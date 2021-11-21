@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-09-20 04:34+0200\n"
+"POT-Creation-Date: 2021-11-21 05:46+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Aaron Sun <AaronSun.Test@gmail.com>\n"
 "Language-Team: \n"
@@ -157,6 +157,7 @@ msgstr "品​保​火力​支援​小組​（​附加​測試人員​）
 msgid "QA Counterintelligence"
 msgstr "品​保​反情​小​組"
 
+#. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
 msgstr "NIS系統​維護​管理"
@@ -309,15 +310,49 @@ msgstr "最初​的​一千​名​Beta測試人員​（​The Ring of One T
 msgid "\tNo souls were sold in the making of this game."
 msgstr "\t​在​這個​遊戲​的​製作​過程​中​沒​有​任何​靈魂​被​出賣。"
 
-#: Source/DiabloUI/dialogs.cpp:172 Source/DiabloUI/dialogs.cpp:185
-#: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
-#: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:181
-#: Source/DiabloUI/selgame.cpp:314 Source/DiabloUI/selgame.cpp:387
-#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
-#: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:525
+#: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
+#: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
+#: Source/DiabloUI/selgame.cpp:193 Source/DiabloUI/selgame.cpp:211
+#: Source/DiabloUI/selgame.cpp:352 Source/DiabloUI/selgame.cpp:428
+#: Source/DiabloUI/selhero.cpp:186 Source/DiabloUI/selhero.cpp:211
+#: Source/DiabloUI/selhero.cpp:281 Source/DiabloUI/selhero.cpp:536
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
 msgstr "好"
+
+#: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
+#, fuzzy
+#| msgid "Down to Diablo"
+msgid "Switch to Diablo"
+msgstr "下​到​迪亞波羅"
+
+#: Source/DiabloUI/extrasmenu.cpp:41
+#, fuzzy
+#| msgid "Exit Hellfire"
+msgid "Switch to Hellfire"
+msgstr "退出​地​獄火"
+
+#: Source/DiabloUI/extrasmenu.cpp:43
+msgid "Switch to Fullgame"
+msgstr ""
+
+#: Source/DiabloUI/extrasmenu.cpp:43
+#, fuzzy
+#| msgid "in the shareware"
+msgid "Switch to Shareware"
+msgstr "在​共​享軟​體​中"
+
+#: Source/DiabloUI/extrasmenu.cpp:44
+msgid "Replay Intro"
+msgstr "重​播動​畫"
+
+#: Source/DiabloUI/extrasmenu.cpp:45
+msgid "Support"
+msgstr "支援"
+
+#: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
+msgid "Previous Menu"
+msgstr "上​一​個​菜單"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -328,148 +363,164 @@ msgid "Multi Player"
 msgstr "多​人"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-msgid "Replay Intro"
-msgstr "重​播動​畫"
+#, fuzzy
+#| msgid "Extra charges"
+msgid "Extras"
+msgstr "額​外​充能"
 
 #: Source/DiabloUI/mainmenu.cpp:39
-msgid "Support"
-msgstr "支援"
-
-#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Show Credits"
 msgstr "顯示製​作​組"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Hellfire"
 msgstr "退出​地​獄火"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Diablo"
 msgstr "退出​暗​黑破壞神"
 
-#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
-#: Source/DiabloUI/mainmenu.cpp:99
-msgid ""
-"The Diablo introduction cinematic is only available in the full retail "
-"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-msgstr ""
-"暗​黑破壞​神介紹​電影版​只​提供​完整​的​零售版​暗​黑破壞神。前往 https://www.gog.com/"
-"game/diablo 購買。"
+#: Source/DiabloUI/mainmenu.cpp:55
+#, fuzzy
+#| msgid "in the shareware"
+msgid "Shareware"
+msgstr "在​共​享軟​體​中"
 
-#: Source/DiabloUI/progress.cpp:48 Source/DiabloUI/selconn.cpp:76
-#: Source/DiabloUI/selhero.cpp:188 Source/DiabloUI/selhero.cpp:213
-#: Source/DiabloUI/selhero.cpp:283 Source/DiabloUI/selhero.cpp:533
+#: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
+#: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
+#: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
 msgid "Cancel"
 msgstr "取消"
 
-#: Source/DiabloUI/selconn.cpp:38 Source/DiabloUI/selgame.cpp:77
-#: Source/DiabloUI/selgame.cpp:372
+#: Source/DiabloUI/selconn.cpp:13
 msgid "Client-Server (TCP)"
 msgstr "客​戶端伺服器​（​TCP​）"
 
-#: Source/DiabloUI/selconn.cpp:41
+#: Source/DiabloUI/selconn.cpp:14
 msgid "Loopback"
 msgstr "環​回"
 
-#: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:434
-#: Source/DiabloUI/selgame.cpp:452
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
+#: Source/DiabloUI/selgame.cpp:510
 msgid "Multi Player Game"
 msgstr "多​人​遊戲"
 
-#: Source/DiabloUI/selconn.cpp:53
+#: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
 msgstr "要求: "
 
-#: Source/DiabloUI/selconn.cpp:59
+#: Source/DiabloUI/selconn.cpp:65
 msgid "no gateway needed"
 msgstr "不​需要​閘道器"
 
-#: Source/DiabloUI/selconn.cpp:65
+#: Source/DiabloUI/selconn.cpp:71
 msgid "Select Connection"
 msgstr "選​擇連線"
 
-#: Source/DiabloUI/selconn.cpp:68
+#: Source/DiabloUI/selconn.cpp:74
 msgid "Change Gateway"
 msgstr "更改​閘​道器"
 
-#: Source/DiabloUI/selconn.cpp:101
+#: Source/DiabloUI/selconn.cpp:107
 msgid "All computers must be connected to a TCP-compatible network."
 msgstr "所有​計算​機​必須連線​到​與​TCP​相容​的​網路。"
 
-#: Source/DiabloUI/selconn.cpp:105
+#: Source/DiabloUI/selconn.cpp:111
 msgid "All computers must be connected to the internet."
 msgstr "所有​計算機​都​必須​連線​到​因特網。"
 
-#: Source/DiabloUI/selconn.cpp:109
+#: Source/DiabloUI/selconn.cpp:115
 msgid "Play by yourself with no network exposure."
 msgstr "自己​玩，沒​有​網路​曝光。"
 
-#: Source/DiabloUI/selconn.cpp:114
+#: Source/DiabloUI/selconn.cpp:120
 msgid "Players Supported: {:d}"
 msgstr "支援​的​玩家: {:d}"
 
-#: Source/DiabloUI/selgame.cpp:80 Source/DiabloUI/selgame.cpp:375
+#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
 msgid "Description:"
 msgstr "說​明: "
 
-#: Source/DiabloUI/selgame.cpp:86
+#: Source/DiabloUI/selgame.cpp:88
 msgid "Select Action"
 msgstr "選​擇​操作"
 
-#: Source/DiabloUI/selgame.cpp:88 Source/DiabloUI/selgame.cpp:151
-#: Source/DiabloUI/selgame.cpp:295
+#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
+#: Source/DiabloUI/selgame.cpp:333
 msgid "Create Game"
 msgstr "建立​遊戲"
 
-#: Source/DiabloUI/selgame.cpp:89
+#: Source/DiabloUI/selgame.cpp:93
+#, fuzzy
+#| msgid "Create Game"
+msgid "Create Public Game"
+msgstr "建立​遊戲"
+
+#: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
 msgstr "加入​遊戲"
 
-#: Source/DiabloUI/selgame.cpp:97 Source/DiabloUI/selgame.cpp:166
-#: Source/DiabloUI/selgame.cpp:184 Source/DiabloUI/selgame.cpp:317
-#: Source/DiabloUI/selgame.cpp:390
+#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
+#: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
+#: Source/DiabloUI/selgame.cpp:431
 msgid "CANCEL"
 msgstr "取消"
 
-#: Source/DiabloUI/selgame.cpp:106
+#: Source/DiabloUI/selgame.cpp:122
 msgid "Create a new game with a difficulty setting of your choice."
 msgstr "建立​一​個​新​遊戲​的​難度​設定​你​的​選擇。"
 
-#: Source/DiabloUI/selgame.cpp:109
+#: Source/DiabloUI/selgame.cpp:125
+#, fuzzy
+#| msgid "Create a new game with a difficulty setting of your choice."
+msgid ""
+"Create a new public game that anyone can join with a difficulty setting of "
+"your choice."
+msgstr "建立​一​個​新​遊戲​的​難度​設定​你​的​選擇。"
+
+#: Source/DiabloUI/selgame.cpp:128
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
 msgstr "輸入​IP​或​主機名，然​後​在​該​地址​加入​正在​進行​的​遊戲。"
 
-#: Source/DiabloUI/selgame.cpp:154
+#: Source/DiabloUI/selgame.cpp:131
+#, fuzzy
+#| msgid ""
+#| "Enter an IP or a hostname and join a game already in progress at that "
+#| "address."
+msgid "Join the public game already in progress at this address."
+msgstr "輸入​IP​或​主機名，然​後​在​該​地址​加入​正在​進行​的​遊戲。"
+
+#: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
 msgstr "選​擇​難度"
 
-#: Source/DiabloUI/selgame.cpp:156 Source/DiabloUI/selgame.cpp:203
-#: Source/DiabloUI/selgame.cpp:306 Source/DiabloUI/selgame.cpp:326
-#: Source/diablo.cpp:1434
+#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
+#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "正常"
 
-#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:207
-#: Source/diablo.cpp:1435
+#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "噩夢"
 
-#: Source/DiabloUI/selgame.cpp:158 Source/DiabloUI/selgame.cpp:211
-#: Source/diablo.cpp:1436
+#: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "地​獄"
 
-#: Source/DiabloUI/selgame.cpp:172
+#: Source/DiabloUI/selgame.cpp:202
 msgid "Join TCP Games"
 msgstr "加入​TCP遊​戲"
 
-#: Source/DiabloUI/selgame.cpp:175 Source/DiabloUI/selgame.cpp:178
+#: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
 msgid "Enter address"
 msgstr "輸入​地址"
 
-#: Source/DiabloUI/selgame.cpp:204
+#: Source/DiabloUI/selgame.cpp:240
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -477,7 +528,7 @@ msgstr ""
 "正常​難度​\n"
 "這​是​一​個​開始​的​角色​應該​開始尋求擊敗迪亞波羅。"
 
-#: Source/DiabloUI/selgame.cpp:208
+#: Source/DiabloUI/selgame.cpp:244
 msgid ""
 "Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
@@ -486,7 +537,7 @@ msgstr ""
 "噩夢​難度​\n"
 "迷宮裡​的​居民​得到​了​支援，這將​是​一​個​更​大​的​挑戰。這隻​建議​有​經驗​的​角色​使用。"
 
-#: Source/DiabloUI/selgame.cpp:212
+#: Source/DiabloUI/selgame.cpp:248
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
@@ -496,35 +547,35 @@ msgstr ""
 "​最​強​大​的​地下​世界​的​生物​潛伏在地獄​的​大門。只有​最​有​經驗​的​人物​才​能​在​這個​領域​冒"
 "險。"
 
-#: Source/DiabloUI/selgame.cpp:227
+#: Source/DiabloUI/selgame.cpp:264
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
 msgstr "你​的​角色​必須達​到​20​級​才​能​進入​多​人​遊戲​的​噩夢​難度。"
 
-#: Source/DiabloUI/selgame.cpp:229
+#: Source/DiabloUI/selgame.cpp:266
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
 msgstr "你​的​角色​必須達​到​30​級​才​能​進入​地獄​難度​的​多​人​遊戲。"
 
-#: Source/DiabloUI/selgame.cpp:304
+#: Source/DiabloUI/selgame.cpp:342
 msgid "Select Game Speed"
 msgstr "選​擇遊戲​速度"
 
-#: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:330
+#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
 msgid "Fast"
 msgstr "快速​的"
 
-#: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:334
+#: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
 msgid "Faster"
 msgstr "更​快"
 
-#: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:338
+#: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
 msgid "Fastest"
 msgstr "最​快​的"
 
-#: Source/DiabloUI/selgame.cpp:327
+#: Source/DiabloUI/selgame.cpp:365
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -532,7 +583,7 @@ msgstr ""
 "正常​速度​\n"
 "這​是​一​個​開始​的​角色​應該​開始尋求擊敗迪亞波羅。"
 
-#: Source/DiabloUI/selgame.cpp:331
+#: Source/DiabloUI/selgame.cpp:369
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
@@ -541,7 +592,7 @@ msgstr ""
 "快速​\n"
 "迷宮​的​居民​們​已​經​被​催促​了，這將​是​一​個​更​大​的​挑戰。這隻​建議​有​經驗​的​角色​使用。"
 
-#: Source/DiabloUI/selgame.cpp:335
+#: Source/DiabloUI/selgame.cpp:373
 msgid ""
 "Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. "
@@ -551,7 +602,7 @@ msgstr ""
 "​地​牢里​的​大多​數​怪物會​比​以前​更​快​地​找到​你。只有​有​經驗​的​冠軍​才​能​在​這個​速度​下​碰碰"
 "運氣。"
 
-#: Source/DiabloUI/selgame.cpp:339
+#: Source/DiabloUI/selgame.cpp:377
 msgid ""
 "Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a "
@@ -560,77 +611,77 @@ msgstr ""
 "最​快​速度​\n"
 "​黑社​會​的​僕從們會​毫​不​猶​豫​地​趕來​攻擊。只有​真正​的​速度​惡魔​才​能​以​這種​速度​進入。"
 
-#: Source/DiabloUI/selgame.cpp:381 Source/DiabloUI/selgame.cpp:384
+#: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
 msgid "Enter Password"
 msgstr "輸​入​密碼"
 
-#: Source/DiabloUI/selgame.cpp:407
+#: Source/DiabloUI/selgame.cpp:448
 msgid "The host is running a different game than you."
 msgstr "主機​執行​的​遊戲與​您​不同。"
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
-#: Source/DiabloUI/selgame.cpp:410
+#: Source/DiabloUI/selgame.cpp:451
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr "您​的​版本​{:s}​與​主機{:d}.{:d}.{:d}​不​匹配。"
 
-#: Source/DiabloUI/selhero.cpp:99
+#: Source/DiabloUI/selhero.cpp:100
 msgid "New Hero"
 msgstr "新​英雄"
 
-#: Source/DiabloUI/selhero.cpp:163
+#: Source/DiabloUI/selhero.cpp:164
 msgid "Choose Class"
 msgstr "選​擇職業"
 
-#: Source/DiabloUI/selhero.cpp:167 Source/panels/charpanel.cpp:22
+#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:22
 msgid "Warrior"
 msgstr "戰士"
 
-#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
 msgid "Rogue"
 msgstr "流亡者"
 
-#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
 msgstr "巫師"
 
-#: Source/DiabloUI/selhero.cpp:171 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:172 Source/panels/charpanel.cpp:25
 msgid "Monk"
 msgstr "武僧"
 
-#: Source/DiabloUI/selhero.cpp:174 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:175 Source/panels/charpanel.cpp:26
 msgid "Bard"
 msgstr "吟遊​詩​人"
 
-#: Source/DiabloUI/selhero.cpp:177 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:178 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
 msgstr "野​蠻​人"
 
-#: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
+#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Multi Player Hero"
 msgstr "新​的​多​人​英雄"
 
-#: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
+#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Single Player Hero"
 msgstr "新​單人​英雄"
 
-#: Source/DiabloUI/selhero.cpp:202
+#: Source/DiabloUI/selhero.cpp:203
 msgid "Save File Exists"
 msgstr "儲​存檔案​已​存在"
 
-#: Source/DiabloUI/selhero.cpp:205 Source/gamemenu.cpp:38
+#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
 msgid "Load Game"
 msgstr "載入​遊戲"
 
-#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:37
+#: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
 msgstr "新​遊戲"
 
-#: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:540
+#: Source/DiabloUI/selhero.cpp:217 Source/DiabloUI/selhero.cpp:551
 msgid "Single Player Characters"
 msgstr "單​人​角色"
 
-#: Source/DiabloUI/selhero.cpp:262
+#: Source/DiabloUI/selhero.cpp:263
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
@@ -638,83 +689,89 @@ msgstr ""
 "流亡者​和​巫師​只​在​暗​黑破​壞神​的​完整​零售版​中​提供。前往 https://www.gog.com/game/"
 "diablo 購買。"
 
-#: Source/DiabloUI/selhero.cpp:274 Source/DiabloUI/selhero.cpp:277
+#: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
 msgid "Enter Name"
 msgstr "輸​入名稱"
 
-#: Source/DiabloUI/selhero.cpp:306
+#: Source/DiabloUI/selhero.cpp:307
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
 msgstr "名稱​無效。名稱​不​能​包含​空格、保留​字元​或​保留​字。\n"
 
 #. TRANSLATORS: Error Message
-#: Source/DiabloUI/selhero.cpp:313
+#: Source/DiabloUI/selhero.cpp:314
 msgid "Unable to create character."
 msgstr "無​法​建立​角色。"
 
-#: Source/DiabloUI/selhero.cpp:467 Source/DiabloUI/selhero.cpp:470
+#: Source/DiabloUI/selhero.cpp:468 Source/DiabloUI/selhero.cpp:471
 msgid "Level:"
 msgstr "等​級: "
 
-#: Source/DiabloUI/selhero.cpp:475
+#: Source/DiabloUI/selhero.cpp:476
 msgid "Strength:"
 msgstr "強度: "
 
-#: Source/DiabloUI/selhero.cpp:480
+#: Source/DiabloUI/selhero.cpp:481
 msgid "Magic:"
 msgstr "魔術: "
 
-#: Source/DiabloUI/selhero.cpp:485
+#: Source/DiabloUI/selhero.cpp:486
 msgid "Dexterity:"
 msgstr "敏​捷: "
 
-#: Source/DiabloUI/selhero.cpp:490
+#: Source/DiabloUI/selhero.cpp:491
 msgid "Vitality:"
 msgstr "活力: "
 
-#: Source/DiabloUI/selhero.cpp:496
+#: Source/DiabloUI/selhero.cpp:497
 #, fuzzy
 #| msgid "Save Game"
 msgid "Savegame:"
 msgstr "儲​存遊​戲"
 
-#: Source/DiabloUI/selhero.cpp:508
+#: Source/DiabloUI/selhero.cpp:510
 msgid "Select Hero"
 msgstr "選​擇​英雄"
 
-#: Source/DiabloUI/selhero.cpp:528
+#: Source/DiabloUI/selhero.cpp:539
 msgid "Delete"
 msgstr "刪​除"
 
-#: Source/DiabloUI/selhero.cpp:538
+#: Source/DiabloUI/selhero.cpp:549
 msgid "Multi Player Characters"
 msgstr "多​人​遊戲​角色"
 
-#: Source/DiabloUI/selhero.cpp:580
+#: Source/DiabloUI/selhero.cpp:599
 msgid "Delete Multi Player Hero"
 msgstr "刪​除​多​人​遊戲​英雄"
 
-#: Source/DiabloUI/selhero.cpp:582
+#: Source/DiabloUI/selhero.cpp:601
 msgid "Delete Single Player Hero"
 msgstr "刪​除​單人​遊戲​英雄"
 
-#: Source/DiabloUI/selhero.cpp:584
+#: Source/DiabloUI/selhero.cpp:603
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "是否​確實​要​刪除​角色​「​{:s}​」？"
 
-#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
+#: Source/DiabloUI/selstart.cpp:43
+#, fuzzy
+#| msgid "Exit Hellfire"
+msgid "Enter Hellfire"
+msgstr "退出​地​獄火"
+
+#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
 msgstr "是"
 
-#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:929
+#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:979
 msgid "No"
 msgstr "否"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join "
-"our community where we talk about things related to Diablo, and the Hellfire "
+"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
 
@@ -757,12 +814,12 @@ msgstr ""
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
-#: Source/appfat.cpp:37
+#: Source/appfat.cpp:38
 msgid "Error"
 msgstr "錯​誤"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
-#: Source/appfat.cpp:101
+#: Source/appfat.cpp:102
 msgid ""
 "{:s}\n"
 "\n"
@@ -772,7 +829,7 @@ msgstr ""
 "\n"
 "錯誤​發生​在: {: s}，行{: d}"
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:117
 #, fuzzy
 #| msgid ""
 #| "Unable to open main data archive ({:s}).\n"
@@ -788,15 +845,12 @@ msgstr ""
 "\n"
 "確保​它​在​遊戲​資料夾​中，並且​檔名​都​是​小寫​的。"
 
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq或spawn.mpq"
-
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:123
 msgid "Data File Error"
 msgstr "數​據​檔案​錯誤"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:131
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -804,166 +858,189 @@ msgstr ""
 "無​法​寫入​位置: \n"
 "{: s}"
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:133
 msgid "Read-Only Directory Error"
 msgstr "只​讀目錄​錯誤"
 
-#: Source/automap.cpp:468
+#: Source/automap.cpp:484
 msgid "game: "
 msgstr "遊​戲: "
 
-#: Source/automap.cpp:474
+#: Source/automap.cpp:490
 msgid "password: "
 msgstr "密碼: "
 
-#: Source/automap.cpp:487
+#: Source/automap.cpp:492
+#, fuzzy
+#| msgid "Quit Game"
+msgid "Public Game"
+msgstr "退出​遊戲"
+
+#: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
 msgstr "層​數: {:d}​巢​穴"
 
-#: Source/automap.cpp:489
+#: Source/automap.cpp:506
 msgid "Level: Crypt {:d}"
 msgstr "層​數: {:d}​墓穴"
 
-#: Source/automap.cpp:491 Source/items.cpp:2086
+#: Source/automap.cpp:508 Source/items.cpp:2090
 msgid "Level: {:d}"
 msgstr "等​級: {:d}"
 
-#: Source/control.cpp:196
+#: Source/control.cpp:212
 msgid "Tab"
 msgstr "標​籤"
 
-#: Source/control.cpp:196
+#: Source/control.cpp:212
 msgid "Esc"
 msgstr "電子​穩定​控制​系統"
 
-#: Source/control.cpp:196
+#: Source/control.cpp:212
 msgid "Enter"
 msgstr "輸​入"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:215
 msgid "Character Information"
 msgstr "角色​資訊"
 
-#: Source/control.cpp:200
+#: Source/control.cpp:216
 msgid "Quests log"
 msgstr "任​務日誌"
 
-#: Source/control.cpp:201
+#: Source/control.cpp:217
 msgid "Automap"
 msgstr "自動​對映"
 
-#: Source/control.cpp:202
+#: Source/control.cpp:218
 msgid "Main Menu"
 msgstr "主​菜單"
 
-#: Source/control.cpp:203
+#: Source/control.cpp:219
 msgid "Inventory"
 msgstr "庫​存"
 
-#: Source/control.cpp:204
+#: Source/control.cpp:220
 msgid "Spell book"
 msgstr "咒​語書"
 
-#: Source/control.cpp:205
+#: Source/control.cpp:221
 msgid "Send Message"
 msgstr "發​送​訊​息"
 
-#: Source/control.cpp:712 Source/control.cpp:1175
+#: Source/control.cpp:718 Source/control.cpp:1587
+msgid "Skill"
+msgstr "技能"
+
+#: Source/control.cpp:719 Source/control.cpp:1237
 msgid "{:s} Skill"
 msgstr "{:s}​技能"
 
-#: Source/control.cpp:716 Source/control.cpp:1179
+#: Source/control.cpp:725
+#, fuzzy
+#| msgid "Spells"
+msgid "Spell"
+msgstr "法​術"
+
+#: Source/control.cpp:726 Source/control.cpp:1241
 msgid "{:s} Spell"
 msgstr "{:s}法術"
 
-#: Source/control.cpp:718
+#: Source/control.cpp:728
 msgid "Damages undead only"
 msgstr "只​傷害亡​靈"
 
-#: Source/control.cpp:722 Source/control.cpp:1183 Source/control.cpp:1554
+#: Source/control.cpp:732 Source/control.cpp:1245 Source/control.cpp:1611
 msgid "Spell Level 0 - Unusable"
 msgstr "法術​等​級​0-無法​使用"
 
-#: Source/control.cpp:724 Source/control.cpp:1185 Source/control.cpp:1556
+#: Source/control.cpp:734 Source/control.cpp:1247 Source/control.cpp:1613
 msgid "Spell Level {:d}"
 msgstr "法術​等​級{:d}"
 
-#: Source/control.cpp:729 Source/control.cpp:1189
+#: Source/control.cpp:741
+#, fuzzy
+#| msgid "{:d} Scroll"
+msgid "Scroll"
+msgstr "{:s}卷軸"
+
+#: Source/control.cpp:742 Source/control.cpp:1251
 msgid "Scroll of {:s}"
 msgstr "{:s}​卷​軸"
 
-#: Source/control.cpp:745 Source/control.cpp:1206
+#: Source/control.cpp:747 Source/control.cpp:1257
 #, fuzzy
 #| msgid "{:d} Scroll"
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:s}卷軸"
 
-#: Source/control.cpp:750 Source/control.cpp:1210 Source/items.cpp:1325
+#: Source/control.cpp:754 Source/itemdat.cpp:167 Source/itemdat.cpp:168
+#: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
+msgid "Staff"
+msgstr "工作人​員"
+
+#: Source/control.cpp:755 Source/control.cpp:1261
 msgid "Staff of {:s}"
 msgstr "{:s}​的​職員"
 
-#: Source/control.cpp:752 Source/control.cpp:1212
+#: Source/control.cpp:757 Source/control.cpp:1263
 #, fuzzy
 #| msgid "{:d} Charge"
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "生命點{:d}的{:d}"
 
-#: Source/control.cpp:762
+#: Source/control.cpp:767
 #, fuzzy
 #| msgid "Spell Hotkey #F{:d}"
 msgid "Spell Hotkey {:s}"
 msgstr "熱​鍵: {:s}"
 
-#: Source/control.cpp:1152
+#: Source/control.cpp:1214
 msgid "Player friendly"
 msgstr "對​玩​家​友好"
 
-#: Source/control.cpp:1154
+#: Source/control.cpp:1216
 msgid "Player attack"
 msgstr "玩​家​攻擊"
 
-#: Source/control.cpp:1157
+#: Source/control.cpp:1219
 msgid "Hotkey: {:s}"
 msgstr "熱​鍵: {:s}"
 
-#: Source/control.cpp:1165
+#: Source/control.cpp:1227
 msgid "Select current spell button"
 msgstr "選​擇​目前​法術​按​鈕"
 
-#: Source/control.cpp:1168
+#: Source/control.cpp:1230
 msgid "Hotkey: 's'"
 msgstr "熱​鍵: 「​s​」"
 
-#: Source/control.cpp:1334 Source/inv.cpp:1893 Source/items.cpp:3751
+#: Source/control.cpp:1387 Source/inv.cpp:1980 Source/items.cpp:3749
 #, fuzzy
 #| msgid "{:d} gold piece"
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "金幣"
 
-#: Source/control.cpp:1337
+#: Source/control.cpp:1390
 msgid "Requirements not met"
 msgstr "未​滿足​條件"
 
-#: Source/control.cpp:1373
+#: Source/control.cpp:1426
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}，層數: {:d}"
 
-#: Source/control.cpp:1375
+#: Source/control.cpp:1428
 msgid "Hit Points {:d} of {:d}"
 msgstr "生命​點{:d}​的​{:d}"
 
-#: Source/control.cpp:1402
+#: Source/control.cpp:1457
 msgid "Level Up"
 msgstr "升級"
 
-#: Source/control.cpp:1532
-msgid "Skill"
-msgstr "技能"
-
-#: Source/control.cpp:1536
+#: Source/control.cpp:1591
 #, fuzzy
 #| msgid "Staff ({:d} charge)"
 msgid "Staff ({:d} charge)"
@@ -971,22 +1048,22 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] "{:s}的職員"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1544
+#: Source/control.cpp:1601
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "法力: {:d} 傷害: {:d}-{:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1546
+#: Source/control.cpp:1603
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "法力: {:d} 傷害: n/a"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1549
+#: Source/control.cpp:1606
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "法力: {:d} 傷害: 1/3 tgt hp"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1606
+#: Source/control.cpp:1664
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] ""
@@ -1035,106 +1112,115 @@ msgstr "邪惡​的​祭壇"
 msgid "level 15"
 msgstr "15​級"
 
-#: Source/diablo.cpp:111
+#: Source/diablo.cpp:114
 msgid "I need help! Come Here!"
 msgstr "我​需要​幫助！過來！"
 
-#: Source/diablo.cpp:112
+#: Source/diablo.cpp:115
 msgid "Follow me."
 msgstr "跟​著​我。"
 
-#: Source/diablo.cpp:113
+#: Source/diablo.cpp:116
 msgid "Here's something for you."
 msgstr "這​是​給​你​的。"
 
-#: Source/diablo.cpp:114
+#: Source/diablo.cpp:117
 msgid "Now you DIE!"
 msgstr "現​在​你​死定​了！"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:777
+#: Source/diablo.cpp:781
 msgid "Options:\n"
 msgstr "選​項: \n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:778
+#: Source/diablo.cpp:782
 msgid "Print this message and exit"
 msgstr "列​印此​訊息並​退出"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:779
+#: Source/diablo.cpp:783
 msgid "Print the version and exit"
 msgstr "列​印​版本​並​退出"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:780
+#: Source/diablo.cpp:784
 msgid "Specify the folder of diabdat.mpq"
 msgstr "指定​diabdat.mpq​的​資料​夾"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:781
+#: Source/diablo.cpp:785
 msgid "Specify the folder of save files"
 msgstr "指定​儲存​檔案​的​資料​夾"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:782
+#: Source/diablo.cpp:786
 msgid "Specify the location of diablo.ini"
 msgstr "指定​diablo.ini​的​位置"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:783
-msgid "Specify the location of the .ttf font"
-msgstr "指定​.ttf字型​的​位置"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
-msgid "Specify the name of a custom .ttf font"
-msgstr "指定​自定義​.ttf字型​的​名稱"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:787
 msgid "Skip startup videos"
 msgstr "跳過啟動視訊"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:788
 msgid "Display frames per second"
 msgstr "每​秒​顯示幀數"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:789
 msgid "Run in windowed mode"
 msgstr "在​視窗​模式​下執行"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:790
 msgid "Enable verbose logging"
 msgstr "啟​用​詳​細​日誌記錄"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "即使​找到​diabdat.mpq，也​強制產生​模式"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:791
 #, fuzzy
 msgid "Record a demo file"
 msgstr "儲​存檔案​已​存在"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:792
 #, fuzzy
 msgid "Play a demo file"
 msgstr "自己​玩，沒​有​網路​曝光。"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+#, fuzzy
+#| msgid "Hellfire Help"
+msgid "Force Hellfire mode"
+msgstr "地​獄火​幫助"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1143,16 +1229,11 @@ msgstr ""
 "地​獄火選項: \n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "即使​hellfire.mpq​存在，也​強制​使用​暗​黑破壞神​原版​模式"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr "使用​備​用​巢狀​調色板"
 
-#: Source/diablo.cpp:801
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1168,294 +1249,294 @@ msgstr "無​法識別​的​選項​{: s}\n"
 msgid "version {:s}"
 msgstr "版本​{:s}"
 
-#: Source/diablo.cpp:1206
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr "--網路​超時​--"
 
-#: Source/diablo.cpp:1207
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr "--​等待​玩​家​--"
 
-#: Source/diablo.cpp:1226
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr "沒​有​可用​的​幫助"
 
-#: Source/diablo.cpp:1227
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr "在​商店​裡"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1439
+#: Source/diablo.cpp:1451
 #, fuzzy
 #| msgid "{:s}, mode = {:s}"
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}​（​等​級{:d}​）: {:s}"
 
-#: Source/dvlnet/loopback.cpp:111
+#: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
 msgstr "環​回"
 
-#: Source/dvlnet/tcp_client.cpp:68
+#: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
 msgstr "無​法連線"
 
-#: Source/dvlnet/tcp_client.cpp:89
+#: Source/dvlnet/tcp_client.cpp:86
 msgid "error: read 0 bytes from server"
 msgstr "錯​誤: 從伺​服器​讀​取​0​位​元組"
 
-#: Source/error.cpp:58
+#: Source/error.cpp:57
 msgid "No automap available in town"
 msgstr "城裡沒​有​汽車​地​圖"
 
-#: Source/error.cpp:59
+#: Source/error.cpp:58
 msgid "No multiplayer functions in demo"
 msgstr "演示​中​沒​有​多​人​遊戲​功能"
 
-#: Source/error.cpp:60
+#: Source/error.cpp:59
 msgid "Direct Sound Creation Failed"
 msgstr "直接​聲音​建立​失敗"
 
-#: Source/error.cpp:61
+#: Source/error.cpp:60
 msgid "Not available in shareware version"
 msgstr "在​共​享軟​體​版本​中​不​可​用"
 
-#: Source/error.cpp:62
+#: Source/error.cpp:61
 msgid "Not enough space to save"
 msgstr "空間​不​夠​節省"
 
-#: Source/error.cpp:63
+#: Source/error.cpp:62
 msgid "No Pause in town"
 msgstr "不​要​在​城裡​停下​來"
 
-#: Source/error.cpp:64
+#: Source/error.cpp:63
 msgid "Copying to a hard disk is recommended"
 msgstr "建​議複製​到​硬碟"
 
-#: Source/error.cpp:65
+#: Source/error.cpp:64
 msgid "Multiplayer sync problem"
 msgstr "多​人​同步​問題"
 
-#: Source/error.cpp:66
+#: Source/error.cpp:65
 msgid "No pause in multiplayer"
 msgstr "多​人​遊戲​中​無暫​停"
 
-#: Source/error.cpp:67
+#: Source/error.cpp:66
 msgid "Loading..."
 msgstr "載入。。。"
 
-#: Source/error.cpp:68
+#: Source/error.cpp:67
 msgid "Saving..."
 msgstr "正在​儲存。。。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:69
+#: Source/error.cpp:68
 msgid "Some are weakened as one grows strong"
 msgstr "當​一​個​人​變​得​強壯時，有些​人​會​變​得​虛弱"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:70
+#: Source/error.cpp:69
 msgid "New strength is forged through destruction"
 msgstr "新​的​力量​是​通過​破壞鍛造出來​的"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:71
+#: Source/error.cpp:70
 msgid "Those who defend seldom attack"
 msgstr "防禦者​很​少​攻擊"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:72
+#: Source/error.cpp:71
 msgid "The sword of justice is swift and sharp"
 msgstr "正​義​之​劍​迅捷​而​鋒利"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:73
+#: Source/error.cpp:72
 msgid "While the spirit is vigilant the body thrives"
 msgstr "當​精神​保持​警惕時，身體​就​會茁壯​成長"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:74
+#: Source/error.cpp:73
 msgid "The powers of mana refocused renews"
 msgstr "法力​的​力量​重新​聚焦​更新"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:75
+#: Source/error.cpp:74
 msgid "Time cannot diminish the power of steel"
 msgstr "時​間​不​能​削弱​鋼鐵​的​力量"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:76
+#: Source/error.cpp:75
 msgid "Magic is not always what it seems to be"
 msgstr "魔術​並​不​總​是​看起來​的​那​樣"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:77
+#: Source/error.cpp:76
 msgid "What once was opened now is closed"
 msgstr "曾​經​打開​的​現​在​關閉​了"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:78
+#: Source/error.cpp:77
 msgid "Intensity comes at the cost of wisdom"
 msgstr "強度​是​以​智慧​為代價​的"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:79
+#: Source/error.cpp:78
 msgid "Arcane power brings destruction"
 msgstr "神秘​力量​帶來毀滅"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:80
+#: Source/error.cpp:79
 msgid "That which cannot be held cannot be harmed"
 msgstr "不​能​持有​的​東西​不​能​受到​傷害"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:81
+#: Source/error.cpp:80
 msgid "Crimson and Azure become as the sun"
 msgstr "深​紅湛藍​如​太​陽"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:82
+#: Source/error.cpp:81
 msgid "Knowledge and wisdom at the cost of self"
 msgstr "以​犧牲​自我​為代價​的​知識​和​智慧"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:83
+#: Source/error.cpp:82
 msgid "Drink and be refreshed"
 msgstr "喝​酒​提神"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:84
+#: Source/error.cpp:83
 msgid "Wherever you go, there you are"
 msgstr "無論​你​走到​哪​裡，你​都​在​那​裡"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:85
+#: Source/error.cpp:84
 msgid "Energy comes at the cost of wisdom"
 msgstr "能量​是​以​智慧​為代價​的"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:86
+#: Source/error.cpp:85
 msgid "Riches abound when least expected"
 msgstr "財富​在​最​不​經意​的​時候​大量​存在"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:87
+#: Source/error.cpp:86
 msgid "Where avarice fails, patience gains reward"
 msgstr "貪​婪失敗​了，耐心​就​會​得到​回報"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:88
+#: Source/error.cpp:87
 msgid "Blessed by a benevolent companion!"
 msgstr "被​仁慈​的​同伴​祝福！"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:89
+#: Source/error.cpp:88
 msgid "The hands of men may be guided by fate"
 msgstr "人​的​手可能​會​被​命運​所​指引"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:90
+#: Source/error.cpp:89
 msgid "Strength is bolstered by heavenly faith"
 msgstr "力量​是​由​天國​的​信仰​支撐​的"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:91
+#: Source/error.cpp:90
 msgid "The essence of life flows from within"
 msgstr "生命​的​本質來​自內​在"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:92
+#: Source/error.cpp:91
 msgid "The way is made clear when viewed from above"
 msgstr "從​上面​看​清楚​了"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:93
+#: Source/error.cpp:92
 msgid "Salvation comes at the cost of wisdom"
 msgstr "拯救​是​以​智慧​為代價​的"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:94
+#: Source/error.cpp:93
 msgid "Mysteries are revealed in the light of reason"
 msgstr "謎團​在​理性​的​光照​下​顯​露出​來"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:95
+#: Source/error.cpp:94
 msgid "Those who are last may yet be first"
 msgstr "最後​一​個​可能​還​是​第一​個"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:96
+#: Source/error.cpp:95
 msgid "Generosity brings its own rewards"
 msgstr "慷慨​自​有​回報"
 
-#: Source/error.cpp:97
+#: Source/error.cpp:96
 msgid "You must be at least level 8 to use this."
 msgstr "你​必須​至少​達​到​8​級​才​能​使用​這個。"
 
-#: Source/error.cpp:98
+#: Source/error.cpp:97
 msgid "You must be at least level 13 to use this."
 msgstr "你​必須​至少​達​到​13級​才​能​使用​這個。"
 
-#: Source/error.cpp:99
+#: Source/error.cpp:98
 msgid "You must be at least level 17 to use this."
 msgstr "你​必須​至少​達​到​17級​才​能​使用​這個。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:100
+#: Source/error.cpp:99
 msgid "Arcane knowledge gained!"
 msgstr "獲​得​奧術​知識！"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:101
+#: Source/error.cpp:100
 msgid "That which does not kill you..."
 msgstr "不​會殺死​你​的​東西。。。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:102
+#: Source/error.cpp:101
 msgid "Knowledge is power."
 msgstr "知識​就​是​力量。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:103
+#: Source/error.cpp:102
 msgid "Give and you shall receive."
 msgstr "付出​你​就​會​得到。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:104
+#: Source/error.cpp:103
 msgid "Some experience is gained by touch."
 msgstr "一些​經驗​是​通過​接觸​獲得​的。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:105
+#: Source/error.cpp:104
 msgid "There's no place like home."
 msgstr "沒​有​比家​更​好​的​地方​了。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:106
+#: Source/error.cpp:105
 msgid "Spiritual energy is restored."
 msgstr "精神​能量​被​恢復。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:107
+#: Source/error.cpp:106
 msgid "You feel more agile."
 msgstr "你​感覺​更​敏捷。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:108
+#: Source/error.cpp:107
 msgid "You feel stronger."
 msgstr "你​感覺​更​強壯。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:109
+#: Source/error.cpp:108
 msgid "You feel wiser."
 msgstr "你​覺得​自己​更​聰明。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:110
+#: Source/error.cpp:109
 msgid "You feel refreshed."
 msgstr "你​感覺​神清​氣爽。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:111
+#: Source/error.cpp:110
 msgid "That which can break will."
 msgstr "能​打破​意志​的​東西。"
 
@@ -1482,10 +1563,6 @@ msgstr "伽馬"
 #: Source/gamemenu.cpp:60 Source/gamemenu.cpp:167
 msgid "Speed"
 msgstr "速度"
-
-#: Source/gamemenu.cpp:61
-msgid "Previous Menu"
-msgstr "上​一​個​菜單"
 
 #: Source/gamemenu.cpp:68
 msgid "Music Disabled"
@@ -1661,7 +1738,7 @@ msgstr ""
 #: Source/help.cpp:68
 #, fuzzy
 #| msgid "Gold"
-msgid "$Gold"
+msgid "$Gold:"
 msgstr "金幣"
 
 #: Source/help.cpp:69
@@ -1686,7 +1763,7 @@ msgstr ""
 
 #: Source/help.cpp:79
 #, fuzzy
-msgid "$Using the Speedbook for Spells"
+msgid "$Using the Speedbook for Spells:"
 msgstr "法​術"
 
 #: Source/help.cpp:80
@@ -1699,12 +1776,12 @@ msgstr ""
 #: Source/help.cpp:84
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
-"readied spell"
+"readied spell."
 msgstr ""
 
 #: Source/help.cpp:86
 #, fuzzy
-msgid "$Setting Spell Hotkeys"
+msgid "$Setting Spell Hotkeys:"
 msgstr "咒​語書"
 
 #: Source/help.cpp:87
@@ -1717,7 +1794,7 @@ msgstr ""
 #: Source/help.cpp:92
 #, fuzzy
 #| msgid "Spell book"
-msgid "$Spell Books"
+msgid "$Spell Books:"
 msgstr "法術​等​級​0-無法​使用"
 
 #: Source/help.cpp:93
@@ -1726,35 +1803,39 @@ msgid ""
 "you to cast the spell more effectively."
 msgstr ""
 
-#: Source/help.cpp:130
+#: Source/help.cpp:181
 #, fuzzy
 #| msgid "Hellfire Help"
 msgid "Shareware Hellfire Help"
 msgstr "地​獄火​幫助"
 
-#: Source/help.cpp:130
+#: Source/help.cpp:181
 msgid "Hellfire Help"
 msgstr "地​獄火​幫助"
 
-#: Source/help.cpp:132
+#: Source/help.cpp:183
 #, fuzzy
 #| msgid "Diablo Help"
 msgid "Shareware Diablo Help"
 msgstr "在​共​享軟​體​中"
 
-#: Source/help.cpp:132
+#: Source/help.cpp:183
 msgid "Diablo Help"
 msgstr "暗​黑破壞神​幫助"
 
-#: Source/help.cpp:156
+#: Source/help.cpp:213
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "按​ESC鍵​結束，或​按箭頭鍵​滾動。"
 
-#: Source/init.cpp:214
+#: Source/init.cpp:175
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq或spawn.mpq"
+
+#: Source/init.cpp:196
 msgid "Some Hellfire MPQs are missing"
 msgstr "一些​地​獄火​MPQ​無法​找到"
 
-#: Source/init.cpp:214
+#: Source/init.cpp:196
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1762,11 +1843,11 @@ msgstr ""
 "地​獄火​MPQ​未​能​全部​找到。\n"
 "請​複製​所有​hf​*​.mpq檔案。"
 
-#: Source/init.cpp:224
+#: Source/init.cpp:204
 msgid "Unable to create main window"
 msgstr "無​法​建立​主視​窗"
 
-#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:154
+#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:155
 msgid "Gold"
 msgstr "金幣"
 
@@ -1906,7 +1987,7 @@ msgstr "拉撒雷茲​之​杖"
 msgid "Scroll of Resurrect"
 msgstr "復​活​卷軸"
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:164
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
 msgid "Blacksmith Oil"
 msgstr "鐵匠​之​油"
 
@@ -2006,7 +2087,7 @@ msgid "Quilted Armor"
 msgstr "內​襯​甲"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5459
+#: Source/itemdat.cpp:77 Source/objects.cpp:5433
 msgid "Armor"
 msgstr "護​甲"
 
@@ -2101,11 +2182,11 @@ msgstr "活力​恢復​藥​水"
 msgid "Potion of Full Rejuvenation"
 msgstr "完全​活力​恢復​藥​水"
 
-#: Source/itemdat.cpp:100 Source/items.cpp:159
+#: Source/itemdat.cpp:100 Source/items.cpp:161
 msgid "Oil of Accuracy"
 msgstr "精準​之​油"
 
-#: Source/itemdat.cpp:101 Source/items.cpp:161
+#: Source/itemdat.cpp:101 Source/items.cpp:163
 msgid "Oil of Sharpness"
 msgstr "銳利​之​油"
 
@@ -2333,11 +2414,6 @@ msgstr "短戰​爭弓"
 msgid "Long War Bow"
 msgstr "長​戰​爭弓"
 
-#: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
-#: Source/itemdat.cpp:170 Source/itemdat.cpp:171
-msgid "Staff"
-msgstr "工作人​員"
-
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
 msgstr "長​杖"
@@ -2428,7 +2504,7 @@ msgstr "秘銀"
 msgid "Meteoric"
 msgstr "隕​鐵"
 
-#: Source/itemdat.cpp:202 Source/objects.cpp:104
+#: Source/itemdat.cpp:202 Source/objects.cpp:107
 msgid "Weird"
 msgstr "詭​異"
 
@@ -2564,7 +2640,7 @@ msgstr "聖者"
 msgid "Awesome"
 msgstr "真​棒"
 
-#: Source/itemdat.cpp:237 Source/objects.cpp:116
+#: Source/itemdat.cpp:237 Source/objects.cpp:119
 msgid "Holy"
 msgstr "聖佑"
 
@@ -3525,711 +3601,733 @@ msgstr "侍從​護​符"
 msgid "Gladiator's Ring"
 msgstr "角​鬥士​戒指"
 
-#: Source/items.cpp:160
+#: Source/items.cpp:162
 msgid "Oil of Mastery"
 msgstr "大​師​之​油"
 
-#: Source/items.cpp:162
+#: Source/items.cpp:164
 msgid "Oil of Death"
 msgstr "死亡​之​油"
 
-#: Source/items.cpp:163
+#: Source/items.cpp:165
 msgid "Oil of Skill"
 msgstr "技能​之​油"
 
-#: Source/items.cpp:165
+#: Source/items.cpp:167
 msgid "Oil of Fortitude"
 msgstr "堅​韌​之​油"
 
-#: Source/items.cpp:166
+#: Source/items.cpp:168
 msgid "Oil of Permanence"
 msgstr "永恒​之​油"
 
-#: Source/items.cpp:167
+#: Source/items.cpp:169
 msgid "Oil of Hardening"
 msgstr "硬化​之​油"
 
-#: Source/items.cpp:168
+#: Source/items.cpp:170
 msgid "Oil of Imperviousness"
 msgstr "防水​之​油"
 
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
-#: Source/items.cpp:1174 Source/items.cpp:1184 Source/items.cpp:1233
-#: Source/items.cpp:1269
-msgid "{0} {1}"
-msgstr ""
-
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
-#: Source/items.cpp:1315
+#. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
+#: Source/items.cpp:1183
+#, fuzzy
+#| msgid "{0} of {1}"
+msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{:s} / {:s}"
 
-#: Source/items.cpp:1902 Source/items.cpp:1914
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
+#: Source/items.cpp:1193
+#, fuzzy
+msgctxt "spell"
+msgid "{0} {1} of {2}"
+msgstr "{:s} {:s} / {:s}"
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
+#: Source/items.cpp:1214
+#, fuzzy
+msgid "{0} {1} of {2}"
+msgstr "{:s} {:s} / {:s}"
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#: Source/items.cpp:1217
+msgid "{0} {1}"
+msgstr ""
+
+#. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
+#: Source/items.cpp:1220
+msgid "{0} of {1}"
+msgstr "{:s} / {:s}"
+
+#: Source/items.cpp:1906 Source/items.cpp:1918
 msgid "increases a weapon's"
 msgstr "增加​武器​的"
 
-#: Source/items.cpp:1904
+#: Source/items.cpp:1908
 msgid "chance to hit"
 msgstr "擊​中​的​機會"
 
-#: Source/items.cpp:1908
+#: Source/items.cpp:1912
 msgid "greatly increases a"
 msgstr "大大​增加"
 
-#: Source/items.cpp:1910
+#: Source/items.cpp:1914
 msgid "weapon's chance to hit"
 msgstr "武器​擊​中​的​機會"
 
-#: Source/items.cpp:1916
+#: Source/items.cpp:1920
 msgid "damage potential"
 msgstr "潛​在​傷害"
 
-#: Source/items.cpp:1920
+#: Source/items.cpp:1924
 msgid "greatly increases a weapon's"
 msgstr "大大​提高​武器​的"
 
-#: Source/items.cpp:1922
+#: Source/items.cpp:1926
 msgid "damage potential - not bows"
 msgstr "潛​在​傷害​-​不​是​弓箭"
 
-#: Source/items.cpp:1926
+#: Source/items.cpp:1930
 msgid "reduces attributes needed"
 msgstr "減​少​所​需​屬性"
 
-#: Source/items.cpp:1928
+#: Source/items.cpp:1932
 msgid "to use armor or weapons"
 msgstr "使用​護甲​或​武器"
 
-#: Source/items.cpp:1932
+#: Source/items.cpp:1936
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "恢復​20​%​的"
 
-#: Source/items.cpp:1934
+#: Source/items.cpp:1938
 msgid "item's durability"
 msgstr "物品​耐久度"
 
-#: Source/items.cpp:1938
+#: Source/items.cpp:1942
 msgid "increases an item's"
 msgstr "增加​物品​的"
 
-#: Source/items.cpp:1940
+#: Source/items.cpp:1944
 msgid "current and max durability"
 msgstr "目前​和​最​大​耐久度"
 
-#: Source/items.cpp:1944
+#: Source/items.cpp:1948
 msgid "makes an item indestructible"
 msgstr "使​物品​堅​不​可​摧"
 
-#: Source/items.cpp:1948
+#: Source/items.cpp:1952
 msgid "increases the armor class"
 msgstr "增加​護甲​等​級"
 
-#: Source/items.cpp:1950
+#: Source/items.cpp:1954
 msgid "of armor and shields"
 msgstr "護甲​和​盾牌"
 
-#: Source/items.cpp:1954
+#: Source/items.cpp:1958
 msgid "greatly increases the armor"
 msgstr "極​大地​增加​護甲"
 
-#: Source/items.cpp:1956
+#: Source/items.cpp:1960
 msgid "class of armor and shields"
 msgstr "護甲​和​盾牌​等​級"
 
-#: Source/items.cpp:1960 Source/items.cpp:1969
+#: Source/items.cpp:1964 Source/items.cpp:1973
 msgid "sets fire trap"
 msgstr "設​定​火焰​陷阱"
 
-#: Source/items.cpp:1965
+#: Source/items.cpp:1969
 msgid "sets lightning trap"
 msgstr "設​定閃電​陷阱"
 
-#: Source/items.cpp:1973
+#: Source/items.cpp:1977
 msgid "sets petrification trap"
 msgstr "設​定​石化​陷阱"
 
-#: Source/items.cpp:1977
+#: Source/items.cpp:1981
 #, fuzzy
 #| msgid "recover partial life"
 msgid "restore all life"
 msgstr "恢復​生命​值"
 
-#: Source/items.cpp:1981
+#: Source/items.cpp:1985
 #, fuzzy
 #| msgid "recover life"
 msgid "restore some life"
 msgstr "恢復​生命​值"
 
-#: Source/items.cpp:1985
+#: Source/items.cpp:1989
 msgid "recover life"
 msgstr "恢復​生命​值"
 
-#: Source/items.cpp:1989
+#: Source/items.cpp:1993
 msgid "deadly heal"
 msgstr "致命​的​治療"
 
-#: Source/items.cpp:1993
+#: Source/items.cpp:1997
 #, fuzzy
 #| msgid "restores 20% of an"
 msgid "restore some mana"
 msgstr "魔力​藥​水"
 
-#: Source/items.cpp:1997
+#: Source/items.cpp:2001
 #, fuzzy
 #| msgid "user loses all mana"
 msgid "restore all mana"
 msgstr "使用者​失去​所有​法力值"
 
-#: Source/items.cpp:2001
+#: Source/items.cpp:2005
 msgid "increase strength"
 msgstr "增強​力量"
 
-#: Source/items.cpp:2005
+#: Source/items.cpp:2009
 msgid "increase magic"
 msgstr "增加​魔法"
 
-#: Source/items.cpp:2009
+#: Source/items.cpp:2013
 msgid "increase dexterity"
 msgstr "增加​敏捷"
 
-#: Source/items.cpp:2013
+#: Source/items.cpp:2017
 msgid "increase vitality"
 msgstr "增加​活力"
 
-#: Source/items.cpp:2018
+#: Source/items.cpp:2022
 msgid "decrease strength"
 msgstr "降低​力量"
 
-#: Source/items.cpp:2022
+#: Source/items.cpp:2026
 msgid "decrease dexterity"
 msgstr "降低​敏捷"
 
-#: Source/items.cpp:2026
+#: Source/items.cpp:2030
 msgid "decrease vitality"
 msgstr "降低​活力"
 
-#: Source/items.cpp:2030
+#: Source/items.cpp:2034
 #, fuzzy
 #| msgid "recover life and mana"
 msgid "restore some life and mana"
 msgstr "恢復​生命值​和​法力值"
 
-#: Source/items.cpp:2034
+#: Source/items.cpp:2038
 #, fuzzy
 #| msgid "recover life and mana"
 msgid "restore all life and mana"
 msgstr "使用者​失去​所有​法力值"
 
-#: Source/items.cpp:2049 Source/items.cpp:2074
+#: Source/items.cpp:2053 Source/items.cpp:2078
 msgid "Right-click to read"
 msgstr "右​擊閱讀"
 
-#: Source/items.cpp:2053
+#: Source/items.cpp:2057
 msgid "Right-click to read, then"
 msgstr "右​擊​閱讀，然​後"
 
-#: Source/items.cpp:2055
+#: Source/items.cpp:2059
 msgid "left-click to target"
 msgstr "左​擊目標"
 
-#: Source/items.cpp:2060
+#: Source/items.cpp:2064
 msgid "Right-click to use"
 msgstr "右​擊​使用"
 
-#: Source/items.cpp:2065 Source/items.cpp:2070
+#: Source/items.cpp:2069 Source/items.cpp:2074
 msgid "Right click to use"
 msgstr "右​擊​使用"
 
-#: Source/items.cpp:2078
+#: Source/items.cpp:2082
 msgid "Right click to read"
 msgstr "右​擊閱讀"
 
-#: Source/items.cpp:2082
+#: Source/items.cpp:2086
 msgid "Right-click to view"
 msgstr "右​擊檢視"
 
-#: Source/items.cpp:2090
+#: Source/items.cpp:2094
 msgid "Doubles gold capacity"
 msgstr "金幣​容量​翻倍"
 
-#: Source/items.cpp:2102 Source/stores.cpp:212
+#: Source/items.cpp:2106 Source/stores.cpp:283
 msgid "Required:"
 msgstr "需求: "
 
-#: Source/items.cpp:2104 Source/stores.cpp:214
+#: Source/items.cpp:2108 Source/stores.cpp:285
 msgid " {:d} Str"
 msgstr "{:d}​力量"
 
-#: Source/items.cpp:2106 Source/stores.cpp:216
+#: Source/items.cpp:2110 Source/stores.cpp:287
 msgid " {:d} Mag"
 msgstr "{:d}​魔法"
 
-#: Source/items.cpp:2108 Source/stores.cpp:218
+#: Source/items.cpp:2112 Source/stores.cpp:289
 msgid " {:d} Dex"
 msgstr "{:d}​敏捷"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3535 Source/player.cpp:3042
+#: Source/items.cpp:3533 Source/player.cpp:3018
 msgid "Ear of {:s}"
 msgstr "{:s}​的​耳朵"
 
-#: Source/items.cpp:3830
+#: Source/items.cpp:3828
 msgid "chance to hit: {:+d}%"
 msgstr "命​中​機率: {:+d}%"
 
-#: Source/items.cpp:3834
+#: Source/items.cpp:3832
 #, fuzzy, no-c-format
 #| msgid "{:+d}% damage"
 msgid "{:+d}% damage"
 msgstr "{:+d}​敵人​傷害"
 
-#: Source/items.cpp:3838 Source/items.cpp:4094
+#: Source/items.cpp:3836 Source/items.cpp:4092
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "命​中: {:+d}%​, {:+d}%​傷害"
 
-#: Source/items.cpp:3842
+#: Source/items.cpp:3840
 #, fuzzy, no-c-format
 #| msgid "{:+d}% armor"
 msgid "{:+d}% armor"
 msgstr "護​甲: {:d}"
 
-#: Source/items.cpp:3846
+#: Source/items.cpp:3844
 msgid "armor class: {:d}"
 msgstr "護​甲​等​級: {:d}"
 
-#: Source/items.cpp:3851 Source/items.cpp:4076
+#: Source/items.cpp:3849 Source/items.cpp:4074
 msgid "Resist Fire: {:+d}%"
 msgstr "火焰​抗性: {:+d}%"
 
-#: Source/items.cpp:3853
+#: Source/items.cpp:3851
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "火焰​抗性: 最​大​75%"
 
-#: Source/items.cpp:3858
+#: Source/items.cpp:3856
 msgid "Resist Lightning: {:+d}%"
 msgstr "閃​電​抗性: {:+d}%"
 
-#: Source/items.cpp:3860
+#: Source/items.cpp:3858
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "閃​電​抗性: 最​大​75%"
 
-#: Source/items.cpp:3865
+#: Source/items.cpp:3863
 msgid "Resist Magic: {:+d}%"
 msgstr "抵抗​魔法: {:+d}%"
 
-#: Source/items.cpp:3867
+#: Source/items.cpp:3865
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "抵抗​魔法: 最​大​75%"
 
-#: Source/items.cpp:3872
+#: Source/items.cpp:3870
 msgid "Resist All: {:+d}%"
 msgstr "所有​抗性: {:+d}%"
 
-#: Source/items.cpp:3874
+#: Source/items.cpp:3872
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "所有​抗性: 最​大​75%"
 
-#: Source/items.cpp:3878
+#: Source/items.cpp:3876
 #, fuzzy
 #| msgid "spells are increased {:d} level"
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "層數: {:d}巢穴"
 
-#: Source/items.cpp:3880
+#: Source/items.cpp:3878
 #, fuzzy
 #| msgid "spells are decreased {:d} level"
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "層數: {:d}巢穴"
 
-#: Source/items.cpp:3882
+#: Source/items.cpp:3880
 msgid "spell levels unchanged (?)"
 msgstr "法術​等​級​不​變​（？）"
 
-#: Source/items.cpp:3885
+#: Source/items.cpp:3883
 msgid "Extra charges"
 msgstr "額​外​充能"
 
-#: Source/items.cpp:3888
+#: Source/items.cpp:3886
 #, fuzzy
 #| msgid "{:d} {:s} charge"
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:s}，層數: {:d}"
 
-#: Source/items.cpp:3892
+#: Source/items.cpp:3890
 msgid "Fire hit damage: {:d}"
 msgstr "火焰​傷害: {:d}"
 
-#: Source/items.cpp:3894
+#: Source/items.cpp:3892
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "火焰​傷害: {:d}-{:d}"
 
-#: Source/items.cpp:3898
+#: Source/items.cpp:3896
 msgid "Lightning hit damage: {:d}"
 msgstr "閃電​傷害: {:d}"
 
-#: Source/items.cpp:3900
+#: Source/items.cpp:3898
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "閃電​傷害: {:d}-{:d}"
 
-#: Source/items.cpp:3904
+#: Source/items.cpp:3902
 msgid "{:+d} to strength"
 msgstr "{:+d}​力量"
 
-#: Source/items.cpp:3908
+#: Source/items.cpp:3906
 msgid "{:+d} to magic"
 msgstr "{:+d}​魔法"
 
-#: Source/items.cpp:3912
+#: Source/items.cpp:3910
 msgid "{:+d} to dexterity"
 msgstr "{:+d}​敏捷"
 
-#: Source/items.cpp:3916
+#: Source/items.cpp:3914
 msgid "{:+d} to vitality"
 msgstr "{:+d}​活力"
 
-#: Source/items.cpp:3920
+#: Source/items.cpp:3918
 msgid "{:+d} to all attributes"
 msgstr "{:+d}​到​所有​屬性"
 
-#: Source/items.cpp:3924
+#: Source/items.cpp:3922
 msgid "{:+d} damage from enemies"
 msgstr "{:+d}​敵人​傷害"
 
-#: Source/items.cpp:3928
+#: Source/items.cpp:3926
 msgid "Hit Points: {:+d}"
 msgstr "生命​值: {:+d}"
 
-#: Source/items.cpp:3932
+#: Source/items.cpp:3930
 msgid "Mana: {:+d}"
 msgstr "法力值: {:+d}"
 
-#: Source/items.cpp:3935
+#: Source/items.cpp:3933
 msgid "high durability"
 msgstr "高​耐​久度"
 
-#: Source/items.cpp:3938
+#: Source/items.cpp:3936
 msgid "decreased durability"
 msgstr "耐​久度​降低"
 
-#: Source/items.cpp:3941
+#: Source/items.cpp:3939
 msgid "indestructible"
 msgstr "堅​不​可​摧"
 
-#: Source/items.cpp:3944
+#: Source/items.cpp:3942
 #, fuzzy, no-c-format
 #| msgid "+{:d}%% light radius"
 msgid "+{:d}% light radius"
 msgstr "謎團​在​理性​的​光照​下​顯​露出​來"
 
-#: Source/items.cpp:3947
+#: Source/items.cpp:3945
 #, fuzzy, no-c-format
 #| msgid "-{:d}%% light radius"
 msgid "-{:d}% light radius"
 msgstr "謎團​在​理性​的​光照​下​顯​露出​來"
 
-#: Source/items.cpp:3950
+#: Source/items.cpp:3948
 msgid "multiple arrows per shot"
 msgstr "射​出​多​重箭"
 
-#: Source/items.cpp:3954
+#: Source/items.cpp:3952
 msgid "fire arrows damage: {:d}"
 msgstr "火箭​傷害: {:d}"
 
-#: Source/items.cpp:3956
+#: Source/items.cpp:3954
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "火箭​傷害: {:d}-{:d}"
 
-#: Source/items.cpp:3960
+#: Source/items.cpp:3958
 msgid "lightning arrows damage {:d}"
 msgstr "閃​電箭​傷害{:d}"
 
-#: Source/items.cpp:3962
+#: Source/items.cpp:3960
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "閃​電箭​傷害{:d}-{:d}"
 
-#: Source/items.cpp:3966
+#: Source/items.cpp:3964
 msgid "fireball damage: {:d}"
 msgstr "火球​傷害: {:d}"
 
-#: Source/items.cpp:3968
+#: Source/items.cpp:3966
 msgid "fireball damage: {:d}-{:d}"
 msgstr "火球​傷害: {:d}-{:d}"
 
-#: Source/items.cpp:3971
+#: Source/items.cpp:3969
 msgid "attacker takes 1-3 damage"
 msgstr "攻擊者​受到​1-3​點​傷害"
 
-#: Source/items.cpp:3974
+#: Source/items.cpp:3972
 msgid "user loses all mana"
 msgstr "使用者​失去​所有​法力值"
 
-#: Source/items.cpp:3977
+#: Source/items.cpp:3975
 msgid "you can't heal"
 msgstr "你​無​法治​癒"
 
-#: Source/items.cpp:3980
+#: Source/items.cpp:3978
 msgid "absorbs half of trap damage"
 msgstr "吸收​一半​陷阱​傷害"
 
-#: Source/items.cpp:3983
+#: Source/items.cpp:3981
 msgid "knocks target back"
 msgstr "擊​退目標"
 
-#: Source/items.cpp:3986
+#: Source/items.cpp:3984
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+​對​惡​魔​造成​200​%​傷害"
 
-#: Source/items.cpp:3989
+#: Source/items.cpp:3987
 msgid "All Resistance equals 0"
 msgstr "所有​抗性​變​為​0"
 
-#: Source/items.cpp:3992
+#: Source/items.cpp:3990
 msgid "hit monster doesn't heal"
 msgstr "命​中​怪物無​法治​癒"
 
-#: Source/items.cpp:3996
+#: Source/items.cpp:3994
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "命​中​竊取​3%​法力值"
 
-#: Source/items.cpp:3998
+#: Source/items.cpp:3996
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "命​中​竊取​5%​法力值"
 
-#: Source/items.cpp:4002
+#: Source/items.cpp:4000
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "命​中​時​竊​取​3%​生命​值"
 
-#: Source/items.cpp:4004
+#: Source/items.cpp:4002
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "命​中​時​竊​取​5​%​生命​值"
 
-#: Source/items.cpp:4007
+#: Source/items.cpp:4005
 msgid "penetrates target's armor"
 msgstr "穿透目標​的​護甲"
 
-#: Source/items.cpp:4011
+#: Source/items.cpp:4009
 msgid "quick attack"
 msgstr "加速​攻擊"
 
-#: Source/items.cpp:4013
+#: Source/items.cpp:4011
 msgid "fast attack"
 msgstr "快速​攻擊"
 
-#: Source/items.cpp:4015
+#: Source/items.cpp:4013
 msgid "faster attack"
 msgstr "極​速攻擊"
 
-#: Source/items.cpp:4017
+#: Source/items.cpp:4015
 msgid "fastest attack"
 msgstr "最​快​的​攻擊"
 
-#: Source/items.cpp:4021
+#: Source/items.cpp:4019
 msgid "fast hit recovery"
 msgstr "快速​打擊​回覆"
 
-#: Source/items.cpp:4023
+#: Source/items.cpp:4021
 msgid "faster hit recovery"
 msgstr "更​快​打擊​回覆"
 
-#: Source/items.cpp:4025
+#: Source/items.cpp:4023
 msgid "fastest hit recovery"
 msgstr "最​快​打擊​回覆"
 
-#: Source/items.cpp:4028
+#: Source/items.cpp:4026
 msgid "fast block"
 msgstr "快速​格擋"
 
-#: Source/items.cpp:4031
+#: Source/items.cpp:4029
 #, fuzzy
 #| msgid "adds {:d} point to damage"
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "傷害: {:d} Dur: {:d}/{:d}"
 
-#: Source/items.cpp:4034
+#: Source/items.cpp:4032
 msgid "fires random speed arrows"
 msgstr "發​射隨機​速度​箭頭"
 
-#: Source/items.cpp:4037
+#: Source/items.cpp:4035
 msgid "unusual item damage"
 msgstr "異​常​物品​損壞"
 
-#: Source/items.cpp:4040
+#: Source/items.cpp:4038
 msgid "altered durability"
 msgstr "改變​耐​久度"
 
-#: Source/items.cpp:4043
+#: Source/items.cpp:4041
 msgid "Faster attack swing"
 msgstr "更​快​的​揮動"
 
-#: Source/items.cpp:4046
+#: Source/items.cpp:4044
 msgid "one handed sword"
 msgstr "單​手劍"
 
-#: Source/items.cpp:4049
+#: Source/items.cpp:4047
 msgid "constantly lose hit points"
 msgstr "不​斷​失去​生命值"
 
-#: Source/items.cpp:4052
+#: Source/items.cpp:4050
 msgid "life stealing"
 msgstr "竊取​生命"
 
-#: Source/items.cpp:4055
+#: Source/items.cpp:4053
 msgid "no strength requirement"
 msgstr "無​力量​要求"
 
-#: Source/items.cpp:4058
+#: Source/items.cpp:4056
 msgid "see with infravision"
 msgstr "夜視​能力"
 
-#: Source/items.cpp:4065
+#: Source/items.cpp:4063
 msgid "lightning damage: {:d}"
 msgstr "閃電​傷害: {:d}"
 
-#: Source/items.cpp:4067
+#: Source/items.cpp:4065
 msgid "lightning damage: {:d}-{:d}"
 msgstr "閃電​傷害: {:d}-{:d}"
 
-#: Source/items.cpp:4070
+#: Source/items.cpp:4068
 msgid "charged bolts on hits"
 msgstr "擊​中​時觸發​電​荷彈"
 
-#: Source/items.cpp:4079
+#: Source/items.cpp:4077
 msgid "occasional triple damage"
 msgstr "有​概率​造成​三​倍​傷害"
 
-#: Source/items.cpp:4082
+#: Source/items.cpp:4080
 #, fuzzy, no-c-format
 #| msgid "decaying {:+d}% damage"
 msgid "decaying {:+d}% damage"
 msgstr "傷害: {:d} Dur: {:d}/{:d}"
 
-#: Source/items.cpp:4085
+#: Source/items.cpp:4083
 msgid "2x dmg to monst, 1x to you"
 msgstr "2x 對​怪物​傷害，1x 反噬​自身"
 
-#: Source/items.cpp:4088
+#: Source/items.cpp:4086
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "隨​機​0-500​%​傷害"
 
-#: Source/items.cpp:4091
+#: Source/items.cpp:4089
 #, fuzzy, no-c-format
 #| msgid "low dur, {:+d}% damage"
 msgid "low dur, {:+d}% damage"
 msgstr "傷害: {:d}-{:d} 耐久: {:d}/{:d}"
 
-#: Source/items.cpp:4097
+#: Source/items.cpp:4095
 msgid "extra AC vs demons"
 msgstr "對​抗​惡魔​的​額外​精準"
 
-#: Source/items.cpp:4100
+#: Source/items.cpp:4098
 msgid "extra AC vs undead"
 msgstr "對​抗亡靈​的​額外​精準"
 
-#: Source/items.cpp:4103
+#: Source/items.cpp:4101
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50​%​法力值轉換​至​生命​值"
 
-#: Source/items.cpp:4106
+#: Source/items.cpp:4104
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40​%​的​生命值轉換​至​法力值"
 
-#: Source/items.cpp:4109
+#: Source/items.cpp:4107
 msgid "Another ability (NW)"
 msgstr "另​一​種​能力​（​NW​）"
 
-#: Source/items.cpp:4146 Source/items.cpp:4193
+#: Source/items.cpp:4144 Source/items.cpp:4191
 msgid "damage: {:d}  Indestructible"
 msgstr "傷害: {:d} 堅​不​可​摧"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4148 Source/items.cpp:4195
+#: Source/items.cpp:4146 Source/items.cpp:4193
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "傷害: {:d} Dur: {:d}/{:d}"
 
-#: Source/items.cpp:4151 Source/items.cpp:4198
+#: Source/items.cpp:4149 Source/items.cpp:4196
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "傷害: {:d}-{:d} 堅​不​可​摧"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4153 Source/items.cpp:4200
+#: Source/items.cpp:4151 Source/items.cpp:4198
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "傷害: {:d}-{:d} 耐久: {:d}/{:d}"
 
-#: Source/items.cpp:4159 Source/items.cpp:4212
+#: Source/items.cpp:4157 Source/items.cpp:4210
 msgid "armor: {:d}  Indestructible"
 msgstr "護​甲: {:d} 堅​不​可​摧"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4161 Source/items.cpp:4214
+#: Source/items.cpp:4159 Source/items.cpp:4212
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "護​甲: {:d} 耐久: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4166
+#: Source/items.cpp:4164
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "傷害: {:d} 耐久: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4168
+#: Source/items.cpp:4166
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "傷害: {:d}-{:d} 耐久: {:d}/{:d}"
 
-#: Source/items.cpp:4169 Source/items.cpp:4204 Source/items.cpp:4219
-#: Source/stores.cpp:184
+#: Source/items.cpp:4167 Source/items.cpp:4202 Source/items.cpp:4217
+#: Source/stores.cpp:255
 msgid "Charges: {:d}/{:d}"
 msgstr "充能: {:d}/{:d}"
 
-#: Source/items.cpp:4181
+#: Source/items.cpp:4179
 msgid "unique item"
 msgstr "獨​特裝備"
 
-#: Source/items.cpp:4208 Source/items.cpp:4217 Source/items.cpp:4224
+#: Source/items.cpp:4206 Source/items.cpp:4215 Source/items.cpp:4222
 msgid "Not Identified"
 msgstr "未​鑑​定"
 
-#: Source/loadsave.cpp:1656 Source/loadsave.cpp:2122
+#: Source/loadsave.cpp:1683 Source/loadsave.cpp:2149
 msgid "Unable to open save file archive"
 msgstr "無​法​打開​儲​存檔​案​存檔"
 
-#: Source/loadsave.cpp:1659
+#: Source/loadsave.cpp:1686
 msgid "Invalid save file"
 msgstr "無效​的​儲存​檔案"
 
-#: Source/loadsave.cpp:1688
+#: Source/loadsave.cpp:1717
 msgid "Player is on a Hellfire only level"
 msgstr "玩​家處於​地​獄火​特有​地​圖"
 
-#: Source/loadsave.cpp:1885
+#: Source/loadsave.cpp:1912
 msgid "Invalid game state"
 msgstr "無效​的​遊戲狀態"
 
-#: Source/menu.cpp:136
+#: Source/menu.cpp:154
 msgid "Unable to display mainmenu"
 msgstr "無​法​顯示主菜單"
+
+#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
+#: Source/menu.cpp:179
+msgid ""
+"The Diablo introduction cinematic is only available in the full retail "
+"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"暗​黑破壞​神介紹​電影版​只​提供​完整​的​零售版​暗​黑破壞神。前往 https://www.gog.com/"
+"game/diablo 購買。"
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -5136,6 +5234,13 @@ msgctxt "monster"
 msgid "Reaper"
 msgstr "收割者"
 
+#. TRANSLATORS: Monster Block end
+#. MT_NAKRUL
+#: Source/monstdat.cpp:158 Source/monstdat.cpp:485
+msgctxt "monster"
+msgid "Na-Krul"
+msgstr ""
+
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
 #, fuzzy
@@ -5176,6 +5281,11 @@ msgstr "丹紅"
 msgctxt "monster"
 msgid "Black Jade"
 msgstr "碧玉"
+
+#: Source/monstdat.cpp:480
+msgctxt "monster"
+msgid "Lachdanan"
+msgstr ""
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
@@ -5243,6 +5353,11 @@ msgctxt "monster"
 msgid "Brokenhead Bangshield"
 msgstr "斷​頭盾"
 
+#: Source/monstdat.cpp:494
+msgctxt "monster"
+msgid "Bongo"
+msgstr ""
+
 #: Source/monstdat.cpp:495
 #, fuzzy
 #| msgid "Rotcarnage"
@@ -5270,6 +5385,11 @@ msgstr "死​神"
 msgctxt "monster"
 msgid "Madeye the Dead"
 msgstr "死者​之​弓"
+
+#: Source/monstdat.cpp:499
+msgctxt "monster"
+msgid "El Chupacabras"
+msgstr ""
 
 #: Source/monstdat.cpp:500
 #, fuzzy
@@ -5740,12 +5860,24 @@ msgctxt "monster"
 msgid "The Vizier"
 msgstr "維​齊爾"
 
+#: Source/monstdat.cpp:567
+#, fuzzy
+#| msgid "Sapphire"
+msgctxt "monster"
+msgid "Zamphir"
+msgstr "藍​寶石"
+
 #: Source/monstdat.cpp:568
 #, fuzzy
 #| msgid "Bloodlust"
 msgctxt "monster"
 msgid "Bloodlust"
 msgstr "嗜​血"
+
+#: Source/monstdat.cpp:569
+msgctxt "monster"
+msgid "Webwidow"
+msgstr ""
 
 #: Source/monstdat.cpp:570
 #, fuzzy
@@ -5769,96 +5901,97 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "杜姆洛克"
 
-#: Source/monster.cpp:3474
+#: Source/monster.cpp:3479
 msgid "Animal"
 msgstr "動物"
 
-#: Source/monster.cpp:3476
+#: Source/monster.cpp:3481
 msgid "Demon"
 msgstr "惡​魔"
 
-#: Source/monster.cpp:3478
+#: Source/monster.cpp:3483
 msgid "Undead"
 msgstr "亡靈"
 
-#: Source/monster.cpp:4610
+#: Source/monster.cpp:4612
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "型​別: {:s} 擊殺: {:d}"
 
-#: Source/monster.cpp:4612
+#: Source/monster.cpp:4614
 msgid "Total kills: {:d}"
 msgstr "擊​殺總​數: {:d}"
 
-#: Source/monster.cpp:4645
+#: Source/monster.cpp:4647
 msgid "Hit Points: {:d}-{:d}"
 msgstr "生命​值: {:d}-{:d}"
 
-#: Source/monster.cpp:4651
+#: Source/monster.cpp:4653
 msgid "No magic resistance"
 msgstr "沒​有​魔法​抵抗"
 
-#: Source/monster.cpp:4655
+#: Source/monster.cpp:4657
 msgid "Resists: "
 msgstr "抗性: "
 
-#: Source/monster.cpp:4657 Source/monster.cpp:4668
+#: Source/monster.cpp:4659 Source/monster.cpp:4671
 msgid "Magic "
 msgstr "魔法"
 
-#: Source/monster.cpp:4659 Source/monster.cpp:4670
+#: Source/monster.cpp:4661 Source/monster.cpp:4673
 msgid "Fire "
 msgstr "火"
 
-#: Source/monster.cpp:4661 Source/monster.cpp:4672
+#: Source/monster.cpp:4663 Source/monster.cpp:4675
 msgid "Lightning "
 msgstr "閃​電"
 
-#: Source/monster.cpp:4666
+#: Source/monster.cpp:4669
 msgid "Immune: "
 msgstr "免疫: "
 
-#: Source/monster.cpp:4684
+#: Source/monster.cpp:4688
 msgid "Type: {:s}"
 msgstr "型​別: {:s}"
 
-#: Source/monster.cpp:4690 Source/monster.cpp:4697
+#: Source/monster.cpp:4694 Source/monster.cpp:4701
 msgid "No resistances"
 msgstr "無​抗性"
 
-#: Source/monster.cpp:4692 Source/monster.cpp:4702
+#: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid "No Immunities"
 msgstr "無​免疫"
 
-#: Source/monster.cpp:4695
+#: Source/monster.cpp:4699
 msgid "Some Magic Resistances"
 msgstr "一些​魔法​抵抗"
 
-#: Source/monster.cpp:4700
+#: Source/monster.cpp:4704
 msgid "Some Magic Immunities"
 msgstr "一些​魔法​免疫"
 
-#: Source/msg.cpp:484
+#: Source/msg.cpp:495
 msgid "Trying to drop a floor item?"
 msgstr "想​扔​地板嗎？"
 
-#: Source/msg.cpp:951 Source/msg.cpp:975 Source/msg.cpp:998 Source/msg.cpp:1113
-#: Source/msg.cpp:1136 Source/msg.cpp:1158 Source/msg.cpp:1180
+#: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
+#: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
+#: Source/msg.cpp:1281
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s}​施放​了​非法​法術。"
 
-#: Source/msg.cpp:1529 Source/multi.cpp:815
+#: Source/msg.cpp:1668 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "玩​家​{:s}(​等​級{:d})剛​加入​了​遊戲"
 
-#: Source/msg.cpp:1826
+#: Source/msg.cpp:1972
 msgid "Waiting for game data..."
 msgstr "正在​等待​遊戲​數據。。。"
 
-#: Source/msg.cpp:1834
+#: Source/msg.cpp:1980
 msgid "The game ended"
 msgstr "比賽​結束​了"
 
-#: Source/msg.cpp:1840
+#: Source/msg.cpp:1986
 msgid "Unable to get level data"
 msgstr "無​法​獲取層數據"
 
@@ -5874,547 +6007,546 @@ msgstr "玩​家​{:s}​殺死​了​迪亞波羅並​離開​了​遊�
 msgid "Player '{:s}' dropped due to timeout"
 msgstr "由於​超時，玩家​{:s}​的​掉落物​被​刪除"
 
-#: Source/multi.cpp:817
+#: Source/multi.cpp:806
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "玩​家​{:s}(​等​級{:d})​已​經​在​遊戲​中"
 
 #. TRANSLATORS: Shrine Name Block
-#: Source/objects.cpp:101
+#: Source/objects.cpp:104
 msgid "Mysterious"
 msgstr "神秘​的"
 
-#: Source/objects.cpp:102
+#: Source/objects.cpp:105
 msgid "Hidden"
 msgstr "隱​藏"
 
-#: Source/objects.cpp:103
+#: Source/objects.cpp:106
 msgid "Gloomy"
 msgstr "陰鬱​的"
 
-#: Source/objects.cpp:105 Source/objects.cpp:112
+#: Source/objects.cpp:108 Source/objects.cpp:115
 msgid "Magical"
 msgstr "神奇​的"
 
-#: Source/objects.cpp:106
+#: Source/objects.cpp:109
 msgid "Stone"
 msgstr "巖石"
 
-#: Source/objects.cpp:107
+#: Source/objects.cpp:110
 msgid "Religious"
 msgstr "宗教​的"
 
-#: Source/objects.cpp:108
+#: Source/objects.cpp:111
 msgid "Enchanted"
 msgstr "被​迷住​了"
 
-#: Source/objects.cpp:109
+#: Source/objects.cpp:112
 msgid "Thaumaturgic"
 msgstr "Thaumaturogic​公司"
 
-#: Source/objects.cpp:110
+#: Source/objects.cpp:113
 msgid "Fascinating"
 msgstr "炫​目"
 
-#: Source/objects.cpp:111
+#: Source/objects.cpp:114
 msgid "Cryptic"
 msgstr "神秘​的"
 
-#: Source/objects.cpp:113
+#: Source/objects.cpp:116
 msgid "Eldritch"
 msgstr "埃爾德里​奇"
 
-#: Source/objects.cpp:114
+#: Source/objects.cpp:117
 msgid "Eerie"
 msgstr "詭異​的"
 
-#: Source/objects.cpp:115
+#: Source/objects.cpp:118
 msgid "Divine"
 msgstr "至​聖"
 
-#: Source/objects.cpp:117
+#: Source/objects.cpp:120
 msgid "Sacred"
 msgstr "聖​潔"
 
-#: Source/objects.cpp:118
+#: Source/objects.cpp:121
 msgid "Spiritual"
 msgstr "靈性"
 
-#: Source/objects.cpp:119
+#: Source/objects.cpp:122
 msgid "Spooky"
 msgstr "幽靈​般​的"
 
-#: Source/objects.cpp:120
+#: Source/objects.cpp:123
 msgid "Abandoned"
 msgstr "被​遺棄​的"
 
-#: Source/objects.cpp:121
+#: Source/objects.cpp:124
 msgid "Creepy"
 msgstr "令​人​毛骨悚然"
 
-#: Source/objects.cpp:122
+#: Source/objects.cpp:125
 msgid "Quiet"
 msgstr "安靜​的"
 
-#: Source/objects.cpp:123
+#: Source/objects.cpp:126
 msgid "Secluded"
 msgstr "與​世隔絕"
 
-#: Source/objects.cpp:124
+#: Source/objects.cpp:127
 msgid "Ornate"
 msgstr "華麗​的"
 
-#: Source/objects.cpp:125
+#: Source/objects.cpp:128
 msgid "Glimmering"
 msgstr "微光"
 
-#: Source/objects.cpp:126
+#: Source/objects.cpp:129
 msgid "Tainted"
 msgstr "污染​魔"
 
-#: Source/objects.cpp:127
+#: Source/objects.cpp:130
 msgid "Oily"
 msgstr "油性"
 
-#: Source/objects.cpp:128
+#: Source/objects.cpp:131
 msgid "Glowing"
 msgstr "輝​光"
 
-#: Source/objects.cpp:129
+#: Source/objects.cpp:132
 msgid "Mendicant's"
 msgstr "乞丐​的"
 
-#: Source/objects.cpp:130
+#: Source/objects.cpp:133
 msgid "Sparkling"
 msgstr "閃​亮​的"
 
-#: Source/objects.cpp:131
+#: Source/objects.cpp:134
 msgid "Town"
 msgstr "城鎮"
 
-#: Source/objects.cpp:132
+#: Source/objects.cpp:135
 msgid "Shimmering"
 msgstr "光彩"
 
-#: Source/objects.cpp:133
+#: Source/objects.cpp:136
 msgid "Solar"
 msgstr "日光"
 
 #. TRANSLATORS: Shrine Name Block end
-#: Source/objects.cpp:135
+#: Source/objects.cpp:138
 msgid "Murphy's"
 msgstr "墨菲​的"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:265
+#: Source/objects.cpp:268
 msgid "The Great Conflict"
 msgstr "大​沖​突"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:266
+#: Source/objects.cpp:269
 msgid "The Wages of Sin are War"
 msgstr "罪惡​的​代價​是​戰爭"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:267
+#: Source/objects.cpp:270
 msgid "The Tale of the Horadrim"
 msgstr "赫拉迪姆​的​故事"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:268
+#: Source/objects.cpp:271
 msgid "The Dark Exile"
 msgstr "黑暗​的​流放"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:269
+#: Source/objects.cpp:272
 msgid "The Sin War"
 msgstr "原罪​之​戰"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:270
+#: Source/objects.cpp:273
 msgid "The Binding of the Three"
 msgstr "三者​的​結合"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:271
+#: Source/objects.cpp:274
 msgid "The Realms Beyond"
 msgstr "超越​的​王國"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:272
+#: Source/objects.cpp:275
 msgid "Tale of the Three"
 msgstr "三​部​曲"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:273
+#: Source/objects.cpp:276
 msgid "The Black King"
 msgstr "黑​王"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:274
+#: Source/objects.cpp:277
 msgid "Journal: The Ensorcellment"
 msgstr "期​刊: 感悟"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:275
+#: Source/objects.cpp:278
 msgid "Journal: The Meeting"
 msgstr "日​記: 會議"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:276
+#: Source/objects.cpp:279
 msgid "Journal: The Tirade"
 msgstr "日​記: 長篇​大論"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:277
+#: Source/objects.cpp:280
 msgid "Journal: His Power Grows"
 msgstr "日​記: 他​的​力量​在​增長"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:278
+#: Source/objects.cpp:281
 msgid "Journal: NA-KRUL"
 msgstr "期​刊: NA-KRUL"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:279
+#: Source/objects.cpp:282
 msgid "Journal: The End"
 msgstr "日​記: 結束"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:280
+#: Source/objects.cpp:283
 msgid "A Spellbook"
 msgstr "咒​語書"
 
-#: Source/objects.cpp:5365
+#: Source/objects.cpp:5339
 msgid "Crucified Skeleton"
 msgstr "十字​架​骷髏"
 
-#: Source/objects.cpp:5369
+#: Source/objects.cpp:5343
 msgid "Lever"
 msgstr "控制​桿"
 
-#: Source/objects.cpp:5378
+#: Source/objects.cpp:5352
 msgid "Open Door"
 msgstr "打開​的​門"
 
-#: Source/objects.cpp:5380
+#: Source/objects.cpp:5354
 msgid "Closed Door"
 msgstr "關閉​的​門"
 
-#: Source/objects.cpp:5382
+#: Source/objects.cpp:5356
 msgid "Blocked Door"
 msgstr "封死​的​門"
 
-#: Source/objects.cpp:5387
+#: Source/objects.cpp:5361
 msgid "Ancient Tome"
 msgstr "古籍"
 
-#: Source/objects.cpp:5389
+#: Source/objects.cpp:5363
 msgid "Book of Vileness"
 msgstr "卑鄙書"
 
-#: Source/objects.cpp:5394
+#: Source/objects.cpp:5368
 msgid "Skull Lever"
 msgstr "頭​骨槓​桿"
 
-#: Source/objects.cpp:5397
+#: Source/objects.cpp:5371
 msgid "Mythical Book"
 msgstr "神話書"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5375
 msgid "Small Chest"
 msgstr "小​箱子"
 
-#: Source/objects.cpp:5405
+#: Source/objects.cpp:5379
 msgid "Chest"
 msgstr "箱子"
 
-#: Source/objects.cpp:5410
+#: Source/objects.cpp:5384
 msgid "Large Chest"
 msgstr "大​箱子"
 
-#: Source/objects.cpp:5413
+#: Source/objects.cpp:5387
 msgid "Sarcophagus"
 msgstr "石​棺"
 
-#: Source/objects.cpp:5416
+#: Source/objects.cpp:5390
 msgid "Bookshelf"
 msgstr "書架"
 
-#: Source/objects.cpp:5420
+#: Source/objects.cpp:5394
 msgid "Bookcase"
 msgstr "書​櫃"
 
-#: Source/objects.cpp:5425
+#: Source/objects.cpp:5399
 msgid "Pod"
 msgstr "豆莢"
 
-#: Source/objects.cpp:5427
+#: Source/objects.cpp:5401
 msgid "Urn"
 msgstr "罐子"
 
-#: Source/objects.cpp:5429
+#: Source/objects.cpp:5403
 msgid "Barrel"
 msgstr "桶"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5433
+#: Source/objects.cpp:5407
 msgid "{:s} Shrine"
 msgstr "{:s}​神殿"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5411
 msgid "Skeleton Tome"
 msgstr "骷​髏​大部​頭"
 
-#: Source/objects.cpp:5440
+#: Source/objects.cpp:5414
 msgid "Library Book"
 msgstr "圖​書館圖書"
 
-#: Source/objects.cpp:5443
+#: Source/objects.cpp:5417
 msgid "Blood Fountain"
 msgstr "血泉"
 
-#: Source/objects.cpp:5446
+#: Source/objects.cpp:5420
 msgid "Decapitated Body"
 msgstr "斷​頭屍體"
 
-#: Source/objects.cpp:5449
+#: Source/objects.cpp:5423
 msgid "Book of the Blind"
 msgstr "盲人​書"
 
-#: Source/objects.cpp:5452
+#: Source/objects.cpp:5426
 msgid "Book of Blood"
 msgstr "血​書"
 
-#: Source/objects.cpp:5455
+#: Source/objects.cpp:5429
 msgid "Purifying Spring"
 msgstr "凈化彈簧"
 
-#: Source/objects.cpp:5462 Source/objects.cpp:5486
+#: Source/objects.cpp:5436 Source/objects.cpp:5460
 msgid "Weapon Rack"
 msgstr "武器​架"
 
-#: Source/objects.cpp:5465
+#: Source/objects.cpp:5439
 msgid "Goat Shrine"
 msgstr "山​羊​神殿"
 
-#: Source/objects.cpp:5468
+#: Source/objects.cpp:5442
 msgid "Cauldron"
 msgstr "大​鍋"
 
-#: Source/objects.cpp:5471
+#: Source/objects.cpp:5445
 msgid "Murky Pool"
 msgstr "渾濁​的​水池"
 
-#: Source/objects.cpp:5474
+#: Source/objects.cpp:5448
 msgid "Fountain of Tears"
 msgstr "淚泉"
 
-#: Source/objects.cpp:5477
+#: Source/objects.cpp:5451
 msgid "Steel Tome"
 msgstr "鋼​卷軸"
 
-#: Source/objects.cpp:5480
+#: Source/objects.cpp:5454
 msgid "Pedestal of Blood"
 msgstr "血座"
 
-#: Source/objects.cpp:5489
+#: Source/objects.cpp:5463
 msgid "Mushroom Patch"
 msgstr "蘑菇斑"
 
-#: Source/objects.cpp:5492
+#: Source/objects.cpp:5466
 msgid "Vile Stand"
 msgstr "卑鄙​的​立場"
 
-#: Source/objects.cpp:5495
+#: Source/objects.cpp:5469
 msgid "Slain Hero"
 msgstr "被​殺​英雄"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5502
+#: Source/objects.cpp:5476
 msgid "Trapped {:s}"
 msgstr "陷阱​{:s}"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5508
+#: Source/objects.cpp:5482
 msgid "{:s} (disabled)"
 msgstr "{:s}​（​已​禁用​）"
 
-#: Source/panels/charpanel.cpp:109
+#: Source/panels/charpanel.cpp:110
 msgid "MAX"
 msgstr "馬​克斯"
 
-#: Source/panels/charpanel.cpp:119
+#: Source/panels/charpanel.cpp:120
 #, fuzzy
 #| msgid "Level:"
 msgid "Level"
 msgstr "等​級: "
 
-#: Source/panels/charpanel.cpp:121
+#: Source/panels/charpanel.cpp:122
 #, fuzzy
 #| msgid "Experience: "
 msgid "Experience"
 msgstr "經​驗: "
 
-#: Source/panels/charpanel.cpp:123
+#: Source/panels/charpanel.cpp:124
 #, fuzzy
 #| msgid "Next Level: "
 msgid "Next level"
 msgstr "下​一​級: "
 
-#: Source/panels/charpanel.cpp:126
+#: Source/panels/charpanel.cpp:127
 msgid "None"
 msgstr "沒​有​一​個"
 
-#: Source/panels/charpanel.cpp:132
+#: Source/panels/charpanel.cpp:133
 msgid "Base"
 msgstr ""
 
-#: Source/panels/charpanel.cpp:133
+#: Source/panels/charpanel.cpp:134
 #, fuzzy
 #| msgid "No"
 msgid "Now"
 msgstr "曾​經​打開​的​現​在​關閉​了"
 
-#: Source/panels/charpanel.cpp:134
+#: Source/panels/charpanel.cpp:135
 #, fuzzy
 #| msgid "Strength:"
 msgid "Strength"
 msgstr "力量"
 
-#: Source/panels/charpanel.cpp:138
+#: Source/panels/charpanel.cpp:139
 #, fuzzy
 #| msgid "Magic:"
 msgid "Magic"
 msgstr "魔術"
 
-#: Source/panels/charpanel.cpp:142
+#: Source/panels/charpanel.cpp:143
 #, fuzzy
 #| msgid "Dexterity:"
 msgid "Dexterity"
 msgstr "靈​巧"
 
-#: Source/panels/charpanel.cpp:145
+#: Source/panels/charpanel.cpp:146
 #, fuzzy
 #| msgid "Vitality:"
 msgid "Vitality"
 msgstr "活力"
 
-#: Source/panels/charpanel.cpp:148
+#: Source/panels/charpanel.cpp:149
 #, fuzzy
 msgid "Points to distribute"
 msgstr "生命​值: {:d}-{:d}"
 
-#: Source/panels/charpanel.cpp:158
+#: Source/panels/charpanel.cpp:159
 #, fuzzy
 #| msgid "armor class: {:d}"
 msgid "Armor class"
 msgstr "護​甲​等​級: {:d}"
 
-#: Source/panels/charpanel.cpp:160
+#: Source/panels/charpanel.cpp:161
 #, fuzzy
 msgid "To hit"
 msgstr "生命​點{:d}​的​{:d}"
 
-#: Source/panels/charpanel.cpp:162
+#: Source/panels/charpanel.cpp:163
 #, fuzzy
 msgid "Damage"
 msgstr "潛​在​傷害​-​不​是​弓箭"
 
-#: Source/panels/charpanel.cpp:168
+#: Source/panels/charpanel.cpp:170
 #, fuzzy
 msgid "Life"
 msgstr "生活"
 
-#: Source/panels/charpanel.cpp:172
+#: Source/panels/charpanel.cpp:174
 msgid "Mana"
 msgstr "法力"
 
-#: Source/panels/charpanel.cpp:177
+#: Source/panels/charpanel.cpp:179
 #, fuzzy
 #| msgid "Resist Magic: {:+d}%"
 msgid "Resist magic"
 msgstr "抵抗​魔法: {:+d}%"
 
-#: Source/panels/charpanel.cpp:179
+#: Source/panels/charpanel.cpp:181
 #, fuzzy
 #| msgid "Resists: "
 msgid "Resist fire"
 msgstr "火焰​抗性: {:+d}%"
 
-#: Source/panels/charpanel.cpp:181
+#: Source/panels/charpanel.cpp:183
 #, fuzzy
 #| msgid "Resist Lightning: {:+d}%"
 msgid "Resist lightning"
 msgstr "閃​電​抗性: {:+d}%"
 
-#: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
-#: Source/panels/mainpanel.cpp:111
+#: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
+#: Source/panels/mainpanel.cpp:108
 #, fuzzy
 #| msgid "Voices"
 msgid "voice"
 msgstr "語音​製作、導演​和​配音"
 
-#: Source/panels/mainpanel.cpp:87
+#: Source/panels/mainpanel.cpp:84
 #, fuzzy
 msgid "char"
 msgstr "角色"
 
-#: Source/panels/mainpanel.cpp:88
+#: Source/panels/mainpanel.cpp:85
 #, fuzzy
 #| msgid "Quests"
 msgid "quests"
 msgstr "任務"
 
-#: Source/panels/mainpanel.cpp:89
+#: Source/panels/mainpanel.cpp:86
 #, fuzzy
 #| msgid "Map"
 msgid "map"
 msgstr "地​圖"
 
-#: Source/panels/mainpanel.cpp:90
+#: Source/panels/mainpanel.cpp:87
 #, fuzzy
 msgid "menu"
 msgstr "菜單"
 
-#: Source/panels/mainpanel.cpp:91
+#: Source/panels/mainpanel.cpp:88
 #, fuzzy
 #| msgid "Inv"
 msgid "inv"
 msgstr "物品​欄"
 
-#: Source/panels/mainpanel.cpp:92
+#: Source/panels/mainpanel.cpp:89
 #, fuzzy
 #| msgid "Spells"
 msgid "spells"
 msgstr "法​術"
 
-#: Source/panels/mainpanel.cpp:104 Source/panels/mainpanel.cpp:106
-#: Source/panels/mainpanel.cpp:108
+#: Source/panels/mainpanel.cpp:101 Source/panels/mainpanel.cpp:103
+#: Source/panels/mainpanel.cpp:105
 msgid "mute"
 msgstr ""
 
-#: Source/pfile.cpp:260
+#: Source/pfile.cpp:242
 msgid "Failed to open player archive for writing."
 msgstr "無​法​打開​播放器​存檔​進行​寫入。"
 
-#: Source/pfile.cpp:385
+#: Source/pfile.cpp:377
 msgid "Unable to open archive"
 msgstr "無​法​打開​存檔"
 
-#: Source/pfile.cpp:387
+#: Source/pfile.cpp:379
 msgid "Unable to load character"
 msgstr "無​法​載入​角色"
 
-#: Source/pfile.cpp:410 Source/pfile.cpp:430
+#: Source/pfile.cpp:403 Source/pfile.cpp:423
 msgid "Unable to read to save file archive"
 msgstr "無​法​讀取​以​儲存檔​案​存檔"
 
-#: Source/pfile.cpp:449
+#: Source/pfile.cpp:442
 msgid "Unable to write to save file archive"
 msgstr "無​法寫​入​以​儲存檔​案​存檔"
 
-#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
-#: Source/plrmsg.cpp:89
+#: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s}​（​等​級{:d}​）: {:s}"
 
@@ -6429,7 +6561,7 @@ msgstr ""
 msgid "%i gold"
 msgstr "金幣"
 
-#: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:56
+#: Source/qol/monhealthbar.cpp:37 Source/qol/xpbar.cpp:56
 #, fuzzy
 #| msgid ""
 #| "Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"
@@ -6472,6 +6604,16 @@ msgstr "加巴德弱者"
 msgid "Zhar the Mad"
 msgstr "瘋狂​的​扎爾"
 
+#: Source/quests.cpp:45
+msgid "Lachdanan"
+msgstr ""
+
+#: Source/quests.cpp:46
+#, fuzzy
+#| msgid "Exit Diablo"
+msgid "Diablo"
+msgstr "退出​暗​黑破壞神"
+
 #: Source/quests.cpp:47
 msgid "The Butcher"
 msgstr "屠夫"
@@ -6501,7 +6643,7 @@ msgid "Poisoned Water Supply"
 msgstr "中毒​供水"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:55 Source/quests.cpp:90
+#: Source/quests.cpp:55 Source/quests.cpp:91
 msgid "The Chamber of Bone"
 msgstr "骨腔"
 
@@ -6529,6 +6671,10 @@ msgstr "遊​蕩​交易者"
 msgid "The Defiler"
 msgstr "污染者"
 
+#: Source/quests.cpp:62
+msgid "Na-Krul"
+msgstr ""
+
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
 msgstr "世界​的​基石"
@@ -6539,27 +6685,27 @@ msgid "The Jersey's Jersey"
 msgstr "球衣​是​球衣"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:89
+#: Source/quests.cpp:90
 msgid "King Leoric's Tomb"
 msgstr "利奧里克國王​墓"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:91 Source/setmaps.cpp:26
+#: Source/quests.cpp:92 Source/setmaps.cpp:26
 msgid "Maze"
 msgstr "迷宮"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:92
+#: Source/quests.cpp:93
 msgid "A Dark Passage"
 msgstr "黑暗​的​通道"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:93
+#: Source/quests.cpp:94
 msgid "Unholy Altar"
 msgstr "邪惡​祭​壇"
 
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
-#: Source/quests.cpp:449
+#: Source/quests.cpp:450
 msgid "To {:s}"
 msgstr "到​{:s}"
 
@@ -6944,298 +7090,331 @@ msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "符文石"
 
-#: Source/stores.cpp:179 Source/stores.cpp:186
+#: Source/stores.cpp:91
+#, fuzzy
+#| msgid "Griswold's Edge"
+msgid "Griswold"
+msgstr "格里斯沃​爾德​之​鋒"
+
+#: Source/stores.cpp:92
+msgid "Pepin"
+msgstr ""
+
+#: Source/stores.cpp:94
+msgid "Ogden"
+msgstr ""
+
+#: Source/stores.cpp:95
+msgid "Cain"
+msgstr ""
+
+#: Source/stores.cpp:96
+#, fuzzy
+#| msgid "Talk to Farnham"
+msgid "Farnham"
+msgstr "和​法納姆談談"
+
+#: Source/stores.cpp:97
+msgid "Adria"
+msgstr ""
+
+#: Source/stores.cpp:98 Source/stores.cpp:1305
+#, fuzzy
+#| msgid "brilliance"
+msgid "Gillian"
+msgstr "輝煌"
+
+#: Source/stores.cpp:99
+msgid "Wirt"
+msgstr ""
+
+#: Source/stores.cpp:218 Source/stores.cpp:225
+msgid "Back"
+msgstr "返回"
+
+#: Source/stores.cpp:250 Source/stores.cpp:257
 msgid ",  "
 msgstr ","
 
-#: Source/stores.cpp:195
+#: Source/stores.cpp:266
 msgid "Damage: {:d}-{:d}  "
 msgstr "傷害: {:d}-{:d}"
 
-#: Source/stores.cpp:197
+#: Source/stores.cpp:268
 msgid "Armor: {:d}  "
 msgstr "護​甲: {:d}"
 
-#: Source/stores.cpp:199
+#: Source/stores.cpp:270
 msgid "Dur: {:d}/{:d},  "
 msgstr "杜爾: {:d}/{:d}，"
 
-#: Source/stores.cpp:202
+#: Source/stores.cpp:273
 msgid "Indestructible,  "
 msgstr "堅​不​可摧，"
 
-#: Source/stores.cpp:210
+#: Source/stores.cpp:281
 msgid "No required attributes"
 msgstr "沒​有​必需​的​屬性"
 
-#: Source/stores.cpp:243 Source/stores.cpp:995 Source/stores.cpp:1239
+#: Source/stores.cpp:314 Source/stores.cpp:1052 Source/stores.cpp:1292
 msgid "Welcome to the"
 msgstr "歡​迎來​到"
 
-#: Source/stores.cpp:244
+#: Source/stores.cpp:315
 msgid "Blacksmith's shop"
 msgstr "鐵匠​鋪"
 
-#: Source/stores.cpp:245 Source/stores.cpp:610 Source/stores.cpp:997
-#: Source/stores.cpp:1054 Source/stores.cpp:1241 Source/stores.cpp:1253
-#: Source/stores.cpp:1265
+#: Source/stores.cpp:316 Source/stores.cpp:670 Source/stores.cpp:1054
+#: Source/stores.cpp:1110 Source/stores.cpp:1294 Source/stores.cpp:1306
+#: Source/stores.cpp:1318
 msgid "Would you like to:"
 msgstr "您​想: "
 
-#: Source/stores.cpp:246
+#: Source/stores.cpp:317
 msgid "Talk to Griswold"
 msgstr "和​格里斯沃​爾德談談"
 
-#: Source/stores.cpp:247
+#: Source/stores.cpp:318
 msgid "Buy basic items"
 msgstr "購​買​基本​物品"
 
-#: Source/stores.cpp:248
+#: Source/stores.cpp:319
 msgid "Buy premium items"
 msgstr "購​買​高檔​商品"
 
-#: Source/stores.cpp:249 Source/stores.cpp:613
+#: Source/stores.cpp:320 Source/stores.cpp:673
 msgid "Sell items"
 msgstr "出售​物品"
 
-#: Source/stores.cpp:250
+#: Source/stores.cpp:321
 msgid "Repair items"
 msgstr "修理​專案"
 
-#: Source/stores.cpp:251
+#: Source/stores.cpp:322
 msgid "Leave the shop"
 msgstr "離​開​商店"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
+#: Source/stores.cpp:360 Source/stores.cpp:714 Source/stores.cpp:1089
 msgid "I have these items for sale:             Your gold: {:d}"
 msgstr "我​有​這​些​東西​要​賣: 你​的​金幣: {:d}"
 
-#: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
-#: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
-#: Source/stores.cpp:660 Source/stores.cpp:751 Source/stores.cpp:767
-#: Source/stores.cpp:832 Source/stores.cpp:848 Source/stores.cpp:1038
-#: Source/stores.cpp:1154 Source/stores.cpp:1170 Source/stores.cpp:1205
-#: Source/stores.cpp:1232
-msgid "Back"
-msgstr "返回"
-
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:351
+#: Source/stores.cpp:420
 msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr "我​有​這​些​高檔​商品​出售: 你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:474 Source/stores.cpp:746
+#: Source/stores.cpp:541 Source/stores.cpp:804
 msgid "You have nothing I want.             Your gold: {:d}"
 msgstr "你​沒​有​我​想要​的​東西。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:489 Source/stores.cpp:761
+#: Source/stores.cpp:554 Source/stores.cpp:817
 msgid "Which item is for sale?             Your gold: {:d}"
 msgstr "哪​件​商品​在​出售？你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:564
+#: Source/stores.cpp:627
 msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr "你​沒什麼​可​修​的。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:579
+#: Source/stores.cpp:640
 msgid "Repair which item?             Your gold: {:d}"
 msgstr "修理​哪​個​專案？你​的​金幣: {:d}"
 
-#: Source/stores.cpp:609
+#: Source/stores.cpp:669
 msgid "Witch's shack"
 msgstr "女​巫小屋"
 
-#: Source/stores.cpp:611
+#: Source/stores.cpp:671
 msgid "Talk to Adria"
 msgstr "和​艾德里亞談​談"
 
-#: Source/stores.cpp:612 Source/stores.cpp:999
+#: Source/stores.cpp:672 Source/stores.cpp:1056
 msgid "Buy items"
 msgstr "購​買​物品"
 
-#: Source/stores.cpp:614
+#: Source/stores.cpp:674
 msgid "Recharge staves"
 msgstr "補​給棒"
 
-#: Source/stores.cpp:615
+#: Source/stores.cpp:675
 msgid "Leave the shack"
 msgstr "離​開​小​屋"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:827
+#: Source/stores.cpp:881
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr "你​沒什麼​好​充電​的。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:842
+#: Source/stores.cpp:894
 msgid "Recharge which item?             Your gold: {:d}"
 msgstr "給​哪​個​專案​充值？你​的​金幣: {:d}"
 
-#: Source/stores.cpp:858
+#: Source/stores.cpp:908
 msgid "You do not have enough gold"
 msgstr "你​沒​有​足夠​的​金幣"
 
-#: Source/stores.cpp:866
+#: Source/stores.cpp:916
 msgid "You do not have enough room in inventory"
 msgstr "您​的​庫存​空間​不足"
 
-#: Source/stores.cpp:903
+#: Source/stores.cpp:953
 msgid "Do we have a deal?"
 msgstr "我​們​有​協議嗎？"
 
-#: Source/stores.cpp:906
+#: Source/stores.cpp:956
 msgid "Are you sure you want to identify this item?"
 msgstr "確​定​要​標識​此​專案嗎？"
 
-#: Source/stores.cpp:912
+#: Source/stores.cpp:962
 msgid "Are you sure you want to buy this item?"
 msgstr "您​確定​要​購買​此​商品​嗎？"
 
-#: Source/stores.cpp:915
+#: Source/stores.cpp:965
 msgid "Are you sure you want to recharge this item?"
 msgstr "您​確定​要​為該​物品​充值​嗎？"
 
-#: Source/stores.cpp:919
+#: Source/stores.cpp:969
 msgid "Are you sure you want to sell this item?"
 msgstr "你​確定​要​賣這個東​西嗎？"
 
-#: Source/stores.cpp:922
+#: Source/stores.cpp:972
 msgid "Are you sure you want to repair this item?"
 msgstr "確​定​要​修復​此​專案嗎？"
 
-#: Source/stores.cpp:936 Source/towners.cpp:157
+#: Source/stores.cpp:986 Source/towners.cpp:157
 msgid "Wirt the Peg-legged boy"
 msgstr "你​是​那​個​假腿​男孩​嗎"
 
-#: Source/stores.cpp:939 Source/stores.cpp:946
+#: Source/stores.cpp:989 Source/stores.cpp:996
 msgid "Talk to Wirt"
 msgstr "和​沃特談談"
 
-#: Source/stores.cpp:940
+#: Source/stores.cpp:990
 msgid "I have something for sale,"
 msgstr "我​有​東西​要​賣，"
 
-#: Source/stores.cpp:941
+#: Source/stores.cpp:991
 msgid "but it will cost 50 gold"
 msgstr "但​要​花​50​金"
 
-#: Source/stores.cpp:942
+#: Source/stores.cpp:992
 msgid "just to take a look. "
 msgstr "只​是​想​看看。"
 
-#: Source/stores.cpp:943
+#: Source/stores.cpp:993
 msgid "What have you got?"
 msgstr "你​有​什麼發現？"
 
-#: Source/stores.cpp:944 Source/stores.cpp:947 Source/stores.cpp:1057
-#: Source/stores.cpp:1255
+#: Source/stores.cpp:994 Source/stores.cpp:997 Source/stores.cpp:1113
+#: Source/stores.cpp:1308
 msgid "Say goodbye"
 msgstr "說​再​見"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:957
+#: Source/stores.cpp:1007
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr "我​有​這個​東西​要​賣: 你​的​金幣: {:d}"
 
-#: Source/stores.cpp:974
+#: Source/stores.cpp:1030
 msgid "Leave"
 msgstr "離​開"
 
-#: Source/stores.cpp:996
+#: Source/stores.cpp:1053
 msgid "Healer's home"
 msgstr "療​養院"
 
-#: Source/stores.cpp:998
+#: Source/stores.cpp:1055
 msgid "Talk to Pepin"
 msgstr "和​佩平​談談"
 
-#: Source/stores.cpp:1000
+#: Source/stores.cpp:1057
 msgid "Leave Healer's home"
 msgstr "離​開療​養院"
 
-#: Source/stores.cpp:1053
+#: Source/stores.cpp:1109
 msgid "The Town Elder"
 msgstr "鎮​上​的​長​老"
 
-#: Source/stores.cpp:1055
+#: Source/stores.cpp:1111
 msgid "Talk to Cain"
 msgstr "和​凱恩談談"
 
-#: Source/stores.cpp:1056
+#: Source/stores.cpp:1112
 msgid "Identify an item"
 msgstr "標​識​專案"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1149
+#: Source/stores.cpp:1205
 msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr "你​沒什麼​可​指認​的。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1164
+#: Source/stores.cpp:1218
 msgid "Identify which item?             Your gold: {:d}"
 msgstr "確定​哪​一​項？你​的​金幣: {:d}"
 
-#: Source/stores.cpp:1184
+#: Source/stores.cpp:1237
 msgid "This item is:"
 msgstr "此​專案​是: "
 
-#: Source/stores.cpp:1187
+#: Source/stores.cpp:1240
 msgid "Done"
 msgstr "多恩"
 
-#: Source/stores.cpp:1196
+#: Source/stores.cpp:1249
 msgid "Talk to {:s}"
 msgstr "與​{:s}​交談"
 
-#: Source/stores.cpp:1200
+#: Source/stores.cpp:1253
 msgid "Talking to {:s}"
 msgstr "與​{:s}​交談"
 
-#: Source/stores.cpp:1202
+#: Source/stores.cpp:1255
 msgid "is not available"
 msgstr "不​可​用"
 
-#: Source/stores.cpp:1203
+#: Source/stores.cpp:1256
 msgid "in the shareware"
 msgstr "在​共​享軟​體​中"
 
-#: Source/stores.cpp:1204
+#: Source/stores.cpp:1257
 msgid "version"
 msgstr "版本"
 
-#: Source/stores.cpp:1231
+#: Source/stores.cpp:1284
 msgid "Gossip"
 msgstr "流言蜚語"
 
-#: Source/stores.cpp:1240
+#: Source/stores.cpp:1293
 msgid "Rising Sun"
 msgstr "日​出"
 
-#: Source/stores.cpp:1242
+#: Source/stores.cpp:1295
 msgid "Talk to Ogden"
 msgstr "與​奧​格登​交談"
 
-#: Source/stores.cpp:1243
+#: Source/stores.cpp:1296
 msgid "Leave the tavern"
 msgstr "離​開​酒館"
 
-#: Source/stores.cpp:1254
+#: Source/stores.cpp:1307
 msgid "Talk to Gillian"
 msgstr "和​阿嬌談​談"
 
-#: Source/stores.cpp:1264 Source/towners.cpp:212
+#: Source/stores.cpp:1317 Source/towners.cpp:212
 msgid "Farnham the Drunk"
 msgstr "醉​漢​法納​姆"
 
-#: Source/stores.cpp:1266
+#: Source/stores.cpp:1319
 msgid "Talk to Farnham"
 msgstr "和​法納姆談談"
 
-#: Source/stores.cpp:1267
+#: Source/stores.cpp:1320
 msgid "Say Goodbye"
 msgstr "說​再​見"
 
@@ -10698,6 +10877,10 @@ msgstr "農夫萊​斯特"
 msgid "Complete Nut"
 msgstr "全​套​螺母"
 
+#: Source/towners.cpp:266
+msgid "Celia"
+msgstr ""
+
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
 msgstr "被​殺​的​老​鄉"
@@ -10727,17 +10910,17 @@ msgid "Down to Crypt"
 msgstr "去​地下室"
 
 #: Source/trigs.cpp:412 Source/trigs.cpp:492 Source/trigs.cpp:539
-#: Source/trigs.cpp:630
+#: Source/trigs.cpp:634
 msgid "Up to level {:d}"
 msgstr "達​到​{:d}​層"
 
 #: Source/trigs.cpp:414 Source/trigs.cpp:469 Source/trigs.cpp:521
-#: Source/trigs.cpp:596 Source/trigs.cpp:613 Source/trigs.cpp:660
+#: Source/trigs.cpp:600 Source/trigs.cpp:617 Source/trigs.cpp:664
 msgid "Up to town"
 msgstr "進​城"
 
-#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:552
-#: Source/trigs.cpp:577 Source/trigs.cpp:642
+#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:556
+#: Source/trigs.cpp:581 Source/trigs.cpp:646
 msgid "Down to level {:d}"
 msgstr "下​到​{:d}"
 
@@ -10749,14 +10932,14 @@ msgstr "上​到​墓穴​{:d}​層"
 msgid "Down to Crypt level {:d}"
 msgstr "下​到​墓穴​{:d}​層"
 
-#: Source/trigs.cpp:564
+#: Source/trigs.cpp:568
 msgid "Up to Nest level {:d}"
 msgstr "上​到​巢穴{:d}​層"
 
-#: Source/trigs.cpp:673
+#: Source/trigs.cpp:677
 msgid "Down to Diablo"
 msgstr "下​到​迪亞波羅"
 
-#: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
+#: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "返回​到​{:d}​層"

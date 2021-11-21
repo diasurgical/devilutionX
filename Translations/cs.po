@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-08 21:56+0200\n"
+"POT-Creation-Date: 2021-11-21 05:44+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Psojed <realpsojed@gmail.com>\n"
 "Language-Team: Psojed (realpsojed@gmail.com)\n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -310,15 +310,49 @@ msgstr "Kruh Jednoho Tisíce"
 msgid "\tNo souls were sold in the making of this game."
 msgstr "\tŽádné duše nebyly zaprodány při tvorbě této hry."
 
-#: Source/DiabloUI/dialogs.cpp:171 Source/DiabloUI/dialogs.cpp:183
-#: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
-#: Source/DiabloUI/selgame.cpp:164 Source/DiabloUI/selgame.cpp:182
-#: Source/DiabloUI/selgame.cpp:316 Source/DiabloUI/selgame.cpp:390
+#: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
+#: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
+#: Source/DiabloUI/selgame.cpp:193 Source/DiabloUI/selgame.cpp:211
+#: Source/DiabloUI/selgame.cpp:352 Source/DiabloUI/selgame.cpp:428
 #: Source/DiabloUI/selhero.cpp:186 Source/DiabloUI/selhero.cpp:211
 #: Source/DiabloUI/selhero.cpp:281 Source/DiabloUI/selhero.cpp:536
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
 msgstr "OK"
+
+#: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
+#, fuzzy
+#| msgid "Down to Diablo"
+msgid "Switch to Diablo"
+msgstr "Dolů do Hnízda úrovně {:d}"
+
+#: Source/DiabloUI/extrasmenu.cpp:41
+#, fuzzy
+#| msgid "Exit Hellfire"
+msgid "Switch to Hellfire"
+msgstr "Ukonči Hellfire"
+
+#: Source/DiabloUI/extrasmenu.cpp:43
+msgid "Switch to Fullgame"
+msgstr ""
+
+#: Source/DiabloUI/extrasmenu.cpp:43
+#, fuzzy
+#| msgid "in the shareware"
+msgid "Switch to Shareware"
+msgstr "v shareware"
+
+#: Source/DiabloUI/extrasmenu.cpp:44
+msgid "Replay Intro"
+msgstr "Přehraj Intro"
+
+#: Source/DiabloUI/extrasmenu.cpp:45
+msgid "Support"
+msgstr "Podpora"
+
+#: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
+msgid "Previous Menu"
+msgstr "Předchozí Menu"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -329,148 +363,164 @@ msgid "Multi Player"
 msgstr "Hra Více Hráčů"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-msgid "Replay Intro"
-msgstr "Přehraj Intro"
+#, fuzzy
+#| msgid "Extra charges"
+msgid "Extras"
+msgstr "Použití navíc"
 
 #: Source/DiabloUI/mainmenu.cpp:39
-msgid "Support"
-msgstr "Podpora"
-
-#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Show Credits"
 msgstr "Ukaž Autory"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Hellfire"
 msgstr "Ukonči Hellfire"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Diablo"
 msgstr "Ukonči Diablo"
 
-#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
-#: Source/DiabloUI/mainmenu.cpp:99
-msgid ""
-"The Diablo introduction cinematic is only available in the full retail "
-"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-msgstr ""
-"Úvodní filmová nahrávka pro Diablo je dostupná pouze v plné verzi hry "
-"Diablo. Pro koupi hry navštiv https://www.gog.com/game/diablo ."
+#: Source/DiabloUI/mainmenu.cpp:55
+#, fuzzy
+#| msgid "in the shareware"
+msgid "Shareware"
+msgstr "v shareware"
 
-#: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:76
+#: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
 #: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: Source/DiabloUI/selconn.cpp:38 Source/DiabloUI/selgame.cpp:77
-#: Source/DiabloUI/selgame.cpp:375
+#: Source/DiabloUI/selconn.cpp:13
 msgid "Client-Server (TCP)"
 msgstr "Klient-Server (TCP)"
 
-#: Source/DiabloUI/selconn.cpp:41
+#: Source/DiabloUI/selconn.cpp:14
 msgid "Loopback"
 msgstr "Smyčka"
 
-#: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:437
-#: Source/DiabloUI/selgame.cpp:455
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
+#: Source/DiabloUI/selgame.cpp:510
 msgid "Multi Player Game"
 msgstr "Hra pro Více Hráčů"
 
-#: Source/DiabloUI/selconn.cpp:53
+#: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
 msgstr "Požadavky:"
 
-#: Source/DiabloUI/selconn.cpp:59
+#: Source/DiabloUI/selconn.cpp:65
 msgid "no gateway needed"
 msgstr "brána není potřeba"
 
-#: Source/DiabloUI/selconn.cpp:65
+#: Source/DiabloUI/selconn.cpp:71
 msgid "Select Connection"
 msgstr "Vyber typ připojení"
 
-#: Source/DiabloUI/selconn.cpp:68
+#: Source/DiabloUI/selconn.cpp:74
 msgid "Change Gateway"
 msgstr "Změň Bránu"
 
-#: Source/DiabloUI/selconn.cpp:101
+#: Source/DiabloUI/selconn.cpp:107
 msgid "All computers must be connected to a TCP-compatible network."
 msgstr "Všechny počítače musí být připojeny k TCP-kompatibilní síti."
 
-#: Source/DiabloUI/selconn.cpp:105
+#: Source/DiabloUI/selconn.cpp:111
 msgid "All computers must be connected to the internet."
 msgstr "Všechny počítače musí být připojeny k internetu."
 
-#: Source/DiabloUI/selconn.cpp:109
+#: Source/DiabloUI/selconn.cpp:115
 msgid "Play by yourself with no network exposure."
 msgstr "Hraj sám, bez jakéhokoli připojení do sítě."
 
-#: Source/DiabloUI/selconn.cpp:114
+#: Source/DiabloUI/selconn.cpp:120
 msgid "Players Supported: {:d}"
 msgstr "Možný Počet Hráčů: {:d}"
 
-#: Source/DiabloUI/selgame.cpp:80 Source/DiabloUI/selgame.cpp:378
+#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
 msgid "Description:"
 msgstr "Popis:"
 
-#: Source/DiabloUI/selgame.cpp:86
+#: Source/DiabloUI/selgame.cpp:88
 msgid "Select Action"
 msgstr "Vyber Akci"
 
-#: Source/DiabloUI/selgame.cpp:88 Source/DiabloUI/selgame.cpp:152
-#: Source/DiabloUI/selgame.cpp:297
+#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
+#: Source/DiabloUI/selgame.cpp:333
 msgid "Create Game"
 msgstr "Vytvoř Hru"
 
-#: Source/DiabloUI/selgame.cpp:89
+#: Source/DiabloUI/selgame.cpp:93
+#, fuzzy
+#| msgid "Create Game"
+msgid "Create Public Game"
+msgstr "Vytvoř Hru"
+
+#: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
 msgstr "Připoj se ke Hře"
 
-#: Source/DiabloUI/selgame.cpp:97 Source/DiabloUI/selgame.cpp:167
-#: Source/DiabloUI/selgame.cpp:185 Source/DiabloUI/selgame.cpp:319
-#: Source/DiabloUI/selgame.cpp:393
+#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
+#: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
+#: Source/DiabloUI/selgame.cpp:431
 msgid "CANCEL"
 msgstr "ZRUŠIT"
 
-#: Source/DiabloUI/selgame.cpp:106
+#: Source/DiabloUI/selgame.cpp:122
 msgid "Create a new game with a difficulty setting of your choice."
 msgstr "Vytvoří novou hru s obtížností jakou si zvolíš."
 
-#: Source/DiabloUI/selgame.cpp:109
+#: Source/DiabloUI/selgame.cpp:125
+#, fuzzy
+#| msgid "Create a new game with a difficulty setting of your choice."
+msgid ""
+"Create a new public game that anyone can join with a difficulty setting of "
+"your choice."
+msgstr "Vytvoří novou hru s obtížností jakou si zvolíš."
+
+#: Source/DiabloUI/selgame.cpp:128
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
 msgstr "Zadej IP nebo název hry a připoj se ke hře vytvořené na dané adrese."
 
-#: Source/DiabloUI/selgame.cpp:155
+#: Source/DiabloUI/selgame.cpp:131
+#, fuzzy
+#| msgid ""
+#| "Enter an IP or a hostname and join a game already in progress at that "
+#| "address."
+msgid "Join the public game already in progress at this address."
+msgstr "Zadej IP nebo název hry a připoj se ke hře vytvořené na dané adrese."
+
+#: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
 msgstr "Vyber Obtížnost"
 
-#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
-#: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:328
-#: Source/diablo.cpp:1431
+#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
+#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "Normal"
 
-#: Source/DiabloUI/selgame.cpp:158 Source/DiabloUI/selgame.cpp:208
-#: Source/diablo.cpp:1432
+#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "Nightmare"
 
-#: Source/DiabloUI/selgame.cpp:159 Source/DiabloUI/selgame.cpp:212
-#: Source/diablo.cpp:1433
+#: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "Hell"
 
-#: Source/DiabloUI/selgame.cpp:173
+#: Source/DiabloUI/selgame.cpp:202
 msgid "Join TCP Games"
 msgstr "Připojit se k TCP Hrám"
 
-#: Source/DiabloUI/selgame.cpp:176 Source/DiabloUI/selgame.cpp:179
+#: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
 msgid "Enter address"
 msgstr "Zadej adresu"
 
-#: Source/DiabloUI/selgame.cpp:205
+#: Source/DiabloUI/selgame.cpp:240
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -478,7 +528,7 @@ msgstr ""
 "Obtížnost Normal\n"
 "Zde by měla začínající postava započít svoji výpravu k poražení Diabla."
 
-#: Source/DiabloUI/selgame.cpp:209
+#: Source/DiabloUI/selgame.cpp:244
 msgid ""
 "Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
@@ -488,7 +538,7 @@ msgstr ""
 "Obyvatelé Labyrintu byli posíleni a budou pro tebe opravdovou zkouškou. "
 "Doporučeno pouze pro zkušené postavy."
 
-#: Source/DiabloUI/selgame.cpp:213
+#: Source/DiabloUI/selgame.cpp:248
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
@@ -498,7 +548,7 @@ msgstr ""
 "Nejsilnější stvoření z podsvětí číhají u Pekelných bran. Pouze ty "
 "nejzkušenější postavy by měly vstoupit do tohoto světa."
 
-#: Source/DiabloUI/selgame.cpp:229
+#: Source/DiabloUI/selgame.cpp:264
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
@@ -506,7 +556,7 @@ msgstr ""
 "Tvoje postava musí dosáhnout 20 úrovně než bude moci vstoupit do hry pro "
 "více hráčů na obtížnost Nightmare."
 
-#: Source/DiabloUI/selgame.cpp:231
+#: Source/DiabloUI/selgame.cpp:266
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
@@ -514,23 +564,23 @@ msgstr ""
 "Tvoje postava musí dosáhnout 30 úrovně než bude moci vstoupit do hry pro "
 "více hráčů na obtížnost Hell."
 
-#: Source/DiabloUI/selgame.cpp:306
+#: Source/DiabloUI/selgame.cpp:342
 msgid "Select Game Speed"
 msgstr "Vyber Rychlost Hry"
 
-#: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:332
+#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
 msgid "Fast"
 msgstr "Rychlá"
 
-#: Source/DiabloUI/selgame.cpp:310 Source/DiabloUI/selgame.cpp:336
+#: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
 msgid "Faster"
 msgstr "Rychlejší"
 
-#: Source/DiabloUI/selgame.cpp:311 Source/DiabloUI/selgame.cpp:340
+#: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
 msgid "Fastest"
 msgstr "Nejrychlejší"
 
-#: Source/DiabloUI/selgame.cpp:329
+#: Source/DiabloUI/selgame.cpp:365
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -538,7 +588,7 @@ msgstr ""
 "Běžná\n"
 "Zde by měla začínající postava započít svoji výpravu k poražení Diabla."
 
-#: Source/DiabloUI/selgame.cpp:333
+#: Source/DiabloUI/selgame.cpp:369
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
@@ -548,7 +598,7 @@ msgstr ""
 "Obyvatelé Labyrintu byli zrychleni a budou pro tebe opravdovou zkouškou. "
 "Doporučeno pouze pro zkušené postavy."
 
-#: Source/DiabloUI/selgame.cpp:337
+#: Source/DiabloUI/selgame.cpp:373
 msgid ""
 "Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. "
@@ -558,7 +608,7 @@ msgstr ""
 "Většina potvor v Labyrintu tě najde rychleji než kdykoli předtím. Pouze "
 "zkušený šampion by měl zkusit štěstí na této rychlosti."
 
-#: Source/DiabloUI/selgame.cpp:341
+#: Source/DiabloUI/selgame.cpp:377
 msgid ""
 "Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a "
@@ -568,16 +618,16 @@ msgstr ""
 "Pohůnci z podsvětí budou spěchat do útoku bez sebemenšího zaváhání. Pouze "
 "pravý rychlostní démon by měl hrát s tímto nastavením."
 
-#: Source/DiabloUI/selgame.cpp:384 Source/DiabloUI/selgame.cpp:387
+#: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
 msgid "Enter Password"
 msgstr "Zadej Heslo"
 
-#: Source/DiabloUI/selgame.cpp:410
+#: Source/DiabloUI/selgame.cpp:448
 msgid "The host is running a different game than you."
 msgstr "Host má spuštěnou jinou hru než ty."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
-#: Source/DiabloUI/selgame.cpp:413
+#: Source/DiabloUI/selgame.cpp:451
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr "Tvoje verze {:s} neodpovídá verzi hosta {:d}.{:d}.{:d}."
 
@@ -710,18 +760,24 @@ msgstr "Smazat Hrdinu Hry pro Jednoho Hráče"
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Opravdu chceš smazat postavu \"{:s}\"?"
 
-#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
+#: Source/DiabloUI/selstart.cpp:43
+#, fuzzy
+#| msgid "Exit Hellfire"
+msgid "Enter Hellfire"
+msgstr "Ukonči Hellfire"
+
+#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
 msgstr "Ano"
 
-#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:929
+#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:979
 msgid "No"
 msgstr "Ne"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
-"We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join "
-"our community where we talk about things related to Diablo, and the Hellfire "
+"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
 
@@ -731,10 +787,11 @@ msgid ""
 "this address: https://github.com/diasurgical/devilutionX To help us better "
 "serve you, please be sure to include the version number, operating system, "
 "and the nature of the problem."
-msgstr "DevilutionX spravuje Diasurgical, problémy a chyby můžete hlásit "
-"na této adrese: https://github.com/diasurgical/devilutionX "
-"Abychom vám mohli lépe pomoci, prosím uveďte číslo verze hry, "
-"váš operační systém a popište váš problém."
+msgstr ""
+"DevilutionX spravuje Diasurgical, problémy a chyby můžete hlásit na této "
+"adrese: https://github.com/diasurgical/devilutionX Abychom vám mohli lépe "
+"pomoci, prosím uveďte číslo verze hry, váš operační systém a popište váš "
+"problém."
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "Disclaimer:"
@@ -754,6 +811,7 @@ msgstr ""
 "ohledně DevilutionX by měly být směřovány k Diasurgical, nikoliv k Blizzard "
 "Entertainment nebo GOG.com."
 
+#: Source/DiabloUI/support_lines.cpp:17
 msgid ""
 "\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
 "under the SIL Open Font License, as well as Twitmoji which is licensed under "
@@ -765,12 +823,12 @@ msgstr ""
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
-#: Source/appfat.cpp:37
+#: Source/appfat.cpp:38
 msgid "Error"
 msgstr "Chyba"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
-#: Source/appfat.cpp:101
+#: Source/appfat.cpp:102
 msgid ""
 "{:s}\n"
 "\n"
@@ -780,7 +838,7 @@ msgstr ""
 "\n"
 "Chyba nastala v: {:s} řádek {:d}"
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:117
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
@@ -790,15 +848,12 @@ msgstr ""
 "\n"
 "Ujistěte se, že je výše uvedený soubor ve složce se hrou."
 
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq nebo spawn.mpq"
-
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:123
 msgid "Data File Error"
 msgstr "Chyba Datového Souboru"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:131
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -806,177 +861,183 @@ msgstr ""
 "Nelze zapisovat do umístění:\n"
 "{:s}"
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:133
 msgid "Read-Only Directory Error"
 msgstr "Chyba - Adresář Pouze pro Čtení"
 
-#: Source/automap.cpp:464
+#: Source/automap.cpp:484
 msgid "game: "
 msgstr "hra: "
 
-#: Source/automap.cpp:470
+#: Source/automap.cpp:490
 msgid "password: "
 msgstr "heslo: "
 
-#: Source/automap.cpp:483
+#: Source/automap.cpp:492
+#, fuzzy
+#| msgid "Quit Game"
+msgid "Public Game"
+msgstr "Ukonči Hru"
+
+#: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
 msgstr "Patro: Hnízdo {:d}"
 
-#: Source/automap.cpp:485
+#: Source/automap.cpp:506
 msgid "Level: Crypt {:d}"
 msgstr "Patro: Krypta {:d}"
 
-#: Source/automap.cpp:487 Source/items.cpp:2078
+#: Source/automap.cpp:508 Source/items.cpp:2090
 msgid "Level: {:d}"
 msgstr "Patro: {:d}"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:212
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:212
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:212
 msgid "Enter"
 msgstr "Zadej Jméno"
 
-#: Source/control.cpp:202
+#: Source/control.cpp:215
 msgid "Character Information"
 msgstr "Informace o Postavě"
 
-#: Source/control.cpp:203
+#: Source/control.cpp:216
 msgid "Quests log"
 msgstr "Deník úkolů"
 
-#: Source/control.cpp:204
+#: Source/control.cpp:217
 msgid "Automap"
 msgstr "Automapa"
 
-#: Source/control.cpp:205
+#: Source/control.cpp:218
 msgid "Main Menu"
 msgstr "Hlavní Menu"
 
-#: Source/control.cpp:206
+#: Source/control.cpp:219
 msgid "Inventory"
 msgstr "Inventář"
 
-#: Source/control.cpp:207
+#: Source/control.cpp:220
 msgid "Spell book"
 msgstr "Kniha kouzel"
 
-#: Source/control.cpp:208
+#: Source/control.cpp:221
 msgid "Send Message"
 msgstr "Odešli Zprávu"
 
-#: Source/control.cpp:750 Source/control.cpp:1557
+#: Source/control.cpp:718 Source/control.cpp:1587
 msgid "Skill"
 msgstr "Dovednost"
 
-#: Source/control.cpp:751 Source/control.cpp:1211
+#: Source/control.cpp:719 Source/control.cpp:1237
 msgid "{:s} Skill"
 msgstr "Dovednost {:s}"
 
-#: Source/control.cpp:757
+#: Source/control.cpp:725
 msgid "Spell"
 msgstr "Kouzlo"
 
-#: Source/control.cpp:758 Source/control.cpp:1215
+#: Source/control.cpp:726 Source/control.cpp:1241
 msgid "{:s} Spell"
 msgstr "Kouzlo {:s}"
 
-#: Source/control.cpp:760
+#: Source/control.cpp:728
 msgid "Damages undead only"
 msgstr "Zraňuje pouze nemrtvé"
 
-#: Source/control.cpp:764 Source/control.cpp:1219 Source/control.cpp:1581
+#: Source/control.cpp:732 Source/control.cpp:1245 Source/control.cpp:1611
 msgid "Spell Level 0 - Unusable"
 msgstr "Kouzlo Úrovně 0 - Nefunguje"
 
-#: Source/control.cpp:766 Source/control.cpp:1221 Source/control.cpp:1583
+#: Source/control.cpp:734 Source/control.cpp:1247 Source/control.cpp:1613
 msgid "Spell Level {:d}"
 msgstr "Kouzlo Úrovně {:d}"
 
-#: Source/control.cpp:773
+#: Source/control.cpp:741
 msgid "Scroll"
 msgstr "Svitek"
 
-#: Source/control.cpp:774 Source/control.cpp:1225
+#: Source/control.cpp:742 Source/control.cpp:1251
 msgid "Scroll of {:s}"
 msgstr "Svitek {:s}"
 
-#: Source/control.cpp:779 Source/control.cpp:1231
+#: Source/control.cpp:747 Source/control.cpp:1257
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} Svitek"
 msgstr[1] "{:d} Svitky"
 msgstr[2] "{:d} Svitků"
 
-#: Source/control.cpp:785 Source/itemdat.cpp:167 Source/itemdat.cpp:168
+#: Source/control.cpp:754 Source/itemdat.cpp:167 Source/itemdat.cpp:168
 #: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
 msgid "Staff"
 msgstr "Hůl"
 
-#: Source/control.cpp:786 Source/control.cpp:1235 Source/items.cpp:1319
+#: Source/control.cpp:755 Source/control.cpp:1261
 msgid "Staff of {:s}"
 msgstr "Hůl - {:s}"
 
-#: Source/control.cpp:788 Source/control.cpp:1237
+#: Source/control.cpp:757 Source/control.cpp:1263
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Použití"
 msgstr[1] "{:d} Použití"
 msgstr[2] "{:d} Použití"
 
-#: Source/control.cpp:798
+#: Source/control.cpp:767
 msgid "Spell Hotkey {:s}"
 msgstr "Klávesová Zkratka Kouzla {:s}"
 
-#: Source/control.cpp:1188
+#: Source/control.cpp:1214
 msgid "Player friendly"
 msgstr "Neútočit na hráče"
 
-#: Source/control.cpp:1190
+#: Source/control.cpp:1216
 msgid "Player attack"
 msgstr "Útočit na hráče"
 
-#: Source/control.cpp:1193
+#: Source/control.cpp:1219
 msgid "Hotkey: {:s}"
 msgstr "Klávesová Zkratka: {:s}"
 
-#: Source/control.cpp:1201
+#: Source/control.cpp:1227
 msgid "Select current spell button"
 msgstr "Tlačítko pro výběr kouzla"
 
-#: Source/control.cpp:1204
+#: Source/control.cpp:1230
 msgid "Hotkey: 's'"
 msgstr "Klávesová Zkratka: 's'"
 
-#: Source/control.cpp:1359 Source/inv.cpp:1892 Source/items.cpp:3746
+#: Source/control.cpp:1387 Source/inv.cpp:1980 Source/items.cpp:3749
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} zlaťák"
 msgstr[1] "{:d} zlaťáky"
 msgstr[2] "{:d} zlaťáků"
 
-#: Source/control.cpp:1362
+#: Source/control.cpp:1390
 msgid "Requirements not met"
 msgstr "Nesplňuješ požadavky"
 
-#: Source/control.cpp:1398
+#: Source/control.cpp:1426
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Úroveň: {:d}"
 
-#: Source/control.cpp:1400
+#: Source/control.cpp:1428
 msgid "Hit Points {:d} of {:d}"
 msgstr "Životy {:d} ze {:d}"
 
-#: Source/control.cpp:1427
+#: Source/control.cpp:1457
 msgid "Level Up"
 msgstr "Nová úroveň"
 
-#: Source/control.cpp:1561
+#: Source/control.cpp:1591
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Hůl ({:d} použití)"
@@ -984,22 +1045,22 @@ msgstr[1] "Hůl ({:d} použití)"
 msgstr[2] "Hůl ({:d} použití)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1571
+#: Source/control.cpp:1601
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "Mana: {:d}  Poš: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1573
+#: Source/control.cpp:1603
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "Mana: {:d}  Poš: n/a"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1576
+#: Source/control.cpp:1606
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "Mana: {:d}  Poš: 1/3 hp cíle"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1634
+#: Source/control.cpp:1664
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "Máš {:d} zlaťák. Kolik jich chceš odebrat?"
@@ -1050,94 +1111,113 @@ msgstr "Bezbožný Oltář"
 msgid "level 15"
 msgstr "15. patro"
 
-#: Source/diablo.cpp:112
+#: Source/diablo.cpp:114
 msgid "I need help! Come Here!"
 msgstr "Potřebuji pomoc! Pojď sem!"
 
-#: Source/diablo.cpp:113
+#: Source/diablo.cpp:115
 msgid "Follow me."
 msgstr "Následuj mě."
 
-#: Source/diablo.cpp:114
+#: Source/diablo.cpp:116
 msgid "Here's something for you."
 msgstr "Tady je něco pro tebe."
 
-#: Source/diablo.cpp:115
+#: Source/diablo.cpp:117
 msgid "Now you DIE!"
 msgstr "Teď chcípneš!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:779
+#: Source/diablo.cpp:781
 msgid "Options:\n"
 msgstr "Nastavení:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:780
+#: Source/diablo.cpp:782
 msgid "Print this message and exit"
 msgstr "Zobraz tuto zprávu a ukonči"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:781
+#: Source/diablo.cpp:783
 msgid "Print the version and exit"
 msgstr "Zobraz verzi a ukonči"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:782
+#: Source/diablo.cpp:784
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Vyber složku se souborem diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:783
+#: Source/diablo.cpp:785
 msgid "Specify the folder of save files"
 msgstr "Vyber složku pro uložené hry"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
+#: Source/diablo.cpp:786
 msgid "Specify the location of diablo.ini"
 msgstr "Vyber složku pro soubor diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:787
 msgid "Skip startup videos"
 msgstr "Přeskoč startovní videa"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:788
 msgid "Display frames per second"
 msgstr "Zobraz smínky za vteřinu"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:789
 msgid "Run in windowed mode"
 msgstr "Spusť hru v okně"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:790
 msgid "Enable verbose logging"
 msgstr "Zapni důkladné logování"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Spusť hru ve spawn módu i když bude diabdat.mpq nalezen"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:791
 msgid "Record a demo file"
 msgstr "Nahrát demo soubor"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:792
 msgid "Play a demo file"
 msgstr "Přehrát demo soubor"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr "Vypnout omezení snímků během přehrávání dema"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+#, fuzzy
+#| msgid "Hellfire Help"
+msgid "Force Hellfire mode"
+msgstr "Nápověda k Hellfire"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1146,16 +1226,11 @@ msgstr ""
 "Hellfire nastavení:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "Spusť hru v diablo módu i když bude hellfire.mpq nalezen"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr "Použij alternativní paletu pro hnízdo"
 
-#: Source/diablo.cpp:801
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1163,44 +1238,44 @@ msgstr ""
 "\n"
 "Chyby hlašte na https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:865
+#: Source/diablo.cpp:869
 msgid "unrecognized option '{:s}'\n"
 msgstr "neznámá volba '{:s}'\n"
 
-#: Source/diablo.cpp:896
+#: Source/diablo.cpp:900
 msgid "version {:s}"
 msgstr "verze {:s}"
 
-#: Source/diablo.cpp:1203
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr "-- Vypadlo spojení --"
 
-#: Source/diablo.cpp:1204
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr "-- Čekám na hráče --"
 
-#: Source/diablo.cpp:1223
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr "Žádná nápověda"
 
-#: Source/diablo.cpp:1224
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr "v obchodech"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1436
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, verze = {:s}, mód = {:s}"
 
-#: Source/dvlnet/loopback.cpp:111
+#: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
 msgstr "zpětná vazba"
 
-#: Source/dvlnet/tcp_client.cpp:68
+#: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
 msgstr "Nelze se připojit"
 
-#: Source/dvlnet/tcp_client.cpp:89
+#: Source/dvlnet/tcp_client.cpp:86
 msgid "error: read 0 bytes from server"
 msgstr "chyba: přečteno 0 bytů ze serveru"
 
@@ -1484,10 +1559,6 @@ msgstr "Kontrast"
 msgid "Speed"
 msgstr "Rychlost Hry"
 
-#: Source/gamemenu.cpp:61
-msgid "Previous Menu"
-msgstr "Předchozí Menu"
-
 #: Source/gamemenu.cpp:68
 msgid "Music Disabled"
 msgstr "Hudba Vypnuta"
@@ -1661,7 +1732,9 @@ msgstr ""
 "klávesnici, nebo kliknutím na předmět pomocí pravého tlačítka myši."
 
 #: Source/help.cpp:68
-msgid "$Gold"
+#, fuzzy
+#| msgid "$Gold"
+msgid "$Gold:"
 msgstr "$Zlaťáky"
 
 #: Source/help.cpp:69
@@ -1691,7 +1764,9 @@ msgstr ""
 "tlačítkem myši do herní obrazovky."
 
 #: Source/help.cpp:79
-msgid "$Using the Speedbook for Spells"
+#, fuzzy
+#| msgid "$Using the Speedbook for Spells"
+msgid "$Using the Speedbook for Spells:"
 msgstr "$Používání Rychlé Volby pro Kouzla"
 
 #: Source/help.cpp:80
@@ -1706,15 +1781,21 @@ msgstr ""
 "obrazovky."
 
 #: Source/help.cpp:84
+#, fuzzy
+#| msgid ""
+#| "Shift + Left-clicking on the 'select current spell' button will clear the "
+#| "readied spell"
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
-"readied spell"
+"readied spell."
 msgstr ""
 "Kliknutím Shift + Levé tlačítko myši na aktuální kouzlo můžeš odebrat "
 "vybrané kouzlo"
 
 #: Source/help.cpp:86
-msgid "$Setting Spell Hotkeys"
+#, fuzzy
+#| msgid "$Setting Spell Hotkeys"
+msgid "$Setting Spell Hotkeys:"
 msgstr "$Nastavení Klávesových Zkratek pro Kouzla"
 
 #: Source/help.cpp:87
@@ -1729,7 +1810,9 @@ msgstr ""
 "z kláves F5, F6, F7 nebo F8."
 
 #: Source/help.cpp:92
-msgid "$Spell Books"
+#, fuzzy
+#| msgid "$Spell Books"
+msgid "$Spell Books:"
 msgstr "$Knihy Kouzel"
 
 #: Source/help.cpp:93
@@ -1740,31 +1823,35 @@ msgstr ""
 "Čtením více než jedné knihy zvyšuješ svou znalost daného kouzla, což ti "
 "umožní čarovat dané kouzlo efektivněji."
 
-#: Source/help.cpp:129
+#: Source/help.cpp:181
 msgid "Shareware Hellfire Help"
 msgstr "Nápověda k Shareware Hellfire"
 
-#: Source/help.cpp:129
+#: Source/help.cpp:181
 msgid "Hellfire Help"
 msgstr "Nápověda k Hellfire"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:183
 msgid "Shareware Diablo Help"
 msgstr "Nápověda k Shareware Diablu"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:183
 msgid "Diablo Help"
 msgstr "Nápověda k Diablu"
 
-#: Source/help.cpp:155
+#: Source/help.cpp:213
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Stiskni ESC pro ukončení, šipky pro posun."
 
-#: Source/init.cpp:217
+#: Source/init.cpp:175
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq nebo spawn.mpq"
+
+#: Source/init.cpp:196
 msgid "Some Hellfire MPQs are missing"
 msgstr "Některé Hellfire MPQ soubory chybí"
 
-#: Source/init.cpp:217
+#: Source/init.cpp:196
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1772,11 +1859,11 @@ msgstr ""
 "Ne všechny Hellfire MPQ soubory nalezeny.\n"
 "Překopírujte všechny hf*.mpq soubory."
 
-#: Source/init.cpp:225
+#: Source/init.cpp:204
 msgid "Unable to create main window"
 msgstr "Nelze vytvořit hlavní okno"
 
-#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:154
+#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:155
 msgid "Gold"
 msgstr "Zlaťáky"
 
@@ -1916,7 +2003,7 @@ msgstr "Lazarusova Hůl"
 msgid "Scroll of Resurrect"
 msgstr "Svitek Oživení"
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:165
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
 msgid "Blacksmith Oil"
 msgstr "Kovářský Olej"
 
@@ -2016,7 +2103,7 @@ msgid "Quilted Armor"
 msgstr "Prošívané Brnění"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5459
+#: Source/itemdat.cpp:77 Source/objects.cpp:5433
 msgid "Armor"
 msgstr "Brnění"
 
@@ -2111,11 +2198,11 @@ msgstr "Lektvar Omlazení"
 msgid "Potion of Full Rejuvenation"
 msgstr "Lektvar Plného Omlazení"
 
-#: Source/itemdat.cpp:100 Source/items.cpp:160
+#: Source/itemdat.cpp:100 Source/items.cpp:161
 msgid "Oil of Accuracy"
 msgstr "Olej Přesnosti"
 
-#: Source/itemdat.cpp:101 Source/items.cpp:162
+#: Source/itemdat.cpp:101 Source/items.cpp:163
 msgid "Oil of Sharpness"
 msgstr "Olej Ostrosti"
 
@@ -2433,7 +2520,7 @@ msgstr "Mithrilový"
 msgid "Meteoric"
 msgstr "Meteorický"
 
-#: Source/itemdat.cpp:202 Source/objects.cpp:104
+#: Source/itemdat.cpp:202 Source/objects.cpp:107
 msgid "Weird"
 msgstr "Divný"
 
@@ -2569,7 +2656,7 @@ msgstr "Posvátný"
 msgid "Awesome"
 msgstr "Úžasný"
 
-#: Source/itemdat.cpp:237 Source/objects.cpp:116
+#: Source/itemdat.cpp:237 Source/objects.cpp:119
 msgid "Holy"
 msgstr "Svatý"
 
@@ -3530,693 +3617,715 @@ msgstr "Amulet Ministranta"
 msgid "Gladiator's Ring"
 msgstr "Gladiátorův Prsten"
 
-#: Source/items.cpp:161
+#: Source/items.cpp:162
 msgid "Oil of Mastery"
 msgstr "Olej Mistrovství"
 
-#: Source/items.cpp:163
+#: Source/items.cpp:164
 msgid "Oil of Death"
 msgstr "Olej Smrti"
 
-#: Source/items.cpp:164
+#: Source/items.cpp:165
 msgid "Oil of Skill"
 msgstr "Olej Dovednosti"
 
-#: Source/items.cpp:166
+#: Source/items.cpp:167
 msgid "Oil of Fortitude"
 msgstr "Olej Statečnosti"
 
-#: Source/items.cpp:167
+#: Source/items.cpp:168
 msgid "Oil of Permanence"
 msgstr "Olej Stálosti"
 
-#: Source/items.cpp:168
+#: Source/items.cpp:169
 msgid "Oil of Hardening"
 msgstr "Olej Tvrdnutí"
 
-#: Source/items.cpp:169
+#: Source/items.cpp:170
 msgid "Oil of Imperviousness"
 msgstr "Olej Nepropustnosti"
 
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
-#: Source/items.cpp:1174 Source/items.cpp:1184 Source/items.cpp:1233
-#: Source/items.cpp:1269
-msgid "{0} {1}"
-msgstr ""
-
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
-#: Source/items.cpp:1315
+#. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
+#: Source/items.cpp:1183
+#, fuzzy
+#| msgid "{0} of {1}"
+msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{:s} {:s}"
 
-#: Source/items.cpp:1894 Source/items.cpp:1906
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
+#: Source/items.cpp:1193
+#, fuzzy
+msgctxt "spell"
+msgid "{0} {1} of {2}"
+msgstr "{:s} {:s} {:s}"
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
+#: Source/items.cpp:1214
+#, fuzzy
+msgid "{0} {1} of {2}"
+msgstr "{:s} {:s} {:s}"
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#: Source/items.cpp:1217
+msgid "{0} {1}"
+msgstr ""
+
+#. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
+#: Source/items.cpp:1220
+msgid "{0} of {1}"
+msgstr "{:s} {:s}"
+
+#: Source/items.cpp:1906 Source/items.cpp:1918
 msgid "increases a weapon's"
 msgstr "zvyšuje u zbraně"
 
-#: Source/items.cpp:1896
+#: Source/items.cpp:1908
 msgid "chance to hit"
 msgstr "šanci na zásah"
 
-#: Source/items.cpp:1900
+#: Source/items.cpp:1912
 msgid "greatly increases a"
 msgstr "výrazně zvyšuje"
 
-#: Source/items.cpp:1902
+#: Source/items.cpp:1914
 msgid "weapon's chance to hit"
 msgstr "u zbraně šanci na zásah"
 
-#: Source/items.cpp:1908
+#: Source/items.cpp:1920
 msgid "damage potential"
 msgstr "potenciál poškození"
 
-#: Source/items.cpp:1912
+#: Source/items.cpp:1924
 msgid "greatly increases a weapon's"
 msgstr "výrazně zvyšuje u zbraně"
 
-#: Source/items.cpp:1914
+#: Source/items.cpp:1926
 msgid "damage potential - not bows"
 msgstr "potenciál poškození - ne u luku"
 
-#: Source/items.cpp:1918
+#: Source/items.cpp:1930
 msgid "reduces attributes needed"
 msgstr "snižuje potřebné atributy"
 
-#: Source/items.cpp:1920
+#: Source/items.cpp:1932
 msgid "to use armor or weapons"
 msgstr "pro používání zbroje a zbraní"
 
-#: Source/items.cpp:1924
+#: Source/items.cpp:1936
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "doplňuje 20% z"
 
-#: Source/items.cpp:1926
+#: Source/items.cpp:1938
 msgid "item's durability"
 msgstr "výdrže předmětu"
 
-#: Source/items.cpp:1930
+#: Source/items.cpp:1942
 msgid "increases an item's"
 msgstr "zvyšuje současnou a"
 
-#: Source/items.cpp:1932
+#: Source/items.cpp:1944
 msgid "current and max durability"
 msgstr "maximální výdrž předmětu"
 
-#: Source/items.cpp:1936
+#: Source/items.cpp:1948
 msgid "makes an item indestructible"
 msgstr "udělá předmět nezničitelným"
 
-#: Source/items.cpp:1940
+#: Source/items.cpp:1952
 msgid "increases the armor class"
 msgstr "zvýší obranné číslo"
 
-#: Source/items.cpp:1942
+#: Source/items.cpp:1954
 msgid "of armor and shields"
 msgstr "zbroje nebo štítu"
 
-#: Source/items.cpp:1946
+#: Source/items.cpp:1958
 msgid "greatly increases the armor"
 msgstr "výrazně zvýší obranné číslo"
 
-#: Source/items.cpp:1948
+#: Source/items.cpp:1960
 msgid "class of armor and shields"
 msgstr "zbroje nebo štítu"
 
-#: Source/items.cpp:1952 Source/items.cpp:1961
+#: Source/items.cpp:1964 Source/items.cpp:1973
 msgid "sets fire trap"
 msgstr "nastraží ohnivou past"
 
-#: Source/items.cpp:1957
+#: Source/items.cpp:1969
 msgid "sets lightning trap"
 msgstr "nastraží bleskovou past"
 
-#: Source/items.cpp:1965
+#: Source/items.cpp:1977
 msgid "sets petrification trap"
 msgstr "nastraží past zkamenění"
 
-#: Source/items.cpp:1969
+#: Source/items.cpp:1981
 msgid "restore all life"
 msgstr "doplní všechny životy"
 
-#: Source/items.cpp:1973
+#: Source/items.cpp:1985
 msgid "restore some life"
 msgstr "doplní část životů"
 
-#: Source/items.cpp:1977
+#: Source/items.cpp:1989
 msgid "recover life"
 msgstr "doplní životy"
 
-#: Source/items.cpp:1981
+#: Source/items.cpp:1993
 msgid "deadly heal"
 msgstr "smrtící léčení"
 
-#: Source/items.cpp:1985
+#: Source/items.cpp:1997
 msgid "restore some mana"
 msgstr "doplní část many"
 
-#: Source/items.cpp:1989
+#: Source/items.cpp:2001
 msgid "restore all mana"
 msgstr "doplní všechnu manu"
 
-#: Source/items.cpp:1993
+#: Source/items.cpp:2005
 msgid "increase strength"
 msgstr "zvýší sílu"
 
-#: Source/items.cpp:1997
+#: Source/items.cpp:2009
 msgid "increase magic"
 msgstr "zvýší magii"
 
-#: Source/items.cpp:2001
+#: Source/items.cpp:2013
 msgid "increase dexterity"
 msgstr "zvýší obratnost"
 
-#: Source/items.cpp:2005
+#: Source/items.cpp:2017
 msgid "increase vitality"
 msgstr "zvýší vitalitu"
 
-#: Source/items.cpp:2010
+#: Source/items.cpp:2022
 msgid "decrease strength"
 msgstr "sníží sílu"
 
-#: Source/items.cpp:2014
+#: Source/items.cpp:2026
 msgid "decrease dexterity"
 msgstr "sníží obratnost"
 
-#: Source/items.cpp:2018
+#: Source/items.cpp:2030
 msgid "decrease vitality"
 msgstr "sníží vitalitu"
 
-#: Source/items.cpp:2022
+#: Source/items.cpp:2034
 msgid "restore some life and mana"
 msgstr "doplní část životů a many"
 
-#: Source/items.cpp:2026
+#: Source/items.cpp:2038
 msgid "restore all life and mana"
 msgstr "doplní všechny životy a manu"
 
-#: Source/items.cpp:2041 Source/items.cpp:2066
+#: Source/items.cpp:2053 Source/items.cpp:2078
 msgid "Right-click to read"
 msgstr "Přečtení - klikni Pravým"
 
-#: Source/items.cpp:2045
+#: Source/items.cpp:2057
 msgid "Right-click to read, then"
 msgstr "Přečtení - klikni Pravým, poté"
 
-#: Source/items.cpp:2047
+#: Source/items.cpp:2059
 msgid "left-click to target"
 msgstr "klikni Levým na cíl"
 
-#: Source/items.cpp:2052
+#: Source/items.cpp:2064
 msgid "Right-click to use"
 msgstr "Použití - klikni Pravým"
 
-#: Source/items.cpp:2057 Source/items.cpp:2062
+#: Source/items.cpp:2069 Source/items.cpp:2074
 msgid "Right click to use"
 msgstr "Použití - klikni Pravým"
 
-#: Source/items.cpp:2070
+#: Source/items.cpp:2082
 msgid "Right click to read"
 msgstr "Přečtení - klikni Pravým"
 
-#: Source/items.cpp:2074
+#: Source/items.cpp:2086
 msgid "Right-click to view"
 msgstr "Zobrazení - klikni Pravým"
 
-#: Source/items.cpp:2082
+#: Source/items.cpp:2094
 msgid "Doubles gold capacity"
 msgstr "Zdvojnásobí kapacitu hromádek zlata"
 
-#: Source/items.cpp:2094 Source/stores.cpp:212
+#: Source/items.cpp:2106 Source/stores.cpp:283
 msgid "Required:"
 msgstr "Požadavky:"
 
-#: Source/items.cpp:2096 Source/stores.cpp:214
+#: Source/items.cpp:2108 Source/stores.cpp:285
 msgid " {:d} Str"
 msgstr " {:d} Síla"
 
-#: Source/items.cpp:2098 Source/stores.cpp:216
+#: Source/items.cpp:2110 Source/stores.cpp:287
 msgid " {:d} Mag"
 msgstr " {:d} Magie"
 
-#: Source/items.cpp:2100 Source/stores.cpp:218
+#: Source/items.cpp:2112 Source/stores.cpp:289
 msgid " {:d} Dex"
 msgstr " {:d} Obrat"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3530 Source/player.cpp:3027
+#: Source/items.cpp:3533 Source/player.cpp:3018
 msgid "Ear of {:s}"
 msgstr "Ucho od {:s}"
 
-#: Source/items.cpp:3825
+#: Source/items.cpp:3828
 msgid "chance to hit: {:+d}%"
 msgstr "šance na zásah: {:+d}%"
 
-#: Source/items.cpp:3829
+#: Source/items.cpp:3832
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% poškození"
 
-#: Source/items.cpp:3833 Source/items.cpp:4089
+#: Source/items.cpp:3836 Source/items.cpp:4092
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "na zásah: {:+d}%, {:+d}% poškození"
 
-#: Source/items.cpp:3837
+#: Source/items.cpp:3840
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% obrana"
 
-#: Source/items.cpp:3841
+#: Source/items.cpp:3844
 msgid "armor class: {:d}"
 msgstr "obranné číslo: {:d}"
 
-#: Source/items.cpp:3846 Source/items.cpp:4071
+#: Source/items.cpp:3849 Source/items.cpp:4074
 msgid "Resist Fire: {:+d}%"
 msgstr "Odolnost Oheň: {:+d}%"
 
-#: Source/items.cpp:3848
+#: Source/items.cpp:3851
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "Odolnost Oheň: 75% MAX"
 
-#: Source/items.cpp:3853
+#: Source/items.cpp:3856
 msgid "Resist Lightning: {:+d}%"
 msgstr "Odolnost Blesky: {:+d}%"
 
-#: Source/items.cpp:3855
+#: Source/items.cpp:3858
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "Odolnost Blesky: 75% MAX"
 
-#: Source/items.cpp:3860
+#: Source/items.cpp:3863
 msgid "Resist Magic: {:+d}%"
 msgstr "Odolnost Magie: {:+d}%"
 
-#: Source/items.cpp:3862
+#: Source/items.cpp:3865
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "Odolnost Magie: 75% MAX"
 
-#: Source/items.cpp:3867
+#: Source/items.cpp:3870
 msgid "Resist All: {:+d}%"
 msgstr "Odolnost Vše: {:+d}%"
 
-#: Source/items.cpp:3869
+#: Source/items.cpp:3872
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "Odolnost Vše: 75% MAX"
 
-#: Source/items.cpp:3873
+#: Source/items.cpp:3876
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "kouzla navýšena o {:d} úroveň"
 msgstr[1] "kouzla navýšena o {:d} úrovně"
 msgstr[2] "kouzla navýšena o {:d} úrovní"
 
-#: Source/items.cpp:3875
+#: Source/items.cpp:3878
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "kouzla snížena o {:d} úroveň"
 msgstr[1] "kouzla snížena o {:d} úrovně"
 msgstr[2] "kouzla snížena o {:d} úrovní"
 
-#: Source/items.cpp:3877
+#: Source/items.cpp:3880
 msgid "spell levels unchanged (?)"
 msgstr "úroveň kouzel beze změn"
 
-#: Source/items.cpp:3880
+#: Source/items.cpp:3883
 msgid "Extra charges"
 msgstr "Použití navíc"
 
-#: Source/items.cpp:3883
+#: Source/items.cpp:3886
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} použití"
 msgstr[1] "{:d} {:s} použití"
 msgstr[2] "{:d} {:s} použití"
 
-#: Source/items.cpp:3887
+#: Source/items.cpp:3890
 msgid "Fire hit damage: {:d}"
 msgstr "Poškození ohněm: {:d}"
 
-#: Source/items.cpp:3889
+#: Source/items.cpp:3892
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "Poškození ohněm: {:d}-{:d}"
 
-#: Source/items.cpp:3893
+#: Source/items.cpp:3896
 msgid "Lightning hit damage: {:d}"
 msgstr "Poškození bleskem: {:d}"
 
-#: Source/items.cpp:3895
+#: Source/items.cpp:3898
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "Poškození bleskem: {:d}-{:d}"
 
-#: Source/items.cpp:3899
+#: Source/items.cpp:3902
 msgid "{:+d} to strength"
 msgstr "{:+d} síla"
 
-#: Source/items.cpp:3903
+#: Source/items.cpp:3906
 msgid "{:+d} to magic"
 msgstr "{:+d} magie"
 
-#: Source/items.cpp:3907
+#: Source/items.cpp:3910
 msgid "{:+d} to dexterity"
 msgstr "{:+d} obratnost"
 
-#: Source/items.cpp:3911
+#: Source/items.cpp:3914
 msgid "{:+d} to vitality"
 msgstr "{:+d} vitalita"
 
-#: Source/items.cpp:3915
+#: Source/items.cpp:3918
 msgid "{:+d} to all attributes"
 msgstr "{:+d} ke všem statistikám"
 
-#: Source/items.cpp:3919
+#: Source/items.cpp:3922
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} poškození od nepřátel"
 
-#: Source/items.cpp:3923
+#: Source/items.cpp:3926
 msgid "Hit Points: {:+d}"
 msgstr "Životy {:+d}"
 
-#: Source/items.cpp:3927
+#: Source/items.cpp:3930
 msgid "Mana: {:+d}"
 msgstr "Mana: {:+d}"
 
-#: Source/items.cpp:3930
+#: Source/items.cpp:3933
 msgid "high durability"
 msgstr "vysoká výdrž"
 
-#: Source/items.cpp:3933
+#: Source/items.cpp:3936
 msgid "decreased durability"
 msgstr "snížená výdrž"
 
-#: Source/items.cpp:3936
+#: Source/items.cpp:3939
 msgid "indestructible"
 msgstr "nezničitelný"
 
-#: Source/items.cpp:3939
+#: Source/items.cpp:3942
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% osvětlení"
 
-#: Source/items.cpp:3942
+#: Source/items.cpp:3945
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% osvětlení"
 
-#: Source/items.cpp:3945
+#: Source/items.cpp:3948
 msgid "multiple arrows per shot"
 msgstr "střílí více šípů současně"
 
-#: Source/items.cpp:3949
+#: Source/items.cpp:3952
 msgid "fire arrows damage: {:d}"
 msgstr "poškození ohnivým šípem: {:d}"
 
-#: Source/items.cpp:3951
+#: Source/items.cpp:3954
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "poškození ohnivým šípem: {:d}-{:d}"
 
-#: Source/items.cpp:3955
+#: Source/items.cpp:3958
 msgid "lightning arrows damage {:d}"
 msgstr "poškození bleskovým šípem: {:d}"
 
-#: Source/items.cpp:3957
+#: Source/items.cpp:3960
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "poškození bleskovým šípem: {:d}-{:d}"
 
-#: Source/items.cpp:3961
+#: Source/items.cpp:3964
 msgid "fireball damage: {:d}"
 msgstr "poškození ohnivou koulí: {:d}"
 
-#: Source/items.cpp:3963
+#: Source/items.cpp:3966
 msgid "fireball damage: {:d}-{:d}"
 msgstr "poškození ohnivou koulí: {:d}-{:d}"
 
-#: Source/items.cpp:3966
+#: Source/items.cpp:3969
 msgid "attacker takes 1-3 damage"
 msgstr "útočník je poškozen za 1-3"
 
-#: Source/items.cpp:3969
+#: Source/items.cpp:3972
 msgid "user loses all mana"
 msgstr "uživatel ztratí všechnu manu"
 
-#: Source/items.cpp:3972
+#: Source/items.cpp:3975
 msgid "you can't heal"
 msgstr "nemůžeš se léčit"
 
-#: Source/items.cpp:3975
+#: Source/items.cpp:3978
 msgid "absorbs half of trap damage"
 msgstr "pohlcuje polovinu poškození z pastí"
 
-#: Source/items.cpp:3978
+#: Source/items.cpp:3981
 msgid "knocks target back"
 msgstr "odhodí nepřítele dozadu"
 
-#: Source/items.cpp:3981
+#: Source/items.cpp:3984
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% poškození proti démonům"
 
-#: Source/items.cpp:3984
+#: Source/items.cpp:3987
 msgid "All Resistance equals 0"
 msgstr "Všechny Odolnosti jsou 0"
 
-#: Source/items.cpp:3987
+#: Source/items.cpp:3990
 msgid "hit monster doesn't heal"
 msgstr "zasažený nepřítel se nemůže léčit"
 
-#: Source/items.cpp:3991
+#: Source/items.cpp:3994
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "zásah vysaje 3% many"
 
-#: Source/items.cpp:3993
+#: Source/items.cpp:3996
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "zásah vysaje 5% many"
 
-#: Source/items.cpp:3997
+#: Source/items.cpp:4000
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "zásah vysaje 3% životů"
 
-#: Source/items.cpp:3999
+#: Source/items.cpp:4002
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "zásah vysaje 5% životů"
 
-#: Source/items.cpp:4002
+#: Source/items.cpp:4005
 msgid "penetrates target's armor"
 msgstr "prorazí obranu nepřítele"
 
-#: Source/items.cpp:4006
+#: Source/items.cpp:4009
 msgid "quick attack"
 msgstr "hbitý útok"
 
-#: Source/items.cpp:4008
+#: Source/items.cpp:4011
 msgid "fast attack"
 msgstr "rychlý útok"
 
-#: Source/items.cpp:4010
+#: Source/items.cpp:4013
 msgid "faster attack"
 msgstr "rychlejší útok"
 
-#: Source/items.cpp:4012
+#: Source/items.cpp:4015
 msgid "fastest attack"
 msgstr "nejrychlejší útok"
 
-#: Source/items.cpp:4016
+#: Source/items.cpp:4019
 msgid "fast hit recovery"
 msgstr "rychlé vzpamatování ze zásahu"
 
-#: Source/items.cpp:4018
+#: Source/items.cpp:4021
 msgid "faster hit recovery"
 msgstr "rychlejší vzpamatování ze zásahu"
 
-#: Source/items.cpp:4020
+#: Source/items.cpp:4023
 msgid "fastest hit recovery"
 msgstr "nejrychlejší vzpamatování ze zásahu"
 
-#: Source/items.cpp:4023
+#: Source/items.cpp:4026
 msgid "fast block"
 msgstr "rychlé blokování"
 
-#: Source/items.cpp:4026
+#: Source/items.cpp:4029
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "přidá {:d} bod k poškození"
 msgstr[1] "přidá {:d} body k poškození"
 msgstr[2] "přidá {:d} bodů k poškození"
 
-#: Source/items.cpp:4029
+#: Source/items.cpp:4032
 msgid "fires random speed arrows"
 msgstr "střílí šípy náhodnou rychlostí"
 
-#: Source/items.cpp:4032
+#: Source/items.cpp:4035
 msgid "unusual item damage"
 msgstr "předmět má neobvyklé poškození"
 
-#: Source/items.cpp:4035
+#: Source/items.cpp:4038
 msgid "altered durability"
 msgstr "upravená výdrž"
 
-#: Source/items.cpp:4038
+#: Source/items.cpp:4041
 msgid "Faster attack swing"
 msgstr "Rychlejší útočný švih"
 
-#: Source/items.cpp:4041
+#: Source/items.cpp:4044
 msgid "one handed sword"
 msgstr "jednoruční meč"
 
-#: Source/items.cpp:4044
+#: Source/items.cpp:4047
 msgid "constantly lose hit points"
 msgstr "neustále budeš ztrácet životy"
 
-#: Source/items.cpp:4047
+#: Source/items.cpp:4050
 msgid "life stealing"
 msgstr "vysátí životů"
 
-#: Source/items.cpp:4050
+#: Source/items.cpp:4053
 msgid "no strength requirement"
 msgstr "nepožaduje sílu"
 
-#: Source/items.cpp:4053
+#: Source/items.cpp:4056
 msgid "see with infravision"
 msgstr "máš infra vidění"
 
-#: Source/items.cpp:4060
+#: Source/items.cpp:4063
 msgid "lightning damage: {:d}"
 msgstr "poškození bleskem: {:d}"
 
-#: Source/items.cpp:4062
+#: Source/items.cpp:4065
 msgid "lightning damage: {:d}-{:d}"
 msgstr "poškození bleskem: {:d}-{:d}"
 
-#: Source/items.cpp:4065
+#: Source/items.cpp:4068
 msgid "charged bolts on hits"
 msgstr "bleskové střely při zásahu"
 
-#: Source/items.cpp:4074
+#: Source/items.cpp:4077
 msgid "occasional triple damage"
 msgstr "občas ztrojnásobí poškození"
 
-#: Source/items.cpp:4077
+#: Source/items.cpp:4080
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "snižující se {:+d}% poškození"
 
-#: Source/items.cpp:4080
+#: Source/items.cpp:4083
 msgid "2x dmg to monst, 1x to you"
 msgstr "2x poškození do nepřítele, 1x do tebe"
 
-#: Source/items.cpp:4083
+#: Source/items.cpp:4086
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Náhodné 0 - 500% poškození"
 
-#: Source/items.cpp:4086
+#: Source/items.cpp:4089
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "nízká výdrž, {:+d}% poškození"
 
-#: Source/items.cpp:4092
+#: Source/items.cpp:4095
 msgid "extra AC vs demons"
 msgstr "extra OČ proti démonům"
 
-#: Source/items.cpp:4095
+#: Source/items.cpp:4098
 msgid "extra AC vs undead"
 msgstr "extra OČ proti nemrtvým"
 
-#: Source/items.cpp:4098
+#: Source/items.cpp:4101
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50% Many přesunuto do Životů"
 
-#: Source/items.cpp:4101
+#: Source/items.cpp:4104
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40% Životů přesunuto do Many"
 
-#: Source/items.cpp:4104
+#: Source/items.cpp:4107
 msgid "Another ability (NW)"
 msgstr "Další dovednost (NW)"
 
-#: Source/items.cpp:4141 Source/items.cpp:4188
+#: Source/items.cpp:4144 Source/items.cpp:4191
 msgid "damage: {:d}  Indestructible"
 msgstr "poškození: {:d}  Nezničitelný"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4143 Source/items.cpp:4190
+#: Source/items.cpp:4146 Source/items.cpp:4193
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "poškození: {:d}  Výdrž: {:d}/{:d}"
 
-#: Source/items.cpp:4146 Source/items.cpp:4193
+#: Source/items.cpp:4149 Source/items.cpp:4196
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "poškození: {:d}-{:d}  Nezničitelný"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4148 Source/items.cpp:4195
+#: Source/items.cpp:4151 Source/items.cpp:4198
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "poškození: {:d}-{:d}  Výdrž: {:d}/{:d}"
 
-#: Source/items.cpp:4154 Source/items.cpp:4207
+#: Source/items.cpp:4157 Source/items.cpp:4210
 msgid "armor: {:d}  Indestructible"
 msgstr "obrana: {:d}  Nezničitelný"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4156 Source/items.cpp:4209
+#: Source/items.cpp:4159 Source/items.cpp:4212
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "obrana: {:d}  Výdrž: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4161
+#: Source/items.cpp:4164
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "poš: {:d}  Výdrž: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4163
+#: Source/items.cpp:4166
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "poš: {:d}-{:d}  Výdrž: {:d}/{:d}"
 
-#: Source/items.cpp:4164 Source/items.cpp:4199 Source/items.cpp:4214
-#: Source/stores.cpp:184
+#: Source/items.cpp:4167 Source/items.cpp:4202 Source/items.cpp:4217
+#: Source/stores.cpp:255
 msgid "Charges: {:d}/{:d}"
 msgstr "Použití: {:d}/{:d}"
 
-#: Source/items.cpp:4176
+#: Source/items.cpp:4179
 msgid "unique item"
 msgstr "unikátní předmět"
 
-#: Source/items.cpp:4203 Source/items.cpp:4212 Source/items.cpp:4219
+#: Source/items.cpp:4206 Source/items.cpp:4215 Source/items.cpp:4222
 msgid "Not Identified"
 msgstr "Není Identifikován"
 
-#: Source/loadsave.cpp:1656 Source/loadsave.cpp:2122
+#: Source/loadsave.cpp:1683 Source/loadsave.cpp:2149
 msgid "Unable to open save file archive"
 msgstr "Nelze otevřít archiv souboru s uloženou hrou"
 
-#: Source/loadsave.cpp:1659
+#: Source/loadsave.cpp:1686
 msgid "Invalid save file"
 msgstr "Neplatný soubor s uloženou hrou"
 
-#: Source/loadsave.cpp:1688
+#: Source/loadsave.cpp:1717
 msgid "Player is on a Hellfire only level"
 msgstr "Hráč je v úrovni pouze pro Hellfire"
 
-#: Source/loadsave.cpp:1885
+#: Source/loadsave.cpp:1912
 msgid "Invalid game state"
 msgstr "Neplatný stav hry"
 
-#: Source/menu.cpp:144
+#: Source/menu.cpp:154
 msgid "Unable to display mainmenu"
 msgstr "Nelze zobrazit mainmenu"
+
+#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
+#: Source/menu.cpp:179
+msgid ""
+"The Diablo introduction cinematic is only available in the full retail "
+"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"Úvodní filmová nahrávka pro Diablo je dostupná pouze v plné verzi hry "
+"Diablo. Pro koupi hry navštiv https://www.gog.com/game/diablo ."
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -5339,97 +5448,97 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Zámek Záhuby"
 
-#: Source/monster.cpp:3474
+#: Source/monster.cpp:3479
 msgid "Animal"
 msgstr "Zvíře"
 
-#: Source/monster.cpp:3476
+#: Source/monster.cpp:3481
 msgid "Demon"
 msgstr "Démon"
 
-#: Source/monster.cpp:3478
+#: Source/monster.cpp:3483
 msgid "Undead"
 msgstr "Nemrtvý"
 
-#: Source/monster.cpp:4610
+#: Source/monster.cpp:4612
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Typ: {:s}  Zabito: {:d}"
 
-#: Source/monster.cpp:4612
+#: Source/monster.cpp:4614
 msgid "Total kills: {:d}"
 msgstr "Celkem zabito: {:d}"
 
-#: Source/monster.cpp:4645
+#: Source/monster.cpp:4647
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Životy: {:d}-{:d}"
 
-#: Source/monster.cpp:4651
+#: Source/monster.cpp:4653
 msgid "No magic resistance"
 msgstr "Žádná magická odolnost"
 
-#: Source/monster.cpp:4655
+#: Source/monster.cpp:4657
 msgid "Resists: "
 msgstr "Odolnosti: "
 
-#: Source/monster.cpp:4657 Source/monster.cpp:4668
+#: Source/monster.cpp:4659 Source/monster.cpp:4671
 msgid "Magic "
 msgstr "Magie "
 
-#: Source/monster.cpp:4659 Source/monster.cpp:4670
+#: Source/monster.cpp:4661 Source/monster.cpp:4673
 msgid "Fire "
 msgstr "Oheň "
 
-#: Source/monster.cpp:4661 Source/monster.cpp:4672
+#: Source/monster.cpp:4663 Source/monster.cpp:4675
 msgid "Lightning "
 msgstr "Blesky "
 
-#: Source/monster.cpp:4666
+#: Source/monster.cpp:4669
 msgid "Immune: "
 msgstr "Imunita: "
 
-#: Source/monster.cpp:4684
+#: Source/monster.cpp:4688
 msgid "Type: {:s}"
 msgstr "Typ: {:s}"
 
-#: Source/monster.cpp:4690 Source/monster.cpp:4697
+#: Source/monster.cpp:4694 Source/monster.cpp:4701
 msgid "No resistances"
 msgstr "Žádné odolnosti"
 
-#: Source/monster.cpp:4692 Source/monster.cpp:4702
+#: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid "No Immunities"
 msgstr "Žádné imunity"
 
-#: Source/monster.cpp:4695
+#: Source/monster.cpp:4699
 msgid "Some Magic Resistances"
 msgstr "Má nějaké Magické Odolnosti"
 
-#: Source/monster.cpp:4700
+#: Source/monster.cpp:4704
 msgid "Some Magic Immunities"
 msgstr "Má nějaké Magické Imunity"
 
-#: Source/msg.cpp:497
+#: Source/msg.cpp:495
 msgid "Trying to drop a floor item?"
 msgstr "Zkoušíš zahodit předmět na zemi?"
 
-#: Source/msg.cpp:950 Source/msg.cpp:985 Source/msg.cpp:1018
-#: Source/msg.cpp:1145 Source/msg.cpp:1177 Source/msg.cpp:1209
-#: Source/msg.cpp:1239
+#: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
+#: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
+#: Source/msg.cpp:1281
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} vyčaroval nedovolené kouzlo."
 
-#: Source/msg.cpp:1621 Source/multi.cpp:799
+#: Source/msg.cpp:1668 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Hráč '{:s}' (úroveň {:d}) se připojil do hry"
 
-#: Source/msg.cpp:1925
+#: Source/msg.cpp:1972
 msgid "Waiting for game data..."
 msgstr "Čekám na herní data..."
 
-#: Source/msg.cpp:1933
+#: Source/msg.cpp:1980
 msgid "The game ended"
 msgstr "Hra byla ukončena"
 
-#: Source/msg.cpp:1939
+#: Source/msg.cpp:1986
 msgid "Unable to get level data"
 msgstr "Nelze získat data o patře"
 
@@ -5445,448 +5554,448 @@ msgstr "Hráč '{:s}' zabil Diabla a opustil hru!"
 msgid "Player '{:s}' dropped due to timeout"
 msgstr "Hráč '{:s}' byl odpojen (timeout)"
 
-#: Source/multi.cpp:801
+#: Source/multi.cpp:806
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "Hráč '{:s}' (úroveň {:d}) už je připojen do hry"
 
 #. TRANSLATORS: Shrine Name Block
-#: Source/objects.cpp:101
+#: Source/objects.cpp:104
 msgid "Mysterious"
 msgstr "Tajemný"
 
-#: Source/objects.cpp:102
+#: Source/objects.cpp:105
 msgid "Hidden"
 msgstr "Skrytý"
 
-#: Source/objects.cpp:103
+#: Source/objects.cpp:106
 msgid "Gloomy"
 msgstr "Ponurý"
 
-#: Source/objects.cpp:105 Source/objects.cpp:112
+#: Source/objects.cpp:108 Source/objects.cpp:115
 msgid "Magical"
 msgstr "Kouzelný"
 
-#: Source/objects.cpp:106
+#: Source/objects.cpp:109
 msgid "Stone"
 msgstr "Kamenný"
 
-#: Source/objects.cpp:107
+#: Source/objects.cpp:110
 msgid "Religious"
 msgstr "Náboženský"
 
-#: Source/objects.cpp:108
+#: Source/objects.cpp:111
 msgid "Enchanted"
 msgstr "Očarovaný"
 
-#: Source/objects.cpp:109
+#: Source/objects.cpp:112
 msgid "Thaumaturgic"
 msgstr "Divotvorný"
 
-#: Source/objects.cpp:110
+#: Source/objects.cpp:113
 msgid "Fascinating"
 msgstr "Fascinující"
 
-#: Source/objects.cpp:111
+#: Source/objects.cpp:114
 msgid "Cryptic"
 msgstr "Záhadný"
 
-#: Source/objects.cpp:113
+#: Source/objects.cpp:116
 msgid "Eldritch"
 msgstr "Podivný"
 
-#: Source/objects.cpp:114
+#: Source/objects.cpp:117
 msgid "Eerie"
 msgstr "Tajuplný"
 
-#: Source/objects.cpp:115
+#: Source/objects.cpp:118
 msgid "Divine"
 msgstr "Božský"
 
-#: Source/objects.cpp:117
+#: Source/objects.cpp:120
 msgid "Sacred"
 msgstr "Posvátný"
 
-#: Source/objects.cpp:118
+#: Source/objects.cpp:121
 msgid "Spiritual"
 msgstr "Duchovní"
 
-#: Source/objects.cpp:119
+#: Source/objects.cpp:122
 msgid "Spooky"
 msgstr "Strašidelný"
 
-#: Source/objects.cpp:120
+#: Source/objects.cpp:123
 msgid "Abandoned"
 msgstr "Opuštěný"
 
-#: Source/objects.cpp:121
+#: Source/objects.cpp:124
 msgid "Creepy"
 msgstr "Strašidelný"
 
-#: Source/objects.cpp:122
+#: Source/objects.cpp:125
 msgid "Quiet"
 msgstr "Tichý"
 
-#: Source/objects.cpp:123
+#: Source/objects.cpp:126
 msgid "Secluded"
 msgstr "Odloučený"
 
-#: Source/objects.cpp:124
+#: Source/objects.cpp:127
 msgid "Ornate"
 msgstr "Ozdobený"
 
-#: Source/objects.cpp:125
+#: Source/objects.cpp:128
 msgid "Glimmering"
 msgstr "Mihotavý"
 
-#: Source/objects.cpp:126
+#: Source/objects.cpp:129
 msgid "Tainted"
 msgstr "Poskvrněný"
 
-#: Source/objects.cpp:127
+#: Source/objects.cpp:130
 msgid "Oily"
 msgstr "Mastný"
 
-#: Source/objects.cpp:128
+#: Source/objects.cpp:131
 msgid "Glowing"
 msgstr "Zařící"
 
-#: Source/objects.cpp:129
+#: Source/objects.cpp:132
 msgid "Mendicant's"
 msgstr "Žebrákův"
 
-#: Source/objects.cpp:130
+#: Source/objects.cpp:133
 msgid "Sparkling"
 msgstr "Jiskřivý"
 
-#: Source/objects.cpp:131
+#: Source/objects.cpp:134
 msgid "Town"
 msgstr "Městský"
 
-#: Source/objects.cpp:132
+#: Source/objects.cpp:135
 msgid "Shimmering"
 msgstr "Třpytivý"
 
-#: Source/objects.cpp:133
+#: Source/objects.cpp:136
 msgid "Solar"
 msgstr "Sluneční"
 
 #. TRANSLATORS: Shrine Name Block end
-#: Source/objects.cpp:135
+#: Source/objects.cpp:138
 msgid "Murphy's"
 msgstr "Murphyho"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:265
+#: Source/objects.cpp:268
 msgid "The Great Conflict"
 msgstr "Velký Konflikt"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:266
+#: Source/objects.cpp:269
 msgid "The Wages of Sin are War"
 msgstr "Mzdou Hříchu je Válka"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:267
+#: Source/objects.cpp:270
 msgid "The Tale of the Horadrim"
 msgstr "Příběh o Horadrimech"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:268
+#: Source/objects.cpp:271
 msgid "The Dark Exile"
 msgstr "Temný Exil"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:269
+#: Source/objects.cpp:272
 msgid "The Sin War"
 msgstr "Hříšná Válka"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:270
+#: Source/objects.cpp:273
 msgid "The Binding of the Three"
 msgstr "Spoutání Trojice"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:271
+#: Source/objects.cpp:274
 msgid "The Realms Beyond"
 msgstr "Sféry Mimo"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:272
+#: Source/objects.cpp:275
 msgid "Tale of the Three"
 msgstr "Příbeh o Třech"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:273
+#: Source/objects.cpp:276
 msgid "The Black King"
 msgstr "Černý Král"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:274
+#: Source/objects.cpp:277
 msgid "Journal: The Ensorcellment"
 msgstr "Deník: Očarování"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:275
+#: Source/objects.cpp:278
 msgid "Journal: The Meeting"
 msgstr "Deník: Setkání"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:276
+#: Source/objects.cpp:279
 msgid "Journal: The Tirade"
 msgstr "Deník: Tiráda"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:277
+#: Source/objects.cpp:280
 msgid "Journal: His Power Grows"
 msgstr "Deník: Jeho Síla Roste"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:278
+#: Source/objects.cpp:281
 msgid "Journal: NA-KRUL"
 msgstr "Deník: NA-KRUL"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:279
+#: Source/objects.cpp:282
 msgid "Journal: The End"
 msgstr "Deník: Konec"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:280
+#: Source/objects.cpp:283
 msgid "A Spellbook"
 msgstr "Kniha Kouzel"
 
-#: Source/objects.cpp:5365
+#: Source/objects.cpp:5339
 msgid "Crucified Skeleton"
 msgstr "Ukřižovaný Kostlivec"
 
-#: Source/objects.cpp:5369
+#: Source/objects.cpp:5343
 msgid "Lever"
 msgstr "Páka"
 
-#: Source/objects.cpp:5378
+#: Source/objects.cpp:5352
 msgid "Open Door"
 msgstr "Otevřené dveře"
 
-#: Source/objects.cpp:5380
+#: Source/objects.cpp:5354
 msgid "Closed Door"
 msgstr "Zavřené dveře"
 
-#: Source/objects.cpp:5382
+#: Source/objects.cpp:5356
 msgid "Blocked Door"
 msgstr "Zablokované dveře"
 
-#: Source/objects.cpp:5387
+#: Source/objects.cpp:5361
 msgid "Ancient Tome"
 msgstr "Prastará Kniha"
 
-#: Source/objects.cpp:5389
+#: Source/objects.cpp:5363
 msgid "Book of Vileness"
 msgstr "Kniha Ohavností"
 
-#: Source/objects.cpp:5394
+#: Source/objects.cpp:5368
 msgid "Skull Lever"
 msgstr "Páka s lebkou"
 
-#: Source/objects.cpp:5397
+#: Source/objects.cpp:5371
 msgid "Mythical Book"
 msgstr "Mýtická Kniha"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5375
 msgid "Small Chest"
 msgstr "Malá Truhla"
 
-#: Source/objects.cpp:5405
+#: Source/objects.cpp:5379
 msgid "Chest"
 msgstr "Truhla"
 
-#: Source/objects.cpp:5410
+#: Source/objects.cpp:5384
 msgid "Large Chest"
 msgstr "Velká Truhla"
 
-#: Source/objects.cpp:5413
+#: Source/objects.cpp:5387
 msgid "Sarcophagus"
 msgstr "Sarkofág"
 
-#: Source/objects.cpp:5416
+#: Source/objects.cpp:5390
 msgid "Bookshelf"
 msgstr "Police na knihy"
 
-#: Source/objects.cpp:5420
+#: Source/objects.cpp:5394
 msgid "Bookcase"
 msgstr "Knihovna"
 
-#: Source/objects.cpp:5425
+#: Source/objects.cpp:5399
 msgid "Pod"
 msgstr "Zámotek"
 
-#: Source/objects.cpp:5427
+#: Source/objects.cpp:5401
 msgid "Urn"
 msgstr "Urna"
 
-#: Source/objects.cpp:5429
+#: Source/objects.cpp:5403
 msgid "Barrel"
 msgstr "Barel"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5433
+#: Source/objects.cpp:5407
 msgid "{:s} Shrine"
 msgstr "{:s} Oltář"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5411
 msgid "Skeleton Tome"
 msgstr "Kostěná Kniha"
 
-#: Source/objects.cpp:5440
+#: Source/objects.cpp:5414
 msgid "Library Book"
 msgstr "Kniha v Knihovně"
 
-#: Source/objects.cpp:5443
+#: Source/objects.cpp:5417
 msgid "Blood Fountain"
 msgstr "Krvavá Fontána"
 
-#: Source/objects.cpp:5446
+#: Source/objects.cpp:5420
 msgid "Decapitated Body"
 msgstr "Setnuté Tělo"
 
-#: Source/objects.cpp:5449
+#: Source/objects.cpp:5423
 msgid "Book of the Blind"
 msgstr "Kniha Slepých"
 
-#: Source/objects.cpp:5452
+#: Source/objects.cpp:5426
 msgid "Book of Blood"
 msgstr "Kniha Krve"
 
-#: Source/objects.cpp:5455
+#: Source/objects.cpp:5429
 msgid "Purifying Spring"
 msgstr "Očišťující Pramen"
 
-#: Source/objects.cpp:5462 Source/objects.cpp:5486
+#: Source/objects.cpp:5436 Source/objects.cpp:5460
 msgid "Weapon Rack"
 msgstr "Stojan na Zbraně"
 
-#: Source/objects.cpp:5465
+#: Source/objects.cpp:5439
 msgid "Goat Shrine"
 msgstr "Oltář Kozlů"
 
-#: Source/objects.cpp:5468
+#: Source/objects.cpp:5442
 msgid "Cauldron"
 msgstr "Velký Kotel"
 
-#: Source/objects.cpp:5471
+#: Source/objects.cpp:5445
 msgid "Murky Pool"
 msgstr "Kalná Kaluž"
 
-#: Source/objects.cpp:5474
+#: Source/objects.cpp:5448
 msgid "Fountain of Tears"
 msgstr "Fontána Slz"
 
-#: Source/objects.cpp:5477
+#: Source/objects.cpp:5451
 msgid "Steel Tome"
 msgstr "Ocelová Kniha"
 
-#: Source/objects.cpp:5480
+#: Source/objects.cpp:5454
 msgid "Pedestal of Blood"
 msgstr "Podstavec Krve"
 
-#: Source/objects.cpp:5489
+#: Source/objects.cpp:5463
 msgid "Mushroom Patch"
 msgstr "Houbový Porost"
 
-#: Source/objects.cpp:5492
+#: Source/objects.cpp:5466
 msgid "Vile Stand"
 msgstr "Odporný Stojan"
 
-#: Source/objects.cpp:5495
+#: Source/objects.cpp:5469
 msgid "Slain Hero"
 msgstr "Zabitý Hrdina"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5502
+#: Source/objects.cpp:5476
 msgid "Trapped {:s}"
 msgstr "{:s} s pastí"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5508
+#: Source/objects.cpp:5482
 msgid "{:s} (disabled)"
 msgstr "{:s} (deaktivováno)"
 
-#: Source/panels/charpanel.cpp:109
+#: Source/panels/charpanel.cpp:110
 msgid "MAX"
 msgstr "Maximum"
 
-#: Source/panels/charpanel.cpp:119
+#: Source/panels/charpanel.cpp:120
 msgid "Level"
 msgstr "Úroveň"
 
-#: Source/panels/charpanel.cpp:121
+#: Source/panels/charpanel.cpp:122
 msgid "Experience"
 msgstr "Zkušenosti"
 
-#: Source/panels/charpanel.cpp:123
+#: Source/panels/charpanel.cpp:124
 msgid "Next level"
 msgstr "Další úroveň"
 
-#: Source/panels/charpanel.cpp:126
+#: Source/panels/charpanel.cpp:127
 msgid "None"
 msgstr "Žádný"
 
-#: Source/panels/charpanel.cpp:132
+#: Source/panels/charpanel.cpp:133
 msgid "Base"
 msgstr "Základ"
 
-#: Source/panels/charpanel.cpp:133
+#: Source/panels/charpanel.cpp:134
 msgid "Now"
 msgstr "Nyní"
 
-#: Source/panels/charpanel.cpp:134
+#: Source/panels/charpanel.cpp:135
 msgid "Strength"
 msgstr "Síla"
 
-#: Source/panels/charpanel.cpp:138
+#: Source/panels/charpanel.cpp:139
 msgid "Magic"
 msgstr "Magie"
 
-#: Source/panels/charpanel.cpp:142
+#: Source/panels/charpanel.cpp:143
 msgid "Dexterity"
 msgstr "Obratnost"
 
-#: Source/panels/charpanel.cpp:145
+#: Source/panels/charpanel.cpp:146
 msgid "Vitality"
 msgstr "Vitalita"
 
-#: Source/panels/charpanel.cpp:148
+#: Source/panels/charpanel.cpp:149
 msgid "Points to distribute"
 msgstr "Body k distribuci"
 
-#: Source/panels/charpanel.cpp:158
+#: Source/panels/charpanel.cpp:159
 msgid "Armor class"
 msgstr "Obranné číslo"
 
-#: Source/panels/charpanel.cpp:160
+#: Source/panels/charpanel.cpp:161
 msgid "To hit"
 msgstr "Šance na zásah"
 
-#: Source/panels/charpanel.cpp:162
+#: Source/panels/charpanel.cpp:163
 msgid "Damage"
 msgstr "Poškození"
 
-#: Source/panels/charpanel.cpp:168
+#: Source/panels/charpanel.cpp:170
 msgid "Life"
 msgstr "Životy"
 
-#: Source/panels/charpanel.cpp:172
+#: Source/panels/charpanel.cpp:174
 msgid "Mana"
 msgstr "Mana"
 
-#: Source/panels/charpanel.cpp:177
+#: Source/panels/charpanel.cpp:179
 msgid "Resist magic"
 msgstr "Odolnost Magie"
 
-#: Source/panels/charpanel.cpp:179
+#: Source/panels/charpanel.cpp:181
 msgid "Resist fire"
 msgstr "Odolnost Oheň"
 
-#: Source/panels/charpanel.cpp:181
+#: Source/panels/charpanel.cpp:183
 msgid "Resist lightning"
 msgstr "Odolnost Blesky"
 
@@ -5924,27 +6033,26 @@ msgstr "kouzla"
 msgid "mute"
 msgstr "ztlumit"
 
-#: Source/pfile.cpp:260
+#: Source/pfile.cpp:242
 msgid "Failed to open player archive for writing."
 msgstr "Nepodařilo se otevřít archiv hráče k zápisu."
 
-#: Source/pfile.cpp:385
+#: Source/pfile.cpp:377
 msgid "Unable to open archive"
 msgstr "Nelze otevřít archiv"
 
-#: Source/pfile.cpp:387
+#: Source/pfile.cpp:379
 msgid "Unable to load character"
 msgstr "Nelze načíst postavu"
 
-#: Source/pfile.cpp:410 Source/pfile.cpp:430
+#: Source/pfile.cpp:403 Source/pfile.cpp:423
 msgid "Unable to read to save file archive"
 msgstr "Nelze přečíst z archivu uložené hry"
 
-#: Source/pfile.cpp:449
+#: Source/pfile.cpp:442
 msgid "Unable to write to save file archive"
 msgstr "Nelze zapsat do archivu uložené hry"
 
-#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (úroveň {:d}): {:s}"
@@ -5960,7 +6068,7 @@ msgstr ",%03d"
 msgid "%i gold"
 msgstr "%i zlaťáků"
 
-#: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:56
+#: Source/qol/monhealthbar.cpp:37 Source/qol/xpbar.cpp:56
 msgid ""
 "Failed to load UI resources.\n"
 "\n"
@@ -6373,298 +6481,331 @@ msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "Runa Kamene"
 
-#: Source/stores.cpp:179 Source/stores.cpp:186
+#: Source/stores.cpp:91
+#, fuzzy
+#| msgid "Griswold's Edge"
+msgid "Griswold"
+msgstr "Griswoldovo Ostří"
+
+#: Source/stores.cpp:92
+msgid "Pepin"
+msgstr ""
+
+#: Source/stores.cpp:94
+msgid "Ogden"
+msgstr ""
+
+#: Source/stores.cpp:95
+msgid "Cain"
+msgstr ""
+
+#: Source/stores.cpp:96
+#, fuzzy
+#| msgid "Talk to Farnham"
+msgid "Farnham"
+msgstr "Mluvit s Farnhamem"
+
+#: Source/stores.cpp:97
+msgid "Adria"
+msgstr ""
+
+#: Source/stores.cpp:98 Source/stores.cpp:1305
+#, fuzzy
+#| msgid "brilliance"
+msgid "Gillian"
+msgstr "oslnivosti"
+
+#: Source/stores.cpp:99
+msgid "Wirt"
+msgstr ""
+
+#: Source/stores.cpp:218 Source/stores.cpp:225
+msgid "Back"
+msgstr "Zpět"
+
+#: Source/stores.cpp:250 Source/stores.cpp:257
 msgid ",  "
 msgstr ",  "
 
-#: Source/stores.cpp:195
+#: Source/stores.cpp:266
 msgid "Damage: {:d}-{:d}  "
 msgstr "Poškození: {:d}-{:d}  "
 
-#: Source/stores.cpp:197
+#: Source/stores.cpp:268
 msgid "Armor: {:d}  "
 msgstr "Obrana: {:d}  "
 
-#: Source/stores.cpp:199
+#: Source/stores.cpp:270
 msgid "Dur: {:d}/{:d},  "
 msgstr "Výdrž: {:d}/{:d},  "
 
-#: Source/stores.cpp:202
+#: Source/stores.cpp:273
 msgid "Indestructible,  "
 msgstr "Nezničitelný,  "
 
-#: Source/stores.cpp:210
+#: Source/stores.cpp:281
 msgid "No required attributes"
 msgstr "Požadavky: nic"
 
-#: Source/stores.cpp:243 Source/stores.cpp:995 Source/stores.cpp:1239
+#: Source/stores.cpp:314 Source/stores.cpp:1052 Source/stores.cpp:1292
 msgid "Welcome to the"
 msgstr "Vítejte v mém"
 
-#: Source/stores.cpp:244
+#: Source/stores.cpp:315
 msgid "Blacksmith's shop"
 msgstr "Kovářském obchodě"
 
-#: Source/stores.cpp:245 Source/stores.cpp:610 Source/stores.cpp:997
-#: Source/stores.cpp:1054 Source/stores.cpp:1241 Source/stores.cpp:1253
-#: Source/stores.cpp:1265
+#: Source/stores.cpp:316 Source/stores.cpp:670 Source/stores.cpp:1054
+#: Source/stores.cpp:1110 Source/stores.cpp:1294 Source/stores.cpp:1306
+#: Source/stores.cpp:1318
 msgid "Would you like to:"
 msgstr "Co byste rádi:"
 
-#: Source/stores.cpp:246
+#: Source/stores.cpp:317
 msgid "Talk to Griswold"
 msgstr "Mluvit s Griswoldem"
 
-#: Source/stores.cpp:247
+#: Source/stores.cpp:318
 msgid "Buy basic items"
 msgstr "Koupit základní předměty"
 
-#: Source/stores.cpp:248
+#: Source/stores.cpp:319
 msgid "Buy premium items"
 msgstr "Koupit prémiové předměty"
 
-#: Source/stores.cpp:249 Source/stores.cpp:613
+#: Source/stores.cpp:320 Source/stores.cpp:673
 msgid "Sell items"
 msgstr "Prodat předměty"
 
-#: Source/stores.cpp:250
+#: Source/stores.cpp:321
 msgid "Repair items"
 msgstr "Opravit předměty"
 
-#: Source/stores.cpp:251
+#: Source/stores.cpp:322
 msgid "Leave the shop"
 msgstr "Odejít z obchodu"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
+#: Source/stores.cpp:360 Source/stores.cpp:714 Source/stores.cpp:1089
 msgid "I have these items for sale:             Your gold: {:d}"
 msgstr "Mám na prodej tyto věci:             Tvoje zlaťáky: {:d}"
 
-#: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
-#: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
-#: Source/stores.cpp:660 Source/stores.cpp:751 Source/stores.cpp:767
-#: Source/stores.cpp:832 Source/stores.cpp:848 Source/stores.cpp:1038
-#: Source/stores.cpp:1154 Source/stores.cpp:1170 Source/stores.cpp:1205
-#: Source/stores.cpp:1232
-msgid "Back"
-msgstr "Zpět"
-
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:351
+#: Source/stores.cpp:420
 msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr "Mám na prodej tyto prémiové věci:             Tvoje zlaťáky: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:474 Source/stores.cpp:746
+#: Source/stores.cpp:541 Source/stores.cpp:804
 msgid "You have nothing I want.             Your gold: {:d}"
 msgstr "Nemáš nic co bych odkoupil.             Tvoje zlaťáky: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:489 Source/stores.cpp:761
+#: Source/stores.cpp:554 Source/stores.cpp:817
 msgid "Which item is for sale?             Your gold: {:d}"
 msgstr "Které předměty jsou na prodej?             Tvoje zlaťáky: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:564
+#: Source/stores.cpp:627
 msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr "Nemáš nic k opravě.             Tvoje zlaťáky: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:579
+#: Source/stores.cpp:640
 msgid "Repair which item?             Your gold: {:d}"
 msgstr "Který předmět mám opravit?             Tvoje zlaťáky: {:d}"
 
-#: Source/stores.cpp:609
+#: Source/stores.cpp:669
 msgid "Witch's shack"
 msgstr "Čarodějná chalupa"
 
-#: Source/stores.cpp:611
+#: Source/stores.cpp:671
 msgid "Talk to Adria"
 msgstr "Mluvit s Adrií"
 
-#: Source/stores.cpp:612 Source/stores.cpp:999
+#: Source/stores.cpp:672 Source/stores.cpp:1056
 msgid "Buy items"
 msgstr "Koupit předměty"
 
-#: Source/stores.cpp:614
+#: Source/stores.cpp:674
 msgid "Recharge staves"
 msgstr "Nabít hole"
 
-#: Source/stores.cpp:615
+#: Source/stores.cpp:675
 msgid "Leave the shack"
 msgstr "Odejít z chalupy"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:827
+#: Source/stores.cpp:881
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr "Nemáš žádné hole k nabití.             Tvoje zlaťáky: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:842
+#: Source/stores.cpp:894
 msgid "Recharge which item?             Your gold: {:d}"
 msgstr "Kterou hůl chceš nabít?             Tvoje zlaťáky: {:d}"
 
-#: Source/stores.cpp:858
+#: Source/stores.cpp:908
 msgid "You do not have enough gold"
 msgstr "Nemáš dostatek zlaťáků"
 
-#: Source/stores.cpp:866
+#: Source/stores.cpp:916
 msgid "You do not have enough room in inventory"
 msgstr "Nemáš dost místa v inventáři"
 
-#: Source/stores.cpp:903
+#: Source/stores.cpp:953
 msgid "Do we have a deal?"
 msgstr "Máme dohodu?"
 
-#: Source/stores.cpp:906
+#: Source/stores.cpp:956
 msgid "Are you sure you want to identify this item?"
 msgstr "Opravdu chceš identifikovat tento předmět?"
 
-#: Source/stores.cpp:912
+#: Source/stores.cpp:962
 msgid "Are you sure you want to buy this item?"
 msgstr "Opravdu chceš koupit tento předmět?"
 
-#: Source/stores.cpp:915
+#: Source/stores.cpp:965
 msgid "Are you sure you want to recharge this item?"
 msgstr "Opravdu chceš dobít tento předmět?"
 
-#: Source/stores.cpp:919
+#: Source/stores.cpp:969
 msgid "Are you sure you want to sell this item?"
 msgstr "Opravdu chceš prodat tento předmět?"
 
-#: Source/stores.cpp:922
+#: Source/stores.cpp:972
 msgid "Are you sure you want to repair this item?"
 msgstr "Opravdu chceš opravit tento předmět?"
 
-#: Source/stores.cpp:936 Source/towners.cpp:157
+#: Source/stores.cpp:986 Source/towners.cpp:157
 msgid "Wirt the Peg-legged boy"
 msgstr "Wirt, kluk s protézou"
 
-#: Source/stores.cpp:939 Source/stores.cpp:946
+#: Source/stores.cpp:989 Source/stores.cpp:996
 msgid "Talk to Wirt"
 msgstr "Mluvit s Wirtem"
 
-#: Source/stores.cpp:940
+#: Source/stores.cpp:990
 msgid "I have something for sale,"
 msgstr "Mám něco na prodej,"
 
-#: Source/stores.cpp:941
+#: Source/stores.cpp:991
 msgid "but it will cost 50 gold"
 msgstr "ale bude tě stát 50 zlaťáků"
 
-#: Source/stores.cpp:942
+#: Source/stores.cpp:992
 msgid "just to take a look. "
 msgstr "aby ses mohl podívat. "
 
-#: Source/stores.cpp:943
+#: Source/stores.cpp:993
 msgid "What have you got?"
 msgstr "Co máš za předmět?"
 
-#: Source/stores.cpp:944 Source/stores.cpp:947 Source/stores.cpp:1057
-#: Source/stores.cpp:1255
+#: Source/stores.cpp:994 Source/stores.cpp:997 Source/stores.cpp:1113
+#: Source/stores.cpp:1308
 msgid "Say goodbye"
 msgstr "Rozloučit se"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:957
+#: Source/stores.cpp:1007
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr "Mám na prodej tento předmět:             Tvoje zlaťáky: {:d}"
 
-#: Source/stores.cpp:974
+#: Source/stores.cpp:1030
 msgid "Leave"
 msgstr "Odejít"
 
-#: Source/stores.cpp:996
+#: Source/stores.cpp:1053
 msgid "Healer's home"
 msgstr "Domě Léčitele"
 
-#: Source/stores.cpp:998
+#: Source/stores.cpp:1055
 msgid "Talk to Pepin"
 msgstr "Mluvit s Pepinem"
 
-#: Source/stores.cpp:1000
+#: Source/stores.cpp:1057
 msgid "Leave Healer's home"
 msgstr "Odejít z Léčitelova domu"
 
-#: Source/stores.cpp:1053
+#: Source/stores.cpp:1109
 msgid "The Town Elder"
 msgstr "Městský Stařešina"
 
-#: Source/stores.cpp:1055
+#: Source/stores.cpp:1111
 msgid "Talk to Cain"
 msgstr "Mluvit s Cainem"
 
-#: Source/stores.cpp:1056
+#: Source/stores.cpp:1112
 msgid "Identify an item"
 msgstr "Identifikovat předmět"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1149
+#: Source/stores.cpp:1205
 msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr "Nemáš nic k identifikaci.             Tvoje zlaťáky: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1164
+#: Source/stores.cpp:1218
 msgid "Identify which item?             Your gold: {:d}"
 msgstr "Který předmět chceš identifikovat?             Tvoje zlaťáky: {:d}"
 
-#: Source/stores.cpp:1184
+#: Source/stores.cpp:1237
 msgid "This item is:"
 msgstr "Tento předmět je:"
 
-#: Source/stores.cpp:1187
+#: Source/stores.cpp:1240
 msgid "Done"
 msgstr "Hotovo"
 
-#: Source/stores.cpp:1196
+#: Source/stores.cpp:1249
 msgid "Talk to {:s}"
 msgstr "Mluvit s {:s}"
 
-#: Source/stores.cpp:1200
+#: Source/stores.cpp:1253
 msgid "Talking to {:s}"
 msgstr "Mluvení s {:s}"
 
-#: Source/stores.cpp:1202
+#: Source/stores.cpp:1255
 msgid "is not available"
 msgstr "není dostupné"
 
-#: Source/stores.cpp:1203
+#: Source/stores.cpp:1256
 msgid "in the shareware"
 msgstr "v shareware"
 
-#: Source/stores.cpp:1204
+#: Source/stores.cpp:1257
 msgid "version"
 msgstr "verzi"
 
-#: Source/stores.cpp:1231
+#: Source/stores.cpp:1284
 msgid "Gossip"
 msgstr "Klábosit"
 
-#: Source/stores.cpp:1240
+#: Source/stores.cpp:1293
 msgid "Rising Sun"
 msgstr "Vycházející Slunce"
 
-#: Source/stores.cpp:1242
+#: Source/stores.cpp:1295
 msgid "Talk to Ogden"
 msgstr "Mluvit s Ogdenem"
 
-#: Source/stores.cpp:1243
+#: Source/stores.cpp:1296
 msgid "Leave the tavern"
 msgstr "Odejít z hospody"
 
-#: Source/stores.cpp:1254
+#: Source/stores.cpp:1307
 msgid "Talk to Gillian"
 msgstr "Mluvit s Gillian"
 
-#: Source/stores.cpp:1264 Source/towners.cpp:212
+#: Source/stores.cpp:1317 Source/towners.cpp:212
 msgid "Farnham the Drunk"
 msgstr "Opilec Farnham"
 
-#: Source/stores.cpp:1266
+#: Source/stores.cpp:1319
 msgid "Talk to Farnham"
 msgstr "Mluvit s Farnhamem"
 
-#: Source/stores.cpp:1267
+#: Source/stores.cpp:1320
 msgid "Say Goodbye"
 msgstr "Rozloučit se"
 
@@ -9404,17 +9545,17 @@ msgid "Down to Crypt"
 msgstr "Dolů do krypty"
 
 #: Source/trigs.cpp:412 Source/trigs.cpp:492 Source/trigs.cpp:539
-#: Source/trigs.cpp:630
+#: Source/trigs.cpp:634
 msgid "Up to level {:d}"
 msgstr "Nahoru do patra {:d}"
 
 #: Source/trigs.cpp:414 Source/trigs.cpp:469 Source/trigs.cpp:521
-#: Source/trigs.cpp:596 Source/trigs.cpp:613 Source/trigs.cpp:660
+#: Source/trigs.cpp:600 Source/trigs.cpp:617 Source/trigs.cpp:664
 msgid "Up to town"
 msgstr "Nahoru do města"
 
-#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:552
-#: Source/trigs.cpp:577 Source/trigs.cpp:642
+#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:556
+#: Source/trigs.cpp:581 Source/trigs.cpp:646
 msgid "Down to level {:d}"
 msgstr "Dolů do patra {:d}"
 
@@ -9426,14 +9567,14 @@ msgstr "Nahoru do Krypty úrovně {:d}"
 msgid "Down to Crypt level {:d}"
 msgstr "Dolů do Krypty úrovně {:d}"
 
-#: Source/trigs.cpp:564
+#: Source/trigs.cpp:568
 msgid "Up to Nest level {:d}"
 msgstr "Nahoru do Hnízda úrovně {:d}"
 
-#: Source/trigs.cpp:673
+#: Source/trigs.cpp:677
 msgid "Down to Diablo"
 msgstr "Dolů do Hnízda úrovně {:d}"
 
-#: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
+#: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "Zpět do Patra {:d}"
