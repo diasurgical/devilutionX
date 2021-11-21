@@ -21,7 +21,8 @@ char32_t DecodeFirstUtf8CodePoint(string_view input, uint8_t *len)
 			return Utf8DecodeError;
 		}
 	}
-	return codepoint;
+	*len = input.size();
+	return Utf8DecodeError;
 }
 
 } // namespace devilution
