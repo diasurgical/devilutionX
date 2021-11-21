@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-09-20 04:34+0200\n"
+"POT-Creation-Date: 2021-11-21 05:45+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -157,6 +157,7 @@ msgstr ""
 msgid "QA Counterintelligence"
 msgstr ""
 
+#. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
 msgstr ""
@@ -309,15 +310,49 @@ msgstr ""
 msgid "\tNo souls were sold in the making of this game."
 msgstr ""
 
-#: Source/DiabloUI/dialogs.cpp:172 Source/DiabloUI/dialogs.cpp:185
-#: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
-#: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:181
-#: Source/DiabloUI/selgame.cpp:314 Source/DiabloUI/selgame.cpp:387
-#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
-#: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:525
+#: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
+#: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
+#: Source/DiabloUI/selgame.cpp:193 Source/DiabloUI/selgame.cpp:211
+#: Source/DiabloUI/selgame.cpp:352 Source/DiabloUI/selgame.cpp:428
+#: Source/DiabloUI/selhero.cpp:186 Source/DiabloUI/selhero.cpp:211
+#: Source/DiabloUI/selhero.cpp:281 Source/DiabloUI/selhero.cpp:536
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
 msgstr ""
+
+#: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
+#, fuzzy
+#| msgid "Down to Diablo"
+msgid "Switch to Diablo"
+msgstr "Ned till Diablo"
+
+#: Source/DiabloUI/extrasmenu.cpp:41
+#, fuzzy
+#| msgid "Exit Hellfire"
+msgid "Switch to Hellfire"
+msgstr "Avsluta Hellfire"
+
+#: Source/DiabloUI/extrasmenu.cpp:43
+msgid "Switch to Fullgame"
+msgstr ""
+
+#: Source/DiabloUI/extrasmenu.cpp:43
+#, fuzzy
+#| msgid "in the shareware"
+msgid "Switch to Shareware"
+msgstr "i shareware"
+
+#: Source/DiabloUI/extrasmenu.cpp:44
+msgid "Replay Intro"
+msgstr "Kör om Intro"
+
+#: Source/DiabloUI/extrasmenu.cpp:45
+msgid "Support"
+msgstr "Support"
+
+#: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
+msgid "Previous Menu"
+msgstr "Föregående Meny"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -328,293 +363,301 @@ msgid "Multi Player"
 msgstr "Flera Spelare"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-msgid "Replay Intro"
-msgstr "Kör om Intro"
+#, fuzzy
+#| msgid "Extra charges"
+msgid "Extras"
+msgstr "Extra laddningar"
 
 #: Source/DiabloUI/mainmenu.cpp:39
-msgid "Support"
-msgstr "Support"
-
-#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Show Credits"
 msgstr "Visa Spelskapare"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Hellfire"
 msgstr "Avsluta Hellfire"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Diablo"
 msgstr "Avsluta Diablo"
 
-#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
-#: Source/DiabloUI/mainmenu.cpp:99
-msgid ""
-"The Diablo introduction cinematic is only available in the full retail "
-"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-msgstr ""
-"Introduktionsvideon finns endast tillgänglig i den kompletta versionen av "
-"Diablo. Besök https://www.gog.com/game/diablo för att köpa."
+#: Source/DiabloUI/mainmenu.cpp:55
+#, fuzzy
+#| msgid "in the shareware"
+msgid "Shareware"
+msgstr "i shareware"
 
-#: Source/DiabloUI/progress.cpp:48 Source/DiabloUI/selconn.cpp:76
-#: Source/DiabloUI/selhero.cpp:188 Source/DiabloUI/selhero.cpp:213
-#: Source/DiabloUI/selhero.cpp:283 Source/DiabloUI/selhero.cpp:533
+#: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
+#: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
+#: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: Source/DiabloUI/selconn.cpp:38 Source/DiabloUI/selgame.cpp:77
-#: Source/DiabloUI/selgame.cpp:372
+#: Source/DiabloUI/selconn.cpp:13
 msgid "Client-Server (TCP)"
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:41
+#: Source/DiabloUI/selconn.cpp:14
 msgid "Loopback"
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:434
-#: Source/DiabloUI/selgame.cpp:452
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
+#: Source/DiabloUI/selgame.cpp:510
 msgid "Multi Player Game"
 msgstr "Flerapelarsspel"
 
-#: Source/DiabloUI/selconn.cpp:53
+#: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:59
+#: Source/DiabloUI/selconn.cpp:65
 msgid "no gateway needed"
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:65
+#: Source/DiabloUI/selconn.cpp:71
 msgid "Select Connection"
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:68
+#: Source/DiabloUI/selconn.cpp:74
 msgid "Change Gateway"
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:101
+#: Source/DiabloUI/selconn.cpp:107
 msgid "All computers must be connected to a TCP-compatible network."
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:105
+#: Source/DiabloUI/selconn.cpp:111
 msgid "All computers must be connected to the internet."
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:109
+#: Source/DiabloUI/selconn.cpp:115
 msgid "Play by yourself with no network exposure."
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:114
+#: Source/DiabloUI/selconn.cpp:120
 msgid "Players Supported: {:d}"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:80 Source/DiabloUI/selgame.cpp:375
+#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
 msgid "Description:"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:86
+#: Source/DiabloUI/selgame.cpp:88
 msgid "Select Action"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:88 Source/DiabloUI/selgame.cpp:151
-#: Source/DiabloUI/selgame.cpp:295
+#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
+#: Source/DiabloUI/selgame.cpp:333
 msgid "Create Game"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:89
+#: Source/DiabloUI/selgame.cpp:93
+msgid "Create Public Game"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:97 Source/DiabloUI/selgame.cpp:166
-#: Source/DiabloUI/selgame.cpp:184 Source/DiabloUI/selgame.cpp:317
-#: Source/DiabloUI/selgame.cpp:390
+#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
+#: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
+#: Source/DiabloUI/selgame.cpp:431
 msgid "CANCEL"
 msgstr "AVBRYT"
 
-#: Source/DiabloUI/selgame.cpp:106
+#: Source/DiabloUI/selgame.cpp:122
 msgid "Create a new game with a difficulty setting of your choice."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:109
+#: Source/DiabloUI/selgame.cpp:125
+msgid ""
+"Create a new public game that anyone can join with a difficulty setting of "
+"your choice."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:128
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:154
+#: Source/DiabloUI/selgame.cpp:131
+msgid "Join the public game already in progress at this address."
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
 msgstr "Välj Svårighetsgrad"
 
-#: Source/DiabloUI/selgame.cpp:156 Source/DiabloUI/selgame.cpp:203
-#: Source/DiabloUI/selgame.cpp:306 Source/DiabloUI/selgame.cpp:326
-#: Source/diablo.cpp:1434
+#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
+#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "Normal"
 
-#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:207
-#: Source/diablo.cpp:1435
+#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "Mardröm"
 
-#: Source/DiabloUI/selgame.cpp:158 Source/DiabloUI/selgame.cpp:211
-#: Source/diablo.cpp:1436
+#: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "Helvete"
 
-#: Source/DiabloUI/selgame.cpp:172
+#: Source/DiabloUI/selgame.cpp:202
 msgid "Join TCP Games"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:175 Source/DiabloUI/selgame.cpp:178
+#: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
 msgid "Enter address"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:204
+#: Source/DiabloUI/selgame.cpp:240
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:208
+#: Source/DiabloUI/selgame.cpp:244
 msgid ""
 "Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:212
+#: Source/DiabloUI/selgame.cpp:248
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:227
+#: Source/DiabloUI/selgame.cpp:264
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:229
+#: Source/DiabloUI/selgame.cpp:266
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:304
+#: Source/DiabloUI/selgame.cpp:342
 msgid "Select Game Speed"
 msgstr "Välj Spelhastighet"
 
-#: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:330
+#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
 msgid "Fast"
 msgstr "Snabb"
 
-#: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:334
+#: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
 msgid "Faster"
 msgstr "Snabbare"
 
-#: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:338
+#: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
 msgid "Fastest"
 msgstr "Snabbast"
 
-#: Source/DiabloUI/selgame.cpp:327
+#: Source/DiabloUI/selgame.cpp:365
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:331
+#: Source/DiabloUI/selgame.cpp:369
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:335
+#: Source/DiabloUI/selgame.cpp:373
 msgid ""
 "Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. "
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:339
+#: Source/DiabloUI/selgame.cpp:377
 msgid ""
 "Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:381 Source/DiabloUI/selgame.cpp:384
+#: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
 msgid "Enter Password"
 msgstr ""
 
-#: Source/DiabloUI/selgame.cpp:407
+#: Source/DiabloUI/selgame.cpp:448
 msgid "The host is running a different game than you."
 msgstr ""
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
-#: Source/DiabloUI/selgame.cpp:410
+#: Source/DiabloUI/selgame.cpp:451
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
 
-#: Source/DiabloUI/selhero.cpp:99
+#: Source/DiabloUI/selhero.cpp:100
 msgid "New Hero"
 msgstr "Ny Hjälte"
 
-#: Source/DiabloUI/selhero.cpp:163
+#: Source/DiabloUI/selhero.cpp:164
 msgid "Choose Class"
 msgstr "Välj Klass"
 
-#: Source/DiabloUI/selhero.cpp:167 Source/panels/charpanel.cpp:22
+#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:22
 msgid "Warrior"
 msgstr "Krigare"
 
-#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
 msgid "Rogue"
 msgstr "Rövare"
 
-#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
 msgstr "Besvärjare"
 
-#: Source/DiabloUI/selhero.cpp:171 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:172 Source/panels/charpanel.cpp:25
 msgid "Monk"
 msgstr "Munk"
 
-#: Source/DiabloUI/selhero.cpp:174 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:175 Source/panels/charpanel.cpp:26
 msgid "Bard"
 msgstr "Skald"
 
-#: Source/DiabloUI/selhero.cpp:177 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:178 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
 msgstr "Barbar"
 
-#: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
+#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Multi Player Hero"
 msgstr "Ny Flerspelarhjälte"
 
-#: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
+#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Single Player Hero"
 msgstr "Ny Enspelarhjälte"
 
-#: Source/DiabloUI/selhero.cpp:202
+#: Source/DiabloUI/selhero.cpp:203
 msgid "Save File Exists"
 msgstr "Sparad Fil Finns"
 
-#: Source/DiabloUI/selhero.cpp:205 Source/gamemenu.cpp:38
+#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
 msgid "Load Game"
 msgstr "Ladda Spel"
 
-#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:37
+#: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
 msgstr "Nytt Spel"
 
-#: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:540
+#: Source/DiabloUI/selhero.cpp:217 Source/DiabloUI/selhero.cpp:551
 msgid "Single Player Characters"
 msgstr "Enspelarkaraktärer"
 
-#: Source/DiabloUI/selhero.cpp:262
+#: Source/DiabloUI/selhero.cpp:263
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
@@ -622,11 +665,11 @@ msgstr ""
 "Rövaren och Besvärjaren finns endast tillgängliga i den kompletta versionen "
 "av Diablo. Besök https://www.gog.com/game/diablo för att köpa."
 
-#: Source/DiabloUI/selhero.cpp:274 Source/DiabloUI/selhero.cpp:277
+#: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
 msgid "Enter Name"
 msgstr "Skriv In Namn"
 
-#: Source/DiabloUI/selhero.cpp:306
+#: Source/DiabloUI/selhero.cpp:307
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
@@ -635,336 +678,343 @@ msgstr ""
 "eller reserverade ord.\n"
 
 #. TRANSLATORS: Error Message
-#: Source/DiabloUI/selhero.cpp:313
+#: Source/DiabloUI/selhero.cpp:314
 msgid "Unable to create character."
 msgstr "Kunde inte skapa karaktären."
 
-#: Source/DiabloUI/selhero.cpp:467 Source/DiabloUI/selhero.cpp:470
+#: Source/DiabloUI/selhero.cpp:468 Source/DiabloUI/selhero.cpp:471
 msgid "Level:"
 msgstr "Nivå:"
 
-#: Source/DiabloUI/selhero.cpp:475
+#: Source/DiabloUI/selhero.cpp:476
 msgid "Strength:"
 msgstr "Styrka:"
 
-#: Source/DiabloUI/selhero.cpp:480
+#: Source/DiabloUI/selhero.cpp:481
 msgid "Magic:"
 msgstr "Magi:"
 
-#: Source/DiabloUI/selhero.cpp:485
+#: Source/DiabloUI/selhero.cpp:486
 msgid "Dexterity:"
 msgstr "Smidighet:"
 
-#: Source/DiabloUI/selhero.cpp:490
+#: Source/DiabloUI/selhero.cpp:491
 msgid "Vitality:"
 msgstr "Kropp:"
 
-#: Source/DiabloUI/selhero.cpp:496
+#: Source/DiabloUI/selhero.cpp:497
 msgid "Savegame:"
 msgstr "Sparat spel:"
 
-#: Source/DiabloUI/selhero.cpp:508
+#: Source/DiabloUI/selhero.cpp:510
 msgid "Select Hero"
 msgstr "Välj Hjälte"
 
-#: Source/DiabloUI/selhero.cpp:528
+#: Source/DiabloUI/selhero.cpp:539
 msgid "Delete"
 msgstr "Ta Bort"
 
-#: Source/DiabloUI/selhero.cpp:538
+#: Source/DiabloUI/selhero.cpp:549
 msgid "Multi Player Characters"
 msgstr "Flerspelarkaraktärer"
 
-#: Source/DiabloUI/selhero.cpp:580
+#: Source/DiabloUI/selhero.cpp:599
 msgid "Delete Multi Player Hero"
 msgstr "Ta Bort Flerspelarhjälte"
 
-#: Source/DiabloUI/selhero.cpp:582
+#: Source/DiabloUI/selhero.cpp:601
 msgid "Delete Single Player Hero"
 msgstr "Ta Bort Enspelarhjälte"
 
-#: Source/DiabloUI/selhero.cpp:584
+#: Source/DiabloUI/selhero.cpp:603
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Är du säker att du vill ta bort karaktären \"{:s}\"?"
 
-#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
+#: Source/DiabloUI/selstart.cpp:43
+#, fuzzy
+#| msgid "Exit Hellfire"
+msgid "Enter Hellfire"
+msgstr "Avsluta Hellfire"
+
+#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
 msgstr "Ja"
 
-#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:929
+#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:979
 msgid "No"
 msgstr "Nej"
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr "GOG.com har en webbsida på https://www.gog.com/forum/diablo"
-
-#: Source/DiabloUI/support_lines.cpp:9
-msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "Följ länkarna för att besöka diskussionsforumen som rör Diablo."
+msgid ""
+"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
+"community where we talk about things related to Diablo, and the Hellfire "
+"expansion."
+msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:10
-msgid "and the Hellfire expansion."
-msgstr "och Hellfire-expansionen."
-
-#: Source/DiabloUI/support_lines.cpp:12
 msgid ""
-"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
+"this address: https://github.com/diasurgical/devilutionX To help us better "
+"serve you, please be sure to include the version number, operating system, "
+"and the nature of the problem."
 msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "at this address: https://github.com/diasurgical/devilutionX"
+msgid "Disclaimer:"
 msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
-"To help us better serve you, please be sure to include the version number,"
+"\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
+"GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
+"the quality or compatibility of DevilutionX. All inquiries regarding "
+"DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
+"or GOG.com."
 msgstr ""
 
-#: Source/DiabloUI/support_lines.cpp:15
-msgid "operating system, and the nature of the problem."
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:18
-msgid "Disclaimer:"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:19
-msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:21
+#: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:22
-msgid ""
-"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:23
-msgid "  Entertainment or GOG.com."
+"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
+"under the SIL Open Font License, as well as Twitmoji which is licensed under "
+"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
+"license. See the ReadMe for further details."
 msgstr ""
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr ""
 
-#: Source/appfat.cpp:37
+#: Source/appfat.cpp:38
 msgid "Error"
 msgstr ""
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
-#: Source/appfat.cpp:101
+#: Source/appfat.cpp:102
 msgid ""
 "{:s}\n"
 "\n"
 "The error occurred at: {:s} line {:d}"
 msgstr ""
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:117
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
 
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq eller spawn.mpq"
-
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:123
 msgid "Data File Error"
 msgstr ""
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:131
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:133
 msgid "Read-Only Directory Error"
 msgstr ""
 
-#: Source/automap.cpp:468
+#: Source/automap.cpp:484
 msgid "game: "
 msgstr "spel: "
 
-#: Source/automap.cpp:474
+#: Source/automap.cpp:490
 msgid "password: "
 msgstr "lösenord: "
 
-#: Source/automap.cpp:487
+#: Source/automap.cpp:492
+#, fuzzy
+#| msgid "Quit Game"
+msgid "Public Game"
+msgstr "Avsluta Spel"
+
+#: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
 msgstr "Nivå: Näste {:d}"
 
-#: Source/automap.cpp:489
+#: Source/automap.cpp:506
 msgid "Level: Crypt {:d}"
 msgstr "Nivå: Krypta {:d}"
 
-#: Source/automap.cpp:491 Source/items.cpp:2086
+#: Source/automap.cpp:508 Source/items.cpp:2090
 msgid "Level: {:d}"
 msgstr "Nivå: {:d}"
 
-#: Source/control.cpp:196
+#: Source/control.cpp:212
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:196
+#: Source/control.cpp:212
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:196
+#: Source/control.cpp:212
 msgid "Enter"
 msgstr "Enter"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:215
 msgid "Character Information"
 msgstr "Karaktärsinformation"
 
-#: Source/control.cpp:200
+#: Source/control.cpp:216
 msgid "Quests log"
 msgstr "Uppdragslogg"
 
-#: Source/control.cpp:201
+#: Source/control.cpp:217
 msgid "Automap"
 msgstr "Autokarta"
 
-#: Source/control.cpp:202
+#: Source/control.cpp:218
 msgid "Main Menu"
 msgstr "Huvudmeny"
 
-#: Source/control.cpp:203
+#: Source/control.cpp:219
 msgid "Inventory"
 msgstr "Ägodelar"
 
-#: Source/control.cpp:204
+#: Source/control.cpp:220
 msgid "Spell book"
 msgstr "Magibok"
 
-#: Source/control.cpp:205
+#: Source/control.cpp:221
 msgid "Send Message"
 msgstr "Skicka Meddelande"
 
-#: Source/control.cpp:712 Source/control.cpp:1175
+#: Source/control.cpp:718 Source/control.cpp:1587
+msgid "Skill"
+msgstr "Färdighet"
+
+#: Source/control.cpp:719 Source/control.cpp:1237
 msgid "{:s} Skill"
 msgstr "{:s} Färdighet"
 
-#: Source/control.cpp:716 Source/control.cpp:1179
+#: Source/control.cpp:725
+#, fuzzy
+#| msgid "Spells"
+msgid "Spell"
+msgstr "Magi"
+
+#: Source/control.cpp:726 Source/control.cpp:1241
 msgid "{:s} Spell"
 msgstr "{:s} Trollformel"
 
-#: Source/control.cpp:718
+#: Source/control.cpp:728
 msgid "Damages undead only"
 msgstr "Skadar endast vandöda"
 
-#: Source/control.cpp:722 Source/control.cpp:1183 Source/control.cpp:1554
+#: Source/control.cpp:732 Source/control.cpp:1245 Source/control.cpp:1611
 msgid "Spell Level 0 - Unusable"
 msgstr "Trollformelsnivå 0 - Oanvändbar"
 
-#: Source/control.cpp:724 Source/control.cpp:1185 Source/control.cpp:1556
+#: Source/control.cpp:734 Source/control.cpp:1247 Source/control.cpp:1613
 msgid "Spell Level {:d}"
 msgstr "Trollformelsnivå {:d}"
 
-#: Source/control.cpp:729 Source/control.cpp:1189
+#: Source/control.cpp:741
+#, fuzzy
+#| msgid "{:d} Scroll"
+#| msgid_plural "{:d} Scrolls"
+msgid "Scroll"
+msgstr "{:d}-Skriftrulle"
+
+#: Source/control.cpp:742 Source/control.cpp:1251
 msgid "Scroll of {:s}"
 msgstr "Skriftrulle med {:s}"
 
-#: Source/control.cpp:745 Source/control.cpp:1206
+#: Source/control.cpp:747 Source/control.cpp:1257
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d}-Skriftrulle"
 msgstr[1] "{:d}-Skriftrullar"
 
-#: Source/control.cpp:750 Source/control.cpp:1210 Source/items.cpp:1325
+#: Source/control.cpp:754 Source/itemdat.cpp:167 Source/itemdat.cpp:168
+#: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
+msgid "Staff"
+msgstr "Stav"
+
+#: Source/control.cpp:755 Source/control.cpp:1261
 msgid "Staff of {:s}"
 msgstr "Stav med {:s}"
 
-#: Source/control.cpp:752 Source/control.cpp:1212
+#: Source/control.cpp:757 Source/control.cpp:1263
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Laddning"
 msgstr[1] "{:d} Laddningar"
 
-#: Source/control.cpp:762
+#: Source/control.cpp:767
 msgid "Spell Hotkey {:s}"
 msgstr "Trollformelsgenväg {:s}"
 
-#: Source/control.cpp:1152
+#: Source/control.cpp:1214
 msgid "Player friendly"
 msgstr "Spelarvänlig"
 
-#: Source/control.cpp:1154
+#: Source/control.cpp:1216
 msgid "Player attack"
 msgstr "Spelaranfall"
 
-#: Source/control.cpp:1157
+#: Source/control.cpp:1219
 msgid "Hotkey: {:s}"
 msgstr "Genväg: {:s}"
 
-#: Source/control.cpp:1165
+#: Source/control.cpp:1227
 msgid "Select current spell button"
 msgstr "Välj nuvarande trollformelsknapp"
 
-#: Source/control.cpp:1168
+#: Source/control.cpp:1230
 msgid "Hotkey: 's'"
 msgstr "Genväg: 's'"
 
-#: Source/control.cpp:1334 Source/inv.cpp:1893 Source/items.cpp:3751
+#: Source/control.cpp:1387 Source/inv.cpp:1980 Source/items.cpp:3749
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} guldmynt"
 msgstr[1] "{:d} guldmynt"
 
-#: Source/control.cpp:1337
+#: Source/control.cpp:1390
 msgid "Requirements not met"
 msgstr "Kraven uppnås ej"
 
-#: Source/control.cpp:1373
+#: Source/control.cpp:1426
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Nivå: {:d}"
 
-#: Source/control.cpp:1375
+#: Source/control.cpp:1428
 msgid "Hit Points {:d} of {:d}"
 msgstr "Kroppspoäng {:d} av {:d}"
 
-#: Source/control.cpp:1402
+#: Source/control.cpp:1457
 msgid "Level Up"
 msgstr "Nivåökning"
 
-#: Source/control.cpp:1532
-msgid "Skill"
-msgstr "Färdighet"
-
-#: Source/control.cpp:1536
+#: Source/control.cpp:1591
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Stav ({:d} laddning)"
 msgstr[1] "Stav ({:d} laddningar)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1544
+#: Source/control.cpp:1601
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "Mana: {:d}  Skada: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1546
+#: Source/control.cpp:1603
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "Mana: {:d}   Skada: ej aktuellt"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1549
+#: Source/control.cpp:1606
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "Mana: {:d}  Skada: 1/3 målets KP"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1606
+#: Source/control.cpp:1664
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "Du har {:d} guldmynt. Hur många vill du dra ifrån?"
@@ -1014,104 +1064,113 @@ msgstr "Det Oheliga Altaret"
 msgid "level 15"
 msgstr "nivå 15"
 
-#: Source/diablo.cpp:111
+#: Source/diablo.cpp:114
 msgid "I need help! Come Here!"
 msgstr ""
 
-#: Source/diablo.cpp:112
+#: Source/diablo.cpp:115
 msgid "Follow me."
 msgstr ""
 
-#: Source/diablo.cpp:113
+#: Source/diablo.cpp:116
 msgid "Here's something for you."
 msgstr ""
 
-#: Source/diablo.cpp:114
+#: Source/diablo.cpp:117
 msgid "Now you DIE!"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:777
+#: Source/diablo.cpp:781
 msgid "Options:\n"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:778
+#: Source/diablo.cpp:782
 msgid "Print this message and exit"
 msgstr "Skriv detta meddelande och avsluta"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:779
+#: Source/diablo.cpp:783
 msgid "Print the version and exit"
 msgstr "Skriv ut version och avsluta"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:780
+#: Source/diablo.cpp:784
 msgid "Specify the folder of diabdat.mpq"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:781
+#: Source/diablo.cpp:785
 msgid "Specify the folder of save files"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:782
+#: Source/diablo.cpp:786
 msgid "Specify the location of diablo.ini"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:783
-msgid "Specify the location of the .ttf font"
-msgstr ""
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
-msgid "Specify the name of a custom .ttf font"
-msgstr ""
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:787
 msgid "Skip startup videos"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:788
 msgid "Display frames per second"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:789
 msgid "Run in windowed mode"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:790
 msgid "Enable verbose logging"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr ""
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:791
 msgid "Record a demo file"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:792
 msgid "Play a demo file"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+#, fuzzy
+#| msgid "Hellfire Help"
+msgid "Force Hellfire mode"
+msgstr "Hellfire-Hjälp"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1120,16 +1179,11 @@ msgstr ""
 "Hellfire-alternativ:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr ""
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr ""
 
-#: Source/diablo.cpp:801
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1143,292 +1197,292 @@ msgstr ""
 msgid "version {:s}"
 msgstr ""
 
-#: Source/diablo.cpp:1206
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr ""
 
-#: Source/diablo.cpp:1207
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr ""
 
-#: Source/diablo.cpp:1226
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr ""
 
-#: Source/diablo.cpp:1227
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr ""
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1439
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr ""
 
-#: Source/dvlnet/loopback.cpp:111
+#: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
 msgstr ""
 
-#: Source/dvlnet/tcp_client.cpp:68
+#: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
 msgstr ""
 
-#: Source/dvlnet/tcp_client.cpp:89
+#: Source/dvlnet/tcp_client.cpp:86
 msgid "error: read 0 bytes from server"
 msgstr ""
 
-#: Source/error.cpp:58
+#: Source/error.cpp:57
 msgid "No automap available in town"
 msgstr ""
 
-#: Source/error.cpp:59
+#: Source/error.cpp:58
 msgid "No multiplayer functions in demo"
 msgstr ""
 
-#: Source/error.cpp:60
+#: Source/error.cpp:59
 msgid "Direct Sound Creation Failed"
 msgstr ""
 
-#: Source/error.cpp:61
+#: Source/error.cpp:60
 msgid "Not available in shareware version"
 msgstr ""
 
-#: Source/error.cpp:62
+#: Source/error.cpp:61
 msgid "Not enough space to save"
 msgstr ""
 
-#: Source/error.cpp:63
+#: Source/error.cpp:62
 msgid "No Pause in town"
 msgstr ""
 
-#: Source/error.cpp:64
+#: Source/error.cpp:63
 msgid "Copying to a hard disk is recommended"
 msgstr ""
 
-#: Source/error.cpp:65
+#: Source/error.cpp:64
 msgid "Multiplayer sync problem"
 msgstr ""
 
-#: Source/error.cpp:66
+#: Source/error.cpp:65
 msgid "No pause in multiplayer"
 msgstr ""
 
-#: Source/error.cpp:67
+#: Source/error.cpp:66
 msgid "Loading..."
 msgstr "Laddar..."
 
-#: Source/error.cpp:68
+#: Source/error.cpp:67
 msgid "Saving..."
 msgstr "Sparar..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:69
+#: Source/error.cpp:68
 msgid "Some are weakened as one grows strong"
 msgstr "Vissa försvagas medan en stärks"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:70
+#: Source/error.cpp:69
 msgid "New strength is forged through destruction"
 msgstr "Ny styrka byggs genom förstörelse"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:71
+#: Source/error.cpp:70
 msgid "Those who defend seldom attack"
 msgstr "De som försvarar anfaller sällan"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:72
+#: Source/error.cpp:71
 msgid "The sword of justice is swift and sharp"
 msgstr "Rättvisans svärd är skarpt och kvickt"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:73
+#: Source/error.cpp:72
 msgid "While the spirit is vigilant the body thrives"
 msgstr "Medan själen vakar når kroppen välmående"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:74
+#: Source/error.cpp:73
 msgid "The powers of mana refocused renews"
 msgstr "Den refokuserade manans kraft förnyar"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:75
+#: Source/error.cpp:74
 msgid "Time cannot diminish the power of steel"
 msgstr "Tiden kan inte minska stålets kraft"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:76
+#: Source/error.cpp:75
 msgid "Magic is not always what it seems to be"
 msgstr "Trolldom är inte alltid som det verkar"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:77
+#: Source/error.cpp:76
 msgid "What once was opened now is closed"
 msgstr "Vad som en gång öppnats är nu stängt"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:78
+#: Source/error.cpp:77
 msgid "Intensity comes at the cost of wisdom"
 msgstr "Intensitet fås till priset av vishet"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:79
+#: Source/error.cpp:78
 msgid "Arcane power brings destruction"
 msgstr "Mystisk kraft förödar"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:80
+#: Source/error.cpp:79
 msgid "That which cannot be held cannot be harmed"
 msgstr "Det som inte kan hållas kan inte skadas"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:81
+#: Source/error.cpp:80
 msgid "Crimson and Azure become as the sun"
 msgstr "Blod och Himmel blir som solen"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:82
+#: Source/error.cpp:81
 msgid "Knowledge and wisdom at the cost of self"
 msgstr "Kunskap och vishet på ens egen bekostnad"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:83
+#: Source/error.cpp:82
 msgid "Drink and be refreshed"
 msgstr "Drick och bli vederkvickad"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:84
+#: Source/error.cpp:83
 msgid "Wherever you go, there you are"
 msgstr "Vart du än färdas, är var du befinner dig"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:85
+#: Source/error.cpp:84
 msgid "Energy comes at the cost of wisdom"
 msgstr "Energi fås till priset av vishet"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:86
+#: Source/error.cpp:85
 msgid "Riches abound when least expected"
 msgstr "Rikedomar möts när de är minst anade"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:87
+#: Source/error.cpp:86
 msgid "Where avarice fails, patience gains reward"
 msgstr "Där snålhet misslyckas, får tålmodigheten sin belöning"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:88
+#: Source/error.cpp:87
 msgid "Blessed by a benevolent companion!"
 msgstr "Välsignad av en välvillig följeslagare!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:89
+#: Source/error.cpp:88
 msgid "The hands of men may be guided by fate"
 msgstr "Människornas händer kan styras av ödet"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:90
+#: Source/error.cpp:89
 msgid "Strength is bolstered by heavenly faith"
 msgstr "Styrkan stöds av himmelsk tro"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:91
+#: Source/error.cpp:90
 msgid "The essence of life flows from within"
 msgstr "Livets essens flödar inifrån"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:92
+#: Source/error.cpp:91
 msgid "The way is made clear when viewed from above"
 msgstr "Vägen är tydlig när man ser den från ovan"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:93
+#: Source/error.cpp:92
 msgid "Salvation comes at the cost of wisdom"
 msgstr "Frälsning fås till priset av vishet"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:94
+#: Source/error.cpp:93
 msgid "Mysteries are revealed in the light of reason"
 msgstr "Mysterier avslöjas i förnuftets ljus"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:95
+#: Source/error.cpp:94
 msgid "Those who are last may yet be first"
 msgstr "De sista kan ännu bli de första"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:96
+#: Source/error.cpp:95
 msgid "Generosity brings its own rewards"
 msgstr "Generositet ger sina egna belöningar"
 
-#: Source/error.cpp:97
+#: Source/error.cpp:96
 msgid "You must be at least level 8 to use this."
 msgstr "Du måste vara minst nivå 8 för att använda detta."
 
-#: Source/error.cpp:98
+#: Source/error.cpp:97
 msgid "You must be at least level 13 to use this."
 msgstr "Du måste vara minst nivå 13 för att använda detta."
 
-#: Source/error.cpp:99
+#: Source/error.cpp:98
 msgid "You must be at least level 17 to use this."
 msgstr "Du måste vara minst nivå 17 för att använda detta."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:100
+#: Source/error.cpp:99
 msgid "Arcane knowledge gained!"
 msgstr "Mystisk kunskap erhållen!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:101
+#: Source/error.cpp:100
 msgid "That which does not kill you..."
 msgstr "Det som inte dödar..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:102
+#: Source/error.cpp:101
 msgid "Knowledge is power."
 msgstr "Kunskap är makt."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:103
+#: Source/error.cpp:102
 msgid "Give and you shall receive."
 msgstr "Ge och du skall få."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:104
+#: Source/error.cpp:103
 msgid "Some experience is gained by touch."
 msgstr "En del erfarenhet fås genom beröring."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:105
+#: Source/error.cpp:104
 msgid "There's no place like home."
 msgstr "Hem ljuva hem."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:106
+#: Source/error.cpp:105
 msgid "Spiritual energy is restored."
 msgstr "Själens energi återhämtas."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:107
+#: Source/error.cpp:106
 msgid "You feel more agile."
 msgstr "Du känner dig spänstigare."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:108
+#: Source/error.cpp:107
 msgid "You feel stronger."
 msgstr "Du känner dig starkare."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:109
+#: Source/error.cpp:108
 msgid "You feel wiser."
 msgstr "Du känner dig visare."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:110
+#: Source/error.cpp:109
 msgid "You feel refreshed."
 msgstr "Du känner dig vederkvickt."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:111
+#: Source/error.cpp:110
 msgid "That which can break will."
 msgstr "Det som kan gå sönder kommer göra det."
 
@@ -1455,10 +1509,6 @@ msgstr "Gamma"
 #: Source/gamemenu.cpp:60 Source/gamemenu.cpp:167
 msgid "Speed"
 msgstr "Hastighet"
-
-#: Source/gamemenu.cpp:61
-msgid "Previous Menu"
-msgstr "Föregående Meny"
 
 #: Source/gamemenu.cpp:68
 msgid "Music Disabled"
@@ -1635,7 +1685,9 @@ msgstr ""
 "föremålet."
 
 #: Source/help.cpp:68
-msgid "$Gold"
+#, fuzzy
+#| msgid "$Gold"
+msgid "$Gold:"
 msgstr "$Guld"
 
 #: Source/help.cpp:69
@@ -1665,7 +1717,9 @@ msgstr ""
 "att högerklicka i spelområdet."
 
 #: Source/help.cpp:79
-msgid "$Using the Speedbook for Spells"
+#, fuzzy
+#| msgid "$Using the Speedbook for Spells"
+msgid "$Using the Speedbook for Spells:"
 msgstr "$Använda Snabboken för Trollformler"
 
 #: Source/help.cpp:80
@@ -1680,15 +1734,21 @@ msgstr ""
 "högerklicka i spelområdet."
 
 #: Source/help.cpp:84
+#, fuzzy
+#| msgid ""
+#| "Shift + Left-clicking on the 'select current spell' button will clear the "
+#| "readied spell"
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
-"readied spell"
+"readied spell."
 msgstr ""
 "Genom att hålla in Shift + vänsterklicka 'förberedd trollformel'-knappen kan "
 "den förberedda trollformeln tas bort"
 
 #: Source/help.cpp:86
-msgid "$Setting Spell Hotkeys"
+#, fuzzy
+#| msgid "$Setting Spell Hotkeys"
+msgid "$Setting Spell Hotkeys:"
 msgstr "$Ställa in Trollformelsgenvägar"
 
 #: Source/help.cpp:87
@@ -1703,7 +1763,9 @@ msgstr ""
 "vill tilldela."
 
 #: Source/help.cpp:92
-msgid "$Spell Books"
+#, fuzzy
+#| msgid "$Spell Books"
+msgid "$Spell Books:"
 msgstr "$Magiböcker"
 
 #: Source/help.cpp:93
@@ -1714,42 +1776,45 @@ msgstr ""
 "Genom att läsa mer än en bok ökar du din kunskap om den trollformen, vilket "
 "låter dig använda den med större verkan."
 
-#: Source/help.cpp:130
+#: Source/help.cpp:181
 msgid "Shareware Hellfire Help"
 msgstr "Shareware Hellfire-Hjälp"
 
-#: Source/help.cpp:130
-#| msgid "Exit Hellfire"
+#: Source/help.cpp:181
 msgid "Hellfire Help"
 msgstr "Hellfire-Hjälp"
 
-#: Source/help.cpp:132
+#: Source/help.cpp:183
 msgid "Shareware Diablo Help"
 msgstr "Shareware Diablo-Hjälp"
 
-#: Source/help.cpp:132
+#: Source/help.cpp:183
 msgid "Diablo Help"
 msgstr "Diablo-Hjälp"
 
-#: Source/help.cpp:156
+#: Source/help.cpp:213
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Tryck ESC för att avsluta och piltangenterna för att flytta."
 
-#: Source/init.cpp:214
+#: Source/init.cpp:175
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq eller spawn.mpq"
+
+#: Source/init.cpp:196
 msgid "Some Hellfire MPQs are missing"
 msgstr ""
 
-#: Source/init.cpp:214
+#: Source/init.cpp:196
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
 msgstr ""
 
-#: Source/init.cpp:224
+#: Source/init.cpp:204
 msgid "Unable to create main window"
 msgstr ""
 
-#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:154
+#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:155
 msgid "Gold"
 msgstr "Guld"
 
@@ -1889,7 +1954,7 @@ msgstr "Lazarus Stav"
 msgid "Scroll of Resurrect"
 msgstr "Återuppståndelse-Skriftrulle"
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:164
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
 msgid "Blacksmith Oil"
 msgstr "Smedsolja"
 
@@ -1989,7 +2054,7 @@ msgid "Quilted Armor"
 msgstr "Vadderat Pansar"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5459
+#: Source/itemdat.cpp:77 Source/objects.cpp:5433
 msgid "Armor"
 msgstr "Pansar"
 
@@ -2084,11 +2149,11 @@ msgstr "Återhämtningsdryck"
 msgid "Potion of Full Rejuvenation"
 msgstr "Fullkomlig Återhämtningsdryck"
 
-#: Source/itemdat.cpp:100 Source/items.cpp:159
+#: Source/itemdat.cpp:100 Source/items.cpp:161
 msgid "Oil of Accuracy"
 msgstr "Träffsäkerhetsolja"
 
-#: Source/itemdat.cpp:101 Source/items.cpp:161
+#: Source/itemdat.cpp:101 Source/items.cpp:163
 msgid "Oil of Sharpness"
 msgstr "Skärpeolja"
 
@@ -2316,11 +2381,6 @@ msgstr "Kort Krigsbåge"
 msgid "Long War Bow"
 msgstr "Lång Krigsbåge"
 
-#: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
-#: Source/itemdat.cpp:170 Source/itemdat.cpp:171
-msgid "Staff"
-msgstr "Stav"
-
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
 msgstr "Långstav"
@@ -2411,7 +2471,7 @@ msgstr "Mitril"
 msgid "Meteoric"
 msgstr "Meteorisk"
 
-#: Source/itemdat.cpp:202 Source/objects.cpp:104
+#: Source/itemdat.cpp:202 Source/objects.cpp:107
 msgid "Weird"
 msgstr "Konstig"
 
@@ -2547,7 +2607,7 @@ msgstr "Hegonaktig"
 msgid "Awesome"
 msgstr "Härlig"
 
-#: Source/itemdat.cpp:237 Source/objects.cpp:116
+#: Source/itemdat.cpp:237 Source/objects.cpp:119
 msgid "Holy"
 msgstr "Helig"
 
@@ -3508,677 +3568,713 @@ msgstr "Lärjungens Amulett"
 msgid "Gladiator's Ring"
 msgstr "Gladiatorns Ring"
 
-#: Source/items.cpp:160
+#: Source/items.cpp:162
 msgid "Oil of Mastery"
 msgstr "Mästerolja"
 
-#: Source/items.cpp:162
+#: Source/items.cpp:164
 msgid "Oil of Death"
 msgstr "Dödsolja"
 
-#: Source/items.cpp:163
+#: Source/items.cpp:165
 msgid "Oil of Skill"
 msgstr "Skicklighetsolja"
 
-#: Source/items.cpp:165
+#: Source/items.cpp:167
 msgid "Oil of Fortitude"
 msgstr "Ståndaktighetsolja"
 
-#: Source/items.cpp:166
+#: Source/items.cpp:168
 msgid "Oil of Permanence"
 msgstr "Permanensolja"
 
-#: Source/items.cpp:167
+#: Source/items.cpp:169
 msgid "Oil of Hardening"
 msgstr "Härdningsolja"
 
-#: Source/items.cpp:168
+#: Source/items.cpp:170
 msgid "Oil of Imperviousness"
 msgstr "Osårbarhetsolja"
 
-#. TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1194 Source/items.cpp:1262 Source/items.cpp:1281
-#: Source/items.cpp:1324
-msgid "{:s} of {:s}"
+#. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
+#: Source/items.cpp:1183
+#, fuzzy
+#| msgid "{:s} of {:s}"
+msgctxt "spell"
+msgid "{0} of {1}"
 msgstr "{:s} av {:s}"
 
-#: Source/items.cpp:1902 Source/items.cpp:1914
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
+#: Source/items.cpp:1193
+#, fuzzy
+msgctxt "spell"
+msgid "{0} {1} of {2}"
+msgstr "{:s} {:s} av {:s}"
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
+#: Source/items.cpp:1214
+#, fuzzy
+msgid "{0} {1} of {2}"
+msgstr "{:s} {:s} av {:s}"
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#: Source/items.cpp:1217
+msgid "{0} {1}"
+msgstr ""
+
+#. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
+#: Source/items.cpp:1220
+#, fuzzy
+#| msgid "{:s} of {:s}"
+msgid "{0} of {1}"
+msgstr "{:s} av {:s}"
+
+#: Source/items.cpp:1906 Source/items.cpp:1918
 msgid "increases a weapon's"
 msgstr "ökar ett vapens"
 
-#: Source/items.cpp:1904
+#: Source/items.cpp:1908
 msgid "chance to hit"
 msgstr "chans att träffa"
 
-#: Source/items.cpp:1908
+#: Source/items.cpp:1912
 msgid "greatly increases a"
 msgstr "ökar betydligt ett"
 
-#: Source/items.cpp:1910
+#: Source/items.cpp:1914
 msgid "weapon's chance to hit"
 msgstr "vapens chans att träffa"
 
-#: Source/items.cpp:1916
+#: Source/items.cpp:1920
 msgid "damage potential"
 msgstr "skadepotential"
 
-#: Source/items.cpp:1920
+#: Source/items.cpp:1924
 msgid "greatly increases a weapon's"
 msgstr "ökar betydligt ett vapens"
 
-#: Source/items.cpp:1922
+#: Source/items.cpp:1926
 msgid "damage potential - not bows"
 msgstr "skadepotential - inte bågar"
 
-#: Source/items.cpp:1926
+#: Source/items.cpp:1930
 msgid "reduces attributes needed"
 msgstr "minskar behövda attribut"
 
-#: Source/items.cpp:1928
+#: Source/items.cpp:1932
 msgid "to use armor or weapons"
 msgstr "för att använda pansar eller vapen"
 
-#: Source/items.cpp:1932
+#: Source/items.cpp:1936
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "återställer 20% av ett"
 
-#: Source/items.cpp:1934
+#: Source/items.cpp:1938
 msgid "item's durability"
 msgstr "föremåls tålighet"
 
-#: Source/items.cpp:1938
+#: Source/items.cpp:1942
 msgid "increases an item's"
 msgstr "ökar ett föremåls"
 
-#: Source/items.cpp:1940
+#: Source/items.cpp:1944
 msgid "current and max durability"
 msgstr "nuvarande och maximala tålighet"
 
-#: Source/items.cpp:1944
+#: Source/items.cpp:1948
 msgid "makes an item indestructible"
 msgstr "gör ett föremål oförstörbart"
 
-#: Source/items.cpp:1948
+#: Source/items.cpp:1952
 msgid "increases the armor class"
 msgstr "ökar pansarklassen"
 
-#: Source/items.cpp:1950
+#: Source/items.cpp:1954
 msgid "of armor and shields"
 msgstr "för pansar och sköldar"
 
-#: Source/items.cpp:1954
+#: Source/items.cpp:1958
 msgid "greatly increases the armor"
 msgstr "ökar betydlgt pansar-"
 
-#: Source/items.cpp:1956
+#: Source/items.cpp:1960
 msgid "class of armor and shields"
 msgstr "klassen för vapen och sköldar"
 
-#: Source/items.cpp:1960 Source/items.cpp:1969
+#: Source/items.cpp:1964 Source/items.cpp:1973
 msgid "sets fire trap"
 msgstr "sätter en eldfälla"
 
-#: Source/items.cpp:1965
+#: Source/items.cpp:1969
 msgid "sets lightning trap"
 msgstr "sätter en åskfälla"
 
-#: Source/items.cpp:1973
+#: Source/items.cpp:1977
 msgid "sets petrification trap"
 msgstr "sätter en försteningsfälla"
 
-#: Source/items.cpp:1977
+#: Source/items.cpp:1981
 msgid "restore all life"
 msgstr "återställ allt liv"
 
-#: Source/items.cpp:1981
+#: Source/items.cpp:1985
 msgid "restore some life"
 msgstr "återställ en del liv"
 
-#: Source/items.cpp:1985
+#: Source/items.cpp:1989
 msgid "recover life"
 msgstr "återhämta liv"
 
-#: Source/items.cpp:1989
+#: Source/items.cpp:1993
 msgid "deadly heal"
 msgstr "dödlig helning"
 
-#: Source/items.cpp:1993
+#: Source/items.cpp:1997
 msgid "restore some mana"
 msgstr "återställ en del mana"
 
-#: Source/items.cpp:1997
+#: Source/items.cpp:2001
 msgid "restore all mana"
 msgstr "återställ all mana"
 
-#: Source/items.cpp:2001
+#: Source/items.cpp:2005
 msgid "increase strength"
 msgstr "öka styrka"
 
-#: Source/items.cpp:2005
+#: Source/items.cpp:2009
 msgid "increase magic"
 msgstr "öka magi"
 
-#: Source/items.cpp:2009
+#: Source/items.cpp:2013
 msgid "increase dexterity"
 msgstr "öka smidighet"
 
-#: Source/items.cpp:2013
+#: Source/items.cpp:2017
 msgid "increase vitality"
 msgstr "öka kropp"
 
-#: Source/items.cpp:2018
+#: Source/items.cpp:2022
 msgid "decrease strength"
 msgstr "minska styrka"
 
-#: Source/items.cpp:2022
+#: Source/items.cpp:2026
 msgid "decrease dexterity"
 msgstr "minska smidighet"
 
-#: Source/items.cpp:2026
+#: Source/items.cpp:2030
 msgid "decrease vitality"
 msgstr "minska kropp"
 
-#: Source/items.cpp:2030
+#: Source/items.cpp:2034
 msgid "restore some life and mana"
 msgstr "återställ en del liv och mana"
 
-#: Source/items.cpp:2034
+#: Source/items.cpp:2038
 msgid "restore all life and mana"
 msgstr "återställ allt liv och mana"
 
-#: Source/items.cpp:2049 Source/items.cpp:2074
+#: Source/items.cpp:2053 Source/items.cpp:2078
 msgid "Right-click to read"
 msgstr "Högerklicka för att läsa"
 
-#: Source/items.cpp:2053
+#: Source/items.cpp:2057
 msgid "Right-click to read, then"
 msgstr "Högerklicka för att läsa, därefter"
 
-#: Source/items.cpp:2055
+#: Source/items.cpp:2059
 msgid "left-click to target"
 msgstr "vänsterklicka för att ange mål"
 
-#: Source/items.cpp:2060
+#: Source/items.cpp:2064
 msgid "Right-click to use"
 msgstr "Högerklicka för att använda"
 
-#: Source/items.cpp:2065 Source/items.cpp:2070
+#: Source/items.cpp:2069 Source/items.cpp:2074
 msgid "Right click to use"
 msgstr "Högerklicka för att använda"
 
-#: Source/items.cpp:2078
+#: Source/items.cpp:2082
 msgid "Right click to read"
 msgstr "Högerklicka för att läsa"
 
-#: Source/items.cpp:2082
+#: Source/items.cpp:2086
 msgid "Right-click to view"
 msgstr "Högerklicka för att visa"
 
-#: Source/items.cpp:2090
+#: Source/items.cpp:2094
 msgid "Doubles gold capacity"
 msgstr "Fördubblar guldkapacitet"
 
-#: Source/items.cpp:2102 Source/stores.cpp:212
+#: Source/items.cpp:2106 Source/stores.cpp:283
 msgid "Required:"
 msgstr "Krävs:"
 
-#: Source/items.cpp:2104 Source/stores.cpp:214
+#: Source/items.cpp:2108 Source/stores.cpp:285
 msgid " {:d} Str"
 msgstr " {:d} Sty"
 
-#: Source/items.cpp:2106 Source/stores.cpp:216
+#: Source/items.cpp:2110 Source/stores.cpp:287
 msgid " {:d} Mag"
 msgstr " {:d} Mag"
 
-#: Source/items.cpp:2108 Source/stores.cpp:218
+#: Source/items.cpp:2112 Source/stores.cpp:289
 msgid " {:d} Dex"
 msgstr " {:d} Smi"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3535 Source/player.cpp:3042
+#: Source/items.cpp:3533 Source/player.cpp:3018
 msgid "Ear of {:s}"
 msgstr "{:s}s öra"
 
-#: Source/items.cpp:3830
+#: Source/items.cpp:3828
 msgid "chance to hit: {:+d}%"
 msgstr "träffchans: {:+d}%"
 
-#: Source/items.cpp:3834
+#: Source/items.cpp:3832
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% skada"
 
-#: Source/items.cpp:3838 Source/items.cpp:4094
+#: Source/items.cpp:3836 Source/items.cpp:4092
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "att träffa: {:+d}%, {:+d}% skada"
 
-#: Source/items.cpp:3842
+#: Source/items.cpp:3840
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% pansar"
 
-#: Source/items.cpp:3846
+#: Source/items.cpp:3844
 msgid "armor class: {:d}"
 msgstr "pansarklass: {:d}"
 
-#: Source/items.cpp:3851 Source/items.cpp:4076
+#: Source/items.cpp:3849 Source/items.cpp:4074
 msgid "Resist Fire: {:+d}%"
 msgstr "Motstå Eld: {:+d}%"
 
-#: Source/items.cpp:3853
+#: Source/items.cpp:3851
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "Motstå Eld: 75% MAX"
 
-#: Source/items.cpp:3858
+#: Source/items.cpp:3856
 msgid "Resist Lightning: {:+d}%"
 msgstr "Motstå Åska: {:+d}%"
 
-#: Source/items.cpp:3860
+#: Source/items.cpp:3858
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "Motstå Åska: 75% MAX"
 
-#: Source/items.cpp:3865
+#: Source/items.cpp:3863
 msgid "Resist Magic: {:+d}%"
 msgstr "Motstå Magi: {:+d}%"
 
-#: Source/items.cpp:3867
+#: Source/items.cpp:3865
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "Motstå Magi: 75% MAX"
 
-#: Source/items.cpp:3872
+#: Source/items.cpp:3870
 msgid "Resist All: {:+d}%"
 msgstr "Motstå Allt: {:+d}%"
 
-#: Source/items.cpp:3874
+#: Source/items.cpp:3872
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "Motstå Allt: 75% MAX"
 
-#: Source/items.cpp:3878
+#: Source/items.cpp:3876
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "trollformler ökas {:d} nivå"
 msgstr[1] "Trollformler ökas {:d} nivåer"
 
-#: Source/items.cpp:3880
+#: Source/items.cpp:3878
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "trollformler minskas {:d} nivå"
 msgstr[1] "trollformler minskas {:d} nivåer"
 
-#: Source/items.cpp:3882
+#: Source/items.cpp:3880
 msgid "spell levels unchanged (?)"
 msgstr "trollformsnivåer oförändrade (?)"
 
-#: Source/items.cpp:3885
+#: Source/items.cpp:3883
 msgid "Extra charges"
 msgstr "Extra laddningar"
 
-#: Source/items.cpp:3888
+#: Source/items.cpp:3886
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} laddning"
 msgstr[1] "{:d} {:s} laddningar"
 
-#: Source/items.cpp:3892
+#: Source/items.cpp:3890
 msgid "Fire hit damage: {:d}"
 msgstr "Eldträffskada: {:d}"
 
-#: Source/items.cpp:3894
+#: Source/items.cpp:3892
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "Eldträffskada: {:d}-{:d}"
 
-#: Source/items.cpp:3898
+#: Source/items.cpp:3896
 msgid "Lightning hit damage: {:d}"
 msgstr "Åskträffskada: {:d}"
 
-#: Source/items.cpp:3900
+#: Source/items.cpp:3898
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "Åskträffskada: {:d}-{:d}"
 
-#: Source/items.cpp:3904
+#: Source/items.cpp:3902
 msgid "{:+d} to strength"
 msgstr "{:+d} till styrka"
 
-#: Source/items.cpp:3908
+#: Source/items.cpp:3906
 msgid "{:+d} to magic"
 msgstr "{:+d} till magi"
 
-#: Source/items.cpp:3912
+#: Source/items.cpp:3910
 msgid "{:+d} to dexterity"
 msgstr "{:+d} till smidighet"
 
-#: Source/items.cpp:3916
+#: Source/items.cpp:3914
 msgid "{:+d} to vitality"
 msgstr "{:+d} till kropp"
 
-#: Source/items.cpp:3920
+#: Source/items.cpp:3918
 msgid "{:+d} to all attributes"
 msgstr "{:+d} till alla attribut"
 
-#: Source/items.cpp:3924
+#: Source/items.cpp:3922
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} skada från fiender"
 
-#: Source/items.cpp:3928
+#: Source/items.cpp:3926
 msgid "Hit Points: {:+d}"
 msgstr "Kroppspoäng: {:+d}"
 
-#: Source/items.cpp:3932
+#: Source/items.cpp:3930
 msgid "Mana: {:+d}"
 msgstr "Mana: {:+d}"
 
-#: Source/items.cpp:3935
+#: Source/items.cpp:3933
 msgid "high durability"
 msgstr "hög tålighet"
 
-#: Source/items.cpp:3938
+#: Source/items.cpp:3936
 msgid "decreased durability"
 msgstr "minskad tålighet"
 
-#: Source/items.cpp:3941
+#: Source/items.cpp:3939
 msgid "indestructible"
 msgstr "oförstörbar"
 
-#: Source/items.cpp:3944
+#: Source/items.cpp:3942
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% ljusradie"
 
-#: Source/items.cpp:3947
+#: Source/items.cpp:3945
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% ljusradie"
 
-#: Source/items.cpp:3950
+#: Source/items.cpp:3948
 msgid "multiple arrows per shot"
 msgstr "flera pilar per skott"
 
-#: Source/items.cpp:3954
+#: Source/items.cpp:3952
 msgid "fire arrows damage: {:d}"
 msgstr "eldpilsskada: {:d}"
 
-#: Source/items.cpp:3956
+#: Source/items.cpp:3954
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "eldpilsskada: {:d}-{:d}"
 
-#: Source/items.cpp:3960
+#: Source/items.cpp:3958
 msgid "lightning arrows damage {:d}"
 msgstr "åskpilsskada {:d}"
 
-#: Source/items.cpp:3962
+#: Source/items.cpp:3960
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "åskpilsskada {:d}-{:d}"
 
-#: Source/items.cpp:3966
+#: Source/items.cpp:3964
 msgid "fireball damage: {:d}"
 msgstr "eldklotsskada: {:d}"
 
-#: Source/items.cpp:3968
+#: Source/items.cpp:3966
 msgid "fireball damage: {:d}-{:d}"
 msgstr "eldklotsskada: {:d}-{:d}"
 
-#: Source/items.cpp:3971
+#: Source/items.cpp:3969
 msgid "attacker takes 1-3 damage"
 msgstr "anfallare tar 1-3 skada"
 
-#: Source/items.cpp:3974
+#: Source/items.cpp:3972
 msgid "user loses all mana"
 msgstr "användaren förlorar all mana"
 
-#: Source/items.cpp:3977
+#: Source/items.cpp:3975
 msgid "you can't heal"
 msgstr "du kan inte läka"
 
-#: Source/items.cpp:3980
+#: Source/items.cpp:3978
 msgid "absorbs half of trap damage"
 msgstr "absorberar hälften av fällskada"
 
-#: Source/items.cpp:3983
+#: Source/items.cpp:3981
 msgid "knocks target back"
 msgstr "knuffar målet bakåt"
 
-#: Source/items.cpp:3986
+#: Source/items.cpp:3984
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% skada mot demoner"
 
-#: Source/items.cpp:3989
+#: Source/items.cpp:3987
 msgid "All Resistance equals 0"
 msgstr "Allt Motstånd lika med 0"
 
-#: Source/items.cpp:3992
+#: Source/items.cpp:3990
 msgid "hit monster doesn't heal"
 msgstr "träffade monster läker inte"
 
-#: Source/items.cpp:3996
+#: Source/items.cpp:3994
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "träff stjäl 3% mana"
 
-#: Source/items.cpp:3998
+#: Source/items.cpp:3996
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "träff stjäl 5% mana"
 
-#: Source/items.cpp:4002
+#: Source/items.cpp:4000
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "träff stjäl 3% liv"
 
-#: Source/items.cpp:4004
+#: Source/items.cpp:4002
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "träff stjäl 5% liv"
 
-#: Source/items.cpp:4007
+#: Source/items.cpp:4005
 msgid "penetrates target's armor"
 msgstr "går genom målets pansar"
 
-#: Source/items.cpp:4011
+#: Source/items.cpp:4009
 msgid "quick attack"
 msgstr "kvick attack"
 
-#: Source/items.cpp:4013
+#: Source/items.cpp:4011
 msgid "fast attack"
 msgstr "snabb attack"
 
-#: Source/items.cpp:4015
+#: Source/items.cpp:4013
 msgid "faster attack"
 msgstr "snabbare attack"
 
-#: Source/items.cpp:4017
+#: Source/items.cpp:4015
 msgid "fastest attack"
 msgstr "snabbast attack"
 
-#: Source/items.cpp:4021
+#: Source/items.cpp:4019
 msgid "fast hit recovery"
 msgstr "snabb återhämtning efter träff"
 
-#: Source/items.cpp:4023
+#: Source/items.cpp:4021
 msgid "faster hit recovery"
 msgstr "snabbare återhämtning efter träff"
 
-#: Source/items.cpp:4025
+#: Source/items.cpp:4023
 msgid "fastest hit recovery"
 msgstr "snabbast återhämtning efter träff"
 
-#: Source/items.cpp:4028
+#: Source/items.cpp:4026
 msgid "fast block"
 msgstr "snabb blockering"
 
-#: Source/items.cpp:4031
+#: Source/items.cpp:4029
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "lägger till {:d} poäng till skada"
 msgstr[1] "lägger till {:d} poäng till skada"
 
-#: Source/items.cpp:4034
+#: Source/items.cpp:4032
 msgid "fires random speed arrows"
 msgstr "avfyrar pilar med slumpmässig hastighet"
 
-#: Source/items.cpp:4037
+#: Source/items.cpp:4035
 msgid "unusual item damage"
 msgstr "skada som ovanligt föremål"
 
-#: Source/items.cpp:4040
+#: Source/items.cpp:4038
 msgid "altered durability"
 msgstr "ändrad tålighet"
 
-#: Source/items.cpp:4043
+#: Source/items.cpp:4041
 msgid "Faster attack swing"
 msgstr "Snabbare anfallssving"
 
-#: Source/items.cpp:4046
+#: Source/items.cpp:4044
 msgid "one handed sword"
 msgstr "enhänt svärd"
 
-#: Source/items.cpp:4049
+#: Source/items.cpp:4047
 msgid "constantly lose hit points"
 msgstr "förlora kroppspoäng konstant"
 
-#: Source/items.cpp:4052
+#: Source/items.cpp:4050
 msgid "life stealing"
 msgstr "livsstjälande"
 
-#: Source/items.cpp:4055
+#: Source/items.cpp:4053
 msgid "no strength requirement"
 msgstr "inget styrkekrav"
 
-#: Source/items.cpp:4058
+#: Source/items.cpp:4056
 msgid "see with infravision"
 msgstr "se med infraseende"
 
-#: Source/items.cpp:4065
+#: Source/items.cpp:4063
 msgid "lightning damage: {:d}"
 msgstr "åskskada: {:d}"
 
-#: Source/items.cpp:4067
+#: Source/items.cpp:4065
 msgid "lightning damage: {:d}-{:d}"
 msgstr "åskskada: {:d}-{:d}"
 
-#: Source/items.cpp:4070
+#: Source/items.cpp:4068
 msgid "charged bolts on hits"
 msgstr "urladdning vid träff"
 
-#: Source/items.cpp:4079
+#: Source/items.cpp:4077
 msgid "occasional triple damage"
 msgstr "ibland trippel skada"
 
-#: Source/items.cpp:4082
+#: Source/items.cpp:4080
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "avtagande {:+d}% skada"
 
-#: Source/items.cpp:4085
+#: Source/items.cpp:4083
 msgid "2x dmg to monst, 1x to you"
 msgstr "dubbel monsterskada, enkel till dig"
 
-#: Source/items.cpp:4088
+#: Source/items.cpp:4086
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Slumpvis 0 - 500% skada"
 
-#: Source/items.cpp:4091
+#: Source/items.cpp:4089
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "låg tål, {:+d}% skada"
 
-#: Source/items.cpp:4097
+#: Source/items.cpp:4095
 msgid "extra AC vs demons"
 msgstr "extra PK mot demoner"
 
-#: Source/items.cpp:4100
+#: Source/items.cpp:4098
 msgid "extra AC vs undead"
 msgstr "extra PK mot vandöda"
 
-#: Source/items.cpp:4103
+#: Source/items.cpp:4101
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50% Mana flyttas till Liv"
 
-#: Source/items.cpp:4106
+#: Source/items.cpp:4104
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40% Liv flyttas till Mana"
 
-#: Source/items.cpp:4109
+#: Source/items.cpp:4107
 msgid "Another ability (NW)"
 msgstr "Annan förmåga (NW)"
 
-#: Source/items.cpp:4146 Source/items.cpp:4193
+#: Source/items.cpp:4144 Source/items.cpp:4191
 msgid "damage: {:d}  Indestructible"
 msgstr "skada: {:d}  Oförstörbar"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4148 Source/items.cpp:4195
+#: Source/items.cpp:4146 Source/items.cpp:4193
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "skada: {:d}  Tål: {:d}/{:d}"
 
-#: Source/items.cpp:4151 Source/items.cpp:4198
+#: Source/items.cpp:4149 Source/items.cpp:4196
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "skada: {:d}-{:d}  Oförstörbar"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4153 Source/items.cpp:4200
+#: Source/items.cpp:4151 Source/items.cpp:4198
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "skada: {:d}-{:d}  Tål: {:d}/{:d}"
 
-#: Source/items.cpp:4159 Source/items.cpp:4212
+#: Source/items.cpp:4157 Source/items.cpp:4210
 msgid "armor: {:d}  Indestructible"
 msgstr "pansar: {:d}  Oförstörbar"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4161 Source/items.cpp:4214
+#: Source/items.cpp:4159 Source/items.cpp:4212
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "pansar: {:d}  Tål: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4166
+#: Source/items.cpp:4164
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "skd: {:d}  Tål: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4168
+#: Source/items.cpp:4166
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "skd: {:d}-{:d}  Tål: {:d}/{:d}"
 
-#: Source/items.cpp:4169 Source/items.cpp:4204 Source/items.cpp:4219
-#: Source/stores.cpp:184
+#: Source/items.cpp:4167 Source/items.cpp:4202 Source/items.cpp:4217
+#: Source/stores.cpp:255
 msgid "Charges: {:d}/{:d}"
 msgstr "Laddningar: {:d}/{:d}"
 
-#: Source/items.cpp:4181
+#: Source/items.cpp:4179
 msgid "unique item"
 msgstr "unikt föremål"
 
-#: Source/items.cpp:4208 Source/items.cpp:4217 Source/items.cpp:4224
+#: Source/items.cpp:4206 Source/items.cpp:4215 Source/items.cpp:4222
 msgid "Not Identified"
 msgstr "Ej Identifierad"
 
-#: Source/loadsave.cpp:1656 Source/loadsave.cpp:2122
+#: Source/loadsave.cpp:1683 Source/loadsave.cpp:2149
 msgid "Unable to open save file archive"
 msgstr "Kunde inte öppna sparat arkiv"
 
-#: Source/loadsave.cpp:1659
+#: Source/loadsave.cpp:1686
 msgid "Invalid save file"
 msgstr "Ogiltig sparfil"
 
-#: Source/loadsave.cpp:1688
+#: Source/loadsave.cpp:1717
 msgid "Player is on a Hellfire only level"
 msgstr "Spelaren är på en nivå endast för Hellfire"
 
-#: Source/loadsave.cpp:1885
+#: Source/loadsave.cpp:1912
 msgid "Invalid game state"
 msgstr "Ogiltigt speltillstånd"
 
-#: Source/menu.cpp:136
+#: Source/menu.cpp:154
 msgid "Unable to display mainmenu"
 msgstr "Kunde inte visa huvudmeny"
+
+#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
+#: Source/menu.cpp:179
+msgid ""
+"The Diablo introduction cinematic is only available in the full retail "
+"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"Introduktionsvideon finns endast tillgänglig i den kompletta versionen av "
+"Diablo. Besök https://www.gog.com/game/diablo för att köpa."
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -4812,6 +4908,13 @@ msgctxt "monster"
 msgid "Reaper"
 msgstr "Skördare"
 
+#. TRANSLATORS: Monster Block end
+#. MT_NAKRUL
+#: Source/monstdat.cpp:158 Source/monstdat.cpp:485
+msgctxt "monster"
+msgid "Na-Krul"
+msgstr ""
+
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
 msgctxt "monster"
@@ -4842,6 +4945,11 @@ msgstr "Röd Vex"
 msgctxt "monster"
 msgid "Black Jade"
 msgstr "Svart Jade"
+
+#: Source/monstdat.cpp:480
+msgctxt "monster"
+msgid "Lachdanan"
+msgstr ""
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
@@ -4893,6 +5001,11 @@ msgctxt "monster"
 msgid "Brokenhead Bangshield"
 msgstr "Sprickskalle Slagsköld"
 
+#: Source/monstdat.cpp:494
+msgctxt "monster"
+msgid "Bongo"
+msgstr ""
+
 #: Source/monstdat.cpp:495
 msgctxt "monster"
 msgid "Rotcarnage"
@@ -4912,6 +5025,11 @@ msgstr "Dödögat"
 msgctxt "monster"
 msgid "Madeye the Dead"
 msgstr "Villöga den Döde"
+
+#: Source/monstdat.cpp:499
+msgctxt "monster"
+msgid "El Chupacabras"
+msgstr ""
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5248,10 +5366,22 @@ msgctxt "monster"
 msgid "The Vizier"
 msgstr "Visiren"
 
+#: Source/monstdat.cpp:567
+#, fuzzy
+#| msgid "Sapphire"
+msgctxt "monster"
+msgid "Zamphir"
+msgstr "Safirblå"
+
 #: Source/monstdat.cpp:568
 msgctxt "monster"
 msgid "Bloodlust"
 msgstr "Blodlust"
+
+#: Source/monstdat.cpp:569
+msgctxt "monster"
+msgid "Webwidow"
+msgstr ""
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
@@ -5269,96 +5399,97 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Domedagslockaren"
 
-#: Source/monster.cpp:3474
+#: Source/monster.cpp:3479
 msgid "Animal"
 msgstr "Djur"
 
-#: Source/monster.cpp:3476
+#: Source/monster.cpp:3481
 msgid "Demon"
 msgstr "Demon"
 
-#: Source/monster.cpp:3478
+#: Source/monster.cpp:3483
 msgid "Undead"
 msgstr "Vandöd"
 
-#: Source/monster.cpp:4610
+#: Source/monster.cpp:4612
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Typ: {:s}  Dödat: {:d}"
 
-#: Source/monster.cpp:4612
+#: Source/monster.cpp:4614
 msgid "Total kills: {:d}"
 msgstr "Totalt dödade: {:d}"
 
-#: Source/monster.cpp:4645
+#: Source/monster.cpp:4647
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Kroppspoäng: {:d}-{:d}"
 
-#: Source/monster.cpp:4651
+#: Source/monster.cpp:4653
 msgid "No magic resistance"
 msgstr "Inget magimotstånd"
 
-#: Source/monster.cpp:4655
+#: Source/monster.cpp:4657
 msgid "Resists: "
 msgstr "Står mot: "
 
-#: Source/monster.cpp:4657 Source/monster.cpp:4668
+#: Source/monster.cpp:4659 Source/monster.cpp:4671
 msgid "Magic "
 msgstr "Magi"
 
-#: Source/monster.cpp:4659 Source/monster.cpp:4670
+#: Source/monster.cpp:4661 Source/monster.cpp:4673
 msgid "Fire "
 msgstr "Eld"
 
-#: Source/monster.cpp:4661 Source/monster.cpp:4672
+#: Source/monster.cpp:4663 Source/monster.cpp:4675
 msgid "Lightning "
 msgstr "Åska"
 
-#: Source/monster.cpp:4666
+#: Source/monster.cpp:4669
 msgid "Immune: "
 msgstr "Immun: "
 
-#: Source/monster.cpp:4684
+#: Source/monster.cpp:4688
 msgid "Type: {:s}"
 msgstr "Typ: {:s}"
 
-#: Source/monster.cpp:4690 Source/monster.cpp:4697
+#: Source/monster.cpp:4694 Source/monster.cpp:4701
 msgid "No resistances"
 msgstr "Inga motståndskrafter"
 
-#: Source/monster.cpp:4692 Source/monster.cpp:4702
+#: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid "No Immunities"
 msgstr "Inga Immuniteter"
 
-#: Source/monster.cpp:4695
+#: Source/monster.cpp:4699
 msgid "Some Magic Resistances"
 msgstr "Vissa Magiska Motståndskrafter"
 
-#: Source/monster.cpp:4700
+#: Source/monster.cpp:4704
 msgid "Some Magic Immunities"
 msgstr "Vissa Magiska Immuniteter"
 
-#: Source/msg.cpp:484
+#: Source/msg.cpp:495
 msgid "Trying to drop a floor item?"
 msgstr ""
 
-#: Source/msg.cpp:951 Source/msg.cpp:975 Source/msg.cpp:998 Source/msg.cpp:1113
-#: Source/msg.cpp:1136 Source/msg.cpp:1158 Source/msg.cpp:1180
+#: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
+#: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
+#: Source/msg.cpp:1281
 msgid "{:s} has cast an illegal spell."
 msgstr ""
 
-#: Source/msg.cpp:1529 Source/multi.cpp:815
+#: Source/msg.cpp:1668 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
-#: Source/msg.cpp:1826
+#: Source/msg.cpp:1972
 msgid "Waiting for game data..."
 msgstr ""
 
-#: Source/msg.cpp:1834
+#: Source/msg.cpp:1980
 msgid "The game ended"
 msgstr ""
 
-#: Source/msg.cpp:1840
+#: Source/msg.cpp:1986
 msgid "Unable to get level data"
 msgstr ""
 
@@ -5374,507 +5505,506 @@ msgstr ""
 msgid "Player '{:s}' dropped due to timeout"
 msgstr ""
 
-#: Source/multi.cpp:817
+#: Source/multi.cpp:806
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr ""
 
 #. TRANSLATORS: Shrine Name Block
-#: Source/objects.cpp:101
+#: Source/objects.cpp:104
 msgid "Mysterious"
 msgstr "Mystisk"
 
-#: Source/objects.cpp:102
+#: Source/objects.cpp:105
 msgid "Hidden"
 msgstr "Gömd"
 
-#: Source/objects.cpp:103
+#: Source/objects.cpp:106
 msgid "Gloomy"
 msgstr "Dyster"
 
-#: Source/objects.cpp:105 Source/objects.cpp:112
+#: Source/objects.cpp:108 Source/objects.cpp:115
 msgid "Magical"
 msgstr "Magisk"
 
-#: Source/objects.cpp:106
+#: Source/objects.cpp:109
 msgid "Stone"
 msgstr "Stenig"
 
-#: Source/objects.cpp:107
+#: Source/objects.cpp:110
 msgid "Religious"
 msgstr "Religiös"
 
-#: Source/objects.cpp:108
+#: Source/objects.cpp:111
 msgid "Enchanted"
 msgstr "Förtrollad"
 
-#: Source/objects.cpp:109
+#: Source/objects.cpp:112
 msgid "Thaumaturgic"
 msgstr "Siande"
 
-#: Source/objects.cpp:110
+#: Source/objects.cpp:113
 msgid "Fascinating"
 msgstr "Fascinerande"
 
-#: Source/objects.cpp:111
+#: Source/objects.cpp:114
 msgid "Cryptic"
 msgstr "Kryptisk"
 
-#: Source/objects.cpp:113
+#: Source/objects.cpp:116
 msgid "Eldritch"
 msgstr "Uråldrig"
 
-#: Source/objects.cpp:114
+#: Source/objects.cpp:117
 msgid "Eerie"
 msgstr "Kuslig"
 
-#: Source/objects.cpp:115
+#: Source/objects.cpp:118
 msgid "Divine"
 msgstr "Gudomlig"
 
-#: Source/objects.cpp:117
+#: Source/objects.cpp:120
 msgid "Sacred"
 msgstr "Helig"
 
-#: Source/objects.cpp:118
+#: Source/objects.cpp:121
 msgid "Spiritual"
 msgstr "Spirituell"
 
-#: Source/objects.cpp:119
+#: Source/objects.cpp:122
 msgid "Spooky"
 msgstr "Spöklik"
 
-#: Source/objects.cpp:120
+#: Source/objects.cpp:123
 msgid "Abandoned"
 msgstr "Övergiven"
 
-#: Source/objects.cpp:121
+#: Source/objects.cpp:124
 msgid "Creepy"
 msgstr "Läskig"
 
-#: Source/objects.cpp:122
+#: Source/objects.cpp:125
 msgid "Quiet"
 msgstr "Tyst"
 
-#: Source/objects.cpp:123
+#: Source/objects.cpp:126
 msgid "Secluded"
 msgstr "Avskild"
 
-#: Source/objects.cpp:124
+#: Source/objects.cpp:127
 msgid "Ornate"
 msgstr "Sirlig"
 
-#: Source/objects.cpp:125
+#: Source/objects.cpp:128
 msgid "Glimmering"
 msgstr "Glittrande"
 
-#: Source/objects.cpp:126
+#: Source/objects.cpp:129
 msgid "Tainted"
 msgstr "Befläckad"
 
-#: Source/objects.cpp:127
+#: Source/objects.cpp:130
 msgid "Oily"
 msgstr "Oljig"
 
-#: Source/objects.cpp:128
+#: Source/objects.cpp:131
 msgid "Glowing"
 msgstr "Lysande"
 
-#: Source/objects.cpp:129
+#: Source/objects.cpp:132
 msgid "Mendicant's"
 msgstr "Botgörarens"
 
-#: Source/objects.cpp:130
+#: Source/objects.cpp:133
 msgid "Sparkling"
 msgstr "Gnistrande"
 
-#: Source/objects.cpp:131
+#: Source/objects.cpp:134
 msgid "Town"
 msgstr "Stadens"
 
-#: Source/objects.cpp:132
+#: Source/objects.cpp:135
 msgid "Shimmering"
 msgstr "Strålande"
 
-#: Source/objects.cpp:133
+#: Source/objects.cpp:136
 msgid "Solar"
 msgstr "Solens"
 
 #. TRANSLATORS: Shrine Name Block end
-#: Source/objects.cpp:135
+#: Source/objects.cpp:138
 msgid "Murphy's"
 msgstr "Murphys"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:265
+#: Source/objects.cpp:268
 msgid "The Great Conflict"
 msgstr "Det Stora Kriget"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:266
+#: Source/objects.cpp:269
 msgid "The Wages of Sin are War"
 msgstr "Krig är Syndens Lön"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:267
+#: Source/objects.cpp:270
 msgid "The Tale of the Horadrim"
 msgstr "Berättelsen om Horadrim"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:268
+#: Source/objects.cpp:271
 msgid "The Dark Exile"
 msgstr "Den Mörka Landsflykten"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:269
+#: Source/objects.cpp:272
 msgid "The Sin War"
 msgstr "Syndakriget"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:270
+#: Source/objects.cpp:273
 msgid "The Binding of the Three"
 msgstr "De Tre Binds Fast"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:271
+#: Source/objects.cpp:274
 msgid "The Realms Beyond"
 msgstr "Världarna Bortom"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:272
+#: Source/objects.cpp:275
 msgid "Tale of the Three"
 msgstr "Berättelsen om de Tre"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:273
+#: Source/objects.cpp:276
 msgid "The Black King"
 msgstr "Den Svarta Kungen"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:274
+#: Source/objects.cpp:277
 msgid "Journal: The Ensorcellment"
 msgstr "Dagbok: Trollbindelsen"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:275
+#: Source/objects.cpp:278
 msgid "Journal: The Meeting"
 msgstr "Dagbok: Mötet"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:276
+#: Source/objects.cpp:279
 msgid "Journal: The Tirade"
 msgstr "Dagbok: Utläggningen"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:277
+#: Source/objects.cpp:280
 msgid "Journal: His Power Grows"
 msgstr "Dagbok: Hans Kraft Växer"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:278
+#: Source/objects.cpp:281
 msgid "Journal: NA-KRUL"
 msgstr "Dagbok: NA-KRUL"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:279
+#: Source/objects.cpp:282
 msgid "Journal: The End"
 msgstr "Dagbok: Slutet"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:280
+#: Source/objects.cpp:283
 msgid "A Spellbook"
 msgstr "En Magibok"
 
-#: Source/objects.cpp:5365
+#: Source/objects.cpp:5339
 msgid "Crucified Skeleton"
 msgstr "Korsfäst Skelett"
 
-#: Source/objects.cpp:5369
+#: Source/objects.cpp:5343
 msgid "Lever"
 msgstr "Spak"
 
-#: Source/objects.cpp:5378
+#: Source/objects.cpp:5352
 msgid "Open Door"
 msgstr "Öppen Dörr"
 
-#: Source/objects.cpp:5380
+#: Source/objects.cpp:5354
 msgid "Closed Door"
 msgstr "Stängd Dörr"
 
-#: Source/objects.cpp:5382
+#: Source/objects.cpp:5356
 msgid "Blocked Door"
 msgstr "Spärrad Dörr"
 
-#: Source/objects.cpp:5387
+#: Source/objects.cpp:5361
 msgid "Ancient Tome"
 msgstr "Urgammal Volym"
 
-#: Source/objects.cpp:5389
+#: Source/objects.cpp:5363
 msgid "Book of Vileness"
 msgstr "Uselhetens Bok"
 
-#: Source/objects.cpp:5394
+#: Source/objects.cpp:5368
 msgid "Skull Lever"
 msgstr "Dödskallespak"
 
-#: Source/objects.cpp:5397
+#: Source/objects.cpp:5371
 msgid "Mythical Book"
 msgstr "Mytisk Bok"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5375
 msgid "Small Chest"
 msgstr "Liten Kista"
 
-#: Source/objects.cpp:5405
+#: Source/objects.cpp:5379
 msgid "Chest"
 msgstr "Kista"
 
-#: Source/objects.cpp:5410
+#: Source/objects.cpp:5384
 msgid "Large Chest"
 msgstr "Stor Kista"
 
-#: Source/objects.cpp:5413
+#: Source/objects.cpp:5387
 msgid "Sarcophagus"
 msgstr "Sarkofag"
 
-#: Source/objects.cpp:5416
+#: Source/objects.cpp:5390
 msgid "Bookshelf"
 msgstr "Bokhylla"
 
-#: Source/objects.cpp:5420
+#: Source/objects.cpp:5394
 msgid "Bookcase"
 msgstr "Bokhyllor"
 
-#: Source/objects.cpp:5425
+#: Source/objects.cpp:5399
 msgid "Pod"
 msgstr "Behållare"
 
-#: Source/objects.cpp:5427
+#: Source/objects.cpp:5401
 msgid "Urn"
 msgstr "Urna"
 
-#: Source/objects.cpp:5429
+#: Source/objects.cpp:5403
 msgid "Barrel"
 msgstr "Tunna"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5433
+#: Source/objects.cpp:5407
 msgid "{:s} Shrine"
 msgstr "{:s} Helgedom"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5411
 msgid "Skeleton Tome"
 msgstr "Skelettband"
 
-#: Source/objects.cpp:5440
+#: Source/objects.cpp:5414
 msgid "Library Book"
 msgstr "Biblioteksbok"
 
-#: Source/objects.cpp:5443
+#: Source/objects.cpp:5417
 msgid "Blood Fountain"
 msgstr "Blodfontän"
 
-#: Source/objects.cpp:5446
+#: Source/objects.cpp:5420
 msgid "Decapitated Body"
 msgstr "Halshuggen Kropp"
 
-#: Source/objects.cpp:5449
+#: Source/objects.cpp:5423
 msgid "Book of the Blind"
 msgstr "De Blindas Bok"
 
-#: Source/objects.cpp:5452
+#: Source/objects.cpp:5426
 msgid "Book of Blood"
 msgstr "Blodboken"
 
-#: Source/objects.cpp:5455
+#: Source/objects.cpp:5429
 msgid "Purifying Spring"
 msgstr "Rengörande Källa"
 
-#: Source/objects.cpp:5462 Source/objects.cpp:5486
+#: Source/objects.cpp:5436 Source/objects.cpp:5460
 msgid "Weapon Rack"
 msgstr "Vapenräcke"
 
-#: Source/objects.cpp:5465
+#: Source/objects.cpp:5439
 msgid "Goat Shrine"
 msgstr "Gethelgedom"
 
-#: Source/objects.cpp:5468
+#: Source/objects.cpp:5442
 msgid "Cauldron"
 msgstr "Kittel"
 
-#: Source/objects.cpp:5471
+#: Source/objects.cpp:5445
 msgid "Murky Pool"
 msgstr "Mörk Pöl"
 
-#: Source/objects.cpp:5474
+#: Source/objects.cpp:5448
 msgid "Fountain of Tears"
 msgstr "Tårfontän"
 
-#: Source/objects.cpp:5477
+#: Source/objects.cpp:5451
 msgid "Steel Tome"
 msgstr "Stålvolymen"
 
-#: Source/objects.cpp:5480
+#: Source/objects.cpp:5454
 msgid "Pedestal of Blood"
 msgstr "Blodpiedestal"
 
-#: Source/objects.cpp:5489
+#: Source/objects.cpp:5463
 msgid "Mushroom Patch"
 msgstr "Svampsamling"
 
-#: Source/objects.cpp:5492
+#: Source/objects.cpp:5466
 msgid "Vile Stand"
 msgstr "Uselt Stativ"
 
-#: Source/objects.cpp:5495
+#: Source/objects.cpp:5469
 msgid "Slain Hero"
 msgstr "Dräpt Hjälte"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5502
+#: Source/objects.cpp:5476
 msgid "Trapped {:s}"
 msgstr "Fångad {:s}"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5508
+#: Source/objects.cpp:5482
 msgid "{:s} (disabled)"
 msgstr "{:s} (deaktiverad)"
 
-#: Source/panels/charpanel.cpp:109
+#: Source/panels/charpanel.cpp:110
 msgid "MAX"
 msgstr "MAX"
 
-#: Source/panels/charpanel.cpp:119
+#: Source/panels/charpanel.cpp:120
 msgid "Level"
 msgstr "Nivå"
 
-#: Source/panels/charpanel.cpp:121
+#: Source/panels/charpanel.cpp:122
 msgid "Experience"
 msgstr "Erfarenhet"
 
-#: Source/panels/charpanel.cpp:123
+#: Source/panels/charpanel.cpp:124
 msgid "Next level"
 msgstr "Nästa nivå"
 
-#: Source/panels/charpanel.cpp:126
+#: Source/panels/charpanel.cpp:127
 msgid "None"
 msgstr "Ingen"
 
-#: Source/panels/charpanel.cpp:132
+#: Source/panels/charpanel.cpp:133
 msgid "Base"
 msgstr "Grund"
 
-#: Source/panels/charpanel.cpp:133
+#: Source/panels/charpanel.cpp:134
 msgid "Now"
 msgstr "Nu"
 
-#: Source/panels/charpanel.cpp:134
+#: Source/panels/charpanel.cpp:135
 msgid "Strength"
 msgstr "Styrka"
 
-#: Source/panels/charpanel.cpp:138
+#: Source/panels/charpanel.cpp:139
 msgid "Magic"
 msgstr "Magi"
 
-#: Source/panels/charpanel.cpp:142
+#: Source/panels/charpanel.cpp:143
 msgid "Dexterity"
 msgstr "Smidighet"
 
-#: Source/panels/charpanel.cpp:145
+#: Source/panels/charpanel.cpp:146
 msgid "Vitality"
 msgstr "Kropp"
 
-#: Source/panels/charpanel.cpp:148
+#: Source/panels/charpanel.cpp:149
 msgid "Points to distribute"
 msgstr "Poäng att fördela"
 
-#: Source/panels/charpanel.cpp:158
+#: Source/panels/charpanel.cpp:159
 msgid "Armor class"
 msgstr "Pansarklass"
 
-#: Source/panels/charpanel.cpp:160
+#: Source/panels/charpanel.cpp:161
 msgid "To hit"
 msgstr "Träffchans"
 
-#: Source/panels/charpanel.cpp:162
+#: Source/panels/charpanel.cpp:163
 msgid "Damage"
 msgstr "Skada"
 
-#: Source/panels/charpanel.cpp:168
+#: Source/panels/charpanel.cpp:170
 msgid "Life"
 msgstr "Liv"
 
-#: Source/panels/charpanel.cpp:172
+#: Source/panels/charpanel.cpp:174
 msgid "Mana"
 msgstr "Mana"
 
-#: Source/panels/charpanel.cpp:177
+#: Source/panels/charpanel.cpp:179
 msgid "Resist magic"
 msgstr "Motstå magi"
 
-#: Source/panels/charpanel.cpp:179
+#: Source/panels/charpanel.cpp:181
 msgid "Resist fire"
 msgstr "Motstå eld"
 
-#: Source/panels/charpanel.cpp:181
+#: Source/panels/charpanel.cpp:183
 msgid "Resist lightning"
 msgstr "Motstå åska"
 
-#: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
-#: Source/panels/mainpanel.cpp:111
+#: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
+#: Source/panels/mainpanel.cpp:108
 msgid "voice"
 msgstr "röst"
 
-#: Source/panels/mainpanel.cpp:87
+#: Source/panels/mainpanel.cpp:84
 msgid "char"
 msgstr "karak"
 
-#: Source/panels/mainpanel.cpp:88
+#: Source/panels/mainpanel.cpp:85
 msgid "quests"
 msgstr "uppdr"
 
-#: Source/panels/mainpanel.cpp:89
+#: Source/panels/mainpanel.cpp:86
 msgid "map"
 msgstr "karta"
 
-#: Source/panels/mainpanel.cpp:90
+#: Source/panels/mainpanel.cpp:87
 msgid "menu"
 msgstr "meny"
 
-#: Source/panels/mainpanel.cpp:91
+#: Source/panels/mainpanel.cpp:88
 msgid "inv"
 msgstr "ägod"
 
-#: Source/panels/mainpanel.cpp:92
+#: Source/panels/mainpanel.cpp:89
 msgid "spells"
 msgstr "troll"
 
-#: Source/panels/mainpanel.cpp:104 Source/panels/mainpanel.cpp:106
-#: Source/panels/mainpanel.cpp:108
+#: Source/panels/mainpanel.cpp:101 Source/panels/mainpanel.cpp:103
+#: Source/panels/mainpanel.cpp:105
 msgid "mute"
 msgstr "tysta"
 
-#: Source/pfile.cpp:260
+#: Source/pfile.cpp:242
 msgid "Failed to open player archive for writing."
 msgstr ""
 
-#: Source/pfile.cpp:385
+#: Source/pfile.cpp:377
 msgid "Unable to open archive"
 msgstr ""
 
-#: Source/pfile.cpp:387
+#: Source/pfile.cpp:379
 msgid "Unable to load character"
 msgstr ""
 
-#: Source/pfile.cpp:410 Source/pfile.cpp:430
+#: Source/pfile.cpp:403 Source/pfile.cpp:423
 msgid "Unable to read to save file archive"
 msgstr ""
 
-#: Source/pfile.cpp:449
+#: Source/pfile.cpp:442
 msgid "Unable to write to save file archive"
 msgstr ""
 
-#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
-#: Source/plrmsg.cpp:89
+#: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (nivå {:d}): {:s}"
 
@@ -5889,7 +6019,7 @@ msgstr ""
 msgid "%i gold"
 msgstr "%i guld"
 
-#: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:56
+#: Source/qol/monhealthbar.cpp:37 Source/qol/xpbar.cpp:56
 msgid ""
 "Failed to load UI resources.\n"
 "\n"
@@ -5929,6 +6059,16 @@ msgstr "Gharbad den Svage"
 msgid "Zhar the Mad"
 msgstr "Zhar den Galne"
 
+#: Source/quests.cpp:45
+msgid "Lachdanan"
+msgstr ""
+
+#: Source/quests.cpp:46
+#, fuzzy
+#| msgid "Exit Diablo"
+msgid "Diablo"
+msgstr "Avsluta Diablo"
+
 #: Source/quests.cpp:47
 msgid "The Butcher"
 msgstr "Slaktaren"
@@ -5958,7 +6098,7 @@ msgid "Poisoned Water Supply"
 msgstr "Förgiftad Vattenkälla"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:55 Source/quests.cpp:90
+#: Source/quests.cpp:55 Source/quests.cpp:91
 msgid "The Chamber of Bone"
 msgstr "Benkammaren"
 
@@ -5986,6 +6126,10 @@ msgstr "Vandrande Köpman"
 msgid "The Defiler"
 msgstr "Förpestaren"
 
+#: Source/quests.cpp:62
+msgid "Na-Krul"
+msgstr ""
+
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
 msgstr "Världens Hörnsten"
@@ -5996,27 +6140,27 @@ msgid "The Jersey's Jersey"
 msgstr "Jerseys Jersey"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:89
+#: Source/quests.cpp:90
 msgid "King Leoric's Tomb"
 msgstr "Kung Leorics Grift"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:91 Source/setmaps.cpp:26
+#: Source/quests.cpp:92 Source/setmaps.cpp:26
 msgid "Maze"
 msgstr "Labyrint"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:92
+#: Source/quests.cpp:93
 msgid "A Dark Passage"
 msgstr "En Mörk Tunnel"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:93
+#: Source/quests.cpp:94
 msgid "Unholy Altar"
 msgstr "Oheligt Altare"
 
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
-#: Source/quests.cpp:449
+#: Source/quests.cpp:450
 msgid "To {:s}"
 msgstr "Till {:s}"
 
@@ -6287,298 +6431,331 @@ msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "Stenruna"
 
-#: Source/stores.cpp:179 Source/stores.cpp:186
+#: Source/stores.cpp:91
+#, fuzzy
+#| msgid "Griswold's Edge"
+msgid "Griswold"
+msgstr "Griswolds Klinga"
+
+#: Source/stores.cpp:92
+msgid "Pepin"
+msgstr ""
+
+#: Source/stores.cpp:94
+msgid "Ogden"
+msgstr ""
+
+#: Source/stores.cpp:95
+msgid "Cain"
+msgstr ""
+
+#: Source/stores.cpp:96
+#, fuzzy
+#| msgid "Talk to Farnham"
+msgid "Farnham"
+msgstr "Tala med Farnham"
+
+#: Source/stores.cpp:97
+msgid "Adria"
+msgstr ""
+
+#: Source/stores.cpp:98 Source/stores.cpp:1305
+#, fuzzy
+#| msgid "brilliance"
+msgid "Gillian"
+msgstr "briljans"
+
+#: Source/stores.cpp:99
+msgid "Wirt"
+msgstr ""
+
+#: Source/stores.cpp:218 Source/stores.cpp:225
+msgid "Back"
+msgstr "Tillbaka"
+
+#: Source/stores.cpp:250 Source/stores.cpp:257
 msgid ",  "
 msgstr ",  "
 
-#: Source/stores.cpp:195
+#: Source/stores.cpp:266
 msgid "Damage: {:d}-{:d}  "
 msgstr "Skada: {:d}-{:d}  "
 
-#: Source/stores.cpp:197
+#: Source/stores.cpp:268
 msgid "Armor: {:d}  "
 msgstr "Pansar: {:d}  "
 
-#: Source/stores.cpp:199
+#: Source/stores.cpp:270
 msgid "Dur: {:d}/{:d},  "
 msgstr "Tål: {:d}/{:d},  "
 
-#: Source/stores.cpp:202
+#: Source/stores.cpp:273
 msgid "Indestructible,  "
 msgstr "Oförstörbar,  "
 
-#: Source/stores.cpp:210
+#: Source/stores.cpp:281
 msgid "No required attributes"
 msgstr "Inga krävda attribut"
 
-#: Source/stores.cpp:243 Source/stores.cpp:995 Source/stores.cpp:1239
+#: Source/stores.cpp:314 Source/stores.cpp:1052 Source/stores.cpp:1292
 msgid "Welcome to the"
 msgstr "Välkommen till"
 
-#: Source/stores.cpp:244
+#: Source/stores.cpp:315
 msgid "Blacksmith's shop"
 msgstr "Smedens butik"
 
-#: Source/stores.cpp:245 Source/stores.cpp:610 Source/stores.cpp:997
-#: Source/stores.cpp:1054 Source/stores.cpp:1241 Source/stores.cpp:1253
-#: Source/stores.cpp:1265
+#: Source/stores.cpp:316 Source/stores.cpp:670 Source/stores.cpp:1054
+#: Source/stores.cpp:1110 Source/stores.cpp:1294 Source/stores.cpp:1306
+#: Source/stores.cpp:1318
 msgid "Would you like to:"
 msgstr "Vill du:"
 
-#: Source/stores.cpp:246
+#: Source/stores.cpp:317
 msgid "Talk to Griswold"
 msgstr "Tala med Griswold"
 
-#: Source/stores.cpp:247
+#: Source/stores.cpp:318
 msgid "Buy basic items"
 msgstr "Köpa enkla föremål"
 
-#: Source/stores.cpp:248
+#: Source/stores.cpp:319
 msgid "Buy premium items"
 msgstr "Köpa exklusiva föremål"
 
-#: Source/stores.cpp:249 Source/stores.cpp:613
+#: Source/stores.cpp:320 Source/stores.cpp:673
 msgid "Sell items"
 msgstr "Sälja föremål"
 
-#: Source/stores.cpp:250
+#: Source/stores.cpp:321
 msgid "Repair items"
 msgstr "Laga föremål"
 
-#: Source/stores.cpp:251
+#: Source/stores.cpp:322
 msgid "Leave the shop"
 msgstr "Lämna butiken"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
+#: Source/stores.cpp:360 Source/stores.cpp:714 Source/stores.cpp:1089
 msgid "I have these items for sale:             Your gold: {:d}"
 msgstr "Jag har dessa föremål till salu:         Ditt guld: {:d}"
 
-#: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
-#: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
-#: Source/stores.cpp:660 Source/stores.cpp:751 Source/stores.cpp:767
-#: Source/stores.cpp:832 Source/stores.cpp:848 Source/stores.cpp:1038
-#: Source/stores.cpp:1154 Source/stores.cpp:1170 Source/stores.cpp:1205
-#: Source/stores.cpp:1232
-msgid "Back"
-msgstr "Tillbaka"
-
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:351
+#: Source/stores.cpp:420
 msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr "Jag har dessa specialföremål till salu:  Ditt guld: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:474 Source/stores.cpp:746
+#: Source/stores.cpp:541 Source/stores.cpp:804
 msgid "You have nothing I want.             Your gold: {:d}"
 msgstr "Du har inget jag vill ha.            Ditt guld: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:489 Source/stores.cpp:761
+#: Source/stores.cpp:554 Source/stores.cpp:817
 msgid "Which item is for sale?             Your gold: {:d}"
 msgstr "Vad är till salu?                   Ditt guld: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:564
+#: Source/stores.cpp:627
 msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr "Du har inget att laga.                  Ditt guld: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:579
+#: Source/stores.cpp:640
 msgid "Repair which item?             Your gold: {:d}"
 msgstr "Laga vilket föremål?           Ditt guld: {:d}"
 
-#: Source/stores.cpp:609
+#: Source/stores.cpp:669
 msgid "Witch's shack"
 msgstr "Häxans hydda"
 
-#: Source/stores.cpp:611
+#: Source/stores.cpp:671
 msgid "Talk to Adria"
 msgstr "Tala med Adria"
 
-#: Source/stores.cpp:612 Source/stores.cpp:999
+#: Source/stores.cpp:672 Source/stores.cpp:1056
 msgid "Buy items"
 msgstr "Köpa föremål"
 
-#: Source/stores.cpp:614
+#: Source/stores.cpp:674
 msgid "Recharge staves"
 msgstr "Ladda om stavar"
 
-#: Source/stores.cpp:615
+#: Source/stores.cpp:675
 msgid "Leave the shack"
 msgstr "Lämna hyddan"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:827
+#: Source/stores.cpp:881
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr "Du har inget att ladda om.                Ditt guld: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:842
+#: Source/stores.cpp:894
 msgid "Recharge which item?             Your gold: {:d}"
 msgstr "Ladda om vilket föremål?         Ditt guld: {:d}"
 
-#: Source/stores.cpp:858
+#: Source/stores.cpp:908
 msgid "You do not have enough gold"
 msgstr "Du har inte tillräckligt med guld"
 
-#: Source/stores.cpp:866
+#: Source/stores.cpp:916
 msgid "You do not have enough room in inventory"
 msgstr "Du har inte tillräckligt med utrymme i dina ägodelar"
 
-#: Source/stores.cpp:903
+#: Source/stores.cpp:953
 msgid "Do we have a deal?"
 msgstr "Är vi överens?"
 
-#: Source/stores.cpp:906
+#: Source/stores.cpp:956
 msgid "Are you sure you want to identify this item?"
 msgstr "Är du säker på att du vill identifiera detta föremål?"
 
-#: Source/stores.cpp:912
+#: Source/stores.cpp:962
 msgid "Are you sure you want to buy this item?"
 msgstr "Är du säker på att du vill köpa detta föremål?"
 
-#: Source/stores.cpp:915
+#: Source/stores.cpp:965
 msgid "Are you sure you want to recharge this item?"
 msgstr "Är du säker på att du vill ladda om detta föremål?"
 
-#: Source/stores.cpp:919
+#: Source/stores.cpp:969
 msgid "Are you sure you want to sell this item?"
 msgstr "Är du säker på att du vill sälja detta föremål?"
 
-#: Source/stores.cpp:922
+#: Source/stores.cpp:972
 msgid "Are you sure you want to repair this item?"
 msgstr "Är du säker på att du vill laga detta föremål?"
 
-#: Source/stores.cpp:936 Source/towners.cpp:157
+#: Source/stores.cpp:986 Source/towners.cpp:157
 msgid "Wirt the Peg-legged boy"
 msgstr "Den Träbente pojken Wirt"
 
-#: Source/stores.cpp:939 Source/stores.cpp:946
+#: Source/stores.cpp:989 Source/stores.cpp:996
 msgid "Talk to Wirt"
 msgstr "Tala med Wirt"
 
-#: Source/stores.cpp:940
+#: Source/stores.cpp:990
 msgid "I have something for sale,"
 msgstr "Jag har något att sälja,"
 
-#: Source/stores.cpp:941
+#: Source/stores.cpp:991
 msgid "but it will cost 50 gold"
 msgstr "men det kostar 50 guld"
 
-#: Source/stores.cpp:942
+#: Source/stores.cpp:992
 msgid "just to take a look. "
 msgstr "bara för att se det. "
 
-#: Source/stores.cpp:943
+#: Source/stores.cpp:993
 msgid "What have you got?"
 msgstr "Vad har du?"
 
-#: Source/stores.cpp:944 Source/stores.cpp:947 Source/stores.cpp:1057
-#: Source/stores.cpp:1255
+#: Source/stores.cpp:994 Source/stores.cpp:997 Source/stores.cpp:1113
+#: Source/stores.cpp:1308
 msgid "Say goodbye"
 msgstr "Säg hejdå"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:957
+#: Source/stores.cpp:1007
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr "Jag säljer detta:                      Ditt guld: {:d}"
 
-#: Source/stores.cpp:974
+#: Source/stores.cpp:1030
 msgid "Leave"
 msgstr "Gå därifrån"
 
-#: Source/stores.cpp:996
+#: Source/stores.cpp:1053
 msgid "Healer's home"
 msgstr "Läkarens hus"
 
-#: Source/stores.cpp:998
+#: Source/stores.cpp:1055
 msgid "Talk to Pepin"
 msgstr "Tala med Pepin"
 
-#: Source/stores.cpp:1000
+#: Source/stores.cpp:1057
 msgid "Leave Healer's home"
 msgstr "Lämna Läkarens hus"
 
-#: Source/stores.cpp:1053
+#: Source/stores.cpp:1109
 msgid "The Town Elder"
 msgstr "Byäldsten"
 
-#: Source/stores.cpp:1055
+#: Source/stores.cpp:1111
 msgid "Talk to Cain"
 msgstr "Tala med Cain"
 
-#: Source/stores.cpp:1056
+#: Source/stores.cpp:1112
 msgid "Identify an item"
 msgstr "Identifiera ett föremål"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1149
+#: Source/stores.cpp:1205
 msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr "Du har inget att identifiera.             Ditt guld: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1164
+#: Source/stores.cpp:1218
 msgid "Identify which item?             Your gold: {:d}"
 msgstr "Identifiera vilket föremål?      Ditt guld: {:d}"
 
-#: Source/stores.cpp:1184
+#: Source/stores.cpp:1237
 msgid "This item is:"
 msgstr "Detta föremål är:"
 
-#: Source/stores.cpp:1187
+#: Source/stores.cpp:1240
 msgid "Done"
 msgstr "Klart"
 
-#: Source/stores.cpp:1196
+#: Source/stores.cpp:1249
 msgid "Talk to {:s}"
 msgstr "Tala med {:s}"
 
-#: Source/stores.cpp:1200
+#: Source/stores.cpp:1253
 msgid "Talking to {:s}"
 msgstr "Talar med {:s}"
 
-#: Source/stores.cpp:1202
+#: Source/stores.cpp:1255
 msgid "is not available"
 msgstr "är inte tillgänglig"
 
-#: Source/stores.cpp:1203
+#: Source/stores.cpp:1256
 msgid "in the shareware"
 msgstr "i shareware"
 
-#: Source/stores.cpp:1204
+#: Source/stores.cpp:1257
 msgid "version"
 msgstr "version"
 
-#: Source/stores.cpp:1231
+#: Source/stores.cpp:1284
 msgid "Gossip"
 msgstr "Skvaller"
 
-#: Source/stores.cpp:1240
+#: Source/stores.cpp:1293
 msgid "Rising Sun"
 msgstr "Soluppgången"
 
-#: Source/stores.cpp:1242
+#: Source/stores.cpp:1295
 msgid "Talk to Ogden"
 msgstr "Tala med Ogden"
 
-#: Source/stores.cpp:1243
+#: Source/stores.cpp:1296
 msgid "Leave the tavern"
 msgstr "Lämna Krogen"
 
-#: Source/stores.cpp:1254
+#: Source/stores.cpp:1307
 msgid "Talk to Gillian"
 msgstr "Tala med Gillian"
 
-#: Source/stores.cpp:1264 Source/towners.cpp:212
+#: Source/stores.cpp:1317 Source/towners.cpp:212
 msgid "Farnham the Drunk"
 msgstr "Fyllot Farnham"
 
-#: Source/stores.cpp:1266
+#: Source/stores.cpp:1319
 msgid "Talk to Farnham"
 msgstr "Tala med Farnham"
 
-#: Source/stores.cpp:1267
+#: Source/stores.cpp:1320
 msgid "Say Goodbye"
 msgstr "Säg Hejdå"
 
@@ -9285,6 +9462,10 @@ msgstr "Bonden Lester"
 msgid "Complete Nut"
 msgstr "Fullkomligt Nöt"
 
+#: Source/towners.cpp:266
+msgid "Celia"
+msgstr ""
+
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
 msgstr "Dräpt Stadsbo"
@@ -9314,17 +9495,17 @@ msgid "Down to Crypt"
 msgstr "Ned till kryptan"
 
 #: Source/trigs.cpp:412 Source/trigs.cpp:492 Source/trigs.cpp:539
-#: Source/trigs.cpp:630
+#: Source/trigs.cpp:634
 msgid "Up to level {:d}"
 msgstr "Upp till nivå {:d}"
 
 #: Source/trigs.cpp:414 Source/trigs.cpp:469 Source/trigs.cpp:521
-#: Source/trigs.cpp:596 Source/trigs.cpp:613 Source/trigs.cpp:660
+#: Source/trigs.cpp:600 Source/trigs.cpp:617 Source/trigs.cpp:664
 msgid "Up to town"
 msgstr "Upp till staden"
 
-#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:552
-#: Source/trigs.cpp:577 Source/trigs.cpp:642
+#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:556
+#: Source/trigs.cpp:581 Source/trigs.cpp:646
 msgid "Down to level {:d}"
 msgstr "Ned till nivå {:d}"
 
@@ -9336,15 +9517,14 @@ msgstr "Upp till Kryptans nivå {:d}"
 msgid "Down to Crypt level {:d}"
 msgstr "Ned till Kryptans nivå {:d}"
 
-#: Source/trigs.cpp:564
+#: Source/trigs.cpp:568
 msgid "Up to Nest level {:d}"
 msgstr "Upp till Nästets nivå {:d}"
 
-#: Source/trigs.cpp:673
-#| msgid "Exit Diablo"
+#: Source/trigs.cpp:677
 msgid "Down to Diablo"
 msgstr "Ned till Diablo"
 
-#: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
+#: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "Tillbaka till nivå {:d}"
