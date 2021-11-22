@@ -14,7 +14,6 @@
 #include "utils/language.h"
 #include "utils/sdl_thread.h"
 #include "utils/ui_fwd.h"
-#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -100,7 +99,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 
 	FreeDlg();
 
-	CopyUtf8(text, fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}"), error, logFilePath, logLineNr), sizeof(text));
+	strcpy(text, fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}"), error, logFilePath, logLineNr).c_str());
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);
@@ -129,7 +128,7 @@ void DirErrorDlg(const char *error)
 {
 	char text[1024];
 
-	CopyUtf8(text, fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}"), error), sizeof(text));
+	strcpy(text, fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}"), error).c_str());
 
 	UiErrorOkDialog(_("Read-Only Directory Error"), text);
 	app_fatal(nullptr);

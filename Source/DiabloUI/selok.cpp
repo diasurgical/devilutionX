@@ -3,7 +3,6 @@
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "utils/language.h"
-#include "utils/utf8.hpp"
 #include "engine/render/text_render.hpp"
 
 namespace devilution {
@@ -69,8 +68,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	vecSelOkDialogItems.push_back(std::make_unique<UiListItem>(_("OK"), 0));
 	vecSelOkDialog.push_back(std::make_unique<UiList>(vecSelOkDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	const std::string wrapped = WordWrapString(body, MESSAGE_WIDTH, GameFont24);
-	CopyUtf8(dialogText, wrapped, sizeof(dialogText));
+	strcpy(dialogText, WordWrapString(body, MESSAGE_WIDTH, GameFont24).c_str());
 
 	UiInitList(0, nullptr, selok_Select, selok_Esc, vecSelOkDialog, false, nullptr);
 
