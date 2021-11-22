@@ -2735,19 +2735,16 @@ msgid "Serpent's"
 msgstr "Гадючий"
 
 #: Source/itemdat.cpp:265
-#, fuzzy
 msgid "Drake's"
-msgstr "Синонім дракона"
+msgstr "Левіятановий"
 
 #: Source/itemdat.cpp:266
-#, fuzzy
 msgid "Dragon's"
-msgstr "Драконячий"
+msgstr "Драконовий"
 
 #: Source/itemdat.cpp:267
-#, fuzzy
 msgid "Wyrm's"
-msgstr "Ще один синонім дракона"
+msgstr "Супостатний"
 
 #: Source/itemdat.cpp:268
 msgid "Hydra's"
