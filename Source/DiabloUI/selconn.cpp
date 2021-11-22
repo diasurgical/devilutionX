@@ -4,7 +4,6 @@
 #include "stores.h"
 #include "storm/storm_net.hpp"
 #include "utils/language.h"
-#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -105,22 +104,21 @@ void SelconnFocus(int value)
 	int players = MAX_PLRS;
 	switch (vecConnItems[value]->m_value) {
 	case SELCONN_TCP:
-		CopyUtf8(selconn_Description, _("All computers must be connected to a TCP-compatible network."), sizeof(selconn_Description));
+		strcpy(selconn_Description, _("All computers must be connected to a TCP-compatible network."));
 		players = MAX_PLRS;
 		break;
 	case SELCONN_ZT:
-		CopyUtf8(selconn_Description, _("All computers must be connected to the internet."), sizeof(selconn_Description));
+		strcpy(selconn_Description, _("All computers must be connected to the internet."));
 		players = MAX_PLRS;
 		break;
 	case SELCONN_LOOPBACK:
-		CopyUtf8(selconn_Description, _("Play by yourself with no network exposure."), sizeof(selconn_Description));
+		strcpy(selconn_Description, _("Play by yourself with no network exposure."));
 		players = 1;
 		break;
 	}
 
-	CopyUtf8(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players), sizeof(selconn_MaxPlayers));
-	const std::string wrapped = WordWrapString(selconn_Description, DESCRIPTION_WIDTH);
-	CopyUtf8(selconn_Description, wrapped, sizeof(selconn_Description));
+	strcpy(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players).c_str());
+	strcpy(selconn_Description, WordWrapString(selconn_Description, DESCRIPTION_WIDTH).c_str());
 }
 
 void SelconnSelect(int value)

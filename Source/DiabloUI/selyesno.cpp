@@ -3,7 +3,6 @@
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "utils/language.h"
-#include "utils/utf8.hpp"
 
 namespace devilution {
 namespace {
@@ -56,8 +55,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	vecSelYesNoDialogItems.push_back(std::make_unique<UiListItem>(_("No"), 1));
 	vecSelYesNoDialog.push_back(std::make_unique<UiList>(vecSelYesNoDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	const std::string wrapped = WordWrapString(body, MESSAGE_WIDTH, GameFont24);
-	CopyUtf8(selyesno_confirmationMessage, wrapped, sizeof(selyesno_confirmationMessage));
+	strcpy(selyesno_confirmationMessage, WordWrapString(body, MESSAGE_WIDTH, GameFont24).c_str());
 
 	UiInitList(vecSelYesNoDialogItems.size(), nullptr, SelyesnoSelect, SelyesnoEsc, vecSelYesNoDialog, true, nullptr);
 

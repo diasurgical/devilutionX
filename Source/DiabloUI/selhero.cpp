@@ -16,7 +16,6 @@
 #include "options.h"
 #include "pfile.h"
 #include "utils/language.h"
-#include "utils/utf8.hpp"
 #include <menu.h>
 
 namespace devilution {
@@ -139,12 +138,8 @@ void SelheroListFocus(int value)
 	}
 
 	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(enum_size<HeroClass>::value);
-	CopyUtf8(textStats[0], "--", sizeof(textStats[0]));
-	CopyUtf8(textStats[1], "--", sizeof(textStats[1]));
-	CopyUtf8(textStats[2], "--", sizeof(textStats[2]));
-	CopyUtf8(textStats[3], "--", sizeof(textStats[3]));
-	CopyUtf8(textStats[4], "--", sizeof(textStats[4]));
-	CopyUtf8(textStats[5], "--", sizeof(textStats[5]));
+	for (char *textStat : textStats)
+		strcpy(textStat, "--");
 	SELLIST_DIALOG_DELETE_BUTTON->m_iFlags = baseFlags | UiFlags::ColorUiSilver | UiFlags::ElementDisabled;
 	selhero_deleteEnabled = false;
 }
@@ -270,7 +265,7 @@ void SelheroClassSelectorSelect(int value)
 	title = selhero_isMultiPlayer ? _("New Multi Player Hero") : _("New Single Player Hero");
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 	if (ShouldPrefillHeroName())
-		CopyUtf8(selhero_heroInfo.name, SelheroGenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name));
+		strcpy(selhero_heroInfo.name, SelheroGenerateName(selhero_heroInfo.heroclass));
 	vecSelDlgItems.clear();
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 211), 320, 33 };
 	vecSelDlgItems.push_back(std::make_unique<UiArtText>(_("Enter Name"), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
@@ -597,11 +592,11 @@ static void UiSelHeroDialog(
 			char dialogTitle[128];
 			char dialogText[256];
 			if (selhero_isMultiPlayer) {
-				CopyUtf8(dialogTitle, _("Delete Multi Player Hero"), sizeof(dialogTitle));
+				strcpy(dialogTitle, _("Delete Multi Player Hero"));
 			} else {
-				CopyUtf8(dialogTitle, _("Delete Single Player Hero"), sizeof(dialogTitle));
+				strcpy(dialogTitle, _("Delete Single Player Hero"));
 			}
-			CopyUtf8(dialogText, fmt::format(_("Are you sure you want to delete the character \"{:s}\"?"), selhero_heroInfo.name), sizeof(dialogText));
+			strcpy(dialogText, fmt::format(_("Are you sure you want to delete the character \"{:s}\"?"), selhero_heroInfo.name).c_str());
 
 			if (UiSelHeroYesNoDialog(dialogTitle, dialogText))
 				fnremove(&selhero_heroInfo);

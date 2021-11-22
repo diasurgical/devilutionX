@@ -10,7 +10,6 @@
 #include "loadsave.h"
 #include "stores.h"
 #include "utils/endian.hpp"
-#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -223,7 +222,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
 
-	CopyUtf8(player._pName, pPack->pName, sizeof(player._pName));
+	strcpy(player._pName, pPack->pName);
 
 	InitPlayer(player, true);
 
