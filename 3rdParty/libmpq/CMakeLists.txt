@@ -26,3 +26,7 @@ target_include_directories(libmpq PUBLIC ${libmpq_SOURCE_DIR})
 target_include_directories(libmpq PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 target_link_libraries(libmpq PRIVATE ZLIB::ZLIB BZip2::BZip2)
+
+if(LIBMPQ_FILE_BUFFER_SIZE)
+  target_compile_definitions(libmpq PRIVATE "LIBMPQ_FILE_BUFFER_SIZE=${LIBMPQ_FILE_BUFFER_SIZE}")
+endif()
