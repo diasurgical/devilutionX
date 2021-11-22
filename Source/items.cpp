@@ -4105,7 +4105,7 @@ void PrintItemPower(char plidx, Item *x)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	const Point position { GetLeftPanel().position.x - SPANEL_WIDTH, GetLeftPanel().position.y };
+	const Point position = GetRightPanel().position - Displacement { SPANEL_WIDTH, 0 };
 	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(position)) {
 		return;
 	}
