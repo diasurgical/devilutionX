@@ -234,13 +234,6 @@ void SelheroCatToName(const char *inBuf, char *outBuf, int cnt)
 	strncat(outBuf, inBuf, cnt - strlen(outBuf));
 }
 
-#ifdef __vita__
-void selhero_SetName(const char *in_buf, char *out_buf, int cnt)
-{
-	strncpy(out_buf, in_buf, cnt);
-}
-#endif
-
 bool HandleMenuAction(MenuAction menuAction)
 {
 	switch (menuAction) {
@@ -365,7 +358,7 @@ void UiFocusNavigation(SDL_Event *event)
 		case SDL_TEXTINPUT:
 			if (textInputActive) {
 #ifdef __vita__
-				selhero_SetName(event->text.text, UiTextInput, UiTextInputLen);
+				CopyUtf8(UiTextInput, event->text.text, UiTextInputLen);
 #else
 				SelheroCatToName(event->text.text, UiTextInput, UiTextInputLen);
 #endif
@@ -584,7 +577,7 @@ bool UiValidPlayerName(const char *name)
 	};
 
 	char tmpname[PLR_NAME_LEN];
-	strncpy(tmpname, name, PLR_NAME_LEN - 1);
+	CopyUtf8(tmpname, name, sizeof(tmpname));
 	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
 		tmpname[i]++;
 

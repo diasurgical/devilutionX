@@ -104,22 +104,21 @@ void SelconnFocus(int value)
 	int players = MAX_PLRS;
 	switch (vecConnItems[value]->m_value) {
 	case SELCONN_TCP:
-		strncpy(selconn_Description, _("All computers must be connected to a TCP-compatible network."), sizeof(selconn_Description) - 1);
+		strcpy(selconn_Description, _("All computers must be connected to a TCP-compatible network."));
 		players = MAX_PLRS;
 		break;
 	case SELCONN_ZT:
-		strncpy(selconn_Description, _("All computers must be connected to the internet."), sizeof(selconn_Description) - 1);
+		strcpy(selconn_Description, _("All computers must be connected to the internet."));
 		players = MAX_PLRS;
 		break;
 	case SELCONN_LOOPBACK:
-		strncpy(selconn_Description, _("Play by yourself with no network exposure."), sizeof(selconn_Description) - 1);
+		strcpy(selconn_Description, _("Play by yourself with no network exposure."));
 		players = 1;
 		break;
 	}
 
-	strncpy(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players).c_str(), sizeof(selconn_MaxPlayers));
-	const std::string wrapped = WordWrapString(selconn_Description, DESCRIPTION_WIDTH);
-	strncpy(selconn_Description, wrapped.data(), sizeof(selconn_Description) - 1);
+	strcpy(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players).c_str());
+	strcpy(selconn_Description, WordWrapString(selconn_Description, DESCRIPTION_WIDTH).c_str());
 }
 
 void SelconnSelect(int value)

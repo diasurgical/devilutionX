@@ -244,8 +244,6 @@ struct Player {
 	Direction tempDirection;
 	/** Used for spell level */
 	int spellLevel;
-	/** Used for stalling the appearance of the options screen after dying in singleplayer */
-	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	/**

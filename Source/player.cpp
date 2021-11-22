@@ -37,7 +37,6 @@ int MyPlayerId;
 Player *MyPlayer;
 Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
-int deathdelay;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
 int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
@@ -411,7 +410,6 @@ void ClearStateVariables(Player &player)
 	player.tempDirection = Direction::South;
 	player.spellLevel = 0;
 	player.position.offset2 = { 0, 0 };
-	player.deathFrame = 0;
 }
 
 void StartWalkStand(int pnum)
@@ -1490,24 +1488,16 @@ bool DoDeath(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.deathFrame >= 2 * player._pDFrames) {
-		if (deathdelay > 1 && pnum == MyPlayerId) {
-			deathdelay--;
-			if (deathdelay == 1) {
-				MyPlayerIsDead = true;
-				if (!gbIsMultiplayer) {
-					gamemenu_on();
-				}
+	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames) {
+		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
+			player.AnimInfo.TicksPerFrame = 1000000000;
+			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
+		} else if (pnum == MyPlayerId && player.AnimInfo.TickCounterOfCurrentFrame == 30) {
+			MyPlayerIsDead = true;
+			if (!gbIsMultiplayer) {
+				gamemenu_on();
 			}
 		}
-
-		player.AnimInfo.TicksPerFrame = 10000;
-		player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames;
-		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
-	}
-
-	if (player.deathFrame < 100) {
-		player.deathFrame++;
 	}
 
 	return false;
@@ -2758,7 +2748,6 @@ void InitPlayer(Player &player, bool firstTime)
 	player._pInvincible = false;
 
 	if (&player == &myPlayer) {
-		deathdelay = 0;
 		MyPlayerIsDead = false;
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
@@ -2985,7 +2974,6 @@ StartPlayerKill(int pnum, int earflag)
 	player._pmode = PM_DEATH;
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
-	player.deathFrame = 1;
 
 	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
 		for (auto &item : player.InvBody) {
@@ -3002,7 +2990,6 @@ StartPlayerKill(int pnum, int earflag)
 
 		if (pnum == MyPlayerId) {
 			drawhpflag = true;
-			deathdelay = 30;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
 				DeadItem(player, &player.HoldItem, { 0, 0 });
@@ -3500,7 +3487,7 @@ void CheckPlrSpell(bool isShiftHeld)
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, myPlayer._pRSplType, sl);
-	} else if (pcursplr != -1 && !isShiftHeld) {
+	} else if (pcursplr != -1 && !isShiftHeld && !gbFriendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, myPlayer._pRSpell, myPlayer._pRSplType, sl);

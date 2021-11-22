@@ -31,6 +31,7 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -201,11 +202,10 @@ bool GetIniValue(const char *sectionName, const char *keyName, char *string, int
 {
 	const char *value = GetIni().GetValue(sectionName, keyName);
 	if (value == nullptr) {
-		strncpy(string, defaultString, stringSize);
+		CopyUtf8(string, defaultString, stringSize);
 		return false;
 	}
-	strncpy(string, value, stringSize - 1);
-	string[stringSize - 1] = '\0';
+	CopyUtf8(string, value, stringSize);
 	return true;
 }
 

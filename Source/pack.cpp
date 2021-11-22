@@ -222,8 +222,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	ClrPlrPath(player);
 	player.destAction = ACTION_NONE;
 
-	strncpy(player._pName, pPack->pName, PLR_NAME_LEN - 1);
-	player._pName[PLR_NAME_LEN - 1] = '\0';
+	strcpy(player._pName, pPack->pName);
 
 	InitPlayer(player, true);
 
