@@ -29,13 +29,6 @@ namespace devilution {
 #define SPANEL_WIDTH 320
 #define SPANEL_HEIGHT 352
 
-struct SpellListItem {
-	Point location;
-	spell_type type;
-	spell_id id;
-	bool isSelected;
-};
-
 extern bool drawhpflag;
 extern bool dropGoldFlag;
 extern bool chrbtn[4];
@@ -176,8 +169,6 @@ void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
-std::vector<SpellListItem> GetSpellListItems();
-void CheckSBook();
 void DrawGoldSplit(const Surface &out, int amount);
 void control_drop_gold(char vkey);
 void DrawTalkPan(const Surface &out);

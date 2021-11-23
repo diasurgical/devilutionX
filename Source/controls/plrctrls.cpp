@@ -19,6 +19,7 @@
 #include "items.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "panels/spell_list.hpp"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"

@@ -506,6 +506,9 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/title.cpp
   Source/panels/charpanel.cpp
   Source/panels/mainpanel.cpp
+  Source/panels/spell_book.cpp
+  Source/panels/spell_icons.cpp
+  Source/panels/spell_list.cpp
   Source/dvlnet/abstract_net.cpp
   Source/dvlnet/base.cpp
   Source/dvlnet/cdwrap.cpp
