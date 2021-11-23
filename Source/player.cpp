@@ -348,7 +348,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 	}
 
 	player.position.offset = dirModeParams.offset; // Offset player sprite to align with their previous tile position
-	//The player's tile position after finishing this movement action
+	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.tileAdd;
 
 	if (pnum == MyPlayerId) {
@@ -703,7 +703,7 @@ bool DoWalk(int pnum, int variant)
 	}
 	auto &player = Players[pnum];
 
-	//Play walking sound effect on certain animation frames
+	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.CurrentFrame == 1
 		    || player.AnimInfo.CurrentFrame == 5) {
@@ -711,10 +711,10 @@ bool DoWalk(int pnum, int variant)
 		}
 	}
 
-	//Check if we reached new tile
+	// Check if we reached new tile
 	if (player.AnimInfo.CurrentFrame >= player._pWFrames) {
 
-		//Update the player's tile position
+		// Update the player's tile position
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
@@ -732,13 +732,13 @@ bool DoWalk(int pnum, int variant)
 			break;
 		}
 
-		//Update the coordinates for lighting and vision entries for the player
+		// Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(player._plid, player.position.tile);
 			ChangeVisionXY(player._pvid, player.position.tile);
 		}
 
-		//Update the "camera" tile position
+		// Update the "camera" tile position
 		if (pnum == MyPlayerId && ScrollInfo._sdir != ScrollDirection::None) {
 			ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 		}
@@ -751,14 +751,14 @@ bool DoWalk(int pnum, int variant)
 
 		ClearStateVariables(player);
 
-		//Reset the "sub-tile" position of the player's light entry to 0
+		// Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOffset(player._plid, { 0, 0 });
 		}
 
 		AutoGoldPickup(pnum);
 		return true;
-	} //We didn't reach new tile so update player's "sub-tile" position
+	} // We didn't reach new tile so update player's "sub-tile" position
 	ChangeOffset(pnum);
 	return false;
 }
@@ -1977,7 +1977,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
 	iv++;
 
-	//Iterate through invGrid and remove every reference to item
+	// Iterate through invGrid and remove every reference to item
 	for (int8_t &itemId : InvGrid) {
 		if (itemId == iv || itemId == -iv) {
 			itemId = 0;
@@ -1987,7 +1987,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	iv--;
 	_pNumInv--;
 
-	//If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
+	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
 		InvList[iv] = InvList[_pNumInv];
 

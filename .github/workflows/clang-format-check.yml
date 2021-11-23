@@ -17,15 +17,15 @@ jobs:
         fetch-depth: 0
 
     - name: Formatting Check (Source)
-      uses: jidicula/clang-format-action@v3.4.0
+      uses: jidicula/clang-format-action@v4.3.1
       with:
-        clang-format-version: '11'
+        clang-format-version: '13'
         check-path: 'Source'
         fallback-style: 'webkit'
 
     - name: Formatting Check (test)
-      uses: jidicula/clang-format-action@v3.4.0
+      uses: jidicula/clang-format-action@v4.3.1
       with:
-        clang-format-version: '11'
+        clang-format-version: '13'
         check-path: 'test'
         fallback-style: 'webkit'
