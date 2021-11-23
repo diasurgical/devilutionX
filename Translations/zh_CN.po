@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-23 10:10+0000\n"
+"POT-Creation-Date: 2021-11-23 14:32+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: muziling <pieceking@qq.com>\n"
 "Language-Team: Emiliano Augusto Gonzalez\n"
@@ -864,168 +864,184 @@ msgstr "墓穴: {:d} 层"
 msgid "Level: {:d}"
 msgstr "等级: {:d}"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:217
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:217
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:217
 msgid "Enter"
 msgstr "Enter"
 
-#: Source/control.cpp:215
+#: Source/control.cpp:220
 msgid "Character Information"
 msgstr "角色​信息"
 
-#: Source/control.cpp:216
+#: Source/control.cpp:221
 msgid "Quests log"
 msgstr "任务​日志"
 
-#: Source/control.cpp:217
+#: Source/control.cpp:222
 msgid "Automap"
 msgstr "自动​地图"
 
-#: Source/control.cpp:218
+#: Source/control.cpp:223
 msgid "Main Menu"
 msgstr "主​菜​单"
 
-#: Source/control.cpp:219
+#: Source/control.cpp:224
 msgid "Inventory"
 msgstr "物品​栏"
 
-#: Source/control.cpp:220
+#: Source/control.cpp:225
 msgid "Spell book"
 msgstr "法术书"
 
-#: Source/control.cpp:221
+#: Source/control.cpp:226
 msgid "Send Message"
 msgstr "发送​消息"
 
-#: Source/control.cpp:718 Source/control.cpp:1584
+#: Source/control.cpp:726 Source/control.cpp:1598
 msgid "Skill"
 msgstr "技能"
 
-#: Source/control.cpp:719 Source/control.cpp:1236
+#: Source/control.cpp:727 Source/control.cpp:1244
 msgid "{:s} Skill"
 msgstr "技能​：​{:s}"
 
-#: Source/control.cpp:725
+#: Source/control.cpp:733
 msgid "Spell"
 msgstr "法术"
 
-#: Source/control.cpp:726 Source/control.cpp:1240
+#: Source/control.cpp:734 Source/control.cpp:1248
 msgid "{:s} Spell"
 msgstr "法术​：​{:s}"
 
-#: Source/control.cpp:728
+#: Source/control.cpp:736
 msgid "Damages undead only"
 msgstr "只​能​伤害​亡灵"
 
-#: Source/control.cpp:732 Source/control.cpp:1244 Source/control.cpp:1608
+#: Source/control.cpp:740 Source/control.cpp:1252
 msgid "Spell Level 0 - Unusable"
 msgstr "法术​等级 0 - 无法​使用"
 
-#: Source/control.cpp:734 Source/control.cpp:1246 Source/control.cpp:1610
+#: Source/control.cpp:742 Source/control.cpp:1254
 msgid "Spell Level {:d}"
 msgstr "法术​等级 {:d}"
 
-#: Source/control.cpp:741
+#: Source/control.cpp:749
 msgid "Scroll"
 msgstr "卷轴"
 
-#: Source/control.cpp:742 Source/control.cpp:1250
+#: Source/control.cpp:750 Source/control.cpp:1258
 msgid "Scroll of {:s}"
 msgstr "{:s}​卷轴"
 
-#: Source/control.cpp:747 Source/control.cpp:1256
+#: Source/control.cpp:755 Source/control.cpp:1264
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d}卷轴"
 
-#: Source/control.cpp:754 Source/itemdat.cpp:167 Source/itemdat.cpp:168
+#: Source/control.cpp:762 Source/itemdat.cpp:167 Source/itemdat.cpp:168
 #: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
 msgid "Staff"
 msgstr "法​杖"
 
-#: Source/control.cpp:755 Source/control.cpp:1260
+#: Source/control.cpp:763 Source/control.cpp:1268
 msgid "Staff of {:s}"
 msgstr "{:s}​法​杖"
 
-#: Source/control.cpp:757 Source/control.cpp:1262
+#: Source/control.cpp:765 Source/control.cpp:1270
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d}充能"
 
-#: Source/control.cpp:767
+#: Source/control.cpp:775
 msgid "Spell Hotkey {:s}"
 msgstr "法术​热键 {:d}"
 
-#: Source/control.cpp:1213
+#: Source/control.cpp:1221
 msgid "Player friendly"
 msgstr "对​玩家​友好"
 
-#: Source/control.cpp:1215
+#: Source/control.cpp:1223
 msgid "Player attack"
 msgstr "玩​家​攻击"
 
-#: Source/control.cpp:1218
+#: Source/control.cpp:1226
 msgid "Hotkey: {:s}"
 msgstr "热键: {:s}"
 
-#: Source/control.cpp:1226
+#: Source/control.cpp:1234
 msgid "Select current spell button"
 msgstr "当前​选择​的​法术​按钮"
 
-#: Source/control.cpp:1229
+#: Source/control.cpp:1237
 msgid "Hotkey: 's'"
 msgstr "热键: “​s​”"
 
-#: Source/control.cpp:1386 Source/inv.cpp:1980 Source/items.cpp:3743
+#: Source/control.cpp:1394 Source/inv.cpp:1980 Source/items.cpp:3743
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d}金币堆"
 
-#: Source/control.cpp:1389
+#: Source/control.cpp:1397
 msgid "Requirements not met"
 msgstr "未​满足​条件"
 
-#: Source/control.cpp:1423
+#: Source/control.cpp:1431
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}，层数: {:d}"
 
-#: Source/control.cpp:1425
+#: Source/control.cpp:1433
 msgid "Hit Points {:d} of {:d}"
 msgstr "生命值 {:d} 的 {:d}"
 
-#: Source/control.cpp:1454
+#: Source/control.cpp:1462
 msgid "Level Up"
 msgstr "升级"
 
-#: Source/control.cpp:1588
+#: Source/control.cpp:1602
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "法杖 ({:d} 充能)"
 
-#. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1598
-msgid "Mana: {:d}  Dam: {:d} - {:d}"
-msgstr "法力: {:d} 伤害: {:d}-{:d}"
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1612
+msgid "Heals: {:d} - {:d}"
+msgstr "治疗 {:d} - {:d}"
 
-#. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1600
-msgid "Mana: {:d}   Dam: n/a"
-msgstr "法力: {:d} 伤害: n/a"
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1614
+msgid "Damage: {:d} - {:d}"
+msgstr "伤害 {:d} - {:d}"
 
-#. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1603
-msgid "Mana: {:d}  Dam: 1/3 tgt hp"
-msgstr "法力: {:d} 伤害: 1/3 目标​生命"
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1618
+msgid "Dmg: 1/3 target hp"
+msgstr "伤害: 1/3 目标​生命"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1620
+msgctxt "spellbook"
+msgid "Mana: {:d}"
+msgstr "法力 {:d}"
+
+#: Source/control.cpp:1623
+msgid "Level 0 - Unusable"
+msgstr "法术​等级 0 - 无法​使用"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1625
+msgctxt "spellbook"
+msgid "Level {:d}"
+msgstr "等级 ​{:d}"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1658
+#: Source/control.cpp:1671
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "你有 {:d} 金币。你想要取出多少？"
