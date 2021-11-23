@@ -289,6 +289,8 @@ void LoadOptions()
 	sgOptions.Gameplay.nFullManaPotionPickup = GetIniInt("Game", "Full Mana Potion Pickup", 0);
 	sgOptions.Gameplay.nRejuPotionPickup = GetIniInt("Game", "Rejuvenation Potion Pickup", 0);
 	sgOptions.Gameplay.nFullRejuPotionPickup = GetIniInt("Game", "Full Rejuvenation Potion Pickup", 0);
+	sgOptions.Gameplay.bAutoPickupInTown = GetIniBool("Game", "Auto Pickup in Town", 0);
+	sgOptions.Gameplay.bAutoPickupElixirs = GetIniBool("Game", "Auto Pickup Elixirs", 0);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -448,6 +450,8 @@ void SaveOptions()
 	SetIniValue("Game", "Full Mana Potion Pickup", sgOptions.Gameplay.nFullManaPotionPickup);
 	SetIniValue("Game", "Rejuvenation Potion Pickup", sgOptions.Gameplay.nRejuPotionPickup);
 	SetIniValue("Game", "Full Rejuvenation Potion Pickup", sgOptions.Gameplay.nFullRejuPotionPickup);
+	SetIniValue("Game", "Auto Pickup in Town", sgOptions.Gameplay.bAutoPickupInTown);
+	SetIniValue("Game", "Auto Pickup Elixirs", sgOptions.Gameplay.bAutoPickupElixirs);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	SetIniValue("Network", "Port", sgOptions.Network.nPort);

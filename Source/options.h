@@ -150,6 +150,10 @@ struct GameplayOptions {
 	int nRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	int nFullRejuPotionPickup;
+	/** @brief Enable or Disable auto-pickup in town */
+	int bAutoPickupInTown;
+	/** @brief Auto-pickup elixirs */
+	int bAutoPickupElixirs;
 };
 
 struct ControllerOptions {

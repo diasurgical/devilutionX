@@ -44,38 +44,24 @@ int numMiscItemsInInv(int iMiscId)
 
 } // namespace
 
-void AutoGoldPickup(int pnum)
+void AutoPickup(int pnum)
 {
-	if (!sgOptions.Gameplay.bAutoGoldPickup)
+	if (leveltype == DTYPE_TOWN && !sgOptions.Gameplay.bAutoPickupInTown)
 		return;
-
 	if (pnum != MyPlayerId)
 		return;
-	if (leveltype == DTYPE_TOWN)
-		return;
-	if (!HasRoomForGold())
-		return;
+
+	bool hasRoomForGold = HasRoomForGold();
 
 	for (auto pathDir : PathDirs) {
 		Point tile = Players[pnum].position.tile + pathDir;
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
-			if (item._itype == ItemType::Gold) {
+			if (hasRoomForGold && item._itype == ItemType::Gold) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
 			}
-		}
-	}
-}
-
-void AutoItemPickup(int pnum)
-{
-	for (auto pathDir : PathDirs) {
-		Point tile = Players[pnum].position.tile + pathDir;
-		if (dItem[tile.x][tile.y] != 0) {
-			int itemIndex = dItem[tile.x][tile.y] - 1;
-			auto &item = Items[itemIndex];
 			if (AutoPlaceItemInInventory(Players[pnum], item, false) || AutoPlaceItemInBelt(Players[pnum], item, false)) {
 				bool doPickup = false;
 				switch (item._iMiscId) {
@@ -96,6 +82,12 @@ void AutoItemPickup(int pnum)
 					break;
 				case IMISC_FULLREJUV:
 					doPickup = sgOptions.Gameplay.nFullRejuPotionPickup > numMiscItemsInInv(item._iMiscId);
+					break;
+				case IMISC_ELIXSTR:
+				case IMISC_ELIXMAG:
+				case IMISC_ELIXDEX:
+				case IMISC_ELIXVIT:
+					doPickup = sgOptions.Gameplay.bAutoPickupElixirs;
 					break;
 				default:
 					break;
