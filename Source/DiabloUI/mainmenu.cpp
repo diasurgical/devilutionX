@@ -1,12 +1,12 @@
 
-#include "control.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"
+#include "control.h"
 #include "utils/language.h"
 
 namespace devilution {
 namespace {
-int mainmenu_attract_time_out; //seconds
+int mainmenu_attract_time_out; // seconds
 uint32_t dwAttractTicks;
 
 std::vector<std::unique_ptr<UiItemBase>> vecMainMenuDialog;

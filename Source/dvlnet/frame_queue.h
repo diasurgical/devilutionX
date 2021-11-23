@@ -1,9 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <deque>
 #include <exception>
 #include <vector>
-#include <cstdint>
 
 namespace devilution {
 namespace net {

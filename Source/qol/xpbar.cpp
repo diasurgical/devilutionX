@@ -1,8 +1,8 @@
 /**
-* @file xpbar.cpp
-*
-* Adds XP bar QoL feature
-*/
+ * @file xpbar.cpp
+ *
+ * Adds XP bar QoL feature
+ */
 #include "xpbar.h"
 
 #include <array>

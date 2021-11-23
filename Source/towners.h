@@ -5,9 +5,9 @@
  */
 #pragma once
 
+#include "utils/stdcompat/string_view.hpp"
 #include <cstdint>
 #include <memory>
-#include "utils/stdcompat/string_view.hpp"
 
 #include "items.h"
 #include "player.h"

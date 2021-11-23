@@ -7,8 +7,8 @@
 
 #include <cstdint>
 
-#include "utils/stdcompat/cstddef.hpp"
 #include "utils/logged_fstream.hpp"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 

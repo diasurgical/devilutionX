@@ -1,8 +1,8 @@
 /**
-* @file xpbar.h
-*
-* Adds XP bar QoL feature
-*/
+ * @file xpbar.h
+ *
+ * Adds XP bar QoL feature
+ */
 #pragma once
 
 namespace devilution {

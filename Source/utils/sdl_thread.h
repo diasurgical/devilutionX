@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <SDL.h>
+#include <memory>
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
@@ -14,7 +14,7 @@ inline SDL_threadID get_id()
 {
 	return SDL_GetThreadID(nullptr);
 }
-} //namespace this_sdl_thread
+} // namespace this_sdl_thread
 
 class SdlThread final {
 	static int SDLCALL ThreadTranslate(void *ptr);

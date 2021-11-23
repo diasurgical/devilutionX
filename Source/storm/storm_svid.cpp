@@ -14,9 +14,9 @@
 #endif
 
 #include "dx.h"
+#include "engine/assets.hpp"
 #include "options.h"
 #include "palette.h"
-#include "engine/assets.hpp"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -146,12 +146,12 @@ bool SVidPlayBegin(const char *filename, int flags)
 	SVidLoop = false;
 	if ((flags & 0x40000) != 0)
 		SVidLoop = true;
-	//0x8 // Non-interlaced
-	//0x200, 0x800 // Upscale video
-	//0x80000 // Center horizontally
-	//0x100000 // Disable video
-	//0x800000 // Edge detection
-	//0x200800 // Clear FB
+	// 0x8 // Non-interlaced
+	// 0x200, 0x800 // Upscale video
+	// 0x80000 // Center horizontally
+	// 0x100000 // Disable video
+	// 0x800000 // Edge detection
+	// 0x200800 // Clear FB
 
 	SDL_RWops *videoStream = OpenAsset(filename);
 	SVidHandle = Smacker_Open(videoStream);

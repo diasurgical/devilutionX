@@ -5,8 +5,8 @@
  */
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 #include "engine.h"
 #include "lighting.h"

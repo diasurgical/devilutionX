@@ -1,7 +1,7 @@
 #include "selstart.h"
 
-#include "control.h"
 #include "DiabloUI/diabloui.h"
+#include "control.h"
 #include "options.h"
 #include "utils/language.h"
 

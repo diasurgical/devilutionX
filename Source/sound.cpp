@@ -16,9 +16,9 @@
 #include <SDL.h>
 #include <aulib.h>
 
+#include "engine/assets.hpp"
 #include "init.h"
 #include "options.h"
-#include "engine/assets.hpp"
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/sdl_mutex.h"

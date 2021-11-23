@@ -23,9 +23,9 @@
 #include "inv.h"
 #include "lighting.h"
 #include "missiles.h"
+#include "mpq/mpq_writer.hpp"
 #include "pfile.h"
 #include "stores.h"
-#include "mpq/mpq_writer.hpp"
 #include "utils/endian.hpp"
 #include "utils/language.h"
 
@@ -890,7 +890,7 @@ void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
  * @param file interface to the save file
  * @return a map converting from item indexes as recorded in the save file to the appropriate Items array index, used by LoadDroppedItemLocations
  * @see LoadDroppedItemLocations
-*/
+ */
 std::unordered_map<uint8_t, uint8_t> LoadDroppedItems(LoadHelper &file)
 {
 	std::unordered_map<uint8_t, uint8_t> itemIndexes = { { 0, 0 } };
@@ -915,7 +915,7 @@ std::unordered_map<uint8_t, uint8_t> LoadDroppedItems(LoadHelper &file)
  * @brief Helper to initialise dItem based on runtime item indexes
  * @param file interface to the save file
  * @param indexMap a map converting from save file item indexes to the appropriate Items array index
-*/
+ */
 void LoadDroppedItemLocations(LoadHelper &file, const std::unordered_map<uint8_t, uint8_t> &indexMap)
 {
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -1506,7 +1506,7 @@ void SavePortal(SaveHelper *file, int i)
  * @param file interface to the save file
  * @return a map converting from runtime item indexes to the relative position in the save file, used by SaveDroppedItemLocations
  * @see SaveDroppedItemLocations
-*/
+ */
 std::unordered_map<uint8_t, uint8_t> SaveDroppedItems(SaveHelper &file)
 {
 	// Vanilla Diablo/Hellfire initialise the ActiveItems and AvailableItems arrays based on saved data, so write valid values for compatibility
@@ -1527,7 +1527,7 @@ std::unordered_map<uint8_t, uint8_t> SaveDroppedItems(SaveHelper &file)
  * @brief Saves the position of dropped items (in dItem)
  * @param file interface to the save file
  * @param indexMap a map converting from runtime item indexes to the relative position in the save file
-*/
+ */
 void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t, uint8_t> &itemIndexes)
 {
 	for (int j = 0; j < MAXDUNY; j++) {

@@ -1,7 +1,7 @@
+#include <errno.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/uio.h>
-#include <errno.h>
 
 ssize_t stream_recvmsg(int socket, struct msghdr *message, int flags)
 {

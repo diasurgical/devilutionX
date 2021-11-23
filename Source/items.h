@@ -8,9 +8,9 @@
 #include <cstdint>
 
 #include "DiabloUI/ui_item.h"
+#include "engine.h"
 #include "engine/animationinfo.h"
 #include "engine/point.hpp"
-#include "engine.h"
 #include "itemdat.h"
 #include "monster.h"
 #include "utils/stdcompat/optional.hpp"

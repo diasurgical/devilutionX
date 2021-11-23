@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <string>
 #ifdef USE_SDL1
+#include <cassert>
 #include <codecvt>
 #include <locale>
-#include <cassert>
 #endif
 
 #include "DiabloUI/art_draw.h"

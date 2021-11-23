@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
-#include <set>
 #include <map>
 #include <memory>
+#include <set>
+#include <string>
 
 #include "dvlnet/base.h"
 #include "dvlnet/packet.h"
@@ -209,7 +209,7 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 		}
 	}
 	if (i >= MAX_PLRS) {
-		//already full
+		// already full
 		return;
 	}
 	for (plr_t j = 0; j < MAX_PLRS; ++j) {
@@ -268,7 +268,7 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 	connected_table[pkt.Source()] = true;
 	peers[pkt.Source()] = sender;
 	if (pkt.Destination() != plr_self && pkt.Destination() != PLR_BROADCAST)
-		return; //packet not for us, drop
+		return; // packet not for us, drop
 	RecvLocal(pkt);
 }
 

@@ -9,8 +9,8 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
-#include "controls/controller_buttons.h"
 #include "controls/controller.h"
+#include "controls/controller_buttons.h"
 
 namespace devilution {
 

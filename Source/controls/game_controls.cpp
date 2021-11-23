@@ -277,7 +277,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 					CalcViewportGeometry();
 				}
 #else
-			    // Not mapped. Reserved for future use.
+				/* Not mapped. Reserved for future use. */
 #endif
 				return true;
 			case ControllerButton_BUTTON_B: // Right button

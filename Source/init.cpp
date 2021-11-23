@@ -14,10 +14,10 @@
 
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
-#include "options.h"
-#include "pfile.h"
 #include "engine/assets.hpp"
 #include "mpq/mpq_reader.hpp"
+#include "options.h"
+#include "pfile.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"

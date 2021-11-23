@@ -7,9 +7,9 @@
 
 #include <cstdint>
 
-#include "player.h"
 #include "inv.h"
 #include "items.h"
+#include "player.h"
 
 namespace devilution {
 

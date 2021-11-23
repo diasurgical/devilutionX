@@ -1,8 +1,8 @@
 /**
-* @file monhealthbar.cpp
-*
-* Adds monster health bar QoL feature
-*/
+ * @file monhealthbar.cpp
+ *
+ * Adds monster health bar QoL feature
+ */
 
 #include "DiabloUI/art_draw.h"
 #include "control.h"

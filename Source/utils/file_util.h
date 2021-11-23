@@ -5,8 +5,8 @@
 #include <fstream>
 #include <memory>
 
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 

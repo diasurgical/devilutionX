@@ -49,9 +49,9 @@ struct GameTickData : TestData {
  * This happens directly after the game_logic (_fProgressToNextGameTick = 0) or if no GameTick is due between two GameTicks (_fProgressToNextGameTick != 0).
  */
 struct RenderingData : TestData {
-	/*
-	* @brief the progress as a fraction (0.0f to 1.0f) in time to the next game tick
-	*/
+	/**
+	 * @brief the progress as a fraction (0.0f to 1.0f) in time to the next game tick
+	 */
 	float _fProgressToNextGameTick;
 	int _ExpectedRenderingFrame;
 	RenderingData(float fProgressToNextGameTick, int expectedRenderingFrame)
@@ -61,12 +61,12 @@ struct RenderingData : TestData {
 	}
 };
 
-/*
-* @brief
-* This UnitTest tries to simulate the GameLoop (GameTickData) and the Rendering that can happen (RenderingData).
-* Rendering can happen more often than GameTicks and at any time between two GameTicks.
-* The Animation Distribution Logic must adjust to the Rendering that happens at any give point in time.
-*/
+/**
+ * @brief
+ * This UnitTest tries to simulate the GameLoop (GameTickData) and the Rendering that can happen (RenderingData).
+ * Rendering can happen more often than GameTicks and at any time between two GameTicks.
+ * The Animation Distribution Logic must adjust to the Rendering that happens at any give point in time.
+ */
 void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 {
 	AnimationInfo animInfo = {};
@@ -218,9 +218,9 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	    });
 }
 
-/*
-* @brief The Warrior make two attacks. The second queued attack cancels the first after the Hit Frame.
-*/
+/**
+ * @brief The Warrior make two attacks. The second queued attack cancels the first after the Hit Frame.
+ */
 TEST(AnimationInfo, AttackSwordWarriorRepeated)
 {
 	RunAnimationTest(

@@ -6,16 +6,16 @@
 
 #include <deque>
 #include <fstream>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 #include "demomode.h"
+#include "menu.h"
+#include "nthread.h"
+#include "options.h"
+#include "pfile.h"
 #include "utils/display.h"
 #include "utils/paths.h"
-#include "menu.h"
-#include "options.h"
-#include "nthread.h"
-#include "pfile.h"
 
 namespace devilution {
 

@@ -1,8 +1,8 @@
 /**
-* @file math.h
-*
-* Math utility functions
-*/
+ * @file math.h
+ *
+ * Math utility functions
+ */
 #pragma once
 
 namespace devilution {

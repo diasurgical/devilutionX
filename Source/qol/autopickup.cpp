@@ -1,8 +1,8 @@
 /**
-* @file autopickup.cpp
-*
-* QoL feature for automatically picking up gold
-*/
+ * @file autopickup.cpp
+ *
+ * QoL feature for automatically picking up gold
+ */
 
 #include "options.h"
 #include "player.h"

@@ -6,8 +6,8 @@
 #endif
 
 #if HAS_KBCTRL == 1
-#include <SDL.h>
 #include "controls/controller_buttons.h"
+#include <SDL.h>
 
 namespace devilution {
 

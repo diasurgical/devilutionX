@@ -1,9 +1,9 @@
 #include "DiabloUI/art_draw.h"
 
 #include "DiabloUI/diabloui.h"
+#include "palette.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
-#include "palette.h"
 
 namespace devilution {
 

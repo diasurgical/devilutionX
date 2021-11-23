@@ -168,7 +168,7 @@ void AutoGetItem(int pnum, Item *item, int ii);
  * @param idx The overarching type of the target item
  * @param createInfo Flags used to describe the specific subtype of the target item
  * @return An index into ActiveItems or -1 if no matching item was found
-*/
+ */
 int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t ci);
 void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
 bool CanPut(Point position);

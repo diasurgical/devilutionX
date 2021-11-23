@@ -5,8 +5,8 @@
  */
 #pragma once
 
-#include <cstdint>
 #include <array>
+#include <cstdint>
 #include <functional>
 
 #include "engine.h"
@@ -15,11 +15,11 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "miniwin/miniwin.h"
-#include "utils/stdcompat/optional.hpp"
 #include "monstdat.h"
 #include "sound.h"
 #include "spelldat.h"
 #include "textdat.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -224,7 +224,7 @@ struct Monster { // note: missing field _mAFNum
 	 * @brief Sets the current cell sprite to match the desired direction and animation sequence
 	 * @param graphic Animation sequence of interest
 	 * @param direction Desired direction the monster should be visually facing
-	*/
+	 */
 	void ChangeAnimationData(MonsterGraphic graphic, Direction direction)
 	{
 		auto &animationData = this->MType->GetAnimData(graphic);
@@ -237,7 +237,7 @@ struct Monster { // note: missing field _mAFNum
 	/**
 	 * @brief Sets the current cell sprite to match the desired animation sequence using the direction the monster is currently facing
 	 * @param graphic Animation sequence of interest
-	*/
+	 */
 	void ChangeAnimationData(MonsterGraphic graphic)
 	{
 		this->ChangeAnimationData(graphic, this->_mdir);

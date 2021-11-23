@@ -1,7 +1,7 @@
 #include "./sdl2_to_1_2_backports.h"
 
-#include <cstddef>
 #include <algorithm>
+#include <cstddef>
 
 #include "./console.h"
 
@@ -610,12 +610,12 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 	// From sdl2-2.0.9/src/filesystem/windows/SDL_sysfilesystem.c
 
 	/*
-     * Vista and later has a new API for this, but SHGetFolderPath works there,
-     *  and apparently just wraps the new API. This is the new way to do it:
-     *
-     *     SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_CREATE,
-     *                          NULL, &wszPath);
-     */
+	 * Vista and later has a new API for this, but SHGetFolderPath works there,
+	 *  and apparently just wraps the new API. This is the new way to do it:
+	 *
+	 *     SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_CREATE,
+	 *                          NULL, &wszPath);
+	 */
 
 	WCHAR path[MAX_PATH];
 	char *retval = NULL;
@@ -784,8 +784,8 @@ char *SDL_GetBasePath()
 	/* is a Linux-style /proc filesystem available? */
 	if (!retval && (access("/proc", F_OK) == 0)) {
 		/* !!! FIXME: after 2.0.6 ships, let's delete this code and just
-                      use the /proc/%llu version. There's no reason to have
-                      two copies of this plus all the #ifdefs. --ryan. */
+		              use the /proc/%llu version. There's no reason to have
+		              two copies of this plus all the #ifdefs. --ryan. */
 #if defined(__FREEBSD__)
 		retval = readSymLink("/proc/curproc/file");
 #elif defined(__NETBSD__)
@@ -808,7 +808,7 @@ char *SDL_GetBasePath()
 	}
 
 	/* If we had access to argv[0] here, we could check it for a path,
-        or troll through $PATH looking for it, too. */
+	    or troll through $PATH looking for it, too. */
 
 	if (retval != NULL) { /* chop off filename. */
 		char *ptr = SDL_strrchr(retval, '/');
@@ -834,12 +834,12 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
 	/*
-     * We use XDG's base directory spec, even if you're not on Linux.
-     *  This isn't strictly correct, but the results are relatively sane
-     *  in any case.
-     *
-     * https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-     */
+	 * We use XDG's base directory spec, even if you're not on Linux.
+	 *  This isn't strictly correct, but the results are relatively sane
+	 *  in any case.
+	 *
+	 * https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+	 */
 	const char *envr = SDL_getenv("XDG_DATA_HOME");
 	const char *append;
 	char *retval = NULL;

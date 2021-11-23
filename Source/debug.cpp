@@ -20,11 +20,11 @@
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
+#include "quests.h"
 #include "setmaps.h"
 #include "spells.h"
 #include "towners.h"
 #include "utils/language.h"
-#include "quests.h"
 
 namespace devilution {
 
@@ -57,7 +57,7 @@ enum class DebugGridTextItem : uint16_t {
 	cursorcoords,
 	objectindex,
 
-	//take dPiece as index
+	// take dPiece as index
 	nBlockTable,
 	nSolidTable,
 	nTransTable,

@@ -1,8 +1,8 @@
 /**
-* @file monhealthbar.h
-*
-* Adds monster health bar QoL feature
-*/
+ * @file monhealthbar.h
+ *
+ * Adds monster health bar QoL feature
+ */
 #pragma once
 
 namespace devilution {
