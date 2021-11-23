@@ -141,6 +141,11 @@ bool WhisperList[MAX_PLRS];
 char panelstr[4][64];
 uint8_t SplTransTbl[256];
 
+constexpr int SpellBookDescriptionWidth = 250;
+constexpr int SpellBookDescriptionHeight = 43;
+constexpr int SpellBookDescriptionPaddingLeft = 2;
+constexpr int SpellBookDescriptionPaddingRight = 2;
+
 /** Maps from spell_id to spelicon.cel frame number. */
 char SpellITbl[] = {
 	27,
@@ -521,9 +526,12 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	return x - 32 - 8;
 }
 
-void PrintSBookStr(const Surface &out, Point position, const char *text)
+void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags flags = UiFlags::None)
 {
-	DrawString(out, text, { GetPanelPosition(UiPanels::Spell, { SPLICONLENGTH + position.x, position.y }), { 222, 0 } }, UiFlags::ColorWhite);
+	DrawString(out, text,
+	    { GetPanelPosition(UiPanels::Spell, { SPLICONLENGTH + SpellBookDescriptionPaddingLeft + position.x, position.y }),
+	        { SpellBookDescriptionWidth - SpellBookDescriptionPaddingLeft - SpellBookDescriptionPaddingRight, 0 } },
+	    UiFlags::ColorWhite | flags);
 }
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
@@ -1566,55 +1574,60 @@ void DrawSpellBook(const Surface &out)
 	auto &myPlayer = Players[MyPlayerId];
 	uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
 
-	int yp = 43;
+	const int lineHeight = 18;
+
+	int yp = 12;
+	const int textPaddingTop = 7;
 	for (int i = 1; i < 8; i++) {
 		spell_id sn = SpellPages[sbooktab][i - 1];
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
-			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + 12 });
+			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescriptionHeight });
 			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
 			if (sn == myPlayer._pRSpell && st == myPlayer._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
 				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
 			}
-			int textOffset = 7;
+
+			const Point line0 { 0, yp + textPaddingTop };
+			const Point line1 { 0, yp + textPaddingTop + lineHeight };
+			PrintSBookStr(out, line0, pgettext("spell", spelldata[sn].sNameText));
 			switch (GetSBookTrans(sn, false)) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, _("Skill"));
+				PrintSBookStr(out, line1, _("Skill"));
 				break;
 			case RSPLTYPE_CHARGES: {
 				int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-				strcpy(tempstr, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges).c_str());
+				PrintSBookStr(out, line1, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges));
 			} break;
 			default: {
-				textOffset = 0;
 				int mana = GetManaAmount(myPlayer, sn) >> 6;
 				if (sn != SPL_BONESPIRIT) {
 					int min;
 					int max;
 					GetDamageAmt(sn, &min, &max);
 					if (min != -1) {
-						strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: {:d} - {:d}"), mana, min, max).c_str());
-					} else {
-						strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}   Dam: n/a"), mana).c_str());
+						if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+							PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Heals: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+						} else {
+							PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Damage: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+						}
 					}
 				} else {
-					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: 1/3 tgt hp"), mana).c_str());
+					PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constrains, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight);
 				}
-				PrintSBookStr(out, { 10, yp }, tempstr);
+				PrintSBookStr(out, line1, fmt::format(pgettext(/* TRANSLATORS: UI constrains, keep short please.*/ "spellbook", "Mana: {:d}"), mana));
 				int lvl = std::max(myPlayer._pSplLvl[sn] + myPlayer._pISplLvlAdd, 0);
 				if (lvl == 0) {
-					strcpy(tempstr, _("Spell Level 0 - Unusable"));
+					PrintSBookStr(out, line0, _("Level 0 - Unusable"), UiFlags::AlignRight);
 				} else {
-					strcpy(tempstr, fmt::format(_("Spell Level {:d}"), lvl).c_str());
+					PrintSBookStr(out, line0, fmt::format(pgettext(/* TRANSLATORS: UI constrains, keep short please.*/ "spellbook", "Level {:d}"), lvl), UiFlags::AlignRight);
 				}
 			} break;
 			}
-			PrintSBookStr(out, { 10, yp + textOffset - 26 }, pgettext("spell", spelldata[sn].sNameText));
-			PrintSBookStr(out, { 10, yp + textOffset - 13 }, tempstr);
 		}
-		yp += 43;
+		yp += SpellBookDescriptionHeight;
 	}
 }
 
