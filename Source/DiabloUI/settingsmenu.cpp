@@ -1,8 +1,8 @@
 #include "selstart.h"
 
-#include "control.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/scrollbar.h"
+#include "control.h"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "utils/language.h"
