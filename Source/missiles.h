@@ -7,9 +7,9 @@
 
 #include <cstdint>
 
-#include "miniwin/miniwin.h"
 #include "engine.h"
 #include "engine/point.hpp"
+#include "miniwin/miniwin.h"
 #include "misdat.h"
 #include "monster.h"
 #include "spelldat.h"
@@ -38,17 +38,17 @@ struct MissilePosition {
 	Displacement traveled;
 
 	/**
-      * @brief Specifies the location (tile) while rendering
-      */
+	 * @brief Specifies the location (tile) while rendering
+	 */
 	Point tileForRendering;
 	/**
-      * @brief Specifies the location (offset) while rendering
-      */
+	 * @brief Specifies the location (offset) while rendering
+	 */
 	Displacement offsetForRendering;
 
 	/**
-      * @brief Stops the missile (set velocity to zero and set offset to last renderer location; shouldn't matter cause the missile don't move anymore)
-      */
+	 * @brief Stops the missile (set velocity to zero and set offset to last renderer location; shouldn't matter cause the missile don't move anymore)
+	 */
 	void StopMissile()
 	{
 		velocity = {};
@@ -130,8 +130,8 @@ struct Missile {
 	int var7;
 	bool limitReached;
 	/**
-      * @brief For moving missiles lastCollisionTargetHash contains the last entity (player or monster) that was checked in CheckMissileCol (needed to avoid multiple hits for a entity at the same tile).
-      */
+	 * @brief For moving missiles lastCollisionTargetHash contains the last entity (player or monster) that was checked in CheckMissileCol (needed to avoid multiple hits for a entity at the same tile).
+	 */
 	int16_t lastCollisionTargetHash;
 };
 
@@ -172,14 +172,14 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
  * @brief Sets the missile sprite to the given sheet frame
  * @param missile this object
  * @param dir Sprite frame, typically representing a direction but there are some exceptions (arrows being 1 indexed, directionless spells)
-*/
+ */
 void SetMissDir(Missile &missile, int dir);
 
 /**
  * @brief Sets the sprite for this missile so it matches the given Direction
  * @param missile this object
  * @param dir Desired facing
-*/
+ */
 inline void SetMissDir(Missile &missile, Direction dir)
 {
 	SetMissDir(missile, static_cast<int>(dir));
@@ -189,7 +189,7 @@ inline void SetMissDir(Missile &missile, Direction dir)
  * @brief Sets the sprite for this missile so it matches the given Direction16
  * @param missile this object
  * @param dir Desired facing at a 22.8125 degree resolution
-*/
+ */
 inline void SetMissDir(Missile &missile, Direction16 dir)
 {
 	SetMissDir(missile, static_cast<int>(dir));

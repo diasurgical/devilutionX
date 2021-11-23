@@ -3,9 +3,9 @@
 #include <deque>
 #include <string>
 #ifdef USE_SDL1
+#include <cassert>
 #include <codecvt>
 #include <locale>
-#include <cassert>
 #endif
 
 #include "control.h"

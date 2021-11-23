@@ -6,6 +6,7 @@
 #pragma once
 
 #include <memory>
+
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {

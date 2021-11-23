@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 
-#include "options.h"
 #include "engine/assets.hpp"
+#include "options.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"

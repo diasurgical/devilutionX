@@ -105,7 +105,7 @@ public:
 		m_iFlags &= ~flag;
 	}
 
-	//protected:
+	// protected:
 	UiType m_type;
 	SDL_Rect m_rect;
 	UiFlags m_iFlags;
@@ -125,7 +125,7 @@ public:
 
 	~UiImage() {};
 
-	//private:
+	// private:
 	Art *m_art;
 	bool m_animated;
 	int m_frame;
@@ -201,7 +201,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	Art *m_bg;
 	Art *m_thumb;
 	Art *m_arrow;
@@ -218,7 +218,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	const char *m_text;
 	void (*m_action)();
 };
@@ -236,7 +236,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	const char *m_hint;
 	char *m_value;
 	std::size_t m_max_length;
@@ -255,7 +255,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	const char *m_text;
 };
 
@@ -279,7 +279,7 @@ public:
 		PRESSED,
 	};
 
-	//private:
+	// private:
 	Art *m_art;
 
 	const char *m_text;
@@ -302,7 +302,7 @@ public:
 
 	~UiListItem() {};
 
-	//private:
+	// private:
 	const char *m_text;
 	int m_value;
 	UiFlags uiFlags;
@@ -355,7 +355,7 @@ public:
 		return m_spacing;
 	}
 
-	//private:
+	// private:
 	Sint16 m_x, m_y;
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;

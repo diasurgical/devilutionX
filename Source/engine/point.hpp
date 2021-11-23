@@ -125,10 +125,10 @@ struct Point {
 	 * In practice it is likely that ApproxDistance gives the same result, especially for nearby points.
 	 * @param other Point to which we want the distance
 	 * @return Exact magnitude of vector this -> other
-	*/
+	 */
 	int ExactDistance(Point other) const
 	{
-		auto vector = *this - other; //No need to call abs() as we square the values anyway
+		auto vector = *this - other; // No need to call abs() as we square the values anyway
 
 		// Casting multiplication operands to a wide type to address overflow warnings
 		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.deltaX) * vector.deltaX + static_cast<int64_t>(vector.deltaY) * vector.deltaY));
@@ -159,7 +159,7 @@ struct Point {
 	 * @param stream output stream, expected to have overloads for int and char*
 	 * @param point Object to display
 	 * @return the stream, to allow chaining
-	*/
+	 */
 	friend std::ostream &operator<<(std::ostream &stream, const Point &point)
 	{
 		return stream << "(x: " << point.x << ", y: " << point.y << ")";

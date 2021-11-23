@@ -1,7 +1,7 @@
 #include "platform/switch/docking.h"
 
-#include <switch.h>
 #include <SDL.h>
+#include <switch.h>
 
 #include "diablo.h"
 #include "utils/display.h"

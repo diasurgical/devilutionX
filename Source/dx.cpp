@@ -308,7 +308,7 @@ void RenderPresent()
 
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
-		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { // pitch is 2560
 			ErrSdl();
 		}
 

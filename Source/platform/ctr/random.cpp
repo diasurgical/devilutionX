@@ -1,6 +1,6 @@
-#include <sys/types.h>
-#include <sodium.h>
 #include <3ds.h>
+#include <sodium.h>
+#include <sys/types.h>
 
 static const char *randombytes_ctrrandom_implementation_name()
 {

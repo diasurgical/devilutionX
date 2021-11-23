@@ -1,9 +1,10 @@
+#include "platform/vita/keyboard.h"
+
 #include <cstring>
 
 #include <SDL.h>
-#include <psp2/types.h>
 #include <psp2/ime_dialog.h>
-#include "platform/vita/keyboard.h"
+#include <psp2/types.h>
 
 static void utf16_to_utf8(const uint16_t *src, uint8_t *dst)
 {

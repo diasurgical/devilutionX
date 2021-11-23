@@ -133,7 +133,7 @@ void DoSpeedBook();
 
 /**
  * Clears panel button flags.
-*/
+ */
 void ClearPanBtn();
 
 /**

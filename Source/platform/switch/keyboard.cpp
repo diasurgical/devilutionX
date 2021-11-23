@@ -1,7 +1,10 @@
-#include <cstring>
-#include <switch.h>
-#include <SDL.h>
 #include "platform/switch/keyboard.h"
+
+#include <cstring>
+
+#include <SDL.h>
+#include <switch.h>
+
 #include "utils/utf8.hpp"
 
 static void switch_keyboard_get(const char *guide_text, char *initial_text, int max_len, int multiline, char *buf)

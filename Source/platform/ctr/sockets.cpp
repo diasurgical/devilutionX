@@ -1,5 +1,9 @@
+#include "platform/ctr/sockets.hpp"
+
 #include <malloc.h>
+
 #include <3ds.h>
+
 #include "utils/log.hpp"
 
 namespace devilution {

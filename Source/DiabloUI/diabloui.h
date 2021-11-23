@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cstdint>
+#include <SDL.h>
 #include <array>
 #include <cstddef>
-#include <SDL.h>
+#include <cstdint>
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"

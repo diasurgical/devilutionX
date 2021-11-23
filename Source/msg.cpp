@@ -28,9 +28,9 @@
 #include "spells.h"
 #include "storm/storm_net.hpp"
 #include "sync.h"
+#include "tmsg.h"
 #include "town.h"
 #include "towners.h"
-#include "tmsg.h"
 #include "trigs.h"
 #include "utils/language.h"
 
@@ -2170,7 +2170,7 @@ Point GetItemPosition(Point position)
 	return position;
 }
 
-} //namespace
+} // namespace
 
 void DeltaLoadLevel()
 {

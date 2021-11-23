@@ -1,6 +1,6 @@
-#include <stddef.h>
 #include <errno.h>
 #include <net/if.h>
+#include <stddef.h>
 
 unsigned int if_nametoindex(const char *__ifname)
 {

@@ -8,9 +8,9 @@
 #include <utility>
 
 #include "engine.h"
-#include "items.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
+#include "items.h"
 
 namespace devilution {
 

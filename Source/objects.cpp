@@ -443,7 +443,7 @@ void AddCandles()
  *
  * @param affectedArea The map region to be updated when this object is activated by the player.
  * @param msg The quest text to play when the player activates the book.
-*/
+ */
 void AddBookLever(Rectangle affectedArea, _speech_id msg)
 {
 	int cnt = 0;
@@ -5396,9 +5396,9 @@ void GetObjectStr(const Object &object)
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
 		if (currlevel >= 17 && currlevel <= 20)      // for hive levels
-			strcpy(infostr, _("Pod"));               //Then a barrel is called a pod
+			strcpy(infostr, _("Pod"));               // Then a barrel is called a pod
 		else if (currlevel >= 21 && currlevel <= 24) // for crypt levels
-			strcpy(infostr, _("Urn"));               //Then a barrel is called an urn
+			strcpy(infostr, _("Urn"));               // Then a barrel is called an urn
 		else
 			strcpy(infostr, _("Barrel"));
 		break;

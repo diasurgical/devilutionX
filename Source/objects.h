@@ -98,7 +98,7 @@ struct Object {
 	 * initialized by IntializeQuestBook().
 	 *
 	 * @param mapRange The region to be updated when this object is activated.
-	*/
+	 */
 	constexpr void InitializeBook(Rectangle mapRange)
 	{
 		SetMapRange(mapRange);
@@ -265,7 +265,7 @@ void SyncObjectAnim(Object &object);
 /**
  * @brief Updates the text drawn in the info box to describe the given object
  * @param object The currently highlighted object
-*/
+ */
 void GetObjectStr(const Object &object);
 void OperateNakrulLever();
 void SyncNakrulRoom();

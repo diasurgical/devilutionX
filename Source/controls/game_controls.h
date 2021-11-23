@@ -1,10 +1,10 @@
 #pragma once
 
-#include <cstdint>
 #include <SDL.h>
+#include <cstdint>
 
-#include "controls/controller.h"
 #include "./axis_direction.h"
+#include "controls/controller.h"
 
 namespace devilution {
 

@@ -1207,22 +1207,22 @@ void DrawInv(const Surface &out)
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), *pInvCels, 1);
 
 	Size slotSize[] = {
-		{ 2, 2 }, //head
-		{ 1, 1 }, //left ring
-		{ 1, 1 }, //right ring
-		{ 1, 1 }, //amulet
-		{ 2, 3 }, //left hand
-		{ 2, 3 }, //right hand
+		{ 2, 2 }, // head
+		{ 1, 1 }, // left ring
+		{ 1, 1 }, // right ring
+		{ 1, 1 }, // amulet
+		{ 2, 3 }, // left hand
+		{ 2, 3 }, // right hand
 		{ 2, 3 }, // chest
 	};
 
 	Point slotPos[] = {
-		{ 133, 59 },  //head
-		{ 48, 205 },  //left ring
-		{ 249, 205 }, //right ring
-		{ 205, 60 },  //amulet
-		{ 17, 160 },  //left hand
-		{ 248, 160 }, //right hand
+		{ 133, 59 },  // head
+		{ 48, 205 },  // left ring
+		{ 249, 205 }, // right ring
+		{ 205, 60 },  // amulet
+		{ 17, 160 },  // left hand
+		{ 248, 160 }, // right hand
 		{ 133, 160 }, // chest
 	};
 
@@ -2084,7 +2084,7 @@ bool UseInvItem(int pnum, int cii)
 		item = &player.SpdList[c];
 		speedlist = true;
 
-		//If selected speedlist item exists in InvList, use the InvList item.
+		// If selected speedlist item exists in InvList, use the InvList item.
 		for (int i = 0; i < player._pNumInv && sgOptions.Gameplay.bAutoRefillBelt; i++) {
 			if (player.InvList[i]._iMiscId == item->_iMiscId && player.InvList[i]._iSpell == item->_iSpell) {
 				c = i;

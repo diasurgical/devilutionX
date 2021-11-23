@@ -6,8 +6,8 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "miniwin/miniwin.h"
 

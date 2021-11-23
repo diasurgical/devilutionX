@@ -37,7 +37,7 @@ bool IsTileWalkable(Point position, bool ignoreDoors = false);
 
 /**
  * @brief Checks if the position contains an object, player, monster, or solid dungeon piece
-*/
+ */
 bool IsTileOccupied(Point position);
 
 /**

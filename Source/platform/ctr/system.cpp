@@ -1,6 +1,6 @@
 #include <3ds.h>
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 
 #include "platform/ctr/cfgu_service.hpp"
 #include "platform/ctr/random.hpp"

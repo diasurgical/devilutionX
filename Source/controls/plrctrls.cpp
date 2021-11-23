@@ -647,7 +647,7 @@ Size GetItemSizeOnSlot(int slot)
 
 /**
  * Search for the first slot occupied by an item in the inventory.
-*/
+ */
 int FindFirstSlotOnItem(int8_t itemInvId)
 {
 	if (itemInvId == 0)

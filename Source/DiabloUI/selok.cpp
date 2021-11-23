@@ -2,8 +2,8 @@
 
 #include "DiabloUI/diabloui.h"
 #include "control.h"
-#include "utils/language.h"
 #include "engine/render/text_render.hpp"
+#include "utils/language.h"
 
 namespace devilution {
 

@@ -1,5 +1,5 @@
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
+#include "DiabloUI/art_draw.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/errorart.h"
 #include "engine/render/text_render.hpp"

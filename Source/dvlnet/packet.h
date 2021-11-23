@@ -1,10 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
-#include <memory>
 #include <array>
+#include <cstdint>
 #include <cstring>
+#include <memory>
+#include <string>
+
 #ifdef PACKET_ENCRYPTION
 #include <sodium.h>
 #endif

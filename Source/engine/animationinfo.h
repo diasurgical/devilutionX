@@ -69,7 +69,7 @@ public:
 
 	/**
 	 * @brief Calculates the progress of the current animation as a fraction (0.0f to 1.0f)
-	*/
+	 */
 	float GetAnimationProgress() const;
 
 	/**

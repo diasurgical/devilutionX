@@ -8,8 +8,8 @@
 #include <cstdint>
 #include <vector>
 
-#include "engine.h"
 #include "effects.h"
+#include "engine.h"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -96,16 +96,16 @@ typedef enum missile_graphic_id : uint8_t {
  */
 enum class MissileMovementDistrubution {
 	/**
-      * @brief No movement distribution is calculated. Normally this means the missile doesn't move at all.
-      */
+	 * @brief No movement distribution is calculated. Normally this means the missile doesn't move at all.
+	 */
 	Disabled,
 	/**
-      * @brief The missile moves and if it hits a enemey it stops (for example firebolt)
-      */
+	 * @brief The missile moves and if it hits a enemey it stops (for example firebolt)
+	 */
 	Blockable,
 	/**
-      * @brief The missile moves and even it hits a enemy it keeps moving (for example flame wave)
-      */
+	 * @brief The missile moves and even it hits a enemy it keeps moving (for example flame wave)
+	 */
 	Unblockable,
 };
 

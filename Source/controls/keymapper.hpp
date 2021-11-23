@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cstddef>
-#include <string>
 #include <functional>
-#include <vector>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace devilution {
 
