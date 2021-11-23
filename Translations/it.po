@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-21 05:45+0100\n"
-"PO-Revision-Date: 2021-11-21 05:45+0100\n"
+"POT-Creation-Date: 2021-11-22 18:45+0100\n"
+"PO-Revision-Date: 2021-11-22 18:45+0100\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -313,10 +313,10 @@ msgstr ""
 
 #: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
 #: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
-#: Source/DiabloUI/selgame.cpp:193 Source/DiabloUI/selgame.cpp:211
-#: Source/DiabloUI/selgame.cpp:352 Source/DiabloUI/selgame.cpp:428
-#: Source/DiabloUI/selhero.cpp:186 Source/DiabloUI/selhero.cpp:211
-#: Source/DiabloUI/selhero.cpp:281 Source/DiabloUI/selhero.cpp:536
+#: Source/DiabloUI/selgame.cpp:192 Source/DiabloUI/selgame.cpp:210
+#: Source/DiabloUI/selgame.cpp:350 Source/DiabloUI/selgame.cpp:425
+#: Source/DiabloUI/selhero.cpp:182 Source/DiabloUI/selhero.cpp:207
+#: Source/DiabloUI/selhero.cpp:277 Source/DiabloUI/selhero.cpp:532
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
 msgstr "OK"
@@ -378,8 +378,8 @@ msgid "Shareware"
 msgstr "Demo"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
-#: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
-#: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
+#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
+#: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:540
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -391,8 +391,8 @@ msgstr "Client-Server (TCP)"
 msgid "Loopback"
 msgstr "Loopback"
 
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
-#: Source/DiabloUI/selgame.cpp:510
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:486
+#: Source/DiabloUI/selgame.cpp:507
 msgid "Multi Player Game"
 msgstr "Multi Giocatore"
 
@@ -428,7 +428,7 @@ msgstr "Gioca da solo senza esporti sulla rete."
 msgid "Players Supported: {:d}"
 msgstr "Giocatori Supportati: {:d}"
 
-#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
+#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:411
 msgid "Description:"
 msgstr "Descrizione:"
 
@@ -436,8 +436,8 @@ msgstr "Descrizione:"
 msgid "Select Action"
 msgstr "Azione"
 
-#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
-#: Source/DiabloUI/selgame.cpp:333
+#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:180
+#: Source/DiabloUI/selgame.cpp:331
 msgid "Create Game"
 msgstr "Crea Partita"
 
@@ -449,9 +449,9 @@ msgstr "Crea Partita Pubblica"
 msgid "Join Game"
 msgstr "Unisciti alla Partita"
 
-#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
-#: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
-#: Source/DiabloUI/selgame.cpp:431
+#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:195
+#: Source/DiabloUI/selgame.cpp:213 Source/DiabloUI/selgame.cpp:353
+#: Source/DiabloUI/selgame.cpp:428
 msgid "CANCEL"
 msgstr "ANNULLA"
 
@@ -479,35 +479,35 @@ msgstr ""
 msgid "Join the public game already in progress at this address."
 msgstr "Unisciti ad una partita già iniziata a questo indirizzo."
 
-#: Source/DiabloUI/selgame.cpp:184
+#: Source/DiabloUI/selgame.cpp:183
 msgid "Select Difficulty"
 msgstr "Difficoltà"
 
-#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
-#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1446
+#: Source/DiabloUI/selgame.cpp:185 Source/DiabloUI/selgame.cpp:238
+#: Source/DiabloUI/selgame.cpp:342 Source/DiabloUI/selgame.cpp:362
+#: Source/diablo.cpp:1447
 msgid "Normal"
 msgstr "Normale"
 
-#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1447
+#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:242
+#: Source/diablo.cpp:1448
 msgid "Nightmare"
 msgstr "Incubo"
 
-#: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1448
+#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:246
+#: Source/diablo.cpp:1449
 msgid "Hell"
 msgstr "Inferno"
 
-#: Source/DiabloUI/selgame.cpp:202
+#: Source/DiabloUI/selgame.cpp:201
 msgid "Join TCP Games"
 msgstr "Unisciti a Partite TCP"
 
-#: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
+#: Source/DiabloUI/selgame.cpp:204 Source/DiabloUI/selgame.cpp:207
 msgid "Enter address"
 msgstr "Inserisci indirizzo"
 
-#: Source/DiabloUI/selgame.cpp:240
+#: Source/DiabloUI/selgame.cpp:239
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -516,7 +516,7 @@ msgstr ""
 "Qui è dove un personaggio agli inizi dovrebbe intraprendere la missione per "
 "sconfiggere Diablo."
 
-#: Source/DiabloUI/selgame.cpp:244
+#: Source/DiabloUI/selgame.cpp:243
 msgid ""
 "Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
@@ -526,7 +526,7 @@ msgstr ""
 "Gli abitanti del Labirinto sono stati rafforzati e la sfida si dimostrerà "
 "ardua. Raccomandato solo per personaggi esperti."
 
-#: Source/DiabloUI/selgame.cpp:248
+#: Source/DiabloUI/selgame.cpp:247
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
@@ -537,7 +537,7 @@ msgstr ""
 "dell'Inferno. Solo i personaggi più esperti dovrebbero avventurarsi in "
 "questo regno."
 
-#: Source/DiabloUI/selgame.cpp:264
+#: Source/DiabloUI/selgame.cpp:262
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
@@ -545,7 +545,7 @@ msgstr ""
 "Il tuo personaggio deve raggiungere il livello 20 prima di poter partecipare "
 "al multi giocatore di difficoltà Incubo."
 
-#: Source/DiabloUI/selgame.cpp:266
+#: Source/DiabloUI/selgame.cpp:264
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
@@ -553,23 +553,23 @@ msgstr ""
 "Il tuo personaggio deve raggiungere il livello 30 prima di poter partecipare "
 "al multi giocatore di difficoltà Inferno."
 
-#: Source/DiabloUI/selgame.cpp:342
+#: Source/DiabloUI/selgame.cpp:340
 msgid "Select Game Speed"
 msgstr "Ritmo di Gioco"
 
-#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
+#: Source/DiabloUI/selgame.cpp:343 Source/DiabloUI/selgame.cpp:366
 msgid "Fast"
 msgstr "Veloce"
 
-#: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
+#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:370
 msgid "Faster"
 msgstr "Molto Veloce"
 
-#: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
+#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:374
 msgid "Fastest"
 msgstr "Velocissimo"
 
-#: Source/DiabloUI/selgame.cpp:365
+#: Source/DiabloUI/selgame.cpp:363
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -578,7 +578,7 @@ msgstr ""
 "Qui è dove un personaggio agli inizi dovrebbe intraprendere la missione per "
 "sconfiggere Diablo."
 
-#: Source/DiabloUI/selgame.cpp:369
+#: Source/DiabloUI/selgame.cpp:367
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
@@ -588,7 +588,7 @@ msgstr ""
 "Gli abitanti del Labirinto sono stati velocizzati e la sfida si dimostrerà "
 "ardua. Raccomandato solo per personaggi esperti."
 
-#: Source/DiabloUI/selgame.cpp:373
+#: Source/DiabloUI/selgame.cpp:371
 msgid ""
 "Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. "
@@ -599,7 +599,7 @@ msgstr ""
 "che mai. Solo un campione esperto dovrebbe tentare la fortuna a questa "
 "velocità."
 
-#: Source/DiabloUI/selgame.cpp:377
+#: Source/DiabloUI/selgame.cpp:375
 msgid ""
 "Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a "
@@ -609,16 +609,16 @@ msgstr ""
 "I tirapiedi degli inferi si precipiteranno ad attaccare senza esitazione. "
 "Solo un vero demone della velocità dovrebbe entrare a questo ritmo."
 
-#: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
+#: Source/DiabloUI/selgame.cpp:417 Source/DiabloUI/selgame.cpp:422
 msgid "Enter Password"
 msgstr "Inserisci Password"
 
-#: Source/DiabloUI/selgame.cpp:448
+#: Source/DiabloUI/selgame.cpp:445
 msgid "The host is running a different game than you."
 msgstr "L'host sta eseguendo un gioco diverso dal tuo."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
-#: Source/DiabloUI/selgame.cpp:451
+#: Source/DiabloUI/selgame.cpp:448
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr "La tua versione {:s} non corrisponde all'host {:d}.{:d}.{:d}."
 
@@ -626,60 +626,60 @@ msgstr "La tua versione {:s} non corrisponde all'host {:d}.{:d}.{:d}."
 msgid "New Hero"
 msgstr "Nuovo Eroe"
 
-#: Source/DiabloUI/selhero.cpp:164
+#: Source/DiabloUI/selhero.cpp:160
 msgid "Choose Class"
 msgstr "Scegli Classe"
 
-#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:22
+#: Source/DiabloUI/selhero.cpp:164 Source/panels/charpanel.cpp:22
 msgid "Warrior"
 msgstr "Guerriero"
 
-#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:165 Source/panels/charpanel.cpp:23
 msgid "Rogue"
 msgstr "Ladro"
 
-#: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:166 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
 msgstr "Mago"
 
-#: Source/DiabloUI/selhero.cpp:172 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:25
 msgid "Monk"
 msgstr "Monaco"
 
-#: Source/DiabloUI/selhero.cpp:175 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:171 Source/panels/charpanel.cpp:26
 msgid "Bard"
 msgstr "Bardo"
 
-#: Source/DiabloUI/selhero.cpp:178 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:174 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
 msgstr "Barbaro"
 
-#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
+#: Source/DiabloUI/selhero.cpp:191 Source/DiabloUI/selhero.cpp:265
 msgid "New Multi Player Hero"
 msgstr "Nuovo Eroe Multi Giocatore"
 
-#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
+#: Source/DiabloUI/selhero.cpp:191 Source/DiabloUI/selhero.cpp:265
 msgid "New Single Player Hero"
 msgstr "Nuovo Eroe Giocatore Singolo"
 
-#: Source/DiabloUI/selhero.cpp:203
+#: Source/DiabloUI/selhero.cpp:199
 msgid "Save File Exists"
 msgstr "Salvataggio Esistente"
 
-#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
+#: Source/DiabloUI/selhero.cpp:202 Source/gamemenu.cpp:38
 msgid "Load Game"
 msgstr "Carica Partita"
 
-#: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
+#: Source/DiabloUI/selhero.cpp:203 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
 msgstr "Nuova Partita"
 
-#: Source/DiabloUI/selhero.cpp:217 Source/DiabloUI/selhero.cpp:551
+#: Source/DiabloUI/selhero.cpp:213 Source/DiabloUI/selhero.cpp:547
 msgid "Single Player Characters"
 msgstr "Personaggi Giocatore Singolo"
 
-#: Source/DiabloUI/selhero.cpp:263
+#: Source/DiabloUI/selhero.cpp:259
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
@@ -687,11 +687,11 @@ msgstr ""
 "Il Ladro e il Mago sono disponibili solo nella versione completa di Diablo. "
 "Visita https://www.gog.com/game/diablo per acquistare."
 
-#: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
+#: Source/DiabloUI/selhero.cpp:271 Source/DiabloUI/selhero.cpp:274
 msgid "Enter Name"
 msgstr "Inserisci Nome"
 
-#: Source/DiabloUI/selhero.cpp:307
+#: Source/DiabloUI/selhero.cpp:303
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
@@ -700,55 +700,55 @@ msgstr ""
 "speciali.\n"
 
 #. TRANSLATORS: Error Message
-#: Source/DiabloUI/selhero.cpp:314
+#: Source/DiabloUI/selhero.cpp:310
 msgid "Unable to create character."
 msgstr "Impossibile creare il personaggio."
 
-#: Source/DiabloUI/selhero.cpp:468 Source/DiabloUI/selhero.cpp:471
+#: Source/DiabloUI/selhero.cpp:464 Source/DiabloUI/selhero.cpp:467
 msgid "Level:"
 msgstr "Livello:"
 
-#: Source/DiabloUI/selhero.cpp:476
+#: Source/DiabloUI/selhero.cpp:472
 msgid "Strength:"
 msgstr "Forza:"
 
-#: Source/DiabloUI/selhero.cpp:481
+#: Source/DiabloUI/selhero.cpp:477
 msgid "Magic:"
 msgstr "Magia:"
 
-#: Source/DiabloUI/selhero.cpp:486
+#: Source/DiabloUI/selhero.cpp:482
 msgid "Dexterity:"
 msgstr "Destrezza:"
 
-#: Source/DiabloUI/selhero.cpp:491
+#: Source/DiabloUI/selhero.cpp:487
 msgid "Vitality:"
 msgstr "Vitalità:"
 
-#: Source/DiabloUI/selhero.cpp:497
+#: Source/DiabloUI/selhero.cpp:493
 msgid "Savegame:"
 msgstr "Salvataggio:"
 
-#: Source/DiabloUI/selhero.cpp:510
+#: Source/DiabloUI/selhero.cpp:506
 msgid "Select Hero"
 msgstr "Eroe"
 
-#: Source/DiabloUI/selhero.cpp:539
+#: Source/DiabloUI/selhero.cpp:535
 msgid "Delete"
 msgstr "Elimina"
 
-#: Source/DiabloUI/selhero.cpp:549
+#: Source/DiabloUI/selhero.cpp:545
 msgid "Multi Player Characters"
 msgstr "Personaggi Multi Giocatore"
 
-#: Source/DiabloUI/selhero.cpp:599
+#: Source/DiabloUI/selhero.cpp:595
 msgid "Delete Multi Player Hero"
 msgstr "Elimina Eroe Multi Giocatore"
 
-#: Source/DiabloUI/selhero.cpp:601
+#: Source/DiabloUI/selhero.cpp:597
 msgid "Delete Single Player Hero"
 msgstr "Elimina Eroe Giocatore Singolo"
 
-#: Source/DiabloUI/selhero.cpp:603
+#: Source/DiabloUI/selhero.cpp:599
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Sei sicuro di voler eliminare il personaggio \"{:s}\"?"
 
@@ -882,7 +882,7 @@ msgstr "Livello: Covo {:d}"
 msgid "Level: Crypt {:d}"
 msgstr "Livello: Cripta {:d}"
 
-#: Source/automap.cpp:508 Source/items.cpp:2090
+#: Source/automap.cpp:508 Source/items.cpp:2084
 msgid "Level: {:d}"
 msgstr "Liv. : {:d}"
 
@@ -926,11 +926,11 @@ msgstr "Libro di magia"
 msgid "Send Message"
 msgstr "Invia Messaggio"
 
-#: Source/control.cpp:718 Source/control.cpp:1587
+#: Source/control.cpp:718 Source/control.cpp:1584
 msgid "Skill"
 msgstr "Abilità"
 
-#: Source/control.cpp:719 Source/control.cpp:1237
+#: Source/control.cpp:719 Source/control.cpp:1236
 msgid "{:s} Skill"
 msgstr "{:s} Abilità"
 
@@ -938,7 +938,7 @@ msgstr "{:s} Abilità"
 msgid "Spell"
 msgstr "Magia"
 
-#: Source/control.cpp:726 Source/control.cpp:1241
+#: Source/control.cpp:726 Source/control.cpp:1240
 msgid "{:s} Spell"
 msgstr "{:s} Magia"
 
@@ -946,11 +946,11 @@ msgstr "{:s} Magia"
 msgid "Damages undead only"
 msgstr "Danneggia solo non morti"
 
-#: Source/control.cpp:732 Source/control.cpp:1245 Source/control.cpp:1611
+#: Source/control.cpp:732 Source/control.cpp:1244 Source/control.cpp:1608
 msgid "Spell Level 0 - Unusable"
 msgstr "Liv. Magia 0 - Inusabile"
 
-#: Source/control.cpp:734 Source/control.cpp:1247 Source/control.cpp:1613
+#: Source/control.cpp:734 Source/control.cpp:1246 Source/control.cpp:1610
 msgid "Spell Level {:d}"
 msgstr "Livello Magia {:d}"
 
@@ -958,11 +958,11 @@ msgstr "Livello Magia {:d}"
 msgid "Scroll"
 msgstr "Pergamena"
 
-#: Source/control.cpp:742 Source/control.cpp:1251
+#: Source/control.cpp:742 Source/control.cpp:1250
 msgid "Scroll of {:s}"
 msgstr "Pergamena {:s}"
 
-#: Source/control.cpp:747 Source/control.cpp:1257
+#: Source/control.cpp:747 Source/control.cpp:1256
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} Pergamena"
@@ -973,11 +973,11 @@ msgstr[1] "{:d} Pergamene"
 msgid "Staff"
 msgstr "Verga"
 
-#: Source/control.cpp:755 Source/control.cpp:1261
+#: Source/control.cpp:755 Source/control.cpp:1260
 msgid "Staff of {:s}"
 msgstr "Verga di {:s}"
 
-#: Source/control.cpp:757 Source/control.cpp:1263
+#: Source/control.cpp:757 Source/control.cpp:1262
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Carica"
@@ -987,71 +987,71 @@ msgstr[1] "{:d} Cariche"
 msgid "Spell Hotkey {:s}"
 msgstr "Tasto Rapido {:s}"
 
-#: Source/control.cpp:1214
+#: Source/control.cpp:1213
 msgid "Player friendly"
 msgstr "Amichevole"
 
-#: Source/control.cpp:1216
+#: Source/control.cpp:1215
 msgid "Player attack"
 msgstr "Offensivo"
 
-#: Source/control.cpp:1219
+#: Source/control.cpp:1218
 msgid "Hotkey: {:s}"
 msgstr "Tasto: {:s}"
 
-#: Source/control.cpp:1227
+#: Source/control.cpp:1226
 msgid "Select current spell button"
 msgstr "Seleziona magia corrente"
 
-#: Source/control.cpp:1230
+#: Source/control.cpp:1229
 msgid "Hotkey: 's'"
 msgstr "Tasto: 's'"
 
-#: Source/control.cpp:1387 Source/inv.cpp:1980 Source/items.cpp:3749
+#: Source/control.cpp:1386 Source/inv.cpp:1980 Source/items.cpp:3743
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} moneta"
 msgstr[1] "{:d} monete"
 
-#: Source/control.cpp:1390
+#: Source/control.cpp:1389
 msgid "Requirements not met"
 msgstr "Requisiti inadeguati"
 
-#: Source/control.cpp:1426
+#: Source/control.cpp:1423
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Livello: {:d}"
 
-#: Source/control.cpp:1428
+#: Source/control.cpp:1425
 msgid "Hit Points {:d} of {:d}"
 msgstr "Punti Ferita {:d} di {:d}"
 
-#: Source/control.cpp:1457
+#: Source/control.cpp:1454
 msgid "Level Up"
 msgstr "Su di Livello"
 
-#: Source/control.cpp:1591
+#: Source/control.cpp:1588
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Verga ({:d} carica)"
 msgstr[1] "Verga ({:d} cariche)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1601
+#: Source/control.cpp:1598
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "Mana: {:d}  Dan: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1603
+#: Source/control.cpp:1600
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "Mana: {:d}   Dan: n/a"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1606
+#: Source/control.cpp:1603
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "Mana: {:d}  Dan: 1/3 tgt hp"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1664
+#: Source/control.cpp:1658
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "Possiedi {:d} moneta d'oro. Quante ne vuoi rimuovere?"
@@ -1101,89 +1101,89 @@ msgstr "L'Altare Sacrilego"
 msgid "level 15"
 msgstr "livello 15"
 
-#: Source/diablo.cpp:114
+#: Source/diablo.cpp:115
 msgid "I need help! Come Here!"
 msgstr "Mi serve aiuto! Vieni!"
 
-#: Source/diablo.cpp:115
+#: Source/diablo.cpp:116
 msgid "Follow me."
 msgstr "Seguimi."
 
-#: Source/diablo.cpp:116
+#: Source/diablo.cpp:117
 msgid "Here's something for you."
 msgstr "Ecco qualche cosa per te."
 
-#: Source/diablo.cpp:117
+#: Source/diablo.cpp:118
 msgid "Now you DIE!"
 msgstr "Ora MUORI!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:781
+#: Source/diablo.cpp:782
 msgid "Options:\n"
 msgstr "Opzioni:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:782
+#: Source/diablo.cpp:783
 msgid "Print this message and exit"
 msgstr "Mostra questo messaggio ed esci"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:783
+#: Source/diablo.cpp:784
 msgid "Print the version and exit"
 msgstr "Mostra versione ed esci"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
+#: Source/diablo.cpp:785
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Specifica la cartella di diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:786
 msgid "Specify the folder of save files"
 msgstr "Specifica la cartella dei salvataggio"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:787
 msgid "Specify the location of diablo.ini"
 msgstr "Specifica la posizione di diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:788
 msgid "Skip startup videos"
 msgstr "Salta video iniziali"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:789
 msgid "Display frames per second"
 msgstr "Mostra fotogrammi al secondo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
+#: Source/diablo.cpp:790
 msgid "Run in windowed mode"
 msgstr "Esegui in finestra"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:791
 msgid "Enable verbose logging"
 msgstr "Abilita log dettagliato"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:792
 msgid "Record a demo file"
 msgstr "Registra un file demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:793
 msgid "Play a demo file"
 msgstr "Riproduci un file demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:794
 msgid "Disable all frame limiting during demo playback"
 msgstr "Disabilita limitazioni di frame in riproduzione demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:795
 msgid ""
 "\n"
 "Game selection:\n"
@@ -1192,22 +1192,22 @@ msgstr ""
 "Selezione gioco:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:796
 msgid "Force Shareware mode"
 msgstr "Forza modalità Demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
+#: Source/diablo.cpp:797
 msgid "Force Diablo mode"
 msgstr "Forza modalità Diablo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:798
 msgid "Force Hellfire mode"
 msgstr "Forza modalità Hellfire"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:798
+#: Source/diablo.cpp:799
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1216,11 +1216,11 @@ msgstr ""
 "Opzioni Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:799
+#: Source/diablo.cpp:800
 msgid "Use alternate nest palette"
 msgstr "Usa tavolozza alternativa"
 
-#: Source/diablo.cpp:805
+#: Source/diablo.cpp:806
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1228,32 +1228,32 @@ msgstr ""
 "\n"
 "Segnala gli errori a https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:869
+#: Source/diablo.cpp:870
 msgid "unrecognized option '{:s}'\n"
 msgstr "opzione sconosciuta '{:s}'\n"
 
-#: Source/diablo.cpp:900
+#: Source/diablo.cpp:901
 msgid "version {:s}"
 msgstr "versione {:s}"
 
-#: Source/diablo.cpp:1218
+#: Source/diablo.cpp:1219
 msgid "-- Network timeout --"
 msgstr "-- Timeout di rete --"
 
-#: Source/diablo.cpp:1219
+#: Source/diablo.cpp:1220
 msgid "-- Waiting for players --"
 msgstr "-- In attesa di giocatori --"
 
-#: Source/diablo.cpp:1238
+#: Source/diablo.cpp:1239
 msgid "No help available"
 msgstr "Nessun aiuto disponibile"
 
-#: Source/diablo.cpp:1239
+#: Source/diablo.cpp:1240
 msgid "while in stores"
 msgstr "mentre nei negozi"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1451
+#: Source/diablo.cpp:1452
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, versione = {:s}, modalità = {:s}"
 
@@ -1724,10 +1724,8 @@ msgstr ""
 "destro del mouse sull'oggetto."
 
 #: Source/help.cpp:68
-#, fuzzy
-#| msgid "$Gold"
 msgid "$Gold:"
-msgstr "$Oro"
+msgstr "$Oro:"
 
 #: Source/help.cpp:69
 msgid ""
@@ -1757,10 +1755,8 @@ msgstr ""
 "nell'area di gioco."
 
 #: Source/help.cpp:79
-#, fuzzy
-#| msgid "$Using the Speedbook for Spells"
 msgid "$Using the Speedbook for Spells:"
-msgstr "$Uso dello Speedbook per le Magie"
+msgstr "$Uso dello Speedbook per le Magie:"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1774,22 +1770,16 @@ msgstr ""
 "nell'area di gioco."
 
 #: Source/help.cpp:84
-#, fuzzy
-#| msgid ""
-#| "Shift + Left-clicking on the 'select current spell' button will clear the "
-#| "readied spell"
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
 "readied spell."
 msgstr ""
 "Maiusc + Clic sinistro sul pulsante 'seleziona magia corrente' cancellerà la "
-"magia pronta"
+"magia pronta."
 
 #: Source/help.cpp:86
-#, fuzzy
-#| msgid "$Setting Spell Hotkeys"
 msgid "$Setting Spell Hotkeys:"
-msgstr "$Impostazioni Tasti Magia"
+msgstr "$Impostazioni Tasti Magia:"
 
 #: Source/help.cpp:87
 msgid ""
@@ -1803,10 +1793,8 @@ msgstr ""
 "assegnare."
 
 #: Source/help.cpp:92
-#, fuzzy
-#| msgid "$Spell Books"
 msgid "$Spell Books:"
-msgstr "$Libri di Magia"
+msgstr "$Libri di Magia:"
 
 #: Source/help.cpp:93
 msgid ""
@@ -1836,15 +1824,15 @@ msgstr "Guida Diablo"
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Premi ESC per uscire o le frecce per scorrere."
 
-#: Source/init.cpp:175
+#: Source/init.cpp:176
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq o spawn.mpq"
 
-#: Source/init.cpp:196
+#: Source/init.cpp:197
 msgid "Some Hellfire MPQs are missing"
 msgstr "Mancano alcuni MPQ di Hellfire"
 
-#: Source/init.cpp:196
+#: Source/init.cpp:197
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1852,7 +1840,7 @@ msgstr ""
 "Non tutti gli MPQ Hellfire sono stati trovati.\n"
 "Si prega di copiare tutti i file hf*.mpq."
 
-#: Source/init.cpp:204
+#: Source/init.cpp:205
 msgid "Unable to create main window"
 msgstr "Impossibile creare la finestra principale"
 
@@ -1996,7 +1984,7 @@ msgstr "Verga di Lazarus"
 msgid "Scroll of Resurrect"
 msgstr "Pergamena di Resurrezione"
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:167
 msgid "Blacksmith Oil"
 msgstr "Olio da Fabbro"
 
@@ -2191,11 +2179,11 @@ msgstr "Pozione di Giovinezza"
 msgid "Potion of Full Rejuvenation"
 msgstr "Gran Pozione di Giovinezza"
 
-#: Source/itemdat.cpp:100 Source/items.cpp:161
+#: Source/itemdat.cpp:100 Source/items.cpp:162
 msgid "Oil of Accuracy"
 msgstr "Olio di Precisione"
 
-#: Source/itemdat.cpp:101 Source/items.cpp:163
+#: Source/itemdat.cpp:101 Source/items.cpp:164
 msgid "Oil of Sharpness"
 msgstr "Olio dell'Acume"
 
@@ -3610,680 +3598,676 @@ msgstr "Amuleto del Chierico"
 msgid "Gladiator's Ring"
 msgstr "Anello del Gladiatore"
 
-#: Source/items.cpp:162
+#: Source/items.cpp:163
 msgid "Oil of Mastery"
 msgstr "Olio della Maestria"
 
-#: Source/items.cpp:164
+#: Source/items.cpp:165
 msgid "Oil of Death"
 msgstr "Olio della Morte"
 
-#: Source/items.cpp:165
+#: Source/items.cpp:166
 msgid "Oil of Skill"
 msgstr "Olio dell'Abilità"
 
-#: Source/items.cpp:167
+#: Source/items.cpp:168
 msgid "Oil of Fortitude"
 msgstr "Olio della Fortezza"
 
-#: Source/items.cpp:168
+#: Source/items.cpp:169
 msgid "Oil of Permanence"
 msgstr "Olio della Permanenza"
 
-#: Source/items.cpp:169
+#: Source/items.cpp:170
 msgid "Oil of Hardening"
 msgstr "Olio della Tempra"
 
-#: Source/items.cpp:170
+#: Source/items.cpp:171
 msgid "Oil of Imperviousness"
 msgstr "Olio dell'Impermeabilità"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
-#: Source/items.cpp:1183
-#, fuzzy
-#| msgid "{0} of {1}"
+#: Source/items.cpp:1184
 msgctxt "spell"
 msgid "{0} of {1}"
-msgstr "{:s} di {:s}"
+msgstr "{0} di {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1193
-#, fuzzy
+#: Source/items.cpp:1192
 msgctxt "spell"
 msgid "{0} {1} of {2}"
-msgstr "{:s} {:s} di {:s}"
+msgstr "{1} {0} di {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1214
-#, fuzzy
+#: Source/items.cpp:1210
 msgid "{0} {1} of {2}"
-msgstr "{:s} {:s} di {:s}"
+msgstr "{0} {1} di {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#: Source/items.cpp:1217
+#: Source/items.cpp:1213
 msgid "{0} {1}"
 msgstr "{1} {0}"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
-#: Source/items.cpp:1220
+#: Source/items.cpp:1216
 msgid "{0} of {1}"
 msgstr "{:s} di {:s}"
 
-#: Source/items.cpp:1906 Source/items.cpp:1918
+#: Source/items.cpp:1900 Source/items.cpp:1912
 msgid "increases a weapon's"
 msgstr "dell'arma, aumenta"
 
-#: Source/items.cpp:1908
+#: Source/items.cpp:1902
 msgid "chance to hit"
 msgstr "possibilità di colpire"
 
-#: Source/items.cpp:1912
+#: Source/items.cpp:1906
 msgid "greatly increases a"
 msgstr "aumenta di molto"
 
-#: Source/items.cpp:1914
+#: Source/items.cpp:1908
 msgid "weapon's chance to hit"
 msgstr "possibilità di colpire dell'arma"
 
-#: Source/items.cpp:1920
+#: Source/items.cpp:1914
 msgid "damage potential"
 msgstr "potenziale danno"
 
-#: Source/items.cpp:1924
+#: Source/items.cpp:1918
 msgid "greatly increases a weapon's"
 msgstr "aumenta di molto dell'arma"
 
-#: Source/items.cpp:1926
+#: Source/items.cpp:1920
 msgid "damage potential - not bows"
 msgstr "potenziale danno - archi esclusi"
 
-#: Source/items.cpp:1930
+#: Source/items.cpp:1924
 msgid "reduces attributes needed"
 msgstr "riduce attributi richiesti"
 
-#: Source/items.cpp:1932
+#: Source/items.cpp:1926
 msgid "to use armor or weapons"
 msgstr "per usare armature o armi"
 
-#: Source/items.cpp:1936
+#: Source/items.cpp:1930
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "ripristina 20% di"
 
-#: Source/items.cpp:1938
+#: Source/items.cpp:1932
 msgid "item's durability"
 msgstr "durabilità dell'oggetto"
 
-#: Source/items.cpp:1942
+#: Source/items.cpp:1936
 msgid "increases an item's"
 msgstr "dell'oggetto, aumenta"
 
-#: Source/items.cpp:1944
+#: Source/items.cpp:1938
 msgid "current and max durability"
 msgstr "durabilità corrente e massima"
 
-#: Source/items.cpp:1948
+#: Source/items.cpp:1942
 msgid "makes an item indestructible"
 msgstr "rende indistruttibile un oggetto"
 
-#: Source/items.cpp:1952
+#: Source/items.cpp:1946
 msgid "increases the armor class"
 msgstr "aumenta la classe armatura"
 
-#: Source/items.cpp:1954
+#: Source/items.cpp:1948
 msgid "of armor and shields"
 msgstr "di armatura e scudi"
 
-#: Source/items.cpp:1958
+#: Source/items.cpp:1952
 msgid "greatly increases the armor"
 msgstr "aumenta di molto la classe"
 
-#: Source/items.cpp:1960
+#: Source/items.cpp:1954
 msgid "class of armor and shields"
 msgstr "armatura di armature e scudi"
 
-#: Source/items.cpp:1964 Source/items.cpp:1973
+#: Source/items.cpp:1958 Source/items.cpp:1967
 msgid "sets fire trap"
 msgstr "imposta trappola fuoco"
 
-#: Source/items.cpp:1969
+#: Source/items.cpp:1963
 msgid "sets lightning trap"
 msgstr "imposta trappola fulmine"
 
-#: Source/items.cpp:1977
+#: Source/items.cpp:1971
 msgid "sets petrification trap"
 msgstr "imposta trappola pietrificazione"
 
-#: Source/items.cpp:1981
+#: Source/items.cpp:1975
 msgid "restore all life"
 msgstr "recupero totale vita"
 
-#: Source/items.cpp:1985
+#: Source/items.cpp:1979
 msgid "restore some life"
 msgstr "recupero paziale vita"
 
-#: Source/items.cpp:1989
+#: Source/items.cpp:1983
 msgid "recover life"
 msgstr "recupero vita"
 
-#: Source/items.cpp:1993
+#: Source/items.cpp:1987
 msgid "deadly heal"
 msgstr "resuscita"
 
-#: Source/items.cpp:1997
+#: Source/items.cpp:1991
 msgid "restore some mana"
 msgstr "recupero parziale mana"
 
-#: Source/items.cpp:2001
+#: Source/items.cpp:1995
 msgid "restore all mana"
 msgstr "recupero totale mana"
 
-#: Source/items.cpp:2005
+#: Source/items.cpp:1999
 msgid "increase strength"
 msgstr "aumenta forza"
 
-#: Source/items.cpp:2009
+#: Source/items.cpp:2003
 msgid "increase magic"
 msgstr "aumenta magia"
 
-#: Source/items.cpp:2013
+#: Source/items.cpp:2007
 msgid "increase dexterity"
 msgstr "aumenta destrezza"
 
-#: Source/items.cpp:2017
+#: Source/items.cpp:2011
 msgid "increase vitality"
 msgstr "aumenta vitalità"
 
-#: Source/items.cpp:2022
+#: Source/items.cpp:2016
 msgid "decrease strength"
 msgstr "riduci forza"
 
-#: Source/items.cpp:2026
+#: Source/items.cpp:2020
 msgid "decrease dexterity"
 msgstr "riduci destrezza"
 
-#: Source/items.cpp:2030
+#: Source/items.cpp:2024
 msgid "decrease vitality"
 msgstr "riduci vitalità"
 
-#: Source/items.cpp:2034
+#: Source/items.cpp:2028
 msgid "restore some life and mana"
 msgstr "recupero parziale vita e mana"
 
-#: Source/items.cpp:2038
+#: Source/items.cpp:2032
 msgid "restore all life and mana"
 msgstr "recupero totale vita e mana"
 
-#: Source/items.cpp:2053 Source/items.cpp:2078
+#: Source/items.cpp:2047 Source/items.cpp:2072
 msgid "Right-click to read"
 msgstr "Clic destro per leggere"
 
-#: Source/items.cpp:2057
+#: Source/items.cpp:2051
 msgid "Right-click to read, then"
 msgstr "Clic destro per leggere, poi"
 
-#: Source/items.cpp:2059
+#: Source/items.cpp:2053
 msgid "left-click to target"
 msgstr "clic sinistro per obiettivo"
 
-#: Source/items.cpp:2064
+#: Source/items.cpp:2058
 msgid "Right-click to use"
 msgstr "Clic destro per usare"
 
-#: Source/items.cpp:2069 Source/items.cpp:2074
+#: Source/items.cpp:2063 Source/items.cpp:2068
 msgid "Right click to use"
 msgstr "Clic destro per usare"
 
-#: Source/items.cpp:2082
+#: Source/items.cpp:2076
 msgid "Right click to read"
 msgstr "Clic destro per leggere"
 
-#: Source/items.cpp:2086
+#: Source/items.cpp:2080
 msgid "Right-click to view"
 msgstr "Clic destro per vedere"
 
-#: Source/items.cpp:2094
+#: Source/items.cpp:2088
 msgid "Doubles gold capacity"
 msgstr "Raddoppia le scorte d'oro"
 
-#: Source/items.cpp:2106 Source/stores.cpp:283
+#: Source/items.cpp:2100 Source/stores.cpp:283
 msgid "Required:"
 msgstr "Richiede:"
 
-#: Source/items.cpp:2108 Source/stores.cpp:285
+#: Source/items.cpp:2102 Source/stores.cpp:285
 msgid " {:d} Str"
 msgstr " {:d} Frz"
 
-#: Source/items.cpp:2110 Source/stores.cpp:287
+#: Source/items.cpp:2104 Source/stores.cpp:287
 msgid " {:d} Mag"
 msgstr " {:d} Mag"
 
-#: Source/items.cpp:2112 Source/stores.cpp:289
+#: Source/items.cpp:2106 Source/stores.cpp:289
 msgid " {:d} Dex"
 msgstr " {:d} Des"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3533 Source/player.cpp:3018
+#: Source/items.cpp:3527 Source/player.cpp:3005
 msgid "Ear of {:s}"
 msgstr "Orecchio di {:s}"
 
-#: Source/items.cpp:3828
+#: Source/items.cpp:3822
 msgid "chance to hit: {:+d}%"
 msgstr "possibilità di colpire: {:+d}%"
 
-#: Source/items.cpp:3832
+#: Source/items.cpp:3826
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% danno"
 
-#: Source/items.cpp:3836 Source/items.cpp:4092
+#: Source/items.cpp:3830 Source/items.cpp:4086
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "colpo: {:+d}%, {:+d}% danno"
 
-#: Source/items.cpp:3840
+#: Source/items.cpp:3834
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% armatura"
 
-#: Source/items.cpp:3844
+#: Source/items.cpp:3838
 msgid "armor class: {:d}"
 msgstr "classe armatura: {:d}"
 
-#: Source/items.cpp:3849 Source/items.cpp:4074
+#: Source/items.cpp:3843 Source/items.cpp:4068
 msgid "Resist Fire: {:+d}%"
 msgstr "Resistenza Fuoco: {:+d}%"
 
-#: Source/items.cpp:3851
+#: Source/items.cpp:3845
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "Resistenza Fuoco: 75% MAX"
 
-#: Source/items.cpp:3856
+#: Source/items.cpp:3850
 msgid "Resist Lightning: {:+d}%"
 msgstr "Resistenza Fulmine: {:+d}%"
 
-#: Source/items.cpp:3858
+#: Source/items.cpp:3852
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "Resistenza Fulmine: 75% MAX"
 
-#: Source/items.cpp:3863
+#: Source/items.cpp:3857
 msgid "Resist Magic: {:+d}%"
 msgstr "Resistenza Magia: {:+d}%"
 
-#: Source/items.cpp:3865
+#: Source/items.cpp:3859
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "Resistenza Magia: 75% MAX"
 
-#: Source/items.cpp:3870
+#: Source/items.cpp:3864
 msgid "Resist All: {:+d}%"
 msgstr "Resistenza Tutto: {:+d}%"
 
-#: Source/items.cpp:3872
+#: Source/items.cpp:3866
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "Resistenza Tutto: 75% MAX"
 
-#: Source/items.cpp:3876
+#: Source/items.cpp:3870
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "magie aumentate di {:d} livello"
 msgstr[1] "magie aumentate di {:d} livelli"
 
-#: Source/items.cpp:3878
+#: Source/items.cpp:3872
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "magie ridotte di {:d} livello"
 msgstr[1] "magie ridotte di {:d} livelli"
 
-#: Source/items.cpp:3880
+#: Source/items.cpp:3874
 msgid "spell levels unchanged (?)"
 msgstr "livelli magia invariati (?)"
 
-#: Source/items.cpp:3883
+#: Source/items.cpp:3877
 msgid "Extra charges"
 msgstr "Cariche extra"
 
-#: Source/items.cpp:3886
+#: Source/items.cpp:3880
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} carica"
 msgstr[1] "{:d} {:s} cariche"
 
-#: Source/items.cpp:3890
+#: Source/items.cpp:3884
 msgid "Fire hit damage: {:d}"
 msgstr "Danno fuoco: {:d}"
 
-#: Source/items.cpp:3892
+#: Source/items.cpp:3886
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "Danno Fuoco: {:d}-{:d}"
 
-#: Source/items.cpp:3896
+#: Source/items.cpp:3890
 msgid "Lightning hit damage: {:d}"
 msgstr "Danno Fulmine : {:d}"
 
-#: Source/items.cpp:3898
+#: Source/items.cpp:3892
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "Danno Fulmine : {:d}-{:d}"
 
-#: Source/items.cpp:3902
+#: Source/items.cpp:3896
 msgid "{:+d} to strength"
 msgstr "{:+d} alla Forza"
 
-#: Source/items.cpp:3906
+#: Source/items.cpp:3900
 msgid "{:+d} to magic"
 msgstr "{:+d} di magia"
 
-#: Source/items.cpp:3910
+#: Source/items.cpp:3904
 msgid "{:+d} to dexterity"
 msgstr "{:+d} di destrezza"
 
-#: Source/items.cpp:3914
+#: Source/items.cpp:3908
 msgid "{:+d} to vitality"
 msgstr "{:+d} di vitalità"
 
-#: Source/items.cpp:3918
+#: Source/items.cpp:3912
 msgid "{:+d} to all attributes"
 msgstr "{:+d} a ogni attributo"
 
-#: Source/items.cpp:3922
+#: Source/items.cpp:3916
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} danno dai nemici"
 
-#: Source/items.cpp:3926
+#: Source/items.cpp:3920
 msgid "Hit Points: {:+d}"
 msgstr "Punti Ferita: {:+d}"
 
-#: Source/items.cpp:3930
+#: Source/items.cpp:3924
 msgid "Mana: {:+d}"
 msgstr "Mana : {:+d}"
 
-#: Source/items.cpp:3933
+#: Source/items.cpp:3927
 msgid "high durability"
 msgstr "alta durabilità"
 
-#: Source/items.cpp:3936
+#: Source/items.cpp:3930
 msgid "decreased durability"
 msgstr "durabilità ridotta"
 
-#: Source/items.cpp:3939
+#: Source/items.cpp:3933
 msgid "indestructible"
 msgstr "indistruttibile"
 
-#: Source/items.cpp:3942
+#: Source/items.cpp:3936
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% bagliore"
 
-#: Source/items.cpp:3945
+#: Source/items.cpp:3939
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% bagliore"
 
-#: Source/items.cpp:3948
+#: Source/items.cpp:3942
 msgid "multiple arrows per shot"
 msgstr "frecce multiple per tiro"
 
-#: Source/items.cpp:3952
+#: Source/items.cpp:3946
 msgid "fire arrows damage: {:d}"
 msgstr "danno dardi infuocati: {:d}"
 
-#: Source/items.cpp:3954
+#: Source/items.cpp:3948
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "danno dardi infuocati: {:d}-{:d}"
 
-#: Source/items.cpp:3958
+#: Source/items.cpp:3952
 msgid "lightning arrows damage {:d}"
 msgstr "danno frecce fulminee: {:d}"
 
-#: Source/items.cpp:3960
+#: Source/items.cpp:3954
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "danno frecce fulminee: {:d}-{:d}"
 
-#: Source/items.cpp:3964
+#: Source/items.cpp:3958
 msgid "fireball damage: {:d}"
 msgstr "danno sfera infuocata: {:d}"
 
-#: Source/items.cpp:3966
+#: Source/items.cpp:3960
 msgid "fireball damage: {:d}-{:d}"
 msgstr "danno sfera infuocata: {:d}-{:d}"
 
-#: Source/items.cpp:3969
+#: Source/items.cpp:3963
 msgid "attacker takes 1-3 damage"
 msgstr "attaccante riceve1-3 danni"
 
-#: Source/items.cpp:3972
+#: Source/items.cpp:3966
 msgid "user loses all mana"
 msgstr "l'utente perde tutto il mana"
 
-#: Source/items.cpp:3975
+#: Source/items.cpp:3969
 msgid "you can't heal"
 msgstr "non puoi guarire"
 
-#: Source/items.cpp:3978
+#: Source/items.cpp:3972
 msgid "absorbs half of trap damage"
 msgstr "assorbe metà danni trappola"
 
-#: Source/items.cpp:3981
+#: Source/items.cpp:3975
 msgid "knocks target back"
 msgstr "respinge il bersaglio"
 
-#: Source/items.cpp:3984
+#: Source/items.cpp:3978
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% danno contro demoni"
 
-#: Source/items.cpp:3987
+#: Source/items.cpp:3981
 msgid "All Resistance equals 0"
 msgstr "Ogni Resistenza è 0"
 
-#: Source/items.cpp:3990
+#: Source/items.cpp:3984
 msgid "hit monster doesn't heal"
 msgstr "colpo al mostro non guarisce"
 
-#: Source/items.cpp:3994
+#: Source/items.cpp:3988
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "colpo ruba 3% mana"
 
-#: Source/items.cpp:3996
+#: Source/items.cpp:3990
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "colpo ruba 5% mana"
 
-#: Source/items.cpp:4000
+#: Source/items.cpp:3994
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "colpo ruba 3% vita"
 
-#: Source/items.cpp:4002
+#: Source/items.cpp:3996
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "colpo ruba 5% vita"
 
-#: Source/items.cpp:4005
+#: Source/items.cpp:3999
 msgid "penetrates target's armor"
 msgstr "penetra l'armatura dell'obiettivo"
 
-#: Source/items.cpp:4009
+#: Source/items.cpp:4003
 msgid "quick attack"
 msgstr "attacco rapido"
 
-#: Source/items.cpp:4011
+#: Source/items.cpp:4005
 msgid "fast attack"
 msgstr "attacco veloce"
 
-#: Source/items.cpp:4013
+#: Source/items.cpp:4007
 msgid "faster attack"
 msgstr "attacco molto veloce"
 
-#: Source/items.cpp:4015
+#: Source/items.cpp:4009
 msgid "fastest attack"
 msgstr "attacco velocissimo"
 
-#: Source/items.cpp:4019
+#: Source/items.cpp:4013
 msgid "fast hit recovery"
 msgstr "recupero veloce"
 
-#: Source/items.cpp:4021
+#: Source/items.cpp:4015
 msgid "faster hit recovery"
 msgstr "recupero molto veloce"
 
-#: Source/items.cpp:4023
+#: Source/items.cpp:4017
 msgid "fastest hit recovery"
 msgstr "recupero velocissimo"
 
-#: Source/items.cpp:4026
+#: Source/items.cpp:4020
 msgid "fast block"
 msgstr "blocco veloce"
 
-#: Source/items.cpp:4029
+#: Source/items.cpp:4023
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "aggiunge {:d} punto al danno"
 msgstr[1] "aggiunge {:d} punti al danno"
 
-#: Source/items.cpp:4032
+#: Source/items.cpp:4026
 msgid "fires random speed arrows"
 msgstr "velocità di gittata casuale"
 
-#: Source/items.cpp:4035
+#: Source/items.cpp:4029
 msgid "unusual item damage"
 msgstr "danno non comune"
 
-#: Source/items.cpp:4038
+#: Source/items.cpp:4032
 msgid "altered durability"
 msgstr "durabilità alterata"
 
-#: Source/items.cpp:4041
+#: Source/items.cpp:4035
 msgid "Faster attack swing"
 msgstr "Sferra attacco veloce"
 
-#: Source/items.cpp:4044
+#: Source/items.cpp:4038
 msgid "one handed sword"
 msgstr "spada a una mano"
 
-#: Source/items.cpp:4047
+#: Source/items.cpp:4041
 msgid "constantly lose hit points"
 msgstr "perdita costante di punti ferita"
 
-#: Source/items.cpp:4050
+#: Source/items.cpp:4044
 msgid "life stealing"
 msgstr "sottrae vita"
 
-#: Source/items.cpp:4053
+#: Source/items.cpp:4047
 msgid "no strength requirement"
 msgstr "nessun requisito di forza"
 
-#: Source/items.cpp:4056
+#: Source/items.cpp:4050
 msgid "see with infravision"
 msgstr "usa infravisione"
 
-#: Source/items.cpp:4063
+#: Source/items.cpp:4057
 msgid "lightning damage: {:d}"
 msgstr "danno fulmineo: {:d}"
 
-#: Source/items.cpp:4065
+#: Source/items.cpp:4059
 msgid "lightning damage: {:d}-{:d}"
 msgstr "danno fulmineo: {:d}-{:d}"
 
-#: Source/items.cpp:4068
+#: Source/items.cpp:4062
 msgid "charged bolts on hits"
 msgstr "scariche fulminee al colpo"
 
-#: Source/items.cpp:4077
+#: Source/items.cpp:4071
 msgid "occasional triple damage"
 msgstr "danno triplo occasionale"
 
-#: Source/items.cpp:4080
+#: Source/items.cpp:4074
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "riduzione {:+d}% danno"
 
-#: Source/items.cpp:4083
+#: Source/items.cpp:4077
 msgid "2x dmg to monst, 1x to you"
 msgstr "2x danni mostri, 1x a te"
 
-#: Source/items.cpp:4086
+#: Source/items.cpp:4080
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Danno casuale 0 - 500%"
 
-#: Source/items.cpp:4089
+#: Source/items.cpp:4083
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "dur ridotta, {:+d}% danno"
 
-#: Source/items.cpp:4095
+#: Source/items.cpp:4089
 msgid "extra AC vs demons"
 msgstr "extra AC contro demoni"
 
-#: Source/items.cpp:4098
+#: Source/items.cpp:4092
 msgid "extra AC vs undead"
 msgstr "extra AC contro non morti"
 
-#: Source/items.cpp:4101
+#: Source/items.cpp:4095
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50% Mana spostato a Salute"
 
-#: Source/items.cpp:4104
+#: Source/items.cpp:4098
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40% Salute spostato a Mana"
 
-#: Source/items.cpp:4107
+#: Source/items.cpp:4101
 msgid "Another ability (NW)"
 msgstr "Altra abilità (NW)"
 
-#: Source/items.cpp:4144 Source/items.cpp:4191
+#: Source/items.cpp:4138 Source/items.cpp:4185
 msgid "damage: {:d}  Indestructible"
 msgstr "danno: {:d}  Invulnerabile"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4146 Source/items.cpp:4193
+#: Source/items.cpp:4140 Source/items.cpp:4187
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "danno: {:d}  Dur: {:d}/{:d}"
 
-#: Source/items.cpp:4149 Source/items.cpp:4196
+#: Source/items.cpp:4143 Source/items.cpp:4190
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "danno: {:d}-{:d}  Indistruttibile"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4151 Source/items.cpp:4198
+#: Source/items.cpp:4145 Source/items.cpp:4192
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "danno: {:d}-{:d}  Dur: {:d}/{:d}"
 
-#: Source/items.cpp:4157 Source/items.cpp:4210
+#: Source/items.cpp:4151 Source/items.cpp:4204
 msgid "armor: {:d}  Indestructible"
 msgstr "armatura: {:d}  Indistruttibile"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4159 Source/items.cpp:4212
+#: Source/items.cpp:4153 Source/items.cpp:4206
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "armatura: {:d}  Dur: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4164
+#: Source/items.cpp:4158
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "dan: {:d}  Dur: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4166
+#: Source/items.cpp:4160
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "dan: {:d}-{:d}  Dur: {:d}/{:d}"
 
-#: Source/items.cpp:4167 Source/items.cpp:4202 Source/items.cpp:4217
+#: Source/items.cpp:4161 Source/items.cpp:4196 Source/items.cpp:4211
 #: Source/stores.cpp:255
 msgid "Charges: {:d}/{:d}"
 msgstr "Cariche: {:d}/{:d}"
 
-#: Source/items.cpp:4179
+#: Source/items.cpp:4173
 msgid "unique item"
 msgstr "oggetto unico"
 
-#: Source/items.cpp:4206 Source/items.cpp:4215 Source/items.cpp:4222
+#: Source/items.cpp:4200 Source/items.cpp:4209 Source/items.cpp:4216
 msgid "Not Identified"
 msgstr "Sconosciuto"
 
@@ -6026,19 +6010,19 @@ msgstr "silenzia"
 msgid "Failed to open player archive for writing."
 msgstr "Impossibile aprire archivio in scrittura."
 
-#: Source/pfile.cpp:377
+#: Source/pfile.cpp:375
 msgid "Unable to open archive"
 msgstr "Impossibile aprire archivio"
 
-#: Source/pfile.cpp:379
+#: Source/pfile.cpp:377
 msgid "Unable to load character"
 msgstr "Impossibile caricare personaggio"
 
-#: Source/pfile.cpp:403 Source/pfile.cpp:423
+#: Source/pfile.cpp:401 Source/pfile.cpp:421
 msgid "Unable to read to save file archive"
 msgstr "Impossibile leggere archivio di salvataggio"
 
-#: Source/pfile.cpp:442
+#: Source/pfile.cpp:440
 msgid "Unable to write to save file archive"
 msgstr "Impossibile scrivere archivio di salvataggio"
 

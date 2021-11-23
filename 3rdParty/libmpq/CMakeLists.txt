@@ -8,8 +8,8 @@ include(FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(libmpq
-    URL https://github.com/diasurgical/libmpq/archive/b7907a9e56cbb647e10b9a9df39c88a321efc0c0.tar.gz
-    URL_HASH MD5=25d9762b9ad81caa33f74c317fdbe404
+    URL https://github.com/diasurgical/libmpq/archive/5f9187193b4c6ed01c8fb694d149b12429cb8b1b.tar.gz
+    URL_HASH MD5=689b123c3a3cb0b4a19e899fd86ac1bf
 )
 FetchContent_MakeAvailableExcludeFromAll(libmpq)
 
@@ -26,3 +26,7 @@ target_include_directories(libmpq PUBLIC ${libmpq_SOURCE_DIR})
 target_include_directories(libmpq PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 target_link_libraries(libmpq PRIVATE ZLIB::ZLIB BZip2::BZip2)
+
+if(LIBMPQ_FILE_BUFFER_SIZE)
+  target_compile_definitions(libmpq PRIVATE "LIBMPQ_FILE_BUFFER_SIZE=${LIBMPQ_FILE_BUFFER_SIZE}")
+endif()
