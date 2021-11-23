@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-21 05:44+0100\n"
+"POT-Creation-Date: 2021-11-23 10:13+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: NSM53PROJECT <nsm53project@gmail.com>\n"
 "Language-Team: \n"
@@ -312,10 +312,10 @@ msgstr "\t이 게임 제작에 영혼을 팔지는 않았다."
 
 #: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
 #: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
-#: Source/DiabloUI/selgame.cpp:193 Source/DiabloUI/selgame.cpp:211
-#: Source/DiabloUI/selgame.cpp:352 Source/DiabloUI/selgame.cpp:428
-#: Source/DiabloUI/selhero.cpp:186 Source/DiabloUI/selhero.cpp:211
-#: Source/DiabloUI/selhero.cpp:281 Source/DiabloUI/selhero.cpp:536
+#: Source/DiabloUI/selgame.cpp:192 Source/DiabloUI/selgame.cpp:210
+#: Source/DiabloUI/selgame.cpp:350 Source/DiabloUI/selgame.cpp:425
+#: Source/DiabloUI/selhero.cpp:182 Source/DiabloUI/selhero.cpp:207
+#: Source/DiabloUI/selhero.cpp:277 Source/DiabloUI/selhero.cpp:532
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
 msgstr "결정"
@@ -377,8 +377,8 @@ msgid "Shareware"
 msgstr "체험판"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
-#: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
-#: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
+#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
+#: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:540
 msgid "Cancel"
 msgstr "취소"
 
@@ -390,8 +390,8 @@ msgstr "클라이언트-서버 (TCP)"
 msgid "Loopback"
 msgstr "루프백"
 
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
-#: Source/DiabloUI/selgame.cpp:510
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:486
+#: Source/DiabloUI/selgame.cpp:507
 msgid "Multi Player Game"
 msgstr "멀티 플레이어 게임"
 
@@ -427,7 +427,7 @@ msgstr "네트워크 공개 없이 혼자서 즐깁니다."
 msgid "Players Supported: {:d}"
 msgstr "지원되는 플레이어: {:d}"
 
-#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
+#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:411
 msgid "Description:"
 msgstr "설명:"
 
@@ -435,8 +435,8 @@ msgstr "설명:"
 msgid "Select Action"
 msgstr "메뉴 선택"
 
-#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
-#: Source/DiabloUI/selgame.cpp:333
+#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:180
+#: Source/DiabloUI/selgame.cpp:331
 msgid "Create Game"
 msgstr "게임 생성"
 
@@ -448,9 +448,9 @@ msgstr "공개 게임 생성"
 msgid "Join Game"
 msgstr "게임 참가"
 
-#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
-#: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
-#: Source/DiabloUI/selgame.cpp:431
+#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:195
+#: Source/DiabloUI/selgame.cpp:213 Source/DiabloUI/selgame.cpp:353
+#: Source/DiabloUI/selgame.cpp:428
 msgid "CANCEL"
 msgstr "취소"
 
@@ -475,35 +475,35 @@ msgstr "IP나 호스트명을 입력하여 해당 주소에서 진행 중인 게
 msgid "Join the public game already in progress at this address."
 msgstr "이 주소로 진행 중인 공개 게임에 참가합니다."
 
-#: Source/DiabloUI/selgame.cpp:184
+#: Source/DiabloUI/selgame.cpp:183
 msgid "Select Difficulty"
 msgstr "난이도 선택"
 
-#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
-#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1446
+#: Source/DiabloUI/selgame.cpp:185 Source/DiabloUI/selgame.cpp:238
+#: Source/DiabloUI/selgame.cpp:342 Source/DiabloUI/selgame.cpp:362
+#: Source/diablo.cpp:1447
 msgid "Normal"
 msgstr "보통"
 
-#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1447
+#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:242
+#: Source/diablo.cpp:1448
 msgid "Nightmare"
 msgstr "악몽"
 
-#: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1448
+#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:246
+#: Source/diablo.cpp:1449
 msgid "Hell"
 msgstr "지옥"
 
-#: Source/DiabloUI/selgame.cpp:202
+#: Source/DiabloUI/selgame.cpp:201
 msgid "Join TCP Games"
 msgstr "TCP 게임 참가"
 
-#: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
+#: Source/DiabloUI/selgame.cpp:204 Source/DiabloUI/selgame.cpp:207
 msgid "Enter address"
 msgstr "주소 입력"
 
-#: Source/DiabloUI/selgame.cpp:240
+#: Source/DiabloUI/selgame.cpp:239
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -511,7 +511,7 @@ msgstr ""
 "보통 난이도\n"
 "초보자는 이 난이도에서 디아블로를 쓰러트리기 위한 퀘스트를 시작해야 합니다."
 
-#: Source/DiabloUI/selgame.cpp:244
+#: Source/DiabloUI/selgame.cpp:243
 msgid ""
 "Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
@@ -521,7 +521,7 @@ msgstr ""
 "미궁의 괴물들이 강회되었으므로 더 큰 도전이 될 것입니다. 숙련자에게 권장합니"
 "다."
 
-#: Source/DiabloUI/selgame.cpp:248
+#: Source/DiabloUI/selgame.cpp:247
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
@@ -531,35 +531,35 @@ msgstr ""
 "황천에서 가장 강한 괴물들이 지옥으로 가는 문에 도사리고 있습니다. 경험이 풍부"
 "한 사람만이 이러한 곳으로 모험을 떠날 수 있습니다."
 
-#: Source/DiabloUI/selgame.cpp:264
+#: Source/DiabloUI/selgame.cpp:262
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
 msgstr "악몽 난이도 멀티 플레이어 게임에 참여하려면 레벨 20에 도달해야 합니다."
 
-#: Source/DiabloUI/selgame.cpp:266
+#: Source/DiabloUI/selgame.cpp:264
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
 msgstr "지옥 난이도 멀티 플레이어 게임에 참여하려면 레벨 30에 도달해야 합니다."
 
-#: Source/DiabloUI/selgame.cpp:342
+#: Source/DiabloUI/selgame.cpp:340
 msgid "Select Game Speed"
 msgstr "게임 속도 선택"
 
-#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
+#: Source/DiabloUI/selgame.cpp:343 Source/DiabloUI/selgame.cpp:366
 msgid "Fast"
 msgstr "빠르게"
 
-#: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
+#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:370
 msgid "Faster"
 msgstr "매우 빠르게"
 
-#: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
+#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:374
 msgid "Fastest"
 msgstr "가장 빠르게"
 
-#: Source/DiabloUI/selgame.cpp:365
+#: Source/DiabloUI/selgame.cpp:363
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -567,7 +567,7 @@ msgstr ""
 "보통 속도\n"
 "초보자는 이 속도에서 디아블로를 쓰러트리기 위한 퀘스트를 시작해야 합니다."
 
-#: Source/DiabloUI/selgame.cpp:369
+#: Source/DiabloUI/selgame.cpp:367
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
@@ -577,7 +577,7 @@ msgstr ""
 "미궁의 괴물들이 강회되었으므로 더 큰 도전이 될 것입니다. 숙련자에게 권장합니"
 "다."
 
-#: Source/DiabloUI/selgame.cpp:373
+#: Source/DiabloUI/selgame.cpp:371
 msgid ""
 "Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. "
@@ -587,7 +587,7 @@ msgstr ""
 "던전에 있는 대부분의 괴물들이 그 어느 때보다 재빨리 당신을 찾아낼 것입니다. "
 "숙련된 챔피언만이 이 속도에서 행운을 시험할 수 있습니다."
 
-#: Source/DiabloUI/selgame.cpp:377
+#: Source/DiabloUI/selgame.cpp:375
 msgid ""
 "Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a "
@@ -597,16 +597,16 @@ msgstr ""
 "황천의 하수인들이 가차없이 공격을 가해 옵니다. 진정한 속도광만이 이 속도를 감"
 "당할 수 있을 것입니다."
 
-#: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
+#: Source/DiabloUI/selgame.cpp:417 Source/DiabloUI/selgame.cpp:422
 msgid "Enter Password"
 msgstr "패스워드 입력"
 
-#: Source/DiabloUI/selgame.cpp:448
+#: Source/DiabloUI/selgame.cpp:445
 msgid "The host is running a different game than you."
 msgstr "읽기 전용 디렉토리 에러."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
-#: Source/DiabloUI/selgame.cpp:451
+#: Source/DiabloUI/selgame.cpp:448
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr "현재 버전 {:s}이 호스트 {:d}.{:d}.{:d}와 맞지 않습니다."
 
@@ -614,60 +614,60 @@ msgstr "현재 버전 {:s}이 호스트 {:d}.{:d}.{:d}와 맞지 않습니다."
 msgid "New Hero"
 msgstr "새로운 영웅"
 
-#: Source/DiabloUI/selhero.cpp:164
+#: Source/DiabloUI/selhero.cpp:160
 msgid "Choose Class"
 msgstr "직업 선택"
 
-#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:22
+#: Source/DiabloUI/selhero.cpp:164 Source/panels/charpanel.cpp:22
 msgid "Warrior"
 msgstr "전사"
 
-#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:165 Source/panels/charpanel.cpp:23
 msgid "Rogue"
 msgstr "도적"
 
-#: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:166 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
 msgstr "원소술사"
 
-#: Source/DiabloUI/selhero.cpp:172 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:25
 msgid "Monk"
 msgstr "수도사"
 
-#: Source/DiabloUI/selhero.cpp:175 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:171 Source/panels/charpanel.cpp:26
 msgid "Bard"
 msgstr "음유시인"
 
-#: Source/DiabloUI/selhero.cpp:178 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:174 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
 msgstr "야만용사"
 
-#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
+#: Source/DiabloUI/selhero.cpp:191 Source/DiabloUI/selhero.cpp:265
 msgid "New Multi Player Hero"
 msgstr "새로운 멀티 플레이어 영웅"
 
-#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
+#: Source/DiabloUI/selhero.cpp:191 Source/DiabloUI/selhero.cpp:265
 msgid "New Single Player Hero"
 msgstr "새로운 싱글 플레이어 영웅"
 
-#: Source/DiabloUI/selhero.cpp:203
+#: Source/DiabloUI/selhero.cpp:199
 msgid "Save File Exists"
 msgstr "기존 저장 파일 존재"
 
-#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
+#: Source/DiabloUI/selhero.cpp:202 Source/gamemenu.cpp:38
 msgid "Load Game"
 msgstr "게임 불러오기"
 
-#: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
+#: Source/DiabloUI/selhero.cpp:203 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
 msgstr "새로운 게임"
 
-#: Source/DiabloUI/selhero.cpp:217 Source/DiabloUI/selhero.cpp:551
+#: Source/DiabloUI/selhero.cpp:213 Source/DiabloUI/selhero.cpp:547
 msgid "Single Player Characters"
 msgstr "싱글 플레이어 캐릭터"
 
-#: Source/DiabloUI/selhero.cpp:263
+#: Source/DiabloUI/selhero.cpp:259
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
@@ -675,66 +675,66 @@ msgstr ""
 "도적과 마법사는 디아블로 정품에서만 사용할 수 있습니다. https://www.gog.com/"
 "game/diablo 에서 구매할 수 있습니다."
 
-#: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
+#: Source/DiabloUI/selhero.cpp:271 Source/DiabloUI/selhero.cpp:274
 msgid "Enter Name"
 msgstr "이름 입력"
 
-#: Source/DiabloUI/selhero.cpp:307
+#: Source/DiabloUI/selhero.cpp:303
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
 msgstr "잘못된 이름입니다. 이름에는 공백이나 특수 문자를 사용할 수 없습니다.\n"
 
 #. TRANSLATORS: Error Message
-#: Source/DiabloUI/selhero.cpp:314
+#: Source/DiabloUI/selhero.cpp:310
 msgid "Unable to create character."
 msgstr "캐릭터 생성이 불가능합니다."
 
-#: Source/DiabloUI/selhero.cpp:468 Source/DiabloUI/selhero.cpp:471
+#: Source/DiabloUI/selhero.cpp:464 Source/DiabloUI/selhero.cpp:467
 msgid "Level:"
 msgstr "레벨:"
 
-#: Source/DiabloUI/selhero.cpp:476
+#: Source/DiabloUI/selhero.cpp:472
 msgid "Strength:"
 msgstr "힘:"
 
-#: Source/DiabloUI/selhero.cpp:481
+#: Source/DiabloUI/selhero.cpp:477
 msgid "Magic:"
 msgstr "마력:"
 
-#: Source/DiabloUI/selhero.cpp:486
+#: Source/DiabloUI/selhero.cpp:482
 msgid "Dexterity:"
 msgstr "민첩:"
 
-#: Source/DiabloUI/selhero.cpp:491
+#: Source/DiabloUI/selhero.cpp:487
 msgid "Vitality:"
 msgstr "활력:"
 
-#: Source/DiabloUI/selhero.cpp:497
+#: Source/DiabloUI/selhero.cpp:493
 msgid "Savegame:"
 msgstr "게임 저장하기:"
 
-#: Source/DiabloUI/selhero.cpp:510
+#: Source/DiabloUI/selhero.cpp:506
 msgid "Select Hero"
 msgstr "영웅 선택"
 
-#: Source/DiabloUI/selhero.cpp:539
+#: Source/DiabloUI/selhero.cpp:535
 msgid "Delete"
 msgstr "삭제"
 
-#: Source/DiabloUI/selhero.cpp:549
+#: Source/DiabloUI/selhero.cpp:545
 msgid "Multi Player Characters"
 msgstr "멀티 플레이어 캐릭터"
 
-#: Source/DiabloUI/selhero.cpp:599
+#: Source/DiabloUI/selhero.cpp:595
 msgid "Delete Multi Player Hero"
 msgstr "멀티 플레이어 영웅 삭제"
 
-#: Source/DiabloUI/selhero.cpp:601
+#: Source/DiabloUI/selhero.cpp:597
 msgid "Delete Single Player Hero"
 msgstr "싱글 플레이어 영웅 삭제"
 
-#: Source/DiabloUI/selhero.cpp:603
+#: Source/DiabloUI/selhero.cpp:599
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "\"{:s}\" 캐럭터를 정말로 삭제하겠습니까?"
 
@@ -864,7 +864,7 @@ msgstr "둥지 지하 {:d}층"
 msgid "Level: Crypt {:d}"
 msgstr "지하묘소 지하 {:d}층"
 
-#: Source/automap.cpp:508 Source/items.cpp:2090
+#: Source/automap.cpp:508 Source/items.cpp:2084
 msgid "Level: {:d}"
 msgstr "지하 {:d}층"
 
@@ -908,11 +908,11 @@ msgstr "주문서"
 msgid "Send Message"
 msgstr "메시지 보내기"
 
-#: Source/control.cpp:718 Source/control.cpp:1587
+#: Source/control.cpp:718 Source/control.cpp:1584
 msgid "Skill"
 msgstr "기술"
 
-#: Source/control.cpp:719 Source/control.cpp:1237
+#: Source/control.cpp:719 Source/control.cpp:1236
 msgid "{:s} Skill"
 msgstr "{:s} 기술"
 
@@ -920,7 +920,7 @@ msgstr "{:s} 기술"
 msgid "Spell"
 msgstr "주문"
 
-#: Source/control.cpp:726 Source/control.cpp:1241
+#: Source/control.cpp:726 Source/control.cpp:1240
 msgid "{:s} Spell"
 msgstr "{:s} 주문"
 
@@ -928,11 +928,11 @@ msgstr "{:s} 주문"
 msgid "Damages undead only"
 msgstr "언데드에게만 피해"
 
-#: Source/control.cpp:732 Source/control.cpp:1245 Source/control.cpp:1611
+#: Source/control.cpp:732 Source/control.cpp:1244 Source/control.cpp:1608
 msgid "Spell Level 0 - Unusable"
 msgstr "주문 레벨 0 - 사용 불가"
 
-#: Source/control.cpp:734 Source/control.cpp:1247 Source/control.cpp:1613
+#: Source/control.cpp:734 Source/control.cpp:1246 Source/control.cpp:1610
 msgid "Spell Level {:d}"
 msgstr "주문 레벨 {:d}"
 
@@ -940,11 +940,11 @@ msgstr "주문 레벨 {:d}"
 msgid "Scroll"
 msgstr "두루마리"
 
-#: Source/control.cpp:742 Source/control.cpp:1251
+#: Source/control.cpp:742 Source/control.cpp:1250
 msgid "Scroll of {:s}"
 msgstr "{:s} 두루마리"
 
-#: Source/control.cpp:747 Source/control.cpp:1257
+#: Source/control.cpp:747 Source/control.cpp:1256
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} 두루마리"
@@ -954,11 +954,11 @@ msgstr[0] "{:d} 두루마리"
 msgid "Staff"
 msgstr "지팡이"
 
-#: Source/control.cpp:755 Source/control.cpp:1261
+#: Source/control.cpp:755 Source/control.cpp:1260
 msgid "Staff of {:s}"
 msgstr "{:s} 지팡이"
 
-#: Source/control.cpp:757 Source/control.cpp:1263
+#: Source/control.cpp:757 Source/control.cpp:1262
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d}회 충전"
@@ -967,69 +967,69 @@ msgstr[0] "{:d}회 충전"
 msgid "Spell Hotkey {:s}"
 msgstr "주문 단축키 {:s}"
 
-#: Source/control.cpp:1214
+#: Source/control.cpp:1213
 msgid "Player friendly"
 msgstr "우호"
 
-#: Source/control.cpp:1216
+#: Source/control.cpp:1215
 msgid "Player attack"
 msgstr "적대"
 
-#: Source/control.cpp:1219
+#: Source/control.cpp:1218
 msgid "Hotkey: {:s}"
 msgstr "단축키: {:s}"
 
-#: Source/control.cpp:1227
+#: Source/control.cpp:1226
 msgid "Select current spell button"
 msgstr "현재 주문 버튼 선택"
 
-#: Source/control.cpp:1230
+#: Source/control.cpp:1229
 msgid "Hotkey: 's'"
 msgstr "단축키: 's'"
 
-#: Source/control.cpp:1387 Source/inv.cpp:1980 Source/items.cpp:3749
+#: Source/control.cpp:1386 Source/inv.cpp:1980 Source/items.cpp:3743
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "금화 {:d}개"
 
-#: Source/control.cpp:1390
+#: Source/control.cpp:1389
 msgid "Requirements not met"
 msgstr "요구 사항 미충족"
 
-#: Source/control.cpp:1426
+#: Source/control.cpp:1423
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, 레벨: {:d}"
 
-#: Source/control.cpp:1428
+#: Source/control.cpp:1425
 msgid "Hit Points {:d} of {:d}"
 msgstr "히트 포인트 {:d} / {:d}"
 
-#: Source/control.cpp:1457
+#: Source/control.cpp:1454
 msgid "Level Up"
 msgstr "레벨업"
 
-#: Source/control.cpp:1591
+#: Source/control.cpp:1588
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "지팡이 ({:d}회 충전)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1601
+#: Source/control.cpp:1598
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "마나: {:d}  피해: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1603
+#: Source/control.cpp:1600
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "마나: {:d}   피해: 사용불가"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1606
+#: Source/control.cpp:1603
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "마나: {:d}  피해: 대상 HP 1/3"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1664
+#: Source/control.cpp:1658
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "금화 {:d}개를 갖고 있습니다. 몇 개를 버리겠습니까?"
@@ -1079,89 +1079,89 @@ msgstr "불경한 제단"
 msgid "level 15"
 msgstr "지하 15층"
 
-#: Source/diablo.cpp:114
+#: Source/diablo.cpp:115
 msgid "I need help! Come Here!"
 msgstr "도와 줘! 여기야!"
 
-#: Source/diablo.cpp:115
+#: Source/diablo.cpp:116
 msgid "Follow me."
 msgstr "날 따라와."
 
-#: Source/diablo.cpp:116
+#: Source/diablo.cpp:117
 msgid "Here's something for you."
 msgstr "자, 여기."
 
-#: Source/diablo.cpp:117
+#: Source/diablo.cpp:118
 msgid "Now you DIE!"
 msgstr "그럼 이제 죽어!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:781
+#: Source/diablo.cpp:782
 msgid "Options:\n"
 msgstr "설정:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:782
+#: Source/diablo.cpp:783
 msgid "Print this message and exit"
 msgstr "이 메시지를 출력하고 종료"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:783
+#: Source/diablo.cpp:784
 msgid "Print the version and exit"
 msgstr "버전을 출력하고 종료"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
+#: Source/diablo.cpp:785
 msgid "Specify the folder of diabdat.mpq"
 msgstr "diabdat.mpq가 있는 폴더 지정"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:786
 msgid "Specify the folder of save files"
 msgstr "저장 파일 폴더 지정"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:787
 msgid "Specify the location of diablo.ini"
 msgstr "diablo.ini의 경로 지정"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:788
 msgid "Skip startup videos"
 msgstr "실행 시 오프닝 재생 안 함"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:789
 msgid "Display frames per second"
 msgstr "초당 프레임 표시"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
+#: Source/diablo.cpp:790
 msgid "Run in windowed mode"
 msgstr "창모드 실행"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:791
 msgid "Enable verbose logging"
 msgstr "상세한 기록 사용"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:792
 msgid "Record a demo file"
 msgstr "데모 파일 기록"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:793
 msgid "Play a demo file"
 msgstr "데모 파일 플레이"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:794
 msgid "Disable all frame limiting during demo playback"
 msgstr "데모 플레이 프레임 제한 해제"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:795
 msgid ""
 "\n"
 "Game selection:\n"
@@ -1170,22 +1170,22 @@ msgstr ""
 "게임 선택:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:796
 msgid "Force Shareware mode"
 msgstr "강제 체험판 모드"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
+#: Source/diablo.cpp:797
 msgid "Force Diablo mode"
 msgstr "강제 디아블로 모드"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:798
 msgid "Force Hellfire mode"
 msgstr "강제 헬파이어 모드"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:798
+#: Source/diablo.cpp:799
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1194,11 +1194,11 @@ msgstr ""
 "헬파이어 설정:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:799
+#: Source/diablo.cpp:800
 msgid "Use alternate nest palette"
 msgstr "대체 팔레트 사용"
 
-#: Source/diablo.cpp:805
+#: Source/diablo.cpp:806
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1206,32 +1206,32 @@ msgstr ""
 "\n"
 "https://github.com/diasurgical/devilutionX/ 에 버그 리포트하기\n"
 
-#: Source/diablo.cpp:869
+#: Source/diablo.cpp:870
 msgid "unrecognized option '{:s}'\n"
 msgstr "인식할 수 없는 설정 '{:s}'\n"
 
-#: Source/diablo.cpp:900
+#: Source/diablo.cpp:901
 msgid "version {:s}"
 msgstr "버전 {:s}"
 
-#: Source/diablo.cpp:1218
+#: Source/diablo.cpp:1219
 msgid "-- Network timeout --"
 msgstr "-- 네트워크 시간 초과 --"
 
-#: Source/diablo.cpp:1219
+#: Source/diablo.cpp:1220
 msgid "-- Waiting for players --"
 msgstr "-- 플레이어 대기 중 --"
 
-#: Source/diablo.cpp:1238
+#: Source/diablo.cpp:1239
 msgid "No help available"
 msgstr "상점에서는 도움을"
 
-#: Source/diablo.cpp:1239
+#: Source/diablo.cpp:1240
 msgid "while in stores"
 msgstr "받을 수 없습니다"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1451
+#: Source/diablo.cpp:1452
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, 버전 = {:s}, 모드 = {:s}"
 
@@ -1790,15 +1790,15 @@ msgstr "디아블로 도움말"
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "ESC를 눌러 종료하거나 방향키를 이용해 스크롤해 주세요."
 
-#: Source/init.cpp:175
+#: Source/init.cpp:176
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq 또는 spawn.mpq"
 
-#: Source/init.cpp:196
+#: Source/init.cpp:197
 msgid "Some Hellfire MPQs are missing"
 msgstr "헬파이어 관련된 일부 MPQ 파일들이 존재하지 않습니다"
 
-#: Source/init.cpp:196
+#: Source/init.cpp:197
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1806,7 +1806,7 @@ msgstr ""
 "헬파이어 관련 모든 MPQ 파일들을 찾을수 없습니다.\n"
 "hf*.mpq 파일들을 모두 복사해주세요."
 
-#: Source/init.cpp:204
+#: Source/init.cpp:205
 msgid "Unable to create main window"
 msgstr "메인 윈도우를 생성할 수 없습니다"
 
@@ -1950,7 +1950,7 @@ msgstr "라자루스의 지팡이"
 msgid "Scroll of Resurrect"
 msgstr "부활 두루마리"
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:167
 msgid "Blacksmith Oil"
 msgstr "대장장이의 윤활유"
 
@@ -2145,11 +2145,11 @@ msgstr "회복 물약"
 msgid "Potion of Full Rejuvenation"
 msgstr "완전 회복 물약"
 
-#: Source/itemdat.cpp:100 Source/items.cpp:161
+#: Source/itemdat.cpp:100 Source/items.cpp:162
 msgid "Oil of Accuracy"
 msgstr "정확도의 기름"
 
-#: Source/itemdat.cpp:101 Source/items.cpp:163
+#: Source/itemdat.cpp:101 Source/items.cpp:164
 msgid "Oil of Sharpness"
 msgstr "날카로움의 기름"
 
@@ -3564,680 +3564,680 @@ msgstr "시종의 목걸이"
 msgid "Gladiator's Ring"
 msgstr "검투사의 반지"
 
-#: Source/items.cpp:162
+#: Source/items.cpp:163
 msgid "Oil of Mastery"
 msgstr "숙련의 기름"
 
-#: Source/items.cpp:164
+#: Source/items.cpp:165
 msgid "Oil of Death"
 msgstr "죽음의 기름"
 
-#: Source/items.cpp:165
+#: Source/items.cpp:166
 msgid "Oil of Skill"
 msgstr "기술의 기름"
 
-#: Source/items.cpp:167
+#: Source/items.cpp:168
 msgid "Oil of Fortitude"
 msgstr "불굴의 기름"
 
-#: Source/items.cpp:168
+#: Source/items.cpp:169
 msgid "Oil of Permanence"
 msgstr "영구성의 기름"
 
-#: Source/items.cpp:169
+#: Source/items.cpp:170
 msgid "Oil of Hardening"
 msgstr "경화의 기름"
 
-#: Source/items.cpp:170
+#: Source/items.cpp:171
 msgid "Oil of Imperviousness"
 msgstr "불침투성의 기름"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
-#: Source/items.cpp:1183
+#: Source/items.cpp:1184
 msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{1}의 {0}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1193
+#: Source/items.cpp:1192
 msgctxt "spell"
 msgid "{0} {1} of {2}"
 msgstr "{0} {2}의 {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1214
+#: Source/items.cpp:1210
 msgid "{0} {1} of {2}"
 msgstr "{0} {2}의 {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#: Source/items.cpp:1217
+#: Source/items.cpp:1213
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
-#: Source/items.cpp:1220
+#: Source/items.cpp:1216
 msgid "{0} of {1}"
 msgstr "{1}의 {0}"
 
 # 어순이 문제가 됨
-#: Source/items.cpp:1906 Source/items.cpp:1918
+#: Source/items.cpp:1900 Source/items.cpp:1912
 msgid "increases a weapon's"
 msgstr "무기 명중률"
 
-#: Source/items.cpp:1908
+#: Source/items.cpp:1902
 msgid "chance to hit"
 msgstr "증가"
 
-#: Source/items.cpp:1912
+#: Source/items.cpp:1906
 msgid "greatly increases a"
 msgstr "무기 명중률"
 
-#: Source/items.cpp:1914
+#: Source/items.cpp:1908
 msgid "weapon's chance to hit"
 msgstr "대폭 증가"
 
-#: Source/items.cpp:1920
+#: Source/items.cpp:1914
 msgid "damage potential"
 msgstr "대폭 증가"
 
-#: Source/items.cpp:1924
+#: Source/items.cpp:1918
 msgid "greatly increases a weapon's"
 msgstr "무기의 피해 가능성"
 
-#: Source/items.cpp:1926
+#: Source/items.cpp:1920
 msgid "damage potential - not bows"
 msgstr "대폭 증가 - 활 제외"
 
-#: Source/items.cpp:1930
+#: Source/items.cpp:1924
 msgid "reduces attributes needed"
 msgstr "갑옷이나 무기 사용에"
 
-#: Source/items.cpp:1932
+#: Source/items.cpp:1926
 msgid "to use armor or weapons"
 msgstr "필요한 요구치 감소"
 
 # 정확한 문장 출력 확인 필요
-#: Source/items.cpp:1936
+#: Source/items.cpp:1930
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "물품 내구도"
 
 # 정확한 문장 출력 확인 필요
-#: Source/items.cpp:1938
+#: Source/items.cpp:1932
 msgid "item's durability"
 msgstr "20% 복구"
 
 # 정확한 문장 출력 확인 필요
-#: Source/items.cpp:1942
+#: Source/items.cpp:1936
 msgid "increases an item's"
 msgstr "물품의 현재와 최대 내구도"
 
 # 정확한 문장 출력 확인 필요
-#: Source/items.cpp:1944
+#: Source/items.cpp:1938
 msgid "current and max durability"
 msgstr "증가"
 
-#: Source/items.cpp:1948
+#: Source/items.cpp:1942
 msgid "makes an item indestructible"
 msgstr "물품이 파괴되지 않도록 만듦"
 
-#: Source/items.cpp:1952
+#: Source/items.cpp:1946
 msgid "increases the armor class"
 msgstr "갑옷과 방패의 방어력"
 
-#: Source/items.cpp:1954
+#: Source/items.cpp:1948
 msgid "of armor and shields"
 msgstr "증가"
 
-#: Source/items.cpp:1958
+#: Source/items.cpp:1952
 msgid "greatly increases the armor"
 msgstr "갑옷과 방패의 방어력"
 
-#: Source/items.cpp:1960
+#: Source/items.cpp:1954
 msgid "class of armor and shields"
 msgstr "대폭 증가"
 
-#: Source/items.cpp:1964 Source/items.cpp:1973
+#: Source/items.cpp:1958 Source/items.cpp:1967
 msgid "sets fire trap"
 msgstr "화염 함정 설치"
 
-#: Source/items.cpp:1969
+#: Source/items.cpp:1963
 msgid "sets lightning trap"
 msgstr "번개 함정 설치"
 
-#: Source/items.cpp:1977
+#: Source/items.cpp:1971
 msgid "sets petrification trap"
 msgstr "석화 함정 설치"
 
-#: Source/items.cpp:1981
+#: Source/items.cpp:1975
 msgid "restore all life"
 msgstr "생명력 전체 회복"
 
-#: Source/items.cpp:1985
+#: Source/items.cpp:1979
 msgid "restore some life"
 msgstr "생명력 일부 회복"
 
-#: Source/items.cpp:1989
+#: Source/items.cpp:1983
 msgid "recover life"
 msgstr "생명력 회복"
 
-#: Source/items.cpp:1993
+#: Source/items.cpp:1987
 msgid "deadly heal"
 msgstr "치명적 치료"
 
-#: Source/items.cpp:1997
+#: Source/items.cpp:1991
 msgid "restore some mana"
 msgstr "마나 일부 회복"
 
-#: Source/items.cpp:2001
+#: Source/items.cpp:1995
 msgid "restore all mana"
 msgstr "마나 전체 회복"
 
-#: Source/items.cpp:2005
+#: Source/items.cpp:1999
 msgid "increase strength"
 msgstr "힘 증가"
 
-#: Source/items.cpp:2009
+#: Source/items.cpp:2003
 msgid "increase magic"
 msgstr "마력 증가"
 
-#: Source/items.cpp:2013
+#: Source/items.cpp:2007
 msgid "increase dexterity"
 msgstr "민첩 증가"
 
-#: Source/items.cpp:2017
+#: Source/items.cpp:2011
 msgid "increase vitality"
 msgstr "활력 증가"
 
-#: Source/items.cpp:2022
+#: Source/items.cpp:2016
 msgid "decrease strength"
 msgstr "힘 감소"
 
-#: Source/items.cpp:2026
+#: Source/items.cpp:2020
 msgid "decrease dexterity"
 msgstr "민첩 감소"
 
-#: Source/items.cpp:2030
+#: Source/items.cpp:2024
 msgid "decrease vitality"
 msgstr "활력 감소"
 
-#: Source/items.cpp:2034
+#: Source/items.cpp:2028
 msgid "restore some life and mana"
 msgstr "생명력과 마나 일부 회복"
 
-#: Source/items.cpp:2038
+#: Source/items.cpp:2032
 msgid "restore all life and mana"
 msgstr "생명력과 마나 전부 회복"
 
-#: Source/items.cpp:2053 Source/items.cpp:2078
+#: Source/items.cpp:2047 Source/items.cpp:2072
 msgid "Right-click to read"
 msgstr "우클릭으로 읽기"
 
 # 조합 방식 확인 필요
-#: Source/items.cpp:2057
+#: Source/items.cpp:2051
 msgid "Right-click to read, then"
 msgstr "우클릭으로 읽고"
 
-#: Source/items.cpp:2059
+#: Source/items.cpp:2053
 msgid "left-click to target"
 msgstr "좌클릭으로 목표 지정"
 
-#: Source/items.cpp:2064
+#: Source/items.cpp:2058
 msgid "Right-click to use"
 msgstr "우클릭으로 사용"
 
-#: Source/items.cpp:2069 Source/items.cpp:2074
+#: Source/items.cpp:2063 Source/items.cpp:2068
 msgid "Right click to use"
 msgstr "우클릭으로 사용"
 
-#: Source/items.cpp:2082
+#: Source/items.cpp:2076
 msgid "Right click to read"
 msgstr "우클릭으로 읽기"
 
-#: Source/items.cpp:2086
+#: Source/items.cpp:2080
 msgid "Right-click to view"
 msgstr "우클릭으로 보기"
 
-#: Source/items.cpp:2094
+#: Source/items.cpp:2088
 msgid "Doubles gold capacity"
 msgstr "금화 수용력 두배"
 
-#: Source/items.cpp:2106 Source/stores.cpp:283
+#: Source/items.cpp:2100 Source/stores.cpp:283
 msgid "Required:"
 msgstr "요구치:"
 
-#: Source/items.cpp:2108 Source/stores.cpp:285
+#: Source/items.cpp:2102 Source/stores.cpp:285
 msgid " {:d} Str"
 msgstr " {:d} 힘"
 
-#: Source/items.cpp:2110 Source/stores.cpp:287
+#: Source/items.cpp:2104 Source/stores.cpp:287
 msgid " {:d} Mag"
 msgstr " {:d} 마력"
 
-#: Source/items.cpp:2112 Source/stores.cpp:289
+#: Source/items.cpp:2106 Source/stores.cpp:289
 msgid " {:d} Dex"
 msgstr " {:d} 민첩"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3533 Source/player.cpp:3018
+#: Source/items.cpp:3527 Source/player.cpp:3005
 msgid "Ear of {:s}"
 msgstr "{:s}의 귀"
 
-#: Source/items.cpp:3828
+#: Source/items.cpp:3822
 msgid "chance to hit: {:+d}%"
 msgstr "명중률: {:+d}%"
 
-#: Source/items.cpp:3832
+#: Source/items.cpp:3826
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% 피해"
 
-#: Source/items.cpp:3836 Source/items.cpp:4092
+#: Source/items.cpp:3830 Source/items.cpp:4086
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "명중률: {:+d}%, {:+d}% 피해"
 
-#: Source/items.cpp:3840
+#: Source/items.cpp:3834
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% 방어력"
 
-#: Source/items.cpp:3844
+#: Source/items.cpp:3838
 msgid "armor class: {:d}"
 msgstr "방어력: {:d}"
 
-#: Source/items.cpp:3849 Source/items.cpp:4074
+#: Source/items.cpp:3843 Source/items.cpp:4068
 msgid "Resist Fire: {:+d}%"
 msgstr "화염 저항: {:+d}%"
 
-#: Source/items.cpp:3851
+#: Source/items.cpp:3845
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "화염 저항: 75% 최대치"
 
-#: Source/items.cpp:3856
+#: Source/items.cpp:3850
 msgid "Resist Lightning: {:+d}%"
 msgstr "번개 저항: {:+d}%"
 
-#: Source/items.cpp:3858
+#: Source/items.cpp:3852
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "번개 저항: 75% 최대치"
 
-#: Source/items.cpp:3863
+#: Source/items.cpp:3857
 msgid "Resist Magic: {:+d}%"
 msgstr "마법 저항: {:+d}%"
 
-#: Source/items.cpp:3865
+#: Source/items.cpp:3859
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "마법 저항: 75% 최대치"
 
-#: Source/items.cpp:3870
+#: Source/items.cpp:3864
 msgid "Resist All: {:+d}%"
 msgstr "전체 저항: {:+d}%"
 
-#: Source/items.cpp:3872
+#: Source/items.cpp:3866
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "전체 저항: 75% 최대치"
 
-#: Source/items.cpp:3876
+#: Source/items.cpp:3870
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "주문이 {:d} 레벨로 상승했다"
 
-#: Source/items.cpp:3878
+#: Source/items.cpp:3872
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "주문이 {:d} 레벨로 하락했다"
 
 # 확인 필요
-#: Source/items.cpp:3880
+#: Source/items.cpp:3874
 msgid "spell levels unchanged (?)"
 msgstr "변동 없는 주문 레벨 (?)"
 
-#: Source/items.cpp:3883
+#: Source/items.cpp:3877
 msgid "Extra charges"
 msgstr "충전 추가분"
 
-#: Source/items.cpp:3886
+#: Source/items.cpp:3880
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} 충전"
 
-#: Source/items.cpp:3890
+#: Source/items.cpp:3884
 msgid "Fire hit damage: {:d}"
 msgstr "화염 피해: {:d}"
 
-#: Source/items.cpp:3892
+#: Source/items.cpp:3886
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "화염 피해: {:d}-{:d}"
 
-#: Source/items.cpp:3896
+#: Source/items.cpp:3890
 msgid "Lightning hit damage: {:d}"
 msgstr "번개 피해: {:d}"
 
-#: Source/items.cpp:3898
+#: Source/items.cpp:3892
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "번개 피해: {:d}-{:d}"
 
-#: Source/items.cpp:3902
+#: Source/items.cpp:3896
 msgid "{:+d} to strength"
 msgstr "힘 {:+d}"
 
-#: Source/items.cpp:3906
+#: Source/items.cpp:3900
 msgid "{:+d} to magic"
 msgstr "마력 {:+d}"
 
-#: Source/items.cpp:3910
+#: Source/items.cpp:3904
 msgid "{:+d} to dexterity"
 msgstr "민첩 {:+d}"
 
-#: Source/items.cpp:3914
+#: Source/items.cpp:3908
 msgid "{:+d} to vitality"
 msgstr "활력 {:+d}"
 
-#: Source/items.cpp:3918
+#: Source/items.cpp:3912
 msgid "{:+d} to all attributes"
 msgstr "모든 능력치 {:+d}"
 
-#: Source/items.cpp:3922
+#: Source/items.cpp:3916
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} 적에게서 받는 피해"
 
-#: Source/items.cpp:3926
+#: Source/items.cpp:3920
 msgid "Hit Points: {:+d}"
 msgstr "히트포인트: {:+d}"
 
-#: Source/items.cpp:3930
+#: Source/items.cpp:3924
 msgid "Mana: {:+d}"
 msgstr "마나: {:+d}"
 
-#: Source/items.cpp:3933
+#: Source/items.cpp:3927
 msgid "high durability"
 msgstr "높은 내구도"
 
-#: Source/items.cpp:3936
+#: Source/items.cpp:3930
 msgid "decreased durability"
 msgstr "내구도 감소"
 
-#: Source/items.cpp:3939
+#: Source/items.cpp:3933
 msgid "indestructible"
 msgstr "영구적"
 
-#: Source/items.cpp:3942
+#: Source/items.cpp:3936
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% 불빛 반경"
 
-#: Source/items.cpp:3945
+#: Source/items.cpp:3939
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% 불빛 반경"
 
-#: Source/items.cpp:3948
+#: Source/items.cpp:3942
 msgid "multiple arrows per shot"
 msgstr "한 번에 여러 발의 화살 쏘기"
 
-#: Source/items.cpp:3952
+#: Source/items.cpp:3946
 msgid "fire arrows damage: {:d}"
 msgstr "화염 화살 피해: {:d}"
 
-#: Source/items.cpp:3954
+#: Source/items.cpp:3948
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "화염 화살 피해: {:d}-{:d}"
 
-#: Source/items.cpp:3958
+#: Source/items.cpp:3952
 msgid "lightning arrows damage {:d}"
 msgstr "번개 화살 피해 {:d}"
 
-#: Source/items.cpp:3960
+#: Source/items.cpp:3954
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "번개 화살 피해 {:d}-{:d}"
 
-#: Source/items.cpp:3964
+#: Source/items.cpp:3958
 msgid "fireball damage: {:d}"
 msgstr "화염구 피해: {:d}"
 
-#: Source/items.cpp:3966
+#: Source/items.cpp:3960
 msgid "fireball damage: {:d}-{:d}"
 msgstr "화염구 피해: {:d}-{:d}"
 
-#: Source/items.cpp:3969
+#: Source/items.cpp:3963
 msgid "attacker takes 1-3 damage"
 msgstr "공격자가 피해를 1-3 받음"
 
-#: Source/items.cpp:3972
+#: Source/items.cpp:3966
 msgid "user loses all mana"
 msgstr "사용자가 모든 마나를 잃음"
 
-#: Source/items.cpp:3975
+#: Source/items.cpp:3969
 msgid "you can't heal"
 msgstr "치료할 수 없음"
 
-#: Source/items.cpp:3978
+#: Source/items.cpp:3972
 msgid "absorbs half of trap damage"
 msgstr "함정 피해 절반 흡수"
 
-#: Source/items.cpp:3981
+#: Source/items.cpp:3975
 msgid "knocks target back"
 msgstr "목표물을 뒤로 밀침"
 
-#: Source/items.cpp:3984
+#: Source/items.cpp:3978
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "악마 상대 시 +200% 피해"
 
-#: Source/items.cpp:3987
+#: Source/items.cpp:3981
 msgid "All Resistance equals 0"
 msgstr "모든 저항 0"
 
-#: Source/items.cpp:3990
+#: Source/items.cpp:3984
 msgid "hit monster doesn't heal"
 msgstr "적중 시 괴물이 회복하지 않음"
 
-#: Source/items.cpp:3994
+#: Source/items.cpp:3988
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "적중 시 마나 3% 흡수"
 
-#: Source/items.cpp:3996
+#: Source/items.cpp:3990
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "적중 시 마나 5% 흡수"
 
-#: Source/items.cpp:4000
+#: Source/items.cpp:3994
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "적중 시 생명력 3% 흡수"
 
-#: Source/items.cpp:4002
+#: Source/items.cpp:3996
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "적중 시 생명력 5% 흡수"
 
-#: Source/items.cpp:4005
+#: Source/items.cpp:3999
 msgid "penetrates target's armor"
 msgstr "목표물의 갑옷을 관통"
 
-#: Source/items.cpp:4009
+#: Source/items.cpp:4003
 msgid "quick attack"
 msgstr "민첩한 공격"
 
-#: Source/items.cpp:4011
+#: Source/items.cpp:4005
 msgid "fast attack"
 msgstr "빠른 공격"
 
-#: Source/items.cpp:4013
+#: Source/items.cpp:4007
 msgid "faster attack"
 msgstr "매우 빠른 공격"
 
-#: Source/items.cpp:4015
+#: Source/items.cpp:4009
 msgid "fastest attack"
 msgstr "가장 빠른 공격"
 
-#: Source/items.cpp:4019
+#: Source/items.cpp:4013
 msgid "fast hit recovery"
 msgstr "빠른 피해 회복"
 
-#: Source/items.cpp:4021
+#: Source/items.cpp:4015
 msgid "faster hit recovery"
 msgstr "매우 빠른 피해 회복"
 
-#: Source/items.cpp:4023
+#: Source/items.cpp:4017
 msgid "fastest hit recovery"
 msgstr "가장 빠른 피해 회복"
 
-#: Source/items.cpp:4026
+#: Source/items.cpp:4020
 msgid "fast block"
 msgstr "빠른 막기"
 
-#: Source/items.cpp:4029
+#: Source/items.cpp:4023
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "피해에 {:d} 포인트 추가"
 
-#: Source/items.cpp:4032
+#: Source/items.cpp:4026
 msgid "fires random speed arrows"
 msgstr "무작위 속사"
 
-#: Source/items.cpp:4035
+#: Source/items.cpp:4029
 msgid "unusual item damage"
 msgstr "비정상적 물품 손상"
 
-#: Source/items.cpp:4038
+#: Source/items.cpp:4032
 msgid "altered durability"
 msgstr "내구도 변화"
 
-#: Source/items.cpp:4041
+#: Source/items.cpp:4035
 msgid "Faster attack swing"
 msgstr "매우 빠른 휘두르기 공격"
 
-#: Source/items.cpp:4044
+#: Source/items.cpp:4038
 msgid "one handed sword"
 msgstr "한손검"
 
-#: Source/items.cpp:4047
+#: Source/items.cpp:4041
 msgid "constantly lose hit points"
 msgstr "지속적인 히트 포인트 상실"
 
-#: Source/items.cpp:4050
+#: Source/items.cpp:4044
 msgid "life stealing"
 msgstr "생명력 흡수"
 
-#: Source/items.cpp:4053
+#: Source/items.cpp:4047
 msgid "no strength requirement"
 msgstr "힘 요구치 없음"
 
-#: Source/items.cpp:4056
+#: Source/items.cpp:4050
 msgid "see with infravision"
 msgstr "초월 시야"
 
-#: Source/items.cpp:4063
+#: Source/items.cpp:4057
 msgid "lightning damage: {:d}"
 msgstr "번개 피해: {:d}"
 
-#: Source/items.cpp:4065
+#: Source/items.cpp:4059
 msgid "lightning damage: {:d}-{:d}"
 msgstr "번개 피해: {:d}-{:d}"
 
 # 마법명 미확정
-#: Source/items.cpp:4068
+#: Source/items.cpp:4062
 msgid "charged bolts on hits"
 msgstr "적중 시 돌격탄"
 
-#: Source/items.cpp:4077
+#: Source/items.cpp:4071
 msgid "occasional triple damage"
 msgstr "가끔 3배의 피해"
 
-#: Source/items.cpp:4080
+#: Source/items.cpp:4074
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "{:+d}% 피해 감소"
 
-#: Source/items.cpp:4083
+#: Source/items.cpp:4077
 msgid "2x dmg to monst, 1x to you"
 msgstr "괴물에게 2배, 본인에게 1배의 피해"
 
-#: Source/items.cpp:4086
+#: Source/items.cpp:4080
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "0 - 500% 무작위 피해"
 
-#: Source/items.cpp:4089
+#: Source/items.cpp:4083
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "낮은 내구도, {:+d}% 피해"
 
-#: Source/items.cpp:4095
+#: Source/items.cpp:4089
 msgid "extra AC vs demons"
 msgstr "악마 상대 시 추가 방어력"
 
-#: Source/items.cpp:4098
+#: Source/items.cpp:4092
 msgid "extra AC vs undead"
 msgstr "언데드 상대 시 추가 방어력"
 
-#: Source/items.cpp:4101
+#: Source/items.cpp:4095
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "마나 50%를 생명력으로 전환"
 
-#: Source/items.cpp:4104
+#: Source/items.cpp:4098
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "생명력 40%를 마나로 전환"
 
-#: Source/items.cpp:4107
+#: Source/items.cpp:4101
 msgid "Another ability (NW)"
 msgstr "또 다른 능력 (NW)"
 
-#: Source/items.cpp:4144 Source/items.cpp:4191
+#: Source/items.cpp:4138 Source/items.cpp:4185
 msgid "damage: {:d}  Indestructible"
 msgstr "피해: {:d}  영구적"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4146 Source/items.cpp:4193
+#: Source/items.cpp:4140 Source/items.cpp:4187
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "피해: {:d}  내구도: {:d}/{:d}"
 
-#: Source/items.cpp:4149 Source/items.cpp:4196
+#: Source/items.cpp:4143 Source/items.cpp:4190
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "피해: {:d}-{:d}  영구적"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4151 Source/items.cpp:4198
+#: Source/items.cpp:4145 Source/items.cpp:4192
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "피해: {:d}-{:d}  내구도: {:d}/{:d}"
 
-#: Source/items.cpp:4157 Source/items.cpp:4210
+#: Source/items.cpp:4151 Source/items.cpp:4204
 msgid "armor: {:d}  Indestructible"
 msgstr "방어력: {:d}  영구적"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4159 Source/items.cpp:4212
+#: Source/items.cpp:4153 Source/items.cpp:4206
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "방어력: {:d}  내구도: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4164
+#: Source/items.cpp:4158
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "피해: {:d}  내구도: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4166
+#: Source/items.cpp:4160
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "피해: {:d}-{:d}  내구도: {:d}/{:d}"
 
-#: Source/items.cpp:4167 Source/items.cpp:4202 Source/items.cpp:4217
+#: Source/items.cpp:4161 Source/items.cpp:4196 Source/items.cpp:4211
 #: Source/stores.cpp:255
 msgid "Charges: {:d}/{:d}"
 msgstr "충전: {:d}/{:d}"
 
-#: Source/items.cpp:4179
+#: Source/items.cpp:4173
 msgid "unique item"
 msgstr "희귀 물품"
 
-#: Source/items.cpp:4206 Source/items.cpp:4215 Source/items.cpp:4222
+#: Source/items.cpp:4200 Source/items.cpp:4209 Source/items.cpp:4216
 msgid "Not Identified"
 msgstr "미식별"
 
@@ -5985,19 +5985,19 @@ msgstr "음소거"
 msgid "Failed to open player archive for writing."
 msgstr "기록용 플레이어 아카이브를 열지 못했습니다."
 
-#: Source/pfile.cpp:377
+#: Source/pfile.cpp:375
 msgid "Unable to open archive"
 msgstr "아카이브를 열 수 없습니다"
 
-#: Source/pfile.cpp:379
+#: Source/pfile.cpp:377
 msgid "Unable to load character"
 msgstr "캐릭터를 불러올 수 없습니다"
 
-#: Source/pfile.cpp:403 Source/pfile.cpp:423
+#: Source/pfile.cpp:401 Source/pfile.cpp:421
 msgid "Unable to read to save file archive"
 msgstr "저장 파일을 읽을 수 없습니다"
 
-#: Source/pfile.cpp:442
+#: Source/pfile.cpp:440
 msgid "Unable to write to save file archive"
 msgstr "저장 파일을 기록할 수 없습니다"
 
