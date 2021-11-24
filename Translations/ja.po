@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-23 14:32+0000\n"
+"POT-Creation-Date: 2021-11-24 22:16+0900\n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: bubio <bubio@gmail.com>\n"
 "Language-Team: \n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -314,39 +314,11 @@ msgstr "\tNo souls were sold in the making of this game."
 #: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
 #: Source/DiabloUI/selgame.cpp:192 Source/DiabloUI/selgame.cpp:210
 #: Source/DiabloUI/selgame.cpp:350 Source/DiabloUI/selgame.cpp:425
-#: Source/DiabloUI/selhero.cpp:182 Source/DiabloUI/selhero.cpp:207
-#: Source/DiabloUI/selhero.cpp:277 Source/DiabloUI/selhero.cpp:532
+#: Source/DiabloUI/selhero.cpp:154 Source/DiabloUI/selhero.cpp:179
+#: Source/DiabloUI/selhero.cpp:249 Source/DiabloUI/selhero.cpp:494
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
 msgstr "OK"
-
-#: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
-msgid "Switch to Diablo"
-msgstr "ディアブロ​に​切り替え"
-
-#: Source/DiabloUI/extrasmenu.cpp:41
-msgid "Switch to Hellfire"
-msgstr "ヘルファイア​に​切り替え"
-
-#: Source/DiabloUI/extrasmenu.cpp:43
-msgid "Switch to Fullgame"
-msgstr "フルゲーム​に​切り替え"
-
-#: Source/DiabloUI/extrasmenu.cpp:43
-msgid "Switch to Shareware"
-msgstr "シェアウェア​に​切り替え"
-
-#: Source/DiabloUI/extrasmenu.cpp:44
-msgid "Replay Intro"
-msgstr "イントロ​を​再生"
-
-#: Source/DiabloUI/extrasmenu.cpp:45
-msgid "Support"
-msgstr "サポート"
-
-#: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
-msgid "Previous Menu"
-msgstr "前​の​メニュー"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -356,29 +328,33 @@ msgstr "シングルプレイヤー"
 msgid "Multi Player"
 msgstr "マルチ​プレイヤー"
 
-#: Source/DiabloUI/mainmenu.cpp:38
-msgid "Extras"
-msgstr "エクストラ"
+#: Source/DiabloUI/mainmenu.cpp:38 Source/DiabloUI/settingsmenu.cpp:111
+msgid "Settings"
+msgstr "設定"
 
 #: Source/DiabloUI/mainmenu.cpp:39
+msgid "Support"
+msgstr "サポート"
+
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Show Credits"
 msgstr "クレジット​を​見る"
 
-#: Source/DiabloUI/mainmenu.cpp:40
+#: Source/DiabloUI/mainmenu.cpp:41
 msgid "Exit Hellfire"
 msgstr "ヘルファイア​を​終了"
 
-#: Source/DiabloUI/mainmenu.cpp:40
+#: Source/DiabloUI/mainmenu.cpp:41
 msgid "Exit Diablo"
 msgstr "ディアブロ​を​終了"
 
-#: Source/DiabloUI/mainmenu.cpp:55
+#: Source/DiabloUI/mainmenu.cpp:56
 msgid "Shareware"
 msgstr "シェアウェア"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
-#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
-#: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:540
+#: Source/DiabloUI/selhero.cpp:157 Source/DiabloUI/selhero.cpp:182
+#: Source/DiabloUI/selhero.cpp:252 Source/DiabloUI/selhero.cpp:502
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -484,17 +460,17 @@ msgstr "難易度​の​選択"
 
 #: Source/DiabloUI/selgame.cpp:185 Source/DiabloUI/selgame.cpp:238
 #: Source/DiabloUI/selgame.cpp:342 Source/DiabloUI/selgame.cpp:362
-#: Source/diablo.cpp:1447
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "通常"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:242
-#: Source/diablo.cpp:1448
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "ナイトメア"
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:246
-#: Source/diablo.cpp:1449
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "ヘル"
 
@@ -617,64 +593,60 @@ msgstr "ホスト​は​あなた​と​は​別​の​ゲーム​を​
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr "あなた​の​バージョン​{:s}​は、ホスト​{:d}.{:d}.{:d}​と​一致​し​ませ​ん。"
 
-#: Source/DiabloUI/selhero.cpp:100
-msgid "New Hero"
-msgstr "新しい​ヒーロー"
-
-#: Source/DiabloUI/selhero.cpp:160
+#: Source/DiabloUI/selhero.cpp:132
 msgid "Choose Class"
 msgstr "クラス​選択"
 
-#: Source/DiabloUI/selhero.cpp:164 Source/panels/charpanel.cpp:22
+#: Source/DiabloUI/selhero.cpp:136 Source/panels/charpanel.cpp:22
 msgid "Warrior"
 msgstr "ウォー​リアー"
 
-#: Source/DiabloUI/selhero.cpp:165 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:137 Source/panels/charpanel.cpp:23
 msgid "Rogue"
 msgstr "ローグ"
 
-#: Source/DiabloUI/selhero.cpp:166 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:138 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
 msgstr "ソーサラー"
 
-#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:140 Source/panels/charpanel.cpp:25
 msgid "Monk"
 msgstr "モンク"
 
-#: Source/DiabloUI/selhero.cpp:171 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:143 Source/panels/charpanel.cpp:26
 msgid "Bard"
 msgstr "バード"
 
-#: Source/DiabloUI/selhero.cpp:174 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:146 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
 msgstr "バーバリアン"
 
-#: Source/DiabloUI/selhero.cpp:191 Source/DiabloUI/selhero.cpp:265
+#: Source/DiabloUI/selhero.cpp:163 Source/DiabloUI/selhero.cpp:237
 msgid "New Multi Player Hero"
 msgstr "新しい​マルチ​プレイヤー​ヒーロー"
 
-#: Source/DiabloUI/selhero.cpp:191 Source/DiabloUI/selhero.cpp:265
+#: Source/DiabloUI/selhero.cpp:163 Source/DiabloUI/selhero.cpp:237
 msgid "New Single Player Hero"
 msgstr "新しい​シングルプレイヤー​ヒーロー"
 
-#: Source/DiabloUI/selhero.cpp:199
+#: Source/DiabloUI/selhero.cpp:171
 msgid "Save File Exists"
 msgstr "セーブ​ファイル​が​あり​ます"
 
-#: Source/DiabloUI/selhero.cpp:202 Source/gamemenu.cpp:38
+#: Source/DiabloUI/selhero.cpp:174 Source/gamemenu.cpp:38
 msgid "Load Game"
 msgstr "ゲーム​の​ロード"
 
-#: Source/DiabloUI/selhero.cpp:203 Source/gamemenu.cpp:37
+#: Source/DiabloUI/selhero.cpp:175 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
 msgstr "新規​ゲーム"
 
-#: Source/DiabloUI/selhero.cpp:213 Source/DiabloUI/selhero.cpp:547
+#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:508
 msgid "Single Player Characters"
 msgstr "シングルプレイヤー​キャラクター"
 
-#: Source/DiabloUI/selhero.cpp:259
+#: Source/DiabloUI/selhero.cpp:231
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
@@ -682,11 +654,11 @@ msgstr ""
 "ローグ​と​ソーサラー​は、ディアブロ​の​製品​版​で​のみ​使用​可能​です。ご​購入​は https://"
 "www.gog.com/game/diablo を​ご覧​ください。"
 
-#: Source/DiabloUI/selhero.cpp:271 Source/DiabloUI/selhero.cpp:274
+#: Source/DiabloUI/selhero.cpp:243 Source/DiabloUI/selhero.cpp:246
 msgid "Enter Name"
 msgstr "名前​を​入力"
 
-#: Source/DiabloUI/selhero.cpp:303
+#: Source/DiabloUI/selhero.cpp:275
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
@@ -694,61 +666,69 @@ msgstr ""
 "名前​が​無効​です。名前​に​スペース、予約​文字、予約​語​を​含む​こと​は​でき​ませ​ん。\n"
 
 #. TRANSLATORS: Error Message
-#: Source/DiabloUI/selhero.cpp:310
+#: Source/DiabloUI/selhero.cpp:282
 msgid "Unable to create character."
 msgstr "キャラクター​を​作る​こと​が​でき​ませ​ん。"
 
-#: Source/DiabloUI/selhero.cpp:464 Source/DiabloUI/selhero.cpp:467
+#: Source/DiabloUI/selhero.cpp:436 Source/DiabloUI/selhero.cpp:439
 msgid "Level:"
 msgstr "レベル:"
 
-#: Source/DiabloUI/selhero.cpp:472
+#: Source/DiabloUI/selhero.cpp:444
 msgid "Strength:"
 msgstr "STR:"
 
-#: Source/DiabloUI/selhero.cpp:477
+#: Source/DiabloUI/selhero.cpp:449
 msgid "Magic:"
 msgstr "MAG:"
 
-#: Source/DiabloUI/selhero.cpp:482
+#: Source/DiabloUI/selhero.cpp:454
 msgid "Dexterity:"
 msgstr "DEX:"
 
-#: Source/DiabloUI/selhero.cpp:487
+#: Source/DiabloUI/selhero.cpp:459
 msgid "Vitality:"
 msgstr "VIT:"
 
-#: Source/DiabloUI/selhero.cpp:493
+#: Source/DiabloUI/selhero.cpp:465
 msgid "Savegame:"
 msgstr "セーブ​回数:"
 
-#: Source/DiabloUI/selhero.cpp:506
+#: Source/DiabloUI/selhero.cpp:478
 msgid "Select Hero"
 msgstr "ヒーロー​の​選択"
 
-#: Source/DiabloUI/selhero.cpp:535
+#: Source/DiabloUI/selhero.cpp:486
+msgid "New Hero"
+msgstr "新しい​ヒーロー"
+
+#: Source/DiabloUI/selhero.cpp:497
 msgid "Delete"
 msgstr "削除"
 
-#: Source/DiabloUI/selhero.cpp:545
+#: Source/DiabloUI/selhero.cpp:506
 msgid "Multi Player Characters"
 msgstr "マルチ​プレイヤー​キャラクター"
 
-#: Source/DiabloUI/selhero.cpp:595
+#: Source/DiabloUI/selhero.cpp:556
 msgid "Delete Multi Player Hero"
 msgstr "マルチ​プレイヤー​ヒーロー​を​削除"
 
-#: Source/DiabloUI/selhero.cpp:597
+#: Source/DiabloUI/selhero.cpp:558
 msgid "Delete Single Player Hero"
 msgstr "シングルプレイヤー​ヒーロー​を​削除"
 
-#: Source/DiabloUI/selhero.cpp:599
+#: Source/DiabloUI/selhero.cpp:560
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "キャラクター​「​{:s}​」​を​削除​し​て​よろしい​です​か？"
 
 #: Source/DiabloUI/selstart.cpp:43
 msgid "Enter Hellfire"
 msgstr "ヘルファイア​へ"
+
+#: Source/DiabloUI/selstart.cpp:44 Source/DiabloUI/settingsmenu.cpp:117
+msgid "Switch to Diablo"
+msgstr "ディアブロ​に​切り替え"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
@@ -757,6 +737,22 @@ msgstr "はい"
 #: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:979
 msgid "No"
 msgstr "いいえ"
+
+#: Source/DiabloUI/settingsmenu.cpp:117
+msgid "Switch to Hellfire"
+msgstr "ヘルファイア​に​切り替え"
+
+#: Source/DiabloUI/settingsmenu.cpp:119
+msgid "Switch to Fullgame"
+msgstr "フルゲーム​に​切り替え"
+
+#: Source/DiabloUI/settingsmenu.cpp:119
+msgid "Switch to Shareware"
+msgstr "シェアウェア​に​切り替え"
+
+#: Source/DiabloUI/settingsmenu.cpp:142 Source/gamemenu.cpp:61
+msgid "Previous Menu"
+msgstr "前​の​メニュー"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
@@ -876,188 +872,127 @@ msgstr "レベル: 巣 {:d}"
 msgid "Level: Crypt {:d}"
 msgstr "レベル: 地下​聖堂 {:d}"
 
-#: Source/automap.cpp:508 Source/items.cpp:2084
+#: Source/automap.cpp:508 Source/items.cpp:2083
 msgid "Level: {:d}"
 msgstr "レベル: {:d}"
 
-#: Source/control.cpp:217
+#: Source/control.cpp:154
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:217
+#: Source/control.cpp:154
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:217
+#: Source/control.cpp:154
 msgid "Enter"
 msgstr "入力"
 
-#: Source/control.cpp:220
+#: Source/control.cpp:157
 msgid "Character Information"
 msgstr "キャラクター​情報"
 
-#: Source/control.cpp:221
+#: Source/control.cpp:158
 msgid "Quests log"
 msgstr "クエスト​の​記録"
 
-#: Source/control.cpp:222
+#: Source/control.cpp:159
 msgid "Automap"
 msgstr "オート​マップ"
 
-#: Source/control.cpp:223
+#: Source/control.cpp:160
 msgid "Main Menu"
 msgstr "メインメニュー"
 
-#: Source/control.cpp:224
+#: Source/control.cpp:161
 msgid "Inventory"
 msgstr "所持​品​の​一覧"
 
-#: Source/control.cpp:225
+#: Source/control.cpp:162
 msgid "Spell book"
 msgstr "スペル​ブック"
 
-#: Source/control.cpp:226
+#: Source/control.cpp:163
 msgid "Send Message"
 msgstr "メッセージ​送信"
 
-#: Source/control.cpp:726 Source/control.cpp:1598
-msgid "Skill"
-msgstr "スキル"
+#: Source/control.cpp:664
+msgid "Player friendly"
+msgstr "プレイヤー​は​味方"
 
-#: Source/control.cpp:727 Source/control.cpp:1244
+#: Source/control.cpp:666
+msgid "Player attack"
+msgstr "プレイヤー​の​攻撃"
+
+#: Source/control.cpp:669
+msgid "Hotkey: {:s}"
+msgstr "ホットキー: {:s}"
+
+#: Source/control.cpp:677
+msgid "Select current spell button"
+msgstr "正しい​呪文​ボタン​を​選択​し​て​ください"
+
+#: Source/control.cpp:680
+msgid "Hotkey: 's'"
+msgstr "ホットキー: ’s’"
+
+#: Source/control.cpp:687 Source/panels/spell_list.cpp:161
 msgid "{:s} Skill"
 msgstr "{:s} スキル"
 
-#: Source/control.cpp:733
-msgid "Spell"
-msgstr "スペル"
-
-#: Source/control.cpp:734 Source/control.cpp:1248
+#: Source/control.cpp:691 Source/panels/spell_list.cpp:168
 msgid "{:s} Spell"
 msgstr "{:s} スペル"
 
-#: Source/control.cpp:736
-msgid "Damages undead only"
-msgstr "アンデッド​系​に​のみ​ダメージ"
-
-#: Source/control.cpp:740 Source/control.cpp:1252
+#: Source/control.cpp:695 Source/panels/spell_list.cpp:174
 msgid "Spell Level 0 - Unusable"
 msgstr "スペル​レベル 0 - 使え​ない"
 
-#: Source/control.cpp:742 Source/control.cpp:1254
+#: Source/control.cpp:697 Source/panels/spell_list.cpp:176
 msgid "Spell Level {:d}"
 msgstr "スペル​レベル {:d}"
 
-#: Source/control.cpp:749
-msgid "Scroll"
-msgstr "スクロール"
-
-#: Source/control.cpp:750 Source/control.cpp:1258
+#: Source/control.cpp:701 Source/panels/spell_list.cpp:184
 msgid "Scroll of {:s}"
 msgstr "{:s}​の​スクロール"
 
-#: Source/control.cpp:755 Source/control.cpp:1264
+#: Source/control.cpp:707 Source/panels/spell_list.cpp:189
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} スクロール"
 
-#: Source/control.cpp:762 Source/itemdat.cpp:167 Source/itemdat.cpp:168
-#: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
-msgid "Staff"
-msgstr "スタッフ"
-
-#: Source/control.cpp:763 Source/control.cpp:1268
+#: Source/control.cpp:711 Source/panels/spell_list.cpp:197
 msgid "Staff of {:s}"
 msgstr "{:s}​・​スタッフ"
 
-#: Source/control.cpp:765 Source/control.cpp:1270
+#: Source/control.cpp:713 Source/panels/spell_list.cpp:199
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d}チャージ"
 
-#: Source/control.cpp:775
-msgid "Spell Hotkey {:s}"
-msgstr "スペルホットキー {:s}"
-
-#: Source/control.cpp:1221
-msgid "Player friendly"
-msgstr "プレイヤー​は​味方"
-
-#: Source/control.cpp:1223
-msgid "Player attack"
-msgstr "プレイヤー​の​攻撃"
-
-#: Source/control.cpp:1226
-msgid "Hotkey: {:s}"
-msgstr "ホットキー: {:s}"
-
-#: Source/control.cpp:1234
-msgid "Select current spell button"
-msgstr "正しい​呪文​ボタン​を​選択​し​て​ください"
-
-#: Source/control.cpp:1237
-msgid "Hotkey: 's'"
-msgstr "ホットキー: ’s’"
-
-#: Source/control.cpp:1394 Source/inv.cpp:1980 Source/items.cpp:3743
+#: Source/control.cpp:835 Source/inv.cpp:1981 Source/items.cpp:3747
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} 金魂"
 
-#: Source/control.cpp:1397
+#: Source/control.cpp:838
 msgid "Requirements not met"
 msgstr "能力​値​が​不足​し​て​い​ます"
 
-#: Source/control.cpp:1431
+#: Source/control.cpp:872
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Level: {:d}"
 
-#: Source/control.cpp:1433
+#: Source/control.cpp:874
 msgid "Hit Points {:d} of {:d}"
 msgstr "ヒット​ポイント: {:d}/{:d}"
 
-#: Source/control.cpp:1462
+#: Source/control.cpp:903
 msgid "Level Up"
 msgstr "レベルアップ"
 
-#: Source/control.cpp:1602
-msgid "Staff ({:d} charge)"
-msgid_plural "Staff ({:d} charges)"
-msgstr[0] "スタッフ ({:d} チェージ)"
-
-#. TRANSLATORS: UI constrains, keep short please.
-#: Source/control.cpp:1612
-msgid "Heals: {:d} - {:d}"
-msgstr "回復量 {:d} - {:d}"
-
-#. TRANSLATORS: UI constrains, keep short please.
-#: Source/control.cpp:1614
-msgid "Damage: {:d} - {:d}"
-msgstr "ダメージ {:d} - {:d}"
-
-#. TRANSLATORS: UI constrains, keep short please.
-#: Source/control.cpp:1618
-msgid "Dmg: 1/3 target hp"
-msgstr "1/3 ターゲット​HP"
-
-#. TRANSLATORS: UI constrains, keep short please.
-#: Source/control.cpp:1620
-msgctxt "spellbook"
-msgid "Mana: {:d}"
-msgstr "マナ {:d}"
-
-#: Source/control.cpp:1623
-msgid "Level 0 - Unusable"
-msgstr "Lvl 0 - 使え​ない"
-
-#. TRANSLATORS: UI constrains, keep short please.
-#: Source/control.cpp:1625
-msgctxt "spellbook"
-msgid "Level {:d}"
-msgstr "Lvl {:d}"
-
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1671
+#: Source/control.cpp:1013
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "あなたは{:d}ゴールドを持っています。何枚削除しますか？"
@@ -1106,89 +1041,89 @@ msgstr "ラザルス​の​間"
 msgid "level 15"
 msgstr "レベル​15"
 
-#: Source/diablo.cpp:115
+#: Source/diablo.cpp:116
 msgid "I need help! Come Here!"
 msgstr "助け​て​ください。ここ​に​来​て​!"
 
-#: Source/diablo.cpp:116
+#: Source/diablo.cpp:117
 msgid "Follow me."
 msgstr "つい​て​き​て。"
 
-#: Source/diablo.cpp:117
+#: Source/diablo.cpp:118
 msgid "Here's something for you."
 msgstr "これ​は、あなた​の​ため​に​用意​し​た​もの​です。"
 
-#: Source/diablo.cpp:118
+#: Source/diablo.cpp:119
 msgid "Now you DIE!"
 msgstr "さあ、死ぬ​ん​だ​!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:782
+#: Source/diablo.cpp:783
 msgid "Options:\n"
 msgstr "オプション:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:783
+#: Source/diablo.cpp:784
 msgid "Print this message and exit"
 msgstr "Print this message and exit"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
+#: Source/diablo.cpp:785
 msgid "Print the version and exit"
 msgstr "Print the version and exit"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:786
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Specify the folder of diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:787
 msgid "Specify the folder of save files"
 msgstr "Specify the folder of save files"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:788
 msgid "Specify the location of diablo.ini"
 msgstr "Specify the location of diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:789
 msgid "Skip startup videos"
 msgstr "Skip startup videos"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
+#: Source/diablo.cpp:790
 msgid "Display frames per second"
 msgstr "Display frames per second"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:791
 msgid "Run in windowed mode"
 msgstr "Run in windowed mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:792
 msgid "Enable verbose logging"
 msgstr "Enable verbose logging"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:793
 msgid "Record a demo file"
 msgstr "Record a demo file"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:794
 msgid "Play a demo file"
 msgstr "Play a demo file"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:795
 msgid "Disable all frame limiting during demo playback"
 msgstr "Disable all frame limiting during demo playback"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:796
 msgid ""
 "\n"
 "Game selection:\n"
@@ -1197,22 +1132,22 @@ msgstr ""
 "Game selection:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
+#: Source/diablo.cpp:797
 msgid "Force Shareware mode"
 msgstr "Force Shareware mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:798
 msgid "Force Diablo mode"
 msgstr "Force Diablo mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:798
+#: Source/diablo.cpp:799
 msgid "Force Hellfire mode"
 msgstr "Force Hellfire mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:799
+#: Source/diablo.cpp:800
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1221,11 +1156,11 @@ msgstr ""
 "Hellfire options:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:800
+#: Source/diablo.cpp:801
 msgid "Use alternate nest palette"
 msgstr "Use alternate nest palette"
 
-#: Source/diablo.cpp:806
+#: Source/diablo.cpp:807
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1233,32 +1168,32 @@ msgstr ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:870
+#: Source/diablo.cpp:871
 msgid "unrecognized option '{:s}'\n"
 msgstr "unrecognized option ‘​{:s}’\n"
 
-#: Source/diablo.cpp:901
+#: Source/diablo.cpp:902
 msgid "version {:s}"
 msgstr "version {:s}"
 
-#: Source/diablo.cpp:1219
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr "— Network timeout —"
 
-#: Source/diablo.cpp:1220
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr "— Waiting for players —"
 
-#: Source/diablo.cpp:1239
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr "ヘルプ​は​使え​ませ​ん"
 
-#: Source/diablo.cpp:1240
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr "店​で"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1452
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, version = {:s}, mode = {:s}"
 
@@ -1984,7 +1919,7 @@ msgstr "ラザルス​の​杖"
 msgid "Scroll of Resurrect"
 msgstr "リザレクション​・​スクロール"
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:167
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
 msgid "Blacksmith Oil"
 msgstr "鍛冶屋​の​オイル"
 
@@ -2179,11 +2114,11 @@ msgstr "リジュベネーション​・​ポーション"
 msgid "Potion of Full Rejuvenation"
 msgstr "フルリジュベネーション​・​ポーション"
 
-#: Source/itemdat.cpp:100 Source/items.cpp:162
+#: Source/itemdat.cpp:100 Source/items.cpp:161
 msgid "Oil of Accuracy"
 msgstr "アキュラシー​・​オイル"
 
-#: Source/itemdat.cpp:101 Source/items.cpp:164
+#: Source/itemdat.cpp:101 Source/items.cpp:163
 msgid "Oil of Sharpness"
 msgstr "シャープネス​・​オイル"
 
@@ -2410,6 +2345,12 @@ msgstr "ショートウォーボウ"
 #: Source/itemdat.cpp:166
 msgid "Long War Bow"
 msgstr "ロングウォーボウ"
+
+#: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
+#: Source/itemdat.cpp:170 Source/itemdat.cpp:171
+#: Source/panels/spell_list.cpp:196
+msgid "Staff"
+msgstr "スタッフ"
 
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
@@ -3598,708 +3539,694 @@ msgstr "アコライト​の​アミュレット"
 msgid "Gladiator's Ring"
 msgstr "グラディエーターズ​・​リング"
 
-#: Source/items.cpp:163
+#: Source/items.cpp:162
 msgid "Oil of Mastery"
 msgstr "マスタリー​・​オイル"
 
-#: Source/items.cpp:165
+#: Source/items.cpp:164
 msgid "Oil of Death"
 msgstr "デス​・​オイル"
 
-#: Source/items.cpp:166
+#: Source/items.cpp:165
 msgid "Oil of Skill"
 msgstr "スキル​・​オイル"
 
-#: Source/items.cpp:168
+#: Source/items.cpp:167
 msgid "Oil of Fortitude"
 msgstr "フォルチュード​・​オイル"
 
-#: Source/items.cpp:169
+#: Source/items.cpp:168
 msgid "Oil of Permanence"
 msgstr "パーマネンス​・​オイル"
 
-#: Source/items.cpp:170
+#: Source/items.cpp:169
 msgid "Oil of Hardening"
 msgstr "ハーデニング​・​オイル"
 
-#: Source/items.cpp:171
+#: Source/items.cpp:170
 msgid "Oil of Imperviousness"
 msgstr "インプレビュスネス​・​オイル"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
-#: Source/items.cpp:1184
-#, fuzzy
-#| msgid "{0} of {1}"
+#: Source/items.cpp:1183
 msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{1}​の​{0}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1192
-#, fuzzy
+#: Source/items.cpp:1191
 msgctxt "spell"
 msgid "{0} {1} of {2}"
 msgstr "{2}​の{0}{1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1210
-#, fuzzy
+#: Source/items.cpp:1209
 msgid "{0} {1} of {2}"
 msgstr "{2}​の{0}{1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#: Source/items.cpp:1213
-#, fuzzy
+#: Source/items.cpp:1212
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
-#: Source/items.cpp:1216
+#: Source/items.cpp:1215
 msgid "{0} of {1}"
 msgstr "{1}​の​{0}"
 
-#: Source/items.cpp:1900 Source/items.cpp:1912
+#: Source/items.cpp:1899 Source/items.cpp:1911
 msgid "increases a weapon's"
 msgstr "武器​の​命中​率​を"
 
-#: Source/items.cpp:1902
+#: Source/items.cpp:1901
 msgid "chance to hit"
 msgstr "上昇​さ​せる"
 
-#: Source/items.cpp:1906
+#: Source/items.cpp:1905
 msgid "greatly increases a"
 msgstr "武器​の​命中​率​を"
 
-#: Source/items.cpp:1908
+#: Source/items.cpp:1907
 msgid "weapon's chance to hit"
 msgstr "大幅​に​上昇​さ​せる"
 
-#: Source/items.cpp:1914
+#: Source/items.cpp:1913
 msgid "damage potential"
 msgstr "増大​さ​せる"
 
-#: Source/items.cpp:1918
+#: Source/items.cpp:1917
 msgid "greatly increases a weapon's"
 msgstr "武器​の​ダメージ​を​大幅​に"
 
-#: Source/items.cpp:1920
+#: Source/items.cpp:1919
 msgid "damage potential - not bows"
 msgstr "増大​さ​せる​-​ボウ​を​除く"
 
-#: Source/items.cpp:1924
+#: Source/items.cpp:1923
 msgid "reduces attributes needed"
 msgstr "防具​や​武器​の​必要​能力​値"
 
-#: Source/items.cpp:1926
+#: Source/items.cpp:1925
 msgid "to use armor or weapons"
 msgstr "の​値​を​引き下げる"
 
-#: Source/items.cpp:1930
+#: Source/items.cpp:1929
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "を​20​%​回復"
 
-#: Source/items.cpp:1932
+#: Source/items.cpp:1931
 msgid "item's durability"
 msgstr "アイテム​の​耐久​度"
 
-#: Source/items.cpp:1936
+#: Source/items.cpp:1935
 msgid "increases an item's"
 msgstr "次​の​もの​を​増大​さ​せ​ます:"
 
-#: Source/items.cpp:1938
+#: Source/items.cpp:1937
 msgid "current and max durability"
 msgstr "20​%​増大​さ​せる"
 
-#: Source/items.cpp:1942
+#: Source/items.cpp:1941
 msgid "makes an item indestructible"
 msgstr "アイテム​を​壊れ​ない​よう​に​し​ます"
 
-#: Source/items.cpp:1946
+#: Source/items.cpp:1945
 msgid "increases the armor class"
 msgstr "防具​と​盾​の​防御​力​を"
 
-#: Source/items.cpp:1948
+#: Source/items.cpp:1947
 msgid "of armor and shields"
 msgstr "増大​さ​せる"
 
-#: Source/items.cpp:1952
+#: Source/items.cpp:1951
 msgid "greatly increases the armor"
 msgstr "防具​と​盾​の​防御​力​を"
 
-#: Source/items.cpp:1954
+#: Source/items.cpp:1953
 msgid "class of armor and shields"
 msgstr "大幅​に​増大​さ​せる"
 
-#: Source/items.cpp:1958 Source/items.cpp:1967
+#: Source/items.cpp:1957 Source/items.cpp:1966
 msgid "sets fire trap"
 msgstr "ファイヤー​トラップ​を​設置"
 
-#: Source/items.cpp:1963
+#: Source/items.cpp:1962
 msgid "sets lightning trap"
 msgstr "ライトニング​トラップ​を​設置"
 
-#: Source/items.cpp:1971
+#: Source/items.cpp:1970
 msgid "sets petrification trap"
 msgstr "石化​トラップ​を​設置"
 
-#: Source/items.cpp:1975
+#: Source/items.cpp:1974
 msgid "restore all life"
 msgstr "ライフ​を​全​回復"
 
-#: Source/items.cpp:1979
+#: Source/items.cpp:1978
 msgid "restore some life"
 msgstr "ライフ​を​回復"
 
-#: Source/items.cpp:1983
+#: Source/items.cpp:1982
 msgid "recover life"
 msgstr "ライフ​の​回復"
 
-#: Source/items.cpp:1987
+#: Source/items.cpp:1986
 msgid "deadly heal"
 msgstr "デッドリー​ヒール"
 
-#: Source/items.cpp:1991
+#: Source/items.cpp:1990
 msgid "restore some mana"
 msgstr "マナ​を​回復"
 
-#: Source/items.cpp:1995
+#: Source/items.cpp:1994
 msgid "restore all mana"
 msgstr "マナ​を​全​回復"
 
-#: Source/items.cpp:1999
+#: Source/items.cpp:1998
 msgid "increase strength"
 msgstr "STR を​増大"
 
-#: Source/items.cpp:2003
+#: Source/items.cpp:2002
 msgid "increase magic"
 msgstr "MAG を​増大"
 
-#: Source/items.cpp:2007
+#: Source/items.cpp:2006
 msgid "increase dexterity"
 msgstr "DEX を​増大"
 
-#: Source/items.cpp:2011
+#: Source/items.cpp:2010
 msgid "increase vitality"
 msgstr "VIT を​増大"
 
-#: Source/items.cpp:2016
+#: Source/items.cpp:2015
 msgid "decrease strength"
 msgstr "STR を​減少"
 
-#: Source/items.cpp:2020
+#: Source/items.cpp:2019
 msgid "decrease dexterity"
 msgstr "DEX を​減少"
 
-#: Source/items.cpp:2024
+#: Source/items.cpp:2023
 msgid "decrease vitality"
 msgstr "VIT を​減少"
 
-#: Source/items.cpp:2028
+#: Source/items.cpp:2027
 msgid "restore some life and mana"
 msgstr "ライフ​と​マナ​を​回復"
 
-#: Source/items.cpp:2032
+#: Source/items.cpp:2031
 msgid "restore all life and mana"
 msgstr "ライフ​と​マナ​を​全​回復"
 
-#: Source/items.cpp:2047 Source/items.cpp:2072
+#: Source/items.cpp:2046 Source/items.cpp:2071
 msgid "Right-click to read"
 msgstr "右​クリック​で​読む"
 
-#: Source/items.cpp:2051
+#: Source/items.cpp:2050
 msgid "Right-click to read, then"
 msgstr "右​クリック​で​読み、次​に"
 
-#: Source/items.cpp:2053
+#: Source/items.cpp:2052
 msgid "left-click to target"
 msgstr "左​クリック​で​ターゲット"
 
-#: Source/items.cpp:2058
+#: Source/items.cpp:2057
 msgid "Right-click to use"
 msgstr "右​クリック​で​使用"
 
-#: Source/items.cpp:2063 Source/items.cpp:2068
+#: Source/items.cpp:2062 Source/items.cpp:2067
 msgid "Right click to use"
 msgstr "右​クリック​で​使用"
 
-#: Source/items.cpp:2076
+#: Source/items.cpp:2075
 msgid "Right click to read"
 msgstr "右​クリック​で​読む"
 
-#: Source/items.cpp:2080
+#: Source/items.cpp:2079
 msgid "Right-click to view"
 msgstr "右​クリック​で​表示"
 
-#: Source/items.cpp:2088
+#: Source/items.cpp:2087
 msgid "Doubles gold capacity"
 msgstr "ゴールド​の​容量​を​2​倍​に​する"
 
-#: Source/items.cpp:2100 Source/stores.cpp:283
+#: Source/items.cpp:2099 Source/stores.cpp:283
 msgid "Required:"
 msgstr "必要​能力:"
 
-#: Source/items.cpp:2102 Source/stores.cpp:285
+#: Source/items.cpp:2101 Source/stores.cpp:285
 msgid " {:d} Str"
 msgstr " {:d} Str"
 
-#: Source/items.cpp:2104 Source/stores.cpp:287
+#: Source/items.cpp:2103 Source/stores.cpp:287
 msgid " {:d} Mag"
 msgstr " {:d} Mag"
 
-#: Source/items.cpp:2106 Source/stores.cpp:289
+#: Source/items.cpp:2105 Source/stores.cpp:289
 msgid " {:d} Dex"
 msgstr " {:d} Dex"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3527 Source/player.cpp:3005
+#: Source/items.cpp:3525 Source/player.cpp:3005
 msgid "Ear of {:s}"
 msgstr "{:s}​の​耳"
 
-#: Source/items.cpp:3822
+#: Source/items.cpp:3826
 msgid "chance to hit: {:+d}%"
 msgstr "命中​率: {:+d}​%"
 
-#: Source/items.cpp:3826
+#: Source/items.cpp:3830
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}​%​ダメージ"
 
-#: Source/items.cpp:3830 Source/items.cpp:4086
+#: Source/items.cpp:3834 Source/items.cpp:4090
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "命中​率:{:+d}​%​, {:+d}​% ダメージ"
 
-#: Source/items.cpp:3834
+#: Source/items.cpp:3838
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}​%​防護​力"
 
-#: Source/items.cpp:3838
+#: Source/items.cpp:3842
 msgid "armor class: {:d}"
 msgstr "防御​力: {:d}"
 
-#: Source/items.cpp:3843 Source/items.cpp:4068
+#: Source/items.cpp:3847 Source/items.cpp:4072
 msgid "Resist Fire: {:+d}%"
 msgstr "耐火​炎: {:+d}​%"
 
-#: Source/items.cpp:3845
+#: Source/items.cpp:3849
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "耐火​炎: 75​% MAX"
 
-#: Source/items.cpp:3850
+#: Source/items.cpp:3854
 msgid "Resist Lightning: {:+d}%"
 msgstr "耐​電撃: {:+d}​%"
 
-#: Source/items.cpp:3852
+#: Source/items.cpp:3856
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "耐​電撃: 75​% MAX"
 
-#: Source/items.cpp:3857
+#: Source/items.cpp:3861
 msgid "Resist Magic: {:+d}%"
 msgstr "耐​魔法: {:+d}​%"
 
-#: Source/items.cpp:3859
+#: Source/items.cpp:3863
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "耐​魔法: 75​% MAX"
 
-#: Source/items.cpp:3864
+#: Source/items.cpp:3868
 msgid "Resist All: {:+d}%"
 msgstr "全​耐性: {:+d}​%"
 
-#: Source/items.cpp:3866
+#: Source/items.cpp:3870
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "全​耐性: 75​% MAX"
 
-#: Source/items.cpp:3870
+#: Source/items.cpp:3874
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "全呪文{:d} レベルアップ"
 
-#: Source/items.cpp:3872
+#: Source/items.cpp:3876
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "全呪文{:d}レベルダウン"
 
-#: Source/items.cpp:3874
+#: Source/items.cpp:3878
 msgid "spell levels unchanged (?)"
 msgstr "呪文​の​レベル​に​変化​なし​(​?​)"
 
-#: Source/items.cpp:3877
+#: Source/items.cpp:3881
 msgid "Extra charges"
 msgstr "追加​チャージ"
 
-#: Source/items.cpp:3880
+#: Source/items.cpp:3884
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s}チャージ"
 
-#: Source/items.cpp:3884
+#: Source/items.cpp:3888
 msgid "Fire hit damage: {:d}"
 msgstr "追加​火炎​ダメージ:{:d}"
 
-#: Source/items.cpp:3886
+#: Source/items.cpp:3890
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "追加​火炎​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3890
+#: Source/items.cpp:3894
 msgid "Lightning hit damage: {:d}"
 msgstr "追加​電撃​ダメージ: {:d}"
 
-#: Source/items.cpp:3892
+#: Source/items.cpp:3896
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "追加​電撃​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3896
+#: Source/items.cpp:3900
 msgid "{:+d} to strength"
 msgstr "STR{:+d}"
 
-#: Source/items.cpp:3900
+#: Source/items.cpp:3904
 msgid "{:+d} to magic"
 msgstr "MAG{:+d}"
 
-#: Source/items.cpp:3904
+#: Source/items.cpp:3908
 msgid "{:+d} to dexterity"
 msgstr "DEX{:+d}"
 
-#: Source/items.cpp:3908
+#: Source/items.cpp:3912
 msgid "{:+d} to vitality"
 msgstr "VIT{:+d}"
 
-#: Source/items.cpp:3912
+#: Source/items.cpp:3916
 msgid "{:+d} to all attributes"
 msgstr "全​能力​値​{:+d}"
 
-#: Source/items.cpp:3916
+#: Source/items.cpp:3920
 msgid "{:+d} damage from enemies"
 msgstr "敵​から​受ける​ダメージ​{:+d}"
 
-#: Source/items.cpp:3920
+#: Source/items.cpp:3924
 msgid "Hit Points: {:+d}"
 msgstr "ヒット​ポイント: {:+d}"
 
-#: Source/items.cpp:3924
+#: Source/items.cpp:3928
 msgid "Mana: {:+d}"
 msgstr "マナ: {:+d}"
 
-#: Source/items.cpp:3927
+#: Source/items.cpp:3931
 msgid "high durability"
 msgstr "高い​耐久​度"
 
-#: Source/items.cpp:3930
+#: Source/items.cpp:3934
 msgid "decreased durability"
 msgstr "低い​耐久​度"
 
-#: Source/items.cpp:3933
+#: Source/items.cpp:3937
 msgid "indestructible"
 msgstr "壊れ​ない"
 
-#: Source/items.cpp:3936
+#: Source/items.cpp:3940
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "視界​+{:d}​%"
 
-#: Source/items.cpp:3939
+#: Source/items.cpp:3943
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "視界​-{:d}​%"
 
-#: Source/items.cpp:3942
+#: Source/items.cpp:3946
 msgid "multiple arrows per shot"
 msgstr "一回​の​射撃​で​複数​の​矢​を​放つ"
 
-#: Source/items.cpp:3946
+#: Source/items.cpp:3950
 msgid "fire arrows damage: {:d}"
 msgstr "火炎​矢​の​ダメージ: {:d}"
 
-#: Source/items.cpp:3948
+#: Source/items.cpp:3952
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "火炎​矢​の​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3952
+#: Source/items.cpp:3956
 msgid "lightning arrows damage {:d}"
 msgstr "電撃​矢​の​ダメージ: {:d}"
 
-#: Source/items.cpp:3954
+#: Source/items.cpp:3958
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "電撃​矢​の​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3958
+#: Source/items.cpp:3962
 msgid "fireball damage: {:d}"
 msgstr "ファイヤーボールダメージ: {:d}"
 
-#: Source/items.cpp:3960
+#: Source/items.cpp:3964
 msgid "fireball damage: {:d}-{:d}"
 msgstr "ファイヤーボールダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3963
+#: Source/items.cpp:3967
 msgid "attacker takes 1-3 damage"
 msgstr "ダメージ​時​に​反撃:1-3"
 
-#: Source/items.cpp:3966
+#: Source/items.cpp:3970
 msgid "user loses all mana"
 msgstr "全て​の​マナ​を​失う"
 
-#: Source/items.cpp:3969
+#: Source/items.cpp:3973
 msgid "you can't heal"
 msgstr "ライフ​を​回復​でき​ない"
 
-#: Source/items.cpp:3972
+#: Source/items.cpp:3976
 msgid "absorbs half of trap damage"
 msgstr "罠​に​よる​ダメージ​半減"
 
-#: Source/items.cpp:3975
+#: Source/items.cpp:3979
 msgid "knocks target back"
 msgstr "ノック​バック​効果"
 
-#: Source/items.cpp:3978
+#: Source/items.cpp:3982
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "対​悪魔​族​ダメージ​+200​%"
 
-#: Source/items.cpp:3981
+#: Source/items.cpp:3985
 msgid "All Resistance equals 0"
 msgstr "全て​の​耐性​を​失う"
 
-#: Source/items.cpp:3984
+#: Source/items.cpp:3988
 msgid "hit monster doesn't heal"
 msgstr "攻撃​を​受け​た​モンスター​は​回復​でき​ない"
 
-#: Source/items.cpp:3988
+#: Source/items.cpp:3992
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "マナ​を​3​%​吸収"
 
-#: Source/items.cpp:3990
+#: Source/items.cpp:3994
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "マナ​を​5​%​吸収"
 
-#: Source/items.cpp:3994
+#: Source/items.cpp:3998
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "ライフ​を​3​%​吸収"
 
-#: Source/items.cpp:3996
+#: Source/items.cpp:4000
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "ライフ​を​5​%​吸収"
 
-#: Source/items.cpp:3999
+#: Source/items.cpp:4003
 msgid "penetrates target's armor"
 msgstr "ターゲット​の​アーマー​を​貫通"
 
-#: Source/items.cpp:4003
+#: Source/items.cpp:4007
 msgid "quick attack"
 msgstr "速い​攻撃"
 
-#: Source/items.cpp:4005
+#: Source/items.cpp:4009
 msgid "fast attack"
 msgstr "高速​攻撃"
 
-#: Source/items.cpp:4007
+#: Source/items.cpp:4011
 msgid "faster attack"
 msgstr "超​高速​攻撃"
 
-#: Source/items.cpp:4009
+#: Source/items.cpp:4013
 msgid "fastest attack"
 msgstr "神速​攻撃"
 
-#: Source/items.cpp:4013
+#: Source/items.cpp:4017
 msgid "fast hit recovery"
 msgstr "高速​体勢​回復"
 
-#: Source/items.cpp:4015
+#: Source/items.cpp:4019
 msgid "faster hit recovery"
 msgstr "早い​体勢​回復"
 
-#: Source/items.cpp:4017
+#: Source/items.cpp:4021
 msgid "fastest hit recovery"
 msgstr "神速​体勢​回復"
 
-#: Source/items.cpp:4020
+#: Source/items.cpp:4024
 msgid "fast block"
 msgstr "早い​防御"
 
-#: Source/items.cpp:4023
+#: Source/items.cpp:4027
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "追加ダメージ: {:d}"
 
-#: Source/items.cpp:4026
+#: Source/items.cpp:4030
 msgid "fires random speed arrows"
 msgstr "発射​間隔​が​一定​で​ない"
 
-#: Source/items.cpp:4029
+#: Source/items.cpp:4033
 msgid "unusual item damage"
 msgstr "魔法​の​アイテム​に​ダメージ"
 
-#: Source/items.cpp:4032
+#: Source/items.cpp:4036
 msgid "altered durability"
 msgstr "特殊​な​耐久​度"
 
-#: Source/items.cpp:4035
+#: Source/items.cpp:4039
 msgid "Faster attack swing"
 msgstr "早い​攻撃​準備"
 
-#: Source/items.cpp:4038
+#: Source/items.cpp:4042
 msgid "one handed sword"
 msgstr "片手​持ち​ソード"
 
-#: Source/items.cpp:4041
+#: Source/items.cpp:4045
 msgid "constantly lose hit points"
 msgstr "少し​ずつ​ライフ​を​失う"
 
-#: Source/items.cpp:4044
+#: Source/items.cpp:4048
 msgid "life stealing"
 msgstr "直接​攻撃​で​ライフ​吸収"
 
-#: Source/items.cpp:4047
+#: Source/items.cpp:4051
 msgid "no strength requirement"
 msgstr "筋力​を​必要​と​し​ない"
 
-#: Source/items.cpp:4050
+#: Source/items.cpp:4054
 msgid "see with infravision"
 msgstr "インフラ​ビジョン​の​効果"
 
-#: Source/items.cpp:4057
+#: Source/items.cpp:4061
 msgid "lightning damage: {:d}"
 msgstr "電撃​ダメージ: {:d}"
 
-#: Source/items.cpp:4059
+#: Source/items.cpp:4063
 msgid "lightning damage: {:d}-{:d}"
 msgstr "電撃​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:4062
+#: Source/items.cpp:4066
 msgid "charged bolts on hits"
 msgstr "チャージド​ボルト"
 
-#: Source/items.cpp:4071
+#: Source/items.cpp:4075
 msgid "occasional triple damage"
 msgstr "たまに​3​倍​の​ダメージ"
 
-#: Source/items.cpp:4074
+#: Source/items.cpp:4078
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "崩壊​{:+d}​%​ダメージ"
 
-#: Source/items.cpp:4077
+#: Source/items.cpp:4081
 msgid "2x dmg to monst, 1x to you"
 msgstr "モンスター​に​2​倍​の​ダメージ、自分​に​1​倍​の​ダメージ"
 
-#: Source/items.cpp:4080
+#: Source/items.cpp:4084
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "ランダム​に​0​～​500​％​の​ダメージ"
 
-#: Source/items.cpp:4083
+#: Source/items.cpp:4087
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "低い​耐久性、{:+d}​%​の​ダメージ"
 
-#: Source/items.cpp:4089
+#: Source/items.cpp:4093
 msgid "extra AC vs demons"
 msgstr "対​悪魔​族​の​追加​AC"
 
-#: Source/items.cpp:4092
+#: Source/items.cpp:4096
 msgid "extra AC vs undead"
 msgstr "対​アンデッド​用​の​追加​AC"
 
-#: Source/items.cpp:4095
+#: Source/items.cpp:4099
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50​%​の​マナ​を​ヘルス​に​移動"
 
-#: Source/items.cpp:4098
+#: Source/items.cpp:4102
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40​%​の​ヘルス​を​マナ​に​移動"
 
-#: Source/items.cpp:4101
+#: Source/items.cpp:4105
 msgid "Another ability (NW)"
 msgstr "別​の​能力​（​NW​）"
 
-#: Source/items.cpp:4138 Source/items.cpp:4185
+#: Source/items.cpp:4142 Source/items.cpp:4189
 msgid "damage: {:d}  Indestructible"
 msgstr "ダメージ:{:d}  壊れ​ない"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4140 Source/items.cpp:4187
+#: Source/items.cpp:4144 Source/items.cpp:4191
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}  耐久​度:{:d}/{:d}"
 
-#: Source/items.cpp:4143 Source/items.cpp:4190
+#: Source/items.cpp:4147 Source/items.cpp:4194
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "ダメージ: {:d}-{:d}  壊れ​ない"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4145 Source/items.cpp:4192
+#: Source/items.cpp:4149 Source/items.cpp:4196
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}  耐久​度:{:d}/{:d}"
 
-#: Source/items.cpp:4151 Source/items.cpp:4204
+#: Source/items.cpp:4155 Source/items.cpp:4208
 msgid "armor: {:d}  Indestructible"
 msgstr "防御​力:{:d}  壊れ​ない"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4153 Source/items.cpp:4206
+#: Source/items.cpp:4157 Source/items.cpp:4210
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "防御​力: {:d}  耐久​度: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4158
+#: Source/items.cpp:4162
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}  耐久​度:{:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4160
+#: Source/items.cpp:4164
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}-{:d}  耐久​度:{:d}/{:d}"
 
-#: Source/items.cpp:4161 Source/items.cpp:4196 Source/items.cpp:4211
+#: Source/items.cpp:4165 Source/items.cpp:4200 Source/items.cpp:4215
 #: Source/stores.cpp:255
 msgid "Charges: {:d}/{:d}"
 msgstr "チャージ: {:d}/{:d}"
 
-#: Source/items.cpp:4173
+#: Source/items.cpp:4177
 msgid "unique item"
 msgstr "ユニーク​アイテム"
 
-#: Source/items.cpp:4200 Source/items.cpp:4209 Source/items.cpp:4216
+#: Source/items.cpp:4204 Source/items.cpp:4213 Source/items.cpp:4220
 msgid "Not Identified"
 msgstr "未​鑑定"
 
-#: Source/loadsave.cpp:1683 Source/loadsave.cpp:2149
+#: Source/loadsave.cpp:1756 Source/loadsave.cpp:2201
 msgid "Unable to open save file archive"
 msgstr "Unable to open save file archive"
 
-#: Source/loadsave.cpp:1686
+#: Source/loadsave.cpp:1759
 msgid "Invalid save file"
 msgstr "Invalid save file"
 
-#: Source/loadsave.cpp:1717
+#: Source/loadsave.cpp:1790
 msgid "Player is on a Hellfire only level"
 msgstr "プレイヤー​は​Hellfire​のみ​の​レベル​に​い​ます"
 
-#: Source/loadsave.cpp:1912
+#: Source/loadsave.cpp:1979
 msgid "Invalid game state"
 msgstr "無効​な​ゲーム​状態"
 
-#: Source/menu.cpp:154
+#: Source/menu.cpp:151
 msgid "Unable to display mainmenu"
 msgstr "Unable to display mainmenu"
-
-#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
-#: Source/menu.cpp:179
-msgid ""
-"The Diablo introduction cinematic is only available in the full retail "
-"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-msgstr ""
-"ディアブロ​の​紹介​シネマ​ティック​は、ディアブロ​の​製品​版​で​のみ​見る​こと​が​でき​ま"
-"す。購入​する​に​は https://www.gog.com/game/diablo を​ご覧​ください。"
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -5494,25 +5421,25 @@ msgstr "魔法​無効化​(​属性​不明​)"
 msgid "Trying to drop a floor item?"
 msgstr "フロア​アイテム​を​落とそう​と​し​て​いる​の​か？"
 
-#: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
-#: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
-#: Source/msg.cpp:1281
+#: Source/msg.cpp:998 Source/msg.cpp:1033 Source/msg.cpp:1064
+#: Source/msg.cpp:1191 Source/msg.cpp:1223 Source/msg.cpp:1255
+#: Source/msg.cpp:1285
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} が​不正​な​呪文​を​唱え​た。"
 
-#: Source/msg.cpp:1668 Source/multi.cpp:804
+#: Source/msg.cpp:1672 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "プレイヤー​「​{:s}​」​（​レベル​{:d}​）​が​ゲーム​に​参加​し​まし​た"
 
-#: Source/msg.cpp:1972
+#: Source/msg.cpp:1976
 msgid "Waiting for game data..."
 msgstr "ゲーム​データ​を​待っ​て​い​ます​…"
 
-#: Source/msg.cpp:1980
+#: Source/msg.cpp:1984
 msgid "The game ended"
 msgstr "ゲーム​終了"
 
-#: Source/msg.cpp:1986
+#: Source/msg.cpp:1990
 msgid "Unable to get level data"
 msgstr "Unable to get level data"
 
@@ -5893,6 +5820,215 @@ msgstr "トラップ​の​掛かっ​た​{:s}"
 msgid "{:s} (disabled)"
 msgstr "{:s} (​無効​)"
 
+#: Source/options.cpp:512
+msgid "ON"
+msgstr "オン"
+
+#: Source/options.cpp:512
+msgid "OFF"
+msgstr "オフ"
+
+#: Source/options.cpp:582 Source/quests.cpp:46
+msgid "Diablo"
+msgstr "ディアブロ"
+
+#: Source/options.cpp:582
+msgid "Diablo specific Settings"
+msgstr "ディアブロ固有の設定"
+
+#: Source/options.cpp:583 Source/options.cpp:595
+msgid "Intro"
+msgstr "イントロ"
+
+#: Source/options.cpp:583 Source/options.cpp:595
+msgid "Enable/disable Intro cinematic."
+msgstr "イントロ・シネマティックの有効化／無効化"
+
+#: Source/options.cpp:594
+msgid "Hellfire"
+msgstr "ヘルファイア​"
+
+#: Source/options.cpp:594
+msgid "Hellfire specific Settings"
+msgstr "ヘルファイア固有の設定"
+
+#: Source/options.cpp:606
+msgid "Audio"
+msgstr "オーディオ"
+
+#: Source/options.cpp:606
+msgid "Audio Settings"
+msgstr "オーディオ設定"
+
+#: Source/options.cpp:607
+msgid "Walking Sound"
+msgstr "歩行音"
+
+#: Source/options.cpp:607
+msgid "Player emits sound when walking."
+msgstr "歩行時に音が出るようになります。"
+
+#: Source/options.cpp:608
+msgid "Auto Equip Sound"
+msgstr "自動装備サウンド"
+
+#: Source/options.cpp:608
+msgid "Automatically equipping items on pickup emits the equipment sound."
+msgstr "ピックアップ時に自動的にアイテムを装備すると、装備音が鳴ります。"
+
+#: Source/options.cpp:609
+msgid "Item Pickup Sound"
+msgstr "アイテムピックアップサウンド"
+
+#: Source/options.cpp:609
+msgid "Picking up items emits the items pickup sound."
+msgstr "アイテムを拾うと、アイテムピックアップサウンドが鳴ります。"
+
+#: Source/options.cpp:622
+msgid "Graphics"
+msgstr "グラフィックス"
+
+#: Source/options.cpp:622
+msgid "Graphics Settings"
+msgstr "グラフィックス設定"
+
+#: Source/options.cpp:623
+msgid "Scaling Quality"
+msgstr "スケーリング品質"
+
+#: Source/options.cpp:623
+msgid "Enables optional filters to the output image when upscaling."
+msgstr "アップスケール時の出力画像にオプションのフィルターを有効にします。"
+
+#: Source/options.cpp:625
+msgid "Nearest Pixel"
+msgstr "近接ピクセル"
+
+#: Source/options.cpp:626
+msgid "Bilinear"
+msgstr "バイリニア"
+
+#: Source/options.cpp:627
+msgid "Anisotropic"
+msgstr "異方性"
+
+#: Source/options.cpp:639
+msgid "Gameplay"
+msgstr "ゲームプレイ"
+
+#: Source/options.cpp:639
+msgid "Gameplay Settings"
+msgstr "ゲームプレイ設定"
+
+#: Source/options.cpp:640
+msgid "Run in Town"
+msgstr "街で走る"
+
+#: Source/options.cpp:640
+msgid ""
+"Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
+"introduced in the expansion."
+msgstr ""
+"ディアブロとヘルファイアで街中でのジョギング/早歩きを有効にします。このオプ"
+"ションは拡張版で導入されました。"
+
+#: Source/options.cpp:641
+msgid "Grab Input"
+msgstr "入力捕捉"
+
+#: Source/options.cpp:641
+msgid "When enabled mouse is locked to the game window."
+msgstr "有効にすると、マウスがゲームウィンドウにロックされます。"
+
+#: Source/options.cpp:642
+msgid "Theo Quest"
+msgstr "テオクエスト"
+
+#: Source/options.cpp:642
+msgid "Enable Little Girl quest."
+msgstr "リトルガールクエストを有効にします。"
+
+#: Source/options.cpp:643
+msgid "Cow Quest"
+msgstr "牛クエスト"
+
+#: Source/options.cpp:643
+msgid ""
+"Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
+msgstr ""
+"ジャージーのクエストを有効にする。農家のレスターの代わりにコンプリートナット"
+"が登場します。"
+
+#: Source/options.cpp:644
+msgid "Friendly Fire"
+msgstr "フレンドリーファイア"
+
+#: Source/options.cpp:644
+msgid ""
+"Allow arrow/spell damage between players in multiplayer even when the "
+"friendly mode is on."
+msgstr ""
+"フレンドリーモードがオンになっていても、マルチプレイヤーのプレイヤー間で弓矢"
+"や呪文のダメージを許容します。"
+
+#: Source/options.cpp:645
+msgid "Test Bard"
+msgstr "テスト・バード"
+
+#: Source/options.cpp:645
+msgid "Force the Bard character type to appear in the hero selection menu."
+msgstr "ヒーロー選択メニューにバードのキャラクタータイプを強制的に表示します。"
+
+#: Source/options.cpp:646
+msgid "Test Barbarian"
+msgstr "テスト・バーバリアン"
+
+#: Source/options.cpp:646
+msgid ""
+"Force the Barbarian character type to appear in the hero selection menu."
+msgstr ""
+"ヒーロー選択メニューにバーバリアンのキャラクタータイプを強制的に表示します。"
+
+#: Source/options.cpp:647
+msgid "Experience Bar"
+msgstr "経験値バー"
+
+#: Source/options.cpp:647
+msgid "Experience Bar is added to the UI at the bottom of the screen."
+msgstr "画面下のUIに経験値バーを追加します。"
+
+#: Source/options.cpp:667
+msgid "Controller"
+msgstr "コントローラー"
+
+#: Source/options.cpp:667
+msgid "Controller Settings"
+msgstr "コントローラー設定"
+
+#: Source/options.cpp:676
+msgid "Network"
+msgstr "ネットワーク"
+
+#: Source/options.cpp:676
+msgid "Network Settings"
+msgstr "ネットワーク設定"
+
+#: Source/options.cpp:685
+msgid "Chat"
+msgstr "チャット"
+
+#: Source/options.cpp:685
+msgid "Chat Settings"
+msgstr "チャット設定"
+
+#: Source/options.cpp:694
+msgid "Language"
+msgstr "言語"
+
+#: Source/options.cpp:694
+msgid "Language Settings"
+msgstr "言語設定"
+
 #: Source/panels/charpanel.cpp:110
 msgid "MAX"
 msgstr "MAX"
@@ -6007,6 +6143,62 @@ msgstr "呪文"
 msgid "mute"
 msgstr "ミュート"
 
+#: Source/panels/spell_book.cpp:150 Source/panels/spell_list.cpp:160
+msgid "Skill"
+msgstr "スキル"
+
+#: Source/panels/spell_book.cpp:154
+msgid "Staff ({:d} charge)"
+msgid_plural "Staff ({:d} charges)"
+msgstr[0] "スタッフ ({:d} チェージ)"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/panels/spell_book.cpp:164
+msgid "Heals: {:d} - {:d}"
+msgstr "回復量 {:d} - {:d}"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/panels/spell_book.cpp:166
+msgid "Damage: {:d} - {:d}"
+msgstr "ダメージ {:d} - {:d}"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/panels/spell_book.cpp:170
+msgid "Dmg: 1/3 target hp"
+msgstr "1/3 ターゲット​HP"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/panels/spell_book.cpp:172
+msgctxt "spellbook"
+msgid "Mana: {:d}"
+msgstr "マナ {:d}"
+
+#: Source/panels/spell_book.cpp:175
+msgid "Level 0 - Unusable"
+msgstr "Lvl 0 - 使え​ない"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/panels/spell_book.cpp:177
+msgctxt "spellbook"
+msgid "Level {:d}"
+msgstr "Lvl {:d}"
+
+#: Source/panels/spell_list.cpp:167
+msgid "Spell"
+msgstr "スペル"
+
+#: Source/panels/spell_list.cpp:170
+msgid "Damages undead only"
+msgstr "アンデッド​系​に​のみ​ダメージ"
+
+#: Source/panels/spell_list.cpp:183
+msgid "Scroll"
+msgstr "スクロール"
+
+#: Source/panels/spell_list.cpp:206
+msgid "Spell Hotkey {:s}"
+msgstr "スペルホットキー {:s}"
+
 #: Source/pfile.cpp:242
 msgid "Failed to open player archive for writing."
 msgstr "Failed to open player archive for writing."
@@ -6089,10 +6281,6 @@ msgstr "狂人​ザール"
 #: Source/quests.cpp:45
 msgid "Lachdanan"
 msgstr "ラック​ダナン"
-
-#: Source/quests.cpp:46
-msgid "Diablo"
-msgstr "ディアブロ"
 
 #: Source/quests.cpp:47
 msgid "The Butcher"
@@ -6424,7 +6612,7 @@ msgstr "バーサク"
 #: Source/spelldat.cpp:60
 msgctxt "spell"
 msgid "Ring of Fire"
-msgstr "リング​・​オブ​・​ファイヤー"
+msgstr "リング​オブ​​ファイヤー"
 
 #: Source/spelldat.cpp:61
 msgctxt "spell"
@@ -6434,12 +6622,12 @@ msgstr "サーチ"
 #: Source/spelldat.cpp:62
 msgctxt "spell"
 msgid "Rune of Fire"
-msgstr "ルーン​・​オブ​・​ファイヤー"
+msgstr "ルーン​​・オブ​​・ファイヤー"
 
 #: Source/spelldat.cpp:63
 msgctxt "spell"
 msgid "Rune of Light"
-msgstr "ライト​・​オブ​・​ルーン"
+msgstr "ライト​​・オブ​​・ルーン"
 
 #: Source/spelldat.cpp:64
 msgctxt "spell"
