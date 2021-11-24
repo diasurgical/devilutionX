@@ -5878,11 +5878,11 @@ msgstr "Звукови настройки"
 
 #: Source/options.cpp:607
 msgid "Walking Sound"
-msgstr "Звук при ходене"
+msgstr "Звук при ход"
 
 #: Source/options.cpp:607
 msgid "Player emits sound when walking."
-msgstr "Героят издава звук при ходене."
+msgstr "Героят издава звук от стъпки при движение."
 
 #: Source/options.cpp:608
 msgid "Auto Equip Sound"
@@ -5914,7 +5914,7 @@ msgstr "Качество при мащабирането"
 
 #: Source/options.cpp:623
 msgid "Enables optional filters to the output image when upscaling."
-msgstr "Включва филтри за подобряване на картината при мащабиране."
+msgstr "Включва филтри за подобряване на изображението при мащабиране."
 
 #: Source/options.cpp:625
 msgid "Nearest Pixel"
@@ -5922,7 +5922,7 @@ msgstr "Най-близък пиксел"
 
 #: Source/options.cpp:626
 msgid "Bilinear"
-msgstr "Билинеарно"
+msgstr "Билинеарен"
 
 #: Source/options.cpp:627
 msgid "Anisotropic"
@@ -6009,7 +6009,7 @@ msgstr "Скала Опит"
 
 #: Source/options.cpp:647
 msgid "Experience Bar is added to the UI at the bottom of the screen."
-msgstr "Скала за Текущо ниво на Опит се показва в долната част на екрана."
+msgstr "Скала за текущо ниво на Опит се показва в долната част на екрана."
 
 #: Source/options.cpp:667
 msgid "Controller"
