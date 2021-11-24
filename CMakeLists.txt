@@ -10,6 +10,12 @@ if(POLICY CMP0111)
   cmake_policy(SET CMP0111 NEW)
 endif()
 
+if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dist")
+  message("-- Detected a source distribution with the required FetchContent dependencies and devilutionx.mpq included")
+  set(SRC_DIST ON)
+  add_subdirectory(dist)
+endif()
+
 include(CMakeDependentOption)
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
@@ -40,6 +46,19 @@ option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken
 mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
+
+# By default, devilutionx.mpq is built only if smpq is installed.
+if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
+  find_program(SMPQ smpq)
+elseif(BUILD_ASSETS_MPQ)
+  find_program(SMPQ smpq REQUIRED)
+endif()
+if(SMPQ)
+  set(_has_smpq ON)
+else()
+  set(_has_smpq OFF)
+endif()
+option(BUILD_ASSETS_MPQ "If true, assets are packaged into devilutionx.mpq." ${_has_smpq})
 
 # The gettext[tools] package takes a very long time to install
 if(CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake$")
@@ -835,8 +854,7 @@ if (Gettext_FOUND)
   endforeach()
 endif()
 
-find_program(SMPQ smpq)
-if(SMPQ)
+if(BUILD_ASSETS_MPQ)
   set(DEVILUTIONX_MPQ "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq")
   add_custom_command(
     COMMENT "Building devilutionx.mpq"
@@ -1130,7 +1148,7 @@ if(VITA)
   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
   vita_create_self(devilutionx.self devilutionx UNSAFE)
-  if(SMPQ)
+  if(BUILD_ASSETS_MPQ OR SRC_DIST)
     vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
       VERSION ${VITA_VERSION}
       NAME ${VITA_APP_NAME}
@@ -1180,7 +1198,7 @@ if(NINTENDO_3DS)
   add_custom_target(romfs_files
     COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
     DEPENDS ${APP_ROMFS_FILES})
-    
+
   add_dependencies(romfs_files romfs_directory devilutionx_mpq)
 
   include(Tools3DS)
@@ -1190,7 +1208,7 @@ if(NINTENDO_3DS)
   add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
-if(CPACK AND (APPLE OR SMPQ))
+if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
       set(SDL2_WIN32_DLLS_DIR "${CMAKE_BINARY_DIR}")
