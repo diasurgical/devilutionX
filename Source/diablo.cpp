@@ -51,6 +51,7 @@
 #include "objects.h"
 #include "options.h"
 #include "panels/spell_book.hpp"
+#include "panels/spell_list.hpp"
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/common.h"
