@@ -10649,16 +10649,3 @@ msgstr "ディアブロ​の​もと​へ"
 #: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "レベル​{:d}​へ​戻る"
-
-#~ msgid "Replay Intro"
-#~ msgstr "イントロ​を​再生"
-
-#~ msgid "Extras"
-#~ msgstr "エクストラ"
-
-#~ msgid ""
-#~ "The Diablo introduction cinematic is only available in the full retail "
-#~ "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-#~ msgstr ""
-#~ "ディアブロ​の​紹介​シネマ​ティック​は、ディアブロ​の​製品​版​で​のみ​見る​こと​が​でき​ま"
-#~ "す。購入​する​に​は https://www.gog.com/game/diablo を​ご覧​ください。"
