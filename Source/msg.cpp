@@ -2255,6 +2255,7 @@ void DeltaLoadLevel()
 				    sgLevels[currlevel].item[i].wValue,
 				    sgLevels[currlevel].item[i].dwBuff);
 			} else {
+				item.dwBuff = sgLevels[currlevel].item[i].dwBuff;
 				RecreateItem(
 				    item,
 				    sgLevels[currlevel].item[i].wIndx,
@@ -2274,7 +2275,6 @@ void DeltaLoadLevel()
 				item._iMinMag = sgLevels[currlevel].item[i].bMinMag;
 				item._iMinDex = sgLevels[currlevel].item[i].bMinDex;
 				item._iAC = sgLevels[currlevel].item[i].bAC;
-				item.dwBuff = sgLevels[currlevel].item[i].dwBuff;
 			}
 			int x = sgLevels[currlevel].item[i].x;
 			int y = sgLevels[currlevel].item[i].y;
