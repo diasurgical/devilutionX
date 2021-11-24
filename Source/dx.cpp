@@ -309,7 +309,15 @@ void RenderPresent()
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
 		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
-			ErrSdl();
+			// We do handle SDL_RENDER_DEVICE_RESET, but I tried and it doesn't arrive
+			if (string_view(SDL_GetError()) == "LockRect(): INVALIDCALL") {
+				ReinitializeRenderer();
+				if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) {
+					ErrSdl();
+				}
+			} else {
+				ErrSdl();
+			}
 		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
