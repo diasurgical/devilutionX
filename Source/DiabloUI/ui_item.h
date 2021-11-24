@@ -312,8 +312,9 @@ typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 
 class UiList : public UiItemBase {
 public:
-	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
-	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * vItems.size()) }, flags)
+	UiList(const vUiListItem &vItems, size_t viewportSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
+	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * viewportSize) }, flags)
+	    , viewportSize(viewportSize)
 	    , m_x(x)
 	    , m_y(y)
 	    , m_width(item_width)
@@ -360,5 +361,6 @@ public:
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;
 	int m_spacing;
+	size_t viewportSize;
 };
 } // namespace devilution

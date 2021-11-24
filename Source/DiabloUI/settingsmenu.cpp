@@ -141,9 +141,9 @@ void UiSettingsMenu()
 		vecDialogItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
 		vecDialogItems.push_back(std::make_unique<UiListItem>(_("Previous Menu"), static_cast<int>(SpecialMenuEntry::PreviousMenu), UiFlags::ColorUiGold));
 
-		vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, rectList.position.x, rectList.position.y, rectList.size.width, 26, UiFlags::FontSize24 | UiFlags::AlignCenter));
+		vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, rectList.size.height / 26, rectList.position.x, rectList.position.y, rectList.size.width, 26, UiFlags::FontSize24 | UiFlags::AlignCenter));
 
-		UiInitList(rectList.size.height / 26, ItemFocused, ItemSelected, EscPressed, vecDialog, true, nullptr, switchOptionExists ? 0 : 1);
+		UiInitList(ItemFocused, ItemSelected, EscPressed, vecDialog, true, nullptr, switchOptionExists ? 0 : 1);
 
 		while (!endMenu) {
 			UiClearScreen();
