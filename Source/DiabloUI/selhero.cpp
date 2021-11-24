@@ -84,7 +84,6 @@ void SelheroSetStats()
 	snprintf(textStats[5], sizeof(textStats[5]), "%i", selhero_heroInfo.saveNumber);
 }
 
-std::size_t listOffset = 0;
 UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
 
 bool SelHeroGetHeroInfo(_uiheroinfo *pInfo)
@@ -469,7 +468,6 @@ void selhero_Init()
 
 void selhero_List_Init()
 {
-	listOffset = 0;
 	size_t selectedItem = 0;
 	vecSelDlgItems.clear();
 
