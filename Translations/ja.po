@@ -3577,12 +3577,12 @@ msgstr "{1}​の​{0}"
 #: Source/items.cpp:1191
 msgctxt "spell"
 msgid "{0} {1} of {2}"
-msgstr "{2}​の{0}{1}"
+msgstr "{2}​の​{0}{1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1209
 msgid "{0} {1} of {2}"
-msgstr "{2}​の{0}{1}"
+msgstr "{2}​の​{0}{1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
 #: Source/items.cpp:1212
@@ -5834,7 +5834,7 @@ msgstr "ディアブロ"
 
 #: Source/options.cpp:582
 msgid "Diablo specific Settings"
-msgstr "ディアブロ固有の設定"
+msgstr "ディアブロ​固有​の​設定"
 
 #: Source/options.cpp:583 Source/options.cpp:595
 msgid "Intro"
@@ -5842,15 +5842,15 @@ msgstr "イントロ"
 
 #: Source/options.cpp:583 Source/options.cpp:595
 msgid "Enable/disable Intro cinematic."
-msgstr "イントロ・シネマティックの有効化／無効化"
+msgstr "イントロ​・​シネマ​ティック​の​有効​化​／​無効化"
 
 #: Source/options.cpp:594
 msgid "Hellfire"
-msgstr "ヘルファイア​"
+msgstr "ヘルファイア"
 
 #: Source/options.cpp:594
 msgid "Hellfire specific Settings"
-msgstr "ヘルファイア固有の設定"
+msgstr "ヘルファイア​固有​の​設定"
 
 #: Source/options.cpp:606
 msgid "Audio"
@@ -5858,31 +5858,31 @@ msgstr "オーディオ"
 
 #: Source/options.cpp:606
 msgid "Audio Settings"
-msgstr "オーディオ設定"
+msgstr "オーディオ​設定"
 
 #: Source/options.cpp:607
 msgid "Walking Sound"
-msgstr "歩行音"
+msgstr "歩行​音"
 
 #: Source/options.cpp:607
 msgid "Player emits sound when walking."
-msgstr "歩行時に音が出るようになります。"
+msgstr "歩行​時​に​音​が​出る​よう​に​なり​ます。"
 
 #: Source/options.cpp:608
 msgid "Auto Equip Sound"
-msgstr "自動装備サウンド"
+msgstr "自動​装備​サウンド"
 
 #: Source/options.cpp:608
 msgid "Automatically equipping items on pickup emits the equipment sound."
-msgstr "ピックアップ時に自動的にアイテムを装備すると、装備音が鳴ります。"
+msgstr "ピックアップ​時​に​自動的​に​アイテム​を​装備​する​と、装備​音​が​鳴り​ます。"
 
 #: Source/options.cpp:609
 msgid "Item Pickup Sound"
-msgstr "アイテムピックアップサウンド"
+msgstr "アイテム​ピックアップ​サウンド"
 
 #: Source/options.cpp:609
 msgid "Picking up items emits the items pickup sound."
-msgstr "アイテムを拾うと、アイテムピックアップサウンドが鳴ります。"
+msgstr "アイテム​を​拾う​と、アイテム​ピックアップ​サウンド​が​鳴り​ます。"
 
 #: Source/options.cpp:622
 msgid "Graphics"
@@ -5890,19 +5890,19 @@ msgstr "グラフィックス"
 
 #: Source/options.cpp:622
 msgid "Graphics Settings"
-msgstr "グラフィックス設定"
+msgstr "グラフィックス​設定"
 
 #: Source/options.cpp:623
 msgid "Scaling Quality"
-msgstr "スケーリング品質"
+msgstr "スケーリング​品質"
 
 #: Source/options.cpp:623
 msgid "Enables optional filters to the output image when upscaling."
-msgstr "アップスケール時の出力画像にオプションのフィルターを有効にします。"
+msgstr "アップス​ケール​時​の​出力​画像​に​オプション​の​フィルター​を​有効​に​し​ます。"
 
 #: Source/options.cpp:625
 msgid "Nearest Pixel"
-msgstr "近接ピクセル"
+msgstr "近接​ピクセル"
 
 #: Source/options.cpp:626
 msgid "Bilinear"
@@ -5910,35 +5910,35 @@ msgstr "バイリニア"
 
 #: Source/options.cpp:627
 msgid "Anisotropic"
-msgstr "異方性"
+msgstr "異方​性"
 
 #: Source/options.cpp:639
 msgid "Gameplay"
-msgstr "ゲームプレイ"
+msgstr "ゲーム​プレイ"
 
 #: Source/options.cpp:639
 msgid "Gameplay Settings"
-msgstr "ゲームプレイ設定"
+msgstr "ゲーム​プレイ​設定"
 
 #: Source/options.cpp:640
 msgid "Run in Town"
-msgstr "街で走る"
+msgstr "街​で​走る"
 
 #: Source/options.cpp:640
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
 msgstr ""
-"ディアブロとヘルファイアで街中でのジョギング/早歩きを有効にします。このオプ"
-"ションは拡張版で導入されました。"
+"ディアブロ​と​ヘルファイア​で​街中​で​の​ジョギング​/​早歩き​を​有効​に​し​ます。この​オプ"
+"ション​は​拡張​版​で​導入​さ​れ​まし​た。"
 
 #: Source/options.cpp:641
 msgid "Grab Input"
-msgstr "入力捕捉"
+msgstr "入力​捕捉"
 
 #: Source/options.cpp:641
 msgid "When enabled mouse is locked to the game window."
-msgstr "有効にすると、マウスがゲームウィンドウにロックされます。"
+msgstr "有効​に​する​と、マウス​が​ゲーム​ウィンドウ​に​ロック​さ​れ​ます。"
 
 #: Source/options.cpp:642
 msgid "Theo Quest"
@@ -5946,56 +5946,56 @@ msgstr "テオクエスト"
 
 #: Source/options.cpp:642
 msgid "Enable Little Girl quest."
-msgstr "リトルガールクエストを有効にします。"
+msgstr "リトル​ガール​クエスト​を​有効​に​し​ます。"
 
 #: Source/options.cpp:643
 msgid "Cow Quest"
-msgstr "牛クエスト"
+msgstr "牛​クエスト"
 
 #: Source/options.cpp:643
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
 msgstr ""
-"ジャージーのクエストを有効にする。農家のレスターの代わりにコンプリートナット"
-"が登場します。"
+"ジャージー​の​クエスト​を​有効​に​する。農家​の​レスター​の​代わり​に​コンプリート​ナット​"
+"が​登場​し​ます。"
 
 #: Source/options.cpp:644
 msgid "Friendly Fire"
-msgstr "フレンドリーファイア"
+msgstr "フレンドリー​ファイア"
 
 #: Source/options.cpp:644
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
 msgstr ""
-"フレンドリーモードがオンになっていても、マルチプレイヤーのプレイヤー間で弓矢"
-"や呪文のダメージを許容します。"
+"フレンドリー​モード​が​オン​に​なっ​て​い​て​も、マルチ​プレイヤー​の​プレイヤー​間​で​弓矢​"
+"や​呪文​の​ダメージ​を​許容​し​ます。"
 
 #: Source/options.cpp:645
 msgid "Test Bard"
-msgstr "テスト・バード"
+msgstr "テスト​・​バード"
 
 #: Source/options.cpp:645
 msgid "Force the Bard character type to appear in the hero selection menu."
-msgstr "ヒーロー選択メニューにバードのキャラクタータイプを強制的に表示します。"
+msgstr "ヒーロー​選択​メニュー​に​バード​の​キャラクター​タイプ​を​強制的​に​表示​し​ます。"
 
 #: Source/options.cpp:646
 msgid "Test Barbarian"
-msgstr "テスト・バーバリアン"
+msgstr "テスト​・​バーバリアン"
 
 #: Source/options.cpp:646
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
 msgstr ""
-"ヒーロー選択メニューにバーバリアンのキャラクタータイプを強制的に表示します。"
+"ヒーロー​選択​メニュー​に​バーバリアン​の​キャラクター​タイプ​を​強制的​に​表示​し​ます。"
 
 #: Source/options.cpp:647
 msgid "Experience Bar"
-msgstr "経験値バー"
+msgstr "経験値​バー"
 
 #: Source/options.cpp:647
 msgid "Experience Bar is added to the UI at the bottom of the screen."
-msgstr "画面下のUIに経験値バーを追加します。"
+msgstr "画面​下​の​UI​に​経験値​バー​を​追加​し​ます。"
 
 #: Source/options.cpp:667
 msgid "Controller"
@@ -6003,7 +6003,7 @@ msgstr "コントローラー"
 
 #: Source/options.cpp:667
 msgid "Controller Settings"
-msgstr "コントローラー設定"
+msgstr "コントローラー​設定"
 
 #: Source/options.cpp:676
 msgid "Network"
@@ -6011,7 +6011,7 @@ msgstr "ネットワーク"
 
 #: Source/options.cpp:676
 msgid "Network Settings"
-msgstr "ネットワーク設定"
+msgstr "ネットワーク​設定"
 
 #: Source/options.cpp:685
 msgid "Chat"
@@ -6019,7 +6019,7 @@ msgstr "チャット"
 
 #: Source/options.cpp:685
 msgid "Chat Settings"
-msgstr "チャット設定"
+msgstr "チャット​設定"
 
 #: Source/options.cpp:694
 msgid "Language"
@@ -6027,7 +6027,7 @@ msgstr "言語"
 
 #: Source/options.cpp:694
 msgid "Language Settings"
-msgstr "言語設定"
+msgstr "言語​設定"
 
 #: Source/panels/charpanel.cpp:110
 msgid "MAX"
@@ -6155,7 +6155,7 @@ msgstr[0] "スタッフ ({:d} チェージ)"
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgid "Heals: {:d} - {:d}"
-msgstr "回復量 {:d} - {:d}"
+msgstr "回復​量 {:d} - {:d}"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:166
@@ -6612,7 +6612,7 @@ msgstr "バーサク"
 #: Source/spelldat.cpp:60
 msgctxt "spell"
 msgid "Ring of Fire"
-msgstr "リング​オブ​​ファイヤー"
+msgstr "リングオブファイヤー"
 
 #: Source/spelldat.cpp:61
 msgctxt "spell"
@@ -6622,12 +6622,12 @@ msgstr "サーチ"
 #: Source/spelldat.cpp:62
 msgctxt "spell"
 msgid "Rune of Fire"
-msgstr "ルーン​​・オブ​​・ファイヤー"
+msgstr "ルーン​・​オブ​・​ファイヤー"
 
 #: Source/spelldat.cpp:63
 msgctxt "spell"
 msgid "Rune of Light"
-msgstr "ライト​​・オブ​​・ルーン"
+msgstr "ライト​・​オブ​・​ルーン"
 
 #: Source/spelldat.cpp:64
 msgctxt "spell"
