@@ -115,7 +115,7 @@ void DrawSpell(const Surface &out)
 	const Point position { PANEL_X + 565, PANEL_Y + 119 };
 	DrawSpellCel(out, position, nCel);
 
-	std::optional<std::string> hotkeyName = GetHotkeyName(spl, st);
+	std::optional<std::string> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType);
 	if (hotkeyName)
 		PrintSBookHotkey(out, position, *hotkeyName);
 }
