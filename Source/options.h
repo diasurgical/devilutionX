@@ -65,9 +65,9 @@ public:
 
 protected:
 	string_view key;
+	OptionEntryFlags flags;
 	string_view name;
 	string_view description;
-	OptionEntryFlags flags;
 	void NotifyValueChanged();
 
 private:
@@ -91,8 +91,8 @@ public:
 	void SaveToIni(string_view category) const override;
 
 private:
-	bool value;
 	bool defaultValue;
+	bool value;
 };
 
 class OptionEntryListBase : public OptionEntryBase {
@@ -135,8 +135,8 @@ protected:
 	void AddEntry(int value, string_view name);
 
 private:
-	int value;
 	int defaultValue;
+	int value;
 	std::vector<string_view> entryNames;
 	std::vector<int> entryValues;
 };
