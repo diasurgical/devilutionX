@@ -704,7 +704,7 @@ bool DoWalk(int pnum, int variant)
 	auto &player = Players[pnum];
 
 	//Play walking sound effect on certain animation frames
-	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
+	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.CurrentFrame == 1
 		    || player.AnimInfo.CurrentFrame == 5) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
@@ -1874,7 +1874,7 @@ void ValidatePlayer()
 		myPlayer._pLevel = MAXCHARLEVEL - 1;
 	if (myPlayer._pExperience > myPlayer._pNextExper) {
 		myPlayer._pExperience = myPlayer._pNextExper;
-		if (sgOptions.Gameplay.bExperienceBar) {
+		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
 	}
@@ -2628,7 +2628,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay
 	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
 
-	if (sgOptions.Gameplay.bExperienceBar) {
+	if (*sgOptions.Gameplay.experienceBar) {
 		force_redraw = 255;
 	}
 
@@ -3022,7 +3022,7 @@ StartPlayerKill(int pnum, int earflag)
 						ear._iSeed = player._pName[2] << 24 | player._pName[3] << 16 | player._pName[4] << 8 | player._pName[5];
 						ear._ivalue = player._pLevel;
 
-						if (FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
+						if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
 							DeadItem(player, &ear, { 0, 0 });
 						}
 					} else {

@@ -37,8 +37,8 @@
 #include "error.h"
 #include "gamemenu.h"
 #include "gmenu.h"
-#include "hwcursor.hpp"
 #include "help.h"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "lighting.h"
 #include "loadsave.h"
@@ -50,6 +50,7 @@
 #include "nthread.h"
 #include "objects.h"
 #include "options.h"
+#include "panels/spell_book.hpp"
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/common.h"
@@ -970,13 +971,11 @@ void DiabloSplash()
 
 	play_movie("gendata\\logo.smk", true);
 
-	if (gbIsHellfire && sgOptions.Hellfire.bIntro) {
+	if (gbIsHellfire && *sgOptions.Hellfire.intro) {
 		play_movie("gendata\\Hellfire.smk", true);
-		sgOptions.Hellfire.bIntro = false;
 	}
-	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bIntro) {
+	if (!gbIsHellfire && !gbIsSpawn && *sgOptions.Diablo.intro) {
 		play_movie("gendata\\diablo1.smk", true);
-		sgOptions.Diablo.bIntro = false;
 	}
 
 	UiTitleDialog();

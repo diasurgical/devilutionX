@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-23 10:10+0000\n"
+"POT-Creation-Date: 2021-11-23 14:32+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -880,168 +880,184 @@ msgstr "レベル: 地下​聖堂 {:d}"
 msgid "Level: {:d}"
 msgstr "レベル: {:d}"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:217
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:217
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:217
 msgid "Enter"
 msgstr "入力"
 
-#: Source/control.cpp:215
+#: Source/control.cpp:220
 msgid "Character Information"
 msgstr "キャラクター​情報"
 
-#: Source/control.cpp:216
+#: Source/control.cpp:221
 msgid "Quests log"
 msgstr "クエスト​の​記録"
 
-#: Source/control.cpp:217
+#: Source/control.cpp:222
 msgid "Automap"
 msgstr "オート​マップ"
 
-#: Source/control.cpp:218
+#: Source/control.cpp:223
 msgid "Main Menu"
 msgstr "メインメニュー"
 
-#: Source/control.cpp:219
+#: Source/control.cpp:224
 msgid "Inventory"
 msgstr "所持​品​の​一覧"
 
-#: Source/control.cpp:220
+#: Source/control.cpp:225
 msgid "Spell book"
 msgstr "スペル​ブック"
 
-#: Source/control.cpp:221
+#: Source/control.cpp:226
 msgid "Send Message"
 msgstr "メッセージ​送信"
 
-#: Source/control.cpp:718 Source/control.cpp:1584
+#: Source/control.cpp:726 Source/control.cpp:1598
 msgid "Skill"
 msgstr "スキル"
 
-#: Source/control.cpp:719 Source/control.cpp:1236
+#: Source/control.cpp:727 Source/control.cpp:1244
 msgid "{:s} Skill"
 msgstr "{:s} スキル"
 
-#: Source/control.cpp:725
+#: Source/control.cpp:733
 msgid "Spell"
 msgstr "スペル"
 
-#: Source/control.cpp:726 Source/control.cpp:1240
+#: Source/control.cpp:734 Source/control.cpp:1248
 msgid "{:s} Spell"
 msgstr "{:s} スペル"
 
-#: Source/control.cpp:728
+#: Source/control.cpp:736
 msgid "Damages undead only"
 msgstr "アンデッド​系​に​のみ​ダメージ"
 
-#: Source/control.cpp:732 Source/control.cpp:1244 Source/control.cpp:1608
+#: Source/control.cpp:740 Source/control.cpp:1252
 msgid "Spell Level 0 - Unusable"
 msgstr "スペル​レベル 0 - 使え​ない"
 
-#: Source/control.cpp:734 Source/control.cpp:1246 Source/control.cpp:1610
+#: Source/control.cpp:742 Source/control.cpp:1254
 msgid "Spell Level {:d}"
 msgstr "スペル​レベル {:d}"
 
-#: Source/control.cpp:741
+#: Source/control.cpp:749
 msgid "Scroll"
 msgstr "スクロール"
 
-#: Source/control.cpp:742 Source/control.cpp:1250
+#: Source/control.cpp:750 Source/control.cpp:1258
 msgid "Scroll of {:s}"
 msgstr "{:s}​の​スクロール"
 
-#: Source/control.cpp:747 Source/control.cpp:1256
+#: Source/control.cpp:755 Source/control.cpp:1264
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} スクロール"
 
-#: Source/control.cpp:754 Source/itemdat.cpp:167 Source/itemdat.cpp:168
+#: Source/control.cpp:762 Source/itemdat.cpp:167 Source/itemdat.cpp:168
 #: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
 msgid "Staff"
 msgstr "スタッフ"
 
-#: Source/control.cpp:755 Source/control.cpp:1260
+#: Source/control.cpp:763 Source/control.cpp:1268
 msgid "Staff of {:s}"
 msgstr "{:s}​・​スタッフ"
 
-#: Source/control.cpp:757 Source/control.cpp:1262
+#: Source/control.cpp:765 Source/control.cpp:1270
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d}チャージ"
 
-#: Source/control.cpp:767
+#: Source/control.cpp:775
 msgid "Spell Hotkey {:s}"
 msgstr "スペルホットキー {:s}"
 
-#: Source/control.cpp:1213
+#: Source/control.cpp:1221
 msgid "Player friendly"
 msgstr "プレイヤー​は​味方"
 
-#: Source/control.cpp:1215
+#: Source/control.cpp:1223
 msgid "Player attack"
 msgstr "プレイヤー​の​攻撃"
 
-#: Source/control.cpp:1218
+#: Source/control.cpp:1226
 msgid "Hotkey: {:s}"
 msgstr "ホットキー: {:s}"
 
-#: Source/control.cpp:1226
+#: Source/control.cpp:1234
 msgid "Select current spell button"
 msgstr "正しい​呪文​ボタン​を​選択​し​て​ください"
 
-#: Source/control.cpp:1229
+#: Source/control.cpp:1237
 msgid "Hotkey: 's'"
 msgstr "ホットキー: ’s’"
 
-#: Source/control.cpp:1386 Source/inv.cpp:1980 Source/items.cpp:3743
+#: Source/control.cpp:1394 Source/inv.cpp:1980 Source/items.cpp:3743
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} 金魂"
 
-#: Source/control.cpp:1389
+#: Source/control.cpp:1397
 msgid "Requirements not met"
 msgstr "能力​値​が​不足​し​て​い​ます"
 
-#: Source/control.cpp:1423
+#: Source/control.cpp:1431
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Level: {:d}"
 
-#: Source/control.cpp:1425
+#: Source/control.cpp:1433
 msgid "Hit Points {:d} of {:d}"
 msgstr "ヒット​ポイント: {:d}/{:d}"
 
-#: Source/control.cpp:1454
+#: Source/control.cpp:1462
 msgid "Level Up"
 msgstr "レベルアップ"
 
-#: Source/control.cpp:1588
+#: Source/control.cpp:1602
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "スタッフ ({:d} チェージ)"
 
-#. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1598
-msgid "Mana: {:d}  Dam: {:d} - {:d}"
-msgstr "マナ: {:d}  ダメージ: {:d} - {:d}"
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1612
+msgid "Heals: {:d} - {:d}"
+msgstr "回復量 {:d} - {:d}"
 
-#. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1600
-msgid "Mana: {:d}   Dam: n/a"
-msgstr "マナ: {:d}   ダメージ: -"
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1614
+msgid "Damage: {:d} - {:d}"
+msgstr "ダメージ {:d} - {:d}"
 
-#. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1603
-msgid "Mana: {:d}  Dam: 1/3 tgt hp"
-msgstr "マナ: {:d}  ダメージ: 1/3 ターゲット​HP"
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1618
+msgid "Dmg: 1/3 target hp"
+msgstr "1/3 ターゲット​HP"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1620
+msgctxt "spellbook"
+msgid "Mana: {:d}"
+msgstr "マナ {:d}"
+
+#: Source/control.cpp:1623
+msgid "Level 0 - Unusable"
+msgstr "Lvl 0 - 使え​ない"
+
+#. TRANSLATORS: UI constrains, keep short please.
+#: Source/control.cpp:1625
+msgctxt "spellbook"
+msgid "Level {:d}"
+msgstr "Lvl {:d}"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1658
+#: Source/control.cpp:1671
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "あなたは{:d}ゴールドを持っています。何枚削除しますか？"

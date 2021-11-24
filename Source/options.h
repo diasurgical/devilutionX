@@ -5,6 +5,8 @@
 #include <SDL_version.h>
 
 #include "pack.h"
+#include "utils/enum_traits.h"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -14,18 +16,180 @@ enum class StartUpGameOption {
 	Diablo,
 };
 
-struct DiabloOptions {
+enum class ScalingQuality {
+	NearestPixel,
+	BilinearFiltering,
+	AnisotropicFiltering,
+};
+
+enum class OptionEntryType {
+	Boolean,
+	List,
+};
+
+enum class OptionEntryFlags {
+	/** @brief No special logic. */
+	None = 0,
+	/** @brief Shouldn't be shown in settings dialog. */
+	Invisible = 1 << 0,
+	/** @brief Need to restart the current running game (single- or multiplayer) to take effect. */
+	CantChangeInGame = 1 << 1,
+	/** @brief Need to restart the current running multiplayer game to take effect. */
+	CantChangeInMultiPlayer = 1 << 2,
+	/** @brief Option is only relevant for Hellfire. */
+	OnlyHellfire = 1 << 3,
+	/** @brief Option is only relevant for Diablo. */
+	OnlyDiablo = 1 << 4,
+};
+use_enum_as_flags(OptionEntryFlags);
+
+class OptionEntryBase {
+public:
+	OptionEntryBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
+	    : key(key)
+	    , flags(flags)
+	    , name(name)
+	    , description(description)
+	{
+	}
+	[[nodiscard]] string_view GetName() const;
+	[[nodiscard]] string_view GetDescription() const;
+	[[nodiscard]] virtual OptionEntryType GetType() const = 0;
+	[[nodiscard]] OptionEntryFlags GetFlags() const;
+
+	void SetValueChangedCallback(std::function<void()> callback);
+
+	[[nodiscard]] virtual string_view GetValueDescription() const = 0;
+	virtual void LoadFromIni(string_view category) = 0;
+	virtual void SaveToIni(string_view category) const = 0;
+
+protected:
+	string_view key;
+	string_view name;
+	string_view description;
+	OptionEntryFlags flags;
+	void NotifyValueChanged();
+
+private:
+	std::function<void()> callback;
+};
+
+class OptionEntryBoolean : public OptionEntryBase {
+public:
+	OptionEntryBoolean(string_view key, OptionEntryFlags flags, string_view name, string_view description, bool defaultValue)
+	    : OptionEntryBase(key, flags, name, description)
+	    , defaultValue(defaultValue)
+	    , value(defaultValue)
+	{
+	}
+	[[nodiscard]] bool operator*() const;
+	void SetValue(bool value);
+
+	[[nodiscard]] OptionEntryType GetType() const override;
+	[[nodiscard]] string_view GetValueDescription() const override;
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+private:
+	bool value;
+	bool defaultValue;
+};
+
+class OptionEntryListBase : public OptionEntryBase {
+public:
+	[[nodiscard]] virtual size_t GetListSize() const = 0;
+	[[nodiscard]] virtual string_view GetListDescription(size_t index) const = 0;
+	[[nodiscard]] virtual size_t GetActiveListIndex() const = 0;
+	virtual void SetActiveListIndex(size_t index) = 0;
+
+	[[nodiscard]] OptionEntryType GetType() const override;
+	[[nodiscard]] string_view GetValueDescription() const override;
+
+protected:
+	OptionEntryListBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
+	    : OptionEntryBase(key, flags, name, description)
+	{
+	}
+};
+
+class OptionEntryEnumBase : public OptionEntryListBase {
+public:
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] virtual size_t GetListSize() const override;
+	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+protected:
+	OptionEntryEnumBase(string_view key, OptionEntryFlags flags, string_view name, string_view description, int defaultValue)
+	    : OptionEntryListBase(key, flags, name, description)
+	    , defaultValue(defaultValue)
+	    , value(defaultValue)
+	{
+	}
+
+	[[nodiscard]] int GetValueInternal() const;
+
+	void AddEntry(int value, string_view name);
+
+private:
+	int value;
+	int defaultValue;
+	std::vector<string_view> entryNames;
+	std::vector<int> entryValues;
+};
+
+template <typename T>
+class OptionEntryEnum : public OptionEntryEnumBase {
+public:
+	OptionEntryEnum(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<std::pair<T, string_view>> entries)
+	    : OptionEntryEnumBase(key, flags, name, description, static_cast<int>(defaultValue))
+	{
+		for (auto entry : entries) {
+			AddEntry(static_cast<int>(entry.first), entry.second);
+		}
+	}
+	[[nodiscard]] T operator*() const
+	{
+		return static_cast<T>(GetValueInternal());
+	}
+};
+
+struct OptionCategoryBase {
+	OptionCategoryBase(string_view key, string_view name, string_view description);
+
+	[[nodiscard]] string_view GetKey() const;
+	[[nodiscard]] string_view GetName() const;
+	[[nodiscard]] string_view GetDescription() const;
+
+	virtual std::vector<OptionEntryBase *> GetEntries() = 0;
+
+protected:
+	string_view key;
+	string_view name;
+	string_view description;
+};
+
+struct DiabloOptions : OptionCategoryBase {
+	DiabloOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Play game intro video on startup. */
-	bool bIntro;
+	OptionEntryBoolean intro;
 	/** @brief Remembers what singleplayer hero/save was last used. */
 	std::uint32_t lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
 	std::uint32_t lastMultiplayerHero;
 };
 
-struct HellfireOptions {
+struct HellfireOptions : OptionCategoryBase {
+	HellfireOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Play game intro video on startup. */
-	bool bIntro;
+	OptionEntryBoolean intro;
 	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(ItemPack) * 2 + 1];
 	/** @brief Remembers what singleplayer hero/save was last used. */
@@ -36,17 +200,20 @@ struct HellfireOptions {
 	StartUpGameOption startUpGameOption;
 };
 
-struct AudioOptions {
+struct AudioOptions : OptionCategoryBase {
+	AudioOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Movie and SFX volume. */
 	int nSoundVolume;
 	/** @brief Music volume. */
 	int nMusicVolume;
 	/** @brief Player emits sound when walking. */
-	bool bWalkingSound;
+	OptionEntryBoolean walkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
-	bool bAutoEquipSound;
+	OptionEntryBoolean autoEquipSound;
 	/** @brief Picking up items emits the items pickup sound. */
-	bool bItemPickupSound;
+	OptionEntryBoolean itemPickupSound;
 
 	/** @brief Output sample rate (Hz) */
 	std::uint32_t nSampleRate;
@@ -58,7 +225,10 @@ struct AudioOptions {
 	std::uint8_t nResamplingQuality;
 };
 
-struct GraphicsOptions {
+struct GraphicsOptions : OptionCategoryBase {
+	GraphicsOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Render width. */
 	int nWidth;
 	/** @brief Render height. */
@@ -70,7 +240,7 @@ struct GraphicsOptions {
 	/** @brief Expand the aspect ratio to match the screen. */
 	bool bFitToScreen;
 	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */
-	char szScaleQuality[2];
+	OptionEntryEnum<ScalingQuality> scaleQuality;
 	/** @brief Only scale by values divisible by the width and height. */
 	bool bIntegerScaling;
 	/** @brief Enable vsync on the output. */
@@ -95,25 +265,28 @@ struct GraphicsOptions {
 	bool bShowFPS;
 };
 
-struct GameplayOptions {
+struct GameplayOptions : OptionCategoryBase {
+	GameplayOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Gameplay ticks per second. */
 	int nTickRate;
 	/** @brief Enable double walk speed when in town. */
-	bool bRunInTown;
+	OptionEntryBoolean runInTown;
 	/** @brief Do not let the mouse leave the application window. */
-	bool bGrabInput;
+	OptionEntryBoolean grabInput;
 	/** @brief Enable the Theo quest. */
-	bool bTheoQuest;
+	OptionEntryBoolean theoQuest;
 	/** @brief Enable the cow quest. */
-	bool bCowQuest;
+	OptionEntryBoolean cowQuest;
 	/** @brief Will players still damage other players in non-PvP mode. */
-	bool bFriendlyFire;
+	OptionEntryBoolean friendlyFire;
 	/** @brief Enable the bard hero class. */
-	bool bTestBard;
+	OptionEntryBoolean testBard;
 	/** @brief Enable the babarian hero class. */
-	bool bTestBarbarian;
+	OptionEntryBoolean testBarbarian;
 	/** @brief Show the current level progress. */
-	bool bExperienceBar;
+	OptionEntryBoolean experienceBar;
 	/** @brief Show enemy health at the top of the screen. */
 	bool bEnemyHealthBar;
 	/** @brief Automatically pick up gold when walking over it. */
@@ -140,7 +313,10 @@ struct GameplayOptions {
 	bool bDisableCripplingShrines;
 };
 
-struct ControllerOptions {
+struct ControllerOptions : OptionCategoryBase {
+	ControllerOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
 	char szMapping[1024];
 	/** @brief Use dpad for spell hotkeys without holding "start" */
@@ -155,7 +331,10 @@ struct ControllerOptions {
 #endif
 };
 
-struct NetworkOptions {
+struct NetworkOptions : OptionCategoryBase {
+	NetworkOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
 	/** @brief Most recently entered Hostname in join dialog. */
@@ -164,12 +343,18 @@ struct NetworkOptions {
 	uint16_t nPort;
 };
 
-struct ChatOptions {
+struct ChatOptions : OptionCategoryBase {
+	ChatOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Quick chat messages. */
 	char szHotKeyMsgs[QUICK_MESSAGE_OPTIONS][MAX_SEND_STR_LEN];
 };
 
-struct LanguageOptions {
+struct LanguageOptions : OptionCategoryBase {
+	LanguageOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Language code (IETF) for text. */
 	char szCode[6];
 };
@@ -184,6 +369,21 @@ struct Options {
 	NetworkOptions Network;
 	ChatOptions Chat;
 	LanguageOptions Language;
+
+	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
+	{
+		return {
+			&Diablo,
+			&Hellfire,
+			&Audio,
+			&Gameplay,
+			&Graphics,
+			&Controller,
+			&Network,
+			&Chat,
+			&Language,
+		};
+	}
 };
 
 bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");

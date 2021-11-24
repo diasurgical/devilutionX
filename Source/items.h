@@ -367,7 +367,7 @@ struct Item {
 		return IsScroll() && _iSpell == spellId;
 	}
 
-	[[nodiscard]] bool KeyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo)
+	[[nodiscard]] bool KeyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
 	{
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
 	}
@@ -414,9 +414,8 @@ struct CornerStoneStruct {
 struct Player;
 
 extern Item Items[MAXITEMS + 1];
-extern int ActiveItems[MAXITEMS];
-extern int ActiveItemCount;
-extern int AvailableItems[MAXITEMS];
+extern uint8_t ActiveItems[MAXITEMS];
+extern uint8_t ActiveItemCount;
 extern bool ShowUniqueItemInfoBox;
 extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
@@ -464,7 +463,7 @@ void SpawnMapOfDoom(Point position);
 void SpawnRuneBomb(Point position);
 void SpawnTheodore(Point position);
 void RespawnItem(Item *item, bool FlipFlag);
-void DeleteItem(int ii, int i);
+void DeleteItem(int i);
 void ProcessItems();
 void FreeItemGFX();
 void GetItemFrm(Item &item);

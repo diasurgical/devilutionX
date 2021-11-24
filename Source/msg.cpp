@@ -715,16 +715,20 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 				}
 			}
 
-			if (ii == -1) { // No item at the target position or the key attributes don't match, so try find a matching item.
-				ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
+			if (ii == -1) {
+				// No item at the target position or the key attributes don't match, so try find a matching item.
+				int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
+				if (activeItemIndex != -1) {
+					ii = ActiveItems[activeItemIndex];
+				}
 			}
 
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_GETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
-					InvGetItem(MyPlayerId, &Items[ii], ii);
+					InvGetItem(MyPlayerId, ii);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
@@ -743,20 +747,20 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsGItemValid(message)) {
 		const Point position { message.x, message.y };
-		int ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
 		if (DeltaGetItem(message, message.bLevel)) {
 			if ((currlevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
 					if (currlevel != message.bLevel) {
 						auto &player = Players[MyPlayerId];
-						ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
-							InvGetItem(MyPlayerId, &Items[ii], ii);
+							InvGetItem(MyPlayerId, ii);
 					} else {
-						InvGetItem(MyPlayerId, &Items[ii], ii);
+						int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
+						InvGetItem(MyPlayerId, ActiveItems[activeItemIndex]);
 					}
 				} else {
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				}
 			}
 		} else {
@@ -788,11 +792,10 @@ DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1 && IOwnLevel(player.plrlevel) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
-			int ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
-			if (ii != -1) {
+			if (FindGetItem(message.dwSeed, message.wIndx, message.wCI) != -1) {
 				NetSendCmdGItem2(false, CMD_AGETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
 					AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
@@ -825,7 +828,7 @@ DWORD OnAutoGetItem(const TCmd *pCmd, int pnum)
 						AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
 					}
 				} else {
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				}
 			}
 		} else {
@@ -843,10 +846,11 @@ DWORD OnItemExtra(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsGItemValid(message)) {
-		const Point position { message.x, message.y };
 		DeltaGetItem(message, message.bLevel);
-		if (currlevel == Players[pnum].plrlevel)
-			SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+		if (currlevel == Players[pnum].plrlevel) {
+			const Point position { message.x, message.y };
+			SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
+		}
 	}
 
 	return sizeof(message);
@@ -1840,7 +1844,7 @@ DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	else if (Players[pnum]._pLevel < MAXCHARLEVEL - 1) {
 		Players[pnum]._pExperience = Players[pnum]._pNextExper;
-		if (sgOptions.Gameplay.bExperienceBar) {
+		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
 		NextPlrLevel(pnum);
@@ -2223,14 +2227,15 @@ void DeltaLoadLevel()
 			continue;
 
 		if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
-			int ii = FindGetItem(
+			int activeItemIndex = FindGetItem(
+			    sgLevels[currlevel].item[i].dwSeed,
 			    sgLevels[currlevel].item[i].wIndx,
-			    sgLevels[currlevel].item[i].wCI,
-			    sgLevels[currlevel].item[i].dwSeed);
-			if (ii != -1) {
-				if (dItem[Items[ii].position.x][Items[ii].position.y] == ii + 1)
-					dItem[Items[ii].position.x][Items[ii].position.y] = 0;
-				DeleteItem(ii, i);
+			    sgLevels[currlevel].item[i].wCI);
+			if (activeItemIndex != -1) {
+				const auto &position = Items[ActiveItems[activeItemIndex]].position;
+				if (dItem[position.x][position.y] == ActiveItems[activeItemIndex] + 1)
+					dItem[position.x][position.y] = 0;
+				DeleteItem(activeItemIndex);
 			}
 		}
 		if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {

@@ -28,6 +28,7 @@
 #include "diablo.h"
 #include "engine/demomode.h"
 #include "options.h"
+#include "qol/xpbar.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/paths.h"
@@ -188,6 +189,26 @@ bool HardwareCursorDefault()
 }
 #endif
 
+void OptionGrabInputChanged()
+{
+#ifdef USE_SDL1
+	SDL_WM_GrabInput(*sgOptions.Gameplay.grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#else
+	if (ghMainWnd != nullptr)
+		SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
+#endif
+}
+
+void OptionExperienceBarChanged()
+{
+	if (!gbRunGame)
+		return;
+	if (*sgOptions.Gameplay.experienceBar)
+		InitXPBar();
+	else
+		FreeXPBar();
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -215,10 +236,14 @@ bool sbWasOptionsLoaded = false;
 
 void LoadOptions()
 {
-	sgOptions.Diablo.bIntro = GetIniBool("Diablo", "Intro", true);
+	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
+		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
+			pEntry->LoadFromIni(pCategory->GetKey());
+		}
+	}
+
 	sgOptions.Diablo.lastSinglePlayerHero = GetIniInt("Diablo", "LastSinglePlayerHero", 0);
 	sgOptions.Diablo.lastMultiplayerHero = GetIniInt("Diablo", "LastMultiplayerHero", 0);
-	sgOptions.Hellfire.bIntro = GetIniBool("Hellfire", "Intro", true);
 	sgOptions.Hellfire.lastSinglePlayerHero = GetIniInt("Hellfire", "LastSinglePlayerHero", 0);
 	sgOptions.Hellfire.lastMultiplayerHero = GetIniInt("Hellfire", "LastMultiplayerHero", 0);
 	sgOptions.Hellfire.startUpGameOption = static_cast<StartUpGameOption>(GetIniInt("Hellfire", "StartUpGameOption", static_cast<int>(StartUpGameOption::None)));
@@ -226,9 +251,6 @@ void LoadOptions()
 
 	sgOptions.Audio.nSoundVolume = GetIniInt("Audio", "Sound Volume", VOLUME_MAX);
 	sgOptions.Audio.nMusicVolume = GetIniInt("Audio", "Music Volume", VOLUME_MAX);
-	sgOptions.Audio.bWalkingSound = GetIniBool("Audio", "Walking Sound", true);
-	sgOptions.Audio.bAutoEquipSound = GetIniBool("Audio", "Auto Equip Sound", AUTO_PICKUP_DEFAULT(false));
-	sgOptions.Audio.bItemPickupSound = GetIniBool("Audio", "Item Pickup Sound", AUTO_PICKUP_DEFAULT(false));
 
 	sgOptions.Audio.nSampleRate = GetIniInt("Audio", "Sample Rate", DEFAULT_AUDIO_SAMPLE_RATE);
 	sgOptions.Audio.nChannels = GetIniInt("Audio", "Channels", DEFAULT_AUDIO_CHANNELS);
@@ -248,7 +270,6 @@ void LoadOptions()
 	sgOptions.Graphics.bUpscale = false;
 #endif
 	sgOptions.Graphics.bFitToScreen = GetIniBool("Graphics", "Fit to Screen", true);
-	GetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.bIntegerScaling = GetIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = GetIniBool("Graphics", "Vertical Sync", true);
 	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
@@ -263,14 +284,6 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bRunInTown = GetIniBool("Game", "Run in Town", AUTO_PICKUP_DEFAULT(false));
-	sgOptions.Gameplay.bGrabInput = GetIniBool("Game", "Grab Input", false);
-	sgOptions.Gameplay.bTheoQuest = GetIniBool("Game", "Theo Quest", false);
-	sgOptions.Gameplay.bCowQuest = GetIniBool("Game", "Cow Quest", false);
-	sgOptions.Gameplay.bFriendlyFire = GetIniBool("Game", "Friendly Fire", true);
-	sgOptions.Gameplay.bTestBard = GetIniBool("Game", "Test Bard", false);
-	sgOptions.Gameplay.bTestBarbarian = GetIniBool("Game", "Test Barbarian", false);
-	sgOptions.Gameplay.bExperienceBar = GetIniBool("Game", "Experience Bar", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bEnemyHealthBar = GetIniBool("Game", "Enemy Health Bar", false);
 	sgOptions.Gameplay.bAutoGoldPickup = GetIniBool("Game", "Auto Gold Pickup", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bAdriaRefillsMana = GetIniBool("Game", "Adria Refills Mana", false);
@@ -373,10 +386,14 @@ void LoadOptions()
 
 void SaveOptions()
 {
-	SetIniValue("Diablo", "Intro", sgOptions.Diablo.bIntro);
+	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
+		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
+			pEntry->SaveToIni(pCategory->GetKey());
+		}
+	}
+
 	SetIniValue("Diablo", "LastSinglePlayerHero", sgOptions.Diablo.lastSinglePlayerHero);
 	SetIniValue("Diablo", "LastMultiplayerHero", sgOptions.Diablo.lastMultiplayerHero);
-	SetIniValue("Hellfire", "Intro", sgOptions.Hellfire.bIntro);
 	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
 	SetIniValue("Hellfire", "LastSinglePlayerHero", sgOptions.Hellfire.lastSinglePlayerHero);
 	SetIniValue("Hellfire", "LastMultiplayerHero", sgOptions.Hellfire.lastMultiplayerHero);
@@ -384,9 +401,6 @@ void SaveOptions()
 
 	SetIniValue("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
-	SetIniValue("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
-	SetIniValue("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
-	SetIniValue("Audio", "Item Pickup Sound", sgOptions.Audio.bItemPickupSound);
 
 	SetIniValue("Audio", "Sample Rate", sgOptions.Audio.nSampleRate);
 	SetIniValue("Audio", "Channels", sgOptions.Audio.nChannels);
@@ -401,7 +415,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
 #endif
 	SetIniValue("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
-	SetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	SetIniValue("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
 	SetIniValue("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
 	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
@@ -416,14 +429,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	SetIniValue("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
-	SetIniValue("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
-	SetIniValue("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
-	SetIniValue("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
-	SetIniValue("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
-	SetIniValue("Game", "Test Bard", sgOptions.Gameplay.bTestBard);
-	SetIniValue("Game", "Test Barbarian", sgOptions.Gameplay.bTestBarbarian);
-	SetIniValue("Game", "Experience Bar", sgOptions.Gameplay.bExperienceBar);
 	SetIniValue("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
 	SetIniValue("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
 	SetIniValue("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
@@ -457,6 +462,241 @@ void SaveOptions()
 	keymapper.Save();
 
 	SaveIni();
+}
+
+string_view OptionEntryBase::GetName() const
+{
+	return _(name.data());
+}
+string_view OptionEntryBase::GetDescription() const
+{
+	return _(description.data());
+}
+OptionEntryFlags OptionEntryBase::GetFlags() const
+{
+	return flags;
+}
+void OptionEntryBase::SetValueChangedCallback(std::function<void()> callback)
+{
+	this->callback = callback;
+}
+void OptionEntryBase::NotifyValueChanged()
+{
+	if (callback)
+		callback();
+}
+
+void OptionEntryBoolean::LoadFromIni(string_view category)
+{
+	value = GetIniBool(category.data(), key.data(), defaultValue);
+}
+void OptionEntryBoolean::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), key.data(), value);
+}
+bool OptionEntryBoolean::operator*() const
+{
+	return value;
+}
+void OptionEntryBoolean::SetValue(bool value)
+{
+	this->value = value;
+	this->NotifyValueChanged();
+}
+OptionEntryType OptionEntryBoolean::GetType() const
+{
+	return OptionEntryType::Boolean;
+}
+string_view OptionEntryBoolean::GetValueDescription() const
+{
+	return value ? _("ON") : _("OFF");
+}
+
+OptionEntryType OptionEntryListBase::GetType() const
+{
+	return OptionEntryType::List;
+}
+string_view OptionEntryListBase::GetValueDescription() const
+{
+	return GetListDescription(GetActiveListIndex());
+}
+
+void OptionEntryEnumBase::LoadFromIni(string_view category)
+{
+	value = GetIniInt(category.data(), key.data(), defaultValue);
+}
+void OptionEntryEnumBase::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), key.data(), value);
+}
+int OptionEntryEnumBase::GetValueInternal() const
+{
+	return value;
+}
+void OptionEntryEnumBase::AddEntry(int value, string_view name)
+{
+	entryValues.push_back(value);
+	entryNames.push_back(name);
+}
+size_t OptionEntryEnumBase::GetListSize() const
+{
+	return entryValues.size();
+}
+string_view OptionEntryEnumBase::GetListDescription(size_t index) const
+{
+	return _(entryNames[index].data());
+}
+size_t OptionEntryEnumBase::GetActiveListIndex() const
+{
+	auto iterator = std::find(entryValues.begin(), entryValues.end(), value);
+	if (iterator == entryValues.end())
+		return 0;
+	return std::distance(entryValues.begin(), iterator);
+}
+void OptionEntryEnumBase::SetActiveListIndex(size_t index)
+{
+	this->value = entryValues[index];
+	this->NotifyValueChanged();
+}
+
+OptionCategoryBase::OptionCategoryBase(string_view key, string_view name, string_view description)
+    : key(key)
+    , name(name)
+    , description(description)
+{
+}
+string_view OptionCategoryBase::GetKey() const
+{
+	return key;
+}
+string_view OptionCategoryBase::GetName() const
+{
+	return _(name.data());
+}
+string_view OptionCategoryBase::GetDescription() const
+{
+	return _(description.data());
+}
+
+DiabloOptions::DiabloOptions()
+    : OptionCategoryBase("Diablo", N_("Diablo"), N_("Diablo specific Settings"))
+    , intro("Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Enable/disable Intro cinematic."), true)
+{
+}
+std::vector<OptionEntryBase *> DiabloOptions::GetEntries()
+{
+	return {
+		&intro,
+	};
+}
+
+HellfireOptions::HellfireOptions()
+    : OptionCategoryBase("Hellfire", N_("Hellfire"), N_("Hellfire specific Settings"))
+    , intro("Intro", OptionEntryFlags::OnlyHellfire, N_("Intro"), N_("Enable/disable Intro cinematic."), true)
+{
+}
+std::vector<OptionEntryBase *> HellfireOptions::GetEntries()
+{
+	return {
+		&intro,
+	};
+}
+
+AudioOptions::AudioOptions()
+    : OptionCategoryBase("Audio", N_("Audio"), N_("Audio Settings"))
+    , walkingSound("Walking Sound", OptionEntryFlags::None, N_("Walking Sound"), N_("Player emits sound when walking."), true)
+    , autoEquipSound("Auto Equip Sound", OptionEntryFlags::None, N_("Auto Equip Sound"), N_("Automatically equipping items on pickup emits the equipment sound."), AUTO_PICKUP_DEFAULT(false))
+    , itemPickupSound("Item Pickup Sound", OptionEntryFlags::None, N_("Item Pickup Sound"), N_("Picking up items emits the items pickup sound."), AUTO_PICKUP_DEFAULT(false))
+{
+}
+std::vector<OptionEntryBase *> AudioOptions::GetEntries()
+{
+	return {
+		&walkingSound,
+		&autoEquipSound,
+		&itemPickupSound,
+	};
+}
+
+GraphicsOptions::GraphicsOptions()
+    : OptionCategoryBase("Graphics", N_("Graphics"), N_("Graphics Settings"))
+    , scaleQuality("Scaling Quality", OptionEntryFlags::None, N_("Scaling Quality"), N_("Enables optional filters to the output image when upscaling."), ScalingQuality::AnisotropicFiltering,
+          {
+              { ScalingQuality::NearestPixel, N_("Nearest Pixel") },
+              { ScalingQuality::BilinearFiltering, N_("Bilinear") },
+              { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
+          })
+{
+}
+std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
+{
+	return {
+		&scaleQuality,
+	};
+}
+
+GameplayOptions::GameplayOptions()
+    : OptionCategoryBase("Game", N_("Gameplay"), N_("Gameplay Settings"))
+    , runInTown("Run in Town", OptionEntryFlags::CantChangeInMultiPlayer, N_("Run in Town"), N_("Enable jogging/fast walking in town for Diablo and Hellfire. This option was introduced in the expansion."), AUTO_PICKUP_DEFAULT(false))
+    , grabInput("Grab Input", OptionEntryFlags::None, N_("Grab Input"), N_("When enabled mouse is locked to the game window."), false)
+    , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
+    , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
+    , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
+    , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
+    , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
+    , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), AUTO_PICKUP_DEFAULT(false))
+{
+	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
+	grabInput.SetValueChangedCallback(OptionExperienceBarChanged);
+}
+std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
+{
+	return {
+		&runInTown,
+		&grabInput,
+		&theoQuest,
+		&cowQuest,
+		&friendlyFire,
+		&testBard,
+		&testBarbarian,
+		&experienceBar,
+	};
+}
+
+ControllerOptions::ControllerOptions()
+    : OptionCategoryBase("Controller", N_("Controller"), N_("Controller Settings"))
+{
+}
+std::vector<OptionEntryBase *> ControllerOptions::GetEntries()
+{
+	return {};
+}
+
+NetworkOptions::NetworkOptions()
+    : OptionCategoryBase("Network", N_("Network"), N_("Network Settings"))
+{
+}
+std::vector<OptionEntryBase *> NetworkOptions::GetEntries()
+{
+	return {};
+}
+
+ChatOptions::ChatOptions()
+    : OptionCategoryBase("NetMsg", N_("Chat"), N_("Chat Settings"))
+{
+}
+std::vector<OptionEntryBase *> ChatOptions::GetEntries()
+{
+	return {};
+}
+
+LanguageOptions::LanguageOptions()
+    : OptionCategoryBase("Language", N_("Language"), N_("Language Settings"))
+{
+}
+std::vector<OptionEntryBase *> LanguageOptions::GetEntries()
+{
+	return {};
 }
 
 } // namespace devilution

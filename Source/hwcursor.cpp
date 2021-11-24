@@ -64,7 +64,7 @@ Point GetHotpointPosition(const SDL_Surface &surface, HotpointPosition position)
 
 bool ShouldUseBilinearScaling()
 {
-	return sgOptions.Graphics.szScaleQuality[0] != '0';
+	return *sgOptions.Graphics.scaleQuality != ScalingQuality::NearestPixel;
 }
 
 bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)

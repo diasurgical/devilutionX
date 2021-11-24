@@ -40,9 +40,8 @@ namespace devilution {
 
 /** Contains the items on ground in the current game. */
 Item Items[MAXITEMS + 1];
-int ActiveItems[MAXITEMS];
-int ActiveItemCount;
-int AvailableItems[MAXITEMS];
+uint8_t ActiveItems[MAXITEMS];
+uint8_t ActiveItemCount;
 bool ShowUniqueItemInfoBox;
 CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
@@ -2539,7 +2538,7 @@ bool IsItemAvailable(int i)
 	    || (
 	        // Bard items are technically Hellfire-exclusive
 	        // but are just normal items with adjusted stats.
-	        sgOptions.Gameplay.bTestBard && IsAnyOf(i, IDI_BARDSWORD, IDI_BARDDAGGER));
+	        *sgOptions.Gameplay.testBard && IsAnyOf(i, IDI_BARDSWORD, IDI_BARDDAGGER));
 }
 
 BYTE GetOutlineColor(const Item &item, bool checkReq)
@@ -2591,9 +2590,8 @@ void InitItems()
 		item._iPostDraw = false;
 	}
 
-	for (int i = 0; i < MAXITEMS; i++) {
-		AvailableItems[i] = i;
-		ActiveItems[i] = 0;
+	for (uint8_t i = 0; i < MAXITEMS; i++) {
+		ActiveItems[i] = i;
 	}
 
 	if (!setlevel) {
@@ -3231,12 +3229,12 @@ bool ItemSpaceOk(Point position)
 
 int AllocateItem()
 {
-	int inum = AvailableItems[0];
-	AvailableItems[0] = AvailableItems[MAXITEMS - ActiveItemCount - 1];
-	ActiveItems[ActiveItemCount] = inum;
+	assert(ActiveItemCount < MAXITEMS);
+
+	int inum = ActiveItems[ActiveItemCount];
 	ActiveItemCount++;
 
-	memset(&Items[inum], 0, sizeof(*Items));
+	Items[inum] = {};
 
 	return inum;
 }
@@ -3561,7 +3559,7 @@ void CornerstoneLoad(Point position)
 		int ii = dItem[position.x][position.y] - 1;
 		for (int i = 0; i < ActiveItemCount; i++) {
 			if (ActiveItems[i] == ii) {
-				DeleteItem(ii, i);
+				DeleteItem(i);
 				break;
 			}
 		}
@@ -3680,14 +3678,20 @@ void RespawnItem(Item *item, bool flipFlag)
 		item->_iSelFlag = 1;
 }
 
-void DeleteItem(int ii, int i)
+void DeleteItem(int i)
 {
-	AvailableItems[MAXITEMS - ActiveItemCount] = ii;
-	ActiveItemCount--;
-	if (ActiveItemCount > 0 && i != ActiveItemCount)
-		ActiveItems[i] = ActiveItems[ActiveItemCount];
-	if (pcursitem == ii) // Unselect item if player has it highlighted
+	if (ActiveItemCount > 0)
+		ActiveItemCount--;
+
+	assert(i >= 0 && i < MAXITEMS && ActiveItemCount < MAXITEMS);
+
+	if (pcursitem == ActiveItems[i]) // Unselect item if player has it highlighted
 		pcursitem = -1;
+
+	if (i < ActiveItemCount) {
+		// If the deleted item was not already at the end of the active list, swap the indexes around to make the next item allocation simpler.
+		std::swap(ActiveItems[i], ActiveItems[ActiveItemCount]);
+	}
 }
 
 void ProcessItems()
