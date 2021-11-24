@@ -357,10 +357,10 @@ public:
 	}
 
 	// private:
+	size_t viewportSize;
 	Sint16 m_x, m_y;
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;
 	int m_spacing;
-	size_t viewportSize;
 };
 } // namespace devilution
