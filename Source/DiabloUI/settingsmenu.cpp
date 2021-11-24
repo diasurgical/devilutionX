@@ -3,6 +3,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/scrollbar.h"
 #include "control.h"
+#include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "utils/language.h"
@@ -33,6 +34,14 @@ bool IsValidEntry(OptionEntryBase *pOptionEntry)
 	return HasNoneOf(pOptionEntry->GetFlags(), OptionEntryFlags::Invisible | (gbIsHellfire ? OptionEntryFlags::OnlyDiablo : OptionEntryFlags::OnlyHellfire));
 }
 
+std::vector<DrawStringFormatArg> CreateDrawStringFormatArgForEntry(OptionEntryBase *pEntry)
+{
+	return std::vector<DrawStringFormatArg> {
+		{ pEntry->GetName().data(), UiFlags::ColorUiGold },
+		{ pEntry->GetValueDescription().data(), UiFlags::ColorUiSilver }
+	};
+}
+
 void ItemFocused(int value)
 {
 	auto &vecItem = vecDialogItems[value];
@@ -51,6 +60,8 @@ void ItemSelected(int value)
 	if (vecItem->m_value < 0) {
 		auto specialMenuEntry = static_cast<SpecialMenuEntry>(vecItem->m_value);
 		switch (specialMenuEntry) {
+		case SpecialMenuEntry::None:
+			break;
 		case SpecialMenuEntry::PreviousMenu:
 			endMenu = true;
 			break;
@@ -83,7 +94,9 @@ void ItemSelected(int value)
 		pOptionList->SetActiveListIndex(nextIndex);
 	} break;
 	}
-	vecDialogItems[value + 1]->m_text = pOption->GetValueDescription().data();
+	vecDialogItems[value]->args.clear();
+	for (auto &arg : CreateDrawStringFormatArgForEntry(pOption))
+		vecDialogItems[value]->args.push_back(arg);
 }
 
 void EscPressed()
@@ -132,8 +145,8 @@ void UiSettingsMenu()
 					vecDialogItems.push_back(std::make_unique<UiListItem>(pCategory->GetName().data(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
 					categoryCreated = true;
 				}
-				vecDialogItems.push_back(std::make_unique<UiListItem>(pEntry->GetName().data(), vecOptions.size(), UiFlags::ColorUiGold | UiFlags::NeedsNextElement));
-				vecDialogItems.push_back(std::make_unique<UiListItem>(pEntry->GetValueDescription().data(), vecOptions.size(), UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
+				auto formatArgs = CreateDrawStringFormatArgForEntry(pEntry);
+				vecDialogItems.push_back(std::make_unique<UiListItem>("{}: {}", formatArgs, vecOptions.size(), UiFlags::ColorUiGold));
 				vecOptions.push_back(pEntry);
 			}
 		}
