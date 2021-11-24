@@ -4514,77 +4514,71 @@ void SpawnPremium(int pnum)
 void SpawnWitch(int lvl)
 {
 	constexpr int PinnedItemCount = 3;
+	constexpr std::array<int, PinnedItemCount> PinnedItemTypes = { IDI_MANA, IDI_FULLMANA, IDI_PORTAL };
+	constexpr int MaxPinnedBookCount = 4;
+	constexpr std::array<int, MaxPinnedBookCount> PinnedBookTypes = { 114, 115, 116, 117 };
 
-	int j = PinnedItemCount;
+	int bookCount = 0;
+	const int pinnedBookCount = gbIsHellfire ? GenerateRnd(MaxPinnedBookCount) : 0;
+	const int reservedItems = gbIsHellfire ? 10 : 17;
+	const int itemCount = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
+	const int maxValue = gbIsHellfire ? 200000 : 140000;
 
-	witchitem[0] = {};
-	GetItemAttrs(witchitem[0], IDI_MANA, 1);
-	witchitem[0]._iCreateInfo = lvl;
-	witchitem[0]._iStatFlag = true;
-	witchitem[1] = {};
-	GetItemAttrs(witchitem[1], IDI_FULLMANA, 1);
-	witchitem[1]._iCreateInfo = lvl;
-	witchitem[1]._iStatFlag = true;
-	witchitem[2] = {};
-	GetItemAttrs(witchitem[2], IDI_PORTAL, 1);
-	witchitem[2]._iCreateInfo = lvl;
-	witchitem[2]._iStatFlag = true;
+	for (int i = 0; i < WITCH_ITEMS; i++) {
+		Item &item = witchitem[i];
+		item = {};
 
-	int maxValue = 140000;
-	int reservedItems = 12;
-	if (gbIsHellfire) {
-		maxValue = 200000;
-		reservedItems = 10;
-
-		int books = GenerateRnd(4);
-		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
-			if (!WitchItemOk(i))
-				continue;
-			if (lvl < AllItemsList[i].iMinMLvl)
-				continue;
-
-			auto &bookItem = witchitem[j];
-
-			bookItem = {};
-			bookItem._iSeed = AdvanceRndSeed();
-			SetRndSeed(bookItem._iSeed);
-			AdvanceRndSeed();
-
-			GetItemAttrs(bookItem, i, lvl);
-			bookItem._iCreateInfo = lvl | CF_WITCH;
-			bookItem._iIdentified = true;
-			WitchBookLevel(bookItem);
-			bookItem._iStatFlag = StoreStatOk(bookItem);
-			j++;
-			bCnt++;
+		if (i < PinnedItemCount) {
+			item._iSeed = AdvanceRndSeed();
+			GetItemAttrs(item, PinnedItemTypes[i], 1);
+			item._iCreateInfo = lvl;
+			item._iStatFlag = true;
+			continue;
 		}
-	}
-	int iCnt = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
 
-	for (int i = j; i < iCnt; i++) {
-		auto &newItem = witchitem[i];
+		if (gbIsHellfire) {
+			if (i < PinnedItemCount + MaxPinnedBookCount && bookCount < pinnedBookCount) {
+				int bookType = PinnedBookTypes[i - PinnedItemCount];
+				if (lvl >= AllItemsList[bookType].iMinMLvl) {
+
+					item._iSeed = AdvanceRndSeed();
+					SetRndSeed(item._iSeed);
+					GetItemAttrs(item, bookType, lvl);
+					item._iCreateInfo = lvl | CF_WITCH;
+					item._iIdentified = true;
+					WitchBookLevel(item);
+					item._iStatFlag = StoreStatOk(item);
+					bookCount++;
+					continue;
+				}
+			}
+		}
+
+		if (i >= itemCount) {
+			item._itype = ItemType::None;
+			continue;
+		}
+
 		do {
-			newItem = {};
-			newItem._iSeed = AdvanceRndSeed();
-			SetRndSeed(newItem._iSeed);
+			item = {};
+			item._iSeed = AdvanceRndSeed();
+			SetRndSeed(item._iSeed);
 			int itemData = RndWitchItem(lvl) - 1;
-			GetItemAttrs(newItem, itemData, lvl);
+			GetItemAttrs(item, itemData, lvl);
 			int maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
 				maxlvl = 2 * lvl;
-			if (maxlvl == -1 && newItem._iMiscId == IMISC_STAFF)
+			if (maxlvl == -1 && item._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
 			if (maxlvl != -1)
-				GetItemBonus(newItem, maxlvl / 2, maxlvl, true, true);
-		} while (newItem._iIvalue > maxValue);
-		newItem._iCreateInfo = lvl | CF_WITCH;
-		newItem._iIdentified = true;
-		WitchBookLevel(newItem);
-		newItem._iStatFlag = StoreStatOk(newItem);
-	}
+				GetItemBonus(item, maxlvl / 2, maxlvl, true, true);
+		} while (item._iIvalue > maxValue);
 
-	for (int i = iCnt; i < WITCH_ITEMS; i++)
-		witchitem[i]._itype = ItemType::None;
+		item._iCreateInfo = lvl | CF_WITCH;
+		item._iIdentified = true;
+		WitchBookLevel(item);
+		item._iStatFlag = StoreStatOk(item);
+	}
 
 	SortVendor(witchitem + PinnedItemCount);
 }
