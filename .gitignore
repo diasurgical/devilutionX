@@ -19,6 +19,9 @@ comparer-config.toml
 /build-*/
 .vscode/tasks.json
 
+# Extra files in the source distribution (see make_src_dist.py)
+/dist/
+
 # ELF object file, shared library and object archive.
 *.o
 *.so
