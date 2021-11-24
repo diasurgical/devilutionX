@@ -471,7 +471,7 @@ msgstr "Кошмарнa"
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:246
 #: Source/diablo.cpp:1448
 msgid "Hell"
-msgstr "Ад на земята"
+msgstr "Адска"
 
 #: Source/DiabloUI/selgame.cpp:201
 msgid "Join TCP Games"
