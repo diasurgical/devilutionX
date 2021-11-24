@@ -1952,7 +1952,7 @@ msgstr "부활 두루마리"
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:167
 msgid "Blacksmith Oil"
-msgstr "대장장이의 윤활유"
+msgstr "대장장이 기름"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
@@ -2428,7 +2428,7 @@ msgstr "석화의 룬"
 
 #: Source/itemdat.cpp:182
 msgid "Short Staff of Charged Bolt"
-msgstr "돌격탄의 단지팡이"
+msgstr "돌격탄 단지팡이"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
@@ -2569,7 +2569,7 @@ msgstr "왕의"
 
 #: Source/itemdat.cpp:227
 msgid "Vulnerable"
-msgstr "연약한"
+msgstr "취약한"
 
 #: Source/itemdat.cpp:228
 msgid "Rusted"
@@ -6329,7 +6329,7 @@ msgstr "돌격탄"
 #: Source/spelldat.cpp:46
 msgctxt "spell"
 msgid "Holy Bolt"
-msgstr "신성한 화살"
+msgstr "신성 화살"
 
 #: Source/spelldat.cpp:47
 msgctxt "spell"
@@ -6532,32 +6532,32 @@ msgstr "상점을 떠난다"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:714 Source/stores.cpp:1089
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "이런 물건들을 구비하고 있지:             소지금: {:d}"
+msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:420
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "이런 특별품들을 구비하고 있지:     소지금: {:d}"
+msgstr "이런 특별 물품들이 구비되어 있습니다:     소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:541 Source/stores.cpp:804
 msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "내가 원하는 물건이 없군.             소지금: {:d}"
+msgstr "매각할 물품이 없습니다.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:554 Source/stores.cpp:817
 msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "무엇을 판매할 텐가?             소지금: {:d}"
+msgstr "무엇을 매각하겠습니까?             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:627
 msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "수리할 것이 없군.             소지금: {:d}"
+msgstr "수리할 것이 없습니다.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:640
 msgid "Repair which item?             Your gold: {:d}"
-msgstr "무엇을 수리할 텐가?             소지금: {:d}"
+msgstr "무엇을 수리하겠습니까?             소지금: {:d}"
 
 #: Source/stores.cpp:669
 msgid "Witch's shack"
@@ -6569,7 +6569,7 @@ msgstr "아드리아와 대화"
 
 #: Source/stores.cpp:672 Source/stores.cpp:1056
 msgid "Buy items"
-msgstr "풀품 구매"
+msgstr "물품 구매"
 
 #: Source/stores.cpp:674
 msgid "Recharge staves"
@@ -6582,7 +6582,7 @@ msgstr "오두막을 떠난다"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:881
 msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "충전할 것이 없군요.             소지금: {:d}"
+msgstr "충전할 것이 없습니다.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:894
@@ -6643,7 +6643,7 @@ msgstr "보고 싶다면 말이죠. "
 
 #: Source/stores.cpp:993
 msgid "What have you got?"
-msgstr "뭘 갖고 있나요?"
+msgstr "지불한다"
 
 #: Source/stores.cpp:994 Source/stores.cpp:997 Source/stores.cpp:1113
 #: Source/stores.cpp:1308
@@ -6653,7 +6653,7 @@ msgstr "작별한다"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1007
 msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "이런 물건을 구비하고 있죠:             소지금: {:d}"
+msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:d}"
 
 #: Source/stores.cpp:1030
 msgid "Leave"
@@ -6686,12 +6686,12 @@ msgstr "물품 감별"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1205
 msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "감별할 게 없군 그래.             소지금: {:d}"
+msgstr "감별할 물품이 없습니다.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1218
 msgid "Identify which item?             Your gold: {:d}"
-msgstr "어느 물건을 감별하겠나?             소지금: {:d}"
+msgstr "어느 물품을 감별하겠습니까?             소지금: {:d}"
 
 #: Source/stores.cpp:1237
 msgid "This item is:"
