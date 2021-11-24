@@ -15,7 +15,6 @@
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
-#include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
@@ -802,7 +801,10 @@ void Render(const UiList *uiList)
 			DrawSelector(rect);
 
 		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
-		DrawString(out, item->m_text, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
+		if (item->args.size() == 0)
+			DrawString(out, item->m_text, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
+		else
+			DrawStringWithColors(out, item->m_text, item->args, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
 	}
 }
 
