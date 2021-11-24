@@ -10925,22 +10925,3 @@ msgstr "Надолу към Диабло"
 #: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "Нагоре към Ниво {:d}"
-
-#~ msgid "Replay Intro"
-#~ msgstr "Начално видео"
-
-#~ msgid "Extras"
-#~ msgstr "Екстри"
-
-#~ msgid "Mana: {:d}  Dam: {:d} - {:d}"
-#~ msgstr "Мана: {:d}  Щети: {:d} - {:d}"
-
-#~ msgid "Mana: {:d}   Dam: n/a"
-#~ msgstr "Мана: {:d}  Щети: няма"
-
-#~ msgid ""
-#~ "The Diablo introduction cinematic is only available in the full retail "
-#~ "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-#~ msgstr ""
-#~ "Началното видео е налично само в пълната версия на играта. Посетете "
-#~ "https://www.gog.com/game/diablo, за да я закупите."
