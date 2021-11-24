@@ -5958,7 +5958,7 @@ msgstr "При включване мишката е заключена в про
 
 #: Source/options.cpp:642
 msgid "Theo Quest"
-msgstr "Задача Тео"
+msgstr "Задача Търсенето на Тео"
 
 #: Source/options.cpp:642
 msgid "Enable Little Girl quest."
