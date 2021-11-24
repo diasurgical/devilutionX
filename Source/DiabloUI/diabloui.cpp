@@ -42,10 +42,6 @@
 
 namespace devilution {
 
-std::size_t SelectedItemMax;
-std::size_t ListViewportSize = 1;
-std::size_t listOffset = 0;
-
 std::array<Art, 3> ArtLogos;
 std::array<Art, 3> ArtFocus;
 Art ArtBackgroundWidescreen;
@@ -55,6 +51,15 @@ Art ArtHero;
 bool gbSpawned;
 
 void (*gfnSoundFunction)(const char *file);
+bool textInputActive = true;
+std::size_t SelectedItem = 0;
+
+namespace {
+
+std::size_t SelectedItemMax;
+std::size_t ListViewportSize = 1;
+std::size_t listOffset = 0;
+
 void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
@@ -64,12 +69,7 @@ UiList *gUiList = nullptr;
 bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
-bool textInputActive = true;
 bool allowEmptyTextInput = false;
-
-std::size_t SelectedItem = 0;
-
-namespace {
 
 uint32_t fadeTc;
 int fadeValue = 0;
