@@ -23,6 +23,7 @@
 #include "menu.h"
 #include "miniwin/miniwin.h"
 #include "movie.h"
+#include "panels/spell_list.hpp"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
