@@ -7,6 +7,7 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
+#include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
 
@@ -249,10 +250,19 @@ public:
 	{
 	}
 
+	UiListItem(const char *text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
+	    : m_text(text)
+	    , args(args)
+	    , m_value(value)
+	    , uiFlags(uiFlags)
+	{
+	}
+
 	~UiListItem() {};
 
 	// private:
 	const char *m_text;
+	std::vector<DrawStringFormatArg> args;
 	int m_value;
 	UiFlags uiFlags;
 };
