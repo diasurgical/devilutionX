@@ -73,7 +73,7 @@ void SelconnLoad()
 	SDL_Rect rect8 = { (Sint16)(PANEL_LEFT + 16), (Sint16)(UI_OFFSET_Y + 427), 250, 35 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtTextButton>(_("Change Gateway"), nullptr, rect8, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold | UiFlags::ElementHidden));
 
-	vecSelConnDlg.push_back(std::make_unique<UiList>(vecConnItems, PANEL_LEFT + 305, (UI_OFFSET_Y + 256), 285, 26, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::VerticalCenter | UiFlags::ColorUiGoldDark));
+	vecSelConnDlg.push_back(std::make_unique<UiList>(vecConnItems, vecConnItems.size(), PANEL_LEFT + 305, (UI_OFFSET_Y + 256), 285, 26, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::VerticalCenter | UiFlags::ColorUiGoldDark));
 
 	SDL_Rect rect9 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect9, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -81,7 +81,7 @@ void SelconnLoad()
 	SDL_Rect rect10 = { (Sint16)(PANEL_LEFT + 454), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtTextButton>(_("Cancel"), &UiFocusNavigationEsc, rect10, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	UiInitList(vecConnItems.size(), SelconnFocus, SelconnSelect, SelconnEsc, vecSelConnDlg, true);
+	UiInitList(SelconnFocus, SelconnSelect, SelconnEsc, vecSelConnDlg, true);
 }
 
 void SelconnFree()

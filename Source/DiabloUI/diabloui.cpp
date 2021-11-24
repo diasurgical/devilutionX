@@ -42,10 +42,6 @@
 
 namespace devilution {
 
-std::size_t SelectedItemMax;
-std::size_t ListViewportSize = 1;
-std::size_t listOffset = 0;
-
 std::array<Art, 3> ArtLogos;
 std::array<Art, 3> ArtFocus;
 Art ArtBackgroundWidescreen;
@@ -55,6 +51,15 @@ Art ArtHero;
 bool gbSpawned;
 
 void (*gfnSoundFunction)(const char *file);
+bool textInputActive = true;
+std::size_t SelectedItem = 0;
+
+namespace {
+
+std::size_t SelectedItemMax;
+std::size_t ListViewportSize = 1;
+std::size_t listOffset = 0;
+
 void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
@@ -64,12 +69,7 @@ UiList *gUiList = nullptr;
 bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
-bool textInputActive = true;
 bool allowEmptyTextInput = false;
-
-std::size_t SelectedItem = 0;
-
-namespace {
 
 uint32_t fadeTc;
 int fadeValue = 0;
@@ -95,11 +95,11 @@ void AdjustListOffset(std::size_t itemIndex)
 
 } // namespace
 
-void UiInitList(size_t listViewportSize, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
+void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
 {
 	SelectedItem = selectedItem;
 	SelectedItemMax = 0;
-	ListViewportSize = listViewportSize;
+	ListViewportSize = 0;
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
@@ -109,7 +109,6 @@ void UiInitList(size_t listViewportSize, void (*fnFocus)(int value), void (*fnSe
 		gUiItems.push_back(item.get());
 	UiItemsWraps = itemsWraps;
 	listOffset = 0;
-	AdjustListOffset(selectedItem);
 	if (fnFocus != nullptr)
 		fnFocus(selectedItem);
 
@@ -138,11 +137,14 @@ void UiInitList(size_t listViewportSize, void (*fnFocus)(int value), void (*fnSe
 		} else if (item->m_type == UiType::List) {
 			auto *uiList = static_cast<UiList *>(item.get());
 			SelectedItemMax = std::max(uiList->m_vecItems.size() - 1, static_cast<size_t>(0));
+			ListViewportSize = uiList->viewportSize;
 			gUiList = uiList;
 		} else if (item->m_type == UiType::Scrollbar) {
 			uiScrollbar = static_cast<UiScrollbar *>(item.get());
 		}
 	}
+
+	AdjustListOffset(selectedItem);
 
 	if (uiScrollbar != nullptr) {
 		if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax + 1)) {
