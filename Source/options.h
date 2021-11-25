@@ -292,7 +292,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Automatically pick up gold when walking over it. */
 	OptionEntryBoolean autoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
-	bool bAdriaRefillsMana;
+	OptionEntryBoolean adriaRefillsMana;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
 	bool bAutoEquipWeapons;
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */

@@ -648,7 +648,7 @@ void StartSmithRepair()
 
 void FillManaPlayer()
 {
-	if (!sgOptions.Gameplay.bAdriaRefillsMana)
+	if (!*sgOptions.Gameplay.adriaRefillsMana)
 		return;
 
 	auto &myPlayer = Players[MyPlayerId];
