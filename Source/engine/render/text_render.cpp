@@ -218,17 +218,19 @@ public:
 		if (rest[0] != '{')
 			return result;
 
-		std::size_t fmtLen;
-		std::size_t closingBracePos;
-		bool positional;
-		if (rest.empty() || (rest[1] != '}' && rest.size() < 3)) {
+		std::size_t closingBracePos = rest.find('}', 1);
+		if (closingBracePos == string_view::npos) {
 			LogError("Unclosed format argument: {}", fmt_);
+			return result;
 		}
-		if (rest[2] == '}' && rest[1] >= '0' && rest[1] <= '9') {
+
+		std::size_t fmtLen;
+		bool positional;
+		if (closingBracePos == 2 && rest[1] >= '0' && rest[1] <= '9') {
 			result = rest[1] - '0';
 			fmtLen = 3;
 			positional = true;
-		} else if ((closingBracePos = rest.find('}', 1)) != string_view::npos) {
+		} else {
 			result = next_++;
 			fmtLen = closingBracePos + 1;
 			positional = false;
