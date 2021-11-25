@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"

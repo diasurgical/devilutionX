@@ -1,5 +1,7 @@
 #include "panels/spell_list.hpp"
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "controls/keymapper.hpp"
 #include "engine.h"

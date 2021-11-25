@@ -7,6 +7,7 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "cursor.h"
 #include "engine/load_file.hpp"
@@ -19,6 +20,7 @@
 #include "missiles.h"
 #include "monster.h"
 #include "options.h"
+#include "panels/ui_panels.hpp"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"

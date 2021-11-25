@@ -4,6 +4,7 @@
  * Implementation of functionality for rendering the dungeons, monsters and calling other render routines.
  */
 
+#include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "controls/touch/renderers.h"
 #include "cursor.h"

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fmt/format.h>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
@@ -19,6 +20,7 @@
 #include "inv_iterators.hpp"
 #include "minitext.h"
 #include "options.h"
+#include "panels/ui_panels.hpp"
 #include "plrmsg.h"
 #include "stores.h"
 #include "town.h"

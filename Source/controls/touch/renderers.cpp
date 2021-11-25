@@ -9,6 +9,7 @@
 #include "init.h"
 #include "inv.h"
 #include "minitext.h"
+#include "panels/ui_panels.hpp"
 #include "stores.h"
 #include "towners.h"
 #include "utils/sdl_compat.h"

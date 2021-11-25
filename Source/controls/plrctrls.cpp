@@ -20,6 +20,7 @@
 #include "minitext.h"
 #include "missiles.h"
 #include "panels/spell_list.hpp"
+#include "panels/ui_panels.hpp"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
