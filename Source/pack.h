@@ -85,9 +85,9 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
 /**
  * @brief Save the attributes needed to recreate this item into an ItemPack struct
  *
- * @param packedItem 
- * @param item 
-*/
+ * @param packedItem The destination packed struct
+ * @param item The source item
+ */
 void PackItem(ItemPack &packedItem, const Item &item);
 
 /**
