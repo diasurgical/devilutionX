@@ -290,7 +290,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Show enemy health at the top of the screen. */
 	OptionEntryBoolean enemyHealthBar;
 	/** @brief Automatically pick up gold when walking over it. */
-	bool bAutoGoldPickup;
+	OptionEntryBoolean autoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
 	bool bAdriaRefillsMana;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */

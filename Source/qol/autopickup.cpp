@@ -34,7 +34,7 @@ bool HasRoomForGold()
 
 void AutoGoldPickup(int pnum)
 {
-	if (!sgOptions.Gameplay.bAutoGoldPickup)
+	if (!*sgOptions.Gameplay.autoGoldPickup)
 		return;
 
 	if (pnum != MyPlayerId)
