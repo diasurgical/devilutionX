@@ -23,7 +23,7 @@ Art playerExpTags;
 
 void InitMonsterHealthBar()
 {
-	if (!sgOptions.Gameplay.bEnemyHealthBar)
+	if (!*sgOptions.Gameplay.enemyHealthBar)
 		return;
 
 	LoadMaskedArt("data\\healthbox.pcx", &healthBox, 1, 1);
@@ -49,7 +49,7 @@ void FreeMonsterHealthBar()
 
 void DrawMonsterHealthBar(const Surface &out)
 {
-	if (!sgOptions.Gameplay.bEnemyHealthBar)
+	if (!*sgOptions.Gameplay.enemyHealthBar)
 		return;
 
 	assert(healthBox.surface != nullptr);

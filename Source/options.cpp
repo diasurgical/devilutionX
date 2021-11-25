@@ -28,6 +28,7 @@
 #include "diablo.h"
 #include "engine/demomode.h"
 #include "options.h"
+#include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
@@ -210,6 +211,16 @@ void OptionExperienceBarChanged()
 		FreeXPBar();
 }
 
+void OptionEnemyHealthBarChanged()
+{
+	if (!gbRunGame)
+		return;
+	if (*sgOptions.Gameplay.enemyHealthBar)
+		InitMonsterHealthBar();
+	else
+		FreeMonsterHealthBar();
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -285,7 +296,6 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bEnemyHealthBar = GetIniBool("Game", "Enemy Health Bar", false);
 	sgOptions.Gameplay.bAutoGoldPickup = GetIniBool("Game", "Auto Gold Pickup", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bAdriaRefillsMana = GetIniBool("Game", "Adria Refills Mana", false);
 	sgOptions.Gameplay.bAutoEquipWeapons = GetIniBool("Game", "Auto Equip Weapons", true);
@@ -430,7 +440,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	SetIniValue("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
 	SetIniValue("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
 	SetIniValue("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
 	SetIniValue("Game", "Auto Equip Weapons", sgOptions.Gameplay.bAutoEquipWeapons);
@@ -646,9 +655,11 @@ GameplayOptions::GameplayOptions()
     , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
     , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
     , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), AUTO_PICKUP_DEFAULT(false))
+    , enemyHealthBar("Enemy Health Bar", OptionEntryFlags::None, N_("Enemy Health Bar"), N_("Enemy Health Bar is displayed at the top of the screen."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
-	grabInput.SetValueChangedCallback(OptionExperienceBarChanged);
+	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
+	enemyHealthBar.SetValueChangedCallback(OptionEnemyHealthBarChanged);
 }
 std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 {
@@ -661,6 +672,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&testBard,
 		&testBarbarian,
 		&experienceBar,
+		&enemyHealthBar,
 	};
 }
 

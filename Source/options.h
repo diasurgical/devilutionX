@@ -288,7 +288,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Show the current level progress. */
 	OptionEntryBoolean experienceBar;
 	/** @brief Show enemy health at the top of the screen. */
-	bool bEnemyHealthBar;
+	OptionEntryBoolean enemyHealthBar;
 	/** @brief Automatically pick up gold when walking over it. */
 	bool bAutoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
