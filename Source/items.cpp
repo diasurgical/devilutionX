@@ -4540,7 +4540,6 @@ void SpawnWitch(int lvl)
 			if (i < PinnedItemCount + MaxPinnedBookCount && bookCount < pinnedBookCount) {
 				int bookType = PinnedBookTypes[i - PinnedItemCount];
 				if (lvl >= AllItemsList[bookType].iMinMLvl) {
-
 					item._iSeed = AdvanceRndSeed();
 					SetRndSeed(item._iSeed);
 					GetItemAttrs(item, bookType, lvl);
