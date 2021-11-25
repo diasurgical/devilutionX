@@ -4701,44 +4701,35 @@ void SpawnBoy(int lvl)
 void SpawnHealer(int lvl)
 {
 	constexpr int PinnedItemCount = 2;
+	constexpr std::array<int, PinnedItemCount + 1> PinnedItemTypes = { IDI_HEAL, IDI_FULLHEAL, IDI_RESURRECT };
+	const int itemCount = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
 
-	int srnd;
+	for (int i = 0; i < 20; i++) {
+		Item &item = healitem[i];
+		item = {};
 
-	healitem[0] = {};
-	GetItemAttrs(healitem[0], IDI_HEAL, 1);
-	healitem[0]._iCreateInfo = lvl;
-	healitem[0]._iStatFlag = true;
+		if (i < PinnedItemCount || (gbIsMultiplayer && i == PinnedItemCount)) {
+			item._iSeed = AdvanceRndSeed();
+			GetItemAttrs(item, PinnedItemTypes[i], 1);
+			item._iCreateInfo = lvl;
+			item._iStatFlag = true;
+			continue;
+		}
 
-	healitem[1] = {};
-	GetItemAttrs(healitem[1], IDI_FULLHEAL, 1);
-	healitem[1]._iCreateInfo = lvl;
-	healitem[1]._iStatFlag = true;
+		if (i >= itemCount) {
+			item._itype = ItemType::None;
+			continue;
+		}
 
-	if (gbIsMultiplayer) {
-		healitem[2] = {};
-		GetItemAttrs(healitem[2], IDI_RESURRECT, 1);
-		healitem[2]._iCreateInfo = lvl;
-		healitem[2]._iStatFlag = true;
-
-		srnd = 3;
-	} else {
-		srnd = 2;
-	}
-	int nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
-	for (int i = srnd; i < nsi; i++) {
-		auto &newItem = healitem[i];
-		newItem = {};
-		newItem._iSeed = AdvanceRndSeed();
-		SetRndSeed(newItem._iSeed);
+		item._iSeed = AdvanceRndSeed();
+		SetRndSeed(item._iSeed);
 		int itype = RndHealerItem(lvl) - 1;
-		GetItemAttrs(newItem, itype, lvl);
-		newItem._iCreateInfo = lvl | CF_HEALER;
-		newItem._iIdentified = true;
-		newItem._iStatFlag = StoreStatOk(newItem);
+		GetItemAttrs(item, itype, lvl);
+		item._iCreateInfo = lvl | CF_HEALER;
+		item._iIdentified = true;
+		item._iStatFlag = StoreStatOk(item);
 	}
-	for (int i = nsi; i < 20; i++) {
-		healitem[i]._itype = ItemType::None;
-	}
+
 	SortVendor(healitem + PinnedItemCount);
 }
 
