@@ -529,17 +529,17 @@ void CalcPlrItemMin(Player &player)
 	}
 }
 
-void WitchBookLevel(int ii)
+void WitchBookLevel(Item &bookItem)
 {
-	if (witchitem[ii]._iMiscId != IMISC_BOOK)
+	if (bookItem._iMiscId != IMISC_BOOK)
 		return;
-	witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
-	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[witchitem[ii]._iSpell];
+	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
+	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[bookItem._iSpell];
 	while (spellLevel > 0) {
-		witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
+		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
 		spellLevel--;
-		if (witchitem[ii]._iMinMag + 20 * witchitem[ii]._iMinMag / 100 > 255) {
-			witchitem[ii]._iMinMag = 255;
+		if (bookItem._iMinMag + 20 * bookItem._iMinMag / 100 > 255) {
+			bookItem._iMinMag = 255;
 			spellLevel = 0;
 		}
 	}
@@ -563,7 +563,7 @@ void CalcPlrBookVals(Player &player)
 {
 	if (currlevel == 0) {
 		for (int i = 1; !witchitem[i].isEmpty(); i++) {
-			WitchBookLevel(i);
+			WitchBookLevel(witchitem[i]);
 			witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
 		}
 	}
@@ -2200,11 +2200,10 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-void SpawnOnePremium(int i, int plvl, int playerId)
+void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 {
 	int itemValue = 0;
 	bool keepGoing = false;
-	Item tempItem = Items[0];
 
 	auto &player = Players[playerId];
 
@@ -2221,22 +2220,22 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 
 	do {
 		keepGoing = false;
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		premiumItem = {};
+		premiumItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(premiumItem._iSeed);
 		int itemType = RndPremiumItem(plvl / 4, plvl) - 1;
-		GetItemAttrs(Items[0], itemType, plvl);
-		GetItemBonus(Items[0], plvl / 2, plvl, true, !gbIsHellfire);
+		GetItemAttrs(premiumItem, itemType, plvl);
+		GetItemBonus(premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
-			if (Items[0]._iIvalue > 140000) {
+			if (premiumItem._iIvalue > 140000) {
 				keepGoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
 			break;
 		}
 
-		switch (Items[0]._itype) {
+		switch (premiumItem._itype) {
 		case ItemType::LightArmor:
 		case ItemType::MediumArmor:
 		case ItemType::HeavyArmor: {
@@ -2258,7 +2257,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		case ItemType::Ring:
 		case ItemType::Amulet: {
 			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-			    [](const Item &item) { return item._itype == Items[0]._itype; });
+			    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
 
 			itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
@@ -2272,17 +2271,15 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		count++;
 	} while (keepGoing
 	    || ((
-	            Items[0]._iIvalue > 200000
-	            || Items[0]._iMinStr > strength
-	            || Items[0]._iMinMag > magic
-	            || Items[0]._iMinDex > dexterity
-	            || Items[0]._iIvalue < itemValue)
+	            premiumItem._iIvalue > 200000
+	            || premiumItem._iMinStr > strength
+	            || premiumItem._iMinMag > magic
+	            || premiumItem._iMinDex > dexterity
+	            || premiumItem._iIvalue < itemValue)
 	        && count < 150));
-	premiumitems[i] = Items[0];
-	premiumitems[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
-	premiumitems[i]._iIdentified = true;
-	premiumitems[i]._iStatFlag = StoreStatOk(premiumitems[i]);
-	Items[0] = tempItem;
+	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
+	premiumItem._iIdentified = true;
+	premiumItem._iStatFlag = StoreStatOk(premiumItem);
 }
 
 bool WitchItemOk(int i)
@@ -2574,14 +2571,12 @@ void InitItemGFX()
 
 void InitItems()
 {
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_GOLD, 1);
-	golditem = Items[0];
+	golditem = {};
+	GetItemAttrs(golditem, IDI_GOLD, 1);
 	golditem._iStatFlag = true;
 	ActiveItemCount = 0;
 
-	for (int i = 0; i < MAXITEMS; i++) {
-		auto &item = Items[i];
+	for (auto &item : Items) {
 		item._itype = ItemType::None;
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
@@ -3535,7 +3530,7 @@ void CornerstoneSave()
 		return;
 	if (!CornerStone.item.isEmpty()) {
 		ItemPack id;
-		PackItem(&id, &CornerStone.item);
+		PackItem(id, CornerStone.item);
 		const auto *buffer = reinterpret_cast<uint8_t *>(&id);
 		for (size_t i = 0; i < sizeof(ItemPack); i++) {
 			snprintf(&sgOptions.Hellfire.szItem[i * 2], 3, "%02hhX", buffer[i]);
@@ -3576,7 +3571,7 @@ void CornerstoneLoad(Point position)
 
 	dItem[position.x][position.y] = ii + 1;
 
-	UnPackItem(&pkSItem, &item, (pkSItem.dwBuff & CF_HELLFIRE) != 0);
+	UnPackItem(pkSItem, item, (pkSItem.dwBuff & CF_HELLFIRE) != 0);
 	item.position = position;
 	RespawnItem(&item, false);
 	CornerStone.item = item;
@@ -4452,9 +4447,6 @@ void SpawnSmith(int lvl)
 {
 	constexpr int PinnedItemCount = 0;
 
-	Item holditem;
-	holditem = Items[0];
-
 	int maxValue = 140000;
 	int maxItems = 20;
 	if (gbIsHellfire) {
@@ -4464,23 +4456,24 @@ void SpawnSmith(int lvl)
 
 	int iCnt = GenerateRnd(maxItems - 10) + 10;
 	for (int i = 0; i < iCnt; i++) {
+		Item &newItem = smithitem[i];
+
 		do {
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			newItem = {};
+			newItem._iSeed = AdvanceRndSeed();
+			SetRndSeed(newItem._iSeed);
 			int itemData = RndSmithItem(lvl) - 1;
-			GetItemAttrs(Items[0], itemData, lvl);
-		} while (Items[0]._iIvalue > maxValue);
-		smithitem[i] = Items[0];
-		smithitem[i]._iCreateInfo = lvl | CF_SMITH;
-		smithitem[i]._iIdentified = true;
-		smithitem[i]._iStatFlag = StoreStatOk(smithitem[i]);
+			GetItemAttrs(newItem, itemData, lvl);
+		} while (newItem._iIvalue > maxValue);
+
+		newItem._iCreateInfo = lvl | CF_SMITH;
+		newItem._iIdentified = true;
+		newItem._iStatFlag = StoreStatOk(newItem);
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ItemType::None;
 
 	SortVendor(smithitem + PinnedItemCount);
-	Items[0] = holditem;
 }
 
 void SpawnPremium(int pnum)
@@ -4491,7 +4484,7 @@ void SpawnPremium(int pnum)
 		for (int i = 0; i < maxItems; i++) {
 			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(i, plvl, pnum);
+				SpawnOnePremium(premiumitems[i], plvl, pnum);
 			}
 		}
 		numpremium = maxItems;
@@ -4501,17 +4494,17 @@ void SpawnPremium(int pnum)
 		if (gbIsHellfire) {
 			// Discard first 3 items and shift next 10
 			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(10, premiumlevel + premiumLvlAddHellfire[10], pnum);
+			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], pnum);
 			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(12, premiumlevel + premiumLvlAddHellfire[12], pnum);
+			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], pnum);
 			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(14, premiumlevel + premiumLvlAddHellfire[14], pnum);
+			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], pnum);
 		} else {
 			// Discard first 2 items and shift next 3
 			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(3, premiumlevel + premiumlvladd[3], pnum);
+			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], pnum);
 			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(5, premiumlevel + premiumlvladd[5], pnum);
+			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], pnum);
 		}
 	}
 }
@@ -4522,19 +4515,16 @@ void SpawnWitch(int lvl)
 
 	int j = PinnedItemCount;
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_MANA, 1);
-	witchitem[0] = Items[0];
+	witchitem[0] = {};
+	GetItemAttrs(witchitem[0], IDI_MANA, 1);
 	witchitem[0]._iCreateInfo = lvl;
 	witchitem[0]._iStatFlag = true;
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_FULLMANA, 1);
-	witchitem[1] = Items[0];
+	witchitem[1] = {};
+	GetItemAttrs(witchitem[1], IDI_FULLMANA, 1);
 	witchitem[1]._iCreateInfo = lvl;
 	witchitem[1]._iStatFlag = true;
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_PORTAL, 1);
-	witchitem[2] = Items[0];
+	witchitem[2] = {};
+	GetItemAttrs(witchitem[2], IDI_PORTAL, 1);
 	witchitem[2]._iCreateInfo = lvl;
 	witchitem[2]._iStatFlag = true;
 
@@ -4551,17 +4541,18 @@ void SpawnWitch(int lvl)
 			if (lvl < AllItemsList[i].iMinMLvl)
 				continue;
 
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			auto &bookItem = witchitem[j];
+
+			bookItem = {};
+			bookItem._iSeed = AdvanceRndSeed();
+			SetRndSeed(bookItem._iSeed);
 			AdvanceRndSeed();
 
-			GetItemAttrs(Items[0], i, lvl);
-			witchitem[j] = Items[0];
-			witchitem[j]._iCreateInfo = lvl | CF_WITCH;
-			witchitem[j]._iIdentified = true;
-			WitchBookLevel(j);
-			witchitem[j]._iStatFlag = StoreStatOk(witchitem[j]);
+			GetItemAttrs(bookItem, i, lvl);
+			bookItem._iCreateInfo = lvl | CF_WITCH;
+			bookItem._iIdentified = true;
+			WitchBookLevel(bookItem);
+			bookItem._iStatFlag = StoreStatOk(bookItem);
 			j++;
 			bCnt++;
 		}
@@ -4569,25 +4560,25 @@ void SpawnWitch(int lvl)
 	int iCnt = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
 
 	for (int i = j; i < iCnt; i++) {
+		auto &newItem = witchitem[i];
 		do {
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			newItem = {};
+			newItem._iSeed = AdvanceRndSeed();
+			SetRndSeed(newItem._iSeed);
 			int itemData = RndWitchItem(lvl) - 1;
-			GetItemAttrs(Items[0], itemData, lvl);
+			GetItemAttrs(newItem, itemData, lvl);
 			int maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
 				maxlvl = 2 * lvl;
-			if (maxlvl == -1 && Items[0]._iMiscId == IMISC_STAFF)
+			if (maxlvl == -1 && newItem._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
 			if (maxlvl != -1)
-				GetItemBonus(Items[0], maxlvl / 2, maxlvl, true, true);
-		} while (Items[0]._iIvalue > maxValue);
-		witchitem[i] = Items[0];
-		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
-		witchitem[i]._iIdentified = true;
-		WitchBookLevel(i);
-		witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
+				GetItemBonus(newItem, maxlvl / 2, maxlvl, true, true);
+		} while (newItem._iIvalue > maxValue);
+		newItem._iCreateInfo = lvl | CF_WITCH;
+		newItem._iIdentified = true;
+		WitchBookLevel(newItem);
+		newItem._iStatFlag = StoreStatOk(newItem);
 	}
 
 	for (int i = iCnt; i < WITCH_ITEMS; i++)
@@ -4616,15 +4607,15 @@ void SpawnBoy(int lvl)
 		return;
 	do {
 		keepgoing = false;
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		boyitem = {};
+		boyitem._iSeed = AdvanceRndSeed();
+		SetRndSeed(boyitem._iSeed);
 		int itype = RndBoyItem(lvl) - 1;
-		GetItemAttrs(Items[0], itype, lvl);
-		GetItemBonus(Items[0], lvl, 2 * lvl, true, true);
+		GetItemAttrs(boyitem, itype, lvl);
+		GetItemBonus(boyitem, lvl, 2 * lvl, true, true);
 
 		if (!gbIsHellfire) {
-			if (Items[0]._iIvalue > 90000) {
+			if (boyitem._iIvalue > 90000) {
 				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
@@ -4633,7 +4624,7 @@ void SpawnBoy(int lvl)
 
 		ivalue = 0;
 
-		ItemType itemType = Items[0]._itype;
+		ItemType itemType = boyitem._itype;
 
 		switch (itemType) {
 		case ItemType::LightArmor:
@@ -4699,13 +4690,12 @@ void SpawnBoy(int lvl)
 		}
 	} while (keepgoing
 	    || ((
-	            Items[0]._iIvalue > 200000
-	            || Items[0]._iMinStr > strength
-	            || Items[0]._iMinMag > magic
-	            || Items[0]._iMinDex > dexterity
-	            || Items[0]._iIvalue < ivalue)
+	            boyitem._iIvalue > 200000
+	            || boyitem._iMinStr > strength
+	            || boyitem._iMinMag > magic
+	            || boyitem._iMinDex > dexterity
+	            || boyitem._iIvalue < ivalue)
 	        && count < 250));
-	boyitem = Items[0];
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
 	boyitem._iStatFlag = StoreStatOk(boyitem);
@@ -4718,22 +4708,19 @@ void SpawnHealer(int lvl)
 
 	int srnd;
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_HEAL, 1);
-	healitem[0] = Items[0];
+	healitem[0] = {};
+	GetItemAttrs(healitem[0], IDI_HEAL, 1);
 	healitem[0]._iCreateInfo = lvl;
 	healitem[0]._iStatFlag = true;
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_FULLHEAL, 1);
-	healitem[1] = Items[0];
+	healitem[1] = {};
+	GetItemAttrs(healitem[1], IDI_FULLHEAL, 1);
 	healitem[1]._iCreateInfo = lvl;
 	healitem[1]._iStatFlag = true;
 
 	if (gbIsMultiplayer) {
-		memset(&Items[0], 0, sizeof(*Items));
-		GetItemAttrs(Items[0], IDI_RESURRECT, 1);
-		healitem[2] = Items[0];
+		healitem[2] = {};
+		GetItemAttrs(healitem[2], IDI_RESURRECT, 1);
 		healitem[2]._iCreateInfo = lvl;
 		healitem[2]._iStatFlag = true;
 
@@ -4743,15 +4730,15 @@ void SpawnHealer(int lvl)
 	}
 	int nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
 	for (int i = srnd; i < nsi; i++) {
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		auto &newItem = healitem[i];
+		newItem = {};
+		newItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(newItem._iSeed);
 		int itype = RndHealerItem(lvl) - 1;
-		GetItemAttrs(Items[0], itype, lvl);
-		healitem[i] = Items[0];
-		healitem[i]._iCreateInfo = lvl | CF_HEALER;
-		healitem[i]._iIdentified = true;
-		healitem[i]._iStatFlag = StoreStatOk(healitem[i]);
+		GetItemAttrs(newItem, itype, lvl);
+		newItem._iCreateInfo = lvl | CF_HEALER;
+		newItem._iIdentified = true;
+		newItem._iStatFlag = StoreStatOk(newItem);
 	}
 	for (int i = nsi; i < 20; i++) {
 		healitem[i]._itype = ItemType::None;
@@ -4761,9 +4748,8 @@ void SpawnHealer(int lvl)
 
 void SpawnStoreGold()
 {
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_GOLD, 1);
-	golditem = Items[0];
+	golditem = {};
+	GetItemAttrs(golditem, IDI_GOLD, 1);
 	golditem._iStatFlag = true;
 }
 

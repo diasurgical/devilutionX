@@ -81,16 +81,21 @@ struct PlayerPack {
 
 void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield);
 bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
-void PackItem(ItemPack *id, const Item *is);
 
 /**
- * Expand an ItemPack into an Item
+ * @brief Save the attributes needed to recreate this item into an ItemPack struct
  *
- * Note: last slot of item[MAXITEMS+1] used as temporary buffer
- * find real name reference below, possibly [sizeof(item[])/sizeof(Item)]
- * @param is The source packed item
- * @param id The destination item
+ * @param packedItem 
+ * @param item 
+*/
+void PackItem(ItemPack &packedItem, const Item &item);
+
+/**
+ * Expand a ItemPack in to a Item
+ *
+ * @param packedItem The source packed item
+ * @param item The destination item
  */
-void UnPackItem(const ItemPack *is, Item *id, bool isHellfire);
+void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire);
 
 } // namespace devilution

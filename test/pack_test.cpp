@@ -6,39 +6,39 @@
 
 using namespace devilution;
 
-static void ComparePackedItems(const ItemPack *item1, const ItemPack *item2)
+static void ComparePackedItems(const ItemPack &item1, const ItemPack &item2)
 {
 	// `ItemPack` is packed, so we copy the unaligned values out before comparing them.
 	// This avoids the following UBSAN error such as this one:
 	// runtime error: load of misaligned address for type 'const unsigned int', which requires 4 byte alignment
 	{
-		const auto item1_iSeed = item1->iSeed;
-		const auto item2_iSeed = item2->iSeed;
+		const auto item1_iSeed = item1.iSeed;
+		const auto item2_iSeed = item2.iSeed;
 		EXPECT_EQ(item1_iSeed, item2_iSeed);
 	}
 	{
-		const auto item1_iCreateInfo = item1->iCreateInfo;
-		const auto item2_iCreateInfo = item2->iCreateInfo;
+		const auto item1_iCreateInfo = item1.iCreateInfo;
+		const auto item2_iCreateInfo = item2.iCreateInfo;
 		EXPECT_EQ(item1_iCreateInfo, item2_iCreateInfo);
 	}
 	{
-		const auto item1_idx = item1->idx;
-		const auto item2_idx = item2->idx;
+		const auto item1_idx = item1.idx;
+		const auto item2_idx = item2.idx;
 		EXPECT_EQ(item1_idx, item2_idx);
 	}
-	EXPECT_EQ(item1->bId, item2->bId);
-	EXPECT_EQ(item1->bDur, item2->bDur);
-	EXPECT_EQ(item1->bMDur, item2->bMDur);
-	EXPECT_EQ(item1->bCh, item2->bCh);
-	EXPECT_EQ(item1->bMCh, item2->bMCh);
+	EXPECT_EQ(item1.bId, item2.bId);
+	EXPECT_EQ(item1.bDur, item2.bDur);
+	EXPECT_EQ(item1.bMDur, item2.bMDur);
+	EXPECT_EQ(item1.bCh, item2.bCh);
+	EXPECT_EQ(item1.bMCh, item2.bMCh);
 	{
-		const auto item1_wValue = item1->wValue;
-		const auto item2_wValue = item2->wValue;
+		const auto item1_wValue = item1.wValue;
+		const auto item2_wValue = item2.wValue;
 		EXPECT_EQ(item1_wValue, item2_wValue);
 	}
 	{
-		const auto item1_dwBuff = item1->dwBuff;
-		const auto item2_dwBuff = item2->dwBuff;
+		const auto item1_dwBuff = item1.dwBuff;
+		const auto item2_dwBuff = item2.dwBuff;
 		EXPECT_EQ(item1_dwBuff, item2_dwBuff);
 	}
 }
@@ -87,50 +87,50 @@ typedef struct TestItemStruct {
 	int IDidx;
 } TestItemStruct;
 
-static void CompareItems(const Item *item1, const TestItemStruct *item2)
+static void CompareItems(const Item &item1, const TestItemStruct &item2)
 {
-	ASSERT_STREQ(item1->_iIName, item2->_iIName);
-	EXPECT_EQ(item1->_itype, item2->_itype);
-	EXPECT_EQ(item1->_iClass, item2->_iClass);
-	EXPECT_EQ(item1->_iCurs, item2->_iCurs);
-	EXPECT_EQ(item1->_iIvalue, item2->_iIvalue);
-	EXPECT_EQ(item1->_iMinDam, item2->_iMinDam);
-	EXPECT_EQ(item1->_iMaxDam, item2->_iMaxDam);
-	EXPECT_EQ(item1->_iAC, item2->_iAC);
-	EXPECT_EQ(item1->_iFlags, item2->_iFlags);
-	EXPECT_EQ(item1->_iMiscId, item2->_iMiscId);
-	EXPECT_EQ(item1->_iSpell, item2->_iSpell);
-	EXPECT_EQ(item1->_iCharges, item2->_iCharges);
-	EXPECT_EQ(item1->_iMaxCharges, item2->_iMaxCharges);
-	EXPECT_EQ(item1->_iDurability, item2->_iDurability);
-	EXPECT_EQ(item1->_iMaxDur, item2->_iMaxDur);
-	EXPECT_EQ(item1->_iPLDam, item2->_iPLDam);
-	EXPECT_EQ(item1->_iPLToHit, item2->_iPLToHit);
-	EXPECT_EQ(item1->_iPLAC, item2->_iPLAC);
-	EXPECT_EQ(item1->_iPLStr, item2->_iPLStr);
-	EXPECT_EQ(item1->_iPLMag, item2->_iPLMag);
-	EXPECT_EQ(item1->_iPLDex, item2->_iPLDex);
-	EXPECT_EQ(item1->_iPLVit, item2->_iPLVit);
-	EXPECT_EQ(item1->_iPLFR, item2->_iPLFR);
-	EXPECT_EQ(item1->_iPLLR, item2->_iPLLR);
-	EXPECT_EQ(item1->_iPLMR, item2->_iPLMR);
-	EXPECT_EQ(item1->_iPLMana, item2->_iPLMana);
-	EXPECT_EQ(item1->_iPLHP, item2->_iPLHP);
-	EXPECT_EQ(item1->_iPLDamMod, item2->_iPLDamMod);
-	EXPECT_EQ(item1->_iPLGetHit, item2->_iPLGetHit);
-	EXPECT_EQ(item1->_iPLLight, item2->_iPLLight);
-	EXPECT_EQ(item1->_iSplLvlAdd, item2->_iSplLvlAdd);
-	EXPECT_EQ(item1->_iUid, item2->_iUid);
-	EXPECT_EQ(item1->_iFMinDam, item2->_iFMinDam);
-	EXPECT_EQ(item1->_iFMaxDam, item2->_iFMaxDam);
-	EXPECT_EQ(item1->_iLMinDam, item2->_iLMinDam);
-	EXPECT_EQ(item1->_iLMaxDam, item2->_iLMaxDam);
-	EXPECT_EQ(item1->_iPrePower, item2->_iPrePower);
-	EXPECT_EQ(item1->_iSufPower, item2->_iSufPower);
-	EXPECT_EQ(item1->_iMinStr, item2->_iMinStr);
-	EXPECT_EQ(item1->_iMinMag, item2->_iMinMag);
-	EXPECT_EQ(item1->_iMinDex, item2->_iMinDex);
-	EXPECT_EQ(item1->IDidx, item2->IDidx);
+	ASSERT_STREQ(item1._iIName, item2._iIName);
+	EXPECT_EQ(item1._itype, item2._itype);
+	EXPECT_EQ(item1._iClass, item2._iClass);
+	EXPECT_EQ(item1._iCurs, item2._iCurs);
+	EXPECT_EQ(item1._iIvalue, item2._iIvalue);
+	EXPECT_EQ(item1._iMinDam, item2._iMinDam);
+	EXPECT_EQ(item1._iMaxDam, item2._iMaxDam);
+	EXPECT_EQ(item1._iAC, item2._iAC);
+	EXPECT_EQ(item1._iFlags, item2._iFlags);
+	EXPECT_EQ(item1._iMiscId, item2._iMiscId);
+	EXPECT_EQ(item1._iSpell, item2._iSpell);
+	EXPECT_EQ(item1._iCharges, item2._iCharges);
+	EXPECT_EQ(item1._iMaxCharges, item2._iMaxCharges);
+	EXPECT_EQ(item1._iDurability, item2._iDurability);
+	EXPECT_EQ(item1._iMaxDur, item2._iMaxDur);
+	EXPECT_EQ(item1._iPLDam, item2._iPLDam);
+	EXPECT_EQ(item1._iPLToHit, item2._iPLToHit);
+	EXPECT_EQ(item1._iPLAC, item2._iPLAC);
+	EXPECT_EQ(item1._iPLStr, item2._iPLStr);
+	EXPECT_EQ(item1._iPLMag, item2._iPLMag);
+	EXPECT_EQ(item1._iPLDex, item2._iPLDex);
+	EXPECT_EQ(item1._iPLVit, item2._iPLVit);
+	EXPECT_EQ(item1._iPLFR, item2._iPLFR);
+	EXPECT_EQ(item1._iPLLR, item2._iPLLR);
+	EXPECT_EQ(item1._iPLMR, item2._iPLMR);
+	EXPECT_EQ(item1._iPLMana, item2._iPLMana);
+	EXPECT_EQ(item1._iPLHP, item2._iPLHP);
+	EXPECT_EQ(item1._iPLDamMod, item2._iPLDamMod);
+	EXPECT_EQ(item1._iPLGetHit, item2._iPLGetHit);
+	EXPECT_EQ(item1._iPLLight, item2._iPLLight);
+	EXPECT_EQ(item1._iSplLvlAdd, item2._iSplLvlAdd);
+	EXPECT_EQ(item1._iUid, item2._iUid);
+	EXPECT_EQ(item1._iFMinDam, item2._iFMinDam);
+	EXPECT_EQ(item1._iFMaxDam, item2._iFMaxDam);
+	EXPECT_EQ(item1._iLMinDam, item2._iLMinDam);
+	EXPECT_EQ(item1._iLMaxDam, item2._iLMaxDam);
+	EXPECT_EQ(item1._iPrePower, item2._iPrePower);
+	EXPECT_EQ(item1._iSufPower, item2._iSufPower);
+	EXPECT_EQ(item1._iMinStr, item2._iMinStr);
+	EXPECT_EQ(item1._iMinMag, item2._iMinMag);
+	EXPECT_EQ(item1._iMinDex, item2._iMinDex);
+	EXPECT_EQ(item1.IDidx, item2.IDidx);
 }
 
 const ItemPack PackedDiabloItems[] = {
@@ -340,11 +340,11 @@ TEST(pack, UnPackItem_diablo)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
-		UnPackItem(&PackedDiabloItems[i], &id, false);
-		CompareItems(&id, &DiabloItems[i]);
+		UnPackItem(PackedDiabloItems[i], id, false);
+		CompareItems(id, DiabloItems[i]);
 
-		PackItem(&is, &id);
-		ComparePackedItems(&is, &PackedDiabloItems[i]);
+		PackItem(is, id);
+		ComparePackedItems(is, PackedDiabloItems[i]);
 	}
 }
 
@@ -358,7 +358,7 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	gbIsSpawn = false;
 
 	Item id;
-	UnPackItem(&pkItemBug, &id, false);
+	UnPackItem(pkItemBug, id, false);
 	ASSERT_STREQ(id._iIName, "Veil of Steel");
 	ASSERT_EQ(id._itype, ItemType::Helm);
 	ASSERT_EQ(id._iClass, ICLASS_ARMOR);
@@ -378,8 +378,8 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	ASSERT_EQ(id.IDidx, IDI_STEELVEIL);
 
 	ItemPack is;
-	PackItem(&is, &id);
-	ComparePackedItems(&is, &pkItem);
+	PackItem(is, id);
+	ComparePackedItems(is, pkItem);
 }
 
 const ItemPack PackedSpawnItems[] = {
@@ -411,11 +411,11 @@ TEST(pack, UnPackItem_spawn)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
-		UnPackItem(&PackedSpawnItems[i], &id, false);
-		CompareItems(&id, &SpawnItems[i]);
+		UnPackItem(PackedSpawnItems[i], id, false);
+		CompareItems(id, SpawnItems[i]);
 
-		PackItem(&is, &id);
-		ComparePackedItems(&is, &PackedSpawnItems[i]);
+		PackItem(is, id);
+		ComparePackedItems(is, PackedSpawnItems[i]);
 	}
 }
 
@@ -455,11 +455,11 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
-		UnPackItem(&PackedDiabloMPItems[i], &id, false);
-		CompareItems(&id, &DiabloMPItems[i]);
+		UnPackItem(PackedDiabloMPItems[i], id, false);
+		CompareItems(id, DiabloMPItems[i]);
 
-		PackItem(&is, &id);
-		ComparePackedItems(&is, &PackedDiabloMPItems[i]);
+		PackItem(is, id);
+		ComparePackedItems(is, PackedDiabloMPItems[i]);
 	}
 }
 
@@ -664,12 +664,12 @@ TEST(pack, UnPackItem_hellfire)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
-		UnPackItem(&PackedHellfireItems[i], &id, true);
-		CompareItems(&id, &HellfireItems[i]);
+		UnPackItem(PackedHellfireItems[i], id, true);
+		CompareItems(id, HellfireItems[i]);
 
-		PackItem(&is, &id);
+		PackItem(is, id);
 		is.dwBuff &= ~CF_HELLFIRE;
-		ComparePackedItems(&is, &PackedHellfireItems[i]);
+		ComparePackedItems(is, PackedHellfireItems[i]);
 	}
 }
 
@@ -682,7 +682,7 @@ TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	UnPackItem(&is, &id, true);
+	UnPackItem(is, id, true);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -692,7 +692,7 @@ TEST(pack, UnPackItem_empty)
 	ItemPack is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	Item id;
 
-	UnPackItem(&is, &id, false);
+	UnPackItem(is, id, false);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -700,46 +700,46 @@ TEST(pack, UnPackItem_empty)
 TEST(pack, PackItem_empty)
 {
 	ItemPack is;
-	Item id;
+	Item id = {};
 
 	id._itype = ItemType::None;
 
-	PackItem(&is, &id);
+	PackItem(is, id);
 
 	ASSERT_EQ(is.idx, 0xFFFF);
 }
 
-static void compareGold(const ItemPack *is, int iCurs)
+static void compareGold(const ItemPack &is, int iCurs)
 {
 	Item id;
-	UnPackItem(is, &id, false);
+	UnPackItem(is, id, false);
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, IDI_GOLD);
-	ASSERT_EQ(id._ivalue, is->wValue);
+	ASSERT_EQ(id._ivalue, is.wValue);
 	ASSERT_EQ(id._itype, ItemType::Gold);
 	ASSERT_EQ(id._iClass, ICLASS_GOLD);
 
 	ItemPack is2;
-	PackItem(&is2, &id);
-	ComparePackedItems(is, &is2);
+	PackItem(is2, id);
+	ComparePackedItems(is, is2);
 }
 
 TEST(pack, UnPackItem_gold_small)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
-	compareGold(&is, ICURS_GOLD_SMALL);
+	compareGold(is, ICURS_GOLD_SMALL);
 }
 
 TEST(pack, UnPackItem_gold_medium)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
-	compareGold(&is, ICURS_GOLD_MEDIUM);
+	compareGold(is, ICURS_GOLD_MEDIUM);
 }
 
 TEST(pack, UnPackItem_gold_large)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
-	compareGold(&is, ICURS_GOLD_LARGE);
+	compareGold(is, ICURS_GOLD_LARGE);
 }
 
 TEST(pack, UnPackItem_ear)
@@ -747,11 +747,11 @@ TEST(pack, UnPackItem_ear)
 	ItemPack is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
 	Item id;
 
-	UnPackItem(&is, &id, false);
+	UnPackItem(is, id, false);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
 
 	ItemPack is2;
-	PackItem(&is2, &id);
-	ComparePackedItems(&is, &is2);
+	PackItem(is2, id);
+	ComparePackedItems(is, is2);
 }

@@ -1006,13 +1006,9 @@ void CheckNaKrulNotes(Player &player)
 		}
 	}
 
-	int itemNum = ActiveItems[0];
-	Item tmp = Items[itemNum];
-	memset(&Items[itemNum], 0, sizeof(*Items));
-	GetItemAttrs(Items[itemNum], IDI_FULLNOTE, 16);
-	SetupItem(Items[itemNum]);
-	player.HoldItem = Items[itemNum];
-	Items[itemNum] = tmp;
+	player.HoldItem = {};
+	GetItemAttrs(player.HoldItem, IDI_FULLNOTE, 16);
+	SetupItem(player.HoldItem);
 }
 
 void CheckQuestItem(Player &player)
@@ -1569,11 +1565,8 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
-	auto &item = Items[MAXITEMS];
-	memset(&item, 0, sizeof(item));
-	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	player.HoldItem = item;
+	player.HoldItem = {};
+	RecreateItem(player.HoldItem, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	if (bId) {
 		player.HoldItem._iIdentified = true;
