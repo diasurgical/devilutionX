@@ -8,6 +8,8 @@
 
 #include <sstream>
 
+#include <fmt/format.h>
+
 #include "debug.h"
 
 #include "automap.h"
@@ -25,6 +27,7 @@
 #include "spells.h"
 #include "towners.h"
 #include "utils/language.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 

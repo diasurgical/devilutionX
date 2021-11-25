@@ -7,6 +7,7 @@
 #include <climits>
 #include <cstdint>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "control.h"
 #include "cursor.h"

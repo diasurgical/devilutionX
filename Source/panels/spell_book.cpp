@@ -1,5 +1,7 @@
 #include "panels/spell_book.hpp"
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
@@ -9,6 +11,7 @@
 #include "init.h"
 #include "missiles.h"
 #include "panels/spell_icons.hpp"
+#include "panels/ui_panels.hpp"
 #include "player.h"
 #include "spelldat.h"
 #include "utils/language.h"

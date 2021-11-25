@@ -31,6 +31,7 @@
 #include "qol/xpbar.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/utf8.hpp"
 

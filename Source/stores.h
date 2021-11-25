@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine.h"
 #include "engine/cel_sprite.hpp"

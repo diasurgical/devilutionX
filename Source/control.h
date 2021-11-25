@@ -7,10 +7,12 @@
 
 #include <cstdint>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/text_render.hpp"
+#include "panels/ui_panels.hpp"
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/stdcompat/optional.hpp"

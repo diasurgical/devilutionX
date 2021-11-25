@@ -15,6 +15,7 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "cursor.h"
 #include "doom.h"
 #include "dx.h"
@@ -28,6 +29,7 @@
 #include "lighting.h"
 #include "missiles.h"
 #include "options.h"
+#include "panels/ui_panels.hpp"
 #include "player.h"
 #include "stores.h"
 #include "town.h"

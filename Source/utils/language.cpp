@@ -8,6 +8,7 @@
 #include "engine/assets.hpp"
 #include "options.h"
 #include "utils/file_util.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
 

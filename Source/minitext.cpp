@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "dx.h"
 #include "engine.h"

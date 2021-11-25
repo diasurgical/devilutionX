@@ -13,7 +13,6 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
-#include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "controls/keymapper.hpp"
 #include "cursor.h"
