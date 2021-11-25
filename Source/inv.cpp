@@ -1387,7 +1387,7 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
 		// annoy players who prefer that playstyle.
-		return player._pClass != HeroClass::Monk && sgOptions.Gameplay.bAutoEquipWeapons;
+		return player._pClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
 	}
 
 	if (item.isArmor()) {

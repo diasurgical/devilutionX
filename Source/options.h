@@ -294,7 +294,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Recover mana when talking to Adria. */
 	OptionEntryBoolean adriaRefillsMana;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
-	bool bAutoEquipWeapons;
+	OptionEntryBoolean autoEquipWeapons;
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */
 	bool bAutoEquipArmor;
 	/** @brief Automatically attempt to equip helm-type items when picking them up. */
