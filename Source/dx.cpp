@@ -136,7 +136,7 @@ void UnlockBufPriv()
  */
 void LimitFrameRate()
 {
-	if (!sgOptions.Graphics.bFPSLimit)
+	if (!*sgOptions.Graphics.limitFPS)
 		return;
 	static uint32_t frameDeadline;
 	uint32_t tc = SDL_GetTicks() * 1000;

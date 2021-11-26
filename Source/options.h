@@ -259,8 +259,8 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Maximum width / height for the hardware cursor. Larger cursors fall back to software. */
 	int nHardwareCursorMaxSize;
 #endif
-	/** @brief Enable FPS Limit. */
-	bool bFPSLimit;
+	/** @brief Enable FPS Limiter. */
+	OptionEntryBoolean limitFPS;
 	/** @brief Show FPS, even without the -f command line flag. */
 	OptionEntryBoolean showFPS;
 };

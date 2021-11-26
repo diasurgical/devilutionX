@@ -299,7 +299,6 @@ void LoadOptions()
 	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
 	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
 #endif
-	sgOptions.Graphics.bFPSLimit = GetIniBool("Graphics", "FPS Limiter", true);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
 
@@ -430,7 +429,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Hardware Cursor For Items", sgOptions.Graphics.bHardwareCursorForItems);
 	SetIniValue("Graphics", "Hardware Cursor Maximum Size", sgOptions.Graphics.nHardwareCursorMaxSize);
 #endif
-	SetIniValue("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
 
@@ -619,7 +617,8 @@ GraphicsOptions::GraphicsOptions()
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
-    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Show FPS in upper-left corner."), false)
+    , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("Color cycling effect used for water, lava, and acid animation."), true)
+    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
 {
 	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
 }
@@ -628,6 +627,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 	return {
 		&scaleQuality,
 		&colorCycling,
+		&limitFPS,
 		&showFPS,
 	};
 }
