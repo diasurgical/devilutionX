@@ -1395,7 +1395,7 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	}
 
 	if (item.isHelm()) {
-		return sgOptions.Gameplay.bAutoEquipHelms;
+		return *sgOptions.Gameplay.autoEquipHelms;
 	}
 
 	if (item.isShield()) {

@@ -298,7 +298,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */
 	OptionEntryBoolean autoEquipArmor;
 	/** @brief Automatically attempt to equip helm-type items when picking them up. */
-	bool bAutoEquipHelms;
+	OptionEntryBoolean autoEquipHelms;
 	/** @brief Automatically attempt to equip shield-type items when picking them up. */
 	bool bAutoEquipShields;
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
