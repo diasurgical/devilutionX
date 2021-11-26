@@ -905,7 +905,7 @@ void SetApplicationVersions()
 
 void DiabloInit()
 {
-	if (sgOptions.Graphics.bShowFPS)
+	if (*sgOptions.Graphics.showFPS)
 		EnableFrameCount();
 
 	init_create_window();

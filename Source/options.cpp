@@ -221,6 +221,14 @@ void OptionEnemyHealthBarChanged()
 		FreeMonsterHealthBar();
 }
 
+void OptionShowFPSChanged()
+{
+	if (*sgOptions.Graphics.showFPS)
+		EnableFrameCount();
+	else
+		frameflag = false;
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -292,7 +300,6 @@ void LoadOptions()
 	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
 #endif
 	sgOptions.Graphics.bFPSLimit = GetIniBool("Graphics", "FPS Limiter", true);
-	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
 
@@ -424,7 +431,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Hardware Cursor Maximum Size", sgOptions.Graphics.nHardwareCursorMaxSize);
 #endif
 	SetIniValue("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
-	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
 
@@ -613,13 +619,16 @@ GraphicsOptions::GraphicsOptions()
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
+    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Show FPS in upper-left corner."), false)
 {
+	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
 }
 std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
 	return {
 		&scaleQuality,
 		&colorCycling,
+		&showFPS,
 	};
 }
 

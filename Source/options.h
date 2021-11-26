@@ -262,7 +262,7 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
 	/** @brief Show FPS, even without the -f command line flag. */
-	bool bShowFPS;
+	OptionEntryBoolean showFPS;
 };
 
 struct GameplayOptions : OptionCategoryBase {
