@@ -304,7 +304,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
 	OptionEntryBoolean autoEquipJewelry;
 	/** @brief Only enable 2/3 quests in each game session */
-	bool bRandomizeQuests;
+	OptionEntryBoolean randomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
 	bool bShowMonsterType;
 	/** @brief Refill belt form inventory, or rather, use potions/scrolls from inventory first when belt item is consumed.  */
