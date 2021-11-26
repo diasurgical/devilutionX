@@ -147,6 +147,7 @@ protected:
 	{
 		return value;
 	}
+	void SetValueInternal(int value);
 
 	void AddEntry(int value, string_view name);
 
@@ -170,6 +171,10 @@ public:
 	[[nodiscard]] T operator*() const
 	{
 		return static_cast<T>(GetValueInternal());
+	}
+	void SetValue(T value)
+	{
+		SetValueInternal(static_cast<int>(value));
 	}
 };
 

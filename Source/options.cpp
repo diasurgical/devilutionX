@@ -513,6 +513,11 @@ void OptionEntryEnumBase::SaveToIni(string_view category) const
 {
 	SetIniValue(category.data(), key.data(), value);
 }
+void OptionEntryEnumBase::SetValueInternal(int value)
+{
+	this->value = value;
+	this->NotifyValueChanged();
+}
 void OptionEntryEnumBase::AddEntry(int value, string_view name)
 {
 	entryValues.push_back(value);
