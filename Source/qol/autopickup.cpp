@@ -62,7 +62,7 @@ void AutoPickup(int pnum)
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
 			}
-			if (item._itype == ItemType::Misc && AutoPlaceItemInInventory(Players[pnum], item, false) || AutoPlaceItemInBelt(Players[pnum], item, false)) {
+		if (item._itype == ItemType::Misc && (AutoPlaceItemInInventory(Players[pnum], item, false)) || AutoPlaceItemInBelt(Players[pnum], item, false)) {
 				bool doPickup = false;
 				switch (item._iMiscId) {
 				case IMISC_HEAL:
