@@ -300,7 +300,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Automatically attempt to equip helm-type items when picking them up. */
 	OptionEntryBoolean autoEquipHelms;
 	/** @brief Automatically attempt to equip shield-type items when picking them up. */
-	bool bAutoEquipShields;
+	OptionEntryBoolean autoEquipShields;
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
 	bool bAutoEquipJewelry;
 	/** @brief Only enable 2/3 quests in each game session */

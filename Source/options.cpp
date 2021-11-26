@@ -296,7 +296,6 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bAutoEquipShields = GetIniBool("Game", "Auto Equip Shields", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bAutoEquipJewelry = GetIniBool("Game", "Auto Equip Jewelry", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bRandomizeQuests = GetIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = GetIniBool("Game", "Show Monster Type", false);
@@ -435,7 +434,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	SetIniValue("Game", "Auto Equip Shields", sgOptions.Gameplay.bAutoEquipShields);
 	SetIniValue("Game", "Auto Equip Jewelry", sgOptions.Gameplay.bAutoEquipJewelry);
 	SetIniValue("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
 	SetIniValue("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
@@ -651,6 +649,7 @@ GameplayOptions::GameplayOptions()
     , autoEquipWeapons("Auto Equip Weapons", OptionEntryFlags::None, N_("Auto Equip Weapons"), N_("Weapons will be automatically equipped on pickup or purchase if enabled."), true)
     , autoEquipArmor("Auto Equip Armor", OptionEntryFlags::None, N_("Auto Equip Armor"), N_("Armor will be automatically equipped on pickup or purchase if enabled."), AUTO_PICKUP_DEFAULT(false))
     , autoEquipHelms("Auto Equip Helms", OptionEntryFlags::None, N_("Auto Equip Helms"), N_("Helms will be automatically equipped on pickup or purchase if enabled."), AUTO_PICKUP_DEFAULT(false))
+    , autoEquipShields("Auto Equip Shields", OptionEntryFlags::None, N_("Auto Equip Shields"), N_("Shields will be automatically equipped on pickup or purchase if enabled."), AUTO_PICKUP_DEFAULT(false))
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -673,6 +672,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&autoEquipWeapons,
 		&autoEquipArmor,
 		&autoEquipHelms,
+		&autoEquipShields,
 	};
 }
 
