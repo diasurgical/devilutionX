@@ -286,7 +286,6 @@ void LoadOptions()
 	sgOptions.Graphics.bVSync = GetIniBool("Graphics", "Vertical Sync", true);
 	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
-	sgOptions.Graphics.bColorCycling = GetIniBool("Graphics", "Color Cycling", true);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
 	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
@@ -419,7 +418,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
 	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
-	SetIniValue("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
 	SetIniValue("Graphics", "Hardware Cursor For Items", sgOptions.Graphics.bHardwareCursorForItems);
@@ -614,12 +612,14 @@ GraphicsOptions::GraphicsOptions()
               { ScalingQuality::BilinearFiltering, N_("Bilinear") },
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
+    , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
 {
 }
 std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
 	return {
 		&scaleQuality,
+		&colorCycling,
 	};
 }
 

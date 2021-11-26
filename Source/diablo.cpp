@@ -2089,7 +2089,7 @@ void game_loop(bool bStartup)
 
 void diablo_color_cyc_logic()
 {
-	if (!sgOptions.Graphics.bColorCycling)
+	if (!*sgOptions.Graphics.colorCycling)
 		return;
 
 	if (PauseMode != 0)

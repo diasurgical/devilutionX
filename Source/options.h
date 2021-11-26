@@ -250,7 +250,7 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Gamma correction level. */
 	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
-	bool bColorCycling;
+	OptionEntryBoolean colorCycling;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
 	bool bHardwareCursor;
