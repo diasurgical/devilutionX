@@ -4,9 +4,9 @@
 * QoL feature for automatically picking up gold
 */
 
+#include "inv_iterators.hpp"
 #include "options.h"
 #include "player.h"
-#include "inv_iterators.hpp"
 
 namespace devilution {
 namespace {
