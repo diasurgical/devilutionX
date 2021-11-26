@@ -101,7 +101,7 @@ void DrawMonsterHealthBar(const Surface &out)
 		}
 	};
 
-	if (sgOptions.Gameplay.bShowMonsterType) {
+	if (*sgOptions.Gameplay.showMonsterType) {
 		Uint8 borderColor = getBorderColor(monster.MData->mMonstClass);
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);
