@@ -17,7 +17,7 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt update &&
-        sudo apt install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev git smpq gettext python
+        sudo apt install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev git smpq gettext python-is-python3
 
     - name: Build
       working-directory: ${{github.workspace}}
