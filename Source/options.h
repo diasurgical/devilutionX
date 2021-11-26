@@ -302,7 +302,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Automatically attempt to equip shield-type items when picking them up. */
 	OptionEntryBoolean autoEquipShields;
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
-	bool bAutoEquipJewelry;
+	OptionEntryBoolean autoEquipJewelry;
 	/** @brief Only enable 2/3 quests in each game session */
 	bool bRandomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */

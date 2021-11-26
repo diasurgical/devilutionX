@@ -1403,7 +1403,7 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	}
 
 	if (item.isJewelry()) {
-		return sgOptions.Gameplay.bAutoEquipJewelry;
+		return *sgOptions.Gameplay.autoEquipJewelry;
 	}
 
 	return true;
