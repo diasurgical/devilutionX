@@ -310,7 +310,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Refill belt from inventory, or rather, use potions/scrolls from inventory first when belt item is consumed.  */
 	OptionEntryBoolean autoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
-	bool bDisableCripplingShrines;
+	OptionEntryBoolean disableCripplingShrines;
 };
 
 struct ControllerOptions : OptionCategoryBase {
