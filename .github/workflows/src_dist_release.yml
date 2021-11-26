@@ -21,11 +21,22 @@ jobs:
 
     - name: Build
       working-directory: ${{github.workspace}}
-      run: tools/make_src_dist.py
+      run: tools/make_src_dist.py && mv build-src-dist/devilutionx-*.tar.xz devilutionx-src.tar.xz
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx-src.tar.xz
-        path: build-src-dist/devilutionx-*.tar.xz
+        path: devilutionx-src.tar.xz
+
+    - name: Update Release
+      if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "devilutionx-src.tar.xz"
+        allowUpdates: true
+        omitBody: true
+        omitName: true
+        omitPrereleaseDuringUpdate: true
+        token: ${{ secrets.GITHUB_TOKEN }}
