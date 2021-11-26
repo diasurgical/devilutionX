@@ -221,6 +221,14 @@ void OptionEnemyHealthBarChanged()
 		FreeMonsterHealthBar();
 }
 
+void OptionShowFPSChanged()
+{
+	if (*sgOptions.Graphics.showFPS)
+		EnableFrameCount();
+	else
+		frameflag = false;
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -284,16 +292,12 @@ void LoadOptions()
 	sgOptions.Graphics.bFitToScreen = GetIniBool("Graphics", "Fit to Screen", true);
 	sgOptions.Graphics.bIntegerScaling = GetIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = GetIniBool("Graphics", "Vertical Sync", true);
-	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
-	sgOptions.Graphics.bColorCycling = GetIniBool("Graphics", "Color Cycling", true);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
 	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
 	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
 #endif
-	sgOptions.Graphics.bFPSLimit = GetIniBool("Graphics", "FPS Limiter", true);
-	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
 
@@ -417,16 +421,12 @@ void SaveOptions()
 	SetIniValue("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
 	SetIniValue("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
 	SetIniValue("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
-	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
-	SetIniValue("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
 	SetIniValue("Graphics", "Hardware Cursor For Items", sgOptions.Graphics.bHardwareCursorForItems);
 	SetIniValue("Graphics", "Hardware Cursor Maximum Size", sgOptions.Graphics.nHardwareCursorMaxSize);
 #endif
-	SetIniValue("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
-	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
 
@@ -614,12 +614,21 @@ GraphicsOptions::GraphicsOptions()
               { ScalingQuality::BilinearFiltering, N_("Bilinear") },
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
+    , blendedTransparancy("Blended Transparency", OptionEntryFlags::CantChangeInGame, N_("Blended Transparency"), N_("Enables uniform transparency mode. This setting affects the transparency on walls, game text menus, and boxes. If disabled will default to old checkerboard transparency."), true)
+    , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
+    , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("Color cycling effect used for water, lava, and acid animation."), true)
+    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
 {
+	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
 }
 std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
 	return {
 		&scaleQuality,
+		&blendedTransparancy,
+		&colorCycling,
+		&limitFPS,
+		&showFPS,
 	};
 }
 

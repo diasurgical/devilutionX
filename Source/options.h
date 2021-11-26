@@ -246,11 +246,11 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Enable vsync on the output. */
 	bool bVSync;
 	/** @brief Use blended transparency rather than stippled. */
-	bool bBlendedTransparancy;
+	OptionEntryBoolean blendedTransparancy;
 	/** @brief Gamma correction level. */
 	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
-	bool bColorCycling;
+	OptionEntryBoolean colorCycling;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
 	bool bHardwareCursor;
@@ -259,10 +259,10 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Maximum width / height for the hardware cursor. Larger cursors fall back to software. */
 	int nHardwareCursorMaxSize;
 #endif
-	/** @brief Enable FPS Limit. */
-	bool bFPSLimit;
+	/** @brief Enable FPS Limiter. */
+	OptionEntryBoolean limitFPS;
 	/** @brief Show FPS, even without the -f command line flag. */
-	bool bShowFPS;
+	OptionEntryBoolean showFPS;
 };
 
 struct GameplayOptions : OptionCategoryBase {

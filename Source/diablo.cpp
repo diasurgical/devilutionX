@@ -905,7 +905,7 @@ void SetApplicationVersions()
 
 void DiabloInit()
 {
-	if (sgOptions.Graphics.bShowFPS)
+	if (*sgOptions.Graphics.showFPS)
 		EnableFrameCount();
 
 	init_create_window();
@@ -2089,7 +2089,7 @@ void game_loop(bool bStartup)
 
 void diablo_color_cyc_logic()
 {
-	if (!sgOptions.Graphics.bColorCycling)
+	if (!*sgOptions.Graphics.colorCycling)
 		return;
 
 	if (PauseMode != 0)

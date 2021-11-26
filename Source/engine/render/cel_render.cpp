@@ -665,7 +665,7 @@ void CelClippedBlitLightTransTo(const Surface &out, Point position, const CelSpr
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (cel_transparency_active) {
-		if (sgOptions.Graphics.bBlendedTransparancy)
+		if (*sgOptions.Graphics.blendedTransparancy)
 			CelBlitLightBlendedSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 		else
 			CelBlitLightTransSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));

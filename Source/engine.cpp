@@ -169,7 +169,7 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
 		height = out.h() - sy;
 	}
 
-	if (sgOptions.Graphics.bBlendedTransparancy) {
+	if (*sgOptions.Graphics.blendedTransparancy) {
 		DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 	} else {
 		DrawHalfTransparentStippledRectTo(out, sx, sy, width, height);

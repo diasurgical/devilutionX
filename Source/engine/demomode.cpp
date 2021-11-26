@@ -152,7 +152,7 @@ void OverrideOptions()
 #endif
 	if (Timedemo) {
 		sgOptions.Graphics.bVSync = false;
-		sgOptions.Graphics.bFPSLimit = false;
+		sgOptions.Graphics.limitFPS.SetValue(false);
 	}
 }
 
