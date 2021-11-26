@@ -292,7 +292,6 @@ void LoadOptions()
 	sgOptions.Graphics.bFitToScreen = GetIniBool("Graphics", "Fit to Screen", true);
 	sgOptions.Graphics.bIntegerScaling = GetIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = GetIniBool("Graphics", "Vertical Sync", true);
-	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
@@ -422,7 +421,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
 	SetIniValue("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
 	SetIniValue("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
-	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
@@ -616,6 +614,7 @@ GraphicsOptions::GraphicsOptions()
               { ScalingQuality::BilinearFiltering, N_("Bilinear") },
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
+    , blendedTransparancy("Blended Transparency", OptionEntryFlags::CantChangeInGame, N_("Blended Transparency"), N_("Enables uniform transparency mode. This setting affects the transparency on walls, game text menus, and boxes. If disabled will default to old checkerboard transparency."), true)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("Color cycling effect used for water, lava, and acid animation."), true)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
@@ -626,6 +625,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
 	return {
 		&scaleQuality,
+		&blendedTransparancy,
 		&colorCycling,
 		&limitFPS,
 		&showFPS,

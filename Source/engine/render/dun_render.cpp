@@ -1252,14 +1252,14 @@ const std::uint32_t *GetMask(TileType tile)
 
 	if (cel_transparency_active) {
 		if (arch_draw_type == 0) {
-			if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
+			if (*sgOptions.Graphics.blendedTransparancy) // Use a fully transparent mask
 				return &WallMaskFullyTrasparent[TILE_HEIGHT - 1];
 			return &WallMask[TILE_HEIGHT - 1];
 		}
 		if (arch_draw_type == 1 && tile != TileType::LeftTriangle) {
 			const auto c = block_lvid[level_piece_id];
 			if (c == 1 || c == 3) {
-				if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
+				if (*sgOptions.Graphics.blendedTransparancy) // Use a fully transparent mask
 					return &LeftMaskTransparent[TILE_HEIGHT - 1];
 				return &LeftMask[TILE_HEIGHT - 1];
 			}
@@ -1267,7 +1267,7 @@ const std::uint32_t *GetMask(TileType tile)
 		if (arch_draw_type == 2 && tile != TileType::RightTriangle) {
 			const auto c = block_lvid[level_piece_id];
 			if (c == 2 || c == 3) {
-				if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
+				if (*sgOptions.Graphics.blendedTransparancy) // Use a fully transparent mask
 					return &RightMaskTransparent[TILE_HEIGHT - 1];
 				return &RightMask[TILE_HEIGHT - 1];
 			}
@@ -1412,7 +1412,7 @@ void RenderTile(const Surface &out, Point position)
 		}
 	} else {
 		mask -= clip.bottom;
-		if (sgOptions.Graphics.bBlendedTransparancy) {
+		if (*sgOptions.Graphics.blendedTransparancy) {
 			if (LightTableIndex == LightsMax) {
 				RenderTileType<TransparencyType::Blended, LightType::FullyDark>(tile, dst, dstPitch, src, mask, tbl, clip);
 			} else if (LightTableIndex == 0) {
