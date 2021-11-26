@@ -1387,23 +1387,23 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
 		// annoy players who prefer that playstyle.
-		return player._pClass != HeroClass::Monk && sgOptions.Gameplay.bAutoEquipWeapons;
+		return player._pClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
-		return sgOptions.Gameplay.bAutoEquipArmor;
+		return *sgOptions.Gameplay.autoEquipArmor;
 	}
 
 	if (item.isHelm()) {
-		return sgOptions.Gameplay.bAutoEquipHelms;
+		return *sgOptions.Gameplay.autoEquipHelms;
 	}
 
 	if (item.isShield()) {
-		return sgOptions.Gameplay.bAutoEquipShields;
+		return *sgOptions.Gameplay.autoEquipShields;
 	}
 
 	if (item.isJewelry()) {
-		return sgOptions.Gameplay.bAutoEquipJewelry;
+		return *sgOptions.Gameplay.autoEquipJewelry;
 	}
 
 	return true;
@@ -2080,7 +2080,7 @@ bool UseInvItem(int pnum, int cii)
 		speedlist = true;
 
 		// If selected speedlist item exists in InvList, use the InvList item.
-		for (int i = 0; i < player._pNumInv && sgOptions.Gameplay.bAutoRefillBelt; i++) {
+		for (int i = 0; i < player._pNumInv && *sgOptions.Gameplay.autoRefillBelt; i++) {
 			if (player.InvList[i]._iMiscId == item->_iMiscId && player.InvList[i]._iSpell == item->_iSpell) {
 				c = i;
 				item = &player.InvList[c];

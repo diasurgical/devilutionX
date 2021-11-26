@@ -288,29 +288,29 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Show the current level progress. */
 	OptionEntryBoolean experienceBar;
 	/** @brief Show enemy health at the top of the screen. */
-	bool bEnemyHealthBar;
+	OptionEntryBoolean enemyHealthBar;
 	/** @brief Automatically pick up gold when walking over it. */
-	bool bAutoGoldPickup;
+	OptionEntryBoolean autoGoldPickup;
 	/** @brief Recover mana when talking to Adria. */
-	bool bAdriaRefillsMana;
+	OptionEntryBoolean adriaRefillsMana;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
-	bool bAutoEquipWeapons;
+	OptionEntryBoolean autoEquipWeapons;
 	/** @brief Automatically attempt to equip armor-type items when picking them up. */
-	bool bAutoEquipArmor;
+	OptionEntryBoolean autoEquipArmor;
 	/** @brief Automatically attempt to equip helm-type items when picking them up. */
-	bool bAutoEquipHelms;
+	OptionEntryBoolean autoEquipHelms;
 	/** @brief Automatically attempt to equip shield-type items when picking them up. */
-	bool bAutoEquipShields;
+	OptionEntryBoolean autoEquipShields;
 	/** @brief Automatically attempt to equip jewelry-type items when picking them up. */
-	bool bAutoEquipJewelry;
+	OptionEntryBoolean autoEquipJewelry;
 	/** @brief Only enable 2/3 quests in each game session */
-	bool bRandomizeQuests;
+	OptionEntryBoolean randomizeQuests;
 	/** @brief Indicates whether or not monster type (Animal, Demon, Undead) is shown along with other monster information. */
-	bool bShowMonsterType;
-	/** @brief Refill belt form inventory, or rather, use potions/scrolls from inventory first when belt item is consumed.  */
-	bool bAutoRefillBelt;
+	OptionEntryBoolean showMonsterType;
+	/** @brief Refill belt from inventory, or rather, use potions/scrolls from inventory first when belt item is consumed.  */
+	OptionEntryBoolean autoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
-	bool bDisableCripplingShrines;
+	OptionEntryBoolean disableCripplingShrines;
 };
 
 struct ControllerOptions : OptionCategoryBase {

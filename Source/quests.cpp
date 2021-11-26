@@ -317,7 +317,7 @@ void InitQuests()
 		}
 	}
 
-	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
+	if (!gbIsMultiplayer && *sgOptions.Gameplay.randomizeQuests) {
 		// Quests are set from the seed used to generate level 16.
 		InitialiseQuestPools(glSeedTbl[15], Quests);
 	}
