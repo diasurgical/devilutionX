@@ -1,5 +1,7 @@
 #include "utils/display.h"
 
+#include <algorithm>
+
 #ifdef __vita__
 #include <psp2/power.h>
 #endif
@@ -61,27 +63,24 @@ void CalculatePreferdWindowSize(int &width, int &height)
 		ErrSdl();
 	}
 
-	if (!*sgOptions.Graphics.integerScaling) {
-		float wFactor = (float)mode.w / width;
-		float hFactor = (float)mode.h / height;
+	if (mode.w < mode.h) {
+		std::swap(mode.w, mode.h);
+	}
 
-		if (wFactor > hFactor) {
-			width = mode.w * height / mode.h;
-		} else {
-			height = mode.h * width / mode.w;
-		}
+	if (*sgOptions.Graphics.integerScaling) {
+		int factor = std::min(mode.w / width, mode.h / height);
+		width = mode.w / factor;
+		height = mode.h / factor;
 		return;
 	}
 
-	int wFactor = mode.w / width;
-	int hFactor = mode.h / height;
+	float wFactor = (float)mode.w / width;
+	float hFactor = (float)mode.h / height;
 
 	if (wFactor > hFactor) {
-		width = mode.w / hFactor;
-		height = mode.h / hFactor;
+		width = mode.w * height / mode.h;
 	} else {
-		width = mode.w / wFactor;
-		height = mode.h / wFactor;
+		height = mode.h * width / mode.w;
 	}
 }
 #endif
