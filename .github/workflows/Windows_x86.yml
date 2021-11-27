@@ -19,7 +19,7 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt update &&
-        sudo apt install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 wget git sudo smpq &&
+        sudo apt install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 dpkg-dev wget git sudo smpq &&
         sudo Packaging/windows/mingw-prep.sh
 
     - name: Cache CMake build folder

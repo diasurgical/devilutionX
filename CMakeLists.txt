@@ -1027,8 +1027,8 @@ if(USE_SDL1)
   target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
 else()
   target_link_libraries(libdevilutionx PUBLIC
-    SDL2::SDL2
     ${SDL2_MAIN}
+    SDL2::SDL2
     SDL2::SDL2_image)
 endif()
 
