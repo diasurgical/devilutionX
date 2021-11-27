@@ -10,8 +10,14 @@ if(POLICY CMP0111)
   cmake_policy(SET CMP0111 NEW)
 endif()
 
+# Projects added via `add_subdirectory` or `FetchContent` may have a lower
+# `cmake_minimum_required` than we set here. Set policies that we require
+# to their new value so that they still apply.
+set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
 if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dist")
-  message("-- Detect a source distribution with the required FetchContent dependencies and devilutionx.mpq included")
+  message("-- Detected a source distribution with the required FetchContent dependencies and devilutionx.mpq included")
   set(SRC_DIST ON)
   add_subdirectory(dist)
 endif()
