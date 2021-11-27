@@ -1,9 +1,12 @@
+#include "platform/switch/random.hpp"
+
 #include <sys/types.h>
+
 #include <sodium.h>
 
 extern "C" {
-#include <switch/sf/service.h>
 #include <switch/services/csrng.h>
+#include <switch/sf/service.h>
 }
 
 static const char *randombytes_switchrandom_implementation_name()

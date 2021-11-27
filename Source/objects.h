@@ -58,6 +58,13 @@ struct Object {
 	int _oVar8;
 
 	/**
+	 * @brief Returns the network identifier for this object
+	 *
+	 * This is currently the index into the Objects array, but may change in the future.
+	 */
+	unsigned int GetId() const;
+
+	/**
 	 * @brief Marks the map region to be refreshed when the player interacts with the object.
 	 *
 	 * Some objects will cause a map region to change when a player interacts with them (e.g. Skeleton King
@@ -91,7 +98,7 @@ struct Object {
 	 * initialized by IntializeQuestBook().
 	 *
 	 * @param mapRange The region to be updated when this object is activated.
-	*/
+	 */
 	constexpr void InitializeBook(Rectangle mapRange)
 	{
 		SetMapRange(mapRange);
@@ -123,17 +130,103 @@ struct Object {
 	}
 
 	/**
+	 * @brief Check if the object can be broken (is an intact barrel or crux)
+	 * @return True if the object is intact and breakable, false if already broken or not a breakable object.
+	 */
+	[[nodiscard]] constexpr bool IsBreakable() const
+	{
+		return _oBreak == 1;
+	}
+
+	/**
+	 * @brief Check if the object has been broken
+	 * @return True if the object is breakable and has been broken, false if unbroken or not a breakable object.
+	 */
+	[[nodiscard]] constexpr bool IsBroken() const
+	{
+		return _oBreak == -1;
+	}
+
+	/**
 	 * Returns true if the object is a harmful shrine and the player has disabled permanent shrine effects.
 	 */
 	[[nodiscard]] bool IsDisabled() const;
 
 	/**
+	 * @brief Check if this object is barrel (or explosive barrel)
+	 * @return True if the object is one of the barrel types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsBarrel() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX);
+	}
+
+	/**
+	 * @brief Check if this object is a chest (or trapped chest).
+	 *
+	 * Trapped chests get their base type change in addition to having the trap flag set, but if they get "refilled" by
+	 * a Thaumaturgic shrine the base type is not reverted. This means you need to consider both the base type and the
+	 * trap flag to differentiate between chests that are currently trapped and chests which have never been trapped.
+	 *
+	 * @return True if the object is any of the chest types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3, _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3);
+	}
+
+	/**
+	 * @brief Check if this object is a trapped chest (specifically a chest which is currently trapped).
+	 * @return True if the object is one of the trapped chest types (see _object_id) and has an active trap.
+	 */
+	[[nodiscard]] constexpr bool IsTrappedChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3) && _oTrapFlag;
+	}
+
+	/**
+	 * @brief Check if this object is an untrapped chest (specifically a chest which has not been trapped).
+	 * @return True if the object is one of the untrapped chest types (see _object_id) and has no active trap.
+	 */
+	[[nodiscard]] constexpr bool IsUntrappedChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3) && !_oTrapFlag;
+	}
+
+	/**
+	 * @brief Check if this object is a crucifix
+	 * @return True if the object is one of the crux types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsCrux() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CRUX1, _object_id::OBJ_CRUX2, _object_id::OBJ_CRUX3);
+	}
+
+	/**
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */
-	bool IsDoor() const
+	[[nodiscard]] constexpr bool IsDoor() const
 	{
 		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR);
+	}
+
+	/**
+	 * @brief Check if this object is a shrine
+	 * @return True if the object is one of the shrine types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsShrine() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER);
+	}
+
+	/**
+	 * @brief Check if this object is a trap source
+	 * @return True if the object is one of the trap types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsTrap() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_TRAPL, _object_id::OBJ_TRAPR);
 	}
 };
 
@@ -166,13 +259,13 @@ void TryDisarm(int pnum, int i);
 int ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
-void BreakObject(int pnum, int oi);
-void SyncBreakObj(int pnum, int oi);
+void BreakObject(int pnum, Object &object);
+void SyncBreakObj(int pnum, Object &object);
 void SyncObjectAnim(Object &object);
 /**
  * @brief Updates the text drawn in the info box to describe the given object
  * @param object The currently highlighted object
-*/
+ */
 void GetObjectStr(const Object &object);
 void OperateNakrulLever();
 void SyncNakrulRoom();

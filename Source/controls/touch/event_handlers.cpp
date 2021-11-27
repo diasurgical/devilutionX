@@ -33,7 +33,7 @@ void SimulateMouseMovement(const SDL_Event &event)
 {
 	Point position = ScaleToScreenCoordinates(event.tfinger.x, event.tfinger.y);
 
-	if (!spselflag && invflag && !MainPanel.Contains(position) && !RightPanel.Contains(position))
+	if (!spselflag && invflag && !GetMainPanel().Contains(position) && !GetRightPanel().Contains(position))
 		return;
 
 	MousePosition = position;
@@ -119,7 +119,7 @@ void HandleTouchEvent(const SDL_Event &event)
 
 bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)
 {
-	if (!IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
+	if (!VirtualGamepadState.isActive || !IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
 		VirtualGamepadState.primaryActionButton.didStateChange = false;
 		VirtualGamepadState.secondaryActionButton.didStateChange = false;
 		VirtualGamepadState.spellActionButton.didStateChange = false;

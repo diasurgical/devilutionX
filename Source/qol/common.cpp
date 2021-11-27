@@ -1,8 +1,8 @@
 /**
-* @file common.h
-*
-* Common functions for QoL features
-*/
+ * @file common.h
+ *
+ * Common functions for QoL features
+ */
 
 #include <SDL.h>
 

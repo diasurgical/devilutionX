@@ -6,6 +6,8 @@
 #include <vector>
 
 #include "DiabloUI/art.h"
+#include "DiabloUI/ui_flags.hpp"
+#include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
 
@@ -20,55 +22,6 @@ enum class UiType {
 	List,
 	Scrollbar,
 	Edit,
-};
-
-enum class UiFlags {
-	// clang-format off
-	None               = 0,
-
-	FontSize12         = 1 << 0,
-	FontSize24         = 1 << 1,
-	FontSize30         = 1 << 2,
-	FontSize42         = 1 << 3,
-	FontSize46         = 1 << 4,
-	FontSizeDialog     = 1 << 5,
-
-	ColorUiGold        = 1 << 6,
-	ColorUiSilver      = 1 << 7,
-	ColorUiGoldDark    = 1 << 8,
-	ColorUiSilverDark  = 1 << 9,
-	ColorDialogWhite   = 1 << 10,
-	ColorDialogYellow  = 1 << 11,
-	ColorGold          = 1 << 12,
-	ColorBlack         = 1 << 13,
-	ColorWhite         = 1 << 14,
-	ColorWhitegold     = 1 << 15,
-	ColorRed           = 1 << 16,
-	ColorBlue          = 1 << 17,
-	ColorButtonface    = 1 << 18,
-	ColorButtonpushed  = 1 << 19,
-
-	AlignCenter        = 1 << 20,
-	AlignRight         = 1 << 21,
-	VerticalCenter     = 1 << 22,
-
-	KerningFitSpacing  = 1 << 23,
-
-	ElementDisabled    = 1 << 24,
-	ElementHidden      = 1 << 25,
-
-	PentaCursor        = 1 << 26,
-	TextCursor         = 1 << 27,
-	// clang-format on
-};
-use_enum_as_flags(UiFlags);
-
-enum class UiPanels {
-	Main,
-	Quest,
-	Character,
-	Spell,
-	Inventory,
 };
 
 class UiItemBase {
@@ -102,7 +55,7 @@ public:
 		m_iFlags &= ~flag;
 	}
 
-	//protected:
+	// protected:
 	UiType m_type;
 	SDL_Rect m_rect;
 	UiFlags m_iFlags;
@@ -122,7 +75,7 @@ public:
 
 	~UiImage() {};
 
-	//private:
+	// private:
 	Art *m_art;
 	bool m_animated;
 	int m_frame;
@@ -198,7 +151,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	Art *m_bg;
 	Art *m_thumb;
 	Art *m_arrow;
@@ -215,7 +168,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	const char *m_text;
 	void (*m_action)();
 };
@@ -233,7 +186,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	const char *m_hint;
 	char *m_value;
 	std::size_t m_max_length;
@@ -252,7 +205,7 @@ public:
 	{
 	}
 
-	//private:
+	// private:
 	const char *m_text;
 };
 
@@ -276,7 +229,7 @@ public:
 		PRESSED,
 	};
 
-	//private:
+	// private:
 	Art *m_art;
 
 	const char *m_text;
@@ -290,25 +243,37 @@ public:
 
 class UiListItem {
 public:
-	UiListItem(const char *text = "", int value = 0)
+	UiListItem(const char *text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , m_value(value)
+	    , uiFlags(uiFlags)
+	{
+	}
+
+	UiListItem(const char *text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
+	    : m_text(text)
+	    , args(args)
+	    , m_value(value)
+	    , uiFlags(uiFlags)
 	{
 	}
 
 	~UiListItem() {};
 
-	//private:
+	// private:
 	const char *m_text;
+	std::vector<DrawStringFormatArg> args;
 	int m_value;
+	UiFlags uiFlags;
 };
 
 typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 
 class UiList : public UiItemBase {
 public:
-	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
-	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * vItems.size()) }, flags)
+	UiList(const vUiListItem &vItems, size_t viewportSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
+	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * viewportSize) }, flags)
+	    , viewportSize(viewportSize)
 	    , m_x(x)
 	    , m_y(y)
 	    , m_width(item_width)
@@ -350,7 +315,8 @@ public:
 		return m_spacing;
 	}
 
-	//private:
+	// private:
+	size_t viewportSize;
 	Sint16 m_x, m_y;
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;

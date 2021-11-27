@@ -1,8 +1,8 @@
 /**
-* @file itemlabels.h
-*
-* Adds item labels QoL feature
-*/
+ * @file itemlabels.h
+ *
+ * Adds item labels QoL feature
+ */
 #pragma once
 
 #include "engine.h"

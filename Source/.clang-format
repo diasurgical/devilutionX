@@ -8,3 +8,4 @@ UseTab: ForIndentation
 SortIncludes: false
 NamespaceIndentation: None
 FixNamespaceComments: true
+SortIncludes: true

@@ -697,7 +697,7 @@ void Freeupstairs()
 
 		for (int yy = -2; yy <= 2; yy++) {
 			for (int xx = -2; xx <= 2; xx++) {
-				dFlags[tx + xx][ty + yy] |= BFLAG_POPULATED;
+				dFlags[tx + xx][ty + yy] |= DungeonFlag::Populated;
 			}
 		}
 	}
@@ -749,7 +749,7 @@ void CheckTrigForce()
 {
 	trigflag = false;
 
-	if (!sgbControllerActive && MousePosition.y > PANEL_TOP - 1) {
+	if (!sgbControllerActive && MousePosition.y > GetMainPanel().position.y - 1) {
 		return;
 	}
 

@@ -17,4 +17,4 @@ void SdlThread::ThreadDeleter(SDL_Thread *thread)
 		app_fatal("Joinable thread destroyed");
 }
 
-} //namespace devilution
+} // namespace devilution

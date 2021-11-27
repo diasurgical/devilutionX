@@ -1,16 +1,20 @@
 #pragma once
 
-#include <SDL.h>
-#include <unistd.h>
 #include <cerrno>
+#include <cmath>
+#include <cstddef>
 #include <cstdio>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <cmath>
-#include <cstddef>
+
+#include <SDL.h>
 
 #include "utils/attributes.h"
 #include "utils/console.h"
+
+#ifndef _WIN32
+#include <unistd.h>
+#endif
 
 #define WINDOW_ICON_NAME 0
 

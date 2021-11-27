@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
@@ -52,6 +53,17 @@ struct STextStruct {
 	int _sline;
 	bool _ssel;
 	int _sval;
+
+	int y;
+
+	[[nodiscard]] bool IsDivider() const
+	{
+		return _sline != 0;
+	}
+	[[nodiscard]] bool IsText() const
+	{
+		return _sstr[0] != '\0';
+	}
 };
 
 /** Shop frame graphics */
@@ -99,7 +111,7 @@ void InitStores();
 void SetupTownStores();
 void FreeStoreMem();
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
-void DrawSLine(const Surface &out, int y);
+void DrawSLine(const Surface &out, int sy);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void StartStore(talk_id s);

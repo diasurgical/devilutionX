@@ -53,12 +53,11 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 
 	vecSelYesNoDialogItems.push_back(std::make_unique<UiListItem>(_("Yes"), 0));
 	vecSelYesNoDialogItems.push_back(std::make_unique<UiListItem>(_("No"), 1));
-	vecSelYesNoDialog.push_back(std::make_unique<UiList>(vecSelYesNoDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
+	vecSelYesNoDialog.push_back(std::make_unique<UiList>(vecSelYesNoDialogItems, vecSelYesNoDialogItems.size(), PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	const std::string wrapped = WordWrapString(body, MESSAGE_WIDTH, GameFont24);
-	strncpy(selyesno_confirmationMessage, wrapped.data(), sizeof(selyesno_confirmationMessage) - 1);
+	strcpy(selyesno_confirmationMessage, WordWrapString(body, MESSAGE_WIDTH, GameFont24).c_str());
 
-	UiInitList(vecSelYesNoDialogItems.size(), nullptr, SelyesnoSelect, SelyesnoEsc, vecSelYesNoDialog, true, nullptr);
+	UiInitList(nullptr, SelyesnoSelect, SelyesnoEsc, vecSelYesNoDialog, true, nullptr);
 
 	selyesno_value = true;
 	selyesno_endMenu = false;

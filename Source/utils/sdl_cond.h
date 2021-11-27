@@ -1,11 +1,12 @@
 #pragma once
 
 #include <SDL.h>
+
 #include "sdl_mutex.h"
 
 namespace devilution {
 
-/*
+/**
  * RAII wrapper for SDL_cond.
  */
 class SdlCond final {

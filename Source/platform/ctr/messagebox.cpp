@@ -1,6 +1,7 @@
 #include <3ds.h>
 #include <SDL.h>
 #include <fmt/core.h>
+
 #include "utils/sdl2_to_1_2_backports.h"
 
 int SDL_ShowSimpleMessageBox(Uint32 flags,

@@ -98,7 +98,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 {
 	const bool inGameMenu = InGameMenu();
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	if (event.type == SDL_FINGERDOWN) {
 		if (VirtualGamepadState.menuPanel.charButton.isHeld && VirtualGamepadState.menuPanel.charButton.didStateChange) {
 			*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
@@ -277,7 +277,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 					CalcViewportGeometry();
 				}
 #else
-			    // Not mapped. Reserved for future use.
+				/* Not mapped. Reserved for future use. */
 #endif
 				return true;
 			case ControllerButton_BUTTON_B: // Right button

@@ -7,6 +7,7 @@
 #include <climits>
 #include <cstdint>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "control.h"
 #include "cursor.h"
@@ -297,7 +298,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (dObject[xp][yp] != 0)
 		return false;
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
+	if (TileContainsSetPiece({ xp, yp }))
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
@@ -306,7 +307,7 @@ bool RndLocOk(int xp, int yp)
 
 bool CanPlaceWallTrap(int xp, int yp)
 {
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
+	if (TileContainsSetPiece({ xp, yp }))
 		return false;
 
 	return nTrapTable[dPiece[xp][yp]];
@@ -443,7 +444,7 @@ void AddCandles()
  *
  * @param affectedArea The map region to be updated when this object is activated by the player.
  * @param msg The quest text to play when the player activates the book.
-*/
+ */
 void AddBookLever(Rectangle affectedArea, _speech_id msg)
 {
 	int cnt = 0;
@@ -550,16 +551,11 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 	}
 }
 
-bool TorchLocOK(int xp, int yp)
-{
-	return (dFlags[xp][yp] & BFLAG_POPULATED) == 0;
-}
-
 void AddL2Torches()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (!TorchLocOK(i, j))
+			if (TileContainsSetPiece({ i, j }))
 				continue;
 
 			int pn = dPiece[i][j];
@@ -635,7 +631,7 @@ void AddChestTraps()
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 			if (dObject[i][j] > 0) {
 				int8_t oi = dObject[i][j] - 1;
-				if (Objects[oi]._otype >= OBJ_CHEST1 && Objects[oi]._otype <= OBJ_CHEST3 && !Objects[oi]._oTrapFlag && GenerateRnd(100) < 10) {
+				if (Objects[oi].IsUntrappedChest() && GenerateRnd(100) < 10) {
 					switch (Objects[oi]._otype) {
 					case OBJ_CHEST1:
 						Objects[oi]._otype = OBJ_TCHEST1;
@@ -2365,7 +2361,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				CreateRndUseful(Objects[i].position, sendmsg);
 		}
 	}
-	if (Objects[i]._oTrapFlag && Objects[i]._otype >= OBJ_TCHEST1 && Objects[i]._otype <= OBJ_TCHEST3) {
+	if (Objects[i].IsTrappedChest()) {
 		auto &player = Players[pnum];
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
 		missile_id mtype;
@@ -2854,7 +2850,7 @@ bool OperateShrineThaumaturgic(int pnum)
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		int v1 = ActiveObjects[j];
 		assert(v1 >= 0 && v1 < MAXOBJECTS);
-		if (IsAnyOf(Objects[v1]._otype, OBJ_CHEST1, OBJ_CHEST2, OBJ_CHEST3, OBJ_TCHEST1, OBJ_TCHEST2, OBJ_TCHEST3) && Objects[v1]._oSelFlag == 0) {
+		if (Objects[v1].IsChest() && Objects[v1]._oSelFlag == 0) {
 			Objects[v1]._oRndSeed = AdvanceRndSeed();
 			Objects[v1]._oSelFlag = 1;
 			Objects[v1]._oAnimFrame -= 2;
@@ -3351,7 +3347,7 @@ bool OperateShrineGlowing(int pnum)
 	else
 		myPlayer._pExperience = 0;
 
-	if (sgOptions.Gameplay.bExperienceBar)
+	if (*sgOptions.Gameplay.experienceBar)
 		force_redraw = 255;
 
 	CheckStats(Players[pnum]);
@@ -3834,7 +3830,6 @@ bool OperateFountains(int pnum, int i)
 {
 	auto &player = Players[pnum];
 	bool applied = false;
-	SetRndSeed(Objects[i]._oRndSeed);
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
 		if (deltaload)
@@ -3906,12 +3901,13 @@ bool OperateFountains(int pnum, int i)
 		if (pnum != MyPlayerId)
 			return false;
 
-		int fromStat = GenerateRnd(4);
-		int toStat = abs(GenerateRnd(3));
+		unsigned randomValue = (Objects[i]._oRndSeed >> 16) % 12;
+		unsigned fromStat = randomValue / 3;
+		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)
 			toStat++;
 
-		std::pair<int, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
+		std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
 		for (auto alteration : alterations) {
 			switch (alteration.first) {
 			case 0:
@@ -4101,7 +4097,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		const auto &testObject = Objects[ActiveObjects[j]];
-		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
+		if (!testObject.IsCrux())
 			continue; // Not a Crux object, keep searching
 		if (cruxType != testObject._oVar8 || testObject._oBreak == -1)
 			continue; // Found either a different crux or a previously broken crux, keep searching
@@ -4130,81 +4126,86 @@ void BreakCrux(Object &crux)
 	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
-void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
+void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendmsg)
 {
-	if (Objects[i]._oSelFlag == 0)
+	if (barrel._oSelFlag == 0)
 		return;
 	if (forcebreak) {
-		Objects[i]._oVar1 = 0;
+		barrel._oVar1 = 0;
 	} else {
-		Objects[i]._oVar1 -= dam;
-		if (pnum != MyPlayerId && Objects[i]._oVar1 <= 0)
-			Objects[i]._oVar1 = 1;
+		barrel._oVar1 -= dam;
+		if (pnum != MyPlayerId && barrel._oVar1 <= 0)
+			barrel._oVar1 = 1;
 	}
-	if (Objects[i]._oVar1 > 0) {
+	if (barrel._oVar1 > 0) {
 		if (deltaload)
 			return;
 
-		PlaySfxLoc(IS_IBOW, Objects[i].position);
+		PlaySfxLoc(IS_IBOW, barrel.position);
 		return;
 	}
 
-	Objects[i]._oVar1 = 0;
-	Objects[i]._oAnimFlag = 1;
-	Objects[i]._oAnimFrame = 1;
-	Objects[i]._oAnimDelay = 1;
-	Objects[i]._oSolidFlag = false;
-	Objects[i]._oMissFlag = true;
-	Objects[i]._oBreak = -1;
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oPreFlag = true;
+	barrel._oVar1 = 0;
+	barrel._oAnimFlag = 1;
+	barrel._oAnimFrame = 1;
+	barrel._oAnimDelay = 1;
+	barrel._oSolidFlag = false;
+	barrel._oMissFlag = true;
+	barrel._oBreak = -1;
+	barrel._oSelFlag = 0;
+	barrel._oPreFlag = true;
 	if (deltaload) {
-		Objects[i]._oAnimFrame = Objects[i]._oAnimLen;
-		Objects[i]._oAnimCnt = 0;
-		Objects[i]._oAnimDelay = 1000;
+		barrel._oAnimFrame = barrel._oAnimLen;
+		barrel._oAnimCnt = 0;
+		barrel._oAnimDelay = 1000;
 		return;
 	}
 
-	if (Objects[i]._otype == OBJ_BARRELEX) {
+	if (barrel._otype == OBJ_BARRELEX) {
 		if (currlevel >= 21 && currlevel <= 24)
-			PlaySfxLoc(IS_POPPOP3, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP3, barrel.position);
 		else if (currlevel >= 17 && currlevel <= 20)
-			PlaySfxLoc(IS_POPPOP8, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP8, barrel.position);
 		else
-			PlaySfxLoc(IS_BARLFIRE, Objects[i].position);
-		for (int yp = Objects[i].position.y - 1; yp <= Objects[i].position.y + 1; yp++) {
-			for (int xp = Objects[i].position.x - 1; xp <= Objects[i].position.x + 1; xp++) {
-				if (dMonster[xp][yp] > 0)
+			PlaySfxLoc(IS_BARLFIRE, barrel.position);
+		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
+			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
+				if (dMonster[xp][yp] > 0) {
 					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
-				bool unused;
-				if (dPlayer[xp][yp] > 0)
+				}
+				if (dPlayer[xp][yp] > 0) {
+					bool unused;
 					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
-				if (dObject[xp][yp] > 0) {
-					int oi = dObject[xp][yp] - 1;
-					if (Objects[oi]._otype == OBJ_BARRELEX && Objects[oi]._oBreak != -1)
-						BreakBarrel(pnum, oi, dam, true, sendmsg);
+				}
+				int oi = dObject[xp][yp] - 1;
+				if (oi >= 0) {
+					Object &adjacentObject = Objects[oi];
+					if (adjacentObject._otype == _object_id::OBJ_BARRELEX && !adjacentObject.IsBroken()) {
+						BreakBarrel(pnum, adjacentObject, dam, true, sendmsg);
+					}
 				}
 			}
 		}
 	} else {
 		if (currlevel >= 21 && currlevel <= 24)
-			PlaySfxLoc(IS_POPPOP2, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP2, barrel.position);
 		else if (currlevel >= 17 && currlevel <= 20)
-			PlaySfxLoc(IS_POPPOP5, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP5, barrel.position);
 		else
-			PlaySfxLoc(IS_BARREL, Objects[i].position);
-		SetRndSeed(Objects[i]._oRndSeed);
-		if (Objects[i]._oVar2 <= 1) {
-			if (Objects[i]._oVar3 == 0)
-				CreateRndUseful(Objects[i].position, sendmsg);
+			PlaySfxLoc(IS_BARREL, barrel.position);
+		SetRndSeed(barrel._oRndSeed);
+		if (barrel._oVar2 <= 1) {
+			if (barrel._oVar3 == 0)
+				CreateRndUseful(barrel.position, sendmsg);
 			else
-				CreateRndItem(Objects[i].position, false, sendmsg, false);
+				CreateRndItem(barrel.position, false, sendmsg, false);
 		}
-		if (Objects[i]._oVar2 >= 8)
-			SpawnSkeleton(Objects[i]._oVar4, Objects[i].position);
+		if (barrel._oVar2 >= 8)
+			SpawnSkeleton(barrel._oVar4, barrel.position);
 	}
-	if (pnum == MyPlayerId)
-		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, i);
+	if (pnum == MyPlayerId) {
+		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, static_cast<uint16_t>(barrel.GetId()));
+	}
 }
 
 void SyncCrux(const Object &crux)
@@ -4330,15 +4331,20 @@ void SyncL3Doors(Object &door)
 
 } // namespace
 
+unsigned int Object::GetId() const
+{
+	return abs(dObject[position.x][position.y]) - 1;
+}
+
 bool Object::IsDisabled() const
 {
-	if (!sgOptions.Gameplay.bDisableCripplingShrines) {
+	if (!*sgOptions.Gameplay.disableCripplingShrines) {
 		return false;
 	}
 	if (IsAnyOf(_otype, _object_id::OBJ_GOATSHRINE, _object_id::OBJ_CAULDRON)) {
 		return true;
 	}
-	if (IsNoneOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER)) {
+	if (!IsShrine()) {
 		return false;
 	}
 	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
@@ -5015,21 +5021,15 @@ void TryDisarm(int pnum, int i)
 		return;
 	}
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		bool checkflag = false;
-		int oi = ActiveObjects[j];
-		int oti = Objects[oi]._otype;
-		if (oti == OBJ_TRAPL)
-			checkflag = true;
-		if (oti == OBJ_TRAPR)
-			checkflag = true;
-		if (checkflag && dObject[Objects[oi]._oVar1][Objects[oi]._oVar2] - 1 == i) {
-			Objects[oi]._oVar4 = 1;
+		Object &trap = Objects[ActiveObjects[j]];
+		if (trap.IsTrap() && dObject[trap._oVar1][trap._oVar2] - 1 == i) {
+			trap._oVar4 = 1;
 			Objects[i]._oTrapFlag = false;
 		}
 	}
-	int oti = Objects[i]._otype;
-	if (oti >= OBJ_TCHEST1 && oti <= OBJ_TCHEST3)
+	if (Objects[i].IsTrappedChest()) {
 		Objects[i]._oTrapFlag = false;
+	}
 }
 
 int ItemMiscIdIdx(item_misc_id imiscid)
@@ -5257,7 +5257,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 	}
 }
 
-void BreakObject(int pnum, int oi)
+void BreakObject(int pnum, Object &object)
 {
 	int objdam = 10;
 	if (pnum != -1) {
@@ -5268,25 +5268,18 @@ void BreakObject(int pnum, int oi)
 		objdam += player._pDamageMod + player._pIBonusDamMod + objdam * player._pIBonusDam / 100;
 	}
 
-	switch (Objects[oi]._otype) {
-	case OBJ_CRUX1:
-	case OBJ_CRUX2:
-	case OBJ_CRUX3:
-		BreakCrux(Objects[oi]);
-		break;
-	case OBJ_BARREL:
-	case OBJ_BARRELEX:
-		BreakBarrel(pnum, oi, objdam, false, true);
-		break;
-	default:
-		break;
+	if (object.IsBarrel()) {
+		BreakBarrel(pnum, object, objdam, false, true);
+	} else if (object.IsCrux()) {
+		BreakCrux(object);
 	}
 }
 
-void SyncBreakObj(int pnum, int oi)
+void SyncBreakObj(int pnum, Object &object)
 {
-	if (Objects[oi]._otype >= OBJ_BARREL && Objects[oi]._otype <= OBJ_BARRELEX)
-		BreakBarrel(pnum, oi, 0, true, false);
+	if (object.IsBarrel()) {
+		BreakBarrel(pnum, object, 0, true, false);
+	}
 }
 
 void SyncObjectAnim(Object &object)
@@ -5404,9 +5397,9 @@ void GetObjectStr(const Object &object)
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
 		if (currlevel >= 17 && currlevel <= 20)      // for hive levels
-			strcpy(infostr, _("Pod"));               //Then a barrel is called a pod
+			strcpy(infostr, _("Pod"));               // Then a barrel is called a pod
 		else if (currlevel >= 21 && currlevel <= 24) // for crypt levels
-			strcpy(infostr, _("Urn"));               //Then a barrel is called an urn
+			strcpy(infostr, _("Urn"));               // Then a barrel is called an urn
 		else
 			strcpy(infostr, _("Barrel"));
 		break;

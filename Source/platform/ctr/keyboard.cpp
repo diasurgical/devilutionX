@@ -2,6 +2,7 @@
 #include <cstring>
 
 #include "platform/ctr/keyboard.h"
+#include "utils/utf8.hpp"
 
 constexpr size_t MAX_TEXT_LENGTH = 255;
 
@@ -44,11 +45,11 @@ void ctr_vkbdFlush()
 		SwkbdButton button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
 
 		if (button == SWKBD_BUTTON_CONFIRM) {
-			strncpy(event.outText, mybuf, event.maxLength);
+			devilution::CopyUtf8(event.outText, mybuf, event.maxLength);
 			continue;
 		}
 
-		strncpy(event.outText, event.inText, event.maxLength);
+		devilution::CopyUtf8(event.outText, event.inText, event.maxLength);
 	}
 
 	eventCount = 0;

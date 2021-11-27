@@ -36,6 +36,21 @@ Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
 
+Uint16 GetScreenWidth()
+{
+	return gnScreenWidth;
+}
+
+Uint16 GetScreenHeight()
+{
+	return gnScreenHeight;
+}
+
+Uint16 GetViewportHeight()
+{
+	return gnViewportHeight;
+}
+
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 {
@@ -132,7 +147,7 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(USE_SDL1)
 	// The default WASAPI backend causes distortions
 	// https://github.com/diasurgical/devilutionX/issues/1434
 	SDL_setenv("SDL_AUDIODRIVER", "winmm", /*overwrite=*/false);
@@ -181,7 +196,7 @@ bool SpawnWindow(const char *lpWindowName)
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, width, height);
-	if (sgOptions.Gameplay.bGrabInput)
+	if (*sgOptions.Gameplay.grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
@@ -192,12 +207,13 @@ bool SpawnWindow(const char *lpWindowName)
 		}
 		flags |= SDL_WINDOW_RESIZABLE;
 
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, sgOptions.Graphics.szScaleQuality);
+		auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	if (sgOptions.Gameplay.bGrabInput) {
+	if (*sgOptions.Gameplay.grabInput) {
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 

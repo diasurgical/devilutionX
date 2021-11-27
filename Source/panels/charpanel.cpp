@@ -5,12 +5,12 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
-
 #include "control.h"
-#include "player.h"
-#include "utils/display.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "panels/ui_panels.hpp"
+#include "player.h"
+#include "utils/display.h"
 #include "utils/language.h"
 
 namespace devilution {

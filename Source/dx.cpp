@@ -10,7 +10,6 @@
 #include "controls/touch/renderers.h"
 #include "engine.h"
 #include "options.h"
-#include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_mutex.h"
@@ -137,7 +136,7 @@ void UnlockBufPriv()
  */
 void LimitFrameRate()
 {
-	if (!sgOptions.Graphics.bFPSLimit)
+	if (!*sgOptions.Graphics.limitFPS)
 		return;
 	static uint32_t frameDeadline;
 	uint32_t tc = SDL_GetTicks() * 1000;
@@ -309,7 +308,7 @@ void RenderPresent()
 
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
-		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { // pitch is 2560
 			ErrSdl();
 		}
 

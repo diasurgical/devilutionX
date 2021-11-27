@@ -7,10 +7,12 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -57,8 +59,7 @@ void ErrorPlrMsg(const char *pszMsg)
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = MAX_PLRS;
 	pMsg->time = SDL_GetTicks();
-	strncpy(pMsg->str, pszMsg, sizeof(pMsg->str));
-	pMsg->str[sizeof(pMsg->str) - 1] = '\0';
+	CopyUtf8(pMsg->str, pszMsg, sizeof(pMsg->str));
 }
 
 size_t EventPlrMsg(const char *pszFmt, ...)
@@ -113,11 +114,11 @@ void DrawPlrMsg(const Surface &out)
 	_plrmsg *pMsg;
 
 	if (chrflag || QuestLogIsOpen) {
-		x += LeftPanel.position.x + LeftPanel.size.width;
-		width -= LeftPanel.size.width;
+		x += GetLeftPanel().position.x + GetLeftPanel().size.width;
+		width -= GetLeftPanel().size.width;
 	}
 	if (invflag || sbookflag)
-		width -= gnScreenWidth - RightPanel.position.x;
+		width -= gnScreenWidth - GetRightPanel().position.x;
 
 	if (width < 300)
 		return;

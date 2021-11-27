@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 
 #include <functional>
 
@@ -30,6 +30,7 @@ struct VirtualDirectionPad {
 	}
 
 	void UpdatePosition(Point touchCoordinates);
+	void Deactivate();
 };
 
 struct VirtualButton {
@@ -45,6 +46,7 @@ struct VirtualButton {
 	}
 
 	virtual bool Contains(Point point) = 0;
+	void Deactivate();
 };
 
 struct VirtualMenuButton : VirtualButton {
@@ -86,6 +88,8 @@ struct VirtualMenuPanel {
 	    : area({ { 0, 0 }, { 0, 0 } })
 	{
 	}
+
+	void Deactivate();
 };
 
 struct VirtualGamepad {
@@ -101,12 +105,18 @@ struct VirtualGamepad {
 	VirtualPadButton healthButton;
 	VirtualPadButton manaButton;
 
+	bool isActive;
+
 	VirtualGamepad()
 	{
 	}
+
+	void Deactivate();
 };
 
 void InitializeVirtualGamepad();
+void ActivateVirtualGamepad();
+void DeactivateVirtualGamepad();
 
 extern VirtualGamepad VirtualGamepadState;
 

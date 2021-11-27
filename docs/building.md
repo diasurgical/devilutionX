@@ -11,7 +11,7 @@ Note that ```pkg-config``` is an optional dependency for finding libsodium, alth
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev
+sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev
 ```
 ### If you want to build the translations (optional)
 ```
@@ -23,7 +23,7 @@ sudo apt-get install smpq
 ```
 ### Installing dependencies on Fedora
 ```
-sudo dnf install cmake gcc-c++ glibc-devel SDL2-devel libsodium-devel libpng-devel libasan libubsan
+sudo dnf install cmake gcc-c++ glibc-devel SDL2-devel libsodium-devel libpng-devel bzip2-devel libasan libubsan
 ```
 ### Compiling
 ```
@@ -48,7 +48,7 @@ cmake --build . -j $(sysctl -n hw.physicalcpu)
 
 ### Installing dependencies
 ```
-pkg install cmake sdl2 libsodium libpng
+pkg install cmake sdl2 libsodium libpng bzip2
 ```
 ### Compiling
 ```
@@ -61,7 +61,7 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkgin install cmake SDL2 libsodium libpng
+pkgin install cmake SDL2 libsodium libpng bzip2
 ```
 ### Compiling
 ```
@@ -75,7 +75,7 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkg_add cmake sdl2 libsodium libpng gmake
+pkg_add cmake sdl2 libsodium libpng bzip2 gmake
 ```
 ### Compiling
 ```
@@ -143,7 +143,13 @@ The location of this tool will need to be [added to the system's PATH environmen
 
 * **Through Open->CMake in Visual Studio**
 1. Go to `File -> Open -> CMake`, select `CMakeLists.txt` from the project root.
-2. Select `Build devilution.exe` from the `Build` menu.
+2. Select the `x64-Release` configuration (or `x86` for 32 bit builds, `-Debug` for debug builds).
+3. Select `Build devilution.exe` from the `Build` menu.
+
+* **Through GCC/WSL in Visual Studio**
+1. Ensure the WSL environment has the build pre-requisites for both devilutionX (see "Installing Dependencies on Debian and Ubuntu" under the "Linux" section above) and [WSL remote development](https://docs.microsoft.com/en-us/cpp/linux/connect-to-your-remote-linux-computer?view=msvc-160#connect-to-wsl).
+2. Select the `WSL-GCC-x64-Debug` configuration.
+3. Select `Build devilution` from the `Build` menu.
 
 * **Through cmake-gui**
 
@@ -218,7 +224,7 @@ make -j$(nproc)
 ```
 The output files will be generated in the build folder.
 
-[Nintendo 3DS manual](/docs/manual/platforms/n3ds.md)
+[Nintendo 3DS manual](/docs/manual/platforms/3ds.md)
 </details>
 
 <details><summary>PlayStation Vita</summary>
@@ -237,11 +243,11 @@ make
 
 ### Installing dependencies on 32 bit Haiku
 ```
-pkgman install cmake_x86 devel:libsdl2_x86 devel:libsodium_x86 devel:libpng_x86
+pkgman install cmake_x86 devel:libsdl2_x86 devel:libsodium_x86 devel:libpng_x86 devel:bzip2_x86
 ```
 ### Installing dependencies on 64 bit Haiku
 ```
-pkgman install cmake devel:libsdl2 devel:libsodium devel:libpng
+pkgman install cmake devel:libsdl2 devel:libsodium devel:libpng devel:bzip2
 ```
 ### Compiling on 32 bit Haiku
 ```

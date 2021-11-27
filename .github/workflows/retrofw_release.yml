@@ -1,0 +1,38 @@
+name: RetroFW Release Build
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  retrofw:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt update &&
+        sudo apt install -y curl cmake git squashfs-tools gettext &&
+        curl -L https://github.com/Poligraf/retrofw_buildroot_gcc11/releases/download/2.3.2/host.tar.gz -o retrofw-toolchain.tar.gz &&
+        sudo mkdir -p /opt/retrofw-toolchain && sudo chown -R "${USER}:" /opt/retrofw-toolchain &&
+        tar -C /opt/retrofw-toolchain --strip-components=1 -xf retrofw-toolchain.tar.gz &&
+        cd /opt/retrofw-toolchain && ./relocate-sdk.sh
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: Packaging/OpenDingux/build.sh retrofw
+      env:
+        TOOLCHAIN: /opt/retrofw-toolchain
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-retrofw.opk.zip
+        path: build-retrofw/devilutionx-retrofw.opk

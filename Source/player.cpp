@@ -27,7 +27,6 @@
 #include "qol/autopickup.h"
 #include "spells.h"
 #include "stores.h"
-#include "storm/storm.h"
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -38,7 +37,6 @@ int MyPlayerId;
 Player *MyPlayer;
 Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
-int deathdelay;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
 int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
@@ -350,7 +348,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 	}
 
 	player.position.offset = dirModeParams.offset; // Offset player sprite to align with their previous tile position
-	//The player's tile position after finishing this movement action
+	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.tileAdd;
 
 	if (pnum == MyPlayerId) {
@@ -412,7 +410,6 @@ void ClearStateVariables(Player &player)
 	player.tempDirection = Direction::South;
 	player.spellLevel = 0;
 	player.position.offset2 = { 0, 0 };
-	player.deathFrame = 0;
 }
 
 void StartWalkStand(int pnum)
@@ -706,18 +703,18 @@ bool DoWalk(int pnum, int variant)
 	}
 	auto &player = Players[pnum];
 
-	//Play walking sound effect on certain animation frames
-	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
+	// Play walking sound effect on certain animation frames
+	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.CurrentFrame == 1
 		    || player.AnimInfo.CurrentFrame == 5) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
 		}
 	}
 
-	//Check if we reached new tile
+	// Check if we reached new tile
 	if (player.AnimInfo.CurrentFrame >= player._pWFrames) {
 
-		//Update the player's tile position
+		// Update the player's tile position
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
@@ -735,13 +732,13 @@ bool DoWalk(int pnum, int variant)
 			break;
 		}
 
-		//Update the coordinates for lighting and vision entries for the player
+		// Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(player._plid, player.position.tile);
 			ChangeVisionXY(player._pvid, player.position.tile);
 		}
 
-		//Update the "camera" tile position
+		// Update the "camera" tile position
 		if (pnum == MyPlayerId && ScrollInfo._sdir != ScrollDirection::None) {
 			ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 		}
@@ -754,14 +751,14 @@ bool DoWalk(int pnum, int variant)
 
 		ClearStateVariables(player);
 
-		//Reset the "sub-tile" position of the player's light entry to 0
+		// Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOffset(player._plid, { 0, 0 });
 		}
 
 		AutoPickup(pnum);
 		return true;
-	} //We didn't reach new tile so update player's "sub-tile" position
+	} // We didn't reach new tile so update player's "sub-tile" position
 	ChangeOffset(pnum);
 	return false;
 }
@@ -788,7 +785,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("WeaponDur: illegal player %i", pnum);
+		app_fatal("DamageWeapon: illegal player %i", pnum);
 	}
 	auto &player = Players[pnum];
 
@@ -1142,18 +1139,10 @@ bool PlrHitPlr(int pnum, int8_t p)
 	return true;
 }
 
-bool PlrHitObj(int pnum, int mx, int my)
+bool PlrHitObj(int pnum, Object &targetObject)
 {
-	int oi;
-
-	if (dObject[mx][my] > 0) {
-		oi = dObject[mx][my] - 1;
-	} else {
-		oi = -dObject[mx][my] - 1;
-	}
-
-	if (Objects[oi]._oBreak == 1) {
-		BreakObject(pnum, oi);
+	if (targetObject.IsBreakable()) {
+		BreakObject(pnum, targetObject);
 		return true;
 	}
 
@@ -1216,7 +1205,7 @@ bool DoAttack(int pnum)
 			}
 			didhit = PlrHitPlr(pnum, p);
 		} else if (dObject[dx][dy] > 0) {
-			didhit = PlrHitObj(pnum, dx, dy);
+			didhit = PlrHitObj(pnum, Objects[dObject[dx][dy] - 1]);
 		}
 		if ((player._pClass == HeroClass::Monk
 		        && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff))
@@ -1335,18 +1324,18 @@ bool DoRangeAttack(int pnum)
 	return false;
 }
 
-void ShieldDur(int pnum)
+void DamageParryItem(int pnum)
 {
 	if (pnum != MyPlayerId) {
 		return;
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("ShieldDur: illegal player %i", pnum);
+		app_fatal("DamageParryItem: illegal player %i", pnum);
 	}
 	auto &player = Players[pnum];
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
+	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return;
 		}
@@ -1383,7 +1372,7 @@ bool DoBlock(int pnum)
 		ClearStateVariables(player);
 
 		if (GenerateRnd(10) == 0) {
-			ShieldDur(pnum);
+			DamageParryItem(pnum);
 		}
 		return true;
 	}
@@ -1499,24 +1488,16 @@ bool DoDeath(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.deathFrame >= 2 * player._pDFrames) {
-		if (deathdelay > 1 && pnum == MyPlayerId) {
-			deathdelay--;
-			if (deathdelay == 1) {
-				MyPlayerIsDead = true;
-				if (!gbIsMultiplayer) {
-					gamemenu_on();
-				}
+	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames) {
+		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
+			player.AnimInfo.TicksPerFrame = 1000000000;
+			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
+		} else if (pnum == MyPlayerId && player.AnimInfo.TickCounterOfCurrentFrame == 30) {
+			MyPlayerIsDead = true;
+			if (!gbIsMultiplayer) {
+				gamemenu_on();
 			}
 		}
-
-		player.AnimInfo.TicksPerFrame = 10000;
-		player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames;
-		dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
-	}
-
-	if (player.deathFrame < 100) {
-		player.deathFrame++;
 	}
 
 	return false;
@@ -1893,7 +1874,7 @@ void ValidatePlayer()
 		myPlayer._pLevel = MAXCHARLEVEL - 1;
 	if (myPlayer._pExperience > myPlayer._pNextExper) {
 		myPlayer._pExperience = myPlayer._pNextExper;
-		if (sgOptions.Gameplay.bExperienceBar) {
+		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
 	}
@@ -1996,7 +1977,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
 	iv++;
 
-	//Iterate through invGrid and remove every reference to item
+	// Iterate through invGrid and remove every reference to item
 	for (int8_t &itemId : InvGrid) {
 		if (itemId == iv || itemId == -iv) {
 			itemId = 0;
@@ -2006,7 +1987,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	iv--;
 	_pNumInv--;
 
-	//If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
+	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
 		InvList[iv] = InvList[_pNumInv];
 
@@ -2156,9 +2137,9 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	const char *szCel;
 
 	HeroClass c = player._pClass;
-	if (c == HeroClass::Bard && hfbard_mpq == nullptr) {
+	if (c == HeroClass::Bard && !hfbard_mpq) {
 		c = HeroClass::Rogue;
-	} else if (c == HeroClass::Barbarian && hfbarb_mpq == nullptr) {
+	} else if (c == HeroClass::Barbarian && !hfbarb_mpq) {
 		c = HeroClass::Warrior;
 	}
 
@@ -2647,7 +2628,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay
 	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
 
-	if (sgOptions.Gameplay.bExperienceBar) {
+	if (*sgOptions.Gameplay.experienceBar) {
 		force_redraw = 255;
 	}
 
@@ -2767,7 +2748,6 @@ void InitPlayer(Player &player, bool firstTime)
 	player._pInvincible = false;
 
 	if (&player == &myPlayer) {
-		deathdelay = 0;
 		MyPlayerIsDead = false;
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
@@ -2994,7 +2974,6 @@ StartPlayerKill(int pnum, int earflag)
 	player._pmode = PM_DEATH;
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
-	player.deathFrame = 1;
 
 	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
 		for (auto &item : player.InvBody) {
@@ -3006,12 +2985,11 @@ StartPlayerKill(int pnum, int earflag)
 	if (player.plrlevel == currlevel) {
 		FixPlayerLocation(pnum, player._pdir);
 		RemovePlrFromMap(pnum);
-		dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
+		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
 
 		if (pnum == MyPlayerId) {
 			drawhpflag = true;
-			deathdelay = 30;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
 				DeadItem(player, &player.HoldItem, { 0, 0 });
@@ -3044,7 +3022,7 @@ StartPlayerKill(int pnum, int earflag)
 						ear._iSeed = player._pName[2] << 24 | player._pName[3] << 16 | player._pName[4] << 8 | player._pName[5];
 						ear._ivalue = player._pLevel;
 
-						if (FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
+						if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
 							DeadItem(player, &ear, { 0, 0 });
 						}
 					} else {
@@ -3450,12 +3428,12 @@ void CheckPlrSpell(bool isShiftHeld)
 		if (pcurs != CURSOR_HAND)
 			return;
 
-		if (MainPanel.Contains(MousePosition)) // inside main panel
+		if (GetMainPanel().Contains(MousePosition)) // inside main panel
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && RightPanel.Contains(MousePosition))  // inside right panel
+		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
+		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
 		) {
 			if (rspell != SPL_HEAL
 			    && rspell != SPL_IDENTIFY
@@ -3509,7 +3487,7 @@ void CheckPlrSpell(bool isShiftHeld)
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, myPlayer._pRSplType, sl);
-	} else if (pcursplr != -1 && !isShiftHeld) {
+	} else if (pcursplr != -1 && !isShiftHeld && !gbFriendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, myPlayer._pRSpell, myPlayer._pRSplType, sl);
@@ -3592,16 +3570,15 @@ void SyncInitPlrPos(int pnum)
 				return position;
 		}
 
-		for (int k : CrawlNum) {
-			int ck = k + 2;
-			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-				Point position = player.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-				if (PosOkPlayer(player, position) && !PosOkPortal(currlevel, position.x, position.y))
-					return position;
-			}
-		}
+		std::optional<Point> nearPosition = FindClosestValidPosition(
+		    [&player](Point testPosition) {
+			    return PosOkPlayer(player, testPosition) && !PosOkPortal(currlevel, testPosition.x, testPosition.y);
+		    },
+		    player.position.tile,
+		    1, // skip the starting tile since that was checked in the previous loop
+		    50);
 
-		return Point { 0, 0 };
+		return nearPosition.value_or(Point { 0, 0 });
 	}();
 
 	player.position.tile = position;

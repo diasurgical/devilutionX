@@ -1,0 +1,3 @@
+tensorflow_text>=2.4.0b0
+sudachipy>=0.6.0
+sudachidict_core

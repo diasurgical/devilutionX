@@ -65,6 +65,6 @@ inline SDLPaletteUniquePtr AllocPalette(int ncolors = 256)
 	return SDLPaletteUniquePtr { NonNull(SDL_AllocPalette(ncolors)) };
 }
 
-} //namespace SDLWrap
+} // namespace SDLWrap
 
-} //namespace devilution
+} // namespace devilution

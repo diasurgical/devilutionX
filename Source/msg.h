@@ -230,7 +230,7 @@ struct TCmdGItem {
 	uint8_t bLevel;
 	uint8_t x;
 	uint8_t y;
-	uint16_t wIndx;
+	_item_indexes wIndx;
 	uint16_t wCI;
 	int32_t dwSeed;
 	uint8_t bId;
@@ -256,7 +256,7 @@ struct TCmdPItem {
 	_cmd_id bCmd;
 	uint8_t x;
 	uint8_t y;
-	uint16_t wIndx;
+	_item_indexes wIndx;
 	uint16_t wCI;
 	/**
 	 * Item identifier
@@ -357,6 +357,8 @@ struct TSyncMonster {
 	uint8_t _my;
 	uint8_t _menemy;
 	uint8_t _mdelta;
+	int32_t _mhitpoints;
+	int8_t mWhoHit;
 };
 
 struct TPktHdr {
@@ -385,6 +387,7 @@ struct DMonsterStr {
 	uint8_t _menemy;
 	uint8_t _mactive;
 	int32_t _mhitpoints;
+	int8_t mWhoHit;
 };
 
 struct DObjectStr {

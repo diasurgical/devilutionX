@@ -20,7 +20,7 @@ jobs:
       run: >
         sudo dpkg --add-architecture i386 &&
         sudo apt update -y &&
-        sudo apt install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 libpng-dev:i386 rpm wget smpq
+        sudo apt install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsodium-dev:i386 libpng-dev:i386 libbz2-dev:i386 rpm wget smpq
 
     - name: Cache CMake build folder
       uses: actions/cache@v2
@@ -43,12 +43,14 @@ jobs:
       run: Packaging/nix/LinuxReleasePackaging.sh && Packaging/nix/AppImage.sh
 
     - name: Upload-Package
+      if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx_linux_x86.tar.xz
         path: devilutionx.tar.xz
 
     - name: Upload-AppImage
+      if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx_linux_x86.appimage

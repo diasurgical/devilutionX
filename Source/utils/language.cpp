@@ -5,10 +5,12 @@
 #include <memory>
 #include <vector>
 
+#include "engine/assets.hpp"
 #include "options.h"
-#include "storm/storm_sdl_rw.h"
 #include "utils/file_util.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
+#include "utils/stdcompat/string_view.hpp"
 
 using namespace devilution;
 #define MO_MAGIC 0x950412de
@@ -269,7 +271,7 @@ const std::string &LanguageTranslate(const char *key)
 bool HasTranslation(const std::string &locale)
 {
 	for (const char *ext : { ".mo", ".gmo" }) {
-		SDL_RWops *rw = SFileOpenRw((locale + ext).c_str());
+		SDL_RWops *rw = OpenAsset((locale + ext).c_str());
 		if (rw != nullptr) {
 			SDL_RWclose(rw);
 			return true;
@@ -277,6 +279,12 @@ bool HasTranslation(const std::string &locale)
 	}
 
 	return false;
+}
+
+bool IsSmallFontTall()
+{
+	string_view code(sgOptions.Language.szCode, 2);
+	return code == "zh" || code == "ja" || code == "ko";
 }
 
 void LanguageInitialize()
@@ -288,7 +296,7 @@ void LanguageInitialize()
 	// We also support ".mo" because that is what poedit generates
 	// and what translators use to test their work.
 	for (const char *ext : { ".mo", ".gmo" }) {
-		if ((rw = SFileOpenRw((lang + ext).c_str())) != nullptr)
+		if ((rw = OpenAsset((lang + ext).c_str())) != nullptr)
 			break;
 	}
 	if (rw == nullptr)

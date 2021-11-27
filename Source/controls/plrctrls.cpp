@@ -19,6 +19,8 @@
 #include "items.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "panels/spell_list.hpp"
+#include "panels/ui_panels.hpp"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
@@ -29,8 +31,6 @@ namespace devilution {
 
 bool sgbTouchActive = false;
 bool sgbControllerActive = false;
-Point speedspellscoords[50];
-int speedspellcount = 0;
 int pcurstrig = -1;
 int pcursmissile = -1;
 quest_id pcursquest = Q_INVALID;
@@ -161,7 +161,7 @@ void FindItemOrObject()
 		for (int yy = -1; yy < 2; yy++) {
 			if (dObject[mx + xx][my + yy] == 0)
 				continue;
-			int o = dObject[mx + xx][my + yy] > 0 ? dObject[mx + xx][my + yy] - 1 : -(dObject[mx + xx][my + yy] + 1);
+			int o = abs(dObject[mx + xx][my + yy]) - 1;
 			if (Objects[o]._oSelFlag == 0)
 				continue;
 			if (xx == 0 && yy == 0 && Objects[o]._oDoorFlag)
@@ -208,10 +208,11 @@ bool CanTargetMonster(const Monster &monster)
 	if (monster._mhitpoints >> 6 <= 0) // dead
 		return false;
 
+	if (!IsTileLit(monster.position.tile)) // not visible
+		return false;
+
 	const int mx = monster.position.tile.x;
 	const int my = monster.position.tile.y;
-	if ((dFlags[mx][my] & BFLAG_LIT) == 0) // not visible
-		return false;
 	if (dMonster[mx][my] == 0)
 		return false;
 
@@ -291,7 +292,7 @@ void FindMeleeTarget()
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
-					const int mi = dMonster[dx][dy] > 0 ? dMonster[dx][dy] - 1 : -(dMonster[dx][dy] + 1);
+					const int mi = abs(dMonster[dx][dy]) - 1;
 					const auto &monster = Monsters[mi];
 					if (CanTargetMonster(monster)) {
 						const bool newCanTalk = CanTalkToMonst(monster);
@@ -351,7 +352,7 @@ void CheckPlayerNearby()
 		const int mx = player.position.future.x;
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
-		    || (dFlags[mx][my] & BFLAG_LIT) == 0
+		    || !IsTileLit(player.position.future)
 		    || (player._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 
@@ -647,7 +648,7 @@ Size GetItemSizeOnSlot(int slot)
 
 /**
  * Search for the first slot occupied by an item in the inventory.
-*/
+ */
 int FindFirstSlotOnItem(int8_t itemInvId)
 {
 	if (itemInvId == 0)
@@ -1014,22 +1015,6 @@ void InvMove(AxisDirection dir)
 	SetCursorPos(mousePos);
 }
 
-/**
- * check if hot spell at X Y exists
- */
-bool HSExists(Point target)
-{
-	for (int r = 0; r < speedspellcount; r++) {
-		if (target.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
-		    && target.x < speedspellscoords[r].x + SPLICONLENGTH / 2
-		    && target.y >= speedspellscoords[r].y - SPLICONLENGTH / 2
-		    && target.y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
-			return true;
-		}
-	}
-	return false;
-}
-
 void HotSpellMove(AxisDirection dir)
 {
 	static AxisDirectionRepeater repeater;
@@ -1037,41 +1022,53 @@ void HotSpellMove(AxisDirection dir)
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
 
-	int spbslot = Players[MyPlayerId]._pRSpell;
-	for (int r = 0; r < speedspellcount; r++) {
-		if (MousePosition.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
-		    && MousePosition.x < speedspellscoords[r].x + SPLICONLENGTH / 2
-		    && MousePosition.y >= speedspellscoords[r].y - SPLICONLENGTH / 2
-		    && MousePosition.y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
-			spbslot = r;
+	auto spellListItems = GetSpellListItems();
+
+	Point position = MousePosition;
+	int shortestDistance = std::numeric_limits<int>::max();
+	for (auto &spellListItem : spellListItems) {
+		Point center = spellListItem.location + Displacement { SPLICONLENGTH / 2, -SPLICONLENGTH / 2 };
+		int distance = MousePosition.ManhattanDistance(center);
+		if (distance < shortestDistance) {
+			position = center;
+			shortestDistance = distance;
+		}
+	}
+
+	const auto search = [&](AxisDirection dir, bool searchForward) {
+		if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
+			return;
+
+		for (size_t i = 0; i < spellListItems.size(); i++) {
+			const size_t index = searchForward ? spellListItems.size() - i - 1 : i;
+
+			auto &spellListItem = spellListItems[index];
+			if (spellListItem.isSelected)
+				continue;
+
+			Point center = spellListItem.location + Displacement { SPLICONLENGTH / 2, -SPLICONLENGTH / 2 };
+			if (dir.x == AxisDirectionX_LEFT && center.x >= MousePosition.x)
+				continue;
+			if (dir.x == AxisDirectionX_RIGHT && center.x <= MousePosition.x)
+				continue;
+			if (dir.x == AxisDirectionX_NONE && center.x != position.x)
+				continue;
+			if (dir.y == AxisDirectionY_UP && center.y >= MousePosition.y)
+				continue;
+			if (dir.y == AxisDirectionY_DOWN && center.y <= MousePosition.y)
+				continue;
+			if (dir.y == AxisDirectionY_NONE && center.y != position.y)
+				continue;
+
+			position = center;
 			break;
 		}
-	}
+	};
+	search({ AxisDirectionX_NONE, dir.y }, dir.y == AxisDirectionY_DOWN);
+	search({ dir.x, AxisDirectionY_NONE }, dir.x == AxisDirectionX_RIGHT);
 
-	Point newMousePosition = speedspellscoords[spbslot];
-
-	if (dir.x == AxisDirectionX_LEFT) {
-		if (spbslot < speedspellcount - 1) {
-			newMousePosition = speedspellscoords[spbslot + 1];
-		}
-	} else if (dir.x == AxisDirectionX_RIGHT) {
-		if (spbslot > 0) {
-			newMousePosition = speedspellscoords[spbslot - 1];
-		}
-	}
-
-	if (dir.y == AxisDirectionY_UP) {
-		if (HSExists(newMousePosition - Displacement { 0, SPLICONLENGTH })) {
-			newMousePosition.y -= SPLICONLENGTH;
-		}
-	} else if (dir.y == AxisDirectionY_DOWN) {
-		if (HSExists(newMousePosition + Displacement { 0, SPLICONLENGTH })) {
-			newMousePosition.y += SPLICONLENGTH;
-		}
-	}
-
-	if (newMousePosition != MousePosition) {
-		SetCursorPos(newMousePosition);
+	if (position != MousePosition) {
+		SetCursorPos(position);
 	}
 }
 
@@ -1132,12 +1129,18 @@ void WalkInDir(int playerId, AxisDirection dir)
 		player._pdir = pdir;
 
 #ifdef VIRTUAL_GAMEPAD
-	if (VirtualGamepadState.standButton.isHeld)
+	if (VirtualGamepadState.standButton.isHeld) {
+		if (player._pmode == PM_STAND)
+			StartStand(playerId, pdir);
 		return;
+	}
 #endif
 
-	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir))
+	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir)) {
+		if (player._pmode == PM_STAND)
+			StartStand(playerId, pdir);
 		return; // Don't start backtrack around obstacles
+	}
 
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
 }
@@ -1247,53 +1250,6 @@ struct RightStickAccumulator {
 };
 
 } // namespace
-
-void StoreSpellCoords()
-{
-	const int startX = PANEL_LEFT + 12 + SPLICONLENGTH / 2;
-	const int endX = startX + SPLICONLENGTH * 10;
-	const int endY = PANEL_TOP - 17 - SPLICONLENGTH / 2;
-	speedspellcount = 0;
-	int xo = endX;
-	int yo = endY;
-	for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
-		std::uint64_t spells;
-		auto &myPlayer = Players[MyPlayerId];
-		switch (i) {
-		case RSPLTYPE_SKILL:
-			spells = myPlayer._pAblSpells;
-			break;
-		case RSPLTYPE_SPELL:
-			spells = myPlayer._pMemSpells;
-			break;
-		case RSPLTYPE_SCROLL:
-			spells = myPlayer._pScrlSpells;
-			break;
-		case RSPLTYPE_CHARGES:
-			spells = myPlayer._pISpells;
-			break;
-		}
-		std::uint64_t spell = 1;
-		for (int j = 1; j < MAX_SPELLS; j++) {
-			if ((spell & spells) != 0) {
-				speedspellscoords[speedspellcount] = { xo, yo };
-				++speedspellcount;
-				xo -= SPLICONLENGTH;
-				if (xo < startX) {
-					xo = endX;
-					yo -= SPLICONLENGTH;
-				}
-			}
-			spell <<= 1;
-		}
-		if (spells != 0 && xo != endX)
-			xo -= SPLICONLENGTH;
-		if (xo < startX) {
-			xo = endX;
-			yo -= SPLICONLENGTH;
-		}
-	}
-}
 
 bool IsAutomapActive()
 {

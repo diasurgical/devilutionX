@@ -3,8 +3,8 @@
  *
  * Implementation of all monster data.
  */
-#include "items.h"
 #include "monstdat.h"
+#include "items.h"
 
 #include "monster.h"
 #include "textdat.h"

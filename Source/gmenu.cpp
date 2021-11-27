@@ -5,6 +5,7 @@
  */
 #include "gmenu.h"
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "controls/axis_direction.h"
 #include "controls/controller_motion.h"
@@ -307,13 +308,13 @@ bool gmenu_left_mouse(bool isDown)
 	if (sgpCurrentMenu == nullptr) {
 		return false;
 	}
-	if (MousePosition.y >= PANEL_TOP) {
+	if (MousePosition.y >= GetMainPanel().position.y) {
 		return false;
 	}
-	if (MousePosition.y - (117 + UI_OFFSET_Y) < 0) {
+	if (MousePosition.y - (117 + GetUIOffsetY()) < 0) {
 		return true;
 	}
-	int i = (MousePosition.y - (117 + UI_OFFSET_Y)) / 45;
+	int i = (MousePosition.y - (117 + GetUIOffsetY())) / 45;
 	if (i >= sgCurrentMenuIdx) {
 		return true;
 	}
@@ -322,10 +323,11 @@ bool gmenu_left_mouse(bool isDown)
 		return true;
 	}
 	int w = GmenuGetLineWidth(pItem);
-	if (MousePosition.x < gnScreenWidth / 2 - w / 2) {
+	uint16_t screenWidth = GetScreenWidth();
+	if (MousePosition.x < screenWidth / 2 - w / 2) {
 		return true;
 	}
-	if (MousePosition.x > gnScreenWidth / 2 + w / 2) {
+	if (MousePosition.x > screenWidth / 2 + w / 2) {
 		return true;
 	}
 	sgpCurrItem = pItem;

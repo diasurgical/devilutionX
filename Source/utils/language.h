@@ -14,3 +14,6 @@ const std::string &LanguageParticularTranslate(const char *context, const char *
 const std::string &LanguagePluralTranslate(const char *singular, const char *plural, int count);
 const std::string &LanguageTranslate(const char *key);
 const char *LanguageMetadata(const char *key);
+
+// Chinese and Japanese, and Korean small font is 16px instead of a 12px one for readability.
+bool IsSmallFontTall();

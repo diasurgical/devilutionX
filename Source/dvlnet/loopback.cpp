@@ -1,4 +1,6 @@
 #include "dvlnet/loopback.h"
+
+#include "multi.h"
 #include "utils/language.h"
 #include "utils/stubs.h"
 

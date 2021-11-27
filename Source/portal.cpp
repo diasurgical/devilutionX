@@ -118,7 +118,7 @@ void RemovePortalMissile(int id)
 		int mi = ActiveMissiles[i];
 		auto &missile = Missiles[mi];
 		if (missile._mitype == MIS_TOWN && missile._misource == id) {
-			dFlags[missile.position.tile.x][missile.position.tile.y] &= ~BFLAG_MISSILE;
+			dFlags[missile.position.tile.x][missile.position.tile.y] &= ~DungeonFlag::Missile;
 
 			if (Portals[id].level != 0)
 				AddUnLight(missile._mlid);

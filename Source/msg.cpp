@@ -26,11 +26,11 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "spells.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "sync.h"
+#include "tmsg.h"
 #include "town.h"
 #include "towners.h"
-#include "tmsg.h"
 #include "trigs.h"
 #include "utils/language.h"
 
@@ -408,6 +408,7 @@ void DeltaLeaveSync(BYTE bLevel)
 		delta._menemy = encode_enemy(monster);
 		delta._mhitpoints = monster._mhitpoints;
 		delta._mactive = monster._msquelch;
+		delta.mWhoHit = monster.mWhoHit;
 	}
 	memcpy(&sgLocals[bLevel].automapsv, AutomapView, sizeof(AutomapView));
 }
@@ -706,13 +707,28 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1 && IOwnLevel(player.plrlevel) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
-			int ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
+			int ii = -1;
+			if (InDungeonBounds(position)) {
+				ii = abs(dItem[position.x][position.y]) - 1;
+				if (ii >= 0 && !Items[ii].KeyAttributesMatch(message.dwSeed, static_cast<_item_indexes>(message.wIndx), message.wCI)) {
+					ii = -1;
+				}
+			}
+
+			if (ii == -1) {
+				// No item at the target position or the key attributes don't match, so try find a matching item.
+				int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
+				if (activeItemIndex != -1) {
+					ii = ActiveItems[activeItemIndex];
+				}
+			}
+
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_GETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
-					InvGetItem(MyPlayerId, &Items[ii], ii);
+					InvGetItem(MyPlayerId, ii);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
@@ -731,20 +747,20 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsGItemValid(message)) {
 		const Point position { message.x, message.y };
-		int ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
 		if (DeltaGetItem(message, message.bLevel)) {
 			if ((currlevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
 					if (currlevel != message.bLevel) {
 						auto &player = Players[MyPlayerId];
-						ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
-							InvGetItem(MyPlayerId, &Items[ii], ii);
+							InvGetItem(MyPlayerId, ii);
 					} else {
-						InvGetItem(MyPlayerId, &Items[ii], ii);
+						int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
+						InvGetItem(MyPlayerId, ActiveItems[activeItemIndex]);
 					}
 				} else {
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				}
 			}
 		} else {
@@ -776,11 +792,10 @@ DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1 && IOwnLevel(player.plrlevel) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
-			int ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
-			if (ii != -1) {
+			if (FindGetItem(message.dwSeed, message.wIndx, message.wCI) != -1) {
 				NetSendCmdGItem2(false, CMD_AGETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
 					AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
@@ -813,7 +828,7 @@ DWORD OnAutoGetItem(const TCmd *pCmd, int pnum)
 						AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
 					}
 				} else {
-					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				}
 			}
 		} else {
@@ -831,10 +846,11 @@ DWORD OnItemExtra(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsGItemValid(message)) {
-		const Point position { message.x, message.y };
 		DeltaGetItem(message, message.bLevel);
-		if (currlevel == Players[pnum].plrlevel)
-			SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
+		if (currlevel == Players[pnum].plrlevel) {
+			const Point position { message.x, message.y };
+			SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
+		}
 	}
 
 	return sizeof(message);
@@ -1338,7 +1354,7 @@ DWORD OnNewLevel(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (pnum != MyPlayerId) {
-		if (message.wParam1 < WM_FIRST && message.wParam1 > WM_LAST)
+		if (message.wParam1 < WM_FIRST || message.wParam1 > WM_LAST)
 			return sizeof(message);
 
 		auto mode = static_cast<interface_mode>(message.wParam1);
@@ -1553,8 +1569,9 @@ DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
-		if (currlevel == playerLevel)
-			SyncBreakObj(message.wParam1, message.wParam2);
+		if (currlevel == playerLevel) {
+			SyncBreakObj(message.wParam1, Objects[message.wParam2]);
+		}
 		DeltaSyncObject(message.wParam2, CMD_BREAKOBJ, playerLevel);
 	}
 
@@ -1668,7 +1685,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 				player._pmode = PM_DEATH;
 				NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
 				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
-				dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
+				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
 
 			player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == MyPlayerId);
@@ -1827,7 +1844,7 @@ DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	else if (Players[pnum]._pLevel < MAXCHARLEVEL - 1) {
 		Players[pnum]._pExperience = Players[pnum]._pNextExper;
-		if (sgOptions.Gameplay.bExperienceBar) {
+		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
 		NextPlrLevel(pnum);
@@ -2062,6 +2079,8 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	monster._my = monsterSync._my;
 	monster._mactive = UINT8_MAX;
 	monster._menemy = monsterSync._menemy;
+	monster._mhitpoints = monsterSync._mhitpoints;
+	monster.mWhoHit = monsterSync.mWhoHit;
 }
 
 bool delta_portal_inited(int i)
@@ -2151,7 +2170,7 @@ Point GetItemPosition(Point position)
 	return position;
 }
 
-} //namespace
+} // namespace
 
 void DeltaLoadLevel()
 {
@@ -2171,8 +2190,10 @@ void DeltaLoadLevel()
 			monster.position.tile = { x, y };
 			monster.position.old = { x, y };
 			monster.position.future = { x, y };
-			if (sgLevels[currlevel].monster[i]._mhitpoints != -1)
+			if (sgLevels[currlevel].monster[i]._mhitpoints != -1) {
 				monster._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
+				monster.mWhoHit = sgLevels[currlevel].monster[i].mWhoHit;
+			}
 			if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
 				M_ClearSquares(i);
 				if (monster._mAi != AI_DIABLO) {
@@ -2206,14 +2227,15 @@ void DeltaLoadLevel()
 			continue;
 
 		if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
-			int ii = FindGetItem(
+			int activeItemIndex = FindGetItem(
+			    sgLevels[currlevel].item[i].dwSeed,
 			    sgLevels[currlevel].item[i].wIndx,
-			    sgLevels[currlevel].item[i].wCI,
-			    sgLevels[currlevel].item[i].dwSeed);
-			if (ii != -1) {
-				if (dItem[Items[ii].position.x][Items[ii].position.y] == ii + 1)
-					dItem[Items[ii].position.x][Items[ii].position.y] = 0;
-				DeleteItem(ii, i);
+			    sgLevels[currlevel].item[i].wCI);
+			if (activeItemIndex != -1) {
+				const auto &position = Items[ActiveItems[activeItemIndex]].position;
+				if (dItem[position.x][position.y] == ActiveItems[activeItemIndex] + 1)
+					dItem[position.x][position.y] = 0;
+				DeleteItem(activeItemIndex);
 			}
 		}
 		if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {
@@ -2272,7 +2294,7 @@ void DeltaLoadLevel()
 				SyncOpObject(-1, sgLevels[currlevel].object[i].bCmd, i);
 				break;
 			case CMD_BREAKOBJ:
-				SyncBreakObj(-1, i);
+				SyncBreakObj(-1, Objects[i]);
 				break;
 			default:
 				break;
@@ -2280,9 +2302,9 @@ void DeltaLoadLevel()
 		}
 
 		for (int i = 0; i < ActiveObjectCount; i++) {
-			int ot = Objects[ActiveObjects[i]]._otype;
-			if (ot == OBJ_TRAPL || ot == OBJ_TRAPR)
+			if (Objects[ActiveObjects[i]].IsTrap()) {
 				OperateTrap(Objects[ActiveObjects[i]]);
+			}
 		}
 	}
 	deltaload = false;

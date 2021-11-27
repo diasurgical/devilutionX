@@ -7,13 +7,16 @@
 
 #include <cstdint>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/text_render.hpp"
+#include "panels/ui_panels.hpp"
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/stdcompat/string_view.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -49,9 +52,9 @@ extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
-extern Rectangle MainPanel;
-extern Rectangle LeftPanel;
-extern Rectangle RightPanel;
+const Rectangle &GetMainPanel();
+const Rectangle &GetLeftPanel();
+const Rectangle &GetRightPanel();
 extern std::optional<OwnedSurface> pBtmBuff;
 extern SDL_Rect PanBtnPos[8];
 
@@ -61,7 +64,7 @@ bool IsChatAvailable();
  */
 inline bool CanPanelsCoverView()
 {
-	return gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT;
+	return GetScreenWidth() <= PANEL_WIDTH && GetScreenHeight() <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
 
 void DrawSpellList(const Surface &out);
@@ -69,7 +72,7 @@ void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
 
-void AddPanelString(const char *str);
+void AddPanelString(string_view str);
 void ClearPanel();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
@@ -125,14 +128,8 @@ void DrawCtrlPan(const Surface &out);
 void DrawCtrlBtns(const Surface &out);
 
 /**
- * Draws the "Speed Book": the rows of known spells for quick-setting a spell that
- * show up when you click the spell slot at the control panel.
- */
-void DoSpeedBook();
-
-/**
  * Clears panel button flags.
-*/
+ */
 void ClearPanBtn();
 
 /**
@@ -168,7 +165,6 @@ void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
-void CheckSBook();
 void DrawGoldSplit(const Surface &out, int amount);
 void control_drop_gold(char vkey);
 void DrawTalkPan(const Surface &out);

@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "init.h"
@@ -65,7 +66,7 @@ const char *const HelpText[] = {
 	   "number appears in that box. Items may be used by either pressing "
 	   "the corresponding number or right-clicking on the item."),
 	"",
-	N_("$Gold"),
+	N_("$Gold:"),
 	N_("You can select a specific amount of gold to drop by "
 	   "right-clicking on a pile of gold in your inventory."),
 	"",
@@ -76,25 +77,68 @@ const char *const HelpText[] = {
 	   "the spell you wish to cast will ready the spell. A readied spell "
 	   "may be cast by simply right-clicking in the play area."),
 	"",
-	N_("$Using the Speedbook for Spells"),
+	N_("$Using the Speedbook for Spells:"),
 	N_("Left-clicking on the 'readied spell' button will open the 'Speedbook' "
 	   "which allows you to select a skill or spell for immediate use. "
 	   "To use a readied skill or spell, simply right-click in the main play "
 	   "area."),
-	N_("Shift + Left-clicking on the 'select current spell' button will clear the readied spell"),
+	N_("Shift + Left-clicking on the 'select current spell' button will clear the readied spell."),
 	"",
-	N_("$Setting Spell Hotkeys"),
+	N_("$Setting Spell Hotkeys:"),
 	N_("You can assign up to four Hotkeys for skills, spells or scrolls. "
 	   "Start by opening the 'speedbook' as described in the section above. "
 	   "Press the F5, F6, F7 or F8 keys after highlighting the spell you "
 	   "wish to assign."),
 	"",
-	N_("$Spell Books"),
+	N_("$Spell Books:"),
 	N_("Reading more than one book increases your knowledge of that "
 	   "spell, allowing you to cast the spell more effectively."),
 };
 
 std::vector<std::string> HelpTextLines;
+
+constexpr int PaddingTop = 32;
+constexpr int PaddingLeft = 32;
+constexpr int ContentPaddingTop = 19;
+constexpr int ContentOuterHeight = 180;
+
+constexpr int PanelHeight = 297;
+constexpr int ContentTextWidth = 577;
+
+int LineHeight()
+{
+	return IsSmallFontTall() ? 18 : 14;
+}
+
+int BlankLineHeight()
+{
+	return 12;
+}
+
+int DividerLineMarginY()
+{
+	return BlankLineHeight() / 2;
+}
+
+int HeaderHeight()
+{
+	return PaddingTop + LineHeight() + 2 * BlankLineHeight() + DividerLineMarginY();
+}
+
+int ContentPaddingY()
+{
+	return BlankLineHeight();
+}
+
+int ContentsTextHeight()
+{
+	return PanelHeight - HeaderHeight() - DividerLineMarginY() - 2 * ContentPaddingY() - BlankLineHeight();
+}
+
+int NumVisibleLines()
+{
+	return (ContentsTextHeight() - 1) / LineHeight() + 1; // Ceil
+}
 
 } // namespace
 
@@ -115,7 +159,7 @@ void InitHelp()
 		size_t previous = 0;
 		while (true) {
 			size_t next = paragraph.find('\n', previous);
-			HelpTextLines.emplace_back(paragraph.substr(previous, next));
+			HelpTextLines.emplace_back(paragraph.substr(previous, next - previous));
 			if (next == std::string::npos)
 				break;
 			previous = next + 1;
@@ -130,21 +174,30 @@ void DrawHelp(const Surface &out)
 	DrawSTextHelp();
 	DrawQTextBack(out);
 
+	const int lineHeight = LineHeight();
+	const int blankLineHeight = BlankLineHeight();
+
 	const char *title;
 	if (gbIsHellfire)
 		title = gbIsSpawn ? _("Shareware Hellfire Help") : _("Hellfire Help");
 	else
 		title = gbIsSpawn ? _("Shareware Diablo Help") : _("Diablo Help");
-	PrintSString(out, 0, 2, title, UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 
-	DrawSLine(out, 5);
+	const int sx = PANEL_X + PaddingLeft;
+	const int sy = UI_OFFSET_Y;
 
-	const int sx = PANEL_X + 32;
-	const int sy = UI_OFFSET_Y + 51;
+	DrawString(out, title,
+	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },
+	    UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 
-	for (int i = 6; i < 21; i++) {
-		const char *line = HelpTextLines[i - 6 + SkipLines].c_str();
-		if (line[0] == '\0') {
+	const int titleBottom = sy + HeaderHeight();
+	DrawSLine(out, titleBottom);
+
+	const int numLines = NumVisibleLines();
+	const int contentY = titleBottom + DividerLineMarginY() + ContentPaddingY();
+	for (int i = 0; i < numLines; i++) {
+		const string_view line = HelpTextLines[i + SkipLines];
+		if (line.empty()) {
 			continue;
 		}
 
@@ -152,13 +205,15 @@ void DrawHelp(const Surface &out)
 		UiFlags style = UiFlags::ColorWhite;
 		if (line[0] == '$') {
 			offset = 1;
-			style = UiFlags::ColorRed;
+			style = UiFlags::ColorBlue;
 		}
 
-		DrawString(out, &line[offset], { { sx, sy + i * 12 }, { 577, 12 } }, style);
+		DrawString(out, line.substr(offset), { { sx, contentY + i * lineHeight }, { ContentTextWidth, lineHeight } }, style, /*spacing=*/1, lineHeight);
 	}
 
-	PrintSString(out, 0, 23, _("Press ESC to end or the arrow keys to scroll."), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
+	DrawString(out, _("Press ESC to end or the arrow keys to scroll."),
+	    { { sx, contentY + ContentsTextHeight() + ContentPaddingY() + blankLineHeight }, { ContentTextWidth, lineHeight } },
+	    UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 }
 
 void DisplayHelp()
@@ -175,7 +230,7 @@ void HelpScrollUp()
 
 void HelpScrollDown()
 {
-	if (SkipLines < HelpTextLines.size() - 15)
+	if (SkipLines + NumVisibleLines() < HelpTextLines.size())
 		SkipLines++;
 }
 

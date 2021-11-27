@@ -5,8 +5,9 @@
  */
 #pragma once
 
-#include "player.h"
 #include "DiabloUI/diabloui.h"
+#include "mpq/mpq_writer.hpp"
+#include "player.h"
 
 namespace devilution {
 
@@ -27,6 +28,7 @@ private:
 	bool clear_tables_;
 };
 
+MpqWriter &CurrentSaveArchive();
 const char *pfile_get_password();
 void pfile_write_hero(bool writeGameData = false, bool clearTables = !gbIsMultiplayer);
 bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *));

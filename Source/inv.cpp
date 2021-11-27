@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <fmt/format.h>
 
+#include "DiabloUI/ui_flags.hpp"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
@@ -18,11 +20,11 @@
 #include "inv_iterators.hpp"
 #include "minitext.h"
 #include "options.h"
+#include "panels/ui_panels.hpp"
 #include "plrmsg.h"
 #include "stores.h"
 #include "town.h"
 #include "towners.h"
-#include "controls/plrctrls.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
@@ -327,7 +329,7 @@ bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool p
 	if (persistItem) {
 		player.InvBody[bodyLocation] = item;
 
-		if (sgOptions.Audio.bAutoEquipSound && playerId == MyPlayerId) {
+		if (*sgOptions.Audio.autoEquipSound && playerId == MyPlayerId) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
 		}
 
@@ -356,11 +358,11 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
-		int xo = RightPanel.position.x;
-		int yo = RightPanel.position.y;
+		int xo = GetRightPanel().position.x;
+		int yo = GetRightPanel().position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
+			xo = GetMainPanel().position.x;
+			yo = GetMainPanel().position.y;
 		}
 
 		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
@@ -692,11 +694,11 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = RightPanel.position.x;
-		int yo = RightPanel.position.y;
+		int xo = GetRightPanel().position.x;
+		int yo = GetRightPanel().position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
+			xo = GetMainPanel().position.x;
+			yo = GetMainPanel().position.y;
 		}
 
 		// check which inventory rectangle the mouse is in, if any
@@ -1006,13 +1008,9 @@ void CheckNaKrulNotes(Player &player)
 		}
 	}
 
-	int itemNum = ActiveItems[0];
-	Item tmp = Items[itemNum];
-	memset(&Items[itemNum], 0, sizeof(*Items));
-	GetItemAttrs(Items[itemNum], IDI_FULLNOTE, 16);
-	SetupItem(Items[itemNum]);
-	player.HoldItem = Items[itemNum];
-	Items[itemNum] = tmp;
+	player.HoldItem = {};
+	GetItemAttrs(player.HoldItem, IDI_FULLNOTE, 16);
+	SetupItem(player.HoldItem);
 }
 
 void CheckQuestItem(Player &player)
@@ -1084,11 +1082,12 @@ void OpenCrypt()
 		NetSendCmdQuest(true, quest);
 }
 
-void CleanupItems(Item *item, int ii)
+void CleanupItems(int ii)
 {
-	dItem[item->position.x][item->position.y] = 0;
+	auto &item = Items[ii];
+	dItem[item.position.x][item.position.y] = 0;
 
-	if (currlevel == 21 && item->position == CornerStone.position) {
+	if (currlevel == 21 && item.position == CornerStone.position) {
 		CornerStone.item._itype = ItemType::None;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item.position = { 0, 0 };
@@ -1100,7 +1099,7 @@ void CleanupItems(Item *item, int ii)
 	int i = 0;
 	while (i < ActiveItemCount) {
 		if (ActiveItems[i] == ii) {
-			DeleteItem(ActiveItems[i], i);
+			DeleteItem(i);
 			i = 0;
 			continue;
 		}
@@ -1130,18 +1129,11 @@ bool PutItem(Player &player, Point &position)
 	if (CanPut(position))
 		return true;
 
-	for (int l = 1; l < 50; l++) {
-		for (int j = -l; j <= l; j++) {
-			int yp = j + player.position.tile.y;
-			for (int i = -l; i <= l; i++) {
-				int xp = i + player.position.tile.x;
-				if (!CanPut({ xp, yp }))
-					continue;
+	std::optional<Point> itemPosition = FindClosestValidPosition(CanPut, player.position.tile, 1, 50);
 
-				position = { xp, yp };
-				return true;
-			}
-		}
+	if (itemPosition) {
+		position = *itemPosition;
+		return true;
 	}
 
 	return false;
@@ -1170,7 +1162,7 @@ void StartGoldDrop()
 		control_reset_talk();
 
 	Point start = GetPanelPosition(UiPanels::Inventory, { 67, 128 });
-	SDL_Rect rect = { start.x, start.y, 180, 20 };
+	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
 	SDL_SetTextInputRect(&rect);
 
 	dropGoldFlag = true;
@@ -1213,22 +1205,22 @@ void DrawInv(const Surface &out)
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), *pInvCels, 1);
 
 	Size slotSize[] = {
-		{ 2, 2 }, //head
-		{ 1, 1 }, //left ring
-		{ 1, 1 }, //right ring
-		{ 1, 1 }, //amulet
-		{ 2, 3 }, //left hand
-		{ 2, 3 }, //right hand
+		{ 2, 2 }, // head
+		{ 1, 1 }, // left ring
+		{ 1, 1 }, // right ring
+		{ 1, 1 }, // amulet
+		{ 2, 3 }, // left hand
+		{ 2, 3 }, // right hand
 		{ 2, 3 }, // chest
 	};
 
 	Point slotPos[] = {
-		{ 133, 59 },  //head
-		{ 48, 205 },  //left ring
-		{ 249, 205 }, //right ring
-		{ 205, 60 },  //amulet
-		{ 17, 160 },  //left hand
-		{ 248, 160 }, //right hand
+		{ 133, 59 },  // head
+		{ 48, 205 },  // left ring
+		{ 249, 205 }, // right ring
+		{ 205, 60 },  // amulet
+		{ 17, 160 },  // left hand
+		{ 248, 160 }, // right hand
 		{ 133, 160 }, // chest
 	};
 
@@ -1271,8 +1263,8 @@ void DrawInv(const Surface &out)
 						LightTableIndex = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RightPanel.position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
-						const int dstY = RightPanel.position.y + slotPos[INVLOC_HAND_RIGHT].y;
+						const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
+						const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
 						cel_transparency_active = false;
@@ -1395,23 +1387,23 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
 		// annoy players who prefer that playstyle.
-		return player._pClass != HeroClass::Monk && sgOptions.Gameplay.bAutoEquipWeapons;
+		return player._pClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipWeapons;
 	}
 
 	if (item.isArmor()) {
-		return sgOptions.Gameplay.bAutoEquipArmor;
+		return *sgOptions.Gameplay.autoEquipArmor;
 	}
 
 	if (item.isHelm()) {
-		return sgOptions.Gameplay.bAutoEquipHelms;
+		return *sgOptions.Gameplay.autoEquipHelms;
 	}
 
 	if (item.isShield()) {
-		return sgOptions.Gameplay.bAutoEquipShields;
+		return *sgOptions.Gameplay.autoEquipShields;
 	}
 
 	if (item.isJewelry()) {
-		return sgOptions.Gameplay.bAutoEquipJewelry;
+		return *sgOptions.Gameplay.autoEquipJewelry;
 	}
 
 	return true;
@@ -1575,11 +1567,8 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
-	auto &item = Items[MAXITEMS];
-	memset(&item, 0, sizeof(item));
-	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	player.HoldItem = item;
+	player.HoldItem = {};
+	RecreateItem(player.HoldItem, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	if (bId) {
 		player.HoldItem._iIdentified = true;
@@ -1614,8 +1603,9 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 {
-	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT
-	    && MousePosition.y > PANEL_TOP && MousePosition.y < 33 + PANEL_TOP) {
+	auto &mainPanelPosition = GetMainPanel().position;
+	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x
+	    && MousePosition.y > mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y) {
 		CheckInvItem(isShiftHeld, isCtrlHeld);
 	}
 }
@@ -1633,14 +1623,15 @@ void CheckItemStats(Player &player)
 	}
 }
 
-void InvGetItem(int pnum, Item *item, int ii)
+void InvGetItem(int pnum, int ii)
 {
+	auto &item = Items[ii];
 	if (dropGoldFlag) {
 		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item->position.x][item->position.y] == 0)
+	if (dItem[item.position.x][item.position.y] == 0)
 		return;
 
 	auto &player = Players[pnum];
@@ -1648,15 +1639,15 @@ void InvGetItem(int pnum, Item *item, int ii)
 	if (MyPlayerId == pnum && pcurs >= CURSOR_FIRSTITEM)
 		NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile);
 
-	item->_iCreateInfo &= ~CF_PREGEN;
-	player.HoldItem = *item;
+	item._iCreateInfo &= ~CF_PREGEN;
+	player.HoldItem = item;
 	CheckQuestItem(player);
 	CheckBookLevel(player);
 	CheckItemStats(player);
 	bool cursorUpdated = false;
 	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player))
 		cursorUpdated = true;
-	CleanupItems(item, ii);
+	CleanupItems(ii);
 	pcursitem = -1;
 	if (!cursorUpdated)
 		NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -1708,11 +1699,11 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 
 	if (done) {
-		if (!autoEquipped && sgOptions.Audio.bItemPickupSound && pnum == MyPlayerId) {
+		if (!autoEquipped && *sgOptions.Audio.itemPickupSound && pnum == MyPlayerId) {
 			PlaySFX(IS_IGRAB);
 		}
 
-		CleanupItems(&Items[ii], ii);
+		CleanupItems(ii);
 		return;
 	}
 
@@ -1725,48 +1716,47 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	player.HoldItem._itype = ItemType::None;
 }
 
-int FindGetItem(int idx, uint16_t ci, int iseed)
+int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t createInfo)
 {
-	if (ActiveItemCount <= 0)
-		return -1;
-
-	int ii;
-	int i = 0;
-	while (true) {
-		ii = ActiveItems[i];
-		if (Items[ii].IDidx == idx && Items[ii]._iSeed == iseed && Items[ii]._iCreateInfo == ci)
-			break;
-
-		i++;
-
-		if (i >= ActiveItemCount)
-			return -1;
+	for (uint8_t i = 0; i < ActiveItemCount; i++) {
+		auto &item = Items[ActiveItems[i]];
+		if (item.KeyAttributesMatch(iseed, idx, createInfo)) {
+			return i;
+		}
 	}
 
-	return ii;
+	return -1;
 }
 
-void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
+void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci)
 {
-	int ii;
+	// Check what the local client has at the target position
+	int ii = dItem[position.x][position.y] - 1;
 
-	if (dItem[position.x][position.y] != 0) {
-		ii = dItem[position.x][position.y] - 1;
-		if (Items[ii].IDidx == idx
-		    && Items[ii]._iSeed == iseed
-		    && Items[ii]._iCreateInfo == ci) {
-			FindGetItem(idx, ci, iseed);
-		} else {
-			ii = FindGetItem(idx, ci, iseed);
+	if (ii >= 0 && ii < MAXITEMS) {
+		// If there was an item there, check that it's the same item as the remote player has
+		if (Items[ii].KeyAttributesMatch(iseed, idx, ci)) {
+			// Key attributes don't match so we must've desynced, ignore this index and try find a matching item via lookup
+			ii = -1;
 		}
-	} else {
-		ii = FindGetItem(idx, ci, iseed);
 	}
 
-	if (ii == -1)
-		return;
+	if (ii == -1) {
+		// Either there's no item at the expected position or it doesn't match what is being picked up, so look for an item that matches the key attributes
+		ii = FindGetItem(iseed, idx, ci);
 
-	CleanupItems(&Items[ii], ii);
+		if (ii != -1) {
+			// Translate to Items index for CleanupItems, FindGetItem returns an ActiveItems index
+			ii = ActiveItems[ii];
+		}
+	}
+
+	if (ii == -1) {
+		// Still can't find the expected item, assume it was collected earlier and this caused the desync
+		return;
+	}
+
+	CleanupItems(ii);
 }
 
 bool CanPut(Point position)
@@ -1775,24 +1765,18 @@ bool CanPut(Point position)
 		return false;
 	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;
+	if (dObject[position.x][position.y] != 0 && Objects[abs(dObject[position.x][position.y]) - 1]._oSolidFlag)
+		return false;
 
-	if (dObject[position.x][position.y] != 0) {
-		if (Objects[dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1)]._oSolidFlag)
+	if (dObject[position.x + 1][position.y + 1] != 0) {
+		int8_t oi = abs(dObject[position.x + 1][position.y + 1]) - 1;
+		if (Objects[oi]._oSelFlag != 0) {
 			return false;
+		}
 	}
 
-	int8_t oi = dObject[position.x + 1][position.y + 1];
-	if (oi > 0 && Objects[oi - 1]._oSelFlag != 0) {
-		return false;
-	}
-	if (oi < 0 && Objects[-(oi + 1)]._oSelFlag != 0) {
-		return false;
-	}
-
-	oi = dObject[position.x + 1][position.y];
-	if (oi > 0) {
-		int8_t oi2 = dObject[position.x][position.y + 1];
-		if (oi2 > 0 && Objects[oi - 1]._oSelFlag != 0 && Objects[oi2 - 1]._oSelFlag != 0)
+	if (dObject[position.x + 1][position.y] > 0 && dObject[position.x][position.y + 1] > 0) {
+		if (Objects[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0 && Objects[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0)
 			return false;
 	}
 
@@ -1917,11 +1901,11 @@ int8_t CheckInvHLight()
 {
 	int8_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = RightPanel.position.x;
-		int yo = RightPanel.position.y;
+		int xo = GetRightPanel().position.x;
+		int yo = GetRightPanel().position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
+			xo = GetMainPanel().position.x;
+			yo = GetMainPanel().position.y;
 		}
 
 		if (MousePosition.x >= InvRect[r].x + xo
@@ -2095,8 +2079,8 @@ bool UseInvItem(int pnum, int cii)
 		item = &player.SpdList[c];
 		speedlist = true;
 
-		//If selected speedlist item exists in InvList, use the InvList item.
-		for (int i = 0; i < player._pNumInv && sgOptions.Gameplay.bAutoRefillBelt; i++) {
+		// If selected speedlist item exists in InvList, use the InvList item.
+		for (int i = 0; i < player._pNumInv && *sgOptions.Gameplay.autoRefillBelt; i++) {
 			if (player.InvList[i]._iMiscId == item->_iMiscId && player.InvList[i]._iSpell == item->_iSpell) {
 				c = i;
 				item = &player.InvList[c];

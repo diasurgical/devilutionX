@@ -34,7 +34,7 @@ int SP4x2;
 int SP4y2;
 BYTE L4dungeon[80][80];
 BYTE dung[20][20];
-//int dword_52A4DC;
+// int dword_52A4DC;
 
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,

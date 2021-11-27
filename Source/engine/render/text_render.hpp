@@ -6,10 +6,13 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <SDL.h>
 
-#include "DiabloUI/ui_item.h"
+#include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/rectangle.hpp"
@@ -48,6 +51,73 @@ enum text_color : uint8_t {
 	ColorButtonpushed,
 };
 
+/**
+ * @brief A format argument for `DrawStringWithColors`.
+ */
+class DrawStringFormatArg {
+public:
+	enum class Type {
+		StringView,
+		Int
+	};
+
+	DrawStringFormatArg(string_view value, UiFlags flags)
+	    : type_(Type::StringView)
+	    , string_view_value_(value)
+	    , flags_(flags)
+	{
+	}
+
+	DrawStringFormatArg(int value, UiFlags flags)
+	    : type_(Type::Int)
+	    , int_value_(value)
+	    , flags_(flags)
+	{
+	}
+
+	Type GetType() const
+	{
+		return type_;
+	}
+
+	string_view GetFormatted() const
+	{
+		if (type_ == Type::StringView)
+			return string_view_value_;
+		return formatted_;
+	}
+
+	void SetFormatted(std::string &&value)
+	{
+		formatted_ = std::move(value);
+	}
+
+	bool HasFormatted() const
+	{
+		return type_ == Type::StringView || !formatted_.empty();
+	}
+
+	int GetIntValue() const
+	{
+		return int_value_;
+	}
+
+	UiFlags GetFlags() const
+	{
+		return flags_;
+	}
+
+private:
+	Type type_;
+	union {
+		string_view string_view_value_;
+		int int_value_;
+	};
+
+	UiFlags flags_;
+	std::string formatted_;
+};
+
 extern std::optional<CelSprite> pSPentSpn2Cels;
 
 void UnloadFonts(GameFontTables size, text_color color);
@@ -61,6 +131,18 @@ void UnloadFonts(GameFontTables size, text_color color);
  * @return Line width in pixels
  */
 int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing = 1, int *charactersInLine = nullptr);
+
+/**
+ * @brief Calculate pixel width of first line of text, respecting kerning
+ * @param fmt An fmt::format string.
+ * @param args Format arguments.
+ * @param size Font size to use
+ * @param spacing Extra spacing to add per character
+ * @param charactersInLine Receives characters read until newline or terminator
+ * @return Line width in pixels
+ */
+int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables size, int spacing, int *charactersInLine = nullptr);
+
 [[nodiscard]] std::string WordWrapString(string_view text, size_t width, GameFontTables size = GameFont12, int spacing = 1);
 
 /**
@@ -102,6 +184,27 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 {
 	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight);
+}
+
+/**
+ * @brief Draws a line of text with different colors for certain parts of the text.
+ *
+ * @example DrawStringWithColors(out, "Press {} to start", {{"Ⓧ", UiFlags::ColorBlue}}, UiFlags::ColorWhite)
+ *
+ * @param out Output buffer to draw the text on.
+ * @param fmt An fmt::format string.
+ * @param args Format arguments.
+ * @param position Location of the top left corner of the string relative to the top left corner of the output buffer.
+ * @param flags A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options
+ * @param spacing Additional space to add between characters.
+ *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
+ * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
+ */
+void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
+
+inline void DrawStringWithColors(const Surface &out, string_view fmt, std::vector<DrawStringFormatArg> args, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
+{
+	return DrawStringWithColors(out, fmt, args.data(), args.size(), rect, flags, spacing, lineHeight);
 }
 
 uint8_t PentSpn2Spin();

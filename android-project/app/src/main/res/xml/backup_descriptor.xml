@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include domain="external" path="." />
+    <exclude domain="external" path="devilutionx.mpq" />
+    <exclude domain="external" path="diabdat.mpq" />
+    <exclude domain="external" path="DIABDAT.MPQ" />
+    <exclude domain="external" path="fonts.mpq" />
+    <exclude domain="external" path="hellfire.mpq" />
+    <exclude domain="external" path="hfmonk.mpq" />
+    <exclude domain="external" path="hfmusic.mpq" />
+    <exclude domain="external" path="hfvoice.mpq" />
+    <exclude domain="external" path="patch_rt.mpq" />
+    <exclude domain="external" path="patch_sh.mpq" />
+    <exclude domain="external" path="pl.mpq" />
+    <exclude domain="external" path="ru.mpq" />
+    <exclude domain="external" path="spawn.mpq" />
+</full-backup-content>

@@ -2,7 +2,7 @@ version: 1.0.{build}
 
 pull_requests:
   do_not_increment_build_number: true
-image: Visual Studio 2019
+image: Visual Studio 2022
 cache: '%LOCALAPPDATA%\vcpkg\archives'
 
 install:
@@ -12,7 +12,7 @@ install:
   - cd %APPVEYOR_BUILD_FOLDER%
 
 before_build:
-  - cmake -G "Visual Studio 16 2019" -A x64 -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
+  - cmake -G "Visual Studio 17 2022" -A x64 -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln

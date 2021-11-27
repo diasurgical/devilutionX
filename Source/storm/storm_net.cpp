@@ -1,3 +1,5 @@
+#include "storm/storm_net.hpp"
+
 #include <memory>
 #ifndef NONET
 #include "utils/sdl_mutex.h"
@@ -10,17 +12,31 @@
 #include "menu.h"
 #include "options.h"
 #include "utils/stubs.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
-static std::unique_ptr<net::abstract_net> dvlnet_inst;
-static char gpszGameName[128] = {};
-static char gpszGamePassword[128] = {};
-static bool GameIsPublic = {};
+namespace {
+std::unique_ptr<net::abstract_net> dvlnet_inst;
+char gpszGameName[128] = {};
+char gpszGamePassword[128] = {};
+bool GameIsPublic = {};
+thread_local uint32_t dwLastError = 0;
 
 #ifndef NONET
-static SdlMutex storm_net_mutex;
+SdlMutex storm_net_mutex;
 #endif
+} // namespace
+
+uint32_t SErrGetLastError()
+{
+	return dwLastError;
+}
+
+void SErrSetLastError(uint32_t dwErrCode)
+{
+	dwLastError = dwErrCode;
+}
 
 bool SNetReceiveMessage(int *senderplayerid, void **data, uint32_t *databytes)
 {
@@ -112,10 +128,10 @@ bool SNetGetGameInfo(game_info type, void *dst, unsigned int length)
 #endif
 	switch (type) {
 	case GAMEINFO_NAME:
-		strncpy((char *)dst, gpszGameName, length);
+		CopyUtf8((char *)dst, gpszGameName, length);
 		break;
 	case GAMEINFO_PASSWORD:
-		strncpy((char *)dst, gpszGamePassword, length);
+		CopyUtf8((char *)dst, gpszGamePassword, length);
 		break;
 	}
 
@@ -164,7 +180,7 @@ bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *
 		pszGameName = defaultName.c_str();
 	}
 
-	strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
+	CopyUtf8(gpszGameName, pszGameName, sizeof(gpszGameName));
 	if (pszGamePassword != nullptr)
 		DvlNet_SetPassword(pszGamePassword);
 	else
@@ -179,7 +195,7 @@ bool SNetJoinGame(char *pszGameName, char *pszGamePassword, int *playerID)
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
 	if (pszGameName != nullptr)
-		strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
+		CopyUtf8(gpszGameName, pszGameName, sizeof(gpszGameName));
 	if (pszGamePassword != nullptr)
 		DvlNet_SetPassword(pszGamePassword);
 	else
@@ -236,7 +252,7 @@ std::vector<std::string> DvlNet_GetGamelist()
 void DvlNet_SetPassword(std::string pw)
 {
 	GameIsPublic = false;
-	strncpy(gpszGamePassword, pw.c_str(), sizeof(gpszGamePassword) - 1);
+	CopyUtf8(gpszGamePassword, pw, sizeof(gpszGamePassword));
 	dvlnet_inst->setup_password(std::move(pw));
 }
 

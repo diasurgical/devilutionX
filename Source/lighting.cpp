@@ -640,7 +640,7 @@ void DoUnVision(Point position, int nRadius)
 
 	for (int i = x1; i < x2; i++) {
 		for (int j = y1; j < y2; j++) {
-			dFlags[i][j] &= ~(BFLAG_VISIBLE | BFLAG_LIT);
+			dFlags[i][j] &= ~(DungeonFlag::Visible | DungeonFlag::Lit);
 		}
 	}
 }
@@ -649,15 +649,15 @@ void DoVision(Point position, int nRadius, MapExplorationType doautomap, bool vi
 {
 	if (InDungeonBounds(position)) {
 		if (doautomap != MAP_EXP_NONE) {
-			if (dFlags[position.x][position.y] != 0) {
+			if (dFlags[position.x][position.y] != DungeonFlag::None) {
 				SetAutomapView(position, doautomap);
 			}
-			dFlags[position.x][position.y] |= BFLAG_EXPLORED;
+			dFlags[position.x][position.y] |= DungeonFlag::Explored;
 		}
 		if (visible) {
-			dFlags[position.x][position.y] |= BFLAG_LIT;
+			dFlags[position.x][position.y] |= DungeonFlag::Lit;
 		}
-		dFlags[position.x][position.y] |= BFLAG_VISIBLE;
+		dFlags[position.x][position.y] |= DungeonFlag::Visible;
 	}
 
 	for (int v = 0; v < 4; v++) {
@@ -712,15 +712,15 @@ void DoVision(Point position, int nRadius, MapExplorationType doautomap, bool vi
 					    || (InDungeonBounds({ x2adj + nCrawlX, y2adj + nCrawlY })
 					        && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
 						if (doautomap != MAP_EXP_NONE) {
-							if (dFlags[nCrawlX][nCrawlY] != 0) {
+							if (dFlags[nCrawlX][nCrawlY] != DungeonFlag::None) {
 								SetAutomapView({ nCrawlX, nCrawlY }, doautomap);
 							}
-							dFlags[nCrawlX][nCrawlY] |= BFLAG_EXPLORED;
+							dFlags[nCrawlX][nCrawlY] |= DungeonFlag::Explored;
 						}
 						if (visible) {
-							dFlags[nCrawlX][nCrawlY] |= BFLAG_LIT;
+							dFlags[nCrawlX][nCrawlY] |= DungeonFlag::Lit;
 						}
-						dFlags[nCrawlX][nCrawlY] |= BFLAG_VISIBLE;
+						dFlags[nCrawlX][nCrawlY] |= DungeonFlag::Visible;
 						if (!nBlockerFlag) {
 							int8_t nTrans = dTransVal[nCrawlX][nCrawlY];
 							if (nTrans != 0) {

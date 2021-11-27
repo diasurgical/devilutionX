@@ -31,6 +31,7 @@ void NextDebugMonster();
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed);
 bool CheckDebugTextCommand(const string_view text);
 bool IsDebugGridTextNeeded();
+bool IsDebugGridInMegatiles();
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer);
 
 } // namespace devilution

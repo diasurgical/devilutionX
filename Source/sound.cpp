@@ -16,9 +16,9 @@
 #include <SDL.h>
 #include <aulib.h>
 
+#include "engine/assets.hpp"
 #include "init.h"
 #include "options.h"
-#include "storm/storm_sdl_rw.h"
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/sdl_mutex.h"
@@ -163,13 +163,15 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		}
 #ifndef STREAM_ALL_AUDIO
 	} else {
-		SDL_RWops *file = SFileOpenRw(path);
-		if (path == nullptr) {
-			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
+		SDL_RWops *file = OpenAsset(path);
+		if (file == nullptr) {
+			ErrDlg("OpenAsset failed", path, __FILE__, __LINE__);
 		}
 		size_t dwBytes = SDL_RWsize(file);
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
-		SDL_RWread(file, waveFile.get(), dwBytes, 1);
+		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
+			ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()).c_str(), __FILE__, __LINE__);
+		}
 		int error = snd->DSB.SetChunk(waveFile, dwBytes);
 		SDL_RWclose(file);
 		if (error != 0) {
@@ -233,12 +235,17 @@ void music_start(uint8_t nTrack)
 	assert(nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
-		if (spawn_mpq != nullptr)
+		if (spawn_mpq)
 			trackPath = SpawnMusicTracks[nTrack];
 		else
 			trackPath = MusicTracks[nTrack];
 
-		SDL_RWops *handle = SFileOpenRw(trackPath);
+#ifdef DISABLE_STREAMING_MUSIC
+		const bool threadsafe = false;
+#else
+		const bool threadsafe = true;
+#endif
+		SDL_RWops *handle = OpenAsset(trackPath, threadsafe);
 		if (handle != nullptr) {
 			LoadMusic(handle);
 			if (!music->open()) {

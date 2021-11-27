@@ -1,7 +1,7 @@
 #include "selstart.h"
 
-#include "control.h"
 #include "DiabloUI/diabloui.h"
+#include "control.h"
 #include "options.h"
 #include "utils/language.h"
 
@@ -42,9 +42,9 @@ void UiSelStartUpGameOption()
 
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Enter Hellfire"), static_cast<int>(StartUpGameOption::Hellfire)));
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Switch to Diablo"), static_cast<int>(StartUpGameOption::Diablo)));
-	vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 240), 510, 43, UiFlags::AlignCenter | UiFlags::FontSize42 | UiFlags::ColorUiGold, 5));
+	vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, vecDialogItems.size(), PANEL_LEFT + 64, (UI_OFFSET_Y + 240), 510, 43, UiFlags::AlignCenter | UiFlags::FontSize42 | UiFlags::ColorUiGold, 5));
 
-	UiInitList(vecDialogItems.size(), nullptr, ItemSelected, EscPressed, vecDialog, true);
+	UiInitList(nullptr, ItemSelected, EscPressed, vecDialog, true);
 
 	endMenu = false;
 	while (!endMenu) {

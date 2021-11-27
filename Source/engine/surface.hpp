@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 
 #include <SDL_version.h>
 
@@ -9,8 +9,8 @@
 #include <SDL_rect.h>
 #include <SDL_surface.h>
 #else
-#include <SDL_video.h>
 #include "utils/sdl2_to_1_2_backports.h"
+#include <SDL_video.h>
 #endif
 
 #include "engine/point.hpp"

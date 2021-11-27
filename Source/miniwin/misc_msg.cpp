@@ -1,12 +1,13 @@
-#include <SDL.h>
 #include <cstdint>
 #include <deque>
 #include <string>
 #ifdef USE_SDL1
+#include <cassert>
 #include <codecvt>
 #include <locale>
-#include <cassert>
 #endif
+
+#include <SDL.h>
 
 #include "control.h"
 #include "controls/controller.h"
@@ -23,12 +24,12 @@
 #include "menu.h"
 #include "miniwin/miniwin.h"
 #include "movie.h"
-#include "storm/storm.h"
+#include "panels/spell_list.hpp"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
-#include "utils/utf8.h"
+#include "utils/utf8.hpp"
 
 #ifdef __vita__
 #include "platform/vita/touch.h"
@@ -335,7 +336,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	}
 #endif
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	HandleTouchEvent(e);
 #endif
 
@@ -403,7 +404,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 				chrflag = false;
 				QuestLogIsOpen = false;
 				sbookflag = false;
-				StoreSpellCoords();
 			}
 			break;
 		case GameActionType_TOGGLE_CHARACTER_INFO:

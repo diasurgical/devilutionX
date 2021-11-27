@@ -32,7 +32,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
+      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake -DDEVILUTIONX_SYSTEM_BZIP2=OFF
 
     - name: Build
       working-directory: ${{github.workspace}}
@@ -40,6 +40,7 @@ jobs:
       run: cmake --build build -j $(nproc) --target package
 
     - name: Upload-Package
+      if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx_x86.zip

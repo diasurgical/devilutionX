@@ -110,9 +110,9 @@ enum class PlayerWeaponGraphic : uint8_t {
 
 enum PLR_MODE : uint8_t {
 	PM_STAND,
-	PM_WALK,  //Movement towards N, NW, or NE
-	PM_WALK2, //Movement towards S, SW, or SE
-	PM_WALK3, //Movement towards W or E
+	PM_WALK,  // Movement towards N, NW, or NE
+	PM_WALK2, // Movement towards S, SW, or SE
+	PM_WALK3, // Movement towards W or E
 	PM_ATTACK,
 	PM_RATTACK,
 	PM_BLOCK,
@@ -244,8 +244,6 @@ struct Player {
 	Direction tempDirection;
 	/** Used for spell level */
 	int spellLevel;
-	/** Used for stalling the appearance of the options screen after dying in singleplayer */
-	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	/**
@@ -431,7 +429,7 @@ struct Player {
 	int GetMeleePiercingToHit() const
 	{
 		int hper = GetMeleeToHit();
-		//in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
+		// in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
 		if (!gbIsHellfire)
 			hper += _pIEnAc;
 		return hper;
@@ -453,7 +451,7 @@ struct Player {
 	int GetRangedPiercingToHit() const
 	{
 		int hper = GetRangedToHit();
-		//in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
+		// in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
 		if (!gbIsHellfire)
 			hper += _pIEnAc;
 		return hper;
@@ -516,7 +514,7 @@ struct Player {
 	 * The stored value is unused...
 	 * @see _pHPPer
 	 * @return The players current hit points as a percentage of their maximum (from 0 to 80%)
-	*/
+	 */
 	int UpdateHitPointPercentage()
 	{
 		if (_pMaxHP <= 0) { // divide by zero guard

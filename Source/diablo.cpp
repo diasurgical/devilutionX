@@ -37,8 +37,8 @@
 #include "error.h"
 #include "gamemenu.h"
 #include "gmenu.h"
-#include "hwcursor.hpp"
 #include "help.h"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "lighting.h"
 #include "loadsave.h"
@@ -50,6 +50,8 @@
 #include "nthread.h"
 #include "objects.h"
 #include "options.h"
+#include "panels/spell_book.hpp"
+#include "panels/spell_list.hpp"
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/common.h"
@@ -58,7 +60,7 @@
 #include "setmaps.h"
 #include "sound.h"
 #include "stores.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "themes.h"
 #include "town.h"
 #include "towners.h"
@@ -67,6 +69,7 @@
 #include "utils/console.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "utils/utf8.hpp"
 
 #ifdef __vita__
 #include "platform/vita/touch.h"
@@ -210,7 +213,7 @@ void LeftMouseCmd(bool bShift)
 {
 	bool bNear;
 
-	assert(MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH);
+	assert(MousePosition.y < GetMainPanel().position.y || MousePosition.x < GetMainPanel().position.x || MousePosition.x >= GetMainPanel().position.x + PANEL_WIDTH);
 
 	if (leveltype == DTYPE_TOWN) {
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
@@ -312,19 +315,19 @@ void LeftMouseDown(int wParam)
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 	bool isCtrlHeld = (wParam & DVL_MK_CTRL) != 0;
 
-	if (!MainPanel.Contains(MousePosition)) {
+	if (!GetMainPanel().Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
-			if (QuestLogIsOpen && LeftPanel.Contains(MousePosition)) {
+			if (QuestLogIsOpen && GetLeftPanel().Contains(MousePosition)) {
 				QuestlogESC();
 			} else if (qtextflag) {
 				qtextflag = false;
 				stream_stop();
-			} else if (chrflag && LeftPanel.Contains(MousePosition)) {
+			} else if (chrflag && GetLeftPanel().Contains(MousePosition)) {
 				CheckChrBtns();
-			} else if (invflag && RightPanel.Contains(MousePosition)) {
+			} else if (invflag && GetRightPanel().Contains(MousePosition)) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld, isCtrlHeld);
-			} else if (sbookflag && RightPanel.Contains(MousePosition)) {
+			} else if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
@@ -380,7 +383,7 @@ void RightMouseDown(bool isShiftHeld)
 		SetSpell();
 		return;
 	}
-	if ((!sbookflag || !RightPanel.Contains(MousePosition))
+	if ((!sbookflag || !GetRightPanel().Contains(MousePosition))
 	    && !TryIconCurs()
 	    && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))) {
 		if (pcurs == CURSOR_HAND) {
@@ -897,12 +900,12 @@ void DiabloInitScreen()
 void SetApplicationVersions()
 {
 	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	strncpy(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION).c_str(), sizeof(gszVersionNumber) / sizeof(char));
+	CopyUtf8(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION), sizeof(gszVersionNumber) / sizeof(char));
 }
 
 void DiabloInit()
 {
-	if (sgOptions.Graphics.bShowFPS)
+	if (*sgOptions.Graphics.showFPS)
 		EnableFrameCount();
 
 	init_create_window();
@@ -928,10 +931,10 @@ void DiabloInit()
 		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
 			continue;
 		}
-		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
+		CopyUtf8(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
 	}
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	InitializeVirtualGamepad();
 #endif
 
@@ -969,13 +972,11 @@ void DiabloSplash()
 
 	play_movie("gendata\\logo.smk", true);
 
-	if (gbIsHellfire && sgOptions.Hellfire.bIntro) {
+	if (gbIsHellfire && *sgOptions.Hellfire.intro) {
 		play_movie("gendata\\Hellfire.smk", true);
-		sgOptions.Hellfire.bIntro = false;
 	}
-	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bIntro) {
+	if (!gbIsHellfire && !gbIsSpawn && *sgOptions.Diablo.intro) {
 		play_movie("gendata\\diablo1.smk", true);
-		sgOptions.Diablo.bIntro = false;
 	}
 
 	UiTitleDialog();
@@ -1064,7 +1065,7 @@ void LoadLvlGFX()
 void LoadAllGFX()
 {
 	IncProgress();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	InitVirtualGamepadGFX(renderer);
 #endif
 	IncProgress();
@@ -1263,11 +1264,11 @@ void InventoryKeyPressed()
 	invflag = !invflag;
 	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
-			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		} else if (!sbookflag) { // We opened the invetory
-			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		}
@@ -1282,11 +1283,11 @@ void CharacterSheetKeyPressed()
 	chrflag = !chrflag;
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!chrflag) { // We closed the character sheet
-			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		} else if (!QuestLogIsOpen) { // We opened the character sheet
-			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		}
@@ -1340,11 +1341,11 @@ void SpellBookKeyPressed()
 	sbookflag = !sbookflag;
 	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
-			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		} else if (!invflag) { // We opened the invetory
-			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		}
@@ -1447,11 +1448,10 @@ void InitKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    strncpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
-		                                    "{:s}, version = {:s}, mode = {:s}"),
-		                        PROJECT_NAME, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty])
-		                        .c_str(),
-		        MAX_SEND_STR_LEN - 1);
+		    CopyUtf8(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
+		                                     "{:s}, version = {:s}, mode = {:s}"),
+		                         PROJECT_NAME, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]),
+		        sizeof(pszStr));
 		    NetSendCmdString(1 << MyPlayerId, pszStr);
 	    },
 	    [&]() { return !IsPlayerDead(); },
@@ -1479,7 +1479,7 @@ void InitKeymapActions()
 	    "QuickLoad",
 	    DVL_VK_F3,
 	    [] { gamemenu_load_game(false); },
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile; },
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE; },
 	});
 	keymapper.AddAction({
 	    "QuitGame",
@@ -1520,7 +1520,8 @@ void FreeGameMem()
 	FreeObjectGFX();
 	FreeMonsterSnd();
 	FreeTownerGFX();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
+	DeactivateVirtualGamepad();
 	FreeVirtualGamepadGFX();
 #endif
 }
@@ -1860,7 +1861,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			LoadAllGFX();
 		} else {
 			IncProgress();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 			InitVirtualGamepadGFX(renderer);
 #endif
 			IncProgress();
@@ -1903,16 +1904,16 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (leveltype != DTYPE_TOWN) {
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
-				uint32_t mid1Seed = GetLCGEngineState();
+				[[maybe_unused]] uint32_t mid1Seed = GetLCGEngineState();
 				InitMonsters();
-				uint32_t mid2Seed = GetLCGEngineState();
+				[[maybe_unused]] uint32_t mid2Seed = GetLCGEngineState();
 				IncProgress();
 				InitObjects();
 				InitItems();
 				if (currlevel < 17)
 					CreateThemeRooms();
 				IncProgress();
-				uint32_t mid3Seed = GetLCGEngineState();
+				[[maybe_unused]] uint32_t mid3Seed = GetLCGEngineState();
 				InitMissiles();
 				InitCorpses();
 #if _DEBUG
@@ -1936,7 +1937,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		} else {
 			for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 				for (int j = 0; j < MAXDUNY; j++) {
-					dFlags[i][j] |= BFLAG_LIT;
+					dFlags[i][j] |= DungeonFlag::Lit;
 				}
 			}
 
@@ -1963,7 +1964,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		InitMonsters();
 		IncProgress();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 		InitVirtualGamepadGFX(renderer);
 #endif
 		InitMissileGFX(gbIsHellfire);
@@ -2011,7 +2012,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				else
 					SyncInitPlrPos(i);
 			} else {
-				dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
+				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
 		}
 	}
@@ -2041,6 +2042,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			SyncNakrulRoom();
 		}
 	}
+
+#ifdef VIRTUAL_GAMEPAD
+	ActivateVirtualGamepad();
+#endif
 
 	if (currlevel >= 17)
 		music_start(currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6);
@@ -2084,7 +2089,7 @@ void game_loop(bool bStartup)
 
 void diablo_color_cyc_logic()
 {
-	if (!sgOptions.Graphics.bColorCycling)
+	if (!*sgOptions.Graphics.colorCycling)
 		return;
 
 	if (PauseMode != 0)

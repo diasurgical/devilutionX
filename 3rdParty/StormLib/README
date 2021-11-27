@@ -1,6 +1,0 @@
-This is a slightly modified version of ladislav-zezula/StormLib@0a9057a09f083eb4791a55eb3d9538cea9822e37
-
-Changes:
-
-* Removed all files not used by DevilutionX.
-* Comment out unnecessary bits with `#ifndef FULL`.

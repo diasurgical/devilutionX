@@ -8,8 +8,8 @@
 #include <array>
 #include <cstdint>
 
-#include "engine/point.hpp"
 #include "engine.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 

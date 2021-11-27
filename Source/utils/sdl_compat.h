@@ -38,9 +38,8 @@ inline const Uint8 *SDLC_GetKeyState()
 inline int SDLC_SetColorKey(SDL_Surface *surface, Uint32 key)
 {
 #ifdef USE_SDL1
-	return SDL_SetColorKey(surface, SDL_SRCCOLORKEY | SDL_RLEACCEL, key);
+	return SDL_SetColorKey(surface, SDL_SRCCOLORKEY, key);
 #else
-	SDL_SetSurfaceRLE(surface, 1);
 	return SDL_SetColorKey(surface, SDL_TRUE, key);
 #endif
 }
@@ -75,13 +74,13 @@ inline int SDLC_SetSurfaceAndPaletteColors(SDL_Surface *surface, SDL_Palette *pa
 		SDL_memcpy(palette->colors + firstcolor, colors, ncolors * sizeof(*colors));
 
 #if SDL1_VIDEO_MODE_BPP == 8
-	// When the video surface is 8bit, we need to set the output pallet as well.
+	// When the video surface is 8bit, we need to set the output palette as well.
 	SDL_SetColors(SDL_GetVideoSurface(), colors, firstcolor, ncolors);
 #endif
 	// In SDL1, the surface always has its own distinct palette, so we need to
 	// update it as well.
 	return SDL_SetPalette(surface, SDL_LOGPAL, colors, firstcolor, ncolors) - 1;
-#else
+#else // !USE_SDL1
 	if (SDL_SetPaletteColors(palette, colors, firstcolor, ncolors) < 0)
 		return -1;
 	if (surface->format->palette != palette)

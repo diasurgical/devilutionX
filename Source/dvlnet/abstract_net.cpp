@@ -12,7 +12,6 @@
 #endif
 #endif
 #include "dvlnet/loopback.h"
-#include "storm/storm.h"
 
 namespace devilution {
 namespace net {

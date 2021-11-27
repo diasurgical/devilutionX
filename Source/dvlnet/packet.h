@@ -1,10 +1,11 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
-#include <memory>
 #include <array>
+#include <cstdint>
 #include <cstring>
+#include <memory>
+#include <string>
+
 #ifdef PACKET_ENCRYPTION
 #include <sodium.h>
 #endif
@@ -354,7 +355,6 @@ inline std::unique_ptr<packet> packet_factory::make_packet(buffer_t buf)
 	else
 		ret->Decrypt(std::move(buf));
 #endif
-	size_t size = ret->Data().size();
 	ret->process_data();
 	return ret;
 }

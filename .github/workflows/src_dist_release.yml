@@ -1,0 +1,31 @@
+name: Build source tarball
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  make_src_dist:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt update &&
+        sudo apt install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev git smpq gettext python-is-python3
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      run: tools/make_src_dist.py
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-src.tar.xz
+        path: build-src-dist/devilutionx-*.tar.xz

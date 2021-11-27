@@ -15,6 +15,7 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "cursor.h"
 #include "doom.h"
 #include "dx.h"
@@ -28,20 +29,21 @@
 #include "lighting.h"
 #include "missiles.h"
 #include "options.h"
+#include "panels/ui_panels.hpp"
 #include "player.h"
 #include "stores.h"
 #include "town.h"
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
 /** Contains the items on ground in the current game. */
 Item Items[MAXITEMS + 1];
-int ActiveItems[MAXITEMS];
-int ActiveItemCount;
-int AvailableItems[MAXITEMS];
+uint8_t ActiveItems[MAXITEMS];
+uint8_t ActiveItemCount;
 bool ShowUniqueItemInfoBox;
 CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
@@ -396,7 +398,7 @@ bool ItemPlace(Point position)
 		return false;
 	if (dObject[position.x][position.y] != 0)
 		return false;
-	if ((dFlags[position.x][position.y] & BFLAG_POPULATED) != 0)
+	if (TileContainsSetPiece(position))
 		return false;
 	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;
@@ -529,17 +531,17 @@ void CalcPlrItemMin(Player &player)
 	}
 }
 
-void WitchBookLevel(int ii)
+void WitchBookLevel(Item &bookItem)
 {
-	if (witchitem[ii]._iMiscId != IMISC_BOOK)
+	if (bookItem._iMiscId != IMISC_BOOK)
 		return;
-	witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
-	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[witchitem[ii]._iSpell];
+	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
+	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[bookItem._iSpell];
 	while (spellLevel > 0) {
-		witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
+		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
 		spellLevel--;
-		if (witchitem[ii]._iMinMag + 20 * witchitem[ii]._iMinMag / 100 > 255) {
-			witchitem[ii]._iMinMag = 255;
+		if (bookItem._iMinMag + 20 * bookItem._iMinMag / 100 > 255) {
+			bookItem._iMinMag = 255;
 			spellLevel = 0;
 		}
 	}
@@ -563,7 +565,7 @@ void CalcPlrBookVals(Player &player)
 {
 	if (currlevel == 0) {
 		for (int i = 1; !witchitem[i].isEmpty(); i++) {
-			WitchBookLevel(i);
+			WitchBookLevel(witchitem[i]);
 			witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
 		}
 	}
@@ -1171,26 +1173,55 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 		}
 		if (nl != 0) {
 			preidx = l[GenerateRnd(nl)];
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
 			item._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemAffix(item, ItemPrefixes[preidx]);
 			item._iPrePower = ItemPrefixes[preidx].power.type;
 		}
 	}
-	if (!StringInPanel(item._iIName)) {
-		strcpy(item._iIName, _(AllItemsList[item.IDidx].iSName));
-		if (preidx != -1) {
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
-		}
-		strncpy(item._iIName, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall */ "{0} of {1}"), item._iIName, pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(item._iIName) - 1);
-		item._iIName[sizeof(item._iIName) - 1] = '\0';
-		if (item._iMagical == ITEM_QUALITY_NORMAL)
-			strcpy(item._iName, item._iIName);
+
+	const char *baseName = _(AllItemsList[item.IDidx].iName);
+	const char *shortName = _(AllItemsList[item.IDidx].iSName);
+	const char *spellName = pgettext("spell", spelldata[bs].sNameText);
+	const char *normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
+
+	CopyUtf8(item._iName, fmt::format(normalFmt, baseName, spellName), sizeof(item._iName));
+	if (!StringInPanel(item._iName)) {
+		CopyUtf8(item._iName, fmt::format(normalFmt, shortName, spellName), sizeof(item._iName));
 	}
+
+	if (preidx != -1) {
+		const char *magicFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}");
+		const char *prefixName = _(ItemPrefixes[preidx].PLName);
+		CopyUtf8(item._iIName, fmt::format(magicFmt, prefixName, baseName, spellName), sizeof(item._iIName));
+		if (!StringInPanel(item._iIName)) {
+			CopyUtf8(item._iIName, fmt::format(magicFmt, prefixName, shortName, spellName), sizeof(item._iIName));
+		}
+	} else {
+		CopyUtf8(item._iIName, item._iName, sizeof(item._iIName));
+	}
+
 	CalcItemValue(item);
 }
+
+namespace {
+
+std::string GenerateMagicItemName(const string_view &baseNamel, int preidx, int sufidx)
+{
+	if (preidx != -1 && sufidx != -1) {
+		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} {1} of {2}");
+		return fmt::format(fmt, _(ItemPrefixes[preidx].PLName), baseNamel, _(ItemSuffixes[sufidx].PLName));
+	} else if (preidx != -1) {
+		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ "{0} {1}");
+		return fmt::format(fmt, _(ItemPrefixes[preidx].PLName), baseNamel);
+	} else if (sufidx != -1) {
+		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale */ "{0} of {1}");
+		return fmt::format(fmt, baseNamel, _(ItemSuffixes[sufidx].PLName));
+	}
+
+	return std::string(baseNamel);
+}
+
+} // namespace
 
 void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
 {
@@ -1230,8 +1261,6 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool
 		}
 		if (nt != 0) {
 			preidx = l[GenerateRnd(nt)];
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
 			item._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemAffix(item, ItemPrefixes[preidx]);
 			item._iPrePower = ItemPrefixes[preidx].power.type;
@@ -1251,28 +1280,15 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool
 		}
 		if (nl != 0) {
 			sufidx = l[GenerateRnd(nl)];
-			strncpy(item._iIName, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} of {1}"), item._iIName, _(ItemSuffixes[sufidx].PLName)).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
 			item._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemAffix(item, ItemSuffixes[sufidx]);
 			item._iSufPower = ItemSuffixes[sufidx].power.type;
 		}
 	}
-	if (!StringInPanel(item._iIName)) {
-		int aii = item.IDidx;
-		if (AllItemsList[aii].iSName != nullptr)
-			strcpy(item._iIName, _(AllItemsList[aii].iSName));
-		else
-			item._iName[0] = 0;
 
-		if (preidx != -1) {
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
-		}
-		if (sufidx != -1) {
-			strncpy(item._iIName, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale */ "{0} of {1}"), item._iIName, _(ItemSuffixes[sufidx].PLName)).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
-		}
+	CopyUtf8(item._iIName, GenerateMagicItemName(item._iName, preidx, sufidx), sizeof(item._iIName));
+	if (!StringInPanel(item._iIName)) {
+		CopyUtf8(item._iIName, GenerateMagicItemName(_(AllItemsList[item.IDidx].iSName), preidx, sufidx), sizeof(item._iIName));
 	}
 	if (preidx != -1 || sufidx != -1)
 		CalcItemValue(item);
@@ -1310,13 +1326,6 @@ void GetStaffSpell(Item &item, int lvl, bool onlygood)
 		if (s == maxSpells)
 			s = SPL_FIREBOLT;
 	}
-
-	char istr[68] = {};
-	strncpy(istr, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} of {1}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(istr) - 1);
-	if (!StringInPanel(istr))
-		strncpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(istr) - 1);
-	strncpy(item._iName, istr, sizeof(item._iName) - 1);
-	strncpy(item._iIName, istr, sizeof(item._iIName) - 1);
 
 	int minc = spelldata[bs].sStaffMin;
 	int maxc = spelldata[bs].sStaffMax - minc + 1;
@@ -1845,7 +1854,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		item._iMinDex = std::max(0, item._iMinDex - r);
 		break;
 	case IMISC_OILBSMTH:
-		if (item._iMaxDur == 255)
+		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
 			return true;
 		if (item._iDurability < item._iMaxDur) {
 			item._iDurability = (item._iMaxDur + 4) / 5 + item._iDurability;
@@ -1866,8 +1875,8 @@ bool ApplyOilToItem(Item &item, Player &player)
 		}
 		break;
 	case IMISC_OILPERM:
-		item._iDurability = 255;
-		item._iMaxDur = 255;
+		item._iDurability = DUR_INDESTRUCTIBLE;
+		item._iMaxDur = DUR_INDESTRUCTIBLE;
 		break;
 	case IMISC_OILHARD:
 		if (item._iAC < 60) {
@@ -2030,7 +2039,7 @@ void PrintItemOil(char iDidx)
 void DrawUniqueInfoWindow(const Surface &out)
 {
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 1);
-	DrawHalfTransparentRectTo(out, RightPanel.position.x - SPANEL_WIDTH + 27, RightPanel.position.y + 28, 265, 297);
+	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SPANEL_WIDTH + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
 void PrintItemMisc(Item &item)
@@ -2193,11 +2202,10 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-void SpawnOnePremium(int i, int plvl, int playerId)
+void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 {
 	int itemValue = 0;
 	bool keepGoing = false;
-	Item tempItem = Items[0];
 
 	auto &player = Players[playerId];
 
@@ -2214,22 +2222,22 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 
 	do {
 		keepGoing = false;
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		premiumItem = {};
+		premiumItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(premiumItem._iSeed);
 		int itemType = RndPremiumItem(plvl / 4, plvl) - 1;
-		GetItemAttrs(Items[0], itemType, plvl);
-		GetItemBonus(Items[0], plvl / 2, plvl, true, !gbIsHellfire);
+		GetItemAttrs(premiumItem, itemType, plvl);
+		GetItemBonus(premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
-			if (Items[0]._iIvalue > 140000) {
+			if (premiumItem._iIvalue > 140000) {
 				keepGoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
 			break;
 		}
 
-		switch (Items[0]._itype) {
+		switch (premiumItem._itype) {
 		case ItemType::LightArmor:
 		case ItemType::MediumArmor:
 		case ItemType::HeavyArmor: {
@@ -2251,7 +2259,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		case ItemType::Ring:
 		case ItemType::Amulet: {
 			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-			    [](const Item &item) { return item._itype == Items[0]._itype; });
+			    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
 
 			itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
@@ -2265,17 +2273,15 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		count++;
 	} while (keepGoing
 	    || ((
-	            Items[0]._iIvalue > 200000
-	            || Items[0]._iMinStr > strength
-	            || Items[0]._iMinMag > magic
-	            || Items[0]._iMinDex > dexterity
-	            || Items[0]._iIvalue < itemValue)
+	            premiumItem._iIvalue > 200000
+	            || premiumItem._iMinStr > strength
+	            || premiumItem._iMinMag > magic
+	            || premiumItem._iMinDex > dexterity
+	            || premiumItem._iIvalue < itemValue)
 	        && count < 150));
-	premiumitems[i] = Items[0];
-	premiumitems[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
-	premiumitems[i]._iIdentified = true;
-	premiumitems[i]._iStatFlag = StoreStatOk(premiumitems[i]);
-	Items[0] = tempItem;
+	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
+	premiumItem._iIdentified = true;
+	premiumItem._iStatFlag = StoreStatOk(premiumItem);
 }
 
 bool WitchItemOk(int i)
@@ -2531,7 +2537,7 @@ bool IsItemAvailable(int i)
 	    || (
 	        // Bard items are technically Hellfire-exclusive
 	        // but are just normal items with adjusted stats.
-	        sgOptions.Gameplay.bTestBard && IsAnyOf(i, IDI_BARDSWORD, IDI_BARDDAGGER));
+	        *sgOptions.Gameplay.testBard && IsAnyOf(i, IDI_BARDSWORD, IDI_BARDDAGGER));
 }
 
 BYTE GetOutlineColor(const Item &item, bool checkReq)
@@ -2567,14 +2573,12 @@ void InitItemGFX()
 
 void InitItems()
 {
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_GOLD, 1);
-	golditem = Items[0];
+	golditem = {};
+	GetItemAttrs(golditem, IDI_GOLD, 1);
 	golditem._iStatFlag = true;
 	ActiveItemCount = 0;
 
-	for (int i = 0; i < MAXITEMS; i++) {
-		auto &item = Items[i];
+	for (auto &item : Items) {
 		item._itype = ItemType::None;
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
@@ -2583,9 +2587,8 @@ void InitItems()
 		item._iPostDraw = false;
 	}
 
-	for (int i = 0; i < MAXITEMS; i++) {
-		AvailableItems[i] = i;
-		ActiveItems[i] = 0;
+	for (uint8_t i = 0; i < MAXITEMS; i++) {
+		ActiveItems[i] = i;
 	}
 
 	if (!setlevel) {
@@ -3194,22 +3197,28 @@ bool ItemSpaceOk(Point position)
 		return false;
 
 	if (dObject[position.x][position.y] != 0) {
-		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
+		int oi = abs(dObject[position.x][position.y]) - 1;
 		if (Objects[oi]._oSolidFlag)
 			return false;
 	}
 
-	if (dObject[position.x + 1][position.y + 1] > 0 && Objects[dObject[position.x + 1][position.y + 1] - 1]._oSelFlag != 0)
-		return false;
+	Point south = position + Direction::South;
+	if (InDungeonBounds(south)) {
+		int objectId = dObject[south.x][south.y];
+		if (objectId != 0 && Objects[abs(objectId) - 1]._oSelFlag != 0)
+			return false;
+	}
 
-	if (dObject[position.x + 1][position.y + 1] < 0 && Objects[-(dObject[position.x + 1][position.y + 1] + 1)]._oSelFlag != 0)
-		return false;
-
-	if (dObject[position.x + 1][position.y] > 0
-	    && dObject[position.x][position.y + 1] > 0
-	    && Objects[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0
-	    && Objects[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0) {
-		return false;
+	Point southEast = position + Direction::SouthEast;
+	Point southWest = position + Direction::SouthWest;
+	if (InDungeonBounds(southEast) && InDungeonBounds(southWest)) {
+		int objectIdSE = dObject[southEast.x][southEast.y];
+		int objectIdSW = dObject[southWest.x][southWest.y];
+		if (objectIdSE > 0 && objectIdSW > 0) {
+			if (Objects[objectIdSE - 1]._oSelFlag != 0 && Objects[objectIdSW - 1]._oSelFlag != 0) {
+				return false;
+			}
+		}
 	}
 
 	return IsTileNotSolid(position);
@@ -3217,31 +3226,21 @@ bool ItemSpaceOk(Point position)
 
 int AllocateItem()
 {
-	int inum = AvailableItems[0];
-	AvailableItems[0] = AvailableItems[MAXITEMS - ActiveItemCount - 1];
-	ActiveItems[ActiveItemCount] = inum;
+	assert(ActiveItemCount < MAXITEMS);
+
+	int inum = ActiveItems[ActiveItemCount];
 	ActiveItemCount++;
 
-	memset(&Items[inum], 0, sizeof(*Items));
+	Items[inum] = {};
 
 	return inum;
 }
 
 Point GetSuperItemLoc(Point position)
 {
-	for (int k = 1; k < 50; k++) {
-		for (int j = -k; j <= k; j++) {
-			for (int i = -k; i <= k; i++) {
-				Displacement offset = { i, j };
-				Point positionToCheck = position + offset;
-				if (ItemSpaceOk(positionToCheck)) {
-					return positionToCheck;
-				}
-			}
-		}
-	}
+	std::optional<Point> itemPosition = FindClosestValidPosition(ItemSpaceOk, position, 1, 50);
 
-	return { 0, 0 }; // TODO handle no space for dropping items
+	return itemPosition.value_or(Point { 0, 0 }); // TODO handle no space for dropping items
 }
 
 void GetItemAttrs(Item &item, int itemData, int lvl)
@@ -3533,7 +3532,7 @@ void CornerstoneSave()
 		return;
 	if (!CornerStone.item.isEmpty()) {
 		ItemPack id;
-		PackItem(&id, &CornerStone.item);
+		PackItem(id, CornerStone.item);
 		const auto *buffer = reinterpret_cast<uint8_t *>(&id);
 		for (size_t i = 0; i < sizeof(ItemPack); i++) {
 			snprintf(&sgOptions.Hellfire.szItem[i * 2], 3, "%02hhX", buffer[i]);
@@ -3557,7 +3556,7 @@ void CornerstoneLoad(Point position)
 		int ii = dItem[position.x][position.y] - 1;
 		for (int i = 0; i < ActiveItemCount; i++) {
 			if (ActiveItems[i] == ii) {
-				DeleteItem(ii, i);
+				DeleteItem(i);
 				break;
 			}
 		}
@@ -3574,7 +3573,7 @@ void CornerstoneLoad(Point position)
 
 	dItem[position.x][position.y] = ii + 1;
 
-	UnPackItem(&pkSItem, &item, (pkSItem.dwBuff & CF_HELLFIRE) != 0);
+	UnPackItem(pkSItem, item, (pkSItem.dwBuff & CF_HELLFIRE) != 0);
 	item.position = position;
 	RespawnItem(&item, false);
 	CornerStone.item = item;
@@ -3676,14 +3675,20 @@ void RespawnItem(Item *item, bool flipFlag)
 		item->_iSelFlag = 1;
 }
 
-void DeleteItem(int ii, int i)
+void DeleteItem(int i)
 {
-	AvailableItems[MAXITEMS - ActiveItemCount] = ii;
-	ActiveItemCount--;
-	if (ActiveItemCount > 0 && i != ActiveItemCount)
-		ActiveItems[i] = ActiveItems[ActiveItemCount];
-	if (pcursitem == ii) // Unselect item if player has it highlighted
+	if (ActiveItemCount > 0)
+		ActiveItemCount--;
+
+	assert(i >= 0 && i < MAXITEMS && ActiveItemCount < MAXITEMS);
+
+	if (pcursitem == ActiveItems[i]) // Unselect item if player has it highlighted
 		pcursitem = -1;
+
+	if (i < ActiveItemCount) {
+		// If the deleted item was not already at the end of the active list, swap the indexes around to make the next item allocation simpler.
+		std::swap(ActiveItems[i], ActiveItems[ActiveItemCount]);
+	}
 }
 
 void ProcessItems()
@@ -4101,8 +4106,8 @@ void PrintItemPower(char plidx, Item *x)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	const Point position { RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y };
-	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(position)) {
+	const Point position = GetRightPanel().position - Displacement { SPANEL_WIDTH, 0 };
+	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(position)) {
 		return;
 	}
 
@@ -4444,9 +4449,6 @@ void SpawnSmith(int lvl)
 {
 	constexpr int PinnedItemCount = 0;
 
-	Item holditem;
-	holditem = Items[0];
-
 	int maxValue = 140000;
 	int maxItems = 20;
 	if (gbIsHellfire) {
@@ -4456,23 +4458,24 @@ void SpawnSmith(int lvl)
 
 	int iCnt = GenerateRnd(maxItems - 10) + 10;
 	for (int i = 0; i < iCnt; i++) {
+		Item &newItem = smithitem[i];
+
 		do {
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			newItem = {};
+			newItem._iSeed = AdvanceRndSeed();
+			SetRndSeed(newItem._iSeed);
 			int itemData = RndSmithItem(lvl) - 1;
-			GetItemAttrs(Items[0], itemData, lvl);
-		} while (Items[0]._iIvalue > maxValue);
-		smithitem[i] = Items[0];
-		smithitem[i]._iCreateInfo = lvl | CF_SMITH;
-		smithitem[i]._iIdentified = true;
-		smithitem[i]._iStatFlag = StoreStatOk(smithitem[i]);
+			GetItemAttrs(newItem, itemData, lvl);
+		} while (newItem._iIvalue > maxValue);
+
+		newItem._iCreateInfo = lvl | CF_SMITH;
+		newItem._iIdentified = true;
+		newItem._iStatFlag = StoreStatOk(newItem);
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ItemType::None;
 
 	SortVendor(smithitem + PinnedItemCount);
-	Items[0] = holditem;
 }
 
 void SpawnPremium(int pnum)
@@ -4483,7 +4486,7 @@ void SpawnPremium(int pnum)
 		for (int i = 0; i < maxItems; i++) {
 			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(i, plvl, pnum);
+				SpawnOnePremium(premiumitems[i], plvl, pnum);
 			}
 		}
 		numpremium = maxItems;
@@ -4493,17 +4496,17 @@ void SpawnPremium(int pnum)
 		if (gbIsHellfire) {
 			// Discard first 3 items and shift next 10
 			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(10, premiumlevel + premiumLvlAddHellfire[10], pnum);
+			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], pnum);
 			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(12, premiumlevel + premiumLvlAddHellfire[12], pnum);
+			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], pnum);
 			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(14, premiumlevel + premiumLvlAddHellfire[14], pnum);
+			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], pnum);
 		} else {
 			// Discard first 2 items and shift next 3
 			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(3, premiumlevel + premiumlvladd[3], pnum);
+			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], pnum);
 			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(5, premiumlevel + premiumlvladd[5], pnum);
+			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], pnum);
 		}
 	}
 }
@@ -4511,79 +4514,70 @@ void SpawnPremium(int pnum)
 void SpawnWitch(int lvl)
 {
 	constexpr int PinnedItemCount = 3;
+	constexpr std::array<int, PinnedItemCount> PinnedItemTypes = { IDI_MANA, IDI_FULLMANA, IDI_PORTAL };
+	constexpr int MaxPinnedBookCount = 4;
+	constexpr std::array<int, MaxPinnedBookCount> PinnedBookTypes = { 114, 115, 116, 117 };
 
-	int j = PinnedItemCount;
+	int bookCount = 0;
+	const int pinnedBookCount = gbIsHellfire ? GenerateRnd(MaxPinnedBookCount) : 0;
+	const int reservedItems = gbIsHellfire ? 10 : 17;
+	const int itemCount = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
+	const int maxValue = gbIsHellfire ? 200000 : 140000;
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_MANA, 1);
-	witchitem[0] = Items[0];
-	witchitem[0]._iCreateInfo = lvl;
-	witchitem[0]._iStatFlag = true;
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_FULLMANA, 1);
-	witchitem[1] = Items[0];
-	witchitem[1]._iCreateInfo = lvl;
-	witchitem[1]._iStatFlag = true;
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_PORTAL, 1);
-	witchitem[2] = Items[0];
-	witchitem[2]._iCreateInfo = lvl;
-	witchitem[2]._iStatFlag = true;
+	for (int i = 0; i < WITCH_ITEMS; i++) {
+		Item &item = witchitem[i];
+		item = {};
 
-	int maxValue = 140000;
-	int reservedItems = 12;
-	if (gbIsHellfire) {
-		maxValue = 200000;
-		reservedItems = 10;
-
-		int books = GenerateRnd(4);
-		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
-			if (!WitchItemOk(i))
-				continue;
-			if (lvl < AllItemsList[i].iMinMLvl)
-				continue;
-
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
-			AdvanceRndSeed();
-
-			GetItemAttrs(Items[0], i, lvl);
-			witchitem[j] = Items[0];
-			witchitem[j]._iCreateInfo = lvl | CF_WITCH;
-			witchitem[j]._iIdentified = true;
-			WitchBookLevel(j);
-			witchitem[j]._iStatFlag = StoreStatOk(witchitem[j]);
-			j++;
-			bCnt++;
+		if (i < PinnedItemCount) {
+			item._iSeed = AdvanceRndSeed();
+			GetItemAttrs(item, PinnedItemTypes[i], 1);
+			item._iCreateInfo = lvl;
+			item._iStatFlag = true;
+			continue;
 		}
-	}
-	int iCnt = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
 
-	for (int i = j; i < iCnt; i++) {
+		if (gbIsHellfire) {
+			if (i < PinnedItemCount + MaxPinnedBookCount && bookCount < pinnedBookCount) {
+				int bookType = PinnedBookTypes[i - PinnedItemCount];
+				if (lvl >= AllItemsList[bookType].iMinMLvl) {
+					item._iSeed = AdvanceRndSeed();
+					SetRndSeed(item._iSeed);
+					GetItemAttrs(item, bookType, lvl);
+					item._iCreateInfo = lvl | CF_WITCH;
+					item._iIdentified = true;
+					WitchBookLevel(item);
+					item._iStatFlag = StoreStatOk(item);
+					bookCount++;
+					continue;
+				}
+			}
+		}
+
+		if (i >= itemCount) {
+			item._itype = ItemType::None;
+			continue;
+		}
+
 		do {
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			item = {};
+			item._iSeed = AdvanceRndSeed();
+			SetRndSeed(item._iSeed);
 			int itemData = RndWitchItem(lvl) - 1;
-			GetItemAttrs(Items[0], itemData, lvl);
+			GetItemAttrs(item, itemData, lvl);
 			int maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
 				maxlvl = 2 * lvl;
-			if (maxlvl == -1 && Items[0]._iMiscId == IMISC_STAFF)
+			if (maxlvl == -1 && item._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
 			if (maxlvl != -1)
-				GetItemBonus(Items[0], maxlvl / 2, maxlvl, true, true);
-		} while (Items[0]._iIvalue > maxValue);
-		witchitem[i] = Items[0];
-		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
-		witchitem[i]._iIdentified = true;
-		WitchBookLevel(i);
-		witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
-	}
+				GetItemBonus(item, maxlvl / 2, maxlvl, true, true);
+		} while (item._iIvalue > maxValue);
 
-	for (int i = iCnt; i < WITCH_ITEMS; i++)
-		witchitem[i]._itype = ItemType::None;
+		item._iCreateInfo = lvl | CF_WITCH;
+		item._iIdentified = true;
+		WitchBookLevel(item);
+		item._iStatFlag = StoreStatOk(item);
+	}
 
 	SortVendor(witchitem + PinnedItemCount);
 }
@@ -4608,15 +4602,15 @@ void SpawnBoy(int lvl)
 		return;
 	do {
 		keepgoing = false;
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		boyitem = {};
+		boyitem._iSeed = AdvanceRndSeed();
+		SetRndSeed(boyitem._iSeed);
 		int itype = RndBoyItem(lvl) - 1;
-		GetItemAttrs(Items[0], itype, lvl);
-		GetItemBonus(Items[0], lvl, 2 * lvl, true, true);
+		GetItemAttrs(boyitem, itype, lvl);
+		GetItemBonus(boyitem, lvl, 2 * lvl, true, true);
 
 		if (!gbIsHellfire) {
-			if (Items[0]._iIvalue > 90000) {
+			if (boyitem._iIvalue > 90000) {
 				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
@@ -4625,7 +4619,7 @@ void SpawnBoy(int lvl)
 
 		ivalue = 0;
 
-		ItemType itemType = Items[0]._itype;
+		ItemType itemType = boyitem._itype;
 
 		switch (itemType) {
 		case ItemType::LightArmor:
@@ -4691,13 +4685,12 @@ void SpawnBoy(int lvl)
 		}
 	} while (keepgoing
 	    || ((
-	            Items[0]._iIvalue > 200000
-	            || Items[0]._iMinStr > strength
-	            || Items[0]._iMinMag > magic
-	            || Items[0]._iMinDex > dexterity
-	            || Items[0]._iIvalue < ivalue)
+	            boyitem._iIvalue > 200000
+	            || boyitem._iMinStr > strength
+	            || boyitem._iMinMag > magic
+	            || boyitem._iMinDex > dexterity
+	            || boyitem._iIvalue < ivalue)
 	        && count < 250));
-	boyitem = Items[0];
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
 	boyitem._iStatFlag = StoreStatOk(boyitem);
@@ -4707,55 +4700,42 @@ void SpawnBoy(int lvl)
 void SpawnHealer(int lvl)
 {
 	constexpr int PinnedItemCount = 2;
+	constexpr std::array<int, PinnedItemCount + 1> PinnedItemTypes = { IDI_HEAL, IDI_FULLHEAL, IDI_RESURRECT };
+	const int itemCount = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
 
-	int srnd;
+	for (int i = 0; i < 20; i++) {
+		Item &item = healitem[i];
+		item = {};
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_HEAL, 1);
-	healitem[0] = Items[0];
-	healitem[0]._iCreateInfo = lvl;
-	healitem[0]._iStatFlag = true;
+		if (i < PinnedItemCount || (gbIsMultiplayer && i == PinnedItemCount)) {
+			item._iSeed = AdvanceRndSeed();
+			GetItemAttrs(item, PinnedItemTypes[i], 1);
+			item._iCreateInfo = lvl;
+			item._iStatFlag = true;
+			continue;
+		}
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_FULLHEAL, 1);
-	healitem[1] = Items[0];
-	healitem[1]._iCreateInfo = lvl;
-	healitem[1]._iStatFlag = true;
+		if (i >= itemCount) {
+			item._itype = ItemType::None;
+			continue;
+		}
 
-	if (gbIsMultiplayer) {
-		memset(&Items[0], 0, sizeof(*Items));
-		GetItemAttrs(Items[0], IDI_RESURRECT, 1);
-		healitem[2] = Items[0];
-		healitem[2]._iCreateInfo = lvl;
-		healitem[2]._iStatFlag = true;
-
-		srnd = 3;
-	} else {
-		srnd = 2;
-	}
-	int nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
-	for (int i = srnd; i < nsi; i++) {
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		item._iSeed = AdvanceRndSeed();
+		SetRndSeed(item._iSeed);
 		int itype = RndHealerItem(lvl) - 1;
-		GetItemAttrs(Items[0], itype, lvl);
-		healitem[i] = Items[0];
-		healitem[i]._iCreateInfo = lvl | CF_HEALER;
-		healitem[i]._iIdentified = true;
-		healitem[i]._iStatFlag = StoreStatOk(healitem[i]);
+		GetItemAttrs(item, itype, lvl);
+		item._iCreateInfo = lvl | CF_HEALER;
+		item._iIdentified = true;
+		item._iStatFlag = StoreStatOk(item);
 	}
-	for (int i = nsi; i < 20; i++) {
-		healitem[i]._itype = ItemType::None;
-	}
+
 	SortVendor(healitem + PinnedItemCount);
 }
 
 void SpawnStoreGold()
 {
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_GOLD, 1);
-	golditem = Items[0];
+	golditem = {};
+	GetItemAttrs(golditem, IDI_GOLD, 1);
 	golditem._iStatFlag = true;
 }
 

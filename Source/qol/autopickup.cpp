@@ -1,8 +1,8 @@
 /**
-* @file autopickup.cpp
-*
-* QoL feature for automatically picking up gold
-*/
+ * @file autopickup.cpp
+ *
+ * QoL feature for automatically picking up gold
+ */
 
 #include "inv_iterators.hpp"
 #include "options.h"
@@ -46,9 +46,9 @@ int NumMiscItemsInInv(int iMiscId)
 
 void AutoPickup(int pnum)
 {
-	if (leveltype == DTYPE_TOWN && !sgOptions.Gameplay.bAutoPickupInTown)
-		return;
 	if (pnum != MyPlayerId)
+		return;
+	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoGoldPickup)
 		return;
 
 	bool hasRoomForGold = HasRoomForGold();
@@ -62,7 +62,7 @@ void AutoPickup(int pnum)
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
 			}
-			if (item._itype == ItemType::Misc && (AutoPlaceItemInInventory(Players[pnum], item, false)) || AutoPlaceItemInBelt(Players[pnum], item, false)) {
+			if (item._itype == ItemType::Misc && (AutoPlaceItemInInventory(Players[pnum], item, false) || AutoPlaceItemInBelt(Players[pnum], item, false))) {
 				bool doPickup = false;
 				switch (item._iMiscId) {
 				case IMISC_HEAL:

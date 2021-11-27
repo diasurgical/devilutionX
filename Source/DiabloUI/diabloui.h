@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cstdint>
+#include <SDL.h>
 #include <array>
 #include <cstddef>
-#include <SDL.h>
+#include <cstdint>
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
@@ -31,11 +31,8 @@ enum _mainmenu_selections : uint8_t {
 	MAINMENU_NONE,
 	MAINMENU_SINGLE_PLAYER,
 	MAINMENU_MULTIPLAYER,
-	MAINMENU_REPLAY_INTRO,
 	MAINMENU_SHOW_SUPPORT,
-	MAINMENU_EXTRAS,
-	MAINMENU_SWITCHGAME,
-	MAINMENU_TOGGLESPAWN,
+	MAINMENU_SETTINGS,
 	MAINMENU_SHOW_CREDITS,
 	MAINMENU_EXIT_DIABLO,
 	MAINMENU_ATTRACT_MODE,
@@ -122,8 +119,7 @@ void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size = L
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, bool (*fnYesNo)() = NULL, size_t selectedItem = 0);
-void UiInitScrollBar(UiScrollbar *uiSb, std::size_t viewportSize, const std::size_t *currentOffset);
+void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, bool (*fnYesNo)() = NULL, size_t selectedItem = 0);
 void UiClearScreen();
 void UiPollAndRender();
 void UiRenderItems(const std::vector<UiItemBase *> &items);

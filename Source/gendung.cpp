@@ -49,7 +49,7 @@ MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
-int8_t dFlags[MAXDUNX][MAXDUNY];
+DungeonFlag dFlags[MAXDUNX][MAXDUNY];
 int8_t dPlayer[MAXDUNX][MAXDUNY];
 int16_t dMonster[MAXDUNX][MAXDUNY];
 int8_t dCorpse[MAXDUNX][MAXDUNY];
@@ -315,11 +315,6 @@ void FindTransparencyValues(int i, int j, int x, int y, int d, uint8_t floorID)
 
 } // namespace
 
-bool InDungeonBounds(Point position)
-{
-	return position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY;
-}
-
 void FillSolidBlockTbls()
 {
 	size_t tileCount;
@@ -445,7 +440,7 @@ void DRLG_SetPC()
 
 	for (int j = 0; j < h; j++) {
 		for (int i = 0; i < w; i++) {
-			dFlags[i + x][j + y] |= BFLAG_POPULATED;
+			dFlags[i + x][j + y] |= DungeonFlag::Populated;
 		}
 	}
 }
@@ -459,7 +454,7 @@ void Make_SetPC(int x, int y, int w, int h)
 
 	for (int j = 0; j < dh; j++) {
 		for (int i = 0; i < dw; i++) {
-			dFlags[i + dx][j + dy] |= BFLAG_POPULATED;
+			dFlags[i + dx][j + dy] |= DungeonFlag::Populated;
 		}
 	}
 }
@@ -506,10 +501,10 @@ void DRLG_HoldThemeRooms()
 			for (int x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width - 1; x++) {
 				int xx = 2 * x + 16;
 				int yy = 2 * y + 16;
-				dFlags[xx][yy] |= BFLAG_POPULATED;
-				dFlags[xx + 1][yy] |= BFLAG_POPULATED;
-				dFlags[xx][yy + 1] |= BFLAG_POPULATED;
-				dFlags[xx + 1][yy + 1] |= BFLAG_POPULATED;
+				dFlags[xx][yy] |= DungeonFlag::Populated;
+				dFlags[xx + 1][yy] |= DungeonFlag::Populated;
+				dFlags[xx][yy + 1] |= DungeonFlag::Populated;
+				dFlags[xx + 1][yy + 1] |= DungeonFlag::Populated;
 			}
 		}
 	}

@@ -19,6 +19,8 @@ SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
 Uint8 paletteTransparencyLookup[256][256];
 
+uint16_t paletteTransparencyLookupBlack16[65536];
+
 namespace {
 
 /** Specifies whether the palette has max brightness. */
@@ -88,6 +90,17 @@ void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, in
 			paletteTransparencyLookup[i][j] = best;
 		}
 	}
+
+	for (unsigned i = 0; i < 256; ++i) {
+		for (unsigned j = 0; j < 256; ++j) {
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+			const std::uint16_t index = i | (j << 8);
+#else
+			const std::uint16_t index = j | (i << 8);
+#endif
+			paletteTransparencyLookupBlack16[index] = paletteTransparencyLookup[0][i] | (paletteTransparencyLookup[0][j] << 8);
+		}
+	}
 }
 
 /**
@@ -105,7 +118,7 @@ void CycleColors(int from, int to)
 		system_palette[to] = col;
 	}
 
-	if (!sgOptions.Graphics.bBlendedTransparancy)
+	if (!*sgOptions.Graphics.blendedTransparancy)
 		return;
 
 	for (auto &palette : paletteTransparencyLookup) {
@@ -139,7 +152,7 @@ void CycleColorsReverse(int from, int to)
 		system_palette[from] = col;
 	}
 
-	if (!sgOptions.Graphics.bBlendedTransparancy)
+	if (!*sgOptions.Graphics.blendedTransparancy)
 		return;
 
 	for (auto &palette : paletteTransparencyLookup) {
@@ -211,7 +224,7 @@ void LoadPalette(const char *pszFileName, bool blend /*= true*/)
 #endif
 	}
 
-	if (blend && sgOptions.Graphics.bBlendedTransparancy) {
+	if (blend && *sgOptions.Graphics.blendedTransparancy) {
 		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_CRYPT) {
 			GenerateBlendedLookupTable(orig_palette, 1, 31);
 		} else if (leveltype == DTYPE_NEST) {
@@ -394,7 +407,7 @@ void palette_update_quest_palette(int n)
 	logical_palette[i] = orig_palette[i];
 	ApplyGamma(system_palette, logical_palette, 32);
 	palette_update(0, 31);
-	if (sgOptions.Graphics.bBlendedTransparancy) {
+	if (*sgOptions.Graphics.blendedTransparancy) {
 		// Update blended transparency, but only for the color that was updated
 		for (int j = 0; j < 256; j++) {
 			if (i == j) { // No need to calculate transparency between 2 identical colors

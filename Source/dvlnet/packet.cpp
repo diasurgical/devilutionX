@@ -5,6 +5,8 @@
 #include <random>
 #endif
 
+#include <cassert>
+
 #include "dvlnet/packet.h"
 
 namespace devilution {

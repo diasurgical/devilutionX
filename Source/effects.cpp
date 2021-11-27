@@ -957,7 +957,7 @@ TSFX sgSFX[] = {
 	{ sfx_MONK,                  "Sfx\\Monk\\Monk69b.wav",      nullptr },// PS_MONK69B
 	{ sfx_MONK,                  "Sfx\\Monk\\Monk70.wav",       nullptr },// PS_MONK70
 	{ sfx_MONK,                  "Sfx\\Monk\\Monk71.wav",       nullptr },// PS_MONK71
-	{ sfx_MONK,                  "Sfx\\Sorceror\\Mage72.wav",   nullptr },// PS_MONK72
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },// PS_MONK72
 	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },// PS_MONK73
 	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },// PS_MONK74
 	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        nullptr },// PS_MONK75

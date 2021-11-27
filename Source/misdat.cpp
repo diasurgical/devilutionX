@@ -5,9 +5,9 @@
  */
 #include "misdat.h"
 
-#include "missiles.h"
-#include "engine/load_file.hpp"
 #include "engine/cel_header.hpp"
+#include "engine/load_file.hpp"
+#include "missiles.h"
 
 namespace devilution {
 

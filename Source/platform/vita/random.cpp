@@ -1,6 +1,6 @@
-#include <sys/types.h>
-#include <sodium.h>
 #include <psp2/kernel/rng.h>
+#include <sodium.h>
+#include <sys/types.h>
 
 static const char *randombytes_vitarandom_implementation_name()
 {

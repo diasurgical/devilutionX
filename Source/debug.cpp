@@ -8,6 +8,8 @@
 
 #include <sstream>
 
+#include <fmt/format.h>
+
 #include "debug.h"
 
 #include "automap.h"
@@ -20,11 +22,12 @@
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
+#include "quests.h"
 #include "setmaps.h"
 #include "spells.h"
 #include "towners.h"
 #include "utils/language.h"
-#include "quests.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -52,14 +55,23 @@ enum class DebugGridTextItem : uint16_t {
 	dObject,
 	dItem,
 	dSpecial,
+
 	coords,
 	cursorcoords,
 	objectindex,
+
+	// take dPiece as index
 	nBlockTable,
 	nSolidTable,
 	nTransTable,
 	nMissileTable,
 	nTrapTable,
+
+	// megatiles
+	AutomapView,
+	dungeon,
+	pdungeon,
+	dflags,
 };
 
 DebugGridTextItem SelectedDebugGridTextItem;
@@ -611,6 +623,10 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"nTransTable",
 		"nMissileTable",
 		"nTrapTable",
+		"AutomapView",
+		"dungeon",
+		"pdungeon",
+		"dflags",
 	};
 
 	if (parameter == "clear") {
@@ -712,6 +728,12 @@ std::string DebugCmdPlayerInfo(const string_view parameter)
 	    player._pInvincible ? 1 : 0, player._pHitPoints);
 }
 
+std::string DebugCmdToggleFPS(const string_view parameter)
+{
+	frameflag = !frameflag;
+	return "";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -742,6 +764,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
+	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
 };
 
 } // namespace
@@ -762,9 +785,7 @@ void GetDebugMonster()
 	if (mi1 == -1) {
 		int mi2 = dMonster[cursPosition.x][cursPosition.y];
 		if (mi2 != 0) {
-			mi1 = mi2 - 1;
-			if (mi2 <= 0)
-				mi1 = -(mi2 + 1);
+			mi1 = abs(mi2) - 1;
 		} else {
 			mi1 = DebugMonsterId;
 		}
@@ -804,7 +825,8 @@ bool CheckDebugTextCommand(const string_view text)
 		parameter = text.substr(dbgCmd.text.length() + 1);
 	const auto result = dbgCmd.actionProc(parameter);
 	Log("DebugCmd: {} Result: {}", text, result);
-	InitDiabloMsg(result);
+	if (result != "")
+		InitDiabloMsg(result);
 	return true;
 }
 
@@ -813,9 +835,23 @@ bool IsDebugGridTextNeeded()
 	return SelectedDebugGridTextItem != DebugGridTextItem::None;
 }
 
+bool IsDebugGridInMegatiles()
+{
+	switch (SelectedDebugGridTextItem) {
+	case DebugGridTextItem::AutomapView:
+	case DebugGridTextItem::dungeon:
+	case DebugGridTextItem::pdungeon:
+	case DebugGridTextItem::dflags:
+		return true;
+	default:
+		return false;
+	}
+}
+
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 {
 	int info = 0;
+	Point megaCoords = { (dungeonCoords.x - 16) / 2, (dungeonCoords.y - 16) / 2 };
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
 		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
@@ -829,8 +865,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		info = 0;
 		int objectIndex = dObject[dungeonCoords.x][dungeonCoords.y];
 		if (objectIndex != 0 && DebugIndexToObjectID.find(objectIndex) != DebugIndexToObjectID.end()) {
-			objectIndex = objectIndex > 0 ? objectIndex - 1 : -(objectIndex + 1);
-			info = DebugIndexToObjectID[objectIndex];
+			info = DebugIndexToObjectID[abs(objectIndex) - 1];
 		}
 		break;
 	}
@@ -847,7 +882,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		info = dPreLight[dungeonCoords.x][dungeonCoords.y];
 		break;
 	case DebugGridTextItem::dFlags:
-		info = dFlags[dungeonCoords.x][dungeonCoords.y];
+		info = static_cast<int>(dFlags[dungeonCoords.x][dungeonCoords.y]);
 		break;
 	case DebugGridTextItem::dPlayer:
 		info = dPlayer[dungeonCoords.x][dungeonCoords.y];
@@ -881,6 +916,18 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		break;
 	case DebugGridTextItem::nTrapTable:
 		info = nTrapTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+		break;
+	case DebugGridTextItem::AutomapView:
+		info = AutomapView[megaCoords.x][megaCoords.y];
+		break;
+	case DebugGridTextItem::dungeon:
+		info = dungeon[megaCoords.x][megaCoords.y];
+		break;
+	case DebugGridTextItem::pdungeon:
+		info = pdungeon[megaCoords.x][megaCoords.y];
+		break;
+	case DebugGridTextItem::dflags:
+		info = dflags[megaCoords.x][megaCoords.y];
 		break;
 	case DebugGridTextItem::None:
 		return false;

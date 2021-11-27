@@ -10,7 +10,7 @@
 #include "control.h"
 #include "menu.h"
 #include "options.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -18,7 +18,7 @@ namespace devilution {
 char selgame_Label[32];
 char selgame_Ip[129] = "";
 char selgame_Password[16] = "";
-char selgame_Description[256];
+char selgame_Description[512];
 bool selgame_enteringGame;
 int selgame_selectedGame;
 bool selgame_endMenu;
@@ -97,7 +97,7 @@ void selgame_GameSelection_Init()
 		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 3));
 	}
 
-	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, PANEL_LEFT + 305, (UI_OFFSET_Y + 255), 285, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
+	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, 6, PANEL_LEFT + 305, (UI_OFFSET_Y + 255), 285, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect5, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -111,7 +111,7 @@ void selgame_GameSelection_Init()
 		int itemValue = vecSelGameDlgItems[index]->m_value;
 		selgame_GameSelection_Select(itemValue);
 	};
-	UiInitList(vecSelGameDlgItems.size(), selgame_GameSelection_Focus, selectFn, selgame_GameSelection_Esc, vecSelGameDialog, true, nullptr, HighlightedItem);
+	UiInitList(selgame_GameSelection_Focus, selectFn, selgame_GameSelection_Esc, vecSelGameDialog, true, nullptr, HighlightedItem);
 }
 
 void selgame_GameSelection_Focus(int value)
@@ -119,20 +119,19 @@ void selgame_GameSelection_Focus(int value)
 	HighlightedItem = value;
 	switch (vecSelGameDlgItems[value]->m_value) {
 	case 0:
-		strncpy(selgame_Description, _("Create a new game with a difficulty setting of your choice."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Description, _("Create a new game with a difficulty setting of your choice."));
 		break;
 	case 1:
-		strncpy(selgame_Description, _("Create a new public game that anyone can join with a difficulty setting of your choice."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Description, _("Create a new public game that anyone can join with a difficulty setting of your choice."));
 		break;
 	case 2:
-		strncpy(selgame_Description, _("Enter an IP or a hostname and join a game already in progress at that address."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Description, _("Enter an IP or a hostname and join a game already in progress at that address."));
 		break;
 	default:
-		strncpy(selgame_Description, _("Join the public game already in progress at this address."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Description, _("Join the public game already in progress at this address."));
 		break;
 	}
-	const std::string wrapped = WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
-	strncpy(selgame_Description, wrapped.data(), sizeof(selgame_Description) - 1);
+	strcpy(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH).c_str());
 }
 
 /**
@@ -187,7 +186,7 @@ void selgame_GameSelection_Select(int value)
 		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Nightmare"), DIFF_NIGHTMARE));
 		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Hell"), DIFF_HELL));
 
-		vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, PANEL_LEFT + 300, (UI_OFFSET_Y + 282), 295, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
+		vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, vecSelGameDlgItems.size(), PANEL_LEFT + 300, (UI_OFFSET_Y + 282), 295, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 		SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect5, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -195,7 +194,7 @@ void selgame_GameSelection_Select(int value)
 		SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 449), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("CANCEL"), &UiFocusNavigationEsc, rect6, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-		UiInitList(vecSelGameDlgItems.size(), selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, vecSelGameDialog, true);
+		UiInitList(selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, vecSelGameDialog, true);
 		break;
 	}
 	case 2: {
@@ -216,9 +215,9 @@ void selgame_GameSelection_Select(int value)
 		HighlightedItem = 0;
 
 #ifdef PACKET_ENCRYPTION
-		UiInitList(0, nullptr, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
+		UiInitList(nullptr, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
 #else
-		UiInitList(0, nullptr, selgame_Password_Select, selgame_GameSelection_Init, vecSelGameDialog);
+		UiInitList(nullptr, selgame_Password_Select, selgame_GameSelection_Init, vecSelGameDialog);
 #endif
 		break;
 	}
@@ -236,20 +235,19 @@ void selgame_Diff_Focus(int value)
 {
 	switch (vecSelGameDlgItems[value]->m_value) {
 	case DIFF_NORMAL:
-		strncpy(selgame_Label, _("Normal"), sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, _("Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Label, _("Normal"));
+		strcpy(selgame_Description, _("Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo."));
 		break;
 	case DIFF_NIGHTMARE:
-		strncpy(selgame_Label, _("Nightmare"), sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, _("Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Label, _("Nightmare"));
+		strcpy(selgame_Description, _("Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only."));
 		break;
 	case DIFF_HELL:
-		strncpy(selgame_Label, _("Hell"), sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, _("Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Label, _("Hell"));
+		strcpy(selgame_Description, _("Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm."));
 		break;
 	}
-	const std::string wrapped = WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
-	strncpy(selgame_Description, wrapped.data(), sizeof(selgame_Description) - 1);
+	strcpy(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH).c_str());
 }
 
 bool IsDifficultyAllowed(int value)
@@ -346,7 +344,7 @@ void selgame_GameSpeedSelection()
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Faster"), 40));
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Fastest"), 50));
 
-	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, PANEL_LEFT + 300, (UI_OFFSET_Y + 279), 295, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
+	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, vecSelGameDlgItems.size(), PANEL_LEFT + 300, (UI_OFFSET_Y + 279), 295, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect5, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -354,31 +352,30 @@ void selgame_GameSpeedSelection()
 	SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 449), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("CANCEL"), &UiFocusNavigationEsc, rect6, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	UiInitList(vecSelGameDlgItems.size(), selgame_Speed_Focus, selgame_Speed_Select, selgame_Speed_Esc, vecSelGameDialog, true);
+	UiInitList(selgame_Speed_Focus, selgame_Speed_Select, selgame_Speed_Esc, vecSelGameDialog, true);
 }
 
 void selgame_Speed_Focus(int value)
 {
 	switch (vecSelGameDlgItems[value]->m_value) {
 	case 20:
-		strncpy(selgame_Label, _("Normal"), sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, _("Normal Speed\nThis is where a starting character should begin the quest to defeat Diablo."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Label, _("Normal"));
+		strcpy(selgame_Description, _("Normal Speed\nThis is where a starting character should begin the quest to defeat Diablo."));
 		break;
 	case 30:
-		strncpy(selgame_Label, _("Fast"), sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, _("Fast Speed\nThe denizens of the Labyrinth have been hastened and will prove to be a greater challenge. This is recommended for experienced characters only."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Label, _("Fast"));
+		strcpy(selgame_Description, _("Fast Speed\nThe denizens of the Labyrinth have been hastened and will prove to be a greater challenge. This is recommended for experienced characters only."));
 		break;
 	case 40:
-		strncpy(selgame_Label, _("Faster"), sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, _("Faster Speed\nMost monsters of the dungeon will seek you out quicker than ever before. Only an experienced champion should try their luck at this speed."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Label, _("Faster"));
+		strcpy(selgame_Description, _("Faster Speed\nMost monsters of the dungeon will seek you out quicker than ever before. Only an experienced champion should try their luck at this speed."));
 		break;
 	case 50:
-		strncpy(selgame_Label, _("Fastest"), sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, _("Fastest Speed\nThe minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace."), sizeof(selgame_Description) - 1);
+		strcpy(selgame_Label, _("Fastest"));
+		strcpy(selgame_Description, _("Fastest Speed\nThe minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace."));
 		break;
 	}
-	const std::string wrapped = WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
-	strncpy(selgame_Description, wrapped.data(), sizeof(selgame_Description) - 1);
+	strcpy(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH).c_str());
 }
 
 void selgame_Speed_Esc()
@@ -430,7 +427,7 @@ void selgame_Password_Init(int /*value*/)
 	SDL_Rect rect7 = { (Sint16)(PANEL_LEFT + 449), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("CANCEL"), &UiFocusNavigationEsc, rect7, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	UiInitList(0, nullptr, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
+	UiInitList(nullptr, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
 }
 
 static bool IsGameCompatible(const GameData &data)
@@ -466,6 +463,11 @@ void selgame_Password_Select(int /*value*/)
 	if (selgame_selectedGame == 2 && strlen(selgame_Password) > 0)
 		gamePassword = selgame_Password;
 
+	// If there is an error, the error message won't necessarily be set.
+	// Clear the error so that we display "Unknown network error"
+	// instead of an arbitrary message in that case.
+	SDL_ClearError();
+
 	if (selgame_selectedGame > 1) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		if (SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
@@ -490,9 +492,9 @@ void selgame_Password_Select(int /*value*/)
 
 	m_game_data->nDifficulty = nDifficulty;
 	m_game_data->nTickRate = nTickRate;
-	m_game_data->bRunInTown = sgOptions.Gameplay.bRunInTown ? 1 : 0;
-	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest ? 1 : 0;
-	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest ? 1 : 0;
+	m_game_data->bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
+	m_game_data->bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
+	m_game_data->bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
 
 	if (SNetCreateGame(nullptr, gamePassword, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
 		UiInitList_clear();

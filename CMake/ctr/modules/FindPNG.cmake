@@ -63,3 +63,4 @@ set(PNG_PROCESS_LIBS PNG_LIBRARY LIBM_LIBRARY)
 libfind_process(PNG)
 
 try_add_imported_target(PNG m 3ds::zlib)
+add_library(PNG::PNG ALIAS 3ds::png)

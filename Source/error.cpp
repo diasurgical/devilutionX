@@ -8,6 +8,7 @@
 
 #include "error.h"
 
+#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -40,7 +41,7 @@ void InitNextLines()
 	size_t previous = 0;
 	while (true) {
 		size_t next = paragraphs.find('\n', previous);
-		TextLines.emplace_back(paragraphs.substr(previous, next));
+		TextLines.emplace_back(paragraphs.substr(previous, next - previous));
 		if (next == std::string::npos)
 			break;
 		previous = next + 1;

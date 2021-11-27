@@ -1,7 +1,11 @@
-#include <cstring>
-#include <switch.h>
-#include <SDL.h>
 #include "platform/switch/keyboard.h"
+
+#include <cstring>
+
+#include <SDL.h>
+#include <switch.h>
+
+#include "utils/utf8.hpp"
 
 static void switch_keyboard_get(const char *guide_text, char *initial_text, int max_len, int multiline, char *buf)
 {
@@ -59,8 +63,7 @@ void switch_start_text_input(const char *guide_text, char *initial_text, int max
 		switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
 	}
 	if (text[0] == '\0') {
-		strncpy(text, initial_text, max_length - 1);
-		text[max_length] = { '\0' };
+		devilution::CopyUtf8(text, initial_text, max_length);
 	}
 	const uint8_t *utf8_text = (uint8_t *)text;
 	for (int i = 0; i < 599 && utf8_text[i];) {

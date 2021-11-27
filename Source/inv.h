@@ -159,10 +159,18 @@ void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
  */
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld);
 void CheckItemStats(Player &player);
-void InvGetItem(int pnum, Item *item, int ii);
+void InvGetItem(int pnum, int ii);
 void AutoGetItem(int pnum, Item *item, int ii);
-int FindGetItem(int idx, uint16_t ci, int iseed);
-void SyncGetItem(Point position, int idx, uint16_t ci, int iseed);
+
+/**
+ * @brief Searches for a dropped item with the same type/createInfo/seed
+ * @param iseed The value used to initialise the RNG when generating the item
+ * @param idx The overarching type of the target item
+ * @param createInfo Flags used to describe the specific subtype of the target item
+ * @return An index into ActiveItems or -1 if no matching item was found
+ */
+int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t ci);
+void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
 bool CanPut(Point position);
 bool TryInvPut();
 int InvPutItem(Player &player, Point position);
