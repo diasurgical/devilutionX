@@ -114,7 +114,7 @@ uint16_t GetUnicodeRow(char32_t codePoint)
 
 bool IsCJK(uint16_t row)
 {
-	return row >= 0x4e && row <= 0x9f;
+	return row >= 0x30 && row <= 0x9f;
 }
 
 bool IsHangul(uint16_t row)
