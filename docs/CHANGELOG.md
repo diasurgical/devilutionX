@@ -210,7 +210,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove light when killing a berserked monster
 - Blood star becoming invisible when blocked
 - Rotate arrows in the appropriate direction when blocking
-- Candles around around the storybook sometimes missing in Crypt
+- Candles around the storybook sometimes missing in Crypt
 - Celia now leaves after her quest ends
 - Update Celia and Complete Nut graphics when completing their quests
 - Only play "Uh uh" sound the first time you pick up the cathedral map
