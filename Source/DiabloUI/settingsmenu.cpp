@@ -18,7 +18,7 @@ std::vector<std::unique_ptr<UiListItem>> vecDialogItems;
 std::vector<std::unique_ptr<UiItemBase>> vecDialog;
 std::vector<OptionEntryBase *> vecOptions;
 
-char optionDescription[256];
+char optionDescription[512];
 
 Rectangle rectDescription;
 
@@ -117,14 +117,14 @@ void UiSettingsMenu()
 		UiAddLogo(&vecDialog);
 
 		Rectangle rectList = { { PANEL_LEFT + 50, (UI_OFFSET_Y + 204) }, { 540, 208 } };
-		rectDescription = { { PANEL_LEFT + 24, rectList.position.y + rectList.size.height + 16 }, { 590, 35 } };
+		rectDescription = { { PANEL_LEFT + 24, rectList.position.y + rectList.size.height + 20 }, { 590, 35 } };
 
 		optionDescription[0] = '\0';
 
 		const char *titleText = _("Settings");
 		vecDialog.push_back(std::make_unique<UiArtText>(titleText, MakeSdlRect(PANEL_LEFT, UI_OFFSET_Y + 161, PANEL_WIDTH, 35), UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
 		vecDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
-		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
+		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1));
 
 		if (diabdat_mpq && hellfire_mpq)
 			vecDialogItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Switch to Diablo") : _("Switch to Hellfire"), static_cast<int>(SpecialMenuEntry::SwitchGame), UiFlags::ColorUiGold));
