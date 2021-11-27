@@ -616,8 +616,8 @@ GraphicsOptions::GraphicsOptions()
           })
     , blendedTransparancy("Blended Transparency", OptionEntryFlags::CantChangeInGame, N_("Blended Transparency"), N_("Enables uniform transparency mode. This setting affects the transparency on walls, game text menus, and boxes. If disabled will default to old checkerboard transparency."), true)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
-    , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("Color cycling effect used for water, lava, and acid animation."), true)
-    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
+    , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
+    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
 {
 	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
 }
