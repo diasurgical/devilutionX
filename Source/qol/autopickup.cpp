@@ -31,7 +31,7 @@ bool HasRoomForGold()
 	return false;
 }
 
-int numMiscItemsInInv(int iMiscId)
+int NumMiscItemsInInv(int iMiscId)
 {
 	int numItems = 0;
 	for (const auto &item : InventoryAndBeltPlayerItemsRange(Players[MyPlayerId])) {
@@ -62,26 +62,26 @@ void AutoPickup(int pnum)
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
 			}
-		if (item._itype == ItemType::Misc && (AutoPlaceItemInInventory(Players[pnum], item, false)) || AutoPlaceItemInBelt(Players[pnum], item, false)) {
+			if (item._itype == ItemType::Misc && (AutoPlaceItemInInventory(Players[pnum], item, false)) || AutoPlaceItemInBelt(Players[pnum], item, false)) {
 				bool doPickup = false;
 				switch (item._iMiscId) {
 				case IMISC_HEAL:
-					doPickup = sgOptions.Gameplay.nHealPotionPickup > numMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.nHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_FULLHEAL:
-					doPickup = sgOptions.Gameplay.nFullHealPotionPickup > numMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.nFullHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_MANA:
-					doPickup = sgOptions.Gameplay.nManaPotionPickup > numMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.nManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_FULLMANA:
-					doPickup = sgOptions.Gameplay.nFullManaPotionPickup > numMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.nFullManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_REJUV:
-					doPickup = sgOptions.Gameplay.nRejuPotionPickup > numMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.nRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_FULLREJUV:
-					doPickup = sgOptions.Gameplay.nFullRejuPotionPickup > numMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.nFullRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_ELIXSTR:
 				case IMISC_ELIXMAG:
