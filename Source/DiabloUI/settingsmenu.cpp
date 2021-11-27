@@ -17,6 +17,7 @@ bool recreateUI = false;
 std::vector<std::unique_ptr<UiListItem>> vecDialogItems;
 std::vector<std::unique_ptr<UiItemBase>> vecDialog;
 std::vector<OptionEntryBase *> vecOptions;
+OptionEntryBase *optionToPreselect = nullptr;
 
 char optionDescription[512];
 
@@ -81,6 +82,11 @@ void ItemSelected(int value)
 	}
 
 	auto *pOption = vecOptions[vecItem->m_value];
+	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
+		endMenu = true;
+		recreateUI = true;
+		optionToPreselect = pOption;
+	}
 	switch (pOption->GetType()) {
 	case OptionEntryType::Boolean: {
 		auto *pOptionBoolean = static_cast<OptionEntryBoolean *>(pOption);
@@ -133,6 +139,9 @@ void UiSettingsMenu()
 
 		bool switchOptionExists = vecDialogItems.size() > 0;
 		int catCount = switchOptionExists ? 1 : 0;
+
+		size_t itemToSelect = switchOptionExists ? 0 : 1;
+
 		for (auto *pCategory : sgOptions.GetCategories()) {
 			bool categoryCreated = false;
 			for (auto *pEntry : pCategory->GetEntries()) {
@@ -146,6 +155,8 @@ void UiSettingsMenu()
 					categoryCreated = true;
 				}
 				auto formatArgs = CreateDrawStringFormatArgForEntry(pEntry);
+				if (optionToPreselect == pEntry)
+					itemToSelect = vecDialogItems.size();
 				vecDialogItems.push_back(std::make_unique<UiListItem>("{}: {}", formatArgs, vecOptions.size(), UiFlags::ColorUiGold));
 				vecOptions.push_back(pEntry);
 			}
@@ -156,7 +167,8 @@ void UiSettingsMenu()
 
 		vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, rectList.size.height / 26, rectList.position.x, rectList.position.y, rectList.size.width, 26, UiFlags::FontSize24 | UiFlags::AlignCenter));
 
-		UiInitList(ItemFocused, ItemSelected, EscPressed, vecDialog, true, nullptr, switchOptionExists ? 0 : 1);
+		UiInitList(ItemFocused, ItemSelected, EscPressed, vecDialog, true, nullptr, itemToSelect);
+		optionToPreselect = nullptr;
 
 		while (!endMenu) {
 			UiClearScreen();

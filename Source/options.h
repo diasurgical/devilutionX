@@ -56,6 +56,8 @@ enum class OptionEntryFlags {
 	OnlyHellfire = 1 << 3,
 	/** @brief Option is only relevant for Diablo. */
 	OnlyDiablo = 1 << 4,
+	/** @brief After option is changed the UI needs to be recreated. */
+	RecreateUI = 1 << 5,
 };
 use_enum_as_flags(OptionEntryFlags);
 
