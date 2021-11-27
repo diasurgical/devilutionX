@@ -222,6 +222,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reflect spell not being synced
 - Search spell affecting all players
 
+### Known issues
+- Switch/3DS: Polish dub produces static sounds
+- OpenDingux: Now requires Beta
+
 ## DevilutionX 1.2.1
 ### Bugfixes
 #### Gameplay
