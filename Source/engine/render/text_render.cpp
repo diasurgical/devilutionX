@@ -19,6 +19,7 @@
 #include "engine/point.hpp"
 #include "palette.h"
 #include "utils/display.h"
+#include "utils/language.h"
 #include "utils/sdl_compat.h"
 #include "utils/utf8.hpp"
 
@@ -33,7 +34,8 @@ std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
 std::array<uint8_t, 6> CJKWidth = { 17, 24, 28, 41, 47, 16 };
 std::array<uint8_t, 6> HangulWidth = { 15, 20, 24, 35, 39, 15 };
-std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
+constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
+constexpr int SmallFontTallLineHeight = 16;
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
 std::array<const char *, 14> ColorTranlations = {
@@ -105,6 +107,11 @@ text_color GetColorFromFlags(UiFlags flags)
 	return ColorWhitegold;
 }
 
+uint16_t GetUnicodeRow(char32_t codePoint)
+{
+	return static_cast<uint32_t>(codePoint) >> 8;
+}
+
 bool IsCJK(uint16_t row)
 {
 	return row >= 0x4e && row <= 0x9f;
@@ -113,6 +120,11 @@ bool IsCJK(uint16_t row)
 bool IsHangul(uint16_t row)
 {
 	return row >= 0xac && row <= 0xd7;
+}
+
+bool IsSmallFontTallRow(uint16_t row)
+{
+	return IsCJK(row) || IsHangul(row);
 }
 
 std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
@@ -257,6 +269,63 @@ private:
 	std::size_t next_;
 };
 
+bool ContainsSmallFontTallCodepoints(string_view text)
+{
+	while (!text.empty()) {
+		const char32_t next = ConsumeFirstUtf8CodePoint(&text);
+		if (next == Utf8DecodeError)
+			break;
+		if (next == ZWSP)
+			continue;
+		if (IsSmallFontTallRow(GetUnicodeRow(next)))
+			return true;
+	}
+	return false;
+}
+
+int GetLineHeight(string_view text, unsigned fontIndex)
+{
+	if (fontIndex == 0 && IsSmallFontTall() && ContainsSmallFontTallCodepoints(text)) {
+		return SmallFontTallLineHeight;
+	}
+	return LineHeights[fontIndex];
+}
+
+int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, unsigned fontIndex)
+{
+	constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
+	if (fontIndex == 0 && IsSmallFontTall()) {
+		char32_t prev = U'\0';
+		char32_t next;
+		FmtArgParser fmtArgParser { fmt, args, argsLen };
+		string_view rest = fmt;
+		while (!rest.empty()) {
+			if ((prev == U'{' || prev == U'}') && static_cast<char>(prev) == rest[0]) {
+				rest.remove_prefix(1);
+				continue;
+			}
+			const std::optional<std::size_t> fmtArgPos = fmtArgParser(rest);
+			if (fmtArgPos) {
+				if (ContainsSmallFontTallCodepoints(args[*fmtArgPos].GetFormatted()))
+					return true;
+				prev = U'\0';
+				continue;
+			}
+
+			next = ConsumeFirstUtf8CodePoint(&rest);
+			if (next == Utf8DecodeError)
+				break;
+			if (next == ZWSP) {
+				prev = next;
+				continue;
+			}
+			if (IsSmallFontTallRow(GetUnicodeRow(next)))
+				return SmallFontTallLineHeight;
+		}
+	}
+	return LineHeights[fontIndex];
+}
+
 int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &characterPosition,
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
     UiFlags flags, GameFontTables size, text_color color)
@@ -274,7 +343,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 		if (next == ZWSP)
 			continue;
 
-		uint32_t unicodeRow = next >> 8;
+		const uint32_t unicodeRow = GetUnicodeRow(next);
 		if (unicodeRow != currentUnicodeRow || font == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
 			font = LoadFont(size, color, unicodeRow);
@@ -349,7 +418,7 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 			break;
 
 		uint8_t frame = next & 0xFF;
-		uint32_t unicodeRow = next >> 8;
+		const uint32_t unicodeRow = GetUnicodeRow(next);
 		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
 			currentUnicodeRow = unicodeRow;
@@ -400,7 +469,7 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen
 			break;
 
 		uint8_t frame = next & 0xFF;
-		uint32_t unicodeRow = next >> 8;
+		const uint32_t unicodeRow = GetUnicodeRow(next);
 		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
 			currentUnicodeRow = unicodeRow;
@@ -465,7 +534,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 
 		if (codepoint != ZWSP) {
 			uint8_t frame = codepoint & 0xFF;
-			uint32_t unicodeRow = codepoint >> 8;
+			const uint32_t unicodeRow = GetUnicodeRow(codepoint);
 			if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
 				kerning = LoadFontKerning(size, unicodeRow);
 				currentUnicodeRow = unicodeRow;
@@ -535,7 +604,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
 
 	if (lineHeight == -1)
-		lineHeight = LineHeights[size];
+		lineHeight = GetLineHeight(text, size);
 
 	if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
 		int textHeight = (std::count(text.cbegin(), text.cend(), '\n') + 1) * lineHeight;
@@ -579,7 +648,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
 
 	if (lineHeight == -1)
-		lineHeight = LineHeights[size];
+		lineHeight = GetLineHeight(fmt, args, argsLen, size);
 
 	if (HasAnyOf(flags, UiFlags::VerticalCenter)) {
 		int textHeight = (CountNewlines(fmt, args, argsLen) + 1) * lineHeight;
@@ -618,7 +687,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 			continue;
 		}
 
-		uint32_t unicodeRow = next >> 8;
+		const uint32_t unicodeRow = GetUnicodeRow(next);
 		if (unicodeRow != currentUnicodeRow || font == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
 			font = LoadFont(size, color, unicodeRow);
