@@ -33,8 +33,8 @@ void PrintChatMessage(const Surface &out, int x, int y, int width, char *textPtr
 {
 	const size_t length = strlen(textPtr);
 	std::replace(textPtr, textPtr + length, '\n', ' ');
-	const string_view text{textPtr, length};
-	DrawString(out, WordWrapString(text, width), { { x, y }, { width, 0 } }, style, 1, 10);
+	const string_view text { textPtr, length };
+	DrawString(out, WordWrapString(text, width), { { x, y }, { width, 0 } }, style, 1, 18);
 }
 
 } // namespace
