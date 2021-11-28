@@ -565,6 +565,18 @@ string_view OptionCategoryBase::GetDescription() const
 
 StartUpOptions::StartUpOptions()
     : OptionCategoryBase("StartUp", N_("Start Up"), N_("Start Up Settings"))
+    , diabloIntro("Diablo Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Shown Intro cinematic."), StartUpIntro::Once,
+          {
+              { StartUpIntro::Off, N_("OFF") },
+              // Once is missing, cause we want to hide it from UI-Settings.
+              { StartUpIntro::On, N_("ON") },
+          })
+    , hellfireIntro("Hellfire Intro", OptionEntryFlags::OnlyHellfire, N_("Intro"), N_("Shown Intro cinematic."), StartUpIntro::Once,
+          {
+              { StartUpIntro::Off, N_("OFF") },
+              // Once is missing, cause we want to hide it from UI-Settings.
+              { StartUpIntro::On, N_("ON") },
+          })
     , splash("Splash", OptionEntryFlags::None, N_("Splash"), N_("Shown splash screen."), StartUpSplash::LogoAndTitleDialog,
           {
               { StartUpSplash::LogoAndTitleDialog, N_("Logo and Title Screen") },
@@ -576,32 +588,28 @@ StartUpOptions::StartUpOptions()
 std::vector<OptionEntryBase *> StartUpOptions::GetEntries()
 {
 	return {
+		&diabloIntro,
+		&hellfireIntro,
 		&splash,
 	};
 }
 
 DiabloOptions::DiabloOptions()
     : OptionCategoryBase("Diablo", N_("Diablo"), N_("Diablo specific Settings"))
-    , intro("Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Enable/disable Intro cinematic."), true)
 {
 }
 std::vector<OptionEntryBase *> DiabloOptions::GetEntries()
 {
-	return {
-		&intro,
-	};
+	return {};
 }
 
 HellfireOptions::HellfireOptions()
     : OptionCategoryBase("Hellfire", N_("Hellfire"), N_("Hellfire specific Settings"))
-    , intro("Intro", OptionEntryFlags::OnlyHellfire, N_("Intro"), N_("Enable/disable Intro cinematic."), true)
 {
 }
 std::vector<OptionEntryBase *> HellfireOptions::GetEntries()
 {
-	return {
-		&intro,
-	};
+	return {};
 }
 
 AudioOptions::AudioOptions()

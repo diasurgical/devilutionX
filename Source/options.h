@@ -16,6 +16,12 @@ enum class StartUpGameOption {
 	Diablo,
 };
 
+enum class StartUpIntro {
+	Off = 0,
+	Once = 1,
+	On = 2,
+};
+
 /** @brief Defines what splash screen should be shown at startup. */
 enum class StartUpSplash {
 	/** @brief Show no splash screen. */
@@ -197,6 +203,10 @@ struct StartUpOptions : OptionCategoryBase {
 	StartUpOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
+	/** @brief Play game intro video on diablo startup. */
+	OptionEntryEnum<StartUpIntro> diabloIntro;
+	/** @brief Play game intro video on hellfire startup. */
+	OptionEntryEnum<StartUpIntro> hellfireIntro;
 	OptionEntryEnum<StartUpSplash> splash;
 };
 
@@ -204,8 +214,6 @@ struct DiabloOptions : OptionCategoryBase {
 	DiabloOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Play game intro video on startup. */
-	OptionEntryBoolean intro;
 	/** @brief Remembers what singleplayer hero/save was last used. */
 	std::uint32_t lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
@@ -216,8 +224,6 @@ struct HellfireOptions : OptionCategoryBase {
 	HellfireOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Play game intro video on startup. */
-	OptionEntryBoolean intro;
 	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(ItemPack) * 2 + 1];
 	/** @brief Remembers what singleplayer hero/save was last used. */
