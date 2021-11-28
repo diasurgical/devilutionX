@@ -127,9 +127,10 @@ std::vector<std::string> GetMPQSearchPaths()
 
 void init_language_archives(const std::vector<std::string> &paths)
 {
-	if (strcasecmp("en", sgOptions.Language.szCode) != 0 || strlen(sgOptions.Language.szCode) != 2) {
+	string_view code = *sgOptions.Language.code;
+	if (code != "en") {
 		char langMpqName[10] = {};
-		CopyUtf8(langMpqName, sgOptions.Language.szCode, sizeof(langMpqName));
+		CopyUtf8(langMpqName, code.data(), sizeof(langMpqName));
 
 		strncat(langMpqName, ".mpq", sizeof(langMpqName) - strlen(langMpqName) - 1);
 		lang_mpq = LoadMPQ(paths, langMpqName);

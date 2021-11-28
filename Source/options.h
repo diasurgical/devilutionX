@@ -186,6 +186,31 @@ public:
 	}
 };
 
+class OptionEntryLanguageCode : public OptionEntryListBase {
+public:
+	OptionEntryLanguageCode();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] virtual size_t GetListSize() const override;
+	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] virtual size_t GetActiveListIndex() const override;
+	virtual void SetActiveListIndex(size_t index) override;
+
+	string_view operator*() const
+	{
+		return szCode;
+	}
+
+private:
+	/** @brief Language code (IETF) for text. */
+	char szCode[6];
+	mutable std::vector<std::pair<std::string, std::string>> languages;
+
+	void CheckLanguagesAreInitialized() const;
+};
+
 struct OptionCategoryBase {
 	OptionCategoryBase(string_view key, string_view name, string_view description);
 
@@ -391,8 +416,7 @@ struct LanguageOptions : OptionCategoryBase {
 	LanguageOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Language code (IETF) for text. */
-	char szCode[6];
+	OptionEntryLanguageCode code;
 };
 
 struct Options {

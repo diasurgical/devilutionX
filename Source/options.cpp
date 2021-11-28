@@ -229,6 +229,12 @@ void OptionShowFPSChanged()
 		frameflag = false;
 }
 
+void OptionLanguageCodeChanged()
+{
+	LanguageInitialize();
+	init_language_archives();
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -316,70 +322,6 @@ void LoadOptions()
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
-#ifdef __ANDROID__
-	JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
-	jobject activity = (jobject)SDL_AndroidGetActivity();
-	jclass clazz(env->GetObjectClass(activity));
-	jmethodID method_id = env->GetMethodID(clazz, "getLocale", "()Ljava/lang/String;");
-	jstring jLocale = (jstring)env->CallObjectMethod(activity, method_id);
-	const char *cLocale = env->GetStringUTFChars(jLocale, nullptr);
-	std::string locale = cLocale;
-	env->ReleaseStringUTFChars(jLocale, cLocale);
-	env->DeleteLocalRef(jLocale);
-	env->DeleteLocalRef(activity);
-	env->DeleteLocalRef(clazz);
-#elif defined(__vita__)
-	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	const char *vita_locales[] = {
-		"ja_JP",
-		"en_US",
-		"fr_FR",
-		"es_ES",
-		"de_DE",
-		"it_IT",
-		"nl_NL",
-		"pt_PT",
-		"ru_RU",
-		"ko_KR",
-		"zh_TW",
-		"zh_CN",
-		"fi_FI",
-		"sv_SE",
-		"da_DK",
-		"no_NO",
-		"pl_PL",
-		"pt_BR",
-		"en_GB",
-		"tr_TR",
-	};
-	SceAppUtilInitParam initParam;
-	SceAppUtilBootParam bootParam;
-	memset(&initParam, 0, sizeof(SceAppUtilInitParam));
-	memset(&bootParam, 0, sizeof(SceAppUtilBootParam));
-	sceAppUtilInit(&initParam, &bootParam);
-	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
-	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
-		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	std::string locale = std::string(vita_locales[language]);
-	sceAppUtilShutdown();
-#elif defined(__3DS__)
-	std::string locale = n3ds::GetLocale();
-#else
-	std::string locale = std::locale("").name().substr(0, 5);
-#endif
-
-	locale = locale.substr(0, 5);
-	LogVerbose("Prefered locale: {}", locale);
-	if (!HasTranslation(locale)) {
-		locale = locale.substr(0, 2);
-		if (!HasTranslation(locale)) {
-			locale = "en";
-		}
-	}
-	LogVerbose("Best match locale: {}", locale);
-
-	GetIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), locale.c_str());
-
 	keymapper.Load();
 
 	if (demo::IsRunning())
@@ -444,8 +386,6 @@ void SaveOptions()
 #ifdef __vita__
 	SetIniValue("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
-
-	SetIniValue("Language", "Code", sgOptions.Language.szCode);
 
 	keymapper.Save();
 
@@ -734,13 +674,147 @@ std::vector<OptionEntryBase *> ChatOptions::GetEntries()
 	return {};
 }
 
+OptionEntryLanguageCode::OptionEntryLanguageCode()
+    : OptionEntryListBase("Code", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, "Language", "Define what language to use in game")
+{
+}
+void OptionEntryLanguageCode::LoadFromIni(string_view category)
+{
+#ifdef __ANDROID__
+	JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
+	jobject activity = (jobject)SDL_AndroidGetActivity();
+	jclass clazz(env->GetObjectClass(activity));
+	jmethodID method_id = env->GetMethodID(clazz, "getLocale", "()Ljava/lang/String;");
+	jstring jLocale = (jstring)env->CallObjectMethod(activity, method_id);
+	const char *cLocale = env->GetStringUTFChars(jLocale, nullptr);
+	std::string locale = cLocale;
+	env->ReleaseStringUTFChars(jLocale, cLocale);
+	env->DeleteLocalRef(jLocale);
+	env->DeleteLocalRef(activity);
+	env->DeleteLocalRef(clazz);
+#elif defined(__vita__)
+	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
+	const char *vita_locales[] = {
+		"ja_JP",
+		"en_US",
+		"fr_FR",
+		"es_ES",
+		"de_DE",
+		"it_IT",
+		"nl_NL",
+		"pt_PT",
+		"ru_RU",
+		"ko_KR",
+		"zh_TW",
+		"zh_CN",
+		"fi_FI",
+		"sv_SE",
+		"da_DK",
+		"no_NO",
+		"pl_PL",
+		"pt_BR",
+		"en_GB",
+		"tr_TR",
+	};
+	SceAppUtilInitParam initParam;
+	SceAppUtilBootParam bootParam;
+	memset(&initParam, 0, sizeof(SceAppUtilInitParam));
+	memset(&bootParam, 0, sizeof(SceAppUtilBootParam));
+	sceAppUtilInit(&initParam, &bootParam);
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
+	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
+		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
+	std::string locale = std::string(vita_locales[language]);
+	sceAppUtilShutdown();
+#elif defined(__3DS__)
+	std::string locale = n3ds::GetLocale();
+#else
+	std::string locale = std::locale("").name().substr(0, 5);
+#endif
+
+	locale = locale.substr(0, 5);
+	LogVerbose("Preferred locale: {}", locale);
+	if (!HasTranslation(locale)) {
+		locale = locale.substr(0, 2);
+		if (!HasTranslation(locale)) {
+			locale = "en";
+		}
+	}
+	LogVerbose("Best match locale: {}", locale);
+
+	GetIniValue(category.data(), key.data(), szCode, sizeof(szCode), locale.c_str());
+}
+void OptionEntryLanguageCode::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), key.data(), szCode);
+}
+
+void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
+{
+	if (!languages.empty())
+		return;
+
+	// Add well-known supported languages
+	languages.push_back({ "bg", "Bulgarian" });
+	languages.push_back({ "cs", "Czech" });
+	languages.push_back({ "da", "Danish" });
+	languages.push_back({ "de", "German" });
+	languages.push_back({ "en", "English" });
+	languages.push_back({ "es", "Spanish" });
+	languages.push_back({ "fr", "French" });
+	languages.push_back({ "ja", "Japanese" });
+	languages.push_back({ "hr", "Croatian" });
+	languages.push_back({ "it", "Italian" });
+	languages.push_back({ "ko_KR", "Korean" });
+	languages.push_back({ "pl", "Polish" });
+	languages.push_back({ "pt_BR", "Portuguese (Brazil)" });
+	languages.push_back({ "ro_RO", "Romansh" });
+	languages.push_back({ "ru", "Russian" });
+	languages.push_back({ "sv", "Swedish" });
+	languages.push_back({ "uk", "Ukrainian" });
+	languages.push_back({ "zh_CN", "Simplified Chinese" });
+	languages.push_back({ "zh_TW", "Traditional Chinese" });
+
+	// Ensures that the ini specified language is present in languages list even if unkown (for example if someone starts to translate a new language)
+	if (std::find_if(languages.begin(), languages.end(), [this](const auto &x) { return x.first == this->szCode; }) == languages.end()) {
+		languages.push_back({ szCode, szCode });
+	}
+}
+
+size_t OptionEntryLanguageCode::GetListSize() const
+{
+	CheckLanguagesAreInitialized();
+	return languages.size();
+}
+string_view OptionEntryLanguageCode::GetListDescription(size_t index) const
+{
+	CheckLanguagesAreInitialized();
+	return languages[index].second;
+}
+size_t OptionEntryLanguageCode::GetActiveListIndex() const
+{
+	CheckLanguagesAreInitialized();
+	auto found = std::find_if(languages.begin(), languages.end(), [this](const auto &x) { return x.first == this->szCode; });
+	if (found == languages.end())
+		return 0;
+	return std::distance(languages.begin(), found);
+}
+void OptionEntryLanguageCode::SetActiveListIndex(size_t index)
+{
+	strcpy(szCode, languages[index].first.c_str());
+	NotifyValueChanged();
+}
+
 LanguageOptions::LanguageOptions()
     : OptionCategoryBase("Language", N_("Language"), N_("Language Settings"))
 {
+	code.SetValueChangedCallback(OptionLanguageCodeChanged);
 }
 std::vector<OptionEntryBase *> LanguageOptions::GetEntries()
 {
-	return {};
+	return {
+		&code,
+	};
 }
 
 } // namespace devilution

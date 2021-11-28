@@ -283,7 +283,7 @@ bool HasTranslation(const std::string &locale)
 
 bool IsSmallFontTall()
 {
-	string_view code(sgOptions.Language.szCode, 2);
+	string_view code = (*sgOptions.Language.code).substr(0, 2);
 	return code == "zh" || code == "ja" || code == "ko";
 }
 
@@ -291,7 +291,7 @@ void LanguageInitialize()
 {
 	translation = { {}, {} };
 
-	const std::string lang = sgOptions.Language.szCode;
+	const std::string lang(*sgOptions.Language.code);
 	SDL_RWops *rw;
 
 	// Translations normally come in ".gmo" files.
