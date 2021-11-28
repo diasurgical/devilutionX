@@ -83,30 +83,7 @@ std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, const c
 	return std::nullopt;
 }
 
-} // namespace
-
-void init_cleanup()
-{
-	if (gbIsMultiplayer && gbRunGame) {
-		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
-	}
-
-	spawn_mpq = std::nullopt;
-	diabdat_mpq = std::nullopt;
-	hellfire_mpq = std::nullopt;
-	hfmonk_mpq = std::nullopt;
-	hfbard_mpq = std::nullopt;
-	hfbarb_mpq = std::nullopt;
-	hfmusic_mpq = std::nullopt;
-	hfvoice_mpq = std::nullopt;
-	lang_mpq = std::nullopt;
-	font_mpq = std::nullopt;
-	devilutionx_mpq = std::nullopt;
-
-	NetClose();
-}
-
-void init_archives()
+std::vector<std::string> GetMPQSearchPaths()
 {
 	std::vector<std::string> paths;
 	paths.push_back(paths::BasePath());
@@ -145,12 +122,11 @@ void init_archives()
 		LogVerbose("MPQ search paths:{}", message);
 	}
 
-#ifndef __ANDROID__
-	// Load devilutionx.mpq first to get the font file for error messages
-	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
-#endif
-	font_mpq = LoadMPQ(paths, "fonts.mpq"); // Extra fonts
+	return paths;
+}
 
+void init_language_archives(const std::vector<std::string> &paths)
+{
 	if (strcasecmp("en", sgOptions.Language.szCode) != 0 || strlen(sgOptions.Language.szCode) != 2) {
 		char langMpqName[10] = {};
 		CopyUtf8(langMpqName, sgOptions.Language.szCode, sizeof(langMpqName));
@@ -158,6 +134,42 @@ void init_archives()
 		strncat(langMpqName, ".mpq", sizeof(langMpqName) - strlen(langMpqName) - 1);
 		lang_mpq = LoadMPQ(paths, langMpqName);
 	}
+}
+
+} // namespace
+
+void init_cleanup()
+{
+	if (gbIsMultiplayer && gbRunGame) {
+		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
+	}
+
+	spawn_mpq = std::nullopt;
+	diabdat_mpq = std::nullopt;
+	hellfire_mpq = std::nullopt;
+	hfmonk_mpq = std::nullopt;
+	hfbard_mpq = std::nullopt;
+	hfbarb_mpq = std::nullopt;
+	hfmusic_mpq = std::nullopt;
+	hfvoice_mpq = std::nullopt;
+	lang_mpq = std::nullopt;
+	font_mpq = std::nullopt;
+	devilutionx_mpq = std::nullopt;
+
+	NetClose();
+}
+
+void init_archives()
+{
+	auto paths = GetMPQSearchPaths();
+
+#ifndef __ANDROID__
+	// Load devilutionx.mpq first to get the font file for error messages
+	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
+#endif
+	font_mpq = LoadMPQ(paths, "fonts.mpq"); // Extra fonts
+
+	init_language_archives(paths);
 
 	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
 	if (!diabdat_mpq) {
@@ -197,6 +209,12 @@ void init_archives()
 		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
 		app_fatal(nullptr);
 	}
+}
+
+void init_language_archives()
+{
+	lang_mpq = std::nullopt;
+	init_language_archives(GetMPQSearchPaths());
 }
 
 void init_create_window()
