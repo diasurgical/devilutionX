@@ -6,6 +6,7 @@
 
 #include <array>
 #include <cstdint>
+#include <cstring>
 
 #include "appfat.h"
 #include "sha.h"
