@@ -973,11 +973,15 @@ void DiabloSplash()
 	if (*sgOptions.StartUp.splash == StartUpSplash::LogoAndTitleDialog)
 		play_movie("gendata\\logo.smk", true);
 
-	if (gbIsHellfire && *sgOptions.Hellfire.intro) {
-		play_movie("gendata\\Hellfire.smk", true);
-	}
-	if (!gbIsHellfire && !gbIsSpawn && *sgOptions.Diablo.intro) {
-		play_movie("gendata\\diablo1.smk", true);
+	auto &intro = gbIsHellfire ? sgOptions.StartUp.hellfireIntro : sgOptions.StartUp.diabloIntro;
+
+	if (*intro != StartUpIntro::Off) {
+		if (gbIsHellfire)
+			play_movie("gendata\\Hellfire.smk", true);
+		else
+			play_movie("gendata\\diablo1.smk", true);
+		if (*intro == StartUpIntro::Once)
+			intro.SetValue(StartUpIntro::Off);
 	}
 
 	if (IsAnyOf(*sgOptions.StartUp.splash, StartUpSplash::TitleDialog, StartUpSplash::LogoAndTitleDialog))
