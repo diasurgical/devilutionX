@@ -26,7 +26,6 @@ Rectangle rectDescription;
 enum class SpecialMenuEntry {
 	None = -1,
 	PreviousMenu = -2,
-	ToggleSpawn = -4,
 };
 
 bool IsValidEntry(OptionEntryBase *pOptionEntry)
@@ -69,11 +68,6 @@ void ItemSelected(int value)
 			break;
 		case SpecialMenuEntry::PreviousMenu:
 			endMenu = true;
-			break;
-		case SpecialMenuEntry::ToggleSpawn:
-			gbIsSpawn = !gbIsSpawn;
-			endMenu = true;
-			recreateUI = true;
 			break;
 		}
 		return;
@@ -130,13 +124,8 @@ void UiSettingsMenu()
 		vecDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
 		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
 
-		if (diabdat_mpq)
-			vecDialogItems.push_back(std::make_unique<UiListItem>(gbIsSpawn ? _("Switch to Fullgame") : _("Switch to Shareware"), static_cast<int>(SpecialMenuEntry::ToggleSpawn), UiFlags::ColorUiGold));
-
-		bool switchOptionExists = vecDialogItems.size() > 0;
-		int catCount = switchOptionExists ? 1 : 0;
-
-		size_t itemToSelect = switchOptionExists ? 0 : 1;
+		size_t catCount = 0;
+		size_t itemToSelect = 1;
 
 		for (auto *pCategory : sgOptions.GetCategories()) {
 			bool categoryCreated = false;

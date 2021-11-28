@@ -236,6 +236,7 @@ struct StartUpOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	OptionEntryEnum<StartUpGameMode> gameMode;
+	OptionEntryBoolean shareware;
 	/** @brief Play game intro video on diablo startup. */
 	OptionEntryEnum<StartUpIntro> diabloIntro;
 	/** @brief Play game intro video on hellfire startup. */

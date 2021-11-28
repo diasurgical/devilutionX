@@ -247,6 +247,11 @@ void OptionGameModeChanged()
 	gbIsHellfire = *sgOptions.StartUp.gameMode == StartUpGameMode::Hellfire;
 }
 
+void OptionSharewareChanged()
+{
+	gbIsSpawn = *sgOptions.StartUp.shareware;
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -521,6 +526,7 @@ StartUpOptions::StartUpOptions()
               // Ask is missing, cause we want to hide it from UI-Settings.
               { StartUpGameMode::Hellfire, N_("Hellfire") },
           })
+    , shareware("Shareware", OptionEntryFlags::NeedDiabloMpq | OptionEntryFlags::RecreateUI, N_("Restrict to Shareware"), N_("Makes the game compatible with the demo. Enables multiplayer with friends who don't own a full copy of Diablo."), false)
     , diabloIntro("Diablo Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Shown Intro cinematic."), StartUpIntro::Once,
           {
               { StartUpIntro::Off, N_("OFF") },
@@ -541,11 +547,13 @@ StartUpOptions::StartUpOptions()
           })
 {
 	gameMode.SetValueChangedCallback(OptionGameModeChanged);
+	shareware.SetValueChangedCallback(OptionSharewareChanged);
 }
 std::vector<OptionEntryBase *> StartUpOptions::GetEntries()
 {
 	return {
 		&gameMode,
+		&shareware,
 		&diabloIntro,
 		&hellfireIntro,
 		&splash,
