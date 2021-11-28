@@ -914,7 +914,7 @@ void DiabloInit()
 	init_archives();
 	was_archives_init = true;
 
-	if (forceSpawn)
+	if (forceSpawn || *sgOptions.StartUp.shareware)
 		gbIsSpawn = true;
 	if (forceDiablo || *sgOptions.StartUp.gameMode == StartUpGameMode::Diablo)
 		gbIsHellfire = false;
