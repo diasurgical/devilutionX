@@ -3,10 +3,12 @@
  *
  * Implementation of functions for compression and decompressing MPQ data.
  */
-#include <SDL.h>
 #include <array>
 #include <cctype>
+#include <cstring>
 #include <memory>
+
+#include <SDL.h>
 
 #include "encrypt.h"
 #include "pkware.h"
