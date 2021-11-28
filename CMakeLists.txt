@@ -119,6 +119,12 @@ option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
                        "DEVILUTIONX_SYSTEM_LIBFMT AND NOT DIST" ON)
 
+if (NOT USE_SDL1)
+  option(DEVILUTIONX_SYSTEM_SDL2 "Use system-provided SDL2" ON)
+  cmake_dependent_option(DEVILUTIONX_STATIC_SDL2 "Link static SDL2" OFF
+                        "DEVILUTIONX_SYSTEM_SDL2 AND NOT DIST" ON)
+endif()
+
 option(DEVILUTIONX_SYSTEM_SDL_IMAGE "Use system-provided SDL_image" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_SDL_IMAGE "Link static SDL_image" OFF
                        "DEVILUTIONX_SYSTEM_SDL_IMAGE AND NOT DIST" ON)
@@ -164,6 +170,10 @@ if(NOT DISABLE_LTO)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO ON)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_MINSIZEREL ON)
   endif()
+endif()
+
+if(TSAN)
+  set(ASAN OFF)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
@@ -298,32 +308,36 @@ if(NOT DEVILUTIONX_SYSTEM_BZIP2)
   add_subdirectory(3rdParty/bzip2)
 endif()
 
-if(ANDROID)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
-elseif(USE_SDL1)
+if(USE_SDL1)
   find_package(SDL REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
 else()
-  find_package(SDL2 REQUIRED)
-  if(TARGET SDL2::SDL2)
-    set(SDL2_MAIN SDL2::SDL2main)
-  elseif(TARGET SDL2::SDL2-static)
-    # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
-    # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
-    if(CMAKE_VERSION VERSION_LESS "3.18")
-      # Aliasing local targets is not supported on CMake < 3.18, so make it global.
-      set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
+  if(DEVILUTIONX_SYSTEM_SDL2)
+    find_package(SDL2 REQUIRED)
+    if(TARGET SDL2::SDL2)
+      set(SDL2_MAIN SDL2::SDL2main)
+    elseif(TARGET SDL2::SDL2-static)
+      # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
+      # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
+      if(CMAKE_VERSION VERSION_LESS "3.18")
+        # Aliasing local targets is not supported on CMake < 3.18, so make it global.
+        set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
+      endif()
+      add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
+      set(SDL2_MAIN SDL2::SDL2main)
+    else()
+      # Assume an older Debian derivate that comes with an sdl2-config.cmake
+      # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
+      add_library(SDL2_lib INTERFACE)
+      target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
+      target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
+      # Can't define an INTERFACE target with ::, so alias instead
+      add_library(SDL2::SDL2 ALIAS SDL2_lib)
     endif()
-    add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
-    set(SDL2_MAIN SDL2::SDL2main)
   else()
-    # Assume an older Debian derivate that comes with an sdl2-config.cmake
-    # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
-    add_library(SDL2_lib INTERFACE)
-    target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
-    target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
-    # Can't define an INTERFACE target with ::, so alias instead
-    add_library(SDL2::SDL2 ALIAS SDL2_lib)
+    add_subdirectory(3rdParty/SDL2)
+    set(SDL2_MAIN SDL2::SDL2main)
+    list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/3rdParty/SDL2/CMake")
   endif()
 endif()
 
