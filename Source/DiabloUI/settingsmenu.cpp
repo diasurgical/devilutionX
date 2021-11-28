@@ -32,7 +32,12 @@ enum class SpecialMenuEntry {
 
 bool IsValidEntry(OptionEntryBase *pOptionEntry)
 {
-	return HasNoneOf(pOptionEntry->GetFlags(), OptionEntryFlags::Invisible | (gbIsHellfire ? OptionEntryFlags::OnlyDiablo : OptionEntryFlags::OnlyHellfire));
+	auto flags = pOptionEntry->GetFlags();
+	if (HasAnyOf(flags, OptionEntryFlags::NeedDiabloMpq) && !diabdat_mpq)
+		return false;
+	if (HasAnyOf(flags, OptionEntryFlags::NeedHellfireMpq) && !hellfire_mpq)
+		return false;
+	return HasNoneOf(flags, OptionEntryFlags::Invisible | (gbIsHellfire ? OptionEntryFlags::OnlyDiablo : OptionEntryFlags::OnlyHellfire));
 }
 
 std::vector<DrawStringFormatArg> CreateDrawStringFormatArgForEntry(OptionEntryBase *pEntry)

@@ -58,6 +58,10 @@ enum class OptionEntryFlags {
 	OnlyDiablo = 1 << 4,
 	/** @brief After option is changed the UI needs to be recreated. */
 	RecreateUI = 1 << 5,
+	/** @brief diablo.mpq must be present. */
+	NeedDiabloMpq = 1 << 6,
+	/** @brief hellfire.mpq must be present. */
+	NeedHellfireMpq = 1 << 7,
 };
 use_enum_as_flags(OptionEntryFlags);
 
