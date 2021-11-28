@@ -321,26 +321,20 @@ msgid "OK"
 msgstr "OK"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
-#, fuzzy
-#| msgid "Down to Diablo"
 msgid "Switch to Diablo"
-msgstr "Dolů do Hnízda úrovně {:d}"
+msgstr ""
 
 #: Source/DiabloUI/extrasmenu.cpp:41
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Switch to Hellfire"
-msgstr "Ukonči Hellfire"
+msgstr ""
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
 msgstr ""
 
 #: Source/DiabloUI/extrasmenu.cpp:43
-#, fuzzy
-#| msgid "in the shareware"
 msgid "Switch to Shareware"
-msgstr "v shareware"
+msgstr ""
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
@@ -451,10 +445,8 @@ msgid "Create Game"
 msgstr "Vytvoř Hru"
 
 #: Source/DiabloUI/selgame.cpp:93
-#, fuzzy
-#| msgid "Create Game"
 msgid "Create Public Game"
-msgstr "Vytvoř Hru"
+msgstr "Vytvoř Veřejnou Hru"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
@@ -761,10 +753,8 @@ msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Opravdu chceš smazat postavu \"{:s}\"?"
 
 #: Source/DiabloUI/selstart.cpp:43
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Enter Hellfire"
-msgstr "Ukonči Hellfire"
+msgstr ""
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
@@ -874,10 +864,8 @@ msgid "password: "
 msgstr "heslo: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "Quit Game"
 msgid "Public Game"
-msgstr "Ukonči Hru"
+msgstr "Veřejná Hra"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -1211,10 +1199,8 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:797
-#, fuzzy
-#| msgid "Hellfire Help"
 msgid "Force Hellfire mode"
-msgstr "Nápověda k Hellfire"
+msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:798
@@ -3647,24 +3633,20 @@ msgstr "Olej Nepropustnosti"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
 #: Source/items.cpp:1183
-#, fuzzy
-#| msgid "{0} of {1}"
 msgctxt "spell"
 msgid "{0} of {1}"
-msgstr "{:s} {:s}"
+msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1193
-#, fuzzy
 msgctxt "spell"
 msgid "{0} {1} of {2}"
-msgstr "{:s} {:s} {:s}"
+msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1214
-#, fuzzy
 msgid "{0} {1} of {2}"
-msgstr "{:s} {:s} {:s}"
+msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
 #: Source/items.cpp:1217
@@ -6819,6 +6801,11 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
+"Ahh, pribeh o nasem Krali. Leoricuv tragicky pad byl pro tuto zemi hroznou "
+"ranou. Lide Krale vzdy milovali a ted se ho smrtelne boji. Otazka, kterou si "
+"stale kladu, zni, jak mohl padnout tak daleko od Svetla, protoze Leoric byl "
+"vzdy ten nejsvetejsi clovek. Jedine nejdesivejsi sily Pekla mohly tak uplne "
+"znicit dobreho cloveka..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:17
@@ -6841,6 +6828,23 @@ msgid ""
 "levels beneath the Cathedral. Please, good master, put his soul at ease by "
 "destroying his now cursed form..."
 msgstr ""
+"Vesnice potrebuje tvou pomoc, dobry pane! Pred nekolika mesici byl unesen "
+"princ Albrecht, syn Krale Leorica. Kral se straslive rozzuril a hledal ve "
+"vesnici sveho ztraceneho syna. S kazdym dalsim dnem se zdalo, ze Leoric "
+"sklouzava stale vice do silenstvi. Snazil se vinit nevinne vesnicany ze "
+"zmizeni jeho syna a brutalne je popravoval. Necela polovina z nas prezila "
+"jeho silenstvi...\n"
+" \n"
+"Kralovi Rytiri a Knezi se ho pokusili uklidnit, ale obratil se proti nim a "
+"bohuzel byli nuceni ho zabit. S poslednim vydechnutim Kral privolal hrozivou "
+"kletbu na sve drivejsi privrzence. Prisahal, ze mu budou v temnote slouzit "
+"naveky...\n"
+" \n"
+"Tenkrat se veci zvratili temneji nez jsem povazoval za mozne! Nas byvaly "
+"Kral povstal z vecneho spanku a nyni veli zastupum nemrtvych priser v "
+"Labyrintu. Jeho telo bylo pohrbeno v hrobce tri patra pod Katedralou. "
+"Prosim, dobry pane, uvolni jeho dusi tim, ze znicis jeho soucasnou prokletou "
+"podobu..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:19
@@ -6849,6 +6853,8 @@ msgid ""
 "down there, waiting in the putrid darkness for his chance to destroy this "
 "land..."
 msgstr ""
+"Jak jsem ti rekl, dobry pane, Kral byl pohrben tri patra pod Katedralou. Je "
+"tam dole a ceka ve zkazene temnote na svou sanci znicit tuto zemi..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:21
@@ -6858,6 +6864,10 @@ msgid ""
 "consumes our land, for your victory is a good omen. May Light guide you on "
 "your way, good master."
 msgstr ""
+"Kletba naseho Krale pominula, ale bojim se, ze to byla pouze cast nejakeho "
+"vetsiho zla. Avsak jiz mozna muzeme byt zachraneni pred temnotou, ktera "
+"suzuje nasi zem, protoze tve vitezstvi je dobrym znamenim. Necht te svetlo "
+"provazi na ceste."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:23
@@ -6867,6 +6877,10 @@ msgid ""
 "this kingdom from that day forward, but perhaps if you were to free his "
 "spirit from his earthly prison, the curse would be lifted..."
 msgstr ""
+"Ztrata syna byla pro Krale Leorica prilis tezka. Udelal jsem, co jsem mohl, "
+"abych zmirnil jeho silenstvi, ale nakonec ho premohlo. Od toho dne se nad "
+"jeho kralovstvim vznasi temna kletba, ale mozna pokud uvolnis jeho dusi z "
+"pozemskeho vezeni, kletba snad pomine..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:25
@@ -6875,6 +6889,8 @@ msgid ""
 "the kind and just ruler that he was. His death was so sad and seemed very "
 "wrong, somehow."
 msgstr ""
+"Nerada myslim na to, jak Kral zemrel. Radeji vzpominam na jeho laskavost a "
+"spravedlivou vladu. Jeho smrt byla tak nestastna a vypadale velice spatne."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:27
@@ -6884,6 +6900,10 @@ msgid ""
 "mithril for him, as well as a field crown to match. I still cannot believe "
 "how he died, but it must have been some sinister force that drove him insane!"
 msgstr ""
+"Vyrobil jsem mnoho zbrani a hodne zbroji, kterymi Kral Leoric vybavil sve "
+"rytire. Take jsem pro nej vykoval ohromny obourucni mec z nejlepsiho mitrilu "
+"a take odpovidajici korunu do boje. Stale nemohu uverit tomu, jak zemrel, "
+"ale to, co ho uvrhlo do silenstvi, musela byt nejaka zlovestna sila!"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:29
@@ -6891,6 +6911,8 @@ msgid ""
 "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is "
 "King. King, so you hear me? HAIL TO THE KING!"
 msgstr ""
+"Nestaram se o to. Poslouchej, zadny kostlivec nemuze byt MUJ kral. Leoric je "
+"Kral. Kral, rozumis mi ? SLAVA KRALI!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:31
@@ -6900,6 +6922,10 @@ msgid ""
 "you do not stop his reign, he will surely march across this land and slay "
 "all who still live here."
 msgstr ""
+"Mrtvi, kteri kraci mezi zivimi, nasleduji prokleteho Krale. Ma moc vzkrisit "
+"jeste vice valecniku do stale se rozrustajici armady nemrtvych. Jestli "
+"nezastavis jeho vladu, urcite se vyda do teto zeme a zavrazdi vsechny, kteri "
+"jsou jeste zivi."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:33
@@ -6909,6 +6935,9 @@ msgid ""
 "need something to use against this King of the undead, then I can help you "
 "out..."
 msgstr ""
+"Podivej, ja tady delam obchody. Neprodavam informace a nestaram se o "
+"jakehosi Krale, ktery muze byt mrtvy dele nez ja jsem zivy. Jestli "
+"potrebujes neco proti tomu Krali nemrtvych, tak bych ti s tim mohl pomoct..."
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
 #: Source/textdat.cpp:35
@@ -6916,6 +6945,8 @@ msgid ""
 "The warmth of life has entered my tomb. Prepare yourself, mortal, to serve "
 "my Master for eternity!"
 msgstr ""
+"Teplo zivota vstoupilo do moji hrobky. Smrtelniku, priprav se slouzit memu "
+"Panu celou vecnost!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:37
@@ -6926,6 +6957,11 @@ msgid ""
 "led them to believe that it too holds some arcane powers. Hmm, perhaps they "
 "are not all as smart as we had feared..."
 msgstr ""
+"Vidim, ze te to divne chovani docela popletlo. Jelikoz se mnoho demonu boji "
+"slunecniho svetla a veri, ze vladne velkou moci, tak se domnivam, ze "
+"vychazejici slunce zobrazene na znaku, o kterem mluvis, je presvedcilo, ze "
+"znak take vladne jakousi tajemnou silou. Hmm, mozna nejsou vsichni az tak "
+"chytri, jak jsme se obavali..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -6939,6 +6975,13 @@ msgid ""
 "the sign to my inn. I don't know why the demons would steal my sign but "
 "leave my family in peace... 'tis strange, no?"
 msgstr ""
+"Pane, chci se s vami podelit o podivny zazitek. Vim, ze mas velke vedomosti "
+"o tech zrudach, ktere obyvaji labyrint, a toto je neco, cemu nemohu za cely "
+"zivot porozumet... V noci me probudilo nejake skrabani z venku mojeho "
+"hostince. Kdyz jsem vyhledl z moji loznice, videl jsem stiny nejakych potvor "
+"podobnych demonum na dvore hostince. Po kratke chvilce utekli pryc, ale "
+"predtim jeste ukradli znak mojeho hostince. Vubec nechapu, proc by demoni "
+"meli krast muj znak, ale nechat moji rodinu na pokoji... je to divne, ze?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
@@ -6949,6 +6992,11 @@ msgid ""
 "cap was left in one of the rooms by a magician who stayed here some time "
 "ago. Perhaps it may be of some value to you."
 msgstr ""
+"Oh, nemusel jsi mi prinest zpet muj znak, ale urcite mi to usetri vydaje za "
+"vyrobu noveho. Dobre, podivam se, co bych ti mohl dat jako odmenu za "
+"nalezeni mojeho znaku? Hmmm, copak tu mame... ah, ano! Tuhle capku nechal v "
+"jednom pokoji carodej, ktery tady pred nejakou dobou bydlel. Treba se ti "
+"muze nejak hodit."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -6957,6 +7005,9 @@ msgid ""
 "- is nothing sacred? I hope that Ogden and Garda are all right. I suppose "
 "that they would come to see me if they were hurt..."
 msgstr ""
+"Muj boze, demoni behaji po nocich ve vesnici a pleni nase domovi - copak jim "
+"nic neni svate? Doufam, ze jsou Ogden a Garda v poradku. Myslim, ze by za "
+"mnou meli zajit, jestli nejsou zraneni..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:45
@@ -6965,6 +7016,8 @@ msgid ""
 "right through the whole thing. Thank the Light that those monsters didn't "
 "attack the inn."
 msgstr ""
+"Oh ne! Tak tam se podel ten znak? Moje babicka a ja jsme celou tu vec urcite "
+"zaspaly. Diky bohum, ze ty prisery nezautocili na hostinec."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:47
@@ -6974,6 +7027,10 @@ msgid ""
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost."
 msgstr ""
+"Demoni ukradli Ogdenum znak, rikas? To nezni moc jako krutosti, o kterych "
+"jsem slysel - nebo je videl. \n"
+" \n"
+"Demoni se zajimaji o vytrhavani srdci z tela, ne o nejake znaky."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:49
@@ -6983,6 +7040,10 @@ msgid ""
 "new sign with some pretty drawing on it. Maybe a nice mug of ale or a piece "
 "of cheese..."
 msgstr ""
+"Vis co si myslim? Nekdo vezme ten znak a budou za neho chtit hodne prachu. "
+"Kdybych ja byl Ogden... a ja nejsem, ale kdybych byl... proste bych koupil "
+"novy znak s nejakym fajnym obrazkem. Mozna pekny dzbanek pivka nebo kus "
+"sira..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:51
@@ -6991,6 +7052,9 @@ msgid ""
 " \n"
 "Never let their erratic actions confuse you, as that too may be their plan."
 msgstr ""
+"Nikdo smrtelny nemuze doopravdy pochopit mysl demonu. \n"
+" \n"
+"Nikdy se nenech jejich divnymi ciny zmast, protoze to muze byt jejich plan."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:53
@@ -7001,6 +7065,11 @@ msgid ""
 "Look, I got over simple sign stealing months ago. You can't turn a profit on "
 "a piece of wood."
 msgstr ""
+"Co - rika, ze jsem to vzal ja? Predpokladam, ze Griswold je na jeho "
+"strane. \n"
+" \n"
+"Podivej, obycejneho kradeni znaku jsem nechal pred mesici. Na kusu dreva "
+"nemuzes vydelat."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:55
@@ -7009,16 +7078,19 @@ msgid ""
 "no leave with life! You kill big uglies and give back Magic. Go past corner "
 "and door, find uglies. You give, you go!"
 msgstr ""
+"Hej - Ty, co zabijis vsechny! Dones mi Magicky Znak nebo mi zautocit! Ty "
+"neodejit zivy! Ty zabit velke osklivaky a donest Magii. Jdi za roh a dvere, "
+"najde osklivaky. Ty das, ty pujdes!"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else..."
-msgstr ""
+msgstr "Ty zabit osklivaky, dostat znak. Ty prinest mi, jinak..."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic!"
-msgstr ""
+msgstr "Ty dal! Ano, dobre! Jdi, my silni. My zabit vsechny s velkou Magii!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:61
@@ -7047,6 +7119,27 @@ msgid ""
 "You must hurry and save the prince from the sacrificial blade of this "
 "demented fiend!"
 msgstr ""
+"To nevesti dobre veci, protoze to potvrzuje me nejtemnejsi obavy. I kdyz "
+"jsem nechtel uverit davnym legendam, nyni je nemohu poprit. Mozna nastal cas "
+"k tomu, abych odhalil, kdo jsem.\n"
+" \n"
+"Me prave jmeno je Deckard Cain Starsi a jsem poslednim nasledovnikem davneho "
+"Bratrstva, ktere bylo zasveceno ochrane tajemstvi o nekonecnem zlu. Zlu, "
+"ktere bylo nyni ocividne uvolneno.\n"
+" \n"
+"Arcibiskup Lazarus, drive nejduveryhodnejsi poradce Krale Leorica, vedl do "
+"Labyrintu skupinu vesnicanu, aby nalezli Kralova ztraceneho syna, Albrechta. "
+"Uplynul nejaky cas nez se vratili a pouze nekolik jich uniklo zivych.\n"
+" \n"
+"Proklej me za blahovost! Mel jsem odhalit jeho skrytou zradu. Musel to byt "
+"sam Lazarus, kdo unesl Albrechta a ukryl ho v Labyrintu. Nechapu, proc se "
+"Arcibiskup obratil k temnote, nebo jake ma umysly s tim ditetem. Ledaze by "
+"ho chtel obetovat svemu temnemu panovi!\n"
+" \n"
+"To musel byt jeho plan! Ti, kteri prezili z jeho 'zachranne skupiny', "
+"rikaji, ze naposledy Lazara spatrili, jak bezi do nejhlubsiho nitra "
+"labyrintu. Musis si pospisit a zachranit prince pred obetnim nozem toho "
+"pomateneho zloducha!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:63
@@ -7054,6 +7147,8 @@ msgid ""
 "You must hurry and rescue Albrecht from the hands of Lazarus. The prince and "
 "the people of this kingdom are counting on you!"
 msgstr ""
+"Musis spechat a zachranit Albrechta z rukou Lazara. Princ a lide tohoto "
+"kralovstvi na tebe spolehaji!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:65
@@ -7069,6 +7164,15 @@ msgid ""
 "again sow chaos in the realm of mankind. You must venture through the portal "
 "and destroy Diablo before it is too late!"
 msgstr ""
+"Tvuj pribeh je dost hrozivy, priteli. Lazarus jiste shori v Pekle za sve "
+"hrozne ciny. Chlapec, ktereho jsi popsal, neni nas princ, ale verim, ze "
+"Albrecht jeste muze byt v nebezpeci. Symbol moci, o kterem mluvis musi byt "
+"portal do sameho srdce Labyrintu.\n"
+" \n"
+"Mel bys vedet toto, priteli - Zlo, proti kteremu bojujes je temny Pan Hruzy. "
+"Smrtelnikum je znam jako Diablo. To on byl pred mnoha staletimi uveznen v "
+"Labyrintu a verim, ze se opet snazi rozsevat chaos v lidskych risich. Musis "
+"projit portalem a znicit Diabla driv nez bude pozde!"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:67
@@ -7078,6 +7182,10 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
+"Lazarus byl Arcibiskup, ktery vedl mnoho vesnicanu do Labyrintu. Tenkrat "
+"jsem ztratil mnoho dobrych pratel a Lazarus se nikdy nevratil. Doufam, ze "
+"byl zabit spolu s ostatnimi. Jestli pro mne chces udelat laskavost, dobry "
+"pane - prosim nemluv o tom dni s Farnhamem."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:71
@@ -7087,6 +7195,10 @@ msgid ""
 "that. He was an Archbishop, and always seemed to care so much for the "
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
+"Byl jsem sokovan, kdyz jsem slysel, co vesnicane te noci planuji. Myslel "
+"jsem, ze Lazarus ma ze vsech lidi nejvice zdraveho rozumu. Byl Arcibiskup a "
+"vzdy se velmi staral o obcany Tristramu. Bylo jich zraneno prilis mnoho, "
+"nemohl jsem je zachranit vsechny..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -7095,6 +7207,9 @@ msgid ""
 "mother's funeral, and was supportive of my grandmother and myself in a very "
 "troubled time. I pray every night that somehow, he is still alive and safe."
 msgstr ""
+"Pamatuji si, ze Lazarus byl velmi laskavy a dobrotivy. Mluvil na pohrbu moji "
+"matky a pomahal moji babicce a mne v nejhorsich dobach. Kazdou noc se "
+"modlim, aby byl nejak nazivu a v bezpeci."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:75
@@ -7104,6 +7219,10 @@ msgid ""
 "much as lift his mace against them. He just ran deeper into the dim, endless "
 "chambers that were filled with the servants of darkness!"
 msgstr ""
+"Byl jsem tam, kdyz nas Lazarus vedl do Labyrintu. Mluvil o svate odplate, "
+"ale kdyz jsme zacali bojovat s temi zplozenci pekla, ani proti nim nepozvedl "
+"svuj palcat. Jenom bezel dale serymi, nekonecnymi komnatami, ktere byly plne "
+"sluzebniku temnoty!"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:77
@@ -7112,6 +7231,9 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
+"Bodaji, pak kousou, pak jsou vsude kolem tebe. Lhar! LHAR! Vsichni jsou "
+"mrtvi! Mrtvi! Slysis me? Jenom padaji a padaji... jejich krev se rozliva "
+"vsude po podlaze... vsechno je to jeho chyba..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:79
@@ -7120,6 +7242,9 @@ msgid ""
 "conflict within his being. He poses a great danger, and will stop at nothing "
 "to serve the powers of darkness which have claimed him as theirs."
 msgstr ""
+"Neznam toho Lazara, o kterem mluvis, ale citim v jeho dusi velky rozpor. "
+"Predstavuje velke nebezpeci a nezastavi se pred nicim, aby slouzil temnote, "
+"ktera ho prohlasila za sveho."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:81
@@ -7128,6 +7253,9 @@ msgid ""
 "down there. Didn't help save my leg, did it? Look, I'll give you a free "
 "piece of advice. Ask Farnham, he was there."
 msgstr ""
+"Ano, spravedlivy Lazarus, ktery byl taak ucinny proti tem priseram tam dole. "
+"Nepomohl snad zachranit moji nohu, ze? Podivej, dam ti radu zadarmo. Zeptej "
+"se Farnhama, byl tam."
 
 #. TRANSLATORS: Quest dialog spoken by Lazarus (Hostile)
 #: Source/textdat.cpp:83
@@ -7135,6 +7263,8 @@ msgid ""
 "Abandon your foolish quest. All that awaits you is the wrath of my Master! "
 "You are too late to save the child. Now you will join him in Hell!"
 msgstr ""
+"Zapomen na svou blaznivou pout. Vse, co te ceka, je hnev meho Pana! Prisel "
+"jsi pozde, abys zachranil to dite. Ted se k nemu pridas v Pekle!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:86
@@ -7145,6 +7275,10 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
+"Hmm, ani nevim, jestli ti muzu rici neco, co by ti nejak pomohlo. Voda, "
+"ktera plni nase studny, prichazi z podzemniho pramene. Slysel jsem o tunelu, "
+"ktery vede k velkemu jezeru - mozna jsou jedno a totez. Nanestesti nevim, co "
+"by mohlo zpusobit, ze jsou nase zasoby vody otravene."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -7155,6 +7289,10 @@ msgid ""
 " \n"
 "Please, do what you can or I don't know what we will do."
 msgstr ""
+"Vzdy jsem se ve sve zasobarne snazil udrzovat velke zasoby jidla a piti, ale "
+"kdyz nema cele mesto zadny zdroj ciste vody, i nase zasoby brzy dojdou. \n"
+" \n"
+"Prosim, udelej, co muzes, jinak nevim co budeme delat."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:90
@@ -7165,6 +7303,11 @@ msgid ""
 "passage that leads to the springs that serve our town. Please find what has "
 "caused this calamity, or we all will surely perish."
 msgstr ""
+"Jsem rad, ze jsem te zastihl! Voda z nasich studni se stala poloslanou a "
+"hnijici a nekteri vesnicane onemocneli, kdyz ji pili. Nase zasoby ciste vody "
+"rychle dochazeji. Verim, ze nekde je pruchod, ktery vede k pramenu, jez "
+"zasobuje cele nase mesto. Prosim, zjisti, co zpusobilo tuhle pohromu, jinak "
+"vsichni jistojiste zahyneme."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -7174,6 +7317,10 @@ msgid ""
 " \n"
 "We cannot survive for long without your help."
 msgstr ""
+"Prosim, musis spechat. S kazdou dalsi hodinou jsme blize tomu, ze nebudeme "
+"mit co pit. \n"
+" \n"
+"Bez tve pomoci nemuzeme dlouho prezit."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:94
@@ -7183,6 +7330,10 @@ msgid ""
 "perseverance and courage gives us hope. Please take this ring - perhaps it "
 "will aid you in the destruction of such vile creatures."
 msgstr ""
+"Co to rikas - pouha pritomnost demonu zpusobila, ze se voda zkazila? Oh, pod "
+"nasim mestem ciha opravdu velke zlo, ale tva vytrvalost a odvaha nam dava "
+"nadeji. Prosim, vezmi si tento prsten - treba ti pomuze pri zniceni tech "
+"desivych priser."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:96
@@ -7190,6 +7341,8 @@ msgid ""
 "My grandmother is very weak, and Garda says that we cannot drink the water "
 "from the wells. Please, can you do something to help us?"
 msgstr ""
+"Moje babicka je velmi slaba a Garda rika, ze nemuzeme pit vodu ze studni. "
+"Prosim, muzes udelat neco, abys nam pomohl?"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:98
@@ -7198,11 +7351,14 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
+"Pepin ti rekl pravdu. Nalehave potrebujeme cistou vodu a co nejdrive. "
+"Zkousel jsem vycistit jednu z mensich studni, ale zase se zaplnila hnusnou "
+"spinou. Urcite je znecistena u pramene."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
 msgid "You drink water?"
-msgstr ""
+msgstr "Ty pijes vodu?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:101
@@ -7213,6 +7369,11 @@ msgid ""
 "Know this - demons are at the heart of this matter, but they remain ignorant "
 "of what they have spawned."
 msgstr ""
+"Lide z Tristramu zemrou, pokud nemuzes dostat cistou vodu do jejich "
+"studni. \n"
+" \n"
+"Mel bys vedet, ze podstatou teto veci jsou demoni, ale vubec si nevsimaji "
+"toho, co zpusobili."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:103
@@ -7220,6 +7381,8 @@ msgid ""
 "For once, I'm with you. My business runs dry - so to speak - if I have no "
 "market to sell to. You better find out what is going on, and soon!"
 msgstr ""
+"Pro jednou s tebou souhlasim. Moje obchody vyschnou - to ti rikam - kdyz "
+"nebudu mit komu prodavat. Nejlip bys mel zjistit, co se deje!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:105
@@ -7231,6 +7394,12 @@ msgid ""
 "the attempt to steal that treasure would be forever bound to defend it. A "
 "twisted, but strangely fitting, end?"
 msgstr ""
+"Kniha, ktera vypravi o komnate lidskych kosti? Dobra, Komnata kosti je "
+"zminovana v jistych starych spiscich, ktere jsem studoval v knihovnach na "
+"Vychode. Tyto svazky naznacovali, ze kdyz se Panove podsveti rozhodnou "
+"chranit velke poklady, vytvori oblast, kde budou vsichni ti, kteri se "
+"pokusili ukrast ten poklad, naveky svazani k jeho ochrane. Pokroucene, ale "
+"velmi ucinne, ze?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
@@ -7238,6 +7407,8 @@ msgid ""
 "I am afraid that I don't know anything about that, good master. Cain has "
 "many books that may be of some help."
 msgstr ""
+"Bojim se, ze o tom nevim nic, dobry pane. Cain ma mnoho knih, ktere ti mohou "
+"nejak pomoci."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:109
@@ -7245,6 +7416,8 @@ msgid ""
 "This sounds like a very dangerous place. If you venture there, please take "
 "great care."
 msgstr ""
+"To zni jako velmi nebezpecne misto. Pokud si tam troufnes jit, prosim bud "
+"opatrny."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:111
@@ -7252,6 +7425,8 @@ msgid ""
 "I am afraid that I haven't heard anything about that. Perhaps Cain the "
 "Storyteller could be of some help."
 msgstr ""
+"Bohuzel jsem nikdy neslysela o nicem takovem. Mozna Cain Vypravec by ti mohl "
+"nejak pomoct."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:113
@@ -7260,6 +7435,8 @@ msgid ""
 "many things, and it would not surprise me if he had some answers to your "
 "question."
 msgstr ""
+"Nevim nic o tom miste, ale muzes se zkusit zeptat Caina Mluvi o mnoha vecech "
+"a neprekvapilo by me, kdyby mohl zodpovedet tvoje otazky."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
@@ -7268,6 +7445,9 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
+"Oukej, tak poslouchej. Je tu ta drevena komnata, vis. A jeho zena, vis - ona "
+"- rika stromum... protoze musis pockat. Pak rikam, to proti nemu muze "
+"fungovat, ale jestli myslis, ze za to budu PLATIT... ty... uhh... jasne."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -7277,6 +7457,10 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
+"Stanes se vecnym sluzebnikem temnych panu, pokud zahynes v teto proklete "
+"oblasti. \n"
+" \n"
+"Vstup do Komnaty kosti na vlastni riziko."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -7285,6 +7469,9 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
+"Ohromny a zahadny poklad, rikas? Mozna bych mel zajem vzit od tebe par "
+"veci... nebo jeste lepe, nepotrebujes nejake vzacne a drahe vybaveni, aby "
+"ses dostal skrz tu zkousku?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -7295,6 +7482,11 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
+"Zda se, ze Arcibiskup Lazarus presvedcil mnoho vesnicanu k vyprave do "
+"Labyrintu, aby nalezli Kralova ztraceneho syna. Hral si s jejich strachem a "
+"udelal z nich zurivy dav. Nikdo z nich nebyl pripraven na to, co lezelo v "
+"chladne zemi... Lazarus je tam dole opustil - zanechal je ve sparech "
+"nepredstavitelnych priser - aby tam zemreli."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -7302,6 +7494,8 @@ msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
 msgstr ""
+"Ano, Farnham mumlal cosi o priserne bestii, ktera se zurive ohanela zbrani. "
+"Myslim, ze mu rikal reznik."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -7313,6 +7507,12 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
+"Proboha, ja znam toho odporneho demona. Mnozi z tech, kteri ze skupiny "
+"vedene Lazarem prezili a vyplazili se z Katedraly, meli na tele jizvy, ktere "
+"jim zpusobil Reznikuv hnev. Nevim, cim rozrezaval sve obeti, ale nemuze to "
+"byt z tohoto sveta. Zanecha to rany hnisajici a dokonce i ja jsem shledaval "
+"temer nemoznym je lecit. Davej si velky pozor, jestli planujes valcit s tim "
+"hroznym demonem..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:127
@@ -7320,6 +7520,8 @@ msgid ""
 "When Farnham said something about a butcher killing people, I immediately "
 "discounted it. But since you brought it up, maybe it is true."
 msgstr ""
+"Kdyz Farnham rikal neco o reznikovi, co zabiji lidi, vubec jsem si toho "
+"nevsimala. Ale kdyz jsi s tim prisel ty, mozna je to pravda."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:129
@@ -7331,6 +7533,11 @@ msgid ""
 "I never saw that hideous beast again, but his blood-stained visage haunts me "
 "to this day."
 msgstr ""
+"Videl jsem to, cemu Farnham rika Reznik, jak se prosekaval skrz tela mych "
+"pratel. Ohanel se sekackem velkym jako sekera, odsekaval ruce a nohy a na "
+"miste zabijel statecne muze. Od bitky me oddelila banda malych jecicich "
+"demonu a nejak jsem nalezl schody vedouci ven. Uz nikdy jsem tu odpornou "
+"bestii nespatril, ale jeho krvavy vzhled me pronasleduje az do dnesnich dnu."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (*sad face*)
 #: Source/textdat.cpp:131
@@ -7339,6 +7546,9 @@ msgid ""
 "couldn't save them. Trapped in a room with so many bodies... so many "
 "friends... NOOOOOOOOOO!"
 msgstr ""
+"Velky! Velky sekacek zabiji moje pratele. Nemuzu ho zastavit, musim utect "
+"pryc, nemuzu jim pomoct. Chycen v mistnosti s tolika telama ... tolika "
+"prateli ... NEEEEEEEEEE!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:133
@@ -7347,6 +7557,9 @@ msgid ""
 "others. You have seen his handiwork in the drunkard Farnham. His destruction "
 "will do much to ensure the safety of this village."
 msgstr ""
+"Reznik je sadisticka prisera, ktera ma rozkos z muceni a bolesti jinych. "
+"Videl jsi jeho praci v ozralci Farnhamovi. Kdyz ho znicis, zajistis tak "
+"bezpeci teto vesnice."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:135
@@ -7358,6 +7571,11 @@ msgid ""
 "I'll put it bluntly - kill him before he kills you and adds your corpse to "
 "his collection."
 msgstr ""
+"Vim o te potvore vic, nez si myslis. Jeho mali pratele me chytili a povedlo "
+"se jim useknout moji nohu nez me Griswold z te diry vytahl. \n"
+" \n"
+"Reknu to jednoduse - zabij ho driv nez on zabije tebe a prida si tvoji "
+"mrtvolu do sbirky."
 
 #. TRANSLATORS: Quest dialog spoken by Wounded Townsman (Dying)
 #: Source/textdat.cpp:137
@@ -7367,6 +7585,10 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
+"Prosim, pojd ke mne. Arcibiskup Lazarus nas zavedl dolu, abychom nasli "
+"ztraceneho prince. Ten bastard nas vedl do pasti! Ted jsou vsichni mrtvi... "
+"zabiti demonem, kteremu rikal Reznik. Pomsti nas! Najdi toho Reznika a zab "
+"ho, aby mohly nase duse odpocivat v pokoji..."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -7379,6 +7601,12 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
+"Zarecitoval jsi zajimave verse, napsane stylem, ktery mi pripomnel jine "
+"dilo. Nech me premyslet - co to jen bylo?\n"
+" \n"
+"...Temnota zahali Skryte. Zarici oci nespatrenych a jen slysis zvuk ostrych "
+"drapu, ktere skrabou, aby mucily ty nebohe duse, ktere byly ucineny slepymi "
+"na vecnost. Vezeni pro tyto proklete se nazyva Sine slepych..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -7388,6 +7616,11 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
+"Nikdy jsem se moc nezajimal o poezii. Obcas jsem mel duvod najmout "
+"minstrely, kdyz se v hostinci darilo, ale to ted vypada, jako by to bylo uz "
+"davno. \n"
+" \n"
+"Co? Ah, ano... uh, dobra, predpokladam, ze muzes videt, co nekdo jiny vi."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -7396,6 +7629,9 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
+"To mi zni jaksi povedomne. Myslim, ze si vzpominam, jak jsem cetl neco velmi "
+"podobneho te basni, kdyz jsem zkoumal historii demonickych trapeni. Je to "
+"misto velkeho zla... pockej - nechces se tam vypravit, ze ne?"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -7404,6 +7640,9 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
+"Jestli se ptas na slepotu, mel by sis promluvit s Pepinem. Vim, ze dal moji "
+"babicce lektvar, ktery pomohl vyjasnit jeji zrak, takze by ti s tim taky "
+"mohl pomoci."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -7412,11 +7651,13 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
+"Obavam se, ze jsem nikdy nevidel ani neslysel o miste, ktere odpovida tvemu "
+"zivemu popisu, priteli. Mozna by ti nejak mohl pomoct Cain Vypravec."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:150
 msgid "Look here... that's pretty funny, huh? Get it? Blind - look here?"
-msgstr ""
+msgstr "Podivej se... to je docela vesely, he? Chapes? Slepy - podivej?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:152
@@ -7427,6 +7668,9 @@ msgid ""
 "Tread carefully or you may yourself be staying much longer than you had "
 "anticipated."
 msgstr ""
+"Je to misto velkych muk a hruzy, a proto slouzi dobre svemu panu. \n"
+" \n"
+"Naslapuj opatrne, jinak muzes zustat dele nez ti bude mile."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:154
@@ -7435,6 +7679,8 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
+"Hele, prodavam ti neco? Ne. Davas mi penize, abych ti o tom neco rekl? Ne. "
+"Odejdes ted a pujdes za vypravecem, ktery kvuli temhle vecem zije? Ano."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -7448,6 +7694,14 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
+"Tvrdis, ze jsi mluvil s Lachdananem? Za sveho zivota byl velkym hrdinou. "
+"Lachdanan byl cestnym a spravedlivym clovekem, ktery po leta slouzil verne "
+"svemu Krali. Ale to uz samozrejme vis.\n"
+" \n"
+"Z tech, kteri byli chyceni ve sparech Kralovy kletby, by byl Lachdanan tim "
+"poslednim, kdo by se podrobil temnote bez boje, tudiz predpokladam, ze tvuj "
+"pribeh muze byt pravdivy. Kdybych byl na tvem miste, nalezl bych zpusob, jak "
+"ho uvolnit z jeho muk."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:158
@@ -7455,6 +7709,8 @@ msgid ""
 "You speak of a brave warrior long dead! I'll have no such talk of speaking "
 "with departed souls in my inn yard, thank you very much."
 msgstr ""
+"Mluvis o dlouho mrtvem statecnem bojovnikovi! V hostinci jsem neslysel o "
+"mluveni s davno mrtvymi, mnohokrat dekuji."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:160
@@ -7464,6 +7720,10 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
+"Zlaty elixit, rikas. Nikdy drive jsem nevaril lektvar takove barvy, takze ti "
+"nemohu rict, jak by te ovlivnil, kdyby ses ho pokusil vypit. Jako tvuj "
+"lecitel ti radim - pokud najdes takovy elixir, udelej, o co te Lachdanan "
+"zada, a NEZKOUSEJ ho pouzit."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
@@ -7471,6 +7731,8 @@ msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
 msgstr ""
+"Nikdy drive jsem o Lachdananovi neslysela. Promin, ale nemyslim, ze ti mohu "
+"nejak pomoci."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -7480,6 +7742,10 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
+"Jestli je to opravdu Lachdanan, koho jsi potkal, pak ti radim, abys mu "
+"pomohl. Nekolikrat jsem s nim jednal a znal jsem ho jako cestneho a verneho "
+"cloveka. Kletba, ktera padla na nasledovniky Krale Leorica, na nej dopadla "
+"urcite zvlaste tvrde."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
@@ -7487,6 +7753,8 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
+"Lachdanan je mrtvy. Kazdy to vi a ty me nemuzes oblbnout, abych si myslel "
+"neco jinyho. Nemuzes mluvit s mrtvyma. To vim!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -7496,6 +7764,9 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
+"Muzes potkat lidi, kteri jsou polapeni v Labyrintu, jako je Lachdanan. \n"
+" \n"
+"Citim v nem cest a velky pocit viny. Pomoz mu a pomuzes vsem z Tristramu."
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -7505,6 +7776,10 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way."
 msgstr ""
+"Pockej, nech me hadat. Caina pohltila obrovska trhlina, ktera se pod nim "
+"otevrela. Pekelny ohen ho spalil na popel a uz nemuze odpovidat na tvoje "
+"otazky. Oh, tohle ze se nestalo? Tak potom si podle mne neco koupis nebo "
+"odejdes."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:172
@@ -7521,6 +7796,16 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
+"Prosim, nezabijej me, jen me vyslechni. Kdysi jsem byl Kapitanem Rytiru "
+"Krale Leorica a udrzoval jsem zakony teto zeme spravedlive a cestne. Potom "
+"na nas padla temna Kletba za nasi ucast na kralove tragicke smrti. I kdyz "
+"moji pratele Rytiri podlehli svemu hroznemu osudu, ja jsem uprchl z Kralovi "
+"hrobky a snazim se najit zpusob, jak se uvolnit z Kletby. Selhal jsem...\n"
+" \n"
+"Slysel jsem o Zlatem Elixiru, ktery muze zrusit Kletbu a dovoli moji dusi "
+"odpocivat, ale nemohu ho nalezt. Ma sila nyni zanika a s ni take posledni "
+"kousky lidskosti. Prosim pomoz mi a najdi ten Elixir. Za tve usili se ti "
+"odvdecim - prisaham na svou cest."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
@@ -7528,6 +7813,8 @@ msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
 msgstr ""
+"Nenalezl jsi Zlaty Elixir. Bojim se, ze jsem odsouzen na vecnost. Prosim, "
+"pokus se jeste..."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
 #: Source/textdat.cpp:176
@@ -7538,6 +7825,11 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
+"Zachranil jsi mou dusi pred zatracenim a za to jsem ti velmi dluzen. Jestli "
+"je nejaky zpusob, jak se ti mohu odvdecit zpoza hrobu, naleznu jej, ale "
+"prozatim - vezmi si mou helmu. Na ceste, na kterou se vydam, ji nebudu "
+"potrebovat. At te ochrani pred temnymi silami, ktere cihaji dole. Jdi za "
+"Svetlem, priteli..."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:178
@@ -7551,6 +7843,13 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
+"Griswold mluvil o Kovadline Zurivosti - legendarnim artefaktu, dlouho "
+"hledanem, ale nenalezenem. Vyrobena z kovovych kosti demonu Pekelnych "
+"britev, Kovadlina Zurivosti byla tavena kolem kosti peti nejmocnejsich magu "
+"podsveti. Jsou na ni vyrezany runy moci a chaosu, jakakoliv zbran ci brneni "
+"vykovane na teto Kovadline, se ponori do rise Chaosu a naplni se magickymi "
+"schopnostmi. Rika se, ze kvuli nepredvidatelne povaze Chaosu je tezke urcit, "
+"jaky bude vysledek tohoto kovani..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
@@ -7558,6 +7857,8 @@ msgid ""
 "Don't you think that Griswold would be a better person to ask about this? "
 "He's quite handy, you know."
 msgstr ""
+"Nemyslis, ze na tohle by ses mel radeji zeptat Griswolda? Je docela sikovny, "
+"vis."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:182
@@ -7567,6 +7868,9 @@ msgid ""
 "However, in this matter, you would be better served to speak to either "
 "Griswold or Cain."
 msgstr ""
+"Pokud shanis informace o Palicce leceni nebo Stribrnem kalichu ocistovani, "
+"mohl bych ti pomoci, priteli. Jenze v tomhle pripade udelas lepe, kdyz si "
+"promluvis s Griswoldem nebo Cainem."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:184
@@ -7576,6 +7880,10 @@ msgid ""
 "was struck upon this anvil, the ground would shake with a great fury. "
 "Whenever the earth moves, I always remember that story."
 msgstr ""
+"Kdyz jsme vyrustali, Griswolduv otec nekterym z nas vypravel o obrovske "
+"kovadline, na ktere se vyrabeli mocne zbrane. Rikal, ze kdyz kladivo uderilo "
+"do te kovadliny, zem se otrasla velkou zurivosti. Kdykoliv se pohne zeme, "
+"vzdy si vzpomenu na ten pribeh."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:186
@@ -7597,6 +7905,22 @@ msgid ""
 " \n"
 "Find the Anvil for me, and I'll get to work!"
 msgstr ""
+"Vitej! Vzdy je potesenim videt jednoho z mych nejlepsich zakazniku! Vim, ze "
+"se vydavas hloubeji do Labyrintu, a slychaval jsem pribeh, ktery by sis "
+"mozna rad poslechl...\n"
+" \n"
+"Jeden z muzu, kteri se vratili z Labyrintu mi vypravel o tajemne kovadline, "
+"na kterou narazil pri uteku. Jeho popis mi pripomnel legendy, ktere jsem "
+"slychaval v mladi, o horici Pekelne Vyhni, kde se vyrabeli mocne magicke "
+"zbrane. Legenda vypravela, ze hluboko v Pekelne Vyhni odpocivala Kovadlina "
+"Zurivosti! Tato Kovadlina obsahovala samotnou podstatu demonickeho "
+"podsveti...\n"
+" \n"
+"Rika se, ze jakakoliv zbran vykovana na te Kovadline je naplnena velkou "
+"silou. Jestli je tahle kovadlina Kovadlina Zurivosti, mozna bych ti mohl "
+"vykovat zbran, kterou bys porazil i nejtemnejsiho pana Pekla! \n"
+" \n"
+"Najdi pro me Kovadlinu a ja se dam do prace!"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -7605,6 +7929,9 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
+"Jeste nic, eh? Dobra, pokracuj v patrani. Zbran vykovana na Kovadline muze "
+"byt tvou nejlepsi nadeji a jsem si jist, ze ti mohu vyrobit opravdu "
+"legendarni."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:190
@@ -7613,6 +7940,9 @@ msgid ""
 "Now we'll show those bastards that there are no weapons in Hell more deadly "
 "than those made by men! Take this and may Light protect you."
 msgstr ""
+"Nemohu tomu uverit! Toto je Kovadlina Zurivosti - dobra prace, priteli. Ted "
+"tem bastardum ukazeme, ze nejsou v Pekle hrozivejsi zbrane nez ty vykovane "
+"lidmi! Vezmi si toto a necht te Svetlo ochranuje."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
@@ -7620,6 +7950,8 @@ msgid ""
 "Griswold can't sell his anvil. What will he do then? And I'd be angry too if "
 "someone took my anvil!"
 msgstr ""
+"Griswold nemuze prodat svoji kovadlinu. Co by pak delal? Taky bych zuril, "
+"kdyby mi vzali kovadlinu!"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:194
@@ -7629,6 +7961,10 @@ msgid ""
 "used by either the Light or the Darkness. Securing the Anvil from below "
 "could shift the course of the Sin War towards the Light."
 msgstr ""
+"V Labyrintu je mnoho artefaktu, ktere vladnou silami, jez nemohou smrtelnici "
+"pochopit. Nektere z nich maji fantastickou moc, ktera muze byt pouzita "
+"Svetlem i Temnotou. Pokud ziskas Kovadlinu, mohlo by to zmenit prubeh Hrisne "
+"Valky ve prospech Svetla."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
@@ -7636,6 +7972,8 @@ msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
 msgstr ""
+"Jestli najdes pro Griswolda ten artefakt, muze mi to hodne pokazit obchody. "
+"Awww, nikdy to nenajdes."
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:198
@@ -7658,6 +7996,21 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
+"Brana Krve a Sine Ohne jsou mista mystickeho puvodu. Kdekoliv spociva ta "
+"kniha, kterou jsi cetl, jiste je to misto velke sily.\n"
+" \n"
+"Legendy mluvi o podstavci, ktery je vytesan z obsidianu a na vrcholku "
+"pokrytem kostmi je kaluz vrici krve. Take jsou zde zminky o Kamenech krve, "
+"ktere otevrou dvere, jez strazi starodavny poklad...\n"
+" \n"
+"Povaha toho pokladu je zahalena domnenkami, priteli, ale rika se, ze davny "
+"hrdina Arkaine skryl svate brneni Udatnost v tajnem sklepeni. Arkaine byl "
+"prvnim smrtelnikem, ktery zmenil prubeh Hrisne Valky a pronasledoval legie "
+"temnoty zpet do Horoucich Pekel.\n"
+" \n"
+"Predtim nez Arkaine zemrel, bylo jeho brneni ukryto v tajne krypte. Rika se, "
+"ze az bude toto brneni opet potrebne, povstane hrdina, jez znovu oblekne "
+"Udatnost. Mozna jsi tim hrdinou ty..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -7666,6 +8019,9 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
+"Kazde dite slyselo pribeh valecnika Arkaina a jeho tajemneho brneni znameho "
+"jako Udatnost. Pokud naleznes misto jeho odpocinku, budes dobre chranen "
+"proti zlu v Labyrintu."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -7674,6 +8030,9 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
+"Hmm... to zni jako neco, co bych si mel pamatovat, ale byl jsem tak "
+"zamestnan ucenim se novych leku a tvorenim lepsich elixiru, ze jsem to "
+"zapomnel. Promin..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
@@ -7681,6 +8040,8 @@ msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
 msgstr ""
+"Pribeh kouzelneho brneni nazyvaneho Udatnosti je neco, o cem si chlapci "
+"casto povidali. Radeji by ses mel zeptat nektero z muzu ve vesnici."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -7690,11 +8051,15 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
+"Brneni zname jako Udatnost muze naklonit vahy ve tvuj prospech. Reknu ti, ze "
+"ho hledalo mnoho lidi - vcetne me samotneho. Arkaine ho skryl dobre, "
+"priteli, a budes potrebovat vice nez jen trochu stesti, abys odhalil "
+"tajemstvi, ktere ho ukryva jiz po mnoho let."
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
 msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz..."
-msgstr ""
+msgstr "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:209
@@ -7704,6 +8069,9 @@ msgid ""
 "The way is fraught with danger and your only hope rests within your self "
 "trust."
 msgstr ""
+"Najdes-li tyto Kameny Krve, pouzij je velmi opatrne. \n"
+" \n"
+"Cesta je plna nebezpeci a tva jedina nadeje spociva ve tve vire v sebe sama."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:211
@@ -7713,6 +8081,10 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
+"Zamyslis najit brneni nazyvane Udatnost? \n"
+" \n"
+"Nikdo nikdy nezjistil, kde Arkaine schoval svoje veci, a jestli je nemuze "
+"najit muj kontakt, vazne pochybuji o tom, ze to zvladnes ty."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:213
@@ -7729,6 +8101,16 @@ msgid ""
 "Legion of Darkness during the Sin War, he lost his humanity to his "
 "insatiable hunger for blood."
 msgstr ""
+"Znam pouze jedinou legendu, jez vypravi o valecnikovi, ktereho jsi popsal. "
+"Jeho pribeh je zapsan v davnych kronikach o Hrisne Valce...\n"
+" \n"
+"Poskvrnen tisici let valky, krve a smrti stoji Vojevudce Krve na hore jeho "
+"roztrhanych obeti. Jeho temna cepel skuci cernou kletbu zivotu; muciva vyzva "
+"kazdemu, kdo se postavi Pekelnemu Popravcimu.\n"
+" \n"
+"Take je psano, ze ackoliv byl kdysi smrtelnikem, jez bojoval po boku Legii "
+"Temnoty behem Hrisne Valky, ztratil svou lidskost kvuli sve neukojitelne "
+"touze po krvi."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:215
@@ -7737,13 +8119,15 @@ msgid ""
 "master. I hope that you do not have to fight him, for he sounds extremely "
 "dangerous."
 msgstr ""
+"Bojim se, ze jsem nikdy neslysel o takovem strasnem valecnikovi, dobry pane. "
+"Doufam, ze s nim nebudes muset bojovat, protoze to zni neobycejne nebezpecne."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:217
 msgid ""
 "Cain would be able to tell you much more about something like this than I "
 "would ever wish to know."
-msgstr ""
+msgstr "Cain ti muze o necem takovem rict vice nez si budu kdy prat vedet."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:219
@@ -7751,6 +8135,8 @@ msgid ""
 "If you are to battle such a fierce opponent, may Light be your guide and "
 "your defender. I will keep you in my thoughts."
 msgstr ""
+"Jestli budes bojovat s tak hroznym protivinikem, necht te Svetlo vede a "
+"ochranuje. Budu na tebe stale myslet."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:221
@@ -7758,6 +8144,8 @@ msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
 msgstr ""
+"Temne a strasne legendy se vypravi o Vojevudci Krve. Bud dobre pripraven, "
+"priteli, protoze nema s nikym vubec slitovani."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:223
@@ -7766,6 +8154,8 @@ msgid ""
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that?"
 msgstr ""
+"Vzdycky musis mluvit o Krvi? Co treba kyticky a slunecni svit a to hezke "
+"devce, ktere roznasi piti. Poslechni, priteli - ses posedly, vis?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:225
@@ -7774,6 +8164,8 @@ msgid ""
 "years knowing only warfare. I am sorry... I can not see if you will defeat "
 "him."
 msgstr ""
+"Jeho zrucnost s mecem nahani hruzu a po tisice let zil pouze bojem. "
+"Promin... nemuzu videt, jestli ho porazis."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:227
@@ -7781,6 +8173,8 @@ msgid ""
 "I haven't ever dealt with this Warlord you speak of, but he sounds like he's "
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
+"Nikdy jsem neobchodoval s tim Vojevudcem, o kterem mluvis, ale zni to jako "
+"by potreboval spoustu mecu. Nevadilo by mi zasobovat jeho armadu..."
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
@@ -7788,6 +8182,8 @@ msgid ""
 "My blade sings for your blood, mortal, and by my dark masters it shall not "
 "be denied."
 msgstr ""
+"Muj mec zpiva o tvoji krvi, smrtelniku a mym temnym panum jiste nebude "
+"odeprena."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:231
@@ -7798,6 +8194,11 @@ msgid ""
 "man could possess. I do not know what secrets it holds, my friend, but "
 "finding this stone would certainly prove most valuable."
 msgstr ""
+"Griswold mluvil o Nebeskem kameni, ktery smeroval do mista na vychode. Byl "
+"tam prevazen kvuli dalsimu studiu. Ten kamen planul energii, ktera nejak "
+"zarucovala videni toho, co normalni clovek nemuze spatrit. Nevim, jaka "
+"tajemstvi skryva, priteli, ale nalezeni tohoto kamene se urcite ukaze velice "
+"cennym."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -7807,6 +8208,9 @@ msgid ""
 "sweetbreads that Garda has just finished baking. Shame what happened to "
 "them..."
 msgstr ""
+"Karavana se zde zastavila, aby nabrala zasoby pro cestu na vychod. Prodal "
+"jsem jim dost cerstveho ovoce a nejaky chleba, ktery Garda prave dopekla. Je "
+"to smula, co se jim stalo..."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:235
@@ -7815,6 +8219,8 @@ msgid ""
 "I will say this. If rocks are falling from the sky, you had better be "
 "careful!"
 msgstr ""
+"Nevim, co si mysleli, ze s tim kamenem uvidi, ale reknu ti jedno. Jestli "
+"padaji z oblohy kameny, radeji bys mel byt opatrny!"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:237
@@ -7826,6 +8232,11 @@ msgid ""
 "I don't see how you could hope to find anything that they would have been "
 "carrying."
 msgstr ""
+"Ano, karavana nejakych velmi dulezitych lidi se zde zastavila, ale bylo to "
+"uz pred nejakou dobou. Meli divny prizvuk a chystali se na dlouhou cestu, co "
+"si vzpominam. \n"
+" \n"
+"Nevim, jak muzes doufat, ze najdes neco z toho, co prevazeli."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:239
@@ -7838,6 +8249,12 @@ msgid ""
 "found. If you should find it, I believe that I can fashion something useful "
 "from it."
 msgstr ""
+"Postuj chvili - mam pribeh, ktery by te mohl zajimat. Pred nejakou dobou "
+"tudy projela karavana, ktera smerovala do vychodnich kralovstvi. "
+"Predpokladam, ze prevazeli kus nebes, ktery spadl na zem! Karavana byla na "
+"ceste severne odtud prepadena maskovanymi najezdniky. Hledal jsem v troskach "
+"ten kamen z nebe, ale nikde tam nebyl. Kdybys ho nasel, verim, ze bych z nej "
+"mohl pro tebe vytvorit neco uzitecneho."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:241
@@ -7845,6 +8262,8 @@ msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it."
 msgstr ""
+"Stale cekam, kdy mi prineses ten kamen z oblohy. Vim, ze z nej muzu udelat "
+"neco mocneho."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold(Quest End)
 #: Source/textdat.cpp:243
@@ -7854,6 +8273,10 @@ msgid ""
 "Ah, Here you are. I arranged pieces of the stone within a silver ring that "
 "my father left me. I hope it serves you well."
 msgstr ""
+"Podivejme se - ej... jo, je to jak, jsem veril. Pockej chvilku...\n"
+" \n"
+"Ah, tady mas. Vlozil jsem kousky kamene do stribrneho prstenu, ktery mi "
+"nechal muj otec. Doufam, ze ti bude k uzitku."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:245
@@ -7862,6 +8285,9 @@ msgid ""
 "green and red and silver. Don't remember what happened to it, though. I "
 "really miss that ring..."
 msgstr ""
+"Mel jsem pekny prsten; byl fakt drahej, s modrym a zelenym a cervenym a "
+"stribrnym. Jenze si nepamatuju, co se s nim stalo. Fakt mi ten prsten "
+"chybi..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
@@ -7870,6 +8296,9 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all."
 msgstr ""
+"Nebesky kamen je velmi mocny a kdyby to byl nekdo jiny nez Griswold, kdo te "
+"ho poslal najit, branila bych ho. Spouta jeho sily a jeho uziti bude dobre "
+"pro nas vsechny."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:249
@@ -7878,6 +8307,9 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work."
 msgstr ""
+"Jestli muze nekdo udelat neco z toho kamene,tak Griswold. Vi toho o sve "
+"praci hodne a i kdyz se mu snazim ukrast zakazniky, respektuji kvalitu jeho "
+"prace."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:251
@@ -7886,6 +8318,9 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
+"Carodejka Adria hleda cernou houbu? O Cernych houbach toho vim tolik, co o "
+"Cervenych sledich. Mozna Pepin lecitel ti povi vice, ale v zednem z mych "
+"pribehu nebo knih takovou vec nenajdes."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -7895,6 +8330,10 @@ msgid ""
 "then that is her business, but I can't help you find any. Black mushrooms... "
 "disgusting!"
 msgstr ""
+"Reknu ti jenom tohle. Ani Garda ani ja vubec NIKDY nepodavame nasim ctenym "
+"hostum cerne houby. Jestli chce Adria uvarit nejake houby, tak je to jenom "
+"jeji vec, ale ja ti nemuzu pomoct s jejich hledanim. Cerne houby... jak "
+"nechutne!"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:255
@@ -7905,6 +8344,11 @@ msgid ""
 "that its alchemy holds. If you can remove the brain of a demon when you kill "
 "it, I would be grateful if you could bring it to me."
 msgstr ""
+"Carodejka mi rekla, ze hledas mozek demona, abys mi pomohl vytvorit muj "
+"elixir. Bude to mit velkou cenu pro mnoho lidi, kteri byly temi podlymi "
+"bestiemi poraneni, pokud se mi povede odhalit tajemstvi, ktere podle me "
+"ukryva. Pokud bys mohl vzit mozek demona, kdyz ho zabijes, byl bych ti velmi "
+"vdecny, kdybys mi ho prinesl."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:257
@@ -7913,6 +8357,9 @@ msgid ""
 "without this, but it can't hurt to have this to study. Would you please "
 "carry this to the witch? I believe that she is expecting it."
 msgstr ""
+"Vynikajici, presne tohle jsem si myslel. Mohl jsem elixir dokoncit i bez "
+"toho, ale nikdy neuskodi trochu studia. Zaneses tohle, prosim, carodejce? "
+"Verim, ze na to uz ceka."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:259
@@ -7920,6 +8367,8 @@ msgid ""
 "I think Ogden might have some mushrooms in the storage cellar. Why don't you "
 "ask him?"
 msgstr ""
+"Myslim, ze Ogdem mozna ma v zasobarne nejake houby. Proc se nezeptas primo "
+"jeho?"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:261
@@ -7928,6 +8377,9 @@ msgid ""
 "I can offer you no more help than that, but it sounds like... a huge, "
 "gargantuan, swollen, bloated mushroom! Well, good hunting, I suppose."
 msgstr ""
+"Pokud to Adria nemuze dostat, muzes se vsadit, ze je to velice vzacna vec. "
+"Nemuzu ti nabidnout lepsi pomoc nez tohle, ale zni to jako... velka, "
+"obrovita, nebezpecna, vypasena houba! Tak, stastny lov, predpokladam."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
@@ -7935,6 +8387,8 @@ msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key!"
 msgstr ""
+"Ogden micha UBOHOU cernou houbu, ale kdyz to piju, tak mi je blbe. Davej "
+"pozor, pozor... reknu ti tajemstvi - musis se mirnit!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -7943,6 +8397,9 @@ msgid ""
 "your eyes open for a black mushroom. It should be fairly large and easy to "
 "identify. If you find it, bring it to me, won't you?"
 msgstr ""
+"Copak to tu mame? Zajimave, to vypada jako kniha o cinidlecg. Mej oci "
+"otevrene a hledej cernou houbu. Mela by byt docela velka a lehce "
+"rozpoznatelna. Jestli ji najdes, prineses mi ji, prosim?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:267
@@ -7950,6 +8407,8 @@ msgid ""
 "It's a big, black mushroom that I need. Now run off and get it for me so "
 "that I can use it for a special concoction that I am working on."
 msgstr ""
+"To, co potrebuji, je velka cerna houba. Ted bez a dones mi ji, abych ji "
+"mohla pouzit ve zvlastni smesi, na ktere prave pracuji."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:269
@@ -7960,6 +8419,10 @@ msgid ""
 "intends to make an elixir from it. If you help him find what he needs, "
 "please see if you can get a sample of the elixir for me."
 msgstr ""
+"Ano, to je skvele do napoje, ktery vyrabim. Mimochodem, lecitel shani mozek "
+"nejakeho demona nebo neceho takoveho, aby mohl lecit ty, kteri byli otraveni "
+"jejich jedem. Verim, ze zamysli z neho udelat elixir. Jestli mu pomuzes to, "
+"co hleda, prosim, zkus mi prinest vzorek toho elixiru."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:271
@@ -7969,6 +8432,10 @@ msgid ""
 "that grotesque organ that you are holding, and then bring me the elixir. "
 "Simple when you think about it, isn't it?"
 msgstr ""
+"Proc mi to sem nosis? Zrovna ted mi je mozek demona k nicemu. Potrebuji "
+"trochu elixiru, na kterem pracuje Lecitel. To on potrebuje te groteskni "
+"organ, ktery drzis, a potom mi prines elixir. Je to tak jednoduche, kdyz se "
+"nad tim  zamyslis, ze ano?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (Quest End)
 #: Source/textdat.cpp:273
@@ -7976,6 +8443,8 @@ msgid ""
 "What? Now you bring me that elixir from the healer? I was able to finish my "
 "brew without it. Why don't you just keep it..."
 msgstr ""
+"Coze? Ted jsi mi donesl ten elixir od Lecitele? Svuj napoj jsem mohla "
+"dokoncit bez nej. Proc si to proste nenechas..."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:275
@@ -7983,6 +8452,8 @@ msgid ""
 "I don't have any mushrooms of any size or color for sale. How about "
 "something a bit more useful?"
 msgstr ""
+"Neprodavam zadne houby jakekoliv velikosti nebo barvy. Co takhle neco trochu "
+"uzitecnejsiho?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:277
@@ -8007,6 +8478,23 @@ msgid ""
 "before the stars align, for we may never have a chance to rid the world of "
 "his evil again!"
 msgstr ""
+"akze legenda o Mape je pravdiva. Ani ja jsem tomu opravdu neveril! "
+"Predpokladam, ze je cas rict ti pravdu o tom, kdo jsem, priteli. Vidis, ze "
+"nejsem tim, cim se zdam...\n"
+" \n"
+"Me prave jmeno je Deckard Cain a jsem poslednim nasledovnikem davneho "
+"Bratrstva, ktere bylo zasveceno udrzovani a ochrane tajemstvi o nekonecnem "
+"zlu. Zlu, ktere bylo nyni zrejme uvolneno...\n"
+" \n"
+"Zlo, proti kteremu stojis je temny Pan hruzy - smrtelnikum znamy jako "
+"Diablo. To on byl pred mnoha staletimi uveznen v Labyrintu. Mapa, kterou jsi "
+"prinesl byla pred davnymi veky vytvorena, aby oznacila dobu, kdy Diablo opet "
+"povstane ze sveho vezeni. Kdyz budou dve hvezdy vyznacene na mape v jedne "
+"rade, Diablo bude na vrcholu sve sily. Bude temer neznicitelny...\n"
+" \n"
+"Ted zavodis s casem, priteli! Najdi Diabla a znic ho drive nezse hvezdy "
+"seskupi, protoze uz mozna nebudeme mit zadnou dalsi sanci, jak vycistit svet "
+"od tohoto zla!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:279
@@ -8014,6 +8502,8 @@ msgid ""
 "Our time is running short! I sense his dark power building and only you can "
 "stop him from attaining his full might."
 msgstr ""
+"Nas cas se krati! Citim, jak se jeho temna sila zvetsuje a jedine ty muzes "
+"zabranit tomu, aby dosahl sve plne sily."
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -8023,6 +8513,11 @@ msgid ""
 "and you will need all your courage and strength to defeat him. May the Light "
 "protect and guide you, my friend. I will help in any way that I am able."
 msgstr ""
+"Jsem si jist, ze jsi zkusil to nejlepsi, ale bojim se, ze ani tva sila a "
+"vule nestaci. Diablo je nyni na vrcholu sve pozemske sily a ty budes "
+"potrebovat vsechu odvahu a silu, abys ho porazil. Necht te Svetlo ochranuje "
+"a vede, priteli. Budu ti pomahat jakymkoliv zpusobem, ktery bude v mych "
+"silach."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (currently unused)
 #: Source/textdat.cpp:283
@@ -8031,6 +8526,9 @@ msgid ""
 "that I would know anything? It sounds like this is a very serious matter. "
 "You should hurry along and see the storyteller as Adria suggests."
 msgstr ""
+"Kdyz ti nemuze pomoct carodejka a radi ti, abys sel za Cainem, proc si "
+"myslis, ze ti nejak pomohu ja? Zni to jako velmi zavazna zalezitost. Mel by "
+"sis pospisit a zajit za vypravecem, jak ti doporucila Adria."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin (currently unused)
 #: Source/textdat.cpp:285
@@ -8041,6 +8539,11 @@ msgid ""
 "I can see that it is a map of the stars in our sky, but any more than that "
 "is beyond my talents."
 msgstr ""
+"Ja si s tim napisem na mape moc neporadim, ale treba Adria nebo Cain by ti "
+"mohl pomoc rozlustit, o cem se zde pise. \n"
+" \n"
+"Vidim, ze to je mapa hvezd na nasi obloze, ale nic vic moje vedomosti "
+"nezahrnuji."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian (currently unused)
 #: Source/textdat.cpp:287
@@ -8050,6 +8553,10 @@ msgid ""
 "Cain is very knowledgeable about ancient writings, and that is easily the "
 "oldest looking piece of paper that I have ever seen."
 msgstr ""
+"Na tuhle vec by ses mel zeptat nejlepe naseho vypravece. \n"
+" \n"
+"Cain je velice informovany o davnych svitcich a tohle je docela dobre "
+"nejstarsi kousek papiru, ktery jsem kdy videla."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold (currently unused)
 #: Source/textdat.cpp:289
@@ -8058,6 +8565,8 @@ msgid ""
 "have no idea how to read this, Cain or Adria may be able to provide the "
 "answers that you seek."
 msgstr ""
+"Nikdy driv jsem takovou mapu nevidel. Kde jsi ji ziskal? I kdyz me nenapada, "
+"jak to precist, na tvoje otazky by ti mohli odpovedet Cain nebo Adria."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (currently unused)
 #: Source/textdat.cpp:291
@@ -8065,6 +8574,8 @@ msgid ""
 "Listen here, come close. I don't know if you know what I know, but you have "
 "really got somethin' here. That's a map."
 msgstr ""
+"Poslouchej, pojd bliz. Nevim, jestli vis, co vim, ale to co mas je opravdu "
+"neco. Tohleto je mapa."
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
 #: Source/textdat.cpp:293
@@ -8073,6 +8584,9 @@ msgid ""
 "portends great disaster, but its secrets are not mine to tell. The time has "
 "come for you to have a very serious conversation with the Storyteller..."
 msgstr ""
+"Oh, bojim se, ze to nevesti vubec nic dobreho. Tato mapa hvezd predvida "
+"velke nestesti, ale o jejich tajemstvich ti nic nepovim. Prisel cas, aby sis "
+"velmi vazne promluvil s Vypravecem..."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt (currently unused)
 #: Source/textdat.cpp:295
@@ -8081,12 +8595,15 @@ msgid ""
 "that to Adria - she can probably tell you what it is. I'll say one thing; it "
 "looks old, and old usually means valuable."
 msgstr ""
+"Hledam mapu, ale tohle urcite neni ona. Mel bys to ukazat Adrii - nepochybne "
+"ti muze rict, co to je. Reknu ti jednu vec; vypada stare a stare obvykle "
+"znamena dost cenne."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:297
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
-msgstr ""
+msgstr "Prooosim, neublizuj. Nezabijej. Nech zit a priste dam dobre."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:299
@@ -8096,6 +8613,9 @@ msgid ""
 " \n"
 "You take this as proof I keep word..."
 msgstr ""
+"Neco pro tebe udelat. Zase, nezabijej Gharbada. Zit a dat dobre. \n"
+" \n"
+"Vem to, jako dukaz ja drzim slovo..."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:301
@@ -8106,11 +8626,16 @@ msgid ""
 " \n"
 "No pain and promise I keep!"
 msgstr ""
+"Jeste ne! Skoro hotove. \n"
+" \n"
+"Mooc mocne, moc silne. Zit! Zit! \n"
+" \n"
+"Netrapit a ja dodrzet slib!"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak (Hostile)
 #: Source/textdat.cpp:303
 msgid "This too good for you. Very Powerful! You want - you take!"
-msgstr ""
+msgstr "Hodne dobre pro tebe. Hodne Mocne! Ty chces - ty ber!"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (annoyed / Hostile)
 #: Source/textdat.cpp:305
@@ -8118,16 +8643,18 @@ msgid ""
 "What?! Why are you here? All these interruptions are enough to make one "
 "insane. Here, take this and leave me to my work. Trouble me no more!"
 msgstr ""
+"Co?! Proc tu jsi? Z toho neustale vyrusovani by jeden zesilel. Tady, vezmi "
+"si to a nech me pracovat. Uz me neobtezuj!"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (Hostile)
 #: Source/textdat.cpp:307
 msgid "Arrrrgh! Your curiosity will be the death of you!!!"
-msgstr ""
+msgstr "Arrrrgh! Tvoje zvedavost zpusobi tvoji smrt!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain
 #: Source/textdat.cpp:308
 msgid "Hello, my friend. Stay awhile and listen..."
-msgstr ""
+msgstr "Vitej, priteli. Postuj chvili a poslouchej..."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:309
@@ -8137,6 +8664,10 @@ msgid ""
 " \n"
 "Read them carefully for they can tell you things that even I cannot."
 msgstr ""
+"Na svych vypravach hloubeji do Labyrintu muzes nalezt ukryte svazky, ve "
+"kterych jsou mnohe vedomosti. \n"
+" \n"
+"Precti je pozorne, protoze ti mohou rici veci, ktere ani ja neznam."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:311
@@ -8146,6 +8677,10 @@ msgid ""
 "and questions to which you seek knowledge, seek me out and I will tell you "
 "what I can."
 msgstr ""
+"Znam mnoho mytu a legend, jez mohou obsahovat odpovedi na tve otazky, ktere "
+"se mohou vynorit pri tvych cestach Labyrintem. Pokud narazis na vyzvy a "
+"otazky, o nichz se chces dozvedete vice, vyhledej me a ja ti reknu vse, co "
+"budu moci."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:313
@@ -8156,6 +8691,11 @@ msgid ""
 "is a skilled craftsman, and if he claims to be able to help you in any way, "
 "you can count on his honesty and his skill."
 msgstr ""
+"Griswold - muz velkych cinu a velke odvahy. Vsadim se, ze ti nikdy nerekl o "
+"tom, jak se vydal do Labyrintu, aby zachranil Wirta, ze? Dobre vedel, jaka "
+"nebezpeci tam na nej cihaji, ale vlastne - ty to vis take. Je velmi zrucny "
+"remeslnik a pokud tvrdi, ze ti muze velmi pomoci jakymkoliv zpusobem, muzes "
+"se spolehnout na jeho cestnost a dovednost."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:315
@@ -8166,6 +8706,11 @@ msgid ""
 "all they had in making a life for themselves here. He is a good man with a "
 "deep sense of responsibility."
 msgstr ""
+"Ogden vlastni a provozuje hostinec U Vychazejiciho slunce jiz temer ctyri "
+"roky. Koupil ho prave nekolik mesicu predtim nez tu slo vsechno k certu. On "
+"a jeho zena Garda nemaji penize, aby odesli, protoze vsechno vlozili do "
+"toho, aby si tady zaridili dobre zivobiti. Je to dobry muz s velkym smyslem "
+"pro odpovednost."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:317
@@ -8176,6 +8721,11 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
+"Chudak Farnham. Je poznamenan vzpominkami na dav, ktery vstoupil do "
+"Katedraly s Lazarem v ten temny den. Utekl zivy, ale jeho odvaha a mnoho "
+"jeho zdraveho rozumu zustalo v te temne dire. Nyni nachazi utechu jedine na "
+"dne sveho korbele, ale mezi jeho neustlym blouznenim jsou obcas pohrbeny "
+"kousku pravdy."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:319
@@ -8186,6 +8736,11 @@ msgid ""
 "access to many strange and arcane artifacts and tomes of knowledge that even "
 "I have never seen before."
 msgstr ""
+"Carodejka, Adria, je v Tristramu trochu zvlastni. Prijela kratce pote, co "
+"byla Katedrala znesvecena, zatimco temer vsichni ostatni utikali. Postavila "
+"si malou chatrc na okraji mesta, zdanlive pres noc, a ma pristup k mnoha "
+"podivnym a tajemnym artefaktum a magickym svazkum, o kterych jsem ani ja "
+"drive neslysel."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:321
@@ -8197,6 +8752,12 @@ msgid ""
 "never returned. The Blacksmith found the boy, but only after the foul beasts "
 "had begun to torture him for their sadistic pleasures."
 msgstr ""
+"Wirtuv pribeh je desivy a tragicky. Byl vytrzen z naruci sve matky a "
+"odvlecen do labyrintu malymi, odpornymi demony, kteri nosili hnusne ostepy. "
+"V tech dnech bylo uneseno mnoho dalsich deti, vcetne syna Krale Leorica. "
+"Rytiri z palace se vydali dolu, ale nikdy se nevratili. Kovar chlapce nasel, "
+"ale az pote, co ho ty hnusne bestie zacali mucit kvuli svym sadistickym "
+"choutkam."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:323
@@ -8206,6 +8767,10 @@ msgid ""
 "existed. His knowledge and skills are equaled by few, and his door is always "
 "open."
 msgstr ""
+"Ah, Pepin. Povazuji ho za praveho pritele - mozna nejblizsiho, co jsem kdy "
+"mel. Ted je trochu zmateny, ale nikdy neexistoval pozornejsi a ohleduplnejsi "
+"clovek. Jeho vedomostem a umeni se rovna malokdo a jeho dvere jsou stale "
+"otevrene."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:325
@@ -8216,11 +8781,16 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
+"Gillian je dobra zena. Vsichni ji maji radi pro jejiho dobreho ducha a svezi "
+"smich, i ja ji mam velmi rad. Zustava v hostinci, aby se mohla starat o svou "
+"starou babicku, ktera je prilis nemocna a nemuze cestovat. Obcas se bojim o "
+"jeji bezpeci, ale vim, ze mnoho muzu by radeji zemrelo, jen aby se ji nic "
+"nestalo."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
 msgid "Greetings, good master. Welcome to the Tavern of the Rising Sun!"
-msgstr ""
+msgstr "Vitej, dobry pane. Vitam te v hostinci U vychazejiciho slunce!"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:329
@@ -8230,6 +8800,10 @@ msgid ""
 "any of them agree on was this old axiom. Perhaps it will help you. You can "
 "cut the flesh, but you must crush the bone."
 msgstr ""
+"Mnoho dobrodruhu zasedlo za stoly meho hostince a vypravelo se tu desetkrat "
+"vice pribehu nez bylo vypito piva. Jedina vec, co jsem slysel, na ktere "
+"vsichni,shodli je tato stara poucka. Treba ti nejak pomuze. Muzes sekat "
+"maso, ale musis rozdrtit kosti."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:331
@@ -8237,6 +8811,8 @@ msgid ""
 "Griswold the blacksmith is extremely knowledgeable about weapons and armor. "
 "If you ever need work done on your gear, he is definitely the man to see."
 msgstr ""
+"Kovar Griswold toho vi o zbranich a brneni nesmirne mnoho. Pokud budes nekdy "
+"potrebovat spravit svou vyzbroj, urcite za nim zajdi."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:333
@@ -8244,6 +8820,8 @@ msgid ""
 "Farnham spends far too much time here, drowning his sorrows in cheap ale. I "
 "would make him leave, but he did suffer so during his time in the Labyrinth."
 msgstr ""
+"Farnham zde travi prilis mnoho casu utapenim sveho zarmutku v levnem pive. "
+"Vyhodil bych ho, ale kdyz byl v Labyrintu, velice trpel."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:335
@@ -8254,6 +8832,10 @@ msgid ""
 "Well, no matter. If you ever have need to trade in items of sorcery, she "
 "maintains a strangely well-stocked hut just across the river."
 msgstr ""
+"Adria je na svuj vek velice moudra, ale musim se priznat - trochu me desi. \n"
+" \n"
+"Dobre, to nevadi. Pokud budes nekdy potrebovat kouzelny predmet, udrzuje "
+"svou chatrc za rekou podivne dobre zasobenou."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:337
@@ -8261,6 +8843,8 @@ msgid ""
 "If you want to know more about the history of our village, the storyteller "
 "Cain knows quite a bit about the past."
 msgstr ""
+"Jestli chces vedet vice o historii nasi vesnice, vypravec Cain toho vi "
+"minulosti docela dost."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:339
@@ -8271,6 +8855,11 @@ msgid ""
 "He probably went fooling about someplace that he shouldn't have been. I feel "
 "sorry for the boy, but I don't abide the company that he keeps."
 msgstr ""
+"Wirt je prohnany maly padouch. Vzdycky se dostane do problemu a vubec me "
+"neprekvapuje, co se mu stalo. \n"
+" \n"
+"Pravdepodobne se dostal nekam, kde by nemel byt. Toho chlapce je mi lito, "
+"ale nesnasim spolecnost, ve ktere se zdrzuje."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:341
@@ -8279,6 +8868,9 @@ msgid ""
 "always attending to the needs of others, but trouble of some sort or another "
 "does seem to follow him wherever he goes..."
 msgstr ""
+"Pepin je dobry muz - a urcite nejslechetnejsi ve vesnici. Vzdy se snazi "
+"pomahat ostatnim, ale zda se, ze potize toho ci onoho druhu ho nasleduji, "
+"kamkoliv jde..."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:343
@@ -8289,11 +8881,16 @@ msgid ""
 "Goodness knows I begged her to leave, telling her that I would watch after "
 "the old woman, but she is too sweet and caring to have done so."
 msgstr ""
+"Gillian, moje barmanka? Kdyby nebylo jeji pece o babicku, nejspis by odtud "
+"davno utekla. \n"
+" \n"
+"Bohove vi, ze jsem ji prosil, aby odesla a rikal ji, ze budu o jeji babicku "
+"pecovat, ale je prilis laskava a starostliva, aby to udelala."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
 msgid "What ails you, my friend?"
-msgstr ""
+msgstr "Co te trapi, priteli?"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:346
@@ -8303,6 +8900,10 @@ msgid ""
 "hurt one of the monsters, make sure it is dead or it very well may "
 "regenerate itself."
 msgstr ""
+"Objevil jsem velice zajimavou vec. Narozdil od nas se prisery v Labyrintu "
+"mohou lecit bez pomoci lektvaru ci magie. Pokud zranis nekterou z tech "
+"priser, ujisti se, ze je opravdu mrtva jinak se muze docela dobre vylecit "
+"sama."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:348
@@ -8312,6 +8913,10 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
+"Predtim nez byla obsazena temi, cimkoliv co tam ciha, Katedrala byla mistem "
+"velkych vedomosti. Da se tam najit mnoho knih. Pokud nejake najdes, mel bys "
+"je vsechny precist, protoze v nich mohou byt ukryty tajemstvi o fungovani "
+"Labyrintu."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -8320,6 +8925,9 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
+"Griswold toho vi o valecnem umeni tolik jako ja vim o umeni lecit. Je take "
+"mazany obchodnik, ale jeho praci se nikdo nevyrovna. Oh, domnivam se, ze to "
+"muze byt tim, ze je siroko daleko jediny kovar."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -8328,6 +8936,9 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to."
 msgstr ""
+"Cain je pravy pritel a uceny mudrc. Udrzuje ohromnou knihovnu a ma "
+"prirozenou schopnost odhalit pravou povahu mnoha veci. Budes-li mit nekdy "
+"jakekoliv otazky, mel bys jit prave za nim."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
@@ -8335,6 +8946,8 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do."
 msgstr ""
+"Ani me schopnosti nestacily na uplne vyleceni Farnhama. Oh, mohl jsem "
+"zahojit jeho telo, ale vyleceni jeho mysli a ducha je pro mne prilis tezke."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:356
@@ -8345,6 +8958,10 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
+"I kdyz take pouzivam trochu magie k vytvareni lektvaru a elixiru, ktere zde "
+"skladuji, Adria je prava carodejka. Zda se, ze nikdy nespi, a vzdy ma "
+"pristup k mnoha mystickym svazkum a artefaktum. Verim, ze jeji chatrc je "
+"mnohem vice nez obycejna bouda, ale nikdy jsem se nemohl podivat dovnitr."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -8354,6 +8971,9 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
+"Chudak Wirt. Udelal jsem pro nej vse, co bylo mozne, ale vim, ze se mu hnusi "
+"ta drevena noha, kterou jsem mu nasadil. Jeho rany byly priserne. Nikdo - a "
+"zvlaste ne takove mlade dite - by nemel tak moc trpet."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -8364,6 +8984,11 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
+"Opravdu nechapu, proc Ogden zustava zde v Tristramu. Trpi slabsimi nervy, "
+"ale je inteligentni a pracovity clovek, ktery dela dobrotu, kamkoliv prijde. "
+"Domnivam se, ze to muze byt strachem z tolika vrazd, ktere se udaly v okolni "
+"zemi, nebo mozna prani jeho zeny, ktera se o nej a rodinu stara, kdekoliv "
+"jsou."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -8374,11 +8999,15 @@ msgid ""
 "She claims that they are visions, but I have no proof of that one way or the "
 "other."
 msgstr ""
+"Ogdenova barmanka je sladka divka. Jeji babicka je dost nemocna a trpi "
+"preludy. \n"
+" \n"
+"Tvrdi, ze to jsou vize, ale nemam dukaz o jednom ani o druhem."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr ""
+msgstr "Dobry den! Cim mohu slouzit?"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
@@ -8386,6 +9015,8 @@ msgid ""
 "My grandmother had a dream that you would come and talk to me. She has "
 "visions, you know and can see into the future."
 msgstr ""
+"Moje babicka mela sen, ze prijdes a budes se mnou mluvit. Vis, ona miva vize "
+"a muze videt do budoucnosti."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:367
@@ -8396,6 +9027,10 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
+"Zena na okraji mesta je carodejnice! Vypada docela prijemne a jeji jmeno, "
+"Adria, zni velice prijemne, ale ja se ji velmi bojim. \n"
+" \n"
+"Clovek, ktery by se podival, co tam provadi, musi byt statecny, jako ty."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:369
@@ -8405,6 +9040,10 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
+"Nas kovar je chloubou Tristramu. Nejenom, ze je mistrovsky remeslnik, ktery "
+"vyhral mnoho turnaju v jeho cechu, ale pochvalil ho i sam nas Kral Leoric - "
+"necht jeho duse odpociva v pokoji. Griswold je take velky hrdina; vsak se "
+"zeptej Caina."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
@@ -8412,6 +9051,8 @@ msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
 msgstr ""
+"Cain je vypravecem v Tristramu tak dlouho, co si pamatuji. Vi toho hodne a "
+"muze ti rict o cemkoliv skoro vsecho."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -8423,6 +9064,10 @@ msgid ""
 "frustrated watching him slip farther and farther into a befuddled stupor "
 "every night."
 msgstr ""
+"Farnham je ozrala, ktery plni svoje bricho pivem a usi ostatnich nesmysly. \n"
+" \n"
+"Vim, ze Pepin i Ogden s nim maji pochopeni, ale ja jsem zklamana, kdyz ho "
+"pozoruji, jak stale vice a vice sklouzava do uplneho otupeni kazdou noc."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -8432,6 +9077,10 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
+"Pepin zachranil moji babicce zivot a ja vim, ze mu to nikdy nebudu moci "
+"oplatit. Jeho schopnost lecit jakoukoliv nemoc je mocnejsi nez nejsilnejsi "
+"mec a zahadnejsi nez jakekoliv kouzlo. Jestli budes nekdy potrebovat leceni, "
+"Pepin ti urcite pomuze."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -8443,6 +9092,11 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
+"Vyrustala jsem s Wirtovou matkou, Canace. I kdyz byla jen trochu zranena, "
+"kdyz ho ty odporne prisery unesly, nikdy se neuzdravila. Myslim, ze zemrela "
+"zalem. Z Wirta se stal necestny mladik, ktery se snazi jen vydelat na drine "
+"ostatnich. Vim, ze trpel a videl mnoho hruz, ktere si ani neumim predstavit, "
+"ale neco z te temnoty nad nim stale visi."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
@@ -8452,11 +9106,14 @@ msgid ""
 "them, and hope one day to leave this place and help them start a grand hotel "
 "in the east."
 msgstr ""
+"Ogden a jeho zena vzali mne a moji babicku k sobe domu a nechavaji me "
+"vydelat par zlataku praci v hostinci. Tolik jim dluzim a doufam, ze jednoho "
+"dne opustime toto misto a pomuzu jim zalozit grand hotel na vychode."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya?"
-msgstr ""
+msgstr "Co pro tebe muzu udelat?"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
@@ -8466,6 +9123,9 @@ msgid ""
 "undying horrors down there, and there's nothing better to shatter skinny "
 "little skeletons!"
 msgstr ""
+"Jestli shanis dobrou zbran, nech mne at ti ukazu tohle. Vezmi si zakladni "
+"tupou zbran, jako je palcat. Na vetsinu tech nehynoucich hruz tam dole "
+"pusobi bezvadne a neni nic lepsiho na rozbijeni tech vyzablych kostlivecku!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -8475,6 +9135,9 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
+"Sekera? Jo, to je dobra zbran, vyvazena proti jakemukoliv nepriteli. "
+"Podivej, jak rozrazi vzduch a pak si v jeji ceste predstav nejakeho hnusneho "
+"demona. Mej na mysli, ze se s ni pomalu seka - ale rozdava pekne silne rany!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -8484,6 +9147,10 @@ msgid ""
 "or pierce on the undead, but against a living, breathing enemy, a sword will "
 "better slice their flesh!"
 msgstr ""
+"Podivej na to ostri, tu vyvazenost. Mec v pravych rukach, a proti spravnemu "
+"nepriteli, je mistrem vsech zbrani. Jeho ostra cepel najde malo mista k "
+"sekani ci prorazeni na tech nemrtvych, ale proti zivemu, dychajicimu "
+"nepriteli mec krasne porcuje jeho maso!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:388
@@ -8492,6 +9159,9 @@ msgid ""
 "Darkness. If you bring them to me, with a bit of work and a hot forge, I can "
 "restore them to top fighting form."
 msgstr ""
+"Tvuj zapas proti Temnote se projevi i na tvych zbranich a zbroji. Jestli je "
+"prineses ke mne, muzu je, s trochou prace a horkou vyhni, opravit do "
+"nejlepsi bojove podoby."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
@@ -8501,6 +9171,10 @@ msgid ""
 "seems to get whatever she needs. If I knew even the smallest bit about how "
 "to harness magic as she did, I could make some truly incredible things."
 msgstr ""
+"Zatimco ja musim kovy a naradi, ktere potrebuji od karavan, co projizdeji "
+"kolem naseho zatraceneho mesta, temer pasovat, zda se, ze ta carodejka Adria "
+"vzdy dostane vsechno, co chce. Kdybych o spoutani magie vedele jenomu trochu "
+"toho, co ona, mohla bych vyrabet skutecne neuveritelne veci."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
@@ -8508,6 +9182,8 @@ msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
 msgstr ""
+"Gillian je hezke devce. Je smula, ze ma jeji babicka tak chatrne zdravi, "
+"jinak bych uz dohodl, aby je nektera z obchodnich karavan odvezla odtud."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
@@ -8516,6 +9192,9 @@ msgid ""
 "in life. If I could bend steel as well as he can bend your ear, I could make "
 "a suit of court plate good enough for an Emperor!"
 msgstr ""
+"Nekdy si myslim, ze Cain mluvi prilis mnoho, ale tusim, ze to je jeho smysl "
+"zivota. Kdybych si mohl poddat ocel jako on tvoje usi, mohl bych vykovat "
+"brneni dobre i pro samotneho Cisare!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
@@ -8525,6 +9204,10 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
+"Byl jsem s Farnhamem te noci, kdy nas Lazarus zavedl do Labyrintu. Uz nikdy "
+"jsem Arcibiskupa nevidel a nejspis bych neprezil, kdyby Farnham nebojoval se "
+"mnou. Bojim se, ze utok zmrzacil jeho dusi stejne jako jiny moji nohu. Tuhle "
+"bitvu pro nej nemohu vybojovat, ale udelal bych to, kdybych jen mohl."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -8533,6 +9216,9 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
+"Dobry clovek, ktery vyvysuje potreby jinych nad svoje. V Tristramu - nebo "
+"kdekoliv jinde - nenajdes jedineho cloveka, ktery by mohl rict neco spatneho "
+"o nasem leciteli."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
@@ -8543,6 +9229,11 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful."
 msgstr ""
+"Ten hoch se urcite dostane do velkych problemu... tusim, ze bych mohl rict, "
+"uz zase. Zkousel jsem v nem vzbudit zajem o praci u mne a nauceni se radneho "
+"remesla, ale on dava prednost vysokemu zisku pri obchodu se zbozim "
+"pochybneho puvodu. Nemohu to po nem chtit po tom, co se mu stalo, ale preji "
+"si, aby byl alespon opatrny."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
@@ -8555,17 +9246,22 @@ msgid ""
 "starved during that first year when the entire countryside was overrun by "
 "demons."
 msgstr ""
+"Hostinsky zde ma male obchody a zadny zpusob vydelku. Trochu si to vynahradi "
+"tim, ze poskytuje jidlo a nocleh tem, kteri sem tam prochazeji vesnici, ale "
+"ti se pravdepodobne odplizi v noci, aby nemuseli platit. Kdyby nebylo jeho "
+"zasob obili a suseneho masa, ktere ma ve sklepe, vetsina z nas by urcite "
+"umrela hlady v tom prvni roce, kdy bylo cele okoli zaplaveno demony."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace?"
-msgstr ""
+msgstr "Copak nemuzu v klidu pit?"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:405
 msgid ""
 "The gal who brings the drinks? Oh, yeah, what a pretty lady. So nice, too."
-msgstr ""
+msgstr "Holka, co nosi piti? Oh, jo, to je pjekna divka. A prijemna taky."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:407
@@ -8574,6 +9270,9 @@ msgid ""
 "stuff, but you listen to me... she's unnatural. I ain't never seen her eat "
 "or drink - and you can't trust somebody who doesn't drink at least a little."
 msgstr ""
+"Proc ta stara baba nedela taky neco jinyho. Jasne, jasne, ma ruzny nesmysly, "
+"ale poslouchej... ona neni normalni. Nikdy sem ji nevidel jist nebo pit - a "
+"nemuzes verit nekomu, kdo aspon trochu nepije."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
@@ -8582,6 +9281,8 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows."
 msgstr ""
+"Cain neni, co rika, ze je. Jasne, jasne, povida dobry pribehy... nektery "
+"jsou fakt strasidelny nebo vesely... ale myslim, ze vi vic, nez vi, ze vi."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
@@ -8589,6 +9290,8 @@ msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
+"Griswold? Dobry Griswold. Mam ho rad jako bratra! Bojovali jsme spolu, vis, "
+"kdyz jsme... my... Lazarus... Lazarus... Lazarus... Lazarus!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -8598,6 +9301,9 @@ msgid ""
 "wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a "
 "hero too..."
 msgstr ""
+"Hehehe, mam rad Pepina. Fakt se snazi, vis. Poslouchej, mel bys ho fakt "
+"poznat. Dobry clovek a lidi, co potrebuou pomoct. Hej, hadam, ze je trochu "
+"jako ty, he hrdina? Ja sem taky bejval hrdina..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:415
@@ -8606,6 +9312,9 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
+"Wirt je decko a ma vic problemu nez ja a ja vim o problemech vsecko. "
+"Poslouchej - ten kluk ma fajn obchod, ale byl tam dole, vis? Prisel o nohu! "
+"Musi chodit na kousku dreva. Smutne, smutne..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
@@ -8614,6 +9323,9 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
+"Ogden je nejlepsi chlap ve meste. Nemyslim, ze mne jeho zena ma moc rada, "
+"ale dokud on ovlada pipu, tak mi nevadi. Zda se, ze u Ogdena travim vic "
+"casu, nez je mozne, ale on je na mne tak hodny..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
@@ -8622,6 +9334,9 @@ msgid ""
 "specialty. This here is the best... theeeee best! That other ale ain't no "
 "good since those stupid dogs..."
 msgstr ""
+"Chci ti neco rict, protoze vim o techhle vecech vsechno. Je to moje "
+"specialita. Tohle tady je nejlepsi... neeeejlepsi! Tohle druhe pivko neni "
+"tak dobre, kvuli tem blbym psum..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
@@ -8630,6 +9345,9 @@ msgid ""
 "somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and "
 "just waitin' for someone to get it."
 msgstr ""
+"Nikdo mne nepos... neposloucha. Nekde - nevim to jiste - ale nekde pod "
+"kostelem je velka kupa zlata. Leskne se a sviti a jenom ceka na nekoho, kdo "
+"si to vezme."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
@@ -8639,6 +9357,9 @@ msgid ""
 "brutes! Oh, I don't care what Griswold says, they can't make anything like "
 "they used to in the old days..."
 msgstr ""
+"Vim, ze mas vlastni myslenky, a vim, ze tomu nebudes verit, ale ta zbran, co "
+"tu mas - to neni tak dobre proti tem velkym bestiim! Oh, nezajima mne, co "
+"rika Griswold, proste nemuzou udelat nic podobneho jako to delali kdysi..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
@@ -8647,11 +9368,14 @@ msgid ""
 "and get out of here. That boy out there... He's always got somethin good, "
 "but you gotta give him some gold or he won't even show you what he's got."
 msgstr ""
+"Kdybych byl ty... a nejsem... ale kdybych byl, prodal bych to vsechno a "
+"rychle odcud vypadl. Ten kluk tam... Vzdycky ma neco dobryho, ale musis mu "
+"dat naky prachy jinak ti ani neukaze, co ma."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
 msgid "I sense a soul in search of answers..."
-msgstr ""
+msgstr "Uvedomuji si dusi v hledani odpovedi..."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:428
@@ -8660,6 +9384,9 @@ msgid ""
 "words. Should you already have knowledge of the arcane mysteries scribed "
 "within a book, remember - that level of mastery can always increase."
 msgstr ""
+"Zadny uceny z nebe nespadl. Objevis-li svazek vedeni, zjisti, co rika. I "
+"kdybys mel jiz vedomosti o davnych tajemstvich popsanych v knize, pamatuj si "
+"- uroven mistrovstvi se vzdy muze zvysit."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:430
@@ -8671,6 +9398,11 @@ msgid ""
 "be kept at the ready in your mind. Know also that these scrolls can be read "
 "but once, so use them with care."
 msgstr ""
+"Nejvetsi sila ma casto nejkratsi zivot. Na svitku muzes nalezt zapsan davna "
+"slova moci. Sila techto svitku je v tom, ze je dokaze seslat i uplny "
+"zacatecnik i mistr. Jejich slabinou je, ze musi byt nejprve nahlas precteny "
+"a nikdy se ti neudrzi v mysli. Take bys mel vedet, ze tyto svitky mohou byt "
+"precteny pouze jednou, a proto je pouzivej s rozvahou."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:432
@@ -8681,6 +9413,10 @@ msgid ""
 "magical energies many times over. I have the ability to restore their power "
 "- but know that nothing is done without a price."
 msgstr ""
+"Ackoliv je zar nesrovnatelny, pouhy plaminek svice je nebezpecnejsi. Zadna "
+"energie, nezalezi jak silna, nemuze byt pouzita bez patricneho soustredeni. "
+"Kouzelne Hole s mnoha kouzly mohou byt nescetnekrat nabity magickou energii. "
+"Mam  schopnost obnovit jejich silu - ale sam vis, ze nic neni zadarmo."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
@@ -8689,6 +9425,9 @@ msgid ""
 "or scroll that you cannot decipher, do not hesitate to bring it to me. If I "
 "can make sense of it I will share what I find."
 msgstr ""
+"Mnozstvi nasich vedomosti zavisi na mnozstvi lidi. Najdes-li knihu ci "
+"svitek, ktery nemuzes rozlustit, nevahej a prines ho ke mne. Pokud ho "
+"pochopim, podelim se z tebou o to, co zjistim."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
@@ -8697,6 +9436,9 @@ msgid ""
 "blacksmith Griswold is more of a sorcerer than he knows. His ability to meld "
 "fire and metal is unequaled in this land."
 msgstr ""
+"Pro muze, ktery zna pouze Zelezo, neni vetsi magie nez Ocel. Kovar Griswold "
+"je vice carodejem nez vi. Jeho schopnosti rozehrat ohen a kovat zelezo neni "
+"v teto zemi rovno."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
@@ -8706,6 +9448,9 @@ msgid ""
 "matriarch over her own. She fears me, but it is only because she does not "
 "understand me."
 msgstr ""
+"Zkazenost ma silu podvodu, ale nevinnost vladne moci cistoty. Mlada zena "
+"Gillian ma ciste srdce a uprednostnuje potreby sve pramatky pred svymi. Boji "
+"se mne, ale je to pouze kvuli tomu, ze mi nerozumi."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -8715,6 +9460,10 @@ msgid ""
 "not look. His knowledge of what lies beneath the cathedral is far greater "
 "than even he allows himself to realize."
 msgstr ""
+"Truhla otevrena v temnote neskryva vetsi poklad nez, kdyz je otevrena na "
+"svetle. Vypravec Cain je zahadou, ale jen pro ty, kteri se nedivaji. Jeho "
+"vedomosti o tom, co lezi pod katedralou, jsou jeste vetsi nez si on sam "
+"uvedomuje."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -8724,6 +9473,10 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
+"Cim vice veris jednomu muzi, tim horsi je pad. Farnham ztratil svou dusi, "
+"ale ne kvuli nejakemu demonovi. Ztratil ji, kdyz videl, jak Arcibiskup "
+"Lazarus zradil jeho pratele. Ma dulezite vedomosti, ale musis oddelit "
+"skutecnost od fantazie."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -8734,6 +9487,10 @@ msgid ""
 "understanding of the creation of elixirs and potions. He is as great an ally "
 "as you have in Tristram."
 msgstr ""
+"Ruce, srdce a mysl mohou provadet zazraky, pokud jsou v dokonalem souladu. "
+"Lecitel Pepin se v tele vyzna tak, jak to ani ja nedokaze. Jeho schopnost "
+"uzdravovat nemoci a poraneni je jeste zvetsena tim, ze chape vyrobu elixiru "
+"a lektvaru. Je to velky spojenec, ktereho muzes v Tristramu mit."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
@@ -8746,6 +9503,12 @@ msgid ""
 "reproachful, Wirt can provide assistance for your battle against the "
 "encroaching Darkness."
 msgstr ""
+"Nemuzeme videt mnoho z budoucnosti, ale az to prijde, prinese to dite. "
+"Chlapec Wirt ma na dusi cernotu, ale pro mesto nebo jeho obyvatele "
+"nepredstavuje hrozbu. Jeho tajne obchody se zlodejicky a podezrelymi cechy z "
+"blizkych mest mu zarucuje pristup k mnoha predmetum, ktere v Tristramu "
+"nejsou lehce dostupne. I kdyz muzes vycitat jeho metody, Wirt muze zajistit "
+"pomoc pro tvou bitvu proti pripravujici se Temnote."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -8758,11 +9521,18 @@ msgid ""
 "found there, provide a glimpse of a life that the people here remember. It "
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
+"Hlinene zdi a doskova strecha nedelaji domov. Hostinsky Ogden slouzi ve "
+"meste k vice vecem nez mnohy chape. Poskytuje pristresek Gillian a jeji "
+"pramatce, udrzuje to, co zivot zanechal Farnhamovi, a pomaha vsem, kteri ve "
+"meste zustali, aby byl Tristram jako driv. Jeho krcma, a prosta poteseni, "
+"ktera se zde daji stale nalezt, obstaravaji zablesky zivota, jaky si lide "
+"pamatuji. Jsou to tyto vzpominky, ktere stale udrzuji jejich nadeji, ze "
+"uspejes."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
 msgid "Pssst... over here..."
-msgstr ""
+msgstr "Pssst... tady..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:451
@@ -8772,6 +9542,10 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
+"Nikdo v Tristramu nema pouziti - nebo odbyt - pro vsechno, co najdes v "
+"labyrintu. Ani ja ne, i kdyz je tezke tomu uverit. \n"
+" \n"
+"Nekdy budes jenom ty schopen najitr vyuziti pro nektere ty veci."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:453
@@ -8779,6 +9553,8 @@ msgid ""
 "Don't trust everything the drunk says. Too many ales have fogged his vision "
 "and his good sense."
 msgstr ""
+"Never vsemu, co rika ten opilec. Prilis mnoho piva zamlzilo jeho zrak a jeho "
+"zdravy rozum."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
@@ -8788,6 +9564,10 @@ msgid ""
 "Griswold, Pepin or that witch, Adria. I'm sure that they will snap up "
 "whatever you can bring them..."
 msgstr ""
+"Jestli sis toho jeste nevsiml, nekupuju nic z Tristramu. Jsem dovozcem "
+"kvalitniho zbozi. Jestli chces nabizet vetes, musis jit za Griswoldem, "
+"Pepinem nebo za tou carodejnici Adrii. Jsem si jist, ze skoci po vsem, co "
+"jim prineses..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:457
@@ -8797,6 +9577,10 @@ msgid ""
 "I'll never get enough money to... well, let's just say that I have definite "
 "plans that require a large amount of gold."
 msgstr ""
+"Soudim, ze dluzim kovari zivot - co z neho zbylo. Jiste, Griswold mi nabidl "
+"uceni v kovarne a je docela prijemny chlapik, ale nikdy bych neziskal dost "
+"zlata na... dobre, reknu ri jenom, ze mam urcite plany, na ktere potrebuju "
+"hodne zlata."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
@@ -8806,6 +9590,10 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
+"Kdybych byl o par let starsi, zahrnul bych ji vsim bohatstvim, co bych "
+"sehnal, a ujistuji te, ze se mohu dostat k opravdu pekne zbozi. Gillian je "
+"krasne devce, ktere by melo vypadnout z Tristramu hned, jak to bude "
+"bezpecne. Hmmm... mozna, ze ji vezmu s sebou, az pujdu..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
@@ -8814,6 +9602,9 @@ msgid ""
 "woman across the river. He keeps telling me about how lucky I am to be "
 "alive, and how my story is foretold in legend. I think he's off his crock."
 msgstr ""
+"Cain vi prilis hodne. Dost me otravuje - vic nez ta zenska za rekou. Porad "
+"mi vypravi, jak jsem stastny, ze jsem nazivu, a jak se muj pribeh prenasi v "
+"legendach. Myslim, ze mu trochu preskocilo."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:463
@@ -8824,6 +9615,11 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
+"Farnham - to je clovek s vaznymi problemy a ja vim o vaznych problemech "
+"vsechno. Prilis veril v poctivost jednoho muze a Lazarus ho zavedl do sameho "
+"chrtanu smrti. Oh, ja vim, jake to je tam dole, tak mi nezacni povidat o "
+"svych planech na zniceni zla, ktere zije v tom Labyrintu. Jenom si davej "
+"pozor na nohy..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -8833,6 +9629,9 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
+"Dokud nepotrebujes neco pripojit, je stary Pepin hodne dobry. \n"
+" \n"
+"Kdybych tenkrat mel nektery z tech lektvaru, co vari, mohl jsem mit nohu..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
@@ -8842,6 +9641,10 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
+"Adria me opravdu trapi. Jiste, Cain ti muze rict hodne o minulosti, ale "
+"carodejka vidi do tvoji minulosti. Vzdycky najde nejaky zpusob, jak dostat "
+"vsechno, co chce. Adriinyma rukama proslo vice zbozi, nez jsem kdy videl "
+"projit branami Kralovskeho Bazaru behem Velke Slavnosti."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
@@ -8851,6 +9654,10 @@ msgid ""
 "stupid tavern. I guess at the least he gives Gillian a place to work, and "
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
+"Ogden je blazen, ze tu zustava. Mohl bych ho dostat z mesta za velmi "
+"rozumnou cenu, ale on trva na tom, ze povede tu hloupou hospodu. Alespon "
+"dava Gillian misto, kde muze pracovat, a jeho zena Garda pece skvely Ovcacky "
+"kolac..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -8859,6 +9666,9 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
+"Za Sinemi hrdinu lezi Komnata kosti. Vecna smrt ceka na kazdeho, kdo by se "
+"snazil ukrast poklady chranene v teto sini. Tak pravil Pan hruzy a tak jest "
+"to psano."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -8867,6 +9677,8 @@ msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken..."
 msgstr ""
+"...a tak, zamceno za Branou krve a Sinemi ohne, ceka Udatnost na Hrdinu "
+"svetla, aby procitlo..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
@@ -8881,6 +9693,14 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
+"Nemuzes videt to co ja.\n"
+"Oko se mlzi,obzor zakryva.\n"
+"Otocis se a jsou pryc,\n"
+"Slysis sumot a nic vic.\n"
+"Potom vidis, co nemuze byt,\n"
+"Stin se hybe, kde svetlo ma byt.\n"
+"Pryc z temna z myslenek tvych,\n"
+"Svrzen jsi do Sine slepych."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
@@ -8890,6 +9710,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
+"Zbrojnice Pekla jsou domovem Vojevudce Krve. Za nim lezi zohavena tela "
+"tisicu. Andele i lide byli zabijeni, aby slouzili pri jeho nekonecnem "
+"obetovani Temnym, kteri prahnou pouze po jedine veci - po krvi."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
@@ -8902,6 +9725,12 @@ msgid ""
 "sky. Neither side ever gains sway for long as the forces of Light and "
 "Darkness constantly vie for control over all creation."
 msgstr ""
+"Pozor dej a svedc o pravdach, jez zde ctes, jelikoz jsou poslednim odkazem "
+"Horadrim. Prave ted zuri valka, ne na bitevnim poli, ktere zname - mezi "
+"vybornym kralovstvim Vysokeho Nebe a chaotickou dirou Horoucich Pekel. Tato "
+"valka jest znama jako Velky konflikt a zuri a plane dele nez hvezdy na "
+"obloze. Zadna ze stran nikdy neziskala prevahu na dlouhou dobu, kdyz sily "
+"Svetla a Temnoty souperi o vladu nad vsemi stvorenimi."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:507
@@ -8914,6 +9743,12 @@ msgid ""
 "have even allied themselves with either side, and helped to dictate the "
 "course of the Sin War."
 msgstr ""
+"Pozor dej a svedc o pravdach, jez zde ctes, jelikoz jsou poslednim odkazem "
+"Horadrim. Kdyz se Vecny konflikt mezi Vysokym Nebem a Horoucim Peklem "
+"presunul do zeme smrtelniku, byl nazyvan Hrisna Valka. Andele a Demoni "
+"kraceli v prevleku mezi lidmi, bojovali ve skrytu, vzdaleni od vsetecnych "
+"oci smrtelniku. Nekteri odvazni a mocni smrtelni se pripojili k nektere ze "
+"stran a pomahali urcovat vyvoj Hrisne Valky."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:509
@@ -8937,6 +9772,22 @@ msgid ""
 "faith. If Diablo were to be released, he would seek a body that is easily "
 "controlled as he would be very weak - perhaps that of an old man or a child."
 msgstr ""
+"Pozor dej a svedc o pravdach, jez zde ctes, jelikoz jsou poslednim odkazem "
+"Horadrim. Pred temer tremi stovkami let se stalo, ze Tri Prvotni Zla z "
+"Horoucich Pekel zahadne vstoupila do naseho sveta. Tri Bratri pustosili po "
+"desetileti zeme vychodu, zatimco se lide v jejich stopach trasli strachem. "
+"Nas Rad - Horadrim - byl zalozen tajnou skupinou magu, aby vypatral a "
+"uveznil Tri Zla pro jednou a naveky.\n"
+" \n"
+"Puvodne Horadrim uveznili dva ze Tri v mocnych artefaktech, jez jsou znamy "
+"jako Kameny duse, a pohrbili je hluboko pod piskem vychodnich pousti. Treti "
+"Zlo uniklo zajmuti a uprchlo na zapad, pronasledovano mnoha Horadrim. Treti "
+"Zlo - zname jako Diablo, Pan Hruzy - bylo nakonec dopadeno, jeho podstata "
+"ulozena do Kamenu duse a pohrbena v tomto Labyrintu.\n"
+" \n"
+"Budiz kazdy varovan, ze Kamen duse nesmi byt objeven lidmi bez viry. Bude-li "
+"Diablo uvolnen, vyhleda telo, jez muze jednoduse ovladat, protoze bude "
+"velice slaby - treba telo starce ci ditete."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:511
@@ -8949,6 +9800,12 @@ msgid ""
 "the factions of Belial and Azmodan while the forces of the High Heavens "
 "continually battered upon the very Gates of Hell."
 msgstr ""
+"I stalo se, ze v Horoucich Peklech propukla revoluce znama jako Temne "
+"vyhnanstvi. Nizsi Zla svrhla Tri Prvotni Zla a vyhostila jejich duchovni "
+"formy do rise smrtelniku. Demonove Belial (Pan Lzi) a Azmodan (Pan Hrichu) "
+"bojovali o ziskani vlady nad Peklem behem nepritomnosti Tri Bratru. Cele "
+"Peklo se rozdelilo na frakce Beliala a Azmodana, zatimco sily Vysokeho Nebe "
+"neustale dorazely az temer na same Brany Pekla."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:513
@@ -8959,6 +9816,11 @@ msgid ""
 "secretive Order of mortal magi named the Horadrim, who quickly became adept "
 "at hunting demons. They also made many dark enemies in the underworlds."
 msgstr ""
+"Mnoho demonu putovalo po risich smrtelniku a hledalo Tri Bratry. Tito demoni "
+"byli do smrtelne roviny nasledovani Andeli, kteri je pronasledovali v "
+"ohromnych mestech Vychodu. Andele se spojili s tajnym Radem smrtelnych magu, "
+"znamym jako Horadrim, kteri se rychle stali odborniky na patrani po "
+"demonech. Take si udelali mnoho temnych nepratel v podsveti."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:515
@@ -8977,6 +9839,18 @@ msgid ""
 "He will then arise to free his Brothers and once more fan the flames of the "
 "Sin War..."
 msgstr ""
+"I stalo se, ze Tri Prvotni Zla byal v duchovni forme vyhnana do rise "
+"smrtelniku a po desetiletich rozsevani chaosu na Vychode, byla ulovena "
+"prokletym Radem smrtelniku Horadrim. Horadrim pouzili artefakty zvane Kameny "
+"duse, aby v nich zachytili podstatu Mefista, Pana Nenavisti, a jeho bratra "
+"Baala, Pana Zniceni. Nejmladsi z bratru - Diablo, Pan Hruzy - uprchl na "
+"zapad.\n"
+" \n"
+"Nakonec Horadrim uveznili i Diabla do Kamenu duse a pohrbili ho pod davnou, "
+"zapomenutou Katedralou. Tam Pan Hruzy spi a ocekava cas sveho znovuzrozeni. "
+"Vez, ze bude hledat telo mlade a nadane, aby ho ovladl - takove, ktere je "
+"nevinne a snadno ovladatelne. Pote povstane, aby uvolnil sve Bratry a znovu "
+"rozviril plameny Hrisne Valky..."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:517
@@ -8988,6 +9862,12 @@ msgid ""
 "that have brought this discord to the realms of man. My lord has named the "
 "battle for this world and all who exist here the Sin War."
 msgstr ""
+"Vsichni velebi Diabla - Pana Hruzy a Toho, jez prezil Temne vyhnanstvi. Kdyz "
+"se probudil z dlouheho spanku, muj Pan a Mistr se mnou mluvil o tajemstvich, "
+"jez zna pouze par smrtelniku. Rekl mi o vecne valce kralovstvi Vysokeho Nebe "
+"a diry Horoucich Pekel. Odhalil mi sily, ktere prinesly tento nesvar do rise "
+"lidi. Muj Pan nazval tuto bitvu o nas svet a vse, co zde existuje, Hrisna "
+"Valka."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:519
@@ -8999,6 +9879,12 @@ msgid ""
 "beneath the sands of the east. Once my Lord releases his Brothers, the Sin "
 "War will once again know the fury of the Three."
 msgstr ""
+"Slavu a podporu Diablovi - Panu Hruzy a Vudci Tri. Muj Pan mi rekl o svych "
+"dvou Bratrech, Mefistovi a Baalovi, kteri byli pred davnymi veky vyhnani do "
+"tohoto sveta. Muj Pan si preje vyckat na svuj cas a sbirat sve straslive "
+"sily, aby mohl osvobodit sve uveznene bratry z jejich hrobky pod poustemi "
+"vychodu. Jakmile muj Pan uvolni sve Bratry, Hrisna Valka opet pozna zurivost "
+"Tri."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:521
@@ -9013,6 +9899,14 @@ msgid ""
 "Diablo's call and pray that I will be rewarded when he at last emerges as "
 "the Lord of this world."
 msgstr ""
+"Slava a obetovani Diablovi- Panu Hruzy a Niciteli dusi. Kdyz jsem probudil "
+"meho Pana ze spanku, pokusil se ziskat smrtelnou podobu. Diablo zkusil "
+"ziskat telo Krale Leorica, ale muj Pan byl z uvezneni prilis slaby. Muj Pan "
+"pozadoval jednoduchou a nevinnou cestu do tohoto sveta a zjistil, ze je pro "
+"tento ukol nejvhodnejsi chlapec Albrecht. Zatimco dobry Kral Leoric zesilel "
+"po neuspesnem Diablove pokusu o jeho ovladnuti, unesl jsem jeho syna "
+"Albrechta a privedl ho pred meho Mistra. Nyni ocekavam Diablovo volani a "
+"preji si, abych byl odmenen, kdyz se konecne vynori jako Pan tohoto sveta."
 
 #. TRANSLATORS: Neutral Text spoken by Ogden
 #: Source/textdat.cpp:523
@@ -9028,6 +9922,17 @@ msgid ""
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
+"Diky bohum, ze ses jiz vratil!\n"
+"Od te doby, co jsi tu zil, se mnoho zmenilo, priteli. Vsude byl klid dokud "
+"neprisli temni najedzdnici a neznicili nasi vesnici. Mnozi byli na miste "
+"stati a ti, kteri pozvedli zbrane, byli zabiti nebo odvleceni, aby se stali "
+"otroky - nebo hur. Kostel na konci mesta byl znesvecen a je pouzivan pro "
+"temne ritualy. Vriskot, ktery se rozleha noci je nelidsky, ale nekteri z "
+"vesnicanu mozna jeste prezili. Kdyz pujdes po ceste, ktera lezi mezi mojim "
+"hostincem a kovarnou, dostanes se ke kostelu a, prosim, zachran koho "
+"muzes. \n"
+" \n"
+"Mozna ti reknu vice, az si zase promluvime. Hodne stesti!"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:525 Source/textdat.cpp:533
@@ -9036,6 +9941,9 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written."
 msgstr ""
+"Za Sinemi hrdinu lezi Komnata kosti. Vecna smrt ceka na kazdeho, kdo by se "
+"snazil ukrast poklady chranene v teto sini. Tak pravil Pan hruzy a tak jest "
+"to psano."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -9045,6 +9953,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
+"Zbrojnice Pekla jsou domovem Vojevudce Krve. Za nim lezi zohavena tela "
+"tisicu. Andele i lide byli zabijeni, aby slouzili pri jeho nekonecnem "
+"obetovani Temnym, kteri prahnou pouze po jedine veci - po krvi."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
@@ -9053,6 +9964,9 @@ msgid ""
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
 "the sands of time confuse your search."
 msgstr ""
+"Pokracuj ve svem ukolu. Hledani ztraceneho pokladu neni jednoduche. Najit "
+"poklad, ktery nekdo schoval je jednodussi. Necham te nad tim premyslet. "
+"Nedovol, aby cas zmatl tve hledani."
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
@@ -9062,6 +9976,10 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
+"Coze?! To je hloupost. Tady v Tristramu neni zadny zakopany poklad. Ukaz mi "
+"to!! Ah, podivej se na to. Tyhle kresby jsou nepresne. Neodpovidaji nasemu "
+"mestu. Pamatoval bych si na to, co lezi pod katedralou, ale ne co lezi pod "
+"nasimi kopci."
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
@@ -9069,6 +9987,8 @@ msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well."
 msgstr ""
+"Opravdu nemam cas, diskutovat s tebou o nejake mape. Mam mnoho nemocnych "
+"lidi, kteri potrebuji mou pomoc a ty taky."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
@@ -9077,6 +9997,9 @@ msgid ""
 "His honor stripped and his visage altered.  He is trapped in immortal "
 "torment.  Charged to conceal the very thing that could free him."
 msgstr ""
+"Pysny Iswall byl uveznen hluboko pod povrchem tohoto sveta. Jeho cest "
+"zmizela a vzhled se zmenil. Je uveznen v nekonecnych mukach a trapenich. "
+"Tajne doufa, ze se jednou stane velka vec, ktera ho osvobodi."
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
@@ -9085,6 +10008,8 @@ msgid ""
 "at you later when you were running around the town with your nose in the "
 "dirt.  I'd ignore it."
 msgstr ""
+"Vsadim se, ze te Wirt videl prichazet a nahral to tak, aby se mohl pozdeji "
+"smat, az budes behat kolem mesta s nosem ve spine. Ignoroval bych to."
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
@@ -9094,6 +10019,10 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
+"Byly casy, kdy bylo tohle mesto castou zastavkou obchodniku z dalekeho "
+"okoli. Monoho se od tech dob zmenilo. Ale skryte jeskyne a pohrbene poklady "
+"jsou jenom detske povidacky. Wirt se malokdy oddava detskym hram. Mozna ze "
+"je to jenom jeho predstavivost."
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
@@ -9101,6 +10030,8 @@ msgid ""
 "Listen here.  Come close.  I don't know if you know what I know, but you've "
 "have really got something here.  That's a map."
 msgstr ""
+"Poslouchej. Pojd bliz. Nevim, jestli vis co vim ja, ale ty mas opravdu jednu "
+"zajimavou vec. Tohle je mapa."
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
@@ -9112,6 +10043,12 @@ msgid ""
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
+"Moje babicka mi casto vypravela pribehy o podivnych armadach, ktere obyvaly "
+"hrbitov kolem kostela. A mozna by te mohl zajimat jeden, ktery jsem slysela. "
+"Ona rikala, ze jestli nechas nejakou obet na hrbitove, vstoupis do "
+"katedraly, kde se budes modlit k mrtvym, a pak se vratis, tak ta obet by se "
+"mohla zmenit v neco docela jineho. Nevim, mozna ze to jsou pouze reci jedne "
+"stare nemocne zeny, ale v soucasne dobe je mozne vsechno."
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
@@ -9120,6 +10057,9 @@ msgid ""
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?"
 msgstr ""
+"Hmmm. Obrovsky a tajemny poklad rikas? Mmmm. Mozna bych si od tebe par veci "
+"vzal. Nebo radeji, nepotrebujes nejake vzacne a drahe zasoby veci, s ktere "
+"ti muzou pomoci projit touhle zkouskou?"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
@@ -9132,6 +10072,12 @@ msgid ""
 "you could destroy it, I would be forever grateful. I'd do it myself, but "
 "someone has to stay here with the cows..."
 msgstr ""
+"Tak ty jsi ten hrdina o kterem kazdy mluvi. Mozna bys mohl pomoci chudemu "
+"farmari z jeho problemu? Na konci tohoto ovocneho sadu, jizne odtud, se "
+"objevila nejaka podivna vec, ktera vyleza za zeme! Kvuli ni se nemuzu dostat "
+"k me urode ani pytlum se senem a moje kravy jsou hladove. Carodejnice mi "
+"dala tohle a rikala, ze to tu vec odstrani. Jestli muzes, jdi a znic to, "
+"budu ti vdecny. Udelal bych to sam, ale nekdo tady musi zustat s kravami..."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
@@ -9139,6 +10085,8 @@ msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
 msgstr ""
+"Vedel jsem, ze to nebude tak jednoduche, jak carodejnice rikala. Je to "
+"spatny svet, kdyz nemuzes verit ani svym sousedum."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
@@ -9147,6 +10095,9 @@ msgid ""
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
 "you know. You've got to find it, and then blast that horror out of our town."
 msgstr ""
+"Hotovo? Poslal jsi to zpet do temnych zakouti Hadesova sveta? Coze? Oh, "
+"nerikej mi, ze jsi to ztratil! Tyhle veci nejsou jen tak k dostani, vis. "
+"Musis to najit a potom odstranit tu hruzu pryc z naseho mesta."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -9156,6 +10107,10 @@ msgid ""
 "church, and so forth, these are trying times. I am but a poor farmer, but "
 "here -- take this with my great thanks."
 msgstr ""
+"Slysel jsem tu explozi! Mnohokrat ti dekuji cizince. Co se vsemi temito "
+"vecmi, co vylezaji ze zeme, monstry nicici chramy a tak dale, tohle je cas "
+"zkousek. Ja jsem jenom obycejny chudy farmar, ale tady -- vezmi si tohle a "
+"mnohokrat dekuji."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
@@ -9165,11 +10120,14 @@ msgid ""
 "those creatures you could come back... and spare a little time to help a "
 "poor farmer?"
 msgstr ""
+"Oh, takove problemy co mam... mozna... Ne, nemuzu te vyuzit, co tedy s temi "
+"dalsimi problemy. Mozna az vycistis kostel od nekterych priser, mohl by ses "
+"vratit... a usetrit svou pomoci trochu casu jednomu chudemu farmari?"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
 msgid "Waaaah! (sniff) Waaaah! (sniff)"
-msgstr ""
+msgstr "Waaaah! (smrka) Waaaah! (smrka)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
@@ -9179,6 +10137,10 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
+"Ztratil jsem Thea! Meho nejlepsiho pritele! Hrali jsme si u reky, a Theo "
+"rikal, ze se chce jit podivat na tu velkou zelenou vec. Rikal jsem mu, ze "
+"bychom to nemeli delat, ale potom najednou vylezl ten BROUK! Utikali jsme "
+"pryc, ale Theo upadl a ten brouk ho chytil a odnesl pryc!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
@@ -9186,6 +10148,8 @@ msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
+"Nasel jsi ho? Jdi najit Theodora, prosim te! Je jeste maly. Neumi se o sebe "
+"jeste postarat! Prosim te!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
@@ -9194,6 +10158,9 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
+"Ty jsi ho nasel! Nasel jsi ho! Dekuji ti! Oh Theo, vylekali te ti strasni "
+"brouci? Hey! Ugh! Tady je nejaka vec, ktera se na tebe lepi. Ick! Pojd Theo, "
+"pujdeme domu! Jeste jednou ti dekuji cizince!"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
@@ -9201,6 +10168,8 @@ msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
 msgstr ""
+"Dlouho jsme necinne lezeli a ted nastal cas se probudit. Po nasem dlouhem "
+"spanku mame velky hlad. Uz brzo, ted, prijde cas se nakrmit..."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
@@ -9208,6 +10177,8 @@ msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
 msgstr ""
+"Radoval ses, maly savce? Jak pateticke. Ten tvuj maly svet nebude mit zadnou "
+"sanci."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
@@ -9216,6 +10187,9 @@ msgid ""
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
 "the flesh of its denizens.  Man shall become our chattel and sustenance."
 msgstr ""
+"Tyhle plochy budou znesveceny a nase rasa zaplavi vsechny pole, ktere volaji "
+"lidi domu. Nase upony obklopi tenhle svet a my budeme oslavovat na telech "
+"jeho obyvatel. Lide se stanou nasimi otroky a potravou."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
@@ -9223,6 +10197,8 @@ msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
 msgstr ""
+"Ah, citim te... jsi blizko! Blizko! Ssss... vune krve a strachu... jak je to "
+"lakave..."
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -9241,21 +10217,33 @@ msgid ""
 "within all things and beyond all things. Light and unity are the products of "
 "this holy foundation, a unity of purpose and a unity of possession."
 msgstr ""
+"A v roce Zlateho Svetla bylo rozhodnuto o stavbe velke Katedraly. Zakladni "
+"kamen tohoto svateho mista byl vytesan z prusvitneho kamene Antyrael, ktery "
+"dostal jmeno po Andelovi, ktery sdilel svou silu s Horadrim. \n"
+" \n"
+"V Roce Barevnych stinu nastalo zemetreseni a Katedrala se narusila a spadla. "
+"Kdyz zacala stavba katakomb a vezi a muzi byli postaveni proti pustoseni "
+"Hrisne Valky, byly ruiny rozebrany kvuli potrebe kameni. A tak se stalo, ze "
+"zakladni kamen zmizel z jejich oci. \n"
+" \n"
+"Tento kamen byl soucast tohoto sveta -- a soucast vsech svetu -- stejne jako "
+"Svetlo je na pocatku vsech veci i na konci vsech veci. Svetlo a jednota jsou "
+"produkty tohoto svateho zrizeni, jednota vsech smyslu a jednota vlastnictvi."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
 msgid "Moo."
-msgstr ""
+msgstr "Muu."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:595
 msgid "I said, Moo."
-msgstr ""
+msgstr "Rikam, Muuu."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
 msgid "Look I'm just a cow, OK?"
-msgstr ""
+msgstr "Podivej, jsem krava, OK?"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:597
@@ -9271,6 +10259,15 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden."
 msgstr ""
+"Dobre, dobre. Nejsem opravdova krava. Normalne tohle nedelam; ale sedel jsem "
+"takhle doma, premyslel o obchode a najednou zacaly pres podlahu vylezat "
+"vsechny tyhle divne veci & brouci & rostliny... bylo to silene! Kdybych mel "
+"neco normalniho na sebe, nebylo by to tak hrozne. Hey! Mohl by jsi zajit ke "
+"mne domu a prinest mi obleceni? To hnede, ne to sedive, to je na vecer. "
+"Udelal bych to sam, ale nechci, aby me takhle nekdo videl. Tady, vezmi si "
+"tohle. Mozna to budes potrebovat... na zabiti tech veci, ktere mi rostou na "
+"zahrade. Muj dum nemuzes minout, je na jihu od mista, kde se reka "
+"rozdeluje... vsak uvidis... je to ten, u ktereho je zarostla zahradka."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
@@ -9278,6 +10275,8 @@ msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
 msgstr ""
+"Proc plytvas casem? Jdi hledat muj oblek! A rychle! Tamhleten Holstein se na "
+"mne porad diva!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
@@ -9285,6 +10284,8 @@ msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!"
 msgstr ""
+"Hej, donesl jsi mi muj oblek? Rychle, nevsimej si toho. Tyhle usi svedi "
+"stejne jako ty neveris!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
@@ -9293,6 +10294,8 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit."
 msgstr ""
+"Ne ne ne ne!  Tohle je SEDIVY oblek!  Ten je na noc!  Tenhle si NEMUZU "
+"obleci.  Copak jsi to za hlupaka?  Potrebuju HNEDY oblek!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
@@ -9303,6 +10306,11 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao."
 msgstr ""
+"Ahh, to je mnohem lepsi. Whew! Konecne, nejaka dustojnost! Mam rohy rovne? "
+"Dobre. Podivej, diky, ze jsi mi pomohl. Tady, vezmi si to jako malou odmenu. "
+"A jeste jeden maly modni tip... muzes pouzit maly... muzes pouzit novy... "
+"vis co myslim? Cely motiv dobrodruha je tak... retro. Takova mala rada, ze? "
+"Ciao."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
@@ -9310,6 +10318,8 @@ msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
 msgstr ""
+"Podivej. Ja jsem krava. A ty jsi navnada pro prisery. Naber par zkusenosti a "
+"pak si promluvime..."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -9317,6 +10327,8 @@ msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
 msgstr ""
+"Musi to opravdu byt strasny ukol, ktery jsem pred tebe postavil. Kdybych ti "
+"mohl jakkoliv... pomohla by ti sklenice pekneho, cerstveho mleka?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
@@ -9324,6 +10336,8 @@ msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
 msgstr ""
+"Oh, mozna bys mi mohl pomoci, ale snad az pote, co vycistis katakomby od "
+"tehletech nevericich bestii."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
@@ -9331,6 +10345,8 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
 msgstr ""
+"Potrebuji neco udelat, ale nemuzu duverovat cizinci. Mozna az tady budes "
+"nejaky cas, budu se citit lepe, kdyz s tebou budu mluvit."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
@@ -9338,6 +10354,8 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
 msgstr ""
+"Vidim v tobe velike moznosti. Mozna nekdy, az budes znat svuj osud, mohl by "
+"ses u mne zastavit a udelat mi jednu laskavost?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
@@ -9346,12 +10364,16 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!"
 msgstr ""
+"Myslim, ze bys mi pravdepodobne mohl pomoci, ale snad az budes trosku "
+"silnejsi. Nemuzu dopustit, aby padla jedina sance nasi vesnice na zniceni "
+"toho zla v chramu!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
 msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk."
 msgstr ""
+"Ja jsem samorostla krava. Udelej neco se sebou a... potom si promluvime."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:622
@@ -9359,6 +10381,8 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
+"Nebudu se zpovidat kazdemu turistovi, ktery pujde kolem! Nemas zabit par "
+"monster? Mozna si promluvime pozdeji. Pokud budes jeste nazivu..."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
@@ -9367,6 +10391,8 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
+"Prestan me otravovat. Hledam opravdoveho hrdinu. A to ty nejsi. Ty jsi jen "
+"potrava pro prisery... Potrebuji nejakeho zkuseneho hrdinu."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
@@ -9383,6 +10409,16 @@ msgid ""
 "it's just south of the fork in the river... you know... the one with the "
 "overgrown vegetable garden."
 msgstr ""
+"Dobra. Nechci te plest. Sedel jsem takhle doma, kdyz najednou se zacalo "
+"vsechno menit. Obrovske stada priser se zacala valit z podlahy! Zpanikaril "
+"jsem. Jedine, co jsem byl schopen udelat, bylo obleknout si tuhle Jersey "
+"kdyz jsem utikal ze dveri. No a ted vypadam takhle smesne. Kdybych ale mel "
+"neco normalniho na sebe, nebylo by to tak zle. Hey! Mohl bys zajit ke mne "
+"domu a donest mi obleceni? To hnede, ne to sedive, to je na vecer. Udelal "
+"bych to sam, ale nechci, aby me takhle nekdo videl. Tady, vezmi si tohle. "
+"Mozna to budes potrebovat... na zabiti tech veci, ktere mi rostou na "
+"zahrade. Muj dum nemuzes minout, je na jihu od mista, kde se reka "
+"rozdeluje... vsak uvidis... je to ten, u ktereho je zarostla zahradka."
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
@@ -9392,6 +10428,9 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low."
 msgstr ""
+"Dneska je chladno a oblacno. Vrhani magickych siti na nove druhy letajicich "
+"priser, to je dobra prace na dnesek. Musim si ale objednat vice netopyru a "
+"cernych svici od Adrie. Zacinaji mi dochazet."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
@@ -9400,6 +10439,9 @@ msgid ""
 "creature -- to no avail.  My methods of enslaving lesser demons seem to have "
 "no effect on this fearsome beast."
 msgstr ""
+"Vyzkousel jsem kouzla, hrozby, prisahy a smlouvani s temihle odpornymi tvory "
+"-- bez uspechu. Moje metody na zotroceni mensich priser nemaji na techto "
+"bestiich zadny uspech."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
@@ -9409,6 +10451,9 @@ msgid ""
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""
+"Muj domov se pomalu kazi, diky temhletem nezvanym veznum. Krypty jsou plne "
+"stinu, ktere se pohybuji pouze v zakoutich me mysli. Nejasne naznaky drapu "
+"tanci na okrajich meho sluchu. Hledaji, myslim si to, hledaji novinky."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
@@ -9418,6 +10463,10 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name."
 msgstr ""
+"Mezi recmi jim uniklo jeho jmeno -- Na-Krul. Pokusil jsem se prozkoumat "
+"tohle jmeno, ale mali demoni mi nejak znicili mou knihovnu. Na-Krul... To "
+"jmeno me naplnuje obavami. Radeji o nem budu uvazovat jako o Prisere. Je to "
+"lepsi nez jeho prave jmeno."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
@@ -9427,6 +10476,9 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice."
 msgstr ""
+"Sileny vriskot zajatych priser mi neda spat. Jsou nastvane na toho, kdo je "
+"vyslal do Pustiny a svolavaji na me kletby za to, ze je tady veznime. Tyhle "
+"jejich slova naplnuji me srdce strachem a nedari se mi zbavit se tech hlasu."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
@@ -9436,6 +10488,10 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge."
 msgstr ""
+"Cas mi rychle ubiha. Musim zaznamenat zpusob, jak oslabit demona a pak ukryt "
+"tenhle text, pro pripad, ze by jeho prisluhovaci nasli zpusob, jak pomoci "
+"mych znalosti osvobodit sveho vudce. Doufam, ze ten kdo tohle najde bude "
+"hledat vedomost."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
@@ -9453,6 +10509,18 @@ msgid ""
 "only these spells to gain entry or his power may be too great for you to "
 "defeat."
 msgstr ""
+"Kdokoliv nasel tenhle svitek, je schopen porazit demonickou stvuru, ktera je "
+"za touto zdi. Muj cas vyprsel. Prave ted, jejich prisluhovac skrabe na "
+"dvere, vedle kterych se schovavam. \n"
+" \n"
+"Zpoutal jsem demona posvatnym kouzlem a uveznil ho za silnou zdi, ale citim, "
+"ze to nestaci. \n"
+" \n"
+"Tri listiny nalezene u mne se postaraji o odstraneni tohoto chraneneho "
+"vstupu do jeho kralovstvi, ale pouze pokud se pouziji ve spravnem poradi. "
+"Paky na vstupni ceste odstrani barieru a osvobodi demona; nedotykej se jich! "
+"Pouzij pouze svitky k dosazeni vstupu jinak jeho sila bude velika a ty ho "
+"nebudes moci porazit."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
