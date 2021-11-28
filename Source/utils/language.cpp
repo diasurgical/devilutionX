@@ -289,6 +289,8 @@ bool IsSmallFontTall()
 
 void LanguageInitialize()
 {
+	translation = { {}, {} };
+
 	const std::string lang = sgOptions.Language.szCode;
 	SDL_RWops *rw;
 
