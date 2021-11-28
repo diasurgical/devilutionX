@@ -482,10 +482,6 @@ void OptionEntryBoolean::SaveToIni(string_view category) const
 {
 	SetIniValue(category.data(), key.data(), value);
 }
-bool OptionEntryBoolean::operator*() const
-{
-	return value;
-}
 void OptionEntryBoolean::SetValue(bool value)
 {
 	this->value = value;
@@ -516,10 +512,6 @@ void OptionEntryEnumBase::LoadFromIni(string_view category)
 void OptionEntryEnumBase::SaveToIni(string_view category) const
 {
 	SetIniValue(category.data(), key.data(), value);
-}
-int OptionEntryEnumBase::GetValueInternal() const
-{
-	return value;
 }
 void OptionEntryEnumBase::AddEntry(int value, string_view name)
 {

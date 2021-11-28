@@ -82,7 +82,10 @@ public:
 	    , value(defaultValue)
 	{
 	}
-	[[nodiscard]] bool operator*() const;
+	[[nodiscard]] bool operator*() const
+	{
+		return value;
+	}
 	void SetValue(bool value);
 
 	[[nodiscard]] OptionEntryType GetType() const override;
@@ -130,7 +133,10 @@ protected:
 	{
 	}
 
-	[[nodiscard]] int GetValueInternal() const;
+	[[nodiscard]] int GetValueInternal() const
+	{
+		return value;
+	}
 
 	void AddEntry(int value, string_view name);
 
