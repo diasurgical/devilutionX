@@ -40,7 +40,7 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Exit Hellfire") : _("Exit Diablo"), MAINMENU_EXIT_DIABLO));
 
-	if (!gbSpawned || gbIsHellfire) {
+	if (!gbIsSpawn || gbIsHellfire) {
 		if (gbIsHellfire)
 			LoadArt("ui_art\\mainmenuw.pcx", &ArtBackgroundWidescreen);
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");
@@ -51,7 +51,7 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	UiAddBackground(&vecMainMenuDialog);
 	UiAddLogo(&vecMainMenuDialog);
 
-	if (gbSpawned && gbIsHellfire) {
+	if (gbIsSpawn && gbIsHellfire) {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT), (Sint16)(UI_OFFSET_Y + 145), 640, 30 };
 		vecMainMenuDialog.push_back(std::make_unique<UiArtText>(_("Shareware"), rect1, UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
 	}

@@ -47,7 +47,6 @@ Art ArtBackgroundWidescreen;
 Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
-bool gbSpawned;
 
 void (*gfnSoundFunction)(const char *file);
 bool textInputActive = true;

@@ -939,7 +939,6 @@ void DiabloInit()
 #endif
 
 	UiInitialize();
-	UiSetSpawned(gbIsSpawn);
 	was_ui_init = true;
 
 	ReadOnlyTest();
