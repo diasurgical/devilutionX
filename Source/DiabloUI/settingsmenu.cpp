@@ -26,7 +26,6 @@ Rectangle rectDescription;
 enum class SpecialMenuEntry {
 	None = -1,
 	PreviousMenu = -2,
-	SwitchGame = -3,
 	ToggleSpawn = -4,
 };
 
@@ -70,11 +69,6 @@ void ItemSelected(int value)
 			break;
 		case SpecialMenuEntry::PreviousMenu:
 			endMenu = true;
-			break;
-		case SpecialMenuEntry::SwitchGame:
-			gbIsHellfire = !gbIsHellfire;
-			endMenu = true;
-			recreateUI = true;
 			break;
 		case SpecialMenuEntry::ToggleSpawn:
 			gbIsSpawn = !gbIsSpawn;
@@ -137,8 +131,6 @@ void UiSettingsMenu()
 		vecDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
 		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
 
-		if (diabdat_mpq && hellfire_mpq)
-			vecDialogItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Switch to Diablo") : _("Switch to Hellfire"), static_cast<int>(SpecialMenuEntry::SwitchGame), UiFlags::ColorUiGold));
 		if (diabdat_mpq)
 			vecDialogItems.push_back(std::make_unique<UiListItem>(gbIsSpawn ? _("Switch to Fullgame") : _("Switch to Shareware"), static_cast<int>(SpecialMenuEntry::ToggleSpawn), UiFlags::ColorUiGold));
 

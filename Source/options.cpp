@@ -235,6 +235,11 @@ void OptionLanguageCodeChanged()
 	init_language_archives();
 }
 
+void OptionGameModeChanged()
+{
+	gbIsHellfire = *sgOptions.StartUp.gameMode == StartUpGameMode::Hellfire;
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -272,7 +277,6 @@ void LoadOptions()
 	sgOptions.Diablo.lastMultiplayerHero = GetIniInt("Diablo", "LastMultiplayerHero", 0);
 	sgOptions.Hellfire.lastSinglePlayerHero = GetIniInt("Hellfire", "LastSinglePlayerHero", 0);
 	sgOptions.Hellfire.lastMultiplayerHero = GetIniInt("Hellfire", "LastMultiplayerHero", 0);
-	sgOptions.Hellfire.startUpGameOption = static_cast<StartUpGameOption>(GetIniInt("Hellfire", "StartUpGameOption", static_cast<int>(StartUpGameOption::None)));
 	GetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
 
 	sgOptions.Audio.nSoundVolume = GetIniInt("Audio", "Sound Volume", VOLUME_MAX);
@@ -343,7 +347,6 @@ void SaveOptions()
 	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
 	SetIniValue("Hellfire", "LastSinglePlayerHero", sgOptions.Hellfire.lastSinglePlayerHero);
 	SetIniValue("Hellfire", "LastMultiplayerHero", sgOptions.Hellfire.lastMultiplayerHero);
-	SetIniValue("Hellfire", "StartUpGameOption", static_cast<int>(sgOptions.Hellfire.startUpGameOption));
 
 	SetIniValue("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
@@ -505,6 +508,12 @@ string_view OptionCategoryBase::GetDescription() const
 
 StartUpOptions::StartUpOptions()
     : OptionCategoryBase("StartUp", N_("Start Up"), N_("Start Up Settings"))
+    , gameMode("Game", OptionEntryFlags::NeedHellfireMpq | OptionEntryFlags::RecreateUI, N_("Game Mode"), N_("Play Diablo or Hellfire."), StartUpGameMode::Ask,
+          {
+              { StartUpGameMode::Diablo, N_("Diablo") },
+              // Ask is missing, cause we want to hide it from UI-Settings.
+              { StartUpGameMode::Hellfire, N_("Hellfire") },
+          })
     , diabloIntro("Diablo Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Shown Intro cinematic."), StartUpIntro::Once,
           {
               { StartUpIntro::Off, N_("OFF") },
@@ -524,10 +533,12 @@ StartUpOptions::StartUpOptions()
               { StartUpSplash::None, N_("None") },
           })
 {
+	gameMode.SetValueChangedCallback(OptionGameModeChanged);
 }
 std::vector<OptionEntryBase *> StartUpOptions::GetEntries()
 {
 	return {
+		&gameMode,
 		&diabloIntro,
 		&hellfireIntro,
 		&splash,

@@ -916,7 +916,7 @@ void DiabloInit()
 
 	if (forceSpawn)
 		gbIsSpawn = true;
-	if (forceDiablo || sgOptions.Hellfire.startUpGameOption == StartUpGameOption::Diablo)
+	if (forceDiablo || *sgOptions.StartUp.gameMode == StartUpGameMode::Diablo)
 		gbIsHellfire = false;
 	if (forceHellfire)
 		gbIsHellfire = true;
@@ -944,7 +944,7 @@ void DiabloInit()
 
 	ReadOnlyTest();
 
-	if (gbIsHellfire && !forceHellfire && sgOptions.Hellfire.startUpGameOption == StartUpGameOption::None) {
+	if (gbIsHellfire && !forceHellfire && *sgOptions.StartUp.gameMode == StartUpGameMode::Ask) {
 		UiSelStartUpGameOption();
 		if (!gbIsHellfire) {
 			// Reinitalize the UI Elements cause we changed the game

@@ -10,10 +10,11 @@
 
 namespace devilution {
 
-enum class StartUpGameOption {
-	None,
-	Hellfire,
-	Diablo,
+enum class StartUpGameMode {
+	/** @brief If hellfire is present, asks the user what game he wants to start. */
+	Ask = 0,
+	Hellfire = 1,
+	Diablo = 2,
 };
 
 enum class StartUpIntro {
@@ -234,6 +235,7 @@ struct StartUpOptions : OptionCategoryBase {
 	StartUpOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
+	OptionEntryEnum<StartUpGameMode> gameMode;
 	/** @brief Play game intro video on diablo startup. */
 	OptionEntryEnum<StartUpIntro> diabloIntro;
 	/** @brief Play game intro video on hellfire startup. */
@@ -261,8 +263,6 @@ struct HellfireOptions : OptionCategoryBase {
 	std::uint32_t lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
 	std::uint32_t lastMultiplayerHero;
-
-	StartUpGameOption startUpGameOption;
 };
 
 struct AudioOptions : OptionCategoryBase {
