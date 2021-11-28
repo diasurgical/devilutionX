@@ -72,7 +72,6 @@ void ItemSelected(int value)
 			break;
 		case SpecialMenuEntry::ToggleSpawn:
 			gbIsSpawn = !gbIsSpawn;
-			UiSetSpawned(gbIsSpawn);
 			endMenu = true;
 			recreateUI = true;
 			break;

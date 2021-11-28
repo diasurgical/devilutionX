@@ -71,9 +71,4 @@ void UiTitleDialog()
 	TitleFree();
 }
 
-void UiSetSpawned(bool bSpawned)
-{
-	gbSpawned = bSpawned;
-}
-
 } // namespace devilution
