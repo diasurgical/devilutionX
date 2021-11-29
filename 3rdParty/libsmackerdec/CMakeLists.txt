@@ -2,8 +2,8 @@ include(FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(libsmackerdec
-    URL https://github.com/diasurgical/libsmackerdec/archive/2b9247f2c72fea5e2992888f7f29cd7f6d790b35.tar.gz
-    URL_HASH MD5=a34396cfe21a166de331ae714c5449cb
+    URL https://github.com/diasurgical/libsmackerdec/archive/792527435722151aff1a5b11f0862b957563d10b.tar.gz
+    URL_HASH MD5=8e970b75c3c273be07c64addfa292522
 )
 FetchContent_MakeAvailableExcludeFromAll(libsmackerdec)
 
