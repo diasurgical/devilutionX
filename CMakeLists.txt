@@ -253,7 +253,6 @@ if(NINTENDO_3DS)
 endif()
 
 if(ANDROID)
-  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
   include(android_defs)
 endif()
 
