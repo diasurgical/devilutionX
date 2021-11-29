@@ -22,6 +22,15 @@
 #include "platform/ctr/locale.hpp"
 #endif
 
+#ifdef _WIN32
+// clang-format off
+// Need to explicitly define the minimum supported windows version for mingw builds
+#define WINVER 0x0600
+#include <windows.h>
+#include <winnls.h>
+// clang-format on
+#endif
+
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
@@ -728,6 +737,23 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 	sceAppUtilShutdown();
 #elif defined(__3DS__)
 	std::string locale = n3ds::GetLocale();
+#elif defined(_WIN32)
+	std::string locale;
+	WCHAR localeBuffer[LOCALE_NAME_MAX_LENGTH];
+	if (GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
+		// The user default locale could be loaded, we need to convert from WIN32's default of UTF16 to UTF8
+		char utf8Buffer[12] {};
+		// We only handle 5 character locales (lang2-region2), so don't bother reading past that. This does leave the resulting string unterminated but the buffer was zero initialised anyway.
+		WideCharToMultiByte(CP_UTF8, 0, localeBuffer, 5, utf8Buffer, 12, nullptr, nullptr);
+
+		// GetUserDefaultLocaleName could return an ISO 639-2/T string (three letter language code) or even an arbitrary custom locale, however we only handle 639-1 (two letter language code) locale names when checking the fallback language.
+		if (utf8Buffer[2] == '-') {
+			// if a region is included in the locale do a simple transformation to the expected POSIX style.
+			utf8Buffer[2] = '_';
+		}
+
+		locale.append(utf8Buffer);
+	}
 #else
 	std::string locale = std::locale("").name().substr(0, 5);
 #endif
