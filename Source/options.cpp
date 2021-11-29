@@ -24,8 +24,6 @@
 
 #ifdef _WIN32
 // clang-format off
-// Need to explicitly define the minimum supported windows version for mingw builds
-#define WINVER 0x0600
 #include <windows.h>
 #include <winnls.h>
 // clang-format on
@@ -739,6 +737,8 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 	std::string locale = n3ds::GetLocale();
 #elif defined(_WIN32)
 	std::string locale;
+
+#if WINVER >= 0x0600
 	WCHAR localeBuffer[LOCALE_NAME_MAX_LENGTH];
 	if (GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
 		// The user default locale could be loaded, we need to convert from WIN32's default of UTF16 to UTF8
@@ -754,6 +754,18 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 
 		locale.append(utf8Buffer);
 	}
+#else
+	// Fallback method for older versions of windows, this is deprecated since Vista
+	char localeBuffer[LOCALE_NAME_MAX_LENGTH];
+	// Deliberately not using the unicode versions here as the information retrieved should be represented in ASCII/single byte UTF8 codepoints.
+	if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME, localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
+		locale.append(localeBuffer);
+		if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME, localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
+			locale.append("_");
+			locale.append(localeBuffer);
+		}
+	}
+#endif
 #else
 	std::string locale = std::locale("").name().substr(0, 5);
 #endif
