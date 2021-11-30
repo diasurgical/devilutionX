@@ -1,8 +1,13 @@
 # Building from Source
 
-Note: If you do not use git to manage the source you must provide the version to CMake manually:
+DevilutionX provides a source package with the release (`devilutionx-src.tar.xz`) that contains
+all the dependencies that must be vendored, the version information, and `devilutionx.mpq`.
+This is the version most appropriate for packaging DevilutionX for Linux distributions.
+For other use cases, use the git repository.
+
+Note: If you do not use git or `devilutionx-src.tar.xz` to get the source you must provide the version to CMake manually:
 ```bash
-cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
+cmake -S. -Bbuild -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 ```
 
 <details><summary>Linux</summary>
@@ -26,10 +31,9 @@ sudo apt-get install smpq
 sudo dnf install cmake gcc-c++ glibc-devel SDL2-devel libsodium-devel libpng-devel bzip2-devel libasan libubsan
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 </details>
 
@@ -37,11 +41,10 @@ make -j$(nproc)
 
 Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
-```
+```bash
 brew bundle install
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.physicalcpu)
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.physicalcpu)
 ```
 </details>
 <details><summary>FreeBSD</summary>
@@ -51,10 +54,9 @@ cmake --build . -j $(sysctl -n hw.physicalcpu)
 pkg install cmake sdl2 libsodium libpng bzip2
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.ncpu)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.ncpu)
 ```
 </details>
 <details><summary>NetBSD</summary>
@@ -64,10 +66,9 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 pkgin install cmake SDL2 libsodium libpng bzip2
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.ncpu)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.ncpu)
 ```
 </details>
 
@@ -78,10 +79,9 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 pkg_add cmake sdl2 libsodium libpng bzip2 gmake
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_MAKE_PROGRAM=gmake -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.ncpuonline)
+```bash
+cmake -S. -Bbuild -DCMAKE_MAKE_PROGRAM=gmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.ncpuonline)
 ```
 </details>
 
@@ -108,18 +108,16 @@ sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-
 
 ### 32-bit
 
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
 ### 64-bit
 
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
 Note: If your `(i686|x86_64)-w64-mingw32` directory is not in `/usr` (e.g. when on Debian), the mingw-prep scripts and the CMake
@@ -217,10 +215,9 @@ sudo (dkp-)pacman -S \
 _If you are compiling using MSYS2, you will need to run `export MSYS2_ARG_CONV_EXCL=-D` before compiling.
 Otherwise, MSYS will sanitize file paths in compiler flags which will likely lead to errors in the build._
 
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 The output files will be generated in the build folder.
 
@@ -230,10 +227,9 @@ The output files will be generated in the build folder.
 <details><summary>PlayStation Vita</summary>
 
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-make
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ```
 [PlayStation Vita manual](/docs/manual/platforms/vita.md)
 </details>
@@ -250,18 +246,16 @@ pkgman install cmake_x86 devel:libsdl2_x86 devel:libsodium_x86 devel:libpng_x86 
 pkgman install cmake devel:libsdl2 devel:libsodium devel:libpng devel:bzip2
 ```
 ### Compiling on 32 bit Haiku
-```
-cd build
-setarch x86 #Switch to secondary compiler toolchain (GCC8+)
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(nproc)
+```bash
+setarch x86 # Switch to secondary compiler toolchain (GCC8+)
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 ### Compiling on 64 bit Haiku
 No setarch required, as there is no secondary toolchain on x86_64, and the primary is GCC8+
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 </details>
 
