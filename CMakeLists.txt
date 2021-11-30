@@ -724,21 +724,41 @@ if(USE_GETTEXT_FROM_VCPKG)
 endif()
 find_package(Gettext)
 if (Gettext_FOUND)
+  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets")
   foreach(lang ${devilutionx_langs})
-    GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
-    list(APPEND devilutionx_TRANSLATIONS ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
+    set(_po_file "${DevilutionX_SOURCE_DIR}/Translations/${lang}.po")
+    set(_gmo_file "${CMAKE_CURRENT_BINARY_DIR}/assets/${lang}.gmo")
+    set(_lang_target devilutionx_lang_${lang})
+    add_custom_command(
+      COMMAND "${GETTEXT_MSGFMT_EXECUTABLE}" -o "${_gmo_file}" "${_po_file}"
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      OUTPUT "${_gmo_file}"
+      MAIN_DEPENDENCY "${_po_file}"
+      VERBATIM
+    )
+    add_custom_target("${_lang_target}" DEPENDS "${_gmo_file}")
+    list(APPEND devilutionx_lang_targets "${_lang_target}")
+    list(APPEND devilutionx_lang_files "${_gmo_file}")
 
-    if(VITA)
-      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "assets/${lang}.gmo")
+    if(ANDROID)
+      set(_android_asset "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets/${lang}.gmo")
+      add_custom_command(
+        COMMAND ${CMAKE_COMMAND} -E copy "${_gmo_file}" "${_android_asset}"
+        OUTPUT "${_android_asset}"
+        MAIN_DEPENDENCY "${_gmo_file}"
+        DEPENDS "${_lang_target}"
+        VERBATIM
+      )
+      list(APPEND _devilutionx_android_lang_files "${_android_asset}")
     endif()
-  endforeach(lang)
+    if(VITA)
+      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${_gmo_file}" "assets/${lang}.gmo")
+    endif()
+  endforeach()
 
-  if(ANDROID)
-    add_custom_target(copy_translations ALL
-      COMMAND ${CMAKE_COMMAND} -E copy ${devilutionx_TRANSLATIONS} ${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets
-      DEPENDS ${devilutionx_TRANSLATIONS})
-
-    add_dependencies(${BIN_TARGET} copy_translations)
+  if (ANDROID)
+    add_custom_target(deviliutionx_android_copy_translations DEPENDS ${_devilutionx_android_lang_files})
+    add_dependencies(${BIN_TARGET} deviliutionx_android_copy_translations)
   endif()
 endif()
 
@@ -854,8 +874,8 @@ set(devilutionx_assets
 foreach(asset_file ${devilutionx_assets})
   set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
   set(dst "${CMAKE_CURRENT_BINARY_DIR}/assets/${asset_file}")
-  list(APPEND DEVILUTIONX_MPQ_FILES ${asset_file})
-  list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES ${dst})
+  list(APPEND DEVILUTIONX_MPQ_FILES "${asset_file}")
+  list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES "${dst}")
   add_custom_command(
     COMMENT "Copying ${asset_file}"
     OUTPUT "${dst}"
@@ -865,16 +885,7 @@ foreach(asset_file ${devilutionx_assets})
 endforeach()
 if (Gettext_FOUND)
   foreach(lang ${devilutionx_langs})
-    set(src "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo")
-    set(dst "${CMAKE_CURRENT_BINARY_DIR}/assets/${lang}.gmo")
-    list(APPEND DEVILUTIONX_MPQ_FILES ${lang}.gmo)
-    list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES ${dst})
-    add_custom_command(
-      COMMENT "Copying ${lang}.gmo"
-      OUTPUT "${dst}"
-      DEPENDS "${src}"
-      COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
-      VERBATIM)
+    list(APPEND DEVILUTIONX_MPQ_FILES "${lang}.gmo")
   endforeach()
 endif()
 
@@ -886,11 +897,13 @@ if(BUILD_ASSETS_MPQ)
     COMMAND ${CMAKE_COMMAND} -E remove -f "${DEVILUTIONX_MPQ}"
     COMMAND ${SMPQ} -M 1 -C PKWARE -c "${DEVILUTIONX_MPQ}" ${DEVILUTIONX_MPQ_FILES}
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets"
-    DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES}
+    DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES} ${devilutionx_lang_targets} ${devilutionx_lang_files}
     VERBATIM)
-  add_custom_target(devilutionx_mpq ALL DEPENDS "${DEVILUTIONX_MPQ}")
+  add_custom_target(devilutionx_mpq DEPENDS "${DEVILUTIONX_MPQ}")
+  add_dependencies(${BIN_TARGET} devilutionx_mpq)
 else()
-  add_custom_target(devilutionx_copied_assets ALL DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES})
+  add_custom_target(devilutionx_copied_assets DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES} ${devilutionx_lang_targets})
+  add_dependencies(${BIN_TARGET} devilutionx_copied_assets)
 endif()
 
 target_include_directories(libdevilutionx PUBLIC
