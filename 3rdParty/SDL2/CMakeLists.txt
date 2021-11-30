@@ -14,8 +14,8 @@ endif()
 include(FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
 FetchContent_Declare(SDL2
-    URL https://github.com/libsdl-org/SDL/archive/2e9821423a237a1206e3c09020778faacfe430be.tar.gz
-    URL_HASH MD5=5311423cceaea04fa1e00ae21050b012
+    URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.0.18.tar.gz
+    URL_HASH MD5=647e2890385e5f13b9aeee2e27fa26e7
 )
 FetchContent_MakeAvailableExcludeFromAll(SDL2)
 
