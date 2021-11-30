@@ -768,7 +768,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.push_back({ "ko_KR", "Korean" });
 	languages.push_back({ "pl", "Polish" });
 	languages.push_back({ "pt_BR", "Portuguese (Brazil)" });
-	languages.push_back({ "ro_RO", "Romansh" });
+	languages.push_back({ "ro_RO", "Romanian" });
 	languages.push_back({ "ru", "Russian" });
 	languages.push_back({ "sv", "Swedish" });
 	languages.push_back({ "uk", "Ukrainian" });
