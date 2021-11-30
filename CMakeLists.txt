@@ -717,6 +717,10 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
+if(NOT DEFINED DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY)
+  set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets")
+endif()
+
 set(devilutionx_langs bg cs da de es fr hr it ja ko_KR pl pt_BR ro_RO ru uk sv zh_CN zh_TW)
 if(USE_GETTEXT_FROM_VCPKG)
   # vcpkg doesn't add its own tools directory to the search path
@@ -724,10 +728,10 @@ if(USE_GETTEXT_FROM_VCPKG)
 endif()
 find_package(Gettext)
 if (Gettext_FOUND)
-  file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets")
+  file(MAKE_DIRECTORY "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}")
   foreach(lang ${devilutionx_langs})
     set(_po_file "${DevilutionX_SOURCE_DIR}/Translations/${lang}.po")
-    set(_gmo_file "${CMAKE_CURRENT_BINARY_DIR}/assets/${lang}.gmo")
+    set(_gmo_file "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${lang}.gmo")
     set(_lang_target devilutionx_lang_${lang})
     add_custom_command(
       COMMAND "${GETTEXT_MSGFMT_EXECUTABLE}" -o "${_gmo_file}" "${_po_file}"
@@ -740,26 +744,10 @@ if (Gettext_FOUND)
     list(APPEND devilutionx_lang_targets "${_lang_target}")
     list(APPEND devilutionx_lang_files "${_gmo_file}")
 
-    if(ANDROID)
-      set(_android_asset "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets/${lang}.gmo")
-      add_custom_command(
-        COMMAND ${CMAKE_COMMAND} -E copy "${_gmo_file}" "${_android_asset}"
-        OUTPUT "${_android_asset}"
-        MAIN_DEPENDENCY "${_gmo_file}"
-        DEPENDS "${_lang_target}"
-        VERBATIM
-      )
-      list(APPEND _devilutionx_android_lang_files "${_android_asset}")
-    endif()
     if(VITA)
       list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${_gmo_file}" "assets/${lang}.gmo")
     endif()
   endforeach()
-
-  if (ANDROID)
-    add_custom_target(deviliutionx_android_copy_translations DEPENDS ${_devilutionx_android_lang_files})
-    add_dependencies(${BIN_TARGET} deviliutionx_android_copy_translations)
-  endif()
 endif()
 
 set(devilutionx_assets
@@ -873,7 +861,7 @@ set(devilutionx_assets
 # - If smpq is not installed, the game will load the assets directly from this directoy.
 foreach(asset_file ${devilutionx_assets})
   set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
-  set(dst "${CMAKE_CURRENT_BINARY_DIR}/assets/${asset_file}")
+  set(dst "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${asset_file}")
   list(APPEND DEVILUTIONX_MPQ_FILES "${asset_file}")
   list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES "${dst}")
   add_custom_command(
@@ -896,7 +884,7 @@ if(BUILD_ASSETS_MPQ)
     OUTPUT "${DEVILUTIONX_MPQ}"
     COMMAND ${CMAKE_COMMAND} -E remove -f "${DEVILUTIONX_MPQ}"
     COMMAND ${SMPQ} -M 1 -C PKWARE -c "${DEVILUTIONX_MPQ}" ${DEVILUTIONX_MPQ_FILES}
-    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets"
+    WORKING_DIRECTORY "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}"
     DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES} ${devilutionx_lang_targets} ${devilutionx_lang_files}
     VERBATIM)
   add_custom_target(devilutionx_mpq DEPENDS "${DEVILUTIONX_MPQ}")

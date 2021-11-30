@@ -12,4 +12,5 @@ if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto=full")
 endif()
 
-file(COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/" DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
+set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
+set(BUILD_ASSETS_MPQ OFF)
