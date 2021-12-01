@@ -81,6 +81,12 @@ You will no longer need `devilutionx.cia` after this step, and so it can be remo
 
 ![image](https://user-images.githubusercontent.com/9203145/141047377-789e5f1c-d049-4a25-82bb-8b3572d791cf.png)
 
+FBI provides the `Remote Install` option to download and install a cia in one step by scanning a QR code using the Nintendo 3DS camera.
+This is most useful when upgrading from a previous version so that you can perform the installation without removing the SD card from the console.
+If you'd like to use this option, scan the QR code below.
+
+![image](https://user-images.githubusercontent.com/9203145/144300019-e315c05f-515c-484d-975b-ce99da641585.png)
+
 [Nintendo 3DS manual](/docs/manual/platforms/3ds.md)
 
 </details>
