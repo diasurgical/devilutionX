@@ -11093,22 +11093,3 @@ msgstr "Giù da Diablo"
 #: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "Torna al Livello {:d}"
-
-#~ msgid "Replay Intro"
-#~ msgstr "Introduzione"
-
-#~ msgid "Extras"
-#~ msgstr "Extra"
-
-#~ msgid "Mana: {:d}  Dam: {:d} - {:d}"
-#~ msgstr "Mana: {:d}  Dan: {:d} - {:d}"
-
-#~ msgid "Mana: {:d}   Dam: n/a"
-#~ msgstr "Mana: {:d}   Dan: n/a"
-
-#~ msgid ""
-#~ "The Diablo introduction cinematic is only available in the full retail "
-#~ "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-#~ msgstr ""
-#~ "Il filmato introduttivo di Diablo è disponibile solo nella versione "
-#~ "completa. Visita https://www.gog.com/game/diablo per acquistare."
