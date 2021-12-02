@@ -795,6 +795,15 @@ OptionEntryLanguageCode::OptionEntryLanguageCode()
 }
 void OptionEntryLanguageCode::LoadFromIni(string_view category)
 {
+	if (GetIniValue(category.data(), key.data(), szCode, sizeof(szCode))) {
+		if (HasTranslation(szCode)) {
+			// User preferred language is available
+			return;
+		}
+	}
+
+	// Might be a first run or the user has attempted to load a translation that doesn't exist via manual ini edit. Try find a best fit from the platform locale information.
+	std::vector<std::string> locales {};
 #ifdef __ANDROID__
 	JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
 	jobject activity = (jobject)SDL_AndroidGetActivity();
@@ -802,7 +811,7 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 	jmethodID method_id = env->GetMethodID(clazz, "getLocale", "()Ljava/lang/String;");
 	jstring jLocale = (jstring)env->CallObjectMethod(activity, method_id);
 	const char *cLocale = env->GetStringUTFChars(jLocale, nullptr);
-	std::string locale = cLocale;
+	locales.emplace_back(cLocale);
 	env->ReleaseStringUTFChars(jLocale, cLocale);
 	env->DeleteLocalRef(jLocale);
 	env->DeleteLocalRef(activity);
@@ -839,56 +848,71 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
 	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
 		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	std::string locale = std::string(vita_locales[language]);
+	locales.emplace_back(vita_locales[language]);
 	sceAppUtilShutdown();
 #elif defined(__3DS__)
-	std::string locale = n3ds::GetLocale();
+	locales.push_back(n3ds::GetLocale());
 #elif defined(_WIN32)
-	std::string locale;
-
 #if WINVER >= 0x0600
-	WCHAR localeBuffer[LOCALE_NAME_MAX_LENGTH];
-	if (GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
-		// The user default locale could be loaded, we need to convert from WIN32's default of UTF16 to UTF8
+	auto wideCharToUtf8 = [](PWSTR wideString) {
 		char utf8Buffer[12] {};
 		// We only handle 5 character locales (lang2-region2), so don't bother reading past that. This does leave the resulting string unterminated but the buffer was zero initialised anyway.
-		WideCharToMultiByte(CP_UTF8, 0, localeBuffer, 5, utf8Buffer, 12, nullptr, nullptr);
+		WideCharToMultiByte(CP_UTF8, 0, wideString, 5, utf8Buffer, sizeof(utf8Buffer), nullptr, nullptr);
 
 		// GetUserDefaultLocaleName could return an ISO 639-2/T string (three letter language code) or even an arbitrary custom locale, however we only handle 639-1 (two letter language code) locale names when checking the fallback language.
-		if (utf8Buffer[2] == '-') {
-			// if a region is included in the locale do a simple transformation to the expected POSIX style.
-			utf8Buffer[2] = '_';
-		}
+		// if a region is included in the locale do a simple transformation to the expected POSIX style.
+		std::replace(utf8Buffer, utf8Buffer + sizeof(utf8Buffer), '-', '_');
+		return std::move(std::string(utf8Buffer));
+	};
+	WCHAR localeBuffer[LOCALE_NAME_MAX_LENGTH];
 
-		locale.append(utf8Buffer);
+	if (GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
+		// Found a user default locale convert from WIN32's default of UTF16 to UTF8 and add to the list
+		locales.push_back(wideCharToUtf8(localeBuffer));
+	}
+
+	ULONG numberOfLanguages;
+	ULONG bufferSize = LOCALE_NAME_MAX_LENGTH;
+	GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &numberOfLanguages, localeBuffer, &bufferSize);
+
+	PWSTR bufferOffset = localeBuffer;
+	for (unsigned i = 0; i < numberOfLanguages; i++) {
+		// Found one (or more) user preferred UI language(s), add these to the list to check as well
+		locales.push_back(wideCharToUtf8(bufferOffset));
+
+		// GetUserPreferredUILanguages returns a null separated list of strings, need to increment past the null terminating the current string.
+		bufferOffset += lstrlenW(localeBuffer) + 1;
 	}
 #else
 	// Fallback method for older versions of windows, this is deprecated since Vista
 	char localeBuffer[LOCALE_NAME_MAX_LENGTH];
 	// Deliberately not using the unicode versions here as the information retrieved should be represented in ASCII/single byte UTF8 codepoints.
 	if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME, localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
-		locale.append(localeBuffer);
+		std::string locale { localeBuffer };
 		if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME, localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
 			locale.append("_");
 			locale.append(localeBuffer);
 		}
+		locales.push_back(std::move(locale));
 	}
 #endif
 #else
-	std::string locale = std::locale("").name().substr(0, 5);
+	locales.emplace_back(std::locale("").name().substr(0, 5));
 #endif
 
-	locale = locale.substr(0, 5);
-	LogVerbose("Preferred locale: {}", locale);
-	if (!HasTranslation(locale)) {
-		locale = locale.substr(0, 2);
-		if (!HasTranslation(locale)) {
-			locale = "en";
+	LogVerbose("Found {} user preferred locales", locales);
+
+	for (const auto &locale : locales) {
+		LogVerbose("Trying to load translation: {}", locale);
+		if (HasTranslation(locale)) {
+			LogVerbose("Best match locale: {}", locale);
+			CopyUtf8(szCode, locale, sizeof(szCode));
+			return;
 		}
 	}
-	LogVerbose("Best match locale: {}", locale);
 
-	GetIniValue(category.data(), key.data(), szCode, sizeof(szCode), locale.c_str());
+	LogVerbose("No suitable translation found");
+	strcpy(szCode, "en");
 }
 void OptionEntryLanguageCode::SaveToIni(string_view category) const
 {
