@@ -26,6 +26,7 @@ import java.util.Objects;
 
 public class DevilutionXSDLActivity extends SDLActivity {
 	private String externalDir;
+	private boolean noExit;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		// windowSoftInputMode=adjustPan stopped working
@@ -49,7 +50,20 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		if (missingGameData()) {
 			Intent intent = new Intent(this, DataActivity.class);
 			startActivity(intent);
+			noExit = true;
 			this.finish();
+		}
+	}
+
+	/**
+	 * When the user exits the game, use System.exit(0)
+	 * to clear memory and prevent errors on restart
+	 */
+	protected void onDestroy() {
+		super.onDestroy();
+
+		if (!noExit) {
+			System.exit(0);
 		}
 	}
 
