@@ -642,6 +642,7 @@ GameplayOptions::GameplayOptions()
     , showMonsterType("Show Monster Type", OptionEntryFlags::None, N_("Show Monster Type"), N_("Hovering over a monster will display the type of monster in the description box in the UI."), false)
     , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), AUTO_PICKUP_DEFAULT(false))
     , disableCripplingShrines("Disable Crippling Shrines", OptionEntryFlags::None, N_("Disable Crippling Shrines"), N_("When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines and Sacred Shrines are not able to be clicked on and labeled as disabled."), false)
+    , quickCast("Quick Cast", OptionEntryFlags::None, N_("Quick Cast"), N_("Spell hotkeys instantly cast the spell, rather than switching the readied spell."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -670,6 +671,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&showMonsterType,
 		&autoRefillBelt,
 		&disableCripplingShrines,
+		&quickCast,
 	};
 }
 

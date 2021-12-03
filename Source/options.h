@@ -377,6 +377,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean autoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	OptionEntryBoolean disableCripplingShrines;
+	/** @brief Spell hotkeys instantly cast the spell. */
+	OptionEntryBoolean quickCast;
 };
 
 struct ControllerOptions : OptionCategoryBase {
