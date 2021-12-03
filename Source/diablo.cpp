@@ -19,6 +19,7 @@
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/keymapper.hpp"
+#include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
 #include "controls/touch/renderers.h"
 #include "diablo.h"
@@ -1380,7 +1381,10 @@ void InitKeymapActions()
 				    SetSpeedSpell(i);
 				    return;
 			    }
-			    ToggleSpell(i);
+			    if (!*sgOptions.Gameplay.quickCast)
+				    ToggleSpell(i);
+			    else
+				    QuickCast(i);
 		    },
 		    [&]() { return !IsPlayerDead(); },
 		});
