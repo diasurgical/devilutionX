@@ -321,26 +321,20 @@ msgid "OK"
 msgstr "OK"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
-#, fuzzy
-#| msgid "Down to Diablo"
 msgid "Switch to Diablo"
-msgstr "Descendre vers Diablo"
+msgstr "Passer à Diablo"
 
 #: Source/DiabloUI/extrasmenu.cpp:41
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Switch to Hellfire"
-msgstr "Quitter Hellfire"
+msgstr "Passer à Hellfire"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
 msgstr ""
 
 #: Source/DiabloUI/extrasmenu.cpp:43
-#, fuzzy
-#| msgid "in the shareware"
 msgid "Switch to Shareware"
-msgstr "dans le shareware"
+msgstr "Passer au Shareware"
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
@@ -363,10 +357,8 @@ msgid "Multi Player"
 msgstr "Multijoueur"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-#, fuzzy
-#| msgid "Extra charges"
 msgid "Extras"
-msgstr "Charges supplémentaires"
+msgstr "Extras"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Show Credits"
@@ -381,10 +373,8 @@ msgid "Exit Diablo"
 msgstr "Quitter Diablo"
 
 #: Source/DiabloUI/mainmenu.cpp:55
-#, fuzzy
-#| msgid "in the shareware"
 msgid "Shareware"
-msgstr "dans le shareware"
+msgstr "Shareware"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
@@ -452,10 +442,8 @@ msgid "Create Game"
 msgstr "Créer une Partie"
 
 #: Source/DiabloUI/selgame.cpp:93
-#, fuzzy
-#| msgid "Create Game"
 msgid "Create Public Game"
-msgstr "Créer une Partie"
+msgstr "Créer une Partie Publique"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
@@ -472,12 +460,12 @@ msgid "Create a new game with a difficulty setting of your choice."
 msgstr "Créer une nouvelle partie avec le niveau de difficulté de votre choix."
 
 #: Source/DiabloUI/selgame.cpp:125
-#, fuzzy
-#| msgid "Create a new game with a difficulty setting of your choice."
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-msgstr "Créer une nouvelle partie avec le niveau de difficulté de votre choix."
+msgstr ""
+"Créer une nouvelle partie, que tout le monde peut rejoindre, avec le niveau "
+"de difficulté de votre choix."
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
@@ -488,14 +476,8 @@ msgstr ""
 "à cette adresse."
 
 #: Source/DiabloUI/selgame.cpp:131
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Join the public game already in progress at this address."
-msgstr ""
-"Entrez une adresse IP ou un nom d'hôte et rejoignez une partie déjà en cours "
-"à cette adresse."
+msgstr "Rejoindre une partie publique déjà en cours à cette adresse"
 
 #: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
@@ -770,10 +752,8 @@ msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Voulez vous vraiment supprimer le personnage \"{:s}\"?"
 
 #: Source/DiabloUI/selstart.cpp:43
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Enter Hellfire"
-msgstr "Quitter Hellfire"
+msgstr "Utiliser Hellfire"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
@@ -883,10 +863,8 @@ msgid "password: "
 msgstr "mot de passe: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "Quit Game"
 msgid "Public Game"
-msgstr "Quitter"
+msgstr "Partie Publique"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -977,7 +955,6 @@ msgid "Scroll of {:s}"
 msgstr "Parchemin de {:s}"
 
 #: Source/control.cpp:747 Source/control.cpp:1257
-#, fuzzy
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "Parchemin de {:s}"
@@ -1217,10 +1194,8 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:797
-#, fuzzy
-#| msgid "Hellfire Help"
 msgid "Force Hellfire mode"
-msgstr "Aide Hellfire"
+msgstr "Force le mode Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:798
@@ -1745,10 +1720,8 @@ msgstr ""
 "l'objet."
 
 #: Source/help.cpp:68
-#, fuzzy
-#| msgid "$Gold"
 msgid "$Gold:"
-msgstr "$Or"
+msgstr "$Or:"
 
 #: Source/help.cpp:69
 msgid ""
@@ -1777,10 +1750,8 @@ msgstr ""
 "être lancé par un simple clic droit dans la zone de jeu."
 
 #: Source/help.cpp:79
-#, fuzzy
-#| msgid "$Using the Speedbook for Spells"
 msgid "$Using the Speedbook for Spells:"
-msgstr "$Utiliser le Speedbook pour les sorts"
+msgstr "$Utiliser le Speedbook pour les sorts:"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1794,22 +1765,16 @@ msgstr ""
 "simplement un clic droit dans la zone de jeu principale."
 
 #: Source/help.cpp:84
-#, fuzzy
-#| msgid ""
-#| "Shift + Left-clicking on the 'select current spell' button will clear the "
-#| "readied spell"
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
 "readied spell."
 msgstr ""
 "Maj + clic gauche sur le bouton 'sélectionner le sort actuel' effacera le "
-"sort préparé"
+"sort préparé."
 
 #: Source/help.cpp:86
-#, fuzzy
-#| msgid "$Setting Spell Hotkeys"
 msgid "$Setting Spell Hotkeys:"
-msgstr "$ Configurer le raccourci pour un sort"
+msgstr "$Configurer le raccourci pour un sort:"
 
 #: Source/help.cpp:87
 msgid ""
@@ -1824,10 +1789,8 @@ msgstr ""
 "attribuer."
 
 #: Source/help.cpp:92
-#, fuzzy
-#| msgid "$Spell Books"
 msgid "$Spell Books:"
-msgstr "$Livres de sort"
+msgstr "$Livres de sort:"
 
 #: Source/help.cpp:93
 msgid ""
@@ -6493,10 +6456,8 @@ msgid "Rune of Stone"
 msgstr "Rune de Pierre"
 
 #: Source/stores.cpp:91
-#, fuzzy
-#| msgid "Griswold's Edge"
 msgid "Griswold"
-msgstr "Epée de Griswold"
+msgstr "Griswold"
 
 #: Source/stores.cpp:92
 msgid "Pepin"
@@ -6511,20 +6472,16 @@ msgid "Cain"
 msgstr ""
 
 #: Source/stores.cpp:96
-#, fuzzy
-#| msgid "Talk to Farnham"
 msgid "Farnham"
-msgstr "Parler à Farnham"
+msgstr "Farnham"
 
 #: Source/stores.cpp:97
 msgid "Adria"
 msgstr ""
 
 #: Source/stores.cpp:98 Source/stores.cpp:1305
-#, fuzzy
-#| msgid "brilliance"
 msgid "Gillian"
-msgstr "éclat"
+msgstr "Gillan"
 
 #: Source/stores.cpp:99
 msgid "Wirt"
@@ -6604,7 +6561,7 @@ msgstr "J'ai ces objets à vendre:             Votre or: {:d}"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:420
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "J'ai ces objets premim à vendre:             Votre or: {:d}"
+msgstr "J'ai ces objets premium à vendre:            Votre or: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:541 Source/stores.cpp:804
@@ -9878,7 +9835,6 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
 #: Source/textdat.cpp:529 Source/textdat.cpp:537
-#, fuzzy
 msgid ""
 "I can see what you see not.\n"
 "Vision milky then eyes rot.\n"
