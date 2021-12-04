@@ -10844,9 +10844,3 @@ msgstr "ディアブロ​の​もと​へ"
 #: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "レベル​{:d}​へ​戻る"
-
-#~ msgid "Switch to Hellfire"
-#~ msgstr "ヘルファイア​に​切り替え"
-
-#~ msgid "Switch to Fullgame"
-#~ msgstr "フルゲーム​に​切り替え"
