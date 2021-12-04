@@ -301,19 +301,6 @@ void LoadOptions()
 
 	sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
 	sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
-#ifndef __vita__
-	sgOptions.Graphics.bFullscreen = GetIniBool("Graphics", "Fullscreen", true);
-#else
-	sgOptions.Graphics.bFullscreen = true;
-#endif
-#if !defined(USE_SDL1)
-	sgOptions.Graphics.bUpscale = GetIniBool("Graphics", "Upscale", true);
-#else
-	sgOptions.Graphics.bUpscale = false;
-#endif
-	sgOptions.Graphics.bFitToScreen = GetIniBool("Graphics", "Fit to Screen", true);
-	sgOptions.Graphics.bIntegerScaling = GetIniBool("Graphics", "Integer Scaling", false);
-	sgOptions.Graphics.bVSync = GetIniBool("Graphics", "Vertical Sync", true);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
@@ -369,15 +356,6 @@ void SaveOptions()
 	SetIniValue("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
 	SetIniValue("Graphics", "Width", sgOptions.Graphics.nWidth);
 	SetIniValue("Graphics", "Height", sgOptions.Graphics.nHeight);
-#ifndef __vita__
-	SetIniValue("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
-#endif
-#if !defined(USE_SDL1)
-	SetIniValue("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
-#endif
-	SetIniValue("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
-	SetIniValue("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
-	SetIniValue("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
@@ -596,28 +574,60 @@ std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 
 GraphicsOptions::GraphicsOptions()
     : OptionCategoryBase("Graphics", N_("Graphics"), N_("Graphics Settings"))
+    , fullscreen("Fullscreen", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fullscreen"), N_("Display the game in windowed or fullscreen mode."), true)
+#if !defined(USE_SDL1) || defined(__3DS__)
+    , fitToScreen("Fit to Screen", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fit to Screen"), N_("Automatically adjust the game window to your current desktop screen aspect ratio and resolution."), true)
+#endif
+#ifndef USE_SDL1
+    , upscale("Upscale", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Upscale"), N_("Enables image scaling from the game resolution to your monitor resolution. Prevents changing the monitor resolution and allows window resizing."), true)
     , scaleQuality("Scaling Quality", OptionEntryFlags::None, N_("Scaling Quality"), N_("Enables optional filters to the output image when upscaling."), ScalingQuality::AnisotropicFiltering,
           {
               { ScalingQuality::NearestPixel, N_("Nearest Pixel") },
               { ScalingQuality::BilinearFiltering, N_("Bilinear") },
               { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
           })
+    , integerScaling("Integer Scaling", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Integer Scaling"), N_("Scales the image using whole number pixel ratio."), false)
+    , vSync("Vertical Sync", OptionEntryFlags::RecreateUI, N_("Vertical Sync"), N_("Forces waiting for Vertical Sync. Prevents tearing effect when drawing a frame. Disabling it can help with mouse lag on some systems."), true)
+#endif
     , blendedTransparancy("Blended Transparency", OptionEntryFlags::CantChangeInGame, N_("Blended Transparency"), N_("Enables uniform transparency mode. This setting affects the transparency on walls, game text menus, and boxes. If disabled will default to old checkerboard transparency."), true)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
 {
+	fullscreen.SetValueChangedCallback(ResizeWindow);
+#if !defined(USE_SDL1) || defined(__3DS__)
+	fitToScreen.SetValueChangedCallback(ResizeWindow);
+#endif
+#ifndef USE_SDL1
+	upscale.SetValueChangedCallback(ResizeWindow);
+	scaleQuality.SetValueChangedCallback(ReinitializeRenderer);
+	integerScaling.SetValueChangedCallback(ResizeWindow);
+	vSync.SetValueChangedCallback(ReinitializeRenderer);
+#endif
 	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
 }
 std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
+	// clang-format off
 	return {
+#ifndef __vita__
+		&fullscreen,
+#endif
+#if !defined(USE_SDL1) || defined(__3DS__)
+		&fitToScreen,
+#endif
+#ifndef USE_SDL1
+		&upscale,
 		&scaleQuality,
+		&integerScaling,
+		&vSync,
+#endif
 		&blendedTransparancy,
 		&colorCycling,
 		&limitFPS,
 		&showFPS,
 	};
+	// clang-format on
 }
 
 GameplayOptions::GameplayOptions()

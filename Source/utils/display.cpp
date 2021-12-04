@@ -61,7 +61,7 @@ void CalculatePreferdWindowSize(int &width, int &height)
 		ErrSdl();
 	}
 
-	if (!sgOptions.Graphics.bIntegerScaling) {
+	if (!*sgOptions.Graphics.integerScaling) {
 		float wFactor = (float)mode.w / width;
 		float hFactor = (float)mode.h / height;
 
@@ -103,7 +103,7 @@ Size GetPreferedWindowSize()
 	Size windowSize = { sgOptions.Graphics.nWidth, sgOptions.Graphics.nHeight };
 
 #ifndef USE_SDL1
-	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
+	if (*sgOptions.Graphics.upscale && *sgOptions.Graphics.fitToScreen) {
 		CalculatePreferdWindowSize(windowSize.width, windowSize.height);
 	}
 #endif
@@ -132,7 +132,7 @@ void SetVideoModeToPrimary(bool fullscreen, int width, int height)
 		flags |= SDL_FULLSCREEN;
 #ifdef __3DS__
 	flags &= ~SDL_FULLSCREEN;
-	flags |= Get3DSScalingFlag(sgOptions.Graphics.bFitToScreen, width, height);
+	flags |= Get3DSScalingFlag(*sgOptions.Graphics.fitToScreen, width, height);
 #endif
 	SetVideoMode(width, height, SDL1_VIDEO_MODE_BPP, flags);
 	if (OutputRequiresScaling())
@@ -201,18 +201,18 @@ bool SpawnWindow(const char *lpWindowName)
 
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
-	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, windowSize.width, windowSize.height);
+	SetVideoModeToPrimary(!gbForceWindowed && *sgOptions.Graphics.fullscreen, windowSize.width, windowSize.height);
 	if (*sgOptions.Gameplay.grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
 	int flags = 0;
-	if (sgOptions.Graphics.bUpscale) {
-		if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
+	if (*sgOptions.Graphics.upscale) {
+		if (!gbForceWindowed && *sgOptions.Graphics.fullscreen) {
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 		flags |= SDL_WINDOW_RESIZABLE;
-	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
+	} else if (!gbForceWindowed && *sgOptions.Graphics.fullscreen) {
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
@@ -259,10 +259,10 @@ void ReinitializeRenderer()
 		renderer = nullptr;
 	}
 
-	if (sgOptions.Graphics.bUpscale) {
+	if (*sgOptions.Graphics.upscale) {
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-		if (sgOptions.Graphics.bVSync) {
+		if (*sgOptions.Graphics.vSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 
@@ -276,7 +276,7 @@ void ReinitializeRenderer()
 
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 
-		if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
+		if (*sgOptions.Graphics.integerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();
 		}
 
@@ -304,15 +304,15 @@ void ResizeWindow()
 	Size windowSize = GetPreferedWindowSize();
 
 #ifdef USE_SDL1
-	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, windowSize.width, windowSize.height);
+	SetVideoModeToPrimary(!gbForceWindowed && *sgOptions.Graphics.fullscreen, windowSize.width, windowSize.height);
 #else
 	int flags = 0;
-	if (sgOptions.Graphics.bUpscale) {
-		if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
+	if (*sgOptions.Graphics.upscale) {
+		if (!gbForceWindowed && *sgOptions.Graphics.fullscreen) {
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 		SDL_SetWindowResizable(ghMainWnd, SDL_TRUE);
-	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
+	} else if (!gbForceWindowed && *sgOptions.Graphics.fullscreen) {
 		flags |= SDL_WINDOW_FULLSCREEN;
 		SDL_SetWindowResizable(ghMainWnd, SDL_FALSE);
 	}

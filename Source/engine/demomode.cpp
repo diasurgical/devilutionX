@@ -146,12 +146,16 @@ void OverrideOptions()
 {
 	sgOptions.Graphics.nWidth = DemoGraphicsWidth;
 	sgOptions.Graphics.nHeight = DemoGraphicsHeight;
-	sgOptions.Graphics.bFitToScreen = false;
+#ifndef USE_SDL1
+	sgOptions.Graphics.fitToScreen.SetValue(false);
+#endif
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = false;
 #endif
 	if (Timedemo) {
-		sgOptions.Graphics.bVSync = false;
+#ifndef USE_SDL1
+		sgOptions.Graphics.vSync.SetValue(false);
+#endif
 		sgOptions.Graphics.limitFPS.SetValue(false);
 	}
 }

@@ -190,7 +190,7 @@ void dx_cleanup()
 	RendererTextureSurface = nullptr;
 #ifndef USE_SDL1
 	texture = nullptr;
-	if (sgOptions.Graphics.bUpscale)
+	if (*sgOptions.Graphics.upscale)
 		SDL_DestroyRenderer(renderer);
 #endif
 	SDL_DestroyWindow(ghMainWnd);
@@ -312,7 +312,7 @@ void RenderPresent()
 #endif
 		SDL_RenderPresent(renderer);
 
-		if (!sgOptions.Graphics.bVSync) {
+		if (!*sgOptions.Graphics.vSync) {
 			LimitFrameRate();
 		}
 	} else {
