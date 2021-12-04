@@ -296,6 +296,34 @@ void ReinitializeRenderer()
 #endif
 }
 
+void ResizeWindow()
+{
+	if (ghMainWnd == nullptr)
+		return;
+
+	Size windowSize = GetPreferedWindowSize();
+
+#ifdef USE_SDL1
+	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, windowSize.width, windowSize.height);
+#else
+	int flags = 0;
+	if (sgOptions.Graphics.bUpscale) {
+		if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
+			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		}
+		SDL_SetWindowResizable(ghMainWnd, SDL_TRUE);
+	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
+		flags |= SDL_WINDOW_FULLSCREEN;
+		SDL_SetWindowResizable(ghMainWnd, SDL_FALSE);
+	}
+	SDL_SetWindowFullscreen(ghMainWnd, flags);
+
+	SDL_SetWindowSize(ghMainWnd, windowSize.width, windowSize.height);
+#endif
+
+	ReinitializeRenderer();
+}
+
 SDL_Surface *GetOutputSurface()
 {
 #ifdef USE_SDL1
