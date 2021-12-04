@@ -563,6 +563,8 @@ void LoadUiGFX()
 	LoadHeros();
 }
 
+} // namespace
+
 void UnloadUiGFX()
 {
 	ArtHero.Unload();
@@ -573,11 +575,8 @@ void UnloadUiGFX()
 		art.Unload();
 }
 
-} // namespace
-
 void UiInitialize()
 {
-	UnloadUiGFX();
 	LoadUiGFX();
 
 	if (ArtCursor.surface != nullptr) {

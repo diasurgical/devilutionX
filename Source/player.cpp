@@ -3403,7 +3403,7 @@ void CalcPlrStaff(Player &player)
 	}
 }
 
-void CheckPlrSpell(bool isShiftHeld)
+void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 {
 	bool addflag = false;
 	int sl;
@@ -3413,13 +3413,12 @@ void CheckPlrSpell(bool isShiftHeld)
 	}
 	auto &myPlayer = Players[MyPlayerId];
 
-	spell_id rspell = myPlayer._pRSpell;
-	if (rspell == SPL_INVALID) {
+	if (spellID == SPL_INVALID) {
 		myPlayer.Say(HeroSpeech::IDontHaveASpellReady);
 		return;
 	}
 
-	if (leveltype == DTYPE_TOWN && !spelldata[rspell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spellID].sTownSpell) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
@@ -3435,19 +3434,19 @@ void CheckPlrSpell(bool isShiftHeld)
 		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
 		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
 		) {
-			if (rspell != SPL_HEAL
-			    && rspell != SPL_IDENTIFY
-			    && rspell != SPL_REPAIR
-			    && rspell != SPL_INFRA
-			    && rspell != SPL_RECHARGE)
+			if (spellID != SPL_HEAL
+			    && spellID != SPL_IDENTIFY
+			    && spellID != SPL_REPAIR
+			    && spellID != SPL_INFRA
+			    && spellID != SPL_RECHARGE)
 				return;
 		}
 	}
 	SpellCheckResult spellcheck = SpellCheckResult::Success;
-	switch (myPlayer._pRSplType) {
+	switch (spellType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_SPELL:
-		spellcheck = CheckSpell(MyPlayerId, rspell, myPlayer._pRSplType, false);
+		spellcheck = CheckSpell(MyPlayerId, spellID, spellType, false);
 		addflag = spellcheck == SpellCheckResult::Success;
 		break;
 	case RSPLTYPE_SCROLL:
@@ -3461,7 +3460,7 @@ void CheckPlrSpell(bool isShiftHeld)
 	}
 
 	if (!addflag) {
-		if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
+		if (spellType == RSPLTYPE_SPELL) {
 			switch (spellcheck) {
 			case SpellCheckResult::Fail_NoMana:
 				myPlayer.Say(HeroSpeech::NotEnoughMana);
@@ -3478,23 +3477,23 @@ void CheckPlrSpell(bool isShiftHeld)
 		return;
 	}
 
-	if (myPlayer._pRSpell == SPL_FIREWALL || myPlayer._pRSpell == SPL_LIGHTWALL) {
+	if (spellID == SPL_FIREWALL || spellID == SPL_LIGHTWALL) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
-		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdLocParam4(true, CMD_SPELLXYD, cursPosition, myPlayer._pRSpell, myPlayer._pRSplType, static_cast<uint16_t>(sd), sl);
+		sl = GetSpellLevel(MyPlayerId, spellID);
+		NetSendCmdLocParam4(true, CMD_SPELLXYD, cursPosition, spellID, spellType, static_cast<uint16_t>(sd), sl);
 	} else if (pcursmonst != -1 && !isShiftHeld) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
-		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, myPlayer._pRSplType, sl);
+		sl = GetSpellLevel(MyPlayerId, spellID);
+		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, spellID, spellType, sl);
 	} else if (pcursplr != -1 && !isShiftHeld && !gbFriendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
-		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, myPlayer._pRSpell, myPlayer._pRSplType, sl);
+		sl = GetSpellLevel(MyPlayerId, spellID);
+		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, spellID, spellType, sl);
 	} else {
 		LastMouseButtonAction = MouseActionType::Spell;
-		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdLocParam3(true, CMD_SPELLXY, cursPosition, myPlayer._pRSpell, myPlayer._pRSplType, sl);
+		sl = GetSpellLevel(MyPlayerId, spellID);
+		NetSendCmdLocParam3(true, CMD_SPELLXY, cursPosition, spellID, spellType, sl);
 	}
 }
 
