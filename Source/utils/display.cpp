@@ -51,6 +51,67 @@ Uint16 GetViewportHeight()
 	return gnViewportHeight;
 }
 
+namespace {
+
+#ifndef USE_SDL1
+void CalculatePreferdWindowSize(int &width, int &height)
+{
+	SDL_DisplayMode mode;
+	if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+		ErrSdl();
+	}
+
+	if (!sgOptions.Graphics.bIntegerScaling) {
+		float wFactor = (float)mode.w / width;
+		float hFactor = (float)mode.h / height;
+
+		if (wFactor > hFactor) {
+			width = mode.w * height / mode.h;
+		} else {
+			height = mode.h * width / mode.w;
+		}
+		return;
+	}
+
+	int wFactor = mode.w / width;
+	int hFactor = mode.h / height;
+
+	if (wFactor > hFactor) {
+		width = mode.w / hFactor;
+		height = mode.h / hFactor;
+	} else {
+		width = mode.w / wFactor;
+		height = mode.h / wFactor;
+	}
+}
+#endif
+
+void AdjustToScreenGeometry(Size windowSize)
+{
+	gnScreenWidth = windowSize.width;
+	gnScreenHeight = windowSize.height;
+
+	gnViewportHeight = gnScreenHeight;
+	if (gnScreenWidth <= PANEL_WIDTH) {
+		// Part of the screen is fully obscured by the UI
+		gnViewportHeight -= PANEL_HEIGHT;
+	}
+}
+
+Size GetPreferedWindowSize()
+{
+	Size windowSize = { sgOptions.Graphics.nWidth, sgOptions.Graphics.nHeight };
+
+#ifndef USE_SDL1
+	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
+		CalculatePreferdWindowSize(windowSize.width, windowSize.height);
+	}
+#endif
+	AdjustToScreenGeometry(windowSize);
+	return windowSize;
+}
+} // namespace
+
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 {
@@ -85,55 +146,6 @@ bool IsFullScreen()
 	return (SDL_GetVideoSurface()->flags & SDL_FULLSCREEN) != 0;
 #else
 	return (SDL_GetWindowFlags(ghMainWnd) & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP)) != 0;
-#endif
-}
-
-void AdjustToScreenGeometry(int width, int height)
-{
-	gnScreenWidth = width;
-	gnScreenHeight = height;
-
-	gnViewportHeight = gnScreenHeight;
-	if (gnScreenWidth <= PANEL_WIDTH) {
-		// Part of the screen is fully obscured by the UI
-		gnViewportHeight -= PANEL_HEIGHT;
-	}
-}
-
-void CalculatePreferdWindowSize(int &width, int &height)
-{
-#ifdef USE_SDL1
-	const SDL_VideoInfo &best = *SDL_GetVideoInfo();
-	Log("Best video mode reported as: {}x{} bpp={} hw_available={}",
-	    best.current_w, best.current_h, best.vfmt->BitsPerPixel, best.hw_available);
-#else
-	SDL_DisplayMode mode;
-	if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
-		ErrSdl();
-	}
-
-	if (!sgOptions.Graphics.bIntegerScaling) {
-		float wFactor = (float)mode.w / width;
-		float hFactor = (float)mode.h / height;
-
-		if (wFactor > hFactor) {
-			width = mode.w * height / mode.h;
-		} else {
-			height = mode.h * width / mode.w;
-		}
-		return;
-	}
-
-	int wFactor = mode.w / width;
-	int hFactor = mode.h / height;
-
-	if (wFactor > hFactor) {
-		width = mode.w / hFactor;
-		height = mode.h / hFactor;
-	} else {
-		width = mode.w / wFactor;
-		height = mode.h / wFactor;
-	}
 #endif
 }
 
@@ -185,17 +197,11 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #endif
 
-	int width = sgOptions.Graphics.nWidth;
-	int height = sgOptions.Graphics.nHeight;
-
-	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
-		CalculatePreferdWindowSize(width, height);
-	}
-	AdjustToScreenGeometry(width, height);
+	Size windowSize = GetPreferedWindowSize();
 
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
-	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, width, height);
+	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, windowSize.width, windowSize.height);
 	if (*sgOptions.Gameplay.grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
@@ -206,9 +212,6 @@ bool SpawnWindow(const char *lpWindowName)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 		flags |= SDL_WINDOW_RESIZABLE;
-
-		auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
@@ -217,7 +220,7 @@ bool SpawnWindow(const char *lpWindowName)
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
-	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.width, windowSize.height, flags);
 #endif
 	if (ghMainWnd == nullptr) {
 		ErrSdl();
@@ -233,8 +236,30 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 	refreshDelay = 1000000 / refreshRate;
 
+	ReinitializeRenderer();
+
+	return ghMainWnd != nullptr;
+}
+
+void ReinitializeRenderer()
+{
+	if (ghMainWnd == nullptr)
+		return;
+
+#ifdef USE_SDL1
+	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
+	Size windowSize = { current.current_w, current.current_h };
+	AdjustToScreenGeometry(windowSize);
+#else
+	if (texture)
+		texture.reset();
+
+	if (renderer != nullptr) {
+		SDL_DestroyRenderer(renderer);
+		renderer = nullptr;
+	}
+
 	if (sgOptions.Graphics.bUpscale) {
-#ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
 		if (sgOptions.Graphics.bVSync) {
@@ -246,28 +271,29 @@ bool SpawnWindow(const char *lpWindowName)
 			ErrSdl();
 		}
 
-		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
+		auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
+
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 
 		if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();
 		}
 
-		if (SDL_RenderSetLogicalSize(renderer, width, height) <= -1) {
+		if (SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
-#endif
-	} else {
-#ifdef USE_SDL1
-		const SDL_VideoInfo &current = *SDL_GetVideoInfo();
-		width = current.current_w;
-		height = current.current_h;
-#else
-		SDL_GetWindowSize(ghMainWnd, &width, &height);
-#endif
-		AdjustToScreenGeometry(width, height);
-	}
 
-	return ghMainWnd != nullptr;
+		Uint32 format;
+		if (SDL_QueryTexture(texture.get(), &format, nullptr, nullptr, nullptr) < 0)
+			ErrSdl();
+		RendererTextureSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, gnScreenWidth, gnScreenHeight, SDL_BITSPERPIXEL(format), format);
+	} else {
+		Size windowSize = {};
+		SDL_GetWindowSize(ghMainWnd, &windowSize.width, &windowSize.height);
+		AdjustToScreenGeometry(windowSize);
+	}
+#endif
 }
 
 SDL_Surface *GetOutputSurface()
