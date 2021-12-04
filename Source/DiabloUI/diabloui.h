@@ -94,6 +94,7 @@ inline SDL_Surface *DiabloUiSurface()
 
 void UiDestroy();
 void UiTitleDialog();
+void UnloadUiGFX();
 void UiInitialize();
 bool UiValidPlayerName(const char *name); /* check */
 void UiSelHeroMultDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, uint32_t *saveNumber);

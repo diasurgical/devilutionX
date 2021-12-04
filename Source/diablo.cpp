@@ -947,6 +947,7 @@ void DiabloInit()
 		UiSelStartUpGameOption();
 		if (!gbIsHellfire) {
 			// Reinitalize the UI Elements cause we changed the game
+			UnloadUiGFX();
 			UiInitialize();
 			if (IsHardwareCursor())
 				SetHardwareCursor(CursorInfo::UnknownCursor());
