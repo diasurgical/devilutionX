@@ -300,17 +300,21 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Render height. */
 	int nHeight;
 	/** @brief Run in fullscreen or windowed mode. */
-	bool bFullscreen;
-	/** @brief Scale the image after rendering. */
-	bool bUpscale;
+	OptionEntryBoolean fullscreen;
+#if !defined(USE_SDL1) || defined(__3DS__)
 	/** @brief Expand the aspect ratio to match the screen. */
-	bool bFitToScreen;
+	OptionEntryBoolean fitToScreen;
+#endif
+#ifndef USE_SDL1
+	/** @brief Scale the image after rendering. */
+	OptionEntryBoolean upscale;
 	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */
 	OptionEntryEnum<ScalingQuality> scaleQuality;
 	/** @brief Only scale by values divisible by the width and height. */
-	bool bIntegerScaling;
+	OptionEntryBoolean integerScaling;
 	/** @brief Enable vsync on the output. */
-	bool bVSync;
+	OptionEntryBoolean vSync;
+#endif
 	/** @brief Use blended transparency rather than stippled. */
 	OptionEntryBoolean blendedTransparancy;
 	/** @brief Gamma correction level. */
