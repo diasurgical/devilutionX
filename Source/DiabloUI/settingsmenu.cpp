@@ -46,6 +46,19 @@ std::vector<DrawStringFormatArg> CreateDrawStringFormatArgForEntry(OptionEntryBa
 	};
 }
 
+void CleanUpSettingsUI()
+{
+	UiInitList_clear();
+
+	vecDialogItems.clear();
+	vecDialog.clear();
+	vecOptions.clear();
+
+	ArtBackground.Unload();
+	ArtBackgroundWidescreen.Unload();
+	UnloadScrollBar();
+}
+
 void ItemFocused(int value)
 {
 	auto &vecItem = vecDialogItems[value];
@@ -77,6 +90,10 @@ void ItemSelected(int value)
 	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
 		endMenu = true;
 		recreateUI = true;
+		// Clean up all UI related Data
+		CleanUpSettingsUI();
+		UnloadUiGFX();
+		FreeItemGFX();
 		optionToPreselect = pOption;
 	}
 	switch (pOption->GetType()) {
@@ -92,9 +109,17 @@ void ItemSelected(int value)
 		pOptionList->SetActiveListIndex(nextIndex);
 	} break;
 	}
-	vecDialogItems[value]->args.clear();
-	for (auto &arg : CreateDrawStringFormatArgForEntry(pOption))
-		vecDialogItems[value]->args.push_back(arg);
+	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
+		// Reinitalize UI with changed settings (for example game mode, language or resolution)
+		UiInitialize();
+		InitItemGFX();
+		if (IsHardwareCursor())
+			SetHardwareCursor(CursorInfo::UnknownCursor());
+	} else {
+		vecItem->args.clear();
+		for (auto &arg : CreateDrawStringFormatArgForEntry(pOption))
+			vecItem->args.push_back(arg);
+	}
 }
 
 void EscPressed()
@@ -161,20 +186,9 @@ void UiSettingsMenu()
 			UiPollAndRender();
 		}
 
-		vecDialogItems.clear();
-		vecDialog.clear();
-		vecOptions.clear();
-
-		ArtBackground.Unload();
-		ArtBackgroundWidescreen.Unload();
-		UnloadScrollBar();
+		CleanUpSettingsUI();
 
 		if (recreateUI) {
-			UiInitialize();
-			FreeItemGFX();
-			InitItemGFX();
-			if (IsHardwareCursor())
-				SetHardwareCursor(CursorInfo::UnknownCursor());
 			recreateUI = false;
 			endMenu = false;
 		}
