@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-27 17:15+0900\n"
+"POT-Creation-Date: 2021-12-05 01:09+0900\n"
 "PO-Revision-Date: \n"
 "Last-Translator: bubio <bubio@gmail.com>\n"
 "Language-Team: \n"
@@ -328,7 +328,7 @@ msgstr "シングルプレイヤー"
 msgid "Multi Player"
 msgstr "マルチ​プレイヤー"
 
-#: Source/DiabloUI/mainmenu.cpp:38 Source/DiabloUI/settingsmenu.cpp:124
+#: Source/DiabloUI/mainmenu.cpp:38 Source/DiabloUI/settingsmenu.cpp:147
 msgid "Settings"
 msgstr "設定"
 
@@ -460,17 +460,17 @@ msgstr "難易度​の​選択"
 
 #: Source/DiabloUI/selgame.cpp:185 Source/DiabloUI/selgame.cpp:238
 #: Source/DiabloUI/selgame.cpp:342 Source/DiabloUI/selgame.cpp:362
-#: Source/diablo.cpp:1447
+#: Source/diablo.cpp:1457
 msgid "Normal"
 msgstr "通常"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:242
-#: Source/diablo.cpp:1448
+#: Source/diablo.cpp:1458
 msgid "Nightmare"
 msgstr "ナイトメア"
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:246
-#: Source/diablo.cpp:1449
+#: Source/diablo.cpp:1459
 msgid "Hell"
 msgstr "ヘル"
 
@@ -597,27 +597,27 @@ msgstr "あなた​の​バージョン​{:s}​は、ホスト​{:d}.{:d}.{
 msgid "Choose Class"
 msgstr "クラス​選択"
 
-#: Source/DiabloUI/selhero.cpp:134 Source/panels/charpanel.cpp:22
+#: Source/DiabloUI/selhero.cpp:134 Source/panels/charpanel.cpp:23
 msgid "Warrior"
 msgstr "ウォー​リアー"
 
-#: Source/DiabloUI/selhero.cpp:135 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:135 Source/panels/charpanel.cpp:24
 msgid "Rogue"
 msgstr "ローグ"
 
-#: Source/DiabloUI/selhero.cpp:136 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:136 Source/panels/charpanel.cpp:25
 msgid "Sorcerer"
 msgstr "ソーサラー"
 
-#: Source/DiabloUI/selhero.cpp:138 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:138 Source/panels/charpanel.cpp:26
 msgid "Monk"
 msgstr "モンク"
 
-#: Source/DiabloUI/selhero.cpp:141 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:141 Source/panels/charpanel.cpp:27
 msgid "Bard"
 msgstr "バード"
 
-#: Source/DiabloUI/selhero.cpp:144 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:144 Source/panels/charpanel.cpp:28
 msgid "Barbarian"
 msgstr "バーバリアン"
 
@@ -722,11 +722,11 @@ msgstr "シングルプレイヤー​ヒーロー​を​削除"
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "キャラクター​「​{:s}​」​を​削除​し​て​よろしい​です​か？"
 
-#: Source/DiabloUI/selstart.cpp:43
+#: Source/DiabloUI/selstart.cpp:42
 msgid "Enter Hellfire"
 msgstr "ヘルファイア​へ"
 
-#: Source/DiabloUI/selstart.cpp:44 Source/DiabloUI/settingsmenu.cpp:130
+#: Source/DiabloUI/selstart.cpp:43
 msgid "Switch to Diablo"
 msgstr "ディアブロ​に​切り替え"
 
@@ -738,19 +738,7 @@ msgstr "はい"
 msgid "No"
 msgstr "いいえ"
 
-#: Source/DiabloUI/settingsmenu.cpp:130
-msgid "Switch to Hellfire"
-msgstr "ヘルファイア​に​切り替え"
-
-#: Source/DiabloUI/settingsmenu.cpp:132
-msgid "Switch to Fullgame"
-msgstr "フルゲーム​に​切り替え"
-
-#: Source/DiabloUI/settingsmenu.cpp:132
-msgid "Switch to Shareware"
-msgstr "シェアウェア​に​切り替え"
-
-#: Source/DiabloUI/settingsmenu.cpp:155 Source/gamemenu.cpp:61
+#: Source/DiabloUI/settingsmenu.cpp:176 Source/gamemenu.cpp:61
 msgid "Previous Menu"
 msgstr "前​の​メニュー"
 
@@ -1041,89 +1029,89 @@ msgstr "ラザルス​の​間"
 msgid "level 15"
 msgstr "レベル​15"
 
-#: Source/diablo.cpp:117
+#: Source/diablo.cpp:118
 msgid "I need help! Come Here!"
 msgstr "助け​て​ください。ここ​に​来​て​!"
 
-#: Source/diablo.cpp:118
+#: Source/diablo.cpp:119
 msgid "Follow me."
 msgstr "つい​て​き​て。"
 
-#: Source/diablo.cpp:119
+#: Source/diablo.cpp:120
 msgid "Here's something for you."
 msgstr "これ​は、あなた​の​ため​に​用意​し​た​もの​です。"
 
-#: Source/diablo.cpp:120
+#: Source/diablo.cpp:121
 msgid "Now you DIE!"
 msgstr "さあ、死ぬ​ん​だ​!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
+#: Source/diablo.cpp:785
 msgid "Options:\n"
 msgstr "オプション:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:786
 msgid "Print this message and exit"
 msgstr "Print this message and exit"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:787
 msgid "Print the version and exit"
 msgstr "Print the version and exit"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:788
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Specify the folder of diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:789
 msgid "Specify the folder of save files"
 msgstr "Specify the folder of save files"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
+#: Source/diablo.cpp:790
 msgid "Specify the location of diablo.ini"
 msgstr "Specify the location of diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:791
 msgid "Skip startup videos"
 msgstr "Skip startup videos"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:792
 msgid "Display frames per second"
 msgstr "Display frames per second"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:793
 msgid "Run in windowed mode"
 msgstr "Run in windowed mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:794
 msgid "Enable verbose logging"
 msgstr "Enable verbose logging"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:795
 msgid "Record a demo file"
 msgstr "Record a demo file"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:796
 msgid "Play a demo file"
 msgstr "Play a demo file"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
+#: Source/diablo.cpp:797
 msgid "Disable all frame limiting during demo playback"
 msgstr "Disable all frame limiting during demo playback"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Game selection:\n"
@@ -1132,22 +1120,22 @@ msgstr ""
 "Game selection:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:798
+#: Source/diablo.cpp:799
 msgid "Force Shareware mode"
 msgstr "Force Shareware mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:799
+#: Source/diablo.cpp:800
 msgid "Force Diablo mode"
 msgstr "Force Diablo mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:800
+#: Source/diablo.cpp:801
 msgid "Force Hellfire mode"
 msgstr "Force Hellfire mode"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:801
+#: Source/diablo.cpp:802
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1156,11 +1144,11 @@ msgstr ""
 "Hellfire options:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:802
+#: Source/diablo.cpp:803
 msgid "Use alternate nest palette"
 msgstr "Use alternate nest palette"
 
-#: Source/diablo.cpp:808
+#: Source/diablo.cpp:809
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1168,32 +1156,32 @@ msgstr ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:872
+#: Source/diablo.cpp:873
 msgid "unrecognized option '{:s}'\n"
 msgstr "unrecognized option ‘​{:s}’\n"
 
-#: Source/diablo.cpp:903
+#: Source/diablo.cpp:904
 msgid "version {:s}"
 msgstr "version {:s}"
 
-#: Source/diablo.cpp:1219
+#: Source/diablo.cpp:1226
 msgid "-- Network timeout --"
 msgstr "— Network timeout —"
 
-#: Source/diablo.cpp:1220
+#: Source/diablo.cpp:1227
 msgid "-- Waiting for players --"
 msgstr "— Waiting for players —"
 
-#: Source/diablo.cpp:1239
+#: Source/diablo.cpp:1246
 msgid "No help available"
 msgstr "ヘルプ​は​使え​ませ​ん"
 
-#: Source/diablo.cpp:1240
+#: Source/diablo.cpp:1247
 msgid "while in stores"
 msgstr "店​で"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1452
+#: Source/diablo.cpp:1462
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, version = {:s}, mode = {:s}"
 
@@ -1739,35 +1727,35 @@ msgstr ""
 "2​冊​以上​の​本​を​読む​こと​で、その​呪文​の​知識​が​増え、より​効果的​に​呪文​を​唱える​こと​が​"
 "でき​ます。"
 
-#: Source/help.cpp:182
+#: Source/help.cpp:180
 msgid "Shareware Hellfire Help"
 msgstr "シェアウェア ヘルファイア ヘルプ"
 
-#: Source/help.cpp:182
+#: Source/help.cpp:180
 msgid "Hellfire Help"
 msgstr "ヘルファイア ヘルプ"
 
-#: Source/help.cpp:184
+#: Source/help.cpp:182
 msgid "Shareware Diablo Help"
 msgstr "シェアウェア ディアブロ ヘルプ"
 
-#: Source/help.cpp:184
+#: Source/help.cpp:182
 msgid "Diablo Help"
 msgstr "ディアブロ ヘルプ"
 
-#: Source/help.cpp:214
+#: Source/help.cpp:212
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "ESC​を​押し​て​終了​する​か、矢印​キー​で​スクロール​し​ます。"
 
-#: Source/init.cpp:176
+#: Source/init.cpp:189
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq​また​は​spawn.mpq"
 
-#: Source/init.cpp:197
+#: Source/init.cpp:210
 msgid "Some Hellfire MPQs are missing"
 msgstr "いくつ​か​の​Hellfire MPQ​が​欠落​し​て​い​ます"
 
-#: Source/init.cpp:197
+#: Source/init.cpp:210
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1775,11 +1763,11 @@ msgstr ""
 "すべて​の​Hellfire MPQ​が​見つから​ない。\n"
 "​すべて​の hf​*​.mpq ファイル​を​コピー​し​て​ください。"
 
-#: Source/init.cpp:205
+#: Source/init.cpp:224
 msgid "Unable to create main window"
 msgstr "Unable to create main window"
 
-#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:155
+#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:166
 msgid "Gold"
 msgstr "ゴールド"
 
@@ -5820,103 +5808,151 @@ msgstr "トラップ​の​掛かっ​た​{:s}"
 msgid "{:s} (disabled)"
 msgstr "{:s} (​無効​)"
 
-#: Source/options.cpp:500
+#: Source/options.cpp:451 Source/options.cpp:534 Source/options.cpp:540
 msgid "ON"
 msgstr "オン"
 
-#: Source/options.cpp:500
+#: Source/options.cpp:451 Source/options.cpp:532 Source/options.cpp:538
 msgid "OFF"
 msgstr "オフ"
 
-#: Source/options.cpp:570 Source/quests.cpp:48
+#: Source/options.cpp:522
+msgid "Start Up"
+msgstr "起動"
+
+#: Source/options.cpp:522
+msgid "Start Up Settings"
+msgstr "起動​時​の​設定"
+
+#: Source/options.cpp:523
+msgid "Game Mode"
+msgstr "ゲーム​モード"
+
+#: Source/options.cpp:523
+msgid "Play Diablo or Hellfire."
+msgstr "ディアブロ、また​は​ヘルファイア​を​選択​し​ます。"
+
+#: Source/options.cpp:525 Source/options.cpp:564 Source/quests.cpp:48
 msgid "Diablo"
 msgstr "ディアブロ"
 
-#: Source/options.cpp:570
-msgid "Diablo specific Settings"
-msgstr "ディアブロ​固有​の​設定"
-
-#: Source/options.cpp:571 Source/options.cpp:583
-msgid "Intro"
-msgstr "イントロ"
-
-#: Source/options.cpp:571 Source/options.cpp:583
-msgid "Enable/disable Intro cinematic."
-msgstr "イントロ​・​シネマ​ティック​の​有効​化​／​無効化"
-
-#: Source/options.cpp:582
+#: Source/options.cpp:527 Source/options.cpp:573
 msgid "Hellfire"
 msgstr "ヘルファイア"
 
-#: Source/options.cpp:582
+#: Source/options.cpp:529
+msgid "Restrict to Shareware"
+msgstr "シェアウェア​の​制限"
+
+#: Source/options.cpp:529
+msgid ""
+"Makes the game compatible with the demo. Enables multiplayer with friends "
+"who don't own a full copy of Diablo."
+msgstr ""
+"ゲーム​を​体験版​と​互換性​の​ある​もの​に​し​ます。ディアブロ​の​製品​版​を​持っ​て​い​ない​友"
+"人​と​の​マルチ​プレイ​が​可能​に​なり​ます。"
+
+#: Source/options.cpp:530 Source/options.cpp:536
+msgid "Intro"
+msgstr "イントロ"
+
+#: Source/options.cpp:530 Source/options.cpp:536
+msgid "Shown Intro cinematic."
+msgstr "イントロ​・​シネマ​ティック​を​表示​し​ます。"
+
+#: Source/options.cpp:542
+msgid "Splash"
+msgstr "スプラッシュ"
+
+#: Source/options.cpp:542
+msgid "Shown splash screen."
+msgstr "スプラッシュ​画面​を​設定​し​ます。"
+
+#: Source/options.cpp:544
+msgid "Logo and Title Screen"
+msgstr "ロゴ​と​タイトル​画面"
+
+#: Source/options.cpp:545
+msgid "Title Screen"
+msgstr "タイトル​画面"
+
+#: Source/options.cpp:546 Source/panels/charpanel.cpp:139
+msgid "None"
+msgstr "なし"
+
+#: Source/options.cpp:564
+msgid "Diablo specific Settings"
+msgstr "ディアブロ​固有​の​設定"
+
+#: Source/options.cpp:573
 msgid "Hellfire specific Settings"
 msgstr "ヘルファイア​固有​の​設定"
 
-#: Source/options.cpp:594
+#: Source/options.cpp:582
 msgid "Audio"
 msgstr "オーディオ"
 
-#: Source/options.cpp:594
+#: Source/options.cpp:582
 msgid "Audio Settings"
 msgstr "オーディオ​設定"
 
-#: Source/options.cpp:595
+#: Source/options.cpp:583
 msgid "Walking Sound"
 msgstr "歩行​音"
 
-#: Source/options.cpp:595
+#: Source/options.cpp:583
 msgid "Player emits sound when walking."
 msgstr "歩行​時​に​音​が​出る​よう​に​なり​ます。"
 
-#: Source/options.cpp:596
+#: Source/options.cpp:584
 msgid "Auto Equip Sound"
 msgstr "自動​装備​サウンド"
 
-#: Source/options.cpp:596
+#: Source/options.cpp:584
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr "ピックアップ​時​に​自動的​に​アイテム​を​装備​する​と、装備​音​が​鳴り​ます。"
 
-#: Source/options.cpp:597
+#: Source/options.cpp:585
 msgid "Item Pickup Sound"
 msgstr "アイテム​ピックアップ​サウンド"
 
-#: Source/options.cpp:597
+#: Source/options.cpp:585
 msgid "Picking up items emits the items pickup sound."
 msgstr "アイテム​を​拾う​と、アイテム​ピックアップ​サウンド​が​鳴り​ます。"
 
-#: Source/options.cpp:610
+#: Source/options.cpp:598
 msgid "Graphics"
 msgstr "グラフィックス"
 
-#: Source/options.cpp:610
+#: Source/options.cpp:598
 msgid "Graphics Settings"
 msgstr "グラフィックス​設定"
 
-#: Source/options.cpp:611
+#: Source/options.cpp:599
 msgid "Scaling Quality"
 msgstr "スケーリング​品質"
 
-#: Source/options.cpp:611
+#: Source/options.cpp:599
 msgid "Enables optional filters to the output image when upscaling."
 msgstr "アップス​ケール​時​の​出力​画像​に​オプション​の​フィルター​を​有効​に​し​ます。"
 
-#: Source/options.cpp:613
+#: Source/options.cpp:601
 msgid "Nearest Pixel"
 msgstr "近接​ピクセル"
 
-#: Source/options.cpp:614
+#: Source/options.cpp:602
 msgid "Bilinear"
 msgstr "バイリニア"
 
-#: Source/options.cpp:615
+#: Source/options.cpp:603
 msgid "Anisotropic"
 msgstr "異方​性"
 
-#: Source/options.cpp:617
+#: Source/options.cpp:605
 msgid "Blended Transparency"
 msgstr "ブレンド​さ​れ​た​透過​効果"
 
-#: Source/options.cpp:617
+#: Source/options.cpp:605
 msgid ""
 "Enables uniform transparency mode. This setting affects the transparency on "
 "walls, game text menus, and boxes. If disabled will default to old "
@@ -5926,45 +5962,45 @@ msgstr ""
 "ボックス​の​透過​効果​に​影響​し​ます。無効​に​する​と、デフォルト​で​古い​市松​模様​の​透明"
 "化​に​なり​ます。"
 
-#: Source/options.cpp:618
+#: Source/options.cpp:606
 msgid "Color Cycling"
 msgstr "カラー​サイクル"
 
-#: Source/options.cpp:618
+#: Source/options.cpp:606
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr "水、溶岩、酸​の​アニメーション​に​使用​さ​れる​カラー​サイクリング​効果。"
 
-#: Source/options.cpp:619
+#: Source/options.cpp:607
 msgid "FPS Limiter"
 msgstr "FPS​リミッター"
 
-#: Source/options.cpp:619
+#: Source/options.cpp:607
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
 "CPU​負荷​が​高く​なら​ない​よう​に​FPS​を​制限​し​ます。制限​は​リフレッシュ​レート​を​考慮​し​"
 "て​い​ます。"
 
-#: Source/options.cpp:620
+#: Source/options.cpp:608
 msgid "Show FPS"
 msgstr "FPS​を​表示"
 
-#: Source/options.cpp:620
+#: Source/options.cpp:608
 msgid "Displays the FPS in the upper left corner of the screen."
 msgstr "画面​左上​に​FPS​を​表示​し​ます。"
 
-#: Source/options.cpp:636
+#: Source/options.cpp:624
 msgid "Gameplay"
 msgstr "ゲーム​プレイ"
 
-#: Source/options.cpp:636
+#: Source/options.cpp:624
 msgid "Gameplay Settings"
 msgstr "ゲーム​プレイ​設定"
 
-#: Source/options.cpp:637
+#: Source/options.cpp:625
 msgid "Run in Town"
 msgstr "街​で​走る"
 
-#: Source/options.cpp:637
+#: Source/options.cpp:625
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
@@ -5972,38 +6008,38 @@ msgstr ""
 "ディアブロ​と​ヘルファイア​で​街中​で​の​ジョギング​/​早歩き​を​有効​に​し​ます。この​オプ"
 "ション​は​拡張​版​で​導入​さ​れ​まし​た。"
 
-#: Source/options.cpp:638
+#: Source/options.cpp:626
 msgid "Grab Input"
 msgstr "入力​捕捉"
 
-#: Source/options.cpp:638
+#: Source/options.cpp:626
 msgid "When enabled mouse is locked to the game window."
 msgstr "有効​に​する​と、マウス​が​ゲーム​ウィンドウ​に​ロック​さ​れ​ます。"
 
-#: Source/options.cpp:639
+#: Source/options.cpp:627
 msgid "Theo Quest"
 msgstr "テオクエスト"
 
-#: Source/options.cpp:639
+#: Source/options.cpp:627
 msgid "Enable Little Girl quest."
 msgstr "リトル​ガール​クエスト​を​有効​に​し​ます。"
 
-#: Source/options.cpp:640
+#: Source/options.cpp:628
 msgid "Cow Quest"
 msgstr "牛​クエスト"
 
-#: Source/options.cpp:640
+#: Source/options.cpp:628
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
 msgstr ""
 "ジャージー​の​クエスト​を​有効​に​する。農家​の​レスター​の​代わり​に​コンプリート​ナット​"
 "が​登場​し​ます。"
 
-#: Source/options.cpp:641
+#: Source/options.cpp:629
 msgid "Friendly Fire"
 msgstr "フレンドリー​ファイア"
 
-#: Source/options.cpp:641
+#: Source/options.cpp:629
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
@@ -6011,112 +6047,112 @@ msgstr ""
 "フレンドリー​モード​が​オン​に​なっ​て​い​て​も、マルチ​プレイヤー​の​プレイヤー​間​で​弓矢​"
 "や​呪文​の​ダメージ​を​許容​し​ます。"
 
-#: Source/options.cpp:642
+#: Source/options.cpp:630
 msgid "Test Bard"
 msgstr "テスト​・​バード"
 
-#: Source/options.cpp:642
+#: Source/options.cpp:630
 msgid "Force the Bard character type to appear in the hero selection menu."
 msgstr "ヒーロー​選択​メニュー​に​バード​の​キャラクター​タイプ​を​強制的​に​表示​し​ます。"
 
-#: Source/options.cpp:643
+#: Source/options.cpp:631
 msgid "Test Barbarian"
 msgstr "テスト​・​バーバリアン"
 
-#: Source/options.cpp:643
+#: Source/options.cpp:631
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
 msgstr ""
 "ヒーロー​選択​メニュー​に​バーバリアン​の​キャラクター​タイプ​を​強制的​に​表示​し​ます。"
 
-#: Source/options.cpp:644
+#: Source/options.cpp:632
 msgid "Experience Bar"
 msgstr "経験値​バー"
 
-#: Source/options.cpp:644
+#: Source/options.cpp:632
 msgid "Experience Bar is added to the UI at the bottom of the screen."
 msgstr "画面​下​の​UI​に​経験値​バー​を​追加​し​ます。"
 
-#: Source/options.cpp:645
+#: Source/options.cpp:633
 msgid "Enemy Health Bar"
 msgstr "敵​の​ヘルスバー"
 
-#: Source/options.cpp:645
+#: Source/options.cpp:633
 msgid "Enemy Health Bar is displayed at the top of the screen."
 msgstr "画面​上部​に​敵​の​ヘルスバー​を​表示​し​ます。"
 
-#: Source/options.cpp:646
+#: Source/options.cpp:634
 msgid "Auto Gold Pickup"
 msgstr "自動​ゴールド​回収"
 
-#: Source/options.cpp:646
+#: Source/options.cpp:634
 msgid "Gold is automatically collected when in close proximity to the player."
 msgstr "プレイヤー​付近​の​ゴールド​を​自動的​に​回収​し​ます。"
 
-#: Source/options.cpp:647
+#: Source/options.cpp:635
 msgid "Adria Refills Mana"
 msgstr "エイドリア​の​マナ​補充"
 
-#: Source/options.cpp:647
+#: Source/options.cpp:635
 msgid "Adria will refill your mana when you visit her shop."
 msgstr "エイドリア​の​店​を​訪れる​と、マナ​を​補充​し​て​くれ​ます。"
 
-#: Source/options.cpp:648
+#: Source/options.cpp:636
 msgid "Auto Equip Weapons"
 msgstr "武器​の​自動​装備"
 
-#: Source/options.cpp:648
+#: Source/options.cpp:636
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr "有効​に​する​と、武器​を​ピックアップ​や​購入​時​に​自動的​に​装備​さ​れ​ます。"
 
-#: Source/options.cpp:649
+#: Source/options.cpp:637
 msgid "Auto Equip Armor"
 msgstr "アーマー​の​自動​装備"
 
-#: Source/options.cpp:649
+#: Source/options.cpp:637
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr "有効​に​する​と、アーマー​を​ピックアップ​や​購入​時​に​自動的​に​装備​さ​れ​ます。"
 
-#: Source/options.cpp:650
+#: Source/options.cpp:638
 msgid "Auto Equip Helms"
 msgstr "ヘルム​の​自動​装備"
 
-#: Source/options.cpp:650
+#: Source/options.cpp:638
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr "有効​に​する​と、ヘルム​を​ピックアップ​や​購入​時​に​自動的​に​装備​さ​れ​ます。"
 
-#: Source/options.cpp:651
+#: Source/options.cpp:639
 msgid "Auto Equip Shields"
 msgstr "シールド​の​自動​装備"
 
-#: Source/options.cpp:651
+#: Source/options.cpp:639
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr "有効​に​する​と、シールド​を​ピックアップ​や​購入​時​に​自動的​に​装備​さ​れ​ます。"
 
-#: Source/options.cpp:652
+#: Source/options.cpp:640
 msgid "Auto Equip Jewelry"
 msgstr "ジュエリー​の​自動​装備"
 
-#: Source/options.cpp:652
+#: Source/options.cpp:640
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr "有効​に​する​と、ジュエリー​を​ピックアップ​や​購入​時​に​自動的​に​装備​さ​れ​ます。"
 
-#: Source/options.cpp:653
+#: Source/options.cpp:641
 msgid "Randomize Quests"
 msgstr "クエスト​の​ランダム化"
 
-#: Source/options.cpp:653
+#: Source/options.cpp:641
 msgid "Randomly selecting available quests for new games."
 msgstr "新規​ゲーム​で​クエスト​が​ランダム​に​選択​さ​れ​ます。"
 
-#: Source/options.cpp:654
+#: Source/options.cpp:642
 msgid "Show Monster Type"
 msgstr "モンスター​の​種類​を​表示"
 
-#: Source/options.cpp:654
+#: Source/options.cpp:642
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
@@ -6124,19 +6160,19 @@ msgstr ""
 "モンスター​に​カーソル​を​合わせる​と、UI​の​説明​欄​に​モンスター​の​種類​が​表示​さ​れ​ま"
 "す。"
 
-#: Source/options.cpp:655
+#: Source/options.cpp:643
 msgid "Auto Refill Belt"
 msgstr "ベルト​の​自動​補充"
 
-#: Source/options.cpp:655
+#: Source/options.cpp:643
 msgid "Refill belt from inventory when belt item is consumed."
 msgstr "ベルト​アイテム​が​消費​さ​れる​と、在庫​から​ベルト​を​補充​し​ます。"
 
-#: Source/options.cpp:656
+#: Source/options.cpp:644
 msgid "Disable Crippling Shrines"
 msgstr "被害​を​与える​祭壇​を​無効化"
 
-#: Source/options.cpp:656
+#: Source/options.cpp:644
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
@@ -6144,115 +6180,127 @@ msgstr ""
 "有効​に​する​と、地獄​の​大釜、魅了​の​祭壇、山羊​の​祭壇、華麗​なる​祭壇、厳粛​なる​祭壇​"
 "が​クリック​でき​なく​なり、無効​と​表示​さ​れ​ます。"
 
-#: Source/options.cpp:689
+#: Source/options.cpp:645
+msgid "Quick Cast"
+msgstr "クイック​キャスト"
+
+#: Source/options.cpp:645
+msgid ""
+"Spell hotkeys instantly cast the spell, rather than switching the readied "
+"spell."
+msgstr ""
+"呪文​の​ホットキー​は、準備​さ​れ​た​呪文​を​切り替える​の​で​は​なく、瞬時​に​呪文​を​唱え​ま"
+"す。"
+
+#: Source/options.cpp:679
 msgid "Controller"
 msgstr "コントローラー"
 
-#: Source/options.cpp:689
+#: Source/options.cpp:679
 msgid "Controller Settings"
 msgstr "コントローラー​設定"
 
-#: Source/options.cpp:698
+#: Source/options.cpp:688
 msgid "Network"
 msgstr "ネットワーク"
 
-#: Source/options.cpp:698
+#: Source/options.cpp:688
 msgid "Network Settings"
 msgstr "ネットワーク​設定"
 
-#: Source/options.cpp:707
+#: Source/options.cpp:697
 msgid "Chat"
 msgstr "チャット"
 
-#: Source/options.cpp:707
+#: Source/options.cpp:697
 msgid "Chat Settings"
 msgstr "チャット​設定"
 
-#: Source/options.cpp:716
+#: Source/options.cpp:706 Source/options.cpp:868
 msgid "Language"
 msgstr "言語"
 
-#: Source/options.cpp:716
+#: Source/options.cpp:706
+msgid "Define what language to use in game."
+msgstr "ゲーム​内​で​使用​する​言語​を​定義​し​ます。"
+
+#: Source/options.cpp:868
 msgid "Language Settings"
 msgstr "言語​設定"
 
-#: Source/panels/charpanel.cpp:110
+#: Source/panels/charpanel.cpp:111
 msgid "MAX"
 msgstr "MAX"
 
-#: Source/panels/charpanel.cpp:120
+#: Source/panels/charpanel.cpp:132
 msgid "Level"
 msgstr "レベル"
 
-#: Source/panels/charpanel.cpp:122
+#: Source/panels/charpanel.cpp:134
 msgid "Experience"
 msgstr "経験値"
 
-#: Source/panels/charpanel.cpp:124
+#: Source/panels/charpanel.cpp:136
 msgid "Next level"
 msgstr "次​の​レベル"
 
-#: Source/panels/charpanel.cpp:127
-msgid "None"
-msgstr "なし"
-
-#: Source/panels/charpanel.cpp:133
+#: Source/panels/charpanel.cpp:144
 msgid "Base"
 msgstr "基本"
 
-#: Source/panels/charpanel.cpp:134
+#: Source/panels/charpanel.cpp:145
 msgid "Now"
 msgstr "現在"
 
-#: Source/panels/charpanel.cpp:135
+#: Source/panels/charpanel.cpp:146
 msgid "Strength"
 msgstr "STR"
 
-#: Source/panels/charpanel.cpp:139
+#: Source/panels/charpanel.cpp:150
 msgid "Magic"
 msgstr "MAG"
 
-#: Source/panels/charpanel.cpp:143
+#: Source/panels/charpanel.cpp:154
 msgid "Dexterity"
 msgstr "DEX"
 
-#: Source/panels/charpanel.cpp:146
+#: Source/panels/charpanel.cpp:157
 msgid "Vitality"
 msgstr "VIT"
 
-#: Source/panels/charpanel.cpp:149
+#: Source/panels/charpanel.cpp:160
 msgid "Points to distribute"
 msgstr "配布​ポイント"
 
-#: Source/panels/charpanel.cpp:159
+#: Source/panels/charpanel.cpp:170
 msgid "Armor class"
 msgstr "防御​力"
 
-#: Source/panels/charpanel.cpp:161
+#: Source/panels/charpanel.cpp:172
 msgid "To hit"
 msgstr "命中​率"
 
-#: Source/panels/charpanel.cpp:163
+#: Source/panels/charpanel.cpp:174
 msgid "Damage"
 msgstr "ダメージ"
 
-#: Source/panels/charpanel.cpp:170
+#: Source/panels/charpanel.cpp:181
 msgid "Life"
 msgstr "ライフ"
 
-#: Source/panels/charpanel.cpp:174
+#: Source/panels/charpanel.cpp:185
 msgid "Mana"
 msgstr "マナ"
 
-#: Source/panels/charpanel.cpp:179
+#: Source/panels/charpanel.cpp:190
 msgid "Resist magic"
 msgstr "耐​魔法"
 
-#: Source/panels/charpanel.cpp:181
+#: Source/panels/charpanel.cpp:192
 msgid "Resist fire"
 msgstr "耐火​炎"
 
-#: Source/panels/charpanel.cpp:183
+#: Source/panels/charpanel.cpp:194
 msgid "Resist lightning"
 msgstr "耐​電撃"
 
@@ -6366,7 +6414,7 @@ msgstr "Unable to read to save file archive"
 msgid "Unable to write to save file archive"
 msgstr "Unable to write to save file archive"
 
-#: Source/plrmsg.cpp:89
+#: Source/plrmsg.cpp:90
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (​レベル {:d}): {:s}"
 
