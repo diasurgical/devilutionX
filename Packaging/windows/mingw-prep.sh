@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SDLDEV_VERS=2.0.14
+SDLDEV_VERS=2.0.18
 SDLTTF_VERS=2.0.15
 SODIUM_VERS=1.0.18
 ZLIB_VERS=1.2.11
@@ -56,13 +56,3 @@ find "${MINGW_PREFIX}/lib/pkgconfig/" -name '*.pc' -exec \
 # Fixup CMake prefix:
 find "${MINGW_PREFIX}" -name '*.cmake' -exec \
   $SUDO sed -i "s|/opt/local/${MINGW_ARCH}|${MINGW_PREFIX}|" '{}' \;
-
-# Fixup SDL2's cmake file
-# See https://github.com/libsdl-org/SDL/issues/3665
-sed "s|@prefix@|${MINGW_PREFIX}|;
-s|@exec_prefix@|\${prefix}|;
-s|@libdir@|\${exec_prefix}/lib|;
-s|@includedir@|\${prefix}/include|;
-s|@SDL_RLD_FLAGS@||;
-s|@SDL_LIBS@||;
-" "$(dirname $0)"/sdl2-config.cmake.in | $SUDO tee "${MINGW_PREFIX}/lib/cmake/SDL2/sdl2-config.cmake" > /dev/null
