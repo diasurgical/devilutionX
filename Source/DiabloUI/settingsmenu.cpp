@@ -12,12 +12,19 @@ namespace devilution {
 namespace {
 
 bool endMenu = false;
-bool recreateUI = false;
+bool backToMain = false;
 
 std::vector<std::unique_ptr<UiListItem>> vecDialogItems;
 std::vector<std::unique_ptr<UiItemBase>> vecDialog;
 std::vector<OptionEntryBase *> vecOptions;
-OptionEntryBase *optionToPreselect = nullptr;
+OptionEntryBase *selectedOption = nullptr;
+
+enum class ShownMenuTyp {
+	Settings,
+	ListOption,
+};
+
+ShownMenuTyp shownMenu;
 
 char optionDescription[512];
 
@@ -59,11 +66,18 @@ void CleanUpSettingsUI()
 	UnloadScrollBar();
 }
 
+void GoBackOneMenuLevel()
+{
+	endMenu = true;
+	backToMain = shownMenu == ShownMenuTyp::Settings;
+	shownMenu = ShownMenuTyp::Settings;
+}
+
 void ItemFocused(int value)
 {
 	auto &vecItem = vecDialogItems[value];
 	optionDescription[0] = '\0';
-	if (vecItem->m_value < 0) {
+	if (vecItem->m_value < 0 || shownMenu != ShownMenuTyp::Settings) {
 		return;
 	}
 	auto *pOption = vecOptions[vecItem->m_value];
@@ -71,31 +85,17 @@ void ItemFocused(int value)
 	strncpy(optionDescription, paragraphs.c_str(), sizeof(optionDescription));
 }
 
-void ItemSelected(int value)
+bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
 {
-	auto &vecItem = vecDialogItems[value];
-	if (vecItem->m_value < 0) {
-		auto specialMenuEntry = static_cast<SpecialMenuEntry>(vecItem->m_value);
-		switch (specialMenuEntry) {
-		case SpecialMenuEntry::None:
-			break;
-		case SpecialMenuEntry::PreviousMenu:
-			endMenu = true;
-			break;
-		}
-		return;
-	}
-
-	auto *pOption = vecOptions[vecItem->m_value];
 	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
 		endMenu = true;
-		recreateUI = true;
 		// Clean up all UI related Data
 		CleanUpSettingsUI();
 		UnloadUiGFX();
 		FreeItemGFX();
-		optionToPreselect = pOption;
+		selectedOption = pOption;
 	}
+
 	switch (pOption->GetType()) {
 	case OptionEntryType::Boolean: {
 		auto *pOptionBoolean = static_cast<OptionEntryBoolean *>(pOption);
@@ -103,37 +103,87 @@ void ItemSelected(int value)
 	} break;
 	case OptionEntryType::List: {
 		auto *pOptionList = static_cast<OptionEntryListBase *>(pOption);
-		size_t nextIndex = pOptionList->GetActiveListIndex() + 1;
-		if (nextIndex >= pOptionList->GetListSize())
-			nextIndex = 0;
-		pOptionList->SetActiveListIndex(nextIndex);
+		pOptionList->SetActiveListIndex(listIndex);
 	} break;
 	}
+
 	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
 		// Reinitalize UI with changed settings (for example game mode, language or resolution)
 		UiInitialize();
 		InitItemGFX();
 		if (IsHardwareCursor())
 			SetHardwareCursor(CursorInfo::UnknownCursor());
-	} else {
-		vecItem->args.clear();
-		for (auto &arg : CreateDrawStringFormatArgForEntry(pOption))
-			vecItem->args.push_back(arg);
+		return false;
+	}
+
+	return true;
+}
+
+void ItemSelected(int value)
+{
+	auto &vecItem = vecDialogItems[value];
+	int vecItemValue = vecItem->m_value;
+	if (vecItemValue < 0) {
+		auto specialMenuEntry = static_cast<SpecialMenuEntry>(vecItemValue);
+		switch (specialMenuEntry) {
+		case SpecialMenuEntry::None:
+			break;
+		case SpecialMenuEntry::PreviousMenu:
+			GoBackOneMenuLevel();
+			break;
+		}
+		return;
+	}
+
+	switch (shownMenu) {
+	case ShownMenuTyp::Settings: {
+		auto *pOption = vecOptions[vecItemValue];
+		bool updateValueDescription = false;
+		if (pOption->GetType() == OptionEntryType::List) {
+			auto *pOptionList = static_cast<OptionEntryListBase *>(pOption);
+			if (pOptionList->GetListSize() > 2) {
+				selectedOption = pOption;
+				endMenu = true;
+				shownMenu = ShownMenuTyp::ListOption;
+			} else {
+				// If the list contains only two items, we don't show a submenu and instead change the option value instantly
+				size_t nextIndex = pOptionList->GetActiveListIndex() + 1;
+				if (nextIndex >= pOptionList->GetListSize())
+					nextIndex = 0;
+				updateValueDescription = ChangeOptionValue(pOption, nextIndex);
+			}
+		} else {
+			updateValueDescription = ChangeOptionValue(pOption, 0);
+		}
+		if (updateValueDescription) {
+			vecItem->args.clear();
+			for (auto &arg : CreateDrawStringFormatArgForEntry(pOption))
+				vecItem->args.push_back(arg);
+		}
+	} break;
+	case ShownMenuTyp::ListOption: {
+		ChangeOptionValue(selectedOption, vecItemValue);
+		GoBackOneMenuLevel();
+	} break;
 	}
 }
 
 void EscPressed()
 {
-	endMenu = true;
+	GoBackOneMenuLevel();
 }
 
 } // namespace
 
 void UiSettingsMenu()
 {
-	endMenu = false;
+	backToMain = false;
+	shownMenu = ShownMenuTyp::Settings;
+	selectedOption = nullptr;
 
 	do {
+		endMenu = false;
+
 		LoadBackgroundArt("ui_art\\black.pcx");
 		LoadScrollBar();
 		UiAddBackground(&vecDialog);
@@ -144,41 +194,51 @@ void UiSettingsMenu()
 
 		optionDescription[0] = '\0';
 
-		const char *titleText = _("Settings");
+		const char *titleText = shownMenu == ShownMenuTyp::Settings ? _("Settings") : selectedOption->GetName().data();
 		vecDialog.push_back(std::make_unique<UiArtText>(titleText, MakeSdlRect(PANEL_LEFT, UI_OFFSET_Y + 161, PANEL_WIDTH, 35), UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
 		vecDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
 		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
 
-		size_t catCount = 0;
 		size_t itemToSelect = 1;
 
-		for (auto *pCategory : sgOptions.GetCategories()) {
-			bool categoryCreated = false;
-			for (auto *pEntry : pCategory->GetEntries()) {
-				if (!IsValidEntry(pEntry))
-					continue;
-				if (!categoryCreated) {
-					if (catCount > 0)
-						vecDialogItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
-					catCount += 1;
-					vecDialogItems.push_back(std::make_unique<UiListItem>(pCategory->GetName().data(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
-					categoryCreated = true;
+		switch (shownMenu) {
+		case ShownMenuTyp::Settings: {
+			size_t catCount = 0;
+			for (auto *pCategory : sgOptions.GetCategories()) {
+				bool categoryCreated = false;
+				for (auto *pEntry : pCategory->GetEntries()) {
+					if (!IsValidEntry(pEntry))
+						continue;
+					if (!categoryCreated) {
+						if (catCount > 0)
+							vecDialogItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
+						catCount += 1;
+						vecDialogItems.push_back(std::make_unique<UiListItem>(pCategory->GetName().data(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
+						categoryCreated = true;
+					}
+					auto formatArgs = CreateDrawStringFormatArgForEntry(pEntry);
+					if (selectedOption == pEntry)
+						itemToSelect = vecDialogItems.size();
+					vecDialogItems.push_back(std::make_unique<UiListItem>("{}: {}", formatArgs, vecOptions.size(), UiFlags::ColorUiGold));
+					vecOptions.push_back(pEntry);
 				}
-				auto formatArgs = CreateDrawStringFormatArgForEntry(pEntry);
-				if (optionToPreselect == pEntry)
-					itemToSelect = vecDialogItems.size();
-				vecDialogItems.push_back(std::make_unique<UiListItem>("{}: {}", formatArgs, vecOptions.size(), UiFlags::ColorUiGold));
-				vecOptions.push_back(pEntry);
 			}
+		} break;
+		case ShownMenuTyp::ListOption: {
+			auto *pOptionList = static_cast<OptionEntryListBase *>(selectedOption);
+			for (size_t i = 0; i < pOptionList->GetListSize(); i++) {
+				vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i).data(), i, UiFlags::ColorUiGold));
+			}
+			itemToSelect = pOptionList->GetActiveListIndex();
+		} break;
 		}
 
-		vecDialogItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
+		vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
 		vecDialogItems.push_back(std::make_unique<UiListItem>(_("Previous Menu"), static_cast<int>(SpecialMenuEntry::PreviousMenu), UiFlags::ColorUiGold));
 
 		vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, rectList.size.height / 26, rectList.position.x, rectList.position.y, rectList.size.width, 26, UiFlags::FontSize24 | UiFlags::AlignCenter));
 
 		UiInitList(ItemFocused, ItemSelected, EscPressed, vecDialog, true, nullptr, itemToSelect);
-		optionToPreselect = nullptr;
 
 		while (!endMenu) {
 			UiClearScreen();
@@ -187,12 +247,7 @@ void UiSettingsMenu()
 		}
 
 		CleanUpSettingsUI();
-
-		if (recreateUI) {
-			recreateUI = false;
-			endMenu = false;
-		}
-	} while (!endMenu);
+	} while (!backToMain);
 }
 
 } // namespace devilution
