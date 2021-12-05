@@ -5800,7 +5800,7 @@ msgstr "П'єдестал Крові"
 
 #: Source/objects.cpp:5464
 msgid "Mushroom Patch"
-msgstr "Латка з Грибами"
+msgstr "Грибна Галявина"
 
 #: Source/objects.cpp:5467
 msgid "Vile Stand"
@@ -5830,25 +5830,19 @@ msgstr "ВИМК"
 
 #: Source/options.cpp:500
 msgid "Start Up"
-msgstr ""
+msgstr "Запуск"
 
 #: Source/options.cpp:500
-#, fuzzy
-#| msgid "Chat Settings"
 msgid "Start Up Settings"
-msgstr "Налаштування Чату"
+msgstr "Налаштування Запуску"
 
 #: Source/options.cpp:501
-#, fuzzy
-#| msgid "Game Design"
 msgid "Game Mode"
-msgstr "Дизайн Гри"
+msgstr "Режим Гри"
 
 #: Source/options.cpp:501
-#, fuzzy
-#| msgid "Play a demo file"
 msgid "Play Diablo or Hellfire."
-msgstr "Зіграти демо"
+msgstr "Грати в Diablo або в Hellfire."
 
 #: Source/options.cpp:503 Source/options.cpp:542 Source/quests.cpp:48
 msgid "Diablo"
@@ -5859,47 +5853,40 @@ msgid "Hellfire"
 msgstr "Hellfire"
 
 #: Source/options.cpp:507
-#, fuzzy
-#| msgid "Switch to Shareware"
 msgid "Restrict to Shareware"
-msgstr "Перейти в Shareware"
+msgstr "Обмежити гру до Shareware"
 
 #: Source/options.cpp:507
 msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
 msgstr ""
+"Робить гру сумісною з демо-версією. Дозволяє гру по мережі з друзями у яких "
+"немає повної копії Diablo."
 
 #: Source/options.cpp:508 Source/options.cpp:514
 msgid "Intro"
 msgstr "Ролик"
 
 #: Source/options.cpp:508 Source/options.cpp:514
-#, fuzzy
-#| msgid "Enable/disable Intro cinematic."
 msgid "Shown Intro cinematic."
-msgstr "Вмикає/вимикає початковий ролик."
+msgstr "Показати початковий ролик."
 
 #: Source/options.cpp:520
-#, fuzzy
-#| msgctxt "spell"
-#| msgid "Flash"
 msgid "Splash"
-msgstr "Спалах"
+msgstr "Заставка"
 
 #: Source/options.cpp:520
 msgid "Shown splash screen."
-msgstr ""
+msgstr "Показана заставка."
 
 #: Source/options.cpp:522
-#, fuzzy
-#| msgid "Z: Zoom Game Screen"
 msgid "Logo and Title Screen"
-msgstr "Z: Збільшити/зменшити екран гри"
+msgstr "Логотип і Початковий Екран"
 
 #: Source/options.cpp:523
 msgid "Title Screen"
-msgstr ""
+msgstr "Початковий Екран"
 
 #: Source/options.cpp:524 Source/panels/charpanel.cpp:139
 msgid "None"
@@ -5955,31 +5942,35 @@ msgstr "Налаштування Графіки"
 
 #: Source/options.cpp:577
 msgid "Fullscreen"
-msgstr ""
+msgstr "Повноекранний Режим"
 
 #: Source/options.cpp:577
 msgid "Display the game in windowed or fullscreen mode."
-msgstr ""
+msgstr "Показує гру в режимі повного екрану чи вікна."
 
 #: Source/options.cpp:579
 msgid "Fit to Screen"
-msgstr ""
+msgstr "Налаштувати по Екрану"
 
 #: Source/options.cpp:579
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
 msgstr ""
+"Автоматично налаштовує вікно гри згідно співвідношення сторін і роздільної "
+"здатності екрану."
 
 #: Source/options.cpp:582
 msgid "Upscale"
-msgstr ""
+msgstr "Збільшення Зображення"
 
 #: Source/options.cpp:582
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
 msgstr ""
+"Дозволяє збільшення зображення гри. Забороняє зміну роздільної здатності "
+"монітора. Дозволяє міняти розмір вікна."
 
 #: Source/options.cpp:583
 msgid "Scaling Quality"
@@ -6003,25 +5994,28 @@ msgstr "Анізотропний"
 
 #: Source/options.cpp:589
 msgid "Integer Scaling"
-msgstr ""
+msgstr "Коефіцієнт Масштабування"
 
 #: Source/options.cpp:589
 msgid "Scales the image using whole number pixel ratio."
-msgstr ""
+msgstr "Збільшує зображення гри по коефіцієнту."
 
 #: Source/options.cpp:590
 msgid "Vertical Sync"
-msgstr ""
+msgstr "Вертикальна Синхронізація"
 
 #: Source/options.cpp:590
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
 msgstr ""
+"Примушує очікування кінця Вертикальної Синхронізації. Запобігає ефекту "
+"розриву зображення. Якщо налаштування вимкнене, то це може зменшити лаг на "
+"деяких системах."
 
 #: Source/options.cpp:592
 msgid "Blended Transparency"
-msgstr ""
+msgstr "Змішана Прозорість"
 
 #: Source/options.cpp:592
 msgid ""
@@ -6029,32 +6023,37 @@ msgid ""
 "walls, game text menus, and boxes. If disabled will default to old "
 "checkerboard transparency."
 msgstr ""
+"Вмикає режим змішаної прозорості. Ця настройка діє на прозорість стін, "
+"текстів меню і контейнерів. Якщо налаштування вимкнене, тоді прозорість "
+"працює в старому режимі шахового порядку."
 
 #: Source/options.cpp:593
 msgid "Color Cycling"
-msgstr ""
+msgstr "Циклування Кольорів"
 
 #: Source/options.cpp:593
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr ""
+"Ефект циклування кольорів, що використовується для анімації води, лави та "
+"кислоти."
 
 #: Source/options.cpp:594
-#, fuzzy
-#| msgid "Scimitar"
 msgid "FPS Limiter"
-msgstr "Ятаган"
+msgstr "Ліміт Кадрів в Секунду"
 
 #: Source/options.cpp:594
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
+"Кадри в секунду лімітовані, щоб запобігти високе використання процессора. "
+"Ліміт враховує частоту оновлення монітора."
 
 #: Source/options.cpp:595
 msgid "Show FPS"
-msgstr ""
+msgstr "Показати Кадри в Секунду"
 
 #: Source/options.cpp:595
 msgid "Displays the FPS in the upper left corner of the screen."
-msgstr ""
+msgstr "Показує лічильник кадрів в секунду в верхньому лівому кутку екрана."
 
 #: Source/options.cpp:634
 msgid "Gameplay"
@@ -6140,130 +6139,123 @@ msgstr "Додає внизу екрана Шкалу Досвіду."
 
 #: Source/options.cpp:643
 msgid "Enemy Health Bar"
-msgstr ""
+msgstr "Шкала Ворожого Життя"
 
 #: Source/options.cpp:643
-#, fuzzy
-#| msgid "Experience Bar is added to the UI at the bottom of the screen."
 msgid "Enemy Health Bar is displayed at the top of the screen."
-msgstr "Додає внизу екрана Шкалу Досвіду."
+msgstr "Додає внизу екрана Шкалу Ворожого Життя."
 
 #: Source/options.cpp:644
 msgid "Auto Gold Pickup"
-msgstr ""
+msgstr "Автопідбір Золота"
 
 #: Source/options.cpp:644
 msgid "Gold is automatically collected when in close proximity to the player."
 msgstr ""
+"Золото автоматично збирається коли гравець знаходиться близько до нього."
 
 #: Source/options.cpp:645
 msgid "Adria Refills Mana"
-msgstr ""
+msgstr "Адрія Поповнює Ману"
 
 #: Source/options.cpp:645
 msgid "Adria will refill your mana when you visit her shop."
-msgstr ""
+msgstr "Адрія поповнить ману коли гравець відвідує її магазин."
 
 #: Source/options.cpp:646
-#, fuzzy
-#| msgid "Auto Equip Sound"
 msgid "Auto Equip Weapons"
-msgstr "Звук Автоспорядження"
+msgstr "Автоспорядження Зброї"
 
 #: Source/options.cpp:646
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
-msgstr ""
+msgstr "Зброя буде автоматично споряджена після її підбору або покупки."
 
 #: Source/options.cpp:647
-#, fuzzy
-#| msgid "Auto Equip Sound"
 msgid "Auto Equip Armor"
-msgstr "Звук Автоспорядження"
+msgstr "Автоспорядження Броні"
 
 #: Source/options.cpp:647
-#, fuzzy
-#| msgid "Automatically equipping items on pickup emits the equipment sound."
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
-msgstr "Автоматичне спорядження предметів видає звук спорядження."
+msgstr "Броня буде автоматично споряджена після її підбору або покупки."
 
 #: Source/options.cpp:648
-#, fuzzy
-#| msgid "Auto Equip Sound"
 msgid "Auto Equip Helms"
-msgstr "Звук Автоспорядження"
+msgstr "Автоспорядження Шоломів"
 
 #: Source/options.cpp:648
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
-msgstr ""
+msgstr "Шоломи будуть автоматично споряджені після їх підбору або покупки."
 
 #: Source/options.cpp:649
-#, fuzzy
-#| msgid "Auto Equip Sound"
 msgid "Auto Equip Shields"
-msgstr "Звук Автоспорядження"
+msgstr "Автоспорядження Щитів"
 
 #: Source/options.cpp:649
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
-msgstr ""
+msgstr "Щити будуть автоматично споряджені після їх підбору або покупки."
 
 #: Source/options.cpp:650
-#, fuzzy
-#| msgid "Auto Equip Sound"
 msgid "Auto Equip Jewelry"
-msgstr "Звук Автоспорядження"
+msgstr "Автоспорядження Коштовностей"
 
 #: Source/options.cpp:650
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Коштовності будуть автоматично споряджені після їх підбору або покупки."
 
 #: Source/options.cpp:651
 msgid "Randomize Quests"
-msgstr ""
+msgstr "Рандомізація Квестів"
 
 #: Source/options.cpp:651
 msgid "Randomly selecting available quests for new games."
-msgstr ""
+msgstr "Квести випадково вибираються для нової гри."
 
 #: Source/options.cpp:652
 msgid "Show Monster Type"
-msgstr ""
+msgstr "Показати Тип Монстра"
 
 #: Source/options.cpp:652
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
 msgstr ""
+"Наведення курсора миші над монстром покаже його тип в Панелі Інформації."
 
 #: Source/options.cpp:653
 msgid "Auto Refill Belt"
-msgstr ""
+msgstr "Автозаповнення Пояса"
 
 #: Source/options.cpp:653
 msgid "Refill belt from inventory when belt item is consumed."
 msgstr ""
+"Коли предмет з Поясу використовується, Пояс автоматично поповнюється з "
+"інвентаря."
 
 #: Source/options.cpp:654
 msgid "Disable Crippling Shrines"
-msgstr ""
+msgstr "Вимкнути Псуючі Вівтарі"
 
 #: Source/options.cpp:654
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
+"Коли це налаштування ввімкнене, гравець не зможе клікнути на Казани, "
+"Чарівливі, Барвисті, Святі Вівтарі і Вівтарі Кози."
 
 #: Source/options.cpp:655
 msgid "Quick Cast"
-msgstr ""
+msgstr "Швидке Чаклування"
 
 #: Source/options.cpp:655
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
-msgstr ""
+msgstr "Гаряча клавішу чар буде відразу чаклувати попередньо вибрані чари."
 
 #: Source/options.cpp:689
 msgid "Controller"
