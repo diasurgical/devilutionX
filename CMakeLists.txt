@@ -548,6 +548,10 @@ set(libdevilutionx_SRCS
   Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp)
 
+if(IOS)
+  list(APPEND libdevilutionx_SRCS Source/platform/ios/ios_paths.m)
+endif()
+
 if(USE_SDL1)
   list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
 endif()
