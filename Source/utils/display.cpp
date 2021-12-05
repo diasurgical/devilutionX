@@ -97,7 +97,7 @@ void AdjustToScreenGeometry(Size windowSize)
 	}
 }
 
-Size GetPreferedWindowSize()
+Size GetPreferredWindowSize()
 {
 	Size windowSize = { sgOptions.Graphics.nWidth, sgOptions.Graphics.nHeight };
 
@@ -196,7 +196,7 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #endif
 
-	Size windowSize = GetPreferedWindowSize();
+	Size windowSize = GetPreferredWindowSize();
 
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
@@ -300,7 +300,7 @@ void ResizeWindow()
 	if (ghMainWnd == nullptr)
 		return;
 
-	Size windowSize = GetPreferedWindowSize();
+	Size windowSize = GetPreferredWindowSize();
 
 #ifdef USE_SDL1
 	SetVideoModeToPrimary(!gbForceWindowed && *sgOptions.Graphics.fullscreen, windowSize.width, windowSize.height);
