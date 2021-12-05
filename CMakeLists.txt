@@ -656,100 +656,6 @@ if(RUN_TESTS)
     test/animationinfo_test.cpp)
 endif()
 
-add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
-if (ANDROID)
-  add_library(${BIN_TARGET} SHARED Source/main.cpp)
-else()
-  add_executable(${BIN_TARGET}
-    WIN32
-    MACOSX_BUNDLE
-    Source/main.cpp
-    Source/devilutionx.exe.manifest
-    Packaging/macOS/AppIcon.icns
-    Packaging/windows/devilutionx.rc)
-endif()
-target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
-
-# Use file GENERATE instead of configure_file because configure_file
-# does not support generator expressions.
-get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-if(is_multi_config)
-  set(CONFIG_PATH $<CONFIG>/config.h)
-  target_include_directories(libdevilutionx PUBLIC ${CMAKE_BINARY_DIR}/$<CONFIG>)
-else()
-  set(CONFIG_PATH config.h)
-endif()
-file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
-"#pragma once
-#define PROJECT_NAME \"${PROJECT_NAME}\"
-#define PROJECT_VERSION \"${PROJECT_VERSION}${VERSION_SUFFIX}\"
-#define PROJECT_VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
-#define PROJECT_VERSION_MINOR ${PROJECT_VERSION_MINOR}
-#define PROJECT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
-")
-
-if(RUN_TESTS)
-  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
-  include(CTest)
-  include(GoogleTest)
-  find_package(GTest REQUIRED)
-  add_definitions(-DRUN_TESTS)
-  target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
-  target_link_libraries(devilutionx-tests PRIVATE libdevilutionx)
-  target_link_libraries(devilutionx-tests PRIVATE ${GTEST_LIBRARIES})
-  target_include_directories(devilutionx-tests PRIVATE 3rdParty/PicoSHA2)
-  if(ENABLE_CODECOVERAGE)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-      message(WARNING "Codecoverage not supported with MSVC")
-    else()
-      target_compile_options(devilutionx-tests PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(libdevilutionx PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(${BIN_TARGET} PRIVATE -fprofile-arcs -ftest-coverage)
-      target_link_options(devilutionx-tests PRIVATE -fprofile-arcs)
-      target_link_options(libdevilutionx PRIVATE -fprofile-arcs)
-      target_link_options(${BIN_TARGET} PRIVATE -fprofile-arcs)
-    endif()
-  endif()
-  gtest_add_tests(devilutionx-tests "" AUTO)
-endif()
-
-if(GPERF)
-  find_package(Gperftools REQUIRED)
-endif()
-
-if(NOT DEFINED DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY)
-  set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets")
-endif()
-
-set(devilutionx_langs bg cs da de es fr hr it ja ko_KR pl pt_BR ro_RO ru uk sv zh_CN zh_TW)
-if(USE_GETTEXT_FROM_VCPKG)
-  # vcpkg doesn't add its own tools directory to the search path
-  list(APPEND Gettext_ROOT ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/tools/gettext/bin)
-endif()
-find_package(Gettext)
-if (Gettext_FOUND)
-  file(MAKE_DIRECTORY "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}")
-  foreach(lang ${devilutionx_langs})
-    set(_po_file "${DevilutionX_SOURCE_DIR}/Translations/${lang}.po")
-    set(_gmo_file "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${lang}.gmo")
-    set(_lang_target devilutionx_lang_${lang})
-    add_custom_command(
-      COMMAND "${GETTEXT_MSGFMT_EXECUTABLE}" -o "${_gmo_file}" "${_po_file}"
-      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-      OUTPUT "${_gmo_file}"
-      MAIN_DEPENDENCY "${_po_file}"
-      VERBATIM
-    )
-    add_custom_target("${_lang_target}" DEPENDS "${_gmo_file}")
-    list(APPEND devilutionx_lang_targets "${_lang_target}")
-    list(APPEND devilutionx_lang_files "${_gmo_file}")
-
-    if(VITA)
-      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${_gmo_file}" "assets/${lang}.gmo")
-    endif()
-  endforeach()
-endif()
-
 set(devilutionx_assets
   data/boxleftend.pcx
   data/boxmiddle.pcx
@@ -855,6 +761,18 @@ set(devilutionx_assets
   ui_art/mainmenuw.pcx
   ui_art/supportw.pcx)
 
+if(VIRTUAL_GAMEPAD)
+  list(APPEND devilutionx_assets
+    ui_art/button.png
+    ui_art/directions2.png
+    ui_art/directions.png
+    ui_art/menu-levelup.png
+    ui_art/menu.png)
+endif()
+
+if(NOT DEFINED DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY)
+  set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets")
+endif()
 
 # Copy assets to the build assets subdirectory. This serves two purposes:
 # - If smpq is installed, devilutionx.mpq is built from these files.
@@ -862,22 +780,137 @@ set(devilutionx_assets
 foreach(asset_file ${devilutionx_assets})
   set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
   set(dst "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${asset_file}")
-  list(APPEND DEVILUTIONX_MPQ_FILES "${asset_file}")
   list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES "${dst}")
+  list(APPEND DEVILUTIONX_MPQ_FILES "${asset_file}")
   add_custom_command(
     COMMENT "Copying ${asset_file}"
     OUTPUT "${dst}"
     DEPENDS "${src}"
     COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
     VERBATIM)
+
+  if(APPLE)
+    list(APPEND BIN_TARGET_SRCS ${dst})
+    string(REGEX MATCH "(.*)\/" subpath ${asset_file})
+    set_source_files_properties(${dst} PROPERTIES
+      MACOSX_PACKAGE_LOCATION "Resources/${subpath}"
+      XCODE_EXPLICIT_FILE_TYPE compiled)
+  endif()
 endforeach()
+
+set(devilutionx_langs bg cs da de es fr hr it ja ko_KR pl pt_BR ro_RO ru uk sv zh_CN zh_TW)
+if(USE_GETTEXT_FROM_VCPKG)
+  # vcpkg doesn't add its own tools directory to the search path
+  list(APPEND Gettext_ROOT ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/tools/gettext/bin)
+endif()
+find_package(Gettext)
 if (Gettext_FOUND)
   foreach(lang ${devilutionx_langs})
     list(APPEND DEVILUTIONX_MPQ_FILES "${lang}.gmo")
+
+	if(APPLE)
+      set(dst "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${lang}.gmo")
+      file(TOUCH ${dst})
+      list(APPEND BIN_TARGET_SRCS ${dst})
+      set_source_files_properties(${dst} PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+        XCODE_EXPLICIT_FILE_TYPE compiled)
+    endif()
   endforeach()
 endif()
 
-if(BUILD_ASSETS_MPQ)
+add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
+if (ANDROID)
+  add_library(${BIN_TARGET} SHARED Source/main.cpp)
+else()
+  add_executable(${BIN_TARGET}
+    WIN32
+    MACOSX_BUNDLE
+    Source/main.cpp
+    Source/devilutionx.exe.manifest
+    Packaging/macOS/AppIcon.icns
+    Packaging/windows/devilutionx.rc
+    ${BIN_TARGET_SRCS})
+endif()
+target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+
+if (Gettext_FOUND AND APPLE)
+  foreach(lang ${devilutionx_langs})
+    file(REMOVE "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${lang}.gmo")
+  endforeach()
+endif()
+
+# Use file GENERATE instead of configure_file because configure_file
+# does not support generator expressions.
+get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(is_multi_config)
+  set(CONFIG_PATH $<CONFIG>/config.h)
+  target_include_directories(libdevilutionx PUBLIC ${CMAKE_BINARY_DIR}/$<CONFIG>)
+else()
+  set(CONFIG_PATH config.h)
+endif()
+file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
+"#pragma once
+#define PROJECT_NAME \"${PROJECT_NAME}\"
+#define PROJECT_VERSION \"${PROJECT_VERSION}${VERSION_SUFFIX}\"
+#define PROJECT_VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
+#define PROJECT_VERSION_MINOR ${PROJECT_VERSION_MINOR}
+#define PROJECT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
+")
+
+if(RUN_TESTS)
+  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
+  include(CTest)
+  include(GoogleTest)
+  find_package(GTest REQUIRED)
+  add_definitions(-DRUN_TESTS)
+  target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
+  target_link_libraries(devilutionx-tests PRIVATE libdevilutionx)
+  target_link_libraries(devilutionx-tests PRIVATE ${GTEST_LIBRARIES})
+  target_include_directories(devilutionx-tests PRIVATE 3rdParty/PicoSHA2)
+  if(ENABLE_CODECOVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+      message(WARNING "Codecoverage not supported with MSVC")
+    else()
+      target_compile_options(devilutionx-tests PRIVATE -fprofile-arcs -ftest-coverage)
+      target_compile_options(libdevilutionx PRIVATE -fprofile-arcs -ftest-coverage)
+      target_compile_options(${BIN_TARGET} PRIVATE -fprofile-arcs -ftest-coverage)
+      target_link_options(devilutionx-tests PRIVATE -fprofile-arcs)
+      target_link_options(libdevilutionx PRIVATE -fprofile-arcs)
+      target_link_options(${BIN_TARGET} PRIVATE -fprofile-arcs)
+    endif()
+  endif()
+  gtest_add_tests(devilutionx-tests "" AUTO)
+endif()
+
+if(GPERF)
+  find_package(Gperftools REQUIRED)
+endif()
+
+if (Gettext_FOUND)
+  file(MAKE_DIRECTORY "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}")
+  foreach(lang ${devilutionx_langs})
+    set(_po_file "${DevilutionX_SOURCE_DIR}/Translations/${lang}.po")
+    set(_gmo_file "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${lang}.gmo")
+    set(_lang_target devilutionx_lang_${lang})
+    add_custom_command(
+      COMMAND "${GETTEXT_MSGFMT_EXECUTABLE}" -o "${_gmo_file}" "${_po_file}"
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      OUTPUT "${_gmo_file}"
+      MAIN_DEPENDENCY "${_po_file}"
+      VERBATIM
+    )
+    add_custom_target("${_lang_target}" DEPENDS "${_gmo_file}")
+    list(APPEND devilutionx_lang_targets "${_lang_target}")
+    list(APPEND devilutionx_lang_files "${_gmo_file}")
+
+    if(VITA)
+      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${_gmo_file}" "assets/${lang}.gmo")
+    endif()
+  endforeach()
+endif()
+
+if(BUILD_ASSETS_MPQ AND NOT APPLE)
   set(DEVILUTIONX_MPQ "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq")
   add_custom_command(
     COMMENT "Building devilutionx.mpq"
@@ -1127,7 +1160,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(APPLE)
-  set_source_files_properties("./Packaging/macOS/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(MACOSX_BUNDLE_GUI_IDENTIFIER com.diasurgical.devilutionx)
   set(MACOSX_BUNDLE_COPYRIGHT Unlicense)
   set(MACOSX_BUNDLE_BUNDLE_NAME devilutionx)
@@ -1136,7 +1168,8 @@ if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
-  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon")
+  set_source_files_properties("Packaging/macOS/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon.icns")
   set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
 
   install (TARGETS ${BIN_TARGET} DESTINATION ./)

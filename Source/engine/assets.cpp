@@ -58,17 +58,16 @@ SDL_RWops *OpenAsset(const char *filename, bool threadsafe)
 	if (OpenMpqFile(filename, &archive, &fileNumber))
 		return SDL_RWops_FromMpqFile(*archive, fileNumber, filename, threadsafe);
 
+#if !defined(__ANDROID__) && !defined(__APPLE__)
 	// Load from the `/assets` directory next to the devilutionx binary.
 	const std::string path = paths::AssetsPath() + relativePath;
+#else
+	// Load from the containers's assets.
+	// This is handled by SDL when we pass a relative path.
+	const std::string path = relativePath;
+#endif
 	if ((rwops = SDL_RWFromFile(path.c_str(), "rb")) != nullptr)
 		return rwops;
-
-#ifdef __ANDROID__
-	// On Android, fall back to the APK's assets.
-	// This is handled by SDL when we pass a relative path.
-	if (!paths::AssetsPath().empty() && (rwops = SDL_RWFromFile(relativePath.c_str(), "rb")))
-		return rwops;
-#endif
 
 	return nullptr;
 }
