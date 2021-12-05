@@ -62,7 +62,7 @@ void InitializeVirtualGamepad()
 	if (SDL_GetDisplayDPI(displayIndex, nullptr, &hdpi, &vdpi) == 0) {
 		int clientWidth;
 		int clientHeight;
-		SDL_GetWindowSize(ghMainWnd, &clientWidth, &clientHeight);
+		SDL_GetRendererOutputSize(renderer, &clientWidth, &clientHeight);
 		hdpi *= static_cast<float>(gnScreenWidth) / clientWidth;
 		vdpi *= static_cast<float>(gnScreenHeight) / clientHeight;
 
