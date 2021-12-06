@@ -143,8 +143,8 @@ public:
 	void LoadFromIni(string_view category) override;
 	void SaveToIni(string_view category) const override;
 
-	[[nodiscard]] virtual size_t GetListSize() const override;
-	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
@@ -198,10 +198,10 @@ public:
 	void LoadFromIni(string_view category) override;
 	void SaveToIni(string_view category) const override;
 
-	[[nodiscard]] virtual size_t GetListSize() const override;
-	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
-	[[nodiscard]] virtual size_t GetActiveListIndex() const override;
-	virtual void SetActiveListIndex(size_t index) override;
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
 
 	string_view operator*() const
 	{
