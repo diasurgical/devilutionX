@@ -209,7 +209,7 @@ public:
 	}
 
 private:
-	/** @brief Language code (IETF) for text. */
+	/** @brief Language code (ISO-15897) for text. */
 	char szCode[6];
 	mutable std::vector<std::pair<std::string, std::string>> languages;
 
