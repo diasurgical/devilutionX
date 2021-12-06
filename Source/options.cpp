@@ -299,8 +299,6 @@ void LoadOptions()
 	sgOptions.Audio.nBufferSize = GetIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
 	sgOptions.Audio.nResamplingQuality = GetIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
 
-	sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
-	sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
@@ -354,8 +352,6 @@ void SaveOptions()
 	SetIniValue("Audio", "Channels", sgOptions.Audio.nChannels);
 	SetIniValue("Audio", "Buffer Size", sgOptions.Audio.nBufferSize);
 	SetIniValue("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
-	SetIniValue("Graphics", "Width", sgOptions.Graphics.nWidth);
-	SetIniValue("Graphics", "Height", sgOptions.Graphics.nHeight);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
@@ -572,6 +568,91 @@ std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 	};
 }
 
+OptionEntryResolution::OptionEntryResolution()
+    : OptionEntryListBase("", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Resolution"), N_("Affect the game's internal resolution and determine your view area. Note: This can differ from screen resolution, when Upscaling, Integer Scaling or Fit to Screen is used."))
+{
+}
+void OptionEntryResolution::LoadFromIni(string_view category)
+{
+	size = { GetIniInt(category.data(), "Width", DEFAULT_WIDTH), GetIniInt(category.data(), "Height", DEFAULT_HEIGHT) };
+}
+void OptionEntryResolution::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), "Width", size.width);
+	SetIniValue(category.data(), "Height", size.height);
+}
+
+void OptionEntryResolution::CheckResolutionsAreInitialized() const
+{
+	if (!resolutions.empty())
+		return;
+
+	std::vector<Size> sizes;
+
+	// Add resolutions
+#ifdef USE_SDL1
+	auto *modes = SDL_ListModes(nullptr, SDL_FULLSCREEN | SDL_HWPALETTE);
+	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
+	if (modes != nullptr && modes != (SDL_Rect **)-1) {
+		for (size_t i = 0; modes[i] != nullptr; i++) {
+			sizes.emplace_back(Size { modes[i]->w, modes[i]->h });
+		}
+	}
+#else
+	int displayModeCount = SDL_GetNumDisplayModes(0);
+	for (int i = 0; i < displayModeCount; i++) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDisplayMode(0, i, &mode) != 0) {
+			ErrSdl();
+		}
+		sizes.emplace_back(Size { mode.w, mode.h });
+	}
+#endif
+
+	// Ensures that the ini specified resolution is present in resolution list even if it doesn't match a monitor resolution (for example if played in window mode)
+	sizes.push_back(this->size);
+	// Ensures that the vanilla/default resolution is always present
+	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
+
+	// Sort by width then by height
+	std::sort(sizes.begin(), sizes.end(),
+	    [](const Size &x, const Size &y) -> bool {
+		    if (x.width == y.width)
+			    return x.height > y.height;
+		    return x.width > y.width;
+	    });
+	// Remove duplicate entries
+	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
+
+	for (auto &size : sizes) {
+		resolutions.emplace_back(size, fmt::format("{}x{}", size.width, size.height));
+	}
+}
+
+size_t OptionEntryResolution::GetListSize() const
+{
+	CheckResolutionsAreInitialized();
+	return resolutions.size();
+}
+string_view OptionEntryResolution::GetListDescription(size_t index) const
+{
+	CheckResolutionsAreInitialized();
+	return resolutions[index].second;
+}
+size_t OptionEntryResolution::GetActiveListIndex() const
+{
+	CheckResolutionsAreInitialized();
+	auto found = std::find_if(resolutions.begin(), resolutions.end(), [this](const auto &x) { return x.first == this->size; });
+	if (found == resolutions.end())
+		return 0;
+	return std::distance(resolutions.begin(), found);
+}
+void OptionEntryResolution::SetActiveListIndex(size_t index)
+{
+	size = resolutions[index].first;
+	NotifyValueChanged();
+}
+
 GraphicsOptions::GraphicsOptions()
     : OptionCategoryBase("Graphics", N_("Graphics"), N_("Graphics Settings"))
     , fullscreen("Fullscreen", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fullscreen"), N_("Display the game in windowed or fullscreen mode."), true)
@@ -594,6 +675,7 @@ GraphicsOptions::GraphicsOptions()
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
 {
+	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(ResizeWindow);
 #if !defined(USE_SDL1) || defined(__3DS__)
 	fitToScreen.SetValueChangedCallback(ResizeWindow);
@@ -610,6 +692,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
 	// clang-format off
 	return {
+		&resolution,
 #ifndef __vita__
 		&fullscreen,
 #endif

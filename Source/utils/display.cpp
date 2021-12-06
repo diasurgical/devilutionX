@@ -100,7 +100,7 @@ void AdjustToScreenGeometry(Size windowSize)
 
 Size GetPreferredWindowSize()
 {
-	Size windowSize = { sgOptions.Graphics.nWidth, sgOptions.Graphics.nHeight };
+	Size windowSize = *sgOptions.Graphics.resolution;
 
 #ifndef USE_SDL1
 	if (*sgOptions.Graphics.upscale && *sgOptions.Graphics.fitToScreen) {
