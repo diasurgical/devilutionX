@@ -1,0 +1,66 @@
+if(NINTENDO_SWITCH)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/switch")
+  include(switch_defs)
+endif()
+
+if(VITA)
+  # Work around a missing setting in the toolchain file.
+  # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
+  set(PKG_CONFIG_EXECUTABLE "$ENV{VITASDK}/bin/arm-vita-eabi-pkg-config")
+
+  include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+  include(vita_defs)
+endif()
+
+set(TARGET_PLATFORM host CACHE STRING "Target platform")
+set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg350 gkd350h cpigamesh)
+if(TARGET_PLATFORM STREQUAL "lepus")
+  include(lepus_defs)
+elseif(TARGET_PLATFORM STREQUAL "retrofw")
+  include(retrofw_defs)
+elseif(TARGET_PLATFORM STREQUAL "rg350")
+  include(rg350_defs)
+elseif(TARGET_PLATFORM STREQUAL "gkd350h")
+  include(gkd350h_defs)
+elseif(TARGET_PLATFORM STREQUAL "cpigamesh")
+  include(cpigamesh_defs)
+endif()
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD|DragonFly")
+  if(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
+    add_definitions(-D_NETBSD_SOURCE)
+  else()
+    add_definitions(-D_BSD_SOURCE)
+    set(UBSAN OFF)
+  endif()
+  set(ASAN OFF)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DO_LARGEFILE=0 -Dstat64=stat -Dlstat64=lstat -Dlseek64=lseek -Doff64_t=off_t -Dfstat64=fstat -Dftruncate64=ftruncate")
+endif()
+
+if(WIN32)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(DIST ON)
+endif()
+
+if(HAIKU)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+endif()
+
+if(AMIGA)
+  include(amiga_defs)
+endif()
+
+if(NINTENDO_3DS)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake/ctr")
+  include(n3ds_defs)
+endif()
+
+if(ANDROID)
+  include(android_defs)
+endif()
+
+if(IOS)
+  include(ios_defs)
+endif()

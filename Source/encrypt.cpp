@@ -9,9 +9,9 @@
 #include <memory>
 
 #include <SDL.h>
+#include <pkware.h>
 
 #include "encrypt.h"
-#include "pkware.h"
 
 namespace devilution {
 
