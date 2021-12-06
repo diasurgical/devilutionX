@@ -38,7 +38,7 @@ jobs:
       working-directory: ${{github.workspace}}
       shell: bash
       run: >
-        cmake --build build --config Release &&
+        cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
         cd build &&
         rm -rf Payload
         mkdir Payload &&
