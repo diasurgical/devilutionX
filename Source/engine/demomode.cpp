@@ -144,8 +144,6 @@ void InitRecording(int recordNumber)
 }
 void OverrideOptions()
 {
-	sgOptions.Graphics.nWidth = DemoGraphicsWidth;
-	sgOptions.Graphics.nHeight = DemoGraphicsHeight;
 #ifndef USE_SDL1
 	sgOptions.Graphics.fitToScreen.SetValue(false);
 #endif

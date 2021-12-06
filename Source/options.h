@@ -216,6 +216,31 @@ private:
 	void CheckLanguagesAreInitialized() const;
 };
 
+class OptionEntryResolution : public OptionEntryListBase {
+public:
+	OptionEntryResolution();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	Size operator*() const
+	{
+		return size;
+	}
+
+private:
+	/** @brief View size. */
+	Size size;
+	mutable std::vector<std::pair<Size, std::string>> resolutions;
+
+	void CheckResolutionsAreInitialized() const;
+};
+
 struct OptionCategoryBase {
 	OptionCategoryBase(string_view key, string_view name, string_view description);
 
@@ -295,10 +320,7 @@ struct GraphicsOptions : OptionCategoryBase {
 	GraphicsOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Render width. */
-	int nWidth;
-	/** @brief Render height. */
-	int nHeight;
+	OptionEntryResolution resolution;
 	/** @brief Run in fullscreen or windowed mode. */
 	OptionEntryBoolean fullscreen;
 #if !defined(USE_SDL1) || defined(__3DS__)
