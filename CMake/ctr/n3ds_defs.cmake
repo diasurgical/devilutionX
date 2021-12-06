@@ -11,7 +11,7 @@ set(USE_SDL1 ON)
 set(PREFILL_PLAYER_NAME ON)
 
 #3DS libraries
-list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake/ctr/modules")
 find_package(CITRO3D REQUIRED)
 
 #additional compilation definitions

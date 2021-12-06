@@ -23,8 +23,10 @@ if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dist")
 endif()
 
 include(CMakeDependentOption)
-include(CMake/out_of_tree.cmake)
-include(CMake/genex.cmake)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
+include(out_of_tree)
+include(genex)
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
@@ -53,6 +55,18 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
+if(PIE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+endif()
+
+if(TSAN)
+  set(ASAN OFF)
+endif()
+
+if(USE_SDL1)
+  set(VIRTUAL_GAMEPAD OFF)
+endif()
+
 # By default, devilutionx.mpq is built only if smpq is installed.
 if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
   find_program(SMPQ smpq)
@@ -73,6 +87,43 @@ endif()
 
 RELEASE_OPTION(CPACK "Configure CPack")
 
+# These must be included after the options above but before the `project` call.
+include(VcPkgManifestFeatures)
+
+# Set up the `project` early so that properties such as `TARGET_SUPPORTS_SHARED_LIBS` are defined.
+if(NOT VERSION_NUM)
+  include(CMake/git.cmake)
+  get_git_tag(VERSION_NUM)
+  if (NOT "${VERSION_NUM}" STREQUAL "")
+    string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )
+  endif()
+  get_git_commit_hash(GIT_COMMIT_HASH)
+  if(NOT VERSION_SUFFIX)
+    set(VERSION_SUFFIX "$<$<NOT:$<CONFIG:Release>>:-${GIT_COMMIT_HASH}>")
+  endif()
+endif()
+if(VERSION_NUM MATCHES untagged)
+  project(DevilutionX LANGUAGES C CXX)
+else()
+  project(DevilutionX
+    VERSION ${VERSION_NUM}
+    LANGUAGES C CXX)
+endif()
+
+# Platform definitions can override options and we want `cmake_dependent_option` to see the effects,
+# so ideally we would include Platforms.cmake before definining the options.
+#
+# However, `Platforms` require `project` to have been called (to get access to toolchain defs),
+# but `project` must be called after `VcPkgManifestFeatures`, and `VcPkgManifestFeatures` need
+# to be after the options.
+include(Platforms)
+
+# Recalculate the dependent options after including the Platforms:
+if(NONET)
+  set(DISABLE_TCP ON)
+  set(DISABLE_ZERO_TIER ON)
+  set(PACKET_ENCRYPTION OFF)
+endif()
 
 if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
   set(BINARY_RELEASE ON)
@@ -88,75 +139,9 @@ if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(CPACK ON)
 endif()
 
-if(USE_SDL1)
-  list(APPEND VCPKG_MANIFEST_FEATURES "sdl1")
-else()
-  list(APPEND VCPKG_MANIFEST_FEATURES "sdl2")
-endif()
-if(PACKET_ENCRYPTION)
-  list(APPEND VCPKG_MANIFEST_FEATURES "encryption")
-endif()
-if(USE_GETTEXT_FROM_VCPKG)
-  list(APPEND VCPKG_MANIFEST_FEATURES "translations")
-endif()
-if(RUN_TESTS)
-  list(APPEND VCPKG_MANIFEST_FEATURES "tests")
-endif()
-
-if(NOT NOSOUND)
-  option(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB "Use system-provided SDL_audiolib" OFF)
-  cmake_dependent_option(DEVILUTIONX_STATIC_SDL_AUDIOLIB "Link static SDL_audiolib" OFF
-                        "DEVILUTIONX_SYSTEM_SDL_AUDIOLIB AND NOT DIST" ON)
-endif()
-
-if(PACKET_ENCRYPTION)
-  option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
-  cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
-                        "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
-endif()
-
-option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" ON)
-cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
-                       "DEVILUTIONX_SYSTEM_LIBFMT AND NOT DIST" ON)
-
-if (NOT USE_SDL1)
-  option(DEVILUTIONX_SYSTEM_SDL2 "Use system-provided SDL2" ON)
-  cmake_dependent_option(DEVILUTIONX_STATIC_SDL2 "Link static SDL2" OFF
-                        "DEVILUTIONX_SYSTEM_SDL2 AND NOT DIST" ON)
-endif()
-
-option(DEVILUTIONX_SYSTEM_SDL_IMAGE "Use system-provided SDL_image" ON)
-cmake_dependent_option(DEVILUTIONX_STATIC_SDL_IMAGE "Link static SDL_image" OFF
-                       "DEVILUTIONX_SYSTEM_SDL_IMAGE AND NOT DIST" ON)
-
-option(DEVILUTIONX_SYSTEM_BZIP2 "Use system-provided bzip2" ON)
-cmake_dependent_option(DEVILUTIONX_STATIC_BZIP2 "Link static bzip2" OFF
-                      "DEVILUTIONX_SYSTEM_BZIP2 AND NOT DIST" ON)
-
-if(NOT VERSION_NUM)
-  include(CMake/git.cmake)
-  get_git_tag(VERSION_NUM)
-  if (NOT "${VERSION_NUM}" STREQUAL "")
-    string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )
-  endif()
-  get_git_commit_hash(GIT_COMMIT_HASH)
-  if(NOT VERSION_SUFFIX)
-    set(VERSION_SUFFIX "$<$<NOT:$<CONFIG:Release>>:-${GIT_COMMIT_HASH}>")
-  endif()
-endif()
-
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
-endif()
-
-if(VERSION_NUM MATCHES untagged)
-  project(DevilutionX
-    LANGUAGES C CXX)
-else()
-  project(DevilutionX
-    VERSION ${VERSION_NUM}
-    LANGUAGES C CXX)
 endif()
 
 # Not a genexp because CMake doesn't support it
@@ -171,12 +156,6 @@ if(NOT DISABLE_LTO)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_MINSIZEREL ON)
   endif()
 endif()
-
-if(TSAN)
-  set(ASAN OFF)
-endif()
-
-list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(GPERF)
   if(GPERF_HEAP_FIRST_GAME_ITERATION)
@@ -193,218 +172,18 @@ if(GPERF)
   endif()
 endif()
 
-if(NINTENDO_SWITCH)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
-  include(switch_defs)
-endif()
-
-if(VITA)
-  # Work around a missing setting in the toolchain file.
-  # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
-  set(PKG_CONFIG_EXECUTABLE "$ENV{VITASDK}/bin/arm-vita-eabi-pkg-config")
-
-  include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-  include(vita_defs)
-endif()
-
-set(TARGET_PLATFORM host CACHE STRING "Target platform")
-set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg350 gkd350h cpigamesh)
-if(TARGET_PLATFORM STREQUAL "lepus")
-  include(lepus_defs)
-elseif(TARGET_PLATFORM STREQUAL "retrofw")
-  include(retrofw_defs)
-elseif(TARGET_PLATFORM STREQUAL "rg350")
-  include(rg350_defs)
-elseif(TARGET_PLATFORM STREQUAL "gkd350h")
-  include(gkd350h_defs)
-elseif(TARGET_PLATFORM STREQUAL "cpigamesh")
-  include(cpigamesh_defs)
-endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD|DragonFly")
-  if(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
-    add_definitions(-D_NETBSD_SOURCE)
-  else()
-    add_definitions(-D_BSD_SOURCE)
-    set(UBSAN OFF)
-  endif()
-  set(ASAN OFF)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DO_LARGEFILE=0 -Dstat64=stat -Dlstat64=lstat -Dlseek64=lseek -Doff64_t=off_t -Dfstat64=fstat -Dftruncate64=ftruncate")
-endif()
-
-if(WIN32)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(DIST ON)
-endif()
-
-if(HAIKU)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-endif()
-
-if(AMIGA)
-  include(amiga_defs)
-endif()
-
-if(NINTENDO_3DS)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
-  include(n3ds_defs)
-endif()
-
-if(ANDROID)
-  include(android_defs)
-endif()
-
-if(IOS)
-  include(ios_defs)
-endif()
-
-if(PIE)
-  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-endif()
-
-if(USE_SDL1)
-  set(VIRTUAL_GAMEPAD OFF)
-endif()
-
-if(NONET)
-  # Fix dependent options if platform defs disable network
-  set(DISABLE_TCP ON)
-  set(DISABLE_ZERO_TIER ON)
-  set(PACKET_ENCRYPTION OFF)
-endif()
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-
 if(NOT NINTENDO_3DS)
   find_package(Threads REQUIRED)
 endif()
 
-if(PACKET_ENCRYPTION)
-  if(DEVILUTIONX_SYSTEM_LIBSODIUM)
-    set(sodium_USE_STATIC_LIBS ${DEVILUTIONX_STATIC_LIBSODIUM})
-    find_package(sodium REQUIRED)
-  else()
-    add_subdirectory(3rdParty/libsodium)
-  endif()
-endif()
-
-if(DEVILUTIONX_SYSTEM_LIBFMT)
-  find_package(fmt 7.0.0 QUIET)
-  if(fmt_FOUND)
-    message("-- Found fmt ${fmt_VERSION}")
-  else()
-    message("-- Suitable system fmt package not found, will use fmt from source")
-  endif()
-endif()
-if(NOT fmt_FOUND)
-  add_subdirectory(3rdParty/libfmt)
-endif()
-
-if(NOT DEVILUTIONX_SYSTEM_BZIP2)
-  add_subdirectory(3rdParty/bzip2)
-endif()
-
-if(USE_SDL1)
-  find_package(SDL REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
-else()
-  if(DEVILUTIONX_SYSTEM_SDL2)
-    find_package(SDL2 REQUIRED)
-    if(TARGET SDL2::SDL2)
-      set(SDL2_MAIN SDL2::SDL2main)
-    elseif(TARGET SDL2::SDL2-static)
-      # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
-      # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
-      if(CMAKE_VERSION VERSION_LESS "3.18")
-        # Aliasing local targets is not supported on CMake < 3.18, so make it global.
-        set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
-      endif()
-      add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
-      set(SDL2_MAIN SDL2::SDL2main)
-    else()
-      # Assume an older Debian derivate that comes with an sdl2-config.cmake
-      # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
-      add_library(SDL2_lib INTERFACE)
-      target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
-      target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
-      # Can't define an INTERFACE target with ::, so alias instead
-      add_library(SDL2::SDL2 ALIAS SDL2_lib)
-    endif()
-  else()
-    add_subdirectory(3rdParty/SDL2)
-    set(SDL2_MAIN SDL2::SDL2main)
-    list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/3rdParty/SDL2/CMake")
-  endif()
-endif()
-
-if(NOT NONET AND NOT DISABLE_TCP)
-  add_subdirectory(3rdParty/asio)
-  if(NINTENDO_3DS)
-      target_compile_definitions(asio INTERFACE
-        ASIO_DISABLE_THREADS=ON
-        ASIO_HAS_UNISTD_H=ON)
-
-      target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
-  elseif(NINTENDO_SWITCH)
-    include(asio_defs)
-  endif()
-endif()
-
-if(DEVILUTIONX_SYSTEM_SDL_IMAGE)
-  if(USE_SDL1)
-    find_package(SDL_image QUIET)
-  else()
-    # vcpkg uses sdl2-image as the package name
-    find_package(sdl2-image QUIET)
-    set(SDL_image_FOUND ${sdl2-image_FOUND})
-
-    if(NOT SDL_image_FOUND)
-      # Fall back on PkgConfig via FindSDL2_image.cmake
-      find_package(SDL2_image QUIET)
-      set(SDL_image_FOUND ${SDL2_image_FOUND})
-    endif()
-  endif()
-  if(SDL_image_FOUND)
-    message("-- Found SDL_image")
-  else()
-    message("-- Suitable system SDL_image package not found, will use SDL_image from source")
-  endif()
-endif()
-if(NOT SDL_image_FOUND)
-  add_subdirectory(3rdParty/SDL_image)
-endif()
-
-if(NOT NOSOUND)
-  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
-    find_package(SDL_audiolib REQUIRED)
-  else()
-    add_subdirectory(3rdParty/SDL_audiolib)
-  endif()
-endif()
-
-add_subdirectory(3rdParty/libsmackerdec)
-
-if(WIN32)
-add_subdirectory(3rdParty/find_steam_game)
-endif()
-
-add_subdirectory(3rdParty/simpleini)
-
-add_subdirectory(3rdParty/libmpq)
-
-add_subdirectory(3rdParty/hoehrmann_utf8)
-
-add_library(PKWare STATIC
-  3rdParty/PKWare/explode.cpp
-  3rdParty/PKWare/implode.cpp)
-target_include_directories(PKWare PUBLIC 3rdParty/PKWare)
+# Dependencies must be included after Platforms.
+include(Dependencies)
 
 set(libdevilutionx_SRCS
   Source/appfat.cpp
@@ -665,7 +444,7 @@ if(RUN_TESTS)
 endif()
 
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
-if (ANDROID)
+if(ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
 else()
   add_executable(${BIN_TARGET}
@@ -739,7 +518,7 @@ find_package(Gettext)
 if (Gettext_FOUND)
   file(MAKE_DIRECTORY "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}")
   foreach(lang ${devilutionx_langs})
-    set(_po_file "${DevilutionX_SOURCE_DIR}/Translations/${lang}.po")
+    set(_po_file "${CMAKE_CURRENT_SOURCE_DIR}/Translations/${lang}.po")
     set(_gmo_file "${DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY}/${lang}.gmo")
     set(_lang_target devilutionx_lang_${lang})
     add_custom_command(
@@ -1087,6 +866,14 @@ if(NOT NOSOUND)
   target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
 endif()
 
+if(NOT NONET AND NOT DISABLE_ZERO_TIER)
+  if(NOT ANDROID)
+    target_link_libraries(libdevilutionx PUBLIC zt-static)
+  else()
+    target_link_libraries(libdevilutionx PUBLIC zt-shared)
+  endif()
+endif()
+
 if(AMIGA)
   target_link_libraries(libdevilutionx PUBLIC
     ${ZLIB_LIBRARY})
@@ -1390,13 +1177,4 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   include(CPack)
-endif()
-
-if(NOT NONET AND NOT DISABLE_ZERO_TIER)
-  add_subdirectory(3rdParty/libzt)
-  if(NOT ANDROID)
-    target_link_libraries(libdevilutionx PUBLIC zt-static)
-  else()
-    target_link_libraries(libdevilutionx PUBLIC zt-shared)
-  endif()
 endif()
