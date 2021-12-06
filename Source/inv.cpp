@@ -1735,7 +1735,7 @@ void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci)
 
 	if (ii >= 0 && ii < MAXITEMS) {
 		// If there was an item there, check that it's the same item as the remote player has
-		if (Items[ii].KeyAttributesMatch(iseed, idx, ci)) {
+		if (!Items[ii].KeyAttributesMatch(iseed, idx, ci)) {
 			// Key attributes don't match so we must've desynced, ignore this index and try find a matching item via lookup
 			ii = -1;
 		}
