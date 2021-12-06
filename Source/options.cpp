@@ -824,29 +824,29 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 		return;
 
 	// Add well-known supported languages
-	languages.push_back({ "bg", "Bulgarian" });
-	languages.push_back({ "cs", "Czech" });
-	languages.push_back({ "da", "Danish" });
-	languages.push_back({ "de", "German" });
-	languages.push_back({ "en", "English" });
-	languages.push_back({ "es", "Spanish" });
-	languages.push_back({ "fr", "French" });
-	languages.push_back({ "ja", "Japanese" });
-	languages.push_back({ "hr", "Croatian" });
-	languages.push_back({ "it", "Italian" });
-	languages.push_back({ "ko_KR", "Korean" });
-	languages.push_back({ "pl", "Polish" });
-	languages.push_back({ "pt_BR", "Portuguese (Brazil)" });
-	languages.push_back({ "ro_RO", "Romanian" });
-	languages.push_back({ "ru", "Russian" });
-	languages.push_back({ "sv", "Swedish" });
-	languages.push_back({ "uk", "Ukrainian" });
-	languages.push_back({ "zh_CN", "Simplified Chinese" });
-	languages.push_back({ "zh_TW", "Traditional Chinese" });
+	languages.emplace_back("bg", "Bulgarian");
+	languages.emplace_back("cs", "Czech");
+	languages.emplace_back("da", "Danish");
+	languages.emplace_back("de", "German");
+	languages.emplace_back("en", "English");
+	languages.emplace_back("es", "Spanish");
+	languages.emplace_back("fr", "French");
+	languages.emplace_back("ja", "Japanese");
+	languages.emplace_back("hr", "Croatian");
+	languages.emplace_back("it", "Italian");
+	languages.emplace_back("ko_KR", "Korean");
+	languages.emplace_back("pl", "Polish");
+	languages.emplace_back("pt_BR", "Portuguese (Brazil)");
+	languages.emplace_back("ro_RO", "Romanian");
+	languages.emplace_back("ru", "Russian");
+	languages.emplace_back("sv", "Swedish");
+	languages.emplace_back("uk", "Ukrainian");
+	languages.emplace_back("zh_CN", "Simplified Chinese");
+	languages.emplace_back("zh_TW", "Traditional Chinese");
 
-	// Ensures that the ini specified language is present in languages list even if unkown (for example if someone starts to translate a new language)
+	// Ensures that the ini specified language is present in languages list even if unknown (for example if someone starts to translate a new language)
 	if (std::find_if(languages.begin(), languages.end(), [this](const auto &x) { return x.first == this->szCode; }) == languages.end()) {
-		languages.push_back({ szCode, szCode });
+		languages.emplace_back(szCode, szCode);
 	}
 }
 
