@@ -957,25 +957,25 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 		return;
 
 	// Add well-known supported languages
-	languages.emplace_back("bg", "Bulgarian");
-	languages.emplace_back("cs", "Czech");
-	languages.emplace_back("da", "Danish");
-	languages.emplace_back("de", "German");
+	languages.emplace_back("bg", "Български - Bulgarian");
+	languages.emplace_back("cs", "Čeština - Czech");
+	languages.emplace_back("da", "Dansk - Danish");
+	languages.emplace_back("de", "Deutsch - German");
 	languages.emplace_back("en", "English");
-	languages.emplace_back("es", "Spanish");
-	languages.emplace_back("fr", "French");
-	languages.emplace_back("ja", "Japanese");
-	languages.emplace_back("hr", "Croatian");
-	languages.emplace_back("it", "Italian");
-	languages.emplace_back("ko_KR", "Korean");
-	languages.emplace_back("pl", "Polish");
-	languages.emplace_back("pt_BR", "Portuguese (Brazil)");
-	languages.emplace_back("ro_RO", "Romanian");
-	languages.emplace_back("ru", "Russian");
-	languages.emplace_back("sv", "Swedish");
-	languages.emplace_back("uk", "Ukrainian");
-	languages.emplace_back("zh_CN", "Simplified Chinese");
-	languages.emplace_back("zh_TW", "Traditional Chinese");
+	languages.emplace_back("es", "Español - Spanish");
+	languages.emplace_back("fr", "Français - French");
+	languages.emplace_back("ja", "日本語 - Japanese");
+	languages.emplace_back("hr", "Hrvatski - Croatian");
+	languages.emplace_back("it", "Italiano - Italian");
+	languages.emplace_back("ko_KR", "한국어 - Korean");
+	languages.emplace_back("pl", "Polski - Polish");
+	languages.emplace_back("pt_BR", "Português do Brasil - Portuguese (Brazil)");
+	languages.emplace_back("ro_RO", "Română - Romanian");
+	languages.emplace_back("ru", "Русский - Russian");
+	languages.emplace_back("sv", "Svenska - Swedish");
+	languages.emplace_back("uk", "Українська - Ukrainian");
+	languages.emplace_back("zh_CN", "汉语 - Simplified Chinese");
+	languages.emplace_back("zh_TW", "漢語 - Traditional Chinese");
 
 	// Ensures that the ini specified language is present in languages list even if unknown (for example if someone starts to translate a new language)
 	if (std::find_if(languages.begin(), languages.end(), [this](const auto &x) { return x.first == this->szCode; }) == languages.end()) {
