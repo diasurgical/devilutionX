@@ -256,6 +256,10 @@ if(ANDROID)
   include(android_defs)
 endif()
 
+if(IOS)
+  include(ios_defs)
+endif()
+
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -1071,6 +1075,7 @@ else()
     ${SDL2_MAIN}
     SDL2::SDL2
     SDL2::SDL2_image)
+  target_link_libraries(${BIN_TARGET} PUBLIC ${SDL2_MAIN})
 endif()
 
 if(NOT NOSOUND)
@@ -1162,9 +1167,13 @@ if(APPLE)
   set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
+  if(IOS)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "9.0")
+  else()
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
+  endif()
   set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon.icns")
-  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/apple/Info.plist")
+  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
 
   install (TARGETS ${BIN_TARGET} DESTINATION ./)
 

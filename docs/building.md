@@ -47,6 +47,29 @@ cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(sysctl -n hw.physicalcpu)
 ```
 </details>
+<details><summary>iOS</summary>
+
+Make sure you have [Homebrew](https://brew.sh/) installed, then run:
+
+```bash
+brew install cmake
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/ios.toolchain.cmake  -DENABLE_BITCODE=0 -DPLATFORM=OS64
+cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release
+cd build
+rm -rf Payload
+mkdir -p Payload
+mv devilutionx.app Payload
+zip -r devilutionx.ipa Payload
+```
+
+For testing with the Simulator instead run the following:
+
+```bash
+cmake -S. -Bbuild -G Xcode -DCMAKE_TOOLCHAIN_FILE=../CMake/ios.toolchain.cmake -DPLATFORM=SIMULATOR64
+```
+
+Then open the generated Xcode project and run things from there.
+</details>
 <details><summary>FreeBSD</summary>
 
 ### Installing dependencies
