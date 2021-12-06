@@ -266,6 +266,29 @@ bool CanPlaceMonster(int xp, int yp)
 		return false;
 	}
 
+	if (!setlevel) {
+		// Avoid to spawn a monster in a door
+		// Monsters are placed (InitMonsters) before objects get generated (InitObjects).
+		// That means we can't check dObject if a door exists, cause it's not yet initialized.
+		// As alternative we use dPiece cause it also contains the information that a door exists (and is used for object creation).
+		int pn = dPiece[xp][yp];
+		switch (leveltype) {
+		case DTYPE_CATHEDRAL:
+		case DTYPE_CATACOMBS:
+			if (IsAnyOf(pn, 13, 541, 17, 542))
+				return false;
+			break;
+		case DTYPE_CAVES:
+			if (IsAnyOf(pn, 531, 534))
+				return false;
+			break;
+		case DTYPE_CRYPT:
+			if (IsAnyOf(pn, 77, 80))
+				return false;
+			break;
+		}
+	}
+
 	return !IsTileSolid({ xp, yp });
 }
 
