@@ -4,8 +4,8 @@
 #define IF_NAMESIZE 16
 
 struct if_nameindex {
-  unsigned int if_index;
-  char *if_name;
+	unsigned int if_index;
+	char *if_name;
 };
 
 #ifdef __cplusplus
