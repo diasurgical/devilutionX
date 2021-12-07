@@ -4,10 +4,6 @@ if(NINTENDO_SWITCH)
 endif()
 
 if(VITA)
-  # Work around a missing setting in the toolchain file.
-  # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
-  set(PKG_CONFIG_EXECUTABLE "$ENV{VITASDK}/bin/arm-vita-eabi-pkg-config")
-
   include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
   include(vita_defs)
 endif()
