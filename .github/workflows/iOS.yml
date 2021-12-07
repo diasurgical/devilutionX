@@ -40,9 +40,9 @@ jobs:
       run: >
         cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
         cd build &&
-        rm -rf Payload
-        mkdir Payload &&
-        mv devilutionx.app Payload/devilutionx.app &&
+        rm -rf Payload &&
+        mkdir -p Payload &&
+        mv devilutionx.app Payload &&
         zip -r devilutionx.ipa Payload
 
     - name: Upload-Package
