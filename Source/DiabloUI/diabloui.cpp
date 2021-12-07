@@ -8,6 +8,7 @@
 #include <locale>
 #endif
 
+#include "../discord/discord.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
@@ -759,6 +760,10 @@ void UiPollAndRender()
 	// Keyboard blocks until input is finished
 	// so defer until after render and fade-in
 	ctr_vkbdFlush();
+#endif
+
+#ifdef DISCORD
+	DiscordManager::Instance().UpdateMenu();
 #endif
 }
 

@@ -1,5 +1,6 @@
 #include "panels/charpanel.hpp"
 
+#include <array>
 #include <string>
 
 #include <fmt/format.h>
@@ -19,7 +20,7 @@ namespace devilution {
 std::optional<CelSprite> pChrButtons;
 
 /** Map of hero class names */
-const char *const ClassStrTbl[] = {
+const std::array<const char *const, 6> ClassStrTbl = {
 	N_("Warrior"),
 	N_("Rogue"),
 	N_("Sorcerer"),

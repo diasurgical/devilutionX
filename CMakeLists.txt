@@ -49,6 +49,7 @@ cmake_dependent_option(PACKET_ENCRYPTION "Encrypt network packets" ON "NOT NONET
 option(NOSOUND "Disable sound support" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
 option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with RUN_TESTS)" OFF)
+option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
@@ -404,6 +405,14 @@ if(NINTENDO_3DS)
   endif()
 endif()
 
+if(DISCORD_INTEGRATION)
+  list(APPEND libdevilutionx_SRCS
+    Source/discord/discord.cpp
+  )
+
+  add_definitions(-DDISCORD)
+endif()
+
 if(RUN_TESTS)
   set(devilutionxtest_SRCS
     test/appfat_test.cpp
@@ -487,6 +496,10 @@ if(RUN_TESTS)
     endif()
   endif()
   gtest_add_tests(devilutionx-tests "" AUTO)
+endif()
+
+if(DISCORD_INTEGRATION)
+  target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
 
 if(GPERF)

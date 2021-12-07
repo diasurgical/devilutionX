@@ -1,3 +1,4 @@
+#include "../discord/discord.h"
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/menu_controls.h"
@@ -52,6 +53,10 @@ void UiTitleDialog()
 	while (!endMenu && SDL_GetTicks() < timeOut) {
 		UiRenderItems(vecTitleScreen);
 		UiFadeIn();
+
+#ifdef DISCORD
+		DiscordManager::Instance().UpdateMenu();
+#endif
 
 		while (SDL_PollEvent(&event) != 0) {
 			if (GetMenuAction(event) != MenuAction_NONE) {

@@ -162,37 +162,6 @@ struct DirectionSettings {
 	void (*walkModeHandler)(int, const DirectionSettings &);
 };
 
-/** Maps from armor animation to letter used in graphic files. */
-const char ArmourChar[4] = {
-	'L', // light
-	'M', // medium
-	'H', // heavy
-	0
-};
-/** Maps from weapon animation to letter used in graphic files. */
-const char WepChar[10] = {
-	'N', // unarmed
-	'U', // no weapon + shield
-	'S', // sword + no shield
-	'D', // sword + shield
-	'B', // bow
-	'A', // axe
-	'M', // blunt + no shield
-	'H', // blunt + shield
-	'T', // staff
-	0
-};
-/** Maps from player class to letter used in graphic files. */
-const char CharChar[] = {
-	'W', // warrior
-	'R', // rogue
-	'S', // sorcerer
-	'M', // monk
-	'B',
-	'C',
-	0
-};
-
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
 const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },

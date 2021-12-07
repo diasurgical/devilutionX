@@ -131,3 +131,35 @@ endif()
 if(NOT NONET AND NOT DISABLE_ZERO_TIER)
   add_subdirectory(3rdParty/libzt)
 endif()
+
+if(DISCORD_INTEGRATION)
+  message("Retrieving Discord SDK")
+  FetchContent_Declare(discordsrc
+    URL https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
+    URL_HASH MD5=f86f15957cc9fbf04e3db10462027d58
+    SOURCE_DIR 3rdParty/Discord
+  )
+
+  FetchContent_Populate(discordsrc)
+
+  if(NOT discordsrc_POPULATED)
+    message(FATAL_ERROR "Failed to retrieve Discord SDK.")
+  endif()
+
+  file(GLOB discord_SRCS ${discordsrc_SOURCE_DIR}/cpp/*.cpp)
+  add_library(discord STATIC ${discord_SRCS})
+
+  target_include_directories(discord INTERFACE "${discordsrc_SOURCE_DIR}/..")
+  if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86")
+  else()
+    set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86_64")
+  endif()
+
+  find_library(DISCORD_LIB discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX} ${DISCORD_LIB_DIR})
+
+  add_library(discord_game_sdk STATIC IMPORTED)
+  set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_LIB})
+
+  file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
