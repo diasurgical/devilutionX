@@ -108,6 +108,11 @@ void PlacePlayer(int pnum)
 
 } // namespace
 
+bool IsWallSpell(spell_id spl)
+{
+	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;
+}
+
 int GetManaAmount(Player &player, spell_id sn)
 {
 	int ma; // mana amount
@@ -218,10 +223,10 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 	return SpellCheckResult::Success;
 }
 
-void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
+void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 {
 	Direction dir = Players[id]._pdir;
-	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
+	if (IsWallSpell(spl)) {
 		dir = Players[id].tempDirection;
 	}
 
