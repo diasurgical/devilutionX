@@ -60,7 +60,7 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 Certain sideloading applications exist which can let you install IPA packages to your device such as AltStore (https://altstore.io/) and Sideloadly (https://sideloadly.io/). Using such a sideloading application, install the .ipa file to your iDevice.
 
-- Once the App is installed, launch it once. It will say that it cannot find the data file (.MPQ). This is ok. Close the game. Do not skip this step as it will create your Documents folder that you will need to access in later steps.
+Once the App is installed, launch it once. It will say that it cannot find the data file (.MPQ). This is ok. Close the game. Do not skip this step as it will create your Documents folder that you will need to access in later steps.
 
 There are 3 way to get install the MPQs. Make sure to have installed the app and have launched it once before attempting to copy over the MPQ files.
 
