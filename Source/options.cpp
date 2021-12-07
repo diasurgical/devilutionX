@@ -911,6 +911,25 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 		}
 	}
 
+	std::vector<std::string> fallbackLocales;
+	fallbackLocales.reserve(locales.size());
+
+	for (const auto &locale : locales) {
+		std::string neutralLocale = locale.substr(0, locale.find('_'));
+		if (std::find(fallbackLocales.cbegin(), fallbackLocales.cend(), neutralLocale) == fallbackLocales.cend()) {
+			fallbackLocales.push_back(neutralLocale);
+		}
+	}
+
+	for (const auto &fallbackLocale : fallbackLocales) {
+		LogVerbose("Trying to load fallback translation: {}", fallbackLocale);
+		if (HasTranslation(fallbackLocale)) {
+			LogVerbose("Found matching fallback locale: {}", fallbackLocale);
+			CopyUtf8(szCode, fallbackLocale, sizeof(szCode));
+			return;
+		}
+	}
+
 	LogVerbose("No suitable translation found");
 	strcpy(szCode, "en");
 }

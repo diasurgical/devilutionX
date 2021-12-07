@@ -270,15 +270,19 @@ const std::string &LanguageTranslate(const char *key)
 
 bool HasTranslation(const std::string &locale)
 {
-	for (const char *ext : { ".mo", ".gmo" }) {
-		SDL_RWops *rw = OpenAsset((locale + ext).c_str());
+	if (locale == "en") {
+		return true;
+	}
+
+	constexpr std::array<char *, 2> Extensions { ".mo", ".gmo" };
+	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const std::string &extension) {
+		SDL_RWops *rw = OpenAsset((locale + extension).c_str());
 		if (rw != nullptr) {
 			SDL_RWclose(rw);
 			return true;
 		}
-	}
-
-	return false;
+		return false;
+	});
 }
 
 bool IsSmallFontTall()
