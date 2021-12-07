@@ -41,7 +41,7 @@ jobs:
         cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
         cd build &&
         rm -rf Payload &&
-        mkdir -p Payload &&
+        mkdir Payload &&
         mv devilutionx.app Payload &&
         zip -r devilutionx.ipa Payload
 
