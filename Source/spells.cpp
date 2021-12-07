@@ -108,7 +108,7 @@ void PlacePlayer(int pnum)
 
 } // namespace
 
-bool IsWallSpell(const spell_id spl)
+bool IsWallSpell(spell_id spl)
 {
 	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;
 }

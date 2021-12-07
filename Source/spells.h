@@ -16,7 +16,7 @@ enum class SpellCheckResult : uint8_t {
 	Fail_Busy,
 };
 
-bool IsWallSpell(const spell_id spl);
+bool IsWallSpell(spell_id spl);
 int GetManaAmount(Player &player, spell_id sn);
 void UseMana(int id, spell_id sn);
 SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
