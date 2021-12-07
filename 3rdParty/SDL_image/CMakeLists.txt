@@ -1,4 +1,4 @@
-include(dependency_options)
+include(functions/dependency_options)
 
 if(NOT DEFINED DEVILUTIONX_SYSTEM_LIBPNG)
   find_package(PNG QUIET)
@@ -26,7 +26,7 @@ else()
   add_subdirectory(../libpng libpng)
 endif()
 
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
 if(USE_SDL1)
   FetchContent_Declare(SDL_image

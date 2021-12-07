@@ -1,5 +1,5 @@
 if(NOT DEVILUTIONX_SYSTEM_LIBSODIUM)
-  include(FetchContent_MakeAvailableExcludeFromAll)
+  include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
   set(SODIUM_MINIMAL ON)
   set(SODIUM_ENABLE_BLOCKING_RANDOM OFF)

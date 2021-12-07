@@ -4,7 +4,7 @@ if(NOT TARGET BZip2::BZip2)
   find_package(BZip2 REQUIRED)
 endif()
 
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(libmpq

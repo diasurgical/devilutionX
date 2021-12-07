@@ -1,3 +1,5 @@
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/switch")
+
 set(ASAN OFF)
 set(UBSAN OFF)
 
