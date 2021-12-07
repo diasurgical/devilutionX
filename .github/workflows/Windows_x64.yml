@@ -26,13 +26,13 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: windows-x86_64-cmake-${{ github.sha }}
-        restore-keys: windows-x86_64-cmake-
+        key: windows-x86_64-cmake-v2-${{ github.sha }}
+        restore-keys: windows-x86_64-cmake-v2-
 
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake -DDEVILUTIONX_SYSTEM_BZIP2=OFF
+      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc64.toolchain.cmake -DDEVILUTIONX_SYSTEM_BZIP2=OFF
 
     - name: Build
       working-directory: ${{github.workspace}}

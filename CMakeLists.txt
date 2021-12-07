@@ -22,11 +22,15 @@ if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/dist")
   add_subdirectory(dist)
 endif()
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(WARNING [[In-source build detected, please eg. create a new directory and use `cmake ..`]])
+endif()
+
 include(CMakeDependentOption)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
-include(out_of_tree)
-include(genex)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake/finders")
+include(functions/genex)
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
@@ -92,7 +96,7 @@ include(VcPkgManifestFeatures)
 
 # Set up the `project` early so that properties such as `TARGET_SUPPORTS_SHARED_LIBS` are defined.
 if(NOT VERSION_NUM)
-  include(CMake/git.cmake)
+  include(functions/git)
   get_git_tag(VERSION_NUM)
   if (NOT "${VERSION_NUM}" STREQUAL "")
     string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )

@@ -1,4 +1,4 @@
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 if(NOT DISABLE_LTO)
   # Force CMake to raise an error if INTERPROCEDURAL_OPTIMIZATION

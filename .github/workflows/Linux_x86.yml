@@ -26,13 +26,13 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: linux-x86-cmake-${{ github.sha }}
-        restore-keys: linux-x86-cmake-
+        key: linux-x86-cmake-v2-${{ github.sha }}
+        restore-keys: linux-x86-cmake-v2-
 
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
+      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/linux_i386.toolchain.cmake
 
     - name: Build
       working-directory: ${{github.workspace}}

@@ -132,14 +132,14 @@ sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-
 ### 32-bit
 
 ```bash
-cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake -DCMAKE_BUILD_TYPE=Release
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
 ### 64-bit
 
 ```bash
-cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake -DCMAKE_BUILD_TYPE=Release
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
@@ -369,7 +369,7 @@ select Icons -> Information in the top menu.
 - `-DCMAKE_BUILD_TYPE=Release` changed build type to release and optimize for distribution.
 - `-DNONET=ON` disable network support, this also removes the need for the ASIO and Sodium.
 - `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
-- `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
+- `-DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/linux_i386.toolchain..cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
 
 ### Debug builds
 - `-DDEBUG=OFF` disable debug mode of the Diablo engine.

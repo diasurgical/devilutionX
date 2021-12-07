@@ -1,6 +1,6 @@
 # Options that control whether to use system dependencies or build them from source,
 # and whether to link them statically.
-include(dependency_options)
+include(functions/dependency_options)
 
 if(USE_SDL1)
   find_package(SDL REQUIRED)
