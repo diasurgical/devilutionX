@@ -1436,7 +1436,7 @@ bool SpellHasActorTarget()
 	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
 		return false;
 
-	if (spl == SPL_FIREWALL && pcursmonst != -1) {
+	if (IsAnyOf(spl, SPL_FIREWALL, SPL_LIGHTWALL) && pcursmonst != -1) {
 		cursPosition = Monsters[pcursmonst].position.tile;
 	}
 
