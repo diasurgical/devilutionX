@@ -17,6 +17,7 @@
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
+#include "dx.h"
 #include "options.h"
 #include "utils/log.hpp"
 #include "utils/sdl_wrap.h"
@@ -321,6 +322,7 @@ void ResizeWindow()
 #endif
 
 	ReinitializeRenderer();
+	dx_resize();
 }
 
 SDL_Surface *GetOutputSurface()
