@@ -70,7 +70,7 @@ Method 1: Using the files.app
 
 ![ios_mpq_files01](https://user-images.githubusercontent.com/1339414/145088910-5664aed6-3a53-43f4-8088-834796792f68.png)
 
-- Copy the MPQs to the devilutionx directory. Your the directory should look like on the picture below
+- Copy the MPQs to the devilutionx directory. Your directory should look like on the picture below
 
 ![ios_mpq_files02](https://user-images.githubusercontent.com/1339414/145089068-2c87887b-58c3-4759-9270-9d8934fe90bb.png)
 
