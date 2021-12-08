@@ -23,7 +23,7 @@ set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/android-pro
 set(ASAN OFF)
 set(UBSAN OFF)
 
-if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
   # Work around a linker bug in clang: https://github.com/android/ndk/issues/721
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto=full")
 endif()

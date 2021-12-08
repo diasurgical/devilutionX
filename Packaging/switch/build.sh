@@ -18,7 +18,7 @@ build() {
 	mkdir -p ../../build
 	cd ../../build
 	rm -f CMakeCache.txt
-	DEVKITPRO="$DEVKITPRO" cmake .. -DBINARY_RELEASE=ON \
+	DEVKITPRO="$DEVKITPRO" cmake .. -DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
 	DEVKITPRO="$DEVKITPRO" make -j "$(getconf _NPROCESSORS_ONLN)"
 	cd -
