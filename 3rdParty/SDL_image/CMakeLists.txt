@@ -8,16 +8,6 @@ if(NOT DEFINED DEVILUTIONX_SYSTEM_LIBPNG)
     message("-- Suitable system png package not found, will use png from source")
     set(DEVILUTIONX_SYSTEM_LIBPNG OFF)
   endif()
-elseif(DEVILUTIONX_SYSTEM_LIBPNG)
-  # In previous versions of DevilutionX, libpng could be built from
-  # source even if `DEVILUTIONX_SYSTEM_LIBPNG` was true.
-  # Detect the older CMake cache and update to the new behaviour.
-  #
-  # This is a temporary upgrade path that will be removed one week from commit date.
-  find_package(PNG QUIET)
-  if(NOT PNG_FOUND)
-    set(DEVILUTIONX_SYSTEM_LIBPNG OFF CACHE BOOL "" FORCE)
-  endif()
 endif()
 dependency_options("libpng" DEVILUTIONX_SYSTEM_LIBPNG ON DEVILUTIONX_STATIC_LIBPNG)
 if(DEVILUTIONX_SYSTEM_LIBPNG)

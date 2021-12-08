@@ -60,16 +60,6 @@ if(NOT DEFINED DEVILUTIONX_SYSTEM_SDL_IMAGE)
     message("-- Suitable system SDL_image package not found, will use SDL_image from source")
     set(DEVILUTIONX_SYSTEM_SDL_IMAGE OFF)
   endif()
-elseif(DEVILUTIONX_SYSTEM_SDL_IMAGE)
-  # In previous versions of DevilutionX, SDL_image could be built from
-  # source even if `DEVILUTIONX_SYSTEM_SDL_IMAGE` was true.
-  # Detect the older CMake cache and update to the new behaviour.
-  #
-  # This is a temporary upgrade path that will be removed one week from commit date.
-  _find_SDL_image(QUIET)
-  if (NOT SDL_image_FOUND)
-    set(DEVILUTIONX_SYSTEM_SDL_IMAGE OFF CACHE BOOL "" FORCE)
-  endif()
 endif()
 dependency_options("SDL_image" DEVILUTIONX_SYSTEM_SDL_IMAGE ON DEVILUTIONX_STATIC_SDL_IMAGE)
 if(DEVILUTIONX_SYSTEM_SDL_IMAGE)
@@ -104,16 +94,6 @@ if(NOT DEFINED DEVILUTIONX_SYSTEM_LIBFMT)
   else()
     message("-- Suitable system fmt package not found, will use fmt from source")
     set(DEVILUTIONX_SYSTEM_LIBFMT OFF)
-  endif()
-elseif(DEVILUTIONX_SYSTEM_LIBFMT)
-  # In previous versions of DevilutionX, libfmt could be built from
-  # source even if `DEVILUTIONX_SYSTEM_LIBFMT` was true.
-  # Detect the older CMake cache and update to the new behaviour.
-  #
-  # This is a temporary upgrade path that will be removed one week from commit date.
-  find_package(fmt 7.0.0 QUIET)
-  if (NOT fmt_FOUND)
-    set(DEVILUTIONX_SYSTEM_LIBFMT OFF CACHE BOOL "" FORCE)
   endif()
 endif()
 dependency_options("libfmt" DEVILUTIONX_SYSTEM_LIBFMT ON DEVILUTIONX_STATIC_LIBFMT)
