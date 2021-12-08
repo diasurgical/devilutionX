@@ -13,12 +13,6 @@ function(dependency_options LIB_NAME SYSTEM_OPTION_NAME DEFAULT_SYSTEM_VALUE STA
       set(_static_default OFF)
     else()
       set(_static_default ON)
-
-      # In previous versions of DevilutionX, the default could be OFF even for non-system libraries.
-      # Detect the older CMake cache and update to the new behaviour.
-      #
-      # This is a temporary upgrade path that will be removed one week from commit date.
-      set(${STATIC_OPTION_NAME} ON CACHE BOOL "" FORCE)
     endif()
     option(${STATIC_OPTION_NAME} "Link ${LIB_NAME} statically" ${_static_default})
   else()
