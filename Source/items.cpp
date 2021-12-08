@@ -471,40 +471,40 @@ void CalcSelfItems(Player &player)
 	int sa = 0;
 	int ma = 0;
 	int da = 0;
-	for (int i = 0; i < NUM_INVLOC; i++) {
-		auto &equipment = player.InvBody[i];
-		if (!equipment.isEmpty()) {
-			equipment._iStatFlag = true;
-			if (equipment._iIdentified) {
-				sa += equipment._iPLStr;
-				ma += equipment._iPLMag;
-				da += equipment._iPLDex;
-			}
+
+	// first iteration is used for collecting stat bonuses from items
+	for (Item &equipment : EquippedPlayerItemsRange(player)) {
+		equipment._iStatFlag = true;
+		if (equipment._iIdentified) {
+			sa += equipment._iPLStr;
+			ma += equipment._iPLMag;
+			da += equipment._iPLDex;
 		}
 	}
 
 	bool changeflag;
 	do {
+		// cap stats to 0
+		const int currstr = std::max(0, sa + player._pBaseStr);
+		const int currmag = std::max(0, ma + player._pBaseMag);
+		const int currdex = std::max(0, da + player._pBaseDex);
+
 		changeflag = false;
-		auto *pi = player.InvBody;
-		for (int i = 0; i < NUM_INVLOC; i++, pi++) {
-			if (!pi->isEmpty() && pi->_iStatFlag) {
-				bool sf = true;
-				if (sa + player._pBaseStr < pi->_iMinStr)
-					sf = false;
-				if (ma + player._pBaseMag < pi->_iMinMag)
-					sf = false;
-				if (da + player._pBaseDex < pi->_iMinDex)
-					sf = false;
-				if (!sf) {
-					changeflag = true;
-					pi->_iStatFlag = false;
-					if (pi->_iIdentified) {
-						sa -= pi->_iPLStr;
-						ma -= pi->_iPLMag;
-						da -= pi->_iPLDex;
-					}
-				}
+		for (Item &equipment : EquippedPlayerItemsRange(player)) {
+			if (!equipment._iStatFlag)
+				continue;
+
+			if (currstr >= equipment._iMinStr
+			    && currmag >= equipment._iMinMag
+			    && currdex >= equipment._iMinDex)
+				continue;
+
+			changeflag = true;
+			equipment._iStatFlag = false;
+			if (equipment._iIdentified) {
+				sa -= equipment._iPLStr;
+				ma -= equipment._iPLMag;
+				da -= equipment._iPLDex;
 			}
 		}
 	} while (changeflag);
