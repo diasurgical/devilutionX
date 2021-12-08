@@ -1167,9 +1167,7 @@ void control_type_message()
 		return;
 
 	talkflag = true;
-	int x = PANEL_LEFT + 200;
-	int y = PANEL_Y + 22;
-	SDL_Rect rect = { x, y, 250, 39 };
+	SDL_Rect rect = MakeSdlRect(PANEL_LEFT + 200, PANEL_Y + 22, 250, 39);
 	SDL_SetTextInputRect(&rect);
 	TalkMessage[0] = '\0';
 	for (bool &talkButtonDown : TalkButtonsDown) {
