@@ -1,5 +1,6 @@
 FROM amigadev/crosstools:m68k-amigaos
 
+RUN apt-get install --no-install-recommends -y smpq
 RUN mkdir /devilutionx-deps-build
 COPY Packaging/amiga/prep.sh /devilutionx-deps-build/prep.sh
 RUN cd /devilutionx-deps-build && ./prep.sh
