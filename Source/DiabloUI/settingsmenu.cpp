@@ -19,12 +19,12 @@ std::vector<std::unique_ptr<UiItemBase>> vecDialog;
 std::vector<OptionEntryBase *> vecOptions;
 OptionEntryBase *selectedOption = nullptr;
 
-enum class ShownMenuTyp {
+enum class ShownMenuType {
 	Settings,
 	ListOption,
 };
 
-ShownMenuTyp shownMenu;
+ShownMenuType shownMenu;
 
 char optionDescription[512];
 
@@ -69,15 +69,15 @@ void CleanUpSettingsUI()
 void GoBackOneMenuLevel()
 {
 	endMenu = true;
-	backToMain = shownMenu == ShownMenuTyp::Settings;
-	shownMenu = ShownMenuTyp::Settings;
+	backToMain = shownMenu == ShownMenuType::Settings;
+	shownMenu = ShownMenuType::Settings;
 }
 
 void ItemFocused(int value)
 {
 	auto &vecItem = vecDialogItems[value];
 	optionDescription[0] = '\0';
-	if (vecItem->m_value < 0 || shownMenu != ShownMenuTyp::Settings) {
+	if (vecItem->m_value < 0 || shownMenu != ShownMenuType::Settings) {
 		return;
 	}
 	auto *pOption = vecOptions[vecItem->m_value];
@@ -136,7 +136,7 @@ void ItemSelected(int value)
 	}
 
 	switch (shownMenu) {
-	case ShownMenuTyp::Settings: {
+	case ShownMenuType::Settings: {
 		auto *pOption = vecOptions[vecItemValue];
 		bool updateValueDescription = false;
 		if (pOption->GetType() == OptionEntryType::List) {
@@ -144,7 +144,7 @@ void ItemSelected(int value)
 			if (pOptionList->GetListSize() > 2) {
 				selectedOption = pOption;
 				endMenu = true;
-				shownMenu = ShownMenuTyp::ListOption;
+				shownMenu = ShownMenuType::ListOption;
 			} else {
 				// If the list contains only two items, we don't show a submenu and instead change the option value instantly
 				size_t nextIndex = pOptionList->GetActiveListIndex() + 1;
@@ -161,7 +161,7 @@ void ItemSelected(int value)
 				vecItem->args.push_back(arg);
 		}
 	} break;
-	case ShownMenuTyp::ListOption: {
+	case ShownMenuType::ListOption: {
 		ChangeOptionValue(selectedOption, vecItemValue);
 		GoBackOneMenuLevel();
 	} break;
@@ -178,7 +178,7 @@ void EscPressed()
 void UiSettingsMenu()
 {
 	backToMain = false;
-	shownMenu = ShownMenuTyp::Settings;
+	shownMenu = ShownMenuType::Settings;
 	selectedOption = nullptr;
 
 	do {
@@ -194,7 +194,7 @@ void UiSettingsMenu()
 
 		optionDescription[0] = '\0';
 
-		const char *titleText = shownMenu == ShownMenuTyp::Settings ? _("Settings") : selectedOption->GetName().data();
+		const char *titleText = shownMenu == ShownMenuType::Settings ? _("Settings") : selectedOption->GetName().data();
 		vecDialog.push_back(std::make_unique<UiArtText>(titleText, MakeSdlRect(PANEL_LEFT, UI_OFFSET_Y + 161, PANEL_WIDTH, 35), UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
 		vecDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
 		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
@@ -202,7 +202,7 @@ void UiSettingsMenu()
 		size_t itemToSelect = 1;
 
 		switch (shownMenu) {
-		case ShownMenuTyp::Settings: {
+		case ShownMenuType::Settings: {
 			size_t catCount = 0;
 			for (auto *pCategory : sgOptions.GetCategories()) {
 				bool categoryCreated = false;
@@ -224,7 +224,7 @@ void UiSettingsMenu()
 				}
 			}
 		} break;
-		case ShownMenuTyp::ListOption: {
+		case ShownMenuType::ListOption: {
 			auto *pOptionList = static_cast<OptionEntryListBase *>(selectedOption);
 			for (size_t i = 0; i < pOptionList->GetListSize(); i++) {
 				vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i).data(), i, UiFlags::ColorUiGold));

@@ -17,6 +17,7 @@
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
+#include "dx.h"
 #include "options.h"
 #include "utils/log.hpp"
 #include "utils/sdl_wrap.h"
@@ -99,7 +100,7 @@ void AdjustToScreenGeometry(Size windowSize)
 
 Size GetPreferredWindowSize()
 {
-	Size windowSize = { sgOptions.Graphics.nWidth, sgOptions.Graphics.nHeight };
+	Size windowSize = *sgOptions.Graphics.resolution;
 
 #ifndef USE_SDL1
 	if (*sgOptions.Graphics.upscale && *sgOptions.Graphics.fitToScreen) {
@@ -205,7 +206,7 @@ bool SpawnWindow(const char *lpWindowName)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
-	int flags = 0;
+	int flags = SDL_WINDOW_ALLOW_HIGHDPI;
 	if (*sgOptions.Graphics.upscale) {
 		if (!gbForceWindowed && *sgOptions.Graphics.fullscreen) {
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -321,6 +322,7 @@ void ResizeWindow()
 #endif
 
 	ReinitializeRenderer();
+	dx_resize();
 }
 
 SDL_Surface *GetOutputSurface()

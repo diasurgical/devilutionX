@@ -1,4 +1,4 @@
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 if(NOT DISABLE_LTO)
   # Force CMake to raise an error if INTERPROCEDURAL_OPTIMIZATION
@@ -19,10 +19,14 @@ set(PNG_TESTS OFF)
 set(PNG_EXECUTABLES OFF)
 set(SKIP_INSTALL_PROGRAMS ON)
 
+if(IOS AND "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "arm64")
+  set(PNG_ARM_NEON "on" CACHE STRING "" FORCE)
+endif()
+
 include(FetchContent)
 FetchContent_Declare(png
-  URL https://github.com/StephenCWills/libpng/archive/5cfc16530ae7f2c1f1c88ecd08b0fde2e2a4cd93.tar.gz
-  URL_HASH MD5=e98756c6316f51ca9c045bb2f1bdf307
+  URL https://github.com/diasurgical/libpng/archive/062dbf095f84b6db90d13e820fb60ec4ed545639.tar.gz
+  URL_HASH MD5=4c0a3862cb218d88889fb4189cb85c5d
 )
 FetchContent_MakeAvailableExcludeFromAll(png)
 

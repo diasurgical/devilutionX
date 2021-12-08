@@ -1,4 +1,4 @@
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(asio
@@ -9,3 +9,7 @@ FetchContent_MakeAvailableExcludeFromAll(asio)
 
 add_library(asio INTERFACE)
 target_include_directories(asio INTERFACE ${asio_SOURCE_DIR}/asio/include)
+
+if(NINTENDO_3DS OR NINTENDO_SWITCH)
+  include(asio_defs REQUIRED)
+endif()

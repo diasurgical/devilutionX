@@ -143,8 +143,8 @@ public:
 	void LoadFromIni(string_view category) override;
 	void SaveToIni(string_view category) const override;
 
-	[[nodiscard]] virtual size_t GetListSize() const override;
-	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
@@ -198,10 +198,10 @@ public:
 	void LoadFromIni(string_view category) override;
 	void SaveToIni(string_view category) const override;
 
-	[[nodiscard]] virtual size_t GetListSize() const override;
-	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
-	[[nodiscard]] virtual size_t GetActiveListIndex() const override;
-	virtual void SetActiveListIndex(size_t index) override;
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
 
 	string_view operator*() const
 	{
@@ -209,11 +209,36 @@ public:
 	}
 
 private:
-	/** @brief Language code (IETF) for text. */
+	/** @brief Language code (ISO-15897) for text. */
 	char szCode[6];
 	mutable std::vector<std::pair<std::string, std::string>> languages;
 
 	void CheckLanguagesAreInitialized() const;
+};
+
+class OptionEntryResolution : public OptionEntryListBase {
+public:
+	OptionEntryResolution();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	Size operator*() const
+	{
+		return size;
+	}
+
+private:
+	/** @brief View size. */
+	Size size;
+	mutable std::vector<std::pair<Size, std::string>> resolutions;
+
+	void CheckResolutionsAreInitialized() const;
 };
 
 struct OptionCategoryBase {
@@ -295,10 +320,7 @@ struct GraphicsOptions : OptionCategoryBase {
 	GraphicsOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Render width. */
-	int nWidth;
-	/** @brief Render height. */
-	int nHeight;
+	OptionEntryResolution resolution;
 	/** @brief Run in fullscreen or windowed mode. */
 	OptionEntryBoolean fullscreen;
 #if !defined(USE_SDL1) || defined(__3DS__)

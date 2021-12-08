@@ -64,12 +64,6 @@ namespace devilution {
 #define DEFAULT_AUDIO_RESAMPLING_QUALITY 5
 #endif
 
-#ifdef VIRTUAL_GAMEPAD
-#define AUTO_PICKUP_DEFAULT(bValue) true
-#else
-#define AUTO_PICKUP_DEFAULT(bValue) bValue
-#endif
-
 namespace {
 
 std::string GetIniPath()
@@ -187,7 +181,7 @@ void SaveIni()
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorDefault()
 {
-#ifdef __ANDROID__
+#if defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
 	// See https://github.com/diasurgical/devilutionX/issues/2502
 	return false;
 #else
@@ -299,8 +293,6 @@ void LoadOptions()
 	sgOptions.Audio.nBufferSize = GetIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
 	sgOptions.Audio.nResamplingQuality = GetIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
 
-	sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
-	sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
@@ -354,8 +346,6 @@ void SaveOptions()
 	SetIniValue("Audio", "Channels", sgOptions.Audio.nChannels);
 	SetIniValue("Audio", "Buffer Size", sgOptions.Audio.nBufferSize);
 	SetIniValue("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
-	SetIniValue("Graphics", "Width", sgOptions.Graphics.nWidth);
-	SetIniValue("Graphics", "Height", sgOptions.Graphics.nHeight);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
@@ -559,8 +549,8 @@ std::vector<OptionEntryBase *> HellfireOptions::GetEntries()
 AudioOptions::AudioOptions()
     : OptionCategoryBase("Audio", N_("Audio"), N_("Audio Settings"))
     , walkingSound("Walking Sound", OptionEntryFlags::None, N_("Walking Sound"), N_("Player emits sound when walking."), true)
-    , autoEquipSound("Auto Equip Sound", OptionEntryFlags::None, N_("Auto Equip Sound"), N_("Automatically equipping items on pickup emits the equipment sound."), AUTO_PICKUP_DEFAULT(false))
-    , itemPickupSound("Item Pickup Sound", OptionEntryFlags::None, N_("Item Pickup Sound"), N_("Picking up items emits the items pickup sound."), AUTO_PICKUP_DEFAULT(false))
+    , autoEquipSound("Auto Equip Sound", OptionEntryFlags::None, N_("Auto Equip Sound"), N_("Automatically equipping items on pickup emits the equipment sound."), false)
+    , itemPickupSound("Item Pickup Sound", OptionEntryFlags::None, N_("Item Pickup Sound"), N_("Picking up items emits the items pickup sound."), false)
 {
 }
 std::vector<OptionEntryBase *> AudioOptions::GetEntries()
@@ -570,6 +560,91 @@ std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 		&autoEquipSound,
 		&itemPickupSound,
 	};
+}
+
+OptionEntryResolution::OptionEntryResolution()
+    : OptionEntryListBase("", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Resolution"), N_("Affect the game's internal resolution and determine your view area. Note: This can differ from screen resolution, when Upscaling, Integer Scaling or Fit to Screen is used."))
+{
+}
+void OptionEntryResolution::LoadFromIni(string_view category)
+{
+	size = { GetIniInt(category.data(), "Width", DEFAULT_WIDTH), GetIniInt(category.data(), "Height", DEFAULT_HEIGHT) };
+}
+void OptionEntryResolution::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), "Width", size.width);
+	SetIniValue(category.data(), "Height", size.height);
+}
+
+void OptionEntryResolution::CheckResolutionsAreInitialized() const
+{
+	if (!resolutions.empty())
+		return;
+
+	std::vector<Size> sizes;
+
+	// Add resolutions
+#ifdef USE_SDL1
+	auto *modes = SDL_ListModes(nullptr, SDL_FULLSCREEN | SDL_HWPALETTE);
+	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
+	if (modes != nullptr && modes != (SDL_Rect **)-1) {
+		for (size_t i = 0; modes[i] != nullptr; i++) {
+			sizes.emplace_back(Size { modes[i]->w, modes[i]->h });
+		}
+	}
+#else
+	int displayModeCount = SDL_GetNumDisplayModes(0);
+	for (int i = 0; i < displayModeCount; i++) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDisplayMode(0, i, &mode) != 0) {
+			ErrSdl();
+		}
+		sizes.emplace_back(Size { mode.w, mode.h });
+	}
+#endif
+
+	// Ensures that the ini specified resolution is present in resolution list even if it doesn't match a monitor resolution (for example if played in window mode)
+	sizes.push_back(this->size);
+	// Ensures that the vanilla/default resolution is always present
+	sizes.emplace_back(Size { DEFAULT_WIDTH, DEFAULT_HEIGHT });
+
+	// Sort by width then by height
+	std::sort(sizes.begin(), sizes.end(),
+	    [](const Size &x, const Size &y) -> bool {
+		    if (x.width == y.width)
+			    return x.height > y.height;
+		    return x.width > y.width;
+	    });
+	// Remove duplicate entries
+	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
+
+	for (auto &size : sizes) {
+		resolutions.emplace_back(size, fmt::format("{}x{}", size.width, size.height));
+	}
+}
+
+size_t OptionEntryResolution::GetListSize() const
+{
+	CheckResolutionsAreInitialized();
+	return resolutions.size();
+}
+string_view OptionEntryResolution::GetListDescription(size_t index) const
+{
+	CheckResolutionsAreInitialized();
+	return resolutions[index].second;
+}
+size_t OptionEntryResolution::GetActiveListIndex() const
+{
+	CheckResolutionsAreInitialized();
+	auto found = std::find_if(resolutions.begin(), resolutions.end(), [this](const auto &x) { return x.first == this->size; });
+	if (found == resolutions.end())
+		return 0;
+	return std::distance(resolutions.begin(), found);
+}
+void OptionEntryResolution::SetActiveListIndex(size_t index)
+{
+	size = resolutions[index].first;
+	NotifyValueChanged();
 }
 
 GraphicsOptions::GraphicsOptions()
@@ -594,6 +669,7 @@ GraphicsOptions::GraphicsOptions()
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
 {
+	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(ResizeWindow);
 #if !defined(USE_SDL1) || defined(__3DS__)
 	fitToScreen.SetValueChangedCallback(ResizeWindow);
@@ -610,6 +686,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
 	// clang-format off
 	return {
+		&resolution,
 #ifndef __vita__
 		&fullscreen,
 #endif
@@ -632,25 +709,25 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 
 GameplayOptions::GameplayOptions()
     : OptionCategoryBase("Game", N_("Gameplay"), N_("Gameplay Settings"))
-    , runInTown("Run in Town", OptionEntryFlags::CantChangeInMultiPlayer, N_("Run in Town"), N_("Enable jogging/fast walking in town for Diablo and Hellfire. This option was introduced in the expansion."), AUTO_PICKUP_DEFAULT(false))
+    , runInTown("Run in Town", OptionEntryFlags::CantChangeInMultiPlayer, N_("Run in Town"), N_("Enable jogging/fast walking in town for Diablo and Hellfire. This option was introduced in the expansion."), false)
     , grabInput("Grab Input", OptionEntryFlags::None, N_("Grab Input"), N_("When enabled mouse is locked to the game window."), false)
     , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
     , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
     , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
     , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
     , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
-    , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), AUTO_PICKUP_DEFAULT(false))
+    , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), false)
     , enemyHealthBar("Enemy Health Bar", OptionEntryFlags::None, N_("Enemy Health Bar"), N_("Enemy Health Bar is displayed at the top of the screen."), false)
-    , autoGoldPickup("Auto Gold Pickup", OptionEntryFlags::None, N_("Auto Gold Pickup"), N_("Gold is automatically collected when in close proximity to the player."), AUTO_PICKUP_DEFAULT(false))
+    , autoGoldPickup("Auto Gold Pickup", OptionEntryFlags::None, N_("Auto Gold Pickup"), N_("Gold is automatically collected when in close proximity to the player."), false)
     , adriaRefillsMana("Adria Refills Mana", OptionEntryFlags::None, N_("Adria Refills Mana"), N_("Adria will refill your mana when you visit her shop."), false)
     , autoEquipWeapons("Auto Equip Weapons", OptionEntryFlags::None, N_("Auto Equip Weapons"), N_("Weapons will be automatically equipped on pickup or purchase if enabled."), true)
-    , autoEquipArmor("Auto Equip Armor", OptionEntryFlags::None, N_("Auto Equip Armor"), N_("Armor will be automatically equipped on pickup or purchase if enabled."), AUTO_PICKUP_DEFAULT(false))
-    , autoEquipHelms("Auto Equip Helms", OptionEntryFlags::None, N_("Auto Equip Helms"), N_("Helms will be automatically equipped on pickup or purchase if enabled."), AUTO_PICKUP_DEFAULT(false))
-    , autoEquipShields("Auto Equip Shields", OptionEntryFlags::None, N_("Auto Equip Shields"), N_("Shields will be automatically equipped on pickup or purchase if enabled."), AUTO_PICKUP_DEFAULT(false))
-    , autoEquipJewelry("Auto Equip Jewelry", OptionEntryFlags::None, N_("Auto Equip Jewelry"), N_("Jewelry will be automatically equipped on pickup or purchase if enabled."), AUTO_PICKUP_DEFAULT(false))
+    , autoEquipArmor("Auto Equip Armor", OptionEntryFlags::None, N_("Auto Equip Armor"), N_("Armor will be automatically equipped on pickup or purchase if enabled."), false)
+    , autoEquipHelms("Auto Equip Helms", OptionEntryFlags::None, N_("Auto Equip Helms"), N_("Helms will be automatically equipped on pickup or purchase if enabled."), false)
+    , autoEquipShields("Auto Equip Shields", OptionEntryFlags::None, N_("Auto Equip Shields"), N_("Shields will be automatically equipped on pickup or purchase if enabled."), false)
+    , autoEquipJewelry("Auto Equip Jewelry", OptionEntryFlags::None, N_("Auto Equip Jewelry"), N_("Jewelry will be automatically equipped on pickup or purchase if enabled."), false)
     , randomizeQuests("Randomize Quests", OptionEntryFlags::CantChangeInGame, N_("Randomize Quests"), N_("Randomly selecting available quests for new games."), true)
     , showMonsterType("Show Monster Type", OptionEntryFlags::None, N_("Show Monster Type"), N_("Hovering over a monster will display the type of monster in the description box in the UI."), false)
-    , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), AUTO_PICKUP_DEFAULT(false))
+    , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), false)
     , disableCripplingShrines("Disable Crippling Shrines", OptionEntryFlags::None, N_("Disable Crippling Shrines"), N_("When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines and Sacred Shrines are not able to be clicked on and labeled as disabled."), false)
     , quickCast("Quick Cast", OptionEntryFlags::None, N_("Quick Cast"), N_("Spell hotkeys instantly cast the spell, rather than switching the readied spell."), false)
 {
@@ -824,29 +901,29 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 		return;
 
 	// Add well-known supported languages
-	languages.push_back({ "bg", "Bulgarian" });
-	languages.push_back({ "cs", "Czech" });
-	languages.push_back({ "da", "Danish" });
-	languages.push_back({ "de", "German" });
-	languages.push_back({ "en", "English" });
-	languages.push_back({ "es", "Spanish" });
-	languages.push_back({ "fr", "French" });
-	languages.push_back({ "ja", "Japanese" });
-	languages.push_back({ "hr", "Croatian" });
-	languages.push_back({ "it", "Italian" });
-	languages.push_back({ "ko_KR", "Korean" });
-	languages.push_back({ "pl", "Polish" });
-	languages.push_back({ "pt_BR", "Portuguese (Brazil)" });
-	languages.push_back({ "ro_RO", "Romanian" });
-	languages.push_back({ "ru", "Russian" });
-	languages.push_back({ "sv", "Swedish" });
-	languages.push_back({ "uk", "Ukrainian" });
-	languages.push_back({ "zh_CN", "Simplified Chinese" });
-	languages.push_back({ "zh_TW", "Traditional Chinese" });
+	languages.emplace_back("bg", "Bulgarian");
+	languages.emplace_back("cs", "Czech");
+	languages.emplace_back("da", "Danish");
+	languages.emplace_back("de", "German");
+	languages.emplace_back("en", "English");
+	languages.emplace_back("es", "Spanish");
+	languages.emplace_back("fr", "French");
+	languages.emplace_back("ja", "Japanese");
+	languages.emplace_back("hr", "Croatian");
+	languages.emplace_back("it", "Italian");
+	languages.emplace_back("ko_KR", "Korean");
+	languages.emplace_back("pl", "Polish");
+	languages.emplace_back("pt_BR", "Portuguese (Brazil)");
+	languages.emplace_back("ro_RO", "Romanian");
+	languages.emplace_back("ru", "Russian");
+	languages.emplace_back("sv", "Swedish");
+	languages.emplace_back("uk", "Ukrainian");
+	languages.emplace_back("zh_CN", "Simplified Chinese");
+	languages.emplace_back("zh_TW", "Traditional Chinese");
 
-	// Ensures that the ini specified language is present in languages list even if unkown (for example if someone starts to translate a new language)
+	// Ensures that the ini specified language is present in languages list even if unknown (for example if someone starts to translate a new language)
 	if (std::find_if(languages.begin(), languages.end(), [this](const auto &x) { return x.first == this->szCode; }) == languages.end()) {
-		languages.push_back({ szCode, szCode });
+		languages.emplace_back(szCode, szCode);
 	}
 }
 

@@ -92,8 +92,6 @@ void CreateBackBuffer()
 	// time the global `palette` is changed. No need to do anything here as
 	// the global `palette` doesn't have any colors set yet.
 #endif
-
-	pal_surface_palette_version = 1;
 }
 
 void LockBufPriv()
@@ -144,6 +142,7 @@ void dx_init()
 
 	palette_init();
 	CreateBackBuffer();
+	pal_surface_palette_version = 1;
 }
 
 void lock_buf(int idx) // NOLINT(misc-unused-parameters)
@@ -216,6 +215,12 @@ void dx_reinit()
 		ErrSdl();
 	}
 #endif
+	force_redraw = 255;
+}
+
+void dx_resize()
+{
+	CreateBackBuffer();
 	force_redraw = 255;
 }
 

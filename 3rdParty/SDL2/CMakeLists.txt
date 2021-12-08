@@ -11,11 +11,11 @@ else()
   set(SDL_STATIC OFF)
 endif()
 
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
 FetchContent_Declare(SDL2
-    URL https://github.com/libsdl-org/SDL/archive/refs/tags/release-2.0.18.tar.gz
-    URL_HASH MD5=647e2890385e5f13b9aeee2e27fa26e7
+    URL https://github.com/libsdl-org/SDL/archive/5056b29b0f8611b470d8b8bdb313eab628f8bd6e.tar.gz
+    URL_HASH MD5=3fb6d72c33434082c32d2649c35c6502
 )
 FetchContent_MakeAvailableExcludeFromAll(SDL2)
 

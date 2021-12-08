@@ -16,6 +16,7 @@ enum class SpellCheckResult : uint8_t {
 	Fail_Busy,
 };
 
+bool IsWallSpell(spell_id spl);
 int GetManaAmount(Player &player, spell_id sn);
 void UseMana(int id, spell_id sn);
 SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
@@ -28,7 +29,7 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
  * @param player The player whose readied spell is to be checked.
  */
 void EnsureValidReadiedSpell(Player &player);
-void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
+void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl);
 
 /**
  * @param pnum player index
