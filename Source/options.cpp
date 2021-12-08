@@ -900,6 +900,17 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 	locales.emplace_back(std::locale("").name().substr(0, 5));
 #endif
 
+	// Insert non-regional locale codes after the last regional variation so we fallback to neutral translations if no regional translation exists that meets user preferences.
+	for (auto localeIter = locales.rbegin(); localeIter != locales.rend(); localeIter++) {
+		auto regionSeparator = localeIter->find('_');
+		if (regionSeparator != std::string::npos) {
+			std::string neutralLocale = localeIter->substr(0, regionSeparator);
+			if (std::find(locales.rbegin(), localeIter, neutralLocale) == localeIter) {
+				localeIter = std::make_reverse_iterator(locales.insert(localeIter.base(), neutralLocale));
+			}
+		}
+	}
+
 	LogVerbose("Found {} user preferred locales", locales);
 
 	for (const auto &locale : locales) {
@@ -907,25 +918,6 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 		if (HasTranslation(locale)) {
 			LogVerbose("Best match locale: {}", locale);
 			CopyUtf8(szCode, locale, sizeof(szCode));
-			return;
-		}
-	}
-
-	std::vector<std::string> fallbackLocales;
-	fallbackLocales.reserve(locales.size());
-
-	for (const auto &locale : locales) {
-		std::string neutralLocale = locale.substr(0, locale.find('_'));
-		if (std::find(fallbackLocales.cbegin(), fallbackLocales.cend(), neutralLocale) == fallbackLocales.cend()) {
-			fallbackLocales.push_back(neutralLocale);
-		}
-	}
-
-	for (const auto &fallbackLocale : fallbackLocales) {
-		LogVerbose("Trying to load fallback translation: {}", fallbackLocale);
-		if (HasTranslation(fallbackLocale)) {
-			LogVerbose("Found matching fallback locale: {}", fallbackLocale);
-			CopyUtf8(szCode, fallbackLocale, sizeof(szCode));
 			return;
 		}
 	}
