@@ -4,6 +4,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
+#include "DiabloUI/scrollbar.h"
 #include "DiabloUI/selhero.h"
 #include "DiabloUI/selok.h"
 #include "config.h"
@@ -41,8 +42,6 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelGameDialog;
 std::vector<std::string> Gamelist;
 int HighlightedItem;
 
-} // namespace
-
 void selgame_FreeVectors()
 {
 	vecSelGameDlgItems.clear();
@@ -50,12 +49,20 @@ void selgame_FreeVectors()
 	vecSelGameDialog.clear();
 }
 
+void selgame_Init()
+{
+	LoadBackgroundArt("ui_art\\selgame.pcx");
+	LoadScrollBar();
+}
+
 void selgame_Free()
 {
 	ArtBackground.Unload();
-
+	UnloadScrollBar();
 	selgame_FreeVectors();
 }
+
+} // namespace
 
 void selgame_GameSelection_Init()
 {
@@ -74,6 +81,9 @@ void selgame_GameSelection_Init()
 
 	UiAddBackground(&vecSelGameDialog);
 	UiAddLogo(&vecSelGameDialog);
+
+	SDL_Rect rectScrollbar = { (Sint16)(PANEL_LEFT + 590), (Sint16)(UI_OFFSET_Y + 244), 25, 178 };
+	vecSelGameDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, rectScrollbar));
 
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_(ConnectionNames[provider]), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
@@ -263,7 +273,7 @@ bool IsDifficultyAllowed(int value)
 	if (value == 2)
 		UiSelOkDialog(title, _("Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty."), false);
 
-	LoadBackgroundArt("ui_art\\selgame.pcx");
+	selgame_Init();
 
 	return false;
 }
@@ -450,7 +460,7 @@ static bool IsGameCompatible(const GameData &data)
 		UiSelOkDialog(title, msg, false);
 	}
 
-	LoadBackgroundArt("ui_art\\selgame.pcx");
+	selgame_Init();
 
 	return false;
 }
@@ -484,7 +494,7 @@ void selgame_Password_Select(int /*value*/)
 			if (error.empty())
 				error = "Unknown network error";
 			UiSelOkDialog(_("Multi Player Game"), error.c_str(), false);
-			LoadBackgroundArt("ui_art\\selgame.pcx");
+			selgame_Init();
 			selgame_Password_Init(selgame_selectedGame);
 		}
 		return;
@@ -505,7 +515,7 @@ void selgame_Password_Select(int /*value*/)
 		if (error.empty())
 			error = "Unknown network error";
 		UiSelOkDialog(_("Multi Player Game"), error.c_str(), false);
-		LoadBackgroundArt("ui_art\\selgame.pcx");
+		selgame_Init();
 		selgame_Password_Init(0);
 	}
 }
@@ -549,7 +559,7 @@ bool UiSelectGame(GameData *gameData, int *playerId)
 {
 	gdwPlayerId = playerId;
 	m_game_data = gameData;
-	LoadBackgroundArt("ui_art\\selgame.pcx");
+	selgame_Init();
 	HighlightedItem = 0;
 	selgame_GameSelection_Init();
 
