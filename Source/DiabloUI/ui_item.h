@@ -191,7 +191,7 @@ public:
 
 class UiArtTextButton : public UiItemBase {
 public:
-	using Callback = void (*) ();
+	using Callback = void (*)();
 
 	UiArtTextButton(const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::ArtTextButton, rect, flags)
@@ -262,30 +262,61 @@ public:
 
 class UiButton : public UiItemBase {
 public:
-	using Callback = void (*) ();
+	using Callback = void (*)();
 
 	UiButton(Art *art, const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Button, rect, flags)
-	    , m_art(art)
-	    , m_text(text)
-	    , m_action(action)
-	    , m_pressed(false)
+	    , art_(art)
+	    , text_(text)
+	    , action_(action)
+	    , pressed_(false)
 	{
 	}
 
-	enum FrameKey : uint8_t {
-		DEFAULT,
-		PRESSED,
-	};
+	[[nodiscard]] constexpr int GetFrame() const
+	{
+		// Frame 1 is a held button sprite, frame 0 is the default
+		return IsPressed() ? 1 : 0;
+	}
 
-	// private:
-	Art *m_art;
+	[[nodiscard]] constexpr Art *GetArt() const
+	{
+		return art_;
+	}
 
-	const char *m_text;
-	Callback m_action;
+	[[nodiscard]] constexpr string_view GetText() const
+	{
+		return text_;
+	}
+
+	constexpr void Activate() const
+	{
+		action_();
+	}
+
+	[[nodiscard]] constexpr bool IsPressed() const
+	{
+		return pressed_;
+	}
+
+	constexpr void Press()
+	{
+		pressed_ = true;
+	}
+
+	constexpr void Release()
+	{
+		pressed_ = false;
+	}
+
+private:
+	Art *art_;
+
+	const char *text_;
+	Callback action_;
 
 	// State
-	bool m_pressed;
+	bool pressed_;
 };
 
 //=============================================================================
