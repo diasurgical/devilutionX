@@ -769,14 +769,14 @@ void Render(const UiArtText *uiArtText)
 void Render(const UiImage *uiImage)
 {
 	int x = uiImage->m_rect.x;
-	if (uiImage->IsCentered() && uiImage->m_art != nullptr) {
-		const int xOffset = GetCenterOffset(uiImage->m_art->w(), uiImage->m_rect.w);
+	if (uiImage->IsCentered() && uiImage->GetArt() != nullptr) {
+		const int xOffset = GetCenterOffset(uiImage->GetArt()->w(), uiImage->m_rect.w);
 		x += xOffset;
 	}
-	if (uiImage->m_animated) {
-		DrawAnimatedArt(uiImage->m_art, { x, uiImage->m_rect.y });
+	if (uiImage->IsAnimated()) {
+		DrawAnimatedArt(uiImage->GetArt(), { x, uiImage->m_rect.y });
 	} else {
-		DrawArt({ x, uiImage->m_rect.y }, uiImage->m_art, uiImage->m_frame, uiImage->m_rect.w);
+		DrawArt({ x, uiImage->m_rect.y }, uiImage->GetArt(), uiImage->GetFrame(), uiImage->m_rect.w);
 	}
 }
 

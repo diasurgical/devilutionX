@@ -92,9 +92,9 @@ class UiImage : public UiItemBase {
 public:
 	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
 	    : UiItemBase(UiType::Image, rect, flags)
-	    , m_art(art)
-	    , m_animated(animated)
-	    , m_frame(frame)
+	    , art_(art)
+	    , animated_(animated)
+	    , frame_(frame)
 	{
 	}
 
@@ -105,10 +105,30 @@ public:
 		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
 	}
 
-	// private:
-	Art *m_art;
-	bool m_animated;
-	int m_frame;
+	[[nodiscard]] constexpr Art *GetArt() const
+	{
+		return art_;
+	}
+
+	[[nodiscard]] constexpr bool IsAnimated() const
+	{
+		return animated_;
+	}
+
+	[[nodiscard]] constexpr int GetFrame() const
+	{
+		return frame_;
+	}
+
+	void SetFrame(int frame)
+	{
+		frame_ = frame;
+	}
+
+private:
+	Art *art_;
+	bool animated_;
+	int frame_;
 };
 
 //=============================================================================
@@ -224,11 +244,11 @@ private:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(const char *hint, char *value, std::size_t max_length, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiEdit(const char *hint, char *value, std::size_t maxLength, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Edit, rect, flags)
 	    , m_hint(hint)
 	    , m_value(value)
-	    , m_max_length(max_length)
+	    , m_max_length(maxLength)
 	    , m_allowEmpty(allowEmpty)
 	{
 	}
