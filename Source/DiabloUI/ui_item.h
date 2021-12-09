@@ -123,9 +123,9 @@ public:
 	 */
 	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)
-	    , m_text(text)
-	    , m_spacing(spacing)
-	    , m_lineHeight(lineHeight)
+	    , text_(text)
+	    , spacing_(spacing)
+	    , lineHeight_(lineHeight)
 	{
 	}
 
@@ -137,36 +137,36 @@ public:
 	 */
 	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)
-	    , m_ptext(ptext)
-	    , m_spacing(spacing)
-	    , m_lineHeight(lineHeight)
+	    , textPointer_(ptext)
+	    , spacing_(spacing)
+	    , lineHeight_(lineHeight)
 	{
 	}
 
-	const char *text() const
+	~UiArtText() override = default;
+
+	[[nodiscard]] constexpr const char *GetText() const
 	{
-		if (m_text != nullptr)
-			return m_text;
-		return *m_ptext;
+		if (text_ != nullptr)
+			return text_;
+		return *textPointer_;
 	}
 
-	int spacing() const
+	[[nodiscard]] constexpr int GetSpacing() const
 	{
-		return m_spacing;
+		return spacing_;
 	}
 
-	int lineHeight() const
+	[[nodiscard]] constexpr int GetLineHeight() const
 	{
-		return m_lineHeight;
+		return lineHeight_;
 	}
-
-	~UiArtText() {};
 
 private:
-	const char *m_text = nullptr;
-	const char **m_ptext = nullptr;
-	int m_spacing = 1;
-	int m_lineHeight = -1;
+	const char *text_ = nullptr;
+	const char **textPointer_ = nullptr;
+	int spacing_;
+	int lineHeight_;
 };
 
 //=============================================================================
@@ -293,7 +293,7 @@ public:
 	{
 	}
 
-	~UiListItem() {};
+	~UiListItem() = default;
 
 	// private:
 	const char *m_text;
@@ -302,10 +302,10 @@ public:
 	UiFlags uiFlags;
 };
 
-typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
-
 class UiList : public UiItemBase {
 public:
+	using vUiListItem = std::vector<std::unique_ptr<UiListItem>>;
+
 	UiList(const vUiListItem &vItems, size_t viewportSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
 	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * viewportSize) }, flags)
 	    , viewportSize(viewportSize)
@@ -313,15 +313,15 @@ public:
 	    , m_y(y)
 	    , m_width(item_width)
 	    , m_height(item_height)
-	    , m_spacing(spacing)
+	    , spacing_(spacing)
 	{
-		for (auto &item : vItems)
+		for (const auto &item : vItems)
 			m_vecItems.push_back(item.get());
 	}
 
-	~UiList() {};
+	~UiList() override = default;
 
-	SDL_Rect itemRect(int i) const
+	[[nodiscard]] SDL_Rect itemRect(int i) const
 	{
 		SDL_Rect tmp;
 		tmp.x = m_x;
@@ -340,14 +340,14 @@ public:
 		return index;
 	}
 
-	UiListItem *GetItem(int i) const
+	[[nodiscard]] UiListItem *GetItem(std::size_t i) const
 	{
 		return m_vecItems[i];
 	}
 
-	int spacing() const
+	[[nodiscard]] constexpr int GetSpacing() const
 	{
-		return m_spacing;
+		return spacing_;
 	}
 
 	// private:
@@ -355,6 +355,8 @@ public:
 	Sint16 m_x, m_y;
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;
-	int m_spacing;
+
+private:
+	int spacing_;
 };
 } // namespace devilution

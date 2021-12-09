@@ -763,7 +763,7 @@ void Render(const UiArtText *uiArtText)
 	Rectangle rect { { uiArtText->m_rect.x, uiArtText->m_rect.y }, { uiArtText->m_rect.w, uiArtText->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiArtText->text(), rect, uiArtText->GetFlags(), uiArtText->spacing(), uiArtText->lineHeight());
+	DrawString(out, uiArtText->GetText(), rect, uiArtText->GetFlags(), uiArtText->GetSpacing(), uiArtText->GetLineHeight());
 }
 
 void Render(const UiImage *uiImage)
@@ -800,9 +800,9 @@ void Render(const UiList *uiList)
 
 		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
 		if (item->args.empty())
-			DrawString(out, item->m_text, rectangle, uiList->GetFlags() | item->uiFlags, uiList->spacing());
+			DrawString(out, item->m_text, rectangle, uiList->GetFlags() | item->uiFlags, uiList->GetSpacing());
 		else
-			DrawStringWithColors(out, item->m_text, item->args, rectangle, uiList->GetFlags() | item->uiFlags, uiList->spacing());
+			DrawStringWithColors(out, item->m_text, item->args, rectangle, uiList->GetFlags() | item->uiFlags, uiList->GetSpacing());
 	}
 }
 
