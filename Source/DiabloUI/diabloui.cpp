@@ -785,7 +785,7 @@ void Render(const UiArtTextButton *uiButton)
 	Rectangle rect { { uiButton->m_rect.x, uiButton->m_rect.y }, { uiButton->m_rect.w, uiButton->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiButton->m_text, rect, uiButton->GetFlags());
+	DrawString(out, uiButton->GetText(), rect, uiButton->GetFlags());
 }
 
 void Render(const UiList *uiList)
@@ -882,9 +882,11 @@ void RenderItem(UiItemBase *item)
 
 bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton *uiButton)
 {
-	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
+	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT) {
 		return false;
-	uiButton->m_action();
+	}
+
+	uiButton->Activate();
 	return true;
 }
 

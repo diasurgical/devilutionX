@@ -145,7 +145,7 @@ public:
 
 	~UiArtText() override = default;
 
-	[[nodiscard]] constexpr const char *GetText() const
+	[[nodiscard]] constexpr string_view GetText() const
 	{
 		if (text_ != nullptr)
 			return text_;
@@ -191,10 +191,12 @@ public:
 
 class UiArtTextButton : public UiItemBase {
 public:
-	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::None)
+	using Callback = void (*) ();
+
+	UiArtTextButton(const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::ArtTextButton, rect, flags)
-	    , m_text(text)
-	    , m_action(action)
+	    , text_(text)
+	    , action_(action)
 	{
 	}
 
@@ -203,9 +205,19 @@ public:
 		UiItemBase::SetFlags(flags);
 	}
 
-	// private:
-	const char *m_text;
-	void (*m_action)();
+	[[nodiscard]] constexpr string_view GetText() const
+	{
+		return text_;
+	}
+
+	constexpr void Activate() const
+	{
+		action_();
+	}
+
+private:
+	const char *text_;
+	Callback action_;
 };
 
 //=============================================================================
@@ -250,7 +262,9 @@ public:
 
 class UiButton : public UiItemBase {
 public:
-	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::None)
+	using Callback = void (*) ();
+
+	UiButton(Art *art, const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Button, rect, flags)
 	    , m_art(art)
 	    , m_text(text)
@@ -268,7 +282,7 @@ public:
 	Art *m_art;
 
 	const char *m_text;
-	void (*m_action)();
+	Callback m_action;
 
 	// State
 	bool m_pressed;
