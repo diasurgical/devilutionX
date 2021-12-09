@@ -383,6 +383,10 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean enemyHealthBar;
 	/** @brief Automatically pick up gold when walking over it. */
 	OptionEntryBoolean autoGoldPickup;
+	/** @brief Auto-pickup elixirs */
+	OptionEntryBoolean autoElixirPickup;
+	/** @brief Enable or Disable auto-pickup in town */
+	OptionEntryBoolean autoPickupInTown;
 	/** @brief Recover mana when talking to Adria. */
 	OptionEntryBoolean adriaRefillsMana;
 	/** @brief Automatically attempt to equip weapon-type items when picking them up. */
@@ -405,6 +409,18 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean disableCripplingShrines;
 	/** @brief Spell hotkeys instantly cast the spell. */
 	OptionEntryBoolean quickCast;
+	/** @brief Number of Healing potions to pick up automatically */
+	int numHealPotionPickup;
+	/** @brief Number of Full Healing potions to pick up automatically */
+	int numFullHealPotionPickup;
+	/** @brief Number of Mana potions to pick up automatically */
+	int numManaPotionPickup;
+	/** @brief Number of Full Mana potions to pick up automatically */
+	int numFullManaPotionPickup;
+	/** @brief Number of Rejuvenating potions to pick up automatically */
+	int numRejuPotionPickup;
+	/** @brief Number of Full Rejuvenating potions to pick up automatically */
+	int numFullRejuPotionPickup;
 };
 
 struct ControllerOptions : OptionCategoryBase {

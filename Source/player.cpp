@@ -756,7 +756,7 @@ bool DoWalk(int pnum, int variant)
 			ChangeLightOffset(player._plid, { 0, 0 });
 		}
 
-		AutoGoldPickup(pnum);
+		AutoPickup(pnum);
 		return true;
 	} // We didn't reach new tile so update player's "sub-tile" position
 	ChangeOffset(pnum);
