@@ -162,7 +162,6 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
 #endif
 
-
 #if defined(_WIN32) && !defined(USE_SDL1)
 	// The default WASAPI backend causes distortions
 	// https://github.com/diasurgical/devilutionX/issues/1434
