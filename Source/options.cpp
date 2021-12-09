@@ -307,8 +307,6 @@ void LoadOptions()
 	sgOptions.Gameplay.numFullManaPotionPickup = GetIniInt("Game", "Full Mana Potion Pickup", 0);
 	sgOptions.Gameplay.numRejuPotionPickup = GetIniInt("Game", "Rejuvenation Potion Pickup", 0);
 	sgOptions.Gameplay.numFullRejuPotionPickup = GetIniInt("Game", "Full Rejuvenation Potion Pickup", 0);
-	sgOptions.Gameplay.AutoPickupInTown = GetIniBool("Game", "Auto Pickup in Town", 0);
-	sgOptions.Gameplay.AutoPickupElixirs = GetIniBool("Game", "Auto Pickup Elixirs", 0);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -369,8 +367,6 @@ void SaveOptions()
 	SetIniValue("Game", "Full Mana Potion Pickup", sgOptions.Gameplay.numFullManaPotionPickup);
 	SetIniValue("Game", "Rejuvenation Potion Pickup", sgOptions.Gameplay.numRejuPotionPickup);
 	SetIniValue("Game", "Full Rejuvenation Potion Pickup", sgOptions.Gameplay.numFullRejuPotionPickup);
-	SetIniValue("Game", "Auto Pickup in Town", sgOptions.Gameplay.AutoPickupInTown);
-	SetIniValue("Game", "Auto Pickup Elixirs", sgOptions.Gameplay.AutoPickupElixirs);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	SetIniValue("Network", "Port", sgOptions.Network.nPort);
@@ -736,6 +732,8 @@ GameplayOptions::GameplayOptions()
     , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), false)
     , enemyHealthBar("Enemy Health Bar", OptionEntryFlags::None, N_("Enemy Health Bar"), N_("Enemy Health Bar is displayed at the top of the screen."), false)
     , autoGoldPickup("Auto Gold Pickup", OptionEntryFlags::None, N_("Auto Gold Pickup"), N_("Gold is automatically collected when in close proximity to the player."), false)
+    , autoElixirPickup("Auto Elixir Pickup", OptionEntryFlags::None, N_("Auto Elixir Pickup"), N_("Elixirs are automatically collected when in close proximity to the player."), false)
+    , autoPickupInTown("Auto Pickup in Town", OptionEntryFlags::None, N_("Auto Pickup in Town"), N_("Automatically pickup items in town."), false)
     , adriaRefillsMana("Adria Refills Mana", OptionEntryFlags::None, N_("Adria Refills Mana"), N_("Adria will refill your mana when you visit her shop."), false)
     , autoEquipWeapons("Auto Equip Weapons", OptionEntryFlags::None, N_("Auto Equip Weapons"), N_("Weapons will be automatically equipped on pickup or purchase if enabled."), true)
     , autoEquipArmor("Auto Equip Armor", OptionEntryFlags::None, N_("Auto Equip Armor"), N_("Armor will be automatically equipped on pickup or purchase if enabled."), false)
@@ -747,6 +745,7 @@ GameplayOptions::GameplayOptions()
     , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), false)
     , disableCripplingShrines("Disable Crippling Shrines", OptionEntryFlags::None, N_("Disable Crippling Shrines"), N_("When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines and Sacred Shrines are not able to be clicked on and labeled as disabled."), false)
     , quickCast("Quick Cast", OptionEntryFlags::None, N_("Quick Cast"), N_("Spell hotkeys instantly cast the spell, rather than switching the readied spell."), false)
+
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -776,6 +775,8 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&autoRefillBelt,
 		&disableCripplingShrines,
 		&quickCast,
+		&autoElixirPickup,
+		&autoPickupInTown,
 	};
 }
 

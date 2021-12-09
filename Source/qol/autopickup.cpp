@@ -58,7 +58,7 @@ void AutoPickup(int pnum)
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
-			if (hasRoomForGold && item._itype == ItemType::Gold && sgOptions.Gameplay.autoGoldPickup) {
+			if (hasRoomForGold && item._itype == ItemType::Gold && *sgOptions.Gameplay.autoGoldPickup) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
 			}
@@ -87,7 +87,7 @@ void AutoPickup(int pnum)
 				case IMISC_ELIXMAG:
 				case IMISC_ELIXDEX:
 				case IMISC_ELIXVIT:
-					doPickup = sgOptions.Gameplay.AutoElixirPickup;
+					doPickup = *sgOptions.Gameplay.autoElixirPickup;
 					break;
 				default:
 					break;

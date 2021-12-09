@@ -418,9 +418,9 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	int numFullRejuPotionPickup;
 	/** @brief Enable or Disable auto-pickup in town */
-	bool AutoPickupInTown;
+	OptionEntryBoolean autoPickupInTown;
 	/** @brief Auto-pickup elixirs */
-	bool AutoPickupElixirs;
+	OptionEntryBoolean autoElixirPickup;
 };
 
 struct ControllerOptions : OptionCategoryBase {
