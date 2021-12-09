@@ -26,39 +26,52 @@ enum class UiType {
 
 class UiItemBase {
 public:
+	virtual ~UiItemBase() = default;
+
+	[[nodiscard]] constexpr UiFlags GetFlags() const
+	{
+		return uiFlags_;
+	}
+
+	[[nodiscard]] constexpr bool IsHidden() const
+	{
+		return (uiFlags_ & UiFlags::ElementHidden) == UiFlags::ElementHidden;
+	}
+
+	[[nodiscard]] constexpr bool IsNotInteractive() const
+	{
+		return HasAnyOf(uiFlags_, UiFlags::ElementHidden | UiFlags::ElementDisabled);
+	}
+
+	constexpr void Hide()
+	{
+		uiFlags_ |= UiFlags::ElementHidden;
+	}
+
+	constexpr void Show()
+	{
+		uiFlags_ &= ~UiFlags::ElementHidden;
+	}
+
+protected:
 	UiItemBase(UiType type, SDL_Rect rect, UiFlags flags)
 	    : m_type(type)
 	    , m_rect(rect)
-	    , m_iFlags(flags)
+	    , uiFlags_(flags)
 	{
 	}
 
-	virtual ~UiItemBase() {};
-
-	bool has_flag(UiFlags flag) const
+	void SetFlags(UiFlags flags)
 	{
-		return (m_iFlags & flag) == flag;
+		uiFlags_ = flags;
 	}
 
-	bool has_any_flag(UiFlags flags) const
-	{
-		return HasAnyOf(m_iFlags, flags);
-	}
-
-	void add_flag(UiFlags flag)
-	{
-		m_iFlags |= flag;
-	}
-
-	void remove_flag(UiFlags flag)
-	{
-		m_iFlags &= ~flag;
-	}
-
-	// protected:
+public:
 	UiType m_type;
 	SDL_Rect m_rect;
-	UiFlags m_iFlags;
+
+private:
+	UiFlags uiFlags_;
 };
 
 //=============================================================================
@@ -73,7 +86,12 @@ public:
 	{
 	}
 
-	~UiImage() {};
+	~UiImage() override = default;
+
+	[[nodiscard]] constexpr bool IsCentered() const
+	{
+		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
+	}
 
 	// private:
 	Art *m_art;
@@ -166,6 +184,11 @@ public:
 	    , m_text(text)
 	    , m_action(action)
 	{
+	}
+
+	void SetFlags(UiFlags flags)
+	{
+		UiItemBase::SetFlags(flags);
 	}
 
 	// private:

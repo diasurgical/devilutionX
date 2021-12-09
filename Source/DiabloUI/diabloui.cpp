@@ -146,9 +146,9 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 
 	if (uiScrollbar != nullptr) {
 		if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax + 1)) {
-			uiScrollbar->add_flag(UiFlags::ElementHidden);
+			uiScrollbar->Hide();
 		} else {
-			uiScrollbar->remove_flag(UiFlags::ElementHidden);
+			uiScrollbar->Show();
 		}
 	}
 }
@@ -755,7 +755,7 @@ void Render(UiText *uiText)
 	Rectangle rect { { uiText->m_rect.x, uiText->m_rect.y }, { uiText->m_rect.w, uiText->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiText->m_text, rect, uiText->m_iFlags | UiFlags::FontSizeDialog);
+	DrawString(out, uiText->m_text, rect, uiText->GetFlags() | UiFlags::FontSizeDialog);
 }
 
 void Render(const UiArtText *uiArtText)
@@ -763,13 +763,13 @@ void Render(const UiArtText *uiArtText)
 	Rectangle rect { { uiArtText->m_rect.x, uiArtText->m_rect.y }, { uiArtText->m_rect.w, uiArtText->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiArtText->text(), rect, uiArtText->m_iFlags, uiArtText->spacing(), uiArtText->lineHeight());
+	DrawString(out, uiArtText->text(), rect, uiArtText->GetFlags(), uiArtText->spacing(), uiArtText->lineHeight());
 }
 
 void Render(const UiImage *uiImage)
 {
 	int x = uiImage->m_rect.x;
-	if (HasAnyOf(uiImage->m_iFlags, UiFlags::AlignCenter) && uiImage->m_art != nullptr) {
+	if (uiImage->IsCentered() && uiImage->m_art != nullptr) {
 		const int xOffset = GetCenterOffset(uiImage->m_art->w(), uiImage->m_rect.w);
 		x += xOffset;
 	}
@@ -785,7 +785,7 @@ void Render(const UiArtTextButton *uiButton)
 	Rectangle rect { { uiButton->m_rect.x, uiButton->m_rect.y }, { uiButton->m_rect.w, uiButton->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiButton->m_text, rect, uiButton->m_iFlags);
+	DrawString(out, uiButton->m_text, rect, uiButton->GetFlags());
 }
 
 void Render(const UiList *uiList)
@@ -799,10 +799,10 @@ void Render(const UiList *uiList)
 			DrawSelector(rect);
 
 		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
-		if (item->args.size() == 0)
-			DrawString(out, item->m_text, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
+		if (item->args.empty())
+			DrawString(out, item->m_text, rectangle, uiList->GetFlags() | item->uiFlags, uiList->spacing());
 		else
-			DrawStringWithColors(out, item->m_text, item->args, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
+			DrawStringWithColors(out, item->m_text, item->args, rectangle, uiList->GetFlags() | item->uiFlags, uiList->spacing());
 	}
 }
 
@@ -845,12 +845,12 @@ void Render(const UiEdit *uiEdit)
 	Rectangle rect { { uiEdit->m_rect.x + 43, uiEdit->m_rect.y + 1 }, { uiEdit->m_rect.w - 86, uiEdit->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiEdit->m_value, rect, uiEdit->m_iFlags | UiFlags::TextCursor);
+	DrawString(out, uiEdit->m_value, rect, uiEdit->GetFlags() | UiFlags::TextCursor);
 }
 
 void RenderItem(UiItemBase *item)
 {
-	if (item->has_flag(UiFlags::ElementHidden))
+	if (item->IsHidden())
 		return;
 	switch (item->m_type) {
 	case UiType::Text:
@@ -959,7 +959,7 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollbar *uiSb)
 
 bool HandleMouseEvent(const SDL_Event &event, UiItemBase *item)
 {
-	if (item->has_any_flag(UiFlags::ElementHidden | UiFlags::ElementDisabled) || !IsInsideRect(event, item->m_rect))
+	if (item->IsNotInteractive() || !IsInsideRect(event, item->m_rect))
 		return false;
 	switch (item->m_type) {
 	case UiType::ArtTextButton:
