@@ -750,12 +750,12 @@ void UiPollAndRender()
 
 namespace {
 
-void Render(UiText *uiText)
+void Render(const UiText *uiText)
 {
 	Rectangle rect { { uiText->m_rect.x, uiText->m_rect.y }, { uiText->m_rect.w, uiText->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiText->m_text, rect, uiText->GetFlags() | UiFlags::FontSizeDialog);
+	DrawString(out, uiText->GetText(), rect, uiText->GetFlags() | UiFlags::FontSizeDialog);
 }
 
 void Render(const UiArtText *uiArtText)

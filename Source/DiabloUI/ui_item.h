@@ -248,12 +248,17 @@ class UiText : public UiItemBase {
 public:
 	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::ColorDialogWhite)
 	    : UiItemBase(UiType::Text, rect, flags)
-	    , m_text(text)
+	    , text_(text)
 	{
 	}
 
-	// private:
-	const char *m_text;
+	[[nodiscard]] constexpr string_view GetText() const
+	{
+		return text_;
+	}
+
+private:
+	const char *text_;
 };
 
 //=============================================================================
