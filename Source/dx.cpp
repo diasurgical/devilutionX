@@ -92,23 +92,6 @@ void CreateBackBuffer()
 	// time the global `palette` is changed. No need to do anything here as
 	// the global `palette` doesn't have any colors set yet.
 #endif
-
-	pal_surface_palette_version = 1;
-}
-
-void CreatePrimarySurface()
-{
-#ifndef USE_SDL1
-	if (renderer != nullptr) {
-		int width = 0;
-		int height = 0;
-		SDL_RenderGetLogicalSize(renderer, &width, &height);
-		Uint32 format;
-		if (SDL_QueryTexture(texture.get(), &format, nullptr, nullptr, nullptr) < 0)
-			ErrSdl();
-		RendererTextureSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
-	}
-#endif
 }
 
 void LockBufPriv()
@@ -157,9 +140,9 @@ void dx_init()
 	SDL_ShowWindow(ghMainWnd);
 #endif
 
-	CreatePrimarySurface();
 	palette_init();
 	CreateBackBuffer();
+	pal_surface_palette_version = 1;
 }
 
 void lock_buf(int idx) // NOLINT(misc-unused-parameters)
@@ -206,7 +189,7 @@ void dx_cleanup()
 	RendererTextureSurface = nullptr;
 #ifndef USE_SDL1
 	texture = nullptr;
-	if (sgOptions.Graphics.bUpscale)
+	if (*sgOptions.Graphics.upscale)
 		SDL_DestroyRenderer(renderer);
 #endif
 	SDL_DestroyWindow(ghMainWnd);
@@ -232,6 +215,12 @@ void dx_reinit()
 		ErrSdl();
 	}
 #endif
+	force_redraw = 255;
+}
+
+void dx_resize()
+{
+	CreateBackBuffer();
 	force_redraw = 255;
 }
 
@@ -328,7 +317,7 @@ void RenderPresent()
 #endif
 		SDL_RenderPresent(renderer);
 
-		if (!sgOptions.Graphics.bVSync) {
+		if (!*sgOptions.Graphics.vSync) {
 			LimitFrameRate();
 		}
 	} else {

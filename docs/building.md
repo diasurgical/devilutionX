@@ -1,8 +1,13 @@
 # Building from Source
 
-Note: If you do not use git to manage the source you must provide the version to CMake manually:
+DevilutionX provides a source package with the release (`devilutionx-src.tar.xz`) that contains
+all the dependencies that must be vendored, the version information, and `devilutionx.mpq`.
+This is the version most appropriate for packaging DevilutionX for Linux distributions.
+For other use cases, use the git repository.
+
+Note: If you do not use git or `devilutionx-src.tar.xz` to get the source you must provide the version to CMake manually:
 ```bash
-cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
+cmake -S. -Bbuild -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 ```
 
 <details><summary>Linux</summary>
@@ -26,10 +31,9 @@ sudo apt-get install smpq
 sudo dnf install cmake gcc-c++ glibc-devel SDL2-devel libsodium-devel libpng-devel bzip2-devel libasan libubsan
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 </details>
 
@@ -37,12 +41,34 @@ make -j$(nproc)
 
 Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
-```
+```bash
 brew bundle install
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.physicalcpu)
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.physicalcpu)
 ```
+</details>
+<details><summary>iOS</summary>
+
+Make sure you have [Homebrew](https://brew.sh/) installed, then run:
+
+```bash
+brew install cmake
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/ios.toolchain.cmake  -DENABLE_BITCODE=0 -DPLATFORM=OS64
+cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release
+cd build
+rm -rf Payload
+mkdir -p Payload
+mv devilutionx.app Payload
+zip -r devilutionx.ipa Payload
+```
+
+For testing with the Simulator instead run the following:
+
+```bash
+cmake -S. -Bbuild -G Xcode -DCMAKE_TOOLCHAIN_FILE=../CMake/ios.toolchain.cmake -DPLATFORM=SIMULATOR64
+```
+
+Then open the generated Xcode project and run things from there.
 </details>
 <details><summary>FreeBSD</summary>
 
@@ -51,10 +77,9 @@ cmake --build . -j $(sysctl -n hw.physicalcpu)
 pkg install cmake sdl2 libsodium libpng bzip2
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.ncpu)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.ncpu)
 ```
 </details>
 <details><summary>NetBSD</summary>
@@ -64,10 +89,9 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 pkgin install cmake SDL2 libsodium libpng bzip2
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.ncpu)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.ncpu)
 ```
 </details>
 
@@ -78,10 +102,9 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 pkg_add cmake sdl2 libsodium libpng bzip2 gmake
 ```
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_MAKE_PROGRAM=gmake -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.ncpuonline)
+```bash
+cmake -S. -Bbuild -DCMAKE_MAKE_PROGRAM=gmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(sysctl -n hw.ncpuonline)
 ```
 </details>
 
@@ -94,7 +117,7 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 Download the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.11.tar.gz) and place them in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686
+sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 libz-mingw-w64-dev
 ```
 
 ### 64-bit
@@ -102,24 +125,22 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-ming
 Download the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.11.tar.gz) and place them in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64
+sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 libz-mingw-w64-dev
 ```
 ### Compiling
 
 ### 32-bit
 
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
 ### 64-bit
 
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
 Note: If your `(i686|x86_64)-w64-mingw32` directory is not in `/usr` (e.g. when on Debian), the mingw-prep scripts and the CMake
@@ -217,10 +238,9 @@ sudo (dkp-)pacman -S \
 _If you are compiling using MSYS2, you will need to run `export MSYS2_ARG_CONV_EXCL=-D` before compiling.
 Otherwise, MSYS will sanitize file paths in compiler flags which will likely lead to errors in the build._
 
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 The output files will be generated in the build folder.
 
@@ -230,10 +250,9 @@ The output files will be generated in the build folder.
 <details><summary>PlayStation Vita</summary>
 
 ### Compiling
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-make
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ```
 [PlayStation Vita manual](/docs/manual/platforms/vita.md)
 </details>
@@ -250,18 +269,16 @@ pkgman install cmake_x86 devel:libsdl2_x86 devel:libsodium_x86 devel:libpng_x86 
 pkgman install cmake devel:libsdl2 devel:libsodium devel:libpng devel:bzip2
 ```
 ### Compiling on 32 bit Haiku
-```
-cd build
-setarch x86 #Switch to secondary compiler toolchain (GCC8+)
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(nproc)
+```bash
+setarch x86 # Switch to secondary compiler toolchain (GCC8+)
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 ### Compiling on 64 bit Haiku
 No setarch required, as there is no secondary toolchain on x86_64, and the primary is GCC8+
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(nproc)
+```bash
+cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 </details>
 
@@ -319,27 +336,17 @@ docker build -f Packaging/amiga/Dockerfile -t devilutionx-amiga .
 ### Build DevilutionX Amiga binary
 
 ~~~ bash
-docker run --rm -v "${PWD}:/work" devilutionx-amiga
-sudo chown -R "${USER}:" build-amiga
+docker run -u "$(id -u "$USER"):$(id -g "$USER")" --rm -v "${PWD}:/work" devilutionx-amiga
 ~~~
 
 The command above builds DevilutionX in release mode.
 For other build options, you can run the container interactively:
 
 ~~~ bash
-docker run -ti --rm -v "${PWD}:/work" devilutionx-amiga bash
+docker run -u "$(id -u "$USER"):$(id -g "$USER")" -ti --rm -v "${PWD}:/work" devilutionx-amiga bash
 ~~~
 
 See the `CMD` in `Packaging/amiga/Dockerfile` for reference.
-
-### Copy the necessary files
-
-Outside of the Docker container, from the DevilutionX directory, run:
-
-~~~ bash
-sudo chown -R "${USER}:" build-amiga
-cp Packaging/amiga/devilutionx.info build-amiga/
-~~~
 
 To actually start DevilutionX, increase the stack size to 50KiB in Amiga.
 You can do this by selecting the DevilutionX icon, then hold right mouse button and
@@ -352,7 +359,7 @@ select Icons -> Information in the top menu.
 - `-DCMAKE_BUILD_TYPE=Release` changed build type to release and optimize for distribution.
 - `-DNONET=ON` disable network support, this also removes the need for the ASIO and Sodium.
 - `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
-- `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
+- `-DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/linux_i386.toolchain..cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
 
 ### Debug builds
 - `-DDEBUG=OFF` disable debug mode of the Diablo engine.

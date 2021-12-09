@@ -69,10 +69,10 @@ static OffsetType MpqFileRwSeek(struct SDL_RWops *context, OffsetType offset, in
 		return -1;
 	}
 
-	if (newPosition == data.position)
+	if (newPosition == static_cast<OffsetType>(data.position))
 		return newPosition;
 
-	if (newPosition > data.size) {
+	if (newPosition > static_cast<OffsetType>(data.size)) {
 		SDL_SetError("MpqFileRwSeek beyond EOF (%d > %u)", static_cast<int>(newPosition), data.size);
 		return -1;
 	}
@@ -94,7 +94,7 @@ static SizeType MpqFileRwRead(struct SDL_RWops *context, void *ptr, SizeType siz
 {
 	Data &data = *GetData(context);
 	const SizeType totalSize = size * maxnum;
-	SizeType remainingSize = totalSize;
+	uint32_t remainingSize = totalSize;
 
 	auto *out = static_cast<uint8_t *>(ptr);
 

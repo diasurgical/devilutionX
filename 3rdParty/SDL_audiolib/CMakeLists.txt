@@ -1,4 +1,4 @@
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 if(DEVILUTIONX_STATIC_SDL_AUDIOLIB)
   set(BUILD_SHARED_LIBS OFF)

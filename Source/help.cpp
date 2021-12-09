@@ -99,8 +99,6 @@ std::vector<std::string> HelpTextLines;
 
 constexpr int PaddingTop = 32;
 constexpr int PaddingLeft = 32;
-constexpr int ContentPaddingTop = 19;
-constexpr int ContentOuterHeight = 180;
 
 constexpr int PanelHeight = 297;
 constexpr int ContentTextWidth = 577;

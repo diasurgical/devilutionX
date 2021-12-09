@@ -19,6 +19,7 @@ void lock_buf(int idx);
 void unlock_buf(int idx);
 void dx_cleanup();
 void dx_reinit();
+void dx_resize();
 void InitPalette();
 void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect);
 void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect);

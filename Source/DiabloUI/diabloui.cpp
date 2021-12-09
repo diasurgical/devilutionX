@@ -47,7 +47,6 @@ Art ArtBackgroundWidescreen;
 Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
-bool gbSpawned;
 
 void (*gfnSoundFunction)(const char *file);
 bool textInputActive = true;
@@ -564,6 +563,8 @@ void LoadUiGFX()
 	LoadHeros();
 }
 
+} // namespace
+
 void UnloadUiGFX()
 {
 	ArtHero.Unload();
@@ -574,11 +575,8 @@ void UnloadUiGFX()
 		art.Unload();
 }
 
-} // namespace
-
 void UiInitialize()
 {
-	UnloadUiGFX();
 	LoadUiGFX();
 
 	if (ArtCursor.surface != nullptr) {

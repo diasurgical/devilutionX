@@ -222,7 +222,7 @@ bool ReadEntry(SDL_RWops *rw, MoEntry *e, std::vector<char> &result)
 		return false;
 	result.resize(e->length + 1);
 	result.back() = '\0';
-	return (SDL_RWread(rw, result.data(), sizeof(char), e->length) == e->length);
+	return static_cast<uint32_t>(SDL_RWread(rw, result.data(), sizeof(char), e->length)) == e->length;
 }
 
 } // namespace
@@ -283,13 +283,15 @@ bool HasTranslation(const std::string &locale)
 
 bool IsSmallFontTall()
 {
-	string_view code(sgOptions.Language.szCode, 2);
+	string_view code = (*sgOptions.Language.code).substr(0, 2);
 	return code == "zh" || code == "ja" || code == "ko";
 }
 
 void LanguageInitialize()
 {
-	const std::string lang = sgOptions.Language.szCode;
+	translation = { {}, {} };
+
+	const std::string lang(*sgOptions.Language.code);
 	SDL_RWops *rw;
 
 	// Translations normally come in ".gmo" files.
@@ -327,7 +329,7 @@ void LanguageInitialize()
 		return;
 	}
 	// FIXME: Endianness.
-	if (SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings) {
+	if (static_cast<uint32_t>(SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
 		SDL_RWclose(rw);
 		return;
 	}
@@ -339,7 +341,7 @@ void LanguageInitialize()
 		return;
 	}
 	// FIXME: Endianness.
-	if (SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings) {
+	if (static_cast<uint32_t>(SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
 		SDL_RWclose(rw);
 		return;
 	}

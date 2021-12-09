@@ -72,7 +72,6 @@ extern Art ArtBackground;
 extern Art ArtBackgroundWidescreen;
 extern Art ArtCursor;
 extern Art ArtHero;
-extern bool gbSpawned;
 
 extern void (*gfnSoundFunction)(const char *file);
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
@@ -95,7 +94,7 @@ inline SDL_Surface *DiabloUiSurface()
 
 void UiDestroy();
 void UiTitleDialog();
-void UiSetSpawned(bool bSpawned);
+void UnloadUiGFX();
 void UiInitialize();
 bool UiValidPlayerName(const char *name); /* check */
 void UiSelHeroMultDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, uint32_t *saveNumber);

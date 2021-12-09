@@ -1,0 +1,53 @@
+name: iOS
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Cache CMake build folder
+      uses: actions/cache@v2
+      with:
+        path: build
+        key: ios-cmake-v2-${{ github.sha }}
+        restore-keys: ios-cmake-v2-
+
+    - name: Configure CMake
+      # Use a bash shell so we can use the same syntax for environment variable
+      # access regardless of the host operating system
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/ios.toolchain.cmake  -DENABLE_BITCODE=0 -DPLATFORM=OS64
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: >
+        cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release &&
+        cd build &&
+        rm -rf Payload devilutionx.ipa &&
+        mkdir Payload &&
+        mv devilutionx.app Payload &&
+        zip -r devilutionx.ipa Payload
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx.ipa
+        path: build/devilutionx.ipa

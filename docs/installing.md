@@ -56,6 +56,44 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 </details>
 
+<details><summary>iOS & iPadOS</summary>
+
+Certain sideloading applications exist which can let you install IPA packages to your device such as AltStore (https://altstore.io/) and Sideloadly (https://sideloadly.io/). Using such a sideloading application, install the .ipa file to your iDevice.
+
+Once the App is installed, launch it once. It will say that it cannot find the data file (.MPQ). This is ok. Close the game. Do not skip this step as it will create your Documents folder that you will need to access in later steps.
+
+There are 3 way to get install the MPQs. Make sure to have installed the app and have launched it once before attempting to copy over the MPQ files.
+
+Method 1: Using the files.app
+
+- Using the files.app, navigate to "On My iPhone / On My iPad"
+
+![ios_mpq_files01](https://user-images.githubusercontent.com/1339414/145088910-5664aed6-3a53-43f4-8088-834796792f68.png)
+
+- Copy the MPQs to the devilutionx directory. Your directory should look like on the picture below
+
+![ios_mpq_files02](https://user-images.githubusercontent.com/1339414/145089068-2c87887b-58c3-4759-9270-9d8934fe90bb.png)
+
+- Go back to your home screen and launch the game
+
+Method 2: Using Finder (MacOS)
+
+On more recent versions of MacOS, iTunes is no more. Instead you can use Finder to directly copy data to and from your iDevices
+
+- Connect your iDevice to your computer and click on the "Files" tab.
+  
+  ![ios_mpq_finder01](https://user-images.githubusercontent.com/1339414/145089218-f5424196-f345-45da-aca6-9c2b2e06cdf0.png)
+
+- Drag and drop the MPQ files on the devilutionx directory
+
+Method 3: Using iTunes (Windows and older MacOS)
+
+- Connect you iDevice to your computer and launch iTunes
+
+- Click on your device and in the files tab drag and drop the MPQ files to the devilutionx directory
+
+</details>
+  
 <details><summary>Nintendo Switch</summary>
 
 - Copy `devilutionx.nro` in into `/switch/devilutionx`
@@ -80,6 +118,12 @@ Use a title manager such as [FBI](https://github.com/Steveice10/FBI) to install 
 You will no longer need `devilutionx.cia` after this step, and so it can be removed after the installation.
 
 ![image](https://user-images.githubusercontent.com/9203145/141047377-789e5f1c-d049-4a25-82bb-8b3572d791cf.png)
+
+FBI provides the `Remote Install` option to download and install a cia in one step by scanning a QR code using the Nintendo 3DS camera.
+This is most useful when upgrading from a previous version so that you can perform the installation without removing the SD card from the console.
+If you'd like to use this option, scan the QR code below.
+
+![image](https://user-images.githubusercontent.com/9203145/144300019-e315c05f-515c-484d-975b-ce99da641585.png)
 
 [Nintendo 3DS manual](/docs/manual/platforms/3ds.md)
 

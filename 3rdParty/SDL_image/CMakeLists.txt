@@ -1,20 +1,32 @@
-option(DEVILUTIONX_SYSTEM_LIBPNG "Use system-provided libpng" ON)
-cmake_dependent_option(DEVILUTIONX_STATIC_LIBPNG "Link static libpng" OFF
-                      "DEVILUTIONX_SYSTEM_LIBPNG AND NOT DIST" ON)
+include(functions/dependency_options)
 
-if(DEVILUTIONX_SYSTEM_LIBPNG)
+if(NOT DEFINED DEVILUTIONX_SYSTEM_LIBPNG)
   find_package(PNG QUIET)
   if(PNG_FOUND)
     message("-- Found png ${PNG_VERSION_STRING}")
   else()
     message("-- Suitable system png package not found, will use png from source")
+    set(DEVILUTIONX_SYSTEM_LIBPNG OFF)
+  endif()
+elseif(DEVILUTIONX_SYSTEM_LIBPNG)
+  # In previous versions of DevilutionX, libpng could be built from
+  # source even if `DEVILUTIONX_SYSTEM_LIBPNG` was true.
+  # Detect the older CMake cache and update to the new behaviour.
+  #
+  # This is a temporary upgrade path that will be removed one week from commit date.
+  find_package(PNG QUIET)
+  if(NOT PNG_FOUND)
+    set(DEVILUTIONX_SYSTEM_LIBPNG OFF CACHE BOOL "" FORCE)
   endif()
 endif()
-if(NOT PNG_FOUND)
+dependency_options("libpng" DEVILUTIONX_SYSTEM_LIBPNG ON DEVILUTIONX_STATIC_LIBPNG)
+if(DEVILUTIONX_SYSTEM_LIBPNG)
+  find_package(PNG REQUIRED)
+else()
   add_subdirectory(../libpng libpng)
 endif()
 
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
 if(USE_SDL1)
   FetchContent_Declare(SDL_image

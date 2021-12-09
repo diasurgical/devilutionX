@@ -22,6 +22,17 @@
       "enableClangTidyCodeAnalysis": true
     },
     {
+      "name": "x64-Debug-SDL1",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "cmakeCommandArgs": "-DUSE_SDL1=ON",
+      "enableClangTidyCodeAnalysis": true
+    },
+    {
       "name": "x64-Release",
       "generator": "Ninja",
       "configurationType": "Release",

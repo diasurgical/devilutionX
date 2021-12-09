@@ -1,13 +1,17 @@
 # Translation of DevilutionX to Spanish
 # FIRST AUTHOR hiperiondev, 2021.
 # egonzalez, 2021.
+# ephphatha, 2021.
+# glebm, 2021.
+# Jmgr, 2021.
 # Mad-Soft <mad.soft@gmail.com>, 2021.
+# qndel, 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-11-21 05:44+0100\n"
-"PO-Revision-Date: 2021-11-21 05:44+0100\n"
+"PO-Revision-Date: 2021-12-04 18:08+0100\n"
 "Last-Translator: Mad-Soft <mad.soft@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -642,7 +646,7 @@ msgstr "Guerrero"
 
 #: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
 msgid "Rogue"
-msgstr "Pícara"
+msgstr "Arpía"
 
 #: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
@@ -1609,7 +1613,7 @@ msgstr "Espacio: Ocultar todas las pantallas de información"
 
 #: Source/help.cpp:31
 msgid "S: Open Speedbook"
-msgstr "S: Abrir Speedbook"
+msgstr "S: Abrir libro rápido"
 
 #: Source/help.cpp:32
 msgid "B: Open Spellbook"
@@ -1655,7 +1659,7 @@ msgstr ""
 
 #: Source/help.cpp:42
 msgid "Shift + Left Mouse Button: Attack without moving"
-msgstr "Shift + Clic izquierdo: Atacar sin moverse"
+msgstr "Mayús + Clic izquierdo: Atacar sin moverse"
 
 #: Source/help.cpp:43
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
@@ -1673,7 +1677,7 @@ msgstr ""
 
 #: Source/help.cpp:45
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
-msgstr "Shift + Click Izquierdo (en el cinturón)): Mover objeto al inventario"
+msgstr "Mayús + Click Izquierdo (en el cinturón)): Mover objeto al inventario"
 
 #: Source/help.cpp:47
 msgid "$Movement:"
@@ -1696,7 +1700,7 @@ msgid ""
 "Holding down the shift key and then left-clicking allows the character to "
 "attack without moving."
 msgstr ""
-"Manteniendo presionado la tecla shift y luego hacer clic con el botón "
+"Manteniendo presionado la tecla Mayús y luego hacer clic con el botón "
 "izquierdo permite que el personaje ataque sin moverse."
 
 #: Source/help.cpp:55
@@ -1733,10 +1737,8 @@ msgstr ""
 "presionando el número correspondiente o haciendo clic derecho en el objeto."
 
 #: Source/help.cpp:68
-#, fuzzy
-#| msgid "$Gold"
 msgid "$Gold:"
-msgstr "$Oro"
+msgstr "$Oro:"
 
 #: Source/help.cpp:69
 msgid ""
@@ -1766,10 +1768,8 @@ msgstr ""
 "el botón derecho en el área de juego."
 
 #: Source/help.cpp:79
-#, fuzzy
-#| msgid "$Using the Speedbook for Spells"
 msgid "$Using the Speedbook for Spells:"
-msgstr "$Uso del Speedbook para Hechizos"
+msgstr "$Uso del libro rápido para Hechizos:"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1778,27 +1778,21 @@ msgid ""
 "skill or spell, simply right-click in the main play area."
 msgstr ""
 "Al hacer clic con el botón izquierdo en el botón 'hechizo listo' se abrirá "
-"el 'Speedbook' que le permite seleccionar una habilidad o hechizo de uso "
+"el 'libro rápido' que le permite seleccionar una habilidad o hechizo de uso "
 "inmediato.  Para usar la habilidad o el hechizo, simplemente haga clic con "
 "el botón derecho en el área de juego principal."
 
 #: Source/help.cpp:84
-#, fuzzy
-#| msgid ""
-#| "Shift + Left-clicking on the 'select current spell' button will clear the "
-#| "readied spell"
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
 "readied spell."
 msgstr ""
-"Shift + Click Izquierdo en el botón 'seleccionar hechizo actual' borrará el "
-"hechizo preparado"
+"Mayús + Click Izquierdo en el botón 'seleccionar hechizo actual' borrará el "
+"hechizo preparado."
 
 #: Source/help.cpp:86
-#, fuzzy
-#| msgid "$Setting Spell Hotkeys"
 msgid "$Setting Spell Hotkeys:"
-msgstr "$Configurar teclas de acceso rápido para Hechizos"
+msgstr "$Configurar teclas de acceso rápido para Hechizos:"
 
 #: Source/help.cpp:87
 msgid ""
@@ -1807,15 +1801,13 @@ msgid ""
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
 "Puede asignar hasta cuatro teclas de Acceso Rápido para habilidades, "
-"hechizos o pergaminos. Empiece por abrir el 'speedbook' como se describe en "
+"hechizos o pergaminos. Empiece por abrir el 'libro rápido' como se describe en "
 "la sección anterior. Presione las teclas F5, F6, F7 o F8 después de resaltar "
 "el hechizo que desea asignar."
 
 #: Source/help.cpp:92
-#, fuzzy
-#| msgid "$Spell Books"
 msgid "$Spell Books:"
-msgstr "$Libro de hechizos"
+msgstr "$Libros de hechizos:"
 
 #: Source/help.cpp:93
 msgid ""
@@ -1975,7 +1967,7 @@ msgstr "Pergamino de la identidad"
 
 #: Source/itemdat.cpp:43 Source/itemdat.cpp:114
 msgid "Scroll of Town Portal"
-msgstr "Pergamino de Portal a la ciudad"
+msgstr "Pergamino de portal a la ciudad"
 
 #: Source/itemdat.cpp:44 Source/itemdat.cpp:403
 msgid "Arkaine's Valor"
@@ -2234,7 +2226,7 @@ msgstr "Pergamino de curación"
 
 #: Source/itemdat.cpp:108
 msgid "Scroll of Search"
-msgstr "Pergamino de búsqueda"
+msgstr "Pergamino de Búsqueda"
 
 #: Source/itemdat.cpp:109
 msgid "Scroll of Lightning"
@@ -3649,22 +3641,18 @@ msgstr "Aceite de Impermeabilidad"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
 #: Source/items.cpp:1183
-#, fuzzy
-#| msgid "{0} of {1}"
 msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{0} de {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1193
-#, fuzzy
 msgctxt "spell"
 msgid "{0} {1} of {2}"
 msgstr "{0} {1} de {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1214
-#, fuzzy
 msgid "{0} {1} of {2}"
 msgstr "{0} {1} de {2}"
 
@@ -3887,7 +3875,7 @@ msgstr "{:+d}% daño"
 
 #: Source/items.cpp:3836 Source/items.cpp:4092
 msgid "to hit: {:+d}%, {:+d}% damage"
-msgstr "para golpear: {:+d}%,{:+d} {:d} daño"
+msgstr "al golpear: {:+d}%, {:+d} daño"
 
 #: Source/items.cpp:3840
 #, no-c-format
@@ -4336,12 +4324,12 @@ msgstr "Zombi"
 #: Source/monstdat.cpp:21
 msgctxt "monster"
 msgid "Ghoul"
-msgstr "Demonio necrófago"
+msgstr "Necrófago"
 
 #: Source/monstdat.cpp:22
 msgctxt "monster"
 msgid "Rotting Carcass"
-msgstr "Carcasa podrida"
+msgstr "Cádaver Podrido"
 
 #: Source/monstdat.cpp:23
 msgctxt "monster"
@@ -4356,12 +4344,12 @@ msgstr "El Caído"
 #: Source/monstdat.cpp:25 Source/monstdat.cpp:33
 msgctxt "monster"
 msgid "Carver"
-msgstr "Tallista"
+msgstr "Trinchante"
 
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
 msgctxt "monster"
 msgid "Devil Kin"
-msgstr "Pariente de Diablo"
+msgstr "Pariente del Demonio"
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:35
 msgctxt "monster"
@@ -4376,7 +4364,7 @@ msgstr "Esqueleto"
 #: Source/monstdat.cpp:29
 msgctxt "monster"
 msgid "Corpse Axe"
-msgstr "Hacha del Cadáver"
+msgstr "Hacha Cadáver"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
 msgctxt "monster"
@@ -4411,7 +4399,7 @@ msgstr "Desgarrador de Huesos"
 #: Source/monstdat.cpp:41
 msgctxt "monster"
 msgid "Corpse Bow"
-msgstr "Arco del Cadáver"
+msgstr "Arquero Cadáver"
 
 #: Source/monstdat.cpp:44
 msgctxt "monster"
@@ -4426,12 +4414,12 @@ msgstr "Capitán Cadáver"
 #: Source/monstdat.cpp:46
 msgctxt "monster"
 msgid "Burning Dead Captain"
-msgstr "Capitán Muerto Ardiente"
+msgstr "Capitán Muerte Ardiente"
 
 #: Source/monstdat.cpp:47
 msgctxt "monster"
 msgid "Horror Captain"
-msgstr "Capitán del Terror"
+msgstr "Capitán del Horror"
 
 #: Source/monstdat.cpp:48
 msgctxt "monster"
@@ -4446,7 +4434,7 @@ msgstr "Oculto"
 #: Source/monstdat.cpp:50
 msgctxt "monster"
 msgid "Stalker"
-msgstr "Acosador"
+msgstr "Acechador"
 
 #: Source/monstdat.cpp:51
 msgctxt "monster"
@@ -4486,17 +4474,17 @@ msgstr "Clan Nocturno"
 #: Source/monstdat.cpp:58
 msgctxt "monster"
 msgid "Fiend"
-msgstr "Maldito"
+msgstr "Maligno"
 
 #: Source/monstdat.cpp:59
 msgctxt "monster"
 msgid "Blink"
-msgstr "Parpadear"
+msgstr "Murciélago destellante"
 
 #: Source/monstdat.cpp:60
 msgctxt "monster"
 msgid "Gloom"
-msgstr "Oscuridad"
+msgstr "Murciélago oscuro"
 
 #: Source/monstdat.cpp:61
 msgctxt "monster"
@@ -4521,7 +4509,7 @@ msgstr "Bestia del Foso"
 #: Source/monstdat.cpp:69
 msgctxt "monster"
 msgid "Lava Maw"
-msgstr "Cavidad de Lava"
+msgstr "Fauces de Lava"
 
 #: Source/monstdat.cpp:70 Source/monstdat.cpp:474
 msgctxt "monster"
@@ -4536,7 +4524,7 @@ msgstr "El Carnicero"
 #: Source/monstdat.cpp:72
 msgctxt "monster"
 msgid "Overlord"
-msgstr "Señor"
+msgstr "Cacique"
 
 #: Source/monstdat.cpp:73
 msgctxt "monster"
@@ -4556,7 +4544,7 @@ msgstr "El Desollado"
 #: Source/monstdat.cpp:76
 msgctxt "monster"
 msgid "Wyrm"
-msgstr "Wyrm"
+msgstr "Pequeño Dragón"
 
 #: Source/monstdat.cpp:77
 msgctxt "monster"
@@ -4566,7 +4554,7 @@ msgstr "Babosa de la Cueva"
 #: Source/monstdat.cpp:78
 msgctxt "monster"
 msgid "Devil Wyrm"
-msgstr "El Demonio Wyrm"
+msgstr "Pequeño Dragón Demoníaco"
 
 #: Source/monstdat.cpp:79
 msgctxt "monster"
@@ -4676,7 +4664,7 @@ msgstr "Remolino"
 #: Source/monstdat.cpp:100
 msgctxt "monster"
 msgid "Devil Kin Brute"
-msgstr "Devil Kin Brute"
+msgstr "Pariente del Demonio Bruto"
 
 #: Source/monstdat.cpp:101
 msgctxt "monster"
@@ -4821,7 +4809,7 @@ msgstr "Defensor"
 #: Source/monstdat.cpp:129
 msgctxt "monster"
 msgid "Golem"
-msgstr "Golem"
+msgstr "Gólem"
 
 #: Source/monstdat.cpp:130
 msgctxt "monster"
@@ -4831,22 +4819,22 @@ msgstr "El Señor Oscuro"
 #: Source/monstdat.cpp:131
 msgctxt "monster"
 msgid "The Arch-Litch Malignus"
-msgstr "El Archi Litch Maligno"
+msgstr "El Archi Exánime Maligno"
 
 #: Source/monstdat.cpp:132
 msgctxt "monster"
 msgid "Hellboar"
-msgstr "Jabalí del Infierno"
+msgstr "Jabinfierno"
 
 #: Source/monstdat.cpp:133
 msgctxt "monster"
 msgid "Stinger"
-msgstr "Aguijón"
+msgstr "Escorpión"
 
 #: Source/monstdat.cpp:134
 msgctxt "monster"
 msgid "Psychorb"
-msgstr "Orbe Psíquico"
+msgstr "Psychorb"
 
 #: Source/monstdat.cpp:135
 msgctxt "monster"
@@ -5489,7 +5477,7 @@ msgstr "Fuego "
 
 #: Source/monster.cpp:4663 Source/monster.cpp:4675
 msgid "Lightning "
-msgstr "Relámpago "
+msgstr "Rayo "
 
 #: Source/monster.cpp:4669
 msgid "Immune: "
@@ -5517,7 +5505,7 @@ msgstr "Algunas Inmunidades Mágicas"
 
 #: Source/msg.cpp:495
 msgid "Trying to drop a floor item?"
-msgstr "¿Está intentando dejar caer un artículo del suelo?"
+msgstr "¿Está intentando lanzar un objeto al suelo?"
 
 #: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
 #: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
@@ -5527,7 +5515,7 @@ msgstr "{:s} ha lanzado un hechizo ilegal."
 
 #: Source/msg.cpp:1668 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
-msgstr "El jugador ' {:s}' (nivel {:d}) acaba de unirse al juego"
+msgstr "Jugador ' {:s}' (nivel {:d}) acaba de unirse"
 
 #: Source/msg.cpp:1972
 msgid "Waiting for game data..."
@@ -6145,7 +6133,7 @@ msgstr "La Maldición del Rey Leoric"
 
 #: Source/quests.cpp:54 Source/setmaps.cpp:27
 msgid "Poisoned Water Supply"
-msgstr "Suministro de Agua Envenenada"
+msgstr "Red de Agua Envenenada"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:55 Source/quests.cpp:91
@@ -6202,7 +6190,7 @@ msgstr "Laberinto"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:93
 msgid "A Dark Passage"
-msgstr "Un Pasaje Oscuro"
+msgstr "Un Pasadizo Oscuro"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:94
@@ -6229,7 +6217,7 @@ msgstr "Guarida del Arzobispo Lazarus"
 #: Source/spelldat.cpp:16
 msgctxt "spell"
 msgid "Firebolt"
-msgstr "Descarga de Fuego"
+msgstr "Flecha de fuego"
 
 #: Source/spelldat.cpp:17
 msgctxt "spell"
@@ -6239,7 +6227,7 @@ msgstr "Curación"
 #: Source/spelldat.cpp:18
 msgctxt "spell"
 msgid "Lightning"
-msgstr "Relámpago"
+msgstr "Rayo "
 
 #: Source/spelldat.cpp:19
 msgctxt "spell"
@@ -6329,7 +6317,7 @@ msgstr "Infierno"
 #: Source/spelldat.cpp:36
 msgctxt "spell"
 msgid "Golem"
-msgstr "Golem"
+msgstr "Gólem"
 
 #: Source/spelldat.cpp:37
 msgctxt "spell"
@@ -6673,7 +6661,7 @@ msgstr "¿Está seguro de que desea reparar este artículo?"
 
 #: Source/stores.cpp:986 Source/towners.cpp:157
 msgid "Wirt the Peg-legged boy"
-msgstr "Wirt el chico de la Pata de Palo"
+msgstr "Wirt el Patapalo"
 
 #: Source/stores.cpp:989 Source/stores.cpp:996
 msgid "Talk to Wirt"
@@ -6711,7 +6699,7 @@ msgstr "Dejar"
 
 #: Source/stores.cpp:1053
 msgid "Healer's home"
-msgstr "La casa del Sanador"
+msgstr "La casa del Curandero"
 
 #: Source/stores.cpp:1055
 msgid "Talk to Pepin"
@@ -6719,11 +6707,11 @@ msgstr "Hablar con Pepin"
 
 #: Source/stores.cpp:1057
 msgid "Leave Healer's home"
-msgstr "Dejar la casa del Sanador"
+msgstr "Dejar la casa del Curandero"
 
 #: Source/stores.cpp:1109
 msgid "The Town Elder"
-msgstr "El Anciano del Pueblo"
+msgstr "El Sabio del Pueblo"
 
 #: Source/stores.cpp:1111
 msgid "Talk to Cain"
@@ -6813,7 +6801,7 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
-" Ahh, la historia de nuestro Rey, ¿verdad? La trágica caída de Leoric fue un "
+" Ah, la historia de nuestro Rey, ¿verdad? La trágica caída de Leoric fue un "
 "duro golpe para esta tierra. La gente siempre amó al Rey, y ahora vive con "
 "un miedo mortal hacia él. La pregunta que me sigo haciendo es cómo pudo "
 "haber caído tan lejos de la Luz, ya que Leoric siempre había sido el más "
@@ -7045,8 +7033,8 @@ msgid ""
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost."
 msgstr ""
-"¿Los demonios robaron el letrerode Ogden, dices? Eso no se parece mucho a "
-"las atrocidades de las que he oído, o visto. \n"
+"¿Dices que los demonios robaron el letrero de Ogden? Eso no se parece mucho "
+"a las atrocidades de las que he oído, o visto. \n"
 " \n"
 "A los demonios les preocupa arrancarte el corazón, no tu letrero."
 
@@ -7143,7 +7131,7 @@ msgstr ""
 "no me permití creer las leyendas antiguas, no puedo negarlas ahora. Quizás "
 "ha llegado el momento de revelar quién soy.\n"
 " \n"
-"Mi verdadero nombre es Deckard Cain el Anciano, y soy el último descendiente "
+"Mi verdadero nombre es Deckard Cain el Sabio, y soy el último descendiente "
 "de una antigua Hermandad que se dedicó a salvaguardar los secretos de un mal "
 "atemporal. Un mal que obviamente ahora se ha liberado.\n"
 " \n"
@@ -7301,11 +7289,11 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
-"Mmm, no sé qué puedo decirte realmente sobre esto que sea de alguna ayuda. "
-"El agua que llena nuestros pozos proviene de un manantial subterráneo. He "
-"oído hablar de un túnel que conduce a un gran lago; tal vez sean lo mismo. "
-"Desafortunadamente, no sé qué causaría que nuestro suministro de agua se "
-"viera contaminado."
+"Hmm, no sé qué puedo decirte realmente que sea de alguna ayuda. El agua que "
+"llena nuestros pozos proviene de un manantial subterráneo. He oído hablar de "
+"un túnel que conduce a un gran lago - tal vez sean lo mismo. "
+"Desafortunadamente, no sé qué pasaría si nuestro suministro de agua "
+"estuviera contaminado."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -7331,12 +7319,12 @@ msgid ""
 "passage that leads to the springs that serve our town. Please find what has "
 "caused this calamity, or we all will surely perish."
 msgstr ""
-"¡Me alegro de haberte alcanzado a tiempo! Nuestros pozos se han vuelto "
-"salobres y estancados y algunos de los habitantes del pueblo se han "
-"enfermado al beber de ellos. Nuestras reservas de agua dulce se están "
-"secando rápidamente. Creo que hay un pasaje que conduce a los manantiales "
-"que sirven a nuestro pueblo. Por favor, avergua qué ha causado esta "
-"calamidad, o seguramente todos moriremos."
+"¡Me alegro de haberte encontrado a tiempo! Nuestros pozos se han vuelto "
+"salobres, estancados y algunos de los habitantes del pueblo han enfermado al "
+"beber de ellos. Nuestras reservas de agua dulce se están secando "
+"rápidamente. Creo que hay un pasadizo que conduce a los manantiales que "
+"sirven a nuestro pueblo. Por favor, averigua qué ha causado esta calamidad, "
+"o seguramente todos moriremos."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -7515,8 +7503,8 @@ msgstr ""
 "a aventurarse en el Laberinto para encontrar al hijo desaparecido del Rey. "
 "Jugó con sus miedos y los convirtió en una multitud frenética. Ninguno de "
 "ellos estaba preparado para lo que había dentro de la tierra fría ... "
-"Lazarus los abandonó allí, dejados en las garras de horrores "
-"indescriptibles, para morir."
+"Lazarus los abandonó allí - dejados en las garras de indescriptibles "
+"horrores - para morir."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -7618,7 +7606,7 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
-"Por favor escuchame. El arzobispo Lazarus, nos llevó hasta aquí para "
+"Por favor escúchame. El arzobispo Lazarus, nos llevó hasta aquí para "
 "encontrar al príncipe perdido. ¡El bastardo nos llevó a una trampa! Ahora "
 "todo el mundo está muerto ... asesinados por un demonio que llamó el "
 "Carnicero. ¡Vénganos! Encuentra a este Carnicero y mátalo para que nuestras "
@@ -7806,7 +7794,7 @@ msgstr ""
 "Es posible que encuentres a personas atrapadas dentro del Laberinto, como "
 "Lachdanan. \n"
 " \n"
-"Siento en él honor y una gran culpa. Ayúdalo y ayudarás a todo Tristram."
+"Siento en él honor y una gran culpa. Ayúdale y ayudarás a todo Tristram."
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -8018,8 +8006,8 @@ msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
 msgstr ""
-"Si encontraras este artefacto para Griswold, podría poner un serio freno a "
-"mi negocio aquí. Awwww, nunca lo encontrarás."
+"Si encuentras este artefacto para Griswold, podrías poner en serios "
+"problemas a mi negocio. Awwww, nunca lo encontrarás."
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:198
@@ -8379,8 +8367,8 @@ msgid ""
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
 "¿La bruja Adria busca un hongo negro? Sé tanto sobre Hongos Negros como "
-"sobre Arenques Rojos. Quizás Pepin el Sanador podría contarte más, pero esto "
-"es algo que no se puede encontrar en ninguna de mis historias o libros."
+"sobre Arenques Rojos. Quizás Pepin el Curandero podría contarte más, pero "
+"esto es algo que no se puede encontrar en ninguna de mis historias o libros."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -8458,8 +8446,8 @@ msgid ""
 "identify. If you find it, bring it to me, won't you?"
 msgstr ""
 "¿Qué tenemos aquí? Interesante, parece un libro de reactivos. Mantén los "
-"ojos abiertos en busca de un hongo negro. Debe ser bastante grande y fácil "
-"de identificar. Si lo encuentras, tráemelo, ¿Sí?"
+"ojos abiertos para un hongo negro. Debe ser bastante grande y fácil de "
+"identificar. Si lo encuentras, tráemelo, ¿quieres?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:267
@@ -8494,7 +8482,7 @@ msgid ""
 "Simple when you think about it, isn't it?"
 msgstr ""
 "¿Por qué has traído eso aquí? No necesito el cerebro de un demonio en este "
-"momento. Necesito algo del elixir en el que está trabajando el Sanador. "
+"momento. Necesito algo del elixir en el que está trabajando el Curandero. "
 "Necesita ese órgano grotesco que estás sosteniendo, y luego tráeme el "
 "elixir. Simple cuando lo piensas, ¿no?"
 
@@ -8638,7 +8626,7 @@ msgid ""
 "Listen here, come close. I don't know if you know what I know, but you have "
 "really got somethin' here. That's a map."
 msgstr ""
-"Escuchame, acércate. No sé si sabes lo que yo sé, pero realmente tienes algo "
+"Escúchame, acércate. No sé si sabes lo que yo sé, pero realmente tienes algo "
 "aquí. Eso es un mapa."
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
@@ -8669,7 +8657,8 @@ msgstr ""
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
 msgstr ""
-"Por favooor, no lastimar. No matar. Mantener vivo y la próxima vez ayudarte."
+"Por favooor, no herir. No matar. Mantener con vida y la próxima vez te "
+"ayudaré."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:299
@@ -8710,7 +8699,7 @@ msgid ""
 "What?! Why are you here? All these interruptions are enough to make one "
 "insane. Here, take this and leave me to my work. Trouble me no more!"
 msgstr ""
-"¡¿Qué?! ¿Por qué estás aquí? Todas estas interrupciones son suficientes para "
+"¿Qué? ¿Por qué estás aquí? Todas estas interrupciones son suficientes para "
 "volverse loco. Toma, toma esto y déjame con mi trabajo. ¡No me molestes más!"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (Hostile)
@@ -9081,7 +9070,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr "¡Buen día! ¿Cómo puedo servirte?"
+msgstr "¡Buenos días! ¿Cómo puedo servirte?"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
@@ -9156,7 +9145,7 @@ msgstr ""
 "Pepin salvó la vida de mi abuela y sé que nunca podré pagarle por eso. Su "
 "habilidad para curar cualquier enfermedad es más poderosa que la espada más "
 "potente y más misteriosa que cualquier hechizo que puedas nombrar. Si alguna "
-"vez necesitsa curarte, Pepin puede ayudarte."
+"vez necesitas curarte, Pepin puede ayudarte."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -9201,10 +9190,10 @@ msgid ""
 "undying horrors down there, and there's nothing better to shatter skinny "
 "little skeletons!"
 msgstr ""
-"Si estás buscando un buen arma, déjame mostrarte esto. Toma tu arma desa "
-"básica, como una maza. Funciona como un encanto contra la mayoría de esos "
-"horrores eternos que hay allí, ¡y no hay nada mejor para destrozar pequeños "
-"esqueletos delgados!"
+"Si estás buscando un buen arma, déjame mostrarte esto. Toma tu arma básica "
+"contundente, como una maza. Funciona como un encanto contra la mayoría de "
+"esos horrores eternos que hay allí, ¡y no hay nada mejor para destrozar "
+"pequeños esqueletos delgados!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -9402,9 +9391,9 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
-"Wirt es un niño con más problemas que yo, y yo sé todo acerca de los "
-"problemas. Escucha, ese chico tiene un buen trato, pero ha estado allí, "
-"¿sabes? ¡Perdí una pierna! Tengo que caminar sobre un trozo de madera. Tan "
+"Wirt es un niño que tiene incluso más problemas que yo, y yo sé todo sobre "
+"los problemas. Escucha, ese chico es afable, pero ha estado allí, ¿sabes? "
+"¡Perdió una pierna! Tiene que caminar sobre un trozo de madera. Es tan "
 "triste, tan triste ..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
@@ -9602,12 +9591,12 @@ msgid ""
 "encroaching Darkness."
 msgstr ""
 "Hay mucho sobre el futuro que no podemos ver, pero cuando llegue serán los "
-"niños quienes lo manejen. El niño Wirt tiene una negrura en el alma, pero no "
+"niños quienes lo manejen. El niño Wirt tiene algo oscuro en el alma, pero no "
 "representa una amenaza para la ciudad o su gente. Sus tratos secretos con "
-"los pilluelos y los gremios tácitos de las ciudades cercanas le permiten "
-"acceder a muchos dispositivos que no se pueden encontrar fácilmente en "
-"Tristram. Si bien sus métodos pueden ser reprochables, Wirt puede ayudarte "
-"en tu batalla contra la Oscuridad que lo invade."
+"los rufianes y los inconfesables gremios de las ciudades cercanas le "
+"permiten acceder a muchos dispositivos que no se pueden encontrar fácilmente "
+"en Tristram. Si bien sus métodos pueden ser reprochables, Wirt puede "
+"ayudarte en tu batalla contra la Oscuridad que nos invade."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -10097,8 +10086,8 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
-"¡¿Un qué?! Esto es una tontería. No hay ningún tesoro enterrado aquí en "
-"Tristram. ¡¡Dejame ver eso!! Ah, mira, estos dibujos son inexactos. No "
+"¿Un qué? ¡Esto es una tontería!. No hay ningún tesoro enterrado aquí en "
+"Tristram. ¡Déjame ver eso! Ah, mira, estos dibujos son inexactos. No "
 "coinciden en absoluto con nuestra ciudad. Me concentraría en lo que hay "
 "debajo de la catedral y no en lo que hay debajo de nuestra capa superficial "
 "del suelo."
@@ -10247,9 +10236,9 @@ msgid ""
 "poor farmer?"
 msgstr ""
 "Oh, qué problema tengo ... tal vez ... No, no podría imponértelo, con todos "
-"los otros problemas. ¿Quizás, después de haber limpiado la iglesia de "
-"algunas de esas criaturas, podrías regresar ... y dedicar un poco de tiempo "
-"para ayudar a un agricultor pobre?"
+"los otros problemas. Quizás, después de haber limpiado la iglesia de algunas "
+"de esas criaturas, ¿podrías regresar ... y dedicar un poco de tiempo para "
+"ayudar a un pobre agricultor?"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
@@ -10365,12 +10354,12 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
 msgid "Moo."
-msgstr "Mu."
+msgstr "Muu."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:595
 msgid "I said, Moo."
-msgstr "Dije Mu."
+msgstr "Dije, Muu."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
@@ -10443,7 +10432,7 @@ msgstr ""
 "rectas? Bien. Mira, muchas gracias por ayudarme. Ten, toma esto como un "
 "regalo; y, ya sabes ... un pequeño consejo de moda ... te vendría bien un "
 "poco ... podrías usar un nuevo ... ¿sabes lo que quiero decir? Todo el "
-"motivo de los aventureros es tan ... retro. Solo un consejo, ¿eh? Ciao."
+"motivo de los aventureros es tan ... retro. Solo un consejo, ¿eh? Chao."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
@@ -10703,7 +10692,7 @@ msgstr "Gillian la Camarera"
 
 #: Source/towners.cpp:179
 msgid "Pepin the Healer"
-msgstr "Pepin el Sanador"
+msgstr "Pepin el Curandero"
 
 #: Source/towners.cpp:196
 msgid "Cain the Elder"

@@ -1432,11 +1432,11 @@ void PerformPrimaryAction()
 
 bool SpellHasActorTarget()
 {
-	int spl = Players[MyPlayerId]._pRSpell;
+	spell_id spl = Players[MyPlayerId]._pRSpell;
 	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
 		return false;
 
-	if (spl == SPL_FIREWALL && pcursmonst != -1) {
+	if (IsWallSpell(spl) && pcursmonst != -1) {
 		cursPosition = Monsters[pcursmonst].position.tile;
 	}
 
@@ -1602,6 +1602,13 @@ void PerformSecondaryAction()
 			myPlayer.destAction = ACTION_WALK;
 		}
 	}
+}
+
+void QuickCast(int slot)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	CheckPlrSpell(false, myPlayer._pSplHotKey[slot], myPlayer._pSplTHotKey[slot]);
 }
 
 } // namespace devilution

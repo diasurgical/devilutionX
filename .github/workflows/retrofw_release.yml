@@ -36,3 +36,14 @@ jobs:
       with:
         name: devilutionx-retrofw.opk.zip
         path: build-retrofw/devilutionx-retrofw.opk
+
+    - name: Update Release
+      if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "build-retrofw/devilutionx-retrofw.opk"
+        allowUpdates: true
+        omitBody: true
+        omitName: true
+        omitPrereleaseDuringUpdate: true
+        token: ${{ secrets.GITHUB_TOKEN }}

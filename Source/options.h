@@ -10,10 +10,27 @@
 
 namespace devilution {
 
-enum class StartUpGameOption {
-	None,
-	Hellfire,
-	Diablo,
+enum class StartUpGameMode {
+	/** @brief If hellfire is present, asks the user what game he wants to start. */
+	Ask = 0,
+	Hellfire = 1,
+	Diablo = 2,
+};
+
+enum class StartUpIntro {
+	Off = 0,
+	Once = 1,
+	On = 2,
+};
+
+/** @brief Defines what splash screen should be shown at startup. */
+enum class StartUpSplash {
+	/** @brief Show no splash screen. */
+	None = 0,
+	/** @brief Show only TitleDialog. */
+	TitleDialog = 1,
+	/** @brief Show Logo and TitleDialog. */
+	LogoAndTitleDialog = 2,
 };
 
 enum class ScalingQuality {
@@ -40,6 +57,12 @@ enum class OptionEntryFlags {
 	OnlyHellfire = 1 << 3,
 	/** @brief Option is only relevant for Diablo. */
 	OnlyDiablo = 1 << 4,
+	/** @brief After option is changed the UI needs to be recreated. */
+	RecreateUI = 1 << 5,
+	/** @brief diablo.mpq must be present. */
+	NeedDiabloMpq = 1 << 6,
+	/** @brief hellfire.mpq must be present. */
+	NeedHellfireMpq = 1 << 7,
 };
 use_enum_as_flags(OptionEntryFlags);
 
@@ -82,7 +105,10 @@ public:
 	    , value(defaultValue)
 	{
 	}
-	[[nodiscard]] bool operator*() const;
+	[[nodiscard]] bool operator*() const
+	{
+		return value;
+	}
 	void SetValue(bool value);
 
 	[[nodiscard]] OptionEntryType GetType() const override;
@@ -117,8 +143,8 @@ public:
 	void LoadFromIni(string_view category) override;
 	void SaveToIni(string_view category) const override;
 
-	[[nodiscard]] virtual size_t GetListSize() const override;
-	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
@@ -130,7 +156,11 @@ protected:
 	{
 	}
 
-	[[nodiscard]] int GetValueInternal() const;
+	[[nodiscard]] int GetValueInternal() const
+	{
+		return value;
+	}
+	void SetValueInternal(int value);
 
 	void AddEntry(int value, string_view name);
 
@@ -155,6 +185,60 @@ public:
 	{
 		return static_cast<T>(GetValueInternal());
 	}
+	void SetValue(T value)
+	{
+		SetValueInternal(static_cast<int>(value));
+	}
+};
+
+class OptionEntryLanguageCode : public OptionEntryListBase {
+public:
+	OptionEntryLanguageCode();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	string_view operator*() const
+	{
+		return szCode;
+	}
+
+private:
+	/** @brief Language code (ISO-15897) for text. */
+	char szCode[6];
+	mutable std::vector<std::pair<std::string, std::string>> languages;
+
+	void CheckLanguagesAreInitialized() const;
+};
+
+class OptionEntryResolution : public OptionEntryListBase {
+public:
+	OptionEntryResolution();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	Size operator*() const
+	{
+		return size;
+	}
+
+private:
+	/** @brief View size. */
+	Size size;
+	mutable std::vector<std::pair<Size, std::string>> resolutions;
+
+	void CheckResolutionsAreInitialized() const;
 };
 
 struct OptionCategoryBase {
@@ -172,12 +256,23 @@ protected:
 	string_view description;
 };
 
+struct StartUpOptions : OptionCategoryBase {
+	StartUpOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
+	OptionEntryEnum<StartUpGameMode> gameMode;
+	OptionEntryBoolean shareware;
+	/** @brief Play game intro video on diablo startup. */
+	OptionEntryEnum<StartUpIntro> diabloIntro;
+	/** @brief Play game intro video on hellfire startup. */
+	OptionEntryEnum<StartUpIntro> hellfireIntro;
+	OptionEntryEnum<StartUpSplash> splash;
+};
+
 struct DiabloOptions : OptionCategoryBase {
 	DiabloOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Play game intro video on startup. */
-	OptionEntryBoolean intro;
 	/** @brief Remembers what singleplayer hero/save was last used. */
 	std::uint32_t lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
@@ -188,16 +283,12 @@ struct HellfireOptions : OptionCategoryBase {
 	HellfireOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Play game intro video on startup. */
-	OptionEntryBoolean intro;
 	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(ItemPack) * 2 + 1];
 	/** @brief Remembers what singleplayer hero/save was last used. */
 	std::uint32_t lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
 	std::uint32_t lastMultiplayerHero;
-
-	StartUpGameOption startUpGameOption;
 };
 
 struct AudioOptions : OptionCategoryBase {
@@ -229,22 +320,23 @@ struct GraphicsOptions : OptionCategoryBase {
 	GraphicsOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Render width. */
-	int nWidth;
-	/** @brief Render height. */
-	int nHeight;
+	OptionEntryResolution resolution;
 	/** @brief Run in fullscreen or windowed mode. */
-	bool bFullscreen;
-	/** @brief Scale the image after rendering. */
-	bool bUpscale;
+	OptionEntryBoolean fullscreen;
+#if !defined(USE_SDL1) || defined(__3DS__)
 	/** @brief Expand the aspect ratio to match the screen. */
-	bool bFitToScreen;
+	OptionEntryBoolean fitToScreen;
+#endif
+#ifndef USE_SDL1
+	/** @brief Scale the image after rendering. */
+	OptionEntryBoolean upscale;
 	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */
 	OptionEntryEnum<ScalingQuality> scaleQuality;
 	/** @brief Only scale by values divisible by the width and height. */
-	bool bIntegerScaling;
+	OptionEntryBoolean integerScaling;
 	/** @brief Enable vsync on the output. */
-	bool bVSync;
+	OptionEntryBoolean vSync;
+#endif
 	/** @brief Use blended transparency rather than stippled. */
 	OptionEntryBoolean blendedTransparancy;
 	/** @brief Gamma correction level. */
@@ -326,6 +418,8 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Auto-pickup elixirs */
 	int bAutoPickupElixirs;
 	OptionEntryBoolean disableCripplingShrines;
+	/** @brief Spell hotkeys instantly cast the spell. */
+	OptionEntryBoolean quickCast;
 };
 
 struct ControllerOptions : OptionCategoryBase {
@@ -370,11 +464,11 @@ struct LanguageOptions : OptionCategoryBase {
 	LanguageOptions();
 	std::vector<OptionEntryBase *> GetEntries() override;
 
-	/** @brief Language code (IETF) for text. */
-	char szCode[6];
+	OptionEntryLanguageCode code;
 };
 
 struct Options {
+	StartUpOptions StartUp;
 	DiabloOptions Diablo;
 	HellfireOptions Hellfire;
 	AudioOptions Audio;
@@ -388,6 +482,7 @@ struct Options {
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
 		return {
+			&StartUp,
 			&Diablo,
 			&Hellfire,
 			&Audio,

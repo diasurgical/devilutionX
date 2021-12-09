@@ -13,6 +13,8 @@ Uint16 GetScreenHeight();
 Uint16 GetViewportHeight();
 
 bool SpawnWindow(const char *lpWindowName);
+void ReinitializeRenderer();
+void ResizeWindow();
 void UiErrorOkDialog(const char *caption, const char *text, bool error = true);
 
 } // namespace devilution

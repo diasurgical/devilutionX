@@ -8,15 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 #### Platforms
-- Added support for [Android](https://play.google.com/store/apps/details?id=org.diasurgical.devilutionx) (leave us a review 🤗)
+- Added support for [Android](https://play.google.com/store/apps/details?id=org.diasurgical.devilutionx) (please leave us a review 🤗)
 - Added support for the original Nintendo 3DS
-- Added support for Lepus
-- Added multiplayer support to Nintendo Switch
-- Added multiplayer support to Nintendo 3DS
-- Added multiplayer support to PlayStation Vita
-- Added multiplayer support to OpenDingux
-- Update macOS icon to follow Big Sur style guide
-- Add launcher sound to 3DS version
+- Added support for Lepus - jz4760/RG300 with multiplayer support
+- Switch: Added TCP/IP multiplayer support
+- Vita: Added TCP/IP multiplayer support
+- OpenDingux: Added TCP/IP multiplayer support
+- 3DS: Added TCP/IP multiplayer support
+- 3DS: Add launcher sound
 #### Graphics / Audio
 - Animations are now updated at render time for high fps visuals
 - Added support for hardware cursor (solves cursor lag)
@@ -30,7 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Item outline color now matches rarity
 - Use gold color to indicate unique items in stores
 - Improved XP bar visuals
-- Widescreen loading sceens
+- More widescreen loading scenes
+- Mac: Icon now follow Big Sur style guide
 #### Multiplayer
 - Added built in support for ZeroTier (no need for port forwarding, no need for an extra application)
 - Added support for unencrypted public games
@@ -42,34 +42,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hold click to continue to attack/walk/consume
 - Click ctrl-click to drop an item
 - Click shift-click to swap to the clicked weapon
-- Operate object as last option for primary controller action
-- Allow applying oils with secondary action button
-- Inventory now takes object size into consideration
-- Add joystick dead zone range to ini
 - Limit the max width between panels
 - Center align panels
-- Rune bomb and crypt map can be used when  standing next to target
+- Rune bomb and crypt map can be used when standing next to target
 - Added option for disabling crippling shrines
 - Improve inventory filling order
 - Added option to refill belt automatically
-- Equip equipment when pressing [use] on the controller
-- Add input hint to virtual keyboards
+- gamepad: Equip equipment when pressing [use]
+- gamepad: Operate object as last option for primary controller action
+- gamepad: Allow applying oils with secondary action button
+- gamepad: Inventory now takes object size into consideration
+- gamepad: Add joystick dead zone range to ini
+- touch: Add input hint to virtual keyboards
 #### Stability / Performance / System
 - Add support for translations
 - Run in self-contained (portable) mode if diablo.ini is in the same folder as DevilutionX
-- Auto detect location of MPQ files from GOG installation
 - Chat now supports Unicode, including emojis
 - Several actions can now have their key bindings remapped in the ini
 - Added key bind options for quick save/load
 - Show additional logging with `--verbose`
 - Start directly in Hellfire mode with `--hellfire`
-- Support for MPQs that use Huffman+ADPCM compression
+- Support for MPQs with compressed audio
 - Log errors to the terminal as well
 - Added options to adjust audio quality to ini
 - Update Shareware help text to match retail version
 - Automatically pause and mute the game when put in the background
 - Allow for multiple heroes with the same name
 - Only update diablo.ini if there are changes
+- Windows: Auto detect location of MPQ files from GOG installation
 #### Translations
 - Added Brazilian Portuguese
 - Added Bulgarian
@@ -87,33 +87,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Bugfixes
 #### Gameplay
 - Fix small rooms missing from some levels
-- Elemental spell was missing in Hellfire
-- Correct spells mana cost for the Sorcerer when not running Hellfire
-- Armor piercing was 2x of what it should be in Diablo
-- Barbarian missing his armor piercing bonus when playing Diablo
-- Firering spell not creating the correct shape
 - Golem's to-hit being incorrect after loading a save game
+- Diablo: Correct spells mana cost for the Sorcerer
+- Diablo: Armor piercing was 2x of what it should be
+- Diablo: Barbarian missing his armor piercing bonus
+- Hellfire: Elemental spell was missing
+- Hellfire: Firering spell not creating the correct shape
 #### Platforms
-- Nintendo Switch no longer reacts to touch events
+- Switch: No longer reacts to touch events
 #### Graphics / Audio
 - Corrected directional sounds for distant sources
 - Fix sound cut off when exiting game or starting the intro video
 - Entirely new audio mixer to solve audio issues and lower memory usage
-- Clearly indicate when game is running Hellfire in shareware mode
-- Draw belt item number for unusable scrolls
 - Fixed rendering issues on 8bit outputs
-- Changed player saying "Not enough mana" to a more fitting message when using a level 0 spell
+- Hellfire: Clearly indicate if it's in shareware mode
 #### Multiplayer
 - Reverted melee damage, when friendly fire and friendly mode is on
 - Do not show XP bar when chat is open
 - Do not show unbound status in place of game name
 - Show host version when incompatible
 #### Controls
-- Prevent wasting stat points on maxed out stats
-- Open virtual keyboard when text input is needed
-- Do not reset cursor position when switching between mouse and gamepad
-- Unable to open crypt and hive using a gamepad
-- Close cathedral map when pressing B-button
+- Gamepad: Prevent wasting stat points on maxed out stats
+- Gamepad: Do not reset cursor position when switching between mouse and gamepad
+- Gamepad: Unable to open crypt and hive
+- Gamepad: Close cathedral map when pressing B-button
+- Touch: Open virtual keyboard when text input is needed
 #### Stability / Performance / System
 - Correctly reset game state if not saved
 - Compatibility with shareware save games
@@ -122,13 +120,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Never require write mode for MPQ files
 - Allow for comments in ini file
 - Load assets from a folder called `assets` next to the application if not found in data paths
-- Added listfile to all our MPQs
+- Added listfile to our MPQs
 - Add ini option for showing FPS
 - Fix name filtering
-- Stop showing network errors twice
 - Correct minor memory leaks
 - Further reduced memory usage
 - Performance improvments
+- Windows: Only show network errors once
 
 ### Bugfixes for original Diablo bugs
 #### Gameplay
@@ -172,6 +170,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix screen position jumping after loading some saves
 - Some lava still animated despite game pause
 - Fully close the dialog screen when pausing game
+- Changed player saying "Not enough mana" to a more fitting message when using a level 0 spell
+- Draw belt item number for unusable scrolls
 #### Multiplayer
 - Correct dsync caused by incorrect vision range for other players
 - Sync monster active state
@@ -210,7 +210,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove light when killing a berserked monster
 - Blood star becoming invisible when blocked
 - Rotate arrows in the appropriate direction when blocking
-- Candles around around the storybook sometimes missing in Crypt
+- Candles around the storybook sometimes missing in Crypt
 - Celia now leaves after her quest ends
 - Update Celia and Complete Nut graphics when completing their quests
 - Only play "Uh uh" sound the first time you pick up the cathedral map
@@ -223,9 +223,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search spell affecting all players
 
 ### Known issues
-- Polish dub sometimes produces weird sounds on Nintendo Switch
-- devilutionx-rg350.opk now requires OpenDingux Beta
-- devilutionx-lepus.opk for OpenDingux Beta for jz4760 devices (RG300) with multiplayer support
+- Switch/3DS: Polish dub produces static sounds
+- OpenDingux: Now requires Beta
 
 ## DevilutionX 1.2.1
 ### Bugfixes

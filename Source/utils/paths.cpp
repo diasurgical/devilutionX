@@ -6,6 +6,10 @@
 #include "utils/log.hpp"
 #include "utils/sdl_ptrs.h"
 
+#ifdef __IPHONEOS__
+#include "platform/ios/ios_paths.h"
+#endif
+
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
@@ -66,10 +70,14 @@ const std::string &BasePath()
 const std::string &PrefPath()
 {
 	if (!prefPath) {
+#ifndef __IPHONEOS__
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 		if (FileExistsAndIsWriteable("diablo.ini")) {
 			prefPath = std::string("./");
 		}
+#else
+		prefPath = FromSDL(IOSGetPrefPath());
+#endif
 	}
 	return *prefPath;
 }
@@ -77,10 +85,14 @@ const std::string &PrefPath()
 const std::string &ConfigPath()
 {
 	if (!configPath) {
+#ifndef __IPHONEOS__
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
 		if (FileExistsAndIsWriteable("diablo.ini")) {
 			configPath = std::string("./");
 		}
+#else
+		configPath = FromSDL(IOSGetPrefPath());
+#endif
 	}
 	return *configPath;
 }

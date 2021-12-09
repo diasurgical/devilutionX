@@ -1,4 +1,4 @@
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(find_steam_game

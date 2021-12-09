@@ -1,16 +1,15 @@
-include(FetchContent_MakeAvailableExcludeFromAll)
+include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(libsmackerdec
-    URL https://github.com/diasurgical/libsmackerdec/archive/f398721a3b2133b4054ca7e43e2201bdca58c1f0.tar.gz
-    URL_HASH MD5=888b9935a5ad232d3c3a3f2f72193075
+    URL https://github.com/diasurgical/libsmackerdec/archive/2997ee0e41e91bb723003bc09234be553b190e38.tar.gz
+    URL_HASH MD5=04d8ccd5bed0c78ee23e777c323d87ee
 )
 FetchContent_MakeAvailableExcludeFromAll(libsmackerdec)
 
 add_library(libsmackerdec STATIC
   ${libsmackerdec_SOURCE_DIR}/src/BitReader.cpp
   ${libsmackerdec_SOURCE_DIR}/src/FileStream.cpp
-  ${libsmackerdec_SOURCE_DIR}/src/HuffmanVLC.cpp
   ${libsmackerdec_SOURCE_DIR}/src/LogError.cpp
   ${libsmackerdec_SOURCE_DIR}/src/SmackerDecoder.cpp)
 

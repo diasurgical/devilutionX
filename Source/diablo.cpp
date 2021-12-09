@@ -19,6 +19,7 @@
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/keymapper.hpp"
+#include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
 #include "controls/touch/renderers.h"
 #include "diablo.h"
@@ -914,9 +915,9 @@ void DiabloInit()
 	init_archives();
 	was_archives_init = true;
 
-	if (forceSpawn)
+	if (forceSpawn || *sgOptions.StartUp.shareware)
 		gbIsSpawn = true;
-	if (forceDiablo || sgOptions.Hellfire.startUpGameOption == StartUpGameOption::Diablo)
+	if (forceDiablo || *sgOptions.StartUp.gameMode == StartUpGameMode::Diablo)
 		gbIsHellfire = false;
 	if (forceHellfire)
 		gbIsHellfire = true;
@@ -939,15 +940,15 @@ void DiabloInit()
 #endif
 
 	UiInitialize();
-	UiSetSpawned(gbIsSpawn);
 	was_ui_init = true;
 
 	ReadOnlyTest();
 
-	if (gbIsHellfire && !forceHellfire && sgOptions.Hellfire.startUpGameOption == StartUpGameOption::None) {
+	if (gbIsHellfire && !forceHellfire && *sgOptions.StartUp.gameMode == StartUpGameMode::Ask) {
 		UiSelStartUpGameOption();
 		if (!gbIsHellfire) {
 			// Reinitalize the UI Elements cause we changed the game
+			UnloadUiGFX();
 			UiInitialize();
 			if (IsHardwareCursor())
 				SetHardwareCursor(CursorInfo::UnknownCursor());
@@ -970,16 +971,22 @@ void DiabloSplash()
 	if (!gbShowIntro)
 		return;
 
-	play_movie("gendata\\logo.smk", true);
+	if (*sgOptions.StartUp.splash == StartUpSplash::LogoAndTitleDialog)
+		play_movie("gendata\\logo.smk", true);
 
-	if (gbIsHellfire && *sgOptions.Hellfire.intro) {
-		play_movie("gendata\\Hellfire.smk", true);
-	}
-	if (!gbIsHellfire && !gbIsSpawn && *sgOptions.Diablo.intro) {
-		play_movie("gendata\\diablo1.smk", true);
+	auto &intro = gbIsHellfire ? sgOptions.StartUp.hellfireIntro : sgOptions.StartUp.diabloIntro;
+
+	if (*intro != StartUpIntro::Off) {
+		if (gbIsHellfire)
+			play_movie("gendata\\Hellfire.smk", true);
+		else
+			play_movie("gendata\\diablo1.smk", true);
+		if (*intro == StartUpIntro::Once)
+			intro.SetValue(StartUpIntro::Off);
 	}
 
-	UiTitleDialog();
+	if (IsAnyOf(*sgOptions.StartUp.splash, StartUpSplash::TitleDialog, StartUpSplash::LogoAndTitleDialog))
+		UiTitleDialog();
 }
 
 void DiabloDeinit()
@@ -1375,7 +1382,10 @@ void InitKeymapActions()
 				    SetSpeedSpell(i);
 				    return;
 			    }
-			    ToggleSpell(i);
+			    if (!*sgOptions.Gameplay.quickCast)
+				    ToggleSpell(i);
+			    else
+				    QuickCast(i);
 		    },
 		    [&]() { return !IsPlayerDead(); },
 		});

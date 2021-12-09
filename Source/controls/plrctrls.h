@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include "player.h"
+
 namespace devilution {
 
 typedef enum belt_item_type : uint8_t {
@@ -45,6 +47,7 @@ bool TryDropItem();
 void InvalidateInventorySlot();
 void FocusOnInventory();
 void PerformSpellAction();
+void QuickCast(int slot);
 
 extern int speedspellcount;
 
