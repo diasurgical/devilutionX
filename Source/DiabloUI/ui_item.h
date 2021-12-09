@@ -28,6 +28,16 @@ class UiItemBase {
 public:
 	virtual ~UiItemBase() = default;
 
+	[[nodiscard]] constexpr UiType GetType() const
+	{
+		return type_;
+	}
+
+	[[nodiscard]] constexpr bool IsType(UiType testType) const
+	{
+		return type_ == testType;
+	}
+
 	[[nodiscard]] constexpr UiFlags GetFlags() const
 	{
 		return uiFlags_;
@@ -55,7 +65,7 @@ public:
 
 protected:
 	UiItemBase(UiType type, SDL_Rect rect, UiFlags flags)
-	    : m_type(type)
+	    : type_(type)
 	    , m_rect(rect)
 	    , uiFlags_(flags)
 	{
@@ -66,8 +76,10 @@ protected:
 		uiFlags_ = flags;
 	}
 
+private:
+	UiType type_;
+
 public:
-	UiType m_type;
 	SDL_Rect m_rect;
 
 private:
