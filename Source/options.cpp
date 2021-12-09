@@ -301,14 +301,14 @@ void LoadOptions()
 #endif
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.nHealPotionPickup = GetIniInt("Game", "Heal Potion Pickup", 0);
-	sgOptions.Gameplay.nFullHealPotionPickup = GetIniInt("Game", "Full Heal Potion Pickup", 0);
-	sgOptions.Gameplay.nManaPotionPickup = GetIniInt("Game", "Mana Potion Pickup", 0);
-	sgOptions.Gameplay.nFullManaPotionPickup = GetIniInt("Game", "Full Mana Potion Pickup", 0);
-	sgOptions.Gameplay.nRejuPotionPickup = GetIniInt("Game", "Rejuvenation Potion Pickup", 0);
-	sgOptions.Gameplay.nFullRejuPotionPickup = GetIniInt("Game", "Full Rejuvenation Potion Pickup", 0);
-	sgOptions.Gameplay.bAutoPickupInTown = GetIniBool("Game", "Auto Pickup in Town", 0);
-	sgOptions.Gameplay.bAutoPickupElixirs = GetIniBool("Game", "Auto Pickup Elixirs", 0);
+	sgOptions.Gameplay.numHealPotionPickup = GetIniInt("Game", "Heal Potion Pickup", 0);
+	sgOptions.Gameplay.numFullHealPotionPickup = GetIniInt("Game", "Full Heal Potion Pickup", 0);
+	sgOptions.Gameplay.numManaPotionPickup = GetIniInt("Game", "Mana Potion Pickup", 0);
+	sgOptions.Gameplay.numFullManaPotionPickup = GetIniInt("Game", "Full Mana Potion Pickup", 0);
+	sgOptions.Gameplay.numRejuPotionPickup = GetIniInt("Game", "Rejuvenation Potion Pickup", 0);
+	sgOptions.Gameplay.numFullRejuPotionPickup = GetIniInt("Game", "Full Rejuvenation Potion Pickup", 0);
+	sgOptions.Gameplay.AutoPickupInTown = GetIniBool("Game", "Auto Pickup in Town", 0);
+	sgOptions.Gameplay.AutoPickupElixirs = GetIniBool("Game", "Auto Pickup Elixirs", 0);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -363,14 +363,14 @@ void SaveOptions()
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
 
-	SetIniValue("Game", "Heal Potion Pickup", sgOptions.Gameplay.nHealPotionPickup);
-	SetIniValue("Game", "Full Heal Potion Pickup", sgOptions.Gameplay.nFullHealPotionPickup);
-	SetIniValue("Game", "Mana Potion Pickup", sgOptions.Gameplay.nManaPotionPickup);
-	SetIniValue("Game", "Full Mana Potion Pickup", sgOptions.Gameplay.nFullManaPotionPickup);
-	SetIniValue("Game", "Rejuvenation Potion Pickup", sgOptions.Gameplay.nRejuPotionPickup);
-	SetIniValue("Game", "Full Rejuvenation Potion Pickup", sgOptions.Gameplay.nFullRejuPotionPickup);
-	SetIniValue("Game", "Auto Pickup in Town", sgOptions.Gameplay.bAutoPickupInTown);
-	SetIniValue("Game", "Auto Pickup Elixirs", sgOptions.Gameplay.bAutoPickupElixirs);
+	SetIniValue("Game", "Heal Potion Pickup", sgOptions.Gameplay.numHealPotionPickup);
+	SetIniValue("Game", "Full Heal Potion Pickup", sgOptions.Gameplay.numFullHealPotionPickup);
+	SetIniValue("Game", "Mana Potion Pickup", sgOptions.Gameplay.numManaPotionPickup);
+	SetIniValue("Game", "Full Mana Potion Pickup", sgOptions.Gameplay.numFullManaPotionPickup);
+	SetIniValue("Game", "Rejuvenation Potion Pickup", sgOptions.Gameplay.numRejuPotionPickup);
+	SetIniValue("Game", "Full Rejuvenation Potion Pickup", sgOptions.Gameplay.numFullRejuPotionPickup);
+	SetIniValue("Game", "Auto Pickup in Town", sgOptions.Gameplay.AutoPickupInTown);
+	SetIniValue("Game", "Auto Pickup Elixirs", sgOptions.Gameplay.AutoPickupElixirs);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	SetIniValue("Network", "Port", sgOptions.Network.nPort);

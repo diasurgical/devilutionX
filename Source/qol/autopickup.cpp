@@ -48,7 +48,7 @@ void AutoPickup(int pnum)
 {
 	if (pnum != MyPlayerId)
 		return;
-	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoGoldPickup)
+	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoPickupInTown)
 		return;
 
 	bool hasRoomForGold = HasRoomForGold();
@@ -58,7 +58,7 @@ void AutoPickup(int pnum)
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
-			if (hasRoomForGold && item._itype == ItemType::Gold) {
+			if (hasRoomForGold && item._itype == ItemType::Gold && sgOptions.Gameplay.autoGoldPickup) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
 			}
@@ -66,28 +66,28 @@ void AutoPickup(int pnum)
 				bool doPickup = false;
 				switch (item._iMiscId) {
 				case IMISC_HEAL:
-					doPickup = sgOptions.Gameplay.nHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_FULLHEAL:
-					doPickup = sgOptions.Gameplay.nFullHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.numFullHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_MANA:
-					doPickup = sgOptions.Gameplay.nManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.numManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_FULLMANA:
-					doPickup = sgOptions.Gameplay.nFullManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.numFullManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_REJUV:
-					doPickup = sgOptions.Gameplay.nRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.numRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_FULLREJUV:
-					doPickup = sgOptions.Gameplay.nFullRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
+					doPickup = sgOptions.Gameplay.numFullRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
 					break;
 				case IMISC_ELIXSTR:
 				case IMISC_ELIXMAG:
 				case IMISC_ELIXDEX:
 				case IMISC_ELIXVIT:
-					doPickup = sgOptions.Gameplay.bAutoPickupElixirs;
+					doPickup = sgOptions.Gameplay.AutoElixirPickup;
 					break;
 				default:
 					break;

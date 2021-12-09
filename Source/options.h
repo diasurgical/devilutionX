@@ -402,24 +402,25 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Refill belt from inventory, or rather, use potions/scrolls from inventory first when belt item is consumed.  */
 	OptionEntryBoolean autoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
-	int nHealPotionPickup;
-	/** @brief Number of Full Healing potions to pick up automatically */
-	int nFullHealPotionPickup;
-	/** @brief Number of Mana potions to pick up automatically */
-	int nManaPotionPickup;
-	/** @brief Number of Full Mana potions to pick up automatically */
-	int nFullManaPotionPickup;
-	/** @brief Number of Rejuvenating potions to pick up automatically */
-	int nRejuPotionPickup;
-	/** @brief Number of Full Rejuvenating potions to pick up automatically */
-	int nFullRejuPotionPickup;
-	/** @brief Enable or Disable auto-pickup in town */
-	int bAutoPickupInTown;
-	/** @brief Auto-pickup elixirs */
-	int bAutoPickupElixirs;
 	OptionEntryBoolean disableCripplingShrines;
 	/** @brief Spell hotkeys instantly cast the spell. */
 	OptionEntryBoolean quickCast;
+	/** @brief Number of Healing potions to pick up automatically */
+	int numHealPotionPickup;
+	/** @brief Number of Full Healing potions to pick up automatically */
+	int numFullHealPotionPickup;
+	/** @brief Number of Mana potions to pick up automatically */
+	int numManaPotionPickup;
+	/** @brief Number of Full Mana potions to pick up automatically */
+	int numFullManaPotionPickup;
+	/** @brief Number of Rejuvenating potions to pick up automatically */
+	int numRejuPotionPickup;
+	/** @brief Number of Full Rejuvenating potions to pick up automatically */
+	int numFullRejuPotionPickup;
+	/** @brief Enable or Disable auto-pickup in town */
+	bool AutoPickupInTown;
+	/** @brief Auto-pickup elixirs */
+	bool AutoPickupElixirs;
 };
 
 struct ControllerOptions : OptionCategoryBase {
