@@ -160,8 +160,8 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
     
 #if SDL_VERSION_ATLEAST(2, 0, 6) && defined(__IPHONEOS__)
-    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
-    SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
+	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
 #endif
 
 #if defined(_WIN32) && !defined(USE_SDL1)
