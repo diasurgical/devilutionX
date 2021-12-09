@@ -7,6 +7,7 @@
 #include "inv_iterators.hpp"
 #include "options.h"
 #include "player.h"
+#include <algorithm>
 
 namespace devilution {
 namespace {
@@ -33,13 +34,41 @@ bool HasRoomForGold()
 
 int NumMiscItemsInInv(int iMiscId)
 {
-	int numItems = 0;
-	for (const auto &item : InventoryAndBeltPlayerItemsRange(Players[MyPlayerId])) {
-		if (item._iMiscId == iMiscId) {
-			numItems++;
+	InventoryAndBeltPlayerItemsRange items { Players[MyPlayerId] };
+	return std::count_if(items.begin(), items.end(), [iMiscId](const Item &item) { return item._iMiscId == iMiscId; });
+}
+
+bool DoPickup(Item item)
+{
+	if (item._itype == ItemType::Gold && *sgOptions.Gameplay.autoGoldPickup && HasRoomForGold())
+		return true;
+
+	if (item._itype == ItemType::Misc
+	    && (AutoPlaceItemInInventory(Players[MyPlayerId], item, false) || AutoPlaceItemInBelt(Players[MyPlayerId], item, false))) {
+		switch (item._iMiscId) {
+		case IMISC_HEAL:
+			return sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
+		case IMISC_FULLHEAL:
+			return sgOptions.Gameplay.numFullHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
+		case IMISC_MANA:
+			return sgOptions.Gameplay.numManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
+		case IMISC_FULLMANA:
+			return sgOptions.Gameplay.numFullManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
+		case IMISC_REJUV:
+			return sgOptions.Gameplay.numRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
+		case IMISC_FULLREJUV:
+			return sgOptions.Gameplay.numFullRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
+		case IMISC_ELIXSTR:
+		case IMISC_ELIXMAG:
+		case IMISC_ELIXDEX:
+		case IMISC_ELIXVIT:
+			return *sgOptions.Gameplay.autoElixirPickup;
+		default:
+			return false;
 		}
 	}
-	return numItems;
+
+	return false;
 }
 
 } // namespace
@@ -51,51 +80,14 @@ void AutoPickup(int pnum)
 	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoPickupInTown)
 		return;
 
-	bool hasRoomForGold = HasRoomForGold();
-
 	for (auto pathDir : PathDirs) {
 		Point tile = Players[pnum].position.tile + pathDir;
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
-			if (hasRoomForGold && item._itype == ItemType::Gold && *sgOptions.Gameplay.autoGoldPickup) {
+			if (DoPickup(item)) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
-			}
-			if (item._itype == ItemType::Misc && (AutoPlaceItemInInventory(Players[pnum], item, false) || AutoPlaceItemInBelt(Players[pnum], item, false))) {
-				bool doPickup = false;
-				switch (item._iMiscId) {
-				case IMISC_HEAL:
-					doPickup = sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
-					break;
-				case IMISC_FULLHEAL:
-					doPickup = sgOptions.Gameplay.numFullHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
-					break;
-				case IMISC_MANA:
-					doPickup = sgOptions.Gameplay.numManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
-					break;
-				case IMISC_FULLMANA:
-					doPickup = sgOptions.Gameplay.numFullManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
-					break;
-				case IMISC_REJUV:
-					doPickup = sgOptions.Gameplay.numRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
-					break;
-				case IMISC_FULLREJUV:
-					doPickup = sgOptions.Gameplay.numFullRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
-					break;
-				case IMISC_ELIXSTR:
-				case IMISC_ELIXMAG:
-				case IMISC_ELIXDEX:
-				case IMISC_ELIXVIT:
-					doPickup = *sgOptions.Gameplay.autoElixirPickup;
-					break;
-				default:
-					break;
-				}
-				if (doPickup) {
-					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-					item._iRequest = true;
-				}
 			}
 		}
 	}

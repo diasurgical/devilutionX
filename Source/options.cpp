@@ -764,6 +764,8 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&experienceBar,
 		&enemyHealthBar,
 		&autoGoldPickup,
+		&autoElixirPickup,
+		&autoPickupInTown,
 		&adriaRefillsMana,
 		&autoEquipWeapons,
 		&autoEquipArmor,
@@ -775,8 +777,6 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&autoRefillBelt,
 		&disableCripplingShrines,
 		&quickCast,
-		&autoElixirPickup,
-		&autoPickupInTown,
 	};
 }
 
