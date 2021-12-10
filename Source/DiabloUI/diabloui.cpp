@@ -116,7 +116,7 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 	textInputActive = false;
 	UiScrollbar *uiScrollbar = nullptr;
 	for (const auto &item : items) {
-		if (item->m_type == UiType::Edit) {
+		if (item->IsType(UiType::Edit)) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
@@ -132,12 +132,12 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 #endif
 			UiTextInput = pItemUIEdit->m_value;
 			UiTextInputLen = pItemUIEdit->m_max_length;
-		} else if (item->m_type == UiType::List) {
+		} else if (item->IsType(UiType::List)) {
 			auto *uiList = static_cast<UiList *>(item.get());
 			SelectedItemMax = std::max(uiList->m_vecItems.size() - 1, static_cast<size_t>(0));
 			ListViewportSize = uiList->viewportSize;
 			gUiList = uiList;
-		} else if (item->m_type == UiType::Scrollbar) {
+		} else if (item->IsType(UiType::Scrollbar)) {
 			uiScrollbar = static_cast<UiScrollbar *>(item.get());
 		}
 	}
@@ -146,9 +146,9 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 
 	if (uiScrollbar != nullptr) {
 		if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax + 1)) {
-			uiScrollbar->add_flag(UiFlags::ElementHidden);
+			uiScrollbar->Hide();
 		} else {
-			uiScrollbar->remove_flag(UiFlags::ElementHidden);
+			uiScrollbar->Show();
 		}
 	}
 }
@@ -750,12 +750,12 @@ void UiPollAndRender()
 
 namespace {
 
-void Render(UiText *uiText)
+void Render(const UiText *uiText)
 {
 	Rectangle rect { { uiText->m_rect.x, uiText->m_rect.y }, { uiText->m_rect.w, uiText->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiText->m_text, rect, uiText->m_iFlags | UiFlags::FontSizeDialog);
+	DrawString(out, uiText->GetText(), rect, uiText->GetFlags() | UiFlags::FontSizeDialog);
 }
 
 void Render(const UiArtText *uiArtText)
@@ -763,20 +763,20 @@ void Render(const UiArtText *uiArtText)
 	Rectangle rect { { uiArtText->m_rect.x, uiArtText->m_rect.y }, { uiArtText->m_rect.w, uiArtText->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiArtText->text(), rect, uiArtText->m_iFlags, uiArtText->spacing(), uiArtText->lineHeight());
+	DrawString(out, uiArtText->GetText(), rect, uiArtText->GetFlags(), uiArtText->GetSpacing(), uiArtText->GetLineHeight());
 }
 
 void Render(const UiImage *uiImage)
 {
 	int x = uiImage->m_rect.x;
-	if (HasAnyOf(uiImage->m_iFlags, UiFlags::AlignCenter) && uiImage->m_art != nullptr) {
-		const int xOffset = GetCenterOffset(uiImage->m_art->w(), uiImage->m_rect.w);
+	if (uiImage->IsCentered() && uiImage->GetArt() != nullptr) {
+		const int xOffset = GetCenterOffset(uiImage->GetArt()->w(), uiImage->m_rect.w);
 		x += xOffset;
 	}
-	if (uiImage->m_animated) {
-		DrawAnimatedArt(uiImage->m_art, { x, uiImage->m_rect.y });
+	if (uiImage->IsAnimated()) {
+		DrawAnimatedArt(uiImage->GetArt(), { x, uiImage->m_rect.y });
 	} else {
-		DrawArt({ x, uiImage->m_rect.y }, uiImage->m_art, uiImage->m_frame, uiImage->m_rect.w);
+		DrawArt({ x, uiImage->m_rect.y }, uiImage->GetArt(), uiImage->GetFrame(), uiImage->m_rect.w);
 	}
 }
 
@@ -785,7 +785,7 @@ void Render(const UiArtTextButton *uiButton)
 	Rectangle rect { { uiButton->m_rect.x, uiButton->m_rect.y }, { uiButton->m_rect.w, uiButton->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiButton->m_text, rect, uiButton->m_iFlags);
+	DrawString(out, uiButton->GetText(), rect, uiButton->GetFlags());
 }
 
 void Render(const UiList *uiList)
@@ -799,10 +799,10 @@ void Render(const UiList *uiList)
 			DrawSelector(rect);
 
 		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
-		if (item->args.size() == 0)
-			DrawString(out, item->m_text, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
+		if (item->args.empty())
+			DrawString(out, item->m_text, rectangle, uiList->GetFlags() | item->uiFlags, uiList->GetSpacing());
 		else
-			DrawStringWithColors(out, item->m_text, item->args, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
+			DrawStringWithColors(out, item->m_text, item->args, rectangle, uiList->GetFlags() | item->uiFlags, uiList->GetSpacing());
 	}
 }
 
@@ -845,14 +845,14 @@ void Render(const UiEdit *uiEdit)
 	Rectangle rect { { uiEdit->m_rect.x + 43, uiEdit->m_rect.y + 1 }, { uiEdit->m_rect.w - 86, uiEdit->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiEdit->m_value, rect, uiEdit->m_iFlags | UiFlags::TextCursor);
+	DrawString(out, uiEdit->m_value, rect, uiEdit->GetFlags() | UiFlags::TextCursor);
 }
 
 void RenderItem(UiItemBase *item)
 {
-	if (item->has_flag(UiFlags::ElementHidden))
+	if (item->IsHidden())
 		return;
-	switch (item->m_type) {
+	switch (item->GetType()) {
 	case UiType::Text:
 		Render(static_cast<UiText *>(item));
 		break;
@@ -882,9 +882,11 @@ void RenderItem(UiItemBase *item)
 
 bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton *uiButton)
 {
-	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
+	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT) {
 		return false;
-	uiButton->m_action();
+	}
+
+	uiButton->Activate();
 	return true;
 }
 
@@ -959,9 +961,9 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollbar *uiSb)
 
 bool HandleMouseEvent(const SDL_Event &event, UiItemBase *item)
 {
-	if (item->has_any_flag(UiFlags::ElementHidden | UiFlags::ElementDisabled) || !IsInsideRect(event, item->m_rect))
+	if (item->IsNotInteractive() || !IsInsideRect(event, item->m_rect))
 		return false;
-	switch (item->m_type) {
+	switch (item->GetType()) {
 	case UiType::ArtTextButton:
 		return HandleMouseEventArtTextButton(event, static_cast<UiArtTextButton *>(item));
 	case UiType::Button:
@@ -1018,8 +1020,9 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
 		for (const auto &item : items) {
-			if (item->m_type == UiType::Button)
+			if (item->IsType(UiType::Button)) {
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
+			}
 		}
 	}
 
@@ -1048,8 +1051,9 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
 		for (const auto &item : items) {
-			if (item->m_type == UiType::Button)
+			if (item->IsType(UiType::Button)) {
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item.get()));
+			}
 		}
 	}
 

@@ -16,20 +16,15 @@ void LoadSmlButtonArt()
 
 void RenderButton(UiButton *button)
 {
-	int frame;
-	if (button->m_pressed) {
-		frame = UiButton::PRESSED;
-	} else {
-		frame = UiButton::DEFAULT;
-	}
-	DrawArt({ button->m_rect.x, button->m_rect.y }, button->m_art, frame, button->m_rect.w, button->m_rect.h);
+	DrawArt({ button->m_rect.x, button->m_rect.y }, button->GetArt(), button->GetFrame(), button->m_rect.w, button->m_rect.h);
 
 	Rectangle textRect { { button->m_rect.x, button->m_rect.y }, { button->m_rect.w, button->m_rect.h } };
-	if (!button->m_pressed)
+	if (!button->IsPressed()) {
 		--textRect.position.y;
+	}
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, button->m_text, textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
+	DrawString(out, button->GetText(), textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
 }
 
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
@@ -38,10 +33,13 @@ bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
 		return false;
 	switch (event.type) {
 	case SDL_MOUSEBUTTONUP:
-		button->m_action();
-		return true;
+		if (button->IsPressed()) {
+			button->Activate();
+			return true;
+		}
+		return false;
 	case SDL_MOUSEBUTTONDOWN:
-		button->m_pressed = true;
+		button->Press();
 		return true;
 	default:
 		return false;
@@ -50,7 +48,7 @@ bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
 
 void HandleGlobalMouseUpButton(UiButton *button)
 {
-	button->m_pressed = false;
+	button->Release();
 }
 
 } // namespace devilution
