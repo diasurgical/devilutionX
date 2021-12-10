@@ -28,37 +28,37 @@ class UiItemBase {
 public:
 	virtual ~UiItemBase() = default;
 
-	[[nodiscard]] constexpr UiType GetType() const
+	[[nodiscard]] UiType GetType() const
 	{
 		return type_;
 	}
 
-	[[nodiscard]] constexpr bool IsType(UiType testType) const
+	[[nodiscard]] bool IsType(UiType testType) const
 	{
 		return type_ == testType;
 	}
 
-	[[nodiscard]] constexpr UiFlags GetFlags() const
+	[[nodiscard]] UiFlags GetFlags() const
 	{
 		return uiFlags_;
 	}
 
-	[[nodiscard]] constexpr bool IsHidden() const
+	[[nodiscard]] bool IsHidden() const
 	{
 		return (uiFlags_ & UiFlags::ElementHidden) == UiFlags::ElementHidden;
 	}
 
-	[[nodiscard]] constexpr bool IsNotInteractive() const
+	[[nodiscard]] bool IsNotInteractive() const
 	{
 		return HasAnyOf(uiFlags_, UiFlags::ElementHidden | UiFlags::ElementDisabled);
 	}
 
-	constexpr void Hide()
+	void Hide()
 	{
 		uiFlags_ |= UiFlags::ElementHidden;
 	}
 
-	constexpr void Show()
+	void Show()
 	{
 		uiFlags_ &= ~UiFlags::ElementHidden;
 	}
@@ -98,24 +98,22 @@ public:
 	{
 	}
 
-	~UiImage() override = default;
-
-	[[nodiscard]] constexpr bool IsCentered() const
+	[[nodiscard]] bool IsCentered() const
 	{
 		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
 	}
 
-	[[nodiscard]] constexpr Art *GetArt() const
+	[[nodiscard]] Art *GetArt() const
 	{
 		return art_;
 	}
 
-	[[nodiscard]] constexpr bool IsAnimated() const
+	[[nodiscard]] bool IsAnimated() const
 	{
 		return animated_;
 	}
 
-	[[nodiscard]] constexpr int GetFrame() const
+	[[nodiscard]] int GetFrame() const
 	{
 		return frame_;
 	}
@@ -163,21 +161,19 @@ public:
 	{
 	}
 
-	~UiArtText() override = default;
-
-	[[nodiscard]] constexpr string_view GetText() const
+	[[nodiscard]] string_view GetText() const
 	{
 		if (text_ != nullptr)
 			return text_;
 		return *textPointer_;
 	}
 
-	[[nodiscard]] constexpr int GetSpacing() const
+	[[nodiscard]] int GetSpacing() const
 	{
 		return spacing_;
 	}
 
-	[[nodiscard]] constexpr int GetLineHeight() const
+	[[nodiscard]] int GetLineHeight() const
 	{
 		return lineHeight_;
 	}
@@ -225,12 +221,12 @@ public:
 		UiItemBase::SetFlags(flags);
 	}
 
-	[[nodiscard]] constexpr string_view GetText() const
+	[[nodiscard]] string_view GetText() const
 	{
 		return text_;
 	}
 
-	constexpr void Activate() const
+	void Activate() const
 	{
 		action_();
 	}
@@ -272,7 +268,7 @@ public:
 	{
 	}
 
-	[[nodiscard]] constexpr string_view GetText() const
+	[[nodiscard]] string_view GetText() const
 	{
 		return text_;
 	}
@@ -298,38 +294,38 @@ public:
 	{
 	}
 
-	[[nodiscard]] constexpr int GetFrame() const
+	[[nodiscard]] int GetFrame() const
 	{
 		// Frame 1 is a held button sprite, frame 0 is the default
 		return IsPressed() ? 1 : 0;
 	}
 
-	[[nodiscard]] constexpr Art *GetArt() const
+	[[nodiscard]] Art *GetArt() const
 	{
 		return art_;
 	}
 
-	[[nodiscard]] constexpr string_view GetText() const
+	[[nodiscard]] string_view GetText() const
 	{
 		return text_;
 	}
 
-	constexpr void Activate() const
+	void Activate() const
 	{
 		action_();
 	}
 
-	[[nodiscard]] constexpr bool IsPressed() const
+	[[nodiscard]] bool IsPressed() const
 	{
 		return pressed_;
 	}
 
-	constexpr void Press()
+	void Press()
 	{
 		pressed_ = true;
 	}
 
-	constexpr void Release()
+	void Release()
 	{
 		pressed_ = false;
 	}
@@ -363,8 +359,6 @@ public:
 	{
 	}
 
-	~UiListItem() = default;
-
 	// private:
 	const char *m_text;
 	std::vector<DrawStringFormatArg> args;
@@ -388,8 +382,6 @@ public:
 		for (const auto &item : vItems)
 			m_vecItems.push_back(item.get());
 	}
-
-	~UiList() override = default;
 
 	[[nodiscard]] SDL_Rect itemRect(int i) const
 	{
@@ -415,7 +407,7 @@ public:
 		return m_vecItems[i];
 	}
 
-	[[nodiscard]] constexpr int GetSpacing() const
+	[[nodiscard]] int GetSpacing() const
 	{
 		return spacing_;
 	}
