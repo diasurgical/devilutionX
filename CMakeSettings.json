@@ -76,7 +76,7 @@
       "enableClangTidyCodeAnalysis": true
     },
     {
-      "name": "WSL-GCC-x64-Debug",
+      "name": "x64-Debug-WSL-GCC",
       "generator": "Ninja",
       "configurationType": "Debug",
       "buildRoot": "${workspaceRoot}\\build\\${name}",
