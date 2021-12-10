@@ -45,7 +45,7 @@ public:
 
 	[[nodiscard]] bool IsHidden() const
 	{
-		return (uiFlags_ & UiFlags::ElementHidden) == UiFlags::ElementHidden;
+		return HasAnyOf(uiFlags_, UiFlags::ElementHidden);
 	}
 
 	[[nodiscard]] bool IsNotInteractive() const
