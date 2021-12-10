@@ -2,14 +2,12 @@ version: 2
 jobs:
   linux_x86_64:
     docker:
-      - image: debian:stretch-backports
+      - image: debian:latest
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt update -y
-      - run: apt install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq
-      - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev libpng-dev
+      - run: apt install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq cmake libsodium-dev libpng-dev file
       - run: cmake -S. -Bbuild .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCPACK=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
