@@ -14,8 +14,8 @@ else()
   set(BUILD_SHARED_LIBS ON)
 endif()
 include(FetchContent)
-FetchContent_Declare(fmt
+FetchContent_Declare(libfmt
   URL https://github.com/fmtlib/fmt/archive/7bdf0628b1276379886c7f6dda2cef2b3b374f0b.zip
   URL_HASH MD5=70e0a0beda4bdac7debe60d380e1d802
 )
-FetchContent_MakeAvailableExcludeFromAll(fmt)
+FetchContent_MakeAvailableExcludeFromAll(libfmt)
