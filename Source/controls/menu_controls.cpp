@@ -63,6 +63,18 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		}
 	}
 
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		sgbControllerActive = false;
+
+		switch (event.button.button) {
+		case SDL_BUTTON_X1:
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
+		case 8:
+#endif
+			return MenuAction_BACK;
+		}
+	}
+
 #if HAS_KBCTRL == 0
 	if (event.type >= SDL_KEYDOWN && event.type < SDL_JOYAXISMOTION)
 		sgbControllerActive = false;
