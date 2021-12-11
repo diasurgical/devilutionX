@@ -11,9 +11,9 @@ if(NOT DEVILUTIONX_SYSTEM_LIBSODIUM)
     set(BUILD_SHARED_LIBS ON)
   endif()
   include(FetchContent)
-  FetchContent_Declare(sodium
+  FetchContent_Declare(libsodium
       GIT_REPOSITORY https://github.com/robinlinden/libsodium-cmake.git
       GIT_TAG a8ac4509b22b84d6c2eb7d7448f08678e4a67da6
   )
-  FetchContent_MakeAvailableExcludeFromAll(sodium)
+  FetchContent_MakeAvailableExcludeFromAll(libsodium)
 endif()

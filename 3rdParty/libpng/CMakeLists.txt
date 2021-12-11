@@ -24,14 +24,14 @@ if(IOS AND "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "arm64")
 endif()
 
 include(FetchContent)
-FetchContent_Declare(png
+FetchContent_Declare(libpng
   URL https://github.com/diasurgical/libpng/archive/062dbf095f84b6db90d13e820fb60ec4ed545639.tar.gz
   URL_HASH MD5=4c0a3862cb218d88889fb4189cb85c5d
 )
-FetchContent_MakeAvailableExcludeFromAll(png)
+FetchContent_MakeAvailableExcludeFromAll(libpng)
 
 target_include_directories(${PNG_LIBRARY} INTERFACE
-  $<BUILD_INTERFACE:${png_SOURCE_DIR}>
-  $<BUILD_INTERFACE:${png_BINARY_DIR}>)
+  $<BUILD_INTERFACE:${libpng_SOURCE_DIR}>
+  $<BUILD_INTERFACE:${libpng_BINARY_DIR}>)
 
 add_library(PNG::PNG ALIAS ${PNG_LIBRARY})
