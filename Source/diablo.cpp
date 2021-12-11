@@ -1915,10 +1915,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
 				[[maybe_unused]] uint32_t mid1Seed = GetLCGEngineState();
-				InitMonsters();
+				InitObjects();
 				[[maybe_unused]] uint32_t mid2Seed = GetLCGEngineState();
 				IncProgress();
-				InitObjects();
+				InitMonsters();
 				InitItems();
 				if (currlevel < 17)
 					CreateThemeRooms();
