@@ -266,7 +266,7 @@ bool CanPlaceMonster(int xp, int yp)
 		return false;
 	}
 
-	return !IsTileSolid({ xp, yp });
+	return !IsTileOccupied({ xp, yp });
 }
 
 void PlaceMonster(int i, int mtype, int x, int y)
