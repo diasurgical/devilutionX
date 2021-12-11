@@ -181,34 +181,37 @@ void UiPlaySelectSound()
 
 namespace {
 
-void UiFocus(std::size_t itemIndex, bool checkUp)
+void UiFocus(std::size_t itemIndex, bool checkUp, bool ignoreItemsWraps = false)
 {
 	if (SelectedItem == itemIndex)
 		return;
 
 	AdjustListOffset(itemIndex);
 
-	auto pItem = gUiList->GetItem(itemIndex);
-	if (HasAnyOf(pItem->uiFlags, UiFlags::ElementHidden | UiFlags::ElementDisabled)) {
+	const auto *pItem = gUiList->GetItem(itemIndex);
+	while (HasAnyOf(pItem->uiFlags, UiFlags::ElementHidden | UiFlags::ElementDisabled)) {
 		if (checkUp) {
 			if (itemIndex > 0)
-				UiFocus(itemIndex - 1, checkUp);
-			else if (UiItemsWraps)
-				UiFocus(SelectedItemMax, checkUp);
+				itemIndex -= 1;
+			else if (UiItemsWraps && !ignoreItemsWraps)
+				itemIndex = SelectedItemMax;
 			else
-				UiFocus(itemIndex, false);
+				checkUp = false;
 		} else {
 			if (itemIndex < SelectedItemMax)
-				UiFocus(itemIndex + 1, checkUp);
-			else if (UiItemsWraps)
-				UiFocus(0, checkUp);
+				itemIndex += 1;
+			else if (UiItemsWraps && !ignoreItemsWraps)
+				itemIndex = 0;
 			else
-				UiFocus(itemIndex, true);
+				checkUp = true;
 		}
-		return;
+		pItem = gUiList->GetItem(itemIndex);
 	}
+
 	if (HasAnyOf(pItem->uiFlags, UiFlags::NeedsNextElement)) {
 		AdjustListOffset(itemIndex + 1);
+	} else {
+		AdjustListOffset(itemIndex);
 	}
 
 	SelectedItem = itemIndex;
@@ -240,7 +243,7 @@ void UiFocusDown()
 void UiFocusPageUp()
 {
 	if (listOffset == 0) {
-		UiFocus(0, true);
+		UiFocus(0, true, true);
 	} else {
 		const std::size_t relpos = SelectedItem - listOffset;
 		std::size_t prevPageStart = SelectedItem - relpos;
@@ -248,15 +251,15 @@ void UiFocusPageUp()
 			prevPageStart -= ListViewportSize;
 		else
 			prevPageStart = 0;
-		UiFocus(prevPageStart, true);
-		UiFocus(listOffset + relpos, true);
+		AdjustListOffset(prevPageStart);
+		UiFocus(listOffset + relpos, true, true);
 	}
 }
 
 void UiFocusPageDown()
 {
 	if (listOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
-		UiFocus(SelectedItemMax, false);
+		UiFocus(SelectedItemMax, false, true);
 	} else {
 		const std::size_t relpos = SelectedItem - listOffset;
 		std::size_t nextPageEnd = SelectedItem + (ListViewportSize - relpos - 1);
@@ -264,8 +267,8 @@ void UiFocusPageDown()
 			nextPageEnd += ListViewportSize;
 		else
 			nextPageEnd = SelectedItemMax;
-		UiFocus(nextPageEnd, false);
-		UiFocus(listOffset + relpos, false);
+		AdjustListOffset(nextPageEnd);
+		UiFocus(listOffset + relpos, false, true);
 	}
 }
 
@@ -903,7 +906,7 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 	index += listOffset;
 
 	if (gfnListFocus != nullptr && SelectedItem != index) {
-		UiFocus(index, true);
+		UiFocus(index, true, false);
 #ifdef USE_SDL1
 		dbClickTimer = SDL_GetTicks();
 	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
