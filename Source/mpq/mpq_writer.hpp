@@ -7,37 +7,11 @@
 
 #include <cstdint>
 
+#include "mpq/mpq_common.hpp"
 #include "utils/logged_fstream.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
-
-struct _FILEHEADER {
-	uint32_t signature;
-	int headersize;
-	uint32_t filesize;
-	uint16_t version;
-	int16_t sectorsizeid;
-	int hashoffset;
-	int blockoffset;
-	int hashcount;
-	int blockcount;
-	uint8_t pad[72];
-};
-
-struct _HASHENTRY {
-	uint32_t hashcheck[2];
-	uint32_t lcid;
-	int32_t block;
-};
-
-struct _BLOCKENTRY {
-	uint32_t offset;
-	uint32_t sizealloc;
-	uint32_t sizefile;
-	uint32_t flags;
-};
-
 class MpqWriter {
 public:
 	bool Open(const char *path);
@@ -57,29 +31,36 @@ public:
 	void RenameFile(const char *name, const char *newName);
 
 private:
-	bool IsValidMpqHeader(_FILEHEADER *hdr) const;
-	int GetHashIndex(int index, uint32_t hashA, uint32_t hashB) const;
-	int FetchHandle(const char *filename) const;
+	bool IsValidMpqHeader(MpqFileHeader *hdr) const;
+	uint32_t GetHashIndex(uint32_t index, uint32_t hashA, uint32_t hashB) const;
+	uint32_t FetchHandle(const char *filename) const;
 
-	bool ReadMPQHeader(_FILEHEADER *hdr);
-	_BLOCKENTRY *AddFile(const char *pszName, _BLOCKENTRY *pBlk, int blockIndex);
-	bool WriteFileContents(const char *pszName, const byte *pbData, size_t dwLen, _BLOCKENTRY *pBlk);
-	_BLOCKENTRY *NewBlock(int *blockIndex);
+	bool ReadMPQHeader(MpqFileHeader *hdr);
+	MpqBlockEntry *AddFile(const char *filename, MpqBlockEntry *block, uint32_t blockIndex);
+	bool WriteFileContents(const char *filename, const byte *fileData, size_t fileSize, MpqBlockEntry *block);
+
+	// Returns an unused entry in the block entry table.
+	MpqBlockEntry *NewBlock(uint32_t *blockIndex = nullptr);
+
+	// Marks space at `blockOffset` of size `blockSize` as free (unused) space.
 	void AllocBlock(uint32_t blockOffset, uint32_t blockSize);
-	int FindFreeBlock(uint32_t size, uint32_t *blockSize);
+
+	// Returns the file offset that is followed by empty space of at least the given size.
+	uint32_t FindFreeBlock(uint32_t size);
+
 	bool WriteHeaderAndTables();
 	bool WriteHeader();
 	bool WriteBlockTable();
 	bool WriteHashTable();
-	void InitDefaultMpqHeader(_FILEHEADER *hdr);
+	void InitDefaultMpqHeader(MpqFileHeader *hdr);
 
 	LoggedFStream stream_;
 	std::string name_;
 	std::uintmax_t size_;
 	bool modified_;
 	bool exists_;
-	_HASHENTRY *hashTable_;
-	_BLOCKENTRY *blockTable_;
+	MpqHashEntry *hashTable_;
+	MpqBlockEntry *blockTable_;
 
 // Amiga cannot Seekp beyond EOF.
 // See https://github.com/bebbo/libnix/issues/30
@@ -88,7 +69,7 @@ private:
 #endif
 
 #ifndef CAN_SEEKP_BEYOND_EOF
-	std::streampos stream_begin;
+	std::streampos streamBegin_;
 #endif
 };
 
