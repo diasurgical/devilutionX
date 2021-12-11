@@ -4410,13 +4410,11 @@ bool DirOK(int i, Direction mdir)
 			if (!InDungeonBounds({ x, y }))
 				continue;
 			int mi = dMonster[x][y];
-			if (mi == 0)
+			if (mi <= 0)
 				continue;
 
-			auto &minion = Monsters[(mi < 0) ? -(mi + 1) : (mi - 1)];
-			if (minion.leaderRelation == LeaderRelation::Leashed
-			    && minion.leader == i
-			    && minion.position.future == Point { x, y }) {
+			auto &minion = Monsters[mi - 1];
+			if (minion.leaderRelation == LeaderRelation::Leashed && minion.leader == i) {
 				mcount++;
 			}
 		}
