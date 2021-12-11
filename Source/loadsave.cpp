@@ -2271,7 +2271,6 @@ void LoadLevel()
 		AutomapZoomReset();
 		ResyncQuests();
 		RedoMissileFlags();
-		SyncPortals();
 		UpdateLighting = true;
 	}
 
