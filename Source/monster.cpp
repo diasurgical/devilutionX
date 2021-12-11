@@ -3540,6 +3540,26 @@ void (*AiProc[])(int i) = {
 	/*AI_BONEDEMON*/ &BoneDemonAi
 };
 
+bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
+{
+	Point futurePosition = position + mdir;
+	if (!InDungeonBounds(futurePosition) || !IsTileAvailable(monster, futurePosition))
+		return false;
+	if (mdir == Direction::East) {
+		if (IsTileSolid(position + Direction::SouthEast))
+			return false;
+	} else if (mdir == Direction::West) {
+		if (IsTileSolid(position + Direction::SouthWest))
+			return false;
+	} else if (mdir == Direction::North) {
+		if (IsTileSolid(position + Direction::NorthEast) || IsTileSolid(position + Direction::NorthWest))
+			return false;
+	} else if (mdir == Direction::South)
+		if (IsTileSolid(position + Direction::SouthWest) || IsTileSolid(position + Direction::SouthEast))
+			return false;
+	return true;
+}
+
 } // namespace
 
 void InitLevelMonsters()
@@ -3957,13 +3977,13 @@ void M_GetKnockback(int i)
 {
 	auto &monster = Monsters[i];
 
-	Direction d = Opposite(monster._mdir);
-	if (!DirOK(i, d)) {
+	Direction dir = Opposite(monster._mdir);
+	if (!IsRelativeMoveOK(monster, monster.position.old, dir)) {
 		return;
 	}
 
 	M_ClearSquares(i);
-	monster.position.old += d;
+	monster.position.old += dir;
 	StartMonsterGotHit(i);
 }
 
@@ -4385,20 +4405,8 @@ bool DirOK(int i, Direction mdir)
 	auto &monster = Monsters[i];
 	Point position = monster.position.tile;
 	Point futurePosition = position + mdir;
-	if (!InDungeonBounds(futurePosition) || !IsTileAvailable(monster, futurePosition))
+	if (!IsRelativeMoveOK(monster, position, mdir))
 		return false;
-	if (mdir == Direction::East) {
-		if (IsTileSolid(position + Direction::SouthEast))
-			return false;
-	} else if (mdir == Direction::West) {
-		if (IsTileSolid(position + Direction::SouthWest))
-			return false;
-	} else if (mdir == Direction::North) {
-		if (IsTileSolid(position + Direction::NorthEast) || IsTileSolid(position + Direction::NorthWest))
-			return false;
-	} else if (mdir == Direction::South)
-		if (IsTileSolid(position + Direction::SouthWest) || IsTileSolid(position + Direction::SouthEast))
-			return false;
 	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
 	}
