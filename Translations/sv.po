@@ -330,7 +330,7 @@ msgstr "Flera Spelare"
 
 #: Source/DiabloUI/mainmenu.cpp:38 Source/DiabloUI/settingsmenu.cpp:197
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Support"
@@ -350,7 +350,7 @@ msgstr "Avsluta Diablo"
 
 #: Source/DiabloUI/mainmenu.cpp:56
 msgid "Shareware"
-msgstr ""
+msgstr "Shareware"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:155 Source/DiabloUI/selhero.cpp:180
@@ -418,7 +418,7 @@ msgstr "Skapa Spel"
 
 #: Source/DiabloUI/selgame.cpp:93
 msgid "Create Public Game"
-msgstr ""
+msgstr "Skapa Offentligt Spel"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
@@ -435,11 +435,11 @@ msgid "Create a new game with a difficulty setting of your choice."
 msgstr "Skapa ett nytt spel med valfri svårighetsgrad."
 
 #: Source/DiabloUI/selgame.cpp:125
-#, fuzzy
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-msgstr "Skapa ett nytt spel med valfri svårighetsgrad."
+msgstr ""
+"Skapa ett nytt spel som vem som helst kan gå med i med valfri svårighetsgrad."
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
@@ -450,14 +450,8 @@ msgstr ""
 "adressen."
 
 #: Source/DiabloUI/selgame.cpp:131
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Join the public game already in progress at this address."
-msgstr ""
-"Skriv in en IP eller ett värdnamn och gå med ett spel som redan pågår på den "
-"adressen."
+msgstr "Gå med det offentliga spelet som redan pågår på denna adress."
 
 #: Source/DiabloUI/selgame.cpp:183
 msgid "Select Difficulty"
@@ -730,11 +724,11 @@ msgstr "Är du säker att du vill ta bort karaktären \"{:s}\"?"
 
 #: Source/DiabloUI/selstart.cpp:42
 msgid "Enter Hellfire"
-msgstr ""
+msgstr "Gå till Hellfire"
 
 #: Source/DiabloUI/selstart.cpp:43
 msgid "Switch to Diablo"
-msgstr ""
+msgstr "Byt till Diablo"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
@@ -754,6 +748,9 @@ msgid ""
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
+"Vi håller i en chattserver på Discord.gg/YQKCAYQ Följ länkarna för att gå "
+"med i vår gemenskap där vi pratar som allt som har att göra med Diablo, och "
+"Hellfireexpansionen."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -762,6 +759,10 @@ msgid ""
 "serve you, please be sure to include the version number, operating system, "
 "and the nature of the problem."
 msgstr ""
+"DevilutionX skapas av Diasurgical, ärenden och buggar kan anmälas på denna "
+"adress: https://github.com/diasurgical/devilutionX För att hjälpa oss hjälpa "
+"dig var god inkludera versionsnummer, operativsystem, och vad problemet "
+"handlar om."
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "Disclaimer:"
@@ -775,6 +776,11 @@ msgid ""
 "DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
 "or GOG.com."
 msgstr ""
+"\tDevilutionX vare sig stöds eller arbetas på av Blizzard Entertainment "
+"eller GOG.com. Vare sig Blizzard Entertainment eller GOG.com har testat "
+"eller intygat kvaliteten eller kompabiliteten hos DevilutionX. Alla frågor "
+"rörande DevilutionX bör riktas till Diasurgical, inte till Blizzard "
+"Entertainment eller GOG.com."
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
@@ -783,6 +789,9 @@ msgid ""
 "CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
 "license. See the ReadMe for further details."
 msgstr ""
+"\tDenna portning använder CharisSILB, Unifont och Noto vilka licenseras "
+"enligt SIL Open Font License, samt Twitmoji vilken licenseras enligt CC-BY "
+"4,0. Porten använder även SDL som licenceras enligt zlib-license."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -840,7 +849,7 @@ msgstr "lösenord: "
 
 #: Source/automap.cpp:492
 msgid "Public Game"
-msgstr ""
+msgstr "Offentligt Spel"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -1110,21 +1119,23 @@ msgid ""
 "\n"
 "Game selection:\n"
 msgstr ""
+"\n"
+"Spelval:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:799
 msgid "Force Shareware mode"
-msgstr ""
+msgstr "Tvinga Sharewareläge"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:800
 msgid "Force Diablo mode"
-msgstr ""
+msgstr "Tvinga Diabloläge"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:801
 msgid "Force Hellfire mode"
-msgstr ""
+msgstr "Tvinga Hellfireläge"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:802
@@ -3571,7 +3582,7 @@ msgstr "{0} {1} av {2}"
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
 #: Source/items.cpp:1214
 msgid "{0} {1}"
-msgstr ""
+msgstr "{0} {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1217
@@ -4853,7 +4864,7 @@ msgstr "Skördare"
 #: Source/monstdat.cpp:158 Source/monstdat.cpp:485
 msgctxt "monster"
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
@@ -4889,7 +4900,7 @@ msgstr "Svart Jade"
 #: Source/monstdat.cpp:480
 msgctxt "monster"
 msgid "Lachdanan"
-msgstr ""
+msgstr "Lachdanan"
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
@@ -4944,7 +4955,7 @@ msgstr "Sprickskalle Slagsköld"
 #: Source/monstdat.cpp:494
 msgctxt "monster"
 msgid "Bongo"
-msgstr ""
+msgstr "Bongo"
 
 #: Source/monstdat.cpp:495
 msgctxt "monster"
@@ -4969,7 +4980,7 @@ msgstr "Villöga den Döde"
 #: Source/monstdat.cpp:499
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr ""
+msgstr "El Chupacabras"
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5309,7 +5320,7 @@ msgstr "Visiren"
 #: Source/monstdat.cpp:567
 msgctxt "monster"
 msgid "Zamphir"
-msgstr ""
+msgstr "Zamfir"
 
 #: Source/monstdat.cpp:568
 msgctxt "monster"
@@ -5319,7 +5330,7 @@ msgstr "Blodlust"
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr ""
+msgstr "Nätänkan"
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
@@ -5810,27 +5821,27 @@ msgstr "{:s} (deaktiverad)"
 
 #: Source/options.cpp:432 Source/options.cpp:515 Source/options.cpp:521
 msgid "ON"
-msgstr ""
+msgstr "PÅ"
 
 #: Source/options.cpp:432 Source/options.cpp:513 Source/options.cpp:519
 msgid "OFF"
-msgstr ""
+msgstr "AV"
 
 #: Source/options.cpp:503
 msgid "Start Up"
-msgstr ""
+msgstr "Start"
 
 #: Source/options.cpp:503
 msgid "Start Up Settings"
-msgstr ""
+msgstr "Startinställningar"
 
 #: Source/options.cpp:504
 msgid "Game Mode"
-msgstr ""
+msgstr "Spelläge"
 
 #: Source/options.cpp:504
 msgid "Play Diablo or Hellfire."
-msgstr ""
+msgstr "Spela Diablo eller Hellfire."
 
 #: Source/options.cpp:506 Source/options.cpp:545 Source/quests.cpp:48
 msgid "Diablo"
@@ -5842,37 +5853,39 @@ msgstr "Hellfire"
 
 #: Source/options.cpp:510
 msgid "Restrict to Shareware"
-msgstr ""
+msgstr "Begränsa till Shareware"
 
 #: Source/options.cpp:510
 msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
 msgstr ""
+"Gör spelet kompatibelt med demot. Möjliggör flerspelare med vänner som inte "
+"äger en egen kopia av Diablo."
 
 #: Source/options.cpp:511 Source/options.cpp:517
 msgid "Intro"
-msgstr ""
+msgstr "Intro"
 
 #: Source/options.cpp:511 Source/options.cpp:517
 msgid "Shown Intro cinematic."
-msgstr ""
+msgstr "Visad Introfilm"
 
 #: Source/options.cpp:523
 msgid "Splash"
-msgstr ""
+msgstr "Laddningsskärm"
 
 #: Source/options.cpp:523
 msgid "Shown splash screen."
-msgstr ""
+msgstr "Visad Laddningsskärm"
 
 #: Source/options.cpp:525
 msgid "Logo and Title Screen"
-msgstr ""
+msgstr "Logga och Titelskärm"
 
 #: Source/options.cpp:526
 msgid "Title Screen"
-msgstr ""
+msgstr "Titelskärm"
 
 #: Source/options.cpp:527 Source/panels/charpanel.cpp:139
 msgid "None"
@@ -5880,47 +5893,48 @@ msgstr "Ingen"
 
 #: Source/options.cpp:545
 msgid "Diablo specific Settings"
-msgstr ""
+msgstr "Diablo-specifika Inställningar"
 
 #: Source/options.cpp:554
 msgid "Hellfire specific Settings"
-msgstr ""
+msgstr "Hellfire-specifika Inställningar"
 
 #: Source/options.cpp:563
 msgid "Audio"
-msgstr ""
+msgstr "Ljud"
 
 #: Source/options.cpp:563
 msgid "Audio Settings"
-msgstr ""
+msgstr "Ljudinställningar"
 
 #: Source/options.cpp:564
 msgid "Walking Sound"
-msgstr ""
+msgstr "Gångljud"
 
 #: Source/options.cpp:564
 msgid "Player emits sound when walking."
-msgstr ""
+msgstr "Spelaren låter vid gång."
 
 #: Source/options.cpp:565
 msgid "Auto Equip Sound"
-msgstr ""
+msgstr "Autopåtagningsljud"
 
 #: Source/options.cpp:565
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr ""
+"Föremål som automatiskt tas på vid upplockning låter med utrustningsljudet."
 
 #: Source/options.cpp:566
 msgid "Item Pickup Sound"
-msgstr ""
+msgstr "Föremålsupplockningsljud"
 
 #: Source/options.cpp:566
 msgid "Picking up items emits the items pickup sound."
-msgstr ""
+msgstr "Att plocka upp föremål låter med föremålsupplockningsljudet."
 
 #: Source/options.cpp:579
 msgid "Resolution"
-msgstr ""
+msgstr "Upplösning"
 
 #: Source/options.cpp:579
 msgid ""
@@ -5928,84 +5942,94 @@ msgid ""
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
 "Fit to Screen is used."
 msgstr ""
+"Påverkar spelets egen upplösning och bestämmer det visade området. OBS: "
+"Detta kan skilja sig från skärmupplösningen, när Uppskalning, "
+"Heltalsskalning eller Anpassa till Skärm används."
 
 #: Source/options.cpp:664
 msgid "Graphics"
-msgstr ""
+msgstr "Grafik"
 
 #: Source/options.cpp:664
 msgid "Graphics Settings"
-msgstr ""
+msgstr "Grafikinställningar"
 
 #: Source/options.cpp:665
 msgid "Fullscreen"
-msgstr ""
+msgstr "Helskärm"
 
 #: Source/options.cpp:665
 msgid "Display the game in windowed or fullscreen mode."
-msgstr ""
+msgstr "Visa spelet i fönster- eller helskärmsläge."
 
 #: Source/options.cpp:667
 msgid "Fit to Screen"
-msgstr ""
+msgstr "Anpassa till Skärm"
 
 #: Source/options.cpp:667
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
 msgstr ""
+"Justerar automatiskt spelfönstret till din nuvarande skrivbordsupplösning "
+"och -förhållande."
 
 #: Source/options.cpp:670
 msgid "Upscale"
-msgstr ""
+msgstr "Uppskalning"
 
 #: Source/options.cpp:670
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
 msgstr ""
+"Aktiverar bildskalning från spelupplösningen till din bildskärms upplösning. "
+"Förhindrar bildskärmens upplösning från att ändras och tillåter fönstrets "
+"storlek att ändras."
 
 #: Source/options.cpp:671
 msgid "Scaling Quality"
-msgstr ""
+msgstr "Skalningskvalitet"
 
 #: Source/options.cpp:671
 msgid "Enables optional filters to the output image when upscaling."
-msgstr ""
+msgstr "Aktiverar frivilliga filter för den färdiga bilden vid uppskalning."
 
 #: Source/options.cpp:673
 msgid "Nearest Pixel"
-msgstr ""
+msgstr "Närmsta Pixel"
 
 #: Source/options.cpp:674
 msgid "Bilinear"
-msgstr ""
+msgstr "Bilinjär"
 
 #: Source/options.cpp:675
 msgid "Anisotropic"
-msgstr ""
+msgstr "Anisotropisk"
 
 #: Source/options.cpp:677
 msgid "Integer Scaling"
-msgstr ""
+msgstr "Heltalsskalning"
 
 #: Source/options.cpp:677
 msgid "Scales the image using whole number pixel ratio."
-msgstr ""
+msgstr "Skalar bilden med en heltalskvot."
 
 #: Source/options.cpp:678
 msgid "Vertical Sync"
-msgstr ""
+msgstr "Vertikal Synk"
 
 #: Source/options.cpp:678
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
 msgstr ""
+"Tvingar väntan på Vertikal Synk. Förhindrar rivningseffekter då en bild "
+"ritas. Att slå av detta kan minska muslagg på vissa system."
 
 #: Source/options.cpp:680
 msgid "Blended Transparency"
-msgstr ""
+msgstr "Blandad Genomskinlighet"
 
 #: Source/options.cpp:680
 msgid ""
@@ -6013,275 +6037,297 @@ msgid ""
 "walls, game text menus, and boxes. If disabled will default to old "
 "checkerboard transparency."
 msgstr ""
+"Aktiverar homogen genomskinlighetsläge. Denna inställning påverkar "
+"genomskinlighet på väggar, speltextmenyer, och rutor. Om den stängs av "
+"används det gamla schackrutegenomskinligheten."
 
 #: Source/options.cpp:681
 msgid "Color Cycling"
-msgstr ""
+msgstr "Färgcykling"
 
 #: Source/options.cpp:681
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr ""
+"Färgcyklingseffekt som används för vatten-, lava-, och syraanimationer."
 
 #: Source/options.cpp:682
 msgid "FPS Limiter"
-msgstr ""
+msgstr "FPS-Begränsare"
 
 #: Source/options.cpp:682
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
+"FPS begränsas för att undvika hög processorbelastning. Gränsen tar "
+"uppdateringsfrekvens i beaktning."
 
 #: Source/options.cpp:683
 msgid "Show FPS"
-msgstr ""
+msgstr "Visa FPS"
 
 #: Source/options.cpp:683
 msgid "Displays the FPS in the upper left corner of the screen."
-msgstr ""
+msgstr "Visar FPS (rutor per sekund) i det övre vänstra hörnet av skärmen."
 
 #: Source/options.cpp:724
 msgid "Gameplay"
-msgstr ""
+msgstr "Spelande"
 
 #: Source/options.cpp:724
 msgid "Gameplay Settings"
-msgstr ""
+msgstr "Spelinställningar"
 
 #: Source/options.cpp:725
 msgid "Run in Town"
-msgstr ""
+msgstr "Springa i Byn"
 
 #: Source/options.cpp:725
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
 msgstr ""
+"Aktiverar joggning/snabb gång i byn för Diablo och Hellfire. Detta "
+"alternativ introducerades i expansionen."
 
 #: Source/options.cpp:726
 msgid "Grab Input"
-msgstr ""
+msgstr "Fånga Input"
 
 #: Source/options.cpp:726
 msgid "When enabled mouse is locked to the game window."
-msgstr ""
+msgstr "När detta aktiveras låses musen till spelfönstret."
 
 #: Source/options.cpp:727
 msgid "Theo Quest"
-msgstr ""
+msgstr "Theouppdrag"
 
 #: Source/options.cpp:727
-#, fuzzy
 msgid "Enable Little Girl quest."
-msgstr "Lilla Flickan"
+msgstr "Aktiverar den Lilla Flickans uppdrag."
 
 #: Source/options.cpp:728
 msgid "Cow Quest"
-msgstr ""
+msgstr "Kouppdrag"
 
 #: Source/options.cpp:728
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
-msgstr ""
+msgstr "Aktiverar Jerseyuppdraget. Bonden Lester ersätts av Fullkomligt Nöt."
 
 #: Source/options.cpp:729
 msgid "Friendly Fire"
-msgstr ""
+msgstr "Vådaskott"
 
 #: Source/options.cpp:729
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
 msgstr ""
+"Tillåter pil-/trollformelsskada mellan spelare i flerspelarläge även om "
+"vänskapsläge är på."
 
 #: Source/options.cpp:730
 msgid "Test Bard"
-msgstr ""
+msgstr "Testa Bard"
 
 #: Source/options.cpp:730
 msgid "Force the Bard character type to appear in the hero selection menu."
-msgstr ""
+msgstr "Tvingar Bardkaraktärstypen att synas i hjältesvalsmenyn."
 
 #: Source/options.cpp:731
 msgid "Test Barbarian"
-msgstr ""
+msgstr "Testa Barbar"
 
 #: Source/options.cpp:731
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
-msgstr ""
+msgstr "Tvingar Barbarkaraktärstypen att synas i hjältesvalsmenyn."
 
 #: Source/options.cpp:732
 msgid "Experience Bar"
-msgstr ""
+msgstr "Erfarenhetsindikator"
 
 #: Source/options.cpp:732
 msgid "Experience Bar is added to the UI at the bottom of the screen."
-msgstr ""
+msgstr "En Erfarenhetsindikator läggs till gränssnittet längst ned på skärmen."
 
 #: Source/options.cpp:733
 msgid "Enemy Health Bar"
-msgstr ""
+msgstr "Fiendelivsindikator"
 
 #: Source/options.cpp:733
 msgid "Enemy Health Bar is displayed at the top of the screen."
-msgstr ""
+msgstr "En Fiendelivsindikator visas längst upp på skärmen."
 
 #: Source/options.cpp:734
 msgid "Auto Gold Pickup"
-msgstr ""
+msgstr "Autoguldupplockning"
 
 #: Source/options.cpp:734
 msgid "Gold is automatically collected when in close proximity to the player."
-msgstr ""
+msgstr "Guld samlas automatiskt in när spelaren är nära."
 
 #: Source/options.cpp:735
 msgid "Auto Elixir Pickup"
-msgstr ""
+msgstr "Autoelixirupplockning"
 
 #: Source/options.cpp:735
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
-msgstr ""
+msgstr "Elixir samlas automatiskt in när spelaren är nära."
 
 #: Source/options.cpp:736
 msgid "Auto Pickup in Town"
-msgstr ""
+msgstr "Autoupplockning i Byn"
 
 #: Source/options.cpp:736
 msgid "Automatically pickup items in town."
-msgstr ""
+msgstr "Plockar automatiskt upp föremål i byn."
 
 #: Source/options.cpp:737
 msgid "Adria Refills Mana"
-msgstr ""
+msgstr "Adria Fyller På Mana"
 
 #: Source/options.cpp:737
 msgid "Adria will refill your mana when you visit her shop."
-msgstr ""
+msgstr "Adria fyller på din mana när du besöker hennes butik."
 
 #: Source/options.cpp:738
 msgid "Auto Equip Weapons"
-msgstr ""
+msgstr "Autovapenpåtagning"
 
 #: Source/options.cpp:738
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Vapen tas automatiskt på vid upplockning eller köp om detta är aktiverat."
 
 #: Source/options.cpp:739
 msgid "Auto Equip Armor"
-msgstr ""
+msgstr "Autorustningpåtagning"
 
 #: Source/options.cpp:739
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Rustningar tas automatiskt på vid upplockning eller köp om detta är "
+"aktiverat."
 
 #: Source/options.cpp:740
 msgid "Auto Equip Helms"
-msgstr ""
+msgstr "Autohjälmpåtagning"
 
 #: Source/options.cpp:740
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Hjälmar tas automatiskt på vid upplockning eller köp om detta är aktiverat."
 
 #: Source/options.cpp:741
 msgid "Auto Equip Shields"
-msgstr ""
+msgstr "Autosköldpåtagning"
 
 #: Source/options.cpp:741
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Sköldar tas automatiskt på vid upplockning eller köp om detta är aktiverat."
 
 #: Source/options.cpp:742
 msgid "Auto Equip Jewelry"
-msgstr ""
+msgstr "Autosmyckepåtagning"
 
 #: Source/options.cpp:742
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Smycken tas automatiskt på vid upplockning eller köp om detta är aktiverat."
 
 #: Source/options.cpp:743
 msgid "Randomize Quests"
-msgstr ""
+msgstr "Slumpa Uppdrag"
 
 #: Source/options.cpp:743
 msgid "Randomly selecting available quests for new games."
-msgstr ""
+msgstr "Väljer slumpvis tillgängliga uppdrag för nya spel."
 
 #: Source/options.cpp:744
 msgid "Show Monster Type"
-msgstr ""
+msgstr "Visa Monstertyp"
 
 #: Source/options.cpp:744
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
 msgstr ""
+"Ett monsters typ visas i gränssnittets informationsruta då man håller musen "
+"över det."
 
 #: Source/options.cpp:745
 msgid "Auto Refill Belt"
-msgstr ""
+msgstr "Autopåfyllning av Bältet"
 
 #: Source/options.cpp:745
 msgid "Refill belt from inventory when belt item is consumed."
-msgstr ""
+msgstr "Fyll på bältet från egendomar då varje bältesföremål konsumeras."
 
 #: Source/options.cpp:746
 msgid "Disable Crippling Shrines"
-msgstr ""
+msgstr "Förbjud Handikappande Helgedomar"
 
 #: Source/options.cpp:746
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
+"När detta aktiveras kommer Kittlar, Fascinerande Helgedomar, Gethelgedomar, "
+"Sirliga Helgedomar och Heliga Helgedomar inte kunna klickas på och kommer "
+"märkas som deaktiverade."
 
 #: Source/options.cpp:747
 msgid "Quick Cast"
-msgstr ""
+msgstr "Snabbtrolleri"
 
 #: Source/options.cpp:747
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
 msgstr ""
+"Trollformelsgenvägsknappar aktiverar omedelbart trollformeln istället för "
+"att byta till den som förberedd trollformel."
 
 #: Source/options.cpp:784
 msgid "Controller"
-msgstr ""
+msgstr "Spelkontroll"
 
 #: Source/options.cpp:784
 msgid "Controller Settings"
-msgstr ""
+msgstr "Spelkontrollsinställningar"
 
 #: Source/options.cpp:793
 msgid "Network"
-msgstr ""
+msgstr "Nätverk"
 
 #: Source/options.cpp:793
 msgid "Network Settings"
-msgstr ""
+msgstr "Nätverksinställningar"
 
 #: Source/options.cpp:802
 msgid "Chat"
-msgstr ""
+msgstr "Chatt"
 
 #: Source/options.cpp:802
 msgid "Chat Settings"
-msgstr ""
+msgstr "Chattinställningar"
 
 #: Source/options.cpp:811 Source/options.cpp:973
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #: Source/options.cpp:811
 msgid "Define what language to use in game."
-msgstr ""
+msgstr "Bestämmer vilket språk som används i spelet."
 
 #: Source/options.cpp:973
 msgid "Language Settings"
-msgstr ""
+msgstr "Språkinställningar"
 
 #: Source/panels/charpanel.cpp:111
 msgid "MAX"
@@ -6410,7 +6456,7 @@ msgstr[1] "Stav ({:d} laddningar)"
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:167
 msgid "Heals: {:d} - {:d}"
-msgstr ""
+msgstr "Läker: {:d} - {:d}"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:169
@@ -6420,7 +6466,7 @@ msgstr "Skada: {:d} - {:d}"
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:173
 msgid "Dmg: 1/3 target hp"
-msgstr ""
+msgstr "Skada: 1/3 av målets liv"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:175
@@ -6429,9 +6475,8 @@ msgid "Mana: {:d}"
 msgstr "Mana: {:d}"
 
 #: Source/panels/spell_book.cpp:178
-#, fuzzy
 msgid "Level 0 - Unusable"
-msgstr "Trollformelsnivå 0 - Oanvändbar"
+msgstr "Nivå 0 - Oanvändbar"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:180
@@ -6535,7 +6580,7 @@ msgstr "Zhar den Galne"
 
 #: Source/quests.cpp:47
 msgid "Lachdanan"
-msgstr ""
+msgstr "Lachdanan"
 
 #: Source/quests.cpp:49
 msgid "The Butcher"
@@ -6596,7 +6641,7 @@ msgstr "Besudlaren"
 
 #: Source/quests.cpp:64
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #: Source/quests.cpp:65 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
@@ -6905,15 +6950,15 @@ msgstr "Griswold"
 
 #: Source/stores.cpp:92
 msgid "Pepin"
-msgstr ""
+msgstr "Pepin"
 
 #: Source/stores.cpp:94
 msgid "Ogden"
-msgstr ""
+msgstr "Ogden"
 
 #: Source/stores.cpp:95
 msgid "Cain"
-msgstr ""
+msgstr "Cain"
 
 #: Source/stores.cpp:96
 msgid "Farnham"
@@ -6921,19 +6966,19 @@ msgstr "Farnham"
 
 #: Source/stores.cpp:97
 msgid "Adria"
-msgstr ""
+msgstr "Adria"
 
 #: Source/stores.cpp:98 Source/stores.cpp:1305
 msgid "Gillian"
-msgstr ""
+msgstr "Gillian"
 
 #: Source/stores.cpp:99
 msgid "Wirt"
-msgstr ""
+msgstr "Wirt"
 
 #: Source/stores.cpp:218 Source/stores.cpp:225
 msgid "Back"
-msgstr ""
+msgstr "Tillbaka"
 
 #: Source/stores.cpp:250 Source/stores.cpp:257
 msgid ",  "
@@ -10589,7 +10634,7 @@ msgid ""
 msgstr ""
 "Är den borta? Sprängde du den tillbaka till de mörka vrårna i Hades den kom "
 "från? Du vad? Åh, säg inte att du tappat bort den! De där är inte billiga, "
-"vet du. Du får leta rätt på den, och spräng bort den där hemskheten från byn-"
+"vet du. Du får leta rätt på den, och spräng bort den där hemskheten från byn."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -11085,7 +11130,7 @@ msgstr "Fullkomligt Nöt"
 
 #: Source/towners.cpp:266
 msgid "Celia"
-msgstr ""
+msgstr "Celia"
 
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
