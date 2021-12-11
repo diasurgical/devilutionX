@@ -352,7 +352,7 @@ void UiFocusNavigation(SDL_Event *event)
 	if (HandleMenuAction(GetMenuAction(*event)))
 		return;
 
-#ifndef USE_SDL1
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 	if (event->type == SDL_MOUSEWHEEL) {
 		if (event->wheel.y > 0) {
 			UiFocusUp();
@@ -360,6 +360,17 @@ void UiFocusNavigation(SDL_Event *event)
 			UiFocusDown();
 		}
 		return;
+	}
+#else
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
+		switch (event->button.button) {
+		case SDL_BUTTON_WHEELUP:
+			UiFocusUp();
+			return;
+		case SDL_BUTTON_WHEELDOWN:
+			UiFocusDown();
+			return;
+		}
 	}
 #endif
 
