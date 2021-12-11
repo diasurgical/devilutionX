@@ -26,8 +26,6 @@
 namespace devilution {
 namespace {
 
-constexpr size_t SVidPaletteBufferSize = 768;
-
 #ifndef NOSOUND
 std::optional<Aulib::Stream> SVidAudioStream;
 PushAulibDecoder *SVidAudioDecoder;
@@ -40,9 +38,7 @@ double SVidFrameEnd;
 double SVidFrameLength;
 bool SVidLoop;
 SmackerHandle SVidHandle;
-std::unique_ptr<uint8_t[]> SVidPaletteBuffer;
 std::unique_ptr<uint8_t[]> SVidFrameBuffer;
-SDL_Color SVidPreviousPalette[256];
 SDLPaletteUniquePtr SVidPalette;
 SDLSurfaceUniquePtr SVidSurface;
 
@@ -60,7 +56,18 @@ bool IsSVidVideoMode = false;
 void TrySetVideoModeToSVidForSDL1()
 {
 	const SDL_Surface *display = SDL_GetVideoSurface();
-	IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
+#if defined(SDL1_VIDEO_MODE_SVID_FLAGS)
+	const int flags = SDL1_VIDEO_MODE_SVID_FLAGS;
+#elif defined(SDL1_VIDEO_MODE_FLAGS)
+	const int flags = SDL1_VIDEO_MODE_FLAGS;
+#else
+	const int flags = display->flags;
+#endif
+#ifdef SDL1_FORCE_SVID_VIDEO_MODE
+	IsSVidVideoMode = true;
+#else
+	IsSVidVideoMode = (flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
+#endif
 	if (!IsSVidVideoMode)
 		return;
 
@@ -74,18 +81,12 @@ void TrySetVideoModeToSVidForSDL1()
 		h = SVidHeight;
 	}
 
-#ifdef SDL1_FORCE_SVID_VIDEO_MODE
-	const bool video_mode_ok = true;
-#else
-	const bool video_mode_ok = SDL_VideoModeOK(
-	    w, h, /*bpp=*/display->format->BitsPerPixel, display->flags);
-#endif
-
-	if (!video_mode_ok) {
+#ifndef SDL1_FORCE_SVID_VIDEO_MODE
+	if (!SDL_VideoModeOK(w, h, /*bpp=*/display->format->BitsPerPixel, flags)) {
 		IsSVidVideoMode = false;
 
 		// Get available fullscreen/hardware modes
-		SDL_Rect **modes = SDL_ListModes(nullptr, display->flags);
+		SDL_Rect **modes = SDL_ListModes(nullptr, flags);
 
 		// Check is there are any modes available.
 		if (modes == reinterpret_cast<SDL_Rect **>(0)
@@ -105,8 +106,8 @@ void TrySetVideoModeToSVidForSDL1()
 			return;
 		IsSVidVideoMode = true;
 	}
-
-	SetVideoMode(w, h, display->format->BitsPerPixel, display->flags);
+#endif
+	SetVideoMode(w, h, display->format->BitsPerPixel, flags);
 }
 #endif
 
@@ -132,6 +133,95 @@ bool SVidLoadNextFrame()
 	Smacker_GetNextFrame(SVidHandle);
 	Smacker_GetFrame(SVidHandle, SVidFrameBuffer.get());
 
+	return true;
+}
+
+void UpdatePalette()
+{
+	constexpr size_t NumColors = 256;
+	uint8_t paletteData[NumColors * 3];
+	Smacker_GetPalette(SVidHandle, paletteData);
+
+	SDL_Color *colors = SVidPalette->colors;
+	for (unsigned i = 0; i < NumColors; ++i) {
+		colors[i].r = paletteData[i * 3];
+		colors[i].g = paletteData[i * 3 + 1];
+		colors[i].b = paletteData[i * 3 + 2];
+#ifndef USE_SDL1
+		colors[i].a = SDL_ALPHA_OPAQUE;
+#endif
+	}
+
+#ifdef USE_SDL1
+#if SDL1_VIDEO_MODE_BPP == 8
+	// When the video surface is 8bit, we need to set the output palette.
+	SDL_SetColors(SDL_GetVideoSurface(), colors, 0, NumColors);
+#endif
+	if (SDL_SetPalette(SVidSurface.get(), SDL_LOGPAL, colors, 0, NumColors) <= 0) {
+		ErrSdl();
+	}
+#else
+	if (SDL_SetSurfacePalette(SVidSurface.get(), SVidPalette.get()) <= -1) {
+		ErrSdl();
+	}
+#endif
+}
+
+bool BlitFrame()
+{
+#ifndef USE_SDL1
+	if (renderer != nullptr) {
+		if (SDL_BlitSurface(SVidSurface.get(), nullptr, GetOutputSurface(), nullptr) <= -1) {
+			Log("{}", SDL_GetError());
+			return false;
+		}
+	} else
+#endif
+	{
+		SDL_Surface *outputSurface = GetOutputSurface();
+#ifdef USE_SDL1
+		const bool isIndexedOutputFormat = SDLBackport_IsPixelFormatIndexed(outputSurface->format);
+#else
+		const Uint32 wndFormat = SDL_GetWindowPixelFormat(ghMainWnd);
+		const bool isIndexedOutputFormat = SDL_ISPIXELFORMAT_INDEXED(wndFormat);
+#endif
+		SDL_Rect outputRect;
+		if (isIndexedOutputFormat) {
+			// Cannot scale if the output format is indexed (8-bit palette).
+			outputRect.w = static_cast<int>(SVidWidth);
+			outputRect.h = static_cast<int>(SVidHeight);
+		} else if (IsLandscapeFit(SVidWidth, SVidHeight, outputSurface->w, outputSurface->h)) {
+			outputRect.w = outputSurface->w;
+			outputRect.h = SVidHeight * outputSurface->w / SVidWidth;
+		} else {
+			outputRect.w = SVidWidth * outputSurface->h / SVidHeight;
+			outputRect.h = outputSurface->h;
+		}
+		outputRect.x = (outputSurface->w - outputRect.w) / 2;
+		outputRect.y = (outputSurface->h - outputRect.h) / 2;
+
+		if (isIndexedOutputFormat
+		    || outputSurface->w == static_cast<int>(SVidWidth)
+		    || outputSurface->h == static_cast<int>(SVidHeight)) {
+			if (SDL_BlitSurface(SVidSurface.get(), nullptr, outputSurface, &outputRect) <= -1) {
+				ErrSdl();
+			}
+		} else {
+			// The source surface is always 8-bit, and the output surface is never 8-bit in this branch.
+			// We must convert to the output format before calling SDL_BlitScaled.
+#ifdef USE_SDL1
+			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurface(SVidSurface.get(), ghMainWnd->format, 0);
+#else
+			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurfaceFormat(SVidSurface.get(), wndFormat, 0);
+#endif
+			if (SDL_BlitScaled(converted.get(), nullptr, outputSurface, &outputRect) <= -1) {
+				Log("{}", SDL_GetError());
+				return false;
+			}
+		}
+	}
+
+	RenderPresent();
 	return true;
 }
 
@@ -192,12 +282,6 @@ bool SVidPlayBegin(const char *filename, int flags)
 	SVidFrameLength = 1000000.0 / Smacker_GetFrameRate(SVidHandle);
 	Smacker_GetFrameSize(SVidHandle, SVidWidth, SVidHeight);
 
-	SVidFrameBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[SVidWidth * SVidHeight] };
-
-	// Decode first frame
-	Smacker_GetNextFrame(SVidHandle);
-	Smacker_GetFrame(SVidHandle, SVidFrameBuffer.get());
-
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
 		int renderWidth = static_cast<int>(SVidWidth);
@@ -210,9 +294,20 @@ bool SVidPlayBegin(const char *filename, int flags)
 #else
 	TrySetVideoModeToSVidForSDL1();
 #endif
-	std::memcpy(SVidPreviousPalette, orig_palette, sizeof(SVidPreviousPalette));
 
-	// Copy frame to buffer
+	// Set the background to black.
+	SDL_FillRect(GetOutputSurface(), nullptr, 0x000000);
+
+	// The buffer for the frame. It is not the same as the SDL surface because the SDL surface also has pitch padding.
+	SVidFrameBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[static_cast<size_t>(SVidWidth * SVidHeight)] };
+
+	// Decode first frame.
+	Smacker_GetNextFrame(SVidHandle);
+	Smacker_GetFrame(SVidHandle, SVidFrameBuffer.get());
+
+	// Create the surface from the frame buffer data.
+	// It will be rendered in `SVidPlayContinue`, called immediately after this function.
+	// Subsequents frames will also be copied to this surface.
 	SVidSurface = SDLWrap::CreateRGBSurfaceWithFormatFrom(
 	    reinterpret_cast<void *>(SVidFrameBuffer.get()),
 	    static_cast<int>(SVidWidth),
@@ -221,42 +316,18 @@ bool SVidPlayBegin(const char *filename, int flags)
 	    static_cast<int>(SVidWidth),
 	    SDL_PIXELFORMAT_INDEX8);
 
-	SVidPaletteBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[SVidPaletteBufferSize] };
 	SVidPalette = SDLWrap::AllocPalette();
-	if (SDLC_SetSurfaceColors(SVidSurface.get(), SVidPalette.get()) <= -1) {
-		ErrSdl();
-	}
+	UpdatePalette();
 
 	SVidFrameEnd = SDL_GetTicks() * 1000.0 + SVidFrameLength;
-	SDL_FillRect(GetOutputSurface(), nullptr, 0x000000);
+
 	return true;
 }
 
 bool SVidPlayContinue()
 {
 	if (Smacker_DidPaletteChange(SVidHandle)) {
-		SDL_Color colors[256];
-		uint8_t *paletteData = SVidPaletteBuffer.get();
-		Smacker_GetPalette(SVidHandle, paletteData);
-
-		for (int i = 0; i < 256; i++) {
-			colors[i].r = paletteData[i * 3 + 0];
-			colors[i].g = paletteData[i * 3 + 1];
-			colors[i].b = paletteData[i * 3 + 2];
-#ifndef USE_SDL1
-			colors[i].a = SDL_ALPHA_OPAQUE;
-#endif
-
-			orig_palette[i].r = paletteData[i * 3 + 0];
-			orig_palette[i].g = paletteData[i * 3 + 1];
-			orig_palette[i].b = paletteData[i * 3 + 2];
-		}
-		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
-
-		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface.get(), SVidPalette.get(), colors, 0, 256) <= -1) {
-			Log("{}", SDL_GetError());
-			return false;
-		}
+		UpdatePalette();
 	}
 
 	if (SDL_GetTicks() * 1000.0 >= SVidFrameEnd) {
@@ -279,59 +350,8 @@ bool SVidPlayContinue()
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
 	}
 
-#ifndef USE_SDL1
-	if (renderer != nullptr) {
-		if (SDL_BlitSurface(SVidSurface.get(), nullptr, GetOutputSurface(), nullptr) <= -1) {
-			Log("{}", SDL_GetError());
-			return false;
-		}
-	} else
-#endif
-	{
-		SDL_Surface *outputSurface = GetOutputSurface();
-#ifdef USE_SDL1
-		const bool isIndexedOutputFormat = SDLBackport_IsPixelFormatIndexed(outputSurface->format);
-#else
-		const Uint32 wndFormat = SDL_GetWindowPixelFormat(ghMainWnd);
-		const bool isIndexedOutputFormat = SDL_ISPIXELFORMAT_INDEXED(wndFormat);
-#endif
-		SDL_Rect outputRect;
-		if (isIndexedOutputFormat) {
-			// Cannot scale if the output format is indexed (8-bit palette).
-			outputRect.w = static_cast<int>(SVidWidth);
-			outputRect.h = static_cast<int>(SVidHeight);
-		} else if (IsLandscapeFit(SVidWidth, SVidHeight, outputSurface->w, outputSurface->h)) {
-			outputRect.w = outputSurface->w;
-			outputRect.h = SVidHeight * outputSurface->w / SVidWidth;
-		} else {
-			outputRect.w = SVidWidth * outputSurface->h / SVidHeight;
-			outputRect.h = outputSurface->h;
-		}
-		outputRect.x = (outputSurface->w - outputRect.w) / 2;
-		outputRect.y = (outputSurface->h - outputRect.h) / 2;
-
-		if (isIndexedOutputFormat
-		    || outputSurface->w == static_cast<int>(SVidWidth)
-		    || outputSurface->h == static_cast<int>(SVidHeight)) {
-			if (SDL_BlitSurface(SVidSurface.get(), nullptr, outputSurface, &outputRect) <= -1) {
-				ErrSdl();
-			}
-		} else {
-			// The source surface is always 8-bit, and the output surface is never 8-bit in this branch.
-			// We must convert to the output format before calling SDL_BlitScaled.
-#ifdef USE_SDL1
-			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurface(SVidSurface.get(), ghMainWnd->format, 0);
-#else
-			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurfaceFormat(SVidSurface.get(), wndFormat, 0);
-#endif
-			if (SDL_BlitScaled(converted.get(), nullptr, outputSurface, &outputRect) <= -1) {
-				Log("{}", SDL_GetError());
-				return false;
-			}
-		}
-	}
-
-	RenderPresent();
+	if (!BlitFrame())
+		return false;
 
 	double now = SDL_GetTicks() * 1000.0;
 	if (now < SVidFrameEnd) {
@@ -356,10 +376,8 @@ void SVidPlayEnd()
 
 	SVidPalette = nullptr;
 	SVidSurface = nullptr;
-	SVidPaletteBuffer = nullptr;
 	SVidFrameBuffer = nullptr;
 
-	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
