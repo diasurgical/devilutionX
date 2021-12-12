@@ -232,27 +232,25 @@ void AddItemListBackButton(bool selectable = false)
 	}
 }
 
-void PrintStoreItem(Item *x, int l, UiFlags flags)
+void PrintStoreItem(const Item &item, int l, UiFlags flags)
 {
 	char sstr[128];
 
 	sstr[0] = '\0';
-	if (x->_iIdentified) {
-		if (x->_iMagical != ITEM_QUALITY_UNIQUE) {
-			if (x->_iPrePower != -1) {
-				PrintItemPower(x->_iPrePower, x);
-				strcat(sstr, tempstr);
+	if (item._iIdentified) {
+		if (item._iMagical != ITEM_QUALITY_UNIQUE) {
+			if (item._iPrePower != -1) {
+				strcat(sstr, PrintItemPower(item._iPrePower, item).c_str());
 			}
 		}
-		if (x->_iSufPower != -1) {
-			PrintItemPower(x->_iSufPower, x);
+		if (item._iSufPower != -1) {
 			if (sstr[0] != '\0')
 				strcat(sstr, _(",  "));
-			strcat(sstr, tempstr);
+			strcat(sstr, PrintItemPower(item._iSufPower, item).c_str());
 		}
 	}
-	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0) {
-		strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
+	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
+		strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), item._iCharges, item._iMaxCharges).c_str());
 		if (sstr[0] != '\0')
 			strcat(sstr, _(",  "));
 		strcat(sstr, tempstr);
@@ -262,21 +260,21 @@ void PrintStoreItem(Item *x, int l, UiFlags flags)
 		l++;
 	}
 	sstr[0] = '\0';
-	if (x->_iClass == ICLASS_WEAPON)
-		strcpy(sstr, fmt::format(_("Damage: {:d}-{:d}  "), x->_iMinDam, x->_iMaxDam).c_str());
-	if (x->_iClass == ICLASS_ARMOR)
-		strcpy(sstr, fmt::format(_("Armor: {:d}  "), x->_iAC).c_str());
-	if (x->_iMaxDur != DUR_INDESTRUCTIBLE && x->_iMaxDur != 0) {
-		strcpy(tempstr, fmt::format(_("Dur: {:d}/{:d},  "), x->_iDurability, x->_iMaxDur).c_str());
+	if (item._iClass == ICLASS_WEAPON)
+		strcpy(sstr, fmt::format(_("Damage: {:d}-{:d}  "), item._iMinDam, item._iMaxDam).c_str());
+	if (item._iClass == ICLASS_ARMOR)
+		strcpy(sstr, fmt::format(_("Armor: {:d}  "), item._iAC).c_str());
+	if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
+		strcpy(tempstr, fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur).c_str());
 		strcat(sstr, tempstr);
 	} else {
 		strcat(sstr, _("Indestructible,  "));
 	}
-	if (x->_itype == ItemType::Misc)
+	if (item._itype == ItemType::Misc)
 		sstr[0] = '\0';
-	int8_t str = x->_iMinStr;
-	uint8_t mag = x->_iMinMag;
-	int8_t dex = x->_iMinDex;
+	int8_t str = item._iMinStr;
+	uint8_t mag = item._iMinMag;
+	int8_t dex = item._iMinDex;
 	if (str == 0 && mag == 0 && dex == 0) {
 		strcat(sstr, _("No required attributes"));
 	} else {
@@ -340,7 +338,7 @@ void ScrollSmithBuy(int idx)
 			}
 
 			AddSTextVal(l, smithitem[idx]._iIvalue);
-			PrintStoreItem(&smithitem[idx], l + 1, itemColor);
+			PrintStoreItem(smithitem[idx], l + 1, itemColor);
 			stextdown = l;
 			idx++;
 		}
@@ -388,7 +386,7 @@ void ScrollSmithPremiumBuy(int boughtitems)
 			UiFlags itemColor = premiumitems[idx].getTextColorWithStatCheck();
 			AddSText(20, l, premiumitems[idx]._iIName, itemColor, true);
 			AddSTextVal(l, premiumitems[idx]._iIvalue);
-			PrintStoreItem(&premiumitems[idx], l + 1, itemColor);
+			PrintStoreItem(premiumitems[idx], l + 1, itemColor);
 			stextdown = l;
 		} else {
 			l -= 4;
@@ -479,7 +477,7 @@ void ScrollSmithSell(int idx)
 				AddSTextVal(l, storehold[idx]._ivalue);
 			}
 
-			PrintStoreItem(&storehold[idx], l + 1, itemColor);
+			PrintStoreItem(storehold[idx], l + 1, itemColor);
 			stextdown = l;
 		}
 		idx++;
@@ -693,7 +691,7 @@ void ScrollWitchBuy(int idx)
 			}
 
 			AddSTextVal(l, witchitem[idx]._iIvalue);
-			PrintStoreItem(&witchitem[idx], l + 1, itemColor);
+			PrintStoreItem(witchitem[idx], l + 1, itemColor);
 			stextdown = l;
 			idx++;
 		}
@@ -946,7 +944,7 @@ void StoreConfirm()
 		AddSText(20, 8, item._iName, itemColor, false);
 
 	AddSTextVal(8, item._iIvalue);
-	PrintStoreItem(&item, 9, itemColor);
+	PrintStoreItem(item, 9, itemColor);
 
 	switch (stextshold) {
 	case STORE_BBOY:
@@ -1020,7 +1018,7 @@ void SStartBoyBuy()
 		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue / 4));
 	else
 		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue / 2));
-	PrintStoreItem(&boyitem, 11, itemColor);
+	PrintStoreItem(boyitem, 11, itemColor);
 
 	{
 		// Add a Leave button. Unlike the other item list back buttons,
@@ -1069,7 +1067,7 @@ void ScrollHealerBuy(int idx)
 
 			AddSText(20, l, healitem[idx]._iName, itemColor, true);
 			AddSTextVal(l, healitem[idx]._iIvalue);
-			PrintStoreItem(&healitem[idx], l + 1, itemColor);
+			PrintStoreItem(healitem[idx], l + 1, itemColor);
 			stextdown = l;
 			idx++;
 		}
@@ -1236,7 +1234,7 @@ void StartStorytellerIdentifyShow()
 
 	AddSText(0, 7, _("This item is:"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 	AddSText(20, 11, item._iIName, itemColor, false);
-	PrintStoreItem(&item, 12, itemColor);
+	PrintStoreItem(item, 12, itemColor);
 	AddSText(0, 18, _("Done"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 }
 
