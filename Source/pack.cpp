@@ -275,11 +275,6 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 		UnPackItem(packedItem, player.SpdList[i], isHellfire);
 	}
 
-	if (&player == &Players[MyPlayerId]) {
-		for (int i = 0; i < 20; i++)
-			witchitem[i]._itype = ItemType::None;
-	}
-
 	CalcPlrInv(player, false);
 	player.wReflections = SDL_SwapLE16(pPack->wReflections);
 	player.pTownWarps = 0;

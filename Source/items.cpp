@@ -517,31 +517,8 @@ void CalcPlrItemMin(Player &player)
 	}
 }
 
-void WitchBookLevel(Item &bookItem)
-{
-	if (bookItem._iMiscId != IMISC_BOOK)
-		return;
-	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
-	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[bookItem._iSpell];
-	while (spellLevel > 0) {
-		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
-		spellLevel--;
-		if (bookItem._iMinMag + 20 * bookItem._iMinMag / 100 > 255) {
-			bookItem._iMinMag = 255;
-			spellLevel = 0;
-		}
-	}
-}
-
 void CalcPlrBookVals(Player &player)
 {
-	if (currlevel == 0) {
-		for (int i = 1; !witchitem[i].isEmpty(); i++) {
-			WitchBookLevel(witchitem[i]);
-			witchitem[i]._iStatFlag = MyPlayer->CanUseItem(witchitem[i]);
-		}
-	}
-
 	for (Item &item : InventoryPlayerItemsRange { player }) {
 		if (item._itype == ItemType::Misc && item._iMiscId == IMISC_BOOK) {
 			item._iMinMag = spelldata[item._iSpell].sMinInt;
@@ -2253,7 +2230,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 	        && count < 150));
 	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumItem._iIdentified = true;
-	premiumItem._iStatFlag = MyPlayer->CanUseItem(premiumItem);
+	premiumItem._iStatFlag = player.CanUseItem(premiumItem);
 }
 
 bool WitchItemOk(int i)
@@ -2414,35 +2391,6 @@ void RecreateTownItem(Item &item, int idx, uint16_t icreateinfo, int iseed)
 		RecreateWitchItem(item, idx, icreateinfo & CF_LEVEL, iseed);
 	else if ((icreateinfo & CF_HEALER) != 0)
 		RecreateHealerItem(item, idx, icreateinfo & CF_LEVEL, iseed);
-}
-
-void RecalcStoreStats()
-{
-	// This function gets called when browsing the saved games list, the global MyPlayer pointer is nullptr at this point
-	// since we're not actually in a game yet. Previous code just blindly used Players[MyPlayerId] (where MyPlayerId = 0)
-	// so we do the same.
-	const auto &myPlayer = Players[MyPlayerId];
-	for (auto &item : smithitem) {
-		if (!item.isEmpty()) {
-			item._iStatFlag = myPlayer.CanUseItem(item);
-		}
-	}
-	for (auto &item : premiumitems) {
-		if (!item.isEmpty()) {
-			item._iStatFlag = myPlayer.CanUseItem(item);
-		}
-	}
-	for (int i = 0; i < 20; i++) {
-		if (!witchitem[i].isEmpty()) {
-			witchitem[i]._iStatFlag = myPlayer.CanUseItem(witchitem[i]);
-		}
-	}
-	for (auto &item : healitem) {
-		if (!item.isEmpty()) {
-			item._iStatFlag = myPlayer.CanUseItem(item);
-		}
-	}
-	boyitem._iStatFlag = myPlayer.CanUseItem(boyitem);
 }
 
 void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int icurs, bool sendmsg, bool delta)
@@ -2960,8 +2908,6 @@ void CalcPlrInv(Player &player, bool loadgfx)
 		CalcPlrBookVals(player);
 		player.CalcScrolls();
 		CalcPlrStaff(player);
-		if (currlevel == 0)
-			RecalcStoreStats();
 	}
 }
 
@@ -4446,7 +4392,6 @@ void SpawnSmith(int lvl)
 
 		newItem._iCreateInfo = lvl | CF_SMITH;
 		newItem._iIdentified = true;
-		newItem._iStatFlag = MyPlayer->CanUseItem(newItem);
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ItemType::None;
@@ -4521,8 +4466,6 @@ void SpawnWitch(int lvl)
 					GetItemAttrs(item, bookType, lvl);
 					item._iCreateInfo = lvl | CF_WITCH;
 					item._iIdentified = true;
-					WitchBookLevel(item);
-					item._iStatFlag = MyPlayer->CanUseItem(item);
 					bookCount++;
 					continue;
 				}
@@ -4551,8 +4494,6 @@ void SpawnWitch(int lvl)
 
 		item._iCreateInfo = lvl | CF_WITCH;
 		item._iIdentified = true;
-		WitchBookLevel(item);
-		item._iStatFlag = MyPlayer->CanUseItem(item);
 	}
 
 	SortVendor(witchitem + PinnedItemCount);
@@ -4669,7 +4610,6 @@ void SpawnBoy(int lvl)
 	        && count < 250));
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
-	boyitem._iStatFlag = MyPlayer->CanUseItem(boyitem);
 	boylevel = lvl / 2;
 }
 
@@ -4702,7 +4642,6 @@ void SpawnHealer(int lvl)
 		GetItemAttrs(item, itype, lvl);
 		item._iCreateInfo = lvl | CF_HEALER;
 		item._iIdentified = true;
-		item._iStatFlag = MyPlayer->CanUseItem(item);
 	}
 
 	SortVendor(healitem + PinnedItemCount);
