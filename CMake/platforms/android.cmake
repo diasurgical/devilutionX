@@ -1,4 +1,5 @@
 # General build options.
+set(BUILD_TESTING OFF)
 set(VIRTUAL_GAMEPAD ON)
 
 # Disable all system dependencies.

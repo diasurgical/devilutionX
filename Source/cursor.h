@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
 #include "miniwin/miniwin.h"
+#include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -31,16 +32,16 @@ enum cursor_id : uint8_t {
 	CURSOR_FIRSTITEM,
 };
 
-extern Size cursSize;
+extern DVL_API_FOR_TEST Size cursSize;
 extern int pcursmonst;
-extern Size icursSize28;
-extern Size icursSize;
+extern DVL_API_FOR_TEST Size icursSize28;
+extern DVL_API_FOR_TEST Size icursSize;
 extern int8_t pcursinvitem;
 extern int8_t pcursitem;
 extern int8_t pcursobj;
 extern int8_t pcursplr;
 extern Point cursPosition;
-extern int pcurs;
+extern DVL_API_FOR_TEST int pcurs;
 
 void InitCursor();
 void FreeCursor();

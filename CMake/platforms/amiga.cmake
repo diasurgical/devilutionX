@@ -1,3 +1,4 @@
+set(BUILD_TESTING OFF)
 set(ASAN OFF)
 set(UBSAN OFF)
 set(NONET ON)

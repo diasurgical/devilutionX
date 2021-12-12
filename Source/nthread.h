@@ -6,6 +6,7 @@
 #pragma once
 
 #include "player.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -15,7 +16,7 @@ extern uint32_t gdwTurnsInTransit;
 extern uintptr_t glpMsgTbl[MAX_PLRS];
 extern uint32_t gdwLargestMsgSize;
 extern uint32_t gdwNormalMsgSize;
-extern float gfProgressToNextGameTick; // the progress as a fraction (0.0f to 1.0f) in time to the next game tick
+extern DVL_API_FOR_TEST float gfProgressToNextGameTick; // the progress as a fraction (0.0f to 1.0f) in time to the next game tick
 extern int last_tick;
 
 void nthread_terminate_game(const char *pszFcn);

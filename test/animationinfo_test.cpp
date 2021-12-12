@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "nthread.h"
 #include "engine/animationinfo.h"
+#include "nthread.h"
 
 using namespace devilution;
 

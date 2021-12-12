@@ -13,6 +13,7 @@
 #include "monster.h"
 #include "objdat.h"
 #include "textdat.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -230,7 +231,7 @@ struct Object {
 	}
 };
 
-extern Object Objects[MAXOBJECTS];
+extern DVL_API_FOR_TEST Object Objects[MAXOBJECTS];
 extern int AvailableObjects[MAXOBJECTS];
 extern int ActiveObjects[MAXOBJECTS];
 extern int ActiveObjectCount;

@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "msg.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -37,7 +38,7 @@ extern BYTE gbActivePlayers;
 extern bool gbGameDestroyed;
 extern GameData sgGameInitInfo;
 extern bool gbSelectProvider;
-extern bool gbIsMultiplayer;
+extern DVL_API_FOR_TEST bool gbIsMultiplayer;
 extern char szPlayerName[128];
 extern bool PublicGame;
 extern BYTE gbDeltaSender;

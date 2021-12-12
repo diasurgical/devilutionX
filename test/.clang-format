@@ -5,6 +5,6 @@ AllowShortFunctionsOnASingleLine: None
 PointerAlignment: Right
 TabWidth: 4
 UseTab: ForIndentation
-SortIncludes: false
+SortIncludes: true
 NamespaceIndentation: None
 FixNamespaceComments: true

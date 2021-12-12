@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 #include "utils/file_util.h"
 

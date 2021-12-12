@@ -20,6 +20,7 @@
 #include "multi.h"
 #include "path.h"
 #include "spelldat.h"
+#include "utils/attributes.h"
 #include "utils/enum_traits.h"
 
 namespace devilution {
@@ -614,9 +615,9 @@ struct Player {
 	}
 };
 
-extern int MyPlayerId;
-extern Player *MyPlayer;
-extern Player Players[MAX_PLRS];
+extern DVL_API_FOR_TEST int MyPlayerId;
+extern DVL_API_FOR_TEST Player *MyPlayer;
+extern DVL_API_FOR_TEST Player Players[MAX_PLRS];
 extern bool MyPlayerIsDead;
 extern int BlockBonuses[enum_size<HeroClass>::value];
 
