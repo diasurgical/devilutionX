@@ -254,6 +254,11 @@ void ReinitializeRenderer()
 	Size windowSize = { current.current_w, current.current_h };
 	AdjustToScreenGeometry(windowSize);
 #else
+	// SDL headers don't expose this key so this is taken from SDL source code
+	// https://github.com/libsdl-org/SDL/blob/release-2.0.18/src/render/SDL_render.c#L47
+	constexpr char SDL_WINDOWRENDERDATA[] = "_SDL_WindowRenderData";
+	static SDL_Renderer *sdlInternalRenderer = nullptr;
+
 	if (texture)
 		texture.reset();
 
@@ -268,6 +273,13 @@ void ReinitializeRenderer()
 		if (*sgOptions.Graphics.vSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
+
+		if (sdlInternalRenderer == nullptr) {
+			// Since we just destroyed our own renderer above,
+			// this would have to be a renderer internal to SDL
+			sdlInternalRenderer = SDL_GetRenderer(ghMainWnd);
+		}
+		SDL_SetWindowData(ghMainWnd, SDL_WINDOWRENDERDATA, nullptr);
 
 		renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
 		if (renderer == nullptr) {
@@ -295,6 +307,12 @@ void ReinitializeRenderer()
 		Size windowSize = {};
 		SDL_GetWindowSize(ghMainWnd, &windowSize.width, &windowSize.height);
 		AdjustToScreenGeometry(windowSize);
+
+		if (sdlInternalRenderer != nullptr) {
+			// If we have previously removed SDL's internal renderer from the window,
+			// it must be restored here to use the window surface again
+			SDL_SetWindowData(ghMainWnd, SDL_WINDOWRENDERDATA, sdlInternalRenderer);
+		}
 	}
 #endif
 }
