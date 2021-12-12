@@ -1915,6 +1915,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
 				[[maybe_unused]] uint32_t mid1Seed = GetLCGEngineState();
+				InitGolems();
 				InitObjects();
 				[[maybe_unused]] uint32_t mid2Seed = GetLCGEngineState();
 				IncProgress();
@@ -1937,6 +1938,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				SavePreLighting();
 			} else {
 				HoldThemeRooms();
+				InitGolems();
 				InitMonsters();
 				InitMissiles();
 				InitCorpses();
@@ -1972,6 +1974,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		GetLevelMTypes();
 		IncProgress();
+		InitGolems();
 		InitMonsters();
 		IncProgress();
 #ifdef VIRTUAL_GAMEPAD
