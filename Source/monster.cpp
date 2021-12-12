@@ -3797,13 +3797,16 @@ void monster_some_crypt()
 	monster._mmaxhp = hp;
 }
 
-void InitMonsters()
+void InitGolems()
 {
 	if (!setlevel) {
 		for (int i = 0; i < MAX_PLRS; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 	}
+}
 
+void InitMonsters()
+{
 	if (!gbIsSpawn && !setlevel && currlevel == 16)
 		LoadDiabMonsts();
 

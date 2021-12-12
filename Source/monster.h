@@ -272,6 +272,7 @@ void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);
 void monster_some_crypt();
+void InitGolems();
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
 int AddMonster(Point position, Direction dir, int mtype, bool inMap);
