@@ -486,6 +486,54 @@ void OptionEntryEnumBase::SetActiveListIndex(size_t index)
 	this->NotifyValueChanged();
 }
 
+void OptionEntryIntBase::LoadFromIni(string_view category)
+{
+	value = GetIniInt(category.data(), key.data(), defaultValue);
+	if (std::find(entryValues.begin(), entryValues.end(), value) == entryValues.end()) {
+		entryValues.push_back(value);
+		std::sort(entryValues.begin(), entryValues.end());
+		entryNames.clear();
+	}
+}
+void OptionEntryIntBase::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), key.data(), value);
+}
+void OptionEntryIntBase::SetValueInternal(int value)
+{
+	this->value = value;
+	this->NotifyValueChanged();
+}
+void OptionEntryIntBase::AddEntry(int value)
+{
+	entryValues.push_back(value);
+}
+size_t OptionEntryIntBase::GetListSize() const
+{
+	return entryValues.size();
+}
+string_view OptionEntryIntBase::GetListDescription(size_t index) const
+{
+	if (entryNames.empty()) {
+		for (auto value : entryValues) {
+			entryNames.push_back(fmt::format("{}", value));
+		}
+	}
+	return entryNames[index].data();
+}
+size_t OptionEntryIntBase::GetActiveListIndex() const
+{
+	auto iterator = std::find(entryValues.begin(), entryValues.end(), value);
+	if (iterator == entryValues.end())
+		return 0;
+	return std::distance(entryValues.begin(), iterator);
+}
+void OptionEntryIntBase::SetActiveListIndex(size_t index)
+{
+	this->value = entryValues[index];
+	this->NotifyValueChanged();
+}
+
 OptionCategoryBase::OptionCategoryBase(string_view key, string_view name, string_view description)
     : key(key)
     , name(name)
