@@ -365,7 +365,11 @@ void StartSmithBuy()
 	AddItemListBackButton();
 
 	storenumh = 0;
-	for (int i = 0; !smithitem[i].isEmpty(); i++) {
+	for (Item &item : smithitem) {
+		if (item.isEmpty())
+			continue;
+
+		item._iStatFlag = MyPlayer->CanUseItem(item);
 		storenumh++;
 	}
 
@@ -402,9 +406,12 @@ void ScrollSmithPremiumBuy(int boughtitems)
 bool StartSmithPremiumBuy()
 {
 	storenumh = 0;
-	for (const auto &item : premiumitems) {
-		if (!item.isEmpty())
-			storenumh++;
+	for (Item &item : premiumitems) {
+		if (item.isEmpty())
+			continue;
+
+		item._iStatFlag = MyPlayer->CanUseItem(item);
+		storenumh++;
 	}
 	if (storenumh == 0) {
 		StartStore(STORE_SMITH);
@@ -703,6 +710,22 @@ void ScrollWitchBuy(int idx)
 		stextsel = stextdown;
 }
 
+void WitchBookLevel(Item &bookItem)
+{
+	if (bookItem._iMiscId != IMISC_BOOK)
+		return;
+	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
+	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[bookItem._iSpell];
+	while (spellLevel > 0) {
+		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
+		spellLevel--;
+		if (bookItem._iMinMag + 20 * bookItem._iMinMag / 100 > 255) {
+			bookItem._iMinMag = 255;
+			spellLevel = 0;
+		}
+	}
+}
+
 void StartWitchBuy()
 {
 	stextsize = true;
@@ -719,7 +742,12 @@ void StartWitchBuy()
 	AddItemListBackButton();
 
 	storenumh = 0;
-	for (int i = 0; !witchitem[i].isEmpty(); i++) {
+	for (Item &item : witchitem) {
+		if (item.isEmpty())
+			continue;
+
+		WitchBookLevel(item);
+		item._iStatFlag = MyPlayer->CanUseItem(item);
 		storenumh++;
 	}
 	stextsmax = std::max(storenumh - 4, 0);
@@ -1004,12 +1032,13 @@ void SStartBoyBuy()
 	stextscrl = false;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("I have this item for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
+	strcpy(tempstr, fmt::format(_("I have this item for sale:             Your gold: {:d}"), MyPlayer->_pGold).c_str());
 
 	AddSText(0, 1, tempstr, UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
+	boyitem._iStatFlag = MyPlayer->CanUseItem(boyitem);
 
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
 		AddSText(20, 10, boyitem._iIName, itemColor, true);
@@ -1095,7 +1124,11 @@ void StartHealerBuy()
 	AddItemListBackButton();
 
 	storenumh = 0;
-	for (int i = 0; !healitem[i].isEmpty(); i++) {
+	for (Item &item : healitem) {
+		if (item.isEmpty())
+			continue;
+
+		item._iStatFlag = MyPlayer->CanUseItem(item);
 		storenumh++;
 	}
 
