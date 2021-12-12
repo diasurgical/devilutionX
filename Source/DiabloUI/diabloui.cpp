@@ -8,13 +8,13 @@
 #include <locale>
 #endif
 
-#include "../discord/discord.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
+#include "discord/discord.h"
 #include "dx.h"
 #include "hwcursor.hpp"
 #include "palette.h"
@@ -762,9 +762,7 @@ void UiPollAndRender()
 	ctr_vkbdFlush();
 #endif
 
-#ifdef DISCORD
-	DiscordManager::Instance().UpdateMenu();
-#endif
+	discord_manager::UpdateMenu();
 }
 
 namespace {

@@ -409,8 +409,6 @@ if(DISCORD_INTEGRATION)
   list(APPEND libdevilutionx_SRCS
     Source/discord/discord.cpp
   )
-
-  add_definitions(-DDISCORD)
 endif()
 
 if(RUN_TESTS)
@@ -499,6 +497,7 @@ if(RUN_TESTS)
 endif()
 
 if(DISCORD_INTEGRATION)
+  target_compile_definitions(libdevilutionx PRIVATE DISCORD)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
 

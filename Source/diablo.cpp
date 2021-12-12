@@ -706,9 +706,7 @@ void RunGameLoop(interface_mode uMsg)
 	gbGameLoopStartup = true;
 	nthread_ignore_mutex(false);
 
-#ifdef DISCORD
-	DiscordManager::Instance().StartGame(sgGameInitInfo.nDifficulty);
-#endif
+	discord_manager::StartGame();
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 	unsigned run_game_iteration = 0;
 #endif
@@ -742,9 +740,7 @@ void RunGameLoop(interface_mode uMsg)
 		if (demo::IsRecording())
 			demo::RecordGameLoopResult(runGameLoop);
 
-#ifdef DISCORD
-		DiscordManager::Instance().UpdateGame();
-#endif
+		discord_manager::UpdateGame();
 
 		if (!runGameLoop) {
 			if (processInput)

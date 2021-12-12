@@ -133,18 +133,13 @@ if(NOT NONET AND NOT DISABLE_ZERO_TIER)
 endif()
 
 if(DISCORD_INTEGRATION)
-  message("Retrieving Discord SDK")
   FetchContent_Declare(discordsrc
     URL https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
     URL_HASH MD5=f86f15957cc9fbf04e3db10462027d58
     SOURCE_DIR 3rdParty/Discord
   )
 
-  FetchContent_Populate(discordsrc)
-
-  if(NOT discordsrc_POPULATED)
-    message(FATAL_ERROR "Failed to retrieve Discord SDK.")
-  endif()
+  FetchContent_MakeAvailableExcludeFromAll(discordsrc)
 
   file(GLOB discord_SRCS ${discordsrc_SOURCE_DIR}/cpp/*.cpp)
   add_library(discord STATIC ${discord_SRCS})

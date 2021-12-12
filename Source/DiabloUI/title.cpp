@@ -1,7 +1,7 @@
-#include "../discord/discord.h"
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/menu_controls.h"
+#include "discord/discord.h"
 #include "utils/language.h"
 
 namespace devilution {
@@ -54,9 +54,7 @@ void UiTitleDialog()
 		UiRenderItems(vecTitleScreen);
 		UiFadeIn();
 
-#ifdef DISCORD
-		DiscordManager::Instance().UpdateMenu();
-#endif
+		discord_manager::UpdateMenu();
 
 		while (SDL_PollEvent(&event) != 0) {
 			if (GetMenuAction(event) != MenuAction_NONE) {

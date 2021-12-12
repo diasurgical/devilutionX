@@ -13,10 +13,14 @@
 
 #include <fmt/format.h>
 
-#include "../gendung.h"
-#include "../panels/charpanel.hpp"
-#include "../player.h"
-#include "../utils/language.h"
+#include "gendung.h"
+#include "multi.h"
+#include "panels/charpanel.hpp"
+#include "player.h"
+#include "utils/language.h"
+
+namespace devilution {
+namespace discord_manager {
 
 // App ID used when someone launches classic Diablo
 constexpr discord::ClientId DiscordDiabloAppId = 496571953147150354;
@@ -24,39 +28,48 @@ constexpr discord::ClientId DiscordDiabloAppId = 496571953147150354;
 // App ID used for DevilutionX's Diablo
 constexpr discord::ClientId DiscordDevilutionxAppId = 795760213524742205;
 
-namespace devilution {
-
-namespace {
-constexpr std::array<const char *, 3> DifficultyStrs = { N_("Normal"), N_("Nightmare"), N_("Hell") };
-constexpr std::array<const char *, DTYPE_LAST + 1> DungeonStrs = { N_("Town"), N_("Cathedral"), N_("Catacombs"), N_("Caves"), N_("Hell"), N_("Nest"), N_("Crypt") };
-
 constexpr auto IgnoreResult = [](discord::Result result) {};
-} // namespace
 
-DiscordManager::DiscordManager()
-{
-	discord::Result result = discord::Core::Create(DiscordDevilutionxAppId, DiscordCreateFlags_NoRequireDiscord, &core_);
-	good_ = result == discord::Result::Ok;
-}
+discord::Core *discord_core = []()->discord::Core* {
+	discord::Core *core;
+	discord::Result result = discord::Core::Create(DiscordDevilutionxAppId, DiscordCreateFlags_NoRequireDiscord, &core);
+	if (result != discord::Result::Ok) {
+		core = nullptr;
+	}
+	return core;
+}();
 
-DiscordManager &DiscordManager::Instance()
-{
-	static DiscordManager instance {};
-	return instance;
-}
+struct PlayerData {
+	dungeon_type dungeonArea;
+	Uint8 dungeonLevel;
+	Sint8 playerLevel;
+	int playerGfx;
 
-std::string DiscordManager::GetLocationString() const
+	// Why??? This is POD
+	bool operator!=(const PlayerData &other) const
+	{
+		return std::tie(dungeonArea, dungeonLevel, playerLevel, playerGfx) != std::tie(other.dungeonArea, other.dungeonLevel, other.playerLevel, other.playerGfx);
+	}
+};
+
+bool want_menu_update = true;
+PlayerData tracked_data;
+Sint64 start_time = 0;
+
+std::string GetLocationString()
 {
+	constexpr std::array<const char *, DTYPE_LAST + 1> DungeonStrs = { N_("Town"), N_("Cathedral"), N_("Catacombs"), N_("Caves"), N_("Hell"), N_("Nest"), N_("Crypt") };
+
 	const char *dungeonStr = _(/* TRANSLATORS: type of dungeon (i.e. Cathedral, Caves)*/ "None");
-	if (dungeon_area_ != DTYPE_NONE) {
-		dungeonStr = _(DungeonStrs.at(dungeon_area_));
+	if (tracked_data.dungeonArea != DTYPE_NONE) {
+		dungeonStr = _(DungeonStrs[tracked_data.dungeonArea]);
 	}
 
-	if (dungeon_level_ > 0) {
-		int level = dungeon_level_;
-		if (dungeon_area_ == DTYPE_NEST)
+	if (tracked_data.dungeonLevel > 0) {
+		int level = tracked_data.dungeonLevel;
+		if (tracked_data.dungeonArea == DTYPE_NEST)
 			level -= 16;
-		else if (dungeon_area_ == DTYPE_CRYPT)
+		else if (tracked_data.dungeonArea == DTYPE_CRYPT)
 			level -= 20;
 
 		return fmt::format(_(/* TRANSLATORS: dungeon type and floor number i.e. "Cathedral 3"*/ "{} {}"), dungeonStr, level);
@@ -64,59 +77,67 @@ std::string DiscordManager::GetLocationString() const
 	return fmt::format("{}", dungeonStr);
 }
 
-std::string DiscordManager::GetCharacterString() const
+std::string GetCharacterString()
 {
-	const char *charClassStr = ClassStrTbl.at(static_cast<int>(player_class_));
-	return fmt::format(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}"), player_level_, charClassStr);
+	const char *charClassStr = ClassStrTbl[static_cast<int>(Players[MyPlayerId]._pClass)];
+	return fmt::format(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}"), tracked_data.playerLevel, charClassStr);
 }
 
-std::string DiscordManager::GetDetailString() const
+std::string GetDetailString()
 {
 	return fmt::format("{} - {}", GetCharacterString(), GetLocationString());
 }
 
-std::string DiscordManager::GetStateString() const
+std::string GetStateString()
 {
-	return fmt::format(_(/* TRANSLATORS: Discord state i.e. "Nightmare difficulty" */ "{} difficulty"), _(DifficultyStrs.at(difficulty_)));
+	constexpr std::array<const char *, 3> DifficultyStrs = { N_("Normal"), N_("Nightmare"), N_("Hell") };
+	const char *difficultyStr = _(DifficultyStrs[sgGameInitInfo.nDifficulty]);
+	return fmt::format(_(/* TRANSLATORS: Discord state i.e. "Nightmare difficulty" */ "{} difficulty"), difficultyStr);
 }
 
-std::string DiscordManager::GetTooltipString() const
+std::string GetTooltipString()
 {
-	return fmt::format("{} - {}", character_name_, GetCharacterString());
+	return fmt::format("{} - {}", Players[MyPlayerId]._pName, GetCharacterString());
 }
 
-char DiscordManager::HeroClassChar() const
+char HeroClassChar()
 {
-	char chr = CharChar.at(static_cast<int>(player_class_));
+	char chr = CharChar[static_cast<int>(Players[MyPlayerId]._pClass)];
 	return static_cast<char>(std::tolower(chr));
 }
 
-char DiscordManager::ArmourClassChar() const
+char ArmourClassChar()
 {
-	char chr = ArmourChar.at(player_gfx_ >> 4);
+	char chr = ArmourChar[tracked_data.playerGfx >> 4];
 	return static_cast<char>(std::tolower(chr));
 }
 
-char DiscordManager::WpnConfigChar() const
+char WpnConfigChar()
 {
-	char chr = WepChar.at(player_gfx_ & 0xF);
+	char chr = WepChar[tracked_data.playerGfx & 0xF];
 	return static_cast<char>(std::tolower(chr));
 }
 
-std::string DiscordManager::GetPlayerAssetString() const
+std::string GetPlayerAssetString()
 {
 	return fmt::format("{}{}{}as", HeroClassChar(), ArmourClassChar(), WpnConfigChar());
 }
 
-void DiscordManager::UpdateGame()
+void ResetStartTime()
 {
-	if (core_ == nullptr || !good_)
+	start_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void UpdateGame()
+{
+	if (discord_core == nullptr)
 		return;
 
-	auto newData = std::make_tuple(Players[MyPlayerId]._pLevel, leveltype, currlevel, Players[MyPlayerId]._pgfxnum);
-	auto trackedData = std::tie(player_level_, dungeon_area_, dungeon_level_, player_gfx_);
-	if (newData != trackedData) {
-		trackedData = newData;
+	auto newData = PlayerData {
+		leveltype, currlevel, Players[MyPlayerId]._pLevel, Players[MyPlayerId]._pgfxnum
+	};
+	if (newData != tracked_data) {
+		tracked_data = newData;
 
 		// Update status strings
 		discord::Activity activity = {};
@@ -125,52 +146,46 @@ void DiscordManager::UpdateGame()
 		activity.SetDetails(GetDetailString().c_str());
 		activity.SetInstance(true);
 
-		activity.GetTimestamps().SetStart(start_time_);
+		activity.GetTimestamps().SetStart(start_time);
 
 		// Set image assets
 		activity.GetAssets().SetLargeImage(GetPlayerAssetString().c_str());
 		activity.GetAssets().SetLargeText(GetTooltipString().c_str());
 
-		core_->ActivityManager().UpdateActivity(activity, IgnoreResult);
+		discord_core->ActivityManager().UpdateActivity(activity, IgnoreResult);
 	}
-	core_->RunCallbacks();
+	discord_core->RunCallbacks();
 }
 
-void DiscordManager::ResetStartTime()
+void StartGame()
 {
-	start_time_ = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-}
-
-void DiscordManager::StartGame(int difficulty)
-{
-	difficulty_ = difficulty;
-	player_class_ = Players[MyPlayerId]._pClass;
-	character_name_ = Players[MyPlayerId]._pName;
-	want_menu_update_ = true;
+	tracked_data = PlayerData { dungeon_type::DTYPE_NONE, 0, 0, 0 };
+	want_menu_update = true;
 	ResetStartTime();
 }
 
-void DiscordManager::UpdateMenu()
+void UpdateMenu()
 {
-	if (core_ == nullptr || !good_)
+	if (discord_core == nullptr)
 		return;
 
-	if (want_menu_update_) {
-		want_menu_update_ = false;
+	if (want_menu_update) {
+		want_menu_update = false;
 		ResetStartTime();
 
 		discord::Activity activity = {};
 		activity.SetName(gszProductName);
 		activity.SetState(_(/* TRANSLATORS: Discord activity, not in game */ "In Menu"));
 
-		activity.GetTimestamps().SetStart(start_time_);
+		activity.GetTimestamps().SetStart(start_time);
 
 		activity.GetAssets().SetLargeImage("icon");
 		activity.GetAssets().SetLargeText(gszProductName);
 
-		core_->ActivityManager().UpdateActivity(activity, IgnoreResult);
+		discord_core->ActivityManager().UpdateActivity(activity, IgnoreResult);
 	}
-	core_->RunCallbacks();
+	discord_core->RunCallbacks();
 }
 
+} // namespace discord_manager
 } // namespace devilution
