@@ -191,6 +191,59 @@ public:
 	}
 };
 
+class OptionEntryIntBase : public OptionEntryListBase {
+public:
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+protected:
+	OptionEntryIntBase(string_view key, OptionEntryFlags flags, string_view name, string_view description, int defaultValue)
+	    : OptionEntryListBase(key, flags, name, description)
+	    , defaultValue(defaultValue)
+	    , value(defaultValue)
+	{
+	}
+
+	[[nodiscard]] int GetValueInternal() const
+	{
+		return value;
+	}
+	void SetValueInternal(int value);
+
+	void AddEntry(int value);
+
+private:
+	int defaultValue;
+	int value;
+	mutable std::vector<std::string> entryNames;
+	std::vector<int> entryValues;
+};
+
+template <typename T>
+class OptionEntryInt : public OptionEntryIntBase {
+public:
+	OptionEntryInt(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<T> entries)
+	    : OptionEntryIntBase(key, flags, name, description, static_cast<int>(defaultValue))
+	{
+		for (auto entry : entries) {
+			AddEntry(static_cast<int>(entry));
+		}
+	}
+	[[nodiscard]] T operator*() const
+	{
+		return static_cast<T>(GetValueInternal());
+	}
+	void SetValue(T value)
+	{
+		SetValueInternal(static_cast<int>(value));
+	}
+};
+
 class OptionEntryLanguageCode : public OptionEntryListBase {
 public:
 	OptionEntryLanguageCode();
