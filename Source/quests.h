@@ -14,6 +14,7 @@
 #include "monster.h"
 #include "objdat.h"
 #include "textdat.h"
+#include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -73,7 +74,7 @@ struct QuestData {
 
 extern bool QuestLogIsOpen;
 extern std::optional<CelSprite> pQLogCel;
-extern Quest Quests[MAXQUESTS];
+extern DVL_API_FOR_TEST Quest Quests[MAXQUESTS];
 extern Point ReturnLvlPosition;
 extern dungeon_type ReturnLevelType;
 extern int ReturnLevel;

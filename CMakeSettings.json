@@ -18,24 +18,6 @@
       ]
     },
     {
-      "name": "x64-Debug-UnitTests",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${workspaceRoot}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "intelliSenseMode": "windows-msvc-x64",
-      "cmakeCommandArgs": "-DRUN_TESTS=ON",
-      "enableClangTidyCodeAnalysis": true,
-      "variables": [
-        {
-          "name": "DISCORD_INTEGRATION",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ]
-    },
-    {
       "name": "x64-Debug-SDL1",
       "generator": "Ninja",
       "configurationType": "Debug",
@@ -79,24 +61,6 @@
       "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
       "inheritEnvironments": [ "msvc_x86" ],
       "intelliSenseMode": "windows-msvc-x86",
-      "enableClangTidyCodeAnalysis": true,
-      "variables": [
-        {
-          "name": "DISCORD_INTEGRATION",
-          "value": "True",
-          "type": "BOOL"
-        }
-      ]
-    },
-    {
-      "name": "x86-Debug-UnitTests",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "buildRoot": "${workspaceRoot}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "inheritEnvironments": [ "msvc_x86" ],
-      "intelliSenseMode": "windows-msvc-x86",
-      "cmakeCommandArgs": "-DRUN_TESTS=ON",
       "enableClangTidyCodeAnalysis": true,
       "variables": [
         {

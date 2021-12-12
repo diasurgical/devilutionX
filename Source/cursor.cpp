@@ -20,6 +20,7 @@
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
+#include "utils/attributes.h"
 #include "utils/language.h"
 
 namespace devilution {

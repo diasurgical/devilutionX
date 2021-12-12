@@ -7,14 +7,14 @@
 
 #include <cstdint>
 
-#include "utils/endian.hpp"
-
 #include "controls/keymapper.hpp"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
 #include "gendung.h"
 #include "init.h"
+#include "utils/attributes.h"
+#include "utils/endian.hpp"
 
 namespace devilution {
 
@@ -61,21 +61,21 @@ extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern Point MousePosition;
 extern bool gbRunGame;
 extern bool gbRunGameResult;
-extern bool zoomflag;
+extern DVL_API_FOR_TEST bool zoomflag;
 extern bool gbProcessPlayers;
 extern bool gbLoadGame;
 extern bool cineflag;
 extern int force_redraw;
 /* These are defined in fonts.h */
 extern void FontsCleanup();
-extern int PauseMode;
+extern DVL_API_FOR_TEST int PauseMode;
 extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
 /**
  * @brief Don't show Messageboxes or other user-interaction. Needed for UnitTests.
  */
-extern bool gbQuietMode;
+extern DVL_API_FOR_TEST bool gbQuietMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];

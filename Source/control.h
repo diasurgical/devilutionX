@@ -15,6 +15,7 @@
 #include "panels/ui_panels.hpp"
 #include "spelldat.h"
 #include "spells.h"
+#include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/ui_fwd.h"
@@ -38,7 +39,7 @@ extern bool lvlbtndown;
 extern int dropGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
-extern int pnumlines;
+extern DVL_API_FOR_TEST int pnumlines;
 extern UiFlags InfoColor;
 extern char tempstr[256];
 extern int sbooktab;

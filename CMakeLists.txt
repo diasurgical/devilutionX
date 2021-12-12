@@ -38,8 +38,9 @@ option(TSAN "Enable thread sanitizer (not compatible with ASAN=ON)" OFF)
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
 option(GPERF "Build with GPerfTools profiler" OFF)
 cmake_dependent_option(GPERF_HEAP_FIRST_GAME_ITERATION "Save heap profile of the first game iteration" OFF "GPERF" OFF)
+option(BUILD_TESTING "Build tests." ON)
 option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
-option(PIE "Generate position-independent code" OFF)
+cmake_dependent_option(PIE "Generate position-independent code" OFF "BUILD_TESTING" ON)
 option(MACOSX_STANDALONE_APP_BUNDLE "Generate a portable app bundle to use on other devices (requires sudo)" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
@@ -47,8 +48,7 @@ cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NON
 cmake_dependent_option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF "NOT NONET" ON)
 cmake_dependent_option(PACKET_ENCRYPTION "Encrypt network packets" ON "NOT NONET" OFF)
 option(NOSOUND "Disable sound support" OFF)
-option(RUN_TESTS "Build and run tests" OFF)
-option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with RUN_TESTS)" OFF)
+option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with BUILD_TESTING)" OFF)
 option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
@@ -57,10 +57,6 @@ option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken
 mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
-
-if(PIE)
-  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-endif()
 
 if(TSAN)
   set(ASAN OFF)
@@ -117,6 +113,12 @@ else()
 endif()
 set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_SUFFIX}>")
 
+# This built-in CMake module adds a BUILD_TESTING option (ON by default).
+# Must be included in the top-level `CMakeLists.txt` after calling `project`.
+# Because we must include `VcPkgManifestFeatures` before the `project` call,
+# we add a BUILD_TESTING option ourselves above as well.
+include(CTest)
+
 # Platform definitions can override options and we want `cmake_dependent_option` to see the effects,
 # so ideally we would include Platforms.cmake before definining the options.
 #
@@ -126,6 +128,17 @@ set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_
 include(Platforms)
 
 # Recalculate the dependent options after including the Platforms:
+if(BUILD_TESTING)
+  # For tests, we build a libdevilutionx.so shared library.
+  # When this libdevilutionx.so is linked against certain static libraries,
+  # they must be compiled with `-fPIC`.
+  set(PIE ON)
+endif()
+
+if(PIE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+endif()
+
 if(NONET)
   set(DISABLE_TCP ON)
   set(DISABLE_ZERO_TIER ON)
@@ -415,33 +428,6 @@ if(DISCORD_INTEGRATION)
   )
 endif()
 
-if(RUN_TESTS)
-  set(devilutionxtest_SRCS
-    test/appfat_test.cpp
-    test/automap_test.cpp
-    test/control_test.cpp
-    test/cursor_test.cpp
-    test/codec_test.cpp
-    test/dead_test.cpp
-    test/diablo_test.cpp
-    test/drlg_l1_test.cpp
-    test/effects_test.cpp
-    test/file_util_test.cpp
-    test/inv_test.cpp
-    test/lighting_test.cpp
-    test/main.cpp
-    test/missiles_test.cpp
-    test/pack_test.cpp
-    test/path_test.cpp
-    test/player_test.cpp
-    test/quests_test.cpp
-    test/random_test.cpp
-    test/scrollrt_test.cpp
-    test/stores_test.cpp
-    test/writehero_test.cpp
-    test/animationinfo_test.cpp)
-endif()
-
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 if(ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
@@ -456,6 +442,20 @@ else()
     Packaging/apple/LaunchScreen.storyboard)
 endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+
+if(BUILD_TESTING)
+  if(ENABLE_CODECOVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+      message(WARNING "Codecoverage not supported with MSVC")
+    else()
+      target_compile_options(libdevilutionx PUBLIC --coverage)
+      target_link_options(libdevilutionx PUBLIC --coverage)
+    endif()
+  endif()
+
+  target_compile_definitions(libdevilutionx PRIVATE _DVL_EXPORTING)
+  add_subdirectory(test)
+endif()
 
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.
@@ -474,31 +474,6 @@ file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 #define PROJECT_VERSION_MINOR ${PROJECT_VERSION_MINOR}
 #define PROJECT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
 ")
-
-if(RUN_TESTS)
-  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
-  include(CTest)
-  include(GoogleTest)
-  find_package(GTest REQUIRED)
-  add_definitions(-DRUN_TESTS)
-  target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
-  target_link_libraries(devilutionx-tests PRIVATE libdevilutionx)
-  target_link_libraries(devilutionx-tests PRIVATE ${GTEST_LIBRARIES})
-  target_include_directories(devilutionx-tests PRIVATE 3rdParty/PicoSHA2)
-  if(ENABLE_CODECOVERAGE)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-      message(WARNING "Codecoverage not supported with MSVC")
-    else()
-      target_compile_options(devilutionx-tests PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(libdevilutionx PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(${BIN_TARGET} PRIVATE -fprofile-arcs -ftest-coverage)
-      target_link_options(devilutionx-tests PRIVATE -fprofile-arcs)
-      target_link_options(libdevilutionx PRIVATE -fprofile-arcs)
-      target_link_options(${BIN_TARGET} PRIVATE -fprofile-arcs)
-    endif()
-  endif()
-  gtest_add_tests(devilutionx-tests "" AUTO)
-endif()
 
 if(DISCORD_INTEGRATION)
   target_compile_definitions(libdevilutionx PRIVATE DISCORD)
@@ -559,6 +534,7 @@ foreach(
   DISABLE_ZERO_TIER
   DISABLE_STREAMING_MUSIC
   DISABLE_STREAMING_SOUNDS
+  BUILD_TESTING
   GPERF
   GPERF_HEAP_MAIN
   GPERF_HEAP_FIRST_GAME_ITERATION

@@ -39,7 +39,7 @@ jobs:
       # access regardless of the host operating system
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild -DMACOSX_STANDALONE_APP_BUNDLE=ON -DDISCORD_INTEGRATION=ON
+      run: cmake -S. -Bbuild -DBUILD_TESTING=OFF -DMACOSX_STANDALONE_APP_BUNDLE=ON -DDISCORD_INTEGRATION=ON
 
     - name: Build
       working-directory: ${{github.workspace}}

@@ -3813,7 +3813,7 @@ void PlayDungMsgs()
 	}
 }
 
-#ifdef RUN_TESTS
+#ifdef BUILD_TESTING
 bool TestPlayerDoGotHit(int pnum)
 {
 	return DoGotHit(pnum);

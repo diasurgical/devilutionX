@@ -12,6 +12,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "scrollrt.h"
+#include "utils/attributes.h"
 #include "utils/enum_traits.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -165,7 +166,7 @@ extern std::array<bool, MAXTILES + 1> nBlockTable;
 /**
  * List of path blocking dPieces
  */
-extern std::array<bool, MAXTILES + 1> nSolidTable;
+extern DVL_API_FOR_TEST std::array<bool, MAXTILES + 1> nSolidTable;
 /**
  * List of transparent dPieces
  */
@@ -180,7 +181,7 @@ extern Point dminPosition;
 /** Specifies the maximum X,Y-coordinates of the map. */
 extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
-extern dungeon_type leveltype;
+extern DVL_API_FOR_TEST dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
 extern uint8_t currlevel;
 extern bool setlevel;
@@ -196,12 +197,12 @@ extern char TransVal;
 /** Specifies the active transparency indices. */
 extern bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
-extern int dPiece[MAXDUNX][MAXDUNY];
+extern DVL_API_FOR_TEST int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
 extern int8_t dTransVal[MAXDUNX][MAXDUNY];
-extern char dLight[MAXDUNX][MAXDUNY];
+extern DVL_API_FOR_TEST char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
 /** Holds various information about dungeon tiles, @see DungeonFlag */
 extern DungeonFlag dFlags[MAXDUNX][MAXDUNY];
@@ -220,9 +221,9 @@ extern int16_t dMonster[MAXDUNX][MAXDUNY];
  * dDead[x][y] & 0x1F - index of dead
  * dDead[x][y] >> 0x5 - direction
  */
-extern int8_t dCorpse[MAXDUNX][MAXDUNY];
+extern DVL_API_FOR_TEST int8_t dCorpse[MAXDUNX][MAXDUNY];
 /** Contains the object numbers (objects array indices) of the map. */
-extern char dObject[MAXDUNX][MAXDUNY];
+extern DVL_API_FOR_TEST char dObject[MAXDUNX][MAXDUNY];
 /** Contains the item numbers (items array indices) of the map. */
 extern int8_t dItem[MAXDUNX][MAXDUNY];
 /**

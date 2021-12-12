@@ -1,10 +1,12 @@
-#include <gtest/gtest.h>
 #include <cstdint>
+
+#include <gtest/gtest.h>
 
 #include "pack.h"
 #include "utils/paths.h"
 
-using namespace devilution;
+namespace devilution {
+namespace {
 
 static void ComparePackedItems(const ItemPack &item1, const ItemPack &item2)
 {
@@ -327,7 +329,7 @@ const TestItemStruct DiabloItems[] = {
 	// clang-format on
 };
 
-TEST(pack, UnPackItem_diablo)
+TEST(PackTest, UnPackItem_diablo)
 {
 	Item id;
 	ItemPack is;
@@ -348,7 +350,7 @@ TEST(pack, UnPackItem_diablo)
 	}
 }
 
-TEST(pack, UnPackItem_diablo_unique_bug)
+TEST(PackTest, UnPackItem_diablo_unique_bug)
 {
 	ItemPack pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
 	ItemPack pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
@@ -398,7 +400,7 @@ const TestItemStruct SpawnItems[] = {
 	// clang-format on
 };
 
-TEST(pack, UnPackItem_spawn)
+TEST(PackTest, UnPackItem_spawn)
 {
 	Item id;
 	ItemPack is;
@@ -442,7 +444,7 @@ const TestItemStruct DiabloMPItems[] = {
 	// clang-format on
 };
 
-TEST(pack, UnPackItem_diablo_multiplayer)
+TEST(PackTest, UnPackItem_diablo_multiplayer)
 {
 	Item id;
 	ItemPack is;
@@ -651,7 +653,7 @@ const TestItemStruct HellfireItems[] = {
 	// clang-format on
 };
 
-TEST(pack, UnPackItem_hellfire)
+TEST(PackTest, UnPackItem_hellfire)
 {
 	Item id;
 	ItemPack is;
@@ -673,7 +675,7 @@ TEST(pack, UnPackItem_hellfire)
 	}
 }
 
-TEST(pack, UnPackItem_diablo_strip_hellfire_items)
+TEST(PackTest, UnPackItem_diablo_strip_hellfire_items)
 {
 	ItemPack is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
 	Item id;
@@ -687,7 +689,7 @@ TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 	ASSERT_EQ(id._itype, ItemType::None);
 }
 
-TEST(pack, UnPackItem_empty)
+TEST(PackTest, UnPackItem_empty)
 {
 	ItemPack is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	Item id;
@@ -697,7 +699,7 @@ TEST(pack, UnPackItem_empty)
 	ASSERT_EQ(id._itype, ItemType::None);
 }
 
-TEST(pack, PackItem_empty)
+TEST(PackTest, PackItem_empty)
 {
 	ItemPack is;
 	Item id = {};
@@ -706,7 +708,9 @@ TEST(pack, PackItem_empty)
 
 	PackItem(is, id);
 
-	ASSERT_EQ(is.idx, 0xFFFF);
+	// Copy the value out before comparing to avoid loading a misaligned address.
+	const auto idx = is.idx;
+	ASSERT_EQ(idx, 0xFFFF);
 }
 
 static void compareGold(const ItemPack &is, int iCurs)
@@ -715,7 +719,9 @@ static void compareGold(const ItemPack &is, int iCurs)
 	UnPackItem(is, id, false);
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, IDI_GOLD);
-	ASSERT_EQ(id._ivalue, is.wValue);
+	// Copy the value out before comparing to avoid loading a misaligned address.
+	const auto wvalue = is.wValue;
+	ASSERT_EQ(id._ivalue, wvalue);
 	ASSERT_EQ(id._itype, ItemType::Gold);
 	ASSERT_EQ(id._iClass, ICLASS_GOLD);
 
@@ -724,25 +730,25 @@ static void compareGold(const ItemPack &is, int iCurs)
 	ComparePackedItems(is, is2);
 }
 
-TEST(pack, UnPackItem_gold_small)
+TEST(PackTest, UnPackItem_gold_small)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
 	compareGold(is, ICURS_GOLD_SMALL);
 }
 
-TEST(pack, UnPackItem_gold_medium)
+TEST(PackTest, UnPackItem_gold_medium)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
 	compareGold(is, ICURS_GOLD_MEDIUM);
 }
 
-TEST(pack, UnPackItem_gold_large)
+TEST(PackTest, UnPackItem_gold_large)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
 	compareGold(is, ICURS_GOLD_LARGE);
 }
 
-TEST(pack, UnPackItem_ear)
+TEST(PackTest, UnPackItem_ear)
 {
 	ItemPack is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
 	Item id;
@@ -755,3 +761,6 @@ TEST(pack, UnPackItem_ear)
 	PackItem(is2, id);
 	ComparePackedItems(is, is2);
 }
+
+} // namespace
+} // namespace devilution
