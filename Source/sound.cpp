@@ -56,7 +56,7 @@ void LoadMusic(SDL_RWops *handle)
 	handle = SDL_RWFromConstMem(musicBuffer.get(), bytestoread);
 #endif
 	music.emplace(handle, std::make_unique<Aulib::DecoderDrwav>(),
-	    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
 }
 
 void CleanupMusic()
@@ -201,7 +201,7 @@ void snd_init()
 	// Initialize the SDL_audiolib library. Set the output sample rate to
 	// 22kHz, the audio format to 16-bit signed, use 2 output channels
 	// (stereo), and a 2KiB output buffer.
-	if (!Aulib::init(sgOptions.Audio.nSampleRate, AUDIO_S16, sgOptions.Audio.nChannels, sgOptions.Audio.nBufferSize)) {
+	if (!Aulib::init(*sgOptions.Audio.sampleRate, AUDIO_S16, *sgOptions.Audio.channels, *sgOptions.Audio.bufferSize)) {
 		LogError(LogCategory::Audio, "Failed to initialize audio (Aulib::init): {}", SDL_GetError());
 		return;
 	}
