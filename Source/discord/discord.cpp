@@ -1,6 +1,6 @@
 #include "discord.h"
 
-#include <Discord/cpp/discord.h>
+#include <discordsrc-src/cpp/discord.h>
 
 #include <algorithm>
 #include <array>
