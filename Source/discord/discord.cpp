@@ -22,10 +22,7 @@
 namespace devilution {
 namespace discord_manager {
 
-// App ID used when someone launches classic Diablo
-constexpr discord::ClientId DiscordDiabloAppId = 496571953147150354;
-
-// App ID used for DevilutionX's Diablo
+// App ID used for DevilutionX's Diablo (classic Diablo's is 496571953147150354)
 constexpr discord::ClientId DiscordDevilutionxAppId = 795760213524742205;
 
 constexpr auto IgnoreResult = [](discord::Result result) {};
@@ -100,27 +97,15 @@ std::string GetTooltipString()
 	return fmt::format("{} - {}", Players[MyPlayerId]._pName, GetCharacterString());
 }
 
-char HeroClassChar()
-{
-	char chr = CharChar[static_cast<int>(Players[MyPlayerId]._pClass)];
-	return static_cast<char>(std::tolower(chr));
-}
-
-char ArmourClassChar()
-{
-	char chr = ArmourChar[tracked_data.playerGfx >> 4];
-	return static_cast<char>(std::tolower(chr));
-}
-
-char WpnConfigChar()
-{
-	char chr = WepChar[tracked_data.playerGfx & 0xF];
-	return static_cast<char>(std::tolower(chr));
-}
-
 std::string GetPlayerAssetString()
 {
-	return fmt::format("{}{}{}as", HeroClassChar(), ArmourClassChar(), WpnConfigChar());
+	char heroChar = CharChar[static_cast<int>(Players[MyPlayerId]._pClass)];
+	char armourChar = ArmourChar[tracked_data.playerGfx >> 4];
+	char wpnChar = WepChar[tracked_data.playerGfx & 0xF];
+
+	std::string result = fmt::format("{}{}{}as", heroChar, armourChar, wpnChar);
+	std::transform(std::begin(result), std::end(result), std::begin(result), &std::tolower);
+	return result;
 }
 
 void ResetStartTime()
