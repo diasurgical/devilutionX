@@ -463,17 +463,17 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Spell hotkeys instantly cast the spell. */
 	OptionEntryBoolean quickCast;
 	/** @brief Number of Healing potions to pick up automatically */
-	int numHealPotionPickup;
+	OptionEntryInt<int> numHealPotionPickup;
 	/** @brief Number of Full Healing potions to pick up automatically */
-	int numFullHealPotionPickup;
+	OptionEntryInt<int> numFullHealPotionPickup;
 	/** @brief Number of Mana potions to pick up automatically */
-	int numManaPotionPickup;
+	OptionEntryInt<int> numManaPotionPickup;
 	/** @brief Number of Full Mana potions to pick up automatically */
-	int numFullManaPotionPickup;
+	OptionEntryInt<int> numFullManaPotionPickup;
 	/** @brief Number of Rejuvenating potions to pick up automatically */
-	int numRejuPotionPickup;
+	OptionEntryInt<int> numRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
-	int numFullRejuPotionPickup;
+	OptionEntryInt<int> numFullRejuPotionPickup;
 };
 
 struct ControllerOptions : OptionCategoryBase {

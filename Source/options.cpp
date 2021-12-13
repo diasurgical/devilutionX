@@ -307,12 +307,6 @@ void LoadOptions()
 #endif
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.numHealPotionPickup = GetIniInt("Game", "Heal Potion Pickup", 0);
-	sgOptions.Gameplay.numFullHealPotionPickup = GetIniInt("Game", "Full Heal Potion Pickup", 0);
-	sgOptions.Gameplay.numManaPotionPickup = GetIniInt("Game", "Mana Potion Pickup", 0);
-	sgOptions.Gameplay.numFullManaPotionPickup = GetIniInt("Game", "Full Mana Potion Pickup", 0);
-	sgOptions.Gameplay.numRejuPotionPickup = GetIniInt("Game", "Rejuvenation Potion Pickup", 0);
-	sgOptions.Gameplay.numFullRejuPotionPickup = GetIniInt("Game", "Full Rejuvenation Potion Pickup", 0);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -366,13 +360,6 @@ void SaveOptions()
 #endif
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-
-	SetIniValue("Game", "Heal Potion Pickup", sgOptions.Gameplay.numHealPotionPickup);
-	SetIniValue("Game", "Full Heal Potion Pickup", sgOptions.Gameplay.numFullHealPotionPickup);
-	SetIniValue("Game", "Mana Potion Pickup", sgOptions.Gameplay.numManaPotionPickup);
-	SetIniValue("Game", "Full Mana Potion Pickup", sgOptions.Gameplay.numFullManaPotionPickup);
-	SetIniValue("Game", "Rejuvenation Potion Pickup", sgOptions.Gameplay.numRejuPotionPickup);
-	SetIniValue("Game", "Full Rejuvenation Potion Pickup", sgOptions.Gameplay.numFullRejuPotionPickup);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	SetIniValue("Network", "Port", sgOptions.Network.nPort);
@@ -799,7 +786,12 @@ GameplayOptions::GameplayOptions()
     , autoRefillBelt("Auto Refill Belt", OptionEntryFlags::None, N_("Auto Refill Belt"), N_("Refill belt from inventory when belt item is consumed."), false)
     , disableCripplingShrines("Disable Crippling Shrines", OptionEntryFlags::None, N_("Disable Crippling Shrines"), N_("When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines and Sacred Shrines are not able to be clicked on and labeled as disabled."), false)
     , quickCast("Quick Cast", OptionEntryFlags::None, N_("Quick Cast"), N_("Spell hotkeys instantly cast the spell, rather than switching the readied spell."), false)
-
+    , numHealPotionPickup("Heal Potion Pickup", OptionEntryFlags::None, N_("Heal Potion Pickup"), N_("Number of Healing potions to pick up automatically."), 0, { 0, 1, 4, 8, 16 })
+    , numFullHealPotionPickup("Full Heal Potion Pickup", OptionEntryFlags::None, N_("Full Heal Potion Pickup"), N_("Number of Full Healing potions to pick up automatically."), 0, { 0, 1, 4, 8, 16 })
+    , numManaPotionPickup("Mana Potion Pickup", OptionEntryFlags::None, N_("Mana Potion Pickup"), N_("Number of Mana potions to pick up automatically."), 0, { 0, 1, 4, 8, 16 })
+    , numFullManaPotionPickup("Full Mana Potion Pickup", OptionEntryFlags::None, N_("Full Mana Potion Pickup"), N_("Number of Mana potions to pick up automatically."), 0, { 0, 1, 4, 8, 16 })
+    , numRejuPotionPickup("Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Heal Rejuvenation Pickup"), N_("Number of Rejuvenation potions to pick up automatically."), 0, { 0, 1, 4, 8, 16 })
+    , numFullRejuPotionPickup("Full Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Full Rejuvenation Potion Pickup"), N_("Number of Rejuvenation potions to pick up automatically."), 0, { 0, 1, 4, 8, 16 })
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -831,6 +823,12 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&autoRefillBelt,
 		&disableCripplingShrines,
 		&quickCast,
+		&numHealPotionPickup,
+		&numFullHealPotionPickup,
+		&numManaPotionPickup,
+		&numFullManaPotionPickup,
+		&numRejuPotionPickup,
+		&numFullRejuPotionPickup,
 	};
 }
 
