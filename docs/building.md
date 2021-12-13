@@ -65,7 +65,7 @@ zip -r devilutionx.ipa Payload
 For testing with the Simulator instead run the following:
 
 ```bash
-cmake -S. -Bbuild -G Xcode -DCMAKE_TOOLCHAIN_FILE=../Platforms/CMake/ios.toolchain.cmake -DPLATFORM=SIMULATOR64
+cmake -S. -Bbuild -G Xcode -DCMAKE_TOOLCHAIN_FILE=../CMake/Platforms/ios.toolchain.cmake -DPLATFORM=SIMULATOR64
 ```
 
 Then open the generated Xcode project and run things from there.
