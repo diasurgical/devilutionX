@@ -53,7 +53,7 @@ Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
 ```bash
 brew install cmake
-cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/ios.toolchain.cmake  -DENABLE_BITCODE=0 -DPLATFORM=OS64
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/Platforms/ios.toolchain.cmake  -DENABLE_BITCODE=0 -DPLATFORM=OS64
 cmake --build build -j $(sysctl -n hw.physicalcpu) --config Release
 cd build
 rm -rf Payload
@@ -65,7 +65,7 @@ zip -r devilutionx.ipa Payload
 For testing with the Simulator instead run the following:
 
 ```bash
-cmake -S. -Bbuild -G Xcode -DCMAKE_TOOLCHAIN_FILE=../CMake/ios.toolchain.cmake -DPLATFORM=SIMULATOR64
+cmake -S. -Bbuild -G Xcode -DCMAKE_TOOLCHAIN_FILE=../Platforms/CMake/ios.toolchain.cmake -DPLATFORM=SIMULATOR64
 ```
 
 Then open the generated Xcode project and run things from there.
