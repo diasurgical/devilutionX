@@ -18,9 +18,18 @@ else()
 endif()
 set(DISCORD_SHARED_LIB "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
-find_library(DISCORD_LIB discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX} ${DISCORD_LIB_DIR})
+if(WIN32)
+  set(DISCORD_LIB "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}.lib")
+else()
+  find_library(DISCORD_LIB discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX} ${DISCORD_LIB_DIR})
+endif()
+
 add_library(discord_game_sdk SHARED IMPORTED GLOBAL)
 set_property(TARGET discord_game_sdk PROPERTY IMPORTED_IMPLIB ${DISCORD_LIB})
 set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_SHARED_LIB})
 
 file(COPY ${DISCORD_SHARED_LIB} DESTINATION "${CMAKE_BINARY_DIR}")
+
+if(CPACK)
+  install(FILES ${DISCORD_SHARED_LIB} DESTINATION ".")
+endif()
