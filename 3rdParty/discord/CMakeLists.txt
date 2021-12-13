@@ -18,15 +18,16 @@ else()
 endif()
 set(DISCORD_SHARED_LIB "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
-if(WIN32)
-  set(DISCORD_LIB "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}.lib")
+if(WIN32 AND NOT MSVC)
+  add_library(discord_game_sdk SHARED "discord_game_sdk_fake.cpp")
+  set_target_properties(discord_game_sdk PROPERTIES PREFIX "")
 else()
   find_library(DISCORD_LIB discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX} ${DISCORD_LIB_DIR})
+  
+  add_library(discord_game_sdk SHARED IMPORTED GLOBAL)
+  set_property(TARGET discord_game_sdk PROPERTY IMPORTED_IMPLIB ${DISCORD_LIB})
+  set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_SHARED_LIB})
 endif()
-
-add_library(discord_game_sdk SHARED IMPORTED GLOBAL)
-set_property(TARGET discord_game_sdk PROPERTY IMPORTED_IMPLIB ${DISCORD_LIB})
-set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_SHARED_LIB})
 
 file(COPY ${DISCORD_SHARED_LIB} DESTINATION "${CMAKE_BINARY_DIR}")
 
