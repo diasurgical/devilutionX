@@ -47,17 +47,17 @@ bool DoPickup(Item item)
 	    && (AutoPlaceItemInInventory(Players[MyPlayerId], item, false) || AutoPlaceItemInBelt(Players[MyPlayerId], item, false))) {
 		switch (item._iMiscId) {
 		case IMISC_HEAL:
-			return sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
+			return *sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
 		case IMISC_FULLHEAL:
-			return sgOptions.Gameplay.numFullHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
+			return *sgOptions.Gameplay.numFullHealPotionPickup > NumMiscItemsInInv(item._iMiscId);
 		case IMISC_MANA:
-			return sgOptions.Gameplay.numManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
+			return *sgOptions.Gameplay.numManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
 		case IMISC_FULLMANA:
-			return sgOptions.Gameplay.numFullManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
+			return *sgOptions.Gameplay.numFullManaPotionPickup > NumMiscItemsInInv(item._iMiscId);
 		case IMISC_REJUV:
-			return sgOptions.Gameplay.numRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
+			return *sgOptions.Gameplay.numRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
 		case IMISC_FULLREJUV:
-			return sgOptions.Gameplay.numFullRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
+			return *sgOptions.Gameplay.numFullRejuPotionPickup > NumMiscItemsInInv(item._iMiscId);
 		case IMISC_ELIXSTR:
 		case IMISC_ELIXMAG:
 		case IMISC_ELIXDEX:
