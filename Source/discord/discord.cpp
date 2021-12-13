@@ -104,7 +104,7 @@ std::string GetPlayerAssetString()
 	char wpnChar = WepChar[tracked_data.playerGfx & 0xF];
 
 	std::string result = fmt::format("{}{}{}as", heroChar, armourChar, wpnChar);
-	std::transform(std::begin(result), std::end(result), std::begin(result), &std::tolower);
+	std::transform(std::begin(result), std::end(result), std::begin(result), [](char c) { return static_cast<char>(std::tolower(c)); });
 	return result;
 }
 
