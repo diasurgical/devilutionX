@@ -30,7 +30,7 @@ constexpr discord::ClientId DiscordDevilutionxAppId = 795760213524742205;
 
 constexpr auto IgnoreResult = [](discord::Result result) {};
 
-discord::Core *discord_core = []()->discord::Core* {
+discord::Core *discord_core = []() -> discord::Core * {
 	discord::Core *core;
 	discord::Result result = discord::Core::Create(DiscordDevilutionxAppId, DiscordCreateFlags_NoRequireDiscord, &core);
 	if (result != discord::Result::Ok) {
