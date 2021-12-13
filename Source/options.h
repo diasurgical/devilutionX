@@ -360,13 +360,13 @@ struct AudioOptions : OptionCategoryBase {
 	OptionEntryBoolean itemPickupSound;
 
 	/** @brief Output sample rate (Hz) */
-	std::uint32_t nSampleRate;
+	OptionEntryInt<std::uint32_t> sampleRate;
 	/** @brief The number of output channels (1 or 2) */
-	std::uint8_t nChannels;
+	OptionEntryInt<std::uint8_t> channels;
 	/** @brief Buffer size (number of frames per channel) */
-	std::uint32_t nBufferSize;
+	OptionEntryInt<std::uint32_t> bufferSize;
 	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest) */
-	std::uint8_t nResamplingQuality;
+	OptionEntryInt<std::uint8_t> resamplingQuality;
 };
 
 struct GraphicsOptions : OptionCategoryBase {
