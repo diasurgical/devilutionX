@@ -3926,13 +3926,13 @@ void DoOil(Player &player, int cii)
 			return _("hit steals 3% mana");
 		if ((item._iFlags & ISPL_STEALMANA_5) != 0)
 			return _("hit steals 5% mana");
-		return _("Another ability (NW)");
+		return "";
 	case IPL_STEALLIFE:
 		if ((item._iFlags & ISPL_STEALLIFE_3) != 0)
 			return _("hit steals 3% life");
 		if ((item._iFlags & ISPL_STEALLIFE_5) != 0)
 			return _("hit steals 5% life");
-		return _("Another ability (NW)");
+		return "";
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
 	case IPL_FASTATTACK:
