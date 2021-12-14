@@ -99,10 +99,13 @@ if(NOT VERSION_NUM)
   if (NOT "${VERSION_NUM}" STREQUAL "")
     string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )
   endif()
-  get_git_commit_hash(GIT_COMMIT_HASH)
   if(NOT VERSION_SUFFIX)
-    set(VERSION_SUFFIX "$<$<NOT:$<CONFIG:Release>>:-${GIT_COMMIT_HASH}>")
+    get_git_commit_hash(GIT_COMMIT_HASH)
+    set(VERSION_SUFFIX "${GIT_COMMIT_HASH}")
   endif()
+endif()
+if(NOT VERSION_SUFFIX)
+  set(VERSION_SUFFIX "debug")
 endif()
 if(VERSION_NUM MATCHES untagged)
   project(DevilutionX LANGUAGES C CXX)
@@ -111,6 +114,7 @@ else()
     VERSION ${VERSION_NUM}
     LANGUAGES C CXX)
 endif()
+set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_SUFFIX}>")
 
 # Platform definitions can override options and we want `cmake_dependent_option` to see the effects,
 # so ideally we would include Platforms.cmake before definining the options.
@@ -458,7 +462,7 @@ endif()
 file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 "#pragma once
 #define PROJECT_NAME \"${PROJECT_NAME}\"
-#define PROJECT_VERSION \"${PROJECT_VERSION}${VERSION_SUFFIX}\"
+#define PROJECT_VERSION \"${PROJECT_VERSION_WITH_SUFFIX}\"
 #define PROJECT_VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
 #define PROJECT_VERSION_MINOR ${PROJECT_VERSION_MINOR}
 #define PROJECT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
