@@ -33,6 +33,7 @@
 #include <SimpleIni.h>
 
 #include "diablo.h"
+#include "discord/discord.h"
 #include "engine/demomode.h"
 #include "options.h"
 #include "qol/monhealthbar.h"
@@ -239,6 +240,7 @@ void OptionLanguageCodeChanged()
 void OptionGameModeChanged()
 {
 	gbIsHellfire = *sgOptions.StartUp.gameMode == StartUpGameMode::Hellfire;
+	discord_manager::UpdateMenu(true);
 }
 
 void OptionSharewareChanged()
