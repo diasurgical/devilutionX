@@ -9,8 +9,12 @@ For Japanese, uses [Sudachi](https://github.com/WorksApplications/sudachi.rs).
 ## Pre-requisites
 
 1. Python. The easiest way to install Python on any Linux system is <https://github.com/asdf-vm/asdf>.
+   On Windows you can use the [official installer](https://www.python.org/downloads/windows/).
+   Note that the Python version must be [supported by tensorflow](https://www.tensorflow.org/install/pip#system-requirements) (this is usually not the latest Python version).
 
-2. Packages:
+2. `gettext`. On Windows you can use [this installer](https://github.com/mlocati/gettext-iconv-windows/releases).
+
+3. Python packages:
 
    ```shell
    pip install -r tools/segmenter/requirements.txt
