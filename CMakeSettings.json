@@ -8,7 +8,14 @@
       "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
       "inheritEnvironments": [ "msvc_x64" ],
       "intelliSenseMode": "windows-msvc-x64",
-      "enableClangTidyCodeAnalysis": true
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x64-Debug-UnitTests",
@@ -19,7 +26,14 @@
       "inheritEnvironments": [ "msvc_x64" ],
       "intelliSenseMode": "windows-msvc-x64",
       "cmakeCommandArgs": "-DRUN_TESTS=ON",
-      "enableClangTidyCodeAnalysis": true
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x64-Debug-SDL1",
@@ -30,7 +44,14 @@
       "inheritEnvironments": [ "msvc_x64" ],
       "intelliSenseMode": "windows-msvc-x64",
       "cmakeCommandArgs": "-DUSE_SDL1=ON",
-      "enableClangTidyCodeAnalysis": true
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x64-Release",
@@ -41,7 +62,14 @@
       "cmakeCommandArgs": "-DCPACK=ON",
       "inheritEnvironments": [ "msvc_x64" ],
       "intelliSenseMode": "windows-msvc-x64",
-      "enableClangTidyCodeAnalysis": true
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x86-Debug",
@@ -51,7 +79,14 @@
       "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
       "inheritEnvironments": [ "msvc_x86" ],
       "intelliSenseMode": "windows-msvc-x86",
-      "enableClangTidyCodeAnalysis": true
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x86-Debug-UnitTests",
@@ -62,7 +97,14 @@
       "inheritEnvironments": [ "msvc_x86" ],
       "intelliSenseMode": "windows-msvc-x86",
       "cmakeCommandArgs": "-DRUN_TESTS=ON",
-      "enableClangTidyCodeAnalysis": true
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x86-Release",
@@ -73,7 +115,14 @@
       "cmakeCommandArgs": "-DCPACK=ON",
       "inheritEnvironments": [ "msvc_x86" ],
       "intelliSenseMode": "windows-msvc-x86",
-      "enableClangTidyCodeAnalysis": true
+      "enableClangTidyCodeAnalysis": true,
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     },
     {
       "name": "x64-Debug-WSL-GCC",
@@ -87,7 +136,13 @@
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "linux_x64" ],
       "wslPath": "${defaultWSLPath}",
-      "variables": []
+      "variables": [
+        {
+          "name": "DISCORD_INTEGRATION",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     }
   ]
 }

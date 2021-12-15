@@ -146,6 +146,35 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
+/** Maps from armor animation to letter used in graphic files. */
+constexpr std::array<char, 4> ArmourChar = {
+	'L', // light
+	'M', // medium
+	'H', // heavy
+};
+/** Maps from weapon animation to letter used in graphic files. */
+constexpr std::array<char, 9> WepChar = {
+	'N', // unarmed
+	'U', // no weapon + shield
+	'S', // sword + no shield
+	'D', // sword + shield
+	'B', // bow
+	'A', // axe
+	'M', // blunt + no shield
+	'H', // blunt + shield
+	'T', // staff
+};
+
+/** Maps from player class to letter used in graphic files. */
+constexpr std::array<char, 6> CharChar = {
+	'W', // warrior
+	'R', // rogue
+	'S', // sorcerer
+	'M', // monk
+	'B',
+	'C',
+};
+
 /**
  * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
  */

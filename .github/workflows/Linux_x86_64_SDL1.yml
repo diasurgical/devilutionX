@@ -31,7 +31,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}
-      run: cmake -S. -Bbuild .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCPACK=ON -DUSE_SDL1=ON
+      run: cmake -S. -Bbuild .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCPACK=ON -DUSE_SDL1=ON -DDISCORD_INTEGRATION=ON
 
     - name: Build
       working-directory: ${{github.workspace}}

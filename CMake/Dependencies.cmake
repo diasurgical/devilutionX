@@ -131,3 +131,7 @@ endif()
 if(NOT NONET AND NOT DISABLE_ZERO_TIER)
   add_subdirectory(3rdParty/libzt)
 endif()
+
+if(DISCORD_INTEGRATION)
+  add_subdirectory(3rdParty/discord)
+endif()

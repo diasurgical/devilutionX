@@ -23,6 +23,7 @@
 #include "controls/touch/gamepad.h"
 #include "controls/touch/renderers.h"
 #include "diablo.h"
+#include "discord/discord.h"
 #include "doom.h"
 #include "drlg_l1.h"
 #include "drlg_l2.h"
@@ -705,6 +706,7 @@ void RunGameLoop(interface_mode uMsg)
 	gbGameLoopStartup = true;
 	nthread_ignore_mutex(false);
 
+	discord_manager::StartGame();
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 	unsigned run_game_iteration = 0;
 #endif
@@ -737,6 +739,9 @@ void RunGameLoop(interface_mode uMsg)
 		bool runGameLoop = demo::IsRunning() ? demo::GetRunGameLoop(drawGame, processInput) : nthread_has_500ms_passed();
 		if (demo::IsRecording())
 			demo::RecordGameLoopResult(runGameLoop);
+
+		discord_manager::UpdateGame();
+
 		if (!runGameLoop) {
 			if (processInput)
 				ProcessInput();

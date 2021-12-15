@@ -14,6 +14,7 @@
 #include "DiabloUI/scrollbar.h"
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
+#include "discord/discord.h"
 #include "dx.h"
 #include "hwcursor.hpp"
 #include "palette.h"
@@ -760,6 +761,8 @@ void UiPollAndRender()
 	// so defer until after render and fade-in
 	ctr_vkbdFlush();
 #endif
+
+	discord_manager::UpdateMenu();
 }
 
 namespace {
