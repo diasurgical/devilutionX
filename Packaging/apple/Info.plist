@@ -48,5 +48,7 @@
 	<true/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
