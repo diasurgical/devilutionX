@@ -11278,9 +11278,3 @@ msgstr "Giù da Diablo"
 #: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "Torna al Livello {:d}"
-
-#~ msgid "Switch to Hellfire"
-#~ msgstr "Passa a Hellfire"
-
-#~ msgid "Switch to Fullgame"
-#~ msgstr "Passa al Gioco Completo"
