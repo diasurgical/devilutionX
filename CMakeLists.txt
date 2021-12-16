@@ -448,6 +448,10 @@ else()
 endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
+if(EMSCRIPTEN)
+  target_link_options(${BIN_TARGET} PRIVATE --preload-file assets)
+endif()
+
 if(BUILD_TESTING)
   if(ENABLE_CODECOVERAGE)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
