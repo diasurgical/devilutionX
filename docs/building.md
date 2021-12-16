@@ -353,6 +353,18 @@ You can do this by selecting the DevilutionX icon, then hold right mouse button 
 select Icons -> Information in the top menu.
 </details>
 
+<details><summary>Emscripten</summary>
+
+Emscripten port is a work in progress. It builds but does not do more than that currently.
+
+To build, install the [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html), then run:
+
+~~~ bash
+emcmake cmake -S. -Bbuild-em -DCMAKE_BUILD_TYPE=Release
+cmake --build build-em -j $(getconf _NPROCESSORS_ONLN)
+~~~
+</details>
+
 <details><summary><b>CMake build options</b></summary>
 
 ### General

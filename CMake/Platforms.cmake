@@ -58,3 +58,7 @@ endif()
 if(IOS)
   include(platforms/ios)
 endif()
+
+if(EMSCRIPTEN)
+  include(platforms/emscripten)
+endif()
