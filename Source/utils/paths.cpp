@@ -91,7 +91,7 @@ const std::string &ConfigPath()
 const std::string &AssetsPath()
 {
 	if (!assetsPath)
-		assetsPath.emplace(BasePath() + "assets/");
+		assetsPath.emplace(FromSDL(SDL_GetBasePath()) + "assets/");
 	return *assetsPath;
 }
 
@@ -116,6 +116,12 @@ void SetConfigPath(const std::string &path)
 {
 	configPath = path;
 	AddTrailingSlash(*configPath);
+}
+
+void SetAssetsPath(const std::string &path)
+{
+	assetsPath = path;
+	AddTrailingSlash(*assetsPath);
 }
 
 void SetMpqDir(const std::string &path)
