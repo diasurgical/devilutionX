@@ -363,6 +363,13 @@ To build, install the [Emscripten SDK](https://emscripten.org/docs/getting_start
 emcmake cmake -S. -Bbuild-em -DCMAKE_BUILD_TYPE=Release
 cmake --build build-em -j $(getconf _NPROCESSORS_ONLN)
 ~~~
+
+To then run it:
+
+~~~ bash
+cd build-em
+emrun index.html
+~~~
 </details>
 
 <details><summary><b>CMake build options</b></summary>
