@@ -91,7 +91,11 @@ const std::string &ConfigPath()
 const std::string &AssetsPath()
 {
 	if (!assetsPath)
+#if __EMSCRIPTEN__
+		assetsPath.emplace("assets/");
+#else
 		assetsPath.emplace(FromSDL(SDL_GetBasePath()) + "assets/");
+#endif
 	return *assetsPath;
 }
 
