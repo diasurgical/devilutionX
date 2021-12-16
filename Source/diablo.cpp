@@ -9,6 +9,7 @@
 
 #include <config.h>
 
+#include "DiabloUI/selstart.h"
 #include "automap.h"
 #include "capture.h"
 #include "control.h"
@@ -71,6 +72,7 @@
 #include "utils/console.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef __vita__
@@ -80,7 +82,6 @@
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 #include <gperftools/heap-profiler.h>
 #endif
-#include <DiabloUI/selstart.h>
 
 namespace devilution {
 
@@ -825,57 +826,78 @@ void DiabloParseFlags(int argc, char **argv)
 	int demoNumber = -1;
 	int recordNumber = -1;
 	for (int i = 1; i < argc; i++) {
-		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
+		const string_view arg = argv[i];
+		if (arg == "-h" || arg == "--help") {
 			PrintHelpAndExit();
-		} else if (strcasecmp("--version", argv[i]) == 0) {
+		} else if (arg == "--version") {
 			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
 			diablo_quit(0);
-		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
+		} else if (arg == "--data-dir") {
+			if (i + 1 == argc) {
+				printInConsole("%s requires an argument\n", "--data-dir");
+				diablo_quit(0);
+			}
 			paths::SetBasePath(argv[++i]);
-		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
+		} else if (arg == "--save-dir") {
+			if (i + 1 == argc) {
+				printInConsole("%s requires an argument\n", "--save-dir");
+				diablo_quit(0);
+			}
 			paths::SetPrefPath(argv[++i]);
-		} else if (strcasecmp("--demo", argv[i]) == 0) {
+		} else if (arg == "--config-dir") {
+			if (i + 1 == argc) {
+				printInConsole("%s requires an argument\n", "--config-dir");
+				diablo_quit(0);
+			}
+			paths::SetConfigPath(argv[++i]);
+		} else if (arg == "--demo") {
+			if (i + 1 == argc) {
+				printInConsole("%s requires an argument\n", "--demo");
+				diablo_quit(0);
+			}
 			demoNumber = SDL_atoi(argv[++i]);
 			gbShowIntro = false;
-		} else if (strcasecmp("--timedemo", argv[i]) == 0) {
+		} else if (arg == "--timedemo") {
 			timedemo = true;
-		} else if (strcasecmp("--record", argv[i]) == 0) {
+		} else if (arg == "--record") {
+			if (i + 1 == argc) {
+				printInConsole("%s requires an argument\n", "--record");
+				diablo_quit(0);
+			}
 			recordNumber = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
-			paths::SetConfigPath(argv[++i]);
-		} else if (strcasecmp("-n", argv[i]) == 0) {
+		} else if (arg == "-n") {
 			gbShowIntro = false;
-		} else if (strcasecmp("-f", argv[i]) == 0) {
+		} else if (arg == "-f") {
 			EnableFrameCount();
-		} else if (strcasecmp("-x", argv[i]) == 0) {
+		} else if (arg == "-x") {
 			gbForceWindowed = true;
-		} else if (strcasecmp("--spawn", argv[i]) == 0) {
+		} else if (arg == "--spawn") {
 			forceSpawn = true;
-		} else if (strcasecmp("--diablo", argv[i]) == 0) {
+		} else if (arg == "--diablo") {
 			forceDiablo = true;
-		} else if (strcasecmp("--hellfire", argv[i]) == 0) {
+		} else if (arg == "--hellfire") {
 			forceHellfire = true;
-		} else if (strcasecmp("--nestart", argv[i]) == 0) {
+		} else if (arg == "--nestart") {
 			gbNestArt = true;
-		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
+		} else if (arg == "--vanilla") {
 			gbVanilla = true;
-		} else if (strcasecmp("--verbose", argv[i]) == 0) {
+		} else if (arg == "--verbose") {
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 #ifdef _DEBUG
-		} else if (strcasecmp("-i", argv[i]) == 0) {
+		} else if (arg == "-i") {
 			DebugDisableNetworkTimeout = true;
-		} else if (argv[i][0] == '+') {
+		} else if (arg[0] == '+') {
 			if (!currentCommand.empty())
 				DebugCmdsFromCommandLine.push_back(currentCommand);
 			argumentIndexOfLastCommandPart = i;
-			currentCommand = &(argv[i][1]);
-		} else if (argv[i][0] != '-' && (argumentIndexOfLastCommandPart + 1) == i) {
+			currentCommand = arg.substr(1);
+		} else if (arg[0] != '-' && (argumentIndexOfLastCommandPart + 1) == i) {
 			currentCommand.append(" ");
-			currentCommand.append(argv[i]);
+			currentCommand.append(arg);
 			argumentIndexOfLastCommandPart = i;
 #endif
 		} else {
-			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
+			printInConsole("unrecognized option '%s'\n", argv[i]);
 			PrintHelpAndExit();
 		}
 	}
