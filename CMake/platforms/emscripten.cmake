@@ -8,3 +8,5 @@ set(DEVILUTIONX_SYSTEM_LIBFMT OFF)
 #   warning: _BZ2_bzDecompress may need to be added to EXPORTED_FUNCTIONS if it arrives from a system library
 #   error: undefined symbol: BZ2_bzDecompressEnd (referenced by top-level compiled C/C++ code)
 set(DEVILUTIONX_SYSTEM_BZIP2 OFF)
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/emscripten/index.html" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
