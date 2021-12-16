@@ -275,7 +275,7 @@ bool HasTranslation(const std::string &locale)
 		return true;
 	}
 
-	constexpr std::array<char *, 2> Extensions { ".mo", ".gmo" };
+	constexpr std::array<const char *, 2> Extensions { ".mo", ".gmo" };
 	return std::any_of(Extensions.cbegin(), Extensions.cend(), [locale](const std::string &extension) {
 		SDL_RWops *rw = OpenAsset((locale + extension).c_str());
 		if (rw != nullptr) {
