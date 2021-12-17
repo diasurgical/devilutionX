@@ -8,6 +8,8 @@
 #include <cstring>
 #include <ctime>
 
+#include <SDL.h>
+
 #include "engine/point.hpp"
 
 namespace devilution {
@@ -41,8 +43,7 @@ void FocusOnCharInfo();
 
 bool GetAsyncKeyState(int vKey);
 
-bool FetchMessage(tagMSG *lpMsg);
-
+bool FetchMessage(SDL_Event *eventPtr, tagMSG *lpMsg);
 bool TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
 bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam);

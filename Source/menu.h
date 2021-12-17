@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "main_loop.hpp"
 #include "multi.h"
 
 namespace devilution {
@@ -12,6 +13,6 @@ namespace devilution {
 extern uint32_t gSaveNumber;
 
 bool mainmenu_select_hero_dialog(GameData *gameData);
-void mainmenu_loop();
+std::unique_ptr<MainLoopHandler> CreateMenuLoopHandler();
 
 } // namespace devilution

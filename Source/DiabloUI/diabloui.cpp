@@ -449,9 +449,6 @@ void UiHandleEvents(SDL_Event *event)
 		}
 	}
 
-	if (event->type == SDL_QUIT)
-		diablo_quit(0);
-
 #ifndef USE_SDL1
 	HandleControllerAddedOrRemovedEvent(*event);
 
@@ -740,13 +737,8 @@ void UiClearScreen()
 		SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 }
 
-void UiPollAndRender()
+void UiRender()
 {
-	SDL_Event event;
-	while (SDL_PollEvent(&event) != 0) {
-		UiFocusNavigation(&event);
-		UiHandleEvents(&event);
-	}
 	HandleMenuAction(GetMenuHeldUpDownAction());
 	UiRenderItems(gUiItems);
 	DrawMouse();
@@ -763,6 +755,16 @@ void UiPollAndRender()
 #endif
 
 	discord_manager::UpdateMenu();
+}
+
+void UiPollAndRender()
+{
+	SDL_Event event;
+	while (SDL_PollEvent(&event) != 0) {
+		UiFocusNavigation(&event);
+		UiHandleEvents(&event);
+	}
+	UiRender();
 }
 
 namespace {

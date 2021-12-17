@@ -19,7 +19,7 @@ bool IsRunning();
 bool IsRecording();
 
 bool GetRunGameLoop(bool &drawGame, bool &processInput);
-bool FetchMessage(tagMSG *lpMsg);
+bool FetchMessage(SDL_Event *eventPtr, tagMSG *lpMsg);
 void RecordGameLoopResult(bool runGameLoop);
 void RecordMessage(tagMSG *lpMsg);
 

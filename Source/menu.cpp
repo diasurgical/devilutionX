@@ -1,13 +1,10 @@
-/**
- * @file mainmenu.cpp
- *
- * Implementation of functions for interacting with the main menu.
- */
+#include "menu.h"
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/settingsmenu.h"
 #include "engine/demomode.h"
 #include "init.h"
+#include "main_loop.hpp"
 #include "movie.h"
 #include "options.h"
 #include "pfile.h"
@@ -83,6 +80,94 @@ bool DummyGetHeroInfo(_uiheroinfo * /*pInfo*/)
 	return true;
 }
 
+void WaitForButtonSound()
+{
+	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
+	UiFadeIn();
+	SDL_Delay(350); // delay to let button pressed sound finish playing
+}
+
+class MainMenuSelectedHandler : public MainLoopHandler {
+public:
+	MainMenuSelectedHandler()
+	{
+		RefreshMusic();
+		AddNextMainLoopHandler(MainMenuSelectedHandler::Create);
+
+		if (selected_ == MAINMENU_NONE) {
+			if (!UiMainMenuDialog(gszProductName, &selected_, effects_play_sound, 5))
+				app_fatal("%s", _("Unable to display mainmenu"));
+			return;
+		}
+
+		switch (selected_) {
+		case MAINMENU_NONE:
+			break;
+		case MAINMENU_SINGLE_PLAYER:
+			if (!InitSinglePlayerMenu()) {
+				SetMainLoopHandler(nullptr);
+			} else {
+				selected_ = MAINMENU_NONE;
+				NextMainLoopHandler();
+			}
+			break;
+		case MAINMENU_MULTIPLAYER:
+			if (!InitMultiPlayerMenu()) {
+				SetMainLoopHandler(nullptr);
+			} else {
+				selected_ = MAINMENU_NONE;
+				NextMainLoopHandler();
+			}
+			break;
+		case MAINMENU_ATTRACT_MODE:
+			if (gbActive) {
+				selected_ = MAINMENU_NONE;
+				PlayIntro();
+			}
+			break;
+		case MAINMENU_SHOW_CREDITS:
+			UiCreditsDialog();
+			selected_ = MAINMENU_NONE;
+			NextMainLoopHandler();
+			break;
+		case MAINMENU_SHOW_SUPPORT:
+			UiSupportDialog();
+			selected_ = MAINMENU_NONE;
+			NextMainLoopHandler();
+			break;
+		case MAINMENU_EXIT_DIABLO:
+			WaitForButtonSound();
+			SetMainLoopHandler(nullptr);
+			break;
+		case MAINMENU_SETTINGS:
+			UiSettingsMenu();
+			selected_ = MAINMENU_NONE;
+			NextMainLoopHandler();
+			break;
+		}
+	}
+
+	~MainMenuSelectedHandler() override
+	{
+		music_stop();
+	}
+
+	static std::unique_ptr<MainMenuSelectedHandler> Create()
+	{
+		return std::make_unique<MainMenuSelectedHandler>();
+	}
+
+	static void SetSelected(_mainmenu_selections value)
+	{
+		selected_ = value;
+	}
+
+private:
+	static _mainmenu_selections selected_;
+};
+
+_mainmenu_selections MainMenuSelectedHandler::selected_ = MAINMENU_NONE;
+
 } // namespace
 
 bool mainmenu_select_hero_dialog(GameData *gameData)
@@ -129,61 +214,10 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 	return true;
 }
 
-void mainmenu_wait_for_button_sound()
+std::unique_ptr<MainLoopHandler> CreateMenuLoopHandler()
 {
-	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
-	UiFadeIn();
-	SDL_Delay(350); // delay to let button pressed sound finish playing
-}
-
-void mainmenu_loop()
-{
-	bool done;
-
-	RefreshMusic();
-	done = false;
-
-	do {
-		_mainmenu_selections menu = MAINMENU_NONE;
-		if (demo::IsRunning())
-			menu = MAINMENU_SINGLE_PLAYER;
-		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("%s", _("Unable to display mainmenu"));
-
-		switch (menu) {
-		case MAINMENU_NONE:
-			break;
-		case MAINMENU_SINGLE_PLAYER:
-			if (!InitSinglePlayerMenu())
-				done = true;
-			break;
-		case MAINMENU_MULTIPLAYER:
-			if (!InitMultiPlayerMenu())
-				done = true;
-			break;
-		case MAINMENU_ATTRACT_MODE:
-			if (gbIsSpawn && !diabdat_mpq)
-				done = false;
-			else if (gbActive)
-				PlayIntro();
-			break;
-		case MAINMENU_SHOW_CREDITS:
-			UiCreditsDialog();
-			break;
-		case MAINMENU_SHOW_SUPPORT:
-			UiSupportDialog();
-			break;
-		case MAINMENU_EXIT_DIABLO:
-			mainmenu_wait_for_button_sound();
-			done = true;
-			break;
-		case MAINMENU_SETTINGS:
-			UiSettingsMenu();
-			break;
-		}
-	} while (!done);
-
-	music_stop();
+	MainMenuSelectedHandler::SetSelected(demo::IsRunning() ? MAINMENU_SINGLE_PLAYER : MAINMENU_NONE);
+	return std::make_unique<MainMenuSelectedHandler>();
 }
 
 } // namespace devilution

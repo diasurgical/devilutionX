@@ -2,6 +2,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"
 #include "control.h"
+#include "main_loop.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -9,70 +10,108 @@ namespace {
 int mainmenu_attract_time_out; // seconds
 uint32_t dwAttractTicks;
 
-std::vector<std::unique_ptr<UiItemBase>> vecMainMenuDialog;
-std::vector<std::unique_ptr<UiListItem>> vecMenuItems;
+class MainMenuDialog : public MainLoopHandler {
+public:
+	MainMenuDialog(const char *name, _mainmenu_selections *result, void (*fnSound)(const char *file), int attractTimeOut)
+	    : result_(result)
+	{
+		*result_ = MAINMENU_NONE;
+		mainmenu_attract_time_out = attractTimeOut;
+		mainmenu_restart_repintro(); // for automatic starts
+		gfnSoundFunction = fnSound;
 
-_mainmenu_selections MainMenuResult;
+		listItems_.push_back(std::make_unique<UiListItem>(_("Single Player"), MAINMENU_SINGLE_PLAYER));
+		listItems_.push_back(std::make_unique<UiListItem>(_("Multi Player"), MAINMENU_MULTIPLAYER));
+		listItems_.push_back(std::make_unique<UiListItem>(_("Settings"), MAINMENU_SETTINGS));
+		listItems_.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));
+		listItems_.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
+		listItems_.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Exit Hellfire") : _("Exit Diablo"), MAINMENU_EXIT_DIABLO));
 
-void UiMainMenuSelect(int value)
-{
-	MainMenuResult = (_mainmenu_selections)vecMenuItems[value]->m_value;
-}
+		if (!gbIsSpawn || gbIsHellfire) {
+			if (gbIsHellfire)
+				LoadArt("ui_art\\mainmenuw.pcx", &ArtBackgroundWidescreen);
+			LoadBackgroundArt("ui_art\\mainmenu.pcx");
+		} else {
+			LoadBackgroundArt("ui_art\\swmmenu.pcx");
+		}
 
-void MainmenuEsc()
-{
-	std::size_t last = vecMenuItems.size() - 1;
-	if (SelectedItem == last) {
-		UiMainMenuSelect(last);
-	} else {
-		SelectedItem = last;
-	}
-}
+		UiAddBackground(&items_);
+		UiAddLogo(&items_);
 
-void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
-{
-	gfnSoundFunction = fnSound;
+		if (gbIsSpawn && gbIsHellfire) {
+			SDL_Rect rect1 = { (Sint16)(PANEL_LEFT), (Sint16)(UI_OFFSET_Y + 145), 640, 30 };
+			items_.push_back(std::make_unique<UiArtText>(_("Shareware"), rect1, UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
+		}
 
-	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Single Player"), MAINMENU_SINGLE_PLAYER));
-	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Multi Player"), MAINMENU_MULTIPLAYER));
-	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Settings"), MAINMENU_SETTINGS));
-	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));
-	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
-	vecMenuItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Exit Hellfire") : _("Exit Diablo"), MAINMENU_EXIT_DIABLO));
+		items_.push_back(std::make_unique<UiList>(listItems_, listItems_.size(), PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UiFlags::FontSize42 | UiFlags::ColorUiGold | UiFlags::AlignCenter, 5));
 
-	if (!gbIsSpawn || gbIsHellfire) {
-		if (gbIsHellfire)
-			LoadArt("ui_art\\mainmenuw.pcx", &ArtBackgroundWidescreen);
-		LoadBackgroundArt("ui_art\\mainmenu.pcx");
-	} else {
-		LoadBackgroundArt("ui_art\\swmmenu.pcx");
-	}
+		SDL_Rect rect2 = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
+		items_.push_back(std::make_unique<UiArtText>(name, rect2, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
-	UiAddBackground(&vecMainMenuDialog);
-	UiAddLogo(&vecMainMenuDialog);
-
-	if (gbIsSpawn && gbIsHellfire) {
-		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT), (Sint16)(UI_OFFSET_Y + 145), 640, 30 };
-		vecMainMenuDialog.push_back(std::make_unique<UiArtText>(_("Shareware"), rect1, UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
+		instance_ = this;
+		UiInitList(nullptr, UiMainMenuSelect, MainmenuEsc, items_, true);
 	}
 
-	vecMainMenuDialog.push_back(std::make_unique<UiList>(vecMenuItems, vecMenuItems.size(), PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UiFlags::FontSize42 | UiFlags::ColorUiGold | UiFlags::AlignCenter, 5));
+	~MainMenuDialog() override
+	{
+		ArtBackgroundWidescreen.Unload();
+		ArtBackground.Unload();
+		instance_ = nullptr;
+	}
 
-	SDL_Rect rect2 = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
-	vecMainMenuDialog.push_back(std::make_unique<UiArtText>(name, rect2, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	void HandleEvent(SDL_Event &event) override
+	{
+		UiFocusNavigation(&event);
+		UiHandleEvents(&event);
+	}
 
-	UiInitList(nullptr, UiMainMenuSelect, MainmenuEsc, vecMainMenuDialog, true);
-}
+	void Render() override
+	{
+		UiClearScreen();
+		UiRender();
+		if (SDL_GetTicks() >= dwAttractTicks && (diabdat_mpq || hellfire_mpq)) {
+			*result_ = MAINMENU_ATTRACT_MODE;
+			NextMainLoopHandler();
+		}
+	}
 
-void MainmenuFree()
-{
-	ArtBackgroundWidescreen.Unload();
-	ArtBackground.Unload();
+	void Select(int value)
+	{
+		*result_ = (_mainmenu_selections)listItems_[value]->m_value;
+		if (*result_ != MAINMENU_NONE) {
+			NextMainLoopHandler();
+		}
+	}
 
-	vecMainMenuDialog.clear();
+	void Esc()
+	{
+		const size_t last = listItems_.size() - 1;
+		if (SelectedItem == last) {
+			Select(static_cast<int>(last));
+		} else {
+			SelectedItem = last;
+		}
+	}
 
-	vecMenuItems.clear();
-}
+private:
+	static void UiMainMenuSelect(int value)
+	{
+		instance_->Select(value);
+	}
+
+	static void MainmenuEsc()
+	{
+		instance_->Esc();
+	}
+
+	static MainMenuDialog *instance_;
+
+	std::vector<std::unique_ptr<UiItemBase>> items_;
+	std::vector<std::unique_ptr<UiListItem>> listItems_;
+	_mainmenu_selections *result_;
+};
+
+MainMenuDialog *MainMenuDialog::instance_ = nullptr;
 
 } // namespace
 
@@ -83,25 +122,7 @@ void mainmenu_restart_repintro()
 
 bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
 {
-	MainMenuResult = MAINMENU_NONE;
-	while (MainMenuResult == MAINMENU_NONE) {
-		mainmenu_attract_time_out = attractTimeOut;
-		MainmenuLoad(name, fnSound);
-
-		mainmenu_restart_repintro(); // for automatic starts
-
-		while (MainMenuResult == MAINMENU_NONE) {
-			UiClearScreen();
-			UiPollAndRender();
-			if (SDL_GetTicks() >= dwAttractTicks && (diabdat_mpq || hellfire_mpq)) {
-				MainMenuResult = MAINMENU_ATTRACT_MODE;
-			}
-		}
-
-		MainmenuFree();
-	}
-
-	*pdwResult = MainMenuResult;
+	SetMainLoopHandler(std::make_unique<MainMenuDialog>(name, pdwResult, fnSound, attractTimeOut));
 	return true;
 }
 

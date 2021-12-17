@@ -11,6 +11,12 @@
 #define DVL_HAVE_ATTRIBUTE(x) 0
 #endif
 
+#ifdef __has_builtin
+#define DVL_HAVE_BUILTIN(x) __has_builtin(x)
+#else
+#define DVL_HAVE_BUILTIN(x) 0
+#endif
+
 #if DVL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
 #define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
 	__attribute__((__format__(__printf__, fmtargnum, firstarg)))
@@ -30,6 +36,14 @@
 #define DVL_ATTRIBUTE_HOT __attribute__((hot))
 #else
 #define DVL_ATTRIBUTE_HOT
+#endif
+
+#if DVL_HAVE_BUILTIN(__builtin_unreachable)
+#define DVL_UNREACHABLE __builtin_unreachable()
+#elif defined(_MSC_VER)
+#define DVL_UNREACHABLE __assume(0)
+#else
+#define DVL_UNREACHABLE
 #endif
 
 // Any global data used by tests must be marked with `DVL_API_FOR_TEST`.

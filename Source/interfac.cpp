@@ -195,7 +195,8 @@ void interface_msg_pump()
 {
 	tagMSG msg;
 
-	while (FetchMessage(&msg)) {
+	SDL_Event e;
+	while (FetchMessage(SDL_PollEvent(&e) != 0 ? &e : nullptr, &msg)) {
 		if (msg.message != DVL_WM_QUIT) {
 			TranslateMessage(&msg);
 			PushMessage(&msg);

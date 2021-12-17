@@ -13,6 +13,7 @@
 #endif
 
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/dialogs.h"
 #include "dx.h"
 #include "engine/assets.hpp"
 #include "mpq/mpq_reader.hpp"
@@ -21,7 +22,6 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
-#include "utils/ui_fwd.h"
 #include "utils/utf8.hpp"
 
 #ifdef __vita__

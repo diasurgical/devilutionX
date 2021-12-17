@@ -229,6 +229,7 @@ set(libdevilutionx_SRCS
   Source/items.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
+  Source/main_loop.cpp
   Source/menu.cpp
   Source/minitext.cpp
   Source/misdat.cpp

@@ -8,12 +8,14 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/dialogs.h"
 #include "diablo.h"
+#include "main_loop.hpp"
 #include "multi.h"
 #include "storm/storm_net.hpp"
+#include "utils/attributes.h"
 #include "utils/language.h"
 #include "utils/sdl_thread.h"
-#include "utils/ui_fwd.h"
 
 namespace devilution {
 
@@ -57,21 +59,47 @@ void FreeDlg()
 	SNetDestroy();
 }
 
+class AppFatalMainLoopHandler : public MainLoopHandler {
+public:
+	AppFatalMainLoopHandler()
+	{
+		FreeDlg();
+		MainLoopQuit(1);
+	}
+};
+
+[[noreturn]] void AppFatalMsgBox(const char *pszFmt, va_list va)
+{
+	AddNextMainLoopHandler([]() { return std::make_unique<AppFatalMainLoopHandler>(); });
+	MsgBox(pszFmt, va);
+	DVL_UNREACHABLE;
+}
+
+[[noreturn]] void AppFatalUiErrorOkDialog(const char *caption, const char *text)
+{
+	AddNextMainLoopHandler([]() { return std::make_unique<AppFatalMainLoopHandler>(); });
+	UiErrorOkDialog(caption, text, /*error=*/true);
+	DVL_UNREACHABLE;
+}
+
 } // namespace
 
-void app_fatal(const char *pszFmt, ...)
+[[noreturn]] void app_fatal(const char *pszFmt, ...)
 {
 	va_list va;
 
 	va_start(va, pszFmt);
-	FreeDlg();
 
-	if (pszFmt != nullptr)
-		MsgBox(pszFmt, va);
+	if (pszFmt != nullptr) {
+		AppFatalMsgBox(pszFmt, va);
+	}
 
 	va_end(va);
 
-	diablo_quit(1);
+	if (pszFmt == nullptr) {
+		diablo_quit(1);
+	}
+	DVL_UNREACHABLE;
 }
 
 void DrawDlg(const char *pszFmt, ...)
@@ -101,8 +129,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 
 	strcpy(text, fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}"), error, logFilePath, logLineNr).c_str());
 
-	UiErrorOkDialog(title, text);
-	app_fatal(nullptr);
+	AppFatalUiErrorOkDialog(title, text);
 }
 
 void InsertCDDlg(const char *archiveName)
@@ -120,8 +147,7 @@ void InsertCDDlg(const char *archiveName)
 	        archiveName)
 	        .c_str());
 
-	UiErrorOkDialog(_("Data File Error"), text);
-	app_fatal(nullptr);
+	AppFatalUiErrorOkDialog(_("Data File Error"), text);
 }
 
 void DirErrorDlg(const char *error)
@@ -130,8 +156,7 @@ void DirErrorDlg(const char *error)
 
 	strcpy(text, fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}"), error).c_str());
 
-	UiErrorOkDialog(_("Read-Only Directory Error"), text);
-	app_fatal(nullptr);
+	AppFatalUiErrorOkDialog(_("Read-Only Directory Error"), text);
 }
 
 } // namespace devilution

@@ -5,6 +5,7 @@
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
+#include "main_loop.hpp"
 #include "options.h"
 #include "utils/language.h"
 

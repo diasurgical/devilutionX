@@ -45,6 +45,7 @@
 #include "init.h"
 #include "lighting.h"
 #include "loadsave.h"
+#include "main_loop.hpp"
 #include "menu.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -723,7 +724,8 @@ void RunGameLoop(interface_mode uMsg)
 		}
 #endif
 
-		while (FetchMessage(&msg)) {
+		SDL_Event e;
+		while (FetchMessage(SDL_PollEvent(&e) != 0 ? &e : nullptr, &msg)) {
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = false;
 				gbRunGame = false;
@@ -994,27 +996,59 @@ void DiabloInit()
 	InitItemGFX();
 }
 
+class LogoPlayer : public MainLoopHandler {
+public:
+	LogoPlayer()
+	{
+		if (*sgOptions.StartUp.splash == StartUpSplash::LogoAndTitleDialog) {
+			play_movie("gendata\\logo.smk", true);
+		} else {
+			NextMainLoopHandler();
+		}
+	}
+};
+
+class IntroPlayer
+    : public MainLoopHandler {
+public:
+	IntroPlayer()
+	{
+		auto &intro = gbIsHellfire ? sgOptions.StartUp.hellfireIntro : sgOptions.StartUp.diabloIntro;
+		if (*intro != StartUpIntro::Off) {
+			if (*intro == StartUpIntro::Once)
+				intro.SetValue(StartUpIntro::Off);
+			if (gbIsHellfire)
+				play_movie("gendata\\Hellfire.smk", true);
+			else
+				play_movie("gendata\\diablo1.smk", true);
+		} else {
+			NextMainLoopHandler();
+		}
+	}
+};
+
+class TitlePlayer
+    : public MainLoopHandler {
+public:
+	TitlePlayer()
+	{
+		if (IsAnyOf(*sgOptions.StartUp.splash, StartUpSplash::TitleDialog, StartUpSplash::LogoAndTitleDialog)) {
+			UiTitleDialog();
+		} else {
+			NextMainLoopHandler();
+		}
+	}
+};
+
 void DiabloSplash()
 {
-	if (!gbShowIntro)
+	if (!gbShowIntro) {
+		NextMainLoopHandler();
 		return;
-
-	if (*sgOptions.StartUp.splash == StartUpSplash::LogoAndTitleDialog)
-		play_movie("gendata\\logo.smk", true);
-
-	auto &intro = gbIsHellfire ? sgOptions.StartUp.hellfireIntro : sgOptions.StartUp.diabloIntro;
-
-	if (*intro != StartUpIntro::Off) {
-		if (gbIsHellfire)
-			play_movie("gendata\\Hellfire.smk", true);
-		else
-			play_movie("gendata\\diablo1.smk", true);
-		if (*intro == StartUpIntro::Once)
-			intro.SetValue(StartUpIntro::Off);
 	}
-
-	if (IsAnyOf(*sgOptions.StartUp.splash, StartUpSplash::TitleDialog, StartUpSplash::LogoAndTitleDialog))
-		UiTitleDialog();
+	AddMainLoopHandlers({ []() { return std::make_unique<LogoPlayer>(); },
+	    []() { return std::make_unique<IntroPlayer>(); },
+	    []() { return std::make_unique<TitlePlayer>(); } });
 }
 
 void DiabloDeinit()
@@ -1626,9 +1660,12 @@ int DiabloMain(int argc, char **argv)
 
 	DiabloInit();
 
+	SetMainLoopQuitFn([](int status) {
+		diablo_quit(status);
+	});
+	AddNextMainLoopHandler(CreateMenuLoopHandler);
 	DiabloSplash();
-	mainmenu_loop();
-	DiabloDeinit();
+	RunMainLoop();
 
 	return 0;
 }

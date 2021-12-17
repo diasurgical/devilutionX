@@ -199,10 +199,10 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 	return dmsg.type == DemoMsgType::GameTick;
 }
 
-bool FetchMessage(tagMSG *lpMsg)
+bool FetchMessage(SDL_Event *eventPtr, tagMSG *lpMsg)
 {
-	SDL_Event e;
-	if (SDL_PollEvent(&e) != 0) {
+	if (eventPtr != 0) {
+		SDL_Event &e = *eventPtr;
 		if (e.type == SDL_QUIT) {
 			lpMsg->message = DVL_WM_QUIT;
 			lpMsg->lParam = 0;

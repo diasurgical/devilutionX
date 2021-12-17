@@ -3,6 +3,7 @@
 #include <SDL.h>
 
 #include "utils/attributes.h"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -17,6 +18,5 @@ Uint16 GetViewportHeight();
 bool SpawnWindow(const char *lpWindowName);
 void ReinitializeRenderer();
 void ResizeWindow();
-void UiErrorOkDialog(const char *caption, const char *text, bool error = true);
 
 } // namespace devilution

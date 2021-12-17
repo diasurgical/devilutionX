@@ -297,7 +297,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool FetchMessage_Real(tagMSG *lpMsg)
+bool FetchMessage_Real(SDL_Event *eventPtr, tagMSG *lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -309,10 +309,10 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
-	SDL_Event e;
-	if (SDL_PollEvent(&e) == 0) {
+	if (eventPtr == nullptr)
 		return false;
-	}
+
+	SDL_Event &e = *eventPtr;
 
 	lpMsg->message = 0;
 	lpMsg->lParam = 0;
@@ -626,9 +626,9 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	return true;
 }
 
-bool FetchMessage(tagMSG *lpMsg)
+bool FetchMessage(SDL_Event *eventPtr, tagMSG *lpMsg)
 {
-	bool available = demo::IsRunning() ? demo::FetchMessage(lpMsg) : FetchMessage_Real(lpMsg);
+	bool available = demo::IsRunning() ? demo::FetchMessage(eventPtr, lpMsg) : FetchMessage_Real(eventPtr, lpMsg);
 
 	if (available && demo::IsRecording())
 		demo::RecordMessage(lpMsg);
