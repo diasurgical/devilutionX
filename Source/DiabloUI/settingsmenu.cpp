@@ -7,6 +7,7 @@
 #include "hwcursor.hpp"
 #include "options.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 namespace {
@@ -73,16 +74,24 @@ void GoBackOneMenuLevel()
 	shownMenu = ShownMenuType::Settings;
 }
 
+void UpdateDescription(const OptionEntryBase &option)
+{
+	auto paragraphs = WordWrapString(option.GetDescription(), rectDescription.size.width, GameFont12, 1);
+	CopyUtf8(optionDescription, paragraphs, sizeof(optionDescription));
+}
+
 void ItemFocused(int value)
 {
+	if (shownMenu != ShownMenuType::Settings)
+		return;
+
 	auto &vecItem = vecDialogItems[value];
 	optionDescription[0] = '\0';
 	if (vecItem->m_value < 0 || shownMenu != ShownMenuType::Settings) {
 		return;
 	}
 	auto *pOption = vecOptions[vecItem->m_value];
-	auto paragraphs = WordWrapString(pOption->GetDescription(), rectDescription.size.width, GameFont12, 1);
-	strncpy(optionDescription, paragraphs.c_str(), sizeof(optionDescription));
+	UpdateDescription(*pOption);
 }
 
 bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
@@ -230,6 +239,7 @@ void UiSettingsMenu()
 				vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i).data(), i, UiFlags::ColorUiGold));
 			}
 			itemToSelect = pOptionList->GetActiveListIndex();
+			UpdateDescription(*pOptionList);
 		} break;
 		}
 
