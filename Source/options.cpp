@@ -684,7 +684,10 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	// SDL_ListModes returns -1 if any resolution is allowed (for example returned on 3DS)
 	if (modes != nullptr && modes != (SDL_Rect **)-1) {
 		for (size_t i = 0; modes[i] != nullptr; i++) {
-			sizes.emplace_back(Size { modes[i]->w, modes[i]->h });
+			if (modes[i]->w < modes[i]->h) {
+				std::swap(modes[i]->w, modes[i]->h);
+			}
+			sizes.emplace_back(Size { modes[i]->w, modes[i]->h * scaleFactor });
 		}
 	}
 #else
@@ -694,7 +697,10 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		if (SDL_GetDisplayMode(0, i, &mode) != 0) {
 			ErrSdl();
 		}
-		sizes.emplace_back(Size { mode.w, mode.h });
+		if (mode.w < mode.h) {
+			std::swap(mode.w, mode.h);
+		}
+		sizes.emplace_back(Size { mode.w, mode.h * scaleFactor });
 	}
 #endif
 
