@@ -1,9 +1,3 @@
-/**
- * @file animationinfo.h
- *
- * Contains most of the the demomode specific logic
- */
-
 #include <deque>
 #include <fstream>
 #include <iostream>
