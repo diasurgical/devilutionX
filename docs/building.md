@@ -16,7 +16,7 @@ Note that ```pkg-config``` is an optional dependency for finding libsodium, alth
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev
+sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgoogletest-dev
 ```
 ### If you want to build the translations (optional)
 ```
@@ -28,7 +28,7 @@ sudo apt-get install smpq
 ```
 ### Installing dependencies on Fedora
 ```
-sudo dnf install cmake gcc-c++ glibc-devel SDL2-devel libsodium-devel libpng-devel bzip2-devel libasan libubsan
+sudo dnf install cmake gcc-c++ glibc-devel SDL2-devel libsodium-devel libpng-devel bzip2-devel gtest-devel libasan libubsan
 ```
 ### Compiling
 ```bash
@@ -74,7 +74,7 @@ Then open the generated Xcode project and run things from there.
 
 ### Installing dependencies
 ```
-pkg install cmake sdl2 libsodium libpng bzip2
+pkg install cmake sdl2 libsodium libpng bzip2 googletest
 ```
 ### Compiling
 ```bash
@@ -86,7 +86,7 @@ cmake --build build -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkgin install cmake SDL2 libsodium libpng bzip2
+pkgin install cmake SDL2 libsodium libpng bzip2 googletest
 ```
 ### Compiling
 ```bash
@@ -99,7 +99,7 @@ cmake --build build -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkg_add cmake sdl2 libsodium libpng bzip2 gmake
+pkg_add cmake sdl2 libsodium libpng bzip2 gmake googletest
 ```
 ### Compiling
 ```bash
