@@ -35,6 +35,7 @@
 #include "diablo.h"
 #include "discord/discord.h"
 #include "engine/demomode.h"
+#include "hwcursor.hpp"
 #include "options.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
@@ -343,12 +344,6 @@ void LoadOptions()
 	sgOptions.Audio.nMusicVolume = GetIniInt("Audio", "Music Volume", VOLUME_MAX);
 
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
-	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
-	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
-#endif
-
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
@@ -392,11 +387,6 @@ void SaveOptions()
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
 
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
-	SetIniValue("Graphics", "Hardware Cursor For Items", sgOptions.Graphics.bHardwareCursorForItems);
-	SetIniValue("Graphics", "Hardware Cursor Maximum Size", sgOptions.Graphics.nHardwareCursorMaxSize);
-#endif
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
 
@@ -771,6 +761,11 @@ GraphicsOptions::GraphicsOptions()
 #endif
     , blendedTransparancy("Blended Transparency", OptionEntryFlags::CantChangeInGame, N_("Blended Transparency"), N_("Enables uniform transparency mode. This setting affects the transparency on walls, game text menus, and boxes. If disabled will default to old checkerboard transparency."), true)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+    , hardwareCursor("Hardware Cursor", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Hardware Cursor"), N_("Use a hardware cursor"), HardwareCursorDefault())
+    , hardwareCursorForItems("Hardware Cursor For Items", OptionEntryFlags::CantChangeInGame, N_("Hardware Cursor For Items"), N_("Use a hardware cursor for items."), false)
+    , hardwareCursorMaxSize("Hardware Cursor Maximum Size", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Hardware Cursor Maximum Size"), N_("Maximum width / height for the hardware cursor. Larger cursors fall back to software."), 128, { 0, 64, 128, 256, 512 })
+#endif
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
 {
@@ -806,6 +801,11 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 #endif
 		&blendedTransparancy,
 		&colorCycling,
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		&hardwareCursor,
+		&hardwareCursorForItems,
+		&hardwareCursorMaxSize,
+#endif
 		&limitFPS,
 		&showFPS,
 	};

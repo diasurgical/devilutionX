@@ -44,11 +44,11 @@ Size ScaledSize(Size size)
 
 bool IsCursorSizeAllowed(Size size)
 {
-	if (sgOptions.Graphics.nHardwareCursorMaxSize <= 0)
+	if (*sgOptions.Graphics.hardwareCursorMaxSize <= 0)
 		return true;
 	size = ScaledSize(size);
-	return size.width <= sgOptions.Graphics.nHardwareCursorMaxSize
-	    && size.height <= sgOptions.Graphics.nHardwareCursorMaxSize;
+	return size.width <= *sgOptions.Graphics.hardwareCursorMaxSize
+	    && size.height <= *sgOptions.Graphics.hardwareCursorMaxSize;
 }
 
 Point GetHotpointPosition(const SDL_Surface &surface, HotpointPosition position)
@@ -99,7 +99,7 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 bool SetHardwareCursorFromSprite(int pcurs)
 {
 	const bool isItem = IsItemSprite(pcurs);
-	if (isItem && !sgOptions.Graphics.bHardwareCursorForItems)
+	if (isItem && !*sgOptions.Graphics.hardwareCursorForItems)
 		return false;
 
 	const int outlineWidth = isItem ? 1 : 0;

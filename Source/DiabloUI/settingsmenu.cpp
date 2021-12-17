@@ -111,8 +111,7 @@ bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
 		// Reinitalize UI with changed settings (for example game mode, language or resolution)
 		UiInitialize();
 		InitItemGFX();
-		if (IsHardwareCursor())
-			SetHardwareCursor(CursorInfo::UnknownCursor());
+		SetHardwareCursor(CursorInfo::UnknownCursor());
 		return false;
 	}
 
