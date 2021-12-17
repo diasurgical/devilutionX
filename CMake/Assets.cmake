@@ -30,7 +30,7 @@ if (Gettext_FOUND)
         MACOSX_PACKAGE_LOCATION Resources
         XCODE_EXPLICIT_FILE_TYPE compiled)
       add_dependencies(libdevilutionx "${_lang_target}")
-      target_sources(libdevilutionx PRIVATE "${_gmo_file}")
+      target_sources(${BIN_TARGET} PRIVATE "${_gmo_file}")
     endif()
 
     if(VITA)
@@ -160,7 +160,7 @@ if(APPLE)
     set_source_files_properties("${src}" PROPERTIES
       MACOSX_PACKAGE_LOCATION "Resources/${_asset_dir}"
       XCODE_EXPLICIT_FILE_TYPE compiled)
-    target_sources(libdevilutionx PRIVATE "${src}")
+    target_sources(${BIN_TARGET} PRIVATE "${src}")
   endforeach()
 else()
   # Copy assets to the build assets subdirectory. This serves two purposes:
