@@ -127,6 +127,11 @@ include(CTest)
 # to be after the options.
 include(Platforms)
 
+# Note: `CMAKE_CROSSCOMPILING` is only available after the `project` call.
+if(CMAKE_CROSSCOMPILING)
+  set(BUILD_TESTING OFF)
+endif()
+
 # Recalculate the dependent options after including the Platforms:
 if(BUILD_TESTING)
   # For tests, we build a libdevilutionx.so shared library.
