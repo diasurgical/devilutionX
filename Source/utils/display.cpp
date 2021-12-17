@@ -269,10 +269,24 @@ void ReinitializeRenderer()
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 
+#ifdef _WIN32
+		// On Windows 11 the directx9 VSYNC timer doesn't get recreated properly, see https://github.com/libsdl-org/SDL/issues/5099
+		// Attempt to use the directx11 driver instead if we have vsync active.
+		const char *const renderHint = SDL_GetHint(SDL_HINT_RENDER_DRIVER);
+		if ((rendererFlags & SDL_RENDERER_PRESENTVSYNC) != 0 && SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d11") != SDL_TRUE) {
+			Log("Error when trying to set hint for direct3d11, using default render driver");
+		}
+#endif
+
 		renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
 		if (renderer == nullptr) {
 			ErrSdl();
 		}
+
+#ifdef _WIN32
+		// Restore any system/user defined hint just in case they turn off upscale/vsync.
+		SDL_SetHint(SDL_HINT_RENDER_DRIVER, renderHint);
+#endif
 
 		auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
