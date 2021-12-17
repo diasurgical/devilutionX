@@ -142,7 +142,7 @@ void OverrideOptions()
 	sgOptions.Graphics.fitToScreen.SetValue(false);
 #endif
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	sgOptions.Graphics.bHardwareCursor = false;
+	sgOptions.Graphics.hardwareCursor.SetValue(false);
 #endif
 	if (Timedemo) {
 #ifndef USE_SDL1

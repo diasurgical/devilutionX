@@ -398,11 +398,11 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryBoolean colorCycling;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
-	bool bHardwareCursor;
+	OptionEntryBoolean hardwareCursor;
 	/** @brief Use a hardware cursor for items. */
-	bool bHardwareCursorForItems;
+	OptionEntryBoolean hardwareCursorForItems;
 	/** @brief Maximum width / height for the hardware cursor. Larger cursors fall back to software. */
-	int nHardwareCursorMaxSize;
+	OptionEntryInt<int> hardwareCursorMaxSize;
 #endif
 	/** @brief Enable FPS Limiter. */
 	OptionEntryBoolean limitFPS;
@@ -553,7 +553,7 @@ struct Options {
 bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
 
-extern Options sgOptions;
+extern DVL_API_FOR_TEST Options sgOptions;
 extern bool sbWasOptionsLoaded;
 
 /**
