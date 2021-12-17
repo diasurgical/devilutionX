@@ -67,10 +67,10 @@ namespace devilution {
 
 namespace {
 
-#ifdef __ANDROID__
-constexpr OptionEntryFlags InvisibleOnAndroid = OptionEntryFlags::Invisible;
+#if defined(__ANDROID__) || defined(__APPLE__)
+constexpr OptionEntryFlags InvisibleWithImplicitRenderer = OptionEntryFlags::Invisible;
 #else
-constexpr OptionEntryFlags InvisibleOnAndroid = OptionEntryFlags::None;
+constexpr OptionEntryFlags InvisibleWithImplicitRenderer = OptionEntryFlags::None;
 #endif
 
 std::string GetIniPath()
@@ -759,7 +759,7 @@ GraphicsOptions::GraphicsOptions()
     , fitToScreen("Fit to Screen", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fit to Screen"), N_("Automatically adjust the game window to your current desktop screen aspect ratio and resolution."), true)
 #endif
 #ifndef USE_SDL1
-    , upscale("Upscale", InvisibleOnAndroid | OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Upscale"), N_("Enables image scaling from the game resolution to your monitor resolution. Prevents changing the monitor resolution and allows window resizing."), true)
+    , upscale("Upscale", InvisibleWithImplicitRenderer | OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Upscale"), N_("Enables image scaling from the game resolution to your monitor resolution. Prevents changing the monitor resolution and allows window resizing."), true)
     , scaleQuality("Scaling Quality", OptionEntryFlags::None, N_("Scaling Quality"), N_("Enables optional filters to the output image when upscaling."), ScalingQuality::AnisotropicFiltering,
           {
               { ScalingQuality::NearestPixel, N_("Nearest Pixel") },
