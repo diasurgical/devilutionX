@@ -16,7 +16,7 @@ Note that ```pkg-config``` is an optional dependency for finding libsodium, alth
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgtest-dev
+sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgtest-dev libgmock-dev
 ```
 ### If you want to build the translations (optional)
 ```
