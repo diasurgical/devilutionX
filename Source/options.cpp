@@ -70,9 +70,15 @@ namespace devilution {
 namespace {
 
 #if defined(__ANDROID__) || defined(__APPLE__)
-constexpr OptionEntryFlags InvisibleWithImplicitRenderer = OptionEntryFlags::Invisible;
+constexpr OptionEntryFlags OnlyIfNoImplicitRenderer = OptionEntryFlags::Invisible;
 #else
-constexpr OptionEntryFlags InvisibleWithImplicitRenderer = OptionEntryFlags::None;
+constexpr OptionEntryFlags OnlyIfNoImplicitRenderer = OptionEntryFlags::None;
+#endif
+
+#if defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
+constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::Invisible;
+#else
+constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::None;
 #endif
 
 std::string GetIniPath()
@@ -756,12 +762,12 @@ void OptionEntryResolution::SetActiveListIndex(size_t index)
 
 GraphicsOptions::GraphicsOptions()
     : OptionCategoryBase("Graphics", N_("Graphics"), N_("Graphics Settings"))
-    , fullscreen("Fullscreen", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fullscreen"), N_("Display the game in windowed or fullscreen mode."), true)
+    , fullscreen("Fullscreen", OnlyIfSupportsWindowed | OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fullscreen"), N_("Display the game in windowed or fullscreen mode."), true)
 #if !defined(USE_SDL1) || defined(__3DS__)
     , fitToScreen("Fit to Screen", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Fit to Screen"), N_("Automatically adjust the game window to your current desktop screen aspect ratio and resolution."), true)
 #endif
 #ifndef USE_SDL1
-    , upscale("Upscale", InvisibleWithImplicitRenderer | OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Upscale"), N_("Enables image scaling from the game resolution to your monitor resolution. Prevents changing the monitor resolution and allows window resizing."), true)
+    , upscale("Upscale", OnlyIfNoImplicitRenderer | OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Upscale"), N_("Enables image scaling from the game resolution to your monitor resolution. Prevents changing the monitor resolution and allows window resizing."), true)
     , scaleQuality("Scaling Quality", OptionEntryFlags::None, N_("Scaling Quality"), N_("Enables optional filters to the output image when upscaling."), ScalingQuality::AnisotropicFiltering,
           {
               { ScalingQuality::NearestPixel, N_("Nearest Pixel") },
