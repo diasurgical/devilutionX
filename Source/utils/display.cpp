@@ -110,7 +110,31 @@ Size GetPreferredWindowSize()
 	AdjustToScreenGeometry(windowSize);
 	return windowSize;
 }
+
 } // namespace
+
+float GetDpiScalingFactor()
+{
+#ifdef USE_SDL1
+	return 1.0F;
+#else
+	if (renderer == nullptr)
+		return 1.0F;
+
+	int renderWidth;
+	int renderHeight;
+	SDL_GetRendererOutputSize(renderer, &renderWidth, &renderHeight);
+
+	int windowWidth;
+	int windowHeight;
+	SDL_GetWindowSize(ghMainWnd, &windowWidth, &windowHeight);
+
+	float hfactor = static_cast<float>(renderWidth) / windowWidth;
+	float vhfactor = static_cast<float>(renderHeight) / windowHeight;
+
+	return std::min(hfactor, vhfactor);
+#endif
+}
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)

@@ -39,6 +39,7 @@
 #include "options.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
+#include "utils/display.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -677,6 +678,7 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		return;
 
 	std::vector<Size> sizes;
+	float scaleFactor = GetDpiScalingFactor();
 
 	// Add resolutions
 #ifdef USE_SDL1
@@ -687,7 +689,9 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 			if (modes[i]->w < modes[i]->h) {
 				std::swap(modes[i]->w, modes[i]->h);
 			}
-			sizes.emplace_back(Size { modes[i]->w, modes[i]->h * scaleFactor });
+			sizes.emplace_back(Size {
+			    static_cast<int>(modes[i]->w * scaleFactor),
+			    static_cast<int>(modes[i]->h * scaleFactor) });
 		}
 	}
 #else
@@ -700,7 +704,9 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 		if (mode.w < mode.h) {
 			std::swap(mode.w, mode.h);
 		}
-		sizes.emplace_back(Size { mode.w, mode.h * scaleFactor });
+		sizes.emplace_back(Size {
+		    static_cast<int>(mode.w * scaleFactor),
+		    static_cast<int>(mode.h * scaleFactor) });
 	}
 #endif
 
