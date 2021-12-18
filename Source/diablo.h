@@ -7,7 +7,6 @@
 
 #include <cstdint>
 
-#include "controls/keymapper.hpp"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
@@ -102,7 +101,6 @@ void diablo_color_cyc_logic();
 
 /* rdata */
 
-extern Keymapper keymapper;
 #ifdef _DEBUG
 extern bool DebugDisableNetworkTimeout;
 #endif
