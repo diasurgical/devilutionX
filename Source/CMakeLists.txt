@@ -81,7 +81,6 @@ set(libdevilutionx_SRCS
   controls/menu_controls.cpp
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
-  controls/keymapper.cpp
   engine/animationinfo.cpp
   engine/demomode.cpp
   engine/load_cel.cpp

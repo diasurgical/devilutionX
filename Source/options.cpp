@@ -32,6 +32,7 @@
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
+#include "control.h"
 #include "diablo.h"
 #include "discord/discord.h"
 #include "engine/demomode.h"
@@ -161,6 +162,17 @@ float GetIniFloat(const char *sectionName, const char *keyName, float defaultVal
 	return (float)GetIni().GetDoubleValue(sectionName, keyName, defaultValue);
 }
 
+bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "")
+{
+	const char *value = GetIni().GetValue(sectionName, keyName);
+	if (value == nullptr) {
+		CopyUtf8(string, defaultString, stringSize);
+		return false;
+	}
+	CopyUtf8(string, value, stringSize);
+	return true;
+}
+
 bool GetIniStringVector(const char *sectionName, const char *keyName, std::vector<std::string> &stringValues)
 {
 	std::list<CSimpleIni::Entry> values;
@@ -195,6 +207,13 @@ void SetIniValue(const char *keyname, const char *valuename, float value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
 	GetIni().SetDoubleValue(keyname, valuename, value, nullptr, true);
+}
+
+void SetIniValue(const char *sectionName, const char *keyName, const char *value)
+{
+	IniChangedChecker changedChecker(sectionName, keyName);
+	auto &ini = GetIni();
+	ini.SetValue(sectionName, keyName, value, nullptr, true);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, const std::vector<std::string> &stringValues)
@@ -307,25 +326,6 @@ void OptionAudioChanged()
 
 } // namespace
 
-void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
-{
-	IniChangedChecker changedChecker(sectionName, keyName);
-	auto &ini = GetIni();
-	std::string stringValue(value, len != 0 ? len : strlen(value));
-	ini.SetValue(sectionName, keyName, stringValue.c_str(), nullptr, true);
-}
-
-bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
-{
-	const char *value = GetIni().GetValue(sectionName, keyName);
-	if (value == nullptr) {
-		CopyUtf8(string, defaultString, stringSize);
-		return false;
-	}
-	CopyUtf8(string, value, stringSize);
-	return true;
-}
-
 /** Game options */
 Options sgOptions;
 bool sbWasOptionsLoaded = false;
@@ -364,8 +364,6 @@ void LoadOptions()
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
-
-	keymapper.Load();
 
 	if (demo::IsRunning())
 		demo::OverrideOptions();
@@ -408,8 +406,6 @@ void SaveOptions()
 #ifdef __vita__
 	SetIniValue("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
 #endif
-
-	keymapper.Save();
 
 	SaveIni();
 }
@@ -1130,6 +1126,168 @@ std::vector<OptionEntryBase *> LanguageOptions::GetEntries()
 	return {
 		&code,
 	};
+}
+
+KeymapperOptions::KeymapperOptions()
+    : OptionCategoryBase("Keymapping", N_("Keymapping"), N_("Keymapping Settings"))
+{
+	// Insert all supported keys: a-z, 0-9 and F1-F12.
+	keyIDToKeyName.reserve(('Z' - 'A' + 1) + ('9' - '0' + 1) + 12);
+	for (char c = 'A'; c <= 'Z'; ++c) {
+		keyIDToKeyName.emplace(c, std::string(1, c));
+	}
+	for (char c = '0'; c <= '9'; ++c) {
+		keyIDToKeyName.emplace(c, std::string(1, c));
+	}
+	for (int i = 0; i < 12; ++i) {
+		keyIDToKeyName.emplace(DVL_VK_F1 + i, fmt::format("F{}", i + 1));
+	}
+
+	keyNameToKeyID.reserve(keyIDToKeyName.size());
+	for (const auto &kv : keyIDToKeyName) {
+		keyNameToKeyID.emplace(kv.second, kv.first);
+	}
+}
+
+std::vector<OptionEntryBase *> KeymapperOptions::GetEntries()
+{
+	std::vector<OptionEntryBase *> entries;
+	for (auto &action : actions) {
+		entries.push_back(action.get());
+	}
+	return entries;
+}
+
+KeymapperOptions::Action::Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index)
+    : OptionEntryBase(key, OptionEntryFlags::None, name, description)
+    , defaultKey(defaultKey)
+    , action(action)
+    , enable(enable)
+    , dynamicIndex(index)
+{
+	if (index >= 0) {
+		dynamicKey = fmt::format(key, index);
+		this->key = dynamicKey;
+	}
+}
+
+string_view KeymapperOptions::Action::GetName() const
+{
+	if (dynamicIndex < 0)
+		return name;
+	dynamicName = fmt::format(_(name.data()), dynamicIndex);
+	return dynamicName;
+}
+
+void KeymapperOptions::Action::LoadFromIni(string_view category)
+{
+	std::array<char, 64> result;
+	if (!GetIniValue(category.data(), key.data(), result.data(), result.size())) {
+		SetValue(defaultKey);
+		return; // Use the default key if no key has been set.
+	}
+
+	std::string readKey = result.data();
+	if (readKey.empty()) {
+		SetValue(DVL_VK_INVALID);
+		return;
+	}
+
+	auto keyIt = sgOptions.Keymapper.keyNameToKeyID.find(readKey);
+	if (keyIt == sgOptions.Keymapper.keyNameToKeyID.end()) {
+		// Use the default key if the key is unknown.
+		Log("Keymapper: unknown key '{}'", readKey);
+		SetValue(defaultKey);
+		return;
+	}
+
+	// Store the key in action.key and in the map so we can save() the
+	// actions while keeping the same order as they have been added.
+	SetValue(keyIt->second);
+}
+void KeymapperOptions::Action::SaveToIni(string_view category) const
+{
+	if (boundKey == DVL_VK_INVALID) {
+		// Just add an empty config entry if the action is unbound.
+		SetIniValue(category.data(), key.data(), "");
+	}
+	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
+	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
+		Log("Keymapper: no name found for key '{}'", key);
+		return;
+	}
+	SetIniValue(category.data(), key.data(), keyNameIt->second.c_str());
+}
+
+string_view KeymapperOptions::Action::GetValueDescription() const
+{
+	if (boundKey == DVL_VK_INVALID)
+		return "";
+	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
+	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
+		return "";
+	}
+	return keyNameIt->second.c_str();
+}
+
+bool KeymapperOptions::Action::SetValue(int value)
+{
+	if (value != DVL_VK_INVALID && sgOptions.Keymapper.keyIDToKeyName.find(value) == sgOptions.Keymapper.keyIDToKeyName.end()) {
+		// Ignore invalid key values
+		return false;
+	}
+
+	// Remove old key
+	if (boundKey != DVL_VK_INVALID) {
+		sgOptions.Keymapper.keyIDToAction.erase(boundKey);
+		boundKey = DVL_VK_INVALID;
+	}
+
+	// Add new key
+	if (value != DVL_VK_INVALID) {
+		auto it = sgOptions.Keymapper.keyIDToAction.find(value);
+		if (it != sgOptions.Keymapper.keyIDToAction.end()) {
+			// Warn about overwriting keys.
+			Log("Keymapper: key '{}' is already bound to action '{}', overwriting", value, it->second.get().name);
+			it->second.get().boundKey = DVL_VK_INVALID;
+		}
+
+		sgOptions.Keymapper.keyIDToAction.insert_or_assign(value, *this);
+		boundKey = value;
+	}
+
+	return true;
+}
+
+void KeymapperOptions::AddAction(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index)
+{
+	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, action, enable, index)));
+}
+
+void KeymapperOptions::KeyPressed(int key) const
+{
+	auto it = keyIDToAction.find(key);
+	if (it == keyIDToAction.end())
+		return; // Ignore unmapped keys.
+
+	const auto &action = it->second;
+
+	// Check that the action can be triggered and that the chat textbox is not
+	// open.
+	if (!action.get().enable() || talkflag)
+		return;
+
+	action.get().action();
+}
+
+string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
+{
+	for (auto &action : actions) {
+		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
+			return action->GetValueDescription();
+		}
+	}
+	return "";
 }
 
 } // namespace devilution
