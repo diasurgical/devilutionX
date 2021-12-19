@@ -39,7 +39,6 @@
 #include "options.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
-#include "utils/display.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -798,7 +797,7 @@ GraphicsOptions::GraphicsOptions()
 #endif
 #ifndef USE_SDL1
 	upscale.SetValueChangedCallback(ResizeWindow);
-	scaleQuality.SetValueChangedCallback(ReinitializeRenderer);
+	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
 	integerScaling.SetValueChangedCallback(ResizeWindow);
 	vSync.SetValueChangedCallback(ReinitializeRenderer);
 #endif
