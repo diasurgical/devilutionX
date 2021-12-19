@@ -26,8 +26,6 @@ extern SDLPaletteUniquePtr Palette;
 extern SDL_Surface *PalSurface;
 extern unsigned int pal_surface_palette_version;
 
-float GetDpiScalingFactor();
-
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags);
 void SetVideoModeToPrimary(bool fullscreen, int width, int height);

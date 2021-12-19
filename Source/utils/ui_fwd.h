@@ -14,7 +14,9 @@ Uint16 GetScreenWidth();
 Uint16 GetScreenHeight();
 Uint16 GetViewportHeight();
 
+float GetDpiScalingFactor();
 bool SpawnWindow(const char *lpWindowName);
+void ReinitializeTexture();
 void ReinitializeRenderer();
 void ResizeWindow();
 void UiErrorOkDialog(const char *caption, const char *text, bool error = true);

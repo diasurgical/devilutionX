@@ -268,6 +268,17 @@ bool SpawnWindow(const char *lpWindowName)
 	return ghMainWnd != nullptr;
 }
 
+void ReinitializeTexture()
+{
+	if (texture)
+		texture.reset();
+
+	auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
+
+	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+}
+
 void ReinitializeRenderer()
 {
 	if (ghMainWnd == nullptr)
@@ -278,9 +289,6 @@ void ReinitializeRenderer()
 	Size windowSize = { current.current_w, current.current_h };
 	AdjustToScreenGeometry(windowSize);
 #else
-	if (texture)
-		texture.reset();
-
 	if (renderer != nullptr) {
 		SDL_DestroyRenderer(renderer);
 		renderer = nullptr;
@@ -312,10 +320,7 @@ void ReinitializeRenderer()
 		SDL_SetHint(SDL_HINT_RENDER_DRIVER, renderHint);
 #endif
 
-		auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
-
-		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+		ReinitializeTexture();
 
 		if (*sgOptions.Graphics.integerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();
