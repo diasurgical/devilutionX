@@ -360,7 +360,8 @@ void FindTransparencyValues(Point floor, uint8_t floorID)
 			seedStack.push(std::make_tuple(scanLeft, scanRight - 1, y + dy, dy));
 			if (scanRight - 1 > scanEnd)
 				seedStack.push(std::make_tuple(scanEnd + 1, scanRight - 1, y - dy, -dy));
-			checkDiagonals({ scanRight - 1, y }, right);
+			if (scanLeft < scanRight)
+				checkDiagonals({ scanRight - 1, y }, right);
 
 			while (scanRight < scanEnd && !isInside(scanRight, y))
 				scanRight++;
