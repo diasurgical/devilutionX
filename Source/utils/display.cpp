@@ -295,7 +295,7 @@ void ReinitializeRenderer()
 	}
 
 	if (*sgOptions.Graphics.upscale) {
-		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
+		Uint32 rendererFlags = 0;
 
 		if (*sgOptions.Graphics.vSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
