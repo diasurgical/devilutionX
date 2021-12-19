@@ -3055,7 +3055,8 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 			}
 			player._pMana = 0;
 			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
-			NetSendCmd(true, CMD_REMSHIELD);
+			if (pnum == MyPlayerId)
+				NetSendCmd(true, CMD_REMSHIELD);
 		}
 	}
 
