@@ -390,8 +390,6 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Enable vsync on the output. */
 	OptionEntryBoolean vSync;
 #endif
-	/** @brief Use blended transparency rather than stippled. */
-	OptionEntryBoolean blendedTransparancy;
 	/** @brief Gamma correction level. */
 	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
