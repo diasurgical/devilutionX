@@ -57,7 +57,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 
 	strcpy(selyesno_confirmationMessage, WordWrapString(body, MESSAGE_WIDTH, GameFont24).c_str());
 
-	UiInitList(nullptr, SelyesnoSelect, SelyesnoEsc, vecSelYesNoDialog, true, nullptr);
+	UiInitList(nullptr, SelyesnoSelect, SelyesnoEsc, vecSelYesNoDialog, true);
 
 	selyesno_value = true;
 	selyesno_endMenu = false;

@@ -181,6 +181,26 @@ void EscPressed()
 	GoBackOneMenuLevel();
 }
 
+void FullscreenChanged()
+{
+	auto *fullscreenOption = &sgOptions.Graphics.fullscreen;
+
+	for (auto &vecItem : vecDialogItems) {
+		int vecItemValue = vecItem->m_value;
+		if (vecItemValue < 0)
+			continue;
+
+		auto *pOption = vecOptions[vecItemValue];
+		if (pOption != fullscreenOption)
+			continue;
+
+		vecItem->args.clear();
+		for (auto &arg : CreateDrawStringFormatArgForEntry(pOption))
+			vecItem->args.push_back(arg);
+		break;
+	}
+}
+
 } // namespace
 
 void UiSettingsMenu()
@@ -247,7 +267,7 @@ void UiSettingsMenu()
 
 		vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, rectList.size.height / 26, rectList.position.x, rectList.position.y, rectList.size.width, 26, UiFlags::FontSize24 | UiFlags::AlignCenter));
 
-		UiInitList(ItemFocused, ItemSelected, EscPressed, vecDialog, true, nullptr, itemToSelect);
+		UiInitList(ItemFocused, ItemSelected, EscPressed, vecDialog, true, FullscreenChanged, nullptr, itemToSelect);
 
 		while (!endMenu) {
 			UiClearScreen();

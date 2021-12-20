@@ -70,7 +70,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	strcpy(dialogText, WordWrapString(body, MESSAGE_WIDTH, GameFont24).c_str());
 
-	UiInitList(nullptr, selok_Select, selok_Esc, vecSelOkDialog, false, nullptr);
+	UiInitList(nullptr, selok_Select, selok_Esc, vecSelOkDialog, false);
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {
