@@ -444,7 +444,7 @@ void UiHandleEvents(SDL_Event *event)
 	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
-			dx_reinit();
+			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			return;
 		}
 	}

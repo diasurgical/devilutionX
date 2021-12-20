@@ -108,7 +108,6 @@ char gszProductName[64] = "DevilutionX vUnknown";
 Keymapper keymapper;
 std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
-bool gbForceWindowed = false;
 #ifdef _DEBUG
 bool DebugDisableNetworkTimeout = false;
 std::vector<std::string> DebugCmdsFromCommandLine;
@@ -447,7 +446,7 @@ void PressKey(int vkey)
 		keymapper.KeyPressed(vkey);
 		if (vkey == DVL_VK_RETURN) {
 			if (GetAsyncKeyState(DVL_VK_MENU))
-				dx_reinit();
+				sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			else
 				control_type_message();
 		}
@@ -472,7 +471,7 @@ void PressKey(int vkey)
 	}
 	if (PauseMode == 2) {
 		if (vkey == DVL_VK_RETURN && GetAsyncKeyState(DVL_VK_MENU))
-			dx_reinit();
+			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 		return;
 	}
 
@@ -480,7 +479,7 @@ void PressKey(int vkey)
 
 	if (vkey == DVL_VK_RETURN) {
 		if (GetAsyncKeyState(DVL_VK_MENU)) {
-			dx_reinit();
+			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 		} else if (stextflag != STORE_NONE) {
 			StoreEnter();
 		} else if (QuestLogIsOpen) {
@@ -796,7 +795,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--record <#>", _("Record a demo file"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--demo <#>", _("Play a demo file"));
@@ -869,8 +867,6 @@ void DiabloParseFlags(int argc, char **argv)
 			gbShowIntro = false;
 		} else if (arg == "-f") {
 			EnableFrameCount();
-		} else if (arg == "-x") {
-			gbForceWindowed = true;
 		} else if (arg == "--spawn") {
 			forceSpawn = true;
 		} else if (arg == "--diablo") {

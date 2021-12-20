@@ -791,14 +791,14 @@ GraphicsOptions::GraphicsOptions()
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
 {
 	resolution.SetValueChangedCallback(ResizeWindow);
-	fullscreen.SetValueChangedCallback(ResizeWindow);
+	fullscreen.SetValueChangedCallback(SetFullscreenMode);
 #if !defined(USE_SDL1) || defined(__3DS__)
 	fitToScreen.SetValueChangedCallback(ResizeWindow);
 #endif
 #ifndef USE_SDL1
 	upscale.SetValueChangedCallback(ResizeWindow);
 	scaleQuality.SetValueChangedCallback(ReinitializeTexture);
-	integerScaling.SetValueChangedCallback(ResizeWindow);
+	integerScaling.SetValueChangedCallback(ReinitializeIntegerScale);
 	vSync.SetValueChangedCallback(ReinitializeRenderer);
 #endif
 	showFPS.SetValueChangedCallback(OptionShowFPSChanged);
