@@ -179,12 +179,6 @@ void SetIniValue(const char *keyname, const char *valuename, int value)
 	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
 }
 
-void SetIniValue(const char *keyname, const char *valuename, std::uint8_t value)
-{
-	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
-}
-
 void SetIniValue(const char *keyname, const char *valuename, std::uint32_t value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
@@ -780,7 +774,6 @@ GraphicsOptions::GraphicsOptions()
     , integerScaling("Integer Scaling", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Integer Scaling"), N_("Scales the image using whole number pixel ratio."), false)
     , vSync("Vertical Sync", OptionEntryFlags::RecreateUI, N_("Vertical Sync"), N_("Forces waiting for Vertical Sync. Prevents tearing effect when drawing a frame. Disabling it can help with mouse lag on some systems."), true)
 #endif
-    , blendedTransparancy("Blended Transparency", OptionEntryFlags::CantChangeInGame, N_("Blended Transparency"), N_("Enables uniform transparency mode. This setting affects the transparency on walls, game text menus, and boxes. If disabled will default to old checkerboard transparency."), true)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
 #if SDL_VERSION_ATLEAST(2, 0, 0)
     , hardwareCursor("Hardware Cursor", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor"), N_("Use a hardware cursor"), HardwareCursorDefault())
@@ -820,7 +813,6 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 		&integerScaling,
 		&vSync,
 #endif
-		&blendedTransparancy,
 		&colorCycling,
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		&hardwareCursor,

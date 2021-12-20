@@ -538,32 +538,6 @@ void CelBlitSafeTo(const Surface &out, Point position, const byte *pRLEBytes, in
 }
 
 /**
- * @brief Same as CelBlitLightSafeTo but with stippled transparency applied
- * @param out Target buffer
- * @param position Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- */
-void CelBlitLightTransSafeTo(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
-{
-	assert(pRLEBytes != nullptr);
-	const std::uint8_t *tbl = &LightTables[LightTableIndex * 256];
-	bool shift = (reinterpret_cast<uintptr_t>(&out[position]) % 2 == 1);
-	const bool pitchIsEven = (out.pitch() % 2 == 0);
-	RenderCel(
-	    out, position, pRLEBytes, nDataSize, nWidth,
-	    [tbl, &shift](std::uint8_t *dst, const std::uint8_t *src, std::size_t width) {
-		    if (reinterpret_cast<uintptr_t>(dst) % 2 == (shift ? 1 : 0)) {
-			    ++dst, ++src, --width;
-		    }
-		    for (const auto *dstEnd = dst + width; dst < dstEnd; dst += 2, src += 2) {
-			    *dst = tbl[*src];
-		    }
-	    },
-	    [pitchIsEven, &shift]() { if (pitchIsEven) shift = !shift; });
-}
-
-/**
  * @brief Same as CelBlitLightSafe, with blended transparency applied
  * @param out The output buffer
  * @param pRLEBytes CEL pixel stream (run-length encoded)
@@ -665,10 +639,7 @@ void CelClippedBlitLightTransTo(const Surface &out, Point position, const CelSpr
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (cel_transparency_active) {
-		if (*sgOptions.Graphics.blendedTransparancy)
-			CelBlitLightBlendedSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
-		else
-			CelBlitLightTransSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
+		CelBlitLightBlendedSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 	} else if (LightTableIndex != 0)
 		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 	else

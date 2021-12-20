@@ -118,9 +118,6 @@ void CycleColors(int from, int to)
 		system_palette[to] = col;
 	}
 
-	if (!*sgOptions.Graphics.blendedTransparancy)
-		return;
-
 	for (auto &palette : paletteTransparencyLookup) {
 		Uint8 col = palette[from];
 		for (int j = from; j < to; j++) {
@@ -151,9 +148,6 @@ void CycleColorsReverse(int from, int to)
 		}
 		system_palette[from] = col;
 	}
-
-	if (!*sgOptions.Graphics.blendedTransparancy)
-		return;
 
 	for (auto &palette : paletteTransparencyLookup) {
 		Uint8 col = palette[to];
@@ -224,7 +218,7 @@ void LoadPalette(const char *pszFileName, bool blend /*= true*/)
 #endif
 	}
 
-	if (blend && *sgOptions.Graphics.blendedTransparancy) {
+	if (blend) {
 		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_CRYPT) {
 			GenerateBlendedLookupTable(orig_palette, 1, 31);
 		} else if (leveltype == DTYPE_NEST) {
@@ -407,20 +401,18 @@ void palette_update_quest_palette(int n)
 	logical_palette[i] = orig_palette[i];
 	ApplyGamma(system_palette, logical_palette, 32);
 	palette_update(0, 31);
-	if (*sgOptions.Graphics.blendedTransparancy) {
-		// Update blended transparency, but only for the color that was updated
-		for (int j = 0; j < 256; j++) {
-			if (i == j) { // No need to calculate transparency between 2 identical colors
-				paletteTransparencyLookup[i][j] = j;
-				continue;
-			}
-			SDL_Color blendedColor;
-			blendedColor.r = ((int)logical_palette[i].r + (int)logical_palette[j].r) / 2;
-			blendedColor.g = ((int)logical_palette[i].g + (int)logical_palette[j].g) / 2;
-			blendedColor.b = ((int)logical_palette[i].b + (int)logical_palette[j].b) / 2;
-			Uint8 best = FindBestMatchForColor(logical_palette, blendedColor, 1, 31);
-			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[j][i] = best;
+	// Update blended transparency, but only for the color that was updated
+	for (int j = 0; j < 256; j++) {
+		if (i == j) { // No need to calculate transparency between 2 identical colors
+			paletteTransparencyLookup[i][j] = j;
+			continue;
 		}
+		SDL_Color blendedColor;
+		blendedColor.r = ((int)logical_palette[i].r + (int)logical_palette[j].r) / 2;
+		blendedColor.g = ((int)logical_palette[i].g + (int)logical_palette[j].g) / 2;
+		blendedColor.b = ((int)logical_palette[i].b + (int)logical_palette[j].b) / 2;
+		Uint8 best = FindBestMatchForColor(logical_palette, blendedColor, 1, 31);
+		paletteTransparencyLookup[i][j] = paletteTransparencyLookup[j][i] = best;
 	}
 }
 
