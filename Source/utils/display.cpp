@@ -17,6 +17,7 @@
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
+#include "controls/touch/gamepad.h"
 #include "dx.h"
 #include "options.h"
 #include "utils/log.hpp"
@@ -408,6 +409,10 @@ void ResizeWindow()
 
 	CreateBackBuffer();
 	force_redraw = 255;
+
+#ifdef VIRTUAL_GAMEPAD
+	InitializeVirtualGamepad();
+#endif
 }
 
 SDL_Surface *GetOutputSurface()
