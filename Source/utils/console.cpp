@@ -28,28 +28,27 @@ HANDLE GetStderrHandle()
 
 void printInConsole(const char *fmt, ...)
 {
-	HANDLE handle = GetStderrHandle();
-	if (handle == NULL)
-		return;
-
 	char message[4096];
 	va_list ap;
 	va_start(ap, fmt);
 	std::vsnprintf(message, sizeof(message), fmt, ap);
 	va_end(ap);
 
+	OutputDebugString(message);
+
+	HANDLE handle = GetStderrHandle();
+	if (handle == NULL)
+		return;
 	WriteConsole(handle, message, strlen(message), NULL, NULL);
 }
 
 void printInConsoleV(const char *fmt, va_list ap)
 {
-	HANDLE handle = GetStderrHandle();
-	if (handle == NULL)
-		return;
-
 	char message[4096];
 	std::vsnprintf(message, sizeof(message), fmt, ap);
+	OutputDebugString(message);
 
+	HANDLE handle = GetStderrHandle();
 	if (handle == NULL)
 		return;
 	WriteConsole(handle, message, strlen(message), NULL, NULL);
