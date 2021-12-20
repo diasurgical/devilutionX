@@ -103,7 +103,6 @@ void diablo_color_cyc_logic();
 /* rdata */
 
 extern Keymapper keymapper;
-extern bool gbForceWindowed;
 #ifdef _DEBUG
 extern bool DebugDisableNetworkTimeout;
 #endif
