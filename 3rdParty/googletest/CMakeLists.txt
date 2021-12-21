@@ -12,3 +12,5 @@ set(INSTALL_GTEST OFF)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
+
+add_library(GTest::gtest ALIAS gmock)
