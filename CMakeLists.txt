@@ -44,6 +44,7 @@ cmake_dependent_option(PIE "Generate position-independent code" OFF "BUILD_TESTI
 option(MACOSX_STANDALONE_APP_BUNDLE "Generate a portable app bundle to use on other devices (requires sudo)" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
+RELEASE_OPTION(DEVILUTIONX_STATIC_CXX_STDLIB "Link C++ standard library statically (if available)")
 cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NONET" ON)
 cmake_dependent_option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF "NOT NONET" ON)
 cmake_dependent_option(PACKET_ENCRYPTION "Encrypt network packets" ON "NOT NONET" OFF)
@@ -169,6 +170,8 @@ if(NOT DISABLE_LTO)
 endif()
 
 if(GPERF)
+  set(DEVILUTIONX_STATIC_CXX_STDLIB OFF)
+
   if(GPERF_HEAP_FIRST_GAME_ITERATION)
     set(GPERF_HEAP_MAIN ON)
   endif()
