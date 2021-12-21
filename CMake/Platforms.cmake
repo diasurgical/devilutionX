@@ -1,7 +1,5 @@
 if(WIN32)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(DIST ON)
+  include(platforms/windows)
 endif()
 
 if(HAIKU)
