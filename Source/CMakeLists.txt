@@ -266,10 +266,7 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
-if(NOT NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC
-  Threads::Threads)
-endif()
+target_link_libraries(libdevilutionx PUBLIC Threads::Threads)
 
 target_link_libraries(libdevilutionx PUBLIC
   PKWare
