@@ -363,8 +363,9 @@ if(GPERF)
   target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
-  target_link_libraries(libdevilutionx PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  genex_for_option(DEVILUTIONX_STATIC_CXX_STDLIB)
+  target_link_libraries(libdevilutionx PUBLIC $<${DEVILUTIONX_STATIC_CXX_STDLIB_GENEX}:-static-libgcc;-static-libstdc++>)
 endif()
 
 if(WIN32)

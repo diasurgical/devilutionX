@@ -5,8 +5,7 @@ if(WIN32)
 endif()
 
 if(HAIKU)
-  set(ASAN OFF)
-  set(UBSAN OFF)
+  include(platforms/haiku)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD|OpenBSD|DragonFly|NetBSD")
