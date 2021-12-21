@@ -275,10 +275,6 @@ target_link_libraries(libdevilutionx PUBLIC
   simpleini
   hoehrmann_utf8)
 
-if(WIN32)
-  target_link_libraries(libdevilutionx PUBLIC find_steam_game)
-endif()
-
 if(NOT NONET)
   if(NOT DISABLE_TCP)
     target_link_libraries(libdevilutionx PUBLIC asio)
@@ -334,27 +330,9 @@ if(NOT NONET AND NOT DISABLE_ZERO_TIER)
   endif()
 endif()
 
-if(AMIGA)
-  target_link_libraries(libdevilutionx PUBLIC
-    ${ZLIB_LIBRARY})
-  if(NOT WARPOS)
-    target_link_libraries(libdevilutionx PUBLIC -ldebug)
-  endif()
-endif()
-
-if(VITA)
-  target_link_libraries(libdevilutionx PUBLIC
-        ScePower_stub
-        SceAppUtil_stub
-        SceNet_stub
-        SceNetCtl_stub
-  )
-  target_compile_definitions(libdevilutionx PUBLIC VITA)
-endif()
-
-if(NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
-endif()
+target_link_libraries(libdevilutionx PUBLIC ${DEVILUTIONX_PLATFORM_LINK_LIBRARIES})
+target_compile_definitions(libdevilutionx PUBLIC ${DEVILUTIONX_PLATFORM_COMPILE_DEFINITIONS})
+target_compile_options(libdevilutionx PUBLIC ${DEVILUTIONX_PLATFORM_COMPILE_OPTIONS})
 
 if(GPERF)
   target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
@@ -363,17 +341,6 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   genex_for_option(DEVILUTIONX_STATIC_CXX_STDLIB)
   target_link_libraries(libdevilutionx PUBLIC $<${DEVILUTIONX_STATIC_CXX_STDLIB_GENEX}:-static-libgcc;-static-libstdc++>)
-endif()
-
-if(WIN32)
-  target_link_libraries(libdevilutionx PUBLIC shlwapi wsock32 ws2_32 wininet)
-
-  if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(libdevilutionx PUBLIC "/W3" "/Zc:__cplusplus" "/utf-8")
-    target_compile_definitions(libdevilutionx PUBLIC _CRT_SECURE_NO_WARNINGS)
-  else()
-    target_compile_options(libdevilutionx PUBLIC $<$<CONFIG:Debug>:-gstabs>)
-  endif()
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -391,10 +358,6 @@ endif()
 if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   # Enable POSIX extensions such as `readlink` and `ftruncate`.
   add_definitions(-D_POSIX_C_SOURCE=200809L)
-endif()
-
-if(HAIKU)
-  target_link_libraries(libdevilutionx PUBLIC network)
 endif()
 
 if(BUILD_TESTING)
@@ -442,7 +405,6 @@ foreach(
   DEFAULT_AUDIO_CHANNELS
   DEFAULT_AUDIO_BUFFER_SIZE
   DEFAULT_AUDIO_RESAMPLING_QUALITY
-  MO_LANG_DIR
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
   SDL1_VIDEO_MODE_SVID_FLAGS

@@ -11,14 +11,18 @@ set(LIBMPQ_FILE_BUFFER_SIZE 32768)
 set(USE_SDL1 ON)
 set(PREFILL_PLAYER_NAME ON)
 
-#3DS libraries
+# 3DS libraries and compile definitions
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/ctr")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/ctr/modules")
 find_package(CITRO3D REQUIRED)
 
-#additional compilation definitions
-add_definitions(-D__3DS__)
-set(MO_LANG_DIR \"romfs:/\")
+list(APPEND DEVILUTIONX_PLATFORM_LINK_LIBRARIES
+  3ds::citro3d
+  3ds::ctrulib
+)
+list(APPEND DEVILUTIONX_PLATFORM_COMPILE_DEFINITIONS
+  __3DS__
+)
 
 #SDL video mode parameters
 set(SDL1_VIDEO_MODE_FLAGS SDL_DOUBLEBUF|SDL_HWSURFACE)

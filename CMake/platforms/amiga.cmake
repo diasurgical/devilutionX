@@ -17,4 +17,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-attributes")
 # `fseeko` fails to link on Amiga.
 add_definitions(-Dfseeko=fseek)
 
+list(APPEND DEVILUTIONX_PLATFORM_LINK_LIBRARIES ${ZLIB_LIBRARY})
+if(NOT WARPOS)
+  list(APPEND DEVILUTIONX_PLATFORM_LINK_LIBRARIES -ldebug)
+endif()
+
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/amiga/devilutionx.info" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
