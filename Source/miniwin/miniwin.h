@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL_keyboard.h>
 #include <cctype>
 #include <cmath>
 #include <cstdint>
@@ -7,6 +8,10 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
 
 #include "engine/point.hpp"
 
@@ -38,6 +43,7 @@ struct tagMSG {
 
 void SetCursorPos(Point position);
 void FocusOnCharInfo();
+int TranslateSdlKey(SDL_Keysym key);
 
 bool GetAsyncKeyState(int vKey);
 

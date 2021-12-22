@@ -745,10 +745,12 @@ void UiClearScreen()
 		SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 }
 
-void UiPollAndRender()
+void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler)
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event) != 0) {
+		if (eventHandler && eventHandler(event))
+			continue;
 		UiFocusNavigation(&event);
 		UiHandleEvents(&event);
 	}

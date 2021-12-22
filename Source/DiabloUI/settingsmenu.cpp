@@ -12,6 +12,8 @@
 namespace devilution {
 namespace {
 
+constexpr size_t IndexKeyInput = 1;
+
 bool endMenu = false;
 bool backToMain = false;
 
@@ -23,6 +25,7 @@ OptionEntryBase *selectedOption = nullptr;
 enum class ShownMenuType {
 	Settings,
 	ListOption,
+	KeyInput,
 };
 
 ShownMenuType shownMenu;
@@ -34,6 +37,7 @@ Rectangle rectDescription;
 enum class SpecialMenuEntry {
 	None = -1,
 	PreviousMenu = -2,
+	UnbindKey = -3,
 };
 
 bool IsValidEntry(OptionEntryBase *pOptionEntry)
@@ -139,6 +143,11 @@ void ItemSelected(int value)
 		case SpecialMenuEntry::PreviousMenu:
 			GoBackOneMenuLevel();
 			break;
+		case SpecialMenuEntry::UnbindKey:
+			auto *pOptionKey = static_cast<KeymapperOptions::Action *>(selectedOption);
+			pOptionKey->SetValue(DVL_VK_INVALID);
+			vecDialogItems[IndexKeyInput]->m_text = selectedOption->GetValueDescription().data();
+			break;
 		}
 		return;
 	}
@@ -160,6 +169,10 @@ void ItemSelected(int value)
 					nextIndex = 0;
 				updateValueDescription = ChangeOptionValue(pOption, nextIndex);
 			}
+		} else if (pOption->GetType() == OptionEntryType::Key) {
+			selectedOption = pOption;
+			endMenu = true;
+			shownMenu = ShownMenuType::KeyInput;
 		} else {
 			updateValueDescription = ChangeOptionValue(pOption, 0);
 		}
@@ -228,6 +241,7 @@ void UiSettingsMenu()
 		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
 
 		size_t itemToSelect = 1;
+		std::function<bool(SDL_Event &)> eventHandler;
 
 		switch (shownMenu) {
 		case ShownMenuType::Settings: {
@@ -239,7 +253,7 @@ void UiSettingsMenu()
 						continue;
 					if (!categoryCreated) {
 						if (catCount > 0)
-							vecDialogItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
+							vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
 						catCount += 1;
 						vecDialogItems.push_back(std::make_unique<UiListItem>(pCategory->GetName().data(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
 						categoryCreated = true;
@@ -260,6 +274,31 @@ void UiSettingsMenu()
 			itemToSelect = pOptionList->GetActiveListIndex();
 			UpdateDescription(*pOptionList);
 		} break;
+		case ShownMenuType::KeyInput: {
+			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Bound key:"), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
+			vecDialogItems.push_back(std::make_unique<UiListItem>(selectedOption->GetValueDescription().data(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorUiGold));
+			assert(IndexKeyInput == vecDialogItems.size() - 1);
+			itemToSelect = IndexKeyInput;
+			eventHandler = [](SDL_Event &event) {
+				if (SelectedItem != IndexKeyInput)
+					return false;
+				if (event.type != SDL_KEYDOWN)
+					return false;
+				int key = TranslateSdlKey(event.key.keysym);
+				// Ignore unknown keys
+				if (key == DVL_VK_INVALID || key == -1)
+					return false;
+				auto *pOptionKey = static_cast<KeymapperOptions::Action *>(selectedOption);
+				if (!pOptionKey->SetValue(key))
+					return false;
+				vecDialogItems[IndexKeyInput]->m_text = selectedOption->GetValueDescription().data();
+				return true;
+			};
+			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Press any key to change."), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
+			vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
+			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Unbind key"), static_cast<int>(SpecialMenuEntry::UnbindKey), UiFlags::ColorUiGold));
+			UpdateDescription(*selectedOption);
+		} break;
 		}
 
 		vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
@@ -272,7 +311,7 @@ void UiSettingsMenu()
 		while (!endMenu) {
 			UiClearScreen();
 			UiRenderItems(vecDialog);
-			UiPollAndRender();
+			UiPollAndRender(eventHandler);
 		}
 
 		CleanUpSettingsUI();
