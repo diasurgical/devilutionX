@@ -935,9 +935,6 @@ void DiabloInit()
 	init_create_window();
 	was_window_init = true;
 
-	init_archives();
-	was_archives_init = true;
-
 	if (forceSpawn || *sgOptions.StartUp.shareware)
 		gbIsSpawn = true;
 	if (forceDiablo || *sgOptions.StartUp.gameMode == StartUpGameMode::Diablo)
@@ -1618,6 +1615,10 @@ int DiabloMain(int argc, char **argv)
 
 	DiabloParseFlags(argc, argv);
 	InitKeymapActions();
+
+	init_archives();
+	was_archives_init = true;
+
 	LoadOptions();
 
 	DiabloInit();
