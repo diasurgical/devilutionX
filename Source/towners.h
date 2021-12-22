@@ -16,7 +16,7 @@
 
 namespace devilution {
 
-#define NUM_TOWNERS 16
+#define NUM_TOWNERS 17
 
 enum _talker_id : uint8_t {
 	TOWN_SMITH,
@@ -32,6 +32,7 @@ enum _talker_id : uint8_t {
 	TOWN_FARMER,
 	TOWN_GIRL,
 	TOWN_COWFARM,
+	TOWN_BIRD,
 	NUM_TOWNER_TYPES,
 };
 

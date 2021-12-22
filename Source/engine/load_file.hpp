@@ -14,9 +14,10 @@ namespace devilution {
 
 class SFile {
 public:
-	explicit SFile(const char *path)
+	explicit SFile(const char* path)
 	{
 		handle_ = OpenAsset(path);
+
 		if (handle_ == nullptr) {
 			if (!gbQuietMode) {
 				app_fatal("Failed to open file:\n%s\n\n%s", path, SDL_GetError());
