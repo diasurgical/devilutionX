@@ -30,6 +30,7 @@ if (Gettext_FOUND)
         MACOSX_PACKAGE_LOCATION Resources
         XCODE_EXPLICIT_FILE_TYPE compiled)
       add_dependencies(libdevilutionx "${_lang_target}")
+      add_dependencies(${BIN_TARGET} "${_lang_target}")
       target_sources(${BIN_TARGET} PRIVATE "${_gmo_file}")
     endif()
 
