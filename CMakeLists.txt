@@ -63,10 +63,6 @@ if(TSAN)
   set(ASAN OFF)
 endif()
 
-if(USE_SDL1)
-  set(VIRTUAL_GAMEPAD OFF)
-endif()
-
 # By default, devilutionx.mpq is built only if smpq is installed.
 if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
   find_program(SMPQ smpq)

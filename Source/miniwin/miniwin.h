@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL_keyboard.h>
+#include <SDL.h>
 #include <cctype>
 #include <cmath>
 #include <cstdint>
@@ -47,6 +47,7 @@ int TranslateSdlKey(SDL_Keysym key);
 
 bool GetAsyncKeyState(int vKey);
 
+void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position);
 bool FetchMessage(tagMSG *lpMsg);
 
 bool TranslateMessage(const tagMSG *lpMsg);

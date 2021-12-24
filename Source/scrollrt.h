@@ -25,11 +25,6 @@ enum class ScrollDirection : uint8_t {
 	NorthWest,
 };
 
-// Defined in SourceX/controls/plctrls.cpp
-extern bool sgbControllerActive;
-extern bool sgbTouchActive;
-extern bool IsMovingMouseCursorWithController();
-
 extern int LightTableIndex;
 extern uint32_t level_cel_block;
 extern char arch_draw_type;

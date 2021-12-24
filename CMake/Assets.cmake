@@ -145,7 +145,7 @@ set(devilutionx_assets
   ui_art/mainmenuw.pcx
   ui_art/supportw.pcx)
 
-if(VIRTUAL_GAMEPAD)
+if(NOT USE_SDL1 AND NOT VITA)
   list(APPEND devilutionx_assets
     ui_art/button.png
     ui_art/directions2.png

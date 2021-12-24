@@ -13,6 +13,7 @@
 #include "DiabloUI/selok.h"
 #include "DiabloUI/selyesno.h"
 #include "control.h"
+#include "controls/plrctrls.h"
 #include "options.h"
 #include "pfile.h"
 #include "utils/language.h"
@@ -217,7 +218,7 @@ bool ShouldPrefillHeroName()
 #if defined(PREFILL_PLAYER_NAME)
 	return true;
 #else
-	return sgbControllerActive;
+	return ControlMode != ControlTypes::KeyboardAndMouse;
 #endif
 }
 

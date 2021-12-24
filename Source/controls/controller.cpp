@@ -2,7 +2,9 @@
 
 #include <cmath>
 
+#ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
+#endif
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 

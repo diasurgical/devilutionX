@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef VIRTUAL_GAMEPAD
-
 #include <functional>
 
 #include "controls/controller_buttons.h"
@@ -121,5 +119,3 @@ void DeactivateVirtualGamepad();
 extern VirtualGamepad VirtualGamepadState;
 
 } // namespace devilution
-
-#endif
