@@ -43,7 +43,7 @@ StashStruct Stash;
 
 int Page; // current page in the stash
 
-int stashX = 16;                          // initial stash cell x coordinate
+int stashX = 17;                          // initial stash cell x coordinate
 int stashY = 76;                          // initial stash cell y coordinate
 int stashNextCell = INV_SLOT_SIZE_PX + 1; // spacing between each cell
 
@@ -334,6 +334,12 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 	Size itemSize { icursSize28 };
 	bool done = false;
 	int r = 0;
+
+	if ((itemSize.width & 1) == 0)
+		i -= INV_SLOT_HALF_SIZE_PX;
+	if ((itemSize.height & 1) == 0)
+		j -= INV_SLOT_HALF_SIZE_PX;
+
 	for (; r < STASH_NUM_XY_SLOTS && !done; r++) {
 		int xo = GetLeftPanel().position.x;
 		int yo = GetLeftPanel().position.y;

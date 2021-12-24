@@ -752,10 +752,12 @@ void CheckBtnUp()
 		switch (i) {
 		case PanelButtonCharinfo:
 			QuestLogIsOpen = false;
+			stashflag = false;
 			chrflag = !chrflag;
 			break;
 		case PanelButtonQlog:
 			chrflag = false;
+			stashflag = false;
 			if (!QuestLogIsOpen)
 				StartQuestlog();
 			else
