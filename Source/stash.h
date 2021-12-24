@@ -15,6 +15,8 @@
 
 namespace devilution {
 
+extern bool stashflag;
+
 enum stash_item : int8_t {
 	// clang-format off
 	STASHITEM_STASH_FIRST  = 0,

@@ -151,16 +151,16 @@ const Point StashRect[] = {
 	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 8 },
 	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 8 },
 	// row 10
-	//{ stashX + stashNextCell * 0,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 1,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 2,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 3,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 4,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 5,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 6,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 7,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 8,  stashY + stashNextCell * 9 },
-	//{ stashX + stashNextCell * 9,  stashY + stashNextCell * 9 }
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 9 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 9 }
 
 	// clang-format on
 };
@@ -590,7 +590,7 @@ void FreeStashGFX()
 void InitStash()
 {
 	pStashCels = LoadCel("data\\stash.cel", SPANEL_WIDTH);
-	LoadStash(0);
+	LoadStash(Page);
 	stashflag = false;
 }
 

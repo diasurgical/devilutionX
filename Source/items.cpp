@@ -31,6 +31,7 @@
 #include "options.h"
 #include "panels/ui_panels.hpp"
 #include "player.h"
+#include "stash.h"
 #include "stores.h"
 #include "town.h"
 #include "utils/language.h"
@@ -3963,7 +3964,7 @@ void DoOil(Player &player, int cii)
 void DrawUniqueInfo(const Surface &out)
 {
 	const Point position = GetRightPanel().position - Displacement { SPANEL_WIDTH, 0 };
-	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(position)) {
+	if ((chrflag || QuestLogIsOpen || stashflag) && GetLeftPanel().Contains(position)) {
 		return;
 	}
 

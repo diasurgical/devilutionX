@@ -454,9 +454,9 @@ void ReleaseKey(int vkey)
 void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
-		if (!chrflag && !QuestLogIsOpen && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+		if (!chrflag && !QuestLogIsOpen && !stashflag && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 			SetCursorPos(MousePosition + Displacement { 160, 0 });
-		} else if (!invflag && !sbookflag && (chrflag || QuestLogIsOpen) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+		} else if (!invflag && !sbookflag && (chrflag || QuestLogIsOpen || stashflag) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
 			SetCursorPos(MousePosition - Displacement { 160, 0 });
 		}
 	}
@@ -464,6 +464,7 @@ void ClosePanels()
 	chrflag = false;
 	sbookflag = false;
 	QuestLogIsOpen = false;
+	stashflag = false;
 }
 
 void PressKey(int vkey)
@@ -1293,6 +1294,7 @@ void HelpKeyPressed()
 		chrflag = false;
 		sbookflag = false;
 		spselflag = false;
+		stashflag = false;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = false;
 			stream_stop();
@@ -1311,7 +1313,7 @@ void InventoryKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	invflag = !invflag;
-	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
+	if (!chrflag && !QuestLogIsOpen && !stashflag && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
@@ -1357,7 +1359,7 @@ void CharacterSheetKeyPressed()
 			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
-		} else if (!QuestLogIsOpen) { // We opened the character sheet
+		} else if (!QuestLogIsOpen && !stashflag) { // We opened the character sheet
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
@@ -1381,7 +1383,7 @@ void QuestLogKeyPressed()
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
-		} else if (!chrflag) { // We opened the character quest log
+		} else if (!chrflag && !stashflag) { // We opened the character quest log
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
@@ -1413,7 +1415,7 @@ void SpellBookKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	sbookflag = !sbookflag;
-	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
+	if (!chrflag && !QuestLogIsOpen && !stashflag && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
@@ -1846,7 +1848,7 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (invflag || chrflag || sbookflag || QuestLogIsOpen) {
+	if (invflag || chrflag || sbookflag || QuestLogIsOpen || stashflag) {
 		ClosePanels();
 		rv = true;
 	}

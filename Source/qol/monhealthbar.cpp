@@ -9,6 +9,7 @@
 #include "cursor.h"
 #include "options.h"
 #include "qol/common.h"
+#include "stash.h"
 #include "utils/language.h"
 
 namespace devilution {
@@ -70,7 +71,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag)
 			position.x -= SPANEL_WIDTH / 2;
-		if (chrflag || QuestLogIsOpen)
+		if (chrflag || QuestLogIsOpen || stashflag)
 			position.x += SPANEL_WIDTH / 2;
 	}
 

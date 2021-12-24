@@ -17,6 +17,7 @@
 #include "init.h"
 #include "minitext.h"
 #include "options.h"
+#include "stash.h"
 #include "towners.h"
 #include "utils/language.h"
 
@@ -2399,6 +2400,7 @@ void StartStore(talk_id s)
 	invflag = false;
 	chrflag = false;
 	QuestLogIsOpen = false;
+	stashflag = false;
 	CloseGoldDrop();
 	ClearSText(0, STORE_LINES);
 	ReleaseStoreBtn();

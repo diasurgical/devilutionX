@@ -1026,7 +1026,7 @@ void Zoom(const Surface &out)
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen) {
+		if (chrflag || QuestLogIsOpen || stashflag) {
 			viewportWidth -= SPANEL_WIDTH;
 			viewportOffsetX = SPANEL_WIDTH;
 		} else if (invflag || sbookflag) {
@@ -1106,7 +1106,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
-			if (chrflag || QuestLogIsOpen) {
+			if (chrflag || QuestLogIsOpen || stashflag) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
@@ -1117,7 +1117,7 @@ void DrawGame(const Surface &fullOut, Point position)
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
-			if (chrflag || QuestLogIsOpen) {
+			if (chrflag || QuestLogIsOpen || stashflag) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
@@ -1284,7 +1284,7 @@ void DrawView(const Surface &out, Point startPosition)
 	}
 #ifndef VIRTUAL_GAMEPAD
 	if (!chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag
-	    && (!QuestLogIsOpen || !GetLeftPanel().Contains(GetMainPanel().position + Displacement { 0, -74 }))) {
+	    && (!QuestLogIsOpen || !stashflag || !GetLeftPanel().Contains(GetMainPanel().position + Displacement { 0, -74 }))) {
 		DrawLevelUpIcon(out);
 	}
 #endif

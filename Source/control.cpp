@@ -970,7 +970,7 @@ void DrawDurIcon(const Surface &out)
 	bool hasRoomUnderPanels = MainPanel.position.y - (RightPanel.position.y + RightPanel.size.height) >= 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || QuestLogIsOpen) && (invflag || sbookflag))
+		if ((chrflag || QuestLogIsOpen || stashflag) && (invflag || sbookflag))
 			return;
 	}
 

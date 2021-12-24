@@ -405,6 +405,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 				chrflag = false;
 				QuestLogIsOpen = false;
 				sbookflag = false;
+				stashflag = false;
 			}
 			break;
 		case GameActionType_TOGGLE_CHARACTER_INFO:

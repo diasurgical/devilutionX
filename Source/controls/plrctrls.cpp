@@ -35,6 +35,7 @@ bool sgbControllerActive = false;
 int pcurstrig = -1;
 int pcursmissile = -1;
 quest_id pcursquest = Q_INVALID;
+StashStruct *Stash;
 
 /**
  * Native game menu, controlled by simulating a keyboard.
@@ -613,6 +614,11 @@ Point GetSlotCoord(int slot)
 	return GetPanelPosition(UiPanels::Inventory, InvRect[slot]);
 }
 
+Point GetStashSlotCoord(int slot)
+{
+	return GetPanelPosition(UiPanels::Stash, StashRect[slot]);
+}
+
 /**
  * Return the item id of the current slot
  */
@@ -620,6 +626,15 @@ int GetItemIdOnSlot(int slot)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 		return abs(MyPlayer->InvGrid[slot - SLOTXY_INV_FIRST]);
+	}
+
+	return 0;
+}
+
+int GetItemIdOnStashSlot(int slot)
+{
+	if (slot >= SLOTXY_STASH_FIRST && slot <= SLOTXY_STASH_LAST) {
+		return abs(Stash->StashGrid[slot - SLOTXY_STASH_FIRST]);
 	}
 
 	return 0;
@@ -698,6 +713,23 @@ int FindClosestInventorySlot(Point mousePos)
 	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
 
 	for (int i = 0; i < NUM_XY_SLOTS; i++) {
+		int distance = mousePos.ManhattanDistance(GetStashSlotCoord(i));
+		if (distance < shortestDistance) {
+			shortestDistance = distance;
+			bestSlot = i;
+		}
+	}
+
+	return bestSlot;
+}
+
+int FindClosestStashSlot(Point mousePos)
+{
+	int shortestDistance = std::numeric_limits<int>::max();
+	int bestSlot = 0;
+	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
+
+	for (int i = 0; i < STASH_NUM_XY_SLOTS; i++) {
 		int distance = mousePos.ManhattanDistance(GetSlotCoord(i));
 		if (distance < shortestDistance) {
 			shortestDistance = distance;
@@ -1419,8 +1451,42 @@ void PerformPrimaryAction()
 					SetCursorPos(mousePos);
 				}
 			}
-			if (stashflag && GetLeftPanel().Contains(MousePosition))
+
+			if (stashflag && GetLeftPanel().Contains(MousePosition)) {
+				int stashSlot = (Slot >= 0) ? Slot : FindClosestStashSlot(MousePosition);
+
+				// Find any item occupying a slot that is currently under the cursor
+				int8_t itemUnderCursor = [](int stashSlot) {
+					if (stashSlot < SLOTXY_STASH_FIRST || stashSlot > SLOTXY_STASH_LAST)
+						return 0;
+					for (int x = 0; x < icursSize28.width; x++) {
+						for (int y = 0; y < icursSize28.height; y++) {
+							int slotUnderCursor = stashSlot + x + y * INV_ROW_SLOT_SIZE;
+							if (slotUnderCursor > SLOTXY_STASH_LAST)
+								continue;
+							int itemId = GetItemIdOnStashSlot(slotUnderCursor);
+							if (itemId != 0)
+								return itemId;
+						}
+					}
+					return 0;
+				}(stashSlot);
+
+				// The cursor will need to be shifted to
+				// this slot if the item is swapped or lifted
+				int jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
 				CheckStashItem();
+
+				// If we don't find the item in the same position as before,
+				// it suggests that the item was swapped or lifted
+				int newSlot = FindFirstSlotOnItem(itemUnderCursor);
+				if (jumpSlot >= 0 && jumpSlot != newSlot) {
+					Point mousePos = GetSlotCoord(jumpSlot);
+					mousePos.y -= InventorySlotSizeInPixels.height;
+					Slot = jumpSlot;
+					SetCursorPos(mousePos);
+				}
+			}
 		}
 		return;
 	}
