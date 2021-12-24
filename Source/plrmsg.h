@@ -16,6 +16,7 @@ struct _plrmsg {
 	Uint32 time;
 	uint8_t player;
 	char str[144];
+	char name[24];
 };
 
 void plrmsg_delay(bool delay);
