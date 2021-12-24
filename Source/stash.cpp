@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fmt/format.h>
 
+#include "panels/charpanel.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
@@ -47,6 +48,29 @@ int Page; // current page in the stash
 int stashX = 17;                          // initial stash cell x coordinate
 int stashY = 76;                          // initial stash cell y coordinate
 int stashNextCell = INV_SLOT_SIZE_PX + 1; // spacing between each cell
+
+struct StyledText {
+	UiFlags style;
+	std::string text;
+	int spacing = 1;
+};
+
+struct PanelEntry {
+	std::string label;
+	Point position;
+	int length;
+	int labelLength;                                       // max label's length - used for line wrapping
+	std::function<StyledText()> statDisplayFunc = nullptr; // function responsible for displaying stat
+};
+
+PanelEntry stashEntries[] = {
+	{ N_("Page"), { 11, 0 }, 0, 15 },
+	{ "", { 11, 11 }, 16, 0,
+	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", Page + 1) }; } },
+	{ N_("Gold"), { 128, 0 }, 0, 98 },
+	{ "", { 128, 11 }, 99, 0,
+	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", stashGold) }; } },
+};
 
 const Point StashRect[] = {
 	// Contains mappings for each cell in the stash (10x10)
@@ -640,6 +664,8 @@ void CheckStashBtn()
 	LoadStash(Page);
 }
 
+
+
 void DrawStash(const Surface &out)
 {
 	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { 0, 351 }), *pStashCels, 1);
@@ -677,11 +703,17 @@ void DrawStash(const Surface &out)
 		}
 	}
 
-	char stashpage[256];
-	Point linePosition { 13, 18 };
-
-	std::sprintf(stashpage, "%d", Page + 1);
-	DrawString(out, stashpage, linePosition, UiFlags::ColorWhite);
+	Point pos = GetPanelPosition(UiPanels::Stash, { 0, 0 });
+	for (auto &entry : stashEntries) {
+		if (entry.statDisplayFunc != nullptr) {
+			StyledText tmp = entry.statDisplayFunc();
+			DrawString(
+			    out,
+			    tmp.text,
+			    { entry.position + Displacement { pos.x, pos.y + 3 }, { entry.length, 18 } },
+			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, tmp.spacing);
+		}
+	}
 }
 
 void CheckStashSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
