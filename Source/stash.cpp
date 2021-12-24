@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <fmt/format.h>
 
-#include "panels/charpanel.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
