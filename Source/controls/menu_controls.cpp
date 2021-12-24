@@ -28,12 +28,8 @@ MenuAction GetMenuAction(const SDL_Event &event)
 	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
 
 	if (ProcessControllerMotion(event, ctrlEvent)) {
-		sgbControllerActive = true;
 		return GetMenuHeldUpDownAction();
 	}
-
-	if (ctrlEvent.button != ControllerButton_NONE)
-		sgbControllerActive = true;
 
 	if (!ctrlEvent.up) {
 		switch (ctrlEvent.button) {
@@ -64,8 +60,6 @@ MenuAction GetMenuAction(const SDL_Event &event)
 	}
 
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
-		sgbControllerActive = false;
-
 		switch (event.button.button) {
 		case SDL_BUTTON_X1:
 #if !SDL_VERSION_ATLEAST(2, 0, 0)
@@ -76,9 +70,6 @@ MenuAction GetMenuAction(const SDL_Event &event)
 	}
 
 #if HAS_KBCTRL == 0
-	if (event.type >= SDL_KEYDOWN && event.type < SDL_JOYAXISMOTION)
-		sgbControllerActive = false;
-
 	if (event.type == SDL_KEYDOWN) {
 		auto sym = event.key.keysym.sym;
 		remap_keyboard_key(&sym);

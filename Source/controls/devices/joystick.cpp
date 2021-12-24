@@ -8,9 +8,6 @@
 
 namespace devilution {
 
-// Defined in SourceX/controls/plctrls.cpp
-extern bool sgbControllerActive;
-
 std::vector<Joystick> Joystick::joysticks_;
 
 ControllerButton Joystick::ToControllerButton(const SDL_Event &event)
@@ -267,7 +264,6 @@ void Joystick::Add(int deviceIndex)
 	result.instance_id_ = SDL_JoystickInstanceID(result.sdl_joystick_);
 #endif
 	joysticks_.push_back(result);
-	sgbControllerActive = true;
 }
 
 void Joystick::Remove(SDL_JoystickID instanceId)
@@ -279,7 +275,6 @@ void Joystick::Remove(SDL_JoystickID instanceId)
 		if (joystick.instance_id_ != instanceId)
 			continue;
 		joysticks_.erase(joysticks_.begin() + i);
-		sgbControllerActive = !joysticks_.empty();
 		return;
 	}
 	Log("Joystick not found with instance id: {}", instanceId);

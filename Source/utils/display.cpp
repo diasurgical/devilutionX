@@ -13,7 +13,9 @@
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/controller.h"
+#ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
+#endif
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
@@ -185,6 +187,9 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #if SDL_VERSION_ATLEAST(2, 0, 10)
 	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 2)
+	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 #endif
 
 #if defined(_WIN32) && !defined(USE_SDL1)
@@ -405,14 +410,11 @@ void ResizeWindow()
 
 #ifndef USE_SDL1
 	SDL_SetWindowResizable(ghMainWnd, renderer != nullptr ? SDL_TRUE : SDL_FALSE);
+	InitializeVirtualGamepad();
 #endif
 
 	CreateBackBuffer();
 	force_redraw = 255;
-
-#ifdef VIRTUAL_GAMEPAD
-	InitializeVirtualGamepad();
-#endif
 }
 
 SDL_Surface *GetOutputSurface()

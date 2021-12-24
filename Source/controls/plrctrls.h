@@ -12,6 +12,15 @@ typedef enum belt_item_type : uint8_t {
 	BLT_MANA,
 } belt_item_type;
 
+enum class ControlTypes : uint8_t {
+	None,
+	KeyboardAndMouse,
+	Gamepad,
+	VirtualGamepad,
+};
+
+extern ControlTypes ControlMode;
+
 // Runs every frame.
 // Handles menu movement.
 void plrctrls_every_frame();
@@ -30,11 +39,10 @@ void HandleRightStickMotion();
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
 bool InGameMenu();
 
+void DetectInputMethod(SDL_Event &event);
+
 // Whether the automap is being displayed.
 bool IsAutomapActive();
-
-// Whether the mouse cursor is being moved with the controller.
-bool IsMovingMouseCursorWithController();
 
 void UseBeltItem(int type);
 

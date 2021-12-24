@@ -4,7 +4,9 @@
 
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
+#ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
+#endif
 #include "controls/devices/joystick.h"
 #include "controls/menu_controls.h"
 #include "controls/modifier_hints.h"
@@ -98,65 +100,67 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 {
 	const bool inGameMenu = InGameMenu();
 
-#ifdef VIRTUAL_GAMEPAD
-	if (event.type == SDL_FINGERDOWN) {
-		if (VirtualGamepadState.menuPanel.charButton.isHeld && VirtualGamepadState.menuPanel.charButton.didStateChange) {
-			*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
-			return true;
-		}
-		if (VirtualGamepadState.menuPanel.questsButton.isHeld && VirtualGamepadState.menuPanel.questsButton.didStateChange) {
-			*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
-			return true;
-		}
-		if (VirtualGamepadState.menuPanel.inventoryButton.isHeld && VirtualGamepadState.menuPanel.inventoryButton.didStateChange) {
-			*action = GameAction(GameActionType_TOGGLE_INVENTORY);
-			return true;
-		}
-		if (VirtualGamepadState.menuPanel.mapButton.isHeld && VirtualGamepadState.menuPanel.mapButton.didStateChange) {
-			*action = GameActionSendKey { DVL_VK_TAB, false };
-			return true;
-		}
-		if (VirtualGamepadState.primaryActionButton.isHeld && VirtualGamepadState.primaryActionButton.didStateChange) {
-			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
-				*action = GameAction(GameActionType_PRIMARY_ACTION);
-			else if (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen)
-				*action = GameActionSendKey { DVL_VK_RETURN, false };
-			else
-				*action = GameActionSendKey { DVL_VK_SPACE, false };
-			return true;
-		}
-		if (VirtualGamepadState.secondaryActionButton.isHeld && VirtualGamepadState.secondaryActionButton.didStateChange) {
-			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
-				*action = GameAction(GameActionType_SECONDARY_ACTION);
-			return true;
-		}
-		if (VirtualGamepadState.spellActionButton.isHeld && VirtualGamepadState.spellActionButton.didStateChange) {
-			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
-				*action = GameAction(GameActionType_CAST_SPELL);
-			return true;
-		}
-		if (VirtualGamepadState.cancelButton.isHeld && VirtualGamepadState.cancelButton.didStateChange) {
-			if (inGameMenu || DoomFlag || spselflag)
-				*action = GameActionSendKey { DVL_VK_ESCAPE, false };
-			else if (invflag)
-				*action = GameAction(GameActionType_TOGGLE_INVENTORY);
-			else if (sbookflag)
-				*action = GameAction(GameActionType_TOGGLE_SPELL_BOOK);
-			else if (QuestLogIsOpen)
-				*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
-			else if (chrflag)
+#ifndef USE_SDL1
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		if (event.type == SDL_FINGERDOWN) {
+			if (VirtualGamepadState.menuPanel.charButton.isHeld && VirtualGamepadState.menuPanel.charButton.didStateChange) {
 				*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
-			return true;
-		}
-		if (VirtualGamepadState.healthButton.isHeld && VirtualGamepadState.healthButton.didStateChange) {
-			if (!QuestLogIsOpen && !sbookflag && stextflag == STORE_NONE)
-				*action = GameAction(GameActionType_USE_HEALTH_POTION);
-			return true;
-		}
-		if (VirtualGamepadState.manaButton.isHeld && VirtualGamepadState.manaButton.didStateChange) {
-			if (!QuestLogIsOpen && !sbookflag && stextflag == STORE_NONE)
-				*action = GameAction(GameActionType_USE_MANA_POTION);
-			return true;
+				return true;
+			}
+			if (VirtualGamepadState.menuPanel.questsButton.isHeld && VirtualGamepadState.menuPanel.questsButton.didStateChange) {
+				*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
+				return true;
+			}
+			if (VirtualGamepadState.menuPanel.inventoryButton.isHeld && VirtualGamepadState.menuPanel.inventoryButton.didStateChange) {
+				*action = GameAction(GameActionType_TOGGLE_INVENTORY);
+				return true;
+			}
+			if (VirtualGamepadState.menuPanel.mapButton.isHeld && VirtualGamepadState.menuPanel.mapButton.didStateChange) {
+				*action = GameActionSendKey { DVL_VK_TAB, false };
+				return true;
+			}
+			if (VirtualGamepadState.primaryActionButton.isHeld && VirtualGamepadState.primaryActionButton.didStateChange) {
+				if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+					*action = GameAction(GameActionType_PRIMARY_ACTION);
+				else if (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen)
+					*action = GameActionSendKey { DVL_VK_RETURN, false };
+				else
+					*action = GameActionSendKey { DVL_VK_SPACE, false };
+				return true;
+			}
+			if (VirtualGamepadState.secondaryActionButton.isHeld && VirtualGamepadState.secondaryActionButton.didStateChange) {
+				if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+					*action = GameAction(GameActionType_SECONDARY_ACTION);
+				return true;
+			}
+			if (VirtualGamepadState.spellActionButton.isHeld && VirtualGamepadState.spellActionButton.didStateChange) {
+				if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+					*action = GameAction(GameActionType_CAST_SPELL);
+				return true;
+			}
+			if (VirtualGamepadState.cancelButton.isHeld && VirtualGamepadState.cancelButton.didStateChange) {
+				if (inGameMenu || DoomFlag || spselflag)
+					*action = GameActionSendKey { DVL_VK_ESCAPE, false };
+				else if (invflag)
+					*action = GameAction(GameActionType_TOGGLE_INVENTORY);
+				else if (sbookflag)
+					*action = GameAction(GameActionType_TOGGLE_SPELL_BOOK);
+				else if (QuestLogIsOpen)
+					*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
+				else if (chrflag)
+					*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
+				return true;
+			}
+			if (VirtualGamepadState.healthButton.isHeld && VirtualGamepadState.healthButton.didStateChange) {
+				if (!QuestLogIsOpen && !sbookflag && stextflag == STORE_NONE)
+					*action = GameAction(GameActionType_USE_HEALTH_POTION);
+				return true;
+			}
+			if (VirtualGamepadState.manaButton.isHeld && VirtualGamepadState.manaButton.didStateChange) {
+				if (!QuestLogIsOpen && !sbookflag && stextflag == STORE_NONE)
+					*action = GameAction(GameActionType_USE_MANA_POTION);
+				return true;
+			}
 		}
 	}
 #endif

@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "control.h"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "dead.h"
 #ifdef _DEBUG
@@ -2559,7 +2560,7 @@ void NextPlrLevel(int pnum)
 		drawmanaflag = true;
 	}
 
-	if (sgbControllerActive)
+	if (ControlMode != ControlTypes::KeyboardAndMouse)
 		FocusOnCharInfo();
 
 	CalcPlrInv(player, true);
@@ -3393,7 +3394,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		return;
 	}
 
-	if (!sgbControllerActive) {
+	if (ControlMode == ControlTypes::KeyboardAndMouse) {
 		if (pcurs != CURSOR_HAND)
 			return;
 

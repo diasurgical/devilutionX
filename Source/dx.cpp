@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 
+#include "controls/plrctrls.h"
 #include "controls/touch/renderers.h"
 #include "engine.h"
 #include "options.h"
@@ -283,18 +284,18 @@ void RenderPresent()
 		if (SDL_RenderCopy(renderer, texture.get(), nullptr, nullptr) <= -1) {
 			ErrSdl();
 		}
-#ifdef VIRTUAL_GAMEPAD
-		RenderVirtualGamepad(renderer);
-#endif
+		if (ControlMode == ControlTypes::VirtualGamepad) {
+			RenderVirtualGamepad(renderer);
+		}
 		SDL_RenderPresent(renderer);
 
 		if (!*sgOptions.Graphics.vSync) {
 			LimitFrameRate();
 		}
 	} else {
-#ifdef VIRTUAL_GAMEPAD
-		RenderVirtualGamepad(surface);
-#endif
+		if (ControlMode == ControlTypes::VirtualGamepad) {
+			RenderVirtualGamepad(surface);
+		}
 		if (SDL_UpdateWindowSurface(ghMainWnd) <= -1) {
 			ErrSdl();
 		}

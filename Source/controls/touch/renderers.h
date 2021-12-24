@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef VIRTUAL_GAMEPAD
-
 #include <SDL.h>
 
 #include "DiabloUI/art.h"
@@ -224,5 +222,3 @@ void RenderVirtualGamepad(SDL_Surface *surface);
 void FreeVirtualGamepadGFX();
 
 } // namespace devilution
-
-#endif

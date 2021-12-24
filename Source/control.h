@@ -59,6 +59,7 @@ const Rectangle &GetRightPanel();
 extern std::optional<OwnedSurface> pBtmBuff;
 extern SDL_Rect PanBtnPos[8];
 
+void CalculatePanelAreas();
 bool IsChatAvailable();
 /**
  * @brief Check if the UI can cover the game area entierly
