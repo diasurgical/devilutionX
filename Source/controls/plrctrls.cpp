@@ -676,6 +676,17 @@ int FindFirstSlotOnItem(int8_t itemInvId)
 	return -1;
 }
 
+int FindFirstStashSlotOnItem(int8_t itemInvId)
+{
+	if (itemInvId == 0)
+		return -1;
+	for (int s = SLOTXY_STASH_FIRST; s < SLOTXY_STASH_LAST; s++) {
+		if (GetItemIdOnStashSlot(s) == itemInvId)
+			return s;
+	}
+	return -1;
+}
+
 /**
  * Reset cursor position based on the current slot.
  */
@@ -1479,9 +1490,9 @@ void PerformPrimaryAction()
 
 				// If we don't find the item in the same position as before,
 				// it suggests that the item was swapped or lifted
-				int newSlot = FindFirstSlotOnItem(itemUnderCursor);
+				int newSlot = FindFirstStashSlotOnItem(itemUnderCursor);
 				if (jumpSlot >= 0 && jumpSlot != newSlot) {
-					Point mousePos = GetSlotCoord(jumpSlot);
+					Point mousePos = GetStashSlotCoord(jumpSlot);
 					mousePos.y -= InventorySlotSizeInPixels.height;
 					Slot = jumpSlot;
 					SetCursorPos(mousePos);
