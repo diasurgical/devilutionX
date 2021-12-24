@@ -67,7 +67,10 @@ struct StashStruct {
 	int _pNumStash;
 };
 
+extern StashStruct Stash;
+
 extern bool stashflag;
+extern int stashGold;
 extern const Point StashRect[100];
 
 // Current Stash Page

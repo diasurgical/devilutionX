@@ -36,6 +36,7 @@
 namespace devilution {
 
 bool stashflag;
+int stashGold;
 
 std::streampos size;
 

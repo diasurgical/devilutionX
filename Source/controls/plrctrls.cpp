@@ -35,7 +35,6 @@ bool sgbControllerActive = false;
 int pcurstrig = -1;
 int pcursmissile = -1;
 quest_id pcursquest = Q_INVALID;
-StashStruct *Stash;
 
 /**
  * Native game menu, controlled by simulating a keyboard.
@@ -634,7 +633,7 @@ int GetItemIdOnSlot(int slot)
 int GetItemIdOnStashSlot(int slot)
 {
 	if (slot >= SLOTXY_STASH_FIRST && slot <= SLOTXY_STASH_LAST) {
-		return abs(Stash->StashGrid[slot - SLOTXY_STASH_FIRST]);
+		return abs(Stash.StashGrid[slot - SLOTXY_STASH_FIRST]);
 	}
 
 	return 0;
