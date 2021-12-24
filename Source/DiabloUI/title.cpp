@@ -1,5 +1,6 @@
 #include "DiabloUI/diabloui.h"
 #include "control.h"
+#include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
 #include "utils/language.h"
@@ -56,7 +57,7 @@ void UiTitleDialog()
 
 		discord_manager::UpdateMenu();
 
-		while (SDL_PollEvent(&event) != 0) {
+		while (PollEvent(&event) != 0) {
 			if (GetMenuAction(event) != MenuAction_NONE) {
 				endMenu = true;
 				break;
