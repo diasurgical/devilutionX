@@ -13,6 +13,7 @@
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
 #include "controls/controller.h"
+#include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
 #include "dx.h"
@@ -748,7 +749,7 @@ void UiClearScreen()
 void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler)
 {
 	SDL_Event event;
-	while (SDL_PollEvent(&event) != 0) {
+	while (PollEvent(&event) != 0) {
 		if (eventHandler && eventHandler(event))
 			continue;
 		UiFocusNavigation(&event);
