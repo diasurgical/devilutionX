@@ -181,13 +181,7 @@ void DrawPlrMsg(const Surface &out)
 		}
 		chatlines = GetChatLines(width, pMsg->str);
 
-		if (chatlines == 1) {
-			y -= lineHeight;
-		} else if (chatlines == 2) {
-			y -= lineHeight * 2;
-		} else {
-			y -= lineHeight * 3;
-		}
+		y -= lineHeight * std::min(chatlines, 3);
 	}
 }
 
