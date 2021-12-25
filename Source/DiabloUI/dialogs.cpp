@@ -6,6 +6,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/errorart.h"
 #include "control.h"
+#include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
 #include "hwcursor.hpp"
@@ -220,7 +221,7 @@ void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std
 	SDL_Event event;
 	dialogEnd = false;
 	do {
-		while (SDL_PollEvent(&event) != 0) {
+		while (PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
