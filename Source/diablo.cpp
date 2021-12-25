@@ -1225,7 +1225,6 @@ void GameLogic()
 #endif
 
 	sound_update();
-	//ClearPlrMsg();
 	CheckTriggers();
 	CheckQuests();
 	force_redraw |= 1;

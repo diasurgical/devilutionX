@@ -192,7 +192,7 @@ void DrawPlrMsg(const Surface &out)
 		} else {
 			y -= threeLine;
 		}
-	}	
+	}
 }
 
 } // namespace devilution
