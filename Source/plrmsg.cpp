@@ -163,7 +163,7 @@ void DrawPlrMsg(const Surface &out)
 		}
 
 		if (pMsg->str[0] != '\0') {
-			
+
 			chatlines = GetChatLines(width, pMsg->str);
 			if (talkflag) {
 				if (chatlines == 1) {
