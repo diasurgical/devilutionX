@@ -153,14 +153,7 @@ void DrawPlrMsg(const Surface &out)
 	}
 
 	for (int i = 0; i < vislines; i++) {
-
-		if (chatlines == 1) {
-			y -= lineHeight;
-		} else if (chatlines == 2) {
-			y -= lineHeight * 2;
-		} else {
-			y -= lineHeight * 3;
-		}
+		y -= lineHeight * chatlines;
 
 		if (pMsg->str[0] != '\0') {
 
