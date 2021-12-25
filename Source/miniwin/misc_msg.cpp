@@ -52,9 +52,6 @@ namespace devilution {
 
 static std::deque<tagMSG> message_queue;
 
-bool mouseWarping = false;
-Point mousePositionWarping;
-
 void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position)
 {
 	event.type = type;
@@ -70,8 +67,11 @@ void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point 
 
 void SetCursorPos(Point position)
 {
-	mousePositionWarping = position;
-	mouseWarping = true;
+	if (ControlMode != ControlTypes::KeyboardAndMouse) {
+		MousePosition = position;
+		return;
+	}
+
 	LogicalToOutput(&position.x, &position.y);
 	if (!demo::IsRunning())
 		SDL_WarpMouseInWindow(ghMainWnd, position.x, position.y);
@@ -474,15 +474,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
-#ifdef __vita__
-	if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
-#else
-	if (e.type < SDL_JOYAXISMOTION) {
-#endif
-		if (mouseWarping && e.type == SDL_MOUSEMOTION)
-			mouseWarping = false;
-	}
-
 	if (HandleControllerAddedOrRemovedEvent(e))
 		return true;
 
@@ -605,15 +596,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 #if SDL_VERSION_ATLEAST(2, 0, 5)
 		case SDL_WINDOWEVENT_TAKE_FOCUS:
 #endif
-			break;
-		case SDL_WINDOWEVENT_ENTER:
-			// Bug in SDL, SDL_WarpMouseInWindow doesn't emit SDL_MOUSEMOTION
-			// and SDL_GetMouseState gives previous location if mouse was
-			// outside window (observed on Ubuntu 19.04)
-			if (mouseWarping) {
-				MousePosition = mousePositionWarping;
-				mouseWarping = false;
-			}
 			break;
 		case SDL_WINDOWEVENT_CLOSE:
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
