@@ -30,20 +30,17 @@ int msgs;
 /** Maps from player_num to text color, as used in chat messages. */
 const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhitegold };
 
-int GetChatLines(int width, char *textPtr)
+int GetChatLines(int width, string_view text)
 {
-	const size_t length = strlen(textPtr);
-	const string_view text { textPtr, length };
-	std::string lineCountString = WordWrapString(text, width);
-	return 1 + std::count(lineCountString.begin(), lineCountString.end(), '\n');
+	return 1 + std::count(text.begin(), text.end(), '\n');
 }
 
-void PrintChatMessage(const Surface &out, int x, int y, int width, char *textPtr, UiFlags style)
+void PrintChatMessage(const Surface &out, int x, int y, int width, char *textPtr, UiFlags style, int lineHeight)
 {
 	const size_t length = strlen(textPtr);
 	std::replace(textPtr, textPtr + length, '\n', ' ');
 	const string_view text { textPtr, length };
-	DrawString(out, WordWrapString(text, width), { { x, y }, { width, 0 } }, style, 1, 15);
+	DrawString(out, WordWrapString(text, width), { { x, y }, { width, 0 } }, style, 1, lineHeight);
 }
 
 } // namespace
@@ -130,7 +127,6 @@ void DrawPlrMsg(const Surface &out)
 	int vislines;
 	int chatlines;
 	_plrmsg *pMsg;
-
 	int lineHeight = 15;
 
 	if (!talkflag && (chrflag || QuestLogIsOpen)) {
@@ -151,8 +147,23 @@ void DrawPlrMsg(const Surface &out)
 
 	pMsg = plr_msgs;
 
+	std::string text = WordWrapString(pMsg->str, width);
+	if (!text.empty()) {
+		chatlines = GetChatLines(width, text);
+	}
+
 	for (int i = 0; i < vislines; i++) {
+
+		if (chatlines == 1) {
+			y -= lineHeight;
+		} else if (chatlines == 2) {
+			y -= lineHeight * 2;
+		} else {
+			y -= lineHeight * 3;
+		}
+
 		if (pMsg->str[0] != '\0') {
+			
 			chatlines = GetChatLines(width, pMsg->str);
 			if (talkflag) {
 				if (chatlines == 1) {
@@ -162,9 +173,9 @@ void DrawPlrMsg(const Surface &out)
 				} else {
 					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * 3);
 				}
-				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
+				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player], lineHeight);
 				if (pMsg->player != MAX_PLRS)
-					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS]);
+					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS], lineHeight);
 			} else if (SDL_GetTicks() - pMsg->time < 10000) {
 				if (chatlines == 1) {
 					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight);
@@ -173,20 +184,11 @@ void DrawPlrMsg(const Surface &out)
 				} else {
 					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * 3);
 				}
-				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
+				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player], lineHeight);
 				if (pMsg->player != MAX_PLRS)
-					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS]);
+					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS], lineHeight);
 			}
 			pMsg++;
-		}
-		chatlines = GetChatLines(width, pMsg->str);
-
-		if (chatlines == 1) {
-			y -= lineHeight;
-		} else if (chatlines == 2) {
-			y -= lineHeight * 2;
-		} else {
-			y -= lineHeight * 3;
 		}
 	}
 }
