@@ -299,7 +299,7 @@ int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLe
 			const std::optional<std::size_t> fmtArgPos = fmtArgParser(rest);
 			if (fmtArgPos) {
 				if (ContainsSmallFontTallCodepoints(args[*fmtArgPos].GetFormatted()))
-					return true;
+					return SmallFontTallLineHeight;
 				prev = U'\0';
 				continue;
 			}
