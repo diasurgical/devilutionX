@@ -19,8 +19,6 @@ namespace devilution {
 
 namespace {
 
-#define PMSG_COUNT 8
-
 struct PlayerMessage {
 	/** Time message was recived */
 	Uint32 time;
@@ -34,7 +32,7 @@ struct PlayerMessage {
 	int lineHeight;
 };
 
-std::array<PlayerMessage, PMSG_COUNT> Messages;
+std::array<PlayerMessage, 8> Messages;
 
 int CountLinesOfText(string_view text)
 {
