@@ -26,8 +26,8 @@ struct PlayerMessage {
 	UiFlags style;
 	/** The text message to display on screen */
 	std::string text;
-	/** Portion of text that should be rendered in gold */
-	std::string from;
+	/** First portion of text that should be rendered in gold */
+	string_view from;
 	/** The line height of the text */
 	int lineHeight;
 };
@@ -41,13 +41,9 @@ int CountLinesOfText(string_view text)
 
 PlayerMessage &GetNextMessage()
 {
-	PlayerMessage &front = Messages.front();
+	std::move_backward(Messages.begin(), Messages.end() - 1, Messages.end()); // Push back older messages
 
-	std::move_backward(&front, &Messages.back(), Messages.end());
-
-	front = {};
-
-	return front;
+	return Messages.front();
 }
 
 } // namespace
@@ -73,6 +69,7 @@ void EventPlrMsg(string_view text, UiFlags style)
 	message.style = style;
 	message.time = SDL_GetTicks();
 	message.text = std::string(text);
+	message.from = string_view(message.text.data(), 0);
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 }
 
@@ -85,7 +82,7 @@ void SendPlrMsg(Player &player, string_view text)
 	message.style = UiFlags::ColorWhite;
 	message.time = SDL_GetTicks();
 	message.text = from + std::string(text);
-	message.from = from;
+	message.from = string_view(message.text.data(), from.size());
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 }
 
