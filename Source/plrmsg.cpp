@@ -129,9 +129,7 @@ void DrawPlrMsg(const Surface &out)
 	int chatlines;
 	_plrmsg *pMsg;
 
-	int oneLine = 15;
-	int twoLine = 30;
-	int threeLine = 45;
+	int lineHeight = 15;
 
 	if (!talkflag && (chrflag || QuestLogIsOpen)) {
 		x += GetLeftPanel().position.x + GetLeftPanel().size.width;
@@ -156,22 +154,22 @@ void DrawPlrMsg(const Surface &out)
 			chatlines = GetChatLines(width, pMsg->str);
 			if (talkflag) {
 				if (chatlines == 1) {
-					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, oneLine);
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight);
 				} else if (chatlines == 2) {
-					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, twoLine);
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * 2);
 				} else {
-					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, threeLine);
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * 3);
 				}
 				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
 				if (pMsg->player != MAX_PLRS)
 					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS]);
 			} else if (SDL_GetTicks() - pMsg->time < 10000) {
 				if (chatlines == 1) {
-					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, oneLine);
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight);
 				} else if (chatlines == 2) {
-					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, twoLine);
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * 2);
 				} else {
-					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, threeLine);
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * 3);
 				}
 				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
 				if (pMsg->player != MAX_PLRS)
@@ -182,11 +180,11 @@ void DrawPlrMsg(const Surface &out)
 		chatlines = GetChatLines(width, pMsg->str);
 
 		if (chatlines == 1) {
-			y -= oneLine;
+			y -= lineHeight;
 		} else if (chatlines == 2) {
-			y -= twoLine;
+			y -= lineHeight * 2;
 		} else {
-			y -= threeLine;
+			y -= lineHeight * 3;
 		}
 	}
 }
