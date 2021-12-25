@@ -1669,7 +1669,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 		ResetPlayerGFX(player);
 		player.plractive = true;
 		gbActivePlayers++;
-		EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), player._pName, player._pLevel).c_str());
+		EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), player._pName, player._pLevel));
 	}
 
 	if (player.plractive && MyPlayerId != pnum) {
@@ -1811,13 +1811,13 @@ DWORD OnSetVitality(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-DWORD OnString(const TCmd *pCmd, int pnum)
+DWORD OnString(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdString *)pCmd;
 
 	int len = strlen(p->str);
 	if (gbBufferMsgs == 0)
-		SendPlrMsg(pnum, p->str);
+		SendPlrMsg(player, p->str);
 
 	return len + 2; // length of string + nul terminator + sizeof(p->bCmd)
 }
@@ -2826,7 +2826,7 @@ uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_SETVIT:
 		return OnSetVitality(pCmd, pnum);
 	case CMD_STRING:
-		return OnString(pCmd, pnum);
+		return OnString(pCmd, player);
 	case CMD_SYNCQUEST:
 		return OnSyncQuest(pCmd, pnum);
 	case CMD_CHEAT_EXPERIENCE:
