@@ -3745,13 +3745,13 @@ void DoOil(Player &player, int cii)
 		return fmt::format(_("chance to hit: {:+d}%"), item._iPLToHit);
 	case IPL_DAMP:
 	case IPL_DAMP_CURSE:
-		return fmt::format(_("{:+d}% damage"), item._iPLDam);
+		return fmt::format(_(/*xgettext:no-c-format*/ "{:+d}% damage"), item._iPLDam);
 	case IPL_TOHIT_DAMP:
 	case IPL_TOHIT_DAMP_CURSE:
 		return fmt::format(_("to hit: {:+d}%, {:+d}% damage"), item._iPLToHit, item._iPLDam);
 	case IPL_ACP:
 	case IPL_ACP_CURSE:
-		return fmt::format(_("{:+d}% armor"), item._iPLAC);
+		return fmt::format(_(/*xgettext:no-c-format*/ "{:+d}% armor"), item._iPLAC);
 	case IPL_SETAC:
 	case IPL_AC_CURSE:
 		return fmt::format(_("armor class: {:d}"), item._iAC);
@@ -3831,9 +3831,9 @@ void DoOil(Player &player, int cii)
 	case IPL_INDESTRUCTIBLE:
 		return _("indestructible");
 	case IPL_LIGHT:
-		return fmt::format(_("+{:d}% light radius"), 10 * item._iPLLight);
+		return fmt::format(_(/*xgettext:no-c-format*/ "+{:d}% light radius"), 10 * item._iPLLight);
 	case IPL_LIGHT_CURSE:
-		return fmt::format(_("-{:d}% light radius"), -10 * item._iPLLight);
+		return fmt::format(_(/*xgettext:no-c-format*/ "-{:d}% light radius"), -10 * item._iPLLight);
 	case IPL_MULT_ARROWS:
 		return _("multiple arrows per shot");
 	case IPL_FIRE_ARROWS:
@@ -3862,22 +3862,22 @@ void DoOil(Player &player, int cii)
 	case IPL_KNOCKBACK:
 		return _("knocks target back");
 	case IPL_3XDAMVDEM:
-		return _("+200% damage vs. demons");
+		return _(/*xgettext:no-c-format*/ "+200% damage vs. demons");
 	case IPL_ALLRESZERO:
 		return _("All Resistance equals 0");
 	case IPL_NOHEALMON:
 		return _("hit monster doesn't heal");
 	case IPL_STEALMANA:
 		if ((item._iFlags & ISPL_STEALMANA_3) != 0)
-			return _("hit steals 3% mana");
+			return _(/*xgettext:no-c-format*/ "hit steals 3% mana");
 		if ((item._iFlags & ISPL_STEALMANA_5) != 0)
-			return _("hit steals 5% mana");
+			return _(/*xgettext:no-c-format*/ "hit steals 5% mana");
 		return "";
 	case IPL_STEALLIFE:
 		if ((item._iFlags & ISPL_STEALLIFE_3) != 0)
-			return _("hit steals 3% life");
+			return _(/*xgettext:no-c-format*/ "hit steals 3% life");
 		if ((item._iFlags & ISPL_STEALLIFE_5) != 0)
-			return _("hit steals 5% life");
+			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
 		return "";
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
@@ -3938,13 +3938,13 @@ void DoOil(Player &player, int cii)
 	case IPL_DEVASTATION:
 		return _("occasional triple damage");
 	case IPL_DECAY:
-		return fmt::format(_("decaying {:+d}% damage"), item._iPLDam);
+		return fmt::format(_(/*xgettext:no-c-format*/ "decaying {:+d}% damage"), item._iPLDam);
 	case IPL_PERIL:
 		return _("2x dmg to monst, 1x to you");
 	case IPL_JESTERS:
-		return _("Random 0 - 500% damage");
+		return _(/*xgettext:no-c-format*/ "Random 0 - 500% damage");
 	case IPL_CRYSTALLINE:
-		return fmt::format(_("low dur, {:+d}% damage"), item._iPLDam);
+		return fmt::format(_(/*xgettext:no-c-format*/ "low dur, {:+d}% damage"), item._iPLDam);
 	case IPL_DOPPELGANGER:
 		return fmt::format(_("to hit: {:+d}%, {:+d}% damage"), item._iPLToHit, item._iPLDam);
 	case IPL_ACDEMON:
