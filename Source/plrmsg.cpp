@@ -13,7 +13,6 @@
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
-//#include "stash.h"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
@@ -138,7 +137,7 @@ void DrawPlrMsg(const Surface &out)
 	int twoLine = 30;
 	int threeLine = 45;
 
-	if (!talkflag && (chrflag || QuestLogIsOpen/* || stashflag*/)) {
+	if (!talkflag && (chrflag || QuestLogIsOpen)) {
 		x += GetLeftPanel().position.x + GetLeftPanel().size.width;
 		width -= GetLeftPanel().size.width;
 	}
