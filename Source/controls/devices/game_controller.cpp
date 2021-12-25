@@ -18,6 +18,12 @@ extern bool sgbControllerActive;
 
 std::vector<GameController> GameController::controllers_;
 
+void GameController::UnlockTriggerState()
+{
+	trigger_left_state_ = ControllerButton_NONE;
+	trigger_right_state_ = ControllerButton_NONE;
+}
+
 ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 {
 	switch (event.type) {
@@ -29,18 +35,18 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 			}
 			if (event.caxis.value > 16384 && !trigger_left_is_down_) { // 50% pressed
 				trigger_left_is_down_ = true;
-				return ControllerButton_AXIS_TRIGGERLEFT;
+				trigger_left_state_ = ControllerButton_AXIS_TRIGGERLEFT;
 			}
-			return ControllerButton_NONE;
+			return trigger_left_state_;
 		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
 			if (event.caxis.value < 8192) { // 25% pressed
 				trigger_right_is_down_ = false;
 			}
 			if (event.caxis.value > 16384 && !trigger_right_is_down_) { // 50% pressed
 				trigger_right_is_down_ = true;
-				return ControllerButton_AXIS_TRIGGERRIGHT;
+				trigger_right_state_ = ControllerButton_AXIS_TRIGGERRIGHT;
 			}
-			return ControllerButton_NONE;
+			return trigger_right_state_;
 		}
 		break;
 	case SDL_CONTROLLERBUTTONDOWN:

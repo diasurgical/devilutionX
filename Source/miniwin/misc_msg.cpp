@@ -13,6 +13,7 @@
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
+#include "controls/input.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "controls/touch/event_handlers.h"
@@ -310,7 +311,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	}
 
 	SDL_Event e;
-	if (SDL_PollEvent(&e) == 0) {
+	if (PollEvent(&e) == 0) {
 		return false;
 	}
 
