@@ -30,8 +30,10 @@ int msgs;
 /** Maps from player_num to text color, as used in chat messages. */
 const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhitegold };
 
-int GetChatLines(int width, string_view text)
+int GetChatLines(int width, char *textPtr)
 {
+	const size_t length = strlen(textPtr);
+	const string_view text { textPtr, length };
 	std::string lineCountString = WordWrapString(text, width);
 	return 1 + std::count(lineCountString.begin(), lineCountString.end(), '\n');
 }
