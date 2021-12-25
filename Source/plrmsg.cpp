@@ -35,9 +35,7 @@ int GetChatLines(int width, char *textPtr)
 	const size_t length = strlen(textPtr);
 	const string_view text { textPtr, length };
 	std::string lineCountString = WordWrapString(text, width);
-	int lines = std::count(lineCountString.begin(), lineCountString.end(), '\n');
-	lines++;
-	return lines;
+	return 1 + std::count(lineCountString.begin(), lineCountString.end(), '\n');
 }
 
 void PrintChatMessage(const Surface &out, int x, int y, int width, char *textPtr, UiFlags style)
