@@ -17,6 +17,7 @@
 #include "engine/point.hpp"
 #include "gmenu.h"
 #include "help.h"
+#include "hwcursor.hpp"
 #include "inv.h"
 #include "items.h"
 #include "minitext.h"
@@ -1337,6 +1338,16 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 
 	if (inputType != ControlTypes::None && inputType != ControlMode) {
 		ControlMode = inputType;
+
+#ifndef USE_SDL1
+		if (ControlMode != ControlTypes::KeyboardAndMouse) {
+			if (IsHardwareCursor())
+				SetHardwareCursor(CursorInfo::UnknownCursor());
+		} else {
+			ResetCursor();
+		}
+#endif
+
 		CalculatePanelAreas();
 	}
 }
@@ -1378,6 +1389,8 @@ void HandleRightStickMotion()
 		static int lastMouseSetTick = 0;
 		const int now = SDL_GetTicks();
 		if (now - lastMouseSetTick > 0) {
+			ControlMode = ControlTypes::KeyboardAndMouse;
+			ResetCursor();
 			SetCursorPos({ x, y });
 			lastMouseSetTick = now;
 		}

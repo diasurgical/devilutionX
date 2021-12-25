@@ -1481,7 +1481,7 @@ bool IsPlayerAdjacentToObject(Player &player, Object &object)
 {
 	int x = abs(player.position.tile.x - object.position.x);
 	int y = abs(player.position.tile.y - object.position.y);
-	if (y > 1 && ObjectAtPosition(object.position + Direction::NorthEast) == &object) {
+	if (y > 1 && object.position.y >= 1 && ObjectAtPosition(object.position + Direction::NorthEast) == &object) {
 		// special case for activating a large object from the north-east side
 		y = abs(player.position.tile.y - object.position.y + 1);
 	}

@@ -219,12 +219,6 @@ void SaveIni()
 }
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-bool HardwareCursorSupported()
-{
-	SDL_version v;
-	SDL_GetVersion(&v);
-	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
-}
 bool HardwareCursorDefault()
 {
 #if defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
@@ -309,6 +303,19 @@ void OptionAudioChanged()
 /** Game options */
 Options sgOptions;
 bool sbWasOptionsLoaded = false;
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+bool HardwareCursorSupported()
+{
+#if defined(TARGET_OS_IPHONE)
+	return false;
+#else
+	SDL_version v;
+	SDL_GetVersion(&v);
+	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
+#endif
+}
+#endif
 
 void LoadOptions()
 {
