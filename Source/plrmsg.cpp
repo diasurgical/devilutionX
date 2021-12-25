@@ -13,7 +13,6 @@
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
-//#include "stash.h"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
