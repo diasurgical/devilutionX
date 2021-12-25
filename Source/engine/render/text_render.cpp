@@ -283,18 +283,10 @@ bool ContainsSmallFontTallCodepoints(string_view text)
 	return false;
 }
 
-int GetLineHeight(string_view text, unsigned fontIndex)
-{
-	if (fontIndex == 0 && IsSmallFontTall() && ContainsSmallFontTallCodepoints(text)) {
-		return SmallFontTallLineHeight;
-	}
-	return LineHeights[fontIndex];
-}
-
-int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, unsigned fontIndex)
+int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables fontIndex)
 {
 	constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
-	if (fontIndex == 0 && IsSmallFontTall()) {
+	if (fontIndex == GameFont12 && IsSmallFontTall()) {
 		char32_t prev = U'\0';
 		char32_t next;
 		FmtArgParser fmtArgParser { fmt, args, argsLen };
@@ -307,7 +299,7 @@ int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLe
 			const std::optional<std::size_t> fmtArgPos = fmtArgParser(rest);
 			if (fmtArgPos) {
 				if (ContainsSmallFontTallCodepoints(args[*fmtArgPos].GetFormatted()))
-					return true;
+					return SmallFontTallLineHeight;
 				prev = U'\0';
 				continue;
 			}
@@ -482,6 +474,14 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen
 		*charactersInLine = codepoints;
 
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
+}
+
+int GetLineHeight(string_view text, GameFontTables fontIndex)
+{
+	if (fontIndex == GameFont12 && IsSmallFontTall() && ContainsSmallFontTallCodepoints(text)) {
+		return SmallFontTallLineHeight;
+	}
+	return LineHeights[fontIndex];
 }
 
 int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int charactersInLine, int availableWidth)
