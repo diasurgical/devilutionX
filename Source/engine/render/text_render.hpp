@@ -143,6 +143,8 @@ int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing
  */
 int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen, GameFontTables size, int spacing, int *charactersInLine = nullptr);
 
+int GetLineHeight(string_view text, GameFontTables fontIndex);
+
 [[nodiscard]] std::string WordWrapString(string_view text, size_t width, GameFontTables size = GameFont12, int spacing = 1);
 
 /**
