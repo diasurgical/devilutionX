@@ -158,12 +158,7 @@ void DrawPlrMsg(const Surface &out)
 		if (pMsg->str[0] != '\0') {
 
 			chatlines = GetChatLines(width, pMsg->str);
-			if (talkflag) {
-				DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * chatlines);
-				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player], lineHeight);
-				if (pMsg->player != MAX_PLRS)
-					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS], lineHeight);
-			} else if (SDL_GetTicks() - pMsg->time < 10000) {
+			if (talkflag || SDL_GetTicks() - pMsg->time < 10000) {
 				DrawHalfTransparentRectTo(out, x - 3, y, width + 6, lineHeight * chatlines);
 				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player], lineHeight);
 				if (pMsg->player != MAX_PLRS)
