@@ -31,6 +31,16 @@ int msgs;
 /** Maps from player_num to text color, as used in chat messages. */
 const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhitegold };
 
+int GetChatLines(int width, char *textPtr)
+{
+	const size_t length = strlen(textPtr);
+	const string_view text { textPtr, length };
+	std::string lineCountString = WordWrapString(text, width);
+	int lines = std::count(lineCountString.begin(), lineCountString.end(), '\n');
+	lines++;
+	return lines;
+}
+
 void PrintChatMessage(const Surface &out, int x, int y, int width, char *textPtr, UiFlags style)
 {
 	const size_t length = strlen(textPtr);
@@ -60,7 +70,7 @@ void ErrorPlrMsg(const char *pszMsg)
 {
 	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
 
-	for (msgs = PMSG_COUNT - 2; msgs > -1; msgs--) {
+	for (msgs = PMSG_COUNT - 2; msgs >= 0; msgs--) {
 		plr_msgs[msgs + 1] = plr_msgs[msgs];
 	}
 
@@ -78,7 +88,7 @@ size_t EventPlrMsg(const char *pszFmt, ...)
 	va_start(va, pszFmt);
 	pMsg = &plr_msgs[plr_msg_slot];
 
-	for (msgs = PMSG_COUNT - 2; msgs > -1; msgs--) {
+	for (msgs = PMSG_COUNT - 2; msgs >= 0; msgs--) {
 		plr_msgs[msgs + 1] = plr_msgs[msgs];
 	}
 
@@ -94,7 +104,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 {
 	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
 
-	for (msgs = PMSG_COUNT - 2; msgs > -1; msgs--) {
+	for (msgs = PMSG_COUNT - 2; msgs >= 0; msgs--) {
 		plr_msgs[msgs + 1] = plr_msgs[msgs];
 	}
 
@@ -105,19 +115,8 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	assert(strlen(player._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
 
-	CopyUtf8(pMsg->str, fmt::format(_("<{:s} (lvl {:d})> {:s}"), player._pName, player._pLevel, pszStr), sizeof(pMsg->str));
-	CopyUtf8(pMsg->name, fmt::format(_("<{:s} (lvl {:d})>"), player._pName, player._pLevel), sizeof(pMsg->name));
-}
-
-void ClearPlrMsg()
-{
-	_plrmsg *pMsg = plr_msgs;
-	uint32_t tick = SDL_GetTicks();
-
-	for (int i = 0; i < PMSG_COUNT; i++, pMsg++) {
-		if ((int)(tick - pMsg->time) > 10000)
-			pMsg->str[0] = '\0';
-	}
+	CopyUtf8(pMsg->str, fmt::format(_("{:s} (lvl {:d}): {:s}"), player._pName, player._pLevel, pszStr), sizeof(pMsg->str));
+	CopyUtf8(pMsg->name, fmt::format(_("{:s} (lvl {:d}):"), player._pName, player._pLevel), sizeof(pMsg->name));
 }
 
 void InitPlrMsg()
@@ -129,16 +128,21 @@ void InitPlrMsg()
 void DrawPlrMsg(const Surface &out)
 {
 	int x = 10;
-	int y = PANEL_TOP - 20;
+	int y = PANEL_TOP - 32;
 	int width = gnScreenWidth - 20;
 	int vislines;
+	int chatlines;
 	_plrmsg *pMsg;
 
-	if (chrflag || QuestLogIsOpen/* || stashflag*/) {
+	int oneLine = 15;
+	int twoLine = 30;
+	int threeLine = 45;
+
+	if (!talkflag && (chrflag || QuestLogIsOpen/* || stashflag*/)) {
 		x += GetLeftPanel().position.x + GetLeftPanel().size.width;
 		width -= GetLeftPanel().size.width;
 	}
-	if (invflag || sbookflag)
+	if (!talkflag && (invflag || sbookflag))
 		width -= gnScreenWidth - GetRightPanel().position.x;
 
 	if (width < 300)
@@ -153,34 +157,42 @@ void DrawPlrMsg(const Surface &out)
 	pMsg = plr_msgs;
 
 	for (int i = 0; i < vislines; i++) {
-		if (talkflag && pMsg->str[0] != '\0') {
-			DrawHalfTransparentRectTo(out, x, y, width, 15);
-			PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
-			if (pMsg->player != MAX_PLRS)
-				PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[4]);
-
-		} else if (SDL_GetTicks() - pMsg->time < 5000) {
-			DrawHalfTransparentRectTo(out, x, y, width, 15);
-			PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
-			if (pMsg->player != MAX_PLRS)
-				PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[4]);
+		if (pMsg->str[0] != '\0') {
+			if (talkflag) {
+				if (GetChatLines(width, pMsg->str) == 1) {
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, oneLine);
+				} else if (GetChatLines(width, pMsg->str) == 2) {
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, twoLine);
+				} else {
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, threeLine);
+				}
+				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
+				if (pMsg->player != MAX_PLRS)
+					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS]);
+			} else if (SDL_GetTicks() - pMsg->time < 10000) {
+				if (GetChatLines(width, pMsg->str) == 1) {
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, oneLine);
+				} else if (GetChatLines(width, pMsg->str) == 2) {
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, twoLine);
+				} else {
+					DrawHalfTransparentRectTo(out, x - 3, y, width + 6, threeLine);
+				}
+				PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
+				if (pMsg->player != MAX_PLRS)
+					PrintChatMessage(out, x, y, width, pMsg->name, TextColorFromPlayerId[MAX_PLRS]);
+			}
+			pMsg++;
 		}
+		chatlines = GetChatLines(width, pMsg->str);
 
-		pMsg++;
-
-		std::string text = pMsg->str;
-		auto count = std::count(text.begin(), text.end(), '\n');
-
-		if (count == 0) {
-			y -= 15;
-		} else if (count == 1) {
-			y -= 30;
+		if (chatlines == 1) {
+			y -= oneLine;
+		} else if (chatlines == 2) {
+			y -= twoLine;
 		} else {
-			y -= 45;
+			y -= threeLine;
 		}
-	}
-
-	
+	}	
 }
 
 } // namespace devilution
