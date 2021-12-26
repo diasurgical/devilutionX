@@ -389,6 +389,7 @@ void SetFullscreenMode()
 		Size windowSize = GetPreferredWindowSize();
 		SDL_SetWindowSize(ghMainWnd, windowSize.width, windowSize.height);
 	}
+	InitializeVirtualGamepad();
 #endif
 	force_redraw = 255;
 }
