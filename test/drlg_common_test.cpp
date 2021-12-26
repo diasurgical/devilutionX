@@ -40,6 +40,34 @@ TEST(DrlgTest, RectangleRangeIterator)
 	EXPECT_EQ(region[2][4], 3) << "Reverse iterators are required";
 	EXPECT_EQ(region[4][2], 7) << "Reverse iterators are required";
 	EXPECT_EQ(region[2][2], 9) << "Reverse iterators are required";
+
+	region = {};
+	counter = 0;
+
+	for (Point position : PointsInRectangleRangeColMajor { topLeftArea }) {
+		region[position.x][position.y] = ++counter;
+	}
+
+	EXPECT_EQ(counter, 9) << "Iterating over a 9 tile range should return exactly 9 points";
+	EXPECT_EQ(region[2][2], 9) << "Iterating over a 9 tile range should return exactly 9 points";
+
+	EXPECT_EQ(region[0][0], 1) << "col-major iterator must use col-major order (where x defines the column, y defines the row)";
+	EXPECT_EQ(region[0][1], 2) << "col-major iterator must use col-major order (where x defines the column, y defines the row)";
+	EXPECT_EQ(region[0][2], 3) << "col-major iterator must use col-major order (where x defines the column, y defines the row)";
+	EXPECT_EQ(region[2][0], 7) << "col-major iterator must use col-major order (where x defines the column, y defines the row)";
+
+	EXPECT_EQ(region[0][3], 0) << "Iterator should not return out of bounds points";
+	EXPECT_EQ(region[3][0], 0) << "Iterator should not return out of bounds points";
+
+	region = {};
+	counter = 0;
+
+	PointsInRectangleRangeColMajor colMajorRange { bottomRightArea };
+	std::for_each(colMajorRange.rbegin(), colMajorRange.rend(), [&region, &counter](Point position) { region[position.x][position.y] = ++counter; });
+	EXPECT_EQ(region[4][4], 1) << "Reverse iterators are required";
+	EXPECT_EQ(region[4][2], 3) << "Reverse iterators are required";
+	EXPECT_EQ(region[2][4], 7) << "Reverse iterators are required";
+	EXPECT_EQ(region[2][2], 9) << "Reverse iterators are required";
 }
 
 } // namespace devilution
