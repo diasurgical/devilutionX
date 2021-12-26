@@ -202,7 +202,7 @@ void PlayerLeftMsg(int pnum, bool left)
 			pszFmt = _("Player '{:s}' dropped due to timeout");
 			break;
 		}
-		EventPlrMsg(fmt::format(pszFmt, player._pName).c_str());
+		EventPlrMsg(fmt::format(pszFmt, player._pName));
 	}
 	player.plractive = false;
 	player._pName[0] = '\0';
@@ -398,7 +398,7 @@ void HandleEvents(_SNETEVENT *pEvt)
 			gbDeltaSender = MAX_PLRS;
 		break;
 	case EVENT_TYPE_PLAYER_MESSAGE:
-		ErrorPlrMsg((char *)pEvt->data);
+		EventPlrMsg((char *)pEvt->data);
 		break;
 	}
 }
@@ -805,7 +805,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	} else {
 		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(szEvent, player._pName, player._pLevel).c_str());
+	EventPlrMsg(fmt::format(szEvent, player._pName, player._pLevel));
 
 	SyncInitPlr(pnum);
 

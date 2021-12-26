@@ -6475,8 +6475,8 @@ msgid "Mana: {:d}"
 msgstr "Mana: {:d}"
 
 #: Source/panels/spell_book.cpp:178
-msgid "Level 0 - Unusable"
-msgstr "Nivå 0 - Oanvändbar"
+msgid "Unusable"
+msgstr "Oanvändbar"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:180

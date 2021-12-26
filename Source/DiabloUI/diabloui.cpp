@@ -13,6 +13,7 @@
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
 #include "controls/controller.h"
+#include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
 #include "dx.h"
@@ -748,7 +749,7 @@ void UiClearScreen()
 void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler)
 {
 	SDL_Event event;
-	while (SDL_PollEvent(&event) != 0) {
+	while (PollEvent(&event) != 0) {
 		if (eventHandler && eventHandler(event))
 			continue;
 		UiFocusNavigation(&event);
@@ -920,7 +921,7 @@ Uint32 dbClickTimer;
 
 bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 {
-	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
+	if (event.type != SDL_MOUSEBUTTONUP || event.button.button != SDL_BUTTON_LEFT)
 		return false;
 
 	std::size_t index = uiList->indexAt(event.button.y);

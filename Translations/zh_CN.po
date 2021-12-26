@@ -1031,8 +1031,8 @@ msgid "Mana: {:d}"
 msgstr "法力 {:d}"
 
 #: Source/control.cpp:1623
-msgid "Level 0 - Unusable"
-msgstr "法术​等级 0 - 无法​使用"
+msgid "Unusable"
+msgstr "无法​使用"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/control.cpp:1625

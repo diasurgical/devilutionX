@@ -6436,8 +6436,8 @@ msgid "Mana: {:d}"
 msgstr "Мана: {:d}"
 
 #: Source/panels/spell_book.cpp:178
-msgid "Level 0 - Unusable"
-msgstr "0-вий Рівень Чар - Непридатні"
+msgid "Unusable"
+msgstr "Непридатні"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:180

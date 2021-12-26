@@ -9,33 +9,42 @@
 
 #include <fmt/format.h>
 
-#include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
 #include "stash.h"
 #include "utils/language.h"
-#include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
 
 namespace {
 
-#define PMSG_COUNT 8
+struct PlayerMessage {
+	/** Time message was recived */
+	Uint32 time;
+	/** The default text color */
+	UiFlags style;
+	/** The text message to display on screen */
+	std::string text;
+	/** First portion of text that should be rendered in gold */
+	string_view from;
+	/** The line height of the text */
+	int lineHeight;
+};
 
-uint8_t plr_msg_slot;
-_plrmsg plr_msgs[PMSG_COUNT];
+std::array<PlayerMessage, 8> Messages;
 
-/** Maps from player_num to text color, as used in chat messages. */
-const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhitegold };
-
-void PrintChatMessage(const Surface &out, int x, int y, int width, char *textPtr, UiFlags style)
+int CountLinesOfText(string_view text)
 {
-	const size_t length = strlen(textPtr);
-	std::replace(textPtr, textPtr + length, '\n', ' ');
-	const string_view text { textPtr, length };
-	DrawString(out, WordWrapString(text, width), { { x, y }, { width, 0 } }, style, 1, 18);
+	return 1 + std::count(text.begin(), text.end(), '\n');
+}
+
+PlayerMessage &GetNextMessage()
+{
+	std::move_backward(Messages.begin(), Messages.end() - 1, Messages.end()); // Push back older messages
+
+	return Messages.front();
 }
 
 } // namespace
@@ -50,87 +59,70 @@ void plrmsg_delay(bool delay)
 	}
 
 	plrmsgTicks += SDL_GetTicks();
-	_plrmsg *pMsg = plr_msgs;
-	for (int i = 0; i < PMSG_COUNT; i++, pMsg++)
-		pMsg->time += plrmsgTicks;
+	for (PlayerMessage &message : Messages)
+		message.time += plrmsgTicks;
 }
 
-void ErrorPlrMsg(const char *pszMsg)
+void EventPlrMsg(string_view text, UiFlags style)
 {
-	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
-	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
-	pMsg->player = MAX_PLRS;
-	pMsg->time = SDL_GetTicks();
-	CopyUtf8(pMsg->str, pszMsg, sizeof(pMsg->str));
+	PlayerMessage &message = GetNextMessage();
+
+	message.style = style;
+	message.time = SDL_GetTicks();
+	message.text = std::string(text);
+	message.from = string_view(message.text.data(), 0);
+	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 }
 
-size_t EventPlrMsg(const char *pszFmt, ...)
+void SendPlrMsg(Player &player, string_view text)
 {
-	_plrmsg *pMsg;
-	va_list va;
+	PlayerMessage &message = GetNextMessage();
 
-	va_start(va, pszFmt);
-	pMsg = &plr_msgs[plr_msg_slot];
-	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
-	pMsg->player = MAX_PLRS;
-	pMsg->time = SDL_GetTicks();
-	vsprintf(pMsg->str, pszFmt, va);
-	va_end(va);
-	return strlen(pMsg->str);
-}
+	std::string from = fmt::format(_("{:s} (lvl {:d}): "), player._pName, player._pLevel);
 
-void SendPlrMsg(int pnum, const char *pszStr)
-{
-	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
-	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
-	pMsg->player = pnum;
-	pMsg->time = SDL_GetTicks();
-	auto &player = Players[pnum];
-	assert(strlen(player._pName) < PLR_NAME_LEN);
-	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
-	CopyUtf8(pMsg->str, fmt::format(_("{:s} (lvl {:d}): {:s}"), player._pName, player._pLevel, pszStr), sizeof(pMsg->str));
-}
-
-void ClearPlrMsg()
-{
-	_plrmsg *pMsg = plr_msgs;
-	uint32_t tick = SDL_GetTicks();
-
-	for (int i = 0; i < PMSG_COUNT; i++, pMsg++) {
-		if ((int)(tick - pMsg->time) > 10000)
-			pMsg->str[0] = '\0';
-	}
+	message.style = UiFlags::ColorWhite;
+	message.time = SDL_GetTicks();
+	message.text = from + std::string(text);
+	message.from = string_view(message.text.data(), from.size());
+	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
 }
 
 void InitPlrMsg()
 {
-	memset(plr_msgs, 0, sizeof(plr_msgs));
-	plr_msg_slot = 0;
+	Messages = {};
 }
 
 void DrawPlrMsg(const Surface &out)
 {
 	int x = 10;
-	int y = 58;
+	int y = PANEL_TOP - 13;
 	int width = gnScreenWidth - 20;
-	_plrmsg *pMsg;
 
-	if (chrflag || QuestLogIsOpen || stashflag) {
+	if (!talkflag && (chrflag || QuestLogIsOpen)) {
 		x += GetLeftPanel().position.x + GetLeftPanel().size.width;
 		width -= GetLeftPanel().size.width;
 	}
-	if (invflag || sbookflag)
+	if (!talkflag && (invflag || sbookflag))
 		width -= gnScreenWidth - GetRightPanel().position.x;
 
 	if (width < 300)
 		return;
 
-	pMsg = plr_msgs;
-	for (int i = 0; i < PMSG_COUNT; i++) {
-		if (pMsg->str[0] != '\0')
-			PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
-		pMsg++;
-		y += 35;
+	width = std::min(540, width);
+
+	for (PlayerMessage &message : Messages) {
+		if (message.text.empty())
+			break;
+		if (!talkflag && SDL_GetTicks() - message.time >= 10000)
+			break;
+
+		std::string text = WordWrapString(message.text, width);
+		int chatlines = CountLinesOfText(text);
+		y -= message.lineHeight * chatlines;
+
+		DrawHalfTransparentRectTo(out, x - 3, y, width + 6, message.lineHeight * chatlines);
+		DrawString(out, text, { { x, y }, { width, 0 } }, message.style, 1, message.lineHeight);
+		DrawString(out, message.from, { { x, y }, { width, 0 } }, UiFlags::ColorWhitegold, 1, message.lineHeight);
 	}
 }
 

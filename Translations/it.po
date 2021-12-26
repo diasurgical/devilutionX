@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-12-23 00:02+0100\n"
-"PO-Revision-Date: 2021-12-23 00:03+0100\n"
+"POT-Creation-Date: 2021-12-25 17:44+0100\n"
+"PO-Revision-Date: 2021-12-25 17:59+0100\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -311,7 +311,7 @@ msgid "\tNo souls were sold in the making of this game."
 msgstr ""
 "\tNessuna anima è stata venduta durante la realizzazione di questo gioco."
 
-#: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
+#: Source/DiabloUI/dialogs.cpp:195 Source/DiabloUI/dialogs.cpp:207
 #: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:113
 #: Source/DiabloUI/selgame.cpp:202 Source/DiabloUI/selgame.cpp:220
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:435
@@ -329,7 +329,7 @@ msgstr "Giocatore Singolo"
 msgid "Multi Player"
 msgstr "Multi Giocatore"
 
-#: Source/DiabloUI/mainmenu.cpp:38 Source/DiabloUI/settingsmenu.cpp:225
+#: Source/DiabloUI/mainmenu.cpp:38 Source/DiabloUI/settingsmenu.cpp:238
 msgid "Settings"
 msgstr "Impostazioni"
 
@@ -353,7 +353,7 @@ msgstr "Esci da Diablo"
 msgid "Shareware"
 msgstr "Demo"
 
-#: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
+#: Source/DiabloUI/progress.cpp:37 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:155 Source/DiabloUI/selhero.cpp:180
 #: Source/DiabloUI/selhero.cpp:250 Source/DiabloUI/selhero.cpp:499
 msgid "Cancel"
@@ -461,17 +461,17 @@ msgstr "Difficoltà"
 
 #: Source/DiabloUI/selgame.cpp:195 Source/DiabloUI/selgame.cpp:248
 #: Source/DiabloUI/selgame.cpp:352 Source/DiabloUI/selgame.cpp:372
-#: Source/diablo.cpp:1478 Source/discord/discord.cpp:98
+#: Source/diablo.cpp:1489 Source/discord/discord.cpp:98
 msgid "Normal"
 msgstr "Normale"
 
 #: Source/DiabloUI/selgame.cpp:196 Source/DiabloUI/selgame.cpp:252
-#: Source/diablo.cpp:1479 Source/discord/discord.cpp:98
+#: Source/diablo.cpp:1490 Source/discord/discord.cpp:98
 msgid "Nightmare"
 msgstr "Incubo"
 
 #: Source/DiabloUI/selgame.cpp:197 Source/DiabloUI/selgame.cpp:256
-#: Source/diablo.cpp:1480 Source/discord/discord.cpp:66
+#: Source/diablo.cpp:1491 Source/discord/discord.cpp:66
 #: Source/discord/discord.cpp:98
 msgid "Hell"
 msgstr "Inferno"
@@ -745,7 +745,19 @@ msgstr "Si"
 msgid "No"
 msgstr "No"
 
-#: Source/DiabloUI/settingsmenu.cpp:266 Source/gamemenu.cpp:61
+#: Source/DiabloUI/settingsmenu.cpp:278
+msgid "Bound key:"
+msgstr "Tasto associato:"
+
+#: Source/DiabloUI/settingsmenu.cpp:297
+msgid "Press any key to change."
+msgstr "Premi qualsiasi tasto per cambiare."
+
+#: Source/DiabloUI/settingsmenu.cpp:299
+msgid "Unbind key"
+msgstr "Disassocia tasto"
+
+#: Source/DiabloUI/settingsmenu.cpp:305 Source/gamemenu.cpp:61
 msgid "Previous Menu"
 msgstr "Menu Precedente"
 
@@ -801,7 +813,7 @@ msgstr ""
 "anche uso di SDL concesso in licenza zlib-license. Consulta il ReadMe per "
 "ulteriori dettagli."
 
-#: Source/DiabloUI/title.cpp:45
+#: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
@@ -871,126 +883,126 @@ msgstr "Livello: Cripta {:d}"
 msgid "Level: {:d}"
 msgstr "Liv. : {:d}"
 
-#: Source/control.cpp:153
+#: Source/control.cpp:150
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:153
+#: Source/control.cpp:150
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:153
+#: Source/control.cpp:150
 msgid "Enter"
 msgstr "Invio"
 
-#: Source/control.cpp:156
+#: Source/control.cpp:153
 msgid "Character Information"
 msgstr "Dettagli Personaggio"
 
-#: Source/control.cpp:157
+#: Source/control.cpp:154
 msgid "Quests log"
 msgstr "Missioni"
 
-#: Source/control.cpp:158
+#: Source/control.cpp:155
 msgid "Automap"
 msgstr "Mappa"
 
-#: Source/control.cpp:159
+#: Source/control.cpp:156
 msgid "Main Menu"
 msgstr "Menu Principale"
 
-#: Source/control.cpp:160
+#: Source/control.cpp:157 Source/diablo.cpp:1439
 msgid "Inventory"
 msgstr "Inventario"
 
-#: Source/control.cpp:161
+#: Source/control.cpp:158
 msgid "Spell book"
 msgstr "Libro di magia"
 
-#: Source/control.cpp:162
+#: Source/control.cpp:159
 msgid "Send Message"
 msgstr "Invia Messaggio"
 
-#: Source/control.cpp:663
+#: Source/control.cpp:660
 msgid "Player friendly"
 msgstr "Amichevole"
 
-#: Source/control.cpp:665
+#: Source/control.cpp:662
 msgid "Player attack"
-msgstr "Offensivo"
+msgstr "Attacco giocatore"
 
-#: Source/control.cpp:668
+#: Source/control.cpp:665
 msgid "Hotkey: {:s}"
 msgstr "Tasto: {:s}"
 
-#: Source/control.cpp:676
+#: Source/control.cpp:673
 msgid "Select current spell button"
 msgstr "Seleziona magia corrente"
 
-#: Source/control.cpp:679
+#: Source/control.cpp:676
 msgid "Hotkey: 's'"
 msgstr "Tasto: 's'"
 
-#: Source/control.cpp:686 Source/panels/spell_list.cpp:163
+#: Source/control.cpp:683 Source/panels/spell_list.cpp:162
 msgid "{:s} Skill"
 msgstr "{:s} Abilità"
 
-#: Source/control.cpp:690 Source/panels/spell_list.cpp:170
+#: Source/control.cpp:687 Source/panels/spell_list.cpp:169
 msgid "{:s} Spell"
 msgstr "{:s} Magia"
 
-#: Source/control.cpp:694 Source/panels/spell_list.cpp:176
+#: Source/control.cpp:691 Source/panels/spell_list.cpp:175
 msgid "Spell Level 0 - Unusable"
 msgstr "Liv. Magia 0 - Inusabile"
 
-#: Source/control.cpp:696 Source/panels/spell_list.cpp:178
+#: Source/control.cpp:693 Source/panels/spell_list.cpp:177
 msgid "Spell Level {:d}"
 msgstr "Livello Magia {:d}"
 
-#: Source/control.cpp:700 Source/panels/spell_list.cpp:186
+#: Source/control.cpp:697 Source/panels/spell_list.cpp:185
 msgid "Scroll of {:s}"
 msgstr "Pergamena {:s}"
 
-#: Source/control.cpp:706 Source/panels/spell_list.cpp:191
+#: Source/control.cpp:703 Source/panels/spell_list.cpp:190
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} Pergamena"
 msgstr[1] "{:d} Pergamene"
 
-#: Source/control.cpp:710 Source/panels/spell_list.cpp:199
+#: Source/control.cpp:707 Source/panels/spell_list.cpp:198
 msgid "Staff of {:s}"
 msgstr "Verga di {:s}"
 
-#: Source/control.cpp:712 Source/panels/spell_list.cpp:201
+#: Source/control.cpp:709 Source/panels/spell_list.cpp:200
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Carica"
 msgstr[1] "{:d} Cariche"
 
-#: Source/control.cpp:834 Source/inv.cpp:1970 Source/items.cpp:3666
+#: Source/control.cpp:831 Source/inv.cpp:1970 Source/items.cpp:3666
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} moneta"
 msgstr[1] "{:d} monete"
 
-#: Source/control.cpp:837
+#: Source/control.cpp:834
 msgid "Requirements not met"
 msgstr "Requisiti inadeguati"
 
-#: Source/control.cpp:871
+#: Source/control.cpp:868
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Livello: {:d}"
 
-#: Source/control.cpp:873
+#: Source/control.cpp:870
 msgid "Hit Points {:d} of {:d}"
 msgstr "Punti Ferita {:d} di {:d}"
 
-#: Source/control.cpp:902
+#: Source/control.cpp:899
 msgid "Level Up"
 msgstr "Su di Livello"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1012
+#: Source/control.cpp:1009
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "Possiedi {:d} moneta d'oro. Quante ne vuoi rimuovere?"
@@ -1040,84 +1052,84 @@ msgstr "L'Altare Sacrilego"
 msgid "level 15"
 msgstr "livello 15"
 
-#: Source/diablo.cpp:119
+#: Source/diablo.cpp:116
 msgid "I need help! Come Here!"
 msgstr "Mi serve aiuto! Vieni!"
 
-#: Source/diablo.cpp:120
+#: Source/diablo.cpp:117
 msgid "Follow me."
 msgstr "Seguimi."
 
-#: Source/diablo.cpp:121
+#: Source/diablo.cpp:118
 msgid "Here's something for you."
 msgstr "Ecco qualche cosa per te."
 
-#: Source/diablo.cpp:122
+#: Source/diablo.cpp:119
 msgid "Now you DIE!"
 msgstr "Ora MUORI!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:787
 msgid "Options:\n"
 msgstr "Opzioni:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:788
 msgid "Print this message and exit"
 msgstr "Mostra questo messaggio ed esci"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:789
 msgid "Print the version and exit"
 msgstr "Mostra versione ed esci"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:790
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Specifica la cartella di diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:791
 msgid "Specify the folder of save files"
 msgstr "Specifica la cartella dei salvataggio"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:792
 msgid "Specify the location of diablo.ini"
 msgstr "Specifica la posizione di diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
+#: Source/diablo.cpp:793
 msgid "Skip startup videos"
 msgstr "Salta video iniziali"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:794
 msgid "Display frames per second"
 msgstr "Mostra fotogrammi al secondo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:798
+#: Source/diablo.cpp:795
 msgid "Enable verbose logging"
 msgstr "Abilita log dettagliato"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:799
+#: Source/diablo.cpp:796
 msgid "Record a demo file"
 msgstr "Registra un file demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:800
+#: Source/diablo.cpp:797
 msgid "Play a demo file"
 msgstr "Riproduci un file demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:801
+#: Source/diablo.cpp:798
 msgid "Disable all frame limiting during demo playback"
 msgstr "Disabilita limitazioni di frame in riproduzione demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:802
+#: Source/diablo.cpp:799
 msgid ""
 "\n"
 "Game selection:\n"
@@ -1126,22 +1138,22 @@ msgstr ""
 "Selezione gioco:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:803
+#: Source/diablo.cpp:800
 msgid "Force Shareware mode"
 msgstr "Forza modalità Demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:804
+#: Source/diablo.cpp:801
 msgid "Force Diablo mode"
 msgstr "Forza modalità Diablo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:805
+#: Source/diablo.cpp:802
 msgid "Force Hellfire mode"
 msgstr "Forza modalità Hellfire"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:806
+#: Source/diablo.cpp:803
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1150,11 +1162,11 @@ msgstr ""
 "Opzioni Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:807
+#: Source/diablo.cpp:804
 msgid "Use alternate nest palette"
 msgstr "Usa tavolozza alternativa"
 
-#: Source/diablo.cpp:813
+#: Source/diablo.cpp:810
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1162,30 +1174,162 @@ msgstr ""
 "\n"
 "Segnala gli errori a https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:927
+#: Source/diablo.cpp:924
 msgid "version {:s}"
 msgstr "versione {:s}"
 
-#: Source/diablo.cpp:1247
+#: Source/diablo.cpp:1243
 msgid "-- Network timeout --"
 msgstr "-- Timeout di rete --"
 
-#: Source/diablo.cpp:1248
+#: Source/diablo.cpp:1244
 msgid "-- Waiting for players --"
 msgstr "-- In attesa di giocatori --"
 
-#: Source/diablo.cpp:1267
+#: Source/diablo.cpp:1263
 msgid "No help available"
 msgstr "Nessun aiuto disponibile"
 
-#: Source/diablo.cpp:1268
+#: Source/diablo.cpp:1264
 msgid "while in stores"
 msgstr "mentre nei negozi"
 
+#: Source/diablo.cpp:1389
+msgid "Help"
+msgstr "Aiuto"
+
+#: Source/diablo.cpp:1390
+msgid "Open Help Screen."
+msgstr "Apri Guida."
+
+#: Source/diablo.cpp:1397
+msgid "Quick spell {}"
+msgstr "Magia rapida {}"
+
+#: Source/diablo.cpp:1398
+msgid "Hotkey for skill or spell."
+msgstr "Tasti per abilità o magia."
+
+#: Source/diablo.cpp:1416
+msgid "Quick Message {}"
+msgstr "Messaggio Rapido {}"
+
+#: Source/diablo.cpp:1417
+msgid "Use Quick Message in chat."
+msgstr "Usa Messaggio Rapido in chat."
+
+#: Source/diablo.cpp:1425
+msgid "Decrease Gamma"
+msgstr "Diminuisci Gamma"
+
+#: Source/diablo.cpp:1426
+msgid "Reduce screen brightness."
+msgstr "Riduci luminosità schermo."
+
+#: Source/diablo.cpp:1432
+msgid "Increase Gamma"
+msgstr "Aumenta Gamma"
+
+#: Source/diablo.cpp:1433
+msgid "Increase screen brightness."
+msgstr "Aumenta luminosità schermo."
+
+#: Source/diablo.cpp:1440
+msgid "Open Inventory screen."
+msgstr "Apri Inventario."
+
+#: Source/diablo.cpp:1446
+msgid "Character"
+msgstr "Profilo"
+
+#: Source/diablo.cpp:1447
+msgid "Open Character screen."
+msgstr "Apri Dettagli Personaggio."
+
+#: Source/diablo.cpp:1453
+msgid "Quest log"
+msgstr "Missioni"
+
+#: Source/diablo.cpp:1454
+msgid "Open Quest log."
+msgstr "Apri Missioni."
+
+#: Source/diablo.cpp:1460
+msgid "Zoom"
+msgstr "Ingrandimento"
+
+#: Source/diablo.cpp:1461
+msgid "Zoom Game Screen."
+msgstr "Ingrandisci Area di Gioco."
+
+#: Source/diablo.cpp:1470
+msgid "Speedbook"
+msgstr "Speedbook"
+
+#: Source/diablo.cpp:1471
+msgid "Open Speedbook."
+msgstr "Apri Speedbook."
+
+#: Source/diablo.cpp:1477
+msgid "Spellbook"
+msgstr "Libro di magia"
+
+#: Source/diablo.cpp:1478
+msgid "Open Spellbook."
+msgstr "Apri Libro di Magia."
+
+#: Source/diablo.cpp:1484
+msgid "Game info"
+msgstr "Dettagli partita"
+
+#: Source/diablo.cpp:1485
+msgid "Displays game infos."
+msgstr "Mostra dettagli partita."
+
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1483
-msgid "{:s}, version = {:s}, mode = {:s}"
-msgstr "{:s}, versione = {:s}, modalità = {:s}"
+#: Source/diablo.cpp:1494
+msgid "{:s} {:s}, Difficulty: {:s}"
+msgstr "{:s} {:s}, Difficoltà: {:s}"
+
+#: Source/diablo.cpp:1504
+msgid "Belt item {}"
+msgstr "Oggetto cintura {}"
+
+#: Source/diablo.cpp:1505
+msgid "Use Belt item."
+msgstr "Usa oggetto in cintura."
+
+#: Source/diablo.cpp:1518
+msgid "Quick save"
+msgstr "Salvataggio rapido"
+
+#: Source/diablo.cpp:1519
+msgid "Saves the game."
+msgstr "Salva la partita."
+
+#: Source/diablo.cpp:1525
+msgid "Quick load"
+msgstr "Caricamento rapido"
+
+#: Source/diablo.cpp:1526
+msgid "Loads the game."
+msgstr "Carica la partita."
+
+#: Source/diablo.cpp:1532
+msgid "Quit game"
+msgstr "Esci dal gioco"
+
+#: Source/diablo.cpp:1533
+msgid "Closes the game."
+msgstr "Chiude la partita."
+
+#: Source/diablo.cpp:1538
+msgid "Stop hero"
+msgstr "Ferma eroe"
+
+#: Source/diablo.cpp:1539
+msgid "Stops walking and cancel pending actions."
+msgstr "Interrompe la camminata e annulla le azioni in sospeso."
 
 #: Source/discord/discord.cpp:66 Source/objects.cpp:135
 msgid "Town"
@@ -1212,10 +1356,10 @@ msgid "Crypt"
 msgstr "Cripta"
 
 #. TRANSLATORS: type of dungeon (i.e. Cathedral, Caves)
-#: Source/discord/discord.cpp:67 Source/options.cpp:601
+#: Source/discord/discord.cpp:67 Source/options.cpp:597
 #: Source/panels/charpanel.cpp:139
 msgid "None"
-msgstr "Nessuna"
+msgstr "Nessuno"
 
 #. TRANSLATORS: dungeon type and floor number i.e. "Cathedral 3"
 #: Source/discord/discord.cpp:80
@@ -1251,11 +1395,11 @@ msgstr "errore: 0 byte ricevuti dal server"
 
 #: Source/error.cpp:58
 msgid "No automap available in town"
-msgstr "Non puoi usare la mappa qui"
+msgstr "Nessuna mappa disponibile in città"
 
 #: Source/error.cpp:59
 msgid "No multiplayer functions in demo"
-msgstr "No funzioni multigiocatore in demo"
+msgstr "Nessuna funzione multigiocatore in demo"
 
 #: Source/error.cpp:60
 msgid "Direct Sound Creation Failed"
@@ -1283,7 +1427,7 @@ msgstr "Sincronizzazione fallita in multigiocatore"
 
 #: Source/error.cpp:66
 msgid "No pause in multiplayer"
-msgstr "No pausa in multigiocatore"
+msgstr "Nessuna pausa in multigiocatore"
 
 #: Source/error.cpp:67
 msgid "Loading..."
@@ -1619,7 +1763,7 @@ msgstr "+ / -: Ingrandisci Mappa"
 
 #: Source/help.cpp:41
 msgid "1 - 8: Use Belt item"
-msgstr "1 - 8: Usa oggetto della Cintura"
+msgstr "1 - 8: Usa oggetto in Cintura"
 
 #: Source/help.cpp:42
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
@@ -1759,7 +1903,7 @@ msgstr ""
 
 #: Source/help.cpp:87
 msgid "$Setting Spell Hotkeys:"
-msgstr "$Impostazioni Tasti Magia:"
+msgstr "$Impostazione Tasti Magia:"
 
 #: Source/help.cpp:88
 msgid ""
@@ -2393,7 +2537,7 @@ msgstr "Arco Lungo da Guerra"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170 Source/itemdat.cpp:171
-#: Source/panels/spell_list.cpp:198
+#: Source/panels/spell_list.cpp:197
 msgid "Staff"
 msgstr "Verga"
 
@@ -2621,7 +2765,7 @@ msgstr "Solenne"
 
 #: Source/itemdat.cpp:236
 msgid "Awesome"
-msgstr "Aitante"
+msgstr "Eccezionale"
 
 #: Source/itemdat.cpp:237 Source/objects.cpp:120
 msgid "Holy"
@@ -2883,7 +3027,7 @@ msgstr "abilità"
 
 #: Source/itemdat.cpp:312
 msgid "accuracy"
-msgstr "accuratezza"
+msgstr "precisione"
 
 #: Source/itemdat.cpp:313
 msgid "precision"
@@ -2975,7 +3119,7 @@ msgstr "paradiso"
 
 #: Source/itemdat.cpp:335
 msgid "the zodiac"
-msgstr "zodiacale"
+msgstr "zodiaco"
 
 #: Source/itemdat.cpp:336
 msgid "the vulture"
@@ -3842,7 +3986,7 @@ msgid "chance to hit: {:+d}%"
 msgstr "possibilità di colpire: {:+d}%"
 
 #: Source/items.cpp:3748
-#, c-format
+#, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% danno"
 
@@ -3851,7 +3995,7 @@ msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "colpo: {:+d}%, {:+d}% danno"
 
 #: Source/items.cpp:3754
-#, c-format
+#, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% armatura"
 
@@ -3935,19 +4079,19 @@ msgstr "Danno Fulmine : {:d}-{:d}"
 
 #: Source/items.cpp:3805
 msgid "{:+d} to strength"
-msgstr "{:+d} alla Forza"
+msgstr "{:+d} alla forza"
 
 #: Source/items.cpp:3808
 msgid "{:+d} to magic"
-msgstr "{:+d} di magia"
+msgstr "{:+d} alla magia"
 
 #: Source/items.cpp:3811
 msgid "{:+d} to dexterity"
-msgstr "{:+d} di destrezza"
+msgstr "{:+d} alla destrezza"
 
 #: Source/items.cpp:3814
 msgid "{:+d} to vitality"
-msgstr "{:+d} di vitalità"
+msgstr "{:+d} alla vitalità"
 
 #: Source/items.cpp:3817
 msgid "{:+d} to all attributes"
@@ -3978,12 +4122,12 @@ msgid "indestructible"
 msgstr "indistruttibile"
 
 #: Source/items.cpp:3834
-#, c-format
+#, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% bagliore"
 
 #: Source/items.cpp:3836
-#, c-format
+#, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% bagliore"
 
@@ -4036,7 +4180,7 @@ msgid "knocks target back"
 msgstr "respinge il bersaglio"
 
 #: Source/items.cpp:3865
-#, c-format
+#, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% danno contro demoni"
 
@@ -4049,22 +4193,22 @@ msgid "hit monster doesn't heal"
 msgstr "colpo al mostro non guarisce"
 
 #: Source/items.cpp:3872
-#, c-format
+#, no-c-format
 msgid "hit steals 3% mana"
 msgstr "colpo ruba 3% mana"
 
 #: Source/items.cpp:3874
-#, c-format
+#, no-c-format
 msgid "hit steals 5% mana"
 msgstr "colpo ruba 5% mana"
 
 #: Source/items.cpp:3878
-#, c-format
+#, no-c-format
 msgid "hit steals 3% life"
 msgstr "colpo ruba 3% vita"
 
 #: Source/items.cpp:3880
-#, c-format
+#, no-c-format
 msgid "hit steals 5% life"
 msgstr "colpo ruba 5% vita"
 
@@ -4167,21 +4311,21 @@ msgid "occasional triple damage"
 msgstr "danno triplo occasionale"
 
 #: Source/items.cpp:3941
-#, c-format
+#, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "riduzione {:+d}% danno"
 
 #: Source/items.cpp:3943
 msgid "2x dmg to monst, 1x to you"
-msgstr "2x danni mostri, 1x a te"
+msgstr "2x danno a mostro, 1x a te"
 
 #: Source/items.cpp:3945
-#, c-format
+#, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Danno casuale 0 - 500%"
 
 #: Source/items.cpp:3947
-#, c-format
+#, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "dur ridotta, {:+d}% danno"
 
@@ -4251,19 +4395,19 @@ msgstr "oggetto unico"
 msgid "Not Identified"
 msgstr "Sconosciuto"
 
-#: Source/loadsave.cpp:1756 Source/loadsave.cpp:2201
+#: Source/loadsave.cpp:1757 Source/loadsave.cpp:2202
 msgid "Unable to open save file archive"
 msgstr "Impossibile aprire file di salvataggio"
 
-#: Source/loadsave.cpp:1759
+#: Source/loadsave.cpp:1760
 msgid "Invalid save file"
 msgstr "Salvataggio non valido"
 
-#: Source/loadsave.cpp:1790
+#: Source/loadsave.cpp:1791
 msgid "Player is on a Hellfire only level"
 msgstr "Il Giocatore è in un livello esclusivo di Hellfire"
 
-#: Source/loadsave.cpp:1979
+#: Source/loadsave.cpp:1980
 msgid "Invalid game state"
 msgstr "Stato del gioco non valido"
 
@@ -5418,7 +5562,7 @@ msgstr "Punti Ferita: {:d}-{:d}"
 
 #: Source/monster.cpp:4662
 msgid "No magic resistance"
-msgstr "Nessuna Res. Magica"
+msgstr "Nessuna resistenza magica"
 
 #: Source/monster.cpp:4666
 msgid "Resists: "
@@ -5446,11 +5590,11 @@ msgstr "Tipo: {:s}"
 
 #: Source/monster.cpp:4703 Source/monster.cpp:4710
 msgid "No resistances"
-msgstr "No resistenze"
+msgstr "Nessuna resistenza"
 
 #: Source/monster.cpp:4705 Source/monster.cpp:4715
 msgid "No Immunities"
-msgstr "No Immunità"
+msgstr "Nessuna Immunità"
 
 #: Source/monster.cpp:4708
 msgid "Some Magic Resistances"
@@ -5468,7 +5612,7 @@ msgstr "Abbandonare un oggetto a terra?"
 #: Source/msg.cpp:1191 Source/msg.cpp:1223 Source/msg.cpp:1255
 #: Source/msg.cpp:1285
 msgid "{:s} has cast an illegal spell."
-msgstr "{:s} ha usato magia illegale."
+msgstr "{:s} ha usato una magia illegale."
 
 #: Source/msg.cpp:1672 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
@@ -5859,43 +6003,43 @@ msgstr "Trappola {:s}"
 msgid "{:s} (disabled)"
 msgstr "{:s} (disabilitato)"
 
-#: Source/options.cpp:458 Source/options.cpp:589 Source/options.cpp:595
+#: Source/options.cpp:454 Source/options.cpp:585 Source/options.cpp:591
 msgid "ON"
 msgstr "ON"
 
-#: Source/options.cpp:458 Source/options.cpp:587 Source/options.cpp:593
+#: Source/options.cpp:454 Source/options.cpp:583 Source/options.cpp:589
 msgid "OFF"
 msgstr "OFF"
 
-#: Source/options.cpp:577
+#: Source/options.cpp:573
 msgid "Start Up"
 msgstr "Avvio"
 
-#: Source/options.cpp:577
+#: Source/options.cpp:573
 msgid "Start Up Settings"
 msgstr "Impostazioni di Avvio"
 
-#: Source/options.cpp:578
+#: Source/options.cpp:574
 msgid "Game Mode"
 msgstr "Modalità Gioco"
 
-#: Source/options.cpp:578
+#: Source/options.cpp:574
 msgid "Play Diablo or Hellfire."
 msgstr "Gioca a Diablo o Hellfire."
 
-#: Source/options.cpp:580 Source/options.cpp:619 Source/quests.cpp:48
+#: Source/options.cpp:576 Source/options.cpp:615 Source/quests.cpp:48
 msgid "Diablo"
 msgstr "Diablo"
 
-#: Source/options.cpp:582 Source/options.cpp:628
+#: Source/options.cpp:578 Source/options.cpp:624
 msgid "Hellfire"
 msgstr "Hellfire"
 
-#: Source/options.cpp:584
+#: Source/options.cpp:580
 msgid "Restrict to Shareware"
 msgstr "Limita alla Demo"
 
-#: Source/options.cpp:584
+#: Source/options.cpp:580
 msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
@@ -5903,107 +6047,107 @@ msgstr ""
 "Rende il gioco compatibile con la demo. Abilita il multigiocatore con amici "
 "che non possiedono una copia completa di Diablo."
 
-#: Source/options.cpp:585 Source/options.cpp:591
+#: Source/options.cpp:581 Source/options.cpp:587
 msgid "Intro"
 msgstr "Introduzione"
 
-#: Source/options.cpp:585 Source/options.cpp:591
+#: Source/options.cpp:581 Source/options.cpp:587
 msgid "Shown Intro cinematic."
 msgstr "Mostra cinematica introduttiva."
 
-#: Source/options.cpp:597
+#: Source/options.cpp:593
 msgid "Splash"
 msgstr "Schermata Iniziale"
 
-#: Source/options.cpp:597
+#: Source/options.cpp:593
 msgid "Shown splash screen."
 msgstr "Mostra schermata iniziale."
 
-#: Source/options.cpp:599
+#: Source/options.cpp:595
 msgid "Logo and Title Screen"
 msgstr "Logo e Schermata Titolo"
 
-#: Source/options.cpp:600
+#: Source/options.cpp:596
 msgid "Title Screen"
 msgstr "Schermata Titolo"
 
-#: Source/options.cpp:619
+#: Source/options.cpp:615
 msgid "Diablo specific Settings"
 msgstr "Impostazioni di Diablo"
 
-#: Source/options.cpp:628
+#: Source/options.cpp:624
 msgid "Hellfire specific Settings"
 msgstr "Impostazioni di Hellfire"
 
-#: Source/options.cpp:637
+#: Source/options.cpp:633
 msgid "Audio"
 msgstr "Audio"
 
-#: Source/options.cpp:637
+#: Source/options.cpp:633
 msgid "Audio Settings"
 msgstr "Impostazioni Audio"
 
-#: Source/options.cpp:638
+#: Source/options.cpp:634
 msgid "Walking Sound"
 msgstr "Rumore di Passi"
 
-#: Source/options.cpp:638
+#: Source/options.cpp:634
 msgid "Player emits sound when walking."
-msgstr "Il giocatore "
+msgstr "Il giocatore un suono quando cammina."
 
-#: Source/options.cpp:639
+#: Source/options.cpp:635
 msgid "Auto Equip Sound"
 msgstr "Suono Auto Equipaggiamento"
 
-#: Source/options.cpp:639
+#: Source/options.cpp:635
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr "L'equipaggiamento automatico di oggetti raccolti emette un suono."
 
-#: Source/options.cpp:640
+#: Source/options.cpp:636
 msgid "Item Pickup Sound"
 msgstr "Suono Raccolta Oggetto"
 
-#: Source/options.cpp:640
+#: Source/options.cpp:636
 msgid "Picking up items emits the items pickup sound."
 msgstr "La raccolta di oggetti emette un suono."
 
-#: Source/options.cpp:641
+#: Source/options.cpp:637
 msgid "Sample Rate"
 msgstr "Frequenza di Campionamento"
 
-#: Source/options.cpp:641
+#: Source/options.cpp:637
 msgid "Output sample rate (Hz)."
 msgstr "Frequenza di campionamento uscita (Hz)."
 
-#: Source/options.cpp:642
+#: Source/options.cpp:638
 msgid "Channels"
 msgstr "Canali"
 
-#: Source/options.cpp:642
+#: Source/options.cpp:638
 msgid "Number of output channels."
 msgstr "Numero di canali di uscita."
 
-#: Source/options.cpp:643
+#: Source/options.cpp:639
 msgid "Buffer Size"
 msgstr "Dimensione Buffer"
 
-#: Source/options.cpp:643
+#: Source/options.cpp:639
 msgid "Buffer size (number of frames per channel)."
 msgstr "DImensione buffer (numero di frame per canale)."
 
-#: Source/options.cpp:644
+#: Source/options.cpp:640
 msgid "Resampling Quality"
 msgstr "Qualità di Ricampionamento"
 
-#: Source/options.cpp:644
+#: Source/options.cpp:640
 msgid "Quality of the resampler, from 0 (lowest) to 10 (highest)."
 msgstr "Qualità del ricampionatore, da 0 (minimo) a 10 (massimo)."
 
-#: Source/options.cpp:665
+#: Source/options.cpp:661
 msgid "Resolution"
 msgstr "Risoluzione"
 
-#: Source/options.cpp:665
+#: Source/options.cpp:661
 msgid ""
 "Affect the game's internal resolution and determine your view area. Note: "
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
@@ -6013,27 +6157,27 @@ msgstr ""
 "visualizzazione. Nota: può differire dalla risoluzione dello schermo quando "
 "si utilizza Upscaling, Ridimensionamento a Intero o Adatta a Schermo."
 
-#: Source/options.cpp:761
+#: Source/options.cpp:757
 msgid "Graphics"
 msgstr "Grafica"
 
-#: Source/options.cpp:761
+#: Source/options.cpp:757
 msgid "Graphics Settings"
 msgstr "Impostazioni Grafiche"
 
-#: Source/options.cpp:762
+#: Source/options.cpp:758
 msgid "Fullscreen"
 msgstr "Schermo intero"
 
-#: Source/options.cpp:762
+#: Source/options.cpp:758
 msgid "Display the game in windowed or fullscreen mode."
 msgstr "Visualizza il gioco in finestra o a schermo intero."
 
-#: Source/options.cpp:764
+#: Source/options.cpp:760
 msgid "Fit to Screen"
 msgstr "Adatta allo Schermo"
 
-#: Source/options.cpp:764
+#: Source/options.cpp:760
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
@@ -6041,11 +6185,11 @@ msgstr ""
 "Regola automaticamente la finestra di gioco in base alle proporzioni e alla "
 "risoluzione dello schermo del tuo desktop corrente."
 
-#: Source/options.cpp:767
+#: Source/options.cpp:763
 msgid "Upscale"
 msgstr "Upscaling"
 
-#: Source/options.cpp:767
+#: Source/options.cpp:763
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
@@ -6054,41 +6198,41 @@ msgstr ""
 "quella del monitor. Impedisce la modifica della risoluzione del monitor e "
 "consente il ridimensionamento della finestra."
 
-#: Source/options.cpp:768
+#: Source/options.cpp:764
 msgid "Scaling Quality"
 msgstr "Qualità di Ridimensionamento"
 
-#: Source/options.cpp:768
+#: Source/options.cpp:764
 msgid "Enables optional filters to the output image when upscaling."
 msgstr ""
 "Abilita filtri facoltativi per l'immagine di output durante l'upscaling."
 
-#: Source/options.cpp:770
+#: Source/options.cpp:766
 msgid "Nearest Pixel"
 msgstr "Pixel Prossimo"
 
-#: Source/options.cpp:771
+#: Source/options.cpp:767
 msgid "Bilinear"
 msgstr "Bilineare"
 
-#: Source/options.cpp:772
+#: Source/options.cpp:768
 msgid "Anisotropic"
 msgstr "Anisotropico"
 
-#: Source/options.cpp:774
+#: Source/options.cpp:770
 msgid "Integer Scaling"
 msgstr "Ridimensionamento a Intero"
 
-#: Source/options.cpp:774
+#: Source/options.cpp:770
 msgid "Scales the image using whole number pixel ratio."
 msgstr ""
 "Ridimensiona l'immagine utilizzando un rapporto tra pixel a quoziente intero."
 
-#: Source/options.cpp:775
+#: Source/options.cpp:771
 msgid "Vertical Sync"
 msgstr "Sincronizzazione Verticale"
 
-#: Source/options.cpp:775
+#: Source/options.cpp:771
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
@@ -6097,36 +6241,36 @@ msgstr ""
 "quando si disegna un frame. Disabilitarlo può aiutare con il ritardo del "
 "mouse su alcuni sistemi."
 
-#: Source/options.cpp:777
+#: Source/options.cpp:773
 msgid "Color Cycling"
 msgstr "Ciclo Colori"
 
-#: Source/options.cpp:777
+#: Source/options.cpp:773
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr ""
 "Effetto di ciclo dei colori utilizzato per animazioni di acqua, lava e acido."
 
-#: Source/options.cpp:779
+#: Source/options.cpp:775
 msgid "Hardware Cursor"
 msgstr "Cursore Hardware"
 
-#: Source/options.cpp:779
+#: Source/options.cpp:775
 msgid "Use a hardware cursor"
 msgstr "Usa cursore hardware"
 
-#: Source/options.cpp:780
+#: Source/options.cpp:776
 msgid "Hardware Cursor For Items"
 msgstr "Cursore Hardware Per Oggetti"
 
-#: Source/options.cpp:780
+#: Source/options.cpp:776
 msgid "Use a hardware cursor for items."
 msgstr "Usa cursore hardware per gli oggetti."
 
-#: Source/options.cpp:781
+#: Source/options.cpp:777
 msgid "Hardware Cursor Maximum Size"
 msgstr "Dimensione Massima Cursore Hardware"
 
-#: Source/options.cpp:781
+#: Source/options.cpp:777
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
 "software."
@@ -6134,37 +6278,37 @@ msgstr ""
 "Larghezza / altezza massima per il cursore hardware. I cursori più grandi "
 "ripiegano sul software."
 
-#: Source/options.cpp:783
+#: Source/options.cpp:779
 msgid "FPS Limiter"
 msgstr "Limita FPS"
 
-#: Source/options.cpp:783
+#: Source/options.cpp:779
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
 "FPS limitati per evitare uso elevato di CPU. Il limite considera la "
 "frequenza di aggiornamento."
 
-#: Source/options.cpp:784
+#: Source/options.cpp:780
 msgid "Show FPS"
 msgstr "Mostra FPS"
 
-#: Source/options.cpp:784
+#: Source/options.cpp:780
 msgid "Displays the FPS in the upper left corner of the screen."
 msgstr "Visualizza FPS nell'angolo superiore sinistro dello schermo."
 
-#: Source/options.cpp:829
+#: Source/options.cpp:825
 msgid "Gameplay"
 msgstr "Gioco"
 
-#: Source/options.cpp:829
+#: Source/options.cpp:825
 msgid "Gameplay Settings"
 msgstr "Impostazioni di Gioco"
 
-#: Source/options.cpp:830
+#: Source/options.cpp:826
 msgid "Run in Town"
 msgstr "Corsa in Città"
 
-#: Source/options.cpp:830
+#: Source/options.cpp:826
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
@@ -6172,38 +6316,38 @@ msgstr ""
 "Abilita camminata veloce in città per Diablo e Hellfire. Opzione introdotta "
 "nell'espansione."
 
-#: Source/options.cpp:831
+#: Source/options.cpp:827
 msgid "Grab Input"
 msgstr "Cattura Input"
 
-#: Source/options.cpp:831
+#: Source/options.cpp:827
 msgid "When enabled mouse is locked to the game window."
 msgstr "Quando abilitato, il puntatore è catturato dalla finestra di gioco."
 
-#: Source/options.cpp:832
+#: Source/options.cpp:828
 msgid "Theo Quest"
 msgstr "Missione di Theo"
 
-#: Source/options.cpp:832
+#: Source/options.cpp:828
 msgid "Enable Little Girl quest."
-msgstr "Abilita missione La Fanciulla"
+msgstr "Abilita missione La Fanciulla."
 
-#: Source/options.cpp:833
+#: Source/options.cpp:829
 msgid "Cow Quest"
 msgstr "Missione della Mucca"
 
-#: Source/options.cpp:833
+#: Source/options.cpp:829
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
 msgstr ""
 "Abilita la missione di Jersey. Lester l'agricoltore è sostituito dal Matto "
 "Svitato."
 
-#: Source/options.cpp:834
+#: Source/options.cpp:830
 msgid "Friendly Fire"
 msgstr "Fuoco Amico"
 
-#: Source/options.cpp:834
+#: Source/options.cpp:830
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
@@ -6211,139 +6355,139 @@ msgstr ""
 "Consenti danni da freccia/incantesimo in multigiocatore anche in modalità "
 "amichevole attiva."
 
-#: Source/options.cpp:835
+#: Source/options.cpp:831
 msgid "Test Bard"
-msgstr "Abilita Bardo"
+msgstr "Prova Bardo"
 
-#: Source/options.cpp:835
+#: Source/options.cpp:831
 msgid "Force the Bard character type to appear in the hero selection menu."
 msgstr "Forza comparsa del personaggio Bardo nel menu di selezione dell'eroe."
 
-#: Source/options.cpp:836
+#: Source/options.cpp:832
 msgid "Test Barbarian"
-msgstr "Abilita Barbaro"
+msgstr "Prova Barbaro"
 
-#: Source/options.cpp:836
+#: Source/options.cpp:832
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
 msgstr ""
 "Forza comparsa del personaggio Barbaro nel menu di selezione dell'eroe."
 
-#: Source/options.cpp:837
+#: Source/options.cpp:833
 msgid "Experience Bar"
 msgstr "Barra Esperienza"
 
-#: Source/options.cpp:837
+#: Source/options.cpp:833
 msgid "Experience Bar is added to the UI at the bottom of the screen."
 msgstr ""
 "La Barra Esperienza compare nell'interfaccia utente nella parte inferiore "
 "dello schermo."
 
-#: Source/options.cpp:838
+#: Source/options.cpp:834
 msgid "Enemy Health Bar"
 msgstr "Barra Salute Nemico"
 
-#: Source/options.cpp:838
+#: Source/options.cpp:834
 msgid "Enemy Health Bar is displayed at the top of the screen."
 msgstr ""
 "La Barra Salute Nemico viene mostrata nella parte superiore dello schermo."
 
-#: Source/options.cpp:839
+#: Source/options.cpp:835
 msgid "Auto Gold Pickup"
 msgstr "Raccolta Automatica Oro"
 
-#: Source/options.cpp:839
+#: Source/options.cpp:835
 msgid "Gold is automatically collected when in close proximity to the player."
 msgstr "L'oro viene raccolto automaticamente in prossimità del giocatore."
 
-#: Source/options.cpp:840
+#: Source/options.cpp:836
 msgid "Auto Elixir Pickup"
 msgstr "Raccolta Automatica Elisir"
 
-#: Source/options.cpp:840
+#: Source/options.cpp:836
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
 msgstr ""
 "Gli elisir vengono raccolti automaticamente in prossimità del giocatore."
 
-#: Source/options.cpp:841
+#: Source/options.cpp:837
 msgid "Auto Pickup in Town"
 msgstr "Raccolta Automatica in Città"
 
-#: Source/options.cpp:841
+#: Source/options.cpp:837
 msgid "Automatically pickup items in town."
 msgstr "Raccolta automatica degli oggetti in città."
 
-#: Source/options.cpp:842
+#: Source/options.cpp:838
 msgid "Adria Refills Mana"
 msgstr "Ricarica Mana da Adria"
 
-#: Source/options.cpp:842
+#: Source/options.cpp:838
 msgid "Adria will refill your mana when you visit her shop."
 msgstr "Adria riempirà il tuo mana alla visita del suo negozio."
 
-#: Source/options.cpp:843
+#: Source/options.cpp:839
 msgid "Auto Equip Weapons"
 msgstr "Auto Equipaggia Armi"
 
-#: Source/options.cpp:843
+#: Source/options.cpp:839
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
 "Le armi saranno automaticamente equipaggiate alla raccolta o all'acquisto."
 
-#: Source/options.cpp:844
+#: Source/options.cpp:840
 msgid "Auto Equip Armor"
 msgstr "Auto Equipaggia Armatura"
 
-#: Source/options.cpp:844
+#: Source/options.cpp:840
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
 "Le armature saranno automaticamente equipaggiate alla raccolta o "
 "all'acquisto."
 
-#: Source/options.cpp:845
+#: Source/options.cpp:841
 msgid "Auto Equip Helms"
 msgstr "Auto Equipaggia Elmi"
 
-#: Source/options.cpp:845
+#: Source/options.cpp:841
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
 "Gli elmi saranno automaticamente equipaggiati alla raccolta o all'acquisto."
 
-#: Source/options.cpp:846
+#: Source/options.cpp:842
 msgid "Auto Equip Shields"
 msgstr "Auto Equipaggia Scudi"
 
-#: Source/options.cpp:846
+#: Source/options.cpp:842
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
 "Gli scudi saranno automaticamente equipaggiati alla raccolta o all'acquisto."
 
-#: Source/options.cpp:847
+#: Source/options.cpp:843
 msgid "Auto Equip Jewelry"
 msgstr "Auto Equipaggia Monili"
 
-#: Source/options.cpp:847
+#: Source/options.cpp:843
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
 "I monili saranno automaticamente equipaggiati alla raccolta o all'acquisto."
 
-#: Source/options.cpp:848
+#: Source/options.cpp:844
 msgid "Randomize Quests"
 msgstr "Missioni Casuali"
 
-#: Source/options.cpp:848
+#: Source/options.cpp:844
 msgid "Randomly selecting available quests for new games."
 msgstr "Seleziona casualmente le missioni disponibili per nuove partite."
 
-#: Source/options.cpp:849
+#: Source/options.cpp:845
 msgid "Show Monster Type"
 msgstr "Mostra Tipo Mostro"
 
-#: Source/options.cpp:849
+#: Source/options.cpp:845
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
@@ -6351,21 +6495,21 @@ msgstr ""
 "Passando il mouse su di un mostro verrà visualizzata una casella di "
 "descrizione col tipo di mostro."
 
-#: Source/options.cpp:850
+#: Source/options.cpp:846
 msgid "Auto Refill Belt"
 msgstr "Auto Ricarica Cintura"
 
-#: Source/options.cpp:850
+#: Source/options.cpp:846
 msgid "Refill belt from inventory when belt item is consumed."
 msgstr ""
 "Ricarica cintura dall'inventario quando l'oggetto della cintura viene "
 "consumato."
 
-#: Source/options.cpp:851
+#: Source/options.cpp:847
 msgid "Disable Crippling Shrines"
 msgstr "Disabilita Santuari Paralizzanti"
 
-#: Source/options.cpp:851
+#: Source/options.cpp:847
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
@@ -6373,11 +6517,11 @@ msgstr ""
 "Quando abilitato i Calderoni, Santuari Avvenenti, di Capra, Ornati e Sacri "
 "non possono essere cliccati ed etichettati come disabilitati."
 
-#: Source/options.cpp:852
+#: Source/options.cpp:848
 msgid "Quick Cast"
 msgstr "Magia Rapida"
 
-#: Source/options.cpp:852
+#: Source/options.cpp:848
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
@@ -6385,89 +6529,97 @@ msgstr ""
 "I tasti di scelta rapida della magia lanciano istantaneamente la magia, "
 "invece di cambiare la magia preparata."
 
-#: Source/options.cpp:853
+#: Source/options.cpp:849
 msgid "Heal Potion Pickup"
 msgstr "Raccolta Pozione di Guarigione"
 
-#: Source/options.cpp:853
+#: Source/options.cpp:849
 msgid "Number of Healing potions to pick up automatically."
 msgstr "Numero di pozioni di Guarigione da raccogliere automaticamente."
 
-#: Source/options.cpp:854
+#: Source/options.cpp:850
 msgid "Full Heal Potion Pickup"
 msgstr "Raccolta Pozione di Guarigione Totale"
 
-#: Source/options.cpp:854
+#: Source/options.cpp:850
 msgid "Number of Full Healing potions to pick up automatically."
 msgstr "Numero di pozioni di Guarigione Totale da raccogliere automaticamente."
 
-#: Source/options.cpp:855
+#: Source/options.cpp:851
 msgid "Mana Potion Pickup"
 msgstr "Raccolta Pozione del Mana"
 
-#: Source/options.cpp:855
+#: Source/options.cpp:851
 msgid "Number of Mana potions to pick up automatically."
 msgstr "Numero di pozioni del Mana da raccogliere automaticamente."
 
-#: Source/options.cpp:856
+#: Source/options.cpp:852
 msgid "Full Mana Potion Pickup"
 msgstr "Raccolta Pozione del Mana Totale"
 
-#: Source/options.cpp:856
+#: Source/options.cpp:852
 msgid "Number of Full Mana potions to pick up automatically."
 msgstr "Numero di pozioni del Mana Totale da raccogliere automaticamente."
 
-#: Source/options.cpp:857
+#: Source/options.cpp:853
 msgid "Rejuvenation Potion Pickup"
 msgstr "Raccolta Pozione di Giovinezza"
 
-#: Source/options.cpp:857
+#: Source/options.cpp:853
 msgid "Number of Rejuvenation potions to pick up automatically."
 msgstr "Numero di pozioni di Giovinezza da raccogliere automaticamente."
 
-#: Source/options.cpp:858
+#: Source/options.cpp:854
 msgid "Full Rejuvenation Potion Pickup"
 msgstr "Raccolta Pozione di Giovinezza Totale"
 
-#: Source/options.cpp:858
+#: Source/options.cpp:854
 msgid "Number of Full Rejuvenation potions to pick up automatically."
 msgstr "Numero di pozioni di Giovinezza Totale da raccogliere automaticamente."
 
-#: Source/options.cpp:900
+#: Source/options.cpp:896
 msgid "Controller"
 msgstr "Controller"
 
-#: Source/options.cpp:900
+#: Source/options.cpp:896
 msgid "Controller Settings"
 msgstr "Impostazioni Controller"
 
-#: Source/options.cpp:909
+#: Source/options.cpp:905
 msgid "Network"
 msgstr "Rete"
 
-#: Source/options.cpp:909
+#: Source/options.cpp:905
 msgid "Network Settings"
 msgstr "Impostazioni Rete"
 
-#: Source/options.cpp:918
+#: Source/options.cpp:914
 msgid "Chat"
 msgstr "Chat"
 
-#: Source/options.cpp:918
+#: Source/options.cpp:914
 msgid "Chat Settings"
 msgstr "Impostazioni Chat"
 
-#: Source/options.cpp:927 Source/options.cpp:1124
+#: Source/options.cpp:923 Source/options.cpp:1120
 msgid "Language"
 msgstr "Lingua"
 
-#: Source/options.cpp:927
+#: Source/options.cpp:923
 msgid "Define what language to use in game."
 msgstr "Stabilisce quale lingua usare nel gioco."
 
-#: Source/options.cpp:1124
+#: Source/options.cpp:1120
 msgid "Language Settings"
 msgstr "Impostazioni Lingua"
+
+#: Source/options.cpp:1132
+msgid "Keymapping"
+msgstr "Tasti associati"
+
+#: Source/options.cpp:1132
+msgid "Keymapping Settings"
+msgstr "Impostazioni Tasti Associati"
 
 #: Source/panels/charpanel.cpp:111
 msgid "MAX"
@@ -6579,7 +6731,7 @@ msgstr "magie"
 msgid "mute"
 msgstr "silenzia"
 
-#: Source/panels/spell_book.cpp:153 Source/panels/spell_list.cpp:162
+#: Source/panels/spell_book.cpp:153 Source/panels/spell_list.cpp:161
 msgid "Skill"
 msgstr "Abilità"
 
@@ -6611,8 +6763,8 @@ msgid "Mana: {:d}"
 msgstr "Mana: {:d}"
 
 #: Source/panels/spell_book.cpp:178
-msgid "Level 0 - Unusable"
-msgstr "Livello 0 - Inusabile"
+msgid "Unusable"
+msgstr "Inusabile"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:180
@@ -6620,19 +6772,19 @@ msgctxt "spellbook"
 msgid "Level {:d}"
 msgstr "Livello {:d}"
 
-#: Source/panels/spell_list.cpp:169
+#: Source/panels/spell_list.cpp:168
 msgid "Spell"
 msgstr "Magia"
 
-#: Source/panels/spell_list.cpp:172
+#: Source/panels/spell_list.cpp:171
 msgid "Damages undead only"
 msgstr "Danneggia solo non morti"
 
-#: Source/panels/spell_list.cpp:185
+#: Source/panels/spell_list.cpp:184
 msgid "Scroll"
 msgstr "Pergamena"
 
-#: Source/panels/spell_list.cpp:208
+#: Source/panels/spell_list.cpp:207
 msgid "Spell Hotkey {:s}"
 msgstr "Tasto Rapido {:s}"
 
@@ -6656,9 +6808,9 @@ msgstr "Impossibile leggere archivio di salvataggio"
 msgid "Unable to write to save file archive"
 msgstr "Impossibile scrivere archivio di salvataggio"
 
-#: Source/plrmsg.cpp:90
-msgid "{:s} (lvl {:d}): {:s}"
-msgstr "{:s} (liv {:d}): {:s}"
+#: Source/plrmsg.cpp:80
+msgid "{:s} (lvl {:d}): "
+msgstr "{:s} (liv {:d}): "
 
 #. TRANSLATORS: Decimal separator
 #: Source/qol/common.cpp:25
@@ -7138,7 +7290,7 @@ msgstr "Indistruttibile,  "
 
 #: Source/stores.cpp:279
 msgid "No required attributes"
-msgstr "Non richiede attributi"
+msgstr "Nessun attributo richiesto"
 
 #: Source/stores.cpp:312 Source/stores.cpp:1079 Source/stores.cpp:1323
 msgid "Welcome to the"

@@ -1262,7 +1262,6 @@ void GameLogic()
 #endif
 
 	sound_update();
-	ClearPlrMsg();
 	CheckTriggers();
 	CheckQuests();
 	force_redraw |= 1;
@@ -1549,17 +1548,17 @@ void InitKeymapActions()
 	    N_("Displays game infos."),
 	    'V',
 	    [] {
-		    char pszStr[MAX_SEND_STR_LEN];
 		    const char *difficulties[3] = {
 			    _("Normal"),
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    CopyUtf8(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
-		                                     "{:s}, version = {:s}, mode = {:s}"),
-		                         PROJECT_NAME, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]),
-		        sizeof(pszStr));
-		    NetSendCmdString(1 << MyPlayerId, pszStr);
+		    EventPlrMsg(fmt::format(
+		                    _(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}, Difficulty: {:s}"),
+		                    PROJECT_NAME,
+		                    PROJECT_VERSION,
+		                    difficulties[sgGameInitInfo.nDifficulty]),
+		        UiFlags::ColorWhite);
 	    },
 	    [&]() { return !IsPlayerDead(); });
 	for (int i = 0; i < 8; ++i) {

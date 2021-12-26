@@ -7,22 +7,18 @@
 
 #include "SDL.h"
 #include <cstdint>
+#include <string>
 
+#include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
+#include "player.h"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
-struct _plrmsg {
-	Uint32 time;
-	uint8_t player;
-	char str[144];
-};
-
 void plrmsg_delay(bool delay);
-void ErrorPlrMsg(const char *pszMsg);
-size_t EventPlrMsg(const char *pszFmt, ...);
-void SendPlrMsg(int pnum, const char *pszStr);
-void ClearPlrMsg();
+void EventPlrMsg(string_view text, UiFlags style = UiFlags::ColorWhitegold);
+void SendPlrMsg(Player &player, string_view text);
 void InitPlrMsg();
 void DrawPlrMsg(const Surface &out);
 
