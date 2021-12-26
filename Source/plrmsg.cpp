@@ -120,7 +120,7 @@ void DrawPlrMsg(const Surface &out)
 		y -= message.lineHeight * chatlines;
 
 		DrawHalfTransparentRectTo(out, x - 3, y, width + 6, message.lineHeight * chatlines);
-		DrawString(out, text, { { x, y }, { width, 0 } }, UiFlags::ColorWhite, 1, message.lineHeight);
+		DrawString(out, text, { { x, y }, { width, 0 } }, message.style, 1, message.lineHeight);
 		DrawString(out, message.from, { { x, y }, { width, 0 } }, UiFlags::ColorWhitegold, 1, message.lineHeight);
 	}
 }
