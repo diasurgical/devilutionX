@@ -921,7 +921,7 @@ Uint32 dbClickTimer;
 
 bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 {
-	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
+	if (event.type != SDL_MOUSEBUTTONUP || event.button.button != SDL_BUTTON_LEFT)
 		return false;
 
 	std::size_t index = uiList->indexAt(event.button.y);
