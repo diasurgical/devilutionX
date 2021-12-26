@@ -62,6 +62,7 @@ std::size_t listOffset = 0;
 void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
+void (*gfnFullscreen)();
 bool (*gfnListYesNo)();
 std::vector<UiItemBase *> gUiItems;
 UiList *gUiList = nullptr;
@@ -94,7 +95,7 @@ void AdjustListOffset(std::size_t itemIndex)
 
 } // namespace
 
-void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
+void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, void (*fnFullscreen)(), bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
 {
 	SelectedItem = selectedItem;
 	SelectedItemMax = 0;
@@ -102,6 +103,7 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
+	gfnFullscreen = fnFullscreen;
 	gfnListYesNo = fnYesNo;
 	gUiItems.clear();
 	for (const auto &item : items)
@@ -162,6 +164,7 @@ void UiInitList_clear()
 	gfnListFocus = nullptr;
 	gfnListSelect = nullptr;
 	gfnListEsc = nullptr;
+	gfnFullscreen = nullptr;
 	gfnListYesNo = nullptr;
 	gUiList = nullptr;
 	gUiItems.clear();
@@ -444,7 +447,9 @@ void UiHandleEvents(SDL_Event *event)
 	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
-			dx_reinit();
+			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			if (gfnFullscreen != nullptr)
+				gfnFullscreen();
 			return;
 		}
 	}
@@ -740,10 +745,12 @@ void UiClearScreen()
 		SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 }
 
-void UiPollAndRender()
+void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler)
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event) != 0) {
+		if (eventHandler && eventHandler(event))
+			continue;
 		UiFocusNavigation(&event);
 		UiHandleEvents(&event);
 	}

@@ -1,12 +1,9 @@
 if(WIN32)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(DIST ON)
+  include(platforms/windows)
 endif()
 
 if(HAIKU)
-  set(ASAN OFF)
-  set(UBSAN OFF)
+  include(platforms/haiku)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD|OpenBSD|DragonFly|NetBSD")
@@ -57,4 +54,8 @@ endif()
 
 if(IOS)
   include(platforms/ios)
+endif()
+
+if(EMSCRIPTEN)
+  include(platforms/emscripten)
 endif()

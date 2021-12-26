@@ -67,33 +67,6 @@ bool CanRenderDirectlyToOutputSurface()
 #endif
 }
 
-void CreateBackBuffer()
-{
-	if (CanRenderDirectlyToOutputSurface()) {
-		Log("{}", "Will render directly to the SDL output surface");
-		PalSurface = GetOutputSurface();
-		RenderDirectlyToOutputSurface = true;
-	} else {
-		PinnedPalSurface = SDLWrap::CreateRGBSurfaceWithFormat(
-		    /*flags=*/0,
-		    /*width=*/gnScreenWidth,
-		    /*height=*/gnScreenHeight,
-		    /*depth=*/8,
-		    SDL_PIXELFORMAT_INDEX8);
-		PalSurface = PinnedPalSurface.get();
-	}
-
-#ifndef USE_SDL1
-	// In SDL2, `PalSurface` points to the global `palette`.
-	if (SDL_SetSurfacePalette(PalSurface, Palette.get()) < 0)
-		ErrSdl();
-#else
-	// In SDL1, `PalSurface` owns its palette and we must update it every
-	// time the global `palette` is changed. No need to do anything here as
-	// the global `palette` doesn't have any colors set yet.
-#endif
-}
-
 void LockBufPriv()
 {
 	MemCrit.lock();
@@ -195,33 +168,31 @@ void dx_cleanup()
 	SDL_DestroyWindow(ghMainWnd);
 }
 
-void dx_reinit()
+void CreateBackBuffer()
 {
-#ifdef USE_SDL1
-	Uint32 flags = ghMainWnd->flags ^ SDL_FULLSCREEN;
-	if (!IsFullScreen()) {
-		flags |= SDL_FULLSCREEN;
+	if (CanRenderDirectlyToOutputSurface()) {
+		Log("{}", "Will render directly to the SDL output surface");
+		PalSurface = GetOutputSurface();
+		RenderDirectlyToOutputSurface = true;
+	} else {
+		PinnedPalSurface = SDLWrap::CreateRGBSurfaceWithFormat(
+		    /*flags=*/0,
+		    /*width=*/gnScreenWidth,
+		    /*height=*/gnScreenHeight,
+		    /*depth=*/8,
+		    SDL_PIXELFORMAT_INDEX8);
+		PalSurface = PinnedPalSurface.get();
 	}
-	ghMainWnd = SDL_SetVideoMode(0, 0, 0, flags);
-	if (ghMainWnd == NULL) {
-		ErrSdl();
-	}
-#else
-	Uint32 flags = 0;
-	if (!IsFullScreen()) {
-		flags = renderer != nullptr ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
-	}
-	if (SDL_SetWindowFullscreen(ghMainWnd, flags) != 0) {
-		ErrSdl();
-	}
-#endif
-	force_redraw = 255;
-}
 
-void dx_resize()
-{
-	CreateBackBuffer();
-	force_redraw = 255;
+#ifndef USE_SDL1
+	// In SDL2, `PalSurface` points to the global `palette`.
+	if (SDL_SetSurfacePalette(PalSurface, Palette.get()) < 0)
+		ErrSdl();
+#else
+	// In SDL1, `PalSurface` owns its palette and we must update it every
+	// time the global `palette` is changed. No need to do anything here as
+	// the global `palette` doesn't have any colors set yet.
+#endif
 }
 
 void InitPalette()

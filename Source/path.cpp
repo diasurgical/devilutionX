@@ -545,7 +545,7 @@ std::optional<Point> FindClosestValidPosition(const std::function<bool(Point)> &
 	return {};
 }
 
-#ifdef RUN_TESTS
+#ifdef BUILD_TESTING
 int TestPathGetHeuristicCost(Point startPosition, Point destinationPosition)
 {
 	return GetHeuristicCost(startPosition, destinationPosition);

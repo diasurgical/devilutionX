@@ -83,7 +83,7 @@ void FocusOnCharInfo()
 	SetCursorPos(ChrBtnsRect[stat].Center());
 }
 
-static int TranslateSdlKey(SDL_Keysym key)
+int TranslateSdlKey(SDL_Keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

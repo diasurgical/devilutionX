@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <unordered_map>
 
 #include <SDL_version.h>
 
@@ -42,6 +43,7 @@ enum class ScalingQuality {
 enum class OptionEntryType {
 	Boolean,
 	List,
+	Key,
 };
 
 enum class OptionEntryFlags {
@@ -75,7 +77,7 @@ public:
 	    , description(description)
 	{
 	}
-	[[nodiscard]] string_view GetName() const;
+	[[nodiscard]] virtual string_view GetName() const;
 	[[nodiscard]] string_view GetDescription() const;
 	[[nodiscard]] virtual OptionEntryType GetType() const = 0;
 	[[nodiscard]] OptionEntryFlags GetFlags() const;
@@ -390,19 +392,17 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Enable vsync on the output. */
 	OptionEntryBoolean vSync;
 #endif
-	/** @brief Use blended transparency rather than stippled. */
-	OptionEntryBoolean blendedTransparancy;
 	/** @brief Gamma correction level. */
 	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
 	OptionEntryBoolean colorCycling;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
-	bool bHardwareCursor;
+	OptionEntryBoolean hardwareCursor;
 	/** @brief Use a hardware cursor for items. */
-	bool bHardwareCursorForItems;
+	OptionEntryBoolean hardwareCursorForItems;
 	/** @brief Maximum width / height for the hardware cursor. Larger cursors fall back to software. */
-	int nHardwareCursorMaxSize;
+	OptionEntryInt<int> hardwareCursorMaxSize;
 #endif
 	/** @brief Enable FPS Limiter. */
 	OptionEntryBoolean limitFPS;
@@ -521,6 +521,56 @@ struct LanguageOptions : OptionCategoryBase {
 	OptionEntryLanguageCode code;
 };
 
+/** The Keymapper maps keys to actions. */
+struct KeymapperOptions : OptionCategoryBase {
+	/**
+	 * Action represents an action that can be triggered using a keyboard
+	 * shortcut.
+	 */
+	class Action final : public OptionEntryBase {
+	public:
+		[[nodiscard]] string_view GetName() const override;
+		[[nodiscard]] OptionEntryType GetType() const override
+		{
+			return OptionEntryType::Key;
+		}
+
+		void LoadFromIni(string_view category) override;
+		void SaveToIni(string_view category) const override;
+
+		[[nodiscard]] string_view GetValueDescription() const override;
+
+		bool SetValue(int value);
+
+	private:
+		Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index);
+		int defaultKey;
+		std::function<void()> action;
+		std::function<bool()> enable;
+		int boundKey = DVL_VK_INVALID;
+		int dynamicIndex;
+		std::string dynamicKey;
+		mutable std::string dynamicName;
+
+		friend struct KeymapperOptions;
+	};
+
+	KeymapperOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
+	void AddAction(
+	    string_view key, string_view name, string_view description, int defaultKey,
+	    std::function<void()> action, std::function<bool()> enable = [] { return true; }, int index = -1);
+	void KeyPressed(int key) const;
+	string_view KeyNameForAction(string_view actionName) const;
+
+private:
+	std::vector<std::unique_ptr<Action>> actions;
+	std::unordered_map<int, std::reference_wrapper<Action>> keyIDToAction;
+	std::unordered_map<int, std::string> keyIDToKeyName;
+	std::unordered_map<std::string, int> keyNameToKeyID;
+};
+
 struct Options {
 	StartUpOptions StartUp;
 	DiabloOptions Diablo;
@@ -532,6 +582,7 @@ struct Options {
 	NetworkOptions Network;
 	ChatOptions Chat;
 	LanguageOptions Language;
+	KeymapperOptions Keymapper;
 
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
@@ -546,14 +597,12 @@ struct Options {
 			&Network,
 			&Chat,
 			&Language,
+			&Keymapper,
 		};
 	}
 };
 
-bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
-void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
-
-extern Options sgOptions;
+extern DVL_API_FOR_TEST Options sgOptions;
 extern bool sbWasOptionsLoaded;
 
 /**

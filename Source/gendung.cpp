@@ -3,6 +3,8 @@
  *
  * Implementation of general dungeon generation code.
  */
+#include <stack>
+
 #include "gendung.h"
 
 #include "engine/load_file.hpp"
@@ -265,52 +267,109 @@ void CreateThemeRoom(int themeIndex)
 	}
 }
 
-void FindTransparencyValues(int i, int j, int x, int y, int d, uint8_t floorID)
+bool IsFloor(Point p, uint8_t floorID)
 {
-	if (dTransVal[x][y] != 0 || dungeon[i][j] != floorID) {
-		if (d == 1) {
-			dTransVal[x][y] = TransVal;
-			dTransVal[x][y + 1] = TransVal;
-		}
-		if (d == 2) {
-			dTransVal[x + 1][y] = TransVal;
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 3) {
-			dTransVal[x][y] = TransVal;
-			dTransVal[x + 1][y] = TransVal;
-		}
-		if (d == 4) {
-			dTransVal[x][y + 1] = TransVal;
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 5) {
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 6) {
-			dTransVal[x][y + 1] = TransVal;
-		}
-		if (d == 7) {
-			dTransVal[x + 1][y] = TransVal;
-		}
-		if (d == 8) {
-			dTransVal[x][y] = TransVal;
-		}
-		return;
+	int i = (p.x - 16) / 2;
+	int j = (p.y - 16) / 2;
+	if (i < 0 || i >= DMAXX)
+		return false;
+	if (j < 0 || j >= DMAXY)
+		return false;
+	return dungeon[i][j] == floorID;
+}
+
+void FillTransparencyValues(Point floor, uint8_t floorID)
+{
+	Direction allDirections[] = {
+		Direction::North,
+		Direction::South,
+		Direction::East,
+		Direction::West,
+		Direction::NorthEast,
+		Direction::NorthWest,
+		Direction::SouthEast,
+		Direction::SouthWest,
+	};
+
+	// We only fill in the surrounding tiles if they are not floor tiles
+	// because they would otherwise not be visited by the span filling algorithm
+	for (Direction dir : allDirections) {
+		Point adjacent = floor + dir;
+		if (!IsFloor(adjacent, floorID))
+			dTransVal[adjacent.x][adjacent.y] = TransVal;
 	}
 
-	dTransVal[x][y] = TransVal;
-	dTransVal[x + 1][y] = TransVal;
-	dTransVal[x][y + 1] = TransVal;
-	dTransVal[x + 1][y + 1] = TransVal;
-	FindTransparencyValues(i + 1, j, x + 2, y, 1, floorID);
-	FindTransparencyValues(i - 1, j, x - 2, y, 2, floorID);
-	FindTransparencyValues(i, j + 1, x, y + 2, 3, floorID);
-	FindTransparencyValues(i, j - 1, x, y - 2, 4, floorID);
-	FindTransparencyValues(i - 1, j - 1, x - 2, y - 2, 5, floorID);
-	FindTransparencyValues(i + 1, j - 1, x + 2, y - 2, 6, floorID);
-	FindTransparencyValues(i - 1, j + 1, x - 2, y + 2, 7, floorID);
-	FindTransparencyValues(i + 1, j + 1, x + 2, y + 2, 8, floorID);
+	dTransVal[floor.x][floor.y] = TransVal;
+}
+
+void FindTransparencyValues(Point floor, uint8_t floorID)
+{
+	// Algorithm adapted from https://en.wikipedia.org/wiki/Flood_fill#Span_Filling
+	// Modified to include diagonally adjacent tiles that would otherwise not be visited
+	// Also, Wikipedia's selection for the initial seed is incorrect
+	using Seed = std::tuple<int, int, int, int>;
+	std::stack<Seed> seedStack;
+	seedStack.push(std::make_tuple(floor.x, floor.x + 1, floor.y, 1));
+
+	const auto isInside = [&](int x, int y) {
+		if (dTransVal[x][y] != 0)
+			return false;
+		return IsFloor({ x, y }, floorID);
+	};
+
+	const auto set = [&](int x, int y) {
+		FillTransparencyValues({ x, y }, floorID);
+	};
+
+	const Displacement left = { -1, 0 };
+	const Displacement right = { 1, 0 };
+	const auto checkDiagonals = [&](Point p, Displacement direction) {
+		Point up = p + Displacement { 0, -1 };
+		Point upOver = up + direction;
+		if (!isInside(up.x, up.y) && isInside(upOver.x, upOver.y))
+			seedStack.push(std::make_tuple(upOver.x, upOver.x + 1, upOver.y, -1));
+
+		Point down = p + Displacement { 0, 1 };
+		Point downOver = down + direction;
+		if (!isInside(down.x, down.y) && isInside(downOver.x, downOver.y))
+			seedStack.push(std::make_tuple(downOver.x, downOver.x + 1, downOver.y, 1));
+	};
+
+	while (!seedStack.empty()) {
+		int scanStart, scanEnd, y, dy;
+		std::tie(scanStart, scanEnd, y, dy) = seedStack.top();
+		seedStack.pop();
+
+		int scanLeft = scanStart;
+		if (isInside(scanLeft, y)) {
+			while (isInside(scanLeft - 1, y)) {
+				set(scanLeft - 1, y);
+				scanLeft--;
+			}
+			checkDiagonals({ scanLeft, y }, left);
+		}
+		if (scanLeft < scanStart)
+			seedStack.push(std::make_tuple(scanLeft, scanStart - 1, y - dy, -dy));
+
+		int scanRight = scanStart;
+		while (scanRight < scanEnd) {
+			while (isInside(scanRight, y)) {
+				set(scanRight, y);
+				scanRight++;
+			}
+			seedStack.push(std::make_tuple(scanLeft, scanRight - 1, y + dy, dy));
+			if (scanRight - 1 > scanEnd)
+				seedStack.push(std::make_tuple(scanEnd + 1, scanRight - 1, y - dy, -dy));
+			if (scanLeft < scanRight)
+				checkDiagonals({ scanRight - 1, y }, right);
+
+			while (scanRight < scanEnd && !isInside(scanRight, y))
+				scanRight++;
+			scanLeft = scanRight;
+			if (scanLeft < scanEnd)
+				checkDiagonals({ scanLeft, y }, left);
+		}
+	}
 }
 
 } // namespace
@@ -594,7 +653,7 @@ void FloodTransparencyValues(uint8_t floorID)
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == floorID && dTransVal[xx][yy] == 0) {
-				FindTransparencyValues(i, j, xx, yy, 0, floorID);
+				FindTransparencyValues({ xx, yy }, floorID);
 				TransVal++;
 			}
 			xx += 2;

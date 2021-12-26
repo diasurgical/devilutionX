@@ -14,7 +14,6 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
 #include "automap.h"
-#include "controls/keymapper.hpp"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
@@ -93,8 +92,6 @@ const Rectangle &GetRightPanel()
 {
 	return RightPanel;
 }
-
-extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {

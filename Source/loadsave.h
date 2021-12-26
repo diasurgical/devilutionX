@@ -6,11 +6,12 @@
 #pragma once
 
 #include "player.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
-extern bool gbIsHellfireSaveGame;
-extern uint8_t giNumberOfLevels;
+extern DVL_API_FOR_TEST bool gbIsHellfireSaveGame;
+extern DVL_API_FOR_TEST uint8_t giNumberOfLevels;
 
 void RemoveInvalidItem(Item &pItem);
 _item_indexes RemapItemIdxFromDiablo(_item_indexes i);

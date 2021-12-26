@@ -38,17 +38,18 @@ option(TSAN "Enable thread sanitizer (not compatible with ASAN=ON)" OFF)
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
 option(GPERF "Build with GPerfTools profiler" OFF)
 cmake_dependent_option(GPERF_HEAP_FIRST_GAME_ITERATION "Save heap profile of the first game iteration" OFF "GPERF" OFF)
+option(BUILD_TESTING "Build tests." ON)
 option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
-option(PIE "Generate position-independent code" OFF)
+cmake_dependent_option(PIE "Generate position-independent code" OFF "BUILD_TESTING" ON)
 option(MACOSX_STANDALONE_APP_BUNDLE "Generate a portable app bundle to use on other devices (requires sudo)" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
+RELEASE_OPTION(DEVILUTIONX_STATIC_CXX_STDLIB "Link C++ standard library statically (if available)")
 cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NONET" ON)
 cmake_dependent_option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF "NOT NONET" ON)
 cmake_dependent_option(PACKET_ENCRYPTION "Encrypt network packets" ON "NOT NONET" OFF)
 option(NOSOUND "Disable sound support" OFF)
-option(RUN_TESTS "Build and run tests" OFF)
-option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with RUN_TESTS)" OFF)
+option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with BUILD_TESTING)" OFF)
 option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support" OFF)
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
@@ -57,10 +58,6 @@ option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken
 mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
-
-if(PIE)
-  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-endif()
 
 if(TSAN)
   set(ASAN OFF)
@@ -97,7 +94,7 @@ include(VcPkgManifestFeatures)
 if(NOT VERSION_NUM)
   include(functions/git)
   get_git_tag(VERSION_NUM)
-  if (NOT "${VERSION_NUM}" STREQUAL "")
+  if(NOT "${VERSION_NUM}" STREQUAL "")
     string(REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )
   endif()
   if(NOT VERSION_SUFFIX)
@@ -117,6 +114,12 @@ else()
 endif()
 set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_SUFFIX}>")
 
+# This built-in CMake module adds a BUILD_TESTING option (ON by default).
+# Must be included in the top-level `CMakeLists.txt` after calling `project`.
+# Because we must include `VcPkgManifestFeatures` before the `project` call,
+# we add a BUILD_TESTING option ourselves above as well.
+include(CTest)
+
 # Platform definitions can override options and we want `cmake_dependent_option` to see the effects,
 # so ideally we would include Platforms.cmake before definining the options.
 #
@@ -125,7 +128,23 @@ set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_
 # to be after the options.
 include(Platforms)
 
+# Note: `CMAKE_CROSSCOMPILING` is only available after the `project` call.
+if(CMAKE_CROSSCOMPILING)
+  set(BUILD_TESTING OFF)
+endif()
+
 # Recalculate the dependent options after including the Platforms:
+if(BUILD_TESTING)
+  # For tests, we build a libdevilutionx.so shared library.
+  # When this libdevilutionx.so is linked against certain static libraries,
+  # they must be compiled with `-fPIC`.
+  set(PIE ON)
+endif()
+
+if(PIE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+endif()
+
 if(NONET)
   set(DISABLE_TCP ON)
   set(DISABLE_ZERO_TIER ON)
@@ -151,6 +170,8 @@ if(NOT DISABLE_LTO)
 endif()
 
 if(GPERF)
+  set(DEVILUTIONX_STATIC_CXX_STDLIB OFF)
+
   if(GPERF_HEAP_FIRST_GAME_ITERATION)
     set(GPERF_HEAP_MAIN ON)
   endif()
@@ -171,279 +192,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-if(NOT NINTENDO_3DS)
-  find_package(Threads REQUIRED)
-endif()
+find_package(Threads REQUIRED)
 
 # Dependencies must be included after Platforms.
 include(Dependencies)
 
-set(libdevilutionx_SRCS
-  Source/appfat.cpp
-  Source/automap.cpp
-  Source/capture.cpp
-  Source/codec.cpp
-  Source/control.cpp
-  Source/cursor.cpp
-  Source/dead.cpp
-  Source/debug.cpp
-  Source/diablo.cpp
-  Source/doom.cpp
-  Source/drlg_l1.cpp
-  Source/drlg_l2.cpp
-  Source/drlg_l3.cpp
-  Source/drlg_l4.cpp
-  Source/dthread.cpp
-  Source/dx.cpp
-  Source/encrypt.cpp
-  Source/engine.cpp
-  Source/error.cpp
-  Source/engine/assets.cpp
-  Source/gamemenu.cpp
-  Source/gendung.cpp
-  Source/gmenu.cpp
-  Source/help.cpp
-  Source/hwcursor.cpp
-  Source/init.cpp
-  Source/interfac.cpp
-  Source/inv.cpp
-  Source/itemdat.cpp
-  Source/items.cpp
-  Source/lighting.cpp
-  Source/loadsave.cpp
-  Source/menu.cpp
-  Source/minitext.cpp
-  Source/misdat.cpp
-  Source/missiles.cpp
-  Source/monstdat.cpp
-  Source/monster.cpp
-  Source/movie.cpp
-  Source/msg.cpp
-  Source/multi.cpp
-  Source/nthread.cpp
-  Source/objdat.cpp
-  Source/objects.cpp
-  Source/options.cpp
-  Source/pack.cpp
-  Source/palette.cpp
-  Source/path.cpp
-  Source/pfile.cpp
-  Source/player.cpp
-  Source/plrmsg.cpp
-  Source/portal.cpp
-  Source/quests.cpp
-  Source/restrict.cpp
-  Source/scrollrt.cpp
-  Source/setmaps.cpp
-  Source/sha.cpp
-  Source/spelldat.cpp
-  Source/spells.cpp
-  Source/stash.cpp
-  Source/stores.cpp
-  Source/sync.cpp
-  Source/textdat.cpp
-  Source/themes.cpp
-  Source/tmsg.cpp
-  Source/town.cpp
-  Source/towners.cpp
-  Source/track.cpp
-  Source/trigs.cpp
-  Source/controls/axis_direction.cpp
-  Source/controls/controller.cpp
-  Source/controls/controller_motion.cpp
-  Source/controls/devices/game_controller.cpp
-  Source/controls/devices/joystick.cpp
-  Source/controls/devices/kbcontroller.cpp
-  Source/controls/game_controls.cpp
-  Source/controls/menu_controls.cpp
-  Source/controls/modifier_hints.cpp
-  Source/controls/plrctrls.cpp
-  Source/controls/keymapper.cpp
-  Source/engine/animationinfo.cpp
-  Source/engine/demomode.cpp
-  Source/engine/load_cel.cpp
-  Source/engine/random.cpp
-  Source/engine/render/automap_render.cpp
-  Source/engine/render/cel_render.cpp
-  Source/engine/render/cl2_render.cpp
-  Source/engine/render/dun_render.cpp
-  Source/engine/render/text_render.cpp
-  Source/engine/surface.cpp
-  Source/mpq/mpq_reader.cpp
-  Source/mpq/mpq_sdl_rwops.cpp
-  Source/mpq/mpq_writer.cpp
-  Source/qol/autopickup.cpp
-  Source/qol/common.cpp
-  Source/qol/monhealthbar.cpp
-  Source/qol/xpbar.cpp
-  Source/qol/itemlabels.cpp
-  Source/utils/console.cpp
-  Source/utils/display.cpp
-  Source/utils/file_util.cpp
-  Source/utils/language.cpp
-  Source/utils/logged_fstream.cpp
-  Source/utils/paths.cpp
-  Source/utils/sdl_bilinear_scale.cpp
-  Source/utils/sdl_thread.cpp
-  Source/utils/utf8.cpp
-  Source/DiabloUI/art.cpp
-  Source/DiabloUI/art_draw.cpp
-  Source/DiabloUI/button.cpp
-  Source/DiabloUI/credits.cpp
-  Source/DiabloUI/credits_lines.cpp
-  Source/DiabloUI/diabloui.cpp
-  Source/DiabloUI/dialogs.cpp
-  Source/DiabloUI/errorart.cpp
-  Source/DiabloUI/mainmenu.cpp
-  Source/DiabloUI/progress.cpp
-  Source/DiabloUI/scrollbar.cpp
-  Source/DiabloUI/settingsmenu.cpp
-  Source/DiabloUI/selconn.cpp
-  Source/DiabloUI/selgame.cpp
-  Source/DiabloUI/selhero.cpp
-  Source/DiabloUI/selok.cpp
-  Source/DiabloUI/selstart.cpp
-  Source/DiabloUI/selyesno.cpp
-  Source/DiabloUI/support_lines.cpp
-  Source/DiabloUI/title.cpp
-  Source/panels/charpanel.cpp
-  Source/panels/mainpanel.cpp
-  Source/panels/spell_book.cpp
-  Source/panels/spell_icons.cpp
-  Source/panels/spell_list.cpp
-  Source/dvlnet/abstract_net.cpp
-  Source/dvlnet/base.cpp
-  Source/dvlnet/cdwrap.cpp
-  Source/dvlnet/frame_queue.cpp
-  Source/dvlnet/loopback.cpp
-  Source/dvlnet/packet.cpp
-  Source/storm/storm_net.cpp
-  Source/storm/storm_svid.cpp
-  Source/miniwin/misc_msg.cpp)
-
-if(IOS)
-  list(APPEND libdevilutionx_SRCS Source/platform/ios/ios_paths.m)
-endif()
-
-if(USE_SDL1)
-  list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
-endif()
-
-if(NOSOUND)
-  list(APPEND libdevilutionx_SRCS
-    Source/effects_stubs.cpp
-    Source/sound_stubs.cpp)
-else()
-  list(APPEND libdevilutionx_SRCS
-    Source/effects.cpp
-    Source/sound.cpp
-    Source/utils/push_aulib_decoder.cpp
-    Source/utils/soundsample.cpp)
-endif()
-
-if(NOT NONET)
-  if(NOT DISABLE_TCP)
-    list(APPEND libdevilutionx_SRCS
-      Source/dvlnet/tcp_client.cpp
-      Source/dvlnet/tcp_server.cpp)
-  endif()
-  if(NOT DISABLE_ZERO_TIER)
-    list(APPEND libdevilutionx_SRCS
-      Source/dvlnet/protocol_zt.cpp
-      Source/dvlnet/zerotier_native.cpp
-      Source/dvlnet/zerotier_lwip.cpp)
-  endif()
-endif()
-
-if (VIRTUAL_GAMEPAD)
-  list(APPEND libdevilutionx_SRCS
-    Source/controls/touch/event_handlers.cpp
-    Source/controls/touch/gamepad.cpp
-    Source/controls/touch/renderers.cpp)
-endif()
+add_subdirectory(Source)
 
 set(BIN_TARGET devilutionx)
-
-if(NINTENDO_SWITCH)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/switch/network.cpp
-    Source/platform/switch/keyboard.cpp
-    Source/platform/switch/docking.cpp
-    Source/platform/switch/asio/pause.c
-    Source/platform/switch/asio/net/if.c
-    Source/platform/switch/asio/sys/signal.c)
-
-  if(PACKET_ENCRYPTION)
-    list(APPEND libdevilutionx_SRCS
-      Source/platform/switch/random.cpp)
-  endif()
-endif()
-
-if(VITA)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/vita/network.cpp
-    Source/platform/vita/keyboard.cpp
-    Source/platform/vita/touch.cpp)
-
-  if(PACKET_ENCRYPTION)
-    list(APPEND libdevilutionx_SRCS
-      Source/platform/vita/random.cpp)
-  endif()
-endif()
-
 if(NINTENDO_3DS)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/ctr/system.cpp
-    Source/platform/ctr/keyboard.cpp
-    Source/platform/ctr/display.cpp
-    Source/platform/ctr/messagebox.cpp
-    Source/platform/ctr/sockets.cpp
-    Source/platform/ctr/locale.cpp
-    Source/platform/ctr/asio/net/if.c
-    Source/platform/ctr/asio/sys/socket.c
-    Source/platform/ctr/asio/sys/uio.c)
   set(BIN_TARGET ${BIN_TARGET}.elf)
-
-  if(PACKET_ENCRYPTION)
-    list(APPEND libdevilutionx_SRCS
-      Source/platform/ctr/random.cpp)
-  endif()
 endif()
 
-if(DISCORD_INTEGRATION)
-  list(APPEND libdevilutionx_SRCS
-    Source/discord/discord.cpp
-  )
-endif()
-
-if(RUN_TESTS)
-  set(devilutionxtest_SRCS
-    test/appfat_test.cpp
-    test/automap_test.cpp
-    test/control_test.cpp
-    test/cursor_test.cpp
-    test/codec_test.cpp
-    test/dead_test.cpp
-    test/diablo_test.cpp
-    test/drlg_l1_test.cpp
-    test/effects_test.cpp
-    test/file_util_test.cpp
-    test/inv_test.cpp
-    test/lighting_test.cpp
-    test/main.cpp
-    test/missiles_test.cpp
-    test/pack_test.cpp
-    test/path_test.cpp
-    test/player_test.cpp
-    test/quests_test.cpp
-    test/random_test.cpp
-    test/scrollrt_test.cpp
-    test/stores_test.cpp
-    test/writehero_test.cpp
-    test/animationinfo_test.cpp)
-endif()
-
-add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 if(ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
 else()
@@ -458,273 +218,19 @@ else()
 endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
-# Use file GENERATE instead of configure_file because configure_file
-# does not support generator expressions.
-get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-if(is_multi_config)
-  set(CONFIG_PATH $<CONFIG>/config.h)
-  target_include_directories(libdevilutionx PUBLIC ${CMAKE_BINARY_DIR}/$<CONFIG>)
-else()
-  set(CONFIG_PATH config.h)
-endif()
-file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
-"#pragma once
-#define PROJECT_NAME \"${PROJECT_NAME}\"
-#define PROJECT_VERSION \"${PROJECT_VERSION_WITH_SUFFIX}\"
-#define PROJECT_VERSION_MAJOR ${PROJECT_VERSION_MAJOR}
-#define PROJECT_VERSION_MINOR ${PROJECT_VERSION_MINOR}
-#define PROJECT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
-")
-
-if(RUN_TESTS)
-  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
-  include(CTest)
-  include(GoogleTest)
-  find_package(GTest REQUIRED)
-  add_definitions(-DRUN_TESTS)
-  target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
-  target_link_libraries(devilutionx-tests PRIVATE libdevilutionx)
-  target_link_libraries(devilutionx-tests PRIVATE ${GTEST_LIBRARIES})
-  target_include_directories(devilutionx-tests PRIVATE 3rdParty/PicoSHA2)
-  if(ENABLE_CODECOVERAGE)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-      message(WARNING "Codecoverage not supported with MSVC")
-    else()
-      target_compile_options(devilutionx-tests PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(libdevilutionx PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(${BIN_TARGET} PRIVATE -fprofile-arcs -ftest-coverage)
-      target_link_options(devilutionx-tests PRIVATE -fprofile-arcs)
-      target_link_options(libdevilutionx PRIVATE -fprofile-arcs)
-      target_link_options(${BIN_TARGET} PRIVATE -fprofile-arcs)
-    endif()
-  endif()
-  gtest_add_tests(devilutionx-tests "" AUTO)
-endif()
-
-if(DISCORD_INTEGRATION)
-  target_compile_definitions(libdevilutionx PRIVATE DISCORD)
-  target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
-endif()
-
-if(GPERF)
-  find_package(Gperftools REQUIRED)
-endif()
-
+# Must be included after `BIN_TARGET` and `libdevilutionx` are defined.
 include(Assets)
 
-target_include_directories(libdevilutionx PUBLIC
-  Source
-  ${CMAKE_CURRENT_BINARY_DIR})
-
-if(NOT NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC
-  Threads::Threads)
+if(EMSCRIPTEN)
+  target_link_options(${BIN_TARGET} PRIVATE --preload-file assets)
 endif()
 
-target_link_libraries(libdevilutionx PUBLIC
-  PKWare
-  libmpq
-  libsmackerdec
-  simpleini
-  hoehrmann_utf8)
-
-if(WIN32)
-  target_link_libraries(libdevilutionx PUBLIC find_steam_game)
-endif()
-
-if(NOT NONET)
-  if(NOT DISABLE_TCP)
-    target_link_libraries(libdevilutionx PUBLIC asio)
-  endif()
-  if(PACKET_ENCRYPTION)
-    target_link_libraries(libdevilutionx PUBLIC sodium)
-  endif()
-endif()
-
-target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
-
-genex_for_option(DEBUG)
-target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
-
-if(NOT NONET AND NOT DISABLE_TCP)
-  target_compile_definitions(libdevilutionx PUBLIC ASIO_STANDALONE)
-endif()
-
-# Defines without value
-foreach(
-  def_name
-  NOSOUND
-  NONET
-  PREFILL_PLAYER_NAME
-  DISABLE_TCP
-  DISABLE_ZERO_TIER
-  DISABLE_STREAMING_MUSIC
-  DISABLE_STREAMING_SOUNDS
-  GPERF
-  GPERF_HEAP_MAIN
-  GPERF_HEAP_FIRST_GAME_ITERATION
-  STREAM_ALL_AUDIO
-  PACKET_ENCRYPTION
-  VIRTUAL_GAMEPAD
-)
-if(${def_name})
-  list(APPEND def_list ${def_name})
-endif()
-endforeach(def_name)
-
-# Defines with value
-foreach(
-  def_name
-  DEFAULT_WIDTH
-  DEFAULT_HEIGHT
-  DEFAULT_AUDIO_SAMPLE_RATE
-  DEFAULT_AUDIO_CHANNELS
-  DEFAULT_AUDIO_BUFFER_SIZE
-  DEFAULT_AUDIO_RESAMPLING_QUALITY
-  MO_LANG_DIR
-  SDL1_VIDEO_MODE_BPP
-  SDL1_VIDEO_MODE_FLAGS
-  SDL1_VIDEO_MODE_SVID_FLAGS
-  SDL1_FORCE_SVID_VIDEO_MODE
-  SDL1_FORCE_DIRECT_RENDER
-  HAS_KBCTRL
-  KBCTRL_BUTTON_DPAD_LEFT
-  KBCTRL_BUTTON_DPAD_RIGHT
-  KBCTRL_BUTTON_DPAD_UP
-  KBCTRL_BUTTON_DPAD_DOWN
-  KBCTRL_BUTTON_B
-  KBCTRL_BUTTON_A
-  KBCTRL_BUTTON_Y
-  KBCTRL_BUTTON_X
-  KBCTRL_BUTTON_LEFTSTICK
-  KBCTRL_BUTTON_RIGHTSTICK
-  KBCTRL_BUTTON_RIGHTSHOULDER
-  KBCTRL_BUTTON_LEFTSHOULDER
-  KBCTRL_BUTTON_TRIGGERLEFT
-  KBCTRL_BUTTON_TRIGGERRIGHT
-  KBCTRL_BUTTON_START
-  KBCTRL_BUTTON_BACK
-  KBCTRL_IGNORE_1
-  JOY_AXIS_LEFTX
-  JOY_AXIS_LEFTY
-  JOY_AXIS_RIGHTX
-  JOY_AXIS_RIGHTY
-  JOY_HAT_DPAD_UP_HAT
-  JOY_HAT_DPAD_UP
-  JOY_HAT_DPAD_DOWN_HAT
-  JOY_HAT_DPAD_DOWN
-  JOY_HAT_DPAD_LEFT_HAT
-  JOY_HAT_DPAD_LEFT
-  JOY_HAT_DPAD_RIGHT_HAT
-  JOY_HAT_DPAD_RIGHT
-  JOY_BUTTON_DPAD_LEFT
-  JOY_BUTTON_DPAD_RIGHT
-  JOY_BUTTON_DPAD_UP
-  JOY_BUTTON_DPAD_DOWN
-  JOY_BUTTON_B
-  JOY_BUTTON_A
-  JOY_BUTTON_Y
-  JOY_BUTTON_X
-  JOY_BUTTON_LEFTSTICK
-  JOY_BUTTON_RIGHTSTICK
-  JOY_BUTTON_RIGHTSHOULDER
-  JOY_BUTTON_LEFTSHOULDER
-  JOY_BUTTON_TRIGGERLEFT
-  JOY_BUTTON_TRIGGERRIGHT
-  JOY_BUTTON_START
-  JOY_BUTTON_BACK
-  REMAP_KEYBOARD_KEYS
-)
-  if(DEFINED ${def_name})
-    list(APPEND def_list ${def_name}=${${def_name}})
-  endif()
-endforeach(def_name)
-
-genex_for_option(UBSAN)
-target_compile_options(libdevilutionx PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
-target_link_libraries(libdevilutionx PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
-
-if(TSAN)
-  target_compile_options(libdevilutionx PUBLIC -fsanitize=thread)
-  target_link_libraries(libdevilutionx PUBLIC -fsanitize=thread)
-else()
-  genex_for_option(ASAN)
-  target_compile_options(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-  target_link_libraries(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-endif()
-
-if(USE_SDL1)
-  target_link_libraries(libdevilutionx PUBLIC
-    ${SDL_LIBRARY}
-    SDL_image)
-  target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
-else()
-  target_link_libraries(libdevilutionx PUBLIC
-    ${SDL2_MAIN}
-    SDL2::SDL2
-    SDL2::SDL2_image)
+if(NOT USE_SDL1)
   target_link_libraries(${BIN_TARGET} PUBLIC ${SDL2_MAIN})
 endif()
 
-if(NOT NOSOUND)
-  target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
-endif()
-
-if(NOT NONET AND NOT DISABLE_ZERO_TIER)
-  if(NOT ANDROID)
-    target_link_libraries(libdevilutionx PUBLIC zt-static)
-  else()
-    target_link_libraries(libdevilutionx PUBLIC zt-shared)
-  endif()
-endif()
-
-if(AMIGA)
-  target_link_libraries(libdevilutionx PUBLIC
-    ${ZLIB_LIBRARY})
-  if(NOT WARPOS)
-    target_link_libraries(libdevilutionx PUBLIC -ldebug)
-  endif()
-endif()
-
-if (VITA)
-  target_link_libraries(libdevilutionx PUBLIC
-        ScePower_stub
-        SceAppUtil_stub
-        SceNet_stub
-        SceNetCtl_stub
-  )
-  target_compile_definitions(libdevilutionx PUBLIC VITA)
-endif()
-
-if(NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
-endif()
-
-target_compile_definitions(libdevilutionx PUBLIC ${def_list})
-
-if (GPERF)
-  target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
-  target_link_libraries(libdevilutionx PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
-endif()
-
-if(WIN32)
-  target_link_libraries(libdevilutionx PUBLIC shlwapi wsock32 ws2_32 wininet)
-
-  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(libdevilutionx PUBLIC $<$<CONFIG:Debug>:-gstabs>)
-  endif()
-endif()
-
-if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
-  # Enable POSIX extensions such as `readlink` and `ftruncate`.
-  add_definitions(-D_POSIX_C_SOURCE=200809L)
-endif()
-
-if(HAIKU)
-  target_link_libraries(libdevilutionx PUBLIC network)
+if(BUILD_TESTING)
+  add_subdirectory(test)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -735,23 +241,9 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
       COMPILE_DEFINITIONS __FILE__="${SOURCE_FILE}"
     )
   endforeach(SOURCE_FILE)
+
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
-
-  # Note: For Valgrind support.
-  genex_for_option(DEBUG)
-  target_compile_options(libdevilutionx PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
-
-  # Warnings for devilutionX
-  target_compile_options(libdevilutionx PUBLIC -Wall -Wextra -Wno-unused-parameter)
-
-  # For ARM and other default unsigned char platforms
-  target_compile_options(libdevilutionx PUBLIC -fsigned-char)
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_compile_options(libdevilutionx PUBLIC "/W3" "/Zc:__cplusplus" "/utf-8")
-  target_compile_definitions(libdevilutionx PUBLIC _CRT_SECURE_NO_WARNINGS)
 endif()
 
 if(APPLE)

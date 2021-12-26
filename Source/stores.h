@@ -9,6 +9,7 @@
 #include "control.h"
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
+#include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -77,11 +78,11 @@ extern std::optional<CelSprite> pSTextSlidCels;
 extern talk_id stextflag;
 
 /** Current index into storehidx/storehold */
-extern int storenumh;
+extern DVL_API_FOR_TEST int storenumh;
 /** Map of inventory items being presented in the store */
 extern char storehidx[48];
 /** Copies of the players items as presented in the store */
-extern Item storehold[48];
+extern DVL_API_FOR_TEST Item storehold[48];
 
 /** Temporary item used to generate gold piles by various function */
 extern Item golditem;

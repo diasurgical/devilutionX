@@ -1,5 +1,5 @@
 /**
- * @file animationinfo.h
+ * @file demomode.h
  *
  * Contains most of the the demomode specific logic
  */

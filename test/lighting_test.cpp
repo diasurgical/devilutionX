@@ -17,8 +17,7 @@ TEST(Lighting, CrawlTables)
 		for (unsigned i = (uint8_t)CrawlTable[cr - 1]; i > 0; i--, cr += 2) {
 			int dx = x + CrawlTable[cr];
 			int dy = y + CrawlTable[cr + 1];
-			sprintf(tempstr, "location %i:%i added twice.", dx - 20, dy - 20);
-			EXPECT_EQ(added[dx][dy], false) << tempstr;
+			EXPECT_EQ(added[dx][dy], false) << "location " << i << ":" << j << " added twice";
 			added[dx][dy] = true;
 		}
 	}
@@ -29,8 +28,7 @@ TEST(Lighting, CrawlTables)
 				continue;
 			if ((i == -18 && j == -18) || (i == -18 && j == 18) || (i == 18 && j == -18) || (i == 18 && j == 18))
 				continue; // Limit of the crawl table rage
-			sprintf(tempstr, "while checking location %i:%i.", i, j);
-			EXPECT_EQ(false, true) << tempstr;
+			EXPECT_EQ(false, true) << "while checking location " << i << ":" << j;
 		}
 	}
 }
