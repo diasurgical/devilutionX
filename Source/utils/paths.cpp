@@ -20,7 +20,6 @@ namespace paths {
 
 namespace {
 
-std::optional<std::string> appPath;
 std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
@@ -51,18 +50,10 @@ std::string FromSDL(char *s)
 
 } // namespace
 
-const std::string &AppPath()
-{
-	if (!appPath) {
-		appPath = FromSDL(SDL_GetBasePath());
-	}
-	return *appPath;
-}
-
 const std::string &BasePath()
 {
 	if (!basePath) {
-		basePath = AppPath();
+		basePath = FromSDL(SDL_GetBasePath());
 	}
 	return *basePath;
 }
@@ -100,7 +91,11 @@ const std::string &ConfigPath()
 const std::string &AssetsPath()
 {
 	if (!assetsPath)
-		assetsPath.emplace(AppPath() + "assets/");
+#if __EMSCRIPTEN__
+		assetsPath.emplace("assets/");
+#else
+		assetsPath.emplace(FromSDL(SDL_GetBasePath()) + "assets/");
+#endif
 	return *assetsPath;
 }
 
@@ -125,6 +120,12 @@ void SetConfigPath(const std::string &path)
 {
 	configPath = path;
 	AddTrailingSlash(*configPath);
+}
+
+void SetAssetsPath(const std::string &path)
+{
+	assetsPath = path;
+	AddTrailingSlash(*assetsPath);
 }
 
 void SetMpqDir(const std::string &path)

@@ -13,7 +13,7 @@ namespace devilution {
 inline bool IsHardwareCursorEnabled()
 {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	return sgOptions.Graphics.bHardwareCursor;
+	return *sgOptions.Graphics.hardwareCursor;
 #else
 	return false;
 #endif

@@ -180,12 +180,12 @@ TEST(PathTest, FindClosest)
 
 		EXPECT_FALSE(nearPosition) << "Searching with no valid tiles should return an empty optional";
 
-		for (int x = 0; x < searchedTiles.size(); x++) {
-			for (int y = 0; y < searchedTiles[x].size(); y++) {
-				if (IsAnyOf(x, 0, 100) && IsAnyOf(y, 0, 100)) {
+		for (size_t x = 0; x < searchedTiles.size(); x++) {
+			for (size_t y = 0; y < searchedTiles[x].size(); y++) {
+				if ((x == 0 || x == 100) && (y == 0 || y == 100)) {
 					EXPECT_EQ(searchedTiles[x][y], 0) << "Extreme corners should be skipped due to the inset/rounded search space";
 				} else {
-					EXPECT_EQ(searchedTiles[x][y], 1) << "Position " << Point { x, y } << " should have been searched exactly once";
+					EXPECT_EQ(searchedTiles[x][y], 1) << "Position " << x << " " << y << " should have been searched exactly once";
 				}
 			}
 		}
@@ -202,11 +202,11 @@ TEST(PathTest, FindClosest)
 
 		EXPECT_FALSE(nearPosition) << "Still shouldn't find a valid position with no valid tiles";
 
-		for (int x = 0; x < searchedTiles.size(); x++) {
-			for (int y = 0; y < searchedTiles[x].size(); y++) {
-				if (Point { x, y } == Point { 2, 2 }) {
+		for (size_t x = 0; x < searchedTiles.size(); x++) {
+			for (size_t y = 0; y < searchedTiles[x].size(); y++) {
+				if (x == 2 && y == 2) {
 					EXPECT_EQ(searchedTiles[x][y], 0) << "The starting tile should be skipped with a min radius of 1";
-				} else if (IsAnyOf(x, 0, 4) && IsAnyOf(y, 0, 4)) {
+				} else if ((x == 0 || x == 4) && (y == 0 || y == 4)) {
 					EXPECT_EQ(searchedTiles[x][y], 0) << "Corners should be skipped";
 				} else {
 					EXPECT_EQ(searchedTiles[x][y], 1) << "All tiles in range should be searched exactly once";
@@ -226,12 +226,12 @@ TEST(PathTest, FindClosest)
 
 		EXPECT_FALSE(nearPosition) << "Searching with no valid tiles should return an empty optional";
 
-		for (int x = 0; x < searchedTiles.size(); x++) {
-			for (int y = 0; y < searchedTiles[x].size(); y++) {
-				if (Point { x, y } == Point { 1, 1 }) {
+		for (size_t x = 0; x < searchedTiles.size(); x++) {
+			for (size_t y = 0; y < searchedTiles[x].size(); y++) {
+				if (x == 1 && y == 1) {
 					EXPECT_EQ(searchedTiles[x][y], 1) << "Only the starting tile should be searched with max radius 0";
 				} else {
-					EXPECT_EQ(searchedTiles[x][y], 0) << "Position " << Point { x, y } << " should not have been searched";
+					EXPECT_EQ(searchedTiles[x][y], 0) << "Position " << x << " " << y << " should not have been searched";
 				}
 			}
 		}
@@ -249,15 +249,15 @@ TEST(PathTest, FindClosest)
 
 		EXPECT_FALSE(nearPosition) << "Searching with no valid tiles should return an empty optional";
 
-		for (int x = 0; x < searchedTiles.size(); x++) {
-			for (int y = 0; y < searchedTiles[x].size(); y++) {
-				if ((IsAnyOf(x, 1, 5) && IsAnyOf(y, 1, 5))     // inset corners
-				    || (IsAnyOf(x, 0, 6) && IsNoneOf(y, 0, 6)) // left/right sides
-				    || (IsNoneOf(x, 0, 6) && IsAnyOf(y, 0, 6)) // top/bottom sides
+		for (size_t x = 0; x < searchedTiles.size(); x++) {
+			for (size_t y = 0; y < searchedTiles[x].size(); y++) {
+				if (((x == 1 || x == 5) && (y == 1 || y == 5))  // inset corners
+				    || ((x == 0 || x == 6) && y != 0 && y != 6) // left/right sides
+				    || (x != 0 && x != 6 && (y == 0 || y == 6)) // top/bottom sides
 				) {
 					EXPECT_EQ(searchedTiles[x][y], 1) << "Searching with a fixed radius should make a square with inset corners";
 				} else {
-					EXPECT_EQ(searchedTiles[x][y], 0) << "Position " << Point { x, y } << " should not have been searched";
+					EXPECT_EQ(searchedTiles[x][y], 0) << "Position " << x << " " << y << " should not have been searched";
 				}
 			}
 		}

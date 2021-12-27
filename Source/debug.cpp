@@ -22,6 +22,7 @@
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"
+#include "plrmsg.h"
 #include "quests.h"
 #include "setmaps.h"
 #include "spells.h"
@@ -94,18 +95,19 @@ void SetSpellLevelCheat(spell_id spl, int spllvl)
 
 void PrintDebugMonster(int m)
 {
-	char dstr[MAX_SEND_STR_LEN];
-
 	auto &monster = Monsters[m];
 
-	sprintf(dstr, "Monster %i = %s", m, monster.mName);
-	NetSendCmdString(1 << MyPlayerId, dstr);
-	sprintf(dstr, "X = %i, Y = %i", monster.position.tile.x, monster.position.tile.y);
-	NetSendCmdString(1 << MyPlayerId, dstr);
-	sprintf(dstr, "Enemy = %i, HP = %i", monster._menemy, monster._mhitpoints);
-	NetSendCmdString(1 << MyPlayerId, dstr);
-	sprintf(dstr, "Mode = %i, Var1 = %i", static_cast<int>(monster._mmode), monster._mVar1);
-	NetSendCmdString(1 << MyPlayerId, dstr);
+	EventPlrMsg(fmt::format(
+	                "Monster {:i} = {:s}\nX = {:i}, Y = {:i}\nEnemy = {:i}, HP = {:i}\nMode = {:i}, Var1 = {:i}",
+	                m,
+	                monster.mName,
+	                monster.position.tile.x,
+	                monster.position.tile.y,
+	                monster._menemy,
+	                monster._mhitpoints,
+	                static_cast<int>(monster._mmode),
+	                monster._mVar1),
+	    UiFlags::ColorWhite);
 
 	bool bActive = false;
 
@@ -114,8 +116,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, monster._msquelch);
-	NetSendCmdString(1 << MyPlayerId, dstr);
+	EventPlrMsg(fmt::format("Active List = {:i}, Squelch = {:i}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
@@ -795,14 +796,11 @@ void GetDebugMonster()
 
 void NextDebugMonster()
 {
-	char dstr[MAX_SEND_STR_LEN];
-
 	DebugMonsterId++;
 	if (DebugMonsterId == MAXMONSTERS)
 		DebugMonsterId = 0;
 
-	sprintf(dstr, "Current debug monster = %i", DebugMonsterId);
-	NetSendCmdString(1 << MyPlayerId, dstr);
+	EventPlrMsg(fmt::format("Current debug monster = {:i}", DebugMonsterId), UiFlags::ColorWhite);
 }
 
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)

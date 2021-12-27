@@ -31,3 +31,14 @@
 #else
 #define DVL_ATTRIBUTE_HOT
 #endif
+
+// Any global data used by tests must be marked with `DVL_API_FOR_TEST`.
+#if defined(_MSC_VER) && defined(BUILD_TESTING)
+#ifdef _DVL_EXPORTING
+#define DVL_API_FOR_TEST __declspec(dllexport)
+#else
+#define DVL_API_FOR_TEST __declspec(dllimport)
+#endif
+#else
+#define DVL_API_FOR_TEST
+#endif

@@ -9,13 +9,6 @@
 
 using namespace devilution;
 
-// Increase stack size for recursion in FindTransparencyValues()
-// 128 KB supports around 500 levels of recursion
-// Default stack size on 3DS is only 32 KB
-extern "C" {
-u32 __stacksize__ = 128 * 1024;
-}
-
 bool shouldDisableBacklight;
 
 aptHookCookie cookie;

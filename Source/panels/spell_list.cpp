@@ -3,10 +3,10 @@
 #include <fmt/format.h>
 
 #include "control.h"
-#include "controls/keymapper.hpp"
 #include "engine.h"
 #include "engine/render/text_render.hpp"
 #include "inv_iterators.hpp"
+#include "options.h"
 #include "palette.h"
 #include "panels/spell_icons.hpp"
 #include "player.h"
@@ -16,8 +16,6 @@
 #define SPLROWICONLS 10
 
 namespace devilution {
-
-extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 namespace {
 
@@ -53,10 +51,10 @@ void PrintSBookSpellType(const Surface &out, Point position, const std::string &
 	DrawString(out, text, position, UiFlags::ColorWhite);
 }
 
-void PrintSBookHotkey(const Surface &out, Point position, const std::string &text)
+void PrintSBookHotkey(const Surface &out, Point position, const string_view text)
 {
 	// Align the hot key text with the top-right corner of the spell icon
-	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 5 - SPLICONLENGTH };
+	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.data()) + 5), 5 - SPLICONLENGTH };
 
 	// Draw a drop shadow below and to the left of the text
 	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
@@ -83,13 +81,14 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 	return false;
 }
 
-std::optional<std::string> GetHotkeyName(spell_id spellId, spell_type spellType)
+std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 {
 	auto &myPlayer = Players[MyPlayerId];
 	for (int t = 0; t < 4; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
-		return keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
+		auto quickSpellActionKey = fmt::format("QuickSpell{}", t + 1);
+		return sgOptions.Keymapper.KeyNameForAction(quickSpellActionKey);
 	}
 	return {};
 }
@@ -117,7 +116,7 @@ void DrawSpell(const Surface &out)
 	const Point position { PANEL_X + 565, PANEL_Y + 119 };
 	DrawSpellCel(out, position, nCel);
 
-	std::optional<std::string> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType);
+	std::optional<string_view> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType);
 	if (hotkeyName)
 		PrintSBookHotkey(out, position, *hotkeyName);
 }
@@ -146,7 +145,7 @@ void DrawSpellList(const Surface &out)
 		SetSpellTrans(transType);
 		DrawSpellCel(out, spellListItem.location, SpellITbl[static_cast<size_t>(spellId)]);
 
-		std::optional<std::string> hotkeyName = GetHotkeyName(spellId, spellListItem.type);
+		std::optional<string_view> hotkeyName = GetHotkeyName(spellId, spellListItem.type);
 
 		if (hotkeyName)
 			PrintSBookHotkey(out, spellListItem.location, *hotkeyName);

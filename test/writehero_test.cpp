@@ -1,17 +1,17 @@
 #include "player_test.h"
 
+#include <cstdint>
 #include <cstdio>
 #include <fstream>
-#include <gtest/gtest.h>
 #include <vector>
-#include <cstdint>
+
+#include <gtest/gtest.h>
+#include <picosha2.h>
 
 #include "loadsave.h"
 #include "pack.h"
 #include "pfile.h"
 #include "utils/paths.h"
-
-#include "picosha2.h"
 
 using namespace devilution;
 

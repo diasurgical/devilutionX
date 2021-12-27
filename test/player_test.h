@@ -5,8 +5,8 @@
  */
 #pragma once
 
-#include "player.h"
 #include "items.h"
+#include "player.h"
 
 using namespace devilution;
 

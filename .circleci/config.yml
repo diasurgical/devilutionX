@@ -10,7 +10,7 @@ jobs:
       - run: apt update -y
       - run: apt install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq
       - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev libpng-dev
-      - run: cmake -S. -Bbuild .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCPACK=ON -DCMAKE_INSTALL_PREFIX=/usr
+      - run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
       - run: Packaging/nix/LinuxReleasePackaging.sh
@@ -25,9 +25,9 @@ jobs:
       - checkout
       - run: apt-get update -y
       - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsodium-dev libpng-dev libbz2-dev
-      - run: cmake -S. -Bbuild -DRUN_TESTS=ON -DENABLE_CODECOVERAGE=ON
+      - run: cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON
       - run: cmake --build build -j 2
-      - run: cmake --build build -j 2 --target test
+      - run: cd build && ctest --output-on-failure
       - run: bash <(curl -s https://codecov.io/bash)
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
@@ -37,7 +37,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - run: /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
   3ds:

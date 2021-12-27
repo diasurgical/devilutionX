@@ -11,6 +11,7 @@
 #include "engine/displacement.hpp"
 #include "engine/point.hpp"
 #include "gendung.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 
@@ -28,17 +29,17 @@ enum MapExplorationType : uint8_t {
 };
 
 /** Specifies whether the automap is enabled. */
-extern bool AutomapActive;
+extern DVL_API_FOR_TEST bool AutomapActive;
 /** Tracks the explored areas of the map. */
 extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
-extern int AutoMapScale;
-extern Displacement AutomapOffset;
-extern int AmLine64;
-extern int AmLine32;
-extern int AmLine16;
-extern int AmLine8;
-extern int AmLine4;
+extern DVL_API_FOR_TEST int AutoMapScale;
+extern DVL_API_FOR_TEST Displacement AutomapOffset;
+extern DVL_API_FOR_TEST int AmLine64;
+extern DVL_API_FOR_TEST int AmLine32;
+extern DVL_API_FOR_TEST int AmLine16;
+extern DVL_API_FOR_TEST int AmLine8;
+extern DVL_API_FOR_TEST int AmLine4;
 
 /**
  * @brief Initializes the automap.
