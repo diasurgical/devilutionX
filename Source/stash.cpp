@@ -706,9 +706,9 @@ void CheckStashBtnUp()
 	stashbtndown = false;
 
 	for (int i = 0; i < 5; i++) {
-		//if (!StashButtons[i]) {
-		//	continue;
-		//}
+		if (!StashButtons[i]) {
+			continue;
+		}
 
 		StashButtons[i] = false;
 
