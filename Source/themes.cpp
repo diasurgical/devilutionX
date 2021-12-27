@@ -191,13 +191,13 @@ bool CheckThemeObj3(Point origin, int8_t regionId, int frequency)
 	});
 }
 
-bool TFit_Obj3(int t)
+bool TFit_Obj3(int8_t regionId)
 {
 	char objrnd[4] = { 4, 4, 3, 5 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
-			if (CheckThemeObj3({ xp, yp }, themes[t].ttval, objrnd[leveltype - 1])) {
+			if (CheckThemeObj3({ xp, yp }, regionId, objrnd[leveltype - 1])) {
 				themex = xp;
 				themey = yp;
 				return true;
@@ -328,7 +328,7 @@ static bool SpecialThemeFit(int i, theme_id t)
 	case THEME_BRNCROSS:
 	case THEME_WEAPONRACK:
 		if (rv) {
-			rv = TFit_Obj3(i);
+			rv = TFit_Obj3(themes[i].ttval);
 		}
 		break;
 	case THEME_TREASURE:
@@ -814,7 +814,7 @@ void Theme_ArmorStand(int t)
 	char monstrnd[4] = { 6, 7, 3, 9 };
 
 	if (armorFlag) {
-		TFit_Obj3(t);
+		TFit_Obj3(themes[t].ttval);
 		AddObject(OBJ_ARMORSTAND, { themex, themey });
 	}
 	for (int yp = 0; yp < MAXDUNY; yp++) {
@@ -899,13 +899,14 @@ void Theme_TearFountain(int t)
  */
 void Theme_BrnCross(int t)
 {
+	int8_t regionId = themes[t].ttval;
 	char monstrnd[4] = { 6, 8, 3, 9 };
 	char bcrossrnd[4] = { 5, 7, 3, 8 };
 
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
-			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
+			if (dTransVal[xp][yp] == regionId && IsTileNotSolid({ xp, yp })) {
+				if (CheckThemeObj3({ xp, yp }, regionId, -1)) {
 					if (GenerateRnd(bcrossrnd[leveltype - 1]) == 0) {
 						AddObject(OBJ_TBCROSS, { xp, yp });
 					}
@@ -923,17 +924,18 @@ void Theme_BrnCross(int t)
  */
 void Theme_WeaponRack(int t)
 {
+	int8_t regionId = themes[t].ttval;
 	char weaponrnd[4] = { 6, 8, 5, 8 };
 	char monstrnd[4] = { 6, 7, 3, 9 };
 
 	if (weaponFlag) {
-		TFit_Obj3(t);
+		TFit_Obj3(regionId);
 		AddObject(OBJ_WEAPONRACK, { themex, themey });
 	}
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
-			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
+			if (dTransVal[xp][yp] == regionId && IsTileNotSolid({ xp, yp })) {
+				if (CheckThemeObj3({ xp, yp }, regionId, -1)) {
 					if (GenerateRnd(weaponrnd[leveltype - 1]) == 0) {
 						AddObject(OBJ_WEAPONRACKN, { xp, yp });
 					}
