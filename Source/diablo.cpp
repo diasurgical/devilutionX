@@ -1486,6 +1486,13 @@ void InitKeymapActions()
 	    InventoryKeyPressed,
 	    [&]() { return !IsPlayerDead(); });
 	sgOptions.Keymapper.AddAction(
+	    "Stash",
+	    N_("Stash"),
+	    N_("Open Stash screen."),
+	    'X',
+	    StashKeyPressed,
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
 	    "Character",
 	    N_("Character"),
 	    N_("Open Character screen."),

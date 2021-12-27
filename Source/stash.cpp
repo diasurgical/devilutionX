@@ -714,7 +714,7 @@ void CheckStashBtnUp()
 
 		stashButton = StashButtonRect[i];
 		stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
-		if (stashButton.Contains(MousePosition)) {
+		if (!stashButton.Contains(MousePosition)) {
 			continue;
 		}
 
@@ -760,8 +760,6 @@ void DoStashBtn()
 	}
 }
 
-
-
 void DrawStash(const Surface &out)
 {
 	int slot = 0;
@@ -789,7 +787,6 @@ void DrawStash(const Surface &out)
 			}
 		}
 	}
-
 
 	for (int i = 0; i < NUM_STASH_GRID_ELEM; i++) {
 		if (Stash.StashGrid[i] != 0) {

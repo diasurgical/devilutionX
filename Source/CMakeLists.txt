@@ -62,6 +62,7 @@ set(libdevilutionx_SRCS
   sha.cpp
   spelldat.cpp
   spells.cpp
+  stash.cpp
   stores.cpp
   sync.cpp
   textdat.cpp
