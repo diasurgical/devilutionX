@@ -318,29 +318,6 @@ void LeftMouseDown(int wParam)
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 	bool isCtrlHeld = (wParam & DVL_MK_CTRL) != 0;
 
-	int stashNavY = 15; // position for stash buttons
-	int stashNavW = 21;
-	int stashNavH = 19;
-
-	int stashGoldY = 16; // position for withdraw gold button
-	int stashGoldW = 27;
-	int stashGoldH = 19;
-
-	const Rectangle StashButtonRect[] = {
-		// Contains mappings for the buttons in the stash (2 navigation buttons, withdraw gold buttons, 2 navigation buttons)
-		// clang-format off
-	//  X,   Y,   W,   H
-	{ { 35,   stashNavY },   { stashNavW, stashNavH } }, // 10 left
-	{ { 63,   stashNavY },   { stashNavW, stashNavH } }, // 1 left
-	{ { 92,  stashGoldY }, { stashGoldW, stashGoldH } }, // withdraw gold
-	{ { 240,  stashNavY },   { stashNavW, stashNavH } }, // 1 right
-	{ { 268,  stashNavY },   { stashNavW, stashNavH } }  // 10 right
-
-		// clang-format on
-	};
-
-	Rectangle stashButton;
-
 	if (!GetMainPanel().Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
 			if (QuestLogIsOpen && GetLeftPanel().Contains(MousePosition)) {
@@ -354,17 +331,9 @@ void LeftMouseDown(int wParam)
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld, isCtrlHeld);
 			} else if (stashflag && GetLeftPanel().Contains(MousePosition)) {
-				if (!dropGoldFlag)
+				if (!withdrawGoldFlag)
 					CheckStashItem(isShiftHeld, isCtrlHeld);
-				for (int i = 0; i < 5; i++) {
-					stashButton = StashButtonRect[i];
-					stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
-					if (stashButton.Contains(MousePosition)) {
-						CheckStashBtn();
-						break;
-					}
-				}
-
+				DoStashBtn();
 			} else if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
@@ -380,9 +349,10 @@ void LeftMouseDown(int wParam)
 			}
 		}
 	} else {
-		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
+		if (!talkflag && !dropGoldFlag && !withdrawGoldFlag && !gmenu_is_active())
 			CheckInvScrn(isShiftHeld, isCtrlHeld);
 		DoPanBtn();
+		DoStashBtn();
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
 	}
@@ -395,6 +365,8 @@ void LeftMouseUp(int wParam)
 	bool isShiftHeld = (wParam & (DVL_MK_SHIFT | DVL_MK_LBUTTON)) != 0;
 	if (panbtndown)
 		CheckBtnUp();
+	if (stashbtndown)
+		CheckStashBtnUp();
 	if (chrbtnactive)
 		ReleaseChrBtns(isShiftHeld);
 	if (lvlbtndown)
@@ -499,7 +471,7 @@ void PressKey(int vkey)
 		return;
 	}
 
-	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag) {
+	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag || withdrawGoldFlag) {
 		return;
 	}
 	if (vkey == DVL_VK_PAUSE) {
@@ -598,6 +570,10 @@ void PressChar(char vkey)
 	}
 	if (dropGoldFlag) {
 		control_drop_gold(vkey);
+		return;
+	}
+	if (withdrawGoldFlag) {
+		control_withdraw_gold(vkey);
 		return;
 	}
 
@@ -1331,6 +1307,11 @@ void StashKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
+	if (currlevel != 0) {
+		InitDiabloMsg(EMSG_STASH);
+		return;
+	}
+
 	stashflag = !stashflag;
 
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
@@ -1840,6 +1821,11 @@ bool PressEscKey()
 
 	if (dropGoldFlag) {
 		control_drop_gold(DVL_VK_ESCAPE);
+		rv = true;
+	}
+
+	if (withdrawGoldFlag) {
+		control_withdraw_gold(DVL_VK_ESCAPE);
 		rv = true;
 	}
 

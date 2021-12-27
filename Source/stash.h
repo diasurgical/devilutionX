@@ -104,7 +104,11 @@ bool DropStashItemBeforeTrig();
 void LoadStash(int page);
 void SaveStash(int page);
 int8_t CheckStashHLight();
-void CheckStashBtn();
+void CheckStashBtnUp();
+void DoStashBtn();
+extern bool StashButtons[5];
+extern bool drawstashbtnflag;
+extern bool stashbtndown;
 
 /* data */
 

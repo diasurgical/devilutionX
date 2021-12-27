@@ -33,9 +33,11 @@ namespace devilution {
 
 extern bool drawhpflag;
 extern bool dropGoldFlag;
+extern bool withdrawGoldFlag;
 extern bool chrbtn[4];
 extern bool lvlbtndown;
 extern int dropGoldValue;
+extern int withdrawGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
 extern int pnumlines;
@@ -50,6 +52,7 @@ extern bool drawbtnflag;
 extern char infostr[128];
 extern bool panelflag;
 extern int initialDropGoldValue;
+extern int initialWithdrawGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
 const Rectangle &GetMainPanel();
@@ -166,7 +169,9 @@ void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
 void DrawGoldSplit(const Surface &out, int amount);
+void DrawGoldWithdraw(const Surface &out, int amount);
 void control_drop_gold(char vkey);
+void control_withdraw_gold(char vkey);
 void DrawTalkPan(const Surface &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();
@@ -177,7 +182,9 @@ void control_new_text(string_view text);
 bool control_presskeys(int vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
 void CloseGoldDrop();
+void CloseGoldWithdraw();
 void GoldDropNewText(string_view text);
+void GoldWithdrawNewText(string_view text);
 extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution

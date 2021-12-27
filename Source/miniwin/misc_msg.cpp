@@ -583,6 +583,10 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			GoldDropNewText(e.text.text);
 			break;
 		}
+		if (gbRunGame && withdrawGoldFlag) {
+			GoldWithdrawNewText(e.text.text);
+			break;
+		}
 		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
 	case SDL_WINDOWEVENT:
 		switch (e.window.event) {

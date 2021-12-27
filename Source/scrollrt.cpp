@@ -1300,6 +1300,9 @@ void DrawView(const Surface &out, Point startPosition)
 	if (dropGoldFlag) {
 		DrawGoldSplit(out, dropGoldValue);
 	}
+	if (withdrawGoldFlag) {
+		DrawGoldWithdraw(out, withdrawGoldValue);
+	}
 	if (HelpFlag) {
 		DrawHelp(out);
 	}

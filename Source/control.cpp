@@ -54,9 +54,11 @@ namespace devilution {
  */
 bool drawhpflag;
 bool dropGoldFlag;
+bool withdrawGoldFlag;
 bool chrbtn[4];
 bool lvlbtndown;
 int dropGoldValue;
+int withdrawGoldValue;
 /**
  * @brief Set if the mana flask needs to be redrawn during the next frame
  */
@@ -74,6 +76,7 @@ bool drawbtnflag;
 char infostr[128];
 bool panelflag;
 int initialDropGoldValue;
+int initialWithdrawGoldValue;
 bool panbtndown;
 bool spselflag;
 Rectangle MainPanel;
@@ -415,6 +418,17 @@ void RemoveGold(Player &player, int goldIndex)
 	dropGoldValue = 0;
 }
 
+void WithdrawGold(Player &player)
+{
+	SetPlrHandItem(player.HoldItem, IDI_GOLD);
+	SetGoldSeed(player, player.HoldItem);
+	player.HoldItem._ivalue = withdrawGoldValue;
+	player.HoldItem._iStatFlag = true;
+	ControlSetGoldCurs(player);
+	stashGold -= withdrawGoldValue;
+	withdrawGoldValue = 0;
+}
+
 } // namespace
 
 bool IsChatAvailable()
@@ -550,6 +564,7 @@ void InitControlPan()
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
+	initialWithdrawGoldValue = 0;
 
 	CalculatePanelAreas();
 }
@@ -1045,14 +1060,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 
 	constexpr auto BufferSize = sizeof(tempstr) / sizeof(*tempstr);
 
-	CopyUtf8(
-	    tempstr,
-	    fmt::format(ngettext(
-	                    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/ "You have {:d} gold piece. How many do you want to remove?",
-	                    "Your stash has {:d} gold pieces. How many do you want to remove?",
-	                    initialDropGoldValue),
-	        initialDropGoldValue),
-	    BufferSize);
+	CopyUtf8(tempstr, fmt::format(ngettext("How many gold pieces do you want to withdraw? (MAX 5000)","How many gold pieces do you want to withdraw? (MAX 5000)", initialWithdrawGoldValue), initialWithdrawGoldValue), BufferSize);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(tempstr, 200);
@@ -1060,7 +1068,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Stash, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
 	tempstr[0] = '\0';
 	if (amount > 0) {
@@ -1091,6 +1099,28 @@ void control_drop_gold(char vkey)
 		dropGoldValue = 0;
 	} else if (vkey == DVL_VK_BACK) {
 		dropGoldValue = dropGoldValue / 10;
+	}
+}
+
+void control_withdraw_gold(char vkey)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (myPlayer._pHitPoints >> 6 <= 0) {
+		CloseGoldWithdraw();
+		withdrawGoldValue = 0;
+		return;
+	}
+
+	if (vkey == DVL_VK_RETURN) {
+		if (withdrawGoldValue > 0)
+			WithdrawGold(myPlayer);
+		CloseGoldWithdraw();
+	} else if (vkey == DVL_VK_ESCAPE) {
+		CloseGoldWithdraw();
+		withdrawGoldValue = 0;
+	} else if (vkey == DVL_VK_BACK) {
+		withdrawGoldValue = withdrawGoldValue / 10;
 	}
 }
 
@@ -1294,6 +1324,14 @@ void CloseGoldDrop()
 	SDL_StopTextInput();
 }
 
+void CloseGoldWithdraw()
+{
+	if (!withdrawGoldFlag)
+		return;
+	withdrawGoldFlag = false;
+	SDL_StopTextInput();
+}
+
 void GoldDropNewText(string_view text)
 {
 	for (char vkey : text) {
@@ -1303,6 +1341,20 @@ void GoldDropNewText(string_view text)
 			newGoldValue += digit;
 			if (newGoldValue <= initialDropGoldValue) {
 				dropGoldValue = newGoldValue;
+			}
+		}
+	}
+}
+
+void GoldWithdrawNewText(string_view text)
+{
+	for (char vkey : text) {
+		int digit = vkey - '0';
+		if (digit >= 0 && digit <= 9) {
+			int newGoldValue = withdrawGoldValue * 10;
+			newGoldValue += digit;
+			if (newGoldValue <= GOLD_MAX_LIMIT && newGoldValue <= initialWithdrawGoldValue) {
+				withdrawGoldValue = newGoldValue;
 			}
 		}
 	}

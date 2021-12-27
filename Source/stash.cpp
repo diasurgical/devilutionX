@@ -210,13 +210,42 @@ const Rectangle StashButtonRect[] = {
 	// clang-format on
 };
 
+	int stashCelY = 33;
+
+const Point StashButtonCelRect[] = {
+	// clang-format off
+	//  X,   Y
+	{ 35,   stashCelY }, // 10 left
+	{ 63,   stashCelY }, // 1 left
+	{ 92,  stashCelY }, // withdraw gold
+	{ 240,  stashCelY }, // 1 right
+	{ 268,  stashCelY },  // 10 right
+
+	// clang-format on
+};
+
 void LoadStash(int page)
 {
 	// Loads stash from file
 
-	const char *stashHeader = "DXS001";
-	if (gbIsHellfire)
-		stashHeader = "HDXS001";
+	const char *stashHeader;
+	if (gbIsSpawn) {
+		if (!gbIsMultiplayer)
+			stashHeader = "SSSP001"; // Spawn Stash Single Player
+		else
+			stashHeader = "SSMP001"; // Spawn Stash Multi Player
+	} else if (gbIsHellfire) {
+		if (!gbIsMultiplayer)
+			stashHeader = "HSSP001"; // Hellfire Stash Single Player
+		else
+			stashHeader = "HSMP001"; // Hellfire Stash Multi Player	
+	} else {
+		if (!gbIsMultiplayer)
+			stashHeader = "DSSP001"; // Diablo Stash Single Player
+		else
+			stashHeader = "DSMP001"; // Diablo Stash Multi Player	
+	}
+
 
 	// Clear the stash first, in case we fail
 	Stash._pNumStash = 0;
@@ -259,6 +288,8 @@ namespace {
 enum class stash_xy_slot;
 
 std::optional<CelSprite> pStashCels;
+std::optional<CelSprite> pStashNavBtnsCels;
+std::optional<CelSprite> pStashGoldBtnCels;
 
 void StashDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 {
@@ -351,6 +382,17 @@ int SwapItem(Item *a, Item *b)
 void CheckStashPaste(int pnum, Point cursorPosition)
 {
 	auto &player = Players[pnum];
+
+	if (player.HoldItem._itype == ItemType::Gold) {
+		stashGold += player.HoldItem._ivalue;
+		player.HoldItem._itype = ItemType::None;
+		if (pnum == MyPlayerId) {
+			SetCursorPos(MousePosition + Displacement(cursSize / 2));
+			NewCursor(CURSOR_HAND);
+		}
+		return;
+	}
+
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursSize.width / 2));
@@ -516,9 +558,9 @@ void CheckStashCut(int pnum, Point cursorPosition, bool automaticMove, bool drop
 		return;
 	}
 
-	if (dropGoldFlag) {
-		dropGoldFlag = false;
-		dropGoldValue = 0;
+	if (withdrawGoldFlag) {
+		withdrawGoldFlag = false;
+		withdrawGoldValue = 0;
 	}
 
 	bool done = false;
@@ -610,64 +652,144 @@ void CheckStashCut(int pnum, Point cursorPosition, bool automaticMove, bool drop
 	LoadStash(Page);
 }
 
+void StartGoldWithdraw()
+{
+	initialWithdrawGoldValue = stashGold;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (talkflag)
+		control_reset_talk();
+
+	Point start = GetPanelPosition(UiPanels::Stash, { 67, 128 });
+	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
+	SDL_SetTextInputRect(&rect);
+
+	withdrawGoldFlag = true;
+	withdrawGoldValue = 0;
+	SDL_StartTextInput();
+}
+
 } // namespace
 
 void FreeStashGFX()
 {
 	pStashCels = std::nullopt;
+	pStashNavBtnsCels = std::nullopt;
+	pStashGoldBtnCels = std::nullopt;
 }
 
 void InitStash()
 {
 	pStashCels = LoadCel("data\\stash.cel", SPANEL_WIDTH);
+	pStashNavBtnsCels = LoadCel("data\\stashnavbtns.cel", 21);
+	pStashGoldBtnCels = LoadCel("data\\stashgoldbtn.cel", 27);
 	LoadStash(Page);
 	stashflag = false;
 }
 
-void CheckStashBtn()
+bool StashButtons[5];
+bool drawstashbtnflag;
+bool stashbtndown;
+
+void SetStashButtonStateDown(int btnId)
 {
-	int slot = 0;
+	StashButtons[btnId] = true;
+}
+
+void CheckStashBtnUp()
+{
+	bool gamemenuOff = true;
 	Rectangle stashButton;
 
+	drawstashbtnflag = true;
+	stashbtndown = false;
+
 	for (int i = 0; i < 5; i++) {
+		//if (!StashButtons[i]) {
+		//	continue;
+		//}
+
+		StashButtons[i] = false;
+
 		stashButton = StashButtonRect[i];
 		stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
 		if (stashButton.Contains(MousePosition)) {
-			slot = i;
-			break;
+			continue;
 		}
-	}
 
-	switch (slot) {
-	case 0:
-		Page -= 10;
-		break;
-	case 1:
-		Page -= 1;
-		break;
-	case 2:
-		//StashWithdrawGold();
-		break;
-	case 3:
-		Page += 1;
-		break;
-	case 4:
-		Page += 10;
-		break;
+		switch (i) {
+			case 0:
+				Page -= 10;
+				break;
+			case 1:
+				Page -= 1;
+				break;
+			case 2:
+				StartGoldWithdraw();
+				break;
+			case 3:
+				Page += 1;
+				break;
+			case 4:
+				Page += 10;
+				break;
+		}
 	}
 
 	if (Page < 0)
 		Page = 0;
 	if (Page > 29)
 		Page = 29;
+
 	LoadStash(Page);
+}
+
+void DoStashBtn()
+{
+	Rectangle stashButton;
+
+	for (int i = 0; i < 5; i++) {
+		stashButton = StashButtonRect[i];
+		stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
+		if (stashButton.Contains(MousePosition)) {
+			StashButtons[i] = true;
+			drawstashbtnflag = true;
+			stashbtndown = true;
+		}
+	}
 }
 
 
 
 void DrawStash(const Surface &out)
 {
+	int slot = 0;
+	Point stashButton;
 	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { 0, 351 }), *pStashCels, 1);
+	for (int penis = 0; penis < 5; penis++) {
+		stashButton = StashButtonCelRect[penis];
+		if (StashButtons[penis]) {
+			switch (penis) {
+			case 0:
+				CelDrawTo(out, { stashButton.x, stashButton.y }, *pStashNavBtnsCels, 1);
+				break;
+			case 1:
+				CelDrawTo(out, { stashButton.x, stashButton.y }, *pStashNavBtnsCels, 2);
+				break;
+			case 2:
+				CelDrawTo(out, { stashButton.x, stashButton.y }, *pStashGoldBtnCels, 1);
+				break;
+			case 3:
+				CelDrawTo(out, { stashButton.x, stashButton.y }, *pStashNavBtnsCels, 3);
+				break;
+			case 4:
+				CelDrawTo(out, { stashButton.x, stashButton.y }, *pStashNavBtnsCels, 4);
+				break;
+			}
+		}
+	}
+
 
 	for (int i = 0; i < NUM_STASH_GRID_ELEM; i++) {
 		if (Stash.StashGrid[i] != 0) {
@@ -840,9 +962,9 @@ bool UseStashItem(int pnum, int cii)
 		return true;
 	}
 
-	if (dropGoldFlag) {
-		dropGoldFlag = false;
-		dropGoldValue = 0;
+	if (withdrawGoldFlag) {
+		withdrawGoldFlag = false;
+		withdrawGoldValue = 0;
 	}
 
 	if (item->IsScroll() && currlevel == 0 && !spelldata[item->_iSpell].sTownSpell) {
