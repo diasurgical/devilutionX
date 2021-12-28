@@ -40,8 +40,8 @@ void play_movie(const char *pszMovie, bool userCanClose)
 			while (movie_playing && FetchMessage(&msg)) {
 				switch (msg.message) {
 				case DVL_WM_KEYDOWN:
-				case DVL_WM_LBUTTONDOWN:
-				case DVL_WM_RBUTTONDOWN:
+				case DVL_WM_LBUTTONUP:
+				case DVL_WM_RBUTTONUP:
 					if (userCanClose || (msg.message == DVL_WM_KEYDOWN && msg.wParam == DVL_VK_ESCAPE))
 						movie_playing = false;
 					break;

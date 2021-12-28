@@ -64,7 +64,7 @@ void UiTitleDialog()
 			}
 			switch (event.type) {
 			case SDL_KEYDOWN:
-			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
 				endMenu = true;
 				break;
 			}

@@ -142,7 +142,7 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 		while (PollEvent(&event) != 0) {
 			switch (event.type) {
 			case SDL_KEYDOWN:
-			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
 				endMenu = true;
 				break;
 			default:
