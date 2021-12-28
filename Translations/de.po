@@ -2323,7 +2323,7 @@ msgstr "Kriegsschwert"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr "Kleine Axt"
+msgstr "Handbeil"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
@@ -2394,19 +2394,19 @@ msgstr "Kompositbogen"
 
 #: Source/itemdat.cpp:163
 msgid "Short Battle Bow"
-msgstr "Kleiner Kampfbogen"
+msgstr "Recurvebogen"
 
 #: Source/itemdat.cpp:164
 msgid "Long Battle Bow"
-msgstr "Langer Kampfbogen"
+msgstr "Kampfbogen"
 
 #: Source/itemdat.cpp:165
 msgid "Short War Bow"
-msgstr "Kleiner Kriegsbogen"
+msgstr "Prunkbogen"
 
 #: Source/itemdat.cpp:166
 msgid "Long War Bow"
-msgstr "Langer Kriegsbogen"
+msgstr "Kriegsbogen"
 
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
