@@ -163,16 +163,12 @@ void FindItemOrObject()
 	}
 
 	for (Point targetPosition : searchArea) {
-		int8_t objectId = abs(dObject[targetPosition.x][targetPosition.y]) - 1;
-		if (objectId < 0) {
+		Object *object = ObjectAtPosition(targetPosition);
+		if (object == nullptr || object->_oSelFlag == 0) {
+			// No object or non-interactive object
 			continue;
 		}
-
-		Object &object = Objects[objectId];
-		if (object._oSelFlag == 0) {
-			continue;
-		}
-		if (targetPosition == futurePosition && object._oDoorFlag) {
+		if (targetPosition == futurePosition && object->_oDoorFlag) {
 			continue; // Ignore doorway so we don't get stuck behind barrels
 		}
 
@@ -184,12 +180,12 @@ void FindItemOrObject()
 			// Don't check the tile we're leaving if the player is walking
 			continue;
 		}
-		if (object.IsDisabled()) {
+		if (object->IsDisabled()) {
 			continue;
 		}
 
 		rotations = newRotations;
-		pcursobj = objectId;
+		pcursobj = object->GetId();
 		cursPosition = targetPosition;
 	}
 }
