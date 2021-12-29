@@ -1151,9 +1151,9 @@ bool DoAttack(int pnum)
 
 		if ((player._pIFlags & ISPL_FIREDAM) == 0 || (player._pIFlags & ISPL_LIGHTDAM) == 0) {
 			if ((player._pIFlags & ISPL_FIREDAM) != 0) {
-				AddMissile({ dx, dy }, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			} else if ((player._pIFlags & ISPL_LIGHTDAM) != 0) {
-				AddMissile({ dx, dy }, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
 		}
 
@@ -1173,8 +1173,11 @@ bool DoAttack(int pnum)
 				p = -(dPlayer[dx][dy] + 1);
 			}
 			didhit = PlrHitPlr(pnum, p);
-		} else if (dObject[dx][dy] > 0) {
-			didhit = PlrHitObj(pnum, Objects[dObject[dx][dy] - 1]);
+		} else {
+			Object *object = ObjectAtPosition(position, false);
+			if (object != nullptr) {
+				didhit = PlrHitObj(pnum, *object);
+			}
 		}
 		if ((player._pClass == HeroClass::Monk
 		        && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff))
@@ -1187,6 +1190,7 @@ bool DoAttack(int pnum)
 		                    || (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword && player.InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
 		                    || (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword && player.InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND))
 		                && !(player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield))))) {
+			// playing as a class/weapon with cleave
 			position = player.position.tile + Right(player._pdir);
 			if (dMonster[position.x][position.y] != 0) {
 				int m = abs(dMonster[position.x][position.y]) - 1;
