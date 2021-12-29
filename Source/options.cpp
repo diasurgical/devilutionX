@@ -1030,7 +1030,27 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 	locales.emplace_back(std::locale("").name().substr(0, 5));
 #endif
 
-	// Insert non-regional locale codes after the last regional variation so we fallback to neutral translations if no regional translation exists that meets user preferences.
+	// So that the correct language is shown in the settings menu for users with US english set as a preferred language
+	//  we need to replace the "en_US" locale code with the neutral string "en" as expected by the available options
+	auto usEnglishLocale = std::find(locales.begin(), locales.end(), "en_US");
+	if (usEnglishLocale != locales.end()) {
+		auto neutralEnglishLocale = std::find(locales.begin(), locales.end(), "en");
+		if (usEnglishLocale < neutralEnglishLocale) {
+			// Neutral locale either isn't user-preferred or is after the us english variation in preferences, so we
+			//  can update this entry
+			*usEnglishLocale = "en";
+			if (neutralEnglishLocale != locales.end()) {
+				// And remove the now duplicate neutral variant (if it exists)
+				locales.erase(neutralEnglishLocale);
+			}
+		} else {
+			// somehow there's already a neutral locale earlier than the regional variation, remove the en_US entry
+			locales.erase(usEnglishLocale);
+		}
+	}
+
+	// Insert non-regional locale codes after the last regional variation so we fallback to neutral translations if no
+	//  regional translation exists that meets user preferences.
 	for (auto localeIter = locales.rbegin(); localeIter != locales.rend(); localeIter++) {
 		auto regionSeparator = localeIter->find('_');
 		if (regionSeparator != std::string::npos) {
