@@ -333,7 +333,7 @@ bool IsTileOccupied(Point position)
 	if (dPlayer[position.x][position.y] != 0) {
 		return true;
 	}
-	if (dObject[position.x][position.y] != 0) {
+	if (IsObjectAtPosition(position)) {
 		return true;
 	}
 
