@@ -1476,6 +1476,17 @@ bool DoDeath(int pnum)
 	return false;
 }
 
+bool IsPlayerAdjacentToObject(Player &player, Object &object)
+{
+	int x = abs(player.position.tile.x - object.position.x);
+	int y = abs(player.position.tile.y - object.position.y);
+	if (y > 1 && ObjectAtPosition(object.position + Direction::NorthEast) == &object) {
+		// special case for activating a large object from the north-east side
+		y = abs(player.position.tile.y - object.position.y + 1);
+	}
+	return x <= 1 && y <= 1;
+}
+
 void CheckNewPath(int pnum, bool pmWillBeCalled)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -1673,12 +1684,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			player.spellLevel = player.destParam2;
 			break;
 		case ACTION_OPERATE:
-			x = abs(player.position.tile.x - object->position.x);
-			y = abs(player.position.tile.y - object->position.y);
-			if (y > 1 && dObject[object->position.x][object->position.y - 1] == -(targetId + 1)) {
-				y = abs(player.position.tile.y - object->position.y + 1);
-			}
-			if (x <= 1 && y <= 1) {
+			if (IsPlayerAdjacentToObject(player, *object)) {
 				if (object->_oBreak == 1) {
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
@@ -1688,12 +1694,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_DISARM:
-			x = abs(player.position.tile.x - object->position.x);
-			y = abs(player.position.tile.y - object->position.y);
-			if (y > 1 && dObject[object->position.x][object->position.y - 1] == -(targetId + 1)) {
-				y = abs(player.position.tile.y - object->position.y + 1);
-			}
-			if (x <= 1 && y <= 1) {
+			if (IsPlayerAdjacentToObject(player, *object)) {
 				if (object->_oBreak == 1) {
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
@@ -1764,12 +1765,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_OPERATE) {
-			x = abs(player.position.tile.x - object->position.x);
-			y = abs(player.position.tile.y - object->position.y);
-			if (y > 1 && dObject[object->position.x][object->position.y - 1] == -(targetId + 1)) {
-				y = abs(player.position.tile.y - object->position.y + 1);
-			}
-			if (x <= 1 && y <= 1) {
+			if (IsPlayerAdjacentToObject(player, *object)) {
 				if (object->_oBreak == 1) {
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
