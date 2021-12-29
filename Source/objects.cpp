@@ -1123,37 +1123,37 @@ void ObjSetMicro(Point position, int pn)
 	}
 }
 
-void AddL1Door(Object &door, Point position, _object_id objectType)
+void AddL1Door(Object &door)
 {
 	door._oDoorFlag = true;
-	if (objectType == _object_id::OBJ_L1LDOOR) {
-		door._oVar1 = dPiece[position.x][position.y];
-		door._oVar2 = dPiece[position.x][position.y - 1];
+	if (door._otype == _object_id::OBJ_L1LDOOR) {
+		door._oVar1 = dPiece[door.position.x][door.position.y];
+		door._oVar2 = dPiece[door.position.x][door.position.y - 1];
 	} else { //_object_id::OBJ_L1RDOOR
-		door._oVar1 = dPiece[position.x][position.y];
-		door._oVar2 = dPiece[position.x - 1][position.y];
+		door._oVar1 = dPiece[door.position.x][door.position.y];
+		door._oVar2 = dPiece[door.position.x - 1][door.position.y];
 	}
 	door._oVar4 = 0;
 }
 
-void AddL2Door(Object &door, Point position, _object_id objectType)
+void AddL2Door(Object &door)
 {
 	door._oDoorFlag = true;
-	if (objectType == OBJ_L2LDOOR)
-		ObjSetMicro(position, 538);
+	if (door._otype == OBJ_L2LDOOR)
+		ObjSetMicro(door.position, 538);
 	else
-		ObjSetMicro(position, 540);
-	dSpecial[position.x][position.y] = 0;
+		ObjSetMicro(door.position, 540);
+	dSpecial[door.position.x][door.position.y] = 0;
 	door._oVar4 = 0;
 }
 
-void AddL3Door(Object &door, Point position, _object_id objectType)
+void AddL3Door(Object &door)
 {
 	door._oDoorFlag = true;
-	if (objectType == OBJ_L3LDOOR)
-		ObjSetMicro(position, 531);
+	if (door._otype == OBJ_L3LDOOR)
+		ObjSetMicro(door.position, 531);
 	else
-		ObjSetMicro(position, 534);
+		ObjSetMicro(door.position, 534);
 	door._oVar4 = 0;
 }
 
@@ -4720,15 +4720,15 @@ void AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		AddL1Door(object, objPos, objType);
+		AddL1Door(object);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		AddL2Door(object, objPos, objType);
+		AddL2Door(object);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		AddL3Door(object, objPos, objType);
+		AddL3Door(object);
 		break;
 	case OBJ_BOOK2R:
 		object.InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
