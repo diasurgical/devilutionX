@@ -64,7 +64,7 @@ struct Object {
 	 *
 	 * This is currently the index into the Objects array, but may change in the future.
 	 */
-	unsigned int GetId() const;
+	[[nodiscard]] unsigned int GetId() const;
 
 	/**
 	 * @brief Marks the map region to be refreshed when the player interacts with the object.
@@ -118,6 +118,16 @@ struct Object {
 		InitializeBook(mapRange);
 		_oVar8 = leverID;
 		bookMessage = message;
+	}
+
+	/**
+	 * @brief Initializes this object as some form of door. Futher initialization of other game structures needs to be
+	 * performed separately, refer to the code in objects.cpp.
+	 */
+	constexpr void InitializeDoor()
+	{
+		_oDoorFlag = true;
+		_oVar4 = 0;
 	}
 
 	/**

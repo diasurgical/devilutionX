@@ -1123,38 +1123,38 @@ void ObjSetMicro(Point position, int pn)
 	}
 }
 
-void AddL1Door(Object &door)
+void InitializeL1Door(Object &door)
 {
-	door._oDoorFlag = true;
+	door.InitializeDoor();
+	door._oVar1 = dPiece[door.position.x][door.position.y];
 	if (door._otype == _object_id::OBJ_L1LDOOR) {
-		door._oVar1 = dPiece[door.position.x][door.position.y];
 		door._oVar2 = dPiece[door.position.x][door.position.y - 1];
-	} else { //_object_id::OBJ_L1RDOOR
-		door._oVar1 = dPiece[door.position.x][door.position.y];
+	} else { // _object_id::OBJ_L1RDOOR
 		door._oVar2 = dPiece[door.position.x - 1][door.position.y];
 	}
-	door._oVar4 = 0;
 }
 
-void AddL2Door(Object &door)
+void InitializeMicroDoor(Object &door)
 {
-	door._oDoorFlag = true;
-	if (door._otype == OBJ_L2LDOOR)
-		ObjSetMicro(door.position, 538);
-	else
-		ObjSetMicro(door.position, 540);
-	dSpecial[door.position.x][door.position.y] = 0;
-	door._oVar4 = 0;
-}
-
-void AddL3Door(Object &door)
-{
-	door._oDoorFlag = true;
-	if (door._otype == OBJ_L3LDOOR)
-		ObjSetMicro(door.position, 531);
-	else
-		ObjSetMicro(door.position, 534);
-	door._oVar4 = 0;
+	door.InitializeDoor();
+	int pieceNumber;
+	switch (door._otype) {
+	case _object_id::OBJ_L2LDOOR:
+		pieceNumber = 538;
+		break;
+	case _object_id::OBJ_L2RDOOR:
+		pieceNumber = 540;
+		break;
+	case _object_id::OBJ_L3LDOOR:
+		pieceNumber = 531;
+		break;
+	case _object_id::OBJ_L3RDOOR:
+		pieceNumber = 534;
+		break;
+	default:
+		return; // unreachable
+	}
+	ObjSetMicro(door.position, pieceNumber);
 }
 
 void AddSarc(int i)
@@ -4720,15 +4720,16 @@ void AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		AddL1Door(object);
+		InitializeL1Door(object);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		AddL2Door(object);
-		break;
+		// If a catacombs door happens to overlap an arch then clear the arch tile to prevent weird rendering
+		dSpecial[object.position.x][object.position.y] = 0;
+		// intentional fall-through
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		AddL3Door(object);
+		InitializeMicroDoor(object);
 		break;
 	case OBJ_BOOK2R:
 		object.InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
