@@ -262,7 +262,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 	const auto &player = Players[pnum];
 
-	if (MissilesData[t].mType == 0) {
+	if (MissilesData[t].mType == 0 && mir == 0) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 		if (player._pClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
