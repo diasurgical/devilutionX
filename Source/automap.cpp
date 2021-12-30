@@ -481,13 +481,13 @@ void DrawAutomapText(const Surface &out)
 
 	if (gbIsMultiplayer) {
 		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
-			strcat(strcpy(desc, _("game: ")), szPlayerName);
+			strcat(strcpy(desc, _("Game: ")), szPlayerName);
 			DrawString(out, desc, linePosition);
 			linePosition.y += 15;
 		}
 
 		if (!PublicGame)
-			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
+			strcat(strcpy(desc, _("Password: ")), szPlayerDescript);
 		else
 			strcpy(desc, _("Public Game"));
 		DrawString(out, desc, linePosition);
@@ -509,7 +509,20 @@ void DrawAutomapText(const Surface &out)
 		}
 
 		DrawString(out, desc, linePosition);
+		linePosition.y += 15;
 	}
+	switch (sgGameInitInfo.nDifficulty) {
+	case DIFF_NORMAL:
+		strcpy(desc, _("Difficulty: Normal"));
+		break;
+	case DIFF_NIGHTMARE:
+		strcpy(desc, _("Difficulty: Nightmare"));
+		break;
+	case DIFF_HELL:
+		strcpy(desc, _("Difficulty: Hell"));
+		break;
+	}
+	DrawString(out, desc, linePosition);
 }
 
 std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
