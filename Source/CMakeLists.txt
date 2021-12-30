@@ -141,7 +141,8 @@ set(libdevilutionx_SRCS
   dvlnet/packet.cpp
   storm/storm_net.cpp
   storm/storm_svid.cpp
-  miniwin/misc_msg.cpp)
+  miniwin/misc_msg.cpp
+  platform/locale.cpp)
 
 if(IOS)
   list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)

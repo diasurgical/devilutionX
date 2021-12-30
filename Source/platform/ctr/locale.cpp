@@ -1,7 +1,8 @@
+#include "platform/ctr/locale.hpp"
+
 #include <3ds.h>
 
 #include "platform/ctr/cfgu_service.hpp"
-#include "platform/ctr/locale.hpp"
 
 namespace devilution {
 namespace n3ds {
