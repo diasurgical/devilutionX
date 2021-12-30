@@ -159,6 +159,7 @@ enum item_cursor_graphic : uint8_t {
 	ICURS_MAP_OF_THE_STARS            = 96,
 	ICURS_FUNGAL_TOME                 = 97,
 	ICURS_GREAT_HELM                  = 98,
+	ICURS_STORMSHIELD                 = 100,
 	ICURS_BATTLE_AXE                  = 101,
 	ICURS_HUNTERS_BOW                 = 102,
 	ICURS_FIELD_PLATE                 = 103,
