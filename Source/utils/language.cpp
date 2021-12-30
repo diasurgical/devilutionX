@@ -270,8 +270,9 @@ const std::string &LanguageTranslate(const char *key)
 
 bool HasTranslation(const std::string &locale)
 {
-	if (locale == "en" || locale == "en_US") {
-		// the base translation is en_US. No translation file will be present for these codes but we want the check to succeed to prevent further searches.
+	if (locale == "en") {
+		// the base translation is en (really en_US). No translation file will be present for this code but we want
+		//  the check to succeed to prevent further searches.
 		return true;
 	}
 
