@@ -276,7 +276,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		dam >>= 2;
 
 	if (monster.MData->mMonstClass == MonsterClass::Demon && (player._pIFlags & ISPL_3XDAMVDEM) != 0) {
-			dam *= 3;
+		dam *= 3;
 	}
 
 	if (pnum == MyPlayerId)
