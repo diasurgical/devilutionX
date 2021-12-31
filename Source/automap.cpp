@@ -18,6 +18,7 @@
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -511,17 +512,19 @@ void DrawAutomapText(const Surface &out)
 		DrawString(out, desc, linePosition);
 		linePosition.y += 15;
 	}
+	string_view difficulty;
 	switch (sgGameInitInfo.nDifficulty) {
 	case DIFF_NORMAL:
-		strcpy(desc, _("Difficulty: Normal"));
+		difficulty = _("Normal");
 		break;
 	case DIFF_NIGHTMARE:
-		strcpy(desc, _("Difficulty: Nightmare"));
+		difficulty = _("Nightmare");
 		break;
 	case DIFF_HELL:
-		strcpy(desc, _("Difficulty: Hell"));
+		difficulty = _("Hell");
 		break;
 	}
+	CopyUtf8(desc, fmt::format(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}"), difficulty), sizeof(desc));
 	DrawString(out, desc, linePosition);
 }
 
