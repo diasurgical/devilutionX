@@ -3779,34 +3779,34 @@ void PlayDungMsgs()
 	}
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgCathedral) == 0) {
+	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && (myPlayer.pDungMsgs & DungMsgCathedral) == 0) {
 		myPlayer.Say(HeroSpeech::TheSanctityOfThisPlaceHasBeenFouled, 40);
 		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DungMsgCathedral;
-	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgCatacombs) == 0) {
+	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && (myPlayer.pDungMsgs & DungMsgCatacombs) == 0) {
 		myPlayer.Say(HeroSpeech::TheSmellOfDeathSurroundsMe, 40);
 		myPlayer.pDungMsgs |= DungMsgCatacombs;
-	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgCaves) == 0) {
+	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && (myPlayer.pDungMsgs & DungMsgCaves) == 0) {
 		myPlayer.Say(HeroSpeech::ItsHotDownHere, 40);
 		myPlayer.pDungMsgs |= DungMsgCaves;
-	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgHell) == 0) {
+	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && (myPlayer.pDungMsgs & DungMsgHell) == 0) {
 		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
 		myPlayer.pDungMsgs |= DungMsgHell;
-	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
+	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
 		sfxdnum = PS_DIABLVLINT;
 		myPlayer.pDungMsgs |= DungMsgDiablo;
-	} else if (currlevel == 17 && !myPlayer._pLvlVisited[17] && !gbIsMultiplayer && (myPlayer.pDungMsgs2 & 1) == 0) {
+	} else if (currlevel == 17 && !myPlayer._pLvlVisited[17] && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER1;
 		Quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
 		Quests[Q_DEFILER]._qlog = true;
 		Quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		myPlayer.pDungMsgs2 |= 1;
-	} else if (currlevel == 19 && !myPlayer._pLvlVisited[19] && !gbIsMultiplayer && (myPlayer.pDungMsgs2 & 4) == 0) {
+	} else if (currlevel == 19 && !myPlayer._pLvlVisited[19] && (myPlayer.pDungMsgs2 & 4) == 0) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER3;
 		myPlayer.pDungMsgs2 |= 4;
-	} else if (currlevel == 21 && !myPlayer._pLvlVisited[21] && !gbIsMultiplayer && (myPlayer.pDungMsgs & 32) == 0) {
+	} else if (currlevel == 21 && !myPlayer._pLvlVisited[21] && (myPlayer.pDungMsgs & 32) == 0) {
 		myPlayer.Say(HeroSpeech::ThisIsAPlaceOfGreatPower, 30);
 		myPlayer.pDungMsgs |= 32;
 	} else {
