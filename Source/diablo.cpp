@@ -1485,16 +1485,10 @@ void InitKeymapActions()
 	    N_("Displays game infos."),
 	    'V',
 	    [] {
-		    const char *difficulties[3] = {
-			    _("Normal"),
-			    _("Nightmare"),
-			    _("Hell"),
-		    };
 		    EventPlrMsg(fmt::format(
-		                    _(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}, Difficulty: {:s}"),
+		                    _(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}"),
 		                    PROJECT_NAME,
-		                    PROJECT_VERSION,
-		                    difficulties[sgGameInitInfo.nDifficulty]),
+		                    PROJECT_VERSION),
 		        UiFlags::ColorWhite);
 	    },
 	    [&]() { return !IsPlayerDead(); });
