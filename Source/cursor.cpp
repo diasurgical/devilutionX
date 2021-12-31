@@ -210,7 +210,10 @@ void CheckTown()
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Town Portal"));
-				strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile._misource]._pName).c_str());
+				if (currlevel  == 0)
+					strcpy(tempstr, fmt::format(_("from {:s} to {:s}"), Players[missile._misource]._pName, LvlNames[Portals[i].level]).c_str());
+				else
+					strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile._misource]._pName).c_str());
 				AddPanelString(tempstr);
 				cursPosition = missile.position.tile;
 			}
@@ -231,7 +234,7 @@ void CheckRportal()
 				if (!setlevel)
 					strcpy(tempstr, _("The Unholy Altar"));
 				else
-					strcpy(tempstr, _("level 15"));
+					strcpy(tempstr, LvlNames[15]);
 				AddPanelString(tempstr);
 				cursPosition = missile.position.tile;
 			}

@@ -15,6 +15,7 @@
 #include "palette.h"
 #include "player.h"
 #include "setmaps.h"
+#include "trigs.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
@@ -500,14 +501,7 @@ void DrawAutomapText(const Surface &out)
 	}
 
 	if (currlevel != 0) {
-		if (currlevel >= 17 && currlevel <= 20) {
-			strcpy(desc, fmt::format(_("Level: Nest {:d}"), currlevel - 16).c_str());
-		} else if (currlevel >= 21 && currlevel <= 24) {
-			strcpy(desc, fmt::format(_("Level: Crypt {:d}"), currlevel - 20).c_str());
-		} else {
-			strcpy(desc, fmt::format(_("Level: {:d}"), currlevel).c_str());
-		}
-
+		strcpy(desc, fmt::format(_("Level: {:s}"), LvlNames[currlevel]).c_str());
 		DrawString(out, desc, linePosition);
 	}
 }

@@ -39,6 +39,8 @@ void Freeupstairs();
 void CheckTrigForce();
 void CheckTriggers();
 
+extern const char *LvlNames[];
+
 /**
  * @brief Check if the provided position is in the entrance boundary of the entrance.
  * @param position The position to check against the entrance boundary.
