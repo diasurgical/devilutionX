@@ -3791,7 +3791,7 @@ void PlayDungMsgs()
 	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgHell) == 0) {
 		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
 		myPlayer.pDungMsgs |= DungMsgHell;
-	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
+	} else if (currlevel == 16 && !myPlayer._pLvlVisited[16] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
 		sfxdnum = PS_DIABLVLINT;
 		myPlayer.pDungMsgs |= DungMsgDiablo;
