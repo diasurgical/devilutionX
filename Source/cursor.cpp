@@ -210,7 +210,7 @@ void CheckTown()
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Town Portal"));
-				if (currlevel  == 0)
+				if (currlevel == 0)
 					strcpy(tempstr, fmt::format(_("from {:s} to {:s}"), Players[missile._misource]._pName, LvlNames[Portals[i].level]).c_str());
 				else
 					strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile._misource]._pName).c_str());
