@@ -1334,7 +1334,7 @@ void DrawFPS(const Surface &out)
 		frameend = 0;
 	}
 	snprintf(string, 12, "%i FPS", framerate);
-	DrawString(out, string, Point { 8, 53 }, UiFlags::ColorRed);
+	DrawString(out, string, Point { 8, 68 }, UiFlags::ColorRed);
 }
 
 /**
