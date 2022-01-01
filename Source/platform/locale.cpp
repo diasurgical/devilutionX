@@ -15,13 +15,42 @@
 #include <windows.h>
 #include <winnls.h>
 // clang-format on
-
-#include "utils/stdcompat/algorithm.hpp"
+#elif defined(__APPLE__) and defined(USE_COREFOUNDATION)
+#include <CoreFoundation/CoreFoundation.h>
 #else
 #include <locale>
 #endif
 
+#include "utils/stdcompat/algorithm.hpp"
+#include "utils/stdcompat/string_view.hpp"
+
 namespace devilution {
+namespace {
+
+std::string IetfToPosix(string_view langCode)
+{
+	/*
+	 * Handle special case for simplified/traditional Chinese. IETF/BCP-47 specifies that only the script should be
+	 *  used to discriminate languages when the region doesn't add additional value. For chinese scripts zh-Hans is
+	 *  preferred over zh-Hans-CN (but platforms may include the region identifier anyway). POSIX locales don't use
+	 *  script in the same way so we need to convert these back to lang_region.
+	 */
+	if (langCode.substr(0, 7) == "zh-Hans") {
+		return "zh_CN";
+	}
+	if (langCode.substr(0, 7) == "zh-Hant") {
+		return "zh_TW";
+	}
+
+	std::string posixLangCode { langCode };
+
+	// if a region is included in the locale do a simple transformation to the expected POSIX style.
+	std::replace(posixLangCode.begin(), posixLangCode.end(), '-', '_');
+
+	return posixLangCode;
+}
+
+} // namespace
 
 std::vector<std::string> GetLocales()
 {
@@ -77,27 +106,26 @@ std::vector<std::string> GetLocales()
 #elif defined(_WIN32)
 #if WINVER >= 0x0600
 	auto wideCharToUtf8 = [](PWSTR wideString) {
-		char utf8Buffer[12] {};
-		// We only handle 5 character locales (lang2-region2), so don't bother reading past that. This does leave the
-		//  resulting string unterminated but the buffer was zero initialised anyway.
-		WideCharToMultiByte(CP_UTF8, 0, wideString, 5, utf8Buffer, sizeof(utf8Buffer), nullptr, nullptr);
+		// WideCharToMultiByte potentially leaves the buffer unterminated, default initialise here as a workaround
+		char utf8Buffer[16] {};
 
-		// GetUserDefaultLocaleName could return an ISO 639-2/T string (three letter language code) or even an
-		//  arbitrary custom locale, however we only handle 639-1 (two letter language code) locale names when checking
-		//  the fallback language.
-		// if a region is included in the locale do a simple transformation to the expected POSIX style.
-		std::replace(utf8Buffer, utf8Buffer + sizeof(utf8Buffer), '-', '_');
-		return std::move(std::string(utf8Buffer));
+		// Fetching up to 10 characters to allow for script tags
+		WideCharToMultiByte(CP_UTF8, 0, wideString, 10, utf8Buffer, sizeof(utf8Buffer), nullptr, nullptr);
+
+		// Windows NLS functions return IETF/BCP-47 locale codes (or potentially arbitrary custom locales) but devX
+		//  uses posix format codes, return the expected format
+		return std::move(IetfToPosix(utf8Buffer));
 	};
+
 	WCHAR localeBuffer[LOCALE_NAME_MAX_LENGTH];
 
-	if (GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
+	if (GetUserDefaultLocaleName(localeBuffer, sizeof(localeBuffer)) != 0) {
 		// Found a user default locale convert from WIN32's default of UTF16 to UTF8 and add to the list
 		locales.push_back(wideCharToUtf8(localeBuffer));
 	}
 
 	ULONG numberOfLanguages;
-	ULONG bufferSize = LOCALE_NAME_MAX_LENGTH;
+	ULONG bufferSize = sizeof(localeBuffer);
 	GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &numberOfLanguages, localeBuffer, &bufferSize);
 
 	PWSTR bufferOffset = localeBuffer;
@@ -123,8 +151,27 @@ std::vector<std::string> GetLocales()
 		locales.push_back(std::move(locale));
 	}
 #endif
+#elif defined(__APPLE__) and defined(USE_COREFOUNDATION)
+	// Get the user's language list (in order of preference)
+	CFArrayRef languages = CFLocaleCopyPreferredLanguages();
+	CFIndex numLanguages = CFArrayGetCount(languages);
+
+	for (CFIndex i = 0; i < numLanguages; i++) {
+		auto language = static_cast<CFStringRef>(CFArrayGetValueAtIndex(languages, i));
+
+		char buffer[16];
+
+		if (CFStringGetCString(language, buffer, sizeof(buffer), kCFStringEncodingUTF8)) {
+			// Convert to the posix format expected by callers
+			locales.push_back(IetfToPosix(buffer));
+		}
+	}
+
+	CFRelease(languages);
 #else
-	locales.emplace_back(std::locale("").name().substr(0, 5));
+	std::string locale = std::locale("").name();
+	// strip off any encoding specifier, devX uses UTF8.
+	locales.emplace_back(locale.substr(0, locale.find('.')));
 #endif
 	return locales;
 }
