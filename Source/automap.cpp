@@ -495,15 +495,10 @@ void DrawAutomapText(const Surface &out)
 		linePosition.y += 15;
 	}
 
-	if (setlevel) {
+	if (setlevel)
 		DrawString(out, _(QuestLevelNames[setlvlnum]), linePosition);
-		return;
-	}
-
-	if (currlevel != 0) {
-		strcpy(desc, fmt::format(_("Level: {:s}"), LvlNames[currlevel]).c_str());
-		DrawString(out, desc, linePosition);
-	}
+	else
+		DrawString(out, LvlNames[currlevel], linePosition);
 }
 
 std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
