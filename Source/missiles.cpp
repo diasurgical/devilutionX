@@ -2812,6 +2812,7 @@ void MI_LArrow(Missile &missile)
 {
 	missile._mirange--;
 	int p = missile._misource;
+	auto &player = Players[p];
 	if (missile._miAnimType == MFILE_MINILTNG || missile._miAnimType == MFILE_MAGBLOS) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
 		missile_resistance rst = MissilesData[missile._mitype].mResist;
@@ -2819,8 +2820,8 @@ void MI_LArrow(Missile &missile)
 			int mind;
 			int maxd;
 			if (p != -1) {
-				mind = Players[p]._pILMinDam;
-				maxd = Players[p]._pILMaxDam;
+				mind = player._pILMinDam;
+				maxd = player._pILMaxDam;
 			} else {
 				mind = GenerateRnd(10) + 1 + currlevel;
 				maxd = GenerateRnd(10) + 1 + currlevel * 2;
@@ -2832,8 +2833,8 @@ void MI_LArrow(Missile &missile)
 			int mind;
 			int maxd;
 			if (p != -1) {
-				mind = Players[p]._pIFMinDam;
-				maxd = Players[p]._pIFMaxDam;
+				mind = player._pIFMinDam;
+				maxd = player._pIFMaxDam;
 			} else {
 				mind = GenerateRnd(10) + 1 + currlevel;
 				maxd = GenerateRnd(10) + 1 + currlevel * 2;
@@ -2849,11 +2850,12 @@ void MI_LArrow(Missile &missile)
 		int maxd;
 		if (p != -1) {
 			if (missile._micaster == TARGET_MONSTERS) {
-				mind = Players[p]._pIMinDam;
-				maxd = Players[p]._pIMaxDam;
+				mind = player._pIMinDam;
+				maxd = player._pIMaxDam;
 			} else {
-				mind = Monsters[p].mMinDamage;
-				maxd = Monsters[p].mMaxDamage;
+				auto &monster = Monsters[p];
+				mind = monster.mMinDamage;
+				maxd = monster.mMaxDamage;
 			}
 		} else {
 			mind = GenerateRnd(10) + 1 + currlevel;
@@ -2898,11 +2900,13 @@ void MI_Arrow(Missile &missile)
 	int maxd;
 	if (p != -1) {
 		if (missile._micaster == TARGET_MONSTERS) {
-			mind = Players[p]._pIMinDam;
-			maxd = Players[p]._pIMaxDam;
+			auto &player = Players[p];
+			mind = player._pIMinDam;
+			maxd = player._pIMaxDam;
 		} else {
-			mind = Monsters[p].mMinDamage;
-			maxd = Monsters[p].mMaxDamage;
+			auto &monster = Monsters[p];
+			mind = monster.mMinDamage;
+			maxd = monster.mMaxDamage;
 		}
 	} else {
 		mind = currlevel;
