@@ -211,7 +211,7 @@ void CheckTown()
 				ClearPanel();
 				strcpy(infostr, _("Town Portal"));
 				if (currlevel == 0)
-					strcpy(tempstr, fmt::format(_("from {:s} to {:s}"), Players[missile._misource]._pName, LvlNames[Portals[i].level]).c_str());
+					strcpy(tempstr, fmt::format(_("to {:s} from {:s}"), LvlNames[Portals[i].level], Players[missile._misource]._pName).c_str());
 				else
 					strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile._misource]._pName).c_str());
 				AddPanelString(tempstr);
