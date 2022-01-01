@@ -58,11 +58,11 @@ int L6UpList[] = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, -1 };
 int L6DownList[] = { 57, 58, 59, 60, 61, 62, 63, 64, -1 };
 
 const char *LvlNames[] = {
-	"Town",
-	"Dungeon 1",
-	"Dungeon 2",
-	"Dungeon 3",
-	"Dungeon 4",
+	"Tristram",
+	"Cathedral 1",
+	"Cathedral 2",
+	"Cathedral 3",
+	"Cathedral 4",
 	"Catacombs 1",
 	"Catacombs 2",
 	"Catacombs 3",
