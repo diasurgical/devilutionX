@@ -11,10 +11,14 @@
 #elif defined(__3DS__)
 #include "platform/ctr/locale.hpp"
 #elif defined(_WIN32)
-// clang-format off
 #include <windows.h>
+
+#if WINVER >= 0x0A00
+#include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/Windows.System.UserProfile.h>
+#else
 #include <winnls.h>
-// clang-format on
+#endif
 #elif defined(__APPLE__) and defined(USE_COREFOUNDATION)
 #include <CoreFoundation/CoreFoundation.h>
 #else
@@ -104,7 +108,13 @@ std::vector<std::string> GetLocales()
 #elif defined(__3DS__)
 	locales.push_back(n3ds::GetLocale());
 #elif defined(_WIN32)
-#if WINVER >= 0x0600
+#if WINVER >= 0x0A00
+	winrt::init_apartment();
+
+	for (const auto &lang : winrt::Windows::System::UserProfile::GlobalizationPreferences::Languages()) {
+		locales.push_back(IetfToPosix(winrt::to_string(lang)));
+	}
+#elif WINVER >= 0x0600
 	auto wideCharToUtf8 = [](PWSTR wideString) {
 		// WideCharToMultiByte potentially leaves the buffer unterminated, default initialise here as a workaround
 		char utf8Buffer[16] {};
@@ -120,7 +130,7 @@ std::vector<std::string> GetLocales()
 	WCHAR localeBuffer[LOCALE_NAME_MAX_LENGTH];
 
 	if (GetUserDefaultLocaleName(localeBuffer, sizeof(localeBuffer)) != 0) {
-		// Found a user default locale convert from WIN32's default of UTF16 to UTF8 and add to the list
+		// Found a user default locale, convert from WIN32's default of UTF16 to UTF8 and add to the list
 		locales.push_back(wideCharToUtf8(localeBuffer));
 	}
 
