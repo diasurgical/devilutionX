@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-12-22 22:16-0300\n"
-"PO-Revision-Date: 2021-12-22 23:47-0300\n"
-"Last-Translator: Emiliano Augusto Gonzalez (hiperiondev) <egonzalez.hiperion@gmail.com>\n"
+"PO-Revision-Date: 2022-01-01 12:40-0300\n"
+"Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -6076,9 +6076,10 @@ msgstr "Pantalla de bienvenida"
 msgid "Shown splash screen."
 msgstr "Mostrar pantalla de bienvenida."
 
+# La traducción no es exacta para reducir el largo.
 #: Source/options.cpp:595
 msgid "Logo and Title Screen"
-msgstr "Pantalla de logo y título"
+msgstr "Logo y título"
 
 #: Source/options.cpp:596
 msgid "Title Screen"
@@ -6272,17 +6273,19 @@ msgstr "Cursor por hardware"
 msgid "Use a hardware cursor"
 msgstr "Usa el cursor por hardware"
 
+# la traduccion debe ser corta para que entre en el cuado de menu
 #: Source/options.cpp:776
 msgid "Hardware Cursor For Items"
-msgstr "Cursor por hardware para objetos"
+msgstr "Cursor por hw para objetos"
 
 #: Source/options.cpp:776
 msgid "Use a hardware cursor for items."
 msgstr "Usa el cursos por hardware para los objetos."
 
+# Mantener corto. Menu de configuración
 #: Source/options.cpp:777
 msgid "Hardware Cursor Maximum Size"
-msgstr "Tamaño máximo del cursor por hardware"
+msgstr "Tamaño máx del cursor por hardw"
 
 #: Source/options.cpp:777
 msgid ""
@@ -6529,9 +6532,10 @@ msgid "Refill belt from inventory when belt item is consumed."
 msgstr ""
 "Recarga el cinturón desde el inventario cuando el objeto ha sido consumido."
 
+# La traduccion debe ser corta para que entre en el cuadro de dialogo
 #: Source/options.cpp:847
 msgid "Disable Crippling Shrines"
-msgstr "Desactivar santuarios paralizantes"
+msgstr "Desact. santuarios paralizantes"
 
 #: Source/options.cpp:847
 msgid ""
@@ -6595,9 +6599,10 @@ msgid "Number of Rejuvenation potions to pick up automatically."
 msgstr ""
 "Número de pociones de rejuvenecimiento que se recogerán automáticamente."
 
+# La traduccion debe ser corta para que entre en el cuadro de dialogo
 #: Source/options.cpp:854
 msgid "Full Rejuvenation Potion Pickup"
-msgstr "Recoger poción de rejuvenecimiento completo"
+msgstr "Recoger poción de rejuvenec. completo"
 
 #: Source/options.cpp:854
 msgid "Number of Full Rejuvenation potions to pick up automatically."
@@ -6791,8 +6796,8 @@ msgid "Mana: {:d}"
 msgstr "Maná: {:d}"
 
 #: Source/panels/spell_book.cpp:178
-msgid "Unusable"
-msgstr "Inutilizable"
+msgid "Level 0 - Unusable"
+msgstr "Nivel0: Inutilizable"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:180
