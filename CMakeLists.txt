@@ -275,6 +275,12 @@ if(APPLE)
         COMPONENT Runtime)
   endif()
 
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+  if(COREFOUNDATION_LIBRARY)
+    target_link_libraries(libdevilutionx PUBLIC "${COREFOUNDATION_LIBRARY}")
+    target_compile_definitions(libdevilutionx PRIVATE USE_COREFOUNDATION)
+  endif()
+
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK On)
 endif()
