@@ -75,20 +75,26 @@ void tcp_server::HandleReceive(const scc &con, const asio::error_code &ec,
 	con->recv_buffer.resize(bytesRead);
 	con->recv_queue.Write(std::move(con->recv_buffer));
 	con->recv_buffer.resize(frame_queue::max_frame_size);
-	while (con->recv_queue.PacketReady()) {
-		try {
-			auto pkt = pktfty.make_packet(con->recv_queue.ReadPacket());
-			if (con->plr == PLR_BROADCAST) {
-				HandleReceiveNewPlayer(con, *pkt);
-			} else {
-				con->timeout = timeout_active;
-				HandleReceivePacket(*pkt);
+	try {
+		while (con->recv_queue.PacketReady()) {
+			try {
+				auto pkt = pktfty.make_packet(con->recv_queue.ReadPacket());
+				if (con->plr == PLR_BROADCAST) {
+					HandleReceiveNewPlayer(con, *pkt);
+				} else {
+					con->timeout = timeout_active;
+					HandleReceivePacket(*pkt);
+				}
+			} catch (dvlnet_exception &e) {
+				Log("Network error: {}", e.what());
+				DropConnection(con);
+				return;
 			}
-		} catch (dvlnet_exception &e) {
-			Log("Network error: {}", e.what());
-			DropConnection(con);
-			return;
 		}
+	} catch (frame_queue_exception &e) {
+		Log("Invalid packet: {}", e.what());
+		DropConnection(con);
+		return;
 	}
 	StartReceive(con);
 }
