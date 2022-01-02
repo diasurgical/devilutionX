@@ -3,6 +3,7 @@
 
 #include <cstdint>
 
+#include "controls/controller.h"
 #include "player.h"
 
 namespace devilution {
@@ -39,7 +40,11 @@ void HandleRightStickMotion();
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
 bool InGameMenu();
 
-void DetectInputMethod(SDL_Event &event);
+void SetPointAndClick(bool value);
+
+bool IsPointAndClick();
+
+void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent);
 
 // Whether the automap is being displayed.
 bool IsAutomapActive();

@@ -4,6 +4,7 @@
 #include "controls/axis_direction.h"
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
+#include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "utils/sdl_compat.h"
 
@@ -26,8 +27,10 @@ MenuAction GetMenuHeldUpDownAction()
 MenuAction GetMenuAction(const SDL_Event &event)
 {
 	const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
+	bool isGamepadMotion = ProcessControllerMotion(event, ctrlEvent);
 
-	if (ProcessControllerMotion(event, ctrlEvent)) {
+	DetectInputMethod(event, ctrlEvent);
+	if (isGamepadMotion) {
 		return GetMenuHeldUpDownAction();
 	}
 
