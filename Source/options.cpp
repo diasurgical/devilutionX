@@ -964,18 +964,25 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("en", "English");
 	languages.emplace_back("es", "Español");
 	languages.emplace_back("fr", "Français");
-	languages.emplace_back("ja", "日本語 - Japanese");
 	languages.emplace_back("hr", "Hrvatski");
 	languages.emplace_back("it", "Italiano");
-	languages.emplace_back("ko_KR", "한국어 - Korean");
+
+	if (font_mpq) {
+		languages.emplace_back("ja", "日本語");
+		languages.emplace_back("ko_KR", "한국어");
+	}
+
 	languages.emplace_back("pl", "Polski");
 	languages.emplace_back("pt_BR", "Português do Brasil");
 	languages.emplace_back("ro_RO", "Română");
 	languages.emplace_back("ru", "Русский");
 	languages.emplace_back("sv", "Svenska");
 	languages.emplace_back("uk", "Українська");
-	languages.emplace_back("zh_CN", "汉语 - Simplified Chinese");
-	languages.emplace_back("zh_TW", "漢語 - Traditional Chinese");
+
+	if (font_mpq) {
+		languages.emplace_back("zh_CN", "汉语");
+		languages.emplace_back("zh_TW", "漢語");
+	}
 
 	// Ensures that the ini specified language is present in languages list even if unknown (for example if someone starts to translate a new language)
 	if (std::find_if(languages.begin(), languages.end(), [this](const auto &x) { return x.first == this->szCode; }) == languages.end()) {
