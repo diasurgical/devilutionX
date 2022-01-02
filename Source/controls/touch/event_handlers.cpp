@@ -34,6 +34,8 @@ void SimulateMouseMovement(const SDL_Event &event)
 
 	MousePosition = position;
 
+	SetPointAndClick(true);
+
 	InvalidateInventorySlot();
 }
 
@@ -88,11 +90,15 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 
 void HandleTouchEvent(const SDL_Event &event)
 {
-	if (Handler.Handle(event))
-		return;
+	SetPointAndClick(false);
 
-	if (!IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
+	if (Handler.Handle(event)) {
 		return;
+	}
+
+	if (!IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
+		return;
+	}
 
 	SimulateMouseMovement(event);
 

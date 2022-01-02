@@ -6,7 +6,6 @@
 
 #include "automap.h"
 #include "control.h"
-#include "controls/controller.h"
 #include "controls/controller_motion.h"
 #ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
@@ -1250,7 +1249,14 @@ struct RightStickAccumulator {
 	float hiresDY;
 };
 
-ControlTypes GetInputTypeFromEvent(SDL_Event &event)
+bool IsStickMovmentSignificant()
+{
+	return leftStickX >= 0.5 || leftStickX <= -0.5
+	    || leftStickY >= 0.5 || leftStickY <= -0.5
+	    || rightStickX != 0 || rightStickY != 0;
+}
+
+ControlTypes GetInputTypeFromEvent(const SDL_Event &event)
 {
 	if (IsAnyOf(event.type, SDL_KEYDOWN, SDL_KEYUP))
 		return ControlTypes::KeyboardAndMouse;
@@ -1266,48 +1272,42 @@ ControlTypes GetInputTypeFromEvent(SDL_Event &event)
 		return event.wheel.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
 	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
 		return ControlTypes::VirtualGamepad;
-	if (event.type >= SDL_CONTROLLERAXISMOTION && event.type <= SDL_CONTROLLERDEVICEREMAPPED)
+	if (event.type == SDL_CONTROLLERAXISMOTION && IsStickMovmentSignificant())
+		return ControlTypes::Gamepad;
+	if (event.type >= SDL_CONTROLLERBUTTONDOWN && event.type <= SDL_CONTROLLERDEVICEREMAPPED)
 		return ControlTypes::Gamepad;
 	if (IsAnyOf(event.type, SDL_JOYDEVICEADDED, SDL_JOYDEVICEREMOVED))
 		return ControlTypes::Gamepad;
 #endif
-	if (event.type >= SDL_JOYAXISMOTION && event.type <= SDL_JOYBUTTONUP)
+	if (event.type == SDL_JOYAXISMOTION && IsStickMovmentSignificant())
+		return ControlTypes::Gamepad;
+	if (event.type >= SDL_JOYBALLMOTION && event.type <= SDL_JOYBUTTONUP)
 		return ControlTypes::Gamepad;
 
 	return ControlTypes::None;
 }
 
-bool ContinueSimulatingMouse(SDL_Event &event)
+float rightStickLastMove = 0;
+
+bool ContinueSimulatingMouse(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
 	if (IsAutomapActive())
 		return false;
 
-	if (event.type == SDL_JOYAXISMOTION) {
-#if defined(JOY_AXIS_RIGHTX)
-		if (event.jaxis.axis == JOY_AXIS_RIGHTX)
-			return true;
-#endif
-#if defined(JOY_AXIS_RIGHTY)
-		if (event.jaxis.axis == JOY_AXIS_RIGHTY)
-			return true;
-#endif
-#ifndef USE_SDL1
-#if !defined(JOY_AXIS_RIGHTX) && !defined(JOY_AXIS_RIGHTY)
+#if !defined(USE_SDL1) && !defined(JOY_AXIS_RIGHTX) && !defined(JOY_AXIS_RIGHTY)
+	if (IsAnyOf(event.type, SDL_JOYAXISMOTION, SDL_JOYHATMOTION, SDL_JOYBUTTONDOWN, SDL_JOYBUTTONUP)) {
 		if (!GameController::All().empty())
 			return true;
+	}
 #endif
-	} else if (event.type == SDL_CONTROLLERAXISMOTION && IsAnyOf(event.caxis.axis, SDL_CONTROLLER_AXIS_RIGHTX, SDL_CONTROLLER_AXIS_RIGHTY)) {
+
+	if (rightStickX != 0 || rightStickY != 0 || rightStickLastMove != 0) {
+		rightStickLastMove = rightStickX + rightStickY; // Allow stick to come to a rest with out breaking simulation
 		return true;
-#endif
-#ifdef USE_SDL1
-	} else if (IsAnyOf(event.type, SDL_JOYBUTTONUP, SDL_JOYBUTTONDOWN, SDL_KEYUP, SDL_KEYDOWN)) {
-#else
-	} else if (IsAnyOf(event.type, SDL_JOYBUTTONUP, SDL_JOYBUTTONDOWN, SDL_KEYUP, SDL_KEYDOWN, SDL_CONTROLLERBUTTONUP, SDL_CONTROLLERBUTTONDOWN)) {
-#endif
-		const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-		if (IsAnyOf(ctrlEvent.button, ControllerButton_BUTTON_RIGHTSTICK, ControllerButton_BUTTON_BACK, ControllerButton_NONE, ControllerButton_IGNORE)) {
-			return true;
-		}
+	}
+
+	if (IsAnyOf(gamepadEvent.button, ControllerButton_BUTTON_RIGHTSTICK, ControllerButton_BUTTON_BACK)) {
+		return true;
 	}
 
 	return false;
@@ -1315,7 +1315,7 @@ bool ContinueSimulatingMouse(SDL_Event &event)
 
 } // namespace
 
-void DetectInputMethod(SDL_Event &event)
+void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
 	ControlTypes inputType = GetInputTypeFromEvent(event);
 
@@ -1326,15 +1326,12 @@ void DetectInputMethod(SDL_Event &event)
 #endif
 
 #if HAS_KBCTRL == 1
-	if (inputType == ControlTypes::KeyboardAndMouse) {
-		const ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-		if (!IsAnyOf(ctrlEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
-			inputType = ControlTypes::Gamepad;
-		}
+	if (inputType == ControlTypes::KeyboardAndMouse && IsNoneOf(gamepadEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
+		inputType = ControlTypes::Gamepad;
 	}
 #endif
 
-	if (ControlMode == ControlTypes::KeyboardAndMouse && inputType == ControlTypes::Gamepad && ContinueSimulatingMouse(event)) {
+	if (ControlMode == ControlTypes::KeyboardAndMouse && inputType == ControlTypes::Gamepad && ContinueSimulatingMouse(event, gamepadEvent)) {
 		return;
 	}
 
@@ -1401,10 +1398,22 @@ void FocusOnInventory()
 	ResetInvCursorPosition();
 }
 
+bool PointAndClickState = false;
+
+void SetPointAndClick(bool value)
+{
+	PointAndClickState = value;
+}
+
+bool IsPointAndClick()
+{
+	return PointAndClickState;
+}
+
 void plrctrls_after_check_curs_move()
 {
 	// check for monsters first, then items, then towners.
-	if (ControlMode == ControlTypes::KeyboardAndMouse) {
+	if (ControlMode == ControlTypes::KeyboardAndMouse || IsPointAndClick()) {
 		return;
 	}
 
