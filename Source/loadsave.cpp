@@ -7,6 +7,7 @@
 
 #include <climits>
 #include <cstring>
+#include <numeric>
 #include <unordered_map>
 
 #include <SDL.h>
@@ -889,28 +890,29 @@ void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
 /**
  * @brief Loads items on the current dungeon floor
  * @param file interface to the save file
+ * @param savedItemCount how many items to read from the save file
  */
-void LoadDroppedItems(LoadHelper &file)
+void LoadDroppedItems(LoadHelper &file, size_t savedItemCount)
 {
-	// Skip loading ActiveItems and AvailableItems, the indices are initialised below based on the number of active items
+	// Skip loading ActiveItems and AvailableItems, the indices are initialised below based on the number of valid items
 	file.Skip<uint8_t>(MAXITEMS * 2);
 
+	// Reset ActiveItems, the Items array will be populated from the start
+	std::iota(ActiveItems, ActiveItems + MAXITEMS, 0);
+	ActiveItemCount = 0;
 	// Clear dItem so we can populate valid drop locations
 	memset(dItem, 0, sizeof(dItem));
 
-	for (uint8_t i = 0; i < MAXITEMS; i++) {
-		if (i < ActiveItemCount) {
-			LoadItem(file, Items[i]);
+	for (size_t i = 0; i < savedItemCount; i++) {
+		Item &item = Items[ActiveItemCount];
+		LoadItem(file, item);
 
-			const Item &item = Items[i];
-			if (!item.isEmpty()) {
-				// Loaded a valid item, populate its location in the lookup table with the offset in the Items array
-				dItem[item.position.x][item.position.y] = static_cast<int8_t>(i + 1);
-			}
+		if (!item.isEmpty()) {
+			// Loaded a valid item
+			ActiveItemCount++;
+			// populate its location in the lookup table with the offset in the Items array + 1 (so 0 can be used for "no item")
+			dItem[item.position.x][item.position.y] = ActiveItemCount;
 		}
-
-		// Initialise ActiveItems to reflect the order the items were loaded from the file
-		ActiveItems[i] = i;
 	}
 }
 
@@ -1772,7 +1774,7 @@ void LoadGame(bool firstflag)
 	invflag = file.NextBool8();
 	chrflag = file.NextBool8();
 	int tmpNummonsters = file.NextBE<int32_t>();
-	int tmpNumitems = file.NextBE<int32_t>();
+	auto savedItemCount = file.NextBE<uint32_t>();
 	int tmpNummissiles = file.NextBE<int32_t>();
 	int tmpNobjects = file.NextBE<int32_t>();
 
@@ -1808,7 +1810,6 @@ void LoadGame(bool firstflag)
 
 	ViewPosition = { viewX, viewY };
 	ActiveMonsterCount = tmpNummonsters;
-	ActiveItemCount = tmpNumitems;
 	ActiveMissileCount = tmpNummissiles;
 	ActiveObjectCount = tmpNobjects;
 
@@ -1851,7 +1852,7 @@ void LoadGame(bool firstflag)
 			LoadLighting(&file, &VisionList[i]);
 	}
 
-	LoadDroppedItems(file);
+	LoadDroppedItems(file, savedItemCount);
 
 	for (bool &uniqueItemFlag : UniqueItemFlags)
 		uniqueItemFlag = file.NextBool8();
@@ -2200,7 +2201,7 @@ void LoadLevel()
 	}
 
 	ActiveMonsterCount = file.NextBE<int32_t>();
-	ActiveItemCount = file.NextBE<int32_t>();
+	auto savedItemCount = file.NextBE<uint32_t>();
 	ActiveObjectCount = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
@@ -2220,7 +2221,7 @@ void LoadLevel()
 		}
 	}
 
-	LoadDroppedItems(file);
+	LoadDroppedItems(file, savedItemCount);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
