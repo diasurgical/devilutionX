@@ -25,8 +25,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: linux-x86_64-sdl1-cmake-${{ github.sha }}
-        restore-keys: linux-x86_64-sdl1-cmake-
+        key: linux-x86_64-sdl1-cmake-v2-${{ github.sha }}
+        restore-keys: linux-x86_64-sdl1-cmake-v2-
 
     - name: Configure CMake
       shell: bash
