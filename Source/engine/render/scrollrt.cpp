@@ -1229,7 +1229,7 @@ void DrawView(const Surface &out, Point startPosition)
 	DrawPlrMsg(out);
 	gmenu_draw(out);
 	doom_draw(out);
-	DrawInfoBox(out);
+	//DrawInfoBox(out);
 	control_update_life_mana(); // Update life/mana totals before rendering any portion of the flask.
 	DrawLifeFlaskUpper(out);
 	DrawManaFlaskUpper(out);
@@ -1634,14 +1634,14 @@ void DrawAndBlit()
 
 		DrawSpell(out);
 	}
-	if (drawbtnflag) {
-		DrawCtrlBtns(out);
-	}
+	//if (drawbtnflag) {
+	//	DrawCtrlBtns(out);
+	//}
 	if (drawsbarflag) {
 		DrawInvBelt(out);
 	}
 	if (talkflag) {
-		DrawTalkPan(out);
+		//DrawTalkPan(out);
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);

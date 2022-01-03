@@ -769,7 +769,7 @@ void DoPanBtn()
 			}
 		}
 	}
-	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
+	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 - 56 + mainPanelPosition.y && MousePosition.y < 120 - 56 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
 			myPlayer._pRSpell = SPL_INVALID;
@@ -964,7 +964,7 @@ void FreeControlPan()
 	pLifeBuff = std::nullopt;
 	FreeSpellIcons();
 	FreeSpellBook();
-	pPanelButtons = std::nullopt;
+	//pPanelButtons = std::nullopt;
 	multiButtons = std::nullopt;
 	talkButtons = std::nullopt;
 	pChrButtons = std::nullopt;
