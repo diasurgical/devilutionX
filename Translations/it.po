@@ -3781,7 +3781,7 @@ msgstr "{1} {0}"
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1166
 msgid "{0} of {1}"
-msgstr "{:s} di {:s}"
+msgstr "{0} di {1}"
 
 #: Source/items.cpp:1850 Source/items.cpp:1862
 msgid "increases a weapon's"

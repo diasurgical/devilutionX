@@ -4148,7 +4148,7 @@ msgstr "шкода кулі вогню: {:d}"
 
 #: Source/items.cpp:3853
 msgid "fireball damage: {:d}-{:d}"
-msgstr "шкода кулі вогню: {:d}"
+msgstr "шкода кулі вогню: {:d}-{:d}"
 
 #: Source/items.cpp:3855
 msgid "attacker takes 1-3 damage"

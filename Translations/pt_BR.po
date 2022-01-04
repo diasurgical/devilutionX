@@ -3664,11 +3664,9 @@ msgstr "Óleo de impermeabilidade"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
 #: Source/items.cpp:1183
-#, fuzzy
-#| msgid "{0} of {1}"
 msgctxt "spell"
 msgid "{0} of {1}"
-msgstr "{:s} {:s}"
+msgstr "{0} {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1193
@@ -3691,7 +3689,7 @@ msgstr ""
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1220
 msgid "{0} of {1}"
-msgstr "{:s} {:s}"
+msgstr "{0} {1}"
 
 #: Source/items.cpp:1906 Source/items.cpp:1918
 msgid "increases a weapon's"

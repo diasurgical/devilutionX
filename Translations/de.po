@@ -3837,7 +3837,7 @@ msgstr "{0}{1}"
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1166
 msgid "{0} of {1}"
-msgstr "{:s} de{:s}"
+msgstr "{0} de{1}"
 
 #: Source/items.cpp:1850 Source/items.cpp:1862
 msgid "increases a weapon's"
@@ -4356,7 +4356,7 @@ msgstr "Blitzschaden: {:d}"
 
 #: Source/items.cpp:3930
 msgid "lightning damage: {:d}-{:d}"
-msgstr "Blitzschaden: {:d}"
+msgstr "Blitzschaden: {:d}-{:d}"
 
 #: Source/items.cpp:3932
 msgid "charged bolts on hits"
@@ -4412,7 +4412,7 @@ msgstr "Schaden: {:d}  Haltb.: {:d}/{:d}"
 
 #: Source/items.cpp:3999 Source/items.cpp:4044
 msgid "damage: {:d}-{:d}  Indestructible"
-msgstr "Schaden: {:d}  Unzerstörbar"
+msgstr "Schaden: {:d}-{:d}  Unzerstörbar"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4001 Source/items.cpp:4046

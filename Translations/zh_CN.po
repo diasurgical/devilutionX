@@ -6732,7 +6732,7 @@ msgstr "卷轴"
 
 #: Source/panels/spell_list.cpp:207
 msgid "Spell Hotkey {:s}"
-msgstr "法术​热键 {:d}"
+msgstr "法术​热键 {:s}"
 
 #: Source/pfile.cpp:242
 msgid "Failed to open player archive for writing."

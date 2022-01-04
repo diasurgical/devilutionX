@@ -3648,7 +3648,7 @@ msgstr ""
 #: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
 #: Source/items.cpp:1315
 msgid "{0} of {1}"
-msgstr "{:s} {:s}"
+msgstr "{0} {1}"
 
 #: Source/items.cpp:1895 Source/items.cpp:1907
 msgid "increases a weapon's"
@@ -3872,7 +3872,7 @@ msgstr "класс брони: {:d}"
 
 #: Source/items.cpp:3842 Source/items.cpp:4067
 msgid "Resist Fire: {:+d}%"
-msgstr "Сопротивление огню: {:d}%"
+msgstr "Сопротивление огню: {:+d}%"
 
 #: Source/items.cpp:3844
 #, no-c-format
@@ -3881,7 +3881,7 @@ msgstr "Сопротивление огню: 75% MAX"
 
 #: Source/items.cpp:3849
 msgid "Resist Lightning: {:+d}%"
-msgstr "Сопротивление молнии: {:d}%"
+msgstr "Сопротивление молнии: {:+d}%"
 
 #: Source/items.cpp:3851
 #, no-c-format
@@ -3890,7 +3890,7 @@ msgstr "Сопротивление молнии: 75% MAX"
 
 #: Source/items.cpp:3856
 msgid "Resist Magic: {:+d}%"
-msgstr "Сопротивление магии: {:d}%"
+msgstr "Сопротивление магии: {:+d}%"
 
 #: Source/items.cpp:3858
 #, no-c-format
@@ -3899,7 +3899,7 @@ msgstr "Сопротивление магии: 75% MAX"
 
 #: Source/items.cpp:3863
 msgid "Resist All: {:+d}%"
-msgstr "Общее сопротивление: {:d}%"
+msgstr "Общее сопротивление: {:+d}%"
 
 #: Source/items.cpp:3865
 #, no-c-format
