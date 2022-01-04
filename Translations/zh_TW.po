@@ -825,9 +825,9 @@ msgid ""
 "\n"
 "The error occurred at: {:s} line {:d}"
 msgstr ""
-"{: s}\n"
+"{:s}\n"
 "\n"
-"錯誤​發生​在: {: s}，行{: d}"
+"錯誤​發生​在: {:s}，行{:d}"
 
 #: Source/appfat.cpp:117
 #, fuzzy
@@ -856,7 +856,7 @@ msgid ""
 "{:s}"
 msgstr ""
 "無​法​寫入​位置: \n"
-"{: s}"
+"{:s}"
 
 #: Source/appfat.cpp:133
 msgid "Read-Only Directory Error"
@@ -1243,7 +1243,7 @@ msgstr ""
 
 #: Source/diablo.cpp:870
 msgid "unrecognized option '{:s}'\n"
-msgstr "無​法識別​的​選項​{: s}\n"
+msgstr "無​法識別​的​選項​{:s}\n"
 
 #: Source/diablo.cpp:901
 msgid "version {:s}"
@@ -3631,11 +3631,9 @@ msgstr "防水​之​油"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
 #: Source/items.cpp:1184
-#, fuzzy
-#| msgid "{0} of {1}"
 msgctxt "spell"
 msgid "{0} of {1}"
-msgstr "{:s} / {:s}"
+msgstr "{0} / {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1192
@@ -3658,7 +3656,7 @@ msgstr ""
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1216
 msgid "{0} of {1}"
-msgstr "{:s} / {:s}"
+msgstr "{0} / {1}"
 
 #: Source/items.cpp:1900 Source/items.cpp:1912
 msgid "increases a weapon's"

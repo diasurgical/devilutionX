@@ -3626,11 +3626,9 @@ msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
 #: Source/items.cpp:1183
-#, fuzzy
-#| msgid "{0} of {1}"
 msgctxt "spell"
 msgid "{0} of {1}"
-msgstr "{:s} de {:s}"
+msgstr "{0} de {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1193
@@ -3653,7 +3651,7 @@ msgstr ""
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1220
 msgid "{0} of {1}"
-msgstr "{:s} de {:s}"
+msgstr "{0} de {1}"
 
 #: Source/items.cpp:1906 Source/items.cpp:1918
 msgid "increases a weapon's"
@@ -4247,7 +4245,7 @@ msgstr "daune: {:d}-{:d}  Dur: {:d}/{:d}"
 
 #: Source/items.cpp:4157 Source/items.cpp:4210
 msgid "armor: {:d}  Indestructible"
-msgstr "armură: {:d}-{:d}  Indestructibil"
+msgstr "armură: {:d}  Indestructibil"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4159 Source/items.cpp:4212

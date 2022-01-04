@@ -4162,7 +4162,7 @@ msgstr "ダメージ: {:d}-{:d}  壊れ​ない"
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4146 Source/items.cpp:4193
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "ダメージ:{:d}  耐久​度:{:d}/{:d}"
+msgstr "ダメージ:{:d}-{:d}  耐久​度:{:d}/{:d}"
 
 #: Source/items.cpp:4152 Source/items.cpp:4205
 msgid "armor: {:d}  Indestructible"
