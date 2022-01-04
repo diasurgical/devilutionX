@@ -976,12 +976,12 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 
 	if (font_mpq) {
 		languages.emplace_back("ja", "日本語");
-		languages.emplace_back("ko_KR", "한국어");
+		languages.emplace_back("ko", "한국어");
 	}
 
 	languages.emplace_back("pl", "Polski");
 	languages.emplace_back("pt_BR", "Português do Brasil");
-	languages.emplace_back("ro_RO", "Română");
+	languages.emplace_back("ro", "Română");
 	languages.emplace_back("ru", "Русский");
 	languages.emplace_back("sv", "Svenska");
 	languages.emplace_back("uk", "Українська");
