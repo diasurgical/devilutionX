@@ -94,7 +94,7 @@ void SetPluralForm(char *string)
 	expression = StrTrimRight(expression);
 	expression = StrTrimLeft(expression);
 
-	// ko_KR, zh_CN, zh_TW
+	// ko, zh_CN, zh_TW
 	if (strcmp(expression, "0") == 0) {
 		GetLocalPluralId = [](int /*n*/) -> int { return 0; };
 		return;
