@@ -528,6 +528,13 @@ struct Player {
 	}
 
 	/**
+	 * @brief Return reciprocal of the factor for calculating damage reduction due to Mana Shield.
+	 *
+	 * Valid only for players with Mana Shield spell level greater than zero.
+	 */
+	int GetManaShieldDamageReduction();
+
+	/**
 	 * @brief Return monster armor value after including player's armor piercing % (hellfire only)
 	 * @param monsterArmor - monster armor before applying % armor pierce
 	 * @param isMelee - indicates if it's melee or ranged combat
