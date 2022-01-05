@@ -2812,7 +2812,6 @@ void MI_LArrow(Missile &missile)
 {
 	missile._mirange--;
 	int p = missile._misource;
-	auto &player = Players[p];
 	if (missile._miAnimType == MFILE_MINILTNG || missile._miAnimType == MFILE_MAGBLOS) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
 		missile_resistance rst = MissilesData[missile._mitype].mResist;
@@ -2820,6 +2819,7 @@ void MI_LArrow(Missile &missile)
 			int mind;
 			int maxd;
 			if (p != -1) {
+				auto &player = Players[p];
 				mind = player._pILMinDam;
 				maxd = player._pILMaxDam;
 			} else {
@@ -2833,6 +2833,7 @@ void MI_LArrow(Missile &missile)
 			int mind;
 			int maxd;
 			if (p != -1) {
+				auto &player = Players[p];
 				mind = player._pIFMinDam;
 				maxd = player._pIFMaxDam;
 			} else {
