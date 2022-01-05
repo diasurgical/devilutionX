@@ -3601,12 +3601,7 @@ void ModifyPlrStr(int p, int l)
 	auto &player = Players[p];
 
 	int max = player.GetMaximumAttributeValue(CharacterAttribute::Strength);
-	if (player._pBaseStr + l > max) {
-		l = max - player._pBaseStr;
-	}
-	if (player._pBaseStr + l < 0) {
-		l = 0;
-	}
+	l = clamp(l, 0, max - player._pBaseStr);
 
 	player._pStrength += l;
 	player._pBaseStr += l;
@@ -3626,12 +3621,7 @@ void ModifyPlrMag(int p, int l)
 	auto &player = Players[p];
 
 	int max = player.GetMaximumAttributeValue(CharacterAttribute::Magic);
-	if (player._pBaseMag + l > max) {
-		l = max - player._pBaseMag;
-	}
-	if (player._pBaseMag + l < 0) {
-		l = 0;
-	}
+	l = clamp(l, 0, max - player._pBaseMag);
 
 	player._pMagic += l;
 	player._pBaseMag += l;
@@ -3665,12 +3655,7 @@ void ModifyPlrDex(int p, int l)
 	auto &player = Players[p];
 
 	int max = player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
-	if (player._pBaseDex + l > max) {
-		l = max - player._pBaseDex;
-	}
-	if (player._pBaseDex + l < 0) {
-		l = 0;
-	}
+	l = clamp(l, 0, max - player._pBaseDex);
 
 	player._pDexterity += l;
 	player._pBaseDex += l;
@@ -3689,12 +3674,7 @@ void ModifyPlrVit(int p, int l)
 	auto &player = Players[p];
 
 	int max = player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
-	if (player._pBaseVit + l > max) {
-		l = max - player._pBaseVit;
-	}
-	if (player._pBaseVit + l < 0) {
-		l = 0;
-	}
+	l = clamp(l, 0, max - player._pBaseVit);
 
 	player._pVitality += l;
 	player._pBaseVit += l;
