@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <vector>
@@ -7,7 +6,6 @@
 
 #include "controls/controller_buttons.h"
 
-#ifndef USE_SDL1
 namespace devilution {
 
 class GameController {
@@ -42,4 +40,3 @@ private:
 };
 
 } // namespace devilution
-#endif

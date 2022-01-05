@@ -605,6 +605,8 @@ struct Options {
 extern DVL_API_FOR_TEST Options sgOptions;
 extern bool sbWasOptionsLoaded;
 
+bool HardwareCursorSupported();
+
 /**
  * @brief Save game configurations to ini file
  */

@@ -198,7 +198,7 @@ bool ProcessInput()
 
 	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE) {
 #ifdef __vita__
-		finish_simulated_mouse_clicks(MousePosition.x, MousePosition.y);
+		FinishSimulatedMouseClicks(MousePosition);
 #endif
 		CheckCursMove();
 		plrctrls_after_check_curs_move();
@@ -909,7 +909,7 @@ void DiabloParseFlags(int argc, char **argv)
 void DiabloInitScreen()
 {
 	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
-	if (!sgbControllerActive)
+	if (ControlMode == ControlTypes::KeyboardAndMouse)
 		SetCursorPos(MousePosition);
 	ScrollInfo.tile = { 0, 0 };
 	ScrollInfo.offset = { 0, 0 };
@@ -953,7 +953,7 @@ void DiabloInit()
 		messages.emplace_back(_(QuickMessages[i].message));
 	}
 
-#ifdef VIRTUAL_GAMEPAD
+#ifndef USE_SDL1
 	InitializeVirtualGamepad();
 #endif
 
@@ -1090,7 +1090,7 @@ void LoadLvlGFX()
 void LoadAllGFX()
 {
 	IncProgress();
-#ifdef VIRTUAL_GAMEPAD
+#if !defined(USE_SDL1) && !defined(__vita__)
 	InitVirtualGamepadGFX(renderer);
 #endif
 	IncProgress();
@@ -1485,16 +1485,10 @@ void InitKeymapActions()
 	    N_("Displays game infos."),
 	    'V',
 	    [] {
-		    const char *difficulties[3] = {
-			    _("Normal"),
-			    _("Nightmare"),
-			    _("Hell"),
-		    };
 		    EventPlrMsg(fmt::format(
-		                    _(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}, Difficulty: {:s}"),
+		                    _(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}"),
 		                    PROJECT_NAME,
-		                    PROJECT_VERSION,
-		                    difficulties[sgGameInitInfo.nDifficulty]),
+		                    PROJECT_VERSION),
 		        UiFlags::ColorWhite);
 	    },
 	    [&]() { return !IsPlayerDead(); });
@@ -1569,7 +1563,7 @@ void FreeGameMem()
 	FreeObjectGFX();
 	FreeMonsterSnd();
 	FreeTownerGFX();
-#ifdef VIRTUAL_GAMEPAD
+#ifndef USE_SDL1
 	DeactivateVirtualGamepad();
 	FreeVirtualGamepadGFX();
 #endif
@@ -1914,7 +1908,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			LoadAllGFX();
 		} else {
 			IncProgress();
-#ifdef VIRTUAL_GAMEPAD
+#if !defined(USE_SDL1) && !defined(__vita__)
 			InitVirtualGamepadGFX(renderer);
 #endif
 			IncProgress();
@@ -2020,7 +2014,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitGolems();
 		InitMonsters();
 		IncProgress();
-#ifdef VIRTUAL_GAMEPAD
+#if !defined(USE_SDL1) && !defined(__vita__)
 		InitVirtualGamepadGFX(renderer);
 #endif
 		InitMissileGFX(gbIsHellfire);
@@ -2099,7 +2093,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		}
 	}
 
-#ifdef VIRTUAL_GAMEPAD
+#ifndef USE_SDL1
 	ActivateVirtualGamepad();
 #endif
 

@@ -3,6 +3,7 @@
 
 #include <cstdint>
 
+#include "controls/controller.h"
 #include "player.h"
 
 namespace devilution {
@@ -11,6 +12,15 @@ typedef enum belt_item_type : uint8_t {
 	BLT_HEALING,
 	BLT_MANA,
 } belt_item_type;
+
+enum class ControlTypes : uint8_t {
+	None,
+	KeyboardAndMouse,
+	Gamepad,
+	VirtualGamepad,
+};
+
+extern ControlTypes ControlMode;
 
 // Runs every frame.
 // Handles menu movement.
@@ -30,11 +40,14 @@ void HandleRightStickMotion();
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
 bool InGameMenu();
 
+void SetPointAndClick(bool value);
+
+bool IsPointAndClick();
+
+void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent);
+
 // Whether the automap is being displayed.
 bool IsAutomapActive();
-
-// Whether the mouse cursor is being moved with the controller.
-bool IsMovingMouseCursorWithController();
 
 void UseBeltItem(int type);
 

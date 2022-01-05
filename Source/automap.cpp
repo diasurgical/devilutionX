@@ -483,13 +483,13 @@ void DrawAutomapText(const Surface &out)
 
 	if (gbIsMultiplayer) {
 		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
-			strcat(strcpy(desc, _("game: ")), szPlayerName);
+			strcat(strcpy(desc, _("Game: ")), szPlayerName);
 			DrawString(out, desc, linePosition);
 			linePosition.y += 15;
 		}
 
 		if (!PublicGame)
-			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
+			strcat(strcpy(desc, _("Password: ")), szPlayerDescript);
 		else
 			strcpy(desc, _("Public Game"));
 		DrawString(out, desc, linePosition);

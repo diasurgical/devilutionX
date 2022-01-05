@@ -6,8 +6,10 @@
 
 #include "automap.h"
 #include "control.h"
-#include "controls/controller.h"
 #include "controls/controller_motion.h"
+#ifndef USE_SDL1
+#include "controls/devices/game_controller.h"
+#endif
 #include "controls/game_controls.h"
 #include "controls/touch/gamepad.h"
 #include "cursor.h"
@@ -15,6 +17,7 @@
 #include "engine/point.hpp"
 #include "gmenu.h"
 #include "help.h"
+#include "hwcursor.hpp"
 #include "inv.h"
 #include "items.h"
 #include "minitext.h"
@@ -29,8 +32,7 @@
 
 namespace devilution {
 
-bool sgbTouchActive = false;
-bool sgbControllerActive = false;
+ControlTypes ControlMode = ControlTypes::None;
 int pcurstrig = -1;
 int pcursmissile = -1;
 quest_id pcursquest = Q_INVALID;
@@ -456,8 +458,10 @@ void Interact()
 	}
 
 	bool stand = false;
-#ifdef VIRTUAL_GAMEPAD
-	stand = VirtualGamepadState.standButton.isHeld;
+#ifndef USE_SDL1
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		stand = VirtualGamepadState.standButton.isHeld;
+	}
 #endif
 
 	if (leveltype != DTYPE_TOWN && stand) {
@@ -1117,7 +1121,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	auto &player = Players[playerId];
 
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
-		if (sgbControllerActive && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
+		if (ControlMode != ControlTypes::KeyboardAndMouse && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
 			NetSendCmdLoc(playerId, true, CMD_WALKXY, player.position.future); // Stop walking
 		return;
 	}
@@ -1128,11 +1132,13 @@ void WalkInDir(int playerId, AxisDirection dir)
 	if (!player.IsWalking() && player.CanChangeAction())
 		player._pdir = pdir;
 
-#ifdef VIRTUAL_GAMEPAD
-	if (VirtualGamepadState.standButton.isHeld) {
-		if (player._pmode == PM_STAND)
-			StartStand(playerId, pdir);
-		return;
+#ifndef USE_SDL1
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		if (VirtualGamepadState.standButton.isHeld) {
+			if (player._pmode == PM_STAND)
+				StartStand(playerId, pdir);
+			return;
+		}
 	}
 #endif
 
@@ -1204,13 +1210,8 @@ void Movement(int playerId)
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
 		return;
 
-	AxisDirection moveDir = GetMoveDirection();
-	if (moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE) {
-		sgbControllerActive = true;
-	}
-
 	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
-		WalkInDir(playerId, moveDir);
+		WalkInDir(playerId, GetMoveDirection());
 	}
 }
 
@@ -1249,16 +1250,111 @@ struct RightStickAccumulator {
 	float hiresDY;
 };
 
+bool IsStickMovmentSignificant()
+{
+	return leftStickX >= 0.5 || leftStickX <= -0.5
+	    || leftStickY >= 0.5 || leftStickY <= -0.5
+	    || rightStickX != 0 || rightStickY != 0;
+}
+
+ControlTypes GetInputTypeFromEvent(const SDL_Event &event)
+{
+	if (IsAnyOf(event.type, SDL_KEYDOWN, SDL_KEYUP))
+		return ControlTypes::KeyboardAndMouse;
+#ifdef USE_SDL1
+	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP, SDL_MOUSEMOTION))
+		return ControlTypes::KeyboardAndMouse;
+#else
+	if (IsAnyOf(event.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP))
+		return event.button.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
+	if (event.type == SDL_MOUSEMOTION)
+		return event.motion.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
+	if (event.type == SDL_MOUSEWHEEL)
+		return event.wheel.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
+	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
+		return ControlTypes::VirtualGamepad;
+	if (event.type == SDL_CONTROLLERAXISMOTION && IsStickMovmentSignificant())
+		return ControlTypes::Gamepad;
+	if (event.type >= SDL_CONTROLLERBUTTONDOWN && event.type <= SDL_CONTROLLERDEVICEREMAPPED)
+		return ControlTypes::Gamepad;
+	if (IsAnyOf(event.type, SDL_JOYDEVICEADDED, SDL_JOYDEVICEREMOVED))
+		return ControlTypes::Gamepad;
+#endif
+	if (event.type == SDL_JOYAXISMOTION && IsStickMovmentSignificant())
+		return ControlTypes::Gamepad;
+	if (event.type >= SDL_JOYBALLMOTION && event.type <= SDL_JOYBUTTONUP)
+		return ControlTypes::Gamepad;
+
+	return ControlTypes::None;
+}
+
+float rightStickLastMove = 0;
+
+bool ContinueSimulatingMouse(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
+{
+	if (IsAutomapActive())
+		return false;
+
+#if !defined(USE_SDL1) && !defined(JOY_AXIS_RIGHTX) && !defined(JOY_AXIS_RIGHTY)
+	if (IsAnyOf(event.type, SDL_JOYAXISMOTION, SDL_JOYHATMOTION, SDL_JOYBUTTONDOWN, SDL_JOYBUTTONUP)) {
+		if (!GameController::All().empty())
+			return true;
+	}
+#endif
+
+	if (rightStickX != 0 || rightStickY != 0 || rightStickLastMove != 0) {
+		rightStickLastMove = rightStickX + rightStickY; // Allow stick to come to a rest with out breaking simulation
+		return true;
+	}
+
+	if (IsAnyOf(gamepadEvent.button, ControllerButton_BUTTON_RIGHTSTICK, ControllerButton_BUTTON_BACK)) {
+		return true;
+	}
+
+	return false;
+}
+
 } // namespace
+
+void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
+{
+	ControlTypes inputType = GetInputTypeFromEvent(event);
+
+#ifdef __vita__
+	if (inputType == ControlTypes::VirtualGamepad) {
+		inputType = ControlTypes::Gamepad;
+	}
+#endif
+
+#if HAS_KBCTRL == 1
+	if (inputType == ControlTypes::KeyboardAndMouse && IsNoneOf(gamepadEvent.button, ControllerButton_NONE, ControllerButton_IGNORE)) {
+		inputType = ControlTypes::Gamepad;
+	}
+#endif
+
+	if (ControlMode == ControlTypes::KeyboardAndMouse && inputType == ControlTypes::Gamepad && ContinueSimulatingMouse(event, gamepadEvent)) {
+		return;
+	}
+
+	if (inputType != ControlTypes::None && inputType != ControlMode) {
+		ControlMode = inputType;
+
+#ifndef USE_SDL1
+		if (ControlMode != ControlTypes::KeyboardAndMouse) {
+			if (IsHardwareCursor())
+				SetHardwareCursor(CursorInfo::UnknownCursor());
+		} else {
+			ResetCursor();
+		}
+#endif
+
+		CalculatePanelAreas();
+	}
+}
 
 bool IsAutomapActive()
 {
 	return AutomapActive && leveltype != DTYPE_TOWN;
-}
-
-bool IsMovingMouseCursorWithController()
-{
-	return rightStickX != 0 || rightStickY != 0;
 }
 
 void HandleRightStickMotion()
@@ -1280,7 +1376,6 @@ void HandleRightStickMotion()
 	}
 
 	{ // move cursor
-		sgbControllerActive = false;
 		InvalidateInventorySlot();
 		int x = MousePosition.x;
 		int y = MousePosition.y;
@@ -1294,6 +1389,8 @@ void HandleRightStickMotion()
 		static int lastMouseSetTick = 0;
 		const int now = SDL_GetTicks();
 		if (now - lastMouseSetTick > 0) {
+			ControlMode = ControlTypes::KeyboardAndMouse;
+			ResetCursor();
 			SetCursorPos({ x, y });
 			lastMouseSetTick = now;
 		}
@@ -1314,32 +1411,46 @@ void FocusOnInventory()
 	ResetInvCursorPosition();
 }
 
+bool PointAndClickState = false;
+
+void SetPointAndClick(bool value)
+{
+	PointAndClickState = value;
+}
+
+bool IsPointAndClick()
+{
+	return PointAndClickState;
+}
+
 void plrctrls_after_check_curs_move()
 {
 	// check for monsters first, then items, then towners.
-	if (sgbControllerActive) {
-		// Clear focuse set by cursor
-		pcursplr = -1;
-		pcursmonst = -1;
-		pcursitem = -1;
-		pcursobj = -1;
-		pcursmissile = -1;
-		pcurstrig = -1;
-		pcursquest = Q_INVALID;
-		cursPosition = { -1, -1 };
-		if (Players[MyPlayerId]._pInvincible) {
-			return;
-		}
-		if (DoomFlag) {
-			return;
-		}
-		if (!invflag) {
-			*infostr = '\0';
-			ClearPanel();
-			FindActor();
-			FindItemOrObject();
-			FindTrigger();
-		}
+	if (ControlMode == ControlTypes::KeyboardAndMouse || IsPointAndClick()) {
+		return;
+	}
+
+	// Clear focuse set by cursor
+	pcursplr = -1;
+	pcursmonst = -1;
+	pcursitem = -1;
+	pcursobj = -1;
+	pcursmissile = -1;
+	pcurstrig = -1;
+	pcursquest = Q_INVALID;
+	cursPosition = { -1, -1 };
+	if (Players[MyPlayerId]._pInvincible) {
+		return;
+	}
+	if (DoomFlag) {
+		return;
+	}
+	if (!invflag) {
+		*infostr = '\0';
+		ClearPanel();
+		FindActor();
+		FindItemOrObject();
+		FindTrigger();
 	}
 }
 

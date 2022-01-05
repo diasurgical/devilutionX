@@ -1,7 +1,8 @@
+#include "platform/ctr/locale.hpp"
+
 #include <3ds.h>
 
 #include "platform/ctr/cfgu_service.hpp"
-#include "platform/ctr/locale.hpp"
 
 namespace devilution {
 namespace n3ds {
@@ -33,7 +34,7 @@ std::string GetLocale()
 	case CFG_LANGUAGE_ZH:
 		return "zh_CN";
 	case CFG_LANGUAGE_KO:
-		return "ko_KR";
+		return "ko";
 	case CFG_LANGUAGE_NL:
 		return "nl";
 	case CFG_LANGUAGE_PT:

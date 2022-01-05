@@ -14,6 +14,7 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
 #include "automap.h"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
@@ -47,6 +48,7 @@
 #endif
 
 namespace devilution {
+
 /**
  * @brief Set if the life flask needs to be redrawn during next frame
  */
@@ -159,38 +161,6 @@ const char *const PanBtnStr[8] = {
 	N_("Send Message"),
 	"" // Player attack
 };
-
-void CalculatePanelAreas()
-{
-	MainPanel = {
-		{ (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT },
-		{ PANEL_WIDTH, PANEL_HEIGHT }
-	};
-	LeftPanel = {
-		{ 0, 0 },
-		{ SPANEL_WIDTH, SPANEL_HEIGHT }
-	};
-	RightPanel = {
-		{ 0, 0 },
-		{ SPANEL_WIDTH, SPANEL_HEIGHT }
-	};
-
-#ifdef VIRTUAL_GAMEPAD
-	LeftPanel.position.x = gnScreenWidth / 2 - LeftPanel.size.width;
-#else
-	if (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width > PANEL_WIDTH) {
-		LeftPanel.position.x = (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width - PANEL_WIDTH) / 2;
-	}
-#endif
-	LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT) / 2;
-
-#ifdef VIRTUAL_GAMEPAD
-	RightPanel.position.x = gnScreenWidth / 2;
-#else
-	RightPanel.position.x = gnScreenWidth - RightPanel.size.width - LeftPanel.position.x;
-#endif
-	RightPanel.position.y = LeftPanel.position.y;
-}
 
 /**
  * Draws a section of the empty flask cel on top of the panel to create the illusion
@@ -412,6 +382,38 @@ void RemoveGold(Player &player, int goldIndex)
 }
 
 } // namespace
+
+void CalculatePanelAreas()
+{
+	MainPanel = {
+		{ (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT },
+		{ PANEL_WIDTH, PANEL_HEIGHT }
+	};
+	LeftPanel = {
+		{ 0, 0 },
+		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+	};
+	RightPanel = {
+		{ 0, 0 },
+		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+	};
+
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		LeftPanel.position.x = gnScreenWidth / 2 - LeftPanel.size.width;
+	} else {
+		if (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width > PANEL_WIDTH) {
+			LeftPanel.position.x = (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width - PANEL_WIDTH) / 2;
+		}
+	}
+	LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT) / 2;
+
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		RightPanel.position.x = gnScreenWidth / 2;
+	} else {
+		RightPanel.position.x = gnScreenWidth - RightPanel.size.width - LeftPanel.position.x;
+	}
+	RightPanel.position.y = LeftPanel.position.y;
+}
 
 bool IsChatAvailable()
 {
