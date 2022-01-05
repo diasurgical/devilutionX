@@ -2851,6 +2851,7 @@ void MI_LArrow(Missile &missile)
 		int maxd;
 		if (p != -1) {
 			if (missile._micaster == TARGET_MONSTERS) {
+				auto &player = Players[p];
 				mind = player._pIMinDam;
 				maxd = player._pIMaxDam;
 			} else {
