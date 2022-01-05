@@ -2104,6 +2104,12 @@ void Player::Reset()
 	*this = std::move(*emptyPlayer);
 }
 
+int Player::GetManaShieldDamageReduction()
+{
+	constexpr int8_t Max = 7;
+	return 24 - std::min(_pSplLvl[SPL_MANASHIELD], Max) * 3;
+}
+
 void Player::RestorePartialLife()
 {
 	int wholeHitpoints = _pMaxHP >> 6;
@@ -3229,7 +3235,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 	if (totalDamage > 0 && player.pManaShield) {
 		int8_t manaShieldLevel = player._pSplLvl[SPL_MANASHIELD];
 		if (manaShieldLevel > 0) {
-			totalDamage += totalDamage / -3;
+			totalDamage += totalDamage / -player.GetManaShieldDamageReduction();
 		}
 		if (pnum == MyPlayerId)
 			drawmanaflag = true;
@@ -3240,7 +3246,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 		} else {
 			totalDamage -= player._pMana;
 			if (manaShieldLevel > 0) {
-				totalDamage += totalDamage / 2;
+				totalDamage += totalDamage / (player.GetManaShieldDamageReduction() - 1);
 			}
 			player._pMana = 0;
 			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
