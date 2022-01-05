@@ -3670,7 +3670,6 @@ void ModifyPlrVit(int p, int l)
 	}
 	auto &player = Players[p];
 
-	int max = player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	l = clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
 
 	player._pVitality += l;
