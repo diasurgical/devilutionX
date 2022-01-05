@@ -1107,7 +1107,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 		UberDiabloMonsterIndex = -2;
 		CreateMagicWeapon(monster.position.tile, ItemType::Sword, ICURS_GREAT_SWORD, false, true);
 		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ICURS_WAR_STAFF, false, true);
-		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_WAR_BOW, false, true);
+		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_BATTLE_BOW, false, true);
 		CreateSpellBook(monster.position.tile, SPL_APOCA, false, true);
 	} else if (monster.MType->mtype != MT_GOLEM) {
 		SpawnItem(monster, monster.position.tile, sendmsg);
