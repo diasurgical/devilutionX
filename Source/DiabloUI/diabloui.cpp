@@ -15,6 +15,7 @@
 #include "controls/controller.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
+#include "controls/plrctrls.h"
 #include "discord/discord.h"
 #include "dx.h"
 #include "hwcursor.hpp"
@@ -340,20 +341,6 @@ void UiFocusNavigation(SDL_Event *event)
 		break;
 	}
 
-#ifndef USE_SDL1
-	// SDL generates mouse events from touch-based inputs to provide basic
-	// touchscreeen support for apps that don't explicitly handle touch events
-	sgbTouchActive = false;
-	if (IsAnyOf(event->type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP) && event->button.which == SDL_TOUCH_MOUSEID)
-		sgbTouchActive = true;
-	if (event->type == SDL_MOUSEMOTION && event->motion.which == SDL_TOUCH_MOUSEID)
-		sgbTouchActive = true;
-	if (event->type == SDL_MOUSEWHEEL && event->wheel.which == SDL_TOUCH_MOUSEID)
-		sgbTouchActive = true;
-	if (IsAnyOf(event->type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
-		sgbTouchActive = true;
-#endif
-
 	if (HandleMenuAction(GetMenuAction(*event)))
 		return;
 
@@ -671,7 +658,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeTc = 0;
 	fadeValue = 0;
 
-	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
+	if (IsHardwareCursorEnabled() && ControlMode == ControlTypes::KeyboardAndMouse && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
 		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
@@ -762,7 +749,7 @@ void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler)
 
 	// Must happen after the very first UiFadeIn, which sets the cursor.
 	if (IsHardwareCursor())
-		SetHardwareCursorVisible(!sgbControllerActive);
+		SetHardwareCursorVisible(ControlMode == ControlTypes::KeyboardAndMouse);
 
 #ifdef __3DS__
 	// Keyboard blocks until input is finished
@@ -1087,7 +1074,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 
 void DrawMouse()
 {
-	if (IsHardwareCursor() || sgbControllerActive || sgbTouchActive)
+	if (ControlMode != ControlTypes::KeyboardAndMouse || IsHardwareCursor())
 		return;
 
 	DrawArt(MousePosition, &ArtCursor);

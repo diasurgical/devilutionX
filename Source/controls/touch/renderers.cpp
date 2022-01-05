@@ -1,4 +1,5 @@
 #include "controls/touch/renderers.h"
+
 #include "control.h"
 #include "cursor.h"
 #include "diablo.h"
@@ -257,7 +258,8 @@ void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 	healthButtonRenderer.RenderPotion(renderFunction, potionArt);
 	manaButtonRenderer.RenderPotion(renderFunction, potionArt);
 
-	standButtonRenderer.Render(renderFunction, buttonArt);
+	if (leveltype != DTYPE_TOWN)
+		standButtonRenderer.Render(renderFunction, buttonArt);
 	directionPadRenderer.Render(renderFunction);
 	menuPanelRenderer.Render(renderFunction);
 }

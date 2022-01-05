@@ -3,10 +3,13 @@
 #include <cmath>
 
 #include "controls/controller.h"
+#ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
+#endif
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
+#include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
 #include "options.h"
 
@@ -160,11 +163,13 @@ AxisDirection GetLeftStickOrDpadDirection(bool allowDpad)
 	bool isLeftPressed = stickX <= -0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT));
 	bool isRightPressed = stickX >= 0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT));
 
-#ifdef VIRTUAL_GAMEPAD
-	isUpPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isUpPressed;
-	isDownPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isDownPressed;
-	isLeftPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isLeftPressed;
-	isRightPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isRightPressed;
+#ifndef USE_SDL1
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		isUpPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isUpPressed;
+		isDownPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isDownPressed;
+		isLeftPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isLeftPressed;
+		isRightPressed |= VirtualGamepadState.isActive && VirtualGamepadState.directionPad.isRightPressed;
+	}
 #endif
 
 	if (isUpPressed) {

@@ -7,6 +7,7 @@
 #include <cstdint>
 
 #include "control.h"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "dead.h"
 #ifdef _DEBUG
@@ -1480,7 +1481,7 @@ bool IsPlayerAdjacentToObject(Player &player, Object &object)
 {
 	int x = abs(player.position.tile.x - object.position.x);
 	int y = abs(player.position.tile.y - object.position.y);
-	if (y > 1 && ObjectAtPosition(object.position + Direction::NorthEast) == &object) {
+	if (y > 1 && object.position.y >= 1 && ObjectAtPosition(object.position + Direction::NorthEast) == &object) {
 		// special case for activating a large object from the north-east side
 		y = abs(player.position.tile.y - object.position.y + 1);
 	}
@@ -2559,7 +2560,7 @@ void NextPlrLevel(int pnum)
 		drawmanaflag = true;
 	}
 
-	if (sgbControllerActive)
+	if (ControlMode != ControlTypes::KeyboardAndMouse)
 		FocusOnCharInfo();
 
 	CalcPlrInv(player, true);
@@ -3393,7 +3394,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		return;
 	}
 
-	if (!sgbControllerActive) {
+	if (ControlMode == ControlTypes::KeyboardAndMouse) {
 		if (pcurs != CURSOR_HAND)
 			return;
 

@@ -734,7 +734,7 @@ void AddDiabObjs()
 	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", { 2 * diabquad3x, 2 * diabquad3y }, { { diabquad4x, diabquad4y }, { 9, 9 } }, 3);
 }
 
-void AddCryptObject(int i, int a2)
+void AddCryptObject(Object &object, int a2)
 {
 	if (a2 > 5) {
 		auto &myPlayer = Players[MyPlayerId];
@@ -743,19 +743,19 @@ void AddCryptObject(int i, int a2)
 			switch (myPlayer._pClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
-				Objects[i]._oVar2 = TEXT_BOOKA;
+				object._oVar2 = TEXT_BOOKA;
 				break;
 			case HeroClass::Rogue:
-				Objects[i]._oVar2 = TEXT_RBOOKA;
+				object._oVar2 = TEXT_RBOOKA;
 				break;
 			case HeroClass::Sorcerer:
-				Objects[i]._oVar2 = TEXT_MBOOKA;
+				object._oVar2 = TEXT_MBOOKA;
 				break;
 			case HeroClass::Monk:
-				Objects[i]._oVar2 = TEXT_OBOOKA;
+				object._oVar2 = TEXT_OBOOKA;
 				break;
 			case HeroClass::Bard:
-				Objects[i]._oVar2 = TEXT_BBOOKA;
+				object._oVar2 = TEXT_BBOOKA;
 				break;
 			}
 			break;
@@ -763,19 +763,19 @@ void AddCryptObject(int i, int a2)
 			switch (myPlayer._pClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
-				Objects[i]._oVar2 = TEXT_BOOKB;
+				object._oVar2 = TEXT_BOOKB;
 				break;
 			case HeroClass::Rogue:
-				Objects[i]._oVar2 = TEXT_RBOOKB;
+				object._oVar2 = TEXT_RBOOKB;
 				break;
 			case HeroClass::Sorcerer:
-				Objects[i]._oVar2 = TEXT_MBOOKB;
+				object._oVar2 = TEXT_MBOOKB;
 				break;
 			case HeroClass::Monk:
-				Objects[i]._oVar2 = TEXT_OBOOKB;
+				object._oVar2 = TEXT_OBOOKB;
 				break;
 			case HeroClass::Bard:
-				Objects[i]._oVar2 = TEXT_BBOOKB;
+				object._oVar2 = TEXT_BBOOKB;
 				break;
 			}
 			break;
@@ -783,40 +783,41 @@ void AddCryptObject(int i, int a2)
 			switch (myPlayer._pClass) {
 			case HeroClass::Warrior:
 			case HeroClass::Barbarian:
-				Objects[i]._oVar2 = TEXT_BOOKC;
+				object._oVar2 = TEXT_BOOKC;
 				break;
 			case HeroClass::Rogue:
-				Objects[i]._oVar2 = TEXT_RBOOKC;
+				object._oVar2 = TEXT_RBOOKC;
 				break;
 			case HeroClass::Sorcerer:
-				Objects[i]._oVar2 = TEXT_MBOOKC;
+				object._oVar2 = TEXT_MBOOKC;
 				break;
 			case HeroClass::Monk:
-				Objects[i]._oVar2 = TEXT_OBOOKC;
+				object._oVar2 = TEXT_OBOOKC;
 				break;
 			case HeroClass::Bard:
-				Objects[i]._oVar2 = TEXT_BBOOKC;
+				object._oVar2 = TEXT_BBOOKC;
 				break;
 			}
 			break;
 		}
-		Objects[i]._oVar3 = 15;
-		Objects[i]._oVar8 = a2;
+		object._oVar3 = 15;
+		object._oVar8 = a2;
 	} else {
-		Objects[i]._oVar2 = a2 + TEXT_SKLJRN;
-		Objects[i]._oVar3 = a2 + 9;
-		Objects[i]._oVar8 = 0;
+		object._oVar2 = a2 + TEXT_SKLJRN;
+		object._oVar3 = a2 + 9;
+		object._oVar8 = 0;
 	}
-	Objects[i]._oVar1 = 1;
-	Objects[i]._oAnimFrame = 5 - 2 * Objects[i]._oVar1;
-	Objects[i]._oVar4 = Objects[i]._oAnimFrame + 1;
+	object._oVar1 = 1;
+	object._oAnimFrame = 5 - 2 * object._oVar1;
+	object._oVar4 = object._oAnimFrame + 1;
 }
 
-void SetupObject(int i, Point position, _object_id ot)
+void SetupObject(Object &object, Point position, _object_id ot)
 {
-	Objects[i]._otype = ot;
-	object_graphic_id ofi = AllObjects[ot].ofindex;
-	Objects[i].position = position;
+	const ObjectData &objectData = AllObjects[ot];
+	object._otype = ot;
+	object_graphic_id ofi = objectData.ofindex;
+	object.position = position;
 
 	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
 	if (found == std::end(ObjFileList)) {
@@ -826,29 +827,29 @@ void SetupObject(int i, Point position, _object_id ot)
 
 	const int j = std::distance(std::begin(ObjFileList), found);
 
-	Objects[i]._oAnimData = pObjCels[j].get();
-	Objects[i]._oAnimFlag = AllObjects[ot].oAnimFlag;
-	if (AllObjects[ot].oAnimFlag != 0) {
-		Objects[i]._oAnimDelay = AllObjects[ot].oAnimDelay;
-		Objects[i]._oAnimCnt = GenerateRnd(AllObjects[ot].oAnimDelay);
-		Objects[i]._oAnimLen = AllObjects[ot].oAnimLen;
-		Objects[i]._oAnimFrame = GenerateRnd(AllObjects[ot].oAnimLen - 1) + 1;
+	object._oAnimData = pObjCels[j].get();
+	object._oAnimFlag = objectData.oAnimFlag;
+	if (object._oAnimFlag != 0) {
+		object._oAnimDelay = objectData.oAnimDelay;
+		object._oAnimCnt = GenerateRnd(object._oAnimDelay);
+		object._oAnimLen = objectData.oAnimLen;
+		object._oAnimFrame = GenerateRnd(object._oAnimLen - 1) + 1;
 	} else {
-		Objects[i]._oAnimDelay = 1000;
-		Objects[i]._oAnimCnt = 0;
-		Objects[i]._oAnimLen = AllObjects[ot].oAnimLen;
-		Objects[i]._oAnimFrame = AllObjects[ot].oAnimDelay;
+		object._oAnimDelay = 1000;
+		object._oAnimCnt = 0;
+		object._oAnimLen = objectData.oAnimLen;
+		object._oAnimFrame = objectData.oAnimDelay;
 	}
-	Objects[i]._oAnimWidth = AllObjects[ot].oAnimWidth;
-	Objects[i]._oSolidFlag = AllObjects[ot].oSolidFlag;
-	Objects[i]._oMissFlag = AllObjects[ot].oMissFlag;
-	Objects[i]._oLight = AllObjects[ot].oLightFlag;
-	Objects[i]._oDelFlag = false;
-	Objects[i]._oBreak = AllObjects[ot].oBreak;
-	Objects[i]._oSelFlag = AllObjects[ot].oSelFlag;
-	Objects[i]._oPreFlag = false;
-	Objects[i]._oTrapFlag = false;
-	Objects[i]._oDoorFlag = false;
+	object._oAnimWidth = objectData.oAnimWidth;
+	object._oSolidFlag = objectData.oSolidFlag;
+	object._oMissFlag = objectData.oMissFlag;
+	object._oLight = objectData.oLightFlag;
+	object._oDelFlag = false;
+	object._oBreak = objectData.oBreak;
+	object._oSelFlag = objectData.oSelFlag;
+	object._oPreFlag = false;
+	object._oTrapFlag = false;
+	object._oDoorFlag = false;
 }
 
 void AddCryptBook(_object_id ot, int v2, int ox, int oy)
@@ -860,8 +861,9 @@ void AddCryptBook(_object_id ot, int v2, int ox, int oy)
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
 	dObject[ox][oy] = oi + 1;
-	SetupObject(oi, { ox, oy }, ot);
-	AddCryptObject(oi, v2);
+	Object &object = Objects[oi];
+	SetupObject(object, { ox, oy }, ot);
+	AddCryptObject(object, v2);
 	ActiveObjectCount++;
 }
 
@@ -1072,19 +1074,6 @@ void DeleteObject(int oi, int i)
 		ActiveObjects[i] = ActiveObjects[ActiveObjectCount];
 }
 
-void AddL1Door(int i, Point position, _object_id objectType)
-{
-	Objects[i]._oDoorFlag = true;
-	if (objectType == _object_id::OBJ_L1LDOOR) {
-		Objects[i]._oVar1 = dPiece[position.x][position.y];
-		Objects[i]._oVar2 = dPiece[position.x][position.y - 1];
-	} else { //_object_id::OBJ_L1RDOOR
-		Objects[i]._oVar1 = dPiece[position.x][position.y];
-		Objects[i]._oVar2 = dPiece[position.x - 1][position.y];
-	}
-	Objects[i]._oVar4 = 0;
-}
-
 void AddChest(int i, int t)
 {
 	if (GenerateRnd(2) == 0)
@@ -1134,25 +1123,38 @@ void ObjSetMicro(Point position, int pn)
 	}
 }
 
-void AddL2Door(int i, Point position, _object_id objectType)
+void InitializeL1Door(Object &door)
 {
-	Objects[i]._oDoorFlag = true;
-	if (objectType == OBJ_L2LDOOR)
-		ObjSetMicro(position, 538);
-	else
-		ObjSetMicro(position, 540);
-	dSpecial[position.x][position.y] = 0;
-	Objects[i]._oVar4 = 0;
+	door.InitializeDoor();
+	door._oVar1 = dPiece[door.position.x][door.position.y];
+	if (door._otype == _object_id::OBJ_L1LDOOR) {
+		door._oVar2 = dPiece[door.position.x][door.position.y - 1];
+	} else { // _object_id::OBJ_L1RDOOR
+		door._oVar2 = dPiece[door.position.x - 1][door.position.y];
+	}
 }
 
-void AddL3Door(int i, Point position, _object_id objectType)
+void InitializeMicroDoor(Object &door)
 {
-	Objects[i]._oDoorFlag = true;
-	if (objectType == OBJ_L3LDOOR)
-		ObjSetMicro(position, 531);
-	else
-		ObjSetMicro(position, 534);
-	Objects[i]._oVar4 = 0;
+	door.InitializeDoor();
+	int pieceNumber;
+	switch (door._otype) {
+	case _object_id::OBJ_L2LDOOR:
+		pieceNumber = 538;
+		break;
+	case _object_id::OBJ_L2RDOOR:
+		pieceNumber = 540;
+		break;
+	case _object_id::OBJ_L3LDOOR:
+		pieceNumber = 531;
+		break;
+	case _object_id::OBJ_L3RDOOR:
+		pieceNumber = 534;
+		break;
+	default:
+		return; // unreachable
+	}
+	ObjSetMicro(door.position, pieceNumber);
 }
 
 void AddSarc(int i)
@@ -4697,7 +4699,8 @@ void AddObject(_object_id objType, Point objPos)
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
 	dObject[objPos.x][objPos.y] = oi + 1;
-	SetupObject(oi, objPos, objType);
+	Object &object = Objects[oi];
+	SetupObject(object, objPos, objType);
 	switch (objType) {
 	case OBJ_L1LIGHT:
 	case OBJ_SKFIRE:
@@ -4717,18 +4720,19 @@ void AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		AddL1Door(oi, objPos, objType);
+		InitializeL1Door(object);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		AddL2Door(oi, objPos, objType);
-		break;
+		// If a catacombs door happens to overlap an arch then clear the arch tile to prevent weird rendering
+		dSpecial[object.position.x][object.position.y] = 0;
+		// intentional fall-through
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		AddL3Door(oi, objPos, objType);
+		InitializeMicroDoor(object);
 		break;
 	case OBJ_BOOK2R:
-		Objects[oi].InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
+		object.InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -4739,11 +4743,11 @@ void AddObject(_object_id objType, Point objPos)
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
 		AddChest(oi, objType);
-		Objects[oi]._oTrapFlag = true;
+		object._oTrapFlag = true;
 		if (leveltype == DTYPE_CATACOMBS) {
-			Objects[oi]._oVar4 = GenerateRnd(2);
+			object._oVar4 = GenerateRnd(2);
 		} else {
-			Objects[oi]._oVar4 = GenerateRnd(3);
+			object._oVar4 = GenerateRnd(3);
 		}
 		break;
 	case OBJ_SARC:
@@ -4756,7 +4760,7 @@ void AddObject(_object_id objType, Point objPos)
 		AddFlameLvr(oi);
 		break;
 	case OBJ_WATER:
-		Objects[oi]._oAnimFrame = 1;
+		object._oAnimFrame = 1;
 		break;
 	case OBJ_TRAPL:
 	case OBJ_TRAPR:

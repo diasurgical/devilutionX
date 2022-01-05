@@ -63,10 +63,6 @@ if(TSAN)
   set(ASAN OFF)
 endif()
 
-if(USE_SDL1)
-  set(VIRTUAL_GAMEPAD OFF)
-endif()
-
 # By default, devilutionx.mpq is built only if smpq is installed.
 if(NOT DEFINED BUILD_ASSETS_MPQ AND NOT SRC_DIST)
   find_program(SMPQ smpq)
@@ -273,6 +269,12 @@ if(APPLE)
         fixup_bundle(${CMAKE_BINARY_DIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app \"\" \"\")
         "
         COMPONENT Runtime)
+  endif()
+
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+  if(COREFOUNDATION_LIBRARY)
+    target_link_libraries(libdevilutionx PUBLIC "${COREFOUNDATION_LIBRARY}")
+    target_compile_definitions(libdevilutionx PRIVATE USE_COREFOUNDATION)
   endif()
 
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")

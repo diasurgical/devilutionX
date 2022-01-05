@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef VIRTUAL_GAMEPAD
-
 #include <functional>
 
 #include "controls/controller_buttons.h"
@@ -14,18 +12,14 @@ namespace devilution {
 struct VirtualDirectionPad {
 	Circle area;
 	Point position;
-	bool isUpPressed;
-	bool isDownPressed;
-	bool isLeftPressed;
-	bool isRightPressed;
+	bool isUpPressed { false };
+	bool isDownPressed { false };
+	bool isLeftPressed { false };
+	bool isRightPressed { false };
 
 	VirtualDirectionPad()
 	    : area({ { 0, 0 }, 0 })
 	    , position({ 0, 0 })
-	    , isUpPressed(false)
-	    , isDownPressed(false)
-	    , isLeftPressed(false)
-	    , isRightPressed(false)
 	{
 	}
 
@@ -34,14 +28,12 @@ struct VirtualDirectionPad {
 };
 
 struct VirtualButton {
-	bool isHeld;
-	bool didStateChange;
+	bool isHeld { false };
+	bool didStateChange { false };
 	std::function<bool()> isUsable;
 
 	VirtualButton()
-	    : isHeld(false)
-	    , didStateChange(false)
-	    , isUsable([]() { return true; })
+	    : isUsable([]() { return true; })
 	{
 	}
 
@@ -105,11 +97,9 @@ struct VirtualGamepad {
 	VirtualPadButton healthButton;
 	VirtualPadButton manaButton;
 
-	bool isActive;
+	bool isActive { false };
 
-	VirtualGamepad()
-	{
-	}
+	VirtualGamepad() = default;
 
 	void Deactivate();
 };
@@ -121,5 +111,3 @@ void DeactivateVirtualGamepad();
 extern VirtualGamepad VirtualGamepadState;
 
 } // namespace devilution
-
-#endif

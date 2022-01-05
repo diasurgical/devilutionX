@@ -1,7 +1,5 @@
 #pragma once
 
-#ifdef VIRTUAL_GAMEPAD
-
 #include <SDL.h>
 
 #include "controls/touch/gamepad.h"
@@ -93,5 +91,3 @@ private:
 void HandleTouchEvent(const SDL_Event &event);
 
 } // namespace devilution
-
-#endif

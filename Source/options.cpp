@@ -6,28 +6,6 @@
 
 #include <cstdint>
 #include <fstream>
-#include <locale>
-
-#ifdef __ANDROID__
-#include "SDL.h"
-#include <jni.h>
-#endif
-
-#ifdef __vita__
-#include <psp2/apputil.h>
-#include <psp2/system_param.h>
-#endif
-
-#ifdef __3DS__
-#include "platform/ctr/locale.hpp"
-#endif
-
-#ifdef _WIN32
-// clang-format off
-#include <windows.h>
-#include <winnls.h>
-// clang-format on
-#endif
 
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
@@ -38,12 +16,14 @@
 #include "engine/demomode.h"
 #include "hwcursor.hpp"
 #include "options.h"
+#include "platform/locale.hpp"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -239,12 +219,6 @@ void SaveIni()
 }
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-bool HardwareCursorSupported()
-{
-	SDL_version v;
-	SDL_GetVersion(&v);
-	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
-}
 bool HardwareCursorDefault()
 {
 #if defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
@@ -329,6 +303,19 @@ void OptionAudioChanged()
 /** Game options */
 Options sgOptions;
 bool sbWasOptionsLoaded = false;
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+bool HardwareCursorSupported()
+{
+#if defined(TARGET_OS_IPHONE)
+	return false;
+#else
+	SDL_version v;
+	SDL_GetVersion(&v);
+	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
+#endif
+}
+#endif
 
 void LoadOptions()
 {
@@ -932,103 +919,9 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 		}
 	}
 
-	// Might be a first run or the user has attempted to load a translation that doesn't exist via manual ini edit. Try find a best fit from the platform locale information.
-	std::vector<std::string> locales {};
-#ifdef __ANDROID__
-	JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
-	jobject activity = (jobject)SDL_AndroidGetActivity();
-	jclass clazz(env->GetObjectClass(activity));
-	jmethodID method_id = env->GetMethodID(clazz, "getLocale", "()Ljava/lang/String;");
-	jstring jLocale = (jstring)env->CallObjectMethod(activity, method_id);
-	const char *cLocale = env->GetStringUTFChars(jLocale, nullptr);
-	locales.emplace_back(cLocale);
-	env->ReleaseStringUTFChars(jLocale, cLocale);
-	env->DeleteLocalRef(jLocale);
-	env->DeleteLocalRef(activity);
-	env->DeleteLocalRef(clazz);
-#elif defined(__vita__)
-	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	const char *vita_locales[] = {
-		"ja_JP",
-		"en_US",
-		"fr_FR",
-		"es_ES",
-		"de_DE",
-		"it_IT",
-		"nl_NL",
-		"pt_PT",
-		"ru_RU",
-		"ko_KR",
-		"zh_TW",
-		"zh_CN",
-		"fi_FI",
-		"sv_SE",
-		"da_DK",
-		"no_NO",
-		"pl_PL",
-		"pt_BR",
-		"en_GB",
-		"tr_TR",
-	};
-	SceAppUtilInitParam initParam;
-	SceAppUtilBootParam bootParam;
-	memset(&initParam, 0, sizeof(SceAppUtilInitParam));
-	memset(&bootParam, 0, sizeof(SceAppUtilBootParam));
-	sceAppUtilInit(&initParam, &bootParam);
-	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
-	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
-		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	locales.emplace_back(vita_locales[language]);
-	sceAppUtilShutdown();
-#elif defined(__3DS__)
-	locales.push_back(n3ds::GetLocale());
-#elif defined(_WIN32)
-#if WINVER >= 0x0600
-	auto wideCharToUtf8 = [](PWSTR wideString) {
-		char utf8Buffer[12] {};
-		// We only handle 5 character locales (lang2-region2), so don't bother reading past that. This does leave the resulting string unterminated but the buffer was zero initialised anyway.
-		WideCharToMultiByte(CP_UTF8, 0, wideString, 5, utf8Buffer, sizeof(utf8Buffer), nullptr, nullptr);
-
-		// GetUserDefaultLocaleName could return an ISO 639-2/T string (three letter language code) or even an arbitrary custom locale, however we only handle 639-1 (two letter language code) locale names when checking the fallback language.
-		// if a region is included in the locale do a simple transformation to the expected POSIX style.
-		std::replace(utf8Buffer, utf8Buffer + sizeof(utf8Buffer), '-', '_');
-		return std::move(std::string(utf8Buffer));
-	};
-	WCHAR localeBuffer[LOCALE_NAME_MAX_LENGTH];
-
-	if (GetUserDefaultLocaleName(localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
-		// Found a user default locale convert from WIN32's default of UTF16 to UTF8 and add to the list
-		locales.push_back(wideCharToUtf8(localeBuffer));
-	}
-
-	ULONG numberOfLanguages;
-	ULONG bufferSize = LOCALE_NAME_MAX_LENGTH;
-	GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &numberOfLanguages, localeBuffer, &bufferSize);
-
-	PWSTR bufferOffset = localeBuffer;
-	for (unsigned i = 0; i < numberOfLanguages; i++) {
-		// Found one (or more) user preferred UI language(s), add these to the list to check as well
-		locales.push_back(wideCharToUtf8(bufferOffset));
-
-		// GetUserPreferredUILanguages returns a null separated list of strings, need to increment past the null terminating the current string.
-		bufferOffset += lstrlenW(localeBuffer) + 1;
-	}
-#else
-	// Fallback method for older versions of windows, this is deprecated since Vista
-	char localeBuffer[LOCALE_NAME_MAX_LENGTH];
-	// Deliberately not using the unicode versions here as the information retrieved should be represented in ASCII/single byte UTF8 codepoints.
-	if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SISO639LANGNAME, localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
-		std::string locale { localeBuffer };
-		if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME, localeBuffer, LOCALE_NAME_MAX_LENGTH) != 0) {
-			locale.append("_");
-			locale.append(localeBuffer);
-		}
-		locales.push_back(std::move(locale));
-	}
-#endif
-#else
-	locales.emplace_back(std::locale("").name().substr(0, 5));
-#endif
+	// Might be a first run or the user has attempted to load a translation that doesn't exist via manual ini edit. Try
+	//  find a best fit from the platform locale information.
+	std::vector<std::string> locales = GetLocales();
 
 	// So that the correct language is shown in the settings menu for users with US english set as a preferred language
 	//  we need to replace the "en_US" locale code with the neutral string "en" as expected by the available options
@@ -1071,25 +964,32 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 		return;
 
 	// Add well-known supported languages
-	languages.emplace_back("bg", "Bulgarian");
-	languages.emplace_back("cs", "Czech");
-	languages.emplace_back("da", "Danish");
-	languages.emplace_back("de", "German");
+	languages.emplace_back("bg", "Български");
+	languages.emplace_back("cs", "Čeština");
+	languages.emplace_back("da", "Dansk");
+	languages.emplace_back("de", "Deutsch");
 	languages.emplace_back("en", "English");
-	languages.emplace_back("es", "Spanish");
-	languages.emplace_back("fr", "French");
-	languages.emplace_back("ja", "Japanese");
-	languages.emplace_back("hr", "Croatian");
-	languages.emplace_back("it", "Italian");
-	languages.emplace_back("ko_KR", "Korean");
-	languages.emplace_back("pl", "Polish");
-	languages.emplace_back("pt_BR", "Portuguese (Brazil)");
-	languages.emplace_back("ro_RO", "Romanian");
-	languages.emplace_back("ru", "Russian");
-	languages.emplace_back("sv", "Swedish");
-	languages.emplace_back("uk", "Ukrainian");
-	languages.emplace_back("zh_CN", "Simplified Chinese");
-	languages.emplace_back("zh_TW", "Traditional Chinese");
+	languages.emplace_back("es", "Español");
+	languages.emplace_back("fr", "Français");
+	languages.emplace_back("hr", "Hrvatski");
+	languages.emplace_back("it", "Italiano");
+
+	if (font_mpq) {
+		languages.emplace_back("ja", "日本語");
+		languages.emplace_back("ko", "한국어");
+	}
+
+	languages.emplace_back("pl", "Polski");
+	languages.emplace_back("pt_BR", "Português do Brasil");
+	languages.emplace_back("ro", "Română");
+	languages.emplace_back("ru", "Русский");
+	languages.emplace_back("sv", "Svenska");
+	languages.emplace_back("uk", "Українська");
+
+	if (font_mpq) {
+		languages.emplace_back("zh_CN", "汉语");
+		languages.emplace_back("zh_TW", "漢語");
+	}
 
 	// Ensures that the ini specified language is present in languages list even if unknown (for example if someone starts to translate a new language)
 	if (std::find_if(languages.begin(), languages.end(), [this](const auto &x) { return x.first == this->szCode; }) == languages.end()) {
@@ -1287,7 +1187,7 @@ void KeymapperOptions::KeyPressed(int key) const
 
 string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 {
-	for (auto &action : actions) {
+	for (const auto &action : actions) {
 		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
 			return action->GetValueDescription();
 		}

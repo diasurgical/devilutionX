@@ -1,0 +1,25 @@
+name: Validate translations
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  fmt-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install polib
+      run: sudo apt update && sudo apt install -y python3-polib
+
+    - name: Check
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: python3 tools/validate_translations.py

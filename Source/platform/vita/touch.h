@@ -4,10 +4,12 @@
 
 #include <SDL.h>
 
+#include "engine/point.hpp"
+
 namespace devilution {
 
-void handle_touch(SDL_Event *event, int currentMouseX, int currentMouseY);
-void finish_simulated_mouse_clicks(int currentMouseX, int currentMouseY);
+void HandleTouchEvent(SDL_Event *event, Point mousePosition);
+void FinishSimulatedMouseClicks(Point mousePosition);
 
 } // namespace devilution
 

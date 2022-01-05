@@ -74,7 +74,6 @@ set(libdevilutionx_SRCS
   controls/axis_direction.cpp
   controls/controller.cpp
   controls/controller_motion.cpp
-  controls/devices/game_controller.cpp
   controls/devices/joystick.cpp
   controls/devices/kbcontroller.cpp
   controls/game_controls.cpp
@@ -141,7 +140,8 @@ set(libdevilutionx_SRCS
   dvlnet/packet.cpp
   storm/storm_net.cpp
   storm/storm_svid.cpp
-  miniwin/misc_msg.cpp)
+  miniwin/misc_msg.cpp
+  platform/locale.cpp)
 
 if(IOS)
   list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)
@@ -177,8 +177,9 @@ if(NOT NONET)
   endif()
 endif()
 
-if(VIRTUAL_GAMEPAD)
+if(NOT USE_SDL1)
   list(APPEND libdevilutionx_SRCS
+    controls/devices/game_controller.cpp
     controls/touch/event_handlers.cpp
     controls/touch/gamepad.cpp
     controls/touch/renderers.cpp)

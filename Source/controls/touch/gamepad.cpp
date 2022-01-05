@@ -170,8 +170,6 @@ void InitializeVirtualGamepad()
 	manaButtonArea.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
 	manaButtonArea.radius = padButtonSize / 2;
 	manaButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
-
-	VirtualGamepadState.isActive = false;
 }
 
 void ActivateVirtualGamepad()
