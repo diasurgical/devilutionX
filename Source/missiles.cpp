@@ -30,7 +30,7 @@ int AvailableMissiles[MAXMISSILES];
 Missile Missiles[MAXMISSILES];
 int ActiveMissileCount;
 bool MissilePreFlag;
-constexpr int MSOURCE_TRAP = -1;
+constexpr int MSOURCE_OBJECT = -1;
 
 namespace {
 
@@ -441,7 +441,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 	int mx = position.x;
 	int my = position.y;
 
-	if (missile._micaster != TARGET_BOTH && missile._misource != MSOURCE_TRAP) {
+	if (missile._micaster != TARGET_BOTH && missile._misource != MSOURCE_OBJECT) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			int mid = dMonster[mx][my];
 			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
@@ -785,7 +785,7 @@ void SpawnLightning(Missile &missile, int dam)
 	int pn = dPiece[position.x][position.y];
 	assert(pn >= 0 && pn <= MAXTILES);
 
-	if (missile._misource != MSOURCE_TRAP || position != missile.position.start) {
+	if (missile._misource != MSOURCE_OBJECT || position != missile.position.start) {
 		if (nMissileTable[pn]) {
 			missile._mirange = 0;
 		}
@@ -795,7 +795,7 @@ void SpawnLightning(Missile &missile, int dam)
 		if (position != Point { missile.var1, missile.var2 } && InDungeonBounds(position)) {
 			missile.var4 = -(AvailableMissiles[0] + 1);
 			missile_id type = MIS_LIGHTNING;
-			if (missile._misource != MSOURCE_TRAP && missile._micaster == TARGET_PLAYERS
+			if (missile._misource != MSOURCE_OBJECT && missile._micaster == TARGET_PLAYERS
 			    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
 				type = MIS_LIGHTNING2;
 			}
@@ -1302,7 +1302,7 @@ void AddFireRune(Missile &missile, Point dst, Direction /*midir*/)
 void AddLightningRune(Missile &missile, Point dst, Direction /*midir*/)
 {
 	int id = missile._misource;
-	int lvl = id != MSOURCE_TRAP ? Players[id]._pLevel : 0;
+	int lvl = id != MSOURCE_OBJECT ? Players[id]._pLevel : 0;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 	missile._midam = dmg;
 	AddRune(missile, dst, MIS_LIGHTWALL);
@@ -1879,7 +1879,7 @@ void AddFirebolt(Missile &missile, Point dst, Direction midir)
 	int sp = 26;
 	if (missile._micaster == TARGET_MONSTERS) {
 		sp = 16;
-		if (missile._misource != MSOURCE_TRAP) {
+		if (missile._misource != MSOURCE_OBJECT) {
 			sp += std::min(missile._mispllvl * 2, 47);
 		}
 
@@ -1997,8 +1997,8 @@ void AddLightning(Missile &missile, Point dst, Direction /*midir*/)
 
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 
-	if (missile._micaster == TARGET_PLAYERS || missile._misource == MSOURCE_TRAP) {
-		if (missile._misource == MSOURCE_TRAP || Monsters[missile._misource].MType->mtype == MT_FAMILIAR)
+	if (missile._micaster == TARGET_PLAYERS || missile._misource == MSOURCE_OBJECT) {
+		if (missile._misource == MSOURCE_OBJECT || Monsters[missile._misource].MType->mtype == MT_FAMILIAR)
 			missile._mirange = 8;
 		else
 			missile._mirange = 10;
@@ -2107,7 +2107,7 @@ void AddTown(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddFlash(Missile &missile, Point /*dst*/, Direction /*midir*/)
 {
-	if (missile._misource != MSOURCE_TRAP) {
+	if (missile._misource != MSOURCE_OBJECT) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			int dmg = GenerateRndSum(20, Players[missile._misource]._pLevel + 1) + Players[missile._misource]._pLevel + 1;
 			missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
@@ -2125,7 +2125,7 @@ void AddFlash(Missile &missile, Point /*dst*/, Direction /*midir*/)
 void AddFlash2(Missile &missile, Point /*dst*/, Direction /*midir*/)
 {
 	if (missile._micaster == TARGET_MONSTERS) {
-		if (missile._misource != MSOURCE_TRAP) {
+		if (missile._misource != MSOURCE_OBJECT) {
 			int dmg = Players[missile._misource]._pLevel + 1;
 			dmg += GenerateRndSum(20, dmg);
 			missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
@@ -2535,7 +2535,7 @@ void AddNova(Missile &missile, Point dst, Direction /*midir*/)
 	missile.var1 = dst.x;
 	missile.var2 = dst.y;
 
-	if (missile._misource != MSOURCE_TRAP) {
+	if (missile._misource != MSOURCE_OBJECT) {
 		int dmg = GenerateRndSum(6, 5) + Players[missile._misource]._pLevel + 5;
 		missile._midam = ScaleSpellEffect(dmg / 2, missile._mispllvl);
 
@@ -2685,7 +2685,7 @@ void AddHbolt(Missile &missile, Point dst, Direction midir)
 		dst += midir;
 	}
 	int sp = 16;
-	if (missile._misource != MSOURCE_TRAP) {
+	if (missile._misource != MSOURCE_OBJECT) {
 		sp += std::min(missile._mispllvl * 2, 47);
 	}
 
@@ -2819,7 +2819,7 @@ void MI_LArrow(Missile &missile)
 		if (missile._mitype == MIS_LARROW) {
 			int mind;
 			int maxd;
-			if (p != MSOURCE_TRAP) {
+			if (p != MSOURCE_OBJECT) {
 				mind = Players[p]._pILMinDam;
 				maxd = Players[p]._pILMaxDam;
 			} else {
@@ -2832,7 +2832,7 @@ void MI_LArrow(Missile &missile)
 		if (missile._mitype == MIS_FARROW) {
 			int mind;
 			int maxd;
-			if (p != MSOURCE_TRAP) {
+			if (p != MSOURCE_OBJECT) {
 				mind = Players[p]._pIFMinDam;
 				maxd = Players[p]._pIFMaxDam;
 			} else {
@@ -2848,7 +2848,7 @@ void MI_LArrow(Missile &missile)
 
 		int mind;
 		int maxd;
-		if (p != MSOURCE_TRAP) {
+		if (p != MSOURCE_OBJECT) {
 			if (missile._micaster == TARGET_MONSTERS) {
 				mind = Players[p]._pIMinDam;
 				maxd = Players[p]._pIMaxDam;
@@ -2897,7 +2897,7 @@ void MI_Arrow(Missile &missile)
 
 	int mind;
 	int maxd;
-	if (p != MSOURCE_TRAP) {
+	if (p != MSOURCE_OBJECT) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			mind = Players[p]._pIMinDam;
 			maxd = Players[p]._pIMaxDam;
@@ -2922,7 +2922,7 @@ void MI_Firebolt(Missile &missile)
 	missile._mirange--;
 	if (missile._mitype != MIS_BONESPIRIT || missile._mimfnum != 8) {
 		int p = missile._misource;
-		if (p != MSOURCE_TRAP) {
+		if (p != MSOURCE_OBJECT) {
 			if (missile._micaster == TARGET_MONSTERS) {
 				auto &player = Players[p];
 				switch (missile._mitype) {
@@ -3251,7 +3251,7 @@ void MI_LightningWallC(Missile &missile)
 	}
 
 	int id = missile._misource;
-	int lvl = (id > MSOURCE_TRAP) ? Players[id]._pLevel : 0;
+	int lvl = (id > MSOURCE_OBJECT) ? Players[id]._pLevel : 0;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 
 	{
@@ -3288,7 +3288,7 @@ void MI_FireNova(Missile &missile)
 	Point src = missile.position.tile;
 	Direction dir = Direction::South;
 	mienemy_type en = TARGET_PLAYERS;
-	if (id != MSOURCE_TRAP) {
+	if (id != MSOURCE_OBJECT) {
 		dir = Players[id]._pdir;
 		en = TARGET_MONSTERS;
 	}
@@ -3316,7 +3316,7 @@ void MI_SpecArrow(Missile &missile)
 	missile_id mitype = MIS_ARROW;
 	Direction dir = Direction::South;
 	mienemy_type micaster = TARGET_PLAYERS;
-	if (id != MSOURCE_TRAP) {
+	if (id != MSOURCE_OBJECT) {
 		auto &player = Players[id];
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
@@ -3351,7 +3351,7 @@ void MI_Lightctrl(Missile &missile)
 	missile._mirange--;
 
 	int dam;
-	if (missile._misource == MSOURCE_TRAP) {
+	if (missile._misource == MSOURCE_OBJECT) {
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
 	} else if (missile._micaster == TARGET_MONSTERS) {
 		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource]._pLevel) + 2) << 6;
@@ -3414,7 +3414,7 @@ void MI_Town(Missile &missile)
 void MI_Flash(Missile &missile)
 {
 	if (missile._micaster == TARGET_MONSTERS) {
-		if (missile._misource != MSOURCE_TRAP)
+		if (missile._misource != MSOURCE_OBJECT)
 			Players[missile._misource]._pInvincible = true;
 	}
 	missile._mirange--;
@@ -3426,7 +3426,7 @@ void MI_Flash(Missile &missile)
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
 		if (missile._micaster == TARGET_MONSTERS) {
-			if (missile._misource != MSOURCE_TRAP)
+			if (missile._misource != MSOURCE_OBJECT)
 				Players[missile._misource]._pInvincible = false;
 		}
 	}
@@ -3436,7 +3436,7 @@ void MI_Flash(Missile &missile)
 void MI_Flash2(Missile &missile)
 {
 	if (missile._micaster == TARGET_MONSTERS) {
-		if (missile._misource != MSOURCE_TRAP)
+		if (missile._misource != MSOURCE_OBJECT)
 			Players[missile._misource]._pInvincible = true;
 	}
 	missile._mirange--;
@@ -3448,7 +3448,7 @@ void MI_Flash2(Missile &missile)
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
 		if (missile._micaster == TARGET_MONSTERS) {
-			if (missile._misource != MSOURCE_TRAP)
+			if (missile._misource != MSOURCE_OBJECT)
 				Players[missile._misource]._pInvincible = false;
 		}
 	}
@@ -3875,7 +3875,7 @@ void MI_Nova(Missile &missile)
 	Point src = missile.position.tile;
 	Direction dir = Direction::South;
 	mienemy_type en = TARGET_PLAYERS;
-	if (id != MSOURCE_TRAP) {
+	if (id != MSOURCE_OBJECT) {
 		dir = Players[id]._pdir;
 		en = TARGET_MONSTERS;
 	}
