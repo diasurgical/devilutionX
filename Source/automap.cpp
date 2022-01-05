@@ -516,7 +516,7 @@ void DrawAutomapText(const Surface &out)
 	}
 	CopyUtf8(desc, fmt::format(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}"), difficulty), sizeof(desc));
 	DrawString(out, desc, linePosition);
-} // namespace
+}
 
 std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 {
