@@ -247,11 +247,7 @@ if(NOT NOSOUND)
 endif()
 
 if(NOT NONET AND NOT DISABLE_ZERO_TIER)
-  if(NOT ANDROID)
-    target_link_libraries(libdevilutionx PUBLIC zt-static)
-  else()
-    target_link_libraries(libdevilutionx PUBLIC zt-shared)
-  endif()
+  target_link_libraries(libdevilutionx PUBLIC libzt::libzt)
 endif()
 
 foreach(path ${DEVILUTIONX_PLATFORM_SUBDIRECTORIES})
