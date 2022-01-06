@@ -36,7 +36,7 @@ TMenuItem sgSingleMenu[] = {
 	{ GMENU_ENABLED, N_("Options"),       &GamemenuOptions    },
 	{ GMENU_ENABLED, N_("New Game"),      &GamemenuNewGame   },
 	{ GMENU_ENABLED, N_("Load Game"),     &gamemenu_load_game  },
-	{ GMENU_ENABLED, N_("Quit Game"),     &gamemenu_quit_game  },
+	{ GMENU_ENABLED, N_("Quit Diablo"),   &gamemenu_quit_game  },
 	{ GMENU_ENABLED, nullptr,              nullptr             }
 	// clang-format on
 };
@@ -45,9 +45,9 @@ TMenuItem sgMultiMenu[] = {
 	// clang-format off
     // dwFlags,      pszStr,                fnMenu
 	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions      },
-	{ GMENU_ENABLED, N_("New Game"),        &GamemenuNewGame     },
-	{ GMENU_ENABLED, N_("Restart In Town"), &GamemenuRestartTown },
-	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game    },
+	{ GMENU_ENABLED, N_("Leave Game"),      &GamemenuNewGame     },
+	{ GMENU_ENABLED, N_("Respawn In Town"), &GamemenuRestartTown },
+	{ GMENU_ENABLED, N_("Quit Diablo"),     &gamemenu_quit_game    },
 	{ GMENU_ENABLED, nullptr,                nullptr               },
 	// clang-format on
 };
