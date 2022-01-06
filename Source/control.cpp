@@ -1419,15 +1419,14 @@ void DrawDeathText(const Surface &out)
 	char gold[64];
 	LightTableIndex = 0;
 
-	//LostGold = Players[MyPlayerId]._pGold / 2;
-	sprintf(gold, _("Death takes its toll of %d Gold"), LostGold);
-
 	DrawString(out, _("You have died"), { { 0, 0 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize42 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
-	if (!gbIsMultiplayer)
+	if (!gbIsMultiplayer) {
 		DrawString(out, _("Press ESC to load last save."), { { 0, 42 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize42 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
-	else
+	} else {
 		DrawString(out, _("Press ESC to continue."), { { 0, 42 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize30 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
-	DrawString(out, gold, { { 0, 84 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize30 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
+		sprintf(gold, _("Death takes its toll of %d Gold"), LostGold);
+		DrawString(out, gold, { { 0, 84 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize30 | UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
+	}
 }
 
 void DrawGoldSplit(const Surface &out)

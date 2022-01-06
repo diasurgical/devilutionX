@@ -46,12 +46,13 @@ void GamemenuReturnToGame(bool bActivate);
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
-    // dwFlags,      pszStr,              fnMenu
-	{ GMENU_ENABLED, N_("Options"),       &GamemenuOptions    },
-	{ GMENU_ENABLED, N_("Save Game"),     &gamemenu_save_game  },
-	{ GMENU_ENABLED, N_("Save and Exit Game"),      &GamemenuSaveAndExit   },
-	{ GMENU_ENABLED, N_("Return to Game"),   &GamemenuReturnToGame  },
-	{ GMENU_ENABLED, nullptr,              nullptr             }
+    // dwFlags,      pszStr,                fnMenu
+	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions    },
+	{ GMENU_ENABLED, N_("Save Game"),       &gamemenu_save_game  },
+	{ GMENU_ENABLED, N_("Load Game"),       &gamemenu_load_game  },
+	{ GMENU_ENABLED, N_("Exit to Menu"),    &GamemenuNewGame   },
+	{ GMENU_ENABLED, N_("Return to Game"),  &GamemenuReturnToGame  },
+	{ GMENU_ENABLED, nullptr,               nullptr             }
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
@@ -59,8 +60,8 @@ TMenuItem sgMultiMenu[] = {
 	// clang-format off
     // dwFlags,      pszStr,                fnMenu
 	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions      },
-	{ GMENU_ENABLED, N_("Save and Exit Game"),      &GamemenuNewGame     },
-	{ GMENU_ENABLED, N_("Return to Game"),   &GamemenuReturnToGame  },
+	{ GMENU_ENABLED, N_("Exit Game"),       &GamemenuNewGame     },
+	{ GMENU_ENABLED, N_("Return to Game"),  &GamemenuReturnToGame  },
 	{ GMENU_ENABLED, nullptr,                nullptr               },
 	// clang-format on
 };
@@ -88,16 +89,11 @@ const char *const SoundToggleNames[] = {
 
 void GamemenuUpdateSingle()
 {
-	//sgSingleMenu[3].setEnabled(gbValidSaveFile);
+	gmenu_enable(&sgSingleMenu[2], gbValidSaveFile);
 
-	//bool enable = MyPlayer->_pmode != PM_DEATH && !MyPlayerIsDead;
+	bool enable = Players[MyPlayerId]._pmode != PM_DEATH && !MyPlayerIsDead;
 
-	//sgSingleMenu[0].setEnabled(enable);
-}
-
-void GamemenuUpdateMulti()
-{
-	//sgMultiMenu[0].setEnabled(MyPlayerIsDead);
+	gmenu_enable(&sgSingleMenu[0], enable);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
@@ -413,7 +409,7 @@ void gamemenu_on()
 	if (!gbIsMultiplayer) {
 		gmenu_set_items(sgSingleMenu, GamemenuUpdateSingle);
 	} else {
-		gmenu_set_items(sgMultiMenu, GamemenuUpdateMulti);
+		gmenu_set_items(sgMultiMenu, nullptr);
 	}
 	PressEscKey();
 }
