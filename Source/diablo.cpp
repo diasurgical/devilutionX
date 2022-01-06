@@ -404,12 +404,6 @@ bool PressSysKey(int wParam)
 
 void ReleaseKey(int vkey)
 {
-	if (vkey == DVL_VK_SNAPSHOT)
-		CaptureScreen();
-	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
-		AltPressed(false);
-	if (vkey == DVL_VK_RCONTROL)
-		ToggleItemLabelHighlight();
 	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag)
 		return;
 	sgOptions.Keymapper.KeyReleased(vkey);
@@ -436,9 +430,6 @@ void PressKey(int vkey)
 		return;
 	}
 
-	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
-		AltPressed(true);
-
 	if (MyPlayerIsDead) {
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
@@ -463,10 +454,6 @@ void PressKey(int vkey)
 	}
 
 	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag) {
-		return;
-	}
-	if (vkey == DVL_VK_PAUSE) {
-		diablo_pause_game();
 		return;
 	}
 
@@ -524,20 +511,6 @@ void PressKey(int vkey)
 		if (AutomapActive && !talkflag) {
 			AutomapRight();
 		}
-	} else if (vkey == DVL_VK_TAB) {
-		DoAutoMap();
-	} else if (vkey == DVL_VK_SPACE) {
-		ClosePanels();
-		HelpFlag = false;
-		spselflag = false;
-		if (qtextflag && leveltype == DTYPE_TOWN) {
-			qtextflag = false;
-			stream_stop();
-		}
-		AutomapActive = false;
-		CancelCurrentDiabloMsg();
-		gamemenu_off();
-		doom_close();
 	}
 }
 
@@ -1472,6 +1445,28 @@ void InitKeymapActions()
 	    [] { Players[MyPlayerId].Stop(); },
 	    nullptr,
 	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "Item Highlighting",
+	    N_("Item highlighting"),
+	    N_("Show/hide items on ground."),
+	    DVL_VK_LMENU,
+	    [] { AltPressed(true); },
+	    [] { AltPressed(false); });
+	sgOptions.Keymapper.AddAction(
+	    "Toggle Item Highlighting",
+	    N_("Toggle item highlighting"),
+	    N_("Permanent show/hide items on ground."),
+	    DVL_VK_RCONTROL,
+	    nullptr,
+	    [] { ToggleItemLabelHighlight(); });
+	sgOptions.Keymapper.AddAction(
+	    "Toggle Automap",
+	    N_("Toggle automap"),
+	    N_("Toggles if automap is displayed."),
+	    DVL_VK_TAB,
+	    DoAutoMap,
+	    nullptr,
+	    IsGameRunning);
 
 	sgOptions.Keymapper.AddAction(
 	    "Inventory",
@@ -1517,6 +1512,26 @@ void InitKeymapActions()
 		    i + 1);
 	}
 	sgOptions.Keymapper.AddAction(
+	    "Hide Info Screens",
+	    N_("Hide Info Screens"),
+	    N_("Hide all info screens."),
+	    DVL_VK_SPACE,
+	    [] {
+		    ClosePanels();
+		    HelpFlag = false;
+		    spselflag = false;
+		    if (qtextflag && leveltype == DTYPE_TOWN) {
+			    qtextflag = false;
+			    stream_stop();
+		    }
+		    AutomapActive = false;
+		    CancelCurrentDiabloMsg();
+		    gamemenu_off();
+		    doom_close();
+	    },
+	    nullptr,
+	    IsGameRunning);
+	sgOptions.Keymapper.AddAction(
 	    "Zoom",
 	    N_("Zoom"),
 	    N_("Zoom Game Screen."),
@@ -1527,6 +1542,12 @@ void InitKeymapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "Pause Game",
+	    N_("Pause Game"),
+	    N_("Pauses the game."),
+	    DVL_VK_PAUSE,
+	    diablo_pause_game);
 	sgOptions.Keymapper.AddAction(
 	    "DecreaseGamma",
 	    N_("Decrease Gamma"),
@@ -1541,6 +1562,7 @@ void InitKeymapActions()
 	    N_("Increase screen brightness."),
 	    'F',
 	    IncreaseGamma,
+	    nullptr,
 	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "Help",
@@ -1550,6 +1572,13 @@ void InitKeymapActions()
 	    HelpKeyPressed,
 	    nullptr,
 	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "Screenshot",
+	    N_("Screenshot"),
+	    N_("Takes a screenshot."),
+	    DVL_VK_SNAPSHOT,
+	    nullptr,
+	    CaptureScreen);
 	sgOptions.Keymapper.AddAction(
 	    "GameInfo",
 	    N_("Game info"),
