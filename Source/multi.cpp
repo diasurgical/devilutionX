@@ -464,6 +464,21 @@ bool InitMulti(GameData *gameData)
 
 } // namespace
 
+void InitGameInfo()
+{
+	sgGameInitInfo.size = sizeof(sgGameInitInfo);
+	sgGameInitInfo.dwSeed = time(nullptr);
+	sgGameInitInfo.programid = GAME_ID;
+	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
+	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
+	sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
+	sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
+	sgGameInitInfo.bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
+	sgGameInitInfo.bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
+	sgGameInitInfo.bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
+	sgGameInitInfo.bFriendlyFire = *sgOptions.Gameplay.friendlyFire ? 1 : 0;
+}
+
 void NetSendLoPri(int playerId, const byte *data, size_t size)
 {
 	if (data != nullptr && size != 0) {
@@ -684,17 +699,7 @@ bool NetInit(bool bSinglePlayer)
 {
 	while (true) {
 		SetRndSeed(0);
-		sgGameInitInfo.size = sizeof(sgGameInitInfo);
-		sgGameInitInfo.dwSeed = time(nullptr);
-		sgGameInitInfo.programid = GAME_ID;
-		sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
-		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
-		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
-		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
-		sgGameInitInfo.bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
-		sgGameInitInfo.bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
-		sgGameInitInfo.bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
-		sgGameInitInfo.bFriendlyFire = *sgOptions.Gameplay.friendlyFire ? 1 : 0;
+		InitGameInfo();
 		memset(sgbPlayerTurnBitTbl, 0, sizeof(sgbPlayerTurnBitTbl));
 		gbGameDestroyed = false;
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
