@@ -44,24 +44,24 @@ void GamemenuSpeed(bool bActivate);
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
-	// dwFlags,      pszStr,          fnMenu
-	{ GMENU_ENABLED, N_("Save Game"), &gamemenu_save_game },
-	{ GMENU_ENABLED, N_("Options"),   &GamemenuOptions    },
-	{ GMENU_ENABLED, N_("New Game"),  &GamemenuNewGame    },
-	{ GMENU_ENABLED, N_("Load Game"), &gamemenu_load_game },
-	{ GMENU_ENABLED, N_("Quit Game"), &gamemenu_quit_game },
-	{ GMENU_ENABLED, nullptr,         nullptr             }
+    // dwFlags,      pszStr,              fnMenu
+	{ GMENU_ENABLED, N_("Save Game"),     &gamemenu_save_game  },
+	{ GMENU_ENABLED, N_("Options"),       &GamemenuOptions    },
+	{ GMENU_ENABLED, N_("New Game"),      &GamemenuNewGame   },
+	{ GMENU_ENABLED, N_("Load Game"),     &gamemenu_load_game  },
+	{ GMENU_ENABLED, N_("Quit Diablo"),   &gamemenu_quit_game  },
+	{ GMENU_ENABLED, nullptr,              nullptr             }
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
-	// dwFlags,      pszStr,                fnMenu
-	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions     },
-	{ GMENU_ENABLED, N_("New Game"),        &GamemenuNewGame     },
-	{ GMENU_ENABLED, N_("Restart In Town"), &GamemenuRestartTown },
-	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game  },
-	{ GMENU_ENABLED, nullptr,               nullptr              },
+    // dwFlags,      pszStr,                fnMenu
+	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions      },
+	{ GMENU_ENABLED, N_("Leave Game"),      &GamemenuNewGame     },
+	{ GMENU_ENABLED, N_("Respawn In Town"), &GamemenuRestartTown },
+	{ GMENU_ENABLED, N_("Quit Diablo"),     &gamemenu_quit_game    },
+	{ GMENU_ENABLED, nullptr,                nullptr               },
 	// clang-format on
 };
 TMenuItem sgOptionsMenu[] = {
