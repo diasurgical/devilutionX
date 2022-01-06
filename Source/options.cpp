@@ -796,14 +796,14 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 		&integerScaling,
 		&vSync,
 #endif
+		&limitFPS,
+		&showFPS,
 		&colorCycling,
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		&hardwareCursor,
 		&hardwareCursorForItems,
 		&hardwareCursorMaxSize,
 #endif
-		&limitFPS,
-		&showFPS,
 	};
 	// clang-format on
 }
@@ -847,8 +847,10 @@ GameplayOptions::GameplayOptions()
 std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 {
 	return {
-		&runInTown,
 		&grabInput,
+		&runInTown,
+		&adriaRefillsMana,
+		&randomizeQuests,
 		&theoQuest,
 		&cowQuest,
 		&friendlyFire,
@@ -856,20 +858,18 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&testBarbarian,
 		&experienceBar,
 		&enemyHealthBar,
+		&showMonsterType,
+		&disableCripplingShrines,
+		&quickCast,
+		&autoRefillBelt,
+		&autoPickupInTown,
 		&autoGoldPickup,
 		&autoElixirPickup,
-		&autoPickupInTown,
-		&adriaRefillsMana,
 		&autoEquipWeapons,
 		&autoEquipArmor,
 		&autoEquipHelms,
 		&autoEquipShields,
 		&autoEquipJewelry,
-		&randomizeQuests,
-		&showMonsterType,
-		&autoRefillBelt,
-		&disableCripplingShrines,
-		&quickCast,
 		&numHealPotionPickup,
 		&numFullHealPotionPickup,
 		&numManaPotionPickup,

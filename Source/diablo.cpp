@@ -1384,13 +1384,21 @@ bool IsPlayerDead()
 
 void InitKeymapActions()
 {
-	sgOptions.Keymapper.AddAction(
-	    "Help",
-	    N_("Help"),
-	    N_("Open Help Screen."),
-	    DVL_VK_F1,
-	    HelpKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	for (int i = 0; i < 8; ++i) {
+		sgOptions.Keymapper.AddAction(
+		    "BeltItem{}",
+		    N_("Belt item {}"),
+		    N_("Use Belt item."),
+		    '1' + i,
+		    [i] {
+			    auto &myPlayer = Players[MyPlayerId];
+			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
+				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
+			    }
+		    },
+		    [&]() { return !IsPlayerDead(); },
+		    i + 1);
+	}
 	for (int i = 0; i < 4; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickSpell{}",
@@ -1410,61 +1418,6 @@ void InitKeymapActions()
 		    [&]() { return !IsPlayerDead(); },
 		    i + 1);
 	}
-	for (int i = 0; i < 4; ++i) {
-		sgOptions.Keymapper.AddAction(
-		    "QuickMessage{}",
-		    N_("Quick Message {}"),
-		    N_("Use Quick Message in chat."),
-		    DVL_VK_F9 + i,
-		    [i]() { DiabloHotkeyMsg(i); },
-		    [] { return true; },
-		    i + 1);
-	}
-	sgOptions.Keymapper.AddAction(
-	    "DecreaseGamma",
-	    N_("Decrease Gamma"),
-	    N_("Reduce screen brightness."),
-	    'G',
-	    DecreaseGamma,
-	    [&]() { return !IsPlayerDead(); });
-	sgOptions.Keymapper.AddAction(
-	    "IncreaseGamma",
-	    N_("Increase Gamma"),
-	    N_("Increase screen brightness."),
-	    'F',
-	    IncreaseGamma,
-	    [&]() { return !IsPlayerDead(); });
-	sgOptions.Keymapper.AddAction(
-	    "Inventory",
-	    N_("Inventory"),
-	    N_("Open Inventory screen."),
-	    'I',
-	    InventoryKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
-	sgOptions.Keymapper.AddAction(
-	    "Character",
-	    N_("Character"),
-	    N_("Open Character screen."),
-	    'C',
-	    CharacterSheetKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
-	sgOptions.Keymapper.AddAction(
-	    "QuestLog",
-	    N_("Quest log"),
-	    N_("Open Quest log."),
-	    'Q',
-	    QuestLogKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
-	sgOptions.Keymapper.AddAction(
-	    "Zoom",
-	    N_("Zoom"),
-	    N_("Zoom Game Screen."),
-	    'Z',
-	    [] {
-		    zoomflag = !zoomflag;
-		    CalcViewportGeometry();
-	    },
-	    [&]() { return !IsPlayerDead(); });
 	sgOptions.Keymapper.AddAction(
 	    "DisplaySpells",
 	    N_("Speedbook"),
@@ -1472,41 +1425,6 @@ void InitKeymapActions()
 	    'S',
 	    DisplaySpellsKeyPressed,
 	    [&]() { return !IsPlayerDead(); });
-	sgOptions.Keymapper.AddAction(
-	    "SpellBook",
-	    N_("Spellbook"),
-	    N_("Open Spellbook."),
-	    'B',
-	    SpellBookKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
-	sgOptions.Keymapper.AddAction(
-	    "GameInfo",
-	    N_("Game info"),
-	    N_("Displays game infos."),
-	    'V',
-	    [] {
-		    EventPlrMsg(fmt::format(
-		                    _(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}"),
-		                    PROJECT_NAME,
-		                    PROJECT_VERSION),
-		        UiFlags::ColorWhite);
-	    },
-	    [&]() { return !IsPlayerDead(); });
-	for (int i = 0; i < 8; ++i) {
-		sgOptions.Keymapper.AddAction(
-		    "BeltItem{}",
-		    N_("Belt item {}"),
-		    N_("Use Belt item."),
-		    '1' + i,
-		    [i] {
-			    auto &myPlayer = Players[MyPlayerId];
-			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
-				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
-			    }
-		    },
-		    [&]() { return !IsPlayerDead(); },
-		    i + 1);
-	}
 	sgOptions.Keymapper.AddAction(
 	    "QuickSave",
 	    N_("Quick save"),
@@ -1533,6 +1451,89 @@ void InitKeymapActions()
 	    N_("Stops walking and cancel pending actions."),
 	    DVL_VK_INVALID,
 	    [] { Players[MyPlayerId].Stop(); },
+	    [&]() { return !IsPlayerDead(); });
+
+	sgOptions.Keymapper.AddAction(
+	    "Inventory",
+	    N_("Inventory"),
+	    N_("Open Inventory screen."),
+	    'I',
+	    InventoryKeyPressed,
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
+	    "Character",
+	    N_("Character"),
+	    N_("Open Character screen."),
+	    'C',
+	    CharacterSheetKeyPressed,
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
+	    "QuestLog",
+	    N_("Quest log"),
+	    N_("Open Quest log."),
+	    'Q',
+	    QuestLogKeyPressed,
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
+	    "SpellBook",
+	    N_("Spellbook"),
+	    N_("Open Spellbook."),
+	    'B',
+	    SpellBookKeyPressed,
+	    [&]() { return !IsPlayerDead(); });
+	for (int i = 0; i < 4; ++i) {
+		sgOptions.Keymapper.AddAction(
+		    "QuickMessage{}",
+		    N_("Quick Message {}"),
+		    N_("Use Quick Message in chat."),
+		    DVL_VK_F9 + i,
+		    [i]() { DiabloHotkeyMsg(i); },
+		    [] { return true; },
+		    i + 1);
+	}
+	sgOptions.Keymapper.AddAction(
+	    "Zoom",
+	    N_("Zoom"),
+	    N_("Zoom Game Screen."),
+	    'Z',
+	    [] {
+		    zoomflag = !zoomflag;
+		    CalcViewportGeometry();
+	    },
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
+	    "DecreaseGamma",
+	    N_("Decrease Gamma"),
+	    N_("Reduce screen brightness."),
+	    'G',
+	    DecreaseGamma,
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
+	    "IncreaseGamma",
+	    N_("Increase Gamma"),
+	    N_("Increase screen brightness."),
+	    'F',
+	    IncreaseGamma,
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
+	    "Help",
+	    N_("Help"),
+	    N_("Open Help Screen."),
+	    DVL_VK_F1,
+	    HelpKeyPressed,
+	    [&]() { return !IsPlayerDead(); });
+	sgOptions.Keymapper.AddAction(
+	    "GameInfo",
+	    N_("Game info"),
+	    N_("Displays game infos."),
+	    'V',
+	    [] {
+		    EventPlrMsg(fmt::format(
+		                    _(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s} {:s}"),
+		                    PROJECT_NAME,
+		                    PROJECT_VERSION),
+		        UiFlags::ColorWhite);
+	    },
 	    [&]() { return !IsPlayerDead(); });
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(
