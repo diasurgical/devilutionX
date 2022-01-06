@@ -538,8 +538,7 @@ void RefreshGameList()
 
 	uint32_t currentTime = SDL_GetTicks();
 
-	if (lastRequest == 0 || currentTime - lastRequest > 30000) {
-		DvlNet_SendInfoRequest();
+	if ((lastRequest == 0 || currentTime - lastRequest > 30000) && DvlNet_SendInfoRequest()) {
 		lastRequest = currentTime;
 		lastUpdate = currentTime - 3000; // Give 2 sec for responses, but don't wait 5
 	}

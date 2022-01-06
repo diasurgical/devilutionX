@@ -25,7 +25,7 @@ public:
 	virtual bool SNetLeaveGame(int type);
 
 	virtual std::string make_default_gamename();
-	virtual void send_info_request();
+	virtual bool send_info_request();
 	virtual void clear_gamelist();
 	virtual std::vector<std::string> get_gamelist();
 
@@ -97,12 +97,13 @@ bool base_protocol<P>::wait_firstpeer()
 }
 
 template <class P>
-void base_protocol<P>::send_info_request()
+bool base_protocol<P>::send_info_request()
 {
-	if (wait_network()) {
-		auto pkt = pktfty->make_packet<PT_INFO_REQUEST>(PLR_BROADCAST, PLR_MASTER);
-		proto.send_oob_mc(pkt->Data());
-	}
+	if (!proto.network_online())
+		return false;
+	auto pkt = pktfty->make_packet<PT_INFO_REQUEST>(PLR_BROADCAST, PLR_MASTER);
+	proto.send_oob_mc(pkt->Data());
+	return true;
 }
 
 template <class P>

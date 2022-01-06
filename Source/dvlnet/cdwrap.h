@@ -40,7 +40,7 @@ public:
 	virtual bool SNetGetTurnsInTransit(uint32_t *turns);
 	virtual void setup_gameinfo(buffer_t info);
 	virtual std::string make_default_gamename();
-	virtual void send_info_request();
+	virtual bool send_info_request();
 	virtual void clear_gamelist();
 	virtual std::vector<std::string> get_gamelist();
 	virtual void setup_password(std::string pw);
@@ -175,9 +175,9 @@ std::string cdwrap<T>::make_default_gamename()
 }
 
 template <class T>
-void cdwrap<T>::send_info_request()
+bool cdwrap<T>::send_info_request()
 {
-	dvlnet_wrap->send_info_request();
+	return dvlnet_wrap->send_info_request();
 }
 
 template <class T>
