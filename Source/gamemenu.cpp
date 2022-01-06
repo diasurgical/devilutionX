@@ -84,7 +84,7 @@ void GamemenuUpdateSingle()
 
 void GamemenuUpdateMulti()
 {
-	gmenu_enable(&sgMultiMenu[2], MyPlayerIsDead);
+	gmenu_enable(&sgMultiMenu[0], MyPlayerIsDead);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
