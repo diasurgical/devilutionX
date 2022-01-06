@@ -543,9 +543,10 @@ struct KeymapperOptions : OptionCategoryBase {
 		bool SetValue(int value);
 
 	private:
-		Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index);
+		Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, int index);
 		int defaultKey;
-		std::function<void()> action;
+		std::function<void()> actionPressed;
+		std::function<void()> actionReleased;
 		std::function<bool()> enable;
 		int boundKey = DVL_VK_INVALID;
 		int dynamicIndex;
@@ -560,8 +561,9 @@ struct KeymapperOptions : OptionCategoryBase {
 
 	void AddAction(
 	    string_view key, string_view name, string_view description, int defaultKey,
-	    std::function<void()> action, std::function<bool()> enable = [] { return true; }, int index = -1);
+	    std::function<void()> actionPressed, std::function<void()> actionReleased = nullptr, std::function<bool()> enable = nullptr, int index = -1);
 	void KeyPressed(int key) const;
+	void KeyReleased(int key) const;
 	string_view KeyNameForAction(string_view actionName) const;
 
 private:
