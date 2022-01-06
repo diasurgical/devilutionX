@@ -410,6 +410,9 @@ void ReleaseKey(int vkey)
 		AltPressed(false);
 	if (vkey == DVL_VK_RCONTROL)
 		ToggleItemLabelHighlight();
+	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag)
+		return;
+	sgOptions.Keymapper.KeyReleased(vkey);
 }
 
 void ClosePanels()
@@ -466,13 +469,14 @@ void PressKey(int vkey)
 		diablo_pause_game();
 		return;
 	}
+
+	sgOptions.Keymapper.KeyPressed(vkey);
+
 	if (PauseMode == 2) {
 		if (vkey == DVL_VK_RETURN && GetAsyncKeyState(DVL_VK_MENU))
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 		return;
 	}
-
-	sgOptions.Keymapper.KeyPressed(vkey);
 
 	if (vkey == DVL_VK_RETURN) {
 		if (GetAsyncKeyState(DVL_VK_MENU)) {
@@ -1382,6 +1386,16 @@ bool IsPlayerDead()
 	return Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead;
 }
 
+bool IsGameRunning()
+{
+	return PauseMode != 2;
+}
+
+bool CanPlayerTakeAction()
+{
+	return !IsPlayerDead() && IsGameRunning();
+}
+
 void InitKeymapActions()
 {
 	for (int i = 0; i < 8; ++i) {
@@ -1396,7 +1410,8 @@ void InitKeymapActions()
 				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			    }
 		    },
-		    [&]() { return !IsPlayerDead(); },
+		    nullptr,
+		    CanPlayerTakeAction,
 		    i + 1);
 	}
 	for (int i = 0; i < 4; ++i) {
@@ -1415,7 +1430,8 @@ void InitKeymapActions()
 			    else
 				    QuickCast(i);
 		    },
-		    [&]() { return !IsPlayerDead(); },
+		    nullptr,
+		    CanPlayerTakeAction,
 		    i + 1);
 	}
 	sgOptions.Keymapper.AddAction(
@@ -1424,21 +1440,24 @@ void InitKeymapActions()
 	    N_("Open Speedbook."),
 	    'S',
 	    DisplaySpellsKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "QuickSave",
 	    N_("Quick save"),
 	    N_("Saves the game."),
 	    DVL_VK_F2,
 	    [] { gamemenu_save_game(false); },
-	    [&]() { return !gbIsMultiplayer && !IsPlayerDead(); });
+	    nullptr,
+	    [&]() { return !gbIsMultiplayer && CanPlayerTakeAction(); });
 	sgOptions.Keymapper.AddAction(
 	    "QuickLoad",
 	    N_("Quick load"),
 	    N_("Loads the game."),
 	    DVL_VK_F3,
 	    [] { gamemenu_load_game(false); },
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE; });
+	    nullptr,
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE && IsGameRunning(); });
 	sgOptions.Keymapper.AddAction(
 	    "QuitGame",
 	    N_("Quit game"),
@@ -1451,7 +1470,8 @@ void InitKeymapActions()
 	    N_("Stops walking and cancel pending actions."),
 	    DVL_VK_INVALID,
 	    [] { Players[MyPlayerId].Stop(); },
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 
 	sgOptions.Keymapper.AddAction(
 	    "Inventory",
@@ -1459,28 +1479,32 @@ void InitKeymapActions()
 	    N_("Open Inventory screen."),
 	    'I',
 	    InventoryKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "Character",
 	    N_("Character"),
 	    N_("Open Character screen."),
 	    'C',
 	    CharacterSheetKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "QuestLog",
 	    N_("Quest log"),
 	    N_("Open Quest log."),
 	    'Q',
 	    QuestLogKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "SpellBook",
 	    N_("Spellbook"),
 	    N_("Open Spellbook."),
 	    'B',
 	    SpellBookKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	for (int i = 0; i < 4; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickMessage{}",
@@ -1488,7 +1512,8 @@ void InitKeymapActions()
 		    N_("Use Quick Message in chat."),
 		    DVL_VK_F9 + i,
 		    [i]() { DiabloHotkeyMsg(i); },
-		    [] { return true; },
+		    nullptr,
+		    nullptr,
 		    i + 1);
 	}
 	sgOptions.Keymapper.AddAction(
@@ -1500,28 +1525,31 @@ void InitKeymapActions()
 		    zoomflag = !zoomflag;
 		    CalcViewportGeometry();
 	    },
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "DecreaseGamma",
 	    N_("Decrease Gamma"),
 	    N_("Reduce screen brightness."),
 	    'G',
 	    DecreaseGamma,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "IncreaseGamma",
 	    N_("Increase Gamma"),
 	    N_("Increase screen brightness."),
 	    'F',
 	    IncreaseGamma,
-	    [&]() { return !IsPlayerDead(); });
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "Help",
 	    N_("Help"),
 	    N_("Open Help Screen."),
 	    DVL_VK_F1,
 	    HelpKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "GameInfo",
 	    N_("Game info"),
@@ -1534,7 +1562,8 @@ void InitKeymapActions()
 		                    PROJECT_VERSION),
 		        UiFlags::ColorWhite);
 	    },
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(
 	    "DebugToggle",
@@ -1543,11 +1572,9 @@ void InitKeymapActions()
 	    'X',
 	    [] {
 		    DebugToggle = !DebugToggle;
-	    },
-	    [&]() { return true; });
+	    });
 #endif
 }
-
 } // namespace
 
 void FreeGameMem()
