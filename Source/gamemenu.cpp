@@ -40,16 +40,17 @@ void GamemenuMusicVolume(bool bActivate);
 void GamemenuSoundVolume(bool bActivate);
 void GamemenuBrightness(bool bActivate);
 void GamemenuSpeed(bool bActivate);
+void GamemenuSaveAndExit(bool bActivate);
+void GamemenuReturnToGame(bool bActivate);
 
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
     // dwFlags,      pszStr,              fnMenu
-	{ GMENU_ENABLED, N_("Save Game"),     &gamemenu_save_game  },
-	{ GMENU_ENABLED, N_("Load Game"),     &gamemenu_load_game  },
-	{ GMENU_ENABLED, N_("New Game"),      &GamemenuNewGame   },
 	{ GMENU_ENABLED, N_("Options"),       &GamemenuOptions    },
-	{ GMENU_ENABLED, N_("Quit Diablo"),   &gamemenu_quit_game  },
+	{ GMENU_ENABLED, N_("Save Game"),     &gamemenu_save_game  },
+	{ GMENU_ENABLED, N_("Save and Exit Game"),      &GamemenuSaveAndExit   },
+	{ GMENU_ENABLED, N_("Return to Game"),   &GamemenuReturnToGame  },
 	{ GMENU_ENABLED, nullptr,              nullptr             }
 	// clang-format on
 };
@@ -57,10 +58,9 @@ TMenuItem sgSingleMenu[] = {
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
     // dwFlags,      pszStr,                fnMenu
-	{ GMENU_ENABLED, N_("Respawn In Town"), &GamemenuRestartTown },
-	{ GMENU_ENABLED, N_("Leave Game"),      &GamemenuNewGame     },
 	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions      },
-	{ GMENU_ENABLED, N_("Quit Diablo"),     &gamemenu_quit_game    },
+	{ GMENU_ENABLED, N_("Save and Exit Game"),      &GamemenuNewGame     },
+	{ GMENU_ENABLED, N_("Return to Game"),   &GamemenuReturnToGame  },
 	{ GMENU_ENABLED, nullptr,                nullptr               },
 	// clang-format on
 };
@@ -88,16 +88,16 @@ const char *const SoundToggleNames[] = {
 
 void GamemenuUpdateSingle()
 {
-	sgSingleMenu[3].setEnabled(gbValidSaveFile);
+	//sgSingleMenu[3].setEnabled(gbValidSaveFile);
 
-	bool enable = MyPlayer->_pmode != PM_DEATH && !MyPlayerIsDead;
+	//bool enable = MyPlayer->_pmode != PM_DEATH && !MyPlayerIsDead;
 
-	sgSingleMenu[0].setEnabled(enable);
+	//sgSingleMenu[0].setEnabled(enable);
 }
 
 void GamemenuUpdateMulti()
 {
-	sgMultiMenu[0].setEnabled(MyPlayerIsDead);
+	//sgMultiMenu[0].setEnabled(MyPlayerIsDead);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
@@ -282,6 +282,51 @@ void GamemenuSpeed(bool bActivate)
 
 	GetOptions().Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
+}
+
+void GamemenuSaveAndExit(bool /*bActivate*/)
+{
+	if (pcurs != CURSOR_HAND) {
+		return;
+	}
+
+	if (Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead) {
+		gamemenu_off();
+		return;
+	}
+
+	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+	NewCursor(CURSOR_NONE);
+	gamemenu_off();
+	InitDiabloMsg(EMSG_SAVING);
+	force_redraw = 255;
+	DrawAndBlit();
+	SaveGame();
+	ClrDiabloMsg();
+	force_redraw = 255;
+	NewCursor(CURSOR_HAND);
+	if (CornerStone.activated) {
+		CornerstoneSave();
+	}
+	interface_msg_pump();
+	SetWindowProc(saveProc);
+
+	for (auto &player : Players) {
+		player._pmode = PM_QUIT;
+		player._pInvincible = true;
+	}
+
+	MyPlayerIsDead = false;
+	force_redraw = 255;
+	scrollrt_draw_game_screen();
+	CornerStone.activated = false;
+	gbRunGame = false;
+	gamemenu_off();
+}
+
+void GamemenuReturnToGame(bool /*bActivate*/)
+{
+	gamemenu_off();
 }
 
 } // namespace

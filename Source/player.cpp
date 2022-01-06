@@ -59,6 +59,7 @@ Player *MyPlayer;
 std::vector<Player> Players;
 Player *InspectPlayer;
 bool MyPlayerIsDead;
+int LostGold;
 
 namespace {
 
@@ -350,6 +351,9 @@ void DropHalfPlayersGold(Player &player)
 	if (remainingGold > 0) {
 		DropGold(player, remainingGold, false);
 	}
+
+	if (&player == MyPlayer)
+		LostGold = player._pGold / 2;
 
 	player._pGold /= 2;
 }
@@ -1037,9 +1041,9 @@ bool DoDeath(Player &player)
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		} else if (&player == MyPlayer && player.AnimInfo.tickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
-			if (!gbIsMultiplayer) {
-				gamemenu_on();
-			}
+			//if (!gbIsMultiplayer) {
+			//	gamemenu_on();
+			//}
 		}
 	}
 
