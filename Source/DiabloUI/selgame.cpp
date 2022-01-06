@@ -40,6 +40,7 @@ const char *title = "";
 std::vector<std::unique_ptr<UiListItem>> vecSelGameDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelGameDialog;
 std::vector<std::string> Gamelist;
+uint32_t firstPublicGameInfoRequestSend = 0;
 int HighlightedItem;
 
 void selgame_FreeVectors()
@@ -98,16 +99,27 @@ void selgame_GameSelection_Init()
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Action"), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 #ifdef PACKET_ENCRYPTION
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Game"), 0));
+	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Game"), 0, UiFlags::ColorUiGold));
 #endif
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Public Game"), 1));
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Join Game"), 2));
+	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Public Game"), 1, UiFlags::ColorUiGold));
+	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Join Game"), 2, UiFlags::ColorUiGold));
 
-	for (unsigned i = 0; i < Gamelist.size(); i++) {
-		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 3));
+	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
+	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Public Games"), -1, UiFlags::ElementDisabled | UiFlags::ColorWhitegold));
+
+	if (Gamelist.empty()) {
+		// We expect the game list is recevied after 3 seconds
+		if (firstPublicGameInfoRequestSend == 0 || (SDL_GetTicks() - firstPublicGameInfoRequestSend) < 2000)
+			vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Loading..."), -1, UiFlags::ElementDisabled | UiFlags::ColorUiSilver));
+		else
+			vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("None"), -1, UiFlags::ElementDisabled | UiFlags::ColorUiSilver));
+	} else {
+		for (unsigned i = 0; i < Gamelist.size(); i++) {
+			vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 3, UiFlags::ColorUiGold));
+		}
 	}
 
-	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, 6, PANEL_LEFT + 305, (UI_OFFSET_Y + 255), 285, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
+	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, 6, PANEL_LEFT + 305, (UI_OFFSET_Y + 255), 285, 26, UiFlags::AlignCenter | UiFlags::FontSize24));
 
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect5, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -541,6 +553,8 @@ void RefreshGameList()
 	if ((lastRequest == 0 || currentTime - lastRequest > 30000) && DvlNet_SendInfoRequest()) {
 		lastRequest = currentTime;
 		lastUpdate = currentTime - 3000; // Give 2 sec for responses, but don't wait 5
+		if (firstPublicGameInfoRequestSend == 0)
+			firstPublicGameInfoRequestSend = currentTime;
 	}
 
 	if (lastUpdate == 0 || currentTime - lastUpdate > 5000) {
@@ -556,6 +570,7 @@ void RefreshGameList()
 
 bool UiSelectGame(GameData *gameData, int *playerId)
 {
+	firstPublicGameInfoRequestSend = 0;
 	gdwPlayerId = playerId;
 	m_game_data = gameData;
 	selgame_Init();
