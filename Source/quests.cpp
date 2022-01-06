@@ -517,6 +517,11 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 	} else if (monster._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		Quests[Q_WARLORD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::YourReignOfPainHasEnded, 30);
+	} else if (monster._uniqtype - 1 == UMT_DIABLO) { //"Diablo"
+		auto &quest = Quests[Q_DIABLO];
+		quest._qactive = QUEST_DONE;
+		if (sendmsg)
+			NetSendCmdQuest(true, quest);
 	}
 }
 
