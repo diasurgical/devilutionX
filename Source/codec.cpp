@@ -5,6 +5,7 @@
  */
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 
@@ -20,8 +21,9 @@ struct CodecSignature {
 	uint32_t checksum;
 	uint8_t error;
 	uint8_t lastChunkSize;
-	uint16_t unused;
 };
+
+constexpr size_t SignatureSize = 8;
 
 // https://stackoverflow.com/a/45172360 - helper to make up for not having an implicit initializer for std::byte
 template <typename... Ts>
@@ -40,7 +42,7 @@ void CodecInitKey(const char *pszPassword)
 		pw[i] = static_cast<byte>(pszPassword[j]);
 	}
 
-	byte digest[SHA1HashSize];
+	alignas(alignof(uint32_t)) byte digest[SHA1HashSize];
 	SHA1Reset(0);
 	SHA1Calculate(0, pw, digest);
 	SHA1Clear();
@@ -64,17 +66,40 @@ void CodecInitKey(const char *pszPassword)
 	}
 	memset(key.data(), 0, sizeof(key));
 }
+
+CodecSignature GetCodecSignature(byte *src)
+{
+	CodecSignature result;
+	result.checksum = LoadLE32(src);
+	src += 4;
+	result.error = static_cast<uint8_t>(*src++);
+	result.lastChunkSize = static_cast<uint8_t>(*src);
+	return result;
+}
+
+void SetCodecSignature(byte *dst, CodecSignature sig)
+{
+	*dst++ = static_cast<byte>(sig.checksum);
+	*dst++ = static_cast<byte>(sig.checksum >> 8);
+	*dst++ = static_cast<byte>(sig.checksum >> 16);
+	*dst++ = static_cast<byte>(sig.checksum >> 24);
+	*dst++ = static_cast<byte>(sig.error);
+	*dst++ = static_cast<byte>(sig.lastChunkSize);
+	*dst++ = static_cast<byte>(0);
+	*dst++ = static_cast<byte>(0);
+}
+
 } // namespace
 
 std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword)
 {
 	byte buf[BlockSize];
-	byte dst[SHA1HashSize];
+	alignas(alignof(uint32_t)) byte dst[SHA1HashSize];
 
 	CodecInitKey(pszPassword);
-	if (size <= sizeof(CodecSignature))
+	if (size <= SignatureSize)
 		return 0;
-	size -= sizeof(CodecSignature);
+	size -= SignatureSize;
 	if (size % BlockSize != 0)
 		return 0;
 	for (auto i = size; i != 0; pbSrcDst += BlockSize, i -= BlockSize) {
@@ -89,18 +114,18 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 	}
 
 	memset(buf, 0, sizeof(buf));
-	auto *sig = reinterpret_cast<CodecSignature *>(pbSrcDst);
-	if (sig->error > 0) {
+	const CodecSignature sig = GetCodecSignature(pbSrcDst);
+	if (sig.error > 0) {
 		goto error;
 	}
 
 	SHA1Result(0, dst);
-	if (sig->checksum != *reinterpret_cast<uint32_t *>(dst)) {
+	if (sig.checksum != *reinterpret_cast<uint32_t *>(dst)) {
 		memset(dst, 0, sizeof(dst));
 		goto error;
 	}
 
-	size += sig->lastChunkSize - BlockSize;
+	size += sig.lastChunkSize - BlockSize;
 	SHA1Clear();
 	return size;
 error:
@@ -112,13 +137,13 @@ std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 {
 	if (dwSrcBytes % BlockSize != 0)
 		dwSrcBytes += BlockSize - (dwSrcBytes % BlockSize);
-	return dwSrcBytes + sizeof(CodecSignature);
+	return dwSrcBytes + SignatureSize;
 }
 
 void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const char *pszPassword)
 {
 	byte buf[BlockSize];
-	byte tmp[SHA1HashSize];
+	alignas(alignof(uint32_t)) byte tmp[SHA1HashSize];
 	byte dst[SHA1HashSize];
 
 	if (size64 != codec_get_encoded_len(size))
@@ -144,11 +169,10 @@ void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const ch
 	}
 	memset(buf, 0, sizeof(buf));
 	SHA1Result(0, tmp);
-	auto *sig = reinterpret_cast<CodecSignature *>(pbSrcDst);
-	sig->error = 0;
-	sig->unused = 0;
-	sig->checksum = *reinterpret_cast<uint32_t *>(tmp);
-	sig->lastChunkSize = static_cast<uint8_t>(lastChunk); // lastChunk is at most 64 so will always fit in an 8 bit var
+	SetCodecSignature(pbSrcDst, CodecSignature { /*.checksum=*/*reinterpret_cast<uint32_t *>(tmp),
+	                                /*.error=*/0,
+	                                // lastChunk is at most 64 so will always fit in an 8 bit var
+	                                /*.lastChunkSize=*/static_cast<uint8_t>(lastChunk) });
 	SHA1Clear();
 }
 
