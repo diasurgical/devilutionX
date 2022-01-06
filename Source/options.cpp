@@ -1048,6 +1048,15 @@ KeymapperOptions::KeymapperOptions()
 		keyIDToKeyName.emplace(DVL_VK_F1 + i, fmt::format("F{}", i + 1));
 	}
 
+	keyIDToKeyName.emplace(DVL_VK_LMENU, "LALT");
+	keyIDToKeyName.emplace(DVL_VK_RMENU, "RALT");
+	keyIDToKeyName.emplace(DVL_VK_SPACE, "SPACE");
+	keyIDToKeyName.emplace(DVL_VK_RCONTROL, "RCONTROL");
+	keyIDToKeyName.emplace(DVL_VK_LCONTROL, "LCONTROL");
+	keyIDToKeyName.emplace(DVL_VK_SNAPSHOT, "PRINT");
+	keyIDToKeyName.emplace(DVL_VK_PAUSE, "PAUSE");
+	keyIDToKeyName.emplace(DVL_VK_TAB, "TAB");
+
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
 	for (const auto &kv : keyIDToKeyName) {
 		keyNameToKeyID.emplace(kv.second, kv.first);
