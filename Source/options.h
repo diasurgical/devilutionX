@@ -587,16 +587,16 @@ struct Options {
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
 		return {
+			&Language,
 			&StartUp,
+			&Graphics,
+			&Audio,
 			&Diablo,
 			&Hellfire,
-			&Audio,
 			&Gameplay,
-			&Graphics,
 			&Controller,
 			&Network,
 			&Chat,
-			&Language,
 			&Keymapper,
 		};
 	}
