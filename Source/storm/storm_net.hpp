@@ -165,7 +165,7 @@ bool SNetSetBasePlayer(int);
 bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData);
 void SNetGetProviderCaps(struct _SNETCAPS *);
 
-void DvlNet_SendInfoRequest();
+bool DvlNet_SendInfoRequest();
 void DvlNet_ClearGamelist();
 std::vector<std::string> DvlNet_GetGamelist();
 void DvlNet_SetPassword(std::string pw);

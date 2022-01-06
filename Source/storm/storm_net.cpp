@@ -234,9 +234,9 @@ bool SNetSetBasePlayer(int /*unused*/)
 	return true;
 }
 
-void DvlNet_SendInfoRequest()
+bool DvlNet_SendInfoRequest()
 {
-	dvlnet_inst->send_info_request();
+	return dvlnet_inst->send_info_request();
 }
 
 void DvlNet_ClearGamelist()

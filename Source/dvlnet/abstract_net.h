@@ -48,8 +48,9 @@ public:
 	{
 	}
 
-	virtual void send_info_request()
+	virtual bool send_info_request()
 	{
+		return true;
 	}
 
 	virtual void clear_gamelist()
