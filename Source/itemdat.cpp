@@ -9,6 +9,43 @@
 
 namespace devilution {
 
+string_view ItemTypeToString(ItemType itemType)
+{
+	switch (itemType) {
+	case ItemType::Misc:
+		return "Misc";
+	case ItemType::Sword:
+		return "Sword";
+	case ItemType::Axe:
+		return "Axe";
+	case ItemType::Bow:
+		return "Bow";
+	case ItemType::Mace:
+		return "Mace";
+	case ItemType::Shield:
+		return "Shield";
+	case ItemType::LightArmor:
+		return "LightArmor";
+	case ItemType::Helm:
+		return "Helm";
+	case ItemType::MediumArmor:
+		return "MediumArmor";
+	case ItemType::HeavyArmor:
+		return "HeavyArmor";
+	case ItemType::Staff:
+		return "Staff";
+	case ItemType::Gold:
+		return "Gold";
+	case ItemType::Ring:
+		return "Ring";
+	case ItemType::Amulet:
+		return "Amulet";
+	case ItemType::None:
+		return "None";
+	}
+	return "";
+}
+
 /** Contains the data related to each item ID. */
 ItemData AllItemsList[] = {
 	// clang-format off
