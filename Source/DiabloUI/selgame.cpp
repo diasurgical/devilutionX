@@ -494,6 +494,7 @@ void selgame_Password_Select(int /*value*/)
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		if (SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
 			if (!IsGameCompatible(*m_game_data)) {
+				InitGameInfo();
 				selgame_GameSelection_Select(1);
 				return;
 			}
@@ -501,6 +502,7 @@ void selgame_Password_Select(int /*value*/)
 			UiInitList_clear();
 			selgame_endMenu = true;
 		} else {
+			InitGameInfo();
 			selgame_Free();
 			std::string error = SDL_GetError();
 			if (error.empty())
