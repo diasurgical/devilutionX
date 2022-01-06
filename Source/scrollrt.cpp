@@ -427,7 +427,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster.mName,
 		    getMonsterModeDisplayName(monster._mmode),
-		    monster._mdir,
+		    DirectionToString(monster._mdir),
 		    nCel,
 		    frames);
 		return;
@@ -529,7 +529,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		    pnum,
 		    player._pName,
 		    szMode,
-		    player._pdir,
+		    DirectionToString(player._pdir),
 		    nCel,
 		    frames);
 		return;
@@ -717,7 +717,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	int nCel = item.AnimInfo.GetFrameToUseForRendering();
 	int frames = SDL_SwapLE32(*(DWORD *)cel->Data());
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", item._iIName, nCel, frames, item._itype);
+		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", item._iIName, nCel, frames, ItemTypeToString(item._itype));
 		return;
 	}
 

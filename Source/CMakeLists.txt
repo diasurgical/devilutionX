@@ -82,6 +82,7 @@ set(libdevilutionx_SRCS
   controls/plrctrls.cpp
   engine/animationinfo.cpp
   engine/demomode.cpp
+  engine/direction.cpp
   engine/load_cel.cpp
   engine/random.cpp
   engine/render/automap_render.cpp
