@@ -142,6 +142,8 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 			SelectedItemMax = std::max(uiList->m_vecItems.size() - 1, static_cast<size_t>(0));
 			ListViewportSize = uiList->viewportSize;
 			gUiList = uiList;
+			if (selectedItem <= SelectedItemMax && HasAnyOf(uiList->GetItem(selectedItem)->uiFlags, UiFlags::NeedsNextElement))
+				AdjustListOffset(selectedItem + 1);
 		} else if (item->IsType(UiType::Scrollbar)) {
 			uiScrollbar = static_cast<UiScrollbar *>(item.get());
 		}
@@ -214,11 +216,9 @@ void UiFocus(std::size_t itemIndex, bool checkUp, bool ignoreItemsWraps = false)
 		pItem = gUiList->GetItem(itemIndex);
 	}
 
-	if (HasAnyOf(pItem->uiFlags, UiFlags::NeedsNextElement)) {
+	if (HasAnyOf(pItem->uiFlags, UiFlags::NeedsNextElement))
 		AdjustListOffset(itemIndex + 1);
-	} else {
-		AdjustListOffset(itemIndex);
-	}
+	AdjustListOffset(itemIndex);
 
 	SelectedItem = itemIndex;
 
