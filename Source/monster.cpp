@@ -1484,7 +1484,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		Direction dir = GetDirection(player.position.tile, monster.position.tile);
 		StartPlrBlock(pnum, dir);
 		if (pnum == MyPlayerId && player.wReflections > 0) {
-			int dam = GenerateRnd((maxDam - minDam + 1) << 6) + (minDam << 6);
+			int dam = GenerateRnd(((maxDam - minDam) << 6) + 1) + (minDam << 6);
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			CheckReflect(i, pnum, dam);
 		}
@@ -1504,7 +1504,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 			}
 		}
 	}
-	int dam = (minDam << 6) + GenerateRnd((maxDam - minDam + 1) << 6);
+	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (pnum == MyPlayerId) {
 		if (player.wReflections > 0)

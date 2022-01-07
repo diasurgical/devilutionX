@@ -1177,7 +1177,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		dam = player._pHitPoints / 3;
 	} else {
 		if (!shift) {
-			dam = (mind << 6) + GenerateRnd((maxd - mind + 1) << 6);
+			dam = (mind << 6) + GenerateRnd(((maxd - mind) << 6) + 1);
 			if (monster == nullptr)
 				if ((player._pIFlags & ISPL_ABSHALFTRAP) != 0)
 					dam /= 2;
