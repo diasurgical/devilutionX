@@ -271,7 +271,7 @@ void OptionShowFPSChanged()
 void OptionLanguageCodeChanged()
 {
 	LanguageInitialize();
-	init_language_archives();
+	LoadLanguageArchive();
 }
 
 void OptionGameModeChanged()
