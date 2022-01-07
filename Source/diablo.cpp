@@ -1633,7 +1633,7 @@ int DiabloMain(int argc, char **argv)
 	LoadCoreArchives();
 	was_archives_init = true;
 
-	// Read settings including translation next. This code will use the presence of fonts.mpq and look for assets in devx.mpq
+	// Read settings including translation next. This will use the presence of fonts.mpq and look for assets in devilutionx.mpq
 	LoadOptions();
 	// Then look for a voice pack file based on the selected translation
 	LoadLanguageArchive();
