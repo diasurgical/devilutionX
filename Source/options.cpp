@@ -1166,7 +1166,7 @@ bool KeymapperOptions::Action::SetValue(int value)
 
 void KeymapperOptions::AddAction(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index)
 {
-	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, action, enable, index)));
+	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, std::move(action), std::move(enable), index)));
 }
 
 void KeymapperOptions::KeyPressed(int key) const
