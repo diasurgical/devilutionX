@@ -25,8 +25,8 @@ endif()
 
 include(FetchContent)
 FetchContent_Declare(libpng
-  URL https://github.com/diasurgical/libpng/archive/062dbf095f84b6db90d13e820fb60ec4ed545639.tar.gz
-  URL_HASH MD5=4c0a3862cb218d88889fb4189cb85c5d
+  URL https://github.com/diasurgical/libpng/archive/3fe9510f01748b8c706550974e23b09166e5a42d.tar.gz
+  URL_HASH MD5=5c813665b54143a1c2a89dd38b598075
 )
 FetchContent_MakeAvailableExcludeFromAll(libpng)
 
