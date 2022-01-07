@@ -3093,7 +3093,8 @@ void MI_Fireball(Missile &missile)
 			AddUnLight(missile._mlid);
 		}
 	} else {
-		int dam = missile._midam;
+		auto &monster = Monsters[id];
+		int dam = (missile._micaster == TARGET_MONSTERS) ? missile._midam : monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1);
 		MoveMissileAndCheckMissileCol(missile, dam, dam, true, false);
 		if (missile._mirange == 0) {
 			Point m = missile.position.tile;
