@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-01-08 13:28+0100\n"
-"PO-Revision-Date: 2022-01-08 13:28+0100\n"
+"POT-Creation-Date: 2022-01-08 17:36+0100\n"
+"PO-Revision-Date: 2022-01-08 17:36+0100\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -438,10 +438,8 @@ msgid "Join Game"
 msgstr "Unisciti alla Partita"
 
 #: Source/DiabloUI/selgame.cpp:108
-#, fuzzy
-#| msgid "Public Game"
 msgid "Public Games"
-msgstr "Partita Pubblica"
+msgstr "Partite Pubbliche"
 
 #: Source/DiabloUI/selgame.cpp:113 Source/error.cpp:67
 msgid "Loading..."
@@ -888,16 +886,12 @@ msgid "Read-Only Directory Error"
 msgstr "Errore di Cartella in Sola Lettura"
 
 #: Source/automap.cpp:485
-#, fuzzy
-#| msgid "game: "
 msgid "Game: "
-msgstr "partita: "
+msgstr "Partita: "
 
 #: Source/automap.cpp:491
-#, fuzzy
-#| msgid "password: "
 msgid "Password: "
-msgstr "password: "
+msgstr "Password: "
 
 #: Source/automap.cpp:493
 msgid "Public Game"
@@ -917,10 +911,8 @@ msgstr "Liv. : {:d}"
 
 #. TRANSLATORS: {:s} means: Game Difficulty.
 #: Source/automap.cpp:527
-#, fuzzy
-#| msgid "{:s} {:s}, Difficulty: {:s}"
 msgid "Difficulty: {:s}"
-msgstr "{:s} {:s}, Difficoltà: {:s}"
+msgstr "Difficoltà: {:s}"
 
 #: Source/control.cpp:152
 msgid "Tab"
@@ -1367,11 +1359,8 @@ msgstr "Mostra dettagli partita."
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1532
-#, fuzzy
-#| msgid "{:d} {:s} charge"
-#| msgid_plural "{:d} {:s} charges"
 msgid "{:s} {:s}"
-msgstr "{:d} {:s} carica"
+msgstr "{:s} {:s}"
 
 #: Source/discord/discord.cpp:66 Source/objects.cpp:135
 msgid "Town"
