@@ -2100,6 +2100,32 @@ void Player::Reset()
 	*this = std::move(*emptyPlayer);
 }
 
+void Player::RestorePartialLife()
+{
+	int wholeHitpoints = _pMaxHP >> 6;
+	int l = ((wholeHitpoints / 8) + GenerateRnd(wholeHitpoints / 4)) << 6;
+	if (IsAnyOf(_pClass, HeroClass::Warrior, HeroClass::Barbarian))
+		l *= 2;
+	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		l += l / 2;
+	_pHitPoints = std::min(_pHitPoints + l, _pMaxHP);
+	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
+}
+
+void Player::RestorePartialMana()
+{
+	int wholeManaPoints = _pMaxMana >> 6;
+	int l = ((wholeManaPoints / 8) + GenerateRnd(wholeManaPoints / 4)) << 6;
+	if (_pClass == HeroClass::Sorcerer)
+		l *= 2;
+	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		l += l / 2;
+	if ((_pIFlags & ISPL_NOMANA) == 0) {
+		_pMana = std::min(_pMana + l, _pMaxMana);
+		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
+	}
+}
+
 void LoadPlrGFX(Player &player, player_graphic graphic)
 {
 	char prefix[16];
