@@ -1629,10 +1629,17 @@ int DiabloMain(int argc, char **argv)
 	DiabloParseFlags(argc, argv);
 	InitKeymapActions();
 
-	init_archives();
+	// Need to ensure devilutionx.mpq (and fonts.mpq if available) are loaded before attempting to read translation settings
+	LoadCoreArchives();
 	was_archives_init = true;
 
+	// Read settings including translation next. This will use the presence of fonts.mpq and look for assets in devilutionx.mpq
 	LoadOptions();
+	// Then look for a voice pack file based on the selected translation
+	LoadLanguageArchive();
+
+	// Finally load game data
+	LoadGameArchives();
 
 	DiabloInit();
 
