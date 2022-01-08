@@ -1218,7 +1218,7 @@ msgstr "Використати предмет з Поясу."
 
 #: Source/diablo.cpp:1405
 msgid "Quick spell {}"
-msgstr "Швидке Чаклування {}"
+msgstr "Швидкі Чари {}"
 
 #: Source/diablo.cpp:1406
 msgid "Hotkey for skill or spell."
@@ -1226,7 +1226,7 @@ msgstr "Гаряча клавіша для чар або таланту."
 
 #: Source/diablo.cpp:1423
 msgid "Speedbook"
-msgstr "Швидка Книга Магії"
+msgstr "Швидка Книга Чар"
 
 #: Source/diablo.cpp:1424
 msgid "Open Speedbook."
@@ -1294,11 +1294,11 @@ msgstr "Відкрити Книгу Чар."
 
 #: Source/diablo.cpp:1487
 msgid "Quick Message {}"
-msgstr "Швидке Послання {}"
+msgstr "Швидке Повідомлення {}"
 
 #: Source/diablo.cpp:1488
 msgid "Use Quick Message in chat."
-msgstr "Відправити Швидке Послання в чат."
+msgstr "Відправити Швидке Повідомлення в чат."
 
 #: Source/diablo.cpp:1496
 msgid "Zoom"
@@ -4262,7 +4262,7 @@ msgstr[2] "додає {:d} очків до шкоди"
 
 #: Source/items.cpp:3894
 msgid "fires random speed arrows"
-msgstr "стріляє кілька "
+msgstr "стріляє кілька швидких стріл"
 
 #: Source/items.cpp:3896
 msgid "unusual item damage"
