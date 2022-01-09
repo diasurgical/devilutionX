@@ -3093,9 +3093,15 @@ void MI_Fireball(Missile &missile)
 			AddUnLight(missile._mlid);
 		}
 	} else {
-		auto &monster = Monsters[id];
-		int dam = (missile._micaster == TARGET_MONSTERS) ? missile._midam : monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1);
-		MoveMissileAndCheckMissileCol(missile, dam, dam, true, false);
+		int minDam = missile._midam;
+		int maxDam = missile._midam;
+
+		if (missile._micaster != TARGET_MONSTERS) {
+			auto &monster = Monsters[id];
+			minDam = monster.mMinDamage;
+			maxDam = monster.mMaxDamage;
+		}
+		MoveMissileAndCheckMissileCol(missile, minDam, maxDam, true, false);
 		if (missile._mirange == 0) {
 			Point m = missile.position.tile;
 			ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
@@ -3103,7 +3109,7 @@ void MI_Fireball(Missile &missile)
 			constexpr Displacement Pattern[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
 			for (auto shift : Pattern) {
 				if (!CheckBlock(p, m + shift))
-					CheckMissileCol(missile, dam, dam, false, m + shift, true);
+					CheckMissileCol(missile, minDam, maxDam, false, m + shift, true);
 			}
 
 			if (!TransList[dTransVal[m.x][m.y]]
