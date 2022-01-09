@@ -839,6 +839,7 @@ GameplayOptions::GameplayOptions()
     , numFullManaPotionPickup("Full Mana Potion Pickup", OptionEntryFlags::None, N_("Full Mana Potion Pickup"), N_("Number of Full Mana potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numRejuPotionPickup("Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Rejuvenation Potion Pickup"), N_("Number of Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
     , numFullRejuPotionPickup("Full Rejuvenation Potion Pickup", OptionEntryFlags::None, N_("Full Rejuvenation Potion Pickup"), N_("Number of Full Rejuvenation potions to pick up automatically."), 0, { 0, 1, 2, 4, 8, 16 })
+    , allowZeroDurabilityItems("Prevent Item Destruction", OptionEntryFlags::None, N_("Prevent Item Destruction"), N_("Prevent items from breaking when reduced to 0 durability."), false)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 	experienceBar.SetValueChangedCallback(OptionExperienceBarChanged);
@@ -876,6 +877,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&numFullManaPotionPickup,
 		&numRejuPotionPickup,
 		&numFullRejuPotionPickup,
+		&allowZeroDurabilityItems,
 	};
 }
 

@@ -474,6 +474,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	OptionEntryInt<int> numFullRejuPotionPickup;
+	/** @brief Allow items to reach 0 Current Durability */
+	OptionEntryBoolean allowZeroDurabilityItems;
 };
 
 struct ControllerOptions : OptionCategoryBase {
