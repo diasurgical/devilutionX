@@ -1320,7 +1320,7 @@ msgstr "Salvamento rápido"
 #, fuzzy
 #| msgid "Savegame:"
 msgid "Saves the game."
-msgstr "Salva o jogo."
+msgstr "Salvar o jogo."
 
 #: Source/diablo.cpp:1437
 msgid "Quick load"
@@ -1330,7 +1330,7 @@ msgstr "Carregamento rápido"
 #, fuzzy
 #| msgid "Load Game"
 msgid "Loads the game."
-msgstr "Carrega o jogo."
+msgstr "Carregar o jogo."
 
 #: Source/diablo.cpp:1444
 #, fuzzy
@@ -1342,7 +1342,7 @@ msgstr "Sair do jogo"
 #, fuzzy
 #| msgid "Lester the farmer"
 msgid "Closes the game."
-msgstr "Fecha o jogo."
+msgstr "Fechar o jogo."
 
 #: Source/diablo.cpp:1450
 msgid "Stop hero"
@@ -1444,7 +1444,7 @@ msgstr "Ajuda"
 #, fuzzy
 #| msgid "F1:    Open Help Screen"
 msgid "Open Help Screen."
-msgstr "Abre Tela de Ajuda."
+msgstr "Abrir Tela de Ajuda."
 
 #: Source/diablo.cpp:1527
 #, fuzzy
@@ -1454,7 +1454,7 @@ msgstr "Informações do jogo"
 
 #: Source/diablo.cpp:1528
 msgid "Displays game infos."
-msgstr "Exibe informações do jogo."
+msgstr "Exibir informações do jogo."
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1532
@@ -2322,7 +2322,7 @@ msgstr "Elmo"
 
 #: Source/itemdat.cpp:104
 msgid "Full Helm"
-msgstr "Elmo completo"
+msgstr "Elmo Completo"
 
 #: Source/itemdat.cpp:105
 msgid "Crown"
@@ -2330,7 +2330,7 @@ msgstr "Coroa"
 
 #: Source/itemdat.cpp:106
 msgid "Great Helm"
-msgstr "Grande elmo"
+msgstr "Grande Elmo"
 
 #: Source/itemdat.cpp:107
 msgid "Cape"
@@ -2350,7 +2350,7 @@ msgstr "Túnica"
 
 #: Source/itemdat.cpp:111
 msgid "Quilted Armor"
-msgstr "Armadura acolchoada"
+msgstr "Armadura Acolchoada"
 
 #: Source/itemdat.cpp:111 Source/itemdat.cpp:112 Source/itemdat.cpp:113
 #: Source/itemdat.cpp:114 Source/objects.cpp:5480
@@ -2359,19 +2359,19 @@ msgstr "Armadura"
 
 #: Source/itemdat.cpp:112
 msgid "Leather Armor"
-msgstr "Armadura de couro"
+msgstr "Armadura de Couro"
 
 #: Source/itemdat.cpp:113
 msgid "Hard Leather Armor"
-msgstr "Armadura de couro duro"
+msgstr "Armadura de Couro Duro"
 
 #: Source/itemdat.cpp:114
 msgid "Studded Leather Armor"
-msgstr "Armad. de couro cravejado"
+msgstr "Armad. de Couro Cravejado"
 
 #: Source/itemdat.cpp:115
 msgid "Ring Mail"
-msgstr "Malha de anéis"
+msgstr "Malha de Anéis"
 
 #: Source/itemdat.cpp:115 Source/itemdat.cpp:116 Source/itemdat.cpp:117
 #: Source/itemdat.cpp:119
@@ -2380,40 +2380,40 @@ msgstr "Malha"
 
 #: Source/itemdat.cpp:116
 msgid "Chain Mail"
-msgstr "Cota de malha"
+msgstr "Cota de Malha"
 
 #: Source/itemdat.cpp:117
 msgid "Scale Mail"
-msgstr "Malha em escamas"
+msgstr "Malha em Escamas"
 
 #: Source/itemdat.cpp:118
 msgid "Breast Plate"
-msgstr "Armadura peitoral"
+msgstr "Armadura Peitoral"
 
 #: Source/itemdat.cpp:118 Source/itemdat.cpp:120 Source/itemdat.cpp:121
 #: Source/itemdat.cpp:122 Source/itemdat.cpp:123
 msgid "Plate"
-msgstr "Armadura de placas"
+msgstr "Armadura de Placas"
 
 #: Source/itemdat.cpp:119
 msgid "Splint Mail"
-msgstr "Cota de talas"
+msgstr "Cota de Talas"
 
 #: Source/itemdat.cpp:120
 msgid "Plate Mail"
-msgstr "Malha de placas"
+msgstr "Malha de Placas"
 
 #: Source/itemdat.cpp:121
 msgid "Field Plate"
-msgstr "Placa de campo"
+msgstr "Placa de Campo"
 
 #: Source/itemdat.cpp:122
 msgid "Gothic Plate"
-msgstr "Placa gótica"
+msgstr "Placa Gótica"
 
 #: Source/itemdat.cpp:123
 msgid "Full Plate Mail"
-msgstr "Malha de placas completa"
+msgstr "Malha de Placas Completa"
 
 #: Source/itemdat.cpp:124 Source/itemdat.cpp:125 Source/itemdat.cpp:126
 #: Source/itemdat.cpp:127 Source/itemdat.cpp:128 Source/itemdat.cpp:129
@@ -2422,39 +2422,39 @@ msgstr "Escudo"
 
 #: Source/itemdat.cpp:125
 msgid "Small Shield"
-msgstr "Escudo pequeno"
+msgstr "Escudo Pequeno"
 
 #: Source/itemdat.cpp:126
 msgid "Large Shield"
-msgstr "Escudo grande"
+msgstr "Escudo Grande"
 
 #: Source/itemdat.cpp:127
 msgid "Kite Shield"
-msgstr "Escudo gota"
+msgstr "Escudo Gota"
 
 #: Source/itemdat.cpp:128
 msgid "Tower Shield"
-msgstr "Escudo torre"
+msgstr "Escudo Torre"
 
 #: Source/itemdat.cpp:129
 msgid "Gothic Shield"
-msgstr "Escudo gótico"
+msgstr "Escudo Gótico"
 
 #: Source/itemdat.cpp:134
 msgid "Potion of Rejuvenation"
-msgstr "Poção de rejuvenescimento"
+msgstr "Poção de Rejuvenescimento"
 
 #: Source/itemdat.cpp:135
 msgid "Potion of Full Rejuvenation"
-msgstr "Poção de rejuvenescimento completo"
+msgstr "Poção de Rejuvenescimento Completo"
 
 #: Source/itemdat.cpp:137 Source/items.cpp:163
 msgid "Oil of Accuracy"
-msgstr "Óleo da precisão"
+msgstr "Óleo da Precisão"
 
 #: Source/itemdat.cpp:138 Source/items.cpp:165
 msgid "Oil of Sharpness"
-msgstr "Óleo da nitidez"
+msgstr "Óleo da Nitidez"
 
 #: Source/itemdat.cpp:139
 msgid "Oil"
@@ -2462,91 +2462,91 @@ msgstr "Óleo"
 
 #: Source/itemdat.cpp:140
 msgid "Elixir of Strength"
-msgstr "Elixir de força"
+msgstr "Elixir da Força"
 
 #: Source/itemdat.cpp:141
 msgid "Elixir of Magic"
-msgstr "Elixir de magia"
+msgstr "Elixir da Magia"
 
 #: Source/itemdat.cpp:142
 msgid "Elixir of Dexterity"
-msgstr "Elixir de destreza"
+msgstr "Elixir da Destreza"
 
 #: Source/itemdat.cpp:143
 msgid "Elixir of Vitality"
-msgstr "Elixir de vitalidade"
+msgstr "Elixir da Vitalidade"
 
 #: Source/itemdat.cpp:144
 msgid "Scroll of Healing"
-msgstr "Pergaminho de cura"
+msgstr "Pergaminho de Cura"
 
 #: Source/itemdat.cpp:145
 msgid "Scroll of Search"
-msgstr "Pergaminho da busca"
+msgstr "Pergaminho de Busca"
 
 #: Source/itemdat.cpp:146
 msgid "Scroll of Lightning"
-msgstr "Pergaminho de raio"
+msgstr "Pergaminho de Raio"
 
 #: Source/itemdat.cpp:149
 msgid "Scroll of Fire Wall"
-msgstr "Pergaminho de parede de fogo"
+msgstr "Pergaminho de Parede de Fogo"
 
 #: Source/itemdat.cpp:150
 msgid "Scroll of Inferno"
-msgstr "Pergaminho de inferno"
+msgstr "Pergaminho de Inferno"
 
 #: Source/itemdat.cpp:152
 msgid "Scroll of Flash"
-msgstr "Pergaminho de lampejo"
+msgstr "Pergaminho de Lampejo"
 
 #: Source/itemdat.cpp:153
 msgid "Scroll of Infravision"
-msgstr "Pergaminho de infravisão"
+msgstr "Pergaminho de Infravisão"
 
 #: Source/itemdat.cpp:154
 msgid "Scroll of Phasing"
-msgstr "Pergaminho de fasear"
+msgstr "Pergaminho de Fasear"
 
 #: Source/itemdat.cpp:155
 msgid "Scroll of Mana Shield"
-msgstr "Pergaminho de escudo de mana"
+msgstr "Pergaminho de Escudo de Mana"
 
 #: Source/itemdat.cpp:156
 msgid "Scroll of Flame Wave"
-msgstr "Pergaminho de onda de chamas"
+msgstr "Pergaminho de Onda de Chamas"
 
 #: Source/itemdat.cpp:157
 msgid "Scroll of Fireball"
-msgstr "Pergaminho de bola de fogo"
+msgstr "Pergaminho de Bola de Fogo"
 
 #: Source/itemdat.cpp:158
 msgid "Scroll of Stone Curse"
-msgstr "Pergaminho de maldição de pedra"
+msgstr "Pergaminho de Maldição de Pedra"
 
 #: Source/itemdat.cpp:159
 msgid "Scroll of Chain Lightning"
-msgstr "Pergaminho de relâmp. encadeado"
+msgstr "Pergaminho de Relâmp. Encadeado"
 
 #: Source/itemdat.cpp:160
 msgid "Scroll of Guardian"
-msgstr "Pergaminho de guardião"
+msgstr "Pergaminho de Guardião"
 
 #: Source/itemdat.cpp:162
 msgid "Scroll of Nova"
-msgstr "Pergaminho de nova"
+msgstr "Pergaminho de Nova"
 
 #: Source/itemdat.cpp:163
 msgid "Scroll of Golem"
-msgstr "Pergaminho de golem"
+msgstr "Pergaminho de Golem"
 
 #: Source/itemdat.cpp:165
 msgid "Scroll of Teleport"
-msgstr "Pergaminho de teletransporte"
+msgstr "Pergaminho de Teletransporte"
 
 #: Source/itemdat.cpp:166
 msgid "Scroll of Apocalypse"
-msgstr "Pergaminho de apocalipse"
+msgstr "Pergaminho de Apocalipse"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
@@ -7788,7 +7788,7 @@ msgstr "do Bobo"
 #: Source/spelldat.cpp:55
 msgctxt "spell"
 msgid "Lightning Wall"
-msgstr "Parede relampejante"
+msgstr "Parede Relampejante"
 
 #: Source/spelldat.cpp:56
 #, fuzzy
