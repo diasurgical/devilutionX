@@ -11519,30 +11519,3 @@ msgstr "Надолу към Диабло"
 #: Source/trigs.cpp:711 Source/trigs.cpp:725 Source/trigs.cpp:739
 msgid "Back to Level {:d}"
 msgstr "Нагоре към Ниво {:d}"
-
-#~ msgid "Run in windowed mode"
-#~ msgstr "Отваряне на приложението в режим в прозорец"
-
-#~ msgid "unrecognized option '{:s}'\n"
-#~ msgstr "неразпозната опция '{:s}'\n"
-
-#~ msgid "{:s}, version = {:s}, mode = {:s}"
-#~ msgstr "{:s}, версия = {:s}, режим = {:s}"
-
-#~ msgid "Blended Transparency"
-#~ msgstr "Преливна прозрачност"
-
-#~ msgid ""
-#~ "Enables uniform transparency mode. This setting affects the transparency "
-#~ "on walls, game text menus, and boxes. If disabled will default to old "
-#~ "checkerboard transparency."
-#~ msgstr ""
-#~ "Включва режим на еднородна прозрачност. Тази настройка влияе върху "
-#~ "прозрачността на стени, игрови прозорци и менюта с текст. Когато е "
-#~ "изключен се връща към стария режим на шахматна прозрачност."
-
-#~ msgid "Switch to Hellfire"
-#~ msgstr "Режим Hellfire"
-
-#~ msgid "Switch to Fullgame"
-#~ msgstr "Режим Пълна версия"
