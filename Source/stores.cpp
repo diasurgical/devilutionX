@@ -1658,6 +1658,7 @@ void SmithRepairItem()
 	}
 
 	myPlayer.InvList[i]._iDurability = myPlayer.InvList[i]._iMaxDur;
+	CalcPlrInv(myPlayer, true);
 }
 
 void SmithRepairEnter()

@@ -1697,6 +1697,8 @@ void ItemDoppel()
 
 void RepairItem(Item &item, int lvl)
 {
+	auto &myPlayer = Players[MyPlayerId];
+
 	if (item._iDurability == item._iMaxDur) {
 		return;
 	}
@@ -1717,6 +1719,7 @@ void RepairItem(Item &item, int lvl)
 	} while (rep + item._iDurability < item._iMaxDur);
 
 	item._iDurability = std::min<int>(item._iDurability + rep, item._iMaxDur);
+	CalcPlrInv(myPlayer, true)
 }
 
 void RechargeItem(Item &item, int r)
