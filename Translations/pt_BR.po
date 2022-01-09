@@ -816,7 +816,7 @@ msgstr "Não"
 
 #: Source/DiabloUI/settingsmenu.cpp:300
 msgid "Bound key:"
-msgstr "Associar tecla:"
+msgstr "Tecla associada:"
 
 #: Source/DiabloUI/settingsmenu.cpp:319
 msgid "Press any key to change."
@@ -837,7 +837,7 @@ msgid ""
 "expansion."
 msgstr ""
 "Nós mantemos um servidor de chat em Discord.gg/YQKCAYQ Clique nos links para "
-"se juntar a comunidade onde nós conversamos sobre assuntos relacionadis ao "
+"se juntar a comunidade onde nós conversamos sobre assuntos relacionados ao "
 "Diablo, e a expansão Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:10
@@ -879,7 +879,7 @@ msgid ""
 msgstr ""
 "\tEste port faz uso das fontes CharisSILB, Unifont, e Noto que são "
 "licenciadas sob a SIL Open Font License, e também a fonte Twitmoji que é "
-"licensiada sob CC-BY 4.0. O port também faz uso da SDL, a qual é licenciada "
+"licenciada sob CC-BY 4.0. O port também faz uso da SDL, a qual é licenciada "
 "sob a zlib-license. Leia o ReadMe para mais detalhes."
 
 #: Source/DiabloUI/title.cpp:46
@@ -1019,7 +1019,7 @@ msgstr "Tecla de atalho: {:s}"
 
 #: Source/control.cpp:675
 msgid "Select current spell button"
-msgstr "Selecionar botão do feitiço atual"
+msgstr "Selecionar feitiço atual"
 
 #: Source/control.cpp:678
 msgid "Hotkey: 's'"
@@ -1217,7 +1217,7 @@ msgid ""
 "Game selection:\n"
 msgstr ""
 "\n"
-"Selecionar jogo:\n"
+"Seleção do jogo:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:800
@@ -1288,7 +1288,7 @@ msgstr "Item do cinto {}"
 #, fuzzy
 #| msgid "1 - 8: Use Belt item"
 msgid "Use Belt item."
-msgstr "Usar item do cinto."
+msgstr "Usar item do Cinto."
 
 #: Source/diablo.cpp:1405
 msgid "Quick spell {}"
@@ -1304,13 +1304,13 @@ msgstr "Tecla de atalho para habilidade ou feitiço."
 #, fuzzy
 #| msgid "Spell book"
 msgid "Speedbook"
-msgstr "Livro de feitiços"
+msgstr "Livro de acesso rápido"
 
 #: Source/diablo.cpp:1424
 #, fuzzy
 #| msgid "S: Open Speedbook"
 msgid "Open Speedbook."
-msgstr "Abrir livro de acesso rápido"
+msgstr "Abrir livro de acesso rápido."
 
 #: Source/diablo.cpp:1430
 msgid "Quick save"
@@ -1350,13 +1350,13 @@ msgstr "Parar herói"
 
 #: Source/diablo.cpp:1451
 msgid "Stops walking and cancel pending actions."
-msgstr "Para de andar e cancela ações pendentes"
+msgstr "Para de andar e cancela ações pendentes."
 
 #: Source/diablo.cpp:1459
 #, fuzzy
 #| msgid "I: Open Inventory screen"
 msgid "Open Inventory screen."
-msgstr "Abre tela de inventário"
+msgstr "Abre tela de Inventário."
 
 #: Source/diablo.cpp:1465
 #, fuzzy
@@ -1368,19 +1368,19 @@ msgstr "Person."
 #, fuzzy
 #| msgid "C: Open Character screen"
 msgid "Open Character screen."
-msgstr "Abre tela de personagem"
+msgstr "Abre tela de Personagem."
 
 #: Source/diablo.cpp:1472
 #, fuzzy
 #| msgid "Quests log"
 msgid "Quest log"
-msgstr "Registro de missões"
+msgstr "Registro de Missões"
 
 #: Source/diablo.cpp:1473
 #, fuzzy
 #| msgid "Q: Open Quest log"
 msgid "Open Quest log."
-msgstr "Abre registro de missões."
+msgstr "Abre Registro de Missões."
 
 #: Source/diablo.cpp:1479
 #, fuzzy
@@ -1392,7 +1392,7 @@ msgstr "Livro de feitiços"
 #, fuzzy
 #| msgid "B: Open Spellbook"
 msgid "Open Spellbook."
-msgstr "Abre livro de feitiços."
+msgstr "Abre Livro de Feitiços."
 
 #: Source/diablo.cpp:1487
 msgid "Quick Message {}"
@@ -1410,31 +1410,31 @@ msgstr "Zoom"
 #, fuzzy
 #| msgid "Z: Zoom Game Screen"
 msgid "Zoom Game Screen."
-msgstr "Zoom da tela do jogo"
+msgstr "Zoom da Tela do Jogo."
 
 #: Source/diablo.cpp:1506
 #, fuzzy
 #| msgid "increase magic"
 msgid "Decrease Gamma"
-msgstr "Diminui Gama"
+msgstr "Diminuir Gama"
 
 #: Source/diablo.cpp:1507
 #, fuzzy
 #| msgid "F: Reduce screen brightness"
 msgid "Reduce screen brightness."
-msgstr "Reduz o brilho da tela."
+msgstr "Reduzir o brilho da tela."
 
 #: Source/diablo.cpp:1513
 #, fuzzy
 #| msgid "increase magic"
 msgid "Increase Gamma"
-msgstr "Aumenta Gama"
+msgstr "Aumentar Gama"
 
 #: Source/diablo.cpp:1514
 #, fuzzy
 #| msgid "G: Increase screen brightness"
 msgid "Increase screen brightness."
-msgstr "Aumenta o brilho da tela."
+msgstr "Aumentar o brilho da tela."
 
 #: Source/diablo.cpp:1520
 msgid "Help"
@@ -1450,7 +1450,7 @@ msgstr "Abre Tela de Ajuda."
 #, fuzzy
 #| msgid "Game Design"
 msgid "Game info"
-msgstr "Informação do jogo"
+msgstr "Informações do jogo"
 
 #: Source/diablo.cpp:1528
 msgid "Displays game infos."
@@ -1482,7 +1482,7 @@ msgstr "Catacumbas"
 
 #: Source/discord/discord.cpp:66
 msgid "Caves"
-msgstr "Caverna"
+msgstr "Cavernas"
 
 #: Source/discord/discord.cpp:66
 msgid "Nest"
@@ -1509,14 +1509,14 @@ msgstr "Nvl {} {}"
 #, fuzzy
 #| msgid "Select Difficulty"
 msgid "{} difficulty"
-msgstr "{} dificuldade"
+msgstr "Dificuldade {}"
 
 #. TRANSLATORS: Discord activity, not in game
 #: Source/discord/discord.cpp:180
 #, fuzzy
 #| msgid "Main Menu"
 msgid "In Menu"
-msgstr "Menu Principal"
+msgstr "No Menu"
 
 #: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
@@ -2017,7 +2017,7 @@ msgstr ""
 #, fuzzy
 #| msgid "$Using the Speedbook for Spells"
 msgid "$Using the Speedbook for Spells:"
-msgstr "$Uso do Livro de acesso rápido para feitiços:"
+msgstr "$Usando o Livro de Acesso Rápido para Feitiços:"
 
 #: Source/help.cpp:81
 msgid ""
@@ -2046,7 +2046,7 @@ msgstr ""
 #, fuzzy
 #| msgid "$Setting Spell Hotkeys"
 msgid "$Setting Spell Hotkeys:"
-msgstr "$Configuração de teclas de atalho para feitiços:"
+msgstr "$Configurando Teclas de Atalho para Feitiços:"
 
 #: Source/help.cpp:88
 msgid ""
@@ -3524,7 +3524,7 @@ msgstr "O defensor"
 #, fuzzy
 #| msgid "Gryphons Claw"
 msgid "Gryphon's Claw"
-msgstr "Garra de Grifo"
+msgstr "Garra do Grifo"
 
 #: Source/itemdat.cpp:456
 msgid "Black Razor"
@@ -3698,7 +3698,7 @@ msgstr "Quepe de reflexão"
 
 #: Source/itemdat.cpp:498
 msgid "OverLord's Helm"
-msgstr "Elmo do suserano"
+msgstr "Elmo do Suserano"
 
 #: Source/itemdat.cpp:499
 msgid "Fool's Crest"
@@ -4658,7 +4658,7 @@ msgstr "Fera das Sombras"
 #| msgid "Bone Gasher"
 msgctxt "monster"
 msgid "Bone Gasher"
-msgstr "Armadura de cadeias de ossos"
+msgstr "Cortaosso"
 
 #: Source/monstdat.cpp:41
 #, fuzzy
@@ -4766,7 +4766,7 @@ msgstr "Clã da Noite"
 #| msgid "Fiend"
 msgctxt "monster"
 msgid "Fiend"
-msgstr "Fiend"
+msgstr "Demônio"
 
 #: Source/monstdat.cpp:59
 #, fuzzy
@@ -4834,7 +4834,7 @@ msgstr "O Açougueiro"
 #| msgid "Overlord"
 msgctxt "monster"
 msgid "Overlord"
-msgstr ""
+msgstr "Suserano"
 
 #: Source/monstdat.cpp:73
 #, fuzzy
@@ -4958,7 +4958,7 @@ msgstr "Morte Vermelha"
 #| msgid "Litch Demon"
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr "Demônio"
+msgstr "Demônio Litch"
 
 #: Source/monstdat.cpp:91
 #, fuzzy
@@ -4993,7 +4993,7 @@ msgstr "Fogo da Perdição"
 #| msgid "Hell Burner"
 msgctxt "monster"
 msgid "Hell Burner"
-msgstr "Quimador do Inferno"
+msgstr "Queimador do Inferno"
 
 #: Source/monstdat.cpp:96
 #, fuzzy
@@ -5049,7 +5049,7 @@ msgstr "Gárgula"
 #| msgid "Blood Claw"
 msgctxt "monster"
 msgid "Blood Claw"
-msgstr "Pata Sangrenta"
+msgstr "Garra Sangrenta"
 
 #: Source/monstdat.cpp:104
 #, fuzzy
@@ -5245,7 +5245,7 @@ msgstr "O Lorde Sombrio"
 #| msgid "The Arch-Litch Malignus"
 msgctxt "monster"
 msgid "The Arch-Litch Malignus"
-msgstr "The Arch-Litch Malignus"
+msgstr "O Arce-Litch Malignus"
 
 #: Source/monstdat.cpp:132
 #, fuzzy
@@ -5399,7 +5399,7 @@ msgstr "Demônio de ossos"
 #| msgid "Arch Lich"
 msgctxt "monster"
 msgid "Arch Lich"
-msgstr "Arch Lich"
+msgstr "Arce Lich"
 
 #: Source/monstdat.cpp:154
 #, fuzzy
@@ -5638,19 +5638,19 @@ msgstr "Blackash, o Calcinante"
 #| msgid "Shadowcrow"
 msgctxt "monster"
 msgid "Shadowcrow"
-msgstr "Corvo das Sombras"
+msgstr "Corvossombra"
 
 #: Source/monstdat.cpp:509
 #, fuzzy
 #| msgid "Blightstone the Weak"
 msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr "Blightstone, o Fraco"
+msgstr "Pedrapraga, o Fraco"
 
 #: Source/monstdat.cpp:510
 msgctxt "monster"
 msgid "Bilefroth the Pit Master"
-msgstr "Bilefroth, o Mestre do Poço"
+msgstr "Espumabile, o Mestre do Poço"
 
 #: Source/monstdat.cpp:511
 #, fuzzy
@@ -5706,7 +5706,7 @@ msgstr "Sombra da Morte Rasga-Carne"
 #| msgid "Warmaggot the Mad"
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr "Warmaggot, o Louco"
+msgstr "Larvaguerra, o Louco"
 
 #: Source/monstdat.cpp:519
 msgctxt "monster"
@@ -6009,14 +6009,14 @@ msgstr "Temível Juiz"
 #| msgid "Stareye the Witch"
 msgctxt "monster"
 msgid "Stareye the Witch"
-msgstr "Ádria, a Bruxa"
+msgstr "Olhestrelha, a Bruxa"
 
 #: Source/monstdat.cpp:564
 #, fuzzy
 #| msgid "Steelskull the Hunter"
 msgctxt "monster"
 msgid "Steelskull the Hunter"
-msgstr "Caçador mortal"
+msgstr "Crânioaço, o Caçador"
 
 #: Source/monstdat.cpp:565
 #, fuzzy
@@ -6037,7 +6037,7 @@ msgstr "O Vizir"
 #| msgid "Sapphire"
 msgctxt "monster"
 msgid "Zamphir"
-msgstr ""
+msgstr "Zamfir"
 
 #: Source/monstdat.cpp:568
 #, fuzzy
@@ -6049,7 +6049,7 @@ msgstr "Sede de Sangue"
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr ""
+msgstr "Viúvaranha"
 
 #: Source/monstdat.cpp:570
 #, fuzzy
@@ -6151,7 +6151,7 @@ msgstr "Gostaria de jogar um item do chão?"
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} lançou um feitiço ilegal."
 
-#: Source/msg.cpp:1672 Source/multi.cpp:809
+#: Source/msg.cpp:1672 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "O jogador '{:s}' (nível {:d}) acabou de entrar no jogo"
 
@@ -6179,7 +6179,7 @@ msgstr "O jogador '{:s}' matou Diablo e saiu do jogo!"
 msgid "Player '{:s}' dropped due to timeout"
 msgstr "O jogador '{:s}' caiu devido a tempo esgotado"
 
-#: Source/multi.cpp:811
+#: Source/multi.cpp:806
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "O jogador '{:s}' (nível {:d}) já está no jogo"
 
@@ -6308,47 +6308,47 @@ msgstr "De Murphy"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:269
 msgid "The Great Conflict"
-msgstr "O grande conflito"
+msgstr "O Grande Conflito"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:270
 msgid "The Wages of Sin are War"
-msgstr "O salário do pecado é a guerra"
+msgstr "O Salário do Pecado é a Guerra"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:271
 msgid "The Tale of the Horadrim"
-msgstr "O conto dos Horadrim"
+msgstr "O Conto dos Horadrim"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:272
 msgid "The Dark Exile"
-msgstr "O exilo sombrio"
+msgstr "O Exílio Sombrio"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:273
 msgid "The Sin War"
-msgstr "A guerra do pecado"
+msgstr "A Guerra do Pecado"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:274
 msgid "The Binding of the Three"
-msgstr "O aprisionamento dos três"
+msgstr "O Aprisionamento dos Três"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:275
 msgid "The Realms Beyond"
-msgstr "Os reinos além"
+msgstr "Os Reinos Além"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:276
 msgid "Tale of the Three"
-msgstr "Conto dos três"
+msgstr "Conto dos Três"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:277
 msgid "The Black King"
-msgstr "O rei negro"
+msgstr "O Rei Negro"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:278
@@ -6383,11 +6383,11 @@ msgstr "Diário: O Fim"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:284
 msgid "A Spellbook"
-msgstr "Um livro de feitiços"
+msgstr "Um Livro de Feitiços"
 
 #: Source/objects.cpp:5386
 msgid "Crucified Skeleton"
-msgstr "Esqueleto crucificado"
+msgstr "Esqueleto Crucificado"
 
 #: Source/objects.cpp:5390
 msgid "Lever"
@@ -6395,35 +6395,35 @@ msgstr "Alavanca"
 
 #: Source/objects.cpp:5399
 msgid "Open Door"
-msgstr "Porta aberta"
+msgstr "Porta Aberta"
 
 #: Source/objects.cpp:5401
 msgid "Closed Door"
-msgstr "Porta fechada"
+msgstr "Porta Fechada"
 
 #: Source/objects.cpp:5403
 msgid "Blocked Door"
-msgstr "Porta bloqueada"
+msgstr "Porta Bloqueada"
 
 #: Source/objects.cpp:5408
 msgid "Ancient Tome"
-msgstr "Tomo antigo"
+msgstr "Tomo Antigo"
 
 #: Source/objects.cpp:5410
 msgid "Book of Vileness"
-msgstr "Livro da vileza"
+msgstr "Livro da Vileza"
 
 #: Source/objects.cpp:5415
 msgid "Skull Lever"
-msgstr "Alavanca de caveira"
+msgstr "Alavanca de Caveira"
 
 #: Source/objects.cpp:5418
 msgid "Mythical Book"
-msgstr "Livro mítico"
+msgstr "Livro Mítico"
 
 #: Source/objects.cpp:5422
 msgid "Small Chest"
-msgstr "Baú pequeno"
+msgstr "Baú Pequeno"
 
 #: Source/objects.cpp:5426
 msgid "Chest"
@@ -6431,7 +6431,7 @@ msgstr "Baú"
 
 #: Source/objects.cpp:5431
 msgid "Large Chest"
-msgstr "Baú grande"
+msgstr "Baú Grande"
 
 #: Source/objects.cpp:5434
 msgid "Sarcophagus"
@@ -6439,7 +6439,7 @@ msgstr "Sarcófago"
 
 #: Source/objects.cpp:5437
 msgid "Bookshelf"
-msgstr "Estante de livros"
+msgstr "Estante de Livros"
 
 #: Source/objects.cpp:5441
 msgid "Bookcase"
@@ -6464,39 +6464,39 @@ msgstr "Altar {:s}"
 
 #: Source/objects.cpp:5458
 msgid "Skeleton Tome"
-msgstr "Tomo do esqueleto"
+msgstr "Tomo do Esqueleto"
 
 #: Source/objects.cpp:5461
 msgid "Library Book"
-msgstr "Livro da biblioteca"
+msgstr "Livro da Biblioteca"
 
 #: Source/objects.cpp:5464
 msgid "Blood Fountain"
-msgstr "Fonte de sangue"
+msgstr "Fonte de Sangue"
 
 #: Source/objects.cpp:5467
 msgid "Decapitated Body"
-msgstr "Corpo decapitado"
+msgstr "Corpo Decapitado"
 
 #: Source/objects.cpp:5470
 msgid "Book of the Blind"
-msgstr "Livro dos cegos"
+msgstr "Livro dos Cegos"
 
 #: Source/objects.cpp:5473
 msgid "Book of Blood"
-msgstr "Livro de sangue"
+msgstr "Livro de Sangue"
 
 #: Source/objects.cpp:5476
 msgid "Purifying Spring"
-msgstr "Fontícula purificante"
+msgstr "Fonte Purificante"
 
 #: Source/objects.cpp:5483 Source/objects.cpp:5507
 msgid "Weapon Rack"
-msgstr "Estante de armas"
+msgstr "Estante de Armas"
 
 #: Source/objects.cpp:5486
 msgid "Goat Shrine"
-msgstr "Altar caprino"
+msgstr "Altar Caprino"
 
 #: Source/objects.cpp:5489
 msgid "Cauldron"
@@ -6504,23 +6504,23 @@ msgstr "Caldeirão"
 
 #: Source/objects.cpp:5492
 msgid "Murky Pool"
-msgstr "Poça turva"
+msgstr "Poça Turva"
 
 #: Source/objects.cpp:5495
 msgid "Fountain of Tears"
-msgstr "Fonte de lágrimas"
+msgstr "Fonte de Lágrimas"
 
 #: Source/objects.cpp:5498
 msgid "Steel Tome"
-msgstr "Tomo de aço"
+msgstr "Tomo do Aço"
 
 #: Source/objects.cpp:5501
 msgid "Pedestal of Blood"
-msgstr "Pedestal de sangue"
+msgstr "Pedestal de Sangue"
 
 #: Source/objects.cpp:5510
 msgid "Mushroom Patch"
-msgstr "Canteiro de cogumelos"
+msgstr "Canteiro de Cogumelos"
 
 #: Source/objects.cpp:5513
 msgid "Vile Stand"
@@ -6528,12 +6528,12 @@ msgstr "Suporte Vil"
 
 #: Source/objects.cpp:5516
 msgid "Slain Hero"
-msgstr "Herói assassinado"
+msgstr "Herói Assassinado"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
 #: Source/objects.cpp:5523
 msgid "Trapped {:s}"
-msgstr "{:s} aprisionado"
+msgstr "{:s} com armadilha"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
 #: Source/objects.cpp:5529
@@ -6542,19 +6542,19 @@ msgstr "{:s} (desativado)"
 
 #: Source/options.cpp:441 Source/options.cpp:572 Source/options.cpp:578
 msgid "ON"
-msgstr ""
+msgstr "LIGADO"
 
 #: Source/options.cpp:441 Source/options.cpp:570 Source/options.cpp:576
 msgid "OFF"
-msgstr ""
+msgstr "DESLIGADO"
 
 #: Source/options.cpp:560
 msgid "Start Up"
-msgstr ""
+msgstr "Inicialização"
 
 #: Source/options.cpp:560
 msgid "Start Up Settings"
-msgstr ""
+msgstr "Configurações de Inicialização"
 
 #: Source/options.cpp:561
 #, fuzzy
@@ -6591,6 +6591,8 @@ msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
 msgstr ""
+"Torna o jogo compatível com a demonstração. Habilita multiplayer com amigos "
+"que não possuem a versão completa do Diablo."
 
 #: Source/options.cpp:568 Source/options.cpp:574
 msgid "Intro"
@@ -6598,7 +6600,7 @@ msgstr "Introdução"
 
 #: Source/options.cpp:568 Source/options.cpp:574
 msgid "Shown Intro cinematic."
-msgstr ""
+msgstr "Exibe vídeo de introdução"
 
 #: Source/options.cpp:580
 #, fuzzy
@@ -6658,14 +6660,15 @@ msgstr "Som ao Auto-Equipar"
 #: Source/options.cpp:622
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr ""
+"Equipar os items automaticamente emite o som dos equipamentos ao pegá-los."
 
 #: Source/options.cpp:623
 msgid "Item Pickup Sound"
-msgstr ""
+msgstr "Som ao Pegar Item"
 
 #: Source/options.cpp:623
 msgid "Picking up items emits the items pickup sound."
-msgstr ""
+msgstr "Emite o som dos equipamentos ao pegá-los."
 
 #: Source/options.cpp:624
 msgid "Sample Rate"
@@ -6673,7 +6676,7 @@ msgstr "Taxa de Amostragem"
 
 #: Source/options.cpp:624
 msgid "Output sample rate (Hz)."
-msgstr ""
+msgstr "Taxa de amostragem de saída (Hz)"
 
 #: Source/options.cpp:625
 msgid "Channels"
@@ -6689,7 +6692,7 @@ msgstr "Tamanho do Buffer"
 
 #: Source/options.cpp:626
 msgid "Buffer size (number of frames per channel)."
-msgstr "Tamanho do Buffer (número de frames por canal)."
+msgstr "Tamanho do Buffer (número de quadros por canal)."
 
 #: Source/options.cpp:627
 msgid "Resampling Quality"
@@ -6711,6 +6714,9 @@ msgid ""
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
 "Fit to Screen is used."
 msgstr ""
+"Afeta a resolução interna do jogo e determina sua área de visão. Nota: Isso "
+"pode mudar para cada resolução de tela, quando usando Upscaling, Escala de "
+"Inteiros ou Ajustar à Tela."
 
 #: Source/options.cpp:744
 msgid "Graphics"
@@ -6726,29 +6732,34 @@ msgstr "Tela cheia"
 
 #: Source/options.cpp:745
 msgid "Display the game in windowed or fullscreen mode."
-msgstr ""
+msgstr "Exibe o jogo em modo janela ou tela cheia."
 
 #: Source/options.cpp:747
 #, fuzzy
 #| msgid "in the shareware"
 msgid "Fit to Screen"
-msgstr "Caber na tela"
+msgstr "Ajustar à Tela"
 
 #: Source/options.cpp:747
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
 msgstr ""
+"Ajusta automaticamente a janela do jogo mantendo a mesma proporção e "
+"resolução da tela de desktop atual."
 
 #: Source/options.cpp:750
 msgid "Upscale"
-msgstr ""
+msgstr "Upscale"
 
 #: Source/options.cpp:750
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
 msgstr ""
+"Habilita escala de imagem da resolução do jogo para a resolução do seu "
+"monitor. Previne mudanças na resolução do monitor e permite redimensionar a "
+"janela."
 
 #: Source/options.cpp:751
 #, fuzzy
@@ -6759,6 +6770,7 @@ msgstr "Qualidade de Escala"
 #: Source/options.cpp:751
 msgid "Enables optional filters to the output image when upscaling."
 msgstr ""
+"Habilita filtros opcionais para a image de saída quando utilizando upscaling."
 
 #: Source/options.cpp:753
 msgid "Nearest Pixel"
@@ -6778,53 +6790,58 @@ msgstr "Escala de Inteiros"
 
 #: Source/options.cpp:757
 msgid "Scales the image using whole number pixel ratio."
-msgstr ""
+msgstr "Escala a imagem usando a proporção de pixel em número inteiro."
 
 #: Source/options.cpp:758
 msgid "Vertical Sync"
-msgstr "Sync Vertical"
+msgstr "Sincronização Vertical"
 
 #: Source/options.cpp:758
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
 msgstr ""
+"Força a espera por Sincronização Vertical. Previne efeito de sobreposição de "
+"retalhos ao desenhar quadro. Desabilitá-lo pode ajudar com lag no mouse em "
+"alguns sistemas."
 
 #: Source/options.cpp:760
 msgid "Color Cycling"
-msgstr ""
+msgstr "Ciclagem de Cores"
 
 #: Source/options.cpp:760
 msgid "Color cycling effect used for water, lava, and acid animation."
-msgstr ""
+msgstr "Efeito de Ciclagem de Cores usado para animação da água, lava e ácido."
 
 #: Source/options.cpp:762
 #, fuzzy
 #| msgid "Hard Leather Armor"
 msgid "Hardware Cursor"
-msgstr "Cursor do Hardware"
+msgstr "Cursor em Hardware"
 
 #: Source/options.cpp:762
 msgid "Use a hardware cursor"
-msgstr ""
+msgstr "Usa um cursor em hardware"
 
 #: Source/options.cpp:763
 msgid "Hardware Cursor For Items"
-msgstr ""
+msgstr "Cursor em Hardware Para Items"
 
 #: Source/options.cpp:763
 msgid "Use a hardware cursor for items."
-msgstr ""
+msgstr "Usa um cursor em hardware para os items"
 
 #: Source/options.cpp:764
 msgid "Hardware Cursor Maximum Size"
-msgstr ""
+msgstr "Tamanho máximo do Cursor em Hardware"
 
 #: Source/options.cpp:764
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
 "software."
 msgstr ""
+"Largura / altura máxima para o cursor em hardware. Cursores maiores são "
+"convertidos para software."
 
 #: Source/options.cpp:766
 #, fuzzy
@@ -6835,6 +6852,8 @@ msgstr "Limitador de FPS"
 #: Source/options.cpp:766
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
+"FPS é limitado para evitar alta carga de CPU. O limite considera a taxa de "
+"atualização."
 
 #: Source/options.cpp:767
 msgid "Show FPS"
@@ -6842,7 +6861,7 @@ msgstr "Exibir FPS"
 
 #: Source/options.cpp:767
 msgid "Displays the FPS in the upper left corner of the screen."
-msgstr ""
+msgstr "Exibe o FPS no canto esquerdo superior da tela."
 
 #: Source/options.cpp:812
 msgid "Gameplay"
@@ -6863,14 +6882,16 @@ msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
 msgstr ""
+"Habilita correr/andar rápido na cidade no Diablo e Hellfire. Essa opção foi "
+"introduzida na expansão."
 
 #: Source/options.cpp:814
 msgid "Grab Input"
-msgstr ""
+msgstr "Travar Input"
 
 #: Source/options.cpp:814
 msgid "When enabled mouse is locked to the game window."
-msgstr ""
+msgstr "Quando habilitado, mouse fica travado na janela do jogo."
 
 #: Source/options.cpp:815
 #, fuzzy
@@ -6913,7 +6934,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Testers"
 msgid "Test Bard"
-msgstr "Bardo"
+msgstr "Teste Bardo"
 
 #: Source/options.cpp:818
 msgid "Force the Bard character type to appear in the hero selection menu."
@@ -6924,7 +6945,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Barbarian"
 msgid "Test Barbarian"
-msgstr "Bárbaro"
+msgstr "Teste Bárbaro"
 
 #: Source/options.cpp:819
 msgid ""
@@ -6940,197 +6961,210 @@ msgstr "Barra de Experiência"
 
 #: Source/options.cpp:820
 msgid "Experience Bar is added to the UI at the bottom of the screen."
-msgstr ""
+msgstr "Barra de Experiência é adicionada à UI na parte inferior da tela."
 
 #: Source/options.cpp:821
 msgid "Enemy Health Bar"
-msgstr ""
+msgstr "Barra de Vida do Inimigo"
 
 #: Source/options.cpp:821
 msgid "Enemy Health Bar is displayed at the top of the screen."
-msgstr ""
+msgstr "Barra de Vida do Inimigo é exibida na parte superior da tela."
 
 #: Source/options.cpp:822
 msgid "Auto Gold Pickup"
-msgstr ""
+msgstr "Pegar ouro automaticamente"
 
 #: Source/options.cpp:822
 msgid "Gold is automatically collected when in close proximity to the player."
-msgstr ""
+msgstr "Ouro é pego automaticamente quando perto do jogador."
 
 #: Source/options.cpp:823
 msgid "Auto Elixir Pickup"
-msgstr ""
+msgstr "Pegar Elixir Automaticamente"
 
 #: Source/options.cpp:823
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
-msgstr ""
+msgstr "Elixires são pegos automaticamente quando perto do jogador."
 
 #: Source/options.cpp:824
 #, fuzzy
 #| msgid "No Pause in town"
 msgid "Auto Pickup in Town"
-msgstr ""
+msgstr "Pegar itens na Cidade automaticamente."
 
 #: Source/options.cpp:824
 msgid "Automatically pickup items in town."
-msgstr ""
+msgstr "Itens são pegos automaticamente quando estiver na cidade."
 
 #: Source/options.cpp:825
 msgid "Adria Refills Mana"
-msgstr ""
+msgstr "Adria Recupera Mana"
 
 #: Source/options.cpp:825
 msgid "Adria will refill your mana when you visit her shop."
-msgstr ""
+msgstr "Adria vai encher sua mana quando você visitar a loja dela."
 
 #: Source/options.cpp:826
 msgid "Auto Equip Weapons"
-msgstr ""
+msgstr "Auto Equipar Armas"
 
 #: Source/options.cpp:826
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Armas são equipadas automaticamente quando pegas ou compradas, se habilitado."
 
 #: Source/options.cpp:827
 msgid "Auto Equip Armor"
-msgstr ""
+msgstr "Auto Equipar Armadura"
 
 #: Source/options.cpp:827
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Armadura é equipada automaticamente se pega ou comprada, se habilitado."
 
 #: Source/options.cpp:828
 msgid "Auto Equip Helms"
-msgstr ""
+msgstr "Auto Equipar Elmos"
 
 #: Source/options.cpp:828
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Elmos são equipados automaticamente se pegos ou comprados, se habilitado."
 
 #: Source/options.cpp:829
 msgid "Auto Equip Shields"
-msgstr ""
+msgstr "Auto Equipar Escudos"
 
 #: Source/options.cpp:829
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Escudos são equipados automaticamente se pegos ou comprados, se habilitado."
 
 #: Source/options.cpp:830
 msgid "Auto Equip Jewelry"
-msgstr ""
+msgstr "Auto Equipar Jóias"
 
 #: Source/options.cpp:830
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Jóias são equipadas automaticamente quando pegas ou compradas, se habilitado."
 
 #: Source/options.cpp:831
 msgid "Randomize Quests"
-msgstr ""
+msgstr "Randomizar Missões"
 
 #: Source/options.cpp:831
 msgid "Randomly selecting available quests for new games."
-msgstr ""
+msgstr "Seleciona missões aleatóriamente para novos jogos."
 
 #: Source/options.cpp:832
 msgid "Show Monster Type"
-msgstr ""
+msgstr "Exibir Tipo de Monstro"
 
 #: Source/options.cpp:832
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
 msgstr ""
+"Quando o cursor estiver sobre o monstro, o seu tipo será exibido em uma "
+"caixa de descrição na UI."
 
 #: Source/options.cpp:833
 msgid "Auto Refill Belt"
-msgstr ""
+msgstr "Auto Abastecer Cinto"
 
 #: Source/options.cpp:833
 msgid "Refill belt from inventory when belt item is consumed."
-msgstr ""
+msgstr "Abastece cinto pelo inventário quando um item do cinto é consumido."
 
 #: Source/options.cpp:834
 msgid "Disable Crippling Shrines"
-msgstr ""
+msgstr "Desabilitar Altares Destrutivos"
 
 #: Source/options.cpp:834
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
+"Quando habilitado, Caldeirões, Altares Fascinantes, Altares Caprinos, "
+"Altares Ornados e Altares Sagrados não podem ser clicadas e são marcados "
+"como desabilitados."
 
 #: Source/options.cpp:835
 #, fuzzy
 #| msgid "quick attack"
 msgid "Quick Cast"
-msgstr "ataque breve"
+msgstr "Lançamento Rápido"
 
 #: Source/options.cpp:835
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
 msgstr ""
+"Teclas de Atalho de feitiços lançam feitiços, ao invés de mudar o fetiço "
+"selecionado."
 
 #: Source/options.cpp:836
 msgid "Heal Potion Pickup"
-msgstr ""
+msgstr "Pegar Poção de Cura"
 
 #: Source/options.cpp:836
 msgid "Number of Healing potions to pick up automatically."
-msgstr ""
+msgstr "Número de poções de cura a serem pegas automaticamente."
 
 #: Source/options.cpp:837
 msgid "Full Heal Potion Pickup"
-msgstr ""
+msgstr "Pegar Poção de Cura Completa"
 
 #: Source/options.cpp:837
 msgid "Number of Full Healing potions to pick up automatically."
-msgstr ""
+msgstr "Número de poções de cura completa a serem pegas automaticamente."
 
 #: Source/options.cpp:838
 msgid "Mana Potion Pickup"
-msgstr ""
+msgstr "Pegar Poção de Mana"
 
 #: Source/options.cpp:838
 msgid "Number of Mana potions to pick up automatically."
-msgstr ""
+msgstr "Número de poções de mana a serem pegas automaticamente."
 
 #: Source/options.cpp:839
 msgid "Full Mana Potion Pickup"
-msgstr ""
+msgstr "Pegar Poção de Mana Completa"
 
 #: Source/options.cpp:839
 msgid "Number of Full Mana potions to pick up automatically."
-msgstr ""
+msgstr "Número de poções de mana completa a serem pegas automaticamente."
 
 #: Source/options.cpp:840
 msgid "Rejuvenation Potion Pickup"
-msgstr ""
+msgstr "Pegar Poção de Rejuvenecimento"
 
 #: Source/options.cpp:840
 msgid "Number of Rejuvenation potions to pick up automatically."
-msgstr ""
+msgstr "Número de poções de Rejuvenecimento a serem pegas automaticamente."
 
 #: Source/options.cpp:841
 msgid "Full Rejuvenation Potion Pickup"
-msgstr ""
+msgstr "Pegar Poção de Rejuvenecimento Completo"
 
 #: Source/options.cpp:841
 msgid "Number of Full Rejuvenation potions to pick up automatically."
 msgstr ""
+"Número de poções de Rejuvenecimento Completo a serem pegas automaticamente."
 
 #: Source/options.cpp:883
 msgid "Controller"
-msgstr ""
+msgstr "Controle"
 
 #: Source/options.cpp:883
 msgid "Controller Settings"
-msgstr ""
+msgstr "Configurações de Controle"
 
 #: Source/options.cpp:892
 #, fuzzy
@@ -7140,11 +7174,11 @@ msgstr "Rede"
 
 #: Source/options.cpp:892
 msgid "Network Settings"
-msgstr ""
+msgstr "Configurações de Rede"
 
 #: Source/options.cpp:901
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #: Source/options.cpp:901
 #, fuzzy
@@ -7158,19 +7192,19 @@ msgstr "Idioma"
 
 #: Source/options.cpp:910
 msgid "Define what language to use in game."
-msgstr ""
+msgstr "Define qual idioma será usado no jogo."
 
 #: Source/options.cpp:1025
 msgid "Language Settings"
-msgstr ""
+msgstr "Configurações de Idioma"
 
 #: Source/options.cpp:1037
 msgid "Keymapping"
-msgstr ""
+msgstr "Mapeamento de Teclas"
 
 #: Source/options.cpp:1037
 msgid "Keymapping Settings"
-msgstr ""
+msgstr "Configurações de Mapeamento de Teclas"
 
 #: Source/panels/charpanel.cpp:111
 msgid "MAX"
@@ -7309,7 +7343,7 @@ msgstr "Inutilizável"
 #, fuzzy
 #| msgid "Charges: {:d}/{:d}"
 msgid "Heals: {:d} - {:d}"
-msgstr "Curas: {:d} - {:d}"
+msgstr "Cura: {:d} - {:d}"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:174
@@ -7437,7 +7471,7 @@ msgstr "Zhar, o Louco"
 
 #: Source/quests.cpp:47
 msgid "Lachdanan"
-msgstr ""
+msgstr "Lachadan"
 
 #: Source/quests.cpp:49
 msgid "The Butcher"
@@ -7498,7 +7532,7 @@ msgstr "O Profanador"
 
 #: Source/quests.cpp:64
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #: Source/quests.cpp:65 Source/trigs.cpp:448
 msgid "Cornerstone of the World"
@@ -7823,39 +7857,39 @@ msgstr "Runa de Pedra"
 #, fuzzy
 #| msgid "Griswold's Edge"
 msgid "Griswold"
-msgstr ""
+msgstr "Griswold"
 
 #: Source/stores.cpp:92
 msgid "Pepin"
-msgstr ""
+msgstr "Pepin"
 
 #: Source/stores.cpp:94
 msgid "Ogden"
-msgstr ""
+msgstr "Ogden"
 
 #: Source/stores.cpp:95
 msgid "Cain"
-msgstr ""
+msgstr "Cain"
 
 #: Source/stores.cpp:96
 #, fuzzy
 #| msgid "Talk to Farnham"
 msgid "Farnham"
-msgstr ""
+msgstr "Farnham"
 
 #: Source/stores.cpp:97
 msgid "Adria"
-msgstr ""
+msgstr "Adria"
 
 #: Source/stores.cpp:98 Source/stores.cpp:1336
 #, fuzzy
 #| msgid "brilliance"
 msgid "Gillian"
-msgstr ""
+msgstr "Gillian"
 
 #: Source/stores.cpp:99
 msgid "Wirt"
-msgstr ""
+msgstr "Wirt"
 
 #: Source/stores.cpp:218 Source/stores.cpp:225
 msgid "Back"
@@ -12066,11 +12100,11 @@ msgstr "Gillian, a Atendente"
 
 #: Source/towners.cpp:172
 msgid "Pepin the Healer"
-msgstr "Pepin, o curandeiro"
+msgstr "Pepin, o Curandeiro"
 
 #: Source/towners.cpp:189
 msgid "Cain the Elder"
-msgstr "Cain, o ancião"
+msgstr "Cain, o Ancião"
 
 #: Source/towners.cpp:218
 msgid "Cow"
@@ -12086,7 +12120,7 @@ msgstr "Completamente Louco"
 
 #: Source/towners.cpp:264
 msgid "Celia"
-msgstr ""
+msgstr "Celia"
 
 #: Source/towners.cpp:277
 msgid "Slain Townsman"
