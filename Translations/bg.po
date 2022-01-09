@@ -1,3 +1,7 @@
+# Translation of DevilutionX to Bulgarian
+# Nikolay Popov <nikolai.popovz@gmail.com>, 2021.
+# @Krezzin, 2021.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
