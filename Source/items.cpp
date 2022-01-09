@@ -496,7 +496,8 @@ void CalcSelfItems(Player &player)
 
 			if (currstr >= equipment._iMinStr
 			    && currmag >= equipment._iMinMag
-			    && currdex >= equipment._iMinDex)
+			    && currdex >= equipment._iMinDex
+			    && ((equipment._iClass == ICLASS_MISC || equipment._iClass == ICLASS_GOLD || equipment._iClass == ICLASS_QUEST) || equipment._iDurability != 0))
 				continue;
 
 			changeflag = true;
@@ -512,7 +513,7 @@ void CalcSelfItems(Player &player)
 
 void CalcPlrItemMin(Player &player)
 {
-	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
+	for (Item &item : PlayerItemsRange { player }) {
 		item._iStatFlag = player.CanUseItem(item);
 	}
 }

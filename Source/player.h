@@ -333,7 +333,8 @@ struct Player {
 	{
 		return _pStrength >= item._iMinStr
 		    && _pMagic >= item._iMinMag
-		    && _pDexterity >= item._iMinDex;
+		    && _pDexterity >= item._iMinDex
+		    && ((item._iClass == ICLASS_MISC || item._iClass == ICLASS_GOLD || item._iClass == ICLASS_QUEST) || item._iDurability != 0);
 	}
 
 	bool HasItem(int item, int *idx = nullptr) const;

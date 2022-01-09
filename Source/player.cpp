@@ -773,10 +773,9 @@ bool DamageWeapon(int pnum, int durrnd)
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability != 0)
+			player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -787,10 +786,9 @@ bool DamageWeapon(int pnum, int durrnd)
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
+		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != 0)
+			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -801,10 +799,9 @@ bool DamageWeapon(int pnum, int durrnd)
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
+		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != 0)
+			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -815,10 +812,9 @@ bool DamageWeapon(int pnum, int durrnd)
 			return false;
 		}
 
+		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability != 0)
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -1314,20 +1310,18 @@ void DamageParryItem(int pnum)
 			return;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
+		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability != 0)
+			player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 			CalcPlrInv(player, true);
 		}
 	}
 
 	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
-			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
+			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != 0)
+				player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-				player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
 				CalcPlrInv(player, true);
 			}
 		}
@@ -1389,17 +1383,11 @@ void DamageArmor(int pnum)
 		return;
 	}
 
-	pi->_iDurability--;
 	if (pi->_iDurability != 0) {
+		pi->_iDurability--;
 		return;
 	}
 
-	if (a != 0) {
-		NetSendCmdDelItem(true, INVLOC_CHEST);
-	} else {
-		NetSendCmdDelItem(true, INVLOC_HEAD);
-	}
-	pi->_itype = ItemType::None;
 	CalcPlrInv(player, true);
 }
 
