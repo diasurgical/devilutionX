@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-01-09 12:22+0100\n"
+"POT-Creation-Date: 2022-01-09 13:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -1396,7 +1396,7 @@ msgstr "Обратна връзка"
 
 #: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
-msgstr "Свързване невъзможно"
+msgstr "Свързването невъзможно "
 
 #: Source/dvlnet/tcp_client.cpp:86
 msgid "error: read 0 bytes from server"
