@@ -1634,9 +1634,9 @@ void DrawAndBlit()
 
 		DrawSpell(out);
 	}
-	//if (drawbtnflag) {
-	//	DrawCtrlBtns(out);
-	//}
+	if (drawbtnflag) {
+		DrawCtrlBtns(out);
+	}
 	if (drawsbarflag) {
 		DrawInvBelt(out);
 	}

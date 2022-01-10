@@ -119,16 +119,24 @@ Rectangle ChrBtnsRect[4] = {
 };
 
 /** Positions of panel buttons. */
-SDL_Rect PanBtnPos[8] = {
+int8_t panBtnX = 215;
+int8_t panBtnY = 50;
+int8_t panBtnSpacing = 21;
+int8_t panBtnW = 20;
+int8_t panBtnH = 20;
+
+SDL_Rect PanBtnPos[10] = {
 	// clang-format off
-	{   9,   9, 71, 19 }, // char button
-	{   9,  35, 71, 19 }, // quests button
-	{   9,  75, 71, 19 }, // map button
-	{   9, 101, 71, 19 }, // menu button
-	{ 560,   9, 71, 19 }, // inv button
-	{ 560,  35, 71, 19 }, // spells button
-	{  87,  91, 33, 32 }, // chat button
-	{ 527,  91, 33, 32 }, // friendly fire button
+	{ panBtnX + (panBtnSpacing * 0),  panBtnY, panBtnW, panBtnH }, // char button
+	{ panBtnX + (panBtnSpacing * 1),  panBtnY, panBtnW, panBtnH }, // inv button
+	{ panBtnX + (panBtnSpacing * 2),  panBtnY, panBtnW, panBtnH }, // stash button
+	{ panBtnX + (panBtnSpacing * 3),  panBtnY, panBtnW, panBtnH }, // spells button
+	{ panBtnX + (panBtnSpacing * 4),  panBtnY, panBtnW, panBtnH }, // party button
+	{ panBtnX + (panBtnSpacing * 5),  panBtnY, panBtnW, panBtnH }, // beastiary button
+	{ panBtnX + (panBtnSpacing * 6),  panBtnY, panBtnW, panBtnH }, // map button
+	{ panBtnX + (panBtnSpacing * 7),  panBtnY, panBtnW, panBtnH }, // chat button
+	{ panBtnX + (panBtnSpacing * 8),  panBtnY, panBtnW, panBtnH }, // quests button
+	{ panBtnX + (panBtnSpacing * 9),  panBtnY, panBtnW, panBtnH }, // menu button
 	// clang-format on
 };
 
@@ -141,7 +149,7 @@ OptionalOwnedClxSpriteList pDurIcons;
 OptionalOwnedClxSpriteList multiButtons;
 OptionalOwnedClxSpriteList pPanelButtons;
 
-bool PanelButtons[8];
+bool PanelButtons[10];
 int PanelButtonIndex;
 char TalkSave[8][MAX_SEND_STR_LEN];
 uint8_t TalkSaveIndex;
@@ -153,27 +161,31 @@ bool WhisperList[MAX_PLRS];
 
 enum panel_button_id : uint8_t {
 	PanelButtonCharinfo,
-	PanelButtonQlog,
-	PanelButtonAutomap,
-	PanelButtonMainmenu,
 	PanelButtonInventory,
+	PanelButtonStash,
 	PanelButtonSpellbook,
+	PanelButtonParty,
+	PanelButtonBeastiary,
+	PanelButtonAutomap,
 	PanelButtonSendmsg,
-	PanelButtonFriendly,
+	PanelButtonQlog,
+	PanelButtonMainmenu,
 };
 
 /** Maps from panel_button_id to hotkey name. */
-const char *const PanBtnHotKey[8] = { "'c'", "'q'", N_("Tab"), N_("Esc"), "'i'", "'b'", N_("Enter"), nullptr };
+const char *const PanBtnHotKey[10] = { "'c'", "'i'", "'x'", "'b'", "'p'", "'m'", N_("Tab"), N_("Enter"), "'q'", N_("Esc")};
 /** Maps from panel_button_id to panel button description. */
-const char *const PanBtnStr[8] = {
+const char *const PanBtnStr[10] = {
 	N_("Character Information"),
-	N_("Quests log"),
-	N_("Automap"),
-	N_("Main Menu"),
 	N_("Inventory"),
+	N_("Stash"),
 	N_("Spell book"),
-	N_("Send Message"),
-	"" // Player attack
+	N_("Party"),
+	N_("Beastiary"),
+	N_("Automap"),
+	N_("Chat"),
+	N_("Quests log"),
+	N_("Main Menu"),
 };
 
 /**
@@ -595,7 +607,7 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 
 void DrawLifeFlaskUpper(const Surface &out)
 {
-	constexpr int LifeFlaskUpperOffset = 96 - 19 + 3;
+	constexpr int LifeFlaskUpperOffset = 96 - 19 + 4;
 	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
 }
 
@@ -884,7 +896,7 @@ void CheckBtnUp()
 	drawbtnflag = true;
 	panbtndown = false;
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 10; i++) {
 		if (!PanelButtons[i]) {
 			continue;
 		}
@@ -932,6 +944,19 @@ void CheckBtnUp()
 				dropGoldValue = 0;
 			}
 			break;
+		case PanelButtonStash:
+			chrflag = false;
+			QuestLogIsOpen = false;
+			//stashflag = !invstashflag;
+			if (dropGoldFlag) {
+				CloseGoldDrop();
+				dropGoldValue = 0;
+			}
+			//if (withdrawStashGold) {
+			//	CloseWithdrawStashGold();
+			//	withdrawStashGoldValue = 0;
+			//}
+			break;
 		case PanelButtonSpellbook:
 			CloseInventory();
 			if (dropGoldFlag) {
@@ -939,6 +964,13 @@ void CheckBtnUp()
 				dropGoldValue = 0;
 			}
 			sbookflag = !sbookflag;
+			break;
+		case PanelButtonParty:
+			break;
+		case PanelButtonBeastiary:
+			break;
+		case PanelButtonAutomap:
+			DoAutoMap();
 			break;
 		case PanelButtonSendmsg:
 			if (talkflag)
@@ -964,7 +996,7 @@ void FreeControlPan()
 	pLifeBuff = std::nullopt;
 	FreeSpellIcons();
 	FreeSpellBook();
-	//pPanelButtons = std::nullopt;
+	pPanelButtons = std::nullopt;
 	multiButtons = std::nullopt;
 	talkButtons = std::nullopt;
 	pChrButtons = std::nullopt;
