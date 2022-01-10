@@ -14,10 +14,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SearchPath-0: Source\n"
 
 #: Source/DiabloUI/credits_lines.cpp:7
@@ -478,7 +478,7 @@ msgstr "Učitavanje..."
 #: Source/DiabloUI/selgame.cpp:157 Source/discord/discord.cpp:71
 #: Source/options.cpp:563 Source/panels/charpanel.cpp:137
 msgid "None"
-msgstr "Nepoznata"
+msgstr "Nepoznato"
 
 #: Source/DiabloUI/selgame.cpp:171 Source/DiabloUI/selgame.cpp:309
 #: Source/DiabloUI/selgame.cpp:335 Source/DiabloUI/selgame.cpp:475
@@ -1067,7 +1067,7 @@ msgstr[0] "{:d} napunjen"
 msgstr[1] "{:d} napunjena"
 msgstr[2] "{:d} napunjeno"
 
-#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
+#: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3480
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} zlatnik"
@@ -1109,23 +1109,23 @@ msgstr ""
 "\n"
 "Pobrinite se da je devilutionx.mpq u mapi igre i da je najnovije inačice."
 
-#: Source/cursor.cpp:220
+#: Source/cursor.cpp:223
 msgid "Town Portal"
 msgstr "Gradski portal"
 
-#: Source/cursor.cpp:221
+#: Source/cursor.cpp:224
 msgid "from {:s}"
 msgstr "od {:s}"
 
-#: Source/cursor.cpp:235
+#: Source/cursor.cpp:238
 msgid "Portal to"
 msgstr "Portal u"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "The Unholy Altar"
 msgstr "Neposvećen oltar"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "level 15"
 msgstr "razina 15"
 
@@ -1324,27 +1324,27 @@ msgstr "Zaustavi hodanje i prekini radnje na čekanju."
 
 #: Source/diablo.cpp:1514
 msgid "Item highlighting"
-msgstr ""
+msgstr "Isticanje predmeta"
 
 #: Source/diablo.cpp:1515
 msgid "Show/hide items on ground."
-msgstr ""
+msgstr "Prikaži/Sakrij predmete na zemlji."
 
 #: Source/diablo.cpp:1521
 msgid "Toggle item highlighting"
-msgstr ""
+msgstr "Uklj/Isklj isticanje predmeta"
 
 #: Source/diablo.cpp:1522
 msgid "Permanent show/hide items on ground."
-msgstr ""
+msgstr "Trajno prikaži/sakrij predmete na zemlji."
 
 #: Source/diablo.cpp:1528
 msgid "Toggle automap"
-msgstr ""
+msgstr "Uklj/Isklj automatsku kartu"
 
 #: Source/diablo.cpp:1529
 msgid "Toggles if automap is displayed."
-msgstr ""
+msgstr "Uklj/Isklj prikaz karte."
 
 #: Source/diablo.cpp:1538
 msgid "Open Inventory screen."
@@ -1384,11 +1384,11 @@ msgstr "Koristi brzu poruku u razgovoru."
 
 #: Source/diablo.cpp:1580
 msgid "Hide Info Screens"
-msgstr ""
+msgstr "Sakrij prozore informacija"
 
 #: Source/diablo.cpp:1581
 msgid "Hide all info screens."
-msgstr ""
+msgstr "Sakrij sve prozore informacija."
 
 #: Source/diablo.cpp:1601
 msgid "Zoom"
@@ -1400,11 +1400,11 @@ msgstr "Uvećava/Smanjuje zaslon igre."
 
 #: Source/diablo.cpp:1612
 msgid "Pause Game"
-msgstr ""
+msgstr "Pauziraj igru"
 
 #: Source/diablo.cpp:1613
 msgid "Pauses the game."
-msgstr ""
+msgstr "Pauzira igru."
 
 #: Source/diablo.cpp:1618
 msgid "Decrease Gamma"
@@ -1432,11 +1432,11 @@ msgstr "Otvori pomoć."
 
 #: Source/diablo.cpp:1642
 msgid "Screenshot"
-msgstr ""
+msgstr "Uslikaj igru"
 
 #: Source/diablo.cpp:1643
 msgid "Takes a screenshot."
-msgstr ""
+msgstr "Uslikaj igru."
 
 #: Source/diablo.cpp:1649
 msgid "Game info"
@@ -1849,19 +1849,19 @@ msgstr "Q: Otvori popis zadataka"
 
 #: Source/help.cpp:37
 msgid "F: Reduce screen brightness"
-msgstr "F: Smanjuje svjetlinu zaslona"
+msgstr "F: Smanji svjetlinu zaslona"
 
 #: Source/help.cpp:38
 msgid "G: Increase screen brightness"
-msgstr "G: Povećava svjetlinu zaslona"
+msgstr "G: Povećaj svjetlinu zaslona"
 
 #: Source/help.cpp:39
 msgid "Z: Zoom Game Screen"
-msgstr "Z: Uvećava/Smanjuje zaslon igre"
+msgstr "Z: Uvećaj/Smanji zaslon igre"
 
 #: Source/help.cpp:40
 msgid "+ / -: Zoom Automap"
-msgstr "+ / -: Uvećava/Smanjuje kartu"
+msgstr "+ / -: Uvećaj/Smanji kartu"
 
 #: Source/help.cpp:41
 msgid "1 - 8: Use Belt item"
@@ -2116,7 +2116,7 @@ msgstr "Prsten istine"
 
 #: Source/itemdat.cpp:65
 msgid "Tavern Sign"
-msgstr "Znak pivnice"
+msgstr "Znak gostionice"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:438
 msgid "Harlequin Crest"
@@ -3001,7 +3001,7 @@ msgstr "Arhanđelova"
 
 #: Source/itemdat.cpp:308
 msgid "Plentiful"
-msgstr ""
+msgstr "Obilan"
 
 #: Source/itemdat.cpp:309
 msgid "Bountiful"
@@ -4122,7 +4122,7 @@ msgid " {:d} Dex"
 msgstr " {:d} Vještine"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3250 Source/player.cpp:3149
+#: Source/items.cpp:3250 Source/player.cpp:3148
 msgid "Ear of {:s}"
 msgstr "Uho od {:s}"
 
@@ -4540,19 +4540,19 @@ msgstr "unikat"
 msgid "Not Identified"
 msgstr "Nije identificirano"
 
-#: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
+#: Source/loadsave.cpp:1832 Source/loadsave.cpp:2338
 msgid "Unable to open save file archive"
 msgstr "Nemoguće otvaranje arhive datoteke spremanja"
 
-#: Source/loadsave.cpp:1833
+#: Source/loadsave.cpp:1835
 msgid "Invalid save file"
 msgstr "Nevaljana datoteka spremanja"
 
-#: Source/loadsave.cpp:1864
+#: Source/loadsave.cpp:1866
 msgid "Player is on a Hellfire only level"
 msgstr "Igrač je na Hellfire razini"
 
-#: Source/loadsave.cpp:2095
+#: Source/loadsave.cpp:2100
 msgid "Invalid game state"
 msgstr "Nevaljano stanje igre"
 
@@ -6021,7 +6021,7 @@ msgstr ""
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:285
 msgid "A Spellbook"
-msgstr ""
+msgstr "Knjiga magije"
 
 #: Source/objects.cpp:5389
 msgid "Crucified Skeleton"
@@ -7003,7 +7003,7 @@ msgstr ""
 msgid "{:d} gold"
 msgstr "{:d} zlato"
 
-#: Source/qol/stash.cpp:586
+#: Source/qol/stash.cpp:619
 #, fuzzy
 #| msgid "You have {:d} gold piece. How many do you want to remove?"
 #| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
@@ -8182,6 +8182,10 @@ msgid ""
 "perseverance and courage gives us hope. Please take this ring - perhaps it "
 "will aid you in the destruction of such vile creatures."
 msgstr ""
+"Što to kažeš - sama prisutnost demona prouzročila je onečišćenje vode? Oh, "
+"iskonski veliko zlo vreba pod našim gradom, ali tvoja upornost i hrabrost "
+"daje nam nadu. Molim te, uzmi ovaj prsten - možda će ti pomoći u uništenju "
+"takvih podlih stvorenja."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:96
@@ -9182,6 +9186,10 @@ msgid ""
 " \n"
 "Read them carefully for they can tell you things that even I cannot."
 msgstr ""
+"Dok se spuštaš sve dublje u labirint, možda ćeš tamo naći skrivene knjige "
+"velikog znanja. \n"
+" \n"
+"Pažljivo ih pročitaj, jer ti mogu reći stvari, čak i meni nepoznate."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:311
@@ -9214,6 +9222,10 @@ msgid ""
 "all they had in making a life for themselves here. He is a good man with a "
 "deep sense of responsibility."
 msgstr ""
+"Ogden posjeduje i vodi Gostionicu izlazećeg sunca već skoro četiri godine. "
+"Kupio ju je samo nekoliko mjeseci prije nego što je sve otišlo kvragu. On i "
+"njegova supruga Garda nemaju novca za odlazak, jer su sve uložili u bolji "
+"život ovdje. On je dobar i vrlo odgovoran čovjek."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:317
@@ -9224,6 +9236,11 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
+"Siroti Farnham. On je uznemirujući podsjetnik na prokletu skupinu koja je "
+"tog mračnog dana s Lazarom ušla u katedralu. Uspio je pobjeći, ali njegova "
+"hrabrost i velik dio razuma ostali su u nekoj mračnoj jami. Danas utjehu "
+"nalazi samo na dnu svoje čašice, ali povremeno se u njegovu trabunjanju "
+"kriju djelići istine."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:319
@@ -9249,6 +9266,12 @@ msgid ""
 "never returned. The Blacksmith found the boy, but only after the foul beasts "
 "had begun to torture him for their sadistic pleasures."
 msgstr ""
+"Priča o Wirtu je zastrašujuća i tragična. Uzeli su ga iz naručja majke i "
+"odvukli u labirint mali, gadni demoni koji rukuju opakim kopljima. Tog je "
+"dana odvedeno mnogo druge djece, uključujući sina kralja Leorika. Vitezovi "
+"palače su otišli dolje, ali se nikada nisu vratili. Kovač je pronašao "
+"dječaka, ali tek nakon što su ga zle zvijeri počele mučiti iz svojih "
+"sadističkih užitaka."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:323
@@ -9258,6 +9281,10 @@ msgid ""
 "existed. His knowledge and skills are equaled by few, and his door is always "
 "open."
 msgstr ""
+"Ah, Pepin. Smatram ga pravim prijateljem, možda najbližim ovdje. Ponekad je "
+"pomalo zbunjen, ali nikad nije postojala brižnija ili pažljivija duša. "
+"Njegovo znanje i vještine su rijetki, a vrata su mu uvijek otvorena za "
+"svakoga."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:325
@@ -9268,6 +9295,11 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
+"Gillian je dobra žena. Obožavana zbog svog dobrog duha i vedrog osmijeha, "
+"zauzima posebno mjesto u mom srcu. Ostala je u gostionici kako bi uzdržavala "
+"svoju staru baku koja je previše bolesna da bi otputovala. Ponekad se bojim "
+"za njenu sigurnost, ali znam da bi svaki muškarac u selu radije umro, nego "
+"da je vidi ozljeđenu."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
@@ -9327,6 +9359,11 @@ msgid ""
 "He probably went fooling about someplace that he shouldn't have been. I feel "
 "sorry for the boy, but I don't abide the company that he keeps."
 msgstr ""
+"Wirt je bitanga i mali nitkov. Uvijek je upadao u nevolje, i nije čudno to, "
+"što mu se dogodilo. \n"
+" \n"
+"Vjerojatno se glupirao negdje gdje nije trebao. Žao mi je dječaka, ali ne "
+"podnosim njegovo društvo."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:341
@@ -9362,6 +9399,9 @@ msgid ""
 "hurt one of the monsters, make sure it is dead or it very well may "
 "regenerate itself."
 msgstr ""
+"Došao sam do vrlo zanimljiva otkrića. Za razliku od nas, stvorenja u "
+"Labirintu mogu se izliječiti bez pomoći napitaka ili magije. Ako ozlijediš "
+"jedno od čudovišta, provjeri je li mrtvo ili će se vrlo brzo regenerirati."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:348
@@ -9371,6 +9411,9 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
+"Prije nego što ju je preuzelo to, što god da vreba ispod. Katedrala je bila "
+"mjesto velikog učenja. Tamo se može naći mnogo knjiga. Ako ih pronađeš, "
+"trebao bi ih sve pročitati, jer neke možda kriju tajnu o radu Labirinta."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -9379,6 +9422,9 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
+"Griswold se razumije u umijeće ratovanja koliko i ja u umijeće liječenja. On "
+"je lukav trgovac, a u njegovu poslu mu nema ravna. Valjda zato što je on "
+"jedini preostali kovač ovdje."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -9407,6 +9453,11 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
+"Dok koristim neke ograničene oblike magije za stvaranje napitaka i eliksira "
+"koje ovdje pohranjujem, Adria je prava čarobnica. Ona nikada ne spava i "
+"uvijek ima pristup mnogim mističnim knjigama i artefaktima. Vjerujem da je "
+"njena koliba mnogo više od kolibe kakvom se čini, ali nikako ne mogu ući u "
+"to mjesto."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -9416,6 +9467,9 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
+"Siroti Wirt. Učinio sam sve moguće za to dijete, ali znam da prezire onu "
+"drvenu nogu koju sam mu bio prisiljen pričvrstiti. Rane su bile grozne. "
+"Nitko, a posebno tako malo dijete ne bi trebalo patiti na taj način."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -9449,7 +9503,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr ""
+msgstr "Dobar dan! Kako vam mogu pomoći?"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
@@ -9469,6 +9523,10 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
+"Žena na rubu grada je vještica! Čini se simpatičnom, a njeno ime Adria "
+"ugodno je uhu, ali ja je se jako bojim. \n"
+" \n"
+"Trebao bi netko hrabar, poput tebe, da provjeri što ona tamo radi."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:369
@@ -9478,6 +9536,10 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
+"Naš kovač je ponos stanovnika Tristrama. Ne samo da je majstor koji je "
+"pobijedio na mnogim natjecanjima unutar svog ceha, nego ga je pohvalio i naš "
+"kralj Leorik, neka mu je spokoj duši. Griswold je isto veliki junak, samo "
+"pitaj Caina."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
@@ -9485,6 +9547,8 @@ msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
 msgstr ""
+"Cain je pripovjedač Tristrama otkad znam za sebe. On zna puno toga i može "
+"vam reći sve, o gotovo svemu."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -9510,6 +9574,10 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
+"Pepin je spasio život moje bake, znam da mu se za to nikad neću moći "
+"odužiti. Njegova sposobnost da izliječi svaku bolest moćnija je od "
+"najmoćnijeg mača i tajanstvenija od bilo koje čarolije koja postoji. Ako ti "
+"ikada zatreba liječenje, Pepin ti može pomoći."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -9521,6 +9589,11 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
+"Odrasla sam s Wirtovom majkom, Canace. Iako je bila lakše ozlijeđena kada su "
+"ga ta grozna stvorenja otela, nikad se nije oporavila. Mislim da je umrla od "
+"slomljenog srca. Wirt je postao mladić podlog duha, koji samo želi "
+"profitirati na tuđem trudu. Znam da je patio i vidio nezamislive strahote, "
+"ali nešto od tog mraka je još uvijek nadvito nad njim."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
@@ -9538,7 +9611,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya?"
-msgstr ""
+msgstr "Što mogu učiniti za vas?"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
@@ -9557,6 +9630,9 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
+"Sjekira? To je dobro oružje, izbalansirano protiv svakog neprijatelja. "
+"Pogledaj kako cijepa zrak, a onda zamisli lijepu debelu demonsku glavu "
+"ispred nje. Zapamti, međutim, da se sporo zamahuje, ali zadaje težak udarac!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -9574,6 +9650,9 @@ msgid ""
 "Darkness. If you bring them to me, with a bit of work and a hot forge, I can "
 "restore them to top fighting form."
 msgstr ""
+"Na tvome oružju i oklopu vidjet će se znakovi borbe protiv sila Tame. Ako mi "
+"ih doneseš, uz malo rada i vrućine iz kovačnice, mogu ih vratiti u vrhunsko "
+"borbeno stanje."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
@@ -9616,6 +9695,10 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
+"Bio sam s Farnhamom te noći kada nas je Lazar odveo u Labirint. Nikada više "
+"nisam vidio nadbiskupa ponovno, možda ne bih preživio da Farnham nije bio uz "
+"mene. Bojim se da je napad ostavio njegovu dušu tako obogaljenu kao, eto i "
+"moju nogu. Ne mogu voditi ovu bitku za njega, ali da mogu, bih."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -9637,6 +9720,10 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful."
 msgstr ""
+"Taj dečko će se uvaliti u ozbiljnu nevolju, ponovno. Pokušao sam ga "
+"zainteresirati za rad i učenje poštenog zanata, ali više voli veliku zaradu "
+"od trgovine sumnjivom robom. Ne mogu mu to zamjeriti nakon onoga što mu se "
+"dogodilo, ali bih volio da je malo oprezniji."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
@@ -9668,6 +9755,9 @@ msgid ""
 "stuff, but you listen to me... she's unnatural. I ain't never seen her eat "
 "or drink - and you can't trust somebody who doesn't drink at least a little."
 msgstr ""
+"Zašto ta stara baba ne učini nešto za promjenu. Naravno, naravno, posjeduje "
+"stvari, ali slušaj me, ona je neprirodna. Nikad je nisam vidio da jede ili "
+"pije, a ne možeš vjerovati nekome tko ne pije, barem malo."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
@@ -9676,6 +9766,9 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows."
 msgstr ""
+"Cain nije onakav kakvim se predstavlja. Naravno, naravno, priča dobre "
+"pričice... neke od njih su stvarno strašne ili smiješne... ali mislim da on "
+"zna više, nego što misli, da zna."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
@@ -9683,6 +9776,8 @@ msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
+"Griswold? Dobri stari Griswold. Volim ga kao brata! Zajedno smo se borili, "
+"znaš, kada smo... mi... Lazar...  Lazar... Lazar!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -9703,6 +9798,9 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
+"Wirt je dijete s više problema od mene, a ja znam sve o problemima. Slušaj "
+"me, taj klinac ima dobre pogodbe, ali on je bio tamo, znaš? Izgubio je nogu! "
+"Mora hodati uokolo na komadu drveta. Tako tužno, tako tužno..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
@@ -9711,6 +9809,9 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
+"Ogden je najbolji čovjek u gradu. Mislim da se njegovoj ženi ne sviđam "
+"previše, ali sve dok ona ima pune bačve, ne smeta mi. Čini se da provodim "
+"više vremena s Ogdenom od ostalih, a on je tako dobar prema meni..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
@@ -9719,6 +9820,9 @@ msgid ""
 "specialty. This here is the best... theeeee best! That other ale ain't no "
 "good since those stupid dogs..."
 msgstr ""
+"Želim ti nešto reći, jer znam sve o ovim stvarima. To je moja specijalnost. "
+"Ovo ovdje je najbolje... najbolje! Ono drugo pivo nije dobro, zbog onih "
+"glupih psa..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
@@ -9727,6 +9831,8 @@ msgid ""
 "somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and "
 "just waitin' for someone to get it."
 msgstr ""
+"Nitko me nikad ne... sluša. Negdje, nisam baš siguran, ali negdje ispod "
+"crkve je cijela hrpa zlata. Sjaji i blista, i samo čeka da ju netko pronađe."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
@@ -9736,6 +9842,9 @@ msgid ""
 "brutes! Oh, I don't care what Griswold says, they can't make anything like "
 "they used to in the old days..."
 msgstr ""
+"Znam da imaš vlastite ideje, i znam da nećeš vjerovati ovome, ali to oružje "
+"koje imaš - jednostavno nije dobro protiv tih velikih zvijeri! Oh, baš me "
+"briga što Griswold kaže, ne mogu napraviti više ništa dobro kao nekada..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
@@ -9786,6 +9895,11 @@ msgid ""
 "magical energies many times over. I have the ability to restore their power "
 "- but know that nothing is done without a price."
 msgstr ""
+"Premda je sunčeva toplina opasno neizdrživa, veću opasnost predstavlja sam "
+"plamen svijeće. Nijedna energija, ma koliko velika, ne može se koristiti bez "
+"odgovarajućeg fokusa. Za mnoge čarolije, začarani štapovi mogu se puniti "
+"čarobnom energijom više puta. Imam sposobnost obnove njihove moći, ali znaj "
+"da ništa nije besplatno."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
@@ -9794,6 +9908,9 @@ msgid ""
 "or scroll that you cannot decipher, do not hesitate to bring it to me. If I "
 "can make sense of it I will share what I find."
 msgstr ""
+"Veličina našeg znanja ovisi o brojnosti naših ljudi. Ako nađeš knjigu ili "
+"svitak koji ne možeš dešifrirati, ne ustručavaj se donijeti ih meni. Ako ih "
+"uspijem shvatiti, podijelit ću ta saznanja s tobom."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
@@ -9802,6 +9919,9 @@ msgid ""
 "blacksmith Griswold is more of a sorcerer than he knows. His ability to meld "
 "fire and metal is unequaled in this land."
 msgstr ""
+"Za čovjeka koji poznaje samo željezo, nema veće magije od čelika. Kovač "
+"Griswold je veći čarobnjak nego što misli. Njegova sposobnost spajanja vatre "
+"i metala je bez premca u ovoj zemlji."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
@@ -9823,6 +9943,9 @@ msgid ""
 "not look. His knowledge of what lies beneath the cathedral is far greater "
 "than even he allows himself to realize."
 msgstr ""
+"Škrinja otvorena u tami ne sadrži veće blago nego kad je otvorena na "
+"svjetlu. Pripovjedač Cain je enigma, ali samo za one koji ne vide. Njegovo "
+"znanje o onome ispod katedrale daleko je veće nego što čak i on sam shvaća."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -9832,6 +9955,10 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
+"Što više vjerujete u jednog čovjeka, vjera je sve slabija. Farnham je "
+"izgubio svoju dušu, ali ne zbog demona. Izgubio ju je kad je vidio svoje "
+"sumještane koje je izdao nadbiskup Lazar. On ima znanje koje treba "
+"prikupiti, ali ti moraš odvojiti činjenice od fantazija."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -9858,6 +9985,12 @@ msgid ""
 "reproachful, Wirt can provide assistance for your battle against the "
 "encroaching Darkness."
 msgstr ""
+"Mnogo toga o budućnosti ne znamo, ali budućnost na djeci ostaje. Dječak Wirt "
+"ima crnilo na duši, ali on nije prijetnja gradu ni njegovim ljudima. Njegov "
+"tajnoviti odnos sa švercerima i mutnim cehovima obližnjih gradova omogućuju "
+"mu pristup mnogim uređajima koji se ne mogu lako nabaviti u Tristramu. Iako "
+"su njegove metode nedopustive, Wirt ti može pomoći u borbi protiv nadolazeće "
+"tame."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -9870,11 +10003,17 @@ msgid ""
 "found there, provide a glimpse of a life that the people here remember. It "
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
+"Zemljani zidovi i slamnate nadstrešnice ne čine dom. Gostioničar Ogden ima "
+"više svrhe u ovom gradu nego što mnogi misle. On pruža utočište Gillian i "
+"njenoj baki, vodi život kakav mu je Farnham ostavio i osigurava okupljalište "
+"za sve koji su ostali u gradu. Njegova gostionica i jednostavni užici koji "
+"se tamo još uvijek mogu pronaći, daju uvid u život kakav ljudi ovdje pamte. "
+"To sjećanje hrani njihove nade u tvoj uspjeh."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
 msgid "Pssst... over here..."
-msgstr ""
+msgstr "Pssst, dođi ovdje..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:451
@@ -9884,6 +10023,10 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
+"Nema svatko u Tristramu koristi, ili tržište za sve što ćeš pronaći u "
+"labirintu. Čak ni ja, koliko god je to nevjerojatno. \n"
+" \n"
+"Ponekad ćeš samo ti moći pronaći svrhu za određenu stvar."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:453
@@ -9891,6 +10034,8 @@ msgid ""
 "Don't trust everything the drunk says. Too many ales have fogged his vision "
 "and his good sense."
 msgstr ""
+"Ne vjeruj svemu što ona pijandura kaže. Previše pića pomutilo mu je pamet i "
+"zdrav razum."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
@@ -9909,10 +10054,10 @@ msgid ""
 "I'll never get enough money to... well, let's just say that I have definite "
 "plans that require a large amount of gold."
 msgstr ""
-"Valjda kovaču dugujem svoj život - što imam od toga. Naravno, Griswold mi je "
-"ponudio šegertovanje u kovačnici, on je vrlo pristojan tip, ali nikad neću "
-"dobiti dovoljno novca za... pa, recimo samo da imam određene planove koji "
-"zahtijevaju veliku količinu zlata."
+"Valjda kovaču dugujem svoj život, ili ono što je ostalo od njega. Griswold "
+"mi je ponudio šegertovanje u kovačnici, on je vrlo pristojan tip, ali nikad "
+"neću dobiti dovoljno novca za... pa, recimo samo da imam određene planove "
+"koji zahtijevaju veću količinu zlata."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
@@ -9934,7 +10079,7 @@ msgid ""
 "woman across the river. He keeps telling me about how lucky I am to be "
 "alive, and how my story is foretold in legend. I think he's off his crock."
 msgstr ""
-"Cain zna previše. Silno me plaši - čak i više od one žene preko rijeke. "
+"Cain zna previše. Silno me plaši, čak i više od one žene preko rijeke. "
 "Stalno mi govori da sam sretan što sam živ i da je moja priča prorečena u "
 "legendi. Mislim da je sišao s uma."
 
@@ -9947,6 +10092,11 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
+"Farnham, je čovjek s ozbiljnim problemima, a ja znam koliko ozbiljni "
+"problemi mogu biti. Previše je vjerovao u integritet jednog čovjeka, a Lazar "
+"ga je odveo u same ralje smrti. A znam kako je dolje, stoga mi ne govori "
+"svoje planove o uništenju zla koje obitava u tom Labirintu. Samo pripazi na "
+"noge..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -9956,6 +10106,10 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
+"Sve dok ne trebaš nešto pričvrstiti, stari Pepin je dobar. \n"
+" \n"
+"Da sam imao neke od onih napitaka koje priprema, možda bih još uvijek imao "
+"nogu..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
@@ -9965,6 +10119,10 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
+"Od Adrie se stvarno naježim. Naravno, Cain je jeziv u onome što vam može "
+"reći o prošlosti, ali ta vještica vidi u vašu prošlost. Uvijek ima neki "
+"način da dobije sve što treba. Adria se dočepa više robe nego što prođe kroz "
+"vrata Kraljeve tržnice tijekom Velikog festivala."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
@@ -9975,9 +10133,9 @@ msgid ""
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
 "Ogden je budala zato što je ostao ovdje. Mogao bih ga izvući iz grada za "
-"razumnu cijenu, ali je uporan u pokušaju da se izvuče s tom glupom pivnicom. "
-"Barem je omogućio Gillian radno mjesto, a njegova supruga Garda radi odličnu "
-"pastirsku pitu..."
+"razumnu cijenu, ali je uporan u pokušaju da se izvuče s tom glupom "
+"gostionicom. Barem je omogućio Gillian radno mjesto, a njegova supruga Garda "
+"radi odličnu pastirsku pitu..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -10161,7 +10319,7 @@ msgstr ""
 "na mjestu, a oni koji su uzeli oružje ubijeni su ili odvučeni u roblje. Ili "
 "još gore, crkva na rubu grada je oskrnavljena i koristi se za mračne "
 "rituale. Krici koji odjekuju u noći nisu ljudski, ali neki od naših mještana "
-"možda su još živi. Slijedi put između moje pivnice i kovačnice kako bi "
+"možda su još živi. Slijedi put između moje gostionice i kovačnice kako bi "
 "pronašao crkvu i spasio ih što više. \n"
 " \n"
 "Možda ti mogu reći nešto više, ako ponovno razgovaramo. Sretno."
@@ -10615,7 +10773,7 @@ msgstr "Griswold kovač"
 
 #: Source/towners.cpp:101
 msgid "Ogden the Tavern owner"
-msgstr "Ogden vlasnik pivnice"
+msgstr "Ogden vlasnik gostionice"
 
 #: Source/towners.cpp:110
 msgid "Wounded Townsman"
