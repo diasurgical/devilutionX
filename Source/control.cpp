@@ -203,7 +203,7 @@ void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int
  */
 void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
-	constexpr int FlaskWidth = 88;
+	constexpr int FlaskWidth = 118;
 	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
 }
 
@@ -595,13 +595,13 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 
 void DrawLifeFlaskUpper(const Surface &out)
 {
-	constexpr int LifeFlaskUpperOffset = 109;
+	constexpr int LifeFlaskUpperOffset = 96 - 19 + 3;
 	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
 }
 
 void DrawManaFlaskUpper(const Surface &out)
 {
-	constexpr int ManaFlaskUpperOffset = 475;
+	constexpr int ManaFlaskUpperOffset = 464 - 19;
 	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, Players[MyPlayerId]._pManaPer);
 }
 
@@ -868,7 +868,7 @@ void CheckPanelInfo()
 			}
 		}
 	}
-	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x && MousePosition.y > 4 + mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y)
+	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x && MousePosition.y > 4 + 17 + mainPanelPosition.y && MousePosition.y < 33 + 17 + mainPanelPosition.y)
 		pcursinvitem = CheckInvHLight();
 
 	if (CheckXPBarInfo()) {

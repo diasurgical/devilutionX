@@ -129,14 +129,14 @@ const Point InvRect[] = {
 	{ 220, 337 }, // inv row 4
 	{ 249, 337 }, // inv row 4
 	{ 278, 337 }, // inv row 4
-	{ 205,  33 }, // belt
-	{ 234,  33 }, // belt
-	{ 263,  33 }, // belt
-	{ 292,  33 }, // belt
-	{ 321,  33 }, // belt
-	{ 350,  33 }, // belt
-	{ 379,  33 }, // belt
-	{ 408,  33 }  // belt
+	{ 205,  50 }, // belt
+	{ 234,  50 }, // belt
+	{ 263,  50 }, // belt
+	{ 292,  50 }, // belt
+	{ 321,  50 }, // belt
+	{ 350,  50 }, // belt
+	{ 379,  50 }, // belt
+	{ 408,  50 }  // belt
 	// clang-format on
 };
 
@@ -1551,7 +1551,7 @@ void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 {
 	const Point mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x
-	    && MousePosition.y > mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y) {
+	    && MousePosition.y > mainPanelPosition.y + 17 && MousePosition.y < 33 + 17 + mainPanelPosition.y) {
 		CheckInvItem(isShiftHeld, isCtrlHeld);
 	}
 }
