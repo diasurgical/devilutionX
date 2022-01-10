@@ -110,6 +110,13 @@ else()
 endif()
 set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_SUFFIX}>")
 
+if(MSVC AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT DISABLE_LTO)
+  # Work around MSVC + CMake bug when LTO is enabled.
+  # See https://github.com/diasurgical/devilutionX/issues/3778
+  # and https://gitlab.kitware.com/cmake/cmake/-/issues/23035
+  set(BUILD_TESTING OFF)
+endif()
+
 # This built-in CMake module adds a BUILD_TESTING option (ON by default).
 # Must be included in the top-level `CMakeLists.txt` after calling `project`.
 # Because we must include `VcPkgManifestFeatures` before the `project` call,
