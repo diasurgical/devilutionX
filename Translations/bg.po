@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-01-08 13:27+0100\n"
+"POT-Creation-Date: 2022-01-09 13:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -432,8 +432,6 @@ msgid "Join Game"
 msgstr "Влез в игра"
 
 #: Source/DiabloUI/selgame.cpp:108
-#, fuzzy
-#| msgid "Public Game"
 msgid "Public Games"
 msgstr "Публична игра"
 
@@ -763,15 +761,15 @@ msgstr "Не"
 
 #: Source/DiabloUI/settingsmenu.cpp:300
 msgid "Bound key:"
-msgstr ""
+msgstr "Зададен клавиш:"
 
 #: Source/DiabloUI/settingsmenu.cpp:319
 msgid "Press any key to change."
-msgstr ""
+msgstr "Зададете нов клавиш."
 
 #: Source/DiabloUI/settingsmenu.cpp:321
 msgid "Unbind key"
-msgstr ""
+msgstr "Освободете клавиш"
 
 #: Source/DiabloUI/settingsmenu.cpp:327 Source/gamemenu.cpp:61
 msgid "Previous Menu"
@@ -876,16 +874,12 @@ msgid "Read-Only Directory Error"
 msgstr "Грешка при отваряне на папка с зададен достъп само за четене"
 
 #: Source/automap.cpp:485
-#, fuzzy
-#| msgid "game: "
 msgid "Game: "
-msgstr "игра: "
+msgstr "Игра: "
 
 #: Source/automap.cpp:491
-#, fuzzy
-#| msgid "password: "
 msgid "Password: "
-msgstr "парола: "
+msgstr "Парола: "
 
 #: Source/automap.cpp:493
 msgid "Public Game"
@@ -905,10 +899,8 @@ msgstr "Ниво: {:d}"
 
 #. TRANSLATORS: {:s} means: Game Difficulty.
 #: Source/automap.cpp:527
-#, fuzzy
-#| msgid "{} difficulty"
 msgid "Difficulty: {:s}"
-msgstr "трудност {} "
+msgstr "Трудност: {:s}"
 
 #: Source/control.cpp:152
 msgid "Tab"
@@ -1222,218 +1214,165 @@ msgid "while in stores"
 msgstr "докато сте в магазин"
 
 #: Source/diablo.cpp:1390
-#, fuzzy
-#| msgid "Sell items"
 msgid "Belt item {}"
-msgstr "Продадете предмети"
+msgstr "Предмет от колана {}"
 
 #: Source/diablo.cpp:1391
-#, fuzzy
-#| msgid "1 - 8: Use Belt item"
 msgid "Use Belt item."
-msgstr "1 - 8: Използване на предмет от колана"
+msgstr "Използване на предмет от колана"
 
 #: Source/diablo.cpp:1405
 msgid "Quick spell {}"
-msgstr ""
+msgstr "Бързо заклинание {}"
 
 #: Source/diablo.cpp:1406
-#, fuzzy
-#| msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
 msgid "Hotkey for skill or spell."
-msgstr "F5, F6, F7, F8:     Задаване на бърз клавиш за умение или заклинание"
+msgstr "Клавиш за умение или заклинание"
 
 #: Source/diablo.cpp:1423
-#, fuzzy
-#| msgid "Spell book"
 msgid "Speedbook"
-msgstr "Книга за Заклинания"
+msgstr "Бързи Заклинания"
 
 #: Source/diablo.cpp:1424
-#, fuzzy
-#| msgid "S: Open Speedbook"
 msgid "Open Speedbook."
-msgstr "S: Отваряне на книга с магии за бърз достъп"
+msgstr "Отваряне на листа с бърз достъп до заклинанния"
 
 #: Source/diablo.cpp:1430
-#, fuzzy
-#| msgid "Quick Cast"
 msgid "Quick save"
-msgstr "Бързо Заклинание"
+msgstr "Бърз Запис"
 
 #: Source/diablo.cpp:1431
-#, fuzzy
-#| msgid "Savegame:"
 msgid "Saves the game."
-msgstr "Номер запис:"
+msgstr "Записва текуща игра."
 
 #: Source/diablo.cpp:1437
-#, fuzzy
-#| msgid "Quick Cast"
 msgid "Quick load"
-msgstr "Бързо Заклинание"
+msgstr "Бързо Зареждане"
 
 #: Source/diablo.cpp:1438
-#, fuzzy
-#| msgid "Load Game"
 msgid "Loads the game."
-msgstr "Зареди игра"
+msgstr "Зарежда запис."
 
 #: Source/diablo.cpp:1444
-#, fuzzy
-#| msgid "Quit Game"
 msgid "Quit game"
 msgstr "Изход от играта"
 
 #: Source/diablo.cpp:1445
-#, fuzzy
-#| msgid "Lester the farmer"
 msgid "Closes the game."
-msgstr "Фермера Лестър"
+msgstr "Затваря играта."
 
 #: Source/diablo.cpp:1450
 msgid "Stop hero"
-msgstr ""
+msgstr "Спри герой"
 
 #: Source/diablo.cpp:1451
 msgid "Stops walking and cancel pending actions."
-msgstr ""
+msgstr "Спира героя и прекратява всички предстоящи действия."
 
 #: Source/diablo.cpp:1459
-#, fuzzy
-#| msgid "I: Open Inventory screen"
 msgid "Open Inventory screen."
-msgstr "I: Отваряне на инвентар"
+msgstr "Отваряне на инвентар"
 
 #: Source/diablo.cpp:1465
-#, fuzzy
-#| msgid "Char"
 msgid "Character"
-msgstr "Перс"
+msgstr "Герой"
 
 #: Source/diablo.cpp:1466
-#, fuzzy
-#| msgid "C: Open Character screen"
 msgid "Open Character screen."
-msgstr "C: Отваряне на прозорец с информация за персонажа"
+msgstr "Отваряне на прозорец с информация за персонажа"
 
 #: Source/diablo.cpp:1472
-#, fuzzy
-#| msgid "Quests log"
 msgid "Quest log"
-msgstr "Приключенски дневник"
+msgstr "Задачи"
 
 #: Source/diablo.cpp:1473
-#, fuzzy
-#| msgid "Q: Open Quest log"
 msgid "Open Quest log."
 msgstr "Q: Отваряне на Приключенски дневник"
 
 #: Source/diablo.cpp:1479
-#, fuzzy
-#| msgid "Spell book"
 msgid "Spellbook"
 msgstr "Книга за Заклинания"
 
 #: Source/diablo.cpp:1480
-#, fuzzy
-#| msgid "B: Open Spellbook"
 msgid "Open Spellbook."
-msgstr "B: Отваряне на книга с заклинания"
+msgstr "Отваряне на книга с заклинания"
 
 #: Source/diablo.cpp:1487
 msgid "Quick Message {}"
-msgstr ""
+msgstr "Бързо съобщение {}"
 
 #: Source/diablo.cpp:1488
 msgid "Use Quick Message in chat."
-msgstr ""
+msgstr "Изпрати бързо съобщение в чата."
 
 #: Source/diablo.cpp:1496
 msgid "Zoom"
-msgstr ""
+msgstr "Мащабиране"
 
 #: Source/diablo.cpp:1497
-#, fuzzy
-#| msgid "Z: Zoom Game Screen"
 msgid "Zoom Game Screen."
-msgstr "Z: Мащабиране на екрана"
+msgstr "Мащабиране на екрана"
 
 #: Source/diablo.cpp:1506
-#, fuzzy
-#| msgid "increase magic"
 msgid "Decrease Gamma"
-msgstr "увеличава магия"
+msgstr "Намаляване Гама"
 
 #: Source/diablo.cpp:1507
-#, fuzzy
-#| msgid "F: Reduce screen brightness"
 msgid "Reduce screen brightness."
-msgstr "F: Намаляване яркоста на екрана"
+msgstr "Намаляване яркоста на екрана"
 
 #: Source/diablo.cpp:1513
-#, fuzzy
-#| msgid "increase magic"
 msgid "Increase Gamma"
-msgstr "увеличава магия"
+msgstr "Увеличаване Гама"
 
 #: Source/diablo.cpp:1514
-#, fuzzy
-#| msgid "G: Increase screen brightness"
 msgid "Increase screen brightness."
-msgstr "G: Увеличаване яркостта на екрана"
+msgstr "Увеличаване яркостта на екрана"
 
 #: Source/diablo.cpp:1520
 msgid "Help"
-msgstr ""
+msgstr "Помощ"
 
 #: Source/diablo.cpp:1521
-#, fuzzy
-#| msgid "F1:    Open Help Screen"
 msgid "Open Help Screen."
-msgstr "F1:    Помощен диалог"
+msgstr "Помощен диалог"
 
 #: Source/diablo.cpp:1527
-#, fuzzy
-#| msgid "Game Design"
 msgid "Game info"
-msgstr "Идея и дизайн на играта"
+msgstr "Игрова информация"
 
 #: Source/diablo.cpp:1528
 msgid "Displays game infos."
-msgstr ""
+msgstr "Показва информация на играта."
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1532
-#, fuzzy
-#| msgid "{:d} {:s} charge"
-#| msgid_plural "{:d} {:s} charges"
 msgid "{:s} {:s}"
-msgstr "{:d} {:s} заряд"
+msgstr "{:s} {:s}"
 
 #: Source/discord/discord.cpp:66 Source/objects.cpp:135
 msgid "Town"
-msgstr "Града"
+msgstr "Град"
 
 #: Source/discord/discord.cpp:66
 msgid "Cathedral"
-msgstr "Катедралата"
+msgstr "Катедрала"
 
 #: Source/discord/discord.cpp:66
 msgid "Catacombs"
-msgstr "Катакомбите"
+msgstr "Катакомби"
 
 #: Source/discord/discord.cpp:66
 msgid "Caves"
-msgstr "Пещерите"
+msgstr "Пещери"
 
 #: Source/discord/discord.cpp:66
 msgid "Nest"
-msgstr "Свърталището"
+msgstr "Свърталище"
 
 #: Source/discord/discord.cpp:66
 msgid "Crypt"
-msgstr "Криптата"
+msgstr "Крипта"
 
 #. TRANSLATORS: dungeon type and floor number i.e. "Cathedral 3"
 #: Source/discord/discord.cpp:80
@@ -1461,7 +1400,7 @@ msgstr "Обратна връзка"
 
 #: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
-msgstr "Невъзможно свързване"
+msgstr "Свързването невъзможно "
 
 #: Source/dvlnet/tcp_client.cpp:86
 msgid "error: read 0 bytes from server"
@@ -2718,7 +2657,7 @@ msgstr "Безполезни"
 
 #: Source/itemdat.cpp:242
 msgid "Bent"
-msgstr "Изкривени"
+msgstr "Криви"
 
 #: Source/itemdat.cpp:243
 msgid "Weak"
@@ -2810,7 +2749,7 @@ msgstr "Уязвими"
 
 #: Source/itemdat.cpp:265
 msgid "Rusted"
-msgstr "Ръждясали"
+msgstr "Ръждиви"
 
 #: Source/itemdat.cpp:267
 msgid "Strong"
@@ -6326,32 +6265,32 @@ msgstr ""
 "анимация на вода, лава и киселина."
 
 #: Source/options.cpp:762
-#, fuzzy
-#| msgid "Hard Leather Armor"
 msgid "Hardware Cursor"
-msgstr "Твърда кожена броня"
+msgstr "Хардуерен курсор"
 
 #: Source/options.cpp:762
 msgid "Use a hardware cursor"
-msgstr ""
+msgstr "Включване на хардуерен курсор"
 
 #: Source/options.cpp:763
 msgid "Hardware Cursor For Items"
-msgstr ""
+msgstr "Хардуерен курсор за предмети"
 
 #: Source/options.cpp:763
 msgid "Use a hardware cursor for items."
-msgstr ""
+msgstr "Използване на хардуерен курсор при графика на предмети."
 
 #: Source/options.cpp:764
 msgid "Hardware Cursor Maximum Size"
-msgstr ""
+msgstr "Макс. размер хардуерен курсор"
 
 #: Source/options.cpp:764
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
 "software."
 msgstr ""
+"Максимална ширина / височина за хардуерния курсор. Големите размери включват "
+"обратно софтуерен режим."
 
 #: Source/options.cpp:766
 msgid "FPS Limiter"
@@ -6687,13 +6626,11 @@ msgstr "Езикови настройки"
 
 #: Source/options.cpp:1037
 msgid "Keymapping"
-msgstr ""
+msgstr "Настойки клавиши"
 
 #: Source/options.cpp:1037
-#, fuzzy
-#| msgid "Graphics Settings"
 msgid "Keymapping Settings"
-msgstr "Графични настройки"
+msgstr "Настойки клавиши"
 
 #: Source/panels/charpanel.cpp:111
 msgid "MAX"
@@ -6890,10 +6827,8 @@ msgid "Unable to write to save file archive"
 msgstr "Неуспешно записване в архив за записен файл"
 
 #: Source/plrmsg.cpp:80
-#, fuzzy
-#| msgid "{:s} (lvl {:d}): {:s}"
 msgid "{:s} (lvl {:d}): "
-msgstr "{:s} (ниво {:d}): {:s}"
+msgstr "{:s} (ниво {:d}): "
 
 #. TRANSLATORS: Decimal separator
 #: Source/qol/common.cpp:25
