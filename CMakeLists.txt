@@ -364,6 +364,10 @@ if(NINTENDO_3DS)
   add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
+if(UWP_LIB)
+  target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
+endif()
+
 if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")

@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#if defined(_WIN64) || defined(_WIN32)
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__)
 #include <find_steam_game.h>
 #endif
 
@@ -96,7 +96,7 @@ std::vector<std::string> GetMPQSearchPaths()
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #elif defined(__3DS__)
 	paths.emplace_back("romfs:/");
-#elif defined(_WIN64) || defined(_WIN32)
+#elif (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__)
 	char gogpath[_FSG_PATH_MAX];
 	fsg_get_gog_game_path(gogpath, "1412601690");
 	if (strlen(gogpath) > 0) {

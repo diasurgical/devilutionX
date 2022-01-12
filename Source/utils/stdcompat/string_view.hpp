@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef __has_include
-#if defined(__cplusplus) && __cplusplus >= 201703L && __has_include(<string_view>) // should be 201606L, but STL headers disagree
+#if defined(__cplusplus) && (__cplusplus >= 201703L || _MSC_VER >= 1930) && __has_include(<string_view>) // should be 201606L, but STL headers disagree
 
 #include <string_view> // IWYU pragma: export
 namespace devilution {
