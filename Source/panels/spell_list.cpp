@@ -85,7 +85,7 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 {
 	auto &myPlayer = Players[MyPlayerId];
-	for (int t = 0; t < 4; t++) {
+	for (size_t t = 0; t < NumHotkeys; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
 		auto quickSpellActionKey = fmt::format("QuickSpell{}", t + 1);
@@ -286,7 +286,7 @@ void SetSpeedSpell(int slot)
 		return;
 	}
 	auto &myPlayer = Players[MyPlayerId];
-	for (int i = 0; i < 4; ++i) {
+	for (size_t i = 0; i < NumHotkeys; ++i) {
 		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
 			myPlayer._pSplHotKey[i] = SPL_INVALID;
 	}
