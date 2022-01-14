@@ -404,12 +404,9 @@ bool PressSysKey(int wParam)
 
 void ReleaseKey(int vkey)
 {
-	if (vkey == DVL_VK_SNAPSHOT)
-		CaptureScreen();
-	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
-		AltPressed(false);
-	if (vkey == DVL_VK_RCONTROL)
-		ToggleItemLabelHighlight();
+	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag)
+		return;
+	sgOptions.Keymapper.KeyReleased(vkey);
 }
 
 void ClosePanels()
@@ -432,9 +429,6 @@ void PressKey(int vkey)
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
 	}
-
-	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
-		AltPressed(true);
 
 	if (MyPlayerIsDead) {
 		if (sgnTimeoutCurs != CURSOR_NONE) {
@@ -462,17 +456,14 @@ void PressKey(int vkey)
 	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag) {
 		return;
 	}
-	if (vkey == DVL_VK_PAUSE) {
-		diablo_pause_game();
-		return;
-	}
+
+	sgOptions.Keymapper.KeyPressed(vkey);
+
 	if (PauseMode == 2) {
 		if (vkey == DVL_VK_RETURN && GetAsyncKeyState(DVL_VK_MENU))
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 		return;
 	}
-
-	sgOptions.Keymapper.KeyPressed(vkey);
 
 	if (vkey == DVL_VK_RETURN) {
 		if (GetAsyncKeyState(DVL_VK_MENU)) {
@@ -520,20 +511,6 @@ void PressKey(int vkey)
 		if (AutomapActive && !talkflag) {
 			AutomapRight();
 		}
-	} else if (vkey == DVL_VK_TAB) {
-		DoAutoMap();
-	} else if (vkey == DVL_VK_SPACE) {
-		ClosePanels();
-		HelpFlag = false;
-		spselflag = false;
-		if (qtextflag && leveltype == DTYPE_TOWN) {
-			qtextflag = false;
-			stream_stop();
-		}
-		AutomapActive = false;
-		CancelCurrentDiabloMsg();
-		gamemenu_off();
-		doom_close();
 	}
 }
 
@@ -1382,6 +1359,16 @@ bool IsPlayerDead()
 	return Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead;
 }
 
+bool IsGameRunning()
+{
+	return PauseMode != 2;
+}
+
+bool CanPlayerTakeAction()
+{
+	return !IsPlayerDead() && IsGameRunning();
+}
+
 void InitKeymapActions()
 {
 	for (int i = 0; i < 8; ++i) {
@@ -1396,7 +1383,8 @@ void InitKeymapActions()
 				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			    }
 		    },
-		    [&]() { return !IsPlayerDead(); },
+		    nullptr,
+		    CanPlayerTakeAction,
 		    i + 1);
 	}
 	for (int i = 0; i < 4; ++i) {
@@ -1415,7 +1403,8 @@ void InitKeymapActions()
 			    else
 				    QuickCast(i);
 		    },
-		    [&]() { return !IsPlayerDead(); },
+		    nullptr,
+		    CanPlayerTakeAction,
 		    i + 1);
 	}
 	sgOptions.Keymapper.AddAction(
@@ -1424,21 +1413,24 @@ void InitKeymapActions()
 	    N_("Open Speedbook."),
 	    'S',
 	    DisplaySpellsKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "QuickSave",
 	    N_("Quick save"),
 	    N_("Saves the game."),
 	    DVL_VK_F2,
 	    [] { gamemenu_save_game(false); },
-	    [&]() { return !gbIsMultiplayer && !IsPlayerDead(); });
+	    nullptr,
+	    [&]() { return !gbIsMultiplayer && CanPlayerTakeAction(); });
 	sgOptions.Keymapper.AddAction(
 	    "QuickLoad",
 	    N_("Quick load"),
 	    N_("Loads the game."),
 	    DVL_VK_F3,
 	    [] { gamemenu_load_game(false); },
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE; });
+	    nullptr,
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE && IsGameRunning(); });
 	sgOptions.Keymapper.AddAction(
 	    "QuitGame",
 	    N_("Quit game"),
@@ -1451,7 +1443,30 @@ void InitKeymapActions()
 	    N_("Stops walking and cancel pending actions."),
 	    DVL_VK_INVALID,
 	    [] { Players[MyPlayerId].Stop(); },
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "Item Highlighting",
+	    N_("Item highlighting"),
+	    N_("Show/hide items on ground."),
+	    DVL_VK_LMENU,
+	    [] { AltPressed(true); },
+	    [] { AltPressed(false); });
+	sgOptions.Keymapper.AddAction(
+	    "Toggle Item Highlighting",
+	    N_("Toggle item highlighting"),
+	    N_("Permanent show/hide items on ground."),
+	    DVL_VK_RCONTROL,
+	    nullptr,
+	    [] { ToggleItemLabelHighlight(); });
+	sgOptions.Keymapper.AddAction(
+	    "Toggle Automap",
+	    N_("Toggle automap"),
+	    N_("Toggles if automap is displayed."),
+	    DVL_VK_TAB,
+	    DoAutoMap,
+	    nullptr,
+	    IsGameRunning);
 
 	sgOptions.Keymapper.AddAction(
 	    "Inventory",
@@ -1459,28 +1474,32 @@ void InitKeymapActions()
 	    N_("Open Inventory screen."),
 	    'I',
 	    InventoryKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "Character",
 	    N_("Character"),
 	    N_("Open Character screen."),
 	    'C',
 	    CharacterSheetKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "QuestLog",
 	    N_("Quest log"),
 	    N_("Open Quest log."),
 	    'Q',
 	    QuestLogKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "SpellBook",
 	    N_("Spellbook"),
 	    N_("Open Spellbook."),
 	    'B',
 	    SpellBookKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	for (int i = 0; i < 4; ++i) {
 		sgOptions.Keymapper.AddAction(
 		    "QuickMessage{}",
@@ -1488,9 +1507,30 @@ void InitKeymapActions()
 		    N_("Use Quick Message in chat."),
 		    DVL_VK_F9 + i,
 		    [i]() { DiabloHotkeyMsg(i); },
-		    [] { return true; },
+		    nullptr,
+		    nullptr,
 		    i + 1);
 	}
+	sgOptions.Keymapper.AddAction(
+	    "Hide Info Screens",
+	    N_("Hide Info Screens"),
+	    N_("Hide all info screens."),
+	    DVL_VK_SPACE,
+	    [] {
+		    ClosePanels();
+		    HelpFlag = false;
+		    spselflag = false;
+		    if (qtextflag && leveltype == DTYPE_TOWN) {
+			    qtextflag = false;
+			    stream_stop();
+		    }
+		    AutomapActive = false;
+		    CancelCurrentDiabloMsg();
+		    gamemenu_off();
+		    doom_close();
+	    },
+	    nullptr,
+	    IsGameRunning);
 	sgOptions.Keymapper.AddAction(
 	    "Zoom",
 	    N_("Zoom"),
@@ -1500,28 +1540,45 @@ void InitKeymapActions()
 		    zoomflag = !zoomflag;
 		    CalcViewportGeometry();
 	    },
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "Pause Game",
+	    N_("Pause Game"),
+	    N_("Pauses the game."),
+	    DVL_VK_PAUSE,
+	    diablo_pause_game);
 	sgOptions.Keymapper.AddAction(
 	    "DecreaseGamma",
 	    N_("Decrease Gamma"),
 	    N_("Reduce screen brightness."),
 	    'G',
 	    DecreaseGamma,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "IncreaseGamma",
 	    N_("Increase Gamma"),
 	    N_("Increase screen brightness."),
 	    'F',
 	    IncreaseGamma,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
 	    "Help",
 	    N_("Help"),
 	    N_("Open Help Screen."),
 	    DVL_VK_F1,
 	    HelpKeyPressed,
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "Screenshot",
+	    N_("Screenshot"),
+	    N_("Takes a screenshot."),
+	    DVL_VK_SNAPSHOT,
+	    nullptr,
+	    CaptureScreen);
 	sgOptions.Keymapper.AddAction(
 	    "GameInfo",
 	    N_("Game info"),
@@ -1534,7 +1591,8 @@ void InitKeymapActions()
 		                    PROJECT_VERSION),
 		        UiFlags::ColorWhite);
 	    },
-	    [&]() { return !IsPlayerDead(); });
+	    nullptr,
+	    CanPlayerTakeAction);
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(
 	    "DebugToggle",
@@ -1543,11 +1601,9 @@ void InitKeymapActions()
 	    'X',
 	    [] {
 		    DebugToggle = !DebugToggle;
-	    },
-	    [&]() { return true; });
+	    });
 #endif
 }
-
 } // namespace
 
 void FreeGameMem()
@@ -1638,10 +1694,17 @@ int DiabloMain(int argc, char **argv)
 	DiabloParseFlags(argc, argv);
 	InitKeymapActions();
 
-	init_archives();
+	// Need to ensure devilutionx.mpq (and fonts.mpq if available) are loaded before attempting to read translation settings
+	LoadCoreArchives();
 	was_archives_init = true;
 
+	// Read settings including translation next. This will use the presence of fonts.mpq and look for assets in devilutionx.mpq
 	LoadOptions();
+	// Then look for a voice pack file based on the selected translation
+	LoadLanguageArchive();
+
+	// Finally load game data
+	LoadGameArchives();
 
 	DiabloInit();
 

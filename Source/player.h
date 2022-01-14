@@ -217,6 +217,14 @@ struct Player {
 	 * @brief Contains Information for current Animation
 	 */
 	AnimationInfo AnimInfo;
+	/**
+	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
+	 */
+	CelSprite *pPreviewCelSprite;
+	/**
+	 * @brief Contains the progress to next game tick when pPreviewCelSprite was set
+	 */
+	float progressToNextGameTickWhenPreviewWasSet;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
@@ -578,6 +586,44 @@ struct Player {
 	}
 
 	/**
+	 * @brief Restores between 1/8 (inclusive) and 1/4 (exclusive) of the players max HP (further adjusted by class).
+	 *
+	 * This determines a random amount of non-fractional life points to restore then scales the value based on the
+	 *  player class. Warriors/barbarians get between 1/4 and 1/2 life restored per potion, rogue/monk/bard get 3/16
+	 *  to 3/8, and sorcerers get the base amount.
+	 */
+	void RestorePartialLife();
+
+	/**
+	 * @brief Resets hp to maxHp
+	 */
+	void RestoreFullLife()
+	{
+		_pHitPoints = _pMaxHP;
+		_pHPBase = _pMaxHPBase;
+	}
+
+	/**
+	 * @brief Restores between 1/8 (inclusive) and 1/4 (exclusive) of the players max Mana (further adjusted by class).
+	 *
+	 * This determines a random amount of non-fractional mana points to restore then scales the value based on the
+	 *  player class. Sorcerers get between 1/4 and 1/2 mana restored per potion, rogue/monk/bard get 3/16 to 3/8,
+	 *  and warrior/barbarian get the base amount. However if the player can't use magic due to an equipped item then
+	 *  they get nothing.
+	 */
+	void RestorePartialMana();
+
+	/**
+	 * @brief Resets mana to maxMana (if the player can use magic)
+	 */
+	void RestoreFullMana()
+	{
+		if ((_pIFlags & ISPL_NOMANA) == 0) {
+			_pMana = _pMaxMana;
+			_pManaBase = _pMaxManaBase;
+		}
+	}
+	/**
 	 * @brief Sets the readied spell to the spell in the specified equipment slot. Does nothing if the item does not have a valid spell.
 	 * @param bodyLocation - the body location whose item will be checked for the spell.
 	 */
@@ -613,6 +659,15 @@ struct Player {
 			return true;
 		return false;
 	}
+
+	/**
+	 * @brief Updates pPreviewCelSprite according to new requested command
+	 * @param cmdId What command is requested
+	 * @param point Point for the command
+	 * @param wParam1 First Parameter
+	 * @param wParam2 Second Parameter
+	 */
+	void UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2);
 };
 
 extern DVL_API_FOR_TEST int MyPlayerId;

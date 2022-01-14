@@ -271,7 +271,7 @@ void OptionShowFPSChanged()
 void OptionLanguageCodeChanged()
 {
 	LanguageInitialize();
-	init_language_archives();
+	LoadLanguageArchive();
 }
 
 void OptionGameModeChanged()
@@ -1048,6 +1048,15 @@ KeymapperOptions::KeymapperOptions()
 		keyIDToKeyName.emplace(DVL_VK_F1 + i, fmt::format("F{}", i + 1));
 	}
 
+	keyIDToKeyName.emplace(DVL_VK_LMENU, "LALT");
+	keyIDToKeyName.emplace(DVL_VK_RMENU, "RALT");
+	keyIDToKeyName.emplace(DVL_VK_SPACE, "SPACE");
+	keyIDToKeyName.emplace(DVL_VK_RCONTROL, "RCONTROL");
+	keyIDToKeyName.emplace(DVL_VK_LCONTROL, "LCONTROL");
+	keyIDToKeyName.emplace(DVL_VK_SNAPSHOT, "PRINT");
+	keyIDToKeyName.emplace(DVL_VK_PAUSE, "PAUSE");
+	keyIDToKeyName.emplace(DVL_VK_TAB, "TAB");
+
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
 	for (const auto &kv : keyIDToKeyName) {
 		keyNameToKeyID.emplace(kv.second, kv.first);
@@ -1063,11 +1072,12 @@ std::vector<OptionEntryBase *> KeymapperOptions::GetEntries()
 	return entries;
 }
 
-KeymapperOptions::Action::Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index)
+KeymapperOptions::Action::Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, int index)
     : OptionEntryBase(key, OptionEntryFlags::None, name, description)
     , defaultKey(defaultKey)
-    , action(action)
-    , enable(enable)
+    , actionPressed(std::move(actionPressed))
+    , actionReleased(std::move(actionReleased))
+    , enable(std::move(enable))
     , dynamicIndex(index)
 {
 	if (index >= 0) {
@@ -1164,9 +1174,9 @@ bool KeymapperOptions::Action::SetValue(int value)
 	return true;
 }
 
-void KeymapperOptions::AddAction(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> action, std::function<bool()> enable, int index)
+void KeymapperOptions::AddAction(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, int index)
 {
-	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, action, enable, index)));
+	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, std::move(actionPressed), std::move(actionReleased), std::move(enable), index)));
 }
 
 void KeymapperOptions::KeyPressed(int key) const
@@ -1175,14 +1185,30 @@ void KeymapperOptions::KeyPressed(int key) const
 	if (it == keyIDToAction.end())
 		return; // Ignore unmapped keys.
 
-	const auto &action = it->second;
+	const Action &action = it->second.get();
 
 	// Check that the action can be triggered and that the chat textbox is not
 	// open.
-	if (!action.get().enable() || talkflag)
+	if (!action.actionPressed || (action.enable && !action.enable()) || talkflag)
 		return;
 
-	action.get().action();
+	action.actionPressed();
+}
+
+void KeymapperOptions::KeyReleased(int key) const
+{
+	auto it = keyIDToAction.find(key);
+	if (it == keyIDToAction.end())
+		return; // Ignore unmapped keys.
+
+	const Action &action = it->second.get();
+
+	// Check that the action can be triggered and that the chat textbox is not
+	// open.
+	if (!action.actionReleased || (action.enable && !action.enable()) || talkflag)
+		return;
+
+	action.actionReleased();
 }
 
 string_view KeymapperOptions::KeyNameForAction(string_view actionName) const

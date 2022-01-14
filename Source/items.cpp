@@ -2873,6 +2873,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pgfxnum = gfxNum;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
+		player.pPreviewCelSprite = nullptr;
 		if (player._pmode == PM_STAND) {
 			LoadPlrGFX(player, player_graphic::Stand);
 			player.AnimInfo.ChangeAnimationData(&*player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
@@ -4064,39 +4065,27 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 
 	switch (mid) {
 	case IMISC_HEAL:
-	case IMISC_FOOD: {
-		int j = player._pMaxHP >> 8;
-		int l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Barbarian))
-			l *= 2;
-		if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
-			l += l / 2;
-		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
-		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
-		drawhpflag = true;
-	} break;
-	case IMISC_FULLHEAL:
-		player._pHitPoints = player._pMaxHP;
-		player._pHPBase = player._pMaxHPBase;
-		drawhpflag = true;
+	case IMISC_FOOD:
+		player.RestorePartialLife();
+		if (&player == MyPlayer) {
+			drawhpflag = true;
+		}
 		break;
-	case IMISC_MANA: {
-		int j = player._pMaxMana >> 8;
-		int l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (player._pClass == HeroClass::Sorcerer)
-			l *= 2;
-		if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
-			l += l / 2;
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
-			player._pMana = std::min(player._pMana + l, player._pMaxMana);
-			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
+	case IMISC_FULLHEAL:
+		player.RestoreFullLife();
+		if (&player == MyPlayer) {
+			drawhpflag = true;
+		}
+		break;
+	case IMISC_MANA:
+		player.RestorePartialMana();
+		if (&player == MyPlayer) {
 			drawmanaflag = true;
 		}
-	} break;
+		break;
 	case IMISC_FULLMANA:
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
-			player._pMana = player._pMaxMana;
-			player._pManaBase = player._pMaxManaBase;
+		player.RestoreFullMana();
+		if (&player == MyPlayer) {
 			drawmanaflag = true;
 		}
 		break;
@@ -4106,9 +4095,10 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 	case IMISC_ELIXMAG:
 		ModifyPlrMag(pnum, 1);
 		if (gbIsHellfire) {
-			player._pMana = player._pMaxMana;
-			player._pManaBase = player._pMaxManaBase;
-			drawmanaflag = true;
+			player.RestoreFullMana();
+			if (&player == MyPlayer) {
+				drawmanaflag = true;
+			}
 		}
 		break;
 	case IMISC_ELIXDEX:
@@ -4117,40 +4107,25 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 	case IMISC_ELIXVIT:
 		ModifyPlrVit(pnum, 1);
 		if (gbIsHellfire) {
-			player._pHitPoints = player._pMaxHP;
-			player._pHPBase = player._pMaxHPBase;
-			drawhpflag = true;
+			player.RestoreFullLife();
+			if (&player == MyPlayer) {
+				drawhpflag = true;
+			}
 		}
 		break;
 	case IMISC_REJUV: {
-		int j = player._pMaxHP >> 8;
-		int l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Barbarian))
-			l *= 2;
-		if (player._pClass == HeroClass::Rogue)
-			l += l / 2;
-		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
-		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
-		drawhpflag = true;
-		j = player._pMaxMana >> 8;
-		l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (player._pClass == HeroClass::Sorcerer)
-			l *= 2;
-		if (player._pClass == HeroClass::Rogue)
-			l += l / 2;
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
-			player._pMana = std::min(player._pMana + l, player._pMaxMana);
-			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
+		player.RestorePartialLife();
+		player.RestorePartialMana();
+		if (&player == MyPlayer) {
+			drawhpflag = true;
 			drawmanaflag = true;
 		}
 	} break;
 	case IMISC_FULLREJUV:
-		player._pHitPoints = player._pMaxHP;
-		player._pHPBase = player._pMaxHPBase;
-		drawhpflag = true;
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
-			player._pMana = player._pMaxMana;
-			player._pManaBase = player._pMaxManaBase;
+		player.RestoreFullLife();
+		player.RestoreFullMana();
+		if (&player == MyPlayer) {
+			drawhpflag = true;
 			drawmanaflag = true;
 		}
 		break;
