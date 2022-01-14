@@ -96,7 +96,7 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 
 	if (event.type != SDL_FINGERUP) {
 		spselflag = true;
-		DoPanBtn();
+			DoPanBtn();
 		spselflag = false;
 	} else {
 		DoPanBtn();

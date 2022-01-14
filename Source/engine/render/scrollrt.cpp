@@ -1634,7 +1634,7 @@ void DrawAndBlit()
 
 		DrawSpell(out);
 	}
-	if (drawbtnflag) {
+	if (drawbtnflag && panelBtnsOpen) {
 		DrawCtrlBtns(out);
 	}
 	if (drawsbarflag) {

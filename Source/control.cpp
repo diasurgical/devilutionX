@@ -85,6 +85,7 @@ bool spselflag;
 Rectangle MainPanel;
 Rectangle LeftPanel;
 Rectangle RightPanel;
+Rectangle MiniPanel;
 std::optional<OwnedSurface> pBtmBuff;
 OptionalOwnedClxSpriteList pGBoxBuff;
 
@@ -119,14 +120,19 @@ Rectangle ChrBtnsRect[4] = {
 };
 
 /** Positions of panel buttons. */
-int8_t panBtnX = 215;
-int8_t panBtnY = 50;
+int8_t panBtnX = 0;
+int8_t panBtnY = 0;
 int8_t panBtnSpacing = 21;
 int8_t panBtnW = 20;
 int8_t panBtnH = 20;
+int8_t expandPanelBtnX = 95; // relative to minipanel
+int8_t expandPanelBtnY = 28; // relative to minipanel
+int8_t expandPanelBtnW = 26;
+int8_t expandPanelBtnH = 16;
 
-SDL_Rect PanBtnPos[10] = {
+SDL_Rect PanBtnPos[11] = {
 	// clang-format off
+	{ expandPanelBtnX, expandPanelBtnY, expandPanelBtnW, expandPanelBtnH }, // expand minipanel
 	{ panBtnX + (panBtnSpacing * 0),  panBtnY, panBtnW, panBtnH }, // char button
 	{ panBtnX + (panBtnSpacing * 1),  panBtnY, panBtnW, panBtnH }, // inv button
 	{ panBtnX + (panBtnSpacing * 2),  panBtnY, panBtnW, panBtnH }, // stash button
@@ -149,7 +155,7 @@ OptionalOwnedClxSpriteList pDurIcons;
 OptionalOwnedClxSpriteList multiButtons;
 OptionalOwnedClxSpriteList pPanelButtons;
 
-bool PanelButtons[10];
+bool PanelButtons[11];
 int PanelButtonIndex;
 char TalkSave[8][MAX_SEND_STR_LEN];
 uint8_t TalkSaveIndex;
@@ -173,9 +179,10 @@ enum panel_button_id : uint8_t {
 };
 
 /** Maps from panel_button_id to hotkey name. */
-const char *const PanBtnHotKey[10] = { "'c'", "'i'", "'x'", "'b'", "'p'", "'m'", N_("Tab"), N_("Enter"), "'q'", N_("Esc")};
+const char *const PanBtnHotKey[11] = { "", "'c'", "'i'", "'x'", "'b'", "'p'", "'m'", N_("Tab"), N_("Enter"), "'q'", N_("Esc")};
 /** Maps from panel_button_id to panel button description. */
-const char *const PanBtnStr[10] = {
+const char *const PanBtnStr[11] = {
+	N_("Expand Mini-Panel"),
 	N_("Character Information"),
 	N_("Inventory"),
 	N_("Stash"),
@@ -723,6 +730,7 @@ void InitControlPan()
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
+	panelBtnsOpen = false;
 
 	CalculatePanelAreas();
 
@@ -771,16 +779,19 @@ void DoPanBtn()
 	const Point mainPanelPosition = GetMainPanel().position;
 
 	for (int i = 0; i < PanelButtonIndex; i++) {
-		int x = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
-		int y = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
-		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= x) {
-			if (MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= y) {
+		int x = PanBtnPos[i].x + miniPanelPosition.x + PanBtnPos[i].w;
+		int y = PanBtnPos[i].y + miniPanelPosition.y + PanBtnPos[i].h;
+		if (MousePosition.x >= PanBtnPos[i].x + miniPanelPosition.x && MousePosition.x <= x) {
+			if (MousePosition.y >= PanBtnPos[i].y + miniPanelPosition.y && MousePosition.y <= y) {
 				PanelButtons[i] = true;
 				drawbtnflag = true;
 				panbtndown = true;
 			}
 		}
+		if (!panelBtnsOpen)
+			continue;
 	}
+
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 - 56 + mainPanelPosition.y && MousePosition.y < 120 - 56 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			Player &myPlayer = *MyPlayer;
@@ -801,17 +812,17 @@ void control_check_btn_press()
 	int y = PanBtnPos[3].y + mainPanelPosition.y + PanBtnPos[3].h;
 	if (MousePosition.x >= PanBtnPos[3].x + mainPanelPosition.x
 	    && MousePosition.x <= x
-	    && MousePosition.y >= PanBtnPos[3].y + mainPanelPosition.y
+	    && MousePosition.y >= PanBtnPos[10].y + mainPanelPosition.y
 	    && MousePosition.y <= y) {
-		SetButtonStateDown(3);
+		SetButtonStateDown(10);
 	}
-	x = PanBtnPos[6].x + mainPanelPosition.x + PanBtnPos[6].w;
-	y = PanBtnPos[6].y + mainPanelPosition.y + PanBtnPos[6].h;
-	if (MousePosition.x >= PanBtnPos[6].x + mainPanelPosition.x
+	x = PanBtnPos[8].x + mainPanelPosition.x + PanBtnPos[8].w;
+	y = PanBtnPos[8].y + mainPanelPosition.y + PanBtnPos[8].h;
+	if (MousePosition.x >= PanBtnPos[8].x + mainPanelPosition.x
 	    && MousePosition.x <= x
-	    && MousePosition.y >= PanBtnPos[6].y + mainPanelPosition.y
+	    && MousePosition.y >= PanBtnPos[8].y + mainPanelPosition.y
 	    && MousePosition.y <= y) {
-		SetButtonStateDown(6);
+		SetButtonStateDown(8);
 	}
 }
 
@@ -827,6 +838,7 @@ void CheckPanelInfo()
 {
 	panelflag = false;
 	const Point mainPanelPosition = GetMainPanel().position;
+
 	for (int i = 0; i < PanelButtonIndex; i++) {
 		int xend = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
 		int yend = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
@@ -896,21 +908,24 @@ void CheckBtnUp()
 	drawbtnflag = true;
 	panbtndown = false;
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 11; i++) {
 		if (!PanelButtons[i]) {
 			continue;
 		}
 
 		PanelButtons[i] = false;
 
-		if (MousePosition.x < PanBtnPos[i].x + mainPanelPosition.x
-		    || MousePosition.x > PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w
-		    || MousePosition.y < PanBtnPos[i].y + mainPanelPosition.y
-		    || MousePosition.y > PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h) {
+		if (MousePosition.x < PanBtnPos[i].x + miniPanelPosition.x
+		    || MousePosition.x > PanBtnPos[i].x + miniPanelPosition.x + PanBtnPos[i].w
+		    || MousePosition.y < PanBtnPos[i].y + miniPanelPosition.y
+		    || MousePosition.y > PanBtnPos[i].y + miniPanelPosition.y + PanBtnPos[i].h) {
 			continue;
 		}
 
 		switch (i) {
+		case PanelButtonExpand:
+			panelBtnsOpen = !panelBtnsOpen;
+			break;
 		case PanelButtonCharinfo:
 			QuestLogIsOpen = false;
 			CloseGoldWithdraw();
