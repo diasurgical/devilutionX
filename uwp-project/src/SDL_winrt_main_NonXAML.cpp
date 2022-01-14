@@ -62,26 +62,23 @@ void onInitialized()
 	Windows::UI::Core::SystemNavigationManager::GetForCurrentView()->BackRequested += ref new Windows::Foundation::EventHandler<Windows::UI::Core::BackRequestedEventArgs^>(OnBackRequested);
 	
 	// workaround untill new config is released
+	std::string controllerMapping = ",*,a:b1,b:b0,x:b3,y:b2,back:b6,start:b7,leftstick:b8,rightstick:b9,leftshoulder:b4,rightshoulder:b5,dpup:b10,dpdown:b12,dpleft:b13,dpright:b11,leftx:a1,lefty:a0~,rightx:a3,righty:a2~,lefttrigger:a4,righttrigger:a5,platform:WinRT";
+
 	for(int i = 0; i < SDL_NumJoysticks(); ++i)
 	{
-		SDL_GameController* controller = SDL_GameControllerOpen(i);
+		SDL_JoystickType type = SDL_JoystickGetDeviceType(i);
 
-		if(!controller)
+		if(type == SDL_JOYSTICK_POWER_UNKNOWN)
 			continue;
 
-		char* c_mapping = SDL_GameControllerMapping(controller);
-		std::string mapping = c_mapping;
+		SDL_JoystickGUID guid = SDL_JoystickGetDeviceGUID(i);
 
-		if(mapping.find("a:b0") != std::string::npos)
-		{
-			mapping.replace(mapping.find("a:b0"), 4, "a:b1");
-			mapping.replace(mapping.find("b:b1"), 4, "b:b0");
-			mapping.replace(mapping.find("x:b2"), 4, "x:b3");
-			mapping.replace(mapping.find("y:b3"), 4, "y:b2");
-			SDL_GameControllerAddMapping(mapping.c_str());
-		}
+		if(!guid.data)
+			continue;
 
-		SDL_free(c_mapping);
+		char guidString[33];
+		SDL_JoystickGetGUIDString(guid, guidString, 33);
+		SDL_GameControllerAddMapping((guidString + controllerMapping).c_str());
 	}
 }
 
