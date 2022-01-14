@@ -18,3 +18,7 @@ FetchContent_Declare(SDL2
     URL_HASH MD5=3fb6d72c33434082c32d2649c35c6502
 )
 FetchContent_MakeAvailableExcludeFromAll(SDL2)
+
+if(TARGET SDL2::SDL2-static AND NOT UWP_LIB)
+  add_library(SDL2::SDL2 ALIAS SDL2-static)
+endif()
