@@ -15,9 +15,7 @@
           "value": "True",
           "type": "BOOL"
         }
-      ],
-      "cmakeToolchain": "C:/Users/Felipe Wannmacher/source/repos/vcpkg/scripts/buildsystems/vcpkg.cmake",
-      "cmakeCommandArgs": "-DUWP_LIB=1"
+      ]
     },
     {
       "name": "x64-Debug-SDL1",
