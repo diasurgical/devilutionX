@@ -1681,7 +1681,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 			if ((player._pHitPoints >> 6) > 0) {
 				StartStand(pnum, Direction::South);
 			} else {
-				player._pgfxnum = 0;
+				player._pgfxnum &= 0xF0;
 				player._pmode = PM_DEATH;
 				NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
 				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
