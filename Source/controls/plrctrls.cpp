@@ -35,7 +35,7 @@ namespace devilution {
 
 ControlTypes ControlMode = ControlTypes::None;
 int pcurstrig = -1;
-int pcursmissile = -1;
+Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
 
 /**
@@ -405,26 +405,24 @@ void FindTrigger()
 	if (pcursitem != -1 || pcursobj != -1)
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
 
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		int mi = ActiveMissiles[i];
-		auto &missile = Missiles[mi];
+	for (auto &missile : Missiles) {
 		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
 			const int newDistance = GetDistance(missile.position.tile, 2);
 			if (newDistance == 0)
 				continue;
-			if (pcursmissile != -1 && distance < newDistance)
+			if (pcursmissile != nullptr && distance < newDistance)
 				continue;
 			const int newRotations = GetRotaryDistance(missile.position.tile);
-			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
+			if (pcursmissile != nullptr && distance == newDistance && rotations < newRotations)
 				continue;
 			cursPosition = missile.position.tile;
-			pcursmissile = mi;
+			pcursmissile = &missile;
 			distance = newDistance;
 			rotations = newRotations;
 		}
 	}
 
-	if (pcursmissile == -1) {
+	if (pcursmissile == nullptr) {
 		for (int i = 0; i < numtrigs; i++) {
 			int tx = trigs[i].position.x;
 			int ty = trigs[i].position.y;
@@ -1443,7 +1441,7 @@ void plrctrls_after_check_curs_move()
 	pcursmonst = -1;
 	pcursitem = -1;
 	pcursobj = -1;
-	pcursmissile = -1;
+	pcursmissile = nullptr;
 	pcurstrig = -1;
 	pcursquest = Q_INVALID;
 	cursPosition = { -1, -1 };
@@ -1710,8 +1708,8 @@ void PerformSecondaryAction()
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
 	} else {
 		auto &myPlayer = Players[MyPlayerId];
-		if (pcursmissile != -1) {
-			MakePlrPath(myPlayer, Missiles[pcursmissile].position.tile, true);
+		if (pcursmissile != nullptr) {
+			MakePlrPath(myPlayer, pcursmissile->position.tile, true);
 			myPlayer.destAction = ACTION_WALK;
 		} else if (pcurstrig != -1) {
 			MakePlrPath(myPlayer, trigs[pcurstrig].position, true);

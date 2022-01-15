@@ -2001,9 +2001,7 @@ bool IsTileSafe(const Monster &monster, Point position)
 	bool fearsFire = (monster.mMagicRes & IMMUNE_FIRE) == 0 || monster.MType->mtype == MT_DIABLO;
 	bool fearsLightning = (monster.mMagicRes & IMMUNE_LIGHTNING) == 0 || monster.MType->mtype == MT_DIABLO;
 
-	for (int j = 0; j < ActiveMissileCount; j++) {
-		uint8_t mi = ActiveMissiles[j];
-		auto &missile = Missiles[mi];
+	for (auto &missile : Missiles) {
 		if (missile.position.tile == position) {
 			if (fearsFire && missile._mitype == MIS_FIREWALL) {
 				return false;
@@ -2558,12 +2556,11 @@ void RhinoAi(int i)
 		if (dist >= 5
 		    && v < 2 * monster._mint + 43
 		    && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy })) {
-			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, TARGET_PLAYERS, i, 0, 0) != -1) {
-				if (monster.MData->snd_special)
-					PlayEffect(monster, 3);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
-				monster._mmode = MonsterMode::Charge;
-			}
+			AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, TARGET_PLAYERS, i, 0, 0);
+			if (monster.MData->snd_special)
+				PlayEffect(monster, 3);
+			dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
+			monster._mmode = MonsterMode::Charge;
 		} else {
 			if (dist >= 2) {
 				v = GenerateRnd(100);
@@ -2761,10 +2758,9 @@ void BatAi(int i)
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * monster._mint + 33
 	    && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy })) {
-		if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, TARGET_PLAYERS, i, 0, 0) != -1) {
-			dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
-			monster._mmode = MonsterMode::Charge;
-		}
+		AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, TARGET_PLAYERS, i, 0, 0);
+		dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
+		monster._mmode = MonsterMode::Charge;
 	} else if (abs(xd) >= 2 || abs(yd) >= 2) {
 		if ((monster._mVar2 > 20 && v < monster._mint + 13)
 		    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
@@ -3030,11 +3026,10 @@ void SnakeAi(int i)
 	monster._mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
 		if (abs(mx) < 3 && abs(my) < 3 && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy }) && static_cast<MonsterMode>(monster._mVar1) != MonsterMode::Charge) {
-			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, TARGET_PLAYERS, i, 0, 0) != -1) {
-				PlayEffect(monster, 0);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
-				monster._mmode = MonsterMode::Charge;
-			}
+			AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, TARGET_PLAYERS, i, 0, 0);
+			PlayEffect(monster, 0);
+			dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
+			monster._mmode = MonsterMode::Charge;
 		} else if (static_cast<MonsterMode>(monster._mVar1) == MonsterMode::Delay || GenerateRnd(100) >= 35 - 2 * monster._mint) {
 			if (pattern[monster._mgoalvar1] == -1)
 				md = Left(md);

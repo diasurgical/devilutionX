@@ -208,9 +208,7 @@ void InitLevelCursor()
 
 void CheckTown()
 {
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		int mx = ActiveMissiles[i];
-		auto &missile = Missiles[mx];
+	for (auto &missile : Missiles) {
 		if (missile._mitype == MIS_TOWN) {
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
@@ -226,9 +224,7 @@ void CheckTown()
 
 void CheckRportal()
 {
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		int mx = ActiveMissiles[i];
-		auto &missile = Missiles[mx];
+	for (auto &missile : Missiles) {
 		if (missile._mitype == MIS_RPORTAL) {
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;

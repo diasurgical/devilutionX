@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <list>
 
 #include "engine.h"
 #include "engine/point.hpp"
@@ -15,8 +16,6 @@
 #include "spelldat.h"
 
 namespace devilution {
-
-#define MAXMISSILES 125
 
 constexpr Point GolemHoldingCell = Point { 1, 0 };
 
@@ -129,10 +128,7 @@ struct Missile {
 	int16_t lastCollisionTargetHash;
 };
 
-extern Missile Missiles[MAXMISSILES];
-extern int AvailableMissiles[MAXMISSILES];
-extern int ActiveMissiles[MAXMISSILES];
-extern int ActiveMissileCount;
+extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
@@ -158,7 +154,6 @@ int GetSpellLevel(int playerId, spell_id sn);
  * @return the direction of the p1->p2 vector
  */
 Direction16 GetDirection16(Point p1, Point p2);
-void DeleteMissile(int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 
@@ -346,7 +341,7 @@ void AddTelekinesis(Missile &missile, const AddMissileParameter &parameter);
 void AddBoneSpirit(Missile &missile, const AddMissileParameter &parameter);
 void AddRportal(Missile &missile, const AddMissileParameter &parameter);
 void AddDiabApoca(Missile &missile, const AddMissileParameter &parameter);
-int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
+Missile &AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
 void MI_Golem(Missile &missile);
 void MI_Manashield(Missile &missile);
 void MI_LArrow(Missile &missile);
