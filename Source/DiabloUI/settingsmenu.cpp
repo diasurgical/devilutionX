@@ -304,9 +304,25 @@ void UiSettingsMenu()
 			eventHandler = [](SDL_Event &event) {
 				if (SelectedItem != IndexKeyInput)
 					return false;
-				if (event.type != SDL_KEYDOWN)
-					return false;
-				int key = TranslateSdlKey(event.key.keysym);
+				int key = DVL_VK_INVALID;
+				switch (event.type) {
+				case SDL_KEYDOWN:
+					key = TranslateSdlKey(event.key.keysym);
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					switch (event.button.button) {
+					case SDL_BUTTON_MIDDLE:
+						key = DVL_VK_MBUTTON;
+						break;
+					case SDL_BUTTON_X1:
+						key = DVL_VK_X1BUTTON;
+						break;
+					case SDL_BUTTON_X2:
+						key = DVL_VK_X2BUTTON;
+						break;
+					}
+					break;
+				}
 				// Ignore unknown keys
 				if (key == DVL_VK_INVALID || key == -1)
 					return false;
