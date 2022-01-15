@@ -202,6 +202,8 @@ endif()
 
 if(ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
+elseif(UWP_LIB)
+  add_custom_target(${BIN_TARGET})  # we only need libdevilutionx
 else()
   add_executable(${BIN_TARGET}
     WIN32
@@ -212,7 +214,10 @@ else()
     Packaging/apple/AppIcon.icns
     Packaging/apple/LaunchScreen.storyboard)
 endif()
-target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+
+if(NOT UWP_LIB)
+  target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+endif()
 
 # Must be included after `BIN_TARGET` and `libdevilutionx` are defined.
 include(Assets)
@@ -221,7 +226,7 @@ if(EMSCRIPTEN)
   target_link_options(${BIN_TARGET} PRIVATE --preload-file assets)
 endif()
 
-if(NOT USE_SDL1)
+if(NOT USE_SDL1 AND NOT UWP_LIB)
   target_link_libraries(${BIN_TARGET} PUBLIC ${SDL2_MAIN})
 endif()
 
