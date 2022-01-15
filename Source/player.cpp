@@ -2523,6 +2523,8 @@ void SetPlrAnims(Player &player)
 		} else if (gn == PlayerWeaponGraphic::Mace || gn == PlayerWeaponGraphic::MaceShield) {
 			player._pAFNum = 8;
 		}
+		if (agn > 0)
+			player._pDFrames = 15;
 	}
 }
 
