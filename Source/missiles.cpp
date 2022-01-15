@@ -711,9 +711,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 		return false;
 
 	Direction dir = GetDirection(position, target);
-	missile.var4 = -(AvailableMissiles[0] + 1);
-	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, GetSpellLevel(missile._misource, SPL_FIREBOLT));
-	missile.var4 = 0;
+	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, GetSpellLevel(missile._misource, SPL_FIREBOLT), &missile);
 	SetMissDir(missile, 2);
 	missile.var2 = 3;
 
@@ -731,30 +729,6 @@ bool GrowWall(int playerId, Point position, Point target, missile_id type, int s
 
 	AddMissile(position, position, Players[playerId]._pdir, type, TARGET_BOTH, playerId, damage, spellLevel);
 	return true;
-}
-
-/**
- * @brief Find parent missile (uses var4)
- *
- * @return id of parent missile or -1
- */
-int FindParent(Missile &missile)
-{
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		int mx = ActiveMissiles[i];
-		auto &parent = Missiles[mx];
-		if (parent._misource != missile._misource)
-			continue;
-		int childId = -(parent.var4 + 1);
-		if (childId < 0 || childId >= MAXMISSILES)
-			continue;
-		if (&Missiles[childId] != &missile)
-			continue;
-
-		return mx;
-	}
-
-	return -1;
 }
 
 void SpawnLightning(Missile &missile, int dam)
@@ -776,7 +750,6 @@ void SpawnLightning(Missile &missile, int dam)
 
 	if (!nMissileTable[pn]) {
 		if (position != Point { missile.var1, missile.var2 } && InDungeonBounds(position)) {
-			missile.var4 = -(AvailableMissiles[0] + 1);
 			missile_id type = MIS_LIGHTNING;
 			if (missile._misource != -1 && missile._micaster == TARGET_PLAYERS
 			    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
@@ -791,7 +764,6 @@ void SpawnLightning(Missile &missile, int dam)
 			    missile._misource,
 			    dam,
 			    missile._mispllvl);
-			missile.var4 = 0;
 			missile.var1 = position.x;
 			missile.var2 = position.y;
 		}
@@ -1872,8 +1844,7 @@ void AddFirebolt(Missile &missile, const AddMissileParameter &parameter)
 			sp += std::min(missile._mispllvl * 2, 47);
 		}
 
-		int mx = FindParent(missile);
-		if (mx == -1 || Missiles[mx]._mitype != MIS_GUARDIAN)
+		if (parameter.pParent == nullptr || parameter.pParent->_mitype != MIS_GUARDIAN)
 			UseMana(missile._misource, SPL_FIREBOLT);
 	}
 	UpdateMissileVelocity(missile, dst, sp);
@@ -1996,7 +1967,7 @@ void AddLightning(Missile &missile, const AddMissileParameter &parameter)
 	missile._mlid = AddLight(missile.position.tile, 4);
 }
 
-void AddMisexp(Missile &missile, const AddMissileParameter & /*parameter*/)
+void AddMisexp(Missile &missile, const AddMissileParameter &parameter)
 {
 	if (missile._micaster != TARGET_MONSTERS && missile._misource >= 0) {
 		switch (Monsters[missile._misource].MType->mtype) {
@@ -2017,9 +1988,8 @@ void AddMisexp(Missile &missile, const AddMissileParameter & /*parameter*/)
 		}
 	}
 
-	int mx = FindParent(missile);
-	assert(mx != -1); // AddMisexp will always be called with a parent associated to the missile.
-	auto &parent = Missiles[mx];
+	assert(parameter.pParent != nullptr); // AddMisexp will always be called with a parent associated to the missile.
+	auto &parent = *parameter.pParent;
 	missile.position.tile = parent.position.tile;
 	missile.position.start = parent.position.start;
 	missile.position.offset = parent.position.offset;
@@ -2758,7 +2728,7 @@ void AddDiabApoca(Missile &missile, const AddMissileParameter & /*parameter*/)
 	missile._miDelFlag = true;
 }
 
-int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl)
+int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent /*= nullptr*/)
 {
 	if (ActiveMissileCount >= MAXMISSILES - 1)
 		return -1;
@@ -2796,7 +2766,7 @@ int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy
 		PlaySfxLoc(missileData.mlSFX, missile.position.start);
 	}
 
-	AddMissileParameter parameter = { dst, midir };
+	AddMissileParameter parameter = { dst, midir, pParent };
 	missileData.mAddProc(missile, parameter);
 
 	return mi;
@@ -2947,19 +2917,18 @@ void MI_Firebolt(Missile &missile)
 		MoveMissileAndCheckMissileCol(missile, d, d, true, true);
 		if (missile._mirange == 0) {
 			missile._miDelFlag = true;
-			missile.var4 = -(AvailableMissiles[0] + 1);
 			Point dst = { 0, 0 };
 			auto dir = static_cast<Direction>(missile._mimfnum);
 			switch (missile._mitype) {
 			case MIS_FIREBOLT:
 			case MIS_MAGMABALL:
-				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_FLARE:
-				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP2, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP2, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_ACID:
-				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP3, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP3, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_BONESPIRIT:
 				SetMissDir(missile, 8);
@@ -2968,24 +2937,23 @@ void MI_Firebolt(Missile &missile)
 				PutMissile(missile);
 				return;
 			case MIS_LICH:
-				AddMissile(missile.position.tile, dst, dir, MIS_EXORA1, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_EXORA1, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_PSYCHORB:
-				AddMissile(missile.position.tile, dst, dir, MIS_EXBL2, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_EXBL2, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_NECROMORB:
-				AddMissile(missile.position.tile, dst, dir, MIS_EXRED3, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_EXRED3, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_ARCHLICH:
-				AddMissile(missile.position.tile, dst, dir, MIS_EXYEL2, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_EXYEL2, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_BONEDEMON:
-				AddMissile(missile.position.tile, dst, dir, MIS_EXBL3, missile._micaster, missile._misource, 0, 0);
+				AddMissile(missile.position.tile, dst, dir, MIS_EXBL3, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			default:
 				break;
 			}
-			missile.var4 = 0;
 			if (missile._mlid != NO_LIGHT)
 				AddUnLight(missile._mlid);
 			PutMissile(missile);
@@ -3963,7 +3931,6 @@ void MI_Flamec(Missile &missile)
 	if (missile.position.tile != Point { missile.var1, missile.var2 }) {
 		int id = dPiece[missile.position.tile.x][missile.position.tile.y];
 		if (!nMissileTable[id]) {
-			missile.var4 = -(AvailableMissiles[0] + 1);
 			AddMissile(
 			    missile.position.tile,
 			    missile.position.start,
@@ -3973,7 +3940,6 @@ void MI_Flamec(Missile &missile)
 			    src,
 			    missile.var3,
 			    missile._mispllvl);
-			missile.var4 = 0;
 		} else {
 			missile._mirange = 0;
 		}
