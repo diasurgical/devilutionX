@@ -9,7 +9,7 @@
 set -ex
 
 PARALLELISM="$(getconf _NPROCESSORS_ONLN)"
-STORMLIB_VERSION=9.23
+STORMLIB_VERSION=8bb328df98e90be08a45a9f6aeb8edda5c1fd27c
 STORMLIB_SRC="/tmp/stormlib-src-$STORMLIB_VERSION"
 SMPQ_VERSION=1.6
 SMPQ_SRC="/tmp/smpq-src-$SMPQ_VERSION"
@@ -17,7 +17,7 @@ SMPQ_SRC="/tmp/smpq-src-$SMPQ_VERSION"
 # Download, build, and install the static version of StormLib, an SMPQ dependency, to the staging prefix.
 if ! [ -d "$STORMLIB_SRC" ]; then
 	mkdir "$STORMLIB_SRC"
-	curl -L -s "https://github.com/ladislav-zezula/StormLib/tarball/v${STORMLIB_VERSION}" | tar -C "$STORMLIB_SRC" --strip-components=1 -xvzf -
+	curl -L -s "https://github.com/ladislav-zezula/StormLib/archive/${STORMLIB_VERSION}.tar.gz" | tar -C "$STORMLIB_SRC" --strip-components=1 -xvzf -
 fi
 
 cmake -S"$STORMLIB_SRC" -B"$STORMLIB_SRC"/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/tmp/smpq-staging -DBUILD_SHARED_LIBS=OFF \
