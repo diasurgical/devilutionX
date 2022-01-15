@@ -2377,7 +2377,7 @@ void InitPlayerGFX(Player &player)
 	ResetPlayerGFX(player);
 
 	if (player._pHitPoints >> 6 == 0) {
-		player._pgfxnum = 0;
+		player._pgfxnum &= ~0xF;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
 	}
@@ -3108,7 +3108,10 @@ StartPlayerKill(int pnum, int earflag)
 	player.Say(HeroSpeech::AuughUh);
 
 	if (player._pgfxnum != 0) {
-		player._pgfxnum = 0;
+		if (diablolevel || earflag != 0)
+			player._pgfxnum &= ~0xF;
+		else
+			player._pgfxnum = 0;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 	}

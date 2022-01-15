@@ -823,7 +823,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 		return;
 	}
 
-	player._pgfxnum = 0;
+	player._pgfxnum &= ~0xF;
 	player._pmode = PM_DEATH;
 	NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
 	player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
