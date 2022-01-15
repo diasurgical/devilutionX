@@ -2409,7 +2409,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numbe
 	CelSprite *pCelSprite = celSprite ? &*celSprite : nullptr;
 
 	float previewShownGameTickFragments = 0.F;
-	if (pCelSprite == player.pPreviewCelSprite)
+	if (pCelSprite == player.pPreviewCelSprite && !player.IsWalking())
 		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
 	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
