@@ -1421,9 +1421,7 @@ DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
 			DeltaSyncGolem(message, pnum, message._currlevel);
 		} else if (pnum != MyPlayerId) {
 			// Check if this player already has an active golem
-			for (int i = 0; i < ActiveMissileCount; i++) {
-				int mi = ActiveMissiles[i];
-				auto &missile = Missiles[mi];
+			for (auto &missile : Missiles) {
 				if (missile._mitype == MIS_GOLEM && missile._misource == pnum) {
 					return sizeof(message);
 				}
@@ -1702,9 +1700,7 @@ DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 				AddInTownPortal(pnum);
 			} else if (currlevel == Players[pnum].plrlevel) {
 				bool addPortal = true;
-				for (int i = 0; i < ActiveMissileCount; i++) {
-					int mi = ActiveMissiles[i];
-					auto &missile = Missiles[mi];
+				for (auto &missile : Missiles) {
 					if (missile._mitype == MIS_TOWN && missile._misource == pnum) {
 						addPortal = false;
 						break;

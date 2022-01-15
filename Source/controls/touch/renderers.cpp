@@ -436,12 +436,12 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 }
 
 extern int pcurstrig;
-extern int pcursmissile;
+extern Missile *pcursmissile;
 extern quest_id pcursquest;
 
 VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 {
-	if (pcursmissile != -1 || pcurstrig != -1 || pcursquest != Q_INVALID) {
+	if (pcursmissile != nullptr || pcurstrig != -1 || pcursquest != Q_INVALID) {
 		return GetStairsButtonType(virtualPadButton->isHeld);
 	}
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)

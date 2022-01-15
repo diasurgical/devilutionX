@@ -176,9 +176,7 @@ void UpdateMissilesRendererData()
 {
 	MissilesAtRenderingTile.clear();
 
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		assert(ActiveMissiles[i] < MAXMISSILES);
-		Missile &m = Missiles[ActiveMissiles[i]];
+	for (auto &m : Missiles) {
 		UpdateMissileRendererData(m);
 		MissilesAtRenderingTile.insert(std::make_pair(m.position.tileForRendering, &m));
 	}
