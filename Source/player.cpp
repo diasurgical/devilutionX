@@ -2204,7 +2204,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 void InitPlayerGFX(Player &player)
 {
 	if (player._pHitPoints >> 6 == 0) {
-		player._pgfxnum &= 0xF0;
+		player._pgfxnum &= ~0xF;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
 	}
