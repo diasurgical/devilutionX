@@ -2436,6 +2436,7 @@ void SetPlrAnims(Player &player)
 	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
 	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
+	auto agn = player._pgfxnum & ~0xF;
 	if (pc == HeroClass::Warrior) {
 		if (gn == PlayerWeaponGraphic::Bow) {
 			if (leveltype != DTYPE_TOWN) {
@@ -2449,6 +2450,8 @@ void SetPlrAnims(Player &player)
 			player._pAFrames = 16;
 			player._pAFNum = 11;
 		}
+		if (agn > 0)
+			player._pDFrames = 15;
 	} else if (pc == HeroClass::Rogue) {
 		if (gn == PlayerWeaponGraphic::Axe) {
 			player._pAFrames = 22;
