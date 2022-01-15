@@ -757,23 +757,6 @@ int FindParent(Missile &missile)
 	return -1;
 }
 
-/**
- * @brief Sync missile position with parent missile, by searching for self reference in all mssiles
- *
- * @todo It's unclear if this is actually neede is mostly dead code
- */
-void SyncPositionWithParent(Missile &missile)
-{
-	int mx = FindParent(missile);
-	if (mx == -1)
-		return;
-
-	auto &parent = Missiles[mx];
-
-	missile.position.offset = parent.position.offset;
-	missile.position.traveled = parent.position.traveled;
-}
-
 void SpawnLightning(Missile &missile, int dam)
 {
 	missile._mirange--;
@@ -1993,8 +1976,6 @@ void AddLightning(Missile &missile, Point dst, Direction /*midir*/)
 {
 	missile.position.start = dst;
 
-	SyncPositionWithParent(missile);
-
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 
 	if (missile._micaster == TARGET_PLAYERS || missile._misource == -1) {
@@ -2634,8 +2615,6 @@ void AddFlame(Missile &missile, Point dst, Direction /*midir*/)
 {
 	missile.var2 = 5 * missile._midam;
 	missile.position.start = dst;
-
-	SyncPositionWithParent(missile);
 
 	missile._mirange = missile.var2 + 20;
 	missile._mlid = AddLight(missile.position.start, 1);
