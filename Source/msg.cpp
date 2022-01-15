@@ -272,28 +272,17 @@ void DeltaImportJunk(const byte *src)
 		if (*src == byte { 0xFF }) {
 			memset(&sgJunk.portal[i], 0xFF, sizeof(DPortal));
 			src++;
-			SetPortalStats(i, false, 0, 0, 0, DTYPE_TOWN);
 		} else {
 			memcpy(&sgJunk.portal[i], src, sizeof(DPortal));
 			src += sizeof(DPortal);
-			SetPortalStats(
-			    i,
-			    true,
-			    sgJunk.portal[i].x,
-			    sgJunk.portal[i].y,
-			    sgJunk.portal[i].level,
-			    (dungeon_type)sgJunk.portal[i].ltype);
 		}
 	}
 
 	int q = 0;
-	for (auto &quest : Quests) {
-		if (!QuestsData[quest._qidx].isSinglePlayerOnly) {
+	for (int qidx = 0; qidx < MAXQUESTS; qidx++) {
+		if (!QuestsData[qidx].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
-			quest._qlog = sgJunk.quests[q].qlog != 0;
-			quest._qactive = sgJunk.quests[q].qstate;
-			quest._qvar1 = sgJunk.quests[q].qvar1;
 			q++;
 		}
 	}
@@ -2083,14 +2072,34 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	monster.mWhoHit = monsterSync.mWhoHit;
 }
 
-bool delta_portal_inited(int i)
+void DeltaSyncJunk()
 {
-	return sgJunk.portal[i].x == 0xFF;
-}
+	for (int i = 0; i < MAXPORTAL; i++) {
+		if (sgJunk.portal[i].x == 0xFF) {
+			SetPortalStats(i, false, 0, 0, 0, DTYPE_TOWN);
+		} else {
+			SetPortalStats(
+			    i,
+			    true,
+			    sgJunk.portal[i].x,
+			    sgJunk.portal[i].y,
+			    sgJunk.portal[i].level,
+			    (dungeon_type)sgJunk.portal[i].ltype);
+		}
+	}
 
-bool delta_quest_inited(int i)
-{
-	return sgJunk.quests[i].qstate != QUEST_INVALID;
+	int q = 0;
+	for (auto &quest : Quests) {
+		if (QuestsData[quest._qidx].isSinglePlayerOnly) {
+			continue;
+		}
+		if (sgJunk.quests[q].qstate != Q_INVALID) {
+			quest._qlog = sgJunk.quests[q].qlog != 0;
+			quest._qactive = sgJunk.quests[q].qstate;
+			quest._qvar1 = sgJunk.quests[q].qvar1;
+		}
+		q++;
+	}
 }
 
 void DeltaAddItem(int ii)
