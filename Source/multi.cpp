@@ -320,7 +320,7 @@ void SendPlayerInfo(int pnum, _cmd_id cmd)
 	static_assert(alignof(PlayerPack) == 1, "Fix pkplr alignment");
 	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PlayerPack)] };
 
-	PackPlayer(reinterpret_cast<PlayerPack *>(pkplr.get()), Players[MyPlayerId], true);
+	PackPlayer(reinterpret_cast<PlayerPack *>(pkplr.get()), Players[MyPlayerId], true, true);
 	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
 }
 
