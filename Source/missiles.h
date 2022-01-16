@@ -20,12 +20,6 @@ namespace devilution {
 
 constexpr Point GolemHoldingCell = Point { 1, 0 };
 
-struct ChainStruct {
-	int idx;
-	missile_id _mitype;
-	int _mirange;
-};
-
 struct MissilePosition {
 	Point tile;
 	/** Sprite's pixel offset from tile. */

@@ -34,9 +34,6 @@ bool MissilePreFlag;
 
 namespace {
 
-ChainStruct chain[MAXMISSILES];
-int numchains;
-
 int AddClassHealingBonus(int hp, HeroClass heroClass)
 {
 	switch (heroClass) {
@@ -1225,12 +1222,6 @@ void InitMissiles()
 	for (int i = 0; i < MAXMISSILES; i++) {
 		AvailableMissiles[i] = i;
 		ActiveMissiles[i] = 0;
-	}
-	numchains = 0;
-	for (auto &link : chain) {
-		link.idx = -1;
-		link._mitype = MIS_ARROW;
-		link._mirange = 0;
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
