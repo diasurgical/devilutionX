@@ -372,6 +372,34 @@ emrun index.html
 ~~~
 </details>
 
+<details><summary>Xbox One/Series</summary>
+### Dependencies
+* Windows 10
+* CMake
+* Git
+* Visual Studio 2022 with the foloowing packages installed:
+    * C++ (v143) Universal Windows Platform tools
+    * Windows 11 SDK (10.0.22000.0)
+    * Windows 10 SDK (10.0.18362.0)
+    * MSVC v143 - VS 2022 C++ x64/x86 build tools
+
+*Note: Visual Studio Community Edition can be used.*
+
+### Building
+
+Add the following to the PATH:
+* CMake
+* GIT
+* VsDevCmd.bat
+
+Run:
+```
+Packaging/xbox-one/build.bat
+```
+
+[Xbox One/Series manual](docs/manual/platforms/xbox-one.md)
+</details>
+
 <details><summary><b>CMake build options</b></summary>
 
 ### General
