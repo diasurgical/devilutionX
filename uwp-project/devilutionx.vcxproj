@@ -110,36 +110,16 @@
     <Folder Include="Assets\fonts" />
     <Folder Include="Assets\gendata" />
     <Folder Include="Assets\ui_art" />
-    <Image Include="Assets\BadgeLogo.scale-100.png" />
     <Image Include="Assets\BadgeLogo.scale-200.png" />
-    <Image Include="Assets\BadgeLogo.scale-400.png" />
-    <Image Include="Assets\LargeTile.scale-100.png" />
     <Image Include="Assets\LargeTile.scale-200.png" />
-    <Image Include="Assets\LargeTile.scale-400.png" />
-    <Image Include="Assets\Logo.scale-100.png" />
     <Image Include="Assets\Logo.scale-200.png" />
-    <Image Include="Assets\Logo.scale-400.png" />
-    <Image Include="Assets\SmallLogo.altform-lightunplated_targetsize-16.png" />
-    <Image Include="Assets\SmallLogo.altform-lightunplated_targetsize-256.png" />
     <Image Include="Assets\SmallLogo.altform-lightunplated_targetsize-48.png" />
-    <Image Include="Assets\SmallLogo.altform-unplated_targetsize-16.png" />
-    <Image Include="Assets\SmallLogo.altform-unplated_targetsize-256.png" />
     <Image Include="Assets\SmallLogo.altform-unplated_targetsize-48.png" />
-    <Image Include="Assets\SmallLogo.scale-100.png" />
     <Image Include="Assets\SmallLogo.scale-200.png" />
-    <Image Include="Assets\SmallLogo.scale-400.png" />
-    <Image Include="Assets\SmallLogo.targetsize-16.png" />
-    <Image Include="Assets\SmallLogo.targetsize-256.png" />
     <Image Include="Assets\SmallLogo.targetsize-48.png" />
-    <Image Include="Assets\SmallTile.scale-100.png" />
     <Image Include="Assets\SmallTile.scale-200.png" />
-    <Image Include="Assets\SmallTile.scale-400.png" />
-    <Image Include="Assets\SplashScreen.scale-100.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
-    <Image Include="Assets\SplashScreen.scale-400.png" />
-    <Image Include="Assets\StoreLogo.scale-100.png" />
     <Image Include="Assets\StoreLogo.scale-200.png" />
-    <Image Include="Assets\StoreLogo.scale-400.png" />
     <Image Include="Assets\ui_art\button.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -155,9 +135,7 @@
     <Image Include="Assets\ui_art\menu.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="Assets\WideTile.scale-100.png" />
     <Image Include="Assets\WideTile.scale-200.png" />
-    <Image Include="Assets\WideTile.scale-400.png" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

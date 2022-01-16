@@ -360,8 +360,8 @@ Emscripten port is a work in progress. It builds but does not do more than that 
 To build, install the [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html), then run:
 
 ~~~ bash
-emcmake cmake -S. -Bbuild-em -DCMAKE_BUILD_TYPE=Release
-cmake --build build-em -j $(getconf _NPROCESSORS_ONLN)
+emcmake cmake -S. -Bbuild-em -DCMAKE\_BUILD\_TYPE=Release
+cmake --build build-em -j $(getconf \_NPROCESSORS\_ONLN)
 ~~~
 
 To then run it:
@@ -373,7 +373,9 @@ emrun index.html
 </details>
 
 <details><summary>Xbox One/Series</summary>
+
 ### Dependencies
+
 * Windows 10
 * CMake
 * Git
@@ -383,7 +385,7 @@ emrun index.html
     * Windows 10 SDK (10.0.18362.0)
     * MSVC v143 - VS 2022 C++ x64/x86 build tools
 
-*Note: Visual Studio Community Edition can be used.*
+_Note: Visual Studio Community Edition can be used._
 
 ### Building
 
@@ -397,7 +399,7 @@ Run:
 Packaging/xbox-one/build.bat
 ```
 
-[Xbox One/Series manual](docs/manual/platforms/xbox-one.md)
+[Xbox One/Series manual](manual/platforms/xbox-one.md)
 </details>
 
 <details><summary><b>CMake build options</b></summary>
