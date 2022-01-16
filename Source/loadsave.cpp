@@ -1532,6 +1532,46 @@ void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t
 	}
 }
 
+constexpr uint32_t VersionAdditionalMissiles = 0;
+
+void SaveAdditionalMissiles()
+{
+	constexpr size_t BytesWrittenBySaveMissile = 180;
+	size_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? Missiles.size() - MaxMissilesForSaveGame : 0;
+	SaveHelper file("additionalMissiles", sizeof(uint32_t) + sizeof(int32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
+
+	file.WriteLE<uint32_t>(VersionAdditionalMissiles);
+	file.WriteLE<uint32_t>(missileCountAdditional);
+
+	size_t wroteMissiles = 0;
+	for (auto &missile : Missiles) {
+		wroteMissiles += 1;
+		if (wroteMissiles >= MaxMissilesForSaveGame) {
+			SaveMissile(&file, missile);
+		}
+	}
+}
+
+void LoadAdditionalMissiles()
+{
+	LoadHelper file("additionalMissiles");
+
+	if (!file.IsValid()) {
+		// no addtional Missiles saved
+		return;
+	}
+
+	auto loadedVersion = file.NextLE<uint32_t>();
+	if (loadedVersion > VersionAdditionalMissiles) {
+		// unknown version
+		return;
+	}
+	uint32_t missileCountAdditional = file.NextLE<uint32_t>();
+	for (int i = 0; i < missileCountAdditional; i++) {
+		LoadMissile(&file);
+	}
+}
+
 const int DiabloItemSaveSize = 368;
 const int HellfireItemSaveSize = 372;
 
@@ -1816,11 +1856,12 @@ void LoadGame(bool firstflag)
 	ActiveMonsterCount = tmpNummonsters;
 	ActiveObjectCount = tmpNobjects;
 
-
 	for (int &monstkill : MonsterKillCounts)
 		monstkill = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
+		int8_t tmpActiveMissiles[MaxMissilesForSaveGame];
+
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
@@ -1857,6 +1898,8 @@ void LoadGame(bool firstflag)
 	}
 
 	LoadDroppedItems(file, savedItemCount);
+
+	LoadAdditionalMissiles();
 
 	for (bool &uniqueItemFlag : UniqueItemFlags)
 		uniqueItemFlag = file.NextBool8();
@@ -2113,6 +2156,8 @@ void SaveGameData()
 
 	file.WriteLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.WriteBE<int32_t>(AutoMapScale);
+
+	SaveAdditionalMissiles();
 }
 
 void SaveGame()
