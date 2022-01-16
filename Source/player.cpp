@@ -2224,7 +2224,12 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 
 	if (minimalWalkDistance >= 0 && position.future != point) {
 		int8_t testWalkPath[MAX_PATH_LENGTH];
-		if (FindPath([this](Point position) { return PosOkPlayer(*this, position); }, position.future, point, testWalkPath) >= minimalWalkDistance) {
+		int steps = FindPath([this](Point position) { return PosOkPlayer(*this, position); }, position.future, point, testWalkPath);
+		if (steps == 0) {
+			// Can't walk to desired location => stand still
+			return;
+		}
+		if (steps >= minimalWalkDistance) {
 			graphic = player_graphic::Walk;
 			switch (testWalkPath[0]) {
 			case WALK_N:
