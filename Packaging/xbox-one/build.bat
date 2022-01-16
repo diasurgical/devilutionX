@@ -11,8 +11,6 @@ cmake -DUWP_LIB=1 -DUWP_SDL2_DIR="%CD%/SDL" -DCMAKE_BUILD_TYPE=x64-Release ..
 
 msbuild /p:Configuration=Release;Platform=x64 DevilutionX.sln
 
-xcopy /E /I /Y assets\* ..\uwp-project\Assets\
-
 powershell "Get-Content ..\uwp-project\Package.appxmanifest.template | %% {$_ -replace '__PROJECT_VERSION__',$(& {git describe --tags --abbrev=0})} | Out-File -FilePath ..\uwp-project\Package.appxmanifest -encoding ASCII"
 
 msbuild /p:Configuration=Release;Platform=x64;AppxBundle=Always;AppxBundlePlatforms=x64 ..\uwp-project\devilutionx.sln
