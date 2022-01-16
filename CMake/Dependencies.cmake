@@ -7,8 +7,6 @@ if(EMSCRIPTEN)
   emscripten_system_library("zlib" ZLIB::ZLIB USE_ZLIB=1)
 elseif(UWP_LIB)
   add_subdirectory(3rdParty/zlib)
-  set(ZLIB_LIBRARY "${CMAKE_CURRENT_BINARY_DIR}/3dsParty/zlib")
-  get_property(ZLIB_INCLUDE_DIR TARGET ZLIB::ZLIB PROPERTY INCLUDE_DIRECTORIES)
 endif()
 
 dependency_options("bzip2" DEVILUTIONX_SYSTEM_BZIP2 ON DEVILUTIONX_STATIC_BZIP2)

@@ -44,3 +44,6 @@ target_include_directories(ZLIB PUBLIC ${zlib_SOURCE_DIR})
 target_include_directories(ZLIB PUBLIC ${zlib_BINARY_DIR})
 
 add_library(ZLIB::ZLIB ALIAS ZLIB)
+
+set(ZLIB_LIBRARY "${CMAKE_CURRENT_BINARY_DIR}/3dsParty/zlib" PARENT_SCOPE)
+set(ZLIB_INCLUDE_DIR HINTS ${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} PARENT_SCOPE)
