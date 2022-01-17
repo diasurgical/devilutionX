@@ -49,8 +49,6 @@ CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
 int MaxGold = GOLD_MAX_LIMIT;
 
-
-
 /** Maps from item_cursor_graphic to in-memory item type. */
 BYTE ItemCAnimTbl[] = {
 	// Diablo (168)
