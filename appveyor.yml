@@ -9,17 +9,14 @@ for:
     cache: '%LOCALAPPDATA%\vcpkg\archives'
 
     install:
-      - echo starting install
+      - if not exist C:\Tools\vcpkg mkdir C:\Tools\vcpkg
       - cd C:\Tools\vcpkg
       - git pull
       - .\bootstrap-vcpkg.bat
       - cd %APPVEYOR_BUILD_FOLDER%
-      - echo finished install
 
     before_build:
-      - echo running cmake
       - cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
-      - finished cmake
 
     build:
       project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
@@ -31,6 +28,7 @@ for:
   -
     before_build:
       - cd %APPVEYOR_BUILD_FOLDER%\Packaging\xbox-one
+      - if exist ..\..\build rd /s /q ..\..\build
 
     build_script:
       - build.bat
