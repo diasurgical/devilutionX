@@ -208,8 +208,8 @@ enum item_cursor_graphic : uint8_t {
 	ICURS_SHORT_WAR_BOW               = 165,
 	ICURS_COMPOSITE_STAFF             = 166,
 	ICURS_SHORT_BATTLE_BOW            = 167,
-	ICURS_GOLD                        = 168,
-	ICURS_AURIC_AMULET                = 180,
+	ICURS_GOLD                        = 168, // cel frame 180, icurs = 168 + 12 = cel frame 180
+	ICURS_AURIC_AMULET                = 180, // cel frame 13, icurs = 180 + 12 - (180 - 1) = cel frame 13
 	ICURS_RUNE_BOMB                   = 187,
 	ICURS_THEODORE                    = 188,
 	ICURS_TORN_NOTE_1                 = 189,
@@ -223,7 +223,9 @@ enum item_cursor_graphic : uint8_t {
 	ICURS_RUNE_OF_STONE               = 197,
 	ICURS_GREY_SUIT                   = 198,
 	ICURS_BROWN_SUIT                  = 199,
-	ICURS_BOVINE                      = 226,
+	ICURS_BOVINE                      = 226, // cel frame 59, icurs = 226 + 12 - (180 - 1) = cel frame 59
+	ICURS_LASTHFITEM                  = 228, // cel frame 61, icurs = 228 + 12 - (180 - 1) = cel frame 61
+	ICURS_SOULSTONE                   = 229, // cel frame 1, icurs = 229 + 12 - (180 - 1) - (62 - 1) = cel frame 1
 	// clang-format on
 };
 

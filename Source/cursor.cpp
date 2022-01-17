@@ -29,7 +29,9 @@ namespace {
 /** Cursor images CEL */
 std::optional<CelSprite> pCursCels;
 std::optional<CelSprite> pCursCels2;
+std::optional<CelSprite> pCursCels3;
 constexpr int InvItems1Size = 180;
+constexpr int InvItems2Size = InvItems1Size + 62;
 
 /** Maps from objcurs.cel frame number to frame width. */
 const int InvItemWidth1[] = {
@@ -53,7 +55,7 @@ const int InvItemWidth1[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
 };
 const int InvItemWidth2[] = {
 	0,
@@ -62,7 +64,13 @@ const int InvItemWidth2[] = {
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	2 * 28, 2 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,      0,
+	0
+};
+
+const int InvItemWidth3[] = {
+	0,
+	1 * 28
 	// clang-format on
 };
 
@@ -97,7 +105,13 @@ const int InvItemHeight2[] = {
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,      0,
+	0
+};
+
+const int InvItemHeight3[] = {
+	0,
+	1 * 28,
 	// clang-format on
 };
 
@@ -133,6 +147,7 @@ void InitCursor()
 	pCursCels = LoadCel("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
 	if (gbIsHellfire)
 		pCursCels2 = LoadCel("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
+	pCursCels3 = LoadCel("Data\\Inv\\fuck.CEL", InvItemWidth3);
 	ClearCursor();
 }
 
@@ -140,24 +155,38 @@ void FreeCursor()
 {
 	pCursCels = std::nullopt;
 	pCursCels2 = std::nullopt;
+	pCursCels3 = std::nullopt;
 	ClearCursor();
 }
 
 const CelSprite &GetInvItemSprite(int i)
 {
-	return i < InvItems1Size ? *pCursCels : *pCursCels2;
+	if (i <= InvItems1Size - 1) {
+		return *pCursCels;
+	} else if (i > InvItems1Size - 1 && i <= InvItems2Size - 2) {
+		return *pCursCels3;
+	}
+	return *pCursCels3;
 }
 
 int GetInvItemFrame(int i)
 {
-	return i < InvItems1Size ? i : i - (InvItems1Size - 1);
+	if (i < InvItems1Size) {
+		return i;
+	} else if (i >= InvItems1Size && i < InvItems2Size - 1) {
+		return i - (InvItems1Size - 1);
+	}
+	return i - (InvItems2Size - 2);
 }
 
 Size GetInvItemSize(int cursId)
 {
-	if (cursId >= InvItems1Size)
+	if (cursId < InvItems1Size) {
+		return { InvItemWidth1[cursId], InvItemHeight1[cursId] };
+	} else if (cursId >= InvItems1Size && cursId < InvItems2Size - 1) {
 		return { InvItemWidth2[cursId - (InvItems1Size - 1)], InvItemHeight2[cursId - (InvItems1Size - 1)] };
-	return { InvItemWidth1[cursId], InvItemHeight1[cursId] };
+	}
+	return { InvItemWidth3[cursId - (InvItems2Size - 2)], InvItemHeight3[cursId - (InvItems2Size - 2)] };
 }
 
 void SetICursor(int cursId)

@@ -127,6 +127,63 @@ enum _unique_items : int8_t {
 	UITEM_INVALID = -1,
 };
 
+enum item_flip_graphic : uint8_t {
+	// clang-format off
+	// Diablo
+	IFLIP_MARMOR     = 0, // Also used as placeholder for missing animations
+	IFLIP_AXE        = 1,
+	IFLIP_HEAL       = 2,
+	IFLIP_BOW        = 3,
+	IFLIP_GOLD       = 4,
+	IFLIP_HELM       = 5,
+	IFLIP_MACE       = 6, // Also used for The Protector (Staff)
+	IFLIP_SHIELD     = 7,
+	IFLIP_SWORD      = 8,
+	IFLIP_ROCK       = 9, // Quest Item
+	IFLIP_CLEAVER    = 10,
+	IFLIP_STAFF      = 11,
+	IFLIP_RING       = 12,
+	IFLIP_CROWN      = 13,
+	IFLIP_LARMOR     = 14,
+	IFLIP_BUCKLER    = 15,
+	IFLIP_SCROLL     = 16, // Scrolls, Map of the Stars, and Cathedral Map (Hellfire)
+	IFLIP_HARMOR     = 17,
+	IFLIP_BOOK       = 18,
+	IFLIP_FOOD       = 19, // Unused, only 1 frame
+	IFLIP_FULLMANA   = 20,
+	IFLIP_RAINBOW    = 21, // Unused
+	IFLIP_MAGIC      = 22,
+	IFLIP_FULLHEAL   = 23,
+	IFLIP_DEX        = 24, // Elixir of Dexterity and Oils (Hellfire)
+	IFLIP_REJUV      = 25,
+	IFLIP_VIT        = 26,
+	IFLIP_MANA       = 27, // Potion of Mana and Elixir of Strength
+	IFLIP_EAR        = 28,
+	IFLIP_BRAIN      = 29, // Quest Item
+	IFLIP_MUSHROOM   = 30, // Quest Item
+	IFLIP_SIGN       = 31, // Quest Item
+	IFLIP_BLOODSTONE = 32, // Quest Item
+	IFLIP_ANVIL      = 33, // Quest Item
+	IFLIP_LAZ        = 34, // Quest Item
+	// Hellfire
+	IFLIP_BOMB       = 35, // Quest Item
+	IFLIP_NOTE       = 36, // Quest Item
+	IFLIP_FULLNOTE   = 37, // Quest Item
+	IFLIP_RUNE       = 38, // Also assigned to 6 unused item graphics in Diablo
+	IFLIP_TEDDY      = 39, // Quest Item
+	IFLIP_BOVINE     = 40,
+	IFLIP_DONKEY     = 41, // Quest Item
+	IFLIP_MOOSE      = 42, // Quest Item
+	// Diablo (Unused/Unimplemented)
+	IFLIP_AXE2       = 43,
+	IFLIP_HEAL2      = 44,
+	IFLIP_EYE        = 45,
+	IFLIP_HEART      = 46,
+	IFLIP_MANA2      = 47,
+	IFLIP_WAND       = 48,
+	// clang-format on
+};
+
 /*
  First 5 bits store level
  6th bit stores onlygood flag
