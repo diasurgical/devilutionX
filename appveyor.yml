@@ -3,20 +3,40 @@ version: 1.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 image: Visual Studio 2022
-cache: '%LOCALAPPDATA%\vcpkg\archives'
 
-install:
-  - cd C:\Tools\vcpkg
-  - git pull
-  - .\bootstrap-vcpkg.bat
-  - cd %APPVEYOR_BUILD_FOLDER%
+for:
+  -
+    cache: '%LOCALAPPDATA%\vcpkg\archives'
 
-before_build:
-  - cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
+    install:
+      - echo starting install
+      - mkdir C:\Tools\vcpkg
+      - cd C:\Tools\vcpkg
+      - git pull
+      - .\bootstrap-vcpkg.bat
+      - cd %APPVEYOR_BUILD_FOLDER%
+      - echo finished install
 
-build:
-  project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
-  verbosity: minimal
-artifacts:
-  - path: Debug\devilutionx.exe
-    name: devilutionx.exe
+    before_build:
+      - echo running cmake
+      - cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
+      - finished cmake
+
+    build:
+      project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
+      verbosity: minimal
+    artifacts:
+      - path: Debug\devilutionx.exe
+        name: devilutionx.exe
+
+  -
+    before_build:
+      - cd %APPVEYOR_BUILD_FOLDER%\Packaging\xbox-one
+
+    build_script:
+      - build.bat
+    artifacts:
+      - path: .
+        name: devilutionX_*_x64.appx
+      - path: .
+        name: Microsoft.VCLibs.x64.*.appx
