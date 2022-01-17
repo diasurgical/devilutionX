@@ -21,9 +21,6 @@ for:
     build:
       project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
       verbosity: minimal
-    artifacts:
-      - path: Debug\devilutionx.exe
-        name: devilutionx.exe
 
   -
     before_build:
@@ -32,8 +29,14 @@ for:
 
     build_script:
       - build.bat
-    artifacts:
-      - path: .
-        name: devilutionX_*_x64.appx
-      - path: .
-        name: Microsoft.VCLibs.x64.*.appx
+
+    after_build:
+      - cd %APPVEYOR_BUILD_FOLDER%
+
+artifacts:
+  - path: Debug
+    name: devilutionx.exe
+  - path: build
+    name: devilutionX_*_x64.appx
+  - path: build
+    name: Microsoft.VCLibs.x64.*.appx
