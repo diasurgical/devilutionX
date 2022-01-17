@@ -4458,12 +4458,16 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		if (pnum == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
-	case IMISC_SOULSTONE:
-		if (currlevel == 16)
-			PrepDoEnding();
-		else
-			StartPlayerKill(MyPlayerId, 0);
-		break;
+	/*case IMISC_SOULSTONE:
+		if (currlevel == 16) {
+			if (Quests[Q_DIABLO]._qactive == QUEST_DONE)
+				PrepDoEnding();
+			else
+				player.Say(HeroSpeech::ICantUseThisYet);
+		} else {
+			player.Say(HeroSpeech::ThatWontWorkHere);
+		}
+		break;*/
 	default:
 		break;
 	}

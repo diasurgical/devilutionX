@@ -2150,6 +2150,20 @@ bool UseInvItem(int pnum, int cii)
 		return true;
 	}
 
+	if (item->_iMiscId == IMISC_SOULSTONE) {
+		if (currlevel == 16) {
+			if (Quests[Q_DIABLO]._qactive == QUEST_DONE) {
+				PrepDoEnding();
+			} else {
+				player.Say(HeroSpeech::ICantUseThisYet);
+				return true;
+			}
+		} else {
+			player.Say(HeroSpeech::ThatWontWorkHere);
+			return true;
+		}
+	}
+
 	int idata = ItemCAnimTbl[item->_iCurs];
 	if (item->_iMiscId == IMISC_BOOK)
 		PlaySFX(IS_RBOOK);
