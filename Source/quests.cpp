@@ -310,9 +310,7 @@ void InitQuests()
 			quest._qactive = QUEST_INIT;
 		} else if (!questData.isSinglePlayerOnly) {
 			quest._qlevel = questData._qdmultlvl;
-			if (!delta_quest_inited(initiatedQuests)) {
-				quest._qactive = QUEST_INIT;
-			}
+			quest._qactive = QUEST_INIT;
 			initiatedQuests++;
 		}
 	}

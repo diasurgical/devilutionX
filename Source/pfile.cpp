@@ -262,7 +262,7 @@ void pfile_write_hero(bool writeGameData, bool clearTables)
 	PlayerPack pkplr;
 	auto &myPlayer = Players[MyPlayerId];
 
-	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer);
+	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer, false);
 	EncodeHero(&pkplr);
 	if (!gbVanilla) {
 		SaveHotkeys();
@@ -342,7 +342,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	auto &player = Players[0];
 	CreatePlayer(0, heroinfo->heroclass);
 	CopyUtf8(player._pName, heroinfo->name, PLR_NAME_LEN);
-	PackPlayer(&pkplr, player, true);
+	PackPlayer(&pkplr, player, true, false);
 	EncodeHero(&pkplr);
 	Game2UiPlayer(player, heroinfo, false);
 	if (!gbVanilla) {

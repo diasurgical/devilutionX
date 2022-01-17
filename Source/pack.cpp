@@ -35,14 +35,14 @@ void VerifyGoldSeeds(Player &player)
 
 } // namespace
 
-void PackItem(ItemPack &packedItem, const Item &item)
+void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire)
 {
 	packedItem = {};
 	if (item.isEmpty()) {
 		packedItem.idx = 0xFFFF;
 	} else {
 		auto idx = item.IDidx;
-		if (!gbIsHellfire) {
+		if (!isHellfire) {
 			idx = RemapItemIdxToDiablo(idx);
 		}
 		if (gbIsSpawn) {
@@ -74,7 +74,7 @@ void PackItem(ItemPack &packedItem, const Item &item)
 	}
 }
 
-void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
+void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool netSync)
 {
 	memset(pPack, 0, sizeof(*pPack));
 	pPack->destAction = player.destAction;
@@ -109,19 +109,25 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
 		pPack->pSplLvl2[i - 37] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
-		PackItem(pPack->InvBody[i], player.InvBody[i]);
+		const Item &item = player.InvBody[i];
+		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		PackItem(pPack->InvBody[i], item, isHellfire);
 	}
 
 	pPack->_pNumInv = player._pNumInv;
 	for (int i = 0; i < pPack->_pNumInv; i++) {
-		PackItem(pPack->InvList[i], player.InvList[i]);
+		const Item &item = player.InvList[i];
+		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		PackItem(pPack->InvList[i], item, isHellfire);
 	}
 
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
 		pPack->InvGrid[i] = player.InvGrid[i];
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		PackItem(pPack->SpdList[i], player.SpdList[i]);
+		const Item &item = player.SpdList[i];
+		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
+		PackItem(pPack->SpdList[i], item, isHellfire);
 	}
 
 	pPack->wReflections = SDL_SwapLE16(player.wReflections);

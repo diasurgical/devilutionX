@@ -33,9 +33,8 @@ Point WarpDrop[MAXPORTAL] = {
 
 void InitPortals()
 {
-	for (int i = 0; i < MAXPORTAL; i++) {
-		if (delta_portal_inited(i))
-			Portals[i].open = false;
+	for (auto &portal : Portals) {
+		portal.open = false;
 	}
 }
 

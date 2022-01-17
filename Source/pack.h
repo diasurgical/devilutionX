@@ -79,7 +79,7 @@ struct PlayerPack {
 };
 #pragma pack(pop)
 
-void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield);
+void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool netSync);
 bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
 
 /**
@@ -88,7 +88,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
  * @param packedItem The destination packed struct
  * @param item The source item
  */
-void PackItem(ItemPack &packedItem, const Item &item);
+void PackItem(ItemPack &packedItem, const Item &item, bool isHellfire);
 
 /**
  * Expand a ItemPack in to a Item

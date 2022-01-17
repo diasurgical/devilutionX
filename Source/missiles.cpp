@@ -263,7 +263,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 	const auto &player = Players[pnum];
 
-	if (MissilesData[t].mType == 0) {
+	if (MissilesData[t].mType == 0 && mir == MISR_NONE) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 		if (player._pClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
@@ -384,7 +384,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		dam = target._pHitPoints / 3;
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
-		if (MissilesData[mtype].mType == 0)
+		if (MissilesData[mtype].mType == 0 && MissilesData[mtype].mResist == MISR_NONE)
 			dam += player._pIBonusDamMod + player._pDamageMod + dam * player._pIBonusDam / 100;
 		if (!shift)
 			dam <<= 6;
@@ -2812,51 +2812,20 @@ int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy
 void MI_LArrow(Missile &missile)
 {
 	missile._mirange--;
-	int p = missile._misource;
 	if (missile._miAnimType == MFILE_MINILTNG || missile._miAnimType == MFILE_MAGBLOS) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
-		missile_resistance rst = MissilesData[missile._mitype].mResist;
-		if (missile._mitype == MIS_LARROW) {
-			int mind;
-			int maxd;
-			if (p != -1) {
-				auto &player = Players[p];
-				mind = player._pILMinDam;
-				maxd = player._pILMaxDam;
-			} else {
-				mind = GenerateRnd(10) + 1 + currlevel;
-				maxd = GenerateRnd(10) + 1 + currlevel * 2;
-			}
-			MissilesData[MIS_LARROW].mResist = MISR_LIGHTNING;
-			CheckMissileCol(missile, mind, maxd, false, missile.position.tile, true);
-		}
-		if (missile._mitype == MIS_FARROW) {
-			int mind;
-			int maxd;
-			if (p != -1) {
-				auto &player = Players[p];
-				mind = player._pIFMinDam;
-				maxd = player._pIFMaxDam;
-			} else {
-				mind = GenerateRnd(10) + 1 + currlevel;
-				maxd = GenerateRnd(10) + 1 + currlevel * 2;
-			}
-			MissilesData[MIS_FARROW].mResist = MISR_FIRE;
-			CheckMissileCol(missile, mind, maxd, false, missile.position.tile, true);
-		}
-		MissilesData[missile._mitype].mResist = rst;
 	} else {
-		missile._midist++;
-
 		int mind;
 		int maxd;
+		int p = missile._misource;
+		missile._midist++;
 		if (p != -1) {
 			if (missile._micaster == TARGET_MONSTERS) {
-				auto &player = Players[p];
+				Player &player = Players[p];
 				mind = player._pIMinDam;
 				maxd = player._pIMaxDam;
 			} else {
-				auto &monster = Monsters[p];
+				Monster &monster = Monsters[p];
 				mind = monster.mMinDamage;
 				maxd = monster.mMaxDamage;
 			}
@@ -2864,20 +2833,51 @@ void MI_LArrow(Missile &missile)
 			mind = GenerateRnd(10) + 1 + currlevel;
 			maxd = GenerateRnd(10) + 1 + currlevel * 2;
 		}
-
 		missile_resistance rst = MissilesData[missile._mitype].mResist;
 		MissilesData[missile._mitype].mResist = MISR_NONE;
-		MoveMissileAndCheckMissileCol(missile, mind, maxd, true, true);
+		MoveMissileAndCheckMissileCol(missile, mind, maxd, true, false);
 		MissilesData[missile._mitype].mResist = rst;
-
 		if (missile._mirange == 0) {
 			missile._mimfnum = 0;
-			if (missile._mitype == MIS_LARROW)
-				SetMissAnim(missile, MFILE_MINILTNG);
-			else
-				SetMissAnim(missile, MFILE_MAGBLOS);
 			missile._mirange = missile._miAnimLen - 1;
 			missile.position.StopMissile();
+
+			rst = MissilesData[missile._mitype].mResist;
+
+			int eMind;
+			int eMaxd;
+			missile_graphic_id eAnim;
+			missile_resistance eRst;
+			switch (missile._mitype) {
+			case MIS_LARROW:
+				if (p != -1) {
+					Player &player = Players[p];
+					eMind = player._pILMinDam;
+					eMaxd = player._pILMaxDam;
+				} else {
+					eMind = GenerateRnd(10) + 1 + currlevel;
+					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
+				}
+				eAnim = MFILE_MINILTNG;
+				eRst = MISR_LIGHTNING;
+				break;
+			case MIS_FARROW:
+				if (p != -1) {
+					Player &player = Players[p];
+					eMind = player._pIFMinDam;
+					eMaxd = player._pIFMaxDam;
+				} else {
+					eMind = GenerateRnd(10) + 1 + currlevel;
+					eMaxd = GenerateRnd(10) + 1 + currlevel * 2;
+				}
+				eAnim = MFILE_MAGBLOS;
+				eRst = MISR_FIRE;
+				break;
+			}
+			SetMissAnim(missile, eAnim);
+			MissilesData[missile._mitype].mResist = eRst;
+			CheckMissileCol(missile, eMind, eMaxd, false, missile.position.tile, true);
+			MissilesData[missile._mitype].mResist = rst;
 		} else {
 			if (missile.position.tile != Point { missile.var1, missile.var2 }) {
 				missile.var1 = missile.position.tile.x;

@@ -1056,6 +1056,9 @@ KeymapperOptions::KeymapperOptions()
 	keyIDToKeyName.emplace(DVL_VK_SNAPSHOT, "PRINT");
 	keyIDToKeyName.emplace(DVL_VK_PAUSE, "PAUSE");
 	keyIDToKeyName.emplace(DVL_VK_TAB, "TAB");
+	keyIDToKeyName.emplace(DVL_VK_MBUTTON, "MMOUSE");
+	keyIDToKeyName.emplace(DVL_VK_X1BUTTON, "X1MOUSE");
+	keyIDToKeyName.emplace(DVL_VK_X2BUTTON, "X2MOUSE");
 
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
 	for (const auto &kv : keyIDToKeyName) {

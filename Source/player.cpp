@@ -2224,7 +2224,12 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 
 	if (minimalWalkDistance >= 0 && position.future != point) {
 		int8_t testWalkPath[MAX_PATH_LENGTH];
-		if (FindPath([this](Point position) { return PosOkPlayer(*this, position); }, position.future, point, testWalkPath) >= minimalWalkDistance) {
+		int steps = FindPath([this](Point position) { return PosOkPlayer(*this, position); }, position.future, point, testWalkPath);
+		if (steps == 0) {
+			// Can't walk to desired location => stand still
+			return;
+		}
+		if (steps >= minimalWalkDistance) {
 			graphic = player_graphic::Walk;
 			switch (testWalkPath[0]) {
 			case WALK_N:
@@ -2377,7 +2382,7 @@ void InitPlayerGFX(Player &player)
 	ResetPlayerGFX(player);
 
 	if (player._pHitPoints >> 6 == 0) {
-		player._pgfxnum = 0;
+		player._pgfxnum &= ~0xF;
 		LoadPlrGFX(player, player_graphic::Death);
 		return;
 	}
@@ -2409,7 +2414,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numbe
 	CelSprite *pCelSprite = celSprite ? &*celSprite : nullptr;
 
 	float previewShownGameTickFragments = 0.F;
-	if (pCelSprite == player.pPreviewCelSprite)
+	if (pCelSprite == player.pPreviewCelSprite && !player.IsWalking())
 		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
 	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
@@ -2436,6 +2441,7 @@ void SetPlrAnims(Player &player)
 	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
 	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
+	int armorGraphicIndex = player._pgfxnum & ~0xF;
 	if (pc == HeroClass::Warrior) {
 		if (gn == PlayerWeaponGraphic::Bow) {
 			if (leveltype != DTYPE_TOWN) {
@@ -2449,6 +2455,8 @@ void SetPlrAnims(Player &player)
 			player._pAFrames = 16;
 			player._pAFNum = 11;
 		}
+		if (armorGraphicIndex > 0)
+			player._pDFrames = 15;
 	} else if (pc == HeroClass::Rogue) {
 		if (gn == PlayerWeaponGraphic::Axe) {
 			player._pAFrames = 22;
@@ -2520,6 +2528,8 @@ void SetPlrAnims(Player &player)
 		} else if (gn == PlayerWeaponGraphic::Mace || gn == PlayerWeaponGraphic::MaceShield) {
 			player._pAFNum = 8;
 		}
+		if (armorGraphicIndex > 0)
+			player._pDFrames = 15;
 	}
 }
 
@@ -3108,7 +3118,10 @@ StartPlayerKill(int pnum, int earflag)
 	player.Say(HeroSpeech::AuughUh);
 
 	if (player._pgfxnum != 0) {
-		player._pgfxnum = 0;
+		if (diablolevel || earflag != 0)
+			player._pgfxnum &= ~0xF;
+		else
+			player._pgfxnum = 0;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 	}

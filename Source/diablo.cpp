@@ -623,6 +623,24 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 			sgbMouseDown = CLICK_NONE;
 		}
 		return;
+	case DVL_WM_MBUTTONDOWN:
+		sgOptions.Keymapper.KeyPressed(DVL_VK_MBUTTON);
+		return;
+	case DVL_WM_MBUTTONUP:
+		sgOptions.Keymapper.KeyReleased(DVL_VK_MBUTTON);
+		return;
+	case DVL_WM_X1BUTTONDOWN:
+		sgOptions.Keymapper.KeyPressed(DVL_VK_X1BUTTON);
+		return;
+	case DVL_WM_X1BUTTONUP:
+		sgOptions.Keymapper.KeyReleased(DVL_VK_X1BUTTON);
+		return;
+	case DVL_WM_X2BUTTONDOWN:
+		sgOptions.Keymapper.KeyPressed(DVL_VK_X2BUTTON);
+		return;
+	case DVL_WM_X2BUTTONUP:
+		sgOptions.Keymapper.KeyReleased(DVL_VK_X2BUTTON);
+		return;
 	case DVL_WM_CAPTURECHANGED:
 		sgbMouseDown = CLICK_NONE;
 		LastMouseButtonAction = MouseActionType::None;
@@ -1649,6 +1667,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 			InitQuests();
 			InitPortals();
 			InitDungMsgs(Players[MyPlayerId]);
+			DeltaSyncJunk();
 		}
 		giNumberOfLevels = gbIsHellfire ? 25 : 17;
 		interface_mode uMsg = WM_DIABNEWGAME;
