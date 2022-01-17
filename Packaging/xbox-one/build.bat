@@ -15,4 +15,4 @@ powershell "Get-Content ..\uwp-project\Package.appxmanifest.template | %% {$_ -r
 
 msbuild /p:Configuration=Release;Platform=x64;AppxBundle=Always;AppxBundlePlatforms=x64 ..\uwp-project\devilutionx.sln
 
-powershell "Get-Childitem -Path uwp-project\AppxPackages, uwp-project\Release -Include Microsoft.VCLibs.x64.*.appx, devilutionX_*_x64.appx -File -Recurse | Copy-Item -Destination ."
+powershell "Get-Childitem -Path uwp-project\AppxPackages, uwp-project\Release -Include Microsoft.VCLibs.x64.*.appx, devilutionX_*_x64.appx -File -Recurse | Compress-Archive -DestinationPath ..\devilutionx.zip"

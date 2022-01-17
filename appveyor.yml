@@ -2,10 +2,21 @@ version: 1.0.{build}
 
 pull_requests:
   do_not_increment_build_number: true
-image: Visual Studio 2022
+environment:
+  matrix:
+
+  - job_name: windows
+    appveyor_build_worker_image: Visual Studio 2022
+
+  - job_name: uwp
+    appveyor_build_worker_image: Visual Studio 2022
 
 for:
   -
+    matrix:
+      only:
+        - job_name: windows
+
     cache: '%LOCALAPPDATA%\vcpkg\archives'
 
     install:
@@ -23,6 +34,10 @@ for:
       verbosity: minimal
 
   -
+    matrix:
+      only:
+        - job_name: uwp
+
     before_build:
       - cd %APPVEYOR_BUILD_FOLDER%\Packaging\xbox-one
       - if exist ..\..\build rd /s /q ..\..\build
@@ -34,9 +49,7 @@ for:
       - cd %APPVEYOR_BUILD_FOLDER%
 
 artifacts:
-  - path: Debug
+  - path: Debug\devilutionx.exe
     name: devilutionx.exe
-  - path: build
-    name: devilutionX_*_x64.appx
-  - path: build
-    name: Microsoft.VCLibs.x64.*.appx
+  - path: devilutionx.zip
+    name: devilutionx.zip
