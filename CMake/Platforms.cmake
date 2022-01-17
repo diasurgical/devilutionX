@@ -59,3 +59,7 @@ endif()
 if(EMSCRIPTEN)
   include(platforms/emscripten)
 endif()
+
+if(UWP_LIB)
+  include(platforms/uwp_lib)
+endif()

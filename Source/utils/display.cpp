@@ -192,7 +192,7 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 #endif
 
-#if defined(_WIN32) && !defined(USE_SDL1)
+#if defined(_WIN32) && !defined(USE_SDL1) && !defined(__UWP__)
 	// The default WASAPI backend causes distortions
 	// https://github.com/diasurgical/devilutionX/issues/1434
 	SDL_setenv("SDL_AUDIODRIVER", "winmm", /*overwrite=*/false);

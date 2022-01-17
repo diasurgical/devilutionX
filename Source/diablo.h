@@ -120,4 +120,8 @@ extern bool gbFriendlyMode;
  */
 extern GameLogicStep gGameLogicStep;
 
+#ifdef __UWP__
+void setOnInitialized(void (*)());
+#endif
+
 } // namespace devilution

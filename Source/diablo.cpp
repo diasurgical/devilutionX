@@ -1695,6 +1695,15 @@ void diablo_quit(int exitStatus)
 	exit(exitStatus);
 }
 
+#ifdef __UWP__
+void (*onInitialized)() = NULL;
+
+void setOnInitialized(void (*callback)())
+{
+	onInitialized = callback;
+}
+#endif
+
 int DiabloMain(int argc, char **argv)
 {
 #ifdef _DEBUG
@@ -1717,6 +1726,10 @@ int DiabloMain(int argc, char **argv)
 	LoadGameArchives();
 
 	DiabloInit();
+
+#ifdef __UWP__
+	onInitialized();
+#endif
 
 	DiabloSplash();
 	mainmenu_loop();

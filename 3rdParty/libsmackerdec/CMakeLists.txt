@@ -17,6 +17,8 @@ target_include_directories(libsmackerdec PUBLIC ${libsmackerdec_SOURCE_DIR}/incl
 
 if(USE_SDL1)
   target_link_libraries(libsmackerdec PUBLIC ${SDL_LIBRARY})
-else()
+elseif(TARGET SDL2::SDL2)
   target_link_libraries(libsmackerdec PUBLIC SDL2::SDL2)
+elseif(TARGET SDL2::SDL2-static)
+  target_link_libraries(libsmackerdec PUBLIC SDL2::SDL2-static)
 endif()
