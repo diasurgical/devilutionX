@@ -33,6 +33,10 @@ for:
       project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
       verbosity: minimal
 
+    artifacts:
+      - path: Debug\devilutionx.exe
+        name: devilutionx.exe
+
   -
     matrix:
       only:
@@ -48,8 +52,6 @@ for:
     after_build:
       - cd %APPVEYOR_BUILD_FOLDER%
 
-artifacts:
-  - path: Debug\devilutionx.exe
-    name: devilutionx.exe
-  - path: devilutionx.zip
-    name: devilutionx.zip
+    artifacts:
+      - path: devilutionx.zip
+        name: devilutionx.zip
