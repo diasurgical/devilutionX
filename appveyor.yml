@@ -10,7 +10,6 @@ for:
 
     install:
       - echo starting install
-      - mkdir C:\Tools\vcpkg
       - cd C:\Tools\vcpkg
       - git pull
       - .\bootstrap-vcpkg.bat
