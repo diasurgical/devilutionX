@@ -147,7 +147,7 @@ void InitCursor()
 	pCursCels = LoadCel("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
 	if (gbIsHellfire)
 		pCursCels2 = LoadCel("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
-	pCursCels3 = LoadCel("Data\\Inv\\fuck.CEL", InvItemWidth3);
+	pCursCels3 = LoadCel("Data\\Inv\\Soulstone.CEL", InvItemWidth3);
 	ClearCursor();
 }
 
@@ -161,32 +161,35 @@ void FreeCursor()
 
 const CelSprite &GetInvItemSprite(int i)
 {
-	if (i <= InvItems1Size - 1) {
+	if (i < InvItems1Size) {
 		return *pCursCels;
-	} else if (i > InvItems1Size - 1 && i <= InvItems2Size - 2) {
+	} else if (i >= InvItems1Size && i < InvItems2Size - 2) {
+		return *pCursCels2;
+	} else if (i >= InvItems2Size - 2) {
 		return *pCursCels3;
 	}
-	return *pCursCels3;
 }
 
 int GetInvItemFrame(int i)
 {
 	if (i < InvItems1Size) {
 		return i;
-	} else if (i >= InvItems1Size && i < InvItems2Size - 1) {
+	} else if (i >= InvItems1Size && i < InvItems2Size - 2) {
 		return i - (InvItems1Size - 1);
+	} else if (i >= InvItems2Size - 2) {
+		return i - (InvItems2Size - 2);
 	}
-	return i - (InvItems2Size - 2);
 }
 
 Size GetInvItemSize(int cursId)
 {
 	if (cursId < InvItems1Size) {
 		return { InvItemWidth1[cursId], InvItemHeight1[cursId] };
-	} else if (cursId >= InvItems1Size && cursId < InvItems2Size - 1) {
+	} else if (cursId >= InvItems1Size && cursId < InvItems2Size - 2) {
 		return { InvItemWidth2[cursId - (InvItems1Size - 1)], InvItemHeight2[cursId - (InvItems1Size - 1)] };
+	} else if (cursId >= InvItems2Size - 2) {
+		return { InvItemWidth3[cursId - (InvItems2Size - 2)], InvItemHeight3[cursId - (InvItems2Size - 2)] };
 	}
-	return { InvItemWidth3[cursId - (InvItems2Size - 2)], InvItemHeight3[cursId - (InvItems2Size - 2)] };
 }
 
 void SetICursor(int cursId)

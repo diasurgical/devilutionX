@@ -2251,6 +2251,12 @@ void PrintItemMisc(const Item &item)
 		strcpy(tempstr, _("Right-click to view"));
 		AddPanelString(tempstr);
 	}
+	if (item._iMiscId == IMISC_SOULSTONE) {
+		strcpy(tempstr, _("Contains Diablo's essence"));
+		AddPanelString(tempstr);
+		strcpy(tempstr, _("Right-click to use"));
+		AddPanelString(tempstr);
+	}
 	if (item._iMiscId == IMISC_EAR) {
 		strcpy(tempstr, fmt::format(_("Level: {:d}"), item._ivalue).c_str());
 		AddPanelString(tempstr);
@@ -4451,6 +4457,12 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		player._pTSpell = SPL_RUNESTONE;
 		if (pnum == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
+		break;
+	case IMISC_SOULSTONE:
+		if (currlevel == 16)
+			PrepDoEnding();
+		else
+			StartPlayerKill(MyPlayerId, 0);
 		break;
 	default:
 		break;

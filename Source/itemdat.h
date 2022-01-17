@@ -65,9 +65,10 @@ enum _item_indexes : int16_t { // TODO defines all indexes in AllItemsList
 	IDI_FULLNOTE,
 	IDI_BROWNSUIT,
 	IDI_GREYSUIT,
-	IDI_SORCERER_DIABLO = 166,
+	IDI_SORCERER_DIABLO,
+	IDI_SOULSTONE = 167,
 
-	IDI_LAST = IDI_SORCERER_DIABLO,
+	IDI_LAST = IDI_SOULSTONE,
 	IDI_NONE = -1,
 };
 
@@ -429,6 +430,7 @@ enum item_misc_id : int8_t {
 	IMISC_RUNELAST,
 	IMISC_AURIC,
 	IMISC_NOTE,
+	IMISC_SOULSTONE,
 	IMISC_INVALID = -1,
 };
 

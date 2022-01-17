@@ -1053,8 +1053,6 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 	quest._qactive = QUEST_DONE;
 	if (sendmsg)
 		NetSendCmdQuest(true, quest);
-	sgbSaveSoundOn = gbSoundOn;
-	gbProcessPlayers = false;
 	for (int j = 0; j < ActiveMonsterCount; j++) {
 		int k = ActiveMonsters[j];
 		auto &monster = Monsters[k];
@@ -1072,13 +1070,6 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 	}
 	AddLight(diablo.position.tile, 8);
 	DoVision(diablo.position.tile, 8, MAP_EXP_NONE, true);
-	int dist = diablo.position.tile.WalkingDistance(ViewPosition);
-	if (dist > 20)
-		dist = 20;
-	diablo._mVar3 = ViewPosition.x << 16;
-	diablo.position.temp.x = ViewPosition.y << 16;
-	diablo.position.temp.y = (int)((diablo._mVar3 - (diablo.position.tile.x << 16)) / (double)dist);
-	diablo.position.offset2.deltaX = (int)((diablo.position.temp.x - (diablo.position.tile.y << 16)) / (double)dist);
 }
 
 void SpawnLoot(Monster &monster, bool sendmsg)
@@ -1794,24 +1785,19 @@ bool MonsterDeath(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
+	auto &player = Players[MyPlayerId];
 	assert(monster.MType != nullptr);
 
 	monster._mVar1++;
 	if (monster.MType->mtype == MT_DIABLO) {
-		if (monster.position.tile.x < ViewPosition.x) {
-			ViewPosition.x--;
-		} else if (monster.position.tile.x > ViewPosition.x) {
-			ViewPosition.x++;
+		if (monster._mVar1 == 140) {
+			Point pos = monster.position.tile;
+			AddMissile({ pos.x, pos.y }, { pos.x, pos.y }, Direction::South, MIS_BOOM2, TARGET_PLAYERS, -1, 0, 0);
+			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
+			monster._mDelFlag = true;
+			SpawnQuestItem(IDI_SOULSTONE, { pos.x, pos.y }, 0, 0);
+			player.Say(HeroSpeech::VengeanceIsMine);
 		}
-
-		if (monster.position.tile.y < ViewPosition.y) {
-			ViewPosition.y--;
-		} else if (monster.position.tile.y > ViewPosition.y) {
-			ViewPosition.y++;
-		}
-
-		if (monster._mVar1 == 140)
-			PrepDoEnding();
 	} else if (monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames) {
 		if (monster._uniqtype == 0)
 			AddCorpse(monster.position.tile, monster.MType->mdeadval, monster._mdir);
@@ -4126,7 +4112,6 @@ void DoEnding()
 
 void PrepDoEnding()
 {
-	gbSoundOn = sgbSaveSoundOn;
 	gbRunGame = false;
 	MyPlayerIsDead = false;
 	cineflag = true;
@@ -4141,8 +4126,6 @@ void PrepDoEnding()
 		if (gbIsMultiplayer) {
 			if (player._pHitPoints >> 6 == 0)
 				player._pHitPoints = 64;
-			if (player._pMana >> 6 == 0)
-				player._pMana = 64;
 		}
 	}
 }
