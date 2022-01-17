@@ -1059,17 +1059,17 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 		if (monster.MType->mtype == MT_DIABLO || diablo._msquelch == 0)
 			continue;
 
-		NewMonsterAnim(monster, MonsterGraphic::Death, monster._mdir);
-		monster._mmode = MonsterMode::Death;
-		monster.position.offset = { 0, 0 };
-		monster._mVar1 = 0;
-		monster.position.tile = monster.position.old;
-		monster.position.future = monster.position.tile;
-		M_ClearSquares(k);
-		dMonster[monster.position.tile.x][monster.position.tile.y] = k + 1;
+		if (!gbIsMultiplayer) {
+			NewMonsterAnim(monster, MonsterGraphic::Death, monster._mdir);
+			monster._mmode = MonsterMode::Death;
+			monster.position.offset = { 0, 0 };
+			monster._mVar1 = 0;
+			monster.position.tile = monster.position.old;
+			monster.position.future = monster.position.tile;
+			M_ClearSquares(k);
+			dMonster[monster.position.tile.x][monster.position.tile.y] = k + 1;
+		}
 	}
-	AddLight(diablo.position.tile, 8);
-	DoVision(diablo.position.tile, 8, MAP_EXP_NONE, true);
 }
 
 void SpawnLoot(Monster &monster, bool sendmsg)
