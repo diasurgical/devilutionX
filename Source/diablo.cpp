@@ -1828,6 +1828,15 @@ void diablo_pause_game()
 bool GameWasAlreadyPaused = false;
 bool MinimizePaused = false;
 
+bool diablo_is_focused()
+{
+#ifndef USE_SDL1
+	return SDL_GetKeyboardFocus() == ghMainWnd;
+#else
+	return true;
+#endif
+}
+
 void diablo_focus_pause()
 {
 	if (!movie_playing && (gbIsMultiplayer || MinimizePaused)) {
