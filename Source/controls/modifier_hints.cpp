@@ -173,7 +173,7 @@ void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, co
         }
 
         SetSpellTrans(splType);
-        DrawSpellCel(out, positions[slot], *pSBkIconCels, [splId]);
+        DrawSpellCel(out, positions[slot], *pSBkIconCels, SpellITbl[splId]);
         textPosition = textPositions[slot];
         // Drop shadow
         DrawString(out, texts[slot], textPosition + Displacement { -1, 1 }, UiFlags::ColorBlack);
