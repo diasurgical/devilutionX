@@ -393,4 +393,20 @@ void SVidPlayEnd()
 #endif
 }
 
+void SVidMute()
+{
+#ifndef NOSOUND
+	if (SVidAudioStream)
+		SVidAudioStream->mute();
+#endif
+}
+
+void SVidUnmute()
+{
+#ifndef NOSOUND
+	if (SVidAudioStream)
+		SVidAudioStream->unmute();
+#endif
+}
+
 } // namespace devilution
