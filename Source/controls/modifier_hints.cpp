@@ -139,46 +139,46 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
  */
 void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
 {
-    std::optional<CelSprite> pSBkIconCels = LoadCel("Data\\SpellI2.CEL", IconSize);
-    const auto &myPlayer  = Players[MyPlayerId];
-    Point positions[4] = {
-	    origin + Displacement { 0, LineHeight },
-	    origin + Displacement { IconSize, LineHeight - IconSize },
-	    origin + Displacement { IconSize, LineHeight + IconSize },
-	    origin + Displacement { IconSize * 2, LineHeight }
-    };
-    Point textPositions[4] = {
-	    positions[0] + Displacement { IconSize - hint.leftW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
-	    positions[1] + Displacement { IconSize - hint.topW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
-	    positions[2] + Displacement { IconSize - hint.bottomW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
-	    positions[3] + Displacement { IconSize - hint.rightW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize }
-    };
-    const char *texts[4] = {hint.left, hint.top, hint.bottom, hint.right};
-    bool isActive[4] = { IsLeftActive(hint), IsTopActive(hint), IsBottomActive(hint), IsRightActive(hint) };
+	std::optional<CelSprite> pSBkIconCels = LoadCel("Data\\SpellI2.CEL", IconSize);
+	const auto &myPlayer  = Players[MyPlayerId];
+	Point positions[4] = {
+	origin + Displacement { 0, LineHeight },
+	origin + Displacement { IconSize, LineHeight - IconSize },
+		origin + Displacement { IconSize, LineHeight + IconSize },
+		origin + Displacement { IconSize * 2, LineHeight }
+	};
+	Point textPositions[4] = {
+		positions[0] + Displacement { IconSize - hint.leftW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
+		positions[1] + Displacement { IconSize - hint.topW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
+		positions[2] + Displacement { IconSize - hint.bottomW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
+		positions[3] + Displacement { IconSize - hint.rightW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize }
+	};
+	const char *texts[4] = {hint.left, hint.top, hint.bottom, hint.right};
+	bool isActive[4] = { IsLeftActive(hint), IsTopActive(hint), IsBottomActive(hint), IsRightActive(hint) };
 	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer._pScrlSpells | myPlayer._pISpells;
-    spell_id splId;
-    spell_type splType;
-    Point textPosition;
+	spell_id splId;
+	spell_type splType;
+	Point textPosition;
 
-    for (int slot = 0; slot < 4; ++slot)
-    {
-        splId = myPlayer._pSplHotKey[slot];
+	for (int slot = 0; slot < 4; ++slot)
+	{
+		splId = myPlayer._pSplHotKey[slot];
 
-        if (splId != SPL_INVALID && (spells & GetSpellBitmask(splId)) != 0)
-            splType = (currlevel == 0 && !spelldata[splId].sTownSpell) ? RSPLTYPE_INVALID : myPlayer._pSplTHotKey[slot];
-        else
-        {
-            splType = RSPLTYPE_INVALID;
-            splId = SPL_NULL;
-        }
+		if (splId != SPL_INVALID && (spells & GetSpellBitmask(splId)) != 0)
+			splType = (currlevel == 0 && !spelldata[splId].sTownSpell) ? RSPLTYPE_INVALID : myPlayer._pSplTHotKey[slot];
+		else
+		{
+			splType = RSPLTYPE_INVALID;
+			splId = SPL_NULL;
+		}
 
-        SetSpellTrans(splType);
-        DrawSpellCel(out, positions[slot], *pSBkIconCels, SpellITbl[splId]);
-        textPosition = textPositions[slot];
-        // Drop shadow
-        DrawString(out, texts[slot], textPosition + Displacement { -1, 1 }, UiFlags::ColorBlack);
-        DrawString(out, texts[slot], textPosition, CircleSpellMenuHintTextColor(isActive[slot]));
-    }
+		SetSpellTrans(splType);
+		DrawSpellCel(out, positions[slot], *pSBkIconCels, SpellITbl[splId]);
+		textPosition = textPositions[slot];
+		// Drop shadow
+		DrawString(out, texts[slot], textPosition + Displacement { -1, 1 }, UiFlags::ColorBlack);
+		DrawString(out, texts[slot], textPosition, CircleSpellMenuHintTextColor(isActive[slot]));
+	}
 
 	pSBkIconCels = std::nullopt;
 }
@@ -195,17 +195,15 @@ void DrawStartModifierMenu(const Surface &out)
 
 void DrawSelectModifierMenu(const Surface &out)
 {
-    if (!select_modifier_active)
-        return;
+	if (!select_modifier_active)
+		return;
 
-	if (sgOptions.Controller.bDpadHotkeys)
-    {
-        static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
-        DrawSpellsCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-    }
-
-    static const CircleMenuHint Spells(/*isDpad=*/false, "F6", "F8", "F7", "F5");
-    DrawSpellsCircleMenuHint(out, Spells, { PANEL_LEFT + PANEL_WIDTH - IconSize * 3 - CircleMarginX, PANEL_TOP - CircleTop });
+	if (sgOptions.Controller.bDpadHotkeys) {
+		static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
+		DrawSpellsCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
+	}
+	static const CircleMenuHint Spells(/*isDpad=*/false, "F6", "F8", "F7", "F5");
+	DrawSpellsCircleMenuHint(out, Spells, { PANEL_LEFT + PANEL_WIDTH - IconSize * 3 - CircleMarginX, PANEL_TOP - CircleTop });
 }
 
 } // namespace
