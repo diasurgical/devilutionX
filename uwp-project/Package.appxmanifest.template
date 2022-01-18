@@ -9,7 +9,7 @@
   <Identity
     Name="b6830ff4-1ef5-4907-9d9e-1ba808edf70f"
     Publisher="CN=devilutionX"
-    Version="__PROJECT_VERSION__" />
+    Version="__PROJECT_VERSION__.0" />
 
   <mp:PhoneIdentity PhoneProductId="b6830ff4-1ef5-4907-9d9e-1ba808edf70f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
