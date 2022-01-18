@@ -1848,10 +1848,6 @@ void diablo_focus_pause()
 
 void diablo_focus_unpause()
 {
-	if (gbIsMultiplayer || !MinimizePaused) {
-		return;
-	}
-
 	if (!GameWasAlreadyPaused) {
 		PauseMode = 0;
 	}
