@@ -301,13 +301,13 @@ int sound_get_or_set_sound_volume(int volume)
 void music_mute()
 {
 	if (music)
-		music->setVolume(VolumeLogToLinear(VOLUME_MIN, VOLUME_MIN, VOLUME_MAX));
+		music->mute();
 }
 
 void music_unmute()
 {
 	if (music)
-		music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
+		music->unmute();
 }
 
 } // namespace devilution
