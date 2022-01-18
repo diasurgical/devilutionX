@@ -110,9 +110,10 @@ enum class MissileMovementDistrubution {
 };
 
 struct Missile;
+struct AddMissileParameter;
 
 struct MissileData {
-	void (*mAddProc)(Missile &, Point, Direction);
+	void (*mAddProc)(Missile &, const AddMissileParameter &);
 	void (*mProc)(Missile &);
 	uint8_t mName;
 	bool mDraw;
