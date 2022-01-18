@@ -87,6 +87,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer);
 int DiabloMain(int argc, char **argv);
 bool TryIconCurs();
 void diablo_pause_game();
+bool diablo_is_focused();
 void diablo_focus_pause();
 void diablo_focus_unpause();
 bool PressEscKey();
