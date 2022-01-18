@@ -63,6 +63,7 @@
 #include "sound.h"
 #include "stores.h"
 #include "storm/storm_net.hpp"
+#include "storm/storm_svid.h"
 #include "themes.h"
 #include "town.h"
 #include "towners.h"
@@ -1829,7 +1830,7 @@ bool MinimizePaused = false;
 
 void diablo_focus_pause()
 {
-	if (gbIsMultiplayer || MinimizePaused) {
+	if (!movie_playing && (gbIsMultiplayer || MinimizePaused)) {
 		return;
 	}
 
@@ -1841,6 +1842,7 @@ void diablo_focus_pause()
 		LastMouseButtonAction = MouseActionType::None;
 	}
 
+	SVidMute();
 	music_mute();
 
 	MinimizePaused = true;
@@ -1852,6 +1854,7 @@ void diablo_focus_unpause()
 		PauseMode = 0;
 	}
 
+	SVidUnmute();
 	music_unmute();
 
 	MinimizePaused = false;
