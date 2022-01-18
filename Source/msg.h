@@ -69,7 +69,7 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdPItem)
 	CMD_RESPAWNITEM,
-	// Attack location.
+	// Attack target location.
 	//
 	// body (TCmdLoc)
 	CMD_ATTACKXY,
