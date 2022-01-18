@@ -140,10 +140,10 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
 void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
 {
 	std::optional<CelSprite> pSBkIconCels = LoadCel("Data\\SpellI2.CEL", IconSize);
-	const auto &myPlayer  = Players[MyPlayerId];
+	const auto &myPlayer = Players[MyPlayerId];
 	Point positions[4] = {
-	origin + Displacement { 0, LineHeight },
-	origin + Displacement { IconSize, LineHeight - IconSize },
+		origin + Displacement { 0, LineHeight },
+		origin + Displacement { IconSize, LineHeight - IconSize },
 		origin + Displacement { IconSize, LineHeight + IconSize },
 		origin + Displacement { IconSize * 2, LineHeight }
 	};
@@ -153,21 +153,19 @@ void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, co
 		positions[2] + Displacement { IconSize - hint.bottomW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
 		positions[3] + Displacement { IconSize - hint.rightW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize }
 	};
-	const char *texts[4] = {hint.left, hint.top, hint.bottom, hint.right};
+	const char *texts[4] = { hint.left, hint.top, hint.bottom, hint.right };
 	bool isActive[4] = { IsLeftActive(hint), IsTopActive(hint), IsBottomActive(hint), IsRightActive(hint) };
 	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer._pScrlSpells | myPlayer._pISpells;
 	spell_id splId;
 	spell_type splType;
 	Point textPosition;
 
-	for (int slot = 0; slot < 4; ++slot)
-	{
+	for (int slot = 0; slot < 4; ++slot) {
 		splId = myPlayer._pSplHotKey[slot];
 
 		if (splId != SPL_INVALID && (spells & GetSpellBitmask(splId)) != 0)
 			splType = (currlevel == 0 && !spelldata[splId].sTownSpell) ? RSPLTYPE_INVALID : myPlayer._pSplTHotKey[slot];
-		else
-		{
+		else {
 			splType = RSPLTYPE_INVALID;
 			splId = SPL_NULL;
 		}
