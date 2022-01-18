@@ -461,6 +461,13 @@ void UiHandleEvents(SDL_Event *event)
 			diablo_focus_unpause();
 		}
 	}
+#else
+	if (event->type == SDL_ACTIVEEVENT && (event->active.state & SDL_APPINPUTFOCUS) != 0) {
+		if (event->active.gain == 0)
+			music_mute();
+		else
+			diablo_focus_unpause();
+	}
 #endif
 }
 

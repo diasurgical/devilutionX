@@ -1833,7 +1833,8 @@ bool diablo_is_focused()
 #ifndef USE_SDL1
 	return SDL_GetKeyboardFocus() == ghMainWnd;
 #else
-	return true;
+	Uint8 appState = SDL_GetAppState();
+	return (appState & SDL_APPINPUTFOCUS) != 0;
 #endif
 }
 

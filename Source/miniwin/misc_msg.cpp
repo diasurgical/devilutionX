@@ -649,6 +649,15 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 
 		break;
+#else
+	case SDL_ACTIVEEVENT:
+		if ((e.active.state & SDL_APPINPUTFOCUS) != 0) {
+			if (e.active.gain == 0)
+				diablo_focus_pause();
+			else
+				diablo_focus_unpause();
+		}
+		break;
 #endif
 	default:
 		return FalseAvail("unknown", e.type);
