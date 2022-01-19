@@ -152,7 +152,7 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 {
 	const int monsterId = monsterSync._mndx;
 	Monster &monster = Monsters[monsterId];
-	if (monster._mhitpoints <= 0) {
+	if (monster._mhitpoints <= 0 || monster._mmode == MonsterMode::Death) {
 		return;
 	}
 
