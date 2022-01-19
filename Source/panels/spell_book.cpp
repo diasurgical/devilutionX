@@ -20,10 +20,12 @@
 #define SPLICONLAST (gbIsHellfire ? 52 : 43)
 
 namespace devilution {
+
+std::optional<CelSprite> pSBkIconCels;
+
 namespace {
 
 std::optional<CelSprite> pSBkBtnCel;
-std::optional<CelSprite> pSBkIconCels;
 std::optional<CelSprite> pSpellBkCel;
 
 /** Maps from spellbook page number and position to spell_id. */

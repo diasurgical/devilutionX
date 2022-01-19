@@ -6,11 +6,15 @@
 #include "control.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"
+#include "engine/load_cel.hpp"
 #include "engine/render/text_render.hpp"
 #include "options.h"
+#include "panels/spell_icons.hpp"
 #include "utils/language.h"
 
 namespace devilution {
+
+extern std::optional<CelSprite> pSBkIconCels;
 
 namespace {
 
@@ -31,6 +35,15 @@ constexpr int CircleMarginX = 16;
 
 /** Distance between the panel top and the circle top. */
 constexpr int CircleTop = 101;
+
+/** Spell icon side size. */
+constexpr int IconSize = 37;
+
+/** Spell icon text right margin. */
+constexpr int IconSizeTextMarginRight = 3;
+
+/** Spell icon text top margin. */
+constexpr int IconSizeTextMarginTop = 2;
 
 struct CircleMenuHint {
 	CircleMenuHint(bool isDpad, const char *top, const char *right, const char *bottom, const char *left)
@@ -99,6 +112,11 @@ UiFlags CircleMenuHintTextColor(bool active)
 	return active ? UiFlags::ColorBlue : UiFlags::ColorWhitegold;
 }
 
+UiFlags CircleSpellMenuHintTextColor(bool active)
+{
+	return active ? UiFlags::ColorBlue : UiFlags::ColorWhite;
+}
+
 /**
  * @brief Draws hint text for a four button layout with the top/left edge of the bounding box at the position given by origin.
  * @param out The output buffer to draw on.
@@ -115,6 +133,53 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
 	DrawString(out, hint.bottom, origin + Displacement { hint.xMid - hint.bottomW / 2, LineHeight * 2 }, CircleMenuHintTextColor(IsBottomActive(hint)));
 }
 
+/**
+ * @brief Draws hint text for a four button layout with the top/left edge of the bounding box at the position given by origin plus the icon for the spell mapped to that entry.
+ * @param out The output buffer to draw on.
+ * @param hint Struct describing the text to draw and the dimensions of the layout.
+ * @param origin Top left corner of the layout (relative to the output buffer).
+ */
+void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
+{
+	const auto &myPlayer = Players[MyPlayerId];
+	Point positions[4] = {
+		origin + Displacement { 0, LineHeight },
+		origin + Displacement { IconSize, LineHeight - IconSize },
+		origin + Displacement { IconSize, LineHeight + IconSize },
+		origin + Displacement { IconSize * 2, LineHeight }
+	};
+	Point textPositions[4] = {
+		positions[0] + Displacement { IconSize - hint.leftW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
+		positions[1] + Displacement { IconSize - hint.topW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
+		positions[2] + Displacement { IconSize - hint.bottomW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
+		positions[3] + Displacement { IconSize - hint.rightW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize }
+	};
+	const char *texts[4] = { hint.left, hint.top, hint.bottom, hint.right };
+	bool isActive[4] = { IsLeftActive(hint), IsTopActive(hint), IsBottomActive(hint), IsRightActive(hint) };
+	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer._pScrlSpells | myPlayer._pISpells;
+	spell_id splId;
+	spell_type splType;
+	Point textPosition;
+
+	for (int slot = 0; slot < 4; ++slot) {
+		splId = myPlayer._pSplHotKey[slot];
+
+		if (splId != SPL_INVALID && (spells & GetSpellBitmask(splId)) != 0)
+			splType = (currlevel == 0 && !spelldata[splId].sTownSpell) ? RSPLTYPE_INVALID : myPlayer._pSplTHotKey[slot];
+		else {
+			splType = RSPLTYPE_INVALID;
+			splId = SPL_NULL;
+		}
+
+		SetSpellTrans(splType);
+		DrawSpellCel(out, positions[slot], *pSBkIconCels, SpellITbl[splId]);
+		textPosition = textPositions[slot];
+		// Drop shadow
+		DrawString(out, texts[slot], textPosition + Displacement { -1, 1 }, UiFlags::ColorBlack);
+		DrawString(out, texts[slot], textPosition, CircleSpellMenuHintTextColor(isActive[slot]));
+	}
+}
+
 void DrawStartModifierMenu(const Surface &out)
 {
 	if (!start_modifier_active)
@@ -129,12 +194,13 @@ void DrawSelectModifierMenu(const Surface &out)
 {
 	if (!select_modifier_active)
 		return;
+
 	if (sgOptions.Controller.bDpadHotkeys) {
 		static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
-		DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
+		DrawSpellsCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 	}
 	static const CircleMenuHint Spells(/*isDpad=*/false, "F6", "F8", "F7", "F5");
-	DrawCircleMenuHint(out, Spells, { PANEL_LEFT + PANEL_WIDTH - Spells.Width() - CircleMarginX, PANEL_TOP - CircleTop });
+	DrawSpellsCircleMenuHint(out, Spells, { PANEL_LEFT + PANEL_WIDTH - IconSize * 3 - CircleMarginX, PANEL_TOP - CircleTop });
 }
 
 } // namespace
