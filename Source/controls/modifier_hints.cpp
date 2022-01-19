@@ -14,6 +14,8 @@
 
 namespace devilution {
 
+extern std::optional<CelSprite> pSBkIconCels;
+
 namespace {
 
 int SpaceWidth()
@@ -139,7 +141,6 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
  */
 void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
 {
-	std::optional<CelSprite> pSBkIconCels = LoadCel("Data\\SpellI2.CEL", IconSize);
 	const auto &myPlayer = Players[MyPlayerId];
 	Point positions[4] = {
 		origin + Displacement { 0, LineHeight },
@@ -177,8 +178,6 @@ void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, co
 		DrawString(out, texts[slot], textPosition + Displacement { -1, 1 }, UiFlags::ColorBlack);
 		DrawString(out, texts[slot], textPosition, CircleSpellMenuHintTextColor(isActive[slot]));
 	}
-
-	pSBkIconCels = std::nullopt;
 }
 
 void DrawStartModifierMenu(const Surface &out)
