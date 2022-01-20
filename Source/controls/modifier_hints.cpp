@@ -184,10 +184,16 @@ void DrawStartModifierMenu(const Surface &out)
 {
 	if (!start_modifier_active)
 		return;
+
+#ifdef __UWP__
+	static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/_("Quests"), /*right=*/_("Inv"), /*bottom=*/_("Spells"), /*left=*/_("Char"));
+	DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
+#else
 	static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
 	static const CircleMenuHint Buttons(/*isDpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
 	DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 	DrawCircleMenuHint(out, Buttons, { PANEL_LEFT + PANEL_WIDTH - Buttons.Width() - CircleMarginX, PANEL_TOP - CircleTop });
+#endif
 }
 
 void DrawSelectModifierMenu(const Surface &out)
@@ -195,10 +201,12 @@ void DrawSelectModifierMenu(const Surface &out)
 	if (!select_modifier_active)
 		return;
 
+#ifndef __UWP__
 	if (sgOptions.Controller.bDpadHotkeys) {
 		static const CircleMenuHint DPad(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
 		DrawSpellsCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 	}
+#endif
 	static const CircleMenuHint Spells(/*isDpad=*/false, "F6", "F8", "F7", "F5");
 	DrawSpellsCircleMenuHint(out, Spells, { PANEL_LEFT + PANEL_WIDTH - IconSize * 3 - CircleMarginX, PANEL_TOP - CircleTop });
 }

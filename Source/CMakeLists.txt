@@ -76,7 +76,6 @@ set(libdevilutionx_SRCS
   controls/controller_motion.cpp
   controls/devices/joystick.cpp
   controls/devices/kbcontroller.cpp
-  controls/game_controls.cpp
   controls/menu_controls.cpp
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
@@ -143,6 +142,12 @@ set(libdevilutionx_SRCS
   storm/storm_svid.cpp
   miniwin/misc_msg.cpp
   platform/locale.cpp)
+
+if(NOT UWP_LIB)
+  list(APPEND libdevilutionx_SRCS controls/game_controls.cpp)
+else()
+  list(APPEND libdevilutionx_SRCS controls/platforms/uwp.cpp)
+endif()
 
 if(IOS)
   list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)
