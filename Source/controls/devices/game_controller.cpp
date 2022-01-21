@@ -86,8 +86,6 @@ ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 
 SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerButton button)
 {
-	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
-		UNIMPLEMENTED();
 	switch (button) {
 	case ControllerButton_BUTTON_A:
 		return SDL_CONTROLLER_BUTTON_A;
@@ -122,10 +120,31 @@ SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerBut
 	}
 }
 
+static SDL_GameControllerAxis ToSdlGameControllerAxis(ControllerButton button)
+{
+	switch (button) {
+	case ControllerButton_AXIS_TRIGGERLEFT:
+		return SDL_CONTROLLER_AXIS_TRIGGERLEFT;
+	case ControllerButton_AXIS_TRIGGERRIGHT:
+		return SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
+	default:
+		return SDL_CONTROLLER_AXIS_INVALID;
+	}
+}
+
 bool GameController::IsPressed(ControllerButton button) const
 {
 	const SDL_GameControllerButton gcButton = ToSdlGameControllerButton(button);
-	return SDL_GameControllerHasButton(sdl_game_controller_, gcButton) && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
+
+	if (gcButton != SDL_CONTROLLER_BUTTON_INVALID)
+		return SDL_GameControllerHasButton(sdl_game_controller_, gcButton) && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
+
+	const SDL_GameControllerAxis gcAxis = ToSdlGameControllerAxis(button);
+
+	if (gcAxis != SDL_CONTROLLER_AXIS_INVALID)
+		return SDL_GameControllerHasAxis(sdl_game_controller_, gcAxis) && SDL_GameControllerGetAxis(sdl_game_controller_, gcAxis) > 16384;
+
+	return false;
 }
 
 bool GameController::ProcessAxisMotion(const SDL_Event &event)

@@ -9,6 +9,7 @@
 #include "controls/menu_controls.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
+#include "qol/itemlabels.h"
 #include "doom.h"
 #include "gmenu.h"
 #include "options.h"
@@ -24,14 +25,12 @@ namespace {
 uint32_t TranslateControllerButtonToKey(ControllerButton controllerButton)
 {
 	switch (controllerButton) {
-	case ControllerButton_BUTTON_A: // Bottom button
+	case ControllerButton_BUTTON_A:
 		return (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen) ? DVL_VK_RETURN : DVL_VK_SPACE;
-	case ControllerButton_BUTTON_B: // Right button
+	case ControllerButton_BUTTON_B:
 		return QuestLogIsOpen ? DVL_VK_SPACE : DVL_VK_ESCAPE;
-	case ControllerButton_BUTTON_Y: // Top button
-		return DVL_VK_RETURN;
 	case ControllerButton_BUTTON_BACK:
-		return DVL_VK_TAB; // Map
+		return DVL_VK_TAB;
 	case ControllerButton_BUTTON_START:
 		return DVL_VK_ESCAPE;
 	case ControllerButton_BUTTON_DPAD_LEFT:
@@ -76,15 +75,9 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 	}
 
 	if (!inGameMenu) {
+		AltPressed(IsControllerButtonPressed(ControllerButton_AXIS_TRIGGERRIGHT));
+
 		switch (ctrlEvent.button) {
-		/*case ControllerButton_AXIS_TRIGGERRIGHT: // ZR (aka R2)
-			if (!ctrlEvent.up) {
-				if (select_modifier_active)
-					*action = GameAction(GameActionType_TOGGLE_SPELL_BOOK);
-				else
-					*action = GameAction(GameActionType_TOGGLE_INVENTORY);
-			}
-			return true;*/
 		case ControllerButton_IGNORE:
 			return true;
 		default:
@@ -95,7 +88,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			switch (ctrlEvent.button) {
 			case ControllerButton_BUTTON_DPAD_UP:
 				if (!ctrlEvent.up)
-					*action = GameAction(GameActionType_TOGGLE_SPELL_BOOK);
+					*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
 				return true;
 			case ControllerButton_BUTTON_DPAD_RIGHT:
 				if (!ctrlEvent.up)
@@ -113,7 +106,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 		}
 
 		// Closes menus or opens quick spell book if nothing is open.
-		if (ctrlEvent.button == ControllerButton_BUTTON_B) { // Bottom button
+		if (ctrlEvent.button == ControllerButton_BUTTON_B) {
 			if (ctrlEvent.up)
 				return true;
 			if (modifier_active)
@@ -216,7 +209,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 AxisDirection GetMoveDirection()
 {
-	return GetLeftStickOrDpadDirection(true);
+	return GetLeftStickOrDpadDirection(!select_modifier_active);
 }
 
 } // namespace devilution

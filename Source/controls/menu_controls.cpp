@@ -38,11 +38,19 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		switch (ctrlEvent.button) {
 		case ControllerButton_IGNORE:
 			return MenuAction_NONE;
+#ifdef __UWP__
+		case ControllerButton_BUTTON_A: // Bottom button
+#else
 		case ControllerButton_BUTTON_B: // Right button
+#endif
 		case ControllerButton_BUTTON_START:
 			return MenuAction_SELECT;
 		case ControllerButton_BUTTON_BACK:
+#ifdef __UWP__
+		case ControllerButton_BUTTON_B: // Right button
+#else
 		case ControllerButton_BUTTON_A: // Bottom button
+#endif
 			return MenuAction_BACK;
 		case ControllerButton_BUTTON_X: // Left button
 			return MenuAction_DELETE;
