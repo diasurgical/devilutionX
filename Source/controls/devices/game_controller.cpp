@@ -124,7 +124,7 @@ SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerBut
 	}
 }
 
-#if SDL_VERSION_ATLEAST(2,0,14)
+#if SDL_VERSION_ATLEAST(2, 0, 14)
 static SDL_GameControllerAxis ToSdlGameControllerAxis(ControllerButton button)
 {
 	switch (button) {
@@ -145,7 +145,7 @@ bool GameController::IsPressed(ControllerButton button) const
 	if (gcButton != SDL_CONTROLLER_BUTTON_INVALID)
 		return SDL_GameControllerHasButton(sdl_game_controller_, gcButton) && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
 
-#if SDL_VERSION_ATLEAST(2,0,14)
+#if SDL_VERSION_ATLEAST(2, 0, 14)
 	const SDL_GameControllerAxis gcAxis = ToSdlGameControllerAxis(button);
 
 	if (gcAxis != SDL_CONTROLLER_AXIS_INVALID)
