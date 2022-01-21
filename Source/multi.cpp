@@ -606,7 +606,8 @@ void multi_process_network_packets()
 		if (pkt->wLen != dwMsgSize)
 			continue;
 		auto &player = Players[dwID];
-		player.position.last = { pkt->px, pkt->py };
+		Point syncPosition = { pkt->px, pkt->py };
+		player.position.last = syncPosition;
 		if (dwID != MyPlayerId) {
 			assert(gbBufferMsgs != 2);
 			player._pHitPoints = pkt->php;
@@ -623,8 +624,10 @@ void multi_process_network_packets()
 						FixPlrWalkTags(dwID);
 						player.position.old = player.position.tile;
 						FixPlrWalkTags(dwID);
-						player.position.tile = { pkt->px, pkt->py };
-						player.position.future = { pkt->px, pkt->py };
+						player.position.tile = syncPosition;
+						player.position.future = syncPosition;
+						if (player.IsWalking())
+							player.position.temp = syncPosition;
 						dPlayer[player.position.tile.x][player.position.tile.y] = dwID + 1;
 					}
 					dx = abs(player.position.future.x - player.position.tile.x);
@@ -634,8 +637,8 @@ void multi_process_network_packets()
 					}
 					MakePlrPath(player, { pkt->targx, pkt->targy }, true);
 				} else {
-					player.position.tile = { pkt->px, pkt->py };
-					player.position.future = { pkt->px, pkt->py };
+					player.position.tile = syncPosition;
+					player.position.future = syncPosition;
 				}
 			}
 		}
