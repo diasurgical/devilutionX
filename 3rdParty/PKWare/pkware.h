@@ -72,7 +72,7 @@ typedef struct
     unsigned short phash_offs[0x2204];      // 49D0: Table of offsets for each PAIR_HASH
 } TCmpStruct;
 
-#define CMP_BUFFER_SIZE  sizeof(TCmpStruct) // Size of compression structure.
+#define CMP_BUFFER_SIZE  (sizeof(TCmpStruct) + 16) // Size of compression structure.
                                             // Defined as 36312 in pkware header file
 
 
@@ -110,7 +110,7 @@ typedef struct
     unsigned short LenBase[0x10];           // 3114: Buffer for 
 } TDcmpStruct;
 
-#define EXP_BUFFER_SIZE sizeof(TDcmpStruct) // Size of decompression structure
+#define EXP_BUFFER_SIZE (sizeof(TDcmpStruct) + 20) // Size of decompression structure
                                             // Defined as 12596 in pkware headers
 
 //-----------------------------------------------------------------------------
