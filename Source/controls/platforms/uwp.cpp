@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-#include "controls/controller.h"
 #include "controls/controller_motion.h"
+#include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 #include "controls/menu_controls.h"
@@ -213,4 +213,3 @@ AxisDirection GetMoveDirection()
 }
 
 } // namespace devilution
-
