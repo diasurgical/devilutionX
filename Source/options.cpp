@@ -411,7 +411,7 @@ OptionEntryFlags OptionEntryBase::GetFlags() const
 }
 void OptionEntryBase::SetValueChangedCallback(std::function<void()> callback)
 {
-	this->callback = callback;
+	this->callback = std::move(callback);
 }
 void OptionEntryBase::NotifyValueChanged()
 {

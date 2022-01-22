@@ -948,10 +948,9 @@ void DiabloInit()
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
 		auto &messages = sgOptions.Chat.szHotKeyMsgs[i];
-		if (messages.size() > 0) {
-			continue;
+		if (messages.empty()) {
+			messages.emplace_back(_(QuickMessages[i].message));
 		}
-		messages.emplace_back(_(QuickMessages[i].message));
 	}
 
 #ifndef USE_SDL1
