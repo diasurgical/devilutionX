@@ -18,7 +18,7 @@ bool start_modifier_active = false;
 bool select_modifier_active = false;
 #ifdef SWAP_CONFIRM_CANCEL_BUTTONS
 const ControllerButton ControllerButton_CONFIRM = ControllerButton_BUTTON_B; // right button
-const ControllerButton ControllerButton_CANCEL = ControllerButton_BUTTON_A; // bottom button
+const ControllerButton ControllerButton_CANCEL = ControllerButton_BUTTON_A;  // bottom button
 #else
 const ControllerButton ControllerButton_CONFIRM = ControllerButton_BUTTON_A;
 const ControllerButton ControllerButton_CANCEL = ControllerButton_BUTTON_B;
