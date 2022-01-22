@@ -380,7 +380,7 @@ if(UWP_LIB)
   target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
 endif()
 
-if(FULL_RANGE_CONTROLLER)
+if(FULL_RANGE_CONTROLLER AND NOT USE_SDL1)
   target_compile_definitions(libdevilutionx PRIVATE FULL_RANGE_CONTROLLER=1)
 endif()
 

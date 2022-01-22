@@ -144,7 +144,7 @@ set(libdevilutionx_SRCS
   miniwin/misc_msg.cpp
   platform/locale.cpp)
 
-if(FULL_RANGE_CONTROLLER)
+if(FULL_RANGE_CONTROLLER AND NOT USE_SDL1)
   list(APPEND libdevilutionx_SRCS controls/full_range_game_controls.cpp)
 else()
   list(APPEND libdevilutionx_SRCS controls/game_controls.cpp)
