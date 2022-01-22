@@ -5,6 +5,7 @@
 
 #include "./axis_direction.h"
 #include "controls/controller.h"
+#include "controls/utils/circle_menu_hint.h"
 
 namespace devilution {
 
@@ -72,6 +73,11 @@ struct GameAction {
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
 
 AxisDirection GetMoveDirection();
+
+bool GetStartModifierLeftCircleMenuHint(CircleMenuHint **hint);
+bool GetStartModifierRightCircleMenuHint(CircleMenuHint **hint);
+bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint **hint);
+bool GetSelectModifierRightCircleMenuHint(CircleMenuHint **hint);
 
 extern bool start_modifier_active;
 extern bool select_modifier_active;

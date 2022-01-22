@@ -79,6 +79,7 @@ set(libdevilutionx_SRCS
   controls/menu_controls.cpp
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
+  controls/utils/circle_menu_hint.h
   engine/animationinfo.cpp
   engine/demomode.cpp
   engine/direction.cpp

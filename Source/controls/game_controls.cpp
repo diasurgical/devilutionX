@@ -16,6 +16,7 @@
 #include "gmenu.h"
 #include "options.h"
 #include "stores.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -419,6 +420,35 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 AxisDirection GetMoveDirection()
 {
 	return GetLeftStickOrDpadDirection(/*allowDpad=*/!sgOptions.Controller.bDpadHotkeys);
+}
+
+bool GetStartModifierLeftCircleMenuHint(CircleMenuHint **hint)
+{
+	*hint = new CircleMenuHint(/*isDpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
+
+	return true;
+}
+
+bool GetStartModifierRightCircleMenuHint(CircleMenuHint **hint)
+{
+	*hint = new CircleMenuHint(/*isDpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
+
+	return true;
+}
+
+bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint **hint)
+{
+	if (sgOptions.Controller.bDpadHotkeys)
+		*hint = new CircleMenuHint(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
+
+	return sgOptions.Controller.bDpadHotkeys;
+}
+
+bool GetSelectModifierRightCircleMenuHint(CircleMenuHint **hint)
+{
+	*hint = new CircleMenuHint(/*isDpad=*/false, "F6", "F8", "F7", "F5");
+
+	return true;
 }
 
 } // namespace devilution

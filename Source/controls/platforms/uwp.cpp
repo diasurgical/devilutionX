@@ -1,19 +1,16 @@
 #include "controls/game_controls.h"
 
-#include <cstdint>
-
-#include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
-#include "controls/menu_controls.h"
-#include "controls/modifier_hints.h"
+#include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "doom.h"
 #include "gmenu.h"
 #include "options.h"
 #include "qol/itemlabels.h"
 #include "stores.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -210,6 +207,30 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 AxisDirection GetMoveDirection()
 {
 	return GetLeftStickOrDpadDirection(!select_modifier_active);
+}
+
+bool GetStartModifierLeftCircleMenuHint(CircleMenuHint **hint)
+{
+	*hint = new CircleMenuHint(/*isDpad=*/true, /*top=*/_("Quests"), /*right=*/_("Inv"), /*bottom=*/_("Spells"), /*left=*/_("Char"));
+
+	return true;
+}
+
+bool GetStartModifierRightCircleMenuHint(CircleMenuHint **hint)
+{
+	return false;
+}
+
+bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint **hint)
+{
+	return false;
+}
+
+bool GetSelectModifierRightCircleMenuHint(CircleMenuHint **hint)
+{
+	*hint = new CircleMenuHint(/*isDpad=*/false, /*top=*/"Y", /*right=*/"B", /*bottom=*/"A", /*left=*/"X");
+
+	return true;
 }
 
 } // namespace devilution
