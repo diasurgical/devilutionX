@@ -2,6 +2,14 @@ if(WIN32)
   include(platforms/windows)
 endif()
 
+if(UNIX)
+  include(platforms/linux)
+endif()
+
+if(APPLE)
+  include(platforms/macos)
+endif()
+
 if(HAIKU)
   include(platforms/haiku)
 endif()

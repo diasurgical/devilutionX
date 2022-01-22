@@ -16,15 +16,22 @@ namespace devilution {
 
 bool start_modifier_active = false;
 bool select_modifier_active = false;
+#ifdef SWAP_CONFIRM_CANCEL_BUTTONS
+const ControllerButton ControllerButton_CONFIRM = ControllerButton_BUTTON_B; // right button
+const ControllerButton ControllerButton_CANCEL = ControllerButton_BUTTON_A; // bottom button
+#else
+const ControllerButton ControllerButton_CONFIRM = ControllerButton_BUTTON_A;
+const ControllerButton ControllerButton_CANCEL = ControllerButton_BUTTON_B;
+#endif
 
 namespace {
 
 uint32_t TranslateControllerButtonToKey(ControllerButton controllerButton)
 {
 	switch (controllerButton) {
-	case ControllerButton_BUTTON_A:
+	case ControllerButton_CONFIRM:
 		return (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen) ? DVL_VK_RETURN : DVL_VK_SPACE;
-	case ControllerButton_BUTTON_B:
+	case ControllerButton_CANCEL:
 		return QuestLogIsOpen ? DVL_VK_SPACE : DVL_VK_ESCAPE;
 	case ControllerButton_BUTTON_BACK:
 		return DVL_VK_TAB;
@@ -103,7 +110,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 		}
 
 		// Closes menus or opens quick spell book if nothing is open.
-		if (ctrlEvent.button == ControllerButton_BUTTON_B) {
+		if (ctrlEvent.button == ControllerButton_CANCEL) {
 			if (ctrlEvent.up)
 				return true;
 			if (modifier_active)
@@ -127,7 +134,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			switch (ctrlEvent.button) {
 			case ControllerButton_IGNORE:
 				return true;
-			case ControllerButton_BUTTON_A:
+			case ControllerButton_CONFIRM:
 				if (!ctrlEvent.up) {
 					if (modifier_active)
 						*action = GameActionSendKey { DVL_VK_F7, ctrlEvent.up };
@@ -235,12 +242,20 @@ bool GetSelectModifierRightCircleMenuHint(CircleMenuHint **hint)
 
 MenuAction GetAButtonMenuAction()
 {
+#ifdef SWAP_CONFIRM_CANCEL_BUTTONS
+	return MenuAction_BACK;
+#else
 	return MenuAction_SELECT;
+#endif
 }
 
 MenuAction GetBButtonMenuAction()
 {
+#ifdef SWAP_CONFIRM_CANCEL_BUTTONS
+	return MenuAction_SELECT;
+#else
 	return MenuAction_BACK;
+#endif
 }
 
 } // namespace devilution

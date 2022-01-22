@@ -111,7 +111,7 @@ ControllerButton Joystick::ToControllerButton(const SDL_Event &event)
 
 int Joystick::ToSdlJoyButton(ControllerButton button)
 {
-#ifndef __UWP__
+#ifndef FULL_RANGE_CONTROLLER
 	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
 #endif
