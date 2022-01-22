@@ -5,6 +5,7 @@
 
 #include "./axis_direction.h"
 #include "controls/controller.h"
+#include "controls/menu_controls.h"
 #include "controls/utils/circle_menu_hint.h"
 
 namespace devilution {
@@ -78,6 +79,9 @@ bool GetStartModifierLeftCircleMenuHint(CircleMenuHint **hint);
 bool GetStartModifierRightCircleMenuHint(CircleMenuHint **hint);
 bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint **hint);
 bool GetSelectModifierRightCircleMenuHint(CircleMenuHint **hint);
+
+MenuAction GetAButtonMenuAction();
+MenuAction GetBButtonMenuAction();
 
 extern bool start_modifier_active;
 extern bool select_modifier_active;

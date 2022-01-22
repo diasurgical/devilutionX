@@ -233,4 +233,14 @@ bool GetSelectModifierRightCircleMenuHint(CircleMenuHint **hint)
 	return true;
 }
 
+MenuAction GetAButtonMenuAction()
+{
+	return MenuAction_SELECT;
+}
+
+MenuAction GetBButtonMenuAction()
+{
+	return MenuAction_BACK;
+}
+
 } // namespace devilution

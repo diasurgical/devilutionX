@@ -4,6 +4,7 @@
 #include "controls/axis_direction.h"
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
+#include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "utils/sdl_compat.h"
@@ -38,20 +39,14 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		switch (ctrlEvent.button) {
 		case ControllerButton_IGNORE:
 			return MenuAction_NONE;
-#ifdef __UWP__
 		case ControllerButton_BUTTON_A: // Bottom button
-#else
-		case ControllerButton_BUTTON_B: // Right button
-#endif
+			return GetAButtonMenuAction();
 		case ControllerButton_BUTTON_START:
 			return MenuAction_SELECT;
 		case ControllerButton_BUTTON_BACK:
-#ifdef __UWP__
-		case ControllerButton_BUTTON_B: // Right button
-#else
-		case ControllerButton_BUTTON_A: // Bottom button
-#endif
 			return MenuAction_BACK;
+		case ControllerButton_BUTTON_B: // Right button
+			return GetBButtonMenuAction();
 		case ControllerButton_BUTTON_X: // Left button
 			return MenuAction_DELETE;
 		case ControllerButton_BUTTON_DPAD_UP:
