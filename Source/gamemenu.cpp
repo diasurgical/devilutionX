@@ -36,7 +36,9 @@ TMenuItem sgSingleMenu[] = {
 	{ GMENU_ENABLED, N_("Options"),       &GamemenuOptions    },
 	{ GMENU_ENABLED, N_("New Game"),      &GamemenuNewGame   },
 	{ GMENU_ENABLED, N_("Load Game"),     &gamemenu_load_game  },
+#ifndef NOEXIT
 	{ GMENU_ENABLED, N_("Quit Game"),     &gamemenu_quit_game  },
+#endif
 	{ GMENU_ENABLED, nullptr,              nullptr             }
 	// clang-format on
 };
@@ -47,7 +49,9 @@ TMenuItem sgMultiMenu[] = {
 	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions      },
 	{ GMENU_ENABLED, N_("New Game"),        &GamemenuNewGame     },
 	{ GMENU_ENABLED, N_("Restart In Town"), &GamemenuRestartTown },
+#ifndef NOEXIT
 	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game    },
+#endif
 	{ GMENU_ENABLED, nullptr,                nullptr               },
 	// clang-format on
 };
@@ -290,11 +294,13 @@ void GamemenuSpeed(bool bActivate)
 
 } // namespace
 
+#ifndef NOEXIT
 void gamemenu_quit_game(bool bActivate)
 {
 	GamemenuNewGame(bActivate);
 	gbRunGameResult = false;
 }
+#endif
 
 void gamemenu_load_game(bool /*bActivate*/)
 {

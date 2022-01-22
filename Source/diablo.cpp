@@ -1455,12 +1455,14 @@ void InitKeymapActions()
 	    [] { gamemenu_load_game(false); },
 	    nullptr,
 	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE && IsGameRunning(); });
+#ifndef NOEXIT
 	sgOptions.Keymapper.AddAction(
 	    "QuitGame",
 	    N_("Quit game"),
 	    N_("Closes the game."),
 	    DVL_VK_INVALID,
 	    [] { gamemenu_quit_game(false); });
+#endif
 	sgOptions.Keymapper.AddAction(
 	    "StopHero",
 	    N_("Stop hero"),
