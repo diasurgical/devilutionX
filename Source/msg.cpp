@@ -2089,7 +2089,7 @@ void DeltaSyncJunk()
 		if (QuestsData[quest._qidx].isSinglePlayerOnly) {
 			continue;
 		}
-		if (sgJunk.quests[q].qstate != Q_INVALID) {
+		if (sgJunk.quests[q].qstate != QUEST_INVALID) {
 			quest._qlog = sgJunk.quests[q].qlog != 0;
 			quest._qactive = sgJunk.quests[q].qstate;
 			quest._qvar1 = sgJunk.quests[q].qvar1;
