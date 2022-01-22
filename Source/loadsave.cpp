@@ -1350,7 +1350,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	// Omit pointer MData;
 }
 
-void SaveMissile(SaveHelper *file, Missile &missile)
+void SaveMissile(SaveHelper *file, const Missile &missile)
 {
 	file->WriteLE<int32_t>(missile._mitype);
 	file->WriteLE<int32_t>(missile.position.tile.x);
@@ -1538,16 +1538,17 @@ void SaveAdditionalMissiles()
 {
 	constexpr size_t BytesWrittenBySaveMissile = 180;
 	size_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? Missiles.size() - MaxMissilesForSaveGame : 0;
-	SaveHelper file("additionalMissiles", sizeof(uint32_t) + sizeof(int32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
+	SaveHelper file("additionalMissiles", sizeof(uint32_t) + sizeof(uint32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
 
 	file.WriteLE<uint32_t>(VersionAdditionalMissiles);
 	file.WriteLE<uint32_t>(missileCountAdditional);
 
-	size_t wroteMissiles = 0;
-	for (auto &missile : Missiles) {
-		wroteMissiles += 1;
-		if (wroteMissiles >= MaxMissilesForSaveGame) {
-			SaveMissile(&file, missile);
+	if (missileCountAdditional > 0) {
+		auto it = Missiles.cbegin();
+		// std::list::const_iterator doesn't provide operator+() :/ using std::advance to get past the missiles we've already saved
+		std::advance(it, MaxMissilesForSaveGame);
+		for (; it != Missiles.cend(); it++) {
+			SaveMissile(&file, *it);
 		}
 	}
 }
@@ -1566,8 +1567,8 @@ void LoadAdditionalMissiles()
 		// unknown version
 		return;
 	}
-	uint32_t missileCountAdditional = file.NextLE<uint32_t>();
-	for (int i = 0; i < missileCountAdditional; i++) {
+	auto missileCountAdditional = file.NextLE<uint32_t>();
+	for (uint32_t i = 0U; i < missileCountAdditional; i++) {
 		LoadMissile(&file);
 	}
 }
@@ -1860,8 +1861,6 @@ void LoadGame(bool firstflag)
 		monstkill = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
-		int8_t tmpActiveMissiles[MaxMissilesForSaveGame];
-
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
@@ -1968,7 +1967,7 @@ void LoadGame(bool firstflag)
 	ProcessVisionList();
 	// convert stray manashield missiles into pManaShield flag
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_MANASHIELD && missile._miDelFlag == false) {
+		if (missile._mitype == MIS_MANASHIELD && !missile._miDelFlag) {
 			Players[missile._misource].pManaShield = true;
 			missile._miDelFlag = true;
 		}
@@ -2037,7 +2036,10 @@ void SaveGameData()
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
 	file.WriteBE<int32_t>(ActiveMonsterCount);
 	file.WriteBE<int32_t>(ActiveItemCount);
-	file.WriteBE<int32_t>(std::min(Missiles.size(), MaxMissilesForSaveGame));
+	// ActiveMissileCount will be a value from 0-125 (for vanilla compatibility). Writing an unsigned value here to avoid
+	// warnings about casting from unsigned to signed, but there's no sign extension issues when reading this as a signed
+	// value later so it doesn't have to match in LoadGameData().
+	file.WriteBE<uint32_t>(static_cast<uint32_t>(std::min(Missiles.size(), MaxMissilesForSaveGame)));
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
@@ -2066,15 +2068,16 @@ void SaveGameData()
 			file.WriteLE<int8_t>(activeMissile);
 		// Write AvailableMissiles
 		for (size_t avaiableMissile = Missiles.size(); avaiableMissile < MaxMissilesForSaveGame; avaiableMissile++)
-			file.WriteLE<int8_t>(avaiableMissile);
-		file.Skip<int8_t>(std::min(Missiles.size(), MaxMissilesForSaveGame));
+			file.WriteLE<int8_t>(static_cast<int8_t>(avaiableMissile));
+		const size_t savedMissiles = std::min(Missiles.size(), MaxMissilesForSaveGame);
+		file.Skip<int8_t>(savedMissiles);
 		// Write Missile Data
-		size_t wroteMissiles = 0;
-		for (auto &missile : Missiles) {
-			SaveMissile(&file, missile);
-			wroteMissiles += 1;
-			if (wroteMissiles == MaxMissilesForSaveGame)
-				break;
+		{
+			auto missilesEnd = Missiles.cbegin();
+			std::advance(missilesEnd, savedMissiles);
+			for (auto it = Missiles.cbegin(); it != missilesEnd; it++) {
+				SaveMissile(&file, *it);
+			}
 		}
 		for (int objectId : ActiveObjects)
 			file.WriteLE<int8_t>(objectId);
