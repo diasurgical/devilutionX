@@ -436,6 +436,7 @@ void UiHandleEvents(SDL_Event *event)
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			SaveOptions();
 			if (gfnFullscreen != nullptr)
 				gfnFullscreen();
 			return;

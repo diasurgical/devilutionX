@@ -437,10 +437,12 @@ void PressKey(int vkey)
 		}
 		sgOptions.Keymapper.KeyPressed(vkey);
 		if (vkey == DVL_VK_RETURN) {
-			if (GetAsyncKeyState(DVL_VK_MENU))
+			if (GetAsyncKeyState(DVL_VK_MENU)) {
 				sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
-			else
+				SaveOptions();
+			} else {
 				control_type_message();
+			}
 		}
 		if (vkey != DVL_VK_ESCAPE) {
 			return;
@@ -461,14 +463,17 @@ void PressKey(int vkey)
 	sgOptions.Keymapper.KeyPressed(vkey);
 
 	if (PauseMode == 2) {
-		if (vkey == DVL_VK_RETURN && GetAsyncKeyState(DVL_VK_MENU))
+		if (vkey == DVL_VK_RETURN && GetAsyncKeyState(DVL_VK_MENU)) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			SaveOptions();
+		}
 		return;
 	}
 
 	if (vkey == DVL_VK_RETURN) {
 		if (GetAsyncKeyState(DVL_VK_MENU)) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			SaveOptions();
 		} else if (stextflag != STORE_NONE) {
 			StoreEnter();
 		} else if (QuestLogIsOpen) {
@@ -995,8 +1000,10 @@ void DiabloSplash()
 			play_movie("gendata\\Hellfire.smk", true);
 		else
 			play_movie("gendata\\diablo1.smk", true);
-		if (*intro == StartUpIntro::Once)
+		if (*intro == StartUpIntro::Once) {
 			intro.SetValue(StartUpIntro::Off);
+			SaveOptions();
+		}
 	}
 
 	if (IsAnyOf(*sgOptions.StartUp.splash, StartUpSplash::TitleDialog, StartUpSplash::LogoAndTitleDialog))
@@ -1007,8 +1014,6 @@ void DiabloDeinit()
 {
 	FreeItemGFX();
 
-	if (sbWasOptionsLoaded && !demo::IsRunning())
-		SaveOptions();
 	if (was_snd_init)
 		effects_cleanup_sfx();
 	snd_deinit();
@@ -1726,6 +1731,7 @@ int DiabloMain(int argc, char **argv)
 	// Finally load game data
 	LoadGameArchives();
 
+	SaveOptions();
 	DiabloInit();
 
 #ifdef __UWP__

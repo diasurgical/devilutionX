@@ -14,6 +14,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "options.h"
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
@@ -216,6 +217,8 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
 	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
 	GmenuUpDown(true);
+	if (sgpCurrentMenu == nullptr)
+		SaveOptions();
 }
 
 void gmenu_draw(const Surface &out)

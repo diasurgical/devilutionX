@@ -302,7 +302,6 @@ void OptionAudioChanged()
 
 /** Game options */
 Options sgOptions;
-bool sbWasOptionsLoaded = false;
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorSupported()
@@ -354,12 +353,13 @@ void LoadOptions()
 
 	if (demo::IsRunning())
 		demo::OverrideOptions();
-
-	sbWasOptionsLoaded = true;
 }
 
 void SaveOptions()
 {
+	if (demo::IsRunning())
+		return;
+
 	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
 		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
 			pEntry->SaveToIni(pCategory->GetKey());

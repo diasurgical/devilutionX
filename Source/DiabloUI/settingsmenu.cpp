@@ -354,6 +354,8 @@ void UiSettingsMenu()
 
 		CleanUpSettingsUI();
 	} while (!backToMain);
+
+	SaveOptions();
 }
 
 } // namespace devilution
