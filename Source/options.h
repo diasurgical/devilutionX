@@ -12,7 +12,7 @@
 namespace devilution {
 
 enum class StartUpGameMode {
-	/** @brief If hellfire is present, asks the user what game he wants to start. */
+	/** @brief If hellfire is present, asks the user what game they want to start. */
 	Ask = 0,
 	Hellfire = 1,
 	Diablo = 2,
@@ -605,7 +605,6 @@ struct Options {
 };
 
 extern DVL_API_FOR_TEST Options sgOptions;
-extern bool sbWasOptionsLoaded;
 
 bool HardwareCursorSupported();
 

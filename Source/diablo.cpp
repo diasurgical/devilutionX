@@ -943,10 +943,9 @@ void DiabloInit()
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
 		auto &messages = sgOptions.Chat.szHotKeyMsgs[i];
-		if (messages.size() > 0) {
-			continue;
+		if (messages.empty()) {
+			messages.emplace_back(_(QuickMessages[i].message));
 		}
-		messages.emplace_back(_(QuickMessages[i].message));
 	}
 
 #ifndef USE_SDL1
@@ -960,6 +959,7 @@ void DiabloInit()
 
 	if (gbIsHellfire && !forceHellfire && *sgOptions.StartUp.gameMode == StartUpGameMode::Ask) {
 		UiSelStartUpGameOption();
+		SaveOptions(); // save the selection so we don't ask again
 		if (!gbIsHellfire) {
 			// Reinitalize the UI Elements cause we changed the game
 			UnloadUiGFX();
@@ -1007,8 +1007,6 @@ void DiabloDeinit()
 {
 	FreeItemGFX();
 
-	if (sbWasOptionsLoaded && !demo::IsRunning())
-		SaveOptions();
 	if (was_snd_init)
 		effects_cleanup_sfx();
 	snd_deinit();

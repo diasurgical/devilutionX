@@ -354,6 +354,9 @@ void UiSettingsMenu()
 
 		CleanUpSettingsUI();
 	} while (!backToMain);
+
+	// Save options when leaving the settings menu so that changes are persisted immediately
+	SaveOptions();
 }
 
 } // namespace devilution

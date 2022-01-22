@@ -302,7 +302,6 @@ void OptionAudioChanged()
 
 /** Game options */
 Options sgOptions;
-bool sbWasOptionsLoaded = false;
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorSupported()
@@ -352,10 +351,13 @@ void LoadOptions()
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
-	if (demo::IsRunning())
+	if (demo::IsRunning()) {
 		demo::OverrideOptions();
-
-	sbWasOptionsLoaded = true;
+	} else {
+		// Immediately attempt to save new options in case the player is upgrading from an old version of DevilutionX
+		//  or if this is a first run
+		SaveOptions();
+	}
 }
 
 void SaveOptions()
@@ -411,7 +413,7 @@ OptionEntryFlags OptionEntryBase::GetFlags() const
 }
 void OptionEntryBase::SetValueChangedCallback(std::function<void()> callback)
 {
-	this->callback = callback;
+	this->callback = std::move(callback);
 }
 void OptionEntryBase::NotifyValueChanged()
 {
