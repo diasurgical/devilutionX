@@ -51,11 +51,13 @@ void AddWarpMissile(int i, Point position)
 {
 	MissilesData[MIS_TOWN].mlSFX = SFX_NONE;
 
-	auto &missile = AddMissile({ 0, 0 }, position, Direction::South, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
-	SetMissDir(missile, 1);
+	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	if (missile != nullptr) {
+		SetMissDir(*missile, 1);
 
-	if (currlevel != 0)
-		missile._mlid = AddLight(missile.position.tile, 15);
+		if (currlevel != 0)
+			missile->_mlid = AddLight(missile->position.tile, 15);
+	}
 
 	MissilesData[MIS_TOWN].mlSFX = LS_SENTINEL;
 }

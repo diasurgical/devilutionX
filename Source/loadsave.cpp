@@ -715,7 +715,9 @@ void LoadMissile(LoadHelper *file)
 	missile.var7 = file->NextLE<int32_t>();
 	missile.limitReached = file->NextBool32();
 	missile.lastCollisionTargetHash = 0;
-	Missiles.push_back(missile);
+	if (Missiles.size() < Missiles.max_size()) {
+		Missiles.push_back(missile);
+	}
 }
 
 void LoadObject(LoadHelper &file, Object &object)

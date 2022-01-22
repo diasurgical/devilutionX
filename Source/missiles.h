@@ -341,7 +341,7 @@ void AddTelekinesis(Missile &missile, const AddMissileParameter &parameter);
 void AddBoneSpirit(Missile &missile, const AddMissileParameter &parameter);
 void AddRportal(Missile &missile, const AddMissileParameter &parameter);
 void AddDiabApoca(Missile &missile, const AddMissileParameter &parameter);
-Missile &AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
+Missile *AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
 void MI_Golem(Missile &missile);
 void MI_Manashield(Missile &missile);
 void MI_LArrow(Missile &missile);
