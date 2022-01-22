@@ -341,6 +341,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
 		CornerstoneSave();
+		SaveOptions();
 	}
 	interface_msg_pump();
 	SetWindowProc(saveProc);
