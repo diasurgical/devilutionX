@@ -2,6 +2,7 @@ set(DISCORD_INTEGRATION OFF)
 set(BUILD_TESTING OFF)
 set(ASAN OFF)
 set(UBSAN OFF)
+SET(DISABLE_LTO ON)
 set(NONET ON)
 
 # Action buttons (swapped A/B and X/Y)
