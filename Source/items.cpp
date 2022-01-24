@@ -3552,6 +3552,10 @@ void SpawnRewardItem(int itemid, Point position)
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item._iIdentified = true;
+
+	if (gbIsMultiplayer) {
+		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
+	}
 }
 
 void SpawnMapOfDoom(Point position)
