@@ -1578,7 +1578,7 @@ void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool de
 	SetupAllItems(item, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
 
 	if (sendmsg)
-		NetSendCmdDItem(false, ii);
+		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
 	if (delta)
 		DeltaAddItem(ii);
 }
@@ -2413,7 +2413,7 @@ void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int i
 	GetSuperItemSpace(position, ii);
 
 	if (sendmsg)
-		NetSendCmdDItem(false, ii);
+		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
 	if (delta)
 		DeltaAddItem(ii);
 }
@@ -3319,7 +3319,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	if (sendmsg)
-		NetSendCmdDItem(false, ii);
+		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
 }
 
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
@@ -3341,7 +3341,7 @@ void CreateRndUseful(Point position, bool sendmsg)
 
 	SetupAllUseful(item, AdvanceRndSeed(), curlv);
 	if (sendmsg)
-		NetSendCmdDItem(false, ii);
+		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
 }
 
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta)
@@ -3552,6 +3552,10 @@ void SpawnRewardItem(int itemid, Point position)
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item._iIdentified = true;
+
+	if (gbIsMultiplayer) {
+		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
+	}
 }
 
 void SpawnMapOfDoom(Point position)
@@ -4584,7 +4588,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 	GetSuperItemSpace(position, ii);
 
 	if (sendmsg)
-		NetSendCmdDItem(false, ii);
+		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
 	if (delta)
 		DeltaAddItem(ii);
 }
@@ -4710,7 +4714,7 @@ std::string DebugSpawnItem(std::string itemName)
 	}
 
 	item._iIdentified = true;
-	NetSendCmdDItem(false, ii);
+	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
 	return fmt::format("Item generated successfully - iterations: {:d}", i);
 }
 
@@ -4787,7 +4791,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	}
 
 	item._iIdentified = true;
-	NetSendCmdDItem(false, ii);
+	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
 	return fmt::format("Item generated successfully - iterations: {:d}", i);
 }
 #endif

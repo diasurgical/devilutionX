@@ -331,7 +331,7 @@ void LeftMouseDown(int wParam)
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
-					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition);
+					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, Players[MyPlayerId].HoldItem);
 					NewCursor(CURSOR_HAND);
 				}
 			} else {

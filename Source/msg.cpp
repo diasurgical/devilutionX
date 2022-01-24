@@ -1614,10 +1614,17 @@ DWORD OnDropItem(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
-	if (gbBufferMsgs == 1)
+	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	else if (IsPItemValid(message))
-		DeltaPutItem(message, { message.x, message.y }, Players[pnum].plrlevel);
+	} else if (IsPItemValid(message)) {
+		int playerLevel = Players[pnum].plrlevel;
+		Point position = { message.x, message.y };
+		if (currlevel == playerLevel && pnum != MyPlayerId) {
+			SyncDropItem(position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+		}
+		PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+		DeltaPutItem(message, position, playerLevel);
+	}
 
 	return sizeof(message);
 }
@@ -2547,42 +2554,41 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position)
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item)
 {
-	TCmdPItem cmd;
+	TCmdPItem cmd {};
 
 	cmd.bCmd = bCmd;
 	cmd.x = position.x;
 	cmd.y = position.y;
-	auto &myPlayer = Players[MyPlayerId];
-	cmd.wIndx = myPlayer.HoldItem.IDidx;
+	cmd.wIndx = item.IDidx;
 
-	if (myPlayer.HoldItem.IDidx == IDI_EAR) {
-		cmd.wCI = myPlayer.HoldItem._iName[8] | (myPlayer.HoldItem._iName[7] << 8);
-		cmd.dwSeed = myPlayer.HoldItem._iName[12] | ((myPlayer.HoldItem._iName[11] | ((myPlayer.HoldItem._iName[10] | (myPlayer.HoldItem._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = myPlayer.HoldItem._iName[13];
-		cmd.bDur = myPlayer.HoldItem._iName[14];
-		cmd.bMDur = myPlayer.HoldItem._iName[15];
-		cmd.bCh = myPlayer.HoldItem._iName[16];
-		cmd.bMCh = myPlayer.HoldItem._iName[17];
-		cmd.wValue = myPlayer.HoldItem._ivalue | (myPlayer.HoldItem._iName[18] << 8) | ((myPlayer.HoldItem._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = myPlayer.HoldItem._iName[22] | ((myPlayer.HoldItem._iName[21] | ((myPlayer.HoldItem._iName[20] | (myPlayer.HoldItem._iName[19] << 8)) << 8)) << 8);
+	if (item.IDidx == IDI_EAR) {
+		cmd.wCI = item._iName[8] | (item._iName[7] << 8);
+		cmd.dwSeed = item._iName[12] | ((item._iName[11] | ((item._iName[10] | (item._iName[9] << 8)) << 8)) << 8);
+		cmd.bId = item._iName[13];
+		cmd.bDur = item._iName[14];
+		cmd.bMDur = item._iName[15];
+		cmd.bCh = item._iName[16];
+		cmd.bMCh = item._iName[17];
+		cmd.wValue = item._ivalue | (item._iName[18] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+		cmd.dwBuff = item._iName[22] | ((item._iName[21] | ((item._iName[20] | (item._iName[19] << 8)) << 8)) << 8);
 	} else {
-		cmd.wCI = myPlayer.HoldItem._iCreateInfo;
-		cmd.dwSeed = myPlayer.HoldItem._iSeed;
-		cmd.bId = myPlayer.HoldItem._iIdentified ? 1 : 0;
-		cmd.bDur = myPlayer.HoldItem._iDurability;
-		cmd.bMDur = myPlayer.HoldItem._iMaxDur;
-		cmd.bCh = myPlayer.HoldItem._iCharges;
-		cmd.bMCh = myPlayer.HoldItem._iMaxCharges;
-		cmd.wValue = myPlayer.HoldItem._ivalue;
-		cmd.wToHit = myPlayer.HoldItem._iPLToHit;
-		cmd.wMaxDam = myPlayer.HoldItem._iMaxDam;
-		cmd.bMinStr = myPlayer.HoldItem._iMinStr;
-		cmd.bMinMag = myPlayer.HoldItem._iMinMag;
-		cmd.bMinDex = myPlayer.HoldItem._iMinDex;
-		cmd.bAC = myPlayer.HoldItem._iAC;
-		cmd.dwBuff = myPlayer.HoldItem.dwBuff;
+		cmd.wCI = item._iCreateInfo;
+		cmd.dwSeed = item._iSeed;
+		cmd.bId = item._iIdentified ? 1 : 0;
+		cmd.bDur = item._iDurability;
+		cmd.bMDur = item._iMaxDur;
+		cmd.bCh = item._iCharges;
+		cmd.bMCh = item._iMaxCharges;
+		cmd.wValue = item._ivalue;
+		cmd.wToHit = item._iPLToHit;
+		cmd.wMaxDam = item._iMaxDam;
+		cmd.bMinStr = item._iMinStr;
+		cmd.bMinMag = item._iMinMag;
+		cmd.bMinDex = item._iMinDex;
+		cmd.bAC = item._iAC;
+		cmd.dwBuff = item.dwBuff;
 	}
 
 	if (bHiPri)
@@ -2617,49 +2623,6 @@ void NetSendCmdDelItem(bool bHiPri, BYTE bLoc)
 
 	cmd.bLoc = bLoc;
 	cmd.bCmd = CMD_DELPLRITEMS;
-	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
-	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
-}
-
-void NetSendCmdDItem(bool bHiPri, int ii)
-{
-	TCmdPItem cmd;
-
-	cmd.bCmd = CMD_DROPITEM;
-	cmd.x = Items[ii].position.x;
-	cmd.y = Items[ii].position.y;
-	cmd.wIndx = Items[ii].IDidx;
-
-	if (Items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = Items[ii]._iName[8] | (Items[ii]._iName[7] << 8);
-		cmd.dwSeed = Items[ii]._iName[12] | ((Items[ii]._iName[11] | ((Items[ii]._iName[10] | (Items[ii]._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = Items[ii]._iName[13];
-		cmd.bDur = Items[ii]._iName[14];
-		cmd.bMDur = Items[ii]._iName[15];
-		cmd.bCh = Items[ii]._iName[16];
-		cmd.bMCh = Items[ii]._iName[17];
-		cmd.wValue = Items[ii]._ivalue | (Items[ii]._iName[18] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = Items[ii]._iName[22] | ((Items[ii]._iName[21] | ((Items[ii]._iName[20] | (Items[ii]._iName[19] << 8)) << 8)) << 8);
-	} else {
-		cmd.wCI = Items[ii]._iCreateInfo;
-		cmd.dwSeed = Items[ii]._iSeed;
-		cmd.bId = Items[ii]._iIdentified ? 1 : 0;
-		cmd.bDur = Items[ii]._iDurability;
-		cmd.bMDur = Items[ii]._iMaxDur;
-		cmd.bCh = Items[ii]._iCharges;
-		cmd.bMCh = Items[ii]._iMaxCharges;
-		cmd.wValue = Items[ii]._ivalue;
-		cmd.wToHit = Items[ii]._iPLToHit;
-		cmd.wMaxDam = Items[ii]._iMaxDam;
-		cmd.bMinStr = Items[ii]._iMinStr;
-		cmd.bMinMag = Items[ii]._iMinMag;
-		cmd.bMinDex = Items[ii]._iMinDex;
-		cmd.bAC = Items[ii]._iAC;
-		cmd.dwBuff = Items[ii].dwBuff;
-	}
-
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
