@@ -31,7 +31,7 @@
 - R3: click with cursor
 
 ## Building from Source
-Install the [PacBrew openorbis SDK][[pacbrew-openorbis]], then run the following
+Install the [PacBrew openorbis SDK][pacbrew-openorbis], then run the following
  bash script.
 ```console
 devilutionX$ ./Packaging/ps4/build.sh
