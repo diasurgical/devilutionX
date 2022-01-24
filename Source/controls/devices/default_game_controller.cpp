@@ -1,11 +1,11 @@
 #include "controls/devices/default_game_controller.h"
 
-#include "controls/touch/gamepad.h"
 #include "controls/controller_motion.h"
 #include "controls/plrctrls.h"
+#include "controls/touch/gamepad.h"
 #include "doom.h"
-#include "options.h"
 #include "gmenu.h"
+#include "options.h"
 #include "stores.h"
 #include "utils/language.h"
 

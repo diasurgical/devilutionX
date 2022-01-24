@@ -26,52 +26,52 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 AxisDirection GetMoveDirection()
 {
-    GameController *controller = GameController::GetCurrentGameController();
+	GameController *controller = GameController::GetCurrentGameController();
 
-    if (controller)
-        return controller->GetMoveDirection();
+	if (controller)
+		return controller->GetMoveDirection();
 
-    return AxisDirection { AxisDirectionX_NONE, AxisDirectionY_NONE };
+	return AxisDirection { AxisDirectionX_NONE, AxisDirectionY_NONE };
 }
 
 bool GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint)
 {
-    GameController *controller = GameController::GetCurrentGameController();
+	GameController *controller = GameController::GetCurrentGameController();
 
-    if (controller)
-	    return controller->GetStartModifierLeftCircleMenuHint(hint);
+	if (controller)
+		return controller->GetStartModifierLeftCircleMenuHint(hint);
 
-    return false;
+	return false;
 }
 
 bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint)
 {
-    GameController *controller = GameController::GetCurrentGameController();
+	GameController *controller = GameController::GetCurrentGameController();
 
-    if (controller)
-	    return controller->GetStartModifierRightCircleMenuHint(hint);
+	if (controller)
+		return controller->GetStartModifierRightCircleMenuHint(hint);
 
-    return false;
+	return false;
 }
 
 bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint)
 {
-    GameController *controller = GameController::GetCurrentGameController();
+	GameController *controller = GameController::GetCurrentGameController();
 
-    if (controller)
-	    return controller->GetSelectModifierLeftCircleMenuHint(hint);
+	if (controller)
+		return controller->GetSelectModifierLeftCircleMenuHint(hint);
 
-    return false;
+	return false;
 }
 
 bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint)
 {
-    GameController *controller = GameController::GetCurrentGameController();
+	GameController *controller = GameController::GetCurrentGameController();
 
-    if (controller)
-	    return controller->GetSelectModifierRightCircleMenuHint(hint);
+	if (controller)
+		return controller->GetSelectModifierRightCircleMenuHint(hint);
 
-    return false;
+	return false;
 }
 
 MenuAction GetAButtonMenuAction(const SDL_Event &event)
