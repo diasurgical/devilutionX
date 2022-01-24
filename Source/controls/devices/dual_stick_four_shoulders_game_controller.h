@@ -17,4 +17,3 @@ protected:
 };
 
 } // namespace devilution
-

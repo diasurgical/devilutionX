@@ -194,19 +194,19 @@ bool GameController::ProcessAxisMotion(const SDL_Event &event)
 
 bool GameController::GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action)
 {
-    if (HandleControllerButtonEvent(event, ctrlEvent, action))
-        return true;
+	if (HandleControllerButtonEvent(event, ctrlEvent, action))
+		return true;
 
-    if (!InGameMenu() && !QuestLogIsOpen && !sbookflag) {
+	if (!InGameMenu() && !QuestLogIsOpen && !sbookflag) {
 		switch (ctrlEvent.button) {
-        case ControllerButton_BUTTON_DPAD_UP:
-        case ControllerButton_BUTTON_DPAD_DOWN:
-        case ControllerButton_BUTTON_DPAD_LEFT:
-        case ControllerButton_BUTTON_DPAD_RIGHT:
-            // The rest of D-Pad actions are handled in charMovement() on every game_logic() call.
-            return true;
-        }
-    }
+		case ControllerButton_BUTTON_DPAD_UP:
+		case ControllerButton_BUTTON_DPAD_DOWN:
+		case ControllerButton_BUTTON_DPAD_LEFT:
+		case ControllerButton_BUTTON_DPAD_RIGHT:
+			// The rest of D-Pad actions are handled in charMovement() on every game_logic() call.
+			return true;
+		}
+	}
 
 	// DPad navigation is handled separately for these.
 	if (gmenu_is_active() || QuestLogIsOpen || stextflag != STORE_NONE) {
@@ -294,10 +294,10 @@ void GameController::Remove(SDL_JoystickID instanceId)
 
 		controllers_.erase(controllers_.begin() + i);
 
-        if (currentGameController_->instance_id_ == controller->instance_id_)
-            currentGameController_ = nullptr;
+		if (currentGameController_->instance_id_ == controller->instance_id_)
+			currentGameController_ = nullptr;
 
-        delete controller;
+		delete controller;
 
 		return;
 	}
@@ -308,10 +308,10 @@ GameController *GameController::Get(SDL_JoystickID instanceId)
 {
 	for (auto *controller : controllers_) {
 		if (controller->instance_id_ == instanceId) {
-            currentGameController_ = controller;
+			currentGameController_ = controller;
 
 			return controller;
-        }
+		}
 	}
 
 	return nullptr;
@@ -345,7 +345,7 @@ bool GameController::IsPressedOnAnyController(ControllerButton button)
 
 GameController *GameController::GetCurrentGameController()
 {
-    return currentGameController_;
+	return currentGameController_;
 }
 
 } // namespace devilution
