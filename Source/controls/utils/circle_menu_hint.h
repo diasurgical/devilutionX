@@ -46,6 +46,20 @@ struct CircleMenuHint {
 	{
 	}
 
+	CircleMenuHint()
+	    : isDpad(false)
+	    , top("")
+	    , topW(0)
+	    , right("")
+	    , rightW(0)
+	    , bottom("")
+	    , bottomW(0)
+	    , left("")
+	    , leftW(0)
+	    , xMid(0)
+	{
+	}
+
 	[[nodiscard]] int Width() const
 	{
 		return 2 * xMid;

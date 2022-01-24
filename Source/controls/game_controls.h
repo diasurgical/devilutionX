@@ -75,15 +75,12 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 AxisDirection GetMoveDirection();
 
-bool GetStartModifierLeftCircleMenuHint(CircleMenuHint **hint);
-bool GetStartModifierRightCircleMenuHint(CircleMenuHint **hint);
-bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint **hint);
-bool GetSelectModifierRightCircleMenuHint(CircleMenuHint **hint);
+bool GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint);
+bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint);
+bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint);
+bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint);
 
-MenuAction GetAButtonMenuAction();
-MenuAction GetBButtonMenuAction();
-
-extern bool start_modifier_active;
-extern bool select_modifier_active;
+MenuAction GetAButtonMenuAction(const SDL_Event &event);
+MenuAction GetBButtonMenuAction(const SDL_Event &event);
 
 } // namespace devilution

@@ -86,3 +86,15 @@ foreach(
     list(APPEND DEVILUTIONX_DEFINITIONS ${def_name}=${${def_name}})
   endif()
 endforeach(def_name)
+
+foreach(
+  def_name
+  DEFAULT_GAME_CONTROLLER
+  DUAL_STICK_4_SHOULDERS_GAME_CONTROLLER
+  OPTIONS_SET_GAME_CONTROLLER
+  SWAP_CONFIRM_CANCEL_BUTTONS
+)
+  if(DEFINED ${def_name})
+    list(APPEND DEVILUTIONX_DEFINITIONS ${def_name}=${${def_name}})
+  endif()
+endforeach(def_name)

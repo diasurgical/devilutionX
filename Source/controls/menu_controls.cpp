@@ -40,13 +40,13 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		case ControllerButton_IGNORE:
 			return MenuAction_NONE;
 		case ControllerButton_BUTTON_A: // Bottom button
-			return GetAButtonMenuAction();
+			return GetAButtonMenuAction(event);
 		case ControllerButton_BUTTON_START:
 			return MenuAction_SELECT;
 		case ControllerButton_BUTTON_BACK:
 			return MenuAction_BACK;
 		case ControllerButton_BUTTON_B: // Right button
-			return GetBButtonMenuAction();
+			return GetBButtonMenuAction(event);
 		case ControllerButton_BUTTON_X: // Left button
 			return MenuAction_DELETE;
 		case ControllerButton_BUTTON_DPAD_UP:

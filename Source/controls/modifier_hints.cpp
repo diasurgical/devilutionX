@@ -121,38 +121,24 @@ void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, co
 
 void DrawStartModifierMenu(const Surface &out)
 {
-	if (!start_modifier_active)
-		return;
+	CircleMenuHint hint;
 
-	CircleMenuHint *hint = nullptr;
+	if (GetStartModifierLeftCircleMenuHint(&hint))
+		DrawCircleMenuHint(out, hint, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 
-	if (GetStartModifierLeftCircleMenuHint(&hint)) {
-		DrawCircleMenuHint(out, *hint, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-		delete hint;
-	}
-
-	if (GetStartModifierRightCircleMenuHint(&hint)) {
-		DrawCircleMenuHint(out, *hint, { PANEL_LEFT + PANEL_WIDTH - hint->Width() - CircleMarginX, PANEL_TOP - CircleTop });
-		delete hint;
-	}
+	if (GetStartModifierRightCircleMenuHint(&hint))
+		DrawCircleMenuHint(out, hint, { PANEL_LEFT + PANEL_WIDTH - hint.Width() - CircleMarginX, PANEL_TOP - CircleTop });
 }
 
 void DrawSelectModifierMenu(const Surface &out)
 {
-	if (!select_modifier_active)
-		return;
+	CircleMenuHint hint;
 
-	CircleMenuHint *hint = nullptr;
+	if (GetSelectModifierLeftCircleMenuHint(&hint))
+		DrawSpellsCircleMenuHint(out, hint, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 
-	if (GetSelectModifierLeftCircleMenuHint(&hint)) {
-		DrawSpellsCircleMenuHint(out, *hint, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-		delete hint;
-	}
-
-	if (GetSelectModifierRightCircleMenuHint(&hint)) {
-		DrawSpellsCircleMenuHint(out, *hint, { PANEL_LEFT + PANEL_WIDTH - IconSize * 3 - CircleMarginX, PANEL_TOP - CircleTop });
-		delete hint;
-	}
+	if (GetSelectModifierRightCircleMenuHint(&hint))
+		DrawSpellsCircleMenuHint(out, hint, { PANEL_LEFT + PANEL_WIDTH - IconSize * 3 - CircleMarginX, PANEL_TOP - CircleTop });
 }
 
 } // namespace
