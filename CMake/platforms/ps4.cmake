@@ -4,6 +4,7 @@ set(ASAN OFF)
 set(UBSAN OFF)
 SET(DISABLE_LTO ON)
 set(NONET ON)
+set(NOEXIT ON)
 
 # Action buttons (swapped A/B and X/Y)
 set(JOY_BUTTON_B 1) # ×
