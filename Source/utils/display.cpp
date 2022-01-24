@@ -230,6 +230,11 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #endif
 
+#ifdef __PS4__
+	// TODO: ps4-openorbis-sdl2 from the packbrew SDK has similar issues as the switch SDK (Jan 24, 20202)
+	Joystick::Add(0);
+#endif
+
 	Size windowSize = GetPreferredWindowSize();
 
 #ifdef USE_SDL1
