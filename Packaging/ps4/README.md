@@ -12,7 +12,6 @@
 
 ## Known limitations
  - No networking
- - Audio stutter
 
 ## Controls
 - D-pad: move hero
