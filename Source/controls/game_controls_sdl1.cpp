@@ -344,14 +344,14 @@ AxisDirection GetMoveDirection()
 
 bool GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint)
 {
-	*hint = new CircleMenuHint(/*isDpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
+	*hint = CircleMenuHint(/*isDpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
 
 	return true;
 }
 
 bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint)
 {
-	*hint = new CircleMenuHint(/*isDpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
+	*hint = CircleMenuHint(/*isDpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
 
 	return true;
 }
@@ -359,14 +359,14 @@ bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint)
 bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint)
 {
 	if (sgOptions.Controller.bDpadHotkeys)
-		*hint = new CircleMenuHint(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
+		*hint = CircleMenuHint(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
 
 	return sgOptions.Controller.bDpadHotkeys;
 }
 
 bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint)
 {
-	*hint = new CircleMenuHint(/*isDpad=*/false, "F6", "F8", "F7", "F5");
+	*hint = CircleMenuHint(/*isDpad=*/false, "F6", "F8", "F7", "F5");
 
 	return true;
 }
