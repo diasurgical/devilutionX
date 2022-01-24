@@ -1588,12 +1588,12 @@ bool TryDropItem()
 
 	if (currlevel == 0) {
 		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 });
+			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 }, myPlayer.HoldItem);
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
 		if (UseItemOpensCrypt(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 });
+			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 }, myPlayer.HoldItem);
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
