@@ -563,7 +563,7 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(itm, target);
 		player.HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, target);
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, player.HoldItem);
 		return;
 	}
 
@@ -574,7 +574,7 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 				if (ItemSpaceOk(next)) {
 					RespawnDeadItem(itm, next);
 					player.HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, next);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, player.HoldItem);
 					return;
 				}
 			}

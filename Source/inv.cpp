@@ -1645,7 +1645,7 @@ void InvGetItem(int pnum, int ii)
 	auto &player = Players[pnum];
 
 	if (MyPlayerId == pnum && pcurs >= CURSOR_FIRSTITEM)
-		NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile);
+		NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile, player.HoldItem);
 
 	item._iCreateInfo &= ~CF_PREGEN;
 	player.HoldItem = item;
@@ -1720,7 +1720,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 	player.HoldItem = *item;
 	RespawnItem(item, true);
-	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position);
+	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position, player.HoldItem);
 	player.HoldItem._itype = ItemType::None;
 }
 
@@ -2211,7 +2211,7 @@ bool DropItemBeforeTrig()
 		return false;
 	}
 
-	NetSendCmdPItem(true, CMD_PUTITEM, cursPosition);
+	NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, Players[MyPlayerId].HoldItem);
 	NewCursor(CURSOR_HAND);
 	return true;
 }

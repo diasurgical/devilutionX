@@ -782,10 +782,9 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii);
-void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
 void NetSendCmdChItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
-void NetSendCmdDItem(bool bHiPri, int ii);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
