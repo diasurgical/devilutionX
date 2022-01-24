@@ -143,13 +143,13 @@ set(libdevilutionx_SRCS
   miniwin/misc_msg.cpp
   platform/locale.cpp)
 
-if(FULL_RANGE_CONTROLLER AND NOT USE_SDL1)
-  list(APPEND libdevilutionx_SRCS controls/full_range_game_controls.cpp)
+if(USE_SDL1)
+  list(APPEND libdevilutionx_SRCS controls/game_controls_sdl1.cpp)
+else()
+  list(APPEND libdevilutionx_SRCS controls/game_controls.cpp)
   list(APPEND libdevilutionx_SRCS controls/devices/dual_stick_four_shoulders_game_controller.cpp)
   list(APPEND libdevilutionx_SRCS controls/devices/default_game_controller.cpp)
   list(APPEND libdevilutionx_SRCS controls/devices/game_controller_factory.cpp)
-else()
-  list(APPEND libdevilutionx_SRCS controls/game_controls.cpp)
 endif()
 
 if(IOS)

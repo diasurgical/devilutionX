@@ -25,5 +25,4 @@ set(DEVILUTIONX_STATIC_ZLIB ON)
 # not really necessary but a good measure for SDL related stuff
 set(WINDOWS_STORE ON)
 
-set(FULL_RANGE_CONTROLLER ON)
 set(DUAL_STICK_4_SHOULDERS_GAME_CONTROLLER ON)

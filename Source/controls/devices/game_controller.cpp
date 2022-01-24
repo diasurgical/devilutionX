@@ -1,13 +1,13 @@
 #include "controls/devices/game_controller.h"
 
 #include "controls/controller_motion.h"
-#include "controls/devices/joystick.h"
-#include "utils/log.hpp"
-#include "utils/stubs.h"
 #include "controls/devices/game_controller_factory.h"
+#include "controls/devices/joystick.h"
+#include "controls/plrctrls.h"
 #include "gmenu.h"
 #include "stores.h"
-#include "controls/plrctrls.h"
+#include "utils/log.hpp"
+#include "utils/stubs.h"
 
 namespace devilution {
 

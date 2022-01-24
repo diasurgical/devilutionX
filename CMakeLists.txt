@@ -380,14 +380,6 @@ if(UWP_LIB)
   target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
 endif()
 
-if(FULL_RANGE_CONTROLLER AND NOT USE_SDL1)
-  target_compile_definitions(libdevilutionx PRIVATE FULL_RANGE_CONTROLLER=1)
-endif()
-
-if(SWAP_CONFIRM_CANCEL_BUTTONS)
-  target_compile_definitions(libdevilutionx PRIVATE SWAP_CONFIRM_CANCEL_BUTTONS=1)
-endif()
-
 if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
