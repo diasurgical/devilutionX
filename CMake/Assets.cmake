@@ -49,6 +49,9 @@ set(devilutionx_assets
   data/dirtybucp.pcx
   data/healthbox.pcx
   data/health.pcx
+  data/hintbox.pcx
+  data/hintboxbackground.pcx
+  data/hinticons.pcx
   data/panel8buc.pcx
   data/panel8bucp.pcx
   data/monstertags.pcx
