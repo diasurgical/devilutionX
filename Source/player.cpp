@@ -582,10 +582,8 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 	}
 }
 
-int DropGold(int pnum, int amount, bool skipFullStacks)
+int DropGold(Player &player, int amount, bool skipFullStacks)
 {
-	auto &player = Players[pnum];
-
 	for (int i = 0; i < player._pNumInv && amount > 0; i++) {
 		auto &item = player.InvList[i];
 
@@ -593,22 +591,20 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 			continue;
 
 		if (amount < item._ivalue) {
+			Item gold {};
+			InitializeItem(gold, IDI_GOLD);
+			SetGoldSeed(player, gold);
+
+			gold._ivalue = amount;
 			item._ivalue -= amount;
-			InitializeItem(player.HoldItem, IDI_GOLD);
-			SetGoldSeed(player, player.HoldItem);
-			SetPlrHandGoldCurs(player.HoldItem);
-			player.HoldItem._ivalue = amount;
-			DeadItem(player, &player.HoldItem, { 0, 0 });
+			SetPlrHandGoldCurs(gold);
+			DeadItem(player, &gold, { 0, 0 });
 			return 0;
 		}
 
 		amount -= item._ivalue;
+		DeadItem(player, &item, { 0, 0 });
 		player.RemoveInvItem(i);
-		InitializeItem(player.HoldItem, IDI_GOLD);
-		SetGoldSeed(player, player.HoldItem);
-		SetPlrHandGoldCurs(player.HoldItem);
-		player.HoldItem._ivalue = item._ivalue;
-		DeadItem(player, &player.HoldItem, { 0, 0 });
 		i = -1;
 	}
 
@@ -622,13 +618,12 @@ void DropHalfPlayersGold(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	int hGold = player._pGold / 2;
+	int remainingGold = DropGold(player, player._pGold / 2, true);
+	if (remainingGold > 0) {
+		DropGold(player, remainingGold, false);
+	}
 
-	hGold = DropGold(pnum, hGold, true);
-	if (hGold > 0)
-		DropGold(pnum, hGold, false);
-
-	player._pGold -= hGold;
+	player._pGold /= 2;
 }
 
 void InitLevelChange(int pnum)
