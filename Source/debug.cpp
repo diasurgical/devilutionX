@@ -446,6 +446,44 @@ std::string DebugCmdRefillHealthMana(const string_view parameter)
 	return "Ready for more.";
 }
 
+std::string DebugCmdChangeHealth(const string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	int change = -1;
+
+	if (!parameter.empty())
+		change = atoi(parameter.data());
+
+	if (change == 0)
+		return fmt::format("Health hasn't changed.");
+
+	int newHealth = myPlayer._pHitPoints + (change * 64);
+	SetPlayerHitPoints(myPlayer, newHealth);
+	if (newHealth <= 0)
+		SyncPlrKill(MyPlayerId, 0);
+
+	return fmt::format("Health has changed.");
+}
+
+std::string DebugCmdChangeMana(const string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	int change = -1;
+
+	if (!parameter.empty())
+		change = atoi(parameter.data());
+
+	if (change == 0)
+		return fmt::format("Mana hasn't changed.");
+
+	int newMana = myPlayer._pMana + (change * 64);
+	myPlayer._pMana = newMana;
+	myPlayer._pManaBase = myPlayer._pMana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
+	drawmanaflag = true;
+
+	return fmt::format("Mana has changed.");
+}
+
 std::string DebugCmdGenerateUniqueItem(const string_view parameter)
 {
 	return DebugSpawnUniqueItem(parameter.data());
@@ -751,6 +789,8 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "r_drawvision", "Toggles vision debug rendering.", "", &DebugCmdVision },
 	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
 	{ "fill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
+	{ "changehp", "Changes health by {value} (Use a negative value to remove health).", "{value}", &DebugCmdChangeHealth },
+	{ "changemp", "Changes mana by {value} (Use a negative value to remove mana).", "{value}", &DebugCmdChangeMana },
 	{ "dropu", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "drop", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
