@@ -14,6 +14,7 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
 #include "automap.h"
+#include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
@@ -565,6 +566,8 @@ void InitControlPan()
 	initialDropGoldIndex = 0;
 
 	CalculatePanelAreas();
+
+	InitModifierHints();
 }
 
 void DrawCtrlPan(const Surface &out)
@@ -830,6 +833,7 @@ void FreeControlPan()
 	pGBoxBuff = std::nullopt;
 	FreeMainPanel();
 	FreeCharPanel();
+	FreeModifierHints();
 }
 
 void DrawInfoBox(const Surface &out)
