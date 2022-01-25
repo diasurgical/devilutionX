@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -6779,15 +6779,17 @@ msgstr "Опыт"
 
 #: Source/panels/charpanel.cpp:136
 msgid "Next level"
-msgstr "Следующий уровень"
+msgstr ""
+"След.\n"
+"уровень"
 
 #: Source/panels/charpanel.cpp:144
 msgid "Base"
-msgstr "Базовый"
+msgstr "База"
 
 #: Source/panels/charpanel.cpp:145
 msgid "Now"
-msgstr "Текущий"
+msgstr "Сейчас"
 
 #: Source/panels/charpanel.cpp:146
 msgid "Strength"
@@ -6807,7 +6809,7 @@ msgstr "Живучесть"
 
 #: Source/panels/charpanel.cpp:160
 msgid "Points to distribute"
-msgstr "Очков осталось"
+msgstr "Очков вложить"
 
 #: Source/panels/charpanel.cpp:170
 msgid "Armor class"
@@ -6815,7 +6817,7 @@ msgstr "Класс брони"
 
 #: Source/panels/charpanel.cpp:172
 msgid "To hit"
-msgstr "Шанс попадания"
+msgstr "Меткость"
 
 #: Source/panels/charpanel.cpp:174
 msgid "Damage"
@@ -6832,17 +6834,17 @@ msgstr "Мана"
 # "Сопротивление" не помещается в панель персонажа
 #: Source/panels/charpanel.cpp:190
 msgid "Resist magic"
-msgstr "Сопротив магии"
+msgstr "Сопр. магии"
 
 # "Сопротивление" не помещается в панель персонажа
 #: Source/panels/charpanel.cpp:192
 msgid "Resist fire"
-msgstr "Сопротив огню"
+msgstr "Сопр. огню"
 
 # "Сопротивление" не помещается в панель персонажа
 #: Source/panels/charpanel.cpp:194
 msgid "Resist lightning"
-msgstr "Сопротив молнии"
+msgstr "Сопр. молнии"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
