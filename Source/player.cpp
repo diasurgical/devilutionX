@@ -538,7 +538,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
 }
 
-void RespawnDeadItem(Item *itm, Point target)
+void RespawnDeadItem(Item &itm, Point target)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -547,23 +547,20 @@ void RespawnDeadItem(Item *itm, Point target)
 
 	dItem[target.x][target.y] = ii + 1;
 
-	Items[ii] = *itm;
+	Items[ii] = itm;
 	Items[ii].position = target;
 	RespawnItem(Items[ii], true);
-
-	itm->_itype = ItemType::None;
 }
 
-void DeadItem(Player &player, Item *itm, Displacement direction)
+void DeadItem(Player &player, Item &itm, Displacement direction)
 {
-	if (itm->isEmpty())
+	if (itm.isEmpty())
 		return;
 
 	Point target = player.position.tile + direction;
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(itm, target);
-		player.HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, player.HoldItem);
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, itm);
 		return;
 	}
 
@@ -573,8 +570,7 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 				Point next = player.position.tile + Displacement { i, j };
 				if (ItemSpaceOk(next)) {
 					RespawnDeadItem(itm, next);
-					player.HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, player.HoldItem);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, itm);
 					return;
 				}
 			}
@@ -598,12 +594,12 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 			gold._ivalue = amount;
 			item._ivalue -= amount;
 			SetPlrHandGoldCurs(gold);
-			DeadItem(player, &gold, { 0, 0 });
+			DeadItem(player, gold, { 0, 0 });
 			return 0;
 		}
 
 		amount -= item._ivalue;
-		DeadItem(player, &item, { 0, 0 });
+		DeadItem(player, item, { 0, 0 });
 		player.RemoveInvItem(i);
 		i = -1;
 	}
@@ -3151,7 +3147,8 @@ StartPlayerKill(int pnum, int earflag)
 			drawhpflag = true;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
-				DeadItem(player, &player.HoldItem, { 0, 0 });
+				DeadItem(player, player.HoldItem, { 0, 0 });
+				player.HoldItem._itype = ItemType::None;
 				NewCursor(CURSOR_HAND);
 			}
 
@@ -3182,13 +3179,14 @@ StartPlayerKill(int pnum, int earflag)
 						ear._ivalue = player._pLevel;
 
 						if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
-							DeadItem(player, &ear, { 0, 0 });
+							DeadItem(player, ear, { 0, 0 });
 						}
 					} else {
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = Left(pdd);
-							DeadItem(player, &item, Displacement(pdd));
+							DeadItem(player, item, Displacement(pdd));
+							item._itype = ItemType::None;
 						}
 
 						CalcPlrInv(player, false);
@@ -3209,12 +3207,14 @@ void StripTopGold(Player &player)
 			if (item._ivalue > MaxGold) {
 				int val = item._ivalue - MaxGold;
 				item._ivalue = MaxGold;
-				InitializeItem(player.HoldItem, 0);
+				InitializeItem(player.HoldItem, IDI_GOLD);
 				SetGoldSeed(player, player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(player.HoldItem);
-				if (!GoldAutoPlace(player))
-					DeadItem(player, &player.HoldItem, { 0, 0 });
+				if (!GoldAutoPlace(player)) {
+					DeadItem(player, player.HoldItem, { 0, 0 });
+					player.HoldItem._itype == ItemType::None;
+				}
 			}
 		}
 	}
