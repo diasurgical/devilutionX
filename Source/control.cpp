@@ -484,6 +484,21 @@ void DrawManaFlaskLower(const Surface &out)
 	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, Players[MyPlayerId]._pManaPer);
 }
 
+void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
+{
+	UiFlags color = (currValue > 0 ? (currValue == maxValue ? UiFlags::ColorGold : UiFlags::ColorWhite) : UiFlags::ColorRed);
+
+	auto drawStringWithShadow = [out, color](string_view text, Point pos) {
+		DrawString(out, text, pos + Displacement { -1, -1 }, UiFlags::ColorBlack | UiFlags::KerningFitSpacing, 0);
+		DrawString(out, text, pos, color | UiFlags::KerningFitSpacing, 0);
+	};
+
+	std::string currText = fmt::format("{:d}", currValue);
+	drawStringWithShadow(currText, pos - Displacement { GetLineWidth(currText, GameFont12) + 1, 0 });
+	drawStringWithShadow("/", pos);
+	drawStringWithShadow(fmt::format("{:d}", maxValue), pos + Displacement { GetLineWidth("/", GameFont12) + 1, 0 });
+}
+
 void control_update_life_mana()
 {
 	Players[MyPlayerId].UpdateManaPercentage();

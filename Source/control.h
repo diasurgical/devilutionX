@@ -106,6 +106,11 @@ void DrawManaFlaskUpper(const Surface &out);
 void DrawManaFlaskLower(const Surface &out);
 
 /**
+ * Controls drawing of current / max values (health, mana) within the control panel.
+ */
+void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue);
+
+/**
  * @brief calls on the active player object to update HP/Mana percentage variables
  *
  * This is used to ensure that DrawFlask routines display an accurate representation of the players health/mana
