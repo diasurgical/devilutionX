@@ -436,10 +436,8 @@ std::string DebugCmdSetSpellsLevel(const string_view parameter)
 std::string DebugCmdRefillHealthMana(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
-	myPlayer._pMana = myPlayer._pMaxMana;
-	myPlayer._pManaBase = myPlayer._pMaxManaBase;
-	myPlayer._pHitPoints = myPlayer._pMaxHP;
-	myPlayer._pHPBase = myPlayer._pMaxHPBase;
+	myPlayer.RestoreFullLife();
+	myPlayer.RestoreFullMana();
 	drawhpflag = true;
 	drawmanaflag = true;
 
