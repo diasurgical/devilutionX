@@ -897,7 +897,7 @@ msgstr "Nivå: {:d}"
 #. TRANSLATORS: {:s} means: Game Difficulty.
 #: Source/automap.cpp:527
 msgid "Difficulty: {:s}"
-msgstr "Svårighetsgrad"
+msgstr "Svårighetsgrad: {:s}"
 
 #: Source/control.cpp:152
 msgid "Tab"
