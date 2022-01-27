@@ -941,7 +941,7 @@ msgstr "Κυρίως Μενού"
 
 #: Source/control.cpp:159 Source/diablo.cpp:1458
 msgid "Inventory"
-msgstr "Αντικέιμενα"
+msgstr "Αντικείμενα"
 
 #: Source/control.cpp:160
 msgid "Spell book"
@@ -3079,7 +3079,7 @@ msgstr "της Λαμπρότητας"
 
 #: Source/itemdat.cpp:357
 msgid "sorcery"
-msgstr "της Βασκανέιας"
+msgstr "της Βασκανείας"
 
 #: Source/itemdat.cpp:358
 msgid "wizardry"
@@ -3858,7 +3858,7 @@ msgstr "ανθεκτικότητα ενός αντικειμένου"
 
 #: Source/items.cpp:1892
 msgid "makes an item indestructible"
-msgstr "κάνει ένα αντικείμενο άφθαρτό"
+msgstr "κάνει ένα αντικείμενο άφθαρτο"
 
 #: Source/items.cpp:1896
 msgid "increases the armor class"
@@ -3942,11 +3942,11 @@ msgstr "μειώνει την ζωτικότητα"
 
 #: Source/items.cpp:1978
 msgid "restore some life and mana"
-msgstr "αποκαθιστά την ζωή και τα μάνα μερικώς"
+msgstr "μερική αναπλήρωση ζωής και μάνα"
 
 #: Source/items.cpp:1982
 msgid "restore all life and mana"
-msgstr "αποκαθιστά την ζωή και τα μάνα πλήρως"
+msgstr "ολική αναπλήρωση ζωής και μάνα"
 
 #: Source/items.cpp:1997 Source/items.cpp:2022
 msgid "Right-click to read"
@@ -4139,7 +4139,7 @@ msgstr "μειωμένη ανθεκτικότητα"
 
 #: Source/items.cpp:3819
 msgid "indestructible"
-msgstr "άφθαρτό"
+msgstr "άφθαρτο"
 
 #: Source/items.cpp:3821
 #, no-c-format
@@ -4385,7 +4385,7 @@ msgstr "ζημιά: {:d}-{:d}  Ανθ: {:d}/{:d}"
 
 #: Source/items.cpp:3994 Source/items.cpp:4045
 msgid "armor: {:d}  Indestructible"
-msgstr "θωράκιση: {:d} Άφθαρτή"
+msgstr "θωράκιση: {:d} Άφθαρτη"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:3996 Source/items.cpp:4047
@@ -7262,7 +7262,7 @@ msgstr "Ανθ: {:d}/{:d},  "
 
 #: Source/stores.cpp:271
 msgid "Indestructible,  "
-msgstr "Άφθαρτό, "
+msgstr "Άφθαρτο, "
 
 #: Source/stores.cpp:279
 msgid "No required attributes"
