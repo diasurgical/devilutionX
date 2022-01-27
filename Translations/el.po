@@ -19,11 +19,12 @@ msgstr ""
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
 msgstr ""
-"Greek Translation DevilutionX: \n"
-"          Main, Technical, QA and Testing: Michael Chatzivasileiou, \n"
+"Greek Translation Team for DevilutionX: \n"
+"          Main, Technical, QA and Testing: Michael Chatzivasileiou AKA "
+"xGnoSiSx \n"
 "          Consulting, QA and Proofing: John Kostakis.\n"
 "\n"
-"Σχεδιασμός Παίχνιδιού"
+"Σχεδιασμός Παiχνιδιού"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -2896,7 +2897,7 @@ msgstr "του Ερπετού"
 
 #: Source/itemdat.cpp:302
 msgid "Drake's"
-msgstr "της Σάυρας"
+msgstr "της Σαύρας"
 
 #: Source/itemdat.cpp:303
 msgid "Dragon's"
