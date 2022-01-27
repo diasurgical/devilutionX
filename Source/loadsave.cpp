@@ -2069,8 +2069,8 @@ void SaveGameData()
 		for (int8_t activeMissile = 0; activeMissile < MaxMissilesForSaveGame; activeMissile++)
 			file.WriteLE<int8_t>(activeMissile);
 		// Write AvailableMissiles
-		for (size_t avaiableMissile = Missiles.size(); avaiableMissile < MaxMissilesForSaveGame; avaiableMissile++)
-			file.WriteLE<int8_t>(static_cast<int8_t>(avaiableMissile));
+		for (size_t availableMissiles = Missiles.size(); availableMissiles < MaxMissilesForSaveGame; availableMissiles++)
+			file.WriteLE<int8_t>(static_cast<int8_t>(availableMissiles));
 		const size_t savedMissiles = std::min(Missiles.size(), MaxMissilesForSaveGame);
 		file.Skip<int8_t>(savedMissiles);
 		// Write Missile Data
