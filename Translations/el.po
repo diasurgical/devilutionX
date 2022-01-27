@@ -2384,7 +2384,7 @@ msgstr "Πάπυρος Φασικής Μεταφοράς"
 
 #: Source/itemdat.cpp:155
 msgid "Scroll of Mana Shield"
-msgstr "Πάπυρος Ασπίδας από Μάνας"
+msgstr "Πάπυρος Ασπίδας από Μάνα"
 
 #: Source/itemdat.cpp:156
 msgid "Scroll of Flame Wave"
@@ -4209,31 +4209,31 @@ msgstr "Όλες οι Αντοχές γίνονται 0"
 
 #: Source/items.cpp:3856
 msgid "hit monster doesn't heal"
-msgstr "το χτυπημένο τέρας δεν θεραπεύεται"
+msgstr "ο κτύπος δεν επιτρέπει θεραπεία"
 
 #: Source/items.cpp:3859
 #, no-c-format
 msgid "hit steals 3% mana"
-msgstr "το χτύπημα κλέβει 3% μάνα"
+msgstr "με κτύπο κλέβει 3% μάνα"
 
 #: Source/items.cpp:3861
 #, no-c-format
 msgid "hit steals 5% mana"
-msgstr "το χτύπημα κλέβει 5% μάνα"
+msgstr "με κτύπο κλέβει 5% μάνα"
 
 #: Source/items.cpp:3865
 #, no-c-format
 msgid "hit steals 3% life"
-msgstr "το χτύπημα κλέβει 3% ζωή"
+msgstr "με κτύπο κλέβει 3% ζωή"
 
 #: Source/items.cpp:3867
 #, no-c-format
 msgid "hit steals 5% life"
-msgstr "το χτύπημα κλέβει 5% ζωή"
+msgstr "με κτύπο κλέβει 5% ζωή"
 
 #: Source/items.cpp:3870
 msgid "penetrates target's armor"
-msgstr "διαπερνά την θωράκιση του στόχου"
+msgstr "διαπερνά θωράκιση"
 
 #: Source/items.cpp:3873
 msgid "quick attack"
