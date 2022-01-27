@@ -1739,8 +1739,10 @@ void DrawAndBlit()
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);
-	DrawFlaskValues(out, { PANEL_X + 134, PANEL_Y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
-	DrawFlaskValues(out, { PANEL_X + PANEL_WIDTH - 138, PANEL_Y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
+	if (*sgOptions.Graphics.showHealthValues)
+		DrawFlaskValues(out, { PANEL_X + 134, PANEL_Y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
+	if (*sgOptions.Graphics.showManaValues)
+		DrawFlaskValues(out, { PANEL_X + PANEL_WIDTH - 138, PANEL_Y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
 
 	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());
