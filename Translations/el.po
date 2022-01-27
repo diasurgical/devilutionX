@@ -369,7 +369,7 @@ msgstr "Διακομιστή-πελάτη (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:14
 msgid "Loopback"
-msgstr "Κλειστός βρόνχος"
+msgstr "Βρόχος επιστροφής"
 
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:510
 #: Source/DiabloUI/selgame.cpp:531
@@ -729,7 +729,7 @@ msgstr "Νέος Ήρωας"
 
 #: Source/DiabloUI/selhero.cpp:495
 msgid "Delete"
-msgstr "Διαγραφή"
+msgstr "Διαγ"
 
 #: Source/DiabloUI/selhero.cpp:504
 msgid "Multi Player Characters"
@@ -749,7 +749,7 @@ msgstr "Είσαι σίγουρος ότι θες να διαγράψεις το
 
 #: Source/DiabloUI/selstart.cpp:42
 msgid "Enter Hellfire"
-msgstr "Εισαγωγή στο Χελφαϊερ"
+msgstr "Εισαγωγή στο Χελφάϊερ"
 
 #: Source/DiabloUI/selstart.cpp:43
 msgid "Switch to Diablo"
@@ -1186,7 +1186,7 @@ msgid ""
 "Hellfire options:\n"
 msgstr ""
 "\n"
-"Επιλογές Hellfire:\n"
+"Επιλογές Χελφάϊερ:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:804
@@ -1404,7 +1404,7 @@ msgstr "Στο Μενού"
 
 #: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
-msgstr "κλειστός βρόνχος"
+msgstr "βρόχος επιστροφής"
 
 #: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
@@ -2105,7 +2105,7 @@ msgstr "Η Ανδρεία του Αρκαϊν"
 
 #: Source/itemdat.cpp:82 Source/itemdat.cpp:131
 msgid "Potion of Full Healing"
-msgstr "Φίλτρο Πλήρους Θεραπέιας"
+msgstr "Φίλτρο Πλήρους Θεραπείας"
 
 #: Source/itemdat.cpp:83 Source/itemdat.cpp:133
 msgid "Potion of Full Mana"
@@ -2352,7 +2352,7 @@ msgstr "Ελιξίριο Ζωτικότητας"
 
 #: Source/itemdat.cpp:144
 msgid "Scroll of Healing"
-msgstr "Πάπυρος Θεραπέιας"
+msgstr "Πάπυρος Θεραπείας"
 
 #: Source/itemdat.cpp:145
 msgid "Scroll of Search"
@@ -2412,7 +2412,7 @@ msgstr "Πάπυρος Αστρικής Έκρηξης"
 
 #: Source/itemdat.cpp:163
 msgid "Scroll of Golem"
-msgstr "Πάπυρος Τεχνητού Πολεμιστή"
+msgstr "Πάπυρος Πήλινου Μαχητή"
 
 #: Source/itemdat.cpp:165
 msgid "Scroll of Teleport"
@@ -2425,7 +2425,7 @@ msgstr "Πάπυρος Αποκάλυψης"
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
 msgid "Book of "
-msgstr "Βιβλίο "
+msgstr "Βιβλίο: "
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"
@@ -3779,13 +3779,13 @@ msgstr "Λάδι της Αδιαπερατότητας"
 #: Source/items.cpp:1134
 msgctxt "spell"
 msgid "{0} of {1}"
-msgstr "{0} {1}"
+msgstr "{0} με \"{1}\""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1142
 msgctxt "spell"
 msgid "{0} {1} of {2}"
-msgstr "{0} {1} και {2}"
+msgstr "{1} {0} με \"{2}\""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1160
@@ -3901,7 +3901,7 @@ msgstr "ανάκτηση ζωής"
 
 #: Source/items.cpp:1937
 msgid "deadly heal"
-msgstr "θανατηφόρα θεραπέια"
+msgstr "θανατηφόρα θεραπεία"
 
 #: Source/items.cpp:1941
 msgid "restore some mana"
@@ -4057,14 +4057,14 @@ msgstr "Αντοχή Πάντων: 75% ΜΕΓΙΣΤΟ"
 #: Source/items.cpp:3771
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] "τα ξόρκια αυξάνονται κατά {:d} επίπεδο"
-msgstr[1] "τα ξόρκια αυξάνονται κατά {:d} επίπεδα"
+msgstr[0] "τα ξόρκια κερδίζουν {:d} επίπεδο"
+msgstr[1] "τα ξόρκια κερδίζουν {:d} επίπεδα"
 
 #: Source/items.cpp:3773
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
-msgstr[0] "τα ξόρκια μειώνονται κατά {:d} επίπεδο"
-msgstr[1] "τα ξόρκια μειώνονται κατά {:d} επίπεδα"
+msgstr[0] "τα ξόρκια μειώνονται {:d} επίπεδο"
+msgstr[1] "τα ξόρκια μειώνονται {:d} επίπεδα"
 
 #: Source/items.cpp:3775
 msgid "spell levels unchanged (?)"
@@ -5950,7 +5950,7 @@ msgstr "Τόμος του Σκελετού"
 
 #: Source/objects.cpp:5461
 msgid "Library Book"
-msgstr "Βιβλίο της Βιβλιοθήκης"
+msgstr "Αναλόγιο Εγγράφου"
 
 #: Source/objects.cpp:5464
 msgid "Blood Fountain"
@@ -6719,7 +6719,7 @@ msgstr[1] "Ράβδος {{:d} φορτία}"
 #: Source/panels/spell_book.cpp:162
 msgctxt "spellbook"
 msgid "Level {:d}"
-msgstr "Επίπεδο {:d}"
+msgstr "Επίπ. {:d}"
 
 #: Source/panels/spell_book.cpp:164
 msgid "Unusable"
@@ -7055,7 +7055,7 @@ msgstr "Λαίλαπα"
 #: Source/spelldat.cpp:36
 msgctxt "spell"
 msgid "Golem"
-msgstr "Τεχνητός Πολεμιστής"
+msgstr "Πήλινος Μαχητής"
 
 #: Source/spelldat.cpp:37
 msgctxt "spell"
@@ -7125,7 +7125,7 @@ msgstr "Θεραπεία Άλλου"
 #: Source/spelldat.cpp:50
 msgctxt "spell"
 msgid "Blood Star"
-msgstr "Άστρο του Αίματους"
+msgstr "Άστρο Αίματος"
 
 #: Source/spelldat.cpp:51
 msgctxt "spell"
