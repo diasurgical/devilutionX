@@ -2272,7 +2272,7 @@ msgstr "Ολομεταλλικός Θώρακας"
 
 #: Source/itemdat.cpp:119
 msgid "Splint Mail"
-msgstr "Κουσάρι Πανοπλία"
+msgstr "Σκληθρωτή Πανοπλία"
 
 #: Source/itemdat.cpp:120
 msgid "Plate Mail"
@@ -2280,7 +2280,7 @@ msgstr "Ολομεταλλική Πανοπλία"
 
 #: Source/itemdat.cpp:121
 msgid "Field Plate"
-msgstr "Πλήρης  Ολομεταλλική Εξάρτηση"
+msgstr "Πλήρης  Ολομεταλλικός Θώρακας"
 
 #: Source/itemdat.cpp:122
 msgid "Gothic Plate"
@@ -2288,7 +2288,7 @@ msgstr "Γοτθική Ολομεταλλική Πανοπλία"
 
 #: Source/itemdat.cpp:123
 msgid "Full Plate Mail"
-msgstr "Πλήρες Μεταλλική Πανοπλία"
+msgstr "Πλήρης Ολομεταλλική Εξάρτυση"
 
 #: Source/itemdat.cpp:124 Source/itemdat.cpp:125 Source/itemdat.cpp:126
 #: Source/itemdat.cpp:127 Source/itemdat.cpp:128 Source/itemdat.cpp:129
@@ -3721,7 +3721,7 @@ msgstr "Το Μπουμπουνητό"
 
 #: Source/itemdat.cpp:536
 msgid "Shirotachi"
-msgstr "Το Σπαθί του Σαμουραΐ"
+msgstr "Σιροτάτσι"
 
 #: Source/itemdat.cpp:537
 msgid "Eater of Souls"
