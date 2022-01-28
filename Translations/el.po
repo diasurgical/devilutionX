@@ -6739,7 +6739,7 @@ msgstr "Ζημια: {:d} - {:d}"
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:178
 msgid "Dmg: 1/3 target hp"
-msgstr "Ζημιά: 1/3 ζωής του στόχου"
+msgstr "Ζημιά: 1/3 ζωής"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:180
