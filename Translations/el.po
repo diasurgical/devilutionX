@@ -3890,11 +3890,11 @@ msgstr "τοποθέτηση παγίδας πέτρωσης"
 
 #: Source/items.cpp:1925
 msgid "restore all life"
-msgstr "θεραπεύει την ζωή πλήρως"
+msgstr "ολική αναπλήρωση της ζωής"
 
 #: Source/items.cpp:1929
 msgid "restore some life"
-msgstr "θεραπεύει την ζωη μερικώς"
+msgstr "μερική αναπλήρωση της ζωής"
 
 #: Source/items.cpp:1933
 msgid "recover life"
@@ -3906,11 +3906,11 @@ msgstr "θανατηφόρα θεραπεία"
 
 #: Source/items.cpp:1941
 msgid "restore some mana"
-msgstr "μερική αποκατάσταση των μάνα"
+msgstr "μερική αναπλήρωση των μάνα"
 
 #: Source/items.cpp:1945
 msgid "restore all mana"
-msgstr "ολική αποκατάσταση των μάνα"
+msgstr "ολική αναπλήρωση των μάνα"
 
 #: Source/items.cpp:1949
 msgid "increase strength"
@@ -5947,7 +5947,7 @@ msgstr "{:s} Βωμός"
 
 #: Source/objects.cpp:5458
 msgid "Skeleton Tome"
-msgstr "Τόμος του Σκελετού"
+msgstr "Σκελετωμένο Αναλόγιο"
 
 #: Source/objects.cpp:5461
 msgid "Library Book"
@@ -7131,7 +7131,7 @@ msgstr "Άστρο Αίματος"
 #: Source/spelldat.cpp:51
 msgctxt "spell"
 msgid "Bone Spirit"
-msgstr "Κοκάλινο Πνεύμα"
+msgstr "Πνεύμα των Οστών"
 
 #: Source/spelldat.cpp:52
 msgctxt "spell"
