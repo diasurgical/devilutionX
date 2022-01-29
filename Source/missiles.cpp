@@ -3356,7 +3356,7 @@ void MI_Flash(Missile &missile)
 	missile._mirange--;
 
 	constexpr Displacement Offsets[] = { fromDirection(Direction::NorthWest), { 0, 0 }, fromDirection(Direction::SouthEast), 
-	                                     fromDirection(Direction::West), fromDirection(Direction::SouthWest), fromDirection(Direction::South)}
+	                                     fromDirection(Direction::West), fromDirection(Direction::SouthWest), fromDirection(Direction::South)};
 	for (Displacement offset : Offsets)
 		CheckMissileCol(missile, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
@@ -3378,7 +3378,7 @@ void MI_Flash2(Missile &missile)
 	}
 	missile._mirange--;
 
-	constexpr Displacement Offsets[] = { fromDirection(Direction::North), fromDirection(Direction::NorthEast), fromDirection(Directino::East) };
+	constexpr Displacement Offsets[] = { fromDirection(Direction::North), fromDirection(Direction::NorthEast), fromDirection(Direction::East) };
 	for (Displacement offset : Offsets)
 		CheckMissileCol(missile, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
