@@ -218,10 +218,6 @@ if(DISCORD_INTEGRATION)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
 endif()
 
-if(GPERF)
-  find_package(Gperftools REQUIRED)
-endif()
-
 target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads
   DevilutionX::SDL
