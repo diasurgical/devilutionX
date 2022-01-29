@@ -1539,12 +1539,13 @@ void AddRuneExplosion(Missile &missile, const AddMissileParameter & /*parameter*
 
 		missile._midam = dmg;
 		
-		for (auto direction : enum_values<Direction>)
-			CheckMissileCol(missile, dmg, dmg, false, missile.position.tile + Displacement(direction), true);
+		constexpr Displacement Offsets[] = { Displacement(Direction::North), Displacement(Direction::NorthWest), { 0, 0 }, 
+											 Displacement(Direction::SouthEast), Displacement(Direction::West), Displacement(Direction::SouthWest), 
+											 Displacement(Direction::South), Displacement(Direction::East), Displacement(Direction::NorthEast)};
 
-		CheckMissileCol(missile, dmg, dmg, false, missile.position.tile, true);
+		for (Displacement offset : Offsets)
+			CheckMissileCol(missile, dmg, dmg, false, missile.position.tile + offset, true);
 
-		
 	}
 	missile._mlid = AddLight(missile.position.start, 8);
 	SetMissDir(missile, 0);
