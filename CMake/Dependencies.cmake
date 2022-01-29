@@ -190,3 +190,8 @@ if(BUILD_TESTING)
     add_subdirectory(3rdParty/googletest)
   endif()
 endif()
+
+if(GPERF)
+  find_package(Gperftools REQUIRED)
+  message("INFO: ${GPERFTOOLS_LIBRARIES}")
+endif()
