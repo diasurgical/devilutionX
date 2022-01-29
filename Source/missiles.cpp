@@ -1538,10 +1538,13 @@ void AddRuneExplosion(Missile &missile, const AddMissileParameter & /*parameter*
 		dmg = ScaleSpellEffect(dmg, missile._mispllvl);
 
 		missile._midam = dmg;
+		
+		for (auto direction: enum_values<Direction>)
+			CheckMissileCol(missile, dmg, dmg, false, missile.position.tile + Displacement::fromDirection(direction), true);
 
-		constexpr Displacement Offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
-		for (Displacement offset : Offsets)
-			CheckMissileCol(missile, dmg, dmg, false, missile.position.tile + offset, true);
+		CheckMissileCol(missile, dmg, dmg, false, missile.position.tile, true));
+
+		
 	}
 	missile._mlid = AddLight(missile.position.start, 8);
 	SetMissDir(missile, 0);
@@ -3352,7 +3355,8 @@ void MI_Flash(Missile &missile)
 	}
 	missile._mirange--;
 
-	constexpr Displacement Offsets[] = { { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
+	constexpr Displacement Offsets[] = { fromDirection(Direction::NorthWest), { 0, 0 }, fromDirection(Direction::SouthEast), 
+	                                     fromDirection(Direction::West), fromDirection(Direction::SouthWest), fromDirection(Direction::South)}
 	for (Displacement offset : Offsets)
 		CheckMissileCol(missile, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
@@ -3374,7 +3378,7 @@ void MI_Flash2(Missile &missile)
 	}
 	missile._mirange--;
 
-	constexpr Displacement Offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 } };
+	constexpr Displacement Offsets[] = { fromDirection(Direction::North), fromDirection(Direction::NorthEast), fromDirection(Directino::East) };
 	for (Displacement offset : Offsets)
 		CheckMissileCol(missile, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
@@ -3991,7 +3995,9 @@ void MI_Element(Missile &missile)
 		if (!CheckBlock(p, c))
 			CheckMissileCol(missile, dam, dam, true, c, true);
 
-		constexpr Displacement Offsets[] = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
+		constexpr Displacement Offsets[] = { fromDirection(Direction::SouthWest), fromDirection(Direction::NorthEast), 
+		                                     fromDirection(Direction::SouthEast), fromDirection(Direction::East), fromDirection(Direction::South), 
+											 fromDirection(Direction::NorthWest), fromDirection(Direction::West), fromDirection(Direction::North) };
 		for (Displacement offset : Offsets) {
 			if (!CheckBlock(p, c + offset))
 				CheckMissileCol(missile, dam, dam, true, c + offset, true);
