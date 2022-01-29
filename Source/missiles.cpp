@@ -3355,8 +3355,8 @@ void MI_Flash(Missile &missile)
 	}
 	missile._mirange--;
 
-	constexpr Displacement Offsets[] = { fromDirection(Direction::NorthWest), { 0, 0 }, fromDirection(Direction::SouthEast), 
-	                                     fromDirection(Direction::West), fromDirection(Direction::SouthWest), fromDirection(Direction::South)};
+	constexpr Displacement Offsets[] = { Displacement::fromDirection(Direction::NorthWest), { 0, 0 }, Displacement::fromDirection(Direction::SouthEast), 
+	                                     Displacement::fromDirection(Direction::West), Displacement::fromDirection(Direction::SouthWest), Displacement::fromDirection(Direction::South)};
 	for (Displacement offset : Offsets)
 		CheckMissileCol(missile, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
@@ -3378,7 +3378,7 @@ void MI_Flash2(Missile &missile)
 	}
 	missile._mirange--;
 
-	constexpr Displacement Offsets[] = { fromDirection(Direction::North), fromDirection(Direction::NorthEast), fromDirection(Direction::East) };
+	constexpr Displacement Offsets[] = { Displacement::fromDirection(Direction::North), Displacement::fromDirection(Direction::NorthEast), Displacement::fromDirection(Direction::East) };
 	for (Displacement offset : Offsets)
 		CheckMissileCol(missile, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
@@ -3995,9 +3995,9 @@ void MI_Element(Missile &missile)
 		if (!CheckBlock(p, c))
 			CheckMissileCol(missile, dam, dam, true, c, true);
 
-		constexpr Displacement Offsets[] = { fromDirection(Direction::SouthWest), fromDirection(Direction::NorthEast), 
-		                                     fromDirection(Direction::SouthEast), fromDirection(Direction::East), fromDirection(Direction::South), 
-											 fromDirection(Direction::NorthWest), fromDirection(Direction::West), fromDirection(Direction::North) };
+		constexpr Displacement Offsets[] = { Displacement::fromDirection(Direction::SouthWest), Displacement::fromDirection(Direction::NorthEast), 
+		                                     Displacement::fromDirection(Direction::SouthEast), Displacement::fromDirection(Direction::East), Displacement::fromDirection(Direction::South), 
+											 Displacement::fromDirection(Direction::NorthWest), Displacement::fromDirection(Direction::West), DIsplacement::fromDirection(Direction::North) };
 		for (Displacement offset : Offsets) {
 			if (!CheckBlock(p, c + offset))
 				CheckMissileCol(missile, dam, dam, true, c + offset, true);
