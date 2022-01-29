@@ -1539,10 +1539,10 @@ void AddRuneExplosion(Missile &missile, const AddMissileParameter & /*parameter*
 
 		missile._midam = dmg;
 		
-		for (auto direction: enum_values<Direction>)
+		for (auto direction: enum_values<Direction>):
 			CheckMissileCol(missile, dmg, dmg, false, missile.position.tile + Displacement::fromDirection(direction), true);
 
-		CheckMissileCol(missile, dmg, dmg, false, missile.position.tile, true));
+		CheckMissileCol(missile, dmg, dmg, false, missile.position.tile, true);
 
 		
 	}
