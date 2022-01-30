@@ -231,7 +231,7 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 
 #ifdef __PS4__
-	// TODO: ps4-openorbis-sdl2 from the packbrew SDK has similar issues as the switch SDK (Jan 24, 20202)
+	// TODO: ps4-openorbis-sdl2 from the packbrew SDK has similar issues as the switch SDK (Jan 24, 2022)
 	Joystick::Add(0);
 #endif
 
