@@ -48,7 +48,7 @@ void InitCorpses()
 	nd++; // Unused blood spatter
 
 	for (auto &corpse : Corpses[nd].data)
-		corpse = MissileSpriteData[MFILE_SHATTER1].animData[0].get();
+		corpse = MissileSpriteData[MFILE_SHATTER1].GetFirstFrame();
 
 	Corpses[nd].frame = 12;
 	Corpses[nd].width = 128;

@@ -8,6 +8,7 @@
 #include "appfat.h"
 #include "diablo.h"
 #include "engine/assets.hpp"
+#include "utils/static_vector.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -99,5 +100,38 @@ std::unique_ptr<T[]> LoadFileInMem(const char *path, std::size_t *numRead = null
 	file.Read(reinterpret_cast<byte *>(buf.get()), fileLen);
 	return buf;
 }
+
+/**
+ * @brief Reads multiple files into a single buffer
+ *
+ * @tparam MaxFiles maximum number of files
+ */
+template <size_t MaxFiles>
+struct MultiFileLoader {
+	/**
+	 * @param numFiles number of files to read
+	 * @param pathFn a function that returns the path for the given index
+	 * @param outOffsets a buffer index for the start of each file will be written here
+	 * @return std::unique_ptr<byte[]> the buffer with all the files
+	 */
+	template <typename PathFn>
+	[[nodiscard]] std::unique_ptr<byte[]> operator()(size_t numFiles, PathFn &&pathFn, uint32_t *outOffsets)
+	{
+		StaticVector<SFile, MaxFiles> files;
+		StaticVector<uint32_t, MaxFiles> sizes;
+		size_t totalSize = 0;
+		for (size_t i = 0; i < numFiles; ++i) {
+			const size_t size = files.emplace_back(pathFn(i)).Size();
+			sizes.emplace_back(static_cast<uint32_t>(size));
+			outOffsets[i] = static_cast<uint32_t>(totalSize);
+			totalSize += size;
+		}
+		std::unique_ptr<byte[]> buf { new byte[totalSize] };
+		for (size_t i = 0; i < numFiles; ++i) {
+			files[i].Read(&buf[outOffsets[i]], sizes[i]);
+		}
+		return buf;
+	}
+};
 
 } // namespace devilution
