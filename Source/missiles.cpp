@@ -642,7 +642,7 @@ void SetMissAnim(Missile &missile, int animtype)
 
 	missile._miAnimType = animtype;
 	missile._miAnimFlags = MissileSpriteData[animtype].flags;
-	missile._miAnimData = MissileSpriteData[animtype].animData[dir].get();
+	missile._miAnimData = MissileSpriteData[animtype].GetFrame(static_cast<size_t>(dir));
 	missile._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
 	missile._miAnimLen = MissileSpriteData[animtype].animLen[dir];
 	missile._miAnimWidth = MissileSpriteData[animtype].animWidth;
@@ -4164,7 +4164,7 @@ void ProcessMissiles()
 void missiles_process_charge()
 {
 	for (auto &missile : Missiles) {
-		missile._miAnimData = MissileSpriteData[missile._miAnimType].animData[missile._mimfnum].get();
+		missile._miAnimData = MissileSpriteData[missile._miAnimType].GetFrame(missile._mimfnum);
 		if (missile._mitype != MIS_RHINO)
 			continue;
 
