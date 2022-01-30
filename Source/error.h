@@ -71,7 +71,7 @@ enum diablo_message : uint8_t {
 };
 
 void InitDiabloMsg(diablo_message e);
-void InitDiabloMsg(std::string msg);
+void InitDiabloMsg(const std::string &msg);
 bool IsDiabloMsgAvailable();
 void CancelCurrentDiabloMsg();
 void ClrDiabloMsg();

@@ -52,6 +52,7 @@
 #include "nthread.h"
 #include "objects.h"
 #include "options.h"
+#include "panels/info_box.hpp"
 #include "panels/spell_book.hpp"
 #include "panels/spell_list.hpp"
 #include "pfile.h"
@@ -172,6 +173,7 @@ void FreeGame()
 	FreeInvGFX();
 	FreeGMenu();
 	FreeQuestText();
+	FreeInfoBoxGfx();
 	FreeStoreMem();
 
 	for (auto &player : Players)
@@ -982,6 +984,9 @@ void DiabloInit()
 
 	// Item graphics are loaded early, they already get touched during hero selection.
 	InitItemGFX();
+
+	// Always available.
+	LoadSmallSelectionSpinner();
 }
 
 void DiabloSplash()
@@ -1985,15 +1990,17 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	if (firstflag) {
 		InitInv();
 		InitQuestText();
-		InitStores();
+		InitInfoBoxGfx();
 		InitAutomapOnce();
 		InitHelp();
 	}
-
 	SetRndSeed(glSeedTbl[currlevel]);
 
-	if (leveltype == DTYPE_TOWN)
+	if (leveltype == DTYPE_TOWN) {
 		SetupTownStores();
+	} else {
+		FreeStoreMem();
+	}
 
 	IncProgress();
 	InitAutomap();

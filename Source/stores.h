@@ -67,13 +67,6 @@ struct STextStruct {
 	}
 };
 
-/** Shop frame graphics */
-extern std::optional<CelSprite> pSTextBoxCels;
-/** Small text selection cursor */
-extern std::optional<CelSprite> pSPentSpn2Cels;
-/** Scrollbar graphics */
-extern std::optional<CelSprite> pSTextSlidCels;
-
 /** Currently active store */
 extern talk_id stextflag;
 
@@ -108,7 +101,6 @@ extern int boylevel;
 extern Item boyitem;
 
 void AddStoreHoldRepair(Item *itm, int8_t i);
-void InitStores();
 void SetupTownStores();
 void FreeStoreMem();
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
