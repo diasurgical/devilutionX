@@ -7,14 +7,11 @@
 #endif
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
+#include "controls/game_controls.h"
 #include "controls/plrctrls.h"
-#include "cursor.h"
 #include "player.h"
 
 namespace devilution {
-
-extern ControllerButton ControllerButton_ATTACK;
-extern ControllerButton ControllerButton_CAST_SPELL;
 
 namespace {
 

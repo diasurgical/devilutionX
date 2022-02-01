@@ -22,8 +22,8 @@ namespace devilution {
 
 bool start_modifier_active = false;
 bool select_modifier_active = false;
-extern const ControllerButton ControllerButton_ATTACK = ControllerButton_BUTTON_B;
-extern const ControllerButton ControllerButton_CAST_SPELL = ControllerButton_BUTTON_X;
+const ControllerButton ControllerButton_ATTACK = ControllerButton_BUTTON_B;
+const ControllerButton ControllerButton_CAST_SPELL = ControllerButton_BUTTON_X;
 
 namespace {
 
