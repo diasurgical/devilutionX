@@ -8,6 +8,7 @@ enum class UiPanels {
 	Character,
 	Spell,
 	Inventory,
+	Stash,
 };
 
 } // namespace devilution

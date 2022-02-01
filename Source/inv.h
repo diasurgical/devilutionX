@@ -85,11 +85,22 @@ extern bool invflag;
 extern bool drawsbarflag;
 extern const Point InvRect[73];
 
+void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size);
+/**
+ * @brief Checks whether the given item can be placed on the belt. Takes item size as well as characteristics into account. Items
+ * that cannot be placed on the belt have to be placed in the inventory instead.
+ * @param item The item to be checked.
+ * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
+ */
+bool CanBePlacedOnBelt(const Item &item);
+int SwapItem(Item &a, Item &b);
+
 /**
  * @brief Function type which performs an operation on the given item.
  */
 using ItemFunc = void (*)(Item &);
 
+void CloseInventory();
 void FreeInvGFX();
 void InitInv();
 

@@ -26,6 +26,7 @@
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
 #include "qol/chatlog.h"
+#include "qol/stash.h"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
@@ -57,6 +58,7 @@ bool InGameMenu()
 namespace {
 
 int Slot = SLOTXY_INV_FIRST;
+Point ActiveStashSlot = InvalidStashPoint;
 int PreviousInventoryColumn = -1;
 
 const Direction FaceDir[3][3] = {
@@ -672,6 +674,19 @@ int FindFirstSlotOnItem(int8_t itemInvId)
 	return -1;
 }
 
+Point FindFirstStashSlotOnItem(uint16_t itemInvId)
+{
+	if (itemInvId == 0)
+		return InvalidStashPoint;
+
+	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+		if (Stash.stashGrids[Stash.page][point.x][point.y] == itemInvId)
+			return point;
+	}
+
+	return InvalidStashPoint;
+}
+
 /**
  * Reset cursor position based on the current slot.
  */
@@ -713,6 +728,23 @@ int FindClosestInventorySlot(Point mousePos)
 		if (distance < shortestDistance) {
 			shortestDistance = distance;
 			bestSlot = i;
+		}
+	}
+
+	return bestSlot;
+}
+
+Point FindClosestStashSlot(Point mousePos)
+{
+	int shortestDistance = std::numeric_limits<int>::max();
+	Point bestSlot = {};
+	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
+
+	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+		int distance = mousePos.ManhattanDistance(GetStashSlotCoord(point));
+		if (distance < shortestDistance) {
+			shortestDistance = distance;
+			bestSlot = point;
 		}
 	}
 
@@ -1496,7 +1528,7 @@ void PerformPrimaryAction()
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
-		} else {
+		} else if (GetRightPanel().Contains(MousePosition)) {
 			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
 			// Find any item occupying a slot that is currently under the cursor
@@ -1528,6 +1560,40 @@ void PerformPrimaryAction()
 				Point mousePos = GetSlotCoord(jumpSlot);
 				mousePos.y -= InventorySlotSizeInPixels.height;
 				Slot = jumpSlot;
+				SetCursorPos(mousePos);
+			}
+		} else if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
+			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
+
+			// Find any item occupying a slot that is currently under the cursor
+			uint16_t itemUnderCursor = [](Point stashSlot) -> uint16_t {
+				if (stashSlot != InvalidStashPoint)
+					return 0;
+				for (int x = 0; x < icursSize28.width; x++) {
+					for (int y = 0; y < icursSize28.height; y++) {
+						Point slotUnderCursor = stashSlot + Displacement { x, y };
+						if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
+							continue;
+						uint16_t itemId = Stash.stashGrids[Stash.page][slotUnderCursor.x][slotUnderCursor.y];
+						if (itemId != 0)
+							return itemId;
+					}
+				}
+				return 0;
+			}(stashSlot);
+
+			// The cursor will need to be shifted to
+			// this slot if the item is swapped or lifted
+			Point jumpSlot = FindFirstStashSlotOnItem(itemUnderCursor);
+			CheckStashItem(MousePosition);
+
+			// If we don't find the item in the same position as before,
+			// it suggests that the item was swapped or lifted
+			Point newSlot = FindFirstStashSlotOnItem(itemUnderCursor);
+			if (jumpSlot != InvalidStashPoint && jumpSlot != newSlot) {
+				Point mousePos = GetStashSlotCoord(jumpSlot);
+				mousePos.y -= InventorySlotSizeInPixels.height;
+				ActiveStashSlot = jumpSlot;
 				SetCursorPos(mousePos);
 			}
 		}
@@ -1626,11 +1692,13 @@ void PerformSpellAction()
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
-		} else {
+		} else if (pcursinvitem != -1) {
 			int itemId = GetItemIdOnSlot(Slot);
 			CheckInvItem(true, false);
 			if (itemId != GetItemIdOnSlot(Slot))
 				ResetInvCursorPosition();
+		} else if (pcursstashitem != uint16_t(-1)) {
+			CheckStashItem(MousePosition, true, false);
 		}
 		return;
 	}
@@ -1685,6 +1753,24 @@ void CtrlUseInvItem()
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
 	}
+}
+
+void CtrlUseStashItem()
+{
+	if (pcursstashitem == uint16_t(-1))
+		return;
+
+	const Item &item = Stash.stashList[pcursstashitem];
+	if (item.IsScroll() && spelldata[item._iSpell].sTargeted) {
+		return;
+	}
+
+	if (item.isEquipment()) {
+		CheckStashItem(MousePosition, true, false); // Auto-equip if it's equipment
+	} else {
+		UseStashItem(pcursstashitem);
+	}
+	// Todo reset cursor position if item is moved
 }
 
 void PerformSecondaryAction()

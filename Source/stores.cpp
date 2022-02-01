@@ -9,6 +9,7 @@
 
 #include <fmt/format.h>
 
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/load_cel.hpp"
 #include "engine/random.hpp"
@@ -18,6 +19,7 @@
 #include "minitext.h"
 #include "options.h"
 #include "panels/info_box.hpp"
+#include "qol/stash.h"
 #include "towners.h"
 #include "utils/language.h"
 
@@ -1333,6 +1335,7 @@ void StartBarmaid()
 	AddSText(0, 2, _("Gillian"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSText(0, 12, _("Talk to Gillian"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 14, _("Access Storage"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 	AddSText(0, 18, _("Say goodbye"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
@@ -2193,6 +2196,16 @@ void BarmaidEnter()
 		gossipend = TEXT_GILLIAN10;
 		StartStore(STORE_GOSSIP);
 		break;
+	case 14:
+		stextflag = STORE_NONE;
+		IsStashOpen = true;
+		invflag = true;
+		if (ControlMode != ControlTypes::KeyboardAndMouse) {
+			if (pcurs == CURSOR_DISARM)
+				NewCursor(CURSOR_HAND);
+			FocusOnInventory();
+		}
+		break;
 	case 18:
 		stextflag = STORE_NONE;
 		break;
@@ -2389,7 +2402,7 @@ void ClearSText(int s, int e)
 void StartStore(talk_id s)
 {
 	sbookflag = false;
-	invflag = false;
+	CloseInventory();
 	chrflag = false;
 	QuestLogIsOpen = false;
 	CloseGoldDrop();

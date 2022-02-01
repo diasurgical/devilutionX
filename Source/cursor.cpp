@@ -18,6 +18,7 @@
 #include "inv.h"
 #include "missiles.h"
 #include "qol/itemlabels.h"
+#include "qol/stash.h"
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
@@ -112,6 +113,8 @@ Size icursSize28;
 
 /** inv_item value */
 int8_t pcursinvitem;
+/** StashItem value */
+uint16_t pcursstashitem;
 /** Pixel size of the current cursor image */
 Size icursSize;
 /** Current highlighted item */
@@ -250,7 +253,7 @@ void CheckCursMove()
 	int sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen) {
+		if (chrflag || QuestLogIsOpen || IsStashOpen) {
 			sx -= GetScreenWidth() / 4;
 		} else if (invflag || sbookflag) {
 			sx += GetScreenWidth() / 4;
@@ -354,7 +357,7 @@ void CheckCursMove()
 				pcursplr = -1;
 		}
 
-		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursplr == -1) {
+		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
 			cursPosition = { mx, my };
 			CheckTrigForce();
 			CheckTown();
@@ -373,6 +376,7 @@ void CheckCursMove()
 		drawsbarflag = true;
 	}
 	pcursinvitem = -1;
+	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
 	ShowUniqueItemInfoBox = false;
 	panelflag = false;
@@ -396,10 +400,13 @@ void CheckCursMove()
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
+	if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
+		pcursstashitem = CheckStashHLight(MousePosition);
+	}
 	if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) {
+	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) {
 		return;
 	}
 
