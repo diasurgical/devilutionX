@@ -52,6 +52,16 @@ bool InGameMenu()
 	    || Players[MyPlayerId]._pInvincible;
 }
 
+bool CanControlHero()
+{
+	return !InGameMenu()
+		&& !invflag
+		&& !spselflag
+		&& !QuestLogIsOpen
+		&& !sbookflag
+		&& !DoomFlag;
+}
+
 namespace {
 
 int Slot = SLOTXY_INV_FIRST;
