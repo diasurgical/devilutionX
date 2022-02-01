@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  retrofw:
+  ps4:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
