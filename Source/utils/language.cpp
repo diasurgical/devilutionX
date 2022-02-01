@@ -100,6 +100,12 @@ void SetPluralForm(char *string)
 		return;
 	}
 
+	// bg, da, de, es, it, sv
+	if (strcmp(expression, "(n != 1)") == 0) {
+		GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
+		return;
+	}
+
 	// fr, pt_BR
 	if (strcmp(expression, "(n > 1)") == 0) {
 		GetLocalPluralId = [](int n) -> int { return n > 1 ? 1 : 0; };
@@ -153,9 +159,8 @@ void SetPluralForm(char *string)
 		};
 		return;
 	}
-
-	// bg, da, de, es, it, sv
-	// (n != 1)
+	
+	LogError("Unknown plural expression: '{}'", expression);
 }
 
 /**
