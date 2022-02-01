@@ -15,11 +15,11 @@
 
 ## Controls
 - D-pad: move hero
-- ×: attack nearby enemies, talk to townspeople and merchants, pickup/place
+- ○: attack nearby enemies, talk to townspeople and merchants, pickup/place
      items in the inventory, OK while in main menu
-- ○: select spell, back while in menus
-- □: pickup items, open nearby chests and doors, use item in the inventory
-- △: cast spell, delete character while in main menu
+- ×: select spell, back while in menus
+- △: pickup items, open nearby chests and doors, use item in the inventory
+- □: cast spell, delete character while in main menu
 - L1: use health item from belt
 - R1: use mana potion from belt
 - L2: toggle character sheet
