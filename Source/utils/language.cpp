@@ -159,7 +159,7 @@ void SetPluralForm(char *string)
 		};
 		return;
 	}
-	
+
 	LogError("Unknown plural expression: '{}'", expression);
 }
 
