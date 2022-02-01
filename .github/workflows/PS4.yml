@@ -1,0 +1,47 @@
+name: PS4 Release Build
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  retrofw:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt update &&
+        sudo apt install -y curl cmake git gettext &&
+        curl -L https://github.com/PacBrew/pacbrew-pacman/releases/download/pacbrew-release-1.0/pacbrew-pacman-1.0.deb &&
+        sudo dpkg -i pacbrew-pacman-1.0.deb && sudo pacbrew-pacman -Sy &&
+        sudo pacbrew-pacman -S ps4-openorbis ps4-openorbis-portlibs &&
+        echo "#include <endian.h>" | sudo tee /opt/pacbrew/ps4/openorbis/include/sys/endian.h
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: Packaging/ps4/build.sh
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx.pkg
+        path: build-ps4/IV0001-DVLX00001_00-*.pkg
+
+    - name: Update Release
+      if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: build-ps4/IV0001-DVLX00001_00-*.pkg
+        allowUpdates: true
+        omitBody: true
+        omitName: true
+        omitPrereleaseDuringUpdate: true
+        token: ${{ secrets.GITHUB_TOKEN }}
