@@ -36,6 +36,7 @@
 #include "panels/spell_book.hpp"
 #include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
+#include "qol/stash.h"
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
@@ -82,6 +83,7 @@ Rectangle MainPanel;
 Rectangle LeftPanel;
 Rectangle RightPanel;
 std::optional<OwnedSurface> pBtmBuff;
+std::optional<OwnedCelSprite> pGBoxBuff;
 
 const Rectangle &GetMainPanel()
 {
@@ -126,7 +128,6 @@ std::optional<OwnedCelSprite> talkButtons;
 std::optional<OwnedCelSprite> pDurIcons;
 std::optional<OwnedCelSprite> multiButtons;
 std::optional<OwnedCelSprite> pPanelButtons;
-std::optional<OwnedCelSprite> pGBoxBuff;
 
 bool PanelButtons[8];
 int PanelButtonIndex;
@@ -305,12 +306,6 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	return x - 32 - 8;
 }
 
-void ControlSetGoldCurs(Player &player)
-{
-	SetPlrHandGoldCurs(player.HoldItem);
-	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-}
-
 void ResetTalkMsg()
 {
 #ifdef _DEBUG
@@ -383,7 +378,31 @@ void RemoveGold(Player &player, int goldIndex)
 	dropGoldValue = 0;
 }
 
+bool IsLevelUpButtonVisible()
+{
+	if (spselflag || chrflag || Players[MyPlayerId]._pStatPts == 0) {
+		return false;
+	}
+	if (ControlMode == ControlTypes::VirtualGamepad) {
+		return false;
+	}
+	if (stextflag != STORE_NONE || IsStashOpen) {
+		return false;
+	}
+	if (QuestLogIsOpen && GetLeftPanel().Contains(GetMainPanel().position + Displacement { 0, -74 })) {
+		return false;
+	}
+
+	return true;
+}
+
 } // namespace
+
+void ControlSetGoldCurs(Player &player)
+{
+	SetPlrHandGoldCurs(player.HoldItem);
+	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+}
 
 void CalculatePanelAreas()
 {
@@ -448,6 +467,7 @@ Point GetPanelPosition(UiPanels panel, Point offset)
 		return GetMainPanel().position + displacement;
 	case UiPanels::Quest:
 	case UiPanels::Character:
+	case UiPanels::Stash:
 		return GetLeftPanel().position + displacement;
 	case UiPanels::Spell:
 	case UiPanels::Inventory:
@@ -768,10 +788,12 @@ void CheckBtnUp()
 		switch (i) {
 		case PanelButtonCharinfo:
 			QuestLogIsOpen = false;
+			IsStashOpen = false;
 			chrflag = !chrflag;
 			break;
 		case PanelButtonQlog:
 			chrflag = false;
+			IsStashOpen = false;
 			if (!QuestLogIsOpen)
 				StartQuestlog();
 			else
@@ -787,6 +809,7 @@ void CheckBtnUp()
 			break;
 		case PanelButtonInventory:
 			sbookflag = false;
+			IsStashOpen = false;
 			invflag = !invflag;
 			if (dropGoldFlag) {
 				CloseGoldDrop();
@@ -794,7 +817,7 @@ void CheckBtnUp()
 			}
 			break;
 		case PanelButtonSpellbook:
-			invflag = false;
+			CloseInventory();
 			if (dropGoldFlag) {
 				CloseGoldDrop();
 				dropGoldValue = 0;
@@ -839,7 +862,7 @@ void FreeControlPan()
 void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
-	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
+	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && !spselflag) {
 		infostr[0] = '\0';
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
@@ -899,6 +922,10 @@ void DrawInfoBox(const Surface &out)
 
 void CheckLvlBtn()
 {
+	if (!IsLevelUpButtonVisible()) {
+		return;
+	}
+
 	auto &mainPanelPosition = GetMainPanel().position;
 	if (!lvlbtndown && MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y)
 		lvlbtndown = true;
@@ -909,6 +936,7 @@ void ReleaseLvlBtn()
 	auto &mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
 		QuestLogIsOpen = false;
+		IsStashOpen = false;
 		chrflag = true;
 	}
 	lvlbtndown = false;
@@ -916,7 +944,7 @@ void ReleaseLvlBtn()
 
 void DrawLevelUpIcon(const Surface &out)
 {
-	if (stextflag == STORE_NONE) {
+	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 3 : 2;
 		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
@@ -987,7 +1015,7 @@ void DrawDurIcon(const Surface &out)
 	bool hasRoomUnderPanels = MainPanel.position.y - (RightPanel.position.y + RightPanel.size.height) >= 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || QuestLogIsOpen) && (invflag || sbookflag))
+		if ((chrflag || QuestLogIsOpen || IsStashOpen) && (invflag || sbookflag))
 			return;
 	}
 

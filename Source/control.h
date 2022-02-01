@@ -57,6 +57,7 @@ const Rectangle &GetMainPanel();
 const Rectangle &GetLeftPanel();
 const Rectangle &GetRightPanel();
 extern std::optional<OwnedSurface> pBtmBuff;
+extern std::optional<OwnedCelSprite> pGBoxBuff;
 extern SDL_Rect PanBtnPos[8];
 
 void CalculatePanelAreas();
@@ -68,6 +69,7 @@ inline bool CanPanelsCoverView()
 {
 	return GetScreenWidth() <= PANEL_WIDTH && GetScreenHeight() <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
+void ControlSetGoldCurs(Player &player);
 
 void DrawSpellList(const Surface &out);
 void SetSpell();

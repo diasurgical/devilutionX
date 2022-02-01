@@ -38,5 +38,7 @@ void SaveGameData();
 void SaveGame();
 void SaveLevel();
 void LoadLevel();
+void LoadStash();
+void SaveStash();
 
 } // namespace devilution

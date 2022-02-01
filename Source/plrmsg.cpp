@@ -13,6 +13,7 @@
 #include "engine/render/text_render.hpp"
 #include "inv.h"
 #include "qol/chatlog.h"
+#include "qol/stash.h"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
@@ -103,7 +104,7 @@ void DrawPlrMsg(const Surface &out)
 	int y = PANEL_TOP - 13;
 	int width = gnScreenWidth - 20;
 
-	if (!talkflag && (chrflag || QuestLogIsOpen)) {
+	if (!talkflag && (chrflag || QuestLogIsOpen || IsStashOpen)) {
 		x += GetLeftPanel().position.x + GetLeftPanel().size.width;
 		width -= GetLeftPanel().size.width;
 	}

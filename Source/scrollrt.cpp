@@ -32,6 +32,7 @@
 #include "qol/chatlog.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
+#include "qol/stash.h"
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
@@ -1021,7 +1022,7 @@ void Zoom(const Surface &out)
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen) {
+		if (chrflag || QuestLogIsOpen || IsStashOpen) {
 			viewportWidth -= SPANEL_WIDTH;
 			viewportOffsetX = SPANEL_WIDTH;
 		} else if (invflag || sbookflag) {
@@ -1101,7 +1102,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
-			if (chrflag || QuestLogIsOpen) {
+			if (chrflag || QuestLogIsOpen || IsStashOpen) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
@@ -1112,7 +1113,7 @@ void DrawGame(const Surface &fullOut, Point position)
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
-			if (chrflag || QuestLogIsOpen) {
+			if (chrflag || QuestLogIsOpen || IsStashOpen) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
@@ -1274,11 +1275,10 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawChr(out);
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
+	} else if (IsStashOpen) {
+		DrawStash(out);
 	}
-	if (ControlMode != ControlTypes::VirtualGamepad && !chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag
-	    && (!QuestLogIsOpen || !GetLeftPanel().Contains(GetMainPanel().position + Displacement { 0, -74 }))) {
-		DrawLevelUpIcon(out);
-	}
+	DrawLevelUpIcon(out);
 	if (ShowUniqueItemInfoBox) {
 		DrawUniqueInfo(out);
 	}
@@ -1291,6 +1291,7 @@ void DrawView(const Surface &out, Point startPosition)
 	if (dropGoldFlag) {
 		DrawGoldSplit(out, dropGoldValue);
 	}
+	DrawGoldWithdraw(out, WithdrawGoldValue);
 	if (HelpFlag) {
 		DrawHelp(out);
 	}

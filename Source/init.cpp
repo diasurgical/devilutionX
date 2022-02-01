@@ -131,6 +131,7 @@ void init_cleanup()
 {
 	if (gbIsMultiplayer && gbRunGame) {
 		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
+		sfile_write_stash();
 	}
 
 	spawn_mpq = std::nullopt;

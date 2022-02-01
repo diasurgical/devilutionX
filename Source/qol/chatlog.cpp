@@ -95,7 +95,7 @@ void ToggleChatLog()
 		ChatLogFlag = false;
 	} else {
 		stextflag = STORE_NONE;
-		invflag = false;
+		CloseInventory();
 		chrflag = false;
 		sbookflag = false;
 		spselflag = false;
