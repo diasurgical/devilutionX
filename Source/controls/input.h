@@ -12,8 +12,7 @@ inline int PollEvent(SDL_Event *event)
 	if (result != 0) {
 		UnlockControllerState(*event);
 		UnlockHeldControllerButtonEvents(*event);
-	}
-	else
+	} else
 		result = PollActionButtonPressed(event);
 
 	return result;

@@ -194,7 +194,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 	if (ctrlEvent.state == ControllerButtonState_HELD) {
 		if (CanControlHero() && !select_modifier_active && !start_modifier_active) {
-			switch(ctrlEvent.button) {
+			switch (ctrlEvent.button) {
 			case ControllerButton_ATTACK:
 				*action = GameAction(GameActionType_PRIMARY_ACTION);
 				break;

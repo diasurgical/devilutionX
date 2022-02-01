@@ -55,11 +55,11 @@ bool InGameMenu()
 bool CanControlHero()
 {
 	return !InGameMenu()
-		&& !invflag
-		&& !spselflag
-		&& !QuestLogIsOpen
-		&& !sbookflag
-		&& !DoomFlag;
+	    && !invflag
+	    && !spselflag
+	    && !QuestLogIsOpen
+	    && !sbookflag
+	    && !DoomFlag;
 }
 
 namespace {

@@ -6,7 +6,7 @@
 
 namespace devilution {
 
-enum ControllerButtonState: uint8_t {
+enum ControllerButtonState : uint8_t {
 	ControllerButtonState_RELEASED = SDL_RELEASED,
 	ControllerButtonState_PRESSED = SDL_PRESSED,
 	ControllerButtonState_HELD = SDL_PRESSED + SDL_RELEASED + 1 // for making it sure that the value is different
