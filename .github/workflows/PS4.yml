@@ -17,7 +17,7 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt update &&
-        sudo apt install -y wget cmake git gettext &&
+        sudo apt install -y wget cmake git gettext smpq &&
         wget https://github.com/PacBrew/pacbrew-pacman/releases/download/pacbrew-release-1.0/pacbrew-pacman-1.0.deb &&
         sudo dpkg -i pacbrew-pacman-1.0.deb && sudo pacbrew-pacman -Sy &&
         sudo pacbrew-pacman --noconfirm -S ps4-openorbis ps4-openorbis-portlibs &&
