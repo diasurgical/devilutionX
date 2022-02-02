@@ -33,13 +33,13 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx.pkg
-        path: build-ps4/IV0001-DVLX00001_00-*.pkg
+        path: build-ps4/devilutionx.pkg
 
     - name: Update Release
       if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
       uses: ncipollo/release-action@v1
       with:
-        artifacts: build-ps4/IV0001-DVLX00001_00-*.pkg
+        artifacts: build-ps4/devilutionx.pkg
         allowUpdates: true
         omitBody: true
         omitName: true
