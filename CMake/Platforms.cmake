@@ -48,6 +48,10 @@ if(VITA)
   include(platforms/vita)
 endif()
 
+if(PS4)
+  include(platforms/ps4)
+endif()
+
 if(ANDROID)
   include(platforms/android)
 endif()
