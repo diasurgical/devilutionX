@@ -17,16 +17,13 @@
 #include "init.h"
 #include "minitext.h"
 #include "options.h"
+#include "panels/info_box.hpp"
 #include "towners.h"
 #include "utils/language.h"
 
 namespace devilution {
 
 Item golditem;
-
-std::optional<CelSprite> pSPentSpn2Cels;
-std::optional<CelSprite> pSTextBoxCels;
-std::optional<CelSprite> pSTextSlidCels;
 
 talk_id stextflag;
 
@@ -2282,11 +2279,8 @@ void AddStoreHoldRepair(Item *itm, int8_t i)
 	storenumh++;
 }
 
-void InitStores()
+void SetupTownStores()
 {
-	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
-	pSTextBoxCels = LoadCel("Data\\TextBox2.CEL", 271);
-	pSTextSlidCels = LoadCel("Data\\TextSlid.CEL", 12);
 	ClearSText(0, STORE_LINES);
 	stextflag = STORE_NONE;
 	stextsize = false;
@@ -2299,10 +2293,7 @@ void InitStores()
 
 	boyitem._itype = ItemType::None;
 	boylevel = 0;
-}
 
-void SetupTownStores()
-{
 	auto &myPlayer = Players[MyPlayerId];
 
 	int l = myPlayer._pLevel / 2;
@@ -2325,8 +2316,7 @@ void SetupTownStores()
 
 void FreeStoreMem()
 {
-	pSTextBoxCels = std::nullopt;
-	pSTextSlidCels = std::nullopt;
+	stextflag = STORE_NONE;
 }
 
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price)

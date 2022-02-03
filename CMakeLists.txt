@@ -226,6 +226,10 @@ if(NOT UWP_LIB)
   target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 endif()
 
+if(GPERF)
+  target_link_libraries(${BIN_TARGET} PUBLIC ${GPERFTOOLS_LIBRARIES})
+endif()
+
 # Must be included after `BIN_TARGET` and `libdevilutionx` are defined.
 include(Assets)
 

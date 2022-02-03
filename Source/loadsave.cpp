@@ -2066,13 +2066,13 @@ void SaveGameData()
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		// Write ActiveMissiles
-		for (int8_t activeMissile = 0; activeMissile < MaxMissilesForSaveGame; activeMissile++)
-			file.WriteLE<int8_t>(activeMissile);
+		for (uint8_t activeMissile = 0; activeMissile < MaxMissilesForSaveGame; activeMissile++)
+			file.WriteLE<uint8_t>(activeMissile);
 		// Write AvailableMissiles
-		for (size_t avaiableMissile = Missiles.size(); avaiableMissile < MaxMissilesForSaveGame; avaiableMissile++)
-			file.WriteLE<int8_t>(static_cast<int8_t>(avaiableMissile));
+		for (size_t availableMissiles = Missiles.size(); availableMissiles < MaxMissilesForSaveGame; availableMissiles++)
+			file.WriteLE(static_cast<uint8_t>(availableMissiles));
 		const size_t savedMissiles = std::min(Missiles.size(), MaxMissilesForSaveGame);
-		file.Skip<int8_t>(savedMissiles);
+		file.Skip<uint8_t>(savedMissiles);
 		// Write Missile Data
 		{
 			auto missilesEnd = Missiles.cbegin();
@@ -2082,9 +2082,9 @@ void SaveGameData()
 			}
 		}
 		for (int objectId : ActiveObjects)
-			file.WriteLE<int8_t>(objectId);
+			file.WriteLE(static_cast<int8_t>(objectId));
 		for (int objectId : AvailableObjects)
-			file.WriteLE<int8_t>(objectId);
+			file.WriteLE(static_cast<int8_t>(objectId));
 		for (int i = 0; i < ActiveObjectCount; i++)
 			SaveObject(file, Objects[ActiveObjects[i]]);
 

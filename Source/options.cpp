@@ -44,7 +44,7 @@ namespace devilution {
 #define DEFAULT_AUDIO_BUFFER_SIZE 2048
 #endif
 #ifndef DEFAULT_AUDIO_RESAMPLING_QUALITY
-#define DEFAULT_AUDIO_RESAMPLING_QUALITY 5
+#define DEFAULT_AUDIO_RESAMPLING_QUALITY 3
 #endif
 
 namespace {
@@ -765,6 +765,8 @@ GraphicsOptions::GraphicsOptions()
 #endif
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
     , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
+    , showHealthValues("Show health values", OptionEntryFlags::None, N_("Show health values"), N_("Displays current / max health value on health globe."), false)
+    , showManaValues("Show mana values", OptionEntryFlags::None, N_("Show mana values"), N_("Displays current / max mana value on mana globe."), false)
 {
 	resolution.SetValueChangedCallback(ResizeWindow);
 	fullscreen.SetValueChangedCallback(SetFullscreenMode);
@@ -798,6 +800,8 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 #endif
 		&limitFPS,
 		&showFPS,
+		&showHealthValues,
+		&showManaValues,
 		&colorCycling,
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		&hardwareCursor,
