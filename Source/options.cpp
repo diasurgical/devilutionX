@@ -44,7 +44,7 @@ namespace devilution {
 #define DEFAULT_AUDIO_BUFFER_SIZE 2048
 #endif
 #ifndef DEFAULT_AUDIO_RESAMPLING_QUALITY
-#define DEFAULT_AUDIO_RESAMPLING_QUALITY 5
+#define DEFAULT_AUDIO_RESAMPLING_QUALITY 3
 #endif
 
 namespace {
