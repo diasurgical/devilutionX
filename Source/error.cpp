@@ -12,6 +12,7 @@
 #include "control.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "panels/info_box.hpp"
 #include "stores.h"
 #include "utils/language.h"
 
@@ -113,11 +114,10 @@ const char *const MsgStrings[] = {
 
 void InitDiabloMsg(diablo_message e)
 {
-	std::string msg = _(MsgStrings[e]);
-	InitDiabloMsg(msg);
+	InitDiabloMsg(LanguageTranslate(MsgStrings[e]));
 }
 
-void InitDiabloMsg(std::string msg)
+void InitDiabloMsg(const std::string &msg)
 {
 	if (DiabloMessages.size() >= MAX_SEND_STR_LEN)
 		return;

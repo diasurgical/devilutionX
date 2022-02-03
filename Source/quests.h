@@ -13,6 +13,7 @@
 #include "gendung.h"
 #include "monster.h"
 #include "objdat.h"
+#include "panels/info_box.hpp"
 #include "textdat.h"
 #include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"

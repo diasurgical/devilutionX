@@ -310,8 +310,7 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 		return;
 	}
 	int nCel = missile._miAnimFrame;
-	const auto *frameTable = reinterpret_cast<const uint32_t *>(missile._miAnimData);
-	int frames = SDL_SwapLE32(frameTable[0]);
+	const int frames = LoadLE32(missile._miAnimData);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
 		return;
@@ -458,7 +457,7 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
 	position.x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2;
 
 	int width = MissileSpriteData[missileGraphicId].animWidth;
-	byte *pCelBuff = MissileSpriteData[missileGraphicId].animData[0].get();
+	const byte *pCelBuff = MissileSpriteData[missileGraphicId].GetFirstFrame();
 
 	CelSprite cel { pCelBuff, width };
 
@@ -1739,6 +1738,10 @@ void DrawAndBlit()
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);
+	if (*sgOptions.Graphics.showHealthValues)
+		DrawFlaskValues(out, { PANEL_X + 134, PANEL_Y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
+	if (*sgOptions.Graphics.showManaValues)
+		DrawFlaskValues(out, { PANEL_X + PANEL_WIDTH - 138, PANEL_Y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
 
 	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());

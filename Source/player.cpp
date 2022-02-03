@@ -493,8 +493,6 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 
 player_graphic GetPlayerGraphicForSpell(spell_id spellId)
 {
-	if (leveltype == DTYPE_TOWN)
-		return player_graphic::Stand;
 	switch (spelldata[spellId].sType) {
 	case STYPE_FIRE:
 		return player_graphic::Fire;
@@ -2268,7 +2266,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		}
 	}
 
-	if (!graphic)
+	if (!graphic || (leveltype == DTYPE_TOWN && IsAnyOf(graphic, player_graphic::Fire, player_graphic::Lightning, player_graphic::Magic)))
 		return;
 
 	LoadPlrGFX(*this, *graphic);
