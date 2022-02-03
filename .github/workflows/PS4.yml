@@ -1,4 +1,4 @@
-name: PS4 Release Build
+name: PS4
 
 on:
   push:
@@ -6,9 +6,6 @@ on:
       - master
   pull_request:
     types: [ opened, synchronize ]
-  release:
-    types: [created]
-  workflow_dispatch:
 
 jobs:
   ps4:
