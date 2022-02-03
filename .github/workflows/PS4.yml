@@ -1,6 +1,11 @@
 name: PS4 Release Build
 
 on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
   release:
     types: [created]
   workflow_dispatch:
