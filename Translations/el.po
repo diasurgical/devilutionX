@@ -4440,307 +4440,307 @@ msgstr "Αδυναμία εμφάνισης του κυρίως μενού"
 #: Source/monstdat.cpp:20
 msgctxt "monster"
 msgid "Zombie"
-msgstr ""
+msgstr "Ζόμπι"
 
 #: Source/monstdat.cpp:21
 msgctxt "monster"
 msgid "Ghoul"
-msgstr ""
+msgstr "Ζόμπι Βρυκόλακας"
 
 #: Source/monstdat.cpp:22
 msgctxt "monster"
 msgid "Rotting Carcass"
-msgstr ""
+msgstr "Σαπισμένο Πτώμα"
 
 #: Source/monstdat.cpp:23
 msgctxt "monster"
 msgid "Black Death"
-msgstr ""
+msgstr "Μαύρος Θάνατος"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
 msgctxt "monster"
 msgid "Fallen One"
-msgstr ""
+msgstr "Έκπτωτος"
 
 #: Source/monstdat.cpp:25 Source/monstdat.cpp:33
 msgctxt "monster"
 msgid "Carver"
-msgstr ""
+msgstr "Χαράκτης"
 
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
 msgctxt "monster"
 msgid "Devil Kin"
-msgstr ""
+msgstr "Διάβολοσόϊ"
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:35
 msgctxt "monster"
 msgid "Dark One"
-msgstr ""
+msgstr "Σκοτεινός"
 
 #: Source/monstdat.cpp:28 Source/monstdat.cpp:40
 msgctxt "monster"
 msgid "Skeleton"
-msgstr ""
+msgstr "Σκελετός"
 
 #: Source/monstdat.cpp:29
 msgctxt "monster"
 msgid "Corpse Axe"
-msgstr ""
+msgstr "Πτώμα με Τσεκούρι"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
 msgctxt "monster"
 msgid "Burning Dead"
-msgstr ""
+msgstr "Φλεγόμενος Νεκρός"
 
 #: Source/monstdat.cpp:31 Source/monstdat.cpp:43
 msgctxt "monster"
 msgid "Horror"
-msgstr ""
+msgstr "Τρόμος"
 
 #: Source/monstdat.cpp:36
 msgctxt "monster"
 msgid "Scavenger"
-msgstr ""
+msgstr "Σαπροφάγος"
 
 #: Source/monstdat.cpp:37
 msgctxt "monster"
 msgid "Plague Eater"
-msgstr ""
+msgstr "Καταβροχθέας Πανώλης"
 
 #: Source/monstdat.cpp:38
 msgctxt "monster"
 msgid "Shadow Beast"
-msgstr ""
+msgstr "Σκιώδες Θηρίο"
 
 #: Source/monstdat.cpp:39
 msgctxt "monster"
 msgid "Bone Gasher"
-msgstr ""
+msgstr "Χαρακωτής Κοκάλων"
 
 #: Source/monstdat.cpp:41
 msgctxt "monster"
 msgid "Corpse Bow"
-msgstr ""
+msgstr "Πτώμα με Τόξο"
 
 #: Source/monstdat.cpp:44
 msgctxt "monster"
 msgid "Skeleton Captain"
-msgstr ""
+msgstr "Σκελετωμένος Λοχαγός"
 
 #: Source/monstdat.cpp:45
 msgctxt "monster"
 msgid "Corpse Captain"
-msgstr ""
+msgstr "Πτώμα Λοχαγού"
 
 #: Source/monstdat.cpp:46
 msgctxt "monster"
 msgid "Burning Dead Captain"
-msgstr ""
+msgstr "Φλεγόμενος Νεκρός Λοχαγός"
 
 #: Source/monstdat.cpp:47
 msgctxt "monster"
 msgid "Horror Captain"
-msgstr ""
+msgstr "Λοχαγός του Τρόμου"
 
 #: Source/monstdat.cpp:48
 msgctxt "monster"
 msgid "Invisible Lord"
-msgstr ""
+msgstr "Αόρατος Άρχοντας"
 
 #: Source/monstdat.cpp:49
 msgctxt "monster"
 msgid "Hidden"
-msgstr ""
+msgstr "Κρυφός"
 
 #: Source/monstdat.cpp:50
 msgctxt "monster"
 msgid "Stalker"
-msgstr ""
+msgstr "Διώκτης"
 
 #: Source/monstdat.cpp:51
 msgctxt "monster"
 msgid "Unseen"
-msgstr ""
+msgstr "Αθέαντος"
 
 #: Source/monstdat.cpp:52
 msgctxt "monster"
 msgid "Illusion Weaver"
-msgstr ""
+msgstr "Υφαντής των ψευδαισθήσεων"
 
 #: Source/monstdat.cpp:53
 msgctxt "monster"
 msgid "Satyr Lord"
-msgstr ""
+msgstr "Άρχοντας Σάτυρος"
 
 #: Source/monstdat.cpp:54 Source/monstdat.cpp:62
 msgctxt "monster"
 msgid "Flesh Clan"
-msgstr ""
+msgstr "Η Φυλή της Σάρκας"
 
 #: Source/monstdat.cpp:55 Source/monstdat.cpp:63
 msgctxt "monster"
 msgid "Stone Clan"
-msgstr ""
+msgstr "Η Φυλή της Πέτρας"
 
 #: Source/monstdat.cpp:56 Source/monstdat.cpp:64
 msgctxt "monster"
 msgid "Fire Clan"
-msgstr ""
+msgstr "Η Φυλή της Φωτιάς"
 
 #: Source/monstdat.cpp:57 Source/monstdat.cpp:65
 msgctxt "monster"
 msgid "Night Clan"
-msgstr ""
+msgstr "Η Φυλή της Νύχτας"
 
 #: Source/monstdat.cpp:58
 msgctxt "monster"
 msgid "Fiend"
-msgstr ""
+msgstr "Κτηνώδες Πετούμενο"
 
 #: Source/monstdat.cpp:59
 msgctxt "monster"
 msgid "Blink"
-msgstr ""
+msgstr "Αστραπιαίο Πετούμενο"
 
 #: Source/monstdat.cpp:60
 msgctxt "monster"
 msgid "Gloom"
-msgstr ""
+msgstr "Ζοφερό Πετούμενο"
 
 #: Source/monstdat.cpp:61
 msgctxt "monster"
 msgid "Familiar"
-msgstr ""
+msgstr "Μαγικός Ιπτάμενος Σύντροφος"
 
 #: Source/monstdat.cpp:66
 msgctxt "monster"
 msgid "Acid Beast"
-msgstr ""
+msgstr "Θηρίο με οξύ"
 
 #: Source/monstdat.cpp:67
 msgctxt "monster"
 msgid "Poison Spitter"
-msgstr ""
+msgstr "Φτύστης Δηλητηρίου"
 
 #: Source/monstdat.cpp:68
 msgctxt "monster"
 msgid "Pit Beast"
-msgstr ""
+msgstr "Θηρίο του Λάκου"
 
 #: Source/monstdat.cpp:69
 msgctxt "monster"
 msgid "Lava Maw"
-msgstr ""
+msgstr "Στόμα Λάβας"
 
 #: Source/monstdat.cpp:70 Source/monstdat.cpp:474
 msgctxt "monster"
 msgid "Skeleton King"
-msgstr ""
+msgstr "Βασιλιάς των Σκελετών"
 
 #: Source/monstdat.cpp:71 Source/monstdat.cpp:482
 msgctxt "monster"
 msgid "The Butcher"
-msgstr ""
+msgstr "Ο Χασάπης"
 
 #: Source/monstdat.cpp:72
 msgctxt "monster"
 msgid "Overlord"
-msgstr ""
+msgstr "Δεσπότης"
 
 #: Source/monstdat.cpp:73
 msgctxt "monster"
 msgid "Mud Man"
-msgstr ""
+msgstr "Λασπωμένος"
 
 #: Source/monstdat.cpp:74
 msgctxt "monster"
 msgid "Toad Demon"
-msgstr ""
+msgstr "Δαιμονικός Βάτραχος"
 
 #: Source/monstdat.cpp:75
 msgctxt "monster"
 msgid "Flayed One"
-msgstr ""
+msgstr "Γδαρμένος"
 
 #: Source/monstdat.cpp:76
 msgctxt "monster"
 msgid "Wyrm"
-msgstr ""
+msgstr "Δρακόντειος"
 
 #: Source/monstdat.cpp:77
 msgctxt "monster"
 msgid "Cave Slug"
-msgstr ""
+msgstr "Γυμνοσάλιαγκας Σπηλαίων"
 
 #: Source/monstdat.cpp:78
 msgctxt "monster"
 msgid "Devil Wyrm"
-msgstr ""
+msgstr "Διαβολικός Δράκοντας"
 
 #: Source/monstdat.cpp:79
 msgctxt "monster"
 msgid "Devourer"
-msgstr ""
+msgstr "Καταβροχθέας"
 
 #: Source/monstdat.cpp:80
 msgctxt "monster"
 msgid "Magma Demon"
-msgstr ""
+msgstr "Δαίμονας Μάγματος"
 
 #: Source/monstdat.cpp:81
 msgctxt "monster"
 msgid "Blood Stone"
-msgstr ""
+msgstr "Ματωμένη Πέτρα"
 
 #: Source/monstdat.cpp:82
 msgctxt "monster"
 msgid "Hell Stone"
-msgstr ""
+msgstr "Πέτρα της Κολάσεως"
 
 #: Source/monstdat.cpp:83
 msgctxt "monster"
 msgid "Lava Lord"
-msgstr ""
+msgstr "Άρχονας της Λάβας"
 
 #: Source/monstdat.cpp:84
 msgctxt "monster"
 msgid "Horned Demon"
-msgstr ""
+msgstr "Δαίμονας με Κέρατο"
 
 #: Source/monstdat.cpp:85
 msgctxt "monster"
 msgid "Mud Runner"
-msgstr ""
+msgstr "Δρομέας της Λάσπης"
 
 #: Source/monstdat.cpp:86
 msgctxt "monster"
 msgid "Frost Charger"
-msgstr ""
+msgstr "Καταδρομέας του Παγετού"
 
 #: Source/monstdat.cpp:87
 msgctxt "monster"
 msgid "Obsidian Lord"
-msgstr ""
+msgstr "Οψιανός Άρχοντας"
 
 #: Source/monstdat.cpp:88
 msgctxt "monster"
 msgid "oldboned"
-msgstr ""
+msgstr "γερασμένο Κόκαλο"
 
 #: Source/monstdat.cpp:89
 msgctxt "monster"
 msgid "Red Death"
-msgstr ""
+msgstr "Κόκκινος Θάνατος"
 
 #: Source/monstdat.cpp:90
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr ""
+msgstr "Απέθαντος Μάγος Δαίμονας"
 
 #: Source/monstdat.cpp:91
 msgctxt "monster"
 msgid "Undead Balrog"
-msgstr ""
+msgstr "Απέθαντο Μπάλρογκ"
 
 #: Source/monstdat.cpp:92
 msgctxt "monster"
@@ -6064,106 +6064,111 @@ msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
 msgstr ""
+"Κάνει το παιχνίδι συμβατό με την δωρεάν έκδοση. Επιτρέπει τετραπλό με φίλους "
+"σου που δεν έχουν την πλήρη έκδοση του Ντιάμπλο."
 
 #: Source/options.cpp:568 Source/options.cpp:574
 msgid "Intro"
-msgstr ""
+msgstr "Εισαγωγή"
 
 #: Source/options.cpp:568 Source/options.cpp:574
 msgid "Shown Intro cinematic."
-msgstr ""
+msgstr "Εμφάνιση βίντεο εισαγωγής."
 
 #: Source/options.cpp:580
 msgid "Splash"
-msgstr ""
+msgstr "Σπλάς"
 
 #: Source/options.cpp:580
 msgid "Shown splash screen."
-msgstr ""
+msgstr "Εμφάνιση Οθόνης Σπλάς."
 
 #: Source/options.cpp:582
 msgid "Logo and Title Screen"
-msgstr ""
+msgstr "Οθόνη Λογότυπου και Τίτλου"
 
 #: Source/options.cpp:583
 msgid "Title Screen"
-msgstr ""
+msgstr "Οθόνη Τίτλου"
 
 #: Source/options.cpp:602
 msgid "Diablo specific Settings"
-msgstr ""
+msgstr "Ρυθμίσεις ειδικά για το Ντιάμπλο"
 
 #: Source/options.cpp:611
 msgid "Hellfire specific Settings"
-msgstr ""
+msgstr "Ρυθμίσεις ειδικά για το Χελφαϊερ"
 
 #: Source/options.cpp:620
 msgid "Audio"
-msgstr ""
+msgstr "Ήχος"
 
 #: Source/options.cpp:620
 msgid "Audio Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Ήχου"
 
 #: Source/options.cpp:621
 msgid "Walking Sound"
-msgstr ""
+msgstr "Ήχος Βαδίσματος"
 
 #: Source/options.cpp:621
 msgid "Player emits sound when walking."
-msgstr ""
+msgstr "Ο παίκτης κάνει ήχο όταν κινείται."
 
 #: Source/options.cpp:622
 msgid "Auto Equip Sound"
-msgstr ""
+msgstr "Ήχος Αυτόματου εξοπλησμού"
 
 #: Source/options.cpp:622
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr ""
+"Τα αυτόματα εξοπλισμένα αντικείμενα θα κάνουν τον ήχο εξοπλισμού όταν τα "
+"μαζεύεις."
 
 #: Source/options.cpp:623
 msgid "Item Pickup Sound"
-msgstr ""
+msgstr "Ήχος μαζέματος αντικειμένων"
 
 #: Source/options.cpp:623
 msgid "Picking up items emits the items pickup sound."
-msgstr ""
+msgstr "Όταν μαζεύεις αντικείμενα θα ακούγεται ο ήχος αυτός."
 
 #: Source/options.cpp:624
 msgid "Sample Rate"
-msgstr ""
+msgstr "Ρυθμός Δειγματοληψίας Ήχου"
 
 #: Source/options.cpp:624
 msgid "Output sample rate (Hz)."
-msgstr ""
+msgstr "Ρυθμός δειγμάτων (Hz)"
 
 #: Source/options.cpp:625
 msgid "Channels"
-msgstr ""
+msgstr "Κανάλια Ήχου"
 
 #: Source/options.cpp:625
 msgid "Number of output channels."
-msgstr ""
+msgstr "Αριθμός καναλιών εξόδου ήχου."
 
 #: Source/options.cpp:626
 msgid "Buffer Size"
-msgstr ""
+msgstr "Μέγεθος Ενδιάμεσης Μνήμης"
 
 #: Source/options.cpp:626
 msgid "Buffer size (number of frames per channel)."
-msgstr ""
+msgstr "Μέγεθος Ενδιάμεσης Μνήμης (Αριθμός πλαισίων ήχου ανά κανάλι)."
 
 #: Source/options.cpp:627
 msgid "Resampling Quality"
-msgstr ""
+msgstr "Ποιότητα Αναδειγματοληψίας"
 
 #: Source/options.cpp:627
 msgid "Quality of the resampler, from 0 (lowest) to 10 (highest)."
 msgstr ""
+"Ποιότητα της Αναδειγματοληψίας Ήχου, από 0 (κατώτερο) έως 10 (μέγιστο)."
 
 #: Source/options.cpp:648
 msgid "Resolution"
-msgstr ""
+msgstr "Ανάλυση"
 
 #: Source/options.cpp:648
 msgid ""
@@ -6171,138 +6176,157 @@ msgid ""
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
 "Fit to Screen is used."
 msgstr ""
+"Αφορά την εσωτερική ανάλυση του παιχνιδιού και ορίζει πόσο μεγάλο είναι το "
+"πεδίο όρασης στο παιχνίδι. Σημ.: Είναι διαφορετική από την ανάλυση της "
+"οθόνης, όταν γίνεται χρήση κλιμάκωσης ή προσαρμογής στην οθόνη."
 
 #: Source/options.cpp:744
 msgid "Graphics"
-msgstr ""
+msgstr "Γραφικά"
 
 #: Source/options.cpp:744
 msgid "Graphics Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Γραφικών"
 
 #: Source/options.cpp:745
 msgid "Fullscreen"
-msgstr ""
+msgstr "Πλήρης Οθόνη"
 
 #: Source/options.cpp:745
 msgid "Display the game in windowed or fullscreen mode."
-msgstr ""
+msgstr "Εμφάνιση του παιχνιδιού σε κατάσταση πλήρους οθόνης ή σε παράθυρο."
 
 #: Source/options.cpp:747
 msgid "Fit to Screen"
-msgstr ""
+msgstr "Προσαρμογή στην Οθόνη"
 
 #: Source/options.cpp:747
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
 msgstr ""
+"Αυτόματη κλιμάκωση του παιχνιδιού στην τρέχουσα ανάλυση και αναλογία της "
+"επιφάνειας εργασίας."
 
 #: Source/options.cpp:750
 msgid "Upscale"
-msgstr ""
+msgstr "Κλιμάκωση"
 
 #: Source/options.cpp:750
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
 msgstr ""
+"Ενεργοποίηση της κλιμάκωσης από την ανάλυση του παιχνιδιού στην ανάλυση την "
+"οθόνης. Απενεργοποιεί την δυνατότητα αλλαγής της ανάλυσης οθόνης και "
+"επιτρέπει την αλλαγή των διαστάσεων του παραθύρου."
 
 #: Source/options.cpp:751
 msgid "Scaling Quality"
-msgstr ""
+msgstr "Ποιότητα Κλιμάκωσης"
 
 #: Source/options.cpp:751
 msgid "Enables optional filters to the output image when upscaling."
 msgstr ""
+"Ενεργοποιεί προαιρετικά φίλτρα υφής για την προβολή όταν γίνεται κλιμάκωση "
+"ανάλυσης."
 
 #: Source/options.cpp:753
 msgid "Nearest Pixel"
-msgstr ""
+msgstr "Κοντινότερο Εικονοστοιχείο"
 
 #: Source/options.cpp:754
 msgid "Bilinear"
-msgstr ""
+msgstr "Διγραμικό"
 
 #: Source/options.cpp:755
 msgid "Anisotropic"
-msgstr ""
+msgstr "Ανισοτροπικό"
 
 #: Source/options.cpp:757
 msgid "Integer Scaling"
-msgstr ""
+msgstr "Ακέραια Κλιμάκωση"
 
 #: Source/options.cpp:757
 msgid "Scales the image using whole number pixel ratio."
-msgstr ""
+msgstr "Κλιμακώνει την εικόνα με βάση μόνο ακέραιου πολλαπλασιαστή."
 
 #: Source/options.cpp:758
 msgid "Vertical Sync"
-msgstr ""
+msgstr "Οριζόντιος Συνχρόνισμός"
 
 #: Source/options.cpp:758
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
 msgstr ""
+"Ενεργοποιεί την αναμονή για Οριζόντιο Συγχρονισμό. Αποτρέπει το σχίσιμο "
+"οθόνης στην εμφάνιση του κάθε καρέ. Η απενεργοποίηση του μπορεί να βοηθήσει "
+"με πιθανόν καθυστέρηση ποντικιού σε κάποια συστήματα."
 
 #: Source/options.cpp:760
 msgid "Color Cycling"
-msgstr ""
+msgstr "Ανακύλιση Χρωμάτων"
 
 #: Source/options.cpp:760
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr ""
+"Ανακύλιση χρωμάτων για τα εφέ κινησης της λάβας, του νερού και του οξέος."
 
 #: Source/options.cpp:762
 msgid "Hardware Cursor"
-msgstr ""
+msgstr "Κέρσορας Συστήματος"
 
 #: Source/options.cpp:762
 msgid "Use a hardware cursor"
-msgstr ""
+msgstr "Χρήση κέρσορα συστήματος (σε αντίθεση με κέρσορα λογισμικού)"
 
 #: Source/options.cpp:763
 msgid "Hardware Cursor For Items"
-msgstr ""
+msgstr "Χρήση κέρσορα συστήματος για τα Αντικείμενα"
 
 #: Source/options.cpp:763
 msgid "Use a hardware cursor for items."
-msgstr ""
+msgstr "Χρήση κέρσορα συστήματος όταν μεταφέρεις Αντικείμενα."
 
 #: Source/options.cpp:764
 msgid "Hardware Cursor Maximum Size"
-msgstr ""
+msgstr "Μέγιστό Μέγεθος του Κέρσορα Συστήματος"
 
 #: Source/options.cpp:764
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
 "software."
 msgstr ""
+"Μέγιστό μήκος και πλάτος για τον κέρσορα συστήματος. Τιμές πέρα από τα όρια "
+"στρέφουν στην χρήση κέρσορα λογισμικού."
 
 #: Source/options.cpp:766
 msgid "FPS Limiter"
-msgstr ""
+msgstr "Όριο KΑΔ(FPS)"
 
 #: Source/options.cpp:766
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
+"Τα ΚΑΔ(Καρέ ανά Δευτερόλεπτο) περιορίζονται για την αποφυγή υπερφόρτωσης της "
+"ΚΜΕ. Το όριο λαμβάνει υπόψιν τον ρυθμό ανανέωσης της οθόνης."
 
 #: Source/options.cpp:767
 msgid "Show FPS"
-msgstr ""
+msgstr "Εμφάνιση ΚΑΔ"
 
 #: Source/options.cpp:767
 msgid "Displays the FPS in the upper left corner of the screen."
 msgstr ""
+"Εμφανίζει τα ΚΑΔ(Καρέ ανά Δευτερόλεπτο) στην πάνω αριστερή γωνία της οθόνης."
 
 #: Source/options.cpp:812
 msgid "Gameplay"
-msgstr ""
+msgstr "Παίξιμο Παιχνιδιού"
 
 #: Source/options.cpp:812
 msgid "Gameplay Settings"
-msgstr ""
+msgstr "Ρυθμίσεις του τρόπου που παίζετε το παιχνίδι"
 
 #: Source/options.cpp:813
 msgid "Run in Town"
