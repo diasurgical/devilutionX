@@ -20,11 +20,11 @@ msgstr ""
 msgid "Game Design"
 msgstr ""
 "Greek Translation Team for DevilutionX: \n"
-"          Main, Technical, QA and Testing: Michael Chatzivasileiou AKA "
+"          Main, Technical, QA and Testing: Michael Chatzivasileiou aka "
 "xGnoSiSx \n"
-"          Consulting, QA and Proofing: John Kostakis.\n"
 "\n"
-"Σχεδιασμός Παiχνιδιού"
+"Game Design\n"
+"Σχεδιασμός Παιχνιδιού"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -4745,207 +4745,207 @@ msgstr "Απέθαντο Μπάλρογκ"
 #: Source/monstdat.cpp:92
 msgctxt "monster"
 msgid "Incinerator"
-msgstr ""
+msgstr "Αποτεφρωτής"
 
 #: Source/monstdat.cpp:93
 msgctxt "monster"
 msgid "Flame Lord"
-msgstr ""
+msgstr "Άρχοντας της Φλόγας"
 
 #: Source/monstdat.cpp:94
 msgctxt "monster"
 msgid "Doom Fire"
-msgstr ""
+msgstr "Φωτιά της Καταστροφής"
 
 #: Source/monstdat.cpp:95
 msgctxt "monster"
 msgid "Hell Burner"
-msgstr ""
+msgstr "Καυστήρας της Κόλασης"
 
 #: Source/monstdat.cpp:96
 msgctxt "monster"
 msgid "Red Storm"
-msgstr ""
+msgstr "Κόκκινη Θύελλα"
 
 #: Source/monstdat.cpp:97
 msgctxt "monster"
 msgid "Storm Rider"
-msgstr ""
+msgstr "Καβαλάρης της θύελλας"
 
 #: Source/monstdat.cpp:98
 msgctxt "monster"
 msgid "Storm Lord"
-msgstr ""
+msgstr "Άρχοντας της θύελλας"
 
 #: Source/monstdat.cpp:99
 msgctxt "monster"
 msgid "Maelstrom"
-msgstr ""
+msgstr "Ζωντανή Δίνη"
 
 #: Source/monstdat.cpp:100
 msgctxt "monster"
 msgid "Devil Kin Brute"
-msgstr ""
+msgstr "Κτηνώδες Διάβολοσόϊ"
 
 #: Source/monstdat.cpp:101
 msgctxt "monster"
 msgid "Winged-Demon"
-msgstr ""
+msgstr "Φτερωτός Δαιμονας"
 
 #: Source/monstdat.cpp:102
 msgctxt "monster"
 msgid "Gargoyle"
-msgstr ""
+msgstr "Γκαργκόϊλ"
 
 #: Source/monstdat.cpp:103
 msgctxt "monster"
 msgid "Blood Claw"
-msgstr ""
+msgstr "Ματωμένο Νύχι"
 
 #: Source/monstdat.cpp:104
 msgctxt "monster"
 msgid "Death Wing"
-msgstr ""
+msgstr "Φτερωτός Θάνατος"
 
 #: Source/monstdat.cpp:105
 msgctxt "monster"
 msgid "Slayer"
-msgstr ""
+msgstr "Σφάχτης"
 
 #: Source/monstdat.cpp:106
 msgctxt "monster"
 msgid "Guardian"
-msgstr ""
+msgstr "Προστάτης"
 
 #: Source/monstdat.cpp:107
 msgctxt "monster"
 msgid "Vortex Lord"
-msgstr ""
+msgstr "Άρχοντας της Δίνης"
 
 #: Source/monstdat.cpp:108
 msgctxt "monster"
 msgid "Balrog"
-msgstr ""
+msgstr "Μπάλρογκ"
 
 #: Source/monstdat.cpp:109
 msgctxt "monster"
 msgid "Cave Viper"
-msgstr ""
+msgstr "Οχιά της Σπιλιάς"
 
 #: Source/monstdat.cpp:110
 msgctxt "monster"
 msgid "Fire Drake"
-msgstr ""
+msgstr "Δράκος της Φωτιάς"
 
 #: Source/monstdat.cpp:111
 msgctxt "monster"
 msgid "Gold Viper"
-msgstr ""
+msgstr "Χρυσή Οχιά"
 
 #: Source/monstdat.cpp:112
 msgctxt "monster"
 msgid "Azure Drake"
-msgstr ""
+msgstr "Κυανός Δράκος"
 
 #: Source/monstdat.cpp:113
 msgctxt "monster"
 msgid "Black Knight"
-msgstr ""
+msgstr "Μαύρος Ιππότης"
 
 #: Source/monstdat.cpp:114
 msgctxt "monster"
 msgid "Doom Guard"
-msgstr ""
+msgstr "Φρουρός του Χαμού"
 
 #: Source/monstdat.cpp:115
 msgctxt "monster"
 msgid "Steel Lord"
-msgstr ""
+msgstr "Ατσαλένιος Άρχοντας"
 
 #: Source/monstdat.cpp:116
 msgctxt "monster"
 msgid "Blood Knight"
-msgstr ""
+msgstr "Ιππότης του Αίματος"
 
 #: Source/monstdat.cpp:117
 msgctxt "monster"
 msgid "The Shredded"
-msgstr ""
+msgstr "Ο Κοματιασμένος"
 
 #: Source/monstdat.cpp:118
 msgctxt "monster"
 msgid "Hollow One"
-msgstr ""
+msgstr "Κενό Πλάσμα"
 
 #: Source/monstdat.cpp:119
 msgctxt "monster"
 msgid "Pain Master"
-msgstr ""
+msgstr "Άρχοντας του Πόνου"
 
 #: Source/monstdat.cpp:120
 msgctxt "monster"
 msgid "Reality Weaver"
-msgstr ""
+msgstr "Υφαντής της Πραγματικότητας"
 
 #: Source/monstdat.cpp:121
 msgctxt "monster"
 msgid "Succubus"
-msgstr ""
+msgstr "Σούκουμπους"
 
 #: Source/monstdat.cpp:122
 msgctxt "monster"
 msgid "Snow Witch"
-msgstr ""
+msgstr "Μάγισσα του Χιονιού"
 
 #: Source/monstdat.cpp:123
 msgctxt "monster"
 msgid "Hell Spawn"
-msgstr ""
+msgstr "Γόνος της Κολάσεως"
 
 #: Source/monstdat.cpp:124
 msgctxt "monster"
 msgid "Soul Burner"
-msgstr ""
+msgstr "Καυστήρας των Ψυχών"
 
 #: Source/monstdat.cpp:125
 msgctxt "monster"
 msgid "Counselor"
-msgstr ""
+msgstr "Σύμβουλoς"
 
 #: Source/monstdat.cpp:126
 msgctxt "monster"
 msgid "Magistrate"
-msgstr ""
+msgstr "Δικαστής"
 
 #: Source/monstdat.cpp:127
 msgctxt "monster"
 msgid "Cabalist"
-msgstr ""
+msgstr "Μέλος Σάχτας"
 
 #: Source/monstdat.cpp:128
 msgctxt "monster"
 msgid "Advocate"
-msgstr ""
+msgstr "Συνήγορος"
 
 #: Source/monstdat.cpp:129
 msgctxt "monster"
 msgid "Golem"
-msgstr ""
+msgstr "Πήλινος Μαχητής"
 
 #: Source/monstdat.cpp:130
 msgctxt "monster"
 msgid "The Dark Lord"
-msgstr ""
+msgstr "Ο Σκοτεινός Άρχοντας"
 
 #: Source/monstdat.cpp:131
 msgctxt "monster"
 msgid "The Arch-Litch Malignus"
-msgstr ""
+msgstr "Ο Απέθαντος Αρχιμάγος Μαλίγκνους"
 
 #: Source/monstdat.cpp:132
 msgctxt "monster"
 msgid "Hellboar"
-msgstr ""
+msgstr "Αγριόχοιρος της Κολάσεως"
 
 #: Source/monstdat.cpp:133
 msgctxt "monster"
@@ -6330,38 +6330,44 @@ msgstr "Ρυθμίσεις του τρόπου που παίζετε το παι
 
 #: Source/options.cpp:813
 msgid "Run in Town"
-msgstr ""
+msgstr "Τρέξιμο στην Πόλη"
 
 #: Source/options.cpp:813
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
 msgstr ""
+"Ενεργοποίηση γρήγορου περπατήματος στην πόλη για το Ντιάμπλο και το "
+"Χελφάϊερ. Αυτή η επιλογή προστέθηκε στην προέκταση του παιχνιδιού."
 
 #: Source/options.cpp:814
 msgid "Grab Input"
-msgstr ""
+msgstr "Κλείδωμα εισαγωγής"
 
 #: Source/options.cpp:814
 msgid "When enabled mouse is locked to the game window."
 msgstr ""
+"Όταν είναι ενεργοποιημένο, το ποντίκι είναι κλειδωμένο στο παράθυρο του "
+"παιχνιδιού."
 
 #: Source/options.cpp:815
 msgid "Theo Quest"
-msgstr ""
+msgstr "Αποστολή του Θέο"
 
 #: Source/options.cpp:815
 msgid "Enable Little Girl quest."
-msgstr ""
+msgstr "Ενεργοποίηση της αποστολή με το μικρό κοριτσάκι."
 
 #: Source/options.cpp:816
 msgid "Cow Quest"
-msgstr ""
+msgstr "Αποστολή Αγελάδας"
 
 #: Source/options.cpp:816
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
 msgstr ""
+"Ενεργοποίηση της αποστολής του Τζέρσεϊ, Ο αγρότης Λέστερ, αντικαθίσταται από "
+"τον Ολοκληρωτικά Τρελό."
 
 #: Source/options.cpp:817
 msgid "Friendly Fire"
