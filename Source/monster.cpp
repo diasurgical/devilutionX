@@ -1094,7 +1094,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 		if (sgGameInitInfo.bTheoQuest != 0) {
 			SpawnTheodore(monster.position.tile);
 		} else {
-			CreateAmulet(monster.position.tile, 13, false, true);
+			CreateAmulet(monster.position.tile, 13, sendmsg, false);
 		}
 	} else if (monster.MType->mtype == MT_HORKSPWN) {
 	} else if (monster.MType->mtype == MT_NAKRUL) {
@@ -1105,10 +1105,10 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 			stream_stop();
 		Quests[Q_NAKRUL]._qlog = false;
 		UberDiabloMonsterIndex = -2;
-		CreateMagicWeapon(monster.position.tile, ItemType::Sword, ICURS_GREAT_SWORD, false, true);
-		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ICURS_WAR_STAFF, false, true);
-		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_WAR_BOW, false, true);
-		CreateSpellBook(monster.position.tile, SPL_APOCA, false, true);
+		CreateMagicWeapon(monster.position.tile, ItemType::Sword, ICURS_GREAT_SWORD, sendmsg, false);
+		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ICURS_WAR_STAFF, sendmsg, false);
+		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_WAR_BOW, sendmsg, false);
+		CreateSpellBook(monster.position.tile, SPL_APOCA, sendmsg, false);
 	} else if (monster.MType->mtype != MT_GOLEM) {
 		SpawnItem(monster, monster.position.tile, sendmsg);
 	}

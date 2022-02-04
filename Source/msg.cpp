@@ -420,15 +420,15 @@ bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
 		if (item.bCmd == CMD_INVALID || item.wIndx != message.wIndx || item.wCI != message.wCI || item.dwSeed != message.dwSeed)
 			continue;
 
-		if (item.bCmd == CMD_WALKXY) {
+		if (item.bCmd == TCmdPItem::PickedUpItem) {
 			return true;
 		}
-		if (item.bCmd == CMD_STAND) {
+		if (item.bCmd == TCmdPItem::FloorItem) {
 			sgbDeltaChanged = true;
-			item.bCmd = CMD_WALKXY;
+			item.bCmd = TCmdPItem::PickedUpItem;
 			return true;
 		}
-		if (item.bCmd == CMD_ACK_PLRINFO) {
+		if (item.bCmd == TCmdPItem::DroppedItem) {
 			sgbDeltaChanged = true;
 			item.bCmd = CMD_INVALID;
 			return true;
@@ -443,7 +443,7 @@ bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
 	for (TCmdPItem &item : sgLevels[bLevel].item) {
 		if (item.bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
-			item.bCmd = CMD_WALKXY;
+			item.bCmd = TCmdPItem::PickedUpItem;
 			item.x = message.x;
 			item.y = message.y;
 			item.wIndx = message.wIndx;
@@ -474,12 +474,12 @@ void DeltaPutItem(const TCmdPItem &message, Point position, BYTE bLevel)
 		return;
 
 	for (const TCmdPItem &item : sgLevels[bLevel].item) {
-		if (item.bCmd != CMD_WALKXY
+		if (item.bCmd != TCmdPItem::PickedUpItem
 		    && item.bCmd != CMD_INVALID
 		    && item.wIndx == message.wIndx
 		    && item.wCI == message.wCI
 		    && item.dwSeed == message.dwSeed) {
-			if (item.bCmd == CMD_ACK_PLRINFO)
+			if (item.bCmd == TCmdPItem::DroppedItem)
 				return;
 			app_fatal("%s", _("Trying to drop a floor item?"));
 		}
@@ -489,7 +489,7 @@ void DeltaPutItem(const TCmdPItem &message, Point position, BYTE bLevel)
 		if (item.bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
 			memcpy(&item, &message, sizeof(TCmdPItem));
-			item.bCmd = CMD_ACK_PLRINFO;
+			item.bCmd = TCmdPItem::DroppedItem;
 			item.x = position.x;
 			item.y = position.y;
 			return;
@@ -2115,7 +2115,7 @@ void DeltaAddItem(int ii)
 		    && item.wIndx == Items[ii].IDidx
 		    && item.wCI == Items[ii]._iCreateInfo
 		    && item.dwSeed == Items[ii]._iSeed
-		    && (item.bCmd == CMD_WALKXY || item.bCmd == CMD_STAND)) {
+		    && IsAnyOf(item.bCmd, TCmdPItem::PickedUpItem, TCmdPItem::FloorItem)) {
 			return;
 		}
 	}
@@ -2125,7 +2125,7 @@ void DeltaAddItem(int ii)
 			continue;
 
 		sgbDeltaChanged = true;
-		item.bCmd = CMD_STAND;
+		item.bCmd = TCmdPItem::FloorItem;
 		item.x = Items[ii].position.x;
 		item.y = Items[ii].position.y;
 		item.wIndx = Items[ii].IDidx;
@@ -2238,7 +2238,7 @@ void DeltaLoadLevel()
 		if (sgLevels[currlevel].item[i].bCmd == CMD_INVALID)
 			continue;
 
-		if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
+		if (sgLevels[currlevel].item[i].bCmd == TCmdPItem::PickedUpItem) {
 			int activeItemIndex = FindGetItem(
 			    sgLevels[currlevel].item[i].dwSeed,
 			    sgLevels[currlevel].item[i].wIndx,
@@ -2250,7 +2250,7 @@ void DeltaLoadLevel()
 				DeleteItem(activeItemIndex);
 			}
 		}
-		if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {
+		if (sgLevels[currlevel].item[i].bCmd == TCmdPItem::DroppedItem) {
 			int ii = AllocateItem();
 			auto &item = Items[ii];
 

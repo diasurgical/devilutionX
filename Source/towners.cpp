@@ -728,7 +728,7 @@ void TalkToGirl(Player &player, Towner &girl)
 
 	if (quest._qactive != QUEST_DONE && player.TryRemoveInvItemById(IDI_THEODORE)) {
 		InitQTextMsg(TEXT_GIRL4);
-		CreateAmulet(girl.position, 13, false, true);
+		CreateAmulet(girl.position, 13, true, false);
 		quest._qlog = false;
 		quest._qactive = QUEST_DONE;
 		auto curFrame = girl._tAnimFrame;

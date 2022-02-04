@@ -600,6 +600,21 @@ struct TCmdPItem {
 	uint8_t bMinMag;
 	uint8_t bMinDex;
 	int16_t bAC;
+
+	/**
+	 * Items placed during dungeon generation
+	 */
+	static constexpr _cmd_id FloorItem = CMD_STAND;
+
+	/**
+	 * Floor items that have already been picked up
+	 */
+	static constexpr _cmd_id PickedUpItem = CMD_WALKXY;
+
+	/**
+	 * Items dropped by players, monsters, or objects and left on the floor of the dungeon
+	 */
+	static constexpr _cmd_id DroppedItem = CMD_ACK_PLRINFO;
 };
 
 struct TCmdChItem {
