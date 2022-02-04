@@ -4950,7 +4950,7 @@ msgstr "Αγριόχοιρος της Κολάσεως"
 #: Source/monstdat.cpp:133
 msgctxt "monster"
 msgid "Stinger"
-msgstr ""
+msgstr "Κεντρί"
 
 #: Source/monstdat.cpp:134
 msgctxt "monster"
@@ -4975,7 +4975,7 @@ msgstr ""
 #: Source/monstdat.cpp:138
 msgctxt "monster"
 msgid "Venomtail"
-msgstr ""
+msgstr "Δηλητηριώδες Ουρά"
 
 #: Source/monstdat.cpp:139
 msgctxt "monster"
@@ -4985,7 +4985,7 @@ msgstr ""
 #: Source/monstdat.cpp:140
 msgctxt "monster"
 msgid "Spider Lord"
-msgstr ""
+msgstr "Άρχοντας της Αράχνης"
 
 #: Source/monstdat.cpp:141
 msgctxt "monster"
@@ -5005,37 +5005,37 @@ msgstr ""
 #: Source/monstdat.cpp:144
 msgctxt "monster"
 msgid "Hell Bug"
-msgstr ""
+msgstr "Έντομο της Κολάσεως"
 
 #: Source/monstdat.cpp:145
 msgctxt "monster"
 msgid "Gravedigger"
-msgstr ""
+msgstr "Νεκροθάφτης"
 
 #: Source/monstdat.cpp:146
 msgctxt "monster"
 msgid "Tomb Rat"
-msgstr ""
+msgstr "Αρουραίος Τάφων"
 
 #: Source/monstdat.cpp:147
 msgctxt "monster"
 msgid "Firebat"
-msgstr ""
+msgstr "Νυχτερίδα της Φωτιάς"
 
 #: Source/monstdat.cpp:148
 msgctxt "monster"
 msgid "Skullwing"
-msgstr ""
+msgstr "Φτερωτό Κρανίο"
 
 #: Source/monstdat.cpp:149
 msgctxt "monster"
 msgid "Lich"
-msgstr ""
+msgstr "Απέθαντος Μάγος"
 
 #: Source/monstdat.cpp:150
 msgctxt "monster"
 msgid "Crypt Demon"
-msgstr ""
+msgstr "Δαίμονας της Κρύπτης"
 
 #: Source/monstdat.cpp:151
 msgctxt "monster"
@@ -5045,12 +5045,12 @@ msgstr ""
 #: Source/monstdat.cpp:152
 msgctxt "monster"
 msgid "Bone Demon"
-msgstr ""
+msgstr "Δαίμονας των Οστών"
 
 #: Source/monstdat.cpp:153
 msgctxt "monster"
 msgid "Arch Lich"
-msgstr ""
+msgstr "Απέθαντος Αρχιμάγος"
 
 #: Source/monstdat.cpp:154
 msgctxt "monster"
@@ -5060,30 +5060,30 @@ msgstr ""
 #: Source/monstdat.cpp:155
 msgctxt "monster"
 msgid "Flesh Thing"
-msgstr ""
+msgstr "Πράγμα Σάρκας"
 
 #: Source/monstdat.cpp:156
 msgctxt "monster"
 msgid "Reaper"
-msgstr ""
+msgstr "Θεριστής"
 
 #. TRANSLATORS: Monster Block end
 #. MT_NAKRUL
 #: Source/monstdat.cpp:158 Source/monstdat.cpp:485
 msgctxt "monster"
 msgid "Na-Krul"
-msgstr ""
+msgstr "Να-Κρούλ"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
 msgctxt "monster"
 msgid "Gharbad the Weak"
-msgstr ""
+msgstr "Γκάρμπάντ Ο Αδύναμος"
 
 #: Source/monstdat.cpp:475
 msgctxt "monster"
 msgid "Zhar the Mad"
-msgstr ""
+msgstr "Ζάρ ο Τρελός"
 
 #: Source/monstdat.cpp:476
 msgctxt "monster"
@@ -5093,7 +5093,7 @@ msgstr ""
 #: Source/monstdat.cpp:477
 msgctxt "monster"
 msgid "Arch-Bishop Lazarus"
-msgstr ""
+msgstr "Ο Αρχιεπίσκοπος Λάζαρος"
 
 #: Source/monstdat.cpp:478
 msgctxt "monster"
@@ -5103,22 +5103,22 @@ msgstr ""
 #: Source/monstdat.cpp:479
 msgctxt "monster"
 msgid "Black Jade"
-msgstr ""
+msgstr "Ο Μαύρος Νεφρίτη"
 
 #: Source/monstdat.cpp:480
 msgctxt "monster"
 msgid "Lachdanan"
-msgstr ""
+msgstr "Λακντάναν"
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
 msgid "Warlord of Blood"
-msgstr ""
+msgstr "Ο Πολέμαρχος του Αίματος"
 
 #: Source/monstdat.cpp:484
 msgctxt "monster"
 msgid "The Defiler"
-msgstr ""
+msgstr "Ο Βεβηλωτής"
 
 #: Source/monstdat.cpp:486
 msgctxt "monster"
@@ -5163,7 +5163,7 @@ msgstr ""
 #: Source/monstdat.cpp:494
 msgctxt "monster"
 msgid "Bongo"
-msgstr ""
+msgstr "Μπόνγκο"
 
 #: Source/monstdat.cpp:495
 msgctxt "monster"
@@ -5178,22 +5178,22 @@ msgstr ""
 #: Source/monstdat.cpp:497
 msgctxt "monster"
 msgid "Deadeye"
-msgstr ""
+msgstr "Νεκρομάτης"
 
 #: Source/monstdat.cpp:498
 msgctxt "monster"
 msgid "Madeye the Dead"
-msgstr ""
+msgstr "Τρελομάτης ο Νεκρός"
 
 #: Source/monstdat.cpp:499
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr ""
+msgstr "Ελ Τσουπακάμπρας"
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
 msgid "Skullfire"
-msgstr ""
+msgstr "Κρανιοφωτιά"
 
 #: Source/monstdat.cpp:501
 msgctxt "monster"
@@ -5233,7 +5233,7 @@ msgstr ""
 #: Source/monstdat.cpp:508
 msgctxt "monster"
 msgid "Shadowcrow"
-msgstr ""
+msgstr "Το Κοράκι της Σκιάς"
 
 #: Source/monstdat.cpp:509
 msgctxt "monster"
@@ -5323,7 +5323,7 @@ msgstr ""
 #: Source/monstdat.cpp:526
 msgctxt "monster"
 msgid "Baron Sludge"
-msgstr ""
+msgstr "Ο Βαρόνος της Γλίτσας"
 
 #: Source/monstdat.cpp:527
 msgctxt "monster"
@@ -5333,7 +5333,7 @@ msgstr ""
 #: Source/monstdat.cpp:528
 msgctxt "monster"
 msgid "Chaoshowler"
-msgstr ""
+msgstr "Ουρλιαχτός του Χάους"
 
 #: Source/monstdat.cpp:529
 msgctxt "monster"
@@ -5343,7 +5343,7 @@ msgstr ""
 #: Source/monstdat.cpp:530
 msgctxt "monster"
 msgid "Madburner"
-msgstr ""
+msgstr "Ο Τρελός Εμπρηστής"
 
 #: Source/monstdat.cpp:531
 msgctxt "monster"
@@ -5378,7 +5378,7 @@ msgstr ""
 #: Source/monstdat.cpp:537
 msgctxt "monster"
 msgid "Goldblight of the Flame"
-msgstr ""
+msgstr "Χρυσοφθορός της Φλόγας"
 
 #: Source/monstdat.cpp:538
 msgctxt "monster"
@@ -5393,12 +5393,12 @@ msgstr ""
 #: Source/monstdat.cpp:540
 msgctxt "monster"
 msgid "The Flayer"
-msgstr ""
+msgstr "Ο Γδάρτης"
 
 #: Source/monstdat.cpp:541
 msgctxt "monster"
 msgid "Bluehorn"
-msgstr ""
+msgstr "Το Μπλέ Κέρατο"
 
 #: Source/monstdat.cpp:542
 msgctxt "monster"
@@ -5418,12 +5418,12 @@ msgstr ""
 #: Source/monstdat.cpp:545
 msgctxt "monster"
 msgid "Lionskull the Bent"
-msgstr ""
+msgstr "Λεοντόκρανιος ο Λυγισμένος"
 
 #: Source/monstdat.cpp:546
 msgctxt "monster"
 msgid "Blacktongue"
-msgstr ""
+msgstr "Η Μαύρη Γλώσσα"
 
 #: Source/monstdat.cpp:547
 msgctxt "monster"
@@ -5448,7 +5448,7 @@ msgstr ""
 #: Source/monstdat.cpp:551
 msgctxt "monster"
 msgid "Blackskull"
-msgstr ""
+msgstr "Το Μαύρο Κρανίο"
 
 #: Source/monstdat.cpp:552
 msgctxt "monster"
@@ -5458,12 +5458,12 @@ msgstr ""
 #: Source/monstdat.cpp:553
 msgctxt "monster"
 msgid "Windspawn"
-msgstr ""
+msgstr "Ο Γόνος του Ανέμου"
 
 #: Source/monstdat.cpp:554
 msgctxt "monster"
 msgid "Lord of the Pit"
-msgstr ""
+msgstr "Άρχοντας του Λάκκου"
 
 #: Source/monstdat.cpp:555
 msgctxt "monster"
@@ -5478,7 +5478,7 @@ msgstr ""
 #: Source/monstdat.cpp:557
 msgctxt "monster"
 msgid "Doomcloud"
-msgstr ""
+msgstr "Σύννεφο του Χαμού"
 
 #: Source/monstdat.cpp:558
 msgctxt "monster"
@@ -5488,7 +5488,7 @@ msgstr ""
 #: Source/monstdat.cpp:559
 msgctxt "monster"
 msgid "Witchmoon"
-msgstr ""
+msgstr "Η Μάγισσα της Σελήνης"
 
 #: Source/monstdat.cpp:560
 msgctxt "monster"
@@ -5498,52 +5498,52 @@ msgstr ""
 #: Source/monstdat.cpp:561
 msgctxt "monster"
 msgid "Graywar the Slayer"
-msgstr ""
+msgstr "Γκριζοπόλεμος ο Σφάχτης"
 
 #: Source/monstdat.cpp:562
 msgctxt "monster"
 msgid "Dreadjudge"
-msgstr ""
+msgstr "Ο Δικαστής του Τρόμου"
 
 #: Source/monstdat.cpp:563
 msgctxt "monster"
 msgid "Stareye the Witch"
-msgstr ""
+msgstr "Αστρομάτα, Η Μάγισσα"
 
 #: Source/monstdat.cpp:564
 msgctxt "monster"
 msgid "Steelskull the Hunter"
-msgstr ""
+msgstr "Ατσαλόκρανιος Ο Κυνηγός"
 
 #: Source/monstdat.cpp:565
 msgctxt "monster"
 msgid "Sir Gorash"
-msgstr ""
+msgstr "Σερ Γκόρας"
 
 #: Source/monstdat.cpp:566
 msgctxt "monster"
 msgid "The Vizier"
-msgstr ""
+msgstr "Ο Βεζίρης"
 
 #: Source/monstdat.cpp:567
 msgctxt "monster"
 msgid "Zamphir"
-msgstr ""
+msgstr "Ζαμφίρ"
 
 #: Source/monstdat.cpp:568
 msgctxt "monster"
 msgid "Bloodlust"
-msgstr ""
+msgstr "Αιμολάγνα"
 
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr ""
+msgstr "Η Χήρα του Ιστού"
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
 msgid "Fleshdancer"
-msgstr ""
+msgstr "Ο Χορευτής της Σάρκας"
 
 #: Source/monstdat.cpp:571
 msgctxt "monster"
@@ -6371,140 +6371,154 @@ msgstr ""
 
 #: Source/options.cpp:817
 msgid "Friendly Fire"
-msgstr ""
+msgstr "Φιλικό Πύρ"
 
 #: Source/options.cpp:817
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
 msgstr ""
+"Επιτρέπει τα βέλη και τα Ξόρκια να κάνουν ζημιά σε άλλους παίκτες ακόμα όταν "
+"είσαι φιλικός προς παίκτες."
 
 #: Source/options.cpp:818
 msgid "Test Bard"
-msgstr ""
+msgstr "Δοκιμή Βάρδου"
 
 #: Source/options.cpp:818
 msgid "Force the Bard character type to appear in the hero selection menu."
-msgstr ""
+msgstr "Επιτρέπει να διαλέξεις τον Βάρδο κατά την δημιουργία ήρωα."
 
 #: Source/options.cpp:819
 msgid "Test Barbarian"
-msgstr ""
+msgstr "Δοκιμή Βάρβαρου"
 
 #: Source/options.cpp:819
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
-msgstr ""
+msgstr "Επιτρέπει να διαλέξεις τον Βάρβαρο κατά την δημιουργία ήρωα."
 
 #: Source/options.cpp:820
 msgid "Experience Bar"
-msgstr ""
+msgstr "Μπάρα Εμπειρίας"
 
 #: Source/options.cpp:820
 msgid "Experience Bar is added to the UI at the bottom of the screen."
-msgstr ""
+msgstr "Προσθέτει μια Μπάρα Εμπειρίας στην κάτω καρτέλα στην οθόνη."
 
 #: Source/options.cpp:821
 msgid "Enemy Health Bar"
-msgstr ""
+msgstr "Μπάρα Υγείας Εχθρών"
 
 #: Source/options.cpp:821
 msgid "Enemy Health Bar is displayed at the top of the screen."
-msgstr ""
+msgstr "Εμφανίζει την Μπάρα Υγείας Εχθρών στην κορυφή της οθόνης."
 
 #: Source/options.cpp:822
 msgid "Auto Gold Pickup"
-msgstr ""
+msgstr "Αυτόματο Μάζεμα Χρυσού"
 
 #: Source/options.cpp:822
 msgid "Gold is automatically collected when in close proximity to the player."
-msgstr ""
+msgstr "Ο χρυσός μαζεύεται αυτόματα όταν τον πλησιάσει ο παίκτης."
 
 #: Source/options.cpp:823
 msgid "Auto Elixir Pickup"
-msgstr ""
+msgstr "Αυτόματο Μάζεμα Ελιξιρίων"
 
 #: Source/options.cpp:823
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
-msgstr ""
+msgstr "Τα ελιξίρια μαζεύονται αυτόματα όταν τα πλησιάσει ο παίκτης."
 
 #: Source/options.cpp:824
 msgid "Auto Pickup in Town"
-msgstr ""
+msgstr "Αυτόματο Μάζεμα στην Πόλη"
 
 #: Source/options.cpp:824
 msgid "Automatically pickup items in town."
-msgstr ""
+msgstr "Αυτόματα μαζεύει αντικείμενα στην πόλη."
 
 #: Source/options.cpp:825
 msgid "Adria Refills Mana"
-msgstr ""
+msgstr "Η Άντρια αναπληρώνει Μάνα"
 
 #: Source/options.cpp:825
 msgid "Adria will refill your mana when you visit her shop."
-msgstr ""
+msgstr "Η Άντρια αναπληρώνει τα μάνα σου όταν επισκεφτείς το μαγαζί της."
 
 #: Source/options.cpp:826
 msgid "Auto Equip Weapons"
-msgstr ""
+msgstr "Αυτόματος Εξοπλισμός Όπλων"
 
 #: Source/options.cpp:826
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Άμα αγοράσεις ή μαζέψεις ένα όπλο, θα εξοπλιστεί αυτόματα, αν η επιλογή "
+"είναι ενεργοποιημένη."
 
 #: Source/options.cpp:827
 msgid "Auto Equip Armor"
-msgstr ""
+msgstr "Αυτόματος Εξοπλισμός Πανοπλίας"
 
 #: Source/options.cpp:827
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Άμα αγοράσεις ή μαζέψεις μια πανοπλία, θα εξοπλιστεί αυτόματα, αν η επιλογή "
+"είναι ενεργοποιημένη."
 
 #: Source/options.cpp:828
 msgid "Auto Equip Helms"
-msgstr ""
+msgstr "Αυτόματος Εξοπλισμός Κράνους"
 
 #: Source/options.cpp:828
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Άμα αγοράσεις ή μαζέψεις ένα κράνος, θα εξοπλιστεί αυτόματα, αν η επιλογή "
+"είναι ενεργοποιημένη."
 
 #: Source/options.cpp:829
 msgid "Auto Equip Shields"
-msgstr ""
+msgstr "Αυτόματος Εξοπλισμός Ασπίδας"
 
 #: Source/options.cpp:829
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Άμα αγοράσεις ή μαζέψεις μια ασπίδα, θα εξοπλιστεί αυτόματα, αν η επιλογή "
+"είναι ενεργοποιημένη."
 
 #: Source/options.cpp:830
 msgid "Auto Equip Jewelry"
-msgstr ""
+msgstr "Αυτόματος Εξοπλισμός Χρυσαφικών"
 
 #: Source/options.cpp:830
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
+"Άμα αγοράσεις ή μαζέψεις χρυσαφικά, θα εξοπλιστεί αυτόματα, αν η επιλογή "
+"είναι ενεργοποιημένη."
 
 #: Source/options.cpp:831
 msgid "Randomize Quests"
-msgstr ""
+msgstr "Τυχαίες Αποστολές"
 
 #: Source/options.cpp:831
 msgid "Randomly selecting available quests for new games."
-msgstr ""
+msgstr "Σε κάθε νέο παιχνίδι, επιλέγονται τυχαίες αποστολές."
 
 #: Source/options.cpp:832
 msgid "Show Monster Type"
-msgstr ""
+msgstr "Εμφάνιση Τύπου των Τεράτων"
 
 #: Source/options.cpp:832
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
 msgstr ""
+"Αν τοποθετήσεις τον κέρσορα πάνω σε ένα τέρας, θα εμφανιστεί ο τύπος του στο "
+"κουτί πληροφοριών στην οθόνη."
 
 #: Source/options.cpp:833
 msgid "Auto Refill Belt"
@@ -6584,47 +6598,47 @@ msgstr ""
 
 #: Source/options.cpp:883
 msgid "Controller"
-msgstr ""
+msgstr "Xειριστήριο"
 
 #: Source/options.cpp:883
 msgid "Controller Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Χειριστηρίου"
 
 #: Source/options.cpp:892
 msgid "Network"
-msgstr ""
+msgstr "Δίκτυο"
 
 #: Source/options.cpp:892
 msgid "Network Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Δικτύου"
 
 #: Source/options.cpp:901
 msgid "Chat"
-msgstr ""
+msgstr "Συνομιλία"
 
 #: Source/options.cpp:901
 msgid "Chat Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Συνομιλίας"
 
 #: Source/options.cpp:910 Source/options.cpp:1025
 msgid "Language"
-msgstr ""
+msgstr "Γλώσσα"
 
 #: Source/options.cpp:910
 msgid "Define what language to use in game."
-msgstr ""
+msgstr "Ορίζει ποια γλώσσα θα χρησιμοποιεί το παιχνίδι."
 
 #: Source/options.cpp:1025
 msgid "Language Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Γλώσσας"
 
 #: Source/options.cpp:1037
 msgid "Keymapping"
-msgstr ""
+msgstr "Ορισμός Πλήκτρων"
 
 #: Source/options.cpp:1037
 msgid "Keymapping Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Ορισμού Πλήκτρων"
 
 #: Source/panels/charpanel.cpp:111
 msgid "MAX"
