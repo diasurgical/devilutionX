@@ -417,9 +417,8 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 	};
 
 	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
-	const auto *frameTable = reinterpret_cast<const uint32_t *>(monster.AnimInfo.pCelSprite->Data());
-	int frames = SDL_SwapLE32(frameTable[0]);
-	if (nCel < 1 || frames > 50 || nCel > frames) {
+	const uint32_t frames = LoadLE32(monster.AnimInfo.pCelSprite->Data());
+	if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster.mName,
@@ -852,10 +851,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 			int px = targetBufferPosition.x - CalculateWidth2(pDeadGuy->width);
 			const byte *pCelBuff = pDeadGuy->data[(bDead >> 5) & 7];
 			assert(pCelBuff != nullptr);
-			const auto *frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
-			int frames = SDL_SwapLE32(frameTable[0]);
+			const uint32_t frames = LoadLE32(pCelBuff);
 			int nCel = pDeadGuy->frame;
-			if (nCel < 1 || frames > 50 || nCel > frames) {
+			if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
 				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}

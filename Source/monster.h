@@ -132,7 +132,7 @@ enum class LeaderRelation : uint8_t {
 };
 
 struct AnimStruct {
-	std::unique_ptr<byte[]> CMem;
+	byte *cl2Data;
 	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
 
 	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
@@ -148,6 +148,7 @@ struct CMonster {
 	_monster_id mtype;
 	/** placeflag enum as a flags*/
 	uint8_t mPlaceFlags;
+	std::unique_ptr<byte[]> animData;
 	AnimStruct Anims[6];
 	/**
 	 * @brief Returns AnimStruct for specified graphic

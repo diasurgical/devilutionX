@@ -31,6 +31,7 @@
 #include "themes.h"
 #include "towners.h"
 #include "trigs.h"
+#include "utils/file_name_generator.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
@@ -130,6 +131,11 @@ int MWVel[24][3] = {
 /** Maps from monster action to monster animation letter. */
 char animletter[7] = "nwahds";
 
+size_t GetNumAnims(const MonsterData &monsterData)
+{
+	return monsterData.has_special ? 6 : 5;
+}
+
 void InitMonsterTRN(CMonster &monst)
 {
 	std::array<uint8_t, 256> colorTranslations;
@@ -137,15 +143,15 @@ void InitMonsterTRN(CMonster &monst)
 
 	std::replace(colorTranslations.begin(), colorTranslations.end(), 255, 0);
 
-	int n = monst.MData->has_special ? 6 : 5;
-	for (int i = 0; i < n; i++) {
+	const size_t numAnims = GetNumAnims(*monst.MData);
+	for (size_t i = 0; i < numAnims; i++) {
 		if (i == 1 && monst.mtype >= MT_COUNSLR && monst.mtype <= MT_ADVOCATE) {
 			continue;
 		}
 
 		for (int j = 0; j < 8; j++) {
 			Cl2ApplyTrans(
-			    CelGetFrame(monst.Anims[i].CMem.get(), j),
+			    CelGetFrame(monst.Anims[i].cl2Data, j),
 			    colorTranslations,
 			    monst.Anims[i].Frames);
 		}
@@ -3693,50 +3699,58 @@ void GetLevelMTypes()
 
 void InitMonsterGFX(int monst)
 {
-	int mtype = LevelMonsterTypes[monst].mtype;
-	int width = MonstersData[mtype].width;
+	CMonster &monster = LevelMonsterTypes[monst];
+	const _monster_id mtype = monster.mtype;
+	const MonsterData &monsterData = MonstersData[mtype];
+	const int width = monsterData.width;
+	constexpr size_t MaxAnims = sizeof(animletter) / sizeof(animletter[0]) - 1;
+	const size_t numAnims = GetNumAnims(monsterData);
 
-	for (int anim = 0; anim < 6; anim++) {
-		int frames = MonstersData[mtype].Frames[anim];
+	const auto hasAnim = [&monsterData](size_t i) {
+		return monsterData.Frames[i] != 0;
+	};
 
-		if ((animletter[anim] != 's' || MonstersData[mtype].has_special) && frames > 0) {
-			char strBuff[256];
-			sprintf(strBuff, MonstersData[mtype].GraphicType, animletter[anim]);
+	std::array<uint32_t, MaxAnims> animOffsets;
+	monster.animData = MultiFileLoader<MaxAnims> {}(
+	    numAnims,
+	    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.GraphicType }, ".CL2", &animletter[0]),
+	    &animOffsets[0],
+	    hasAnim);
 
-			byte *celBuf;
-			{
-				auto celData = LoadFileInMem(strBuff);
-				celBuf = celData.get();
-				LevelMonsterTypes[monst].Anims[anim].CMem = std::move(celData);
-			}
+	for (unsigned animIndex = 0; animIndex < numAnims; animIndex++) {
+		AnimStruct &anim = monster.Anims[animIndex];
 
-			if (LevelMonsterTypes[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
-				for (int i = 0; i < 8; i++) {
-					byte *pCelStart = CelGetFrame(celBuf, i);
-					LevelMonsterTypes[monst].Anims[anim].CelSpritesForDirections[i].emplace(pCelStart, width);
-				}
-			} else {
-				for (int i = 0; i < 8; i++) {
-					LevelMonsterTypes[monst].Anims[anim].CelSpritesForDirections[i].emplace(celBuf, width);
-				}
-			}
+		if (!hasAnim(animIndex)) {
+			anim.Frames = 0;
+			continue;
 		}
 
-		LevelMonsterTypes[monst].Anims[anim].Frames = frames;
-		LevelMonsterTypes[monst].Anims[anim].Rate = MonstersData[mtype].Rate[anim];
+		anim.cl2Data = &monster.animData[animOffsets[animIndex]];
+		anim.Frames = monsterData.Frames[animIndex];
+		anim.Rate = monsterData.Rate[animIndex];
+
+		if (monster.mtype != MT_GOLEM || (animletter[animIndex] != 's' && animletter[animIndex] != 'd')) {
+			for (int i = 0; i < 8; i++) {
+				anim.CelSpritesForDirections[i].emplace(CelGetFrame(anim.cl2Data, i), width);
+			}
+		} else {
+			for (int i = 0; i < 8; i++) {
+				anim.CelSpritesForDirections[i].emplace(anim.cl2Data, width);
+			}
+		}
 	}
 
-	LevelMonsterTypes[monst].mMinHP = MonstersData[mtype].mMinHP;
-	LevelMonsterTypes[monst].mMaxHP = MonstersData[mtype].mMaxHP;
+	monster.mMinHP = monsterData.mMinHP;
+	monster.mMaxHP = monsterData.mMaxHP;
 	if (!gbIsHellfire && mtype == MT_DIABLO) {
-		LevelMonsterTypes[monst].mMinHP -= 2000;
-		LevelMonsterTypes[monst].mMaxHP -= 2000;
+		monster.mMinHP -= 2000;
+		monster.mMaxHP -= 2000;
 	}
-	LevelMonsterTypes[monst].mAFNum = MonstersData[mtype].mAFNum;
-	LevelMonsterTypes[monst].MData = &MonstersData[mtype];
+	monster.mAFNum = monsterData.mAFNum;
+	monster.MData = &monsterData;
 
-	if (MonstersData[mtype].has_trans) {
-		InitMonsterTRN(LevelMonsterTypes[monst]);
+	if (monsterData.has_trans) {
+		InitMonsterTRN(monster);
 	}
 
 	if (mtype >= MT_NMAGMA && mtype <= MT_WMAGMA)
@@ -4393,12 +4407,7 @@ void ProcessMonsters()
 void FreeMonsters()
 {
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
-		int mtype = LevelMonsterTypes[i].mtype;
-		for (int j = 0; j < 6; j++) {
-			if (animletter[j] != 's' || MonstersData[mtype].has_special) {
-				LevelMonsterTypes[i].Anims[j].CMem = nullptr;
-			}
-		}
+		LevelMonsterTypes[i].animData = nullptr;
 	}
 }
 
