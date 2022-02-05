@@ -4955,22 +4955,22 @@ msgstr "Κεντρί"
 #: Source/monstdat.cpp:134
 msgctxt "monster"
 msgid "Psychorb"
-msgstr ""
+msgstr "Ψυχόσφαιρος"
 
 #: Source/monstdat.cpp:135
 msgctxt "monster"
 msgid "Arachnon"
-msgstr ""
+msgstr "Αραχνόμος"
 
 #: Source/monstdat.cpp:136
 msgctxt "monster"
 msgid "Felltwin"
-msgstr ""
+msgstr "Έκπτωτος Δίδυμος"
 
 #: Source/monstdat.cpp:137
 msgctxt "monster"
 msgid "Hork Spawn"
-msgstr ""
+msgstr "Γόνος Σαρκοδαίμονα"
 
 #: Source/monstdat.cpp:138
 msgctxt "monster"
@@ -4980,7 +4980,7 @@ msgstr "Δηλητηριώδες Ουρά"
 #: Source/monstdat.cpp:139
 msgctxt "monster"
 msgid "Necromorb"
-msgstr ""
+msgstr "Νεκρόσφαιρος"
 
 #: Source/monstdat.cpp:140
 msgctxt "monster"
@@ -4990,17 +4990,17 @@ msgstr "Άρχοντας της Αράχνης"
 #: Source/monstdat.cpp:141
 msgctxt "monster"
 msgid "Lashworm"
-msgstr ""
+msgstr "Μαστιγοσκώληκας"
 
 #: Source/monstdat.cpp:142
 msgctxt "monster"
 msgid "Torchant"
-msgstr ""
+msgstr "Πυρσοδαίμονας"
 
 #: Source/monstdat.cpp:143 Source/monstdat.cpp:483
 msgctxt "monster"
 msgid "Hork Demon"
-msgstr ""
+msgstr "Σαρκοδαίμονας"
 
 #: Source/monstdat.cpp:144
 msgctxt "monster"
@@ -5040,7 +5040,7 @@ msgstr "Δαίμονας της Κρύπτης"
 #: Source/monstdat.cpp:151
 msgctxt "monster"
 msgid "Hellbat"
-msgstr ""
+msgstr "Κολασμένη Νυχτερίδα"
 
 #: Source/monstdat.cpp:152
 msgctxt "monster"
@@ -5055,7 +5055,7 @@ msgstr "Απέθαντος Αρχιμάγος"
 #: Source/monstdat.cpp:154
 msgctxt "monster"
 msgid "Biclops"
-msgstr ""
+msgstr "Δικέφαλος Κύκλωπας"
 
 #: Source/monstdat.cpp:155
 msgctxt "monster"
@@ -5088,7 +5088,7 @@ msgstr "Ζάρ ο Τρελός"
 #: Source/monstdat.cpp:476
 msgctxt "monster"
 msgid "Snotspill"
-msgstr ""
+msgstr "Μυξορίχτης"
 
 #: Source/monstdat.cpp:477
 msgctxt "monster"
@@ -5098,7 +5098,7 @@ msgstr "Ο Αρχιεπίσκοπος Λάζαρος"
 #: Source/monstdat.cpp:478
 msgctxt "monster"
 msgid "Red Vex"
-msgstr ""
+msgstr "Κόκκινη Αγανάκτηση"
 
 #: Source/monstdat.cpp:479
 msgctxt "monster"
@@ -5123,7 +5123,7 @@ msgstr "Ο Βεβηλωτής"
 #: Source/monstdat.cpp:486
 msgctxt "monster"
 msgid "Bonehead Keenaxe"
-msgstr ""
+msgstr "Κοφτερό Σκελετωμένο Τσεκούρι"
 
 #: Source/monstdat.cpp:487
 msgctxt "monster"
@@ -5168,12 +5168,12 @@ msgstr "Μπόνγκο"
 #: Source/monstdat.cpp:495
 msgctxt "monster"
 msgid "Rotcarnage"
-msgstr ""
+msgstr "Σαπισμένος Μακελάρης"
 
 #: Source/monstdat.cpp:496
 msgctxt "monster"
 msgid "Shadowbite"
-msgstr ""
+msgstr "Σκιωδαγκανιάρης"
 
 #: Source/monstdat.cpp:497
 msgctxt "monster"
@@ -5233,12 +5233,12 @@ msgstr ""
 #: Source/monstdat.cpp:508
 msgctxt "monster"
 msgid "Shadowcrow"
-msgstr "Το Κοράκι της Σκιάς"
+msgstr "Σκιεροκόρακας"
 
 #: Source/monstdat.cpp:509
 msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr ""
+msgstr "Περονόπετρος, Ο Αδύναμος"
 
 #: Source/monstdat.cpp:510
 msgctxt "monster"
@@ -5343,7 +5343,7 @@ msgstr ""
 #: Source/monstdat.cpp:530
 msgctxt "monster"
 msgid "Madburner"
-msgstr "Ο Τρελός Εμπρηστής"
+msgstr "Τρελόεμπρηστής"
 
 #: Source/monstdat.cpp:531
 msgctxt "monster"
@@ -5383,12 +5383,12 @@ msgstr "Χρυσοφθορός της Φλόγας"
 #: Source/monstdat.cpp:538
 msgctxt "monster"
 msgid "Blackstorm"
-msgstr ""
+msgstr "Ο Μαύρος Καταδρομέας"
 
 #: Source/monstdat.cpp:539
 msgctxt "monster"
 msgid "Plaguewrath"
-msgstr ""
+msgstr "Η Οργή της Πανούκλας"
 
 #: Source/monstdat.cpp:540
 msgctxt "monster"
@@ -5453,7 +5453,7 @@ msgstr "Το Μαύρο Κρανίο"
 #: Source/monstdat.cpp:552
 msgctxt "monster"
 msgid "Soulslash"
-msgstr ""
+msgstr "Χαράκτης των Ψυχών"
 
 #: Source/monstdat.cpp:553
 msgctxt "monster"
@@ -5468,7 +5468,7 @@ msgstr "Άρχοντας του Λάκκου"
 #: Source/monstdat.cpp:555
 msgctxt "monster"
 msgid "Rustweaver"
-msgstr ""
+msgstr "Υφαντής της Σκουριάς"
 
 #: Source/monstdat.cpp:556
 msgctxt "monster"
