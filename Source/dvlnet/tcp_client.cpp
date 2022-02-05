@@ -18,7 +18,7 @@ namespace net {
 int tcp_client::create(std::string addrstr)
 {
 	try {
-		auto port = sgOptions.Network.nPort;
+		auto port = *sgOptions.Network.port;
 		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, *pktfty);
 		return join(local_server->LocalhostSelf());
 	} catch (std::system_error &e) {
@@ -34,7 +34,7 @@ int tcp_client::join(std::string addrstr)
 
 	try {
 		std::stringstream port;
-		port << sgOptions.Network.nPort;
+		port << *sgOptions.Network.port;
 		asio::connect(sock, resolver.resolve(addrstr, port.str()));
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);

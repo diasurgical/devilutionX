@@ -324,20 +324,9 @@ void LoadOptions()
 		}
 	}
 
-	sgOptions.Diablo.lastSinglePlayerHero = GetIniInt("Diablo", "LastSinglePlayerHero", 0);
-	sgOptions.Diablo.lastMultiplayerHero = GetIniInt("Diablo", "LastMultiplayerHero", 0);
-	sgOptions.Hellfire.lastSinglePlayerHero = GetIniInt("Hellfire", "LastSinglePlayerHero", 0);
-	sgOptions.Hellfire.lastMultiplayerHero = GetIniInt("Hellfire", "LastMultiplayerHero", 0);
 	GetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
 
-	sgOptions.Audio.nSoundVolume = GetIniInt("Audio", "Sound Volume", VOLUME_MAX);
-	sgOptions.Audio.nMusicVolume = GetIniInt("Audio", "Music Volume", VOLUME_MAX);
-
-	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
-	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
-	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
 	GetIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
@@ -366,21 +355,9 @@ void SaveOptions()
 		}
 	}
 
-	SetIniValue("Diablo", "LastSinglePlayerHero", sgOptions.Diablo.lastSinglePlayerHero);
-	SetIniValue("Diablo", "LastMultiplayerHero", sgOptions.Diablo.lastMultiplayerHero);
 	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
-	SetIniValue("Hellfire", "LastSinglePlayerHero", sgOptions.Hellfire.lastSinglePlayerHero);
-	SetIniValue("Hellfire", "LastMultiplayerHero", sgOptions.Hellfire.lastMultiplayerHero);
-
-	SetIniValue("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
-	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
-
-	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
-
-	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
-	SetIniValue("Network", "Port", sgOptions.Network.nPort);
 	SetIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
@@ -600,24 +577,36 @@ std::vector<OptionEntryBase *> StartUpOptions::GetEntries()
 
 DiabloOptions::DiabloOptions()
     : OptionCategoryBase("Diablo", N_("Diablo"), N_("Diablo specific Settings"))
+    , lastSinglePlayerHero("LastSinglePlayerHero", OptionEntryFlags::Invisible | OptionEntryFlags::OnlyDiablo, "Sample Rate", "Remembers what singleplayer hero/save was last used.", 0)
+    , lastMultiplayerHero("LastMultiplayerHero", OptionEntryFlags::Invisible | OptionEntryFlags::OnlyDiablo, "Sample Rate", "Remembers what multiplayer hero/save was last used.", 0)
 {
 }
 std::vector<OptionEntryBase *> DiabloOptions::GetEntries()
 {
-	return {};
+	return {
+		&lastSinglePlayerHero,
+		&lastMultiplayerHero,
+	};
 }
 
 HellfireOptions::HellfireOptions()
     : OptionCategoryBase("Hellfire", N_("Hellfire"), N_("Hellfire specific Settings"))
+    , lastSinglePlayerHero("LastSinglePlayerHero", OptionEntryFlags::Invisible | OptionEntryFlags::OnlyHellfire, "Sample Rate", "Remembers what singleplayer hero/save was last used.", 0)
+    , lastMultiplayerHero("LastMultiplayerHero", OptionEntryFlags::Invisible | OptionEntryFlags::OnlyHellfire, "Sample Rate", "Remembers what multiplayer hero/save was last used.", 0)
 {
 }
 std::vector<OptionEntryBase *> HellfireOptions::GetEntries()
 {
-	return {};
+	return {
+		&lastSinglePlayerHero,
+		&lastMultiplayerHero,
+	};
 }
 
 AudioOptions::AudioOptions()
     : OptionCategoryBase("Audio", N_("Audio"), N_("Audio Settings"))
+    , soundVolume("Sound Volume", OptionEntryFlags::Invisible, "Sound Volume", "Movie and SFX volume.", VOLUME_MAX)
+    , musicVolume("Music Volume", OptionEntryFlags::Invisible, "Music Volume", "Music Volume.", VOLUME_MAX)
     , walkingSound("Walking Sound", OptionEntryFlags::None, N_("Walking Sound"), N_("Player emits sound when walking."), true)
     , autoEquipSound("Auto Equip Sound", OptionEntryFlags::None, N_("Auto Equip Sound"), N_("Automatically equipping items on pickup emits the equipment sound."), false)
     , itemPickupSound("Item Pickup Sound", OptionEntryFlags::None, N_("Item Pickup Sound"), N_("Picking up items emits the items pickup sound."), false)
@@ -634,6 +623,8 @@ AudioOptions::AudioOptions()
 std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 {
 	return {
+		&soundVolume,
+		&musicVolume,
 		&walkingSound,
 		&autoEquipSound,
 		&itemPickupSound,
@@ -757,6 +748,7 @@ GraphicsOptions::GraphicsOptions()
     , integerScaling("Integer Scaling", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI, N_("Integer Scaling"), N_("Scales the image using whole number pixel ratio."), false)
     , vSync("Vertical Sync", OptionEntryFlags::RecreateUI, N_("Vertical Sync"), N_("Forces waiting for Vertical Sync. Prevents tearing effect when drawing a frame. Disabling it can help with mouse lag on some systems."), true)
 #endif
+    , gammaCorrection("Gamma Correction", OptionEntryFlags::Invisible, "Gamma Correction", "Gamma correction level.", 100)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
 #if SDL_VERSION_ATLEAST(2, 0, 0)
     , hardwareCursor("Hardware Cursor", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor"), N_("Use a hardware cursor"), HardwareCursorDefault())
@@ -798,6 +790,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 		&integerScaling,
 		&vSync,
 #endif
+		&gammaCorrection,
 		&limitFPS,
 		&showFPS,
 		&showHealthValues,
@@ -814,6 +807,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 
 GameplayOptions::GameplayOptions()
     : OptionCategoryBase("Game", N_("Gameplay"), N_("Gameplay Settings"))
+    , tickRate("Speed", OptionEntryFlags::Invisible, "Speed", "Gameplay ticks per second.", 20)
     , runInTown("Run in Town", OptionEntryFlags::CantChangeInMultiPlayer, N_("Run in Town"), N_("Enable jogging/fast walking in town for Diablo and Hellfire. This option was introduced in the expansion."), false)
     , grabInput("Grab Input", OptionEntryFlags::None, N_("Grab Input"), N_("When enabled mouse is locked to the game window."), false)
     , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
@@ -851,6 +845,7 @@ GameplayOptions::GameplayOptions()
 std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 {
 	return {
+		&tickRate,
 		&grabInput,
 		&runInTown,
 		&adriaRefillsMana,
@@ -894,11 +889,14 @@ std::vector<OptionEntryBase *> ControllerOptions::GetEntries()
 
 NetworkOptions::NetworkOptions()
     : OptionCategoryBase("Network", N_("Network"), N_("Network Settings"))
+    , port("Port", OptionEntryFlags::Invisible, "Port", "What network port to use.", 6112)
 {
 }
 std::vector<OptionEntryBase *> NetworkOptions::GetEntries()
 {
-	return {};
+	return {
+		&port,
+	};
 }
 
 ChatOptions::ChatOptions()
