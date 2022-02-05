@@ -104,18 +104,20 @@ void selgame_GameSelection_Init()
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Public Game"), 1, UiFlags::ColorUiGold));
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Join Game"), 2, UiFlags::ColorUiGold));
 
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Public Games"), -1, UiFlags::ElementDisabled | UiFlags::ColorWhitegold));
+	if (provider == SELCONN_ZT) {
+		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
+		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Public Games"), -1, UiFlags::ElementDisabled | UiFlags::ColorWhitegold));
 
-	if (Gamelist.empty()) {
-		// We expect the game list is recevied after 3 seconds
-		if (firstPublicGameInfoRequestSend == 0 || (SDL_GetTicks() - firstPublicGameInfoRequestSend) < 2000)
-			vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Loading..."), -1, UiFlags::ElementDisabled | UiFlags::ColorUiSilver));
-		else
-			vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("None"), -1, UiFlags::ElementDisabled | UiFlags::ColorUiSilver));
-	} else {
-		for (unsigned i = 0; i < Gamelist.size(); i++) {
-			vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 3, UiFlags::ColorUiGold));
+		if (Gamelist.empty()) {
+			// We expect the game list to be received after 3 seconds
+			if (firstPublicGameInfoRequestSend == 0 || (SDL_GetTicks() - firstPublicGameInfoRequestSend) < 2000)
+				vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Loading..."), -1, UiFlags::ElementDisabled | UiFlags::ColorUiSilver));
+			else
+				vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("None"), -1, UiFlags::ElementDisabled | UiFlags::ColorUiSilver));
+		} else {
+			for (unsigned i = 0; i < Gamelist.size(); i++) {
+				vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 3, UiFlags::ColorUiGold));
+			}
 		}
 	}
 
@@ -587,7 +589,8 @@ bool UiSelectGame(GameData *gameData, int *playerId)
 	while (!selgame_endMenu) {
 		UiClearScreen();
 		UiPollAndRender();
-		RefreshGameList();
+		if (provider == SELCONN_ZT)
+			RefreshGameList();
 	}
 	selgame_Free();
 
