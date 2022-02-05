@@ -6522,79 +6522,85 @@ msgstr ""
 
 #: Source/options.cpp:833
 msgid "Auto Refill Belt"
-msgstr ""
+msgstr "Αυτόματο Γέμισμα Ζώνης"
 
 #: Source/options.cpp:833
 msgid "Refill belt from inventory when belt item is consumed."
 msgstr ""
+"Η ζώνη σου γεμίζει ξανά από τον σάκο σου όταν καταναλώσεις ένα αντικείμενο."
 
 #: Source/options.cpp:834
 msgid "Disable Crippling Shrines"
-msgstr ""
+msgstr "Απενεργοποίηση Βλαβερών Βωμών"
 
 #: Source/options.cpp:834
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
+"Όταν είναι ενεργοποιημένο, ο Συναρπαστικός και Ιερός Βωμός καθώς και οι "
+"βωμοί Κατσίκας και Διακόσμησης, δεν μπορούν να γίνουν κλίκ, και είναι "
+"απενεργοποιημένοι."
 
 #: Source/options.cpp:835
 msgid "Quick Cast"
-msgstr ""
+msgstr "Άμεσα Ξόρκια"
 
 #: Source/options.cpp:835
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
 msgstr ""
+"Τα πλήκτρα ξορκιών απευθείας ρίχνουν το ξόρκι, αντί να αλλάζουν το έτοιμο "
+"ξόρκι."
 
 #: Source/options.cpp:836
 msgid "Heal Potion Pickup"
-msgstr ""
+msgstr "Μάζεμα Φίλτρων Θεραπείας"
 
 #: Source/options.cpp:836
 msgid "Number of Healing potions to pick up automatically."
-msgstr ""
+msgstr "Αριθμός Φίλτρων Θεραπείας για αυτόματο μάζεμα."
 
 #: Source/options.cpp:837
 msgid "Full Heal Potion Pickup"
-msgstr ""
+msgstr "Μάζεμα Φίλτρων Πλήρους Θεραπείας"
 
 #: Source/options.cpp:837
 msgid "Number of Full Healing potions to pick up automatically."
-msgstr ""
+msgstr "Αριθμός Φίλτρων Πλήρους Θεραπείας για αυτόματο μάζεμα."
 
 #: Source/options.cpp:838
 msgid "Mana Potion Pickup"
-msgstr ""
+msgstr "Μάζεμα Φίλτρου Μάνα"
 
 #: Source/options.cpp:838
 msgid "Number of Mana potions to pick up automatically."
-msgstr ""
+msgstr "Αριθμός Φίλτρων Μάνα για αυτόματο μάζεμα."
 
 #: Source/options.cpp:839
 msgid "Full Mana Potion Pickup"
-msgstr ""
+msgstr "Μάζεμα Φίλτρου Πλήρωσης Μάνα"
 
 #: Source/options.cpp:839
 msgid "Number of Full Mana potions to pick up automatically."
-msgstr ""
+msgstr "Αριθμός Φίλτρων Πλήρωσης Μάνα για αυτόματο μάζεμα."
 
 #: Source/options.cpp:840
 msgid "Rejuvenation Potion Pickup"
-msgstr ""
+msgstr "Μάζεμα Φίλτρου Αναζωογόνησης"
 
 #: Source/options.cpp:840
 msgid "Number of Rejuvenation potions to pick up automatically."
-msgstr ""
+msgstr "Αριθμός Φίλτρων Αναζωογόνησης για αυτόματο μάζεμα."
 
 #: Source/options.cpp:841
 msgid "Full Rejuvenation Potion Pickup"
-msgstr ""
+msgstr "Μάζεμα Φίλτρου Πλήρους Αναζωογόνησης"
 
 #: Source/options.cpp:841
 msgid "Number of Full Rejuvenation potions to pick up automatically."
-msgstr ""
+msgstr "Αριθμός Φίλτρων Πλήρους Αναζωογόνησης για αυτόματο μάζεμα."
 
 #: Source/options.cpp:883
 msgid "Controller"
@@ -7314,133 +7320,135 @@ msgstr "Δεν απαιτούνται στατιστικά"
 
 #: Source/stores.cpp:312 Source/stores.cpp:1079 Source/stores.cpp:1323
 msgid "Welcome to the"
-msgstr ""
+msgstr "Καλώς ήρθες στο"
 
 #: Source/stores.cpp:313
 msgid "Blacksmith's shop"
-msgstr ""
+msgstr "Μαγαζί του Σιδηρουργού"
 
 #: Source/stores.cpp:314 Source/stores.cpp:675 Source/stores.cpp:1081
 #: Source/stores.cpp:1141 Source/stores.cpp:1325 Source/stores.cpp:1337
 #: Source/stores.cpp:1349
 msgid "Would you like to:"
-msgstr ""
+msgstr "Θα ήθελες να:"
 
 #: Source/stores.cpp:315
 msgid "Talk to Griswold"
-msgstr ""
+msgstr "Μιλήσεις στον Γκρίσγουαλντ"
 
 #: Source/stores.cpp:316
 msgid "Buy basic items"
-msgstr ""
+msgstr "Αγοράσεις απλά αντικείμενα"
 
 #: Source/stores.cpp:317
 msgid "Buy premium items"
-msgstr ""
+msgstr "Αγοράσεις αντιέιμενα ιδιαίτερης αξίας"
 
 #: Source/stores.cpp:318 Source/stores.cpp:678
 msgid "Sell items"
-msgstr ""
+msgstr "Πουλήσεις αντικείμενα"
 
 #: Source/stores.cpp:319
 msgid "Repair items"
-msgstr ""
+msgstr "Επιδιορθώσεις αντικείμενα"
 
 #: Source/stores.cpp:320
 msgid "Leave the shop"
-msgstr ""
+msgstr "Φύγεις από το Μαγαζί"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:358 Source/stores.cpp:735 Source/stores.cpp:1116
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr ""
+msgstr "Έχω τα παρακάτω αντικείμενα για πώληση:             Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
 msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr ""
+"Έχω τα παρακάτω αντικείμενα αξίας για πώληση:             Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:546 Source/stores.cpp:830
 msgid "You have nothing I want.             Your gold: {:d}"
-msgstr ""
+msgstr "Δεν έχεις τίποτα που θέλω.             Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:559 Source/stores.cpp:843
 msgid "Which item is for sale?             Your gold: {:d}"
-msgstr ""
+msgstr "Ποιο αντικείμενο είναι για πώληση;             Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:632
 msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr ""
+msgstr "Δεν έχεις τίποτα που θέλει επιδιόρθωση.             Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:645
 msgid "Repair which item?             Your gold: {:d}"
-msgstr ""
+msgstr "Πιο αντικείμενο θέλεις να επιδιορθώσω;             Ο χρυσός σου: {:d}"
 
 #: Source/stores.cpp:674
 msgid "Witch's shack"
-msgstr ""
+msgstr "Η Παράγκα της Μάγισσας"
 
 #: Source/stores.cpp:676
 msgid "Talk to Adria"
-msgstr ""
+msgstr "Μίλα στην Άντρια"
 
 #: Source/stores.cpp:677 Source/stores.cpp:1083
 msgid "Buy items"
-msgstr ""
+msgstr "Αγόρασε αντικείμενα"
 
 #: Source/stores.cpp:679
 msgid "Recharge staves"
-msgstr ""
+msgstr "Επαναφόρτιση Ράβδων"
 
 #: Source/stores.cpp:680
 msgid "Leave the shack"
-msgstr ""
+msgstr "Φύγε από την παράγκα"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:907
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr ""
+"Δεν έχεις τίποτα που θέλει επαναφόρτιση.             Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:920
 msgid "Recharge which item?             Your gold: {:d}"
-msgstr ""
+msgstr "Ποια ράβδος θες να επαναφορτίσεις;             Ο χρυσός σου: {:d}"
 
 #: Source/stores.cpp:934
 msgid "You do not have enough gold"
-msgstr ""
+msgstr "Δεν έχεις αρκετό χρυσό"
 
 #: Source/stores.cpp:942
 msgid "You do not have enough room in inventory"
-msgstr ""
+msgstr "Δεν έχεις χώρο στον σάκο σου"
 
 #: Source/stores.cpp:979
 msgid "Do we have a deal?"
-msgstr ""
+msgstr "Είμαστε σύμφωνοι;"
 
 #: Source/stores.cpp:982
 msgid "Are you sure you want to identify this item?"
-msgstr ""
+msgstr "Είσαι σίγουρος(η) ότι θες να ταυτοποιήσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:988
 msgid "Are you sure you want to buy this item?"
-msgstr ""
+msgstr "Είσαι σίγουρος(η) ότι θες να αγοράσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:991
 msgid "Are you sure you want to recharge this item?"
-msgstr ""
+msgstr "Είσαι σίγουρος(η) ότι θες να επαναφορτίσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:995
 msgid "Are you sure you want to sell this item?"
-msgstr ""
+msgstr "Είσαι σίγουρος(η) ότι θες να πουλήσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:998
 msgid "Are you sure you want to repair this item?"
-msgstr ""
+msgstr "Είσαι σίγουρος(η) ότι θες να επιδιορθώσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:1012 Source/towners.cpp:150
 msgid "Wirt the Peg-legged boy"
@@ -7452,115 +7460,115 @@ msgstr "Μίλα στον Ουίρτ"
 
 #: Source/stores.cpp:1016
 msgid "I have something for sale,"
-msgstr ""
+msgstr "Έχω κάτι προς πώληση,"
 
 #: Source/stores.cpp:1017
 msgid "but it will cost 50 gold"
-msgstr ""
+msgstr "αλλά θα σου κοστίσει 50 χρυσά"
 
 #: Source/stores.cpp:1018
 msgid "just to take a look. "
-msgstr ""
+msgstr "μονό για να το δεις. "
 
 #: Source/stores.cpp:1019
 msgid "What have you got?"
-msgstr ""
+msgstr "Τι έχεις;"
 
 #: Source/stores.cpp:1020 Source/stores.cpp:1023 Source/stores.cpp:1144
 #: Source/stores.cpp:1339
 msgid "Say goodbye"
-msgstr ""
+msgstr "Πες αντίο"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1033
 msgid "I have this item for sale:             Your gold: {:d}"
-msgstr ""
+msgstr "Έχω το παρακάτω αντικείμενο για πώληση:             Ο χρυσός σου: {:d}"
 
 #: Source/stores.cpp:1057
 msgid "Leave"
-msgstr ""
+msgstr "Φύγε"
 
 #: Source/stores.cpp:1080
 msgid "Healer's home"
-msgstr ""
+msgstr "Το σπίτι του Θεραπευτή"
 
 #: Source/stores.cpp:1082
 msgid "Talk to Pepin"
-msgstr ""
+msgstr "Μίλα στον Πέπιν"
 
 #: Source/stores.cpp:1084
 msgid "Leave Healer's home"
-msgstr ""
+msgstr "Φύγε από το σπίτι του Θεραπευτή"
 
 #: Source/stores.cpp:1140
 msgid "The Town Elder"
-msgstr ""
+msgstr "Ο Γέροντας της Πόλης"
 
 #: Source/stores.cpp:1142
 msgid "Talk to Cain"
-msgstr ""
+msgstr "Μίλα στον Κάϊν"
 
 #: Source/stores.cpp:1143
 msgid "Identify an item"
-msgstr ""
+msgstr "Ταυτοποιήσε ένα αντικείμενο"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1236
 msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr ""
+msgstr "Δεν έχεις τίποτα που θέλει ταυτοποίηση.             Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1249
 msgid "Identify which item?             Your gold: {:d}"
-msgstr ""
+msgstr "Πιο αντικείμενο θέλεις να ταυτοποιήσω;             Ο χρυσός σου: {:d}"
 
 #: Source/stores.cpp:1268
 msgid "This item is:"
-msgstr ""
+msgstr "Αυτό το αντικείμενο είναι:"
 
 #: Source/stores.cpp:1271
 msgid "Done"
-msgstr ""
+msgstr "Τελειώσαμε"
 
 #: Source/stores.cpp:1280
 msgid "Talk to {:s}"
-msgstr ""
+msgstr "Μίλα στον(ην) {:s}"
 
 #: Source/stores.cpp:1284
 msgid "Talking to {:s}"
-msgstr ""
+msgstr "Μιλάει στον(ην) {:s}"
 
 #: Source/stores.cpp:1286
 msgid "is not available"
-msgstr ""
+msgstr "δεν είναι διαθέσιμο"
 
 #: Source/stores.cpp:1287
 msgid "in the shareware"
-msgstr ""
+msgstr "στην δωρεάν"
 
 #: Source/stores.cpp:1288
 msgid "version"
-msgstr ""
+msgstr "έκδοση"
 
 #: Source/stores.cpp:1315
 msgid "Gossip"
-msgstr ""
+msgstr "Κουτσομπολιό"
 
 #: Source/stores.cpp:1324
 msgid "Rising Sun"
-msgstr ""
+msgstr "Ο Ανατέλλων Ήλιος"
 
 #: Source/stores.cpp:1326
 msgid "Talk to Ogden"
-msgstr ""
+msgstr "Μίλα στον Όγκντεν"
 
 #: Source/stores.cpp:1327
 msgid "Leave the tavern"
-msgstr ""
+msgstr "Φύγε από την Ταβέρνα"
 
 #: Source/stores.cpp:1338
 msgid "Talk to Gillian"
-msgstr ""
+msgstr "Μίλα στην Γκίλλιαν"
 
 #: Source/stores.cpp:1348 Source/towners.cpp:205
 msgid "Farnham the Drunk"
@@ -7568,11 +7576,11 @@ msgstr "Φάρνχαμ ο Μεθύστακας"
 
 #: Source/stores.cpp:1350
 msgid "Talk to Farnham"
-msgstr ""
+msgstr "Μίλα στον Φάρνχαμ"
 
 #: Source/stores.cpp:1351
 msgid "Say Goodbye"
-msgstr ""
+msgstr "Πες αντίο"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
@@ -8459,7 +8467,7 @@ msgstr ""
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
 msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz..."
-msgstr ""
+msgstr "Ζζζζζζζζζζζζζζζζζζζζζζζζζζζζζζζ..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:209
@@ -8892,7 +8900,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Cain
 #: Source/textdat.cpp:308
 msgid "Hello, my friend. Stay awhile and listen..."
-msgstr ""
+msgstr "Γειά σου, φίλε(η) μου. Ξαπόστασε για λίγο και άκου..."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:309
@@ -8986,6 +8994,8 @@ msgstr ""
 #: Source/textdat.cpp:327
 msgid "Greetings, good master. Welcome to the Tavern of the Rising Sun!"
 msgstr ""
+"Χαιρετισμούς, καλέ(ή) μου άρχοντα(ισσα) Καλώς ήρθες στην Ταβέρνα του "
+"Ανατέλλοντος Ηλίου!"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:329
@@ -9058,7 +9068,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
 msgid "What ails you, my friend?"
-msgstr ""
+msgstr "Τι σε ταλαιπωρεί φίλε(η) μου;"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:346
@@ -9143,7 +9153,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr ""
+msgstr "Καλημέρα! Πώς μπορώ να σε υπηρετήσω;"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
@@ -9221,7 +9231,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya?"
-msgstr ""
+msgstr "Λοιπόν, τι μπορώ να κάνω για σένα;"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
@@ -9324,7 +9334,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace?"
-msgstr ""
+msgstr "Δεν μπορεί ένα φιλαράκι να πιεί με την ησυχία του;"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:405
@@ -9416,7 +9426,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
 msgid "I sense a soul in search of answers..."
-msgstr ""
+msgstr "Αισθάνομαι μια ψυχή που αναζητά απαντήσεις..."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:428
@@ -9527,7 +9537,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
 msgid "Pssst... over here..."
-msgstr ""
+msgstr "Ψσστ… εδώ πέρα..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:451
@@ -9934,7 +9944,7 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
 msgid "Waaaah! (sniff) Waaaah! (sniff)"
-msgstr ""
+msgstr "Ουααα! (σνίφ) Ουααα! (σνίφ)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
@@ -10010,17 +10020,17 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
 msgid "Moo."
-msgstr ""
+msgstr "Μοο."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:595
 msgid "I said, Moo."
-msgstr ""
+msgstr "Είπα, Μοο."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
 msgid "Look I'm just a cow, OK?"
-msgstr ""
+msgstr "Κοίτα είμαι απλά μια αγελάδα, εντάξει;"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:597
