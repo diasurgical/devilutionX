@@ -2279,7 +2279,7 @@ void AddStoreHoldRepair(Item *itm, int8_t i)
 	storenumh++;
 }
 
-void SetupTownStores()
+void InitStores()
 {
 	ClearSText(0, STORE_LINES);
 	stextflag = STORE_NONE;
@@ -2293,7 +2293,10 @@ void SetupTownStores()
 
 	boyitem._itype = ItemType::None;
 	boylevel = 0;
+}
 
+void SetupTownStores()
+{
 	auto &myPlayer = Players[MyPlayerId];
 
 	int l = myPlayer._pLevel / 2;
