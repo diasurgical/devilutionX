@@ -21,12 +21,12 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pSBkIconCels;
+std::optional<OwnedCelSprite> pSBkIconCels;
 
 namespace {
 
-std::optional<CelSprite> pSBkBtnCel;
-std::optional<CelSprite> pSpellBkCel;
+std::optional<OwnedCelSprite> pSBkBtnCel;
+std::optional<OwnedCelSprite> pSpellBkCel;
 
 /** Maps from spellbook page number and position to spell_id. */
 spell_id SpellPages[6][7] = {

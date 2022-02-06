@@ -74,7 +74,7 @@ struct QuestData {
 };
 
 extern bool QuestLogIsOpen;
-extern std::optional<CelSprite> pQLogCel;
+extern std::optional<OwnedCelSprite> pQLogCel;
 extern DVL_API_FOR_TEST Quest Quests[MAXQUESTS];
 extern Point ReturnLvlPosition;
 extern dungeon_type ReturnLevelType;

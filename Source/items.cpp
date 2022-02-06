@@ -127,7 +127,7 @@ _sfx_id ItemInvSnds[] = {
 
 namespace {
 
-std::optional<CelSprite> itemanims[ITEMTYPES];
+std::optional<OwnedCelSprite> itemanims[ITEMTYPES];
 
 enum class PlayerArmorGraphic : uint8_t {
 	// clang-format off
@@ -2405,7 +2405,7 @@ void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int i
 	int idx = RndTypeItems(itemType, imid, lvl);
 
 	while (true) {
-		memset(&item, 0, sizeof(item));
+		item = {};
 		SetupAllItems(item, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
 		if (item._iCurs == icurs)
 			break;
@@ -2875,13 +2875,13 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pgfxnum = gfxNum;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
-		player.pPreviewCelSprite = nullptr;
+		player.previewCelSprite = std::nullopt;
 		if (player._pmode == PM_STAND) {
 			LoadPlrGFX(player, player_graphic::Stand);
-			player.AnimInfo.ChangeAnimationData(&*player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
+			player.AnimInfo.ChangeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
 		} else {
 			LoadPlrGFX(player, player_graphic::Walk);
-			player.AnimInfo.ChangeAnimationData(&*player.AnimationData[static_cast<size_t>(player_graphic::Walk)].GetCelSpritesForDirection(player._pdir), player._pWFrames, 1);
+			player.AnimInfo.ChangeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].GetCelSpritesForDirection(player._pdir), player._pWFrames, 1);
 		}
 	} else {
 		player._pgfxnum = gfxNum;
@@ -2919,7 +2919,7 @@ void SetPlrHandItem(Item &item, int itemData)
 	auto &pAllItem = AllItemsList[itemData];
 
 	// zero-initialize struct
-	memset(&item, 0, sizeof(item));
+	item = {};
 
 	item._itype = pAllItem.itype;
 	item._iCurs = pAllItem.iCurs;
@@ -3643,7 +3643,7 @@ void FreeItemGFX()
 
 void GetItemFrm(Item &item)
 {
-	item.AnimInfo.pCelSprite = &*itemanims[ItemCAnimTbl[item._iCurs]];
+	item.AnimInfo.celSprite = itemanims[ItemCAnimTbl[item._iCurs]]->Unowned();
 }
 
 void GetItemStr(Item &item)
@@ -4582,7 +4582,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 	auto &item = Items[ii];
 
 	while (true) {
-		memset(&item, 0, sizeof(*Items));
+		item = {};
 		SetupAllItems(item, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
 		if (item._iMiscId == IMISC_BOOK && item._iSpell == ispell)
 			break;
@@ -4705,7 +4705,7 @@ std::string DebugSpawnItem(std::string itemName)
 			continue;
 
 		Point bkp = item.position;
-		memset(&item, 0, sizeof(Item));
+		item = {};
 		item.position = bkp;
 		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, 1, false, false, false);
 
@@ -4771,7 +4771,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 			return fmt::format("Item not found in {:d} tries!", max_iter);
 
 		Point bkp = item.position;
-		memset(&item, 0, sizeof(Item));
+		item = {};
 		item.position = bkp;
 		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
 		SetRndSeed(dist(BetterRng));
@@ -4802,11 +4802,11 @@ void Item::SetNewAnimation(bool showAnimation)
 {
 	int it = ItemCAnimTbl[_iCurs];
 	int numberOfFrames = ItemAnimLs[it];
-	auto *pCelSprite = itemanims[it] ? &*itemanims[it] : nullptr;
+	auto celSprite = itemanims[it] ? std::optional<CelSprite> { itemanims[it]->Unowned() } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
-		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
-		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 1);
+		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1);
 	_iPostDraw = false;
 	_iRequest = false;
 	if (showAnimation) {

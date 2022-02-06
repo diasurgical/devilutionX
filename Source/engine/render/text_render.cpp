@@ -25,7 +25,7 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pSPentSpn2Cels;
+std::optional<OwnedCelSprite> pSPentSpn2Cels;
 
 namespace {
 

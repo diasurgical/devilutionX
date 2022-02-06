@@ -4,14 +4,14 @@
 
 namespace devilution {
 
-CelSprite LoadCel(const char *pszName, int width)
+OwnedCelSprite LoadCel(const char *pszName, int width)
 {
-	return CelSprite(LoadFileInMem(pszName), width);
+	return OwnedCelSprite(LoadFileInMem(pszName), width);
 }
 
-CelSprite LoadCel(const char *pszName, const int *widths)
+OwnedCelSprite LoadCel(const char *pszName, const int *widths)
 {
-	return CelSprite(LoadFileInMem(pszName), widths);
+	return OwnedCelSprite(LoadFileInMem(pszName), widths);
 }
 
 } // namespace devilution

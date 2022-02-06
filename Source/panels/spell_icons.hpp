@@ -27,7 +27,7 @@ void DrawSpellCel(const Surface &out, Point position, int nCel);
  * @param sprite Icons sprite sheet.
  * @param nCel Index of the cel frame to draw. 0 based.
  */
-void DrawSpellCel(const Surface &out, Point position, const CelSprite &sprite, int nCel);
+void DrawSpellCel(const Surface &out, Point position, const OwnedCelSprite &sprite, int nCel);
 
 void SetSpellTrans(spell_type t);
 

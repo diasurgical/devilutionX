@@ -122,11 +122,11 @@ namespace {
 
 std::optional<OwnedSurface> pLifeBuff;
 std::optional<OwnedSurface> pManaBuff;
-std::optional<CelSprite> talkButtons;
-std::optional<CelSprite> pDurIcons;
-std::optional<CelSprite> multiButtons;
-std::optional<CelSprite> pPanelButtons;
-std::optional<CelSprite> pGBoxBuff;
+std::optional<OwnedCelSprite> talkButtons;
+std::optional<OwnedCelSprite> pDurIcons;
+std::optional<OwnedCelSprite> multiButtons;
+std::optional<OwnedCelSprite> pPanelButtons;
+std::optional<OwnedCelSprite> pGBoxBuff;
 
 bool PanelButtons[8];
 int PanelButtonIndex;
@@ -518,7 +518,7 @@ void InitControlPan()
 	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 1);
 	{
 		const Point bulbsPosition { 0, 87 };
-		const CelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
+		const OwnedCelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
 		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 1);
 		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 2);
 	}
