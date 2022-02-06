@@ -2899,6 +2899,10 @@ void GenerateLevel(lvl_entry entry)
 	bool doneflag = false;
 	while (!doneflag) {
 		nRoomCnt = 0;
+		nSx1 = 0;
+		nSy1 = 0;
+		nSx2 = 0;
+		nSy2 = 0;
 		InitDungeonFlags();
 		DRLG_InitTrans();
 		if (!CreateDungeon()) {
