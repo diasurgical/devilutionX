@@ -7422,12 +7422,12 @@ msgstr "Φύγεις από το Μαγαζί"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:355 Source/stores.cpp:732 Source/stores.cpp:1113
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Έχω τα παρακάτω για πώληση:             Ο χρυσός σου: {:d}"
+msgstr "Έχω τα παρακάτω για πώληση:           Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:422
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Έχω τα παρακάτω ακριβά για πώληση:      Ο χρυσός σου: {:d}"
+msgstr "Έχω τα παρακάτω ακριβά για πώληση:    Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:543 Source/stores.cpp:827
@@ -7437,12 +7437,12 @@ msgstr "Δεν έχεις τίποτα που θέλω.             Ο χρυσ�
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:556 Source/stores.cpp:840
 msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "Ποιο αντικείμενο είναι για πούλημα;        Ο χρυσός σου: {:d}"
+msgstr "Ποιο αντικείμενο είναι για πούλημα;       Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:629
 msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "Δεν έχεις τίποτα για επιδιόρθωση.             Ο χρυσός σου: {:d}"
+msgstr "Δεν έχεις τίποτα για επιδιόρθωση.       Ο χρυσός σου: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:642
