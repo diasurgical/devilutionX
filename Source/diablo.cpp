@@ -1991,6 +1991,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitInv();
 		InitQuestText();
 		InitInfoBoxGfx();
+		InitStores();
 		InitAutomapOnce();
 		InitHelp();
 	}

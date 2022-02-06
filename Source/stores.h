@@ -101,8 +101,15 @@ extern int boylevel;
 extern Item boyitem;
 
 void AddStoreHoldRepair(Item *itm, int8_t i);
+
+/** Clears premium items sold by Griswold and Wirt. */
+void InitStores();
+
+/** Spawns items sold by vendors, including premium items sold by Griswold and Wirt. */
 void SetupTownStores();
+
 void FreeStoreMem();
+
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
 void DrawSLine(const Surface &out, int sy);
 void DrawSTextHelp();
