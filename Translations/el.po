@@ -4662,7 +4662,7 @@ msgstr "Μαγικός Ιπτάμενος Σύντροφος"
 #: Source/monstdat.cpp:66
 msgctxt "monster"
 msgid "Acid Beast"
-msgstr "Θηρίο με οξύ"
+msgstr "Όξινο Θηρίο"
 
 #: Source/monstdat.cpp:67
 msgctxt "monster"
@@ -4752,7 +4752,7 @@ msgstr "Άρχονας της Λάβας"
 #: Source/monstdat.cpp:84
 msgctxt "monster"
 msgid "Horned Demon"
-msgstr "Δαίμονας με Κέρατο"
+msgstr "Κερατάς Δαίμονας"
 
 #: Source/monstdat.cpp:85
 msgctxt "monster"
