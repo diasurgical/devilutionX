@@ -7493,23 +7493,23 @@ msgstr "Είμαστε σύμφωνοι;"
 
 #: Source/stores.cpp:979
 msgid "Are you sure you want to identify this item?"
-msgstr "Είσαι σίγουρος(η) ότι θες να ταυτοποιήσεις το αντικείμενο αυτό;"
+msgstr "Σίγουρα θες να ταυτοποιήσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:985
 msgid "Are you sure you want to buy this item?"
-msgstr "Είσαι σίγουρος(η) ότι θες να αγοράσεις το αντικείμενο αυτό;"
+msgstr "Σίγουρα θες να αγοράσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:988
 msgid "Are you sure you want to recharge this item?"
-msgstr "Είσαι σίγουρος(η) ότι θες να επαναφορτίσεις το αντικείμενο αυτό;"
+msgstr "Σίγουρα θες να επαναφορτίσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:992
 msgid "Are you sure you want to sell this item?"
-msgstr "Είσαι σίγουρος(η) ότι θες να πουλήσεις το αντικείμενο αυτό;"
+msgstr "Σίγουρα θες να πουλήσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:995
 msgid "Are you sure you want to repair this item?"
-msgstr "Είσαι σίγουρος(η) ότι θες να επιδιορθώσεις το αντικείμενο αυτό;"
+msgstr "Σίγουρα θες να επιδιορθώσεις το αντικείμενο αυτό;"
 
 #: Source/stores.cpp:1009 Source/towners.cpp:150
 msgid "Wirt the Peg-legged boy"
@@ -8961,7 +8961,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Cain
 #: Source/textdat.cpp:308
 msgid "Hello, my friend. Stay awhile and listen..."
-msgstr "Γειά σου, φίλε(η) μου. Ξαπόστασε για λίγο και άκου..."
+msgstr "Γειά σου, άνθρωπε μου. Ξαπόστασε για λίγο και άκου..."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:309
@@ -9129,7 +9129,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
 msgid "What ails you, my friend?"
-msgstr "Τι σε ταλαιπωρεί φίλε(η) μου;"
+msgstr "Τι σε ταλαιπωρεί άνθρωπε μου;"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:346
