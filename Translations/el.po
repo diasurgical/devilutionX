@@ -1278,32 +1278,28 @@ msgid "Stops walking and cancel pending actions."
 msgstr "Σταματά το περπάτημα και ακυρώνει δράσεις που υπολείπονται."
 
 #: Source/diablo.cpp:1480
-#, fuzzy
-#| msgid "lightning"
 msgid "Item highlighting"
-msgstr "της Βροντής"
+msgstr "Επισήμανση αντικειμένων"
 
 #: Source/diablo.cpp:1481
 msgid "Show/hide items on ground."
-msgstr ""
+msgstr "Εμφανίζει ή κρύβει τα αντικείμενα στο έδαφος."
 
 #: Source/diablo.cpp:1487
-#, fuzzy
-#| msgid "Resist lightning"
 msgid "Toggle item highlighting"
-msgstr "Αντοχή Κεραυνού"
+msgstr "Εναλλαγή επισήμανσης αντικείμενων"
 
 #: Source/diablo.cpp:1488
 msgid "Permanent show/hide items on ground."
-msgstr ""
+msgstr "Μόνιμη εμφάνιση/απόκρυψη αντικειμένων στο έδαφος."
 
 #: Source/diablo.cpp:1494
 msgid "Toggle automap"
-msgstr ""
+msgstr "Εναλλαγή αυτόματου χάρτη"
 
 #: Source/diablo.cpp:1495
 msgid "Toggles if automap is displayed."
-msgstr ""
+msgstr "Εναλλαγή εμφάνισης του αυτόματου χάρτη."
 
 #: Source/diablo.cpp:1504
 msgid "Open Inventory screen."
@@ -1342,16 +1338,12 @@ msgid "Use Quick Message in chat."
 msgstr "Χρήση για άμεσο μήνυμα στην συνομιλία."
 
 #: Source/diablo.cpp:1546
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide Info Screens"
-msgstr "Space: Κλείσιμο όλων των καρτελών"
+msgstr "Κλείσιμο των καρτελών πληροφορίας"
 
 #: Source/diablo.cpp:1547
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide all info screens."
-msgstr "Space: Κλείσιμο όλων των καρτελών"
+msgstr "Κλείσιμο όλων των καρτελών."
 
 #: Source/diablo.cpp:1566
 msgid "Zoom"
@@ -1362,16 +1354,12 @@ msgid "Zoom Game Screen."
 msgstr "Μεγεθύνει την προβολή του παιχνιδιού."
 
 #: Source/diablo.cpp:1577
-#, fuzzy
-#| msgid "Save Game"
 msgid "Pause Game"
-msgstr "Σώσιμο Παιχνιδιού"
+msgstr "Παύση Παιχνιδιού"
 
 #: Source/diablo.cpp:1578
-#, fuzzy
-#| msgid "Saves the game."
 msgid "Pauses the game."
-msgstr "Αποθηκεύει το παιχνίδι."
+msgstr "Σταματάει την δράση στο παιχνίδι."
 
 #: Source/diablo.cpp:1583
 msgid "Decrease Gamma"
@@ -1399,11 +1387,11 @@ msgstr "Ανοίγει την Καρτέλα Βοήθειας."
 
 #: Source/diablo.cpp:1607
 msgid "Screenshot"
-msgstr ""
+msgstr "Στιγμιότυπο οθόνης"
 
 #: Source/diablo.cpp:1608
 msgid "Takes a screenshot."
-msgstr ""
+msgstr "Λαμβάνει και αποθηκεύει την οθόνη σαν εικόνα."
 
 #: Source/diablo.cpp:1614
 msgid "Game info"
@@ -6381,19 +6369,19 @@ msgstr ""
 
 #: Source/options.cpp:768
 msgid "Show health values"
-msgstr ""
+msgstr "Εμφάνιση Αριθμού Ζωής"
 
 #: Source/options.cpp:768
 msgid "Displays current / max health value on health globe."
-msgstr ""
+msgstr "Δείχνει τον αριθμό των πόντων ζωής πάνω στην σφαίρα ζωής."
 
 #: Source/options.cpp:769
 msgid "Show mana values"
-msgstr ""
+msgstr "Εμφάνιση Αριθμού Μάνα"
 
 #: Source/options.cpp:769
 msgid "Displays current / max mana value on mana globe."
-msgstr ""
+msgstr "Δείχνει τον αριθμό των πόντων μάνα πάνω στην σφαίρα μάνα."
 
 #: Source/options.cpp:816
 msgid "Gameplay"
