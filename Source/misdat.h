@@ -159,7 +159,9 @@ struct MissileFileData {
 
 	[[nodiscard]] const byte *GetFrame(size_t i) const
 	{
-		return &animData[frameOffsets[i]];
+		// For a "null" missile, `frameOffsets[i]` is 0 and `animData` is nullptr
+		// `animData[frameOffsets[i]]` is UB, so we use get() instead.
+		return animData.get() + frameOffsets[i];
 	}
 
 	void FreeGFX()
