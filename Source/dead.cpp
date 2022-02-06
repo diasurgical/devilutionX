@@ -18,12 +18,10 @@ int8_t stonendx;
 namespace {
 void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 {
-	int i = 0;
 	const auto &animData = mon.GetAnimData(MonsterGraphic::Death);
-	for (const auto &celSprite : animData.CelSpritesForDirections)
-		corpse.data[i++] = celSprite->Data();
+	memcpy(&corpse.data[0], &animData.CelSpritesForDirections[0], sizeof(animData.CelSpritesForDirections[0]) * animData.CelSpritesForDirections.size());
 	corpse.frame = animData.Frames;
-	corpse.width = animData.CelSpritesForDirections[0]->Width();
+	corpse.width = animData.Width;
 }
 } // namespace
 

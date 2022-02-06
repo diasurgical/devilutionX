@@ -173,74 +173,74 @@ constexpr int ItemAnimWidth = 96;
 
 struct Item {
 	/** Randomly generated identifier */
-	int32_t _iSeed;
-	uint16_t _iCreateInfo;
-	enum ItemType _itype;
-	Point position;
-	bool _iAnimFlag;
+	int32_t _iSeed = 0;
+	uint16_t _iCreateInfo = 0;
+	enum ItemType _itype = ItemType::None;
+	Point position = { 0, 0 };
+	bool _iAnimFlag = false;
 	/*
 	 * @brief Contains Information for current Animation
 	 */
 	AnimationInfo AnimInfo;
-	bool _iDelFlag; // set when item is flagged for deletion, deprecated in 1.02
-	uint8_t _iSelFlag;
-	bool _iPostDraw;
-	bool _iIdentified;
-	item_quality _iMagical;
-	char _iName[64];
-	char _iIName[64];
-	enum item_equip_type _iLoc;
-	enum item_class _iClass;
-	uint8_t _iCurs;
-	int _ivalue;
-	int _iIvalue;
-	uint8_t _iMinDam;
-	uint8_t _iMaxDam;
-	int16_t _iAC;
-	uint32_t _iFlags; // item_special_effect
-	enum item_misc_id _iMiscId;
-	enum spell_id _iSpell;
-	int _iCharges;
-	int _iMaxCharges;
-	int _iDurability;
-	int _iMaxDur;
-	int16_t _iPLDam;
-	int16_t _iPLToHit;
-	int16_t _iPLAC;
-	int16_t _iPLStr;
-	int16_t _iPLMag;
-	int16_t _iPLDex;
-	int16_t _iPLVit;
-	int16_t _iPLFR;
-	int16_t _iPLLR;
-	int16_t _iPLMR;
-	int16_t _iPLMana;
-	int16_t _iPLHP;
-	int16_t _iPLDamMod;
-	int16_t _iPLGetHit;
-	int16_t _iPLLight;
-	int8_t _iSplLvlAdd;
-	bool _iRequest;
+	bool _iDelFlag = false; // set when item is flagged for deletion, deprecated in 1.02
+	uint8_t _iSelFlag = 0;
+	bool _iPostDraw = false;
+	bool _iIdentified = false;
+	item_quality _iMagical = ITEM_QUALITY_NORMAL;
+	char _iName[64] = {};
+	char _iIName[64] = {};
+	enum item_equip_type _iLoc = ILOC_NONE;
+	enum item_class _iClass = ICLASS_NONE;
+	uint8_t _iCurs = 0;
+	int _ivalue = 0;
+	int _iIvalue = 0;
+	uint8_t _iMinDam = 0;
+	uint8_t _iMaxDam = 0;
+	int16_t _iAC = 0;
+	uint32_t _iFlags = 0; // item_special_effect
+	enum item_misc_id _iMiscId = IMISC_NONE;
+	enum spell_id _iSpell = SPL_NULL;
+	int _iCharges = 0;
+	int _iMaxCharges = 0;
+	int _iDurability = 0;
+	int _iMaxDur = 0;
+	int16_t _iPLDam = 0;
+	int16_t _iPLToHit = 0;
+	int16_t _iPLAC = 0;
+	int16_t _iPLStr = 0;
+	int16_t _iPLMag = 0;
+	int16_t _iPLDex = 0;
+	int16_t _iPLVit = 0;
+	int16_t _iPLFR = 0;
+	int16_t _iPLLR = 0;
+	int16_t _iPLMR = 0;
+	int16_t _iPLMana = 0;
+	int16_t _iPLHP = 0;
+	int16_t _iPLDamMod = 0;
+	int16_t _iPLGetHit = 0;
+	int16_t _iPLLight = 0;
+	int8_t _iSplLvlAdd = 0;
+	bool _iRequest = false;
 	/** Unique item ID, used as an index into UniqueItemList */
-	int _iUid;
-	int16_t _iFMinDam;
-	int16_t _iFMaxDam;
-	int16_t _iLMinDam;
-	int16_t _iLMaxDam;
-	int16_t _iPLEnAc;
-	enum item_effect_type _iPrePower;
-	enum item_effect_type _iSufPower;
-	int _iVAdd1;
-	int _iVMult1;
-	int _iVAdd2;
-	int _iVMult2;
-	int8_t _iMinStr;
-	uint8_t _iMinMag;
-	int8_t _iMinDex;
-	bool _iStatFlag;
-	_item_indexes IDidx;
-	uint32_t dwBuff;
-	uint32_t _iDamAcFlags;
+	int _iUid = 0;
+	int16_t _iFMinDam = 0;
+	int16_t _iFMaxDam = 0;
+	int16_t _iLMinDam = 0;
+	int16_t _iLMaxDam = 0;
+	int16_t _iPLEnAc = 0;
+	enum item_effect_type _iPrePower = IPL_INVALID;
+	enum item_effect_type _iSufPower = IPL_INVALID;
+	int _iVAdd1 = 0;
+	int _iVMult1 = 0;
+	int _iVAdd2 = 0;
+	int _iVMult2 = 0;
+	int8_t _iMinStr = 0;
+	uint8_t _iMinMag = 0;
+	int8_t _iMinDex = 0;
+	bool _iStatFlag = false;
+	_item_indexes IDidx = IDI_NONE;
+	uint32_t dwBuff = 0;
+	uint32_t _iDamAcFlags = 0;
 
 	/**
 	 * @brief Checks whether this item is empty or not.

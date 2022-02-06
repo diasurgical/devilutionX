@@ -61,7 +61,7 @@ inline bool IsItemSprite(int cursId)
 void CelDrawCursor(const Surface &out, Point position, int cursId);
 
 /** Returns the sprite for the given inventory index. */
-const CelSprite &GetInvItemSprite(int i);
+const OwnedCelSprite &GetInvItemSprite(int i);
 
 /** Returns the CEL frame index for the given inventory index. */
 int GetInvItemFrame(int i);

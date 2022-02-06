@@ -27,8 +27,8 @@
 namespace devilution {
 namespace {
 /** Cursor images CEL */
-std::optional<CelSprite> pCursCels;
-std::optional<CelSprite> pCursCels2;
+std::optional<OwnedCelSprite> pCursCels;
+std::optional<OwnedCelSprite> pCursCels2;
 constexpr int InvItems1Size = 180;
 
 /** Maps from objcurs.cel frame number to frame width. */
@@ -143,7 +143,7 @@ void FreeCursor()
 	ClearCursor();
 }
 
-const CelSprite &GetInvItemSprite(int i)
+const OwnedCelSprite &GetInvItemSprite(int i)
 {
 	return i < InvItems1Size ? *pCursCels : *pCursCels2;
 }

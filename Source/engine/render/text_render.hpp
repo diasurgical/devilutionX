@@ -123,7 +123,7 @@ private:
  *
  * Also used in the stores and the quest log.
  */
-extern std::optional<CelSprite> pSPentSpn2Cels;
+extern std::optional<OwnedCelSprite> pSPentSpn2Cels;
 
 void LoadSmallSelectionSpinner();
 

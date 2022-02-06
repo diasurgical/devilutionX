@@ -190,7 +190,7 @@ struct PlayerAnimationData {
 	 */
 	std::unique_ptr<byte[]> RawData;
 
-	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] std::optional<CelSprite> GetCelSpritesForDirection(Direction direction) const
 	{
 		return CelSpritesForDirections[static_cast<size_t>(direction)];
 	}
@@ -220,9 +220,9 @@ struct Player {
 	/**
 	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
 	 */
-	CelSprite *pPreviewCelSprite;
+	std::optional<CelSprite> previewCelSprite;
 	/**
-	 * @brief Contains the progress to next game tick when pPreviewCelSprite was set
+	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */
 	float progressToNextGameTickWhenPreviewWasSet;
 	int _plid;
@@ -668,7 +668,7 @@ struct Player {
 	}
 
 	/**
-	 * @brief Updates pPreviewCelSprite according to new requested command
+	 * @brief Updates previewCelSprite according to new requested command
 	 * @param cmdId What command is requested
 	 * @param point Point for the command
 	 * @param wParam1 First Parameter

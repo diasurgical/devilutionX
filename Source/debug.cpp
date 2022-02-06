@@ -32,7 +32,7 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pSquareCel;
+std::optional<OwnedCelSprite> pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
 bool DebugVision = false;

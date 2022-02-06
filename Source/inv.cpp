@@ -134,7 +134,7 @@ const Point InvRect[] = {
 
 namespace {
 
-std::optional<CelSprite> pInvCels;
+std::optional<OwnedCelSprite> pInvCels;
 
 void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 {

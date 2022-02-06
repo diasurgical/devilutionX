@@ -16,7 +16,7 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pChrButtons;
+std::optional<OwnedCelSprite> pChrButtons;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {

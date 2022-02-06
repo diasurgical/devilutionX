@@ -2270,9 +2270,9 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	auto &celSprites = AnimationData[static_cast<size_t>(*graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
-	if (celSprites && pPreviewCelSprite != &*celSprites) {
-		pPreviewCelSprite = &*celSprites;
+	std::optional<CelSprite> celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
+	if (celSprites && previewCelSprite != celSprites) {
+		previewCelSprite = celSprites;
 		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
 	}
 }
@@ -2401,7 +2401,7 @@ void InitPlayerGFX(Player &player)
 
 void ResetPlayerGFX(Player &player)
 {
-	player.AnimInfo.pCelSprite = nullptr;
+	player.AnimInfo.celSprite = std::nullopt;
 	for (auto &animData : player.AnimationData) {
 		for (auto &celSprite : animData.CelSpritesForDirections)
 			celSprite = std::nullopt;
@@ -2413,14 +2413,12 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numbe
 {
 	LoadPlrGFX(player, graphic);
 
-	auto &celSprite = player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
-
-	CelSprite *pCelSprite = celSprite ? &*celSprite : nullptr;
+	std::optional<CelSprite> celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
 
 	float previewShownGameTickFragments = 0.F;
-	if (pCelSprite == player.pPreviewCelSprite && !player.IsWalking())
+	if (celSprite == player.previewCelSprite && !player.IsWalking())
 		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
-	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
+	player.AnimInfo.SetNewAnimation(celSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
 
 void SetPlrAnims(Player &player)
@@ -3488,7 +3486,7 @@ void ProcessPlayers()
 				CheckNewPath(pnum, tplayer);
 			} while (tplayer);
 
-			player.pPreviewCelSprite = nullptr;
+			player.previewCelSprite = std::nullopt;
 			player.AnimInfo.ProcessAnimation();
 		}
 	}
@@ -3711,7 +3709,7 @@ void SyncPlrAnim(int pnum)
 		app_fatal("SyncPlrAnim");
 	}
 
-	player.AnimInfo.pCelSprite = &*player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(player._pdir)];
+	player.AnimInfo.celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(player._pdir);
 	// Ensure ScrollInfo is initialized correctly
 	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);
 }

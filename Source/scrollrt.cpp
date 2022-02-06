@@ -311,8 +311,8 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 		return;
 	}
 	int nCel = missile._miAnimFrame;
-	const int frames = LoadLE32(missile._miAnimData);
-	if (nCel < 1 || frames > 50 || nCel > frames) {
+	const uint32_t frames = LoadLE32(missile._miAnimData);
+	if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
 		return;
 	}
@@ -351,7 +351,7 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
-	if (monster.AnimInfo.pCelSprite == nullptr) {
+	if (!monster.AnimInfo.celSprite) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
 		return;
 	}
@@ -418,7 +418,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 	};
 
 	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
-	const uint32_t frames = LoadLE32(monster.AnimInfo.pCelSprite->Data());
+	const uint32_t frames = LoadLE32(monster.AnimInfo.celSprite->Data());
 	if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
@@ -430,7 +430,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		return;
 	}
 
-	const auto &cel = *monster.AnimInfo.pCelSprite;
+	const auto &cel = *monster.AnimInfo.celSprite;
 
 	if (!IsTileLit(tilePosition)) {
 		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, GetInfravisionTRN());
@@ -454,7 +454,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, Point position, bool lighting)
 {
-	position.x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2;
+	position.x += CalculateWidth2(Players[pnum].AnimInfo.celSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2;
 
 	int width = MissileSpriteData[missileGraphicId].animWidth;
 	const byte *pCelBuff = MissileSpriteData[missileGraphicId].GetFirstFrame();
@@ -508,22 +508,22 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 
 	auto &player = Players[pnum];
 
-	const auto *pCelSprite = player.AnimInfo.pCelSprite;
+	std::optional<CelSprite> sprite = player.AnimInfo.celSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
 
-	if (player.pPreviewCelSprite != nullptr) {
-		pCelSprite = player.pPreviewCelSprite;
+	if (player.previewCelSprite) {
+		sprite = player.previewCelSprite;
 		nCel = 1;
 	}
 
-	if (pCelSprite == nullptr) {
+	if (!sprite) {
 		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, player._pName);
 		return;
 	}
 
-	targetBufferPosition -= { CalculateWidth2(pCelSprite == nullptr ? 96 : pCelSprite->Width()), 0 };
+	targetBufferPosition -= { CalculateWidth2(sprite ? sprite->Width() : 96), 0 };
 
-	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(pCelSprite->Data()));
+	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(sprite->Data()));
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (player._pmode <= PM_QUIT)
@@ -540,16 +540,16 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	}
 
 	if (pnum == pcursplr)
-		Cl2DrawOutline(out, 165, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
+		Cl2DrawOutline(out, 165, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel);
 
 	if (pnum == MyPlayerId) {
-		Cl2Draw(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
+		Cl2Draw(out, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel);
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
 	}
 
 	if (!IsTileLit(tilePosition) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
-		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel, GetInfravisionTRN());
+		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel, GetInfravisionTRN());
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
 	}
@@ -560,7 +560,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	else
 		LightTableIndex -= 5;
 
-	Cl2DrawLight(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
+	Cl2DrawLight(out, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel);
 	DrawPlayerIcons(out, pnum, targetBufferPosition, false);
 
 	LightTableIndex = l;
@@ -580,7 +580,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 		auto &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
-			const Displacement center { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()), 0 };
+			const Displacement center { CalculateWidth2(player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96), 0 };
 			const Point playerRenderPosition { targetBufferPosition + player.position.offset - center };
 			DrawPlayer(out, i, tilePosition, playerRenderPosition);
 		}
@@ -712,15 +712,15 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	if (item._iPostDraw == pre)
 		return;
 
-	const auto *cel = item.AnimInfo.pCelSprite;
-	if (cel == nullptr) {
+	std::optional<CelSprite> cel = item.AnimInfo.celSprite;
+	if (!cel) {
 		Log("Draw Item \"{}\" 1: NULL CelSprite", item._iIName);
 		return;
 	}
 
 	int nCel = item.AnimInfo.GetFrameToUseForRendering();
-	int frames = SDL_SwapLE32(*(DWORD *)cel->Data());
-	if (nCel < 1 || frames > 50 || nCel > frames) {
+	const uint32_t frames = LoadLE32(cel->Data());
+	if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
 		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", item._iIName, nCel, frames, ItemTypeToString(item._itype));
 		return;
 	}
@@ -749,11 +749,12 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		auto &towner = Towners[mi];
 		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
 		const Point position { px, targetBufferPosition.y };
+		CelSprite sprite { towner._tAnimData, towner._tAnimWidth };
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
+			CelBlitOutlineTo(out, 166, position, sprite, towner._tAnimFrame);
 		}
 		assert(towner._tAnimData);
-		CelClippedDrawTo(out, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
+		CelClippedDrawTo(out, position, sprite, towner._tAnimFrame);
 		return;
 	}
 
@@ -775,7 +776,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	const CelSprite &cel = *monster.AnimInfo.pCelSprite;
+	CelSprite cel = *monster.AnimInfo.celSprite;
 
 	Displacement offset = monster.position.offset;
 	if (monster.IsWalking()) {
