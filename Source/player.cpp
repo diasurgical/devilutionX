@@ -165,33 +165,33 @@ struct DirectionSettings {
 };
 // clang-format off
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
-const int PlrGFXAnimLens[enum_size<HeroClass>::value][9] = {
-	{ 10,  8,  2, 20, 20,  6, 20,  8, 14 },
-	{  8,  8,  4, 20, 16,  7, 20,  8, 12 },
-	{  8,  8,  6, 20, 12,  8, 20,  8,  8 },
-	{  8,  8,  3, 20, 18,  6, 20,  8, 13 },
-	{  8,  8,  4, 20, 16,  7, 20,  8, 12 },
-	{ 10,  8,  2, 20, 20,  6, 20,  8, 14 },
+const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
+	{ 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
+	{  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
+	{  8, 16,  8,  6, 20, 12,  8, 20,  8, 12,  8 },
+	{  8, 16,  8,  3, 20, 18,  6, 20,  8, 12, 13 },
+	{  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
+	{ 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
 };
 /** Specifies the frame of each animation for which an action is triggered per weapon type, for each player class. */
 const int PlrGFXAFrames[enum_size<HeroClass>::value][10] = {
-	// Default, Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
-	{  16,      16,      16,            16,    16,          16,  20,  16,   16,         16 },
-	{  18,      18,      18,            18,    18,          12,  22,  18,   18,         16 },
-	{  16,      20,      16,            16,    16,          20,  24,  16,   16,         16 },
-	{  16,      12,      12,            16,    16,          20,  23,  16,   16,         13 },
-	{  18,      18,      18,            18,    18,          12,  22,  18,   18,         16 },
-	{  16,      16,      16,            16,    16,          16,  20,  16,   16,         16 },
+	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
+	{  16,      16,            16,    16,          16,  20,  16,   16,         16 },
+	{  18,      18,            18,    18,          12,  22,  18,   18,         16 },
+	{  20,      16,            16,    16,          20,  24,  16,   16,         16 },
+	{  12,      12,            16,    16,          20,  23,  16,   16,         13 },
+	{  18,      18,            18,    18,          12,  22,  18,   18,         16 },
+	{  16,      16,            16,    16,          16,  20,  16,   16,         16 },
 };
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
 const int PlrGFXAFNum[enum_size<HeroClass>::value][10] = {
-	// Default, Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
-	{   9,       9,       9,             9,     9,          11,  10,   9,    9,         11 },
-	{  10,      10,      10,            10,    10,           7,  13,  10,   10,         11 },
-	{  12,      12,       9,            12,    12,          16,  16,  12,   12,         12 },
-	{  12,       7,       7,            12,    12,          14,  14,  12,   12,          8 },
-	{  10,      10,      10,            10,    10,          11,  13,  10,   10,         11 },
-	{   9,       9,       9,             9,     9,          11,   8,   8,    8,         11 },
+	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
+	{   9,       9,             9,     9,          11,  10,   9,    9,         11 },
+	{  10,      10,            10,    10,           7,  13,  10,   10,         11 },
+	{  12,       9,            12,    12,          16,  16,  12,   12,         12 },
+	{   7,       7,            12,    12,          14,  14,  12,   12,          8 },
+	{  10,      10,            10,    10,          11,  13,  10,   10,         11 },
+	{   9,       9,             9,     9,          11,   8,   8,    8,         11 },
 };
 // clang-format on
 /** Maps from player class to player velocity. */
@@ -2447,67 +2447,26 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numbe
 void SetPlrAnims(Player &player)
 {
 	HeroClass pc = player._pClass;
+	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
 
 	if (leveltype == DTYPE_TOWN) {
-		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][6];
-		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][7];
-		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][3];
-		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
+		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][7];
+		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][8];
+		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
+		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
 	} else {
 		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][0];
-		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][1];
-		player._pHFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
-		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
-		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][3];
-		player._pBFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][2];
+		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][2];
+		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];
+		player._pHFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][6];
+		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
+		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
+		player._pBFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][3];
+		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];
 	}
-	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][8];
+	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
-	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
 	int armorGraphicIndex = player._pgfxnum & ~0xF;
-
-	switch (gn) {
-	case PlayerWeaponGraphic::Unarmed:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][1];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][1];
-		break;
-	case PlayerWeaponGraphic::UnarmedShield:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][2];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][2];
-		break;
-	case PlayerWeaponGraphic::Sword:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][3];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][3];
-		break;
-	case PlayerWeaponGraphic::SwordShield:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][4];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][4];
-		break;
-	case PlayerWeaponGraphic::Bow:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][5];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][5];
-		break;
-	case PlayerWeaponGraphic::Axe:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][6];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][6];
-		break;
-	case PlayerWeaponGraphic::Mace:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][7];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][7];
-		break;
-	case PlayerWeaponGraphic::MaceShield:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][8];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][8];
-		break;
-	case PlayerWeaponGraphic::Staff:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][9];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][9];
-		break;
-	default:
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][0];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][0];
-		break;
-	}
 
 	if (pc == HeroClass::Warrior || pc == HeroClass::Barbarian) {
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
