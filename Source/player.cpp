@@ -2504,9 +2504,6 @@ void SetPlrAnims(Player &player)
 	player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][0];
 	player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][0];
 
-	if (leveltype == DTYPE_TOWN)
-		player._pAFrames = 0;
-
 	if (pc == HeroClass::Warrior || pc == HeroClass::Barbarian) {
 		if (gn == PlayerWeaponGraphic::Bow && leveltype != DTYPE_TOWN)
 			player._pNFrames = 8;
