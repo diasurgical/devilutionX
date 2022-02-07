@@ -177,7 +177,7 @@ const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 // clang-format on
 
 // clang-format off
-/** Specifies the frame of each animation for which an action is triggered per weapon type, for each player class. */
+/** Specifies the frame of each animation for which an attack is triggered per weapon type, for each player class. */
 const int PlrGFXAFrames[enum_size<HeroClass>::value][10] = {
 	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
 	{  16,      16,            16,    16,          16,  20,  16,   16,         16 },
@@ -190,7 +190,7 @@ const int PlrGFXAFrames[enum_size<HeroClass>::value][10] = {
 // clang-format on
 
 // clang-format off
-/** Specifies the frame of each animation for which an action is triggered, for each player class. */
+/** Specifies the frame of each animation for which an attack is completed per weapon type, for each player class. */
 const int PlrGFXAFNum[enum_size<HeroClass>::value][10] = {
 	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
 	{   9,       9,             9,     9,          11,  10,   9,    9,         11 },
