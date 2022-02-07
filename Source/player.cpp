@@ -163,6 +163,7 @@ struct DirectionSettings {
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(int, const DirectionSettings &);
 };
+
 // clang-format off
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
 const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
@@ -173,6 +174,9 @@ const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
 	{ 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
 };
+// clang-format on
+
+// clang-format off
 /** Specifies the frame of each animation for which an action is triggered per weapon type, for each player class. */
 const int PlrGFXAFrames[enum_size<HeroClass>::value][10] = {
 	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
@@ -183,6 +187,9 @@ const int PlrGFXAFrames[enum_size<HeroClass>::value][10] = {
 	{  18,      18,            18,    18,          12,  22,  18,   18,         16 },
 	{  16,      16,            16,    16,          16,  20,  16,   16,         16 },
 };
+// clang-format on
+
+// clang-format off
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
 const int PlrGFXAFNum[enum_size<HeroClass>::value][10] = {
 	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
@@ -194,6 +201,7 @@ const int PlrGFXAFNum[enum_size<HeroClass>::value][10] = {
 	{   9,       9,             9,     9,          11,   8,   8,    8,         11 },
 };
 // clang-format on
+
 /** Maps from player class to player velocity. */
 int PWVel[enum_size<HeroClass>::value][3] = {
 	{ 2048, 1024, 512 },
