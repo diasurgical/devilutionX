@@ -175,11 +175,12 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.AnimInfo.CurrentFrame = GenerateRnd(monster.AnimInfo.NumberOfFrames - 1) + 1;
 
 	monster.mLevel = monster.MData->mLevel;
-	monster._mmaxhp = (monster.MType->mMinHP + GenerateRnd(monster.MType->mMaxHP - monster.MType->mMinHP + 1)) << 6;
+	int maxhp = monster.MData->mMinHP + GenerateRnd(monster.MData->mMaxHP - monster.MData->mMinHP + 1);
 	if (monster.MType->mtype == MT_DIABLO && !gbIsHellfire) {
-		monster._mmaxhp /= 2;
+		maxhp /= 2;
 		monster.mLevel -= 15;
 	}
+	monster._mmaxhp = maxhp << 6;
 
 	if (!gbIsMultiplayer)
 		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
@@ -3736,13 +3737,6 @@ void InitMonsterGFX(int monst)
 		}
 	}
 
-	monster.mMinHP = monsterData.mMinHP;
-	monster.mMaxHP = monsterData.mMaxHP;
-	if (!gbIsHellfire && mtype == MT_DIABLO) {
-		monster.mMinHP -= 2000;
-		monster.mMaxHP -= 2000;
-	}
-	monster.mAFNum = monsterData.mAFNum;
 	monster.MData = &monsterData;
 
 	if (monsterData.has_trans) {
@@ -4633,8 +4627,8 @@ void PrintMonstHistory(int mt)
 		int minHP = MonstersData[mt].mMinHP;
 		int maxHP = MonstersData[mt].mMaxHP;
 		if (!gbIsHellfire && mt == MT_DIABLO) {
-			minHP -= 2000;
-			maxHP -= 2000;
+			minHP /= 2;
+			maxHP /= 2;
 		}
 		if (!gbIsMultiplayer) {
 			minHP /= 2;
