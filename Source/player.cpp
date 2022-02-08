@@ -167,12 +167,12 @@ struct DirectionSettings {
 const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	// clang-format off
                 // NFrames, AFrames, WFrames, BFrames, DFrames, SFrames, HFrames, NFrames (Town), WFrames (Town), AFNum, SFNum
-/* Warrior   */ {  10,      16,       8,       2,      20,      20,       6,      20,              8,               9,   14 },
-/* Rogue     */ {   8,      18,       8,       4,      20,      16,       7,      20,              8,              10,   12 },
-/* Sorcerer  */ {   8,      16,       8,       6,      20,      12,       8,      20,              8,              12,    8 },
-/* Monk      */ {   8,      16,       8,       3,      20,      18,       6,      20,              8,              12,   13 },
-/* Bard      */ {   8,      18,       8,       4,      20,      16,       7,      20,              8,              10,   12 },
-/* Barbarian */ {  10,      16,       8,       2,      20,      20,       6,      20,              8,               9,   14 },
+/* Warrior   */ {  10,      16,       8,       2,      20,      20,       6,      20,              8,              9,    14 },
+/* Rogue     */ {   8,      18,       8,       4,      20,      16,       7,      20,              8,             10,    12 },
+/* Sorcerer  */ {   8,      16,       8,       6,      20,      12,       8,      20,              8,             12,     8 },
+/* Monk      */ {   8,      16,       8,       3,      20,      18,       6,      20,              8,             12,    13 },
+/* Bard      */ {   8,      18,       8,       4,      20,      16,       7,      20,              8,             10,    12 },
+/* Barbarian */ {  10,      16,       8,       2,      20,      20,       6,      20,              8,              9,    14 },
 	// clang-format on
 };
 /** Specifies the frame of each animation for which an attack is triggered per weapon type, for each player class. */
