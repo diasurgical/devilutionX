@@ -168,17 +168,10 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(monster.AnimInfo.TicksPerFrame - 1);
 	monster.AnimInfo.CurrentFrame = GenerateRnd(monster.AnimInfo.NumberOfFrames - 1) + 1;
 
-	monster.mLevel = monster.MData->mLevel;
-	monster._mmaxhp = (monster.MType->mMinHP + GenerateRnd(monster.MType->mMaxHP - monster.MType->mMinHP + 1)) << 6;
-	if (monster.MType->mtype == MT_DIABLO && !gbIsHellfire) {
-		monster._mmaxhp /= 2;
-		monster.mLevel -= 15;
-	}
+	monster.mLevel = monster.MType->mLevel;
+	
+	monster._mhitpoints = (monster.MType->mMinHP + GenerateRnd(monster.MType->mMaxHP - monster.MType->mMinHP + 1)) << 6;
 
-	if (!gbIsMultiplayer)
-		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
-
-	monster._mhitpoints = monster._mmaxhp;
 	monster._mAi = monster.MData->mAi;
 	monster._mint = monster.MData->mInt;
 	monster._mgoal = MGOAL_NORMAL;
@@ -193,15 +186,15 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster._mRndSeed = AdvanceRndSeed();
 	monster._mAISeed = AdvanceRndSeed();
 	monster.mWhoHit = 0;
-	monster.mExp = monster.MData->mExp;
-	monster.mHit = monster.MData->mHit;
-	monster.mMinDamage = monster.MData->mMinDamage;
-	monster.mMaxDamage = monster.MData->mMaxDamage;
-	monster.mHit2 = monster.MData->mHit2;
-	monster.mMinDamage2 = monster.MData->mMinDamage2;
-	monster.mMaxDamage2 = monster.MData->mMaxDamage2;
-	monster.mArmorClass = monster.MData->mArmorClass;
-	monster.mMagicRes = monster.MData->mMagicRes;
+	monster.mExp = monster.MType->mExp;
+	monster.mHit = monster.MType->mHit;
+	monster.mMinDamage = monster.MType->mMinDamage;
+	monster.mMaxDamage = monster.MType->mMaxDamage;
+	monster.mHit2 = monster.MType->mHit2;
+	monster.mMinDamage2 = monster.MType->mMinDamage2;
+	monster.mMaxDamage2 = monster.MType->mMaxDamage2;
+	monster.mArmorClass = monster.MType->mArmorClass;
+	monster.mMagicRes = monster.MType->mMagicRes;
 	monster.leader = 0;
 	monster.leaderRelation = LeaderRelation::None;
 	monster._mFlags = monster.MData->mFlags;
@@ -212,41 +205,6 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.AnimInfo.CurrentFrame = 1;
 		monster._mFlags |= MFLAG_ALLOW_SPECIAL;
 		monster._mmode = MonsterMode::SpecialMeleeAttack;
-	}
-
-	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster._mmaxhp = 3 * monster._mmaxhp;
-		if (gbIsHellfire)
-			monster._mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
-		else
-			monster._mmaxhp += 64;
-		monster._mhitpoints = monster._mmaxhp;
-		monster.mLevel += 15;
-		monster.mExp = 2 * (monster.mExp + 1000);
-		monster.mHit += NIGHTMARE_TO_HIT_BONUS;
-		monster.mMinDamage = 2 * (monster.mMinDamage + 2);
-		monster.mMaxDamage = 2 * (monster.mMaxDamage + 2);
-		monster.mHit2 += NIGHTMARE_TO_HIT_BONUS;
-		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
-		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
-		monster.mArmorClass += NIGHTMARE_AC_BONUS;
-	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-		monster._mmaxhp = 4 * monster._mmaxhp;
-		if (gbIsHellfire)
-			monster._mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
-		else
-			monster._mmaxhp += 192;
-		monster._mhitpoints = monster._mmaxhp;
-		monster.mLevel += 30;
-		monster.mExp = 4 * (monster.mExp + 1000);
-		monster.mHit += HELL_TO_HIT_BONUS;
-		monster.mMinDamage = 4 * monster.mMinDamage + 6;
-		monster.mMaxDamage = 4 * monster.mMaxDamage + 6;
-		monster.mHit2 += HELL_TO_HIT_BONUS;
-		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
-		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
-		monster.mArmorClass += HELL_AC_BONUS;
-		monster.mMagicRes = monster.MData->mMagicRes2;
 	}
 }
 
@@ -602,6 +560,7 @@ int AddMonsterType(_monster_id type, placeflag placeflag)
 		LevelMonsterTypeCount++;
 		LevelMonsterTypes[i].mtype = type;
 		monstimgtot += MonstersData[type].mImage;
+		InitMonsterType(i);
 		InitMonsterGFX(i);
 		InitMonsterSND(i);
 	}
@@ -3691,6 +3650,76 @@ void GetLevelMTypes()
 	}
 }
 
+void InitMonsterType(int monst)
+{
+	int mtype = LevelMonsterTypes[monst].mtype;
+	LevelMonsterTypes[monst].MData = &MonstersData[mtype];
+	LevelMonsterTypes[monst].mMinHP = MonstersData[mtype].mMinHP;
+	LevelMonsterTypes[monst].mMaxHP = MonstersData[mtype].mMaxHP;
+	if (!gbIsHellfire && mtype == MT_DIABLO) {
+		LevelMonsterTypes[monst].mMinHP /= 2;
+		LevelMonsterTypes[monst].mMaxHP /= 2;
+		LevelMonsterTypes[monst].mLevel -= 15;
+	}
+	
+	if (!gbIsMultiplayer)
+		LevelMonsterTypes[monst].mMinHP = std::max(LevelMonsterTypes[monst].mMinHP / 2, 1);
+		LevelMonsterTypes[monst].mMinHP = std::max(LevelMonsterTypes[monst].mMaxHP / 2, 1);
+
+
+		switch (sgGameInitInfo.nDifficulty) {
+	    case DIFF_NIGHTMARE:
+		    int hp_modifier;
+			if (gbIsHellfire)
+			    hp_modifier = gbIsMultiplayer ? 100 : 50;
+		    else
+			    hp_modifier = 1;
+		    LevelMonsterTypes[monst].mMinHP = 3 * LevelMonsterTypes[monst].mMinHP+ hp_modifier;
+		    LevelMonsterTypes[monst].mMaxHP = 3 * LevelMonsterTypes[monst].mMaxHP + hp_modifier;
+
+			LevelMonsterTypes[monst].mExp = 2*(MonstersData[mtype].mExp+1000);
+		    LevelMonsterTypes[monst].mHit = MonstersData[mtype].mHit+NIGHTMARE_TO_HIT_BONUS;
+		    LevelMonsterTypes[monst].mMinDamage = 2*(MonstersData[mtype].mMinDamage+2);
+		    LevelMonsterTypes[monst].mMaxDamage = 2*(MonstersData[mtype].mMaxDamage+2);
+		    LevelMonsterTypes[monst].mHit2 = MonstersData[mtype].mHit2+NIGHTMARE_TO_HIT_BONUS;
+		    LevelMonsterTypes[monst].mMinDamage2 = 2*(MonstersData[mtype].mMinDamage2+2);
+		    LevelMonsterTypes[monst].mMaxDamage2 = 2*(MonstersData[mtype].mMaxDamage2+2);
+		    LevelMonsterTypes[monst].mArmorClass = MonstersData[mtype].mArmorClass+NIGHTMARE_AC_BONUS;
+		    break;
+
+	    case DIFF_HELL:
+		    int hp_modifier;
+		    if (gbIsHellfire)
+			    hp_modifier = gbIsMultiplayer ? 200 : 100;
+		    else
+			    hp_modifier = 3;
+		    LevelMonsterTypes[monst].mMinHP = 4 * LevelMonsterTypes[monst].mMinHP + hp_modifier;
+		    LevelMonsterTypes[monst].mMaxHP = 4 * LevelMonsterTypes[monst].mMaxHP + hp_modifier;
+
+		    LevelMonsterTypes[monst].mExp = 4 * (MonstersData[mtype].mExp + 1000);
+		    LevelMonsterTypes[monst].mHit = MonstersData[mtype].mHit + HELL_TO_HIT_BONUS;
+		    LevelMonsterTypes[monst].mMinDamage = 4 * (MonstersData[mtype].mMinDamage + 6);
+		    LevelMonsterTypes[monst].mMaxDamage = 4 * (MonstersData[mtype].mMaxDamage + 6);
+		    LevelMonsterTypes[monst].mHit2 = MonstersData[mtype].mHit2 + HELL_TO_HIT_BONUS;
+		    LevelMonsterTypes[monst].mMinDamage2 = 4 * (MonstersData[mtype].mMinDamage2 + 6);
+		    LevelMonsterTypes[monst].mMaxDamage2 = 4 * (MonstersData[mtype].mMaxDamage2 + 6);
+		    LevelMonsterTypes[monst].mArmorClass = MonstersData[mtype].mArmorClass + HELL_AC_BONUS;
+		    LevelMonsterTypes[monst].mMagicRes = MonstersData[mtype].mMagicRes2;
+		    break;
+	    default:
+		    LevelMonsterTypes[monst].mExp = MonstersData[mtype].mExp;
+		    LevelMonsterTypes[monst].mHit = MonstersData[mtype].mHit;
+		    LevelMonsterTypes[monst].mMinDamage = MonstersData[mtype].mMinDamage;
+		    LevelMonsterTypes[monst].mMaxDamage = MonstersData[mtype].mMaxDamage;
+		    LevelMonsterTypes[monst].mHit2 = MonstersData[mtype].mHit2;
+		    LevelMonsterTypes[monst].mMinDamage2 = MonstersData[mtype].mMinDamage2;
+		    LevelMonsterTypes[monst].mMaxDamage2 = MonstersData[mtype].mMaxDamage2;
+		    LevelMonsterTypes[monst].mArmorClass = MonstersData[mtype].mArmorClass;
+		    LevelMonsterTypes[monst].mMagicRes = MonstersData[mtype].mMagicRes;
+		    break;
+	}
+}
+
 void InitMonsterGFX(int monst)
 {
 	int mtype = LevelMonsterTypes[monst].mtype;
@@ -3726,14 +3755,8 @@ void InitMonsterGFX(int monst)
 		LevelMonsterTypes[monst].Anims[anim].Rate = MonstersData[mtype].Rate[anim];
 	}
 
-	LevelMonsterTypes[monst].mMinHP = MonstersData[mtype].mMinHP;
-	LevelMonsterTypes[monst].mMaxHP = MonstersData[mtype].mMaxHP;
-	if (!gbIsHellfire && mtype == MT_DIABLO) {
-		LevelMonsterTypes[monst].mMinHP -= 2000;
-		LevelMonsterTypes[monst].mMaxHP -= 2000;
-	}
+	
 	LevelMonsterTypes[monst].mAFNum = MonstersData[mtype].mAFNum;
-	LevelMonsterTypes[monst].MData = &MonstersData[mtype];
 
 	if (MonstersData[mtype].has_trans) {
 		InitMonsterTRN(LevelMonsterTypes[monst]);

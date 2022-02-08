@@ -161,6 +161,16 @@ struct CMonster {
 	uint16_t mMaxHP;
 	uint8_t mAFNum;
 	int8_t mdeadval;
+	int8_t mLevel;
+	uint16_t mExp;
+	uint16_t mHit;
+	uint8_t mMinDamage;
+	uint8_t mMaxDamage;
+	uint16_t mHit2;
+	uint8_t mMinDamage2;
+	uint8_t mMaxDamage2;
+	uint8_t mArmorClass;
+	uint16_t mMagicRes;
 	const MonsterData *MData;
 };
 
@@ -270,6 +280,7 @@ extern bool sgbSaveSoundOn;
 
 void InitLevelMonsters();
 void GetLevelMTypes();
+void InitMonsterType(int monst);
 void InitMonsterGFX(int monst);
 void monster_some_crypt();
 void InitGolems();
