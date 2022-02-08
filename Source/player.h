@@ -288,14 +288,23 @@ struct Player {
 	 * @brief Contains Data (Sprites) for the different Animations
 	 */
 	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
+	/* Nothing Frames */
 	int _pNFrames;
+	/* Walk Frames */
 	int _pWFrames;
+	/* Attack Frames */
 	int _pAFrames;
+	/* Attack Frame Number*/
 	int _pAFNum;
+	/* Spell Frames */
 	int _pSFrames;
+	/* Spell Frame Number */
 	int _pSFNum;
+	/* Hit Frames */
 	int _pHFrames;
+	/* Death Frames */
 	int _pDFrames;
+	/* Block Frames */
 	int _pBFrames;
 	Item InvBody[NUM_INVLOC];
 	Item InvList[NUM_INV_GRID_ELEM];

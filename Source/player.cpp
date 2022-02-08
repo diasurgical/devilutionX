@@ -166,12 +166,13 @@ struct DirectionSettings {
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
 const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	// clang-format off
-/* Warrior   */ { 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
-/* Rogue     */ {  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
-/* Sorcerer  */ {  8, 16,  8,  6, 20, 12,  8, 20,  8, 12,  8 },
-/* Monk      */ {  8, 16,  8,  3, 20, 18,  6, 20,  8, 12, 13 },
-/* Bard      */ {  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
-/* Barbarian */ { 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
+				// NFrames, AFrames, WFrames, BFrames, DFrames, SFrames, HFrames, NFrames (Town), WFrames (Town), AFNum, SFNum
+/* Warrior   */ {  10,      16,       8,       2,      20,      20,       6,      20,              8,               9,   14 },
+/* Rogue     */ {   8,      18,       8,       4,      20,      16,       7,      20,              8,              10,   12 },
+/* Sorcerer  */ {   8,      16,       8,       6,      20,      12,       8,      20,              8,              12,    8 },
+/* Monk      */ {   8,      16,       8,       3,      20,      18,       6,      20,              8,              12,   13 },
+/* Bard      */ {   8,      18,       8,       4,      20,      16,       7,      20,              8,              10,   12 },
+/* Barbarian */ {  10,      16,       8,       2,      20,      20,       6,      20,              8,               9,   14 },
 	// clang-format on
 };
 /** Specifies the frame of each animation for which an attack is triggered per weapon type, for each player class. */
@@ -2453,21 +2454,19 @@ void SetPlrAnims(Player &player)
 	HeroClass pc = player._pClass;
 	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
 
-	if (leveltype == DTYPE_TOWN) {
-		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][7];
-		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][8];
-		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
-		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
-	} else {
+	if (leveltype != DTYPE_TOWN) {
 		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][0];
 		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][2];
-		player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];
-		player._pHFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][6];
-		player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
-		player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
-		player._pBFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][3];
-		player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];
+	} else {
+		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][7];
+		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][8];
 	}
+	player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];	
+	player._pBFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][3];
+	player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
+	player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
+	player._pHFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][6];
+	player._pAFNum = PlrGFXAFNum[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];
 	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
 	int armorGraphicIndex = player._pgfxnum & ~0xF;
