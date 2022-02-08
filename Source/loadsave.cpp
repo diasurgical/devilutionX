@@ -922,17 +922,6 @@ void LoadDroppedItems(LoadHelper &file, size_t savedItemCount)
 	}
 }
 
-void RemoveEmptyLevelItems()
-{
-	for (int i = ActiveItemCount; i > 0; i--) {
-		auto &item = Items[ActiveItems[i]];
-		if (item.isEmpty()) {
-			dItem[item.position.x][item.position.y] = 0;
-			DeleteItem(i);
-		}
-	}
-}
-
 void SaveItem(SaveHelper &file, const Item &item)
 {
 	auto idx = item.IDidx;
@@ -1981,7 +1970,6 @@ void LoadGame(bool firstflag)
 	gbProcessPlayers = true;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
-		RemoveEmptyLevelItems();
 		SaveGame();
 	}
 
@@ -2317,10 +2305,6 @@ void LoadLevel()
 				AutomapView[i][j] = automapView == MAP_EXP_OLD ? MAP_EXP_SELF : automapView;
 			}
 		}
-	}
-
-	if (gbIsHellfireSaveGame != gbIsHellfire) {
-		RemoveEmptyLevelItems();
 	}
 
 	if (!gbSkipSync) {
