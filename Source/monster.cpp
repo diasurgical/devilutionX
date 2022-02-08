@@ -3666,10 +3666,10 @@ void InitMonsterType(int monst)
 		LevelMonsterTypes[monst].mMinHP = std::max(LevelMonsterTypes[monst].mMinHP / 2, 1);
 		LevelMonsterTypes[monst].mMinHP = std::max(LevelMonsterTypes[monst].mMaxHP / 2, 1);
 
-
+		int hp_modifier;
 		switch (sgGameInitInfo.nDifficulty) {
 	    case DIFF_NIGHTMARE:
-		    int hp_modifier;
+		    
 			if (gbIsHellfire)
 			    hp_modifier = gbIsMultiplayer ? 100 : 50;
 		    else
@@ -3688,7 +3688,6 @@ void InitMonsterType(int monst)
 		    break;
 
 	    case DIFF_HELL:
-		    int hp_modifier;
 		    if (gbIsHellfire)
 			    hp_modifier = gbIsMultiplayer ? 200 : 100;
 		    else
