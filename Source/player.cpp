@@ -49,52 +49,16 @@ int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
-/** Maps from player_class to starting stat in strength. */
-int StrengthTbl[enum_size<HeroClass>::value] = {
-	30,
-	20,
-	15,
-	25,
-	20,
-	40,
-};
-/** Maps from player_class to starting stat in magic. */
-int MagicTbl[enum_size<HeroClass>::value] = {
+/** Maps from player_class to starting stat. */
+int StatTbl[enum_size<HeroClass>::value][5] = {
 	// clang-format off
-	10,
-	15,
-	35,
-	15,
-	20,
-	 0,
+	{ 30, 10, 20, 25, 30 },
+	{ 20, 15, 30, 20, 20 },
+	{ 15, 35, 15, 20, 10 },
+	{ 25, 15, 25, 20, 25 },
+	{ 20, 20, 25, 20, 25 },
+	{ 40,  0, 20, 25, 30 },
 	// clang-format on
-};
-/** Maps from player_class to starting stat in dexterity. */
-int DexterityTbl[enum_size<HeroClass>::value] = {
-	20,
-	30,
-	15,
-	25,
-	25,
-	20,
-};
-/** Maps from player_class to starting stat in vitality. */
-int VitalityTbl[enum_size<HeroClass>::value] = {
-	25,
-	20,
-	20,
-	20,
-	20,
-	25,
-};
-/** Specifies the chance to block bonus of each player class.*/
-int BlockBonuses[enum_size<HeroClass>::value] = {
-	30,
-	20,
-	10,
-	25,
-	25,
-	30,
 };
 
 /** Specifies the experience point limit of each level. */
@@ -200,13 +164,8 @@ const int PlrGFXAFNum[enum_size<HeroClass>::value][10] = {
 	// clang-format on
 };
 /** Maps from player class to player velocity. */
-int PWVel[enum_size<HeroClass>::value][3] = {
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
+int PWVel[3] = {
+	2048, 1024, 512
 };
 const char *const ClassPathTbl[] = {
 	"Warrior",
@@ -1600,9 +1559,9 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			int xvel = 1024;
 			int yvel = 512;
 			if (currlevel != 0) {
-				xvel3 = PWVel[static_cast<std::size_t>(player._pClass)][0];
-				xvel = PWVel[static_cast<std::size_t>(player._pClass)][1];
-				yvel = PWVel[static_cast<std::size_t>(player._pClass)][2];
+				xvel3 = PWVel[0];
+				xvel = PWVel[1];
+				yvel = PWVel[2];
 			}
 
 			switch (player.walkpath[0]) {
@@ -2494,16 +2453,16 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	player._pClass = c;
 
-	player._pBaseStr = StrengthTbl[static_cast<std::size_t>(c)];
+	player._pBaseStr = StatTbl[static_cast<std::size_t>(c)][0];
 	player._pStrength = player._pBaseStr;
 
-	player._pBaseMag = MagicTbl[static_cast<std::size_t>(c)];
+	player._pBaseMag = StatTbl[static_cast<std::size_t>(c)][1];
 	player._pMagic = player._pBaseMag;
 
-	player._pBaseDex = DexterityTbl[static_cast<std::size_t>(c)];
+	player._pBaseDex = StatTbl[static_cast<std::size_t>(c)][2];
 	player._pDexterity = player._pBaseDex;
 
-	player._pBaseVit = VitalityTbl[static_cast<std::size_t>(c)];
+	player._pBaseVit = StatTbl[static_cast<std::size_t>(c)][3];
 	player._pVitality = player._pBaseVit;
 
 	player._pStatPts = 0;
@@ -2516,7 +2475,7 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	player._pLevel = 1;
 
-	player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(c)];
+	player._pBaseToBlk = StatTbl[static_cast<std::size_t>(c)][4];
 
 	player._pHitPoints = (player._pVitality + 10) << 6;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {

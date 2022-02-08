@@ -762,10 +762,7 @@ extern int plrxoff[9];
 extern int plryoff[9];
 extern int plrxoff2[9];
 extern int plryoff2[9];
-extern int StrengthTbl[enum_size<HeroClass>::value];
-extern int MagicTbl[enum_size<HeroClass>::value];
-extern int DexterityTbl[enum_size<HeroClass>::value];
-extern int VitalityTbl[enum_size<HeroClass>::value];
+extern int StatTbl[enum_size<HeroClass>::value][5];
 extern uint32_t ExpLvlsTbl[MAXCHARLEVEL];
 
 } // namespace devilution

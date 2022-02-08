@@ -307,10 +307,10 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats)
 {
-	classStats->strength = StrengthTbl[playerClass];
-	classStats->magic = MagicTbl[playerClass];
-	classStats->dexterity = DexterityTbl[playerClass];
-	classStats->vitality = VitalityTbl[playerClass];
+	classStats->strength = StatTbl[playerClass][0];
+	classStats->magic = StatTbl[playerClass][1];
+	classStats->dexterity = StatTbl[playerClass][2];
+	classStats->vitality = StatTbl[playerClass][3];
 }
 
 uint32_t pfile_ui_get_first_unused_save_num()

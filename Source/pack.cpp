@@ -243,7 +243,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	player._pGold = SDL_SwapLE32(pPack->pGold);
 	player._pMaxHPBase = SDL_SwapLE32(pPack->pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(pPack->pHPBase);
-	player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(player._pClass)];
+	player._pBaseToBlk = StatTbl[static_cast<std::size_t>(player._pClass)][4];
 	if (!netSync)
 		if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 			player._pHPBase = 64;

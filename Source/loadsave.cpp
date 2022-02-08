@@ -392,7 +392,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pDamageMod = file.NextLE<int32_t>();
 	player._pBaseToBlk = file.NextLE<int32_t>();
 	if (player._pBaseToBlk == 0)
-		player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(player._pClass)];
+		player._pBaseToBlk = StatTbl[static_cast<std::size_t>(player._pClass)][4];
 	player._pHPBase = file.NextLE<int32_t>();
 	player._pMaxHPBase = file.NextLE<int32_t>();
 	player._pHitPoints = file.NextLE<int32_t>();
