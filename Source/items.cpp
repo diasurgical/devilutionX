@@ -2610,6 +2610,14 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	bool rightHandEmpty = player.InvBody[INVLOC_HAND_RIGHT].isEmpty();
 	int16_t leftHandAc = player.InvBody[INVLOC_HAND_LEFT]._iAC;
 	int16_t rightHandAc = player.InvBody[INVLOC_HAND_RIGHT]._iAC;
+	item_class leftHandClass = player.InvBody[INVLOC_HAND_LEFT]._iClass;
+	item_class rightHandClass = player.InvBody[INVLOC_HAND_RIGHT]._iClass;
+	item_equip_type leftHandLoc = player.InvBody[INVLOC_HAND_LEFT]._iLoc;
+	item_equip_type rightHandLoc = player.InvBody[INVLOC_HAND_RIGHT]._iLoc;
+
+	ItemType chestItem = player.InvBody[INVLOC_CHEST]._itype;
+	bool chestUsable = player.InvBody[INVLOC_CHEST]._iStatFlag;
+	item_quality chestMagical = player.InvBody[INVLOC_CHEST]._iMagical;
 
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && item._iStatFlag) {
@@ -2755,7 +2763,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		break;
 	}
 	
-
 	player._pISpells = spl;
 
 	EnsureValidReadiedSpell(player);
@@ -2809,42 +2816,39 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pILMaxDam = lmax;
 
 	player._pBlockFlag = false;
-	if (player._pClass == HeroClass::Monk) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+	if (pc == HeroClass::Monk) {
+		if (leftHandItem == ItemType::Staff && leftHandUsable) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
-		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+		if (rightHandItem == ItemType::Staff && rightHandUsable) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
-		if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
+		if (leftHandEmpty && rightHandEmpty)
 			player._pBlockFlag = true;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) != ILOC_TWOHAND && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
+		if (leftHandClass == ICLASS_WEAPON && leftHandLoc != ILOC_TWOHAND && rightHandEmpty)
 			player._pBlockFlag = true;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && player.GetItemLocation(player.InvBody[INVLOC_HAND_RIGHT]) != ILOC_TWOHAND && player.InvBody[INVLOC_HAND_LEFT].isEmpty())
+		if (rightHandClass == ICLASS_WEAPON && rightHandLoc != ILOC_TWOHAND && leftHandEmpty)
 			player._pBlockFlag = true;
 	}
 
 	ItemType weaponItemType = ItemType::None;
 	bool holdsShield = false;
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
-	    && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
-	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-		weaponItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+	if (!leftHandEmpty && leftHandClass == ICLASS_WEAPON && leftHandUsable) {
+		weaponItemType = leftHandItem;
 	}
 
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()
-	    && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON
-	    && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-		weaponItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	if (!rightHandEmpty && rightHandClass == ICLASS_WEAPON && rightHandUsable) {
+		weaponItemType = rightHandItem;
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+	if (leftHandItem == ItemType::Shield && leftHandUsable) {
 		player._pBlockFlag = true;
 		holdsShield = true;
 	}
-	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+
+	if (rightHandItem == ItemType::Shield && rightHandUsable) {
 		player._pBlockFlag = true;
 		holdsShield = true;
 	}
@@ -2871,13 +2875,13 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	}
 
 	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
-	if (player.InvBody[INVLOC_CHEST]._itype == ItemType::HeavyArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
-		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
-			player._pIAC += playerLevel / 2;
+	if (chestItem == ItemType::HeavyArmor && chestUsable) {
+		if (player._pClass == HeroClass::Monk && chestMagical == ITEM_QUALITY_UNIQUE)
+			player._pIAC += player._pLevel / 2;
 		animArmorId = PlayerArmorGraphic::Heavy;
-	} else if (player.InvBody[INVLOC_CHEST]._itype == ItemType::MediumArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
+	} else if (chestItem == ItemType::MediumArmor && chestUsable) {
 		if (player._pClass == HeroClass::Monk) {
-			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
+			if (chestMagical == ITEM_QUALITY_UNIQUE)
 				player._pIAC += playerLevel * 2;
 			else
 				player._pIAC += playerLevel / 2;
