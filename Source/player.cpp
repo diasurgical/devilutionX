@@ -2461,7 +2461,7 @@ void SetPlrAnims(Player &player)
 		player._pNFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][7];
 		player._pWFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][8];
 	}
-	player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];	
+	player._pAFrames = PlrGFXAFrames[static_cast<std::size_t>(pc)][static_cast<std::size_t>(gn)];
 	player._pBFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][3];
 	player._pDFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][4];
 	player._pSFrames = PlrGFXAnimLens[static_cast<std::size_t>(pc)][5];
