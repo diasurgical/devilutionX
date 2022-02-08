@@ -710,8 +710,15 @@ int CalculateToHitBonus(int level)
 	}
 }
 
-int SaveItemPower(Item &item, const ItemPower &power)
+int SaveItemPower(Item &item, ItemPower &power)
 {
+	if (!gbIsHellfire) {
+		if (power.type == IPL_TARGAC) {
+			power.param1 = 1 << power.param1;
+			power.param2 = 3 << power.param2;
+		}
+	}
+
 	int r = RndPL(power.param1, power.param2);
 
 	switch (power.type) {
@@ -1084,14 +1091,6 @@ int PLVal(int pv, int p1, int p2, int minv, int maxv)
 void SaveItemAffix(Item &item, const PLStruct &affix)
 {
 	auto power = affix.power;
-
-	if (!gbIsHellfire) {
-		if (power.type == IPL_TARGAC) {
-			power.param1 = 1 << power.param1;
-			power.param2 = 3 << power.param2;
-		}
-	}
-
 	int value = SaveItemPower(item, power);
 
 	value = PLVal(value, power.param1, power.param2, affix.minVal, affix.maxVal);
@@ -1491,7 +1490,7 @@ void GetUniqueItem(Item &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
-	for (const auto &power : UniqueItems[uid].powers) {
+	for (auto power : UniqueItems[uid].powers) {
 		if (power.type == IPL_INVALID)
 			break;
 		SaveItemPower(item, power);
@@ -3874,7 +3873,10 @@ void DoOil(Player &player, int cii)
 			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
 		return "";
 	case IPL_TARGAC:
-		return _("penetrates target's armor");
+		if (gbIsHellfire)
+			return _("penetrates target's armor");
+		else
+			return _("penetrates target's armor") + fmt::format(" ({:d})", item._iPLEnAc);
 	case IPL_FASTATTACK:
 		if ((item._iFlags & ISPL_QUICKATTACK) != 0)
 			return _("quick attack");
