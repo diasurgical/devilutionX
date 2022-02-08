@@ -163,45 +163,41 @@ struct DirectionSettings {
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(int, const DirectionSettings &);
 };
-
-// clang-format off
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
 const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
-	{ 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
-	{  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
-	{  8, 16,  8,  6, 20, 12,  8, 20,  8, 12,  8 },
-	{  8, 16,  8,  3, 20, 18,  6, 20,  8, 12, 13 },
-	{  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
-	{ 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
+	// clang-format off
+/* Warrior   */ { 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
+/* Rogue     */ {  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
+/* Sorcerer  */ {  8, 16,  8,  6, 20, 12,  8, 20,  8, 12,  8 },
+/* Monk      */ {  8, 16,  8,  3, 20, 18,  6, 20,  8, 12, 13 },
+/* Bard      */ {  8, 18,  8,  4, 20, 16,  7, 20,  8, 10, 12 },
+/* Barbarian */ { 10, 16,  8,  2, 20, 20,  6, 20,  8,  9, 14 },
+	// clang-format on
 };
-// clang-format on
-
-// clang-format off
 /** Specifies the frame of each animation for which an attack is triggered per weapon type, for each player class. */
 const int PlrGFXAFrames[enum_size<HeroClass>::value][10] = {
-	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
-	{  16,      16,            16,    16,          16,  20,  16,   16,         16 },
-	{  18,      18,            18,    18,          12,  22,  18,   18,         16 },
-	{  20,      16,            16,    16,          20,  24,  16,   16,         16 },
-	{  12,      12,            16,    16,          20,  23,  16,   16,         13 },
-	{  18,      18,            18,    18,          12,  22,  18,   18,         16 },
-	{  16,      16,            16,    16,          16,  20,  16,   16,         16 },
+	// clang-format off
+                // Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
+/* Warrior   */ {  16,      16,            16,    16,          16,  20,  16,   16,         16 },
+/* Rogue     */ {  18,      18,            18,    18,          12,  22,  18,   18,         16 },
+/* Sorcerer  */ {  20,      16,            16,    16,          20,  24,  16,   16,         16 },
+/* Monk      */ {  12,      12,            16,    16,          20,  23,  16,   16,         13 },
+/* Bard      */ {  18,      18,            18,    18,          12,  22,  18,   18,         16 },
+/* Barbarian */ {  16,      16,            16,    16,          16,  20,  16,   16,         16 },
+	// clang-format on
 };
-// clang-format on
-
-// clang-format off
 /** Specifies the frame of each animation for which an attack is completed per weapon type, for each player class. */
 const int PlrGFXAFNum[enum_size<HeroClass>::value][10] = {
-	// Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
-	{   9,       9,             9,     9,          11,  10,   9,    9,         11 },
-	{  10,      10,            10,    10,           7,  13,  10,   10,         11 },
-	{  12,       9,            12,    12,          16,  16,  12,   12,         12 },
-	{   7,       7,            12,    12,          14,  14,  12,   12,          8 },
-	{  10,      10,            10,    10,          11,  13,  10,   10,         11 },
-	{   9,       9,             9,     9,          11,   8,   8,    8,         11 },
+	// clang-format off
+                // Unarmed, UnarmedShield, Sword, SwordShield, Bow, Axe, Mace, MaceShield, Staff
+/* Warrior   */ {   9,       9,             9,     9,          11,  10,   9,    9,         11 },
+/* Rogue     */ {  10,      10,            10,    10,           7,  13,  10,   10,         11 },
+/* Sorcerer  */ {  12,       9,            12,    12,          16,  16,  12,   12,         12 },
+/* Monk      */ {   7,       7,            12,    12,          14,  14,  12,   12,          8 },
+/* Bard      */ {  10,      10,            10,    10,          11,  13,  10,   10,         11 },
+/* Barbarian */ {   9,       9,             9,     9,          11,   8,   8,    8,         11 },
+	// clang-format on
 };
-// clang-format on
-
 /** Maps from player class to player velocity. */
 int PWVel[enum_size<HeroClass>::value][3] = {
 	{ 2048, 1024, 512 },
