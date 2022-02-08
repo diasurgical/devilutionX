@@ -2563,11 +2563,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 {
 	int mind = 0; // min damage
 	int maxd = 0; // max damage
-	int tac = 0;  // accuracy
+	int tac = 0;  // armor class
 
 	int bdam = 0;   // bonus damage
 	int btohit = 0; // bonus chance to hit
-	int bac = 0;    // bonus accuracy
+	int bac = 0;    // bonus armor class
 
 	ItemSpecialEffect iflgs = ItemSpecialEffect::None; // item_special_effect flags
 
@@ -2593,7 +2593,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int imana = 0; // increased mana
 
 	int spllvladd = 0; // increased spell level
-	int enac = 0;      // enhanced accuracy
+	int enac = 0;      // enhanced armor class
 
 	int fmin = 0; // minimum fire damage
 	int fmax = 0; // maximum fire damage
