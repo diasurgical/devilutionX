@@ -1377,15 +1377,18 @@ void DamageArmor(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	bool chestEmpty = player.InvBody[INVLOC_CHEST].isEmpty();
+	bool headEmpty = player.InvBody[INVLOC_HEAD].isEmpty();
+
+	if (chestEmpty && headEmpty) {
 		return;
 	}
 
 	a = GenerateRnd(3);
-	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (!chestEmpty && headEmpty) {
 		a = 1;
 	}
-	if (player.InvBody[INVLOC_CHEST].isEmpty() && !player.InvBody[INVLOC_HEAD].isEmpty()) {
+	if (chestEmpty && !headEmpty) {
 		a = 0;
 	}
 
