@@ -886,10 +886,10 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 
 	ItemType phanditype = ItemType::None;
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword) {
+	if (player.IsHoldingItem(ItemType::Sword)) {
 		phanditype = ItemType::Sword;
 	}
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
+	if (player.IsHoldingItem(ItemType::Mace)) {
 		phanditype = ItemType::Mace;
 	}
 
@@ -1114,6 +1114,11 @@ bool DoAttack(int pnum)
 	}
 	auto &player = Players[pnum];
 
+	ItemType leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+	ItemType rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	item_equip_type leftHandItemLoc = player.InvBody[INVLOC_HAND_LEFT]._iLoc;
+	item_equip_type rightHandItemLoc = player.InvBody[INVLOC_HAND_RIGHT]._iLoc;
+
 	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
 		PlaySfxLoc(PS_SWING, player.position.tile);
 	}
@@ -1169,16 +1174,16 @@ bool DoAttack(int pnum)
 			}
 		}
 		if ((player._pClass == HeroClass::Monk
-		        && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff))
+		        && (player.IsHoldingItem(ItemType::Staff)))
 		    || (player._pClass == HeroClass::Bard
-		        && player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword && player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword)
+		        && player.IsHoldingItem(ItemType::Sword))
 		    || (player._pClass == HeroClass::Barbarian
-		        && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Axe || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Axe
-		            || (((player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace && player.InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
-		                    || (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace && player.InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND)
-		                    || (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword && player.InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
-		                    || (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword && player.InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND))
-		                && !(player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield))))) {
+		        && (player.IsHoldingItem(ItemType::Axe)
+		            || (((leftHandItemType == ItemType::Mace && leftHandItemLoc == ILOC_TWOHAND)
+		                    || (rightHandItemType == ItemType::Mace && rightHandItemLoc == ILOC_TWOHAND)
+		                    || (leftHandItemType == ItemType::Sword && leftHandItemLoc == ILOC_TWOHAND)
+		                    || (rightHandItemType == ItemType::Sword && rightHandItemLoc == ILOC_TWOHAND))
+		                && !(leftHandItemType == ItemType::Shield || rightHandItemType == ItemType::Shield))))) {
 			// playing as a class/weapon with cleave
 			position = player.position.tile + Right(player._pdir);
 			if (dMonster[position.x][position.y] != 0) {
@@ -1297,23 +1302,28 @@ void DamageParryItem(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	ItemType leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+	ItemType rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	int &leftHandItemDur = player.InvBody[INVLOC_HAND_LEFT]._iDurability;
+	int &rightHandItemDur = player.InvBody[INVLOC_HAND_RIGHT]._iDurability;
+
+	if (leftHandItemType == ItemType::Shield || leftHandItemType == ItemType::Staff) {
+		if (leftHandItemDur == DUR_INDESTRUCTIBLE) {
 			return;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		leftHandItemDur--;
+		if (leftHandItemDur == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 			CalcPlrInv(player, true);
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
-			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+	if (rightHandItemType == ItemType::Shield) {
+		if (rightHandItemDur != DUR_INDESTRUCTIBLE) {
+			rightHandItemDur--;
+			if (rightHandItemDur == 0) {
 				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 				player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
 				CalcPlrInv(player, true);

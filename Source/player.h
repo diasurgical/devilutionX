@@ -684,6 +684,11 @@ struct Player {
 	 * @param wParam2 Second Parameter
 	 */
 	void UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2);
+
+	constexpr bool Player::IsHoldingItem(ItemType type)
+	{
+		return IsAnyOf(type, InvBody[INVLOC_HAND_LEFT]._itype, InvBody[INVLOC_HAND_RIGHT]._itype);
+	}
 };
 
 extern DVL_API_FOR_TEST int MyPlayerId;
