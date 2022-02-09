@@ -1094,7 +1094,7 @@ KeymapperOptions::Action::Action(string_view key, string_view name, string_view 
 string_view KeymapperOptions::Action::GetName() const
 {
 	if (dynamicIndex < 0)
-		return name;
+		return _(name.data());
 	dynamicName = fmt::format(_(name.data()), dynamicIndex);
 	return dynamicName;
 }
