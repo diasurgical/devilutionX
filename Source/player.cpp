@@ -1895,28 +1895,117 @@ void ValidatePlayer()
 
 void CheckCheatStats(Player &player)
 {
-	if (player._pStrength > 750) {
-		player._pStrength = 750;
-	}
+	/* Max stats obtainable via items are as follows: */
+	/* Helmet = 20, Armor = 20, Weapon = 30, Shield = 15, Rings = 60 (120 in Hellfire), Amulet = 30 */
+	int maxItemStats = 175;
 
-	if (player._pDexterity > 750) {
-		player._pDexterity = 750;
-	}
+	if (gbIsHellfire)
+		maxItemStats += 60;
 
-	if (player._pMagic > 750) {
-		player._pMagic = 750;
-	}
+	if (player._pStrength > player.GetMaximumAttributeValue(CharacterAttribute::Strength) + maxItemStats)
+		player._pStrength = player.GetMaximumAttributeValue(CharacterAttribute::Strength) + maxItemStats;
 
-	if (player._pVitality > 750) {
-		player._pVitality = 750;
-	}
+	if (player._pDexterity > player.GetMaximumAttributeValue(CharacterAttribute::Magic) + maxItemStats)
+		player._pDexterity = player.GetMaximumAttributeValue(CharacterAttribute::Magic) + maxItemStats;
 
-	if (player._pHitPoints > 128000) {
-		player._pHitPoints = 128000;
-	}
+	if (player._pMagic > player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) + maxItemStats)
+		player._pMagic = player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) + maxItemStats;
 
-	if (player._pMana > 128000) {
-		player._pMana = 128000;
+	if (player._pVitality > player.GetMaximumAttributeValue(CharacterAttribute::Vitality) + maxItemStats)
+		player._pVitality = player.GetMaximumAttributeValue(CharacterAttribute::Vitality) + maxItemStats;
+
+	switch (player._pClass) {
+	case HeroClass::Warrior:
+		if (!gbIsHellfire) {
+			// Default: 316, Whale: 100, Whale:100, Life: 60, Tiger: 50, Life/Lion: 60, Life/Lion: 60, Life/Lion: 60
+			if (player._pHitPoints > 806 << 6)
+				player._pHitPoints = 806 << 6;
+			// Default: 98, Royal Circlet: 50, Naj's Light Plate: 25, Dreamflange: 80, Brilliance: 15, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90
+			if (player._pMana > 538 << 6)
+				player._pMana = 538 << 6;
+		} else {
+			// Default: 316, Whale: 100, Whale:100, Life: 60, Tiger: 50, Karik's Ring: 120, Karik's Ring: 120, Life: 60
+			if (player._pHitPoints > 926 << 6)
+				player._pHitPoints = 926 << 6;
+			// Default: 98, Royal Circlet: 50, Whale: 0, Dreamflange: 80, Tiger: 0, Gladiator's Ring: 186, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90
+			if (player._pMana > 594 << 6)
+				player._pMana = 594 << 6;
+		}
+		break;
+	case HeroClass::Rogue:
+		if (!gbIsHellfire) {
+			// Default: 201, Whale: 100, Whale: 100, Shaefer's Hammer: 50, Tiger: 50, Lion: 60, Lion: 60, Lion: 60
+			if (player._pHitPoints > 681 << 6)
+				player._pHitPoints = 681 << 6;
+		} else {
+			// Default: 201, Whale: 100, Whale: 100, Shaefer's Hammer: 50, Tiger: 50, Karik's Ring: 90, Karik's Ring: 90, Lion: 60
+			if (player._pHitPoints > 741 << 6)
+				player._pHitPoints = 741 << 6;
+
+		}
+		// Default: 173, Royal Circlet: 55, Sorcery: 30, Dreamflange: 95, Brilliance: 22, Dragon's/Wizardry: 105, Dragon's/Wizardry: 105, Dragon's/Wizardry: 105
+		if (player._pMana > 690 << 6)
+			player._pMana = 690 << 6;
+		break;
+	case HeroClass::Sorcerer:
+		if (!gbIsHellfire) {
+			// Default: 138, Whale: 100, Whale: 100, Schaefer's Hammer: 50, Tiger: 50, Lion: 60, Lion: 60, Lion: 60
+			if (player._pHitPoints > 618 << 6)
+				player._pHitPoints = 618 << 6;
+		} else {
+			// Default: 138, Whale: 100, Whale: 100, Dreamflange: 0, Tiger: 50, Lion: 60, Lion: 60, Acolyte's Amulet: 353
+			if (player._pHitPoints > 861 << 6)
+				player._pHitPoints = 861 << 6;
+		}
+		// Default: 596, Royal Circlet: 60, Sorcery: 40, Dreamflange: 110, Brilliance: 30, Dragon's/Wizardry: 120, Dragon's/Wizardry: 120, Dragon's/Wizardry: 120
+		if (player._pMana > 1196 << 6)
+			player._pMana = 1196 << 6;
+		break;
+	case HeroClass::Monk:
+		if (!gbIsHellfire) {
+			// Default: 203, Whale: 100, Whale: 100, Shaefer's Hammer: 50, Tiger: 50, Lion: 60, Lion: 60, Lion: 60
+			if (player._pHitPoints > 683 << 6)
+				player._pHitPoints = 683 << 6;
+		} else {
+			// Default: 203, Whale: 100, Whale: 100, Shaefer's Hammer: 50, Tiger: 50, Karik's Ring: 90, Karik's Ring: 90, Lion: 60
+			if (player._pHitPoints > 743 << 6)
+				player._pHitPoints = 743 << 6;
+		}
+		// Default: 185, Royal Circlet: 55, Sorcery: 30, Dreamflange: 95, Brilliance: 22, Dragon's/Wizardry: 105, Dragon's/Wizardry: 105, Dragon's/Wizardry: 105
+		if (player._pMana > 702 << 6)
+			player._pMana = 702 << 6;
+		break;
+	case HeroClass::Bard:
+		if (!gbIsHellfire) {
+			// Default: 201, Whale: 100, Whale: 100, Shaefer's Hammer: 50, Tiger: 50, Lion: 60, Lion: 60, Lion: 60
+			if (player._pHitPoints > 703 << 6)
+				player._pHitPoints = 703 << 6;
+		} else {
+			// Default: 201, Whale: 100, Whale: 100, Shaefer's Hammer: 50, Tiger: 50, Karik's Ring: 90, Karik's Ring: 90, Lion: 60
+			if (player._pHitPoints > 763 << 6)
+				player._pHitPoints = 763 << 6;
+		}
+		// Default: 283, Royal Circlet: 57, Sorcery: 35, Dreamflange: 102, Brilliance: 26, Dragon's/Wizardry: 112, Dragon's/Wizardry: 112, Dragon's/Wizardry: 112
+		if (player._pMana > 839 << 6)
+			player._pMana = 839 << 6;
+		break;
+	case HeroClass::Barbarian:
+		if (!gbIsHellfire) {
+			// Default: 418, Whale: 100, Whale:100, Life: 60, Tiger: 50, Life/Lion: 60, Life/Lion: 60, Life/Lion: 60
+			if (player._pHitPoints > 908 << 6)
+				player._pHitPoints = 908 << 6;
+			// Default: 0, Royal Circlet: 50, Naj's Light Plate: 25, Dreamflange: 80, Brilliance: 15, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90
+			if (player._pMana > 440 << 6)
+				player._pMana = 440 << 6;
+		} else {
+			// Default: 418, Whale: 100, Whale:100, Life: 60, Tiger: 50, Karik's Ring: 120, Karik's Ring: 120, Life: 60
+			if (player._pHitPoints > 926 << 6)
+				player._pHitPoints = 926 << 6;
+			// Default: 0, Royal Circlet: 50, Whale: 0, Dreamflange: 80, Tiger: 0, Gladiator's Ring: 227, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90
+			if (player._pMana > 537 << 6)
+				player._pMana = 537 << 6;
+		}
+		break;
 	}
 }
 
