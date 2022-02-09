@@ -2571,7 +2571,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int imana = 0; // increased mana
 
 	int spllvladd = 0; // increased spell level
-	int enac = 0;      // armor piercing
+	int enac = 0;      // accuracy
 
 	int fmin = 0; // minimum fire damage
 	int fmax = 0; // maximum fire damage
