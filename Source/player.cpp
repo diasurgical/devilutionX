@@ -2654,9 +2654,7 @@ void CreatePlayer(int playerId, HeroClass c)
 		player._pSplLvl[SPL_FIREBOLT] = 2;
 	}
 
-	// interestingly, only the first three hotkeys are reset
-	// TODO: BUGFIX: clear all 4 hotkeys instead of 3 (demo leftover)
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		player._pSplHotKey[i] = SPL_INVALID;
 	}
 
