@@ -2717,35 +2717,35 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 200;
 		break;
 	case HeroClass::Monk:
-		if (IsAnyOf(ItemType::Staff, leftHandItemType, rightHandItemType) || (leftHandEmpty && rightHandEmpty)) {
+		if (player.IsHoldingItem(ItemType::Staff) || (leftHandEmpty && rightHandEmpty)) {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
 		} else {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 300;
 		}
 		break;
 	case HeroClass::Bard:
-		if (IsAnyOf(ItemType::Sword, leftHandItemType, rightHandItemType)) {
+		if (player.IsHoldingItem(ItemType::Sword)) {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
-		} else if (IsAnyOf(ItemType::Bow, leftHandItemType, rightHandItemType)) {
+		} else if (player.IsHoldingItem(ItemType::Bow)) {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 250;
 		} else {
 			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
 		break;
 	case HeroClass::Barbarian:
-		if (IsAnyOf(ItemType::Axe, leftHandItemType, rightHandItemType) || IsAnyOf(ItemType::Mace, leftHandItemType, rightHandItemType)) {
+		if (player.IsHoldingItem(ItemType::Axe) || IsAnyOf(ItemType::Mace, leftHandItemType, rightHandItemType)) {
 			player._pDamageMod = playerLevel * player._pStrength / 75;
-		} else if (IsAnyOf(ItemType::Bow, leftHandItemType, rightHandItemType)) {
+		} else if (player.IsHoldingItem(ItemType::Bow)) {
 			player._pDamageMod = playerLevel * player._pStrength / 300;
 		} else {
 			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
-		if (IsAnyOf(ItemType::Shield, leftHandItemType, rightHandItemType)) {
+		if (player.IsHoldingItem(ItemType::Shield)) {
 			if (leftHandItemType == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_LEFT]._iAC / 2;
 			else if (rightHandItemType == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
-		} else if (IsNoneOf(leftHandItemType, ItemType::Staff, ItemType::Bow) && IsNoneOf(rightHandItemType, ItemType::Staff, ItemType::Bow)) {
+		} else if (!player.IsHoldingItem(ItemType::Staff) && player.IsHoldingItem(ItemType::Bow)) {
 			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
 		player._pIAC += playerLevel / 4;
@@ -2865,16 +2865,12 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		break;
 	}
 
-	ItemType chestItem = player.InvBody[INVLOC_CHEST]._itype;
-	bool chestUsable = player.CanUseItem(player.InvBody[INVLOC_CHEST]);
-	item_quality chestMagical = player.InvBody[INVLOC_CHEST]._iMagical;
-
 	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
-	if (chestItem == ItemType::HeavyArmor && chestUsable) {
-		if (player._pClass == HeroClass::Monk && chestMagical == ITEM_QUALITY_UNIQUE)
+	if (player.InvBody[INVLOC_CHEST]._itype == ItemType::HeavyArmor && player.CanUseItem(player.InvBody[INVLOC_CHEST])) {
+		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 			player._pIAC += player._pLevel / 2;
 		animArmorId = PlayerArmorGraphic::Heavy;
-	} else if (chestItem == ItemType::MediumArmor && chestUsable) {
+	} else if (player.InvBody[INVLOC_CHEST]._itype == ItemType::MediumArmor && player.CanUseItem(player.InvBody[INVLOC_CHEST])) {
 		if (player._pClass == HeroClass::Monk) {
 			if (chestMagical == ITEM_QUALITY_UNIQUE)
 				player._pIAC += playerLevel * 2;
