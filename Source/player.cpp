@@ -164,10 +164,6 @@ const int PlrGFXAFNum[enum_size<HeroClass>::value][10] = {
 /* Barbarian */ {   9,       9,             9,     9,          11,   8,   8,    8,         11 },
 	// clang-format on
 };
-/** Maps from player class to player velocity. */
-int PWVel[3] = {
-	2048, 1024, 512
-};
 const char *const ClassPathTbl[] = {
 	"Warrior",
 	"Rogue",
@@ -1583,11 +1579,6 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			int xvel3 = 2048;
 			int xvel = 1024;
 			int yvel = 512;
-			if (currlevel != 0) {
-				xvel3 = PWVel[0];
-				xvel = PWVel[1];
-				yvel = PWVel[2];
-			}
 
 			switch (player.walkpath[0]) {
 			case WALK_N:
