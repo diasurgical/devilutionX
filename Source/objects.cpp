@@ -308,6 +308,8 @@ bool RndLocOk(int xp, int yp)
 
 bool CanPlaceWallTrap(int xp, int yp)
 {
+	if (dObject[xp][yp] != 0)
+		return false;
 	if (TileContainsSetPiece({ xp, yp }))
 		return false;
 
