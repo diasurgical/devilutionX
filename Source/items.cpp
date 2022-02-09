@@ -2761,7 +2761,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pDamageMod = playerLevel * player._pStrength / 100;
 		break;
 	}
-	
 	player._pISpells = spl;
 
 	EnsureValidReadiedSpell(player);
