@@ -2545,7 +2545,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	int bdam = 0;   // bonus damage
 	int btohit = 0; // bonus chance to hit
-	int bac = 0;    // accuracy
+	int bac = 0;    // bonus accuracy
 
 	int iflgs = ISPL_NONE; // item_special_effect flags
 
@@ -2571,7 +2571,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int imana = 0; // increased mana
 
 	int spllvladd = 0; // increased spell level
-	int enac = 0;      // accuracy
+	int enac = 0;      // enhanced accuracy
 
 	int fmin = 0; // minimum fire damage
 	int fmax = 0; // maximum fire damage
