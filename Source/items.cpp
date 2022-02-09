@@ -2602,8 +2602,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	ItemType leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
 	ItemType rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
-	bool leftHandUsable = player.InvBody[INVLOC_HAND_LEFT]._iStatFlag;
-	bool rightHandUsable = player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag;
+	bool leftHandUsable = player.CanUseItem(player.InvBody[INVLOC_HAND_LEFT]);
+	bool rightHandUsable = player.CanUseItem(player.InvBody[INVLOC_HAND_RIGHT]);
 	bool leftHandEmpty = player.InvBody[INVLOC_HAND_LEFT].isEmpty();
 	bool rightHandEmpty = player.InvBody[INVLOC_HAND_RIGHT].isEmpty();
 	int16_t leftHandAc = player.InvBody[INVLOC_HAND_LEFT]._iAC;
@@ -2614,11 +2614,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	item_equip_type rightHandLoc = player.InvBody[INVLOC_HAND_RIGHT]._iLoc;
 
 	ItemType chestItem = player.InvBody[INVLOC_CHEST]._itype;
-	bool chestUsable = player.InvBody[INVLOC_CHEST]._iStatFlag;
+	bool chestUsable = player.CanUseItem(player.InvBody[INVLOC_CHEST]);
 	item_quality chestMagical = player.InvBody[INVLOC_CHEST]._iMagical;
 
 	for (auto &item : player.InvBody) {
-		if (!item.isEmpty() && item._iStatFlag) {
+		if (!item.isEmpty() && player.CanUseItem(item)) {
 
 			mind += item._iMinDam;
 			maxd += item._iMaxDam;
@@ -4344,7 +4344,6 @@ void SpawnBoy(int lvl)
 
 	Player &myPlayer = *MyPlayer;
 
-	HeroClass pc = myPlayer._pClass;
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
 	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
 	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
@@ -4410,7 +4409,7 @@ void SpawnBoy(int lvl)
 		count++;
 
 		if (count < 200) {
-			switch (pc) {
+			switch (myPlayer._pClass) {
 			case HeroClass::Warrior:
 				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
 					ivalue = INT_MAX;
