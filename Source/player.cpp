@@ -52,12 +52,13 @@ int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 /** Maps from player_class to starting stat. */
 int StatTbl[enum_size<HeroClass>::value][5] = {
 	// clang-format off
-	{ 30, 10, 20, 25, 30 },
-	{ 20, 15, 30, 20, 20 },
-	{ 15, 35, 15, 20, 10 },
-	{ 25, 15, 25, 20, 25 },
-	{ 20, 20, 25, 20, 25 },
-	{ 40,  0, 20, 25, 30 },
+               // Str, Mag, Dex, Vit, Blk
+/* Warrior   */ { 30,  10,  20,  25,  30 },
+/* Rogue     */ { 20,  15,  30,  20,  20 },
+/* Sorcerer  */ { 15,  35,  15,  20,  10 },
+/* Monk      */ { 25,  15,  25,  20,  25 },
+/* Bard      */ { 20,  20,  25,  20,  25 },
+/* Barbarian */ { 40,   0,  20,  25,  30 },
 	// clang-format on
 };
 
