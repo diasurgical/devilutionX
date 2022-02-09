@@ -2613,10 +2613,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	item_equip_type leftHandLoc = player.InvBody[INVLOC_HAND_LEFT]._iLoc;
 	item_equip_type rightHandLoc = player.InvBody[INVLOC_HAND_RIGHT]._iLoc;
 
-	ItemType chestItem = player.InvBody[INVLOC_CHEST]._itype;
-	bool chestUsable = player.CanUseItem(player.InvBody[INVLOC_CHEST]);
-	item_quality chestMagical = player.InvBody[INVLOC_CHEST]._iMagical;
-
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && player.CanUseItem(item)) {
 
@@ -2870,6 +2866,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	default:
 		break;
 	}
+
+	ItemType chestItem = player.InvBody[INVLOC_CHEST]._itype;
+	bool chestUsable = player.CanUseItem(player.InvBody[INVLOC_CHEST]);
+	item_quality chestMagical = player.InvBody[INVLOC_CHEST]._iMagical;
 
 	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
 	if (chestItem == ItemType::HeavyArmor && chestUsable) {
