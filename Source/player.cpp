@@ -1313,8 +1313,8 @@ void DamageParryItem(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	ItemType leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
-	ItemType rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	ItemType &leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+	ItemType &rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
 	int &leftHandItemDur = player.InvBody[INVLOC_HAND_LEFT]._iDurability;
 	int &rightHandItemDur = player.InvBody[INVLOC_HAND_RIGHT]._iDurability;
 
@@ -1326,7 +1326,7 @@ void DamageParryItem(int pnum)
 		leftHandItemDur--;
 		if (leftHandItemDur == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			leftHandItemType = ItemType::None;
 			CalcPlrInv(player, true);
 		}
 	}
@@ -1336,7 +1336,7 @@ void DamageParryItem(int pnum)
 			rightHandItemDur--;
 			if (rightHandItemDur == 0) {
 				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-				player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+				rightHandItemType = ItemType::None;
 				CalcPlrInv(player, true);
 			}
 		}
