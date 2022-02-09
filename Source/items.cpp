@@ -2545,7 +2545,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	int bdam = 0;   // bonus damage
 	int btohit = 0; // bonus chance to hit
-	int bac = 0;    // bonus accuracy
+	int bac = 0;    // accuracy
 
 	int iflgs = ISPL_NONE; // item_special_effect flags
 
