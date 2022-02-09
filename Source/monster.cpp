@@ -4644,39 +4644,14 @@ void PrintMonstHistory(int mt)
 
 	AddPanelString(tempstr);
 	if (MonsterKillCounts[mt] >= 30) {
-		int minHP = MonstersData[mt].mMinHP;
-		int maxHP = MonstersData[mt].mMaxHP;
-		if (!gbIsHellfire && mt == MT_DIABLO) {
-			minHP -= 2000;
-			maxHP -= 2000;
-		}
-		if (!gbIsMultiplayer) {
-			minHP /= 2;
-			maxHP /= 2;
-		}
-		if (minHP < 1)
-			minHP = 1;
-		if (maxHP < 1)
-			maxHP = 1;
-
-		int hpBonusNightmare = 1;
-		int hpBonusHell = 3;
-		if (gbIsHellfire) {
-			hpBonusNightmare = (!gbIsMultiplayer ? 50 : 100);
-			hpBonusHell = (!gbIsMultiplayer ? 100 : 200);
-		}
-		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-			minHP = 3 * minHP + hpBonusNightmare;
-			maxHP = 3 * maxHP + hpBonusNightmare;
-		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-			minHP = 4 * minHP + hpBonusHell;
-			maxHP = 4 * maxHP + hpBonusHell;
-		}
+		int minHP = LevelMonsterTypes[mt].mMinHP;
+		int maxHP = LevelMonsterTypes[mt].mMaxHP;
+		
 		strcpy(tempstr, fmt::format(_("Hit Points: {:d}-{:d}"), minHP, maxHP).c_str());
 		AddPanelString(tempstr);
 	}
 	if (MonsterKillCounts[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].mMagicRes : MonstersData[mt].mMagicRes2;
+		int res = LevelMonsterTypes[mt].mMagicRes;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
 			strcpy(tempstr, _("No magic resistance"));
 			AddPanelString(tempstr);
