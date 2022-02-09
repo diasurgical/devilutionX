@@ -2600,8 +2600,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int lmin = 0; // minimum lightning damage
 	int lmax = 0; // maximum lightning damage
 
-	HeroClass pc = player._pClass;
-
 	ItemType leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
 	ItemType rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
 	bool leftHandUsable = player.InvBody[INVLOC_HAND_LEFT]._iStatFlag;
@@ -2815,7 +2813,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pILMaxDam = lmax;
 
 	player._pBlockFlag = false;
-	if (pc == HeroClass::Monk) {
+	if (player._pClass == HeroClass::Monk) {
 		if (leftHandItemType == ItemType::Staff && leftHandUsable) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
