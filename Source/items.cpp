@@ -2602,8 +2602,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	HeroClass pc = player._pClass;
 
-	ItemType leftHandItem = player.InvBody[INVLOC_HAND_LEFT]._itype;
-	ItemType rightHandItem = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	ItemType leftHandItemTypeType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+	ItemType rightHandItemTypeType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
 	bool leftHandUsable = player.InvBody[INVLOC_HAND_LEFT]._iStatFlag;
 	bool rightHandUsable = player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag;
 	bool leftHandEmpty = player.InvBody[INVLOC_HAND_LEFT].isEmpty();
@@ -2671,11 +2671,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		mind = 1;
 		maxd = 1;
 
-		if (leftHandItem == ItemType::Shield && leftHandUsable) {
+		if (leftHandItemType == ItemType::Shield && leftHandUsable) {
 			maxd = 3;
 		}
 
-		if (rightHandItem == ItemType::Shield && rightHandUsable) {
+		if (rightHandItemType == ItemType::Shield && rightHandUsable) {
 			maxd = 3;
 		}
 
@@ -2725,35 +2725,35 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 200;
 		break;
 	case HeroClass::Monk:
-		if (IsAnyOf(ItemType::Staff, leftHandItem, rightHandItem) || (leftHandEmpty && rightHandEmpty)) {
+		if (IsAnyOf(ItemType::Staff, leftHandItemType, rightHandItemType) || (leftHandEmpty && rightHandEmpty)) {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
 		} else {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 300;
 		}
 		break;
 	case HeroClass::Bard:
-		if (IsAnyOf(ItemType::Sword, leftHandItem, rightHandItem)) {
+		if (IsAnyOf(ItemType::Sword, leftHandItemType, rightHandItemType)) {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 150;
-		} else if (IsAnyOf(ItemType::Bow, leftHandItem, rightHandItem)) {
+		} else if (IsAnyOf(ItemType::Bow, leftHandItemType, rightHandItemType)) {
 			player._pDamageMod = playerLevel * (player._pStrength + player._pDexterity) / 250;
 		} else {
 			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
 		break;
 	case HeroClass::Barbarian:
-		if (IsAnyOf(ItemType::Axe, leftHandItem, rightHandItem) || IsAnyOf(ItemType::Mace, leftHandItem, rightHandItem)) {
+		if (IsAnyOf(ItemType::Axe, leftHandItemType, rightHandItemType) || IsAnyOf(ItemType::Mace, leftHandItemType, rightHandItemType)) {
 			player._pDamageMod = playerLevel * player._pStrength / 75;
-		} else if (IsAnyOf(ItemType::Bow, leftHandItem, rightHandItem)) {
+		} else if (IsAnyOf(ItemType::Bow, leftHandItemType, rightHandItemType)) {
 			player._pDamageMod = playerLevel * player._pStrength / 300;
 		} else {
 			player._pDamageMod = playerLevel * player._pStrength / 100;
 		}
-		if (IsAnyOf(ItemType::Shield, leftHandItem, rightHandItem)) {
-			if (leftHandItem == ItemType::Shield)
+		if (IsAnyOf(ItemType::Shield, leftHandItemType, rightHandItemType)) {
+			if (leftHandItemType == ItemType::Shield)
 				player._pIAC -= leftHandAc / 2;
-			else if (rightHandItem == ItemType::Shield)
+			else if (rightHandItemType == ItemType::Shield)
 				player._pIAC -= rightHandAc / 2;
-		} else if (IsNoneOf(leftHandItem, ItemType::Staff, ItemType::Bow) && IsNoneOf(rightHandItem, ItemType::Staff, ItemType::Bow)) {
+		} else if (IsNoneOf(leftHandItemType, ItemType::Staff, ItemType::Bow) && IsNoneOf(rightHandItemType, ItemType::Staff, ItemType::Bow)) {
 			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
 		player._pIAC += playerLevel / 4;
@@ -2817,11 +2817,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	player._pBlockFlag = false;
 	if (pc == HeroClass::Monk) {
-		if (leftHandItem == ItemType::Staff && leftHandUsable) {
+		if (leftHandItemType == ItemType::Staff && leftHandUsable) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
-		if (rightHandItem == ItemType::Staff && rightHandUsable) {
+		if (rightHandItemType == ItemType::Staff && rightHandUsable) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
@@ -2836,19 +2836,19 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	ItemType weaponItemType = ItemType::None;
 	bool holdsShield = false;
 	if (!leftHandEmpty && leftHandClass == ICLASS_WEAPON && leftHandUsable) {
-		weaponItemType = leftHandItem;
+		weaponItemType = leftHandItemType;
 	}
 
 	if (!rightHandEmpty && rightHandClass == ICLASS_WEAPON && rightHandUsable) {
-		weaponItemType = rightHandItem;
+		weaponItemType = rightHandItemType;
 	}
 
-	if (leftHandItem == ItemType::Shield && leftHandUsable) {
+	if (leftHandItemType == ItemType::Shield && leftHandUsable) {
 		player._pBlockFlag = true;
 		holdsShield = true;
 	}
 
-	if (rightHandItem == ItemType::Shield && rightHandUsable) {
+	if (rightHandItemType == ItemType::Shield && rightHandUsable) {
 		player._pBlockFlag = true;
 		holdsShield = true;
 	}
