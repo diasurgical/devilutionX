@@ -1943,7 +1943,6 @@ void CheckCheatStats(Player &player)
 			// Default: 201, Whale: 100, Whale: 100, Shaefer's Hammer: 50, Tiger: 50, Karik's Ring: 90, Karik's Ring: 90, Lion: 60
 			if (player._pHitPoints > 741 << 6)
 				player._pHitPoints = 741 << 6;
-
 		}
 		// Default: 173, Royal Circlet: 55, Sorcery: 30, Dreamflange: 95, Brilliance: 22, Dragon's/Wizardry: 105, Dragon's/Wizardry: 105, Dragon's/Wizardry: 105
 		if (player._pMana > 690 << 6)
