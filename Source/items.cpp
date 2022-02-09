@@ -2602,8 +2602,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	HeroClass pc = player._pClass;
 
-	ItemType leftHandItemTypeType = player.InvBody[INVLOC_HAND_LEFT]._itype;
-	ItemType rightHandItemTypeType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	ItemType leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+	ItemType rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
 	bool leftHandUsable = player.InvBody[INVLOC_HAND_LEFT]._iStatFlag;
 	bool rightHandUsable = player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag;
 	bool leftHandEmpty = player.InvBody[INVLOC_HAND_LEFT].isEmpty();
