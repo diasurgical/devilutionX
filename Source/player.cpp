@@ -756,57 +756,68 @@ bool DamageWeapon(int pnum, int durrnd)
 		return false;
 	}
 
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	bool leftHandEmpty = player.InvBody[INVLOC_HAND_LEFT].isEmpty();
+	bool rightHandEmpty = player.InvBody[INVLOC_HAND_RIGHT].isEmpty();
+	ItemType &leftHandItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
+	ItemType &rightHandItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
+	item_class leftHandItemClass = player.InvBody[INVLOC_HAND_LEFT]._iClass;
+	item_class rightHandItemClass = player.InvBody[INVLOC_HAND_RIGHT]._iClass;
+	int &leftHandItemDur = player.InvBody[INVLOC_HAND_LEFT]._iDurability;
+	int &rightHandItemDur = player.InvBody[INVLOC_HAND_RIGHT]._iDurability;
+
+
+
+	if (!leftHandEmpty && leftHandItemClass == ICLASS_WEAPON) {
+		if (leftHandItemDur == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
+		leftHandItemDur--;
+		if (leftHandItemDur <= 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			leftHandItemType = ItemType::None;
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (!rightHandEmpty && rightHandItemClass == ICLASS_WEAPON) {
+		if (rightHandItemDur == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		rightHandItemDur--;
+		if (rightHandItemDur <= 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			rightHandItemType = ItemType::None;
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (leftHandEmpty && rightHandItemType == ItemType::Shield) {
+		if (rightHandItemDur == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
+		rightHandItemDur--;
+		if (rightHandItemDur <= 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			rightHandItemType = ItemType::None;
 			CalcPlrInv(player, true);
 			return true;
 		}
 	}
 
-	if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+	if (rightHandEmpty && leftHandItemType == ItemType::Shield) {
+		if (leftHandItemDur == DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
-		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		leftHandItemDur--;
+		if (leftHandItemDur <= 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			leftHandItemType = ItemType::None;
 			CalcPlrInv(player, true);
 			return true;
 		}
