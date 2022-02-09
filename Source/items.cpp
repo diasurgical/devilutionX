@@ -2605,8 +2605,6 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	bool rightHandUsable = player.CanUseItem(player.InvBody[INVLOC_HAND_RIGHT]);
 	bool leftHandEmpty = player.InvBody[INVLOC_HAND_LEFT].isEmpty();
 	bool rightHandEmpty = player.InvBody[INVLOC_HAND_RIGHT].isEmpty();
-	int16_t leftHandAc = player.InvBody[INVLOC_HAND_LEFT]._iAC;
-	int16_t rightHandAc = player.InvBody[INVLOC_HAND_RIGHT]._iAC;
 	item_class leftHandClass = player.InvBody[INVLOC_HAND_LEFT]._iClass;
 	item_class rightHandClass = player.InvBody[INVLOC_HAND_RIGHT]._iClass;
 	item_equip_type leftHandLoc = player.InvBody[INVLOC_HAND_LEFT]._iLoc;
@@ -2743,9 +2741,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 		if (IsAnyOf(ItemType::Shield, leftHandItemType, rightHandItemType)) {
 			if (leftHandItemType == ItemType::Shield)
-				player._pIAC -= leftHandAc / 2;
+				player._pIAC -= player.InvBody[INVLOC_HAND_LEFT]._iAC / 2;
 			else if (rightHandItemType == ItemType::Shield)
-				player._pIAC -= rightHandAc / 2;
+				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
 		} else if (IsNoneOf(leftHandItemType, ItemType::Staff, ItemType::Bow) && IsNoneOf(rightHandItemType, ItemType::Staff, ItemType::Bow)) {
 			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
