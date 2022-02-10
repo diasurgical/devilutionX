@@ -20,7 +20,6 @@ int VisionId;
 Light Lights[MAXLIGHTS];
 uint8_t ActiveLights[MAXLIGHTS];
 int ActiveLightCount;
-char LightsMax;
 std::array<uint8_t, LIGHTSIZE> LightTables;
 bool DisableLighting;
 bool UpdateLighting;
@@ -937,11 +936,6 @@ void ToggleLighting()
 	}
 }
 #endif
-
-void InitLightMax()
-{
-	LightsMax = 15;
-}
 
 void InitLighting()
 {
