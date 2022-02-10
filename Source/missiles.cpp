@@ -2191,7 +2191,6 @@ void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 	if (monster.MType->mtype >= MT_NSNAKE && monster.MType->mtype <= MT_GSNAKE)
 		missile._miAnimFrame = 7;
 	if (monster._uniqtype != 0) {
-		missile._miUniqTrans = monster._uniqtrans + 1;
 		missile._mlid = monster.mlid;
 	}
 	PutMissile(missile);
@@ -2715,6 +2714,13 @@ Missile *AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mi
 	missile._miDrawFlag = missileData.mDraw;
 	missile._mlid = NO_LIGHT;
 	missile.lastCollisionTargetHash = 0;
+
+	if (micaster == TARGET_PLAYERS) {
+		Monster &monster = Monsters[id];
+		if (monster._uniqtype != 0) {
+			missile._miUniqTrans = monster._uniqtrans + 1;
+		}
+	}
 
 	if (missile._miAnimType == MFILE_NONE || MissileSpriteData[missile._miAnimType].animFAmt < 8)
 		SetMissDir(missile, 0);
