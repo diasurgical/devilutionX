@@ -370,10 +370,6 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	auto &monster = Monsters[ActiveMonsterCount];
 	const auto &uniqueMonsterData = UniqueMonstersData[uniqindex];
 
-	if ((uniquetrans + 19) * 256 >= LIGHTSIZE) {
-		return;
-	}
-
 	int uniqtype;
 	for (uniqtype = 0; uniqtype < LevelMonsterTypeCount; uniqtype++) {
 		if (LevelMonsterTypes[uniqtype].mtype == uniqueMonsterData.mtype) {
@@ -543,10 +539,6 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 	}
-
-	char filestr[64];
-	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
-	LoadFileInMem(filestr, &LightTables[256 * (uniquetrans + 19)], 256);
 
 	monster._uniqtrans = uniquetrans++;
 

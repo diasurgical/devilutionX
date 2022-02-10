@@ -1002,7 +1002,7 @@ void DrawDurIcon(const Surface &out)
 void RedBack(const Surface &out)
 {
 	uint8_t *dst = out.begin();
-	uint8_t *tbl = &LightTables[4608];
+	uint8_t *tbl = &LightTables[16 * 256];
 	for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
 		for (int w = gnScreenWidth; w != 0; w--) {
 			if (leveltype != DTYPE_HELL || *dst >= 32)

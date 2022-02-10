@@ -17,7 +17,8 @@ namespace devilution {
 
 #define MAXLIGHTS 32
 #define MAXVISION 32
-#define LIGHTSIZE (27 * 256)
+/** 16 light levels + red for pause/death screen */
+#define LIGHTSIZE (17 * 256)
 #define NO_LIGHT -1
 
 struct LightPosition {
