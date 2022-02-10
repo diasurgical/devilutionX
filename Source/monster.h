@@ -280,7 +280,7 @@ extern bool sgbSaveSoundOn;
 
 void InitLevelMonsters();
 void GetLevelMTypes();
-void InitMonsterType(int monst);
+void InitMonsterAdjust(int monst, bool isUnique = 0, Monster *monster = nullptr);
 void InitMonsterGFX(int monst);
 void monster_some_crypt();
 void InitGolems();

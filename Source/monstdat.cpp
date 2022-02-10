@@ -468,7 +468,7 @@ const char MonstAvailTbl[] = {
 /** Contains the data related to each unique monster ID. */
 const UniqueMonsterData UniqueMonstersData[] = {
 	// clang-format off
-	// mtype,       mName,                          mTrnName,    mlevel, mmaxhp, mAi,      mint, mMinDamage, mMaxDamage, mMagicRes,                                                    monsterPack, customHitpoints, customArmorClass, mtalkmsg
+	// mtype,       mName,									   mTrnName,    mlevel, mmaxhp, mAi,      mint, mMinDamage, mMaxDamage, mMagicRes,                                                    monsterPack,		customHitpoints, customArmorClass, mtalkmsg
 	// TRANSLATORS: Unique Monster Block start
 	{  MT_NGOATMC,  P_("monster", "Gharbad the Weak"),         "BSDB",        4,    120, AI_GARBUD,   3,          8,         16,                              IMMUNE_LIGHTNING | IMMUNE_NULL_40,  UniqueMonsterPack::None,        0,        0, TEXT_GARBUD1   },
 	{  MT_SKING,    P_("monster", "Skeleton King"),            "GENRL",       0,    240, AI_SKELKING, 3,          6,         16, IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40,  UniqueMonsterPack::Independent, 0,        0, TEXT_NONE      },
@@ -488,7 +488,7 @@ const UniqueMonsterData UniqueMonstersData[] = {
 	{  MT_NZOMBIE,  P_("monster", "Soulpus"),                  "GENERAL",     2,    133, AI_ZOMBIE,   0,          4,          8,                RESIST_FIRE | RESIST_LIGHTNING                 ,  UniqueMonsterPack::None,        0,        0, TEXT_NONE      },
 	{  MT_RFALLSP,  P_("monster", "Pukerat the Unclean"),      "PTU",         2,     77, AI_FALLEN,   3,          1,          5,                RESIST_FIRE                                    ,  UniqueMonsterPack::None,        0,        0, TEXT_NONE      },
 	{  MT_WSKELAX,  P_("monster", "Boneripper"),               "BR",          2,     54, AI_BAT,      0,          6,         15, IMMUNE_MAGIC | IMMUNE_FIRE |                    IMMUNE_NULL_40,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
-	{  MT_NZOMBIE,  P_("monster", "Rotfeast the Hungry"),      "ETH",         2,     85, AI_SKELSD,   3,          4,         12, IMMUNE_MAGIC |                                  IMMUNE_NULL_40,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
+	{  MT_NZOMBIE,  P_("monster", "Rotfeast the Hungry"),      "ETH",         2,     85, AI_SKELSD,   3,          4,         12, IMMUNE_MAGIC |                                  IMMUNE_NULL_40,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      }, // Note, can't spawn via PlaceUniqueMonsters(), Soulpus same mtype and mlevel
 	{  MT_DFALLSD,  P_("monster", "Gutshank the Quick"),       "GTQ",         3,     66, AI_BAT,      2,          6,         16,                RESIST_FIRE                                    ,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
 	{  MT_TSKELSD,  P_("monster", "Brokenhead Bangshield"),    "BHBS",        3,    108, AI_SKELSD,   3,         12,         20, IMMUNE_MAGIC |               RESIST_LIGHTNING | IMMUNE_NULL_40,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
 	{  MT_YFALLSP,  P_("monster", "Bongo"),                    "BNG",         3,    178, AI_FALLEN,   3,          9,         21, 0                                                             ,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
