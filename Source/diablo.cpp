@@ -2189,7 +2189,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	SetDungeonMicros();
 
-	InitLightMax();
 	IncProgress();
 	IncProgress();
 
