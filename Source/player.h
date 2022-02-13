@@ -894,7 +894,8 @@ public:
 
 	/** @brief Checks if the player level is owned by local client. */
 	bool isLevelOwnedByLocalClient() const;
-	constexpr bool IsHoldingItem(ItemType type)
+
+	bool IsHoldingItem(ItemType type)
 	{
 		return IsAnyOf(type, InvBody[INVLOC_HAND_LEFT]._itype, InvBody[INVLOC_HAND_RIGHT]._itype);
 	}
