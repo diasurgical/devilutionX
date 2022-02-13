@@ -1929,9 +1929,9 @@ void CheckCheatStats(Player &player)
 			// Default: 316, Whale: 100, Whale:100, Life: 60, Tiger: 50, Karik's Ring: 120, Karik's Ring: 120, Life: 60
 			if (player._pHitPoints > 926 << 6)
 				player._pHitPoints = 926 << 6;
-			// Default: 98, Royal Circlet: 50, Whale: 0, Dreamflange: 80, Tiger: 0, Gladiator's Ring: 186, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90
-			if (player._pMana > 594 << 6)
-				player._pMana = 594 << 6;
+			// Default: 98, Royal Circlet: 50, Whale: 0, Dreamflange: 80, Tiger: 0, Gladiator's Ring: 218, Dragon's/Zodiac: 80, Dragon's/Zoadiac: 80
+			if (player._pMana > 606 << 6)
+				player._pMana = 606 << 6;
 		}
 		break;
 	case HeroClass::Rogue:
@@ -1992,19 +1992,19 @@ void CheckCheatStats(Player &player)
 		break;
 	case HeroClass::Barbarian:
 		if (!gbIsHellfire) {
-			// Default: 418, Whale: 100, Whale:100, Life: 60, Tiger: 50, Life/Lion: 60, Life/Lion: 60, Life/Lion: 60
-			if (player._pHitPoints > 908 << 6)
-				player._pHitPoints = 908 << 6;
+			// Default: 418, Whale: 100, Whale:100, Life: 75, Tiger: 50, Life: 75, Life: 75, Life: 75
+			if (player._pHitPoints > 968 << 6)
+				player._pHitPoints = 968 << 6;
 			// Default: 0, Royal Circlet: 50, Naj's Light Plate: 25, Dreamflange: 80, Brilliance: 15, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90
 			if (player._pMana > 440 << 6)
 				player._pMana = 440 << 6;
 		} else {
-			// Default: 418, Whale: 100, Whale:100, Life: 60, Tiger: 50, Karik's Ring: 120, Karik's Ring: 120, Life: 60
-			if (player._pHitPoints > 926 << 6)
-				player._pHitPoints = 926 << 6;
-			// Default: 0, Royal Circlet: 50, Whale: 0, Dreamflange: 80, Tiger: 0, Gladiator's Ring: 227, Dragon's/Wizardry: 90, Dragon's/Wizardry: 90
-			if (player._pMana > 537 << 6)
-				player._pMana = 537 << 6;
+			// Default: 418, Whale: 100, Whale:100, Life: 75, Tiger: 50, Karik's Ring: 150, Karik's Ring: 150, Life: 75
+			if (player._pHitPoints > 1118 << 6)
+				player._pHitPoints = 1118 << 6;
+			// Default: 0, Royal Circlet: 50, Whale: 0, Dreamflange: 80, Tiger: 0, Gladiator's Ring: 277, Dragon's/Zodiac: 80, Dragon's/Zodiac: 80
+			if (player._pMana > 567 << 6)
+				player._pMana = 567 << 6;
 		}
 		break;
 	}
