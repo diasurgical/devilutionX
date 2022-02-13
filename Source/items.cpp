@@ -2745,7 +2745,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				player._pIAC -= player.InvBody[INVLOC_HAND_LEFT]._iAC / 2;
 			else if (rightHandItemType == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
-		} else if (!player.IsHoldingItem(ItemType::Staff) && player.IsHoldingItem(ItemType::Bow)) {
+		} else if (!player.IsHoldingItem(ItemType::Staff) && !player.IsHoldingItem(ItemType::Bow)) {
 			player._pDamageMod += playerLevel * player._pVitality / 100;
 		}
 		player._pIAC += playerLevel / 4;
