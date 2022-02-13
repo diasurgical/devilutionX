@@ -550,9 +550,9 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	monster._uniqtrans = uniquetrans++;
 
-	if (uniqueMonsterData.customHitpoints != 0) {
-		monster.mHit = uniqueMonsterData.customHitpoints;
-		monster.mHit2 = uniqueMonsterData.customHitpoints;
+	if (uniqueMonsterData.customToHit != 0) {
+		monster.mHit = uniqueMonsterData.customToHit;
+		monster.mHit2 = uniqueMonsterData.customToHit;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.mHit += NIGHTMARE_TO_HIT_BONUS;
