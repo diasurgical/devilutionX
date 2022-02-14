@@ -442,14 +442,28 @@ void StartAttack(int pnum, Direction d)
 	}
 
 	int skippedAnimationFrames = 0;
-	if ((player._pIFlags & ISPL_FASTERATTACK) != 0) {
-		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
-		skippedAnimationFrames = 2;
+	int increasePercent = 0;
+	if ((player._pIFlags & ISPL_FASTESTATTACK) != 0) {
+		increasePercent = 40;
+	} else if ((player._pIFlags & ISPL_FASTERATTACK) != 0) {
+		increasePercent = 30;
 	} else if ((player._pIFlags & ISPL_FASTATTACK) != 0) {
-		skippedAnimationFrames = 1;
-	} else if ((player._pIFlags & ISPL_FASTESTATTACK) != 0) {
-		// Fastest Attack is skipped if Fast or Faster Attack is also specified, cause both skip the frame that triggers fastest attack skipping
-		skippedAnimationFrames = 2;
+		increasePercent = 20;
+	} else if ((player._pIFlags & ISPL_QUICKATTACK) != 0) {
+		increasePercent = 10;
+	}
+
+	if ((player._pIFlags & ISPL_QUICKATTACK) != 0 || (player._pIFlags & ISPL_FASTATTACK) != 0 || (player._pIFlags & ISPL_FASTERATTACK) != 0 || (player._pIFlags & ISPL_FASTESTATTACK) != 0) {
+
+		if (increasePercent >= ((1000 / (player._pAFNum - 4)) * player._pAFNum - 1000) / 10) {
+			skippedAnimationFrames = 4;
+		} else if (increasePercent >= ((1000 / (player._pAFNum - 3)) * player._pAFNum - 1000) / 10) {
+			skippedAnimationFrames = 3;
+		} else if (increasePercent >= ((1000 / (player._pAFNum - 2)) * player._pAFNum - 1000) / 10) {
+			skippedAnimationFrames = 2;
+		} else if (increasePercent >= ((1000 / (player._pAFNum - 1)) * player._pAFNum - 1000) / 10) {
+			skippedAnimationFrames = 1;
+		}
 	}
 
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;

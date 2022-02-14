@@ -3875,13 +3875,13 @@ void DoOil(Player &player, int cii)
 		return _("penetrates target's armor");
 	case IPL_FASTATTACK:
 		if ((item._iFlags & ISPL_QUICKATTACK) != 0)
-			return _("quick attack");
+			return _("+10% increased attack speed");
 		if ((item._iFlags & ISPL_FASTATTACK) != 0)
-			return _("fast attack");
+			return _("+20% increased attack speed");
 		if ((item._iFlags & ISPL_FASTERATTACK) != 0)
-			return _("faster attack");
+			return _("+30% increased attack speed");
 		if ((item._iFlags & ISPL_FASTESTATTACK) != 0)
-			return _("fastest attack");
+			return _("+40% increased attack speed");
 		return _("Another ability (NW)");
 	case IPL_FASTRECOVER:
 		if ((item._iFlags & ISPL_FASTRECOVER) != 0)
