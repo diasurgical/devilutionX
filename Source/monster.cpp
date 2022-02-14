@@ -50,6 +50,7 @@
 
 namespace devilution {
 
+<<<<<<< HEAD
 CMonster LevelMonsterTypes[MaxLvlMTypes];
 size_t LevelMonsterTypeCount;
 Monster Monsters[MaxMonsters];
@@ -58,6 +59,15 @@ size_t ActiveMonsterCount;
 // BUGFIX: replace MonsterKillCounts[MaxMonsters] with MonsterKillCounts[NUM_MTYPES].
 /** Tracks the total number of monsters killed per monster_id. */
 int MonsterKillCounts[MaxMonsters];
+=======
+CMonster LevelMonsterTypes[MAX_LVLMTYPES];
+int LevelMonsterTypeCount;
+Monster Monsters[MAXMONSTERS];
+int ActiveMonsters[MAXMONSTERS];
+int ActiveMonsterCount;
+/** Tracks the total number of monsters killed per monster_id. */
+int MonsterKillCounts[NUM_MTYPES];
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 bool sgbSaveSoundOn;
 
 namespace {
@@ -73,6 +83,7 @@ size_t totalmonsters;
 int monstimgtot;
 int uniquetrans;
 
+<<<<<<< HEAD
 constexpr const std::array<_monster_id, 12> SkeletonTypes {
 	MT_WSKELAX,
 	MT_TSKELAX,
@@ -95,6 +106,37 @@ size_t GetNumAnims(const MonsterData &monsterData)
 {
 	return monsterData.hasSpecial ? 6 : 5;
 }
+=======
+/** Maps from monster walk animation frame num to monster velocity. */
+int MWVel[24][3] = {
+	{ 256, 512, 1024 },
+	{ 128, 256, 512 },
+	{ 85, 171, 341 },
+	{ 64, 128, 256 },
+	{ 51, 102, 205 },
+	{ 43, 85, 171 },
+	{ 37, 73, 146 },
+	{ 32, 64, 128 },
+	{ 28, 57, 114 },
+	{ 26, 51, 102 },
+	{ 23, 47, 93 },
+	{ 21, 43, 85 },
+	{ 20, 39, 79 },
+	{ 18, 37, 73 },
+	{ 17, 34, 68 },
+	{ 16, 32, 64 },
+	{ 15, 30, 60 },
+	{ 14, 28, 57 },
+	{ 13, 27, 54 },
+	{ 13, 26, 51 },
+	{ 12, 24, 49 },
+	{ 12, 23, 47 },
+	{ 11, 22, 45 },
+	{ 11, 21, 43 }
+};
+	/** Maps from monster action to monster animation letter. */
+char animletter[7] = "nwahds";
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 
 void InitMonsterTRN(CMonster &monst)
 {
@@ -139,6 +181,7 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.maxHitPoints = maxhp << 6;
 
 	if (!gbIsMultiplayer)
+<<<<<<< HEAD
 		monster.maxHitPoints = std::max(monster.maxHitPoints / 2, 64);
 
 	monster.hitPoints = monster.maxHitPoints;
@@ -164,6 +207,35 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 	monster.armorClass = monster.data().armorClass;
 	monster.resistance = monster.data().resistance;
 	monster.leader = Monster::NoLeader;
+=======
+		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
+
+	monster._mhitpoints = monster._mmaxhp;
+	monster._mAi = monster.MData->mAi;
+	monster._mint = monster.MData->mInt;
+	monster._mgoal = MGOAL_NORMAL;
+	monster._mgoalvar1 = 0;
+	monster._mgoalvar2 = 0;
+	monster._mgoalvar3 = 0;
+	monster._pathcount = 0;
+	monster._mDelFlag = false;
+	monster._uniqtype = 0;
+	monster._msquelch = 0;
+	monster.mlid = NO_LIGHT;
+	monster._mRndSeed = AdvanceRndSeed();
+	monster._mAISeed = AdvanceRndSeed();
+	monster.mWhoHit = 0;
+	monster.mExp = monster.MData->mExp;
+	monster.mHit = monster.MData->mHit;
+	monster.mMinDamage = monster.MData->mMinDamage;
+	monster.mMaxDamage = monster.MData->mMaxDamage;
+	monster.mHit2 = monster.MData->mHit2;
+	monster.mMinDamage2 = monster.MData->mMinDamage2;
+	monster.mMaxDamage2 = monster.MData->mMaxDamage2;
+	monster.mArmorClass = monster.MData->mArmorClass;
+	monster.mMagicRes = monster.MData->mMagicRes;
+	monster.leader = 0;
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 	monster.leaderRelation = LeaderRelation::None;
 	monster.flags = monster.data().abilityFlags;
 	monster.talkMsg = TEXT_NONE;
@@ -390,8 +462,111 @@ void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspa
 			UberDiabloMonsterIndex = -1;
 			return;
 		}
+<<<<<<< HEAD
 		position = { UberRow - 2, UberCol };
 		UberDiabloMonsterIndex = static_cast<int>(ActiveMonsterCount);
+=======
+		xp = UberRow - 2;
+		yp = UberCol;
+		UberDiabloMonsterIndex = ActiveMonsterCount;
+	}
+	PlaceMonster(ActiveMonsterCount, uniqtype, xp, yp);
+	monster._uniqtype = uniqindex + 1;
+
+	if (uniqueMonsterData.mlevel != 0) {
+		monster.mLevel = 2 * uniqueMonsterData.mlevel;
+	} else {
+		monster.mLevel = monster.MData->mLevel + 5;
+	}
+
+	monster.mExp *= 2;
+	monster.mName = pgettext("monster", uniqueMonsterData.mName);
+	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
+
+	if (!gbIsMultiplayer)
+		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
+
+	monster._mhitpoints = monster._mmaxhp;
+	monster._mAi = uniqueMonsterData.mAi;
+	monster._mint = uniqueMonsterData.mint;
+	monster.mMinDamage = uniqueMonsterData.mMinDamage;
+	monster.mMaxDamage = uniqueMonsterData.mMaxDamage;
+	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
+	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
+	monster.mMagicRes = uniqueMonsterData.mMagicRes;
+	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
+	if (uniqindex == UMT_HORKDMN)
+		monster.mlid = NO_LIGHT;
+	else
+		monster.mlid = AddLight(monster.position.tile, 3);
+
+	if (gbIsMultiplayer) {
+		if (monster._mAi == AI_LAZHELP)
+			monster.mtalkmsg = TEXT_NONE;
+		if (monster._mAi == AI_LAZARUS && Quests[Q_BETRAYER]._qvar1 > 3) {
+			monster._mgoal = MGOAL_NORMAL;
+		} else if (monster.mtalkmsg != TEXT_NONE) {
+			monster._mgoal = MGOAL_INQUIRING;
+		}
+	} else if (monster.mtalkmsg != TEXT_NONE) {
+		monster._mgoal = MGOAL_INQUIRING;
+	}
+
+	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
+		monster._mmaxhp = 3 * monster._mmaxhp;
+		if (gbIsHellfire)
+			monster._mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
+		else
+			monster._mmaxhp += 64;
+		monster.mLevel += 15;
+		monster._mhitpoints = monster._mmaxhp;
+		monster.mExp = 2 * (monster.mExp + 1000);
+		monster.mMinDamage = 2 * (monster.mMinDamage + 2);
+		monster.mMaxDamage = 2 * (monster.mMaxDamage + 2);
+		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
+		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
+	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+		monster._mmaxhp = 4 * monster._mmaxhp;
+		if (gbIsHellfire)
+			monster._mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
+		else
+			monster._mmaxhp += 192;
+		monster.mLevel += 30;
+		monster._mhitpoints = monster._mmaxhp;
+		monster.mExp = 4 * (monster.mExp + 1000);
+		monster.mMinDamage = 4 * monster.mMinDamage + 6;
+		monster.mMaxDamage = 4 * monster.mMaxDamage + 6;
+		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
+		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
+	}
+
+	char filestr[64];
+	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
+	LoadFileInMem(filestr, &LightTables[256 * (uniquetrans + 19)], 256);
+
+	monster._uniqtrans = uniquetrans++;
+
+	if (uniqueMonsterData.customHitpoints != 0) {
+		monster.mHit = uniqueMonsterData.customHitpoints;
+		monster.mHit2 = uniqueMonsterData.customHitpoints;
+
+		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
+			monster.mHit += NIGHTMARE_TO_HIT_BONUS;
+			monster.mHit2 += NIGHTMARE_TO_HIT_BONUS;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+			monster.mHit += HELL_TO_HIT_BONUS;
+			monster.mHit2 += HELL_TO_HIT_BONUS;
+		}
+	}
+	if (uniqueMonsterData.customArmorClass != 0) {
+		monster.mArmorClass = uniqueMonsterData.customArmorClass;
+
+		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
+			monster.mArmorClass += NIGHTMARE_AC_BONUS;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+			monster.mArmorClass += HELL_AC_BONUS;
+		}
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 	}
 	const size_t typeIndex = GetMonsterTypeIndex(uniqueMonsterData.mtype);
 	PlaceMonster(ActiveMonsterCount, typeIndex, position);
@@ -939,6 +1114,7 @@ void Teleport(Monster &monster)
 
 bool IsHardHit(Monster &target, unsigned dam)
 {
+<<<<<<< HEAD
 	switch (target.type().type) {
 	case MT_SNEAK:
 	case MT_STALKER:
@@ -948,6 +1124,39 @@ bool IsHardHit(Monster &target, unsigned dam)
 	default:
 		return (dam >> 6) >= target.level(sgGameInitInfo.nDifficulty) + 3;
 	}
+=======
+	assert(i >= 0 && i < MAXMONSTERS);
+	auto &monster = Monsters[i];
+	assert(monster.MType != nullptr);
+
+	if (pnum >= 0)
+		monster.mWhoHit |= 1 << pnum;
+	if (pnum < MAX_PLRS && i >= MAX_PLRS)
+		AddPlrMonstExper(monster.mLevel, monster.mExp, monster.mWhoHit);
+	MonsterKillCounts[monster.MType->mtype]++;
+	monster._mhitpoints = 0;
+	SetRndSeed(monster._mRndSeed);
+	SpawnLoot(monster, sendmsg);
+	if (monster.MType->mtype == MT_DIABLO)
+		DiabloDeath(monster, true);
+	else
+		PlayEffect(monster, 2);
+
+	Direction md = pnum >= 0 ? GetMonsterDirection(monster) : monster._mdir;
+	NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+	monster._mmode = MonsterMode::Death;
+	monster._mgoal = MGOAL_NONE;
+	monster.position.offset = { 0, 0 };
+	monster._mVar1 = 0;
+	monster.position.tile = monster.position.old;
+	monster.position.future = monster.position.old;
+	M_ClearSquares(i);
+	dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
+	CheckQuestKill(monster, sendmsg);
+	M_FallenFear(monster.position.tile);
+	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
+		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 }
 
 void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
@@ -1067,7 +1276,11 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 		}
 	}
 
+<<<<<<< HEAD
 	if (monster.lightId != NO_LIGHT) // BUGFIX: change uniqtype check to lightId check like it is in all other places (fixed)
+=======
+	if (monster.mlid != NO_LIGHT)
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 		SyncLightPosition(monster);
 
 	return isAnimationEnd;
@@ -1172,6 +1385,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		StartPlrBlock(player, dir);
 		if (&player == MyPlayer && player.wReflections > 0) {
 			int dam = GenerateRnd(((maxDam - minDam) << 6) + 1) + (minDam << 6);
+<<<<<<< HEAD
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			CheckReflect(monster, player, dam);
 		}
@@ -1181,10 +1395,21 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		if (player._pMaxHP > 64) {
 			if (player._pMaxHPBase > 64) {
 				player._pMaxHP -= 64;
+=======
+			dam = std::max(dam + (player._pIGetHit << 6), 1 << 6);
+			CheckReflect(i, pnum, dam);
+		}
+		return;
+	}
+	if (monster.MType->mtype == MT_YZOMBIE && pnum == MyPlayerId) {
+		if (player._pMaxHP > 1 << 6) {
+			if (player._pMaxHPBase > 1 << 6) {
+				player._pMaxHP -= 1 << 6;
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 				if (player._pHitPoints > player._pMaxHP) {
 					player._pHitPoints = player._pMaxHP;
 				}
-				player._pMaxHPBase -= 64;
+				player._pMaxHPBase -= 1 << 6;
 				if (player._pHPBase > player._pMaxHPBase) {
 					player._pHPBase = player._pMaxHPBase;
 				}
@@ -1192,6 +1417,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 		}
 	}
 	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
+<<<<<<< HEAD
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (&player == MyPlayer) {
 		if (player.wReflections > 0) {
@@ -1199,6 +1425,13 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 			dam = std::max(dam - reflectedDamage, 0);
 		}
 		ApplyPlrDamage(DamageType::Physical, player, 0, 0, dam);
+=======
+	dam = std::max(dam + (player._pIGetHit << 6), 1 << 6);
+	if (pnum == MyPlayerId) {
+		if (player.wReflections > 0)
+			CheckReflect(i, pnum, dam);
+		ApplyPlrDamage(pnum, 0, 0, dam);
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 	}
 
 	// Reflect can also kill a monster, so make sure the monster is still alive
@@ -1408,7 +1641,7 @@ void MonsterTalk(Monster &monster)
 	if (monster.uniqueType == UniqueMonsterType::Garbud) {
 		if (monster.talkMsg == TEXT_GARBUD1) {
 			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
-			Quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
+			Quests[Q_GARBUD]._qlog = true;
 		}
 		if (monster.talkMsg == TEXT_GARBUD2 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, true);
@@ -2127,6 +2360,7 @@ void ScavengerAi(Monster &monster)
 		monster.goalVar3--;
 		if (dCorpse[monster.position.tile.x][monster.position.tile.y] != 0) {
 			StartEating(monster);
+<<<<<<< HEAD
 			if (gbIsHellfire) {
 				int mMaxHP = monster.maxHitPoints;
 				monster.hitPoints += mMaxHP / 8;
@@ -2136,6 +2370,19 @@ void ScavengerAi(Monster &monster)
 					dCorpse[monster.position.tile.x][monster.position.tile.y] = 0;
 			} else {
 				monster.hitPoints += 64;
+=======
+			if ((monster._mFlags & MFLAG_NOHEAL) == 0) {
+				if (gbIsHellfire) {
+					int mMaxHP = monster._mmaxhp;
+					monster._mhitpoints += mMaxHP / 8;
+					if (monster._mhitpoints > monster._mmaxhp)
+						monster._mhitpoints = monster._mmaxhp;
+					if (monster._mgoalvar3 <= 0 || monster._mhitpoints == monster._mmaxhp)
+						dCorpse[monster.position.tile.x][monster.position.tile.y] = 0;
+				} else {
+					monster._mhitpoints += 64;
+				}
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 			}
 			int targetHealth = monster.maxHitPoints;
 			if (!gbIsHellfire)
@@ -2146,11 +2393,48 @@ void ScavengerAi(Monster &monster)
 				monster.goalVar2 = 0;
 			}
 		} else {
+<<<<<<< HEAD
 			if (monster.goalVar1 == 0) {
 				std::optional<Point> position = ScavengerFindCorpse(monster);
 				if (position) {
 					monster.goalVar1 = position->x + 1;
 					monster.goalVar2 = position->y + 1;
+=======
+			if (monster._mgoalvar1 == 0) {
+				bool done = false;
+				int x;
+				int y;
+				if (GenerateRnd(2) != 0) {
+					for (y = -4; y <= 4 && !done; y++) {
+						for (x = -4; x <= 4 && !done; x++) {
+							if (!InDungeonBounds(monster.position.tile + Displacement { x, y }))
+								continue;
+							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
+							    && IsLineNotSolid(
+							        monster.position.tile,
+							        monster.position.tile + Displacement { x, y });
+						}
+					}
+					x--;
+					y--;
+				} else {
+					for (y = 4; y >= -4 && !done; y--) {
+						for (x = 4; x >= -4 && !done; x--) {
+							if (!InDungeonBounds(monster.position.tile + Displacement { x, y }))
+								continue;
+							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
+							    && IsLineNotSolid(
+							        monster.position.tile,
+							        monster.position.tile + Displacement { x, y });
+						}
+					}
+					x++;
+					y++;
+				}
+				if (done) {
+					monster._mgoalvar1 = x + monster.position.tile.x + 1;
+					monster._mgoalvar2 = y + monster.position.tile.y + 1;
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 				}
 			}
 			if (monster.goalVar1 != 0) {
@@ -3869,9 +4153,17 @@ void GolumAi(Monster &golem)
 				enemy.position.last = golem.position.tile;
 				for (int j = 0; j < 5; j++) {
 					for (int k = 0; k < 5; k++) {
-						int enemyId = dMonster[golem.position.tile.x + k - 2][golem.position.tile.y + j - 2]; // BUGFIX: Check if indexes are between 0 and 112
+						int golemXIndex = golem.position.tile.x + k - 2;
+						int golemYIndex = golem.position.tile.y + j - 2;
+						if (golemXIndex < 0 || golemXIndex > 112 || golemYIndex < 0 || golemYIndex > 112)
+							continue;
+						int enemyId = dMonster[golem.position.tile.x + k - 2][golem.position.tile.y + j - 2];
 						if (enemyId > 0)
+<<<<<<< HEAD
 							Monsters[enemyId - 1].activeForTicks = UINT8_MAX; // BUGFIX: should be `Monsters[enemy-1]`, not Monsters[enemy]. (fixed)
+=======
+							Monsters[enemyId - 1]._msquelch = UINT8_MAX;
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 					}
 				}
 			}

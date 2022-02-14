@@ -439,11 +439,20 @@ struct Monster { // note: missing field _mAFNum
 	bool tryLiftGargoyle();
 };
 
+<<<<<<< HEAD
 extern size_t LevelMonsterTypeCount;
 extern Monster Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];
 extern size_t ActiveMonsterCount;
 extern int MonsterKillCounts[MaxMonsters];
+=======
+extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
+extern int LevelMonsterTypeCount;
+extern Monster Monsters[MAXMONSTERS];
+extern int ActiveMonsters[MAXMONSTERS];
+extern int ActiveMonsterCount;
+extern int MonsterKillCounts[NUM_MTYPES];
+>>>>>>> c3b3b189d (Apply bugfix MWVel)
 extern bool sgbSaveSoundOn;
 
 void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
