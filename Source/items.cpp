@@ -3881,7 +3881,7 @@ void DoOil(Player &player, int cii)
 		if ((item._iFlags & ISPL_FASTERATTACK) != 0)
 			return _("+30% increased attack speed");
 		if ((item._iFlags & ISPL_FASTESTATTACK) != 0)
-			return _("+40% increased attack speed");
+			return _("+30% increased attack speed");
 		return _("Another ability (NW)");
 	case IPL_FASTRECOVER:
 		if ((item._iFlags & ISPL_FASTRECOVER) != 0)
