@@ -442,18 +442,19 @@ void StartAttack(int pnum, Direction d)
 	}
 
 	int skippedAnimationFrames = 0;
-	int increasePercent = 0;
-	if ((player._pIFlags & ISPL_FASTESTATTACK) != 0) {
-		increasePercent = 40;
-	} else if ((player._pIFlags & ISPL_FASTERATTACK) != 0) {
-		increasePercent = 30;
-	} else if ((player._pIFlags & ISPL_FASTATTACK) != 0) {
-		increasePercent = 20;
-	} else if ((player._pIFlags & ISPL_QUICKATTACK) != 0) {
-		increasePercent = 10;
-	}
 
 	if ((player._pIFlags & ISPL_QUICKATTACK) != 0 || (player._pIFlags & ISPL_FASTATTACK) != 0 || (player._pIFlags & ISPL_FASTERATTACK) != 0 || (player._pIFlags & ISPL_FASTESTATTACK) != 0) {
+		int increasePercent = 0;
+
+		if ((player._pIFlags & ISPL_FASTESTATTACK) != 0) {
+			increasePercent = 40;
+		} else if ((player._pIFlags & ISPL_FASTERATTACK) != 0) {
+			increasePercent = 30;
+		} else if ((player._pIFlags & ISPL_FASTATTACK) != 0) {
+			increasePercent = 20;
+		} else if ((player._pIFlags & ISPL_QUICKATTACK) != 0) {
+			increasePercent = 10;
+		}
 
 		if (increasePercent >= ((1000 / (player._pAFNum - 4)) * player._pAFNum - 1000) / 10) {
 			skippedAnimationFrames = 4;
