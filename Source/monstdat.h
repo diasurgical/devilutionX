@@ -307,7 +307,7 @@ struct UniqueMonsterData {
 	 */
 
 	UniqueMonsterPack monsterPack;
-	uint8_t customHitpoints;
+	uint8_t customToHit;
 	uint8_t customArmorClass;
 	_speech_id mtalkmsg;
 };
