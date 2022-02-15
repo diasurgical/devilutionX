@@ -540,6 +540,10 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 	}
 
+	char filestr[64];
+	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
+	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
+
 	monster._uniqtrans = uniquetrans++;
 
 	if (uniqueMonsterData.customToHit != 0) {

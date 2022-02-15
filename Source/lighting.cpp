@@ -848,6 +848,12 @@ void MakeLightTable()
 		tbl += 240;
 	}
 
+	LoadFileInMem("PlrGFX\\Infra.TRN", tbl, 256);
+	tbl += 256;
+
+	LoadFileInMem("PlrGFX\\Stone.TRN", tbl, 256);
+	tbl += 256;
+
 	for (int i = 0; i < 8; i++) {
 		for (uint8_t col = 226; col < 239; col++) {
 			if (i != 0 || col != 226) {

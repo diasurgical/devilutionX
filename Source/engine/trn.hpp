@@ -7,12 +7,8 @@
 
 namespace devilution {
 
-uint8_t *GetTRN(const char *path);
-
-uint8_t *GetUniqueMonsterTRN(const char *path);
-
 uint8_t *GetInfravisionTRN();
-
 uint8_t *GetStoneTRN();
+uint8_t *GetPauseTRN();
 
 } // namespace devilution

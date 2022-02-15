@@ -319,10 +319,9 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 
 	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
 	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
-	if (missile._miUniqTrans != 0) {
-		uint8_t *trn = GetUniqueMonsterTRN(UniqueMonstersData[Monsters[missile._misource]._uniqtype - 1].mTrnName);
-		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame, trn);
-	} else if (missile._miLightFlag)
+	if (missile._miUniqTrans != 0)
+		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame, Monsters[missile._misource].uniqueTRN.get());
+	else if (missile._miLightFlag)
 		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame);
 	else
 		Cl2Draw(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame);
@@ -440,7 +439,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	uint8_t *trn = nullptr;
 	if (monster._uniqtype != 0)
-		trn = GetUniqueMonsterTRN(UniqueMonstersData[monster._uniqtype - 1].mTrnName);
+		trn = monster.uniqueTRN.get();
 	if (monster._mmode == MonsterMode::Petrified)
 		trn = GetStoneTRN();
 	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
@@ -862,7 +861,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				break;
 			}
 			if (pDeadGuy->translationPaletteIndex != 0) {
-				uint8_t *trn = GetUniqueMonsterTRN(UniqueMonstersData[pDeadGuy->translationPaletteIndex - 1].mTrnName);
+				uint8_t *trn = Monsters[pDeadGuy->translationPaletteIndex - 1].uniqueTRN.get();
 				Cl2DrawTRN(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel, trn);
 			} else {
 				Cl2DrawLight(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel);

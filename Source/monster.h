@@ -219,6 +219,7 @@ struct Monster { // note: missing field _mAFNum
 	const char *mName;
 	CMonster *MType;
 	const MonsterData *MData;
+	std::unique_ptr<uint8_t[]> uniqueTRN;
 
 	/**
 	 * @brief Sets the current cell sprite to match the desired direction and animation sequence
