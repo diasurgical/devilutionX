@@ -50,6 +50,8 @@ void RepeatMouseAction()
 	auto &myPlayer = Players[MyPlayerId];
 	if (myPlayer.destAction != ACTION_NONE)
 		return;
+	if (myPlayer._pInvincible)
+		return;
 	if (!myPlayer.CanChangeAction())
 		return;
 
