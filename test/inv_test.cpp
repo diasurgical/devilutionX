@@ -198,7 +198,7 @@ TEST(Inv, RemoveCurrentSpellScroll_inventory)
 
 	// Put a firebolt scroll into the inventory
 	MyPlayer->_pNumInv = 1;
-	MyPlayer->_pSpell = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
 	MyPlayer->InvList[0]._itype = ItemType::Misc;
 	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
 	MyPlayer->InvList[0]._iSpell = SPL_FIREBOLT;
@@ -216,7 +216,7 @@ TEST(Inv, RemoveCurrentSpellScroll_belt)
 		MyPlayer->SpdList[i].clear();
 	}
 	// Put a firebolt scroll into the belt
-	MyPlayer->_pSpell = static_cast<spell_id>(SPL_FIREBOLT);
+	MyPlayer->executedSpell.spellId = static_cast<spell_id>(SPL_FIREBOLT);
 	MyPlayer->SpdList[3]._itype = ItemType::Misc;
 	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
 	MyPlayer->SpdList[3]._iSpell = SPL_FIREBOLT;

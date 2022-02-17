@@ -384,7 +384,7 @@ void ClearStateVariables(Player &player)
 {
 	player.position.temp = { 0, 0 };
 	player.tempDirection = Direction::South;
-	player.spellLevel = 0;
+	player.queuedSpell.spellLevel = 0;
 	player.position.offset2 = { 0, 0 };
 }
 
@@ -501,9 +501,9 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, GetPlayerGraphicForSpell(player._pSpell), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player.queuedSpell.spellId), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
 
-	PlaySfxLoc(spelldata[player._pSpell].sSFX, player.position.tile);
+	PlaySfxLoc(spelldata[player.queuedSpell.spellId].sSFX, player.position.tile);
 
 	player._pmode = PM_SPELL;
 
@@ -511,7 +511,8 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	SetPlayerOld(player);
 
 	player.position.temp = WorldTilePosition { cx, cy };
-	player.spellLevel = player.GetSpellLevel(player._pSpell);
+	player.queuedSpell.spellLevel = player.GetSpellLevel(player.queuedSpell.spellId);
+	player.executedSpell = player.queuedSpell;
 }
 
 void RespawnDeadItem(Item &&itm, Point target)
@@ -1264,14 +1265,14 @@ bool DoSpell(Player &player)
 	if (player.AnimInfo.currentFrame == player._pSFNum) {
 		CastSpell(
 		    player.getId(),
-		    player._pSpell,
+		    player.executedSpell.spellId,
 		    player.position.tile.x,
 		    player.position.tile.y,
 		    player.position.temp.x,
 		    player.position.temp.y,
-		    player.spellLevel);
+		    player.executedSpell.spellLevel);
 
-		if (player._pSplFrom == 0) {
+		if (player.executedSpell.spellFrom == 0) {
 			EnsureValidReadiedSpell(player);
 		}
 	}
@@ -1525,22 +1526,22 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(player, d, player.destParam1, player.destParam2);
-			player.spellLevel = player.destParam3;
+			player.executedSpell.spellLevel = player.destParam3;
 			break;
 		case ACTION_SPELLWALL:
 			StartSpell(player, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2);
 			player.tempDirection = static_cast<Direction>(player.destParam3);
-			player.spellLevel = player.destParam4;
+			player.executedSpell.spellLevel = player.destParam4;
 			break;
 		case ACTION_SPELLMON:
 			d = GetDirection(player.position.tile, monster->position.future);
 			StartSpell(player, d, monster->position.future.x, monster->position.future.y);
-			player.spellLevel = player.destParam2;
+			player.executedSpell.spellLevel = player.destParam2;
 			break;
 		case ACTION_SPELLPLR:
 			d = GetDirection(player.position.tile, target->position.future);
 			StartSpell(player, d, target->position.future.x, target->position.future.y);
-			player.spellLevel = player.destParam2;
+			player.executedSpell.spellLevel = player.destParam2;
 			break;
 		case ACTION_OPERATE:
 			if (IsPlayerAdjacentToObject(player, *object)) {
@@ -2051,7 +2052,7 @@ player_graphic Player::getGraphic() const
 	case PM_BLOCK:
 		return player_graphic::Block;
 	case PM_SPELL:
-		switch (spelldata[_pSpell].sType) {
+		switch (spelldata[executedSpell.spellId].sType) {
 		case STYPE_FIRE:
 			return player_graphic::Fire;
 		case STYPE_LIGHTNING:
@@ -2742,8 +2743,8 @@ void InitPlayer(Player &player, bool firstTime)
 		if (&player == MyPlayer)
 			LoadHotkeys();
 		player._pSBkSpell = SPL_INVALID;
-		player._pSpell = player._pRSpell;
-		player._pSplType = player._pRSplType;
+		player.queuedSpell.spellId = player._pRSpell;
+		player.queuedSpell.spellType = player._pRSplType;
 		player.pManaShield = false;
 		player.wReflections = 0;
 	}

@@ -1914,7 +1914,7 @@ void UseStaffCharge(Player &player)
 {
 	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
 
-	if (!CanUseStaff(staff, player._pSpell))
+	if (!CanUseStaff(staff, player.executedSpell.spellId))
 		return;
 
 	staff._iCharges--;

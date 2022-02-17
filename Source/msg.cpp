@@ -1141,9 +1141,9 @@ size_t OnSpellWall(const TCmd *pCmd, Player &player)
 	player.destParam2 = position.y;
 	player.destParam3 = message.wParam3;
 	player.destParam4 = message.wParam4;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam2);
-	player._pSplFrom = 0;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam2);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -1179,8 +1179,8 @@ size_t OnSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam1 = position.x;
 	player.destParam2 = position.y;
 	player.destParam3 = message.wParam3;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam2);
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam2);
 
 	return sizeof(message);
 }
@@ -1210,9 +1210,9 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	player.destParam1 = position.x;
 	player.destParam2 = position.y;
 	player.destParam3 = message.wParam2;
-	player._pSpell = spell;
-	player._pSplType = RSPLTYPE_INVALID;
-	player._pSplFrom = 2;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = RSPLTYPE_INVALID;
+	player.queuedSpell.spellFrom = 2;
 
 	return sizeof(message);
 }
@@ -1317,9 +1317,9 @@ size_t OnSpellMonster(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLMON;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam4;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam3);
-	player._pSplFrom = 0;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam3);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -1353,9 +1353,9 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLPLR;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam4;
-	player._pSpell = spell;
-	player._pSplType = static_cast<spell_type>(message.wParam3);
-	player._pSplFrom = 0;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = static_cast<spell_type>(message.wParam3);
+	player.queuedSpell.spellFrom = 0;
 
 	return sizeof(message);
 }
@@ -1385,9 +1385,9 @@ size_t OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLMON;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam3;
-	player._pSpell = spell;
-	player._pSplType = RSPLTYPE_INVALID;
-	player._pSplFrom = 2;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = RSPLTYPE_INVALID;
+	player.queuedSpell.spellFrom = 2;
 
 	return sizeof(message);
 }
@@ -1415,9 +1415,9 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLPLR;
 	player.destParam1 = message.wParam1;
 	player.destParam2 = message.wParam3;
-	player._pSpell = spell;
-	player._pSplType = RSPLTYPE_INVALID;
-	player._pSplFrom = 2;
+	player.queuedSpell.spellId = spell;
+	player.queuedSpell.spellType = RSPLTYPE_INVALID;
+	player.queuedSpell.spellFrom = 2;
 
 	return sizeof(message);
 }
@@ -2020,9 +2020,9 @@ size_t OnNova(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1) {
 		if (player.isOnActiveLevel() && &player != MyPlayer && InDungeonBounds(position)) {
 			ClrPlrPath(player);
-			player._pSpell = SPL_NOVA;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 3;
+			player.queuedSpell.spellId = SPL_NOVA;
+			player.queuedSpell.spellType = RSPLTYPE_INVALID;
+			player.queuedSpell.spellFrom = 3;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = position.x;
 			player.destParam2 = position.y;

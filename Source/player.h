@@ -210,6 +210,14 @@ struct PlayerAnimationData {
 	}
 };
 
+struct SpellCastInfo {
+	spell_id spellId;
+	spell_type spellType;
+	int8_t spellFrom; // TODO Create enum
+	/* @brief Used for spell level */
+	int spellLevel;
+};
+
 struct Player {
 	Player() = default;
 	Player(Player &&) noexcept = default;
@@ -242,9 +250,10 @@ struct Player {
 	float progressToNextGameTickWhenPreviewWasSet;
 	int _plid;
 	int _pvid;
-	spell_id _pSpell;
-	spell_type _pSplType;
-	int8_t _pSplFrom; // TODO Create enum
+	/* @brief next queued spell */
+	SpellCastInfo queuedSpell;
+	/* @brief the spell that is currently casted */
+	SpellCastInfo executedSpell;
 	spell_id _pTSpell;
 	spell_id _pRSpell;
 	spell_type _pRSplType;
@@ -295,8 +304,7 @@ struct Player {
 	bool _pInfraFlag;
 	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
 	Direction tempDirection;
-	/** Used for spell level */
-	int spellLevel;
+
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
 	/**
