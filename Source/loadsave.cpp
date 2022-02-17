@@ -359,9 +359,9 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._plid = file.NextLE<int32_t>();
 	player._pvid = file.NextLE<int32_t>();
 
-	player._pSpell = static_cast<spell_id>(file.NextLE<int32_t>());
-	player._pSplType = static_cast<spell_type>(file.NextLE<int8_t>());
-	player._pSplFrom = file.NextLE<int8_t>();
+	player.queuedSpell.spellId = static_cast<spell_id>(file.NextLE<int32_t>());
+	player.queuedSpell.spellType = static_cast<spell_type>(file.NextLE<int8_t>());
+	player.queuedSpell.spellFrom = file.NextLE<int8_t>();
 	file.Skip(2); // Alignment
 	player._pTSpell = static_cast<spell_id>(file.NextLE<int32_t>());
 	file.Skip<int8_t>(); // Skip _pTSplType
@@ -444,7 +444,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.temp.y = static_cast<WorldTileCoord>(tempPositionY);
 
 	player.tempDirection = static_cast<Direction>(file.NextLE<int32_t>());
-	player.spellLevel = file.NextLE<int32_t>();
+	player.queuedSpell.spellLevel = file.NextLE<int32_t>();
 	file.Skip<uint32_t>(); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
 	player.position.offset2.deltaX = file.NextLE<int32_t>();
 	player.position.offset2.deltaY = file.NextLE<int32_t>();
@@ -549,6 +549,8 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	file.Skip(20); // Available bytes
 	CalcPlrItemVals(player, false);
+
+	player.executedSpell = player.queuedSpell; // Ensures backwards compatibility
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -1128,9 +1130,9 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._plid);
 	file.WriteLE<int32_t>(player._pvid);
 
-	file.WriteLE<int32_t>(player._pSpell);
-	file.WriteLE<int8_t>(player._pSplType);
-	file.WriteLE<int8_t>(player._pSplFrom);
+	file.WriteLE<int32_t>(player.queuedSpell.spellId);
+	file.WriteLE<int8_t>(player.queuedSpell.spellType);
+	file.WriteLE<int8_t>(player.queuedSpell.spellFrom);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(player._pTSpell);
 	file.Skip<int8_t>(); // Skip _pTSplType
@@ -1214,7 +1216,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(tempPositionY);
 
 	file.WriteLE<int32_t>(static_cast<int32_t>(player.tempDirection));
-	file.WriteLE<int32_t>(player.spellLevel);
+	file.WriteLE<int32_t>(player.queuedSpell.spellLevel);
 	file.Skip<int32_t>(); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
 	file.WriteLE<int32_t>(player.position.offset2.deltaX);
 	file.WriteLE<int32_t>(player.position.offset2.deltaY);

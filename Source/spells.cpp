@@ -176,7 +176,7 @@ void UseMana(Player &player, spell_id sn)
 	if (&player != MyPlayer)
 		return;
 
-	switch (player._pSplType) {
+	switch (player.executedSpell.spellType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_INVALID:
 		break;

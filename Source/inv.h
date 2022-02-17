@@ -381,7 +381,7 @@ inline bool RemoveInventoryOrBeltItemById(Player &player, _item_indexes id)
  */
 inline bool RemoveCurrentSpellScroll(Player &player)
 {
-	const spell_id spellId = player._pSpell;
+	const spell_id spellId = player.executedSpell.spellId;
 	return RemoveInventoryOrBeltItem(player, [spellId](const Item &item) {
 		return item.isScrollOf(spellId);
 	});

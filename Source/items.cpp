@@ -3911,9 +3911,9 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
-			player._pSpell = spl;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 3;
+			player.queuedSpell.spellId = spl;
+			player.queuedSpell.spellType = RSPLTYPE_INVALID;
+			player.queuedSpell.spellFrom = 3;
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;
 			player.destParam2 = cursPosition.y;
