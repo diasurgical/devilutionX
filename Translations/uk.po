@@ -1269,32 +1269,28 @@ msgid "Stops walking and cancel pending actions."
 msgstr "Зупиняє ходьбу і незакінчені дії."
 
 #: Source/diablo.cpp:1480
-#, fuzzy
-#| msgid "lightning"
 msgid "Item highlighting"
-msgstr "блискавки"
+msgstr "Підствітлення Предметів"
 
 #: Source/diablo.cpp:1481
 msgid "Show/hide items on ground."
-msgstr ""
+msgstr "Показати/Сховати предмети на землі."
 
 #: Source/diablo.cpp:1487
-#, fuzzy
-#| msgid "Resist lightning"
 msgid "Toggle item highlighting"
-msgstr "Спротив блискавці"
+msgstr "Постійне підсвітлення предметів"
 
 #: Source/diablo.cpp:1488
 msgid "Permanent show/hide items on ground."
-msgstr ""
+msgstr "Постійно показувати/ховати предмети на землі."
 
 #: Source/diablo.cpp:1494
 msgid "Toggle automap"
-msgstr ""
+msgstr "Автокарта"
 
 #: Source/diablo.cpp:1495
 msgid "Toggles if automap is displayed."
-msgstr ""
+msgstr "Перемикає відображення автокарти"
 
 #: Source/diablo.cpp:1504
 msgid "Open Inventory screen."
@@ -1333,16 +1329,12 @@ msgid "Use Quick Message in chat."
 msgstr "Відправити Швидке Повідомлення в чат."
 
 #: Source/diablo.cpp:1546
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide Info Screens"
-msgstr "Пробіл: Сховати всі вікна"
+msgstr "Сховати Вікна"
 
 #: Source/diablo.cpp:1547
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide all info screens."
-msgstr "Пробіл: Сховати всі вікна"
+msgstr "Ховає всі інформаційні вікна."
 
 #: Source/diablo.cpp:1566
 msgid "Zoom"
@@ -1353,16 +1345,12 @@ msgid "Zoom Game Screen."
 msgstr "Збільшити/зменшити екран гри."
 
 #: Source/diablo.cpp:1577
-#, fuzzy
-#| msgid "Save Game"
 msgid "Pause Game"
-msgstr "Зберегти Гру"
+msgstr "Зупинити Гру"
 
 #: Source/diablo.cpp:1578
-#, fuzzy
-#| msgid "Saves the game."
 msgid "Pauses the game."
-msgstr "Зберігає гру."
+msgstr "Ставить гру на паузу."
 
 #: Source/diablo.cpp:1583
 msgid "Decrease Gamma"
@@ -1390,11 +1378,11 @@ msgstr "Відкрити вікно Допомоги."
 
 #: Source/diablo.cpp:1607
 msgid "Screenshot"
-msgstr ""
+msgstr "Знімок екрана"
 
 #: Source/diablo.cpp:1608
 msgid "Takes a screenshot."
-msgstr ""
+msgstr "Робить знімок екрана."
 
 #: Source/diablo.cpp:1614
 msgid "Game info"
@@ -1739,7 +1727,7 @@ msgstr "Гамма"
 
 #: Source/gamemenu.cpp:64 Source/gamemenu.cpp:171
 msgid "Speed"
-msgstr "Швидкість"
+msgstr "Швид-ть"
 
 #: Source/gamemenu.cpp:72
 msgid "Music Disabled"
@@ -4533,12 +4521,12 @@ msgstr "Скелет"
 #: Source/monstdat.cpp:29
 msgctxt "monster"
 msgid "Corpse Axe"
-msgstr ""
+msgstr "Труп з Сокирою"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
 msgctxt "monster"
 msgid "Burning Dead"
-msgstr ""
+msgstr "Палаючий Скелет"
 
 #: Source/monstdat.cpp:31 Source/monstdat.cpp:43
 msgctxt "monster"
@@ -4553,12 +4541,12 @@ msgstr ""
 #: Source/monstdat.cpp:37
 msgctxt "monster"
 msgid "Plague Eater"
-msgstr ""
+msgstr "Пожирач Чуми"
 
 #: Source/monstdat.cpp:38
 msgctxt "monster"
 msgid "Shadow Beast"
-msgstr ""
+msgstr "Звір Тіні"
 
 #: Source/monstdat.cpp:39
 msgctxt "monster"
@@ -4568,57 +4556,57 @@ msgstr ""
 #: Source/monstdat.cpp:41
 msgctxt "monster"
 msgid "Corpse Bow"
-msgstr ""
+msgstr "Труп з Луком"
 
 #: Source/monstdat.cpp:44
 msgctxt "monster"
 msgid "Skeleton Captain"
-msgstr ""
+msgstr "Капітан Скелетів"
 
 #: Source/monstdat.cpp:45
 msgctxt "monster"
 msgid "Corpse Captain"
-msgstr ""
+msgstr "Капітан Трупів"
 
 #: Source/monstdat.cpp:46
 msgctxt "monster"
 msgid "Burning Dead Captain"
-msgstr ""
+msgstr "Капітан Палаючих Скелетів"
 
 #: Source/monstdat.cpp:47
 msgctxt "monster"
 msgid "Horror Captain"
-msgstr ""
+msgstr "Капітан Кошмарів"
 
 #: Source/monstdat.cpp:48
 msgctxt "monster"
 msgid "Invisible Lord"
-msgstr ""
+msgstr "Невидимий Лорд"
 
 #: Source/monstdat.cpp:49
 msgctxt "monster"
 msgid "Hidden"
-msgstr ""
+msgstr "Прихований"
 
 #: Source/monstdat.cpp:50
 msgctxt "monster"
 msgid "Stalker"
-msgstr ""
+msgstr "Сталкер"
 
 #: Source/monstdat.cpp:51
 msgctxt "monster"
 msgid "Unseen"
-msgstr ""
+msgstr "Невидимий"
 
 #: Source/monstdat.cpp:52
 msgctxt "monster"
 msgid "Illusion Weaver"
-msgstr ""
+msgstr "Ткач Іллюзій"
 
 #: Source/monstdat.cpp:53
 msgctxt "monster"
 msgid "Satyr Lord"
-msgstr ""
+msgstr "Лорд Сатирів"
 
 #: Source/monstdat.cpp:54 Source/monstdat.cpp:62
 msgctxt "monster"
@@ -4643,7 +4631,7 @@ msgstr "Клан Ночі"
 #: Source/monstdat.cpp:58
 msgctxt "monster"
 msgid "Fiend"
-msgstr ""
+msgstr "Біс"
 
 #: Source/monstdat.cpp:59
 msgctxt "monster"
@@ -4683,12 +4671,12 @@ msgstr ""
 #: Source/monstdat.cpp:70 Source/monstdat.cpp:474
 msgctxt "monster"
 msgid "Skeleton King"
-msgstr ""
+msgstr "Король-Скелет"
 
 #: Source/monstdat.cpp:71 Source/monstdat.cpp:482
 msgctxt "monster"
 msgid "The Butcher"
-msgstr ""
+msgstr "М'ясник"
 
 #: Source/monstdat.cpp:72
 msgctxt "monster"
@@ -6366,19 +6354,19 @@ msgstr "Показує лічильник кадрів в секунду в ве
 
 #: Source/options.cpp:760
 msgid "Show health values"
-msgstr ""
+msgstr "Показати значення здоров'я"
 
 #: Source/options.cpp:760
 msgid "Displays current / max health value on health globe."
-msgstr ""
+msgstr "Показує значення поточного/максимального здоров'я на кулі здоров'я."
 
 #: Source/options.cpp:761
 msgid "Show mana values"
-msgstr ""
+msgstr "Показати значення мани"
 
 #: Source/options.cpp:761
 msgid "Displays current / max mana value on mana globe."
-msgstr ""
+msgstr "Показує значення поточної/максимальної мани на кулі мани."
 
 #: Source/options.cpp:809
 msgid "Gameplay"
@@ -7039,7 +7027,7 @@ msgstr "До {:s}"
 
 #: Source/setmaps.cpp:24
 msgid "Skeleton King's Lair"
-msgstr "Лігво Короля Скелета"
+msgstr "Лігво Короля-Скелета"
 
 #: Source/setmaps.cpp:25
 msgid "Chamber of Bone"
