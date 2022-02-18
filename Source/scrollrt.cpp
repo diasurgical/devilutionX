@@ -28,6 +28,7 @@
 #include "nthread.h"
 #include "panels/charpanel.hpp"
 #include "plrmsg.h"
+#include "qol/chatlog.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
@@ -1292,6 +1293,9 @@ void DrawView(const Surface &out, Point startPosition)
 	}
 	if (HelpFlag) {
 		DrawHelp(out);
+	}
+	if (ChatLogFlag) {
+		DrawChatLog(out);
 	}
 	if (IsDiabloMsgAvailable()) {
 		DrawDiabloMsg(out);
