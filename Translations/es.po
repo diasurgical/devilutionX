@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-02-15 10:32-0300\n"
-"PO-Revision-Date: 2022-02-15 10:37-0300\n"
+"POT-Creation-Date: 2022-02-18 20:24-0300\n"
+"PO-Revision-Date: 2022-02-18 20:27-0300\n"
 "Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -1732,9 +1732,10 @@ msgstr "Reiniciar en la Ciudad"
 msgid "Gamma"
 msgstr "Gama"
 
+# Mantener corto. Texto de menú
 #: Source/gamemenu.cpp:64 Source/gamemenu.cpp:171
 msgid "Speed"
-msgstr "Velocidad"
+msgstr "Veloc."
 
 #: Source/gamemenu.cpp:72
 msgid "Music Disabled"
@@ -5602,71 +5603,71 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Cerradura de la Condenación"
 
-#: Source/monster.cpp:3479
+#: Source/monster.cpp:3485
 msgid "Animal"
 msgstr "Animal"
 
-#: Source/monster.cpp:3481
+#: Source/monster.cpp:3487
 msgid "Demon"
 msgstr "Demonio"
 
-#: Source/monster.cpp:3483
+#: Source/monster.cpp:3489
 msgid "Undead"
 msgstr "Muerto viviente"
 
-#: Source/monster.cpp:4621
+#: Source/monster.cpp:4630
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Tipo: {:s}  Muertes: {:d}"
 
-#: Source/monster.cpp:4623
+#: Source/monster.cpp:4632
 msgid "Total kills: {:d}"
 msgstr "Muertes totales: {:d}"
 
-#: Source/monster.cpp:4656
+#: Source/monster.cpp:4665
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Puntos de Golpe: {:d}- {:d}"
 
-#: Source/monster.cpp:4662
+#: Source/monster.cpp:4671
 msgid "No magic resistance"
 msgstr "Sin resistencia mágica"
 
-#: Source/monster.cpp:4666
+#: Source/monster.cpp:4675
 msgid "Resists: "
 msgstr "Resiste: "
 
-#: Source/monster.cpp:4668 Source/monster.cpp:4680
+#: Source/monster.cpp:4677 Source/monster.cpp:4689
 msgid "Magic "
 msgstr "Magia "
 
-#: Source/monster.cpp:4670 Source/monster.cpp:4682
+#: Source/monster.cpp:4679 Source/monster.cpp:4691
 msgid "Fire "
 msgstr "Fuego "
 
-#: Source/monster.cpp:4672 Source/monster.cpp:4684
+#: Source/monster.cpp:4681 Source/monster.cpp:4693
 msgid "Lightning "
 msgstr "Rayo "
 
-#: Source/monster.cpp:4678
+#: Source/monster.cpp:4687
 msgid "Immune: "
 msgstr "Inmune: "
 
-#: Source/monster.cpp:4697
+#: Source/monster.cpp:4706
 msgid "Type: {:s}"
 msgstr "Tipo: {:s}"
 
-#: Source/monster.cpp:4703 Source/monster.cpp:4710
+#: Source/monster.cpp:4712 Source/monster.cpp:4719
 msgid "No resistances"
 msgstr "Sin resistencias"
 
-#: Source/monster.cpp:4705 Source/monster.cpp:4715
+#: Source/monster.cpp:4714 Source/monster.cpp:4724
 msgid "No Immunities"
 msgstr "Sin Inmunidades"
 
-#: Source/monster.cpp:4708
+#: Source/monster.cpp:4717
 msgid "Some Magic Resistances"
 msgstr "Algunas Resistencias Mágicas"
 
-#: Source/monster.cpp:4713
+#: Source/monster.cpp:4722
 msgid "Some Magic Immunities"
 msgstr "Algunas Inmunidades Mágicas"
 
@@ -6368,7 +6369,7 @@ msgstr "Muestra los FPS en la esquina superior izquierda de la pantalla."
 
 #: Source/options.cpp:760
 msgid "Show health values"
-msgstr "Muestra valores de salud "
+msgstr "Muestra valores de salud"
 
 #: Source/options.cpp:760
 msgid "Displays current / max health value on health globe."
