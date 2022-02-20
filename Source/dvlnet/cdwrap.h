@@ -42,7 +42,7 @@ public:
 	virtual std::string make_default_gamename();
 	virtual bool send_info_request();
 	virtual void clear_gamelist();
-	virtual std::vector<std::string> get_gamelist();
+	virtual std::vector<GameInfo> get_gamelist();
 	virtual void setup_password(std::string pw);
 	virtual void clear_password();
 
@@ -187,7 +187,7 @@ void cdwrap<T>::clear_gamelist()
 }
 
 template <class T>
-std::vector<std::string> cdwrap<T>::get_gamelist()
+std::vector<GameInfo> cdwrap<T>::get_gamelist()
 {
 	return dvlnet_wrap->get_gamelist();
 }

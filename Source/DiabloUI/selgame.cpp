@@ -13,6 +13,7 @@
 #include "options.h"
 #include "storm/storm_net.hpp"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -39,7 +40,7 @@ const char *title = "";
 
 std::vector<std::unique_ptr<UiListItem>> vecSelGameDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelGameDialog;
-std::vector<std::string> Gamelist;
+std::vector<GameInfo> Gamelist;
 uint32_t firstPublicGameInfoRequestSend = 0;
 int HighlightedItem;
 
@@ -61,6 +62,41 @@ void selgame_Free()
 	ArtBackground.Unload();
 	UnloadScrollBar();
 	selgame_FreeVectors();
+}
+
+bool IsGameCompatible(const GameData &data)
+{
+	return (data.versionMajor == PROJECT_VERSION_MAJOR
+	    && data.versionMinor == PROJECT_VERSION_MINOR
+	    && data.versionPatch == PROJECT_VERSION_PATCH
+	    && data.programid == GAME_ID);
+	return false;
+}
+
+static std::string GetErrorMessageIncompatibility(const GameData &data)
+{
+	if (data.programid != GAME_ID) {
+		std::string gameMode;
+		switch (data.programid) {
+		case GameIdDiabloFull:
+			gameMode = _("Diablo");
+			break;
+		case GameIdDiabloSpawn:
+			gameMode = _("Diablo Shareware");
+			break;
+		case GameIdHellfireFull:
+			gameMode = _("Hellfire");
+			break;
+		case GameIdHellfireSpawn:
+			gameMode = _("Hellfire Shareware");
+			break;
+		default:
+			return _("The host is running a different game than you.");
+		}
+		return fmt::format(_("The host is running a different game mode ({:s}) than you."), gameMode);
+	} else {
+		return fmt::format(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version {:s} does not match the host {:d}.{:d}.{:d}."), PROJECT_VERSION, data.versionMajor, data.versionMinor, data.versionPatch).c_str();
+	}
 }
 
 } // namespace
@@ -116,7 +152,7 @@ void selgame_GameSelection_Init()
 				vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("None"), -1, UiFlags::ElementDisabled | UiFlags::ColorUiSilver));
 		} else {
 			for (unsigned i = 0; i < Gamelist.size(); i++) {
-				vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 3, UiFlags::ColorUiGold));
+				vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].name.c_str(), i + 3, UiFlags::ColorUiGold));
 			}
 		}
 	}
@@ -152,7 +188,52 @@ void selgame_GameSelection_Focus(int value)
 		strcpy(selgame_Description, _("Enter an IP or a hostname and join a game already in progress at that address."));
 		break;
 	default:
-		strcpy(selgame_Description, _("Join the public game already in progress at this address."));
+		const auto &gameInfo = Gamelist[vecSelGameDlgItems[value]->m_value - 3];
+		std::string infoString = _("Join the public game already in progress at this address.");
+		infoString.append("\n\n");
+		if (IsGameCompatible(gameInfo.gameData)) {
+			string_view difficulty;
+			switch (gameInfo.gameData.nDifficulty) {
+			case DIFF_NORMAL:
+				difficulty = _("Normal");
+				break;
+			case DIFF_NIGHTMARE:
+				difficulty = _("Nightmare");
+				break;
+			case DIFF_HELL:
+				difficulty = _("Hell");
+				break;
+			}
+			infoString.append(fmt::format(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}"), difficulty));
+			infoString.append("\n");
+			switch (gameInfo.gameData.nTickRate) {
+			case 20:
+				infoString.append(_("Speed: Normal"));
+				break;
+			case 30:
+				infoString.append(_("Speed: Fast"));
+				break;
+			case 40:
+				infoString.append(_("Speed: Faster"));
+				break;
+			case 50:
+				infoString.append(_("Speed: Fastest"));
+				break;
+			default:
+				// This should not occure, so no translations is needed
+				infoString.append(fmt::format("Speed: {}", gameInfo.gameData.nTickRate));
+				break;
+			}
+			infoString.append("\n");
+			infoString.append(_("Players: "));
+			for (auto &playerName : gameInfo.players) {
+				infoString.append(playerName);
+				infoString.append(" ");
+			}
+		} else {
+			infoString.append(GetErrorMessageIncompatibility(gameInfo.gameData));
+		}
+		CopyUtf8(selgame_Description, infoString, sizeof(selgame_Description));
 		break;
 	}
 	strcpy(selgame_Description, WordWrapString(selgame_Description, DESCRIPTION_WIDTH).c_str());
@@ -177,7 +258,7 @@ void selgame_GameSelection_Select(int value)
 	selgame_selectedGame = value;
 
 	if (value > 2) {
-		strcpy(selgame_Ip, Gamelist[value - 3].c_str());
+		strcpy(selgame_Ip, Gamelist[value - 3].name.c_str());
 		selgame_Password_Select(value);
 		return;
 	}
@@ -454,25 +535,15 @@ void selgame_Password_Init(int /*value*/)
 	UiInitList(nullptr, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
 }
 
-static bool IsGameCompatible(const GameData &data)
+static bool IsGameCompatibleWithErrorMessage(const GameData &data)
 {
-	if (data.versionMajor == PROJECT_VERSION_MAJOR
-	    && data.versionMinor == PROJECT_VERSION_MINOR
-	    && data.versionPatch == PROJECT_VERSION_PATCH
-	    && data.programid == GAME_ID) {
+	if (IsGameCompatible(data))
 		return IsDifficultyAllowed(data.nDifficulty);
-	}
 
 	selgame_Free();
 
-	if (data.programid != GAME_ID) {
-		UiSelOkDialog(title, _("The host is running a different game than you."), false);
-	} else {
-		char msg[128];
-		strcpy(msg, fmt::format(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version {:s} does not match the host {:d}.{:d}.{:d}."), PROJECT_VERSION, data.versionMajor, data.versionMinor, data.versionPatch).c_str());
-
-		UiSelOkDialog(title, msg, false);
-	}
+	std::string errorMessage = GetErrorMessageIncompatibility(data);
+	UiSelOkDialog(title, errorMessage.c_str(), false);
 
 	selgame_Init();
 
@@ -495,7 +566,7 @@ void selgame_Password_Select(int /*value*/)
 	if (selgame_selectedGame > 1) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		if (SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
-			if (!IsGameCompatible(*m_game_data)) {
+			if (!IsGameCompatibleWithErrorMessage(*m_game_data)) {
 				InitGameInfo();
 				selgame_GameSelection_Select(1);
 				return;
@@ -562,7 +633,7 @@ void RefreshGameList()
 	}
 
 	if (lastUpdate == 0 || currentTime - lastUpdate > 5000) {
-		std::vector<std::string> gamelist = DvlNet_GetGamelist();
+		std::vector<GameInfo> gamelist = DvlNet_GetGamelist();
 		Gamelist.clear();
 		for (unsigned i = 0; i < gamelist.size(); i++) {
 			Gamelist.push_back(gamelist[i]);
