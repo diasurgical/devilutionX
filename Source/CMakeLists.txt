@@ -91,6 +91,7 @@ set(libdevilutionx_SRCS
   engine/render/dun_render.cpp
   engine/render/text_render.cpp
   engine/surface.cpp
+  engine/trn.cpp
   mpq/mpq_reader.cpp
   mpq/mpq_sdl_rwops.cpp
   mpq/mpq_writer.cpp

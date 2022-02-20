@@ -44,15 +44,15 @@ void Cl2Draw(const Surface &out, int sx, int sy, const CelSprite &cel, int frame
 void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
- * @brief Blit CL2 sprite, and apply a given lighting, to the given buffer at the given coordianates
+ * @brief Blit CL2 sprite, and apply given TRN to the given buffer at the given coordinates
  * @param out Output buffer
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  * @param pCelBuff CL2 buffer
  * @param nCel CL2 frame number
- * @param light Light shade to use
+ * @param TRN to use
  */
-void Cl2DrawLightTbl(const Surface &out, int sx, int sy, const CelSprite &cel, int frame, char light);
+void Cl2DrawTRN(const Surface &out, int sx, int sy, const CelSprite &cel, int frame, uint8_t *trn);
 
 /**
  * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates

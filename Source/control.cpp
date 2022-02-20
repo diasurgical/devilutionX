@@ -20,6 +20,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/trn.hpp"
 #include "error.h"
 #include "gamemenu.h"
 #include "init.h"
@@ -1002,7 +1003,7 @@ void DrawDurIcon(const Surface &out)
 void RedBack(const Surface &out)
 {
 	uint8_t *dst = out.begin();
-	uint8_t *tbl = &LightTables[4608];
+	uint8_t *tbl = GetPauseTRN();
 	for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
 		for (int w = gnScreenWidth; w != 0; w--) {
 			if (leveltype != DTYPE_HELL || *dst >= 32)

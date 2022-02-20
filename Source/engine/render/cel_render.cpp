@@ -10,6 +10,7 @@
 
 #include "engine/cel_header.hpp"
 #include "engine/render/common_impl.h"
+#include "engine/trn.hpp"
 #include "options.h"
 #include "palette.h"
 #include "scrollrt.h"
@@ -620,7 +621,7 @@ void CelDrawLightRedTo(const Surface &out, Point position, const CelSprite &cel,
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
+	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, cel.Width(frame), GetInfravisionTRN());
 }
 
 void CelDrawItem(const Item &item, const Surface &out, Point position, const CelSprite &cel, int frame)

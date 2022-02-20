@@ -16,6 +16,7 @@
 #include "engine/render/cl2_render.hpp"
 #include "engine/render/dun_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/trn.hpp"
 #include "error.h"
 #include "gmenu.h"
 #include "help.h"
@@ -319,7 +320,7 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
 	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
 	if (missile._miUniqTrans != 0)
-		Cl2DrawLightTbl(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame, missile._miUniqTrans + 3);
+		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame, Monsters[missile._misource].uniqueTRN.get());
 	else if (missile._miLightFlag)
 		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame);
 	else
@@ -432,18 +433,18 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 	const auto &cel = *monster.AnimInfo.pCelSprite;
 
 	if (!IsTileLit(tilePosition)) {
-		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, 1);
+		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, GetInfravisionTRN());
 		return;
 	}
-	int trans = 0;
+	uint8_t *trn = nullptr;
 	if (monster._uniqtype != 0)
-		trans = monster._uniqtrans + 4;
+		trn = monster.uniqueTRN.get();
 	if (monster._mmode == MonsterMode::Petrified)
-		trans = 2;
+		trn = GetStoneTRN();
 	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
-		trans = 1;
-	if (trans != 0)
-		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, trans);
+		trn = GetInfravisionTRN();
+	if (trn != nullptr)
+		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, trn);
 	else
 		Cl2DrawLight(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel);
 }
@@ -466,7 +467,7 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
 	}
 
 	if (lighting) {
-		Cl2DrawLightTbl(out, position.x, position.y, cel, 1, 1);
+		Cl2DrawTRN(out, position.x, position.y, cel, 1, GetInfravisionTRN());
 		return;
 	}
 
@@ -548,7 +549,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	}
 
 	if (!IsTileLit(tilePosition) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
-		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel, 1);
+		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel, GetInfravisionTRN());
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
 	}
@@ -858,7 +859,8 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				break;
 			}
 			if (pDeadGuy->translationPaletteIndex != 0) {
-				Cl2DrawLightTbl(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel, pDeadGuy->translationPaletteIndex);
+				uint8_t *trn = Monsters[pDeadGuy->translationPaletteIndex - 1].uniqueTRN.get();
+				Cl2DrawTRN(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel, trn);
 			} else {
 				Cl2DrawLight(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel);
 			}
