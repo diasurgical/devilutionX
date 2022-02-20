@@ -6,6 +6,8 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <vector>
 
 #include "msg.h"
 #include "utils/attributes.h"
@@ -29,6 +31,13 @@ struct GameData {
 	uint8_t bTheoQuest;
 	uint8_t bCowQuest;
 	uint8_t bFriendlyFire;
+};
+
+/* @brief Contains info of running public game (for game list browsing) */
+struct GameInfo {
+	std::string name;
+	GameData gameData;
+	std::vector<std::string> players;
 };
 
 extern bool gbSomebodyWonGameKludge;

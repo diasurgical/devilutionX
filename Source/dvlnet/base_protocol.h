@@ -27,7 +27,7 @@ public:
 	virtual std::string make_default_gamename();
 	virtual bool send_info_request();
 	virtual void clear_gamelist();
-	virtual std::vector<std::string> get_gamelist();
+	virtual std::vector<GameInfo> get_gamelist();
 
 	virtual ~base_protocol() = default;
 
@@ -37,7 +37,7 @@ private:
 
 	endpoint firstpeer;
 	std::string gamename;
-	std::map<std::string, endpoint> game_list;
+	std::map<std::string, std::tuple<GameData, std::vector<std::string>, endpoint>> game_list;
 	std::array<endpoint, MAX_PLRS> peers;
 
 	plr_t get_master();
@@ -86,7 +86,7 @@ bool base_protocol<P>::wait_firstpeer()
 	// wait for peer for 5 seconds
 	for (auto i = 0; i < 500; ++i) {
 		if (game_list.count(gamename)) {
-			firstpeer = game_list[gamename];
+			firstpeer = std::get<2>(game_list[gamename]);
 			break;
 		}
 		send_info_request();
@@ -229,10 +229,24 @@ template <class P>
 void base_protocol<P>::recv_decrypted(packet &pkt, endpoint sender)
 {
 	if (pkt.Source() == PLR_BROADCAST && pkt.Destination() == PLR_MASTER && pkt.Type() == PT_INFO_REPLY) {
-		std::string pname;
-		pname.resize(pkt.Info().size());
-		std::memcpy(&pname[0], pkt.Info().data(), pkt.Info().size());
-		game_list[pname] = sender;
+		constexpr size_t sizePlayerName = (sizeof(char) * PLR_NAME_LEN);
+		size_t neededSize = sizeof(GameData) + (sizePlayerName * MAX_PLRS);
+		if (pkt.Info().size() < neededSize)
+			return;
+		const GameData *gameData = (const GameData *)pkt.Info().data();
+		std::vector<std::string> playerNames;
+		for (size_t i = 0; i < MAX_PLRS; i++) {
+			std::string playerName;
+			const char *playerNamePointer = (const char *)(pkt.Info().data() + sizeof(GameData) + (i * sizePlayerName));
+			playerName.append(playerNamePointer, strnlen(playerNamePointer, PLR_NAME_LEN));
+			if (!playerName.empty())
+				playerNames.push_back(playerName);
+		}
+		std::string gameName;
+		size_t gameNameSize = pkt.Info().size() - neededSize;
+		gameName.resize(gameNameSize);
+		std::memcpy(&gameName[0], pkt.Info().data() + neededSize, gameNameSize);
+		game_list[gameName] = std::make_tuple(*gameData, playerNames, sender);
 		return;
 	}
 	recv_ingame(pkt, sender);
@@ -247,8 +261,17 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		} else if (pkt.Type() == PT_INFO_REQUEST) {
 			if ((plr_self != PLR_BROADCAST) && (get_master() == plr_self)) {
 				buffer_t buf;
-				buf.resize(gamename.size());
-				std::memcpy(buf.data(), &gamename[0], gamename.size());
+				constexpr size_t sizePlayerName = (sizeof(char) * PLR_NAME_LEN);
+				buf.resize(game_init_info.size() + (sizePlayerName * MAX_PLRS) + gamename.size());
+				std::memcpy(buf.data(), &game_init_info[0], game_init_info.size());
+				for (size_t i = 0; i < MAX_PLRS; i++) {
+					if (Players[i].plractive) {
+						std::memcpy(buf.data() + game_init_info.size() + (i * sizePlayerName), &Players[i]._pName, sizePlayerName);
+					} else {
+						std::memset(buf.data() + game_init_info.size() + (i * sizePlayerName), '\0', sizePlayerName);
+					}
+				}
+				std::memcpy(buf.data() + game_init_info.size() + (sizePlayerName * MAX_PLRS), &gamename[0], gamename.size());
 				auto reply = pktfty->make_packet<PT_INFO_REPLY>(PLR_BROADCAST,
 				    PLR_MASTER,
 				    buf);
@@ -280,12 +303,12 @@ void base_protocol<P>::clear_gamelist()
 }
 
 template <class P>
-std::vector<std::string> base_protocol<P>::get_gamelist()
+std::vector<GameInfo> base_protocol<P>::get_gamelist()
 {
 	recv();
-	std::vector<std::string> ret;
+	std::vector<GameInfo> ret;
 	for (auto &s : game_list) {
-		ret.push_back(s.first);
+		ret.push_back({ s.first, std::get<0>(s.second), std::get<1>(s.second) });
 	}
 	return ret;
 }

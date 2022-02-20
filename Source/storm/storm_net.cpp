@@ -244,7 +244,7 @@ void DvlNet_ClearGamelist()
 	return dvlnet_inst->clear_gamelist();
 }
 
-std::vector<std::string> DvlNet_GetGamelist()
+std::vector<GameInfo> DvlNet_GetGamelist()
 {
 	return dvlnet_inst->get_gamelist();
 }
