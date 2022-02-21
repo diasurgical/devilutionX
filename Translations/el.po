@@ -5175,37 +5175,37 @@ msgstr "Κοφτερό Σκελετωμένο Τσεκούρι"
 #: Source/monstdat.cpp:487
 msgctxt "monster"
 msgid "Bladeskin the Slasher"
-msgstr ""
+msgstr "Ο Λεπιδόδερμας ο Κόφτης"
 
 #: Source/monstdat.cpp:488
 msgctxt "monster"
 msgid "Soulpus"
-msgstr ""
+msgstr "Το Πύον της Ψυχής"
 
 #: Source/monstdat.cpp:489
 msgctxt "monster"
 msgid "Pukerat the Unclean"
-msgstr ""
+msgstr "Το Εμετικό Ακάθαρτο Ποντίκι"
 
 #: Source/monstdat.cpp:490
 msgctxt "monster"
 msgid "Boneripper"
-msgstr ""
+msgstr "Κόκαλόξηλωτής"
 
 #: Source/monstdat.cpp:491
 msgctxt "monster"
 msgid "Rotfeast the Hungry"
-msgstr ""
+msgstr "Σαπιοφάγος Ο Πεινασμένος"
 
 #: Source/monstdat.cpp:492
 msgctxt "monster"
 msgid "Gutshank the Quick"
-msgstr ""
+msgstr "Εντεροκνήμης Ο Γρήγορος"
 
 #: Source/monstdat.cpp:493
 msgctxt "monster"
 msgid "Brokenhead Bangshield"
-msgstr ""
+msgstr "Ο Σπαζοκέφαλος Ασπιδοκτύπης"
 
 #: Source/monstdat.cpp:494
 msgctxt "monster"
@@ -5245,37 +5245,37 @@ msgstr "Κρανιοφωτιά"
 #: Source/monstdat.cpp:501
 msgctxt "monster"
 msgid "Warpskull"
-msgstr ""
+msgstr "Το Διαστροφικό Κρανίο"
 
 #: Source/monstdat.cpp:502
 msgctxt "monster"
 msgid "Goretongue"
-msgstr ""
+msgstr "Αιματόγλωσσος"
 
 #: Source/monstdat.cpp:503
 msgctxt "monster"
 msgid "Pulsecrawler"
-msgstr ""
+msgstr "Παλμοερπετό"
 
 #: Source/monstdat.cpp:504
 msgctxt "monster"
 msgid "Moonbender"
-msgstr ""
+msgstr "Ο Λυγιστής της Σελήνης"
 
 #: Source/monstdat.cpp:505
 msgctxt "monster"
 msgid "Wrathraven"
-msgstr ""
+msgstr "Το Κοράκι της Οργής"
 
 #: Source/monstdat.cpp:506
 msgctxt "monster"
 msgid "Spineeater"
-msgstr ""
+msgstr "Ο Καταβροχθέας Σπονδύλων"
 
 #: Source/monstdat.cpp:507
 msgctxt "monster"
 msgid "Blackash the Burning"
-msgstr ""
+msgstr "Η Μαύρη Στάχτη της Ανάφλεξης"
 
 #: Source/monstdat.cpp:508
 msgctxt "monster"
@@ -5290,82 +5290,82 @@ msgstr "Περονόπετρος, Ο Αδύναμος"
 #: Source/monstdat.cpp:510
 msgctxt "monster"
 msgid "Bilefroth the Pit Master"
-msgstr ""
+msgstr "Ο Αφρίστης Χολής, Ο Άρχοντας του Λάκκου"
 
 #: Source/monstdat.cpp:511
 msgctxt "monster"
 msgid "Bloodskin Darkbow"
-msgstr ""
+msgstr "Αιματόδερμος, το Σκοτεινό Τόξο"
 
 #: Source/monstdat.cpp:512
 msgctxt "monster"
 msgid "Foulwing"
-msgstr ""
+msgstr "To Βρωμερό Πτερύγιο"
 
 #: Source/monstdat.cpp:513
 msgctxt "monster"
 msgid "Shadowdrinker"
-msgstr ""
+msgstr "Ο Πότης των Σκιών"
 
 #: Source/monstdat.cpp:514
 msgctxt "monster"
 msgid "Hazeshifter"
-msgstr ""
+msgstr "Ομιχλώδες Περπατητής"
 
 #: Source/monstdat.cpp:515
 msgctxt "monster"
 msgid "Deathspit"
-msgstr ""
+msgstr "Θανατοφτύχτης"
 
 #: Source/monstdat.cpp:516
 msgctxt "monster"
 msgid "Bloodgutter"
-msgstr ""
+msgstr "Το Αυλάκι Αίματος"
 
 #: Source/monstdat.cpp:517
 msgctxt "monster"
 msgid "Deathshade Fleshmaul"
-msgstr ""
+msgstr "Η Σκιά του Θανάτου, η Σφύρα της Σάρκας"
 
 #: Source/monstdat.cpp:518
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr ""
+msgstr "Το Σκουλήκι του Πολέμου, ο Τρελός"
 
 #: Source/monstdat.cpp:519
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr ""
+msgstr "Γυαλιόκρανος ο Οδοντωτός"
 
 #: Source/monstdat.cpp:520
 msgctxt "monster"
 msgid "Blightfire"
-msgstr ""
+msgstr "Η Άρρωστη Φωτιά"
 
 #: Source/monstdat.cpp:521
 msgctxt "monster"
 msgid "Nightwing the Cold"
-msgstr ""
+msgstr "Το Κρύο Φτερό της Νύχτας"
 
 #: Source/monstdat.cpp:522
 msgctxt "monster"
 msgid "Gorestone"
-msgstr ""
+msgstr "Η Αιματοβαμμένη Πέτρα"
 
 #: Source/monstdat.cpp:523
 msgctxt "monster"
 msgid "Bronzefist Firestone"
-msgstr ""
+msgstr "Χαλκόγρονθος, ο Φλογόπετρος"
 
 #: Source/monstdat.cpp:524
 msgctxt "monster"
 msgid "Wrathfire the Doomed"
-msgstr ""
+msgstr "Η Φωτιά της Οργής και του Χαμού"
 
 #: Source/monstdat.cpp:525
 msgctxt "monster"
 msgid "Firewound the Grim"
-msgstr ""
+msgstr "Η Βλοσυρή Φλεγόμενη Πληγή"
 
 #: Source/monstdat.cpp:526
 msgctxt "monster"
@@ -5375,7 +5375,7 @@ msgstr "Ο Βαρόνος της Γλίτσας"
 #: Source/monstdat.cpp:527
 msgctxt "monster"
 msgid "Blighthorn Steelmace"
-msgstr ""
+msgstr "Αρρωστοκέρατος, το Ατσαλένιο Σκήπτρο"
 
 #: Source/monstdat.cpp:528
 msgctxt "monster"
@@ -5385,7 +5385,7 @@ msgstr "Ουρλιαχτός του Χάους"
 #: Source/monstdat.cpp:529
 msgctxt "monster"
 msgid "Doomgrin the Rotting"
-msgstr ""
+msgstr "Χαμοφέρνης ο Σάπιος"
 
 #: Source/monstdat.cpp:530
 msgctxt "monster"
@@ -5395,32 +5395,32 @@ msgstr "Τρελόεμπρηστής"
 #: Source/monstdat.cpp:531
 msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr ""
+msgstr "Κοκαλοπρίονος, Ο Απέθαντος Μάγος"
 
 #: Source/monstdat.cpp:532
 msgctxt "monster"
 msgid "Breakspine"
-msgstr ""
+msgstr "Σπονδυλοσπάστης"
 
 #: Source/monstdat.cpp:533
 msgctxt "monster"
 msgid "Devilskull Sharpbone"
-msgstr ""
+msgstr "Δαιμονόκρανος, το Αιχμηρό Κόκαλο"
 
 #: Source/monstdat.cpp:534
 msgctxt "monster"
 msgid "Brokenstorm"
-msgstr ""
+msgstr "Η Σπασμένη Καταιγίδα"
 
 #: Source/monstdat.cpp:535
 msgctxt "monster"
 msgid "Stormbane"
-msgstr ""
+msgstr "Ο Όλεθρος της Καταιγίδας"
 
 #: Source/monstdat.cpp:536
 msgctxt "monster"
 msgid "Oozedrool"
-msgstr ""
+msgstr "Λασποσαλιαρίδης"
 
 #: Source/monstdat.cpp:537
 msgctxt "monster"
@@ -5450,17 +5450,17 @@ msgstr "Το Μπλέ Κέρατο"
 #: Source/monstdat.cpp:542
 msgctxt "monster"
 msgid "Warpfire Hellspawn"
-msgstr ""
+msgstr "Η Διατροφική Φλόγα, η Κολασμένη"
 
 #: Source/monstdat.cpp:543
 msgctxt "monster"
 msgid "Fangspeir"
-msgstr ""
+msgstr "Οδοντόσπειρα"
 
 #: Source/monstdat.cpp:544
 msgctxt "monster"
 msgid "Festerskull"
-msgstr ""
+msgstr "Πυόκρανος"
 
 #: Source/monstdat.cpp:545
 msgctxt "monster"
@@ -5475,22 +5475,22 @@ msgstr "Η Μαύρη Γλώσσα"
 #: Source/monstdat.cpp:547
 msgctxt "monster"
 msgid "Viletouch"
-msgstr ""
+msgstr "Το Αχρείο Άγγιγμα"
 
 #: Source/monstdat.cpp:548
 msgctxt "monster"
 msgid "Viperflame"
-msgstr ""
+msgstr "Η Φλεγόμενη Οχιά"
 
 #: Source/monstdat.cpp:549
 msgctxt "monster"
 msgid "Fangskin"
-msgstr ""
+msgstr "Οδοντόδερμα"
 
 #: Source/monstdat.cpp:550
 msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr ""
+msgstr "Η Ανίερη Φλόγα της Μάγισσάς"
 
 #: Source/monstdat.cpp:551
 msgctxt "monster"
@@ -5520,7 +5520,7 @@ msgstr "Υφαντής της Σκουριάς"
 #: Source/monstdat.cpp:556
 msgctxt "monster"
 msgid "Howlingire the Shade"
-msgstr ""
+msgstr "Το Θυμωμένο Ουρλιαχτό, το Σκιώδες"
 
 #: Source/monstdat.cpp:557
 msgctxt "monster"
@@ -5530,7 +5530,7 @@ msgstr "Σύννεφο του Χαμού"
 #: Source/monstdat.cpp:558
 msgctxt "monster"
 msgid "Bloodmoon Soulfire"
-msgstr ""
+msgstr "Ματωμένη Σελήνη, Η Φωτιά της Ψυχής"
 
 #: Source/monstdat.cpp:559
 msgctxt "monster"
@@ -5540,7 +5540,7 @@ msgstr "Η Μάγισσα της Σελήνης"
 #: Source/monstdat.cpp:560
 msgctxt "monster"
 msgid "Gorefeast"
-msgstr ""
+msgstr "Αιματογλέντης"
 
 #: Source/monstdat.cpp:561
 msgctxt "monster"
@@ -5595,13 +5595,13 @@ msgstr "Ο Χορευτής της Σάρκας"
 #: Source/monstdat.cpp:571
 msgctxt "monster"
 msgid "Grimspike"
-msgstr ""
+msgstr "To Βλοσυρό Δόρυ"
 
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:573
 msgctxt "monster"
 msgid "Doomlock"
-msgstr ""
+msgstr "Μάντης του Χαμού"
 
 #: Source/monster.cpp:3479
 msgid "Animal"
@@ -7816,6 +7816,12 @@ msgid ""
 "led them to believe that it too holds some arcane powers. Hmm, perhaps they "
 "are not all as smart as we had feared..."
 msgstr ""
+"Βλέπω ότι αυτή η περίεργη συμπεριφορά σε προβληματίζει και εσένα. Θα υπέθετα "
+"ότι εφόσον πολλοί δαίμονες φοβούνται το φως του ήλιου και πιστεύουν ότι έχει "
+"μεγάλη δύναμη, ότι μπορεί ο ανατέλλοντας ήλιος που απεικονίζεται στην "
+"πινακίδα για την οποία αναφέρεσαι να τους έκανε να πιστέψουν ότι έχει "
+"αντίστοιχες απόκρυφες δυνάμεις. Χμ, ίσως δεν είναι όλοι τους τόσο έξυπνοι "
+"όσο φοβόμασταν τελικά..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -7829,6 +7835,15 @@ msgid ""
 "the sign to my inn. I don't know why the demons would steal my sign but "
 "leave my family in peace... 'tis strange, no?"
 msgstr ""
+"Άρχοντα/ίσσα, έχω μια περίεργη εμπειρία να διηγηθώ. Ξέρω ότι έχεις μεγάλη "
+"γνώση αυτών των τεράτων που κατοικούν στον λαβύρινθο, αλλά αυτό είναι κάτι "
+"που δεν μπορώ να καταλάβω, μα τη ζωή μου... Με ξύπνησε κατά τη διάρκεια της "
+"νύχτας ένας ήχος ξυσίματος ακριβώς έξω από την ταβέρνα μου. Όταν κοίταξα έξω "
+"από την κρεβατοκάμαρά μου, είδα τις φιγούρες μικρών πλασμάτων που έμοιαζαν "
+"με δαίμονες στην αυλή του πανδοχείου. Μετά από λίγο, έφυγαν τρέχοντας, αλλά "
+"όχι πριν κλέψουν την ταμπέλα του πανδοχείου μου. Δεν ξέρω γιατί οι δαίμονες "
+"έκλεψαν την πινακίδα μου ενώ άφησαν την οικογένειά μου απείραχτη... Είναι "
+"περίεργο, όχι;"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
