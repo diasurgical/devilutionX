@@ -156,9 +156,8 @@ void DrawChatLog(const Surface &out)
 	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },
 	    (UnreadFlag ? UiFlags::ColorRed : UiFlags::ColorWhitegold) | UiFlags::AlignCenter);
 
-	char timestamp[64];
 	time_t tm = time(nullptr);
-	sprintf(timestamp, "%02d:%02d:%02d", localtime(&tm)->tm_hour, localtime(&tm)->tm_min, localtime(&tm)->tm_sec);
+	std::string timestamp = fmt::format("{:02}:{:02}:{:02}", localtime(&tm)->tm_hour, localtime(&tm)->tm_min, localtime(&tm)->tm_sec);
 	DrawString(out, timestamp, { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } }, UiFlags::ColorRed);
 
 	const int titleBottom = sy + HeaderHeight();
@@ -176,7 +175,7 @@ void DrawChatLog(const Surface &out)
 		for (auto &x : text.colors) {
 			args.emplace_back(DrawStringFormatArg { x.text, x.color });
 		}
-		DrawStringWithColors(out, line, args, { { (sx + text.offset), contentY + i * lineHeight }, { ContentTextWidth - text.offset, lineHeight } }, UiFlags::ColorWhite, /*spacing=*/1, lineHeight);
+		DrawStringWithColors(out, line, args, { { (sx + text.offset), contentY + i * lineHeight }, { ContentTextWidth - text.offset * 2, lineHeight } }, UiFlags::ColorWhite, /*spacing=*/1, lineHeight);
 	}
 
 	DrawString(out, _("Press ESC to end or the arrow keys to scroll."),
