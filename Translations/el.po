@@ -5711,7 +5711,7 @@ msgstr "Ο παίκτης '{:s}' έπεσε λόγω δικτυακού χρόν
 
 #: Source/multi.cpp:814
 msgid "Player '{:s}' (level {:d}) is already in the game"
-msgstr "Ο παίκτης '{:s}' είναι ήδη στο παιχνίδι"
+msgstr "Ο παίκτης '{:s}' (Επιπέδου {:d}) είναι ήδη στο παιχνίδι"
 
 #. TRANSLATORS: Shrine Name Block
 #: Source/objects.cpp:106
@@ -6826,8 +6826,8 @@ msgstr "Δεξιότητα"
 #: Source/panels/spell_book.cpp:159
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] "Ράβδος {{:d} φορτίο}"
-msgstr[1] "Ράβδος {{:d} φορτία}"
+msgstr[0] "Ράβδος ({:d} φορτίο}"
+msgstr[1] "Ράβδος ({:d} φορτία}"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:164
