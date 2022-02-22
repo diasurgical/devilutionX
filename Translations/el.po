@@ -7854,6 +7854,11 @@ msgid ""
 "cap was left in one of the rooms by a magician who stayed here some time "
 "ago. Perhaps it may be of some value to you."
 msgstr ""
+"Ω, δεν χρειάστηκε να φέρεις πίσω την πινακίδα μου, αλλά υποθέτω ότι με "
+"γλιτώνεις από τα έξοδα να φτιάξω άλλη μία. Λοιπόν, για να δω, τι θα μπορούσα "
+"να σου δώσω ως αμοιβή που την βρήκες; Χμμμ, τι έχουμε εδώ... αχ, ναι! Αυτός "
+"ο σκούφος ξεχάστηκε σε ένα από τα δωμάτια μου από έναν μάγο που έμεινε εδώ "
+"πριν από λίγο καιρό. Ίσως έχει κάποια αξία για σένα."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -7862,6 +7867,9 @@ msgid ""
 "- is nothing sacred? I hope that Ogden and Garda are all right. I suppose "
 "that they would come to see me if they were hurt..."
 msgstr ""
+"Θεέ μου, δαίμονες τρέχουν στο χωριό τη νύχτα, λεηλατούν τα σπίτια μας - δεν "
+"είναι τίποτα ιερό; Ελπίζω ότι ο Όγκντεν και η Γκάρντα είναι καλά. Υποθέτω "
+"ότι θα είχαν έρθει να με δουν αν είχαν πληγωθεί..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:45
@@ -7870,6 +7878,9 @@ msgid ""
 "right through the whole thing. Thank the Light that those monsters didn't "
 "attack the inn."
 msgstr ""
+"Ω θεε μου! Εκεί βρέθηκε η ταμπέλα; Η γιαγιά μου και εγώ πρέπει να "
+"κοιμηθήκαμε χωρίς να το πάρουμε χαμπάρι. Ευχαριστώ το Φως που αυτά τα τέρατα "
+"δεν επιτέθηκαν στο πανδοχείο."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:47
@@ -7879,6 +7890,10 @@ msgid ""
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost."
 msgstr ""
+"Λες ότι οι δαίμονες έκλεψαν την πινακίδα του Όγκντεν; Αυτό δεν μοιάζει "
+"καθόλου με τις φρικαλεότητες που έχω ακούσει - ή έχω δει.\n"
+" \n"
+"Οι δαίμονες ενδιαφέρονται να ξεσκίσουν την καρδιά σου, όχι την ταμπέλα σου."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:49
@@ -7888,6 +7903,10 @@ msgid ""
 "new sign with some pretty drawing on it. Maybe a nice mug of ale or a piece "
 "of cheese..."
 msgstr ""
+"Ξέρεις τι σκέφτομαι; Κάποιος πήρε την ταμπέλα και θα θέλει πολλά χρήματα για "
+"αυτήν. Αν ήμουν ο Όγκντεν... και δεν είμαι, αλλά αν ήμουν... θα αγόραζα "
+"απλώς μια νέα πινακίδα με ένα όμορφο σχέδιο πάνω της. Ίσως μια ωραία κούπα "
+"μπύρας ή ένα κομμάτι τυρί..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:51
@@ -7896,6 +7915,10 @@ msgid ""
 " \n"
 "Never let their erratic actions confuse you, as that too may be their plan."
 msgstr ""
+"Κανένας θνητός δεν μπορεί να καταλάβει πραγματικά το μυαλό του δαίμονα.\n"
+" \n"
+"Μην αφήσετε ποτέ τις ακανόνιστες ενέργειές τους να σε μπερδέψουν, καθώς αυτό "
+"μπορεί να είναι και το σχέδιό τους."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:53
@@ -7906,6 +7929,10 @@ msgid ""
 "Look, I got over simple sign stealing months ago. You can't turn a profit on "
 "a piece of wood."
 msgstr ""
+"Τι - λέει ότι το πήρα εγώ; Μάλλον και ο Γκρίσγουαλντ είναι μαζί του.\n"
+" \n"
+"Κοίτα, ξεπέρασα την απλή κλοπή πριν από μήνες. Δεν μπορείς να αποφέρεις "
+"κέρδος με ένα κομμάτι ξύλο."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:55
@@ -7914,16 +7941,22 @@ msgid ""
 "no leave with life! You kill big uglies and give back Magic. Go past corner "
 "and door, find uglies. You give, you go!"
 msgstr ""
+"Ε, εσύ - εσύ που σκοτώνεις όλους! Μου δίνεις Μαγικό Πανό ή κάνουμε επίθεση! "
+"Δεν φεύγεις με τη ζωή σου! Σκοτώνεις μεγάλους άσχημους και δίνεις πίσω το "
+"Μαγικό. Περάσε από γωνία δεξιά και στην πόρτα, βρες τους άσχημους. Μου "
+"δίνεις, και περνάς!"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else..."
-msgstr ""
+msgstr "Σκοτώνεις άσχημους, παίρνεις πανό. Θα μου το φέρεις, αλλιώς..."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic!"
 msgstr ""
+"Δώστε μου! Ναι, όμορφα! Πήγαινε τώρα, είμαστε δυνατοί. Σκοτώνουμε όλους με "
+"μεγάλη Μαγεία!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:61
@@ -7952,6 +7985,30 @@ msgid ""
 "You must hurry and save the prince from the sacrificial blade of this "
 "demented fiend!"
 msgstr ""
+"Αυτό δεν προμηνύεται καλό, γιατί επιβεβαιώνει τους πιο σκοτεινούς φόβους "
+"μου. Ενώ δεν επέτρεψα στον εαυτό μου να πιστέψει τους αρχαίους θρύλους, δεν "
+"μπορώ να τους αρνηθώ τώρα. Ίσως ήρθε η ώρα να αποκαλύψω ποιος είμαι.\n"
+" \n"
+"Το αληθινό μου όνομα είναι Ντέκαρντ Κέϊν ο Πρεσβύτερος και είμαι ο "
+"τελευταίος απόγονος μιας αρχαίας Αδελφότητας που ήταν αφιερωμένη στη "
+"διαφύλαξη των μυστικών ενός διαχρονικού κακού. Ένα κακό που προφανώς έχει "
+"πλέον απελευθερωθεί.\n"
+" \n"
+"Ο Αρχιεπίσκοπος Λάζαρος, κάποτε ο πιο έμπιστος σύμβουλος του βασιλιά Λέορικ, "
+"οδήγησε μια ομάδα απλών αστών στον Λαβύρινθο για να βρει τον εξαφανισμένο "
+"γιο του Βασιλιά, τον Άλμπρεχτ. Πέρασε αρκετός καιρός μέχρι να επιστρέψουν, "
+"και μόνο λίγοι από αυτούς γλίτωσαν με τη ζωή τους.\n"
+" \n"
+"Ανάθεμα με τον ανόητο! Θα έπρεπε να είχα υποψιαστεί την καλυμμένη προδοσία "
+"του τότε. Πρέπει να ήταν ο ίδιος ο Λάζαρος που απήγαγε τον Άλμπρεχτ και "
+"έκτοτε τον έκρυψε μέσα στον Λαβύρινθο. Δεν καταλαβαίνω γιατί ο Αρχιεπίσκοπος "
+"στράφηκε στο σκοτάδι, ή ποιο είναι το ενδιαφέρον του για το παιδί, εκτός κι "
+"αν θέλει να το θυσιάσει στα σκοτεινά αφεντικά του!\n"
+" \n"
+"Αυτό πρέπει να είναι το σχεδόν του! Οι επιζώντες της \"ομάδας διάσωσης\" "
+"του, λένε ότι ο Λάζαρος εθεάθη τελευταία φορά να τρέχει στα βαθύτερα σπλάχνα "
+"του λαβύρινθου. Πρέπει να βιαστείς και να σώσεις τον πρίγκιπα από τη "
+"θυσιαστική λεπίδα αυτού του παραφρονημένου κακούργου!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:63
@@ -7959,6 +8016,8 @@ msgid ""
 "You must hurry and rescue Albrecht from the hands of Lazarus. The prince and "
 "the people of this kingdom are counting on you!"
 msgstr ""
+"Πρέπει να βιαστείς και να σώσεις τον Άλμπρεχτ από τα χέρια του Λάζαρου. Ο "
+"πρίγκιπας και οι άνθρωποι αυτού του βασιλείου βασίζονται σε σένα!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:65
@@ -7974,6 +8033,18 @@ msgid ""
 "again sow chaos in the realm of mankind. You must venture through the portal "
 "and destroy Diablo before it is too late!"
 msgstr ""
+"Η ιστορία σου είναι πολύ ζοφερή φίλε/η μου. Ο Λάζαρος σίγουρα θα καεί στην "
+"Κόλαση για τη φρικτή πράξη του. Το αγόρι που περιγράφεις δεν είναι ο "
+"πρίγκιπας μας, αλλά πιστεύω ότι ο Άλμπρεχτ μπορεί ακόμα να βρίσκεται σε "
+"κίνδυνο. Το σύμβολο της δύναμης για το οποίο μιλάς πρέπει να είναι μια πύλη "
+"που οδηγεί στην ίδια την καρδιά του λαβύρινθου.\n"
+" \n"
+"Μάθε αυτό, φίλε/η μου - Το κακό στο οποίο εναντιώνεσαι είναι ο σκοτεινός "
+"Άρχοντας του Τρόμου. Είναι γνωστός στους θνητούς άντρες ως Ντιάμπλο. Αυτός "
+"ήταν που φυλακίστηκε μέσα στον Λαβύρινθο πριν από πολλούς αιώνες και φοβάμαι "
+"ότι επιδιώκει να σπείρει ξανά το χάος στον κόσμο της ανθρωπότητας. Πρέπει να "
+"περάσεις από την πύλη και να καταστρέψεις τον Ντιάμπλο πριν να είναι πολύ "
+"αργά!"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:67
@@ -7983,6 +8054,11 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
+"Ο Λάζαρος ήταν ο Αρχιεπίσκοπος που οδήγησε πολλούς από τους κατοίκους της "
+"πόλης στον λαβύρινθο. Έχασα πολλούς καλούς φίλους εκείνη την ημέρα και ο "
+"Λάζαρος δεν επέστρεψε ποτέ. Υποθέτω ότι σκοτώθηκε μαζί με τους άλλους. Κάνε "
+"μου τη χάρη, Άρχοντα/ίσσα - σε παρακαλώ μην μιλήσεις στον Φάρνχαμ για εκείνη "
+"την ημέρα."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:71
@@ -7992,6 +8068,11 @@ msgid ""
 "that. He was an Archbishop, and always seemed to care so much for the "
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
+"Σοκαρίστηκα όταν άκουσα τι σχεδίαζαν να κάνουν οι κάτοικοι της πόλης εκείνο "
+"το βράδυ. Νόμιζα ότι από όλους τους ανθρώπους, ο Λάζαρος θα είχε περισσότερη "
+"λογική από αυτό. Ήταν Αρχιεπίσκοπος και πάντα φαινόταν να νοιάζεται τόσο "
+"πολύ για τους κατοίκους της πόλης της Τρίστραμ. Τόσοι πολλοί τραυματίστηκαν, "
+"που δεν μπόρεσα να τους σώσω όλους..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -8000,6 +8081,10 @@ msgid ""
 "mother's funeral, and was supportive of my grandmother and myself in a very "
 "troubled time. I pray every night that somehow, he is still alive and safe."
 msgstr ""
+"Θυμάμαι τον Λάζαρο ως έναν πολύ ευγενικό και χαρισματικό άνθρωπο. Μίλησε "
+"στην κηδεία της μητέρας μου και στήριξε τη γιαγιά μου και εμένα σε μια πολύ "
+"ταραγμένη περίοδο. Προσεύχομαι κάθε βράδυ, με κάποιο τρόπο, να είναι ακόμα "
+"ζωντανός και ασφαλής."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:75
@@ -8009,6 +8094,11 @@ msgid ""
 "much as lift his mace against them. He just ran deeper into the dim, endless "
 "chambers that were filled with the servants of darkness!"
 msgstr ""
+"Ήμουν εκεί όταν ο Λάζαρος μας οδήγησε στον λαβύρινθο. Μίλησε για ιερή "
+"ανταπόδοση, αλλά όταν αρχίσαμε να πολεμάμε αυτά τα κολασμένα πλάσματα, δεν "
+"σήκωσε το μαχαίρι του εναντίον τους. Απλώς έτρεξε πιο βαθιά μέσα στους "
+"σκοτεινούς, ατελείωτους θαλάμους που ήταν γεμάτοι με τους υπηρέτες του "
+"σκότους!"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:77
@@ -8017,6 +8107,9 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
+"Μαχαιρώνουν, μετά δαγκώνουν και μετά είναι παντού γύρω σου. Ψεύτης! ΨΕΥΤΗΣ! "
+"Είναι όλοι νεκροί! Νεκρός! Με ακούς? Συνεχίζουν να πέφτουν και να πέφτουν... "
+"το αίμα τους χύνεται σε όλο το πάτωμα... Αυτός φταίει..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:79
@@ -8025,6 +8118,10 @@ msgid ""
 "conflict within his being. He poses a great danger, and will stop at nothing "
 "to serve the powers of darkness which have claimed him as theirs."
 msgstr ""
+"Δεν ξέρω αυτόν τον Λάζαρο για τον οποίο μιλάς, αλλά αισθάνομαι μια μεγάλη "
+"σύγκρουση μέσα στην ύπαρξή του. Αποτελεί έναν μεγάλο κίνδυνο και δεν θα "
+"σταματήσει με τίποτα να υπηρετεί τις δυνάμεις του σκότους που τον έχουν "
+"διεκδικήσει ως δικό τους."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:81
@@ -8033,6 +8130,9 @@ msgid ""
 "down there. Didn't help save my leg, did it? Look, I'll give you a free "
 "piece of advice. Ask Farnham, he was there."
 msgstr ""
+"Ναι, ο δίκαιος Λάζαρος, ο οποίος ήταν τοοόσο αποτελεσματικός εναντίον "
+"εκείνων των τεράτων εκεί κάτω. Δεν με βοήθησε να σώσω το πόδι μου, σωστά; "
+"Κοίτα, θα σου δώσω μια δωρεάν συμβουλή. Ρωτήστε τον Φάρνχαμ, ήταν εκεί."
 
 #. TRANSLATORS: Quest dialog spoken by Lazarus (Hostile)
 #: Source/textdat.cpp:83
@@ -8040,6 +8140,9 @@ msgid ""
 "Abandon your foolish quest. All that awaits you is the wrath of my Master! "
 "You are too late to save the child. Now you will join him in Hell!"
 msgstr ""
+"Εγκαταλείψε την ανόητη αναζήτησή σου. Το μόνο που σε περιμένει είναι η οργή "
+"του Άρχοντα μου! Είναι πολύ αργά για να σώσεις το παιδί. Τώρα θα το "
+"συναντήσεις στην Κόλαση!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:86
@@ -8050,6 +8153,10 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
+"Χμμ, δεν ξέρω τι μπορώ πραγματικά να σου πω για αυτό, που θα βοηθούσε. Το "
+"νερό που γεμίζει τα πηγάδια μας προέρχεται από μια υπόγεια πηγή. Έχω ακούσει "
+"για ένα τούνελ που οδηγεί σε μια μεγάλη λίμνη - ίσως είναι ένα και το αυτό. "
+"Δυστυχώς, δεν γνωρίζω τι θα μπορούσε να προκαλέσει τη μόλυνση του νερού μας."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -8060,6 +8167,11 @@ msgid ""
 " \n"
 "Please, do what you can or I don't know what we will do."
 msgstr ""
+"Πάντα προσπαθούσα να διατηρήσω μια μεγάλη προσφορά τροφίμων και ποτών στο "
+"κελάρι μας, αλλά καθώς ολόκληρη η πόλη δεν έχει πηγή γλυκού νερού, ακόμη και "
+"τα αποθέματα μου σύντομα θα τελειώσουν.\n"
+" \n"
+"Σε παρακαλώ, κάνε ό,τι μπορείς γιατί δεν ξέρω τι θα απογίνουμε."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:90
@@ -8070,6 +8182,11 @@ msgid ""
 "passage that leads to the springs that serve our town. Please find what has "
 "caused this calamity, or we all will surely perish."
 msgstr ""
+"Χαίρομαι που σε πρόλαβα εγκαίρως! Τα πηγάδια μας έχουν γίνει υφάλμυρα και "
+"στάσιμα και κάποιοι από τους κατοίκους της πόλης έχουν αρρωστήσει πίνοντας "
+"από αυτά. Τα αποθέματα γλυκού νερού μας τελειώνουν γρήγορα. Πιστεύω ότι "
+"υπάρχει ένα πέρασμα που οδηγεί στις πηγές που προμηθεύουν την πόλη μας. "
+"Παρακαλώ βρες τι προκάλεσε αυτή την καταστροφή, διαφορετικά θα χαθούμε όλοι."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -8079,6 +8196,10 @@ msgid ""
 " \n"
 "We cannot survive for long without your help."
 msgstr ""
+"Σε παρακαλώ, πρέπει να βιαστείς. Κάθε ώρα που περνάει μας φέρνει πιο κοντά "
+"στο να μην έχουμε νερό να πιούμε.\n"
+" \n"
+"Δεν μπορούμε να επιβιώσουμε για πολύ χωρίς τη βοήθειά σου."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:94
@@ -8088,6 +8209,10 @@ msgid ""
 "perseverance and courage gives us hope. Please take this ring - perhaps it "
 "will aid you in the destruction of such vile creatures."
 msgstr ""
+"Τι είναι αυτό που λες - η απλή παρουσία των δαιμόνων είχε κάνει το νερό να "
+"μολυνθεί; Ω, πραγματικά ένα μεγάλο κακό κρύβεται κάτω από την πόλη μας, αλλά "
+"η επιμονή και το θάρρος σου μας δίνουν ελπίδα. Πάρε αυτό το δαχτυλίδι - ίσως "
+"θα σε βοηθήσει στην καταστροφή αυτών των άθλιων πλασμάτων."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:96
@@ -8095,6 +8220,9 @@ msgid ""
 "My grandmother is very weak, and Garda says that we cannot drink the water "
 "from the wells. Please, can you do something to help us?"
 msgstr ""
+"Η γιαγιά μου είναι πολύ αδύναμη και η Γκάρντα λέει ότι δεν μπορούμε να "
+"πιούμε το νερό από τα πηγάδια. Σε παρακαλώ, μπορείς να κάνεις κάτι για να "
+"μας βοηθήσεις;"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:98
@@ -8103,11 +8231,14 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
+"Ο Πεπίν σου είπε την αλήθεια. Θα χρειαστούμε πολύ πόσημο νερό και μάλιστα "
+"σύντομα. Προσπάθησα να καθαρίσω ένα από τα μικρότερα πηγάδια, αλλά μυρίζει "
+"στάσιμη βρωμιά. Πρέπει να έχει βουλώσει και βρωμίσει στην πηγή."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
 msgid "You drink water?"
-msgstr ""
+msgstr "Πίνεις νερό;"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:101
@@ -8118,6 +8249,11 @@ msgid ""
 "Know this - demons are at the heart of this matter, but they remain ignorant "
 "of what they have spawned."
 msgstr ""
+"Οι κάτοικοι της Τρίστραμ θα πεθάνουν εάν δεν μπορέσεις να επαναφέρεις το "
+"πόσημο νερό στα πηγάδια τους.\n"
+" \n"
+"Να ξέρεις - Δαίμονες βρίσκονται στο επίκεντρο αυτού του ζητήματος, αλλά "
+"είναι ανίδεοι για το τι έχουν προκαλέσει."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:103
@@ -8125,6 +8261,8 @@ msgid ""
 "For once, I'm with you. My business runs dry - so to speak - if I have no "
 "market to sell to. You better find out what is going on, and soon!"
 msgstr ""
+"Για πρώτη φορά είμαι μαζί σου. Η επιχείρησή μου στεγνώνει - να το πω έτσι - "
+"αν δεν έχω αγορά να πουλήσω. Καλύτερα να μάθεις τι συμβαίνει και σύντομα!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:105
@@ -8136,6 +8274,13 @@ msgid ""
 "the attempt to steal that treasure would be forever bound to defend it. A "
 "twisted, but strangely fitting, end?"
 msgstr ""
+"Ένα βιβλίο που μιλάει για θάλαμο ανθρώπινων οστών; Λοιπόν, ένας θάλαμος των "
+"οστών αναφέρεται σε ορισμένες αρχαϊκές γραφές που μελέτησα στις βιβλιοθήκες "
+"της Ανατολής. Αυτοί οι τόμοι συμπέραναν ότι όταν οι Άρχοντες του κάτω κόσμου "
+"ήθελαν να προστατεύσουν μεγάλους θησαυρούς, θα δημιουργούσαν περιοχές όπου "
+"όσοι πέθαιναν, στην προσπάθεια να κλέψουν αυτόν τον θησαυρό, θα ήταν για "
+"πάντα δεσμευμένοι για να τον προστατέψουν. Ένα διεστραμμένο, αλλά παράξενα "
+"ταιριαστό τέλος;"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
@@ -8143,6 +8288,8 @@ msgid ""
 "I am afraid that I don't know anything about that, good master. Cain has "
 "many books that may be of some help."
 msgstr ""
+"Φοβάμαι ότι δεν ξέρω τίποτα για αυτό, καλέ/ή μου άρχοντα/ίσσα. Ο Κάϊν έχει "
+"πολλά βιβλία που μπορεί να σε βοηθήσουν."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:109
@@ -8150,6 +8297,8 @@ msgid ""
 "This sounds like a very dangerous place. If you venture there, please take "
 "great care."
 msgstr ""
+"Αυτό μου ακούγεται σαν ένα πολύ επικίνδυνο μέρος. Εάν τολμήσεις να πας εκεί, "
+"σε παρακαλώ να είσαι πολύ προσεκτικός/ή."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:111
@@ -8157,6 +8306,8 @@ msgid ""
 "I am afraid that I haven't heard anything about that. Perhaps Cain the "
 "Storyteller could be of some help."
 msgstr ""
+"Φοβάμαι ότι δεν έχω ακούσει τίποτα για αυτό. Ίσως ο Κεϊν ο Αφηγητής θα "
+"μπορούσε να βοηθήσει."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:113
@@ -8165,6 +8316,9 @@ msgid ""
 "many things, and it would not surprise me if he had some answers to your "
 "question."
 msgstr ""
+"Δεν ξέρω τίποτα για αυτό το μέρος, αλλά μπορείς να δοκιμάσεις να ρωτήσεις "
+"τον Κέϊν. Μιλάει για πολλά πράγματα και δεν θα με εξέπληξε αν είχε κάποιες "
+"απαντήσεις στην ερώτησή σου."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
@@ -8173,6 +8327,10 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
+"Εντάξει, άκου λοιπόν. Υπάρχει αυτός ο θάλαμος από ξύλο, βλέπεις. Και η "
+"γυναίκα του, ξέρεις - αυτή - λέει στο δέντρο... γιατί, πρέπει να περιμένεις. "
+"Μετά λέω, αυτό μπορεί να λειτουργήσει εναντίον του, αλλά αν νομίζεις ότι θα "
+"ΠΛΗΡΩΣΩ γι' αυτό... εσύ... ε... ναι."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -8182,6 +8340,10 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
+"Θα γίνεις αιώνιος υπηρέτης των σκοτεινών αρχόντων αν πέσεις μέσα σε αυτόν "
+"τον καταραμένο μέρος.\n"
+" \n"
+"Μπες στον Θάλαμο των Οστών με δική σου ευθύνη."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -8190,6 +8352,9 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
+"Ένας τεράστιος και μυστηριώδης θησαυρός, λες; Ίσως θα με ενδιέφερε να πάρω "
+"μερικά πράγματα από σένα... ή καλύτερα, δεν χρειάζεσε σπάνιες και ακριβές "
+"προμήθειες εξοπλισμού για να ξεπεράσεις αυτή τη δοκιμασία;"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -8200,6 +8365,12 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
+"Φαίνεται ότι ο Αρχιεπίσκοπος Λάζαρος παρότρυνε πολλούς από τους κατοίκους "
+"της πόλης να τολμήσουν να μπούν στον Λαβύρινθο για να βρουν τον εξαφανισμένο "
+"γιο του Βασιλιά. Έπαιξε πάνω στους φόβους τους και τους μετάτρεψε σε έναν "
+"ξέφρενο όχλο. Κανείς τους δεν ήταν προετοιμασμένος για αυτό που βρισκόταν "
+"μέσα στην κρύα γη... Ο Λάζαρος τους εγκατέλειψε εκεί κάτω - αφημένους στα "
+"νύχια ανείπωτων τρόμων - για να πεθάνουν."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
