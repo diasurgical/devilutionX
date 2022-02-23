@@ -593,7 +593,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 			if (monsterName.find(name) == std::string::npos)
 				continue;
 			/* match was found */
-			mtype = UniqueMonstersData[i].mtype;
+			mtype = mondata.mtype;
 			uniqidx = i;
 			break;
 		}
