@@ -3364,7 +3364,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize, Point pos
 	int yp = pos.y;
 	bool skipGroupPlacement = false; /* skips the placement of debug monsters */
 
-	if (xp == 0 && yp == 0){
+	if (xp == 0 && yp == 0) {
 		while (true) {
 			xp = GenerateRnd(80) + 16;
 			yp = GenerateRnd(80) + 16;
