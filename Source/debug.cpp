@@ -637,7 +637,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 			/* Spawn Unique Monster*/
 			if (uniqidx != -1) {
 				if (ActiveMonsterCount < MAXMONSTERS) {
-					PlaceUniqueMonst(uniqidx, mtype, 0, pos);	
+					PlaceUniqueMonst(uniqidx, mtype, 0, pos);
 				} else {
 					return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
 				}
