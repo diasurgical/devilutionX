@@ -970,6 +970,7 @@ void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
 	languages.emplace_back("cs", "Čeština");
 	languages.emplace_back("da", "Dansk");
 	languages.emplace_back("de", "Deutsch");
+	languages.emplace_back("el", "Ελληνικά");
 	languages.emplace_back("en", "English");
 	languages.emplace_back("es", "Español");
 	languages.emplace_back("fr", "Français");
