@@ -568,25 +568,33 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 
 	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
 
+	/* check normal monster list */
 	int mtype = -1;
-	for (int i = 0; i < 138; i++) {
+	int uniqidx = -1;
+	for (int i = 0; i < NUM_MTYPES; i++) {
 		auto mondata = MonstersData[i];
 		std::string monsterName(mondata.mName);
 		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+		/* if match is not found, check next */
 		if (monsterName.find(name) == std::string::npos)
 			continue;
+		/* match was found */
 		mtype = i;
 		break;
 	}
 
+	/* check unique monster list */
 	if (mtype == -1) {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
 			auto mondata = UniqueMonstersData[i];
 			std::string monsterName(mondata.mName);
 			std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+			/* if a match is not found, check next */
 			if (monsterName.find(name) == std::string::npos)
 				continue;
-			mtype = mondata.mtype;
+			/* match was found */
+			mtype = UniqueMonstersData[i].mtype;
+			uniqidx = i;
 			break;
 		}
 	}
@@ -594,7 +602,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = MAX_LVLMTYPES - 1;
+	int id = LevelMonsterTypeCount; /* first unused position in the array */
 	bool found = false;
 
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
@@ -610,6 +618,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 		InitMonsterGFX(id);
 		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
 		LevelMonsterTypes[id].mdeadval = 1;
+		LevelMonsterTypeCount++;
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -625,8 +634,17 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 			if (!IsTileWalkable(pos))
 				continue;
 
-			if (AddMonster(pos, myPlayer._pdir, id, true) < 0)
-				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+			/* Spawn Unique Monster*/
+			if (uniqidx != -1) {
+				if (ActiveMonsterCount < MAXMONSTERS) {
+					PlaceUniqueMonst(uniqidx, mtype, 0, pos);	
+				} else {
+					return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+				}
+			} else { /* Spawn Regular Monster */
+				if (AddMonster(pos, myPlayer._pdir, id, true) < 0)
+					return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+			}
 			spawnedMonster += 1;
 
 			if (spawnedMonster >= count)
