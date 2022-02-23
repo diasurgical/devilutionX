@@ -97,7 +97,7 @@ void PrintDebugMonster(int m)
 	auto &monster = Monsters[m];
 
 	EventPlrMsg(fmt::format(
-	                "Monster {:i} = {:s}\nX = {:i}, Y = {:i}\nEnemy = {:i}, HP = {:i}\nMode = {:i}, Var1 = {:i}",
+	                "Monster {:d} = {:s}\nX = {:d}, Y = {:d}\nEnemy = {:d}, HP = {:d}\nMode = {:d}, Var1 = {:d}",
 	                m,
 	                monster.mName,
 	                monster.position.tile.x,
@@ -115,7 +115,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	EventPlrMsg(fmt::format("Active List = {:i}, Squelch = {:i}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
+	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
@@ -837,7 +837,7 @@ void NextDebugMonster()
 	if (DebugMonsterId == MAXMONSTERS)
 		DebugMonsterId = 0;
 
-	EventPlrMsg(fmt::format("Current debug monster = {:i}", DebugMonsterId), UiFlags::ColorWhite);
+	EventPlrMsg(fmt::format("Current debug monster = {:d}", DebugMonsterId), UiFlags::ColorWhite);
 }
 
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)
