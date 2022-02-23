@@ -270,6 +270,7 @@ extern int ActiveMonsterCount;
 extern int MonsterKillCounts[MAXMONSTERS];
 extern bool sgbSaveSoundOn;
 
+void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);

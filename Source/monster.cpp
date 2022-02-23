@@ -477,115 +477,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		UberDiabloMonsterIndex = ActiveMonsterCount;
 	}
 	PlaceMonster(ActiveMonsterCount, uniqtype, xp, yp);
-	monster._uniqtype = uniqindex + 1;
-
-	if (uniqueMonsterData.mlevel != 0) {
-		monster.mLevel = 2 * uniqueMonsterData.mlevel;
-	} else {
-		monster.mLevel = monster.MData->mLevel + 5;
-	}
-
-	monster.mExp *= 2;
-	monster.mName = pgettext("monster", uniqueMonsterData.mName);
-	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
-
-	if (!gbIsMultiplayer)
-		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
-
-	monster._mhitpoints = monster._mmaxhp;
-	monster._mAi = uniqueMonsterData.mAi;
-	monster._mint = uniqueMonsterData.mint;
-	monster.mMinDamage = uniqueMonsterData.mMinDamage;
-	monster.mMaxDamage = uniqueMonsterData.mMaxDamage;
-	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
-	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
-	monster.mMagicRes = uniqueMonsterData.mMagicRes;
-	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
-	if (uniqindex == UMT_HORKDMN)
-		monster.mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
-	else
-		monster.mlid = AddLight(monster.position.tile, 3);
-
-	if (gbIsMultiplayer) {
-		if (monster._mAi == AI_LAZHELP)
-			monster.mtalkmsg = TEXT_NONE;
-		if (monster._mAi == AI_LAZARUS && Quests[Q_BETRAYER]._qvar1 > 3) {
-			monster._mgoal = MGOAL_NORMAL;
-		} else if (monster.mtalkmsg != TEXT_NONE) {
-			monster._mgoal = MGOAL_INQUIRING;
-		}
-	} else if (monster.mtalkmsg != TEXT_NONE) {
-		monster._mgoal = MGOAL_INQUIRING;
-	}
-
-	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster._mmaxhp = 3 * monster._mmaxhp;
-		if (gbIsHellfire)
-			monster._mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
-		else
-			monster._mmaxhp += 64;
-		monster.mLevel += 15;
-		monster._mhitpoints = monster._mmaxhp;
-		monster.mExp = 2 * (monster.mExp + 1000);
-		monster.mMinDamage = 2 * (monster.mMinDamage + 2);
-		monster.mMaxDamage = 2 * (monster.mMaxDamage + 2);
-		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
-		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
-	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-		monster._mmaxhp = 4 * monster._mmaxhp;
-		if (gbIsHellfire)
-			monster._mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
-		else
-			monster._mmaxhp += 192;
-		monster.mLevel += 30;
-		monster._mhitpoints = monster._mmaxhp;
-		monster.mExp = 4 * (monster.mExp + 1000);
-		monster.mMinDamage = 4 * monster.mMinDamage + 6;
-		monster.mMaxDamage = 4 * monster.mMaxDamage + 6;
-		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
-		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
-	}
-
-	char filestr[64];
-	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
-	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
-
-	monster._uniqtrans = uniquetrans++;
-
-	if (uniqueMonsterData.customToHit != 0) {
-		monster.mHit = uniqueMonsterData.customToHit;
-		monster.mHit2 = uniqueMonsterData.customToHit;
-
-		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-			monster.mHit += NIGHTMARE_TO_HIT_BONUS;
-			monster.mHit2 += NIGHTMARE_TO_HIT_BONUS;
-		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-			monster.mHit += HELL_TO_HIT_BONUS;
-			monster.mHit2 += HELL_TO_HIT_BONUS;
-		}
-	}
-	if (uniqueMonsterData.customArmorClass != 0) {
-		monster.mArmorClass = uniqueMonsterData.customArmorClass;
-
-		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-			monster.mArmorClass += NIGHTMARE_AC_BONUS;
-		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-			monster.mArmorClass += HELL_AC_BONUS;
-		}
-	}
-
-	ActiveMonsterCount++;
-
-	if (uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
-		PlaceGroup(miniontype, bosspacksize, uniqueMonsterData.monsterPack, ActiveMonsterCount - 1);
-	}
-
-	if (monster._mAi != AI_GARG) {
-		monster.ChangeAnimationData(MonsterGraphic::Stand);
-		monster.AnimInfo.CurrentFrame = GenerateRnd(monster.AnimInfo.NumberOfFrames - 1) + 1;
-		monster._mFlags &= ~MFLAG_ALLOW_SPECIAL;
-		monster._mmode = MonsterMode::Stand;
-	}
+	PrepareUniqueMonst(monster, uniqindex, miniontype, bosspacksize, uniqueMonsterData);
 }
 
 int AddMonsterType(_monster_id type, placeflag placeflag)
@@ -3563,6 +3455,119 @@ bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
 }
 
 } // namespace
+
+void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
+{
+	monster._uniqtype = uniqindex + 1;
+
+	if (uniqueMonsterData.mlevel != 0) {
+		monster.mLevel = 2 * uniqueMonsterData.mlevel;
+	} else {
+		monster.mLevel = monster.MData->mLevel + 5;
+	}
+
+	monster.mExp *= 2;
+	monster.mName = pgettext("monster", uniqueMonsterData.mName);
+	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
+
+	if (!gbIsMultiplayer)
+		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
+
+	monster._mhitpoints = monster._mmaxhp;
+	monster._mAi = uniqueMonsterData.mAi;
+	monster._mint = uniqueMonsterData.mint;
+	monster.mMinDamage = uniqueMonsterData.mMinDamage;
+	monster.mMaxDamage = uniqueMonsterData.mMaxDamage;
+	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
+	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
+	monster.mMagicRes = uniqueMonsterData.mMagicRes;
+	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
+	if (uniqindex == UMT_HORKDMN)
+		monster.mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
+	else
+		monster.mlid = AddLight(monster.position.tile, 3);
+
+	if (gbIsMultiplayer) {
+		if (monster._mAi == AI_LAZHELP)
+			monster.mtalkmsg = TEXT_NONE;
+		if (monster._mAi == AI_LAZARUS && Quests[Q_BETRAYER]._qvar1 > 3) {
+			monster._mgoal = MGOAL_NORMAL;
+		} else if (monster.mtalkmsg != TEXT_NONE) {
+			monster._mgoal = MGOAL_INQUIRING;
+		}
+	} else if (monster.mtalkmsg != TEXT_NONE) {
+		monster._mgoal = MGOAL_INQUIRING;
+	}
+
+	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
+		monster._mmaxhp = 3 * monster._mmaxhp;
+		if (gbIsHellfire)
+			monster._mmaxhp += (gbIsMultiplayer ? 100 : 50) << 6;
+		else
+			monster._mmaxhp += 64;
+		monster.mLevel += 15;
+		monster._mhitpoints = monster._mmaxhp;
+		monster.mExp = 2 * (monster.mExp + 1000);
+		monster.mMinDamage = 2 * (monster.mMinDamage + 2);
+		monster.mMaxDamage = 2 * (monster.mMaxDamage + 2);
+		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
+		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
+	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+		monster._mmaxhp = 4 * monster._mmaxhp;
+		if (gbIsHellfire)
+			monster._mmaxhp += (gbIsMultiplayer ? 200 : 100) << 6;
+		else
+			monster._mmaxhp += 192;
+		monster.mLevel += 30;
+		monster._mhitpoints = monster._mmaxhp;
+		monster.mExp = 4 * (monster.mExp + 1000);
+		monster.mMinDamage = 4 * monster.mMinDamage + 6;
+		monster.mMaxDamage = 4 * monster.mMaxDamage + 6;
+		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
+		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
+	}
+
+	char filestr[64];
+	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
+	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
+
+	monster._uniqtrans = uniquetrans++;
+
+	if (uniqueMonsterData.customToHit != 0) {
+		monster.mHit = uniqueMonsterData.customToHit;
+		monster.mHit2 = uniqueMonsterData.customToHit;
+
+		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
+			monster.mHit += NIGHTMARE_TO_HIT_BONUS;
+			monster.mHit2 += NIGHTMARE_TO_HIT_BONUS;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+			monster.mHit += HELL_TO_HIT_BONUS;
+			monster.mHit2 += HELL_TO_HIT_BONUS;
+		}
+	}
+	if (uniqueMonsterData.customArmorClass != 0) {
+		monster.mArmorClass = uniqueMonsterData.customArmorClass;
+
+		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
+			monster.mArmorClass += NIGHTMARE_AC_BONUS;
+		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+			monster.mArmorClass += HELL_AC_BONUS;
+		}
+	}
+
+	ActiveMonsterCount++;
+
+	if (uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
+		PlaceGroup(miniontype, bosspacksize, uniqueMonsterData.monsterPack, ActiveMonsterCount - 1);
+	}
+
+	if (monster._mAi != AI_GARG) {
+		monster.ChangeAnimationData(MonsterGraphic::Stand);
+		monster.AnimInfo.CurrentFrame = GenerateRnd(monster.AnimInfo.NumberOfFrames - 1) + 1;
+		monster._mFlags &= ~MFLAG_ALLOW_SPECIAL;
+		monster._mmode = MonsterMode::Stand;
+	}
+}
 
 void InitLevelMonsters()
 {
