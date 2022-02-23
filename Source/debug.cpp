@@ -614,11 +614,16 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
-		InitMonsterGFX(id);
-		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].mdeadval = 1;
-		LevelMonsterTypeCount++;
+		if (LevelMonsterTypeCount < MAX_LVLMTYPES) {
+				LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
+				InitMonsterGFX(id);
+				InitMonsterSND(id);
+				LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
+				LevelMonsterTypes[id].mdeadval = 1;
+				LevelMonsterTypeCount++;
+		} else {
+			return ("Cannot spawn additional monster types");
+		}
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
