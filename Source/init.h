@@ -29,6 +29,7 @@ extern std::optional<MpqArchive> font_mpq;
 extern std::optional<MpqArchive> lang_mpq;
 extern std::optional<MpqArchive> devilutionx_mpq;
 
+void InitMPQSearchPaths();
 void init_cleanup();
 void LoadCoreArchives();
 void LoadLanguageArchive();

@@ -1725,6 +1725,9 @@ int DiabloMain(int argc, char **argv)
 	DiabloParseFlags(argc, argv);
 	InitKeymapActions();
 
+	// Initialize search paths for assets (mpq and relative files)
+	InitMPQSearchPaths();
+
 	// Need to ensure devilutionx.mpq (and fonts.mpq if available) are loaded before attempting to read translation settings
 	LoadCoreArchives();
 	was_archives_init = true;

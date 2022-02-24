@@ -17,6 +17,7 @@
 #include "engine/assets.hpp"
 #include "mpq/mpq_reader.hpp"
 #include "options.h"
+#include "path.h"
 #include "pfile.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -60,16 +61,16 @@ std::optional<MpqArchive> font_mpq;
 
 namespace {
 
-std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, string_view mpqName)
+std::optional<MpqArchive> LoadMPQ(string_view mpqName)
 {
 	std::optional<MpqArchive> archive;
 	std::string mpqAbsPath;
 	std::int32_t error = 0;
-	for (const auto &path : paths) {
+	const auto &searchPaths = paths::GetMPQSearchPaths();
+	for (const auto &path : searchPaths) {
 		mpqAbsPath = path + mpqName.data();
 		if ((archive = MpqArchive::Open(mpqAbsPath.c_str(), error))) {
 			LogVerbose("  Found: {} in {}", mpqName, path);
-			paths::SetMpqDir(path);
 			return archive;
 		}
 		if (error != 0) {
@@ -83,7 +84,9 @@ std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, string_
 	return std::nullopt;
 }
 
-std::vector<std::string> GetMPQSearchPaths()
+} // namespace
+
+void InitMPQSearchPaths()
 {
 	std::vector<std::string> paths;
 	paths.push_back(paths::BasePath());
@@ -122,10 +125,8 @@ std::vector<std::string> GetMPQSearchPaths()
 		LogVerbose("MPQ search paths:{}", message);
 	}
 
-	return paths;
+	paths::SetMPQSearchPaths(paths);
 }
-
-} // namespace
 
 void init_cleanup()
 {
@@ -150,13 +151,11 @@ void init_cleanup()
 
 void LoadCoreArchives()
 {
-	auto paths = GetMPQSearchPaths();
-
 #if !defined(__ANDROID__) && !defined(__APPLE__)
 	// Load devilutionx.mpq first to get the font file for error messages
-	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
+	devilutionx_mpq = LoadMPQ("devilutionx.mpq");
 #endif
-	font_mpq = LoadMPQ(paths, "fonts.mpq"); // Extra fonts
+	font_mpq = LoadMPQ("fonts.mpq"); // Extra fonts
 }
 
 void LoadLanguageArchive()
@@ -168,23 +167,20 @@ void LoadLanguageArchive()
 		std::string langMpqName { code };
 		langMpqName.append(".mpq");
 
-		auto paths = GetMPQSearchPaths();
-		lang_mpq = LoadMPQ(paths, langMpqName);
+		lang_mpq = LoadMPQ(langMpqName);
 	}
 }
 
 void LoadGameArchives()
 {
-	auto paths = GetMPQSearchPaths();
-
-	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
+	diabdat_mpq = LoadMPQ("DIABDAT.MPQ");
 	if (!diabdat_mpq) {
 		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
-		diabdat_mpq = LoadMPQ(paths, "diabdat.mpq");
+		diabdat_mpq = LoadMPQ("diabdat.mpq");
 	}
 
 	if (!diabdat_mpq) {
-		spawn_mpq = LoadMPQ(paths, "spawn.mpq");
+		spawn_mpq = LoadMPQ("spawn.mpq");
 		if (spawn_mpq)
 			gbIsSpawn = true;
 	}
@@ -195,21 +191,21 @@ void LoadGameArchives()
 	}
 	SDL_RWclose(handle);
 
-	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
+	hellfire_mpq = LoadMPQ("hellfire.mpq");
 	if (hellfire_mpq)
 		gbIsHellfire = true;
 	if (forceHellfire && !hellfire_mpq)
 		InsertCDDlg("hellfire.mpq");
 
-	hfmonk_mpq = LoadMPQ(paths, "hfmonk.mpq");
-	hfbard_mpq = LoadMPQ(paths, "hfbard.mpq");
+	hfmonk_mpq = LoadMPQ("hfmonk.mpq");
+	hfbard_mpq = LoadMPQ("hfbard.mpq");
 	if (hfbard_mpq)
 		gbBard = true;
-	hfbarb_mpq = LoadMPQ(paths, "hfbarb.mpq");
+	hfbarb_mpq = LoadMPQ("hfbarb.mpq");
 	if (hfbarb_mpq)
 		gbBarbarian = true;
-	hfmusic_mpq = LoadMPQ(paths, "hfmusic.mpq");
-	hfvoice_mpq = LoadMPQ(paths, "hfvoice.mpq");
+	hfmusic_mpq = LoadMPQ("hfmusic.mpq");
+	hfvoice_mpq = LoadMPQ("hfvoice.mpq");
 
 	if (gbIsHellfire && (!hfmonk_mpq || !hfmusic_mpq || !hfvoice_mpq)) {
 		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
