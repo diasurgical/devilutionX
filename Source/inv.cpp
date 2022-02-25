@@ -1503,7 +1503,7 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 	}
 
 	if (persistItem) {
-		player.InvList[player._pNumInv] = player.HoldItem;
+		player.InvList[player._pNumInv] = item;
 		player._pNumInv++;
 
 		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize);
