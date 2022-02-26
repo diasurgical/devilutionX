@@ -498,6 +498,27 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 		return;
 	}
 
+	// Checks conditions for spell again, cause initial check was done when spell was queued and the parameters could be changed meanwhile
+	bool isValid = true;
+	switch (player.queuedSpell.spellType) {
+	case RSPLTYPE_SKILL:
+	case RSPLTYPE_SPELL:
+		isValid = CheckSpell(player, player.queuedSpell.spellId, player.queuedSpell.spellType, true) == SpellCheckResult::Success;
+		break;
+	case RSPLTYPE_SCROLL:
+		isValid = UseScroll(player, player.queuedSpell.spellId);
+		break;
+	case RSPLTYPE_CHARGES:
+		isValid = CanUseStaff(player, player.queuedSpell.spellId);
+		break;
+	case RSPLTYPE_INVALID:
+		// Scroll is removed previous, so don't check again
+		isValid = true;
+		break;
+	}
+	if (!isValid)
+		return;
+
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_SPELL)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
@@ -3448,10 +3469,10 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		addflag = spellcheck == SpellCheckResult::Success;
 		break;
 	case RSPLTYPE_SCROLL:
-		addflag = UseScroll(spellID);
+		addflag = pcurs == CURSOR_HAND && UseScroll(myPlayer, spellID);
 		break;
 	case RSPLTYPE_CHARGES:
-		addflag = UseStaff(spellID);
+		addflag = pcurs == CURSOR_HAND && CanUseStaff(myPlayer, spellID);
 		break;
 	case RSPLTYPE_INVALID:
 		return;

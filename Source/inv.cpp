@@ -1897,15 +1897,12 @@ int8_t CheckInvHLight()
 	return rv;
 }
 
-bool UseScroll(const spell_id spell)
+bool UseScroll(Player &player, spell_id spell)
 {
-	if (pcurs != CURSOR_HAND)
-		return false;
-
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
 		return false;
 
-	return HasInventoryOrBeltItem(*MyPlayer, [spell](const Item &item) {
+	return HasInventoryOrBeltItem(player, [spell](const Item &item) {
 		return item.isScrollOf(spell);
 	});
 }
@@ -1921,15 +1918,9 @@ void UseStaffCharge(Player &player)
 	CalcPlrStaff(player);
 }
 
-bool UseStaff(const spell_id spell)
+bool CanUseStaff(Player &player, spell_id spellId)
 {
-	if (pcurs != CURSOR_HAND) {
-		return false;
-	}
-
-	Player &myPlayer = *MyPlayer;
-
-	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], spell);
+	return CanUseStaff(player.InvBody[INVLOC_HAND_LEFT], spellId);
 }
 
 Item &GetInventoryItem(Player &player, int location)
