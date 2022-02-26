@@ -217,7 +217,7 @@ std::array<T, 16> maybeAutofill(std::initializer_list<T> list)
 
 MissileFileData::MissileFileData(string_view name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
     std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
-    int16_t animWidth, int16_t animWidth2)
+    uint16_t animWidth, int16_t animWidth2)
     : name(name)
     , animName(animName)
     , animFAmt(animFAmt)

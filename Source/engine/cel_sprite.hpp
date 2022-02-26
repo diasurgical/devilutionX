@@ -15,13 +15,13 @@ class OwnedCelSprite;
  */
 class CelSprite {
 public:
-	CelSprite(const byte *data, int width)
+	CelSprite(const byte *data, uint16_t width)
 	    : data_ptr_(data)
 	    , width_(width)
 	{
 	}
 
-	CelSprite(const byte *data, const int *widths)
+	CelSprite(const byte *data, const uint16_t *widths)
 	    : data_ptr_(data)
 	    , widths_(widths)
 	{
@@ -39,7 +39,7 @@ public:
 		return data_ptr_;
 	}
 
-	[[nodiscard]] int Width(std::size_t frame = 1) const
+	[[nodiscard]] uint16_t Width(std::size_t frame = 1) const
 	{
 		return widths_ == nullptr ? width_ : widths_[frame];
 	}
@@ -55,8 +55,8 @@ public:
 
 private:
 	const byte *data_ptr_;
-	int width_ = 0;
-	const int *widths_ = nullptr; // unowned
+	uint16_t width_ = 0;
+	const uint16_t *widths_ = nullptr; // unowned
 };
 
 /**
@@ -65,13 +65,13 @@ private:
  */
 class OwnedCelSprite : public CelSprite {
 public:
-	OwnedCelSprite(std::unique_ptr<byte[]> data, int width)
+	OwnedCelSprite(std::unique_ptr<byte[]> data, uint16_t width)
 	    : CelSprite(data.get(), width)
 	    , data_(std::move(data))
 	{
 	}
 
-	OwnedCelSprite(std::unique_ptr<byte[]> data, const int *widths)
+	OwnedCelSprite(std::unique_ptr<byte[]> data, const uint16_t *widths)
 	    : CelSprite(data.get(), widths)
 	    , data_(std::move(data))
 	{

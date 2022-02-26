@@ -455,12 +455,9 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, Point position, bool lighting)
 {
-	position.x += CalculateWidth2(Players[pnum].AnimInfo.celSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2;
+	position.x += CalculateWidth2(static_cast<int>(Players[pnum].AnimInfo.celSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2);
 
-	int width = MissileSpriteData[missileGraphicId].animWidth;
-	const byte *pCelBuff = MissileSpriteData[missileGraphicId].GetFirstFrame();
-
-	CelSprite cel { pCelBuff, width };
+	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
 
 	if (pnum == MyPlayerId) {
 		Cl2Draw(out, position.x, position.y, cel, 1);
@@ -750,7 +747,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		auto &towner = Towners[mi];
 		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
 		const Point position { px, targetBufferPosition.y };
-		CelSprite sprite { towner._tAnimData, towner._tAnimWidth };
+		const CelSprite sprite = towner.Sprite();
 		if (mi == pcursmonst) {
 			CelBlitOutlineTo(out, 166, position, sprite, towner._tAnimFrame);
 		}

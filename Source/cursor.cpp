@@ -29,10 +29,10 @@ namespace {
 /** Cursor images CEL */
 std::optional<OwnedCelSprite> pCursCels;
 std::optional<OwnedCelSprite> pCursCels2;
-constexpr int InvItems1Size = 180;
+constexpr uint16_t InvItems1Size = 180;
 
 /** Maps from objcurs.cel frame number to frame width. */
-const int InvItemWidth1[] = {
+const uint16_t InvItemWidth1[] = {
 	// clang-format off
 	// Cursors
 	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
@@ -55,7 +55,7 @@ const int InvItemWidth1[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 };
-const int InvItemWidth2[] = {
+const uint16_t InvItemWidth2[] = {
 	0,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -67,7 +67,7 @@ const int InvItemWidth2[] = {
 };
 
 /** Maps from objcurs.cel frame number to frame height. */
-const int InvItemHeight1[] = {
+const uint16_t InvItemHeight1[] = {
 	// clang-format off
 	// Cursors
 	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
@@ -90,7 +90,7 @@ const int InvItemHeight1[] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 };
-const int InvItemHeight2[] = {
+const uint16_t InvItemHeight2[] = {
 	0,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
