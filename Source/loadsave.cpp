@@ -732,7 +732,7 @@ void LoadObject(LoadHelper &file, Object &object)
 	object._oAnimCnt = file.NextLE<int32_t>();
 	object._oAnimLen = file.NextLE<uint32_t>();
 	object._oAnimFrame = file.NextLE<uint32_t>();
-	object._oAnimWidth = file.NextLE<int32_t>();
+	object._oAnimWidth = static_cast<uint16_t>(file.NextLE<int32_t>());
 	file.Skip(4); // Skip _oAnimWidth2
 	object._oDelFlag = file.NextBool32();
 	object._oBreak = file.NextLE<int8_t>();
@@ -1403,7 +1403,7 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.WriteLE<uint32_t>(object._oAnimLen);
 	file.WriteLE<uint32_t>(object._oAnimFrame);
 	file.WriteLE<int32_t>(object._oAnimWidth);
-	file.WriteLE<int32_t>(CalculateWidth2(object._oAnimWidth)); // Write _oAnimWidth2 for vanilla compatibility
+	file.WriteLE<int32_t>(CalculateWidth2(static_cast<int>(object._oAnimWidth))); // Write _oAnimWidth2 for vanilla compatibility
 	file.WriteLE<uint32_t>(object._oDelFlag ? 1 : 0);
 	file.WriteLE<int8_t>(object._oBreak);
 	file.Skip(3); // Alignment

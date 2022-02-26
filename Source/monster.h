@@ -137,11 +137,11 @@ struct AnimStruct {
 		const byte *spriteData = CelSpritesForDirections[static_cast<size_t>(direction)];
 		if (spriteData == nullptr)
 			return std::nullopt;
-		return CelSprite(spriteData, static_cast<int>(Width));
+		return CelSprite(spriteData, Width);
 	}
 
 	std::array<byte *, 8> CelSpritesForDirections;
-	unsigned Width;
+	uint16_t Width;
 	int Frames;
 	int Rate;
 };

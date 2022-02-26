@@ -234,7 +234,7 @@ struct ObjectData {
 	int oAnimFlag;  // TODO Create enum
 	int oAnimDelay; // Tick length of each frame in the current animation
 	int oAnimLen;   // Number of frames in current animation
-	int oAnimWidth;
+	uint16_t oAnimWidth;
 	bool oSolidFlag;
 	bool oMissFlag;
 	bool oLightFlag;
