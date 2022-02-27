@@ -2060,8 +2060,9 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 			    && premiumItem._iMinStr <= strength
 			    && premiumItem._iMinMag <= magic
 			    && premiumItem._iMinDex <= dexterity
-			    && premiumItem._iIvalue >= itemValue)
+			    && premiumItem._iIvalue >= itemValue) {
 				break;
+			}
 		}
 	}
 	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
