@@ -213,7 +213,8 @@ struct PlayerAnimationData {
 struct SpellCastInfo {
 	spell_id spellId;
 	spell_type spellType;
-	int8_t spellFrom; // TODO Create enum
+	/* @brief Inventory location for scrolls */
+	int8_t spellFrom;
 	/* @brief Used for spell level */
 	int spellLevel;
 };

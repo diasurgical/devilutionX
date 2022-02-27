@@ -1897,6 +1897,39 @@ int8_t CheckInvHLight()
 	return rv;
 }
 
+bool RemoveCurrentSpellScroll(Player &player)
+{
+	const spell_id spellId = player.executedSpell.spellId;
+
+	// Try to remove the scroll from selected inventory slot
+	int itemSlot = player.executedSpell.spellFrom;
+	int itemIndex = 0;
+	Item *item;
+	if (itemSlot <= INVITEM_INV_LAST) {
+		itemIndex = itemSlot - INVITEM_INV_FIRST;
+		item = &player.InvList[itemIndex];
+	} else {
+		itemIndex = itemSlot - INVITEM_BELT_FIRST;
+		item = &player.SpdList[itemIndex];
+	}
+
+	const auto isCurrentSpell = [spellId](const Item &item) {
+		return item.isScrollOf(spellId) || item.isRuneOf(spellId);
+	};
+
+	if (!item->isEmpty() && isCurrentSpell(*item)) {
+		if (itemSlot <= INVITEM_INV_LAST)
+			player.RemoveInvItem(static_cast<int>(itemIndex));
+		else
+			player.RemoveSpdBarItem(itemIndex);
+		return true;
+	}
+
+	// Didn't find it at the selected slot, take the first one we find
+	// This path is always used when the scroll is consumed via spell selection
+	return RemoveInventoryOrBeltItem(player, isCurrentSpell);
+}
+
 bool UseScroll(Player &player, spell_id spell)
 {
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
@@ -2050,7 +2083,10 @@ bool UseInvItem(int pnum, int cii)
 			CloseInventory();
 			return true;
 		}
-		player.RemoveSpdBarItem(c);
+		if (!item->isScroll() && !item->isRune())
+			player.RemoveSpdBarItem(c);
+		else
+			player.queuedSpell.spellFrom = cii;
 		return true;
 	}
 	if (player.InvList[c]._iMiscId == IMISC_MAPOFDOOM)
@@ -2060,7 +2096,10 @@ bool UseInvItem(int pnum, int cii)
 		CloseInventory();
 		return true;
 	}
-	player.RemoveInvItem(c);
+	if (!item->isScroll() && !item->isRune())
+		player.RemoveInvItem(c);
+	else
+		player.queuedSpell.spellFrom = cii;
 
 	return true;
 }

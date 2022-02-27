@@ -1086,6 +1086,7 @@ void AddHiveExplosion(Missile &missile, const AddMissileParameter &parameter)
 void AddFireRune(Missile &missile, const AddMissileParameter &parameter)
 {
 	AddRune(missile, parameter.dst, MIS_HIVEEXP);
+	UseMana(Players[missile._misource], SPL_RUNEFIRE);
 }
 
 void AddLightningRune(Missile &missile, const AddMissileParameter &parameter)
@@ -1094,21 +1095,25 @@ void AddLightningRune(Missile &missile, const AddMissileParameter &parameter)
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 	missile._midam = dmg;
 	AddRune(missile, parameter.dst, MIS_LIGHTWALL);
+	UseMana(Players[missile._misource], SPL_RUNELIGHT);
 }
 
 void AddGreatLightningRune(Missile &missile, const AddMissileParameter &parameter)
 {
 	AddRune(missile, parameter.dst, MIS_NOVA);
+	UseMana(Players[missile._misource], SPL_RUNENOVA);
 }
 
 void AddImmolationRune(Missile &missile, const AddMissileParameter &parameter)
 {
 	AddRune(missile, parameter.dst, MIS_IMMOLATION);
+	UseMana(Players[missile._misource], SPL_RUNEIMMOLAT);
 }
 
 void AddStoneRune(Missile &missile, const AddMissileParameter &parameter)
 {
 	AddRune(missile, parameter.dst, MIS_STONE);
+	UseMana(Players[missile._misource], SPL_RUNESTONE);
 }
 
 void AddReflection(Missile &missile, const AddMissileParameter & /*parameter*/)
