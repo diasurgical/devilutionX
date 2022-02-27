@@ -47,8 +47,6 @@ bool InitMenu(_selhero_selections type)
 	if (type == SELHERO_PREVIOUS)
 		return true;
 
-	music_stop();
-
 	success = StartGame(type != SELHERO_CONTINUE, type != SELHERO_CONNECT);
 	if (success)
 		RefreshMusic();
@@ -182,8 +180,6 @@ void mainmenu_loop()
 			break;
 		}
 	} while (!done);
-
-	music_stop();
 }
 
 } // namespace devilution
