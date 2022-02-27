@@ -184,6 +184,7 @@ void FreeGame()
 	FreeDebugGFX();
 #endif
 	FreeGameMem();
+	music_stop();
 }
 
 bool ProcessInput()
@@ -666,7 +667,6 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		nthread_ignore_mutex(true);
 		PaletteFadeOut(8);
 		sound_stop();
-		music_stop();
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ShowProgress((interface_mode)uMsg);
@@ -1638,8 +1638,6 @@ void InitKeymapActions()
 
 void FreeGameMem()
 {
-	music_stop();
-
 	pDungeonCels = nullptr;
 	pMegaTiles = nullptr;
 	pLevelPieces = nullptr;
@@ -1703,6 +1701,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 void diablo_quit(int exitStatus)
 {
 	FreeGameMem();
+	music_stop();
 	DiabloDeinit();
 	exit(exitStatus);
 }
@@ -1977,7 +1976,14 @@ void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
-	music_stop();
+	_music_id neededTrack;
+	if (currlevel >= 17)
+		neededTrack = currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6;
+	else
+		neededTrack = static_cast<_music_id>(leveltype);
+
+	if (neededTrack != sgnMusicTrack)
+		music_stop();
 	if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 		NewCursor(CURSOR_HAND);
 	}
@@ -2216,10 +2222,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	ActivateVirtualGamepad();
 #endif
 
-	if (currlevel >= 17)
-		music_start(currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6);
-	else
-		music_start(leveltype);
+	if (sgnMusicTrack != neededTrack)
+		music_start(neededTrack);
 
 	if (MinimizePaused) {
 		music_mute();
