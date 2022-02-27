@@ -379,13 +379,7 @@ inline bool RemoveInventoryOrBeltItemById(Player &player, _item_indexes id)
  *
  * @return Whether a scroll was found and removed.
  */
-inline bool RemoveCurrentSpellScroll(Player &player)
-{
-	const spell_id spellId = player.executedSpell.spellId;
-	return RemoveInventoryOrBeltItem(player, [spellId](const Item &item) {
-		return item.isScrollOf(spellId);
-	});
-}
+bool RemoveCurrentSpellScroll(Player &player);
 
 /* data */
 

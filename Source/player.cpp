@@ -511,10 +511,6 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 	case RSPLTYPE_CHARGES:
 		isValid = CanUseStaff(player, player.queuedSpell.spellId);
 		break;
-	case RSPLTYPE_INVALID:
-		// Scroll is removed previous, so don't check again
-		isValid = true;
-		break;
 	}
 	if (!isValid)
 		return;
@@ -1293,7 +1289,7 @@ bool DoSpell(Player &player)
 		    player.position.temp.y,
 		    player.executedSpell.spellLevel);
 
-		if (player.executedSpell.spellFrom == 0) {
+		if (IsAnyOf(player.executedSpell.spellType, RSPLTYPE_SCROLL, RSPLTYPE_CHARGES)) {
 			EnsureValidReadiedSpell(player);
 		}
 	}
