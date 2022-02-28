@@ -9056,6 +9056,10 @@ msgid ""
 "The way is fraught with danger and your only hope rests within your self "
 "trust."
 msgstr ""
+"Εάν βρεις αυτές τις Πέτρες του Αίματος, χρησιμοποίησέ τες προσεκτικά.\n"
+" \n"
+"Ο δρόμος είναι γεμάτος κινδύνους και η μόνη σου ελπίδα βρίσκεται στην "
+"εμπιστοσύνη του εαυτού σου."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:211
@@ -9065,6 +9069,11 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
+"Σκοπεύεις να βρεις την πανοπλία γνωστή ως Τιμή;\n"
+" \n"
+"Κανείς δεν έχει καταλάβει ποτέ πού είχε κρύψει ο Αρκάϊν το πράμα, και αφού "
+"οι επαφές μου δεν μπορούσαν να την βρουν, αμφιβάλλω σοβαρά ότι θα την βρεις "
+"εσύ."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:213
@@ -9081,6 +9090,18 @@ msgid ""
 "Legion of Darkness during the Sin War, he lost his humanity to his "
 "insatiable hunger for blood."
 msgstr ""
+"Ξέρω μόνο έναν θρύλο που μιλά για έναν τέτοιο πολεμιστή όπως περιγράφεις. Η "
+"ιστορία του βρίσκεται στα αρχαία χρονικά του Πολέμου της Αμαρτίας...\n"
+" \n"
+"Λεκιασμένος από χίλια χρόνια πολέμου, αίματος και θανάτου, ο Πολέμαρχος του "
+"Αίματος στέκεται πάνω σε ένα βουνό με τα κουρελιασμένα θύματά του. Η "
+"σκοτεινή του λεπίδα φωνάζει μια μαύρη κατάρα στους ζωντανούς, μια "
+"βασανισμένη πρόσκληση σε όποιον θα σταθεί μπροστά σε αυτόν τον Δήμιο της "
+"Κόλασης.\n"
+" \n"
+"Γράφεται επίσης ότι αν και κάποτε ήταν θνητός που πολέμησε δίπλα στη Λεγεώνα "
+"του Σκότους κατά τη διάρκεια του Πολέμου της Αμαρτίας, έχασε την ανθρωπιά "
+"του από την ακόρεστη πείνα του για αίμα."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:215
@@ -9089,6 +9110,9 @@ msgid ""
 "master. I hope that you do not have to fight him, for he sounds extremely "
 "dangerous."
 msgstr ""
+"Φοβάμαι ότι δεν έχω ακούσει τίποτα για έναν τόσο μοχθηρό πολεμιστή, καλέ/ή "
+"μου Άρχοντα/ίσσα. Ελπίζω να μην χρειαστεί να τον πολεμήσεις, γιατί ακούγεται "
+"εξαιρετικά επικίνδυνος."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:217
@@ -9096,6 +9120,8 @@ msgid ""
 "Cain would be able to tell you much more about something like this than I "
 "would ever wish to know."
 msgstr ""
+"Ο Κέϊιν θα μπορούσε να σου πει πολύ περισσότερα για κάτι τέτοιο, από όσα θα "
+"ήθελα ποτέ να μάθω εγώ."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:219
@@ -9103,6 +9129,8 @@ msgid ""
 "If you are to battle such a fierce opponent, may Light be your guide and "
 "your defender. I will keep you in my thoughts."
 msgstr ""
+"Εάν πρόκειται να πολεμήσετε έναν τόσο σκληρό αντίπαλο, είθε το Φώς να είναι "
+"ο οδηγός και ο υπερασπιστής σας. Θα σε έχω στις σκέψεις μου."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:221
@@ -9110,6 +9138,8 @@ msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
 msgstr ""
+"Σκοτεινοί και πονηροί θρύλοι περιβάλλουν τον Πολέμαρχο του Αίματος. Να είσαι "
+"καλά προετοιμασμένος, φίλε/η μου, γιατί δεν δείχνει έλεος και δεν χαρίζεται."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:223
@@ -9118,6 +9148,9 @@ msgid ""
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that?"
 msgstr ""
+"Πρέπει πάντα να μιλάς για το αίμα; Τι έχεις να πεις για τα λουλούδια, τον "
+"ήλιο, και αυτό το όμορφο κορίτσι που φέρνει τα ποτά. Άκου εδώ, φίλε - είσαι "
+"εμμονικός, το ξέρεις;"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:225
@@ -9126,6 +9159,9 @@ msgid ""
 "years knowing only warfare. I am sorry... I can not see if you will defeat "
 "him."
 msgstr ""
+"Η ικανότητα του με τη λεπίδα είναι φοβερή και έχει ζήσει για χιλιάδες χρόνια "
+"γνωρίζοντας μόνο τον πόλεμο. Λυπάμαι... Δεν μπορώ να προβλέψω αν θα τον "
+"νικήσεις."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:227
@@ -9133,6 +9169,9 @@ msgid ""
 "I haven't ever dealt with this Warlord you speak of, but he sounds like he's "
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
+"Δεν έχω ασχοληθεί ποτέ με αυτόν τον Πολέμαρχο για τον οποίο μιλάς, αλλά "
+"ακούγεται σαν να έχει χρησιμοποιήσει πολλά ξίφη. Δεν θα με πείραζε να "
+"τροφοδοτήσω τον στρατό του..."
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
@@ -9140,6 +9179,8 @@ msgid ""
 "My blade sings for your blood, mortal, and by my dark masters it shall not "
 "be denied."
 msgstr ""
+"Η λεπίδα μου τραγουδά για το αίμα σου, θνητέ, και μα τους σκοτεινούς αφέντες "
+"μου, δεν θα της το αρνηθώ."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:231
@@ -9150,6 +9191,12 @@ msgid ""
 "man could possess. I do not know what secrets it holds, my friend, but "
 "finding this stone would certainly prove most valuable."
 msgstr ""
+"Ο Γκρίσγουαλντ μιλά για την Ουράνια Πέτρα που προοριζόταν για το ενκλάβιο "
+"που βρίσκεται στα ανατολικά. Μεταφέρθηκε εκεί για περαιτέρω μελέτη. Αυτή η "
+"πέτρα έλαμψε με μια ενέργεια που με κάποιον τρόπο προσέφερε όραμα πέρα από "
+"αυτό που μπορούσε να έχει ένας κανονικός άνθρωπος. Δεν ξέρω τι μυστικά "
+"κρύβει, φίλε/η μου, αλλά η εύρεση αυτής της πέτρας σίγουρα θα αποδειχτεί "
+"πολύτιμη."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -9159,6 +9206,10 @@ msgid ""
 "sweetbreads that Garda has just finished baking. Shame what happened to "
 "them..."
 msgstr ""
+"Το καραβάνι σταμάτησε εδώ για να πάρει μερικές προμήθειες για το ταξίδι του "
+"προς τα ανατολικά. Τους πούλησα μια σειρά από φρέσκα φρούτα και μερικά "
+"εξαιρετικά γλυκά που μόλις τελείωσε η Γκάρντα να ψήνει. Κρίμα αυτό που "
+"πάθανε..."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:235
@@ -9167,6 +9218,8 @@ msgid ""
 "I will say this. If rocks are falling from the sky, you had better be "
 "careful!"
 msgstr ""
+"Δεν ξέρω τι είναι αυτό που νόμιζαν ότι μπορούσαν να δουν με αυτόν τον βράχο, "
+"αλλά θα πω αυτό: Αν πέφτουν βράχοι από τον ουρανό, καλύτερα να προσέχεις!"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:237
@@ -9178,6 +9231,12 @@ msgid ""
 "I don't see how you could hope to find anything that they would have been "
 "carrying."
 msgstr ""
+"Λοιπόν, ένα καραβάνι μερικών πολύ σημαντικών ανθρώπων σταμάτησε εδώ, αλλά "
+"αυτό έγινε πριν από αρκετό καιρό. Είχαν περίεργες προφορές και ξεκινούσαν "
+"ένα μακρύ ταξίδι, όπως θυμάμαι.\n"
+" \n"
+"Δεν καταλαβαίνω πώς θα μπορούσες να ελπίζεις ότι θα βρεις κάτι που "
+"κουβαλούσαν."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:239
@@ -9190,6 +9249,13 @@ msgid ""
 "found. If you should find it, I believe that I can fashion something useful "
 "from it."
 msgstr ""
+"Κάτσε για λίγο - Έχω μια ιστορία που μπορεί να σου φανεί ενδιαφέρουσα. Από "
+"εδώ πέρασε πριν λίγο καιρό ένα καραβάνι που είχε προορισμό τα ανατολικά "
+"βασίλεια. Υποτίθεται ότι κουβαλούσε ένα κομμάτι του ουρανού που είχε πέσει "
+"στη γη! Το καραβάνι έπεσε σε ενέδρα από καβαλάρηδες που φορούσαν μανδύες "
+"ακριβώς βόρεια από εδώ κατά μήκος του δρόμου. Έψαξα στα συντρίμμια για αυτόν "
+"τον ουράνιο βράχο, αλλά δεν τον βρήκα πουθενά. Αν το βρεις, πιστεύω ότι "
+"μπορώ να φτιάξω κάτι χρήσιμο από αυτό."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:241
@@ -9197,6 +9263,8 @@ msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it."
 msgstr ""
+"Ακόμα περιμένω να μου φέρεις εκείνη την πέτρα από τον ουρανό. Ξέρω ότι μπορώ "
+"να φτιάξω κάτι δυνατό από αυτό."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold(Quest End)
 #: Source/textdat.cpp:243
@@ -9206,6 +9274,11 @@ msgid ""
 "Ah, Here you are. I arranged pieces of the stone within a silver ring that "
 "my father left me. I hope it serves you well."
 msgstr ""
+"Επίτρεψε μου να το δω - ναι... ναι, είναι όπως πίστευα. Δώσε μου ένα "
+"λεπτό...\n"
+" \n"
+"Α, ορίστε. Διαρρύθμισα κομμάτια της πέτρας μέσα σε ένα ασημένιο δαχτυλίδι "
+"που μου άφησε ο πατέρας μου. Ελπίζω ότι θα σε υπηρετήσει καλά."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:245
@@ -9214,6 +9287,9 @@ msgid ""
 "green and red and silver. Don't remember what happened to it, though. I "
 "really miss that ring..."
 msgstr ""
+"Είχα ένα ωραίο δαχτυλίδι. ήταν πολύ ακριβό, με μπλε και πράσινο και κόκκινο "
+"και ασημί. Δεν θυμάμαι τι του συνέβη, όμως. Μου λείπει πολύ αυτό το "
+"δαχτυλίδι..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
@@ -9222,6 +9298,9 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all."
 msgstr ""
+"Η Ουράνια Πέτρα είναι πολύ ισχυρή, και αν ήταν κάποιος εκτός από τον "
+"Γκρίσγουαλντι που σου πρότεινε να την βρεις, θα σε απέτρεπα. Θα αξιοποιήσει "
+"τις δυνάμεις της και η χρησιμότητα της θα είναι για το καλό όλων μας."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:249
@@ -9230,6 +9309,9 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work."
 msgstr ""
+"Αν κάποιος μπορεί να φτιάξει κάτι από αυτήν την πέτρα, ο Γκρισγουάλντ "
+"μπορεί. Ξέρει τι κάνει και όσο και αν προσπαθώ να κλέψω τους πελάτες του, "
+"σέβομαι την ποιότητα της δουλειάς του."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:251
@@ -9238,6 +9320,10 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
+"Η μάγισσα η Άντρια αναζητά ένα μαύρο μανιτάρι; Ξέρω τόσα για τα Μαύρα "
+"Μανιτάρια όσο και για τις Κόκκινες Ρέγγες. Ίσως ο Πέπιν ο Θεραπευτής θα "
+"μπορούσε να σου πει περισσότερα, αλλά αυτό δεν είναι κάτι που μπορεί να "
+"βρεθεί σε κάποια από τις ιστορίες ή στα βιβλία μου."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -9247,6 +9333,10 @@ msgid ""
 "then that is her business, but I can't help you find any. Black mushrooms... "
 "disgusting!"
 msgstr ""
+"Επίτρεψε μου να πω μόνο αυτό. Τόσο η Γκάρντα όσο και εγώ δεν θα σερβίραμε "
+"ποτέ μαύρα μανιτάρια στους τιμημένους καλεσμένους μας. Αν η Άντρια θέλει "
+"μερικά μανιτάρια στο στιφάδο της, τότε είναι δική της δουλειά, αλλά δεν "
+"μπορώ να σε βοηθήσω να τα βρεις. Μαύρα μανιτάρια... αηδιαστικό!"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:255
@@ -9257,6 +9347,12 @@ msgid ""
 "that its alchemy holds. If you can remove the brain of a demon when you kill "
 "it, I would be grateful if you could bring it to me."
 msgstr ""
+"Η μάγισσα μου είπε ότι έψαχνες για τον εγκέφαλο ενός δαίμονα για να με "
+"βοηθήσει να δημιουργήσω το ελιξίριο μου. Θα πρέπει να έχει μεγάλη αξία για "
+"τους πολλούς που τραυματίζονται από αυτά τα αποκρουστικά θηρία, αν μπορούσα "
+"απλώς να ξεκλειδώσω τα μυστικά που υποπτεύομαι ότι κρύβει η αλχημεία του. "
+"Εάν μπορείς να αφαιρέσεις τον εγκέφαλο ενός δαίμονα όταν τον σκοτώσεις και "
+"να μου τον φέρεις, θα σου ήμουν ευγνώμων."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:257
@@ -9265,6 +9361,9 @@ msgid ""
 "without this, but it can't hurt to have this to study. Would you please "
 "carry this to the witch? I believe that she is expecting it."
 msgstr ""
+"Εξαιρετικό, αυτό ακριβώς είχα στο μυαλό μου. Μπόρεσα να τελειώσω το ελιξίριο "
+"χωρίς αυτό, αλλά δεν είναι κακό να το μελετήσω. Θα το μεταφέρεις σε παρακαλώ "
+"στη μάγισσα; Πιστεύω ότι το περιμένει."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:259
@@ -9272,6 +9371,8 @@ msgid ""
 "I think Ogden might have some mushrooms in the storage cellar. Why don't you "
 "ask him?"
 msgstr ""
+"Νομίζω ότι ο Όγκντεν μπορεί να έχει μερικά μανιτάρια στην αποθήκη του στο "
+"κελάρι. Γιατί δεν τον ρωτάς;"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:261
@@ -9280,6 +9381,10 @@ msgid ""
 "I can offer you no more help than that, but it sounds like... a huge, "
 "gargantuan, swollen, bloated mushroom! Well, good hunting, I suppose."
 msgstr ""
+"Εάν η Άντρια δεν έχει ένα από αυτό, μπορείς να στοιχηματίσεις ότι είναι "
+"πράγματι σπάνιο. Δεν μπορώ να σου προσφέρω περισσότερη βοήθεια από αυτή, "
+"αλλά ακούγεται σαν... ένα τεράστιο, γιγαντιαίο, πρησμένο, φουσκωμένο "
+"μανιτάρι! Καλό κυνήγι, υποθέτω."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
@@ -9287,6 +9392,8 @@ msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key!"
 msgstr ""
+"Ο Όγκντεν ανακατεύει ένα ΚΑΚΟ μαύρο μανιτάρι, αλλά θα αρρωστήσω αν το πιώ. "
+"Άκου, άκου... εδώ είναι το μυστικό - το να έχεις μέτρο είναι το κλειδί!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -9295,6 +9402,9 @@ msgid ""
 "your eyes open for a black mushroom. It should be fairly large and easy to "
 "identify. If you find it, bring it to me, won't you?"
 msgstr ""
+"Τι έχουμε εδώ? Είναι ενδιαφέρον, μοιάζει με ένα βιβλίο συστατικών. Κράτα τα "
+"μάτια σου ανοιχτά για ένα μαύρο μανιτάρι. Θα πρέπει να είναι αρκετά μεγάλο "
+"και να αναγνωρίζεται εύκολα. Αν το βρεις, φέρε το μου, έτσι;"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:267
@@ -9302,6 +9412,8 @@ msgid ""
 "It's a big, black mushroom that I need. Now run off and get it for me so "
 "that I can use it for a special concoction that I am working on."
 msgstr ""
+"Είναι ένα μεγάλο, μαύρο μανιτάρι που χρειάζομαι. Τώρα τρέξε και βρες το για "
+"μένα, ώστε να το χρησιμοποιήσω σε ένα ειδικό παρασκεύασμα που δουλεύω."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:269
@@ -9312,6 +9424,12 @@ msgid ""
 "intends to make an elixir from it. If you help him find what he needs, "
 "please see if you can get a sample of the elixir for me."
 msgstr ""
+"Ναι, αυτό είναι τέλειο για ένα παρασκεύασμα που δημιουργώ. Παρεμπιπτόντως, ο "
+"θεραπευτής ψάχνει τον εγκέφαλο κάποιου δαίμονα ή κάτι άλλο για να μπορέσει "
+"να θεραπεύσει όσους έχουν πληγεί από το δηλητηριώδες φαρμάκι. Πιστεύω ότι "
+"σκοπεύει να φτιάξει ένα ελιξίριο με αυτό. Αν τον βοηθήσεις να βρει αυτό που "
+"χρειάζεται, δες αν μπορείς να πάρεις και ένα δείγμα από το ελιξίριο για μένα "
+"σε παρακαλώ."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:271
@@ -9321,6 +9439,10 @@ msgid ""
 "that grotesque organ that you are holding, and then bring me the elixir. "
 "Simple when you think about it, isn't it?"
 msgstr ""
+"Γιατί το έφερες αυτό εδώ; Δεν έχω ανάγκη για εγκέφαλο δαίμονα αυτή τη "
+"στιγμή. Χρειάζομαι λίγο από το ελιξίριο στο οποίο εργάζεται ο Θεραπευτής. "
+"Χρειάζεται αυτό το γκροτέσκο όργανο που κρατάς και μετά να μου φέρεις το "
+"ελιξίριο. Απλό όταν το σκεφτείς, έτσι δεν είναι;"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (Quest End)
 #: Source/textdat.cpp:273
@@ -9328,6 +9450,8 @@ msgid ""
 "What? Now you bring me that elixir from the healer? I was able to finish my "
 "brew without it. Why don't you just keep it..."
 msgstr ""
+"Τι? Τώρα μου φέρνεις αυτό το ελιξίριο από τον θεραπευτή; Μπόρεσα να "
+"ολοκληρώσω την παρασκευή μου χωρίς αυτό. Γιατί δεν το κρατάς..."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:275
@@ -9335,6 +9459,8 @@ msgid ""
 "I don't have any mushrooms of any size or color for sale. How about "
 "something a bit more useful?"
 msgstr ""
+"Δεν έχω προς πώληση μανιτάρια οποιουδήποτε μεγέθους ή χρώματος. Τι θα έλεγες "
+"για κάτι λίγο πιο χρήσιμο;"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:277
@@ -9359,6 +9485,26 @@ msgid ""
 "before the stars align, for we may never have a chance to rid the world of "
 "his evil again!"
 msgstr ""
+"Ώστε, ο θρύλος του Χάρτη είναι πραγματικός. Ακόμα κι εγώ δεν πίστεψα ποτέ "
+"τίποτα από αυτά! Υποθέτω ότι ήρθε η ώρα να σου πω την αλήθεια για το ποιος "
+"είμαι, φίλε/η μου. Βλέπεις, δεν είμαι μόνο όλο αυτό που φαίνομαι...\n"
+" \n"
+"Το αληθινό μου όνομα είναι Ντέκαρντ Κέϊν ο Πρεσβύτερος και είμαι ο "
+"τελευταίος απόγονος μιας αρχαίας Αδελφότητας που ήταν αφιερωμένη στο να "
+"κρατά και να προστατεύει τα μυστικά ενός διαχρονικού κακού. Ένα κακό που "
+"προφανώς έχει πλέον απελευθερωθεί...\n"
+" \n"
+"Το κακό στο οποίο εναντιώνεσαι είναι ο σκοτεινός Άρχοντας του Τρόμου - "
+"γνωστός στους θνητούς ως Ντιάμπλο. Ήταν αυτός που φυλακίστηκε μέσα στον "
+"Λαβύρινθο πριν από πολλούς αιώνες. Ο Χάρτης που κρατάς τώρα δημιουργήθηκε "
+"πριν από πολλά χρόνια για να σηματοδοτήσει την εποχή που ο Ντιάμπλο θα "
+"σηκωθεί ξανά από τη φυλάκισή του. Όταν τα δύο αστέρια σε αυτόν τον χάρτη "
+"ευθυγραμμιστούν, ο Ντιάμπλο θα είναι στο απόγειο της δύναμής του. Θα είναι "
+"ανίκητος...\n"
+" \n"
+"Τώρα είσαι σε αγώνα δρόμου ενάντια στο χρόνο φίλε/η μου! Βρες τον Ντιάμπλο "
+"και καταστρέψτε τον πριν ευθυγραμμιστούν τα αστέρια, γιατί μπορεί να μην "
+"έχουμε ποτέ ξανά την ευκαιρία να απαλλάξουμε από τον κόσμο το κακό του!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:279
@@ -9366,6 +9512,8 @@ msgid ""
 "Our time is running short! I sense his dark power building and only you can "
 "stop him from attaining his full might."
 msgstr ""
+"Ο χρόνος μας είναι λίγος! Αισθάνομαι τη σκοτεινή ισχύ του και μόνο εσύ "
+"μπορείς να τον εμποδίσεις να αποκτήσει την πλήρη δύναμή του."
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -9375,6 +9523,11 @@ msgid ""
 "and you will need all your courage and strength to defeat him. May the Light "
 "protect and guide you, my friend. I will help in any way that I am able."
 msgstr ""
+"Είμαι σίγουρος ότι έκανες το καλύτερο δυνατό, αλλά φοβάμαι ότι ακόμη και η "
+"δύναμη και η θέλησή σου μπορεί να μην είναι αρκετή. Ο Ντιάμπλο βρίσκεται "
+"τώρα στο απόγειο της γήινης ισχύος του και θα χρειαστείς όλο σας το θάρρος "
+"και τη δύναμή σου για να τον νικήσεις. Είθε το Φως να σε προστατεύει και να "
+"σε καθοδηγεί, φίλε/η μου. Θα βοηθήσω με όποιον τρόπο μπορώ."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (currently unused)
 #: Source/textdat.cpp:283
@@ -9383,6 +9536,10 @@ msgid ""
 "that I would know anything? It sounds like this is a very serious matter. "
 "You should hurry along and see the storyteller as Adria suggests."
 msgstr ""
+"Αν η μάγισσα δεν μπορεί να σε βοηθήσει και σου προτείνει να δεις τον Κέϊν, "
+"τι σε κάνει να πιστεύεις ότι θα ήξερα τίποτα εγώ; Φαίνεται ότι αυτό είναι "
+"ένα πολύ σοβαρό θέμα. Θα πρέπει να βιαστείς και να δεις τον αφηγητή ιστοριών "
+"όπως προτείνει η Άντρια."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin (currently unused)
 #: Source/textdat.cpp:285
@@ -9393,6 +9550,12 @@ msgid ""
 "I can see that it is a map of the stars in our sky, but any more than that "
 "is beyond my talents."
 msgstr ""
+"Δεν μπορώ να καταλάβω από τα γραπτά σε αυτόν τον χάρτη, αλλά ίσως η Άντρια ή "
+"ο Κέϊν θα μπορούσαν να σε βοηθήσουν να αποκρυπτογραφήσεις και να μάθεις σε "
+"τι αναφέρεται.\n"
+" \n"
+"Μπορώ να δω ότι είναι ένας χάρτης των αστεριών στον ουρανό μας, αλλά κάτι "
+"περισσότερο από αυτό είναι πέρα ​από τα ταλέντα μου."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian (currently unused)
 #: Source/textdat.cpp:287
@@ -9402,6 +9565,11 @@ msgid ""
 "Cain is very knowledgeable about ancient writings, and that is easily the "
 "oldest looking piece of paper that I have ever seen."
 msgstr ""
+"Το καλύτερο άτομο για να ρωτήσεις για κάτι τέτοιο θα ήταν ο αφηγητής "
+"ιστοριών μας.\n"
+" \n"
+"Ο Κέϊν γνωρίζει πολύ καλά τα αρχαία γραπτά, και αυτό είναι εύκολα το πιο "
+"παλιό χαρτί που έχω δει ποτέ."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold (currently unused)
 #: Source/textdat.cpp:289
@@ -9410,6 +9578,9 @@ msgid ""
 "have no idea how to read this, Cain or Adria may be able to provide the "
 "answers that you seek."
 msgstr ""
+"Δεν έχω ξαναδεί τέτοιο χάρτη. Πού τον βρήκες; Αν και δεν έχω ιδέα πώς να τον "
+"διαβάσω, ο Κέϊν ή η Άντρια μπορεί να είναι σε θέση να σου δώσουν τις "
+"απαντήσεις που αναζητάς."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (currently unused)
 #: Source/textdat.cpp:291
@@ -9417,6 +9588,8 @@ msgid ""
 "Listen here, come close. I don't know if you know what I know, but you have "
 "really got somethin' here. That's a map."
 msgstr ""
+"Άκου εδώ, έλα κοντά. Δεν ξέρω αν ξέρεις αυτό που ξέρω, αλλά έχεις κάτι εδώ "
+"πραγματικά. Αυτός είναι ένας χάρτης."
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
 #: Source/textdat.cpp:293
@@ -9425,6 +9598,10 @@ msgid ""
 "portends great disaster, but its secrets are not mine to tell. The time has "
 "come for you to have a very serious conversation with the Storyteller..."
 msgstr ""
+"Ω, φοβάμαι ότι αυτό δεν προμηνύεται καθόλου καλό. Αυτός ο χάρτης των "
+"αστεριών προμηνύει μεγάλη καταστροφή, αλλά τα μυστικά του δεν είναι δικά μου "
+"να τα πω. Ήρθε η ώρα να κάνετε μια πολύ σοβαρή συζήτηση με τον αφηγητή "
+"ιστοριών..."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt (currently unused)
 #: Source/textdat.cpp:295
@@ -9433,12 +9610,17 @@ msgid ""
 "that to Adria - she can probably tell you what it is. I'll say one thing; it "
 "looks old, and old usually means valuable."
 msgstr ""
+"Έψαχνα για έναν χάρτη, αλλά σίγουρα δεν είναι αυτός. Θα πρέπει να τον "
+"δείξεις στην Άντρια - πιθανότατα μπορεί να σου πει τι είναι. Θα πω ένα "
+"πράγμα. φαίνεται παλιός και παλιό συνήθως σημαίνει πολύτιμο."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:297
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
 msgstr ""
+"Σε παρακαλωωωωώ, μην με πονέσεις. Όχι σκότωμα. Να είμαι ζωντανός και την "
+"επόμενη φορά το καλό πράμα θα σου φέρω."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:299
@@ -9448,6 +9630,10 @@ msgid ""
 " \n"
 "You take this as proof I keep word..."
 msgstr ""
+"Κάτι για σένα φτιάχνω. Και πάλι, μην σκοτώσετε τον Γκάρμπαντ. Να ζήσω και "
+"σου δώσω καλό πράμα.\n"
+" \n"
+"Πάρε αυτό ως απόδειξη ότι κρατάω τη λέξη μου..."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:301
@@ -9458,11 +9644,16 @@ msgid ""
 " \n"
 "No pain and promise I keep!"
 msgstr ""
+"Τίποτα ακόμη! Σχεδόν τελείωσε.\n"
+" \n"
+"Πολύ δυνατό, πολύ δυνατό. Ζω! Ζω!\n"
+" \n"
+"Χωρίς πόνο και υπόσχεση κρατώ!"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak (Hostile)
 #: Source/textdat.cpp:303
 msgid "This too good for you. Very Powerful! You want - you take!"
-msgstr ""
+msgstr "Αυτό είναι πολύ καλό για σένα. Πολύ δυνατό! Το θέλεις - έλα πάρε το!"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (annoyed / Hostile)
 #: Source/textdat.cpp:305
@@ -9470,11 +9661,14 @@ msgid ""
 "What?! Why are you here? All these interruptions are enough to make one "
 "insane. Here, take this and leave me to my work. Trouble me no more!"
 msgstr ""
+"Τι?! Γιατί είσαι εδώ? Όλες αυτές οι διακοπές είναι αρκετές για να τρελαθεί "
+"κανείς. Ορίστε, πάρε αυτό και αφήσε με στη δουλειά μου. Μην με ταλαιπωρείς "
+"άλλο!"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (Hostile)
 #: Source/textdat.cpp:307
 msgid "Arrrrgh! Your curiosity will be the death of you!!!"
-msgstr ""
+msgstr "Αρρρργκ! Η περιέργειά σου θα είναι ο θάνατος σου!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain
 #: Source/textdat.cpp:308
