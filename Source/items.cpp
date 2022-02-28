@@ -3580,8 +3580,12 @@ bool DoOil(Player &player, int cii)
 		return _("penetrates target's armor");
 	case IPL_FASTATTACK:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::QuickAttack))
+			if (gbIsHellfire && item._itype == ItemType::Bow)
+				return _("fires quick speed arrows");
 			return _("quick attack");
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastAttack))
+			if (gbIsHellfire && item._itype == ItemType::Bow)
+				return _("fires fast speed arrows");
 			return _("fast attack");
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterAttack))
 			return _("faster attack");
