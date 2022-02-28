@@ -3751,28 +3751,28 @@ void DoOil(Player &player, int cii)
 		return fmt::format(_("armor class: {:d}"), item._iAC);
 	case IPL_FIRERES:
 	case IPL_FIRERES_CURSE:
-		if (item._iPLFR < 75)
+		if (item._iPLFR < MAXRESIST)
 			return fmt::format(_("Resist Fire: {:+d}%"), item._iPLFR);
 		else
-			return _("Resist Fire: 75% MAX");
+			return fmt::format(_("Resist Fire: {:+d}% MAX"), MAXRESIST);
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
-		if (item._iPLLR < 75)
+		if (item._iPLLR < MAXRESIST)
 			return fmt::format(_("Resist Lightning: {:+d}%"), item._iPLLR);
 		else
-			return _("Resist Lightning: 75% MAX");
+			return fmt::format(_("Resist Lightning: {:+d}% MAX"), MAXRESIST);
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
-		if (item._iPLMR < 75)
+		if (item._iPLMR < MAXRESIST)
 			return fmt::format(_("Resist Magic: {:+d}%"), item._iPLMR);
 		else
-			return _("Resist Magic: 75% MAX");
+			return fmt::format(_("Resist Magic: {:+d}% MAX"), MAXRESIST);
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
-		if (item._iPLFR < 75)
+		if (item._iPLFR < MAXRESIST)
 			return fmt::format(_("Resist All: {:+d}%"), item._iPLFR);
 		else
-			return _("Resist All: 75% MAX");
+			return fmt::format(_("Resist All: {:+d}% MAX"), MAXRESIST);
 	case IPL_SPLLVLADD:
 		if (item._iSplLvlAdd > 0)
 			return fmt::format(ngettext("spells are increased {:d} level", "spells are increased {:d} levels", item._iSplLvlAdd), item._iSplLvlAdd);
