@@ -20,298 +20,369 @@ msgstr ""
 msgid "Game Design"
 msgstr ""
 "Greek Translation Team for DevilutionX: \n"
-"Main, Technical, QA and Testing: Michael Chatzivasileiou aka GnoSiS\n"
+"Main, Technical, QA and Testing: Michael Chatzivasileiou aka xGnoSiSx\n"
 "\n"
-"Game Design\n"
-"Σχεδιασμός Παιχνιδιού"
+"Game Design - Σχεδιασμός Παιχνιδιού"
 
 #: Source/DiabloUI/credits_lines.cpp:10
+#, fuzzy
 msgid "Senior Designers"
 msgstr "Προϊστάμενοι Σχεδιασμού"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
+#, fuzzy
 msgid "Additional Design"
 msgstr "Επιπλέον Σχεδιαστές"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
+#, fuzzy
 msgid "Lead Programmer"
 msgstr "Κύριος Προγραμματιστής"
 
 #: Source/DiabloUI/credits_lines.cpp:19
+#, fuzzy
 msgid "Senior Programmers"
 msgstr "Προϊστάμενοι Προγραμματιστές"
 
 #: Source/DiabloUI/credits_lines.cpp:23
+#, fuzzy
 msgid "Programming"
 msgstr "Προγραμματιστές"
 
 #: Source/DiabloUI/credits_lines.cpp:26
+#, fuzzy
 msgid "Special Guest Programmers"
 msgstr "Ειδικοί Έκτακτοι Προγραμματιστές"
 
 #: Source/DiabloUI/credits_lines.cpp:29
+#, fuzzy
 msgid "Battle.net Programming"
 msgstr "Προγραμματισμός Battle.net"
 
 #: Source/DiabloUI/credits_lines.cpp:32
+#, fuzzy
 msgid "Serial Communications Programming"
 msgstr "Προγραμματισμός Σειριακών Επικοινωνιών"
 
 #: Source/DiabloUI/credits_lines.cpp:35
+#, fuzzy
 msgid "Installer Programming"
 msgstr "Προγραμματισμός Εγκατάστασης"
 
 #: Source/DiabloUI/credits_lines.cpp:38
+#, fuzzy
 msgid "Art Directors"
 msgstr "Καλλιτεχνικοί Διευθυντές"
 
 #: Source/DiabloUI/credits_lines.cpp:41
+#, fuzzy
 msgid "Artwork"
 msgstr "Καλλιτεχνία"
 
 #: Source/DiabloUI/credits_lines.cpp:48
+#, fuzzy
 msgid "Technical Artwork"
 msgstr "Τεχνική Καλλιτεχνία"
 
 #: Source/DiabloUI/credits_lines.cpp:52
+#, fuzzy
 msgid "Cinematic Art Directors"
 msgstr "Σκηνοθέτες Κινηματογραφικής Τέχνης"
 
 #: Source/DiabloUI/credits_lines.cpp:55
+#, fuzzy
 msgid "3D Cinematic Artwork"
 msgstr "3D Κινηματογραφική Τέχνη"
 
 #: Source/DiabloUI/credits_lines.cpp:61
+#, fuzzy
 msgid "Cinematic Technical Artwork"
 msgstr "Κινηματογραφική Τεχνική Τέχνη"
 
 #: Source/DiabloUI/credits_lines.cpp:64
+#, fuzzy
 msgid "Executive Producer"
 msgstr "Εκτελεστικός Παραγωγός"
 
 #: Source/DiabloUI/credits_lines.cpp:67
+#, fuzzy
 msgid "Producer"
 msgstr "Παραγωγός"
 
 #: Source/DiabloUI/credits_lines.cpp:70
+#, fuzzy
 msgid "Associate Producer"
 msgstr "Συνεργάτης Παραγωγός"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
+#, fuzzy
 msgid "Diablo Strike Team"
 msgstr "Ομάδα κρούσης Diablo"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:71
+#, fuzzy
 msgid "Music"
 msgstr "Μουσική"
 
 #: Source/DiabloUI/credits_lines.cpp:80
+#, fuzzy
 msgid "Sound Design"
 msgstr "Σχεδιασμός Ήχου"
 
 #: Source/DiabloUI/credits_lines.cpp:83
+#, fuzzy
 msgid "Cinematic Music & Sound"
 msgstr "Κινηματογραφική Μουσική και Ήχος"
 
 #: Source/DiabloUI/credits_lines.cpp:86
+#, fuzzy
 msgid "Voice Production, Direction & Casting"
 msgstr "Παραγωγή φωνής, κατεύθυνση & κάστινγκ"
 
 #: Source/DiabloUI/credits_lines.cpp:89
+#, fuzzy
 msgid "Script & Story"
 msgstr "Σενάριο & Ιστορία"
 
 #: Source/DiabloUI/credits_lines.cpp:93
+#, fuzzy
 msgid "Voice Editing"
 msgstr "Επεξεργασία Φωνής"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
+#, fuzzy
 msgid "Voices"
 msgstr "Φωνές"
 
 #: Source/DiabloUI/credits_lines.cpp:101
+#, fuzzy
 msgid "Recording Engineer"
 msgstr "Μηχανικός Εγγραφής Ήχου"
 
 #: Source/DiabloUI/credits_lines.cpp:104
+#, fuzzy
 msgid "Manual Design & Layout"
 msgstr "Σχεδιασμός και Μορφή Ενχειριδίου"
 
 #: Source/DiabloUI/credits_lines.cpp:108
+#, fuzzy
 msgid "Manual Artwork"
 msgstr "Καλλιτεχνία Εγχειριδίου"
 
 #: Source/DiabloUI/credits_lines.cpp:112
+#, fuzzy
 msgid "Provisional Director of QA (Lead Tester)"
 msgstr "Προσωρινός διευθυντής του QA (Προϊστάμενος Ελεγκτής)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
+#, fuzzy
 msgid "QA Assault Team (Testers)"
 msgstr "Ομάδα επίθεσης QA (Ελεγκτές)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
+#, fuzzy
 msgid "QA Special Ops Team (Compatibility Testers)"
 msgstr "QA Ειδική Ομάδα Επιχειρήσεων (Ελεγκτές Συμβατότητας)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
+#, fuzzy
 msgid "QA Artillery Support (Additional Testers) "
 msgstr "Υποστήριξη πυροβολικού QA (πρόσθετοι ελεγκτές) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
+#, fuzzy
 msgid "QA Counterintelligence"
 msgstr "Αντικατασκοπεία QA"
 
 #. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
+#, fuzzy
 msgid "Order of Network Information Services"
 msgstr "Ομάδα Υπηρεσιών Δικτυακών Πληροφοριών"
 
 #: Source/DiabloUI/credits_lines.cpp:134
+#, fuzzy
 msgid "Customer Support"
 msgstr "Υποστήριξη Πελατών"
 
 #: Source/DiabloUI/credits_lines.cpp:139
+#, fuzzy
 msgid "Sales"
 msgstr "Πωλήσεις"
 
 #: Source/DiabloUI/credits_lines.cpp:142
+#, fuzzy
 msgid "Dunsel"
 msgstr "Άχρηστα"
 
 #: Source/DiabloUI/credits_lines.cpp:145
+#, fuzzy
 msgid "Mr. Dabiri's Background Vocalists"
 msgstr "Τραγουδιστές Υπόβαθρου του κ. Dabiri"
 
 #: Source/DiabloUI/credits_lines.cpp:149
+#, fuzzy
 msgid "Public Relations"
 msgstr "Δημόσιες Σχέσεις"
 
 #: Source/DiabloUI/credits_lines.cpp:152
+#, fuzzy
 msgid "Marketing"
 msgstr "Μάρκετινγκ"
 
 #: Source/DiabloUI/credits_lines.cpp:155
+#, fuzzy
 msgid "International Sales"
 msgstr "Διεθνείς Πωλήσεις"
 
 #: Source/DiabloUI/credits_lines.cpp:158
+#, fuzzy
 msgid "U.S. Sales"
 msgstr "Πωλήσεις U.S"
 
 #: Source/DiabloUI/credits_lines.cpp:161
+#, fuzzy
 msgid "Manufacturing"
 msgstr "Παραγωγή"
 
 #: Source/DiabloUI/credits_lines.cpp:164
+#, fuzzy
 msgid "Legal & Business"
 msgstr "Νομικά & Επιχειρηματικά"
 
 #: Source/DiabloUI/credits_lines.cpp:167
+#, fuzzy
 msgid "Special Thanks To"
 msgstr "Ειδικές Ευχαριστίες στους"
 
 #: Source/DiabloUI/credits_lines.cpp:171
+#, fuzzy
 msgid "Thanks To"
 msgstr "Ευχαριστούμε τους"
 
 #: Source/DiabloUI/credits_lines.cpp:200
+#, fuzzy
 msgid "In memory of"
 msgstr "Στην μνήμη του"
 
 #: Source/DiabloUI/credits_lines.cpp:206
+#, fuzzy
 msgid "Very Special Thanks to"
 msgstr "Πολύ Ειδικές Ευχαριστίες στους"
 
 #: Source/DiabloUI/credits_lines.cpp:212
+#, fuzzy
 msgid "General Manager"
 msgstr "Γενικός Μάνατζερ"
 
 #: Source/DiabloUI/credits_lines.cpp:218
+#, fuzzy
 msgid "Software Engineering"
 msgstr "Μηχανική Λογισμικού"
 
 #: Source/DiabloUI/credits_lines.cpp:221
+#, fuzzy
 msgid "Art Director"
 msgstr "Διευθυντής Τέχνης"
 
 #: Source/DiabloUI/credits_lines.cpp:224
+#, fuzzy
 msgid "Artists"
 msgstr "Καλιτέχνες"
 
 #: Source/DiabloUI/credits_lines.cpp:228
+#, fuzzy
 msgid "Design"
 msgstr "Σχεδιασμός"
 
 #: Source/DiabloUI/credits_lines.cpp:235
+#, fuzzy
 msgid "Sound Design, SFX & Audio Engineering"
 msgstr "Σχεδιασμός Ήχου, SFX & Μηχανική Φωνής"
 
 #: Source/DiabloUI/credits_lines.cpp:238
+#, fuzzy
 msgid "Quality Assurance Lead"
 msgstr "Προϊστάμενος  Διαπίστευσης Ποιότητας"
 
 #: Source/DiabloUI/credits_lines.cpp:241
+#, fuzzy
 msgid "Testers"
 msgstr "Έλεγχος"
 
 #: Source/DiabloUI/credits_lines.cpp:246
+#, fuzzy
 msgid "Manual"
 msgstr "Εγχειρίδιο"
 
 #: Source/DiabloUI/credits_lines.cpp:255
+#, fuzzy
 msgid "\tAdditional Work"
 msgstr "\t Επιπλέον Εργασίες"
 
 #: Source/DiabloUI/credits_lines.cpp:257
+#, fuzzy
 msgid "Quest Text Writing"
 msgstr "Συγγραφή Κειμένων Αποστολών"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
+#, fuzzy
 msgid "Thanks to"
 msgstr "Ευχαριστούμε τούς παρακάτω"
 
 #: Source/DiabloUI/credits_lines.cpp:265
+#, fuzzy
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
 msgstr "\t\t\tΕιδικές Ευχαριστίες στην Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
+#, fuzzy
 msgid "\t\t\tSierra On-Line Inc. Northwest"
 msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
+#, fuzzy
 msgid "Quality Assurance Manager"
 msgstr "Μάνατζερ Διαπίστευσης Ποιότητας"
 
 #: Source/DiabloUI/credits_lines.cpp:275
+#, fuzzy
 msgid "Quality Assurance Lead Tester"
 msgstr "Προϊστάμενος και Ελεγκτής Διαπίστευσης Ποιότητας"
 
 #: Source/DiabloUI/credits_lines.cpp:278
+#, fuzzy
 msgid "Main Testers"
 msgstr "Κύριοι Ελεγκτές"
 
 #: Source/DiabloUI/credits_lines.cpp:281
+#, fuzzy
 msgid "Additional Testers"
 msgstr "Επιπλέον Ελεγκτές"
 
 #: Source/DiabloUI/credits_lines.cpp:286
+#, fuzzy
 msgid "Product Marketing Manager"
 msgstr "Μάνατζερ Μάρκετινγκ Προϊόντος"
 
 #: Source/DiabloUI/credits_lines.cpp:289
+#, fuzzy
 msgid "Public Relations Manager"
 msgstr "Μάνατζερ Δημοσίων Σχέσεων"
 
 #: Source/DiabloUI/credits_lines.cpp:292
+#, fuzzy
 msgid "Associate Product Manager"
 msgstr "Βοηθός Μάνατζερ Προϊόντος"
 
 #: Source/DiabloUI/credits_lines.cpp:301
+#, fuzzy
 msgid "The Ring of One Thousand"
 msgstr "Ο Κύκλος των Χιλίων"
 
 #: Source/DiabloUI/credits_lines.cpp:547
+#, fuzzy
 msgid "\tNo souls were sold in the making of this game."
 msgstr "\tΔεν πουλήθηκαν ψυχές κατά την ανάπτυξη του παιχνιδιού."
 
@@ -8490,6 +8561,13 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
+"Απαγγέλλεις ένα ενδιαφέρον στιχάκι γραμμένο σε ύφος που μου θυμίζει άλλα "
+"έργα. Κάτσε να σκεφτώ τώρα - πώς ήταν;\n"
+" \n"
+"...Το σκοτάδι σκεπάζει το Κρυφό. Μάτια που λάμπουν αόρατα μόνο με τους ήχους "
+"των κοφτερών νυχιών που ξύνουν στιγμιάια για να βασανίσουν εκείνες τις "
+"φτωχές ψυχές που έχουν μείνει αόματες για όλη την αιωνιότητα. Η φυλακή για "
+"αυτούς που είναι τόσο καταραμένοι ονομάζεται η Αίθουσα των Τυφλών..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -8499,6 +8577,12 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
+"Ποτέ δεν ασχολήθηκα πολύ με την ποίηση. Περιστασιακά, είχα λόγο να προσλάβω "
+"βάρδους όταν το πανδοχείο πήγαινε καλά, αλλά αυτό μοιάζει πλέον ότι έγινε "
+"εδώ και πολύ καιρό πριν.\n"
+" \n"
+"Τι? Α, ναι... ε, καλά, υποθέτω ότι θα μπορούσες να δεις τι ξέρει κάποιος "
+"άλλος."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -8507,6 +8591,10 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
+"Αυτό κατά κάποιο τρόπο μου ακούγεται γνωστό. Φαίνεται να θυμάμαι ότι διάβασα "
+"κάτι πολύ παρόμοιο με αυτό το ποίημα ενώ ερευνούσα την ιστορία των "
+"δαιμονικών δεινών. Μίλησε για ένα μέρος μεγάλου κακού που... περίμενε - δεν "
+"σκοπεύεις να πας εκεί;"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -8515,6 +8603,9 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
+"Εάν έχεις ερωτήσεις σχετικά με την τύφλωση, θα πρέπει να μιλήσετε με τον "
+"Πέπιν. Ξέρω ότι έδωσε στη γιαγιά μου ένα φίλτρο που της βοήθησε να καθαρίσει "
+"την όρασή της, οπότε ίσως μπορεί να βοηθήσει και εσένα."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -8523,11 +8614,14 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
+"Φοβάμαι ότι ούτε έχω ακούσει ούτε έχω δει ένα μέρος που να ταιριάζει με τη "
+"ζωντανή περιγραφή σου, φίλε μου. Ίσως ο Κάιν ο αφηγητής ιστοριών θα μπορούσε "
+"να βοηθήσει."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:150
 msgid "Look here... that's pretty funny, huh? Get it? Blind - look here?"
-msgstr ""
+msgstr "Κοίτα εδώ... είναι πολύ αστείο, ε; Το έπιασες; Τυφλός - κοιτά εδώ;"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:152
@@ -8538,6 +8632,11 @@ msgid ""
 "Tread carefully or you may yourself be staying much longer than you had "
 "anticipated."
 msgstr ""
+"Αυτό είναι ένα μέρος μεγάλης αγωνίας και τρόμου, και έτσι εξυπηρετεί καλά "
+"τον Άρχοντα του.\n"
+" \n"
+"Περπάτα προσεκτικά, διαφορετικά μπορεί να μείνεις πολύ περισσότερο από όσο "
+"περίμενες."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:154
@@ -8546,6 +8645,9 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
+"Για να δούμε, σου πουλάω κάτι; Όχι. Μου δίνεις χρήματα για να σου πω γι' "
+"αυτό; Όχι. Φεύγεις τώρα, για να μιλήσεις με τον αφηγητή ιστοριών που ζει για "
+"κάτι τέτοιο; Ναί."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -8559,6 +8661,14 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
+"Υποστηρίζεις ότι έχεις μιλήσει με τον Λακντάναν; Υπήρξε μεγάλος ήρωας όταν "
+"ζούσε. Ο Λακντάναν ήταν ένας έντιμος και δίκαιος άνθρωπος που υπηρέτησε "
+"πιστά τον Βασιλιά του για χρόνια. Αλλά φυσικά, το γνωρίζεις ήδη αυτό.\n"
+" \n"
+"Από αυτούς που πιάστηκαν στην Κατάρα του Βασιλιά, ο Λακντάναν θα ήταν "
+"λιγότερο πιθανό να υποταχθεί στο σκοτάδι χωρίς μάχη, οπότε υποθέτω ότι η "
+"ιστορία σου θα μπορούσε να είναι αληθινή. Αν ήμουν στη θέση σου, φίλε μου, "
+"θα έβρισκα τρόπο να τον απαλλάξω από το μαρτύριο του."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:158
@@ -8566,6 +8676,9 @@ msgid ""
 "You speak of a brave warrior long dead! I'll have no such talk of speaking "
 "with departed souls in my inn yard, thank you very much."
 msgstr ""
+"Μιλάς για έναν γενναίο πολεμιστή που είναι νεκρός εδώ και καιρό! Δεν θα κάνω "
+"κουβέντα για ψυχές που έχουν φύγει στην αυλή του πανδοχείου μου, σε "
+"ευχαριστώ πολύ."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:160
@@ -8575,6 +8688,11 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
+"Χρυσό ελιξίριο, λες. Δεν έχω φτιάξει ποτέ ένα φίλτρο αυτού του χρώματος, "
+"οπότε δεν μπορώ να σου πω πώς θα σε επηρέαζε αν προσπαθούσες να το πιείς. Ως "
+"θεραπευτής σου, σε συμβουλεύω ανεπιφύλακτα ότι εάν βρείτε ένα τέτοιο "
+"ελιξίριο, να κάνετε ό,τι σας ζητήσει ο Λακντάναν και ΜΗΝ προσπαθήσετε να το "
+"χρησιμοποιήσεις."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
@@ -8582,6 +8700,8 @@ msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
 msgstr ""
+"Δεν έχω ξανακούσει για κάποιον Λακντάναν. Λυπάμαι, αλλά δεν νομίζω ότι μπορώ "
+"να σε βοηθήσω."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -8591,6 +8711,10 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
+"Εάν όντως συναντήσες τον Λακντάναν, τότε θα σε συμβούλευα να τον βοηθήσεις. "
+"Ασχολήθηκα μαζί του πολλές φορές και είναι ειλικρινής και πιστός. Η κατάρα "
+"που έπεσε πάνω στους ακόλουθους του βασιλιά Λεόρικ θα είναι ιδιαίτερα σκληρή "
+"πάνω του."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
@@ -8598,6 +8722,8 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
+" Ο Λακντάναν είναι νεκρός. Όλοι το ξέρουν αυτό και δεν μπορείς να με "
+"ξεγελάσεις να σκεφτώ αλλιώς. Δεν μπορείς να μιλήσεις στους νεκρούς. Το ξέρω!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -8607,6 +8733,11 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
+"Μπορεί να συναντήσεις άτομα που είναι παγιδευμένα μέσα στον Λαβύρινθο, όπως "
+"τον Λακντάναν.\n"
+" \n"
+"Νιώθω μέσα του μεγάλη τιμή και μεγάλη ενοχή. Βοήθησέ τον, και θα βοήθησες "
+"όλο το Τρίστραμ."
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -8616,6 +8747,11 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way."
 msgstr ""
+"Περίμενε, άσε με να μαντέψω. Ο Κέϊν καταβροχθίστηκε από μια γιγαντιαία "
+"σχισμή που άνοιξε κάτω από τα πόδια του. Αποτεφρώθηκε μέσα σε μια μπάλα "
+"κολασμένης φωτιάς και δεν μπορεί πλέον να απαντήσει στις ερωτήσεις σου. Α, "
+"δεν έγινε αυτό; Τότε υποθέτω ότι θα αγοράσεις κάτι ή διαφορετικά σου εύχομαι "
+"καλό δρόμο."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:172
@@ -8632,6 +8768,18 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
+"Σε παρακαλώ, μη με σκοτώσεις, απλώς άκουσέ με. Ήμουν κάποτε Λοχαγός των "
+"Ιπποτών του Βασιλιά Λέορικ, και υπηρετούσα τους νόμους αυτής της χώρας με "
+"δικαιοσύνη και τιμή. Τότε η σκοτεινή του κατάρα έπεσε πάνω μας για τον ρόλο "
+"που παίξαμε στον τραγικό θάνατό του. Καθώς οι συνάδελφοί μου Ιππότες "
+"υπέκυψαν στη διεστραμμένη μοίρα τους, έφυγα από τον ταφικό θάλαμο του "
+"Βασιλιά, αναζητώντας κάποιον τρόπο να ελευθερωθώ από την Κατάρα. Απέτυχα...\n"
+" \n"
+"Έχω ακούσει για ένα Χρυσό Ελιξίριο που θα μπορούσε να σηκώσει την Κατάρα και "
+"να αφήσει την ψυχή μου να ξεκουραστεί, αλλά δεν κατάφερα να το βρω. Η δύναμή "
+"μου τώρα μειώνεται, και μαζί της και η τελευταία ανθρωπιά μου. Παρακαλώ "
+"βοήθησε με και βρες το Ελιξίριο. Θα σε ανταμείψω για την προσπάθεια σου - "
+"ορκίζομαι στην τιμή μου."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
@@ -8639,6 +8787,8 @@ msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
 msgstr ""
+"Δεν έχεις βρει το Χρυσό Ελιξίριο. Φοβάμαι ότι είμαι καταδικασμένος στην "
+"αιωνιότητα. Σε παρακαλώ, συνέχισε να προσπαθείς..."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
 #: Source/textdat.cpp:176
@@ -8649,6 +8799,11 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
+"Έσωσες την ψυχή μου από την καταδίκη, και γι' αυτό είμαι υπόχρεος σου. Αν "
+"υπάρχει ποτέ τρόπος να σου το ανταποδώσω πέρα από τον τάφο, θα τον βρω, αλλά "
+"προς το παρόν - πάρε το κράνος μου. Στο ταξίδι που πρόκειται να κάνω δεν θα "
+"το χρειαστώ καθόλου. Είθε να σε προστατεύσει από τις σκοτεινές δυνάμεις του "
+"κάτω κόσμου. Περπάτα με το φως φίλε μου..."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:178
@@ -8662,6 +8817,15 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
+"Ο Γκρίσγουαλντ μιλάει για το Αμόνι της Οργής- ένα θρυλικό τεχνούργημα που "
+"αναζητήθηκε εδώ και πολύ καιρό, αλλά δεν βρέθηκε ποτέ. Φτιαγμένο από τα "
+"μεταλλικά οστά των δαιμόνων του λάκκου του ξυραφιού, το Αμόνι της Οργής "
+"χυτεύθηκε γύρω από τα κρανία των πέντε πιο ισχυρών μάγων του κάτω κόσμου. "
+"Σκαλισμένο με ρούνους δύναμης και χάους, οποιοδήποτε όπλο ή πανοπλία "
+"σφυρηλατηθεί πάνω σε αυτό το Αμόνι θα βυθιστεί στο βασίλειο του Χάους, "
+"εμβαπτίζοντάς το με μαγικές ιδιότητες. Λέγεται ότι η απρόβλεπτη φύση του "
+"Χάους καθιστά δύσκολο να γνωρίζουμε ποιο θα είναι το αποτέλεσμα αυτής της "
+"σφυρηλάτησης..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
@@ -8669,6 +8833,8 @@ msgid ""
 "Don't you think that Griswold would be a better person to ask about this? "
 "He's quite handy, you know."
 msgstr ""
+"Δεν πιστεύεις ότι ο Γκρίσγουαλντ θα ήταν το καλύτερο άτομο να ρωτήσεις γι' "
+"αυτό; Είναι πολύ χρήσιμος, ξέρεις."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:182
@@ -8678,6 +8844,10 @@ msgid ""
 "However, in this matter, you would be better served to speak to either "
 "Griswold or Cain."
 msgstr ""
+"Αν έψαχνες για πληροφορίες για το Γουδοχέρι της Θεραπείας ή το Ασημένιο "
+"Δισκοπότηρο της Κάθαρσης, θα μπορούσα να σε βοηθήσω, φίλε μου. Ωστόσο, σε "
+"αυτό το θέμα, θα ήταν καλύτερα να μιλήσεις είτε με τον Γκρίσγουαλντ είτε με "
+"τον Κέϊν."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:184
@@ -8687,6 +8857,11 @@ msgid ""
 "was struck upon this anvil, the ground would shake with a great fury. "
 "Whenever the earth moves, I always remember that story."
 msgstr ""
+"Ο πατέρας του Γκρισγουάλντ συνήθιζε να λέει σε μερικούς από εμάς όταν "
+"μεγαλώναμε μικροι για ένα γιγάντιο αμόνι που χρησιμοποιήθηκε για την "
+"κατασκευή πανίσχυρων όπλων. Είπε ότι όταν χτυπούσαν ένα σφυρί σε αυτό το "
+"αμόνι, το έδαφος ταρακουνούσε με μεγάλη οργή. Όποτε ταρακουνάει η γη, πάντα "
+"θυμάμαι αυτή την ιστορία."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:186
@@ -8708,6 +8883,23 @@ msgid ""
 " \n"
 "Find the Anvil for me, and I'll get to work!"
 msgstr ""
+"Χαιρετισμούς! Είναι πάντα χαρά να βλέπω τον καλύτερο μου πελάτη! Ξέρω ότι "
+"έχεις μπει πιο βαθιά στον Λαβύρινθο και υπάρχει μια ιστορία που μου είχαν "
+"πεί, που μπορεί να αξίζει τον χρόνο να την ακούσεις...\n"
+" \n"
+"Ένας από τους άντρες που επέστρεψαν από τον Λαβύρινθο μου είπε για ένα "
+"μυστικιστικό αμόνι που είδε κατά την απόδρασή του. Η περιγραφή του μου "
+"θύμισε θρύλους που είχα ακούσει στα νιάτα μου για το φλεγόμενο σιδηρουργείο "
+"της κολάσεως όπου κατασκευάζονται ισχυρά όπλα μαγείας. Ο θρύλος έλεγε ότι "
+"βαθιά μέσα στο σιδηρουργείο βρισκόταν το Αμόνι της Οργής! Αυτό το Αμόνι "
+"περιείχε μέσα του την ίδια την ουσία του δαιμονικού κάτω κόσμου...\n"
+" \n"
+"Λέγεται ότι κάθε όπλο που κατασκευάζεται πάνω στο φλεγόμενο αμόνι είναι "
+"εμποτισμένο με μεγάλη δύναμη. Αν αυτό το αμόνι είναι πράγματι το Αμόνι της "
+"Οργής, ίσως μπορέσω να σου φτιάξω ένα όπλο ικανό να νικήσει ακόμα και τον "
+"πιο σκοτεινό Άρχοντα της Κόλασης!\n"
+" \n"
+"Βρές μου το Αμόνι και θα πιάσω δουλειά!"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -8716,6 +8908,9 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
+"Τίποτα ακόμα, ε; Λοιπόν, συνέχισε να ψάχνεις. Ένα όπλο σφυρηλατημένο στο "
+"Αμόνι θα μπορούσε να είναι η καλύτερη ελπίδα σου, και είμαι σίγουρος ότι "
+"μπορώ να σου σφυρηλατήσω ένα, θρυλικών διαστάσεων."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:190
@@ -8724,6 +8919,10 @@ msgid ""
 "Now we'll show those bastards that there are no weapons in Hell more deadly "
 "than those made by men! Take this and may Light protect you."
 msgstr ""
+"Δεν μπορώ να το πιστέψω! Αυτό είναι το Αμόνι της Οργής - καλή δουλειά, φίλε "
+"μου. Τώρα θα δείξουμε σε αυτά τα καθάρματα ότι δεν υπάρχουν όπλα στην Κόλαση "
+"πιο θανατηφόρα από αυτά που φτιάχνουν οι άνθρωποι! Πάρε αυτό και εύχομαι το "
+"Φως να σε προστατεύσει."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
@@ -8731,6 +8930,8 @@ msgid ""
 "Griswold can't sell his anvil. What will he do then? And I'd be angry too if "
 "someone took my anvil!"
 msgstr ""
+"Ο Γκρίσγουαλντ δεν μπορεί να πουλήσει το αμόνι του. Τι θα κάνει τότε; Και "
+"εγώ θα θύμωνα και εγώ αν κάποιος μου έπαιρνε το αμόνι μου!"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:194
@@ -8740,6 +8941,11 @@ msgid ""
 "used by either the Light or the Darkness. Securing the Anvil from below "
 "could shift the course of the Sin War towards the Light."
 msgstr ""
+"Υπάρχουν πολλά τεχνουργήματα μέσα στον Λαβύρινθο που έχουν δυνάμεις πέρα από "
+"την κατανόηση των θνητών. Μερικά από αυτά έχουν φανταστική δύναμη που μπορεί "
+"να χρησιμοποιηθεί είτε από το Φως είτε από το Σκοτάδι. Η εξασφάλιση του "
+"αμιονιού από τον κάτω κόσμο θα μπορούσε να μετατοπίσει την πορεία του "
+"Πολέμου της Αμαρτίας προς το Φως."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
@@ -8747,6 +8953,8 @@ msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
 msgstr ""
+"Εάν έβρισκες αυτό το τεχνούργημα για τον Γκρίσγουαλντ, θα μπορούσε να θέσει "
+"σοβαρά προβλήματα στην επιχείρησή μου εδώ. Ωχ τι λέω, δεν θα το βρεις ποτέ."
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:198
@@ -8769,6 +8977,25 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
+"Η Πύλη του Αίματος και οι Αίθουσες της Φωτιάς είναι ορόσημα μυστικιστικής "
+"προέλευσης. Από όπου κι αν προέρχεται αυτό το βιβλίο που διαβάσες, είναι "
+"σίγουρα ένα μέρος με μεγάλη δύναμη.\n"
+" \n"
+"Οι θρύλοι μιλούν για ένα βάθρο που είναι λαξευμένο από πέτρα οψιανού και "
+"έχει μια λίμνη από βραστό αίμα στην επιφανειακή επιφάνειά του που είναι από "
+"κόκκαλα. Υπάρχουν επίσης νύξεις για Πέτρες από Αίμα που θα ανοίξουν μια "
+"πόρτα που φυλάει έναν αρχαίο θησαυρό...\n"
+" \n"
+"Η φύση αυτού του θησαυρού καλύπτεται από εικασίες, φίλε μου, αλλά λέγεται "
+"ότι ο αρχαίος ήρωας Αρκάϊν τοποθέτησε την Ιερή Πανοπλία της Τιμής σε ένα "
+"μυστικό θησαυροφυλάκιο. Ο Αρκάϊν ήταν ο πρώτος θνητός που αντέστρεψε την ροή "
+"του Πολέμου της Αμαρτίας και κυνήγησε τις λεγεώνες του σκότους πίσω στις "
+"Φλεγόμενες Κολάσεις.\n"
+" \n"
+"Λίγο πριν πεθάνει ο Αρκάϊν, η πανοπλία του κρύφθηκε σε ένα μυστικό "
+"θησαυροφυλάκιο. Λέγεται ότι όταν αυτή η ιερή πανοπλία θα χρειαστεί ξανά, "
+"ένας ήρωας θα αναδυθεί για να φορέσει την Τιμή για άλλη μια φορά. Ίσως εσύ "
+"να είσαι αυτός ο ήρωας..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -8777,6 +9004,9 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
+"Κάθε παιδί ακούει την ιστορία του πολεμιστή Αρκάϊν και της μυστικιστικής "
+"πανοπλίας του, γνωστής ως Τιμή. Αν μπορούσες να βρεις τον τόπο ανάπαυσής "
+"της, θα είσαι καλά προστατευμένος/η από το κακό στον Λαβύρινθο."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -8785,6 +9015,9 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
+"Χμ... ακούγεται σαν κάτι που πρέπει να θυμάμαι, αλλά ήμουν τόσο "
+"απασχολημένος με το να μαθαίνω νέες θεραπείες και να δημιουργώ καλύτερα "
+"ελιξίρια που πρέπει να το έχω ξεχάσει. Συγνώμη..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
@@ -8792,6 +9025,9 @@ msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
 msgstr ""
+"Η ιστορία της μαγικής πανοπλίας που ονομάζεται Τιμή είναι κάτι για το οποίο "
+"άκουσα συχνά τα αγόρια να μιλάνε. Καλύτερα να ρωτήσεις έναν από τους άντρες "
+"του χωριού."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -8801,6 +9037,11 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
+"Η πανοπλία γνωστή ως Τιμή θα μπορούσε να είναι αυτό που γείρει τη ζυγαριά "
+"υπέρ σου. Θα σου πω ότι πολλοί το έχουν ψάξει - συμπεριλαμβανομένου και του "
+"εαυτού μου. Ο Αρκάϊν την έκρυψε καλά, φίλε μου, και θα χρειαστεί περισσότερο "
+"από λίγη τύχη για να ξεκλειδώσεις τα μυστικά που την κράτησαν κρυμμένη, ω, "
+"τόσα χρόνια."
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
