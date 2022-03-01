@@ -9683,6 +9683,11 @@ msgid ""
 " \n"
 "Read them carefully for they can tell you things that even I cannot."
 msgstr ""
+"Ενώ βρίσκεσε βαθύτερα στον Λαβύρινθο, μπορεί να βρεις κρυμμένους τόμους με "
+"σπουδαία γνώση.\n"
+" \n"
+"Διάβασε τους προσεκτικά γιατί μπορούν να σου πουν πράγματα που ακόμη και εγώ "
+"δεν μπορώ."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:311
@@ -9692,6 +9697,10 @@ msgid ""
 "and questions to which you seek knowledge, seek me out and I will tell you "
 "what I can."
 msgstr ""
+"Γνωρίζω πολλούς μύθους και θρύλους που μπορεί να περιέχουν απαντήσεις σε "
+"ερωτήσεις που μπορεί να προκύψουν στα ταξίδια σου στον Λαβύρινθο. Αν "
+"συναντήσεις προκλήσεις και ερωτήσεις για τις οποίες αναζητάς γνώση, "
+"αναζητήστε με και θα σου πω ότι μπορώ."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:313
@@ -9702,6 +9711,12 @@ msgid ""
 "is a skilled craftsman, and if he claims to be able to help you in any way, "
 "you can count on his honesty and his skill."
 msgstr ""
+"Ο Γκρίσγουαλντ - ένας άνθρωπος δράσης και με μεγάλο θάρρος. Βάζω στοίχημα "
+"ότι δεν σου είπε ποτέ για την εποχή που πήγε στον Λαβύρινθο για να σώσει τον "
+"Ουίρτ, σωστά; Ξέρει από τους κινδύνους που υπάρχουν εκεί, αλλά πάλι - το "
+"ίδιο και εσύ. Είναι επιδέξιος τεχνίτης και αν ισχυρίζεται ότι μπορεί να σε "
+"βοηθήσει με οποιονδήποτε τρόπο, μπορείς να βασιστείς στην ειλικρίνεια και "
+"την ικανότητά του."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:315
@@ -9712,6 +9727,11 @@ msgid ""
 "all they had in making a life for themselves here. He is a good man with a "
 "deep sense of responsibility."
 msgstr ""
+"Ο Όγκντεν κατέχει και διευθύνει το πανδοχείο και ταβέρνα του Ανατέλλοντος "
+"Ηλίου εδώ και σχεδόν τέσσερα χρόνια. Το αγόρασε λίγους μήνες πριν όλα πάνε "
+"κατά διαόλου. Αυτός και η σύζυγός του η Γκάρντα δεν έχουν τα χρήματα να "
+"φύγουν καθώς επένδυσαν ό,τι είχαν για να φτιάξουν την ζωή τους εδώ. Είναι "
+"καλός άνθρωπος με βαθύ αίσθημα ευθύνης."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:317
@@ -9722,6 +9742,12 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
+"Ο καημένος ο Φάρνxαμ. Είναι μια ανησυχητική υπενθύμιση της καταδικασμένης "
+"ομάδας που μπήκε στον καθεδρικό ναό με τον Λάζαρο εκείνη τη σκοτεινή μέρα. "
+"Ξέφυγε με τη ζωή του, αλλά το θάρρος του και μεγαλύτερο μέρος της λογικής "
+"του έμειναν σε κάποιο σκοτεινό λάκκο. Βρίσκει παρηγοριά μόνο στον πάτο του "
+"μπουκαλιού του σήμερα, αλλά υπάρχουν περιστασιακά κομμάτια αλήθειας θαμμένα "
+"μέσα στις συνεχείς ασυναρτησίες του."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:319
@@ -9732,6 +9758,11 @@ msgid ""
 "access to many strange and arcane artifacts and tomes of knowledge that even "
 "I have never seen before."
 msgstr ""
+"Η μάγισσα, Άντρια, είναι μια ιδιαιτερότητα εδώ στην Τρίστραμ. Έφτασε λίγο "
+"μετά τη βεβήλωση του καθεδρικού ναού, ενώ περίπου όλοι οι άλλοι τράπηκαν σε "
+"φυγή. Έχει χτίσει μια μικρή καλύβα στην άκρη της πόλης, σχεδόν μέσα σε μια "
+"νύχτα, και έχει πρόσβαση σε πολλά παράξενα και απόκρυφα τεχνουργήματα και "
+"τόμους γνώσης που ακόμη και εγώ δεν έχω ξαναδεί."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:321
@@ -9743,6 +9774,13 @@ msgid ""
 "never returned. The Blacksmith found the boy, but only after the foul beasts "
 "had begun to torture him for their sadistic pleasures."
 msgstr ""
+"Η ιστορία του Ουίρτ είναι τρομακτική και τραγική. Τον πήραν από την αγκαλιά "
+"της μητέρας του και τον έσυραν στον λαβύρινθο οι μικροί, βρωμεροί δαίμονες "
+"που κρατούσαν άσχημες λόγχες. Πολλά άλλα παιδιά απήχθησαν εκείνη την ημέρα, "
+"συμπεριλαμβανομένου και του γιου του βασιλιά Λεόρικ. Οι Ιππότες του παλατιού "
+"πήγαν κάτω, αλλά δεν επέστρεψαν ποτέ. Ο Σιδηρουργός βρήκε το αγόρι, αλλά "
+"μόνο αφού τα θηρία είχαν αρχίσει να το βασανίζουν για τις σαδιστικές "
+"απολαύσεις τους."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:323
@@ -9752,6 +9790,10 @@ msgid ""
 "existed. His knowledge and skills are equaled by few, and his door is always "
 "open."
 msgstr ""
+"Α, ο Πέπιν. Τον θεωρώ αληθινό φίλο μου - ίσως τον πιο κοντινό που έχω εδώ. "
+"Είναι λίγο μπερδεμένος κατά καιρούς, αλλά ποτέ δεν υπήρξε η πιο φροντιστική "
+"ή προσεκτική ψυχή. Οι γνώσεις και οι δεξιότητές του εξισώνονται με λίγους, "
+"και η πόρτα του είναι πάντα ανοιχτή."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:325
@@ -9762,6 +9804,12 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
+"Η Γκίλιαν είναι μια ωραία γυναίκα. Πολύ λατρεμένη για την καλή της διάθεση "
+"και το γρήγορο γέλιο της, κατέχει μια ξεχωριστή θέση στην καρδιά μου. Μένει "
+"στην ταβέρνα για να στηρίξει την ηλικιωμένη γιαγιά της που είναι πολύ "
+"άρρωστη για να ταξιδέψει. Μερικές φορές φοβάμαι για την ασφάλειά της, αλλά "
+"ξέρω ότι οποιοσδήποτε άντρας στο χωριό προτιμά να πεθάνει παρά να τη δει να "
+"παθαίνει κακό."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
@@ -9778,6 +9826,11 @@ msgid ""
 "any of them agree on was this old axiom. Perhaps it will help you. You can "
 "cut the flesh, but you must crush the bone."
 msgstr ""
+"Πολλοί τυχοδιώκτες έχουν κοσμήσει τα τραπέζια της ταβέρνας μου και έχουν "
+"ειπωθεί δέκα φορές περισσότερες ιστορίες πάνω από μπίρες. Το μόνο πράγμα στο "
+"οποίο άκουσα ποτέ κάποιον από αυτούς να συμφωνεί ήταν αυτό το παλιό αξίωμα. "
+"Ίσως θα σε βοηθήσει. Μπορεί να κόψεις τη σάρκα, αλλά πρέπει να συνθλίψεις το "
+"κόκαλο."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:331
@@ -9785,6 +9838,9 @@ msgid ""
 "Griswold the blacksmith is extremely knowledgeable about weapons and armor. "
 "If you ever need work done on your gear, he is definitely the man to see."
 msgstr ""
+"Ο Γκρίσγουαλντ ο σιδηρουργός είναι εξαιρετικός γνώστης των όπλων και της "
+"Θωράκισης. Αν χρειαστείς ποτέ δουλειά στον εξοπλισμό σου, είναι σίγουρα ο "
+"άνθρωπος που πρέπει να δεις."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:333
@@ -9792,6 +9848,8 @@ msgid ""
 "Farnham spends far too much time here, drowning his sorrows in cheap ale. I "
 "would make him leave, but he did suffer so during his time in the Labyrinth."
 msgstr ""
+"Ο Φάρνχαμ ξοδεύει πάρα πολύ χρόνο εδώ, πνίγοντας τις λύπες του σε φτηνή "
+"μπύρα. Θα τον έδιωχνα, αλλά υπέφερε τόσο πολύ όταν πήγε στον Λαβύρινθο."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:335
@@ -9802,6 +9860,11 @@ msgid ""
 "Well, no matter. If you ever have need to trade in items of sorcery, she "
 "maintains a strangely well-stocked hut just across the river."
 msgstr ""
+"Η Άντρια είναι πολύ σοφή πέρα ​​από τα χρόνια της, αλλά πρέπει να ομολογήσω - "
+"με τρομάζει λίγο.\n"
+" \n"
+"Λοιπόν, δεν έχει σημασία. Αν ποτέ χρειαστεί να εμπορευθείς είδη μαγείας, "
+"διατηρεί μια περίεργα καλά εφοδιασμένη καλύβα ακριβώς απέναντι από το ποτάμι."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:337
@@ -9809,6 +9872,8 @@ msgid ""
 "If you want to know more about the history of our village, the storyteller "
 "Cain knows quite a bit about the past."
 msgstr ""
+"Αν θέλετε να μάθεις περισσότερα για την ιστορία του χωριού μας, ο αφηγητής "
+"ιστοριών μας ο Κέϊν γνωρίζει αρκετά για το παρελθόν."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:339
@@ -9819,6 +9884,11 @@ msgid ""
 "He probably went fooling about someplace that he shouldn't have been. I feel "
 "sorry for the boy, but I don't abide the company that he keeps."
 msgstr ""
+"Ο Ουίρτ είναι ένα παλιόπαιδο και ένας μικρός απατεώνας. Πάντα έμπαινε σε "
+"μπελάδες και δεν αποτελεί έκπληξη αυτό που του συνέβη.\n"
+" \n"
+"Μάλλον έμπλεξε κάπου που δεν έπρεπε να ήταν. Λυπάμαι για το αγόρι, αλλά δεν "
+"αντέχω την παρέα του."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:341
@@ -9827,6 +9897,9 @@ msgid ""
 "always attending to the needs of others, but trouble of some sort or another "
 "does seem to follow him wherever he goes..."
 msgstr ""
+"Ο Πέπιν είναι καλός άνθρωπος - και σίγουρα ο πιο γενναιόδωρος στο χωριό. "
+"Φροντίζει πάντα τις ανάγκες των άλλων, αλλά κάποιου είδους προβλήματα "
+"φαίνεται να τον ακολουθούν όπου κι αν πάει..."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:343
@@ -9837,6 +9910,11 @@ msgid ""
 "Goodness knows I begged her to leave, telling her that I would watch after "
 "the old woman, but she is too sweet and caring to have done so."
 msgstr ""
+"Η Γκίλιαν, η σερβιτόρα μου; Αν δεν ήταν για την αίσθηση του καθήκοντός της "
+"προς τη γιαγιά της, θα είχε φύγει από εδώ, εδώ και πολύ καιρό.\n"
+" \n"
+"Μα το καλό μου, την παρακάλεσα να φύγει, λέγοντάς της ότι θα πρόσεχα τη "
+"ηλικιωμένη, αλλά είναι πολύ γλυκιά και περιποιητική για να έφευγε."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
@@ -9851,6 +9929,10 @@ msgid ""
 "hurt one of the monsters, make sure it is dead or it very well may "
 "regenerate itself."
 msgstr ""
+"Έχω κάνει μια πολύ ενδιαφέρουσα ανακάλυψη. Σε αντίθεση με εμάς, τα πλάσματα "
+"στον Λαβύρινθο μπορούν να θεραπεύσουν τον εαυτό τους χωρίς τη βοήθεια "
+"φίλτρων ή μαγείας. Εάν πληγώσεις ένα από τα τέρατα, βεβαιώσου ότι είναι "
+"νεκρό διαφορετικά μπορεί να αναγεννήσει τις σάρκες του."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:348
@@ -9860,6 +9942,10 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
+"Πριν καταληφθεί από... ό,τι κρύβεται από κάτω, ο καθεδρικός ναός ήταν ένας "
+"τόπος μεγάλης μάθησης. Υπάρχουν πολλά βιβλία που μπορείς να βρεις εκεί. Αν "
+"βρεις κάποια, σου προτείνω να τα διαβάσεις, γιατί μπορεί να κρατούν μυστικά "
+"για τον Λαβύρινθο."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -9868,6 +9954,10 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
+"Ο Γκρίσγουαλντ γνωρίζει τόσα πολλά για την τέχνη του πολέμου όσο κι εγώ για "
+"την τέχνη της θεραπείας. Είναι οξυδερκής έμπορος, και η δουλειά του είναι "
+"πρώτης ποιότητας. Α, υποθέτω ότι αυτό μπορεί να οφείλεται στο ότι είναι ο "
+"μόνος σιδηρουργός που έχει απομείνει εδώ."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -9876,6 +9966,10 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to."
 msgstr ""
+"Ο Κέϊν είναι αληθινός φίλος και σοφός γνώστης. Διατηρεί μια τεράστια "
+"βιβλιοθήκη και έχει μια έμφυτη ικανότητα να διακρίνει την αληθινή φύση "
+"πολλών πραγμάτων. Αν έχεις ποτέ απορίες, είναι το άτομο στο οποίο πρέπει να "
+"πας."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
@@ -9883,6 +9977,9 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do."
 msgstr ""
+"Ακόμη και οι ικανότητές μου δεν μπόρεσαν να θεραπεύσουν πλήρως τον Φάρνχαμ. "
+"Ω, μπόρεσα να ιάσω το σώμα του, αλλά το μυαλό και το πνεύμα του είναι πέρα ​​"
+"από οτιδήποτε μπορώ να κάνω."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:356
@@ -9893,6 +9990,12 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
+"Ενώ εγώ χρησιμοποιώ μερικές περιορισμένες μορφές μαγείας για να δημιουργήσω "
+"τα φίλτρα και τα ελιξίρια που αποθηκεύω εδώ, η Άντρια είναι μια αληθινή "
+"μάγισσα. Δεν φαίνεται να κοιμάται ποτέ και έχει πάντα πρόσβαση σε πολλούς "
+"μυστικιστικούς τόμους και τεχνουργήματα. Πιστεύω ότι η καλύβα της μπορεί να "
+"είναι πολύ περισσότερο από την παράγκα που φαίνεται να είναι, αλλά δεν έχω "
+"καταφέρει ποτέ να μπω μέσα εκεί."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -9902,6 +10005,10 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
+"Ο φτωχός Ουίρτ. Έκανα ό,τι ήταν δυνατό για το παιδί, αλλά ξέρω ότι "
+"περιφρονεί αυτό το ξύλινο παλούκι που αναγκάστηκα να βάλω στο πόδι του. Οι "
+"πληγές του ήταν φρικτές. Κανείς - και ειδικά ένα τόσο μικρό παιδί - δεν θα "
+"έπρεπε να υποφέρει όπως έπαθε."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -9912,6 +10019,12 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
+"Πραγματικά δεν καταλαβαίνω γιατί ο Όγκντεν μένει εδώ στην Τρίστραμ. Πάσχει "
+"από μια ελαφριά νευρική πάθηση, αλλά είναι ένας έξυπνος και εργατικός "
+"άνθρωπος που θα τα πήγαινε πολύ καλά όπου κι αν πήγαινε. Υποθέτω ότι μπορεί "
+"να είναι ο φόβος των πολλών δολοφονιών που συμβαίνουν στη γύρω ύπαιθρο ή "
+"ίσως οι επιθυμίες της γυναίκας του που κρατούν αυτόν και την οικογένειά του "
+"εδώ."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -9922,6 +10035,11 @@ msgid ""
 "She claims that they are visions, but I have no proof of that one way or the "
 "other."
 msgstr ""
+"Η σερβιτόρα του Όγκντεν είναι ένα γλυκό κορίτσι. Η γιαγιά της είναι αρκετά "
+"άρρωστη και υποφέρει από παραισθήσεις.\n"
+" \n"
+"Ισχυρίζεται ότι βλέπει οράματα, αλλά δεν υπάρχει καμία απόδειξη γι' αυτά με "
+"κανέναν τρόπο."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
