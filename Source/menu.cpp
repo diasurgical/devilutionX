@@ -180,6 +180,8 @@ void mainmenu_loop()
 			break;
 		}
 	} while (!done);
+
+	music_stop();
 }
 
 } // namespace devilution
