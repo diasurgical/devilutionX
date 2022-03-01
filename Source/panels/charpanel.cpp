@@ -135,7 +135,7 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pExperience) }; } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
-	        if (MyPlayer->_pLevel == MAXCHARLEVEL - 1) {
+	        if (MyPlayer->_pLevel == MAXCHARLEVEL) {
 		        return StyledText { UiFlags::ColorWhitegold, _("None") };
 	        }
 	        return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pNextExper) };

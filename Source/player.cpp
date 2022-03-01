@@ -98,7 +98,7 @@ int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-uint32_t ExpLvlsTbl[MAXCHARLEVEL] = {
+uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1] = {
 	0,
 	2000,
 	4620,
@@ -1842,8 +1842,8 @@ void ValidatePlayer()
 	}
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pLevel > MAXCHARLEVEL - 1)
-		myPlayer._pLevel = MAXCHARLEVEL - 1;
+	if (myPlayer._pLevel > MAXCHARLEVEL)
+		myPlayer._pLevel = MAXCHARLEVEL;
 	if (myPlayer._pExperience > myPlayer._pNextExper) {
 		myPlayer._pExperience = myPlayer._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
@@ -2775,7 +2775,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
-		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 0, 50);
+		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MAXCHARLEVEL);
 
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.
