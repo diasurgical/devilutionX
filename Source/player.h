@@ -29,7 +29,7 @@ namespace devilution {
 #define NUM_INV_GRID_ELEM 40
 #define MAXBELTITEMS 8
 #define MAXRESIST 75
-#define MAXCHARLEVEL 51
+#define MAXCHARLEVEL 50
 #define MAX_SPELL_LEVEL 15
 #define PLR_NAME_LEN 32
 
@@ -757,6 +757,6 @@ extern int StrengthTbl[enum_size<HeroClass>::value];
 extern int MagicTbl[enum_size<HeroClass>::value];
 extern int DexterityTbl[enum_size<HeroClass>::value];
 extern int VitalityTbl[enum_size<HeroClass>::value];
-extern uint32_t ExpLvlsTbl[MAXCHARLEVEL];
+extern uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1];
 
 } // namespace devilution
