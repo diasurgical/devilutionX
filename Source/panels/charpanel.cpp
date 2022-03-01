@@ -107,9 +107,7 @@ StyledText GetResistInfo(int8_t resist)
 	else if (resist >= MAXRESIST)
 		style = UiFlags::ColorWhitegold;
 
-	return {
-		style, fmt::format("{:d}%", resist)
-	};
+	return { style, fmt::format("{:d}%", resist) };
 }
 
 constexpr int LeftColumnLabelX = 88;
