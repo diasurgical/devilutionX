@@ -309,9 +309,10 @@ void DoHealOther(int pnum, uint16_t rid)
 		return;
 	}
 
-	int hp = (GenerateRnd(10) + 1) << 6;
-	hp += GenerateRndSum(4, player._pLevel) + player._pLevel << 6;
-	hp += GenerateRndSum(6, GetSpellLevel(pnum, SPL_HEALOTHER)) + GetSpellLevel(pnum, SPL_HEALOTHER) << 6;
+	int hp = (GenerateRnd(10) + 1);
+	hp += GenerateRndSum(4, player._pLevel) + player._pLevel;
+	hp += GenerateRndSum(6, GetSpellLevel(pnum, SPL_HEALOTHER)) + GetSpellLevel(pnum, SPL_HEALOTHER);
+	hp <<= 6;
 
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 		hp *= 2;
