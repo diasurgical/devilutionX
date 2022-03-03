@@ -33,8 +33,8 @@ enum packet_type : uint8_t {
 const char *packet_type_to_string(uint8_t packetType);
 
 typedef uint8_t plr_t;
+typedef uint8_t seq_t;
 typedef uint32_t cookie_t;
-typedef int turn_t;      // change int to something else in devilution code later
 typedef int leaveinfo_t; // also change later
 #ifdef PACKET_ENCRYPTION
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
@@ -42,6 +42,11 @@ typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
 // Stub out the key_t defintion as we're not doing any encryption.
 using key_t = uint8_t;
 #endif
+
+struct turn_t {
+	seq_t SequenceNumber;
+	int32_t Value;
+};
 
 static constexpr plr_t PLR_MASTER = 0xFE;
 static constexpr plr_t PLR_BROADCAST = 0xFF;
@@ -149,7 +154,8 @@ void packet_proc<P>::process_data()
 		self.process_element(m_message);
 		break;
 	case PT_TURN:
-		self.process_element(m_turn);
+		self.process_element(m_turn.SequenceNumber);
+		self.process_element(m_turn.Value);
 		break;
 	case PT_JOIN_REQUEST:
 		self.process_element(m_cookie);

@@ -31,6 +31,9 @@ public:
 
 	virtual ~base_protocol() = default;
 
+protected:
+	virtual bool IsGameHost();
+
 private:
 	P proto;
 	typedef typename P::endpoint endpoint;
@@ -129,7 +132,7 @@ int base_protocol<P>::create(std::string addrstr)
 
 	if (wait_network()) {
 		plr_self = 0;
-		connected_table[plr_self] = true;
+		Connect(plr_self);
 	}
 	return (plr_self == PLR_BROADCAST ? -1 : plr_self);
 }
@@ -143,6 +146,12 @@ int base_protocol<P>::join(std::string addrstr)
 			wait_join();
 
 	return (plr_self == PLR_BROADCAST ? -1 : plr_self);
+}
+
+template <class P>
+bool base_protocol<P>::IsGameHost()
+{
+	return firstpeer == endpoint();
 }
 
 template <class P>
@@ -206,7 +215,7 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 	plr_t i;
 	for (i = 0; i < MAX_PLRS; ++i) {
 		if (i != plr_self && !peers[i]) {
-			connected_table[i] = true;
+			Connect(i);
 			peers[i] = sender;
 			break;
 		}
@@ -295,7 +304,7 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		}
 
 		// addrinfo packets
-		connected_table[pkt.NewPlayer()] = true;
+		Connect(pkt.NewPlayer());
 		peers[pkt.NewPlayer()].unserialize(pkt.Info());
 		return;
 	} else if (pkt.Source() >= MAX_PLRS) {
@@ -303,7 +312,7 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		LogDebug("Invalid packet: packet source ({}) >= MAX_PLRS", pkt.Source());
 		return;
 	} else if (sender == firstpeer && pkt.Type() == PT_JOIN_ACCEPT) {
-		connected_table[pkt.Source()] = true;
+		Connect(pkt.Source());
 		peers[pkt.Source()] = sender;
 		firstpeer = endpoint();
 	} else if (sender != peers[pkt.Source()]) {
