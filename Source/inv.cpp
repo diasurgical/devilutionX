@@ -239,7 +239,7 @@ bool CanEquip(const Item &item)
  */
 bool CanWield(Player &player, const Item &item)
 {
-	if (!CanEquip(item) || IsNoneOf(item._iLoc, ILOC_ONEHAND, ILOC_TWOHAND))
+	if (!CanEquip(item) || IsNoneOf(player.GetItemLocation(item), ILOC_ONEHAND, ILOC_TWOHAND))
 		return false;
 
 	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
@@ -255,20 +255,13 @@ bool CanWield(Player &player, const Item &item)
 
 	Item &occupiedHand = !leftHandItem.isEmpty() ? leftHandItem : rightHandItem;
 
-	// Barbarian can wield two handed swords and maces in one hand, so we allow equiping any sword/mace as long as his occupied
-	// hand has a shield (i.e. no dual wielding allowed)
-	if (player._pClass == HeroClass::Barbarian) {
-		if (occupiedHand._itype == ItemType::Shield && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
-			return true;
-	}
-
 	// Bard can dual wield swords and maces, so we allow equiping one-handed weapons in her free slot as long as her occupied
 	// slot is another one-handed weapon.
 	if (player._pClass == HeroClass::Bard) {
-		bool occupiedHandIsOneHandedSwordOrMace = occupiedHand._iLoc == ILOC_ONEHAND
+		bool occupiedHandIsOneHandedSwordOrMace = player.GetItemLocation(occupiedHand) == ILOC_ONEHAND
 		    && IsAnyOf(occupiedHand._itype, ItemType::Sword, ItemType::Mace);
 
-		bool weaponToEquipIsOneHandedSwordOrMace = item._iLoc == ILOC_ONEHAND
+		bool weaponToEquipIsOneHandedSwordOrMace = player.GetItemLocation(item) == ILOC_ONEHAND
 		    && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace);
 
 		if (occupiedHandIsOneHandedSwordOrMace && weaponToEquipIsOneHandedSwordOrMace) {
@@ -276,8 +269,8 @@ bool CanWield(Player &player, const Item &item)
 		}
 	}
 
-	return item._iLoc == ILOC_ONEHAND
-	    && occupiedHand._iLoc == ILOC_ONEHAND
+	return player.GetItemLocation(item) == ILOC_ONEHAND
+	    && player.GetItemLocation(occupiedHand) == ILOC_ONEHAND
 	    && item._iClass != occupiedHand._iClass;
 }
 
@@ -397,17 +390,13 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (r >= SLOTXY_BELT_FIRST && r <= SLOTXY_BELT_LAST)
 		il = ILOC_BELT;
 
-	done = player.HoldItem._iLoc == il;
+	done = player.GetItemLocation(player.HoldItem) == il;
 
-	if (il == ILOC_ONEHAND && player.HoldItem._iLoc == ILOC_TWOHAND) {
-		if (player._pClass == HeroClass::Barbarian
-		    && IsAnyOf(player.HoldItem._itype, ItemType::Sword, ItemType::Mace))
-			il = ILOC_ONEHAND;
-		else
-			il = ILOC_TWOHAND;
+	if (il == ILOC_ONEHAND && player.GetItemLocation(player.HoldItem) == ILOC_TWOHAND) {
+		il = ILOC_TWOHAND;
 		done = true;
 	}
-	if (player.HoldItem._iLoc == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
+	if (player.GetItemLocation(player.HoldItem) == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
 		if (itemSize == Size { 1, 1 }) {
 			done = true;
 			if (!AllItemsList[player.HoldItem.IDidx].iUsable)
@@ -531,7 +520,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			break;
 		}
 		if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-			if ((player.InvBody[INVLOC_HAND_LEFT].isEmpty() || player.InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND)
+			if ((player.InvBody[INVLOC_HAND_LEFT].isEmpty() || player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) != ILOC_TWOHAND)
 			    || (player._pClass == HeroClass::Barbarian && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace))) {
 				if ((player.InvBody[INVLOC_HAND_LEFT].isEmpty() || player.InvBody[INVLOC_HAND_LEFT]._iClass != player.HoldItem._iClass)
 				    || (player._pClass == HeroClass::Bard && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON)) {
@@ -839,7 +828,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 					 */
 					automaticallyUnequip = true; // Switch to say "I have no room when inventory is too full"
 					int invloc = NUM_INVLOC;
-					switch (holdItem._iLoc) {
+					switch (player.GetItemLocation(holdItem)) {
 					case ILOC_ARMOR:
 						invloc = INVLOC_CHEST;
 						break;
@@ -856,16 +845,16 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 						}
 						// User is attempting to move a weapon (left hand)
 						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
-						    && player.InvList[iv - 1]._iLoc == player.InvBody[INVLOC_HAND_LEFT]._iLoc) {
+						    && player.GetItemLocation(player.InvList[iv - 1]) == player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT])) {
 							invloc = INVLOC_HAND_LEFT;
 						}
 						// User is attempting to move a shield (right hand)
 						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass
-						    && player.InvList[iv - 1]._iLoc == player.InvBody[INVLOC_HAND_RIGHT]._iLoc) {
+						    && player.GetItemLocation(player.InvList[iv - 1]) == player.GetItemLocation(player.InvBody[INVLOC_HAND_RIGHT])) {
 							invloc = INVLOC_HAND_RIGHT;
 						}
 						// A two-hand item can always be replaced with a one-hand item
-						if (player.InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
+						if (player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) == ILOC_TWOHAND) {
 							invloc = INVLOC_HAND_LEFT;
 						}
 						break;
@@ -1270,19 +1259,16 @@ void DrawInv(const Surface &out)
 			CelDrawItem(myPlayer.InvBody[slot], out, position, cel, celFrame);
 
 			if (slot == INVLOC_HAND_LEFT) {
-				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
-					if (myPlayer._pClass != HeroClass::Barbarian
-					    || IsNoneOf(myPlayer.InvBody[slot]._itype, ItemType::Sword, ItemType::Mace)) {
-						InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
-						LightTableIndex = 0;
-						cel_transparency_active = true;
+				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
+					InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
+					LightTableIndex = 0;
+					cel_transparency_active = true;
 
-						const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
-						const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
-						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
+					const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
+					const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
+					CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
-						cel_transparency_active = false;
-					}
+					cel_transparency_active = false;
 				}
 			}
 		}
@@ -1590,9 +1576,9 @@ void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int 
 
 	player.InvBody[bLoc] = player.HoldItem;
 
-	if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+	if (bLoc == INVLOC_HAND_LEFT && player.GetItemLocation(player.HoldItem) == ILOC_TWOHAND) {
 		player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
-	} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+	} else if (bLoc == INVLOC_HAND_RIGHT && player.GetItemLocation(player.HoldItem) == ILOC_TWOHAND) {
 		player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 	}
 
@@ -1956,8 +1942,7 @@ int8_t CheckInvHLight()
 		pi = &myPlayer.InvBody[rv];
 	} else if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST) {
 		pi = &myPlayer.InvBody[INVLOC_HAND_LEFT];
-		if (pi->isEmpty() || pi->_iLoc != ILOC_TWOHAND
-		    || (myPlayer._pClass == HeroClass::Barbarian && IsAnyOf(myPlayer.InvBody[INVLOC_HAND_LEFT]._itype, ItemType::Sword, ItemType::Mace))) {
+		if (pi->isEmpty() || myPlayer.GetItemLocation(*pi) != ILOC_TWOHAND) {
 			rv = INVLOC_HAND_RIGHT;
 			pi = &myPlayer.InvBody[rv];
 		} else {
