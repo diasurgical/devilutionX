@@ -450,6 +450,16 @@ struct Player {
 	void Reset();
 
 	/**
+	 * @brief Returns item location taking into consideration barbarian's ability to hold two-handed maces and clubs in one hand.
+	 */
+	item_equip_type GetItemLocation(const Item &item) const
+	{
+		if (_pClass == HeroClass::Barbarian && item._iLoc == ILOC_TWOHAND && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
+			return ILOC_ONEHAND;
+		return item._iLoc;
+	}
+
+	/**
 	 * @brief Return player's armor value
 	 */
 	int GetArmor() const
