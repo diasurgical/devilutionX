@@ -1935,7 +1935,7 @@ void AddLightning(Missile &missile, const AddMissileParameter &parameter)
 	missile._mlid = AddLight(missile.position.tile, 4);
 }
 
-void AddMisexp(Missile &missile, const AddMissileParameter &parameter)
+void AddMissileHit(Missile &missile, const AddMissileParameter &parameter)
 {
 	if (missile._micaster != TARGET_MONSTERS && missile._misource >= 0) {
 		switch (Monsters[missile._misource].MType->mtype) {
@@ -2843,7 +2843,7 @@ void MI_Arrow(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Firebolt(Missile &missile)
+void MI_Projectile(Missile &missile)
 {
 	int d = 0;
 
@@ -3540,7 +3540,7 @@ void MI_Weapexp(Missile &missile)
 	}
 }
 
-void MI_Misexp(Missile &missile)
+void MI_MissileHit(Missile &missile)
 {
 	constexpr int ExpLight[] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2, 1, 0, 0, 0, 0 };
 

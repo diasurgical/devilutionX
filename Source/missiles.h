@@ -247,7 +247,7 @@ void AddFireball(Missile &missile, const AddMissileParameter &parameter);
  */
 void AddLightningC(Missile &missile, const AddMissileParameter &parameter);
 void AddLightning(Missile &missile, const AddMissileParameter &parameter);
-void AddMisexp(Missile &missile, const AddMissileParameter &parameter);
+void AddMissileHit(Missile &missile, const AddMissileParameter &parameter);
 void AddWeapexp(Missile &missile, const AddMissileParameter &parameter);
 
 /**
@@ -346,7 +346,7 @@ void MI_Golem(Missile &missile);
 void MI_Manashield(Missile &missile);
 void MI_Elementalarrow(Missile &missile);
 void MI_Arrow(Missile &missile);
-void MI_Firebolt(Missile &missile);
+void MI_Projectile(Missile &missile);
 void MI_Nova(Missile &missilei);
 void MI_Acidpuddle(Missile &missile);
 void MI_Firewall(Missile &missile);
@@ -370,7 +370,7 @@ void MI_Flamewave(Missile &missile);
 void MI_Guardian(Missile &missile);
 void MI_Chainlightning(Missile &missile);
 void MI_Weapexp(Missile &missile);
-void MI_Misexp(Missile &missile);
+void MI_MissileHit(Missile &missile);
 void MI_Acidexp(Missile &missile);
 void MI_Teleport(Missile &missile);
 void MI_Stonecurse(Missile &missile);
