@@ -1259,7 +1259,7 @@ bool DoRangeAttack(int pnum)
 		}
 
 		int dmg = 4;
-		missile_id mistype = MIS_ACID;
+		missile_id mistype = MIS_ARROW;
 		if ((player._pIFlags & ISPL_FIRE_ARROWS) != 0) {
 			mistype = MIS_FIREARROW;
 		}
