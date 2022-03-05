@@ -147,7 +147,7 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
-enum spell_flag : int8_t {
+enum spell_flag : uint8_t {
 	// clang-format off
 	SF_ETHEREALIZE      = 1 << 0,
 	SF_RAGE_ON          = 1 << 1,
