@@ -2644,12 +2644,12 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		}
 	}
 
-	if ((player._pSpellFlags & 2) == 2) {
+	if ((player._pSpellFlags & SF_RAGE_ON) != 0) {
 		sadd += 2 * player._pLevel;
 		dadd += player._pLevel + player._pLevel / 2;
 		vadd += 2 * player._pLevel;
 	}
-	if ((player._pSpellFlags & 4) == 4) {
+	if ((player._pSpellFlags & SF_RAGE_COOLDOWN) != 0) {
 		sadd -= 2 * player._pLevel;
 		dadd -= player._pLevel + player._pLevel / 2;
 		vadd -= 2 * player._pLevel;
@@ -2737,7 +2737,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		lr += player._pLevel;
 	}
 
-	if ((player._pSpellFlags & 4) == 4) {
+	if ((player._pSpellFlags & SF_RAGE_COOLDOWN) != 0) {
 		mr -= player._pLevel;
 		fr -= player._pLevel;
 		lr -= player._pLevel;

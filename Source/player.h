@@ -147,6 +147,19 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
+enum spell_flag : int8_t {
+	// clang-format off
+	SF_ETHEREALIZE      = 1 << 0,
+	SF_RAGE_ON          = 1 << 1,
+	SF_RAGE_COOLDOWN    = 1 << 2,
+	SF_NOTHING3         = 1 << 3,
+	SF_NOTHING4         = 1 << 4,
+	SF_NOTHING5         = 1 << 5,
+	SF_NOTHING6         = 1 << 6,
+	SF_NOTHING7         = 1 << 7,
+	// clang-format on
+};
+
 /** Maps from armor animation to letter used in graphic files. */
 constexpr std::array<char, 4> ArmourChar = {
 	'L', // light
