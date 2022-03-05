@@ -1259,12 +1259,12 @@ bool DoRangeAttack(int pnum)
 		}
 
 		int dmg = 4;
-		missile_id mistype = MIS_ARROW;
+		missile_id mistype = MIS_ACID;
 		if ((player._pIFlags & ISPL_FIRE_ARROWS) != 0) {
-			mistype = MIS_FARROW;
+			mistype = MIS_FIREARROW;
 		}
 		if ((player._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
-			mistype = MIS_LARROW;
+			mistype = MIS_LIGHTNINGARROW;
 		}
 		if ((player._pIFlags & ISPL_FIRE_ARROWS) != 0 && (player._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
 			dmg = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
@@ -2609,14 +2609,14 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	player._pRSplType = RSPLTYPE_SKILL;
 	if (c == HeroClass::Warrior) {
-		player._pAblSpells = GetSpellBitmask(SPL_REPAIR);
-		player._pRSpell = SPL_REPAIR;
+		player._pAblSpells = GetSpellBitmask(SPL_ITEMREPAIR);
+		player._pRSpell = SPL_ITEMREPAIR;
 	} else if (c == HeroClass::Rogue) {
-		player._pAblSpells = GetSpellBitmask(SPL_DISARM);
-		player._pRSpell = SPL_DISARM;
+		player._pAblSpells = GetSpellBitmask(SPL_DISARMTRAP);
+		player._pRSpell = SPL_DISARMTRAP;
 	} else if (c == HeroClass::Sorcerer) {
-		player._pAblSpells = GetSpellBitmask(SPL_RECHARGE);
-		player._pRSpell = SPL_RECHARGE;
+		player._pAblSpells = GetSpellBitmask(SPL_STAFFRECHARGE);
+		player._pRSpell = SPL_STAFFRECHARGE;
 	} else if (c == HeroClass::Monk) {
 		player._pAblSpells = GetSpellBitmask(SPL_SEARCH);
 		player._pRSpell = SPL_SEARCH;
@@ -2624,8 +2624,8 @@ void CreatePlayer(int playerId, HeroClass c)
 		player._pAblSpells = GetSpellBitmask(SPL_IDENTIFY);
 		player._pRSpell = SPL_IDENTIFY;
 	} else if (c == HeroClass::Barbarian) {
-		player._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
-		player._pRSpell = SPL_BLODBOIL;
+		player._pAblSpells = GetSpellBitmask(SPL_RAGE);
+		player._pRSpell = SPL_RAGE;
 	}
 
 	if (c == HeroClass::Sorcerer) {
@@ -2890,17 +2890,17 @@ void InitPlayer(Player &player, bool firstTime)
 	}
 
 	if (player._pClass == HeroClass::Warrior) {
-		player._pAblSpells = GetSpellBitmask(SPL_REPAIR);
+		player._pAblSpells = GetSpellBitmask(SPL_ITEMREPAIR);
 	} else if (player._pClass == HeroClass::Rogue) {
-		player._pAblSpells = GetSpellBitmask(SPL_DISARM);
+		player._pAblSpells = GetSpellBitmask(SPL_DISARMTRAP);
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		player._pAblSpells = GetSpellBitmask(SPL_RECHARGE);
+		player._pAblSpells = GetSpellBitmask(SPL_STAFFRECHARGE);
 	} else if (player._pClass == HeroClass::Monk) {
 		player._pAblSpells = GetSpellBitmask(SPL_SEARCH);
 	} else if (player._pClass == HeroClass::Bard) {
 		player._pAblSpells = GetSpellBitmask(SPL_IDENTIFY);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		player._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
+		player._pAblSpells = GetSpellBitmask(SPL_RAGE);
 	}
 
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
@@ -3301,7 +3301,7 @@ void RemovePlrMissiles(int pnum)
 	}
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
+		if (missile._mitype == MIS_STONECURSE && missile._misource == pnum) {
 			Monsters[missile.var2]._mmode = static_cast<MonsterMode>(missile.var1);
 		}
 	}
@@ -3596,11 +3596,11 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
 		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
 		) {
-			if (spellID != SPL_HEAL
+			if (spellID != SPL_HEALING
 			    && spellID != SPL_IDENTIFY
-			    && spellID != SPL_REPAIR
-			    && spellID != SPL_INFRA
-			    && spellID != SPL_RECHARGE)
+			    && spellID != SPL_ITEMREPAIR
+			    && spellID != SPL_INFRAVISION
+			    && spellID != SPL_STAFFRECHARGE)
 				return;
 		}
 	}

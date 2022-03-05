@@ -1178,7 +1178,7 @@ void AddFlameTrap(int i)
 void AddFlameLvr(int i)
 {
 	Objects[i]._oVar1 = trapid;
-	Objects[i]._oVar2 = MIS_FLAMEC;
+	Objects[i]._oVar2 = MIS_INFERNOC;
 }
 
 void AddTrap(int i)
@@ -1196,7 +1196,7 @@ void AddTrap(int i)
 	if (mt == 1)
 		Objects[i]._oVar3 = MIS_FIREBOLT;
 	if (mt == 2)
-		Objects[i]._oVar3 = MIS_LIGHTCTRL;
+		Objects[i]._oVar3 = MIS_LIGHTNINGC;
 	Objects[i]._oVar4 = 0;
 }
 
@@ -1481,7 +1481,7 @@ void UpdateCircle(int i)
 		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
 		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 			Quests[Q_BETRAYER]._qvar1 = 4;
-		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_PHASING, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
@@ -2211,7 +2211,7 @@ void OperateBook(int pnum, Object &book)
 			if (doAddMissile) {
 				questObject._oVar6 = 4;
 				ObjectAtPosition({ 35, 36 })->_oVar5++;
-				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
+				AddMissile(player.position.tile, target, Direction::South, MIS_PHASING, TARGET_BOTH, pnum, 0, 0);
 				missileAdded = true;
 			}
 		}
@@ -2376,13 +2376,13 @@ void OperateChest(int pnum, int i, bool sendmsg)
 			mtype = MIS_ARROW;
 			break;
 		case 1:
-			mtype = MIS_FARROW;
+			mtype = MIS_FIREARROW;
 			break;
 		case 2:
 			mtype = MIS_NOVA;
 			break;
 		case 3:
-			mtype = MIS_FIRERING;
+			mtype = MIS_RINGOFFIRE;
 			break;
 		case 4:
 			mtype = MIS_STEALPOTS;
@@ -3028,7 +3028,7 @@ bool OperateShrineHoly(int pnum)
 	if (deltaload)
 		return false;
 
-	AddMissile(Players[pnum].position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
+	AddMissile(Players[pnum].position.tile, { 0, 0 }, Direction::South, MIS_PHASING, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
 
 	if (pnum != MyPlayerId)
 		return false;
@@ -3047,12 +3047,12 @@ bool OperateShrineSacred(int pnum)
 
 	auto &player = Players[pnum];
 
-	player._pMemSpells |= GetSpellBitmask(SPL_CBOLT);
+	player._pMemSpells |= GetSpellBitmask(SPL_CHARGEDBOLT);
 
-	if (player._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_CBOLT]++;
-	if (player._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_CBOLT]++;
+	if (player._pSplLvl[SPL_CHARGEDBOLT] < MAX_SPELL_LEVEL)
+		player._pSplLvl[SPL_CHARGEDBOLT]++;
+	if (player._pSplLvl[SPL_CHARGEDBOLT] < MAX_SPELL_LEVEL)
+		player._pSplLvl[SPL_CHARGEDBOLT]++;
 
 	uint32_t t = player._pMaxManaBase / 10;
 	int v1 = player._pMana - player._pManaBase;
@@ -3204,11 +3204,11 @@ bool OperateShrineOrnate(int pnum)
 
 	auto &player = Players[pnum];
 
-	player._pMemSpells |= GetSpellBitmask(SPL_HBOLT);
-	if (player._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_HBOLT]++;
-	if (player._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_HBOLT]++;
+	player._pMemSpells |= GetSpellBitmask(SPL_HOLYBOLT);
+	if (player._pSplLvl[SPL_HOLYBOLT] < MAX_SPELL_LEVEL)
+		player._pSplLvl[SPL_HOLYBOLT]++;
+	if (player._pSplLvl[SPL_HOLYBOLT] < MAX_SPELL_LEVEL)
+		player._pSplLvl[SPL_HOLYBOLT]++;
 
 	uint32_t t = player._pMaxManaBase / 10;
 	int v1 = player._pMana - player._pManaBase;
@@ -3436,7 +3436,7 @@ bool OperateShrineTown(int pnum, Point spawnPosition)
 	    spawnPosition,
 	    myPlayer.position.tile,
 	    myPlayer._pdir,
-	    MIS_TOWN,
+	    MIS_TOWNPORTAL,
 	    TARGET_PLAYERS,
 	    pnum,
 	    0,
@@ -3887,7 +3887,7 @@ bool OperateFountains(int pnum, int i)
 		    player.position.tile,
 		    player.position.tile,
 		    player._pdir,
-		    MIS_INFRA,
+		    MIS_INFRAVISION,
 		    TARGET_PLAYERS,
 		    pnum,
 		    0,

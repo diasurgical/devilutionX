@@ -203,7 +203,7 @@ void AddLightningRune(Missile &missile, const AddMissileParameter &parameter);
 void AddGreatLightningRune(Missile &missile, const AddMissileParameter &parameter);
 void AddImmolationRune(Missile &missile, const AddMissileParameter &parameter);
 void AddStoneRune(Missile &missile, const AddMissileParameter &parameter);
-void AddReflection(Missile &missile, const AddMissileParameter &parameter);
+void AddReflect(Missile &missile, const AddMissileParameter &parameter);
 void AddBerserk(Missile &missile, const AddMissileParameter &parameter);
 
 /**
@@ -215,22 +215,22 @@ void AddStealPotions(Missile &missile, const AddMissileParameter &parameter);
 void AddManaTrap(Missile &missile, const AddMissileParameter &parameter);
 void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter);
 void AddWarp(Missile &missile, const AddMissileParameter &parameter);
-void AddLightningWall(Missile &missile, const AddMissileParameter &parameter);
+void AddLightningwall(Missile &missile, const AddMissileParameter &parameter);
 void AddRuneExplosion(Missile &missile, const AddMissileParameter &parameter);
-void AddFireNova(Missile &missile, const AddMissileParameter &parameter);
-void AddLightningArrow(Missile &missile, const AddMissileParameter &parameter);
+void AddImmolation(Missile &missile, const AddMissileParameter &parameter);
+void AddBowLightning(Missile &missile, const AddMissileParameter &parameter);
 void AddMana(Missile &missile, const AddMissileParameter &parameter);
 void AddMagi(Missile &missile, const AddMissileParameter &parameter);
-void AddRing(Missile &missile, const AddMissileParameter &parameter);
+void AddRingoffire(Missile &missile, const AddMissileParameter &parameter);
 void AddSearch(Missile &missile, const AddMissileParameter &parameter);
-void AddCboltArrow(Missile &missile, const AddMissileParameter &parameter);
-void AddLArrow(Missile &missile, const AddMissileParameter &parameter);
+void AddBowChargedbolt(Missile &missile, const AddMissileParameter &parameter);
+void AddElementalarrow(Missile &missile, const AddMissileParameter &parameter);
 void AddArrow(Missile &missile, const AddMissileParameter &parameter);
-void AddRndTeleport(Missile &missile, const AddMissileParameter &parameter);
+void AddPhasing(Missile &missile, const AddMissileParameter &parameter);
 void AddFirebolt(Missile &missile, const AddMissileParameter &parameter);
 void AddMagmaball(Missile &missile, const AddMissileParameter &parameter);
 void AddTeleport(Missile &missile, const AddMissileParameter &parameter);
-void AddLightball(Missile &missile, const AddMissileParameter &parameter);
+void AddNova(Missile &missile, const AddMissileParameter &parameter);
 void AddFirewall(Missile &missile, const AddMissileParameter &parameter);
 
 /**
@@ -245,7 +245,7 @@ void AddFireball(Missile &missile, const AddMissileParameter &parameter);
  * var1: X coordinate of the missile
  * var2: Y coordinate of the missile
  */
-void AddLightctrl(Missile &missile, const AddMissileParameter &parameter);
+void AddLightningC(Missile &missile, const AddMissileParameter &parameter);
 void AddLightning(Missile &missile, const AddMissileParameter &parameter);
 void AddMisexp(Missile &missile, const AddMissileParameter &parameter);
 void AddWeapexp(Missile &missile, const AddMissileParameter &parameter);
@@ -253,11 +253,11 @@ void AddWeapexp(Missile &missile, const AddMissileParameter &parameter);
 /**
  * var1: Animation
  */
-void AddTown(Missile &missile, const AddMissileParameter &parameter);
+void AddTownportal(Missile &missile, const AddMissileParameter &parameter);
 void AddFlash(Missile &missile, const AddMissileParameter &parameter);
 void AddFlash2(Missile &missile, const AddMissileParameter &parameter);
 void AddManashield(Missile &missile, const AddMissileParameter &parameter);
-void AddFiremove(Missile &missile, const AddMissileParameter &parameter);
+void AddFlamewave(Missile &missile, const AddMissileParameter &parameter);
 
 /**
  * var1: Animation
@@ -269,30 +269,30 @@ void AddGuardian(Missile &missile, const AddMissileParameter &parameter);
  * var1: X coordinate of the destination
  * var2: Y coordinate of the destination
  */
-void AddChain(Missile &missile, const AddMissileParameter &parameter);
+void AddChainlightning(Missile &missile, const AddMissileParameter &parameter);
 void AddRhino(Missile &missile, const AddMissileParameter &parameter);
 
 /**
  * var1: X coordinate of the missile-light
  * var2: Y coordinate of the missile-light
  */
-void AddFlare(Missile &missile, const AddMissileParameter &parameter);
+void AddBloodstar(Missile &missile, const AddMissileParameter &parameter);
 
 /**
  * var1: X coordinate of the missile-light
  * var2: Y coordinate of the missile-light
  */
 void AddAcid(Missile &missile, const AddMissileParameter &parameter);
-void AddAcidpud(Missile &missile, const AddMissileParameter &parameter);
+void AddAcidpuddle(Missile &missile, const AddMissileParameter &parameter);
 
 /**
  * var1: mmode of the monster
  * var2: mnum of the monster
  */
-void AddStone(Missile &missile, const AddMissileParameter &parameter);
+void AddStonecurse(Missile &missile, const AddMissileParameter &parameter);
 void AddGolem(Missile &missile, const AddMissileParameter &parameter);
-void AddBoom(Missile &missile, const AddMissileParameter &parameter);
-void AddHeal(Missile &missile, const AddMissileParameter &parameter);
+void AddApocalypse(Missile &missile, const AddMissileParameter &parameter);
+void AddHealing(Missile &missile, const AddMissileParameter &parameter);
 void AddHealOther(Missile &missile, const AddMissileParameter &parameter);
 
 /**
@@ -301,7 +301,7 @@ void AddHealOther(Missile &missile, const AddMissileParameter &parameter);
  * var4: X coordinate of the destination
  * var5: Y coordinate of the destination
  */
-void AddElement(Missile &missile, const AddMissileParameter &parameter);
+void AddElemental(Missile &missile, const AddMissileParameter &parameter);
 void AddIdentify(Missile &missile, const AddMissileParameter &parameter);
 
 /**
@@ -313,83 +313,83 @@ void AddIdentify(Missile &missile, const AddMissileParameter &parameter);
  * var6: Y coordinate of the second wave
  */
 void AddFirewallC(Missile &missile, const AddMissileParameter &parameter);
-void AddInfra(Missile &missile, const AddMissileParameter &parameter);
+void AddInfravision(Missile &missile, const AddMissileParameter &parameter);
 
 /**
  * var1: X coordinate of the destination
  * var2: Y coordinate of the destination
  */
-void AddWave(Missile &missile, const AddMissileParameter &parameter);
-void AddNova(Missile &missile, const AddMissileParameter &parameter);
-void AddBlodboil(Missile &missile, const AddMissileParameter &parameter);
-void AddRepair(Missile &missile, const AddMissileParameter &parameter);
-void AddRecharge(Missile &missile, const AddMissileParameter &parameter);
-void AddDisarm(Missile &missile, const AddMissileParameter &parameter);
-void AddApoca(Missile &missile, const AddMissileParameter &parameter);
-void AddFlame(Missile &missile, const AddMissileParameter &parameter);
-void AddFlamec(Missile &missile, const AddMissileParameter &parameter);
+void AddFlamewaveC(Missile &missile, const AddMissileParameter &parameter);
+void AddImmolationC(Missile &missile, const AddMissileParameter &parameter);
+void AddRage(Missile &missile, const AddMissileParameter &parameter);
+void AddItemRepair(Missile &missile, const AddMissileParameter &parameter);
+void AddStaffRecharge(Missile &missile, const AddMissileParameter &parameter);
+void AddDisarmTrap(Missile &missile, const AddMissileParameter &parameter);
+void AddApocalypseC(Missile &missile, const AddMissileParameter &parameter);
+void AddInferno(Missile &missile, const AddMissileParameter &parameter);
+void AddInfernoC(Missile &missile, const AddMissileParameter &parameter);
 
 /**
  * var1: Light strength
  * var2: Base direction
  */
-void AddCbolt(Missile &missile, const AddMissileParameter &parameter);
-void AddHbolt(Missile &missile, const AddMissileParameter &parameter);
+void AddChargedbolt(Missile &missile, const AddMissileParameter &parameter);
+void AddHolybolt(Missile &missile, const AddMissileParameter &parameter);
 void AddResurrect(Missile &missile, const AddMissileParameter &parameter);
 void AddResurrectBeam(Missile &missile, const AddMissileParameter &parameter);
 void AddTelekinesis(Missile &missile, const AddMissileParameter &parameter);
 void AddBoneSpirit(Missile &missile, const AddMissileParameter &parameter);
 void AddRportal(Missile &missile, const AddMissileParameter &parameter);
-void AddDiabApoca(Missile &missile, const AddMissileParameter &parameter);
+void AddDApocalypseC(Missile &missile, const AddMissileParameter &parameter);
 Missile *AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl, Missile *pParent = nullptr);
 void MI_Golem(Missile &missile);
 void MI_Manashield(Missile &missile);
-void MI_LArrow(Missile &missile);
+void MI_Elementalarrow(Missile &missile);
 void MI_Arrow(Missile &missile);
 void MI_Firebolt(Missile &missile);
-void MI_Lightball(Missile &missilei);
-void MI_Acidpud(Missile &missile);
+void MI_Nova(Missile &missilei);
+void MI_Acidpuddle(Missile &missile);
 void MI_Firewall(Missile &missile);
 void MI_Fireball(Missile &missile);
 void MI_HorkSpawn(Missile &missile);
 void MI_Rune(Missile &missile);
-void MI_LightningWall(Missile &missile);
+void MI_Lightningwall(Missile &missile);
 void MI_HiveExplode(Missile &missile);
-void MI_LightningArrow(Missile &missile);
-void MI_FireRing(Missile &missile);
+void MI_BowLightning(Missile &missile);
+void MI_Ringoffire(Missile &missile);
 void MI_Search(Missile &missile);
-void MI_LightningWallC(Missile &missile);
-void MI_FireNova(Missile &missile);
+void MI_LightningwallC(Missile &missile);
+void MI_ImmolationC(Missile &missile);
 void MI_SpecArrow(Missile &missile);
-void MI_Lightctrl(Missile &missile);
+void MI_LightningC(Missile &missile);
 void MI_Lightning(Missile &missile);
-void MI_Town(Missile &missile);
+void MI_Townportal(Missile &missile);
 void MI_Flash(Missile &missile);
 void MI_Flash2(Missile &missile);
-void MI_Firemove(Missile &missile);
+void MI_Flamewave(Missile &missile);
 void MI_Guardian(Missile &missile);
-void MI_Chain(Missile &missile);
+void MI_Chainlightning(Missile &missile);
 void MI_Weapexp(Missile &missile);
 void MI_Misexp(Missile &missile);
-void MI_Acidsplat(Missile &missile);
+void MI_Acidexp(Missile &missile);
 void MI_Teleport(Missile &missile);
-void MI_Stone(Missile &missile);
-void MI_Boom(Missile &missile);
+void MI_Stonecurse(Missile &missile);
+void MI_Apocalypse(Missile &missile);
 void MI_Rhino(Missile &missile);
 void MI_FirewallC(Missile &missile);
-void MI_Infra(Missile &missile);
-void MI_Apoca(Missile &missile);
-void MI_Wave(Missile &missile);
-void MI_Nova(Missile &missile);
-void MI_Blodboil(Missile &missile);
-void MI_Flame(Missile &missile);
-void MI_Flamec(Missile &missile);
-void MI_Cbolt(Missile &missile);
-void MI_Hbolt(Missile &missile);
-void MI_Element(Missile &missile);
+void MI_Infravision(Missile &missile);
+void MI_ApocalypseC(Missile &missile);
+void MI_FlamewaveC(Missile &missile);
+void MI_Immolation1(Missile &missile);
+void MI_Rage(Missile &missile);
+void MI_Inferno(Missile &missile);
+void MI_InfernoC(Missile &missile);
+void MI_Chargedbolt(Missile &missile);
+void MI_Holybolt(Missile &missile);
+void MI_Elemental(Missile &missile);
 void MI_Bonespirit(Missile &missile);
 void MI_ResurrectBeam(Missile &missile);
-void MI_Rportal(Missile &missile);
+void MI_Redportal(Missile &missile);
 void ProcessMissiles();
 void missiles_process_charge();
 void RedoMissileFlags();

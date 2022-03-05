@@ -110,7 +110,7 @@ void PlacePlayer(int pnum)
 
 bool IsWallSpell(spell_id spl)
 {
-	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;
+	return spl == SPL_FIREWALL || spl == SPL_LIGHTNINGWALL;
 }
 
 int GetManaAmount(Player &player, spell_id sn)
@@ -133,8 +133,8 @@ int GetManaAmount(Player &player, spell_id sn)
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
 	}
 
-	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj);
+	if (sn == SPL_HEALING || sn == SPL_HEALOTHER) {
+		ma = (spelldata[SPL_HEALING].sManaCost + 2 * player._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
 		ma = ((BYTE)player._pMaxManaBase - adj);
 	} else {
@@ -234,13 +234,13 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 		AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 	}
 
-	if (spl == SPL_TOWN) {
-		UseMana(id, SPL_TOWN);
-	} else if (spl == SPL_CBOLT) {
-		UseMana(id, SPL_CBOLT);
+	if (spl == SPL_TOWNPORTAL) {
+		UseMana(id, SPL_TOWNPORTAL);
+	} else if (spl == SPL_CHARGEDBOLT) {
+		UseMana(id, SPL_CHARGEDBOLT);
 
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
-			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
+			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CHARGEDBOLT, TARGET_MONSTERS, id, 0, spllvl);
 		}
 	}
 }
@@ -337,11 +337,11 @@ int GetSpellBookLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
-		case SPL_STONE:
+		case SPL_STONECURSE:
 		case SPL_GUARDIAN:
 		case SPL_GOLEM:
-		case SPL_ELEMENT:
-		case SPL_FLARE:
+		case SPL_ELEMENTAL:
+		case SPL_BLOODSTAR:
 		case SPL_BONESPIRIT:
 			return -1;
 		default:
@@ -352,7 +352,7 @@ int GetSpellBookLevel(spell_id s)
 	if (!gbIsHellfire) {
 		switch (s) {
 		case SPL_NOVA:
-		case SPL_APOCA:
+		case SPL_APOCALYPSE:
 			return -1;
 		default:
 			if (s > SPL_LASTDIABLO)
@@ -368,12 +368,12 @@ int GetSpellStaffLevel(spell_id s)
 {
 	if (gbIsSpawn) {
 		switch (s) {
-		case SPL_STONE:
+		case SPL_STONECURSE:
 		case SPL_GUARDIAN:
 		case SPL_GOLEM:
-		case SPL_APOCA:
-		case SPL_ELEMENT:
-		case SPL_FLARE:
+		case SPL_APOCALYPSE:
+		case SPL_ELEMENTAL:
+		case SPL_BLOODSTAR:
 		case SPL_BONESPIRIT:
 			return -1;
 		default:

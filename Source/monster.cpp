@@ -1108,7 +1108,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 		CreateMagicWeapon(monster.position.tile, ItemType::Sword, ICURS_GREAT_SWORD, false, true);
 		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ICURS_WAR_STAFF, false, true);
 		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_WAR_BOW, false, true);
-		CreateSpellBook(monster.position.tile, SPL_APOCA, false, true);
+		CreateSpellBook(monster.position.tile, SPL_APOCALYPSE, false, true);
 	} else if (monster.MType->mtype != MT_GOLEM) {
 		SpawnItem(monster, monster.position.tile, sendmsg);
 	}
@@ -1221,7 +1221,7 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	CheckQuestKill(monster, sendmsg);
 	M_FallenFear(monster.position.tile);
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
-		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
+		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUDDLE, TARGET_PLAYERS, i, monster._mint + 1, 0);
 }
 
 void StartDeathFromMonster(int i, int mid)
@@ -1266,7 +1266,7 @@ void StartDeathFromMonster(int i, int mid)
 	CheckQuestKill(monster, true);
 	M_FallenFear(monster.position.tile);
 	if (monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID)
-		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster._mint + 1, 0);
+		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUDDLE, TARGET_PLAYERS, mid, monster._mint + 1, 0);
 
 	if (gbIsHellfire)
 		M_StartStand(killer, killer._mdir);
@@ -1583,7 +1583,7 @@ bool MonaterRangedAttack(int i)
 		const auto &missileType = static_cast<missile_id>(monster._mVar1);
 		if (missileType != MIS_NULL) {
 			int multimissiles = 1;
-			if (missileType == MIS_CBOLT)
+			if (missileType == MIS_CHARGEDBOLT)
 				multimissiles = 3;
 			for (int mi = 0; mi < multimissiles; mi++) {
 				AddMissile(
@@ -2008,7 +2008,7 @@ bool IsTileSafe(const Monster &monster, Point position)
 			if (fearsFire && missile._mitype == MIS_FIREWALL) {
 				return false;
 			}
-			if (fearsLightning && missile._mitype == MIS_LIGHTWALL) {
+			if (fearsLightning && missile._mitype == MIS_LIGHTNINGWALL) {
 				return false;
 			}
 		}
@@ -2847,7 +2847,7 @@ void ButcherAi(int i)
 
 void SuccubusAi(int i)
 {
-	AiRanged(i, MIS_FLARE, false);
+	AiRanged(i, MIS_BLOODSTAR, false);
 }
 
 void SneakAi(int i)
@@ -2913,7 +2913,7 @@ void SneakAi(int i)
 
 void StormAi(int i)
 {
-	AiRangedAvoidance(i, MIS_LIGHTCTRL2, true, 4, 0);
+	AiRangedAvoidance(i, MIS_MLIGHTNINGC, true, 4, 0);
 }
 
 void GharbadAi(int i)
@@ -3113,7 +3113,7 @@ void CounselorAi(int i)
 	} else if (monster._mgoal == MGOAL_NORMAL) {
 		if (abs(mx) >= 2 || abs(my) >= 2) {
 			if (v < 5 * (monster._mint + 10) && LineClearMissile(monster.position.tile, { fx, fy })) {
-				constexpr missile_id MissileTypes[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
+				constexpr missile_id MissileTypes[4] = { MIS_FIREBOLT, MIS_CHARGEDBOLT, MIS_LIGHTNINGC, MIS_FIREBALL };
 				StartRangedAttack(monster, MissileTypes[monster._mint], monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1));
 			} else if (GenerateRnd(100) < 30) {
 				monster._mgoal = MGOAL_MOVE;
@@ -3216,7 +3216,7 @@ void MegaAi(int i)
 	}
 	if (monster._mgoal == MGOAL_NORMAL) {
 		if (((dist >= 3 && v < 5 * (monster._mint + 2)) || v < 5 * (monster._mint + 1) || monster._mgoalvar3 == 4) && LineClearMissile(monster.position.tile, { fx, fy })) {
-			StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
+			StartRangedSpecialAttack(monster, MIS_INFERNOC, 0);
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 2 * (5 * monster._mint + 25)
@@ -3231,7 +3231,7 @@ void MegaAi(int i)
 				if (GenerateRnd(2) != 0)
 					StartAttack(monster);
 				else
-					StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
+					StartRangedSpecialAttack(monster, MIS_INFERNOC, 0);
 			}
 		}
 		monster._mgoalvar3 = 1;
@@ -3243,7 +3243,7 @@ void MegaAi(int i)
 
 void DiabloAi(int i)
 {
-	AiRangedAvoidance(i, MIS_DIABAPOCA, false, 40, 0);
+	AiRangedAvoidance(i, MIS_DAPOCALYPSEC, false, 40, 0);
 }
 
 void LazarusAi(int i)

@@ -205,7 +205,7 @@ bool HasRangedSpell()
 	int spl = Players[MyPlayerId]._pRSpell;
 
 	return spl != SPL_INVALID
-	    && spl != SPL_TOWN
+	    && spl != SPL_TOWNPORTAL
 	    && spl != SPL_TELEPORT
 	    && spelldata[spl].sTargeted
 	    && !spelldata[spl].sTownSpell;
@@ -406,7 +406,7 @@ void FindTrigger()
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
+		if (missile._mitype == MIS_TOWNPORTAL || missile._mitype == MIS_REDPORTAL) {
 			const int newDistance = GetDistance(missile.position.tile, 2);
 			if (newDistance == 0)
 				continue;
@@ -1477,7 +1477,7 @@ void UseBeltItem(int type)
 		auto &myPlayer = Players[MyPlayerId];
 		const int id = AllItemsList[myPlayer.SpdList[i].IDidx].iMiscId;
 		const int spellId = AllItemsList[myPlayer.SpdList[i].IDidx].iSpell;
-		if ((type == BLT_HEALING && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEAL)))
+		if ((type == BLT_HEALING && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEALING)))
 		    || (type == BLT_MANA && (id == IMISC_MANA || id == IMISC_FULLMANA))
 		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
 			if (!myPlayer.SpdList[i].isEmpty()) {
@@ -1550,7 +1550,7 @@ void PerformPrimaryAction()
 bool SpellHasActorTarget()
 {
 	spell_id spl = Players[MyPlayerId]._pRSpell;
-	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
+	if (spl == SPL_TOWNPORTAL || spl == SPL_TELEPORT)
 		return false;
 
 	if (IsWallSpell(spl) && pcursmonst != -1) {
@@ -1646,7 +1646,7 @@ void PerformSpellAction()
 	const auto &myPlayer = Players[MyPlayerId];
 	int spl = myPlayer._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
-	    || (pcursobj == -1 && spl == SPL_DISARM)) {
+	    || (pcursobj == -1 && spl == SPL_DISARMTRAP)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}

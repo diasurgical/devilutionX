@@ -372,7 +372,7 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 				return GAMEPAD_HEALING;
 			if (id == IMISC_FULLHEAL)
 				return GAMEPAD_FULL_HEALING;
-			if (id == IMISC_SCROLL && spellId == SPL_HEAL)
+			if (id == IMISC_SCROLL && spellId == SPL_HEALING)
 				return GAMEPAD_SCROLL_OF_HEALING;
 		}
 

@@ -59,7 +59,7 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 	EXPECT_FALSE(UseScroll());
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEAL);
+	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEALING);
 	EXPECT_FALSE(UseScroll());
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
@@ -86,7 +86,7 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 	EXPECT_FALSE(UseScroll());
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEAL);
+	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEALING);
 	EXPECT_FALSE(UseScroll());
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);

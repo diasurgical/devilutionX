@@ -30,12 +30,14 @@ std::optional<CelSprite> pSpellBkCel;
 
 /** Maps from spellbook page number and position to spell_id. */
 spell_id SpellPages[6][7] = {
-	{ SPL_NULL, SPL_FIREBOLT, SPL_CBOLT, SPL_HBOLT, SPL_HEAL, SPL_HEALOTHER, SPL_FLAME },
-	{ SPL_RESURRECT, SPL_FIREWALL, SPL_TELEKINESIS, SPL_LIGHTNING, SPL_TOWN, SPL_FLASH, SPL_STONE },
-	{ SPL_RNDTELEPORT, SPL_MANASHIELD, SPL_ELEMENT, SPL_FIREBALL, SPL_WAVE, SPL_CHAIN, SPL_GUARDIAN },
-	{ SPL_NOVA, SPL_GOLEM, SPL_TELEPORT, SPL_APOCA, SPL_BONESPIRIT, SPL_FLARE, SPL_ETHEREALIZE },
-	{ SPL_LIGHTWALL, SPL_IMMOLAT, SPL_WARP, SPL_REFLECT, SPL_BERSERK, SPL_FIRERING, SPL_SEARCH },
-	{ SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID, SPL_INVALID }
+	// clang-format off
+	{ SPL_NULL,          SPL_FIREBOLT,   SPL_CHARGEDBOLT, SPL_HOLYBOLT,   SPL_HEALING,    SPL_HEALOTHER,      SPL_INFERNO },
+	{ SPL_RESURRECT,     SPL_FIREWALL,   SPL_TELEKINESIS, SPL_LIGHTNING,  SPL_TOWNPORTAL, SPL_FLASH,          SPL_STONECURSE },
+	{ SPL_PHASING,       SPL_MANASHIELD, SPL_ELEMENTAL,   SPL_FIREBALL,   SPL_FLAMEWAVE,  SPL_CHAINLIGHTNING, SPL_GUARDIAN },
+	{ SPL_NOVA,          SPL_GOLEM,      SPL_TELEPORT,    SPL_APOCALYPSE, SPL_BONESPIRIT, SPL_BLOODSTAR,      SPL_NULL },
+	{ SPL_LIGHTNINGWALL, SPL_IMMOLATION, SPL_WARP,        SPL_REFLECT,    SPL_BERSERK,    SPL_RINGOFFIRE,     SPL_SEARCH },
+	{ SPL_INVALID,       SPL_INVALID,    SPL_INVALID,     SPL_INVALID,    SPL_INVALID,    SPL_INVALID,        SPL_INVALID }
+	// clang-format on
 };
 
 constexpr int SpellBookDescriptionWidth = 250;
@@ -94,17 +96,17 @@ void InitSpellBook()
 
 	Player &player = Players[MyPlayerId];
 	if (player._pClass == HeroClass::Warrior) {
-		SpellPages[0][0] = SPL_REPAIR;
+		SpellPages[0][0] = SPL_ITEMREPAIR;
 	} else if (player._pClass == HeroClass::Rogue) {
-		SpellPages[0][0] = SPL_DISARM;
+		SpellPages[0][0] = SPL_DISARMTRAP;
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		SpellPages[0][0] = SPL_RECHARGE;
+		SpellPages[0][0] = SPL_STAFFRECHARGE;
 	} else if (player._pClass == HeroClass::Monk) {
 		SpellPages[0][0] = SPL_SEARCH;
 	} else if (player._pClass == HeroClass::Bard) {
 		SpellPages[0][0] = SPL_IDENTIFY;
 	} else if (player._pClass == HeroClass::Barbarian) {
-		SpellPages[0][0] = SPL_BLODBOIL;
+		SpellPages[0][0] = SPL_RAGE;
 	}
 }
 
@@ -170,7 +172,7 @@ void DrawSpellBook(const Surface &out)
 						int max;
 						GetDamageAmt(sn, &min, &max);
 						if (min != -1) {
-							if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+							if (sn == SPL_HEALING || sn == SPL_HEALOTHER) {
 								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Heals: {:d} - {:d}"), min, max), UiFlags::AlignRight);
 							} else {
 								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Damage: {:d} - {:d}"), min, max), UiFlags::AlignRight);

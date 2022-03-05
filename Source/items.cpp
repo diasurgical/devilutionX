@@ -654,7 +654,7 @@ void GetBookSpell(Item &item, int lvl)
 		}
 		if (!gbIsMultiplayer) {
 			if (s == SPL_HEALOTHER)
-				s = SPL_FLARE;
+				s = SPL_BLOODSTAR;
 		}
 		if (s == maxSpells)
 			s = 1;
@@ -1271,7 +1271,7 @@ void GetStaffSpell(Item &item, int lvl, bool onlygood)
 		if (!gbIsMultiplayer && s == SPL_RESURRECT)
 			s = SPL_TELEKINESIS;
 		if (!gbIsMultiplayer && s == SPL_HEALOTHER)
-			s = SPL_FLARE;
+			s = SPL_BLOODSTAR;
 		if (s == maxSpells)
 			s = SPL_FIREBOLT;
 	}
@@ -2241,7 +2241,7 @@ bool WitchItemOk(int i)
 		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
 		return false;
-	if (AllItemsList[i].iSpell == SPL_TOWN)
+	if (AllItemsList[i].iSpell == SPL_TOWNPORTAL)
 		return false;
 	if (AllItemsList[i].iMiscId == IMISC_FULLHEAL)
 		return false;
@@ -2273,7 +2273,7 @@ bool HealerItemOk(int i)
 		return false;
 
 	if (AllItemsList[i].iMiscId == IMISC_SCROLL)
-		return AllItemsList[i].iSpell == SPL_HEAL;
+		return AllItemsList[i].iSpell == SPL_HEALING;
 	if (AllItemsList[i].iMiscId == IMISC_SCROLLT)
 		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 

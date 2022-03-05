@@ -1708,7 +1708,7 @@ DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 			} else if (currlevel == Players[pnum].plrlevel) {
 				bool addPortal = true;
 				for (auto &missile : Missiles) {
-					if (missile._mitype == MIS_TOWN && missile._misource == pnum) {
+					if (missile._mitype == MIS_TOWNPORTAL && missile._misource == pnum) {
 						addPortal = false;
 						break;
 					}
