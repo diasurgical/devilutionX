@@ -147,16 +147,12 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
-enum spell_flag : uint8_t {
+enum class SpellFlag : uint8_t {
 	// clang-format off
-	SF_ETHEREALIZE      = 1 << 0,
-	SF_RAGE_ON          = 1 << 1,
-	SF_RAGE_COOLDOWN    = 1 << 2,
-	SF_NOTHING3         = 1 << 3,
-	SF_NOTHING4         = 1 << 4,
-	SF_NOTHING5         = 1 << 5,
-	SF_NOTHING6         = 1 << 6,
-	SF_NOTHING7         = 1 << 7,
+	Etherealize  = 1 << 0,
+	RageActive   = 1 << 1,
+	RageCooldown = 1 << 2,
+	// bits 3-7 are unused
 	// clang-format on
 };
 
