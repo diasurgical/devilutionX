@@ -1047,7 +1047,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		return false;
 	}
 
-	if ((target._pSpellFlags & SF_ETHEREALIZE) != 0) {
+	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize)) {
 		return false;
 	}
 

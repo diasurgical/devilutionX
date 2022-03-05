@@ -155,6 +155,7 @@ enum class SpellFlag : uint8_t {
 	// bits 3-7 are unused
 	// clang-format on
 };
+use_enum_as_flags(SpellFlag);
 
 /** Maps from armor animation to letter used in graphic files. */
 constexpr std::array<char, 4> ArmourChar = {
@@ -247,7 +248,7 @@ struct Player {
 	uint64_t _pMemSpells;  // Bitmask of learned spells
 	uint64_t _pAblSpells;  // Bitmask of abilities
 	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
-	uint8_t _pSpellFlags;
+	SpellFlag _pSpellFlags;
 	spell_id _pSplHotKey[4];
 	spell_type _pSplTHotKey[4];
 	bool _pBlockFlag;

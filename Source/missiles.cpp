@@ -325,7 +325,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		return false;
 	}
 
-	if ((target._pSpellFlags & SF_ETHEREALIZE) != 0 && MissilesData[mtype].mType == 0) {
+	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize) != 0 && MissilesData[mtype].mType == 0) {
 		return false;
 	}
 
@@ -1044,7 +1044,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		return false;
 	}
 
-	if ((player._pSpellFlags & SF_ETHEREALIZE) != 0 && MissilesData[mtype].mType == 0) {
+	if (HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize) && MissilesData[mtype].mType == 0) {
 		return false;
 	}
 
@@ -1178,7 +1178,7 @@ void InitMissiles()
 	auto &myPlayer = Players[MyPlayerId];
 
 	AutoMapShowItems = false;
-	myPlayer._pSpellFlags &= ~SF_ETHEREALIZE;
+	myPlayer._pSpellFlags &= ~SpellFlag::Etherealize;
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_INFRA) {
@@ -1189,9 +1189,9 @@ void InitMissiles()
 		}
 	}
 
-	if ((myPlayer._pSpellFlags & SF_RAGE_ON) != 0 || (myPlayer._pSpellFlags & SF_RAGE_COOLDOWN) != 0) {
-		myPlayer._pSpellFlags &= ~SF_RAGE_ON;
-		myPlayer._pSpellFlags &= ~SF_RAGE_COOLDOWN;
+	if (HasAnyOf(myPlayer._pSpellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown)) {
+		myPlayer._pSpellFlags &= ~SpellFlag::RageActive;
+		myPlayer._pSpellFlags &= ~SpellFlag::RageCooldown;
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_BLODBOIL) {
 				if (missile._misource == MyPlayerId) {
@@ -2475,8 +2475,7 @@ void AddBlodboil(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	auto &player = Players[missile._misource];
 
-	uint8_t bloodBoilFlags = SF_RAGE_ON | SF_RAGE_COOLDOWN;
-	if ((player._pSpellFlags & bloodBoilFlags) != 0 || player._pHitPoints <= player._pLevel << 6) {
+	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown) || player._pHitPoints <= player._pLevel << 6) {
 		missile._miDelFlag = true;
 		return;
 	}
@@ -2484,7 +2483,7 @@ void AddBlodboil(Missile &missile, const AddMissileParameter & /*parameter*/)
 	UseMana(missile._misource, SPL_BLODBOIL);
 	int tmp = 3 * player._pLevel;
 	tmp <<= 7;
-	player._pSpellFlags |= SF_RAGE_ON;
+	player._pSpellFlags |= SpellFlag::RageActive;
 	missile.var2 = tmp;
 	int lvl = player._pLevel * 2;
 	missile._mirange = lvl + 10 * missile._mispllvl + 245;
@@ -3847,13 +3846,13 @@ void MI_Blodboil(Missile &missile)
 
 	int hpdif = player._pMaxHP - player._pHitPoints;
 
-	if ((player._pSpellFlags & SF_RAGE_ON) != 0) {
-		player._pSpellFlags &= ~SF_RAGE_ON;
-		player._pSpellFlags |= SF_RAGE_COOLDOWN;
+	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive)) {
+		player._pSpellFlags &= ~SpellFlag::RageActive;
+		player._pSpellFlags |= SpellFlag::RageCooldown;
 		int lvl = player._pLevel * 2;
 		missile._mirange = lvl + 10 * missile._mispllvl + 245;
 	} else {
-		player._pSpellFlags &= ~SF_RAGE_COOLDOWN;
+		player._pSpellFlags &= ~SpellFlag::RageCooldown;
 		missile._miDelFlag = true;
 		hpdif += missile.var2;
 	}

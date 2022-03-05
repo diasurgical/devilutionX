@@ -1340,7 +1340,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 
 	auto &player = Players[pnum];
 
-	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || (player._pSpellFlags & SF_ETHEREALIZE) != 0)
+	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
 		return;
 	if (monster.position.tile.WalkingDistance(player.position.tile) >= 2)
 		return;
