@@ -434,7 +434,7 @@ const char MonstAvailTbl[] = {
 /** Contains the data related to each unique monster ID. */
 const UniqueMonsterData UniqueMonstersData[] = {
 	// clang-format off
-	// mtype,       mName,                          mTrnName,    mlevel, mmaxhp, mAi,      mint, mMinDamage, mMaxDamage, mMagicRes,                                                    monsterPack, customHitpoints, customArmorClass, mtalkmsg
+	// mtype,       mName,                                     mTrnName,   mlevel, mmaxhp, mAi,       mint,  mMinDamage, mMaxDamage, mMagicRes,                                                   monsterPack, customHitpoints, customArmorClass, mtalkmsg
 	// TRANSLATORS: Unique Monster Block start
 	{  MT_NGOATMC,  P_("monster", "Gharbad the Weak"),         "BSDB",        4,    120, AI_GARBUD,   3,          8,         16,                              IMMUNE_LIGHTNING | IMMUNE_NULL_40,  UniqueMonsterPack::None,        0,        0, TEXT_GARBUD1   },
 	{  MT_SKING,    P_("monster", "Skeleton King"),            "GENRL",       0,    240, AI_SKELKING, 3,          6,         16, IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40,  UniqueMonsterPack::Independent, 0,        0, TEXT_NONE      },
@@ -521,11 +521,7 @@ const UniqueMonsterData UniqueMonstersData[] = {
 	{  MT_RBLACK,   P_("monster", "Sir Gorash"),               "GENERAL",    16,   1050, AI_SKELSD,   1,         20,         60,                                                 IMMUNE_NULL_40,  UniqueMonsterPack::None,        0,        0, TEXT_NONE      },
 	{  MT_CABALIST, P_("monster", "The Vizier"),               "GENERAL",    15,    850, AI_COUNSLR,  2,         25,         40,                IMMUNE_FIRE                                    ,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
 	{  MT_HLSPWN,   P_("monster", "Bloodlust"),                "GENERAL",    15,    825, AI_SUCC,     1,         20,         55, IMMUNE_MAGIC |               IMMUNE_LIGHTNING | IMMUNE_NULL_40,  UniqueMonsterPack::None,        0,        0, TEXT_NONE      },
-	{  MT_HLSPWN,   P_("monster", "Webwidow"),                 "GENERAL",    16,    774, AI_SUCC,     1,         20,         50, IMMUNE_MAGIC | IMMUNE_FIRE |                    IMMUNE_NULL_40,  UniqueMonsterPack::None,        0,        0, TEXT_NONE      },
-	{  MT_SOLBRNR,  P_("monster", "Fleshdancer"),              "GENERAL",    16,    999, AI_SUCC,     3,         30,         50, IMMUNE_MAGIC | RESIST_FIRE |                    IMMUNE_NULL_40,  UniqueMonsterPack::None,        0,        0, TEXT_NONE      },
-	{  MT_OBLORD,   P_("monster", "Grimspike"),                "GENERAL",    19,    534, AI_SNEAK,    1,         25,         40, IMMUNE_MAGIC | RESIST_FIRE |                    IMMUNE_NULL_40,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
 // TRANSLATORS: Unique Monster Block end
-	{  MT_STORML,   P_("monster", "Doomlock"),                 "GENERAL",    28,    534, AI_SNEAK,    1,         35,         55, IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40,  UniqueMonsterPack::Leashed,     0,        0, TEXT_NONE      },
 	{  MT_INVALID,  nullptr,                        nullptr,       0,      0, AI_INVALID,  0,          0,          0, 0                                                             ,  UniqueMonsterPack::None,        0,        0, TEXT_NONE      },
 	// clang-format on
 };
