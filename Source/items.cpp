@@ -1131,7 +1131,7 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 	const char *baseName = _(AllItemsList[item.IDidx].iName);
 	const char *shortName = _(AllItemsList[item.IDidx].iSName);
 	const char *spellName = pgettext("spell", spelldata[bs].sNameText);
-	const char *normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
+	const char *normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of FireWall */ "{0} of {1}");
 
 	CopyUtf8(item._iName, fmt::format(normalFmt, baseName, spellName), sizeof(item._iName));
 	if (!StringInPanel(item._iName)) {
@@ -1139,7 +1139,7 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 	}
 
 	if (preidx != -1) {
-		const char *magicFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}");
+		const char *magicFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of FireWall */ "{0} {1} of {2}");
 		const char *prefixName = _(ItemPrefixes[preidx].PLName);
 		CopyUtf8(item._iIName, fmt::format(magicFmt, prefixName, baseName, spellName), sizeof(item._iIName));
 		if (!StringInPanel(item._iIName)) {

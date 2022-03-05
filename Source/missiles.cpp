@@ -1517,7 +1517,7 @@ void AddWarp(Missile &missile, const AddMissileParameter & /*parameter*/)
 		UseMana(missile._misource, SPL_WARP);
 }
 
-void AddLightningwall(Missile &missile, const AddMissileParameter &parameter)
+void AddLightningWall(Missile &missile, const AddMissileParameter &parameter)
 {
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	missile._miAnimFrame = GenerateRnd(8) + 1;
@@ -1620,7 +1620,7 @@ void AddMagi(Missile &missile, const AddMissileParameter & /*parameter*/)
 	drawmanaflag = true;
 }
 
-void AddRingoffire(Missile &missile, const AddMissileParameter & /*parameter*/)
+void AddRingOfFire(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	if (missile._micaster == TARGET_MONSTERS)
 		UseMana(missile._misource, SPL_RINGOFFIRE);
@@ -1652,7 +1652,7 @@ void AddSearch(Missile &missile, const AddMissileParameter & /*parameter*/)
 	}
 }
 
-void AddBowChargedbolt(Missile &missile, const AddMissileParameter &parameter)
+void AddBowChargedBolt(Missile &missile, const AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
 	missile._mirnd = GenerateRnd(15) + 1;
@@ -1671,7 +1671,7 @@ void AddBowChargedbolt(Missile &missile, const AddMissileParameter &parameter)
 	missile._mirange = 256;
 }
 
-void AddElementalarrow(Missile &missile, const AddMissileParameter &parameter)
+void AddElementArrow(Missile &missile, const AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
 	if (missile.position.start == dst) {
@@ -1823,7 +1823,7 @@ void AddFirebolt(Missile &missile, const AddMissileParameter &parameter)
 	missile._mlid = AddLight(missile.position.start, 8);
 }
 
-void AddMagmaball(Missile &missile, const AddMissileParameter &parameter)
+void AddMagmaBall(Missile &missile, const AddMissileParameter &parameter)
 {
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	missile.position.traveled.deltaX += 3 * missile.position.velocity.deltaX;
@@ -1866,7 +1866,7 @@ void AddNova(Missile &missile, const AddMissileParameter &parameter)
 	missile.var2 = position.y;
 }
 
-void AddFirewall(Missile &missile, const AddMissileParameter &parameter)
+void AddFireWall(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile._midam = GenerateRndSum(10, 2) + 2;
 	missile._midam += missile._misource >= 0 ? Players[missile._misource]._pLevel : currlevel; // BUGFIX: missing parenthesis around ternary (fixed)
@@ -1965,7 +1965,7 @@ void AddMissileHit(Missile &missile, const AddMissileParameter &parameter)
 	missile._mirange = missile._miAnimLen;
 }
 
-void AddWeapexp(Missile &missile, const AddMissileParameter &parameter)
+void AddElementMeleeHit(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile.var2 = parameter.dst.x;
 	if (parameter.dst.x == 1)
@@ -1975,7 +1975,7 @@ void AddWeapexp(Missile &missile, const AddMissileParameter &parameter)
 	missile._mirange = missile._miAnimLen - 1;
 }
 
-void AddTownportal(Missile &missile, const AddMissileParameter &parameter)
+void AddTownPortal(Missile &missile, const AddMissileParameter &parameter)
 {
 	if (currlevel == 0) {
 		missile.position.tile = parameter.dst;
@@ -2062,7 +2062,7 @@ void AddFlash2(Missile &missile, const AddMissileParameter & /*parameter*/)
 	missile._mirange = 19;
 }
 
-void AddManashield(Missile &missile, const AddMissileParameter & /*parameter*/)
+void AddManaShield(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 
@@ -2082,7 +2082,7 @@ void AddManashield(Missile &missile, const AddMissileParameter & /*parameter*/)
 		UseMana(missile._misource, SPL_MANASHIELD);
 }
 
-void AddFlamewave(Missile &missile, const AddMissileParameter &parameter)
+void AddFlameWave(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile._midam = GenerateRnd(10) + Players[missile._misource]._pLevel + 1;
 	UpdateMissileVelocity(missile, parameter.dst, 16);
@@ -2146,7 +2146,7 @@ void AddGuardian(Missile &missile, const AddMissileParameter &parameter)
 	missile.var3 = 1;
 }
 
-void AddChainlightning(Missile &missile, const AddMissileParameter &parameter)
+void AddChainLightning(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
@@ -2197,7 +2197,7 @@ void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 	PutMissile(missile);
 }
 
-void AddBloodstar(Missile &missile, const AddMissileParameter &parameter)
+void AddBloodStar(Missile &missile, const AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
 	if (missile.position.start == dst) {
@@ -2242,7 +2242,7 @@ void AddAcid(Missile &missile, const AddMissileParameter &parameter)
 	PutMissile(missile);
 }
 
-void AddAcidpuddle(Missile &missile, const AddMissileParameter & /*parameter*/)
+void AddAcidPuddle(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miLightFlag = true;
 	int monst = missile._misource;
@@ -2250,7 +2250,7 @@ void AddAcidpuddle(Missile &missile, const AddMissileParameter & /*parameter*/)
 	missile._miPreFlag = true;
 }
 
-void AddStonecurse(Missile &missile, const AddMissileParameter &parameter)
+void AddStoneCurse(Missile &missile, const AddMissileParameter &parameter)
 {
 	std::optional<Point> targetMonsterPosition = FindClosestValidPosition(
 	    [](Point target) {
@@ -2412,7 +2412,7 @@ void AddIdentify(Missile &missile, const AddMissileParameter & /*parameter*/)
 	}
 }
 
-void AddFirewallC(Missile &missile, const AddMissileParameter &parameter)
+void AddFireWallC(Missile &missile, const AddMissileParameter &parameter)
 {
 	std::optional<Point> spreadPosition = FindClosestValidPosition(
 	    [start = missile.position.start](Point target) {
@@ -2445,7 +2445,7 @@ void AddInfravision(Missile &missile, const AddMissileParameter & /*parameter*/)
 		UseMana(missile._misource, SPL_INFRAVISION);
 }
 
-void AddFlamewaveC(Missile &missile, const AddMissileParameter &parameter)
+void AddFlameWaveC(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
@@ -2585,7 +2585,7 @@ void AddInfernoC(Missile &missile, const AddMissileParameter &parameter)
 	missile._mirange = 256;
 }
 
-void AddChargedbolt(Missile &missile, const AddMissileParameter &parameter)
+void AddChargedBolt(Missile &missile, const AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
 	missile._mirnd = GenerateRnd(15) + 1;
@@ -2603,7 +2603,7 @@ void AddChargedbolt(Missile &missile, const AddMissileParameter &parameter)
 	missile._mirange = 256;
 }
 
-void AddHolybolt(Missile &missile, const AddMissileParameter &parameter)
+void AddHolyBolt(Missile &missile, const AddMissileParameter &parameter)
 {
 	Point dst = parameter.dst;
 	if (missile.position.start == dst) {
@@ -2670,7 +2670,7 @@ void AddBoneSpirit(Missile &missile, const AddMissileParameter &parameter)
 	}
 }
 
-void AddRportal(Missile &missile, const AddMissileParameter & /*parameter*/)
+void AddRedPortal(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._mirange = 100;
 	missile.var1 = 100 - missile._miAnimLen;
@@ -2731,7 +2731,7 @@ Missile *AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mi
 	return &missile;
 }
 
-void MI_Elementalarrow(Missile &missile)
+void MI_ElementArrow(Missile &missile)
 {
 	missile._mirange--;
 	if (missile._miAnimType == MFILE_MINILTNG || missile._miAnimType == MFILE_MAGBLOS) {
@@ -2881,13 +2881,13 @@ void MI_Projectile(Missile &missile)
 			switch (missile._mitype) {
 			case MIS_FIREBOLT:
 			case MIS_MAGMABALL:
-				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP, missile._micaster, missile._misource, 0, 0, &missile);
+				AddMissile(missile.position.tile, dst, dir, MIS_MISSILEHIT, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_BLOODSTAR:
-				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP2, missile._micaster, missile._misource, 0, 0, &missile);
+				AddMissile(missile.position.tile, dst, dir, MIS_MISSILEHIT2, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_ACID:
-				AddMissile(missile.position.tile, dst, dir, MIS_MISEXP3, missile._micaster, missile._misource, 0, 0, &missile);
+				AddMissile(missile.position.tile, dst, dir, MIS_MISSILEHIT3, missile._micaster, missile._misource, 0, 0, &missile);
 				break;
 			case MIS_BONESPIRIT:
 				SetMissDir(missile, 8);
@@ -2955,7 +2955,7 @@ void MI_Nova(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Acidpuddle(Missile &missile)
+void MI_AcidPuddle(Missile &missile)
 {
 	missile._mirange--;
 	int range = missile._mirange;
@@ -2972,7 +2972,7 @@ void MI_Acidpuddle(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Firewall(Missile &missile)
+void MI_FireWall(Missile &missile)
 {
 	constexpr int ExpLight[14] = { 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 12 };
 
@@ -3107,7 +3107,7 @@ void MI_Rune(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Lightningwall(Missile &missile)
+void MI_LightningWall(Missile &missile)
 {
 	missile._mirange--;
 	int range = missile._mirange;
@@ -3134,7 +3134,7 @@ void MI_BowLightning(Missile &missile)
 	SpawnLightning(missile, missile._midam);
 }
 
-void MI_Ringoffire(Missile &missile)
+void MI_RingOfFire(Missile &missile)
 {
 	missile._miDelFlag = true;
 	int8_t src = missile._misource;
@@ -3175,7 +3175,7 @@ void MI_Search(Missile &missile)
 		AutoMapShowItems = false;
 }
 
-void MI_LightningwallC(Missile &missile)
+void MI_LightningWallC(Missile &missile)
 {
 	missile._mirange--;
 	if (missile._mirange == 0) {
@@ -3311,7 +3311,7 @@ void MI_Lightning(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Townportal(Missile &missile)
+void MI_TownPortal(Missile &missile)
 {
 	int expLight[17] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15 };
 
@@ -3388,7 +3388,7 @@ void MI_Flash2(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Flamewave(Missile &missile)
+void MI_FlameWave(Missile &missile)
 {
 	constexpr int ExpLight[14] = { 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 12 };
 
@@ -3481,7 +3481,7 @@ void MI_Guardian(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Chainlightning(Missile &missile)
+void MI_ChainLightning(Missile &missile)
 {
 	int id = missile._misource;
 	Point position = missile.position.tile;
@@ -3507,7 +3507,7 @@ void MI_Chainlightning(Missile &missile)
 		missile._miDelFlag = true;
 }
 
-void MI_Weapexp(Missile &missile)
+void MI_ElementMeleeHit(Missile &missile)
 {
 	constexpr int ExpLight[10] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2 };
 
@@ -3558,7 +3558,7 @@ void MI_MissileHit(Missile &missile)
 	}
 }
 
-void MI_Acidexp(Missile &missile)
+void MI_AcidHit(Missile &missile)
 {
 	if (missile._mirange == missile._miAnimLen) {
 		missile.position.tile += Displacement { 1, 1 };
@@ -3603,7 +3603,7 @@ void MI_Teleport(Missile &missile)
 	}
 }
 
-void MI_Stonecurse(Missile &missile)
+void MI_StoneCurse(Missile &missile)
 {
 	missile._mirange--;
 	auto &monster = Monsters[missile.var2];
@@ -3680,7 +3680,7 @@ void MI_Rhino(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_FirewallC(Missile &missile)
+void MI_FireWallC(Missile &missile)
 {
 	missile._mirange--;
 	if (missile._mirange == 0) {
@@ -3756,7 +3756,7 @@ void MI_ApocalypseC(Missile &missile)
 	}
 }
 
-void MI_FlamewaveC(Missile &missile)
+void MI_FlameWaveC(Missile &missile)
 {
 	bool f1 = false;
 	bool f2 = false;
@@ -3910,7 +3910,7 @@ void MI_InfernoC(Missile &missile)
 		missile._miDelFlag = true;
 }
 
-void MI_Chargedbolt(Missile &missile)
+void MI_ChargedBolt(Missile &missile)
 {
 	missile._mirange--;
 	if (missile._miAnimType != MFILE_LGHNING) {
@@ -3951,7 +3951,7 @@ void MI_Chargedbolt(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Holybolt(Missile &missile)
+void MI_HolyBolt(Missile &missile)
 {
 	missile._mirange--;
 	if (missile._miAnimType != MFILE_HOLYEXPL) {
@@ -4035,7 +4035,7 @@ void MI_Elemental(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Bonespirit(Missile &missile)
+void MI_BoneSpirit(Missile &missile)
 {
 	missile._mirange--;
 	int dam = missile._midam;
@@ -4088,7 +4088,7 @@ void MI_ResurrectBeam(Missile &missile)
 	PutMissile(missile);
 }
 
-void MI_Redportal(Missile &missile)
+void MI_RedPortal(Missile &missile)
 {
 	int expLight[17] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15 };
 
