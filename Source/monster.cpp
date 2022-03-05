@@ -1685,12 +1685,9 @@ bool MonsterFadeout(Monster &monster)
 	}
 
 	int mt = monster.MType->mtype;
-	if (mt < MT_INCIN || mt > MT_HELLBURN) {
-		monster._mFlags &= ~MFLAG_LOCK_ANIMATION;
-		monster._mFlags |= MFLAG_HIDDEN;
-	} else {
-		monster._mFlags &= ~MFLAG_LOCK_ANIMATION;
-	}
+
+	monster._mFlags &= ~MFLAG_LOCK_ANIMATION;
+	monster._mFlags |= MFLAG_HIDDEN;
 
 	M_StartStand(monster, monster._mdir);
 
@@ -4755,19 +4752,16 @@ void MissToMonst(Missile &missile, Point position)
 	monster._mdir = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster._mdir);
-	if (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN) {
-		if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0)
-			M_StartHit(m, -1, 0);
-		else
-			MonsterHitMonster(m, -1, 0);
-	} else {
-		StartFadein(monster, monster._mdir, false);
-	}
+
+	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0)
+		M_StartHit(m, -1, 0);
+	else
+		MonsterHitMonster(m, -1, 0);
 
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
 		if (dPlayer[oldPosition.x][oldPosition.y] > 0) {
-			if (monster.MType->mtype != MT_GLOOM && (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN)) {
+			if (monster.MType->mtype != MT_GLOOM) {
 				MonsterAttackPlayer(m, dPlayer[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
 				if (pnum == dPlayer[oldPosition.x][oldPosition.y] - 1 && (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE)) {
 					auto &player = Players[pnum];
@@ -4788,7 +4782,7 @@ void MissToMonst(Missile &missile, Point position)
 	}
 
 	if (dMonster[oldPosition.x][oldPosition.y] > 0) {
-		if (monster.MType->mtype != MT_GLOOM && (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN)) {
+		if (monster.MType->mtype != MT_GLOOM) {
 			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
 			if (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE) {
 				Point newPosition = oldPosition + monster._mdir;
