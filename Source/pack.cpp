@@ -291,7 +291,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	player.pBattleNet = pPack->pBattleNet != 0;
 	player.pManaShield = pPack->pManaShield != 0;
 	player.pDifficulty = static_cast<_difficulty>(difficulty);
-	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(pPack->pDamAcFlags));
+	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(static_cast<uint32_t>(pPack->pDamAcFlags)));
 
 	return true;
 }
