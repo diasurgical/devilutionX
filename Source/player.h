@@ -780,5 +780,4 @@ extern int DexterityTbl[enum_size<HeroClass>::value];
 extern int VitalityTbl[enum_size<HeroClass>::value];
 extern uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1];
 
-
 } // namespace devilution
