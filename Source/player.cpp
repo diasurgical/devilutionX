@@ -3196,26 +3196,22 @@ StartPlayerKill(int pnum, int earflag)
 
 void StripTopGold(Player &player)
 {
-	Item tmpItem = player.HoldItem;
-
 	for (Item &item : InventoryPlayerItemsRange { player }) {
 		if (item._itype == ItemType::Gold) {
 			if (item._ivalue > MaxGold) {
-				int val = item._ivalue - MaxGold;
+				Item excessGold;
+				InitializeItem(excessGold, IDI_GOLD);
+				SetGoldSeed(player, excessGold);
+				excessGold._ivalue = item._ivalue - MaxGold;
+				SetPlrHandGoldCurs(excessGold);
 				item._ivalue = MaxGold;
-				InitializeItem(player.HoldItem, IDI_GOLD);
-				SetGoldSeed(player, player.HoldItem);
-				player.HoldItem._ivalue = val;
-				SetPlrHandGoldCurs(player.HoldItem);
-				if (!GoldAutoPlace(player)) {
-					DeadItem(player, player.HoldItem, { 0, 0 });
-					player.HoldItem._itype == ItemType::None;
+				if (!GoldAutoPlace(player, excessGold)) {
+					DeadItem(player, excessGold, { 0, 0 });
 				}
 			}
 		}
 	}
 	player._pGold = CalculateGold(player);
-	player.HoldItem = tmpItem;
 }
 
 void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
