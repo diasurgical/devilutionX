@@ -548,6 +548,7 @@ void RespawnDeadItem(Item &itm, Point target)
 	Items[ii] = itm;
 	Items[ii].position = target;
 	RespawnItem(Items[ii], true);
+	NetSendCmdPItem(false, CMD_RESPAWNITEM, target, itm);
 }
 
 void DeadItem(Player &player, Item &itm, Displacement direction)
@@ -558,7 +559,6 @@ void DeadItem(Player &player, Item &itm, Displacement direction)
 	Point target = player.position.tile + direction;
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(itm, target);
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, itm);
 		return;
 	}
 
@@ -568,7 +568,6 @@ void DeadItem(Player &player, Item &itm, Displacement direction)
 				Point next = player.position.tile + Displacement { i, j };
 				if (ItemSpaceOk(next)) {
 					RespawnDeadItem(itm, next);
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, itm);
 					return;
 				}
 			}
