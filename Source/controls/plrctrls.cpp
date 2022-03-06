@@ -25,6 +25,7 @@
 #include "missiles.h"
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
+#include "qol/chatlog.h"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
@@ -45,6 +46,7 @@ bool InGameMenu()
 {
 	return stextflag != STORE_NONE
 	    || HelpFlag
+	    || ChatLogFlag
 	    || talkflag
 	    || qtextflag
 	    || gmenu_is_active()

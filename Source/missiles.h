@@ -97,8 +97,8 @@ struct Missile {
 	const byte *_miAnimData;
 	int _miAnimDelay; // Tick length of each frame in the current animation
 	int _miAnimLen;   // Number of frames in current animation
-	int _miAnimWidth;
-	int _miAnimWidth2;
+	uint16_t _miAnimWidth;
+	int16_t _miAnimWidth2;
 	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _pAnimDelay
 	int _miAnimAdd;
 	int _miAnimFrame; // Current frame of animation.

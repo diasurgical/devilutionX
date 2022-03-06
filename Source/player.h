@@ -147,6 +147,17 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
+enum class SpellFlag : uint8_t {
+	// clang-format off
+	None         = 0,
+	Etherealize  = 1 << 0,
+	RageActive   = 1 << 1,
+	RageCooldown = 1 << 2,
+	// bits 3-7 are unused
+	// clang-format on
+};
+use_enum_as_flags(SpellFlag);
+
 /** Maps from armor animation to letter used in graphic files. */
 constexpr std::array<char, 4> ArmourChar = {
 	'L', // light
@@ -190,7 +201,7 @@ struct PlayerAnimationData {
 	 */
 	std::unique_ptr<byte[]> RawData;
 
-	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] std::optional<CelSprite> GetCelSpritesForDirection(Direction direction) const
 	{
 		return CelSpritesForDirections[static_cast<size_t>(direction)];
 	}
@@ -220,9 +231,9 @@ struct Player {
 	/**
 	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
 	 */
-	CelSprite *pPreviewCelSprite;
+	std::optional<CelSprite> previewCelSprite;
 	/**
-	 * @brief Contains the progress to next game tick when pPreviewCelSprite was set
+	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */
 	float progressToNextGameTickWhenPreviewWasSet;
 	int _plid;
@@ -238,7 +249,7 @@ struct Player {
 	uint64_t _pMemSpells;  // Bitmask of learned spells
 	uint64_t _pAblSpells;  // Bitmask of abilities
 	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
-	uint8_t _pSpellFlags;
+	SpellFlag _pSpellFlags;
 	spell_id _pSplHotKey[4];
 	spell_type _pSplTHotKey[4];
 	bool _pBlockFlag;
@@ -678,7 +689,7 @@ struct Player {
 	}
 
 	/**
-	 * @brief Updates pPreviewCelSprite according to new requested command
+	 * @brief Updates previewCelSprite according to new requested command
 	 * @param cmdId What command is requested
 	 * @param point Point for the command
 	 * @param wParam1 First Parameter

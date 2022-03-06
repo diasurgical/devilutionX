@@ -29,7 +29,7 @@ struct Object {
 	int _oAnimCnt;        // Increases by one each game tick, counting how close we are to _pAnimDelay
 	uint32_t _oAnimLen;   // Number of frames in current animation
 	uint32_t _oAnimFrame; // Current frame of animation.
-	int _oAnimWidth;
+	uint16_t _oAnimWidth;
 	bool _oDelFlag;
 	int8_t _oBreak;
 	bool _oSolidFlag;

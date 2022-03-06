@@ -224,7 +224,7 @@ ItemData AllItemsList[] = {
 /** Contains the data related to each item prefix. */
 const PLStruct ItemPrefixes[] = {
 	// clang-format off
-	// PLName,              { type,                 param1, param2 }, PLMinLvl, PLIType,                                                         PLGOE,    PLDouble, PLOk,  minVal, maxVal, multVal
+	// PLName,              { type,                 param1, param2 }, PLMinLvl, PLIType,                                                                                                                                PLGOE,    PLDouble, PLOk,  minVal, maxVal, multVal
 	// TRANSLATORS: Item prefix section.
 	{ N_("Tin"),            { IPL_TOHIT_CURSE,           6,     10 },        3,                                                AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  true,     false,      0,      0,      -3 },
 	{ N_("Brass"),          { IPL_TOHIT_CURSE,           1,      5 },        1,                                                AffixItemType::Weapon |                        AffixItemType::Bow | AffixItemType::Misc, GOE_ANY,  true,     false,      0,      0,      -2 },
@@ -320,7 +320,7 @@ const PLStruct ItemPrefixes[] = {
 /** Contains the data related to each item suffix. */
 const PLStruct ItemSuffixes[] = {
 	// clang-format off
-	// PLName,              { type,               param1, param2 },   PLMinLvl, PLIType,                                                         PLGOE,    PLDouble, PLOk,  minVal, maxVal, multVal
+	// PLName,              { type,               param1, param2 },   PLMinLvl, PLIType,                                                                                                                                PLGOE,    PLDouble, PLOk,  minVal, maxVal, multVal
 	// TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 	{  N_("quality"),       { IPL_DAMMOD,              1,        2 },        2,                                                AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow                      , GOE_ANY,  false,    true,     100,    200,       2 },
 	{  N_("maiming"),       { IPL_DAMMOD,              3,        5 },        7,                                                AffixItemType::Weapon | AffixItemType::Staff | AffixItemType::Bow                      , GOE_ANY,  false,    true,    1300,   1500,       3 },

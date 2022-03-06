@@ -31,7 +31,7 @@ int qtextSpd;
 /** Start time of scrolling */
 Uint32 ScrollStart;
 /** Graphics for the window border */
-std::optional<CelSprite> pTextBoxCels;
+std::optional<OwnedCelSprite> pTextBoxCels;
 
 /** Pixels for a line of text and the empty space under it. */
 const int LineHeight = 38;

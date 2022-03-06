@@ -134,7 +134,7 @@ const Point InvRect[] = {
 
 namespace {
 
-std::optional<CelSprite> pInvCels;
+std::optional<OwnedCelSprite> pInvCels;
 
 void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 {
@@ -1515,7 +1515,7 @@ bool GoldAutoPlace(Player &player)
 			SetPlrHandGoldCurs(player.HoldItem);
 			player.InvList[i]._ivalue = MaxGold;
 			if (gbIsHellfire)
-				GetPlrHandSeed(&player.HoldItem);
+				GenerateNewSeed(player.HoldItem);
 		} else {
 			player.HoldItem._ivalue = 0;
 			done = true;
@@ -1547,13 +1547,13 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
 	player.InvList[ii] = player.HoldItem;
 	player._pNumInv++;
 	player.InvGrid[slotIndex] = player._pNumInv;
-	GetPlrHandSeed(&player.InvList[ii]);
+	GenerateNewSeed(player.InvList[ii]);
 
 	int gold = player.HoldItem._ivalue;
 	if (gold > MaxGold) {
 		gold -= MaxGold;
 		player.HoldItem._ivalue = gold;
-		GetPlrHandSeed(&player.HoldItem);
+		GenerateNewSeed(player.HoldItem);
 		player.InvList[ii]._ivalue = MaxGold;
 		return false;
 	}
@@ -1705,7 +1705,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 		player.Say(HeroSpeech::ICantCarryAnymore);
 	}
 	player.HoldItem = *item;
-	RespawnItem(item, true);
+	RespawnItem(*item, true);
 	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position, player.HoldItem);
 	player.HoldItem._itype = ItemType::None;
 }
@@ -1829,7 +1829,7 @@ int InvPutItem(Player &player, Point position)
 	dItem[position.x][position.y] = ii + 1;
 	Items[ii] = player.HoldItem;
 	Items[ii].position = position;
-	RespawnItem(&Items[ii], true);
+	RespawnItem(Items[ii], true);
 
 	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = Items[ii];
@@ -1886,7 +1886,7 @@ int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int i
 	}
 
 	item.position = position;
-	RespawnItem(&Items[ii], true);
+	RespawnItem(Items[ii], true);
 
 	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = Items[ii];

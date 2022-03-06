@@ -136,6 +136,11 @@ size_t GetNumAnims(const MonsterData &monsterData)
 	return monsterData.has_special ? 6 : 5;
 }
 
+bool IsDirectionalAnim(const CMonster &monster, size_t animIndex)
+{
+	return monster.mtype != MT_GOLEM || animIndex < 4;
+}
+
 void InitMonsterTRN(CMonster &monst)
 {
 	std::array<uint8_t, 256> colorTranslations;
@@ -149,11 +154,15 @@ void InitMonsterTRN(CMonster &monst)
 			continue;
 		}
 
-		for (int j = 0; j < 8; j++) {
-			Cl2ApplyTrans(
-			    CelGetFrame(monst.Anims[i].cl2Data, j),
-			    colorTranslations,
-			    monst.Anims[i].Frames);
+		AnimStruct &anim = monst.Anims[i];
+		if (IsDirectionalAnim(monst, i)) {
+			for (int j = 0; j < 8; j++) {
+				Cl2ApplyTrans(anim.CelSpritesForDirections[j], colorTranslations, anim.Frames);
+			}
+		} else {
+			for (int j = 0; j < 8; j++) {
+				Cl2ApplyTrans(CelGetFrame(anim.CelSpritesForDirections[0], j), colorTranslations, anim.Frames);
+			}
 		}
 	}
 }
@@ -680,8 +689,7 @@ void DeleteMonster(int i)
 void NewMonsterAnim(Monster &monster, MonsterGraphic graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 {
 	const auto &animData = monster.MType->GetAnimData(graphic);
-	const auto *pCelSprite = &*animData.CelSpritesForDirections[static_cast<size_t>(md)];
-	monster.AnimInfo.SetNewAnimation(pCelSprite, animData.Frames, animData.Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
+	monster.AnimInfo.SetNewAnimation(animData.GetCelSpritesForDirection(md), animData.Frames, animData.Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
 	monster._mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
 	monster._mdir = md;
 }
@@ -1340,7 +1348,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 
 	auto &player = Players[pnum];
 
-	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || (player._pSpellFlags & 1) != 0)
+	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
 		return;
 	if (monster.position.tile.WalkingDistance(player.position.tile) >= 2)
 		return;
@@ -3726,17 +3734,18 @@ void InitMonsterGFX(int monst)
 			continue;
 		}
 
-		anim.cl2Data = &monster.animData[animOffsets[animIndex]];
 		anim.Frames = monsterData.Frames[animIndex];
 		anim.Rate = monsterData.Rate[animIndex];
+		anim.Width = width;
 
-		if (monster.mtype != MT_GOLEM || (animletter[animIndex] != 's' && animletter[animIndex] != 'd')) {
+		byte *cl2Data = &monster.animData[animOffsets[animIndex]];
+		if (IsDirectionalAnim(monster, animIndex)) {
 			for (int i = 0; i < 8; i++) {
-				anim.CelSpritesForDirections[i].emplace(CelGetFrame(anim.cl2Data, i), width);
+				anim.CelSpritesForDirections[i] = CelGetFrame(cl2Data, i);
 			}
 		} else {
 			for (int i = 0; i < 8; i++) {
-				anim.CelSpritesForDirections[i].emplace(anim.cl2Data, width);
+				anim.CelSpritesForDirections[i] = cl2Data;
 			}
 		}
 	}

@@ -21,7 +21,7 @@ void set_up_scroll(Item &item, spell_id spell)
 void clear_inventory()
 {
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		memset(&Players[MyPlayerId].InvList[i], 0, sizeof(Item));
+		Players[MyPlayerId].InvList[i] = {};
 		Players[MyPlayerId].InvGrid[i] = 0;
 	}
 	Players[MyPlayerId]._pNumInv = 0;

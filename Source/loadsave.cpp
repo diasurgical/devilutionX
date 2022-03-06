@@ -362,7 +362,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMemSpells = file.NextLE<uint64_t>();
 	player._pAblSpells = file.NextLE<uint64_t>();
 	player._pScrlSpells = file.NextLE<uint64_t>();
-	player._pSpellFlags = file.NextLE<uint8_t>();
+	player._pSpellFlags = static_cast<SpellFlag>(file.NextLE<uint8_t>());
 	file.Skip(3); // Alignment
 
 	for (auto &spell : player._pSplHotKey)
@@ -732,7 +732,7 @@ void LoadObject(LoadHelper &file, Object &object)
 	object._oAnimCnt = file.NextLE<int32_t>();
 	object._oAnimLen = file.NextLE<uint32_t>();
 	object._oAnimFrame = file.NextLE<uint32_t>();
-	object._oAnimWidth = file.NextLE<int32_t>();
+	object._oAnimWidth = static_cast<uint16_t>(file.NextLE<int32_t>());
 	file.Skip(4); // Skip _oAnimWidth2
 	object._oDelFlag = file.NextBool32();
 	object._oBreak = file.NextLE<int8_t>();
@@ -1055,7 +1055,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.AnimInfo.NumberOfFrames);
 	file.WriteLE<int32_t>(player.AnimInfo.CurrentFrame);
 	// write _pAnimWidth for vanilla compatibility
-	int animWidth = player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width();
+	int animWidth = player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96;
 	file.WriteLE<int32_t>(animWidth);
 	// write _pAnimWidth2 for vanilla compatibility
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
@@ -1083,7 +1083,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint64_t>(player._pMemSpells);
 	file.WriteLE<uint64_t>(player._pAblSpells);
 	file.WriteLE<uint64_t>(player._pScrlSpells);
-	file.WriteLE<uint8_t>(player._pSpellFlags);
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSpellFlags));
 	file.Skip(3); // Alignment
 
 	for (auto &spellId : player._pSplHotKey)
@@ -1403,7 +1403,7 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.WriteLE<uint32_t>(object._oAnimLen);
 	file.WriteLE<uint32_t>(object._oAnimFrame);
 	file.WriteLE<int32_t>(object._oAnimWidth);
-	file.WriteLE<int32_t>(CalculateWidth2(object._oAnimWidth)); // Write _oAnimWidth2 for vanilla compatibility
+	file.WriteLE<int32_t>(CalculateWidth2(static_cast<int>(object._oAnimWidth))); // Write _oAnimWidth2 for vanilla compatibility
 	file.WriteLE<uint32_t>(object._oDelFlag ? 1 : 0);
 	file.WriteLE<int8_t>(object._oBreak);
 	file.Skip(3); // Alignment

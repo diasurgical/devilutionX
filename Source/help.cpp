@@ -11,6 +11,7 @@
 #include "engine/render/text_render.hpp"
 #include "init.h"
 #include "minitext.h"
+#include "qol/chatlog.h"
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
@@ -218,6 +219,7 @@ void DisplayHelp()
 {
 	SkipLines = 0;
 	HelpFlag = true;
+	ChatLogFlag = false;
 }
 
 void HelpScrollUp()

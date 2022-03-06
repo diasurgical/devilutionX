@@ -580,14 +580,14 @@ void CelBlitLightSafeTo(const Surface &out, Point position, const byte *pRLEByte
 
 } // namespace
 
-void CelDrawTo(const Surface &out, Point position, const CelSprite &cel, int frame)
+void CelDrawTo(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
 	CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelClippedDrawTo(const Surface &out, Point position, const CelSprite &cel, int frame)
+void CelClippedDrawTo(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -595,7 +595,7 @@ void CelClippedDrawTo(const Surface &out, Point position, const CelSprite &cel, 
 	CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelDrawLightTo(const Surface &out, Point position, const CelSprite &cel, int frame, uint8_t *tbl)
+void CelDrawLightTo(const Surface &out, Point position, CelSprite cel, int frame, uint8_t *tbl)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
@@ -606,7 +606,7 @@ void CelDrawLightTo(const Surface &out, Point position, const CelSprite &cel, in
 		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelClippedDrawLightTo(const Surface &out, Point position, const CelSprite &cel, int frame)
+void CelClippedDrawLightTo(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -617,14 +617,14 @@ void CelClippedDrawLightTo(const Surface &out, Point position, const CelSprite &
 		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelDrawLightRedTo(const Surface &out, Point position, const CelSprite &cel, int frame)
+void CelDrawLightRedTo(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, cel.Width(frame), GetInfravisionTRN());
 }
 
-void CelDrawItem(const Item &item, const Surface &out, Point position, const CelSprite &cel, int frame)
+void CelDrawItem(const Item &item, const Surface &out, Point position, CelSprite cel, int frame)
 {
 	bool usable = item._iStatFlag;
 	if (!usable) {
@@ -634,7 +634,7 @@ void CelDrawItem(const Item &item, const Surface &out, Point position, const Cel
 	}
 }
 
-void CelClippedBlitLightTransTo(const Surface &out, Point position, const CelSprite &cel, int frame)
+void CelClippedBlitLightTransTo(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -647,14 +647,14 @@ void CelClippedBlitLightTransTo(const Surface &out, Point position, const CelSpr
 		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void CelDrawUnsafeTo(const Surface &out, Point position, const CelSprite &cel, int frame)
+void CelDrawUnsafeTo(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
 	RenderCelClipY(out, position, pRLEBytes, nDataSize, cel.Width(frame), RenderLineMemcpy, NullLineEndFn);
 }
 
-void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, const CelSprite &cel, int frame, bool skipColorIndexZero)
+void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame, bool skipColorIndexZero)
 {
 	int nDataSize;
 	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -664,7 +664,7 @@ void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, const Cel
 		RenderCelOutline<false>(out, position, src, nDataSize, cel.Width(frame), col);
 }
 
-std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)
+std::pair<int, int> MeasureSolidHorizontalBounds(CelSprite cel, int frame)
 {
 	int nDataSize;
 	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);

@@ -536,7 +536,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
 }
 
-void RespawnDeadItem(Item *itm, Point target)
+void RespawnDeadItem(Item &itm, Point target)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -545,23 +545,20 @@ void RespawnDeadItem(Item *itm, Point target)
 
 	dItem[target.x][target.y] = ii + 1;
 
-	Items[ii] = *itm;
+	Items[ii] = itm;
 	Items[ii].position = target;
-	RespawnItem(&Items[ii], true);
-
-	itm->_itype = ItemType::None;
+	RespawnItem(Items[ii], true);
 }
 
-void DeadItem(Player &player, Item *itm, Displacement direction)
+void DeadItem(Player &player, Item &itm, Displacement direction)
 {
-	if (itm->isEmpty())
+	if (itm.isEmpty())
 		return;
 
 	Point target = player.position.tile + direction;
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(itm, target);
-		player.HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, player.HoldItem);
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, itm);
 		return;
 	}
 
@@ -571,8 +568,7 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 				Point next = player.position.tile + Displacement { i, j };
 				if (ItemSpaceOk(next)) {
 					RespawnDeadItem(itm, next);
-					player.HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, player.HoldItem);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, itm);
 					return;
 				}
 			}
@@ -580,10 +576,8 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 	}
 }
 
-int DropGold(int pnum, int amount, bool skipFullStacks)
+int DropGold(Player &player, int amount, bool skipFullStacks)
 {
-	auto &player = Players[pnum];
-
 	for (int i = 0; i < player._pNumInv && amount > 0; i++) {
 		auto &item = player.InvList[i];
 
@@ -591,22 +585,20 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 			continue;
 
 		if (amount < item._ivalue) {
+			Item gold {};
+			InitializeItem(gold, IDI_GOLD);
+			SetGoldSeed(player, gold);
+
+			gold._ivalue = amount;
 			item._ivalue -= amount;
-			SetPlrHandItem(player.HoldItem, IDI_GOLD);
-			SetGoldSeed(player, player.HoldItem);
-			SetPlrHandGoldCurs(player.HoldItem);
-			player.HoldItem._ivalue = amount;
-			DeadItem(player, &player.HoldItem, { 0, 0 });
+			SetPlrHandGoldCurs(gold);
+			DeadItem(player, gold, { 0, 0 });
 			return 0;
 		}
 
 		amount -= item._ivalue;
+		DeadItem(player, item, { 0, 0 });
 		player.RemoveInvItem(i);
-		SetPlrHandItem(player.HoldItem, IDI_GOLD);
-		SetGoldSeed(player, player.HoldItem);
-		SetPlrHandGoldCurs(player.HoldItem);
-		player.HoldItem._ivalue = item._ivalue;
-		DeadItem(player, &player.HoldItem, { 0, 0 });
 		i = -1;
 	}
 
@@ -620,13 +612,12 @@ void DropHalfPlayersGold(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	int hGold = player._pGold / 2;
+	int remainingGold = DropGold(player, player._pGold / 2, true);
+	if (remainingGold > 0) {
+		DropGold(player, remainingGold, false);
+	}
 
-	hGold = DropGold(pnum, hGold, true);
-	if (hGold > 0)
-		DropGold(pnum, hGold, false);
-
-	player._pGold -= hGold;
+	player._pGold /= 2;
 }
 
 void InitLevelChange(int pnum)
@@ -1048,7 +1039,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		return false;
 	}
 
-	if ((target._pSpellFlags & 1) != 0) {
+	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize)) {
 		return false;
 	}
 
@@ -2271,9 +2262,9 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	auto &celSprites = AnimationData[static_cast<size_t>(*graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
-	if (celSprites && pPreviewCelSprite != &*celSprites) {
-		pPreviewCelSprite = &*celSprites;
+	std::optional<CelSprite> celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
+	if (celSprites && previewCelSprite != celSprites) {
+		previewCelSprite = celSprites;
 		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
 	}
 }
@@ -2402,7 +2393,7 @@ void InitPlayerGFX(Player &player)
 
 void ResetPlayerGFX(Player &player)
 {
-	player.AnimInfo.pCelSprite = nullptr;
+	player.AnimInfo.celSprite = std::nullopt;
 	for (auto &animData : player.AnimationData) {
 		for (auto &celSprite : animData.CelSpritesForDirections)
 			celSprite = std::nullopt;
@@ -2414,14 +2405,12 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numbe
 {
 	LoadPlrGFX(player, graphic);
 
-	auto &celSprite = player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
-
-	CelSprite *pCelSprite = celSprite ? &*celSprite : nullptr;
+	std::optional<CelSprite> celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
 
 	float previewShownGameTickFragments = 0.F;
-	if (pCelSprite == player.pPreviewCelSprite && !player.IsWalking())
+	if (celSprite == player.previewCelSprite && !player.IsWalking())
 		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
-	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
+	player.AnimInfo.SetNewAnimation(celSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
 
 void SetPlrAnims(Player &player)
@@ -2641,7 +2630,7 @@ void CreatePlayer(int playerId, HeroClass c)
 		spellLevel = 0;
 	}
 
-	player._pSpellFlags = 0;
+	player._pSpellFlags = SpellFlag::None;
 
 	if (player._pClass == HeroClass::Sorcerer) {
 		player._pSplLvl[SPL_FIREBOLT] = 2;
@@ -3155,7 +3144,8 @@ StartPlayerKill(int pnum, int earflag)
 			drawhpflag = true;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
-				DeadItem(player, &player.HoldItem, { 0, 0 });
+				DeadItem(player, player.HoldItem, { 0, 0 });
+				player.HoldItem._itype = ItemType::None;
 				NewCursor(CURSOR_HAND);
 			}
 
@@ -3164,7 +3154,7 @@ StartPlayerKill(int pnum, int earflag)
 				if (earflag != -1) {
 					if (earflag != 0) {
 						Item ear;
-						SetPlrHandItem(ear, IDI_EAR);
+						InitializeItem(ear, IDI_EAR);
 						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
 						switch (player._pClass) {
 						case HeroClass::Sorcerer:
@@ -3186,13 +3176,14 @@ StartPlayerKill(int pnum, int earflag)
 						ear._ivalue = player._pLevel;
 
 						if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
-							DeadItem(player, &ear, { 0, 0 });
+							DeadItem(player, ear, { 0, 0 });
 						}
 					} else {
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = Left(pdd);
-							DeadItem(player, &item, Displacement(pdd));
+							DeadItem(player, item, Displacement(pdd));
+							item._itype = ItemType::None;
 						}
 
 						CalcPlrInv(player, false);
@@ -3213,12 +3204,14 @@ void StripTopGold(Player &player)
 			if (item._ivalue > MaxGold) {
 				int val = item._ivalue - MaxGold;
 				item._ivalue = MaxGold;
-				SetPlrHandItem(player.HoldItem, 0);
+				InitializeItem(player.HoldItem, IDI_GOLD);
 				SetGoldSeed(player, player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(player.HoldItem);
-				if (!GoldAutoPlace(player))
-					DeadItem(player, &player.HoldItem, { 0, 0 });
+				if (!GoldAutoPlace(player)) {
+					DeadItem(player, player.HoldItem, { 0, 0 });
+					player.HoldItem._itype == ItemType::None;
+				}
 			}
 		}
 	}
@@ -3489,7 +3482,7 @@ void ProcessPlayers()
 				CheckNewPath(pnum, tplayer);
 			} while (tplayer);
 
-			player.pPreviewCelSprite = nullptr;
+			player.previewCelSprite = std::nullopt;
 			player.AnimInfo.ProcessAnimation();
 		}
 	}
@@ -3712,7 +3705,7 @@ void SyncPlrAnim(int pnum)
 		app_fatal("SyncPlrAnim");
 	}
 
-	player.AnimInfo.pCelSprite = &*player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(player._pdir)];
+	player.AnimInfo.celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(player._pdir);
 	// Ensure ScrollInfo is initialized correctly
 	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);
 }

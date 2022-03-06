@@ -19,6 +19,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "qol/chatlog.h"
 #include "storm/storm_net.hpp"
 #include "sync.h"
 #include "tmsg.h"
@@ -761,6 +762,11 @@ bool NetInit(bool bSinglePlayer)
 	if (!SNetGetGameInfo(GAMEINFO_PASSWORD, szPlayerDescript, 128))
 		nthread_terminate_game("SNetGetGameInfo2");
 	PublicGame = DvlNet_IsPublicGame();
+
+	auto &myPlayer = Players[MyPlayerId];
+	// separator for marking messages from a different game
+	AddMessageToChatLog(_("New Game"), nullptr, UiFlags::ColorRed);
+	AddMessageToChatLog(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), myPlayer._pName, myPlayer._pLevel));
 
 	return true;
 }

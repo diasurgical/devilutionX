@@ -26,7 +26,7 @@ namespace devilution {
 
 namespace {
 
-std::optional<CelSprite> sgpBackCel;
+std::optional<OwnedCelSprite> sgpBackCel;
 
 uint32_t sgdwProgress;
 int progress_id;
