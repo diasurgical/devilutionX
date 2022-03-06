@@ -8,13 +8,13 @@ namespace devilution {
 extern bool TestPlayerDoGotHit(int pnum);
 }
 
-int RunBlockTest(int frames, int flags)
+int RunBlockTest(int frames, uint32_t flags)
 {
 	int pnum = 0;
 	auto &player = Players[pnum];
 
 	player._pHFrames = frames;
-	player._pIFlags = flags;
+	player._pIFlags = static_cast<ItemSpecialEffect>(flags);
 	StartPlrHit(pnum, 5, false);
 
 	int i = 1;
@@ -29,13 +29,13 @@ int RunBlockTest(int frames, int flags)
 }
 
 #define NORM 0
-#define BAL ISPL_FASTRECOVER
-#define STA ISPL_FASTERRECOVER
-#define HAR ISPL_FASTESTRECOVER
-#define BALSTA (ISPL_FASTRECOVER | ISPL_FASTERRECOVER)
-#define BALHAR (ISPL_FASTRECOVER | ISPL_FASTESTRECOVER)
-#define STAHAR (ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
-#define ZEN (ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
+#define BAL static_cast<uint32_t>(ItemSpecialEffect::FastHitRecovery)
+#define STA static_cast<uint32_t>(ItemSpecialEffect::FasterHitRecovery)
+#define HAR static_cast<uint32_t>(ItemSpecialEffect::FastestHitRecovery)
+#define BALSTA static_cast<uint32_t>(ItemSpecialEffect::FastHitRecovery | ItemSpecialEffect::FasterHitRecovery)
+#define BALHAR static_cast<uint32_t>(ItemSpecialEffect::FastHitRecovery | ItemSpecialEffect::FastestHitRecovery)
+#define STAHAR static_cast<uint32_t>(ItemSpecialEffect::FasterHitRecovery | ItemSpecialEffect::FastestHitRecovery)
+#define ZEN static_cast<uint32_t>(ItemSpecialEffect::FastHitRecovery | ItemSpecialEffect::FasterHitRecovery | ItemSpecialEffect::FastestHitRecovery)
 #define WAR 6
 #define ROU 7
 #define SRC 8
@@ -126,7 +126,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pBattleNet, 0);
 	ASSERT_EQ(player.pManaShield, 0);
 	ASSERT_EQ(player.pDifficulty, 0);
-	ASSERT_EQ(player.pDamAcFlags, 0);
+	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MAX_PATH_LENGTH), 0);
@@ -161,7 +161,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIBonusAC, 0);
 	ASSERT_EQ(player._pIBonusDamMod, 0);
 	ASSERT_EQ(player._pISpells, 0);
-	ASSERT_EQ(player._pIFlags, 0);
+	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
 	ASSERT_EQ(player._pIGetHit, 0);
 	ASSERT_EQ(player._pISplLvlAdd, 0);
 	ASSERT_EQ(player._pISplDur, 0);

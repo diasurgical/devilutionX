@@ -197,7 +197,7 @@ struct Item {
 	uint8_t _iMinDam;
 	uint8_t _iMaxDam;
 	int16_t _iAC;
-	uint32_t _iFlags; // item_special_effect
+	ItemSpecialEffect _iFlags; // ItemSpecialEffect flags
 	enum item_misc_id _iMiscId;
 	enum spell_id _iSpell;
 	int _iCharges;
@@ -240,7 +240,7 @@ struct Item {
 	bool _iStatFlag;
 	_item_indexes IDidx;
 	uint32_t dwBuff;
-	uint32_t _iDamAcFlags;
+	ItemSpecialEffectHf _iDamAcFlags;
 
 	/**
 	 * @brief Checks whether this item is empty or not.

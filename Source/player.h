@@ -313,7 +313,7 @@ struct Player {
 	/** Bitmask of staff spell */
 	uint64_t _pISpells;
 	/** Bitmask using item_special_effect */
-	int _pIFlags;
+	ItemSpecialEffect _pIFlags;
 	int _pIGetHit;
 	int8_t _pISplLvlAdd;
 	int _pISplDur;
@@ -333,7 +333,7 @@ struct Player {
 	uint16_t wReflections;
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
-	uint32_t pDamAcFlags;
+	ItemSpecialEffectHf pDamAcFlags;
 
 	void CalcScrolls();
 
@@ -635,7 +635,7 @@ struct Player {
 	 */
 	void RestoreFullMana()
 	{
-		if ((_pIFlags & ISPL_NOMANA) == 0) {
+		if (HasNoneOf(_pIFlags,ItemSpecialEffect::NoMana)) {
 			_pMana = _pMaxMana;
 			_pManaBase = _pMaxManaBase;
 		}

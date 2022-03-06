@@ -442,12 +442,12 @@ void StartAttack(int pnum, Direction d)
 	}
 
 	int skippedAnimationFrames = 0;
-	if ((player._pIFlags & ISPL_FASTERATTACK) != 0) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
 		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
 		skippedAnimationFrames = 2;
-	} else if ((player._pIFlags & ISPL_FASTATTACK) != 0) {
+	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
 		skippedAnimationFrames = 1;
-	} else if ((player._pIFlags & ISPL_FASTESTATTACK) != 0) {
+	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack)) {
 		// Fastest Attack is skipped if Fast or Faster Attack is also specified, cause both skip the frame that triggers fastest attack skipping
 		skippedAnimationFrames = 2;
 	}
@@ -475,7 +475,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 
 	int skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
-		if ((player._pIFlags & ISPL_FASTATTACK) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
 		}
 	}
@@ -737,7 +737,7 @@ bool DoWalk(int pnum, int variant)
 
 bool WeaponDecay(Player &player, int ii)
 {
-	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & ISPLHF_DECAY) != 0) {
+	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && HasAnyOf(player.InvBody[ii]._iDamAcFlags, ItemSpecialEffectHf::Decay)) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
 			NetSendCmdDelItem(true, ii);
@@ -882,7 +882,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 			return false;
 	}
 
-	if ((player._pIFlags & ISPL_FIREDAM) != 0 && (player._pIFlags & ISPL_LIGHTDAM) != 0) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage) && HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
 		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 	}
@@ -923,22 +923,22 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		}
 		break;
 	case MonsterClass::Demon:
-		if ((player._pIFlags & ISPL_3XDAMVDEM) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage)) {
 			dam *= 3;
 		}
 		break;
 	}
 
-	if ((player.pDamAcFlags & ISPLHF_DEVASTATION) != 0 && GenerateRnd(100) < 5) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Devastation) && GenerateRnd(100) < 5) {
 		dam *= 3;
 	}
 
-	if ((player.pDamAcFlags & ISPLHF_DOPPELGANGER) != 0 && monster.MType->mtype != MT_DIABLO && monster._uniqtype == 0 && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.MType->mtype != MT_DIABLO && monster._uniqtype == 0 && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster);
 	}
 
 	dam <<= 6;
-	if ((player.pDamAcFlags & ISPLHF_JESTERS) != 0) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Jesters)) {
 		int r = GenerateRnd(201);
 		if (r >= 100)
 			r = 100 + (r - 100) * 5;
@@ -949,7 +949,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		dam >>= 2;
 
 	if (pnum == MyPlayerId) {
-		if ((player.pDamAcFlags & ISPLHF_PERIL) != 0) {
+		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
 			dam2 += player._pIGetHit << 6;
 			if (dam2 >= 0) {
 				ApplyPlrDamage(pnum, 0, 1, dam2);
@@ -960,7 +960,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 
 	int skdam = 0;
-	if ((player._pIFlags & ISPL_RNDSTEALLIFE) != 0) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		skdam = GenerateRnd(dam / 8);
 		player._pHitPoints += skdam;
 		if (player._pHitPoints > player._pMaxHP) {
@@ -972,11 +972,12 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		}
 		drawhpflag = true;
 	}
-	if ((player._pIFlags & (ISPL_STEALMANA_3 | ISPL_STEALMANA_5)) != 0 && (player._pIFlags & ISPL_NOMANA) == 0) {
-		if ((player._pIFlags & ISPL_STEALMANA_3) != 0) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana))
+		{
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3)) {
 			skdam = 3 * dam / 100;
 		}
-		if ((player._pIFlags & ISPL_STEALMANA_5) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana5)) {
 			skdam = 5 * dam / 100;
 		}
 		player._pMana += skdam;
@@ -989,11 +990,11 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		}
 		drawmanaflag = true;
 	}
-	if ((player._pIFlags & (ISPL_STEALLIFE_3 | ISPL_STEALLIFE_5)) != 0) {
-		if ((player._pIFlags & ISPL_STEALLIFE_3) != 0) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife3 | ItemSpecialEffect::StealLife5)) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife3)) {
 			skdam = 3 * dam / 100;
 		}
-		if ((player._pIFlags & ISPL_STEALLIFE_5) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealLife5)) {
 			skdam = 5 * dam / 100;
 		}
 		player._pHitPoints += skdam;
@@ -1006,7 +1007,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		}
 		drawhpflag = true;
 	}
-	if ((player._pIFlags & ISPL_NOHEALPLR) != 0) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnPlayer)) { // Why is there a different ItemSpecialEffect here? (see missile.cpp) is this a BUG?
 		monster._mFlags |= MFLAG_NOHEAL;
 	}
 #ifdef _DEBUG
@@ -1026,7 +1027,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 			M_StartHit(m, pnum, dam);
 			monster.Petrify();
 		} else {
-			if ((player._pIFlags & ISPL_KNOCKBACK) != 0) {
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback)) {
 				M_GetKnockback(m);
 			}
 			M_StartHit(m, pnum, dam);
@@ -1091,7 +1092,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		}
 	}
 	int skdam = dam << 6;
-	if ((attacker._pIFlags & ISPL_RNDSTEALLIFE) != 0) {
+	if (HasAnyOf(attacker._pIFlags, ItemSpecialEffect::RandomStealLife)) {
 		int tac = GenerateRnd(skdam / 8);
 		attacker._pHitPoints += tac;
 		if (attacker._pHitPoints > attacker._pMaxHP) {
@@ -1152,10 +1153,10 @@ bool DoAttack(int pnum)
 			}
 		}
 
-		if ((player._pIFlags & ISPL_FIREDAM) == 0 || (player._pIFlags & ISPL_LIGHTDAM) == 0) {
-			if ((player._pIFlags & ISPL_FIREDAM) != 0) {
+		if (!HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
 				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-			} else if ((player._pIFlags & ISPL_LIGHTDAM) != 0) {
+			} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
 				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
 		}
@@ -1241,7 +1242,7 @@ bool DoRangeAttack(int pnum)
 	if (player.AnimInfo.CurrentFrame == player._pAFNum) {
 		arrows = 1;
 	}
-	if ((player._pIFlags & ISPL_MULT_ARROWS) != 0 && player.AnimInfo.CurrentFrame == player._pAFNum + 2) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.CurrentFrame == player._pAFNum + 2) {
 		arrows = 2;
 	}
 
@@ -1260,13 +1261,13 @@ bool DoRangeAttack(int pnum)
 
 		int dmg = 4;
 		missile_id mistype = MIS_ARROW;
-		if ((player._pIFlags & ISPL_FIRE_ARROWS) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)) {
 			mistype = MIS_FARROW;
 		}
-		if ((player._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningArrows)) {
 			mistype = MIS_LARROW;
 		}
-		if ((player._pIFlags & ISPL_FIRE_ARROWS) != 0 && (player._pIFlags & ISPL_LIGHT_ARROWS) != 0) {
+		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
 			dmg = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
 			mistype = MIS_SPECARROW;
 		}
@@ -2128,7 +2129,7 @@ void Player::RestorePartialMana()
 		l *= 2;
 	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
-	if ((_pIFlags & ISPL_NOMANA) == 0) {
+	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 		_pMana = std::min(_pMana + l, _pMaxMana);
 		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
 	}
@@ -2682,7 +2683,7 @@ void CreatePlayer(int playerId, HeroClass c)
 	player.pLvlLoad = 0;
 	player.pBattleNet = false;
 	player.pManaShield = false;
-	player.pDamAcFlags = 0;
+	player.pDamAcFlags = ItemSpecialEffectHf::None;
 	player.wReflections = 0;
 
 	InitDungMsgs(player);
@@ -2740,7 +2741,7 @@ void NextPlrLevel(int pnum)
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;
 
-	if ((player._pIFlags & ISPL_NOMANA) == 0) {
+	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		player._pMana = player._pMaxMana;
 		player._pManaBase = player._pMaxManaBase;
 	}
@@ -3007,7 +3008,7 @@ void StartPlrBlock(int pnum, Direction dir)
 	PlaySfxLoc(IS_ISWORD, player.position.tile);
 
 	int skippedAnimationFrames = 0;
-	if ((player._pIFlags & ISPL_FASTBLOCK) != 0) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastBlock)) {
 		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
@@ -3076,14 +3077,14 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	Direction pd = player._pdir;
 
 	int skippedAnimationFrames = 0;
-	constexpr int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
-	if ((player._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
+	constexpr ItemSpecialEffect ZenFlags = ItemSpecialEffect::FastHitRecovery | ItemSpecialEffect::FasterHitRecovery | ItemSpecialEffect::FastestHitRecovery;
+	if (HasAllOf(player._pIFlags, ZenFlags)) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
 		skippedAnimationFrames = 4;
-	} else if ((player._pIFlags & ISPL_FASTESTRECOVER) != 0) {
+	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestHitRecovery)) {
 		skippedAnimationFrames = 3;
-	} else if ((player._pIFlags & ISPL_FASTERRECOVER) != 0) {
+	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterHitRecovery)) {
 		skippedAnimationFrames = 2;
-	} else if ((player._pIFlags & ISPL_FASTRECOVER) != 0) {
+	} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastHitRecovery)) {
 		skippedAnimationFrames = 1;
 	} else {
 		skippedAnimationFrames = 0;
@@ -3443,10 +3444,10 @@ void ProcessPlayers()
 			}
 
 			if (pnum == MyPlayerId) {
-				if ((player._pIFlags & ISPL_DRAINLIFE) != 0 && currlevel != 0) {
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && currlevel != 0) {
 					ApplyPlrDamage(pnum, 0, 0, 4);
 				}
-				if ((player._pIFlags & ISPL_NOMANA) != 0 && player._pManaBase > 0) {
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
 					player._pManaBase -= player._pMana;
 					player._pMana = 0;
 					drawmanaflag = true;
@@ -3825,7 +3826,7 @@ void ModifyPlrMag(int p, int l)
 
 	player._pMaxManaBase += ms;
 	player._pMaxMana += ms;
-	if ((player._pIFlags & ISPL_NOMANA) == 0) {
+	if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		player._pManaBase += ms;
 		player._pMana += ms;
 	}

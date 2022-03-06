@@ -503,17 +503,17 @@ std::string DebugCmdArrow(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
-	myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
+	myPlayer._pIFlags &= ~ItemSpecialEffect::FireArrows;
+	myPlayer._pIFlags &= ~ItemSpecialEffect::LightningArrows;
 
 	if (parameter == "normal") {
 		// we removed the parameter at the top
 	} else if (parameter == "fire") {
-		myPlayer._pIFlags |= ISPL_FIRE_ARROWS;
+		myPlayer._pIFlags |= ItemSpecialEffect::FireArrows;
 	} else if (parameter == "lightning") {
-		myPlayer._pIFlags |= ISPL_LIGHT_ARROWS;
+		myPlayer._pIFlags |= ItemSpecialEffect::LightningArrows;
 	} else if (parameter == "explosion") {
-		myPlayer._pIFlags |= (ISPL_FIRE_ARROWS | ISPL_LIGHT_ARROWS);
+		myPlayer._pIFlags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows);
 	} else {
 		return "Unknown is sometimes similar to nothing (unkown effect).";
 	}

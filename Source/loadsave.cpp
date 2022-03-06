@@ -242,7 +242,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iMinDam = file.NextLE<int32_t>();
 	item._iMaxDam = file.NextLE<int32_t>();
 	item._iAC = file.NextLE<int32_t>();
-	item._iFlags = file.NextLE<uint32_t>();
+	item._iFlags = static_cast<ItemSpecialEffect>(file.NextLE<uint32_t>());
 	item._iMiscId = static_cast<item_misc_id>(file.NextLE<int32_t>());
 	item._iSpell = static_cast<spell_id>(file.NextLE<int32_t>());
 	item._iCharges = file.NextLE<int32_t>();
@@ -294,9 +294,9 @@ void LoadItemData(LoadHelper &file, Item &item)
 	}
 	item.dwBuff = file.NextLE<uint32_t>();
 	if (gbIsHellfireSaveGame)
-		item._iDamAcFlags = file.NextLE<uint32_t>();
+		item._iDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	else
-		item._iDamAcFlags = 0;
+		item._iDamAcFlags = ItemSpecialEffectHf::None;
 
 	RemoveInvalidItem(item);
 }
@@ -485,7 +485,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(4); // Alignment
 
 	player._pISpells = file.NextLE<uint64_t>();
-	player._pIFlags = file.NextLE<int32_t>();
+	player._pIFlags = static_cast<ItemSpecialEffect>(file.NextLE<int32_t>());
 	player._pIGetHit = file.NextLE<int32_t>();
 	player._pISplLvlAdd = file.NextLE<int8_t>();
 	file.Skip(1); // Unused
@@ -521,7 +521,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	player.pDiabloKillLevel = file.NextLE<uint32_t>();
 	player.pDifficulty = static_cast<_difficulty>(file.NextLE<uint32_t>());
-	player.pDamAcFlags = file.NextLE<uint32_t>();
+	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	file.Skip(20); // Available bytes
 	CalcPlrItemVals(player, false);
 
@@ -966,7 +966,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item._iMinDam);
 	file.WriteLE<int32_t>(item._iMaxDam);
 	file.WriteLE<int32_t>(item._iAC);
-	file.WriteLE<uint32_t>(item._iFlags);
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iFlags));
 	file.WriteLE<int32_t>(item._iMiscId);
 	file.WriteLE<int32_t>(item._iSpell);
 	file.WriteLE<int32_t>(item._iCharges);
@@ -1012,7 +1012,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(idx);
 	file.WriteLE<uint32_t>(item.dwBuff);
 	if (gbIsHellfire)
-		file.WriteLE<uint32_t>(item._iDamAcFlags);
+		file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iDamAcFlags));
 }
 
 void SavePlayer(SaveHelper &file, const Player &player)
@@ -1204,7 +1204,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(4); // Alignment
 
 	file.WriteLE<uint64_t>(player._pISpells);
-	file.WriteLE<int32_t>(player._pIFlags);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player._pIFlags));
 	file.WriteLE<int32_t>(player._pIGetHit);
 
 	file.WriteLE<int8_t>(player._pISplLvlAdd);
@@ -1232,7 +1232,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	file.WriteLE<uint32_t>(player.pDiabloKillLevel);
 	file.WriteLE<uint32_t>(player.pDifficulty);
-	file.WriteLE<uint32_t>(player.pDamAcFlags);
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(player.pDamAcFlags));
 	file.Skip(20); // Available bytes
 
 	// Omit pointer _pNData
@@ -1576,7 +1576,7 @@ void RemoveInvalidItem(Item &item)
 	if (!gbIsHellfire) {
 		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
 		isInvalid = isInvalid || (item._iMiscId == IMISC_BOOK && GetSpellBookLevel(item._iSpell) == -1);
-		isInvalid = isInvalid || item._iDamAcFlags != 0;
+		isInvalid = isInvalid || item._iDamAcFlags != ItemSpecialEffectHf::None;
 		isInvalid = isInvalid || item._iPrePower > IPL_LASTDIABLO;
 		isInvalid = isInvalid || item._iSufPower > IPL_LASTDIABLO;
 	}
