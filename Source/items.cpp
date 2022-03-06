@@ -1201,7 +1201,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 				continue;
 			if (onlygood && !ItemPrefixes[j].PLOk)
 				continue;
-			if (HasAnyOf(flgs,AffixItemType::Staff) && ItemPrefixes[j].power.type == IPL_CHARGES)
+			if (HasAnyOf(flgs, AffixItemType::Staff) && ItemPrefixes[j].power.type == IPL_CHARGES)
 				continue;
 			l[nt] = j;
 			nt++;
