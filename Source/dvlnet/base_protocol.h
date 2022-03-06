@@ -288,7 +288,7 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		// normal packets
 		LogDebug("Invalid packet: packet source ({}) >= MAX_PLRS", pkt.Source());
 		return;
-	} else if (sender != peers[pkt.Source()]) {
+	} else if (sender != peers[pkt.Source()] && sender != firstpeer) {
 		LogDebug("Invalid packet: packet source ({}) received from unrecognized endpoint", pkt.Source());
 		return;
 	}
