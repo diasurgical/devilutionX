@@ -57,6 +57,7 @@
 #include "panels/spell_list.hpp"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "qol/chatlog.h"
 #include "qol/common.h"
 #include "qol/itemlabels.h"
 #include "restrict.h"
@@ -491,6 +492,8 @@ void PressKey(int vkey)
 			QuestlogUp();
 		} else if (HelpFlag) {
 			HelpScrollUp();
+		} else if (ChatLogFlag) {
+			ChatLogScrollUp();
 		} else if (AutomapActive) {
 			AutomapUp();
 		}
@@ -501,16 +504,22 @@ void PressKey(int vkey)
 			QuestlogDown();
 		} else if (HelpFlag) {
 			HelpScrollDown();
+		} else if (ChatLogFlag) {
+			ChatLogScrollDown();
 		} else if (AutomapActive) {
 			AutomapDown();
 		}
 	} else if (vkey == DVL_VK_PRIOR) {
 		if (stextflag != STORE_NONE) {
 			StorePrior();
+		} else if (ChatLogFlag) {
+			ChatLogScrollTop();
 		}
 	} else if (vkey == DVL_VK_NEXT) {
 		if (stextflag != STORE_NONE) {
 			StoreNext();
+		} else if (ChatLogFlag) {
+			ChatLogScrollBottom();
 		}
 	} else if (vkey == DVL_VK_LEFT) {
 		if (AutomapActive && !talkflag) {
@@ -1549,6 +1558,7 @@ void InitKeymapActions()
 	    [] {
 		    ClosePanels();
 		    HelpFlag = false;
+		    ChatLogFlag = false;
 		    spselflag = false;
 		    if (qtextflag && leveltype == DTYPE_TOWN) {
 			    qtextflag = false;
@@ -1623,6 +1633,14 @@ void InitKeymapActions()
 	    },
 	    nullptr,
 	    CanPlayerTakeAction);
+	sgOptions.Keymapper.AddAction(
+	    "ChatLog",
+	    N_("Chat Log"),
+	    N_("Displays chat log."),
+	    'L',
+	    [] {
+		    ToggleChatLog();
+	    });
 #ifdef _DEBUG
 	sgOptions.Keymapper.AddAction(
 	    "DebugToggle",
@@ -1892,6 +1910,11 @@ bool PressEscKey()
 
 	if (HelpFlag) {
 		HelpFlag = false;
+		rv = true;
+	}
+
+	if (ChatLogFlag) {
+		ChatLogFlag = false;
 		rv = true;
 	}
 

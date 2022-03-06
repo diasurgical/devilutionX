@@ -12,6 +12,7 @@
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
+#include "qol/chatlog.h"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
@@ -71,6 +72,7 @@ void EventPlrMsg(string_view text, UiFlags style)
 	message.text = std::string(text);
 	message.from = string_view(message.text.data(), 0);
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
+	AddMessageToChatLog(std::string(text));
 }
 
 void SendPlrMsg(Player &player, string_view text)
@@ -84,6 +86,7 @@ void SendPlrMsg(Player &player, string_view text)
 	message.text = from + std::string(text);
 	message.from = string_view(message.text.data(), from.size());
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
+	AddMessageToChatLog(std::string(text), &player);
 }
 
 void InitPlrMsg()
@@ -93,6 +96,9 @@ void InitPlrMsg()
 
 void DrawPlrMsg(const Surface &out)
 {
+	if (ChatLogFlag)
+		return;
+
 	int x = 10;
 	int y = PANEL_TOP - 13;
 	int width = gnScreenWidth - 20;

@@ -96,6 +96,7 @@ set(libdevilutionx_SRCS
   mpq/mpq_sdl_rwops.cpp
   mpq/mpq_writer.cpp
   qol/autopickup.cpp
+  qol/chatlog.cpp
   qol/common.cpp
   qol/monhealthbar.cpp
   qol/xpbar.cpp
