@@ -2010,7 +2010,13 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 
 	plvl = clamp(plvl, 1, 30);
 
-	for (int count = 0; count < 150; count++) {
+	int maxCount;
+	if (gbIsHellfire)
+		maxCount = 150;
+	else
+		maxCount = 65000;	// Diablo originally had no limitation, but it seems wise to have a break in the loop so you don't sit there forever.
+	
+	for (int count = 0; count < maxCount; count++) {
 		premiumItem = {};
 		premiumItem._iSeed = AdvanceRndSeed();
 		SetRndSeed(premiumItem._iSeed);
