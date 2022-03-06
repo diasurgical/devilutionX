@@ -131,7 +131,7 @@ TEST(Inv, GoldAutoPlace)
 	Players[MyPlayerId].HoldItem._itype = ItemType::Gold;
 	Players[MyPlayerId].HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
 
-	GoldAutoPlace(Players[MyPlayerId]);
+	GoldAutoPlace(Players[MyPlayerId], Players[MyPlayerId].HoldItem);
 	// We expect the inventory:
 	// | 5000 | 900 | ...
 	EXPECT_EQ(Players[MyPlayerId].InvList[0]._ivalue, GOLD_MAX_LIMIT);
