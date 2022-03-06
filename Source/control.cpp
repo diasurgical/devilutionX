@@ -372,7 +372,7 @@ void RemoveGold(Player &player, int goldIndex)
 	SetGoldSeed(player, player.HoldItem);
 	player.HoldItem._ivalue = dropGoldValue;
 	player.HoldItem._iStatFlag = true;
-	ControlSetGoldCurs(player);
+	ControlSetGoldCurs(player.HoldItem);
 	player._pGold = CalculateGold(player);
 	dropGoldValue = 0;
 }
@@ -397,10 +397,10 @@ bool IsLevelUpButtonVisible()
 
 } // namespace
 
-void ControlSetGoldCurs(Player &player)
+void ControlSetGoldCurs(Item &goldItem)
 {
-	SetPlrHandGoldCurs(player.HoldItem);
-	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+	SetPlrHandGoldCurs(goldItem);
+	NewCursor(goldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
 void CalculatePanelAreas()

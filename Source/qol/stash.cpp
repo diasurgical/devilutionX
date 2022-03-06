@@ -262,7 +262,7 @@ void WithdrawGold(Player &player, int amount)
 	SetGoldSeed(player, player.HoldItem);
 	player.HoldItem._ivalue = amount;
 	player.HoldItem._iStatFlag = true;
-	ControlSetGoldCurs(player);
+	ControlSetGoldCurs(player.HoldItem);
 	Stash.gold -= amount;
 	Stash.dirty = true;
 }
