@@ -1173,6 +1173,34 @@ void StartGoldDrop()
 	SDL_StartTextInput();
 }
 
+bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex, Item &goldStack)
+{
+	if (player.InvGrid[slotIndex] != 0) {
+		return false;
+	}
+
+	int ii = player._pNumInv;
+	player.InvList[ii] = goldStack;
+	player._pNumInv++;
+	player.InvGrid[slotIndex] = player._pNumInv;
+	GenerateNewSeed(player.InvList[ii]);
+
+	int gold = goldStack._ivalue;
+	if (gold > MaxGold) {
+		gold -= MaxGold;
+		goldStack._ivalue = gold;
+		GenerateNewSeed(goldStack);
+		player.InvList[ii]._ivalue = MaxGold;
+		return false;
+	}
+
+	goldStack._ivalue = 0;
+	player._pGold = CalculateGold(player);
+	NewCursor(CURSOR_HAND);
+
+	return true;
+}
+
 } // namespace
 
 void FreeInvGFX()
@@ -1499,8 +1527,6 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 	return true;
 }
 
-bool GoldAutoPlaceInInventorySlot(Player &, int, Item &);
-
 bool GoldAutoPlace(Player &player, Item &goldStack)
 {
 	bool done = false;
@@ -1537,34 +1563,6 @@ bool GoldAutoPlace(Player &player, Item &goldStack)
 
 	player._pGold = CalculateGold(player);
 	return done;
-}
-
-bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex, Item &goldStack)
-{
-	if (player.InvGrid[slotIndex] != 0) {
-		return false;
-	}
-
-	int ii = player._pNumInv;
-	player.InvList[ii] = goldStack;
-	player._pNumInv++;
-	player.InvGrid[slotIndex] = player._pNumInv;
-	GenerateNewSeed(player.InvList[ii]);
-
-	int gold = goldStack._ivalue;
-	if (gold > MaxGold) {
-		gold -= MaxGold;
-		goldStack._ivalue = gold;
-		GenerateNewSeed(goldStack);
-		player.InvList[ii]._ivalue = MaxGold;
-		return false;
-	}
-
-	goldStack._ivalue = 0;
-	player._pGold = CalculateGold(player);
-	NewCursor(CURSOR_HAND);
-
-	return true;
 }
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
