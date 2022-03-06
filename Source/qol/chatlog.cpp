@@ -130,7 +130,7 @@ void AddMessageToChatLog(const std::string &message, Player *player, UiFlags fla
 		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor } } });
 	}
 
-	int diff = ChatLogLines.size() - oldSize;
+	unsigned int diff = ChatLogLines.size() - oldSize;
 	// only autoscroll when on top of the log
 	if (SkipLines != 0) {
 		SkipLines += diff;
@@ -158,7 +158,7 @@ void DrawChatLog(const Surface &out)
 
 	time_t tm = time(nullptr);
 	std::string timestamp = fmt::format("{:02}:{:02}:{:02}", localtime(&tm)->tm_hour, localtime(&tm)->tm_min, localtime(&tm)->tm_sec);
-	DrawString(out, timestamp, { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } }, UiFlags::ColorRed);
+	DrawString(out, timestamp, { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } }, UiFlags::ColorWhitegold);
 
 	const int titleBottom = sy + HeaderHeight();
 	DrawSLine(out, titleBottom);
