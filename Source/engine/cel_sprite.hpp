@@ -3,6 +3,7 @@
 #include <memory>
 #include <utility>
 
+#include "utils/pointer_value_union.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -23,7 +24,7 @@ public:
 
 	CelSprite(const byte *data, const uint16_t *widths)
 	    : data_ptr_(data)
-	    , widths_(widths)
+	    , width_(widths)
 	{
 	}
 
@@ -41,7 +42,7 @@ public:
 
 	[[nodiscard]] uint16_t Width(std::size_t frame = 1) const
 	{
-		return widths_ == nullptr ? width_ : widths_[frame];
+		return width_.HoldsPointer() ? width_.AsPointer()[frame] : width_.AsValue();
 	}
 
 	[[nodiscard]] bool operator==(CelSprite other) const
@@ -55,8 +56,7 @@ public:
 
 private:
 	const byte *data_ptr_;
-	uint16_t width_ = 0;
-	const uint16_t *widths_ = nullptr; // unowned
+	PointerOrValue<uint16_t> width_;
 };
 
 /**
