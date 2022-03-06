@@ -2339,7 +2339,7 @@ void AddHeal(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	auto &player = Players[missile._misource];
 
-	int hp = (GenerateRnd(10) + 1);
+	int hp = GenerateRnd(10) + 1;
 	hp += GenerateRndSum(4, player._pLevel) + player._pLevel;
 	hp += GenerateRndSum(6, missile._mispllvl) + missile._mispllvl;
 	hp <<= 6;
