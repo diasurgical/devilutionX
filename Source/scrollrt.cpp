@@ -455,7 +455,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, Point position, bool lighting)
 {
-	position.x += CalculateWidth2(static_cast<int>(Players[pnum].AnimInfo.celSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2);
+	position.x += CalculateWidth2(Players[pnum].AnimInfo.celSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2;
 
 	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
 
