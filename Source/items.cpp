@@ -344,24 +344,24 @@ int premiumLvlAddHellfire[] = {
 	// clang-format on
 };
 
-bool IsPrefixValidForItemType(int i, int flgs)
+bool IsPrefixValidForItemType(int i, AffixItemType flgs)
 {
-	int itemTypes = ItemPrefixes[i].PLIType;
+	AffixItemType itemTypes = ItemPrefixes[i].PLIType;
 
 	if (!gbIsHellfire) {
 		if (i > 82)
 			return false;
 
 		if (i >= 12 && i <= 20)
-			itemTypes &= ~PLT_STAFF;
+			itemTypes &= ~AffixItemType::Staff;
 	}
 
-	return (flgs & itemTypes) != 0;
+	return HasAnyOf(flgs, itemTypes);
 }
 
-bool IsSuffixValidForItemType(int i, int flgs)
+bool IsSuffixValidForItemType(int i, AffixItemType flgs)
 {
-	int itemTypes = ItemSuffixes[i].PLIType;
+	AffixItemType itemTypes = ItemSuffixes[i].PLIType;
 
 	if (!gbIsHellfire) {
 		if (i > 94)
@@ -373,10 +373,10 @@ bool IsSuffixValidForItemType(int i, int flgs)
 		    || (i >= 34 && i <= 36)
 		    || (i >= 41 && i <= 44)
 		    || (i >= 60 && i <= 63))
-			itemTypes &= ~PLT_STAFF;
+			itemTypes &= ~AffixItemType::Staff;
 	}
 
-	return (flgs & itemTypes) != 0;
+	return HasAnyOf(flgs, itemTypes);
 }
 
 int ItemsGetCurrlevel()
@@ -1111,7 +1111,7 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 		int nl = 0;
 		int l[256];
 		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
-			if (!IsPrefixValidForItemType(j, PLT_STAFF) || ItemPrefixes[j].PLMinLvl > lvl)
+			if (!IsPrefixValidForItemType(j, AffixItemType::Staff) || ItemPrefixes[j].PLMinLvl > lvl)
 				continue;
 			if (onlygood && !ItemPrefixes[j].PLOk)
 				continue;
@@ -1174,7 +1174,7 @@ std::string GenerateMagicItemName(const string_view &baseNamel, int preidx, int 
 
 } // namespace
 
-void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
+void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool onlygood)
 {
 	int l[256];
 	goodorevil goe;
@@ -1201,7 +1201,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool
 				continue;
 			if (onlygood && !ItemPrefixes[j].PLOk)
 				continue;
-			if (flgs == PLT_STAFF && ItemPrefixes[j].power.type == IPL_CHARGES)
+			if (HasAnyOf(flgs,AffixItemType::Staff) && ItemPrefixes[j].power.type == IPL_CHARGES)
 				continue;
 			l[nt] = j;
 			nt++;
@@ -1248,7 +1248,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool
 void GetStaffSpell(Item &item, int lvl, bool onlygood)
 {
 	if (!gbIsHellfire && GenerateRnd(4) == 0) {
-		GetItemPower(item, lvl / 2, lvl, PLT_STAFF, onlygood);
+		GetItemPower(item, lvl / 2, lvl, AffixItemType::Staff, onlygood);
 		return;
 	}
 
@@ -1327,29 +1327,29 @@ void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allows
 	case ItemType::Sword:
 	case ItemType::Axe:
 	case ItemType::Mace:
-		GetItemPower(item, minlvl, maxlvl, PLT_WEAP, onlygood);
+		GetItemPower(item, minlvl, maxlvl, AffixItemType::Weapon, onlygood);
 		break;
 	case ItemType::Bow:
-		GetItemPower(item, minlvl, maxlvl, PLT_BOW, onlygood);
+		GetItemPower(item, minlvl, maxlvl, AffixItemType::Bow, onlygood);
 		break;
 	case ItemType::Shield:
-		GetItemPower(item, minlvl, maxlvl, PLT_SHLD, onlygood);
+		GetItemPower(item, minlvl, maxlvl, AffixItemType::Shield, onlygood);
 		break;
 	case ItemType::LightArmor:
 	case ItemType::Helm:
 	case ItemType::MediumArmor:
 	case ItemType::HeavyArmor:
-		GetItemPower(item, minlvl, maxlvl, PLT_ARMO, onlygood);
+		GetItemPower(item, minlvl, maxlvl, AffixItemType::Armor, onlygood);
 		break;
 	case ItemType::Staff:
 		if (allowspells)
 			GetStaffSpell(item, maxlvl, onlygood);
 		else
-			GetItemPower(item, minlvl, maxlvl, PLT_STAFF, onlygood);
+			GetItemPower(item, minlvl, maxlvl, AffixItemType::Staff, onlygood);
 		break;
 	case ItemType::Ring:
 	case ItemType::Amulet:
-		GetItemPower(item, minlvl, maxlvl, PLT_MISC, onlygood);
+		GetItemPower(item, minlvl, maxlvl, AffixItemType::Misc, onlygood);
 		break;
 	case ItemType::None:
 	case ItemType::Misc:
