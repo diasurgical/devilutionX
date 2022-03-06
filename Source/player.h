@@ -149,6 +149,7 @@ enum action_id : int8_t {
 
 enum class SpellFlag : uint8_t {
 	// clang-format off
+	None         = 0,
 	Etherealize  = 1 << 0,
 	RageActive   = 1 << 1,
 	RageCooldown = 1 << 2,
@@ -778,5 +779,6 @@ extern int MagicTbl[enum_size<HeroClass>::value];
 extern int DexterityTbl[enum_size<HeroClass>::value];
 extern int VitalityTbl[enum_size<HeroClass>::value];
 extern uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1];
+
 
 } // namespace devilution

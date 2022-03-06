@@ -2640,7 +2640,7 @@ void CreatePlayer(int playerId, HeroClass c)
 		spellLevel = 0;
 	}
 
-	player._pSpellFlags = 0;
+	player._pSpellFlags = SpellFlag::None;
 
 	if (player._pClass == HeroClass::Sorcerer) {
 		player._pSplLvl[SPL_FIREBOLT] = 2;
