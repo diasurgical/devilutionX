@@ -56,7 +56,6 @@ int8_t dPlayer[MAXDUNX][MAXDUNY];
 int16_t dMonster[MAXDUNX][MAXDUNY];
 int8_t dCorpse[MAXDUNX][MAXDUNY];
 int8_t dObject[MAXDUNX][MAXDUNY];
-int8_t dItem[MAXDUNX][MAXDUNY];
 char dSpecial[MAXDUNX][MAXDUNY];
 int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
@@ -622,7 +621,6 @@ void DRLG_Init_Globals()
 	memset(dMonster, 0, sizeof(dMonster));
 	memset(dCorpse, 0, sizeof(dCorpse));
 	memset(dObject, 0, sizeof(dObject));
-	memset(dItem, 0, sizeof(dItem));
 	memset(dSpecial, 0, sizeof(dSpecial));
 	int8_t c = DisableLighting ? 0 : 15;
 	memset(dLight, c, sizeof(dLight));

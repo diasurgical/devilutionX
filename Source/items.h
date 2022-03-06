@@ -413,9 +413,12 @@ struct CornerStoneStruct {
 
 struct Player;
 
+/** Contains the items on ground in the current game. */
 extern Item Items[MAXITEMS + 1];
 extern uint8_t ActiveItems[MAXITEMS];
 extern uint8_t ActiveItemCount;
+/** Contains the location of dropped items. */
+extern int8_t dItem[MAXDUNX][MAXDUNY];
 extern bool ShowUniqueItemInfoBox;
 extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
@@ -427,8 +430,8 @@ void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
-void SetPlrHandItem(Item &item, int itemData);
-void GetPlrHandSeed(Item *h);
+void InitializeItem(Item &item, int itemData);
+void GenerateNewSeed(Item &h);
 
 /**
  * @brief Set a new unique seed value on the given item
@@ -462,7 +465,7 @@ void SpawnRewardItem(int itemid, Point position);
 void SpawnMapOfDoom(Point position);
 void SpawnRuneBomb(Point position);
 void SpawnTheodore(Point position);
-void RespawnItem(Item *item, bool FlipFlag);
+void RespawnItem(Item &item, bool FlipFlag);
 void DeleteItem(int i);
 void ProcessItems();
 void FreeItemGFX();

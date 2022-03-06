@@ -374,7 +374,7 @@ void RemoveGold(Player &player, int goldIndex)
 		SetPlrHandGoldCurs(player.InvList[gi]);
 	else
 		player.RemoveInvItem(gi);
-	SetPlrHandItem(player.HoldItem, IDI_GOLD);
+	InitializeItem(player.HoldItem, IDI_GOLD);
 	SetGoldSeed(player, player.HoldItem);
 	player.HoldItem._ivalue = dropGoldValue;
 	player.HoldItem._iStatFlag = true;

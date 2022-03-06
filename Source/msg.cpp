@@ -2292,7 +2292,7 @@ void DeltaLoadLevel()
 			int y = sgLevels[currlevel].item[i].y;
 			item.position = GetItemPosition({ x, y });
 			dItem[item.position.x][item.position.y] = ii + 1;
-			RespawnItem(&Items[ii], false);
+			RespawnItem(Items[ii], false);
 		}
 	}
 
