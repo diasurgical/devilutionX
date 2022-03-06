@@ -2339,13 +2339,10 @@ void AddHeal(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	auto &player = Players[missile._misource];
 
-	int hp = (GenerateRnd(10) + 1) << 6;
-	for (int i = 0; i < player._pLevel; i++) {
-		hp += (GenerateRnd(4) + 1) << 6;
-	}
-	for (int i = 0; i < missile._mispllvl; i++) {
-		hp += (GenerateRnd(6) + 1) << 6;
-	}
+	int hp = GenerateRnd(10) + 1;
+	hp += GenerateRndSum(4, player._pLevel) + player._pLevel;
+	hp += GenerateRndSum(6, missile._mispllvl) + missile._mispllvl;
+	hp <<= 6;
 
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian || player._pClass == HeroClass::Monk) {
 		hp *= 2;
