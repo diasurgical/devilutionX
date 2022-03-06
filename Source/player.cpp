@@ -536,7 +536,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
 }
 
-void RespawnDeadItem(Item &itm, Point target)
+void RespawnDeadItem(Item &&itm, Point target)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -548,17 +548,17 @@ void RespawnDeadItem(Item &itm, Point target)
 	Items[ii] = itm;
 	Items[ii].position = target;
 	RespawnItem(Items[ii], true);
+	NetSendCmdPItem(false, CMD_RESPAWNITEM, target, Items[ii]);
 }
 
-void DeadItem(Player &player, Item &itm, Displacement direction)
+void DeadItem(Player &player, Item &&itm, Displacement direction)
 {
 	if (itm.isEmpty())
 		return;
 
 	Point target = player.position.tile + direction;
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
-		RespawnDeadItem(itm, target);
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, itm);
+		RespawnDeadItem(std::move(itm), target);
 		return;
 	}
 
@@ -567,8 +567,7 @@ void DeadItem(Player &player, Item &itm, Displacement direction)
 			for (int i = -k; i <= k; i++) {
 				Point next = player.position.tile + Displacement { i, j };
 				if (ItemSpaceOk(next)) {
-					RespawnDeadItem(itm, next);
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, itm);
+					RespawnDeadItem(std::move(itm), next);
 					return;
 				}
 			}
@@ -592,12 +591,12 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 			gold._ivalue = amount;
 			item._ivalue -= amount;
 			SetPlrHandGoldCurs(gold);
-			DeadItem(player, gold, { 0, 0 });
+			DeadItem(player, std::move(gold), { 0, 0 });
 			return 0;
 		}
 
 		amount -= item._ivalue;
-		DeadItem(player, item, { 0, 0 });
+		DeadItem(player, std::move(item), { 0, 0 });
 		player.RemoveInvItem(i);
 		i = -1;
 	}
@@ -3143,7 +3142,7 @@ StartPlayerKill(int pnum, int earflag)
 			drawhpflag = true;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
-				DeadItem(player, player.HoldItem, { 0, 0 });
+				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
 				player.HoldItem._itype = ItemType::None;
 				NewCursor(CURSOR_HAND);
 			}
@@ -3175,13 +3174,13 @@ StartPlayerKill(int pnum, int earflag)
 						ear._ivalue = player._pLevel;
 
 						if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
-							DeadItem(player, ear, { 0, 0 });
+							DeadItem(player, std::move(ear), { 0, 0 });
 						}
 					} else {
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = Left(pdd);
-							DeadItem(player, item, Displacement(pdd));
+							DeadItem(player, std::move(item), Displacement(pdd));
 							item._itype = ItemType::None;
 						}
 
@@ -3206,7 +3205,7 @@ void StripTopGold(Player &player)
 				SetPlrHandGoldCurs(excessGold);
 				item._ivalue = MaxGold;
 				if (!GoldAutoPlace(player, excessGold)) {
-					DeadItem(player, excessGold, { 0, 0 });
+					DeadItem(player, std::move(excessGold), { 0, 0 });
 				}
 			}
 		}
