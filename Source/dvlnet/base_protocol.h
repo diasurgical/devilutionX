@@ -45,6 +45,7 @@ private:
 	void handle_join_request(packet &pkt, endpoint sender);
 	void recv_decrypted(packet &pkt, endpoint sender);
 	void recv_ingame(packet &pkt, endpoint sender);
+	bool is_recognized(endpoint sender);
 
 	bool wait_network();
 	bool wait_firstpeer();
@@ -205,6 +206,7 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 	plr_t i;
 	for (i = 0; i < MAX_PLRS; ++i) {
 		if (i != plr_self && !peers[i]) {
+			connected_table[i] = true;
 			peers[i] = sender;
 			break;
 		}
@@ -213,16 +215,23 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 		// already full
 		return;
 	}
-	for (plr_t j = 0; j < MAX_PLRS; ++j) {
-		if ((j != plr_self) && (j != i) && peers[j]) {
-			auto infopkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, j, peers[j].serialize());
-			proto.send(sender, infopkt->Data());
-		}
-	}
+
 	auto reply = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST,
 	    pkt.Cookie(), i,
 	    game_init_info);
 	proto.send(sender, reply->Data());
+
+	auto senderinfo = sender.serialize();
+	for (plr_t j = 0; j < MAX_PLRS; ++j) {
+		endpoint peer = peers[j];
+		if ((j != plr_self) && (j != i) && peer) {
+			auto peerpkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, i, senderinfo);
+			proto.send(peer, peerpkt->Data());
+
+			auto infopkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, j, peer.serialize());
+			proto.send(sender, infopkt->Data());
+		}
+	}
 }
 
 template <class P>
@@ -280,6 +289,11 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		}
 		return;
 	} else if (pkt.Source() == PLR_MASTER && pkt.Type() == PT_CONNECT) {
+		if (!is_recognized(sender)) {
+			LogDebug("Invalid packet: PT_CONNECT received from unrecognized endpoint");
+			return;
+		}
+
 		// addrinfo packets
 		connected_table[pkt.NewPlayer()] = true;
 		peers[pkt.NewPlayer()].unserialize(pkt.Info());
@@ -288,15 +302,34 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		// normal packets
 		LogDebug("Invalid packet: packet source ({}) >= MAX_PLRS", pkt.Source());
 		return;
-	} else if (sender != peers[pkt.Source()] && sender != firstpeer) {
+	} else if (sender == firstpeer && pkt.Type() == PT_JOIN_ACCEPT) {
+		connected_table[pkt.Source()] = true;
+		peers[pkt.Source()] = sender;
+		firstpeer = endpoint();
+	} else if (sender != peers[pkt.Source()]) {
 		LogDebug("Invalid packet: packet source ({}) received from unrecognized endpoint", pkt.Source());
 		return;
 	}
-	connected_table[pkt.Source()] = true;
-	peers[pkt.Source()] = sender;
 	if (pkt.Destination() != plr_self && pkt.Destination() != PLR_BROADCAST)
 		return; // packet not for us, drop
 	RecvLocal(pkt);
+}
+
+template <class P>
+bool base_protocol<P>::is_recognized(endpoint sender)
+{
+	if (!sender)
+		return false;
+
+	if (sender == firstpeer)
+		return true;
+
+	for (auto player = 0; player <= MAX_PLRS; player++) {
+		if (sender == peers[player])
+			return true;
+	}
+
+	return false;
 }
 
 template <class P>
