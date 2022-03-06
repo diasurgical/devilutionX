@@ -197,7 +197,7 @@ struct Item {
 	uint8_t _iMinDam = 0;
 	uint8_t _iMaxDam = 0;
 	int16_t _iAC = 0;
-	ItemSpecialEffect _iFlags = ItemSpecialEffect::None; // ItemSpecialEffect flags
+	ItemSpecialEffect _iFlags = ItemSpecialEffect::None;
 	enum item_misc_id _iMiscId = IMISC_NONE;
 	enum spell_id _iSpell = SPL_NULL;
 	int _iCharges = 0;
