@@ -2011,10 +2011,9 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 	plvl = clamp(plvl, 1, 30);
 
 	int maxCount;
-	if (gbIsHellfire)
-		maxCount = 150;
+    if (gbIsHellfire)
+        maxCount = 150;
 	else
-		/* Diablo originally had no limitation, but it seems wise to have a break in the loop so you don't sit there forever. */
 		maxCount = 65000;
 
 	for (int count = 0; count < maxCount; count++) {
