@@ -2169,11 +2169,9 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 
 	plvl = clamp(plvl, 1, 30);
 
-	int maxCount;
-    if (gbIsHellfire)
-        maxCount = 150;
-	else
-		maxCount = 65000;
+	int maxCount = 65000;
+	if (gbIsHellfire)
+		maxCount = 150;
 
 	for (int count = 0; count < maxCount; count++) {
 		premiumItem = {};
