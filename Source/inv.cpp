@@ -906,18 +906,18 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 }
 
-void CheckBookLevel(Player &player)
+void UpdateBookLevel(Player &player, Item &book)
 {
-	if (player.HoldItem._iMiscId != IMISC_BOOK)
+	if (book._iMiscId != IMISC_BOOK)
 		return;
 
-	player.HoldItem._iMinMag = spelldata[player.HoldItem._iSpell].sMinInt;
-	int8_t spellLevel = player._pSplLvl[player.HoldItem._iSpell];
+	book._iMinMag = spelldata[book._iSpell].sMinInt;
+	int8_t spellLevel = player._pSplLvl[book._iSpell];
 	while (spellLevel != 0) {
-		player.HoldItem._iMinMag += 20 * player.HoldItem._iMinMag / 100;
+		book._iMinMag += 20 * book._iMinMag / 100;
 		spellLevel--;
-		if (player.HoldItem._iMinMag + 20 * player.HoldItem._iMinMag / 100 > 255) {
-			player.HoldItem._iMinMag = -1;
+		if (book._iMinMag + 20 * book._iMinMag / 100 > 255) {
+			book._iMinMag = -1;
 			spellLevel = 0;
 		}
 	}
@@ -1625,7 +1625,7 @@ void InvGetItem(int pnum, int ii)
 	item._iCreateInfo &= ~CF_PREGEN;
 	player.HoldItem = item;
 	CheckQuestItem(player);
-	CheckBookLevel(player);
+	UpdateBookLevel(player, player.HoldItem);
 	CheckItemStats(player);
 	bool cursorUpdated = false;
 	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player, player.HoldItem))
@@ -1658,7 +1658,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	item->_iCreateInfo &= ~CF_PREGEN;
 	player.HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(player);
-	CheckBookLevel(player);
+	UpdateBookLevel(player, player.HoldItem);
 	CheckItemStats(player);
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	if (player.HoldItem._itype == ItemType::Gold) {
