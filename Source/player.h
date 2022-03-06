@@ -646,7 +646,7 @@ struct Player {
 	 */
 	void RestoreFullMana()
 	{
-		if (HasNoneOf(_pIFlags,ItemSpecialEffect::NoMana)) {
+		if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 			_pMana = _pMaxMana;
 			_pManaBase = _pMaxManaBase;
 		}

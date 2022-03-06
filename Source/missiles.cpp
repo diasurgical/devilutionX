@@ -291,7 +291,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 				M_StartHit(m, pnum, dam);
 			monster.Petrify();
 		} else {
-			if (MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback)){
+			if (MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback)) {
 				M_GetKnockback(m);
 			}
 			if (m > MAX_PLRS - 1)
@@ -1473,7 +1473,7 @@ void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter)
 			av++;
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
 			av += 2;
-		if (HasAnyOf(player._pIFlags,ItemSpecialEffect::FasterAttack))
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
 			av += 4;
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 			av += 8;

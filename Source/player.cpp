@@ -963,8 +963,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		}
 		drawhpflag = true;
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana))
-		{
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3 | ItemSpecialEffect::StealMana5) && HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::StealMana3)) {
 			skdam = 3 * dam / 100;
 		}
