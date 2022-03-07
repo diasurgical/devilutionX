@@ -69,6 +69,11 @@ int tcp_client::join(std::string addrstr)
 	return plr_self;
 }
 
+bool tcp_client::IsGameHost()
+{
+	return local_server != nullptr;
+}
+
 void tcp_client::poll()
 {
 	ioc.poll();
