@@ -124,7 +124,7 @@ void AddMessageToChatLog(const std::string &message, Player *player, UiFlags fla
 	if (player == nullptr) {
 		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { message, flags } } });
 	} else {
-		std::string playerInfo = fmt::format(_("{:s} (lvl {:d}): {:s}"), player->_pName, player->_pLevel, "");
+		std::string playerInfo = fmt::format(_("{:s} (lvl {:d}): "), player->_pName, player->_pLevel);
 		ChatLogLines.emplace_back(MultiColoredText { message, { {} }, 20 });
 		UiFlags nameColor = player == &Players[MyPlayerId] ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
 		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor } } });
