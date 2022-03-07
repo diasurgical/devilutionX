@@ -232,7 +232,6 @@ const ItemPack PackedDiabloItems[] = {
 	// clang-format on
 };
 
-
 #define EmpyreanBandSpecialEffect (ItemSpecialEffect::FastHitRecovery | ItemSpecialEffect::HalfTrapDamage)
 #define GrisworldEdgeSpecialEffect (ItemSpecialEffect::FireDamage | ItemSpecialEffect::Knockback | ItemSpecialEffect::FastAttack)
 

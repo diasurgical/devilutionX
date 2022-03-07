@@ -8,7 +8,6 @@ namespace devilution {
 extern bool TestPlayerDoGotHit(int pnum);
 }
 
-
 int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
 	int pnum = 0;
@@ -28,7 +27,6 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 
 	return i;
 }
-
 
 constexpr ItemSpecialEffect Normal = ItemSpecialEffect::None;
 constexpr ItemSpecialEffect Balance = ItemSpecialEffect::FastHitRecovery;
