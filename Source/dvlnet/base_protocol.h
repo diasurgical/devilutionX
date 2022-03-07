@@ -42,6 +42,7 @@ private:
 	std::string gamename;
 	std::map<std::string, std::tuple<GameData, std::vector<std::string>, endpoint>> game_list;
 	std::array<endpoint, MAX_PLRS> peers;
+	bool isGameHost_;
 
 	plr_t get_master();
 	void recv();
@@ -129,6 +130,7 @@ template <class P>
 int base_protocol<P>::create(std::string addrstr)
 {
 	gamename = addrstr;
+	isGameHost_ = true;
 
 	if (wait_network()) {
 		plr_self = 0;
@@ -141,17 +143,19 @@ template <class P>
 int base_protocol<P>::join(std::string addrstr)
 {
 	gamename = addrstr;
-	if (wait_network())
+	isGameHost_ = false;
+
+	if (wait_network()) {
 		if (wait_firstpeer())
 			wait_join();
-
+	}
 	return (plr_self == PLR_BROADCAST ? -1 : plr_self);
 }
 
 template <class P>
 bool base_protocol<P>::IsGameHost()
 {
-	return firstpeer == endpoint();
+	return isGameHost_;
 }
 
 template <class P>
