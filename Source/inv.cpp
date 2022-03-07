@@ -1173,6 +1173,34 @@ void StartGoldDrop()
 	SDL_StartTextInput();
 }
 
+bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex, Item &goldStack)
+{
+	if (player.InvGrid[slotIndex] != 0) {
+		return false;
+	}
+
+	int ii = player._pNumInv;
+	player.InvList[ii] = goldStack;
+	player._pNumInv++;
+	player.InvGrid[slotIndex] = player._pNumInv;
+	GenerateNewSeed(player.InvList[ii]);
+
+	int gold = goldStack._ivalue;
+	if (gold > MaxGold) {
+		gold -= MaxGold;
+		goldStack._ivalue = gold;
+		GenerateNewSeed(goldStack);
+		player.InvList[ii]._ivalue = MaxGold;
+		return false;
+	}
+
+	goldStack._ivalue = 0;
+	player._pGold = CalculateGold(player);
+	NewCursor(CURSOR_HAND);
+
+	return true;
+}
+
 } // namespace
 
 void FreeInvGFX()
@@ -1499,7 +1527,7 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 	return true;
 }
 
-bool GoldAutoPlace(Player &player)
+bool GoldAutoPlace(Player &player, Item &goldStack)
 {
 	bool done = false;
 
@@ -1509,60 +1537,32 @@ bool GoldAutoPlace(Player &player)
 		if (player.InvList[i]._ivalue >= MaxGold)
 			continue;
 
-		player.InvList[i]._ivalue += player.HoldItem._ivalue;
+		player.InvList[i]._ivalue += goldStack._ivalue;
 		if (player.InvList[i]._ivalue > MaxGold) {
-			player.HoldItem._ivalue = player.InvList[i]._ivalue - MaxGold;
-			SetPlrHandGoldCurs(player.HoldItem);
+			goldStack._ivalue = player.InvList[i]._ivalue - MaxGold;
+			SetPlrHandGoldCurs(goldStack);
 			player.InvList[i]._ivalue = MaxGold;
 			if (gbIsHellfire)
-				GenerateNewSeed(player.HoldItem);
+				GenerateNewSeed(goldStack);
 		} else {
-			player.HoldItem._ivalue = 0;
+			goldStack._ivalue = 0;
 			done = true;
 		}
 
 		SetPlrHandGoldCurs(player.InvList[i]);
-		player._pGold = CalculateGold(player);
 	}
 
 	for (int i = 39; i >= 30 && !done; i--) {
-		done = GoldAutoPlaceInInventorySlot(player, i);
+		done = GoldAutoPlaceInInventorySlot(player, i, goldStack);
 	}
 	for (int x = 9; x >= 0 && !done; x--) {
 		for (int y = 2; y >= 0 && !done; y--) {
-			done = GoldAutoPlaceInInventorySlot(player, 10 * y + x);
+			done = GoldAutoPlaceInInventorySlot(player, 10 * y + x, goldStack);
 		}
 	}
 
-	return done;
-}
-
-bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
-{
-	if (player.InvGrid[slotIndex] != 0) {
-		return false;
-	}
-
-	int ii = player._pNumInv;
-	player.InvList[ii] = player.HoldItem;
-	player._pNumInv++;
-	player.InvGrid[slotIndex] = player._pNumInv;
-	GenerateNewSeed(player.InvList[ii]);
-
-	int gold = player.HoldItem._ivalue;
-	if (gold > MaxGold) {
-		gold -= MaxGold;
-		player.HoldItem._ivalue = gold;
-		GenerateNewSeed(player.HoldItem);
-		player.InvList[ii]._ivalue = MaxGold;
-		return false;
-	}
-
-	player.HoldItem._ivalue = 0;
 	player._pGold = CalculateGold(player);
-	NewCursor(CURSOR_HAND);
-
-	return true;
+	return done;
 }
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
@@ -1639,7 +1639,7 @@ void InvGetItem(int pnum, int ii)
 	CheckBookLevel(player);
 	CheckItemStats(player);
 	bool cursorUpdated = false;
-	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player))
+	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player, player.HoldItem))
 		cursorUpdated = true;
 	CleanupItems(ii);
 	pcursitem = -1;
@@ -1673,7 +1673,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	CheckItemStats(player);
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	if (player.HoldItem._itype == ItemType::Gold) {
-		done = GoldAutoPlace(player);
+		done = GoldAutoPlace(player, player.HoldItem);
 		if (!done) {
 			item->_ivalue = player.HoldItem._ivalue;
 			SetPlrHandGoldCurs(*item);

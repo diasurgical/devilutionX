@@ -455,7 +455,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, Point position, bool lighting)
 {
-	position.x += CalculateWidth2(static_cast<int>(Players[pnum].AnimInfo.celSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2);
+	position.x -= MissileSpriteData[missileGraphicId].animWidth2;
 
 	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
 
@@ -519,7 +519,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	targetBufferPosition -= { CalculateWidth2(sprite ? sprite->Width() : 96), 0 };
+	Point spriteBufferPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite ? sprite->Width() : 96), 0 };
 
 	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(sprite->Data()));
 	if (nCel < 1 || frames > 50 || nCel > frames) {
@@ -538,16 +538,16 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	}
 
 	if (pnum == pcursplr)
-		Cl2DrawOutline(out, 165, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel);
+		Cl2DrawOutline(out, 165, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 
 	if (pnum == MyPlayerId) {
-		Cl2Draw(out, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel);
+		Cl2Draw(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
 	}
 
 	if (!IsTileLit(tilePosition) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
-		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel, GetInfravisionTRN());
+		Cl2DrawTRN(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel, GetInfravisionTRN());
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
 	}
@@ -558,7 +558,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	else
 		LightTableIndex -= 5;
 
-	Cl2DrawLight(out, targetBufferPosition.x, targetBufferPosition.y, *sprite, nCel);
+	Cl2DrawLight(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 	DrawPlayerIcons(out, pnum, targetBufferPosition, false);
 
 	LightTableIndex = l;

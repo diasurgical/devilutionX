@@ -62,24 +62,42 @@ protected:
 		}
 	};
 
+	struct PlayerState {
+		bool isConnected = {};
+		bool waitForTurns = {};
+		std::deque<turn_t> turnQueue;
+		int32_t lastTurnValue = {};
+	};
+
+	seq_t next_turn = 0;
 	message_t message_last;
 	std::deque<message_t> message_queue;
-	std::array<turn_t, MAX_PLRS> turn_last = {};
-	std::array<std::deque<turn_t>, MAX_PLRS> turn_queue;
-	std::array<bool, MAX_PLRS> connected_table = {};
 
 	plr_t plr_self = PLR_BROADCAST;
 	cookie_t cookie_self = 0;
 
 	std::unique_ptr<packet_factory> pktfty;
 
-	void HandleAccept(packet &pkt);
+	void Connect(plr_t player);
 	void RecvLocal(packet &pkt);
 	void RunEventHandler(_SNETEVENT &ev);
 
+	[[nodiscard]] bool IsConnected(plr_t player) const;
+	virtual bool IsGameHost() = 0;
+
 private:
+	std::array<PlayerState, MAX_PLRS> playerStateTable_;
+
 	plr_t GetOwner();
+	bool AllTurnsArrived();
+	void MakeReady(seq_t sequenceNumber);
+	void SendTurnIfReady(turn_t turn);
 	void ClearMsg(plr_t plr);
+
+	void HandleAccept(packet &pkt);
+	void HandleConnect(packet &pkt);
+	void HandleTurn(packet &pkt);
+	void HandleDisconnect(packet &pkt);
 };
 
 } // namespace net
