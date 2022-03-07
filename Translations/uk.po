@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-07 14:52+0200\n"
+"POT-Creation-Date: 2022-03-07 17:13+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Oleksandr Kalko (tsunami_state) <tsunami.wave@ukr.net>\n"
 "Language-Team: \n"
@@ -355,7 +355,7 @@ msgstr "Вийти з Diablo"
 
 #: Source/DiabloUI/mainmenu.cpp:60
 msgid "Shareware"
-msgstr "Shareware"
+msgstr "Демо-версія"
 
 #: Source/DiabloUI/progress.cpp:37 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:156 Source/DiabloUI/selhero.cpp:181
@@ -414,30 +414,24 @@ msgid "Diablo"
 msgstr "Diablo"
 
 #: Source/DiabloUI/selgame.cpp:85
-#, fuzzy
-#| msgid "Shareware"
 msgid "Diablo Shareware"
-msgstr "Shareware"
+msgstr "Демо-версія Diablo"
 
 #: Source/DiabloUI/selgame.cpp:88 Source/options.cpp:542 Source/options.cpp:593
 msgid "Hellfire"
 msgstr "Hellfire"
 
 #: Source/DiabloUI/selgame.cpp:91
-#, fuzzy
-#| msgid "Shareware"
 msgid "Hellfire Shareware"
-msgstr "Shareware"
+msgstr "Демо-версія Hellfire"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "The host is running a different game than you."
 msgstr "На сервері запущена інша гра."
 
 #: Source/DiabloUI/selgame.cpp:96
-#, fuzzy
-#| msgid "The host is running a different game than you."
 msgid "The host is running a different game mode ({:s}) than you."
-msgstr "На сервері запущена інша гра."
+msgstr "На сервері запущений інший режим гри ({:s})."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:98
@@ -547,10 +541,8 @@ msgid "Speed: Fastest"
 msgstr "Швидкість: Найшвидша"
 
 #: Source/DiabloUI/selgame.cpp:228
-#, fuzzy
-#| msgid "Player attack"
 msgid "Players: "
-msgstr "Гравець атакує"
+msgstr "Гравці: "
 
 #: Source/DiabloUI/selgame.cpp:288
 msgid "Select Difficulty"
@@ -1196,7 +1188,7 @@ msgstr ""
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:812
 msgid "Force Shareware mode"
-msgstr "Примусити режим Shareware"
+msgstr "Примусити режим демо-версії"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:813
@@ -1328,7 +1320,7 @@ msgstr "Автокарта"
 
 #: Source/diablo.cpp:1504
 msgid "Toggles if automap is displayed."
-msgstr "Перемикає відображення автокарти"
+msgstr "Перемикає відображення автокарти."
 
 #: Source/diablo.cpp:1513
 msgid "Open Inventory screen."
@@ -1436,16 +1428,12 @@ msgid "{:s} {:s}"
 msgstr "{:s} {:s}"
 
 #: Source/diablo.cpp:1638
-#, fuzzy
-#| msgid "Chat"
 msgid "Chat Log"
-msgstr "Чат"
+msgstr "Лог Чату"
 
 #: Source/diablo.cpp:1639
-#, fuzzy
-#| msgid "Displays game infos."
 msgid "Displays chat log."
-msgstr "Показує інформацію про гру."
+msgstr "Показує лог чату."
 
 #: Source/discord/discord.cpp:66 Source/objects.cpp:136
 msgid "Town"
@@ -1517,7 +1505,7 @@ msgstr "Помилка створення Direct Sound"
 
 #: Source/error.cpp:62
 msgid "Not available in shareware version"
-msgstr "Недоступно в версії shareware"
+msgstr "Недоступно в демо-версії"
 
 #: Source/error.cpp:63
 msgid "Not enough space to save"
@@ -2013,7 +2001,7 @@ msgstr ""
 
 #: Source/help.cpp:181
 msgid "Shareware Hellfire Help"
-msgstr "Допомога Shareware Hellfire"
+msgstr "Допомога Демо-версії Hellfire"
 
 #: Source/help.cpp:181
 msgid "Hellfire Help"
@@ -2021,7 +2009,7 @@ msgstr "Допомога Hellfire"
 
 #: Source/help.cpp:183
 msgid "Shareware Diablo Help"
-msgstr "Допомога Shareware Diablo"
+msgstr "Допомога Демо-версії Diablo"
 
 #: Source/help.cpp:183
 msgid "Diablo Help"
@@ -4091,40 +4079,32 @@ msgid "Resist Fire: {:+d}%"
 msgstr "Спротив Вогню: {:+d}%"
 
 #: Source/items.cpp:3754
-#, fuzzy
-#| msgid "Resist Fire: {:+d}%"
 msgid "Resist Fire: {:+d}% MAX"
-msgstr "Спротив Вогню: {:+d}%"
+msgstr "Спротив Вогню: {:+d}% МАКС"
 
 #: Source/items.cpp:3758
 msgid "Resist Lightning: {:+d}%"
 msgstr "Спротив Блискавці: {:+d}%"
 
 #: Source/items.cpp:3760
-#, fuzzy
-#| msgid "Resist Lightning: {:+d}%"
 msgid "Resist Lightning: {:+d}% MAX"
-msgstr "Спротив Блискавці: {:+d}%"
+msgstr "Спротив Блискавці: {:+d}% МАКС"
 
 #: Source/items.cpp:3764
 msgid "Resist Magic: {:+d}%"
 msgstr "Спротив Магії: {:+d}%"
 
 #: Source/items.cpp:3766
-#, fuzzy
-#| msgid "Resist Magic: {:+d}%"
 msgid "Resist Magic: {:+d}% MAX"
-msgstr "Спротив Магії: {:+d}%"
+msgstr "Спротив Магії: {:+d}% МАКС"
 
 #: Source/items.cpp:3770
 msgid "Resist All: {:+d}%"
 msgstr "Спротив Всьому: {:+d}%"
 
 #: Source/items.cpp:3772
-#, fuzzy
-#| msgid "Resist All: {:+d}%"
 msgid "Resist All: {:+d}% MAX"
-msgstr "Спротив Всьому: {:+d}%"
+msgstr "Спротив Всьому: {:+d}% МАКС"
 
 #: Source/items.cpp:3775
 msgid "spells are increased {:d} level"
@@ -4693,12 +4673,12 @@ msgstr ""
 #: Source/monstdat.cpp:66
 msgctxt "monster"
 msgid "Acid Beast"
-msgstr ""
+msgstr "Кислотний Звір"
 
 #: Source/monstdat.cpp:67
 msgctxt "monster"
 msgid "Poison Spitter"
-msgstr ""
+msgstr "Отрутоплюй"
 
 #: Source/monstdat.cpp:68
 msgctxt "monster"
@@ -4733,7 +4713,7 @@ msgstr ""
 #: Source/monstdat.cpp:74
 msgctxt "monster"
 msgid "Toad Demon"
-msgstr ""
+msgstr "Жабодемон"
 
 #: Source/monstdat.cpp:75
 msgctxt "monster"
@@ -4743,7 +4723,7 @@ msgstr ""
 #: Source/monstdat.cpp:76
 msgctxt "monster"
 msgid "Wyrm"
-msgstr ""
+msgstr "Супостат"
 
 #: Source/monstdat.cpp:77
 msgctxt "monster"
@@ -4758,7 +4738,7 @@ msgstr ""
 #: Source/monstdat.cpp:79
 msgctxt "monster"
 msgid "Devourer"
-msgstr ""
+msgstr "Пожирач"
 
 #: Source/monstdat.cpp:80
 msgctxt "monster"
@@ -4873,7 +4853,7 @@ msgstr ""
 #: Source/monstdat.cpp:102
 msgctxt "monster"
 msgid "Gargoyle"
-msgstr ""
+msgstr "Ґаргуля"
 
 #: Source/monstdat.cpp:103
 msgctxt "monster"
@@ -4968,12 +4948,12 @@ msgstr ""
 #: Source/monstdat.cpp:121
 msgctxt "monster"
 msgid "Succubus"
-msgstr ""
+msgstr "Суккуб"
 
 #: Source/monstdat.cpp:122
 msgctxt "monster"
 msgid "Snow Witch"
-msgstr ""
+msgstr "Сніжна Відьма"
 
 #: Source/monstdat.cpp:123
 msgctxt "monster"
@@ -5008,7 +4988,7 @@ msgstr ""
 #: Source/monstdat.cpp:129
 msgctxt "monster"
 msgid "Golem"
-msgstr ""
+msgstr "Голем"
 
 #: Source/monstdat.cpp:130
 msgctxt "monster"
@@ -5128,7 +5108,7 @@ msgstr ""
 #: Source/monstdat.cpp:153
 msgctxt "monster"
 msgid "Arch Lich"
-msgstr ""
+msgstr "Архі-Ліч"
 
 #: Source/monstdat.cpp:154
 msgctxt "monster"
@@ -5704,7 +5684,7 @@ msgstr "Декілька Магічних Імунітетів"
 
 #: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
-msgstr ""
+msgstr "Пробуєте кинути предмет що на підлозі?"
 
 #: Source/msg.cpp:987 Source/msg.cpp:1022 Source/msg.cpp:1053
 #: Source/msg.cpp:1180 Source/msg.cpp:1212 Source/msg.cpp:1244
@@ -6128,7 +6108,7 @@ msgstr "Грати в Diablo або в Hellfire."
 
 #: Source/options.cpp:544
 msgid "Restrict to Shareware"
-msgstr "Обмежити гру до Shareware"
+msgstr "Обмежити гру до Демо"
 
 #: Source/options.cpp:544
 msgid ""
@@ -6898,19 +6878,13 @@ msgstr "Неможливо писати в архів збереження"
 msgid "Unable to write to save file archive"
 msgstr "Неможливо прочитати архів збереження"
 
-#: Source/plrmsg.cpp:82
+#: Source/plrmsg.cpp:82 Source/qol/chatlog.cpp:127
 msgid "{:s} (lvl {:d}): "
-msgstr "{:s} (рів {:d}): "
-
-#: Source/qol/chatlog.cpp:127
-#, fuzzy
-#| msgid "{:s} (lvl {:d}): "
-msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (рів {:d}): "
 
 #: Source/qol/chatlog.cpp:155
 msgid "Chat History (Messages: {:d})"
-msgstr ""
+msgstr "Історія Чату (Повідомлень: {:d})"
 
 #. TRANSLATORS: Decimal separator
 #: Source/qol/common.cpp:25
@@ -7606,7 +7580,7 @@ msgstr "недоступне"
 
 #: Source/stores.cpp:1284
 msgid "in the shareware"
-msgstr "в shareware"
+msgstr "в демо-версії"
 
 #: Source/stores.cpp:1285
 msgid "version"
@@ -10433,36 +10407,3 @@ msgstr "Вниз до Діабло"
 #: Source/trigs.cpp:711 Source/trigs.cpp:725 Source/trigs.cpp:739
 msgid "Back to Level {:d}"
 msgstr "Назад на {:d} рівень"
-
-#~ msgid "Menu"
-#~ msgstr "Меню"
-
-#~ msgid "Inv"
-#~ msgstr "Інвен"
-
-#~ msgid "Map"
-#~ msgstr "Карта"
-
-#~ msgid "Char"
-#~ msgstr "Герой"
-
-#~ msgid "Spells"
-#~ msgstr "Чари"
-
-#~ msgid "Quests"
-#~ msgstr "Журнал"
-
-#~ msgid "Resist Fire: 75% MAX"
-#~ msgstr "Спротив Вогню: 75% МАКС"
-
-#~ msgid "Resist Lightning: 75% MAX"
-#~ msgstr "Спротив Вогню: 75% МАКС"
-
-#~ msgid "Resist Magic: 75% MAX"
-#~ msgstr "Спротив Вогню: 75% МАКС"
-
-#~ msgid "Resist All: 75% MAX"
-#~ msgstr "Спротив Вогню: 75% МАКС"
-
-#~ msgid "MAX"
-#~ msgstr "МАКС"
