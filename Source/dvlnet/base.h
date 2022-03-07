@@ -69,7 +69,7 @@ protected:
 		int32_t lastTurnValue = {};
 	};
 
-	seq_t next_turn;
+	seq_t next_turn = 0;
 	message_t message_last;
 	std::deque<message_t> message_queue;
 
