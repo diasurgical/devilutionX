@@ -43,7 +43,6 @@ constexpr int Warrior = 6;
 constexpr int Rogue = 7;
 constexpr int Sorcerer = 8;
 
-
 struct BlockTestCase {
 	int expectedRecoveryFrame;
 	int maxRecoveryFrame;
