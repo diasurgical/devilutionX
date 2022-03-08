@@ -1291,7 +1291,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 		    if ((monster._mFlags & MFLAG_BERSERK) != 0)
 			    return false;
 
-		    if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
+		    if (monster._uniqtype != 0 || monster._mAi == MonsterAI::Diablo)
 			    return false;
 		    if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 			    return false;
@@ -3658,7 +3658,7 @@ void MI_Rhino(Missile &missile)
 	Point prevPos = missile.position.tile;
 	Point newPosSnake;
 	dMonster[prevPos.x][prevPos.y] = 0;
-	if (monster._mAi == AI_SNAKE) {
+	if (monster._mAi == MonsterAI::Snake) {
 		missile.position.traveled += missile.position.velocity * 2;
 		UpdateMissilePos(missile);
 		newPosSnake = missile.position.tile;
@@ -3668,7 +3668,7 @@ void MI_Rhino(Missile &missile)
 	}
 	UpdateMissilePos(missile);
 	Point newPos = missile.position.tile;
-	if (!IsTileAvailable(monster, newPos) || (monster._mAi == AI_SNAKE && !IsTileAvailable(monster, newPosSnake))) {
+	if (!IsTileAvailable(monster, newPos) || (monster._mAi == MonsterAI::Snake && !IsTileAvailable(monster, newPosSnake))) {
 		MissToMonst(missile, prevPos);
 		missile._miDelFlag = true;
 		return;

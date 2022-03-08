@@ -2208,7 +2208,7 @@ void DeltaLoadLevel()
 			}
 			if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
 				M_ClearSquares(i);
-				if (monster._mAi != AI_DIABLO) {
+				if (monster._mAi != MonsterAI::Diablo) {
 					if (monster._uniqtype == 0) {
 						assert(monster.MType != nullptr);
 						AddCorpse(monster.position.tile, monster.MType->mdeadval, monster._mdir);
