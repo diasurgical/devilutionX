@@ -74,6 +74,13 @@ enum monster_resistance : uint8_t {
 	// clang-format on
 };
 
+struct MonsterResists {
+	uint8_t Magic;
+	uint8_t Fire;
+	uint8_t Lightning;
+	uint8_t Acid;
+};
+
 enum monster_treasure : uint16_t {
 	// clang-format off
 	T_MASK    = 0xFFF,
