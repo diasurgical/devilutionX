@@ -14,7 +14,7 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 	auto &player = Players[pnum];
 
 	player._pHFrames = frames;
-	player._pIFlags = static_cast<ItemSpecialEffect>(flags);
+	player._pIFlags = flags;
 	StartPlrHit(pnum, 5, false);
 
 	int i = 1;
