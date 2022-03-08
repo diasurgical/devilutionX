@@ -120,10 +120,9 @@ struct MonsterData {
 	uint8_t mMaxDamage2;
 	uint8_t mArmorClass;
 	MonsterClass mMonstClass;
-	/** Using monster_resistance as bitflags */
-	uint8_t mMagicRes;
-	/** Using monster_resistance as bitflags */
-	uint8_t mMagicRes2;
+	MonsterResists mNormalResist;
+	MonsterResists mNightmareResist;
+	MonsterResists mHellResist;
 	int8_t mSelFlag; // TODO Create enum
 	/** Using monster_treasure */
 	uint16_t mTreasure;
