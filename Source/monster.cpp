@@ -3817,7 +3817,7 @@ void monster_some_crypt()
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.mArmorClass -= 50;
 	int hp = monster._mmaxhp / 2;
-	monster.mMagicRes.setToZero();
+	monster.mMagicRes.setResistsToZero();
 	monster._mhitpoints = hp;
 	monster._mmaxhp = hp;
 }

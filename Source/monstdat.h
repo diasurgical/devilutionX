@@ -187,7 +187,7 @@ struct MonsterResists {
 	/**
 	 * @brief Sets all monster resistances to 0.
 	 */
-	void setToZero()
+	void setResistsToZero()
 	{
 		this->Magic = 0;
 		this->Fire = 0;
