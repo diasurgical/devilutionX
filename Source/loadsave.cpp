@@ -1974,6 +1974,10 @@ void LoadGame(bool firstflag)
 	}
 
 	gbIsHellfireSaveGame = gbIsHellfire;
+	if (Quests[Q_DIABLO]._qactive == QUEST_DONE) {
+		gbProcessPlayers = false;
+		myPlayer._pmode = PM_QUIT;
+	}
 }
 
 void SaveHeroItems(Player &player)
