@@ -1902,7 +1902,6 @@ bool IsTileSafe(const Monster &monster, Point position)
 	if (!TileContainsMissile(position)) {
 		return true;
 	}
-	
 
 	bool fearsFire = !monster.mMagicRes.isFireImmune() || monster.MType->mtype == MT_DIABLO;
 	bool fearsLightning = !monster.mMagicRes.isLightningImmune() || monster.MType->mtype == MT_DIABLO;
@@ -4691,7 +4690,7 @@ void PrintMonstHistory(int mt)
 		case DIFF_NORMAL:
 		default:
 			res = monsterType.mNormalResist;
-		break;
+			break;
 		}
 
 		if (res.hasResistancesOrImmunities()) {
@@ -4718,11 +4717,10 @@ void PrintMonstHistory(int mt)
 				string_view str { tempstr };
 				str.remove_suffix(str.size() - FindLastUtf8Symbols(str));
 				AddPanelString(str);
+			}
 		} else {
 			strcpy(tempstr, _("No magic resistance"));
 			AddPanelString(tempstr);
-			
-			}
 		}
 	}
 }

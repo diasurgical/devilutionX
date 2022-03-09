@@ -204,13 +204,13 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	missile_resistance mir = MissilesData[t].mResist;
 
 	if ((mor.isMagicImmune() && mir == MISR_MAGIC)
-	    || (mor.isFireImmune() && mir == MISR_FIRE)
-	    || (mor.isLightningImmune() && mir == MISR_LIGHTNING)
+		|| (mor.isFireImmune() && mir == MISR_FIRE)
+		|| (mor.isLightningImmune() && mir == MISR_LIGHTNING)
 		|| (mor.isAcidImmune() && mir == MISR_ACID)) {
 		return false;
 	}
 
-	if (mor.isMagicResistant() && mir == MISR_MAGIC){
+	if (mor.isMagicResistant() && mir == MISR_MAGIC) {
 		resist = mor.getMagicResist();
 	} else if (mor.isFireResistant() && mir == MISR_FIRE) {
 		resist = mor.getFireResist();
@@ -270,13 +270,12 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 			dam += player._pDamageMod / 2;
 	}
 
-	
 	if (!shift)
 		dam <<= 6;
 
-	assert(dam < (0x7FFFFFFF>>6));
+	assert(dam < (0x7FFFFFFF >> 6));
 	if (resist > 0)
-		dam = dam * (100-resist)/100;
+		dam = dam * (100 - resist) / 100;
 
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;
