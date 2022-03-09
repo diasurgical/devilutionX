@@ -274,7 +274,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (!shift)
 		dam <<= 6;
 
-	assert(dam < (250000<<0x7FFFFFFF));
+	assert(dam < (0x7FFFFFFF>>6));
 	if (resist > 0)
 		dam = dam * (100-resist)/100;
 
