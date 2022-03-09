@@ -216,7 +216,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.mMinDamage2 = monster.MData->mMinDamage2;
 	monster.mMaxDamage2 = monster.MData->mMaxDamage2;
 	monster.mArmorClass = monster.MData->mArmorClass;
-	monster.mMagicRes = monster.MData->mMagicRes;
+	monster.mMagicRes = monster.MData->mNormalResist;
 	monster.leader = 0;
 	monster.leaderRelation = LeaderRelation::None;
 	monster._mFlags = monster.MData->mFlags;
@@ -245,6 +245,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
 		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
 		monster.mArmorClass += NIGHTMARE_AC_BONUS;
+		monster.mMagicRes = monster.MData->mNightmareResist;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster._mmaxhp = 4 * monster._mmaxhp;
 		if (gbIsHellfire)
@@ -261,7 +262,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 		monster.mArmorClass += HELL_AC_BONUS;
-		monster.mMagicRes = monster.MData->mMagicRes2;
+		monster.mMagicRes = monster.MData->mHellResist;
 	}
 }
 
@@ -1901,9 +1902,10 @@ bool IsTileSafe(const Monster &monster, Point position)
 	if (!TileContainsMissile(position)) {
 		return true;
 	}
+	
 
-	bool fearsFire = (monster.mMagicRes & IMMUNE_FIRE) == 0 || monster.MType->mtype == MT_DIABLO;
-	bool fearsLightning = (monster.mMagicRes & IMMUNE_LIGHTNING) == 0 || monster.MType->mtype == MT_DIABLO;
+	bool fearsFire = !monster.mMagicRes.isFireImmune() || monster.MType->mtype == MT_DIABLO;
+	bool fearsLightning = !monster.mMagicRes.isLightningImmune() || monster.MType->mtype == MT_DIABLO;
 
 	for (auto &missile : Missiles) {
 		if (missile.position.tile == position) {
@@ -3816,7 +3818,7 @@ void monster_some_crypt()
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.mArmorClass -= 50;
 	int hp = monster._mmaxhp / 2;
-	monster.mMagicRes = 0;
+	monster.mMagicRes.setToZero();
 	monster._mhitpoints = hp;
 	monster._mmaxhp = hp;
 }
@@ -4642,13 +4644,15 @@ void PrintMonstHistory(int mt)
 		strcpy(tempstr, fmt::format(_("Total kills: {:d}"), MonsterKillCounts[mt]).c_str());
 	}
 
+	auto &monsterType = MonstersData[mt];
+
 	AddPanelString(tempstr);
 	if (MonsterKillCounts[mt] >= 30) {
-		int minHP = MonstersData[mt].mMinHP;
-		int maxHP = MonstersData[mt].mMaxHP;
+		int minHP = monsterType.mMinHP;
+		int maxHP = monsterType.mMaxHP;
 		if (!gbIsHellfire && mt == MT_DIABLO) {
-			minHP -= 2000;
-			maxHP -= 2000;
+			minHP /= 2;
+			maxHP /= 2;
 		}
 		if (!gbIsMultiplayer) {
 			minHP /= 2;
@@ -4676,34 +4680,48 @@ void PrintMonstHistory(int mt)
 		AddPanelString(tempstr);
 	}
 	if (MonsterKillCounts[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].mMagicRes : MonstersData[mt].mMagicRes2;
-		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
-			strcpy(tempstr, _("No magic resistance"));
-			AddPanelString(tempstr);
-		} else {
-			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
+		MonsterResists res;
+		switch (sgGameInitInfo.nDifficulty) {
+		case DIFF_NIGHTMARE:
+			res = monsterType.mNightmareResist;
+			break;
+		case DIFF_HELL:
+			res = monsterType.mHellResist;
+			break;
+		case DIFF_NORMAL:
+		default:
+			res = monsterType.mNormalResist;
+		break;
+		}
+
+		if (res.hasResistancesOrImmunities()) {
+			if (res.hasResistances()) {
 				strcpy(tempstr, _("Resists: "));
-				if ((res & RESIST_MAGIC) != 0)
+				if (res.isMagicResistant())
 					strcat(tempstr, _("Magic "));
-				if ((res & RESIST_FIRE) != 0)
+				if (res.isFireResistant())
 					strcat(tempstr, _("Fire "));
-				if ((res & RESIST_LIGHTNING) != 0)
+				if (res.isLightningResistant())
 					strcat(tempstr, _("Lightning "));
 				string_view str { tempstr };
 				str.remove_suffix(str.size() - FindLastUtf8Symbols(str));
 				AddPanelString(str);
 			}
-			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
+			if (res.hasImmunities()) {
 				strcpy(tempstr, _("Immune: "));
-				if ((res & IMMUNE_MAGIC) != 0)
+				if (res.isMagicImmune())
 					strcat(tempstr, _("Magic "));
-				if ((res & IMMUNE_FIRE) != 0)
+				if (res.isFireImmune())
 					strcat(tempstr, _("Fire "));
-				if ((res & IMMUNE_LIGHTNING) != 0)
+				if (res.isLightningImmune())
 					strcat(tempstr, _("Lightning "));
 				string_view str { tempstr };
 				str.remove_suffix(str.size() - FindLastUtf8Symbols(str));
 				AddPanelString(str);
+		} else {
+			strcpy(tempstr, _("No magic resistance"));
+			AddPanelString(tempstr);
+			
 			}
 		}
 	}
@@ -4717,22 +4735,22 @@ void PrintUniqueHistory()
 		AddPanelString(tempstr);
 	}
 
-	int res = monster.mMagicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
-	if (res == 0) {
-		strcpy(tempstr, _("No resistances"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("No Immunities"));
-	} else {
-		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0)
+	MonsterResists const res = monster.mMagicRes;
+	if (res.hasResistancesOrImmunities()) {
+		if (res.hasResistances())
 			strcpy(tempstr, _("Some Magic Resistances"));
 		else
 			strcpy(tempstr, _("No resistances"));
 		AddPanelString(tempstr);
-		if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
+		if (res.hasImmunities()) {
 			strcpy(tempstr, _("Some Magic Immunities"));
 		} else {
 			strcpy(tempstr, _("No Immunities"));
 		}
+	} else {
+		strcpy(tempstr, _("No resistances"));
+		AddPanelString(tempstr);
+		strcpy(tempstr, _("No Immunities"));
 	}
 	AddPanelString(tempstr);
 }

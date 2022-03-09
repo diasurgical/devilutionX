@@ -61,25 +61,304 @@ enum class MonsterClass : uint8_t {
 	Animal,
 };
 
-enum monster_resistance : uint8_t {
-	// clang-format off
-	RESIST_MAGIC     = 1 << 0,
-	RESIST_FIRE      = 1 << 1,
-	RESIST_LIGHTNING = 1 << 2,
-	IMMUNE_MAGIC     = 1 << 3,
-	IMMUNE_FIRE      = 1 << 4,
-	IMMUNE_LIGHTNING = 1 << 5,
-	IMMUNE_NULL_40   = 1 << 6,
-	IMMUNE_ACID      = 1 << 7,
-	// clang-format on
-};
+//enum monster_resistance : uint8_t {
+//	// clang-format off
+//	RESIST_MAGIC     = 1 << 0,
+//	RESIST_FIRE      = 1 << 1,
+//	RESIST_LIGHTNING = 1 << 2,
+//	IMMUNE_MAGIC     = 1 << 3,
+//	IMMUNE_FIRE      = 1 << 4,
+//	IMMUNE_LIGHTNING = 1 << 5,
+//	IMMUNE_NULL_40   = 1 << 6,
+//	IMMUNE_ACID      = 1 << 7,
+//	// clang-format on
+//};
 
 struct MonsterResists {
-	uint8_t Magic;
-	uint8_t Fire;
-	uint8_t Lightning;
-	uint8_t Acid;
+	/*
+	* NOTE: unless we remove backwards compatability, or maybe use up some extra memory locations,
+	* magic, fire, and lightning resistances should be less than 128, otherwise they will not save properly.
+	* 
+	*/
+	uint8_t Magic = 0;
+	uint8_t Fire = 0;
+	uint8_t Lightning = 0;
+	uint8_t Acid = 0;
+
+	/**
+	* @brief Returns if monster has any resistances (or immunities) to Magic, Fire, or Lightning
+	* @return True if any of the monster's non-acid resistances are greater than 0
+	*/
+	bool hasResistancesOrImmunities() const
+	{
+		return this->Magic > 0 || this->Fire > 0 || this->Lightning > 0;
+	}
+	/**
+	 * @brief Returns if monster has any resistances to Magic, Fire, or Lightning. Must have at least one greater than 0 but less than 100.
+	 * @return True if any of the monster's non-acid resistances are greater than 0 but less than 100
+	 */
+	bool hasResistances() const
+	{
+		return (this->Magic > 0 && this->Magic < 100) || (this->Fire > 0 && this->Fire < 100) || (this->Lightning > 0 && this->Lightning < 100);
+	}
+
+	/**
+	 * @brief Returns if monster has any immunities to Magic, Fire, or Lightning
+	 * @return True if monster has non-acid immunities
+	 */
+	bool hasImmunities() const
+	{
+		return this->Magic >= 100 || this->Fire >= 100 || this->Lightning >= 100;
+	}
+
+	/**
+	 * @brief Returns if monster has resistance (not immunity) to Magic
+	 * @return True if monster has resistance greater than 0 but less than 100 to Magic
+	 */
+	bool isMagicResistant() const
+	{
+		return this->Magic > 0 && this->Magic < 100;
+	}
+
+	/**
+	 * @brief Returns if monster has immunity to Magic
+	 * @return True if monster has resistance greateer than or equal to 100 to Magic
+	 */
+	bool isMagicImmune() const
+	{
+		return this->Magic >= 100;
+	}
+
+	/**
+	 * @brief Returns if monster has resistance (not immunity) to Fire
+	 * @return True if monster has resistance greater than 0 but less than 100 to Fire
+	 */
+	bool isFireResistant() const
+	{
+		return this->Fire > 0 && this->Fire < 100;
+	}
+
+	/**
+	 * @brief Returns if monster has immunity to Fire
+	 * @return True if monster has resistance greateer than or equal to 100 to Fire
+	 */
+	bool isFireImmune() const
+	{
+		return this->Fire >= 100;
+	}
+
+	/**
+	 * @brief Returns if monster has resistance (not immunity) to Lightning
+	 * @return True if monster has resistance greater than 0 but less than 100 to Lightning
+	 */
+	bool isLightningResistant() const
+	{
+		return this->Lightning > 0 && this->Lightning < 100;
+	}
+
+	/**
+	 * @brief Returns if monster has immunity to Lightning
+	 * @return True if monster has resistance greateer than or equal to 100 to Lightning
+	 */
+	bool isLightningImmune() const
+	{
+		return this->Lightning >= 100;
+	}
+
+	/**
+	 * @brief Returns if monster has resistance (not immunity) to Acid
+	 * @return True if monster has resistance greater than 0 but less than 100 to Acid
+	 */
+	bool isAcidResistant() const
+	{
+		return this->Acid > 0 && this->Acid < 100;
+	}
+
+	/**
+	 * @brief Returns if monster has immunity to Acid
+	 * @return True if monster has resistance greateer than or equal to 100 to Acid
+	 */
+	bool isAcidImmune() const
+	{
+		return this->Acid >= 100;
+	}
+
+	/**
+	 * @brief Sets all monster resistances to 0.
+	 */
+	void setToZero()
+	{
+		this->Magic = 0;
+		this->Fire = 0;
+		this->Lightning = 0;
+		this->Acid = 0;
+	}
+
+	/**
+	 * @brief Converts the monster resists to save info
+	 * @return 32 bit int for saving purposes
+	 */
+	uint32_t getSaveData()
+	{
+		/*
+		* Save Structure (low to high):
+		* 8 bits - original Diablo save data
+		* 3 bits - acid data
+		* 7 biits - lightning data
+		* 7 bits - fire data
+		* 7 bits - magic data
+		*/
+
+
+		uint32_t saveData = 0;
+		// set lower 8 to original resistance values, for compatability
+		if (this->isMagicResistant())
+			saveData |= 1 << 0;
+		else if (this->isMagicImmune())
+			saveData |= 1 << 3; 
+		if (this->isFireResistant())
+			saveData |= 1 << 1;
+		else if (this->isFireImmune())
+			saveData |= 1 << 4;
+		if (this->isLightningResistant())
+			saveData |= 1 << 2;
+		else if (this->isLightningImmune())
+			saveData |= 1 << 5;
+		if (this->isAcidImmune() || this->isAcidResistant())
+			saveData |= 1 << 7;
+
+		uint32_t temp = 0;
+		uint8_t mask = 0b01111111;
+		if (this->isMagicResistant() || this->isMagicImmune()) {
+			if (this->Magic < 128)
+				temp |= (this->Magic & mask);
+			else
+				temp |= 0b01111111;
+		}
+		temp <<= 7;
+		if (this->isFireResistant() || this->isFireImmune()) {
+			if (this->Fire < 128)
+				temp |= (this->Fire * mask);
+			else
+				temp |= 0b01111111;
+		}
+		temp <<= 7;
+		if (this->isLightningResistant() || this->isLightningImmune()) {
+			if (this->Lightning < 128)
+				temp |= (this->Lightning & mask);
+			else
+				temp |= 0b01111111;
+		}
+		temp <<= 3;
+		int8_t acidTemp = 0;
+		if (this->isAcidResistant() || this->isAcidImmune()) {
+			if (this->isAcidImmune())
+				acidTemp = 0b111;
+			else {
+				acidTemp = this->Acid;
+				if (acidTemp > 0 && acidTemp < 16)
+					acidTemp = 0b001;
+				else if (acidTemp >= 16 && acidTemp < 32)
+					acidTemp = 0b010;
+				else if (acidTemp >= 32 && acidTemp < 48)
+					acidTemp = 0b011;
+				else if (acidTemp >= 48 && acidTemp < 64)
+					acidTemp = 0b100;
+				else if (acidTemp >= 64 && acidTemp < 80)
+					acidTemp = 0b101;
+				else /* >80 and < 100 */
+					acidTemp = 0b110;
+			}
+			temp |= acidTemp;
+		}
+		temp <<= 8;
+		saveData |= temp;
+
+		return saveData;
+	}
+
+	/**
+	 * @brief Unpacks save data based on expanded save data from getSaveData()
+	 * @param 32 bit int from save file saving purposes
+	 */
+	void unpackSaveData(uint32_t saveData)
+	{
+		uint32_t temp = saveData;
+		uint8_t originalSave = temp & 0b11111111;
+		temp >>= 8;
+		uint8_t _acid = temp & 0b111;
+		temp >>= 3;
+		uint8_t _lightning = temp & 0b1111111;
+		temp >>= 7;
+		uint8_t _fire = temp & 0b1111111;
+		temp >>= 7;
+		uint8_t _magic = temp & 0b1111111;
+
+		constexpr uint8_t resistMagic = 1 << 0;
+		constexpr uint8_t resistFire = 1 << 1;
+		constexpr uint8_t resistLightning = 1 << 2;
+		constexpr uint8_t immuneMagic = 1 << 3;
+		constexpr uint8_t immuneFire = 1 << 4;
+		constexpr uint8_t immuneLightning = 1 << 5;
+		constexpr uint8_t immuneAcid = 1 << 7;
+
+		// check if loaded data contained info that matches original save, if not, use original save values
+
+		bool hasResistMagic = (originalSave & resistMagic) != 0;
+		bool hasImmuneMagic = (originalSave & immuneMagic) != 0;
+		bool hasResistFire = (originalSave & resistFire) != 0;
+		bool hasImmuneFire = (originalSave & immuneFire) != 0;
+		bool hasResistLightning = (originalSave & resistLightning) != 0;
+		bool hasImmuneLightning = (originalSave & immuneLightning) != 0;
+		bool hasImmuneAcid = (originalSave & immuneAcid) != 0;
+
+		if (hasResistMagic) {
+			if (_magic > 0 && _magic < 100)
+				this->Magic = _magic;
+			else
+				this->Magic = 75;
+		} else if (hasImmuneMagic) {
+			if (_magic >= 100)
+				this->Magic = _magic;
+			else
+				this->Magic = 100;
+		}
+
+		if (hasResistFire) {
+			if (_fire > 0 && _fire < 100)
+				this->Fire = _fire;
+			else
+				this->Fire = 75;
+		}
+		else if (hasImmuneFire)
+		{
+			if (_fire >= 100)
+				this->Fire = _fire;
+			else
+				this->Fire = 100;
+		}
+
+		if (hasResistLightning) {
+			if (_lightning > 0 && _lightning < 100)
+				this->Lightning = _lightning;
+			else
+				this->Lightning = 75;
+		} else if (hasImmuneLightning) {
+			if (_lightning >= 100)
+				this->Lightning = _lightning;
+			else
+				this->Lightning = 100;
+		}
+
+		if (hasImmuneAcid) {
+			if (_acid > 0 && _acid < 0b111)
+				this->Acid = _acid * 16;
+			else
+				this->Acid = 100;
+		}
+	}
 };
+
 
 enum monster_treasure : uint16_t {
 	// clang-format off
@@ -306,12 +585,10 @@ struct UniqueMonsterData {
 	uint8_t mint;
 	uint8_t mMinDamage;
 	uint8_t mMaxDamage;
-	/** Using monster_resistance as bitflags */
-	uint16_t mMagicRes;
+	MonsterResists mMagicRes;
 	/**
 	 * @brief Defines if and how a group of monsters should be spawned with the unique monster
 	 */
-
 	UniqueMonsterPack monsterPack;
 	uint8_t customToHit;
 	uint8_t customArmorClass;

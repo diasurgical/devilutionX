@@ -200,19 +200,21 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (monster._mmode == MonsterMode::Charge)
 		return false;
 
-	uint8_t mor = monster.mMagicRes;
+	MonsterResists mor = monster.mMagicRes;
 	missile_resistance mir = MissilesData[t].mResist;
 
-	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & IMMUNE_LIGHTNING) != 0 && mir == MISR_LIGHTNING)
-	    || ((mor & IMMUNE_ACID) != 0 && mir == MISR_ACID))
+	if ((mor.isMagicImmune() && mir == MISR_MAGIC)
+	    || (mor.isFireImmune() && mir == MISR_FIRE)
+	    || (mor.isLightningImmune() && mir == MISR_LIGHTNING)
+		|| (mor.isAcidImmune() && mir == MISR_ACID)) {
 		return false;
+	}
 
-	if (((mor & RESIST_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & RESIST_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & RESIST_LIGHTNING) != 0 && mir == MISR_LIGHTNING))
+	if ((mor.isMagicResistant() && mir == MISR_MAGIC)
+	    || (mor.isFireResistant() && mir == MISR_FIRE)
+	    || (mor.isLightningResistant() && mir == MISR_LIGHTNING)) {
 		resist = true;
+	}
 
 	if (gbIsHellfire && t == MIS_HBOLT && (monster.MType->mtype == MT_DIABLO || monster.MType->mtype == MT_BONEDEMN))
 		resist = true;
@@ -970,16 +972,16 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		return false;
 
 	missile_resistance mir = MissilesData[t].mResist;
-	int mor = monster.mMagicRes;
-	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & IMMUNE_LIGHTNING) != 0 && mir == MISR_LIGHTNING)) {
+	MonsterResists mor = monster.mMagicRes;
+	if ((mor.isMagicImmune() && mir == MISR_MAGIC)
+	    || (mor.isFireImmune() && mir == MISR_FIRE)
+	    || (mor.isLightningImmune() && mir == MISR_LIGHTNING)) {
 		return false;
 	}
 
-	if (((mor & RESIST_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & RESIST_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & RESIST_LIGHTNING) != 0 && mir == MISR_LIGHTNING)) {
+	if ((mor.isMagicResistant() && mir == MISR_MAGIC)
+	    || (mor.isFireResistant() && mir == MISR_FIRE)
+	    || (mor.isLightningResistant() && mir == MISR_LIGHTNING)) {
 		resist = true;
 	}
 
@@ -1295,9 +1297,9 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 		    if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 			    return false;
-		    if ((monster.mMagicRes & IMMUNE_MAGIC) != 0)
+		    if (monster.mMagicRes.isMagicImmune())
 			    return false;
-		    if ((monster.mMagicRes & RESIST_MAGIC) != 0 && ((monster.mMagicRes & RESIST_MAGIC) != 1 || GenerateRnd(2) != 0))
+		    if (monster.mMagicRes.isMagicResistant() && (!monster.mMagicRes.isMagicResistant() || GenerateRnd(2) != 0))
 			    return false;
 
 		    return true;
