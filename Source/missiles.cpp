@@ -189,7 +189,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 {
 	auto &monster = Monsters[m];
 
-	bool resist = false;
+	uint8_t resist = 0;
 	if (monster.mtalkmsg != TEXT_NONE
 	    || monster._mhitpoints >> 6 <= 0
 	    || (t == MIS_HBOLT && monster.MType->mtype != MT_DIABLO && monster.MData->mMonstClass != MonsterClass::Undead)) {
@@ -210,14 +210,17 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		return false;
 	}
 
-	if ((mor.isMagicResistant() && mir == MISR_MAGIC)
-	    || (mor.isFireResistant() && mir == MISR_FIRE)
-	    || (mor.isLightningResistant() && mir == MISR_LIGHTNING)) {
-		resist = true;
+	if (mor.isMagicResistant() && mir == MISR_MAGIC){
+		resist = mor.getMagicResist();
+	} else if (mor.isFireResistant() && mir == MISR_FIRE) {
+		resist = mor.getFireResist();
+	} else if (mor.isLightningResistant() && mir == MISR_LIGHTNING) {
+		resist = mor.getLightningResist();
 	}
 
-	if (gbIsHellfire && t == MIS_HBOLT && (monster.MType->mtype == MT_DIABLO || monster.MType->mtype == MT_BONEDEMN))
-		resist = true;
+	if (gbIsHellfire && t == MIS_HBOLT && (monster.MType->mtype == MT_DIABLO || monster.MType->mtype == MT_BONEDEMN)) {
+		resist = 75;
+	}
 
 	int hit = GenerateRnd(100);
 	int hper = 0;
@@ -267,10 +270,13 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 			dam += player._pDamageMod / 2;
 	}
 
+	
 	if (!shift)
 		dam <<= 6;
-	if (resist)
-		dam >>= 2;
+
+	assert(dam < (250000<<0x7FFFFFFF));
+	if (resist > 0)
+		dam = dam * (100-resist)/100;
 
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;

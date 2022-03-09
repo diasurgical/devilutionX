@@ -85,6 +85,25 @@ struct MonsterResists {
 	uint8_t Lightning = 0;
 	uint8_t Acid = 0;
 
+
+	uint8_t getMagicResist()
+	{
+		return this->Magic;
+	}
+	uint8_t getFireResist()
+	{
+		return this->Fire;
+	}
+	uint8_t getLightningResist()
+	{
+		return this->Lightning;
+	}
+	uint8_t getAcidResist()
+	{
+		return this->Acid;
+	}
+
+
 	/**
 	* @brief Returns if monster has any resistances (or immunities) to Magic, Fire, or Lightning
 	* @return True if any of the monster's non-acid resistances are greater than 0
