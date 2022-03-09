@@ -619,7 +619,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.mMaxDamage2 = file->NextLE<uint8_t>();
 	monster.mArmorClass = file->NextLE<uint8_t>();
 	file->Skip(1); // Alignment
-	monster.mMagicRes.unpackSaveData(file->NextLE<uint32_t>());
+	monster.mResists.unpackSaveData(file->NextLE<uint32_t>());
 
 	monster.mtalkmsg = static_cast<_speech_id>(file->NextLE<int32_t>());
 	if (monster.mtalkmsg == TEXT_KING1) // Fix original bad mapping of NONE for monsters
@@ -1322,7 +1322,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(monster.mMaxDamage2);
 	file->WriteLE<uint8_t>(monster.mArmorClass);
 	file->Skip(1); // Alignment
-	file->WriteLE<uint32_t>(monster.mMagicRes.getSaveData());
+	file->WriteLE<uint32_t>(monster.mResists.getSaveData());
 
 	file->WriteLE<int32_t>(monster.mtalkmsg == TEXT_NONE ? 0 : monster.mtalkmsg); // Replicate original bad mapping of none for monsters
 	file->WriteLE<uint8_t>(monster.leader);

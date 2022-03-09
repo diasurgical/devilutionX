@@ -122,7 +122,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	DrawString(out, monster.mName, { position, { width, height } }, style);
 
 	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
-		MonsterResists res = monster.mMagicRes;
+		MonsterResists res = monster.mResists;
 		bool immunes[] = { res.isMagicImmune(), res.isFireImmune(), res.isLightningImmune() };
 		bool resists[] = { res.isMagicResistant(), res.isFireResistant(), res.isLightningResistant() };
 

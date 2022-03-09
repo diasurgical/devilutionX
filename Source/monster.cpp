@@ -216,7 +216,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.mMinDamage2 = monster.MData->mMinDamage2;
 	monster.mMaxDamage2 = monster.MData->mMaxDamage2;
 	monster.mArmorClass = monster.MData->mArmorClass;
-	monster.mMagicRes = monster.MData->mNormalResist;
+	monster.mResists = monster.MData->mNormalResist;
 	monster.leader = 0;
 	monster.leaderRelation = LeaderRelation::None;
 	monster._mFlags = monster.MData->mFlags;
@@ -245,7 +245,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
 		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
 		monster.mArmorClass += NIGHTMARE_AC_BONUS;
-		monster.mMagicRes = monster.MData->mNightmareResist;
+		monster.mResists = monster.MData->mNightmareResist;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster._mmaxhp = 4 * monster._mmaxhp;
 		if (gbIsHellfire)
@@ -262,7 +262,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 		monster.mArmorClass += HELL_AC_BONUS;
-		monster.mMagicRes = monster.MData->mHellResist;
+		monster.mResists = monster.MData->mHellResist;
 	}
 }
 
@@ -1903,8 +1903,8 @@ bool IsTileSafe(const Monster &monster, Point position)
 		return true;
 	}
 
-	bool fearsFire = !monster.mMagicRes.isFireImmune() || monster.MType->mtype == MT_DIABLO;
-	bool fearsLightning = !monster.mMagicRes.isLightningImmune() || monster.MType->mtype == MT_DIABLO;
+	bool fearsFire = !monster.mResists.isFireImmune() || monster.MType->mtype == MT_DIABLO;
+	bool fearsLightning = !monster.mResists.isLightningImmune() || monster.MType->mtype == MT_DIABLO;
 
 	for (auto &missile : Missiles) {
 		if (missile.position.tile == position) {
@@ -3489,7 +3489,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	monster.mMaxDamage = uniqueMonsterData.mMaxDamage;
 	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
 	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
-	monster.mMagicRes = uniqueMonsterData.mMagicRes;
+	monster.mResists = uniqueMonsterData.mResists;
 	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
 		monster.mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
@@ -3817,7 +3817,7 @@ void monster_some_crypt()
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.mArmorClass -= 50;
 	int hp = monster._mmaxhp / 2;
-	monster.mMagicRes.setResistsToZero();
+	monster.mResists.setResistsToZero();
 	monster._mhitpoints = hp;
 	monster._mmaxhp = hp;
 }
@@ -4733,7 +4733,7 @@ void PrintUniqueHistory()
 		AddPanelString(tempstr);
 	}
 
-	MonsterResists const res = monster.mMagicRes;
+	MonsterResists const res = monster.mResists;
 	if (res.hasResistancesOrImmunities()) {
 		if (res.hasResistances())
 			strcpy(tempstr, _("Some Magic Resistances"));

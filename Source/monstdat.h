@@ -581,7 +581,7 @@ struct UniqueMonsterData {
 	uint8_t mint;
 	uint8_t mMinDamage;
 	uint8_t mMaxDamage;
-	MonsterResists mMagicRes;
+	MonsterResists mResists;
 	/**
 	 * @brief Defines if and how a group of monsters should be spawned with the unique monster
 	 */
