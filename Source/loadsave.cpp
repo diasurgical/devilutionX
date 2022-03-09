@@ -2061,6 +2061,7 @@ void LoadGame(bool firstflag)
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 	if (Quests[Q_DIABLO]._qactive == QUEST_DONE) {
+		PlaySFX(USFX_DIABLOD);
 		gbProcessPlayers = false;
 		myPlayer._pmode = PM_QUIT;
 	}
