@@ -192,7 +192,7 @@ struct Monster { // note: missing field _mAFNum
 	int _mVar3;
 	int _mmaxhp;
 	int _mhitpoints;
-	MonsterAI _mAi;
+	_mai_id _mAi;
 	uint8_t _mint;
 	uint32_t _mFlags;
 	uint8_t _msquelch;
