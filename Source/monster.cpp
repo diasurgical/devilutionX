@@ -3464,6 +3464,13 @@ bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
 
 } // namespace
 
+void InitTRNForUniqueMonster(Monster &monster)
+{
+	char filestr[64];
+	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", UniqueMonstersData[monster._uniqtype - 1].mTrnName);
+	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
+}
+
 void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
 {
 	monster._uniqtype = uniqindex + 1;
@@ -3535,10 +3542,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 	}
 
-	char filestr[64];
-	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
-	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
-
+	InitTRNForUniqueMonster(monster);
 	monster._uniqtrans = uniquetrans++;
 
 	if (uniqueMonsterData.customToHit != 0) {
@@ -4551,6 +4555,9 @@ void SyncMonsterAnim(Monster &monster)
 		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName);
 	else
 		monster.mName = pgettext("monster", monster.MData->mName);
+
+	if (monster._uniqtype != 0)
+		InitTRNForUniqueMonster(monster);
 
 	MonsterGraphic graphic = MonsterGraphic::Stand;
 
