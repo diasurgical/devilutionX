@@ -203,10 +203,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	MonsterResists mor = monster.mMagicRes;
 	missile_resistance mir = MissilesData[t].mResist;
 
-	if ((mor.isMagicImmune() && mir == MISR_MAGIC)
-		|| (mor.isFireImmune() && mir == MISR_FIRE)
-		|| (mor.isLightningImmune() && mir == MISR_LIGHTNING)
-		|| (mor.isAcidImmune() && mir == MISR_ACID)) {
+	if ((mor.isMagicImmune() && mir == MISR_MAGIC) || (mor.isFireImmune() && mir == MISR_FIRE) || (mor.isLightningImmune() && mir == MISR_LIGHTNING) || (mor.isAcidImmune() && mir == MISR_ACID)) {
 		return false;
 	}
 

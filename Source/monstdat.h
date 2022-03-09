@@ -356,7 +356,6 @@ struct MonsterResists {
 	}
 };
 
-
 enum monster_treasure : uint16_t {
 	// clang-format off
 	T_MASK    = 0xFFF,
