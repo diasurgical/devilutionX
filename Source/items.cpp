@@ -2883,14 +2883,16 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pgfxnum = gfxNum;
 	}
 
-	if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
-		int half = MaxGold;
-		MaxGold = GOLD_MAX_LIMIT;
+	if (&player == &Players[MyPlayerId]) {
+		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
+			int half = MaxGold;
+			MaxGold = GOLD_MAX_LIMIT;
 
-		if (half != MaxGold)
-			StripTopGold(player);
-	} else {
-		MaxGold = GOLD_MAX_LIMIT * 2;
+			if (half != MaxGold)
+				StripTopGold(player);
+		} else {
+			MaxGold = GOLD_MAX_LIMIT * 2;
+		}
 	}
 
 	drawmanaflag = true;
