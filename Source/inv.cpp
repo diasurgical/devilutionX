@@ -1139,23 +1139,25 @@ bool PutItem(Player &player, Point &position)
 	if (position.WalkingDistance(player.position.tile) > 1) {
 		position = player.position.tile + d;
 	}
-
-	std::optional<Point> itemPosition = FindClosestValidItemPosition(position);
-
-	position = player.position.tile + Left(Left(Left(d)));
 	if (CanPut(position))
 		return true;
 
-	position = player.position.tile + Right(Right(Right(d)));
+	position = player.position.tile + Left(d);
 	if (CanPut(position))
 		return true;
 
-	position = player.position.tile + Opposite(d);
+	position = player.position.tile + Right(d);
 	if (CanPut(position))
 		return true;
 
-	position = player.position.tile;
-	return CanPut(position);
+	std::optional<Point> itemPosition = FindClosestValidPosition(CanPut, player.position.tile, 1, 50);
+
+	if (itemPosition) {
+		position = itemPosition.value();
+		return true;
+	}
+
+	return false;
 }
 
 bool CanUseStaff(Item &staff, spell_id spell)
