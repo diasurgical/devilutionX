@@ -11,7 +11,7 @@ extern bool TestPlayerDoGotHit(int pnum);
 int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
 	int pnum = 0;
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;

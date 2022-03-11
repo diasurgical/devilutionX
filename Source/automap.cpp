@@ -344,11 +344,11 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 
 void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	Point tile = myPlayer.position.tile;
-	if (myPlayer._pmode == PM_WALK3) {
-		tile = myPlayer.position.future;
-		if (myPlayer._pdir == Direction::West)
+	const Player &player = *MyPlayer;
+	Point tile = player.position.tile;
+	if (player._pmode == PM_WALK3) {
+		tile = player.position.future;
+		if (player._pdir == Direction::West)
 			tile.x++;
 		else
 			tile.y++;
@@ -392,7 +392,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 {
 	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
 
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 	Point tile = player.position.tile;
 	if (player._pmode == PM_WALK3) {
 		tile = player.position.future;
@@ -665,7 +665,7 @@ void DrawAutomap(const Surface &out)
 
 	Automap += AutomapOffset;
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	Displacement myPlayerOffset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
@@ -731,7 +731,7 @@ void DrawAutomap(const Surface &out)
 	}
 
 	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
-		auto &player = Players[playerId];
+		Player &player = Players[playerId];
 		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging && (&player == &myPlayer || player.friendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, playerId);
 		}

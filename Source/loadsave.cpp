@@ -1826,7 +1826,7 @@ void LoadHotkeys()
 	if (!file.IsValid())
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	size_t nHotkeys = 4; // Defaults to old save format number
 
 	// Refill the spell arrays with no selection
@@ -1864,7 +1864,7 @@ void LoadHotkeys()
 
 void SaveHotkeys()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	SaveHelper file(CurrentSaveArchive(), "hotkeys", HotkeysSize());
 
@@ -1997,7 +1997,7 @@ void LoadGame(bool firstflag)
 		file.Skip(4); // Skip loading gnLevelTypeTbl
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	LoadPlayer(file, myPlayer);
 
@@ -2269,7 +2269,7 @@ void SaveGameData()
 		file.WriteBE<int32_t>(getHellfireLevelType(gnLevelTypeTbl[i]));
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	myPlayer.pDifficulty = sgGameInitInfo.nDifficulty;
 	SavePlayer(file, myPlayer);
 
@@ -2396,7 +2396,7 @@ void SaveLevel()
 {
 	PFileScopedArchiveWriter scopedWriter;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
 
@@ -2547,7 +2547,7 @@ void LoadLevel()
 		UpdateLighting = true;
 	}
 
-	for (auto &player : Players) {
+	for (Player &player : Players) {
 		if (player.plractive && currlevel == player.plrlevel)
 			Lights[player._plid]._lunflag = true;
 	}

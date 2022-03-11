@@ -67,7 +67,7 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 {
 	pSpell = spell_id::SPL_INVALID;
 	pSplType = spell_type::RSPLTYPE_INVALID;
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	for (auto &spellListItem : GetSpellListItems()) {
 		if (spellListItem.isSelected) {
@@ -84,7 +84,7 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 
 std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	for (size_t t = 0; t < NumHotkeys; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
@@ -98,7 +98,7 @@ std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 
 void DrawSpell(const Surface &out)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	spell_id spl = myPlayer._pRSpell;
 	spell_type st = myPlayer._pRSplType;
 
@@ -127,7 +127,7 @@ void DrawSpellList(const Surface &out)
 	InfoString.clear();
 	ClearPanel();
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	for (auto &spellListItem : GetSpellListItems()) {
 		const spell_id spellId = spellListItem.id;
@@ -217,7 +217,7 @@ std::vector<SpellListItem> GetSpellListItems()
 	int y = mainPanelPosition.y - 17;
 
 	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
-		auto &myPlayer = Players[MyPlayerId];
+		Player &myPlayer = *MyPlayer;
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
 			mask = myPlayer._pAblSpells;
@@ -271,7 +271,7 @@ void SetSpell()
 
 	ClearPanel();
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	myPlayer._pRSpell = pSpell;
 	myPlayer._pRSplType = pSplType;
 
@@ -286,7 +286,7 @@ void SetSpeedSpell(size_t slot)
 	if (!GetSpellListSelection(pSpell, pSplType)) {
 		return;
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	for (size_t i = 0; i < NumHotkeys; ++i) {
 		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
 			myPlayer._pSplHotKey[i] = SPL_INVALID;
@@ -299,7 +299,7 @@ void ToggleSpell(size_t slot)
 {
 	uint64_t spells;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pSplHotKey[slot] == SPL_INVALID) {
 		return;
@@ -339,7 +339,7 @@ void DoSpeedBook()
 	int x = xo + SPLICONLENGTH / 2;
 	int y = yo - SPLICONLENGTH / 2;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pRSpell != SPL_INVALID) {
 		for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {

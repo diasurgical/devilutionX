@@ -14,7 +14,7 @@ namespace {
 
 bool HasRoomForGold()
 {
-	for (int idx : Players[MyPlayerId].InvGrid) {
+	for (int idx : MyPlayer->InvGrid) {
 		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
 		if (idx < 0)
 			continue;
@@ -24,7 +24,7 @@ bool HasRoomForGold()
 			return true;
 
 		// Main item cell. Potentially a gold pile so check it.
-		auto item = Players[MyPlayerId].InvList[idx - 1];
+		auto item = MyPlayer->InvList[idx - 1];
 		if (item._itype == ItemType::Gold && item._ivalue < MaxGold)
 			return true;
 	}
@@ -34,7 +34,7 @@ bool HasRoomForGold()
 
 int NumMiscItemsInInv(int iMiscId)
 {
-	InventoryAndBeltPlayerItemsRange items { Players[MyPlayerId] };
+	InventoryAndBeltPlayerItemsRange items { *MyPlayer };
 	return std::count_if(items.begin(), items.end(), [iMiscId](const Item &item) { return item._iMiscId == iMiscId; });
 }
 
@@ -44,7 +44,7 @@ bool DoPickup(Item item)
 		return true;
 
 	if (item._itype == ItemType::Misc
-	    && (AutoPlaceItemInInventory(Players[MyPlayerId], item, false) || AutoPlaceItemInBelt(Players[MyPlayerId], item, false))) {
+	    && (AutoPlaceItemInInventory(*MyPlayer, item, false) || AutoPlaceItemInBelt(*MyPlayer, item, false))) {
 		switch (item._iMiscId) {
 		case IMISC_HEAL:
 			return *sgOptions.Gameplay.numHealPotionPickup > NumMiscItemsInInv(item._iMiscId);

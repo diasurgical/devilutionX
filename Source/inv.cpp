@@ -273,7 +273,7 @@ void ChangeEquipment(Player &player, inv_body_loc bodyLocation, const Item &item
 
 bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool persistItem)
 {
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 
 	if (!CanEquip(player, item, bodyLocation)) {
 		return false;
@@ -574,7 +574,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropItem)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pmode > PM_WALK3) {
 		return;
@@ -868,7 +868,7 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 		}
 	}
 
-	Players[MyPlayerId].Say(HeroSpeech::JustWhatIWasLookingFor, 10);
+	MyPlayer->Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 
 	for (auto note : notes) {
 		if (idx != note) {
@@ -885,7 +885,7 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 
 void CheckQuestItem(Player &player, Item &questItem)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (questItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		Quests[Q_BLIND]._qactive = QUEST_DONE;
@@ -926,7 +926,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 		Quests[Q_GRAVE]._qlog = false;
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		if (Quests[Q_GRAVE]._qvar1 != 1) {
-			Players[MyPlayerId].Say(HeroSpeech::UhHuh, 10);
+			MyPlayer->Say(HeroSpeech::UhHuh, 10);
 			Quests[Q_GRAVE]._qvar1 = 1;
 		}
 	}
@@ -1037,7 +1037,7 @@ void StartGoldDrop()
 
 	initialDropGoldIndex = pcursinvitem;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (pcursinvitem <= INVITEM_INV_LAST)
 		initialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
@@ -1113,7 +1113,7 @@ void FreeInvGFX()
 
 void InitInv()
 {
-	switch (Players[MyPlayerId]._pClass) {
+	switch (MyPlayer->_pClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
 		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
@@ -1158,7 +1158,7 @@ void DrawInv(const Surface &out)
 		{ 133, 160 }, // chest
 	};
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
 		if (!myPlayer.InvBody[slot].isEmpty()) {
@@ -1249,7 +1249,7 @@ void DrawInvBelt(const Surface &out)
 
 	DrawPanelBox(out, { 205, 21, 232, 28 }, mainPanelPosition + Displacement { 205, 5 });
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		if (myPlayer.SpdList[i].isEmpty()) {
@@ -1619,7 +1619,7 @@ void InvGetItem(Player &player, int ii)
 void AutoGetItem(int pnum, Item *itemPointer, int ii)
 {
 	Item &item = *itemPointer;
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (dropGoldFlag) {
 		CloseGoldDrop();
@@ -1878,7 +1878,7 @@ int8_t CheckInvHLight()
 	int8_t rv = -1;
 	InfoColor = UiFlags::ColorWhite;
 	Item *pi = nullptr;
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	ClearPanel();
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {
@@ -1972,7 +1972,7 @@ bool UseScroll(const spell_id spell)
 	if (pcurs != CURSOR_HAND)
 		return false;
 
-	Player &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
 		return false;
@@ -2000,7 +2000,7 @@ bool UseStaff(const spell_id spell)
 		return false;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], spell);
 }
@@ -2021,7 +2021,7 @@ bool UseInvItem(int pnum, int cii)
 	int c;
 	Item *item;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId)
 		return true;

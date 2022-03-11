@@ -894,7 +894,7 @@ void ToggleLighting()
 	}
 
 	memcpy(dLight, dPreLight, sizeof(dLight));
-	for (const auto &player : Players) {
+	for (const Player &player : Players) {
 		if (player.plractive && player.plrlevel == currlevel) {
 			DoLighting(player.position.tile, player._pLightRad, -1);
 		}
@@ -1134,7 +1134,7 @@ void ProcessVisionList()
 		MapExplorationType doautomap = MAP_EXP_SELF;
 		if (!vision._lflags) {
 			doautomap = MAP_EXP_OTHERS;
-			for (const auto &player : Players) {
+			for (const Player &player : Players) {
 				// Find player for this vision
 				if (!player.plractive || player.plrlevel != currlevel || player._pvid != vision._lid)
 					continue;

@@ -38,7 +38,7 @@
 namespace devilution {
 
 int MyPlayerId;
-Player *MyPlayer;
+Player *MyPlayer = &Players[MyPlayerId];
 Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 
@@ -217,14 +217,14 @@ void PmChangeLightOff(Player &player)
 
 void WalkUpwards(int pnum, const DirectionSettings &walkParams)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
 	player.position.temp = { walkParams.tileAdd.deltaX, walkParams.tileAdd.deltaY };
 }
 
 void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
 	player.position.temp = player.position.tile;
 	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
@@ -236,7 +236,7 @@ void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
 
 void WalkSides(int pnum, const DirectionSettings &walkParams)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	Point const nextPosition = player.position.tile + walkParams.map;
 
@@ -313,7 +313,7 @@ bool PlrDirOK(const Player &player, Direction dir)
 
 void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	const auto &dirModeParams = WalkSettings[static_cast<size_t>(dir)];
 	SetPlayerOld(player);
 	if (!PlrDirOK(player, dir)) {
@@ -353,7 +353,7 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
  */
 void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
 		SyncPlrKill(pnum, -1);
@@ -391,7 +391,7 @@ void StartWalkStand(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartWalkStand: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player._pmode = PM_STAND;
 	player.position.future = player.position.tile;
@@ -409,7 +409,7 @@ void ChangeOffset(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_ChangeOffset: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int px = player.position.offset2.deltaX / 256;
 	int py = player.position.offset2.deltaY / 256;
@@ -437,7 +437,7 @@ void StartAttack(int pnum, Direction d)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartAttack: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
 		SyncPlrKill(pnum, -1);
@@ -469,7 +469,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartRangeAttack: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
 		SyncPlrKill(pnum, -1);
@@ -510,7 +510,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS)
 		app_fatal("StartSpell: illegal player %i", pnum);
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
 		SyncPlrKill(pnum, -1);
@@ -604,7 +604,7 @@ void DropHalfPlayersGold(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("DropHalfPlayersGold: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int remainingGold = DropGold(player, player._pGold / 2, true);
 	if (remainingGold > 0) {
@@ -616,8 +616,8 @@ void DropHalfPlayersGold(int pnum)
 
 void InitLevelChange(int pnum)
 {
-	auto &player = Players[pnum];
-	auto &myPlayer = Players[MyPlayerId];
+	Player &player = Players[pnum];
+	Player &myPlayer = *MyPlayer;
 
 	RemovePlrMissiles(pnum);
 	player.pManaShield = false;
@@ -658,7 +658,7 @@ bool DoWalk(int pnum, int variant)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoWalk: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
@@ -743,7 +743,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("DamageWeapon: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (WeaponDecay(player, INVLOC_HAND_LEFT))
 		return true;
@@ -821,7 +821,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PlrHitMonst: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (!monster.IsPossibleToHit())
 		return false;
@@ -1084,7 +1084,7 @@ bool DoAttack(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoAttack: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player.AnimInfo.CurrentFrame == player._pAFNum - 2) {
 		PlaySfxLoc(PS_SWING, player.position.tile);
@@ -1193,7 +1193,7 @@ bool DoRangeAttack(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoRangeAttack: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int arrows = 0;
 	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
@@ -1268,7 +1268,7 @@ void DamageParryItem(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("DamageParryItem: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
@@ -1298,7 +1298,7 @@ bool DoBlock(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoBlock: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player.AnimInfo.CurrentFrame >= player._pBFrames - 1) {
 		StartStand(pnum, player._pdir);
@@ -1325,7 +1325,7 @@ void DamageArmor(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("DamageArmor: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		return;
@@ -1366,7 +1366,7 @@ bool DoSpell(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoSpell: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player.AnimInfo.CurrentFrame == player._pSFNum) {
 		CastSpell(
@@ -1397,7 +1397,7 @@ bool DoGotHit(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoGotHit: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player.AnimInfo.CurrentFrame >= player._pHFrames - 1) {
 		StartStand(pnum, player._pdir);
@@ -1417,7 +1417,7 @@ bool DoDeath(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoDeath: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames - 1) {
 		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
@@ -1450,7 +1450,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("CheckNewPath: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int x = 0;
 	int y = 0;
@@ -1774,7 +1774,7 @@ bool PlrDeathModeOK(int p)
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("PlrDeathModeOK: illegal player %i", p);
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	if (player._pmode == PM_DEATH) {
 		return true;
@@ -1794,7 +1794,7 @@ void ValidatePlayer()
 	if ((DWORD)MyPlayerId >= MAX_PLRS) {
 		app_fatal("ValidatePlayer: illegal player %i", MyPlayerId);
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pLevel > MAXCHARLEVEL)
 		myPlayer._pLevel = MAXCHARLEVEL;
@@ -2509,7 +2509,7 @@ void CreatePlayer(int playerId, HeroClass c)
 	if ((DWORD)playerId >= MAX_PLRS) {
 		app_fatal("CreatePlayer: illegal player %i", playerId);
 	}
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 
 	player.Reset();
 	SetRndSeed(SDL_GetTicks());
@@ -2666,7 +2666,7 @@ void NextPlrLevel(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NextPlrLevel: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player._pLevel++;
 	player._pMaxLvl++;
@@ -2725,7 +2725,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	if (pnum >= MAX_PLRS || pnum < 0) {
 		app_fatal("AddPlrExperience: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pHitPoints <= 0) {
 		return;
@@ -2789,7 +2789,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 
 void InitPlayer(Player &player, bool firstTime)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (firstTime) {
 		player._pRSplType = RSPLTYPE_INVALID;
@@ -2879,7 +2879,7 @@ void InitMultiView()
 	if ((DWORD)MyPlayerId >= MAX_PLRS) {
 		app_fatal("InitPlayer: illegal player %i", MyPlayerId);
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	ViewPosition = myPlayer.position.tile;
 }
@@ -2919,7 +2919,7 @@ void FixPlayerLocation(int pnum, Direction bDir)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("FixPlayerLocation: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player.position.future = player.position.tile;
 	player.position.offset = { 0, 0 };
@@ -2938,7 +2938,7 @@ void StartStand(int pnum, Direction dir)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartStand: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
 		SyncPlrKill(pnum, -1);
@@ -2958,7 +2958,7 @@ void StartPlrBlock(int pnum, Direction dir)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlrBlock: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
 		SyncPlrKill(pnum, -1);
@@ -2984,7 +2984,7 @@ void FixPlrWalkTags(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("FixPlrWalkTags: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int pp = pnum + 1;
 	int pn = -(pnum + 1);
@@ -3016,7 +3016,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlrHit: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
 		SyncPlrKill(pnum, -1);
@@ -3068,7 +3068,7 @@ StartPlayerKill(int pnum, int earflag)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlayerKill: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pHitPoints <= 0 && player._pmode == PM_DEATH) {
 		return;
@@ -3184,7 +3184,7 @@ void StripTopGold(Player &player)
 
 void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int totalDamage = (dam << 6) + frac;
 	if (totalDamage > 0 && player.pManaShield) {
@@ -3231,7 +3231,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 
 void SyncPlrKill(int pnum, int earflag)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pHitPoints <= 0 && currlevel == 0) {
 		SetPlayerHitPoints(player, 64);
@@ -3275,8 +3275,8 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartNewLvl: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
-	auto &myPlayer = Players[MyPlayerId];
+	Player &player = Players[pnum];
+	Player &myPlayer = *MyPlayer;
 
 	switch (fom) {
 	case WM_DIABNEXTLVL:
@@ -3314,7 +3314,7 @@ void RestartTownLvl(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("RestartTownLvl: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player.plrlevel = 0;
 	player._pInvincible = false;
@@ -3335,7 +3335,7 @@ void RestartTownLvl(int pnum)
 
 void StartWarpLvl(int pnum, int pidx)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	InitLevelChange(pnum);
 
@@ -3360,7 +3360,7 @@ void ProcessPlayers()
 	if ((DWORD)MyPlayerId >= MAX_PLRS) {
 		app_fatal("ProcessPlayers: illegal player %i", MyPlayerId);
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.pLvlLoad > 0) {
 		myPlayer.pLvlLoad--;
@@ -3391,7 +3391,7 @@ void ProcessPlayers()
 	ValidatePlayer();
 
 	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
-		auto &player = Players[pnum];
+		Player &player = Players[pnum];
 		if (player.plractive && currlevel == player.plrlevel && (pnum == MyPlayerId || !player._pLvlChanging)) {
 			CheckCheatStats(player);
 
@@ -3530,7 +3530,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 	if ((DWORD)MyPlayerId >= MAX_PLRS) {
 		app_fatal("CheckPlrSpell: illegal player %i", MyPlayerId);
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (spellID == SPL_INVALID) {
 		myPlayer.Say(HeroSpeech::IDontHaveASpellReady);
@@ -3621,7 +3621,7 @@ void SyncPlrAnim(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("SyncPlrAnim: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player_graphic graphic;
 	switch (player._pmode) {
@@ -3675,7 +3675,7 @@ void SyncPlrAnim(int pnum)
 
 void SyncInitPlrPos(int pnum)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (!gbIsMultiplayer || player.plrlevel != currlevel) {
 		return;
@@ -3713,7 +3713,7 @@ void SyncInitPlr(int pnum)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("SyncInitPlr: illegal player %i", pnum);
 	}
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	SetPlrAnims(player);
 	SyncInitPlrPos(pnum);
@@ -3747,7 +3747,7 @@ void ModifyPlrStr(int p, int l)
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrStr: illegal player %i", p);
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
 
@@ -3766,7 +3766,7 @@ void ModifyPlrMag(int p, int l)
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrMag: illegal player %i", p);
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
 
@@ -3799,7 +3799,7 @@ void ModifyPlrDex(int p, int l)
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrDex: illegal player %i", p);
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	l = clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
 
@@ -3817,7 +3817,7 @@ void ModifyPlrVit(int p, int l)
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("ModifyPlrVit: illegal player %i", p);
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	l = clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
 
@@ -3846,7 +3846,7 @@ void SetPlayerHitPoints(Player &player, int val)
 	player._pHitPoints = val;
 	player._pHPBase = val + player._pMaxHPBase - player._pMaxHP;
 
-	if (&player == &Players[MyPlayerId]) {
+	if (&player == MyPlayer) {
 		drawhpflag = true;
 	}
 }
@@ -3914,7 +3914,7 @@ void PlayDungMsgs()
 	if ((DWORD)MyPlayerId >= MAX_PLRS) {
 		app_fatal("PlayDungMsgs: illegal player %i", MyPlayerId);
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && (myPlayer.pDungMsgs & DungMsgCathedral) == 0) {
 		myPlayer.Say(HeroSpeech::TheSanctityOfThisPlaceHasBeenFouled, 40);

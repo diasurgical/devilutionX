@@ -2226,7 +2226,7 @@ void GenerateLevel(lvl_entry entry)
 			}
 		} else if (entry == ENTRY_MAIN) {
 			if (currlevel < 21) {
-				if (!Players[MyPlayerId].pOriginalCathedral) {
+				if (!MyPlayer->pOriginalCathedral) {
 					if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
 						doneflag = false;
 					if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
@@ -2252,7 +2252,7 @@ void GenerateLevel(lvl_entry entry)
 				}
 				ViewPosition.y++;
 			}
-		} else if (!Players[MyPlayerId].pOriginalCathedral && entry == ENTRY_PREV) {
+		} else if (!MyPlayer->pOriginalCathedral && entry == ENTRY_PREV) {
 			if (currlevel < 21) {
 				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
@@ -2276,7 +2276,7 @@ void GenerateLevel(lvl_entry entry)
 			}
 		} else {
 			if (currlevel < 21) {
-				if (!Players[MyPlayerId].pOriginalCathedral) {
+				if (!MyPlayer->pOriginalCathedral) {
 					if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
 					if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)

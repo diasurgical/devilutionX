@@ -738,7 +738,7 @@ void UpdateEnemy(Monster &monster)
 	const auto &position = monster.position.tile;
 	if ((monster._mFlags & MFLAG_BERSERK) != 0 || (monster._mFlags & MFLAG_GOLEM) == 0) {
 		for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
-			auto &player = Players[pnum];
+			Player &player = Players[pnum];
 			if (!player.plractive || currlevel != player.plrlevel || player._pLvlChanging
 			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
@@ -1314,7 +1314,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 void CheckReflect(int mon, int pnum, int dam)
 {
 	auto &monster = Monsters[mon];
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player.wReflections--;
 	if (player.wReflections <= 0)
@@ -1340,7 +1340,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		return;
 	}
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
 		return;
@@ -3151,7 +3151,7 @@ void LazarusAi(int i)
 	Direction md = GetMonsterDirection(monster);
 	if (IsTileVisible(monster.position.tile)) {
 		if (!gbIsMultiplayer) {
-			auto &myPlayer = Players[MyPlayerId];
+			Player &myPlayer = *MyPlayer;
 			if (monster.mtalkmsg == TEXT_VILE13 && monster._mgoal == MGOAL_INQUIRING && myPlayer.position.tile == Point { 35, 46 }) {
 				PlayInGameMovie("gendata\\fprst3.smk");
 				monster._mmode = MonsterMode::Talk;
@@ -4085,7 +4085,7 @@ void DoEnding()
 	if (gbIsSpawn)
 		return;
 
-	switch (Players[MyPlayerId]._pClass) {
+	switch (MyPlayer->_pClass) {
 	case HeroClass::Sorcerer:
 	case HeroClass::Monk:
 		play_movie("gendata\\DiabVic1.smk", false);
@@ -4123,11 +4123,11 @@ void PrepDoEnding()
 	MyPlayerIsDead = false;
 	cineflag = true;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer.pDiabloKillLevel = std::max(myPlayer.pDiabloKillLevel, static_cast<uint8_t>(sgGameInitInfo.nDifficulty + 1));
 
-	for (auto &player : Players) {
+	for (Player &player : Players) {
 		player._pmode = PM_QUIT;
 		player._pInvincible = true;
 		if (gbIsMultiplayer) {
@@ -4306,7 +4306,7 @@ void ProcessMonsters()
 			monster.enemyPosition = monster.position.last;
 		} else {
 			assert(monster._menemy >= 0 && monster._menemy < MAX_PLRS);
-			auto &player = Players[monster._menemy];
+			Player &player = Players[monster._menemy];
 			monster.enemyPosition = player.position.future;
 			if (IsTileVisible(monster.position.tile)) {
 				monster._msquelch = UINT8_MAX;
@@ -4700,7 +4700,7 @@ void PrintUniqueHistory()
 
 void PlayEffect(Monster &monster, int mode)
 {
-	if (Players[MyPlayerId].pLvlLoad != 0) {
+	if (MyPlayer->pLvlLoad != 0) {
 		return;
 	}
 
@@ -4870,7 +4870,7 @@ int PreSpawnSkeleton()
 
 void TalktoMonster(Monster &monster)
 {
-	auto &player = Players[monster._menemy];
+	Player &player = Players[monster._menemy];
 	monster._mmode = MonsterMode::Talk;
 	if (monster._mAi != AI_SNOTSPIL && monster._mAi != AI_LACHDAN) {
 		return;
@@ -4894,7 +4894,7 @@ void TalktoMonster(Monster &monster)
 void SpawnGolem(int i, Point position, Missile &missile)
 {
 	assert(i >= 0 && i < MAX_PLRS);
-	auto &player = Players[i];
+	Player &player = Players[i];
 	auto &golem = Monsters[i];
 
 	dMonster[position.x][position.y] = i + 1;
