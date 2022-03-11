@@ -56,7 +56,7 @@ Cutscenes PickCutscene(interface_mode uMsg)
 	case WM_DIABPREVLVL:
 	case WM_DIABTOWNWARP:
 	case WM_DIABTWARPUP: {
-		int lvl = Players[MyPlayerId].plrlevel;
+		int lvl = MyPlayer->plrlevel;
 		if (lvl == 1 && uMsg == WM_DIABNEXTLVL)
 			return CutTown;
 		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
@@ -237,7 +237,7 @@ void ShowProgress(interface_mode uMsg)
 	sound_init();
 	IncProgress();
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	switch (uMsg) {
 	case WM_DIABLOADGAME:

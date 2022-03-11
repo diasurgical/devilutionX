@@ -178,7 +178,7 @@ void FreeGame()
 	FreeInfoBoxGfx();
 	FreeStoreMem();
 
-	for (auto &player : Players)
+	for (Player &player : Players)
 		ResetPlayerGFX(player);
 
 	FreeCursor();
@@ -234,7 +234,7 @@ void LeftMouseCmd(bool bShift)
 		return;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	bNear = myPlayer.position.tile.WalkingDistance(cursPosition) < 2;
 	if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 		NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
@@ -382,7 +382,7 @@ void RightMouseDown(bool isShiftHeld)
 {
 	LastMouseButtonAction = MouseActionType::None;
 
-	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
+	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || MyPlayer->_pInvincible) {
 		return;
 	}
 
@@ -1210,7 +1210,7 @@ void CreateLevel(lvl_entry lvldir)
 void UnstuckChargers()
 {
 	if (gbIsMultiplayer) {
-		for (auto &player : Players) {
+		for (Player &player : Players) {
 			if (!player.plractive)
 				continue;
 			if (player._pLvlChanging)
@@ -1234,7 +1234,7 @@ void UpdateMonsterLights()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 		if (monster.mlid != NO_LIGHT) {
-			if (monster.mlid == Players[MyPlayerId]._plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
+			if (monster.mlid == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
 				monster.mlid = NO_LIGHT;
 				continue;
 			}
@@ -1443,7 +1443,7 @@ void SpellBookKeyPressed()
 
 bool IsPlayerDead()
 {
-	return Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead;
+	return MyPlayer->_pmode == PM_DEATH || MyPlayerIsDead;
 }
 
 bool IsGameRunning()
@@ -1465,7 +1465,7 @@ void InitKeymapActions()
 		    N_("Use Belt item."),
 		    '1' + i,
 		    [i] {
-			    auto &myPlayer = Players[MyPlayerId];
+			    Player &myPlayer = *MyPlayer;
 			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
 				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			    }
@@ -1531,7 +1531,7 @@ void InitKeymapActions()
 	    N_("Stop hero"),
 	    N_("Stops walking and cancel pending actions."),
 	    DVL_VK_INVALID,
-	    [] { Players[MyPlayerId].Stop(); },
+	    [] { MyPlayer->Stop(); },
 	    nullptr,
 	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
@@ -1745,7 +1745,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 			InitLevels();
 			InitQuests();
 			InitPortals();
-			InitDungMsgs(Players[MyPlayerId]);
+			InitDungMsgs(*MyPlayer);
 			DeltaSyncJunk();
 		}
 		giNumberOfLevels = gbIsHellfire ? 25 : 17;
@@ -1847,7 +1847,7 @@ bool TryIconCurs()
 		return true;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1)
@@ -2125,7 +2125,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	InitLevelMonsters();
 	IncProgress();
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (!setlevel) {
 		CreateLevel(lvldir);
@@ -2157,7 +2157,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		IncProgress();
 
-		for (auto &player : Players) {
+		for (Player &player : Players) {
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
@@ -2172,7 +2172,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		bool visited = false;
 		int players = gbIsMultiplayer ? MAX_PLRS : 1;
 		for (int i = 0; i < players; i++) {
-			auto &player = Players[i];
+			Player &player = Players[i];
 			if (player.plractive)
 				visited = visited || player._pLvlVisited[currlevel];
 		}
@@ -2258,7 +2258,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			GetPortalLvlPos();
 		IncProgress();
 
-		for (auto &player : Players) {
+		for (Player &player : Players) {
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
@@ -2284,7 +2284,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SyncPortals();
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &player = Players[i];
+		Player &player = Players[i];
 		if (player.plractive && player.plrlevel == currlevel && (!player._pLvlChanging || i == MyPlayerId)) {
 			if (player._pHitPoints > 0) {
 				if (!gbIsMultiplayer)

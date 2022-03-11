@@ -388,7 +388,7 @@ void RemoveGold(Player &player, int goldIndex)
 
 bool IsLevelUpButtonVisible()
 {
-	if (spselflag || chrflag || Players[MyPlayerId]._pStatPts == 0) {
+	if (spselflag || chrflag || MyPlayer->_pStatPts == 0) {
 		return false;
 	}
 	if (ControlMode == ControlTypes::VirtualGamepad) {
@@ -496,25 +496,25 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 void DrawLifeFlaskUpper(const Surface &out)
 {
 	constexpr int LifeFlaskUpperOffset = 109;
-	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
+	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, MyPlayer->_pHPPer);
 }
 
 void DrawManaFlaskUpper(const Surface &out)
 {
 	constexpr int ManaFlaskUpperOffset = 475;
-	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, Players[MyPlayerId]._pManaPer);
+	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, MyPlayer->_pManaPer);
 }
 
 void DrawLifeFlaskLower(const Surface &out)
 {
 	constexpr int LifeFlaskLowerOffset = 96;
-	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, Players[MyPlayerId]._pHPPer);
+	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, MyPlayer->_pHPPer);
 }
 
 void DrawManaFlaskLower(const Surface &out)
 {
 	constexpr int ManaFlaskLowerOffeset = 464;
-	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, Players[MyPlayerId]._pManaPer);
+	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, MyPlayer->_pManaPer);
 }
 
 void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
@@ -534,8 +534,8 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 
 void control_update_life_mana()
 {
-	Players[MyPlayerId].UpdateManaPercentage();
-	Players[MyPlayerId].UpdateHitPointPercentage();
+	MyPlayer->UpdateManaPercentage();
+	MyPlayer->UpdateHitPointPercentage();
 }
 
 void InitControlPan()
@@ -621,8 +621,7 @@ void DrawCtrlBtns(const Surface &out)
 	}
 	if (PanelButtonIndex == 8) {
 		CelDrawTo(out, mainPanelPosition + Displacement { 87, 122 }, *multiButtons, PanelButtons[6] ? 1 : 0);
-		auto &myPlayer = Players[MyPlayerId];
-		if (myPlayer.friendlyMode)
+		if (MyPlayer->friendlyMode)
 			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, *multiButtons, PanelButtons[7] ? 3 : 2);
 		else
 			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, *multiButtons, PanelButtons[7] ? 5 : 4);
@@ -654,7 +653,7 @@ void DoPanBtn()
 	}
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
-			auto &myPlayer = Players[MyPlayerId];
+			Player &myPlayer = *MyPlayer;
 			myPlayer._pRSpell = SPL_INVALID;
 			myPlayer._pRSplType = RSPLTYPE_INVALID;
 			force_redraw = 255;
@@ -710,8 +709,7 @@ void CheckPanelInfo()
 			if (i != 7) {
 				InfoString = _(PanBtnStr[i]);
 			} else {
-				auto &myPlayer = Players[MyPlayerId];
-				if (myPlayer.friendlyMode)
+				if (MyPlayer->friendlyMode)
 					InfoString = _("Player friendly");
 				else
 					InfoString = _("Player attack");
@@ -728,7 +726,7 @@ void CheckPanelInfo()
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
-		auto &myPlayer = Players[MyPlayerId];
+		Player &myPlayer = *MyPlayer;
 		const spell_id spellId = myPlayer._pRSpell;
 		if (spellId != SPL_INVALID && spellId != SPL_NULL) {
 			switch (myPlayer._pRSplType) {
@@ -873,7 +871,7 @@ void DrawInfoBox(const Surface &out)
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
 	} else if (!myPlayer.HoldItem.isEmpty()) {
@@ -957,7 +955,7 @@ void DrawLevelUpIcon(const Surface &out)
 
 void CheckChrBtns()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (chrbtnactive || myPlayer._pStatPts == 0)
 		return;
@@ -987,7 +985,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.Contains(MousePosition)) {
-			auto &myPlayer = Players[MyPlayerId];
+			Player &myPlayer = *MyPlayer;
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
 				statPointsToAdd = CapStatPointsToAdd(myPlayer._pStatPts, myPlayer, attribute);
@@ -1029,7 +1027,7 @@ void DrawDurIcon(const Surface &out)
 			x -= MainPanel.position.x + MainPanel.size.width - RightPanel.position.x;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 3);
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 2);
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
@@ -1082,7 +1080,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 void control_drop_gold(char vkey)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
 		CloseGoldDrop();
@@ -1136,7 +1134,7 @@ void DrawTalkPan(const Surface &out)
 		if (i == MyPlayerId)
 			continue;
 
-		auto &player = Players[i];
+		Player &player = Players[i];
 		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {

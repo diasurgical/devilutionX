@@ -74,7 +74,7 @@ void RepeatMouseAction()
 	if (LastMouseButtonAction == MouseActionType::None)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (myPlayer.destAction != ACTION_NONE)
 		return;
 	if (myPlayer._pInvincible)

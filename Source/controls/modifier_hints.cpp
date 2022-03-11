@@ -110,7 +110,7 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
  */
 void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	const Displacement spellIconDisplacement = { (HintBoxSize - IconSize) / 2 + 1, HintBoxSize - (HintBoxSize - IconSize) / 2 - 1 };
 	Point hintBoxPositions[4] = {
 		origin + Displacement { 0, LineHeight - HintBoxSize },

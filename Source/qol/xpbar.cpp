@@ -91,7 +91,7 @@ void DrawXPBar(const Surface &out)
 	if (!*sgOptions.Gameplay.experienceBar || talkflag)
 		return;
 
-	const auto &player = Players[MyPlayerId];
+	const Player &player = *MyPlayer;
 	const Rectangle &mainPanel = GetMainPanel();
 
 	const Point back = { mainPanel.position.x + mainPanel.size.width / 2 - 155, mainPanel.position.y + mainPanel.size.height - 11 };
@@ -141,7 +141,7 @@ bool CheckXPBarInfo()
 	if (MousePosition.x < backX || MousePosition.x >= backX + BackWidth || MousePosition.y < backY || MousePosition.y >= backY + BackHeight)
 		return false;
 
-	const auto &player = Players[MyPlayerId];
+	const Player &player = *MyPlayer;
 
 	const int8_t charLevel = player._pLevel;
 

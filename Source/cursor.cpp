@@ -278,7 +278,7 @@ void CheckCursMove()
 	int xo = 0;
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);

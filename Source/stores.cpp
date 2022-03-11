@@ -297,17 +297,17 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 
 bool StoreAutoPlace(Item &item, bool persistItem)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 
-	if (AutoEquipEnabled(myPlayer, item) && AutoEquip(MyPlayerId, item, persistItem)) {
+	if (AutoEquipEnabled(player, item) && AutoEquip(MyPlayerId, item, persistItem)) {
 		return true;
 	}
 
-	if (AutoPlaceItemInBelt(myPlayer, item, persistItem)) {
+	if (AutoPlaceItemInBelt(player, item, persistItem)) {
 		return true;
 	}
 
-	return AutoPlaceItemInInventory(myPlayer, item, persistItem);
+	return AutoPlaceItemInInventory(player, item, persistItem);
 }
 
 void StartSmith()
@@ -452,9 +452,9 @@ bool SmithSellOk(int i)
 	Item *pI;
 
 	if (i >= 0) {
-		pI = &Players[MyPlayerId].InvList[i];
+		pI = &MyPlayer->InvList[i];
 	} else {
-		pI = &Players[MyPlayerId].SpdList[-(i + 1)];
+		pI = &MyPlayer->SpdList[-(i + 1)];
 	}
 
 	if (pI->isEmpty())
@@ -515,7 +515,7 @@ void StartSmithSell()
 		item.clear();
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 
 	for (int8_t i = 0; i < myPlayer._pNumInv; i++) {
 		if (storenumh >= 48)
@@ -574,7 +574,7 @@ void StartSmithSell()
 
 bool SmithRepairOk(int i)
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.InvList[i].isEmpty())
 		return false;
@@ -597,7 +597,7 @@ void StartSmithRepair()
 		item.clear();
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
 	if (!helmet.isEmpty() && helmet._iDurability != helmet._iMaxDur) {
@@ -654,7 +654,7 @@ void FillManaPlayer()
 	if (!*sgOptions.Gameplay.adriaRefillsMana)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pMana != myPlayer._pMaxMana) {
 		PlaySFX(IS_CAST8);
@@ -711,7 +711,7 @@ void WitchBookLevel(Item &bookItem)
 	if (bookItem._iMiscId != IMISC_BOOK)
 		return;
 	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
-	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[bookItem._iSpell];
+	int8_t spellLevel = MyPlayer->_pSplLvl[bookItem._iSpell];
 	while (spellLevel > 0) {
 		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
 		spellLevel--;
@@ -754,9 +754,9 @@ bool WitchSellOk(int i)
 	bool rv = false;
 
 	if (i >= 0)
-		pI = &Players[MyPlayerId].InvList[i];
+		pI = &MyPlayer->InvList[i];
 	else
-		pI = &Players[MyPlayerId].SpdList[-(i + 1)];
+		pI = &MyPlayer->SpdList[-(i + 1)];
 
 	if (pI->_itype == ItemType::Misc)
 		rv = true;
@@ -783,7 +783,7 @@ void StartWitchSell()
 		item.clear();
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 
 	for (int i = 0; i < myPlayer._pNumInv; i++) {
 		if (storenumh >= 48)
@@ -843,7 +843,7 @@ void StartWitchSell()
 
 bool WitchRechargeOk(int i)
 {
-	const auto &item = Players[MyPlayerId].InvList[i];
+	const auto &item = MyPlayer->InvList[i];
 
 	if (item._itype == ItemType::Staff && item._iCharges != item._iMaxCharges) {
 		return true;
@@ -876,7 +876,7 @@ void StartWitchRecharge()
 		item.clear();
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	const auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
 
 	if ((leftHand._itype == ItemType::Staff || leftHand._iMiscId == IMISC_UNIQUE) && leftHand._iCharges != leftHand._iMaxCharges) {
@@ -1049,7 +1049,7 @@ void SStartBoyBuy()
 
 void HealPlayer()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pHitPoints != myPlayer._pMaxHP) {
 		PlaySFX(IS_CAST8);
@@ -1161,7 +1161,7 @@ void StartStorytellerIdentify()
 		item.clear();
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
 	if (IdItemOk(&helmet)) {
@@ -1487,7 +1487,7 @@ bool StoreGoldFit(Item &item)
  */
 void StoreSellItem()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (storehidx[idx] >= 0)
@@ -1545,7 +1545,7 @@ void SmithRepairItem(int price)
 
 	int8_t i = storehidx[idx];
 
-	auto &myPlayer = *MyPlayer;
+	Player &myPlayer = *MyPlayer;
 
 	if (i < 0) {
 		if (i == -1)
@@ -1699,7 +1699,7 @@ void WitchRechargeItem(int price)
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iCharges = storehold[idx]._iMaxCharges;
 
-	auto &myPlayer = *MyPlayer;
+	Player &myPlayer = *MyPlayer;
 
 	int8_t i = storehidx[idx];
 	if (i < 0)
@@ -1842,7 +1842,7 @@ void BoyBuyEnter()
 
 void StorytellerIdentifyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int8_t idx = storehidx[((stextlhold - stextup) / 4) + stextvhold];
 	if (idx < 0) {
@@ -2191,7 +2191,7 @@ void InitStores()
 
 void SetupTownStores()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int l = myPlayer._pLevel / 2;
 	if (!gbIsMultiplayer) {
@@ -2623,7 +2623,7 @@ void StoreNext()
 
 void TakePlrsMoney(int cost)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pGold -= std::min(cost, myPlayer._pGold);
 

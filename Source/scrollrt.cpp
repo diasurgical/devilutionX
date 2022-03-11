@@ -254,7 +254,7 @@ bool ShouldShowCursor()
 		return true;
 	if (invflag)
 		return true;
-	if (chrflag && Players[MyPlayerId]._pStatPts > 0)
+	if (chrflag && MyPlayer->_pStatPts > 0)
 		return true;
 
 	return false;
@@ -448,7 +448,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		trn = monster.uniqueTRN.get();
 	if (monster._mmode == MonsterMode::Petrified)
 		trn = GetStoneTRN();
-	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
+	if (MyPlayer->_pInfraFlag && LightTableIndex > 8)
 		trn = GetInfravisionTRN();
 	if (trn != nullptr)
 		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, trn);
@@ -487,7 +487,7 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
  */
 void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	if (player.pManaShield)
 		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, position, lighting);
 	if (player.wReflections > 0)
@@ -506,11 +506,11 @@ void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting
  */
 void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
 {
-	if (!IsTileLit(tilePosition) && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
+	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	std::optional<CelSprite> sprite = player.AnimInfo.celSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
@@ -552,7 +552,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
+	if (!IsTileLit(tilePosition) || (MyPlayer->_pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawTRN(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel, GetInfravisionTRN());
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
@@ -581,7 +581,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 	dFlags[tilePosition.x][tilePosition.y] &= ~DungeonFlag::DeadPlayer;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &player = Players[i];
+		Player &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
 			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
@@ -761,7 +761,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && !Players[MyPlayerId]._pInfraFlag)
+	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag)
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
@@ -807,7 +807,7 @@ void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBuffer
 		Log("draw player: tried to draw illegal player {}", p);
 		return;
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	Displacement offset = player.position.offset;
 	if (player.IsWalking()) {
@@ -1091,7 +1091,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
