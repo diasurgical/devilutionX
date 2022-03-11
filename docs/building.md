@@ -139,7 +139,7 @@ cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ### 64-bit
 
 ```bash
-cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
