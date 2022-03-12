@@ -1211,7 +1211,6 @@ std::optional<Point> FindClosestValidItemPosition(Point startingPosition)
 	return {};
 }
 
-
 void FreeInvGFX()
 {
 	pInvCels = std::nullopt;
