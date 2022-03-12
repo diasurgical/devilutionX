@@ -1098,37 +1098,6 @@ void CleanupItems(int ii)
 	}
 }
 
-std::optional<Point> FindClosestValidItemPosition(Point startingPosition)
-{
-	if (CanPut(startingPosition)) {
-		return startingPosition;
-	}
-	if (dItem[startingPosition.x][startingPosition.y] == 0)
-		return {};
-
-	bool checkedTiles[MAXDUNX][MAXDUNY] = { false };
-	std::queue<Point> tilesToCheck;
-	tilesToCheck.push(startingPosition);
-	while (!tilesToCheck.empty()) {
-		Point currentPosition = tilesToCheck.front();
-		tilesToCheck.pop();
-		for (auto dir : PathDirs) {
-			Point newPosition = currentPosition + dir;
-			if (InDungeonBounds(newPosition)) {
-				if (!checkedTiles[newPosition.x][newPosition.y]) {
-					checkedTiles[newPosition.x][newPosition.y] = true;
-					if (CanPut(newPosition))
-						return newPosition;
-					if (dItem[newPosition.x][newPosition.y] != 0)
-						tilesToCheck.push(newPosition);
-				}
-			}
-		}
-	}
-
-	return {};
-}
-
 bool PutItem(Player &player, Point &position)
 {
 	if (ActiveItemCount >= MAXITEMS)
@@ -1139,18 +1108,8 @@ bool PutItem(Player &player, Point &position)
 	if (position.WalkingDistance(player.position.tile) > 1) {
 		position = player.position.tile + d;
 	}
-	if (CanPut(position))
-		return true;
 
-	position = player.position.tile + Left(d);
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Right(d);
-	if (CanPut(position))
-		return true;
-
-	std::optional<Point> itemPosition = FindClosestValidPosition(CanPut, player.position.tile, 1, 50);
+	std::optional<Point> itemPosition = FindClosestValidItemPosition(position);
 
 	if (itemPosition) {
 		position = itemPosition.value();
@@ -1220,6 +1179,38 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex, Item &goldStack
 }
 
 } // namespace
+
+std::optional<Point> FindClosestValidItemPosition(Point startingPosition)
+{
+	if (CanPut(startingPosition)) {
+		return startingPosition;
+	}
+	if (dItem[startingPosition.x][startingPosition.y] == 0)
+		return {};
+
+	bool checkedTiles[MAXDUNX][MAXDUNY] = { false };
+	std::queue<Point> tilesToCheck;
+	tilesToCheck.push(startingPosition);
+	while (!tilesToCheck.empty()) {
+		Point currentPosition = tilesToCheck.front();
+		tilesToCheck.pop();
+		for (auto dir : PathDirs) {
+			Point newPosition = currentPosition + dir;
+			if (InDungeonBounds(newPosition)) {
+				if (!checkedTiles[newPosition.x][newPosition.y]) {
+					checkedTiles[newPosition.x][newPosition.y] = true;
+					if (CanPut(newPosition))
+						return newPosition;
+					if (dItem[newPosition.x][newPosition.y] != 0)
+						tilesToCheck.push(newPosition);
+				}
+			}
+		}
+	}
+
+	return {};
+}
+
 
 void FreeInvGFX()
 {
@@ -1791,10 +1782,6 @@ bool CanPut(Point position)
 	}
 
 	if (!InDungeonBounds(position + Displacement { 1, 1 })) {
-		return false;
-	}
-
-	if (dItem[position.x][position.y] != 0) {
 		return false;
 	}
 

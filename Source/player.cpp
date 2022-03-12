@@ -557,21 +557,14 @@ void DeadItem(Player &player, Item &&itm, Displacement direction)
 		return;
 
 	Point target = player.position.tile + direction;
-	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
+	if (direction != Displacement { 0, 0 } && CanPut(target)) {
 		RespawnDeadItem(std::move(itm), target);
 		return;
 	}
 
-	for (int k = 1; k < 50; k++) {
-		for (int j = -k; j <= k; j++) {
-			for (int i = -k; i <= k; i++) {
-				Point next = player.position.tile + Displacement { i, j };
-				if (ItemSpaceOk(next)) {
-					RespawnDeadItem(std::move(itm), next);
-					return;
-				}
-			}
-		}
+	std::optional<Point> itemPosition = FindClosestValidItemPosition(player.position.tile);
+	if (itemPosition) {
+		RespawnDeadItem(std::move(itm), itemPosition.value());
 	}
 }
 

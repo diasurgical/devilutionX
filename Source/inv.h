@@ -90,6 +90,7 @@ extern const Point InvRect[73];
  */
 using ItemFunc = void (*)(Item &);
 
+std::optional<Point> FindClosestValidItemPosition(Point startingPosition);
 void FreeInvGFX();
 void InitInv();
 
