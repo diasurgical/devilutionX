@@ -2646,7 +2646,7 @@ bool OperateShrineHidden(int pnum)
 	if (cnt > 0) {
 		for (auto &item : player.InvBody) {
 			if (!item.isEmpty()
-			    && item._iMaxDur != DUR_INDESTRUCTIBLE
+			    && item._iMaxDur < DUR_INDESTRUCTIBLE
 			    && item._iMaxDur != 0) {
 				item._iDurability += 10;
 				item._iMaxDur += 10;
@@ -2657,14 +2657,14 @@ bool OperateShrineHidden(int pnum)
 		while (true) {
 			cnt = 0;
 			for (auto &item : player.InvBody) {
-				if (!item.isEmpty() && item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
+				if (!item.isEmpty() && item._iMaxDur < DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
 					cnt++;
 				}
 			}
 			if (cnt == 0)
 				break;
 			int r = GenerateRnd(NUM_INVLOC);
-			if (player.InvBody[r].isEmpty() || player.InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || player.InvBody[r]._iMaxDur == 0)
+			if (player.InvBody[r].isEmpty() || player.InvBody[r]._iMaxDur >= DUR_INDESTRUCTIBLE || player.InvBody[r]._iMaxDur == 0)
 				continue;
 
 			player.InvBody[r]._iDurability -= 20;
@@ -3506,7 +3506,7 @@ bool OperateShrineMurphys(int pnum)
 	bool broke = false;
 	for (auto &item : myPlayer.InvBody) {
 		if (!item.isEmpty() && GenerateRnd(3) == 0) {
-			if (item._iDurability != DUR_INDESTRUCTIBLE) {
+			if (item._iDurability < DUR_INDESTRUCTIBLE) {
 				if (item._iDurability > 0) {
 					item._iDurability /= 2;
 					broke = true;

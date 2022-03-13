@@ -761,7 +761,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	}
 
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability >= DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
@@ -775,7 +775,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	}
 
 	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability >= DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
@@ -789,7 +789,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	}
 
 	if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == DUR_INDESTRUCTIBLE) {
+		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability >= DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
@@ -803,7 +803,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	}
 
 	if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability >= DUR_INDESTRUCTIBLE) {
 			return false;
 		}
 
@@ -1302,7 +1302,7 @@ void DamageParryItem(int pnum)
 	auto &player = Players[pnum];
 
 	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability >= DUR_INDESTRUCTIBLE) {
 			return;
 		}
 
@@ -1315,7 +1315,7 @@ void DamageParryItem(int pnum)
 	}
 
 	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
+		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability < DUR_INDESTRUCTIBLE) {
 			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
 				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
@@ -1377,7 +1377,7 @@ void DamageArmor(int pnum)
 	} else {
 		pi = &player.InvBody[INVLOC_HEAD];
 	}
-	if (pi->_iDurability == DUR_INDESTRUCTIBLE) {
+	if (pi->_iDurability >= DUR_INDESTRUCTIBLE) {
 		return;
 	}
 
