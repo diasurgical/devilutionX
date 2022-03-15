@@ -34,6 +34,18 @@ void base::DisconnectNet(plr_t plr)
 {
 }
 
+void base::SendEchoRequest(plr_t player)
+{
+	if (plr_self == PLR_BROADCAST)
+		return;
+	if (player == plr_self)
+		return;
+
+	timestamp_t now = SDL_GetTicks();
+	auto echo = pktfty->make_packet<PT_ECHO_REQUEST>(plr_self, player, now);
+	send(*echo);
+}
+
 void base::HandleAccept(packet &pkt)
 {
 	if (plr_self != PLR_BROADCAST) {
@@ -68,8 +80,6 @@ void base::HandleTurn(packet &pkt)
 {
 	plr_t src = pkt.Source();
 	PlayerState &playerState = playerStateTable_[src];
-	playerState.waitForTurns = true;
-
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
 	const turn_t &turn = pkt.Turn();
 	turnQueue.push_back(turn);
@@ -92,12 +102,25 @@ void base::HandleDisconnect(packet &pkt)
 			ClearMsg(newPlayer);
 			PlayerState &playerState = playerStateTable_[newPlayer];
 			playerState.isConnected = false;
-			playerState.waitForTurns = false;
 			playerState.turnQueue.clear();
 		}
 	} else {
 		ABORT(); // we were dropped by the owner?!?
 	}
+}
+
+void base::HandleEchoRequest(packet &pkt)
+{
+	auto reply = pktfty->make_packet<PT_ECHO_REPLY>(plr_self, pkt.Source(), pkt.Time());
+	send(*reply);
+}
+
+void base::HandleEchoReply(packet &pkt)
+{
+	uint32_t now = SDL_GetTicks();
+	plr_t src = pkt.Source();
+	PlayerState &playerState = playerStateTable_[src];
+	playerState.roundTripLatency = now - pkt.Time();
 }
 
 void base::ClearMsg(plr_t plr)
@@ -113,7 +136,11 @@ void base::ClearMsg(plr_t plr)
 void base::Connect(plr_t player)
 {
 	PlayerState &playerState = playerStateTable_[player];
+	bool wasConnected = playerState.isConnected;
 	playerState.isConnected = true;
+
+	if (!wasConnected)
+		SendFirstTurnIfReady(player);
 }
 
 bool base::IsConnected(plr_t player) const
@@ -142,6 +169,12 @@ void base::RecvLocal(packet &pkt)
 		break;
 	case PT_DISCONNECT:
 		HandleDisconnect(pkt);
+		break;
+	case PT_ECHO_REQUEST:
+		HandleEchoRequest(pkt);
+		break;
+	case PT_ECHO_REPLY:
+		HandleEchoReply(pkt);
 		break;
 	default:
 		break;
@@ -187,7 +220,7 @@ bool base::AllTurnsArrived()
 {
 	for (auto i = 0; i < MAX_PLRS; ++i) {
 		PlayerState &playerState = playerStateTable_[i];
-		if (!playerState.waitForTurns)
+		if (!playerState.isConnected)
 			continue;
 
 		std::deque<turn_t> &turnQueue = playerState.turnQueue;
@@ -208,7 +241,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 		status[i] = 0;
 
 		PlayerState &playerState = playerStateTable_[i];
-		if (!playerState.waitForTurns)
+		if (!playerState.isConnected)
 			continue;
 
 		status[i] |= PS_CONNECTED;
@@ -226,7 +259,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 	if (AllTurnsArrived()) {
 		for (auto i = 0; i < MAX_PLRS; ++i) {
 			PlayerState &playerState = playerStateTable_[i];
-			if (!playerState.waitForTurns)
+			if (!playerState.isConnected)
 				continue;
 
 			std::deque<turn_t> &turnQueue = playerState.turnQueue;
@@ -253,7 +286,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 
 	for (auto i = 0; i < MAX_PLRS; ++i) {
 		PlayerState &playerState = playerStateTable_[i];
-		if (!playerState.waitForTurns)
+		if (!playerState.isConnected)
 			continue;
 
 		std::deque<turn_t> &turnQueue = playerState.turnQueue;
@@ -284,27 +317,39 @@ bool base::SNetSendTurn(char *data, unsigned int size)
 
 void base::SendTurnIfReady(turn_t turn)
 {
-	PlayerState &playerState = playerStateTable_[plr_self];
-	bool &ready = playerState.waitForTurns;
+	if (awaitingSequenceNumber_)
+		awaitingSequenceNumber_ = !IsGameHost();
 
-	if (!ready)
-		ready = IsGameHost();
-
-	if (ready) {
+	if (!awaitingSequenceNumber_) {
 		auto pkt = pktfty->make_packet<PT_TURN>(plr_self, PLR_BROADCAST, turn);
 		send(*pkt);
 	}
 }
 
+void base::SendFirstTurnIfReady(plr_t player)
+{
+	if (awaitingSequenceNumber_)
+		return;
+
+	PlayerState &playerState = playerStateTable_[plr_self];
+	std::deque<turn_t> &turnQueue = playerState.turnQueue;
+	if (turnQueue.empty())
+		return;
+
+	turn_t turn = turnQueue.back();
+	auto pkt = pktfty->make_packet<PT_TURN>(plr_self, player, turn);
+	send(*pkt);
+}
+
 void base::MakeReady(seq_t sequenceNumber)
 {
-	PlayerState &playerState = playerStateTable_[plr_self];
-	if (playerState.waitForTurns)
+	if (!awaitingSequenceNumber_)
 		return;
 
 	next_turn = sequenceNumber;
-	playerState.waitForTurns = true;
+	awaitingSequenceNumber_ = false;
 
+	PlayerState &playerState = playerStateTable_[plr_self];
 	std::deque<turn_t> &turnQueue = playerState.turnQueue;
 	if (!turnQueue.empty()) {
 		turn_t &turn = turnQueue.front();
