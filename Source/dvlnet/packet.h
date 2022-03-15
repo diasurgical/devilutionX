@@ -26,6 +26,8 @@ enum packet_type : uint8_t {
 	PT_DISCONNECT   = 0x14,
 	PT_INFO_REQUEST = 0x21,
 	PT_INFO_REPLY   = 0x22,
+	PT_ECHO_REQUEST = 0x31,
+	PT_ECHO_REPLY   = 0x32,
 	// clang-format on
 };
 
@@ -35,6 +37,7 @@ const char *packet_type_to_string(uint8_t packetType);
 typedef uint8_t plr_t;
 typedef uint8_t seq_t;
 typedef uint32_t cookie_t;
+typedef uint32_t timestamp_t;
 typedef int leaveinfo_t; // also change later
 #ifdef PACKET_ENCRYPTION
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
@@ -81,6 +84,7 @@ protected:
 	turn_t m_turn;
 	cookie_t m_cookie;
 	plr_t m_newplr;
+	timestamp_t m_time;
 	buffer_t m_info;
 	leaveinfo_t m_leaveinfo;
 
@@ -103,6 +107,7 @@ public:
 	turn_t Turn();
 	cookie_t Cookie();
 	plr_t NewPlayer();
+	timestamp_t Time();
 	const buffer_t &Info();
 	leaveinfo_t LeaveInfo();
 };
@@ -178,6 +183,10 @@ void packet_proc<P>::process_data()
 		self.process_element(m_info);
 		break;
 	case PT_INFO_REQUEST:
+		break;
+	case PT_ECHO_REQUEST:
+	case PT_ECHO_REPLY:
+		self.process_element(m_time);
 		break;
 	}
 }
@@ -311,6 +320,30 @@ inline void packet_out::create<PT_DISCONNECT>(plr_t s, plr_t d, plr_t n,
 	m_dest = d;
 	m_newplr = n;
 	m_leaveinfo = l;
+}
+
+template <>
+inline void packet_out::create<PT_ECHO_REQUEST>(plr_t s, plr_t d, timestamp_t t)
+{
+	if (have_encrypted || have_decrypted)
+		ABORT();
+	have_decrypted = true;
+	m_type = PT_ECHO_REQUEST;
+	m_src = s;
+	m_dest = d;
+	m_time = t;
+}
+
+template <>
+inline void packet_out::create<PT_ECHO_REPLY>(plr_t s, plr_t d, timestamp_t t)
+{
+	if (have_encrypted || have_decrypted)
+		ABORT();
+	have_decrypted = true;
+	m_type = PT_ECHO_REPLY;
+	m_src = s;
+	m_dest = d;
+	m_time = t;
 }
 
 inline void packet_out::process_element(buffer_t &x)

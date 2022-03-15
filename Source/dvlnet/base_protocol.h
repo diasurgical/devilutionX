@@ -32,24 +32,32 @@ public:
 	virtual ~base_protocol() = default;
 
 protected:
-	virtual bool IsGameHost();
+	bool IsGameHost() override;
 
 private:
 	P proto;
-	typedef typename P::endpoint endpoint;
+	typedef typename P::endpoint endpoint_t;
 
-	endpoint firstpeer;
+	struct Peer {
+		endpoint_t endpoint;
+		std::unique_ptr<std::deque<packet>> sendQueue;
+	};
+
+	endpoint_t firstpeer;
 	std::string gamename;
-	std::map<std::string, std::tuple<GameData, std::vector<std::string>, endpoint>> game_list;
-	std::array<endpoint, MAX_PLRS> peers;
+	std::map<std::string, std::tuple<GameData, std::vector<std::string>, endpoint_t>> game_list;
+	std::array<Peer, MAX_PLRS> peers;
 	bool isGameHost_;
 
 	plr_t get_master();
+	void InitiateHandshake(plr_t player);
+	void SendTo(plr_t player, packet &pkt);
+	void DrainSendQueue(plr_t player);
 	void recv();
-	void handle_join_request(packet &pkt, endpoint sender);
-	void recv_decrypted(packet &pkt, endpoint sender);
-	void recv_ingame(packet &pkt, endpoint sender);
-	bool is_recognized(endpoint sender);
+	void handle_join_request(packet &pkt, endpoint_t sender);
+	void recv_decrypted(packet &pkt, endpoint_t sender);
+	void recv_ingame(packet &pkt, endpoint_t sender);
+	bool is_recognized(endpoint_t sender);
 
 	bool wait_network();
 	bool wait_firstpeer();
@@ -61,7 +69,7 @@ plr_t base_protocol<P>::get_master()
 {
 	plr_t ret = plr_self;
 	for (plr_t i = 0; i < MAX_PLRS; ++i)
-		if (peers[i])
+		if (peers[i].endpoint)
 			ret = std::min(ret, i);
 	return ret;
 }
@@ -81,8 +89,9 @@ bool base_protocol<P>::wait_network()
 template <class P>
 void base_protocol<P>::DisconnectNet(plr_t plr)
 {
-	proto.disconnect(peers[plr]);
-	peers[plr] = endpoint();
+	Peer &peer = peers[plr];
+	proto.disconnect(peer.endpoint);
+	peer = {};
 }
 
 template <class P>
@@ -165,18 +174,30 @@ void base_protocol<P>::poll()
 }
 
 template <class P>
+void base_protocol<P>::InitiateHandshake(plr_t player)
+{
+	Peer &peer = peers[player];
+
+	// The first packet sent will initiate the TCP connection over the ZeroTier network.
+	// It will cause problems if both peers attempt to initiate the handshake simultaneously.
+	// If the connection is already open, it should be safe to initiate from either end.
+	// If not, only the player with the smaller player number should initiate the handshake.
+	if (plr_self < player || proto.is_peer_connected(peer.endpoint))
+		SendEchoRequest(player);
+}
+
+template <class P>
 void base_protocol<P>::send(packet &pkt)
 {
-	if (pkt.Destination() < MAX_PLRS) {
-		if (pkt.Destination() == MyPlayerId)
+	plr_t destination = pkt.Destination();
+	if (destination < MAX_PLRS) {
+		if (destination == MyPlayerId)
 			return;
-		if (peers[pkt.Destination()])
-			proto.send(peers[pkt.Destination()], pkt.Data());
-	} else if (pkt.Destination() == PLR_BROADCAST) {
-		for (auto &peer : peers)
-			if (peer)
-				proto.send(peer, pkt.Data());
-	} else if (pkt.Destination() == PLR_MASTER) {
+		SendTo(destination, pkt);
+	} else if (destination == PLR_BROADCAST) {
+		for (plr_t player = 0; player < MAX_PLRS; player++)
+			SendTo(player, pkt);
+	} else if (destination == PLR_MASTER) {
 		throw dvlnet_exception();
 	} else {
 		throw dvlnet_exception();
@@ -184,11 +205,26 @@ void base_protocol<P>::send(packet &pkt)
 }
 
 template <class P>
+void base_protocol<P>::SendTo(plr_t player, packet &pkt)
+{
+	Peer &peer = peers[player];
+	if (!peer.endpoint)
+		return;
+
+	// The handshake uses echo packets so clients know
+	// when they can safely drain their send queues
+	if (peer.sendQueue && !IsAnyOf(pkt.Type(), PT_ECHO_REQUEST, PT_ECHO_REPLY))
+		peer.sendQueue->push_back(pkt);
+	else
+		proto.send(peer.endpoint, pkt.Data());
+}
+
+template <class P>
 void base_protocol<P>::recv()
 {
 	try {
 		buffer_t pkt_buf;
-		endpoint sender;
+		endpoint_t sender;
 		while (proto.recv(sender, pkt_buf)) { // read until kernel buffer is empty?
 			try {
 				auto pkt = pktfty->make_packet(pkt_buf);
@@ -201,7 +237,7 @@ void base_protocol<P>::recv()
 		}
 		while (proto.get_disconnected(sender)) {
 			for (plr_t i = 0; i < MAX_PLRS; ++i) {
-				if (peers[i] == sender) {
+				if (peers[i].endpoint == sender) {
 					DisconnectNet(i);
 					break;
 				}
@@ -214,13 +250,15 @@ void base_protocol<P>::recv()
 }
 
 template <class P>
-void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
+void base_protocol<P>::handle_join_request(packet &pkt, endpoint_t sender)
 {
 	plr_t i;
 	for (i = 0; i < MAX_PLRS; ++i) {
-		if (i != plr_self && !peers[i]) {
+		Peer &peer = peers[i];
+		if (i != plr_self && !peer.endpoint) {
+			peer.endpoint = sender;
+			peer.sendQueue = std::make_unique<std::deque<packet>>();
 			Connect(i);
-			peers[i] = sender;
 			break;
 		}
 	}
@@ -229,14 +267,9 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 		return;
 	}
 
-	auto reply = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST,
-	    pkt.Cookie(), i,
-	    game_init_info);
-	proto.send(sender, reply->Data());
-
 	auto senderinfo = sender.serialize();
 	for (plr_t j = 0; j < MAX_PLRS; ++j) {
-		endpoint peer = peers[j];
+		endpoint_t peer = peers[j].endpoint;
 		if ((j != plr_self) && (j != i) && peer) {
 			auto peerpkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, i, senderinfo);
 			proto.send(peer, peerpkt->Data());
@@ -245,10 +278,18 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 			proto.send(sender, infopkt->Data());
 		}
 	}
+
+	// PT_JOIN_ACCEPT must be sent after all PT_CONNECT packets so the new player does
+	// not resume game logic until after having been notified of all existing players
+	auto reply = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST,
+	    pkt.Cookie(), i,
+	    game_init_info);
+	proto.send(sender, reply->Data());
+	DrainSendQueue(i);
 }
 
 template <class P>
-void base_protocol<P>::recv_decrypted(packet &pkt, endpoint sender)
+void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 {
 	if (pkt.Source() == PLR_BROADCAST && pkt.Destination() == PLR_MASTER && pkt.Type() == PT_INFO_REPLY) {
 		constexpr size_t sizePlayerName = (sizeof(char) * PLR_NAME_LEN);
@@ -275,7 +316,7 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint sender)
 }
 
 template <class P>
-void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
+void base_protocol<P>::recv_ingame(packet &pkt, endpoint_t sender)
 {
 	if (pkt.Source() == PLR_BROADCAST && pkt.Destination() == PLR_MASTER) {
 		if (pkt.Type() == PT_JOIN_REQUEST) {
@@ -308,28 +349,65 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		}
 
 		// addrinfo packets
-		Connect(pkt.NewPlayer());
-		peers[pkt.NewPlayer()].unserialize(pkt.Info());
+		plr_t newPlayer = pkt.NewPlayer();
+		Peer &peer = peers[newPlayer];
+		peer.endpoint.unserialize(pkt.Info());
+		peer.sendQueue = std::make_unique<std::deque<packet>>();
+		Connect(newPlayer);
+
+		if (plr_self != PLR_BROADCAST)
+			InitiateHandshake(newPlayer);
+
 		return;
 	} else if (pkt.Source() >= MAX_PLRS) {
 		// normal packets
 		LogDebug("Invalid packet: packet source ({}) >= MAX_PLRS", pkt.Source());
 		return;
 	} else if (sender == firstpeer && pkt.Type() == PT_JOIN_ACCEPT) {
-		Connect(pkt.Source());
-		peers[pkt.Source()] = sender;
-		firstpeer = endpoint();
-	} else if (sender != peers[pkt.Source()]) {
+		plr_t src = pkt.Source();
+		peers[src].endpoint = sender;
+		Connect(src);
+		firstpeer = {};
+	} else if (sender != peers[pkt.Source()].endpoint) {
 		LogDebug("Invalid packet: packet source ({}) received from unrecognized endpoint", pkt.Source());
 		return;
 	}
 	if (pkt.Destination() != plr_self && pkt.Destination() != PLR_BROADCAST)
 		return; // packet not for us, drop
+
+	bool wasBroadcast = plr_self == PLR_BROADCAST;
 	RecvLocal(pkt);
+
+	if (plr_self != PLR_BROADCAST) {
+		if (wasBroadcast) {
+			// Send a handshake to everyone just after PT_JOIN_ACCEPT
+			for (plr_t player = 0; player < MAX_PLRS; player++)
+				InitiateHandshake(player);
+		}
+
+		DrainSendQueue(pkt.Source());
+	}
 }
 
 template <class P>
-bool base_protocol<P>::is_recognized(endpoint sender)
+void base_protocol<P>::DrainSendQueue(plr_t player)
+{
+	Peer &srcPeer = peers[player];
+	if (!srcPeer.sendQueue)
+		return;
+
+	std::deque<packet> &sendQueue = *srcPeer.sendQueue;
+	while (!sendQueue.empty()) {
+		packet &pkt = sendQueue.front();
+		proto.send(srcPeer.endpoint, pkt.Data());
+		sendQueue.pop_front();
+	}
+
+	srcPeer.sendQueue = nullptr;
+}
+
+template <class P>
+bool base_protocol<P>::is_recognized(endpoint_t sender)
 {
 	if (!sender)
 		return false;
@@ -338,7 +416,7 @@ bool base_protocol<P>::is_recognized(endpoint sender)
 		return true;
 
 	for (auto player = 0; player <= MAX_PLRS; player++) {
-		if (sender == peers[player])
+		if (sender == peers[player].endpoint)
 			return true;
 	}
 

@@ -31,7 +31,7 @@ public:
 	virtual std::string make_default_gamename();
 
 protected:
-	virtual bool IsGameHost();
+	bool IsGameHost() override;
 
 private:
 	frame_queue recv_queue;
