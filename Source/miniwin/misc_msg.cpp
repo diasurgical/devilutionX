@@ -315,6 +315,7 @@ void ProcessGamepadEvents(GameAction &action)
 {
 	switch (action.type) {
 	case GameActionType_NONE:
+	case GameActionType_SEND_KEY:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
 		UseBeltItem(BLT_HEALING);
