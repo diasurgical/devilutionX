@@ -125,6 +125,8 @@ bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
 		auto *pOptionList = static_cast<OptionEntryListBase *>(pOption);
 		pOptionList->SetActiveListIndex(listIndex);
 	} break;
+	case OptionEntryType::Key:
+		break;
 	}
 
 	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
@@ -203,6 +205,8 @@ void ItemSelected(int value)
 		ChangeOptionValue(selectedOption, vecItemValue);
 		GoBackOneMenuLevel();
 	} break;
+	case ShownMenuType::KeyInput:
+		break;
 	}
 }
 
