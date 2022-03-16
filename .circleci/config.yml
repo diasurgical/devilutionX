@@ -7,9 +7,9 @@ jobs:
     steps:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
-      - run: apt update -y
-      - run: apt install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq
-      - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev libpng-dev
+      - run: apt-get update -y
+      - run: apt-get install -y g++ libsdl2-dev libbz2-dev git rpm wget smpq
+      - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev libpng-dev
       - run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF -DCPACK=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
