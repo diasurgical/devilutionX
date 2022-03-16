@@ -2055,7 +2055,7 @@ void HealerBuyEnter()
 {
 	if (stextsel == BackButtonLine()) {
 		StartStore(STORE_HEALER);
-		stextsel = 16;
+		stextsel = 14;
 		return;
 	}
 
@@ -2596,7 +2596,7 @@ void StoreESC()
 		break;
 	case STORE_HBUY:
 		StartStore(STORE_HEALER);
-		stextsel = 16;
+		stextsel = 14;
 		break;
 	case STORE_SIDENTIFY:
 		StartStore(STORE_STORY);
