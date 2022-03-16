@@ -1078,7 +1078,7 @@ void StartHealer()
 	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSText(0, 12, _("Talk to Pepin"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
 	AddSText(0, 14, _("Buy items"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
-	AddSText(0, 16, _("Leave Healer's home"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
+	AddSText(0, 18, _("Leave Healer's home"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -2045,7 +2045,7 @@ void HealerEnter()
 	case 14:
 		StartStore(STORE_HBUY);
 		break;
-	case 16:
+	case 18:
 		stextflag = STORE_NONE;
 		break;
 	}
