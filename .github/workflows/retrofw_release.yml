@@ -38,7 +38,7 @@ jobs:
         path: build-retrofw/devilutionx-retrofw.opk
 
     - name: Update Release
-      if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+      if: github.event_name == 'release' && github.event.action == 'created' && ${{ !env.ACT }}
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build-retrofw/devilutionx-retrofw.opk"
