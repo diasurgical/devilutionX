@@ -202,7 +202,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove, bool dropItem)
 
 	if (!holdItem.isEmpty()) {
 		CalcPlrInv(player, true);
-		CheckItemStats(player);
+		holdItem._iStatFlag = player.CanUseItem(holdItem);
 		if (automaticallyEquipped) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
 		} else if (!automaticMove || automaticallyMoved) {

@@ -867,7 +867,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		}
 
 		CalcPlrInv(player, true);
-		CheckItemStats(player);
+		holdItem._iStatFlag = player.CanUseItem(holdItem);
 
 		if (pnum == MyPlayerId) {
 			if (automaticallyEquipped) {
@@ -1599,13 +1599,6 @@ void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 	}
 }
 
-void CheckItemStats(Player &player)
-{
-	Item &item = player.HoldItem;
-
-	item._iStatFlag = player.CanUseItem(item);
-}
-
 void InvGetItem(int pnum, int ii)
 {
 	auto &item = Items[ii];
@@ -1626,7 +1619,7 @@ void InvGetItem(int pnum, int ii)
 	player.HoldItem = item;
 	CheckQuestItem(player);
 	UpdateBookLevel(player, player.HoldItem);
-	CheckItemStats(player);
+	player.HoldItem._iStatFlag = player.CanUseItem(player.HoldItem);
 	bool cursorUpdated = false;
 	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player, player.HoldItem))
 		cursorUpdated = true;
@@ -1659,7 +1652,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	player.HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(player);
 	UpdateBookLevel(player, player.HoldItem);
-	CheckItemStats(player);
+	player.HoldItem._iStatFlag = player.CanUseItem(player.HoldItem);
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	if (player.HoldItem._itype == ItemType::Gold) {
 		done = GoldAutoPlace(player, player.HoldItem);
