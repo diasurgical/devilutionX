@@ -1677,14 +1677,14 @@ void CtrlUseInvItem()
 		return;
 	}
 
+	int itemId = GetItemIdOnSlot(Slot);
 	if (item->isEquipment()) {
-		int itemId = GetItemIdOnSlot(Slot);
 		CheckInvItem(true, false); // auto-equip if it's an equipment
-		if (itemId != GetItemIdOnSlot(Slot))
-			ResetInvCursorPosition();
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
 	}
+	if (itemId != GetItemIdOnSlot(Slot))
+		ResetInvCursorPosition();
 }
 
 void PerformSecondaryAction()
