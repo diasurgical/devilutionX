@@ -1108,6 +1108,8 @@ bool CanUseStaff(Item &staff, spell_id spell)
 
 void StartGoldDrop()
 {
+	CloseGoldWithdraw();
+
 	initialDropGoldIndex = pcursinvitem;
 
 	auto &myPlayer = Players[MyPlayerId];

@@ -235,6 +235,8 @@ void CheckStashCut(Point cursorPosition, bool automaticMove, bool dropItem)
 
 void StartGoldWithdraw()
 {
+	CloseGoldDrop();
+
 	InitialWithdrawGoldValue = Stash.gold;
 
 	if (talkflag)
