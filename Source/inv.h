@@ -196,6 +196,13 @@ void DoTelekinesis();
 int CalculateGold(Player &player);
 bool DropItemBeforeTrig();
 
+/**
+ * @brief Gets the size, in inventory cells, of the given item.
+ * @param item The item whose size is to be determined.
+ * @return The size, in inventory cells, of the item.
+ */
+Size GetInventorySize(const Item &item);
+
 /* data */
 
 } // namespace devilution
