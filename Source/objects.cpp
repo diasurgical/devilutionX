@@ -9,7 +9,6 @@
 
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
-#include "control.h"
 #include "cursor.h"
 #ifdef _DEBUG
 #include "debug.h"
@@ -5457,8 +5456,7 @@ void GetObjectStr(const Object &object)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])).c_str());
-		strcpy(infostr, tempstr);
+		strcpy(infostr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])).c_str());
 		break;
 	case OBJ_SKELBOOK:
 		strcpy(infostr, _("Skeleton Tome"));
@@ -5526,14 +5524,12 @@ void GetObjectStr(const Object &object)
 	}
 	if (Players[MyPlayerId]._pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
-			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
-			strcpy(infostr, tempstr);
+			strcpy(infostr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
 	if (object.IsDisabled()) {
-		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
-		strcpy(infostr, tempstr);
+		strcpy(infostr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
 		InfoColor = UiFlags::ColorRed;
 	}
 }

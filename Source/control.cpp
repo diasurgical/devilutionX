@@ -67,7 +67,6 @@ bool drawmanaflag;
 bool chrbtnactive;
 int pnumlines;
 UiFlags InfoColor;
-char tempstr[256];
 int sbooktab;
 int8_t initialDropGoldIndex;
 bool talkflag;
@@ -703,8 +702,7 @@ void CheckPanelInfo()
 					strcpy(infostr, _("Player attack"));
 			}
 			if (PanBtnHotKey[i] != nullptr) {
-				strcpy(tempstr, fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])));
 			}
 			InfoColor = UiFlags::ColorWhite;
 			panelflag = true;
@@ -714,41 +712,30 @@ void CheckPanelInfo()
 		strcpy(infostr, _("Select current spell button"));
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
-		strcpy(tempstr, _("Hotkey: 's'"));
-		AddPanelString(tempstr);
+		AddPanelString(_("Hotkey: 's'"));
 		auto &myPlayer = Players[MyPlayerId];
 		const spell_id spellId = myPlayer._pRSpell;
 		if (spellId != SPL_INVALID && spellId != SPL_NULL) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[spellId].sSkillText)).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[spellId].sSkillText)));
 				break;
 			case RSPLTYPE_SPELL: {
-				strcpy(tempstr, fmt::format(_("{:s} Spell"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("{:s} Spell"), pgettext("spell", spelldata[spellId].sNameText)));
 				int c = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spellId], 0);
-				if (c == 0)
-					strcpy(tempstr, _("Spell Level 0 - Unusable"));
-				else
-					strcpy(tempstr, fmt::format(_("Spell Level {:d}"), c).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(c == 0 ? _("Spell Level 0 - Unusable") : fmt::format(_("Spell Level {:d}"), c));
 			} break;
 			case RSPLTYPE_SCROLL: {
-				strcpy(tempstr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[spellId].sNameText)));
 				const InventoryAndBeltPlayerItemsRange items { myPlayer };
 				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 					return item.IsScrollOf(spellId);
 				});
-				strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 			} break;
 			case RSPLTYPE_CHARGES:
-				strcpy(tempstr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
-				AddPanelString(tempstr);
-				strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[spellId].sNameText)));
+				AddPanelString(fmt::format(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
 				break;
 			case RSPLTYPE_INVALID:
 				break;
@@ -910,10 +897,8 @@ void DrawInfoBox(const Surface &out)
 			auto &target = Players[pcursplr];
 			strcpy(infostr, target._pName);
 			ClearPanel();
-			strcpy(tempstr, fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel).c_str());
-			AddPanelString(tempstr);
-			strcpy(tempstr, fmt::format(_("Hit Points {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
+			AddPanelString(fmt::format(_("Hit Points {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6));
 		}
 	}
 	if (infostr[0] != '\0' || pnumlines != 0)
@@ -1051,33 +1036,29 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 1);
 
-	constexpr auto BufferSize = sizeof(tempstr) / sizeof(*tempstr);
-
-	CopyUtf8(
-	    tempstr,
-	    fmt::format(ngettext(
-	                    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/ "You have {:d} gold piece. How many do you want to remove?",
-	                    "You have {:d} gold pieces. How many do you want to remove?",
-	                    initialDropGoldValue),
+	const std::string description = fmt::format(
+	    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/
+	    ngettext(
+	        "You have {:d} gold piece. How many do you want to remove?",
+	        "You have {:d} gold pieces. How many do you want to remove?",
 	        initialDropGoldValue),
-	    BufferSize);
+	    initialDropGoldValue);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
-	const std::string wrapped = WordWrapString(tempstr, 200);
+	const std::string wrapped = WordWrapString(description, 200);
 
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
 	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
-	tempstr[0] = '\0';
+	std::string value = "";
 	if (amount > 0) {
-		// snprintf ensures that the destination buffer ends in a null character.
-		snprintf(tempstr, BufferSize, "%u", amount);
+		value = fmt::format("{:d}", amount);
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
-	DrawString(out, tempstr, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
+	DrawString(out, value, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
 }
 
 void control_drop_gold(char vkey)

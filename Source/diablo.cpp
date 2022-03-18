@@ -12,7 +12,6 @@
 #include "DiabloUI/selstart.h"
 #include "automap.h"
 #include "capture.h"
-#include "control.h"
 #include "cursor.h"
 #include "dead.h"
 #ifdef _DEBUG
@@ -58,9 +57,10 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
-#include "qol/common.h"
 #include "qol/itemlabels.h"
+#include "qol/monhealthbar.h"
 #include "qol/stash.h"
+#include "qol/xpbar.h"
 #include "restrict.h"
 #include "setmaps.h"
 #include "sound.h"
@@ -159,7 +159,8 @@ void StartGame(interface_mode uMsg)
 #endif
 	assert(ghMainWnd);
 	music_stop();
-	InitQol();
+	InitMonsterHealthBar();
+	InitXPBar();
 	ShowProgress(uMsg);
 	gmenu_init_menu();
 	InitLevelCursor();
@@ -170,7 +171,8 @@ void StartGame(interface_mode uMsg)
 
 void FreeGame()
 {
-	FreeQol();
+	FreeMonsterHealthBar();
+	FreeXPBar();
 	FreeControlPan();
 	FreeInvGFX();
 	FreeStashGFX();

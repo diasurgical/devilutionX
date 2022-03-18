@@ -41,7 +41,6 @@ extern bool drawmanaflag;
 extern bool chrbtnactive;
 extern DVL_API_FOR_TEST int pnumlines;
 extern UiFlags InfoColor;
-extern char tempstr[256];
 extern int sbooktab;
 extern int8_t initialDropGoldIndex;
 extern bool talkflag;
