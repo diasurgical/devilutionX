@@ -2712,6 +2712,10 @@ void CalcPlrInv(Player &player, bool loadgfx)
 		CalcPlrBookVals(player);
 		player.CalcScrolls();
 		CalcPlrStaff(player);
+		if (IsStashOpen) {
+			// If stash is open, ensure the items are displayed correctly
+			Stash.RefreshItemStatFlags();
+		}
 	}
 }
 

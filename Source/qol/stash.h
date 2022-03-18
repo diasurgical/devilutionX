@@ -28,6 +28,8 @@ public:
 	}
 
 	void SetPage(int newPage);
+	/** @brief Updates _iStatFlag for all stash items. */
+	void RefreshItemStatFlags();
 
 private:
 	/** Current Page */

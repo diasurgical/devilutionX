@@ -2169,6 +2169,7 @@ void BarmaidEnter()
 	case 14:
 		stextflag = STORE_NONE;
 		IsStashOpen = true;
+		Stash.RefreshItemStatFlags();
 		invflag = true;
 		if (ControlMode != ControlTypes::KeyboardAndMouse) {
 			if (pcurs == CURSOR_DISARM)

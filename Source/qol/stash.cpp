@@ -548,6 +548,13 @@ void StashStruct::SetPage(int newPage)
 	page = clamp(newPage, 0, CountStashPages - 1);
 }
 
+void StashStruct::RefreshItemStatFlags()
+{
+	for (auto &item : Stash.stashList) {
+		item._iStatFlag = MyPlayer->CanUseItem(item);
+	}
+}
+
 void WithdrawGoldKeyPress(char vkey)
 {
 	auto &myPlayer = Players[MyPlayerId];
