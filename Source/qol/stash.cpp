@@ -48,10 +48,10 @@ Art StashNavButtonArt;
  * @param stashListIndex The item's StashList index
  * @param itemSize Size of item
  */
-void AddItemToStashGrid(Point position, uint16_t stashListIndex, Size itemSize)
+void AddItemToStashGrid(int page, Point position, uint16_t stashListIndex, Size itemSize)
 {
 	for (auto point : PointsInRectangleRange({ { 0, 0 }, itemSize })) {
-		Stash.stashGrids[Stash.page][position.x + point.x][position.y + point.y] = stashListIndex + 1;
+		Stash.stashGrids[page][position.x + point.x][position.y + point.y] = stashListIndex + 1;
 	}
 }
 
@@ -139,7 +139,7 @@ void CheckStashPaste(Point cursorPosition)
 		}
 	}
 
-	AddItemToStashGrid(firstSlot, stashIndex, itemSize);
+	AddItemToStashGrid(Stash.page, firstSlot, stashIndex, itemSize);
 
 	Stash.dirty = true;
 
@@ -228,8 +228,13 @@ void CheckStashCut(Point cursorPosition, bool automaticMove, bool dropItem)
 		}
 	}
 
-	if (dropItem) {
-		TryDropItem();
+	if (dropItem && !holdItem.isEmpty()) {
+		if (invflag && AutoPlaceItemInInventory(player, holdItem, true)) {
+			holdItem._itype = ItemType::None;
+			NewCursor(CURSOR_HAND);
+		} else {
+			TryDropItem();
+		}
 	}
 }
 
@@ -605,6 +610,53 @@ void GoldWithdrawNewText(string_view text)
 			}
 		}
 	}
+}
+
+bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
+{
+	if (item._itype == ItemType::Gold) {
+		if (persistItem) {
+			Stash.gold += item._ivalue;
+			Stash.dirty = true;
+		}
+		return true;
+	}
+
+	Size itemSize = GetInventorySize(item);
+
+	constexpr int CountStashPages = 50;
+
+	// Try to add the item to the current active page and if it's not possible move forward
+	for (int pageCounter = 0; pageCounter < CountStashPages; pageCounter++) {
+		int pageIndex = Stash.page + pageCounter;
+		// Wrap around if needed
+		if (pageIndex >= CountStashPages)
+			pageIndex -= CountStashPages;
+		// Search all possible position in stash grid
+		for (auto stashPosition : PointsInRectangleRange({ { 0, 0 }, { 10 - (itemSize.width - 1), 10 - (itemSize.height - 1) } })) {
+			// Check that all needed slots are free
+			bool isSpaceFree = true;
+			for (auto itemPoint : PointsInRectangleRange({ { 0, 0 }, itemSize })) {
+				uint16_t iv = Stash.stashGrids[pageIndex][stashPosition.x + itemPoint.x][stashPosition.y + itemPoint.y];
+				if (iv != 0) {
+					isSpaceFree = false;
+					break;
+				}
+			}
+			if (!isSpaceFree)
+				continue;
+			if (persistItem) {
+				Stash.stashList.push_back(item);
+				uint16_t stashIndex = Stash.stashList.size() - 1;
+				Stash.stashList[stashIndex].position = stashPosition + Displacement { 0, itemSize.height - 1 };
+				AddItemToStashGrid(pageIndex, stashPosition, stashIndex, itemSize);
+				Stash.dirty = true;
+			}
+			return true;
+		}
+	}
+
+	return false;
 }
 
 } // namespace devilution

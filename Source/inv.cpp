@@ -895,8 +895,13 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		}
 	}
 
-	if (dropItem) {
-		TryDropItem();
+	if (dropItem && !holdItem.isEmpty()) {
+		if (IsStashOpen && AutoPlaceItemInStash(player, holdItem, true)) {
+			holdItem._itype = ItemType::None;
+			NewCursor(CURSOR_HAND);
+		} else {
+			TryDropItem();
+		}
 	}
 }
 
