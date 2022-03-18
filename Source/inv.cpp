@@ -158,19 +158,6 @@ void AddItemToInvGrid(Player &player, int invGridIndex, int invListIndex, Size i
 }
 
 /**
- * @brief Gets the size, in inventory cells, of the given item.
- * @param item The item whose size is to be determined.
- * @return The size, in inventory cells, of the item.
- */
-Size GetInventorySize(const Item &item)
-{
-	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
-	auto size = GetInvItemSize(itemSizeIndex);
-
-	return { size.width / InventorySlotSizeInPixels.width, size.height / InventorySlotSizeInPixels.height };
-}
-
-/**
  * @brief Checks whether the given item can fit in a belt slot (i.e. the item's size in inventory cells is 1x1).
  * @param item The item to be checked.
  * @return 'True' in case the item can fit a belt slot and 'False' otherwise.
@@ -2205,6 +2192,14 @@ bool DropItemBeforeTrig()
 	NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, Players[MyPlayerId].HoldItem);
 	NewCursor(CURSOR_HAND);
 	return true;
+}
+
+Size GetInventorySize(const Item &item)
+{
+	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
+	auto size = GetInvItemSize(itemSizeIndex);
+
+	return { size.width / InventorySlotSizeInPixels.width, size.height / InventorySlotSizeInPixels.height };
 }
 
 } // namespace devilution
