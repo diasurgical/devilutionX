@@ -2058,7 +2058,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		FreeStoreMem();
 	}
 
-	LoadStash();
+	if (firstflag || lvldir == ENTRY_LOAD) {
+		LoadStash();
+	}
 
 	IncProgress();
 	InitAutomap();
