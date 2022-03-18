@@ -168,14 +168,12 @@ void DrawSpellList(const Surface &out)
 			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
 			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			if (spellId == SPL_HBOLT) {
-				strcpy(tempstr, _("Damages undead only"));
-				AddPanelString(tempstr);
+				AddPanelString(_("Damages undead only"));
 			}
 			if (spellLevel == 0)
-				strcpy(tempstr, _("Spell Level 0 - Unusable"));
+				AddPanelString(_("Spell Level 0 - Unusable"));
 			else
-				strcpy(tempstr, fmt::format(_("Spell Level {:d}"), spellLevel).c_str());
-			AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("Spell Level {:d}"), spellLevel));
 			break;
 		case RSPLTYPE_SCROLL: {
 			if (myPlayer.plrlevel != 0) {
@@ -187,8 +185,7 @@ void DrawSpellList(const Surface &out)
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 				return item.IsScrollOf(spellId);
 			});
-			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 		} break;
 		case RSPLTYPE_CHARGES: {
 			if (myPlayer.plrlevel != 0) {
@@ -197,15 +194,13 @@ void DrawSpellList(const Surface &out)
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
 			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges));
 		} break;
 		case RSPLTYPE_INVALID:
 			break;
 		}
 		if (hotkeyName) {
-			strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), *hotkeyName).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(_("Spell Hotkey {:s}"), *hotkeyName));
 		}
 	}
 }

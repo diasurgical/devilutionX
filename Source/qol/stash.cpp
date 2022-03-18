@@ -564,26 +564,21 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 
 	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), *pGBoxBuff, 1);
 
-	constexpr auto BufferSize = sizeof(tempstr) / sizeof(*tempstr);
-
-	CopyUtf8(tempstr, _("How many gold pieces do you want to withdraw? (MAX 5000)"), BufferSize);
-
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
-	const std::string wrapped = WordWrapString(tempstr, 200);
+	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw? (MAX 5000)"), 200);
 
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
 	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Stash, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
-	tempstr[0] = '\0';
+	std::string value = "";
 	if (amount > 0) {
-		// snprintf ensures that the destination buffer ends in a null character.
-		snprintf(tempstr, BufferSize, "%u", amount);
+		value = fmt::format("{:d}", amount);
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
-	DrawString(out, tempstr, GetPanelPosition(UiPanels::Stash, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
+	DrawString(out, value, GetPanelPosition(UiPanels::Stash, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
 }
 
 void CloseGoldWithdraw()

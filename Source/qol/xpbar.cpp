@@ -10,7 +10,6 @@
 #include <fmt/format.h>
 
 #include "DiabloUI/art_draw.h"
-#include "common.h"
 #include "control.h"
 #include "engine/point.hpp"
 #include "options.h"
@@ -43,6 +42,27 @@ void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &g
 	out.SetPixel({ point.x, point.y + 1 }, gradient[idx * 3 / 4]);
 	out.SetPixel({ point.x, point.y + 2 }, gradient[idx]);
 	out.SetPixel({ point.x, point.y + 3 }, gradient[idx / 2]);
+}
+
+/**
+ * @brief Prints integer with thousands separator.
+ */
+std::string PrintWithSeparator(int n)
+{
+	std::string number = fmt::format("{:d}", n);
+	std::string out = "";
+
+	int length = number.length();
+	int mlength = length % 3;
+	if (mlength == 0)
+		mlength = 3;
+	out.append(number.substr(0, mlength));
+	for (int i = mlength; i < length; i += 3) {
+		out.append(_(/* TRANSLATORS: Thousands separator */ ","));
+		out.append(number.substr(i, 3));
+	}
+
+	return out;
 }
 
 } // namespace
@@ -122,17 +142,13 @@ bool CheckXPBarInfo()
 
 	const int8_t charLevel = player._pLevel;
 
-	strcpy(tempstr, fmt::format(_("Level {:d}"), charLevel).c_str());
-	AddPanelString(tempstr);
+	AddPanelString(fmt::format(_("Level {:d}"), charLevel));
 
 	if (charLevel == MAXCHARLEVEL) {
 		// Show a maximum level indicator for max level players.
 		InfoColor = UiFlags::ColorWhitegold;
 
-		strcpy(tempstr, _("Experience: "));
-		PrintWithSeparator(tempstr + strlen(tempstr), ExpLvlsTbl[charLevel - 1]);
-		AddPanelString(tempstr);
-
+		AddPanelString(fmt::format("Experience: {:s}", PrintWithSeparator(ExpLvlsTbl[charLevel - 1])));
 		AddPanelString(_("Maximum Level"));
 
 		return true;
@@ -140,16 +156,9 @@ bool CheckXPBarInfo()
 
 	InfoColor = UiFlags::ColorWhite;
 
-	strcpy(tempstr, _("Experience: "));
-	PrintWithSeparator(tempstr + strlen(tempstr), player._pExperience);
-	AddPanelString(tempstr);
-
-	strcpy(tempstr, _("Next Level: "));
-	PrintWithSeparator(tempstr + strlen(tempstr), ExpLvlsTbl[charLevel]);
-	AddPanelString(tempstr);
-
-	strcpy(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), fmt::format(_(" to Level {:d}"), charLevel + 1).c_str());
-	AddPanelString(tempstr);
+	AddPanelString(fmt::format("Experience: {:s}", PrintWithSeparator(player._pExperience)));
+	AddPanelString(fmt::format("Next Level: {:s}", PrintWithSeparator(ExpLvlsTbl[charLevel])));
+	AddPanelString(fmt::format(_("{:s} to Level {:d}"), PrintWithSeparator(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
 
 	return true;
 }
