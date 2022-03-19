@@ -246,6 +246,9 @@ void StartGoldWithdraw()
 {
 	CloseGoldDrop();
 
+	if (pcurs != CURSOR_HAND)
+		return;
+
 	InitialWithdrawGoldValue = Stash.gold;
 
 	if (talkflag)
