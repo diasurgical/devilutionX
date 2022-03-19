@@ -951,19 +951,19 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 	SetupItem(noteItem);
 }
 
-void CheckQuestItem(Player &player)
+void CheckQuestItem(Player &player, Item &questItem)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (player.HoldItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
+	if (questItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		Quests[Q_BLIND]._qactive = QUEST_DONE;
 
-	if (player.HoldItem.IDidx == IDI_MUSHROOM && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
+	if (questItem.IDidx == IDI_MUSHROOM && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10); // BUGFIX: Voice for this quest might be wrong in MP
 		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
 
-	if (player.HoldItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
 			Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 		}
@@ -972,11 +972,11 @@ void CheckQuestItem(Player &player)
 		}
 	}
 
-	if (player.HoldItem.IDidx == IDI_GLDNELIX && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == IDI_GLDNELIX && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
 		myPlayer.Say(HeroSpeech::INeedToGetThisToLachdanan, 30);
 	}
 
-	if (player.HoldItem.IDidx == IDI_ROCK && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == IDI_ROCK && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
 			Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 		}
@@ -985,12 +985,12 @@ void CheckQuestItem(Player &player)
 		}
 	}
 
-	if (player.HoldItem.IDidx == IDI_ARMOFVAL && Quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
+	if (questItem.IDidx == IDI_ARMOFVAL && Quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
 		Quests[Q_BLOOD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::MayTheSpiritOfArkaineProtectMe, 20);
 	}
 
-	if (player.HoldItem.IDidx == IDI_MAPOFDOOM) {
+	if (questItem.IDidx == IDI_MAPOFDOOM) {
 		Quests[Q_GRAVE]._qlog = false;
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		if (Quests[Q_GRAVE]._qvar1 != 1) {
@@ -999,7 +999,7 @@ void CheckQuestItem(Player &player)
 		}
 	}
 
-	TryCombineNaKrulNotes(player, player.HoldItem);
+	TryCombineNaKrulNotes(player, questItem);
 }
 
 void OpenHive()
@@ -1617,7 +1617,7 @@ void InvGetItem(int pnum, int ii)
 
 	item._iCreateInfo &= ~CF_PREGEN;
 	player.HoldItem = item;
-	CheckQuestItem(player);
+	CheckQuestItem(player, player.HoldItem);
 	UpdateBookLevel(player, player.HoldItem);
 	player.HoldItem._iStatFlag = player.CanUseItem(player.HoldItem);
 	bool cursorUpdated = false;
@@ -1650,7 +1650,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 
 	item->_iCreateInfo &= ~CF_PREGEN;
 	player.HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
-	CheckQuestItem(player);
+	CheckQuestItem(player, player.HoldItem);
 	UpdateBookLevel(player, player.HoldItem);
 	player.HoldItem._iStatFlag = player.CanUseItem(player.HoldItem);
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
