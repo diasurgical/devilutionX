@@ -474,7 +474,7 @@ void GetItemStr(Item &item);
 void CheckIdentify(Player &player, int cii);
 void DoRepair(Player &player, int cii);
 void DoRecharge(Player &player, int cii);
-void DoOil(Player &player, int cii);
+bool DoOil(Player &player, int cii);
 [[nodiscard]] std::string PrintItemPower(char plidx, const Item &item);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
@@ -504,6 +504,7 @@ void initItemGetRecords();
 
 void RepairItem(Item &item, int lvl);
 void RechargeItem(Item &item, Player &player);
+bool ApplyOilToItem(Item &item, Player &player);
 
 #ifdef _DEBUG
 std::string DebugSpawnItem(std::string itemName);
