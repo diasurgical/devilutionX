@@ -397,15 +397,16 @@ void RightMouseDown(bool isShiftHeld)
 		SetSpell();
 		return;
 	}
-	if ((!sbookflag || !GetRightPanel().Contains(MousePosition))
-	    && !TryIconCurs()
-	    && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))) {
-		if (pcurs == CURSOR_HAND) {
-			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
-				CheckPlrSpell(isShiftHeld);
-		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
-			NewCursor(CURSOR_HAND);
-		}
+	if (sbookflag && GetRightPanel().Contains(MousePosition))
+		return;
+	if (TryIconCurs())
+		return;
+	if (pcursinvitem != -1 && UseInvItem(MyPlayerId, pcursinvitem))
+		return;
+	if (pcurs == CURSOR_HAND) {
+		CheckPlrSpell(isShiftHeld);
+	} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
+		NewCursor(CURSOR_HAND);
 	}
 }
 
