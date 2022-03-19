@@ -229,9 +229,13 @@ void CheckStashCut(Point cursorPosition, bool automaticMove, bool dropItem)
 	}
 
 	if (dropItem && !holdItem.isEmpty()) {
-		if (invflag && AutoPlaceItemInInventory(player, holdItem, true)) {
-			holdItem._itype = ItemType::None;
-			NewCursor(CURSOR_HAND);
+		if (invflag) {
+			if (AutoPlaceItemInInventory(player, holdItem, true)) {
+				holdItem._itype = ItemType::None;
+				NewCursor(CURSOR_HAND);
+			} else {
+				player.SaySpecific(HeroSpeech::IHaveNoRoom);
+			}
 		} else {
 			TryDropItem();
 		}
