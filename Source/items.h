@@ -503,6 +503,7 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void initItemGetRecords();
 
 void RepairItem(Item &item, int lvl);
+void RechargeItem(Item &item, Player &player);
 
 #ifdef _DEBUG
 std::string DebugSpawnItem(std::string itemName);

@@ -1692,22 +1692,6 @@ void ItemDoppel()
 		idoppely = 16;
 }
 
-void RechargeItem(Item &item, int r)
-{
-	if (item._iCharges == item._iMaxCharges)
-		return;
-
-	do {
-		item._iMaxCharges--;
-		if (item._iMaxCharges == 0) {
-			return;
-		}
-		item._iCharges += r;
-	} while (item._iCharges < item._iMaxCharges);
-
-	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
-}
-
 bool ApplyOilToItem(Item &item, Player &player)
 {
 	int r;
@@ -3632,15 +3616,9 @@ void DoRecharge(Player &player, int cii)
 	} else {
 		pi = &player.InvBody[cii];
 	}
-	if (pi->_itype == ItemType::Staff && pi->_iSpell != SPL_NULL) {
-		int r = GetSpellBookLevel(pi->_iSpell);
-		r = GenerateRnd(player._pLevel / r) + 1;
-		RechargeItem(*pi, r);
-		CalcPlrInv(player, true);
-	}
 
-	if (&player == &Players[MyPlayerId])
-		NewCursor(CURSOR_HAND);
+	RechargeItem(*pi, player);
+	CalcPlrInv(player, true);
 }
 
 void DoOil(Player &player, int cii)
@@ -4763,6 +4741,28 @@ void RepairItem(Item &item, int lvl)
 	} while (rep + item._iDurability < item._iMaxDur);
 
 	item._iDurability = std::min<int>(item._iDurability + rep, item._iMaxDur);
+}
+
+void RechargeItem(Item &item, Player &player)
+{
+	if (item._itype != ItemType::Staff || item._iSpell == SPL_NULL)
+		return;
+
+	if (item._iCharges == item._iMaxCharges)
+		return;
+
+	int r = GetSpellBookLevel(item._iSpell);
+	r = GenerateRnd(player._pLevel / r) + 1;
+
+	do {
+		item._iMaxCharges--;
+		if (item._iMaxCharges == 0) {
+			return;
+		}
+		item._iCharges += r;
+	} while (item._iCharges < item._iMaxCharges);
+
+	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
 }
 
 } // namespace devilution

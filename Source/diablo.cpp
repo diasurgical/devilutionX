@@ -1834,8 +1834,11 @@ bool TryIconCurs()
 	if (pcurs == CURSOR_RECHARGE) {
 		if (pcursinvitem != -1)
 			DoRecharge(myPlayer, pcursinvitem);
-		else
-			NewCursor(CURSOR_HAND);
+		else if (pcursstashitem != uint16_t(-1)) {
+			Item &item = Stash.stashList[pcursstashitem];
+			RechargeItem(item, myPlayer);
+		}
+		NewCursor(CURSOR_HAND);
 		return true;
 	}
 
