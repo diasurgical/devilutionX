@@ -1843,9 +1843,14 @@ bool TryIconCurs()
 	}
 
 	if (pcurs == CURSOR_OIL) {
+		bool changeCursor = true;
 		if (pcursinvitem != -1)
-			DoOil(myPlayer, pcursinvitem);
-		else
+			changeCursor = DoOil(myPlayer, pcursinvitem);
+		else if (pcursstashitem != uint16_t(-1)) {
+			Item &item = Stash.stashList[pcursstashitem];
+			changeCursor = ApplyOilToItem(item, myPlayer);
+		}
+		if (changeCursor)
 			NewCursor(CURSOR_HAND);
 		return true;
 	}

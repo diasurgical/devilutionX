@@ -1692,115 +1692,6 @@ void ItemDoppel()
 		idoppely = 16;
 }
 
-bool ApplyOilToItem(Item &item, Player &player)
-{
-	int r;
-
-	if (item._iClass == ICLASS_MISC) {
-		return false;
-	}
-	if (item._iClass == ICLASS_GOLD) {
-		return false;
-	}
-	if (item._iClass == ICLASS_QUEST) {
-		return false;
-	}
-
-	switch (player._pOilType) {
-	case IMISC_OILACC:
-	case IMISC_OILMAST:
-	case IMISC_OILSHARP:
-		if (item._iClass == ICLASS_ARMOR) {
-			return false;
-		}
-		break;
-	case IMISC_OILDEATH:
-		if (item._iClass == ICLASS_ARMOR) {
-			return false;
-		}
-		if (item._itype == ItemType::Bow) {
-			return false;
-		}
-		break;
-	case IMISC_OILHARD:
-	case IMISC_OILIMP:
-		if (item._iClass == ICLASS_WEAPON) {
-			return false;
-		}
-		break;
-	default:
-		break;
-	}
-
-	switch (player._pOilType) {
-	case IMISC_OILACC:
-		if (item._iPLToHit < 50) {
-			item._iPLToHit += GenerateRnd(2) + 1;
-		}
-		break;
-	case IMISC_OILMAST:
-		if (item._iPLToHit < 100) {
-			item._iPLToHit += GenerateRnd(3) + 3;
-		}
-		break;
-	case IMISC_OILSHARP:
-		if (item._iMaxDam - item._iMinDam < 30) {
-			item._iMaxDam = item._iMaxDam + 1;
-		}
-		break;
-	case IMISC_OILDEATH:
-		if (item._iMaxDam - item._iMinDam < 30) {
-			item._iMinDam = item._iMinDam + 1;
-			item._iMaxDam = item._iMaxDam + 2;
-		}
-		break;
-	case IMISC_OILSKILL:
-		r = GenerateRnd(6) + 5;
-		item._iMinStr = std::max(0, item._iMinStr - r);
-		item._iMinMag = std::max(0, item._iMinMag - r);
-		item._iMinDex = std::max(0, item._iMinDex - r);
-		break;
-	case IMISC_OILBSMTH:
-		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
-			return true;
-		if (item._iDurability < item._iMaxDur) {
-			item._iDurability = (item._iMaxDur + 4) / 5 + item._iDurability;
-			item._iDurability = std::min<int>(item._iDurability, item._iMaxDur);
-		} else {
-			if (item._iMaxDur >= 100) {
-				return true;
-			}
-			item._iMaxDur++;
-			item._iDurability = item._iMaxDur;
-		}
-		break;
-	case IMISC_OILFORT:
-		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur < 200) {
-			r = GenerateRnd(41) + 10;
-			item._iMaxDur += r;
-			item._iDurability += r;
-		}
-		break;
-	case IMISC_OILPERM:
-		item._iDurability = DUR_INDESTRUCTIBLE;
-		item._iMaxDur = DUR_INDESTRUCTIBLE;
-		break;
-	case IMISC_OILHARD:
-		if (item._iAC < 60) {
-			item._iAC += GenerateRnd(2) + 1;
-		}
-		break;
-	case IMISC_OILIMP:
-		if (item._iAC < 120) {
-			item._iAC += GenerateRnd(3) + 3;
-		}
-		break;
-	default:
-		return false;
-	}
-	return true;
-}
-
 void PrintItemOil(char iDidx)
 {
 	switch (iDidx) {
@@ -3621,7 +3512,7 @@ void DoRecharge(Player &player, int cii)
 	CalcPlrInv(player, true);
 }
 
-void DoOil(Player &player, int cii)
+bool DoOil(Player &player, int cii)
 {
 	Item *pi;
 	if (cii >= NUM_INVLOC) {
@@ -3630,10 +3521,9 @@ void DoOil(Player &player, int cii)
 		pi = &player.InvBody[cii];
 	}
 	if (!ApplyOilToItem(*pi, player))
-		return;
+		return false;
 	CalcPlrInv(player, true);
-	if (&player == &Players[MyPlayerId])
-		NewCursor(CURSOR_HAND);
+	return true;
 }
 
 [[nodiscard]] std::string PrintItemPower(char plidx, const Item &item)
@@ -4763,6 +4653,115 @@ void RechargeItem(Item &item, Player &player)
 	} while (item._iCharges < item._iMaxCharges);
 
 	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
+}
+
+bool ApplyOilToItem(Item &item, Player &player)
+{
+	int r;
+
+	if (item._iClass == ICLASS_MISC) {
+		return false;
+	}
+	if (item._iClass == ICLASS_GOLD) {
+		return false;
+	}
+	if (item._iClass == ICLASS_QUEST) {
+		return false;
+	}
+
+	switch (player._pOilType) {
+	case IMISC_OILACC:
+	case IMISC_OILMAST:
+	case IMISC_OILSHARP:
+		if (item._iClass == ICLASS_ARMOR) {
+			return false;
+		}
+		break;
+	case IMISC_OILDEATH:
+		if (item._iClass == ICLASS_ARMOR) {
+			return false;
+		}
+		if (item._itype == ItemType::Bow) {
+			return false;
+		}
+		break;
+	case IMISC_OILHARD:
+	case IMISC_OILIMP:
+		if (item._iClass == ICLASS_WEAPON) {
+			return false;
+		}
+		break;
+	default:
+		break;
+	}
+
+	switch (player._pOilType) {
+	case IMISC_OILACC:
+		if (item._iPLToHit < 50) {
+			item._iPLToHit += GenerateRnd(2) + 1;
+		}
+		break;
+	case IMISC_OILMAST:
+		if (item._iPLToHit < 100) {
+			item._iPLToHit += GenerateRnd(3) + 3;
+		}
+		break;
+	case IMISC_OILSHARP:
+		if (item._iMaxDam - item._iMinDam < 30) {
+			item._iMaxDam = item._iMaxDam + 1;
+		}
+		break;
+	case IMISC_OILDEATH:
+		if (item._iMaxDam - item._iMinDam < 30) {
+			item._iMinDam = item._iMinDam + 1;
+			item._iMaxDam = item._iMaxDam + 2;
+		}
+		break;
+	case IMISC_OILSKILL:
+		r = GenerateRnd(6) + 5;
+		item._iMinStr = std::max(0, item._iMinStr - r);
+		item._iMinMag = std::max(0, item._iMinMag - r);
+		item._iMinDex = std::max(0, item._iMinDex - r);
+		break;
+	case IMISC_OILBSMTH:
+		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			return true;
+		if (item._iDurability < item._iMaxDur) {
+			item._iDurability = (item._iMaxDur + 4) / 5 + item._iDurability;
+			item._iDurability = std::min<int>(item._iDurability, item._iMaxDur);
+		} else {
+			if (item._iMaxDur >= 100) {
+				return true;
+			}
+			item._iMaxDur++;
+			item._iDurability = item._iMaxDur;
+		}
+		break;
+	case IMISC_OILFORT:
+		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur < 200) {
+			r = GenerateRnd(41) + 10;
+			item._iMaxDur += r;
+			item._iDurability += r;
+		}
+		break;
+	case IMISC_OILPERM:
+		item._iDurability = DUR_INDESTRUCTIBLE;
+		item._iMaxDur = DUR_INDESTRUCTIBLE;
+		break;
+	case IMISC_OILHARD:
+		if (item._iAC < 60) {
+			item._iAC += GenerateRnd(2) + 1;
+		}
+		break;
+	case IMISC_OILIMP:
+		if (item._iAC < 120) {
+			item._iAC += GenerateRnd(3) + 3;
+		}
+		break;
+	default:
+		return false;
+	}
+	return true;
 }
 
 } // namespace devilution
