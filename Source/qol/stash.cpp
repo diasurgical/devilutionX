@@ -476,7 +476,7 @@ bool UseStashItem(uint16_t c)
 		WithdrawGoldValue = 0;
 	}
 
-	if (item->IsScroll() && currlevel == 0 && !spelldata[item->_iSpell].sTownSpell) {
+	if (item->IsScroll()) {
 		return true;
 	}
 
