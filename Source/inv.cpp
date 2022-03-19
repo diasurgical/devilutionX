@@ -29,6 +29,7 @@
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -1968,7 +1969,7 @@ int8_t CheckInvHLight()
 
 	if (pi->_itype == ItemType::Gold) {
 		int nGold = pi->_ivalue;
-		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
+		CopyUtf8(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold), sizeof(infostr));
 	} else {
 		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {

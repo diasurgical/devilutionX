@@ -34,6 +34,7 @@
 #include "track.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -5456,7 +5457,7 @@ void GetObjectStr(const Object &object)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		strcpy(infostr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])).c_str());
+		CopyUtf8(infostr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])), sizeof(infostr));
 		break;
 	case OBJ_SKELBOOK:
 		strcpy(infostr, _("Skeleton Tome"));
@@ -5524,12 +5525,12 @@ void GetObjectStr(const Object &object)
 	}
 	if (Players[MyPlayerId]._pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
-			strcpy(infostr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
+			CopyUtf8(infostr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr), sizeof(infostr));
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
 	if (object.IsDisabled()) {
-		strcpy(infostr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
+		CopyUtf8(infostr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr), sizeof(infostr));
 		InfoColor = UiFlags::ColorRed;
 	}
 }

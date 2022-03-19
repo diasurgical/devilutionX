@@ -12,6 +12,7 @@
 #include "player.h"
 #include "spells.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 #define SPLROWICONLS 10
 
@@ -159,14 +160,14 @@ void DrawSpellList(const Surface &out)
 		case RSPLTYPE_SKILL:
 			spellColor = PAL16_YELLOW - 46;
 			PrintSBookSpellType(out, spellListItem.location, _("Skill"), spellColor);
-			strcpy(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)).c_str());
+			CopyUtf8(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)), sizeof(infostr));
 			break;
 		case RSPLTYPE_SPELL:
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_BLUE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
-			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			CopyUtf8(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)), sizeof(infostr));
 			if (spellId == SPL_HBOLT) {
 				AddPanelString(_("Damages undead only"));
 			}
@@ -180,7 +181,7 @@ void DrawSpellList(const Surface &out)
 				spellColor = PAL16_RED - 59;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), spellColor);
-			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			CopyUtf8(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)), sizeof(infostr));
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 				return item.IsScrollOf(spellId);
@@ -192,7 +193,7 @@ void DrawSpellList(const Surface &out)
 				spellColor = PAL16_ORANGE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
-			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			CopyUtf8(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)), sizeof(infostr));
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
 			AddPanelString(fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges));
 		} break;

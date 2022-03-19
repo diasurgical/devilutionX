@@ -3614,7 +3614,7 @@ void GetItemStr(Item &item)
 		InfoColor = item.getTextColor();
 	} else {
 		int nGold = item._ivalue;
-		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
+		CopyUtf8(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold), sizeof(infostr));
 	}
 }
 

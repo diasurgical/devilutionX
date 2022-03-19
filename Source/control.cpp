@@ -860,7 +860,7 @@ void DrawInfoBox(const Surface &out)
 		auto &myPlayer = Players[MyPlayerId];
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
-			strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
+			CopyUtf8(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold), sizeof(infostr));
 		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
 			ClearPanel();
 			AddPanelString(_("Requirements not met"));
