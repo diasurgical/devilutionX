@@ -403,6 +403,8 @@ void RightMouseDown(bool isShiftHeld)
 		return;
 	if (pcursinvitem != -1 && UseInvItem(MyPlayerId, pcursinvitem))
 		return;
+	if (pcursstashitem != uint16_t(-1) && UseStashItem(pcursstashitem))
+		return;
 	if (pcurs == CURSOR_HAND) {
 		CheckPlrSpell(isShiftHeld);
 	} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
