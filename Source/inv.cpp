@@ -867,7 +867,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		}
 
 		CalcPlrInv(player, true);
-		CheckItemStats(player);
+		holdItem._iStatFlag = player.CanUseItem(holdItem);
 
 		if (pnum == MyPlayerId) {
 			if (automaticallyEquipped) {
@@ -910,26 +910,26 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 }
 
-void CheckBookLevel(Player &player)
+void UpdateBookLevel(Player &player, Item &book)
 {
-	if (player.HoldItem._iMiscId != IMISC_BOOK)
+	if (book._iMiscId != IMISC_BOOK)
 		return;
 
-	player.HoldItem._iMinMag = spelldata[player.HoldItem._iSpell].sMinInt;
-	int8_t spellLevel = player._pSplLvl[player.HoldItem._iSpell];
+	book._iMinMag = spelldata[book._iSpell].sMinInt;
+	int8_t spellLevel = player._pSplLvl[book._iSpell];
 	while (spellLevel != 0) {
-		player.HoldItem._iMinMag += 20 * player.HoldItem._iMinMag / 100;
+		book._iMinMag += 20 * book._iMinMag / 100;
 		spellLevel--;
-		if (player.HoldItem._iMinMag + 20 * player.HoldItem._iMinMag / 100 > 255) {
-			player.HoldItem._iMinMag = -1;
+		if (book._iMinMag + 20 * book._iMinMag / 100 > 255) {
+			book._iMinMag = -1;
 			spellLevel = 0;
 		}
 	}
 }
 
-void CheckNaKrulNotes(Player &player)
+void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 {
-	int idx = player.HoldItem.IDidx;
+	int idx = noteItem.IDidx;
 	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
 
 	if (IsNoneOf(idx, IDI_NOTE1, IDI_NOTE2, IDI_NOTE3)) {
@@ -950,24 +950,24 @@ void CheckNaKrulNotes(Player &player)
 		}
 	}
 
-	player.HoldItem = {};
-	GetItemAttrs(player.HoldItem, IDI_FULLNOTE, 16);
-	SetupItem(player.HoldItem);
+	noteItem = {};
+	GetItemAttrs(noteItem, IDI_FULLNOTE, 16);
+	SetupItem(noteItem);
 }
 
-void CheckQuestItem(Player &player)
+void CheckQuestItem(Player &player, Item &questItem)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (player.HoldItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
+	if (questItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		Quests[Q_BLIND]._qactive = QUEST_DONE;
 
-	if (player.HoldItem.IDidx == IDI_MUSHROOM && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
+	if (questItem.IDidx == IDI_MUSHROOM && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10); // BUGFIX: Voice for this quest might be wrong in MP
 		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
 
-	if (player.HoldItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
 			Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 		}
@@ -976,11 +976,11 @@ void CheckQuestItem(Player &player)
 		}
 	}
 
-	if (player.HoldItem.IDidx == IDI_GLDNELIX && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == IDI_GLDNELIX && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
 		myPlayer.Say(HeroSpeech::INeedToGetThisToLachdanan, 30);
 	}
 
-	if (player.HoldItem.IDidx == IDI_ROCK && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
+	if (questItem.IDidx == IDI_ROCK && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
 			Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 		}
@@ -989,12 +989,12 @@ void CheckQuestItem(Player &player)
 		}
 	}
 
-	if (player.HoldItem.IDidx == IDI_ARMOFVAL && Quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
+	if (questItem.IDidx == IDI_ARMOFVAL && Quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
 		Quests[Q_BLOOD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::MayTheSpiritOfArkaineProtectMe, 20);
 	}
 
-	if (player.HoldItem.IDidx == IDI_MAPOFDOOM) {
+	if (questItem.IDidx == IDI_MAPOFDOOM) {
 		Quests[Q_GRAVE]._qlog = false;
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		if (Quests[Q_GRAVE]._qvar1 != 1) {
@@ -1003,7 +1003,7 @@ void CheckQuestItem(Player &player)
 		}
 	}
 
-	CheckNaKrulNotes(player);
+	TryCombineNaKrulNotes(player, questItem);
 }
 
 void OpenHive()
@@ -1151,7 +1151,6 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex, Item &goldStack
 
 	goldStack._ivalue = 0;
 	player._pGold = CalculateGold(player);
-	NewCursor(CURSOR_HAND);
 
 	return true;
 }
@@ -1603,13 +1602,6 @@ void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 	}
 }
 
-void CheckItemStats(Player &player)
-{
-	Item &item = player.HoldItem;
-
-	item._iStatFlag = player.CanUseItem(item);
-}
-
 void InvGetItem(int pnum, int ii)
 {
 	auto &item = Items[ii];
@@ -1628,9 +1620,9 @@ void InvGetItem(int pnum, int ii)
 
 	item._iCreateInfo &= ~CF_PREGEN;
 	player.HoldItem = item;
-	CheckQuestItem(player);
-	CheckBookLevel(player);
-	CheckItemStats(player);
+	CheckQuestItem(player, player.HoldItem);
+	UpdateBookLevel(player, player.HoldItem);
+	player.HoldItem._iStatFlag = player.CanUseItem(player.HoldItem);
 	bool cursorUpdated = false;
 	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player, player.HoldItem))
 		cursorUpdated = true;
@@ -1640,48 +1632,44 @@ void InvGetItem(int pnum, int ii)
 		NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, Item *item, int ii)
+void AutoGetItem(int pnum, Item *itemPointer, int ii)
 {
-	bool done;
-	bool autoEquipped = false;
-
-	if (pcurs != CURSOR_HAND) {
-		return;
-	}
+	Item &item = *itemPointer;
+	auto &player = Players[pnum];
 
 	if (dropGoldFlag) {
 		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item->position.x][item->position.y] == 0)
+	if (dItem[item.position.x][item.position.y] == 0)
 		return;
 
-	auto &player = Players[pnum];
+	item._iCreateInfo &= ~CF_PREGEN;
+	CheckQuestItem(player, item);
+	UpdateBookLevel(player, item);
+	item._iStatFlag = player.CanUseItem(item);
+	SetICursor(item._iCurs + CURSOR_FIRSTITEM);
 
-	item->_iCreateInfo &= ~CF_PREGEN;
-	player.HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
-	CheckQuestItem(player);
-	CheckBookLevel(player);
-	CheckItemStats(player);
-	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	if (player.HoldItem._itype == ItemType::Gold) {
-		done = GoldAutoPlace(player, player.HoldItem);
+	bool done;
+	bool autoEquipped = false;
+
+	if (item._itype == ItemType::Gold) {
+		done = GoldAutoPlace(player, item);
 		if (!done) {
-			item->_ivalue = player.HoldItem._ivalue;
-			SetPlrHandGoldCurs(*item);
+			SetPlrHandGoldCurs(item);
 		}
 	} else {
-		done = AutoEquipEnabled(player, player.HoldItem) && AutoEquip(pnum, player.HoldItem);
+		done = AutoEquipEnabled(player, item) && AutoEquip(pnum, item);
 		if (done) {
 			autoEquipped = true;
 		}
 
 		if (!done) {
-			done = AutoPlaceItemInBelt(player, player.HoldItem, true);
+			done = AutoPlaceItemInBelt(player, item, true);
 		}
 		if (!done) {
-			done = AutoPlaceItemInInventory(player, player.HoldItem, true);
+			done = AutoPlaceItemInInventory(player, item, true);
 		}
 	}
 
@@ -1697,10 +1685,8 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	if (pnum == MyPlayerId) {
 		player.Say(HeroSpeech::ICantCarryAnymore);
 	}
-	player.HoldItem = *item;
-	RespawnItem(*item, true);
-	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position, player.HoldItem);
-	player.HoldItem._itype = ItemType::None;
+	RespawnItem(item, true);
+	NetSendCmdPItem(true, CMD_RESPAWNITEM, item.position, item);
 }
 
 int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t createInfo)
