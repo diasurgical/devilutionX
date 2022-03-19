@@ -3629,9 +3629,6 @@ void CheckIdentify(Player &player, int cii)
 
 	pi->_iIdentified = true;
 	CalcPlrInv(player, true);
-
-	if (&player == &Players[MyPlayerId])
-		NewCursor(CURSOR_HAND);
 }
 
 void DoRepair(Player &player, int cii)

@@ -1812,8 +1812,11 @@ bool TryIconCurs()
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1)
 			CheckIdentify(myPlayer, pcursinvitem);
-		else
-			NewCursor(CURSOR_HAND);
+		else if (pcursstashitem != uint16_t(-1)) {
+			Item &item = Stash.stashList[pcursstashitem];
+			item._iIdentified = true;
+		}
+		NewCursor(CURSOR_HAND);
 		return true;
 	}
 
