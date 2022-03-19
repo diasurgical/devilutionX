@@ -263,7 +263,7 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 		strcpy(sstr, fmt::format(_("Damage: {:d}-{:d}  "), item._iMinDam, item._iMaxDam).c_str());
 	if (item._iClass == ICLASS_ARMOR)
 		strcpy(sstr, fmt::format(_("Armor: {:d}  "), item._iAC).c_str());
-	if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
+	if (item._iMaxDur < DUR_INDESTRUCTIBLE && item._iMaxDur != 0) {
 		strcpy(tempstr, fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur).c_str());
 		strcat(sstr, tempstr);
 	} else {

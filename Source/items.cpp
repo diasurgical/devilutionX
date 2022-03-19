@@ -849,6 +849,8 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		int bonus = r * item._iMaxDur / 100;
 		item._iMaxDur += bonus;
 		item._iDurability += bonus;
+		item._iMaxDur = clamp(item._iMaxDur, 1, DUR_INDESTRUCTIBLE);
+		item._iDurability = clamp(item._iDurability, 1, DUR_INDESTRUCTIBLE);
 	} break;
 	case IPL_CRYSTALLINE:
 		item._iPLDam += 140 + r * 2;
@@ -1801,7 +1803,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		item._iMinDex = std::max(0, item._iMinDex - r);
 		break;
 	case IMISC_OILBSMTH:
-		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+		if (item._iMaxDur >= DUR_INDESTRUCTIBLE)
 			return true;
 		if (item._iDurability < item._iMaxDur) {
 			item._iDurability = (item._iMaxDur + 4) / 5 + item._iDurability;
@@ -1815,7 +1817,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		}
 		break;
 	case IMISC_OILFORT:
-		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur < 200) {
+		if (item._iMaxDur < 200) {
 			r = GenerateRnd(41) + 10;
 			item._iMaxDur += r;
 			item._iDurability += r;
@@ -3984,12 +3986,12 @@ void PrintItemDetails(const Item &item)
 {
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (item._iMaxDur >= DUR_INDESTRUCTIBLE)
 				strcpy(tempstr, fmt::format(_("damage: {:d}  Indestructible"), item._iMinDam).c_str());
 			else
 				strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}"), item._iMinDam, item._iDurability, item._iMaxDur).c_str());
 		} else {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (item._iMaxDur >= DUR_INDESTRUCTIBLE)
 				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), item._iMinDam, item._iMaxDam).c_str());
 			else
 				strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}"), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur).c_str());
@@ -3997,7 +3999,7 @@ void PrintItemDetails(const Item &item)
 		AddPanelString(tempstr);
 	}
 	if (item._iClass == ICLASS_ARMOR) {
-		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+		if (item._iMaxDur >= DUR_INDESTRUCTIBLE)
 			strcpy(tempstr, fmt::format(_("armor: {:d}  Indestructible"), item._iAC).c_str());
 		else
 			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}"), item._iAC, item._iDurability, item._iMaxDur).c_str());
@@ -4029,12 +4031,12 @@ void PrintItemDur(const Item &item)
 {
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (item._iMaxDur >= DUR_INDESTRUCTIBLE)
 				strcpy(tempstr, fmt::format(_("damage: {:d}  Indestructible"), item._iMinDam).c_str());
 			else
 				strcpy(tempstr, fmt::format(_("damage: {:d}  Dur: {:d}/{:d}"), item._iMinDam, item._iDurability, item._iMaxDur).c_str());
 		} else {
-			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+			if (item._iMaxDur >= DUR_INDESTRUCTIBLE)
 				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), item._iMinDam, item._iMaxDam).c_str());
 			else
 				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Dur: {:d}/{:d}"), item._iMinDam, item._iMaxDam, item._iDurability, item._iMaxDur).c_str());
@@ -4048,7 +4050,7 @@ void PrintItemDur(const Item &item)
 			AddPanelString(_("Not Identified"));
 	}
 	if (item._iClass == ICLASS_ARMOR) {
-		if (item._iMaxDur == DUR_INDESTRUCTIBLE)
+		if (item._iMaxDur >= DUR_INDESTRUCTIBLE)
 			strcpy(tempstr, fmt::format(_("armor: {:d}  Indestructible"), item._iAC).c_str());
 		else
 			strcpy(tempstr, fmt::format(_("armor: {:d}  Dur: {:d}/{:d}"), item._iAC, item._iDurability, item._iMaxDur).c_str());
