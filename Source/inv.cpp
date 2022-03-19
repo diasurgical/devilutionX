@@ -1147,7 +1147,6 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex, Item &goldStack
 
 	goldStack._ivalue = 0;
 	player._pGold = CalculateGold(player);
-	NewCursor(CURSOR_HAND);
 
 	return true;
 }
@@ -1633,10 +1632,6 @@ void AutoGetItem(int pnum, Item *itemPointer, int ii)
 {
 	Item &item = *itemPointer;
 	auto &player = Players[pnum];
-
-	if (pcurs != CURSOR_HAND) {
-		return;
-	}
 
 	if (dropGoldFlag) {
 		CloseGoldDrop();
