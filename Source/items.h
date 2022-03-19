@@ -502,6 +502,8 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
  */
 void initItemGetRecords();
 
+void RepairItem(Item &item, int lvl);
+
 #ifdef _DEBUG
 std::string DebugSpawnItem(std::string itemName);
 std::string DebugSpawnUniqueItem(std::string itemName);

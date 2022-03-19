@@ -1692,30 +1692,6 @@ void ItemDoppel()
 		idoppely = 16;
 }
 
-void RepairItem(Item &item, int lvl)
-{
-	if (item._iDurability == item._iMaxDur) {
-		return;
-	}
-
-	if (item._iMaxDur <= 0) {
-		item._itype = ItemType::None;
-		return;
-	}
-
-	int rep = 0;
-	do {
-		rep += lvl + GenerateRnd(lvl);
-		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
-		if (item._iMaxDur == 0) {
-			item._itype = ItemType::None;
-			return;
-		}
-	} while (rep + item._iDurability < item._iMaxDur);
-
-	item._iDurability = std::min<int>(item._iDurability + rep, item._iMaxDur);
-}
-
 void RechargeItem(Item &item, int r)
 {
 	if (item._iCharges == item._iMaxCharges)
@@ -3645,9 +3621,6 @@ void DoRepair(Player &player, int cii)
 
 	RepairItem(*pi, player._pLevel);
 	CalcPlrInv(player, true);
-
-	if (&player == &Players[MyPlayerId])
-		NewCursor(CURSOR_HAND);
 }
 
 void DoRecharge(Player &player, int cii)
@@ -4766,6 +4739,30 @@ void initItemGetRecords()
 {
 	memset(itemrecord, 0, sizeof(itemrecord));
 	gnNumGetRecords = 0;
+}
+
+void RepairItem(Item &item, int lvl)
+{
+	if (item._iDurability == item._iMaxDur) {
+		return;
+	}
+
+	if (item._iMaxDur <= 0) {
+		item._itype = ItemType::None;
+		return;
+	}
+
+	int rep = 0;
+	do {
+		rep += lvl + GenerateRnd(lvl);
+		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
+		if (item._iMaxDur == 0) {
+			item._itype = ItemType::None;
+			return;
+		}
+	} while (rep + item._iDurability < item._iMaxDur);
+
+	item._iDurability = std::min<int>(item._iDurability + rep, item._iMaxDur);
 }
 
 } // namespace devilution

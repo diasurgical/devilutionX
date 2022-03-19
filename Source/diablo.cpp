@@ -1823,8 +1823,11 @@ bool TryIconCurs()
 	if (pcurs == CURSOR_REPAIR) {
 		if (pcursinvitem != -1)
 			DoRepair(myPlayer, pcursinvitem);
-		else
-			NewCursor(CURSOR_HAND);
+		else if (pcursstashitem != uint16_t(-1)) {
+			Item &item = Stash.stashList[pcursstashitem];
+			RepairItem(item, myPlayer._pLevel);
+		}
+		NewCursor(CURSOR_HAND);
 		return true;
 	}
 
