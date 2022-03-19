@@ -1629,10 +1629,10 @@ void InvGetItem(int pnum, int ii)
 		NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, Item *item, int ii)
+void AutoGetItem(int pnum, Item *itemPointer, int ii)
 {
-	bool done;
-	bool autoEquipped = false;
+	Item &item = *itemPointer;
+	auto &player = Players[pnum];
 
 	if (pcurs != CURSOR_HAND) {
 		return;
@@ -1643,34 +1643,34 @@ void AutoGetItem(int pnum, Item *item, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item->position.x][item->position.y] == 0)
+	if (dItem[item.position.x][item.position.y] == 0)
 		return;
 
-	auto &player = Players[pnum];
+	item._iCreateInfo &= ~CF_PREGEN;
+	CheckQuestItem(player, item);
+	UpdateBookLevel(player, item);
+	item._iStatFlag = player.CanUseItem(item);
+	SetICursor(item._iCurs + CURSOR_FIRSTITEM);
 
-	item->_iCreateInfo &= ~CF_PREGEN;
-	player.HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
-	CheckQuestItem(player, player.HoldItem);
-	UpdateBookLevel(player, player.HoldItem);
-	player.HoldItem._iStatFlag = player.CanUseItem(player.HoldItem);
-	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	if (player.HoldItem._itype == ItemType::Gold) {
-		done = GoldAutoPlace(player, player.HoldItem);
+	bool done;
+	bool autoEquipped = false;
+
+	if (item._itype == ItemType::Gold) {
+		done = GoldAutoPlace(player, item);
 		if (!done) {
-			item->_ivalue = player.HoldItem._ivalue;
-			SetPlrHandGoldCurs(*item);
+			SetPlrHandGoldCurs(item);
 		}
 	} else {
-		done = AutoEquipEnabled(player, player.HoldItem) && AutoEquip(pnum, player.HoldItem);
+		done = AutoEquipEnabled(player, item) && AutoEquip(pnum, item);
 		if (done) {
 			autoEquipped = true;
 		}
 
 		if (!done) {
-			done = AutoPlaceItemInBelt(player, player.HoldItem, true);
+			done = AutoPlaceItemInBelt(player, item, true);
 		}
 		if (!done) {
-			done = AutoPlaceItemInInventory(player, player.HoldItem, true);
+			done = AutoPlaceItemInInventory(player, item, true);
 		}
 	}
 
@@ -1686,10 +1686,8 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	if (pnum == MyPlayerId) {
 		player.Say(HeroSpeech::ICantCarryAnymore);
 	}
-	player.HoldItem = *item;
-	RespawnItem(*item, true);
-	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position, player.HoldItem);
-	player.HoldItem._itype = ItemType::None;
+	RespawnItem(item, true);
+	NetSendCmdPItem(true, CMD_RESPAWNITEM, item.position, item);
 }
 
 int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t createInfo)
