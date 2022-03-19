@@ -923,9 +923,9 @@ void UpdateBookLevel(Player &player, Item &book)
 	}
 }
 
-void CheckNaKrulNotes(Player &player)
+void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 {
-	int idx = player.HoldItem.IDidx;
+	int idx = noteItem.IDidx;
 	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
 
 	if (IsNoneOf(idx, IDI_NOTE1, IDI_NOTE2, IDI_NOTE3)) {
@@ -946,9 +946,9 @@ void CheckNaKrulNotes(Player &player)
 		}
 	}
 
-	player.HoldItem = {};
-	GetItemAttrs(player.HoldItem, IDI_FULLNOTE, 16);
-	SetupItem(player.HoldItem);
+	noteItem = {};
+	GetItemAttrs(noteItem, IDI_FULLNOTE, 16);
+	SetupItem(noteItem);
 }
 
 void CheckQuestItem(Player &player)
@@ -999,7 +999,7 @@ void CheckQuestItem(Player &player)
 		}
 	}
 
-	CheckNaKrulNotes(player);
+	TryCombineNaKrulNotes(player, player.HoldItem);
 }
 
 void OpenHive()
