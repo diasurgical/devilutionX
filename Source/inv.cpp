@@ -902,7 +902,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 				holdItem._itype = ItemType::None;
 				NewCursor(CURSOR_HAND);
 			} else {
-				player.SaySpecific(HeroSpeech::IHaveNoRoom);
+				player.SaySpecific(HeroSpeech::WhereWouldIPutThis);
 			}
 		} else {
 			TryDropItem();
