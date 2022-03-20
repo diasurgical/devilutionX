@@ -209,7 +209,7 @@ class UiArtTextButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiArtTextButton(const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiArtTextButton(string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::ArtTextButton, rect, flags)
 	    , text_(text)
 	    , action_(action)
@@ -232,7 +232,7 @@ public:
 	}
 
 private:
-	const char *text_;
+	string_view text_;
 	Callback action_;
 };
 
@@ -285,7 +285,7 @@ class UiButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiButton(Art *art, const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiButton(Art *art, string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Button, rect, flags)
 	    , art_(art)
 	    , text_(text)
@@ -333,7 +333,7 @@ public:
 private:
 	Art *art_;
 
-	const char *text_;
+	string_view text_;
 	Callback action_;
 
 	// State
