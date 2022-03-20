@@ -461,10 +461,10 @@ void RecreateEar(Item &item, uint16_t ic, int iseed, int Id, int dur, int mdur, 
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
 void SpawnQuestItem(int itemid, Point position, int randarea, int selflag);
-void SpawnRewardItem(int itemid, Point position);
-void SpawnMapOfDoom(Point position);
-void SpawnRuneBomb(Point position);
-void SpawnTheodore(Point position);
+void SpawnRewardItem(int itemid, Point position, bool sendmsg);
+void SpawnMapOfDoom(Point position, bool sendmsg);
+void SpawnRuneBomb(Point position, bool sendmsg);
+void SpawnTheodore(Point position, bool sendmsg);
 void RespawnItem(Item &item, bool FlipFlag);
 void DeleteItem(int i);
 void ProcessItems();

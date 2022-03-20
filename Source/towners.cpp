@@ -612,7 +612,7 @@ void TalkToFarmer(Player &player, Towner &farmer)
 		quest._qvar1 = 1;
 		quest._qlog = true;
 		quest._qmsg = TEXT_FARMER1;
-		SpawnRuneBomb(farmer.position + Displacement { 1, 0 });
+		SpawnRuneBomb(farmer.position + Displacement { 1, 0 }, true);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		break;
@@ -621,7 +621,7 @@ void TalkToFarmer(Player &player, Towner &farmer)
 		break;
 	case QUEST_DONE:
 		InitQTextMsg(TEXT_FARMER4);
-		SpawnRewardItem(IDI_AURIC, farmer.position + Displacement { 1, 0 });
+		SpawnRewardItem(IDI_AURIC, farmer.position + Displacement { 1, 0 }, true);
 		quest._qactive = QUEST_HIVE_DONE;
 		quest._qlog = false;
 		if (gbIsMultiplayer)
@@ -712,7 +712,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		quest._qvar1 = 1;
 		quest._qmsg = TEXT_JERSEY4;
 		quest._qlog = true;
-		SpawnRuneBomb(cowFarmer.position + Displacement { 1, 0 });
+		SpawnRuneBomb(cowFarmer.position + Displacement { 1, 0 }, true);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		break;

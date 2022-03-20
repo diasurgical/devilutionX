@@ -3347,7 +3347,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	}
 }
 
-void SpawnRewardItem(int itemid, Point position)
+void SpawnRewardItem(int itemid, Point position, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -3363,25 +3363,26 @@ void SpawnRewardItem(int itemid, Point position)
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item._iIdentified = true;
+	GenerateNewSeed(item);
 
-	if (gbIsMultiplayer) {
-		NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
+	if (sendmsg) {
+		NetSendCmdPItem(true, CMD_SPAWNITEM, item.position, item);
 	}
 }
 
-void SpawnMapOfDoom(Point position)
+void SpawnMapOfDoom(Point position, bool sendmsg)
 {
-	SpawnRewardItem(IDI_MAPOFDOOM, position);
+	SpawnRewardItem(IDI_MAPOFDOOM, position, sendmsg);
 }
 
-void SpawnRuneBomb(Point position)
+void SpawnRuneBomb(Point position, bool sendmsg)
 {
-	SpawnRewardItem(IDI_RUNEBOMB, position);
+	SpawnRewardItem(IDI_RUNEBOMB, position, sendmsg);
 }
 
-void SpawnTheodore(Point position)
+void SpawnTheodore(Point position, bool sendmsg)
 {
-	SpawnRewardItem(IDI_THEODORE, position);
+	SpawnRewardItem(IDI_THEODORE, position, sendmsg);
 }
 
 void RespawnItem(Item &item, bool flipFlag)
@@ -3390,14 +3391,14 @@ void RespawnItem(Item &item, bool flipFlag)
 	item.SetNewAnimation(flipFlag);
 	item._iRequest = false;
 
-	if (item._iCurs == ICURS_MAGIC_ROCK) {
+	if (IsAnyOf(item._iCurs, ICURS_MAGIC_ROCK, ICURS_TAVERN_SIGN, ICURS_ANVIL_OF_FURY))
 		item._iSelFlag = 1;
+	else if (IsAnyOf(item._iCurs, ICURS_MAP_OF_THE_STARS, ICURS_RUNE_BOMB, ICURS_THEODORE, ICURS_AURIC_AMULET))
+		item._iSelFlag = 2;
+
+	if (item._iCurs == ICURS_MAGIC_ROCK) {
 		PlaySfxLoc(ItemDropSnds[it], item.position);
 	}
-	if (item._iCurs == ICURS_TAVERN_SIGN)
-		item._iSelFlag = 1;
-	if (item._iCurs == ICURS_ANVIL_OF_FURY)
-		item._iSelFlag = 1;
 }
 
 void DeleteItem(int i)
