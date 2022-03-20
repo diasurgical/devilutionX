@@ -110,8 +110,8 @@ void CheckStashPaste(Point cursorPosition)
 
 	// Check that no more then 1 item is replaced by the move
 	uint16_t it = 0;
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, itemSize })) {
-		uint16_t iv = Stash.stashGrids[Stash.GetPage()][firstSlot.x + point.x][firstSlot.y + point.y];
+	for (auto point : PointsInRectangleRange({ firstSlot, itemSize })) {
+		uint16_t iv = Stash.stashGrids[Stash.GetPage()][point.x][point.y];
 		if (iv == 0 || it == iv)
 			continue;
 		if (it == 0) {
@@ -648,8 +648,8 @@ bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 		for (auto stashPosition : PointsInRectangleRange({ { 0, 0 }, { 10 - (itemSize.width - 1), 10 - (itemSize.height - 1) } })) {
 			// Check that all needed slots are free
 			bool isSpaceFree = true;
-			for (auto itemPoint : PointsInRectangleRange({ { 0, 0 }, itemSize })) {
-				uint16_t iv = Stash.stashGrids[pageIndex][stashPosition.x + itemPoint.x][stashPosition.y + itemPoint.y];
+			for (auto itemPoint : PointsInRectangleRange({ stashPosition, itemSize })) {
+				uint16_t iv = Stash.stashGrids[pageIndex][itemPoint.x][itemPoint.y];
 				if (iv != 0) {
 					isSpaceFree = false;
 					break;
