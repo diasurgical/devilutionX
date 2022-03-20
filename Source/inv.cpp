@@ -1951,14 +1951,14 @@ int8_t CheckInvHLight()
 
 	if (pi->_itype == ItemType::Gold) {
 		int nGold = pi->_ivalue;
-		CopyUtf8(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold), sizeof(infostr));
+		InfoString = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
 	} else {
 		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {
-			strcpy(infostr, pi->_iIName);
+			InfoString = pi->_iIName;
 			PrintItemDetails(*pi);
 		} else {
-			strcpy(infostr, pi->_iName);
+			InfoString = pi->_iName;
 			PrintItemDur(*pi);
 		}
 	}

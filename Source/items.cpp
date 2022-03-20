@@ -3460,14 +3460,14 @@ void GetItemStr(Item &item)
 {
 	if (item._itype != ItemType::Gold) {
 		if (item._iIdentified)
-			strcpy(infostr, item._iIName);
+			InfoString = item._iIName;
 		else
-			strcpy(infostr, item._iName);
+			InfoString = item._iName;
 
 		InfoColor = item.getTextColor();
 	} else {
 		int nGold = item._ivalue;
-		CopyUtf8(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold), sizeof(infostr));
+		InfoString = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
 	}
 }
 
