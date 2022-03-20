@@ -1835,11 +1835,6 @@ int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, i
 
 	assert(CanPut(position));
 
-	return SyncDropItem(position, idx, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff, toHit, maxDam, minStr, minMag, minDex, ac);
-}
-
-int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
-{
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 

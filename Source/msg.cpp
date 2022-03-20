@@ -1614,17 +1614,10 @@ DWORD OnDropItem(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
-	if (gbBufferMsgs == 1) {
+	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (IsPItemValid(message)) {
-		int playerLevel = Players[pnum].plrlevel;
-		Point position = { message.x, message.y };
-		if (currlevel == playerLevel && pnum != MyPlayerId) {
-			SyncDropItem(position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
-		}
-		PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-		DeltaPutItem(message, position, playerLevel);
-	}
+	else if (IsPItemValid(message))
+		DeltaPutItem(message, { message.x, message.y }, Players[pnum].plrlevel);
 
 	return sizeof(message);
 }
