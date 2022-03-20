@@ -711,6 +711,8 @@ struct TPktHdr {
 	uint8_t targy;
 	int32_t php;
 	int32_t pmhp;
+	int32_t mana;
+	int32_t maxmana;
 	uint8_t bstr;
 	uint8_t bmag;
 	uint8_t bdex;
