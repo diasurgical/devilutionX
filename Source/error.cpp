@@ -168,7 +168,7 @@ void DrawDiabloMsg(const Surface &out)
 	auto message = DiabloMessages.front();
 	int lineNumber = 0;
 	for (auto &line : TextLines) {
-		DrawString(out, line.c_str(), { { PANEL_X + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
+		DrawString(out, line, { { PANEL_X + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
 		lineNumber += 1;
 	}
 

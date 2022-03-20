@@ -1827,10 +1827,10 @@ void LoadGame(bool firstflag)
 
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "game");
 	if (!file.IsValid())
-		app_fatal("%s", _("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive").c_str());
 
 	if (!IsHeaderValid(file.NextLE<uint32_t>()))
-		app_fatal("%s", _("Invalid save file"));
+		app_fatal("%s", _("Invalid save file").c_str());
 
 	if (gbIsHellfireSaveGame) {
 		giNumberOfLevels = 25;
@@ -1861,7 +1861,7 @@ void LoadGame(bool firstflag)
 	int tmpNobjects = file.NextBE<int32_t>();
 
 	if (!gbIsHellfire && currlevel > 17)
-		app_fatal("%s", _("Player is on a Hellfire only level"));
+		app_fatal("%s", _("Player is on a Hellfire only level").c_str());
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = file.NextBE<uint32_t>();
@@ -2090,7 +2090,7 @@ void SaveGameData()
 	else if (!gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("RETL"));
 	else
-		app_fatal("%s", _("Invalid game state"));
+		app_fatal("%s", _("Invalid game state").c_str());
 
 	if (gbIsHellfire) {
 		giNumberOfLevels = 25;
@@ -2328,7 +2328,7 @@ void LoadLevel()
 	GetPermLevelNames(szName);
 	LoadHelper file(OpenSaveArchive(gSaveNumber), szName);
 	if (!file.IsValid())
-		app_fatal("%s", _("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive").c_str());
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {

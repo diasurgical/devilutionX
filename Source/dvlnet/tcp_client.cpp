@@ -62,7 +62,7 @@ int tcp_client::join(std::string addrstr)
 		}
 	}
 	if (plr_self == PLR_BROADCAST) {
-		SDL_SetError("%s", _("Unable to connect"));
+		SDL_SetError("%s", _("Unable to connect").c_str());
 		return -1;
 	}
 

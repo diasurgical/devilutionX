@@ -25,7 +25,7 @@ void DialogActionCancel()
 	endMenu = true;
 }
 
-void ProgressLoad(const char *msg)
+void ProgressLoad()
 {
 	LoadBackgroundArt("ui_art\\black.pcx");
 	LoadArt("ui_art\\spopup.pcx", &ArtPopupSm);
@@ -63,9 +63,9 @@ void ProgressRender(BYTE progress)
 
 } // namespace
 
-bool UiProgressDialog(const char *msg, int (*fnfunc)())
+bool UiProgressDialog(int (*fnfunc)())
 {
-	ProgressLoad(msg);
+	ProgressLoad();
 	SetFadeLevel(256);
 
 	endMenu = false;

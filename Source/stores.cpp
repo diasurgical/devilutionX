@@ -223,7 +223,7 @@ void AddOptionsBackButton()
 void AddItemListBackButton(bool selectable = false)
 {
 	const int line = BackButtonLine();
-	const char *text = _("Back");
+	string_view text = _("Back");
 	if (!selectable && IsSmallFontTall()) {
 		AddSText(0, line, text, UiFlags::ColorWhite | UiFlags::AlignRight, selectable);
 	} else {
@@ -354,7 +354,7 @@ void StartSmithBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithBuy(stextsval);
 	AddItemListBackButton();
@@ -419,7 +419,7 @@ bool StartSmithPremiumBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), Players[MyPlayerId]._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddItemListBackButton();
 
@@ -538,7 +538,7 @@ void StartSmithSell()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -549,7 +549,7 @@ void StartSmithSell()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -620,7 +620,7 @@ void StartSmithRepair()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to repair.             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing to repair.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -631,7 +631,7 @@ void StartSmithRepair()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Repair which item?             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Repair which item?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 
 	ScrollSmithSell(stextsval);
@@ -719,7 +719,7 @@ void StartWitchBuy()
 	stextsmax = 20;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollWitchBuy(stextsval);
 	AddItemListBackButton();
@@ -812,7 +812,7 @@ void StartWitchSell()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -823,7 +823,7 @@ void StartWitchSell()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -885,7 +885,7 @@ void StartWitchRecharge()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -896,7 +896,7 @@ void StartWitchRecharge()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Recharge which item?             Your gold: {:d}"), myPlayer._pGold).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Recharge which item?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();

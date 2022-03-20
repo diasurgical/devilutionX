@@ -172,7 +172,7 @@ void DrawHelp(const Surface &out)
 	const int lineHeight = LineHeight();
 	const int blankLineHeight = BlankLineHeight();
 
-	const char *title;
+	string_view title;
 	if (gbIsHellfire)
 		title = gbIsSpawn ? _("Shareware Hellfire Help") : _("Hellfire Help");
 	else

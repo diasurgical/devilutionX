@@ -263,7 +263,7 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clearTables)
     , clear_tables_(clearTables)
 {
 	if (!OpenArchive(save_num_))
-		app_fatal("%s", _("Failed to open player archive for writing."));
+		app_fatal("%s", _("Failed to open player archive for writing.").c_str());
 }
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
@@ -305,7 +305,7 @@ void sfile_write_stash()
 		return;
 
 	if (!StashWriter.Open(GetStashSavePath().c_str()))
-		app_fatal("%s", _("Failed to open stash archive for writing."));
+		app_fatal("%s", _("Failed to open stash archive for writing.").c_str());
 
 	SaveStash();
 
@@ -403,7 +403,7 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 	uint32_t saveNum = heroInfo->saveNumber;
 	if (saveNum < MAX_CHARACTERS) {
 		hero_names[saveNum][0] = '\0';
-		RemoveFile(GetSavePath(saveNum).c_str());
+		RemoveFile(GetSavePath(saveNum));
 	}
 	return true;
 }
@@ -416,9 +416,9 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	{
 		std::optional<MpqArchive> archive = OpenSaveArchive(saveNum);
 		if (!archive)
-			app_fatal("%s", _("Unable to open archive"));
+			app_fatal("%s", _("Unable to open archive").c_str());
 		if (!ReadHero(*archive, &pkplr))
-			app_fatal("%s", _("Unable to load character"));
+			app_fatal("%s", _("Unable to load character").c_str());
 
 		gbValidSaveFile = ArchiveContainsGame(*archive);
 		if (gbValidSaveFile)
@@ -442,7 +442,7 @@ bool LevelFileExists()
 
 	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to read to save file archive"));
+		app_fatal("%s", _("Unable to read to save file archive").c_str());
 
 	bool hasFile = SaveWriter.HasFile(szName);
 	SaveWriter.Close();
@@ -462,7 +462,7 @@ void GetPermLevelNames(char *szPerm)
 	uint32_t saveNum = gSaveNumber;
 	GetTempLevelNames(szPerm);
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to read to save file archive"));
+		app_fatal("%s", _("Unable to read to save file archive").c_str());
 
 	bool hasFile = SaveWriter.HasFile(szPerm);
 	SaveWriter.Close();
@@ -481,7 +481,7 @@ void pfile_remove_temp_files()
 
 	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to write to save file archive"));
+		app_fatal("%s", _("Unable to write to save file archive").c_str());
 	SaveWriter.RemoveHashEntries(GetTempSaveNames);
 	SaveWriter.Close();
 }

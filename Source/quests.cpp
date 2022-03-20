@@ -267,7 +267,7 @@ int QuestLogMouseToEntry()
 	return -1;
 }
 
-void PrintQLString(const Surface &out, int x, int y, const char *str, bool marked, bool disabled = false)
+void PrintQLString(const Surface &out, int x, int y, string_view str, bool marked, bool disabled = false)
 {
 	int width = GetLineWidth(str);
 	x += std::max((257 - width) / 2, 0);

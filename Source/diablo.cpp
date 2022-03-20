@@ -818,30 +818,30 @@ void RunGameLoop(interface_mode uMsg)
 
 [[noreturn]] void PrintHelpAndExit()
 {
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "Options:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-h, --help", _("Print this message and exit"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--version", _("Print the version and exit"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--data-dir", _("Specify the folder of diabdat.mpq"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--save-dir", _("Specify the folder of save files"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--record <#>", _("Record a demo file"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--demo <#>", _("Play a demo file"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--timedemo", _("Disable all frame limiting during demo playback"));
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nGame selection:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force Shareware mode"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force Diablo mode"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--hellfire", _("Force Hellfire mode"));
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
+	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "Options:\n").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-h, --help", _("Print this message and exit").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--version", _("Print the version and exit").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--data-dir", _("Specify the folder of diabdat.mpq").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--save-dir", _("Specify the folder of save files").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--record <#>", _("Record a demo file").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--demo <#>", _("Play a demo file").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--timedemo", _("Disable all frame limiting during demo playback").c_str());
+	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nGame selection:\n").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force Shareware mode").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force Diablo mode").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--hellfire", _("Force Hellfire mode").c_str());
+	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n").c_str());
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette").c_str());
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "+<internal command>", "Pass commands to the engine");
 #endif
-	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
+	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n").c_str());
 	diablo_quit(0);
 }
 

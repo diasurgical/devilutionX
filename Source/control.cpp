@@ -130,7 +130,7 @@ std::optional<OwnedCelSprite> pPanelButtons;
 
 bool PanelButtons[8];
 int PanelButtonIndex;
-char TalkSave[8][80];
+char TalkSave[8][MAX_SEND_STR_LEN];
 uint8_t TalkSaveIndex;
 uint8_t NextTalkSave;
 char TalkMessage[MAX_SEND_STR_LEN];
@@ -694,12 +694,12 @@ void CheckPanelInfo()
 		int yend = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
 		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= yend) {
 			if (i != 7) {
-				strcpy(infostr, _(PanBtnStr[i]));
+				CopyUtf8(infostr, _(PanBtnStr[i]), sizeof(infostr));
 			} else {
 				if (gbFriendlyMode)
-					strcpy(infostr, _("Player friendly"));
+					CopyUtf8(infostr, _("Player friendly"), sizeof(infostr));
 				else
-					strcpy(infostr, _("Player attack"));
+					CopyUtf8(infostr, _("Player attack"), sizeof(infostr));
 			}
 			if (PanBtnHotKey[i] != nullptr) {
 				AddPanelString(fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])));
@@ -709,7 +709,7 @@ void CheckPanelInfo()
 		}
 	}
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
-		strcpy(infostr, _("Select current spell button"));
+		CopyUtf8(infostr, _("Select current spell button"), sizeof(infostr));
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
@@ -880,7 +880,7 @@ void DrawInfoBox(const Surface &out)
 			if (leveltype != DTYPE_TOWN) {
 				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
-				strcpy(infostr, monster.mName);
+				CopyUtf8(infostr, monster.mName, sizeof(infostr));
 				ClearPanel();
 				if (monster._uniqtype != 0) {
 					InfoColor = UiFlags::ColorWhitegold;

@@ -38,7 +38,7 @@ const int LineHeight = 38;
 
 std::vector<std::string> TextLines;
 
-void LoadText(const char *text)
+void LoadText(string_view text)
 {
 	TextLines.clear();
 

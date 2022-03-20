@@ -262,7 +262,7 @@ public:
 
 class UiText : public UiItemBase {
 public:
-	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::ColorDialogWhite)
+	UiText(string_view text, SDL_Rect rect, UiFlags flags = UiFlags::ColorDialogWhite)
 	    : UiItemBase(UiType::Text, rect, flags)
 	    , text_(text)
 	{
@@ -274,7 +274,7 @@ public:
 	}
 
 private:
-	const char *text_;
+	string_view text_;
 };
 
 //=============================================================================
@@ -344,14 +344,14 @@ private:
 
 class UiListItem {
 public:
-	UiListItem(const char *text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
+	UiListItem(string_view text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , m_value(value)
 	    , uiFlags(uiFlags)
 	{
 	}
 
-	UiListItem(const char *text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
+	UiListItem(string_view text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , args(args)
 	    , m_value(value)
@@ -360,7 +360,7 @@ public:
 	}
 
 	// private:
-	const char *m_text;
+	string_view m_text;
 	std::vector<DrawStringFormatArg> args;
 	int m_value;
 	UiFlags uiFlags;

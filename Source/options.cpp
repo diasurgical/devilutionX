@@ -1020,7 +1020,7 @@ size_t OptionEntryLanguageCode::GetActiveListIndex() const
 }
 void OptionEntryLanguageCode::SetActiveListIndex(size_t index)
 {
-	strcpy(szCode, languages[index].first.c_str());
+	CopyUtf8(szCode, languages[index].first, sizeof(szCode));
 	NotifyValueChanged();
 }
 
@@ -1148,7 +1148,7 @@ string_view KeymapperOptions::Action::GetValueDescription() const
 	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
 		return "";
 	}
-	return keyNameIt->second.c_str();
+	return keyNameIt->second;
 }
 
 bool KeymapperOptions::Action::SetValue(int value)
