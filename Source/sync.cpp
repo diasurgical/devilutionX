@@ -197,8 +197,7 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 	}
 
 	decode_enemy(monster, enemyId);
-	monster.mWhoHit = monsterSync.mWhoHit;
-	monster._mhitpoints = monsterSync._mhitpoints;
+	monster.mWhoHit |= monsterSync.mWhoHit;
 }
 
 bool IsEnemyIdValid(const Monster &monster, int enemyId)
