@@ -33,6 +33,7 @@
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -3154,7 +3155,7 @@ StartPlayerKill(int pnum, int earflag)
 					if (earflag != 0) {
 						Item ear;
 						InitializeItem(ear, IDI_EAR);
-						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
+						CopyUtf8(ear._iName, fmt::format(_("Ear of {:s}"), player._pName), sizeof(ear._iName));
 						switch (player._pClass) {
 						case HeroClass::Sorcerer:
 							ear._iCurs = ICURS_EAR_SORCERER;

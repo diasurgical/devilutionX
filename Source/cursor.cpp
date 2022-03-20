@@ -24,6 +24,7 @@
 #include "trigs.h"
 #include "utils/attributes.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 namespace {
@@ -216,7 +217,7 @@ void CheckTown()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, _("Town Portal"));
+				CopyUtf8(infostr, _("Town Portal"), sizeof(infostr));
 				AddPanelString(fmt::format(_("from {:s}"), Players[missile._misource]._pName));
 				cursPosition = missile.position.tile;
 			}
@@ -231,7 +232,7 @@ void CheckRportal()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, _("Portal to"));
+				CopyUtf8(infostr, _("Portal to"), sizeof(infostr));
 				AddPanelString(!setlevel ? _("The Unholy Altar") : _("level 15"));
 				cursPosition = missile.position.tile;
 			}

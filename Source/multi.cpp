@@ -193,7 +193,7 @@ void PlayerLeftMsg(int pnum, bool left)
 	delta_close_portal(pnum);
 	RemovePlrMissiles(pnum);
 	if (left) {
-		const char *pszFmt = _("Player '{:s}' just left the game");
+		string_view pszFmt = _("Player '{:s}' just left the game");
 		switch (sgdwPlayerLeftReasonTbl[pnum]) {
 		case LEAVE_ENDING:
 			pszFmt = _("Player '{:s}' killed Diablo and left the game!");
@@ -813,7 +813,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	player.plractive = true;
 	gbActivePlayers++;
 
-	const char *szEvent;
+	string_view szEvent;
 	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = _("Player '{:s}' (level {:d}) just joined the game");
 	} else {

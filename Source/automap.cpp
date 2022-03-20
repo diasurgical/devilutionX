@@ -477,21 +477,24 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
  */
 void DrawAutomapText(const Surface &out)
 {
-	char desc[256];
 	Point linePosition { 8, 8 };
 
 	if (gbIsMultiplayer) {
 		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
-			strcat(strcpy(desc, _("Game: ")), szPlayerName);
-			DrawString(out, desc, linePosition);
+			std::string description = _("Game: ");
+			description.append(szPlayerName);
+			DrawString(out, description, linePosition);
 			linePosition.y += 15;
 		}
 
-		if (!PublicGame)
-			strcat(strcpy(desc, _("Password: ")), szPlayerDescript);
-		else
-			strcpy(desc, _("Public Game"));
-		DrawString(out, desc, linePosition);
+		std::string description;
+		if (!PublicGame) {
+			description = _("Password: ");
+			description.append(szPlayerDescript);
+		} else {
+			description = _("Public Game");
+		}
+		DrawString(out, description, linePosition);
 		linePosition.y += 15;
 	}
 
@@ -501,15 +504,16 @@ void DrawAutomapText(const Surface &out)
 	}
 
 	if (currlevel != 0) {
+		std::string description;
 		if (currlevel >= 17 && currlevel <= 20) {
-			strcpy(desc, fmt::format(_("Level: Nest {:d}"), currlevel - 16).c_str());
+			description = fmt::format(_("Level: Nest {:d}"), currlevel - 16);
 		} else if (currlevel >= 21 && currlevel <= 24) {
-			strcpy(desc, fmt::format(_("Level: Crypt {:d}"), currlevel - 20).c_str());
+			description = fmt::format(_("Level: Crypt {:d}"), currlevel - 20);
 		} else {
-			strcpy(desc, fmt::format(_("Level: {:d}"), currlevel).c_str());
+			description = fmt::format(_("Level: {:d}"), currlevel);
 		}
 
-		DrawString(out, desc, linePosition);
+		DrawString(out, description, linePosition);
 		linePosition.y += 15;
 	}
 	string_view difficulty;
@@ -524,8 +528,9 @@ void DrawAutomapText(const Surface &out)
 		difficulty = _("Hell");
 		break;
 	}
-	CopyUtf8(desc, fmt::format(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}"), difficulty), sizeof(desc));
-	DrawString(out, desc, linePosition);
+
+	std::string description = fmt::format(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}"), difficulty);
+	DrawString(out, description, linePosition);
 }
 
 std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)

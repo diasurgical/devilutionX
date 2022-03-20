@@ -657,8 +657,9 @@ void GetBookSpell(Item &item, int lvl)
 		if (s == maxSpells)
 			s = 1;
 	}
-	strcat(item._iName, pgettext("spell", spelldata[bs].sNameText));
-	strcat(item._iIName, pgettext("spell", spelldata[bs].sNameText));
+	std::string spellName = pgettext("spell", spelldata[bs].sNameText);
+	CopyUtf8(item._iName, std::string(item._iName + spellName), sizeof(item._iIName));
+	CopyUtf8(item._iIName, std::string(item._iIName + spellName), sizeof(item._iIName));
 	item._iSpell = bs;
 	item._iMinMag = spelldata[bs].sMinInt;
 	item._ivalue += spelldata[bs].sBookCost;
@@ -1126,10 +1127,10 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 		}
 	}
 
-	const char *baseName = _(AllItemsList[item.IDidx].iName);
-	const char *shortName = _(AllItemsList[item.IDidx].iSName);
-	const char *spellName = pgettext("spell", spelldata[bs].sNameText);
-	const char *normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
+	string_view baseName = _(AllItemsList[item.IDidx].iName);
+	string_view shortName = _(AllItemsList[item.IDidx].iSName);
+	string_view spellName = pgettext("spell", spelldata[bs].sNameText);
+	string_view normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
 
 	CopyUtf8(item._iName, fmt::format(normalFmt, baseName, spellName), sizeof(item._iName));
 	if (!StringInPanel(item._iName)) {
@@ -1137,8 +1138,8 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 	}
 
 	if (preidx != -1) {
-		const char *magicFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}");
-		const char *prefixName = _(ItemPrefixes[preidx].PLName);
+		string_view magicFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}");
+		string_view prefixName = _(ItemPrefixes[preidx].PLName);
 		CopyUtf8(item._iIName, fmt::format(magicFmt, prefixName, baseName, spellName), sizeof(item._iIName));
 		if (!StringInPanel(item._iIName)) {
 			CopyUtf8(item._iIName, fmt::format(magicFmt, prefixName, shortName, spellName), sizeof(item._iIName));
@@ -1155,13 +1156,13 @@ namespace {
 std::string GenerateMagicItemName(const string_view &baseNamel, int preidx, int sufidx)
 {
 	if (preidx != -1 && sufidx != -1) {
-		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} {1} of {2}");
+		string_view fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} {1} of {2}");
 		return fmt::format(fmt, _(ItemPrefixes[preidx].PLName), baseNamel, _(ItemSuffixes[sufidx].PLName));
 	} else if (preidx != -1) {
-		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ "{0} {1}");
+		string_view fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ "{0} {1}");
 		return fmt::format(fmt, _(ItemPrefixes[preidx].PLName), baseNamel);
 	} else if (sufidx != -1) {
-		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale */ "{0} of {1}");
+		string_view fmt = _(/* TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale */ "{0} of {1}");
 		return fmt::format(fmt, baseNamel, _(ItemSuffixes[sufidx].PLName));
 	}
 
@@ -1307,8 +1308,8 @@ void GetOilType(Item &item, int maxLvl)
 
 	int8_t t = rnd[GenerateRnd(cnt)];
 
-	strcpy(item._iName, _(OilNames[t]));
-	strcpy(item._iIName, _(OilNames[t]));
+	CopyUtf8(item._iName, _(OilNames[t]), sizeof(item._iName));
+	CopyUtf8(item._iIName, _(OilNames[t]), sizeof(item._iIName));
 	item._iMiscId = OilMagic[t];
 	item._ivalue = OilValues[t];
 	item._iIvalue = OilValues[t];
@@ -1493,7 +1494,7 @@ void GetUniqueItem(Item &item, _unique_items uid)
 		SaveItemPower(item, power);
 	}
 
-	strcpy(item._iIName, _(UniqueItems[uid].UIName));
+	CopyUtf8(item._iIName, _(UniqueItems[uid].UIName), sizeof(item._iIName));
 	item._iIvalue = UniqueItems[uid].UIValue;
 
 	if (item._iMiscId == IMISC_UNIQUE)
@@ -2724,8 +2725,8 @@ void InitializeItem(Item &item, int itemData)
 
 	item._itype = pAllItem.itype;
 	item._iCurs = pAllItem.iCurs;
-	strcpy(item._iName, _(pAllItem.iName));
-	strcpy(item._iIName, _(pAllItem.iName));
+	CopyUtf8(item._iName, _(pAllItem.iName), sizeof(item._iName));
+	CopyUtf8(item._iIName, _(pAllItem.iName), sizeof(item._iIName));
 	item._iLoc = pAllItem.iLoc;
 	item._iClass = pAllItem.iClass;
 	item._iMinDam = pAllItem.iMinDam;
@@ -2961,8 +2962,8 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 {
 	item._itype = AllItemsList[itemData].itype;
 	item._iCurs = AllItemsList[itemData].iCurs;
-	strcpy(item._iName, _(AllItemsList[itemData].iName));
-	strcpy(item._iIName, _(AllItemsList[itemData].iName));
+	CopyUtf8(item._iName, _(AllItemsList[itemData].iName), sizeof(item._iName));
+	CopyUtf8(item._iIName, _(AllItemsList[itemData].iName), sizeof(item._iIName));
 	item._iLoc = AllItemsList[itemData].iLoc;
 	item._iClass = AllItemsList[itemData].iClass;
 	item._iMinDam = AllItemsList[itemData].iMinDam;

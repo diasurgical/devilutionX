@@ -33,6 +33,7 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -481,7 +482,7 @@ void DeltaPutItem(const TCmdPItem &message, Point position, BYTE bLevel)
 		    && item.dwSeed == message.dwSeed) {
 			if (item.bCmd == TCmdPItem::DroppedItem)
 				return;
-			app_fatal("%s", _("Trying to drop a floor item?"));
+			app_fatal("%s", _("Trying to drop a floor item?").c_str());
 		}
 	}
 
@@ -984,7 +985,7 @@ DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1019,7 +1020,7 @@ DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1050,7 +1051,7 @@ DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1177,7 +1178,7 @@ DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1209,7 +1210,7 @@ DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1241,7 +1242,7 @@ DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1271,7 +1272,7 @@ DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1965,7 +1966,7 @@ bool msg_wait_resync()
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
 	sgdwOwnerWait = SDL_GetTicks();
-	success = UiProgressDialog(_("Waiting for game data..."), WaitForTurns);
+	success = UiProgressDialog(WaitForTurns);
 	gbBufferMsgs = 0;
 	if (!success) {
 		FreePackets();
@@ -1973,13 +1974,13 @@ bool msg_wait_resync()
 	}
 
 	if (gbGameDestroyed) {
-		DrawDlg("%s", _("The game ended"));
+		DrawDlg("%s", _("The game ended").c_str());
 		FreePackets();
 		return false;
 	}
 
 	if (sgbDeltaChunks != MAX_CHUNKS) {
-		DrawDlg("%s", _("Unable to get level data"));
+		DrawDlg("%s", _("Unable to get level data").c_str());
 		FreePackets();
 		return false;
 	}
@@ -2660,8 +2661,8 @@ void NetSendCmdString(uint32_t pmask, const char *pszStr)
 	TCmdString cmd;
 
 	cmd.bCmd = CMD_STRING;
-	strcpy(cmd.str, pszStr);
-	multi_send_msg_packet(pmask, (byte *)&cmd, strlen(pszStr) + 2);
+	CopyUtf8(cmd.str, pszStr, sizeof(cmd.str));
+	multi_send_msg_packet(pmask, (byte *)&cmd, strlen(cmd.str) + 2);
 }
 
 void delta_close_portal(int pnum)

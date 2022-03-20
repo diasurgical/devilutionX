@@ -33,6 +33,7 @@
 #include "trigs.h"
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
+#include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef _DEBUG
@@ -177,7 +178,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster._mmode = MonsterMode::Stand;
 	monster.MType = &LevelMonsterTypes[mtype];
 	monster.MData = monster.MType->MData;
-	monster.mName = pgettext("monster", monster.MData->mName);
+	monster.mName = pgettext("monster", monster.MData->mName).c_str();
 	monster.AnimInfo = {};
 	monster.ChangeAnimationData(MonsterGraphic::Stand);
 	monster.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(monster.AnimInfo.TicksPerFrame - 1);
@@ -3374,7 +3375,7 @@ void BoneDemonAi(int i)
 	AiRangedAvoidance(i, MIS_BONEDEMON, true, 4, 0);
 }
 
-const char *GetMonsterTypeText(const MonsterData &monsterData)
+string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.mMonstClass) {
 	case MonsterClass::Animal:
@@ -3482,7 +3483,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	}
 
 	monster.mExp *= 2;
-	monster.mName = pgettext("monster", uniqueMonsterData.mName);
+	monster.mName = pgettext("monster", uniqueMonsterData.mName).c_str();
 	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
@@ -4552,9 +4553,9 @@ void SyncMonsterAnim(Monster &monster)
 #endif
 	monster.MData = LevelMonsterTypes[monster._mMTidx].MData;
 	if (monster._uniqtype != 0)
-		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName);
+		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName).c_str();
 	else
-		monster.mName = pgettext("monster", monster.MData->mName);
+		monster.mName = pgettext("monster", monster.MData->mName).c_str();
 
 	if (monster._uniqtype != 0)
 		InitTRNForUniqueMonster(monster);
