@@ -986,15 +986,15 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 void SpawnLoot(Monster &monster, bool sendmsg)
 {
 	if (Quests[Q_GARBUD].IsAvailable() && monster._uniqtype - 1 == UMT_GARBUD) {
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, true, false);
+		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, sendmsg, false);
 	} else if (monster._uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
 		Quests[Q_DEFILER]._qlog = false;
-		SpawnMapOfDoom(monster.position.tile);
+		SpawnMapOfDoom(monster.position.tile, sendmsg);
 	} else if (monster._uniqtype - 1 == UMT_HORKDMN) {
 		if (sgGameInitInfo.bTheoQuest != 0) {
-			SpawnTheodore(monster.position.tile);
+			SpawnTheodore(monster.position.tile, sendmsg);
 		} else {
 			CreateAmulet(monster.position.tile, 13, sendmsg, false);
 		}

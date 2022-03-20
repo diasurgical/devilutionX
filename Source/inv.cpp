@@ -1830,8 +1830,10 @@ int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, i
 			return -1;
 	}
 
-	if (!PutItem(player, position))
-		return -1;
+	if (IsNoneOf(idx, IDI_MAPOFDOOM, IDI_RUNEBOMB, IDI_THEODORE, IDI_AURIC)) {
+		if (!PutItem(player, position))
+			return -1;
+	}
 
 	assert(CanPut(position));
 
