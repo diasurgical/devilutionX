@@ -1104,7 +1104,10 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	MonsterKillCounts[monster.MType->mtype]++;
 	monster._mhitpoints = 0;
 	SetRndSeed(monster._mRndSeed);
-	SpawnLoot(monster, sendmsg);
+	if (pnum == MyPlayerId) {
+		// prevent double-spawning loot, only the player who delivered the killing blow should send a drop item message
+		SpawnLoot(monster, sendmsg);
+	}
 	if (monster.MType->mtype == MT_DIABLO)
 		DiabloDeath(monster, true);
 	else
