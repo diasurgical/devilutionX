@@ -28,6 +28,8 @@ int WithdrawGoldValue;
 
 namespace {
 
+constexpr int CountStashPages = 50;
+
 int InitialWithdrawGoldValue;
 
 /** Contains mappings for the buttons in the stash (2 navigation buttons, withdraw gold buttons, 2 navigation buttons) */
@@ -109,7 +111,7 @@ void CheckStashPaste(Point cursorPosition)
 	// Check that no more then 1 item is replaced by the move
 	uint16_t it = 0;
 	for (auto point : PointsInRectangleRange({ firstSlot, itemSize })) {
-		uint16_t iv = Stash.stashGrids[Stash.page][point.x][point.y];
+		uint16_t iv = Stash.stashGrids[Stash.GetPage()][point.x][point.y];
 		if (iv == 0 || it == iv)
 			continue;
 		if (it == 0) {
@@ -131,7 +133,7 @@ void CheckStashPaste(Point cursorPosition)
 	} else {
 		stashIndex = it - 1;
 		cn = SwapItem(Stash.stashList[stashIndex], player.HoldItem);
-		for (auto &row : Stash.stashGrids[Stash.page]) {
+		for (auto &row : Stash.stashGrids[Stash.GetPage()]) {
 			for (auto &itemId : row) {
 				if (itemId == it)
 					itemId = 0;
@@ -139,7 +141,7 @@ void CheckStashPaste(Point cursorPosition)
 		}
 	}
 
-	AddItemToStashGrid(Stash.page, firstSlot, stashIndex, itemSize);
+	AddItemToStashGrid(Stash.GetPage(), firstSlot, stashIndex, itemSize);
 
 	Stash.dirty = true;
 
@@ -182,7 +184,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove, bool dropItem)
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
 
-	uint16_t ii = Stash.stashGrids[Stash.page][slot.x][slot.y];
+	uint16_t ii = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y];
 	if (ii != 0) {
 		uint16_t iv = ii - 1;
 
@@ -306,25 +308,24 @@ void CheckStashButtonRelease(Point mousePosition)
 	if (stashButton.Contains(mousePosition)) {
 		switch (StashButtonPressed) {
 		case 0:
-			Stash.page -= 10;
+			Stash.SetPage(Stash.GetPage() - 10);
 			break;
 		case 1:
-			Stash.page -= 1;
+			Stash.SetPage(Stash.GetPage() - 1);
 			break;
 		case 2:
 			StartGoldWithdraw();
 			break;
 		case 3:
-			Stash.page += 1;
+			Stash.SetPage(Stash.GetPage() + 1);
 			break;
 		case 4:
-			Stash.page += 10;
+			Stash.SetPage(Stash.GetPage() + 10);
 			break;
 		}
 	}
 
 	StashButtonPressed = -1;
-	Stash.page = clamp(Stash.page, 0, 49);
 }
 
 void CheckStashButtonPress(Point mousePosition)
@@ -355,17 +356,17 @@ void DrawStash(const Surface &out)
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
 
 	for (auto slot : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
-		if (Stash.stashGrids[Stash.page][slot.x][slot.y] != 0) {
+		if (Stash.stashGrids[Stash.GetPage()][slot.x][slot.y] != 0) {
 			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels);
 		}
 	}
 
 	for (auto slot : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
-		if (Stash.stashGrids[Stash.page][slot.x][slot.y] == 0) {
+		if (Stash.stashGrids[Stash.GetPage()][slot.x][slot.y] == 0) {
 			continue; // No item in the given slot
 		}
 
-		uint16_t itemId = Stash.stashGrids[Stash.page][slot.x][slot.y] - 1;
+		uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y] - 1;
 		if (Stash.stashList[itemId].position != slot) {
 			continue; // Not the first slot of the item
 		}
@@ -388,7 +389,7 @@ void DrawStash(const Surface &out)
 	Point position = GetPanelPosition(UiPanels::Stash);
 	UiFlags style = UiFlags::VerticalCenter | UiFlags::ColorWhite;
 
-	DrawString(out, fmt::format("{:d}", Stash.page + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
+	DrawString(out, fmt::format("{:d}", Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
 	DrawString(out, fmt::format("{:d}", Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
 }
 
@@ -423,7 +424,7 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	ClearPanel();
 
-	uint16_t itemId = abs(Stash.stashGrids[Stash.page][slot.x][slot.y]);
+	uint16_t itemId = abs(Stash.stashGrids[Stash.GetPage()][slot.x][slot.y]);
 	if (itemId == 0)
 		return -1;
 
@@ -435,10 +436,10 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	InfoColor = item.getTextColor();
 	if (item._iIdentified) {
-		strcpy(infostr, item._iIName);
+		InfoString = item._iIName;
 		PrintItemDetails(item);
 	} else {
-		strcpy(infostr, item._iName);
+		InfoString = item._iName;
 		PrintItemDur(item);
 	}
 
@@ -510,7 +511,7 @@ bool UseStashItem(uint16_t c)
 void StashStruct::RemoveStashItem(uint16_t iv)
 {
 	// Iterate through stashGrid and remove every reference to item
-	for (auto &row : Stash.stashGrids[Stash.page]) {
+	for (auto &row : Stash.stashGrids[Stash.GetPage()]) {
 		for (uint16_t &itemId : row) {
 			if (itemId - 1 == iv) {
 				itemId = 0;
@@ -540,6 +541,18 @@ void StashStruct::RemoveStashItem(uint16_t iv)
 	}
 	stashList.pop_back();
 	Stash.dirty = true;
+}
+
+void StashStruct::SetPage(int newPage)
+{
+	page = clamp(newPage, 0, CountStashPages - 1);
+}
+
+void StashStruct::RefreshItemStatFlags()
+{
+	for (auto &item : Stash.stashList) {
+		item._iStatFlag = MyPlayer->CanUseItem(item);
+	}
 }
 
 void WithdrawGoldKeyPress(char vkey)
@@ -625,11 +638,9 @@ bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 
 	Size itemSize = GetInventorySize(item);
 
-	constexpr int CountStashPages = 50;
-
 	// Try to add the item to the current active page and if it's not possible move forward
 	for (int pageCounter = 0; pageCounter < CountStashPages; pageCounter++) {
-		int pageIndex = Stash.page + pageCounter;
+		int pageIndex = Stash.GetPage() + pageCounter;
 		// Wrap around if needed
 		if (pageIndex >= CountStashPages)
 			pageIndex -= CountStashPages;

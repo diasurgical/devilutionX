@@ -680,7 +680,7 @@ Point FindFirstStashSlotOnItem(uint16_t itemInvId)
 		return InvalidStashPoint;
 
 	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
-		if (Stash.stashGrids[Stash.page][point.x][point.y] == itemInvId)
+		if (Stash.stashGrids[Stash.GetPage()][point.x][point.y] == itemInvId)
 			return point;
 	}
 
@@ -1486,7 +1486,7 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 	if (!invflag) {
-		*infostr = '\0';
+		InfoString.clear();
 		ClearPanel();
 		FindActor();
 		FindItemOrObject();
@@ -1574,7 +1574,7 @@ void PerformPrimaryAction()
 						Point slotUnderCursor = stashSlot + Displacement { x, y };
 						if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
 							continue;
-						uint16_t itemId = Stash.stashGrids[Stash.page][slotUnderCursor.x][slotUnderCursor.y];
+						uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slotUnderCursor.x][slotUnderCursor.y];
 						if (itemId != 0)
 							return itemId;
 					}

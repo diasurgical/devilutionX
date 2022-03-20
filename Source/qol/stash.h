@@ -14,14 +14,26 @@
 
 namespace devilution {
 
-struct StashStruct {
+class StashStruct {
+public:
 	void RemoveStashItem(uint16_t iv);
 	std::map<int, std::array<std::array<uint16_t, 10>, 10>> stashGrids;
 	std::vector<Item> stashList;
 	int gold;
+	bool dirty = false;
+
+	int GetPage() const
+	{
+		return page;
+	}
+
+	void SetPage(int newPage);
+	/** @brief Updates _iStatFlag for all stash items. */
+	void RefreshItemStatFlags();
+
+private:
 	/** Current Page */
 	int page;
-	bool dirty = false;
 };
 
 constexpr Point InvalidStashPoint { -1, -1 };

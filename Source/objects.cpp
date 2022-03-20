@@ -5389,11 +5389,11 @@ void GetObjectStr(const Object &object)
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		CopyUtf8(infostr, _("Crucified Skeleton"), sizeof(infostr));
+		InfoString = _("Crucified Skeleton");
 		break;
 	case OBJ_LEVER:
 	case OBJ_FLAMELVR:
-		CopyUtf8(infostr, _("Lever"), sizeof(infostr));
+		InfoString = _("Lever");
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5402,135 +5402,135 @@ void GetObjectStr(const Object &object)
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
 		if (object._oVar4 == 1)
-			CopyUtf8(infostr, _("Open Door"), sizeof(infostr));
+			InfoString = _("Open Door");
 		if (object._oVar4 == 0)
-			CopyUtf8(infostr, _("Closed Door"), sizeof(infostr));
+			InfoString = _("Closed Door");
 		if (object._oVar4 == 2)
-			CopyUtf8(infostr, _("Blocked Door"), sizeof(infostr));
+			InfoString = _("Blocked Door");
 		break;
 	case OBJ_BOOK2L:
 		if (setlevel) {
 			if (setlvlnum == SL_BONECHAMB) {
-				CopyUtf8(infostr, _("Ancient Tome"), sizeof(infostr));
+				InfoString = _("Ancient Tome");
 			} else if (setlvlnum == SL_VILEBETRAYER) {
-				CopyUtf8(infostr, _("Book of Vileness"), sizeof(infostr));
+				InfoString = _("Book of Vileness");
 			}
 		}
 		break;
 	case OBJ_SWITCHSKL:
-		CopyUtf8(infostr, _("Skull Lever"), sizeof(infostr));
+		InfoString = _("Skull Lever");
 		break;
 	case OBJ_BOOK2R:
-		CopyUtf8(infostr, _("Mythical Book"), sizeof(infostr));
+		InfoString = _("Mythical Book");
 		break;
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
-		CopyUtf8(infostr, _("Small Chest"), sizeof(infostr));
+		InfoString = _("Small Chest");
 		break;
 	case OBJ_CHEST2:
 	case OBJ_TCHEST2:
-		CopyUtf8(infostr, _("Chest"), sizeof(infostr));
+		InfoString = _("Chest");
 		break;
 	case OBJ_CHEST3:
 	case OBJ_TCHEST3:
 	case OBJ_SIGNCHEST:
-		CopyUtf8(infostr, _("Large Chest"), sizeof(infostr));
+		InfoString = _("Large Chest");
 		break;
 	case OBJ_SARC:
-		CopyUtf8(infostr, _("Sarcophagus"), sizeof(infostr));
+		InfoString = _("Sarcophagus");
 		break;
 	case OBJ_BOOKSHELF:
-		CopyUtf8(infostr, _("Bookshelf"), sizeof(infostr));
+		InfoString = _("Bookshelf");
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		CopyUtf8(infostr, _("Bookcase"), sizeof(infostr));
+		InfoString = _("Bookcase");
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		if (currlevel >= 17 && currlevel <= 20)           // for hive levels
-			CopyUtf8(infostr, _("Pod"), sizeof(infostr)); // Then a barrel is called a pod
-		else if (currlevel >= 21 && currlevel <= 24)      // for crypt levels
-			CopyUtf8(infostr, _("Urn"), sizeof(infostr)); // Then a barrel is called an urn
+		if (currlevel >= 17 && currlevel <= 20)      // for hive levels
+			InfoString = _("Pod");                   // Then a barrel is called a pod
+		else if (currlevel >= 21 && currlevel <= 24) // for crypt levels
+			InfoString = _("Urn");                   // Then a barrel is called an urn
 		else
-			CopyUtf8(infostr, _("Barrel"), sizeof(infostr));
+			InfoString = _("Barrel");
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		CopyUtf8(infostr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])), sizeof(infostr));
+		InfoString = fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1]));
 		break;
 	case OBJ_SKELBOOK:
-		CopyUtf8(infostr, _("Skeleton Tome"), sizeof(infostr));
+		InfoString = _("Skeleton Tome");
 		break;
 	case OBJ_BOOKSTAND:
-		CopyUtf8(infostr, _("Library Book"), sizeof(infostr));
+		InfoString = _("Library Book");
 		break;
 	case OBJ_BLOODFTN:
-		CopyUtf8(infostr, _("Blood Fountain"), sizeof(infostr));
+		InfoString = _("Blood Fountain");
 		break;
 	case OBJ_DECAP:
-		CopyUtf8(infostr, _("Decapitated Body"), sizeof(infostr));
+		InfoString = _("Decapitated Body");
 		break;
 	case OBJ_BLINDBOOK:
-		CopyUtf8(infostr, _("Book of the Blind"), sizeof(infostr));
+		InfoString = _("Book of the Blind");
 		break;
 	case OBJ_BLOODBOOK:
-		CopyUtf8(infostr, _("Book of Blood"), sizeof(infostr));
+		InfoString = _("Book of Blood");
 		break;
 	case OBJ_PURIFYINGFTN:
-		CopyUtf8(infostr, _("Purifying Spring"), sizeof(infostr));
+		InfoString = _("Purifying Spring");
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		CopyUtf8(infostr, _("Armor"), sizeof(infostr));
+		InfoString = _("Armor");
 		break;
 	case OBJ_WARWEAP:
-		CopyUtf8(infostr, _("Weapon Rack"), sizeof(infostr));
+		InfoString = _("Weapon Rack");
 		break;
 	case OBJ_GOATSHRINE:
-		CopyUtf8(infostr, _("Goat Shrine"), sizeof(infostr));
+		InfoString = _("Goat Shrine");
 		break;
 	case OBJ_CAULDRON:
-		CopyUtf8(infostr, _("Cauldron"), sizeof(infostr));
+		InfoString = _("Cauldron");
 		break;
 	case OBJ_MURKYFTN:
-		CopyUtf8(infostr, _("Murky Pool"), sizeof(infostr));
+		InfoString = _("Murky Pool");
 		break;
 	case OBJ_TEARFTN:
-		CopyUtf8(infostr, _("Fountain of Tears"), sizeof(infostr));
+		InfoString = _("Fountain of Tears");
 		break;
 	case OBJ_STEELTOME:
-		CopyUtf8(infostr, _("Steel Tome"), sizeof(infostr));
+		InfoString = _("Steel Tome");
 		break;
 	case OBJ_PEDISTAL:
-		CopyUtf8(infostr, _("Pedestal of Blood"), sizeof(infostr));
+		InfoString = _("Pedestal of Blood");
 		break;
 	case OBJ_STORYBOOK:
-		CopyUtf8(infostr, _(StoryBookName[object._oVar3]), sizeof(infostr));
+		InfoString = _(StoryBookName[object._oVar3]);
 		break;
 	case OBJ_WEAPONRACK:
-		CopyUtf8(infostr, _("Weapon Rack"), sizeof(infostr));
+		InfoString = _("Weapon Rack");
 		break;
 	case OBJ_MUSHPATCH:
-		CopyUtf8(infostr, _("Mushroom Patch"), sizeof(infostr));
+		InfoString = _("Mushroom Patch");
 		break;
 	case OBJ_LAZSTAND:
-		CopyUtf8(infostr, _("Vile Stand"), sizeof(infostr));
+		InfoString = _("Vile Stand");
 		break;
 	case OBJ_SLAINHERO:
-		CopyUtf8(infostr, _("Slain Hero"), sizeof(infostr));
+		InfoString = _("Slain Hero");
 		break;
 	default:
 		break;
 	}
 	if (Players[MyPlayerId]._pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
-			CopyUtf8(infostr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr), sizeof(infostr));
+			InfoString = fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), InfoString);
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
 	if (object.IsDisabled()) {
-		CopyUtf8(infostr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr), sizeof(infostr));
+		InfoString = fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), InfoString);
 		InfoColor = UiFlags::ColorRed;
 	}
 }

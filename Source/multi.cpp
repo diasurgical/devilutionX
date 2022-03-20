@@ -126,6 +126,8 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.targy = target.y;
 	pkt->hdr.php = myPlayer._pHitPoints;
 	pkt->hdr.pmhp = myPlayer._pMaxHP;
+	pkt->hdr.mana = myPlayer._pMana;
+	pkt->hdr.maxmana = myPlayer._pMaxMana;
 	pkt->hdr.bstr = myPlayer._pBaseStr;
 	pkt->hdr.bmag = myPlayer._pBaseMag;
 	pkt->hdr.bdex = myPlayer._pBaseDex;
@@ -613,6 +615,8 @@ void multi_process_network_packets()
 			assert(gbBufferMsgs != 2);
 			player._pHitPoints = pkt->php;
 			player._pMaxHP = pkt->pmhp;
+			player._pMana = pkt->mana;
+			player._pMaxMana = pkt->maxmana;
 			bool cond = gbBufferMsgs == 1;
 			player._pBaseStr = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
