@@ -240,7 +240,7 @@ private:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(const char *hint, char *value, std::size_t maxLength, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiEdit(string_view hint, char *value, std::size_t maxLength, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Edit, rect, flags)
 	    , m_hint(hint)
 	    , m_value(value)
@@ -250,7 +250,7 @@ public:
 	}
 
 	// private:
-	const char *m_hint;
+	string_view m_hint;
 	char *m_value;
 	std::size_t m_max_length;
 	bool m_allowEmpty;
