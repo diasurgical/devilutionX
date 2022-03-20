@@ -53,10 +53,7 @@ void ctr_vkbdFlush()
 
 		if (button == SWKBD_BUTTON_CONFIRM) {
 			devilution::CopyUtf8(event.outText, mybuf, event.maxLength);
-			continue;
 		}
-
-		devilution::CopyUtf8(event.outText, event.inText, event.maxLength);
 	}
 
 	eventCount = 0;
