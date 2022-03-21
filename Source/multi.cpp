@@ -257,42 +257,7 @@ void BeginTimeout()
 		return;
 	}
 
-	int nLowestActive = -1;
-	int nLowestPlayer = -1;
-	uint8_t bGroupPlayers = 0;
-	uint8_t bGroupCount = 0;
-	for (int i = 0; i < MAX_PLRS; i++) {
-		uint32_t nState = player_state[i];
-		if ((nState & PS_CONNECTED) != 0) {
-			if (nLowestPlayer == -1) {
-				nLowestPlayer = i;
-			}
-			if ((nState & PS_ACTIVE) != 0) {
-				bGroupPlayers++;
-				if (nLowestActive == -1) {
-					nLowestActive = i;
-				}
-			} else {
-				bGroupCount++;
-			}
-		}
-	}
-
-	assert(bGroupPlayers);
-	assert(nLowestActive != -1);
-	assert(nLowestPlayer != -1);
-
-	if (bGroupPlayers < bGroupCount) {
-		gbGameDestroyed = true;
-	} else if (bGroupPlayers == bGroupCount) {
-		if (nLowestPlayer != nLowestActive) {
-			gbGameDestroyed = true;
-		} else if (nLowestActive == MyPlayerId) {
-			CheckDropPlayer();
-		}
-	} else if (nLowestActive == MyPlayerId) {
-		CheckDropPlayer();
-	}
+	CheckDropPlayer();
 }
 
 void HandleAllPackets(int pnum, const byte *data, size_t size)
