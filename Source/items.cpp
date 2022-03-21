@@ -2298,9 +2298,6 @@ void InitItemGFX()
 
 void InitItems()
 {
-	golditem = {};
-	GetItemAttrs(golditem, IDI_GOLD, 1);
-	golditem._iStatFlag = true;
 	ActiveItemCount = 0;
 	memset(dItem, 0, sizeof(dItem));
 
@@ -2764,31 +2761,6 @@ void GenerateNewSeed(Item &item)
 	item._iSeed = AdvanceRndSeed();
 }
 
-void SetGoldSeed(Player &player, Item &gold)
-{
-	int s = 0;
-
-	bool doneflag;
-	do {
-		doneflag = true;
-		s = AdvanceRndSeed();
-		for (int i = 0; i < ActiveItemCount; i++) {
-			int ii = ActiveItems[i];
-			auto &item = Items[ii];
-			if (item._iSeed == s)
-				doneflag = false;
-		}
-		if (&player == &Players[MyPlayerId]) {
-			for (int i = 0; i < player._pNumInv; i++) {
-				if (player.InvList[i]._iSeed == s)
-					doneflag = false;
-			}
-		}
-	} while (!doneflag);
-
-	gold._iSeed = s;
-}
-
 int GetGoldCursor(int value)
 {
 	if (value >= GOLD_MEDIUM_LIMIT)
@@ -2901,15 +2873,13 @@ void CreatePlrItems(int playerId)
 		break;
 	}
 
-	auto &startingGold = player.InvList[player._pNumInv];
+	Item &goldItem = player.InvList[player._pNumInv];
+	MakeGoldStack(goldItem, 100);
+
 	player._pNumInv++;
 	player.InvGrid[30] = player._pNumInv;
 
-	InitializeItem(startingGold, IDI_GOLD);
-	GenerateNewSeed(startingGold);
-	startingGold._ivalue = 100;
-	startingGold._iCurs = ICURS_GOLD_SMALL;
-	player._pGold = startingGold._ivalue;
+	player._pGold = goldItem._ivalue;
 
 	CalcPlrItemVals(player, false);
 }
@@ -4336,11 +4306,13 @@ void SpawnHealer(int lvl)
 	SortVendor(healitem + PinnedItemCount);
 }
 
-void SpawnStoreGold()
+void MakeGoldStack(Item &goldItem, int value)
 {
-	golditem = {};
-	GetItemAttrs(golditem, IDI_GOLD, 1);
-	golditem._iStatFlag = true;
+	InitializeItem(goldItem, IDI_GOLD);
+	GenerateNewSeed(goldItem);
+	goldItem._iStatFlag = true;
+	goldItem._ivalue = value;
+	SetPlrHandGoldCurs(goldItem);
 }
 
 int ItemNoFlippy()

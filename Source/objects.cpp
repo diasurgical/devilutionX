@@ -3086,17 +3086,14 @@ bool OperateShrineSpiritual(int pnum)
 
 	auto &player = Players[pnum];
 
-	for (int8_t &gridItem : player.InvGrid) {
-		if (gridItem == 0) {
-			int r = 5 * leveltype + GenerateRnd(10 * leveltype);
-			DWORD t = player._pNumInv; // check
-			player.InvList[t] = golditem;
-			player.InvList[t]._iSeed = AdvanceRndSeed();
+	for (int8_t &itemIndex : player.InvGrid) {
+		if (itemIndex == 0) {
+			Item &goldItem = player.InvList[player._pNumInv];
+			MakeGoldStack(goldItem, 5 * leveltype + GenerateRnd(10 * leveltype));
 			player._pNumInv++;
-			gridItem = player._pNumInv;
-			player.InvList[t]._ivalue = r;
-			player._pGold += r;
-			SetPlrHandGoldCurs(player.InvList[t]);
+			itemIndex = player._pNumInv;
+
+			player._pGold += goldItem._ivalue;
 		}
 	}
 

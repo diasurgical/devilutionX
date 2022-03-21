@@ -432,11 +432,6 @@ void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
 void InitializeItem(Item &item, int itemData);
 void GenerateNewSeed(Item &h);
-
-/**
- * @brief Set a new unique seed value on the given item
- */
-void SetGoldSeed(Player &player, Item &gold);
 int GetGoldCursor(int value);
 
 /**
@@ -487,7 +482,7 @@ void SpawnPremium(int pnum);
 void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);
-void SpawnStoreGold();
+void MakeGoldStack(Item &goldItem, int value);
 int ItemNoFlippy();
 void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);

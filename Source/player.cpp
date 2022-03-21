@@ -586,14 +586,12 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 			continue;
 
 		if (amount < item._ivalue) {
-			Item gold {};
-			InitializeItem(gold, IDI_GOLD);
-			SetGoldSeed(player, gold);
+			Item goldItem;
+			MakeGoldStack(goldItem, amount);
+			DeadItem(player, std::move(goldItem), { 0, 0 });
 
-			gold._ivalue = amount;
 			item._ivalue -= amount;
-			SetPlrHandGoldCurs(gold);
-			DeadItem(player, std::move(gold), { 0, 0 });
+
 			return 0;
 		}
 
@@ -3201,11 +3199,9 @@ void StripTopGold(Player &player)
 		if (item._itype == ItemType::Gold) {
 			if (item._ivalue > MaxGold) {
 				Item excessGold;
-				InitializeItem(excessGold, IDI_GOLD);
-				SetGoldSeed(player, excessGold);
-				excessGold._ivalue = item._ivalue - MaxGold;
-				SetPlrHandGoldCurs(excessGold);
+				MakeGoldStack(excessGold, item._ivalue - MaxGold);
 				item._ivalue = MaxGold;
+
 				if (!GoldAutoPlace(player, excessGold)) {
 					DeadItem(player, std::move(excessGold), { 0, 0 });
 				}

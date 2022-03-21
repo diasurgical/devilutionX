@@ -248,7 +248,7 @@ void StartGoldWithdraw()
 {
 	CloseGoldDrop();
 
-	InitialWithdrawGoldValue = Stash.gold;
+	InitialWithdrawGoldValue = std::min(RoomForGold(), Stash.gold);
 
 	if (talkflag)
 		control_reset_talk();
@@ -264,11 +264,7 @@ void StartGoldWithdraw()
 
 void WithdrawGold(Player &player, int amount)
 {
-	InitializeItem(player.HoldItem, IDI_GOLD);
-	SetGoldSeed(player, player.HoldItem);
-	player.HoldItem._ivalue = amount;
-	player.HoldItem._iStatFlag = true;
-	ControlSetGoldCurs(player.HoldItem);
+	AddGoldToInventory(player, amount);
 	Stash.gold -= amount;
 	Stash.dirty = true;
 }
@@ -587,7 +583,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), *pGBoxBuff, 1);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
-	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw? (MAX 5000)"), 200);
+	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw?"), 200);
 
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
@@ -619,7 +615,7 @@ void GoldWithdrawNewText(string_view text)
 		if (digit >= 0 && digit <= 9) {
 			int newGoldValue = WithdrawGoldValue * 10;
 			newGoldValue += digit;
-			if (newGoldValue <= GOLD_MAX_LIMIT && newGoldValue <= InitialWithdrawGoldValue) {
+			if (newGoldValue <= InitialWithdrawGoldValue) {
 				WithdrawGoldValue = newGoldValue;
 			}
 		}

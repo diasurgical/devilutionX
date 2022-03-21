@@ -159,6 +159,16 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
 bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false);
+
+/**
+ * @brief Calculate the maximum aditional gold that may fit in the user's inventory
+ */
+int RoomForGold();
+
+/**
+ * @return The leftover amount that didn't fit, if any
+ */
+int AddGoldToInventory(Player &player, int value);
 bool GoldAutoPlace(Player &player, Item &goldStack);
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(Player &player, inv_body_loc iv);
