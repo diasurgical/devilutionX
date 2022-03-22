@@ -344,31 +344,28 @@ AxisDirection GetMoveDirection()
 
 bool GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint)
 {
-	*hint = CircleMenuHint(/*isDpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
+	if (start_modifier_active)
+		*hint = CircleMenuHint(/*top=*/HintIcon::IconMenu, /*right=*/HintIcon::IconInv, /*bottom=*/HintIcon::IconMap, /*left=*/HintIcon::IconChar);
 
-	return true;
+	return start_modifier_active;
 }
 
 bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint)
 {
-	*hint = CircleMenuHint(/*isDpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
+	if (start_modifier_active)
+		*hint = CircleMenuHint(/*top=*/HintIcon::IconNull, /*right=*/HintIcon::IconNull, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconQuests);
 
-	return true;
+	return start_modifier_active;
 }
 
-bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint)
+bool CanDrawSelectModifierLeftCircleMenuHint()
 {
-	if (sgOptions.Controller.bDpadHotkeys)
-		*hint = CircleMenuHint(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
-
-	return sgOptions.Controller.bDpadHotkeys;
+	return select_modifier_active && sgOptions.Controller.bDpadHotkeys;
 }
 
-bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint)
+bool CanDrawSelectModifierRightCircleMenuHint()
 {
-	*hint = CircleMenuHint(/*isDpad=*/false, "F6", "F8", "F7", "F5");
-
-	return true;
+	return select_modifier_active;
 }
 
 MenuAction GetAButtonMenuAction(const SDL_Event &event)
