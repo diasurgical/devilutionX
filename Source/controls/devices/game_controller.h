@@ -45,8 +45,8 @@ public:
 
 	virtual bool GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint) = 0;
 	virtual bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint) = 0;
-	virtual bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint) = 0;
-	virtual bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint) = 0;
+	virtual bool CanDrawSelectModifierLeftCircleMenuHint() = 0;
+	virtual bool CanDrawSelectModifierRightCircleMenuHint() = 0;
 
 protected:
 	static SDL_GameControllerButton ToSdlGameControllerButton(ControllerButton button);

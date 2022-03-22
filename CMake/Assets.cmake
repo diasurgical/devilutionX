@@ -2,7 +2,7 @@ if(NOT DEFINED DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY)
   set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets")
 endif()
 
-set(devilutionx_langs bg cs da de es fr hr it ja ko pl pt_BR ro ru uk sv zh_CN zh_TW)
+set(devilutionx_langs bg cs da de el es fr hr it ja ko pl pt_BR ro ru uk sv zh_CN zh_TW)
 if(USE_GETTEXT_FROM_VCPKG)
   # vcpkg doesn't add its own tools directory to the search path
   list(APPEND Gettext_ROOT ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/tools/gettext/bin)
@@ -49,10 +49,15 @@ set(devilutionx_assets
   data/dirtybucp.pcx
   data/healthbox.pcx
   data/health.pcx
+  data/hintbox.pcx
+  data/hintboxbackground.pcx
+  data/hinticons.pcx
   data/panel8buc.pcx
   data/panel8bucp.pcx
   data/monstertags.pcx
   data/resistance.pcx
+  data/stash.pcx
+  data/stashnavbtns.pcx
   data/talkbutton.pcx
   data/xpbar.pcx
   fonts/12-00.bin

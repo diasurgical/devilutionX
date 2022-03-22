@@ -77,8 +77,8 @@ AxisDirection GetMoveDirection();
 
 bool GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint);
 bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint);
-bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint);
-bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint);
+bool CanDrawSelectModifierLeftCircleMenuHint();
+bool CanDrawSelectModifierRightCircleMenuHint();
 
 MenuAction GetAButtonMenuAction(const SDL_Event &event);
 MenuAction GetBButtonMenuAction(const SDL_Event &event);

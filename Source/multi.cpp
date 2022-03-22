@@ -19,6 +19,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "qol/chatlog.h"
 #include "storm/storm_net.hpp"
 #include "sync.h"
 #include "tmsg.h"
@@ -125,6 +126,8 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.targy = target.y;
 	pkt->hdr.php = myPlayer._pHitPoints;
 	pkt->hdr.pmhp = myPlayer._pMaxHP;
+	pkt->hdr.mana = myPlayer._pMana;
+	pkt->hdr.maxmana = myPlayer._pMaxMana;
 	pkt->hdr.bstr = myPlayer._pBaseStr;
 	pkt->hdr.bmag = myPlayer._pBaseMag;
 	pkt->hdr.bdex = myPlayer._pBaseDex;
@@ -192,7 +195,7 @@ void PlayerLeftMsg(int pnum, bool left)
 	delta_close_portal(pnum);
 	RemovePlrMissiles(pnum);
 	if (left) {
-		const char *pszFmt = _("Player '{:s}' just left the game");
+		string_view pszFmt = _("Player '{:s}' just left the game");
 		switch (sgdwPlayerLeftReasonTbl[pnum]) {
 		case LEAVE_ENDING:
 			pszFmt = _("Player '{:s}' killed Diablo and left the game!");
@@ -254,42 +257,7 @@ void BeginTimeout()
 		return;
 	}
 
-	int nLowestActive = -1;
-	int nLowestPlayer = -1;
-	uint8_t bGroupPlayers = 0;
-	uint8_t bGroupCount = 0;
-	for (int i = 0; i < MAX_PLRS; i++) {
-		uint32_t nState = player_state[i];
-		if ((nState & PS_CONNECTED) != 0) {
-			if (nLowestPlayer == -1) {
-				nLowestPlayer = i;
-			}
-			if ((nState & PS_ACTIVE) != 0) {
-				bGroupPlayers++;
-				if (nLowestActive == -1) {
-					nLowestActive = i;
-				}
-			} else {
-				bGroupCount++;
-			}
-		}
-	}
-
-	assert(bGroupPlayers);
-	assert(nLowestActive != -1);
-	assert(nLowestPlayer != -1);
-
-	if (bGroupPlayers < bGroupCount) {
-		gbGameDestroyed = true;
-	} else if (bGroupPlayers == bGroupCount) {
-		if (nLowestPlayer != nLowestActive) {
-			gbGameDestroyed = true;
-		} else if (nLowestActive == MyPlayerId) {
-			CheckDropPlayer();
-		}
-	} else if (nLowestActive == MyPlayerId) {
-		CheckDropPlayer();
-	}
+	CheckDropPlayer();
 }
 
 void HandleAllPackets(int pnum, const byte *data, size_t size)
@@ -472,7 +440,7 @@ void InitGameInfo()
 	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
 	sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
-	sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
+	sgGameInitInfo.nTickRate = *sgOptions.Gameplay.tickRate;
 	sgGameInitInfo.bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
 	sgGameInitInfo.bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
 	sgGameInitInfo.bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
@@ -606,11 +574,14 @@ void multi_process_network_packets()
 		if (pkt->wLen != dwMsgSize)
 			continue;
 		auto &player = Players[dwID];
-		player.position.last = { pkt->px, pkt->py };
+		Point syncPosition = { pkt->px, pkt->py };
+		player.position.last = syncPosition;
 		if (dwID != MyPlayerId) {
 			assert(gbBufferMsgs != 2);
 			player._pHitPoints = pkt->php;
 			player._pMaxHP = pkt->pmhp;
+			player._pMana = pkt->mana;
+			player._pMaxMana = pkt->maxmana;
 			bool cond = gbBufferMsgs == 1;
 			player._pBaseStr = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
@@ -623,8 +594,10 @@ void multi_process_network_packets()
 						FixPlrWalkTags(dwID);
 						player.position.old = player.position.tile;
 						FixPlrWalkTags(dwID);
-						player.position.tile = { pkt->px, pkt->py };
-						player.position.future = { pkt->px, pkt->py };
+						player.position.tile = syncPosition;
+						player.position.future = syncPosition;
+						if (player.IsWalking())
+							player.position.temp = syncPosition;
 						dPlayer[player.position.tile.x][player.position.tile.y] = dwID + 1;
 					}
 					dx = abs(player.position.future.x - player.position.tile.x);
@@ -634,8 +607,8 @@ void multi_process_network_packets()
 					}
 					MakePlrPath(player, { pkt->targx, pkt->targy }, true);
 				} else {
-					player.position.tile = { pkt->px, pkt->py };
-					player.position.future = { pkt->px, pkt->py };
+					player.position.tile = syncPosition;
+					player.position.future = syncPosition;
 				}
 			}
 		}
@@ -759,6 +732,11 @@ bool NetInit(bool bSinglePlayer)
 		nthread_terminate_game("SNetGetGameInfo2");
 	PublicGame = DvlNet_IsPublicGame();
 
+	auto &myPlayer = Players[MyPlayerId];
+	// separator for marking messages from a different game
+	AddMessageToChatLog(_("New Game"), nullptr, UiFlags::ColorRed);
+	AddMessageToChatLog(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), myPlayer._pName, myPlayer._pLevel));
+
 	return true;
 }
 
@@ -804,7 +782,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	player.plractive = true;
 	gbActivePlayers++;
 
-	const char *szEvent;
+	string_view szEvent;
 	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = _("Player '{:s}' (level {:d}) just joined the game");
 	} else {

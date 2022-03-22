@@ -137,7 +137,7 @@ AxisDirection DualStick4ShouldersGameController::GetMoveDirection()
 bool DualStick4ShouldersGameController::GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint)
 {
 	if (start_modifier_active)
-		*hint = CircleMenuHint(/*isDpad=*/true, /*top=*/_("Quests"), /*right=*/_("Inv"), /*bottom=*/_("Spells"), /*left=*/_("Char"));
+		*hint = CircleMenuHint(/*top=*/HintIcon::IconQuests, /*right=*/HintIcon::IconInv, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconChar);
 
 	return start_modifier_active;
 }
@@ -147,16 +147,13 @@ bool DualStick4ShouldersGameController::GetStartModifierRightCircleMenuHint(Circ
 	return false;
 }
 
-bool DualStick4ShouldersGameController::GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint)
+bool DualStick4ShouldersGameController::CanDrawSelectModifierLeftCircleMenuHint()
 {
 	return false;
 }
 
-bool DualStick4ShouldersGameController::GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint)
+bool DualStick4ShouldersGameController::CanDrawSelectModifierRightCircleMenuHint()
 {
-	if (select_modifier_active)
-		*hint = CircleMenuHint(/*isDpad=*/false, /*top=*/"Y", /*right=*/"B", /*bottom=*/"A", /*left=*/"X");
-
 	return select_modifier_active;
 }
 

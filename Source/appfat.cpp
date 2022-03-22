@@ -35,7 +35,7 @@ void MsgBox(const char *pszFmt, va_list va)
 
 	vsnprintf(text, sizeof(text), pszFmt, va);
 
-	UiErrorOkDialog(_("Error"), text);
+	UiErrorOkDialog(_("Error").c_str(), text);
 }
 
 /**
@@ -93,44 +93,33 @@ void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 }
 #endif
 
-void ErrDlg(const char *title, const char *error, const char *logFilePath, int logLineNr)
+void ErrDlg(const char *title, string_view error, string_view logFilePath, int logLineNr)
 {
-	char text[1024];
-
 	FreeDlg();
 
-	strcpy(text, fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}"), error, logFilePath, logLineNr).c_str());
+	std::string text = fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}"), error, logFilePath, logLineNr);
 
-	UiErrorOkDialog(title, text);
+	UiErrorOkDialog(title, text.c_str());
 	app_fatal(nullptr);
 }
 
-void InsertCDDlg(const char *archiveName)
+void InsertCDDlg(string_view archiveName)
 {
-	char text[1024];
+	std::string text = fmt::format(
+	    _("Unable to open main data archive ({:s}).\n"
+	      "\n"
+	      "Make sure that it is in the game folder."),
+	    archiveName);
 
-	snprintf(
-	    text,
-	    sizeof(text),
-	    "%s",
-	    fmt::format(
-	        _("Unable to open main data archive ({:s}).\n"
-	          "\n"
-	          "Make sure that it is in the game folder."),
-	        archiveName)
-	        .c_str());
-
-	UiErrorOkDialog(_("Data File Error"), text);
+	UiErrorOkDialog(_("Data File Error").c_str(), text.c_str());
 	app_fatal(nullptr);
 }
 
-void DirErrorDlg(const char *error)
+void DirErrorDlg(string_view error)
 {
-	char text[1024];
+	std::string text = fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}"), error);
 
-	strcpy(text, fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}"), error).c_str());
-
-	UiErrorOkDialog(_("Read-Only Directory Error"), text);
+	UiErrorOkDialog(_("Read-Only Directory Error").c_str(), text.c_str());
 	app_fatal(nullptr);
 }
 

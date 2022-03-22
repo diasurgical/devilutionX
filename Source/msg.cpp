@@ -33,6 +33,7 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -420,15 +421,15 @@ bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
 		if (item.bCmd == CMD_INVALID || item.wIndx != message.wIndx || item.wCI != message.wCI || item.dwSeed != message.dwSeed)
 			continue;
 
-		if (item.bCmd == CMD_WALKXY) {
+		if (item.bCmd == TCmdPItem::PickedUpItem) {
 			return true;
 		}
-		if (item.bCmd == CMD_STAND) {
+		if (item.bCmd == TCmdPItem::FloorItem) {
 			sgbDeltaChanged = true;
-			item.bCmd = CMD_WALKXY;
+			item.bCmd = TCmdPItem::PickedUpItem;
 			return true;
 		}
-		if (item.bCmd == CMD_ACK_PLRINFO) {
+		if (item.bCmd == TCmdPItem::DroppedItem) {
 			sgbDeltaChanged = true;
 			item.bCmd = CMD_INVALID;
 			return true;
@@ -443,7 +444,7 @@ bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
 	for (TCmdPItem &item : sgLevels[bLevel].item) {
 		if (item.bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
-			item.bCmd = CMD_WALKXY;
+			item.bCmd = TCmdPItem::PickedUpItem;
 			item.x = message.x;
 			item.y = message.y;
 			item.wIndx = message.wIndx;
@@ -474,14 +475,14 @@ void DeltaPutItem(const TCmdPItem &message, Point position, BYTE bLevel)
 		return;
 
 	for (const TCmdPItem &item : sgLevels[bLevel].item) {
-		if (item.bCmd != CMD_WALKXY
+		if (item.bCmd != TCmdPItem::PickedUpItem
 		    && item.bCmd != CMD_INVALID
 		    && item.wIndx == message.wIndx
 		    && item.wCI == message.wCI
 		    && item.dwSeed == message.dwSeed) {
-			if (item.bCmd == CMD_ACK_PLRINFO)
+			if (item.bCmd == TCmdPItem::DroppedItem)
 				return;
-			app_fatal("%s", _("Trying to drop a floor item?"));
+			app_fatal("%s", _("Trying to drop a floor item?").c_str());
 		}
 	}
 
@@ -489,7 +490,7 @@ void DeltaPutItem(const TCmdPItem &message, Point position, BYTE bLevel)
 		if (item.bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
 			memcpy(&item, &message, sizeof(TCmdPItem));
-			item.bCmd = CMD_ACK_PLRINFO;
+			item.bCmd = TCmdPItem::DroppedItem;
 			item.x = position.x;
 			item.y = position.y;
 			return;
@@ -984,7 +985,7 @@ DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1019,7 +1020,7 @@ DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1050,7 +1051,7 @@ DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1177,7 +1178,7 @@ DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1209,7 +1210,7 @@ DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1241,7 +1242,7 @@ DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1271,7 +1272,7 @@ DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
 
@@ -1421,9 +1422,7 @@ DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
 			DeltaSyncGolem(message, pnum, message._currlevel);
 		} else if (pnum != MyPlayerId) {
 			// Check if this player already has an active golem
-			for (int i = 0; i < ActiveMissileCount; i++) {
-				int mi = ActiveMissiles[i];
-				auto &missile = Missiles[mi];
+			for (auto &missile : Missiles) {
 				if (missile._mitype == MIS_GOLEM && missile._misource == pnum) {
 					return sizeof(message);
 				}
@@ -1606,7 +1605,7 @@ DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
-	else if (message.wParam1 < MAXCHARLEVEL && pnum != MyPlayerId)
+	else if (message.wParam1 <= MAXCHARLEVEL && pnum != MyPlayerId)
 		Players[pnum]._pLevel = message.wParam1;
 
 	return sizeof(message);
@@ -1616,10 +1615,30 @@ DWORD OnDropItem(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
-	if (gbBufferMsgs == 1)
+	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	else if (IsPItemValid(message))
+	} else if (IsPItemValid(message)) {
 		DeltaPutItem(message, { message.x, message.y }, Players[pnum].plrlevel);
+	}
+
+	return sizeof(message);
+}
+
+DWORD OnSpawnItem(const TCmd *pCmd, int pnum)
+{
+	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
+
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (IsPItemValid(message)) {
+		int playerLevel = Players[pnum].plrlevel;
+		Point position = { message.x, message.y };
+		if (currlevel == playerLevel && pnum != MyPlayerId) {
+			SyncDropItem(position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+		}
+		PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
+		DeltaPutItem(message, position, playerLevel);
+	}
 
 	return sizeof(message);
 }
@@ -1702,9 +1721,7 @@ DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 				AddInTownPortal(pnum);
 			} else if (currlevel == Players[pnum].plrlevel) {
 				bool addPortal = true;
-				for (int i = 0; i < ActiveMissileCount; i++) {
-					int mi = ActiveMissiles[i];
-					auto &missile = Missiles[mi];
+				for (auto &missile : Missiles) {
 					if (missile._mitype == MIS_TOWN && missile._misource == pnum) {
 						addPortal = false;
 						break;
@@ -1831,7 +1848,7 @@ DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
-	else if (Players[pnum]._pLevel < MAXCHARLEVEL - 1) {
+	else if (Players[pnum]._pLevel < MAXCHARLEVEL) {
 		Players[pnum]._pExperience = Players[pnum]._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
@@ -1962,7 +1979,7 @@ bool msg_wait_resync()
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
 	sgdwOwnerWait = SDL_GetTicks();
-	success = UiProgressDialog(_("Waiting for game data..."), WaitForTurns);
+	success = UiProgressDialog(WaitForTurns);
 	gbBufferMsgs = 0;
 	if (!success) {
 		FreePackets();
@@ -1970,13 +1987,13 @@ bool msg_wait_resync()
 	}
 
 	if (gbGameDestroyed) {
-		DrawDlg("%s", _("The game ended"));
+		DrawDlg("%s", _("The game ended").c_str());
 		FreePackets();
 		return false;
 	}
 
 	if (sgbDeltaChunks != MAX_CHUNKS) {
-		DrawDlg("%s", _("Unable to get level data"));
+		DrawDlg("%s", _("Unable to get level data").c_str());
 		FreePackets();
 		return false;
 	}
@@ -2093,7 +2110,7 @@ void DeltaSyncJunk()
 		if (QuestsData[quest._qidx].isSinglePlayerOnly) {
 			continue;
 		}
-		if (sgJunk.quests[q].qstate != Q_INVALID) {
+		if (sgJunk.quests[q].qstate != QUEST_INVALID) {
 			quest._qlog = sgJunk.quests[q].qlog != 0;
 			quest._qactive = sgJunk.quests[q].qstate;
 			quest._qvar1 = sgJunk.quests[q].qvar1;
@@ -2112,7 +2129,7 @@ void DeltaAddItem(int ii)
 		    && item.wIndx == Items[ii].IDidx
 		    && item.wCI == Items[ii]._iCreateInfo
 		    && item.dwSeed == Items[ii]._iSeed
-		    && (item.bCmd == CMD_WALKXY || item.bCmd == CMD_STAND)) {
+		    && IsAnyOf(item.bCmd, TCmdPItem::PickedUpItem, TCmdPItem::FloorItem)) {
 			return;
 		}
 	}
@@ -2122,7 +2139,7 @@ void DeltaAddItem(int ii)
 			continue;
 
 		sgbDeltaChanged = true;
-		item.bCmd = CMD_STAND;
+		item.bCmd = TCmdPItem::FloorItem;
 		item.x = Items[ii].position.x;
 		item.y = Items[ii].position.y;
 		item.wIndx = Items[ii].IDidx;
@@ -2235,7 +2252,7 @@ void DeltaLoadLevel()
 		if (sgLevels[currlevel].item[i].bCmd == CMD_INVALID)
 			continue;
 
-		if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
+		if (sgLevels[currlevel].item[i].bCmd == TCmdPItem::PickedUpItem) {
 			int activeItemIndex = FindGetItem(
 			    sgLevels[currlevel].item[i].dwSeed,
 			    sgLevels[currlevel].item[i].wIndx,
@@ -2247,7 +2264,7 @@ void DeltaLoadLevel()
 				DeleteItem(activeItemIndex);
 			}
 		}
-		if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {
+		if (sgLevels[currlevel].item[i].bCmd == TCmdPItem::DroppedItem) {
 			int ii = AllocateItem();
 			auto &item = Items[ii];
 
@@ -2289,7 +2306,7 @@ void DeltaLoadLevel()
 			int y = sgLevels[currlevel].item[i].y;
 			item.position = GetItemPosition({ x, y });
 			dItem[item.position.x][item.position.y] = ii + 1;
-			RespawnItem(&Items[ii], false);
+			RespawnItem(Items[ii], false);
 		}
 	}
 
@@ -2551,42 +2568,41 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position)
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item)
 {
-	TCmdPItem cmd;
+	TCmdPItem cmd {};
 
 	cmd.bCmd = bCmd;
 	cmd.x = position.x;
 	cmd.y = position.y;
-	auto &myPlayer = Players[MyPlayerId];
-	cmd.wIndx = myPlayer.HoldItem.IDidx;
+	cmd.wIndx = item.IDidx;
 
-	if (myPlayer.HoldItem.IDidx == IDI_EAR) {
-		cmd.wCI = myPlayer.HoldItem._iName[8] | (myPlayer.HoldItem._iName[7] << 8);
-		cmd.dwSeed = myPlayer.HoldItem._iName[12] | ((myPlayer.HoldItem._iName[11] | ((myPlayer.HoldItem._iName[10] | (myPlayer.HoldItem._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = myPlayer.HoldItem._iName[13];
-		cmd.bDur = myPlayer.HoldItem._iName[14];
-		cmd.bMDur = myPlayer.HoldItem._iName[15];
-		cmd.bCh = myPlayer.HoldItem._iName[16];
-		cmd.bMCh = myPlayer.HoldItem._iName[17];
-		cmd.wValue = myPlayer.HoldItem._ivalue | (myPlayer.HoldItem._iName[18] << 8) | ((myPlayer.HoldItem._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = myPlayer.HoldItem._iName[22] | ((myPlayer.HoldItem._iName[21] | ((myPlayer.HoldItem._iName[20] | (myPlayer.HoldItem._iName[19] << 8)) << 8)) << 8);
+	if (item.IDidx == IDI_EAR) {
+		cmd.wCI = item._iName[8] | (item._iName[7] << 8);
+		cmd.dwSeed = item._iName[12] | ((item._iName[11] | ((item._iName[10] | (item._iName[9] << 8)) << 8)) << 8);
+		cmd.bId = item._iName[13];
+		cmd.bDur = item._iName[14];
+		cmd.bMDur = item._iName[15];
+		cmd.bCh = item._iName[16];
+		cmd.bMCh = item._iName[17];
+		cmd.wValue = item._ivalue | (item._iName[18] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+		cmd.dwBuff = item._iName[22] | ((item._iName[21] | ((item._iName[20] | (item._iName[19] << 8)) << 8)) << 8);
 	} else {
-		cmd.wCI = myPlayer.HoldItem._iCreateInfo;
-		cmd.dwSeed = myPlayer.HoldItem._iSeed;
-		cmd.bId = myPlayer.HoldItem._iIdentified ? 1 : 0;
-		cmd.bDur = myPlayer.HoldItem._iDurability;
-		cmd.bMDur = myPlayer.HoldItem._iMaxDur;
-		cmd.bCh = myPlayer.HoldItem._iCharges;
-		cmd.bMCh = myPlayer.HoldItem._iMaxCharges;
-		cmd.wValue = myPlayer.HoldItem._ivalue;
-		cmd.wToHit = myPlayer.HoldItem._iPLToHit;
-		cmd.wMaxDam = myPlayer.HoldItem._iMaxDam;
-		cmd.bMinStr = myPlayer.HoldItem._iMinStr;
-		cmd.bMinMag = myPlayer.HoldItem._iMinMag;
-		cmd.bMinDex = myPlayer.HoldItem._iMinDex;
-		cmd.bAC = myPlayer.HoldItem._iAC;
-		cmd.dwBuff = myPlayer.HoldItem.dwBuff;
+		cmd.wCI = item._iCreateInfo;
+		cmd.dwSeed = item._iSeed;
+		cmd.bId = item._iIdentified ? 1 : 0;
+		cmd.bDur = item._iDurability;
+		cmd.bMDur = item._iMaxDur;
+		cmd.bCh = item._iCharges;
+		cmd.bMCh = item._iMaxCharges;
+		cmd.wValue = item._ivalue;
+		cmd.wToHit = item._iPLToHit;
+		cmd.wMaxDam = item._iMaxDam;
+		cmd.bMinStr = item._iMinStr;
+		cmd.bMinMag = item._iMinMag;
+		cmd.bMinDex = item._iMinDex;
+		cmd.bAC = item._iAC;
+		cmd.dwBuff = item.dwBuff;
 	}
 
 	if (bHiPri)
@@ -2627,49 +2643,6 @@ void NetSendCmdDelItem(bool bHiPri, BYTE bLoc)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDItem(bool bHiPri, int ii)
-{
-	TCmdPItem cmd;
-
-	cmd.bCmd = CMD_DROPITEM;
-	cmd.x = Items[ii].position.x;
-	cmd.y = Items[ii].position.y;
-	cmd.wIndx = Items[ii].IDidx;
-
-	if (Items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = Items[ii]._iName[8] | (Items[ii]._iName[7] << 8);
-		cmd.dwSeed = Items[ii]._iName[12] | ((Items[ii]._iName[11] | ((Items[ii]._iName[10] | (Items[ii]._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = Items[ii]._iName[13];
-		cmd.bDur = Items[ii]._iName[14];
-		cmd.bMDur = Items[ii]._iName[15];
-		cmd.bCh = Items[ii]._iName[16];
-		cmd.bMCh = Items[ii]._iName[17];
-		cmd.wValue = Items[ii]._ivalue | (Items[ii]._iName[18] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = Items[ii]._iName[22] | ((Items[ii]._iName[21] | ((Items[ii]._iName[20] | (Items[ii]._iName[19] << 8)) << 8)) << 8);
-	} else {
-		cmd.wCI = Items[ii]._iCreateInfo;
-		cmd.dwSeed = Items[ii]._iSeed;
-		cmd.bId = Items[ii]._iIdentified ? 1 : 0;
-		cmd.bDur = Items[ii]._iDurability;
-		cmd.bMDur = Items[ii]._iMaxDur;
-		cmd.bCh = Items[ii]._iCharges;
-		cmd.bMCh = Items[ii]._iMaxCharges;
-		cmd.wValue = Items[ii]._ivalue;
-		cmd.wToHit = Items[ii]._iPLToHit;
-		cmd.wMaxDam = Items[ii]._iMaxDam;
-		cmd.bMinStr = Items[ii]._iMinStr;
-		cmd.bMinMag = Items[ii]._iMinMag;
-		cmd.bMinDex = Items[ii]._iMinDex;
-		cmd.bAC = Items[ii]._iAC;
-		cmd.dwBuff = Items[ii].dwBuff;
-	}
-
-	if (bHiPri)
-		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
-	else
-		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
-}
-
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam)
 {
 	TCmdDamage cmd;
@@ -2701,8 +2674,8 @@ void NetSendCmdString(uint32_t pmask, const char *pszStr)
 	TCmdString cmd;
 
 	cmd.bCmd = CMD_STRING;
-	strcpy(cmd.str, pszStr);
-	multi_send_msg_packet(pmask, (byte *)&cmd, strlen(pszStr) + 2);
+	CopyUtf8(cmd.str, pszStr, sizeof(cmd.str));
+	multi_send_msg_packet(pmask, (byte *)&cmd, strlen(cmd.str) + 2);
 }
 
 void delta_close_portal(int pnum)
@@ -2750,6 +2723,8 @@ uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 		return OnPutItem(pCmd, pnum);
 	case CMD_SYNCPUTITEM:
 		return OnSyncPutItem(pCmd, pnum);
+	case CMD_SPAWNITEM:
+		return OnSpawnItem(pCmd, pnum);
 	case CMD_RESPAWNITEM:
 		return OnRespawnItem(pCmd, pnum);
 	case CMD_ATTACKXY:

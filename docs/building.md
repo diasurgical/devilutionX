@@ -139,7 +139,7 @@ cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ### 64-bit
 
 ```bash
-cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
@@ -150,11 +150,18 @@ of the `(i686|x86_64)-w64-mingw32` directory.
 <details><summary>Windows via Visual Studio</summary>
 
 ### Installing dependencies
-Make sure to install the `C++ CMake tools for Windows` and `Windows SDK` component for Visual Studio.
+Make sure to install the workload `Desktop development with C++` and the individual components `C++ CMake tools for Windows` and `Windows SDK` for Visual Studio.
 *Note: `Windows SDK` component should match your Windows build version.*
 
-Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start-windows.
-Don't forget to perform _user-wide integration_ step for additional convenience.
+Install [Git for Windows](https://gitforwindows.org/)
+
+Run the following commands in Command Prompt or Powershell  
+git clone https://github.com/microsoft/vcpkg  
+cd vcpkg  
+bootstrap-vcpkg.bat  
+vcpkg integrate install
+
+If you need aditional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
 
 ### If you want to build the devilutionX.mpq File (optional)
 In order to build devilutionx.mpq, install smpq from https://launchpad.net/smpq/trunk/1.6/+download/SMPQ-1.6-x86_64.exe.

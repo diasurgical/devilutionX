@@ -12,7 +12,7 @@
 namespace devilution {
 
 enum class StartUpGameMode {
-	/** @brief If hellfire is present, asks the user what game he wants to start. */
+	/** @brief If hellfire is present, asks the user what game they want to start. */
 	Ask = 0,
 	Hellfire = 1,
 	Diablo = 2,
@@ -236,6 +236,10 @@ public:
 			AddEntry(static_cast<int>(entry));
 		}
 	}
+	OptionEntryInt(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue)
+	    : OptionEntryInt(key, flags, name, description, defaultValue, { defaultValue })
+	{
+	}
 	[[nodiscard]] T operator*() const
 	{
 		return static_cast<T>(GetValueInternal());
@@ -329,9 +333,9 @@ struct DiabloOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Remembers what singleplayer hero/save was last used. */
-	std::uint32_t lastSinglePlayerHero;
+	OptionEntryInt<std::uint32_t> lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
-	std::uint32_t lastMultiplayerHero;
+	OptionEntryInt<std::uint32_t> lastMultiplayerHero;
 };
 
 struct HellfireOptions : OptionCategoryBase {
@@ -341,9 +345,9 @@ struct HellfireOptions : OptionCategoryBase {
 	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(ItemPack) * 2 + 1];
 	/** @brief Remembers what singleplayer hero/save was last used. */
-	std::uint32_t lastSinglePlayerHero;
+	OptionEntryInt<std::uint32_t> lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
-	std::uint32_t lastMultiplayerHero;
+	OptionEntryInt<std::uint32_t> lastMultiplayerHero;
 };
 
 struct AudioOptions : OptionCategoryBase {
@@ -351,9 +355,9 @@ struct AudioOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Movie and SFX volume. */
-	int nSoundVolume;
+	OptionEntryInt<int> soundVolume;
 	/** @brief Music volume. */
-	int nMusicVolume;
+	OptionEntryInt<int> musicVolume;
 	/** @brief Player emits sound when walking. */
 	OptionEntryBoolean walkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
@@ -393,7 +397,7 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryBoolean vSync;
 #endif
 	/** @brief Gamma correction level. */
-	int nGammaCorrection;
+	OptionEntryInt<int> gammaCorrection;
 	/** @brief Enable color cycling animations. */
 	OptionEntryBoolean colorCycling;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
@@ -408,6 +412,10 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryBoolean limitFPS;
 	/** @brief Show FPS, even without the -f command line flag. */
 	OptionEntryBoolean showFPS;
+	/** @brief Display current/max health values on health globe. */
+	OptionEntryBoolean showHealthValues;
+	/** @brief Display current/max mana values on mana globe. */
+	OptionEntryBoolean showManaValues;
 };
 
 struct GameplayOptions : OptionCategoryBase {
@@ -415,7 +423,7 @@ struct GameplayOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Gameplay ticks per second. */
-	int nTickRate;
+	OptionEntryInt<int> tickRate;
 	/** @brief Enable double walk speed when in town. */
 	OptionEntryBoolean runInTown;
 	/** @brief Do not let the mouse leave the application window. */
@@ -503,7 +511,7 @@ struct NetworkOptions : OptionCategoryBase {
 	/** @brief Most recently entered Hostname in join dialog. */
 	char szPreviousHost[129];
 	/** @brief What network port to use. */
-	uint16_t nPort;
+	OptionEntryInt<uint16_t> port;
 };
 
 struct ChatOptions : OptionCategoryBase {
@@ -605,7 +613,6 @@ struct Options {
 };
 
 extern DVL_API_FOR_TEST Options sgOptions;
-extern bool sbWasOptionsLoaded;
 
 bool HardwareCursorSupported();
 

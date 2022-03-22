@@ -763,7 +763,7 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
 	}
 }
 
-void Cl2Draw(const Surface &out, int sx, int sy, const CelSprite &cel, int frame)
+void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 {
 	assert(frame > 0);
 
@@ -773,7 +773,7 @@ void Cl2Draw(const Surface &out, int sx, int sy, const CelSprite &cel, int frame
 	Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame)
+void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite cel, int frame)
 {
 	assert(frame > 0);
 
@@ -783,16 +783,16 @@ void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, const CelSp
 	RenderCl2Outline(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), col);
 }
 
-void Cl2DrawLightTbl(const Surface &out, int sx, int sy, const CelSprite &cel, int frame, char light)
+void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, uint8_t *trn)
 {
 	assert(frame > 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(light));
+	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), trn);
 }
 
-void Cl2DrawLight(const Surface &out, int sx, int sy, const CelSprite &cel, int frame)
+void Cl2DrawLight(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 {
 	assert(frame > 0);
 

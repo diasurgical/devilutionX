@@ -19,13 +19,13 @@ Art PanelButton;
 Art PanelButtonGrime;
 Art PanelButtonDownGrime;
 
-void DrawButtonText(const Surface &out, const char *text, Rectangle placement, UiFlags style, int spacing = 1)
+void DrawButtonText(const Surface &out, string_view text, Rectangle placement, UiFlags style, int spacing = 1)
 {
 	DrawString(out, text, { placement.position + Displacement { 0, 1 }, placement.size }, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | UiFlags::ColorBlack, spacing);
 	DrawString(out, text, placement, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | style, spacing);
 }
 
-void DrawButtonOnPanel(Point position, const char *text, int frame)
+void DrawButtonOnPanel(Point position, string_view text, int frame)
 {
 	DrawArt(*pBtmBuff, position, &PanelButton, frame);
 	int spacing = 2;
@@ -38,7 +38,7 @@ void DrawButtonOnPanel(Point position, const char *text, int frame)
 	DrawButtonText(*pBtmBuff, text, { position, { PanelButton.w(), 0 } }, UiFlags::ColorButtonface, spacing);
 }
 
-void RenderMainButton(int buttonId, const char *text, int frame)
+void RenderMainButton(int buttonId, string_view text, int frame)
 {
 	Point panelPosition { PanBtnPos[buttonId].x + 4, PanBtnPos[buttonId].y + 17 };
 	DrawButtonOnPanel(panelPosition, text, frame);
@@ -59,7 +59,7 @@ void RenderMainButton(int buttonId, const char *text, int frame)
 
 void DrawTalkButton(int buttonId)
 {
-	const char *text = _("voice");
+	string_view text = _("voice");
 	Point position { 176, PANEL_HEIGHT + 101 + 18 * buttonId };
 	DrawArt(*pBtmBuff, position, &TalkButton);
 	int width = std::min(GetLineWidth(text, GameFont12, 1), PanelButton.w());

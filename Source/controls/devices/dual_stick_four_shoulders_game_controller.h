@@ -9,8 +9,8 @@ public:
 	AxisDirection GetMoveDirection();
 	bool GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint);
 	bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint);
-	bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint);
-	bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint);
+	bool CanDrawSelectModifierLeftCircleMenuHint();
+	bool CanDrawSelectModifierRightCircleMenuHint();
 
 protected:
 	bool HandleControllerButtonEvent(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);

@@ -350,7 +350,7 @@ AxisDirection DefaultGameController::GetMoveDirection()
 bool DefaultGameController::GetStartModifierLeftCircleMenuHint(CircleMenuHint *hint)
 {
 	if (start_modifier_active)
-		*hint = CircleMenuHint(/*isDpad=*/true, /*top=*/_("Menu"), /*right=*/_("Inv"), /*bottom=*/_("Map"), /*left=*/_("Char"));
+		*hint = CircleMenuHint(/*top=*/HintIcon::IconMenu, /*right=*/HintIcon::IconInv, /*bottom=*/HintIcon::IconMap, /*left=*/HintIcon::IconChar);
 
 	return start_modifier_active;
 }
@@ -358,24 +358,18 @@ bool DefaultGameController::GetStartModifierLeftCircleMenuHint(CircleMenuHint *h
 bool DefaultGameController::GetStartModifierRightCircleMenuHint(CircleMenuHint *hint)
 {
 	if (start_modifier_active)
-		*hint = CircleMenuHint(/*isDpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/_("Spells"), /*left=*/_("Quests"));
+		*hint = CircleMenuHint(/*top=*/HintIcon::IconNull, /*right=*/HintIcon::IconNull, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconQuests);
 
 	return start_modifier_active;
 }
 
-bool DefaultGameController::GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint)
+bool DefaultGameController::CanDrawSelectModifierLeftCircleMenuHint()
 {
-	if (select_modifier_active && sgOptions.Controller.bDpadHotkeys)
-		*hint = CircleMenuHint(/*isDpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
-
 	return select_modifier_active && sgOptions.Controller.bDpadHotkeys;
 }
 
-bool DefaultGameController::GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint)
+bool DefaultGameController::CanDrawSelectModifierRightCircleMenuHint()
 {
-	if (select_modifier_active)
-		*hint = CircleMenuHint(/*isDpad=*/false, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
-
 	return select_modifier_active;
 }
 

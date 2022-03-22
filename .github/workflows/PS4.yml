@@ -1,0 +1,39 @@
+name: PS4
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  ps4:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt-get update &&
+        sudo apt-get install -y wget cmake git gettext smpq &&
+        wget https://github.com/PacBrew/pacbrew-pacman/releases/download/pacbrew-release-1.0/pacbrew-pacman-1.0.deb &&
+        sudo dpkg -i pacbrew-pacman-1.0.deb && sudo pacbrew-pacman -Sy &&
+        sudo pacbrew-pacman --noconfirm -S ps4-openorbis ps4-openorbis-portlibs &&
+        echo "#include <endian.h>" | sudo tee /opt/pacbrew/ps4/openorbis/include/sys/endian.h
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: Packaging/ps4/build.sh
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx.pkg
+        path: build-ps4/devilutionx.pkg
+

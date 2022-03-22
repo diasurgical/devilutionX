@@ -19,6 +19,7 @@ void UiMainMenuSelect(int value)
 	MainMenuResult = (_mainmenu_selections)vecMenuItems[value]->m_value;
 }
 
+#ifndef NOEXIT
 void MainmenuEsc()
 {
 	std::size_t last = vecMenuItems.size() - 1;
@@ -28,6 +29,7 @@ void MainmenuEsc()
 		SelectedItem = last;
 	}
 }
+#endif
 
 void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 {
@@ -38,7 +40,9 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Settings"), MAINMENU_SETTINGS));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
+#ifndef NOEXIT
 	vecMenuItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Exit Hellfire") : _("Exit Diablo"), MAINMENU_EXIT_DIABLO));
+#endif
 
 	if (!gbIsSpawn || gbIsHellfire) {
 		if (gbIsHellfire)
@@ -53,7 +57,7 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 
 	if (gbIsSpawn && gbIsHellfire) {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT), (Sint16)(UI_OFFSET_Y + 145), 640, 30 };
-		vecMainMenuDialog.push_back(std::make_unique<UiArtText>(_("Shareware"), rect1, UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
+		vecMainMenuDialog.push_back(std::make_unique<UiArtText>(_("Shareware").c_str(), rect1, UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
 	}
 
 	vecMainMenuDialog.push_back(std::make_unique<UiList>(vecMenuItems, vecMenuItems.size(), PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UiFlags::FontSize42 | UiFlags::ColorUiGold | UiFlags::AlignCenter, 5));
@@ -61,7 +65,11 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	SDL_Rect rect2 = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
 	vecMainMenuDialog.push_back(std::make_unique<UiArtText>(name, rect2, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
+#ifndef NOEXIT
 	UiInitList(nullptr, UiMainMenuSelect, MainmenuEsc, vecMainMenuDialog, true);
+#else
+	UiInitList(nullptr, UiMainMenuSelect, nullptr, vecMainMenuDialog, true);
+#endif
 }
 
 void MainmenuFree()

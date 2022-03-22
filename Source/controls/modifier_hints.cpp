@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+#include "DiabloUI/art_draw.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "controls/controller.h"
@@ -14,91 +15,92 @@
 
 namespace devilution {
 
-extern std::optional<CelSprite> pSBkIconCels;
+extern std::optional<OwnedCelSprite> pSBkIconCels;
 
 namespace {
 
-bool IsTopActive(const CircleMenuHint &hint)
-{
-	if (hint.isDpad)
-		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP);
-	return IsControllerButtonPressed(ControllerButton_BUTTON_Y);
-}
+/** Vertical distance between text lines. */
+constexpr int LineHeight = 25;
 
-bool IsRightActive(const CircleMenuHint &hint)
-{
-	if (hint.isDpad)
-		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT);
-	return IsControllerButtonPressed(ControllerButton_BUTTON_B);
-}
+/** Horizontal margin of the hints circle from panel edge. */
+constexpr int CircleMarginX = 16;
 
-bool IsBottomActive(const CircleMenuHint &hint)
-{
-	if (hint.isDpad)
-		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN);
-	return IsControllerButtonPressed(ControllerButton_BUTTON_A);
-}
+/** Distance between the panel top and the circle top. */
+constexpr int CircleTop = 101;
 
-bool IsLeftActive(const CircleMenuHint &hint)
-{
-	if (hint.isDpad)
-		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT);
-	return IsControllerButtonPressed(ControllerButton_BUTTON_X);
-}
+/** Spell icon side size. */
+constexpr int IconSize = 37;
 
-UiFlags CircleMenuHintTextColor(bool active)
-{
-	return active ? UiFlags::ColorBlue : UiFlags::ColorWhitegold;
-}
+/** Spell icon text right margin. */
+constexpr int IconSizeTextMarginRight = 3;
 
-UiFlags CircleSpellMenuHintTextColor(bool active)
-{
-	return active ? UiFlags::ColorBlue : UiFlags::ColorWhite;
-}
+/** Spell icon text top margin. */
+constexpr int IconSizeTextMarginTop = 2;
+
+constexpr int HintBoxSize = 39;
+constexpr int HintBoxMargin = 5;
+
+Art hintBox;
+Art hintBoxBackground;
+Art hintIcons;
 
 /**
  * @brief Draws hint text for a four button layout with the top/left edge of the bounding box at the position given by origin.
  * @param out The output buffer to draw on.
- * @param hint Struct describing the text to draw and the dimensions of the layout.
+ * @param hint Struct describing the icon to draw.
  * @param origin Top left corner of the layout (relative to the output buffer).
  */
 void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
 {
-	DrawString(out, hint.top, origin + Displacement { hint.xMid - hint.topW / 2, 0 }, CircleMenuHintTextColor(IsTopActive(hint)));
+	const Displacement backgroundDisplacement = { (HintBoxSize - IconSize) / 2 + 1, (HintBoxSize - IconSize) / 2 - 1 };
+	Point hintBoxPositions[4] = {
+		origin + Displacement { 0, LineHeight - HintBoxSize },
+		origin + Displacement { HintBoxSize + HintBoxMargin, LineHeight - HintBoxSize * 2 - HintBoxMargin },
+		origin + Displacement { HintBoxSize + HintBoxMargin, LineHeight + HintBoxMargin },
+		origin + Displacement { HintBoxSize * 2 + HintBoxMargin * 2, LineHeight - HintBoxSize }
+	};
+	Point iconPositions[4] = {
+		hintBoxPositions[0] + backgroundDisplacement,
+		hintBoxPositions[1] + backgroundDisplacement,
+		hintBoxPositions[2] + backgroundDisplacement,
+		hintBoxPositions[3] + backgroundDisplacement,
+	};
+	uint8_t iconIndices[4] { hint.left, hint.top, hint.bottom, hint.right };
 
-	DrawString(out, hint.left, origin + Displacement { 0, LineHeight }, CircleMenuHintTextColor(IsLeftActive(hint)));
-	DrawString(out, hint.right, origin + Displacement { hint.leftW + MidSpaces * SpaceWidth(), LineHeight }, CircleMenuHintTextColor(IsRightActive(hint)));
+	for (int slot = 0; slot < 4; ++slot) {
+		if (iconIndices[slot] == HintIcon::IconNull)
+			continue;
 
-	DrawString(out, hint.bottom, origin + Displacement { hint.xMid - hint.bottomW / 2, LineHeight * 2 }, CircleMenuHintTextColor(IsBottomActive(hint)));
+		DrawArt(out, iconPositions[slot], &hintBoxBackground);
+		DrawArt(out, iconPositions[slot], &hintIcons, iconIndices[slot], 37, 38);
+		DrawArt(out, hintBoxPositions[slot], &hintBox);
+	}
 }
 
 /**
  * @brief Draws hint text for a four button layout with the top/left edge of the bounding box at the position given by origin plus the icon for the spell mapped to that entry.
  * @param out The output buffer to draw on.
- * @param hint Struct describing the text to draw and the dimensions of the layout.
  * @param origin Top left corner of the layout (relative to the output buffer).
  */
-void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
+void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 {
 	const auto &myPlayer = Players[MyPlayerId];
-	Point positions[4] = {
-		origin + Displacement { 0, LineHeight },
-		origin + Displacement { IconSize, LineHeight - IconSize },
-		origin + Displacement { IconSize, LineHeight + IconSize },
-		origin + Displacement { IconSize * 2, LineHeight }
+	const Displacement spellIconDisplacement = { (HintBoxSize - IconSize) / 2 + 1, HintBoxSize - (HintBoxSize - IconSize) / 2 - 1 };
+	Point hintBoxPositions[4] = {
+		origin + Displacement { 0, LineHeight - HintBoxSize },
+		origin + Displacement { HintBoxSize + HintBoxMargin, LineHeight - HintBoxSize * 2 - HintBoxMargin },
+		origin + Displacement { HintBoxSize + HintBoxMargin, LineHeight + HintBoxMargin },
+		origin + Displacement { HintBoxSize * 2 + HintBoxMargin * 2, LineHeight - HintBoxSize }
 	};
-	Point textPositions[4] = {
-		positions[0] + Displacement { IconSize - hint.leftW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
-		positions[1] + Displacement { IconSize - hint.topW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
-		positions[2] + Displacement { IconSize - hint.bottomW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize },
-		positions[3] + Displacement { IconSize - hint.rightW - IconSizeTextMarginRight, IconSizeTextMarginTop - IconSize }
+	Point spellIconPositions[4] = {
+		hintBoxPositions[0] + spellIconDisplacement,
+		hintBoxPositions[1] + spellIconDisplacement,
+		hintBoxPositions[2] + spellIconDisplacement,
+		hintBoxPositions[3] + spellIconDisplacement,
 	};
-	const char *texts[4] = { hint.left, hint.top, hint.bottom, hint.right };
-	bool isActive[4] = { IsLeftActive(hint), IsTopActive(hint), IsBottomActive(hint), IsRightActive(hint) };
 	uint64_t spells = myPlayer._pAblSpells | myPlayer._pMemSpells | myPlayer._pScrlSpells | myPlayer._pISpells;
 	spell_id splId;
 	spell_type splType;
-	Point textPosition;
 
 	for (int slot = 0; slot < 4; ++slot) {
 		splId = myPlayer._pSplHotKey[slot];
@@ -111,11 +113,8 @@ void DrawSpellsCircleMenuHint(const Surface &out, const CircleMenuHint &hint, co
 		}
 
 		SetSpellTrans(splType);
-		DrawSpellCel(out, positions[slot], *pSBkIconCels, SpellITbl[splId]);
-		textPosition = textPositions[slot];
-		// Drop shadow
-		DrawString(out, texts[slot], textPosition + Displacement { -1, 1 }, UiFlags::ColorBlack);
-		DrawString(out, texts[slot], textPosition, CircleSpellMenuHintTextColor(isActive[slot]));
+		DrawSpellCel(out, spellIconPositions[slot], *pSBkIconCels, SpellITbl[splId]);
+		DrawArt(out, hintBoxPositions[slot], &hintBox);
 	}
 }
 
@@ -127,21 +126,40 @@ void DrawStartModifierMenu(const Surface &out)
 		DrawCircleMenuHint(out, hint, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 
 	if (GetStartModifierRightCircleMenuHint(&hint))
-		DrawCircleMenuHint(out, hint, { PANEL_LEFT + PANEL_WIDTH - hint.Width() - CircleMarginX, PANEL_TOP - CircleTop });
+		DrawCircleMenuHint(out, hint, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
 }
 
 void DrawSelectModifierMenu(const Surface &out)
 {
-	CircleMenuHint hint;
+	if (CanDrawSelectModifierLeftCircleMenuHint())
+		DrawSpellsCircleMenuHint(out, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 
-	if (GetSelectModifierLeftCircleMenuHint(&hint))
-		DrawSpellsCircleMenuHint(out, hint, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-
-	if (GetSelectModifierRightCircleMenuHint(&hint))
-		DrawSpellsCircleMenuHint(out, hint, { PANEL_LEFT + PANEL_WIDTH - IconSize * 3 - CircleMarginX, PANEL_TOP - CircleTop });
+	if (CanDrawSelectModifierRightCircleMenuHint())
+		DrawSpellsCircleMenuHint(out, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
 }
 
 } // namespace
+
+void InitModifierHints()
+{
+	LoadMaskedArt("data\\hintbox.pcx", &hintBox, 1, 1);
+	LoadMaskedArt("data\\hintboxbackground.pcx", &hintBoxBackground, 1, 1);
+	LoadMaskedArt("data\\hinticons.pcx", &hintIcons, 6, 1);
+
+	if (hintBox.surface == nullptr || hintBoxBackground.surface == nullptr) {
+		app_fatal("%s", _("Failed to load UI resources.\n"
+		                  "\n"
+		                  "Make sure devilutionx.mpq is in the game folder and that it is up to date.")
+		                    .c_str());
+	}
+}
+
+void FreeModifierHints()
+{
+	hintBox.Unload();
+	hintBoxBackground.Unload();
+	hintIcons.Unload();
+}
 
 void DrawControllerModifierHints(const Surface &out)
 {

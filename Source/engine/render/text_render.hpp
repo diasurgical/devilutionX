@@ -118,7 +118,14 @@ private:
 	std::string formatted_;
 };
 
-extern std::optional<CelSprite> pSPentSpn2Cels;
+/**
+ * @brief Small text selection cursor.
+ *
+ * Also used in the stores and the quest log.
+ */
+extern std::optional<OwnedCelSprite> pSPentSpn2Cels;
+
+void LoadSmallSelectionSpinner();
 
 void UnloadFonts(GameFontTables size, text_color color);
 

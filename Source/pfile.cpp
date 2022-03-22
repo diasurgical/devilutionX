@@ -14,6 +14,7 @@
 #include "menu.h"
 #include "mpq/mpq_reader.hpp"
 #include "pack.h"
+#include "qol/stash.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
@@ -31,7 +32,8 @@ bool gbValidSaveFile;
 
 namespace {
 
-MpqWriter archive;
+MpqWriter SaveWriter;
+MpqWriter StashWriter;
 
 /** List of character names for the character selection screen. */
 char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
@@ -60,6 +62,22 @@ std::string GetSavePath(uint32_t saveNum)
 	char saveNumStr[21];
 	snprintf(saveNumStr, sizeof(saveNumStr) / sizeof(char), "%i", saveNum);
 	path.append(saveNumStr);
+	path.append(ext);
+	return path;
+}
+
+std::string GetStashSavePath()
+{
+	std::string path = paths::PrefPath();
+	const char *ext = ".sv";
+	if (gbIsHellfire)
+		ext = ".hsv";
+
+	if (gbIsSpawn) {
+		path.append("stash_spawn");
+	} else {
+		path.append("stash");
+	}
 	path.append(ext);
 	return path;
 }
@@ -106,32 +124,13 @@ void RenameTempToPerm()
 		[[maybe_unused]] bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
 		assert(result);
 		dwIndex++;
-		if (archive.HasFile(szTemp)) {
-			if (archive.HasFile(szPerm))
-				archive.RemoveHashEntry(szPerm);
-			archive.RenameFile(szTemp, szPerm);
+		if (SaveWriter.HasFile(szTemp)) {
+			if (SaveWriter.HasFile(szPerm))
+				SaveWriter.RemoveHashEntry(szPerm);
+			SaveWriter.RenameFile(szTemp, szPerm);
 		}
 	}
 	assert(!GetPermSaveNames(dwIndex, szPerm));
-}
-
-std::unique_ptr<byte[]> ReadArchive(MpqArchive &archive, const char *pszName, size_t *pdwLen = nullptr)
-{
-	int32_t error;
-	std::size_t length;
-
-	std::unique_ptr<byte[]> result = archive.ReadFile(pszName, length, error);
-	if (error != 0)
-		return nullptr;
-
-	std::size_t decodedLength = codec_decode(result.get(), length, pfile_get_password());
-	if (decodedLength == 0)
-		return nullptr;
-
-	if (pdwLen != nullptr)
-		*pdwLen = decodedLength;
-
-	return result;
 }
 
 bool ReadHero(MpqArchive &archive, PlayerPack *pPack)
@@ -158,18 +157,12 @@ void EncodeHero(const PlayerPack *pack)
 
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
-	archive.WriteFile("hero", packed.get(), packedLen);
+	SaveWriter.WriteFile("hero", packed.get(), packedLen);
 }
 
 bool OpenArchive(uint32_t saveNum)
 {
-	return archive.Open(GetSavePath(saveNum).c_str());
-}
-
-std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum)
-{
-	std::int32_t error;
-	return MpqArchive::Open(GetSavePath(saveNum).c_str(), error);
+	return SaveWriter.Open(GetSavePath(saveNum).c_str());
 }
 
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
@@ -227,6 +220,37 @@ bool ArchiveContainsGame(MpqArchive &hsArchive)
 
 } // namespace
 
+std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum)
+{
+	std::int32_t error;
+	return MpqArchive::Open(GetSavePath(saveNum).c_str(), error);
+}
+
+std::optional<MpqArchive> OpenStashArchive()
+{
+	std::int32_t error;
+	return MpqArchive::Open(GetStashSavePath().c_str(), error);
+}
+
+std::unique_ptr<byte[]> ReadArchive(MpqArchive &archive, const char *pszName, size_t *pdwLen)
+{
+	int32_t error;
+	std::size_t length;
+
+	std::unique_ptr<byte[]> result = archive.ReadFile(pszName, length, error);
+	if (error != 0)
+		return nullptr;
+
+	std::size_t decodedLength = codec_decode(result.get(), length, pfile_get_password());
+	if (decodedLength == 0)
+		return nullptr;
+
+	if (pdwLen != nullptr)
+		*pdwLen = decodedLength;
+
+	return result;
+}
+
 const char *pfile_get_password()
 {
 	if (gbIsSpawn)
@@ -239,17 +263,22 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clearTables)
     , clear_tables_(clearTables)
 {
 	if (!OpenArchive(save_num_))
-		app_fatal("%s", _("Failed to open player archive for writing."));
+		app_fatal("%s", _("Failed to open player archive for writing.").c_str());
 }
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
 {
-	archive.Close(clear_tables_);
+	SaveWriter.Close(clear_tables_);
 }
 
 MpqWriter &CurrentSaveArchive()
 {
-	return archive;
+	return SaveWriter;
+}
+
+MpqWriter &StashArchive()
+{
+	return StashWriter;
 }
 
 void pfile_write_hero(bool writeGameData, bool clearTables)
@@ -268,6 +297,21 @@ void pfile_write_hero(bool writeGameData, bool clearTables)
 		SaveHotkeys();
 		SaveHeroItems(myPlayer);
 	}
+}
+
+void sfile_write_stash()
+{
+	if (!Stash.dirty)
+		return;
+
+	if (!StashWriter.Open(GetStashSavePath().c_str()))
+		app_fatal("%s", _("Failed to open stash archive for writing.").c_str());
+
+	SaveStash();
+
+	StashWriter.Close(false);
+
+	Stash.dirty = false;
 }
 
 bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
@@ -336,7 +380,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 	giNumberOfLevels = gbIsHellfire ? 25 : 17;
 
-	archive.RemoveHashEntries(GetFileName);
+	SaveWriter.RemoveHashEntries(GetFileName);
 	CopyUtf8(hero_names[saveNum], heroinfo->name, sizeof(hero_names[saveNum]));
 
 	auto &player = Players[0];
@@ -350,7 +394,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 		SaveHeroItems(player);
 	}
 
-	archive.Close();
+	SaveWriter.Close();
 	return true;
 }
 
@@ -359,7 +403,7 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 	uint32_t saveNum = heroInfo->saveNumber;
 	if (saveNum < MAX_CHARACTERS) {
 		hero_names[saveNum][0] = '\0';
-		RemoveFile(GetSavePath(saveNum).c_str());
+		RemoveFile(GetSavePath(saveNum));
 	}
 	return true;
 }
@@ -372,9 +416,9 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	{
 		std::optional<MpqArchive> archive = OpenSaveArchive(saveNum);
 		if (!archive)
-			app_fatal("%s", _("Unable to open archive"));
+			app_fatal("%s", _("Unable to open archive").c_str());
 		if (!ReadHero(*archive, &pkplr))
-			app_fatal("%s", _("Unable to load character"));
+			app_fatal("%s", _("Unable to load character").c_str());
 
 		gbValidSaveFile = ArchiveContainsGame(*archive);
 		if (gbValidSaveFile)
@@ -398,10 +442,10 @@ bool LevelFileExists()
 
 	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to read to save file archive"));
+		app_fatal("%s", _("Unable to read to save file archive").c_str());
 
-	bool hasFile = archive.HasFile(szName);
-	archive.Close();
+	bool hasFile = SaveWriter.HasFile(szName);
+	SaveWriter.Close();
 	return hasFile;
 }
 
@@ -418,10 +462,10 @@ void GetPermLevelNames(char *szPerm)
 	uint32_t saveNum = gSaveNumber;
 	GetTempLevelNames(szPerm);
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to read to save file archive"));
+		app_fatal("%s", _("Unable to read to save file archive").c_str());
 
-	bool hasFile = archive.HasFile(szPerm);
-	archive.Close();
+	bool hasFile = SaveWriter.HasFile(szPerm);
+	SaveWriter.Close();
 	if (!hasFile) {
 		if (setlevel)
 			sprintf(szPerm, "perms%02d", setlvlnum);
@@ -437,18 +481,9 @@ void pfile_remove_temp_files()
 
 	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to write to save file archive"));
-	archive.RemoveHashEntries(GetTempSaveNames);
-	archive.Close();
-}
-
-std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen)
-{
-	uint32_t saveNum = gSaveNumber;
-	std::optional<MpqArchive> archive = OpenSaveArchive(saveNum);
-	if (!archive)
-		return nullptr;
-	return ReadArchive(*archive, pszName, pdwLen);
+		app_fatal("%s", _("Unable to write to save file archive").c_str());
+	SaveWriter.RemoveHashEntries(GetTempSaveNames);
+	SaveWriter.Close();
 }
 
 void pfile_update(bool forceSave)
@@ -464,6 +499,7 @@ void pfile_update(bool forceSave)
 
 	prevTick = tick;
 	pfile_write_hero();
+	sfile_write_stash();
 }
 
 } // namespace devilution

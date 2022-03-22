@@ -54,22 +54,22 @@ bool GetStartModifierRightCircleMenuHint(CircleMenuHint *hint)
 	return false;
 }
 
-bool GetSelectModifierLeftCircleMenuHint(CircleMenuHint *hint)
+bool CanDrawSelectModifierLeftCircleMenuHint()
 {
 	GameController *controller = GameController::GetCurrentGameController();
 
 	if (controller)
-		return controller->GetSelectModifierLeftCircleMenuHint(hint);
+		return controller->CanDrawSelectModifierLeftCircleMenuHint();
 
 	return false;
 }
 
-bool GetSelectModifierRightCircleMenuHint(CircleMenuHint *hint)
+bool CanDrawSelectModifierRightCircleMenuHint()
 {
 	GameController *controller = GameController::GetCurrentGameController();
 
 	if (controller)
-		return controller->GetSelectModifierRightCircleMenuHint(hint);
+		return controller->CanDrawSelectModifierRightCircleMenuHint();
 
 	return false;
 }

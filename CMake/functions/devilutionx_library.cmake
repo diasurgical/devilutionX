@@ -30,10 +30,6 @@ function(add_devilutionx_library NAME)
     target_link_libraries(${NAME} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   endif()
 
-  if(GPERF)
-    target_link_libraries(${NAME} PUBLIC ${GPERFTOOLS_LIBRARIES})
-  endif()
-
   if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     genex_for_option(DEVILUTIONX_STATIC_CXX_STDLIB)
     target_link_libraries(${NAME} PUBLIC $<${DEVILUTIONX_STATIC_CXX_STDLIB_GENEX}:-static-libgcc;-static-libstdc++>)

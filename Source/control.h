@@ -41,14 +41,13 @@ extern bool drawmanaflag;
 extern bool chrbtnactive;
 extern DVL_API_FOR_TEST int pnumlines;
 extern UiFlags InfoColor;
-extern char tempstr[256];
 extern int sbooktab;
 extern int8_t initialDropGoldIndex;
 extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern bool drawbtnflag;
-extern char infostr[128];
+extern std::string InfoString;
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
@@ -57,6 +56,7 @@ const Rectangle &GetMainPanel();
 const Rectangle &GetLeftPanel();
 const Rectangle &GetRightPanel();
 extern std::optional<OwnedSurface> pBtmBuff;
+extern std::optional<OwnedCelSprite> pGBoxBuff;
 extern SDL_Rect PanBtnPos[8];
 
 void CalculatePanelAreas();
@@ -68,6 +68,7 @@ inline bool CanPanelsCoverView()
 {
 	return GetScreenWidth() <= PANEL_WIDTH && GetScreenHeight() <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
+void ControlSetGoldCurs(Item &goldItem);
 
 void DrawSpellList(const Surface &out);
 void SetSpell();
@@ -104,6 +105,11 @@ void DrawManaFlaskUpper(const Surface &out);
  * Controls the drawing of the area of the mana flask within the control panel.
  */
 void DrawManaFlaskLower(const Surface &out);
+
+/**
+ * Controls drawing of current / max values (health, mana) within the control panel.
+ */
+void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue);
 
 /**
  * @brief calls on the active player object to update HP/Mana percentage variables

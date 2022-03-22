@@ -14,6 +14,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "options.h"
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
@@ -23,10 +24,10 @@ namespace devilution {
 
 namespace {
 
-std::optional<CelSprite> optbar_cel;
-std::optional<CelSprite> PentSpin_cel;
-std::optional<CelSprite> option_cel;
-std::optional<CelSprite> sgpLogo;
+std::optional<OwnedCelSprite> optbar_cel;
+std::optional<OwnedCelSprite> PentSpin_cel;
+std::optional<OwnedCelSprite> option_cel;
+std::optional<OwnedCelSprite> sgpLogo;
 bool mouseNavigation;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;
@@ -216,6 +217,8 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
 	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
 	GmenuUpDown(true);
+	if (sgpCurrentMenu == nullptr)
+		SaveOptions();
 }
 
 void gmenu_draw(const Surface &out)

@@ -560,16 +560,18 @@ enum goodorevil : uint8_t {
 	GOE_GOOD,
 };
 
-enum affix_item_type : uint8_t {
+enum class AffixItemType : uint8_t {
 	// clang-format off
-	PLT_MISC  = 1 << 0,
-	PLT_BOW   = 1 << 1,
-	PLT_STAFF = 1 << 2,
-	PLT_WEAP  = 1 << 3,
-	PLT_SHLD  = 1 << 4,
-	PLT_ARMO  = 1 << 5,
+	None      = 0,
+	Misc      = 1 << 0,
+	Bow       = 1 << 1,
+	Staff     = 1 << 2,
+	Weapon    = 1 << 3,
+	Shield    = 1 << 4,
+	Armor     = 1 << 5,
 	// clang-format on
 };
+use_enum_as_flags(AffixItemType);
 
 struct ItemPower {
 	item_effect_type type;
@@ -581,7 +583,7 @@ struct PLStruct {
 	const char *PLName;
 	ItemPower power;
 	int8_t PLMinLvl;
-	int PLIType; // affix_item_type as bit flags
+	AffixItemType PLIType; // AffixItemType as bit flags
 	enum goodorevil PLGOE;
 	bool PLDouble;
 	bool PLOk;

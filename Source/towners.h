@@ -43,7 +43,7 @@ struct Towner {
 	int16_t seed;
 	/** Tile position of NPC */
 	Point position;
-	int16_t _tAnimWidth;
+	uint16_t _tAnimWidth;
 	/** Tick length of each frame in the current animation */
 	int16_t _tAnimDelay;
 	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
@@ -59,6 +59,11 @@ struct Towner {
 	std::size_t animOrderSize;
 	void (*talk)(Player &player, Towner &towner);
 	_talker_id _ttype;
+
+	CelSprite Sprite() const
+	{
+		return CelSprite { _tAnimData, _tAnimWidth };
+	}
 };
 
 extern Towner Towners[NUM_TOWNERS];

@@ -127,7 +127,7 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 			textInputActive = true;
 			allowEmptyTextInput = pItemUIEdit->m_allowEmpty;
 #ifdef __SWITCH__
-			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
+			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #elif defined(__vita__)
 			vita_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #elif defined(__3DS__)
@@ -436,6 +436,7 @@ void UiHandleEvents(SDL_Event *event)
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			SaveOptions();
 			if (gfnFullscreen != nullptr)
 				gfnFullscreen();
 			return;

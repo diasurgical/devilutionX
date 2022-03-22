@@ -139,7 +139,7 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 	Point position { 0, 0 };
 	for (item_cursor_graphic graphic : potionGraphics) {
 		const int frame = CURSOR_FIRSTITEM + graphic;
-		const CelSprite &potionSprite = GetInvItemSprite(frame);
+		const OwnedCelSprite &potionSprite = GetInvItemSprite(frame);
 		position.y += potionSize.height;
 		CelClippedDrawTo(Surface(surface.get()), position, potionSprite, frame);
 	}
@@ -430,18 +430,18 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetDungeonButtonType()
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 {
-	if (pcursinvitem != -1 || pcurs > CURSOR_HAND)
+	if (pcursinvitem != -1 || pcursstashitem != uint16_t(-1) || pcurs > CURSOR_HAND)
 		return GetItemButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
 extern int pcurstrig;
-extern int pcursmissile;
+extern Missile *pcursmissile;
 extern quest_id pcursquest;
 
 VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 {
-	if (pcursmissile != -1 || pcurstrig != -1 || pcursquest != Q_INVALID) {
+	if (pcursmissile != nullptr || pcurstrig != -1 || pcursquest != Q_INVALID) {
 		return GetStairsButtonType(virtualPadButton->isHeld);
 	}
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)

@@ -25,11 +25,12 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
 bool QuestLogIsOpen;
-std::optional<CelSprite> pQLogCel;
+std::optional<OwnedCelSprite> pQLogCel;
 /** Contains the quests of the current game. */
 Quest Quests[MAXQUESTS];
 Point ReturnLvlPosition;
@@ -266,7 +267,7 @@ int QuestLogMouseToEntry()
 	return -1;
 }
 
-void PrintQLString(const Surface &out, int x, int y, const char *str, bool marked, bool disabled = false)
+void PrintQLString(const Surface &out, int x, int y, string_view str, bool marked, bool disabled = false)
 {
 	int width = GetLineWidth(str);
 	x += std::max((257 - width) / 2, 0);
@@ -447,7 +448,7 @@ bool ForceQuests()
 			int ql = quest._qslvl - 1;
 
 			if (EntranceBoundaryContains(quest.position, cursPosition)) {
-				strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
+				InfoString = fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql]));
 				cursPosition = quest.position;
 				return true;
 			}

@@ -392,6 +392,9 @@ ASALocalRun/
 # Created by https://www.gitignore.io/api/xcode
 # Edit at https://www.gitignore.io/?templates=xcode
 
+### Visual Code
+/.vscode
+
 ### Xcode ###
 # Xcode
 #

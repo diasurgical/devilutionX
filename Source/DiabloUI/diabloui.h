@@ -102,7 +102,7 @@ void UiSelHeroSingDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool
 bool UiCreditsDialog();
 bool UiSupportDialog();
 bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
-bool UiProgressDialog(const char *msg, int (*fnfunc)());
+bool UiProgressDialog(int (*fnfunc)());
 bool UiSelectGame(GameData *gameData, int *playerId);
 bool UiSelectProvider(GameData *gameData);
 void UiFadeIn();

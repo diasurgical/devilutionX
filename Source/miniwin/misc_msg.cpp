@@ -28,6 +28,7 @@
 #include "miniwin/miniwin.h"
 #include "movie.h"
 #include "panels/spell_list.hpp"
+#include "qol/stash.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -302,7 +303,7 @@ bool BlurInventory()
 		}
 	}
 
-	invflag = false;
+	CloseInventory();
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
 	if (chrflag)
@@ -315,6 +316,7 @@ void ProcessGamepadEvents(GameAction &action)
 {
 	switch (action.type) {
 	case GameActionType_NONE:
+	case GameActionType_SEND_KEY:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
 		UseBeltItem(BLT_HEALING);
@@ -340,12 +342,14 @@ void ProcessGamepadEvents(GameAction &action)
 			chrflag = false;
 			QuestLogIsOpen = false;
 			sbookflag = false;
+			IsStashOpen = false;
 		}
 		break;
 	case GameActionType_TOGGLE_CHARACTER_INFO:
 		chrflag = !chrflag;
 		if (chrflag) {
 			QuestLogIsOpen = false;
+			IsStashOpen = false;
 			spselflag = false;
 			if (pcurs == CURSOR_DISARM)
 				NewCursor(CURSOR_HAND);
@@ -356,6 +360,7 @@ void ProcessGamepadEvents(GameAction &action)
 		if (!QuestLogIsOpen) {
 			StartQuestlog();
 			chrflag = false;
+			IsStashOpen = false;
 			spselflag = false;
 		} else {
 			QuestLogIsOpen = false;
@@ -375,7 +380,7 @@ void ProcessGamepadEvents(GameAction &action)
 		break;
 	case GameActionType_TOGGLE_SPELL_BOOK:
 		if (BlurInventory()) {
-			invflag = false;
+			CloseInventory();
 			spselflag = false;
 			sbookflag = !sbookflag;
 		}
@@ -603,6 +608,10 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 		if (gbRunGame && dropGoldFlag) {
 			GoldDropNewText(e.text.text);
+			break;
+		}
+		if (gbRunGame && IsWithdrawGoldOpen) {
+			GoldWithdrawNewText(e.text.text);
 			break;
 		}
 		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);

@@ -64,6 +64,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdPItem)
 	CMD_PUTITEM,
+	// Spawn item on ground (place quest items).
+	//
+	// body (TCmdPItem)
+	CMD_SPAWNITEM,
 	// Respawn item on ground (drop dead player item, or drop attempted loot item
 	// when inventory is full).
 	//
@@ -600,6 +604,21 @@ struct TCmdPItem {
 	uint8_t bMinMag;
 	uint8_t bMinDex;
 	int16_t bAC;
+
+	/**
+	 * Items placed during dungeon generation
+	 */
+	static constexpr _cmd_id FloorItem = CMD_STAND;
+
+	/**
+	 * Floor items that have already been picked up
+	 */
+	static constexpr _cmd_id PickedUpItem = CMD_WALKXY;
+
+	/**
+	 * Items dropped by players, monsters, or objects and left on the floor of the dungeon
+	 */
+	static constexpr _cmd_id DroppedItem = CMD_ACK_PLRINFO;
 };
 
 struct TCmdChItem {
@@ -692,6 +711,8 @@ struct TPktHdr {
 	uint8_t targy;
 	int32_t php;
 	int32_t pmhp;
+	int32_t mana;
+	int32_t maxmana;
 	uint8_t bstr;
 	uint8_t bmag;
 	uint8_t bdex;
@@ -782,10 +803,9 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii);
-void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
 void NetSendCmdChItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
-void NetSendCmdDItem(bool bHiPri, int ii);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);

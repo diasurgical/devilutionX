@@ -226,6 +226,10 @@ if(NOT UWP_LIB)
   target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 endif()
 
+if(GPERF)
+  target_link_libraries(${BIN_TARGET} PUBLIC ${GPERFTOOLS_LIBRARIES})
+endif()
+
 # Must be included after `BIN_TARGET` and `libdevilutionx` are defined.
 include(Assets)
 
@@ -331,6 +335,15 @@ if(VITA)
     )
   endif()
 
+endif()
+
+if(PS4)
+  add_custom_command(
+    TARGET devilutionx_mpq POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} "${PROJECT_SOURCE_DIR}/Packaging/ps4/")
+  add_self(${BIN_TARGET})
+  add_pkg(${BIN_TARGET} "${PROJECT_SOURCE_DIR}/Packaging/ps4"
+    "DVLX00001" "DevilutionX" "${PROJECT_VERSION}")
 endif()
 
 if(NINTENDO_3DS)

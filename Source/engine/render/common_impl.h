@@ -13,16 +13,6 @@
 
 namespace devilution {
 
-inline std::uint8_t *GetLightTable(char light)
-{
-	int idx = 4096;
-	if (light == 2)
-		idx += 256; // gray colors
-	if (light >= 4)
-		idx += (light - 1) << 8;
-	return &LightTables[idx];
-}
-
 struct ClipX {
 	std::int_fast16_t left;
 	std::int_fast16_t right;

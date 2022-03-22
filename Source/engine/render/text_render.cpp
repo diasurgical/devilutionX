@@ -25,6 +25,8 @@
 
 namespace devilution {
 
+std::optional<OwnedCelSprite> pSPentSpn2Cels;
+
 namespace {
 
 constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
@@ -371,6 +373,11 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 }
 
 } // namespace
+
+void LoadSmallSelectionSpinner()
+{
+	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
+}
 
 void UnloadFonts(GameFontTables size, text_color color)
 {
