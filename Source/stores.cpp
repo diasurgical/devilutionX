@@ -27,8 +27,6 @@
 
 namespace devilution {
 
-Item golditem;
-
 talk_id stextflag;
 
 int storenumh;
@@ -1479,61 +1477,15 @@ void SmithPremiumBuyEnter()
 bool StoreGoldFit(int idx)
 {
 	int cost = storehold[idx]._iIvalue;
-	int sz = cost / MaxGold;
-	if (cost % MaxGold != 0)
-		sz++;
 
-	NewCursor(storehold[idx]._iCurs + CURSOR_FIRSTITEM);
-	int numsqrs = cursSize.width / 28 * (cursSize.height / 28);
-	NewCursor(CURSOR_HAND);
+	Size itemSize = GetInventorySize(storehold[idx]);
+	int itemRoomForGold = itemSize.width * itemSize.height * MaxGold;
 
-	if (numsqrs >= sz)
+	if (cost <= itemRoomForGold) {
 		return true;
-
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (int8_t itemId : myPlayer.InvGrid) {
-		if (itemId == 0)
-			numsqrs++;
 	}
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
-		const auto &item = myPlayer.InvList[i];
-		if (item._itype == ItemType::Gold && item._ivalue != MaxGold) {
-			if (cost + item._ivalue <= MaxGold)
-				cost = 0;
-			else
-				cost -= MaxGold - item._ivalue;
-		}
-	}
-
-	sz = cost / MaxGold;
-	if ((cost % MaxGold) != 0)
-		sz++;
-
-	return numsqrs >= sz;
-}
-
-/**
- * @brief Add gold pile to the players invetory
- * @param v The value of the gold pile
- */
-void PlaceStoreGold(int v)
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (auto &gridNum : myPlayer.InvGrid) {
-		if (gridNum == 0) {
-			int ii = myPlayer._pNumInv;
-			SetGoldSeed(myPlayer, golditem);
-			myPlayer.InvList[ii] = golditem;
-			myPlayer._pNumInv++;
-			gridNum = myPlayer._pNumInv;
-			myPlayer.InvList[ii]._ivalue = v;
-			SetPlrHandGoldCurs(myPlayer.InvList[ii]);
-			return;
-		}
-	}
+	return cost <= itemRoomForGold + RoomForGold();
 }
 
 /**
@@ -1558,27 +1510,10 @@ void StoreSellItem()
 			idx++;
 		}
 	}
+
+	AddGoldToInventory(myPlayer, cost);
+
 	myPlayer._pGold += cost;
-	for (int i = 0; i < myPlayer._pNumInv && cost > 0; i++) {
-		auto &item = myPlayer.InvList[i];
-		if (item._itype == ItemType::Gold && item._ivalue != MaxGold) {
-			if (cost + item._ivalue <= MaxGold) {
-				item._ivalue += cost;
-				cost = 0;
-			} else {
-				cost -= MaxGold - item._ivalue;
-				item._ivalue = MaxGold;
-			}
-			SetPlrHandGoldCurs(myPlayer.InvList[i]);
-		}
-	}
-	if (cost > 0) {
-		while (cost > MaxGold) {
-			PlaceStoreGold(MaxGold);
-			cost -= MaxGold;
-		}
-		PlaceStoreGold(cost);
-	}
 }
 
 void SmithSellEnter()
@@ -2293,7 +2228,6 @@ void SetupTownStores()
 	}
 
 	l = clamp(l + 2, 6, 16);
-	SpawnStoreGold();
 	SpawnSmith(l);
 	SpawnWitch(l);
 	SpawnHealer(l);

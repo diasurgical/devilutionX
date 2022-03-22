@@ -571,11 +571,11 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				cn = SwapItem(player.InvList[invIndex], player.HoldItem);
 				if (player.HoldItem._itype == ItemType::Gold)
 					player._pGold = CalculateGold(player);
-				for (auto &itemId : player.InvGrid) {
-					if (itemId == it)
-						itemId = 0;
-					if (itemId == -it)
-						itemId = 0;
+				for (auto &itemIndex : player.InvGrid) {
+					if (itemIndex == it)
+						itemIndex = 0;
+					if (itemIndex == -it)
+						itemIndex = 0;
 				}
 			}
 			int ii = r - SLOTXY_INV_FIRST;
@@ -1128,31 +1128,20 @@ void StartGoldDrop()
 	SDL_StartTextInput();
 }
 
-bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex, Item &goldStack)
+int CreateGoldItemInInventorySlot(Player &player, int slotIndex, int value)
 {
 	if (player.InvGrid[slotIndex] != 0) {
-		return false;
+		return value;
 	}
 
-	int ii = player._pNumInv;
-	player.InvList[ii] = goldStack;
+	Item &goldItem = player.InvList[player._pNumInv];
+	MakeGoldStack(goldItem, std::min(value, MaxGold));
 	player._pNumInv++;
 	player.InvGrid[slotIndex] = player._pNumInv;
-	GenerateNewSeed(player.InvList[ii]);
 
-	int gold = goldStack._ivalue;
-	if (gold > MaxGold) {
-		gold -= MaxGold;
-		goldStack._ivalue = gold;
-		GenerateNewSeed(goldStack);
-		player.InvList[ii]._ivalue = MaxGold;
-		return false;
-	}
+	value -= goldItem._ivalue;
 
-	goldStack._ivalue = 0;
-	player._pGold = CalculateGold(player);
-
-	return true;
+	return value;
 }
 
 } // namespace
@@ -1519,42 +1508,72 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 	return true;
 }
 
+int RoomForGold()
+{
+	int amount = 0;
+	for (int8_t &itemIndex : MyPlayer->InvGrid) {
+		if (itemIndex < 0) {
+			continue;
+		}
+		if (itemIndex == 0) {
+			amount += MaxGold;
+			continue;
+		}
+
+		Item &goldItem = MyPlayer->InvList[itemIndex - 1];
+		if (goldItem._itype != ItemType::Gold || goldItem._ivalue == MaxGold) {
+			continue;
+		}
+
+		amount += MaxGold - goldItem._ivalue;
+	}
+
+	return amount;
+}
+
+int AddGoldToInventory(Player &player, int value)
+{
+	// Top off existing piles
+	for (int i = 0; i < player._pNumInv && value > 0; i++) {
+		Item &goldItem = player.InvList[i];
+		if (goldItem._itype != ItemType::Gold || goldItem._ivalue >= MaxGold) {
+			continue;
+		}
+
+		if (goldItem._ivalue + value > MaxGold) {
+			value -= MaxGold - goldItem._ivalue;
+			goldItem._ivalue = MaxGold;
+		} else {
+			goldItem._ivalue += value;
+			value = 0;
+		}
+
+		SetPlrHandGoldCurs(goldItem);
+	}
+
+	// Last row right to left
+	for (int i = 39; i >= 30 && value > 0; i--) {
+		value = CreateGoldItemInInventorySlot(player, i, value);
+	}
+
+	// Remaining inventory in columns, bottom to top, right to left
+	for (int x = 9; x >= 0 && value > 0; x--) {
+		for (int y = 2; y >= 0 && value > 0; y--) {
+			value = CreateGoldItemInInventorySlot(player, 10 * y + x, value);
+		}
+	}
+
+	return value;
+}
+
 bool GoldAutoPlace(Player &player, Item &goldStack)
 {
-	bool done = false;
-
-	for (int i = 0; i < player._pNumInv && !done; i++) {
-		if (player.InvList[i]._itype != ItemType::Gold)
-			continue;
-		if (player.InvList[i]._ivalue >= MaxGold)
-			continue;
-
-		player.InvList[i]._ivalue += goldStack._ivalue;
-		if (player.InvList[i]._ivalue > MaxGold) {
-			goldStack._ivalue = player.InvList[i]._ivalue - MaxGold;
-			SetPlrHandGoldCurs(goldStack);
-			player.InvList[i]._ivalue = MaxGold;
-			if (gbIsHellfire)
-				GenerateNewSeed(goldStack);
-		} else {
-			goldStack._ivalue = 0;
-			done = true;
-		}
-
-		SetPlrHandGoldCurs(player.InvList[i]);
-	}
-
-	for (int i = 39; i >= 30 && !done; i--) {
-		done = GoldAutoPlaceInInventorySlot(player, i, goldStack);
-	}
-	for (int x = 9; x >= 0 && !done; x--) {
-		for (int y = 2; y >= 0 && !done; y--) {
-			done = GoldAutoPlaceInInventorySlot(player, 10 * y + x, goldStack);
-		}
-	}
+	goldStack._ivalue = AddGoldToInventory(player, goldStack._ivalue);
+	SetPlrHandGoldCurs(goldStack);
 
 	player._pGold = CalculateGold(player);
-	return done;
+
+	return goldStack._ivalue == 0;
 }
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
