@@ -1556,7 +1556,7 @@ int AddGoldToInventory(Player &player, int value)
 		value = CreateGoldItemInInventorySlot(player, i, value);
 	}
 
-	// Remaning inventory in colums, bottom to top, right to left
+	// Remaining inventory in columns, bottom to top, right to left
 	for (int x = 9; x >= 0 && value > 0; x--) {
 		for (int y = 2; y >= 0 && value > 0; y--) {
 			value = CreateGoldItemInInventorySlot(player, 10 * y + x, value);
