@@ -148,8 +148,21 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, con
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask, const std::array<uint8_t, 256> *colorMapping)
 {
 	LoadArt(pszFile, art, frames, nullptr, colorMapping);
-	if (art->surface != nullptr)
-		SDLC_SetColorKey(art->surface.get(), mask);
+	if (art->surface == nullptr)
+		return;
+	SDL_Surface *surface = art->surface.get();
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+#ifdef DEVILUTIONX_MASKED_ART_RLE
+	SDL_SetSurfaceRLE(surface, 1);
+#endif
+	SDL_SetColorKey(surface, SDL_TRUE, mask);
+#else
+	int flags = SDL_SRCCOLORKEY;
+#ifdef DEVILUTIONX_MASKED_ART_RLE
+	flags |= SDL_RLEACCEL;
+#endif
+	SDL_SetColorKey(surface, flags, mask);
+#endif
 }
 
 void LoadArt(Art *art, const std::uint8_t *artData, int w, int h, int frames)
