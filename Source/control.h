@@ -68,8 +68,6 @@ inline bool CanPanelsCoverView()
 {
 	return GetScreenWidth() <= PANEL_WIDTH && GetScreenHeight() <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
-void ControlSetGoldCurs(Item &goldItem);
-
 void DrawSpellList(const Surface &out);
 void SetSpell();
 void SetSpeedSpell(int slot);

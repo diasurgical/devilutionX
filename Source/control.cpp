@@ -369,7 +369,10 @@ void RemoveGold(Player &player, int goldIndex)
 		SetPlrHandGoldCurs(player.InvList[gi]);
 	else
 		player.RemoveInvItem(gi);
+
 	MakeGoldStack(player.HoldItem, dropGoldValue);
+	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+
 	player._pGold = CalculateGold(player);
 	dropGoldValue = 0;
 }
@@ -393,12 +396,6 @@ bool IsLevelUpButtonVisible()
 }
 
 } // namespace
-
-void ControlSetGoldCurs(Item &goldItem)
-{
-	SetPlrHandGoldCurs(goldItem);
-	NewCursor(goldItem._iCurs + CURSOR_FIRSTITEM);
-}
 
 void CalculatePanelAreas()
 {
