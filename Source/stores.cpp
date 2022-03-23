@@ -345,6 +345,11 @@ void ScrollSmithBuy(int idx)
 		stextsel = stextdown;
 }
 
+uint32_t TotalPlayerGold()
+{
+	return MyPlayer->_pGold + Stash.gold;
+}
+
 void StartSmithBuy()
 {
 	stextsize = true;
@@ -352,7 +357,7 @@ void StartSmithBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithBuy(stextsval);
 	AddItemListBackButton();
@@ -417,7 +422,7 @@ bool StartSmithPremiumBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), Players[MyPlayerId]._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddItemListBackButton();
 
@@ -536,7 +541,7 @@ void StartSmithSell()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -547,7 +552,7 @@ void StartSmithSell()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -618,7 +623,7 @@ void StartSmithRepair()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to repair.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing to repair.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -629,7 +634,7 @@ void StartSmithRepair()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Repair which item?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Repair which item?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 
 	ScrollSmithSell(stextsval);
@@ -717,7 +722,7 @@ void StartWitchBuy()
 	stextsmax = 20;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollWitchBuy(stextsval);
 	AddItemListBackButton();
@@ -810,7 +815,7 @@ void StartWitchSell()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -821,7 +826,7 @@ void StartWitchSell()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -883,7 +888,7 @@ void StartWitchRecharge()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -894,7 +899,7 @@ void StartWitchRecharge()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Recharge which item?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Recharge which item?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -1007,7 +1012,7 @@ void SStartBoyBuy()
 	stextscrl = false;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have this item for sale:             Your gold: {:d}"), MyPlayer->_pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have this item for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
@@ -1088,7 +1093,7 @@ void StartHealerBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 
 	ScrollHealerBuy(stextsval);
@@ -1206,7 +1211,7 @@ void StartStorytellerIdentify()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to identify.             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, fmt::format(_("You have nothing to identify.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -1217,7 +1222,7 @@ void StartStorytellerIdentify()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Identify which item?             Your gold: {:d}"), myPlayer._pGold), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, fmt::format(_("Identify which item?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 
 	ScrollSmithSell(stextsval);
@@ -1389,7 +1394,7 @@ void SmithBuyEnter()
 	auto &myPlayer = Players[MyPlayerId];
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	if (myPlayer._pGold < smithitem[idx]._iIvalue) {
+	if (TotalPlayerGold() < smithitem[idx]._iIvalue) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1457,7 +1462,7 @@ void SmithPremiumBuyEnter()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pGold < premiumitems[idx]._iIvalue) {
+	if (TotalPlayerGold() < premiumitems[idx]._iIvalue) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1582,7 +1587,7 @@ void SmithRepairEnter()
 	auto &myPlayer = Players[MyPlayerId];
 
 	myPlayer.HoldItem = storehold[idx];
-	if (myPlayer._pGold < storehold[idx]._iIvalue)
+	if (TotalPlayerGold() < storehold[idx]._iIvalue)
 		StartStore(STORE_NOMONEY);
 	else
 		StartStore(STORE_CONFIRM);
@@ -1659,7 +1664,7 @@ void WitchBuyEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	if (myPlayer._pGold < witchitem[idx]._iIvalue) {
+	if (TotalPlayerGold() < witchitem[idx]._iIvalue) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1733,7 +1738,7 @@ void WitchRechargeEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 	myPlayer.HoldItem = storehold[idx];
-	if (myPlayer._pGold < storehold[idx]._iIvalue)
+	if (TotalPlayerGold() < storehold[idx]._iIvalue)
 		StartStore(STORE_NOMONEY);
 	else
 		StartStore(STORE_CONFIRM);
@@ -1742,7 +1747,7 @@ void WitchRechargeEnter()
 void BoyEnter()
 {
 	if (!boyitem.isEmpty() && stextsel == 18) {
-		if (Players[MyPlayerId]._pGold < 50) {
+		if (TotalPlayerGold() < 50) {
 			stextshold = STORE_BOY;
 			stextlhold = 18;
 			stextvhold = stextsval;
@@ -1837,7 +1842,7 @@ void BoyBuyEnter()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pGold < price) {
+	if (TotalPlayerGold() < price) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1975,7 +1980,7 @@ void HealerBuyEnter()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pGold < healitem[idx]._iIvalue) {
+	if (TotalPlayerGold() < healitem[idx]._iIvalue) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -2029,7 +2034,7 @@ void StorytellerIdentifyEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 	myPlayer.HoldItem = storehold[idx];
-	if (myPlayer._pGold < storehold[idx]._iIvalue)
+	if (TotalPlayerGold() < storehold[idx]._iIvalue)
 		StartStore(STORE_NOMONEY);
 	else
 		StartStore(STORE_CONFIRM);
@@ -2640,12 +2645,15 @@ void TakePlrsMoney(int cost)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	myPlayer._pGold -= cost;
+	myPlayer._pGold -= std::min(cost, myPlayer._pGold);
 
 	cost = TakeGold(myPlayer, cost, true);
 	if (cost != 0) {
-		TakeGold(myPlayer, cost, false);
+		cost = TakeGold(myPlayer, cost, false);
 	}
+
+	Stash.gold -= cost;
+	Stash.dirty = true;
 }
 
 void StoreEnter()
