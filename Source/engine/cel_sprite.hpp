@@ -80,11 +80,6 @@ public:
 	OwnedCelSprite(OwnedCelSprite &&) noexcept = default;
 	OwnedCelSprite &operator=(OwnedCelSprite &&) noexcept = default;
 
-	[[nodiscard]] CelSprite Unowned() const
-	{
-		return CelSprite(*this);
-	}
-
 private:
 	std::unique_ptr<byte[]> data_;
 };

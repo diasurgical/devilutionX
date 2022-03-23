@@ -3427,7 +3427,7 @@ void FreeItemGFX()
 
 void GetItemFrm(Item &item)
 {
-	item.AnimInfo.celSprite = itemanims[ItemCAnimTbl[item._iCurs]]->Unowned();
+	item.AnimInfo.celSprite.emplace(*itemanims[ItemCAnimTbl[item._iCurs]]);
 }
 
 void GetItemStr(Item &item)
@@ -4564,7 +4564,7 @@ void Item::SetNewAnimation(bool showAnimation)
 {
 	int it = ItemCAnimTbl[_iCurs];
 	int numberOfFrames = ItemAnimLs[it];
-	auto celSprite = itemanims[it] ? std::optional<CelSprite> { itemanims[it]->Unowned() } : std::nullopt;
+	auto celSprite = itemanims[it] ? std::optional<CelSprite> { *itemanims[it] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
 		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
