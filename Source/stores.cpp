@@ -2653,6 +2653,7 @@ void TakePlrsMoney(int cost)
 	}
 
 	Stash.gold -= cost;
+	Stash.dirty = true;
 }
 
 void StoreEnter()
