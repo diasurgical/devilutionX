@@ -393,7 +393,7 @@ endif()
 
 if(UBUNTU_TOUCH)
   target_compile_definitions(libdevilutionx PRIVATE -DUBUNTU_TOUCH=1)
-endif(UBUNTU_TOUCH)
+endif()
 
 if(UWP_LIB)
   target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
@@ -464,18 +464,20 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
     endif()
     
     if(UBUNTU_TOUCH)
-      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/mk/clickable/manifest.json.in ${CMAKE_CURRENT_BINARY_DIR}/manifest.json)
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Packaging/nix-ubuntutouch/clickable/manifest.json.in ${CMAKE_CURRENT_BINARY_DIR}/manifest.json)
       install(FILES ${CMAKE_CURRENT_BINARY_DIR}/manifest.json DESTINATION .)
-      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/mk/clickable/devilutionX.apparmor DESTINATION .)
-      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/mk/linux/devilutionX.desktop DESTINATION .)
+      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/Packaging/nix-ubuntutouch/clickable/devilutionX.apparmor DESTINATION .)
+      install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/Packaging/nix-ubuntutouch/linux/devilutionX.desktop DESTINATION .)
     endif()
 
-    install(FILES "${desktop_file}"
-      DESTINATION "share/applications"
-    )
-    install(FILES "${desktop_file_hellfire}"
-      DESTINATION "share/applications"
-    )
+    if(NOT UBUNTU_TOUCH)
+        install(FILES "${desktop_file}"
+          DESTINATION "share/applications"
+        )
+        install(FILES "${desktop_file_hellfire}"
+          DESTINATION "share/applications"
+        )
+    endif()
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
