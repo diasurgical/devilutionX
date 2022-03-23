@@ -693,13 +693,13 @@ struct Player {
 	{
 		if (_pmode == PM_STAND)
 			return true;
-		if (_pmode == PM_ATTACK && AnimInfo.CurrentFrame > _pAFNum)
+		if (_pmode == PM_ATTACK && AnimInfo.CurrentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_RATTACK && AnimInfo.CurrentFrame > _pAFNum)
+		if (_pmode == PM_RATTACK && AnimInfo.CurrentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_SPELL && AnimInfo.CurrentFrame > _pSFNum)
+		if (_pmode == PM_SPELL && AnimInfo.CurrentFrame >= _pSFNum)
 			return true;
-		if (IsWalking() && AnimInfo.CurrentFrame == AnimInfo.NumberOfFrames)
+		if (IsWalking() && AnimInfo.CurrentFrame == AnimInfo.NumberOfFrames - 1)
 			return true;
 		return false;
 	}

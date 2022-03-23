@@ -85,7 +85,7 @@ void InitSpellBook()
 	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", SPANEL_WIDTH);
 
 	if (gbIsHellfire) {
-		static const uint16_t SBkBtnHellfireWidths[] = { 0, 61, 61, 61, 61, 61, 76 };
+		static const uint16_t SBkBtnHellfireWidths[] = { 61, 61, 61, 61, 61, 76 };
 		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", SBkBtnHellfireWidths);
 	} else {
 		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", 76);
@@ -117,16 +117,16 @@ void FreeSpellBook()
 
 void DrawSpellBook(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), *pSpellBkCel, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), *pSpellBkCel, 0);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), *pSBkBtnCel, sbooktab + 1);
+		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), *pSBkBtnCel, sbooktab);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), *pSBkBtnCel, sbooktab + 1);
+		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), *pSBkBtnCel, sbooktab);
 	}
 	auto &player = Players[MyPlayerId];
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;

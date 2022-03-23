@@ -443,7 +443,7 @@ void AddInitItems()
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames;
+		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -1686,7 +1686,7 @@ void SpawnRock()
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
-	item.AnimInfo.CurrentFrame = 11;
+	item.AnimInfo.CurrentFrame = 10;
 }
 
 void ItemDoppel()
@@ -1815,7 +1815,7 @@ void PrintItemOil(char iDidx)
 
 void DrawUniqueInfoWindow(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 0);
 	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SPANEL_WIDTH + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
@@ -3358,7 +3358,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	item._iPostDraw = true;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames;
+		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
 		item._iAnimFlag = false;
 	}
 }
@@ -3442,16 +3442,16 @@ void ProcessItems()
 			continue;
 		item.AnimInfo.ProcessAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.CurrentFrame == 11)
-				item.AnimInfo.CurrentFrame = 1;
-			if (item._iSelFlag == 2 && item.AnimInfo.CurrentFrame == 21)
-				item.AnimInfo.CurrentFrame = 11;
+			if (item._iSelFlag == 1 && item.AnimInfo.CurrentFrame == 10)
+				item.AnimInfo.CurrentFrame = 0;
+			if (item._iSelFlag == 2 && item.AnimInfo.CurrentFrame == 20)
+				item.AnimInfo.CurrentFrame = 10;
 		} else {
-			if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames / 2)
+			if (item.AnimInfo.CurrentFrame == (item.AnimInfo.NumberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
 
-			if (item.AnimInfo.CurrentFrame >= item.AnimInfo.NumberOfFrames) {
-				item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames;
+			if (item.AnimInfo.CurrentFrame >= item.AnimInfo.NumberOfFrames - 1) {
+				item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
 				item._iAnimFlag = false;
 				item._iSelFlag = 1;
 			}
@@ -4360,7 +4360,7 @@ void MakeGoldStack(Item &goldItem, int value)
 int ItemNoFlippy()
 {
 	int r = ActiveItems[ActiveItemCount - 1];
-	Items[r].AnimInfo.CurrentFrame = Items[r].AnimInfo.NumberOfFrames;
+	Items[r].AnimInfo.CurrentFrame = Items[r].AnimInfo.NumberOfFrames - 1;
 	Items[r]._iAnimFlag = false;
 	Items[r]._iSelFlag = 1;
 
@@ -4617,7 +4617,7 @@ void Item::SetNewAnimation(bool showAnimation)
 		_iAnimFlag = true;
 		_iSelFlag = 0;
 	} else {
-		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames;
+		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames - 1;
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}

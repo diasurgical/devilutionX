@@ -101,7 +101,7 @@ struct Missile {
 	int16_t _miAnimWidth2;
 	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _pAnimDelay
 	int _miAnimAdd;
-	int _miAnimFrame; // Current frame of animation.
+	int _miAnimFrame; // Current frame of animation + 1.
 	bool _miDrawFlag;
 	bool _miLightFlag;
 	bool _miPreFlag;

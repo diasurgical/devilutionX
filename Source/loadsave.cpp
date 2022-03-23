@@ -230,7 +230,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	file.Skip(4); // Skip pointer _iAnimData
 	item.AnimInfo = {};
 	item.AnimInfo.NumberOfFrames = file.NextLE<int32_t>();
-	item.AnimInfo.CurrentFrame = file.NextLE<int32_t>();
+	item.AnimInfo.CurrentFrame = file.NextLE<int32_t>() - 1;
 	file.Skip(8); // Skip _iAnimWidth and _iAnimWidth2
 	file.Skip(4); // Unused since 1.02
 	item._iSelFlag = file.NextLE<uint8_t>();
@@ -344,7 +344,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.AnimInfo.TicksPerFrame = file.NextLE<int32_t>() + 1;
 	player.AnimInfo.TickCounterOfCurrentFrame = file.NextLE<int32_t>();
 	player.AnimInfo.NumberOfFrames = file.NextLE<int32_t>();
-	player.AnimInfo.CurrentFrame = file.NextLE<int32_t>();
+	player.AnimInfo.CurrentFrame = file.NextLE<int32_t>() - 1;
 	file.Skip(4); // Skip _pAnimWidth
 	file.Skip(4); // Skip _pAnimWidth2
 	file.Skip(4); // Skip _peflag
@@ -581,7 +581,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.AnimInfo.TicksPerFrame = file->NextLE<int32_t>();
 	monster.AnimInfo.TickCounterOfCurrentFrame = file->NextLE<int32_t>();
 	monster.AnimInfo.NumberOfFrames = file->NextLE<int32_t>();
-	monster.AnimInfo.CurrentFrame = file->NextLE<int32_t>();
+	monster.AnimInfo.CurrentFrame = file->NextLE<int32_t>() - 1;
 	file->Skip(4); // Skip _meflag
 	monster._mDelFlag = file->NextBool32();
 	monster._mVar1 = file->NextLE<int32_t>();
@@ -953,7 +953,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<uint32_t>(item._iAnimFlag ? 1 : 0);
 	file.Skip(4); // Skip pointer _iAnimData
 	file.WriteLE<int32_t>(item.AnimInfo.NumberOfFrames);
-	file.WriteLE<int32_t>(item.AnimInfo.CurrentFrame);
+	file.WriteLE<int32_t>(item.AnimInfo.CurrentFrame + 1);
 	// write _iAnimWidth for vanilla compatibility
 	file.WriteLE<int32_t>(ItemAnimWidth);
 	// write _iAnimWidth2 for vanilla compatibility
@@ -1062,7 +1062,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(std::max(0, player.AnimInfo.TicksPerFrame - 1));
 	file.WriteLE<int32_t>(player.AnimInfo.TickCounterOfCurrentFrame);
 	file.WriteLE<int32_t>(player.AnimInfo.NumberOfFrames);
-	file.WriteLE<int32_t>(player.AnimInfo.CurrentFrame);
+	file.WriteLE<int32_t>(player.AnimInfo.CurrentFrame + 1);
 	// write _pAnimWidth for vanilla compatibility
 	int animWidth = player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96;
 	file.WriteLE<int32_t>(animWidth);
@@ -1290,7 +1290,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.AnimInfo.TicksPerFrame);
 	file->WriteLE<int32_t>(monster.AnimInfo.TickCounterOfCurrentFrame);
 	file->WriteLE<int32_t>(monster.AnimInfo.NumberOfFrames);
-	file->WriteLE<int32_t>(monster.AnimInfo.CurrentFrame);
+	file->WriteLE<int32_t>(monster.AnimInfo.CurrentFrame + 1);
 	file->Skip<uint32_t>(); // Skip _meflag
 	file->WriteLE<uint32_t>(monster._mDelFlag ? 1 : 0);
 	file->WriteLE<int32_t>(monster._mVar1);

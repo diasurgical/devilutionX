@@ -613,7 +613,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 
 	const int dialogX = 30;
 
-	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), *pGBoxBuff, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), *pGBoxBuff, 0);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw?"), 200);

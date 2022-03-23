@@ -528,16 +528,16 @@ void InitControlPan()
 
 	LoadCharPanel();
 	LoadSpellIcons();
-	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 1);
+	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 0);
 	{
 		const Point bulbsPosition { 0, 87 };
 		const OwnedCelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
-		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 1);
-		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 2);
+		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 0);
+		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 1);
 	}
 	talkflag = false;
 	if (IsChatAvailable()) {
-		CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
+		CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 0);
 		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
@@ -596,16 +596,16 @@ void DrawCtrlBtns(const Surface &out)
 			DrawPanelBox(out, MakeSdlRect(PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20), { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
 		} else {
 			Point position { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 };
-			CelDrawTo(out, position, *pPanelButtons, i + 1);
+			CelDrawTo(out, position, *pPanelButtons, i);
 			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
 		}
 	}
 	if (PanelButtonIndex == 8) {
-		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 2 : 1);
+		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 1 : 0);
 		if (gbFriendlyMode)
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 4 : 3);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 3 : 2);
 		else
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 6 : 5);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 5 : 4);
 	}
 }
 
@@ -1031,7 +1031,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 {
 	const int dialogX = 30;
 
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 0);
 
 	const std::string description = fmt::format(
 	    ngettext(
