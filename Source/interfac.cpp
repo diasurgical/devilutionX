@@ -173,7 +173,7 @@ void DrawCutscene()
 	lock_buf(1);
 	const Surface &out = GlobalBackBuffer();
 	DrawArt(out, { PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y }, &ArtCutsceneWidescreen);
-	CelDrawTo(out, { PANEL_X, 480 - 1 + UI_OFFSET_Y }, *sgpBackCel, 1);
+	CelDrawTo(out, { PANEL_X, 480 - 1 + UI_OFFSET_Y }, *sgpBackCel, 0);
 
 	constexpr int ProgressHeight = 22;
 	SDL_Rect rect = MakeSdlRect(

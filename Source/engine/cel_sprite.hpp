@@ -40,7 +40,7 @@ public:
 		return data_ptr_;
 	}
 
-	[[nodiscard]] uint16_t Width(std::size_t frame = 1) const
+	[[nodiscard]] uint16_t Width(std::size_t frame = 0) const
 	{
 		return width_.HoldsPointer() ? width_.AsPointer()[frame] : width_.AsValue();
 	}

@@ -20,7 +20,7 @@ void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 {
 	const auto &animData = mon.GetAnimData(MonsterGraphic::Death);
 	memcpy(&corpse.data[0], &animData.CelSpritesForDirections[0], sizeof(animData.CelSpritesForDirections[0]) * animData.CelSpritesForDirections.size());
-	corpse.frame = animData.Frames;
+	corpse.frame = animData.Frames - 1;
 	corpse.width = animData.Width;
 }
 } // namespace
@@ -48,7 +48,7 @@ void InitCorpses()
 	for (auto &corpse : Corpses[nd].data)
 		corpse = MissileSpriteData[MFILE_SHATTER1].GetFirstFrame();
 
-	Corpses[nd].frame = 12;
+	Corpses[nd].frame = 11;
 	Corpses[nd].width = 128;
 	Corpses[nd].translationPaletteIndex = 0;
 	nd++;

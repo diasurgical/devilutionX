@@ -65,7 +65,7 @@ void CelDrawCursor(const Surface &out, Point position, int cursId);
 const OwnedCelSprite &GetInvItemSprite(int i);
 
 /** Returns the CEL frame index for the given inventory index. */
-int GetInvItemFrame(int i);
+int GetInvItemFrame(int cursId);
 
 /** Returns the width and height for an inventory index. */
 Size GetInvItemSize(int cursId);

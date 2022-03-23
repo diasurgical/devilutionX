@@ -312,9 +312,9 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 		Log("Draw Missile 2 type {}: NULL Cel Buffer", missile._mitype);
 		return;
 	}
-	int nCel = missile._miAnimFrame;
+	int nCel = missile._miAnimFrame - 1;
 	const uint32_t frames = LoadLE32(missile._miAnimData);
-	if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
+	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
 		return;
 	}
@@ -322,11 +322,11 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
 	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
 	if (missile._miUniqTrans != 0)
-		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame, Monsters[missile._misource].uniqueTRN.get());
+		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel, Monsters[missile._misource].uniqueTRN.get());
 	else if (missile._miLightFlag)
-		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame);
+		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel);
 	else
-		Cl2Draw(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame);
+		Cl2Draw(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel);
 }
 
 /**
@@ -421,7 +421,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
 	const uint32_t frames = LoadLE32(monster.AnimInfo.celSprite->Data());
-	if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
+	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster.mName,
@@ -461,16 +461,16 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
 	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
 
 	if (pnum == MyPlayerId) {
-		Cl2Draw(out, position.x, position.y, cel, 1);
+		Cl2Draw(out, position.x, position.y, cel, 0);
 		return;
 	}
 
 	if (lighting) {
-		Cl2DrawTRN(out, position.x, position.y, cel, 1, GetInfravisionTRN());
+		Cl2DrawTRN(out, position.x, position.y, cel, 0, GetInfravisionTRN());
 		return;
 	}
 
-	Cl2DrawLight(out, position.x, position.y, cel, 1);
+	Cl2DrawLight(out, position.x, position.y, cel, 0);
 }
 
 /**
@@ -512,7 +512,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 
 	if (player.previewCelSprite) {
 		sprite = player.previewCelSprite;
-		nCel = 1;
+		nCel = 0;
 	}
 
 	if (!sprite) {
@@ -522,8 +522,8 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 
 	Point spriteBufferPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite ? sprite->Width() : 96), 0 };
 
-	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(sprite->Data()));
-	if (nCel < 1 || frames > 50 || nCel > frames) {
+	const uint32_t frames = LoadLE32(sprite->Data());
+	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		const char *szMode = "unknown action";
 		if (player._pmode <= PM_QUIT)
 			szMode = PlayerModeNames[player._pmode];
@@ -622,21 +622,21 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 		return;
 	}
 
-	uint32_t nCel = objectToDraw._oAnimFrame;
-	uint32_t frames = LoadLE32(pCelBuff);
-	if (nCel < 1 || frames > 50 || nCel > frames) {
+	const uint32_t nCel = objectToDraw._oAnimFrame - 1;
+	const uint32_t frames = LoadLE32(pCelBuff);
+	if (nCel == static_cast<uint32_t>(-1) || frames > 50 || nCel >= frames) {
 		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, objectToDraw._otype);
 		return;
 	}
 
 	CelSprite cel { objectToDraw._oAnimData, objectToDraw._oAnimWidth };
 	if (pcursobj != -1 && &objectToDraw == &Objects[pcursobj]) {
-		CelBlitOutlineTo(out, 194, screenPosition, cel, objectToDraw._oAnimFrame);
+		CelBlitOutlineTo(out, 194, screenPosition, cel, nCel);
 	}
 	if (objectToDraw._oLight) {
-		CelClippedDrawLightTo(out, screenPosition, cel, objectToDraw._oAnimFrame);
+		CelClippedDrawLightTo(out, screenPosition, cel, nCel);
 	} else {
-		CelClippedDrawTo(out, screenPosition, cel, objectToDraw._oAnimFrame);
+		CelClippedDrawTo(out, screenPosition, cel, nCel);
 	}
 }
 
@@ -719,7 +719,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 
 	int nCel = item.AnimInfo.GetFrameToUseForRendering();
 	const uint32_t frames = LoadLE32(cel->Data());
-	if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
+	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", item._iIName, nCel, frames, ItemTypeToString(item._itype));
 		return;
 	}
@@ -730,7 +730,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 		CelBlitOutlineTo(out, GetOutlineColor(item, false), position, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, position, *cel, nCel);
-	if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames || item._iCurs == ICURS_MAGIC_ROCK)
+	if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames - 1 || item._iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
 }
 
@@ -853,8 +853,8 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 			const byte *pCelBuff = pDeadGuy->data[(bDead >> 5) & 7];
 			assert(pCelBuff != nullptr);
 			const uint32_t frames = LoadLE32(pCelBuff);
-			int nCel = pDeadGuy->frame;
-			if (nCel < 1 || frames > 50 || nCel > static_cast<int>(frames)) {
+			const int nCel = pDeadGuy->frame;
+			if (nCel < 0 || frames >= 50 || nCel > static_cast<int>(frames)) {
 				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
@@ -905,7 +905,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
 			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
 			if (bArch != 0) {
-				CelDrawTo(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, *pSpecialCels, bArch);
+				CelDrawTo(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, *pSpecialCels, bArch - 1);
 			}
 		}
 	}

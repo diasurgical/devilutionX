@@ -739,7 +739,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 
 uint8_t PentSpn2Spin()
 {
-	return (SDL_GetTicks() / 50) % 8 + 1;
+	return (SDL_GetTicks() / 50) % 8;
 }
 
 } // namespace devilution

@@ -31,7 +31,7 @@ void NewTownerAnim(Towner &towner, byte *pAnim, uint8_t numFrames, int delay)
 {
 	towner._tAnimData = pAnim;
 	towner._tAnimLen = numFrames;
-	towner._tAnimFrame = 1;
+	towner._tAnimFrame = 0;
 	towner._tAnimCnt = 0;
 	towner._tAnimDelay = delay;
 }
@@ -64,13 +64,13 @@ void InitSmith(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
-		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
-		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-		1, 1, 1, 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 2, 3, 4
+		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
+		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
+		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
+		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
+		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
+		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+		0, 0, 0, 0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0, 1, 2, 3
 		// clang-format on
 	};
 	towner.animOrder = AnimOrder;
@@ -84,15 +84,15 @@ void InitBarOwner(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 3, 2,  1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 2, 1, 16, 15, 14, 14, 15, 16,
-		1, 2, 3, 4, 5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16
+		0, 1, 2, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 1, 0, 15, 14, 13, 13, 14, 15,
+		0, 1, 2, 3, 4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15
 		// clang-format on
 	};
 	towner.animOrder = AnimOrder;
@@ -115,15 +115,15 @@ void InitWitch(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
-		 4,  4,  4,  5,  6,  6,  6,  5,  4, 15, 14, 13, 13, 13, 14, 15, 4, 5, 6, 6, 6, 5,
-		 4,  4,  4,  5,  6,  6,  6,  5,  4, 15, 14, 13, 13, 13, 14, 15, 4, 5, 6, 6, 6, 5,
-		 4,  4,  4,  5,  6,  6,  6,  5,  4, 15, 14, 13, 13, 13, 14, 15, 4, 5, 6, 6, 6, 5,
-		 4,  3,  2,  1, 19, 18, 19,  1,  2,  1, 19, 18, 19,  1,  2,
-		 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-		15, 15, 14, 13, 13, 13, 13, 14, 15,
-		15, 15, 14, 13, 12, 12, 12, 11, 10, 10, 10,  9,
-		 8,  9, 10, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-		 1,  2,  1, 19, 18, 19,  1,  2,  1,  2,  3
+		 3,  3,  3,  4,  5,  5,  5,  4,  3, 14, 13, 12, 12, 12, 13, 14, 3, 4, 5, 5, 5, 4,
+		 3,  3,  3,  4,  5,  5,  5,  4,  3, 14, 13, 12, 12, 12, 13, 14, 3, 4, 5, 5, 5, 4,
+		 3,  3,  3,  4,  5,  5,  5,  4,  3, 14, 13, 12, 12, 12, 13, 14, 3, 4, 5, 5, 5, 4,
+		 3,  2,  1,  0, 18, 17, 18,  0,  1,  0, 18, 17, 18,  0,  1,
+		 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+		14, 14, 13, 12, 12, 12, 12, 13, 14,
+		14, 14, 13, 12, 11, 11, 11, 10,  9,  9,  9,  8,
+		 7,  8,  9,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+		 0,  1,  0, 18, 17, 18,  0,  1,  0,  1,  2
 		// clang-format on
 	};
 	towner.animOrder = AnimOrder;
@@ -155,15 +155,15 @@ void InitHealer(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
-		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
-		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
-		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
-		 1,  2,  3,  3,  2,  1, 20, 19, 19, 20,
-		 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
-		15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,
-		 5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
-		15, 14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,
-		 5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+		 0,  1,  2,  2,  1,  0, 19, 18, 18, 19,
+		 0,  1,  2,  2,  1,  0, 19, 18, 18, 19,
+		 0,  1,  2,  2,  1,  0, 19, 18, 18, 19,
+		 0,  1,  2,  2,  1,  0, 19, 18, 18, 19,
+		 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+		14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,
+		 4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+		14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,
+		 4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
 		// clang-format on
 	};
 	towner.animOrder = AnimOrder;
@@ -177,10 +177,10 @@ void InitTeller(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
-		 1,  1, 25, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15,
-		16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 25, 25,  1,  1,  1, 25,
-		 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-		14, 13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1
+		 0,  0, 24, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14,
+		15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 24, 24,  0,  0,  0, 24,
+		 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+		13, 12, 11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0
 		// clang-format on
 	};
 	towner.animOrder = AnimOrder;
@@ -194,9 +194,9 @@ void InitDrunk(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
-		 1, 1, 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 11, 11, 11, 12, 13, 14, 15, 16, 17, 18, 18,
-		 1, 1, 1, 18, 17, 16, 15, 14, 13, 12, 11, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-		 1, 2, 3,  4,  5,  5,  5,  4,  3,  2
+		 0, 0, 0,  1,  2,  3,  4,  5,  6,  7,  8, 9, 10, 10, 10, 10, 11, 12, 13, 14, 15, 16, 17, 17,
+		 0, 0, 0, 17, 16, 15, 14, 13, 12, 11, 10, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+		 0, 1, 2,  3,  4,  4,  4,  3,  2,  1
 		// clang-format on
 	};
 	towner.animOrder = AnimOrder;
@@ -210,11 +210,9 @@ void InitCows(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 128;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	for (int i = 0; i < 8; i++) {
-		towner._tNAnim[i] = CelGetFrame(CowCels.get(), i);
-	}
+	CelGetDirectionFrames(CowCels.get(), towner._tNAnim);
 	NewTownerAnim(towner, towner._tNAnim[static_cast<size_t>(townerData.dir)], 12, 3);
-	towner._tAnimFrame = GenerateRnd(11) + 1;
+	towner._tAnimFrame = GenerateRnd(11);
 	towner.name = _("Cow");
 
 	const Point position = townerData.position;
@@ -650,7 +648,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		quest._qactive = QUEST_DONE;
 		auto curFrame = cowFarmer._tAnimFrame;
 		LoadTownerAnimations(cowFarmer, "Towners\\Farmer\\mfrmrn2.CEL", 15, 3);
-		cowFarmer._tAnimFrame = std::min(curFrame, cowFarmer._tAnimLen);
+		cowFarmer._tAnimFrame = std::min<uint8_t>(curFrame, cowFarmer._tAnimLen - 1);
 		return;
 	}
 
@@ -733,7 +731,7 @@ void TalkToGirl(Player &player, Towner &girl)
 		quest._qactive = QUEST_DONE;
 		auto curFrame = girl._tAnimFrame;
 		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, 6);
-		girl._tAnimFrame = std::min(curFrame, girl._tAnimLen);
+		girl._tAnimFrame = std::min<uint8_t>(curFrame, girl._tAnimLen - 1);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		return;
@@ -869,8 +867,8 @@ void ProcessTowners()
 		}
 
 		towner._tAnimFrame++;
-		if (towner._tAnimFrame > towner._tAnimLen)
-			towner._tAnimFrame = 1;
+		if (towner._tAnimFrame >= towner._tAnimLen)
+			towner._tAnimFrame = 0;
 	}
 }
 

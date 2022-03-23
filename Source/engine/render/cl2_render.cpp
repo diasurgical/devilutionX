@@ -730,11 +730,11 @@ void RenderCl2Outline(const Surface &out, Point position, const byte *src, std::
 
 } // namespace
 
-void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
+void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int numFrames)
 {
 	assert(p != nullptr);
 
-	for (int i = 1; i <= nCel; i++) {
+	for (int i = 0; i < numFrames; ++i) {
 		constexpr int FrameHeaderSize = 10;
 		int nDataSize;
 		byte *dst = CelGetFrame(p, i, &nDataSize) + FrameHeaderSize;
@@ -765,7 +765,7 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
 
 void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -775,7 +775,7 @@ void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 
 void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite cel, int frame)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -785,7 +785,7 @@ void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite c
 
 void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, uint8_t *trn)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -794,7 +794,7 @@ void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, ui
 
 void Cl2DrawLight(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);

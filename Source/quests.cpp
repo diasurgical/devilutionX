@@ -749,7 +749,7 @@ void DrawQuestLog(const Surface &out)
 		SelectedQuest = l;
 	}
 	const auto x = InnerPanel.position.x;
-	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 0);
 	int y = InnerPanel.position.y + ListYOffset;
 	for (int i = 0; i < EncounteredQuestCount; i++) {
 		if (i == FirstFinishedQuest) {

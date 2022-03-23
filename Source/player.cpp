@@ -371,9 +371,10 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 	if (data == nullptr && gbQuietMode)
 		return;
 
-	for (int i = 0; i < 8; i++) {
-		byte *pCelStart = CelGetFrame(data.get(), i);
-		anim[i].emplace(pCelStart, width);
+	const byte *directionFrames[8];
+	CelGetDirectionFrames(data.get(), directionFrames);
+	for (size_t i = 0; i < 8; i++) {
+		anim[i].emplace(directionFrames[i], width);
 	}
 }
 
@@ -667,14 +668,14 @@ bool DoWalk(int pnum, int variant)
 
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
-		if (player.AnimInfo.CurrentFrame == 1
-		    || player.AnimInfo.CurrentFrame == 5) {
+		if (player.AnimInfo.CurrentFrame == 0
+		    || player.AnimInfo.CurrentFrame == 4) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
 		}
 	}
 
 	// Check if we reached new tile
-	if (player.AnimInfo.CurrentFrame >= player._pWFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pWFrames - 1) {
 
 		// Update the player's tile position
 		switch (variant) {
@@ -1118,13 +1119,13 @@ bool DoAttack(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
+	if (player.AnimInfo.CurrentFrame == player._pAFNum - 2) {
 		PlaySfxLoc(PS_SWING, player.position.tile);
 	}
 
 	bool didhit = false;
 
-	if (player.AnimInfo.CurrentFrame == player._pAFNum) {
+	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
 		Point position = player.position.tile + player._pdir;
 		int dx = position.x;
 		int dy = position.y;
@@ -1211,7 +1212,7 @@ bool DoAttack(int pnum)
 		}
 	}
 
-	if (player.AnimInfo.CurrentFrame == player._pAFrames) {
+	if (player.AnimInfo.CurrentFrame == player._pAFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1228,10 +1229,10 @@ bool DoRangeAttack(int pnum)
 	auto &player = Players[pnum];
 
 	int arrows = 0;
-	if (player.AnimInfo.CurrentFrame == player._pAFNum) {
+	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
 		arrows = 1;
 	}
-	if ((player._pIFlags & ISPL_MULT_ARROWS) != 0 && player.AnimInfo.CurrentFrame == player._pAFNum + 2) {
+	if ((player._pIFlags & ISPL_MULT_ARROWS) != 0 && player.AnimInfo.CurrentFrame == player._pAFNum + 1) {
 		arrows = 2;
 	}
 
@@ -1282,7 +1283,7 @@ bool DoRangeAttack(int pnum)
 		}
 	}
 
-	if (player.AnimInfo.CurrentFrame >= player._pAFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pAFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1333,7 +1334,7 @@ bool DoBlock(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame >= player._pBFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pBFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 
@@ -1403,7 +1404,7 @@ bool DoSpell(int pnum)
 	auto &player = Players[pnum];
 
 	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : ((player.AnimInfo.CurrentFrame * player.AnimInfo.TicksPerFrame) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (currentSpellFrame == (player._pSFNum + 1)) {
+	if (currentSpellFrame == player._pSFNum) {
 		CastSpell(
 		    pnum,
 		    player._pSpell,
@@ -1418,7 +1419,7 @@ bool DoSpell(int pnum)
 		}
 	}
 
-	if (currentSpellFrame >= player._pSFrames) {
+	if (currentSpellFrame >= player._pSFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1434,7 +1435,7 @@ bool DoGotHit(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame >= player._pHFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pHFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		if (GenerateRnd(4) != 0) {
@@ -1454,7 +1455,7 @@ bool DoDeath(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames) {
+	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames - 1) {
 		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
 			player.AnimInfo.TicksPerFrame = 1000000000;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
@@ -1736,7 +1737,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		return;
 	}
 
-	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame > player._pAFNum) {
+	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
 			StartAttack(pnum, d);
@@ -1767,7 +1768,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame > player._pAFNum) {
+	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(pnum, d, player.destParam1, player.destParam2);
@@ -1783,8 +1784,8 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.TicksPerFrame + 1) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (player._pmode == PM_SPELL && currentSpellFrame > player._pSFNum) {
+	const int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.TicksPerFrame + 1) + player.AnimInfo.TickCounterOfCurrentFrame);
+	if (player._pmode == PM_SPELL && currentSpellFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
@@ -2843,12 +2844,12 @@ void InitPlayer(Player &player, bool firstTime)
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South, player._pNFrames, 4);
-			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1) + 1;
+			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1);
 			player.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 2);
-			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
 		}
 
 		player._pdir = Direction::South;

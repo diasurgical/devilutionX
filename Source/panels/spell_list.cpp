@@ -113,7 +113,7 @@ void DrawSpell(const Surface &out)
 	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
-	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 27;
+	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 26;
 	const Point position { PANEL_X + 565, PANEL_Y + 119 };
 	DrawSpellCel(out, position, nCel);
 

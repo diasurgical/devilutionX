@@ -31,13 +31,12 @@ namespace {
 /** Cursor images CEL */
 std::optional<OwnedCelSprite> pCursCels;
 std::optional<OwnedCelSprite> pCursCels2;
-constexpr uint16_t InvItems1Size = 180;
 
 /** Maps from objcurs.cel frame number to frame width. */
 const uint16_t InvItemWidth1[] = {
 	// clang-format off
 	// Cursors
-	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
+	33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
 	// Items
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -58,7 +57,6 @@ const uint16_t InvItemWidth1[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 };
 const uint16_t InvItemWidth2[] = {
-	0,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -67,12 +65,13 @@ const uint16_t InvItemWidth2[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
 	// clang-format on
 };
+constexpr uint16_t InvItems1Size = sizeof(InvItemWidth1) / sizeof(InvItemWidth1[0]);
 
 /** Maps from objcurs.cel frame number to frame height. */
-const uint16_t InvItemHeight1[] = {
+const uint16_t InvItemHeight1[InvItems1Size] = {
 	// clang-format off
 	// Cursors
-	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
+	29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
 	// Items
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -93,7 +92,6 @@ const uint16_t InvItemHeight1[] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 };
 const uint16_t InvItemHeight2[] = {
-	0,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -147,26 +145,27 @@ void FreeCursor()
 	ClearCursor();
 }
 
-const OwnedCelSprite &GetInvItemSprite(int i)
+const OwnedCelSprite &GetInvItemSprite(int cursId)
 {
-	return i < InvItems1Size ? *pCursCels : *pCursCels2;
+	return cursId <= InvItems1Size ? *pCursCels : *pCursCels2;
 }
 
-int GetInvItemFrame(int i)
+int GetInvItemFrame(int cursId)
 {
-	return i < InvItems1Size ? i : i - (InvItems1Size - 1);
+	return cursId <= InvItems1Size ? cursId - 1 : cursId - InvItems1Size - 1;
 }
 
 Size GetInvItemSize(int cursId)
 {
-	if (cursId >= InvItems1Size)
-		return { InvItemWidth2[cursId - (InvItems1Size - 1)], InvItemHeight2[cursId - (InvItems1Size - 1)] };
-	return { InvItemWidth1[cursId], InvItemHeight1[cursId] };
+	const int i = cursId - 1;
+	if (i >= InvItems1Size)
+		return { InvItemWidth2[i - InvItems1Size], InvItemHeight2[i - InvItems1Size] };
+	return { InvItemWidth1[i], InvItemHeight1[i] };
 }
 
 void SetICursor(int cursId)
 {
-	icursSize = GetInvItemSize(cursId);
+	icursSize = cursId == CURSOR_NONE ? Size { 0, 0 } : GetInvItemSize(cursId);
 	icursSize28 = icursSize / 28;
 }
 
@@ -178,7 +177,7 @@ void ResetCursor()
 void NewCursor(int cursId)
 {
 	pcurs = cursId;
-	cursSize = GetInvItemSize(cursId);
+	cursSize = cursId == CURSOR_NONE ? Size { 0, 0 } : GetInvItemSize(cursId);
 	SetICursor(cursId);
 	if (IsHardwareCursorEnabled() && ControlMode == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo() != CursorInfo::GameCursor(cursId) && cursId != CURSOR_NONE) {
 		SetHardwareCursor(CursorInfo::GameCursor(cursId));
