@@ -59,8 +59,6 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
-option(DEVILUTIONX_MASKED_ART_RLE "RLE-compress masked art in memory (e.g. fonts). Slightly lower RAM usage at a significant performance cost." OFF)
-
 option(DEVILUTIONX_CONVERT_FONTS_TO_CEL "Convert PCX font files to CEL in memory.")
 
 if(TSAN)
