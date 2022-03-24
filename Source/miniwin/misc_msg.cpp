@@ -298,12 +298,12 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			Players[MyPlayerId].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
 		}
 	}
 
-	CloseInventory();
+	IsStashOpen = false;
+	invflag = false;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
 	if (chrflag)
@@ -342,14 +342,12 @@ void ProcessGamepadEvents(GameAction &action)
 			chrflag = false;
 			QuestLogIsOpen = false;
 			sbookflag = false;
-			IsStashOpen = false;
 		}
 		break;
 	case GameActionType_TOGGLE_CHARACTER_INFO:
 		chrflag = !chrflag;
-		if (chrflag) {
+		if (chrflag && BlurStash()) {
 			QuestLogIsOpen = false;
-			IsStashOpen = false;
 			spselflag = false;
 			if (pcurs == CURSOR_DISARM)
 				NewCursor(CURSOR_HAND);
@@ -358,10 +356,11 @@ void ProcessGamepadEvents(GameAction &action)
 		break;
 	case GameActionType_TOGGLE_QUEST_LOG:
 		if (!QuestLogIsOpen) {
-			StartQuestlog();
-			chrflag = false;
-			IsStashOpen = false;
-			spselflag = false;
+			if (BlurStash()) {
+				StartQuestlog();
+				chrflag = false;
+				spselflag = false;
+			}
 		} else {
 			QuestLogIsOpen = false;
 		}
@@ -395,6 +394,11 @@ void ProcessGamepadEvents(GameAction &action)
 }
 
 } // namespace
+
+bool BlurStash()
+{
+	return !IsStashOpen || BlurInventory();
+}
 
 bool FetchMessage_Real(tagMSG *lpMsg)
 {

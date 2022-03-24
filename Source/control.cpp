@@ -772,41 +772,53 @@ void CheckBtnUp()
 		switch (i) {
 		case PanelButtonCharinfo:
 			QuestLogIsOpen = false;
-			IsStashOpen = false;
-			chrflag = !chrflag;
+			if (BlurStash()) {
+				chrflag = !chrflag;
+			}
 			break;
 		case PanelButtonQlog:
 			chrflag = false;
-			IsStashOpen = false;
-			if (!QuestLogIsOpen)
-				StartQuestlog();
-			else
+			if (!QuestLogIsOpen) {
+				if (BlurStash()) {
+					StartQuestlog();
+				}
+			} else {
 				QuestLogIsOpen = false;
+			}
 			break;
 		case PanelButtonAutomap:
 			DoAutoMap();
 			break;
 		case PanelButtonMainmenu:
-			qtextflag = false;
-			gamemenu_handle_previous();
-			gamemenuOff = false;
+			if (BlurStash()) {
+				qtextflag = false;
+				gamemenu_handle_previous();
+				gamemenuOff = false;
+			}
 			break;
 		case PanelButtonInventory:
 			sbookflag = false;
-			IsStashOpen = false;
-			invflag = !invflag;
+			if (invflag) {
+				if (BlurStash()) {
+					invflag = false;
+				}
+			} else {
+				invflag = true;
+			}
 			if (dropGoldFlag) {
 				CloseGoldDrop();
 				dropGoldValue = 0;
 			}
 			break;
 		case PanelButtonSpellbook:
-			CloseInventory();
-			if (dropGoldFlag) {
-				CloseGoldDrop();
-				dropGoldValue = 0;
+			if (BlurStash()) {
+				CloseInventory();
+				if (dropGoldFlag) {
+					CloseGoldDrop();
+					dropGoldValue = 0;
+				}
+				sbookflag = !sbookflag;
 			}
-			sbookflag = !sbookflag;
 			break;
 		case PanelButtonSendmsg:
 			if (talkflag)
@@ -917,9 +929,10 @@ void ReleaseLvlBtn()
 {
 	auto &mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
-		QuestLogIsOpen = false;
-		IsStashOpen = false;
-		chrflag = true;
+		if (BlurStash()) {
+			QuestLogIsOpen = false;
+			chrflag = true;
+		}
 	}
 	lvlbtndown = false;
 }

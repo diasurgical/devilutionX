@@ -41,6 +41,8 @@ struct tagMSG {
 // Everything else
 //
 
+bool BlurStash();
+
 void SetCursorPos(Point position);
 void FocusOnCharInfo();
 int TranslateSdlKey(SDL_Keysym key);

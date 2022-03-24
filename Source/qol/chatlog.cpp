@@ -93,7 +93,7 @@ void ToggleChatLog()
 {
 	if (ChatLogFlag) {
 		ChatLogFlag = false;
-	} else {
+	} else if (BlurStash()) {
 		stextflag = STORE_NONE;
 		CloseInventory();
 		chrflag = false;

@@ -494,7 +494,7 @@ bool UseStashItem(uint16_t c)
 
 	if (Stash.stashList[c]._iMiscId == IMISC_MAPOFDOOM)
 		return true;
-	if (Stash.stashList[c]._iMiscId == IMISC_NOTE) {
+	if (Stash.stashList[c]._iMiscId == IMISC_NOTE && BlurStash()) {
 		InitQTextMsg(TEXT_BOOK9);
 		CloseInventory();
 		return true;

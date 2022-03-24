@@ -224,7 +224,9 @@ void LeftMouseCmd(bool bShift)
 	assert(MousePosition.y < GetMainPanel().position.y || MousePosition.x < GetMainPanel().position.x || MousePosition.x >= GetMainPanel().position.x + PANEL_WIDTH);
 
 	if (leveltype == DTYPE_TOWN) {
-		IsStashOpen = false;
+		if (!BlurStash()) {
+			return;
+		}
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
@@ -429,6 +431,9 @@ void ReleaseKey(int vkey)
 
 void ClosePanels()
 {
+	if (!BlurStash())
+		return;
+
 	if (CanPanelsCoverView()) {
 		if (!chrflag && !QuestLogIsOpen && !IsStashOpen && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 			SetCursorPos(MousePosition + Displacement { 160, 0 });
@@ -1299,7 +1304,7 @@ void HelpKeyPressed()
 		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
 		AddPanelString(_("while in stores"));
 		LastMouseButtonAction = MouseActionType::None;
-	} else {
+	} else if (BlurStash()) {
 		CloseInventory();
 		chrflag = false;
 		sbookflag = false;
@@ -1321,7 +1326,15 @@ void InventoryKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
-	invflag = !invflag;
+
+	if (invflag) {
+		if (!BlurStash())
+			return;
+		invflag = false;
+	} else {
+		invflag = true;
+	}
+
 	if (!chrflag && !QuestLogIsOpen && !IsStashOpen && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
@@ -1334,13 +1347,15 @@ void InventoryKeyPressed()
 		}
 	}
 	sbookflag = false;
-	IsStashOpen = false;
 }
 
 void CharacterSheetKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
+	if (!BlurStash())
+		return;
+
 	chrflag = !chrflag;
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!chrflag) { // We closed the character sheet
@@ -1354,13 +1369,15 @@ void CharacterSheetKeyPressed()
 		}
 	}
 	QuestLogIsOpen = false;
-	IsStashOpen = false;
 }
 
 void QuestLogKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
+	if (!BlurStash())
+		return;
+
 	if (!QuestLogIsOpen) {
 		StartQuestlog();
 	} else {
@@ -1378,13 +1395,15 @@ void QuestLogKeyPressed()
 		}
 	}
 	chrflag = false;
-	IsStashOpen = false;
 }
 
 void DisplaySpellsKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
+	if (!BlurStash())
+		return;
+
 	chrflag = false;
 	QuestLogIsOpen = false;
 	CloseInventory();
@@ -1401,7 +1420,11 @@ void SpellBookKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
+	if (!BlurStash())
+		return;
+
 	sbookflag = !sbookflag;
+
 	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
@@ -1413,6 +1436,7 @@ void SpellBookKeyPressed()
 			}
 		}
 	}
+
 	CloseInventory();
 }
 

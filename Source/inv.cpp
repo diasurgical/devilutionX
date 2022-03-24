@@ -2146,7 +2146,7 @@ bool UseInvItem(int pnum, int cii)
 
 	UseItem(pnum, item->_iMiscId, item->_iSpell);
 
-	if (speedlist) {
+	if (speedlist && BlurStash()) {
 		if (player.SpdList[c]._iMiscId == IMISC_NOTE) {
 			InitQTextMsg(TEXT_BOOK9);
 			CloseInventory();
@@ -2157,7 +2157,7 @@ bool UseInvItem(int pnum, int cii)
 	}
 	if (player.InvList[c]._iMiscId == IMISC_MAPOFDOOM)
 		return true;
-	if (player.InvList[c]._iMiscId == IMISC_NOTE) {
+	if (player.InvList[c]._iMiscId == IMISC_NOTE && BlurStash()) {
 		InitQTextMsg(TEXT_BOOK9);
 		CloseInventory();
 		return true;
@@ -2169,7 +2169,9 @@ bool UseInvItem(int pnum, int cii)
 
 void CloseInventory()
 {
-	IsStashOpen = false;
+	if (!BlurStash())
+		return;
+
 	invflag = false;
 }
 
