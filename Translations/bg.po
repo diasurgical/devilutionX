@@ -5649,7 +5649,7 @@ msgstr "Огън "
 
 #: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid " Lightning"
-msgstr "Мълния"
+msgstr " Мълния"
 
 #: Source/monster.cpp:4700
 msgid "Immune:"
