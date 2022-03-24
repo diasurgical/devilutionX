@@ -108,6 +108,7 @@ set(libdevilutionx_SRCS
   utils/logged_fstream.cpp
   utils/paths.cpp
   utils/pcx.cpp
+  utils/pcx_to_cel.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
   utils/utf8.cpp
