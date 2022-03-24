@@ -5653,7 +5653,7 @@ msgstr "Мълния"
 
 #: Source/monster.cpp:4700
 msgid "Immune:"
-msgstr "Имунитет: "
+msgstr "Имунитет:"
 
 #: Source/monster.cpp:4717
 msgid "Type: {:s}"
