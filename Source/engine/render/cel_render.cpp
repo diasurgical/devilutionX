@@ -708,4 +708,35 @@ std::pair<int, int> MeasureSolidHorizontalBounds(CelSprite cel, int frame)
 	return { xBegin, xEnd };
 }
 
+void CelApplyTrans(byte *p, const std::array<uint8_t, 256> &translation)
+{
+	assert(p != nullptr);
+	const uint32_t numFrames = LoadLE32(p);
+	const byte *frameOffsets = p + 4;
+	p += 4 * (2 + static_cast<size_t>(numFrames));
+
+	uint32_t frameEnd = LoadLE32(&frameOffsets[0]);
+	for (uint32_t i = 0; i < numFrames; ++i) {
+		const uint32_t frameBegin = frameEnd;
+		frameEnd = LoadLE32(&frameOffsets[4 * (static_cast<size_t>(i) + 1)]);
+
+		const byte *end = p + (frameEnd - frameBegin);
+		const bool frameHasHeader = static_cast<uint8_t>(*p) == 0;
+		if (frameHasHeader) {
+			constexpr uint32_t FrameHeaderSize = 5 * 2;
+			p += FrameHeaderSize;
+		}
+		while (p != end) {
+			const auto val = static_cast<uint8_t>(*p++);
+			if (IsCelTransparent(val)) {
+				continue;
+			}
+			for (unsigned i = 0; i < val; ++i) {
+				const auto color = static_cast<uint8_t>(*p);
+				*p++ = static_cast<byte>(translation[color]);
+			}
+		}
+	}
+}
+
 } // namespace devilution
