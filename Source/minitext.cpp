@@ -151,6 +151,10 @@ void DrawQTextBack(const Surface &out)
 
 void DrawQText(const Surface &out)
 {
+	if (!qtextflag) {
+		return;
+	}
+
 	DrawQTextBack(out);
 	DrawQTextContent(out.subregionY(UI_OFFSET_Y + 49, 260));
 }

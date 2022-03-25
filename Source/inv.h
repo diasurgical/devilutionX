@@ -200,6 +200,7 @@ void RemoveScroll(Player &player);
 bool UseScroll();
 void UseStaffCharge(Player &player);
 bool UseStaff();
+const Item &GetInventoryItem(int pcursinvitem);
 bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(Player &player);

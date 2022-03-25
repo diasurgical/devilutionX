@@ -489,14 +489,14 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
 #ifdef USE_SDL1
-		if (gbRunGame && (IsTalkActive() || dropGoldFlag)) {
+		if (gbRunGame && (IsTalkActive() || IsDropGoldOpen)) {
 			Uint16 unicode = e.key.keysym.unicode;
 			if (unicode >= ' ') {
 				std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
 				std::string utf8 = convert.to_bytes(unicode);
 				if (IsTalkActive())
 					control_new_text(utf8);
-				if (dropGoldFlag)
+				if (IsDropGoldOpen)
 					GoldDropNewText(utf8);
 			}
 		}
@@ -606,7 +606,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			control_new_text(e.text.text);
 			break;
 		}
-		if (gbRunGame && dropGoldFlag) {
+		if (gbRunGame && IsDropGoldOpen) {
 			GoldDropNewText(e.text.text);
 			break;
 		}

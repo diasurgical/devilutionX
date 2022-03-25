@@ -143,6 +143,10 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg(const Surface &out)
 {
+	if (!IsDiabloMsgAvailable()) {
+		return;
+	}
+
 	int dialogStartY = ((gnScreenHeight - PANEL_HEIGHT) / 2) - (ErrorWindowHeight / 2) + 9;
 
 	CelDrawTo(out, { PANEL_X + 101, dialogStartY }, *pSTextSlidCels, 1);
