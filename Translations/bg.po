@@ -1264,7 +1264,7 @@ msgstr "Бързи Заклинания"
 
 #: Source/diablo.cpp:1475
 msgid "Open Speedbook."
-msgstr "Отваряне на листа с бърз достъп до заклинанния. "
+msgstr "Отваряне на листа с бърз достъп до заклинанния."
 
 #: Source/diablo.cpp:1482
 msgid "Quick save"
