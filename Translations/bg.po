@@ -1396,7 +1396,7 @@ msgstr "Увеличаване Гама"
 
 #: Source/diablo.cpp:1627
 msgid "Increase screen brightness."
-msgstr "Увеличаване яркостта на екрана. "
+msgstr "Увеличаване яркостта на екрана."
 
 #: Source/diablo.cpp:1634
 msgid "Help"
