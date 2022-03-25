@@ -1332,7 +1332,7 @@ msgstr "Герой"
 
 #: Source/diablo.cpp:1546
 msgid "Open Character screen."
-msgstr "Отваряне на прозорец с информация за персонажа. "
+msgstr "Отваряне на прозорец с информация за персонажа."
 
 #: Source/diablo.cpp:1553
 msgid "Quest log"
