@@ -1472,7 +1472,7 @@ msgstr "Нв {} {}"
 #. TRANSLATORS: Discord state i.e. "Nightmare difficulty"
 #: Source/discord/discord.cpp:102
 msgid "{} difficulty"
-msgstr "{} трудност "
+msgstr "{} трудност"
 
 #. TRANSLATORS: Discord activity, not in game
 #: Source/discord/discord.cpp:182
