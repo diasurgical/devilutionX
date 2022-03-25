@@ -1372,7 +1372,7 @@ msgstr "Мащабиране"
 
 #: Source/diablo.cpp:1602
 msgid "Zoom Game Screen."
-msgstr "Мащабиране на екрана. "
+msgstr "Мащабиране на екрана."
 
 #: Source/diablo.cpp:1612
 msgid "Pause Game"
