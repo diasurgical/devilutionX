@@ -1404,7 +1404,7 @@ msgstr "Помощ"
 
 #: Source/diablo.cpp:1635
 msgid "Open Help Screen."
-msgstr "Помощен диалог. "
+msgstr "Помощен диалог."
 
 #: Source/diablo.cpp:1642
 msgid "Screenshot"
