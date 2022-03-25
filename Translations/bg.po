@@ -1248,7 +1248,7 @@ msgstr "Предмет от колана {}"
 
 #: Source/diablo.cpp:1440
 msgid "Use Belt item."
-msgstr "Използване на предмет от колана "
+msgstr "Използване на предмет от колана."
 
 #: Source/diablo.cpp:1455
 msgid "Quick spell {}"
