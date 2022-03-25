@@ -1485,7 +1485,7 @@ msgstr "Обратна връзка"
 
 #: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
-msgstr "Свързването e невъзможно "
+msgstr "Свързването e невъзможно"
 
 #: Source/dvlnet/tcp_client.cpp:91
 msgid "error: read 0 bytes from server"
