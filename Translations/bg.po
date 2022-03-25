@@ -5637,7 +5637,7 @@ msgstr "Няма магическа устойчивост"
 
 #: Source/monster.cpp:4690
 msgid "Resists:"
-msgstr "Устойчивост: "
+msgstr "Устойчивост:"
 
 #: Source/monster.cpp:4692 Source/monster.cpp:4702
 msgid " Magic"
