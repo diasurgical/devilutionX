@@ -5641,7 +5641,7 @@ msgstr "Устойчивост:"
 
 #: Source/monster.cpp:4692 Source/monster.cpp:4702
 msgid " Magic"
-msgstr "Магия"
+msgstr " Магия"
 
 #: Source/monster.cpp:4694 Source/monster.cpp:4704
 msgid " Fire"
