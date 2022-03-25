@@ -195,7 +195,7 @@ bool TryInvPut();
 int InvPutItem(Player &player, Point position);
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
-int8_t CheckInvHLight();
+int8_t CheckInvHLight(Point mousePosition);
 void RemoveScroll(Player &player);
 bool UseScroll();
 void UseStaffCharge(Player &player);

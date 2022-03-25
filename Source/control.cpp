@@ -737,7 +737,7 @@ void CheckPanelInfo()
 		}
 	}
 	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x && MousePosition.y > 4 + mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y)
-		pcursinvitem = CheckInvHLight();
+		pcursinvitem = CheckInvHLight(MousePosition);
 
 	if (CheckXPBarInfo()) {
 		panelflag = true;
@@ -1073,7 +1073,7 @@ void control_drop_gold(char vkey)
 		CloseGoldDrop();
 		dropGoldValue = 0;
 	} else if (vkey == DVL_VK_BACK) {
-		dropGoldValue = dropGoldValue / 10;
+		dropGoldValue /= 10;
 	}
 }
 

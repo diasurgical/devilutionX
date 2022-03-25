@@ -1,3 +1,9 @@
+/**
+ * @file options.h
+ *
+ * Load and save options from the diablo.ini file.
+ */
+
 #pragma once
 
 #include <cstdint>
