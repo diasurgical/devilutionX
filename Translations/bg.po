@@ -1388,7 +1388,7 @@ msgstr "Намаляване Гама"
 
 #: Source/diablo.cpp:1619
 msgid "Reduce screen brightness."
-msgstr "Намаляване яркоста на екрана. "
+msgstr "Намаляване яркоста на екрана."
 
 #: Source/diablo.cpp:1626
 msgid "Increase Gamma"
