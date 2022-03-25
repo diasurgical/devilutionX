@@ -1364,7 +1364,7 @@ msgstr "Скриване Инфо Екрани"
 
 #: Source/diablo.cpp:1581
 msgid "Hide all info screens."
-msgstr "Скриване на всички информационни екрани. "
+msgstr "Скриване на всички информационни екрани."
 
 #: Source/diablo.cpp:1601
 msgid "Zoom"
