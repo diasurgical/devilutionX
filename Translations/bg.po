@@ -1256,7 +1256,7 @@ msgstr "Бързо заклинание {}"
 
 #: Source/diablo.cpp:1456
 msgid "Hotkey for skill or spell."
-msgstr "Клавиш за умение или заклинание. "
+msgstr "Клавиш за умение или заклинание."
 
 #: Source/diablo.cpp:1474
 msgid "Speedbook"
