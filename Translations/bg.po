@@ -1340,7 +1340,7 @@ msgstr "Задачи"
 
 #: Source/diablo.cpp:1554
 msgid "Open Quest log."
-msgstr "Q: Отваряне на Приключенски дневник. "
+msgstr "Q: Отваряне на Приключенски дневник."
 
 #: Source/diablo.cpp:1561
 msgid "Spellbook"
