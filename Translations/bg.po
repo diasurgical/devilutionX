@@ -5645,7 +5645,7 @@ msgstr "Магия"
 
 #: Source/monster.cpp:4694 Source/monster.cpp:4704
 msgid " Fire"
-msgstr "Огън "
+msgstr " Огън"
 
 #: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid " Lightning"
