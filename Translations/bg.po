@@ -1324,7 +1324,7 @@ msgstr "Включва показването на авто-карта."
 
 #: Source/diablo.cpp:1538
 msgid "Open Inventory screen."
-msgstr "Отваряне на инвентар. "
+msgstr "Отваряне на инвентар."
 
 #: Source/diablo.cpp:1545
 msgid "Character"
