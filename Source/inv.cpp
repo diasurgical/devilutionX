@@ -348,16 +348,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		il = ILOC_TWOHAND;
 		done = true;
 	}
-	if (player.GetItemLocation(player.HoldItem) == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
-		if (itemSize == Size { 1, 1 }) {
-			done = true;
-			if (!AllItemsList[player.HoldItem.IDidx].iUsable)
-				done = false;
-			if (!player.CanUseItem(player.HoldItem))
-				done = false;
-			if (player.HoldItem._itype == ItemType::Gold)
-				done = false;
-		}
+	if (il == ILOC_BELT) {
+		done = CanBePlacedOnBelt(player.HoldItem);
 	}
 
 	int8_t it = 0;
@@ -911,16 +903,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 
 	if (dropItem && !holdItem.isEmpty()) {
-		if (IsStashOpen) {
-			if (AutoPlaceItemInStash(player, holdItem, true)) {
-				holdItem._itype = ItemType::None;
-				NewCursor(CURSOR_HAND);
-			} else {
-				player.SaySpecific(HeroSpeech::WhereWouldIPutThis);
-			}
-		} else {
-			TryDropItem();
-		}
+		TryDropItem();
 	}
 }
 
@@ -1190,7 +1173,7 @@ bool CanBePlacedOnBelt(const Item &item)
 {
 	return FitsInBeltSlot(item)
 	    && item._itype != ItemType::Gold
-	    && item._iStatFlag
+	    && MyPlayer->CanUseItem(item)
 	    && AllItemsList[item.IDidx].iUsable;
 }
 
@@ -1628,10 +1611,34 @@ void inv_update_rem_item(Player &player, inv_body_loc iv)
 	CalcPlrInv(player, player._pmode != PM_DEATH);
 }
 
+void TransferItemToStash(Player &player, int location)
+{
+	if (location == -1) {
+		return;
+	}
+
+	Item &item = GetInventoryItem(player, location);
+	if (!AutoPlaceItemInStash(player, item, true)) {
+		player.SaySpecific(HeroSpeech::WhereWouldIPutThis);
+		return;
+	}
+
+	PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
+
+	if (location < INVITEM_INV_FIRST)
+		player.InvBody[location]._itype = ItemType::None;
+	else if (location <= INVITEM_INV_LAST)
+		player.RemoveInvItem(location - INVITEM_INV_FIRST);
+	else
+		player.RemoveSpdBarItem(location - INVITEM_BELT_FIRST);
+}
+
 void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(MyPlayerId, MousePosition);
+	} else if (IsStashOpen && isCtrlHeld) {
+		TransferItemToStash(*MyPlayer, pcursinvitem);
 	} else {
 		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld, isCtrlHeld);
 	}
@@ -2071,6 +2078,17 @@ bool UseStaff()
 	auto &myPlayer = Players[MyPlayerId];
 
 	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], myPlayer._pRSpell);
+}
+
+Item &GetInventoryItem(Player &player, int location)
+{
+	if (location < INVITEM_INV_FIRST)
+		return player.InvBody[location];
+
+	if (location <= INVITEM_INV_LAST)
+		return player.InvList[location - INVITEM_INV_FIRST];
+
+	return player.SpdList[location - INVITEM_BELT_FIRST];
 }
 
 bool UseInvItem(int pnum, int cii)

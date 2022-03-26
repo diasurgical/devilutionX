@@ -91,7 +91,6 @@ void CheckStashPaste(Point cursorPosition)
 	if (player.HoldItem._itype == ItemType::Gold) {
 		Stash.gold += player.HoldItem._ivalue;
 		Stash.dirty = true;
-		player.HoldItem._itype = ItemType::None;
 		if (!IsHardwareCursor())
 			SetCursorPos(cursorPosition);
 		NewCursor(CURSOR_HAND);
@@ -150,7 +149,7 @@ void CheckStashPaste(Point cursorPosition)
 	NewCursor(cn);
 }
 
-void CheckStashCut(Point cursorPosition, bool automaticMove, bool dropItem)
+void CheckStashCut(Point cursorPosition, bool automaticMove)
 {
 	auto &player = Players[MyPlayerId];
 
@@ -223,43 +222,12 @@ void CheckStashCut(Point cursorPosition, bool automaticMove, bool dropItem)
 			holdItem._itype = ItemType::None;
 		} else {
 			NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-			if (!IsHardwareCursor() && !dropItem) {
+			if (!IsHardwareCursor()) {
 				// For a hardware cursor, we set the "hot point" to the center of the item instead.
 				SetCursorPos(cursorPosition - Displacement(cursSize / 2));
 			}
 		}
 	}
-
-	if (dropItem && !holdItem.isEmpty()) {
-		if (invflag) {
-			if (AutoPlaceItemInInventory(player, holdItem, true)) {
-				holdItem._itype = ItemType::None;
-				NewCursor(CURSOR_HAND);
-			} else {
-				player.SaySpecific(HeroSpeech::IHaveNoRoom);
-			}
-		} else {
-			TryDropItem();
-		}
-	}
-}
-
-void StartGoldWithdraw()
-{
-	CloseGoldDrop();
-
-	InitialWithdrawGoldValue = std::min(RoomForGold(), Stash.gold);
-
-	if (talkflag)
-		control_reset_talk();
-
-	Point start = GetPanelPosition(UiPanels::Stash, { 67, 128 });
-	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
-	SDL_SetTextInputRect(&rect);
-
-	IsWithdrawGoldOpen = true;
-	WithdrawGoldValue = 0;
-	SDL_StartTextInput();
 }
 
 void WithdrawGold(Player &player, int amount)
@@ -290,6 +258,27 @@ void InitStash()
 
 	LoadArt("data\\stash.pcx", &StashPanelArt, 1);
 	LoadArt("data\\stashnavbtns.pcx", &StashNavButtonArt, 5);
+}
+
+void TransferItemToInventory(Player &player, uint16_t itemId)
+{
+	if (itemId == uint16_t(-1)) {
+		return;
+	}
+
+	Item &item = Stash.stashList[itemId];
+	if (item.isEmpty()) {
+		return;
+	}
+
+	if (!AutoPlaceItemInInventory(player, item, true)) {
+		player.SaySpecific(HeroSpeech::IHaveNoRoom);
+		return;
+	}
+
+	PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
+
+	Stash.RemoveStashItem(itemId);
 }
 
 int StashButtonPressed = -1;
@@ -358,16 +347,17 @@ void DrawStash(const Surface &out)
 	}
 
 	for (auto slot : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
-		if (Stash.stashGrids[Stash.GetPage()][slot.x][slot.y] == 0) {
+		uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y];
+		if (itemId == 0) {
 			continue; // No item in the given slot
 		}
 
-		uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y] - 1;
-		if (Stash.stashList[itemId].position != slot) {
+		itemId -= 1;
+		Item &item = Stash.stashList[itemId];
+		if (item.position != slot) {
 			continue; // Not the first slot of the item
 		}
 
-		Item &item = Stash.stashList[itemId];
 		int frame = item._iCurs + CURSOR_FIRSTITEM;
 
 		const Point position = GetStashSlotCoord(item.position) + offset;
@@ -375,11 +365,11 @@ void DrawStash(const Surface &out)
 		const int celFrame = GetInvItemFrame(frame);
 
 		if (pcursstashitem == itemId) {
-			uint8_t color = GetOutlineColor(Stash.stashList[itemId], true);
+			uint8_t color = GetOutlineColor(item, true);
 			CelBlitOutlineTo(out, color, position, cel, celFrame, false);
 		}
 
-		CelDrawItem(Stash.stashList[itemId], out, position, cel, celFrame);
+		CelDrawItem(item, out, position, cel, celFrame);
 	}
 
 	Point position = GetPanelPosition(UiPanels::Stash);
@@ -393,8 +383,10 @@ void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckStashPaste(mousePosition);
+	} else if (isCtrlHeld) {
+		TransferItemToInventory(*MyPlayer, pcursstashitem);
 	} else {
-		CheckStashCut(mousePosition, isShiftHeld, isCtrlHeld);
+		CheckStashCut(mousePosition, isShiftHeld);
 	}
 }
 
@@ -420,15 +412,16 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	ClearPanel();
 
-	uint16_t itemId = abs(Stash.stashGrids[Stash.GetPage()][slot.x][slot.y]);
-	if (itemId == 0)
+	uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y];
+	if (itemId == 0) {
 		return -1;
+	}
 
-	uint16_t ii = itemId - 1;
-	Item &item = Stash.stashList[ii];
-
-	if (item.isEmpty())
+	itemId -= 1;
+	Item &item = Stash.stashList[itemId];
+	if (item.isEmpty()) {
 		return -1;
+	}
 
 	InfoColor = item.getTextColor();
 	if (item._iIdentified) {
@@ -439,7 +432,7 @@ uint16_t CheckStashHLight(Point mousePosition)
 		PrintItemDur(item);
 	}
 
-	return ii;
+	return itemId;
 }
 
 bool UseStashItem(uint16_t c)
@@ -549,6 +542,24 @@ void StashStruct::RefreshItemStatFlags()
 	for (auto &item : Stash.stashList) {
 		item._iStatFlag = MyPlayer->CanUseItem(item);
 	}
+}
+
+void StartGoldWithdraw()
+{
+	CloseGoldDrop();
+
+	InitialWithdrawGoldValue = std::min(RoomForGold(), Stash.gold);
+
+	if (talkflag)
+		control_reset_talk();
+
+	Point start = GetPanelPosition(UiPanels::Stash, { 67, 128 });
+	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
+	SDL_SetTextInputRect(&rect);
+
+	IsWithdrawGoldOpen = true;
+	WithdrawGoldValue = 0;
+	SDL_StartTextInput();
 }
 
 void WithdrawGoldKeyPress(char vkey)

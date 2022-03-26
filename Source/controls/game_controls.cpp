@@ -15,6 +15,7 @@
 #include "doom.h"
 #include "gmenu.h"
 #include "options.h"
+#include "qol/stash.h"
 #include "stores.h"
 
 namespace devilution {
@@ -164,6 +165,10 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 		}
 	}
 #endif
+	if (IsStashOpen && ctrlEvent.button == ControllerButton_BUTTON_BACK) {
+		StartGoldWithdraw();
+		return false;
+	}
 
 	if (HandleStartAndSelect(ctrlEvent, action))
 		return true;

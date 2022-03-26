@@ -3136,7 +3136,6 @@ StartPlayerKill(int pnum, int earflag)
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
 				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
-				player.HoldItem._itype = ItemType::None;
 				NewCursor(CURSOR_HAND);
 			}
 

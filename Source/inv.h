@@ -180,6 +180,7 @@ int AddGoldToInventory(Player &player, int value);
 bool GoldAutoPlace(Player &player, Item &goldStack);
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(Player &player, inv_body_loc iv);
+void TransferItemToStash(Player &player, int location);
 void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
 
 /**
@@ -208,6 +209,7 @@ void RemoveScroll(Player &player);
 bool UseScroll();
 void UseStaffCharge(Player &player);
 bool UseStaff();
+Item &GetInventoryItem(Player &player, int location);
 bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(Player &player);
