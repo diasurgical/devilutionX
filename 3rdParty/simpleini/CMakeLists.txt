@@ -2,8 +2,8 @@ include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(simpleini
-    URL https://github.com/brofield/simpleini/archive/7bca74f6535a37846162383e52071f380c99a43a.zip
-    URL_HASH MD5=af067f743dd5c7aac3212ca22da6f621
+    URL https://github.com/brofield/simpleini/archive/9b3ed7ec815997bc8c5b9edf140d6bde653e1458.tar.gz
+    URL_HASH MD5=96d91f2a7f65c8a22a770e7498be1d3d
 )
 FetchContent_MakeAvailableExcludeFromAll(simpleini)
 
