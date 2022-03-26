@@ -1508,16 +1508,18 @@ void plrctrls_after_game_logic()
 void UseBeltItem(int type)
 {
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		auto &myPlayer = Players[MyPlayerId];
-		const int id = AllItemsList[myPlayer.SpdList[i].IDidx].iMiscId;
-		const int spellId = AllItemsList[myPlayer.SpdList[i].IDidx].iSpell;
-		if ((type == BLT_HEALING && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEAL)))
-		    || (type == BLT_MANA && (id == IMISC_MANA || id == IMISC_FULLMANA))
-		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
-			if (!myPlayer.SpdList[i].isEmpty()) {
-				UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
-				break;
-			}
+		Item &item = Players[MyPlayerId].SpdList[i];
+		if (item.isEmpty()) {
+			continue;
+		}
+
+		bool isRejuvenation = IsAnyOf(item._iMiscId, IMISC_REJUV, IMISC_FULLREJUV);
+		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.IsScrollOf(SPL_HEAL);
+		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
+
+		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
+			UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
+			break;
 		}
 	}
 }
