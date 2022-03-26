@@ -491,26 +491,16 @@ msgid ""
 msgstr "Створити нову відкриту гру без паролю з вибором рівня важкості."
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter a Game ID to join a game already in progress."
-msgstr "Введіть IP адресу або ім'я домену і приєднайтесь до вже запущеної гри."
+msgstr "Введіть ID Гри і приєднайтесь до вже запущеної гри."
 
 #: Source/DiabloUI/selgame.cpp:196
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter an IP or a hostname to join a game already in progress."
 msgstr "Введіть IP адресу або ім'я домену і приєднайтесь до вже запущеної гри."
 
 #: Source/DiabloUI/selgame.cpp:201
-#, fuzzy
-#| msgid "Join the public game already in progress at this address."
 msgid "Join the public game already in progress."
-msgstr "Приєднайтесь до відкритої гри, яка вже запущена по цій адресі."
+msgstr "Приєднайтесь до відкритої гри, яка вже запущена."
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
@@ -561,16 +551,12 @@ msgid "Select Difficulty"
 msgstr "Виберіть Складність"
 
 #: Source/DiabloUI/selgame.cpp:315
-#, fuzzy
-#| msgid "Join TCP Games"
 msgid "Join {:s} Games"
-msgstr "Приєднатися по TCP"
+msgstr "Приєднатися до {:s} Гри"
 
 #: Source/DiabloUI/selgame.cpp:320
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter Game ID"
-msgstr "Введіть Ім'я"
+msgstr "Введіть ID Гри"
 
 #: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
@@ -3443,11 +3429,11 @@ msgstr "Лук з Чорного Дуба"
 
 #: Source/itemdat.cpp:449
 msgid "Flamedart"
-msgstr ""
+msgstr "Вогнедротик"
 
 #: Source/itemdat.cpp:450
 msgid "Fleshstinger"
-msgstr ""
+msgstr "Жало Плоті"
 
 #: Source/itemdat.cpp:451
 msgid "Windforce"
@@ -3495,7 +3481,7 @@ msgstr "Тіньовий Яструб"
 
 #: Source/itemdat.cpp:462
 msgid "Wizardspike"
-msgstr ""
+msgstr "Вістря Мага"
 
 #: Source/itemdat.cpp:463
 msgid "Lightsabre"
@@ -3511,7 +3497,7 @@ msgstr "Інферно"
 
 #: Source/itemdat.cpp:466
 msgid "Doombringer"
-msgstr ""
+msgstr "Погибельник"
 
 #: Source/itemdat.cpp:467
 msgid "The Grizzly"
@@ -3531,7 +3517,7 @@ msgstr "Гострий Дзьоб"
 
 #: Source/itemdat.cpp:471
 msgid "BloodSlayer"
-msgstr ""
+msgstr "Крововбивця"
 
 #: Source/itemdat.cpp:472
 msgid "The Celestial Axe"
@@ -3551,11 +3537,11 @@ msgstr "Томагавк Агінари"
 
 #: Source/itemdat.cpp:476
 msgid "Hellslayer"
-msgstr ""
+msgstr "Пекельний Вбивця"
 
 #: Source/itemdat.cpp:477
 msgid "Messerschmidt's Reaver"
-msgstr ""
+msgstr "Грабіжник Мессершмідта"
 
 #: Source/itemdat.cpp:478
 msgid "Crackrust"
@@ -3583,7 +3569,7 @@ msgstr "Сучкуватий Корінь"
 
 #: Source/itemdat.cpp:484
 msgid "The Cranium Basher"
-msgstr ""
+msgstr "Черепний Розбійник"
 
 #: Source/itemdat.cpp:485
 msgid "Schaefer's Hammer"
@@ -3591,7 +3577,7 @@ msgstr "Молот Шефера"
 
 #: Source/itemdat.cpp:486
 msgid "Dreamflange"
-msgstr ""
+msgstr "Край Сну"
 
 #: Source/itemdat.cpp:487
 msgid "Staff of Shadows"
@@ -3599,7 +3585,7 @@ msgstr "Посох Тіней"
 
 #: Source/itemdat.cpp:488
 msgid "Immolator"
-msgstr ""
+msgstr "Спалювач"
 
 #: Source/itemdat.cpp:489
 msgid "Storm Spire"
@@ -3607,7 +3593,7 @@ msgstr "Штормовий Шпиль"
 
 #: Source/itemdat.cpp:490
 msgid "Gleamsong"
-msgstr ""
+msgstr "Мерехтюча Пісня"
 
 #: Source/itemdat.cpp:491
 msgid "Thundercall"
@@ -3647,7 +3633,7 @@ msgstr "Герб Дурня"
 
 #: Source/itemdat.cpp:500
 msgid "Gotterdamerung"
-msgstr ""
+msgstr "Загибель Богів"
 
 #: Source/itemdat.cpp:501
 msgid "Royal Circlet"
@@ -3667,11 +3653,11 @@ msgstr "Веселковий Плащ"
 
 #: Source/itemdat.cpp:505
 msgid "Leather of Aut"
-msgstr ""
+msgstr "Шкіра Аута"
 
 #: Source/itemdat.cpp:506
 msgid "Wisdom's Wrap"
-msgstr ""
+msgstr "Шаль Мудрості"
 
 #: Source/itemdat.cpp:507
 msgid "Sparking Mail"
@@ -3679,19 +3665,19 @@ msgstr "Іскряча Броня"
 
 #: Source/itemdat.cpp:508
 msgid "Scavenger Carapace"
-msgstr ""
+msgstr "Панцир Cміттяра"
 
 #: Source/itemdat.cpp:509
 msgid "Nightscape"
-msgstr ""
+msgstr "Нічний Покров"
 
 #: Source/itemdat.cpp:510
 msgid "Naj's Light Plate"
-msgstr ""
+msgstr "Легка Пластина Наджа"
 
 #: Source/itemdat.cpp:511
 msgid "Demonspike Coat"
-msgstr ""
+msgstr "Мундир з Демоношипів"
 
 #: Source/itemdat.cpp:512
 msgid "The Deflector"
@@ -3699,11 +3685,11 @@ msgstr "Дефлектор"
 
 #: Source/itemdat.cpp:513
 msgid "Split Skull Shield"
-msgstr ""
+msgstr "Щит-Череполом"
 
 #: Source/itemdat.cpp:514
 msgid "Dragon's Breach"
-msgstr ""
+msgstr "Пролом Дракона"
 
 #: Source/itemdat.cpp:515
 msgid "Blackoak Shield"
@@ -3727,7 +3713,7 @@ msgstr "Кільце Реги"
 
 #: Source/itemdat.cpp:520
 msgid "The Bleeder"
-msgstr ""
+msgstr "Кровопроливач"
 
 #: Source/itemdat.cpp:521
 msgid "Constricting Ring"
@@ -3803,11 +3789,11 @@ msgstr "Діамантове Лезо"
 
 #: Source/itemdat.cpp:539
 msgid "Bone Chain Armor"
-msgstr ""
+msgstr "Кістяна Кільчаста Броня"
 
 #: Source/itemdat.cpp:540
 msgid "Demon Plate Armor"
-msgstr ""
+msgstr "Демонська Латна Броня"
 
 #: Source/itemdat.cpp:541
 msgid "Acolyte's Amulet"
@@ -4782,7 +4768,7 @@ msgstr "Брудобігун"
 #: Source/monstdat.cpp:86
 msgctxt "monster"
 msgid "Frost Charger"
-msgstr ""
+msgstr "Морозний Бігун"
 
 #: Source/monstdat.cpp:87
 msgctxt "monster"
@@ -5032,12 +5018,12 @@ msgstr "Арахнон"
 #: Source/monstdat.cpp:136
 msgctxt "monster"
 msgid "Felltwin"
-msgstr ""
+msgstr "Фелтвін"
 
 #: Source/monstdat.cpp:137
 msgctxt "monster"
 msgid "Hork Spawn"
-msgstr ""
+msgstr "Блювотний Виродок"
 
 #: Source/monstdat.cpp:138
 msgctxt "monster"
@@ -5047,7 +5033,7 @@ msgstr "Отруто-хвіст"
 #: Source/monstdat.cpp:139
 msgctxt "monster"
 msgid "Necromorb"
-msgstr ""
+msgstr "Некро-Око"
 
 #: Source/monstdat.cpp:140
 msgctxt "monster"
@@ -5057,17 +5043,17 @@ msgstr "Лорд-Павук"
 #: Source/monstdat.cpp:141
 msgctxt "monster"
 msgid "Lashworm"
-msgstr ""
+msgstr "Хльостохробак"
 
 #: Source/monstdat.cpp:142
 msgctxt "monster"
 msgid "Torchant"
-msgstr ""
+msgstr "Торчант"
 
 #: Source/monstdat.cpp:143 Source/monstdat.cpp:483
 msgctxt "monster"
 msgid "Hork Demon"
-msgstr ""
+msgstr "Блювотний Демон"
 
 #: Source/monstdat.cpp:144
 msgctxt "monster"
@@ -5155,7 +5141,7 @@ msgstr "Безумний Жар"
 #: Source/monstdat.cpp:476
 msgctxt "monster"
 msgid "Snotspill"
-msgstr ""
+msgstr "Шмарклі"
 
 #: Source/monstdat.cpp:477
 msgctxt "monster"
@@ -5190,12 +5176,12 @@ msgstr "Паплюжник"
 #: Source/monstdat.cpp:486
 msgctxt "monster"
 msgid "Bonehead Keenaxe"
-msgstr ""
+msgstr "Гостросокирний Кістяк"
 
 #: Source/monstdat.cpp:487
 msgctxt "monster"
 msgid "Bladeskin the Slasher"
-msgstr ""
+msgstr "Рубака Мечешкура"
 
 #: Source/monstdat.cpp:488
 msgctxt "monster"
@@ -5220,7 +5206,7 @@ msgstr "Голодний Гнилеїд"
 #: Source/monstdat.cpp:492
 msgctxt "monster"
 msgid "Gutshank the Quick"
-msgstr "Швидкий Шивоторіз"
+msgstr "Швидкий Животоріз"
 
 #: Source/monstdat.cpp:493
 msgctxt "monster"
@@ -5265,27 +5251,27 @@ msgstr "Череповогонь"
 #: Source/monstdat.cpp:501
 msgctxt "monster"
 msgid "Warpskull"
-msgstr ""
+msgstr "Кривочереп"
 
 #: Source/monstdat.cpp:502
 msgctxt "monster"
 msgid "Goretongue"
-msgstr ""
+msgstr "Кровоязик"
 
 #: Source/monstdat.cpp:503
 msgctxt "monster"
 msgid "Pulsecrawler"
-msgstr ""
+msgstr "Пульсоповз"
 
 #: Source/monstdat.cpp:504
 msgctxt "monster"
 msgid "Moonbender"
-msgstr ""
+msgstr "Місячний Маг"
 
 #: Source/monstdat.cpp:505
 msgctxt "monster"
 msgid "Wrathraven"
-msgstr ""
+msgstr "Ворон Кари"
 
 #: Source/monstdat.cpp:506
 msgctxt "monster"
@@ -5300,22 +5286,22 @@ msgstr "Пекучий Чорнопопіл"
 #: Source/monstdat.cpp:508
 msgctxt "monster"
 msgid "Shadowcrow"
-msgstr "Тіньоворон"
+msgstr "Тіньоворона"
 
 #: Source/monstdat.cpp:509
 msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr ""
+msgstr "Слабак Іржекамінь"
 
 #: Source/monstdat.cpp:510
 msgctxt "monster"
 msgid "Bilefroth the Pit Master"
-msgstr ""
+msgstr "Господар Ями Жовчепінь"
 
 #: Source/monstdat.cpp:511
 msgctxt "monster"
 msgid "Bloodskin Darkbow"
-msgstr ""
+msgstr "Темнолучник Кровошкур"
 
 #: Source/monstdat.cpp:512
 msgctxt "monster"
@@ -5330,7 +5316,7 @@ msgstr "Тінопитій"
 #: Source/monstdat.cpp:514
 msgctxt "monster"
 msgid "Hazeshifter"
-msgstr ""
+msgstr "Імлозмін"
 
 #: Source/monstdat.cpp:515
 msgctxt "monster"
@@ -5345,22 +5331,22 @@ msgstr "Кровотрощ"
 #: Source/monstdat.cpp:517
 msgctxt "monster"
 msgid "Deathshade Fleshmaul"
-msgstr ""
+msgstr "Смертетінь Плотеріз"
 
 #: Source/monstdat.cpp:518
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr ""
+msgstr "Безумний Військохробак"
 
 #: Source/monstdat.cpp:519
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr ""
+msgstr "Зазублений Скляночереп"
 
 #: Source/monstdat.cpp:520
 msgctxt "monster"
 msgid "Blightfire"
-msgstr ""
+msgstr "Іржевогонь"
 
 #: Source/monstdat.cpp:521
 msgctxt "monster"
@@ -5370,12 +5356,12 @@ msgstr "Холодний Нічнокрил"
 #: Source/monstdat.cpp:522
 msgctxt "monster"
 msgid "Gorestone"
-msgstr ""
+msgstr "Кровокамінь"
 
 #: Source/monstdat.cpp:523
 msgctxt "monster"
 msgid "Bronzefist Firestone"
-msgstr ""
+msgstr "Бронзокулачний Вогнекамінь"
 
 #: Source/monstdat.cpp:524
 msgctxt "monster"
@@ -5425,7 +5411,7 @@ msgstr "Спинолом"
 #: Source/monstdat.cpp:533
 msgctxt "monster"
 msgid "Devilskull Sharpbone"
-msgstr ""
+msgstr "Гострокіст Чорточереп"
 
 #: Source/monstdat.cpp:534
 msgctxt "monster"
@@ -5440,7 +5426,7 @@ msgstr ""
 #: Source/monstdat.cpp:536
 msgctxt "monster"
 msgid "Oozedrool"
-msgstr ""
+msgstr "Липкослина"
 
 #: Source/monstdat.cpp:537
 msgctxt "monster"
@@ -5480,47 +5466,47 @@ msgstr ""
 #: Source/monstdat.cpp:544
 msgctxt "monster"
 msgid "Festerskull"
-msgstr ""
+msgstr "Гноєчереп"
 
 #: Source/monstdat.cpp:545
 msgctxt "monster"
 msgid "Lionskull the Bent"
-msgstr ""
+msgstr "Зігнутий Левочереп"
 
 #: Source/monstdat.cpp:546
 msgctxt "monster"
 msgid "Blacktongue"
-msgstr ""
+msgstr "Чорноязик"
 
 #: Source/monstdat.cpp:547
 msgctxt "monster"
 msgid "Viletouch"
-msgstr ""
+msgstr "Огиднодотик"
 
 #: Source/monstdat.cpp:548
 msgctxt "monster"
 msgid "Viperflame"
-msgstr ""
+msgstr "Вогняна Змія"
 
 #: Source/monstdat.cpp:549
 msgctxt "monster"
 msgid "Fangskin"
-msgstr ""
+msgstr "Іклошкур"
 
 #: Source/monstdat.cpp:550
 msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr ""
+msgstr "Нечестивий Відьмовогонь"
 
 #: Source/monstdat.cpp:551
 msgctxt "monster"
 msgid "Blackskull"
-msgstr ""
+msgstr "Чорночереп"
 
 #: Source/monstdat.cpp:552
 msgctxt "monster"
 msgid "Soulslash"
-msgstr ""
+msgstr "Душеріз"
 
 #: Source/monstdat.cpp:553
 msgctxt "monster"
@@ -5565,22 +5551,22 @@ msgstr "Кровобенкет"
 #: Source/monstdat.cpp:561
 msgctxt "monster"
 msgid "Graywar the Slayer"
-msgstr ""
+msgstr "Вбивця Сіробій"
 
 #: Source/monstdat.cpp:562
 msgctxt "monster"
 msgid "Dreadjudge"
-msgstr ""
+msgstr "Суддя"
 
 #: Source/monstdat.cpp:563
 msgctxt "monster"
 msgid "Stareye the Witch"
-msgstr ""
+msgstr "Відьма Зоряоко"
 
 #: Source/monstdat.cpp:564
 msgctxt "monster"
 msgid "Steelskull the Hunter"
-msgstr ""
+msgstr "Мисливець Сталечереп"
 
 #: Source/monstdat.cpp:565
 msgctxt "monster"
@@ -5600,17 +5586,17 @@ msgstr "Замфір"
 #: Source/monstdat.cpp:568
 msgctxt "monster"
 msgid "Bloodlust"
-msgstr ""
+msgstr "Кровожад"
 
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr ""
+msgstr "Павуковдова"
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
 msgid "Fleshdancer"
-msgstr ""
+msgstr "Плотетанцівниця"
 
 #: Source/monstdat.cpp:571
 msgctxt "monster"
@@ -7816,6 +7802,13 @@ msgid ""
 "the sign to my inn. I don't know why the demons would steal my sign but "
 "leave my family in peace... 'tis strange, no?"
 msgstr ""
+"Учителю, у мене стався дивний випадок. Я знаю, що ти багато знаєш про тих "
+"чудовиськ, які мешкають у лабіринті, але це те, чого я не можу зрозуміти... "
+"Уночі мене розбудив шкряпаючий звук біля моєї таверни. Коли я виглянув зі "
+"своєї спальні, я побачив тіні маленьких демоноподібних створінь у дворі "
+"корчми. Через деякий час вони втекли, але не раніше, ніж вкрали табличку до "
+"моєї корчми. Я не знаю, чому демони крадуть мій знак, але залишають мою "
+"родину в спокої… дивно, правда?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
@@ -8109,6 +8102,10 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
+"Хм, не знаю що тобі сказати і що може стати в нагоді. Вода, яка наповнює "
+"наші криниці надходить із підземного джерела. Я чув про тунель, що веде до "
+"великого озера, можливо вони — одне й те саме. На жаль, я не знаю, що могло "
+"б призвести до забруднення нашого джерела."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -8119,6 +8116,11 @@ msgid ""
 " \n"
 "Please, do what you can or I don't know what we will do."
 msgstr ""
+"Я завжди намагався тримати великий запас їжі і напоїв у нашому погребі, але "
+"оскільки по всьому місту немає прісної води, то і наші запаси скоро "
+"вичерпаються.\n"
+" \n"
+"Будь ласка, зроби все, що можеш, або я не знаю, що ми будемо робити далі."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:90
@@ -8129,6 +8131,11 @@ msgid ""
 "passage that leads to the springs that serve our town. Please find what has "
 "caused this calamity, or we all will surely perish."
 msgstr ""
+"Я радий, що вчасно тебе наздогнав ! Вода в наших колодязях стала солонуватою "
+"і застояною, і деякі городяни захворіли через неї. Наші запаси прісної води "
+"швидко вичерпуються. Я вірю, що є прохід, який веде до джерел, які "
+"постачають наше місто. Будь ласка, знайди що причинило це нещастя, інакше ми "
+"всі неодмінно загинемо."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -8138,6 +8145,10 @@ msgid ""
 " \n"
 "We cannot survive for long without your help."
 msgstr ""
+"Прошу, ти маєш поспішити. Кожна минаюча година наближає нас кінця запасів "
+"питної води.\n"
+" \n"
+"Довго прожити без твоєї допомоги ми не зможемо."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:94
@@ -8273,6 +8284,10 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
+"Якщо ти загинеш в цій проклятій ділянці, то станеш вічним слугою темних "
+"володарів.\n"
+" \n"
+"Іди в Палату Костіна свій страх і ризик."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -8281,6 +8296,9 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
+"То ти кажеш, величезний і таємничий скарб? Мені було б цікаво взяти у тебе "
+"пару речей… або, ще краще, хіба тобі не потрібні рідкісні та дорогі припаси, "
+"щоб пережити це випробування?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -8291,6 +8309,10 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
+"Схоже, архієпископ Лазар підбурив багатьох городян піти в Лабіринт, щоб "
+"знайти зниклого сина Короля. Він зіграв на їхніх страхах і збив їх у шалену "
+"юрбу. Жоден з них не був готовий до того, що лежало під землею… Лазар "
+"покинув їх там, унизу — залишив у лапах невимовних жахів на смерть."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -8298,6 +8320,8 @@ msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
 msgstr ""
+"Так, Фарнхем бурмотів щось про незграбного звіра, який володів лютою зброєю. "
+"Схоже, він назвав його м’ясником."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -8374,6 +8398,10 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
+"Прошу тебе, вислухай. Архієпископ Лазар, він привів нас сюди, щоб знайти "
+"загубленого принца. Мерзотник завів нас у пастку! Тепер усі мертві… убиті "
+"демоном, якого він назвав М’ясником. Помстись за нас! Знайди цього М'ясника "
+"і вбий його, щоб наші душі нарешті упокоїлись..."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -8478,6 +8506,8 @@ msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
 msgstr ""
+"Я ніколи раніше не чула про Лахданана. Пробач, але я не зможу тут тобі "
+"допомогти."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -8487,6 +8517,10 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
+"Якщо ти насправді зустрів Лахданана, я б порадив допомогти йому. Я кілька "
+"разів мав з ним справу вважаю його чесним і відданим за своєю природою. "
+"Прокляття, яке впало на послідовників Короля Леоріка, особливо тяжко "
+"обрушилося на нього."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
@@ -8494,6 +8528,8 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
+" Лахданан мертвий. Усі це знають, і ти не зможеш обдурити мене, щоб я "
+"передумав. З мертвими не можна говорити. Я знаю!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -8503,6 +8539,11 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
+"Ти можете зустріти людей таких як Лахданан, які опинилися в пастці в "
+"Лабіринті.\n"
+" \n"
+"Я відчуваю в ньому честь і велику провину. Допоможи йому, і ти допоможеш "
+"всьому Трістраму."
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
