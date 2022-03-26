@@ -1564,12 +1564,8 @@ extern SDL_Surface *PalSurface;
 
 void ClearScreenBuffer()
 {
-	lock_buf(3);
-
 	assert(PalSurface != nullptr);
 	SDL_FillRect(PalSurface, nullptr, 0);
-
-	unlock_buf(3);
 }
 
 #ifdef _DEBUG
@@ -1670,9 +1666,7 @@ void scrollrt_draw_game_screen()
 	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());
 	} else {
-		lock_buf(0);
 		DrawCursor(GlobalBackBuffer());
-		unlock_buf(0);
 	}
 
 	DrawMain(hgt, false, false, false, false, false);
@@ -1680,9 +1674,7 @@ void scrollrt_draw_game_screen()
 	RenderPresent();
 
 	if (!IsHardwareCursor()) {
-		lock_buf(0);
 		UndrawCursor(GlobalBackBuffer());
-		unlock_buf(0);
 	}
 }
 
@@ -1712,7 +1704,6 @@ void DrawAndBlit()
 
 	force_redraw = 0;
 
-	lock_buf(0);
 	const Surface &out = GlobalBackBuffer();
 	UndrawCursor(out);
 
@@ -1753,8 +1744,6 @@ void DrawAndBlit()
 	}
 
 	DrawFPS(out);
-
-	unlock_buf(0);
 
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);
 
