@@ -1528,7 +1528,7 @@ void PerformPrimaryAction()
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
-		} else if (GetRightPanel().Contains(MousePosition)) {
+		} else if (GetRightPanel().Contains(MousePosition) || GetMainPanel().Contains(MousePosition)) {
 			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
 			// Find any item occupying a slot that is currently under the cursor
