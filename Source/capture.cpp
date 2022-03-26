@@ -169,7 +169,6 @@ void CaptureScreen()
 	PaletteGetEntries(256, palette);
 	RedPalette();
 
-	lock_buf(2);
 	const Surface &buf = GlobalBackBuffer();
 	success = CaptureHdr(buf.w(), buf.h(), &outStream);
 	if (success) {
@@ -178,7 +177,6 @@ void CaptureScreen()
 	if (success) {
 		success = CapturePal(palette, &outStream);
 	}
-	unlock_buf(2);
 	outStream.close();
 
 	if (!success) {
