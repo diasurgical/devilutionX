@@ -455,16 +455,9 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 			return GetApplyButtonType(virtualPadButton->isHeld);
 
 		if (pcursinvitem != -1) {
-			Item *item;
-			if (pcursinvitem < INVITEM_INV_FIRST)
-				item = &MyPlayer->InvBody[pcursinvitem];
-			else if (pcursinvitem <= INVITEM_INV_LAST)
-				item = &MyPlayer->InvList[pcursinvitem - INVITEM_INV_FIRST];
-			else
-				item = &MyPlayer->SpdList[pcursinvitem - INVITEM_BELT_FIRST];
-
-			if (!item->IsScroll() || !spelldata[item->_iSpell].sTargeted) {
-				if (!item->isEquipment()) {
+			Item &item = GetInventoryItem(*MyPlayer, pcursinvitem);
+			if (!item.IsScroll() || !spelldata[item._iSpell].sTargeted) {
+				if (!item.isEquipment()) {
 					return GetApplyButtonType(virtualPadButton->isHeld);
 				}
 			}

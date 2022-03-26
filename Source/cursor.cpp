@@ -177,6 +177,9 @@ void ResetCursor()
 
 void NewCursor(int cursId)
 {
+	if (cursId < CURSOR_FIRSTITEM && MyPlayer != nullptr) {
+		MyPlayer->HoldItem._itype = ItemType::None;
+	}
 	pcurs = cursId;
 	cursSize = GetInvItemSize(cursId);
 	SetICursor(cursId);

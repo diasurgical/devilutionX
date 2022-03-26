@@ -319,10 +319,16 @@ void ProcessGamepadEvents(GameAction &action)
 	case GameActionType_SEND_KEY:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
-		UseBeltItem(BLT_HEALING);
+		if (IsStashOpen)
+			Stash.SetPage(Stash.GetPage() - 1);
+		else
+			UseBeltItem(BLT_HEALING);
 		break;
 	case GameActionType_USE_MANA_POTION:
-		UseBeltItem(BLT_MANA);
+		if (IsStashOpen)
+			Stash.SetPage(Stash.GetPage() + 1);
+		else
+			UseBeltItem(BLT_MANA);
 		break;
 	case GameActionType_PRIMARY_ACTION:
 		PerformPrimaryAction();
