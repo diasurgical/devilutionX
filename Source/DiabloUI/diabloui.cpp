@@ -666,7 +666,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeTc = 0;
 	fadeValue = 0;
 
-	if (IsHardwareCursorEnabled() && ControlMode == ControlTypes::KeyboardAndMouse && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
+	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
 		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
