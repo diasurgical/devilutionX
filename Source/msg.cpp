@@ -2615,15 +2615,16 @@ void NetSendCmdChItem(bool bHiPri, BYTE bLoc)
 {
 	TCmdChItem cmd;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = Players[MyPlayerId];
+	Item &item = myPlayer.InvBody[bLoc];
 
 	cmd.bCmd = CMD_CHANGEPLRITEMS;
 	cmd.bLoc = bLoc;
-	cmd.wIndx = myPlayer.HoldItem.IDidx;
-	cmd.wCI = myPlayer.HoldItem._iCreateInfo;
-	cmd.dwSeed = myPlayer.HoldItem._iSeed;
-	cmd.bId = myPlayer.HoldItem._iIdentified ? 1 : 0;
-	cmd.dwBuff = myPlayer.HoldItem.dwBuff;
+	cmd.wIndx = item.IDidx;
+	cmd.wCI = item._iCreateInfo;
+	cmd.dwSeed = item._iSeed;
+	cmd.bId = item._iIdentified ? 1 : 0;
+	cmd.dwBuff = item.dwBuff;
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
