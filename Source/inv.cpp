@@ -950,9 +950,11 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 		}
 	}
 
+	Point position = noteItem.position; // copy the position to restore it after re-initialising the item
 	noteItem = {};
 	GetItemAttrs(noteItem, IDI_FULLNOTE, 16);
 	SetupItem(noteItem);
+	noteItem.position = position; // this ensures CleanupItem removes the entry in the dropped items lookup table
 }
 
 void CheckQuestItem(Player &player, Item &questItem)
