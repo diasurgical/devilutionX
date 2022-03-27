@@ -2171,6 +2171,7 @@ bool UseInvItem(int pnum, int cii)
 
 void CloseInventory()
 {
+	CloseGoldWithdraw();
 	IsStashOpen = false;
 	invflag = false;
 }

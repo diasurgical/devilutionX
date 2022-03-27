@@ -342,6 +342,7 @@ void ProcessGamepadEvents(GameAction &action)
 			chrflag = false;
 			QuestLogIsOpen = false;
 			sbookflag = false;
+			CloseGoldWithdraw();
 			IsStashOpen = false;
 		}
 		break;
@@ -349,6 +350,7 @@ void ProcessGamepadEvents(GameAction &action)
 		chrflag = !chrflag;
 		if (chrflag) {
 			QuestLogIsOpen = false;
+			CloseGoldWithdraw();
 			IsStashOpen = false;
 			spselflag = false;
 			if (pcurs == CURSOR_DISARM)
@@ -360,6 +362,7 @@ void ProcessGamepadEvents(GameAction &action)
 		if (!QuestLogIsOpen) {
 			StartQuestlog();
 			chrflag = false;
+			CloseGoldWithdraw();
 			IsStashOpen = false;
 			spselflag = false;
 		} else {

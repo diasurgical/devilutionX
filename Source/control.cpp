@@ -769,11 +769,13 @@ void CheckBtnUp()
 		switch (i) {
 		case PanelButtonCharinfo:
 			QuestLogIsOpen = false;
+			CloseGoldWithdraw();
 			IsStashOpen = false;
 			chrflag = !chrflag;
 			break;
 		case PanelButtonQlog:
 			chrflag = false;
+			CloseGoldWithdraw();
 			IsStashOpen = false;
 			if (!QuestLogIsOpen)
 				StartQuestlog();
@@ -790,6 +792,7 @@ void CheckBtnUp()
 			break;
 		case PanelButtonInventory:
 			sbookflag = false;
+			CloseGoldWithdraw();
 			IsStashOpen = false;
 			invflag = !invflag;
 			if (dropGoldFlag) {
@@ -915,6 +918,7 @@ void ReleaseLvlBtn()
 	auto &mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
 		QuestLogIsOpen = false;
+		CloseGoldWithdraw();
 		IsStashOpen = false;
 		chrflag = true;
 	}
