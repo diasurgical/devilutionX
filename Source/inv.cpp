@@ -440,70 +440,27 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		}
 		break;
 	}
-	case ILOC_ONEHAND:
-		if (r <= SLOTXY_HAND_LEFT_LAST) {
-			if (player.InvBody[INVLOC_HAND_LEFT].isEmpty()) {
-				if ((player.InvBody[INVLOC_HAND_RIGHT].isEmpty() || player.InvBody[INVLOC_HAND_RIGHT]._iClass != player.HoldItem._iClass)
-				    || (player._pClass == HeroClass::Bard && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON)) {
-					ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem);
-				} else {
-					Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_RIGHT];
-					ChangeEquipment(player, INVLOC_HAND_RIGHT, player.HoldItem);
-					player.HoldItem = previouslyEquippedItem;
-					cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
-				}
-				break;
-			}
-			if ((player.InvBody[INVLOC_HAND_RIGHT].isEmpty() || player.InvBody[INVLOC_HAND_RIGHT]._iClass != player.HoldItem._iClass)
-			    || (player._pClass == HeroClass::Bard && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON)) {
-				Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_LEFT];
-				ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem);
-				player.HoldItem = previouslyEquippedItem;
-				cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
-				break;
-			}
+	case ILOC_ONEHAND: {
+		inv_body_loc selectedHand = r <= SLOTXY_HAND_LEFT_LAST ? INVLOC_HAND_LEFT : INVLOC_HAND_RIGHT;
+		inv_body_loc otherHand = r <= SLOTXY_HAND_LEFT_LAST ? INVLOC_HAND_RIGHT : INVLOC_HAND_LEFT;
 
-			Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_RIGHT];
-			ChangeEquipment(player, INVLOC_HAND_RIGHT, player.HoldItem);
-			player.HoldItem = previouslyEquippedItem;
-			cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
-			break;
-		}
-		if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-			if ((player.InvBody[INVLOC_HAND_LEFT].isEmpty() || player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT]) != ILOC_TWOHAND)
-			    || (player._pClass == HeroClass::Barbarian && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace))) {
-				if ((player.InvBody[INVLOC_HAND_LEFT].isEmpty() || player.InvBody[INVLOC_HAND_LEFT]._iClass != player.HoldItem._iClass)
-				    || (player._pClass == HeroClass::Bard && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON)) {
-					ChangeEquipment(player, INVLOC_HAND_RIGHT, player.HoldItem);
-					break;
-				}
-				Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_LEFT];
-				ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem);
-				player.HoldItem = previouslyEquippedItem;
-				cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
-				break;
-			}
-			Item twoHandedWeapon = player.InvBody[INVLOC_HAND_LEFT];
-			RemoveEquipment(player, INVLOC_HAND_LEFT, false);
-			ChangeEquipment(player, INVLOC_HAND_RIGHT, player.HoldItem);
-			player.HoldItem = twoHandedWeapon;
-			cn = twoHandedWeapon._iCurs + CURSOR_FIRSTITEM;
-			break;
-		}
+		bool pasteIntoSelectedHand = (player.InvBody[otherHand].isEmpty() || player.InvBody[otherHand]._iClass != player.HoldItem._iClass)
+		    || (player._pClass == HeroClass::Bard && player.InvBody[otherHand]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON);
 
-		if ((!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == player.HoldItem._iClass)
-		    && !(player._pClass == HeroClass::Bard && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON)) {
-			Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_LEFT];
-			ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem);
-			player.HoldItem = previouslyEquippedItem;
-			cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
-		} else {
-			Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_RIGHT];
-			ChangeEquipment(player, INVLOC_HAND_RIGHT, player.HoldItem);
+		bool dequipTwoHandedWeapon = (!player.InvBody[otherHand].isEmpty() && player.GetItemLocation(player.InvBody[otherHand]) == ILOC_TWOHAND);
+
+		inv_body_loc pasteHand = pasteIntoSelectedHand ? selectedHand : otherHand;
+		Item previouslyEquippedItem = dequipTwoHandedWeapon ? player.InvBody[otherHand] : player.InvBody[pasteHand];
+		if (dequipTwoHandedWeapon) {
+			RemoveEquipment(player, otherHand, false);
+		}
+		ChangeEquipment(player, pasteHand, player.HoldItem);
+		if (!previouslyEquippedItem.isEmpty()) {
 			player.HoldItem = previouslyEquippedItem;
 			cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
 		}
 		break;
+	}
 	case ILOC_TWOHAND:
 		if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && !player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			Item tempitem = player.HoldItem;
