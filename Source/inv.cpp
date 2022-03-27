@@ -801,10 +801,6 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 						invloc = INVLOC_AMULET;
 						break;
 					case ILOC_ONEHAND:
-						// Ensure shield is on the right, weapon on the left.
-						if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
-							SwapItem(player.InvBody[INVLOC_HAND_RIGHT], player.InvBody[INVLOC_HAND_LEFT]);
-						}
 						// User is attempting to move a weapon (left hand)
 						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
 						    && player.GetItemLocation(player.InvList[iv - 1]) == player.GetItemLocation(player.InvBody[INVLOC_HAND_LEFT])) {
@@ -835,7 +831,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 								player.RemoveInvItem(player._pNumInv - 1, false);
 								break;
 							}
-							player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+							RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 							invloc = INVLOC_HAND_LEFT;
 						} else {
 							invloc = INVLOC_HAND_LEFT;
