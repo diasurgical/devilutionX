@@ -224,6 +224,7 @@ void LeftMouseCmd(bool bShift)
 	assert(MousePosition.y < GetMainPanel().position.y || MousePosition.x < GetMainPanel().position.x || MousePosition.x >= GetMainPanel().position.x + PANEL_WIDTH);
 
 	if (leveltype == DTYPE_TOWN) {
+		CloseGoldWithdraw();
 		IsStashOpen = false;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
@@ -1334,6 +1335,7 @@ void InventoryKeyPressed()
 		}
 	}
 	sbookflag = false;
+	CloseGoldWithdraw();
 	IsStashOpen = false;
 }
 
@@ -1354,6 +1356,7 @@ void CharacterSheetKeyPressed()
 		}
 	}
 	QuestLogIsOpen = false;
+	CloseGoldWithdraw();
 	IsStashOpen = false;
 }
 
@@ -1378,6 +1381,7 @@ void QuestLogKeyPressed()
 		}
 	}
 	chrflag = false;
+	CloseGoldWithdraw();
 	IsStashOpen = false;
 }
 
