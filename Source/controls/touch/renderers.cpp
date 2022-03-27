@@ -382,7 +382,7 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 			continue;
 		}
 
-		if (potionType == BLT_HEALING) {
+		if (potionType == BeltItemType::Healing) {
 			if (item._iMiscId == IMISC_HEAL)
 				return GAMEPAD_HEALING;
 			if (item._iMiscId == IMISC_FULLHEAL)
@@ -391,7 +391,7 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 				return GAMEPAD_SCROLL_OF_HEALING;
 		}
 
-		if (potionType == BLT_MANA) {
+		if (potionType == BeltItemType::Mana) {
 			if (item._iMiscId == IMISC_MANA)
 				return GAMEPAD_MANA;
 			if (item._iMiscId == IMISC_FULLMANA)
