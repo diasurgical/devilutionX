@@ -112,6 +112,14 @@ void DrawInv(const Surface &out);
 void DrawInvBelt(const Surface &out);
 
 /**
+ * @brief Removes equipment from the specified location on the player's body.
+ * @param player The player from which equipment will be removed.
+ * @param bodyLocation The location from which equipment will be removed.
+ * @param hiPri Priority of the network message to sync player equipment.
+ */
+void RemoveEquipment(Player &player, inv_body_loc bodyLocation, bool hiPri);
+
+/**
  * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
  * @param player The player to check.
  * @param item The item to check.
