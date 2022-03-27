@@ -12,10 +12,10 @@
 
 namespace devilution {
 
-typedef enum belt_item_type : uint8_t {
-	BLT_HEALING,
-	BLT_MANA,
-} belt_item_type;
+enum class BeltItemType : uint8_t {
+	Healing,
+	Mana,
+};
 
 enum class ControlTypes : uint8_t {
 	None,
@@ -68,7 +68,7 @@ bool IsMovementHandlerActive();
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent);
 void ProcessGameAction(const GameAction &action);
 
-void UseBeltItem(int type);
+void UseBeltItem(BeltItemType type);
 
 // Talk to towners, click on inv items, attack, etc.
 void PerformPrimaryAction();

@@ -183,7 +183,7 @@ private:
 
 class PotionButtonRenderer : public VirtualPadButtonRenderer {
 public:
-	PotionButtonRenderer(VirtualPadButton *potionButton, belt_item_type potionType)
+	PotionButtonRenderer(VirtualPadButton *potionButton, BeltItemType potionType)
 	    : VirtualPadButtonRenderer(potionButton)
 	    , potionType(potionType)
 	{
@@ -192,7 +192,7 @@ public:
 	void RenderPotion(RenderFunction renderFunction, const ButtonTexture &potionArt);
 
 private:
-	belt_item_type potionType;
+	BeltItemType potionType;
 
 	VirtualGamepadButtonType GetButtonType();
 	std::optional<VirtualGamepadPotionType> GetPotionType();
@@ -208,8 +208,8 @@ public:
 	    , secondaryActionButtonRenderer(&virtualGamepad->secondaryActionButton)
 	    , spellActionButtonRenderer(&virtualGamepad->spellActionButton)
 	    , cancelButtonRenderer(&virtualGamepad->cancelButton)
-	    , healthButtonRenderer(&virtualGamepad->healthButton, BLT_HEALING)
-	    , manaButtonRenderer(&virtualGamepad->manaButton, BLT_MANA)
+	    , healthButtonRenderer(&virtualGamepad->healthButton, BeltItemType::Healing)
+	    , manaButtonRenderer(&virtualGamepad->manaButton, BeltItemType::Mana)
 	{
 	}
 

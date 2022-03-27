@@ -1587,10 +1587,10 @@ void ProcessGameAction(const GameAction &action)
 	case GameActionType_SEND_KEY:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
-		UseBeltItem(BLT_HEALING);
+		UseBeltItem(BeltItemType::Healing);
 		break;
 	case GameActionType_USE_MANA_POTION:
-		UseBeltItem(BLT_MANA);
+		UseBeltItem(BeltItemType::Mana);
 		break;
 	case GameActionType_PRIMARY_ACTION:
 		PerformPrimaryAction();
@@ -1782,7 +1782,7 @@ void plrctrls_after_game_logic()
 	Movement(*MyPlayer);
 }
 
-void UseBeltItem(int type)
+void UseBeltItem(BeltItemType type)
 {
 	for (int i = 0; i < MaxBeltItems; i++) {
 		Item &item = MyPlayer->SpdList[i];
@@ -1794,7 +1794,7 @@ void UseBeltItem(int type)
 		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SpellID::Healing);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
-		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
+		if ((type == BeltItemType::Healing && isHealing) || (type == BeltItemType::Mana && isMana)) {
 			UseInvItem(INVITEM_BELT_FIRST + i);
 			break;
 		}
