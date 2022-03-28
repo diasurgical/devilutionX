@@ -658,12 +658,6 @@ void ResyncMPQuests()
 		nakrulQuest._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, nakrulQuest);
 	}
-
-	auto &cowQuest = Quests[Q_JERSEY];
-	if (cowQuest._qactive == QUEST_INIT && currlevel == cowQuest._qlevel - 1) {
-		cowQuest._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, cowQuest);
-	}
 }
 
 void ResyncQuests()
