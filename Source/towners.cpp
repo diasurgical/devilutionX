@@ -671,9 +671,6 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		break;
-	case QUEST_ACTIVE:
-		InitQTextMsg(TEXT_JERSEY5);
-		break;
 	case QUEST_DONE:
 		InitQTextMsg(TEXT_JERSEY1);
 		break;
