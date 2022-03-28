@@ -319,10 +319,10 @@ void ProcessGamepadEvents(GameAction &action)
 	case GameActionType_SEND_KEY:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
-		UseBeltItem(BLT_HEALING);
+		UseBeltItem(BeltItemType::Healing);
 		break;
 	case GameActionType_USE_MANA_POTION:
-		UseBeltItem(BLT_MANA);
+		UseBeltItem(BeltItemType::Mana);
 		break;
 	case GameActionType_PRIMARY_ACTION:
 		PerformPrimaryAction();

@@ -1505,7 +1505,7 @@ void plrctrls_after_game_logic()
 	Movement(MyPlayerId);
 }
 
-void UseBeltItem(int type)
+void UseBeltItem(BeltItemType type)
 {
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		Item &item = Players[MyPlayerId].SpdList[i];
@@ -1517,7 +1517,7 @@ void UseBeltItem(int type)
 		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.IsScrollOf(SPL_HEAL);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
-		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
+		if ((type == BeltItemType::Healing && isHealing) || (type == BeltItemType::Mana && isMana)) {
 			UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			break;
 		}
