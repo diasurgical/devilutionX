@@ -22,6 +22,7 @@
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -554,6 +555,20 @@ struct Player {
 	 * Valid only for players with Mana Shield spell level greater than zero.
 	 */
 	int GetManaShieldDamageReduction();
+
+	/**
+	 * @brief Gets the effective spell level for the player, considering item bonuses
+	 * @param spell spell_id enum member identifying the spell
+	 * @return effective spell level
+	 */
+	int GetSpellLevel(spell_id spell) const
+	{
+		if (spell == SPL_INVALID || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+			return 0;
+		}
+
+		return std::max<int8_t>(_pISplLvlAdd + _pSplLvl[static_cast<std::size_t>(spell)], 0);
+	}
 
 	/**
 	 * @brief Return monster armor value after including player's armor piercing % (hellfire only)

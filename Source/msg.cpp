@@ -1313,12 +1313,15 @@ DWORD OnResurrect(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-DWORD OnHealOther(const TCmd *pCmd, int pnum)
+DWORD OnHealOther(const TCmd *pCmd, const Player &caster)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel && message.wParam1 < MAX_PLRS)
-		DoHealOther(pnum, message.wParam1);
+	if (gbBufferMsgs != 1) {
+		if (currlevel == caster.plrlevel && message.wParam1 < MAX_PLRS) {
+			DoHealOther(caster, Players[message.wParam1]);
+		}
+	}
 
 	return sizeof(message);
 }
@@ -2767,7 +2770,7 @@ uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_RESURRECT:
 		return OnResurrect(pCmd, pnum);
 	case CMD_HEALOTHER:
-		return OnHealOther(pCmd, pnum);
+		return OnHealOther(pCmd, player);
 	case CMD_TALKXY:
 		return OnTalkXY(pCmd, player);
 	case CMD_DEBUG:

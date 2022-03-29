@@ -36,7 +36,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
  * @param rid target player index
  */
 void DoResurrect(int pnum, uint16_t rid);
-void DoHealOther(int pnum, uint16_t rid);
+void DoHealOther(const Player &caster, Player &target);
 int GetSpellBookLevel(spell_id s);
 int GetSpellStaffLevel(spell_id s);
 
