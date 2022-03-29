@@ -1015,8 +1015,8 @@ void SStartBoyBuy()
 	AddSText(0, 1, fmt::format(_("I have this item for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 
-	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
 	boyitem._iStatFlag = MyPlayer->CanUseItem(boyitem);
+	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
 
 	if (boyitem._iMagical != ITEM_QUALITY_NORMAL)
 		AddSText(20, 10, boyitem._iIName, itemColor, true);
