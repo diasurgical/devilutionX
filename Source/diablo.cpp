@@ -101,7 +101,6 @@ bool gbLoadGame;
 bool cineflag;
 int force_redraw;
 int PauseMode;
-bool gbNestArt;
 bool gbBard;
 bool gbBarbarian;
 bool gbQuietMode = false;
@@ -836,7 +835,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force Diablo mode").c_str());
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--hellfire", _("Force Hellfire mode").c_str());
 	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette").c_str());
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
@@ -905,8 +903,6 @@ void DiabloParseFlags(int argc, char **argv)
 			forceDiablo = true;
 		} else if (arg == "--hellfire") {
 			forceHellfire = true;
-		} else if (arg == "--nestart") {
-			gbNestArt = true;
 		} else if (arg == "--vanilla") {
 			gbVanilla = true;
 		} else if (arg == "--verbose") {

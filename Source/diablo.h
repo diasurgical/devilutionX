@@ -72,7 +72,6 @@ extern int force_redraw;
 /* These are defined in fonts.h */
 extern void FontsCleanup();
 extern DVL_API_FOR_TEST int PauseMode;
-extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
 /**

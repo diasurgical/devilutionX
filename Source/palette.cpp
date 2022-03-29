@@ -244,7 +244,7 @@ void LoadRndLvlPal(dungeon_type l)
 
 	char szFileName[27];
 	if (l == DTYPE_NEST) {
-		if (!gbNestArt) {
+		if (!*sgOptions.Graphics.alternateNestArt) {
 			rv++;
 		}
 		sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
