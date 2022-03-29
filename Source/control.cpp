@@ -57,10 +57,9 @@ namespace devilution {
  * @brief Set if the life flask needs to be redrawn during next frame
  */
 bool drawhpflag;
-bool dropGoldFlag;
+bool IsDropGoldOpen;
 bool chrbtn[4];
-bool lvlbtndown;
-int dropGoldValue;
+int DropGoldValue;
 /**
  * @brief Set if the mana flask needs to be redrawn during the next frame
  */
@@ -69,14 +68,14 @@ bool chrbtnactive;
 int pnumlines;
 UiFlags InfoColor;
 int sbooktab;
-int8_t initialDropGoldIndex;
+int8_t InitialDropGoldIndex;
 bool talkflag;
 bool sbookflag;
 bool chrflag;
 bool drawbtnflag;
 std::string InfoString;
 bool panelflag;
-int initialDropGoldValue;
+int InitialDropGoldValue;
 bool panbtndown;
 bool spselflag;
 Rectangle MainPanel;
@@ -129,6 +128,7 @@ std::optional<OwnedCelSprite> pDurIcons;
 std::optional<OwnedCelSprite> multiButtons;
 std::optional<OwnedCelSprite> pPanelButtons;
 
+bool IsLevelUpButtonPressed;
 bool PanelButtons[8];
 int PanelButtonIndex;
 char TalkSave[8][MAX_SEND_STR_LEN];
@@ -364,17 +364,17 @@ void ControlUpDown(int v)
 void RemoveGold(Player &player, int goldIndex)
 {
 	int gi = goldIndex - INVITEM_INV_FIRST;
-	player.InvList[gi]._ivalue -= dropGoldValue;
+	player.InvList[gi]._ivalue -= DropGoldValue;
 	if (player.InvList[gi]._ivalue > 0)
 		SetPlrHandGoldCurs(player.InvList[gi]);
 	else
 		player.RemoveInvItem(gi);
 
-	MakeGoldStack(player.HoldItem, dropGoldValue);
+	MakeGoldStack(player.HoldItem, DropGoldValue);
 	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	player._pGold = CalculateGold(player);
-	dropGoldValue = 0;
+	DropGoldValue = 0;
 }
 
 bool IsLevelUpButtonVisible()
@@ -549,7 +549,7 @@ void InitControlPan()
 	}
 	LoadMainPanel();
 	panelflag = false;
-	lvlbtndown = false;
+	IsLevelUpButtonPressed = false;
 	pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
 	ClearPanBtn();
 	if (!IsChatAvailable())
@@ -574,9 +574,9 @@ void InitControlPan()
 	pQLogCel = LoadCel("Data\\Quest.CEL", SPANEL_WIDTH);
 	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
 	CloseGoldDrop();
-	dropGoldValue = 0;
-	initialDropGoldValue = 0;
-	initialDropGoldIndex = 0;
+	DropGoldValue = 0;
+	InitialDropGoldValue = 0;
+	InitialDropGoldIndex = 0;
 
 	CalculatePanelAreas();
 
@@ -737,7 +737,7 @@ void CheckPanelInfo()
 		}
 	}
 	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x && MousePosition.y > 4 + mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y)
-		pcursinvitem = CheckInvHLight();
+		pcursinvitem = CheckInvHLight(MousePosition);
 
 	if (CheckXPBarInfo()) {
 		panelflag = true;
@@ -795,16 +795,16 @@ void CheckBtnUp()
 			CloseGoldWithdraw();
 			IsStashOpen = false;
 			invflag = !invflag;
-			if (dropGoldFlag) {
+			if (IsDropGoldOpen) {
 				CloseGoldDrop();
-				dropGoldValue = 0;
+				DropGoldValue = 0;
 			}
 			break;
 		case PanelButtonSpellbook:
 			CloseInventory();
-			if (dropGoldFlag) {
+			if (IsDropGoldOpen) {
 				CloseGoldDrop();
-				dropGoldValue = 0;
+				DropGoldValue = 0;
 			}
 			sbookflag = !sbookflag;
 			break;
@@ -902,36 +902,44 @@ void DrawInfoBox(const Surface &out)
 		PrintInfo(out);
 }
 
-void CheckLvlBtn()
+bool CheckLevelUpButtonPress()
 {
 	if (!IsLevelUpButtonVisible()) {
+		return false;
+	}
+
+	Rectangle button = { GetPanelPosition(UiPanels::Main, { 40, -39 }), { 41, 22 } };
+	if (button.Contains(MousePosition)) {
+		IsLevelUpButtonPressed = true;
+	}
+
+	return IsLevelUpButtonPressed;
+}
+
+void CheckLevelUpButtonRelease()
+{
+	if (!IsLevelUpButtonPressed) {
 		return;
 	}
 
-	auto &mainPanelPosition = GetMainPanel().position;
-	if (!lvlbtndown && MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y)
-		lvlbtndown = true;
-}
-
-void ReleaseLvlBtn()
-{
-	auto &mainPanelPosition = GetMainPanel().position;
-	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
+	Rectangle button = { GetPanelPosition(UiPanels::Main, { 40, -39 }), { 41, 22 } };
+	if (button.Contains(MousePosition)) {
 		QuestLogIsOpen = false;
 		CloseGoldWithdraw();
 		IsStashOpen = false;
 		chrflag = true;
 	}
-	lvlbtndown = false;
+	IsLevelUpButtonPressed = false;
 }
 
-void DrawLevelUpIcon(const Surface &out)
+void DrawLevelUpButton(const Surface &out)
 {
-	if (IsLevelUpButtonVisible()) {
-		int nCel = lvlbtndown ? 3 : 2;
-		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
-		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
+	if (!IsLevelUpButtonVisible()) {
+		return;
 	}
+
+	DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
+	CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, IsLevelUpButtonPressed ? 3 : 2);
 }
 
 void CheckChrBtns()
@@ -1030,6 +1038,10 @@ void RedBack(const Surface &out)
 
 void DrawGoldSplit(const Surface &out, int amount)
 {
+	if (!IsDropGoldOpen) {
+		return;
+	}
+
 	const int dialogX = 30;
 
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 1);
@@ -1039,8 +1051,8 @@ void DrawGoldSplit(const Surface &out, int amount)
 	    ngettext(
 	        "You have {:d} gold piece. How many do you want to remove?",
 	        "You have {:d} gold pieces. How many do you want to remove?",
-	        initialDropGoldValue),
-	    initialDropGoldValue);
+	        InitialDropGoldValue),
+	    InitialDropGoldValue);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(description, 200);
@@ -1059,25 +1071,25 @@ void DrawGoldSplit(const Surface &out, int amount)
 	DrawString(out, value, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
 }
 
-void control_drop_gold(char vkey)
+void DropGoldKeyPress(char vkey)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
+		DropGoldValue = 0;
 		return;
 	}
 
 	if (vkey == DVL_VK_RETURN) {
-		if (dropGoldValue > 0)
-			RemoveGold(myPlayer, initialDropGoldIndex);
+		if (DropGoldValue > 0)
+			RemoveGold(myPlayer, InitialDropGoldIndex);
 		CloseGoldDrop();
 	} else if (vkey == DVL_VK_ESCAPE) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
+		DropGoldValue = 0;
 	} else if (vkey == DVL_VK_BACK) {
-		dropGoldValue = dropGoldValue / 10;
+		DropGoldValue /= 10;
 	}
 }
 
@@ -1275,9 +1287,9 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 
 void CloseGoldDrop()
 {
-	if (!dropGoldFlag)
+	if (!IsDropGoldOpen)
 		return;
-	dropGoldFlag = false;
+	IsDropGoldOpen = false;
 	SDL_StopTextInput();
 }
 
@@ -1286,10 +1298,10 @@ void GoldDropNewText(string_view text)
 	for (char vkey : text) {
 		int digit = vkey - '0';
 		if (digit >= 0 && digit <= 9) {
-			int newGoldValue = dropGoldValue * 10;
+			int newGoldValue = DropGoldValue * 10;
 			newGoldValue += digit;
-			if (newGoldValue <= initialDropGoldValue) {
-				dropGoldValue = newGoldValue;
+			if (newGoldValue <= InitialDropGoldValue) {
+				DropGoldValue = newGoldValue;
 			}
 		}
 	}

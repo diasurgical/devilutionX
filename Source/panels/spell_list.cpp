@@ -124,6 +124,10 @@ void DrawSpell(const Surface &out)
 
 void DrawSpellList(const Surface &out)
 {
+	if (!spselflag) {
+		return;
+	}
+
 	InfoString.clear();
 	ClearPanel();
 

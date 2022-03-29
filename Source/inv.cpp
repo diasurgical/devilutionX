@@ -146,7 +146,7 @@ std::optional<OwnedCelSprite> pInvCels;
  */
 void AddItemToInvGrid(Player &player, int invGridIndex, int invListIndex, Size itemSize)
 {
-	const int pitch = 10;
+	constexpr int pitch = 10;
 	for (int y = 0; y < itemSize.height; y++) {
 		for (int x = 0; x < itemSize.width; x++) {
 			if (x == 0 && y == itemSize.height - 1)
@@ -292,10 +292,8 @@ bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool p
 	return true;
 }
 
-void CheckInvPaste(int pnum, Point cursorPosition)
+void CheckInvPaste(Player &player, Point cursorPosition)
 {
-	auto &player = Players[pnum];
-
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursSize.width / 2));
 	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursSize.height / 2));
@@ -329,40 +327,35 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		return;
 
 	item_equip_type il = ILOC_UNEQUIPABLE;
-	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST)
+	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {
 		il = ILOC_HELM;
-	if (r >= SLOTXY_RING_LEFT && r <= SLOTXY_RING_RIGHT)
+	} else if (r >= SLOTXY_RING_LEFT && r <= SLOTXY_RING_RIGHT) {
 		il = ILOC_RING;
-	if (r == SLOTXY_AMULET)
+	} else if (r == SLOTXY_AMULET) {
 		il = ILOC_AMULET;
-	if (r >= SLOTXY_HAND_LEFT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST)
-		il = ILOC_ONEHAND;
-	if (r >= SLOTXY_CHEST_FIRST && r <= SLOTXY_CHEST_LAST)
+	} else if (r >= SLOTXY_HAND_LEFT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST) {
+		il = player.GetItemLocation(player.HoldItem);
+	} else if (r >= SLOTXY_CHEST_FIRST && r <= SLOTXY_CHEST_LAST) {
 		il = ILOC_ARMOR;
-	if (r >= SLOTXY_BELT_FIRST && r <= SLOTXY_BELT_LAST)
+	} else if (r >= SLOTXY_BELT_FIRST && r <= SLOTXY_BELT_LAST) {
 		il = ILOC_BELT;
-
-	done = player.GetItemLocation(player.HoldItem) == il;
-
-	if (il == ILOC_ONEHAND && player.GetItemLocation(player.HoldItem) == ILOC_TWOHAND) {
-		il = ILOC_TWOHAND;
-		done = true;
-	}
-	if (player.GetItemLocation(player.HoldItem) == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
-		if (itemSize == Size { 1, 1 }) {
-			done = true;
-			if (!AllItemsList[player.HoldItem.IDidx].iUsable)
-				done = false;
-			if (!player.CanUseItem(player.HoldItem))
-				done = false;
-			if (player.HoldItem._itype == ItemType::Gold)
-				done = false;
-		}
 	}
 
 	int8_t it = 0;
-	if (il == ILOC_UNEQUIPABLE) {
-		done = true;
+	switch (il) {
+	case ILOC_BELT:
+		if (player.HoldItem._iLoc != ILOC_UNEQUIPABLE)
+			return;
+		if (itemSize != Size { 1, 1 })
+			return;
+		if (!AllItemsList[player.HoldItem.IDidx].iUsable)
+			return;
+		if (!player.CanUseItem(player.HoldItem))
+			return;
+		if (player.HoldItem._itype == ItemType::Gold)
+			return;
+		break;
+	case ILOC_UNEQUIPABLE: {
 		int ii = r - SLOTXY_INV_FIRST;
 		if (player.HoldItem._itype == ItemType::Gold) {
 			if (player.InvGrid[ii] != 0) {
@@ -376,23 +369,22 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				}
 			}
 		} else {
-			int yy = std::max(INV_ROW_SLOT_SIZE * ((ii / INV_ROW_SLOT_SIZE) - ((itemSize.height - 1) / 2)), 0);
-			for (j = 0; j < itemSize.height && done; j++) {
+			int yy = std::max(INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE - ((itemSize.height - 1) / 2)), 0);
+			for (j = 0; j < itemSize.height; j++) {
 				if (yy >= NUM_INV_GRID_ELEM)
-					done = false;
+					return;
 				int xx = std::max((ii % INV_ROW_SLOT_SIZE) - ((itemSize.width - 1) / 2), 0);
-				for (i = 0; i < itemSize.width && done; i++) {
+				for (i = 0; i < itemSize.width; i++) {
 					if (xx >= INV_ROW_SLOT_SIZE) {
-						done = false;
-					} else {
-						if (player.InvGrid[xx + yy] != 0) {
-							int8_t iv = abs(player.InvGrid[xx + yy]);
-							if (it != 0) {
-								if (it != iv)
-									done = false;
-							} else {
-								it = iv;
-							}
+						return;
+					}
+					if (player.InvGrid[xx + yy] != 0) {
+						int8_t iv = abs(player.InvGrid[xx + yy]);
+						if (it != 0) {
+							if (it != iv)
+								return;
+						} else {
+							it = iv;
 						}
 					}
 					xx++;
@@ -400,23 +392,23 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				yy += INV_ROW_SLOT_SIZE;
 			}
 		}
+	} break;
+	default:
+		if (player.HoldItem._iLoc != il) {
+			return;
+		}
+		break;
 	}
-
-	if (!done)
-		return;
 
 	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.CanUseItem(player.HoldItem)) {
-		done = false;
 		player.Say(HeroSpeech::ICantUseThisYet);
-	}
-
-	if (!done)
 		return;
+	}
 
 	if (player._pmode > PM_WALK3 && IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT))
 		return;
 
-	if (pnum == MyPlayerId)
+	if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
 	int cn = CURSOR_HAND;
@@ -519,13 +511,13 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				player.HoldItem = player.InvBody[INVLOC_HAND_RIGHT];
 			else
 				player.HoldItem = player.InvBody[INVLOC_HAND_LEFT];
-			if (pnum == MyPlayerId)
+			if (&player == MyPlayer)
 				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			bool done2h = AutoPlaceItemInInventory(player, player.HoldItem, true);
 			player.HoldItem = tempitem;
-			if (pnum == MyPlayerId)
+			if (&player == MyPlayer)
 				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -628,7 +620,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		break;
 	}
 	CalcPlrInv(player, true);
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
 			SetCursorPos(MousePosition + Displacement(cursSize / 2));
 		NewCursor(cn);
@@ -643,9 +635,9 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		return;
 	}
 
-	if (dropGoldFlag) {
+	if (IsDropGoldOpen) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
+		DropGoldValue = 0;
 	}
 
 	bool done = false;
@@ -1123,14 +1115,14 @@ void StartGoldDrop()
 {
 	CloseGoldWithdraw();
 
-	initialDropGoldIndex = pcursinvitem;
+	InitialDropGoldIndex = pcursinvitem;
 
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (pcursinvitem <= INVITEM_INV_LAST)
-		initialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
+		InitialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
 	else
-		initialDropGoldValue = myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
+		InitialDropGoldValue = myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
 
 	if (talkflag)
 		control_reset_talk();
@@ -1139,8 +1131,8 @@ void StartGoldDrop()
 	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
 	SDL_SetTextInputRect(&rect);
 
-	dropGoldFlag = true;
-	dropGoldValue = 0;
+	IsDropGoldOpen = true;
+	DropGoldValue = 0;
 	SDL_StartTextInput();
 }
 
@@ -1631,7 +1623,7 @@ void inv_update_rem_item(Player &player, inv_body_loc iv)
 void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		CheckInvPaste(MyPlayerId, MousePosition);
+		CheckInvPaste(*MyPlayer, MousePosition);
 	} else {
 		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld, isCtrlHeld);
 	}
@@ -1649,9 +1641,9 @@ void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 void InvGetItem(int pnum, int ii)
 {
 	auto &item = Items[ii];
-	if (dropGoldFlag) {
+	if (IsDropGoldOpen) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
+		DropGoldValue = 0;
 	}
 
 	if (dItem[item.position.x][item.position.y] == 0)
@@ -1681,9 +1673,9 @@ void AutoGetItem(int pnum, Item *itemPointer, int ii)
 	Item &item = *itemPointer;
 	auto &player = Players[pnum];
 
-	if (dropGoldFlag) {
+	if (IsDropGoldOpen) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
+		DropGoldValue = 0;
 	}
 
 	if (dItem[item.position.x][item.position.y] == 0)
@@ -1920,7 +1912,7 @@ int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int i
 	return ii;
 }
 
-int8_t CheckInvHLight()
+int8_t CheckInvHLight(Point mousePosition)
 {
 	int8_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
@@ -1931,10 +1923,10 @@ int8_t CheckInvHLight()
 			yo = GetMainPanel().position.y;
 		}
 
-		if (MousePosition.x >= InvRect[r].x + xo
-		    && MousePosition.x < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
-		    && MousePosition.y >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
-		    && MousePosition.y < InvRect[r].y + yo) {
+		if (mousePosition.x >= InvRect[r].x + xo
+		    && mousePosition.x < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
+		    && mousePosition.y >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
+		    && mousePosition.y < InvRect[r].y + yo) {
 			break;
 		}
 	}
@@ -2073,6 +2065,19 @@ bool UseStaff()
 	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], myPlayer._pRSpell);
 }
 
+const Item &GetInventoryItem(int location)
+{
+	Player &myPlayer = Players[MyPlayerId];
+
+	if (location < INVITEM_INV_FIRST)
+		return myPlayer.InvBody[location];
+
+	if (location <= INVITEM_INV_LAST)
+		return myPlayer.InvList[location - INVITEM_INV_FIRST];
+
+	return myPlayer.SpdList[location - INVITEM_BELT_FIRST];
+}
+
 bool UseInvItem(int pnum, int cii)
 {
 	int c;
@@ -2150,9 +2155,9 @@ bool UseInvItem(int pnum, int cii)
 		return true;
 	}
 
-	if (dropGoldFlag) {
+	if (IsDropGoldOpen) {
 		CloseGoldDrop();
-		dropGoldValue = 0;
+		DropGoldValue = 0;
 	}
 
 	if (item->IsScroll() && currlevel == 0 && !spelldata[item->_iSpell].sTownSpell) {

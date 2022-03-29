@@ -393,7 +393,7 @@ void CheckCursMove()
 		return;
 	}
 	if (invflag && GetRightPanel().Contains(MousePosition)) {
-		pcursinvitem = CheckInvHLight();
+		pcursinvitem = CheckInvHLight(MousePosition);
 		return;
 	}
 	if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {

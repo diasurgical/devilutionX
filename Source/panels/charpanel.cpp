@@ -296,7 +296,7 @@ void FreeCharPanel()
 
 void DrawChr(const Surface &out)
 {
-	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
+	Point pos = GetPanelPosition(UiPanels::Character);
 	DrawArt(out, pos, &PanelFull);
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {

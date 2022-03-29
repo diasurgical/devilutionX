@@ -1278,29 +1278,15 @@ void DrawView(const Surface &out, Point startPosition)
 	} else if (IsStashOpen) {
 		DrawStash(out);
 	}
-	DrawLevelUpIcon(out);
-	if (ShowUniqueItemInfoBox) {
-		DrawUniqueInfo(out);
-	}
-	if (qtextflag) {
-		DrawQText(out);
-	}
-	if (spselflag) {
-		DrawSpellList(out);
-	}
-	if (dropGoldFlag) {
-		DrawGoldSplit(out, dropGoldValue);
-	}
+	DrawLevelUpButton(out);
+	DrawUniqueInfo(out);
+	DrawQText(out);
+	DrawSpellList(out);
+	DrawGoldSplit(out, DropGoldValue);
 	DrawGoldWithdraw(out, WithdrawGoldValue);
-	if (HelpFlag) {
-		DrawHelp(out);
-	}
-	if (ChatLogFlag) {
-		DrawChatLog(out);
-	}
-	if (IsDiabloMsgAvailable()) {
-		DrawDiabloMsg(out);
-	}
+	DrawHelp(out);
+	DrawChatLog(out);
+	DrawDiabloMsg(out);
 	if (MyPlayerIsDead) {
 		RedBack(out);
 	} else if (PauseMode != 0) {

@@ -334,7 +334,7 @@ void LeftMouseDown(int wParam)
 			} else if (chrflag && GetLeftPanel().Contains(MousePosition)) {
 				CheckChrBtns();
 			} else if (invflag && GetRightPanel().Contains(MousePosition)) {
-				if (!dropGoldFlag)
+				if (!IsDropGoldOpen)
 					CheckInvItem(isShiftHeld, isCtrlHeld);
 			} else if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
 				if (!IsWithdrawGoldOpen)
@@ -348,13 +348,12 @@ void LeftMouseDown(int wParam)
 					NewCursor(CURSOR_HAND);
 				}
 			} else {
-				CheckLvlBtn();
-				if (!lvlbtndown)
+				if (!CheckLevelUpButtonPress())
 					LeftMouseCmd(isShiftHeld);
 			}
 		}
 	} else {
-		if (!talkflag && !dropGoldFlag && !IsWithdrawGoldOpen && !gmenu_is_active())
+		if (!talkflag && !IsDropGoldOpen && !IsWithdrawGoldOpen && !gmenu_is_active())
 			CheckInvScrn(isShiftHeld, isCtrlHeld);
 		DoPanBtn();
 		CheckStashButtonPress(MousePosition);
@@ -373,8 +372,7 @@ void LeftMouseUp(int wParam)
 	CheckStashButtonRelease(MousePosition);
 	if (chrbtnactive)
 		ReleaseChrBtns(isShiftHeld);
-	if (lvlbtndown)
-		ReleaseLvlBtn();
+	CheckLevelUpButtonRelease();
 	if (stextflag != STORE_NONE)
 		ReleaseStoreBtn();
 }
@@ -422,7 +420,7 @@ bool PressSysKey(int wParam)
 
 void ReleaseKey(int vkey)
 {
-	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag)
+	if (sgnTimeoutCurs != CURSOR_NONE || IsDropGoldOpen)
 		return;
 	sgOptions.Keymapper.KeyReleased(vkey);
 }
@@ -473,7 +471,7 @@ void PressKey(int vkey)
 		return;
 	}
 
-	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag || IsWithdrawGoldOpen) {
+	if (sgnTimeoutCurs != CURSOR_NONE || IsDropGoldOpen || IsWithdrawGoldOpen) {
 		return;
 	}
 
@@ -568,8 +566,8 @@ void PressChar(char vkey)
 		doom_close();
 		return;
 	}
-	if (dropGoldFlag) {
-		control_drop_gold(vkey);
+	if (IsDropGoldOpen) {
+		DropGoldKeyPress(vkey);
 		return;
 	}
 	if (IsWithdrawGoldOpen) {
@@ -1978,8 +1976,8 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (dropGoldFlag) {
-		control_drop_gold(DVL_VK_ESCAPE);
+	if (IsDropGoldOpen) {
+		DropGoldKeyPress(DVL_VK_ESCAPE);
 		rv = true;
 	}
 

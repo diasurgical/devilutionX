@@ -140,6 +140,10 @@ void AddMessageToChatLog(const std::string &message, Player *player, UiFlags fla
 
 void DrawChatLog(const Surface &out)
 {
+	if (!ChatLogFlag) {
+		return;
+	}
+
 	DrawSTextHelp();
 	DrawQTextBack(out);
 
