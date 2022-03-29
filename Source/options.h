@@ -400,6 +400,8 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryInt<int> gammaCorrection;
 	/** @brief Enable color cycling animations. */
 	OptionEntryBoolean colorCycling;
+	/** @brief Use alternate nest palette. */
+	OptionEntryBoolean alternateNestArt;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
 	OptionEntryBoolean hardwareCursor;
