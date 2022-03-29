@@ -1797,11 +1797,13 @@ bool TryIconCurs()
 {
 	if (pcurs == CURSOR_RESURRECT) {
 		NetSendCmdParam1(true, CMD_RESURRECT, pcursplr);
+		NewCursor(CURSOR_HAND);
 		return true;
 	}
 
 	if (pcurs == CURSOR_HEALOTHER) {
 		NetSendCmdParam1(true, CMD_HEALOTHER, pcursplr);
+		NewCursor(CURSOR_HAND);
 		return true;
 	}
 
