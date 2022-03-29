@@ -247,10 +247,6 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 
 void DoResurrect(int pnum, uint16_t rid)
 {
-	if (pnum == MyPlayerId) {
-		NewCursor(CURSOR_HAND);
-	}
-
 	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
 		return;
 	}
@@ -295,10 +291,6 @@ void DoResurrect(int pnum, uint16_t rid)
 
 void DoHealOther(int pnum, uint16_t rid)
 {
-	if (pnum == MyPlayerId) {
-		NewCursor(CURSOR_HAND);
-	}
-
 	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
 		return;
 	}
