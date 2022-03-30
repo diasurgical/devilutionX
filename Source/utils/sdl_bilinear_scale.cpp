@@ -48,7 +48,18 @@ uint8_t MixColorsWithAlpha(uint8_t first, uint8_t firstAlpha,
 	const int firstWithAlpha = first * firstAlpha;
 	const int secondWithAlpha = second * secondAlpha;
 
-	return ToInt((secondWithAlpha - firstWithAlpha) * (ratio / mixedAlpha)) + firstWithAlpha / mixedAlpha;
+	// We want to calculate:
+	//
+	//    (ToInt((secondWithAlpha - firstWithAlpha) * ratio) + firstWithAlpha) / mixedAlpha
+	//
+	// However, the above written as-is can overflow in the argument to `ToInt`.
+	// To avoid the overflow we divide each term by `mixedAlpha` separately.
+	//
+	// This would be lower precision and could result in a negative overall result,
+	// so we do the rounding integer division for each term (instead of a truncating one):
+	//
+	//    (a + (a - 1)) / b`
+	return ToInt((secondWithAlpha - firstWithAlpha) * ((ratio + (mixedAlpha - 1)) / mixedAlpha)) + (firstWithAlpha + (mixedAlpha - 1)) / mixedAlpha;
 }
 
 } // namespace
