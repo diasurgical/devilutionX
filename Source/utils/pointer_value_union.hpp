@@ -40,7 +40,7 @@ public:
 
 	[[nodiscard]] T AsValue() const
 	{
-		return repr_ >> 1;
+		return static_cast<T>(repr_ >> 1);
 	}
 
 private:
