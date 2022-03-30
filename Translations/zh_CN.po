@@ -884,7 +884,7 @@ msgstr "墓穴: {:d} 层"
 
 #: Source/automap.cpp:509 Source/items.cpp:2034
 msgid "Level: {:d}"
-msgstr "等级: {:d}"
+msgstr "层数: {:d}"
 
 #. TRANSLATORS: {:s} means: Game Difficulty.
 #: Source/automap.cpp:527
