@@ -28,7 +28,7 @@ int WithdrawGoldValue;
 
 namespace {
 
-constexpr int CountStashPages = 50;
+constexpr unsigned CountStashPages = 50;
 
 int InitialWithdrawGoldValue;
 
@@ -50,7 +50,7 @@ Art StashNavButtonArt;
  * @param stashListIndex The item's StashList index
  * @param itemSize Size of item
  */
-void AddItemToStashGrid(int page, Point position, uint16_t stashListIndex, Size itemSize)
+void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, Size itemSize)
 {
 	for (auto point : PointsInRectangleRange({ { 0, 0 }, itemSize })) {
 		Stash.stashGrids[page][position.x + point.x][position.y + point.y] = stashListIndex + 1;
@@ -539,9 +539,9 @@ void StashStruct::RemoveStashItem(uint16_t iv)
 	Stash.dirty = true;
 }
 
-void StashStruct::SetPage(int newPage)
+void StashStruct::SetPage(unsigned newPage)
 {
-	page = clamp(newPage, 0, CountStashPages - 1);
+	page = std::max(newPage, CountStashPages - 1);
 }
 
 void StashStruct::RefreshItemStatFlags()
@@ -635,8 +635,8 @@ bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 	Size itemSize = GetInventorySize(item);
 
 	// Try to add the item to the current active page and if it's not possible move forward
-	for (int pageCounter = 0; pageCounter < CountStashPages; pageCounter++) {
-		int pageIndex = Stash.GetPage() + pageCounter;
+	for (unsigned pageCounter = 0; pageCounter < CountStashPages; pageCounter++) {
+		unsigned pageIndex = Stash.GetPage() + pageCounter;
 		// Wrap around if needed
 		if (pageIndex >= CountStashPages)
 			pageIndex -= CountStashPages;
