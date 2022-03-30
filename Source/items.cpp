@@ -16,6 +16,7 @@
 #include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "doom.h"
 #include "dx.h"
@@ -1806,35 +1807,70 @@ void DrawUniqueInfoWindow(const Surface &out)
 void PrintItemMisc(const Item &item)
 {
 	if (item._iMiscId == IMISC_SCROLL) {
-		AddPanelString(_("Right-click to read"));
+		if (ControlMode == ControlTypes::KeyboardAndMouse) {
+			AddPanelString(_("Right-click to read"));
+		} else {
+			if (item.IsScrollOf(SPL_TELEPORT) || item.IsScrollOf(SPL_TOWN)) {
+				AddPanelString(_("Select from spell book, then"));
+				AddPanelString(_("cast spell to read"));
+			} else if (!invflag) {
+				AddPanelString(_("Open inventory to use"));
+			} else {
+				AddPanelString(_("Activate to read"));
+			}
+		}
 	}
 	if (item._iMiscId == IMISC_SCROLLT) {
-		AddPanelString(_("Right-click to read, then"));
-		AddPanelString(_("left-click to target"));
+		if (ControlMode == ControlTypes::KeyboardAndMouse) {
+			AddPanelString(_("Right-click to read, then"));
+			AddPanelString(_("left-click to target"));
+		} else {
+			if (item.IsScrollOf(SPL_FIREBALL)
+			    || item.IsScrollOf(SPL_FIREWALL)
+			    || item.IsScrollOf(SPL_FLAME)
+			    || item.IsScrollOf(SPL_GUARDIAN)
+			    || item.IsScrollOf(SPL_LIGHTNING)
+			    || item.IsScrollOf(SPL_STONE)
+			    || item.IsScrollOf(SPL_WAVE)) {
+				AddPanelString(_("Select from spell book, then"));
+				AddPanelString(_("cast spell to read"));
+			} else if (!invflag) {
+				AddPanelString(_("Open inventory to use"));
+			} else {
+				AddPanelString(_("Activate to read"));
+			}
+		}
 	}
-	if (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST) {
+	if ((item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST)
+	    || (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST)
+	    || (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST)) {
 		PrintItemOil(item._iMiscId);
-		AddPanelString(_("Right-click to use"));
+		if (ControlMode == ControlTypes::KeyboardAndMouse) {
+			AddPanelString(_("Right-click to use"));
+		} else {
+			if (!invflag) {
+				AddPanelString(_("Open inventory to use"));
+			} else {
+				AddPanelString(_("Activate to use"));
+			}
+		}
 	}
-	if (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST) {
-		PrintItemOil(item._iMiscId);
-		AddPanelString(_("Right click to use"));
-	}
-	if (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST) {
-		PrintItemOil(item._iMiscId);
-		AddPanelString(_("Right click to use"));
-	}
-	if (item._iMiscId == IMISC_BOOK) {
-		AddPanelString(_("Right-click to read"));
-	}
-	if (item._iMiscId == IMISC_NOTE) {
-		AddPanelString(_("Right click to read"));
+	if (IsAnyOf(item._iMiscId, IMISC_BOOK, IMISC_NOTE)) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse) {
+			AddPanelString(_("Right-click to read"));
+		} else {
+			AddPanelString(_("Activate to read"));
+		}
 	}
 	if (item._iMiscId == IMISC_MAPOFDOOM) {
-		AddPanelString(_("Right-click to view"));
+		if (ControlMode == ControlTypes::KeyboardAndMouse) {
+			AddPanelString(_("Right-click to view"));
+		} else {
+			AddPanelString(_("Activate to view"));
+		}
 	}
 	if (item._iMiscId == IMISC_EAR) {
-		AddPanelString(fmt::format(_("Level: {:d}"), item._ivalue));
+		AddPanelString(fmt::format(pgettext("player", "Level: {:d}"), item._ivalue));
 	}
 	if (item._iMiscId == IMISC_AURIC) {
 		AddPanelString(_("Doubles gold capacity"));
