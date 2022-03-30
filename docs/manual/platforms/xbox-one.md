@@ -4,8 +4,8 @@
 
 1. Download and unzip [devilutionx-xbox-one.zip](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-xbox-one.zip).
 2. In Xbox Device Portal click on `Add` button located at `Home/My games & apps`
-3. In the first popup - called `Deploy or Install Application` choose `devilutionX..appx` and then click `Next`
-4. In the second popup - called `Choose any necessary dependencies` choose `Microsoft.VCLibs..appx` and then click `Start`
+3. In the first popup - called `Deploy or Install Application` choose `devilutionX.appx` and then click `Next`
+4. In the second popup - called `Choose any necessary dependencies` choose `Microsoft.VCLibs.appx` and then click `Start`
 5. In your PC go to the shared folder `WindowsApps` and find the devilutionX folder which should be something like `<random string>\_<version>\_random string<>`
 6. Copy `diabdat.mpq` from your CD (or GoG install folder) to it.
 7. In the Xbox press `View` on DevilutionX and select `Details` and there change the type from `App` to `Game`.
@@ -23,16 +23,17 @@ Launch `DevilutionX` from the Dev Mode home.
 - Y: cast spell, delete character while in main menu
 - LB: use health item from belt
 - RB: use mana potion from belt
-- LT: character sheet (alt: Menu + LB or ←)
-- RT: inventory (alt: Menu + RB or →)
-- Left analog click: toggle automap (alt: Menu + ↓)
-- Menu + View: game menu (alt: Menu + ↑)
-- View + A/B/X/Y: Spell hotkeys
+- LT + ←: character sheet
+- LT + →: inventory
+- LT + ↑: quest log
+- LT + ↓: spell book
+- LT + A/B/X/Y: Spell hotkeys
+- View: toggle automap
+- Menu: game menu
 - Right analog: move automap or simulate mouse
-- Right analog click: left mouse click (alt: View + LB)
-- View + Right analog click: right mouse click (alt: View + RB)
-- View + LT: quest log (alt: Menu + Y)
-- View + RT: spell book (alt: Menu + B)
+- Right analog click: left mouse click
+- LT + Right analog click: right mouse click
+- RT: highlight items on the floor
 
 ## Resources
 

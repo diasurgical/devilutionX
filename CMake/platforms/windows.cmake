@@ -20,3 +20,6 @@ endif()
 if(MINGW_CROSS)
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/mingw")
 endif()
+
+# for future use
+# set(OPTIONS_SET_GAME_CONTROLLER ON)

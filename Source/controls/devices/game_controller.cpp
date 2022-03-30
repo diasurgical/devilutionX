@@ -1,22 +1,47 @@
 #include "controls/devices/game_controller.h"
 
-#include <cstddef>
-
 #include "controls/controller_motion.h"
+#include "controls/devices/game_controller_factory.h"
 #include "controls/devices/joystick.h"
+#include "controls/plrctrls.h"
+#include "gmenu.h"
+#include "stores.h"
 #include "utils/log.hpp"
-#include "utils/sdl2_backports.h"
-#include "utils/sdl_ptrs.h"
 #include "utils/stubs.h"
 
 namespace devilution {
 
-std::vector<GameController> GameController::controllers_;
+std::vector<GameController *> GameController::controllers_;
+GameController *GameController::currentGameController_ = nullptr;
 
 void GameController::UnlockTriggerState()
 {
 	trigger_left_state_ = ControllerButton_NONE;
 	trigger_right_state_ = ControllerButton_NONE;
+}
+
+uint32_t GameController::TranslateControllerButtonToKey(ControllerButton controllerButton)
+{
+	switch (controllerButton) {
+	case ControllerButton_CONFIRM:
+		return (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen) ? DVL_VK_RETURN : DVL_VK_SPACE;
+	case ControllerButton_CANCEL:
+		return QuestLogIsOpen ? DVL_VK_SPACE : DVL_VK_ESCAPE;
+	case ControllerButton_BUTTON_BACK:
+		return DVL_VK_TAB;
+	case ControllerButton_BUTTON_START:
+		return DVL_VK_ESCAPE;
+	case ControllerButton_BUTTON_DPAD_LEFT:
+		return DVL_VK_LEFT;
+	case ControllerButton_BUTTON_DPAD_RIGHT:
+		return DVL_VK_RIGHT;
+	case ControllerButton_BUTTON_DPAD_UP:
+		return DVL_VK_UP;
+	case ControllerButton_BUTTON_DPAD_DOWN:
+		return DVL_VK_DOWN;
+	default:
+		return 0;
+	}
 }
 
 ControllerButton GameController::ToControllerButton(const SDL_Event &event)
@@ -88,6 +113,7 @@ SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerBut
 {
 	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
+
 	switch (button) {
 	case ControllerButton_BUTTON_A:
 		return SDL_CONTROLLER_BUTTON_A;
@@ -124,8 +150,19 @@ SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerBut
 
 bool GameController::IsPressed(ControllerButton button) const
 {
+	switch (button) {
+	case ControllerButton_AXIS_TRIGGERLEFT:
+		return trigger_left_is_down_;
+	case ControllerButton_AXIS_TRIGGERRIGHT:
+		return trigger_right_is_down_;
+	}
+
 	const SDL_GameControllerButton gcButton = ToSdlGameControllerButton(button);
-	return SDL_GameControllerHasButton(sdl_game_controller_, gcButton) && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
+
+	if (gcButton != SDL_CONTROLLER_BUTTON_INVALID)
+		return SDL_GameControllerHasButton(sdl_game_controller_, gcButton) && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
+
+	return false;
 }
 
 bool GameController::ProcessAxisMotion(const SDL_Event &event)
@@ -155,19 +192,89 @@ bool GameController::ProcessAxisMotion(const SDL_Event &event)
 	return true;
 }
 
+bool GameController::GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action)
+{
+	if (HandleControllerButtonEvent(event, ctrlEvent, action))
+		return true;
+
+	if (!InGameMenu() && !QuestLogIsOpen && !sbookflag) {
+		switch (ctrlEvent.button) {
+		case ControllerButton_BUTTON_DPAD_UP:
+		case ControllerButton_BUTTON_DPAD_DOWN:
+		case ControllerButton_BUTTON_DPAD_LEFT:
+		case ControllerButton_BUTTON_DPAD_RIGHT:
+			// The rest of D-Pad actions are handled in charMovement() on every game_logic() call.
+			return true;
+		}
+	}
+
+	// DPad navigation is handled separately for these.
+	if (gmenu_is_active() || QuestLogIsOpen || stextflag != STORE_NONE) {
+		switch (ctrlEvent.button) {
+		case ControllerButton_BUTTON_DPAD_UP:
+		case ControllerButton_BUTTON_DPAD_DOWN:
+		case ControllerButton_BUTTON_DPAD_LEFT:
+		case ControllerButton_BUTTON_DPAD_RIGHT:
+			return true;
+		}
+	}
+
+	// By default, map to a keyboard key.
+	if (ctrlEvent.button != ControllerButton_NONE) {
+		*action = GameActionSendKey { TranslateControllerButtonToKey(ctrlEvent.button), ctrlEvent.up };
+		return true;
+	}
+
+	// Ignore unhandled joystick events where a GameController is open for this joystick.
+	// This is because SDL sends both game controller and joystick events in this case.
+	const Joystick *const joystick = Joystick::Get(event);
+
+	if (joystick)
+		if (joystick->instance_id() == instance_id_)
+			return true;
+
+	if (event.type == SDL_CONTROLLERAXISMOTION)
+		return true; // Ignore releasing the trigger buttons
+
+	return false;
+}
+
+MenuAction GameController::GetAButtonMenuAction()
+{
+#ifdef SWAP_CONFIRM_CANCEL_BUTTONS
+	return MenuAction_BACK;
+#else
+	return MenuAction_SELECT;
+#endif
+}
+
+MenuAction GameController::GetBButtonMenuAction()
+{
+#ifdef SWAP_CONFIRM_CANCEL_BUTTONS
+	return MenuAction_SELECT;
+#else
+	return MenuAction_BACK;
+#endif
+}
+
 void GameController::Add(int joystickIndex)
 {
 	Log("Opening game controller for joystick at index {}", joystickIndex);
-	GameController result;
-	result.sdl_game_controller_ = SDL_GameControllerOpen(joystickIndex);
-	if (result.sdl_game_controller_ == nullptr) {
+	GameController *controller = GameControllerFactory::Create();
+	controller->sdl_game_controller_ = SDL_GameControllerOpen(joystickIndex);
+
+	if (controller->sdl_game_controller_ == nullptr) {
 		Log("{}", SDL_GetError());
 		SDL_ClearError();
+		delete controller;
+
 		return;
 	}
-	SDL_Joystick *const sdlJoystick = SDL_GameControllerGetJoystick(result.sdl_game_controller_);
-	result.instance_id_ = SDL_JoystickInstanceID(sdlJoystick);
-	controllers_.push_back(result);
+
+	SDL_Joystick *const sdlJoystick = SDL_GameControllerGetJoystick(controller->sdl_game_controller_);
+	controller->instance_id_ = SDL_JoystickInstanceID(sdlJoystick);
+	controllers_.push_back(controller);
+	currentGameController_ = controller;
 
 	const SDL_JoystickGUID guid = SDL_JoystickGetGUID(sdlJoystick);
 	SDLUniquePtr<char> mapping { SDL_GameControllerMappingForGUID(guid) };
@@ -180,10 +287,18 @@ void GameController::Remove(SDL_JoystickID instanceId)
 {
 	Log("Removing game controller with instance id {}", instanceId);
 	for (std::size_t i = 0; i < controllers_.size(); ++i) {
-		const GameController &controller = controllers_[i];
-		if (controller.instance_id_ != instanceId)
+		GameController *controller = controllers_[i];
+
+		if (controller->instance_id_ != instanceId)
 			continue;
+
 		controllers_.erase(controllers_.begin() + i);
+
+		if (currentGameController_->instance_id_ == controller->instance_id_)
+			currentGameController_ = nullptr;
+
+		delete controller;
+
 		return;
 	}
 	Log("Game controller not found with instance id: {}", instanceId);
@@ -191,10 +306,14 @@ void GameController::Remove(SDL_JoystickID instanceId)
 
 GameController *GameController::Get(SDL_JoystickID instanceId)
 {
-	for (auto &controller : controllers_) {
-		if (controller.instance_id_ == instanceId)
-			return &controller;
+	for (auto *controller : controllers_) {
+		if (controller->instance_id_ == instanceId) {
+			currentGameController_ = controller;
+
+			return controller;
+		}
 	}
+
 	return nullptr;
 }
 
@@ -211,17 +330,22 @@ GameController *GameController::Get(const SDL_Event &event)
 	}
 }
 
-const std::vector<GameController> &GameController::All()
+const std::vector<GameController *> &GameController::All()
 {
 	return controllers_;
 }
 
 bool GameController::IsPressedOnAnyController(ControllerButton button)
 {
-	for (auto &controller : controllers_)
-		if (controller.IsPressed(button))
+	for (auto *controller : controllers_)
+		if (controller->IsPressed(button))
 			return true;
 	return false;
+}
+
+GameController *GameController::GetCurrentGameController()
+{
+	return currentGameController_;
 }
 
 } // namespace devilution

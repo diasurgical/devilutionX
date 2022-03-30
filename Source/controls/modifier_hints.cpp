@@ -44,31 +44,6 @@ Art hintBox;
 Art hintBoxBackground;
 Art hintIcons;
 
-enum HintIcon : uint8_t {
-	IconChar,
-	IconInv,
-	IconQuests,
-	IconSpells,
-	IconMap,
-	IconMenu,
-	IconNull
-};
-
-struct CircleMenuHint {
-	CircleMenuHint(HintIcon top, HintIcon right, HintIcon bottom, HintIcon left)
-	    : top(top)
-	    , right(right)
-	    , bottom(bottom)
-	    , left(left)
-	{
-	}
-
-	HintIcon top;
-	HintIcon right;
-	HintIcon bottom;
-	HintIcon left;
-};
-
 /**
  * @brief Draws hint text for a four button layout with the top/left edge of the bounding box at the position given by origin.
  * @param out The output buffer to draw on.
@@ -145,23 +120,22 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 
 void DrawStartModifierMenu(const Surface &out)
 {
-	if (!start_modifier_active)
-		return;
-	static const CircleMenuHint DPad(/*top=*/HintIcon::IconMenu, /*right=*/HintIcon::IconInv, /*bottom=*/HintIcon::IconMap, /*left=*/HintIcon::IconChar);
-	static const CircleMenuHint Buttons(/*top=*/HintIcon::IconNull, /*right=*/HintIcon::IconNull, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconQuests);
-	DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-	DrawCircleMenuHint(out, Buttons, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
+	CircleMenuHint hint;
+
+	if (GetStartModifierLeftCircleMenuHint(&hint))
+		DrawCircleMenuHint(out, hint, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
+
+	if (GetStartModifierRightCircleMenuHint(&hint))
+		DrawCircleMenuHint(out, hint, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
 }
 
 void DrawSelectModifierMenu(const Surface &out)
 {
-	if (!select_modifier_active)
-		return;
-
-	if (sgOptions.Controller.bDpadHotkeys) {
+	if (CanDrawSelectModifierLeftCircleMenuHint())
 		DrawSpellsCircleMenuHint(out, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
-	}
-	DrawSpellsCircleMenuHint(out, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
+
+	if (CanDrawSelectModifierRightCircleMenuHint())
+		DrawSpellsCircleMenuHint(out, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
 }
 
 } // namespace

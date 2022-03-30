@@ -111,8 +111,10 @@ ControllerButton Joystick::ToControllerButton(const SDL_Event &event)
 
 int Joystick::ToSdlJoyButton(ControllerButton button)
 {
+#ifdef USE_SDL1
 	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
+#endif
 	switch (button) {
 #ifdef JOY_BUTTON_A
 	case ControllerButton_BUTTON_A:
