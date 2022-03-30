@@ -69,7 +69,7 @@ T SwapBE(T in)
 	case 4:
 		return SDL_SwapBE32(in);
 	case 8:
-		return SDL_SwapBE64(in);
+		return static_cast<T>(SDL_SwapBE64(in));
 	default:
 		return in;
 	}
@@ -1322,10 +1322,10 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(monster.mExp);
 
-	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.mHit, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.mMinDamage);
 	file->WriteLE<uint8_t>(monster.mMaxDamage);
-	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.mMinDamage2);
 	file->WriteLE<uint8_t>(monster.mMaxDamage2);
 	file->WriteLE<uint8_t>(monster.mArmorClass);
@@ -1535,7 +1535,7 @@ constexpr uint32_t VersionAdditionalMissiles = 0;
 void SaveAdditionalMissiles()
 {
 	constexpr size_t BytesWrittenBySaveMissile = 180;
-	size_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? Missiles.size() - MaxMissilesForSaveGame : 0;
+	uint32_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? static_cast<uint32_t>(Missiles.size() - MaxMissilesForSaveGame) : 0;
 	SaveHelper file(CurrentSaveArchive(), "additionalMissiles", sizeof(uint32_t) + sizeof(uint32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
 
 	file.WriteLE<uint32_t>(VersionAdditionalMissiles);
@@ -2061,17 +2061,19 @@ void SaveStash()
 
 	file.WriteLE<uint32_t>(Stash.gold);
 
-	file.WriteLE<uint32_t>(Stash.stashGrids.size());
-	for (auto stashPage : Stash.stashGrids) {
+	// Current stash size is 50 pages, expanding to 100 in the near future. Will definitely fit in a 32 bit value.
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashGrids.size()));
+	for (const auto &stashPage : Stash.stashGrids) {
 		file.WriteLE<uint32_t>(stashPage.first);
-		for (auto row : stashPage.second) {
+		for (const auto &row : stashPage.second) {
 			for (uint16_t cell : row) {
 				file.WriteLE<uint16_t>(cell);
 			}
 		}
 	}
 
-	file.WriteLE<uint32_t>(Stash.stashList.size());
+	// 100 pages of 100 items is still only 10 000, as with the page count will definitely fit in 32 bits even in the worst case.
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashList.size()));
 	for (const Item &item : Stash.stashList) {
 		SaveItem(file, item);
 	}
