@@ -17,23 +17,23 @@ namespace devilution {
 class StashStruct {
 public:
 	void RemoveStashItem(uint16_t iv);
-	std::map<int, std::array<std::array<uint16_t, 10>, 10>> stashGrids;
+	std::map<unsigned, std::array<std::array<uint16_t, 10>, 10>> stashGrids;
 	std::vector<Item> stashList;
 	int gold;
 	bool dirty = false;
 
-	int GetPage() const
+	unsigned GetPage() const
 	{
 		return page;
 	}
 
-	void SetPage(int newPage);
+	void SetPage(unsigned newPage);
 	/** @brief Updates _iStatFlag for all stash items. */
 	void RefreshItemStatFlags();
 
 private:
 	/** Current Page */
-	int page;
+	unsigned page;
 };
 
 constexpr Point InvalidStashPoint { -1, -1 };
