@@ -1035,8 +1035,8 @@ void DrawGoldSplit(const Surface &out, int amount)
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 1);
 
 	const std::string description = fmt::format(
-	    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/
 	    ngettext(
+	        /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/
 	        "You have {:d} gold piece. How many do you want to remove?",
 	        "You have {:d} gold pieces. How many do you want to remove?",
 	        initialDropGoldValue),
