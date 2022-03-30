@@ -1231,4 +1231,14 @@ string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 	return "";
 }
 
+uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
+{
+	for (const auto &action : actions) {
+		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
+			return action->boundKey;
+		}
+	}
+	return DVL_VK_INVALID;
+}
+
 } // namespace devilution

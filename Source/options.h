@@ -577,6 +577,7 @@ struct KeymapperOptions : OptionCategoryBase {
 	void KeyPressed(int key) const;
 	void KeyReleased(int key) const;
 	string_view KeyNameForAction(string_view actionName) const;
+	uint32_t KeyForAction(string_view actionName) const;
 
 private:
 	std::vector<std::unique_ptr<Action>> actions;
