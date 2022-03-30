@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-30 13:50+0200\n"
+"POT-Creation-Date: 2022-03-31 01:59+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -482,7 +482,7 @@ msgid "Create a new public game that anyone can join with a difficulty setting o
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:194
-msgid "Enter a Game ID to join a game already in progress."
+msgid "Enter Game ID to join a game already in progress."
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:196
@@ -855,7 +855,7 @@ msgstr ""
 msgid "Level: Crypt {:d}"
 msgstr ""
 
-#: Source/automap.cpp:513 Source/items.cpp:1837
+#: Source/automap.cpp:513
 msgid "Level: {:d}"
 msgstr ""
 
@@ -955,7 +955,7 @@ msgid_plural "{:d} Charges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3444
+#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] ""
@@ -2018,7 +2018,7 @@ msgstr ""
 msgid "Scroll of Resurrect"
 msgstr ""
 
-#: Source/itemdat.cpp:88 Source/itemdat.cpp:136 Source/items.cpp:171
+#: Source/itemdat.cpp:88 Source/itemdat.cpp:136 Source/items.cpp:172
 msgid "Blacksmith Oil"
 msgstr ""
 
@@ -2213,11 +2213,11 @@ msgstr ""
 msgid "Potion of Full Rejuvenation"
 msgstr ""
 
-#: Source/itemdat.cpp:137 Source/items.cpp:166
+#: Source/itemdat.cpp:137 Source/items.cpp:167
 msgid "Oil of Accuracy"
 msgstr ""
 
-#: Source/itemdat.cpp:138 Source/items.cpp:168
+#: Source/itemdat.cpp:138 Source/items.cpp:169
 msgid "Oil of Sharpness"
 msgstr ""
 
@@ -3638,660 +3638,681 @@ msgstr ""
 msgid "Gladiator's Ring"
 msgstr ""
 
-#: Source/items.cpp:167
+#: Source/items.cpp:168
 msgid "Oil of Mastery"
 msgstr ""
 
-#: Source/items.cpp:169
+#: Source/items.cpp:170
 msgid "Oil of Death"
 msgstr ""
 
-#: Source/items.cpp:170
+#: Source/items.cpp:171
 msgid "Oil of Skill"
 msgstr ""
 
-#: Source/items.cpp:172
+#: Source/items.cpp:173
 msgid "Oil of Fortitude"
 msgstr ""
 
-#: Source/items.cpp:173
+#: Source/items.cpp:174
 msgid "Oil of Permanence"
 msgstr ""
 
-#: Source/items.cpp:174
+#: Source/items.cpp:175
 msgid "Oil of Hardening"
 msgstr ""
 
-#: Source/items.cpp:175
+#: Source/items.cpp:176
 msgid "Oil of Imperviousness"
 msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
-#: Source/items.cpp:1133
+#: Source/items.cpp:1134
 msgctxt "spell"
 msgid "{0} of {1}"
 msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1141
+#: Source/items.cpp:1142
 msgctxt "spell"
 msgid "{0} {1} of {2}"
 msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1159
+#: Source/items.cpp:1160
 msgid "{0} {1} of {2}"
 msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#: Source/items.cpp:1162
+#: Source/items.cpp:1163
 msgid "{0} {1}"
 msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
-#: Source/items.cpp:1165
+#: Source/items.cpp:1166
 msgid "{0} of {1}"
 msgstr ""
 
-#: Source/items.cpp:1700 Source/items.cpp:1708
+#: Source/items.cpp:1701 Source/items.cpp:1709
 msgid "increases a weapon's"
 msgstr ""
 
-#: Source/items.cpp:1701
+#: Source/items.cpp:1702
 msgid "chance to hit"
 msgstr ""
 
-#: Source/items.cpp:1704
+#: Source/items.cpp:1705
 msgid "greatly increases a"
 msgstr ""
 
-#: Source/items.cpp:1705
+#: Source/items.cpp:1706
 msgid "weapon's chance to hit"
 msgstr ""
 
-#: Source/items.cpp:1709
+#: Source/items.cpp:1710
 msgid "damage potential"
 msgstr ""
 
-#: Source/items.cpp:1712
+#: Source/items.cpp:1713
 msgid "greatly increases a weapon's"
 msgstr ""
 
-#: Source/items.cpp:1713
+#: Source/items.cpp:1714
 msgid "damage potential - not bows"
 msgstr ""
 
-#: Source/items.cpp:1716
+#: Source/items.cpp:1717
 msgid "reduces attributes needed"
 msgstr ""
 
-#: Source/items.cpp:1717
+#: Source/items.cpp:1718
 msgid "to use armor or weapons"
 msgstr ""
 
-#: Source/items.cpp:1720
+#: Source/items.cpp:1721
 #, no-c-format
 msgid "restores 20% of an"
 msgstr ""
 
-#: Source/items.cpp:1721
+#: Source/items.cpp:1722
 msgid "item's durability"
 msgstr ""
 
-#: Source/items.cpp:1724
+#: Source/items.cpp:1725
 msgid "increases an item's"
 msgstr ""
 
-#: Source/items.cpp:1725
+#: Source/items.cpp:1726
 msgid "current and max durability"
 msgstr ""
 
-#: Source/items.cpp:1728
+#: Source/items.cpp:1729
 msgid "makes an item indestructible"
 msgstr ""
 
-#: Source/items.cpp:1731
+#: Source/items.cpp:1732
 msgid "increases the armor class"
 msgstr ""
 
-#: Source/items.cpp:1732
+#: Source/items.cpp:1733
 msgid "of armor and shields"
 msgstr ""
 
-#: Source/items.cpp:1735
+#: Source/items.cpp:1736
 msgid "greatly increases the armor"
 msgstr ""
 
-#: Source/items.cpp:1736
+#: Source/items.cpp:1737
 msgid "class of armor and shields"
 msgstr ""
 
-#: Source/items.cpp:1739 Source/items.cpp:1746
+#: Source/items.cpp:1740 Source/items.cpp:1747
 msgid "sets fire trap"
 msgstr ""
 
-#: Source/items.cpp:1743
+#: Source/items.cpp:1744
 msgid "sets lightning trap"
 msgstr ""
 
-#: Source/items.cpp:1749
+#: Source/items.cpp:1750
 msgid "sets petrification trap"
 msgstr ""
 
-#: Source/items.cpp:1752
+#: Source/items.cpp:1753
 msgid "restore all life"
 msgstr ""
 
-#: Source/items.cpp:1755
+#: Source/items.cpp:1756
 msgid "restore some life"
 msgstr ""
 
-#: Source/items.cpp:1758
+#: Source/items.cpp:1759
 msgid "recover life"
 msgstr ""
 
-#: Source/items.cpp:1761
+#: Source/items.cpp:1762
 msgid "deadly heal"
 msgstr ""
 
-#: Source/items.cpp:1764
+#: Source/items.cpp:1765
 msgid "restore some mana"
 msgstr ""
 
-#: Source/items.cpp:1767
+#: Source/items.cpp:1768
 msgid "restore all mana"
 msgstr ""
 
-#: Source/items.cpp:1770
+#: Source/items.cpp:1771
 msgid "increase strength"
 msgstr ""
 
-#: Source/items.cpp:1773
+#: Source/items.cpp:1774
 msgid "increase magic"
 msgstr ""
 
-#: Source/items.cpp:1776
+#: Source/items.cpp:1777
 msgid "increase dexterity"
 msgstr ""
 
-#: Source/items.cpp:1779
+#: Source/items.cpp:1780
 msgid "increase vitality"
 msgstr ""
 
-#: Source/items.cpp:1783
+#: Source/items.cpp:1784
 msgid "decrease strength"
 msgstr ""
 
-#: Source/items.cpp:1786
+#: Source/items.cpp:1787
 msgid "decrease dexterity"
 msgstr ""
 
-#: Source/items.cpp:1789
+#: Source/items.cpp:1790
 msgid "decrease vitality"
 msgstr ""
 
-#: Source/items.cpp:1792
+#: Source/items.cpp:1793
 msgid "restore some life and mana"
 msgstr ""
 
-#: Source/items.cpp:1795
+#: Source/items.cpp:1796
 msgid "restore all life and mana"
 msgstr ""
 
-#: Source/items.cpp:1809 Source/items.cpp:1828
+#: Source/items.cpp:1811 Source/items.cpp:1860
 msgid "Right-click to read"
 msgstr ""
 
-#: Source/items.cpp:1812
+#: Source/items.cpp:1814 Source/items.cpp:1835
+msgid "Select from spell book, then"
+msgstr ""
+
+#: Source/items.cpp:1815 Source/items.cpp:1836
+msgid "cast spell to read"
+msgstr ""
+
+#: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
+msgid "Open inventory to use"
+msgstr ""
+
+#: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
+msgid "Activate to read"
+msgstr ""
+
+#: Source/items.cpp:1825
 msgid "Right-click to read, then"
 msgstr ""
 
-#: Source/items.cpp:1813
+#: Source/items.cpp:1826
 msgid "left-click to target"
 msgstr ""
 
-#: Source/items.cpp:1817
+#: Source/items.cpp:1849
 msgid "Right-click to use"
 msgstr ""
 
-#: Source/items.cpp:1821 Source/items.cpp:1825
-msgid "Right click to use"
+#: Source/items.cpp:1854
+msgid "Activate to use"
 msgstr ""
 
-#: Source/items.cpp:1831
-msgid "Right click to read"
-msgstr ""
-
-#: Source/items.cpp:1834
+#: Source/items.cpp:1867
 msgid "Right-click to view"
 msgstr ""
 
-#: Source/items.cpp:1840
+#: Source/items.cpp:1869
+msgid "Activate to view"
+msgstr ""
+
+#: Source/items.cpp:1873
+msgctxt "player"
+msgid "Level: {:d}"
+msgstr ""
+
+#: Source/items.cpp:1876
 msgid "Doubles gold capacity"
 msgstr ""
 
-#: Source/items.cpp:1851 Source/stores.cpp:279
+#: Source/items.cpp:1887 Source/stores.cpp:279
 msgid "Required:"
 msgstr ""
 
-#: Source/items.cpp:1853 Source/stores.cpp:281
+#: Source/items.cpp:1889 Source/stores.cpp:281
 msgid " {:d} Str"
 msgstr ""
 
-#: Source/items.cpp:1855 Source/stores.cpp:283
+#: Source/items.cpp:1891 Source/stores.cpp:283
 msgid " {:d} Mag"
 msgstr ""
 
-#: Source/items.cpp:1857 Source/stores.cpp:285
+#: Source/items.cpp:1893 Source/stores.cpp:285
 msgid " {:d} Dex"
 msgstr ""
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3214 Source/player.cpp:3149
+#: Source/items.cpp:3250 Source/player.cpp:3149
 msgid "Ear of {:s}"
 msgstr ""
 
-#: Source/items.cpp:3510
+#: Source/items.cpp:3546
 msgid "chance to hit: {:+d}%"
 msgstr ""
 
-#: Source/items.cpp:3513
+#: Source/items.cpp:3549
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr ""
 
-#: Source/items.cpp:3516 Source/items.cpp:3714
+#: Source/items.cpp:3552 Source/items.cpp:3750
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr ""
 
-#: Source/items.cpp:3519
+#: Source/items.cpp:3555
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr ""
 
-#: Source/items.cpp:3522
+#: Source/items.cpp:3558
 msgid "armor class: {:d}"
 msgstr ""
 
-#: Source/items.cpp:3526 Source/items.cpp:3700
+#: Source/items.cpp:3562 Source/items.cpp:3736
 msgid "Resist Fire: {:+d}%"
 msgstr ""
 
-#: Source/items.cpp:3528
+#: Source/items.cpp:3564
 msgid "Resist Fire: {:+d}% MAX"
 msgstr ""
 
-#: Source/items.cpp:3532
+#: Source/items.cpp:3568
 msgid "Resist Lightning: {:+d}%"
 msgstr ""
 
-#: Source/items.cpp:3534
+#: Source/items.cpp:3570
 msgid "Resist Lightning: {:+d}% MAX"
 msgstr ""
 
-#: Source/items.cpp:3538
+#: Source/items.cpp:3574
 msgid "Resist Magic: {:+d}%"
 msgstr ""
 
-#: Source/items.cpp:3540
+#: Source/items.cpp:3576
 msgid "Resist Magic: {:+d}% MAX"
 msgstr ""
 
-#: Source/items.cpp:3544
+#: Source/items.cpp:3580
 msgid "Resist All: {:+d}%"
 msgstr ""
 
-#: Source/items.cpp:3546
+#: Source/items.cpp:3582
 msgid "Resist All: {:+d}% MAX"
 msgstr ""
 
-#: Source/items.cpp:3549
+#: Source/items.cpp:3585
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/items.cpp:3551
+#: Source/items.cpp:3587
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/items.cpp:3553
+#: Source/items.cpp:3589
 msgid "spell levels unchanged (?)"
 msgstr ""
 
-#: Source/items.cpp:3555
+#: Source/items.cpp:3591
 msgid "Extra charges"
 msgstr ""
 
-#: Source/items.cpp:3557
+#: Source/items.cpp:3593
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/items.cpp:3560
+#: Source/items.cpp:3596
 msgid "Fire hit damage: {:d}"
 msgstr ""
 
-#: Source/items.cpp:3562
+#: Source/items.cpp:3598
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr ""
 
-#: Source/items.cpp:3565
+#: Source/items.cpp:3601
 msgid "Lightning hit damage: {:d}"
 msgstr ""
 
-#: Source/items.cpp:3567
+#: Source/items.cpp:3603
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr ""
 
-#: Source/items.cpp:3570
+#: Source/items.cpp:3606
 msgid "{:+d} to strength"
 msgstr ""
 
-#: Source/items.cpp:3573
+#: Source/items.cpp:3609
 msgid "{:+d} to magic"
 msgstr ""
 
-#: Source/items.cpp:3576
+#: Source/items.cpp:3612
 msgid "{:+d} to dexterity"
 msgstr ""
 
-#: Source/items.cpp:3579
+#: Source/items.cpp:3615
 msgid "{:+d} to vitality"
 msgstr ""
 
-#: Source/items.cpp:3582
+#: Source/items.cpp:3618
 msgid "{:+d} to all attributes"
 msgstr ""
 
-#: Source/items.cpp:3585
+#: Source/items.cpp:3621
 msgid "{:+d} damage from enemies"
 msgstr ""
 
-#: Source/items.cpp:3588
+#: Source/items.cpp:3624
 msgid "Hit Points: {:+d}"
 msgstr ""
 
-#: Source/items.cpp:3591
+#: Source/items.cpp:3627
 msgid "Mana: {:+d}"
 msgstr ""
 
-#: Source/items.cpp:3593
+#: Source/items.cpp:3629
 msgid "high durability"
 msgstr ""
 
-#: Source/items.cpp:3595
+#: Source/items.cpp:3631
 msgid "decreased durability"
 msgstr ""
 
-#: Source/items.cpp:3597
+#: Source/items.cpp:3633
 msgid "indestructible"
 msgstr ""
 
-#: Source/items.cpp:3599
+#: Source/items.cpp:3635
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr ""
 
-#: Source/items.cpp:3601
+#: Source/items.cpp:3637
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr ""
 
-#: Source/items.cpp:3603
+#: Source/items.cpp:3639
 msgid "multiple arrows per shot"
 msgstr ""
 
-#: Source/items.cpp:3606
+#: Source/items.cpp:3642
 msgid "fire arrows damage: {:d}"
 msgstr ""
 
-#: Source/items.cpp:3608
+#: Source/items.cpp:3644
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr ""
 
-#: Source/items.cpp:3611
+#: Source/items.cpp:3647
 msgid "lightning arrows damage {:d}"
 msgstr ""
 
-#: Source/items.cpp:3613
+#: Source/items.cpp:3649
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr ""
 
-#: Source/items.cpp:3616
+#: Source/items.cpp:3652
 msgid "fireball damage: {:d}"
 msgstr ""
 
-#: Source/items.cpp:3618
+#: Source/items.cpp:3654
 msgid "fireball damage: {:d}-{:d}"
 msgstr ""
 
-#: Source/items.cpp:3620
+#: Source/items.cpp:3656
 msgid "attacker takes 1-3 damage"
 msgstr ""
 
-#: Source/items.cpp:3622
+#: Source/items.cpp:3658
 msgid "user loses all mana"
 msgstr ""
 
-#: Source/items.cpp:3624
+#: Source/items.cpp:3660
 msgid "you can't heal"
 msgstr ""
 
-#: Source/items.cpp:3626
+#: Source/items.cpp:3662
 msgid "absorbs half of trap damage"
 msgstr ""
 
-#: Source/items.cpp:3628
+#: Source/items.cpp:3664
 msgid "knocks target back"
 msgstr ""
 
-#: Source/items.cpp:3630
+#: Source/items.cpp:3666
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr ""
 
-#: Source/items.cpp:3632
+#: Source/items.cpp:3668
 msgid "All Resistance equals 0"
 msgstr ""
 
-#: Source/items.cpp:3634
+#: Source/items.cpp:3670
 msgid "hit monster doesn't heal"
 msgstr ""
 
-#: Source/items.cpp:3637
+#: Source/items.cpp:3673
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr ""
 
-#: Source/items.cpp:3639
+#: Source/items.cpp:3675
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr ""
 
-#: Source/items.cpp:3643
+#: Source/items.cpp:3679
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr ""
 
-#: Source/items.cpp:3645
+#: Source/items.cpp:3681
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr ""
 
-#: Source/items.cpp:3648
+#: Source/items.cpp:3684
 msgid "penetrates target's armor"
 msgstr ""
 
-#: Source/items.cpp:3651
+#: Source/items.cpp:3687
 msgid "quick attack"
 msgstr ""
 
-#: Source/items.cpp:3653
+#: Source/items.cpp:3689
 msgid "fast attack"
 msgstr ""
 
-#: Source/items.cpp:3655
+#: Source/items.cpp:3691
 msgid "faster attack"
 msgstr ""
 
-#: Source/items.cpp:3657
+#: Source/items.cpp:3693
 msgid "fastest attack"
 msgstr ""
 
-#: Source/items.cpp:3658 Source/items.cpp:3666 Source/items.cpp:3724
+#: Source/items.cpp:3694 Source/items.cpp:3702 Source/items.cpp:3760
 msgid "Another ability (NW)"
 msgstr ""
 
-#: Source/items.cpp:3661
+#: Source/items.cpp:3697
 msgid "fast hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3663
+#: Source/items.cpp:3699
 msgid "faster hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3665
+#: Source/items.cpp:3701
 msgid "fastest hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3668
+#: Source/items.cpp:3704
 msgid "fast block"
 msgstr ""
 
-#: Source/items.cpp:3670
+#: Source/items.cpp:3706
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] ""
 msgstr[1] ""
 
-#: Source/items.cpp:3672
+#: Source/items.cpp:3708
 msgid "fires random speed arrows"
 msgstr ""
 
-#: Source/items.cpp:3674
+#: Source/items.cpp:3710
 msgid "unusual item damage"
 msgstr ""
 
-#: Source/items.cpp:3676
+#: Source/items.cpp:3712
 msgid "altered durability"
 msgstr ""
 
-#: Source/items.cpp:3678
+#: Source/items.cpp:3714
 msgid "Faster attack swing"
 msgstr ""
 
-#: Source/items.cpp:3680
+#: Source/items.cpp:3716
 msgid "one handed sword"
 msgstr ""
 
-#: Source/items.cpp:3682
+#: Source/items.cpp:3718
 msgid "constantly lose hit points"
 msgstr ""
 
-#: Source/items.cpp:3684
+#: Source/items.cpp:3720
 msgid "life stealing"
 msgstr ""
 
-#: Source/items.cpp:3686
+#: Source/items.cpp:3722
 msgid "no strength requirement"
 msgstr ""
 
-#: Source/items.cpp:3688
+#: Source/items.cpp:3724
 msgid "see with infravision"
 msgstr ""
 
-#: Source/items.cpp:3693
+#: Source/items.cpp:3729
 msgid "lightning damage: {:d}"
 msgstr ""
 
-#: Source/items.cpp:3695
+#: Source/items.cpp:3731
 msgid "lightning damage: {:d}-{:d}"
 msgstr ""
 
-#: Source/items.cpp:3697
+#: Source/items.cpp:3733
 msgid "charged bolts on hits"
 msgstr ""
 
-#: Source/items.cpp:3704
+#: Source/items.cpp:3740
 msgid "occasional triple damage"
 msgstr ""
 
-#: Source/items.cpp:3706
+#: Source/items.cpp:3742
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr ""
 
-#: Source/items.cpp:3708
+#: Source/items.cpp:3744
 msgid "2x dmg to monst, 1x to you"
 msgstr ""
 
-#: Source/items.cpp:3710
+#: Source/items.cpp:3746
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr ""
 
-#: Source/items.cpp:3712
+#: Source/items.cpp:3748
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr ""
 
-#: Source/items.cpp:3716
+#: Source/items.cpp:3752
 msgid "extra AC vs demons"
 msgstr ""
 
-#: Source/items.cpp:3718
+#: Source/items.cpp:3754
 msgid "extra AC vs undead"
 msgstr ""
 
-#: Source/items.cpp:3720
+#: Source/items.cpp:3756
 msgid "50% Mana moved to Health"
 msgstr ""
 
-#: Source/items.cpp:3722
+#: Source/items.cpp:3758
 msgid "40% Health moved to Mana"
 msgstr ""
 
-#: Source/items.cpp:3759 Source/items.cpp:3797
+#: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"
 msgstr ""
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3761 Source/items.cpp:3799
+#: Source/items.cpp:3797 Source/items.cpp:3835
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
-#: Source/items.cpp:3764 Source/items.cpp:3802
+#: Source/items.cpp:3800 Source/items.cpp:3838
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr ""
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3766 Source/items.cpp:3804
+#: Source/items.cpp:3802 Source/items.cpp:3840
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr ""
 
-#: Source/items.cpp:3771 Source/items.cpp:3814
+#: Source/items.cpp:3807 Source/items.cpp:3850
 msgid "armor: {:d}  Indestructible"
 msgstr ""
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3773 Source/items.cpp:3816
+#: Source/items.cpp:3809 Source/items.cpp:3852
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr ""
 
-#: Source/items.cpp:3776 Source/items.cpp:3807 Source/items.cpp:3820
+#: Source/items.cpp:3812 Source/items.cpp:3843 Source/items.cpp:3856
 #: Source/stores.cpp:253
 msgid "Charges: {:d}/{:d}"
 msgstr ""
 
-#: Source/items.cpp:3785
+#: Source/items.cpp:3821
 msgid "unique item"
 msgstr ""
 
-#: Source/items.cpp:3810 Source/items.cpp:3818 Source/items.cpp:3824
+#: Source/items.cpp:3846 Source/items.cpp:3854 Source/items.cpp:3860
 msgid "Not Identified"
 msgstr ""
 

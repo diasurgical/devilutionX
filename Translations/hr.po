@@ -4,17 +4,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-01-08 13:27+0100\n"
-"PO-Revision-Date: 2022-01-08 13:28+0100\n"
+"POT-Creation-Date: 2022-03-31 01:59+0200\n"
+"PO-Revision-Date: 2022-03-31 01:59+0200\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: \n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -101,7 +101,7 @@ msgstr "Pomoćni producent"
 msgid "Diablo Strike Team"
 msgstr "Diablo udarni tim"
 
-#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
+#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:71
 msgid "Music"
 msgstr "Glazba"
 
@@ -316,145 +316,181 @@ msgstr "Prsten od jedne tisuće"
 msgid "\tNo souls were sold in the making of this game."
 msgstr "\tTijekom izrade ove igre nije bilo prodanih duša."
 
-#: Source/DiabloUI/dialogs.cpp:195 Source/DiabloUI/dialogs.cpp:207
-#: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:125
-#: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:232
-#: Source/DiabloUI/selgame.cpp:372 Source/DiabloUI/selgame.cpp:447
-#: Source/DiabloUI/selhero.cpp:153 Source/DiabloUI/selhero.cpp:178
-#: Source/DiabloUI/selhero.cpp:248 Source/DiabloUI/selhero.cpp:492
-#: Source/DiabloUI/selok.cpp:68
+#: Source/DiabloUI/dialogs.cpp:196 Source/DiabloUI/dialogs.cpp:208
+#: Source/DiabloUI/selconn.cpp:80 Source/DiabloUI/selgame.cpp:168
+#: Source/DiabloUI/selgame.cpp:306 Source/DiabloUI/selgame.cpp:332
+#: Source/DiabloUI/selgame.cpp:472 Source/DiabloUI/selgame.cpp:547
+#: Source/DiabloUI/selhero.cpp:154 Source/DiabloUI/selhero.cpp:179
+#: Source/DiabloUI/selhero.cpp:249 Source/DiabloUI/selhero.cpp:493
+#: Source/DiabloUI/selok.cpp:69
 msgid "OK"
 msgstr "U redu"
 
-#: Source/DiabloUI/mainmenu.cpp:36
+#: Source/DiabloUI/mainmenu.cpp:38
 msgid "Single Player"
 msgstr "Jedan igrač"
 
-#: Source/DiabloUI/mainmenu.cpp:37
+#: Source/DiabloUI/mainmenu.cpp:39
 msgid "Multi Player"
 msgstr "Više igrača"
 
-#: Source/DiabloUI/mainmenu.cpp:38 Source/DiabloUI/settingsmenu.cpp:255
+#: Source/DiabloUI/mainmenu.cpp:40 Source/DiabloUI/settingsmenu.cpp:259
 msgid "Settings"
 msgstr "Postavke"
 
-#: Source/DiabloUI/mainmenu.cpp:39
+#: Source/DiabloUI/mainmenu.cpp:41
 msgid "Support"
 msgstr "Podrška"
 
-#: Source/DiabloUI/mainmenu.cpp:40
+#: Source/DiabloUI/mainmenu.cpp:42
 msgid "Show Credits"
 msgstr "Zasluge"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:44
 msgid "Exit Hellfire"
 msgstr "Zatvori Hellfire"
 
-#: Source/DiabloUI/mainmenu.cpp:41
+#: Source/DiabloUI/mainmenu.cpp:44
 msgid "Exit Diablo"
 msgstr "Zatvori Diablo"
 
-#: Source/DiabloUI/mainmenu.cpp:56
+#: Source/DiabloUI/mainmenu.cpp:60
 msgid "Shareware"
 msgstr "Shareware"
 
-#: Source/DiabloUI/progress.cpp:37 Source/DiabloUI/selconn.cpp:82
-#: Source/DiabloUI/selhero.cpp:156 Source/DiabloUI/selhero.cpp:181
-#: Source/DiabloUI/selhero.cpp:251 Source/DiabloUI/selhero.cpp:500
+#: Source/DiabloUI/progress.cpp:37 Source/DiabloUI/selconn.cpp:83
+#: Source/DiabloUI/selhero.cpp:157 Source/DiabloUI/selhero.cpp:182
+#: Source/DiabloUI/selhero.cpp:252 Source/DiabloUI/selhero.cpp:501
 msgid "Cancel"
 msgstr "Odustani"
 
-#: Source/DiabloUI/selconn.cpp:13
+#: Source/DiabloUI/selconn.cpp:14
 msgid "Client-Server (TCP)"
 msgstr "Klijent-Poslužitelj (TCP)"
 
-#: Source/DiabloUI/selconn.cpp:14
+#: Source/DiabloUI/selconn.cpp:15
 msgid "Loopback"
 msgstr "Izvanmrežno"
 
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:510
-#: Source/DiabloUI/selgame.cpp:531
+#: Source/DiabloUI/selconn.cpp:54 Source/DiabloUI/selgame.cpp:604
+#: Source/DiabloUI/selgame.cpp:625
 msgid "Multi Player Game"
 msgstr "Igra za više igrača"
 
-#: Source/DiabloUI/selconn.cpp:59
+#: Source/DiabloUI/selconn.cpp:60
 msgid "Requirements:"
 msgstr "Zahtjevi:"
 
-#: Source/DiabloUI/selconn.cpp:65
+#: Source/DiabloUI/selconn.cpp:66
 msgid "no gateway needed"
 msgstr "pristupnik ne treba"
 
-#: Source/DiabloUI/selconn.cpp:71
+#: Source/DiabloUI/selconn.cpp:72
 msgid "Select Connection"
 msgstr "Odabir povezivanja"
 
-#: Source/DiabloUI/selconn.cpp:74
+#: Source/DiabloUI/selconn.cpp:75
 msgid "Change Gateway"
 msgstr "Promijeni pristupnika"
 
-#: Source/DiabloUI/selconn.cpp:107
+#: Source/DiabloUI/selconn.cpp:108
 msgid "All computers must be connected to a TCP-compatible network."
 msgstr "Sva računala moraju biti povezana u TCP kompatibilnu mrežu."
 
-#: Source/DiabloUI/selconn.cpp:111
+#: Source/DiabloUI/selconn.cpp:112
 msgid "All computers must be connected to the internet."
 msgstr "Sva računala moraju biti povezana s internetom."
 
-#: Source/DiabloUI/selconn.cpp:115
+#: Source/DiabloUI/selconn.cpp:116
 msgid "Play by yourself with no network exposure."
 msgstr "Igrajte sami sa sobom bez pristupa mreži."
 
-#: Source/DiabloUI/selconn.cpp:120
+#: Source/DiabloUI/selconn.cpp:121
 msgid "Players Supported: {:d}"
 msgstr "Podržano igrača: {:d}"
 
-#: Source/DiabloUI/selgame.cpp:93 Source/DiabloUI/selgame.cpp:433
+#: Source/DiabloUI/selgame.cpp:83 Source/options.cpp:542 Source/options.cpp:581
+#: Source/quests.cpp:49
+msgid "Diablo"
+msgstr "Diablo"
+
+#: Source/DiabloUI/selgame.cpp:86
+#, fuzzy
+#| msgid "Shareware"
+msgid "Diablo Shareware"
+msgstr "Shareware"
+
+#: Source/DiabloUI/selgame.cpp:89 Source/options.cpp:544 Source/options.cpp:595
+msgid "Hellfire"
+msgstr "Hellfire"
+
+#: Source/DiabloUI/selgame.cpp:92
+#, fuzzy
+#| msgid "Shareware"
+msgid "Hellfire Shareware"
+msgstr "Shareware"
+
+#: Source/DiabloUI/selgame.cpp:95
+msgid "The host is running a different game than you."
+msgstr "Na poslužitelju je pokrenuta drugačija igra nego kod vas."
+
+#: Source/DiabloUI/selgame.cpp:97
+#, fuzzy
+#| msgid "The host is running a different game than you."
+msgid "The host is running a different game mode ({:s}) than you."
+msgstr "Na poslužitelju je pokrenuta drugačija igra nego kod vas."
+
+#. TRANSLATORS: Error message when somebody tries to join a game running another version.
+#: Source/DiabloUI/selgame.cpp:99
+msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
+msgstr "Vaša inačica {:s} ne podudara se s poslužiteljevom {:d}.{:d}.{:d}."
+
+#: Source/DiabloUI/selgame.cpp:134 Source/DiabloUI/selgame.cpp:533
 msgid "Description:"
 msgstr "Opis:"
 
-#: Source/DiabloUI/selgame.cpp:99
+#: Source/DiabloUI/selgame.cpp:140
 msgid "Select Action"
 msgstr "Odabir radnje"
 
-#: Source/DiabloUI/selgame.cpp:102 Source/DiabloUI/selgame.cpp:202
-#: Source/DiabloUI/selgame.cpp:353
+#: Source/DiabloUI/selgame.cpp:143 Source/DiabloUI/selgame.cpp:294
+#: Source/DiabloUI/selgame.cpp:453
 msgid "Create Game"
 msgstr "Stvori igru"
 
-#: Source/DiabloUI/selgame.cpp:104
+#: Source/DiabloUI/selgame.cpp:145
 msgid "Create Public Game"
 msgstr "Stvori javnu igru"
 
-#: Source/DiabloUI/selgame.cpp:105
+#: Source/DiabloUI/selgame.cpp:146
 msgid "Join Game"
 msgstr "Pridruži se igri"
 
-#: Source/DiabloUI/selgame.cpp:108
+#: Source/DiabloUI/selgame.cpp:150
 msgid "Public Games"
 msgstr "Javna igra"
 
-#: Source/DiabloUI/selgame.cpp:113 Source/error.cpp:67
+#: Source/DiabloUI/selgame.cpp:155 Source/error.cpp:64
 msgid "Loading..."
 msgstr "Učitavanje..."
 
 #. TRANSLATORS: type of dungeon (i.e. Cathedral, Caves)
-#: Source/DiabloUI/selgame.cpp:115 Source/discord/discord.cpp:67
-#: Source/options.cpp:584 Source/panels/charpanel.cpp:139
+#: Source/DiabloUI/selgame.cpp:157 Source/discord/discord.cpp:71
+#: Source/options.cpp:563 Source/panels/charpanel.cpp:137
 msgid "None"
 msgstr "Nepoznata"
 
-#: Source/DiabloUI/selgame.cpp:128 Source/DiabloUI/selgame.cpp:217
-#: Source/DiabloUI/selgame.cpp:235 Source/DiabloUI/selgame.cpp:375
-#: Source/DiabloUI/selgame.cpp:450
+#: Source/DiabloUI/selgame.cpp:171 Source/DiabloUI/selgame.cpp:309
+#: Source/DiabloUI/selgame.cpp:335 Source/DiabloUI/selgame.cpp:475
+#: Source/DiabloUI/selgame.cpp:550
 msgid "CANCEL"
 msgstr "Odustani"
 
-#: Source/DiabloUI/selgame.cpp:144
+#: Source/DiabloUI/selgame.cpp:187
 msgid "Create a new game with a difficulty setting of your choice."
 msgstr "Stvorite novu igru s težinom po vašem izboru."
 
-#: Source/DiabloUI/selgame.cpp:147
+#: Source/DiabloUI/selgame.cpp:190
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
@@ -462,48 +498,93 @@ msgstr ""
 "Stvorite novu javnu igru kojoj se bilo tko može pridružiti s težinom po "
 "vašem izboru."
 
-#: Source/DiabloUI/selgame.cpp:150
-msgid ""
-"Enter an IP or a hostname and join a game already in progress at that "
-"address."
+#: Source/DiabloUI/selgame.cpp:194
+#, fuzzy
+#| msgid ""
+#| "Enter an IP or a hostname and join a game already in progress at that "
+#| "address."
+msgid "Enter Game ID to join a game already in progress."
 msgstr ""
 "Upišite IP adresu ili naziv poslužitelja i pridružite se već pokrenutoj igri "
 "na dotičnoj adresi."
 
-#: Source/DiabloUI/selgame.cpp:153
-msgid "Join the public game already in progress at this address."
+#: Source/DiabloUI/selgame.cpp:196
+#, fuzzy
+#| msgid ""
+#| "Enter an IP or a hostname and join a game already in progress at that "
+#| "address."
+msgid "Enter an IP or a hostname to join a game already in progress."
+msgstr ""
+"Upišite IP adresu ili naziv poslužitelja i pridružite se već pokrenutoj igri "
+"na dotičnoj adresi."
+
+#: Source/DiabloUI/selgame.cpp:201
+#, fuzzy
+#| msgid "Join the public game already in progress at this address."
+msgid "Join the public game already in progress."
 msgstr "Pridružite se već pokrenutoj igri na dotičnoj adresi."
 
-#: Source/DiabloUI/selgame.cpp:205
-msgid "Select Difficulty"
-msgstr "Odabir težine"
-
-#: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:260
-#: Source/DiabloUI/selgame.cpp:364 Source/DiabloUI/selgame.cpp:384
-#: Source/automap.cpp:518 Source/discord/discord.cpp:98
+#: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
+#: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
+#: Source/DiabloUI/selgame.cpp:484 Source/automap.cpp:522
+#: Source/discord/discord.cpp:100
 msgid "Normal"
 msgstr "Normalna"
 
-#: Source/DiabloUI/selgame.cpp:208 Source/DiabloUI/selgame.cpp:264
-#: Source/automap.cpp:521 Source/discord/discord.cpp:98
+#: Source/DiabloUI/selgame.cpp:210 Source/DiabloUI/selgame.cpp:300
+#: Source/DiabloUI/selgame.cpp:364 Source/automap.cpp:525
+#: Source/discord/discord.cpp:100
 msgid "Nightmare"
 msgstr "Noćna mora"
 
-#: Source/DiabloUI/selgame.cpp:209 Source/DiabloUI/selgame.cpp:268
-#: Source/automap.cpp:524 Source/discord/discord.cpp:66
-#: Source/discord/discord.cpp:98
+#: Source/DiabloUI/selgame.cpp:213 Source/DiabloUI/selgame.cpp:301
+#: Source/DiabloUI/selgame.cpp:368 Source/automap.cpp:528
+#: Source/discord/discord.cpp:66 Source/discord/discord.cpp:100
 msgid "Hell"
 msgstr "Pakao"
 
-#: Source/DiabloUI/selgame.cpp:223
-msgid "Join TCP Games"
-msgstr "Pridruži se TCP igrama"
+#. TRANSLATORS: {:s} means: Game Difficulty.
+#: Source/DiabloUI/selgame.cpp:216 Source/automap.cpp:532
+msgid "Difficulty: {:s}"
+msgstr "Težina: {:s}"
 
-#: Source/DiabloUI/selgame.cpp:226 Source/DiabloUI/selgame.cpp:229
+#: Source/DiabloUI/selgame.cpp:220 Source/gamemenu.cpp:165
+msgid "Speed: Normal"
+msgstr "Brzina: Normalna"
+
+#: Source/DiabloUI/selgame.cpp:223 Source/gamemenu.cpp:163
+msgid "Speed: Fast"
+msgstr "Brzina: Brza"
+
+#: Source/DiabloUI/selgame.cpp:226 Source/gamemenu.cpp:161
+msgid "Speed: Faster"
+msgstr "Brzina: Brža"
+
+#: Source/DiabloUI/selgame.cpp:229 Source/gamemenu.cpp:159
+msgid "Speed: Fastest"
+msgstr "Brzina: Najbrža"
+
+#: Source/DiabloUI/selgame.cpp:237
+msgid "Players: "
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:297
+msgid "Select Difficulty"
+msgstr "Odabir težine"
+
+#: Source/DiabloUI/selgame.cpp:315
+msgid "Join {:s} Games"
+msgstr "Pridruži se {:s} igrama"
+
+#: Source/DiabloUI/selgame.cpp:320
+msgid "Enter Game ID"
+msgstr ""
+
+#: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
 msgstr "Upis adrese"
 
-#: Source/DiabloUI/selgame.cpp:261
+#: Source/DiabloUI/selgame.cpp:361
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -511,7 +592,7 @@ msgstr ""
 "Normalna težina\n"
 "Ovdje bi novi lik trebao započeti potragu za porazom Diabla."
 
-#: Source/DiabloUI/selgame.cpp:265
+#: Source/DiabloUI/selgame.cpp:365
 msgid ""
 "Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
@@ -521,7 +602,7 @@ msgstr ""
 "Stanovnici Labirinta su ojačali i pokazat će se kao veći izazov. Ovo je "
 "preporučljivo samo za iskusne likove."
 
-#: Source/DiabloUI/selgame.cpp:269
+#: Source/DiabloUI/selgame.cpp:369
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
@@ -531,7 +612,7 @@ msgstr ""
 "Najmoćnija bića iz podzemlja vrebaju na ulazu u Pakao. U ovo bi carstvo "
 "trebali ući samo najiskusniji likovi."
 
-#: Source/DiabloUI/selgame.cpp:284
+#: Source/DiabloUI/selgame.cpp:384
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
@@ -539,7 +620,7 @@ msgstr ""
 "Vaš lik mora prije dostići razinu 20 kako bi mogao ući u igru s više igrača "
 "ili u težinu noćne more."
 
-#: Source/DiabloUI/selgame.cpp:286
+#: Source/DiabloUI/selgame.cpp:386
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
@@ -547,23 +628,23 @@ msgstr ""
 "Vaš lik mora prije dostići razinu 30 kako bi mogao ući u igru s više igrača "
 "ili u paklenu težinu."
 
-#: Source/DiabloUI/selgame.cpp:362
+#: Source/DiabloUI/selgame.cpp:462
 msgid "Select Game Speed"
 msgstr "Odabir brzine igre"
 
-#: Source/DiabloUI/selgame.cpp:365 Source/DiabloUI/selgame.cpp:388
+#: Source/DiabloUI/selgame.cpp:465 Source/DiabloUI/selgame.cpp:488
 msgid "Fast"
 msgstr "Brza"
 
-#: Source/DiabloUI/selgame.cpp:366 Source/DiabloUI/selgame.cpp:392
+#: Source/DiabloUI/selgame.cpp:466 Source/DiabloUI/selgame.cpp:492
 msgid "Faster"
 msgstr "Brža"
 
-#: Source/DiabloUI/selgame.cpp:367 Source/DiabloUI/selgame.cpp:396
+#: Source/DiabloUI/selgame.cpp:467 Source/DiabloUI/selgame.cpp:496
 msgid "Fastest"
 msgstr "Najbrža"
 
-#: Source/DiabloUI/selgame.cpp:385
+#: Source/DiabloUI/selgame.cpp:485
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -571,7 +652,7 @@ msgstr ""
 "Normalna brzina\n"
 "Ovdje bi novi lik trebao započeti potragu za porazom Diabla."
 
-#: Source/DiabloUI/selgame.cpp:389
+#: Source/DiabloUI/selgame.cpp:489
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
@@ -581,7 +662,7 @@ msgstr ""
 "Stanovnici Labirinta su ubrzani i pokazat će se kao veći izazov. Ovo je "
 "preporučljivo samo za iskusne likove."
 
-#: Source/DiabloUI/selgame.cpp:393
+#: Source/DiabloUI/selgame.cpp:493
 msgid ""
 "Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. "
@@ -591,7 +672,7 @@ msgstr ""
 "Većina čudovišta u tamnici će vas tražiti bržije nego ikad prije. Samo "
 "iskusni šampioni bi trebali iskusiti sreću na ovoj brzini."
 
-#: Source/DiabloUI/selgame.cpp:397
+#: Source/DiabloUI/selgame.cpp:497
 msgid ""
 "Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a "
@@ -601,73 +682,64 @@ msgstr ""
 "Sluge podzemlja napast će vas bez oklijevanja. Samo istinski demon bi trebao "
 "ući u ovaj tempo."
 
-#: Source/DiabloUI/selgame.cpp:439 Source/DiabloUI/selgame.cpp:444
+#: Source/DiabloUI/selgame.cpp:539 Source/DiabloUI/selgame.cpp:544
 msgid "Enter Password"
 msgstr "Upis lozinke"
 
-#: Source/DiabloUI/selgame.cpp:467
-msgid "The host is running a different game than you."
-msgstr "Na poslužitelju je pokrenuta drugačija igra nego kod vas."
-
-#. TRANSLATORS: Error message when somebody tries to join a game running another version.
-#: Source/DiabloUI/selgame.cpp:470
-msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
-msgstr "Vaša inačica {:s} ne podudara se s poslužiteljevom {:d}.{:d}.{:d}."
-
-#: Source/DiabloUI/selhero.cpp:131
+#: Source/DiabloUI/selhero.cpp:132
 msgid "Choose Class"
 msgstr "Odabir klase"
 
-#: Source/DiabloUI/selhero.cpp:135 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:136 Source/panels/charpanel.cpp:23
 msgid "Warrior"
 msgstr "Ratnik"
 
-#: Source/DiabloUI/selhero.cpp:136 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:137 Source/panels/charpanel.cpp:24
 msgid "Rogue"
 msgstr "Lutalica"
 
-#: Source/DiabloUI/selhero.cpp:137 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:138 Source/panels/charpanel.cpp:25
 msgid "Sorcerer"
 msgstr "Čarobnjak"
 
-#: Source/DiabloUI/selhero.cpp:139 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:140 Source/panels/charpanel.cpp:26
 msgid "Monk"
 msgstr "Redovnik"
 
-#: Source/DiabloUI/selhero.cpp:142 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:143 Source/panels/charpanel.cpp:27
 msgid "Bard"
 msgstr ""
 
-#: Source/DiabloUI/selhero.cpp:145 Source/panels/charpanel.cpp:28
+#: Source/DiabloUI/selhero.cpp:146 Source/panels/charpanel.cpp:28
 msgid "Barbarian"
 msgstr "Barbarin"
 
-#: Source/DiabloUI/selhero.cpp:162 Source/DiabloUI/selhero.cpp:236
+#: Source/DiabloUI/selhero.cpp:163 Source/DiabloUI/selhero.cpp:237
 msgid "New Multi Player Hero"
 msgstr "Novi heroj među više igrača"
 
-#: Source/DiabloUI/selhero.cpp:162 Source/DiabloUI/selhero.cpp:236
+#: Source/DiabloUI/selhero.cpp:163 Source/DiabloUI/selhero.cpp:237
 msgid "New Single Player Hero"
 msgstr "Novi heroj jednog igrača"
 
-#: Source/DiabloUI/selhero.cpp:170
+#: Source/DiabloUI/selhero.cpp:171
 msgid "Save File Exists"
 msgstr "Spremljena igra postoji"
 
-#: Source/DiabloUI/selhero.cpp:173 Source/gamemenu.cpp:38
+#: Source/DiabloUI/selhero.cpp:174 Source/gamemenu.cpp:38
 msgid "Load Game"
 msgstr "Učitaj igru"
 
-#: Source/DiabloUI/selhero.cpp:174 Source/gamemenu.cpp:37
-#: Source/gamemenu.cpp:48
+#: Source/DiabloUI/selhero.cpp:175 Source/gamemenu.cpp:37
+#: Source/gamemenu.cpp:50 Source/multi.cpp:737
 msgid "New Game"
 msgstr "Nova igra"
 
-#: Source/DiabloUI/selhero.cpp:184 Source/DiabloUI/selhero.cpp:506
+#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:507
 msgid "Single Player Characters"
 msgstr "Lik jednog igrača"
 
-#: Source/DiabloUI/selhero.cpp:230
+#: Source/DiabloUI/selhero.cpp:231
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
@@ -675,11 +747,11 @@ msgstr ""
 "Čarobnjak i Lutalica samo su dostupni u cjelovitom maloprodajnom izdanju "
 "Diabla. Posjetite https://www.gog.com/game/diablo kako bi ga kupili."
 
-#: Source/DiabloUI/selhero.cpp:242 Source/DiabloUI/selhero.cpp:245
+#: Source/DiabloUI/selhero.cpp:243 Source/DiabloUI/selhero.cpp:246
 msgid "Enter Name"
 msgstr "Upiši ime"
 
-#: Source/DiabloUI/selhero.cpp:274
+#: Source/DiabloUI/selhero.cpp:275
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
@@ -688,91 +760,91 @@ msgstr ""
 "rezervirane riječi.\n"
 
 #. TRANSLATORS: Error Message
-#: Source/DiabloUI/selhero.cpp:281
+#: Source/DiabloUI/selhero.cpp:282
 msgid "Unable to create character."
 msgstr "Nemoguće stvaranje lika."
 
-#: Source/DiabloUI/selhero.cpp:435 Source/DiabloUI/selhero.cpp:438
+#: Source/DiabloUI/selhero.cpp:436 Source/DiabloUI/selhero.cpp:439
 msgid "Level:"
 msgstr "Razina:"
 
-#: Source/DiabloUI/selhero.cpp:443
+#: Source/DiabloUI/selhero.cpp:444
 msgid "Strength:"
 msgstr "Snaga:"
 
-#: Source/DiabloUI/selhero.cpp:448
+#: Source/DiabloUI/selhero.cpp:449
 msgid "Magic:"
 msgstr "Magija:"
 
-#: Source/DiabloUI/selhero.cpp:453
+#: Source/DiabloUI/selhero.cpp:454
 msgid "Dexterity:"
 msgstr "Vještina:"
 
-#: Source/DiabloUI/selhero.cpp:458
+#: Source/DiabloUI/selhero.cpp:459
 msgid "Vitality:"
 msgstr "Vitalnost:"
 
-#: Source/DiabloUI/selhero.cpp:464
+#: Source/DiabloUI/selhero.cpp:465
 msgid "Savegame:"
 msgstr "Broj igre:"
 
-#: Source/DiabloUI/selhero.cpp:476
+#: Source/DiabloUI/selhero.cpp:477
 msgid "Select Hero"
 msgstr "Odabir heroja"
 
-#: Source/DiabloUI/selhero.cpp:484
+#: Source/DiabloUI/selhero.cpp:485
 msgid "New Hero"
 msgstr "Novi heroj"
 
-#: Source/DiabloUI/selhero.cpp:495
+#: Source/DiabloUI/selhero.cpp:496
 msgid "Delete"
 msgstr "Obriši"
 
-#: Source/DiabloUI/selhero.cpp:504
+#: Source/DiabloUI/selhero.cpp:505
 msgid "Multi Player Characters"
 msgstr "Lik među više igrača"
 
-#: Source/DiabloUI/selhero.cpp:554
+#: Source/DiabloUI/selhero.cpp:555
 msgid "Delete Multi Player Hero"
 msgstr "Obriši heroja s više igrača"
 
-#: Source/DiabloUI/selhero.cpp:556
+#: Source/DiabloUI/selhero.cpp:557
 msgid "Delete Single Player Hero"
 msgstr "Obriši heroja jednog igrača"
 
-#: Source/DiabloUI/selhero.cpp:558
+#: Source/DiabloUI/selhero.cpp:559
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Sigurno želite obrisati \"{:s}\" lik?"
 
-#: Source/DiabloUI/selstart.cpp:42
+#: Source/DiabloUI/selstart.cpp:43
 msgid "Enter Hellfire"
 msgstr "Pokreni Hellfire"
 
-#: Source/DiabloUI/selstart.cpp:43
+#: Source/DiabloUI/selstart.cpp:44
 msgid "Switch to Diablo"
 msgstr "Prebaci na Diablo"
 
-#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:1004
+#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:986
 msgid "Yes"
 msgstr "Da"
 
-#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:1005
+#: Source/DiabloUI/selyesno.cpp:56 Source/stores.cpp:987
 msgid "No"
 msgstr "Ne"
 
-#: Source/DiabloUI/settingsmenu.cpp:300
+#: Source/DiabloUI/settingsmenu.cpp:304
 msgid "Bound key:"
 msgstr "Tipka prečaca:"
 
-#: Source/DiabloUI/settingsmenu.cpp:319
+#: Source/DiabloUI/settingsmenu.cpp:339
 msgid "Press any key to change."
 msgstr "Pritisni bilo koju tipku za promjenu."
 
-#: Source/DiabloUI/settingsmenu.cpp:321
+#: Source/DiabloUI/settingsmenu.cpp:341
 msgid "Unbind key"
 msgstr "Ukloni tipku prečaca"
 
-#: Source/DiabloUI/settingsmenu.cpp:327 Source/gamemenu.cpp:61
+#: Source/DiabloUI/settingsmenu.cpp:347 Source/gamemenu.cpp:65
 msgid "Previous Menu"
 msgstr "Prijašnji izbornik"
 
@@ -836,7 +908,7 @@ msgid "Error"
 msgstr "Greška"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
-#: Source/appfat.cpp:102
+#: Source/appfat.cpp:100
 msgid ""
 "{:s}\n"
 "\n"
@@ -846,7 +918,7 @@ msgstr ""
 "\n"
 "Greška se dogodila na: {:s} redak {:d}"
 
-#: Source/appfat.cpp:117
+#: Source/appfat.cpp:109
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
@@ -856,12 +928,12 @@ msgstr ""
 "\n"
 "Provjerite nalazi li se u mapi igre."
 
-#: Source/appfat.cpp:123
+#: Source/appfat.cpp:114
 msgid "Data File Error"
 msgstr "Greška datoteke podataka"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:131
+#: Source/appfat.cpp:120
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -869,290 +941,272 @@ msgstr ""
 "Nemoguće zapisivanje lokacije:\n"
 "{:s}"
 
-#: Source/appfat.cpp:133
+#: Source/appfat.cpp:122
 msgid "Read-Only Directory Error"
 msgstr "Greška, direktorij ima samo dozvolu čitanja"
 
-#: Source/automap.cpp:485
+#: Source/automap.cpp:484
 msgid "Game: "
 msgstr "Igra: "
 
-#: Source/automap.cpp:491
+#: Source/automap.cpp:492
 msgid "Password: "
 msgstr "Lozinka: "
 
-#: Source/automap.cpp:493
+#: Source/automap.cpp:495
 msgid "Public Game"
 msgstr "Javna igra"
 
-#: Source/automap.cpp:505
+#: Source/automap.cpp:509
 msgid "Level: Nest {:d}"
 msgstr "Razina: Skrovište {:d}"
 
-#: Source/automap.cpp:507
+#: Source/automap.cpp:511
 msgid "Level: Crypt {:d}"
 msgstr "Razina: Kripta {:d}"
 
-#: Source/automap.cpp:509 Source/items.cpp:2034
+#: Source/automap.cpp:513
 msgid "Level: {:d}"
 msgstr "Razina: {:d}"
 
-#. TRANSLATORS: {:s} means: Game Difficulty.
-#: Source/automap.cpp:527
-msgid "Difficulty: {:s}"
-msgstr "Težina: {:s}"
-
-#: Source/control.cpp:152
+#: Source/control.cpp:155
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:152
+#: Source/control.cpp:155
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:152
+#: Source/control.cpp:155
 msgid "Enter"
 msgstr "Enter"
 
-#: Source/control.cpp:155
+#: Source/control.cpp:158
 msgid "Character Information"
 msgstr "Informacije lika"
 
-#: Source/control.cpp:156
+#: Source/control.cpp:159
 msgid "Quests log"
 msgstr "Popis zadataka"
 
-#: Source/control.cpp:157
+#: Source/control.cpp:160
 msgid "Automap"
 msgstr "Automatska mapa"
 
-#: Source/control.cpp:158
+#: Source/control.cpp:161
 msgid "Main Menu"
 msgstr "Glavni izbornik"
 
-#: Source/control.cpp:159 Source/diablo.cpp:1458
+#: Source/control.cpp:162 Source/diablo.cpp:1537
 msgid "Inventory"
 msgstr "Inventar"
 
-#: Source/control.cpp:160
+#: Source/control.cpp:163
 msgid "Spell book"
 msgstr "Knjiga čarolija"
 
-#: Source/control.cpp:161
+#: Source/control.cpp:164
 msgid "Send Message"
 msgstr "Pošalji poruku"
 
-#: Source/control.cpp:662
+#: Source/control.cpp:694
 msgid "Player friendly"
 msgstr "Prijateljski igrač"
 
-#: Source/control.cpp:664
+#: Source/control.cpp:696
 msgid "Player attack"
 msgstr "Napadač"
 
-#: Source/control.cpp:667
+#: Source/control.cpp:699
 msgid "Hotkey: {:s}"
 msgstr "Prečac: {:s}"
 
-#: Source/control.cpp:675
+#: Source/control.cpp:706
 msgid "Select current spell button"
 msgstr "Odaberi trenutnu tipku čarolije"
 
-#: Source/control.cpp:678
+#: Source/control.cpp:709
 msgid "Hotkey: 's'"
 msgstr "Prečac: 's'"
 
-#: Source/control.cpp:685 Source/panels/spell_list.cpp:162
+#: Source/control.cpp:715 Source/panels/spell_list.cpp:163
 msgid "{:s} Skill"
 msgstr "{:s} vještina"
 
-#: Source/control.cpp:689 Source/panels/spell_list.cpp:169
+#: Source/control.cpp:718 Source/panels/spell_list.cpp:170
 msgid "{:s} Spell"
 msgstr "{:s} čarolija"
 
-#: Source/control.cpp:693 Source/panels/spell_list.cpp:175
+#: Source/control.cpp:720 Source/panels/spell_list.cpp:175
 msgid "Spell Level 0 - Unusable"
 msgstr "Razina čarolije 0 - Neupotrebljivo"
 
-#: Source/control.cpp:695 Source/panels/spell_list.cpp:177
+#: Source/control.cpp:720 Source/panels/spell_list.cpp:177
 msgid "Spell Level {:d}"
 msgstr "Razina čarolije {:d}"
 
-#: Source/control.cpp:699 Source/panels/spell_list.cpp:185
+#: Source/control.cpp:723 Source/panels/spell_list.cpp:184
 msgid "Scroll of {:s}"
 msgstr "Svitak {:s}"
 
-#: Source/control.cpp:705 Source/panels/spell_list.cpp:190
+#: Source/control.cpp:728 Source/panels/spell_list.cpp:189
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} svitak"
 msgstr[1] "{:d} svitka"
 msgstr[2] "{:d} svitaka"
 
-#: Source/control.cpp:709 Source/panels/spell_list.cpp:198
+#: Source/control.cpp:731 Source/panels/spell_list.cpp:196
 msgid "Staff of {:s}"
 msgstr "Štap {:s}"
 
-#: Source/control.cpp:711 Source/panels/spell_list.cpp:200
+#: Source/control.cpp:732 Source/panels/spell_list.cpp:198
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} napunjen"
 msgstr[1] "{:d} napunjena"
 msgstr[2] "{:d} napunjeno"
 
-#: Source/control.cpp:833 Source/inv.cpp:1985 Source/items.cpp:3653
+#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} zlatnik"
 msgstr[1] "{:d} zlatnika"
 msgstr[2] "{:d} zlatnika"
 
-#: Source/control.cpp:836
+#: Source/control.cpp:863
 msgid "Requirements not met"
 msgstr "Zahtjevi nisu ispunjeni"
 
-#: Source/control.cpp:870
+#: Source/control.cpp:897
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Razina: {:d}"
 
-#: Source/control.cpp:872
+#: Source/control.cpp:898
 msgid "Hit Points {:d} of {:d}"
 msgstr "Pogoci {:d} od {:d}"
 
-#: Source/control.cpp:901
+#: Source/control.cpp:932
 msgid "Level Up"
 msgstr "Povećaj razinu"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1011
+#: Source/control.cpp:1040
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "Imate {:d} zlatnik. Koliko ih želite izdvojiti?"
 msgstr[1] "Imate {:d} zlatnika. Koliko ih želite izdvojiti?"
 msgstr[2] "Imate {:d} zlatnika. Koliko ih želite izdvojiti?"
 
-#: Source/controls/modifier_hints.cpp:122
-msgid "Menu"
-msgstr "Izbornik"
+#: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
+#: Source/qol/xpbar.cpp:76
+msgid ""
+"Failed to load UI resources.\n"
+"\n"
+"Make sure devilutionx.mpq is in the game folder and that it is up to date."
+msgstr ""
+"Neuspjelo učitavanje resursa korisničkog sučelja.\n"
+"\n"
+"Pobrinite se da je devilutionx.mpq u mapi igre i da je najnovije inačice."
 
-#: Source/controls/modifier_hints.cpp:122
-msgid "Inv"
-msgstr "Inventar"
-
-#: Source/controls/modifier_hints.cpp:122
-msgid "Map"
-msgstr "Karta"
-
-#: Source/controls/modifier_hints.cpp:122
-msgid "Char"
-msgstr "Karakteristike"
-
-#: Source/controls/modifier_hints.cpp:123
-msgid "Spells"
-msgstr "Magija"
-
-#: Source/controls/modifier_hints.cpp:123
-msgid "Quests"
-msgstr "Zadaci"
-
-#: Source/cursor.cpp:218
+#: Source/cursor.cpp:220
 msgid "Town Portal"
 msgstr "Gradski portal"
 
-#: Source/cursor.cpp:219
+#: Source/cursor.cpp:221
 msgid "from {:s}"
 msgstr "od {:s}"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:235
 msgid "Portal to"
 msgstr "Portal u"
 
-#: Source/cursor.cpp:238
+#: Source/cursor.cpp:236
 msgid "The Unholy Altar"
 msgstr "Neposvećen oltar"
 
-#: Source/cursor.cpp:240
+#: Source/cursor.cpp:236
 msgid "level 15"
 msgstr "razina 15"
 
-#: Source/diablo.cpp:116
+#: Source/diablo.cpp:119
 msgid "I need help! Come Here!"
 msgstr "Trebam pomoć! Dođi ovdje!"
 
-#: Source/diablo.cpp:117
+#: Source/diablo.cpp:120
 msgid "Follow me."
 msgstr "Slijedi me."
 
-#: Source/diablo.cpp:118
+#: Source/diablo.cpp:121
 msgid "Here's something for you."
 msgstr "Imam nešto za tebe."
 
-#: Source/diablo.cpp:119
+#: Source/diablo.cpp:122
 msgid "Now you DIE!"
 msgstr "Sada UMRI!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:821
 msgid "Options:\n"
 msgstr "Mogućnosti:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:822
 msgid "Print this message and exit"
 msgstr "Prikaži ovu pomoć i izađi"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
+#: Source/diablo.cpp:823
 msgid "Print the version and exit"
 msgstr "Prikaži inačicu i izađi"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:824
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Navedite mapu za diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:825
 msgid "Specify the folder of save files"
 msgstr "Navedite mapu za spremanje datoteka"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:826
 msgid "Specify the location of diablo.ini"
 msgstr "Navedite lokaciju za diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:827
 msgid "Skip startup videos"
 msgstr "Preskoči uvodni video"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:828
 msgid "Display frames per second"
 msgstr "Prikaži sličice u sekundi"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
+#: Source/diablo.cpp:829
 msgid "Enable verbose logging"
 msgstr "Omogući opširnije zapisivanje"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
+#: Source/diablo.cpp:830
 msgid "Record a demo file"
 msgstr "Snimi demo datoteku"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:831
 msgid "Play a demo file"
 msgstr "Reproduciraj demo datoteku"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:798
+#: Source/diablo.cpp:832
 msgid "Disable all frame limiting during demo playback"
 msgstr "Onemogući sva ograničenja sličica tijekom demo reprodukcije"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:799
+#: Source/diablo.cpp:833
 msgid ""
 "\n"
 "Game selection:\n"
@@ -1161,22 +1215,22 @@ msgstr ""
 "Odabir igre:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:800
+#: Source/diablo.cpp:834
 msgid "Force Shareware mode"
 msgstr "Prisli Shareware izdanje"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:801
+#: Source/diablo.cpp:835
 msgid "Force Diablo mode"
 msgstr "Prisili Diablo izdanje"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:802
+#: Source/diablo.cpp:836
 msgid "Force Hellfire mode"
 msgstr "Prisili Hellfire izdanje"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:803
+#: Source/diablo.cpp:837
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1184,12 +1238,7 @@ msgstr ""
 "\n"
 "Hellfire mogućnosti:\n"
 
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:804
-msgid "Use alternate nest palette"
-msgstr "Koristi zamjensku nest paletu"
-
-#: Source/diablo.cpp:810
+#: Source/diablo.cpp:843
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1197,164 +1246,220 @@ msgstr ""
 "\n"
 "Prijavite greške na https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:924
+#: Source/diablo.cpp:955
 msgid "version {:s}"
 msgstr "inačica {:s}"
 
-#: Source/diablo.cpp:1243
+#: Source/diablo.cpp:1276
 msgid "-- Network timeout --"
 msgstr "-- Mrežno čekanje --"
 
-#: Source/diablo.cpp:1244
+#: Source/diablo.cpp:1277
 msgid "-- Waiting for players --"
 msgstr "-- Čekanje igrača --"
 
-#: Source/diablo.cpp:1263
+#: Source/diablo.cpp:1296
 msgid "No help available"
 msgstr "Pomoć nije dostupna"
 
-#: Source/diablo.cpp:1264
+#: Source/diablo.cpp:1297
 msgid "while in stores"
 msgstr "u trgovini"
 
-#: Source/diablo.cpp:1390
+#: Source/diablo.cpp:1439
 msgid "Belt item {}"
 msgstr "Predmet pojasa {}"
 
-#: Source/diablo.cpp:1391
+#: Source/diablo.cpp:1440
 msgid "Use Belt item."
 msgstr "Korištenje predmeta pojasa."
 
-#: Source/diablo.cpp:1405
+#: Source/diablo.cpp:1455
 msgid "Quick spell {}"
 msgstr "Brza magija {}"
 
-#: Source/diablo.cpp:1406
+#: Source/diablo.cpp:1456
 msgid "Hotkey for skill or spell."
 msgstr "Prečac za vještinu ili magiju."
 
-#: Source/diablo.cpp:1423
+#: Source/diablo.cpp:1474
 msgid "Speedbook"
 msgstr "Brza knjiga"
 
-#: Source/diablo.cpp:1424
+#: Source/diablo.cpp:1475
 msgid "Open Speedbook."
 msgstr "Otvara brzu knjigu."
 
-#: Source/diablo.cpp:1430
+#: Source/diablo.cpp:1482
 msgid "Quick save"
 msgstr "Brzo spremanje"
 
-#: Source/diablo.cpp:1431
+#: Source/diablo.cpp:1483
 msgid "Saves the game."
 msgstr "Sprema igru."
 
-#: Source/diablo.cpp:1437
+#: Source/diablo.cpp:1490
 msgid "Quick load"
 msgstr "Brzo učitavanje"
 
-#: Source/diablo.cpp:1438
+#: Source/diablo.cpp:1491
 msgid "Loads the game."
 msgstr "Učitava igru."
 
-#: Source/diablo.cpp:1444
+#: Source/diablo.cpp:1499
 msgid "Quit game"
 msgstr "Zatvori Diablo"
 
-#: Source/diablo.cpp:1445
+#: Source/diablo.cpp:1500
 msgid "Closes the game."
 msgstr "Zatvara igru."
 
-#: Source/diablo.cpp:1450
+#: Source/diablo.cpp:1506
 msgid "Stop hero"
 msgstr "Zaustavi heroja"
 
-#: Source/diablo.cpp:1451
+#: Source/diablo.cpp:1507
 msgid "Stops walking and cancel pending actions."
 msgstr "Zaustavi hodanje i prekini radnje na čekanju."
 
-#: Source/diablo.cpp:1459
+#: Source/diablo.cpp:1514
+msgid "Item highlighting"
+msgstr ""
+
+#: Source/diablo.cpp:1515
+msgid "Show/hide items on ground."
+msgstr ""
+
+#: Source/diablo.cpp:1521
+msgid "Toggle item highlighting"
+msgstr ""
+
+#: Source/diablo.cpp:1522
+msgid "Permanent show/hide items on ground."
+msgstr ""
+
+#: Source/diablo.cpp:1528
+msgid "Toggle automap"
+msgstr ""
+
+#: Source/diablo.cpp:1529
+msgid "Toggles if automap is displayed."
+msgstr ""
+
+#: Source/diablo.cpp:1538
 msgid "Open Inventory screen."
 msgstr "Otvori inventar."
 
-#: Source/diablo.cpp:1465
+#: Source/diablo.cpp:1545
 msgid "Character"
 msgstr "Lik"
 
-#: Source/diablo.cpp:1466
+#: Source/diablo.cpp:1546
 msgid "Open Character screen."
 msgstr "Otvori informacije lika."
 
-#: Source/diablo.cpp:1472
+#: Source/diablo.cpp:1553
 msgid "Quest log"
 msgstr "Popis zadataka"
 
-#: Source/diablo.cpp:1473
+#: Source/diablo.cpp:1554
 msgid "Open Quest log."
 msgstr "Otvori popis zadataka."
 
-#: Source/diablo.cpp:1479
+#: Source/diablo.cpp:1561
 msgid "Spellbook"
 msgstr "Knjiga magije"
 
-#: Source/diablo.cpp:1480
+#: Source/diablo.cpp:1562
 msgid "Open Spellbook."
 msgstr "Otvori knjigu magije."
 
-#: Source/diablo.cpp:1487
+#: Source/diablo.cpp:1570
 msgid "Quick Message {}"
 msgstr "Brza poruka {}"
 
-#: Source/diablo.cpp:1488
+#: Source/diablo.cpp:1571
 msgid "Use Quick Message in chat."
 msgstr "Koristi brzu poruku u razgovoru."
 
-#: Source/diablo.cpp:1496
+#: Source/diablo.cpp:1580
+msgid "Hide Info Screens"
+msgstr ""
+
+#: Source/diablo.cpp:1581
+msgid "Hide all info screens."
+msgstr ""
+
+#: Source/diablo.cpp:1601
 msgid "Zoom"
 msgstr "Uvećaj/Smanji"
 
-#: Source/diablo.cpp:1497
+#: Source/diablo.cpp:1602
 msgid "Zoom Game Screen."
 msgstr "Uvećava/Smanjuje zaslon igre."
 
-#: Source/diablo.cpp:1506
+#: Source/diablo.cpp:1612
+msgid "Pause Game"
+msgstr ""
+
+#: Source/diablo.cpp:1613
+msgid "Pauses the game."
+msgstr ""
+
+#: Source/diablo.cpp:1618
 msgid "Decrease Gamma"
 msgstr "Smanji gamu"
 
-#: Source/diablo.cpp:1507
+#: Source/diablo.cpp:1619
 msgid "Reduce screen brightness."
 msgstr "Smanjuje svjetlinu zaslona."
 
-#: Source/diablo.cpp:1513
+#: Source/diablo.cpp:1626
 msgid "Increase Gamma"
 msgstr "Povećaj gamu"
 
-#: Source/diablo.cpp:1514
+#: Source/diablo.cpp:1627
 msgid "Increase screen brightness."
 msgstr "Povećava svjetlinu zaslona."
 
-#: Source/diablo.cpp:1520
+#: Source/diablo.cpp:1634
 msgid "Help"
 msgstr "Pomoć"
 
-#: Source/diablo.cpp:1521
+#: Source/diablo.cpp:1635
 msgid "Open Help Screen."
 msgstr "Otvori pomoć."
 
-#: Source/diablo.cpp:1527
+#: Source/diablo.cpp:1642
+msgid "Screenshot"
+msgstr ""
+
+#: Source/diablo.cpp:1643
+msgid "Takes a screenshot."
+msgstr ""
+
+#: Source/diablo.cpp:1649
 msgid "Game info"
 msgstr "Informacije igre"
 
-#: Source/diablo.cpp:1528
+#: Source/diablo.cpp:1650
 msgid "Displays game infos."
 msgstr "Prikazuje informacije igre."
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1532
+#: Source/diablo.cpp:1654
 msgid "{:s} {:s}"
 msgstr "{:s} {:s}"
 
-#: Source/discord/discord.cpp:66 Source/objects.cpp:135
+#: Source/diablo.cpp:1663
+msgid "Chat Log"
+msgstr ""
+
+#: Source/diablo.cpp:1664
+msgid "Displays chat log."
+msgstr ""
+
+#: Source/discord/discord.cpp:66 Source/objects.cpp:136
 msgid "Town"
 msgstr "Grad"
 
@@ -1379,22 +1484,22 @@ msgid "Crypt"
 msgstr "Kripta"
 
 #. TRANSLATORS: dungeon type and floor number i.e. "Cathedral 3"
-#: Source/discord/discord.cpp:80
+#: Source/discord/discord.cpp:82
 msgid "{} {}"
 msgstr "{} {}"
 
 #. TRANSLATORS: Discord character, i.e. "Lv 6 Warrior"
-#: Source/discord/discord.cpp:88
+#: Source/discord/discord.cpp:90
 msgid "Lv {} {}"
 msgstr "Razina {} {}"
 
 #. TRANSLATORS: Discord state i.e. "Nightmare difficulty"
-#: Source/discord/discord.cpp:100
+#: Source/discord/discord.cpp:102
 msgid "{} difficulty"
 msgstr "{} težina"
 
 #. TRANSLATORS: Discord activity, not in game
-#: Source/discord/discord.cpp:180
+#: Source/discord/discord.cpp:182
 msgid "In Menu"
 msgstr "U izbornik"
 
@@ -1406,259 +1511,259 @@ msgstr "izvanmrežno"
 msgid "Unable to connect"
 msgstr "Nemoguće povezivanje"
 
-#: Source/dvlnet/tcp_client.cpp:86
+#: Source/dvlnet/tcp_client.cpp:91
 msgid "error: read 0 bytes from server"
 msgstr "greška: očitano 0 bajta sa poslužitelja"
 
-#: Source/error.cpp:58
+#: Source/error.cpp:55
 msgid "No automap available in town"
 msgstr "Karta nije dostupna u gradu"
 
-#: Source/error.cpp:59
+#: Source/error.cpp:56
 msgid "No multiplayer functions in demo"
 msgstr "Igranje više igrača nije dostupno u demo inačici"
 
-#: Source/error.cpp:60
+#: Source/error.cpp:57
 msgid "Direct Sound Creation Failed"
 msgstr "Stvaranje izravnog zvuka neuspjelo"
 
-#: Source/error.cpp:61
+#: Source/error.cpp:58
 msgid "Not available in shareware version"
 msgstr "Nije dostupno u sharware inačici"
 
-#: Source/error.cpp:62
+#: Source/error.cpp:59
 msgid "Not enough space to save"
 msgstr "Nedovoljno prostora za spremanje"
 
-#: Source/error.cpp:63
+#: Source/error.cpp:60
 msgid "No Pause in town"
 msgstr "Nema pauze u gradu"
 
-#: Source/error.cpp:64
+#: Source/error.cpp:61
 msgid "Copying to a hard disk is recommended"
 msgstr "Kopiranje na čvrsti disk je preporučeno"
 
-#: Source/error.cpp:65
+#: Source/error.cpp:62
 msgid "Multiplayer sync problem"
 msgstr "Problem usklađivanja više igrača"
 
-#: Source/error.cpp:66
+#: Source/error.cpp:63
 msgid "No pause in multiplayer"
 msgstr "Nema pauze u igri više igrača"
 
-#: Source/error.cpp:68
+#: Source/error.cpp:65
 msgid "Saving..."
 msgstr "Spremanje..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:69
+#: Source/error.cpp:66
 msgid "Some are weakened as one grows strong"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:70
+#: Source/error.cpp:67
 msgid "New strength is forged through destruction"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:71
+#: Source/error.cpp:68
 msgid "Those who defend seldom attack"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:72
+#: Source/error.cpp:69
 msgid "The sword of justice is swift and sharp"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:73
+#: Source/error.cpp:70
 msgid "While the spirit is vigilant the body thrives"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:74
+#: Source/error.cpp:71
 msgid "The powers of mana refocused renews"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:75
+#: Source/error.cpp:72
 msgid "Time cannot diminish the power of steel"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:76
+#: Source/error.cpp:73
 msgid "Magic is not always what it seems to be"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:77
+#: Source/error.cpp:74
 msgid "What once was opened now is closed"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:78
+#: Source/error.cpp:75
 msgid "Intensity comes at the cost of wisdom"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:79
+#: Source/error.cpp:76
 msgid "Arcane power brings destruction"
 msgstr "Tajanstvena moć donosi uništenje"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:80
+#: Source/error.cpp:77
 msgid "That which cannot be held cannot be harmed"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:81
+#: Source/error.cpp:78
 msgid "Crimson and Azure become as the sun"
 msgstr "Grimizno i Azurno postaju kao sunce"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:82
+#: Source/error.cpp:79
 msgid "Knowledge and wisdom at the cost of self"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:83
+#: Source/error.cpp:80
 msgid "Drink and be refreshed"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:84
+#: Source/error.cpp:81
 msgid "Wherever you go, there you are"
 msgstr "Gdje god kreneš, tamo stigneš"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:85
+#: Source/error.cpp:82
 msgid "Energy comes at the cost of wisdom"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:86
+#: Source/error.cpp:83
 msgid "Riches abound when least expected"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:87
+#: Source/error.cpp:84
 msgid "Where avarice fails, patience gains reward"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:88
+#: Source/error.cpp:85
 msgid "Blessed by a benevolent companion!"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:89
+#: Source/error.cpp:86
 msgid "The hands of men may be guided by fate"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:90
+#: Source/error.cpp:87
 msgid "Strength is bolstered by heavenly faith"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:91
+#: Source/error.cpp:88
 msgid "The essence of life flows from within"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:92
+#: Source/error.cpp:89
 msgid "The way is made clear when viewed from above"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:93
+#: Source/error.cpp:90
 msgid "Salvation comes at the cost of wisdom"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:94
+#: Source/error.cpp:91
 msgid "Mysteries are revealed in the light of reason"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:95
+#: Source/error.cpp:92
 msgid "Those who are last may yet be first"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:96
+#: Source/error.cpp:93
 msgid "Generosity brings its own rewards"
 msgstr ""
 
-#: Source/error.cpp:97
+#: Source/error.cpp:94
 msgid "You must be at least level 8 to use this."
 msgstr ""
 
-#: Source/error.cpp:98
+#: Source/error.cpp:95
 msgid "You must be at least level 13 to use this."
 msgstr ""
 
-#: Source/error.cpp:99
+#: Source/error.cpp:96
 msgid "You must be at least level 17 to use this."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:100
+#: Source/error.cpp:97
 msgid "Arcane knowledge gained!"
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:101
+#: Source/error.cpp:98
 msgid "That which does not kill you..."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:102
+#: Source/error.cpp:99
 msgid "Knowledge is power."
 msgstr "Znanje je moć."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:103
+#: Source/error.cpp:100
 msgid "Give and you shall receive."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:104
+#: Source/error.cpp:101
 msgid "Some experience is gained by touch."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:105
+#: Source/error.cpp:102
 msgid "There's no place like home."
 msgstr "Najbolje je kod kuće."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:106
+#: Source/error.cpp:103
 msgid "Spiritual energy is restored."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:107
+#: Source/error.cpp:104
 msgid "You feel more agile."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:108
+#: Source/error.cpp:105
 msgid "You feel stronger."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:109
+#: Source/error.cpp:106
 msgid "You feel wiser."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:110
+#: Source/error.cpp:107
 msgid "You feel refreshed."
 msgstr ""
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:111
+#: Source/error.cpp:108
 msgid "That which can break will."
 msgstr ""
 
@@ -1666,55 +1771,39 @@ msgstr ""
 msgid "Save Game"
 msgstr "Spremi igru"
 
-#: Source/gamemenu.cpp:36 Source/gamemenu.cpp:47
+#: Source/gamemenu.cpp:36 Source/gamemenu.cpp:49
 msgid "Options"
 msgstr "Mogućnosti"
 
-#: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
+#: Source/gamemenu.cpp:40 Source/gamemenu.cpp:53
 msgid "Quit Game"
 msgstr "Zatvori Diablo"
 
-#: Source/gamemenu.cpp:49
+#: Source/gamemenu.cpp:51
 msgid "Restart In Town"
 msgstr "Ponovno pokreni u gradu"
 
-#: Source/gamemenu.cpp:59
+#: Source/gamemenu.cpp:63
 msgid "Gamma"
 msgstr "Gama"
 
-#: Source/gamemenu.cpp:60 Source/gamemenu.cpp:167
+#: Source/gamemenu.cpp:64 Source/gamemenu.cpp:171
 msgid "Speed"
 msgstr "Brzina"
 
-#: Source/gamemenu.cpp:68
+#: Source/gamemenu.cpp:72
 msgid "Music Disabled"
 msgstr "Glazba isključena"
 
-#: Source/gamemenu.cpp:72
+#: Source/gamemenu.cpp:76
 msgid "Sound"
 msgstr "Zvuk"
 
-#: Source/gamemenu.cpp:73
+#: Source/gamemenu.cpp:77
 msgid "Sound Disabled"
 msgstr "Zvuk isključen"
 
-#: Source/gamemenu.cpp:155
-msgid "Speed: Fastest"
-msgstr "Brzina: Najbrža"
-
-#: Source/gamemenu.cpp:157
-msgid "Speed: Faster"
-msgstr "Brzina: Brža"
-
-#: Source/gamemenu.cpp:159
-msgid "Speed: Fast"
-msgstr "Brzina: Brza"
-
-#: Source/gamemenu.cpp:161
-msgid "Speed: Normal"
-msgstr "Brzina: Normalna"
-
-#: Source/gmenu.cpp:167
+#: Source/gmenu.cpp:168
 msgid "Pause"
 msgstr "Pauza"
 
@@ -1937,35 +2026,35 @@ msgstr ""
 "Čitanje više knjiga proširuje vaše znanje odabrane magije, što omogućuje "
 "učinkovitije bacanje magije."
 
-#: Source/help.cpp:180
+#: Source/help.cpp:177
 msgid "Shareware Hellfire Help"
 msgstr "Shareware Hellfire pomoć"
 
-#: Source/help.cpp:180
+#: Source/help.cpp:177
 msgid "Hellfire Help"
 msgstr "Hellfire pomoć"
 
-#: Source/help.cpp:182
+#: Source/help.cpp:179
 msgid "Shareware Diablo Help"
 msgstr "Shareware Diablo pomoć"
 
-#: Source/help.cpp:182
+#: Source/help.cpp:179
 msgid "Diablo Help"
 msgstr "Diablo pomoć"
 
-#: Source/help.cpp:212
+#: Source/help.cpp:209 Source/qol/chatlog.cpp:181
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Pritisnite ESC za završetak ili tipku strelice za pomicanje."
 
-#: Source/init.cpp:194
+#: Source/init.cpp:195
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq ili spawn.mpq"
 
-#: Source/init.cpp:215
+#: Source/init.cpp:216
 msgid "Some Hellfire MPQs are missing"
 msgstr "Određeni Hellfire MPQ-ovi nedostaju"
 
-#: Source/init.cpp:215
+#: Source/init.cpp:216
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1973,11 +2062,11 @@ msgstr ""
 "Nisu svi Hellfire MPQ-ovi pronađeni.\n"
 "Kopirajte sve hf*.mpq datoteke."
 
-#: Source/init.cpp:223
+#: Source/init.cpp:224
 msgid "Unable to create main window"
 msgstr "Nemoguće stvaranje glavnog prozora"
 
-#: Source/itemdat.cpp:53 Source/itemdat.cpp:235 Source/panels/charpanel.cpp:166
+#: Source/itemdat.cpp:53 Source/itemdat.cpp:235 Source/panels/charpanel.cpp:164
 msgid "Gold"
 msgstr "Zlato"
 
@@ -2041,11 +2130,11 @@ msgstr ""
 msgid "Golden Elixir"
 msgstr ""
 
-#: Source/itemdat.cpp:69 Source/quests.cpp:53
+#: Source/itemdat.cpp:69 Source/quests.cpp:54
 msgid "Anvil of Fury"
 msgstr ""
 
-#: Source/itemdat.cpp:70 Source/quests.cpp:44
+#: Source/itemdat.cpp:70 Source/quests.cpp:45
 msgid "Black Mushroom"
 msgstr ""
 
@@ -2119,7 +2208,7 @@ msgstr "Štap od Lazara"
 msgid "Scroll of Resurrect"
 msgstr "Svitak uskrsnuća"
 
-#: Source/itemdat.cpp:88 Source/itemdat.cpp:136 Source/items.cpp:168
+#: Source/itemdat.cpp:88 Source/itemdat.cpp:136 Source/items.cpp:172
 msgid "Blacksmith Oil"
 msgstr "Kovačko ulje"
 
@@ -2219,7 +2308,7 @@ msgid "Quilted Armor"
 msgstr "Prošiveni oklop"
 
 #: Source/itemdat.cpp:111 Source/itemdat.cpp:112 Source/itemdat.cpp:113
-#: Source/itemdat.cpp:114 Source/objects.cpp:5480
+#: Source/itemdat.cpp:114 Source/objects.cpp:5482
 msgid "Armor"
 msgstr "Oklop"
 
@@ -2314,11 +2403,11 @@ msgstr "Napitak oporavka"
 msgid "Potion of Full Rejuvenation"
 msgstr "Napitak potpunog oporavka"
 
-#: Source/itemdat.cpp:137 Source/items.cpp:163
+#: Source/itemdat.cpp:137 Source/items.cpp:167
 msgid "Oil of Accuracy"
 msgstr "Ulje preciznosti"
 
-#: Source/itemdat.cpp:138 Source/items.cpp:165
+#: Source/itemdat.cpp:138 Source/items.cpp:169
 msgid "Oil of Sharpness"
 msgstr "Ulje oštroumnosti"
 
@@ -2548,7 +2637,7 @@ msgstr "Dugi ratni luk"
 
 #: Source/itemdat.cpp:204 Source/itemdat.cpp:205 Source/itemdat.cpp:206
 #: Source/itemdat.cpp:207 Source/itemdat.cpp:208
-#: Source/panels/spell_list.cpp:197
+#: Source/panels/spell_list.cpp:195
 msgid "Staff"
 msgstr "Štap"
 
@@ -2642,7 +2731,7 @@ msgstr "Mitril"
 msgid "Meteoric"
 msgstr "Meteor"
 
-#: Source/itemdat.cpp:239 Source/objects.cpp:108
+#: Source/itemdat.cpp:239 Source/objects.cpp:109
 msgid "Weird"
 msgstr "Čudno"
 
@@ -2778,7 +2867,7 @@ msgstr ""
 msgid "Awesome"
 msgstr ""
 
-#: Source/itemdat.cpp:274 Source/objects.cpp:120
+#: Source/itemdat.cpp:274 Source/objects.cpp:121
 msgid "Holy"
 msgstr "Sveto"
 
@@ -3757,31 +3846,31 @@ msgstr ""
 msgid "Gladiator's Ring"
 msgstr "Gladijatorov prsten"
 
-#: Source/items.cpp:164
+#: Source/items.cpp:168
 msgid "Oil of Mastery"
 msgstr "Ulje majstorstva"
 
-#: Source/items.cpp:166
+#: Source/items.cpp:170
 msgid "Oil of Death"
 msgstr "Ulje smrti"
 
-#: Source/items.cpp:167
+#: Source/items.cpp:171
 msgid "Oil of Skill"
 msgstr "Ulje vještine"
 
-#: Source/items.cpp:169
+#: Source/items.cpp:173
 msgid "Oil of Fortitude"
 msgstr "Ulje hrabrosti"
 
-#: Source/items.cpp:170
+#: Source/items.cpp:174
 msgid "Oil of Permanence"
 msgstr "Ulje postojanosti"
 
-#: Source/items.cpp:171
+#: Source/items.cpp:175
 msgid "Oil of Hardening"
 msgstr "Ulje stvrdnjavanja"
 
-#: Source/items.cpp:172
+#: Source/items.cpp:176
 msgid "Oil of Imperviousness"
 msgstr "Ulje nepropusnosti"
 
@@ -3812,645 +3901,662 @@ msgstr "{0} {1}"
 msgid "{0} of {1}"
 msgstr "{0} od {1}"
 
-#: Source/items.cpp:1850 Source/items.cpp:1862
+#: Source/items.cpp:1701 Source/items.cpp:1709
 msgid "increases a weapon's"
 msgstr ""
 
-#: Source/items.cpp:1852
+#: Source/items.cpp:1702
 msgid "chance to hit"
 msgstr ""
 
-#: Source/items.cpp:1856
+#: Source/items.cpp:1705
 msgid "greatly increases a"
 msgstr ""
 
-#: Source/items.cpp:1858
+#: Source/items.cpp:1706
 msgid "weapon's chance to hit"
 msgstr ""
 
-#: Source/items.cpp:1864
+#: Source/items.cpp:1710
 msgid "damage potential"
 msgstr ""
 
-#: Source/items.cpp:1868
+#: Source/items.cpp:1713
 msgid "greatly increases a weapon's"
 msgstr ""
 
-#: Source/items.cpp:1870
+#: Source/items.cpp:1714
 msgid "damage potential - not bows"
 msgstr ""
 
-#: Source/items.cpp:1874
+#: Source/items.cpp:1717
 msgid "reduces attributes needed"
 msgstr "smanjuje potrebna svojstva"
 
-#: Source/items.cpp:1876
+#: Source/items.cpp:1718
 msgid "to use armor or weapons"
 msgstr ""
 
-#: Source/items.cpp:1880
+#: Source/items.cpp:1721
 #, no-c-format
 msgid "restores 20% of an"
 msgstr ""
 
-#: Source/items.cpp:1882
+#: Source/items.cpp:1722
 msgid "item's durability"
 msgstr ""
 
-#: Source/items.cpp:1886
+#: Source/items.cpp:1725
 msgid "increases an item's"
 msgstr ""
 
-#: Source/items.cpp:1888
+#: Source/items.cpp:1726
 msgid "current and max durability"
 msgstr ""
 
-#: Source/items.cpp:1892
+#: Source/items.cpp:1729
 msgid "makes an item indestructible"
 msgstr ""
 
-#: Source/items.cpp:1896
+#: Source/items.cpp:1732
 msgid "increases the armor class"
 msgstr ""
 
-#: Source/items.cpp:1898
+#: Source/items.cpp:1733
 msgid "of armor and shields"
 msgstr ""
 
-#: Source/items.cpp:1902
+#: Source/items.cpp:1736
 msgid "greatly increases the armor"
 msgstr ""
 
-#: Source/items.cpp:1904
+#: Source/items.cpp:1737
 msgid "class of armor and shields"
 msgstr ""
 
-#: Source/items.cpp:1908 Source/items.cpp:1917
+#: Source/items.cpp:1740 Source/items.cpp:1747
 msgid "sets fire trap"
 msgstr ""
 
-#: Source/items.cpp:1913
+#: Source/items.cpp:1744
 msgid "sets lightning trap"
 msgstr ""
 
-#: Source/items.cpp:1921
+#: Source/items.cpp:1750
 msgid "sets petrification trap"
 msgstr ""
 
-#: Source/items.cpp:1925
+#: Source/items.cpp:1753
 msgid "restore all life"
 msgstr ""
 
-#: Source/items.cpp:1929
+#: Source/items.cpp:1756
 msgid "restore some life"
 msgstr "djelomično obnavlja život"
 
-#: Source/items.cpp:1933
+#: Source/items.cpp:1759
 msgid "recover life"
 msgstr "obnavlja život"
 
-#: Source/items.cpp:1937
+#: Source/items.cpp:1762
 msgid "deadly heal"
 msgstr "diže iz mrtvih"
 
-#: Source/items.cpp:1941
+#: Source/items.cpp:1765
 msgid "restore some mana"
 msgstr "djelomično obnavlja manu"
 
-#: Source/items.cpp:1945
+#: Source/items.cpp:1768
 msgid "restore all mana"
 msgstr "potpuno obnavlja manu"
 
-#: Source/items.cpp:1949
+#: Source/items.cpp:1771
 msgid "increase strength"
 msgstr "povećava snagu"
 
-#: Source/items.cpp:1953
+#: Source/items.cpp:1774
 msgid "increase magic"
 msgstr "povećava magiju"
 
-#: Source/items.cpp:1957
+#: Source/items.cpp:1777
 msgid "increase dexterity"
 msgstr "povećava vještinu"
 
-#: Source/items.cpp:1961
+#: Source/items.cpp:1780
 msgid "increase vitality"
 msgstr "povećava vitalnost"
 
-#: Source/items.cpp:1966
+#: Source/items.cpp:1784
 msgid "decrease strength"
 msgstr "smanjuje snagu"
 
-#: Source/items.cpp:1970
+#: Source/items.cpp:1787
 msgid "decrease dexterity"
 msgstr "smanjuje vještinu"
 
-#: Source/items.cpp:1974
+#: Source/items.cpp:1790
 msgid "decrease vitality"
 msgstr "smanjuje vitalnost"
 
-#: Source/items.cpp:1978
+#: Source/items.cpp:1793
 msgid "restore some life and mana"
 msgstr "djelomično obnavlja život i manu"
 
-#: Source/items.cpp:1982
+#: Source/items.cpp:1796
 msgid "restore all life and mana"
 msgstr "potpuno obnavlja život i manu"
 
-#: Source/items.cpp:1997 Source/items.cpp:2022
+#: Source/items.cpp:1811 Source/items.cpp:1860
 msgid "Right-click to read"
 msgstr "Desno klikni za čitanje"
 
-#: Source/items.cpp:2001
+#: Source/items.cpp:1814 Source/items.cpp:1835
+#, fuzzy
+#| msgid "Select current spell button"
+msgid "Select from spell book, then"
+msgstr "Odaberi trenutnu tipku čarolije"
+
+#: Source/items.cpp:1815 Source/items.cpp:1836
+msgid "cast spell to read"
+msgstr ""
+
+#: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
+#, fuzzy
+#| msgid "Open Inventory screen."
+msgid "Open inventory to use"
+msgstr "Otvori inventar."
+
+#: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
+msgid "Activate to read"
+msgstr ""
+
+#: Source/items.cpp:1825
 msgid "Right-click to read, then"
 msgstr "Desno klikni za čitanje, zatim"
 
-#: Source/items.cpp:2003
+#: Source/items.cpp:1826
 msgid "left-click to target"
 msgstr "lijevo klikni na metu"
 
-#: Source/items.cpp:2008
+#: Source/items.cpp:1849
 msgid "Right-click to use"
 msgstr "Desno klikni za korištenje"
 
-#: Source/items.cpp:2013 Source/items.cpp:2018
-msgid "Right click to use"
-msgstr "Desno klikni za korištenje"
+#: Source/items.cpp:1854
+#, fuzzy
+#| msgid "Associate Producer"
+msgid "Activate to use"
+msgstr "Pomoćni producent"
 
-#: Source/items.cpp:2026
-msgid "Right click to read"
-msgstr "Desno klikni za čitanje"
-
-#: Source/items.cpp:2030
+#: Source/items.cpp:1867
 msgid "Right-click to view"
 msgstr "Desno klikni za pogledati"
 
-#: Source/items.cpp:2038
+#: Source/items.cpp:1869
+msgid "Activate to view"
+msgstr ""
+
+#: Source/items.cpp:1873
+msgctxt "player"
+msgid "Level: {:d}"
+msgstr "Razina: {:d}"
+
+#: Source/items.cpp:1876
 msgid "Doubles gold capacity"
 msgstr "Udvostručuje kapacitet zlata"
 
-#: Source/items.cpp:2050 Source/stores.cpp:281
+#: Source/items.cpp:1887 Source/stores.cpp:279
 msgid "Required:"
 msgstr "Potrebno:"
 
-#: Source/items.cpp:2052 Source/stores.cpp:283
+#: Source/items.cpp:1889 Source/stores.cpp:281
 msgid " {:d} Str"
 msgstr " {:d} Snage"
 
-#: Source/items.cpp:2054 Source/stores.cpp:285
+#: Source/items.cpp:1891 Source/stores.cpp:283
 msgid " {:d} Mag"
 msgstr " {:d} Magije"
 
-#: Source/items.cpp:2056 Source/stores.cpp:287
+#: Source/items.cpp:1893 Source/stores.cpp:285
 msgid " {:d} Dex"
 msgstr " {:d} Vještine"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3431 Source/player.cpp:3001
+#: Source/items.cpp:3250 Source/player.cpp:3149
 msgid "Ear of {:s}"
 msgstr "Uho od {:s}"
 
-#: Source/items.cpp:3732
+#: Source/items.cpp:3546
 msgid "chance to hit: {:+d}%"
 msgstr "šanse za pogodak: {:+d}%"
 
-#: Source/items.cpp:3735
+#: Source/items.cpp:3549
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% oštećenje"
 
-#: Source/items.cpp:3738 Source/items.cpp:3936
+#: Source/items.cpp:3552 Source/items.cpp:3750
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "pogodak: {:+d}%, {:+d}% oštećenje"
 
-#: Source/items.cpp:3741
+#: Source/items.cpp:3555
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% oklop"
 
-#: Source/items.cpp:3744
+#: Source/items.cpp:3558
 msgid "armor class: {:d}"
 msgstr "klasa oklopa: {:d}"
 
-#: Source/items.cpp:3748 Source/items.cpp:3922
+#: Source/items.cpp:3562 Source/items.cpp:3736
 msgid "Resist Fire: {:+d}%"
 msgstr "Otpor na vatru: {:+d}%"
 
-#: Source/items.cpp:3750
-msgid "Resist Fire: 75% MAX"
-msgstr "Otpor na vatru: 75% MAX"
+#: Source/items.cpp:3564
+msgid "Resist Fire: {:+d}% MAX"
+msgstr "Otpor na vatru: {:+d}% MAX"
 
-#: Source/items.cpp:3754
+#: Source/items.cpp:3568
 msgid "Resist Lightning: {:+d}%"
 msgstr "Otpor na svjetlost: {:+d}%"
 
-#: Source/items.cpp:3756
-msgid "Resist Lightning: 75% MAX"
-msgstr "Otpor na svjetlost: 75% MAX"
+#: Source/items.cpp:3570
+msgid "Resist Lightning: {:+d}% MAX"
+msgstr "Otpor na svjetlost: {:+d}% MAX"
 
-#: Source/items.cpp:3760
+#: Source/items.cpp:3574
 msgid "Resist Magic: {:+d}%"
 msgstr "Otpor na magiju: {:+d}%"
 
-#: Source/items.cpp:3762
-msgid "Resist Magic: 75% MAX"
-msgstr "Otpor na magiju: 75% MAX"
+#: Source/items.cpp:3576
+msgid "Resist Magic: {:+d}% MAX"
+msgstr "Otpor na magiju: {:+d}% MAX"
 
-#: Source/items.cpp:3766
+#: Source/items.cpp:3580
 msgid "Resist All: {:+d}%"
 msgstr "Otpor na sve: {:+d}%"
 
-#: Source/items.cpp:3768
-msgid "Resist All: 75% MAX"
-msgstr "Otpor na sve: 75% MAX"
+#: Source/items.cpp:3582
+msgid "Resist All: {:+d}% MAX"
+msgstr "Otpor na sve: {:+d}% MAX"
 
-#: Source/items.cpp:3771
+#: Source/items.cpp:3585
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "magija je povećana za {:d} razinu"
 msgstr[1] "magija je povećana za {:d} razine"
 msgstr[2] "magija je povećana za {:d} razina"
 
-#: Source/items.cpp:3773
+#: Source/items.cpp:3587
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "magija je smanjena za {:d} razinu"
 msgstr[1] "magija je smanjena za {:d} razine"
 msgstr[2] "magija je smanjena za {:d} razina"
 
-#: Source/items.cpp:3775
+#: Source/items.cpp:3589
 msgid "spell levels unchanged (?)"
 msgstr "razina magije nepromijenjena (?)"
 
-#: Source/items.cpp:3777
+#: Source/items.cpp:3591
 msgid "Extra charges"
 msgstr "Dodatna punjenja"
 
-#: Source/items.cpp:3779
+#: Source/items.cpp:3593
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} punjenje"
 msgstr[1] "{:d} {:s} punjenja"
 msgstr[2] "{:d} {:s} punjenja"
 
-#: Source/items.cpp:3782
+#: Source/items.cpp:3596
 msgid "Fire hit damage: {:d}"
 msgstr "Oštećenje na pogodak vatre: {:d}"
 
-#: Source/items.cpp:3784
+#: Source/items.cpp:3598
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "Oštećenje na pogodak vatre: {:d}-{:d}"
 
-#: Source/items.cpp:3787
+#: Source/items.cpp:3601
 #, fuzzy
 msgid "Lightning hit damage: {:d}"
 msgstr "Oštećenje na pogodak svjetlosti: {:d}"
 
-#: Source/items.cpp:3789
+#: Source/items.cpp:3603
 #, fuzzy
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "oštećenje na pogodak svjetlosti: {:d}-{:d}"
 
-#: Source/items.cpp:3792
+#: Source/items.cpp:3606
 msgid "{:+d} to strength"
 msgstr "{:+d} na snagu"
 
-#: Source/items.cpp:3795
+#: Source/items.cpp:3609
 msgid "{:+d} to magic"
 msgstr "{:+d} na magiju"
 
-#: Source/items.cpp:3798
+#: Source/items.cpp:3612
 msgid "{:+d} to dexterity"
 msgstr "{:+d} na vještinu"
 
-#: Source/items.cpp:3801
+#: Source/items.cpp:3615
 msgid "{:+d} to vitality"
 msgstr "{:+d} na vitalnost"
 
-#: Source/items.cpp:3804
+#: Source/items.cpp:3618
 msgid "{:+d} to all attributes"
 msgstr "{:+d} na sve vještine"
 
-#: Source/items.cpp:3807
+#: Source/items.cpp:3621
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} na štetu od neprijatelja"
 
-#: Source/items.cpp:3810
+#: Source/items.cpp:3624
 msgid "Hit Points: {:+d}"
 msgstr "Pogodci: {:+d}"
 
-#: Source/items.cpp:3813
+#: Source/items.cpp:3627
 msgid "Mana: {:+d}"
 msgstr "Mana: {:+d}"
 
-#: Source/items.cpp:3815
+#: Source/items.cpp:3629
 msgid "high durability"
 msgstr "visoka izdržljivost"
 
-#: Source/items.cpp:3817
+#: Source/items.cpp:3631
 msgid "decreased durability"
 msgstr "smanjena izdržljivost"
 
-#: Source/items.cpp:3819
+#: Source/items.cpp:3633
 msgid "indestructible"
 msgstr "neuništivo"
 
-#: Source/items.cpp:3821
+#: Source/items.cpp:3635
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% radijus svjetlosti"
 
-#: Source/items.cpp:3823
+#: Source/items.cpp:3637
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% radijus svjetlosti"
 
-#: Source/items.cpp:3825
+#: Source/items.cpp:3639
 msgid "multiple arrows per shot"
 msgstr "više strijela pri pogodku"
 
-#: Source/items.cpp:3828
+#: Source/items.cpp:3642
 msgid "fire arrows damage: {:d}"
 msgstr "oštećenje od strijele: {:d}"
 
-#: Source/items.cpp:3830
+#: Source/items.cpp:3644
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "oštećenje od strijele: {:d}-{:d}"
 
-#: Source/items.cpp:3833
+#: Source/items.cpp:3647
 #, fuzzy
 msgid "lightning arrows damage {:d}"
 msgstr "oštećenje od strijele svjetlosti: {:d}"
 
-#: Source/items.cpp:3835
+#: Source/items.cpp:3649
 #, fuzzy
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "oštećenje od strijele svjetlosti: {:d}-{:d}"
 
-#: Source/items.cpp:3838
+#: Source/items.cpp:3652
 msgid "fireball damage: {:d}"
 msgstr ""
 
-#: Source/items.cpp:3840
+#: Source/items.cpp:3654
 msgid "fireball damage: {:d}-{:d}"
 msgstr ""
 
-#: Source/items.cpp:3842
+#: Source/items.cpp:3656
 msgid "attacker takes 1-3 damage"
 msgstr ""
 
-#: Source/items.cpp:3844
+#: Source/items.cpp:3658
 msgid "user loses all mana"
 msgstr ""
 
-#: Source/items.cpp:3846
+#: Source/items.cpp:3660
 msgid "you can't heal"
 msgstr ""
 
-#: Source/items.cpp:3848
+#: Source/items.cpp:3662
 msgid "absorbs half of trap damage"
 msgstr ""
 
-#: Source/items.cpp:3850
+#: Source/items.cpp:3664
 msgid "knocks target back"
 msgstr ""
 
-#: Source/items.cpp:3852
+#: Source/items.cpp:3666
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr ""
 
-#: Source/items.cpp:3854
+#: Source/items.cpp:3668
 msgid "All Resistance equals 0"
 msgstr ""
 
-#: Source/items.cpp:3856
+#: Source/items.cpp:3670
 msgid "hit monster doesn't heal"
 msgstr ""
 
-#: Source/items.cpp:3859
+#: Source/items.cpp:3673
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr ""
 
-#: Source/items.cpp:3861
+#: Source/items.cpp:3675
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr ""
 
-#: Source/items.cpp:3865
+#: Source/items.cpp:3679
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr ""
 
-#: Source/items.cpp:3867
+#: Source/items.cpp:3681
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr ""
 
-#: Source/items.cpp:3870
+#: Source/items.cpp:3684
 msgid "penetrates target's armor"
 msgstr ""
 
-#: Source/items.cpp:3873
+#: Source/items.cpp:3687
 msgid "quick attack"
 msgstr ""
 
-#: Source/items.cpp:3875
+#: Source/items.cpp:3689
 msgid "fast attack"
 msgstr ""
 
-#: Source/items.cpp:3877
+#: Source/items.cpp:3691
 msgid "faster attack"
 msgstr ""
 
-#: Source/items.cpp:3879
+#: Source/items.cpp:3693
 msgid "fastest attack"
 msgstr ""
 
-#: Source/items.cpp:3880 Source/items.cpp:3888 Source/items.cpp:3946
+#: Source/items.cpp:3694 Source/items.cpp:3702 Source/items.cpp:3760
 msgid "Another ability (NW)"
 msgstr ""
 
-#: Source/items.cpp:3883
+#: Source/items.cpp:3697
 msgid "fast hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3885
+#: Source/items.cpp:3699
 msgid "faster hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3887
+#: Source/items.cpp:3701
 msgid "fastest hit recovery"
 msgstr ""
 
-#: Source/items.cpp:3890
+#: Source/items.cpp:3704
 msgid "fast block"
 msgstr ""
 
-#: Source/items.cpp:3892
+#: Source/items.cpp:3706
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "dodaje {:d} bod na oštećenje"
 msgstr[1] "dodaje {:d} boda na oštećenje"
 msgstr[2] "dodaje {:d} boda na oštećenje"
 
-#: Source/items.cpp:3894
+#: Source/items.cpp:3708
 msgid "fires random speed arrows"
 msgstr ""
 
-#: Source/items.cpp:3896
+#: Source/items.cpp:3710
 msgid "unusual item damage"
 msgstr "neobično oštećenje predmeta"
 
-#: Source/items.cpp:3898
+#: Source/items.cpp:3712
 msgid "altered durability"
 msgstr "promijenjena izdržljivost"
 
-#: Source/items.cpp:3900
+#: Source/items.cpp:3714
 msgid "Faster attack swing"
 msgstr ""
 
-#: Source/items.cpp:3902
+#: Source/items.cpp:3716
 msgid "one handed sword"
 msgstr "jednoruki mač"
 
-#: Source/items.cpp:3904
+#: Source/items.cpp:3718
 msgid "constantly lose hit points"
 msgstr ""
 
-#: Source/items.cpp:3906
+#: Source/items.cpp:3720
 msgid "life stealing"
 msgstr ""
 
-#: Source/items.cpp:3908
+#: Source/items.cpp:3722
 msgid "no strength requirement"
 msgstr ""
 
-#: Source/items.cpp:3910
+#: Source/items.cpp:3724
 msgid "see with infravision"
 msgstr ""
 
-#: Source/items.cpp:3915
+#: Source/items.cpp:3729
 #, fuzzy
 msgid "lightning damage: {:d}"
 msgstr "oštećenje od svjetlosti: {:d}"
 
-#: Source/items.cpp:3917
+#: Source/items.cpp:3731
 #, fuzzy
 msgid "lightning damage: {:d}-{:d}"
 msgstr "oštećenje od svjetlosti: {:d}-{:d}"
 
-#: Source/items.cpp:3919
+#: Source/items.cpp:3733
 msgid "charged bolts on hits"
 msgstr "pražnjenja naboja pri pogodku"
 
-#: Source/items.cpp:3926
+#: Source/items.cpp:3740
 msgid "occasional triple damage"
 msgstr "povremeno trostruko oštećenje"
 
-#: Source/items.cpp:3928
+#: Source/items.cpp:3742
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "raspadanje {:+d}% oštećenje"
 
-#: Source/items.cpp:3930
+#: Source/items.cpp:3744
 msgid "2x dmg to monst, 1x to you"
 msgstr "2x ošteć. na čudovište, 1x na vas"
 
-#: Source/items.cpp:3932
+#: Source/items.cpp:3746
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Naizmjenično 0 - 500% oštećenje"
 
-#: Source/items.cpp:3934
+#: Source/items.cpp:3748
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "niska izdrž, {:+d}% oštećenje"
 
-#: Source/items.cpp:3938
+#: Source/items.cpp:3752
 msgid "extra AC vs demons"
 msgstr "dodatna AC protiv demona"
 
-#: Source/items.cpp:3940
+#: Source/items.cpp:3754
 msgid "extra AC vs undead"
 msgstr "dodatna AC protiv nemrtvih"
 
-#: Source/items.cpp:3942
+#: Source/items.cpp:3756
 msgid "50% Mana moved to Health"
 msgstr "50% Mane premješteno u Zdravlje"
 
-#: Source/items.cpp:3944
+#: Source/items.cpp:3758
 msgid "40% Health moved to Mana"
 msgstr "40% Zdravlja premješteno u Manu"
 
-#: Source/items.cpp:3981 Source/items.cpp:4026
+#: Source/items.cpp:3795 Source/items.cpp:3833
 msgid "damage: {:d}  Indestructible"
 msgstr "oštećenje: {:d}  neuništivo"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3983 Source/items.cpp:4028
+#: Source/items.cpp:3797 Source/items.cpp:3835
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "oštećenje: {:d}  Izdrž: {:d}/{:d}"
 
-#: Source/items.cpp:3986 Source/items.cpp:4031
+#: Source/items.cpp:3800 Source/items.cpp:3838
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "oštećenje: {:d}-{:d}  neuništivo"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3988 Source/items.cpp:4033
+#: Source/items.cpp:3802 Source/items.cpp:3840
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "oštećenje: {:d}-{:d}  Izdrž: {:d}/{:d}"
 
-#: Source/items.cpp:3994 Source/items.cpp:4045
+#: Source/items.cpp:3807 Source/items.cpp:3850
 msgid "armor: {:d}  Indestructible"
 msgstr "oklop: {:d}  neuništivo"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3996 Source/items.cpp:4047
+#: Source/items.cpp:3809 Source/items.cpp:3852
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "oklop: {:d}  Izdrž: {:d}/{:d}"
 
-#. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4001
-msgid "dam: {:d}  Dur: {:d}/{:d}"
-msgstr "ošt: {:d}  Izdrž: {:d}/{:d}"
-
-#. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4003
-msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "ošt: {:d}-{:d}  Izdrž: {:d}/{:d}"
-
-#: Source/items.cpp:4004 Source/items.cpp:4037 Source/items.cpp:4052
+#: Source/items.cpp:3812 Source/items.cpp:3843 Source/items.cpp:3856
 #: Source/stores.cpp:253
 msgid "Charges: {:d}/{:d}"
 msgstr "Punjenje: {:d}/{:d}"
 
-#: Source/items.cpp:4014
+#: Source/items.cpp:3821
 msgid "unique item"
 msgstr "unikat"
 
-#: Source/items.cpp:4041 Source/items.cpp:4050 Source/items.cpp:4057
+#: Source/items.cpp:3846 Source/items.cpp:3854 Source/items.cpp:3860
 msgid "Not Identified"
 msgstr "Nije identificirano"
 
-#: Source/loadsave.cpp:1748 Source/loadsave.cpp:2193
+#: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
 msgid "Unable to open save file archive"
 msgstr "Nemoguće otvaranje arhive datoteke spremanja"
 
-#: Source/loadsave.cpp:1751
+#: Source/loadsave.cpp:1833
 msgid "Invalid save file"
 msgstr "Nevaljana datoteka spremanja"
 
-#: Source/loadsave.cpp:1782
+#: Source/loadsave.cpp:1864
 msgid "Player is on a Hellfire only level"
 msgstr "Igrač je na Hellfire razini"
 
-#: Source/loadsave.cpp:1971
+#: Source/loadsave.cpp:2095
 msgid "Invalid game state"
 msgstr "Nevaljano stanje igre"
 
-#: Source/menu.cpp:151
+#: Source/menu.cpp:149
 msgid "Unable to display mainmenu"
 msgstr "Nemoguć prikaz glavnog izbornika"
 
@@ -5607,516 +5713,504 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr ""
 
-#: Source/monster.cpp:3479
+#: Source/monster.cpp:3382
 msgid "Animal"
 msgstr "Životinja"
 
-#: Source/monster.cpp:3481
+#: Source/monster.cpp:3384
 msgid "Demon"
 msgstr "Demon"
 
-#: Source/monster.cpp:3483
+#: Source/monster.cpp:3386
 msgid "Undead"
 msgstr "Živi mrtvac"
 
-#: Source/monster.cpp:4621
+#: Source/monster.cpp:4648
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Vrsta: {:s}  Ubijeno: {:d}"
 
-#: Source/monster.cpp:4623
+#: Source/monster.cpp:4650
 msgid "Total kills: {:d}"
 msgstr "Ukupno ubijeno: {:d}"
 
-#: Source/monster.cpp:4656
+#: Source/monster.cpp:4682
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Pogodci: {:d}-{:d}"
 
-#: Source/monster.cpp:4662
+#: Source/monster.cpp:4687
 msgid "No magic resistance"
 msgstr "Nema otpora na magiju"
 
-#: Source/monster.cpp:4666
-msgid "Resists: "
-msgstr "Otpor: "
+#: Source/monster.cpp:4690
+msgid "Resists:"
+msgstr "Otpor:"
 
-#: Source/monster.cpp:4668 Source/monster.cpp:4680
-msgid "Magic "
-msgstr "Magija "
+#: Source/monster.cpp:4692 Source/monster.cpp:4702
+msgid " Magic"
+msgstr " Magija"
 
-#: Source/monster.cpp:4670 Source/monster.cpp:4682
-msgid "Fire "
-msgstr "Vatra "
+#: Source/monster.cpp:4694 Source/monster.cpp:4704
+msgid " Fire"
+msgstr " Vatra"
 
-#: Source/monster.cpp:4672 Source/monster.cpp:4684
-msgid "Lightning "
-msgstr "Svjetlost "
+#: Source/monster.cpp:4696 Source/monster.cpp:4706
+msgid " Lightning"
+msgstr " Svjetlost"
 
-#: Source/monster.cpp:4678
-msgid "Immune: "
-msgstr "Imunost: "
+#: Source/monster.cpp:4700
+msgid "Immune:"
+msgstr "Imunost:"
 
-#: Source/monster.cpp:4697
+#: Source/monster.cpp:4717
 msgid "Type: {:s}"
 msgstr "Vrsta: {:s}"
 
-#: Source/monster.cpp:4703 Source/monster.cpp:4710
+#: Source/monster.cpp:4722 Source/monster.cpp:4728
 msgid "No resistances"
 msgstr "Bez otpora"
 
-#: Source/monster.cpp:4705 Source/monster.cpp:4715
+#: Source/monster.cpp:4723 Source/monster.cpp:4732
 msgid "No Immunities"
 msgstr "Bez imunosti"
 
-#: Source/monster.cpp:4708
+#: Source/monster.cpp:4726
 msgid "Some Magic Resistances"
 msgstr "Nešto otpora na magiju"
 
-#: Source/monster.cpp:4713
+#: Source/monster.cpp:4730
 msgid "Some Magic Immunities"
 msgstr "Nešto imunosti na magiju"
 
-#: Source/msg.cpp:495
+#: Source/msg.cpp:485
 msgid "Trying to drop a floor item?"
 msgstr "Pokušavate ispustiti podni predmet?"
 
-#: Source/msg.cpp:998 Source/msg.cpp:1033 Source/msg.cpp:1064
-#: Source/msg.cpp:1191 Source/msg.cpp:1223 Source/msg.cpp:1255
-#: Source/msg.cpp:1285
+#: Source/msg.cpp:988 Source/msg.cpp:1023 Source/msg.cpp:1054
+#: Source/msg.cpp:1181 Source/msg.cpp:1213 Source/msg.cpp:1245
+#: Source/msg.cpp:1275
 msgid "{:s} has cast an illegal spell."
 msgstr ""
 
-#: Source/msg.cpp:1672 Source/multi.cpp:809
+#: Source/msg.cpp:1683 Source/multi.cpp:738 Source/multi.cpp:787
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Igrač '{:s}' (razina {:d}) se upravo pridruži igri"
 
-#: Source/msg.cpp:1976
-msgid "Waiting for game data..."
-msgstr "Čekanje podataka igre..."
-
-#: Source/msg.cpp:1984
+#: Source/msg.cpp:1993
 msgid "The game ended"
 msgstr "Igra je završila"
 
-#: Source/msg.cpp:1990
+#: Source/msg.cpp:1999
 msgid "Unable to get level data"
 msgstr "Nemoguće dobivanje podataka razine"
 
-#: Source/multi.cpp:195
+#: Source/multi.cpp:198
 msgid "Player '{:s}' just left the game"
 msgstr "Igrač '{:s}' je upravo napustio igru"
 
-#: Source/multi.cpp:198
+#: Source/multi.cpp:201
 msgid "Player '{:s}' killed Diablo and left the game!"
 msgstr "Igrač '{:s}' je ubio Diabla i napustio igru!"
 
-#: Source/multi.cpp:202
+#: Source/multi.cpp:205
 msgid "Player '{:s}' dropped due to timeout"
 msgstr "Igrač '{:s}' je odustao zbog isteka vremena"
 
-#: Source/multi.cpp:811
+#: Source/multi.cpp:789
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "Igrač '{:s}' (razina {:d}) je već u igri"
 
 #. TRANSLATORS: Shrine Name Block
-#: Source/objects.cpp:105
+#: Source/objects.cpp:106
 msgid "Mysterious"
 msgstr "Mistično"
 
-#: Source/objects.cpp:106
+#: Source/objects.cpp:107
 msgid "Hidden"
 msgstr "Skriveno"
 
-#: Source/objects.cpp:107
+#: Source/objects.cpp:108
 msgid "Gloomy"
 msgstr "Turobno"
 
-#: Source/objects.cpp:109 Source/objects.cpp:116
+#: Source/objects.cpp:110 Source/objects.cpp:117
 msgid "Magical"
 msgstr "Magično"
 
-#: Source/objects.cpp:110
+#: Source/objects.cpp:111
 msgid "Stone"
 msgstr ""
 
-#: Source/objects.cpp:111
+#: Source/objects.cpp:112
 msgid "Religious"
 msgstr ""
 
-#: Source/objects.cpp:112
+#: Source/objects.cpp:113
 msgid "Enchanted"
 msgstr ""
 
-#: Source/objects.cpp:113
+#: Source/objects.cpp:114
 msgid "Thaumaturgic"
 msgstr ""
 
-#: Source/objects.cpp:114
+#: Source/objects.cpp:115
 msgid "Fascinating"
 msgstr ""
 
-#: Source/objects.cpp:115
+#: Source/objects.cpp:116
 msgid "Cryptic"
 msgstr "Kriptično"
 
-#: Source/objects.cpp:117
+#: Source/objects.cpp:118
 msgid "Eldritch"
 msgstr ""
 
-#: Source/objects.cpp:118
+#: Source/objects.cpp:119
 msgid "Eerie"
 msgstr ""
 
-#: Source/objects.cpp:119
+#: Source/objects.cpp:120
 msgid "Divine"
 msgstr ""
 
-#: Source/objects.cpp:121
+#: Source/objects.cpp:122
 msgid "Sacred"
 msgstr ""
 
-#: Source/objects.cpp:122
+#: Source/objects.cpp:123
 msgid "Spiritual"
 msgstr ""
 
-#: Source/objects.cpp:123
+#: Source/objects.cpp:124
 msgid "Spooky"
 msgstr ""
 
-#: Source/objects.cpp:124
+#: Source/objects.cpp:125
 msgid "Abandoned"
 msgstr ""
 
-#: Source/objects.cpp:125
+#: Source/objects.cpp:126
 msgid "Creepy"
 msgstr ""
 
-#: Source/objects.cpp:126
+#: Source/objects.cpp:127
 msgid "Quiet"
 msgstr ""
 
-#: Source/objects.cpp:127
+#: Source/objects.cpp:128
 msgid "Secluded"
 msgstr ""
 
-#: Source/objects.cpp:128
+#: Source/objects.cpp:129
 msgid "Ornate"
 msgstr ""
 
-#: Source/objects.cpp:129
+#: Source/objects.cpp:130
 msgid "Glimmering"
 msgstr ""
 
-#: Source/objects.cpp:130
+#: Source/objects.cpp:131
 msgid "Tainted"
 msgstr ""
 
-#: Source/objects.cpp:131
+#: Source/objects.cpp:132
 msgid "Oily"
 msgstr ""
 
-#: Source/objects.cpp:132
+#: Source/objects.cpp:133
 msgid "Glowing"
 msgstr ""
 
-#: Source/objects.cpp:133
+#: Source/objects.cpp:134
 msgid "Mendicant's"
 msgstr ""
 
-#: Source/objects.cpp:134
+#: Source/objects.cpp:135
 msgid "Sparkling"
 msgstr ""
 
-#: Source/objects.cpp:136
+#: Source/objects.cpp:137
 msgid "Shimmering"
 msgstr ""
 
-#: Source/objects.cpp:137
+#: Source/objects.cpp:138
 msgid "Solar"
 msgstr ""
 
 #. TRANSLATORS: Shrine Name Block end
-#: Source/objects.cpp:139
+#: Source/objects.cpp:140
 msgid "Murphy's"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:269
+#: Source/objects.cpp:270
 msgid "The Great Conflict"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:270
+#: Source/objects.cpp:271
 msgid "The Wages of Sin are War"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:271
+#: Source/objects.cpp:272
 msgid "The Tale of the Horadrim"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:272
+#: Source/objects.cpp:273
 msgid "The Dark Exile"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:273
+#: Source/objects.cpp:274
 msgid "The Sin War"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:274
+#: Source/objects.cpp:275
 #, fuzzy
 #| msgid "The Ring of One Thousand"
 msgid "The Binding of the Three"
 msgstr "Prsten od tisuće"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:275
+#: Source/objects.cpp:276
 msgid "The Realms Beyond"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:276
+#: Source/objects.cpp:277
 msgid "Tale of the Three"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:277
+#: Source/objects.cpp:278
 msgid "The Black King"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:278
+#: Source/objects.cpp:279
 msgid "Journal: The Ensorcellment"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:279
+#: Source/objects.cpp:280
 msgid "Journal: The Meeting"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:280
+#: Source/objects.cpp:281
 msgid "Journal: The Tirade"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:281
+#: Source/objects.cpp:282
 msgid "Journal: His Power Grows"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:282
+#: Source/objects.cpp:283
 msgid "Journal: NA-KRUL"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:283
+#: Source/objects.cpp:284
 msgid "Journal: The End"
 msgstr ""
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:284
+#: Source/objects.cpp:285
 msgid "A Spellbook"
 msgstr ""
 
-#: Source/objects.cpp:5386
+#: Source/objects.cpp:5389
 msgid "Crucified Skeleton"
 msgstr ""
 
-#: Source/objects.cpp:5390
+#: Source/objects.cpp:5393
 #, fuzzy
 #| msgid "Level:"
 msgid "Lever"
 msgstr "Razina:"
 
-#: Source/objects.cpp:5399
+#: Source/objects.cpp:5402
 msgid "Open Door"
 msgstr "Otvorena vrata"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5404
 msgid "Closed Door"
 msgstr "Zatvorena vrata"
 
-#: Source/objects.cpp:5403
+#: Source/objects.cpp:5406
 msgid "Blocked Door"
 msgstr "Blokirana vrata"
 
-#: Source/objects.cpp:5408
+#: Source/objects.cpp:5411
 msgid "Ancient Tome"
 msgstr ""
 
-#: Source/objects.cpp:5410
+#: Source/objects.cpp:5413
 msgid "Book of Vileness"
 msgstr ""
 
-#: Source/objects.cpp:5415
+#: Source/objects.cpp:5418
 msgid "Skull Lever"
 msgstr ""
 
-#: Source/objects.cpp:5418
+#: Source/objects.cpp:5421
 msgid "Mythical Book"
 msgstr ""
 
-#: Source/objects.cpp:5422
+#: Source/objects.cpp:5425
 msgid "Small Chest"
 msgstr "Mala škrinja"
 
-#: Source/objects.cpp:5426
+#: Source/objects.cpp:5429
 msgid "Chest"
 msgstr "Škrinja"
 
-#: Source/objects.cpp:5431
+#: Source/objects.cpp:5434
 msgid "Large Chest"
 msgstr "Velika škrinja"
 
-#: Source/objects.cpp:5434
+#: Source/objects.cpp:5437
 msgid "Sarcophagus"
 msgstr "Sarkofag"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5440
 msgid "Bookshelf"
 msgstr "Ormarić za knjige"
 
-#: Source/objects.cpp:5441
+#: Source/objects.cpp:5444
 msgid "Bookcase"
 msgstr "Polica za knjige"
 
-#: Source/objects.cpp:5446
+#: Source/objects.cpp:5449
 msgid "Pod"
 msgstr ""
 
-#: Source/objects.cpp:5448
+#: Source/objects.cpp:5451
 msgid "Urn"
 msgstr ""
 
-#: Source/objects.cpp:5450
+#: Source/objects.cpp:5453
 msgid "Barrel"
 msgstr "Bačva"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5454
+#: Source/objects.cpp:5457
 msgid "{:s} Shrine"
 msgstr "{:s} svetište"
 
-#: Source/objects.cpp:5458
+#: Source/objects.cpp:5460
 msgid "Skeleton Tome"
 msgstr ""
 
-#: Source/objects.cpp:5461
+#: Source/objects.cpp:5463
 msgid "Library Book"
 msgstr ""
 
-#: Source/objects.cpp:5464
+#: Source/objects.cpp:5466
 msgid "Blood Fountain"
 msgstr ""
 
-#: Source/objects.cpp:5467
+#: Source/objects.cpp:5469
 msgid "Decapitated Body"
 msgstr ""
 
-#: Source/objects.cpp:5470
+#: Source/objects.cpp:5472
 msgid "Book of the Blind"
 msgstr ""
 
-#: Source/objects.cpp:5473
+#: Source/objects.cpp:5475
 msgid "Book of Blood"
 msgstr ""
 
-#: Source/objects.cpp:5476
+#: Source/objects.cpp:5478
 msgid "Purifying Spring"
 msgstr ""
 
-#: Source/objects.cpp:5483 Source/objects.cpp:5507
+#: Source/objects.cpp:5485 Source/objects.cpp:5509
 msgid "Weapon Rack"
 msgstr ""
 
-#: Source/objects.cpp:5486
+#: Source/objects.cpp:5488
 msgid "Goat Shrine"
 msgstr ""
 
-#: Source/objects.cpp:5489
+#: Source/objects.cpp:5491
 msgid "Cauldron"
 msgstr ""
 
-#: Source/objects.cpp:5492
+#: Source/objects.cpp:5494
 msgid "Murky Pool"
 msgstr ""
 
-#: Source/objects.cpp:5495
+#: Source/objects.cpp:5497
 msgid "Fountain of Tears"
 msgstr ""
 
-#: Source/objects.cpp:5498
+#: Source/objects.cpp:5500
 msgid "Steel Tome"
 msgstr ""
 
-#: Source/objects.cpp:5501
+#: Source/objects.cpp:5503
 msgid "Pedestal of Blood"
 msgstr ""
 
-#: Source/objects.cpp:5510
+#: Source/objects.cpp:5512
 msgid "Mushroom Patch"
 msgstr ""
 
-#: Source/objects.cpp:5513
+#: Source/objects.cpp:5515
 msgid "Vile Stand"
 msgstr ""
 
-#: Source/objects.cpp:5516
+#: Source/objects.cpp:5518
 #, fuzzy
 #| msgid "Select Hero"
 msgid "Slain Hero"
 msgstr "Odaberi heroja"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5523
+#: Source/objects.cpp:5525
 msgid "Trapped {:s}"
 msgstr "U zamci {:s}"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5529
+#: Source/objects.cpp:5530
 msgid "{:s} (disabled)"
 msgstr "{:s} (onemogućeno)"
 
-#: Source/options.cpp:441 Source/options.cpp:572 Source/options.cpp:578
+#: Source/options.cpp:420 Source/options.cpp:551 Source/options.cpp:557
 msgid "ON"
 msgstr "UKLJ"
 
-#: Source/options.cpp:441 Source/options.cpp:570 Source/options.cpp:576
+#: Source/options.cpp:420 Source/options.cpp:549 Source/options.cpp:555
 msgid "OFF"
 msgstr "ISKLJ"
 
-#: Source/options.cpp:560
+#: Source/options.cpp:539
 msgid "Start Up"
 msgstr "Pokretanje"
 
-#: Source/options.cpp:560
+#: Source/options.cpp:539
 msgid "Start Up Settings"
 msgstr "Postavke pokretanja"
 
-#: Source/options.cpp:561
+#: Source/options.cpp:540
 msgid "Game Mode"
 msgstr "Izdanje igre"
 
-#: Source/options.cpp:561
+#: Source/options.cpp:540
 msgid "Play Diablo or Hellfire."
 msgstr "Igrajte Diablo ili Hellfire."
 
-#: Source/options.cpp:563 Source/options.cpp:602 Source/quests.cpp:48
-msgid "Diablo"
-msgstr "Diablo"
-
-#: Source/options.cpp:565 Source/options.cpp:611
-msgid "Hellfire"
-msgstr "Hellfire"
-
-#: Source/options.cpp:567
+#: Source/options.cpp:546
 msgid "Restrict to Shareware"
 msgstr "Ograniči na Shareware"
 
-#: Source/options.cpp:567
+#: Source/options.cpp:546
 msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
@@ -6124,107 +6218,107 @@ msgstr ""
 "Čini igru kompatibilnu s demo izdanjem. Omogućuje igranje više igrača s "
 "prijateljima koji ne posjeduju punu kopiju Diabla."
 
-#: Source/options.cpp:568 Source/options.cpp:574
+#: Source/options.cpp:547 Source/options.cpp:553
 msgid "Intro"
 msgstr "Uvod"
 
-#: Source/options.cpp:568 Source/options.cpp:574
+#: Source/options.cpp:547 Source/options.cpp:553
 msgid "Shown Intro cinematic."
 msgstr "Prikazan uvodni film."
 
-#: Source/options.cpp:580
+#: Source/options.cpp:559
 msgid "Splash"
 msgstr "Uvodni zaslon"
 
-#: Source/options.cpp:580
+#: Source/options.cpp:559
 msgid "Shown splash screen."
 msgstr "Prikaži uvodni zaslon."
 
-#: Source/options.cpp:582
+#: Source/options.cpp:561
 msgid "Logo and Title Screen"
 msgstr "Logotip i naslovni zaslon"
 
-#: Source/options.cpp:583
+#: Source/options.cpp:562
 msgid "Title Screen"
 msgstr "Naslovni zaslon"
 
-#: Source/options.cpp:602
+#: Source/options.cpp:581
 msgid "Diablo specific Settings"
 msgstr "Diablo specifične postavke"
 
-#: Source/options.cpp:611
+#: Source/options.cpp:595
 msgid "Hellfire specific Settings"
 msgstr "Hellfire specifične postavke"
 
-#: Source/options.cpp:620
+#: Source/options.cpp:609
 msgid "Audio"
 msgstr "Zvuk"
 
-#: Source/options.cpp:620
+#: Source/options.cpp:609
 msgid "Audio Settings"
 msgstr "Postavke zvuka"
 
-#: Source/options.cpp:621
+#: Source/options.cpp:612
 msgid "Walking Sound"
 msgstr "Zvuk hodanja"
 
-#: Source/options.cpp:621
+#: Source/options.cpp:612
 msgid "Player emits sound when walking."
 msgstr "Lik emitira zvuk pri hodanju."
 
-#: Source/options.cpp:622
+#: Source/options.cpp:613
 msgid "Auto Equip Sound"
 msgstr "Zvuk automatskog opremanja"
 
-#: Source/options.cpp:622
+#: Source/options.cpp:613
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr "Automatsko opremanje predmetima pri uzimanju emitira zvuk opremanja."
 
-#: Source/options.cpp:623
+#: Source/options.cpp:614
 msgid "Item Pickup Sound"
 msgstr "Zvuk uzimanja predmeta"
 
-#: Source/options.cpp:623
+#: Source/options.cpp:614
 msgid "Picking up items emits the items pickup sound."
 msgstr "Uzimanje predmeta emitira zvuk uzimanja."
 
-#: Source/options.cpp:624
+#: Source/options.cpp:615
 msgid "Sample Rate"
 msgstr "Frekvencija"
 
-#: Source/options.cpp:624
+#: Source/options.cpp:615
 msgid "Output sample rate (Hz)."
 msgstr "Izlazna frekvencija (Hz)."
 
-#: Source/options.cpp:625
+#: Source/options.cpp:616
 msgid "Channels"
 msgstr "Kanali"
 
-#: Source/options.cpp:625
+#: Source/options.cpp:616
 msgid "Number of output channels."
 msgstr "Broj izlaznih kanala."
 
-#: Source/options.cpp:626
+#: Source/options.cpp:617
 msgid "Buffer Size"
 msgstr "Veličina međuspremnika"
 
-#: Source/options.cpp:626
+#: Source/options.cpp:617
 msgid "Buffer size (number of frames per channel)."
 msgstr "Veličina međuspremnika (broj sličica po kanalu)"
 
-#: Source/options.cpp:627
+#: Source/options.cpp:618
 msgid "Resampling Quality"
 msgstr "Normalzacija zvuka"
 
-#: Source/options.cpp:627
+#: Source/options.cpp:618
 msgid "Quality of the resampler, from 0 (lowest) to 10 (highest)."
 msgstr "Kvaliteta normalizacije zvuka, od 0 (najmanja) do 10 (najveća)."
 
-#: Source/options.cpp:648
+#: Source/options.cpp:641
 msgid "Resolution"
 msgstr "Razlučivost"
 
-#: Source/options.cpp:648
+#: Source/options.cpp:641
 msgid ""
 "Affect the game's internal resolution and determine your view area. Note: "
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
@@ -6234,27 +6328,27 @@ msgstr ""
 "Napomena: To se može razlikovati od razlučivosti zaslona, kada se koristi "
 "Uvećanje, Cjelobrojno uvećanje ili Prilagodba po zaslonu."
 
-#: Source/options.cpp:744
+#: Source/options.cpp:737
 msgid "Graphics"
 msgstr "Grafika"
 
-#: Source/options.cpp:744
+#: Source/options.cpp:737
 msgid "Graphics Settings"
 msgstr "Postavke grafike"
 
-#: Source/options.cpp:745
+#: Source/options.cpp:738
 msgid "Fullscreen"
 msgstr "Cjelozaslonski prikaz"
 
-#: Source/options.cpp:745
+#: Source/options.cpp:738
 msgid "Display the game in windowed or fullscreen mode."
 msgstr "Prikaži igru u prozoru ili preko cijelog zaslona."
 
-#: Source/options.cpp:747
+#: Source/options.cpp:740
 msgid "Fit to Screen"
 msgstr "Prilagodi po zaslonu"
 
-#: Source/options.cpp:747
+#: Source/options.cpp:740
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
@@ -6262,11 +6356,11 @@ msgstr ""
 "Automatski prilagođuje prozor igre prema omjeru slike i razlučivosti vašeg "
 "trenutnog zaslona računala."
 
-#: Source/options.cpp:750
+#: Source/options.cpp:743
 msgid "Upscale"
 msgstr "Uvećanje"
 
-#: Source/options.cpp:750
+#: Source/options.cpp:743
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
@@ -6274,39 +6368,39 @@ msgstr ""
 "Omogućuje uvećanje slike iz razlučivosti igre na razlučivost vašeg monitora. "
 "Sprječava promjenu razlučivosti monitora i dopušta promjenu veličine prozora."
 
-#: Source/options.cpp:751
+#: Source/options.cpp:744
 msgid "Scaling Quality"
 msgstr "Kvaliteta uvećanja"
 
-#: Source/options.cpp:751
+#: Source/options.cpp:744
 msgid "Enables optional filters to the output image when upscaling."
 msgstr "Omogućuje dodatne filtre za izlaznu sliku pri uvećanju."
 
-#: Source/options.cpp:753
+#: Source/options.cpp:746
 msgid "Nearest Pixel"
 msgstr "Najbliži piksel"
 
-#: Source/options.cpp:754
+#: Source/options.cpp:747
 msgid "Bilinear"
 msgstr "Bilinearno"
 
-#: Source/options.cpp:755
+#: Source/options.cpp:748
 msgid "Anisotropic"
 msgstr "Anizotropno"
 
-#: Source/options.cpp:757
+#: Source/options.cpp:750
 msgid "Integer Scaling"
 msgstr "Cjelobrojno uvećanje"
 
-#: Source/options.cpp:757
+#: Source/options.cpp:750
 msgid "Scales the image using whole number pixel ratio."
 msgstr "Uvećava sliku koristeći cijeli broj omjera piksela."
 
-#: Source/options.cpp:758
+#: Source/options.cpp:751
 msgid "Vertical Sync"
 msgstr "Okomito usklađivanje"
 
-#: Source/options.cpp:758
+#: Source/options.cpp:751
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
@@ -6315,35 +6409,45 @@ msgstr ""
 "kidanja slike pri iscrtavanju slike. Onemogućavanje može pomoći pri "
 "zapinjanju miša na određenim sustavima."
 
-#: Source/options.cpp:760
+#: Source/options.cpp:754
 msgid "Color Cycling"
 msgstr "Kruženje boja"
 
-#: Source/options.cpp:760
+#: Source/options.cpp:754
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr "Efekt kruženja boja korišten za vodu, lavu i animacije kiseline."
 
-#: Source/options.cpp:762
+#: Source/options.cpp:755
+#, fuzzy
+#| msgid "Use alternate nest palette"
+msgid "Alternate nest art"
+msgstr "Koristi zamjensku nest paletu"
+
+#: Source/options.cpp:755
+msgid "The game will use an alternative palette for Hellfire’s nest tileset."
+msgstr ""
+
+#: Source/options.cpp:757
 msgid "Hardware Cursor"
 msgstr "Hardverski pokazivač"
 
-#: Source/options.cpp:762
+#: Source/options.cpp:757
 msgid "Use a hardware cursor"
 msgstr "Koristi hardverski pokazivač"
 
-#: Source/options.cpp:763
+#: Source/options.cpp:758
 msgid "Hardware Cursor For Items"
 msgstr "Hardverski pokazivač za predmete"
 
-#: Source/options.cpp:763
+#: Source/options.cpp:758
 msgid "Use a hardware cursor for items."
 msgstr "Koristi hardverski pokazivač za predmete."
 
-#: Source/options.cpp:764
+#: Source/options.cpp:759
 msgid "Hardware Cursor Maximum Size"
 msgstr "Najveća veličina hardverskog pokazivača"
 
-#: Source/options.cpp:764
+#: Source/options.cpp:759
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
 "software."
@@ -6351,37 +6455,53 @@ msgstr ""
 "Najveća širina / visina hardverskog pokazivača. Veći pokazivač koristi "
 "softverski prikaz."
 
-#: Source/options.cpp:766
+#: Source/options.cpp:761
 msgid "FPS Limiter"
 msgstr "Ograniči broj sl/s"
 
-#: Source/options.cpp:766
+#: Source/options.cpp:761
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
 "Broj sličica (FPS) je ograničen u svrhu izbjegavanja povišenog CPU "
 "korištenja. Ograničenje uzima u obzir brzinu osvježavanja."
 
-#: Source/options.cpp:767
+#: Source/options.cpp:762
 msgid "Show FPS"
 msgstr "Prikaži broj sl/s"
 
-#: Source/options.cpp:767
+#: Source/options.cpp:762
 msgid "Displays the FPS in the upper left corner of the screen."
 msgstr "Prikazuje broj sličica (FPS) u sekundi u gornjem lijevom kutu zaslona."
 
-#: Source/options.cpp:812
+#: Source/options.cpp:763
+msgid "Show health values"
+msgstr ""
+
+#: Source/options.cpp:763
+msgid "Displays current / max health value on health globe."
+msgstr ""
+
+#: Source/options.cpp:764
+msgid "Show mana values"
+msgstr ""
+
+#: Source/options.cpp:764
+msgid "Displays current / max mana value on mana globe."
+msgstr ""
+
+#: Source/options.cpp:813
 msgid "Gameplay"
 msgstr "Igra"
 
-#: Source/options.cpp:812
+#: Source/options.cpp:813
 msgid "Gameplay Settings"
 msgstr "Postavke igre"
 
-#: Source/options.cpp:813
+#: Source/options.cpp:815
 msgid "Run in Town"
 msgstr "Trčanje u gradu"
 
-#: Source/options.cpp:813
+#: Source/options.cpp:815
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
@@ -6389,37 +6509,37 @@ msgstr ""
 "Omogućuje đogiranje/brzo trčanje u gradu za Diablo i Hellfire. Ova mogućnost "
 "je predstavljena u Hellfire izdanju."
 
-#: Source/options.cpp:814
+#: Source/options.cpp:816
 msgid "Grab Input"
 msgstr "Obuhvati pokazivač"
 
-#: Source/options.cpp:814
+#: Source/options.cpp:816
 msgid "When enabled mouse is locked to the game window."
 msgstr "Kada je omogućeno miš je zaključan u prozoru igre."
 
-#: Source/options.cpp:815
+#: Source/options.cpp:817
 msgid "Theo Quest"
 msgstr "Potraga za Theom"
 
-#: Source/options.cpp:815
+#: Source/options.cpp:817
 msgid "Enable Little Girl quest."
 msgstr "Omogući potragu za malom djevojčicom."
 
-#: Source/options.cpp:816
+#: Source/options.cpp:818
 msgid "Cow Quest"
 msgstr "Potraga za kravom"
 
-#: Source/options.cpp:816
+#: Source/options.cpp:818
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
 msgstr ""
 "Omogući Jerseyjevu potragu. Farmer Lester je zemijenjen potpunim idiotom."
 
-#: Source/options.cpp:817
+#: Source/options.cpp:819
 msgid "Friendly Fire"
 msgstr "Prijateljska vatra"
 
-#: Source/options.cpp:817
+#: Source/options.cpp:819
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
@@ -6427,128 +6547,128 @@ msgstr ""
 "Dopusti strijeli/čaroliji oštećenje između igrača u igri više igrača čak i "
 "kada je prijateljski način igranja uključen."
 
-#: Source/options.cpp:818
+#: Source/options.cpp:820
 msgid "Test Bard"
 msgstr "Testiraj Barda"
 
-#: Source/options.cpp:818
+#: Source/options.cpp:820
 msgid "Force the Bard character type to appear in the hero selection menu."
 msgstr "Prisili pojavljivanje lika Barda u izborniku odabira heroja."
 
-#: Source/options.cpp:819
+#: Source/options.cpp:821
 msgid "Test Barbarian"
 msgstr "Testiraj Barbarina"
 
-#: Source/options.cpp:819
+#: Source/options.cpp:821
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
 msgstr "Prisili pojavljivanje lika Barbarina u izborniku odabira heroja."
 
-#: Source/options.cpp:820
+#: Source/options.cpp:822
 msgid "Experience Bar"
 msgstr "Traka iskustva"
 
-#: Source/options.cpp:820
+#: Source/options.cpp:822
 msgid "Experience Bar is added to the UI at the bottom of the screen."
 msgstr "Traka iskustva je dodana u grafičko sučelje na dnu zaslona."
 
-#: Source/options.cpp:821
+#: Source/options.cpp:823
 msgid "Enemy Health Bar"
 msgstr "Traka zdravlja neprijatelja"
 
-#: Source/options.cpp:821
+#: Source/options.cpp:823
 msgid "Enemy Health Bar is displayed at the top of the screen."
 msgstr "Traka zdravlja neprijatelja je prikazana na vrhu zaslona."
 
-#: Source/options.cpp:822
+#: Source/options.cpp:824
 msgid "Auto Gold Pickup"
 msgstr "Automatsko uzimanje zlata"
 
-#: Source/options.cpp:822
+#: Source/options.cpp:824
 msgid "Gold is automatically collected when in close proximity to the player."
 msgstr "Zlato se automatski prikuplja kada je u blizini lika."
 
-#: Source/options.cpp:823
+#: Source/options.cpp:825
 msgid "Auto Elixir Pickup"
 msgstr "Automatsko uzimanje eliksira"
 
-#: Source/options.cpp:823
+#: Source/options.cpp:825
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
 msgstr "Eliksir se automatski prikuplja kada je u blizini lika."
 
-#: Source/options.cpp:824
+#: Source/options.cpp:826
 msgid "Auto Pickup in Town"
 msgstr "Automatsko uzimanje u gradu"
 
-#: Source/options.cpp:824
+#: Source/options.cpp:826
 msgid "Automatically pickup items in town."
 msgstr "Automatsko uzimanje predmeta u gradu."
 
-#: Source/options.cpp:825
+#: Source/options.cpp:827
 msgid "Adria Refills Mana"
 msgstr "Adria puni manu"
 
-#: Source/options.cpp:825
+#: Source/options.cpp:827
 msgid "Adria will refill your mana when you visit her shop."
 msgstr "Adria će napuniti vašu manu kada posjetite njenu trgovinu."
 
-#: Source/options.cpp:826
+#: Source/options.cpp:828
 msgid "Auto Equip Weapons"
 msgstr "Automatsko opremanje oružjem"
 
-#: Source/options.cpp:826
+#: Source/options.cpp:828
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr "Automatsko opremanje oružjem pri uzimanju ili kupovini."
 
-#: Source/options.cpp:827
+#: Source/options.cpp:829
 msgid "Auto Equip Armor"
 msgstr "Automatsko opremanje oklopom"
 
-#: Source/options.cpp:827
+#: Source/options.cpp:829
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr "Automatsko opremanje oklopom pri uzimanju ili kupovini."
 
-#: Source/options.cpp:828
+#: Source/options.cpp:830
 msgid "Auto Equip Helms"
 msgstr "Automatsko opremanje šljemom"
 
-#: Source/options.cpp:828
+#: Source/options.cpp:830
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr "Automatsko opremanje šljemom pri uzimanju ili kupovini."
 
-#: Source/options.cpp:829
+#: Source/options.cpp:831
 msgid "Auto Equip Shields"
 msgstr "Automatsko opremanje štitom"
 
-#: Source/options.cpp:829
+#: Source/options.cpp:831
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr "Automatsko opremanje štitom pri uzimanju ili kupovini."
 
-#: Source/options.cpp:830
+#: Source/options.cpp:832
 msgid "Auto Equip Jewelry"
 msgstr "Automatsko opremanje nakitom"
 
-#: Source/options.cpp:830
+#: Source/options.cpp:832
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr "Automatsko opremanje nakitom pri uzimanju ili kupovini."
 
-#: Source/options.cpp:831
+#: Source/options.cpp:833
 msgid "Randomize Quests"
 msgstr "Naizmjenični odabir zadataka"
 
-#: Source/options.cpp:831
+#: Source/options.cpp:833
 msgid "Randomly selecting available quests for new games."
 msgstr "Naizmjenično odaberi dostupne zadatke za nove igre."
 
-#: Source/options.cpp:832
+#: Source/options.cpp:834
 msgid "Show Monster Type"
 msgstr "Prikaži vrstu čudovišta"
 
-#: Source/options.cpp:832
+#: Source/options.cpp:834
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
@@ -6556,19 +6676,19 @@ msgstr ""
 "Lebdenjem pokazivačem preko čudovišta će prikazati vrstu čudovišta u okviru "
 "opisa u grafičkom sučelju."
 
-#: Source/options.cpp:833
+#: Source/options.cpp:835
 msgid "Auto Refill Belt"
 msgstr "Automatski popuni pojas"
 
-#: Source/options.cpp:833
+#: Source/options.cpp:835
 msgid "Refill belt from inventory when belt item is consumed."
 msgstr "Popuni pojas iz inventara kada se predmet iz pojasa potroši."
 
-#: Source/options.cpp:834
+#: Source/options.cpp:836
 msgid "Disable Crippling Shrines"
 msgstr "Onemogući svetišta sakaćenja"
 
-#: Source/options.cpp:834
+#: Source/options.cpp:836
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
@@ -6577,11 +6697,11 @@ msgstr ""
 "svetišta i sveta svetišta ne može se kliknuti na njih i označiti ih kao "
 "onemogućenima."
 
-#: Source/options.cpp:835
+#: Source/options.cpp:837
 msgid "Quick Cast"
 msgstr "Bacanje čarolije"
 
-#: Source/options.cpp:835
+#: Source/options.cpp:837
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
@@ -6589,171 +6709,167 @@ msgstr ""
 "Prečaci za čarolije odmah bacaju čaroliju, umjesto da prebacivaju spremnu "
 "čaroliju."
 
-#: Source/options.cpp:836
+#: Source/options.cpp:838
 msgid "Heal Potion Pickup"
 msgstr "Uzimanje napitka zdravlja"
 
-#: Source/options.cpp:836
+#: Source/options.cpp:838
 msgid "Number of Healing potions to pick up automatically."
 msgstr "Automatsko uzimanje napitaka zdravlja."
 
-#: Source/options.cpp:837
+#: Source/options.cpp:839
 msgid "Full Heal Potion Pickup"
 msgstr "Uzimanje napitka potpunog zdravlja"
 
-#: Source/options.cpp:837
+#: Source/options.cpp:839
 msgid "Number of Full Healing potions to pick up automatically."
 msgstr "Automatsko uzimanje napitaka potpunog zdravlja."
 
-#: Source/options.cpp:838
+#: Source/options.cpp:840
 msgid "Mana Potion Pickup"
 msgstr "Uzimanje napitka mane"
 
-#: Source/options.cpp:838
+#: Source/options.cpp:840
 msgid "Number of Mana potions to pick up automatically."
 msgstr "Automatsko uzimanje napitaka mane."
 
-#: Source/options.cpp:839
+#: Source/options.cpp:841
 msgid "Full Mana Potion Pickup"
 msgstr "Uzimanje napitka potpune mane"
 
-#: Source/options.cpp:839
+#: Source/options.cpp:841
 msgid "Number of Full Mana potions to pick up automatically."
 msgstr "Automatsko uzimanje napitaka potpune mane."
 
-#: Source/options.cpp:840
+#: Source/options.cpp:842
 msgid "Rejuvenation Potion Pickup"
 msgstr "Uzimanje napitka oporavka"
 
-#: Source/options.cpp:840
+#: Source/options.cpp:842
 msgid "Number of Rejuvenation potions to pick up automatically."
 msgstr "Automatsko uzimanje napitaka oporavka."
 
-#: Source/options.cpp:841
+#: Source/options.cpp:843
 msgid "Full Rejuvenation Potion Pickup"
 msgstr "Uzimanje napitka potpunog oporavka"
 
-#: Source/options.cpp:841
+#: Source/options.cpp:843
 msgid "Number of Full Rejuvenation potions to pick up automatically."
 msgstr "Automatsko uzimanje napitaka potpunog oporavka."
 
-#: Source/options.cpp:883
+#: Source/options.cpp:886
 msgid "Controller"
 msgstr "Upravljači"
 
-#: Source/options.cpp:883
+#: Source/options.cpp:886
 msgid "Controller Settings"
 msgstr "Postavke upravljača"
 
-#: Source/options.cpp:892
+#: Source/options.cpp:895
 msgid "Network"
 msgstr "Mreža"
 
-#: Source/options.cpp:892
+#: Source/options.cpp:895
 msgid "Network Settings"
 msgstr "Mrežne postavke"
 
-#: Source/options.cpp:901
+#: Source/options.cpp:907
 msgid "Chat"
 msgstr "Razgovor"
 
-#: Source/options.cpp:901
+#: Source/options.cpp:907
 msgid "Chat Settings"
 msgstr "Postavke razgovora"
 
-#: Source/options.cpp:910 Source/options.cpp:1025
+#: Source/options.cpp:916 Source/options.cpp:1032
 msgid "Language"
 msgstr "Jezik"
 
-#: Source/options.cpp:910
+#: Source/options.cpp:916
 msgid "Define what language to use in game."
 msgstr "Odaberite jezik koji će se koristiti u igri."
 
-#: Source/options.cpp:1025
+#: Source/options.cpp:1032
 msgid "Language Settings"
 msgstr "Postavke jezika"
 
-#: Source/options.cpp:1037
+#: Source/options.cpp:1044
 msgid "Keymapping"
 msgstr "Tipke prečaca"
 
-#: Source/options.cpp:1037
+#: Source/options.cpp:1044
 msgid "Keymapping Settings"
 msgstr "Postavke tipka prečaca"
 
-#: Source/panels/charpanel.cpp:111
-msgid "MAX"
-msgstr "MAKS"
-
-#: Source/panels/charpanel.cpp:132
+#: Source/panels/charpanel.cpp:130
 msgid "Level"
 msgstr "Razina"
 
-#: Source/panels/charpanel.cpp:134
+#: Source/panels/charpanel.cpp:132
 msgid "Experience"
 msgstr "Iskustvo"
 
-#: Source/panels/charpanel.cpp:136
+#: Source/panels/charpanel.cpp:134
 msgid "Next level"
 msgstr "Sljedeća razina"
 
-#: Source/panels/charpanel.cpp:144
+#: Source/panels/charpanel.cpp:142
 msgid "Base"
 msgstr "Bod."
 
-#: Source/panels/charpanel.cpp:145
+#: Source/panels/charpanel.cpp:143
 msgid "Now"
 msgstr "Ras."
 
-#: Source/panels/charpanel.cpp:146
+#: Source/panels/charpanel.cpp:144
 msgid "Strength"
 msgstr "Snaga"
 
-#: Source/panels/charpanel.cpp:150
+#: Source/panels/charpanel.cpp:148
 msgid "Magic"
 msgstr "Magija"
 
-#: Source/panels/charpanel.cpp:154
+#: Source/panels/charpanel.cpp:152
 msgid "Dexterity"
 msgstr "Vještina"
 
-#: Source/panels/charpanel.cpp:157
+#: Source/panels/charpanel.cpp:155
 msgid "Vitality"
 msgstr "Vitalnost"
 
-#: Source/panels/charpanel.cpp:160
+#: Source/panels/charpanel.cpp:158
 msgid "Points to distribute"
 msgstr "Bodovi za raspodjelu"
 
-#: Source/panels/charpanel.cpp:170
+#: Source/panels/charpanel.cpp:168
 msgid "Armor class"
 msgstr "Klasa oklopa"
 
-#: Source/panels/charpanel.cpp:172
+#: Source/panels/charpanel.cpp:170
 msgid "To hit"
 msgstr "Pogodci"
 
-#: Source/panels/charpanel.cpp:174
+#: Source/panels/charpanel.cpp:172
 msgid "Damage"
 msgstr "Oštećenje"
 
-#: Source/panels/charpanel.cpp:181
+#: Source/panels/charpanel.cpp:179
 msgid "Life"
 msgstr "Život"
 
-#: Source/panels/charpanel.cpp:185
+#: Source/panels/charpanel.cpp:183
 msgid "Mana"
 msgstr "Mana"
 
-#: Source/panels/charpanel.cpp:190
+#: Source/panels/charpanel.cpp:188
 msgid "Resist magic"
 msgstr "Otpor na magiju"
 
-#: Source/panels/charpanel.cpp:192
+#: Source/panels/charpanel.cpp:190
 msgid "Resist fire"
 msgstr "Otpor na vatru"
 
-#: Source/panels/charpanel.cpp:194
+#: Source/panels/charpanel.cpp:192
 msgid "Resist lightning"
 msgstr "Otpor na svjetlost"
 
@@ -6791,11 +6907,11 @@ msgstr "magija"
 msgid "mute"
 msgstr "utišaj"
 
-#: Source/panels/spell_book.cpp:153 Source/panels/spell_list.cpp:161
+#: Source/panels/spell_book.cpp:155 Source/panels/spell_list.cpp:162
 msgid "Skill"
 msgstr "Vještina"
 
-#: Source/panels/spell_book.cpp:157
+#: Source/panels/spell_book.cpp:159
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Štap ({:d} napunjen)"
@@ -6803,226 +6919,231 @@ msgstr[1] "Štap ({:d} napunjena)"
 msgstr[2] "Štap ({:d} napunjeno)"
 
 #. TRANSLATORS: UI constrains, keep short please.
-#: Source/panels/spell_book.cpp:162
+#: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
 msgstr "Razina {:d}"
 
-#: Source/panels/spell_book.cpp:164
+#: Source/panels/spell_book.cpp:166
 msgid "Unusable"
 msgstr "Neupotrebljivo"
 
 #. TRANSLATORS: UI constrains, keep short please.
-#: Source/panels/spell_book.cpp:172
+#: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr "Izlječenje: {:d}-{:d}"
 
 #. TRANSLATORS: UI constrains, keep short please.
-#: Source/panels/spell_book.cpp:174
+#: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr "Oštećenje: {:d} - {:d}"
 
 #. TRANSLATORS: UI constrains, keep short please.
-#: Source/panels/spell_book.cpp:178
+#: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr "Ošt: 1/3 pog. mete"
 
 #. TRANSLATORS: UI constrains, keep short please.
-#: Source/panels/spell_book.cpp:180
+#: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"
 msgstr "Mana: {:d}"
 
-#: Source/panels/spell_list.cpp:168
+#: Source/panels/spell_list.cpp:169
 msgid "Spell"
 msgstr "Čarolija"
 
-#: Source/panels/spell_list.cpp:171
+#: Source/panels/spell_list.cpp:172
 msgid "Damages undead only"
 msgstr "Oštećuje samo mrtve"
 
-#: Source/panels/spell_list.cpp:184
+#: Source/panels/spell_list.cpp:183
 msgid "Scroll"
 msgstr "Svitak"
 
-#: Source/panels/spell_list.cpp:207
+#: Source/panels/spell_list.cpp:204
 msgid "Spell Hotkey {:s}"
 msgstr "Prečac čarolije {:s}"
 
-#: Source/pfile.cpp:242
+#: Source/pfile.cpp:266
 msgid "Failed to open player archive for writing."
 msgstr "Neuspjelo otvaranje arhive igrača za zapisivanje."
 
-#: Source/pfile.cpp:375
+#: Source/pfile.cpp:308
+#, fuzzy
+#| msgid "Failed to open player archive for writing."
+msgid "Failed to open stash archive for writing."
+msgstr "Neuspjelo otvaranje arhive igrača za zapisivanje."
+
+#: Source/pfile.cpp:419
 msgid "Unable to open archive"
 msgstr "Nemoguće otvaranje arhive"
 
-#: Source/pfile.cpp:377
+#: Source/pfile.cpp:421
 msgid "Unable to load character"
 msgstr "Nemoguće učitavanje lika"
 
-#: Source/pfile.cpp:401 Source/pfile.cpp:421
+#: Source/pfile.cpp:445 Source/pfile.cpp:465
 msgid "Unable to read to save file archive"
 msgstr "Nemoguće čitanje arhive datoteke spremanja"
 
-#: Source/pfile.cpp:440
+#: Source/pfile.cpp:484
 msgid "Unable to write to save file archive"
 msgstr "Nemoguće zapisivanje arhive datoteke spremanja"
 
-#: Source/plrmsg.cpp:80
+#: Source/plrmsg.cpp:83 Source/qol/chatlog.cpp:127
 msgid "{:s} (lvl {:d}): "
 msgstr "{:s} (razina {:d}): "
 
-#. TRANSLATORS: Decimal separator
-#: Source/qol/common.cpp:25
-#, c-format
-msgid ",%03d"
-msgstr ",%03d"
-
-#: Source/qol/itemlabels.cpp:70
-#, c-format
-msgid "%i gold"
-msgstr "%i zlato"
-
-#: Source/qol/monhealthbar.cpp:37 Source/qol/xpbar.cpp:56
-msgid ""
-"Failed to load UI resources.\n"
-"\n"
-"Make sure devilutionx.mpq is in the game folder and that it is up to date."
+#: Source/qol/chatlog.cpp:155
+msgid "Chat History (Messages: {:d})"
 msgstr ""
-"Neuspjelo učitavanje resursa korisničkog sučelja.\n"
-"\n"
-"Pobrinite se da je devilutionx.mpq u mapi igre i da je najnovije inačice."
 
-#: Source/qol/xpbar.cpp:125
+#: Source/qol/itemlabels.cpp:72
+msgid "{:d} gold"
+msgstr "{:d} zlato"
+
+#: Source/qol/stash.cpp:586
+#, fuzzy
+#| msgid "You have {:d} gold piece. How many do you want to remove?"
+#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgid "How many gold pieces do you want to withdraw?"
+msgstr "Imate {:d} zlatnik. Koliko ih želite izdvojiti?"
+
+#. TRANSLATORS: Thousands separator
+#: Source/qol/xpbar.cpp:61
+msgid ","
+msgstr ""
+
+#: Source/qol/xpbar.cpp:146
 msgid "Level {:d}"
 msgstr "Razina {:d}"
 
-#: Source/qol/xpbar.cpp:132 Source/qol/xpbar.cpp:143
-msgid "Experience: "
-msgstr "Iskustvo: "
+#: Source/qol/xpbar.cpp:152 Source/qol/xpbar.cpp:160
+msgid "Experience: {:s}"
+msgstr "Iskustvo: {:s}"
 
-#: Source/qol/xpbar.cpp:136
+#: Source/qol/xpbar.cpp:153
 msgid "Maximum Level"
 msgstr "Najveća razina"
 
-#: Source/qol/xpbar.cpp:147
-msgid "Next Level: "
-msgstr "Sljedeća razina: "
+#: Source/qol/xpbar.cpp:161
+msgid "Next Level: {:s}"
+msgstr "Sljedeća razina: {:s}"
 
-#: Source/qol/xpbar.cpp:151
-msgid " to Level {:d}"
-msgstr " do razine {:d}"
+#: Source/qol/xpbar.cpp:162
+msgid "{:s} to Level {:d}"
+msgstr "{:s} do razine {:d}"
 
 #. TRANSLATORS: Quest Name Block
-#: Source/quests.cpp:43
+#: Source/quests.cpp:44
 msgid "The Magic Rock"
 msgstr "Čaroban kamen"
 
-#: Source/quests.cpp:45
+#: Source/quests.cpp:46
 msgid "Gharbad The Weak"
 msgstr ""
 
-#: Source/quests.cpp:46
+#: Source/quests.cpp:47
 msgid "Zhar the Mad"
 msgstr ""
 
-#: Source/quests.cpp:47
+#: Source/quests.cpp:48
 msgid "Lachdanan"
 msgstr ""
 
-#: Source/quests.cpp:49
+#: Source/quests.cpp:50
 msgid "The Butcher"
 msgstr "Mesar"
 
-#: Source/quests.cpp:50
+#: Source/quests.cpp:51
 msgid "Ogden's Sign"
 msgstr ""
 
-#: Source/quests.cpp:51
+#: Source/quests.cpp:52
 msgid "Halls of the Blind"
 msgstr ""
 
-#: Source/quests.cpp:52
+#: Source/quests.cpp:53
 msgid "Valor"
 msgstr ""
 
-#: Source/quests.cpp:54
+#: Source/quests.cpp:55
 msgid "Warlord of Blood"
 msgstr ""
 
-#: Source/quests.cpp:55
+#: Source/quests.cpp:56
 msgid "The Curse of King Leoric"
 msgstr "Prokletstvo kralja Leorika"
 
-#: Source/quests.cpp:56 Source/setmaps.cpp:27
+#: Source/quests.cpp:57 Source/setmaps.cpp:27
 msgid "Poisoned Water Supply"
 msgstr "Zatrovane zalihe vode"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:57 Source/quests.cpp:93
+#: Source/quests.cpp:58 Source/quests.cpp:94
 msgid "The Chamber of Bone"
 msgstr ""
 
-#: Source/quests.cpp:58
+#: Source/quests.cpp:59
 msgid "Archbishop Lazarus"
 msgstr ""
 
-#: Source/quests.cpp:59
+#: Source/quests.cpp:60
 msgid "Grave Matters"
 msgstr ""
 
-#: Source/quests.cpp:60
+#: Source/quests.cpp:61
 msgid "Farmer's Orchard"
 msgstr ""
 
-#: Source/quests.cpp:61
+#: Source/quests.cpp:62
 msgid "Little Girl"
 msgstr ""
 
-#: Source/quests.cpp:62
+#: Source/quests.cpp:63
 msgid "Wandering Trader"
 msgstr ""
 
-#: Source/quests.cpp:63
+#: Source/quests.cpp:64
 msgid "The Defiler"
 msgstr ""
 
-#: Source/quests.cpp:64
+#: Source/quests.cpp:65
 msgid "Na-Krul"
 msgstr ""
 
-#: Source/quests.cpp:65 Source/trigs.cpp:448
+#: Source/quests.cpp:66 Source/trigs.cpp:449
 msgid "Cornerstone of the World"
 msgstr ""
 
 #. TRANSLATORS: Quest Name Block end
-#: Source/quests.cpp:66
+#: Source/quests.cpp:67
 msgid "The Jersey's Jersey"
 msgstr ""
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:92
+#: Source/quests.cpp:93
 msgid "King Leoric's Tomb"
 msgstr "Grobnica kralja Leorika"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:94 Source/setmaps.cpp:26
+#: Source/quests.cpp:95 Source/setmaps.cpp:26
 msgid "Maze"
 msgstr ""
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:95
+#: Source/quests.cpp:96
 msgid "A Dark Passage"
 msgstr "Mračni prolaz"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:96
+#: Source/quests.cpp:97
 msgid "Unholy Altar"
 msgstr ""
 
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
-#: Source/quests.cpp:452
+#: Source/quests.cpp:451
 msgid "To {:s}"
 msgstr "U {:s}"
 
@@ -7301,106 +7422,106 @@ msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "Prodavati predmete"
 
-#: Source/stores.cpp:91
+#: Source/stores.cpp:90
 msgid "Griswold"
 msgstr ""
 
-#: Source/stores.cpp:92
+#: Source/stores.cpp:91
 msgid "Pepin"
 msgstr ""
 
-#: Source/stores.cpp:94
+#: Source/stores.cpp:93
 msgid "Ogden"
 msgstr ""
 
-#: Source/stores.cpp:95
+#: Source/stores.cpp:94
 msgid "Cain"
 msgstr ""
 
-#: Source/stores.cpp:96
+#: Source/stores.cpp:95
 msgid "Farnham"
 msgstr ""
 
-#: Source/stores.cpp:97
+#: Source/stores.cpp:96
 msgid "Adria"
 msgstr ""
 
-#: Source/stores.cpp:98 Source/stores.cpp:1336
+#: Source/stores.cpp:97 Source/stores.cpp:1308
 msgid "Gillian"
 msgstr ""
 
-#: Source/stores.cpp:99
+#: Source/stores.cpp:98
 msgid "Wirt"
 msgstr ""
 
-#: Source/stores.cpp:218 Source/stores.cpp:225
+#: Source/stores.cpp:217 Source/stores.cpp:224
 msgid "Back"
 msgstr "Natrag"
 
-#: Source/stores.cpp:248 Source/stores.cpp:255
+#: Source/stores.cpp:246 Source/stores.cpp:252
 msgid ",  "
 msgstr ",  "
 
-#: Source/stores.cpp:264
+#: Source/stores.cpp:263
 msgid "Damage: {:d}-{:d}  "
 msgstr "Oštećenje: {:d}-{:d}  "
 
-#: Source/stores.cpp:266
+#: Source/stores.cpp:265
 msgid "Armor: {:d}  "
 msgstr "Oklop: {:d}  "
 
-#: Source/stores.cpp:268
+#: Source/stores.cpp:267
 msgid "Dur: {:d}/{:d},  "
 msgstr "Izdržljivost: {:d}/{:d},  "
 
-#: Source/stores.cpp:271
+#: Source/stores.cpp:269
 msgid "Indestructible,  "
 msgstr "Neuništivo,  "
 
-#: Source/stores.cpp:279
+#: Source/stores.cpp:277
 msgid "No required attributes"
 msgstr "Nema potrebnih svojstava"
 
-#: Source/stores.cpp:312 Source/stores.cpp:1079 Source/stores.cpp:1323
+#: Source/stores.cpp:309 Source/stores.cpp:1059 Source/stores.cpp:1295
 msgid "Welcome to the"
 msgstr "Dobrodošli"
 
-#: Source/stores.cpp:313
+#: Source/stores.cpp:310
 msgid "Blacksmith's shop"
 msgstr "Kovačnica"
 
-#: Source/stores.cpp:314 Source/stores.cpp:675 Source/stores.cpp:1081
-#: Source/stores.cpp:1141 Source/stores.cpp:1325 Source/stores.cpp:1337
-#: Source/stores.cpp:1349
+#: Source/stores.cpp:311 Source/stores.cpp:665 Source/stores.cpp:1061
+#: Source/stores.cpp:1119 Source/stores.cpp:1297 Source/stores.cpp:1309
+#: Source/stores.cpp:1322
 msgid "Would you like to:"
 msgstr "Želite li:"
 
-#: Source/stores.cpp:315
+#: Source/stores.cpp:312
 msgid "Talk to Griswold"
 msgstr "Razgovarati s Griswoldom"
 
-#: Source/stores.cpp:316
+#: Source/stores.cpp:313
 msgid "Buy basic items"
 msgstr "Kupovati osnovne predmete"
 
-#: Source/stores.cpp:317
+#: Source/stores.cpp:314
 msgid "Buy premium items"
 msgstr "Kupovati napredne predmete"
 
-#: Source/stores.cpp:318 Source/stores.cpp:678
+#: Source/stores.cpp:315 Source/stores.cpp:668
 msgid "Sell items"
 msgstr "Prodavati predmete"
 
-#: Source/stores.cpp:319
+#: Source/stores.cpp:316
 msgid "Repair items"
 msgstr "Popravljati predmete"
 
-#: Source/stores.cpp:320
+#: Source/stores.cpp:317
 msgid "Leave the shop"
 msgstr "Napustiti kovačnicu"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:358 Source/stores.cpp:735 Source/stores.cpp:1116
+#: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
 msgid "I have these items for sale:             Your gold: {:d}"
 msgstr "Imam ove predmete za prodaju:             Vaše zlato: {:d}"
 
@@ -7410,216 +7531,220 @@ msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr "Imam ove napredne predmete za prodaju:     Vaše zlato: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:546 Source/stores.cpp:830
+#: Source/stores.cpp:544 Source/stores.cpp:818
 msgid "You have nothing I want.             Your gold: {:d}"
 msgstr "Nemaš ništa što mi je potrebno.             Vaše zlato: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:559 Source/stores.cpp:843
+#: Source/stores.cpp:555 Source/stores.cpp:829
 msgid "Which item is for sale?             Your gold: {:d}"
 msgstr "Koji predmet je za prodaju?             Vaše zlato: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:632
+#: Source/stores.cpp:626
 msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr "Nemaš ništa za popraviti.             Vaše zlato: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:645
+#: Source/stores.cpp:637
 msgid "Repair which item?             Your gold: {:d}"
 msgstr "Koji predmet je potrebno popraviti?             Vaše zlato: {:d}"
 
-#: Source/stores.cpp:674
+#: Source/stores.cpp:664
 msgid "Witch's shack"
 msgstr "Vještičina koliba"
 
-#: Source/stores.cpp:676
+#: Source/stores.cpp:666
 msgid "Talk to Adria"
 msgstr "Razgovarati s Adriom"
 
-#: Source/stores.cpp:677 Source/stores.cpp:1083
+#: Source/stores.cpp:667 Source/stores.cpp:1063
 msgid "Buy items"
 msgstr "Kupovati predmete"
 
-#: Source/stores.cpp:679
+#: Source/stores.cpp:669
 msgid "Recharge staves"
 msgstr "Napuniti predmete"
 
-#: Source/stores.cpp:680
+#: Source/stores.cpp:670
 msgid "Leave the shack"
 msgstr "Napustiti kolibu"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:907
+#: Source/stores.cpp:891
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr "Nemaš ništa za napuniti.             Vaše zlato: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:920
+#: Source/stores.cpp:902
 msgid "Recharge which item?             Your gold: {:d}"
 msgstr "Koji predmet treba napuniti?             Vaše zlato: {:d}"
 
-#: Source/stores.cpp:934
+#: Source/stores.cpp:914
 msgid "You do not have enough gold"
 msgstr "Nemate dovoljno zlata"
 
-#: Source/stores.cpp:942
+#: Source/stores.cpp:922
 msgid "You do not have enough room in inventory"
 msgstr "Nemate dovoljno mjesta u inventaru"
 
-#: Source/stores.cpp:979
+#: Source/stores.cpp:961
 msgid "Do we have a deal?"
 msgstr "Jesmo li se dogovorili?"
 
-#: Source/stores.cpp:982
+#: Source/stores.cpp:964
 msgid "Are you sure you want to identify this item?"
 msgstr "Sigurno želite identificirati ovaj predmet?"
 
-#: Source/stores.cpp:988
+#: Source/stores.cpp:970
 msgid "Are you sure you want to buy this item?"
 msgstr "Sigurno želite kupiti ovaj predmet?"
 
-#: Source/stores.cpp:991
+#: Source/stores.cpp:973
 msgid "Are you sure you want to recharge this item?"
 msgstr "Sigurno želite ponovno napuniti ovaj predmet?"
 
-#: Source/stores.cpp:995
+#: Source/stores.cpp:977
 msgid "Are you sure you want to sell this item?"
 msgstr "Sigurno želite prodati ovaj predmet?"
 
-#: Source/stores.cpp:998
+#: Source/stores.cpp:980
 msgid "Are you sure you want to repair this item?"
 msgstr "Sigurno želite popraviti ovaj predmet?"
 
-#: Source/stores.cpp:1012 Source/towners.cpp:150
+#: Source/stores.cpp:994 Source/towners.cpp:150
 msgid "Wirt the Peg-legged boy"
 msgstr "Wirt dječak s drvenom nogom"
 
-#: Source/stores.cpp:1015 Source/stores.cpp:1022
+#: Source/stores.cpp:997 Source/stores.cpp:1004
 msgid "Talk to Wirt"
 msgstr "Razgovaraj s Wirtom"
 
-#: Source/stores.cpp:1016
+#: Source/stores.cpp:998
 msgid "I have something for sale,"
 msgstr "Imam nešto za prodaju,"
 
-#: Source/stores.cpp:1017
+#: Source/stores.cpp:999
 msgid "but it will cost 50 gold"
 msgstr "ali koštat će te 50 zlata"
 
-#: Source/stores.cpp:1018
+#: Source/stores.cpp:1000
 msgid "just to take a look. "
 msgstr "samo da pogledaš. "
 
-#: Source/stores.cpp:1019
+#: Source/stores.cpp:1001
 msgid "What have you got?"
 msgstr "Što to imaš?"
 
-#: Source/stores.cpp:1020 Source/stores.cpp:1023 Source/stores.cpp:1144
-#: Source/stores.cpp:1339
+#: Source/stores.cpp:1002 Source/stores.cpp:1005 Source/stores.cpp:1122
+#: Source/stores.cpp:1312
 msgid "Say goodbye"
 msgstr "Pozdravi se"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1033
+#: Source/stores.cpp:1015
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr "Imam ove predmete za prodaju:             Vaše zlato: {:d}"
 
-#: Source/stores.cpp:1057
+#: Source/stores.cpp:1037
 msgid "Leave"
 msgstr "Napusti"
 
-#: Source/stores.cpp:1080
+#: Source/stores.cpp:1060
 msgid "Healer's home"
 msgstr "Iscjelitelj"
 
-#: Source/stores.cpp:1082
+#: Source/stores.cpp:1062
 msgid "Talk to Pepin"
 msgstr "Razgovarati s Pepinom"
 
-#: Source/stores.cpp:1084
+#: Source/stores.cpp:1064
 msgid "Leave Healer's home"
 msgstr "Napustiti iscjelitelja"
 
-#: Source/stores.cpp:1140
+#: Source/stores.cpp:1118
 msgid "The Town Elder"
 msgstr "Gradski starješina"
 
-#: Source/stores.cpp:1142
+#: Source/stores.cpp:1120
 msgid "Talk to Cain"
 msgstr "Razgovarati s Cainom"
 
-#: Source/stores.cpp:1143
+#: Source/stores.cpp:1121
 msgid "Identify an item"
 msgstr "Identificirati predmet"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1236
+#: Source/stores.cpp:1214
 msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr "Nemaš ništa za identifikaciju.             Vaše zlato: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1249
+#: Source/stores.cpp:1225
 msgid "Identify which item?             Your gold: {:d}"
 msgstr "Koji predmet je za identifikaciju?             Vaše zlato: {:d}"
 
-#: Source/stores.cpp:1268
+#: Source/stores.cpp:1242
 msgid "This item is:"
 msgstr "Taj predmet je:"
 
-#: Source/stores.cpp:1271
+#: Source/stores.cpp:1245
 msgid "Done"
 msgstr "Završi"
 
-#: Source/stores.cpp:1280
+#: Source/stores.cpp:1254
 msgid "Talk to {:s}"
 msgstr "Razgovarj s {:s}"
 
-#: Source/stores.cpp:1284
+#: Source/stores.cpp:1257
 msgid "Talking to {:s}"
 msgstr "Razgovaraš s {:s}"
 
-#: Source/stores.cpp:1286
+#: Source/stores.cpp:1258
 msgid "is not available"
 msgstr "nije dostupno"
 
-#: Source/stores.cpp:1287
+#: Source/stores.cpp:1259
 msgid "in the shareware"
 msgstr "u shareware"
 
-#: Source/stores.cpp:1288
+#: Source/stores.cpp:1260
 msgid "version"
 msgstr "izdanju"
 
-#: Source/stores.cpp:1315
+#: Source/stores.cpp:1287
 msgid "Gossip"
 msgstr "Glasine"
 
-#: Source/stores.cpp:1324
+#: Source/stores.cpp:1296
 msgid "Rising Sun"
 msgstr "Gostionica izlazećeg sunca"
 
-#: Source/stores.cpp:1326
+#: Source/stores.cpp:1298
 msgid "Talk to Ogden"
 msgstr "Razgovarati s Ogdenom"
 
-#: Source/stores.cpp:1327
+#: Source/stores.cpp:1299
 msgid "Leave the tavern"
 msgstr "Napustiti gostionicu"
 
-#: Source/stores.cpp:1338
+#: Source/stores.cpp:1310
 msgid "Talk to Gillian"
 msgstr "Razgovarati s Gillian"
 
-#: Source/stores.cpp:1348 Source/towners.cpp:205
+#: Source/stores.cpp:1311
+msgid "Access Storage"
+msgstr ""
+
+#: Source/stores.cpp:1321 Source/towners.cpp:205
 msgid "Farnham the Drunk"
 msgstr "Farnham pijandura"
 
-#: Source/stores.cpp:1350
+#: Source/stores.cpp:1323
 msgid "Talk to Farnham"
 msgstr "Razgovarati s Farnhamom"
 
-#: Source/stores.cpp:1351
+#: Source/stores.cpp:1324
 msgid "Say Goodbye"
 msgstr "Pozdravi se"
 
@@ -10532,183 +10657,62 @@ msgstr ""
 msgid "Slain Townsman"
 msgstr "Ubijeni mještanin"
 
-#: Source/trigs.cpp:342
+#: Source/trigs.cpp:343
 msgid "Down to dungeon"
 msgstr "Dolje u spilju"
 
-#: Source/trigs.cpp:353
+#: Source/trigs.cpp:354
 msgid "Down to catacombs"
 msgstr "Dolje u katakombe"
 
-#: Source/trigs.cpp:363
+#: Source/trigs.cpp:364
 msgid "Down to caves"
 msgstr "Dolje u spilje"
 
-#: Source/trigs.cpp:373
+#: Source/trigs.cpp:374
 msgid "Down to hell"
 msgstr "Dolje u pakao"
 
-#: Source/trigs.cpp:385
+#: Source/trigs.cpp:386
 msgid "Down to Hive"
 msgstr "Dolje u košnicu"
 
-#: Source/trigs.cpp:397
+#: Source/trigs.cpp:398
 msgid "Down to Crypt"
 msgstr "Dolje u kriptu"
 
-#: Source/trigs.cpp:413 Source/trigs.cpp:493 Source/trigs.cpp:540
-#: Source/trigs.cpp:635
+#: Source/trigs.cpp:414 Source/trigs.cpp:494 Source/trigs.cpp:541
+#: Source/trigs.cpp:636
 msgid "Up to level {:d}"
 msgstr "Gore na razinu {:d}"
 
-#: Source/trigs.cpp:415 Source/trigs.cpp:470 Source/trigs.cpp:522
-#: Source/trigs.cpp:601 Source/trigs.cpp:618 Source/trigs.cpp:665
+#: Source/trigs.cpp:416 Source/trigs.cpp:471 Source/trigs.cpp:523
+#: Source/trigs.cpp:602 Source/trigs.cpp:619 Source/trigs.cpp:666
 msgid "Up to town"
 msgstr "Gore u grad"
 
-#: Source/trigs.cpp:426 Source/trigs.cpp:504 Source/trigs.cpp:557
-#: Source/trigs.cpp:582 Source/trigs.cpp:647
+#: Source/trigs.cpp:427 Source/trigs.cpp:505 Source/trigs.cpp:558
+#: Source/trigs.cpp:583 Source/trigs.cpp:648
 msgid "Down to level {:d}"
 msgstr "Dolje na razinu {:d}"
 
-#: Source/trigs.cpp:438
+#: Source/trigs.cpp:439
 msgid "Up to Crypt level {:d}"
 msgstr "Gore na razinu kripte {:d}"
 
-#: Source/trigs.cpp:453
+#: Source/trigs.cpp:454
 msgid "Down to Crypt level {:d}"
 msgstr "Dolje na razinu kripte {:d}"
 
-#: Source/trigs.cpp:569
+#: Source/trigs.cpp:570
 msgid "Up to Nest level {:d}"
 msgstr "Dolje na razinu skrovišta {:d}"
 
-#: Source/trigs.cpp:678
+#: Source/trigs.cpp:679
 msgid "Down to Diablo"
 msgstr "Dolje u Diablo"
 
-#: Source/trigs.cpp:711 Source/trigs.cpp:725 Source/trigs.cpp:739
+#: Source/trigs.cpp:712 Source/trigs.cpp:726 Source/trigs.cpp:740
 msgid "Back to Level {:d}"
 msgstr "Natrag na razinu {:d}"
 
-#~ msgid "Run in windowed mode"
-#~ msgstr "Pokreni u prozoru"
-
-#~ msgid "{:s}, version = {:s}, mode = {:s}"
-#~ msgstr "{:s}, inačica = {:s}, izdanje = {:s}"
-
-#~ msgid "Blended Transparency"
-#~ msgstr "Kombinirana prozirnost"
-
-#~ msgid ""
-#~ "Enables uniform transparency mode. This setting affects the transparency "
-#~ "on walls, game text menus, and boxes. If disabled will default to old "
-#~ "checkerboard transparency."
-#~ msgstr ""
-#~ "Omogućuje ujednačenu prozirnost. Ova postavka utječe na prozirnost "
-#~ "zidova, tekstnih izbornika igre i okvira. Ako je onemogućeno, koristit će "
-#~ "se stara prozirnost poput šahovnice."
-
-#~ msgid "Switch to Hellfire"
-#~ msgstr "Prebaci na Hellfire"
-
-#~ msgid "Switch to Fullgame"
-#~ msgstr "Prebaci u cjeli zaslon"
-
-#~ msgid "Replay Intro"
-#~ msgstr "Pogledaj uvod"
-
-#~ msgid "Extras"
-#~ msgstr "Dodaci"
-
-#~ msgid "Mana: {:d}  Dam: {:d} - {:d}"
-#~ msgstr "Mana: {:d}  Oštećenje: {:d} - {:d}"
-
-#~ msgid "Mana: {:d}   Dam: n/a"
-#~ msgstr "Mana: {:d}   Oštećenje: n/d"
-
-#~ msgid "unrecognized option '{:s}'\n"
-#~ msgstr "neprepoznata mogućnost '{:s}'\n"
-
-#~ msgid ""
-#~ "The Diablo introduction cinematic is only available in the full retail "
-#~ "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-#~ msgstr ""
-#~ "Diablo uvodni film je samo dostupan u cjelovitom maloprodajnom izdanju "
-#~ "Diabla. Posjetite https://www.gog.com/game/diablo kako bi ga kupili."
-
-#~ msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-#~ msgstr "GOG.com održava web stranicu https://www.gog.com/forum/diablo"
-
-#~ msgid ""
-#~ "Follow the links to visit the discussion boards associated with Diablo."
-#~ msgstr "Slijedite poveznice za posjet raspravama povezanima s Diablom."
-
-#~ msgid "and the Hellfire expansion."
-#~ msgstr "i Hellfire proširenje."
-
-#~ msgid "at this address: https://github.com/diasurgical/devilutionX"
-#~ msgstr "na ovo j adresi: https://github.com/diasurgical/devilutionX"
-
-#~ msgid ""
-#~ "To help us better serve you, please be sure to include the version number,"
-#~ msgstr "Kako bi vam lakše pomogli, navedite broj inačice,"
-
-#~ msgid "operating system, and the nature of the problem."
-#~ msgstr "operativni sustav i prirodu problema."
-
-#~ msgid ""
-#~ "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-#~ msgstr ""
-#~ "  DevilutionX nije podržavan i održavan od strane Blizzard Entertainmenta,"
-
-#~ msgid ""
-#~ "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
-#~ msgstr ""
-#~ "  niti GOG.com. Niti Blizzard Entertainment ili GOG.com nisu testirali"
-
-#~ msgid "  Entertainment or GOG.com."
-#~ msgstr "  Entertainment ili GOG.com."
-
-#~ msgid "Specify the location of the .ttf font"
-#~ msgstr "Navedite lokaciju za .ttf datoteku"
-
-#~ msgid "Specify the name of a custom .ttf font"
-#~ msgstr "Navedite naziv prilagođene .ttf datoteke"
-
-#~ msgid "Force spawn mode even if diabdat.mpq is found"
-#~ msgstr "Prisili spawn način rada čak iako je diabdat.mpq pronađen"
-
-#~ msgid "Force diablo mode even if hellfire.mpq is found"
-#~ msgstr "Prisili diablo izdanje čak iako je hellfire.mpq pronađen"
-
-#~ msgid "Credits"
-#~ msgstr "Zasluge"
-
-#, fuzzy
-#~| msgid "Character already exists. Do you want to overwrite \"%s\"?"
-#~ msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
-#~ msgstr "Lik već postoji. Želite li prebrisati \"%s\"?"
-
-#~ msgid ""
-#~ "Unable to open a required file.\n"
-#~ "\n"
-#~ "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
-#~ "011bc6518e6166206231080a4440b373\n"
-#~ "68f049866b44688a7af65ba766bef75a\n"
-#~ "\n"
-#~ "The problem occurred when loading:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Nemoguće otvaranje potrebne datoteke.\n"
-#~ "\n"
-#~ "Provjerite poklapa li se MD5 diabdat.mpq datoteke sa sljedećim "
-#~ "vrijednostima\n"
-#~ "011bc6518e6166206231080a4440b373\n"
-#~ "68f049866b44688a7af65ba766bef75a\n"
-#~ "\n"
-#~ "Došlo je do problema učitavanja:\n"
-#~ "%s"
-
-#~ msgid "Enter Hero name.."
-#~ msgstr "Upiši ime heroja.."

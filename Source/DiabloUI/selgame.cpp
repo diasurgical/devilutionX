@@ -191,7 +191,7 @@ void selgame_GameSelection_Focus(int value)
 		break;
 	case 2:
 		if (provider == SELCONN_ZT) {
-			CopyUtf8(selgame_Description, _("Enter a Game ID to join a game already in progress."), sizeof(selgame_Description));
+			CopyUtf8(selgame_Description, _("Enter Game ID to join a game already in progress."), sizeof(selgame_Description));
 		} else {
 			CopyUtf8(selgame_Description, _("Enter an IP or a hostname to join a game already in progress."), sizeof(selgame_Description));
 		}
