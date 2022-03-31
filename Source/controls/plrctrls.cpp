@@ -688,13 +688,13 @@ int FindFirstSlotOnItem(int8_t itemInvId)
 	return -1;
 }
 
-Point FindFirstStashSlotOnItem(uint16_t itemInvId)
+Point FindFirstStashSlotOnItem(StashStruct::StashCell itemInvId)
 {
-	if (itemInvId == 0)
+	if (itemInvId == StashStruct::EmptyCell)
 		return InvalidStashPoint;
 
 	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
-		if (Stash.stashGrids[Stash.GetPage()][point.x][point.y] == itemInvId)
+		if (Stash.GetItemIdAtPosition(point) == itemInvId)
 			return point;
 	}
 
@@ -1772,17 +1772,17 @@ void PerformPrimaryAction()
 			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
 
 			// Find any item occupying a slot that is currently under the cursor
-			uint16_t itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> uint16_t {
+			StashStruct::StashCell itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> StashStruct::StashCell {
 				if (stashSlot != InvalidStashPoint)
-					return 0;
+					return StashStruct::EmptyCell;
 				for (Point slotUnderCursor : PointsInRectangleRange { { stashSlot, cursorSizeInCells } }) {
 					if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
 						continue;
-					uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slotUnderCursor.x][slotUnderCursor.y];
-					if (itemId != 0)
+					StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slotUnderCursor);
+					if (itemId != StashStruct::EmptyCell)
 						return itemId;
 				}
-				return 0;
+				return StashStruct::EmptyCell;
 			}(stashSlot, cursorSizeInCells);
 
 			// The cursor will need to be shifted to
