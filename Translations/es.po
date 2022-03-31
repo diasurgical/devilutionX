@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-31 01:59+0200\n"
-"PO-Revision-Date: 2022-03-31 01:59+0200\n"
+"POT-Creation-Date: 2022-03-31 09:36-0300\n"
+"PO-Revision-Date: 2022-03-31 10:00-0300\n"
 "Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -495,30 +495,17 @@ msgstr ""
 "que elijas."
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter Game ID to join a game already in progress."
-msgstr ""
-"Introduzca una IP o un nombre de equipo y únase a un juego que ya esté en "
-"ejecución en esa dirección."
+msgstr "Introduzca un ID de juego para unirse a un juego en curso."
 
 #: Source/DiabloUI/selgame.cpp:196
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter an IP or a hostname to join a game already in progress."
 msgstr ""
-"Introduzca una IP o un nombre de equipo y únase a un juego que ya esté en "
-"ejecución en esa dirección."
+"Introduzca una IP o un nombre de equipo para unirse a un juego en curso."
 
 #: Source/DiabloUI/selgame.cpp:201
-#, fuzzy
-#| msgid "Join the public game already in progress at this address."
 msgid "Join the public game already in progress."
-msgstr "Únase a un juego público que ya esté en ejecución en esa dirección."
+msgstr "Únase a un juego público que ya esté en curso."
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
@@ -573,10 +560,8 @@ msgid "Join {:s} Games"
 msgstr "Unirse a los juegos {:s}"
 
 #: Source/DiabloUI/selgame.cpp:320
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter Game ID"
-msgstr "Introduzca nombre"
+msgstr "Introduzca su ID de juego"
 
 #: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
@@ -1067,7 +1052,7 @@ msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Carga"
 msgstr[1] "{:d} Cargas"
 
-#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
+#: Source/control.cpp:860 Source/inv.cpp:1990 Source/items.cpp:3480
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} pieza de oro"
@@ -1108,23 +1093,23 @@ msgstr ""
 "Asegúrese que Devilutionx.mpq se encuentra en la carpeta del juego y está "
 "actualizado."
 
-#: Source/cursor.cpp:220
+#: Source/cursor.cpp:223
 msgid "Town Portal"
 msgstr "Portal a la ciudad"
 
-#: Source/cursor.cpp:221
+#: Source/cursor.cpp:224
 msgid "from {:s}"
 msgstr "de {:s}"
 
-#: Source/cursor.cpp:235
+#: Source/cursor.cpp:238
 msgid "Portal to"
 msgstr "Portal a"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "The Unholy Altar"
 msgstr "El Altar Impío"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "level 15"
 msgstr "nivel 15"
 
@@ -4038,24 +4023,20 @@ msgid "Right-click to read"
 msgstr "Haga clic derecho para leer"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-#, fuzzy
-#| msgid "Select current spell button"
 msgid "Select from spell book, then"
-msgstr "Seleccionar botón de hechizo actual"
+msgstr "Seleccionar desde el libro de hechizos, entoncesl"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
-msgstr ""
+msgstr "lanzar hechizo leido"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
-#, fuzzy
-#| msgid "Open Inventory screen."
 msgid "Open inventory to use"
-msgstr "Abrir la pantalla de Inventario."
+msgstr "Abrir inventario para usar"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
-msgstr ""
+msgstr "Activar para leer"
 
 #: Source/items.cpp:1825
 msgid "Right-click to read, then"
@@ -4070,10 +4051,8 @@ msgid "Right-click to use"
 msgstr "Clic derecho para usar"
 
 #: Source/items.cpp:1854
-#, fuzzy
-#| msgid "Associate Producer"
 msgid "Activate to use"
-msgstr "Productor Asociado"
+msgstr "Activar para usar"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -4081,7 +4060,7 @@ msgstr "Clic derecho para ver"
 
 #: Source/items.cpp:1869
 msgid "Activate to view"
-msgstr ""
+msgstr "Activar para ver"
 
 #: Source/items.cpp:1873
 msgctxt "player"
@@ -4109,7 +4088,7 @@ msgid " {:d} Dex"
 msgstr " {:d} Destreza"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3250 Source/player.cpp:3149
+#: Source/items.cpp:3250 Source/player.cpp:3148
 msgid "Ear of {:s}"
 msgstr "Oído de {:s}"
 
@@ -5688,7 +5667,7 @@ msgstr "Sin resistencia mágica"
 
 #: Source/monster.cpp:4690
 msgid "Resists:"
-msgstr " Resiste: "
+msgstr "Resiste:"
 
 #: Source/monster.cpp:4692 Source/monster.cpp:4702
 msgid " Magic"
@@ -6363,14 +6342,14 @@ msgstr ""
 "Efecto de ciclo de color usado para la animación del agua, lava y ácido."
 
 #: Source/options.cpp:755
-#, fuzzy
-#| msgid "Use alternate nest palette"
 msgid "Alternate nest art"
-msgstr "Usar paleta nest alternativa"
+msgstr "Alternar arte alternativa"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
 msgstr ""
+"El juego usará una paleta alternativa para el juego de fichas alternativo de "
+"Hellfire."
 
 #: Source/options.cpp:757
 msgid "Hardware Cursor"
@@ -6945,10 +6924,8 @@ msgid "Failed to open player archive for writing."
 msgstr "No se pudo abrir el archivo del reproductor para escribir."
 
 #: Source/pfile.cpp:308
-#, fuzzy
-#| msgid "Failed to open player archive for writing."
 msgid "Failed to open stash archive for writing."
-msgstr "No se pudo abrir el archivo del reproductor para escribir."
+msgstr "No se pudo abrir el archivo oculto para escribir."
 
 #: Source/pfile.cpp:419
 msgid "Unable to open archive"
@@ -6978,17 +6955,14 @@ msgstr "Historia del Chat (Mensajes: {:d})"
 msgid "{:d} gold"
 msgstr "{:d} oro"
 
-#: Source/qol/stash.cpp:586
-#, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
-#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+#: Source/qol/stash.cpp:597
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "Tiene {:d} moneda de oro. ¿Cuanto quiere eliminar?"
+msgstr "¿Cuántas piezas de oro quieres retirar?"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
 msgid ","
-msgstr ""
+msgstr ","
 
 #: Source/qol/xpbar.cpp:146
 msgid "Level {:d}"
@@ -7701,7 +7675,7 @@ msgstr "Hablar con Gillian"
 
 #: Source/stores.cpp:1311
 msgid "Access Storage"
-msgstr ""
+msgstr "Acceder al almacenamiento"
 
 #: Source/stores.cpp:1321 Source/towners.cpp:205
 msgid "Farnham the Drunk"
@@ -11700,4 +11674,3 @@ msgstr "Baja a Diablo"
 #: Source/trigs.cpp:712 Source/trigs.cpp:726 Source/trigs.cpp:740
 msgid "Back to Level {:d}"
 msgstr "Volver al nivel {:d}"
-
