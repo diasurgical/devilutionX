@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2022-03-31 09:36-0300\n"
-"PO-Revision-Date: 2022-03-31 09:49-0300\n"
+"PO-Revision-Date: 2022-03-31 10:00-0300\n"
 "Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -4032,7 +4032,7 @@ msgstr "lanzar hechizo leido"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
-msgstr "Abrir la inventario para usar"
+msgstr "Abrir inventario para usar"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
@@ -6343,7 +6343,7 @@ msgstr ""
 
 #: Source/options.cpp:755
 msgid "Alternate nest art"
-msgstr "Alternar paleta alternativa"
+msgstr "Alternar arte alternativa"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
