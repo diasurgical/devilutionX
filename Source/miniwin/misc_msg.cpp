@@ -320,13 +320,13 @@ void ProcessGamepadEvents(GameAction &action)
 		break;
 	case GameActionType_USE_HEALTH_POTION:
 		if (IsStashOpen)
-			Stash.SetPage(Stash.GetPage() - 1);
+			Stash.PreviousPage();
 		else
 			UseBeltItem(BLT_HEALING);
 		break;
 	case GameActionType_USE_MANA_POTION:
 		if (IsStashOpen)
-			Stash.SetPage(Stash.GetPage() + 1);
+			Stash.NextPage();
 		else
 			UseBeltItem(BLT_MANA);
 		break;
