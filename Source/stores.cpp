@@ -1400,7 +1400,6 @@ void SmithBuyEnter()
 	}
 
 	myPlayer.HoldItem = smithitem[idx];
-	NewCursor(myPlayer.HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
 
@@ -1408,7 +1407,6 @@ void SmithBuyEnter()
 		StartStore(STORE_CONFIRM);
 	else
 		StartStore(STORE_NOROOM);
-	NewCursor(CURSOR_HAND);
 }
 
 /**
@@ -1468,15 +1466,13 @@ void SmithPremiumBuyEnter()
 	}
 
 	myPlayer.HoldItem = premiumitems[idx];
-	NewCursor(myPlayer.HoldItem._iCurs + CURSOR_FIRSTITEM);
+
 	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
 
 	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false))
 		StartStore(STORE_CONFIRM);
 	else
 		StartStore(STORE_NOROOM);
-
-	NewCursor(CURSOR_HAND);
 }
 
 bool StoreGoldFit(int idx)
@@ -1670,15 +1666,13 @@ void WitchBuyEnter()
 	}
 
 	myPlayer.HoldItem = witchitem[idx];
-	NewCursor(myPlayer.HoldItem._iCurs + CURSOR_FIRSTITEM);
+
 	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
 
 	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false) || AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, false))
 		StartStore(STORE_CONFIRM);
 	else
 		StartStore(STORE_NOROOM);
-
-	NewCursor(CURSOR_HAND);
 }
 
 void WitchSellEnter()
@@ -1849,7 +1843,6 @@ void BoyBuyEnter()
 
 	myPlayer.HoldItem = boyitem;
 	myPlayer.HoldItem._iIvalue = price;
-	NewCursor(myPlayer.HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	bool done = false;
 	if (AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false)) {
@@ -1861,8 +1854,6 @@ void BoyBuyEnter()
 	}
 
 	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
-
-	NewCursor(CURSOR_HAND);
 }
 
 void StorytellerIdentifyItem()
@@ -1986,7 +1977,6 @@ void HealerBuyEnter()
 	}
 
 	myPlayer.HoldItem = healitem[idx];
-	NewCursor(myPlayer.HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
 
@@ -1994,8 +1984,6 @@ void HealerBuyEnter()
 		StartStore(STORE_CONFIRM);
 	else
 		StartStore(STORE_NOROOM);
-
-	NewCursor(CURSOR_HAND);
 }
 
 void StorytellerEnter()
