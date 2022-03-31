@@ -132,7 +132,7 @@ void CheckStashPaste(Point cursorPosition)
 	} else {
 		stashIndex = it - 1;
 		cn = SwapItem(Stash.stashList[stashIndex], player.HoldItem);
-		for (auto &row : Stash.stashGrids[Stash.GetPage()]) {
+		for (auto &row : Stash.GetCurrentGrid()) {
 			for (auto &itemId : row) {
 				if (itemId == it)
 					itemId = 0;
@@ -502,7 +502,7 @@ bool UseStashItem(uint16_t c)
 void StashStruct::RemoveStashItem(uint16_t iv)
 {
 	// Iterate through stashGrid and remove every reference to item
-	for (auto &row : Stash.stashGrids[Stash.GetPage()]) {
+	for (auto &row : Stash.GetCurrentGrid()) {
 		for (uint16_t &itemId : row) {
 			if (itemId - 1 == iv) {
 				itemId = 0;

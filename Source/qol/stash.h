@@ -17,7 +17,8 @@ namespace devilution {
 class StashStruct {
 public:
 	void RemoveStashItem(uint16_t iv);
-	std::map<unsigned, std::array<std::array<uint16_t, 10>, 10>> stashGrids;
+	using StashGrid = std::array<std::array<uint16_t, 10>, 10>;
+	std::map<unsigned, StashGrid> stashGrids;
 	std::vector<Item> stashList;
 	int gold;
 	bool dirty = false;
@@ -25,6 +26,11 @@ public:
 	unsigned GetPage() const
 	{
 		return page;
+	}
+
+	StashGrid &GetCurrentGrid()
+	{
+		return stashGrids[GetPage()];
 	}
 
 	void SetPage(unsigned newPage);
