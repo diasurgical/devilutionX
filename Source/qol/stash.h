@@ -16,8 +16,11 @@ namespace devilution {
 
 class StashStruct {
 public:
-	void RemoveStashItem(uint16_t iv);
-	using StashGrid = std::array<std::array<uint16_t, 10>, 10>;
+	using StashCell = uint16_t;
+	using StashGrid = std::array<std::array<StashCell, 10>, 10>;
+	static constexpr StashCell EmptyCell = -1;
+
+	void RemoveStashItem(StashCell iv);
 	std::map<unsigned, StashGrid> stashGrids;
 	std::vector<Item> stashList;
 	int gold;
@@ -31,6 +34,22 @@ public:
 	StashGrid &GetCurrentGrid()
 	{
 		return stashGrids[GetPage()];
+	}
+
+	/**
+	 * @brief Returns the 0-based index of the item at the specified position, or EmptyCell if no item occupies that slot
+	 * @param gridPosition x,y coordinate of the current stash page
+	 * @return a value which can be used to index into stashList or StashStruct::EmptyCell
+	 */
+	StashCell GetItemIdAtPosition(Point gridPosition)
+	{
+		// Because StashCell is an unsigned type we can let this underflow
+		return GetCurrentGrid()[gridPosition.x][gridPosition.y] - 1;
+	}
+
+	bool IsItemAtPosition(Point gridPosition)
+	{
+		return GetItemIdAtPosition(gridPosition) != EmptyCell;
 	}
 
 	void SetPage(unsigned newPage);
