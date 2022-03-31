@@ -857,7 +857,7 @@ DWORD OnPutItem(const TCmd *pCmd, int pnum)
 		if (currlevel == Players[pnum].plrlevel) {
 			int ii;
 			if (pnum == MyPlayerId)
-				ii = InvPutItem(Players[pnum], position);
+				ii = InvPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			else
 				ii = SyncPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			if (ii != -1) {
