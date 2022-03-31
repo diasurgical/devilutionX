@@ -1625,9 +1625,10 @@ void TransferItemToStash(Player &player, int location)
 
 	PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
 
-	if (location < INVITEM_INV_FIRST)
-		player.InvBody[location]._itype = ItemType::None;
-	else if (location <= INVITEM_INV_LAST)
+	if (location < INVITEM_INV_FIRST) {
+		RemoveEquipment(player, static_cast<inv_body_loc>(location), false);
+		CalcPlrInv(player, true);
+	} else if (location <= INVITEM_INV_LAST)
 		player.RemoveInvItem(location - INVITEM_INV_FIRST);
 	else
 		player.RemoveSpdBarItem(location - INVITEM_BELT_FIRST);
