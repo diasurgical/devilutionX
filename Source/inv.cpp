@@ -1836,14 +1836,14 @@ bool TryInvPut()
 	return CanPut(myPlayer.position.tile);
 }
 
-int InvPutItem(Player &player, Point position)
+int InvPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
 	if (player.plrlevel == 0) {
-		if (player.HoldItem.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
+		if (idx == IDI_RUNEBOMB && OpensHive(position)) {
 			OpenHive();
 			return -1;
 		}
-		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && OpensGrave(position)) {
+		if (idx == IDI_MAPOFDOOM && OpensGrave(position)) {
 			OpenCrypt();
 			return -1;
 		}
@@ -1854,22 +1854,7 @@ int InvPutItem(Player &player, Point position)
 
 	assert(CanPut(position));
 
-	int ii = AllocateItem();
-
-	dItem[position.x][position.y] = ii + 1;
-	Items[ii] = player.HoldItem;
-	Items[ii].position = position;
-	RespawnItem(Items[ii], true);
-
-	if (currlevel == 21 && position == CornerStone.position) {
-		CornerStone.item = Items[ii];
-		InitQTextMsg(TEXT_CORNSTN);
-		Quests[Q_CORNSTN]._qlog = false;
-		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
-	}
-
-	NewCursor(CURSOR_HAND);
-	return ii;
+	return SyncDropItem(position, idx, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff, toHit, maxDam, minStr, minMag, minDex, ac);
 }
 
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
@@ -1916,10 +1901,10 @@ int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int i
 	}
 
 	item.position = position;
-	RespawnItem(Items[ii], true);
+	RespawnItem(item, true);
 
 	if (currlevel == 21 && position == CornerStone.position) {
-		CornerStone.item = Items[ii];
+		CornerStone.item = item;
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
 		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
