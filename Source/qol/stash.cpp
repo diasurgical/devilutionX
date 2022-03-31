@@ -534,7 +534,7 @@ void StashStruct::RemoveStashItem(uint16_t iv)
 
 void StashStruct::SetPage(unsigned newPage)
 {
-	page = std::max(newPage, CountStashPages - 1);
+	page = std::min(newPage, CountStashPages - 1);
 }
 
 void StashStruct::RefreshItemStatFlags()
