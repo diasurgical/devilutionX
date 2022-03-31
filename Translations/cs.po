@@ -1252,7 +1252,7 @@ msgstr "Použije Předmět z opasku."
 
 #: Source/diablo.cpp:1455
 msgid "Quick spell {}"
-msgstr "Rychlá volba kouzla"
+msgstr "Rychlá volba kouzla {}"
 
 #: Source/diablo.cpp:1456
 msgid "Hotkey for skill or spell."
@@ -1352,7 +1352,7 @@ msgstr "Otevře Knihu Kouzel."
 
 #: Source/diablo.cpp:1570
 msgid "Quick Message {}"
-msgstr "Rychlé Zprávy"
+msgstr "Rychlé Zprávy {}"
 
 #: Source/diablo.cpp:1571
 msgid "Use Quick Message in chat."
