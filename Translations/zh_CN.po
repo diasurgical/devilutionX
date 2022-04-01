@@ -540,10 +540,8 @@ msgstr "地狱"
 
 #. TRANSLATORS: {:s} means: Game Difficulty.
 #: Source/DiabloUI/selgame.cpp:216 Source/automap.cpp:532
-#, fuzzy
-#| msgid "{:s} {:s}, Difficulty: {:s}"
 msgid "Difficulty: {:s}"
-msgstr "{:s} {:s}, 难度: {:s}"
+msgstr "难度: {:s}"
 
 #: Source/DiabloUI/selgame.cpp:220 Source/gamemenu.cpp:165
 msgid "Speed: Normal"
@@ -562,21 +560,16 @@ msgid "Speed: Fastest"
 msgstr "速度: 最​快"
 
 #: Source/DiabloUI/selgame.cpp:237
-#, fuzzy
-#| msgctxt "monster"
-#| msgid "Slayer"
 msgid "Players: "
-msgstr "屠杀者"
+msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:297
 msgid "Select Difficulty"
 msgstr "选择​难度"
 
 #: Source/DiabloUI/selgame.cpp:315
-#, fuzzy
-#| msgid "Join TCP Games"
 msgid "Join {:s} Games"
-msgstr "加入​TCP​游戏"
+msgstr "加入{:s}游戏"
 
 #: Source/DiabloUI/selgame.cpp:320
 #, fuzzy
@@ -762,7 +755,7 @@ msgstr "无法​创建​角色。"
 
 #: Source/DiabloUI/selhero.cpp:436 Source/DiabloUI/selhero.cpp:439
 msgid "Level:"
-msgstr "层​数:"
+msgstr "等级:"
 
 #: Source/DiabloUI/selhero.cpp:444
 msgid "Strength:"
@@ -938,14 +931,10 @@ msgid "Read-Only Directory Error"
 msgstr "只​读​目录​错误"
 
 #: Source/automap.cpp:484
-#, fuzzy
-#| msgid "game: "
 msgid "Game: "
 msgstr "游戏: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "password: "
 msgid "Password: "
 msgstr "密码: "
 
@@ -963,7 +952,7 @@ msgstr "墓穴: {:d} 层"
 
 #: Source/automap.cpp:513
 msgid "Level: {:d}"
-msgstr "等级: {:d}"
+msgstr "层数: {:d}"
 
 #: Source/control.cpp:155
 msgid "Tab"
@@ -1070,7 +1059,7 @@ msgstr "未​满足​条件"
 
 #: Source/control.cpp:897
 msgid "{:s}, Level: {:d}"
-msgstr "{:s}，层数: {:d}"
+msgstr "{:s}, 等级: {:d}"
 
 #: Source/control.cpp:898
 msgid "Hit Points {:d} of {:d}"
@@ -1115,7 +1104,7 @@ msgstr "不​洁​祭坛"
 
 #: Source/cursor.cpp:236
 msgid "level 15"
-msgstr "15​级"
+msgstr "15​层"
 
 #: Source/diablo.cpp:119
 msgid "I need help! Come Here!"
@@ -1448,11 +1437,8 @@ msgstr "显示​游戏​信息。"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1654
-#, fuzzy
-#| msgid "{:d} {:s} charge"
-#| msgid_plural "{:d} {:s} charges"
 msgid "{:s} {:s}"
-msgstr "{:d} {:s} 充能"
+msgstr ""
 
 #: Source/diablo.cpp:1663
 #, fuzzy
@@ -5704,34 +5690,24 @@ msgid "No magic resistance"
 msgstr "没有​魔法​抗性"
 
 #: Source/monster.cpp:4690
-#, fuzzy
-#| msgid "Resists: "
 msgid "Resists:"
-msgstr "抗性: "
+msgstr "抗性:"
 
 #: Source/monster.cpp:4692 Source/monster.cpp:4702
-#, fuzzy
-#| msgid "Magic"
 msgid " Magic"
-msgstr "魔法"
+msgstr " 魔法"
 
 #: Source/monster.cpp:4694 Source/monster.cpp:4704
-#, fuzzy
-#| msgid "Fire "
 msgid " Fire"
-msgstr "火焰 "
+msgstr " 火焰"
 
 #: Source/monster.cpp:4696 Source/monster.cpp:4706
-#, fuzzy
-#| msgid "Lightning"
 msgid " Lightning"
-msgstr "闪​电"
+msgstr " 闪​电"
 
 #: Source/monster.cpp:4700
-#, fuzzy
-#| msgid "Immune: "
 msgid "Immune:"
-msgstr "免疫: "
+msgstr "免疫:"
 
 #: Source/monster.cpp:4717
 msgid "Type: {:s}"
@@ -6963,29 +6939,23 @@ msgstr ""
 
 #: Source/qol/xpbar.cpp:146
 msgid "Level {:d}"
-msgstr "等级​{:d}"
+msgstr "等级 ​{:d}"
 
 #: Source/qol/xpbar.cpp:152 Source/qol/xpbar.cpp:160
-#, fuzzy
-#| msgid "Experience: "
 msgid "Experience: {:s}"
-msgstr "经验: "
+msgstr "经验: {:s}"
 
 #: Source/qol/xpbar.cpp:153
 msgid "Maximum Level"
 msgstr "最​大​等级"
 
 #: Source/qol/xpbar.cpp:161
-#, fuzzy
-#| msgid "Next Level: "
 msgid "Next Level: {:s}"
-msgstr "下​一​级: "
+msgstr "下​一​级: {:s}"
 
 #: Source/qol/xpbar.cpp:162
-#, fuzzy
-#| msgid " to Level {:d}"
 msgid "{:s} to Level {:d}"
-msgstr " 到 {:d} 级"
+msgstr "{:s} 到 {:d} 级"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:44
