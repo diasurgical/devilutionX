@@ -22,6 +22,7 @@
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -556,6 +557,20 @@ struct Player {
 	int GetManaShieldDamageReduction();
 
 	/**
+	 * @brief Gets the effective spell level for the player, considering item bonuses
+	 * @param spell spell_id enum member identifying the spell
+	 * @return effective spell level
+	 */
+	int GetSpellLevel(spell_id spell) const
+	{
+		if (spell == SPL_INVALID || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+			return 0;
+		}
+
+		return std::max<int8_t>(_pISplLvlAdd + _pSplLvl[static_cast<std::size_t>(spell)], 0);
+	}
+
+	/**
 	 * @brief Return monster armor value after including player's armor piercing % (hellfire only)
 	 * @param monsterArmor - monster armor before applying % armor pierce
 	 * @param isMelee - indicates if it's melee or ranged combat
@@ -740,6 +755,9 @@ void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);
 void StartPlayerKill(int pnum, int earflag);
+/**
+ * @brief Strip the top off gold piles that are larger than MaxGold
+ */
 void StripTopGold(Player &player);
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);

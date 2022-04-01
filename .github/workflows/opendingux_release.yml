@@ -16,9 +16,9 @@ jobs:
 
     - name: Create Build Environment
       run: >
-        sudo apt update &&
-        sudo apt install -y curl cmake git squashfs-tools &&
-        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-gcw0-toolchain.2021-10-22.tar.xz -o gcw0-toolchain.tar.xz &&
+        sudo apt-get update &&
+        sudo apt-get install -y curl cmake git squashfs-tools &&
+        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-gcw0-toolchain.2021-03-10.tar.xz -o gcw0-toolchain.tar.xz &&
         sudo mkdir -p /opt/gcw0-toolchain && sudo chown -R "${USER}:" /opt/gcw0-toolchain &&
         tar -C /opt -xf gcw0-toolchain.tar.xz
 
@@ -37,7 +37,7 @@ jobs:
         path: build-rg350/devilutionx-rg350.opk
 
     - name: Update Release
-      if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build-rg350/devilutionx-rg350.opk"
@@ -59,7 +59,7 @@ jobs:
       run: >
         sudo apt update &&
         sudo apt install -y curl cmake git squashfs-tools &&
-        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-lepus-toolchain.2021-10-22.tar.xz -o lepus-toolchain.tar.xz &&
+        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-lepus-toolchain.2021-03-11.tar.xz -o lepus-toolchain.tar.xz &&
         sudo mkdir -p /opt/lepus-toolchain && sudo chown -R "${USER}:" /opt/lepus-toolchain &&
         tar -C /opt -xf lepus-toolchain.tar.xz
 
@@ -78,7 +78,7 @@ jobs:
         path: build-lepus/devilutionx-lepus.opk
 
     - name: Update Release
-      if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build-lepus/devilutionx-lepus.opk"

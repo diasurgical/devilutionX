@@ -2802,6 +2802,8 @@ void MI_LArrow(Missile &missile)
 				eAnim = MFILE_MAGBLOS;
 				eRst = MISR_FIRE;
 				break;
+			default:
+				break;
 			}
 			SetMissAnim(missile, eAnim);
 			MissilesData[missile._mitype].mResist = eRst;

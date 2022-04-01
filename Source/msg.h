@@ -64,6 +64,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdPItem)
 	CMD_PUTITEM,
+	// Spawn item on ground (place quest items).
+	//
+	// body (TCmdPItem)
+	CMD_SPAWNITEM,
 	// Respawn item on ground (drop dead player item, or drop attempted loot item
 	// when inventory is full).
 	//
@@ -707,6 +711,8 @@ struct TPktHdr {
 	uint8_t targy;
 	int32_t php;
 	int32_t pmhp;
+	int32_t mana;
+	int32_t maxmana;
 	uint8_t bstr;
 	uint8_t bmag;
 	uint8_t bdex;

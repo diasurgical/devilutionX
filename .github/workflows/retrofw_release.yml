@@ -16,8 +16,8 @@ jobs:
 
     - name: Create Build Environment
       run: >
-        sudo apt update &&
-        sudo apt install -y curl cmake git squashfs-tools gettext &&
+        sudo apt-get update &&
+        sudo apt-get install -y curl cmake git squashfs-tools gettext &&
         curl -L https://github.com/Poligraf/retrofw_buildroot_gcc11/releases/download/2.3.2/host.tar.gz -o retrofw-toolchain.tar.gz &&
         sudo mkdir -p /opt/retrofw-toolchain && sudo chown -R "${USER}:" /opt/retrofw-toolchain &&
         tar -C /opt/retrofw-toolchain --strip-components=1 -xf retrofw-toolchain.tar.gz &&
@@ -38,7 +38,7 @@ jobs:
         path: build-retrofw/devilutionx-retrofw.opk
 
     - name: Update Release
-      if: startsWith(github.ref, 'refs/tags/') && ${{ !env.ACT }}
+      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
       uses: ncipollo/release-action@v1
       with:
         artifacts: "build-retrofw/devilutionx-retrofw.opk"

@@ -30,10 +30,10 @@ mkdir -p ${SYSROOT}/usr/include
 cd deps
 
 # ZLIB
-wget https://www.zlib.net/zlib-1.2.11.tar.gz -O zlib-1.2.11.tar.gz
-tar -xvf zlib-1.2.11.tar.gz
-mkdir -p zlib-1.2.11/build
-cd zlib-1.2.11
+wget https://www.zlib.net/zlib-1.2.12.tar.gz -O zlib-1.2.12.tar.gz
+tar -xvf zlib-1.2.12.tar.gz
+mkdir -p zlib-1.2.12/build
+cd zlib-1.2.12
 cmake -S. -Bbuild "${CMAKE_FLAGS[@]}" -DM68K_COMMON="${M68K_COMMON} -O3 -fno-exceptions -w -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14"
 cmake --build build -j"$PARALLELISM" --config Release --target install
 cd ..

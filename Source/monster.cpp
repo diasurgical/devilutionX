@@ -33,6 +33,7 @@
 #include "trigs.h"
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
+#include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef _DEBUG
@@ -177,7 +178,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster._mmode = MonsterMode::Stand;
 	monster.MType = &LevelMonsterTypes[mtype];
 	monster.MData = monster.MType->MData;
-	monster.mName = pgettext("monster", monster.MData->mName);
+	monster.mName = pgettext("monster", monster.MData->mName).c_str();
 	monster.AnimInfo = {};
 	monster.ChangeAnimationData(MonsterGraphic::Stand);
 	monster.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(monster.AnimInfo.TicksPerFrame - 1);
@@ -987,15 +988,15 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 void SpawnLoot(Monster &monster, bool sendmsg)
 {
 	if (Quests[Q_GARBUD].IsAvailable() && monster._uniqtype - 1 == UMT_GARBUD) {
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, true, false);
+		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, sendmsg, false);
 	} else if (monster._uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
 		Quests[Q_DEFILER]._qlog = false;
-		SpawnMapOfDoom(monster.position.tile);
+		SpawnMapOfDoom(monster.position.tile, sendmsg);
 	} else if (monster._uniqtype - 1 == UMT_HORKDMN) {
 		if (sgGameInitInfo.bTheoQuest != 0) {
-			SpawnTheodore(monster.position.tile);
+			SpawnTheodore(monster.position.tile, sendmsg);
 		} else {
 			CreateAmulet(monster.position.tile, 13, sendmsg, false);
 		}
@@ -3375,7 +3376,7 @@ void BoneDemonAi(int i)
 	AiRangedAvoidance(i, MIS_BONEDEMON, true, 4, 0);
 }
 
-const char *GetMonsterTypeText(const MonsterData &monsterData)
+string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.mMonstClass) {
 	case MonsterClass::Animal:
@@ -3465,6 +3466,13 @@ bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
 
 } // namespace
 
+void InitTRNForUniqueMonster(Monster &monster)
+{
+	char filestr[64];
+	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", UniqueMonstersData[monster._uniqtype - 1].mTrnName);
+	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
+}
+
 void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
 {
 	monster._uniqtype = uniqindex + 1;
@@ -3476,7 +3484,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	}
 
 	monster.mExp *= 2;
-	monster.mName = pgettext("monster", uniqueMonsterData.mName);
+	monster.mName = pgettext("monster", uniqueMonsterData.mName).c_str();
 	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
@@ -3536,10 +3544,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 	}
 
-	char filestr[64];
-	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
-	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
-
+	InitTRNForUniqueMonster(monster);
 	monster._uniqtrans = uniquetrans++;
 
 	if (uniqueMonsterData.customToHit != 0) {
@@ -4549,9 +4554,12 @@ void SyncMonsterAnim(Monster &monster)
 #endif
 	monster.MData = LevelMonsterTypes[monster._mMTidx].MData;
 	if (monster._uniqtype != 0)
-		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName);
+		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName).c_str();
 	else
-		monster.mName = pgettext("monster", monster.MData->mName);
+		monster.mName = pgettext("monster", monster.MData->mName).c_str();
+
+	if (monster._uniqtype != 0)
+		InitTRNForUniqueMonster(monster);
 
 	MonsterGraphic graphic = MonsterGraphic::Stand;
 
@@ -4638,9 +4646,9 @@ void M_FallenFear(Point position)
 void PrintMonstHistory(int mt)
 {
 	if (*sgOptions.Gameplay.showMonsterType) {
-		strcpy(tempstr, fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]).c_str());
+		AddPanelString(fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
 	} else {
-		strcpy(tempstr, fmt::format(_("Total kills: {:d}"), MonsterKillCounts[mt]).c_str());
+		AddPanelString(fmt::format(_("Total kills: {:d}"), MonsterKillCounts[mt]));
 	}
 
 	auto &monsterType = MonstersData[mt];
@@ -4675,8 +4683,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		strcpy(tempstr, fmt::format(_("Hit Points: {:d}-{:d}"), minHP, maxHP).c_str());
-		AddPanelString(tempstr);
+		AddPanelString(fmt::format(_("Hit Points: {:d}-{:d}"), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
 		MonsterResists res;
@@ -4729,8 +4736,7 @@ void PrintUniqueHistory()
 {
 	auto &monster = Monsters[pcursmonst];
 	if (*sgOptions.Gameplay.showMonsterType) {
-		strcpy(tempstr, fmt::format(_("Type: {:s}"), GetMonsterTypeText(*monster.MData)).c_str());
-		AddPanelString(tempstr);
+		AddPanelString(fmt::format(_("Type: {:s}"), GetMonsterTypeText(*monster.MData)));
 	}
 
 	MonsterResists const res = monster.mResists;
@@ -4743,14 +4749,13 @@ void PrintUniqueHistory()
 		if (res.hasImmunities()) {
 			strcpy(tempstr, _("Some Magic Immunities"));
 		} else {
-			strcpy(tempstr, _("No Immunities"));
+			AddPanelString(_("No Immunities"));
 		}
 	} else {
 		strcpy(tempstr, _("No resistances"));
 		AddPanelString(tempstr);
 		strcpy(tempstr, _("No Immunities"));
 	}
-	AddPanelString(tempstr);
 }
 
 void PlayEffect(Monster &monster, int mode)

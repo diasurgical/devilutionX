@@ -7,7 +7,7 @@
 
 #include "utils/utf8.hpp"
 
-static void switch_keyboard_get(const char *guide_text, char *initial_text, int max_len, int multiline, char *buf)
+static void switch_keyboard_get(devilution::string_view guide_text, devilution::string_view initial_text, char *buf, unsigned buf_len)
 {
 	Result rc = 0;
 
@@ -17,10 +17,21 @@ static void switch_keyboard_get(const char *guide_text, char *initial_text, int 
 
 	if (R_SUCCEEDED(rc)) {
 		swkbdConfigMakePresetDefault(&kbd);
-		swkbdConfigSetGuideText(&kbd, guide_text);
-		swkbdConfigSetInitialText(&kbd, initial_text);
-		swkbdConfigSetStringLenMax(&kbd, max_len);
-		rc = swkbdShow(&kbd, buf, max_len);
+
+		// swkbConfigSetGuide/InitialText both copy the input string. They expect a null terminated c-string but we're
+		//  getting a string view which may be a substring of a larger std::string/c-string, so we copy to a temporary
+		//  null-terminated string first for safety
+		if (!guide_text.empty()) {
+			std::string textCopy { guide_text };
+			swkbdConfigSetGuideText(&kbd, textCopy.c_str());
+		}
+		if (!initial_text.empty()) {
+			std::string textCopy { initial_text };
+			swkbdConfigSetInitialText(&kbd, textCopy.c_str());
+		}
+
+		swkbdConfigSetStringLenMax(&kbd, buf_len);
+		rc = swkbdShow(&kbd, buf, buf_len);
 		swkbdClose(&kbd);
 	}
 }
@@ -50,10 +61,10 @@ static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancod
 	SDL_PushEvent(&event);
 }
 
-void switch_start_text_input(const char *guide_text, char *initial_text, int max_length, int multiline)
+void switch_start_text_input(devilution::string_view guide_text, devilution::string_view initial_text, unsigned max_length)
 {
 	char text[max_length] = { '\0' };
-	switch_keyboard_get(guide_text, initial_text, max_length, multiline, text);
+	switch_keyboard_get(guide_text, initial_text, text, sizeof(text));
 	for (int i = 0; i < 600; i++) {
 		switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
 		switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
@@ -63,10 +74,10 @@ void switch_start_text_input(const char *guide_text, char *initial_text, int max
 		switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
 	}
 	if (text[0] == '\0') {
-		devilution::CopyUtf8(text, initial_text, max_length);
+		devilution::CopyUtf8(text, initial_text, sizeof(text));
 	}
 	const uint8_t *utf8_text = (uint8_t *)text;
-	for (int i = 0; i < 599 && utf8_text[i];) {
+	for (int i = 0; i < sizeof(text) && utf8_text[i];) {
 		int bytes_in_char = get_utf8_character_bytes(&utf8_text[i]);
 		SDL_Event textinput_event;
 		textinput_event.type = SDL_TEXTINPUT;

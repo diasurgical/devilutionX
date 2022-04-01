@@ -170,7 +170,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		size_t dwBytes = SDL_RWsize(file);
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
 		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
-			ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()).c_str(), __FILE__, __LINE__);
+			ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()), __FILE__, __LINE__);
 		}
 		int error = snd->DSB.SetChunk(waveFile, dwBytes);
 		SDL_RWclose(file);

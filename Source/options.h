@@ -400,6 +400,8 @@ struct GraphicsOptions : OptionCategoryBase {
 	OptionEntryInt<int> gammaCorrection;
 	/** @brief Enable color cycling animations. */
 	OptionEntryBoolean colorCycling;
+	/** @brief Use alternate nest palette. */
+	OptionEntryBoolean alternateNestArt;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
 	OptionEntryBoolean hardwareCursor;
@@ -508,6 +510,8 @@ struct NetworkOptions : OptionCategoryBase {
 
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
+	/** @brief Most recently entered ZeroTier Game ID. */
+	char szPreviousZTGame[129];
 	/** @brief Most recently entered Hostname in join dialog. */
 	char szPreviousHost[129];
 	/** @brief What network port to use. */
@@ -573,6 +577,7 @@ struct KeymapperOptions : OptionCategoryBase {
 	void KeyPressed(int key) const;
 	void KeyReleased(int key) const;
 	string_view KeyNameForAction(string_view actionName) const;
+	uint32_t KeyForAction(string_view actionName) const;
 
 private:
 	std::vector<std::unique_ptr<Action>> actions;

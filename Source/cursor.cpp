@@ -18,11 +18,13 @@
 #include "inv.h"
 #include "missiles.h"
 #include "qol/itemlabels.h"
+#include "qol/stash.h"
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
 #include "utils/attributes.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 namespace {
@@ -112,6 +114,8 @@ Size icursSize28;
 
 /** inv_item value */
 int8_t pcursinvitem;
+/** StashItem value */
+uint16_t pcursstashitem;
 /** Pixel size of the current cursor image */
 Size icursSize;
 /** Current highlighted item */
@@ -173,6 +177,9 @@ void ResetCursor()
 
 void NewCursor(int cursId)
 {
+	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
+		MyPlayer->HoldItem._itype = ItemType::None;
+	}
 	pcurs = cursId;
 	cursSize = GetInvItemSize(cursId);
 	SetICursor(cursId);
@@ -213,9 +220,8 @@ void CheckTown()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, _("Town Portal"));
-				strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile._misource]._pName).c_str());
-				AddPanelString(tempstr);
+				InfoString = _("Town Portal");
+				AddPanelString(fmt::format(_("from {:s}"), Players[missile._misource]._pName));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -229,12 +235,8 @@ void CheckRportal()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, _("Portal to"));
-				if (!setlevel)
-					strcpy(tempstr, _("The Unholy Altar"));
-				else
-					strcpy(tempstr, _("level 15"));
-				AddPanelString(tempstr);
+				InfoString = _("Portal to");
+				AddPanelString(!setlevel ? _("The Unholy Altar") : _("level 15"));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -250,7 +252,7 @@ void CheckCursMove()
 	int sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen) {
+		if (chrflag || QuestLogIsOpen || IsStashOpen) {
 			sx -= GetScreenWidth() / 4;
 		} else if (invflag || sbookflag) {
 			sx += GetScreenWidth() / 4;
@@ -354,7 +356,7 @@ void CheckCursMove()
 				pcursplr = -1;
 		}
 
-		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursplr == -1) {
+		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
 			cursPosition = { mx, my };
 			CheckTrigForce();
 			CheckTown();
@@ -373,6 +375,7 @@ void CheckCursMove()
 		drawsbarflag = true;
 	}
 	pcursinvitem = -1;
+	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
 	ShowUniqueItemInfoBox = false;
 	panelflag = false;
@@ -396,10 +399,13 @@ void CheckCursMove()
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
+	if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
+		pcursstashitem = CheckStashHLight(MousePosition);
+	}
 	if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) {
+	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) {
 		return;
 	}
 

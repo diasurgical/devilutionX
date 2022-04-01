@@ -126,6 +126,8 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.targy = target.y;
 	pkt->hdr.php = myPlayer._pHitPoints;
 	pkt->hdr.pmhp = myPlayer._pMaxHP;
+	pkt->hdr.mana = myPlayer._pMana;
+	pkt->hdr.maxmana = myPlayer._pMaxMana;
 	pkt->hdr.bstr = myPlayer._pBaseStr;
 	pkt->hdr.bmag = myPlayer._pBaseMag;
 	pkt->hdr.bdex = myPlayer._pBaseDex;
@@ -193,7 +195,7 @@ void PlayerLeftMsg(int pnum, bool left)
 	delta_close_portal(pnum);
 	RemovePlrMissiles(pnum);
 	if (left) {
-		const char *pszFmt = _("Player '{:s}' just left the game");
+		string_view pszFmt = _("Player '{:s}' just left the game");
 		switch (sgdwPlayerLeftReasonTbl[pnum]) {
 		case LEAVE_ENDING:
 			pszFmt = _("Player '{:s}' killed Diablo and left the game!");
@@ -255,42 +257,7 @@ void BeginTimeout()
 		return;
 	}
 
-	int nLowestActive = -1;
-	int nLowestPlayer = -1;
-	uint8_t bGroupPlayers = 0;
-	uint8_t bGroupCount = 0;
-	for (int i = 0; i < MAX_PLRS; i++) {
-		uint32_t nState = player_state[i];
-		if ((nState & PS_CONNECTED) != 0) {
-			if (nLowestPlayer == -1) {
-				nLowestPlayer = i;
-			}
-			if ((nState & PS_ACTIVE) != 0) {
-				bGroupPlayers++;
-				if (nLowestActive == -1) {
-					nLowestActive = i;
-				}
-			} else {
-				bGroupCount++;
-			}
-		}
-	}
-
-	assert(bGroupPlayers);
-	assert(nLowestActive != -1);
-	assert(nLowestPlayer != -1);
-
-	if (bGroupPlayers < bGroupCount) {
-		gbGameDestroyed = true;
-	} else if (bGroupPlayers == bGroupCount) {
-		if (nLowestPlayer != nLowestActive) {
-			gbGameDestroyed = true;
-		} else if (nLowestActive == MyPlayerId) {
-			CheckDropPlayer();
-		}
-	} else if (nLowestActive == MyPlayerId) {
-		CheckDropPlayer();
-	}
+	CheckDropPlayer();
 }
 
 void HandleAllPackets(int pnum, const byte *data, size_t size)
@@ -613,6 +580,8 @@ void multi_process_network_packets()
 			assert(gbBufferMsgs != 2);
 			player._pHitPoints = pkt->php;
 			player._pMaxHP = pkt->pmhp;
+			player._pMana = pkt->mana;
+			player._pMaxMana = pkt->maxmana;
 			bool cond = gbBufferMsgs == 1;
 			player._pBaseStr = pkt->bstr;
 			player._pBaseMag = pkt->bmag;
@@ -813,7 +782,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	player.plractive = true;
 	gbActivePlayers++;
 
-	const char *szEvent;
+	string_view szEvent;
 	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = _("Player '{:s}' (level {:d}) just joined the game");
 	} else {

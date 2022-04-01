@@ -79,10 +79,18 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
             -->
+            <!-- Location where shortcuts for the app are defined -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <activity android:name=".DataActivity"
                 android:theme="@style/Theme.MyApplication">
+        </activity>
+
+        <activity android:name=".ImportActivity"
+            android:theme="@style/Theme.MyApplication">
         </activity>
     </application>
 

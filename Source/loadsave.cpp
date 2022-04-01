@@ -24,9 +24,11 @@
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"
+#include "menu.h"
 #include "missiles.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
+#include "qol/stash.h"
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
@@ -67,7 +69,7 @@ T SwapBE(T in)
 	case 4:
 		return SDL_SwapBE32(in);
 	case 8:
-		return SDL_SwapBE64(in);
+		return static_cast<T>(SDL_SwapBE64(in));
 	default:
 		return in;
 	}
@@ -93,9 +95,12 @@ class LoadHelper {
 	}
 
 public:
-	LoadHelper(const char *szFileName)
+	LoadHelper(std::optional<MpqArchive> archive, const char *szFileName)
 	{
-		m_buffer_ = pfile_read(szFileName, &m_size_);
+		if (archive)
+			m_buffer_ = ReadArchive(*archive, szFileName, &m_size_);
+		else
+			m_buffer_ = nullptr;
 	}
 
 	bool IsValid(size_t size = 1)
@@ -148,14 +153,16 @@ public:
 };
 
 class SaveHelper {
+	MpqWriter &m_mpqWriter;
 	const char *m_szFileName_;
 	std::unique_ptr<byte[]> m_buffer_;
 	size_t m_cur_ = 0;
 	size_t m_capacity_;
 
 public:
-	SaveHelper(const char *szFileName, size_t bufferLen)
-	    : m_szFileName_(szFileName)
+	SaveHelper(MpqWriter &mpqWriter, const char *szFileName, size_t bufferLen)
+	    : m_mpqWriter(mpqWriter)
+	    , m_szFileName_(szFileName)
 	    , m_buffer_(new byte[codec_get_encoded_len(bufferLen)])
 	    , m_capacity_(bufferLen)
 	{
@@ -207,7 +214,7 @@ public:
 		const auto encodedLen = codec_get_encoded_len(m_cur_);
 		const char *const password = pfile_get_password();
 		codec_encode(m_buffer_.get(), m_cur_, encodedLen, password);
-		CurrentSaveArchive().WriteFile(m_szFileName_, m_buffer_.get(), encodedLen);
+		m_mpqWriter.WriteFile(m_szFileName_, m_buffer_.get(), encodedLen);
 	}
 };
 
@@ -1314,10 +1321,10 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(monster.mExp);
 
-	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.mHit, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.mMinDamage);
 	file->WriteLE<uint8_t>(monster.mMaxDamage);
-	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.mMinDamage2);
 	file->WriteLE<uint8_t>(monster.mMaxDamage2);
 	file->WriteLE<uint8_t>(monster.mArmorClass);
@@ -1526,8 +1533,8 @@ constexpr uint32_t VersionAdditionalMissiles = 0;
 void SaveAdditionalMissiles()
 {
 	constexpr size_t BytesWrittenBySaveMissile = 180;
-	size_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? Missiles.size() - MaxMissilesForSaveGame : 0;
-	SaveHelper file("additionalMissiles", sizeof(uint32_t) + sizeof(uint32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
+	uint32_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? static_cast<uint32_t>(Missiles.size() - MaxMissilesForSaveGame) : 0;
+	SaveHelper file(CurrentSaveArchive(), "additionalMissiles", sizeof(uint32_t) + sizeof(uint32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
 
 	file.WriteLE<uint32_t>(VersionAdditionalMissiles);
 	file.WriteLE<uint32_t>(missileCountAdditional);
@@ -1544,7 +1551,7 @@ void SaveAdditionalMissiles()
 
 void LoadAdditionalMissiles()
 {
-	LoadHelper file("additionalMissiles");
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "additionalMissiles");
 
 	if (!file.IsValid()) {
 		// no addtional Missiles saved
@@ -1713,7 +1720,7 @@ bool IsHeaderValid(uint32_t magicNumber)
 
 void LoadHotkeys()
 {
-	LoadHelper file("hotkeys");
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "hotkeys");
 	if (!file.IsValid())
 		return;
 
@@ -1736,7 +1743,7 @@ void SaveHotkeys()
 	const size_t nHotkeyTypes = sizeof(myPlayer._pSplHotKey) / sizeof(myPlayer._pSplHotKey[0]);
 	const size_t nHotkeySpells = sizeof(myPlayer._pSplTHotKey) / sizeof(myPlayer._pSplTHotKey[0]);
 
-	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
+	SaveHelper file(CurrentSaveArchive(), "hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
 
 	for (auto &spellId : myPlayer._pSplHotKey) {
 		file.WriteLE<int32_t>(spellId);
@@ -1750,7 +1757,7 @@ void SaveHotkeys()
 
 void LoadHeroItems(Player &player)
 {
-	LoadHelper file("heroitems");
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "heroitems");
 	if (!file.IsValid())
 		return;
 
@@ -1761,6 +1768,45 @@ void LoadHeroItems(Player &player)
 	LoadMatchingItems(file, MAXBELTITEMS, player.SpdList);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
+}
+
+constexpr uint8_t StashVersion = 0;
+
+void LoadStash()
+{
+	const char *filename;
+	if (!gbIsMultiplayer)
+		filename = "spstashitems";
+	else
+		filename = "mpstashitems";
+
+	Stash = {};
+
+	LoadHelper file(OpenStashArchive(), filename);
+	if (!file.IsValid())
+		return;
+
+	auto version = file.NextLE<uint8_t>();
+	if (version > StashVersion)
+		return;
+
+	Stash.gold = file.NextLE<uint32_t>();
+
+	auto pages = file.NextLE<uint32_t>();
+	for (unsigned i = 0; i < pages; i++) {
+		auto page = file.NextLE<uint32_t>();
+		for (auto &row : Stash.stashGrids[page]) {
+			for (uint16_t &cell : row) {
+				cell = file.NextLE<uint16_t>();
+			}
+		}
+	}
+
+	auto itemCount = file.NextLE<uint32_t>();
+	Stash.stashList.resize(itemCount);
+	for (unsigned i = 0; i < itemCount; i++) {
+		LoadItemData(file, Stash.stashList[i]);
+	}
 }
 
 void RemoveEmptyInventory(Player &player)
@@ -1777,12 +1823,12 @@ void LoadGame(bool firstflag)
 {
 	FreeGameMem();
 
-	LoadHelper file("game");
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "game");
 	if (!file.IsValid())
-		app_fatal("%s", _("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive").c_str());
 
 	if (!IsHeaderValid(file.NextLE<uint32_t>()))
-		app_fatal("%s", _("Invalid save file"));
+		app_fatal("%s", _("Invalid save file").c_str());
 
 	if (gbIsHellfireSaveGame) {
 		giNumberOfLevels = 25;
@@ -1813,7 +1859,7 @@ void LoadGame(bool firstflag)
 	int tmpNobjects = file.NextBE<int32_t>();
 
 	if (!gbIsHellfire && currlevel > 17)
-		app_fatal("%s", _("Player is on a Hellfire only level"));
+		app_fatal("%s", _("Player is on a Hellfire only level").c_str());
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = file.NextBE<uint32_t>();
@@ -1977,7 +2023,7 @@ void LoadGame(bool firstflag)
 void SaveHeroItems(Player &player)
 {
 	size_t itemCount = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
+	SaveHelper file(CurrentSaveArchive(), "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
 
@@ -1989,9 +2035,51 @@ void SaveHeroItems(Player &player)
 		SaveItem(file, item);
 }
 
+void SaveStash()
+{
+	const char *filename;
+	if (!gbIsMultiplayer)
+		filename = "spstashitems";
+	else
+		filename = "mpstashitems";
+
+	const int itemSize = (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize);
+
+	SaveHelper file(
+	    StashArchive(),
+	    filename,
+	    sizeof(uint8_t)
+	        + sizeof(uint32_t)
+	        + sizeof(uint32_t)
+	        + (sizeof(uint32_t) + 10 * 10 * sizeof(uint16_t)) * Stash.stashGrids.size()
+	        + sizeof(uint32_t)
+	        + itemSize * Stash.stashList.size());
+
+	file.WriteLE<uint8_t>(StashVersion);
+
+	file.WriteLE<uint32_t>(Stash.gold);
+
+	// Current stash size is 50 pages, expanding to 100 in the near future. Will definitely fit in a 32 bit value.
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashGrids.size()));
+	for (const auto &stashPage : Stash.stashGrids) {
+		file.WriteLE<uint32_t>(stashPage.first);
+		for (const auto &row : stashPage.second) {
+			for (uint16_t cell : row) {
+				file.WriteLE<uint16_t>(cell);
+			}
+		}
+	}
+
+	// 100 pages of 100 items is still only 10 000, as with the page count will definitely fit in 32 bits even in the worst case.
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashList.size()));
+	for (const Item &item : Stash.stashList) {
+		SaveItem(file, item);
+	}
+}
+
 void SaveGameData()
 {
-	SaveHelper file("game", 320 * 1024);
+	SaveHelper file(CurrentSaveArchive(), "game", 320 * 1024);
 
 	if (gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("SHAR"));
@@ -2002,7 +2090,7 @@ void SaveGameData()
 	else if (!gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("RETL"));
 	else
-		app_fatal("%s", _("Invalid game state"));
+		app_fatal("%s", _("Invalid game state").c_str());
 
 	if (gbIsHellfire) {
 		giNumberOfLevels = 25;
@@ -2155,6 +2243,7 @@ void SaveGame()
 {
 	gbValidSaveFile = true;
 	pfile_write_hero(/*writeGameData=*/true);
+	sfile_write_stash();
 }
 
 void SaveLevel()
@@ -2170,7 +2259,7 @@ void SaveLevel()
 
 	char szName[MAX_PATH];
 	GetTempLevelNames(szName);
-	SaveHelper file(szName, 256 * 1024);
+	SaveHelper file(CurrentSaveArchive(), szName, 256 * 1024);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -2237,9 +2326,9 @@ void LoadLevel()
 {
 	char szName[MAX_PATH];
 	GetPermLevelNames(szName);
-	LoadHelper file(szName);
+	LoadHelper file(OpenSaveArchive(gSaveNumber), szName);
 	if (!file.IsValid())
-		app_fatal("%s", _("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive").c_str());
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {

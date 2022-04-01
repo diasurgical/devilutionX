@@ -38,14 +38,11 @@ const int LineHeight = 38;
 
 std::vector<std::string> TextLines;
 
-void LoadText(const char *text)
+void LoadText(string_view text)
 {
 	TextLines.clear();
 
-	char tempstr[2560];
-	strcpy(tempstr, text);
-
-	const std::string paragraphs = WordWrapString(tempstr, 543, GameFont30);
+	const std::string paragraphs = WordWrapString(text, 543, GameFont30);
 
 	size_t previous = 0;
 	while (true) {

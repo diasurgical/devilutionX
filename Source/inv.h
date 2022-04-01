@@ -85,11 +85,22 @@ extern bool invflag;
 extern bool drawsbarflag;
 extern const Point InvRect[73];
 
+void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size);
+/**
+ * @brief Checks whether the given item can be placed on the belt. Takes item size as well as characteristics into account. Items
+ * that cannot be placed on the belt have to be placed in the inventory instead.
+ * @param item The item to be checked.
+ * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
+ */
+bool CanBePlacedOnBelt(const Item &item);
+int SwapItem(Item &a, Item &b);
+
 /**
  * @brief Function type which performs an operation on the given item.
  */
 using ItemFunc = void (*)(Item &);
 
+void CloseInventory();
 void FreeInvGFX();
 void InitInv();
 
@@ -99,6 +110,14 @@ void InitInv();
 void DrawInv(const Surface &out);
 
 void DrawInvBelt(const Surface &out);
+
+/**
+ * @brief Removes equipment from the specified location on the player's body.
+ * @param player The player from which equipment will be removed.
+ * @param bodyLocation The location from which equipment will be removed.
+ * @param hiPri Priority of the network message to sync player equipment.
+ */
+void RemoveEquipment(Player &player, inv_body_loc bodyLocation, bool hiPri);
 
 /**
  * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
@@ -148,16 +167,26 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
 bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false);
+
+/**
+ * @brief Calculate the maximum aditional gold that may fit in the user's inventory
+ */
+int RoomForGold();
+
+/**
+ * @return The leftover amount that didn't fit, if any
+ */
+int AddGoldToInventory(Player &player, int value);
 bool GoldAutoPlace(Player &player, Item &goldStack);
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(Player &player, inv_body_loc iv);
+void TransferItemToStash(Player &player, int location);
 void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
 
 /**
  * Check for interactions with belt
  */
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld);
-void CheckItemStats(Player &player);
 void InvGetItem(int pnum, int ii);
 void AutoGetItem(int pnum, Item *item, int ii);
 
@@ -172,7 +201,7 @@ int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t ci);
 void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
 bool CanPut(Point position);
 bool TryInvPut();
-int InvPutItem(Player &player, Point position);
+int InvPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int8_t CheckInvHLight();
@@ -180,10 +209,18 @@ void RemoveScroll(Player &player);
 bool UseScroll();
 void UseStaffCharge(Player &player);
 bool UseStaff();
+Item &GetInventoryItem(Player &player, int location);
 bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(Player &player);
 bool DropItemBeforeTrig();
+
+/**
+ * @brief Gets the size, in inventory cells, of the given item.
+ * @param item The item whose size is to be determined.
+ * @return The size, in inventory cells, of the item.
+ */
+Size GetInventorySize(const Item &item);
 
 /* data */
 

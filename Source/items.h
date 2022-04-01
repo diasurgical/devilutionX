@@ -432,11 +432,6 @@ void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
 void InitializeItem(Item &item, int itemData);
 void GenerateNewSeed(Item &h);
-
-/**
- * @brief Set a new unique seed value on the given item
- */
-void SetGoldSeed(Player &player, Item &gold);
 int GetGoldCursor(int value);
 
 /**
@@ -461,10 +456,10 @@ void RecreateEar(Item &item, uint16_t ic, int iseed, int Id, int dur, int mdur, 
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
 void SpawnQuestItem(int itemid, Point position, int randarea, int selflag);
-void SpawnRewardItem(int itemid, Point position);
-void SpawnMapOfDoom(Point position);
-void SpawnRuneBomb(Point position);
-void SpawnTheodore(Point position);
+void SpawnRewardItem(int itemid, Point position, bool sendmsg);
+void SpawnMapOfDoom(Point position, bool sendmsg);
+void SpawnRuneBomb(Point position, bool sendmsg);
+void SpawnTheodore(Point position, bool sendmsg);
 void RespawnItem(Item &item, bool FlipFlag);
 void DeleteItem(int i);
 void ProcessItems();
@@ -474,7 +469,7 @@ void GetItemStr(Item &item);
 void CheckIdentify(Player &player, int cii);
 void DoRepair(Player &player, int cii);
 void DoRecharge(Player &player, int cii);
-void DoOil(Player &player, int cii);
+bool DoOil(Player &player, int cii);
 [[nodiscard]] std::string PrintItemPower(char plidx, const Item &item);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
@@ -487,7 +482,7 @@ void SpawnPremium(int pnum);
 void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);
-void SpawnStoreGold();
+void MakeGoldStack(Item &goldItem, int value);
 int ItemNoFlippy();
 void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta);
 void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
@@ -501,6 +496,10 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
  * @brief Resets item get records.
  */
 void initItemGetRecords();
+
+void RepairItem(Item &item, int lvl);
+void RechargeItem(Item &item, Player &player);
+bool ApplyOilToItem(Item &item, Player &player);
 
 #ifdef _DEBUG
 std::string DebugSpawnItem(std::string itemName);

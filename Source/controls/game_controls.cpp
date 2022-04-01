@@ -15,6 +15,7 @@
 #include "doom.h"
 #include "gmenu.h"
 #include "options.h"
+#include "qol/stash.h"
 #include "stores.h"
 
 namespace devilution {
@@ -164,6 +165,10 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 		}
 	}
 #endif
+	if (IsStashOpen && ctrlEvent.button == ControllerButton_BUTTON_BACK) {
+		StartGoldWithdraw();
+		return false;
+	}
 
 	if (HandleStartAndSelect(ctrlEvent, action))
 		return true;
@@ -232,25 +237,25 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			switch (ctrlEvent.button) {
 			case ControllerButton_BUTTON_DPAD_UP:
 				if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-					*action = GameActionSendKey { DVL_VK_F6, ctrlEvent.up };
+					*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell2"), ctrlEvent.up };
 				else
 					*action = GameActionSendKey { DVL_VK_ESCAPE, ctrlEvent.up };
 				return true;
 			case ControllerButton_BUTTON_DPAD_RIGHT:
 				if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-					*action = GameActionSendKey { DVL_VK_F8, ctrlEvent.up };
+					*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell4"), ctrlEvent.up };
 				else if (!ctrlEvent.up)
 					*action = GameAction(GameActionType_TOGGLE_INVENTORY);
 				return true;
 			case ControllerButton_BUTTON_DPAD_DOWN:
 				if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-					*action = GameActionSendKey { DVL_VK_F7, ctrlEvent.up };
+					*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell3"), ctrlEvent.up };
 				else
 					*action = GameActionSendKey { DVL_VK_TAB, ctrlEvent.up };
 				return true;
 			case ControllerButton_BUTTON_DPAD_LEFT:
 				if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-					*action = GameActionSendKey { DVL_VK_F5, ctrlEvent.up };
+					*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell1"), ctrlEvent.up };
 				else if (!ctrlEvent.up)
 					*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
 				return true;
@@ -313,7 +318,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			if (ctrlEvent.up)
 				return true;
 			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-				*action = GameActionSendKey { DVL_VK_F7, ctrlEvent.up };
+				*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell3"), ctrlEvent.up };
 			else if (DoomFlag)
 				*action = GameActionSendKey { DVL_VK_ESCAPE, ctrlEvent.up };
 			else if (invflag)
@@ -336,7 +341,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			case ControllerButton_BUTTON_B: // Right button
 				if (!ctrlEvent.up) {
 					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendKey { DVL_VK_F8, ctrlEvent.up };
+						*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell4"), ctrlEvent.up };
 					else
 						*action = GameAction(GameActionType_PRIMARY_ACTION);
 				}
@@ -344,7 +349,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			case ControllerButton_BUTTON_Y: // Top button
 				if (!ctrlEvent.up) {
 					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendKey { DVL_VK_F6, ctrlEvent.up };
+						*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell2"), ctrlEvent.up };
 					else
 						*action = GameAction(GameActionType_SECONDARY_ACTION);
 				}
@@ -352,7 +357,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			case ControllerButton_BUTTON_X: // Left button
 				if (!ctrlEvent.up) {
 					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendKey { DVL_VK_F5, ctrlEvent.up };
+						*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("QuickSpell1"), ctrlEvent.up };
 					else
 						*action = GameAction(GameActionType_CAST_SPELL);
 				}

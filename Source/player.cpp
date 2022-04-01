@@ -27,11 +27,13 @@
 #include "options.h"
 #include "player.h"
 #include "qol/autopickup.h"
+#include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -584,14 +586,12 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 			continue;
 
 		if (amount < item._ivalue) {
-			Item gold {};
-			InitializeItem(gold, IDI_GOLD);
-			SetGoldSeed(player, gold);
+			Item goldItem;
+			MakeGoldStack(goldItem, amount);
+			DeadItem(player, std::move(goldItem), { 0, 0 });
 
-			gold._ivalue = amount;
 			item._ivalue -= amount;
-			SetPlrHandGoldCurs(gold);
-			DeadItem(player, std::move(gold), { 0, 0 });
+
 			return 0;
 		}
 
@@ -730,8 +730,7 @@ bool WeaponDecay(Player &player, int ii)
 	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & ISPLHF_DECAY) != 0) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
-			NetSendCmdDelItem(true, ii);
-			player.InvBody[ii]._itype = ItemType::None;
+			RemoveEquipment(player, static_cast<inv_body_loc>(ii), true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -767,8 +766,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -781,8 +779,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -795,8 +792,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -809,8 +805,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -1308,8 +1303,7 @@ void DamageParryItem(int pnum)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 		}
 	}
@@ -1318,8 +1312,7 @@ void DamageParryItem(int pnum)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
 			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-				player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+				RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 				CalcPlrInv(player, true);
 			}
 		}
@@ -1387,11 +1380,10 @@ void DamageArmor(int pnum)
 	}
 
 	if (a != 0) {
-		NetSendCmdDelItem(true, INVLOC_CHEST);
+		RemoveEquipment(player, INVLOC_CHEST, true);
 	} else {
-		NetSendCmdDelItem(true, INVLOC_HEAD);
+		RemoveEquipment(player, INVLOC_HEAD, true);
 	}
-	pi->_itype = ItemType::None;
 	CalcPlrInv(player, true);
 }
 
@@ -1937,34 +1929,35 @@ bool Player::HasItem(int item, int *idx) const
 
 void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
-	iv++;
-
 	// Iterate through invGrid and remove every reference to item
-	for (int8_t &itemId : InvGrid) {
-		if (itemId == iv || itemId == -iv) {
-			itemId = 0;
+	for (int8_t &itemIndex : InvGrid) {
+		if (abs(itemIndex) - 1 == iv) {
+			itemIndex = 0;
 		}
 	}
 
-	iv--;
+	InvList[iv]._itype = ItemType::None;
+
 	_pNumInv--;
 
 	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
 		InvList[iv] = InvList[_pNumInv];
+		InvList[_pNumInv]._itype = ItemType::None;
 
-		for (int8_t &itemId : InvGrid) {
-			if (itemId == _pNumInv + 1) {
-				itemId = iv + 1;
+		for (int8_t &itemIndex : InvGrid) {
+			if (itemIndex == _pNumInv + 1) {
+				itemIndex = iv + 1;
 			}
-			if (itemId == -(_pNumInv + 1)) {
-				itemId = -(iv + 1);
+			if (itemIndex == -(_pNumInv + 1)) {
+				itemIndex = -(iv + 1);
 			}
 		}
 	}
 
-	if (calcScrolls)
+	if (calcScrolls) {
 		CalcScrolls();
+	}
 }
 
 bool Player::TryRemoveInvItemById(int item)
@@ -3143,7 +3136,6 @@ StartPlayerKill(int pnum, int earflag)
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
 				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
-				player.HoldItem._itype = ItemType::None;
 				NewCursor(CURSOR_HAND);
 			}
 
@@ -3153,7 +3145,7 @@ StartPlayerKill(int pnum, int earflag)
 					if (earflag != 0) {
 						Item ear;
 						InitializeItem(ear, IDI_EAR);
-						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
+						CopyUtf8(ear._iName, fmt::format(_("Ear of {:s}"), player._pName), sizeof(ear._iName));
 						switch (player._pClass) {
 						case HeroClass::Sorcerer:
 							ear._iCurs = ICURS_EAR_SORCERER;
@@ -3199,11 +3191,9 @@ void StripTopGold(Player &player)
 		if (item._itype == ItemType::Gold) {
 			if (item._ivalue > MaxGold) {
 				Item excessGold;
-				InitializeItem(excessGold, IDI_GOLD);
-				SetGoldSeed(player, excessGold);
-				excessGold._ivalue = item._ivalue - MaxGold;
-				SetPlrHandGoldCurs(excessGold);
+				MakeGoldStack(excessGold, item._ivalue - MaxGold);
 				item._ivalue = MaxGold;
+
 				if (!GoldAutoPlace(player, excessGold)) {
 					DeadItem(player, std::move(excessGold), { 0, 0 });
 				}
@@ -3581,8 +3571,8 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
+		    ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
+		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))                 // inside right panel
 		) {
 			if (spellID != SPL_HEAL
 			    && spellID != SPL_IDENTIFY

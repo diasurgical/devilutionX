@@ -327,6 +327,7 @@ void LoadOptions()
 	GetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
+	GetIniValue("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame, sizeof(sgOptions.Network.szPreviousZTGame), "");
 	GetIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
@@ -358,6 +359,7 @@ void SaveOptions()
 	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
+	SetIniValue("Network", "Previous Game ID", sgOptions.Network.szPreviousZTGame);
 	SetIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
@@ -750,13 +752,14 @@ GraphicsOptions::GraphicsOptions()
 #endif
     , gammaCorrection("Gamma Correction", OptionEntryFlags::Invisible, "Gamma Correction", "Gamma correction level.", 100)
     , colorCycling("Color Cycling", OptionEntryFlags::None, N_("Color Cycling"), N_("Color cycling effect used for water, lava, and acid animation."), true)
+    , alternateNestArt("Alternate nest art", OptionEntryFlags::OnlyHellfire | OptionEntryFlags::CantChangeInGame, N_("Alternate nest art"), N_("The game will use an alternative palette for Hellfire’s nest tileset."), false)
 #if SDL_VERSION_ATLEAST(2, 0, 0)
     , hardwareCursor("Hardware Cursor", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor"), N_("Use a hardware cursor"), HardwareCursorDefault())
     , hardwareCursorForItems("Hardware Cursor For Items", OptionEntryFlags::CantChangeInGame | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor For Items"), N_("Use a hardware cursor for items."), false)
     , hardwareCursorMaxSize("Hardware Cursor Maximum Size", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::RecreateUI | (HardwareCursorSupported() ? OptionEntryFlags::None : OptionEntryFlags::Invisible), N_("Hardware Cursor Maximum Size"), N_("Maximum width / height for the hardware cursor. Larger cursors fall back to software."), 128, { 0, 64, 128, 256, 512 })
 #endif
     , limitFPS("FPS Limiter", OptionEntryFlags::None, N_("FPS Limiter"), N_("FPS is limited to avoid high CPU load. Limit considers refresh rate."), true)
-    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), true)
+    , showFPS("Show FPS", OptionEntryFlags::None, N_("Show FPS"), N_("Displays the FPS in the upper left corner of the screen."), false)
     , showHealthValues("Show health values", OptionEntryFlags::None, N_("Show health values"), N_("Displays current / max health value on health globe."), false)
     , showManaValues("Show mana values", OptionEntryFlags::None, N_("Show mana values"), N_("Displays current / max mana value on mana globe."), false)
 {
@@ -796,6 +799,7 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 		&showHealthValues,
 		&showManaValues,
 		&colorCycling,
+		&alternateNestArt,
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		&hardwareCursor,
 		&hardwareCursorForItems,
@@ -1020,7 +1024,7 @@ size_t OptionEntryLanguageCode::GetActiveListIndex() const
 }
 void OptionEntryLanguageCode::SetActiveListIndex(size_t index)
 {
-	strcpy(szCode, languages[index].first.c_str());
+	CopyUtf8(szCode, languages[index].first, sizeof(szCode));
 	NotifyValueChanged();
 }
 
@@ -1148,7 +1152,7 @@ string_view KeymapperOptions::Action::GetValueDescription() const
 	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
 		return "";
 	}
-	return keyNameIt->second.c_str();
+	return keyNameIt->second;
 }
 
 bool KeymapperOptions::Action::SetValue(int value)
@@ -1225,6 +1229,16 @@ string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 		}
 	}
 	return "";
+}
+
+uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
+{
+	for (const auto &action : actions) {
+		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
+			return action->boundKey;
+		}
+	}
+	return DVL_VK_INVALID;
 }
 
 } // namespace devilution
