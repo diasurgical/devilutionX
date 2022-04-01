@@ -1416,7 +1416,9 @@ bool AutoEquipEnabled(const Player &player, const Item &item)
 	}
 
 	if (item.isShield()) {
-		return *sgOptions.Gameplay.autoEquipShields;
+		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip shields on him so as to not
+		// annoy players who prefer that playstyle.
+		return player._pClass != HeroClass::Monk && *sgOptions.Gameplay.autoEquipShields;
 	}
 
 	if (item.isJewelry()) {
