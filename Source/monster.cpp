@@ -4739,7 +4739,6 @@ void PrintUniqueHistory()
 			AddPanelString(_("Some Magic Resistances"));
 		else
 			AddPanelString(_("No resistances"));
-		AddPanelString(tempstr);
 		if (res.hasImmunities()) {
 			AddPanelString(_("Some Magic Immunities"));
 		} else {
