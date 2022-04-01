@@ -4653,7 +4653,6 @@ void PrintMonstHistory(int mt)
 
 	auto &monsterType = MonstersData[mt];
 
-	AddPanelString(tempstr);
 	if (MonsterKillCounts[mt] >= 30) {
 		int minHP = monsterType.mMinHP;
 		int maxHP = monsterType.mMaxHP;
@@ -4702,32 +4701,27 @@ void PrintMonstHistory(int mt)
 
 		if (res.hasResistancesOrImmunities()) {
 			if (res.hasResistances()) {
-				strcpy(tempstr, _("Resists: "));
+				std::string resists = _("Resists:");
 				if (res.isMagicResistant())
-					strcat(tempstr, _("Magic "));
+					resists.append(_(" Magic"));
 				if (res.isFireResistant())
-					strcat(tempstr, _("Fire "));
+					resists.append(_(" Fire"));
 				if (res.isLightningResistant())
-					strcat(tempstr, _("Lightning "));
-				string_view str { tempstr };
-				str.remove_suffix(str.size() - FindLastUtf8Symbols(str));
-				AddPanelString(str);
+					resists.append(_(" Lightning"));
+				AddPanelString(resists);
 			}
 			if (res.hasImmunities()) {
-				strcpy(tempstr, _("Immune: "));
+				std::string immune = _("Immune:");
 				if (res.isMagicImmune())
-					strcat(tempstr, _("Magic "));
+					immune.append(_(" Magic"));
 				if (res.isFireImmune())
-					strcat(tempstr, _("Fire "));
+					immune.append(_(" Fire"));
 				if (res.isLightningImmune())
-					strcat(tempstr, _("Lightning "));
-				string_view str { tempstr };
-				str.remove_suffix(str.size() - FindLastUtf8Symbols(str));
-				AddPanelString(str);
+					immune.append(_(" Lightning"));
+				AddPanelString(immune);
 			}
 		} else {
-			strcpy(tempstr, _("No magic resistance"));
-			AddPanelString(tempstr);
+			AddPanelString(_("No magic resistance"));
 		}
 	}
 }
@@ -4742,19 +4736,18 @@ void PrintUniqueHistory()
 	MonsterResists const res = monster.mResists;
 	if (res.hasResistancesOrImmunities()) {
 		if (res.hasResistances())
-			strcpy(tempstr, _("Some Magic Resistances"));
+			AddPanelString(_("Some Magic Resistances"));
 		else
-			strcpy(tempstr, _("No resistances"));
+			AddPanelString(_("No resistances"));
 		AddPanelString(tempstr);
 		if (res.hasImmunities()) {
-			strcpy(tempstr, _("Some Magic Immunities"));
+			AddPanelString(_("Some Magic Immunities"));
 		} else {
 			AddPanelString(_("No Immunities"));
 		}
 	} else {
-		strcpy(tempstr, _("No resistances"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("No Immunities"));
+		AddPanelString(_("No resistances"));
+		AddPanelString(_("No Immunities"));
 	}
 }
 
