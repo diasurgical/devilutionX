@@ -244,10 +244,10 @@ bool SpawnWindow(const char *lpWindowName)
 	}
 
 	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.width, windowSize.height, flags);
-    
-    if (ghMainWnd != nullptr)
-        SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
-    
+
+	if (ghMainWnd != nullptr)
+		SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
+
 #endif
 	if (ghMainWnd == nullptr) {
 		ErrSdl();
