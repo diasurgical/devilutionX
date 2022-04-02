@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-31 01:58+0200\n"
+"POT-Creation-Date: 2022-04-02 17:52+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -492,27 +492,17 @@ msgid ""
 msgstr "Създайте публична игра с трудност по Ваш избор."
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter Game ID to join a game already in progress."
-msgstr "Напишете IP или hostname и се присъединете към текущата игра."
+msgstr "Въведете Game ID за да се присъединете към игра."
 
 #: Source/DiabloUI/selgame.cpp:196
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter an IP or a hostname to join a game already in progress."
-msgstr "Напишете IP или hostname и се присъединете към текущата игра."
+msgstr "Въведете IP или hostname и се присъединете към текущата игра."
 
 #: Source/DiabloUI/selgame.cpp:201
-#, fuzzy
-#| msgid "Join the public game already in progress at this address."
 msgid "Join the public game already in progress."
 msgstr ""
-"Присъединете към текущата публична игра на този адрес\n"
+"Присъединете към текущата публична игра.\n"
 "."
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
@@ -568,10 +558,8 @@ msgid "Join {:s} Games"
 msgstr "Присъедини се към {:s} игри"
 
 #: Source/DiabloUI/selgame.cpp:320
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter Game ID"
-msgstr "Въведете име"
+msgstr "Въведете Game ID"
 
 #: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
@@ -1059,7 +1047,7 @@ msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Заряд"
 msgstr[1] "{:d} Заряди"
 
-#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
+#: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3480
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} златна монета"
@@ -1099,23 +1087,23 @@ msgstr ""
 "\n"
 "Уверете се, че файлът devilutionx.mpq е в папката на играта и е актуален."
 
-#: Source/cursor.cpp:220
+#: Source/cursor.cpp:223
 msgid "Town Portal"
 msgstr "Градски портал"
 
-#: Source/cursor.cpp:221
+#: Source/cursor.cpp:224
 msgid "from {:s}"
 msgstr "от {:s}"
 
-#: Source/cursor.cpp:235
+#: Source/cursor.cpp:238
 msgid "Portal to"
 msgstr "Портал до"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "The Unholy Altar"
 msgstr "Нечестивия олтар"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "level 15"
 msgstr "Ниво 15 "
 
@@ -4029,19 +4017,19 @@ msgstr "Десен клик за прочитане"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
 msgid "Select from spell book, then"
-msgstr ""
+msgstr "Изберете от книгата със заклинания,"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
-msgstr ""
+msgstr "след това изричане на заклинанието за прочит "
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
-msgstr ""
+msgstr "Отворете инвентар за да използвате"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
-msgstr ""
+msgstr "Активиране за прочит"
 
 #: Source/items.cpp:1825
 msgid "Right-click to read, then"
@@ -4057,7 +4045,7 @@ msgstr "Десен клик за използване"
 
 #: Source/items.cpp:1854
 msgid "Activate to use"
-msgstr ""
+msgstr "Активиране за използване"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -4065,7 +4053,7 @@ msgstr "Десен клик за поглед"
 
 #: Source/items.cpp:1869
 msgid "Activate to view"
-msgstr ""
+msgstr "Активиране за поглед"
 
 #: Source/items.cpp:1873
 msgctxt "player"
@@ -4093,7 +4081,7 @@ msgid " {:d} Dex"
 msgstr " {:d} Сръч"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3250 Source/player.cpp:3149
+#: Source/items.cpp:3250 Source/player.cpp:3148
 msgid "Ear of {:s}"
 msgstr "Ухо на {:s}"
 
@@ -4501,19 +4489,19 @@ msgstr "уникат"
 msgid "Not Identified"
 msgstr "Неразпознат"
 
-#: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
+#: Source/loadsave.cpp:1832 Source/loadsave.cpp:2338
 msgid "Unable to open save file archive"
 msgstr "Невъзможно отваряне на файл за запис"
 
-#: Source/loadsave.cpp:1833
+#: Source/loadsave.cpp:1835
 msgid "Invalid save file"
 msgstr "Невалиден файлов запис"
 
-#: Source/loadsave.cpp:1864
+#: Source/loadsave.cpp:1866
 msgid "Player is on a Hellfire only level"
 msgstr "Играчът е на ниво само за Hellfire"
 
-#: Source/loadsave.cpp:2095
+#: Source/loadsave.cpp:2100
 msgid "Invalid game state"
 msgstr "Невалидно игрово състояние"
 
@@ -6347,14 +6335,13 @@ msgstr ""
 "анимация на вода, лава и киселина."
 
 #: Source/options.cpp:755
-#, fuzzy
-#| msgid "Use alternate nest palette"
 msgid "Alternate nest art"
-msgstr "Използване на вторична палитра за ниво Свърталище"
+msgstr "Алтернативна палитра за Свърталище"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
 msgstr ""
+"Играта ще използва алтернативна палитра за Hellfire нивата от Свърталището."
 
 #: Source/options.cpp:757
 msgid "Hardware Cursor"
@@ -6948,7 +6935,7 @@ msgstr "История на Чата (Съобщения: {:d})"
 msgid "{:d} gold"
 msgstr "{:d} злато"
 
-#: Source/qol/stash.cpp:586
+#: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"
 msgstr "Колко златни монети искате да изтеглите?"
 
