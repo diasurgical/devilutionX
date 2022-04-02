@@ -7,6 +7,7 @@
 #include "engine.h"
 #include "gmenu.h"
 #include "inv.h"
+#include "qol/stash.h"
 #include "scrollrt.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"
@@ -29,8 +30,16 @@ void SimulateMouseMovement(const SDL_Event &event)
 {
 	Point position = ScaleToScreenCoordinates(event.tfinger.x, event.tfinger.y);
 
-	if (!spselflag && invflag && !GetMainPanel().Contains(position) && !GetRightPanel().Contains(position))
-		return;
+	bool isInMainPanel = GetMainPanel().Contains(position);
+	bool isInLeftPanel = GetLeftPanel().Contains(position);
+	bool isInRightPanel = GetRightPanel().Contains(position);
+	if (IsStashOpen) {
+		if (!spselflag && !isInMainPanel && !isInLeftPanel && !isInRightPanel)
+			return;
+	} else if (invflag) {
+		if (!spselflag && !isInMainPanel && !isInRightPanel)
+			return;
+	}
 
 	MousePosition = position;
 
@@ -86,6 +95,18 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 	}
 }
 
+void HandleStashPanelInteraction(const SDL_Event &event)
+{
+	if (pcurs >= CURSOR_FIRSTITEM)
+		return;
+
+	if (event.type != SDL_FINGERUP) {
+		CheckStashButtonPress(MousePosition);
+	} else {
+		CheckStashButtonRelease(MousePosition);
+	}
+}
+
 } // namespace
 
 void HandleTouchEvent(const SDL_Event &event)
@@ -112,6 +133,7 @@ void HandleTouchEvent(const SDL_Event &event)
 		return;
 
 	HandleBottomPanelInteraction(event);
+	HandleStashPanelInteraction(event);
 }
 
 bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)
