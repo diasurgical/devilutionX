@@ -17,11 +17,11 @@
 #include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
+#include "engine/load_pcx_as_cel.hpp"
 #include "engine/point.hpp"
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/language.h"
-#include "utils/pcx_to_cel.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/utf8.hpp"
@@ -194,17 +194,10 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 	GetFontPath(size, row, &path[0]);
 
 	std::optional<OwnedCelSpriteWithFrameHeight> &font = Fonts[fontId];
-	SDL_RWops *handle = OpenAsset(path);
-	if (handle == nullptr) {
-		LogError("Missing font: {}", path);
-		return nullptr;
-	}
-
 	constexpr unsigned NumFrames = 256;
-	font = LoadPcxAsCel(handle, NumFrames, /*generateFrameHeaders=*/false);
-	if (font->sprite.Data() == nullptr) {
+	font = LoadPcxAssetAsCel(path, NumFrames);
+	if (!font) {
 		LogError("Error loading font: {}", path);
-		font = std::nullopt;
 		return nullptr;
 	}
 
