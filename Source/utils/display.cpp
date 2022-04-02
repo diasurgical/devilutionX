@@ -245,8 +245,9 @@ bool SpawnWindow(const char *lpWindowName)
 
 	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.width, windowSize.height, flags);
 
-    // Note: https://github.com/libsdl-org/SDL/issues/962
-    // This is a solution to a problem related to SDL mouse grab.
+	// Note: https://github.com/libsdl-org/SDL/issues/962
+	// This is a solution to a problem related to SDL mouse grab.
+	// See https://github.com/diasurgical/devilutionX/issues/4251
 	if (ghMainWnd != nullptr)
 		SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
 
