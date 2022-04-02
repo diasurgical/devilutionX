@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2022-03-31 09:36-0300\n"
-"PO-Revision-Date: 2022-03-31 10:00-0300\n"
+"PO-Revision-Date: 2022-04-02 13:09-0300\n"
 "Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -283,7 +283,7 @@ msgstr "\t\t\tSierra On-Line Inc. Noroeste"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr "Gerente de Garantía de la Calidad"
+msgstr "Gerente de Garantía de Calidad"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
@@ -384,7 +384,7 @@ msgstr "Requisitos:"
 
 #: Source/DiabloUI/selconn.cpp:66
 msgid "no gateway needed"
-msgstr "sin puerta de enlace"
+msgstr "no se necesita puerta de enlace"
 
 #: Source/DiabloUI/selconn.cpp:72
 msgid "Select Connection"
@@ -439,7 +439,7 @@ msgstr "El equipo está ejecutando un modo de juego ({:s}) diferente al tuyo."
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:99
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
-msgstr "Su versión {:s} no coincide con el host {:d}.{:d}.{:d}."
+msgstr "Su versión {:s} no coincide con el anfitrión {:d}.{:d}.{:d}."
 
 #: Source/DiabloUI/selgame.cpp:134 Source/DiabloUI/selgame.cpp:533
 msgid "Description:"
@@ -505,7 +505,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:201
 msgid "Join the public game already in progress."
-msgstr "Únase a un juego público que ya esté en curso."
+msgstr "Unirse a un juego público que ya esté en curso."
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
@@ -4024,7 +4024,7 @@ msgstr "Haga clic derecho para leer"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
 msgid "Select from spell book, then"
-msgstr "Seleccionar desde el libro de hechizos, entoncesl"
+msgstr "Seleccionar desde el libro de hechizos, entonces"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
