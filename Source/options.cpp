@@ -55,7 +55,7 @@ constexpr OptionEntryFlags OnlyIfNoImplicitRenderer = OptionEntryFlags::Invisibl
 constexpr OptionEntryFlags OnlyIfNoImplicitRenderer = OptionEntryFlags::None;
 #endif
 
-#if defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
+#if defined(__ANDROID__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1)
 constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::Invisible;
 #else
 constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::None;
@@ -221,7 +221,7 @@ void SaveIni()
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorDefault()
 {
-#if defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
+#if defined(__ANDROID__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1)
 	// See https://github.com/diasurgical/devilutionX/issues/2502
 	return false;
 #else
@@ -306,7 +306,7 @@ Options sgOptions;
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorSupported()
 {
-#if defined(TARGET_OS_IPHONE)
+#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1)
 	return false;
 #else
 	SDL_version v;
