@@ -34,13 +34,9 @@ namespace {
 
 constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 
-#ifdef DEVILUTIONX_CONVERT_FONTS_TO_CEL
 using Font = const OwnedCelSpriteWithFrameHeight;
 std::unordered_map<uint32_t, std::optional<OwnedCelSpriteWithFrameHeight>> Fonts;
-#else
-using Font = Art;
-std::unordered_map<uint32_t, Art> Fonts;
-#endif
+
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
 std::array<uint8_t, 6> CJKWidth = { 17, 24, 28, 41, 47, 16 };
@@ -180,7 +176,6 @@ void GetFontPath(GameFontTables size, uint16_t row, char *out)
 	sprintf(out, "fonts\\%i-%02x.pcx", FontSizes[size], row);
 }
 
-#ifdef DEVILUTIONX_CONVERT_FONTS_TO_CEL
 const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color color, uint16_t row)
 {
 	const uint32_t fontId = GetFontId(size, color, row);
@@ -214,40 +209,6 @@ void DrawFont(const Surface &out, Point position, const OwnedCelSpriteWithFrameH
 {
 	CelDrawTo(out, { position.x, static_cast<int>(position.y + font->frameHeight) }, CelSprite { font->sprite }, frame);
 }
-#else
-Art *LoadFont(GameFontTables size, text_color color, uint16_t row)
-{
-	const uint32_t fontId = GetFontId(size, color, row);
-
-	auto hotFont = Fonts.find(fontId);
-	if (hotFont != Fonts.end()) {
-		return &hotFont->second;
-	}
-
-	char path[32];
-	GetFontPath(size, row, &path[0]);
-
-	auto *font = &Fonts[fontId];
-
-	if (ColorTranlations[color] != nullptr) {
-		std::array<uint8_t, 256> colorMapping;
-		LoadFileInMem(ColorTranlations[color], colorMapping);
-		LoadMaskedArt(path, font, 256, 1, &colorMapping);
-	} else {
-		LoadMaskedArt(path, font, 256, 1);
-	}
-	if (font->surface == nullptr) {
-		LogError("Missing font: {}", path);
-	}
-
-	return font;
-}
-
-void DrawFont(const Surface &out, Point position, Art *font, int frame)
-{
-	DrawArt(out, position, font, frame);
-}
-#endif
 
 bool IsWhitespace(char32_t c)
 {
