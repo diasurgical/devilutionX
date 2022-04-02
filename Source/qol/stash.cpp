@@ -536,6 +536,7 @@ void StashStruct::RemoveStashItem(uint16_t iv)
 void StashStruct::SetPage(unsigned newPage)
 {
 	page = std::min(newPage, LastStashPage);
+	dirty = true;
 }
 
 void StashStruct::NextPage(unsigned offset)
@@ -545,6 +546,7 @@ void StashStruct::NextPage(unsigned offset)
 	} else {
 		page = LastStashPage;
 	}
+	dirty = true;
 }
 
 void StashStruct::PreviousPage(unsigned offset)
@@ -554,6 +556,7 @@ void StashStruct::PreviousPage(unsigned offset)
 	} else {
 		page = LastStashPage;
 	}
+	dirty = true;
 }
 
 void StashStruct::RefreshItemStatFlags()
