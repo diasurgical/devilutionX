@@ -94,6 +94,11 @@ inline CelSprite::CelSprite(const OwnedCelSprite &owned)
 {
 }
 
+struct CelSpriteWithFrameHeight {
+	CelSprite sprite;
+	unsigned frameHeight;
+};
+
 struct OwnedCelSpriteWithFrameHeight {
 	OwnedCelSprite sprite;
 	unsigned frameHeight;

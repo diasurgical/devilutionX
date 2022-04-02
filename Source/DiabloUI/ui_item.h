@@ -7,6 +7,7 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
+#include "engine/cel_sprite.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
@@ -18,6 +19,7 @@ enum class UiType {
 	ArtText,
 	ArtTextButton,
 	Image,
+	ImageCel,
 	Button,
 	List,
 	Scrollbar,
@@ -125,6 +127,48 @@ public:
 
 private:
 	Art *art_;
+	bool animated_;
+	int frame_;
+};
+
+//=============================================================================
+class UiImageCel : public UiItemBase {
+public:
+	UiImageCel(CelSpriteWithFrameHeight sprite, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
+	    : UiItemBase(UiType::ImageCel, rect, flags)
+	    , sprite_(sprite)
+	    , animated_(animated)
+	    , frame_(frame)
+	{
+	}
+
+	[[nodiscard]] bool IsCentered() const
+	{
+		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
+	}
+
+	[[nodiscard]] CelSpriteWithFrameHeight GetSprite() const
+	{
+		return sprite_;
+	}
+
+	[[nodiscard]] bool IsAnimated() const
+	{
+		return animated_;
+	}
+
+	[[nodiscard]] int GetFrame() const
+	{
+		return frame_;
+	}
+
+	void SetFrame(int frame)
+	{
+		frame_ = frame;
+	}
+
+private:
+	CelSpriteWithFrameHeight sprite_;
 	bool animated_;
 	int frame_;
 };

@@ -7,6 +7,7 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
+#include "engine/cel_sprite.hpp"
 #include "player.h"
 #include "utils/display.h"
 
@@ -66,8 +67,8 @@ struct _uiheroinfo {
 	bool spawned;
 };
 
-extern std::array<Art, 3> ArtLogos;
-extern std::array<Art, 3> ArtFocus;
+extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
+extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 extern Art ArtBackground;
 extern Art ArtBackgroundWidescreen;
 extern Art ArtCursor;
