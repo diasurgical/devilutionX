@@ -18,8 +18,6 @@ namespace devilution {
 
 namespace {
 
-constexpr uint8_t PcxTransparentColorIndex = 1;
-
 void WriteLE32(uint8_t *out, uint32_t val)
 {
 	const uint32_t littleEndian = SDL_SwapLE32(val);
@@ -32,26 +30,40 @@ void WriteLE16(uint8_t *out, uint16_t val)
 	memcpy(out, &littleEndian, 2);
 }
 
-void AppendCelTransparentRun(uint8_t width, std::vector<uint8_t> &out)
+void AppendCelTransparentRun(unsigned width, std::vector<uint8_t> &out)
 {
+	while (width >= 128) {
+		out.push_back(0x80);
+		width -= 128;
+	}
+	if (width == 0)
+		return;
 	out.push_back(0xFF - (width - 1));
 }
 
 void AppendCelSolidRun(const uint8_t *src, unsigned width, std::vector<uint8_t> &out)
 {
-	assert(width < 126);
+	while (width >= 127) {
+		out.push_back(127);
+		for (size_t i = 0; i < 127; ++i)
+			out.push_back(src[i]);
+		width -= 127;
+		src += 127;
+	}
+	if (width == 0)
+		return;
 	out.push_back(width);
 	for (size_t i = 0; i < width; ++i)
 		out.push_back(src[i]);
 }
 
-void AppendCelLine(const uint8_t *src, unsigned width, std::vector<uint8_t> &out)
+void AppendCelLine(const uint8_t *src, unsigned width, uint8_t transparentColorIndex, std::vector<uint8_t> &out)
 {
 	unsigned runBegin = 0;
 	bool transparentRun = false;
 	for (unsigned i = 0; i < width; ++i) {
 		const uint8_t pixel = src[i];
-		if (pixel == PcxTransparentColorIndex) {
+		if (pixel == transparentColorIndex) {
 			if (transparentRun)
 				continue;
 			if (runBegin != i)
@@ -73,7 +85,7 @@ void AppendCelLine(const uint8_t *src, unsigned width, std::vector<uint8_t> &out
 
 } // namespace
 
-std::optional<OwnedCelSpriteWithFrameHeight> LoadPcxAsCel(SDL_RWops *handle, unsigned numFrames, bool generateFrameHeaders)
+std::optional<OwnedCelSpriteWithFrameHeight> LoadPcxAsCel(SDL_RWops *handle, unsigned numFrames, bool generateFrameHeaders, uint8_t transparentColorIndex)
 {
 	int width;
 	int height;
@@ -83,10 +95,9 @@ std::optional<OwnedCelSpriteWithFrameHeight> LoadPcxAsCel(SDL_RWops *handle, uns
 		return std::nullopt;
 	}
 	assert(bpp == 8);
-	assert(width <= 128);
 
-	uint32_t pixelDataSize = SDL_RWsize(handle);
-	if (pixelDataSize == static_cast<uint32_t>(-1)) {
+	ptrdiff_t pixelDataSize = SDL_RWsize(handle);
+	if (pixelDataSize < 0) {
 		SDL_RWclose(handle);
 		return std::nullopt;
 	}
@@ -141,20 +152,20 @@ std::optional<OwnedCelSpriteWithFrameHeight> LoadPcxAsCel(SDL_RWops *handle, uns
 
 		size_t line = frameHeight;
 		while (line-- != 0) {
-			AppendCelLine(&frameBuffer[line * width], width, celData);
+			AppendCelLine(&frameBuffer[line * width], width, transparentColorIndex, celData);
 			if (generateFrameHeaders) {
 				switch (line) {
 				case 32:
-					WriteLE16(&celData[frameHeaderPos + 2], celData.size() - frameHeaderPos);
+					WriteLE16(&celData[frameHeaderPos + 2], static_cast<uint16_t>(celData.size() - frameHeaderPos));
 					break;
 				case 64:
-					WriteLE16(&celData[frameHeaderPos + 4], celData.size() - frameHeaderPos);
+					WriteLE16(&celData[frameHeaderPos + 4], static_cast<uint16_t>(celData.size() - frameHeaderPos));
 					break;
 				case 96:
-					WriteLE16(&celData[frameHeaderPos + 6], celData.size() - frameHeaderPos);
+					WriteLE16(&celData[frameHeaderPos + 6], static_cast<uint16_t>(celData.size() - frameHeaderPos));
 					break;
 				case 128:
-					WriteLE16(&celData[frameHeaderPos + 8], celData.size() - frameHeaderPos);
+					WriteLE16(&celData[frameHeaderPos + 8], static_cast<uint16_t>(celData.size() - frameHeaderPos));
 					break;
 				}
 			}
@@ -168,7 +179,7 @@ std::optional<OwnedCelSpriteWithFrameHeight> LoadPcxAsCel(SDL_RWops *handle, uns
 	memcpy(&out[0], celData.data(), celData.size());
 	return OwnedCelSpriteWithFrameHeight {
 		OwnedCelSprite { std::move(out), static_cast<uint16_t>(width) },
-		static_cast<unsigned>(frameHeight)
+		frameHeight
 	};
 }
 

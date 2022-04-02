@@ -84,6 +84,7 @@ set(libdevilutionx_SRCS
   engine/demomode.cpp
   engine/direction.cpp
   engine/load_cel.cpp
+  engine/load_pcx_as_cel.cpp
   engine/random.cpp
   engine/render/automap_render.cpp
   engine/render/cel_render.cpp
