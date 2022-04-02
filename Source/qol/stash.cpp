@@ -29,6 +29,7 @@ int WithdrawGoldValue;
 namespace {
 
 constexpr unsigned CountStashPages = 50;
+constexpr unsigned LastStashPage = CountStashPages - 1;
 
 int InitialWithdrawGoldValue;
 
@@ -293,19 +294,19 @@ void CheckStashButtonRelease(Point mousePosition)
 	if (stashButton.Contains(mousePosition)) {
 		switch (StashButtonPressed) {
 		case 0:
-			Stash.SetPage(Stash.GetPage() - 10);
+			Stash.PreviousPage(10);
 			break;
 		case 1:
-			Stash.SetPage(Stash.GetPage() - 1);
+			Stash.PreviousPage();
 			break;
 		case 2:
 			StartGoldWithdraw();
 			break;
 		case 3:
-			Stash.SetPage(Stash.GetPage() + 1);
+			Stash.NextPage();
 			break;
 		case 4:
-			Stash.SetPage(Stash.GetPage() + 10);
+			Stash.NextPage(10);
 			break;
 		}
 	}
@@ -534,7 +535,28 @@ void StashStruct::RemoveStashItem(uint16_t iv)
 
 void StashStruct::SetPage(unsigned newPage)
 {
-	page = std::min(newPage, CountStashPages - 1);
+	page = std::min(newPage, LastStashPage);
+	dirty = true;
+}
+
+void StashStruct::NextPage(unsigned offset)
+{
+	if (page <= LastStashPage) {
+		page += std::min(offset, LastStashPage - page);
+	} else {
+		page = LastStashPage;
+	}
+	dirty = true;
+}
+
+void StashStruct::PreviousPage(unsigned offset)
+{
+	if (page <= LastStashPage) {
+		page -= std::min(offset, page);
+	} else {
+		page = LastStashPage;
+	}
+	dirty = true;
 }
 
 void StashStruct::RefreshItemStatFlags()

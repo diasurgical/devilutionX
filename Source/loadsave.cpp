@@ -1809,6 +1809,8 @@ void LoadStash()
 	for (unsigned i = 0; i < itemCount; i++) {
 		LoadItemData(file, Stash.stashList[i]);
 	}
+
+	Stash.SetPage(file.NextLE<uint32_t>());
 }
 
 void RemoveEmptyInventory(Player &player)
@@ -2055,7 +2057,8 @@ void SaveStash()
 	        + sizeof(uint32_t)
 	        + (sizeof(uint32_t) + 10 * 10 * sizeof(uint16_t)) * Stash.stashGrids.size()
 	        + sizeof(uint32_t)
-	        + itemSize * Stash.stashList.size());
+	        + itemSize * Stash.stashList.size()
+	        + sizeof(uint32_t));
 
 	file.WriteLE<uint8_t>(StashVersion);
 
@@ -2077,6 +2080,8 @@ void SaveStash()
 	for (const Item &item : Stash.stashList) {
 		SaveItem(file, item);
 	}
+
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.GetPage()));
 }
 
 void SaveGameData()

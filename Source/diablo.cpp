@@ -510,7 +510,7 @@ void PressKey(int vkey)
 		} else if (AutomapActive) {
 			AutomapUp();
 		} else if (IsStashOpen) {
-			Stash.SetPage(Stash.GetPage() - 1);
+			Stash.PreviousPage();
 		}
 	} else if (vkey == DVL_VK_DOWN) {
 		if (stextflag != STORE_NONE) {
@@ -524,7 +524,7 @@ void PressKey(int vkey)
 		} else if (AutomapActive) {
 			AutomapDown();
 		} else if (IsStashOpen) {
-			Stash.SetPage(Stash.GetPage() + 1);
+			Stash.NextPage();
 		}
 	} else if (vkey == DVL_VK_PRIOR) {
 		if (stextflag != STORE_NONE) {

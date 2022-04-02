@@ -28,6 +28,9 @@ public:
 	}
 
 	void SetPage(unsigned newPage);
+	void NextPage(unsigned offset = 1);
+	void PreviousPage(unsigned offset = 1);
+
 	/** @brief Updates _iStatFlag for all stash items. */
 	void RefreshItemStatFlags();
 
