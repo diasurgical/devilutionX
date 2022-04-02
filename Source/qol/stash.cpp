@@ -52,8 +52,8 @@ Art StashNavButtonArt;
  */
 void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, Size itemSize)
 {
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, itemSize })) {
-		Stash.stashGrids[page][position.x + point.x][position.y + point.y] = stashListIndex + 1;
+	for (auto point : PointsInRectangleRange({ position, itemSize })) {
+		Stash.stashGrids[page][point.x][point.y] = stashListIndex + 1;
 	}
 }
 
