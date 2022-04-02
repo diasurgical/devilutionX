@@ -88,6 +88,9 @@ _speech_id gossipstart;
 /** End of possible gossip dialogs for current store */
 _speech_id gossipend;
 
+/** Temporary item used to hold the the item being traided */
+Item StoreItem;
+
 /** Maps from towner IDs to NPC names. */
 const char *const TownerNames[] = {
 	N_("Griswold"),
@@ -290,19 +293,19 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 	AddSText(40, l++, productLine, flags, false);
 }
 
-void StoreAutoPlace()
+bool StoreAutoPlace(Item &item, bool persistItem)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem)) {
-		return;
+	if (AutoEquipEnabled(myPlayer, item) && AutoEquip(MyPlayerId, item, persistItem)) {
+		return true;
 	}
 
-	if (AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, true)) {
-		return;
+	if (AutoPlaceItemInBelt(myPlayer, item, persistItem)) {
+		return true;
 	}
 
-	AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true);
+	return AutoPlaceItemInInventory(myPlayer, item, persistItem);
 }
 
 void StartSmith()
@@ -933,13 +936,11 @@ void StoreNoRoom()
 	AddSText(0, 14, _("You do not have enough room in inventory"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 }
 
-void StoreConfirm()
+void StoreConfirm(Item &item)
 {
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-
-	auto &item = Players[MyPlayerId].HoldItem;
 
 	UiFlags itemColor = item.getTextColorWithStatCheck();
 
@@ -1240,13 +1241,11 @@ void StartStorytellerIdentify()
 	AddItemListBackButton();
 }
 
-void StartStorytellerIdentifyShow()
+void StartStorytellerIdentifyShow(Item &item)
 {
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-
-	auto &item = Players[MyPlayerId].HoldItem;
 
 	UiFlags itemColor = item.getTextColorWithStatCheck();
 
@@ -1369,15 +1368,12 @@ void SmithEnter()
 /**
  * @brief Purchases an item from the smith.
  */
-void SmithBuyItem()
+void SmithBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	auto &item = myPlayer.HoldItem;
-
 	TakePlrsMoney(item._iIvalue);
 	if (item._iMagical == ITEM_QUALITY_NORMAL)
 		item._iIdentified = false;
-	StoreAutoPlace();
+	StoreAutoPlace(item, true);
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == SMITH_ITEMS - 1) {
 		smithitem[SMITH_ITEMS - 1]._itype = ItemType::None;
@@ -1387,7 +1383,7 @@ void SmithBuyItem()
 		}
 		smithitem[idx]._itype = ItemType::None;
 	}
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 }
 
 void SmithBuyEnter()
@@ -1402,37 +1398,30 @@ void SmithBuyEnter()
 	stextvhold = stextsval;
 	stextshold = STORE_SBUY;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
 	if (!PlayerCanAfford(smithitem[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = smithitem[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(smithitem[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = smithitem[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 /**
  * @brief Purchases a premium item from the smith.
  */
-void SmithBuyPItem()
+void SmithBuyPItem(Item &item)
 {
-	auto &item = Players[MyPlayerId].HoldItem;
-
 	TakePlrsMoney(item._iIvalue);
-
 	if (item._iMagical == ITEM_QUALITY_NORMAL)
 		item._iIdentified = false;
-
-	StoreAutoPlace();
+	StoreAutoPlace(item, true);
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	int xx = 0;
@@ -1469,28 +1458,25 @@ void SmithPremiumBuyEnter()
 		}
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	if (!PlayerCanAfford(premiumitems[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = premiumitems[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(premiumitems[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = premiumitems[idx];
+	StartStore(STORE_CONFIRM);
 }
 
-bool StoreGoldFit(int idx)
+bool StoreGoldFit(Item &item)
 {
-	int cost = storehold[idx]._iIvalue;
+	int cost = item._iIvalue;
 
-	Size itemSize = GetInventorySize(storehold[idx]);
+	Size itemSize = GetInventorySize(item);
 	int itemRoomForGold = itemSize.width * itemSize.height * MaxGold;
 
 	if (cost <= itemRoomForGold) {
@@ -1537,30 +1523,33 @@ void SmithSellEnter()
 	}
 
 	stextlhold = stextsel;
-	int idx = stextsval + ((stextsel - stextup) / 4);
 	stextshold = STORE_SSELL;
 	stextvhold = stextsval;
-	Players[MyPlayerId].HoldItem = storehold[idx];
 
-	if (StoreGoldFit(idx))
-		StartStore(STORE_CONFIRM);
-	else
+	int idx = stextsval + ((stextsel - stextup) / 4);
+
+	if (!StoreGoldFit(storehold[idx])) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 /**
  * @brief Repairs an item in the player's inventory or body in the smith.
  */
-void SmithRepairItem()
+void SmithRepairItem(int price)
 {
-	auto &myPlayer = Players[MyPlayerId];
-
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+	TakePlrsMoney(price);
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iDurability = storehold[idx]._iMaxDur;
 
 	int8_t i = storehidx[idx];
+
+	auto &myPlayer = *MyPlayer;
 
 	if (i < 0) {
 		if (i == -1)
@@ -1591,13 +1580,13 @@ void SmithRepairEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	auto &myPlayer = Players[MyPlayerId];
-
-	myPlayer.HoldItem = storehold[idx];
-	if (!PlayerCanAfford(storehold[idx]._iIvalue))
+	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
-	else
-		StartStore(STORE_CONFIRM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void WitchEnter()
@@ -1629,17 +1618,15 @@ void WitchEnter()
 /**
  * @brief Purchases an item from the witch.
  */
-void WitchBuyItem()
+void WitchBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 
 	if (idx < 3)
-		myPlayer.HoldItem._iSeed = AdvanceRndSeed();
+		item._iSeed = AdvanceRndSeed();
 
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
-	StoreAutoPlace();
+	TakePlrsMoney(item._iIvalue);
+	StoreAutoPlace(item, true);
 
 	if (idx >= 3) {
 		if (idx == WITCH_ITEMS - 1) {
@@ -1652,7 +1639,7 @@ void WitchBuyItem()
 		}
 	}
 
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 }
 
 void WitchBuyEnter()
@@ -1667,8 +1654,6 @@ void WitchBuyEnter()
 	stextvhold = stextsval;
 	stextshold = STORE_WBUY;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
 	if (!PlayerCanAfford(witchitem[idx]._iIvalue)) {
@@ -1676,14 +1661,13 @@ void WitchBuyEnter()
 		return;
 	}
 
-	myPlayer.HoldItem = witchitem[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false) || AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(witchitem[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = witchitem[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void WitchSellEnter()
@@ -1699,24 +1683,27 @@ void WitchSellEnter()
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	Players[MyPlayerId].HoldItem = storehold[idx];
-	if (StoreGoldFit(idx))
-		StartStore(STORE_CONFIRM);
-	else
+
+	if (!StoreGoldFit(storehold[idx])) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 /**
  * @brief Recharges an item in the player's inventory or body in the witch.
  */
-void WitchRechargeItem()
+void WitchRechargeItem(int price)
 {
-	auto &myPlayer = Players[MyPlayerId];
-
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+	TakePlrsMoney(price);
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iCharges = storehold[idx]._iMaxCharges;
+
+	auto &myPlayer = *MyPlayer;
 
 	int8_t i = storehidx[idx];
 	if (i < 0)
@@ -1739,14 +1726,15 @@ void WitchRechargeEnter()
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	myPlayer.HoldItem = storehold[idx];
-	if (!PlayerCanAfford(storehold[idx]._iIvalue))
+
+	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
-	else
-		StartStore(STORE_CONFIRM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void BoyEnter()
@@ -1777,25 +1765,21 @@ void BoyEnter()
 	StartStore(STORE_GOSSIP);
 }
 
-void BoyBuyItem()
+void BoyBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
-	StoreAutoPlace();
+	TakePlrsMoney(item._iIvalue);
+	StoreAutoPlace(item, true);
 	boyitem._itype = ItemType::None;
 	stextshold = STORE_BOY;
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 	stextlhold = 12;
 }
 
 /**
  * @brief Purchases an item from the healer.
  */
-void HealerBuyItem()
+void HealerBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	auto &item = myPlayer.HoldItem;
-
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (!gbIsMultiplayer) {
 		if (idx < 2)
@@ -1808,7 +1792,7 @@ void HealerBuyItem()
 	TakePlrsMoney(item._iIvalue);
 	if (item._iMagical == ITEM_QUALITY_NORMAL)
 		item._iIdentified = false;
-	StoreAutoPlace();
+	StoreAutoPlace(item, true);
 
 	if (!gbIsMultiplayer) {
 		if (idx < 2)
@@ -1826,7 +1810,7 @@ void HealerBuyItem()
 		}
 		healitem[idx]._itype = ItemType::None;
 	}
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 }
 
 void BoyBuyEnter()
@@ -1845,29 +1829,22 @@ void BoyBuyEnter()
 	else
 		price += boyitem._iIvalue / 2;
 
-	auto &myPlayer = Players[MyPlayerId];
-
-	if (!PlayerCanAfford(price)) {
+	if (TotalPlayerGold() < price) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = boyitem;
-	myPlayer.HoldItem._iIvalue = price;
-
-	bool done = false;
-	if (AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false)) {
-		done = true;
+	if (!StoreAutoPlace(boyitem, false)) {
+		StartStore(STORE_NOROOM);
+		return;
 	}
 
-	if (!done) {
-		done = AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false);
-	}
-
-	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
+	StoreItem = boyitem;
+	StoreItem._iIvalue = price;
+	StartStore(STORE_CONFIRM);
 }
 
-void StorytellerIdentifyItem()
+void StorytellerIdentifyItem(Item &item)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -1890,43 +1867,43 @@ void StorytellerIdentifyItem()
 	} else {
 		myPlayer.InvList[idx]._iIdentified = true;
 	}
-	myPlayer.HoldItem._iIdentified = true;
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+	item._iIdentified = true;
+	TakePlrsMoney(item._iIvalue);
 	CalcPlrInv(myPlayer, true);
 }
 
-void ConfirmEnter()
+void ConfirmEnter(Item &item)
 {
 	if (stextsel == 18) {
 		switch (stextshold) {
 		case STORE_SBUY:
-			SmithBuyItem();
+			SmithBuyItem(item);
 			break;
 		case STORE_SSELL:
 		case STORE_WSELL:
 			StoreSellItem();
 			break;
 		case STORE_SREPAIR:
-			SmithRepairItem();
+			SmithRepairItem(item._iIvalue);
 			break;
 		case STORE_WBUY:
-			WitchBuyItem();
+			WitchBuyItem(item);
 			break;
 		case STORE_WRECHARGE:
-			WitchRechargeItem();
+			WitchRechargeItem(item._iIvalue);
 			break;
 		case STORE_BBOY:
-			BoyBuyItem();
+			BoyBuyItem(item);
 			break;
 		case STORE_HBUY:
-			HealerBuyItem();
+			HealerBuyItem(item);
 			break;
 		case STORE_SIDENTIFY:
-			StorytellerIdentifyItem();
+			StorytellerIdentifyItem(item);
 			StartStore(STORE_IDSHOW);
 			return;
 		case STORE_SPBUY:
-			SmithBuyPItem();
+			SmithBuyPItem(item);
 			break;
 		default:
 			break;
@@ -1980,21 +1957,18 @@ void HealerBuyEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	auto &myPlayer = Players[MyPlayerId];
-
-	if (!PlayerCanAfford(healitem[idx]._iIvalue)) {
+	if (TotalPlayerGold() < healitem[idx]._iIvalue) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = healitem[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false) || AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(healitem[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = healitem[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void StorytellerEnter()
@@ -2029,14 +2003,15 @@ void StorytellerIdentifyEnter()
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	myPlayer.HoldItem = storehold[idx];
-	if (!PlayerCanAfford(storehold[idx]._iIvalue))
+
+	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
-	else
-		StartStore(STORE_CONFIRM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void TalkEnter()
@@ -2364,7 +2339,7 @@ void StartStore(talk_id s)
 		StoreNoRoom();
 		break;
 	case STORE_CONFIRM:
-		StoreConfirm();
+		StoreConfirm(StoreItem);
 		break;
 	case STORE_BOY:
 		StartBoy();
@@ -2393,7 +2368,7 @@ void StartStore(talk_id s)
 		StartTalk();
 		break;
 	case STORE_IDSHOW:
-		StartStorytellerIdentifyShow();
+		StartStorytellerIdentifyShow(StoreItem);
 		break;
 	case STORE_TAVERN:
 		StartTavern();
@@ -2706,7 +2681,7 @@ void StoreEnter()
 		stextsval = stextvhold;
 		break;
 	case STORE_CONFIRM:
-		ConfirmEnter();
+		ConfirmEnter(StoreItem);
 		break;
 	case STORE_BOY:
 		BoyEnter();
