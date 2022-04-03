@@ -483,6 +483,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 		LoadItemData(file, item);
 
 	LoadItemData(file, player.HoldItem);
+	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 
 	player._pIMinDam = file.NextLE<int32_t>();
 	player._pIMaxDam = file.NextLE<int32_t>();
