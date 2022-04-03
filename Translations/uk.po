@@ -4034,7 +4034,7 @@ msgstr "Правий клік щоб використати"
 
 #: Source/items.cpp:1854
 msgid "Activate to use"
-msgstr "Активуйте що використати"
+msgstr "Активуйте щоб використати"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -5388,7 +5388,7 @@ msgstr "Приречений Гнівовогонь"
 #: Source/monstdat.cpp:525
 msgctxt "monster"
 msgid "Firewound the Grim"
-msgstr "Нежадний Вогнеран"
+msgstr "Нещадний Вогнеран"
 
 #: Source/monstdat.cpp:526
 msgctxt "monster"
@@ -8360,11 +8360,11 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
-"Заради Світла, я знаю цього мерзкого демона. Коли ті, хто пережив атаку, яку "
-"вів Лазарь, виповзли з собору — було багато тих, хто носив шрами його гніву "
-"на своїх тілах. Я не знаю, чим він розрізав своїх жертв, але це не могло "
-"бути з цього світу. Воно лишало рани, нагноєні хворобою, і я бачив, що їх "
-"майже неможливо вилікувати. Будь обережним, якщо плануєш битися з цим "
+"Заради Світла, я знаю цього мерзенного демона. Коли ті, хто пережив атаку, "
+"яку вів Лазарь, виповзли з собору — було багато тих, хто носив шрами його "
+"гніву на своїх тілах. Я не знаю, чим він розрізав своїх жертв, але це не "
+"могло бути з цього світу. Воно лишало рани, нагноєні хворобою, і я бачив, що "
+"їх майже неможливо вилікувати. Будь обережним, якщо плануєш битися з цим "
 "негідником…"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
@@ -8413,7 +8413,7 @@ msgid ""
 msgstr ""
 "М’ясник — садистська істота, яка насолоджується тортурами та болем інших. Ти "
 "бачив його роботу в п’яниці Фарнхемі. Його знищення зробить багато щоб "
-"запевнити безпеку цього села."
+"забезпечити безпеку цього села."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:135
@@ -9483,7 +9483,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
 msgid "What ails you, my friend?"
-msgstr "Що нездужує тебе, друже?"
+msgstr "Що турбує тебе, друже?"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:346
