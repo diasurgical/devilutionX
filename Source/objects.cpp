@@ -2959,6 +2959,7 @@ bool OperateShrineEldritch(int pnum)
 		}
 		if (IsAnyOf(item._iMiscId, IMISC_FULLHEAL, IMISC_FULLMANA)) {
 			InitializeItem(item, ItemMiscIdIdx(IMISC_FULLREJUV));
+			item._iStatFlag = true;
 			continue;
 		}
 	}
