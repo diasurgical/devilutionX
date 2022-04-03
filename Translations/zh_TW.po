@@ -583,7 +583,7 @@ msgstr "選​擇​難度"
 
 #: Source/DiabloUI/selgame.cpp:315
 msgid "Join {:s} Games"
-msgstr "加入​{:s}遊​戲"
+msgstr "加入​{:s}​遊戲"
 
 #: Source/DiabloUI/selgame.cpp:320
 msgid "Enter Game ID"
@@ -4196,7 +4196,7 @@ msgstr "火焰​抗性: {:+d}%"
 
 #: Source/items.cpp:3564
 msgid "Resist Fire: {:+d}% MAX"
-msgstr "火焰​抗性: 最​大{:+d}%"
+msgstr "火焰​抗性: 最​大​{:+d}%"
 
 #: Source/items.cpp:3568
 msgid "Resist Lightning: {:+d}%"
@@ -4204,7 +4204,7 @@ msgstr "閃​電​抗性: {:+d}%"
 
 #: Source/items.cpp:3570
 msgid "Resist Lightning: {:+d}% MAX"
-msgstr "閃​電​抗性: 最​大{:+d}%"
+msgstr "閃​電​抗性: 最​大​{:+d}%"
 
 #: Source/items.cpp:3574
 msgid "Resist Magic: {:+d}%"
@@ -4212,7 +4212,7 @@ msgstr "抵抗​魔法: {:+d}%"
 
 #: Source/items.cpp:3576
 msgid "Resist Magic: {:+d}% MAX"
-msgstr "抵抗​魔法: 最​大{:+d}%"
+msgstr "抵抗​魔法: 最​大​{:+d}%"
 
 #: Source/items.cpp:3580
 msgid "Resist All: {:+d}%"
@@ -6216,7 +6216,7 @@ msgstr " 火"
 
 #: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid " Lightning"
-msgstr " 閃​電"
+msgstr " 閃電"
 
 #: Source/monster.cpp:4700
 msgid "Immune:"
@@ -7487,7 +7487,7 @@ msgstr "只​傷害亡​靈"
 #, fuzzy
 #| msgid "{:d} Scroll"
 msgid "Scroll"
-msgstr "{:s}卷軸"
+msgstr "{:s}​卷​軸"
 
 #: Source/panels/spell_list.cpp:204
 #, fuzzy
@@ -7562,7 +7562,7 @@ msgstr "下​一​級: {:s}"
 
 #: Source/qol/xpbar.cpp:162
 msgid "{:s} to Level {:d}"
-msgstr "{:s}到​{:d}​級"
+msgstr "{:s}​到​{:d}​級"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:44
