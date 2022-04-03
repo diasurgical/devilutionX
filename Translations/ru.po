@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-31 02:00+0200\n"
+"POT-Creation-Date: 2022-04-03 18:45+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Dominus Iniquitatis <zerosaiko@gmail.com>\n"
 "Language-Team: \n"
@@ -473,7 +473,7 @@ msgstr "Подключиться к игре"
 msgid "Public Games"
 msgstr "Открытые игры"
 
-#: Source/DiabloUI/selgame.cpp:155 Source/error.cpp:64
+#: Source/DiabloUI/selgame.cpp:155 Source/error.cpp:62
 msgid "Loading..."
 msgstr "Загрузка..."
 
@@ -1054,31 +1054,31 @@ msgstr[0] "{:d} заряд"
 msgstr[1] "{:d} заряда"
 msgstr[2] "{:d} зарядов"
 
-#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
+#: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3480
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} золотой"
 msgstr[1] "{:d} золотых"
 msgstr[2] "{:d} золотых"
 
-#: Source/control.cpp:863
+#: Source/control.cpp:862
 msgid "Requirements not met"
 msgstr "Требования не удовлетворены"
 
-#: Source/control.cpp:897
+#: Source/control.cpp:896
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Уровень: {:d}"
 
-#: Source/control.cpp:898
+#: Source/control.cpp:897
 msgid "Hit Points {:d} of {:d}"
 msgstr "Здоровье {:d} из {:d}"
 
-#: Source/control.cpp:932
+#: Source/control.cpp:931
 msgid "Level Up"
 msgstr "Новый уровень"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1040
+#: Source/control.cpp:1039
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "У вас {:d} золотой. Сколько вы хотите забрать?"
@@ -1096,23 +1096,23 @@ msgstr ""
 "\n"
 "Убедитесь, что devilutionx.mpq находится в папке с игрой и он обновлён."
 
-#: Source/cursor.cpp:220
+#: Source/cursor.cpp:223
 msgid "Town Portal"
 msgstr "Городской портал"
 
-#: Source/cursor.cpp:221
+#: Source/cursor.cpp:224
 msgid "from {:s}"
 msgstr "из {:s}"
 
-#: Source/cursor.cpp:235
+#: Source/cursor.cpp:238
 msgid "Portal to"
 msgstr "Портал в"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "The Unholy Altar"
 msgstr "Нечестивый Алтарь"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "level 15"
 msgstr "уровень 15"
 
@@ -1506,256 +1506,256 @@ msgstr "Невозможно соединиться"
 msgid "error: read 0 bytes from server"
 msgstr "ошибка: прочитано 0 байт с сервера"
 
-#: Source/error.cpp:55
+#: Source/error.cpp:53
 msgid "No automap available in town"
 msgstr "Автокарта недоступна в городе"
 
-#: Source/error.cpp:56
+#: Source/error.cpp:54
 msgid "No multiplayer functions in demo"
 msgstr "Сетевая игра недоступна в демоверсии"
 
-#: Source/error.cpp:57
+#: Source/error.cpp:55
 msgid "Direct Sound Creation Failed"
 msgstr "Ошибка создания Direct Sound"
 
-#: Source/error.cpp:58
+#: Source/error.cpp:56
 msgid "Not available in shareware version"
 msgstr "Недоступно в shareware-версии"
 
-#: Source/error.cpp:59
+#: Source/error.cpp:57
 msgid "Not enough space to save"
 msgstr "Недостаточно места на диске для сохранения"
 
-#: Source/error.cpp:60
+#: Source/error.cpp:58
 msgid "No Pause in town"
 msgstr "Пауза недоступна в городе"
 
-#: Source/error.cpp:61
+#: Source/error.cpp:59
 msgid "Copying to a hard disk is recommended"
 msgstr "Рекомендуется копирование на жёсткий диск"
 
-#: Source/error.cpp:62
+#: Source/error.cpp:60
 msgid "Multiplayer sync problem"
 msgstr "Проблема синхронизации сетевой игры"
 
-#: Source/error.cpp:63
+#: Source/error.cpp:61
 msgid "No pause in multiplayer"
 msgstr "Пауза недоступна в сетевой игре"
 
-#: Source/error.cpp:65
+#: Source/error.cpp:63
 msgid "Saving..."
 msgstr "Сохранение..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:66
+#: Source/error.cpp:64
 msgid "Some are weakened as one grows strong"
 msgstr "Чем сильнее один, тем слабее другие"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:67
+#: Source/error.cpp:65
 msgid "New strength is forged through destruction"
 msgstr "Прочность куётся из обломков"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:68
+#: Source/error.cpp:66
 msgid "Those who defend seldom attack"
 msgstr "Те, кто защищаются, редко атакуют"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:69
+#: Source/error.cpp:67
 msgid "The sword of justice is swift and sharp"
 msgstr "Меч правосудия быстр и остр"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:70
+#: Source/error.cpp:68
 msgid "While the spirit is vigilant the body thrives"
 msgstr "В здоровом теле здоровый дух"
 
 # Явно не "Перефокусированные силы маны обновляются"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:71
+#: Source/error.cpp:69
 msgid "The powers of mana refocused renews"
 msgstr "Силы маны воспряли вновь"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:72
+#: Source/error.cpp:70
 msgid "Time cannot diminish the power of steel"
 msgstr "Время не уменьшит силу стали"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:73
+#: Source/error.cpp:71
 msgid "Magic is not always what it seems to be"
 msgstr "Магия не всегда то, чем кажется"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:74
+#: Source/error.cpp:72
 msgid "What once was opened now is closed"
 msgstr "Что было открыто - закрыто теперь"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:75
+#: Source/error.cpp:73
 msgid "Intensity comes at the cost of wisdom"
 msgstr "Интенсивность достигается за счёт мудрости"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:76
+#: Source/error.cpp:74
 msgid "Arcane power brings destruction"
 msgstr "Тайная сила приносит разруху"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:77
+#: Source/error.cpp:75
 msgid "That which cannot be held cannot be harmed"
 msgstr "Не сломать того, что не взять"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:78
+#: Source/error.cpp:76
 msgid "Crimson and Azure become as the sun"
 msgstr "Кровь и лазурь становятся солнцем"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:79
+#: Source/error.cpp:77
 msgid "Knowledge and wisdom at the cost of self"
 msgstr "Знания и мудрость ценой себя"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:80
+#: Source/error.cpp:78
 msgid "Drink and be refreshed"
 msgstr "Пей и освежись"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:81
+#: Source/error.cpp:79
 msgid "Wherever you go, there you are"
 msgstr "Куда бы вы ни пошли, вот и вы"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:82
+#: Source/error.cpp:80
 msgid "Energy comes at the cost of wisdom"
 msgstr "Энергия приходит за счёт мудрости"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:83
+#: Source/error.cpp:81
 msgid "Riches abound when least expected"
 msgstr "Изобилие богатства, когда меньше всего ждёшь"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:84
+#: Source/error.cpp:82
 msgid "Where avarice fails, patience gains reward"
 msgstr "Где жадность терпит поражение, терпение вознаграждается"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:85
+#: Source/error.cpp:83
 msgid "Blessed by a benevolent companion!"
 msgstr "Благословлён великодушным спутником!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:86
+#: Source/error.cpp:84
 msgid "The hands of men may be guided by fate"
 msgstr "Руки человека может направлять судьба"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:87
+#: Source/error.cpp:85
 msgid "Strength is bolstered by heavenly faith"
 msgstr "Сила подкрепляется небесной верой"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:88
+#: Source/error.cpp:86
 msgid "The essence of life flows from within"
 msgstr "Суть жизни течёт изнутри"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:89
+#: Source/error.cpp:87
 msgid "The way is made clear when viewed from above"
 msgstr "С высоты путь виднее"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:90
+#: Source/error.cpp:88
 msgid "Salvation comes at the cost of wisdom"
 msgstr "Спасение достигается ценой мудрости"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:91
+#: Source/error.cpp:89
 msgid "Mysteries are revealed in the light of reason"
 msgstr "Тайны раскрываются в свете разума"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:92
+#: Source/error.cpp:90
 msgid "Those who are last may yet be first"
 msgstr "Последние могут быть первыми"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:93
+#: Source/error.cpp:91
 msgid "Generosity brings its own rewards"
 msgstr "Щедрость приносит свои плоды"
 
-#: Source/error.cpp:94
+#: Source/error.cpp:92
 msgid "You must be at least level 8 to use this."
 msgstr "Вы должны быть не ниже 8 уровня, чтобы использовать это."
 
-#: Source/error.cpp:95
+#: Source/error.cpp:93
 msgid "You must be at least level 13 to use this."
 msgstr "Вы должны быть не ниже 13 уровня, чтобы использовать это."
 
-#: Source/error.cpp:96
+#: Source/error.cpp:94
 msgid "You must be at least level 17 to use this."
 msgstr "Вы должны быть не ниже 17 уровня, чтобы использовать это."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:97
+#: Source/error.cpp:95
 msgid "Arcane knowledge gained!"
 msgstr "Постигнуты тайные знания!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:98
+#: Source/error.cpp:96
 msgid "That which does not kill you..."
 msgstr "То, что тебя не убивает..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:99
+#: Source/error.cpp:97
 msgid "Knowledge is power."
 msgstr "Знание - сила."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:100
+#: Source/error.cpp:98
 msgid "Give and you shall receive."
 msgstr "Давайте - и вам дано будет."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:101
+#: Source/error.cpp:99
 msgid "Some experience is gained by touch."
 msgstr "Некоторый опыт приобретается на ощупь."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:102
+#: Source/error.cpp:100
 msgid "There's no place like home."
 msgstr "Нет места лучше дома."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:103
+#: Source/error.cpp:101
 msgid "Spiritual energy is restored."
 msgstr "Духовная энергия восстановлена."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:104
+#: Source/error.cpp:102
 msgid "You feel more agile."
 msgstr "Вы чувствуете себя более подвижным."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:105
+#: Source/error.cpp:103
 msgid "You feel stronger."
 msgstr "Вы чувствуете себя сильнее."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:106
+#: Source/error.cpp:104
 msgid "You feel wiser."
 msgstr "Вы чувствуете себя мудрее."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:107
+#: Source/error.cpp:105
 msgid "You feel refreshed."
 msgstr "Вы чувствуете себя отдохнувшим."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:108
+#: Source/error.cpp:106
 msgid "That which can break will."
 msgstr "То, что может сломать волю."
 
@@ -2303,7 +2303,7 @@ msgid "Quilted Armor"
 msgstr "Стёганые Доспехи"
 
 #: Source/itemdat.cpp:111 Source/itemdat.cpp:112 Source/itemdat.cpp:113
-#: Source/itemdat.cpp:114 Source/objects.cpp:5482
+#: Source/itemdat.cpp:114 Source/objects.cpp:5476
 msgid "Armor"
 msgstr "Доспехи"
 
@@ -4099,7 +4099,7 @@ msgid " {:d} Dex"
 msgstr " {:d} Ловк"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3250 Source/player.cpp:3149
+#: Source/items.cpp:3250 Source/player.cpp:3145
 msgid "Ear of {:s}"
 msgstr "Ухо {:s}"
 
@@ -4514,19 +4514,19 @@ msgstr "уникальный предмет"
 msgid "Not Identified"
 msgstr "Не идентифицировано"
 
-#: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
+#: Source/loadsave.cpp:1870 Source/loadsave.cpp:2376
 msgid "Unable to open save file archive"
 msgstr "Невозможно открыть файл сохранённой игры"
 
-#: Source/loadsave.cpp:1833
+#: Source/loadsave.cpp:1873
 msgid "Invalid save file"
 msgstr "Неправильный файл сохранения"
 
-#: Source/loadsave.cpp:1864
+#: Source/loadsave.cpp:1904
 msgid "Player is on a Hellfire only level"
 msgstr "Игрок на уровне Hellfire"
 
-#: Source/loadsave.cpp:2095
+#: Source/loadsave.cpp:2138
 msgid "Invalid game state"
 msgstr "Неправильное состояние игры"
 
@@ -5672,71 +5672,71 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Судьбожим"
 
-#: Source/monster.cpp:3382
+#: Source/monster.cpp:3383
 msgid "Animal"
 msgstr "Зверь"
 
-#: Source/monster.cpp:3384
+#: Source/monster.cpp:3385
 msgid "Demon"
 msgstr "Демон"
 
-#: Source/monster.cpp:3386
+#: Source/monster.cpp:3387
 msgid "Undead"
 msgstr "Нежить"
 
-#: Source/monster.cpp:4648
+#: Source/monster.cpp:4649
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Тип: {:s}  Убито: {:d}"
 
-#: Source/monster.cpp:4650
+#: Source/monster.cpp:4651
 msgid "Total kills: {:d}"
 msgstr "Убито: {:d}"
 
-#: Source/monster.cpp:4682
+#: Source/monster.cpp:4683
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Здоровье: {:d}-{:d}"
 
-#: Source/monster.cpp:4687
+#: Source/monster.cpp:4688
 msgid "No magic resistance"
 msgstr "Нет сопротивления"
 
-#: Source/monster.cpp:4690
+#: Source/monster.cpp:4691
 msgid "Resists:"
 msgstr "Сопротивления:"
 
-#: Source/monster.cpp:4692 Source/monster.cpp:4702
+#: Source/monster.cpp:4693 Source/monster.cpp:4703
 msgid " Magic"
 msgstr " Магия"
 
-#: Source/monster.cpp:4694 Source/monster.cpp:4704
+#: Source/monster.cpp:4695 Source/monster.cpp:4705
 msgid " Fire"
 msgstr " Огонь"
 
-#: Source/monster.cpp:4696 Source/monster.cpp:4706
+#: Source/monster.cpp:4697 Source/monster.cpp:4707
 msgid " Lightning"
 msgstr " Молния"
 
-#: Source/monster.cpp:4700
+#: Source/monster.cpp:4701
 msgid "Immune:"
 msgstr "Иммунитет:"
 
-#: Source/monster.cpp:4717
+#: Source/monster.cpp:4718
 msgid "Type: {:s}"
 msgstr "Тип: {:s}"
 
-#: Source/monster.cpp:4722 Source/monster.cpp:4728
+#: Source/monster.cpp:4723 Source/monster.cpp:4729
 msgid "No resistances"
 msgstr "Без сопротивлений"
 
-#: Source/monster.cpp:4723 Source/monster.cpp:4732
+#: Source/monster.cpp:4724 Source/monster.cpp:4733
 msgid "No Immunities"
 msgstr "Без иммунитета"
 
-#: Source/monster.cpp:4726
+#: Source/monster.cpp:4727
 msgid "Some Magic Resistances"
 msgstr "Какое-то магическое сопротивление"
 
-#: Source/monster.cpp:4730
+#: Source/monster.cpp:4731
 msgid "Some Magic Immunities"
 msgstr "Какой-то магический иммунитет"
 
@@ -5980,158 +5980,158 @@ msgstr "Журнал: Конец"
 msgid "A Spellbook"
 msgstr "Книга Заклинаний"
 
-#: Source/objects.cpp:5389
+#: Source/objects.cpp:5383
 msgid "Crucified Skeleton"
 msgstr "Распятый скелет"
 
-#: Source/objects.cpp:5393
+#: Source/objects.cpp:5387
 msgid "Lever"
 msgstr "Рычаг"
 
-#: Source/objects.cpp:5402
+#: Source/objects.cpp:5396
 msgid "Open Door"
 msgstr "Открытая дверь"
 
-#: Source/objects.cpp:5404
+#: Source/objects.cpp:5398
 msgid "Closed Door"
 msgstr "Закрытая дверь"
 
-#: Source/objects.cpp:5406
+#: Source/objects.cpp:5400
 msgid "Blocked Door"
 msgstr "Заблокированная дверь"
 
-#: Source/objects.cpp:5411
+#: Source/objects.cpp:5405
 msgid "Ancient Tome"
 msgstr "Древний фолиант"
 
-#: Source/objects.cpp:5413
+#: Source/objects.cpp:5407
 msgid "Book of Vileness"
 msgstr "Книга подлости"
 
-#: Source/objects.cpp:5418
+#: Source/objects.cpp:5412
 msgid "Skull Lever"
 msgstr "Череп-рычаг"
 
-#: Source/objects.cpp:5421
+#: Source/objects.cpp:5415
 msgid "Mythical Book"
 msgstr "Мифическая книга"
 
-#: Source/objects.cpp:5425
+#: Source/objects.cpp:5419
 msgid "Small Chest"
 msgstr "Маленький сундук"
 
-#: Source/objects.cpp:5429
+#: Source/objects.cpp:5423
 msgid "Chest"
 msgstr "Сундук"
 
-#: Source/objects.cpp:5434
+#: Source/objects.cpp:5428
 msgid "Large Chest"
 msgstr "Большой сундук"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5431
 msgid "Sarcophagus"
 msgstr "Саркофаг"
 
-#: Source/objects.cpp:5440
+#: Source/objects.cpp:5434
 msgid "Bookshelf"
 msgstr "Книжная полка"
 
-#: Source/objects.cpp:5444
+#: Source/objects.cpp:5438
 msgid "Bookcase"
 msgstr "Книжный шкаф"
 
-#: Source/objects.cpp:5449
+#: Source/objects.cpp:5443
 msgid "Pod"
 msgstr "Кокон"
 
-#: Source/objects.cpp:5451
+#: Source/objects.cpp:5445
 msgid "Urn"
 msgstr "Урна"
 
-#: Source/objects.cpp:5453
+#: Source/objects.cpp:5447
 msgid "Barrel"
 msgstr "Бочка"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5457
+#: Source/objects.cpp:5451
 msgid "{:s} Shrine"
 msgstr "{:s} святыня"
 
-#: Source/objects.cpp:5460
+#: Source/objects.cpp:5454
 msgid "Skeleton Tome"
 msgstr "Фолиант скелетов"
 
-#: Source/objects.cpp:5463
+#: Source/objects.cpp:5457
 msgid "Library Book"
 msgstr "Библиотечная книга"
 
-#: Source/objects.cpp:5466
+#: Source/objects.cpp:5460
 msgid "Blood Fountain"
 msgstr "Кровавый фонтан"
 
-#: Source/objects.cpp:5469
+#: Source/objects.cpp:5463
 msgid "Decapitated Body"
 msgstr "Обезглавленное тело"
 
-#: Source/objects.cpp:5472
+#: Source/objects.cpp:5466
 msgid "Book of the Blind"
 msgstr "Книга Слепцов"
 
-#: Source/objects.cpp:5475
+#: Source/objects.cpp:5469
 msgid "Book of Blood"
 msgstr "Книга Крови"
 
-#: Source/objects.cpp:5478
+#: Source/objects.cpp:5472
 msgid "Purifying Spring"
 msgstr "Очищающий источник"
 
-#: Source/objects.cpp:5485 Source/objects.cpp:5509
+#: Source/objects.cpp:5479 Source/objects.cpp:5503
 msgid "Weapon Rack"
 msgstr "Стойка с оружием"
 
-#: Source/objects.cpp:5488
+#: Source/objects.cpp:5482
 msgid "Goat Shrine"
 msgstr "Козлиный храм"
 
-#: Source/objects.cpp:5491
+#: Source/objects.cpp:5485
 msgid "Cauldron"
 msgstr "Котёл"
 
-#: Source/objects.cpp:5494
+#: Source/objects.cpp:5488
 msgid "Murky Pool"
 msgstr "Тёмный бассейн"
 
-#: Source/objects.cpp:5497
+#: Source/objects.cpp:5491
 msgid "Fountain of Tears"
 msgstr "Фонтан слёз"
 
-#: Source/objects.cpp:5500
+#: Source/objects.cpp:5494
 msgid "Steel Tome"
 msgstr "Стальной фолиант"
 
-#: Source/objects.cpp:5503
+#: Source/objects.cpp:5497
 msgid "Pedestal of Blood"
 msgstr "Пьедестал крови"
 
-#: Source/objects.cpp:5512
+#: Source/objects.cpp:5506
 msgid "Mushroom Patch"
 msgstr "Грибы"
 
-#: Source/objects.cpp:5515
+#: Source/objects.cpp:5509
 msgid "Vile Stand"
 msgstr "Мерзкий стенд"
 
-#: Source/objects.cpp:5518
+#: Source/objects.cpp:5512
 msgid "Slain Hero"
 msgstr "Убитый герой"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5525
+#: Source/objects.cpp:5519
 msgid "Trapped {:s}"
 msgstr "{:s} с ловушкой"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5530
+#: Source/objects.cpp:5524
 msgid "{:s} (disabled)"
 msgstr "{:s} (отключено)"
 
@@ -6145,11 +6145,11 @@ msgstr "ВЫКЛ"
 
 #: Source/options.cpp:539
 msgid "Start Up"
-msgstr ""
+msgstr "Запустить"
 
 #: Source/options.cpp:539
 msgid "Start Up Settings"
-msgstr ""
+msgstr "Параметры запуска"
 
 #: Source/options.cpp:540
 msgid "Game Mode"
@@ -6282,6 +6282,10 @@ msgid ""
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
 "Fit to Screen is used."
 msgstr ""
+"Влияет на внутреннее разрешение игры и определяет область просмотра. "
+"Примечание: может отличаться от разрешения экрана при использовании "
+"масштабирования, целочисленного масштабирования или растягивания по размеру "
+"экрана."
 
 #: Source/options.cpp:737
 msgid "Graphics"
@@ -6301,7 +6305,7 @@ msgstr "Отображать игру в оконном или полноэкр�
 
 #: Source/options.cpp:740
 msgid "Fit to Screen"
-msgstr ""
+msgstr "По размеру экрана"
 
 #: Source/options.cpp:740
 msgid ""
@@ -6313,13 +6317,16 @@ msgstr ""
 
 #: Source/options.cpp:743
 msgid "Upscale"
-msgstr ""
+msgstr "Масштабирование"
 
 #: Source/options.cpp:743
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
 msgstr ""
+"Включает масштабирование изображения от разрешения игры до разрешения вашего "
+"монитора. Предотвращает изменение разрешения монитора и позволяет изменять "
+"размер окна."
 
 #: Source/options.cpp:744
 msgid "Scaling Quality"
@@ -6328,27 +6335,31 @@ msgstr "Качество масштабирования"
 #: Source/options.cpp:744
 msgid "Enables optional filters to the output image when upscaling."
 msgstr ""
+"Включает дополнительные фильтры для выходного изображения при "
+"масштабировании."
 
 # Should be "nearest neighbor".
 #: Source/options.cpp:746
 msgid "Nearest Pixel"
-msgstr ""
+msgstr "Ближайший пиксель"
 
 #: Source/options.cpp:747
 msgid "Bilinear"
-msgstr ""
+msgstr "Анизотропная"
 
 #: Source/options.cpp:748
 msgid "Anisotropic"
-msgstr ""
+msgstr "Целочисленное масштабирование"
 
 #: Source/options.cpp:750
 msgid "Integer Scaling"
-msgstr ""
+msgstr "Целочисленное масштабирование"
 
 #: Source/options.cpp:750
 msgid "Scales the image using whole number pixel ratio."
 msgstr ""
+"Масштабирует изображение с использованием целочисленного соотношения "
+"пикселей."
 
 #: Source/options.cpp:751
 msgid "Vertical Sync"
@@ -6365,11 +6376,13 @@ msgstr ""
 
 #: Source/options.cpp:754
 msgid "Color Cycling"
-msgstr ""
+msgstr "Цветовой цикл"
 
 #: Source/options.cpp:754
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr ""
+"Эффект циклического изменения цвета, используемый для анимации воды, лавы и "
+"кислоты."
 
 #: Source/options.cpp:755
 msgid "Alternate nest art"
@@ -6463,11 +6476,11 @@ msgstr ""
 
 #: Source/options.cpp:816
 msgid "Grab Input"
-msgstr ""
+msgstr "Захватить ввод"
 
 #: Source/options.cpp:816
 msgid "When enabled mouse is locked to the game window."
-msgstr ""
+msgstr "Если включено, мышь фиксируется в окне игры."
 
 #: Source/options.cpp:817
 msgid "Theo Quest"
@@ -6500,7 +6513,7 @@ msgstr ""
 
 #: Source/options.cpp:820
 msgid "Test Bard"
-msgstr ""
+msgstr "Тестировать барба"
 
 #: Source/options.cpp:820
 msgid "Force the Bard character type to appear in the hero selection menu."
@@ -6508,7 +6521,7 @@ msgstr "Принудительно показывать Барда на экра
 
 #: Source/options.cpp:821
 msgid "Test Barbarian"
-msgstr ""
+msgstr "Тестировать варваа"
 
 #: Source/options.cpp:821
 msgid ""
@@ -6744,11 +6757,11 @@ msgstr "Языковые настройки"
 
 #: Source/options.cpp:1044
 msgid "Keymapping"
-msgstr ""
+msgstr "Раскладка клавиш"
 
 #: Source/options.cpp:1044
 msgid "Keymapping Settings"
-msgstr ""
+msgstr "Настройки раскладки клавиш"
 
 #: Source/panels/charpanel.cpp:130
 msgid "Level"
@@ -6881,7 +6894,7 @@ msgstr "Уровень {:d}"
 
 #: Source/panels/spell_book.cpp:166
 msgid "Unusable"
-msgstr ""
+msgstr "Неиспользовано"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:174
@@ -6957,7 +6970,7 @@ msgstr "История чата (сообщений: {:d})"
 msgid "{:d} gold"
 msgstr "{:d} золото"
 
-#: Source/qol/stash.cpp:586
+#: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"
 msgstr "Сколько золота вы хотите забрать?"
 
