@@ -445,6 +445,10 @@ void ClosePanels()
 
 void PressKey(int vkey)
 {
+	if (vkey == DVL_VK_PAUSE) {
+		diablo_pause_game();
+		return;
+	}
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
 	}
@@ -556,10 +560,6 @@ void PressKey(int vkey)
 void PressChar(char vkey)
 {
 	if (gmenu_is_active() || IsTalkActive() || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
-		return;
-	}
-	if (vkey == 'p' || vkey == 'P') {
-		diablo_pause_game();
 		return;
 	}
 	if (PauseMode == 2) {
@@ -1612,7 +1612,7 @@ void InitKeymapActions()
 	    "Pause Game",
 	    N_("Pause Game"),
 	    N_("Pauses the game."),
-	    DVL_VK_PAUSE,
+	    'P',
 	    diablo_pause_game);
 	sgOptions.Keymapper.AddAction(
 	    "DecreaseGamma",
