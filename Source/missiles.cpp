@@ -1421,6 +1421,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 				}
 				if (ii != -1) {
 					InitializeItem(player.SpdList[si], ii);
+					player.SpdList[si]._iStatFlag = true;
 				}
 				if (!hasPlayedSFX) {
 					PlaySfxLoc(IS_POPPOP2, target);
