@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-31 01:59+0200\n"
+"POT-Creation-Date: 2022-03-31 02:00+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Dominus Iniquitatis <zerosaiko@gmail.com>\n"
 "Language-Team: \n"
@@ -109,7 +109,7 @@ msgstr "Помощник продюсера"
 msgid "Diablo Strike Team"
 msgstr "Ударная команда Diablo"
 
-#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:71
+#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
 msgid "Music"
 msgstr "Музыка"
 
@@ -536,7 +536,7 @@ msgstr "Адская"
 #. TRANSLATORS: {:s} means: Game Difficulty.
 #: Source/DiabloUI/selgame.cpp:216 Source/automap.cpp:532
 msgid "Difficulty: {:s}"
-msgstr "Сложность:"
+msgstr "Сложность: {:s}"
 
 #: Source/DiabloUI/selgame.cpp:220 Source/gamemenu.cpp:165
 msgid "Speed: Normal"
@@ -1453,7 +1453,7 @@ msgstr "Отображает информацию об игре."
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1654
 msgid "{:s} {:s}"
-msgstr "{:d} {:s}"
+msgstr "{:s} {:s}"
 
 #: Source/diablo.cpp:1663
 msgid "Chat Log"
@@ -6129,7 +6129,7 @@ msgstr "Стойка с оружием"
 # Взял из Diablo 3.
 #: Source/objects.cpp:5488
 msgid "Goat Shrine"
-msgstr "Козье святилище"
+msgstr "Козлиный храм"
 
 #: Source/objects.cpp:5491
 msgid "Cauldron"
@@ -6253,6 +6253,8 @@ msgstr "Настройки звука"
 msgid "Walking Sound"
 msgstr "Звук ходьбы"
 
+# Player? Maybe the player character? Or hero?
+# (The original phrase is formulated in a quite, ahem, specific way. Might need to update the English translation itself.)
 #: Source/options.cpp:612
 msgid "Player emits sound when walking."
 msgstr "Игрок издает звук при ходьбе."
@@ -7056,7 +7058,7 @@ msgstr "Следующий уровень: {:s}"
 
 #: Source/qol/xpbar.cpp:162
 msgid "{:s} to Level {:d}"
-msgstr "до уровня {:d}"
+msgstr "{:s} до уровня {:d}"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:44
@@ -11720,65 +11722,3 @@ msgstr "Спуститься к Диабло"
 #: Source/trigs.cpp:712 Source/trigs.cpp:726 Source/trigs.cpp:740
 msgid "Back to Level {:d}"
 msgstr "Вернуться на Уровень {:d}"
-
-#~ msgid "Menu"
-#~ msgstr "Меню"
-
-#~ msgid "Inv"
-#~ msgstr "Инв"
-
-#~ msgid "Map"
-#~ msgstr "Карта"
-
-#~ msgid "Char"
-#~ msgstr "Перс"
-
-#~ msgid "Spells"
-#~ msgstr "Закл"
-
-#~ msgid "Quests"
-#~ msgstr "Задания"
-
-#~ msgid "Right click to use"
-#~ msgstr "Правый клик для использования"
-
-#~ msgid "Right click to read"
-#~ msgstr "Правый клик для чтения"
-
-#~ msgid "Resist Fire: 75% MAX"
-#~ msgstr "Сопротивление огню: 75% МАКС"
-
-#~ msgid "Resist Lightning: 75% MAX"
-#~ msgstr "Сопротивление молнии: 75% МАКС"
-
-#~ msgid "Resist Magic: 75% MAX"
-#~ msgstr "Сопротивление магии: 75% МАКС"
-
-#~ msgid "Resist All: 75% MAX"
-#~ msgstr "Общее сопротивление: 75% МАКС"
-
-#~ msgid "dam: {:d}  Dur: {:d}/{:d}"
-#~ msgstr "урон: {:d}  Прчн: {:d}/{:d}"
-
-#~ msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-#~ msgstr "урон: {:d}-{:d}  Прчн: {:d}/{:d}"
-
-#~ msgid "Magic "
-#~ msgstr "Магия "
-
-#~ msgid "Lightning "
-#~ msgstr "Молния "
-
-#~ msgid "Waiting for game data..."
-#~ msgstr "Ожидание игровых данных..."
-
-#~ msgid "MAX"
-#~ msgstr "МАКС"
-
-#, c-format
-#~ msgid ",%03d"
-#~ msgstr ",%03d"
-
-#, c-format
-#~ msgid "%i gold"
-#~ msgstr "%i золото"
