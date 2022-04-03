@@ -859,8 +859,7 @@ void DrawInfoBox(const Surface &out)
 			int nGold = myPlayer.HoldItem._ivalue;
 			InfoString = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
 		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
-			ClearPanel();
-			AddPanelString(_("Requirements not met"));
+			InfoString = _("Requirements not met");
 		} else {
 			if (myPlayer.HoldItem._iIdentified)
 				InfoString = myPlayer.HoldItem._iIName;
