@@ -20,63 +20,316 @@ namespace devilution {
 #define MAXMULTIQUESTS 10
 
 enum _cmd_id : uint8_t {
+	// Player mode standing.
+	//
+	// body (TCmd)
 	CMD_STAND,
+	// Walk to location.
+	//
+	// body (TCmdLoc)
 	CMD_WALKXY,
+	// Acknowledge receive of player info.
+	//
+	// body (TCmdPlrInfoHdr)
 	CMD_ACK_PLRINFO,
+	// Increment player strength.
+	//
+	// body (TCmdParam1):
+	//    int16_t delta
 	CMD_ADDSTR,
+	// Increment player magic.
+	//
+	// body (TCmdParam1):
+	//    int16_t delta
 	CMD_ADDMAG,
+	// Increment player dexterity.
+	//
+	// body (TCmdParam1):
+	//    int16_t delta
 	CMD_ADDDEX,
+	// Increment player vitality.
+	//
+	// body (TCmdParam1):
+	//    int16_t delta
 	CMD_ADDVIT,
+	// Lift item to hand.
+	//
+	// body (TCmdGItem)
 	CMD_GETITEM,
+	// Loot item to inventory.
+	//
+	// body (TCmdGItem)
 	CMD_AGETITEM,
+	// Drop item from hand on ground.
+	//
+	// body (TCmdPItem)
 	CMD_PUTITEM,
+	// Spawn item on ground (place quest items).
+	//
+	// body (TCmdPItem)
+	CMD_SPAWNITEM,
+	// Respawn item on ground (drop dead player item, or drop attempted loot item
+	// when inventory is full).
+	//
+	// body (TCmdPItem)
 	CMD_RESPAWNITEM,
+	// Attack target location.
+	//
+	// body (TCmdLoc)
 	CMD_ATTACKXY,
+	// Range attack target location.
+	//
+	// body (TCmdLoc)
 	CMD_RATTACKXY,
+	// Cast spell at target location.
+	//
+	// body (TCmdLocParam2):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t spell_id
+	//    int16_t spell_lvl
 	CMD_SPELLXY,
+	// Cast targetted spell at target location.
+	//
+	// body (TCmdLocParam2):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t spell_id
+	//    int16_t spell_lvl
 	CMD_TSPELLXY,
+	// Operate object at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t object_num
 	CMD_OPOBJXY,
+	// Disarm trap at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t object_num
 	CMD_DISARMXY,
+	// Attack target monster.
+	//
+	// body (TCmdParam1):
+	//    int16_t monster_num
 	CMD_ATTACKID,
+	// Attack target player.
+	//
+	// body (TCmdParam1):
+	//    int16_t player_num
 	CMD_ATTACKPID,
+	// Range attack target monster.
+	//
+	// body (TCmdParam1):
+	//    int16_t monster_num
 	CMD_RATTACKID,
+	// Range attack target player.
+	//
+	// body (TCmdParam1):
+	//    int16_t player_num
 	CMD_RATTACKPID,
+	// Cast spell on target monster.
+	//
+	// body (TCmdParam3):
+	//    int16_t monster_num
+	//    int16_t spell_id
+	//    int16_t spell_lvl
 	CMD_SPELLID,
+	// Cast spell on target player.
+	//
+	// body (TCmdParam3):
+	//    int16_t player_num
+	//    int16_t spell_id
+	//    int16_t spell_lvl
 	CMD_SPELLPID,
+	// Cast targetted spell on target monster.
+	//
+	// body (TCmdParam3):
+	//    int16_t monster_num
+	//    int16_t spell_id
+	//    int16_t spell_lvl
 	CMD_TSPELLID,
+	// Cast targetted spell on target player.
+	//
+	// body (TCmdParam3):
+	//    int16_t player_num
+	//    int16_t spell_id
+	//    int16_t spell_lvl
 	CMD_TSPELLPID,
+	// Cast resurrect spell on target player.
+	//
+	// body (TCmdParam1):
+	//    int16_t player_num
 	CMD_RESURRECT,
+	// Operate object using telekinesis.
+	//
+	// body (TCmdParam1):
+	//    int16_t object_num
 	CMD_OPOBJT,
+	// Knockback target monster using telekinesis.
+	//
+	// body (TCmdParam1):
+	//    int16_t monster_num
 	CMD_KNOCKBACK,
+	// Talk with towner at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t towner_num
 	CMD_TALKXY,
+	// Enter new dungeon level.
+	//
+	// body (TCmdParam2):
+	//    int16_t trig_msg
+	//    int16_t level
 	CMD_NEWLVL,
+	// Enter target portal.
+	//
+	// body (TCmdParam1):
+	//    int16_t portal_num
 	CMD_WARP,
+	// Cheat: give player level up.
+	//
+	// body (TCmd)
 	CMD_CHEAT_EXPERIENCE,
+	// Cheat: increase active spell level of player.
+	//
+	// body (TCmd)
 	CMD_CHEAT_SPELL_LEVEL,
+	// Debug command (nop).
+	//
+	// body (TCmd)
 	CMD_DEBUG,
+	// Synchronize data of unvisited dungeon level (state of objects, items and
+	// monsters).
+	//
+	// body (TSyncHeader, TSyncMonster+)
 	CMD_SYNCDATA,
+	// Monster death at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t monster_num
 	CMD_MONSTDEATH,
+	// Damage target monster.
+	//
+	// body (TCmdParam2):
+	//    int16_t monster_num
+	//    int16_t damage
 	CMD_MONSTDAMAGE,
+	// Player death.
+	//
+	// body (TCmdParam1):
+	//    int16_t ear_flag
 	CMD_PLRDEAD,
+	// Lift item to hand request.
+	//
+	// body (TCmdGItem)
 	CMD_REQUESTGITEM,
+	// Loot item to inventory request.
+	//
+	// body (TCmdGItem)
 	CMD_REQUESTAGITEM,
+	// Lift item to hand at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t item_num
 	CMD_GOTOGETITEM,
+	// Loot item to inventory at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t item_num
 	CMD_GOTOAGETITEM,
+	// Open target door.
+	//
+	// body (TCmdParam1):
+	//    int16_t object_num
 	CMD_OPENDOOR,
+	// Close target door.
+	//
+	// body (TCmdParam1):
+	//    int16_t object_num
 	CMD_CLOSEDOOR,
+	// Operate object.
+	//
+	// body (TCmdParam1):
+	//    int16_t object_num
 	CMD_OPERATEOBJ,
+	// Player operate object.
+	//
+	// body (TCmdParam2):
+	//    int16_t player_num
+	//    int16_t object_num
 	CMD_PLROPOBJ,
+	// Break object.
+	//
+	// body (TCmdParam2):
+	//    int16_t player_num
+	//    int16_t object_num
 	CMD_BREAKOBJ,
+	// Equip item for player.
+	//
+	// body (TCmdChItem)
 	CMD_CHANGEPLRITEMS,
+	// Remove equipped item (destroy equipped item, swap equipped item, unequip
+	// equipped item).
+	//
+	// body (TCmdDelItem)
 	CMD_DELPLRITEMS,
+	// Damage target player.
+	//
+	// body (TCmdDamage)
 	CMD_PLRDAMAGE,
+	// Set player level.
+	//
+	// body (TCmdParam1):
+	//    int16_t clvl
 	CMD_PLRLEVEL,
+	// Place item on ground (e.g. monster item drop, chest/barrel/sarcophagus
+	// item drop, etc).
+	//
+	// body (TCmdPItem)
 	CMD_DROPITEM,
+	// Player join dungeon level at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t dlvl
 	CMD_PLAYER_JOINLEVEL,
+	// Acknowledge receive of player info.
+	//
+	// body (TCmdPlrInfoHdr)
 	CMD_SEND_PLRINFO,
+	// Shift attack target location.
+	//
+	// body (TCmdLoc)
 	CMD_SATTACKXY,
+	// Activate town portal at location.
+	//
+	// body (TCmdLocParam3):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t level
+	//    int16_t dtype
+	//    int16_t is_setlevel
 	CMD_ACTIVATEPORTAL,
+	// Deactivate portal of player.
+	//
+	// body (TCmd)
 	CMD_DEACTIVATEPORTAL,
+	// Delta information for dungeon level 0 through 24.
+	//
+	// body (TCmdPlrInfoHdr)
 	CMD_DLEVEL_0,
 	CMD_DLEVEL_1,
 	CMD_DLEVEL_2,
@@ -102,29 +355,104 @@ enum _cmd_id : uint8_t {
 	CMD_DLEVEL_22,
 	CMD_DLEVEL_23,
 	CMD_DLEVEL_24,
+	// Delta information of quest and portal states.
+	//
+	// body (TCmdPlrInfoHdr)
 	CMD_DLEVEL_JUNK,
+	// Delta information end marker.
+	//
+	// body (TCmdPlrInfoHdr)
 	CMD_DLEVEL_END,
+	// Cast heal other spell on target player.
+	//
+	// body (TCmdParam1):
+	//    int16_t player_num
 	CMD_HEALOTHER,
+	// Chat message.
+	//
+	// body (TCmdString)
 	CMD_STRING,
+	// Set player strength.
+	//
+	// body (TCmdParam1):
+	//    int16_t str
 	CMD_SETSTR,
+	// Set player magic.
+	//
+	// body (TCmdParam1):
+	//    int16_t mag
 	CMD_SETMAG,
+	// Set player dexterity.
+	//
+	// body (TCmdParam1):
+	//    int16_t dex
 	CMD_SETDEX,
+	// Set player vitality.
+	//
+	// body (TCmdParam1):
+	//    int16_t vit
 	CMD_SETVIT,
+	// Restart in town.
+	//
+	// body (TCmd)
 	CMD_RETOWN,
+	// Cast spell with direction at target location (e.g. firewall).
+	//
+	// body (TCmdLocParam3):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t spell_id
+	//    int16_t dir
+	//    int16_t spell_lvl
 	CMD_SPELLXYD,
+	// Track (dungeon generated) item looted by other player on dungeon level not
+	// yet visited by player. The item is tracked as "already taken" in the delta
+	// table, so it is not generated twice on the same dungeon level.
+	//
+	// body (TCmdGItem)
 	CMD_ITEMEXTRA,
+	// Synchronize item drop state.
+	//
+	// body (TCmdPItem)
 	CMD_SYNCPUTITEM,
+	// Golem death at location.
+	//
+	// body (TCmdLocParam1):
+	//    int8_t x
+	//    int8_t y
+	//    int16_t dlvl
 	CMD_KILLGOLEM,
+	// Synchronize quest state.
+	//
+	// body (TCmdQuest)
 	CMD_SYNCQUEST,
+	// Spawn golem at target location.
+	//
+	// body (TCmdGolem)
 	CMD_AWAKEGOLEM,
+	// Cast nova spell at target location.
+	//
+	// body (TCmdLoc)
 	CMD_NOVA,
+	// Enable mana shield of player (render).
+	//
+	// body (TCmd)
 	CMD_SETSHIELD,
+	// Disable mana shield of player (don't render).
+	//
+	// body (TCmd)
 	CMD_REMSHIELD,
 	CMD_SETREFLECT,
 	CMD_NAKRUL,
 	CMD_OPENHIVE,
 	CMD_OPENCRYPT,
+	// Fake command; set current player for succeeding mega pkt buffer messages.
+	//
+	// body (TFakeCmdPlr)
 	FAKE_CMD_SETID,
+	// Fake command; drop mega pkt buffer messages of specified player.
+	//
+	// body (TFakeDropPlr)
 	FAKE_CMD_DROPID,
 	NUM_CMDS,
 	CMD_INVALID = 0xFF,
@@ -276,6 +604,21 @@ struct TCmdPItem {
 	uint8_t bMinMag;
 	uint8_t bMinDex;
 	int16_t bAC;
+
+	/**
+	 * Items placed during dungeon generation
+	 */
+	static constexpr _cmd_id FloorItem = CMD_STAND;
+
+	/**
+	 * Floor items that have already been picked up
+	 */
+	static constexpr _cmd_id PickedUpItem = CMD_WALKXY;
+
+	/**
+	 * Items dropped by players, monsters, or objects and left on the floor of the dungeon
+	 */
+	static constexpr _cmd_id DroppedItem = CMD_ACK_PLRINFO;
 };
 
 struct TCmdChItem {
@@ -368,6 +711,8 @@ struct TPktHdr {
 	uint8_t targy;
 	int32_t php;
 	int32_t pmhp;
+	int32_t mana;
+	int32_t maxmana;
 	uint8_t bstr;
 	uint8_t bmag;
 	uint8_t bdex;
@@ -437,12 +782,11 @@ void msg_send_drop_pkt(int pnum, int reason);
 bool msg_wait_resync();
 void run_delta_info();
 void DeltaExportData(int pnum);
+void DeltaSyncJunk();
 void delta_init();
 void delta_kill_monster(int mi, Point position, BYTE bLevel);
 void delta_monster_hp(int mi, int hp, BYTE bLevel);
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
-bool delta_portal_inited(int i);
-bool delta_quest_inited(int i);
 void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
@@ -459,10 +803,9 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii);
-void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
+void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
 void NetSendCmdChItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
-void NetSendCmdDItem(bool bHiPri, int ii);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);

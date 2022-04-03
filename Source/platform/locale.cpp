@@ -19,6 +19,8 @@
 #include <CoreFoundation/CoreFoundation.h>
 #else
 #include <locale>
+
+#include "utils/log.hpp"
 #endif
 
 #include "utils/stdcompat/algorithm.hpp"
@@ -169,9 +171,13 @@ std::vector<std::string> GetLocales()
 
 	CFRelease(languages);
 #else
-	std::string locale = std::locale("").name();
-	// strip off any encoding specifier, devX uses UTF8.
-	locales.emplace_back(locale.substr(0, locale.find('.')));
+	try {
+		std::string locale = std::locale("").name();
+		// strip off any encoding specifier, devX uses UTF8.
+		locales.emplace_back(locale.substr(0, locale.find('.')));
+	} catch (std::runtime_error &e) {
+		LogWarn("Locale detection failed: {}", e.what());
+	}
 #endif
 	return locales;
 }

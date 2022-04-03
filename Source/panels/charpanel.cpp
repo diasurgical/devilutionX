@@ -16,7 +16,7 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pChrButtons;
+std::optional<OwnedCelSprite> pChrButtons;
 
 /** Map of hero class names */
 const char *const ClassStrTbl[] = {
@@ -107,9 +107,7 @@ StyledText GetResistInfo(int8_t resist)
 	else if (resist >= MAXRESIST)
 		style = UiFlags::ColorWhitegold;
 
-	return {
-		style, (resist >= MAXRESIST ? _("MAX") : fmt::format("{:d}%", resist))
-	};
+	return { style, fmt::format("{:d}%", resist) };
 }
 
 constexpr int LeftColumnLabelX = 88;
@@ -135,7 +133,7 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pExperience) }; } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
-	        if (MyPlayer->_pLevel == MAXCHARLEVEL - 1) {
+	        if (MyPlayer->_pLevel == MAXCHARLEVEL) {
 		        return StyledText { UiFlags::ColorWhitegold, _("None") };
 	        }
 	        return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pNextExper) };

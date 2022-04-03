@@ -18,7 +18,7 @@ static constexpr unsigned MaxCorpses = 31;
 struct Corpse {
 	std::array<const byte *, 8> data;
 	int frame;
-	int width;
+	uint16_t width;
 	uint8_t translationPaletteIndex;
 };
 

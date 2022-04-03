@@ -20,11 +20,13 @@
 #define SPLICONLAST (gbIsHellfire ? 52 : 43)
 
 namespace devilution {
+
+std::optional<OwnedCelSprite> pSBkIconCels;
+
 namespace {
 
-std::optional<CelSprite> pSBkBtnCel;
-std::optional<CelSprite> pSBkIconCels;
-std::optional<CelSprite> pSpellBkCel;
+std::optional<OwnedCelSprite> pSBkBtnCel;
+std::optional<OwnedCelSprite> pSpellBkCel;
 
 /** Maps from spellbook page number and position to spell_id. */
 spell_id SpellPages[6][7] = {
@@ -83,7 +85,7 @@ void InitSpellBook()
 	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", SPANEL_WIDTH);
 
 	if (gbIsHellfire) {
-		static const int SBkBtnHellfireWidths[] = { 0, 61, 61, 61, 61, 61, 76 };
+		static const uint16_t SBkBtnHellfireWidths[] = { 0, 61, 61, 61, 61, 61, 76 };
 		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", SBkBtnHellfireWidths);
 	} else {
 		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", 76);

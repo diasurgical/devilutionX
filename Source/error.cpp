@@ -9,9 +9,9 @@
 #include "error.h"
 
 #include "DiabloUI/ui_flags.hpp"
-#include "control.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "panels/info_box.hpp"
 #include "stores.h"
 #include "utils/language.h"
 
@@ -29,14 +29,9 @@ const int LineWidth = 418;
 void InitNextLines()
 {
 	msgdelay = SDL_GetTicks();
-	auto message = DiabloMessages.front();
-
 	TextLines.clear();
 
-	char tempstr[1536]; // Longest test is about 768 chars * 2 for unicode
-	strcpy(tempstr, message.data());
-
-	const std::string paragraphs = WordWrapString(tempstr, LineWidth, GameFont12, 1);
+	const std::string paragraphs = WordWrapString(DiabloMessages.front(), LineWidth, GameFont12, 1);
 
 	size_t previous = 0;
 	while (true) {
@@ -113,11 +108,10 @@ const char *const MsgStrings[] = {
 
 void InitDiabloMsg(diablo_message e)
 {
-	std::string msg = _(MsgStrings[e]);
-	InitDiabloMsg(msg);
+	InitDiabloMsg(LanguageTranslate(MsgStrings[e]));
 }
 
-void InitDiabloMsg(std::string msg)
+void InitDiabloMsg(const std::string &msg)
 {
 	if (DiabloMessages.size() >= MAX_SEND_STR_LEN)
 		return;
@@ -169,10 +163,9 @@ void DrawDiabloMsg(const Surface &out)
 
 	DrawHalfTransparentRectTo(out, PANEL_X + 104, dialogStartY - 8, 432, ErrorWindowHeight);
 
-	auto message = DiabloMessages.front();
 	int lineNumber = 0;
 	for (auto &line : TextLines) {
-		DrawString(out, line.c_str(), { { PANEL_X + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
+		DrawString(out, line, { { PANEL_X + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
 		lineNumber += 1;
 	}
 

@@ -127,7 +127,7 @@ void UiInitList(void (*fnFocus)(int value), void (*fnSelect)(int value), void (*
 			textInputActive = true;
 			allowEmptyTextInput = pItemUIEdit->m_allowEmpty;
 #ifdef __SWITCH__
-			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
+			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #elif defined(__vita__)
 			vita_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #elif defined(__3DS__)
@@ -436,6 +436,7 @@ void UiHandleEvents(SDL_Event *event)
 		const Uint8 *state = SDLC_GetKeyState();
 		if (state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
+			SaveOptions();
 			if (gfnFullscreen != nullptr)
 				gfnFullscreen();
 			return;
@@ -458,8 +459,15 @@ void UiHandleEvents(SDL_Event *event)
 		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
 			music_mute();
 		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
-			music_unmute();
+			diablo_focus_unpause();
 		}
+	}
+#else
+	if (event->type == SDL_ACTIVEEVENT && (event->active.state & SDL_APPINPUTFOCUS) != 0) {
+		if (event->active.gain == 0)
+			music_mute();
+		else
+			diablo_focus_unpause();
 	}
 #endif
 }
@@ -658,7 +666,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeTc = 0;
 	fadeValue = 0;
 
-	if (IsHardwareCursorEnabled() && ControlMode == ControlTypes::KeyboardAndMouse && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
+	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
 		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);

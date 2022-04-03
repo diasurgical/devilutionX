@@ -152,7 +152,7 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 {
 	const int monsterId = monsterSync._mndx;
 	Monster &monster = Monsters[monsterId];
-	if (monster._mhitpoints <= 0) {
+	if (monster._mhitpoints <= 0 || monster._mmode == MonsterMode::Death) {
 		return;
 	}
 
@@ -197,8 +197,7 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 	}
 
 	decode_enemy(monster, enemyId);
-	monster.mWhoHit = monsterSync.mWhoHit;
-	monster._mhitpoints = monsterSync._mhitpoints;
+	monster.mWhoHit |= monsterSync.mWhoHit;
 }
 
 bool IsEnemyIdValid(const Monster &monster, int enemyId)

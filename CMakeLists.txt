@@ -59,6 +59,8 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
+option(DEVILUTIONX_MASKED_ART_RLE "RLE-compress masked art in memory (e.g. fonts). Slightly lower RAM usage at a significant performance cost." OFF)
+
 if(TSAN)
   set(ASAN OFF)
 endif()
@@ -109,6 +111,13 @@ else()
     LANGUAGES C CXX)
 endif()
 set(PROJECT_VERSION_WITH_SUFFIX "${PROJECT_VERSION}$<$<CONFIG:Debug>:-${VERSION_SUFFIX}>")
+
+if(MSVC AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT DISABLE_LTO)
+  # Work around MSVC + CMake bug when LTO is enabled.
+  # See https://github.com/diasurgical/devilutionX/issues/3778
+  # and https://gitlab.kitware.com/cmake/cmake/-/issues/23035
+  set(BUILD_TESTING OFF)
+endif()
 
 # This built-in CMake module adds a BUILD_TESTING option (ON by default).
 # Must be included in the top-level `CMakeLists.txt` after calling `project`.
@@ -202,6 +211,8 @@ endif()
 
 if(ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
+elseif(UWP_LIB)
+  add_custom_target(${BIN_TARGET})  # we only need libdevilutionx
 else()
   add_executable(${BIN_TARGET}
     WIN32
@@ -212,7 +223,14 @@ else()
     Packaging/apple/AppIcon.icns
     Packaging/apple/LaunchScreen.storyboard)
 endif()
-target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+
+if(NOT UWP_LIB)
+  target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
+endif()
+
+if(GPERF)
+  target_link_libraries(${BIN_TARGET} PUBLIC ${GPERFTOOLS_LIBRARIES})
+endif()
 
 # Must be included after `BIN_TARGET` and `libdevilutionx` are defined.
 include(Assets)
@@ -221,7 +239,7 @@ if(EMSCRIPTEN)
   target_link_options(${BIN_TARGET} PRIVATE --preload-file assets)
 endif()
 
-if(NOT USE_SDL1)
+if(NOT USE_SDL1 AND NOT UWP_LIB)
   target_link_libraries(${BIN_TARGET} PUBLIC ${SDL2_MAIN})
 endif()
 
@@ -321,6 +339,15 @@ if(VITA)
 
 endif()
 
+if(PS4)
+  add_custom_command(
+    TARGET devilutionx_mpq POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} "${PROJECT_SOURCE_DIR}/Packaging/ps4/")
+  add_self(${BIN_TARGET})
+  add_pkg(${BIN_TARGET} "${PROJECT_SOURCE_DIR}/Packaging/ps4"
+    "DVLX00001" "DevilutionX" "${PROJECT_VERSION}")
+endif()
+
 if(NINTENDO_3DS)
   set(APP_TITLE       "DevilutionX")
   set(APP_DESCRIPTION "DevilutionX port for 3DS")
@@ -364,6 +391,10 @@ if(NINTENDO_3DS)
   add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
+if(UWP_LIB)
+  target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
+endif()
+
 if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -404,6 +435,12 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
         DESTINATION "LICENSE"
       )
     endforeach()
+
+    if(DISCORD_SHARED_LIB)
+      install(FILES "${DISCORD_SHARED_LIB}"
+        DESTINATION "."
+      )
+    endif()
 
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(TOLOWER ${PROJECT_NAME} project_name)

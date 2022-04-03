@@ -7,16 +7,16 @@
 constexpr size_t MAX_TEXT_LENGTH = 255;
 
 struct vkbdEvent {
-	const char *hintText;
-	const char *inText;
+	devilution::string_view hintText;
+	devilution::string_view inText;
 	char *outText;
-	int maxLength;
+	size_t maxLength;
 };
 
 static vkbdEvent events[16];
 static int eventCount = 0;
 
-void ctr_vkbdInput(const char *hintText, const char *inText, char *outText, int maxLength)
+void ctr_vkbdInput(devilution::string_view hintText, devilution::string_view inText, char *outText, size_t maxLength)
 {
 	if (eventCount >= sizeof(events))
 		return;
@@ -35,21 +35,25 @@ void ctr_vkbdFlush()
 		vkbdEvent &event = events[i];
 		SwkbdState swkbd;
 
-		char mybuf[MAX_TEXT_LENGTH + 1];
-
 		swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 2, MAX_TEXT_LENGTH);
 		swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, 0, 0);
-		swkbdSetInitialText(&swkbd, event.inText);
-		swkbdSetHintText(&swkbd, event.hintText);
 
+		// swkbdSetInitialText stores the pointer to the c-string, only copying it when swkbdInputText is called. Need to
+		//  ensure it has a valid null-terminated string until that point.
+		std::string initialText { event.inText };
+		swkbdSetInitialText(&swkbd, initialText.c_str());
+
+		// swkbdSetHintText copies from the c-string immediately so we can use the output buffer to save a malloc
+		char mybuf[MAX_TEXT_LENGTH + 1];
+		devilution::CopyUtf8(mybuf, event.hintText, sizeof(mybuf));
+		swkbdSetHintText(&swkbd, mybuf);
+
+		memset(mybuf, 0, sizeof(mybuf));
 		SwkbdButton button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
 
 		if (button == SWKBD_BUTTON_CONFIRM) {
 			devilution::CopyUtf8(event.outText, mybuf, event.maxLength);
-			continue;
 		}
-
-		devilution::CopyUtf8(event.outText, event.inText, event.maxLength);
 	}
 
 	eventCount = 0;

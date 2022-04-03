@@ -9,7 +9,6 @@
 
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
-#include "control.h"
 #include "cursor.h"
 #ifdef _DEBUG
 #include "debug.h"
@@ -17,6 +16,7 @@
 #include "drlg_l1.h"
 #include "drlg_l4.h"
 #include "engine/load_file.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "error.h"
 #include "init.h"
@@ -34,6 +34,7 @@
 #include "track.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -307,6 +308,8 @@ bool RndLocOk(int xp, int yp)
 
 bool CanPlaceWallTrap(int xp, int yp)
 {
+	if (dObject[xp][yp] != 0)
+		return false;
 	if (TileContainsSetPiece({ xp, yp }))
 		return false;
 
@@ -2467,17 +2470,17 @@ void OperateSlainHero(int pnum, int i)
 	auto &player = Players[pnum];
 
 	if (player._pClass == HeroClass::Warrior) {
-		CreateMagicArmor(Objects[i].position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, false, true);
+		CreateMagicArmor(Objects[i].position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
 	} else if (player._pClass == HeroClass::Rogue) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Bow, ICURS_LONG_WAR_BOW, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		CreateSpellBook(Objects[i].position, SPL_LIGHTNING, false, true);
+		CreateSpellBook(Objects[i].position, SPL_LIGHTNING, true, false);
 	} else if (player._pClass == HeroClass::Monk) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Staff, ICURS_WAR_STAFF, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
 	} else if (player._pClass == HeroClass::Bard) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Sword, ICURS_BASTARD_SWORD, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Sword, ICURS_BASTARD_SWORD, true, false);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Axe, ICURS_BATTLE_AXE, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
 	}
 	Players[MyPlayerId].Say(HeroSpeech::RestInPeaceMyFriend);
 	if (pnum == MyPlayerId)
@@ -2940,30 +2943,24 @@ bool OperateShrineCryptic(int pnum)
 
 bool OperateShrineEldritch(int pnum)
 {
-	/// BUGFIX: change `plr[pnum].HoldItem` to use a temporary buffer to prevent deleting item in hand
 	if (deltaload)
 		return false;
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
-
-	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
-		if (item._itype == ItemType::Misc) {
-			if (item._iMiscId == IMISC_HEAL
-			    || item._iMiscId == IMISC_MANA) {
-				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
-				GetPlrHandSeed(&player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				item = player.HoldItem;
-			}
-			if (item._iMiscId == IMISC_FULLHEAL
-			    || item._iMiscId == IMISC_FULLMANA) {
-				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
-				GetPlrHandSeed(&player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				item = player.HoldItem;
-			}
+	for (Item &item : InventoryAndBeltPlayerItemsRange { Players[pnum] }) {
+		if (item._itype != ItemType::Misc) {
+			continue;
+		}
+		if (IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_MANA)) {
+			InitializeItem(item, ItemMiscIdIdx(IMISC_REJUV));
+			item._iStatFlag = true;
+			continue;
+		}
+		if (IsAnyOf(item._iMiscId, IMISC_FULLHEAL, IMISC_FULLMANA)) {
+			InitializeItem(item, ItemMiscIdIdx(IMISC_FULLREJUV));
+			item._iStatFlag = true;
+			continue;
 		}
 	}
 
@@ -3083,17 +3080,14 @@ bool OperateShrineSpiritual(int pnum)
 
 	auto &player = Players[pnum];
 
-	for (int8_t &gridItem : player.InvGrid) {
-		if (gridItem == 0) {
-			int r = 5 * leveltype + GenerateRnd(10 * leveltype);
-			DWORD t = player._pNumInv; // check
-			player.InvList[t] = golditem;
-			player.InvList[t]._iSeed = AdvanceRndSeed();
+	for (int8_t &itemIndex : player.InvGrid) {
+		if (itemIndex == 0) {
+			Item &goldItem = player.InvList[player._pNumInv];
+			MakeGoldStack(goldItem, 5 * leveltype + GenerateRnd(10 * leveltype));
 			player._pNumInv++;
-			gridItem = player._pNumInv;
-			player.InvList[t]._ivalue = r;
-			player._pGold += r;
-			SetPlrHandGoldCurs(player.InvList[t]);
+			itemIndex = player._pNumInv;
+
+			player._pGold += goldItem._ivalue;
 		}
 	}
 
@@ -4868,16 +4862,19 @@ void OperateTrap(Object &trap)
 	}
 
 	trap._oVar4 = 1;
-	Point target = trigger.position;
-	for (int y = target.y - 1; y <= trigger.position.y + 1; y++) {
-		for (int x = trigger.position.x - 1; x <= trigger.position.x + 1; x++) {
-			if (dPlayer[x][y] != 0) {
-				target.x = x;
-				target.y = y;
-			}
-		}
-	}
+
 	if (!deltaload) {
+		// default to firing at the trigger object
+		Point target = trigger.position;
+
+		PointsInRectangleRange searchArea { Rectangle { target, 1 } };
+		// look for a player near the trigger (using a reverse search to match vanilla behaviour)
+		auto foundPosition = std::find_if(searchArea.crbegin(), searchArea.crend(), [](Point testPosition) { return InDungeonBounds(testPosition) && dPlayer[testPosition.x][testPosition.y] != 0; });
+		if (foundPosition != searchArea.crend()) {
+			// if a player is standing near the trigger then target them instead
+			target = *foundPosition;
+		}
+
 		Direction dir = GetDirection(trap.position, target);
 		AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
 		PlaySfxLoc(IS_TRAP, trigger.position);
@@ -5383,11 +5380,11 @@ void GetObjectStr(const Object &object)
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		strcpy(infostr, _("Crucified Skeleton"));
+		InfoString = _("Crucified Skeleton");
 		break;
 	case OBJ_LEVER:
 	case OBJ_FLAMELVR:
-		strcpy(infostr, _("Lever"));
+		InfoString = _("Lever");
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5396,138 +5393,135 @@ void GetObjectStr(const Object &object)
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
 		if (object._oVar4 == 1)
-			strcpy(infostr, _("Open Door"));
+			InfoString = _("Open Door");
 		if (object._oVar4 == 0)
-			strcpy(infostr, _("Closed Door"));
+			InfoString = _("Closed Door");
 		if (object._oVar4 == 2)
-			strcpy(infostr, _("Blocked Door"));
+			InfoString = _("Blocked Door");
 		break;
 	case OBJ_BOOK2L:
 		if (setlevel) {
 			if (setlvlnum == SL_BONECHAMB) {
-				strcpy(infostr, _("Ancient Tome"));
+				InfoString = _("Ancient Tome");
 			} else if (setlvlnum == SL_VILEBETRAYER) {
-				strcpy(infostr, _("Book of Vileness"));
+				InfoString = _("Book of Vileness");
 			}
 		}
 		break;
 	case OBJ_SWITCHSKL:
-		strcpy(infostr, _("Skull Lever"));
+		InfoString = _("Skull Lever");
 		break;
 	case OBJ_BOOK2R:
-		strcpy(infostr, _("Mythical Book"));
+		InfoString = _("Mythical Book");
 		break;
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
-		strcpy(infostr, _("Small Chest"));
+		InfoString = _("Small Chest");
 		break;
 	case OBJ_CHEST2:
 	case OBJ_TCHEST2:
-		strcpy(infostr, _("Chest"));
+		InfoString = _("Chest");
 		break;
 	case OBJ_CHEST3:
 	case OBJ_TCHEST3:
 	case OBJ_SIGNCHEST:
-		strcpy(infostr, _("Large Chest"));
+		InfoString = _("Large Chest");
 		break;
 	case OBJ_SARC:
-		strcpy(infostr, _("Sarcophagus"));
+		InfoString = _("Sarcophagus");
 		break;
 	case OBJ_BOOKSHELF:
-		strcpy(infostr, _("Bookshelf"));
+		InfoString = _("Bookshelf");
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		strcpy(infostr, _("Bookcase"));
+		InfoString = _("Bookcase");
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
 		if (currlevel >= 17 && currlevel <= 20)      // for hive levels
-			strcpy(infostr, _("Pod"));               // Then a barrel is called a pod
+			InfoString = _("Pod");                   // Then a barrel is called a pod
 		else if (currlevel >= 21 && currlevel <= 24) // for crypt levels
-			strcpy(infostr, _("Urn"));               // Then a barrel is called an urn
+			InfoString = _("Urn");                   // Then a barrel is called an urn
 		else
-			strcpy(infostr, _("Barrel"));
+			InfoString = _("Barrel");
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])).c_str());
-		strcpy(infostr, tempstr);
+		InfoString = fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1]));
 		break;
 	case OBJ_SKELBOOK:
-		strcpy(infostr, _("Skeleton Tome"));
+		InfoString = _("Skeleton Tome");
 		break;
 	case OBJ_BOOKSTAND:
-		strcpy(infostr, _("Library Book"));
+		InfoString = _("Library Book");
 		break;
 	case OBJ_BLOODFTN:
-		strcpy(infostr, _("Blood Fountain"));
+		InfoString = _("Blood Fountain");
 		break;
 	case OBJ_DECAP:
-		strcpy(infostr, _("Decapitated Body"));
+		InfoString = _("Decapitated Body");
 		break;
 	case OBJ_BLINDBOOK:
-		strcpy(infostr, _("Book of the Blind"));
+		InfoString = _("Book of the Blind");
 		break;
 	case OBJ_BLOODBOOK:
-		strcpy(infostr, _("Book of Blood"));
+		InfoString = _("Book of Blood");
 		break;
 	case OBJ_PURIFYINGFTN:
-		strcpy(infostr, _("Purifying Spring"));
+		InfoString = _("Purifying Spring");
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		strcpy(infostr, _("Armor"));
+		InfoString = _("Armor");
 		break;
 	case OBJ_WARWEAP:
-		strcpy(infostr, _("Weapon Rack"));
+		InfoString = _("Weapon Rack");
 		break;
 	case OBJ_GOATSHRINE:
-		strcpy(infostr, _("Goat Shrine"));
+		InfoString = _("Goat Shrine");
 		break;
 	case OBJ_CAULDRON:
-		strcpy(infostr, _("Cauldron"));
+		InfoString = _("Cauldron");
 		break;
 	case OBJ_MURKYFTN:
-		strcpy(infostr, _("Murky Pool"));
+		InfoString = _("Murky Pool");
 		break;
 	case OBJ_TEARFTN:
-		strcpy(infostr, _("Fountain of Tears"));
+		InfoString = _("Fountain of Tears");
 		break;
 	case OBJ_STEELTOME:
-		strcpy(infostr, _("Steel Tome"));
+		InfoString = _("Steel Tome");
 		break;
 	case OBJ_PEDISTAL:
-		strcpy(infostr, _("Pedestal of Blood"));
+		InfoString = _("Pedestal of Blood");
 		break;
 	case OBJ_STORYBOOK:
-		strcpy(infostr, _(StoryBookName[object._oVar3]));
+		InfoString = _(StoryBookName[object._oVar3]);
 		break;
 	case OBJ_WEAPONRACK:
-		strcpy(infostr, _("Weapon Rack"));
+		InfoString = _("Weapon Rack");
 		break;
 	case OBJ_MUSHPATCH:
-		strcpy(infostr, _("Mushroom Patch"));
+		InfoString = _("Mushroom Patch");
 		break;
 	case OBJ_LAZSTAND:
-		strcpy(infostr, _("Vile Stand"));
+		InfoString = _("Vile Stand");
 		break;
 	case OBJ_SLAINHERO:
-		strcpy(infostr, _("Slain Hero"));
+		InfoString = _("Slain Hero");
 		break;
 	default:
 		break;
 	}
 	if (Players[MyPlayerId]._pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
-			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
-			strcpy(infostr, tempstr);
+			InfoString = fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), InfoString);
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
 	if (object.IsDisabled()) {
-		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
-		strcpy(infostr, tempstr);
+		InfoString = fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), InfoString);
 		InfoColor = UiFlags::ColorRed;
 	}
 }

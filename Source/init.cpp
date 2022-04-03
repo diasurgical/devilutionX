@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#if defined(_WIN64) || defined(_WIN32)
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__)
 #include <find_steam_game.h>
 #endif
 
@@ -96,7 +96,7 @@ std::vector<std::string> GetMPQSearchPaths()
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #elif defined(__3DS__)
 	paths.emplace_back("romfs:/");
-#elif defined(_WIN64) || defined(_WIN32)
+#elif (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__)
 	char gogpath[_FSG_PATH_MAX];
 	fsg_get_gog_game_path(gogpath, "1412601690");
 	if (strlen(gogpath) > 0) {
@@ -131,6 +131,7 @@ void init_cleanup()
 {
 	if (gbIsMultiplayer && gbRunGame) {
 		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
+		sfile_write_stash();
 	}
 
 	spawn_mpq = std::nullopt;
@@ -212,7 +213,7 @@ void LoadGameArchives()
 	hfvoice_mpq = LoadMPQ(paths, "hfvoice.mpq");
 
 	if (gbIsHellfire && (!hfmonk_mpq || !hfmusic_mpq || !hfvoice_mpq)) {
-		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
+		UiErrorOkDialog(_("Some Hellfire MPQs are missing").c_str(), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files.").c_str());
 		app_fatal(nullptr);
 	}
 }
@@ -220,7 +221,7 @@ void LoadGameArchives()
 void init_create_window()
 {
 	if (!SpawnWindow(PROJECT_NAME))
-		app_fatal("%s", _("Unable to create main window"));
+		app_fatal("%s", _("Unable to create main window").c_str());
 	dx_init();
 	gbActive = true;
 #ifndef USE_SDL1

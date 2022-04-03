@@ -13,7 +13,6 @@
 #include "options.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
-#include "utils/sdl_mutex.h"
 #include "utils/sdl_wrap.h"
 
 #ifdef __3DS__
@@ -46,12 +45,6 @@ bool RenderDirectlyToOutputSurface;
 
 namespace {
 
-int sgdwLockCount;
-#ifdef _DEBUG
-int locktbl[256];
-#endif
-SdlMutex MemCrit;
-
 bool CanRenderDirectlyToOutputSurface()
 {
 #ifdef USE_SDL1
@@ -66,26 +59,6 @@ bool CanRenderDirectlyToOutputSurface()
 #else // !USE_SDL1
 	return false;
 #endif
-}
-
-void LockBufPriv()
-{
-	MemCrit.lock();
-	if (sgdwLockCount != 0) {
-		sgdwLockCount++;
-		return;
-	}
-
-	sgdwLockCount++;
-}
-
-void UnlockBufPriv()
-{
-	if (sgdwLockCount == 0)
-		app_fatal("draw main unlock error");
-
-	sgdwLockCount--;
-	MemCrit.unlock();
 }
 
 /**
@@ -119,31 +92,8 @@ void dx_init()
 	pal_surface_palette_version = 1;
 }
 
-void lock_buf(int idx) // NOLINT(misc-unused-parameters)
-{
-#ifdef _DEBUG
-	++locktbl[idx];
-#endif
-	LockBufPriv();
-}
-
-void unlock_buf(int idx) // NOLINT(misc-unused-parameters)
-{
-#ifdef _DEBUG
-	if (locktbl[idx] == 0)
-		app_fatal("Draw lock underflow: 0x%x", idx);
-	--locktbl[idx];
-#endif
-	UnlockBufPriv();
-}
-
 Surface GlobalBackBuffer()
 {
-	if (sgdwLockCount == 0) {
-		Log("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock");
-		return Surface();
-	}
-
 	return Surface(PalSurface, SDL_Rect { 0, 0, gnScreenWidth, gnScreenHeight });
 }
 
@@ -153,9 +103,6 @@ void dx_cleanup()
 	if (ghMainWnd != nullptr)
 		SDL_HideWindow(ghMainWnd);
 #endif
-	MemCrit.lock();
-	sgdwLockCount = 0;
-	MemCrit.unlock();
 
 	PalSurface = nullptr;
 	PinnedPalSurface = nullptr;

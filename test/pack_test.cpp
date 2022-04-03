@@ -345,7 +345,7 @@ TEST(PackTest, UnPackItem_diablo)
 		UnPackItem(PackedDiabloItems[i], id, false);
 		CompareItems(id, DiabloItems[i]);
 
-		PackItem(is, id);
+		PackItem(is, id, gbIsHellfire);
 		ComparePackedItems(is, PackedDiabloItems[i]);
 	}
 }
@@ -380,7 +380,7 @@ TEST(PackTest, UnPackItem_diablo_unique_bug)
 	ASSERT_EQ(id.IDidx, IDI_STEELVEIL);
 
 	ItemPack is;
-	PackItem(is, id);
+	PackItem(is, id, gbIsHellfire);
 	ComparePackedItems(is, pkItem);
 }
 
@@ -416,7 +416,7 @@ TEST(PackTest, UnPackItem_spawn)
 		UnPackItem(PackedSpawnItems[i], id, false);
 		CompareItems(id, SpawnItems[i]);
 
-		PackItem(is, id);
+		PackItem(is, id, gbIsHellfire);
 		ComparePackedItems(is, PackedSpawnItems[i]);
 	}
 }
@@ -460,7 +460,7 @@ TEST(PackTest, UnPackItem_diablo_multiplayer)
 		UnPackItem(PackedDiabloMPItems[i], id, false);
 		CompareItems(id, DiabloMPItems[i]);
 
-		PackItem(is, id);
+		PackItem(is, id, gbIsHellfire);
 		ComparePackedItems(is, PackedDiabloMPItems[i]);
 	}
 }
@@ -669,7 +669,7 @@ TEST(PackTest, UnPackItem_hellfire)
 		UnPackItem(PackedHellfireItems[i], id, true);
 		CompareItems(id, HellfireItems[i]);
 
-		PackItem(is, id);
+		PackItem(is, id, gbIsHellfire);
 		is.dwBuff &= ~CF_HELLFIRE;
 		ComparePackedItems(is, PackedHellfireItems[i]);
 	}
@@ -706,7 +706,7 @@ TEST(PackTest, PackItem_empty)
 
 	id._itype = ItemType::None;
 
-	PackItem(is, id);
+	PackItem(is, id, gbIsHellfire);
 
 	// Copy the value out before comparing to avoid loading a misaligned address.
 	const auto idx = is.idx;
@@ -726,7 +726,7 @@ static void compareGold(const ItemPack &is, int iCurs)
 	ASSERT_EQ(id._iClass, ICLASS_GOLD);
 
 	ItemPack is2;
-	PackItem(is2, id);
+	PackItem(is2, id, gbIsHellfire);
 	ComparePackedItems(is, is2);
 }
 
@@ -758,7 +758,7 @@ TEST(PackTest, UnPackItem_ear)
 	ASSERT_EQ(id._ivalue, 3);
 
 	ItemPack is2;
-	PackItem(is2, id);
+	PackItem(is2, id, gbIsHellfire);
 	ComparePackedItems(is, is2);
 }
 

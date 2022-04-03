@@ -9,7 +9,7 @@
 namespace devilution {
 
 namespace {
-std::optional<CelSprite> pSpellCels;
+std::optional<OwnedCelSprite> pSpellCels;
 uint8_t SplTransTbl[256];
 } // namespace
 
@@ -87,7 +87,7 @@ void DrawSpellCel(const Surface &out, Point position, int nCel)
 	DrawSpellCel(out, position, *pSpellCels, nCel);
 }
 
-void DrawSpellCel(const Surface &out, Point position, const CelSprite &sprite, int nCel)
+void DrawSpellCel(const Surface &out, Point position, const OwnedCelSprite &sprite, int nCel)
 {
 	CelDrawLightTo(out, position, sprite, nCel, SplTransTbl);
 }

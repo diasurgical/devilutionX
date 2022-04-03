@@ -75,7 +75,7 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 	for (TestData *x : vecTestData) {
 		auto setNewAnimationData = dynamic_cast<SetNewAnimationData *>(x);
 		if (setNewAnimationData != nullptr) {
-			animInfo.SetNewAnimation(nullptr, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
+			animInfo.SetNewAnimation(std::nullopt, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
 		}
 
 		auto gameTickData = dynamic_cast<GameTickData *>(x);

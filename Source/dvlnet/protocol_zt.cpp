@@ -307,6 +307,11 @@ uint64_t protocol_zt::current_ms()
 	return 0;
 }
 
+bool protocol_zt::is_peer_connected(endpoint &peer)
+{
+	return peer_list.count(peer) != 0 && peer_list[peer].fd != -1;
+}
+
 std::string protocol_zt::make_default_gamename()
 {
 	std::string ret;

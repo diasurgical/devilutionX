@@ -139,7 +139,7 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 	Point position { 0, 0 };
 	for (item_cursor_graphic graphic : potionGraphics) {
 		const int frame = CURSOR_FIRSTITEM + graphic;
-		const CelSprite &potionSprite = GetInvItemSprite(frame);
+		const OwnedCelSprite &potionSprite = GetInvItemSprite(frame);
 		position.y += potionSize.height;
 		CelClippedDrawTo(Surface(surface.get()), position, potionSprite, frame);
 	}
@@ -359,33 +359,30 @@ void PotionButtonRenderer::RenderPotion(RenderFunction renderFunction, Art &poti
 
 std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 {
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		auto &myPlayer = Players[MyPlayerId];
-		const int id = AllItemsList[myPlayer.SpdList[i].IDidx].iMiscId;
-		const int spellId = AllItemsList[myPlayer.SpdList[i].IDidx].iSpell;
-
-		if (myPlayer.SpdList[i].isEmpty())
+	for (const Item &item : MyPlayer->SpdList) {
+		if (item.isEmpty()) {
 			continue;
+		}
 
 		if (potionType == BLT_HEALING) {
-			if (id == IMISC_HEAL)
+			if (item._iMiscId == IMISC_HEAL)
 				return GAMEPAD_HEALING;
-			if (id == IMISC_FULLHEAL)
+			if (item._iMiscId == IMISC_FULLHEAL)
 				return GAMEPAD_FULL_HEALING;
-			if (id == IMISC_SCROLL && spellId == SPL_HEAL)
+			if (item.IsScrollOf(SPL_HEAL))
 				return GAMEPAD_SCROLL_OF_HEALING;
 		}
 
 		if (potionType == BLT_MANA) {
-			if (id == IMISC_MANA)
+			if (item._iMiscId == IMISC_MANA)
 				return GAMEPAD_MANA;
-			if (id == IMISC_FULLMANA)
+			if (item._iMiscId == IMISC_FULLMANA)
 				return GAMEPAD_FULL_MANA;
 		}
 
-		if (id == IMISC_REJUV)
+		if (item._iMiscId == IMISC_REJUV)
 			return GAMEPAD_REJUVENATION;
-		if (id == IMISC_FULLREJUV)
+		if (item._iMiscId == IMISC_FULLREJUV)
 			return GAMEPAD_FULL_REJUVENATION;
 	}
 
@@ -430,18 +427,18 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetDungeonButtonType()
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 {
-	if (pcursinvitem != -1 || pcurs > CURSOR_HAND)
+	if (pcursinvitem != -1 || pcursstashitem != uint16_t(-1) || pcurs > CURSOR_HAND)
 		return GetItemButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
 extern int pcurstrig;
-extern int pcursmissile;
+extern Missile *pcursmissile;
 extern quest_id pcursquest;
 
 VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 {
-	if (pcursmissile != -1 || pcurstrig != -1 || pcursquest != Q_INVALID) {
+	if (pcursmissile != nullptr || pcurstrig != -1 || pcursquest != Q_INVALID) {
 		return GetStairsButtonType(virtualPadButton->isHeld);
 	}
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
@@ -455,16 +452,9 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 			return GetApplyButtonType(virtualPadButton->isHeld);
 
 		if (pcursinvitem != -1) {
-			Item *item;
-			if (pcursinvitem < INVITEM_INV_FIRST)
-				item = &MyPlayer->InvBody[pcursinvitem];
-			else if (pcursinvitem <= INVITEM_INV_LAST)
-				item = &MyPlayer->InvList[pcursinvitem - INVITEM_INV_FIRST];
-			else
-				item = &MyPlayer->SpdList[pcursinvitem - INVITEM_BELT_FIRST];
-
-			if (!item->IsScroll() || !spelldata[item->_iSpell].sTargeted) {
-				if (!item->isEquipment()) {
+			Item &item = GetInventoryItem(*MyPlayer, pcursinvitem);
+			if (!item.IsScroll() || !spelldata[item._iSpell].sTargeted) {
+				if (!item.isEquipment()) {
 					return GetApplyButtonType(virtualPadButton->isHeld);
 				}
 			}

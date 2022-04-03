@@ -30,6 +30,9 @@ public:
 
 	virtual std::string make_default_gamename();
 
+protected:
+	bool IsGameHost() override;
+
 private:
 	frame_queue recv_queue;
 	buffer_t recv_buffer = buffer_t(frame_queue::max_frame_size);

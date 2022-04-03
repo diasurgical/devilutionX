@@ -67,13 +67,6 @@ struct STextStruct {
 	}
 };
 
-/** Shop frame graphics */
-extern std::optional<CelSprite> pSTextBoxCels;
-/** Small text selection cursor */
-extern std::optional<CelSprite> pSPentSpn2Cels;
-/** Scrollbar graphics */
-extern std::optional<CelSprite> pSTextSlidCels;
-
 /** Currently active store */
 extern talk_id stextflag;
 
@@ -83,9 +76,6 @@ extern DVL_API_FOR_TEST int storenumh;
 extern char storehidx[48];
 /** Copies of the players items as presented in the store */
 extern DVL_API_FOR_TEST Item storehold[48];
-
-/** Temporary item used to generate gold piles by various function */
-extern Item golditem;
 
 /** Items sold by Griswold */
 extern Item smithitem[SMITH_ITEMS];
@@ -108,9 +98,15 @@ extern int boylevel;
 extern Item boyitem;
 
 void AddStoreHoldRepair(Item *itm, int8_t i);
+
+/** Clears premium items sold by Griswold and Wirt. */
 void InitStores();
+
+/** Spawns items sold by vendors, including premium items sold by Griswold and Wirt. */
 void SetupTownStores();
+
 void FreeStoreMem();
+
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
 void DrawSLine(const Surface &out, int sy);
 void DrawSTextHelp();

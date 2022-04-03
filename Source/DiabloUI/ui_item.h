@@ -209,7 +209,7 @@ class UiArtTextButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiArtTextButton(const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiArtTextButton(string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::ArtTextButton, rect, flags)
 	    , text_(text)
 	    , action_(action)
@@ -232,7 +232,7 @@ public:
 	}
 
 private:
-	const char *text_;
+	string_view text_;
 	Callback action_;
 };
 
@@ -240,7 +240,7 @@ private:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(const char *hint, char *value, std::size_t maxLength, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiEdit(string_view hint, char *value, std::size_t maxLength, bool allowEmpty, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Edit, rect, flags)
 	    , m_hint(hint)
 	    , m_value(value)
@@ -250,7 +250,7 @@ public:
 	}
 
 	// private:
-	const char *m_hint;
+	string_view m_hint;
 	char *m_value;
 	std::size_t m_max_length;
 	bool m_allowEmpty;
@@ -262,7 +262,7 @@ public:
 
 class UiText : public UiItemBase {
 public:
-	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::ColorDialogWhite)
+	UiText(string_view text, SDL_Rect rect, UiFlags flags = UiFlags::ColorDialogWhite)
 	    : UiItemBase(UiType::Text, rect, flags)
 	    , text_(text)
 	{
@@ -274,7 +274,7 @@ public:
 	}
 
 private:
-	const char *text_;
+	string_view text_;
 };
 
 //=============================================================================
@@ -285,7 +285,7 @@ class UiButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiButton(Art *art, const char *text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiButton(Art *art, string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Button, rect, flags)
 	    , art_(art)
 	    , text_(text)
@@ -333,7 +333,7 @@ public:
 private:
 	Art *art_;
 
-	const char *text_;
+	string_view text_;
 	Callback action_;
 
 	// State
@@ -344,14 +344,14 @@ private:
 
 class UiListItem {
 public:
-	UiListItem(const char *text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
+	UiListItem(string_view text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , m_value(value)
 	    , uiFlags(uiFlags)
 	{
 	}
 
-	UiListItem(const char *text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
+	UiListItem(string_view text, std::vector<DrawStringFormatArg> &args, int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , args(args)
 	    , m_value(value)
@@ -360,7 +360,7 @@ public:
 	}
 
 	// private:
-	const char *m_text;
+	string_view m_text;
 	std::vector<DrawStringFormatArg> args;
 	int m_value;
 	UiFlags uiFlags;

@@ -24,9 +24,11 @@
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"
+#include "menu.h"
 #include "missiles.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
+#include "qol/stash.h"
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
@@ -37,6 +39,8 @@ bool gbIsHellfireSaveGame;
 uint8_t giNumberOfLevels;
 
 namespace {
+
+constexpr size_t MaxMissilesForSaveGame = 125;
 
 uint8_t giNumberQuests;
 uint8_t giNumberOfSmithPremiumItems;
@@ -65,7 +69,7 @@ T SwapBE(T in)
 	case 4:
 		return SDL_SwapBE32(in);
 	case 8:
-		return SDL_SwapBE64(in);
+		return static_cast<T>(SDL_SwapBE64(in));
 	default:
 		return in;
 	}
@@ -91,9 +95,12 @@ class LoadHelper {
 	}
 
 public:
-	LoadHelper(const char *szFileName)
+	LoadHelper(std::optional<MpqArchive> archive, const char *szFileName)
 	{
-		m_buffer_ = pfile_read(szFileName, &m_size_);
+		if (archive)
+			m_buffer_ = ReadArchive(*archive, szFileName, &m_size_);
+		else
+			m_buffer_ = nullptr;
 	}
 
 	bool IsValid(size_t size = 1)
@@ -146,14 +153,16 @@ public:
 };
 
 class SaveHelper {
+	MpqWriter &m_mpqWriter;
 	const char *m_szFileName_;
 	std::unique_ptr<byte[]> m_buffer_;
 	size_t m_cur_ = 0;
 	size_t m_capacity_;
 
 public:
-	SaveHelper(const char *szFileName, size_t bufferLen)
-	    : m_szFileName_(szFileName)
+	SaveHelper(MpqWriter &mpqWriter, const char *szFileName, size_t bufferLen)
+	    : m_mpqWriter(mpqWriter)
+	    , m_szFileName_(szFileName)
 	    , m_buffer_(new byte[codec_get_encoded_len(bufferLen)])
 	    , m_capacity_(bufferLen)
 	{
@@ -166,9 +175,9 @@ public:
 	}
 
 	template <typename T>
-	constexpr void Skip()
+	constexpr void Skip(size_t count = 1)
 	{
-		Skip(sizeof(T));
+		Skip(sizeof(T) * count);
 	}
 
 	void Skip(size_t len)
@@ -205,7 +214,7 @@ public:
 		const auto encodedLen = codec_get_encoded_len(m_cur_);
 		const char *const password = pfile_get_password();
 		codec_encode(m_buffer_.get(), m_cur_, encodedLen, password);
-		CurrentSaveArchive().WriteFile(m_szFileName_, m_buffer_.get(), encodedLen);
+		m_mpqWriter.WriteFile(m_szFileName_, m_buffer_.get(), encodedLen);
 	}
 };
 
@@ -360,14 +369,16 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMemSpells = file.NextLE<uint64_t>();
 	player._pAblSpells = file.NextLE<uint64_t>();
 	player._pScrlSpells = file.NextLE<uint64_t>();
-	player._pSpellFlags = file.NextLE<uint8_t>();
+	player._pSpellFlags = static_cast<SpellFlag>(file.NextLE<uint8_t>());
 	file.Skip(3); // Alignment
 
-	for (auto &spell : player._pSplHotKey)
-		spell = static_cast<spell_id>(file.NextLE<int32_t>());
-
-	for (auto &spellType : player._pSplTHotKey)
-		spellType = static_cast<spell_type>(file.NextLE<int8_t>());
+	// Extra hotkeys: to keep single player save compatibility, read only 4 hotkeys here, rely on LoadHotkeys for the rest
+	for (size_t i = 0; i < 4; i++) {
+		player._pSplHotKey[i] = static_cast<spell_id>(file.NextLE<int32_t>());
+	}
+	for (size_t i = 0; i < 4; i++) {
+		player._pSplTHotKey[i] = static_cast<spell_type>(file.NextLE<uint8_t>());
+	}
 
 	file.Skip<int32_t>(); // Skip _pwtype
 	player._pBlockFlag = file.NextBool8();
@@ -664,8 +675,9 @@ void SyncPackSize(Monster &leader)
 	}
 }
 
-void LoadMissile(LoadHelper *file, Missile &missile)
+void LoadMissile(LoadHelper *file)
 {
+	Missile missile = {};
 	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
 	missile.position.tile.x = file->NextLE<int32_t>();
 	missile.position.tile.y = file->NextLE<int32_t>();
@@ -712,6 +724,9 @@ void LoadMissile(LoadHelper *file, Missile &missile)
 	missile.var7 = file->NextLE<int32_t>();
 	missile.limitReached = file->NextBool32();
 	missile.lastCollisionTargetHash = 0;
+	if (Missiles.size() < Missiles.max_size()) {
+		Missiles.push_back(missile);
+	}
 }
 
 void LoadObject(LoadHelper &file, Object &object)
@@ -726,7 +741,7 @@ void LoadObject(LoadHelper &file, Object &object)
 	object._oAnimCnt = file.NextLE<int32_t>();
 	object._oAnimLen = file.NextLE<uint32_t>();
 	object._oAnimFrame = file.NextLE<uint32_t>();
-	object._oAnimWidth = file.NextLE<int32_t>();
+	object._oAnimWidth = static_cast<uint16_t>(file.NextLE<int32_t>());
 	file.Skip(4); // Skip _oAnimWidth2
 	object._oDelFlag = file.NextBool32();
 	object._oBreak = file.NextLE<int8_t>();
@@ -916,17 +931,6 @@ void LoadDroppedItems(LoadHelper &file, size_t savedItemCount)
 	}
 }
 
-void RemoveEmptyLevelItems()
-{
-	for (int i = ActiveItemCount; i > 0; i--) {
-		auto &item = Items[ActiveItems[i]];
-		if (item.isEmpty()) {
-			dItem[item.position.x][item.position.y] = 0;
-			DeleteItem(i);
-		}
-	}
-}
-
 void SaveItem(SaveHelper &file, const Item &item)
 {
 	auto idx = item.IDidx;
@@ -1060,7 +1064,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.AnimInfo.NumberOfFrames);
 	file.WriteLE<int32_t>(player.AnimInfo.CurrentFrame);
 	// write _pAnimWidth for vanilla compatibility
-	int animWidth = player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width();
+	int animWidth = player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96;
 	file.WriteLE<int32_t>(animWidth);
 	// write _pAnimWidth2 for vanilla compatibility
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
@@ -1088,14 +1092,16 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint64_t>(player._pMemSpells);
 	file.WriteLE<uint64_t>(player._pAblSpells);
 	file.WriteLE<uint64_t>(player._pScrlSpells);
-	file.WriteLE<uint8_t>(player._pSpellFlags);
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(player._pSpellFlags));
 	file.Skip(3); // Alignment
 
-	for (auto &spellId : player._pSplHotKey)
-		file.WriteLE<int32_t>(spellId);
-
-	for (auto &spellType : player._pSplTHotKey)
-		file.WriteLE<int8_t>(spellType);
+	// Extra hotkeys: to keep single player save compatibility, write only 4 hotkeys here, rely on SaveHotkeys for the rest
+	for (size_t i = 0; i < 4; i++) {
+		file.WriteLE<int32_t>(player._pSplHotKey[i]);
+	}
+	for (size_t i = 0; i < 4; i++) {
+		file.WriteLE<uint8_t>(player._pSplTHotKey[i]);
+	}
 
 	file.WriteLE<int32_t>(player.UsesRangedWeapon() ? 1 : 0);
 	file.WriteLE<uint8_t>(player._pBlockFlag ? 1 : 0);
@@ -1320,10 +1326,10 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(monster.mExp);
 
-	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.mHit, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.mMinDamage);
 	file->WriteLE<uint8_t>(monster.mMaxDamage);
-	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.mMinDamage2);
 	file->WriteLE<uint8_t>(monster.mMaxDamage2);
 	file->WriteLE<uint8_t>(monster.mArmorClass);
@@ -1346,7 +1352,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	// Omit pointer MData;
 }
 
-void SaveMissile(SaveHelper *file, Missile &missile)
+void SaveMissile(SaveHelper *file, const Missile &missile)
 {
 	file->WriteLE<int32_t>(missile._mitype);
 	file->WriteLE<int32_t>(missile.position.tile.x);
@@ -1408,7 +1414,7 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.WriteLE<uint32_t>(object._oAnimLen);
 	file.WriteLE<uint32_t>(object._oAnimFrame);
 	file.WriteLE<int32_t>(object._oAnimWidth);
-	file.WriteLE<int32_t>(CalculateWidth2(object._oAnimWidth)); // Write _oAnimWidth2 for vanilla compatibility
+	file.WriteLE<int32_t>(CalculateWidth2(static_cast<int>(object._oAnimWidth))); // Write _oAnimWidth2 for vanilla compatibility
 	file.WriteLE<uint32_t>(object._oDelFlag ? 1 : 0);
 	file.WriteLE<int8_t>(object._oBreak);
 	file.Skip(3); // Alignment
@@ -1525,6 +1531,47 @@ void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.WriteLE<uint8_t>(itemIndexes.at(dItem[i][j]));
+	}
+}
+
+constexpr uint32_t VersionAdditionalMissiles = 0;
+
+void SaveAdditionalMissiles()
+{
+	constexpr size_t BytesWrittenBySaveMissile = 180;
+	uint32_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? static_cast<uint32_t>(Missiles.size() - MaxMissilesForSaveGame) : 0;
+	SaveHelper file(CurrentSaveArchive(), "additionalMissiles", sizeof(uint32_t) + sizeof(uint32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
+
+	file.WriteLE<uint32_t>(VersionAdditionalMissiles);
+	file.WriteLE<uint32_t>(missileCountAdditional);
+
+	if (missileCountAdditional > 0) {
+		auto it = Missiles.cbegin();
+		// std::list::const_iterator doesn't provide operator+() :/ using std::advance to get past the missiles we've already saved
+		std::advance(it, MaxMissilesForSaveGame);
+		for (; it != Missiles.cend(); it++) {
+			SaveMissile(&file, *it);
+		}
+	}
+}
+
+void LoadAdditionalMissiles()
+{
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "additionalMissiles");
+
+	if (!file.IsValid()) {
+		// no addtional Missiles saved
+		return;
+	}
+
+	auto loadedVersion = file.NextLE<uint32_t>();
+	if (loadedVersion > VersionAdditionalMissiles) {
+		// unknown version
+		return;
+	}
+	auto missileCountAdditional = file.NextLE<uint32_t>();
+	for (uint32_t i = 0U; i < missileCountAdditional; i++) {
+		LoadMissile(&file);
 	}
 }
 
@@ -1677,46 +1724,80 @@ bool IsHeaderValid(uint32_t magicNumber)
 	return false;
 }
 
+// Returns the size of the hotkeys file with the number of hotkeys passed and if a header with the number of hotkeys is present in the file
+size_t HotkeysSize(size_t nHotkeys = NumHotkeys)
+{
+	//     header            spells                         spell types                    active spell      active spell type
+	return sizeof(uint8_t) + (nHotkeys * sizeof(int32_t)) + (nHotkeys * sizeof(uint8_t)) + sizeof(int32_t) + sizeof(uint8_t);
+}
+
 void LoadHotkeys()
 {
-	LoadHelper file("hotkeys");
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "hotkeys");
 	if (!file.IsValid())
 		return;
 
 	auto &myPlayer = Players[MyPlayerId];
+	size_t nHotkeys = 4; // Defaults to old save format number
 
-	for (auto &spellId : myPlayer._pSplHotKey) {
-		spellId = static_cast<spell_id>(file.NextLE<int32_t>());
+	// Refill the spell arrays with no selection
+	std::fill(myPlayer._pSplHotKey, myPlayer._pSplHotKey + NumHotkeys, SPL_INVALID);
+	std::fill(myPlayer._pSplTHotKey, myPlayer._pSplTHotKey + NumHotkeys, RSPLTYPE_INVALID);
+
+	// Checking if the save file has the old format with only 4 hotkeys and no header
+	if (file.IsValid(HotkeysSize(nHotkeys))) {
+		// The file contains a header byte and at least 4 entries, so we can assume it's a new format save
+		nHotkeys = file.NextLE<uint8_t>();
 	}
-	for (auto &spellType : myPlayer._pSplTHotKey) {
-		spellType = static_cast<spell_type>(file.NextLE<int8_t>());
+
+	// Read all hotkeys in the file
+	for (size_t i = 0; i < nHotkeys; i++) {
+		// Do not load hotkeys past the size of the spell types array, discard the rest
+		if (i < NumHotkeys) {
+			myPlayer._pSplHotKey[i] = static_cast<spell_id>(file.NextLE<int32_t>());
+		} else {
+			file.Skip<int32_t>();
+		}
 	}
+	for (size_t i = 0; i < nHotkeys; i++) {
+		// Do not load hotkeys past the size of the spells array, discard the rest
+		if (i < NumHotkeys) {
+			myPlayer._pSplTHotKey[i] = static_cast<spell_type>(file.NextLE<uint8_t>());
+		} else {
+			file.Skip<uint8_t>();
+		}
+	}
+
+	// Load the selected spell last
 	myPlayer._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
-	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<int8_t>());
+	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
 }
 
 void SaveHotkeys()
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	const size_t nHotkeyTypes = sizeof(myPlayer._pSplHotKey) / sizeof(myPlayer._pSplHotKey[0]);
-	const size_t nHotkeySpells = sizeof(myPlayer._pSplTHotKey) / sizeof(myPlayer._pSplTHotKey[0]);
+	SaveHelper file(CurrentSaveArchive(), "hotkeys", HotkeysSize());
 
-	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
+	// Write the number of spell hotkeys
+	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
 
+	// Write the spell hotkeys
 	for (auto &spellId : myPlayer._pSplHotKey) {
 		file.WriteLE<int32_t>(spellId);
 	}
 	for (auto &spellType : myPlayer._pSplTHotKey) {
 		file.WriteLE<uint8_t>(spellType);
 	}
+
+	// Write the selected spell last
 	file.WriteLE<int32_t>(myPlayer._pRSpell);
 	file.WriteLE<uint8_t>(myPlayer._pRSplType);
 }
 
 void LoadHeroItems(Player &player)
 {
-	LoadHelper file("heroitems");
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "heroitems");
 	if (!file.IsValid())
 		return;
 
@@ -1727,6 +1808,47 @@ void LoadHeroItems(Player &player)
 	LoadMatchingItems(file, MAXBELTITEMS, player.SpdList);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
+}
+
+constexpr uint8_t StashVersion = 0;
+
+void LoadStash()
+{
+	const char *filename;
+	if (!gbIsMultiplayer)
+		filename = "spstashitems";
+	else
+		filename = "mpstashitems";
+
+	Stash = {};
+
+	LoadHelper file(OpenStashArchive(), filename);
+	if (!file.IsValid())
+		return;
+
+	auto version = file.NextLE<uint8_t>();
+	if (version > StashVersion)
+		return;
+
+	Stash.gold = file.NextLE<uint32_t>();
+
+	auto pages = file.NextLE<uint32_t>();
+	for (unsigned i = 0; i < pages; i++) {
+		auto page = file.NextLE<uint32_t>();
+		for (auto &row : Stash.stashGrids[page]) {
+			for (uint16_t &cell : row) {
+				cell = file.NextLE<uint16_t>();
+			}
+		}
+	}
+
+	auto itemCount = file.NextLE<uint32_t>();
+	Stash.stashList.resize(itemCount);
+	for (unsigned i = 0; i < itemCount; i++) {
+		LoadItemData(file, Stash.stashList[i]);
+	}
+
+	Stash.SetPage(file.NextLE<uint32_t>());
 }
 
 void RemoveEmptyInventory(Player &player)
@@ -1743,12 +1865,12 @@ void LoadGame(bool firstflag)
 {
 	FreeGameMem();
 
-	LoadHelper file("game");
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "game");
 	if (!file.IsValid())
-		app_fatal("%s", _("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive").c_str());
 
 	if (!IsHeaderValid(file.NextLE<uint32_t>()))
-		app_fatal("%s", _("Invalid save file"));
+		app_fatal("%s", _("Invalid save file").c_str());
 
 	if (gbIsHellfireSaveGame) {
 		giNumberOfLevels = 25;
@@ -1779,7 +1901,7 @@ void LoadGame(bool firstflag)
 	int tmpNobjects = file.NextBE<int32_t>();
 
 	if (!gbIsHellfire && currlevel > 17)
-		app_fatal("%s", _("Player is on a Hellfire only level"));
+		app_fatal("%s", _("Player is on a Hellfire only level").c_str());
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = file.NextBE<uint32_t>();
@@ -1810,7 +1932,6 @@ void LoadGame(bool firstflag)
 
 	ViewPosition = { viewX, viewY };
 	ActiveMonsterCount = tmpNummonsters;
-	ActiveMissileCount = tmpNummissiles;
 	ActiveObjectCount = tmpNobjects;
 
 	for (int &monstkill : MonsterKillCounts)
@@ -1823,12 +1944,12 @@ void LoadGame(bool firstflag)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			SyncPackSize(Monsters[ActiveMonsters[i]]);
-		for (int &missileId : ActiveMissiles)
-			missileId = file.NextLE<int8_t>();
-		for (int &missileId : AvailableMissiles)
-			missileId = file.NextLE<int8_t>();
-		for (int i = 0; i < ActiveMissileCount; i++)
-			LoadMissile(&file, Missiles[ActiveMissiles[i]]);
+		// Skip ActiveMissiles
+		file.Skip<int8_t>(MaxMissilesForSaveGame);
+		// Skip AvailableMissiles
+		file.Skip<int8_t>(MaxMissilesForSaveGame);
+		for (int i = 0; i < tmpNummissiles; i++)
+			LoadMissile(&file);
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : AvailableObjects)
@@ -1853,6 +1974,8 @@ void LoadGame(bool firstflag)
 	}
 
 	LoadDroppedItems(file, savedItemCount);
+
+	LoadAdditionalMissiles();
 
 	for (bool &uniqueItemFlag : UniqueItemFlags)
 		uniqueItemFlag = file.NextBool8();
@@ -1921,7 +2044,7 @@ void LoadGame(bool firstflag)
 	ProcessVisionList();
 	// convert stray manashield missiles into pManaShield flag
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_MANASHIELD && missile._miDelFlag == false) {
+		if (missile._mitype == MIS_MANASHIELD && !missile._miDelFlag) {
 			Players[missile._misource].pManaShield = true;
 			missile._miDelFlag = true;
 		}
@@ -1933,7 +2056,6 @@ void LoadGame(bool firstflag)
 	gbProcessPlayers = true;
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
-		RemoveEmptyLevelItems();
 		SaveGame();
 	}
 
@@ -1943,7 +2065,7 @@ void LoadGame(bool firstflag)
 void SaveHeroItems(Player &player)
 {
 	size_t itemCount = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
+	SaveHelper file(CurrentSaveArchive(), "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
 
@@ -1955,9 +2077,54 @@ void SaveHeroItems(Player &player)
 		SaveItem(file, item);
 }
 
+void SaveStash()
+{
+	const char *filename;
+	if (!gbIsMultiplayer)
+		filename = "spstashitems";
+	else
+		filename = "mpstashitems";
+
+	const int itemSize = (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize);
+
+	SaveHelper file(
+	    StashArchive(),
+	    filename,
+	    sizeof(uint8_t)
+	        + sizeof(uint32_t)
+	        + sizeof(uint32_t)
+	        + (sizeof(uint32_t) + 10 * 10 * sizeof(uint16_t)) * Stash.stashGrids.size()
+	        + sizeof(uint32_t)
+	        + itemSize * Stash.stashList.size()
+	        + sizeof(uint32_t));
+
+	file.WriteLE<uint8_t>(StashVersion);
+
+	file.WriteLE<uint32_t>(Stash.gold);
+
+	// Current stash size is 50 pages, expanding to 100 in the near future. Will definitely fit in a 32 bit value.
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashGrids.size()));
+	for (const auto &stashPage : Stash.stashGrids) {
+		file.WriteLE<uint32_t>(stashPage.first);
+		for (const auto &row : stashPage.second) {
+			for (uint16_t cell : row) {
+				file.WriteLE<uint16_t>(cell);
+			}
+		}
+	}
+
+	// 100 pages of 100 items is still only 10 000, as with the page count will definitely fit in 32 bits even in the worst case.
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashList.size()));
+	for (const Item &item : Stash.stashList) {
+		SaveItem(file, item);
+	}
+
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.GetPage()));
+}
+
 void SaveGameData()
 {
-	SaveHelper file("game", 320 * 1024);
+	SaveHelper file(CurrentSaveArchive(), "game", 320 * 1024);
 
 	if (gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("SHAR"));
@@ -1968,7 +2135,7 @@ void SaveGameData()
 	else if (!gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("RETL"));
 	else
-		app_fatal("%s", _("Invalid game state"));
+		app_fatal("%s", _("Invalid game state").c_str());
 
 	if (gbIsHellfire) {
 		giNumberOfLevels = 25;
@@ -1990,7 +2157,10 @@ void SaveGameData()
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
 	file.WriteBE<int32_t>(ActiveMonsterCount);
 	file.WriteBE<int32_t>(ActiveItemCount);
-	file.WriteBE<int32_t>(ActiveMissileCount);
+	// ActiveMissileCount will be a value from 0-125 (for vanilla compatibility). Writing an unsigned value here to avoid
+	// warnings about casting from unsigned to signed, but there's no sign extension issues when reading this as a signed
+	// value later so it doesn't have to match in LoadGameData().
+	file.WriteBE<uint32_t>(static_cast<uint32_t>(std::min(Missiles.size(), MaxMissilesForSaveGame)));
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
@@ -2014,16 +2184,26 @@ void SaveGameData()
 			file.WriteBE<int32_t>(monsterId);
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
-		for (int missileId : ActiveMissiles)
-			file.WriteLE<int8_t>(missileId);
-		for (int missileId : AvailableMissiles)
-			file.WriteLE<int8_t>(missileId);
-		for (int i = 0; i < ActiveMissileCount; i++)
-			SaveMissile(&file, Missiles[ActiveMissiles[i]]);
+		// Write ActiveMissiles
+		for (uint8_t activeMissile = 0; activeMissile < MaxMissilesForSaveGame; activeMissile++)
+			file.WriteLE<uint8_t>(activeMissile);
+		// Write AvailableMissiles
+		for (size_t availableMissiles = Missiles.size(); availableMissiles < MaxMissilesForSaveGame; availableMissiles++)
+			file.WriteLE(static_cast<uint8_t>(availableMissiles));
+		const size_t savedMissiles = std::min(Missiles.size(), MaxMissilesForSaveGame);
+		file.Skip<uint8_t>(savedMissiles);
+		// Write Missile Data
+		{
+			auto missilesEnd = Missiles.cbegin();
+			std::advance(missilesEnd, savedMissiles);
+			for (auto it = Missiles.cbegin(); it != missilesEnd; it++) {
+				SaveMissile(&file, *it);
+			}
+		}
 		for (int objectId : ActiveObjects)
-			file.WriteLE<int8_t>(objectId);
+			file.WriteLE(static_cast<int8_t>(objectId));
 		for (int objectId : AvailableObjects)
-			file.WriteLE<int8_t>(objectId);
+			file.WriteLE(static_cast<int8_t>(objectId));
 		for (int i = 0; i < ActiveObjectCount; i++)
 			SaveObject(file, Objects[ActiveObjects[i]]);
 
@@ -2100,12 +2280,15 @@ void SaveGameData()
 
 	file.WriteLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.WriteBE<int32_t>(AutoMapScale);
+
+	SaveAdditionalMissiles();
 }
 
 void SaveGame()
 {
 	gbValidSaveFile = true;
 	pfile_write_hero(/*writeGameData=*/true);
+	sfile_write_stash();
 }
 
 void SaveLevel()
@@ -2121,7 +2304,7 @@ void SaveLevel()
 
 	char szName[MAX_PATH];
 	GetTempLevelNames(szName);
-	SaveHelper file(szName, 256 * 1024);
+	SaveHelper file(CurrentSaveArchive(), szName, 256 * 1024);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -2188,9 +2371,9 @@ void LoadLevel()
 {
 	char szName[MAX_PATH];
 	GetPermLevelNames(szName);
-	LoadHelper file(szName);
+	LoadHelper file(OpenSaveArchive(gSaveNumber), szName);
 	if (!file.IsValid())
-		app_fatal("%s", _("Unable to open save file archive"));
+		app_fatal("%s", _("Unable to open save file archive").c_str());
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -2254,10 +2437,6 @@ void LoadLevel()
 				AutomapView[i][j] = automapView == MAP_EXP_OLD ? MAP_EXP_SELF : automapView;
 			}
 		}
-	}
-
-	if (gbIsHellfireSaveGame != gbIsHellfire) {
-		RemoveEmptyLevelItems();
 	}
 
 	if (!gbSkipSync) {

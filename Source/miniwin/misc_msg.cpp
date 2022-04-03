@@ -28,6 +28,7 @@
 #include "miniwin/miniwin.h"
 #include "movie.h"
 #include "panels/spell_list.hpp"
+#include "qol/stash.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -302,7 +303,7 @@ bool BlurInventory()
 		}
 	}
 
-	invflag = false;
+	CloseInventory();
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
 	if (chrflag)
@@ -315,12 +316,19 @@ void ProcessGamepadEvents(GameAction &action)
 {
 	switch (action.type) {
 	case GameActionType_NONE:
+	case GameActionType_SEND_KEY:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
-		UseBeltItem(BLT_HEALING);
+		if (IsStashOpen)
+			Stash.PreviousPage();
+		else
+			UseBeltItem(BLT_HEALING);
 		break;
 	case GameActionType_USE_MANA_POTION:
-		UseBeltItem(BLT_MANA);
+		if (IsStashOpen)
+			Stash.NextPage();
+		else
+			UseBeltItem(BLT_MANA);
 		break;
 	case GameActionType_PRIMARY_ACTION:
 		PerformPrimaryAction();
@@ -340,12 +348,16 @@ void ProcessGamepadEvents(GameAction &action)
 			chrflag = false;
 			QuestLogIsOpen = false;
 			sbookflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
 		}
 		break;
 	case GameActionType_TOGGLE_CHARACTER_INFO:
 		chrflag = !chrflag;
 		if (chrflag) {
 			QuestLogIsOpen = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
 			spselflag = false;
 			if (pcurs == CURSOR_DISARM)
 				NewCursor(CURSOR_HAND);
@@ -356,6 +368,8 @@ void ProcessGamepadEvents(GameAction &action)
 		if (!QuestLogIsOpen) {
 			StartQuestlog();
 			chrflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
 			spselflag = false;
 		} else {
 			QuestLogIsOpen = false;
@@ -375,7 +389,7 @@ void ProcessGamepadEvents(GameAction &action)
 		break;
 	case GameActionType_TOGGLE_SPELL_BOOK:
 		if (BlurInventory()) {
-			invflag = false;
+			CloseInventory();
 			spselflag = false;
 			sbookflag = !sbookflag;
 		}
@@ -513,26 +527,62 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
-		if (button == SDL_BUTTON_LEFT) {
+		switch (button) {
+		case SDL_BUTTON_LEFT:
 			lpMsg->message = DVL_WM_LBUTTONDOWN;
 			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
 			lpMsg->wParam = KeystateForMouse(DVL_MK_LBUTTON);
-		} else if (button == SDL_BUTTON_RIGHT) {
+			break;
+		case SDL_BUTTON_RIGHT:
 			lpMsg->message = DVL_WM_RBUTTONDOWN;
 			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
 			lpMsg->wParam = KeystateForMouse(DVL_MK_RBUTTON);
+			break;
+		case SDL_BUTTON_MIDDLE:
+			lpMsg->message = DVL_WM_MBUTTONDOWN;
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
+			break;
+		case SDL_BUTTON_X1:
+			lpMsg->message = DVL_WM_X1BUTTONDOWN;
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
+			break;
+		case SDL_BUTTON_X2:
+			lpMsg->message = DVL_WM_X2BUTTONDOWN;
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
+			break;
 		}
 	} break;
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
-		if (button == SDL_BUTTON_LEFT) {
+		switch (button) {
+		case SDL_BUTTON_LEFT:
 			lpMsg->message = DVL_WM_LBUTTONUP;
 			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
 			lpMsg->wParam = KeystateForMouse(0);
-		} else if (button == SDL_BUTTON_RIGHT) {
+			break;
+		case SDL_BUTTON_RIGHT:
 			lpMsg->message = DVL_WM_RBUTTONUP;
 			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
 			lpMsg->wParam = KeystateForMouse(0);
+			break;
+		case SDL_BUTTON_MIDDLE:
+			lpMsg->message = DVL_WM_MBUTTONUP;
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
+			break;
+		case SDL_BUTTON_X1:
+			lpMsg->message = DVL_WM_X1BUTTONUP;
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
+			break;
+		case SDL_BUTTON_X2:
+			lpMsg->message = DVL_WM_X2BUTTONUP;
+			lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
+			lpMsg->wParam = KeystateForMouse(0);
+			break;
 		}
 	} break;
 #ifndef USE_SDL1
@@ -567,6 +617,10 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 		if (gbRunGame && dropGoldFlag) {
 			GoldDropNewText(e.text.text);
+			break;
+		}
+		if (gbRunGame && IsWithdrawGoldOpen) {
+			GoldWithdrawNewText(e.text.text);
 			break;
 		}
 		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
@@ -612,6 +666,15 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			return FalseAvail("SDL_WINDOWEVENT", e.window.event);
 		}
 
+		break;
+#else
+	case SDL_ACTIVEEVENT:
+		if ((e.active.state & SDL_APPINPUTFOCUS) != 0) {
+			if (e.active.gain == 0)
+				diablo_focus_pause();
+			else
+				diablo_focus_unpause();
+		}
 		break;
 #endif
 	default:

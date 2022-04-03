@@ -91,12 +91,14 @@ set(libdevilutionx_SRCS
   engine/render/dun_render.cpp
   engine/render/text_render.cpp
   engine/surface.cpp
+  engine/trn.cpp
   mpq/mpq_reader.cpp
   mpq/mpq_sdl_rwops.cpp
   mpq/mpq_writer.cpp
   qol/autopickup.cpp
-  qol/common.cpp
+  qol/chatlog.cpp
   qol/monhealthbar.cpp
+  qol/stash.cpp
   qol/xpbar.cpp
   qol/itemlabels.cpp
   utils/console.cpp
@@ -129,6 +131,7 @@ set(libdevilutionx_SRCS
   DiabloUI/support_lines.cpp
   DiabloUI/title.cpp
   panels/charpanel.cpp
+  panels/info_box.cpp
   panels/mainpanel.cpp
   panels/spell_book.cpp
   panels/spell_icons.cpp
@@ -216,10 +219,6 @@ file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 if(DISCORD_INTEGRATION)
   target_compile_definitions(libdevilutionx PRIVATE DISCORD)
   target_link_libraries(libdevilutionx PRIVATE discord discord_game_sdk)
-endif()
-
-if(GPERF)
-  find_package(Gperftools REQUIRED)
 endif()
 
 target_link_libraries(libdevilutionx PUBLIC

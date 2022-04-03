@@ -18,6 +18,7 @@ set(tests
   cursor_test
   dead_test
   diablo_test
+  drlg_common_test
   drlg_l1_test
   effects_test
   file_util_test
@@ -39,6 +40,9 @@ foreach(test_target ${tests})
   gtest_discover_tests(${test_target})
   target_link_libraries(${test_target} PRIVATE test_main)
   set_target_properties(${test_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${DevilutionX_BINARY_DIR})
+  if(GPERF)
+    target_link_libraries(${test_target} PUBLIC ${GPERFTOOLS_LIBRARIES})
+  endif()
 endforeach()
 
 target_include_directories(writehero_test PRIVATE ../3rdParty/PicoSHA2)

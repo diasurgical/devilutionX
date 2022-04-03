@@ -145,7 +145,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 			return;
 	}
 
-	sound->Play(lVolume, sgOptions.Audio.nSoundVolume, lPan);
+	sound->Play(lVolume, *sgOptions.Audio.soundVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
@@ -170,7 +170,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		size_t dwBytes = SDL_RWsize(file);
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
 		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
-			ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()).c_str(), __FILE__, __LINE__);
+			ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()), __FILE__, __LINE__);
 		}
 		int error = snd->DSB.SetChunk(waveFile, dwBytes);
 		SDL_RWclose(file);
@@ -191,12 +191,12 @@ TSnd::~TSnd()
 
 void snd_init()
 {
-	sgOptions.Audio.nSoundVolume = CapVolume(sgOptions.Audio.nSoundVolume);
-	gbSoundOn = sgOptions.Audio.nSoundVolume > VOLUME_MIN;
+	sgOptions.Audio.soundVolume.SetValue(CapVolume(*sgOptions.Audio.soundVolume));
+	gbSoundOn = *sgOptions.Audio.soundVolume > VOLUME_MIN;
 	sgbSaveSoundOn = gbSoundOn;
 
-	sgOptions.Audio.nMusicVolume = CapVolume(sgOptions.Audio.nMusicVolume);
-	gbMusicOn = sgOptions.Audio.nMusicVolume > VOLUME_MIN;
+	sgOptions.Audio.musicVolume.SetValue(CapVolume(*sgOptions.Audio.musicVolume));
+	gbMusicOn = *sgOptions.Audio.musicVolume > VOLUME_MIN;
 
 	// Initialize the SDL_audiolib library. Set the output sample rate to
 	// 22kHz, the audio format to 16-bit signed, use 2 output channels
@@ -254,7 +254,9 @@ void music_start(uint8_t nTrack)
 				return;
 			}
 
-			music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
+			music->setVolume(VolumeLogToLinear(*sgOptions.Audio.musicVolume, VOLUME_MIN, VOLUME_MAX));
+			if (!diablo_is_focused())
+				music_mute();
 			if (!music->play(/*iterations=*/0)) {
 				LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
 				CleanupMusic();
@@ -278,36 +280,36 @@ void sound_disable_music(bool disable)
 int sound_get_or_set_music_volume(int volume)
 {
 	if (volume == 1)
-		return sgOptions.Audio.nMusicVolume;
+		return *sgOptions.Audio.musicVolume;
 
-	sgOptions.Audio.nMusicVolume = volume;
+	sgOptions.Audio.musicVolume.SetValue(volume);
 
 	if (music)
-		music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
+		music->setVolume(VolumeLogToLinear(*sgOptions.Audio.musicVolume, VOLUME_MIN, VOLUME_MAX));
 
-	return sgOptions.Audio.nMusicVolume;
+	return *sgOptions.Audio.musicVolume;
 }
 
 int sound_get_or_set_sound_volume(int volume)
 {
 	if (volume == 1)
-		return sgOptions.Audio.nSoundVolume;
+		return *sgOptions.Audio.soundVolume;
 
-	sgOptions.Audio.nSoundVolume = volume;
+	sgOptions.Audio.soundVolume.SetValue(volume);
 
-	return sgOptions.Audio.nSoundVolume;
+	return *sgOptions.Audio.soundVolume;
 }
 
 void music_mute()
 {
 	if (music)
-		music->setVolume(VolumeLogToLinear(VOLUME_MIN, VOLUME_MIN, VOLUME_MAX));
+		music->mute();
 }
 
 void music_unmute()
 {
 	if (music)
-		music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
+		music->unmute();
 }
 
 } // namespace devilution

@@ -19,6 +19,7 @@ void ItemSelected(int value)
 {
 	auto option = static_cast<StartUpGameMode>(vecDialogItems[value]->m_value);
 	sgOptions.StartUp.gameMode.SetValue(option);
+	SaveOptions();
 	endMenu = true;
 }
 

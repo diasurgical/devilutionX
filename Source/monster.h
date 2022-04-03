@@ -132,14 +132,16 @@ enum class LeaderRelation : uint8_t {
 };
 
 struct AnimStruct {
-	std::unique_ptr<byte[]> CMem;
-	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
-
-	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] std::optional<CelSprite> GetCelSpritesForDirection(Direction direction) const
 	{
-		return CelSpritesForDirections[static_cast<size_t>(direction)];
+		const byte *spriteData = CelSpritesForDirections[static_cast<size_t>(direction)];
+		if (spriteData == nullptr)
+			return std::nullopt;
+		return CelSprite(spriteData, Width);
 	}
 
+	std::array<byte *, 8> CelSpritesForDirections;
+	uint16_t Width;
 	int Frames;
 	int Rate;
 };
@@ -148,6 +150,7 @@ struct CMonster {
 	_monster_id mtype;
 	/** placeflag enum as a flags*/
 	uint8_t mPlaceFlags;
+	std::unique_ptr<byte[]> animData;
 	AnimStruct Anims[6];
 	/**
 	 * @brief Returns AnimStruct for specified graphic
@@ -219,6 +222,7 @@ struct Monster { // note: missing field _mAFNum
 	const char *mName;
 	CMonster *MType;
 	const MonsterData *MData;
+	std::unique_ptr<uint8_t[]> uniqueTRN;
 
 	/**
 	 * @brief Sets the current cell sprite to match the desired direction and animation sequence
@@ -228,10 +232,9 @@ struct Monster { // note: missing field _mAFNum
 	void ChangeAnimationData(MonsterGraphic graphic, Direction direction)
 	{
 		auto &animationData = this->MType->GetAnimData(graphic);
-		auto &celSprite = animationData.GetCelSpritesForDirection(direction);
 
 		// Passing the Frames and Rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->AnimInfo.ChangeAnimationData(celSprite ? &*celSprite : nullptr, animationData.Frames, animationData.Rate);
+		this->AnimInfo.ChangeAnimationData(animationData.GetCelSpritesForDirection(direction), animationData.Frames, animationData.Rate);
 	}
 
 	/**
@@ -268,6 +271,7 @@ extern int ActiveMonsterCount;
 extern int MonsterKillCounts[MAXMONSTERS];
 extern bool sgbSaveSoundOn;
 
+void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);

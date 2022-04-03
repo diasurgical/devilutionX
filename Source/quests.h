@@ -13,6 +13,7 @@
 #include "gendung.h"
 #include "monster.h"
 #include "objdat.h"
+#include "panels/info_box.hpp"
 #include "textdat.h"
 #include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
@@ -73,7 +74,7 @@ struct QuestData {
 };
 
 extern bool QuestLogIsOpen;
-extern std::optional<CelSprite> pQLogCel;
+extern std::optional<OwnedCelSprite> pQLogCel;
 extern DVL_API_FOR_TEST Quest Quests[MAXQUESTS];
 extern Point ReturnLvlPosition;
 extern dungeon_type ReturnLevelType;

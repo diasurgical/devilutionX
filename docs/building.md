@@ -114,7 +114,7 @@ cmake --build build -j $(sysctl -n hw.ncpuonline)
 
 ### 32-bit
 
-Download the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.11.tar.gz) and place them in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
+Download the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.12.tar.gz) and place them in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 libz-mingw-w64-dev
@@ -122,7 +122,7 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-ming
 
 ### 64-bit
 
-Download the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.11.tar.gz) and place them in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
+Download the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.12.tar.gz) and place them in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 libz-mingw-w64-dev
@@ -139,7 +139,7 @@ cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ### 64-bit
 
 ```bash
-cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/mingwcc64.toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DDEVILUTIONX_SYSTEM_BZIP2=OFF
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
 
@@ -150,11 +150,18 @@ of the `(i686|x86_64)-w64-mingw32` directory.
 <details><summary>Windows via Visual Studio</summary>
 
 ### Installing dependencies
-Make sure to install the `C++ CMake tools for Windows` and `Windows SDK` component for Visual Studio.
+Make sure to install the workload `Desktop development with C++` and the individual components `C++ CMake tools for Windows` and `Windows SDK` for Visual Studio.
 *Note: `Windows SDK` component should match your Windows build version.*
 
-Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start-windows.
-Don't forget to perform _user-wide integration_ step for additional convenience.
+Install [Git for Windows](https://gitforwindows.org/)
+
+Run the following commands in Command Prompt or Powershell  
+git clone https://github.com/microsoft/vcpkg  
+cd vcpkg  
+bootstrap-vcpkg.bat  
+vcpkg integrate install
+
+If you need aditional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
 
 ### If you want to build the devilutionX.mpq File (optional)
 In order to build devilutionx.mpq, install smpq from https://launchpad.net/smpq/trunk/1.6/+download/SMPQ-1.6-x86_64.exe.
@@ -360,8 +367,8 @@ Emscripten port is a work in progress. It builds but does not do more than that 
 To build, install the [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html), then run:
 
 ~~~ bash
-emcmake cmake -S. -Bbuild-em -DCMAKE_BUILD_TYPE=Release
-cmake --build build-em -j $(getconf _NPROCESSORS_ONLN)
+emcmake cmake -S. -Bbuild-em -DCMAKE\_BUILD\_TYPE=Release
+cmake --build build-em -j $(getconf \_NPROCESSORS\_ONLN)
 ~~~
 
 To then run it:
@@ -370,6 +377,36 @@ To then run it:
 cd build-em
 emrun index.html
 ~~~
+</details>
+
+<details><summary>Xbox One/Series</summary>
+
+### Dependencies
+
+* Windows 10
+* CMake
+* Git
+* Visual Studio 2022 with the foloowing packages installed:
+    * C++ (v143) Universal Windows Platform tools
+    * Windows 11 SDK (10.0.22000.0)
+    * Windows 10 SDK (10.0.18362.0)
+    * MSVC v143 - VS 2022 C++ x64/x86 build tools
+
+_Note: Visual Studio Community Edition can be used._
+
+### Building
+
+Add the following to the PATH:
+* CMake
+* GIT
+* VsDevCmd.bat
+
+Run:
+```
+Packaging/xbox-one/build.bat
+```
+
+[Xbox One/Series manual](manual/platforms/xbox-one.md)
 </details>
 
 <details><summary><b>CMake build options</b></summary>

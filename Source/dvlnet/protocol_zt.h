@@ -73,6 +73,7 @@ public:
 	bool recv(endpoint &peer, buffer_t &data);
 	bool get_disconnected(endpoint &peer);
 	bool network_online();
+	bool is_peer_connected(endpoint &peer);
 	static std::string make_default_gamename();
 
 private:

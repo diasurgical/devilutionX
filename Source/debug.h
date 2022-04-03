@@ -15,7 +15,7 @@
 
 namespace devilution {
 
-extern std::optional<CelSprite> pSquareCel;
+extern std::optional<OwnedCelSprite> pSquareCel;
 extern bool DebugToggle;
 extern bool DebugGodMode;
 extern bool DebugVision;

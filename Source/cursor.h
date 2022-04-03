@@ -37,6 +37,7 @@ extern int pcursmonst;
 extern DVL_API_FOR_TEST Size icursSize28;
 extern DVL_API_FOR_TEST Size icursSize;
 extern int8_t pcursinvitem;
+extern uint16_t pcursstashitem;
 extern int8_t pcursitem;
 extern int8_t pcursobj;
 extern int8_t pcursplr;
@@ -61,7 +62,7 @@ inline bool IsItemSprite(int cursId)
 void CelDrawCursor(const Surface &out, Point position, int cursId);
 
 /** Returns the sprite for the given inventory index. */
-const CelSprite &GetInvItemSprite(int i);
+const OwnedCelSprite &GetInvItemSprite(int i);
 
 /** Returns the CEL frame index for the given inventory index. */
 int GetInvItemFrame(int i);

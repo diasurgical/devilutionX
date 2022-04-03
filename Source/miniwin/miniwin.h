@@ -78,6 +78,12 @@ void ClearMessageQueue();
 #define DVL_WM_LBUTTONUP 0x0202
 #define DVL_WM_RBUTTONDOWN 0x0204
 #define DVL_WM_RBUTTONUP 0x0205
+#define DVL_WM_MBUTTONDOWN 0x0206
+#define DVL_WM_MBUTTONUP 0x0207
+#define DVL_WM_X1BUTTONDOWN 0x0208
+#define DVL_WM_X1BUTTONUP 0x0209
+#define DVL_WM_X2BUTTONDOWN 0x020A
+#define DVL_WM_X2BUTTONUP 0x020B
 
 #define DVL_WM_KEYDOWN 0x0100
 #define DVL_WM_KEYUP 0x0101
@@ -97,6 +103,9 @@ void ClearMessageQueue();
 //
 // ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 #define DVL_VK_INVALID 0     // Invalid key
+#define DVL_VK_MBUTTON 0x04  // Middle mouse button (three-button mouse)
+#define DVL_VK_X1BUTTON 0x05 // X1 mouse button
+#define DVL_VK_X2BUTTON 0x06 // X2 mouse button
 #define DVL_VK_BACK 0x08     // BACKSPACE key
 #define DVL_VK_TAB 0x09      // TAB key
 #define DVL_VK_RETURN 0x0D   // ENTER key

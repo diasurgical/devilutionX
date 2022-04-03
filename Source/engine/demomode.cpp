@@ -218,12 +218,12 @@ bool FetchMessage(tagMSG *lpMsg)
 		}
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_KP_PLUS && sgGameInitInfo.nTickRate < 255) {
 			sgGameInitInfo.nTickRate++;
-			sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
+			sgOptions.Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
 			gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 		}
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_KP_MINUS && sgGameInitInfo.nTickRate > 1) {
 			sgGameInitInfo.nTickRate--;
-			sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
+			sgOptions.Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
 			gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 		}
 	}

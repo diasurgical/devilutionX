@@ -1227,7 +1227,11 @@ void InitMonsterSND(int monst)
 
 void FreeMonsterSnd()
 {
+#ifdef _DEBUG
+	for (int i = 0; i < MAX_LVLMTYPES; i++) {
+#else
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+#endif
 		for (auto &variants : LevelMonsterTypes[i].Snds) {
 			for (auto &snd : variants) {
 				snd = nullptr;

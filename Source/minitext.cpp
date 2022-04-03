@@ -31,21 +31,18 @@ int qtextSpd;
 /** Start time of scrolling */
 Uint32 ScrollStart;
 /** Graphics for the window border */
-std::optional<CelSprite> pTextBoxCels;
+std::optional<OwnedCelSprite> pTextBoxCels;
 
 /** Pixels for a line of text and the empty space under it. */
 const int LineHeight = 38;
 
 std::vector<std::string> TextLines;
 
-void LoadText(const char *text)
+void LoadText(string_view text)
 {
 	TextLines.clear();
 
-	char tempstr[2560];
-	strcpy(tempstr, text);
-
-	const std::string paragraphs = WordWrapString(tempstr, 543, GameFont30);
+	const std::string paragraphs = WordWrapString(text, 543, GameFont30);
 
 	size_t previous = 0;
 	while (true) {

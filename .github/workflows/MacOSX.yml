@@ -47,10 +47,9 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build build -j $(sysctl -n hw.physicalcpu) --target package
 
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
       with:
-        files: ${{github.workspace}}/build/devilutionx.dmg
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: devilutionx.dmg
+        path: ${{github.workspace}}/build/devilutionx.dmg

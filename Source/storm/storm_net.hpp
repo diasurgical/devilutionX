@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "multi.h"
+
 namespace devilution {
 
 enum game_info : uint8_t {
@@ -167,7 +169,7 @@ void SNetGetProviderCaps(struct _SNETCAPS *);
 
 bool DvlNet_SendInfoRequest();
 void DvlNet_ClearGamelist();
-std::vector<std::string> DvlNet_GetGamelist();
+std::vector<GameInfo> DvlNet_GetGamelist();
 void DvlNet_SetPassword(std::string pw);
 void DvlNet_ClearPassword();
 bool DvlNet_IsPublicGame();

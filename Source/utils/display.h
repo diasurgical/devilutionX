@@ -58,10 +58,13 @@ void OutputToLogical(T *x, T *y)
 #ifndef USE_SDL1
 	if (!renderer)
 		return;
+
 	float scaleX;
 	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	*x = static_cast<T>(*x / scaleX);
-	*y = static_cast<T>(*y / scaleX);
+	float scaleDpi = GetDpiScalingFactor();
+	float scale = scaleX / scaleDpi;
+	*x = static_cast<T>(*x / scale);
+	*y = static_cast<T>(*y / scale);
 
 	SDL_Rect view;
 	SDL_RenderGetViewport(renderer, &view);
@@ -91,8 +94,10 @@ void LogicalToOutput(T *x, T *y)
 
 	float scaleX;
 	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	*x = static_cast<T>(*x * scaleX);
-	*y = static_cast<T>(*y * scaleX);
+	float scaleDpi = GetDpiScalingFactor();
+	float scale = scaleX / scaleDpi;
+	*x = static_cast<T>(*x * scale);
+	*y = static_cast<T>(*y * scale);
 #else
 	if (!OutputRequiresScaling())
 		return;

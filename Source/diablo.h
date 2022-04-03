@@ -17,7 +17,11 @@
 
 namespace devilution {
 
-#define GAME_ID (gbIsHellfire ? (gbIsSpawn ? LoadBE32("HSHR") : LoadBE32("HRTL")) : (gbIsSpawn ? LoadBE32("DSHR") : LoadBE32("DRTL")))
+constexpr uint32_t GameIdDiabloFull = LoadBE32("DRTL");
+constexpr uint32_t GameIdDiabloSpawn = LoadBE32("DSHR");
+constexpr uint32_t GameIdHellfireFull = LoadBE32("HRTL");
+constexpr uint32_t GameIdHellfireSpawn = LoadBE32("HSHR");
+#define GAME_ID (gbIsHellfire ? (gbIsSpawn ? GameIdHellfireSpawn : GameIdHellfireFull) : (gbIsSpawn ? GameIdDiabloSpawn : GameIdDiabloFull))
 
 #define NUMLEVELS 25
 
@@ -60,6 +64,7 @@ extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern Point MousePosition;
 extern bool gbRunGame;
 extern bool gbRunGameResult;
+extern bool ReturnToMainMenu;
 extern DVL_API_FOR_TEST bool zoomflag;
 extern bool gbProcessPlayers;
 extern bool gbLoadGame;
@@ -68,7 +73,6 @@ extern int force_redraw;
 /* These are defined in fonts.h */
 extern void FontsCleanup();
 extern DVL_API_FOR_TEST int PauseMode;
-extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
 /**
@@ -87,6 +91,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer);
 int DiabloMain(int argc, char **argv);
 bool TryIconCurs();
 void diablo_pause_game();
+bool diablo_is_focused();
 void diablo_focus_pause();
 void diablo_focus_unpause();
 bool PressEscKey();
@@ -119,5 +124,9 @@ extern bool gbFriendlyMode;
  * @brief Specifices what game logic step is currently executed
  */
 extern GameLogicStep gGameLogicStep;
+
+#ifdef __UWP__
+void setOnInitialized(void (*)());
+#endif
 
 } // namespace devilution

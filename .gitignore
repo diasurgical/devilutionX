@@ -392,6 +392,9 @@ ASALocalRun/
 # Created by https://www.gitignore.io/api/xcode
 # Edit at https://www.gitignore.io/?templates=xcode
 
+### Visual Code
+/.vscode
+
 ### Xcode ###
 # Xcode
 #
@@ -449,3 +452,10 @@ Brewfile.lock.json
 # GPerf heap profile dumps
 *.heap
 *.mo
+
+# UWP copied assets
+uwp-project/Assets/data
+uwp-project/Assets/fonts
+uwp-project/Assets/gendata
+uwp-project/Assets/ui_art
+!uwp-project/devilutionX_TemporaryKey.pfx
