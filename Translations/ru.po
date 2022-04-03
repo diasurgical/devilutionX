@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-01-08 13:29+0100\n"
+"POT-Creation-Date: 2022-04-03 21:32+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Dominus Iniquitatis <zerosaiko@gmail.com>\n"
 "Language-Team: \n"
