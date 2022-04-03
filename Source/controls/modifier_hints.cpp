@@ -130,7 +130,7 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 	for (int slot = 0; slot < 4; ++slot) {
 		splId = myPlayer._pSplHotKey[slot];
 
-		if (splId != SPL_INVALID && (spells & GetSpellBitmask(splId)) != 0)
+		if (splId != SPL_INVALID && splId != SPL_NULL && (spells & GetSpellBitmask(splId)) != 0)
 			splType = (currlevel == 0 && !spelldata[splId].sTownSpell) ? RSPLTYPE_INVALID : myPlayer._pSplTHotKey[slot];
 		else {
 			splType = RSPLTYPE_INVALID;
