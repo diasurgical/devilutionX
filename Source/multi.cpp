@@ -77,7 +77,7 @@ void BufferInit(TBuffer *pBuf)
 	pBuf->bData[0] = byte { 0 };
 }
 
-void CopyPacket(TBuffer *buf, const byte *packet, uint8_t size)
+void CopyPacket(TBuffer *buf, const byte *packet, size_t size)
 {
 	if (buf->dwNextWriteOffset + size + 2 > 0x1000) {
 		return;
@@ -108,7 +108,7 @@ byte *ReceivePacket(TBuffer *pBuf, byte *body, size_t *size)
 			*size -= chunkSize;
 		}
 		memcpy(pBuf->bData, srcPtr, (pBuf->bData - srcPtr) + pBuf->dwNextWriteOffset + 1);
-		pBuf->dwNextWriteOffset += (pBuf->bData - srcPtr);
+		pBuf->dwNextWriteOffset += static_cast<uint32_t>(pBuf->bData - srcPtr);
 		return body;
 	}
 	return body;
@@ -138,7 +138,7 @@ void SendPacket(int playerId, const byte *packet, size_t size)
 	TPkt pkt;
 
 	NetReceivePlayerData(&pkt);
-	pkt.hdr.wLen = size + sizeof(pkt.hdr);
+	pkt.hdr.wLen = static_cast<uint16_t>(size + sizeof(pkt.hdr));
 	memcpy(pkt.body, packet, size);
 	if (!SNetSendMessage(playerId, &pkt.hdr, pkt.hdr.wLen))
 		nthread_terminate_game("SNetSendMessage0");
@@ -147,9 +147,9 @@ void SendPacket(int playerId, const byte *packet, size_t size)
 void MonsterSeeds()
 {
 	sgdwGameLoops++;
-	uint32_t l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
+	const uint32_t seed = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
 	for (int i = 0; i < MAXMONSTERS; i++)
-		Monsters[i]._mAISeed = l + i;
+		Monsters[i]._mAISeed = seed + i;
 }
 
 void HandleTurnUpperBit(int pnum)
@@ -435,7 +435,7 @@ bool InitMulti(GameData *gameData)
 void InitGameInfo()
 {
 	sgGameInitInfo.size = sizeof(sgGameInitInfo);
-	sgGameInitInfo.dwSeed = time(nullptr);
+	sgGameInitInfo.dwSeed = static_cast<uint32_t>(time(nullptr));
 	sgGameInitInfo.programid = GAME_ID;
 	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
@@ -470,8 +470,8 @@ void NetSendHiPri(int playerId, const byte *data, size_t size)
 		byte *lowpriBody = ReceivePacket(&sgLoPriBuf, hipriBody, &msgSize);
 		msgSize = sync_all_monsters(lowpriBody, msgSize);
 		size_t len = gdwNormalMsgSize - msgSize;
-		pkt.hdr.wLen = len;
-		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, len))
+		pkt.hdr.wLen = static_cast<uint16_t>(len);
+		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, static_cast<unsigned>(len)))
 			nthread_terminate_game("SNetSendMessage");
 	}
 }
@@ -480,13 +480,13 @@ void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size)
 {
 	TPkt pkt;
 	NetReceivePlayerData(&pkt);
-	size_t t = size + sizeof(pkt.hdr);
-	pkt.hdr.wLen = t;
+	size_t len = size + sizeof(pkt.hdr);
+	pkt.hdr.wLen = static_cast<uint16_t>(len);
 	memcpy(pkt.body, data, size);
-	size_t p = 0;
-	for (size_t v = 1; p < MAX_PLRS; p++, v <<= 1) {
+	size_t playerID = 0;
+	for (size_t v = 1; playerID < MAX_PLRS; playerID++, v <<= 1) {
 		if ((v & pmask) != 0) {
-			if (!SNetSendMessage(p, &pkt.hdr, t) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
+			if (!SNetSendMessage(playerID, &pkt.hdr, len) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
 				nthread_terminate_game("SNetSendMessage");
 				return;
 			}

@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <fstream>
 
+#include <fmt/format.h>
+
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
@@ -166,12 +168,6 @@ bool GetIniStringVector(const char *sectionName, const char *keyName, std::vecto
 }
 
 void SetIniValue(const char *keyname, const char *valuename, int value)
-{
-	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
-}
-
-void SetIniValue(const char *keyname, const char *valuename, std::uint32_t value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
 	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
@@ -1082,7 +1078,7 @@ std::vector<OptionEntryBase *> KeymapperOptions::GetEntries()
 	return entries;
 }
 
-KeymapperOptions::Action::Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, int index)
+KeymapperOptions::Action::Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
     : OptionEntryBase(key, OptionEntryFlags::None, name, description)
     , defaultKey(defaultKey)
     , actionPressed(std::move(actionPressed))
@@ -1090,15 +1086,15 @@ KeymapperOptions::Action::Action(string_view key, string_view name, string_view 
     , enable(std::move(enable))
     , dynamicIndex(index)
 {
-	if (index >= 0) {
-		dynamicKey = fmt::format(key, index);
+	if (index != 0) {
+		dynamicKey = fmt::format(fmt::string_view(key.data(), key.size()), index);
 		this->key = dynamicKey;
 	}
 }
 
 string_view KeymapperOptions::Action::GetName() const
 {
-	if (dynamicIndex < 0)
+	if (dynamicIndex == 0)
 		return _(name.data());
 	dynamicName = fmt::format(_(name.data()), dynamicIndex);
 	return dynamicName;
@@ -1184,7 +1180,7 @@ bool KeymapperOptions::Action::SetValue(int value)
 	return true;
 }
 
-void KeymapperOptions::AddAction(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, int index)
+void KeymapperOptions::AddAction(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
 {
 	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, std::move(actionPressed), std::move(actionReleased), std::move(enable), index)));
 }

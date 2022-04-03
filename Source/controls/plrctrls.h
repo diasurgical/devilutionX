@@ -1,6 +1,7 @@
 #pragma once
 // Controller actions implementation
 
+#include <cstddef>
 #include <cstdint>
 
 #include <SDL.h>
@@ -81,7 +82,7 @@ bool TryDropItem();
 void InvalidateInventorySlot();
 void FocusOnInventory();
 void PerformSpellAction();
-void QuickCast(int slot);
+void QuickCast(size_t slot);
 
 extern int speedspellcount;
 

@@ -350,6 +350,12 @@ uint32_t TotalPlayerGold()
 	return MyPlayer->_pGold + Stash.gold;
 }
 
+// TODO: Change `_iIvalue` to be unsigned instead of passing `int` here.
+bool PlayerCanAfford(int price)
+{
+	return TotalPlayerGold() >= static_cast<uint32_t>(price);
+}
+
 void StartSmithBuy()
 {
 	stextsize = true;
@@ -1394,7 +1400,7 @@ void SmithBuyEnter()
 	auto &myPlayer = Players[MyPlayerId];
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	if (TotalPlayerGold() < smithitem[idx]._iIvalue) {
+	if (!PlayerCanAfford(smithitem[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1460,7 +1466,7 @@ void SmithPremiumBuyEnter()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (TotalPlayerGold() < premiumitems[idx]._iIvalue) {
+	if (!PlayerCanAfford(premiumitems[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1583,7 +1589,7 @@ void SmithRepairEnter()
 	auto &myPlayer = Players[MyPlayerId];
 
 	myPlayer.HoldItem = storehold[idx];
-	if (TotalPlayerGold() < storehold[idx]._iIvalue)
+	if (!PlayerCanAfford(storehold[idx]._iIvalue))
 		StartStore(STORE_NOMONEY);
 	else
 		StartStore(STORE_CONFIRM);
@@ -1660,7 +1666,7 @@ void WitchBuyEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	if (TotalPlayerGold() < witchitem[idx]._iIvalue) {
+	if (!PlayerCanAfford(witchitem[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1732,7 +1738,7 @@ void WitchRechargeEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 	myPlayer.HoldItem = storehold[idx];
-	if (TotalPlayerGold() < storehold[idx]._iIvalue)
+	if (!PlayerCanAfford(storehold[idx]._iIvalue))
 		StartStore(STORE_NOMONEY);
 	else
 		StartStore(STORE_CONFIRM);
@@ -1741,7 +1747,7 @@ void WitchRechargeEnter()
 void BoyEnter()
 {
 	if (!boyitem.isEmpty() && stextsel == 18) {
-		if (TotalPlayerGold() < 50) {
+		if (!PlayerCanAfford(50)) {
 			stextshold = STORE_BOY;
 			stextlhold = 18;
 			stextvhold = stextsval;
@@ -1836,7 +1842,7 @@ void BoyBuyEnter()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (TotalPlayerGold() < price) {
+	if (!PlayerCanAfford(price)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1971,7 +1977,7 @@ void HealerBuyEnter()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (TotalPlayerGold() < healitem[idx]._iIvalue) {
+	if (!PlayerCanAfford(healitem[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -2022,7 +2028,7 @@ void StorytellerIdentifyEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 	myPlayer.HoldItem = storehold[idx];
-	if (TotalPlayerGold() < storehold[idx]._iIvalue)
+	if (!PlayerCanAfford(storehold[idx]._iIvalue))
 		StartStore(STORE_NOMONEY);
 	else
 		StartStore(STORE_CONFIRM);

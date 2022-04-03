@@ -277,7 +277,7 @@ void SetSpell()
 	force_redraw = 255;
 }
 
-void SetSpeedSpell(int slot)
+void SetSpeedSpell(size_t slot)
 {
 	spell_id pSpell;
 	spell_type pSplType;
@@ -294,7 +294,7 @@ void SetSpeedSpell(int slot)
 	myPlayer._pSplTHotKey[slot] = pSplType;
 }
 
-void ToggleSpell(int slot)
+void ToggleSpell(size_t slot)
 {
 	uint64_t spells;
 

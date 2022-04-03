@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -70,8 +71,8 @@ inline bool CanPanelsCoverView()
 }
 void DrawSpellList(const Surface &out);
 void SetSpell();
-void SetSpeedSpell(int slot);
-void ToggleSpell(int slot);
+void SetSpeedSpell(size_t slot);
+void ToggleSpell(size_t slot);
 
 void AddPanelString(string_view str);
 void ClearPanel();

@@ -685,7 +685,7 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int lever
 	start += Displacement { 16, 16 };
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
@@ -719,7 +719,7 @@ void LoadMapObjs(const char *path, Point start)
 	start += Displacement { 16, 16 };
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				AddObject(ObjTypeConv[objectId], start + Displacement { i, j });
 			}
@@ -4655,7 +4655,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				filesLoaded[AllObjects[ObjTypeConv[objectId]].ofindex] = true;
 			}
@@ -4674,7 +4674,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
 			}

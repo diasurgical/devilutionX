@@ -2531,7 +2531,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[i][j] = (tileId != 0) ? tileId : 7;
 		}
 	}
@@ -2579,7 +2579,7 @@ void LoadPreL3Dungeon(const char *path)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[i][j] = (tileId != 0) ? tileId : 7;
 		}
 	}
