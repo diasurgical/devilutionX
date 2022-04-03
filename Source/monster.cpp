@@ -1414,7 +1414,8 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 			CheckReflect(i, pnum, dam);
 		ApplyPlrDamage(pnum, 0, 0, dam);
 	}
-	if ((player._pIFlags & ISPL_THORNS) != 0) {
+	// Reflect can also kill a monster, so make sure the monster is still alive
+	if ((player._pIFlags & ISPL_THORNS) != 0 && monster._mmode != MonsterMode::Death) {
 		int mdam = (GenerateRnd(3) + 1) << 6;
 		monster._mhitpoints -= mdam;
 		if (monster._mhitpoints >> 6 <= 0)
