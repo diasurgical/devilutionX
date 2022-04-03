@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <vector>
 
 #include "engine/point.hpp"
@@ -19,8 +20,8 @@ void DrawSpell(const Surface &out);
 void DrawSpellList(const Surface &out);
 std::vector<SpellListItem> GetSpellListItems();
 void SetSpell();
-void SetSpeedSpell(int slot);
-void ToggleSpell(int slot);
+void SetSpeedSpell(size_t slot);
+void ToggleSpell(size_t slot);
 
 /**
  * Draws the "Speed Book": the rows of known spells for quick-setting a spell that

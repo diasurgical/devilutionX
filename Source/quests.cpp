@@ -149,7 +149,7 @@ void DrawWarLord(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
 		}
 	}
@@ -171,7 +171,7 @@ void DrawSChamber(quest_id q, int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
 		}
 	}
@@ -195,7 +195,7 @@ void DrawLTBanner(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				pdungeon[x + i][y + j] = tileId;
 			}
@@ -219,7 +219,7 @@ void DrawBlind(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				pdungeon[x + i][y + j] = tileId;
 			}
@@ -243,7 +243,7 @@ void DrawBlood(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[x + i][y + j] = tileId;
 			}

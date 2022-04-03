@@ -6,6 +6,7 @@
 #include "text_render.hpp"
 
 #include <array>
+#include <cstddef>
 #include <unordered_map>
 #include <utility>
 
@@ -511,7 +512,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 	output.reserve(text.size());
 	const char *begin = text.data();
 	const char *processedEnd = text.data();
-	std::size_t lastBreakablePos = -1;
+	string_view::size_type lastBreakablePos = string_view::npos;
 	std::size_t lastBreakableLen;
 	bool lastBreakableKeep = false;
 	uint32_t currentUnicodeRow = 0;
@@ -532,7 +533,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 
 		if (codepoint == U'\n') { // Existing line break, scan next line
-			lastBreakablePos = -1;
+			lastBreakablePos = string_view::npos;
 			lineWidth = 0;
 			output.append(processedEnd, remaining.data());
 			processedEnd = remaining.data();
@@ -561,7 +562,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 			continue; // String is still within the limit, continue to the next symbol
 		}
 
-		if (lastBreakablePos == -1) { // Single word longer than width
+		if (lastBreakablePos == string_view::npos) { // Single word longer than width
 			continue;
 		}
 
@@ -576,7 +577,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 		// Restart from the beginning of the new line.
 		remaining = text.substr(lastBreakablePos + lastBreakableLen);
 		processedEnd = remaining.data();
-		lastBreakablePos = -1;
+		lastBreakablePos = string_view::npos;
 		lineWidth = 0;
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 	} while (!remaining.empty() && remaining[0] != '\0');

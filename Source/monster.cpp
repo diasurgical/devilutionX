@@ -3917,7 +3917,7 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t monsterId = SDL_SwapLE16(monsterLayer[j * width + i]);
+			auto monsterId = static_cast<uint8_t>(SDL_SwapLE16(monsterLayer[j * width + i]));
 			if (monsterId != 0) {
 				int mtype = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
 				PlaceMonster(ActiveMonsterCount++, mtype, i + startPosition.x + 16, j + startPosition.y + 16);

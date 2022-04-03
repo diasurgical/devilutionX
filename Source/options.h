@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <unordered_map>
 
@@ -555,13 +556,13 @@ struct KeymapperOptions : OptionCategoryBase {
 		bool SetValue(int value);
 
 	private:
-		Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, int index);
+		Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
 		int defaultKey;
 		std::function<void()> actionPressed;
 		std::function<void()> actionReleased;
 		std::function<bool()> enable;
 		int boundKey = DVL_VK_INVALID;
-		int dynamicIndex;
+		unsigned dynamicIndex;
 		std::string dynamicKey;
 		mutable std::string dynamicName;
 
@@ -573,7 +574,10 @@ struct KeymapperOptions : OptionCategoryBase {
 
 	void AddAction(
 	    string_view key, string_view name, string_view description, int defaultKey,
-	    std::function<void()> actionPressed, std::function<void()> actionReleased = nullptr, std::function<bool()> enable = nullptr, int index = -1);
+	    std::function<void()> actionPressed,
+	    std::function<void()> actionReleased = nullptr,
+	    std::function<bool()> enable = nullptr,
+	    unsigned index = 0);
 	void KeyPressed(int key) const;
 	void KeyReleased(int key) const;
 	string_view KeyNameForAction(string_view actionName) const;

@@ -2028,7 +2028,7 @@ void PerformSecondaryAction()
 	}
 }
 
-void QuickCast(int slot)
+void QuickCast(size_t slot)
 {
 	auto &myPlayer = Players[MyPlayerId];
 	spell_id spell = myPlayer._pSplHotKey[slot];

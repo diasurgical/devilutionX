@@ -38,7 +38,7 @@
 namespace devilution {
 
 bool deltaload;
-BYTE gbBufferMsgs;
+uint8_t gbBufferMsgs;
 int dwRecCount;
 
 namespace {
@@ -59,13 +59,13 @@ uint32_t sgdwOwnerWait;
 uint32_t sgdwRecvOffset;
 int sgnCurrMegaPlayer;
 DLevel sgLevels[NUMLEVELS];
-BYTE sbLastCmd;
+uint8_t sbLastCmd;
 byte sgRecvBuf[sizeof(DLevel) + 1];
 _cmd_id sgbRecvCmd;
 LocalLevel sgLocals[NUMLEVELS];
 DJunk sgJunk;
 bool sgbDeltaChanged;
-BYTE sgbDeltaChunks;
+uint8_t sgbDeltaChunks;
 std::list<TMegaPkt> MegaPktList;
 Item ItemLimbo;
 
@@ -290,10 +290,10 @@ void DeltaImportJunk(const byte *src)
 	}
 }
 
-DWORD CompressData(byte *buffer, byte *end)
+uint32_t CompressData(byte *buffer, byte *end)
 {
-	DWORD size = end - buffer - 1;
-	DWORD pkSize = PkwareCompress(buffer + 1, size);
+	const auto size = static_cast<uint32_t>(end - buffer - 1);
+	const uint32_t pkSize = PkwareCompress(buffer + 1, size);
 
 	*buffer = size != pkSize ? byte { 1 } : byte { 0 };
 
@@ -377,7 +377,7 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 	monster._mhitpoints = message._mhitpoints;
 }
 
-void DeltaLeaveSync(BYTE bLevel)
+void DeltaLeaveSync(uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -404,7 +404,7 @@ void DeltaLeaveSync(BYTE bLevel)
 	memcpy(&sgLocals[bLevel].automapsv, AutomapView, sizeof(AutomapView));
 }
 
-void DeltaSyncObject(int oi, _cmd_id bCmd, BYTE bLevel)
+void DeltaSyncObject(int oi, _cmd_id bCmd, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -413,7 +413,7 @@ void DeltaSyncObject(int oi, _cmd_id bCmd, BYTE bLevel)
 	sgLevels[bLevel].object[oi].bCmd = bCmd;
 }
 
-bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
+bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return true;
@@ -470,7 +470,7 @@ bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
 	return true;
 }
 
-void DeltaPutItem(const TCmdPItem &message, Point position, BYTE bLevel)
+void DeltaPutItem(const TCmdPItem &message, Point position, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -1610,7 +1610,7 @@ DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= MAXCHARLEVEL && pnum != MyPlayerId)
-		Players[pnum]._pLevel = message.wParam1;
+		Players[pnum]._pLevel = static_cast<int8_t>(message.wParam1);
 
 	return sizeof(message);
 }
@@ -2025,14 +2025,14 @@ void DeltaExportData(int pnum)
 			dstEnd = DeltaExportItem(dstEnd, sgLevels[i].item);
 			dstEnd = DeltaExportObject(dstEnd, sgLevels[i].object);
 			dstEnd = DeltaExportMonster(dstEnd, sgLevels[i].monster);
-			int size = CompressData(dst.get(), dstEnd);
+			uint32_t size = CompressData(dst.get(), dstEnd);
 			dthread_send_delta(pnum, static_cast<_cmd_id>(i + CMD_DLEVEL_0), std::move(dst), size);
 		}
 
 		std::unique_ptr<byte[]> dst { new byte[sizeof(DJunk) + 1] };
 		byte *dstEnd = &dst.get()[1];
 		dstEnd = DeltaExportJunk(dstEnd);
-		int size = CompressData(dst.get(), dstEnd);
+		uint32_t size = CompressData(dst.get(), dstEnd);
 		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, std::move(dst), size);
 	}
 
@@ -2049,7 +2049,7 @@ void delta_init()
 	deltaload = false;
 }
 
-void delta_kill_monster(int mi, Point position, BYTE bLevel)
+void delta_kill_monster(int mi, Point position, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -2062,7 +2062,7 @@ void delta_kill_monster(int mi, Point position, BYTE bLevel)
 	pD->_mhitpoints = 0;
 }
 
-void delta_monster_hp(int mi, int hp, BYTE bLevel)
+void delta_monster_hp(int mi, int hp, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -2351,7 +2351,7 @@ void NetSendCmd(bool bHiPri, _cmd_id bCmd)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE cl)
+void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl)
 {
 	TCmdGolem cmd;
 
@@ -2524,7 +2524,7 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint8_t ii)
 {
 	TCmdGItem cmd;
 
@@ -2617,7 +2617,7 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdChItem(bool bHiPri, BYTE bLoc)
+void NetSendCmdChItem(bool bHiPri, uint8_t bLoc)
 {
 	TCmdChItem cmd;
 
@@ -2638,7 +2638,7 @@ void NetSendCmdChItem(bool bHiPri, BYTE bLoc)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDelItem(bool bHiPri, BYTE bLoc)
+void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc)
 {
 	TCmdDelItem cmd;
 

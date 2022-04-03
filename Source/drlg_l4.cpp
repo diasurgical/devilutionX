@@ -273,7 +273,7 @@ void SetRoom(const uint16_t *dunData, int rx1, int ry1)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[i + rx1][j + ry1] = tileId;
 				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
