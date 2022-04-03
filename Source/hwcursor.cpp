@@ -98,7 +98,7 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 
 bool SetHardwareCursorFromSprite(int pcurs)
 {
-	const bool isItem = IsItemSprite(pcurs);
+	const bool isItem = !MyPlayer->HoldItem.isEmpty();
 	if (isItem && !*sgOptions.Graphics.hardwareCursorForItems)
 		return false;
 

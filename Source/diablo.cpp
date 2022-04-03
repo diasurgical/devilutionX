@@ -342,9 +342,9 @@ void LeftMouseDown(int wParam)
 				CheckStashButtonPress(MousePosition);
 			} else if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 				CheckSBook();
-			} else if (pcurs >= CURSOR_FIRSTITEM) {
+			} else if (!MyPlayer->HoldItem.isEmpty()) {
 				if (TryInvPut()) {
-					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, Players[MyPlayerId].HoldItem);
+					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, MyPlayer->HoldItem);
 					NewCursor(CURSOR_HAND);
 				}
 			} else {

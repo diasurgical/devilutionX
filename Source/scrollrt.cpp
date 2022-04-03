@@ -265,12 +265,17 @@ bool ShouldShowCursor()
  */
 void DrawCursor(const Surface &out)
 {
-	if (pcurs <= CURSOR_NONE || cursSize.width == 0 || cursSize.height == 0 || !ShouldShowCursor()) {
+	if (pcurs <= CURSOR_NONE || !ShouldShowCursor()) {
+		return;
+	}
+
+	Size cursSize = GetInvItemSize(pcurs);
+	if (cursSize.width == 0 || cursSize.height == 0) {
 		return;
 	}
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
-	const int outlineWidth = IsItemSprite(pcurs) ? 1 : 0;
+	const int outlineWidth = !MyPlayer->HoldItem.isEmpty() ? 1 : 0;
 
 	if (MousePosition.x < -cursSize.width - outlineWidth || MousePosition.x - outlineWidth >= out.w() || MousePosition.y < -cursSize.height - outlineWidth || MousePosition.y - outlineWidth >= out.h())
 		return;
@@ -1573,7 +1578,7 @@ void ScrollView()
 {
 	bool scroll;
 
-	if (pcurs >= CURSOR_FIRSTITEM)
+	if (!MyPlayer->HoldItem.isEmpty())
 		return;
 
 	scroll = false;

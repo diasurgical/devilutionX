@@ -32,7 +32,6 @@ enum cursor_id : uint8_t {
 	CURSOR_FIRSTITEM,
 };
 
-extern DVL_API_FOR_TEST Size cursSize;
 extern int pcursmonst;
 extern int8_t pcursinvitem;
 extern uint16_t pcursstashitem;
@@ -50,11 +49,6 @@ void InitLevelCursor();
 void CheckRportal();
 void CheckTown();
 void CheckCursMove();
-
-inline bool IsItemSprite(int cursId)
-{
-	return cursId >= CURSOR_FIRSTITEM;
-}
 
 void CelDrawCursor(const Surface &out, Point position, int cursId);
 

@@ -852,10 +852,10 @@ void DrawInfoBox(const Surface &out)
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
+	auto &myPlayer = Players[MyPlayerId];
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
-	} else if (pcurs >= CURSOR_FIRSTITEM) {
-		auto &myPlayer = Players[MyPlayerId];
+	} else if (!myPlayer.HoldItem.isEmpty()) {
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
 			InfoString = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
