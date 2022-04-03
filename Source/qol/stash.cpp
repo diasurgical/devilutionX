@@ -225,6 +225,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 			NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
 			if (!IsHardwareCursor()) {
 				// For a hardware cursor, we set the "hot point" to the center of the item instead.
+				Size cursSize = GetInvItemSize(holdItem._iCurs + CURSOR_FIRSTITEM);
 				SetCursorPos(cursorPosition - Displacement(cursSize / 2));
 			}
 		}
@@ -381,7 +382,7 @@ void DrawStash(const Surface &out)
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 {
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!MyPlayer->HoldItem.isEmpty()) {
 		CheckStashPaste(mousePosition);
 	} else if (isCtrlHeld) {
 		TransferItemToInventory(*MyPlayer, pcursstashitem);

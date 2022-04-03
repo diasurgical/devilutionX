@@ -783,7 +783,7 @@ std::string DebugCmdItemInfo(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 	Item *pItem = nullptr;
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!myPlayer.HoldItem.isEmpty()) {
 		pItem = &myPlayer.HoldItem;
 	} else if (pcursinvitem != -1) {
 		if (pcursinvitem <= INVITEM_INV_LAST)

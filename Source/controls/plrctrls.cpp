@@ -713,16 +713,16 @@ void ResetInvCursorPosition()
 			mousePos = GetSlotCoord(Slot);
 		}
 
-		if (pcurs >= CURSOR_FIRSTITEM) {
+		if (!MyPlayer->HoldItem.isEmpty()) {
 			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 		}
 	} else if (Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 		mousePos = GetSlotCoord(Slot);
-		if (pcurs >= CURSOR_FIRSTITEM)
+		if (!MyPlayer->HoldItem.isEmpty())
 			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 	} else {
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
-		if (pcurs >= CURSOR_FIRSTITEM) {
+		if (!MyPlayer->HoldItem.isEmpty()) {
 			Size itemSize = GetInventorySize(MyPlayer->HoldItem);
 			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX * itemSize.height };
 		}
@@ -1085,7 +1085,7 @@ void StashMove(AxisDirection dir)
 	// Jump from general inventory to stash
 	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 		int firstSlot = Slot;
-		if (pcurs < CURSOR_FIRSTITEM) {
+		if (MyPlayer->HoldItem.isEmpty()) {
 			int8_t itemId = GetItemIdOnSlot(Slot);
 			if (itemId != 0) {
 				firstSlot = FindFirstSlotOnItem(itemId);
@@ -1848,7 +1848,7 @@ void PerformSpellAction()
 		return;
 
 	if (invflag) {
-		if (pcurs >= CURSOR_FIRSTITEM)
+		if (!MyPlayer->HoldItem.isEmpty())
 			TryDropItem();
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
@@ -1864,7 +1864,7 @@ void PerformSpellAction()
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
@@ -1963,7 +1963,7 @@ void PerformSecondaryAction()
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
