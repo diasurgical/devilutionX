@@ -94,6 +94,7 @@ dungeon_type gnLevelTypeTbl[NUMLEVELS];
 Point MousePosition;
 bool gbRunGame;
 bool gbRunGameResult;
+bool ReturnToMainMenu;
 bool zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
 bool gbProcessPlayers;
@@ -1700,6 +1701,7 @@ void FreeGameMem()
 bool StartGame(bool bNewGame, bool bSinglePlayer)
 {
 	gbSelectProvider = true;
+	ReturnToMainMenu = false;
 
 	do {
 		gbLoadGame = false;
@@ -1735,6 +1737,8 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 		// initialize main menu resources.
 		if (gbRunGameResult)
 			UiInitialize();
+		if (ReturnToMainMenu)
+			return true;
 	} while (gbRunGameResult);
 
 	SNetDestroy();

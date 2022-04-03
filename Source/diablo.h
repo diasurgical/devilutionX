@@ -64,6 +64,7 @@ extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern Point MousePosition;
 extern bool gbRunGame;
 extern bool gbRunGameResult;
+extern bool ReturnToMainMenu;
 extern DVL_API_FOR_TEST bool zoomflag;
 extern bool gbProcessPlayers;
 extern bool gbLoadGame;
