@@ -6129,7 +6129,7 @@ msgstr "Стойка с оружием"
 # Взял из Diablo 3.
 #: Source/objects.cpp:5488
 msgid "Goat Shrine"
-msgstr "Козлиный храм"
+msgstr "Козье святилище"
 
 #: Source/objects.cpp:5491
 msgid "Cauldron"
