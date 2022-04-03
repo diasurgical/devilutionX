@@ -4,6 +4,10 @@
 #include <cstdint>
 #include <list>
 
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #include "automap.h"
 #include "control.h"
 #include "controls/controller_motion.h"
@@ -30,12 +34,14 @@
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
+#include "utils/log.hpp"
 
 #define SPLICONLENGTH 56
 
 namespace devilution {
 
 ControlTypes ControlMode = ControlTypes::None;
+ControlTypes ControlDevice = ControlTypes::None;
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
@@ -1467,7 +1473,7 @@ ControlTypes GetInputTypeFromEvent(const SDL_Event &event)
 
 float rightStickLastMove = 0;
 
-bool ContinueSimulatingMouse(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
+bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
 	if (IsAutomapActive())
 		return false;
@@ -1491,11 +1497,50 @@ bool ContinueSimulatingMouse(const SDL_Event &event, const ControllerButtonEvent
 	return false;
 }
 
+bool IsNextMouseButtonClickEventSimulated = false;
+
+void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
+{
+	if (SDL_LOG_PRIORITY_DEBUG < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+		return;
+	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
+		return;
+	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
+		if (before == after)
+			return std::string { ControlTypeToString(before) };
+		return fmt::format("{} -> {}", ControlTypeToString(before), ControlTypeToString(after));
+	};
+	LogDebug("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
+}
+
 } // namespace
+
+void NextMouseButtonClickEventIsSimulated()
+{
+	IsNextMouseButtonClickEventSimulated = true;
+}
+
+string_view ControlTypeToString(ControlTypes controlType)
+{
+	switch (controlType) {
+	case ControlTypes::None:
+		return "None";
+	case ControlTypes::KeyboardAndMouse:
+		return "KeyboardAndMouse";
+	case ControlTypes::Gamepad:
+		return "Gamepad";
+	case ControlTypes::VirtualGamepad:
+		return "VirtualGamepad";
+	}
+	return "Invalid";
+}
 
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
 	ControlTypes inputType = GetInputTypeFromEvent(event);
+
+	if (inputType == ControlTypes::None)
+		return;
 
 #ifdef __vita__
 	if (inputType == ControlTypes::VirtualGamepad) {
@@ -1509,22 +1554,42 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 	}
 #endif
 
-	if (ControlMode == ControlTypes::KeyboardAndMouse && inputType == ControlTypes::Gamepad && ContinueSimulatingMouse(event, gamepadEvent)) {
-		return;
+	ControlTypes newControlDevice = inputType;
+	ControlTypes newControlMode = inputType;
+	const bool isSimulatedMouseButtonEvent = IsNextMouseButtonClickEventSimulated
+	    && (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN)
+	    && ControlDevice != ControlTypes::KeyboardAndMouse;
+	if (isSimulatedMouseButtonEvent) {
+		IsNextMouseButtonClickEventSimulated = false;
+
+		// `inputType` here will be `KeyboardAndMouse` because this is a (simulated) mouse event.
+		// Restore it to the original control device.
+		newControlDevice = ControlDevice;
 	}
 
-	if (inputType != ControlTypes::None && inputType != ControlMode) {
-		ControlMode = inputType;
+	if (isSimulatedMouseButtonEvent) {
+		newControlMode = ControlTypes::KeyboardAndMouse;
+	} else if (ContinueSimulatedMouseEvent(event, gamepadEvent)) {
+		newControlMode = ControlMode;
+	}
+
+	LogControlDeviceAndModeChange(newControlDevice, newControlMode);
+
+	if (newControlDevice != ControlDevice) {
+		ControlDevice = newControlDevice;
 
 #ifndef USE_SDL1
-		if (ControlMode != ControlTypes::KeyboardAndMouse) {
+		if (ControlDevice != ControlTypes::KeyboardAndMouse) {
 			if (IsHardwareCursor())
 				SetHardwareCursor(CursorInfo::UnknownCursor());
 		} else {
 			ResetCursor();
 		}
 #endif
+	}
 
+	if (newControlMode != ControlMode) {
+		ControlMode = newControlMode;
 		CalculatePanelAreas();
 	}
 }
@@ -1566,9 +1631,11 @@ void HandleRightStickMotion()
 		static int lastMouseSetTick = 0;
 		const int now = SDL_GetTicks();
 		if (now - lastMouseSetTick > 0) {
-			ControlMode = ControlTypes::KeyboardAndMouse;
 			ResetCursor();
 			SetCursorPos({ x, y });
+			LogControlDeviceAndModeChange(ControlDevice, ControlTypes::KeyboardAndMouse);
+
+			ControlMode = ControlTypes::KeyboardAndMouse;
 			lastMouseSetTick = now;
 		}
 	}

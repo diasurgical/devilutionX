@@ -68,7 +68,7 @@ void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point 
 
 void SetCursorPos(Point position)
 {
-	if (ControlMode != ControlTypes::KeyboardAndMouse) {
+	if (ControlDevice != ControlTypes::KeyboardAndMouse) {
 		MousePosition = position;
 		return;
 	}
@@ -398,6 +398,7 @@ void ProcessGamepadEvents(GameAction &action)
 		Uint8 simulatedButton = action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
 		SDL_Event clickEvent;
 		SetMouseButtonEvent(clickEvent, action.send_mouse_click.up ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN, simulatedButton, MousePosition);
+		NextMouseButtonClickEventIsSimulated();
 		SDL_PushEvent(&clickEvent);
 		break;
 	}
