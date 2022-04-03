@@ -1810,10 +1810,7 @@ void PrintItemMisc(const Item &item)
 		if (ControlMode == ControlTypes::KeyboardAndMouse) {
 			AddPanelString(_("Right-click to read"));
 		} else {
-			if (item.IsScrollOf(SPL_TELEPORT) || item.IsScrollOf(SPL_TOWN)) {
-				AddPanelString(_("Select from spell book, then"));
-				AddPanelString(_("cast spell to read"));
-			} else if (!invflag) {
+			if (!invflag) {
 				AddPanelString(_("Open inventory to use"));
 			} else {
 				AddPanelString(_("Activate to read"));
@@ -1825,13 +1822,7 @@ void PrintItemMisc(const Item &item)
 			AddPanelString(_("Right-click to read, then"));
 			AddPanelString(_("left-click to target"));
 		} else {
-			if (item.IsScrollOf(SPL_FIREBALL)
-			    || item.IsScrollOf(SPL_FIREWALL)
-			    || item.IsScrollOf(SPL_FLAME)
-			    || item.IsScrollOf(SPL_GUARDIAN)
-			    || item.IsScrollOf(SPL_LIGHTNING)
-			    || item.IsScrollOf(SPL_STONE)
-			    || item.IsScrollOf(SPL_WAVE)) {
+			if (TargetsMonster(item._iSpell)) {
 				AddPanelString(_("Select from spell book, then"));
 				AddPanelString(_("cast spell to read"));
 			} else if (!invflag) {
@@ -3932,7 +3923,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_SCROLL:
-		if (spelldata[spl].sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
 			if (pnum == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);
@@ -3949,7 +3940,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_SCROLLT:
-		if (spelldata[spl].sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
 			if (pnum == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);

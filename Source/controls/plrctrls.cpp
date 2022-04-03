@@ -1768,7 +1768,7 @@ bool SpellHasActorTarget()
 	return pcursplr != -1 || pcursmonst != -1;
 }
 
-void UpdateSpellTarget()
+void UpdateSpellTarget(spell_id spell)
 {
 	if (SpellHasActorTarget())
 		return;
@@ -1778,7 +1778,7 @@ void UpdateSpellTarget()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	int range = myPlayer._pRSpell == SPL_TELEPORT ? 4 : 1;
+	int range = spell == SPL_TELEPORT ? 4 : 1;
 
 	cursPosition = myPlayer.position.future + Displacement(myPlayer._pdir) * range;
 }
@@ -1861,39 +1861,52 @@ void PerformSpellAction()
 		return;
 	}
 
-	UpdateSpellTarget();
+	UpdateSpellTarget(myPlayer._pRSpell);
 	CheckPlrSpell(false);
 }
 
 void CtrlUseInvItem()
 {
-	if (pcursinvitem == -1)
-		return;
-
-	auto &myPlayer = Players[MyPlayerId];
-
-	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-	if (item.IsScroll() && spelldata[item._iSpell].sTargeted) {
+	if (pcursinvitem == -1) {
 		return;
 	}
+
+	auto &myPlayer = Players[MyPlayerId];
+	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
+	if (item.IsScroll()) {
+		if (TargetsMonster(item._iSpell)) {
+			return;
+		}
+		if (spelldata[item._iSpell].sTargeted) {
+			UpdateSpellTarget(item._iSpell);
+		}
+	}
+
 	int itemId = GetItemIdOnSlot(Slot);
 	if (item.isEquipment()) {
 		CheckInvItem(true, false); // auto-equip if it's an equipment
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
 	}
-	if (itemId != GetItemIdOnSlot(Slot))
+	if (itemId != GetItemIdOnSlot(Slot)) {
 		ResetInvCursorPosition();
+	}
 }
 
 void CtrlUseStashItem()
 {
-	if (pcursstashitem == uint16_t(-1))
+	if (pcursstashitem == uint16_t(-1)) {
 		return;
+	}
 
 	const Item &item = Stash.stashList[pcursstashitem];
-	if (item.IsScroll() && spelldata[item._iSpell].sTargeted) {
-		return;
+	if (item.IsScroll()) {
+		if (TargetsMonster(item._iSpell)) {
+			return;
+		}
+		if (spelldata[item._iSpell].sTargeted) {
+			UpdateSpellTarget(item._iSpell);
+		}
 	}
 
 	if (item.isEquipment()) {

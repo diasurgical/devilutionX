@@ -113,6 +113,16 @@ bool IsWallSpell(spell_id spl)
 	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;
 }
 
+bool TargetsMonster(spell_id id)
+{
+	return id == SPL_FIREBALL
+	    || id == SPL_FIREWALL
+	    || id == SPL_FLAME
+	    || id == SPL_LIGHTNING
+	    || id == SPL_STONE
+	    || id == SPL_WAVE;
+}
+
 int GetManaAmount(Player &player, spell_id sn)
 {
 	int ma; // mana amount
