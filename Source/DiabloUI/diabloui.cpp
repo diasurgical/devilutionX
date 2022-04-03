@@ -666,11 +666,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeTc = 0;
 	fadeValue = 0;
 
-	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
-		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
-#endif
+	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && ControlDevice == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
 	}
 
@@ -757,7 +753,7 @@ void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler)
 
 	// Must happen after the very first UiFadeIn, which sets the cursor.
 	if (IsHardwareCursor())
-		SetHardwareCursorVisible(ControlMode == ControlTypes::KeyboardAndMouse);
+		SetHardwareCursorVisible(ControlDevice == ControlTypes::KeyboardAndMouse);
 
 #ifdef __3DS__
 	// Keyboard blocks until input is finished
@@ -1082,7 +1078,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 
 void DrawMouse()
 {
-	if (ControlMode != ControlTypes::KeyboardAndMouse || IsHardwareCursor())
+	if (ControlDevice != ControlTypes::KeyboardAndMouse || IsHardwareCursor())
 		return;
 
 	DrawArt(MousePosition, &ArtCursor);
