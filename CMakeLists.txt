@@ -436,6 +436,12 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
       )
     endforeach()
 
+    if(DISCORD_SHARED_LIB)
+      install(FILES "${DISCORD_SHARED_LIB}"
+        DESTINATION "."
+      )
+    endif()
+
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(TOLOWER ${PROJECT_NAME} project_name)
     set(CPACK_PACKAGE_NAME ${project_name})
