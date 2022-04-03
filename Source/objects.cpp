@@ -2943,30 +2943,23 @@ bool OperateShrineCryptic(int pnum)
 
 bool OperateShrineEldritch(int pnum)
 {
-	/// BUGFIX: change `plr[pnum].HoldItem` to use a temporary buffer to prevent deleting item in hand
 	if (deltaload)
 		return false;
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
-
-	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
-		if (item._itype == ItemType::Misc) {
-			if (item._iMiscId == IMISC_HEAL
-			    || item._iMiscId == IMISC_MANA) {
-				InitializeItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
-				GenerateNewSeed(player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				item = player.HoldItem;
-			}
-			if (item._iMiscId == IMISC_FULLHEAL
-			    || item._iMiscId == IMISC_FULLMANA) {
-				InitializeItem(player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
-				GenerateNewSeed(player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				item = player.HoldItem;
-			}
+	for (Item &item : InventoryAndBeltPlayerItemsRange { Players[pnum] }) {
+		if (item._itype != ItemType::Misc) {
+			continue;
+		}
+		if (IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_MANA)) {
+			InitializeItem(item, ItemMiscIdIdx(IMISC_REJUV));
+			item._iStatFlag = true;
+			continue;
+		}
+		if (IsAnyOf(item._iMiscId, IMISC_FULLHEAL, IMISC_FULLMANA)) {
+			InitializeItem(item, ItemMiscIdIdx(IMISC_FULLREJUV));
+			continue;
 		}
 	}
 
