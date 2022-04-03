@@ -1586,18 +1586,18 @@ bool GoldAutoPlace(Player &player, Item &goldStack)
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
-	player.HoldItem = {};
-	RecreateItem(player.HoldItem, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	Item &item = player.InvBody[bLoc];
+
+	item = {};
+	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	if (bId) {
-		player.HoldItem._iIdentified = true;
+		item._iIdentified = true;
 	}
 
-	player.InvBody[bLoc] = player.HoldItem;
-
-	if (bLoc == INVLOC_HAND_LEFT && player.GetItemLocation(player.HoldItem) == ILOC_TWOHAND) {
+	if (bLoc == INVLOC_HAND_LEFT && player.GetItemLocation(item) == ILOC_TWOHAND) {
 		player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
-	} else if (bLoc == INVLOC_HAND_RIGHT && player.GetItemLocation(player.HoldItem) == ILOC_TWOHAND) {
+	} else if (bLoc == INVLOC_HAND_RIGHT && player.GetItemLocation(item) == ILOC_TWOHAND) {
 		player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 	}
 
