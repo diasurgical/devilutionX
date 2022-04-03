@@ -7021,7 +7021,7 @@ msgstr "Невозможно записать в архив файла сохр�
 
 #: Source/plrmsg.cpp:83 Source/qol/chatlog.cpp:127
 msgid "{:s} (lvl {:d}): "
-msgstr "{:s} (урвн {:d}): {:s} "
+msgstr "{:s} (урвн {:d}): "
 
 #: Source/qol/chatlog.cpp:155
 msgid "Chat History (Messages: {:d})"
