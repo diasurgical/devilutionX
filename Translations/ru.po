@@ -548,7 +548,7 @@ msgid ""
 "of Nightmare difficulty."
 msgstr ""
 "Ваш персонаж должен достигнуть 20 уровня, прежде чем вы сможете вступить в "
-"многопользовательскую игру на Кошмарной сложности."
+"сетевую игру на Кошмарной сложности."
 
 #: Source/DiabloUI/selgame.cpp:286
 msgid ""
@@ -556,7 +556,7 @@ msgid ""
 "of Hell difficulty."
 msgstr ""
 "Ваш персонаж должен достигнуть 30 уровня, прежде чем вы сможете вступить в "
-"многопользовательскую игру на Адской сложности."
+"сетевую игру на Адской сложности."
 
 #: Source/DiabloUI/selgame.cpp:362
 msgid "Select Game Speed"
@@ -6362,7 +6362,7 @@ msgstr ""
 
 #: Source/options.cpp:762
 msgid "Hardware Cursor"
-msgstr "Аппаратный Курсор"
+msgstr "Аппаратный курсор"
 
 #: Source/options.cpp:762
 msgid "Use a hardware cursor"
