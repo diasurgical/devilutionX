@@ -15,7 +15,6 @@ namespace devilution {
 namespace {
 constexpr size_t PcxHeaderSize = 128;
 constexpr unsigned NumPaletteColors = 256;
-constexpr unsigned PcxPaletteSize = 1 + NumPaletteColors * 3;
 
 bool LoadPcxMeta(SDL_RWops *handle, int &width, int &height, std::uint8_t &bpp)
 {
@@ -30,23 +29,23 @@ bool LoadPcxMeta(SDL_RWops *handle, int &width, int &height, std::uint8_t &bpp)
 }
 
 bool LoadPcxPixelsAndPalette(SDL_RWops *handle, int width, int height, std::uint8_t bpp,
-    uint8_t *buffer, std::size_t bufferPitch, SDL_Color *palette)
+    uint8_t *buffer, std::ptrdiff_t bufferPitch, SDL_Color *palette)
 {
-	const bool has256ColorPalette = palette != nullptr && bpp == 8;
-	std::uint32_t pixelDataSize = SDL_RWsize(handle);
-	if (pixelDataSize == static_cast<std::uint32_t>(-1)) {
+	std::ptrdiff_t pixelDataSize = SDL_RWsize(handle);
+	if (pixelDataSize < 0) {
+		// Unable to determine size, or an error occurred.
 		return false;
 	}
-	pixelDataSize -= PcxHeaderSize + (has256ColorPalette ? PcxPaletteSize : 0);
 
-	// We read 1 extra byte because it delimits the palette.
-	const size_t readSize = pixelDataSize + (has256ColorPalette ? PcxPaletteSize : 0);
+	// SDL_RWsize gives the total size of the file however we've already read the header from an earlier call to
+	//  LoadPcxMeta, so we only need to read the remainder of the file.
+	const std::size_t readSize = pixelDataSize - PcxHeaderSize;
 	std::unique_ptr<uint8_t[]> fileBuffer { new uint8_t[readSize] };
 	if (SDL_RWread(handle, fileBuffer.get(), readSize, 1) == 0) {
 		return false;
 	}
-	const unsigned xSkip = bufferPitch - width;
-	const unsigned srcSkip = width % 2;
+	const std::ptrdiff_t xSkip = bufferPitch - width;
+	const std::ptrdiff_t srcSkip = width % 2;
 	uint8_t *dataPtr = fileBuffer.get();
 	for (int j = 0; j < height; j++) {
 		for (int x = 0; x < width;) {
@@ -67,9 +66,10 @@ bool LoadPcxPixelsAndPalette(SDL_RWops *handle, int width, int height, std::uint
 		buffer += xSkip;
 	}
 
-	if (has256ColorPalette) {
+	if (palette != nullptr && bpp == 8) {
+		// The file has a 256 color palette that needs to be loaded.
 		[[maybe_unused]] constexpr unsigned PcxPaletteSeparator = 0x0C;
-		assert(*dataPtr == PcxPaletteSeparator);
+		assert(*dataPtr == PcxPaletteSeparator); // sanity check the delimiter
 		++dataPtr;
 
 		auto *out = palette;
