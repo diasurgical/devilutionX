@@ -205,7 +205,7 @@ GameController *GameController::Get(const SDL_Event &event)
 		return Get(event.caxis.which);
 	case SDL_CONTROLLERBUTTONDOWN:
 	case SDL_CONTROLLERBUTTONUP:
-		return Get(event.jball.which);
+		return Get(event.cbutton.which);
 	default:
 		return nullptr;
 	}
@@ -216,11 +216,15 @@ const std::vector<GameController> &GameController::All()
 	return controllers_;
 }
 
-bool GameController::IsPressedOnAnyController(ControllerButton button)
+bool GameController::IsPressedOnAnyController(ControllerButton button, SDL_JoystickID *which)
 {
 	for (auto &controller : controllers_)
-		if (controller.IsPressed(button))
+		if (controller.IsPressed(button)) {
+			if (which != nullptr)
+				*which = controller.instance_id_;
+
 			return true;
+		}
 	return false;
 }
 

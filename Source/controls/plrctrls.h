@@ -59,6 +59,8 @@ void HandleRightStickMotion();
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
 bool InGameMenu();
 
+bool CanControlHero();
+
 void SetPointAndClick(bool value);
 
 bool IsPointAndClick();
