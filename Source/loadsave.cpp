@@ -2102,11 +2102,23 @@ void SaveStash()
 
 	file.WriteLE<uint32_t>(Stash.gold);
 
-	// Current stash size is 50 pages, expanding to 100 in the near future. Will definitely fit in a 32 bit value.
-	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.stashGrids.size()));
+	std::vector<unsigned> pagesToSave;
 	for (const auto &stashPage : Stash.stashGrids) {
-		file.WriteLE<uint32_t>(stashPage.first);
-		for (const auto &row : stashPage.second) {
+		if (std::any_of(stashPage.second.cbegin(), stashPage.second.cend(), [](const auto &row) {
+			    return std::any_of(row.cbegin(), row.cend(), [](auto cell) {
+				    return cell > 0;
+			    });
+		    })) {
+			// found a page that contains at least one item
+			pagesToSave.push_back(stashPage.first);
+		}
+	};
+
+	// Current stash size is 100 pages. Will definitely fit in a 32 bit value.
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(pagesToSave.size()));
+	for (const auto &page : pagesToSave) {
+		file.WriteLE<uint32_t>(page);
+		for (const auto &row : Stash.stashGrids[page]) {
 			for (uint16_t cell : row) {
 				file.WriteLE<uint16_t>(cell);
 			}
