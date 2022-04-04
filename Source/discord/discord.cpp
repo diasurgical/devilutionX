@@ -86,7 +86,7 @@ std::string GetLocationString()
 
 std::string GetCharacterString()
 {
-	std::string charClassStr = _(ClassStrTbl[static_cast<int>(Players[MyPlayerId]._pClass)]);
+	const std::string &charClassStr = _(ClassStrTbl[static_cast<int>(Players[MyPlayerId]._pClass)]);
 	return fmt::format(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}"), tracked_data.playerLevel, charClassStr);
 }
 
