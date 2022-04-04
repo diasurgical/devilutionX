@@ -27,11 +27,13 @@
 #include "options.h"
 #include "player.h"
 #include "qol/autopickup.h"
+#include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -98,7 +100,7 @@ int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-uint32_t ExpLvlsTbl[MAXCHARLEVEL] = {
+uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1] = {
 	0,
 	2000,
 	4620,
@@ -536,7 +538,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
 }
 
-void RespawnDeadItem(Item *itm, Point target)
+void RespawnDeadItem(Item &&itm, Point target)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -545,23 +547,20 @@ void RespawnDeadItem(Item *itm, Point target)
 
 	dItem[target.x][target.y] = ii + 1;
 
-	Items[ii] = *itm;
+	Items[ii] = itm;
 	Items[ii].position = target;
-	RespawnItem(&Items[ii], true);
-
-	itm->_itype = ItemType::None;
+	RespawnItem(Items[ii], true);
+	NetSendCmdPItem(false, CMD_RESPAWNITEM, target, Items[ii]);
 }
 
-void DeadItem(Player &player, Item *itm, Displacement direction)
+void DeadItem(Player &player, Item &&itm, Displacement direction)
 {
-	if (itm->isEmpty())
+	if (itm.isEmpty())
 		return;
 
 	Point target = player.position.tile + direction;
 	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
-		RespawnDeadItem(itm, target);
-		player.HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, target, player.HoldItem);
+		RespawnDeadItem(std::move(itm), target);
 		return;
 	}
 
@@ -570,9 +569,7 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 			for (int i = -k; i <= k; i++) {
 				Point next = player.position.tile + Displacement { i, j };
 				if (ItemSpaceOk(next)) {
-					RespawnDeadItem(itm, next);
-					player.HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, next, player.HoldItem);
+					RespawnDeadItem(std::move(itm), next);
 					return;
 				}
 			}
@@ -580,10 +577,8 @@ void DeadItem(Player &player, Item *itm, Displacement direction)
 	}
 }
 
-int DropGold(int pnum, int amount, bool skipFullStacks)
+int DropGold(Player &player, int amount, bool skipFullStacks)
 {
-	auto &player = Players[pnum];
-
 	for (int i = 0; i < player._pNumInv && amount > 0; i++) {
 		auto &item = player.InvList[i];
 
@@ -591,22 +586,18 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 			continue;
 
 		if (amount < item._ivalue) {
+			Item goldItem;
+			MakeGoldStack(goldItem, amount);
+			DeadItem(player, std::move(goldItem), { 0, 0 });
+
 			item._ivalue -= amount;
-			SetPlrHandItem(player.HoldItem, IDI_GOLD);
-			SetGoldSeed(player, player.HoldItem);
-			SetPlrHandGoldCurs(player.HoldItem);
-			player.HoldItem._ivalue = amount;
-			DeadItem(player, &player.HoldItem, { 0, 0 });
+
 			return 0;
 		}
 
 		amount -= item._ivalue;
+		DeadItem(player, std::move(item), { 0, 0 });
 		player.RemoveInvItem(i);
-		SetPlrHandItem(player.HoldItem, IDI_GOLD);
-		SetGoldSeed(player, player.HoldItem);
-		SetPlrHandGoldCurs(player.HoldItem);
-		player.HoldItem._ivalue = item._ivalue;
-		DeadItem(player, &player.HoldItem, { 0, 0 });
 		i = -1;
 	}
 
@@ -620,13 +611,12 @@ void DropHalfPlayersGold(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	int hGold = player._pGold / 2;
+	int remainingGold = DropGold(player, player._pGold / 2, true);
+	if (remainingGold > 0) {
+		DropGold(player, remainingGold, false);
+	}
 
-	hGold = DropGold(pnum, hGold, true);
-	if (hGold > 0)
-		DropGold(pnum, hGold, false);
-
-	player._pGold -= hGold;
+	player._pGold /= 2;
 }
 
 void InitLevelChange(int pnum)
@@ -740,8 +730,7 @@ bool WeaponDecay(Player &player, int ii)
 	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & ISPLHF_DECAY) != 0) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
-			NetSendCmdDelItem(true, ii);
-			player.InvBody[ii]._itype = ItemType::None;
+			RemoveEquipment(player, static_cast<inv_body_loc>(ii), true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -777,8 +766,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -791,8 +779,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -805,8 +792,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -819,8 +805,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -1047,7 +1032,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		return false;
 	}
 
-	if ((target._pSpellFlags & 1) != 0) {
+	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize)) {
 		return false;
 	}
 
@@ -1318,8 +1303,7 @@ void DamageParryItem(int pnum)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 		}
 	}
@@ -1328,8 +1312,7 @@ void DamageParryItem(int pnum)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
 			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-				player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+				RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 				CalcPlrInv(player, true);
 			}
 		}
@@ -1397,11 +1380,10 @@ void DamageArmor(int pnum)
 	}
 
 	if (a != 0) {
-		NetSendCmdDelItem(true, INVLOC_CHEST);
+		RemoveEquipment(player, INVLOC_CHEST, true);
 	} else {
-		NetSendCmdDelItem(true, INVLOC_HEAD);
+		RemoveEquipment(player, INVLOC_HEAD, true);
 	}
-	pi->_itype = ItemType::None;
 	CalcPlrInv(player, true);
 }
 
@@ -1842,8 +1824,8 @@ void ValidatePlayer()
 	}
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pLevel > MAXCHARLEVEL - 1)
-		myPlayer._pLevel = MAXCHARLEVEL - 1;
+	if (myPlayer._pLevel > MAXCHARLEVEL)
+		myPlayer._pLevel = MAXCHARLEVEL;
 	if (myPlayer._pExperience > myPlayer._pNextExper) {
 		myPlayer._pExperience = myPlayer._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
@@ -1947,34 +1929,35 @@ bool Player::HasItem(int item, int *idx) const
 
 void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
-	iv++;
-
 	// Iterate through invGrid and remove every reference to item
-	for (int8_t &itemId : InvGrid) {
-		if (itemId == iv || itemId == -iv) {
-			itemId = 0;
+	for (int8_t &itemIndex : InvGrid) {
+		if (abs(itemIndex) - 1 == iv) {
+			itemIndex = 0;
 		}
 	}
 
-	iv--;
+	InvList[iv]._itype = ItemType::None;
+
 	_pNumInv--;
 
 	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
 		InvList[iv] = InvList[_pNumInv];
+		InvList[_pNumInv]._itype = ItemType::None;
 
-		for (int8_t &itemId : InvGrid) {
-			if (itemId == _pNumInv + 1) {
-				itemId = iv + 1;
+		for (int8_t &itemIndex : InvGrid) {
+			if (itemIndex == _pNumInv + 1) {
+				itemIndex = iv + 1;
 			}
-			if (itemId == -(_pNumInv + 1)) {
-				itemId = -(iv + 1);
+			if (itemIndex == -(_pNumInv + 1)) {
+				itemIndex = -(iv + 1);
 			}
 		}
 	}
 
-	if (calcScrolls)
+	if (calcScrolls) {
 		CalcScrolls();
+	}
 }
 
 bool Player::TryRemoveInvItemById(int item)
@@ -2270,9 +2253,9 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	auto &celSprites = AnimationData[static_cast<size_t>(*graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
-	if (celSprites && pPreviewCelSprite != &*celSprites) {
-		pPreviewCelSprite = &*celSprites;
+	std::optional<CelSprite> celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
+	if (celSprites && previewCelSprite != celSprites) {
+		previewCelSprite = celSprites;
 		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
 	}
 }
@@ -2401,7 +2384,7 @@ void InitPlayerGFX(Player &player)
 
 void ResetPlayerGFX(Player &player)
 {
-	player.AnimInfo.pCelSprite = nullptr;
+	player.AnimInfo.celSprite = std::nullopt;
 	for (auto &animData : player.AnimationData) {
 		for (auto &celSprite : animData.CelSpritesForDirections)
 			celSprite = std::nullopt;
@@ -2413,14 +2396,12 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numbe
 {
 	LoadPlrGFX(player, graphic);
 
-	auto &celSprite = player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
-
-	CelSprite *pCelSprite = celSprite ? &*celSprite : nullptr;
+	std::optional<CelSprite> celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
 
 	float previewShownGameTickFragments = 0.F;
-	if (pCelSprite == player.pPreviewCelSprite && !player.IsWalking())
+	if (celSprite == player.previewCelSprite && !player.IsWalking())
 		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
-	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
+	player.AnimInfo.SetNewAnimation(celSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
 
 void SetPlrAnims(Player &player)
@@ -2640,17 +2621,14 @@ void CreatePlayer(int playerId, HeroClass c)
 		spellLevel = 0;
 	}
 
-	player._pSpellFlags = 0;
+	player._pSpellFlags = SpellFlag::None;
 
 	if (player._pClass == HeroClass::Sorcerer) {
 		player._pSplLvl[SPL_FIREBOLT] = 2;
 	}
 
-	// interestingly, only the first three hotkeys are reset
-	// TODO: BUGFIX: clear all 4 hotkeys instead of 3 (demo leftover)
-	for (int i = 0; i < 3; i++) {
-		player._pSplHotKey[i] = SPL_INVALID;
-	}
+	// Initializing the hotkey bindings to no selection
+	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SPL_INVALID);
 
 	PlayerWeaponGraphic animWeaponId = PlayerWeaponGraphic::Unarmed;
 	switch (c) {
@@ -2775,7 +2753,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
-		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 0, 50);
+		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MAXCHARLEVEL);
 
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.
@@ -3154,7 +3132,7 @@ StartPlayerKill(int pnum, int earflag)
 			drawhpflag = true;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
-				DeadItem(player, &player.HoldItem, { 0, 0 });
+				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
 				NewCursor(CURSOR_HAND);
 			}
 
@@ -3163,8 +3141,8 @@ StartPlayerKill(int pnum, int earflag)
 				if (earflag != -1) {
 					if (earflag != 0) {
 						Item ear;
-						SetPlrHandItem(ear, IDI_EAR);
-						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
+						InitializeItem(ear, IDI_EAR);
+						CopyUtf8(ear._iName, fmt::format(_("Ear of {:s}"), player._pName), sizeof(ear._iName));
 						switch (player._pClass) {
 						case HeroClass::Sorcerer:
 							ear._iCurs = ICURS_EAR_SORCERER;
@@ -3185,13 +3163,14 @@ StartPlayerKill(int pnum, int earflag)
 						ear._ivalue = player._pLevel;
 
 						if (FindGetItem(ear._iSeed, IDI_EAR, ear._iCreateInfo) == -1) {
-							DeadItem(player, &ear, { 0, 0 });
+							DeadItem(player, std::move(ear), { 0, 0 });
 						}
 					} else {
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = Left(pdd);
-							DeadItem(player, &item, Displacement(pdd));
+							DeadItem(player, std::move(item), Displacement(pdd));
+							item._itype = ItemType::None;
 						}
 
 						CalcPlrInv(player, false);
@@ -3205,24 +3184,20 @@ StartPlayerKill(int pnum, int earflag)
 
 void StripTopGold(Player &player)
 {
-	Item tmpItem = player.HoldItem;
-
 	for (Item &item : InventoryPlayerItemsRange { player }) {
 		if (item._itype == ItemType::Gold) {
 			if (item._ivalue > MaxGold) {
-				int val = item._ivalue - MaxGold;
+				Item excessGold;
+				MakeGoldStack(excessGold, item._ivalue - MaxGold);
 				item._ivalue = MaxGold;
-				SetPlrHandItem(player.HoldItem, 0);
-				SetGoldSeed(player, player.HoldItem);
-				player.HoldItem._ivalue = val;
-				SetPlrHandGoldCurs(player.HoldItem);
-				if (!GoldAutoPlace(player))
-					DeadItem(player, &player.HoldItem, { 0, 0 });
+
+				if (!GoldAutoPlace(player, excessGold)) {
+					DeadItem(player, std::move(excessGold), { 0, 0 });
+				}
 			}
 		}
 	}
 	player._pGold = CalculateGold(player);
-	player.HoldItem = tmpItem;
 }
 
 void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
@@ -3488,7 +3463,7 @@ void ProcessPlayers()
 				CheckNewPath(pnum, tplayer);
 			} while (tplayer);
 
-			player.pPreviewCelSprite = nullptr;
+			player.previewCelSprite = std::nullopt;
 			player.AnimInfo.ProcessAnimation();
 		}
 	}
@@ -3593,8 +3568,8 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
+		    ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
+		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))                 // inside right panel
 		) {
 			if (spellID != SPL_HEAL
 			    && spellID != SPL_IDENTIFY
@@ -3711,7 +3686,7 @@ void SyncPlrAnim(int pnum)
 		app_fatal("SyncPlrAnim");
 	}
 
-	player.AnimInfo.pCelSprite = &*player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(player._pdir)];
+	player.AnimInfo.celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(player._pdir);
 	// Ensure ScrollInfo is initialized correctly
 	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);
 }
@@ -3792,10 +3767,7 @@ void ModifyPlrStr(int p, int l)
 	}
 	auto &player = Players[p];
 
-	int max = player.GetMaximumAttributeValue(CharacterAttribute::Strength);
-	if (player._pBaseStr + l > max) {
-		l = max - player._pBaseStr;
-	}
+	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
 
 	player._pStrength += l;
 	player._pBaseStr += l;
@@ -3814,10 +3786,7 @@ void ModifyPlrMag(int p, int l)
 	}
 	auto &player = Players[p];
 
-	int max = player.GetMaximumAttributeValue(CharacterAttribute::Magic);
-	if (player._pBaseMag + l > max) {
-		l = max - player._pBaseMag;
-	}
+	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
 
 	player._pMagic += l;
 	player._pBaseMag += l;
@@ -3850,10 +3819,7 @@ void ModifyPlrDex(int p, int l)
 	}
 	auto &player = Players[p];
 
-	int max = player.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
-	if (player._pBaseDex + l > max) {
-		l = max - player._pBaseDex;
-	}
+	l = clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
 
 	player._pDexterity += l;
 	player._pBaseDex += l;
@@ -3871,10 +3837,7 @@ void ModifyPlrVit(int p, int l)
 	}
 	auto &player = Players[p];
 
-	int max = player.GetMaximumAttributeValue(CharacterAttribute::Vitality);
-	if (player._pBaseVit + l > max) {
-		l = max - player._pBaseVit;
-	}
+	l = clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
 
 	player._pVitality += l;
 	player._pBaseVit += l;

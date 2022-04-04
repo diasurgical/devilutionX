@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "multi.h"
 #include "storm/storm_net.hpp"
 
 namespace devilution {
@@ -57,9 +58,9 @@ public:
 	{
 	}
 
-	virtual std::vector<std::string> get_gamelist()
+	virtual std::vector<GameInfo> get_gamelist()
 	{
-		return std::vector<std::string>();
+		return std::vector<GameInfo>();
 	}
 
 	static std::unique_ptr<abstract_net> MakeNet(provider_t provider);

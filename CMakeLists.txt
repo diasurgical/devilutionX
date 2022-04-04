@@ -59,6 +59,8 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
+option(DEVILUTIONX_MASKED_ART_RLE "RLE-compress masked art in memory (e.g. fonts). Slightly lower RAM usage at a significant performance cost." OFF)
+
 if(TSAN)
   set(ASAN OFF)
 endif()
@@ -337,6 +339,15 @@ if(VITA)
 
 endif()
 
+if(PS4)
+  add_custom_command(
+    TARGET devilutionx_mpq POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} "${PROJECT_SOURCE_DIR}/Packaging/ps4/")
+  add_self(${BIN_TARGET})
+  add_pkg(${BIN_TARGET} "${PROJECT_SOURCE_DIR}/Packaging/ps4"
+    "DVLX00001" "DevilutionX" "${PROJECT_VERSION}")
+endif()
+
 if(NINTENDO_3DS)
   set(APP_TITLE       "DevilutionX")
   set(APP_DESCRIPTION "DevilutionX port for 3DS")
@@ -424,6 +435,12 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
         DESTINATION "LICENSE"
       )
     endforeach()
+
+    if(DISCORD_SHARED_LIB)
+      install(FILES "${DISCORD_SHARED_LIB}"
+        DESTINATION "."
+      )
+    endif()
 
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(TOLOWER ${PROJECT_NAME} project_name)

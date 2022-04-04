@@ -192,12 +192,6 @@ bool SpawnWindow(const char *lpWindowName)
 	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 #endif
 
-#if defined(_WIN32) && !defined(USE_SDL1) && !defined(__UWP__)
-	// The default WASAPI backend causes distortions
-	// https://github.com/diasurgical/devilutionX/issues/1434
-	SDL_setenv("SDL_AUDIODRIVER", "winmm", /*overwrite=*/false);
-#endif
-
 	int initFlags = SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
 #ifndef NOSOUND
 	initFlags |= SDL_INIT_AUDIO;
@@ -249,11 +243,14 @@ bool SpawnWindow(const char *lpWindowName)
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	if (*sgOptions.Gameplay.grabInput) {
-		flags |= SDL_WINDOW_INPUT_GRABBED;
-	}
-
 	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.width, windowSize.height, flags);
+
+	// Note: https://github.com/libsdl-org/SDL/issues/962
+	// This is a solution to a problem related to SDL mouse grab.
+	// See https://github.com/diasurgical/devilutionX/issues/4251
+	if (ghMainWnd != nullptr)
+		SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
+
 #endif
 	if (ghMainWnd == nullptr) {
 		ErrSdl();

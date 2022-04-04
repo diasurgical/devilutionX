@@ -32,7 +32,7 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pSquareCel;
+std::optional<OwnedCelSprite> pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
 bool DebugVision = false;
@@ -97,7 +97,7 @@ void PrintDebugMonster(int m)
 	auto &monster = Monsters[m];
 
 	EventPlrMsg(fmt::format(
-	                "Monster {:i} = {:s}\nX = {:i}, Y = {:i}\nEnemy = {:i}, HP = {:i}\nMode = {:i}, Var1 = {:i}",
+	                "Monster {:d} = {:s}\nX = {:d}, Y = {:d}\nEnemy = {:d}, HP = {:d}\nMode = {:d}, Var1 = {:d}",
 	                m,
 	                monster.mName,
 	                monster.position.tile.x,
@@ -115,7 +115,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	EventPlrMsg(fmt::format("Active List = {:i}, Squelch = {:i}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
+	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
@@ -169,17 +169,16 @@ std::string DebugCmdGiveGoldCheat(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	for (int8_t &itemId : myPlayer.InvGrid) {
-		if (itemId != 0)
+	for (int8_t &itemIndex : myPlayer.InvGrid) {
+		if (itemIndex != 0)
 			continue;
 
-		int ni = myPlayer._pNumInv++;
-		SetPlrHandItem(myPlayer.InvList[ni], IDI_GOLD);
-		GetPlrHandSeed(&myPlayer.InvList[ni]);
-		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
-		myPlayer._pGold += GOLD_MAX_LIMIT;
-		itemId = myPlayer._pNumInv;
+		Item &goldItem = myPlayer.InvList[myPlayer._pNumInv];
+		MakeGoldStack(goldItem, GOLD_MAX_LIMIT);
+		myPlayer._pNumInv++;
+		itemIndex = myPlayer._pNumInv;
+
+		myPlayer._pGold += goldItem._ivalue;
 	}
 	CalcPlrInv(myPlayer, true);
 
@@ -190,15 +189,15 @@ std::string DebugCmdTakeGoldCheat(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	for (auto itemId : myPlayer.InvGrid) {
-		itemId -= 1;
+	for (auto itemIndex : myPlayer.InvGrid) {
+		itemIndex -= 1;
 
-		if (itemId < 0)
+		if (itemIndex < 0)
 			continue;
-		if (myPlayer.InvList[itemId]._itype != ItemType::Gold)
+		if (myPlayer.InvList[itemIndex]._itype != ItemType::Gold)
 			continue;
 
-		myPlayer.RemoveInvItem(itemId);
+		myPlayer.RemoveInvItem(itemIndex);
 	}
 
 	myPlayer._pGold = 0;
@@ -543,7 +542,7 @@ std::string DebugCmdLevelSeed(const string_view parameter)
 	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
 }
 
-std::string DebugCmdSpawnMonster(const string_view parameter)
+std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 {
 	if (currlevel == 0)
 		return "Do you want to kill the towners?!?";
@@ -551,44 +550,31 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	std::stringstream paramsStream(parameter.data());
 	std::string name;
 	int count = 1;
-	if (std::getline(paramsStream, name, ' ')) {
-		count = atoi(name.c_str());
-		if (count > 0)
-			name.clear();
-		else
-			count = 1;
-		std::getline(paramsStream, name, ' ');
+	for (std::string tmp; std::getline(paramsStream, tmp, ' '); name += tmp + " ") {
+		int num = atoi(tmp.c_str());
+		if (num > 0) {
+			count = num;
+			break;
+		}
 	}
+	if (name.empty())
+		return "Monster name cannot be empty. Duh.";
 
-	std::string singleWord;
-	while (std::getline(paramsStream, singleWord, ' ')) {
-		name.append(" ");
-		name.append(singleWord);
-	}
-
+	name.pop_back(); // remove last space
 	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
 
 	int mtype = -1;
-	for (int i = 0; i < 138; i++) {
-		auto mondata = MonstersData[i];
+	int uniqueIndex = -1;
+	for (int i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
+		auto mondata = UniqueMonstersData[i];
 		std::string monsterName(mondata.mName);
 		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (monsterName.find(name) == std::string::npos)
 			continue;
-		mtype = i;
-		break;
-	}
-
-	if (mtype == -1) {
-		for (int i = 0; i < 100; i++) {
-			auto mondata = UniqueMonstersData[i];
-			std::string monsterName(mondata.mName);
-			std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
-			if (monsterName.find(name) == std::string::npos)
-				continue;
-			mtype = mondata.mtype;
+		mtype = mondata.mtype;
+		uniqueIndex = i;
+		if (monsterName == name) // to support partial name matching but always choose the correct monster if full name is given
 			break;
-		}
 	}
 
 	if (mtype == -1)
@@ -608,6 +594,93 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	if (!found) {
 		LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
 		InitMonsterGFX(id);
+		InitMonsterSND(id);
+		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
+		LevelMonsterTypes[id].mdeadval = 1;
+	}
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	int spawnedMonster = 0;
+
+	for (int k : CrawlNum) {
+		int ck = k + 2;
+		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
+			Point pos = myPlayer.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
+				continue;
+			if (!IsTileWalkable(pos))
+				continue;
+
+			int mon = AddMonster(pos, myPlayer._pdir, id, true);
+			if (mon < 0)
+				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+			auto &monster = Monsters[mon];
+			PrepareUniqueMonst(monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
+			ActiveMonsterCount--;
+			monster._udeadval = 1;
+			spawnedMonster += 1;
+
+			if (spawnedMonster >= count)
+				return "Let the fighting begin!";
+		}
+	}
+
+	return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+}
+
+std::string DebugCmdSpawnMonster(const string_view parameter)
+{
+	if (currlevel == 0)
+		return "Do you want to kill the towners?!?";
+
+	std::stringstream paramsStream(parameter.data());
+	std::string name;
+	int count = 1;
+	for (std::string tmp; std::getline(paramsStream, tmp, ' '); name += tmp + " ") {
+		int num = atoi(tmp.c_str());
+		if (num > 0) {
+			count = num;
+			break;
+		}
+	}
+	if (name.empty())
+		return "Monster name cannot be empty. Duh.";
+
+	name.pop_back(); // remove last space
+	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+
+	int mtype = -1;
+
+	for (int i = 0; i < NUM_MTYPES; i++) {
+		auto mondata = MonstersData[i];
+		std::string monsterName(mondata.mName);
+		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (monsterName.find(name) == std::string::npos)
+			continue;
+		mtype = i;
+		if (monsterName == name) // to support partial name matching but always choose the correct monster if full name is given
+			break;
+	}
+
+	if (mtype == -1)
+		return "Monster not found!";
+
+	int id = MAX_LVLMTYPES - 1;
+	bool found = false;
+
+	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+		if (LevelMonsterTypes[i].mtype == mtype) {
+			id = i;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) {
+		LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(id);
+		InitMonsterSND(id);
 		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
 		LevelMonsterTypes[id].mdeadval = 1;
 	}
@@ -796,7 +869,8 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
-	{ "spawn", "Spawns monster {name}.", "({count}) {name}", &DebugCmdSpawnMonster },
+	{ "spawnu", "Spawns unique monster {name}.", "{name} ({count})", &DebugCmdSpawnUniqueMonster },
+	{ "spawn", "Spawns monster {name}.", "{name} ({count})", &DebugCmdSpawnMonster },
 	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
 	{ "scrollview", "Toggles scroll view feature (with shift+mouse).", "", &DebugCmdScrollView },
 	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
@@ -837,7 +911,7 @@ void NextDebugMonster()
 	if (DebugMonsterId == MAXMONSTERS)
 		DebugMonsterId = 0;
 
-	EventPlrMsg(fmt::format("Current debug monster = {:i}", DebugMonsterId), UiFlags::ColorWhite);
+	EventPlrMsg(fmt::format("Current debug monster = {:d}", DebugMonsterId), UiFlags::ColorWhite);
 }
 
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)

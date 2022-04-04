@@ -4,8 +4,8 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pSTextBoxCels;
-std::optional<CelSprite> pSTextSlidCels;
+std::optional<OwnedCelSprite> pSTextBoxCels;
+std::optional<OwnedCelSprite> pSTextSlidCels;
 
 void InitInfoBoxGfx()
 {

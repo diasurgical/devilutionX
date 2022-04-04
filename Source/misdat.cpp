@@ -8,13 +8,14 @@
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
 #include "missiles.h"
+#include "utils/file_name_generator.hpp"
 
 namespace devilution {
 
 /** Data related to each missile ID. */
 MissileData MissilesData[] = {
 	// clang-format off
-	// mAddProc,                   mProc,              mName,             mDraw, mType, mResist,        mFileNum,        miSFX,       mlSFX,       MovementDistribution;
+	// mAddProc,                   mProc,              mName,             mDraw, mType, mResist,        mFileNum,        mlSFX,       miSFX,       MovementDistribution;
 	{  &AddArrow,                  &MI_Arrow,          MIS_ARROW,         true,      0, MISR_NONE,      MFILE_ARROWS,    SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Blockable   },
 	{  &AddFirebolt,               &MI_Firebolt,       MIS_FIREBOLT,      true,      1, MISR_FIRE,      MFILE_FIREBA,    LS_FBOLT1,   LS_FIRIMP2,  MissileMovementDistrubution::Blockable   },
 	{  &AddGuardian,               &MI_Guardian,       MIS_GUARDIAN,      true,      1, MISR_NONE,      MFILE_GUARD,     LS_GUARD,    LS_GUARDLAN, MissileMovementDistrubution::Disabled    },
@@ -140,13 +141,13 @@ MissileFileData MissileSpriteData[] = {
 	{ "Bluexfr",  MFILE_BLUEXFR,    1,       MissileDataFlags::None,         { 0 },         { 19 },                                160,         48 },
 	{ "Bluexbk",  MFILE_BLUEXBK,    1,       MissileDataFlags::None,         { 0 },         { 19 },                                160,         48 },
 	{ "Manashld", MFILE_MANASHLD,   1,       MissileDataFlags::NotAnimated,  { 0 },         {  1 },                                 96,         16 },
-	{ nullptr,    MFILE_BLOOD,      4,       MissileDataFlags::None,         { 0 },         { 15 },                                 96,         16 },
-	{ nullptr,    MFILE_BONE,       3,       MissileDataFlags::None,         { 2 },         {  8 },                                128,         32 },
-	{ nullptr,    MFILE_METLHIT,    3,       MissileDataFlags::None,         { 2 },         { 10 },                                 96,         16 },
+	{ {},         MFILE_BLOOD,      4,       MissileDataFlags::None,         { 0 },         { 15 },                                 96,         16 },
+	{ {},         MFILE_BONE,       3,       MissileDataFlags::None,         { 2 },         {  8 },                                128,         32 },
+	{ {},         MFILE_METLHIT,    3,       MissileDataFlags::None,         { 2 },         { 10 },                                 96,         16 },
 	{ "Farrow",   MFILE_FARROW,    16,       MissileDataFlags::None,         { 0 },         {  4 },                                 96,         16 },
 	{ "Doom",     MFILE_DOOM,       9,       MissileDataFlags::MonsterOwned, { 1 },         { 15 },                                 96,         16 },
-	{ nullptr,    MFILE_0F,         1,       MissileDataFlags::MonsterOwned, { 0 },         {  0 },                                  0,          0 },
-	{ nullptr,    MFILE_BLODBUR,    2,       MissileDataFlags::None,         { 2 },         {  8 },                                128,         32 },
+	{ {},         MFILE_0F,         1,       MissileDataFlags::MonsterOwned, { 0 },         {  0 },                                  0,          0 },
+	{ {},         MFILE_BLODBUR,    2,       MissileDataFlags::None,         { 2 },         {  8 },                                128,         32 },
 	{ "Newexp",   MFILE_NEWEXP,     1,       MissileDataFlags::None,         { 1 },         { 15 },                                 96,         16 },
 	{ "Shatter1", MFILE_SHATTER1,   1,       MissileDataFlags::None,         { 1 },         { 12 },                                128,         32 },
 	{ "Bigexp",   MFILE_BIGEXP,     1,       MissileDataFlags::None,         { 0 },         { 15 },                                160,         48 },
@@ -160,11 +161,11 @@ MissileFileData MissileSpriteData[] = {
 	{ "Holy",     MFILE_HOLY,      16,       MissileDataFlags::None,         { 1, 0 },      { 14 },                                 96,         16 },
 	{ "Holyexpl", MFILE_HOLYEXPL,   1,       MissileDataFlags::None,         { 0 },         {  8 },                                160,         48 },
 	{ "Larrow",   MFILE_LARROW,    16,       MissileDataFlags::None,         { 0 },         {  4 },                                 96,         16 },
-	{ nullptr,    MFILE_FIRARWEX,   1,       MissileDataFlags::None,         { 0 },         {  6 },                                 64,          0 },
+	{ {},         MFILE_FIRARWEX,   1,       MissileDataFlags::None,         { 0 },         {  6 },                                 64,          0 },
 	{ "Acidbf",   MFILE_ACIDBF,    16,       MissileDataFlags::MonsterOwned, { 0 },         {  8 },                                 96,         16 },
 	{ "Acidspla", MFILE_ACIDSPLA,   1,       MissileDataFlags::MonsterOwned, { 0 },         {  8 },                                 96,         16 },
 	{ "Acidpud",  MFILE_ACIDPUD,    2,       MissileDataFlags::MonsterOwned, { 0 },         {  9,  4 },                             96,         16 },
-	{ nullptr,    MFILE_ETHRSHLD,   1,       MissileDataFlags::None,         { 0 },         {  1 },                                 96,         16 },
+	{ {},         MFILE_ETHRSHLD,   1,       MissileDataFlags::None,         { 0 },         {  1 },                                 96,         16 },
 	{ "Firerun",  MFILE_FIRERUN,    8,       MissileDataFlags::None,         { 1 },         { 12 },                                 96,         16 },
 	{ "Ressur1",  MFILE_RESSUR1,    1,       MissileDataFlags::None,         { 0 },         { 16 },                                 96,         16 },
 	{ "Sklball",  MFILE_SKLBALL,    9,       MissileDataFlags::None,         { 1 },         { 16, 16, 16, 16, 16, 16, 16, 16, 8 },  96,         16 },
@@ -189,7 +190,7 @@ MissileFileData MissileSpriteData[] = {
 	{ "ms_blb",   MFILE_BONEDEMON, 16,       MissileDataFlags::MonsterOwned, { 0 },         { 15 },                                 96,          8 },
 	{ "ex_ora1",  MFILE_EXORA1,     1,       MissileDataFlags::MonsterOwned, { 0 },         { 13 },                                 96,        -12 },
 	{ "ex_blu3",  MFILE_EXBL3,      1,       MissileDataFlags::MonsterOwned, { 0 },         {  7 },                                292,        114 },
-	{ "",         MFILE_NONE,       0,       MissileDataFlags::None,         {  },          { },                                     0,          0 },
+	{ {},         MFILE_NONE,       0,       MissileDataFlags::None,         {  },          { },                                     0,          0 },
 	// clang-format on
 };
 
@@ -214,9 +215,9 @@ std::array<T, 16> maybeAutofill(std::initializer_list<T> list)
 
 } // namespace
 
-MissileFileData::MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
+MissileFileData::MissileFileData(string_view name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
     std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
-    int16_t animWidth, int16_t animWidth2)
+    uint16_t animWidth, int16_t animWidth2)
     : name(name)
     , animName(animName)
     , animFAmt(animFAmt)
@@ -230,21 +231,18 @@ MissileFileData::MissileFileData(const char *name, uint8_t animName, uint8_t ani
 
 void MissileFileData::LoadGFX()
 {
-	if (animData[0] != nullptr)
+	if (animData != nullptr)
 		return;
 
-	if (name == nullptr)
+	if (name.empty())
 		return;
 
-	char pszName[256];
+	FileNameGenerator pathGenerator({ "Missiles\\", name }, ".CL2");
 	if (animFAmt == 1) {
-		sprintf(pszName, "Missiles\\%s.CL2", name);
-		animData[0] = LoadFileInMem(pszName);
+		animData = LoadFileInMem(pathGenerator());
+		frameOffsets[0] = 0;
 	} else {
-		for (unsigned i = 0; i < animFAmt; i++) {
-			sprintf(pszName, "Missiles\\%s%u.CL2", name, i + 1);
-			animData[i] = LoadFileInMem(pszName);
-		}
+		animData = MultiFileLoader<16> {}(animFAmt, pathGenerator, &frameOffsets[0]);
 	}
 }
 

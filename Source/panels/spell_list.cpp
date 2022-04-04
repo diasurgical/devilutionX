@@ -12,6 +12,7 @@
 #include "player.h"
 #include "spells.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 #define SPLROWICONLS 10
 
@@ -41,7 +42,7 @@ void PrintSBookSpellType(const Surface &out, Point position, const std::string &
 	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 1, 0 }, SPLICONLENGTH, rectColorIndex);
 
 	// Align the spell type text with bottom of spell icon
-	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text.c_str()) / 2, (IsSmallFontTall() ? -19 : -15) };
+	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text) / 2, (IsSmallFontTall() ? -19 : -15) };
 
 	// Draw a drop shadow below and to the left of the text
 	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
@@ -84,7 +85,7 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 {
 	auto &myPlayer = Players[MyPlayerId];
-	for (int t = 0; t < 4; t++) {
+	for (size_t t = 0; t < NumHotkeys; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
 		auto quickSpellActionKey = fmt::format("QuickSpell{}", t + 1);
@@ -123,7 +124,7 @@ void DrawSpell(const Surface &out)
 
 void DrawSpellList(const Surface &out)
 {
-	infostr[0] = '\0';
+	InfoString.clear();
 	ClearPanel();
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -159,53 +160,48 @@ void DrawSpellList(const Surface &out)
 		case RSPLTYPE_SKILL:
 			spellColor = PAL16_YELLOW - 46;
 			PrintSBookSpellType(out, spellListItem.location, _("Skill"), spellColor);
-			strcpy(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)).c_str());
+			InfoString = fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText));
 			break;
 		case RSPLTYPE_SPELL:
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_BLUE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
-			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			InfoString = fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText));
 			if (spellId == SPL_HBOLT) {
-				strcpy(tempstr, _("Damages undead only"));
-				AddPanelString(tempstr);
+				AddPanelString(_("Damages undead only"));
 			}
 			if (spellLevel == 0)
-				strcpy(tempstr, _("Spell Level 0 - Unusable"));
+				AddPanelString(_("Spell Level 0 - Unusable"));
 			else
-				strcpy(tempstr, fmt::format(_("Spell Level {:d}"), spellLevel).c_str());
-			AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("Spell Level {:d}"), spellLevel));
 			break;
 		case RSPLTYPE_SCROLL: {
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_RED - 59;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), spellColor);
-			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			InfoString = fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText));
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 				return item.IsScrollOf(spellId);
 			});
-			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 		} break;
 		case RSPLTYPE_CHARGES: {
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_ORANGE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
-			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			InfoString = fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText));
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges));
 		} break;
 		case RSPLTYPE_INVALID:
 			break;
 		}
 		if (hotkeyName) {
-			strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), *hotkeyName).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(_("Spell Hotkey {:s}"), *hotkeyName));
 		}
 	}
 }
@@ -290,7 +286,7 @@ void SetSpeedSpell(int slot)
 		return;
 	}
 	auto &myPlayer = Players[MyPlayerId];
-	for (int i = 0; i < 4; ++i) {
+	for (size_t i = 0; i < NumHotkeys; ++i) {
 		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
 			myPlayer._pSplHotKey[i] = SPL_INVALID;
 	}

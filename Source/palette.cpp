@@ -28,9 +28,9 @@ bool sgbFadedIn = true;
 
 void LoadGamma()
 {
-	int gammaValue = sgOptions.Graphics.nGammaCorrection;
+	int gammaValue = *sgOptions.Graphics.gammaCorrection;
 	gammaValue = clamp(gammaValue, 30, 100);
-	sgOptions.Graphics.nGammaCorrection = gammaValue - gammaValue % 5;
+	sgOptions.Graphics.gammaCorrection.SetValue(gammaValue - gammaValue % 5);
 }
 
 Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skipFrom, int skipTo)
@@ -178,7 +178,7 @@ void palette_update(int first, int ncolor)
 
 void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 {
-	double g = sgOptions.Graphics.nGammaCorrection / 100.0;
+	double g = *sgOptions.Graphics.gammaCorrection / 100.0;
 
 	for (int i = 0; i < n; i++) {
 		dst[i].r = static_cast<Uint8>(pow(src[i].r / 256.0, g) * 256.0);
@@ -244,7 +244,7 @@ void LoadRndLvlPal(dungeon_type l)
 
 	char szFileName[27];
 	if (l == DTYPE_NEST) {
-		if (!gbNestArt) {
+		if (!*sgOptions.Graphics.alternateNestArt) {
 			rv++;
 		}
 		sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
@@ -256,10 +256,9 @@ void LoadRndLvlPal(dungeon_type l)
 
 void IncreaseGamma()
 {
-	if (sgOptions.Graphics.nGammaCorrection < 100) {
-		sgOptions.Graphics.nGammaCorrection += 5;
-		if (sgOptions.Graphics.nGammaCorrection > 100)
-			sgOptions.Graphics.nGammaCorrection = 100;
+	int gammaValue = *sgOptions.Graphics.gammaCorrection;
+	if (gammaValue < 100) {
+		sgOptions.Graphics.gammaCorrection.SetValue(std::min(gammaValue + 5, 100));
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -267,10 +266,9 @@ void IncreaseGamma()
 
 void DecreaseGamma()
 {
-	if (sgOptions.Graphics.nGammaCorrection > 30) {
-		sgOptions.Graphics.nGammaCorrection -= 5;
-		if (sgOptions.Graphics.nGammaCorrection < 30)
-			sgOptions.Graphics.nGammaCorrection = 30;
+	int gammaValue = *sgOptions.Graphics.gammaCorrection;
+	if (gammaValue > 30) {
+		sgOptions.Graphics.gammaCorrection.SetValue(std::max(gammaValue - 5, 30));
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
@@ -279,11 +277,11 @@ void DecreaseGamma()
 int UpdateGamma(int gamma)
 {
 	if (gamma > 0) {
-		sgOptions.Graphics.nGammaCorrection = 130 - gamma;
+		sgOptions.Graphics.gammaCorrection.SetValue(130 - gamma);
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
-	return 130 - sgOptions.Graphics.nGammaCorrection;
+	return 130 - *sgOptions.Graphics.gammaCorrection;
 }
 
 void SetFadeLevel(int fadeval)

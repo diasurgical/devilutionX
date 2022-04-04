@@ -14,6 +14,7 @@
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -159,7 +160,7 @@ void LoadFallbackPalette()
 	BlackPalette();
 }
 
-void Init(const char *caption, const char *text, bool error, bool renderBehind)
+void Init(string_view caption, string_view text, bool error, bool renderBehind)
 {
 	if (!renderBehind) {
 		ArtBackground.Unload();
@@ -171,7 +172,7 @@ void Init(const char *caption, const char *text, bool error, bool renderBehind)
 		}
 	}
 
-	if (caption == nullptr) {
+	if (caption.empty()) {
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
 	} else if (error) {
 		LoadArt(&dialogArt, PopupData, 385, 280);
@@ -184,12 +185,12 @@ void Init(const char *caption, const char *text, bool error, bool renderBehind)
 
 	wrappedText = WordWrapString(text, textWidth, FontSizeDialog);
 
-	if (caption == nullptr) {
+	if (caption.empty()) {
 		SDL_Rect rect1 = MakeSdlRect(PANEL_LEFT + 180, UI_OFFSET_Y + 168, dialogArt.w(), dialogArt.h());
 		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 
 		SDL_Rect rect2 = MakeSdlRect(PANEL_LEFT + 200, UI_OFFSET_Y + 211, textWidth, 80);
-		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText.c_str(), rect2, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
+		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
 		SDL_Rect rect3 = MakeSdlRect(PANEL_LEFT + 265, UI_OFFSET_Y + 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect3));
@@ -201,7 +202,7 @@ void Init(const char *caption, const char *text, bool error, bool renderBehind)
 		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogYellow));
 
 		SDL_Rect rect3 = MakeSdlRect(PANEL_LEFT + 147, UI_OFFSET_Y + 141, textWidth, 190);
-		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText.c_str(), rect3, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
+		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect3, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
 		SDL_Rect rect4 = MakeSdlRect(PANEL_LEFT + 264, UI_OFFSET_Y + 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect4));

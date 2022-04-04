@@ -21,7 +21,7 @@ void set_up_scroll(Item &item, spell_id spell)
 void clear_inventory()
 {
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		memset(&Players[MyPlayerId].InvList[i], 0, sizeof(Item));
+		Players[MyPlayerId].InvList[i] = {};
 		Players[MyPlayerId].InvGrid[i] = 0;
 	}
 	Players[MyPlayerId]._pNumInv = 0;
@@ -131,7 +131,7 @@ TEST(Inv, GoldAutoPlace)
 	Players[MyPlayerId].HoldItem._itype = ItemType::Gold;
 	Players[MyPlayerId].HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
 
-	GoldAutoPlace(Players[MyPlayerId]);
+	GoldAutoPlace(Players[MyPlayerId], Players[MyPlayerId].HoldItem);
 	// We expect the inventory:
 	// | 5000 | 900 | ...
 	EXPECT_EQ(Players[MyPlayerId].InvList[0]._ivalue, GOLD_MAX_LIMIT);

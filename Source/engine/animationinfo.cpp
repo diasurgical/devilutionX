@@ -75,7 +75,7 @@ float AnimationInfo::GetAnimationProgress() const
 	return animationFraction;
 }
 
-void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
+void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -90,7 +90,7 @@ void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFram
 		ticksPerFrame = 1;
 	}
 
-	this->pCelSprite = celSprite;
+	this->celSprite = celSprite;
 	NumberOfFrames = numberOfFrames;
 	CurrentFrame = 1 + numSkippedFrames;
 	TickCounterOfCurrentFrame = 0;
@@ -168,7 +168,7 @@ void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFram
 	}
 }
 
-void AnimationInfo::ChangeAnimationData(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame)
+void AnimationInfo::ChangeAnimationData(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame)
 {
 	if (numberOfFrames != NumberOfFrames || ticksPerFrame != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
@@ -183,7 +183,7 @@ void AnimationInfo::ChangeAnimationData(const CelSprite *celSprite, int numberOf
 		RelevantFramesForDistributing = 0;
 		TickModifier = 0.0F;
 	}
-	this->pCelSprite = celSprite;
+	this->celSprite = celSprite;
 }
 
 void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool dontProgressAnimation /*= false*/)

@@ -99,20 +99,25 @@ void tcp_server::HandleReceive(const scc &con, const asio::error_code &ec,
 	StartReceive(con);
 }
 
-void tcp_server::SendConnect(const scc &con)
-{
-	auto pkt = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST,
-	    con->plr);
-	SendPacket(*pkt);
-}
-
 void tcp_server::HandleReceiveNewPlayer(const scc &con, packet &pkt)
 {
 	auto newplr = NextFree();
 	if (newplr == PLR_BROADCAST)
 		throw server_exception();
+
 	if (Empty())
 		game_init_info = pkt.Info();
+
+	for (plr_t player = 0; player < MAX_PLRS; player++) {
+		if (connections[player]) {
+			auto playerPacket = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, newplr);
+			StartSend(connections[player], *playerPacket);
+
+			auto newplrPacket = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, player);
+			StartSend(con, *newplrPacket);
+		}
+	}
+
 	auto reply = pktfty.make_packet<PT_JOIN_ACCEPT>(PLR_MASTER, PLR_BROADCAST,
 	    pkt.Cookie(), newplr,
 	    game_init_info);
@@ -120,7 +125,6 @@ void tcp_server::HandleReceiveNewPlayer(const scc &con, packet &pkt)
 	con->plr = newplr;
 	connections[newplr] = con;
 	con->timeout = timeout_active;
-	SendConnect(con);
 }
 
 void tcp_server::HandleReceivePacket(packet &pkt)

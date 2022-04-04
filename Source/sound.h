@@ -60,6 +60,8 @@ struct TSnd {
 };
 
 extern bool gbSndInited;
+extern _music_id sgnMusicTrack;
+
 void ClearDuplicateSounds();
 void snd_stop_snd(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);

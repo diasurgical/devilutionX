@@ -14,7 +14,7 @@
 
 namespace devilution {
 namespace {
-std::optional<CelSprite> DoomCel;
+std::optional<OwnedCelSprite> DoomCel;
 } // namespace
 
 bool DoomFlag;

@@ -10,7 +10,9 @@
 
 #include "effects.h"
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
 #include "utils/stdcompat/cstddef.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -134,25 +136,43 @@ enum class MissileDataFlags {
 };
 
 struct MissileFileData {
-	const char *name;
+	string_view name;
 	uint8_t animName;
 	uint8_t animFAmt;
 	MissileDataFlags flags;
 	std::array<uint8_t, 16> animDelay = {};
 	std::array<uint8_t, 16> animLen = {};
-	int16_t animWidth;
+	uint16_t animWidth;
 	int16_t animWidth2;
-	std::array<std::unique_ptr<byte[]>, 16> animData;
+	std::unique_ptr<byte[]> animData;
+	std::array<uint32_t, 16> frameOffsets;
 
-	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
+	MissileFileData(string_view name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
 	    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
-	    int16_t animWidth, int16_t animWidth2);
+	    uint16_t animWidth, int16_t animWidth2);
 
 	void LoadGFX();
 
+	[[nodiscard]] const byte *GetFirstFrame() const
+	{
+		return animData.get();
+	}
+
+	[[nodiscard]] const byte *GetFrame(size_t i) const
+	{
+		// For a "null" missile, `frameOffsets[i]` is 0 and `animData` is nullptr
+		// `animData[frameOffsets[i]]` is UB, so we use get() instead.
+		return animData.get() + frameOffsets[i];
+	}
+
+	CelSprite Sprite() const
+	{
+		return CelSprite { GetFirstFrame(), animWidth };
+	}
+
 	void FreeGFX()
 	{
-		animData = {};
+		animData = nullptr;
 	}
 };
 

@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <SDL.h>
+
 #include "controls/controller.h"
 #include "player.h"
 
@@ -20,7 +22,24 @@ enum class ControlTypes : uint8_t {
 	VirtualGamepad,
 };
 
+string_view ControlTypeToString(ControlTypes controlType);
+
+/**
+ * @brief Call this after sending a simulated mouse button click event.
+ */
+void NextMouseButtonClickEventIsSimulated();
+
 extern ControlTypes ControlMode;
+
+/**
+ * @brief Controlling device type.
+ *
+ * While simulating a mouse, `ControlMode` is set to `KeyboardAndMouse`,
+ * even though a gamepad is used to control it.
+ *
+ * This value is always set to the actual active device type.
+ */
+extern ControlTypes ControlDevice;
 
 // Runs every frame.
 // Handles menu movement.

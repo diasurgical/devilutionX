@@ -206,7 +206,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	}
 	auto heroClass = static_cast<HeroClass>(pPack->pClass);
 
-	if (pPack->pLevel >= MAXCHARLEVEL || pPack->pLevel < 1) {
+	if (pPack->pLevel > MAXCHARLEVEL || pPack->pLevel < 1) {
 		return false;
 	}
 	uint32_t difficulty = SDL_SwapLE32(pPack->pDifficulty);

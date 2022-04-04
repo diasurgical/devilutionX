@@ -35,15 +35,6 @@ inline const Uint8 *SDLC_GetKeyState()
 #endif
 }
 
-inline int SDLC_SetColorKey(SDL_Surface *surface, Uint32 key)
-{
-#ifdef USE_SDL1
-	return SDL_SetColorKey(surface, SDL_SRCCOLORKEY, key);
-#else
-	return SDL_SetColorKey(surface, SDL_TRUE, key);
-#endif
-}
-
 // Copies the colors into the surface's palette.
 inline int SDLC_SetSurfaceColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors)
 {

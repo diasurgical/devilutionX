@@ -31,39 +31,35 @@ void GamemenuSpeed(bool bActivate);
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
-    // dwFlags,      pszStr,              fnMenu
-	{ GMENU_ENABLED, N_("Save Game"),     &gamemenu_save_game  },
-	{ GMENU_ENABLED, N_("Options"),       &GamemenuOptions    },
-	{ GMENU_ENABLED, N_("New Game"),      &GamemenuNewGame   },
-	{ GMENU_ENABLED, N_("Load Game"),     &gamemenu_load_game  },
-#ifndef NOEXIT
-	{ GMENU_ENABLED, N_("Quit Game"),     &gamemenu_quit_game  },
-#endif
-	{ GMENU_ENABLED, nullptr,              nullptr             }
+	// dwFlags,      pszStr,          fnMenu
+	{ GMENU_ENABLED, N_("Save Game"), &gamemenu_save_game },
+	{ GMENU_ENABLED, N_("Options"),   &GamemenuOptions    },
+	{ GMENU_ENABLED, N_("New Game"),  &GamemenuNewGame    },
+	{ GMENU_ENABLED, N_("Load Game"), &gamemenu_load_game },
+	{ GMENU_ENABLED, N_("Quit Game"), &gamemenu_quit_game },
+	{ GMENU_ENABLED, nullptr,         nullptr             }
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
-    // dwFlags,      pszStr,                fnMenu
-	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions      },
+	// dwFlags,      pszStr,                fnMenu
+	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions     },
 	{ GMENU_ENABLED, N_("New Game"),        &GamemenuNewGame     },
 	{ GMENU_ENABLED, N_("Restart In Town"), &GamemenuRestartTown },
-#ifndef NOEXIT
-	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game    },
-#endif
-	{ GMENU_ENABLED, nullptr,                nullptr               },
+	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game  },
+	{ GMENU_ENABLED, nullptr,               nullptr              },
 	// clang-format on
 };
 TMenuItem sgOptionsMenu[] = {
 	// clang-format off
-    // dwFlags,                     pszStr,              fnMenu
+	// dwFlags,                     pszStr,              fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,             &GamemenuMusicVolume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,             &GamemenuSoundVolume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, N_("Gamma"),         &GamemenuGamma         },
-	{ GMENU_ENABLED | GMENU_SLIDER, N_("Speed"),         &GamemenuSpeed         },
-	{ GMENU_ENABLED               , N_("Previous Menu"), &GamemenuPrevious      },
-	{ GMENU_ENABLED               , nullptr,              nullptr                },
+	{ GMENU_ENABLED | GMENU_SLIDER, N_("Gamma"),         &GamemenuGamma        },
+	{ GMENU_ENABLED | GMENU_SLIDER, N_("Speed"),         &GamemenuSpeed        },
+	{ GMENU_ENABLED               , N_("Previous Menu"), &GamemenuPrevious     },
+	{ GMENU_ENABLED               , nullptr,             nullptr               },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
@@ -156,19 +152,19 @@ void GamemenuGetSpeed()
 	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 		if (sgGameInitInfo.nTickRate >= 50)
-			sgOptionsMenu[3].pszStr = _("Speed: Fastest");
+			sgOptionsMenu[3].pszStr = _("Speed: Fastest").c_str();
 		else if (sgGameInitInfo.nTickRate >= 40)
-			sgOptionsMenu[3].pszStr = _("Speed: Faster");
+			sgOptionsMenu[3].pszStr = _("Speed: Faster").c_str();
 		else if (sgGameInitInfo.nTickRate >= 30)
-			sgOptionsMenu[3].pszStr = _("Speed: Fast");
+			sgOptionsMenu[3].pszStr = _("Speed: Fast").c_str();
 		else if (sgGameInitInfo.nTickRate == 20)
-			sgOptionsMenu[3].pszStr = _("Speed: Normal");
+			sgOptionsMenu[3].pszStr = _("Speed: Normal").c_str();
 		return;
 	}
 
 	sgOptionsMenu[3].dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
 
-	sgOptionsMenu[3].pszStr = _("Speed");
+	sgOptionsMenu[3].pszStr = _("Speed").c_str();
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }
@@ -288,19 +284,21 @@ void GamemenuSpeed(bool bActivate)
 		sgGameInitInfo.nTickRate = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
 	}
 
-	sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
+	sgOptions.Gameplay.tickRate.SetValue(sgGameInitInfo.nTickRate);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 }
 
 } // namespace
 
-#ifndef NOEXIT
 void gamemenu_quit_game(bool bActivate)
 {
 	GamemenuNewGame(bActivate);
+#ifndef NOEXIT
 	gbRunGameResult = false;
-}
+#else
+	ReturnToMainMenu = true;
 #endif
+}
 
 void gamemenu_load_game(bool /*bActivate*/)
 {

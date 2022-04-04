@@ -2,8 +2,8 @@ include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(zlib
-    URL https://www.zlib.net/zlib-1.2.11.tar.gz
-    URL_HASH MD5=1c9f62f0778697a09d36121ead88e08e
+    URL https://www.zlib.net/zlib-1.2.12.tar.gz
+    URL_HASH MD5=5fc414a9726be31427b440b434d05f78
 )
 FetchContent_MakeAvailableExcludeFromAll(zlib)
 

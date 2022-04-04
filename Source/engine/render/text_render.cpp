@@ -25,7 +25,7 @@
 
 namespace devilution {
 
-std::optional<CelSprite> pSPentSpn2Cels;
+std::optional<OwnedCelSprite> pSPentSpn2Cels;
 
 namespace {
 
@@ -502,7 +502,7 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 	return maxSpacing - spacingRedux;
 }
 
-std::string WordWrapString(string_view text, size_t width, GameFontTables size, int spacing)
+std::string WordWrapString(string_view text, unsigned width, GameFontTables size, int spacing)
 {
 	std::string output;
 	if (text.empty() || text[0] == '\0')
@@ -511,21 +511,21 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 	output.reserve(text.size());
 	const char *begin = text.data();
 	const char *processedEnd = text.data();
-	int lastBreakablePos = -1;
-	int lastBreakableLen;
+	std::size_t lastBreakablePos = -1;
+	std::size_t lastBreakableLen;
 	bool lastBreakableKeep = false;
 	uint32_t currentUnicodeRow = 0;
-	size_t lineWidth = 0;
+	unsigned lineWidth = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
 
 	char32_t codepoint = U'\0'; // the current codepoint
 	char32_t nextCodepoint;     // the next codepoint
-	uint8_t nextCodepointLen;
+	std::size_t nextCodepointLen;
 	string_view remaining = text;
 	nextCodepoint = DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen);
 	do {
 		codepoint = nextCodepoint;
-		const uint8_t codepointLen = nextCodepointLen;
+		const std::size_t codepointLen = nextCodepointLen;
 		if (codepoint == Utf8DecodeError)
 			break;
 		remaining.remove_prefix(codepointLen);
@@ -551,7 +551,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 
 		const bool isWhitespace = IsWhitespace(codepoint);
 		if (isWhitespace || IsBreakAllowed(codepoint, nextCodepoint)) {
-			lastBreakablePos = static_cast<int>(remaining.data() - begin - codepointLen);
+			lastBreakablePos = remaining.data() - begin - codepointLen;
 			lastBreakableLen = codepointLen;
 			lastBreakableKeep = !isWhitespace;
 			continue;

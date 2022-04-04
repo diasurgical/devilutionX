@@ -221,7 +221,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 6);
 	ASSERT_EQ(CountItems(player.InvList, NUM_INV_GRID_ELEM), 2);
 	ASSERT_EQ(CountItems(player.SpdList, MAXBELTITEMS), 8);
-	ASSERT_EQ(CountItems(&player.HoldItem, 1), 1);
+	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
 
 	ASSERT_EQ(player.position.tile.x, 75);
 	ASSERT_EQ(player.position.tile.y, 68);
@@ -277,7 +277,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pSBkSpell, -1);
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
-	ASSERT_EQ(player._pSpellFlags, 0);
+	ASSERT_EQ(player._pSpellFlags, SpellFlag::None);
 	ASSERT_TRUE(player.UsesRangedWeapon());
 	ASSERT_EQ(player._pBlockFlag, 0);
 	ASSERT_EQ(player._pLightRad, 11);

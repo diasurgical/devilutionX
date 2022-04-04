@@ -22,6 +22,7 @@
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -29,10 +30,11 @@ namespace devilution {
 #define NUM_INV_GRID_ELEM 40
 #define MAXBELTITEMS 8
 #define MAXRESIST 75
-#define MAXCHARLEVEL 51
+#define MAXCHARLEVEL 50
 #define MAX_SPELL_LEVEL 15
 #define PLR_NAME_LEN 32
 
+constexpr size_t NumHotkeys = 12;
 constexpr int BaseHitChance = 50;
 
 /** Walking directions */
@@ -147,6 +149,17 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
+enum class SpellFlag : uint8_t {
+	// clang-format off
+	None         = 0,
+	Etherealize  = 1 << 0,
+	RageActive   = 1 << 1,
+	RageCooldown = 1 << 2,
+	// bits 3-7 are unused
+	// clang-format on
+};
+use_enum_as_flags(SpellFlag);
+
 /** Maps from armor animation to letter used in graphic files. */
 constexpr std::array<char, 4> ArmourChar = {
 	'L', // light
@@ -190,7 +203,7 @@ struct PlayerAnimationData {
 	 */
 	std::unique_ptr<byte[]> RawData;
 
-	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] std::optional<CelSprite> GetCelSpritesForDirection(Direction direction) const
 	{
 		return CelSpritesForDirections[static_cast<size_t>(direction)];
 	}
@@ -220,9 +233,9 @@ struct Player {
 	/**
 	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
 	 */
-	CelSprite *pPreviewCelSprite;
+	std::optional<CelSprite> previewCelSprite;
 	/**
-	 * @brief Contains the progress to next game tick when pPreviewCelSprite was set
+	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */
 	float progressToNextGameTickWhenPreviewWasSet;
 	int _plid;
@@ -238,9 +251,9 @@ struct Player {
 	uint64_t _pMemSpells;  // Bitmask of learned spells
 	uint64_t _pAblSpells;  // Bitmask of abilities
 	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
-	uint8_t _pSpellFlags;
-	spell_id _pSplHotKey[4];
-	spell_type _pSplTHotKey[4];
+	SpellFlag _pSpellFlags;
+	spell_id _pSplHotKey[NumHotkeys];
+	spell_type _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
@@ -450,6 +463,16 @@ struct Player {
 	void Reset();
 
 	/**
+	 * @brief Returns item location taking into consideration barbarian's ability to hold two-handed maces and clubs in one hand.
+	 */
+	item_equip_type GetItemLocation(const Item &item) const
+	{
+		if (_pClass == HeroClass::Barbarian && item._iLoc == ILOC_TWOHAND && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
+			return ILOC_ONEHAND;
+		return item._iLoc;
+	}
+
+	/**
 	 * @brief Return player's armor value
 	 */
 	int GetArmor() const
@@ -533,6 +556,20 @@ struct Player {
 	 * Valid only for players with Mana Shield spell level greater than zero.
 	 */
 	int GetManaShieldDamageReduction();
+
+	/**
+	 * @brief Gets the effective spell level for the player, considering item bonuses
+	 * @param spell spell_id enum member identifying the spell
+	 * @return effective spell level
+	 */
+	int GetSpellLevel(spell_id spell) const
+	{
+		if (spell == SPL_INVALID || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+			return 0;
+		}
+
+		return std::max<int8_t>(_pISplLvlAdd + _pSplLvl[static_cast<std::size_t>(spell)], 0);
+	}
 
 	/**
 	 * @brief Return monster armor value after including player's armor piercing % (hellfire only)
@@ -668,7 +705,7 @@ struct Player {
 	}
 
 	/**
-	 * @brief Updates pPreviewCelSprite according to new requested command
+	 * @brief Updates previewCelSprite according to new requested command
 	 * @param cmdId What command is requested
 	 * @param point Point for the command
 	 * @param wParam1 First Parameter
@@ -719,6 +756,9 @@ void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);
 void StartPlayerKill(int pnum, int earflag);
+/**
+ * @brief Strip the top off gold piles that are larger than MaxGold
+ */
 void StripTopGold(Player &player);
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);
@@ -757,6 +797,6 @@ extern int StrengthTbl[enum_size<HeroClass>::value];
 extern int MagicTbl[enum_size<HeroClass>::value];
 extern int DexterityTbl[enum_size<HeroClass>::value];
 extern int VitalityTbl[enum_size<HeroClass>::value];
-extern uint32_t ExpLvlsTbl[MAXCHARLEVEL];
+extern uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1];
 
 } // namespace devilution

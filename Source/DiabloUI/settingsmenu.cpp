@@ -125,6 +125,8 @@ bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
 		auto *pOptionList = static_cast<OptionEntryListBase *>(pOption);
 		pOptionList->SetActiveListIndex(listIndex);
 	} break;
+	case OptionEntryType::Key:
+		break;
 	}
 
 	if (HasAnyOf(pOption->GetFlags(), OptionEntryFlags::RecreateUI)) {
@@ -203,6 +205,8 @@ void ItemSelected(int value)
 		ChangeOptionValue(selectedOption, vecItemValue);
 		GoBackOneMenuLevel();
 	} break;
+	case ShownMenuType::KeyInput:
+		break;
 	}
 }
 
@@ -252,8 +256,8 @@ void UiSettingsMenu()
 
 		optionDescription[0] = '\0';
 
-		const char *titleText = shownMenu == ShownMenuType::Settings ? _("Settings") : selectedOption->GetName().data();
-		vecDialog.push_back(std::make_unique<UiArtText>(titleText, MakeSdlRect(PANEL_LEFT, UI_OFFSET_Y + 161, PANEL_WIDTH, 35), UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
+		string_view titleText = shownMenu == ShownMenuType::Settings ? _("Settings") : selectedOption->GetName();
+		vecDialog.push_back(std::make_unique<UiArtText>(titleText.data(), MakeSdlRect(PANEL_LEFT, UI_OFFSET_Y + 161, PANEL_WIDTH, 35), UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
 		vecDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, MakeSdlRect(rectList.position.x + rectList.size.width + 5, rectList.position.y, 25, rectList.size.height)));
 		vecDialog.push_back(std::make_unique<UiArtText>(optionDescription, MakeSdlRect(rectDescription), UiFlags::FontSize12 | UiFlags::ColorUiSilverDark | UiFlags::AlignCenter, 1, IsSmallFontTall() ? 22 : 18));
 
@@ -272,7 +276,7 @@ void UiSettingsMenu()
 						if (catCount > 0)
 							vecDialogItems.push_back(std::make_unique<UiListItem>("", static_cast<int>(SpecialMenuEntry::None), UiFlags::ElementDisabled));
 						catCount += 1;
-						vecDialogItems.push_back(std::make_unique<UiListItem>(pCategory->GetName().data(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
+						vecDialogItems.push_back(std::make_unique<UiListItem>(pCategory->GetName(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
 						categoryCreated = true;
 					}
 					if (selectedOption == pEntry)
@@ -280,7 +284,7 @@ void UiSettingsMenu()
 					auto formatArgs = CreateDrawStringFormatArgForEntry(pEntry);
 					if (NeedsTwoLinesToDisplayOption(formatArgs)) {
 						vecDialogItems.push_back(std::make_unique<UiListItem>("{}:", formatArgs, vecOptions.size(), UiFlags::ColorUiGold | UiFlags::NeedsNextElement));
-						vecDialogItems.push_back(std::make_unique<UiListItem>(pEntry->GetValueDescription().data(), vecOptions.size(), UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
+						vecDialogItems.push_back(std::make_unique<UiListItem>(pEntry->GetValueDescription(), vecOptions.size(), UiFlags::ColorUiSilver | UiFlags::ElementDisabled));
 					} else {
 						vecDialogItems.push_back(std::make_unique<UiListItem>("{}: {}", formatArgs, vecOptions.size(), UiFlags::ColorUiGold));
 					}
@@ -291,14 +295,14 @@ void UiSettingsMenu()
 		case ShownMenuType::ListOption: {
 			auto *pOptionList = static_cast<OptionEntryListBase *>(selectedOption);
 			for (size_t i = 0; i < pOptionList->GetListSize(); i++) {
-				vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i).data(), i, UiFlags::ColorUiGold));
+				vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i), i, UiFlags::ColorUiGold));
 			}
 			itemToSelect = pOptionList->GetActiveListIndex();
 			UpdateDescription(*pOptionList);
 		} break;
 		case ShownMenuType::KeyInput: {
 			vecDialogItems.push_back(std::make_unique<UiListItem>(_("Bound key:"), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorWhitegold | UiFlags::ElementDisabled));
-			vecDialogItems.push_back(std::make_unique<UiListItem>(selectedOption->GetValueDescription().data(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorUiGold));
+			vecDialogItems.push_back(std::make_unique<UiListItem>(selectedOption->GetValueDescription(), static_cast<int>(SpecialMenuEntry::None), UiFlags::ColorUiGold));
 			assert(IndexKeyInput == vecDialogItems.size() - 1);
 			itemToSelect = IndexKeyInput;
 			eventHandler = [](SDL_Event &event) {

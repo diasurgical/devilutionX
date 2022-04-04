@@ -34,6 +34,18 @@ void base::DisconnectNet(plr_t plr)
 {
 }
 
+void base::SendEchoRequest(plr_t player)
+{
+	if (plr_self == PLR_BROADCAST)
+		return;
+	if (player == plr_self)
+		return;
+
+	timestamp_t now = SDL_GetTicks();
+	auto echo = pktfty->make_packet<PT_ECHO_REQUEST>(plr_self, player, now);
+	send(*echo);
+}
+
 void base::HandleAccept(packet &pkt)
 {
 	if (plr_self != PLR_BROADCAST) {
@@ -41,7 +53,7 @@ void base::HandleAccept(packet &pkt)
 	}
 	if (pkt.Cookie() == cookie_self) {
 		plr_self = pkt.NewPlayer();
-		connected_table[plr_self] = true;
+		Connect(plr_self);
 	}
 	if (game_init_info != pkt.Info()) {
 		if (pkt.Info().size() != sizeof(GameData)) {
@@ -58,6 +70,59 @@ void base::HandleAccept(packet &pkt)
 	}
 }
 
+void base::HandleConnect(packet &pkt)
+{
+	plr_t newPlayer = pkt.NewPlayer();
+	Connect(newPlayer);
+}
+
+void base::HandleTurn(packet &pkt)
+{
+	plr_t src = pkt.Source();
+	PlayerState &playerState = playerStateTable_[src];
+	std::deque<turn_t> &turnQueue = playerState.turnQueue;
+	const turn_t &turn = pkt.Turn();
+	turnQueue.push_back(turn);
+	MakeReady(turn.SequenceNumber);
+}
+
+void base::HandleDisconnect(packet &pkt)
+{
+	plr_t newPlayer = pkt.NewPlayer();
+	if (newPlayer != plr_self) {
+		if (IsConnected(newPlayer)) {
+			auto leaveinfo = pkt.LeaveInfo();
+			_SNETEVENT ev;
+			ev.eventid = EVENT_TYPE_PLAYER_LEAVE_GAME;
+			ev.playerid = pkt.NewPlayer();
+			ev.data = reinterpret_cast<unsigned char *>(&leaveinfo);
+			ev.databytes = sizeof(leaveinfo_t);
+			RunEventHandler(ev);
+			DisconnectNet(newPlayer);
+			ClearMsg(newPlayer);
+			PlayerState &playerState = playerStateTable_[newPlayer];
+			playerState.isConnected = false;
+			playerState.turnQueue.clear();
+		}
+	} else {
+		ABORT(); // we were dropped by the owner?!?
+	}
+}
+
+void base::HandleEchoRequest(packet &pkt)
+{
+	auto reply = pktfty->make_packet<PT_ECHO_REPLY>(plr_self, pkt.Source(), pkt.Time());
+	send(*reply);
+}
+
+void base::HandleEchoReply(packet &pkt)
+{
+	uint32_t now = SDL_GetTicks();
+	plr_t src = pkt.Source();
+	PlayerState &playerState = playerStateTable_[src];
+	playerState.roundTripLatency = now - pkt.Time();
+}
+
 void base::ClearMsg(plr_t plr)
 {
 	message_queue.erase(std::remove_if(message_queue.begin(),
@@ -68,42 +133,48 @@ void base::ClearMsg(plr_t plr)
 	    message_queue.end());
 }
 
+void base::Connect(plr_t player)
+{
+	PlayerState &playerState = playerStateTable_[player];
+	bool wasConnected = playerState.isConnected;
+	playerState.isConnected = true;
+
+	if (!wasConnected)
+		SendFirstTurnIfReady(player);
+}
+
+bool base::IsConnected(plr_t player) const
+{
+	const PlayerState &playerState = playerStateTable_[player];
+	return playerState.isConnected;
+}
+
 void base::RecvLocal(packet &pkt)
 {
 	if (pkt.Source() < MAX_PLRS) {
-		connected_table[pkt.Source()] = true;
+		Connect(pkt.Source());
 	}
 	switch (pkt.Type()) {
 	case PT_MESSAGE:
 		message_queue.emplace_back(pkt.Source(), pkt.Message());
 		break;
 	case PT_TURN:
-		turn_queue[pkt.Source()].push_back(pkt.Turn());
+		HandleTurn(pkt);
 		break;
 	case PT_JOIN_ACCEPT:
 		HandleAccept(pkt);
 		break;
 	case PT_CONNECT:
-		connected_table[pkt.NewPlayer()] = true; // this can probably be removed
+		HandleConnect(pkt);
 		break;
 	case PT_DISCONNECT:
-		if (pkt.NewPlayer() != plr_self) {
-			if (connected_table[pkt.NewPlayer()]) {
-				auto leaveinfo = pkt.LeaveInfo();
-				_SNETEVENT ev;
-				ev.eventid = EVENT_TYPE_PLAYER_LEAVE_GAME;
-				ev.playerid = pkt.NewPlayer();
-				ev.data = reinterpret_cast<unsigned char *>(&leaveinfo);
-				ev.databytes = sizeof(leaveinfo_t);
-				RunEventHandler(ev);
-				connected_table[pkt.NewPlayer()] = false;
-				DisconnectNet(pkt.NewPlayer());
-				ClearMsg(pkt.NewPlayer());
-				turn_queue[pkt.NewPlayer()].clear();
-			}
-		} else {
-			ABORT(); // we were dropped by the owner?!?
-		}
+		HandleDisconnect(pkt);
+		break;
+	case PT_ECHO_REQUEST:
+		HandleEchoRequest(pkt);
+		break;
+	case PT_ECHO_REPLY:
+		HandleEchoReply(pkt);
 		break;
 	default:
 		break;
@@ -145,51 +216,146 @@ bool base::SNetSendMessage(int playerId, void *data, unsigned int size)
 	return true;
 }
 
+bool base::AllTurnsArrived()
+{
+	for (auto i = 0; i < MAX_PLRS; ++i) {
+		PlayerState &playerState = playerStateTable_[i];
+		if (!playerState.isConnected)
+			continue;
+
+		std::deque<turn_t> &turnQueue = playerState.turnQueue;
+		if (turnQueue.empty()) {
+			LogDebug("Turn missing from player {}", i);
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 {
 	poll();
-	bool allTurnsArrived = true;
+
 	for (auto i = 0; i < MAX_PLRS; ++i) {
 		status[i] = 0;
-		if (connected_table[i]) {
-			status[i] |= PS_CONNECTED;
-			if (turn_queue[i].empty())
-				allTurnsArrived = false;
+
+		PlayerState &playerState = playerStateTable_[i];
+		if (!playerState.isConnected)
+			continue;
+
+		status[i] |= PS_CONNECTED;
+
+		std::deque<turn_t> &turnQueue = playerState.turnQueue;
+		while (!turnQueue.empty()) {
+			const turn_t &turn = turnQueue.front();
+			seq_t diff = turn.SequenceNumber - next_turn;
+			if (diff <= 0x7F)
+				break;
+			turnQueue.pop_front();
 		}
 	}
-	if (allTurnsArrived) {
+
+	if (AllTurnsArrived()) {
 		for (auto i = 0; i < MAX_PLRS; ++i) {
-			if (connected_table[i]) {
-				size[i] = sizeof(turn_t);
-				status[i] |= PS_ACTIVE;
-				status[i] |= PS_TURN_ARRIVED;
-				turn_last[i] = turn_queue[i].front();
-				turn_queue[i].pop_front();
-				data[i] = reinterpret_cast<char *>(&turn_last[i]);
-			}
+			PlayerState &playerState = playerStateTable_[i];
+			if (!playerState.isConnected)
+				continue;
+
+			std::deque<turn_t> &turnQueue = playerState.turnQueue;
+			if (turnQueue.empty())
+				continue;
+
+			const turn_t &turn = turnQueue.front();
+			if (turn.SequenceNumber != next_turn)
+				continue;
+
+			playerState.lastTurnValue = turn.Value;
+			turnQueue.pop_front();
+
+			size[i] = sizeof(int32_t);
+			status[i] |= PS_ACTIVE;
+			status[i] |= PS_TURN_ARRIVED;
+			data[i] = reinterpret_cast<char *>(&playerState.lastTurnValue);
 		}
+
+		next_turn++;
+
 		return true;
 	}
+
 	for (auto i = 0; i < MAX_PLRS; ++i) {
-		if (connected_table[i]) {
-			if (!turn_queue[i].empty()) {
-				status[i] |= PS_ACTIVE;
-			}
-		}
+		PlayerState &playerState = playerStateTable_[i];
+		if (!playerState.isConnected)
+			continue;
+
+		std::deque<turn_t> &turnQueue = playerState.turnQueue;
+		if (turnQueue.empty())
+			continue;
+
+		status[i] |= PS_ACTIVE;
 	}
+
 	return false;
 }
 
 bool base::SNetSendTurn(char *data, unsigned int size)
 {
-	if (size != sizeof(turn_t))
+	if (size != sizeof(int32_t))
 		ABORT();
+
 	turn_t turn;
-	std::memcpy(&turn, data, sizeof(turn));
-	auto pkt = pktfty->make_packet<PT_TURN>(plr_self, PLR_BROADCAST, turn);
-	send(*pkt);
-	turn_queue[plr_self].push_back(pkt->Turn());
+	turn.SequenceNumber = next_turn;
+	std::memcpy(&turn.Value, data, size);
+
+	PlayerState &playerState = playerStateTable_[plr_self];
+	std::deque<turn_t> &turnQueue = playerState.turnQueue;
+	turnQueue.push_back(turn);
+	SendTurnIfReady(turn);
 	return true;
+}
+
+void base::SendTurnIfReady(turn_t turn)
+{
+	if (awaitingSequenceNumber_)
+		awaitingSequenceNumber_ = !IsGameHost();
+
+	if (!awaitingSequenceNumber_) {
+		auto pkt = pktfty->make_packet<PT_TURN>(plr_self, PLR_BROADCAST, turn);
+		send(*pkt);
+	}
+}
+
+void base::SendFirstTurnIfReady(plr_t player)
+{
+	if (awaitingSequenceNumber_)
+		return;
+
+	PlayerState &playerState = playerStateTable_[plr_self];
+	std::deque<turn_t> &turnQueue = playerState.turnQueue;
+	if (turnQueue.empty())
+		return;
+
+	turn_t turn = turnQueue.back();
+	auto pkt = pktfty->make_packet<PT_TURN>(plr_self, player, turn);
+	send(*pkt);
+}
+
+void base::MakeReady(seq_t sequenceNumber)
+{
+	if (!awaitingSequenceNumber_)
+		return;
+
+	next_turn = sequenceNumber;
+	awaitingSequenceNumber_ = false;
+
+	PlayerState &playerState = playerStateTable_[plr_self];
+	std::deque<turn_t> &turnQueue = playerState.turnQueue;
+	if (!turnQueue.empty()) {
+		turn_t &turn = turnQueue.front();
+		turn.SequenceNumber = next_turn;
+		SendTurnIfReady(turn);
+	}
 }
 
 void base::SNetGetProviderCaps(struct _SNETCAPS *caps)
@@ -248,7 +414,7 @@ bool base::SNetDropPlayer(int playerid, uint32_t flags)
 plr_t base::GetOwner()
 {
 	for (auto i = 0; i < MAX_PLRS; ++i) {
-		if (connected_table[i]) {
+		if (IsConnected(i)) {
 			return i;
 		}
 	}
@@ -257,13 +423,21 @@ plr_t base::GetOwner()
 
 bool base::SNetGetOwnerTurnsWaiting(uint32_t *turns)
 {
-	*turns = turn_queue[GetOwner()].size();
+	poll();
+
+	plr_t owner = GetOwner();
+	PlayerState &playerState = playerStateTable_[owner];
+	std::deque<turn_t> &turnQueue = playerState.turnQueue;
+	*turns = turnQueue.size();
+
 	return true;
 }
 
 bool base::SNetGetTurnsInTransit(uint32_t *turns)
 {
-	*turns = turn_queue[plr_self].size();
+	PlayerState &playerState = playerStateTable_[plr_self];
+	std::deque<turn_t> &turnQueue = playerState.turnQueue;
+	*turns = turnQueue.size();
 	return true;
 }
 
