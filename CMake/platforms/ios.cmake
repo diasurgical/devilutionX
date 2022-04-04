@@ -1,3 +1,5 @@
+enable_language(OBJC)
+
 # General build options.
 set(BUILD_TESTING OFF)
 
