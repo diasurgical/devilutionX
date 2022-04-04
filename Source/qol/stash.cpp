@@ -28,7 +28,7 @@ int WithdrawGoldValue;
 
 namespace {
 
-constexpr unsigned CountStashPages = 50;
+constexpr unsigned CountStashPages = 100;
 constexpr unsigned LastStashPage = CountStashPages - 1;
 
 int InitialWithdrawGoldValue;
