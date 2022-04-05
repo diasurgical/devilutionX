@@ -158,6 +158,8 @@ AxisDirection GetLeftStickOrDpadDirection(bool allowDpad)
 
 	AxisDirection result { AxisDirectionX_NONE, AxisDirectionY_NONE };
 
+	allowDpad = allowDpad && !IsControllerButtonPressed(ControllerButton_BUTTON_START);
+
 	bool isUpPressed = stickY >= 0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP));
 	bool isDownPressed = stickY <= -0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN));
 	bool isLeftPressed = stickX <= -0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT));

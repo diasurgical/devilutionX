@@ -206,6 +206,8 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			case ControllerButton_CAST_SPELL:
 				*action = GameAction(GameActionType_CAST_SPELL);
 				break;
+			default:
+				break;
 			}
 		}
 
