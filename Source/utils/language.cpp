@@ -38,10 +38,26 @@ struct MoHead {
 	uint32_t dstOffset;
 };
 
+void SwapLE(MoHead &head)
+{
+	head.magic = SDL_SwapLE32(head.magic);
+	head.revision.major = SDL_SwapLE16(head.revision.major);
+	head.revision.minor = SDL_SwapLE16(head.revision.minor);
+	head.nbMappings = SDL_SwapLE32(head.nbMappings);
+	head.srcOffset = SDL_SwapLE32(head.srcOffset);
+	head.dstOffset = SDL_SwapLE32(head.dstOffset);
+}
+
 struct MoEntry {
 	uint32_t length;
 	uint32_t offset;
 };
+
+void SwapLE(MoEntry &entry)
+{
+	entry.length = SDL_SwapLE32(entry.length);
+	entry.offset = SDL_SwapLE32(entry.offset);
+}
 
 char *StrTrimLeft(char *s)
 {
@@ -316,12 +332,12 @@ void LanguageInitialize()
 		return;
 
 	// Read header and do sanity checks
-	// FIXME: Endianness.
 	MoHead head;
 	if (SDL_RWread(rw, &head, sizeof(MoHead), 1) != 1) {
 		SDL_RWclose(rw);
 		return;
 	}
+	SwapLE(head);
 
 	if (head.magic != MO_MAGIC) {
 		SDL_RWclose(rw);
@@ -351,10 +367,12 @@ void LanguageInitialize()
 		SDL_RWclose(rw);
 		return;
 	}
-	// FIXME: Endianness.
 	if (static_cast<uint32_t>(SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
 		SDL_RWclose(rw);
 		return;
+	}
+	for (size_t i = 0; i < head.nbMappings; ++i) {
+		SwapLE(dst[i]);
 	}
 
 	std::vector<char> key;
