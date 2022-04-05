@@ -26,8 +26,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: linux-x86-cmake-v3-${{ github.sha }}
-        restore-keys: linux-x86-cmake-v3-
+        key: linux-x86-cmake-v4-${{ github.sha }}
+        restore-keys: linux-x86-cmake-v4-
 
     - name: Configure CMake
       shell: bash
