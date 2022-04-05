@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2022-03-31 01:59+0200\n"
-"PO-Revision-Date: 2022-03-31 01:59+0200\n"
+"PO-Revision-Date: 2022-04-05 13:00+0200\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -500,30 +500,16 @@ msgstr ""
 "difficoltà a tua scelta."
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter Game ID to join a game already in progress."
-msgstr ""
-"Inserisci un IP o un nome host e unisciti ad una partita iniziata a "
-"quell'indirizzo."
+msgstr "Inserisci l'ID Partita per unirti ad una partita già in corso."
 
 #: Source/DiabloUI/selgame.cpp:196
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter an IP or a hostname to join a game already in progress."
-msgstr ""
-"Inserisci un IP o un nome host e unisciti ad una partita iniziata a "
-"quell'indirizzo."
+msgstr "Inserisci un IP o host per unirti ad una partita già in corso."
 
 #: Source/DiabloUI/selgame.cpp:201
-#, fuzzy
-#| msgid "Join the public game already in progress at this address."
 msgid "Join the public game already in progress."
-msgstr "Unisciti ad una partita già iniziata a questo indirizzo."
+msgstr "Unisciti ad una partita già in corso."
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
@@ -579,7 +565,7 @@ msgstr "Unisciti a Partite {:s}"
 
 #: Source/DiabloUI/selgame.cpp:320
 msgid "Enter Game ID"
-msgstr ""
+msgstr "Inserisci ID Partita"
 
 #: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
@@ -4037,24 +4023,20 @@ msgid "Right-click to read"
 msgstr "Clic destro per leggere"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-#, fuzzy
-#| msgid "Select current spell button"
 msgid "Select from spell book, then"
-msgstr "Seleziona magia corrente"
+msgstr "Seleziona dal libro di magia, poi"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
-msgstr ""
+msgstr "lancia magia per leggere"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
-#, fuzzy
-#| msgid "Open Inventory screen."
 msgid "Open inventory to use"
-msgstr "Apri Inventario."
+msgstr "Apri inventario"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
-msgstr ""
+msgstr "Attiva per leggere"
 
 #: Source/items.cpp:1825
 msgid "Right-click to read, then"
@@ -4069,10 +4051,8 @@ msgid "Right-click to use"
 msgstr "Clic destro per usare"
 
 #: Source/items.cpp:1854
-#, fuzzy
-#| msgid "Associate Producer"
 msgid "Activate to use"
-msgstr "Produttore Associato"
+msgstr "Attiva per usare"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -4080,7 +4060,7 @@ msgstr "Clic destro per vedere"
 
 #: Source/items.cpp:1869
 msgid "Activate to view"
-msgstr ""
+msgstr "Attiva per visualizzare"
 
 #: Source/items.cpp:1873
 msgctxt "player"
@@ -6360,14 +6340,12 @@ msgstr ""
 "Effetto di ciclo dei colori utilizzato per animazioni di acqua, lava e acido."
 
 #: Source/options.cpp:755
-#, fuzzy
-#| msgid "Use alternate nest palette"
 msgid "Alternate nest art"
-msgstr "Usa tavolozza alternativa"
+msgstr "Tavolozza grafica alternativa"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
-msgstr ""
+msgstr "Il gioco utilizzerà una tavolozza alternativa per Hellfire."
 
 #: Source/options.cpp:757
 msgid "Hardware Cursor"
