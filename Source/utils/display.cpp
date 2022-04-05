@@ -323,10 +323,10 @@ void ReinitializeRenderer()
 
 #ifdef _WIN32
 		// On Windows 11 the directx9 VSYNC timer doesn't get recreated properly, see https://github.com/libsdl-org/SDL/issues/5099
-		// Attempt to use the directx11 driver instead if we have vsync active.
+		// Attempt to use the opengl driver instead if we have vsync active.
 		const char *const renderHint = SDL_GetHint(SDL_HINT_RENDER_DRIVER);
-		if ((rendererFlags & SDL_RENDERER_PRESENTVSYNC) != 0 && SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d11") != SDL_TRUE) {
-			Log("Error when trying to set hint for direct3d11, using default render driver");
+		if ((rendererFlags & SDL_RENDERER_PRESENTVSYNC) != 0 && SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl") != SDL_TRUE) {
+			Log("Error when trying to set hint for opengl, using default render driver");
 		}
 #endif
 
