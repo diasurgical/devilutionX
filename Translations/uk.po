@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
@@ -1108,7 +1108,7 @@ msgstr "рівень 15"
 
 #: Source/diablo.cpp:120
 msgid "I need help! Come Here!"
-msgstr "Допоможіть! Сюди!"
+msgstr "Мені потрібна допомога! Ідіть сюди!"
 
 #: Source/diablo.cpp:121
 msgid "Follow me."
@@ -2106,7 +2106,7 @@ msgstr "Золотий Еліксир"
 
 #: Source/itemdat.cpp:69 Source/quests.cpp:54
 msgid "Anvil of Fury"
-msgstr "Наковальня Люті"
+msgstr "Ковадло Люті"
 
 #: Source/itemdat.cpp:70 Source/quests.cpp:45
 msgid "Black Mushroom"
@@ -7659,7 +7659,7 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
-" Оу, історія нашого Короля… Трагічне падіння Леоріка стало великою бідою для "
+" А, історія нашого Короля… Трагічне падіння Леоріка стало великою бідою для "
 "наших земель. Люди завжди любили Короля, а тепер живуть в смертельному "
 "страху до нього. Я часто сам себе питаю — як так могло статися? Адже Леорік "
 "був найбільш праведним серед нас. Тільки найпотворніші та найчорніші сили "
@@ -8317,7 +8317,7 @@ msgstr ""
 "Якщо ти загинеш в цій проклятій ділянці, то станеш вічним слугою темних "
 "володарів.\n"
 " \n"
-"Іди в Палату Костіна свій страх і ризик."
+"Іди в Палату Кості на свій страх і ризик."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -8459,6 +8459,12 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
+"Ти читаєш цікаву риму, написану в стилі, що нагадує мені інші твори. Дай "
+"мені подумати — який це був твір?\n"
+" \n"
+"…Тьма огортає Прихованих. Очі, невидимо світяться, лише звуки гострих "
+"кігтів, які шкрябають, щоб мучити ті бідні душі, що втратили зір навіки. "
+"В'язниця для тих проклятих називається Залами Сліпих…"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -8468,6 +8474,10 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
+"Я ніколи не цікавився поезією. Колись, коли в корчмі все було добре, я "
+"наймав бродячих музикантів, але це було так давно.\n"
+" \n"
+"Що? О, так… ну, ти міг би спитати, що знають інші."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -8476,6 +8486,9 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
+"Він здається дуже знайомим. Я пам’ятаю, як читав щось дуже схоже на цей "
+"вірш, досліджуючи історію демонічних страждань. Там говорилося про місце "
+"великого зла, що… почекай, ти ж туди не підеш?"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -8484,6 +8497,8 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
+"Якщо у тебе є питання про сліпоту, поговори з Пепіном. Він давав моїй бабусі "
+"зілля, яке допомогло прояснити її зір, тож, можливо, він і тобі допоможе."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -8492,7 +8507,7 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
-"Боюся, що я не чув і не бачив місця, яке б відповідало твоєму яскравому "
+"Боюся, що я не чув і не бачив місце, що б відповідало твоєму яскравому "
 "опису, друже. Можливо, Каїн Розповідач міг би допомогти."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
@@ -8509,6 +8524,10 @@ msgid ""
 "Tread carefully or you may yourself be staying much longer than you had "
 "anticipated."
 msgstr ""
+"Це місце великих страждань та жахів, і тому воно добре служить своєму "
+"господареві.\n"
+" \n"
+"Будь обережним, інакше ти сам надовго там залишишся."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:154
@@ -8517,6 +8536,9 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
+"Подивимося, я тобі щось продаю? Ні. Ти даєш мені гроші, щоб я тобі "
+"розказував? Ні. Ти зараз підеш і будеш говорити з оповідачем, який живе "
+"заради таких речей? Так."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -8530,6 +8552,13 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
+"Ти стверджуєш, що розмовляв з Лахдананом? За життя він був великим героєм. "
+"Лахданан був почесною і справедливою людиною, яка роками вірно служила "
+"своєму королю. Але, звісно, ти це все знаєш.\n"
+" \n"
+"З тих, кого охопило прокляття короля, Лахданан найменше би підкорився "
+"темряві без бою, тому схоже, що твоя історія правдива. Якби я був на твоєму "
+"місці, друже, я б знайшов спосіб, як звільнити його від тортур."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:158
@@ -8537,6 +8566,8 @@ msgid ""
 "You speak of a brave warrior long dead! I'll have no such talk of speaking "
 "with departed souls in my inn yard, thank you very much."
 msgstr ""
+"Ти говориш про відважного воїна, що давно помер! Ну ні, у моїй корчмі таких "
+"балачок про бесіди з померлими не буде."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:160
@@ -8546,6 +8577,10 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
+"Значить, золотий еліксир. Я ніколи раніше не готував зілля такого кольору, "
+"тому не можу сказати що станеться, якщо ти його вип'єш. Як твій цілитель, я "
+"настійно раджу, що якщо ти знайдеш такий еліксир, роби так, як просить "
+"Лахданан, і НЕ пробуй його на собі."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
@@ -8666,6 +8701,13 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
+"Грізволд говорить про Ковадло Люті — легендарний артефакт, який довго "
+"шукали, але так і не знайшли. Створене з металевих кісток демонів з Лезової "
+"Темниці, Ковадло Люті було виплавлене навколо черепів п’яти наймогутніших "
+"магів підземного світу. На нім вирізані руни сили та хаосу, і будь-яка зброя "
+"або броня, виковане на цьому ковадлі, буде занурене в царство Хаосу, "
+"наповнюючи її магічними властивостями. Кажуть, що через непередбачуваність "
+"Хаосу важко знати, яким буде результат…"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
@@ -8673,6 +8715,7 @@ msgid ""
 "Don't you think that Griswold would be a better person to ask about this? "
 "He's quite handy, you know."
 msgstr ""
+"Хіба не було б краще запитати про це Грізволда? Знаєш, він досить умілий."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:182
@@ -8682,6 +8725,9 @@ msgid ""
 "However, in this matter, you would be better served to speak to either "
 "Griswold or Cain."
 msgstr ""
+"Якби ти шукав інформацію про Товкачик Зцілення або Срібну Чашу Очищення, я "
+"міг би тобі допомогти, друже. Однак у цій справі тобі краще поговорити з "
+"Грізволдом або з Каїном."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:184
@@ -8691,6 +8737,10 @@ msgid ""
 "was struck upon this anvil, the ground would shake with a great fury. "
 "Whenever the earth moves, I always remember that story."
 msgstr ""
+"Коли ми росли, батько Грізволда розповідав нам про гігантське ковадло, на "
+"якому виготовляли могутню зброю. Він сказав, що коли по цьому ковадлу "
+"вдарять молотком, земля трясеться від великої люті. Я завжди згадую цю "
+"історію коли земля трясеться."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:186
@@ -8712,6 +8762,21 @@ msgid ""
 " \n"
 "Find the Anvil for me, and I'll get to work!"
 msgstr ""
+"Вітаю! Завжди приємно бачити одного з моїх найкращих клієнтів! Я знаю, що ти "
+"глибше зайшов в Лабіринт, і в мене є історія, яка можливо, варта твого "
+"часу…\n"
+" \n"
+"Один із тих, хто повернувся з Лабіринту, розповів мені про містичне Ковадло, "
+"на яке він натрапив під час втечі. Його опис нагадав мені легенди, які я чув "
+"у юності про палаючу Кузню Пекла, де виготовляють могутню магічну зброю. "
+"Легенда свідчить, що глибоко в Кузні Пекла спочиває Ковадло Люті! Це ковадло "
+"містило в собі саму суть демонічного підземного світу…\n"
+" \n"
+"Кажуть, що будь-яка зброя, створена на палаючому ковадлі буде наповнена "
+"великою силою. Якщо це ковадло і справді є Ковадлом Люті, я зможу зробити "
+"для тебе зброю, здатну перемогти навіть найтемнішого володаря Пекла!\n"
+" \n"
+"Знайди мені це Ковадло, і я візьмуся за роботу!"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -8720,6 +8785,9 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
+"Ще нічого, а? Ну, продовжуй шукати. Зброя, викована на ковадлі, може бути "
+"твоєю найбільшою надією, і я впевнений, що зможу зробити тобі легендарну "
+"зброю."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:190
@@ -8728,6 +8796,9 @@ msgid ""
 "Now we'll show those bastards that there are no weapons in Hell more deadly "
 "than those made by men! Take this and may Light protect you."
 msgstr ""
+"Я не можу в це повірити! Це Ковадло Люті - молодець, друже. Зараз ми "
+"покажемо тим виродкам, що в пеклі немає зброї більш смертоносної, ніж та, "
+"яку створили люди! Візьми це і нехай Світло захистить тебе."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
@@ -8735,6 +8806,8 @@ msgid ""
 "Griswold can't sell his anvil. What will he do then? And I'd be angry too if "
 "someone took my anvil!"
 msgstr ""
+"Грізволд не може продати своє ковадло. Що він тоді робитиме? І я б теж "
+"розсердився, якби хтось узяв моє ковадло!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:194
@@ -8744,6 +8817,10 @@ msgid ""
 "used by either the Light or the Darkness. Securing the Anvil from below "
 "could shift the course of the Sin War towards the Light."
 msgstr ""
+"У Лабіринті є багато артефактів, які володіють силами, що незбагненні для "
+"смертних. Деякі з них мають фантастичну силу, яку може використати Світло, "
+"або Темрява. Здобуття Ковадла з Лабіринту може зрушити хід Війни Гріхів у "
+"бік Світла."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
@@ -8751,6 +8828,8 @@ msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
 msgstr ""
+"Якби ти знайшли цей артефакт для Грізволда, це могло б серйозно зашкодити "
+"моєму бізнесу. Оооо, ти ніколи його не знайдеш."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:198
@@ -8781,6 +8860,9 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
+"Кожна дитина чує історію воїна Аркейна та його містичної броні, відомої як "
+"Доблесть. Якби ти зміг знайти його могилу, ти був би добре захищений від зла "
+"в Лабіринті."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -8789,6 +8871,9 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
+"Хм… звучить як щось, що я повинен пам’ятати, але я був настільки зайнятий "
+"вивченням нових ліків і створенням кращих еліксирів, що, мабуть, забув. "
+"Вибач…"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
@@ -8796,6 +8881,8 @@ msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
 msgstr ""
+"Я часто чула, як хлопці розповідали про чарівну броню під назвою Доблесть. "
+"Краще запитай в когось із чоловіків у селі."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -8805,6 +8892,10 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
+"Броня, відома як Доблесть, може стати тим, що схилить ваги на твою користь. "
+"Скажу тобі, що багато хто її шукав, в тому числі і я. Аркейн добре сховав "
+"її, друже, і знадобиться більше ніж трохи удачі, щоб розкрити таємниці що "
+"ховали її, ось так багато років."
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
@@ -8819,6 +8910,9 @@ msgid ""
 "The way is fraught with danger and your only hope rests within your self "
 "trust."
 msgstr ""
+"Якщо ти знайдеш ті Камені Крові, будь обережним використовуючи їх.\n"
+" \n"
+"Шлях повен небезпеки, і твоя єдина надія полягає у вірі в себе."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:211
@@ -8828,6 +8922,10 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
+"Ти збираєшся знайти броню, відому як Доблесть?\n"
+" \n"
+"Ніхто ніколи не дізнався, де Аркейн сховав речі, і якщо навіть мої контакти "
+"не змогли їх знайти, я сумніваюся, що і ти коли-небудь знайдеш."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:213
@@ -8903,6 +9001,8 @@ msgid ""
 "My blade sings for your blood, mortal, and by my dark masters it shall not "
 "be denied."
 msgstr ""
+"Мій клинок співає по твоїй крові, смертний, і моїм темнім господарям не буде "
+"відмови."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:231
@@ -8922,6 +9022,9 @@ msgid ""
 "sweetbreads that Garda has just finished baking. Shame what happened to "
 "them..."
 msgstr ""
+"Караван зупинився тут, щоб взяти припаси для їх подорожі на схід. Я продав "
+"їм чимало свіжих фруктів і чудового солодкового м'яса, яке Гарда тільки "
+"закінчила випікати. Прикро що з ними сталося…"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:235
@@ -8953,6 +9056,12 @@ msgid ""
 "found. If you should find it, I believe that I can fashion something useful "
 "from it."
 msgstr ""
+"Залишся на хвилинку — у мене є історія, яка може тебе зацікавити. Якийсь час "
+"потому, тут проходив караван, який прямував до східних королівств. Він "
+"нібито ніс шматочок неба, що впав на землю! Вершники в плащах напали на "
+"караван з засідки на північ звідси, біля дороги. Я обшукав уламки в пошуках "
+"цієї небесної скелі, але її ніде не було. Якщо ти знайдеш її, то думаю, що "
+"зможу виготовити з неї щось корисне."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:241
@@ -8993,6 +9102,9 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work."
 msgstr ""
+"Якщо хтось зможе щось зробити з того каменю, то це Грізволд. Він знає, що "
+"робить, і я поважаю його майстерність, хай би я і намагаюся вкрасти його "
+"клієнтів."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:251
@@ -9001,6 +9113,9 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
+"Відьма Адрія шукає чорний гриб? Я знаю про Чорні Гриби стільки ж, скільки "
+"про Червоних Оселедців. Можливо, Цілитель Пепін розкаже більше, але такого "
+"немає в жодній з моїх оповідань чи книжок."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -9010,6 +9125,9 @@ msgid ""
 "then that is her business, but I can't help you find any. Black mushrooms... "
 "disgusting!"
 msgstr ""
+"Я ось що скажу. Ні Гарда, ні я, НІКОЛИ б не подали чорні гриби нашим "
+"почесним гостям. Якщо Адрія хоче гриби у своєму рагу, то це її справа, але я "
+"не можу допомогти в їх пошуку. Чорні гриби… Гидота!"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:255
@@ -9180,6 +9298,8 @@ msgid ""
 "Listen here, come close. I don't know if you know what I know, but you have "
 "really got somethin' here. That's a map."
 msgstr ""
+"Слухай сюди, підійди ближче. Не знаю, чи ти знаєш те, що я знаю, але у тебе "
+"тут справді щось є. Це карта."
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
 #: Source/textdat.cpp:293
@@ -9188,6 +9308,9 @@ msgid ""
 "portends great disaster, but its secrets are not mine to tell. The time has "
 "come for you to have a very serious conversation with the Storyteller..."
 msgstr ""
+"О, боюся, це не передвіщає нічого хорошого. Ця карта зірок віщує велике "
+"лихо, але не мені розказувати її секрети. Настав твій час для дуже серйозної "
+"розмови з Розповідачем…"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt (currently unused)
 #: Source/textdat.cpp:295
@@ -9196,6 +9319,9 @@ msgid ""
 "that to Adria - she can probably tell you what it is. I'll say one thing; it "
 "looks old, and old usually means valuable."
 msgstr ""
+"Я шукав карту, але це точно не вона. Ти повинні показати її Адрії — вона, "
+"напевно, розповість тобі, що це таке. Я скажу одне; вона виглядає старою, а "
+"стара карта зазвичай означає що вона цінна."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:297
@@ -9508,6 +9634,9 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
+"До того, як Собором заволоділо те, що ховається внизу, він був місцем "
+"великого вивчання. Там можна знайти багато книг. Якщо ти знайдеш їх, "
+"прочитай їх усі, оскільки деякі з них можуть берегти секрети Лабіринту."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -9516,6 +9645,9 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
+"Грізволд знає про мистецтво війни стільки ж, скільки я про мистецтво "
+"зцілення. Він хитрий купець, але його робота не має собі рівних. О, я "
+"припускаю, що це може тому, що він єдиний коваль, що тут залишився."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -9524,6 +9656,9 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to."
 msgstr ""
+"Каїн — справжній друг і великий мудрець. У нього велика бібліотека і він має "
+"вроджену здатність розпізнати справжню природу речей. Якщо у тебе коли-"
+"небудь виникнуть запитання, звертайся до нього."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
@@ -9531,6 +9666,8 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do."
 msgstr ""
+"Навіть мій досвід не допоміг повністю вилікувати Фарнхема. О, я зміг зцілити "
+"його тіло, але його розум і дух за межами моїх знань."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:356
@@ -9541,6 +9678,10 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
+"Хоча я використовую деякі обмежені форми магії для створення зілль та "
+"еліксирів, Адрія — справжня чарівниця. Здається, вона ніколи не спить, і "
+"вона завжди має багато містичних томів і артефактів. Я вважаю, що її хатина "
+"набагато більша всередині, ніж ззовні, хоч я ніколи там і не був."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -9550,6 +9691,10 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
+"Бідний Вірт. Я зробив для нього все можливе, але знаю, що він зневажає той "
+"протез, який я змушений був прикріпити до його ноги. Його рани були "
+"жахливими. Ніхто, а особливо такий молодий хлопець, не повинен страждати як "
+"він."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -9560,6 +9705,11 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
+"Я справді не розумію, чому Огден залишається тут, у Трістрамі. Він страждає "
+"від легкого нервового збудження, але він розумний і працьовитий чоловік, "
+"скрізь досяг би успіху, куди б не пішов. Я припускаю, що це може бути страх "
+"перед тими жахіттями, що відбуваються в навколо нашого села, або, можливо, "
+"його дружина, не бажає нікуди йти."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -9611,6 +9761,10 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
+"Жителі Трістраму гордяться своїм Ковалем. Він не тільки умілий майстер, що "
+"переміг у багатьох змаганнях своєї гільдії, але й отримав похвалу від самого "
+"нашого Короля Леоріка — нехай його душа спочиває з миром. Грізволд також "
+"великий герой; можеш спитати Каїна."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
@@ -9618,6 +9772,8 @@ msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
 msgstr ""
+"Каїн був розповідачем Трістраму, скільки я себе пам’ятаю. Він дуже багато "
+"знає і може розповісти тобі майже про все."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -9629,6 +9785,11 @@ msgid ""
 "frustrated watching him slip farther and farther into a befuddled stupor "
 "every night."
 msgstr ""
+"Фарнхем — п’яниця, який наповнює своє пузо — елем, а вуха слухаючих його "
+"людей — нісенітницею.\n"
+" \n"
+"Я знаю, що Пепін, і Огден симпатизують йому, але мене так засмучує, що я "
+"бачу, як він щоночі все далі і далі впадає в п'яний дурман."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -9638,6 +9799,10 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
+"Пепін врятував життя моїй бабусі, і я знаю, що ніколи не зможу йому за це "
+"віддячити. Його здатність зцілювати будь-яку хворобу потужніша, ніж "
+"наймогутніший меч, і загадковіша, ніж будь-яке заклинання, яке ти можете "
+"назвати. Якщо тобі коли-небудь знадобиться зцілення, Пепін тобі допоможе."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -9649,6 +9814,11 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
+"Я виросла з матір'ю Вірта, Кенас. Хоча її лише трохи поранили, коли ті "
+"огидні створіння вкрали його, вона так і не одужала. Я думаю, що вона "
+"померла через розбите серце. Вірт став підлим юнаком, який прагне лише "
+"наживитися на чужому поті. Я знаю, що він страждав і бачив жахи, які навіть "
+"я уявити не можу, але частина цієї темряви нависає над ним досі."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
@@ -9658,11 +9828,15 @@ msgid ""
 "them, and hope one day to leave this place and help them start a grand hotel "
 "in the east."
 msgstr ""
+"Огден та його дружина взяли мене та мою бабусю в свій дім і навіть дозволили "
+"мені заробити кілька золотих, працюючи в корчмі. Я дуже багато завдячую їм і "
+"сподіваюся, що колись покину це місце і допоможу їм відкрити грандіозний "
+"готель на сході."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya?"
-msgstr "Ну, що я можу для тебе зробити?"
+msgstr "Ну, що я можу тобі зробити?"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
@@ -9672,6 +9846,9 @@ msgid ""
 "undying horrors down there, and there's nothing better to shatter skinny "
 "little skeletons!"
 msgstr ""
+"Якщо ти шукаєш добру зброю, дозволь мені показати тобі це. Наприклад, візьми "
+"якусь тупу булаву. Проти більшості тих невмирущих жахів піде як по маслу, "
+"немає нічого кращого, щоб розбивати сухі скелети!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -9681,6 +9858,10 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
+"Сокира? Так, це хороша зброя, збалансована проти будь-якого ворога. "
+"Подивись, як вона розсікає повітря, а потім уяви собі гарну товстенну голову "
+"демона на її шляху. Май на увазі, що вона повільно розмахується — але який "
+"удар!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -9698,6 +9879,9 @@ msgid ""
 "Darkness. If you bring them to me, with a bit of work and a hot forge, I can "
 "restore them to top fighting form."
 msgstr ""
+"Твоя зброя та броня показуватимуть ознаки боротьби з Темрявою. Якщо ти "
+"принесеш їх мені, трохи попрацювавши в гарячій кузні, я зроблю їх як "
+"новенькі."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
@@ -9707,6 +9891,10 @@ msgid ""
 "seems to get whatever she needs. If I knew even the smallest bit about how "
 "to harness magic as she did, I could make some truly incredible things."
 msgstr ""
+"Мені доводиться практично провозити контрабандою потрібні мені метали та "
+"інструменти з караванів, що огинають околиці нашого проклятого міста, а ця "
+"відьма Адрія завжди отримує все, що їй потрібно. Якби я б хоч трохи знав як "
+"приборкати магію, як вона, я б зробив справді неймовірні речі."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
@@ -9714,6 +9902,8 @@ msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
 msgstr ""
+"Гілліан — гарна дівчина. Шкода, що в її бабці таке погане здоров’я, інакше я "
+"б влаштував, щоб вивезти їх звідси на торговому каравані."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
@@ -9722,6 +9912,9 @@ msgid ""
 "in life. If I could bend steel as well as he can bend your ear, I could make "
 "a suit of court plate good enough for an Emperor!"
 msgstr ""
+"Іноді мені здається, що Каїн забагато говорить, але схоже, що це його "
+"покликання в житті. Якби я міг гнути сталь так само, як він може гнути твоє "
+"вухо, я б зробив лати, достойні Імператора!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
@@ -9731,6 +9924,10 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
+"Я був з Фарнхемом тоді, коли Лазар повів нас у Лабіринт. Я більше ніколи не "
+"бачив Архієпископа, і, можливо б не вижив, якби Фарнхем не був поруч зі "
+"мною. Я боюся, що напад залишив його душу так само покаліченою, як і мою "
+"ногу. Я бився б за нього в цій битві якби міг, але не можу."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -9739,6 +9936,9 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
+"Хороший чоловік, що ставить потреби інших вище своїх. Ти не знайдеш нікого в "
+"Трістрамі — тай й де завгодно, якщо на те пішло — хто б сказав погане про "
+"цілителя."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
@@ -9749,6 +9949,11 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful."
 msgstr ""
+"Цей хлопець потрапить в серйозні неприємності… або, я мушу сказати, знову "
+"потрапить. Я намагався зацікавити його роботою тут, в кузні, навчити чесному "
+"ремеслу, але він віддає перевагу високим прибуткам від торгівлі сумнівними "
+"товарами. Я не можу злитися на нього після того, що з ним сталося, але я "
+"хотів, щоб він хоча б був обережний."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
@@ -9761,17 +9966,23 @@ msgid ""
 "starved during that first year when the entire countryside was overrun by "
 "demons."
 msgstr ""
+"У корчмаря мало бізнесу і немає реального способу заробляти. Йому вдається "
+"звести кінці з кінцями, забезпечуючи їжею та житлом тих, хто час від часу "
+"ходить через село, але вони можуть втекти, не плативши. Якби не запаси зерна "
+"та в’яленого м’яса, які він тримав у своєму погребі, то чому б більшість із "
+"нас померли б від голоду в той перший рік, коли всю сільську місцевість "
+"заполонили демони."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace?"
-msgstr ""
+msgstr "Хіба я не можу спокійно випити?"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:405
 msgid ""
 "The gal who brings the drinks? Oh, yeah, what a pretty lady. So nice, too."
-msgstr ""
+msgstr "Дівчина, що приносить напої? О, так, яка гарна жінка. І добра теж."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:407
@@ -9780,6 +9991,9 @@ msgid ""
 "stuff, but you listen to me... she's unnatural. I ain't never seen her eat "
 "or drink - and you can't trust somebody who doesn't drink at least a little."
 msgstr ""
+"Чому б та стара карга щось не зробила. Звісно, звісно, у неї є речі, але "
+"послухай мене… вона неприродня. Я ніколи не бачив, щоб вона їла чи пила — і "
+"не можна вірити тому, хто хоч трохи не п’є."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
@@ -9788,6 +10002,9 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows."
 msgstr ""
+"Каїн не той, ким себе видає. Звичайно, звичайно, він розказує хороші "
+"історії… деякі з них справді страшні або смішні… але я думаю, що він знає "
+"більше, ніж знає, що знає."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
@@ -9795,6 +10012,8 @@ msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
+"Грізволд? Старий добрий Грізволд. Я люблю його як брата! Ми билися разом, "
+"знаєш, коли… ми… Лазар…  Лазар… Лазар!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -9804,6 +10023,10 @@ msgid ""
 "wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a "
 "hero too..."
 msgstr ""
+"Хе-хе, мені подобається Пепін. Знаєш, він справді старається. Слухай сюди, "
+"ти маєш познайомитися з ним. Такий добрий хлопець з людьми, які завжди "
+"хочуть допомоги. Гей, я думаю, це було б схоже на тебе, а герой? Я теж був "
+"героєм…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:415
@@ -9812,6 +10035,9 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
+"У Вірта більше проблем, ніж у мене, а я все знаю про проблеми. Слухай сюди — "
+"у того пацана добра угода, але він там був, розумієш? Втратив ногу! Треба "
+"ходити на шматку дерева. Так сумно, так сумно…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
@@ -9820,6 +10046,9 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
+"Огден — найкращий чоловік у селі. Не думаю, що я дуже подобаюся його "
+"дружині, але поки вона буде відкривати бочки, вона нормальна. Я проводжу з "
+"Огденом більше часу, ніж всі, але він такий добрий до мене…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
@@ -9828,6 +10057,9 @@ msgid ""
 "specialty. This here is the best... theeeee best! That other ale ain't no "
 "good since those stupid dogs..."
 msgstr ""
+"Хочу тобі дещо сказати, бо я знаю все про ці штуки. Я в цьому знаюсь. Цей "
+"ель ось тут найкращий…наааааайкращий! Той інший не годиться з тих пір, як "
+"дурні собаки…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
@@ -9836,6 +10068,9 @@ msgid ""
 "somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and "
 "just waitin' for someone to get it."
 msgstr ""
+"Мене ніхто ніколи не слу… слухає. Десь – я не знаю де, – але десь під "
+"церквою є ціла купа золота. Блищить і сяє, і я просто чекаю, щоб хтось її "
+"забрав."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
@@ -9853,6 +10088,9 @@ msgid ""
 "and get out of here. That boy out there... He's always got somethin good, "
 "but you gotta give him some gold or he won't even show you what he's got."
 msgstr ""
+"Якби я був тобою… а я не ти… але якби був, я б продав усе, що в тебе є, і "
+"пішов звідси. Той хлопець ось там… У нього завжди є щось хороше, але тобі "
+"треба дати йому трохи золота, інакше він навіть не покаже, що у нього є."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
@@ -9866,6 +10104,9 @@ msgid ""
 "words. Should you already have knowledge of the arcane mysteries scribed "
 "within a book, remember - that level of mastery can always increase."
 msgstr ""
+"Мудрість заробляється, а не дається. Якщо ти знайдеш том знань, поглинай "
+"його слова. Якщо ти вже знаєш про таємні секрети, записані в книзі, то "
+"пам’ятай — рівень майстерності завжди може підвищитися."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:430
@@ -9978,6 +10219,10 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
+"Не всі у Трістрамі можуть використати – чи купити – речі, що ти знайдеш в "
+"лабіринті. Навіть не я, як важко не було б в це повірити.\n"
+" \n"
+"Іноді тільки ти зможеш знайти ціль для деяких речей."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:453
@@ -9985,6 +10230,8 @@ msgid ""
 "Don't trust everything the drunk says. Too many ales have fogged his vision "
 "and his good sense."
 msgstr ""
+"Не вір всьому, що говорить п'яниця. Забагато елю затуманило його зір і "
+"здоровий глузд."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
@@ -9994,6 +10241,10 @@ msgid ""
 "Griswold, Pepin or that witch, Adria. I'm sure that they will snap up "
 "whatever you can bring them..."
 msgstr ""
+"Якщо ти не помітив, я не купую у Трістрамі все підряд. Я імпортер якісних "
+"товарів. Якщо ти хочеш торгувати мотлохом, то іди до Грізволда, Пепіна або "
+"до тієї відьми, Адрії. Я впевнений, що вони розкуплять все, що ти їм "
+"принесеш…"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:457
@@ -10003,6 +10254,10 @@ msgid ""
 "I'll never get enough money to... well, let's just say that I have definite "
 "plans that require a large amount of gold."
 msgstr ""
+"Що ж, я зобов'язаний ковалю своїм життям - тим що залишилось. Звісно, "
+"Грізволд запропонував мені навчання в кузні, і він доволі добрий, але я "
+"ніколи не отримаю достатньо грошей, щоб… ну, скажімо, у мене є певні плани, "
+"які потребують багато золота."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
@@ -10033,6 +10288,11 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
+"Фарнхем — оце чоловік з серйозними проблемами, і я знаю наскільки вони "
+"серйозні. Він занадто повірив у непорочність однієї людини, а Лазар ввів "
+"його в самі щелепи смерті. О, я знаю, як там унизу, тож навіть не починай "
+"мені розказувати про свої плани знищити зло, що живе в тому Лабіринті. "
+"Просто стеж за ногами…"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -10060,6 +10320,10 @@ msgid ""
 "stupid tavern. I guess at the least he gives Gillian a place to work, and "
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
+"Огден — дурень, що залишився тут. Я міг би вивезти його з міста за дуже "
+"розумну ціну, але він наполягає на тому, щоб заробити за допомогою тієї "
+"дурної таверни. Принаймні, він дає Гілліан місце для роботи, а його дружина "
+"Гарда робить чудовий Пастуховий пиріг…"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -10255,6 +10519,9 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written."
 msgstr ""
+"За Залом Героїв стоїть Палата Кості.  Вічна смерть чекає кожного, хто захоче "
+"вкрасти скарби, що в цій кімнаті.  Так говорить Володар Жахів, і так "
+"написано."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -10385,10 +10652,11 @@ msgid ""
 "poor farmer?"
 msgstr ""
 
+# I you find a better onomatopeia of crying in Ukrainian, I'm all ears
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
 msgid "Waaaah! (sniff) Waaaah! (sniff)"
-msgstr ""
+msgstr "Гуууу! (хлип) Гуууу! (хлип)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
@@ -10409,6 +10677,8 @@ msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
+"Ти його знайшов?  Будь ласка, знайди Теодора!  Він просто маленький.  Він не "
+"може подбати про себе!  Прошу!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
@@ -10417,6 +10687,9 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
+"Ти знайшов його!  Ти знайшов його!  Дякую!  О, Тео, тебе налякали ті "
+"неприємні жучки?  Фе!  Тьфу!  Щось прилипло до твого хутра!  Фу!  Давай, "
+"Тео, ходімо додому!  Ще раз дякую, герой!"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
@@ -10424,6 +10697,8 @@ msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
 msgstr ""
+"Ми довго дрімали, і настав час пробудження.  Після довгого сну ми сповнені "
+"сильний голодом.  Вже скоро, ми поживимося…"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
@@ -10431,6 +10706,8 @@ msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
 msgstr ""
+"Тобі сподобалось, ссавцю?  Як жалюгідно. Твій маленький світ не буде для нас "
+"проблемою."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
@@ -10439,6 +10716,9 @@ msgid ""
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
 "the flesh of its denizens.  Man shall become our chattel and sustenance."
 msgstr ""
+"Ці землі будуть осквернені, і наш виводок заполонить поля, які люди "
+"називають домом.  Наші вусики огорнуть цей світ, і ми будемо ласувати плоттю "
+"його мешканців.  Людина стане нашим майном і їжею."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
@@ -10446,6 +10726,7 @@ msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
 msgstr ""
+"Ах, я чую тебе…ти близько! Близько! Шшшш…запах крові та страху…як привабливо…"
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -10478,7 +10759,7 @@ msgstr "Я сказав Му."
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
 msgid "Look I'm just a cow, OK?"
-msgstr "Я проста корова, ОК?"
+msgstr "Я проста корова, ясно?"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:597
@@ -10501,6 +10782,8 @@ msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
 msgstr ""
+"Що ти тут стоїш?  Іди і знайди мій костюм!  І поспіши!  Той Гольштейн мені "
+"весь час підморгує!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
@@ -10533,6 +10816,7 @@ msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
 msgstr ""
+"Подивись.  Я корова. А ти, ти приманка. Наберись досвіду!  Тоді і поговоримо…"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -10547,6 +10831,8 @@ msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
 msgstr ""
+"О, мені б знадобилася твоя допомога, але, мабуть, після того, як ти очистиш "
+"катакомби від осквернення тих звірів."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
