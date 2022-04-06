@@ -629,7 +629,7 @@ const Speech Speeches[] = {
 	    true, USFX_SKLJRN1 },
 	{ N_(/* TRANSLATORS: Quest text read aloud from book */ "I have tried spells, threats, abjuration and bargaining with this foul creature -- to no avail.  My methods of enslaving lesser demons seem to have no effect on this fearsome beast."),
 	    true, PS_NARATR6 },
-	{ N_(/* TRANSLATORS: Quest text read aloud from book */ "My home is slowly becoming corrupted by the vileness of this unwanted prisoner.  The crypts are	full of shadows that move just beyond the corners of my vision.  The faint scrabble of claws dances at the edges of my hearing. They are searching, I think, for this journal."),
+	{ N_(/* TRANSLATORS: Quest text read aloud from book */ "My home is slowly becoming corrupted by the vileness of this unwanted prisoner.  The crypts are full of shadows that move just beyond the corners of my vision.  The faint scrabble of claws dances at the edges of my hearing. They are searching, I think, for this journal."),
 	    true, PS_NARATR7 },
 	{ N_(/* TRANSLATORS: Quest text read aloud from book */ "In its ranting, the creature has let slip its name -- Na-Krul.  I have attempted to research the name, but the smaller demons have somehow destroyed my library.  Na-Krul... The name fills me with a cold dread.  I prefer to think of it only as The Creature rather than ponder its true name."),
 	    true, PS_NARATR8 },
