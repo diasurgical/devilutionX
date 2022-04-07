@@ -384,7 +384,7 @@ msgstr "Requisitos:"
 
 #: Source/DiabloUI/selconn.cpp:66
 msgid "no gateway needed"
-msgstr "no se necesita puerta de enlace"
+msgstr "sin puerta de enlace"
 
 #: Source/DiabloUI/selconn.cpp:72
 msgid "Select Connection"
