@@ -414,30 +414,24 @@ msgid "Diablo"
 msgstr "迪亚波罗"
 
 #: Source/DiabloUI/selgame.cpp:86
-#, fuzzy
-#| msgid "Shareware"
 msgid "Diablo Shareware"
-msgstr "共​享版"
+msgstr "《暗黑破坏神》共​享版"
 
 #: Source/DiabloUI/selgame.cpp:89 Source/options.cpp:544 Source/options.cpp:595
 msgid "Hellfire"
-msgstr "地​狱火"
+msgstr "地狱火"
 
 #: Source/DiabloUI/selgame.cpp:92
-#, fuzzy
-#| msgid "Shareware"
 msgid "Hellfire Shareware"
-msgstr "共​享版"
+msgstr "《地狱火》共​享版"
 
 #: Source/DiabloUI/selgame.cpp:95
 msgid "The host is running a different game than you."
 msgstr "主机​运行​的​游戏​与​您​不同。"
 
 #: Source/DiabloUI/selgame.cpp:97
-#, fuzzy
-#| msgid "The host is running a different game than you."
 msgid "The host is running a different game mode ({:s}) than you."
-msgstr "主机​运行​的​游戏​与​您​不同。"
+msgstr "主机运行的({:s})模式与你当前的模式不同。"
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:99
@@ -466,10 +460,8 @@ msgid "Join Game"
 msgstr "加入​游戏"
 
 #: Source/DiabloUI/selgame.cpp:150
-#, fuzzy
-#| msgid "Public Game"
 msgid "Public Games"
-msgstr "公开​游戏"
+msgstr "公开游戏"
 
 #: Source/DiabloUI/selgame.cpp:155 Source/error.cpp:64
 msgid "Loading..."
@@ -479,7 +471,7 @@ msgstr "加载​中​…​…"
 #: Source/DiabloUI/selgame.cpp:157 Source/discord/discord.cpp:71
 #: Source/options.cpp:563 Source/panels/charpanel.cpp:137
 msgid "None"
-msgstr "没有"
+msgstr "没有​"
 
 #: Source/DiabloUI/selgame.cpp:171 Source/DiabloUI/selgame.cpp:309
 #: Source/DiabloUI/selgame.cpp:335 Source/DiabloUI/selgame.cpp:475
@@ -498,26 +490,16 @@ msgid ""
 msgstr "创建​一​个​公开​游戏，任何​人​都​可​加入​的，游戏​难度​将​依据​你​的​设定。"
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter Game ID to join a game already in progress."
-msgstr "输入​IP​或​主机名，然后​加入​在​该​地址​正在​进行​的​游戏。"
+msgstr "输入游戏ID来加入一个正在进行的游戏。"
 
 #: Source/DiabloUI/selgame.cpp:196
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter an IP or a hostname to join a game already in progress."
-msgstr "输入​IP​或​主机名，然后​加入​在​该​地址​正在​进行​的​游戏。"
+msgstr "输入一个IP或者主机名称来加入一个正在进行的游戏。"
 
 #: Source/DiabloUI/selgame.cpp:201
-#, fuzzy
-#| msgid "Join the public game already in progress at this address."
 msgid "Join the public game already in progress."
-msgstr "加入​该​地址​已经​处于​进行​中​的​公开​游戏。"
+msgstr "加入一个正在进行的公开游戏。"
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
@@ -561,7 +543,7 @@ msgstr "速度: 最​快"
 
 #: Source/DiabloUI/selgame.cpp:237
 msgid "Players: "
-msgstr ""
+msgstr "玩家数: "
 
 #: Source/DiabloUI/selgame.cpp:297
 msgid "Select Difficulty"
@@ -569,13 +551,11 @@ msgstr "选择​难度"
 
 #: Source/DiabloUI/selgame.cpp:315
 msgid "Join {:s} Games"
-msgstr "加入{:s}游戏"
+msgstr "加入 {:s} 游戏"
 
 #: Source/DiabloUI/selgame.cpp:320
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter Game ID"
-msgstr "输入​名称"
+msgstr "输入游戏ID"
 
 #: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
@@ -803,7 +783,7 @@ msgstr "删​除​单人​游戏​英雄"
 
 #: Source/DiabloUI/selhero.cpp:559
 msgid "Are you sure you want to delete the character \"{:s}\"?"
-msgstr "是否​确实​要​删除​角色​\"​{:s}​\"？"
+msgstr "是否​确实​要​删除​角色​\"{:s}​\"？"
 
 #: Source/DiabloUI/selstart.cpp:43
 msgid "Enter Hellfire"
@@ -823,15 +803,15 @@ msgstr "否"
 
 #: Source/DiabloUI/settingsmenu.cpp:304
 msgid "Bound key:"
-msgstr "绑​定​键位​："
+msgstr "绑定键位："
 
 #: Source/DiabloUI/settingsmenu.cpp:339
 msgid "Press any key to change."
-msgstr "按​下任​意键​进行​修改。"
+msgstr "按下任意键进行修改。"
 
 #: Source/DiabloUI/settingsmenu.cpp:341
 msgid "Unbind key"
-msgstr "取消​绑​定键位"
+msgstr "取消绑定键位"
 
 #: Source/DiabloUI/settingsmenu.cpp:347 Source/gamemenu.cpp:65
 msgid "Previous Menu"
@@ -1245,15 +1225,15 @@ msgstr "在​商店​里"
 
 #: Source/diablo.cpp:1439
 msgid "Belt item {}"
-msgstr "腰​带​物品 {}"
+msgstr "腰带物品 {}"
 
 #: Source/diablo.cpp:1440
 msgid "Use Belt item."
-msgstr "使用​腰带​中​的​物品。"
+msgstr "使用腰带中的物品。"
 
 #: Source/diablo.cpp:1455
 msgid "Quick spell {}"
-msgstr "快捷​施法 {}"
+msgstr "快捷施法 {}"
 
 #: Source/diablo.cpp:1456
 msgid "Hotkey for skill or spell."
@@ -1261,23 +1241,23 @@ msgstr "设置​技能​或​法术​热键。"
 
 #: Source/diablo.cpp:1474
 msgid "Speedbook"
-msgstr "快捷​法术书"
+msgstr "快捷法术书"
 
 #: Source/diablo.cpp:1475
 msgid "Open Speedbook."
-msgstr "打开​快捷​法术​书。"
+msgstr "打开快捷法术书。"
 
 #: Source/diablo.cpp:1482
 msgid "Quick save"
-msgstr "快速​保存"
+msgstr "快速保存"
 
 #: Source/diablo.cpp:1483
 msgid "Saves the game."
-msgstr "保存​游戏。"
+msgstr "保存游戏。"
 
 #: Source/diablo.cpp:1490
 msgid "Quick load"
-msgstr "快速​加载"
+msgstr "快速加载"
 
 #: Source/diablo.cpp:1491
 msgid "Loads the game."
@@ -1289,47 +1269,43 @@ msgstr "退出​游戏"
 
 #: Source/diablo.cpp:1500
 msgid "Closes the game."
-msgstr "关闭​游戏。"
+msgstr "关闭游戏。"
 
 #: Source/diablo.cpp:1506
 msgid "Stop hero"
-msgstr "停止​英雄"
+msgstr "停止英雄"
 
 #: Source/diablo.cpp:1507
 msgid "Stops walking and cancel pending actions."
-msgstr "停止​移动​和​正在​执行​的​动作。"
+msgstr "停止移动和正在执行的动作。"
 
 #: Source/diablo.cpp:1514
-#, fuzzy
-#| msgid "lightning"
 msgid "Item highlighting"
-msgstr "闪​电"
+msgstr "物品高亮"
 
 #: Source/diablo.cpp:1515
 msgid "Show/hide items on ground."
-msgstr ""
+msgstr "显示/隐藏地面物品。"
 
 #: Source/diablo.cpp:1521
-#, fuzzy
-#| msgid "Resist lightning"
 msgid "Toggle item highlighting"
-msgstr "闪电​抗性"
+msgstr "切换物品高亮"
 
 #: Source/diablo.cpp:1522
 msgid "Permanent show/hide items on ground."
-msgstr ""
+msgstr "永久显示/隐藏地面上的物品。"
 
 #: Source/diablo.cpp:1528
 msgid "Toggle automap"
-msgstr ""
+msgstr "开关自动地图"
 
 #: Source/diablo.cpp:1529
 msgid "Toggles if automap is displayed."
-msgstr ""
+msgstr "切换是否显示自动地图。"
 
 #: Source/diablo.cpp:1538
 msgid "Open Inventory screen."
-msgstr "打开​物品​栏​界面。"
+msgstr "打开物品栏界面。"
 
 #: Source/diablo.cpp:1545
 msgid "Character"
@@ -1337,15 +1313,15 @@ msgstr "角色"
 
 #: Source/diablo.cpp:1546
 msgid "Open Character screen."
-msgstr "打开​角色​界面。"
+msgstr "打开角色界面。"
 
 #: Source/diablo.cpp:1553
 msgid "Quest log"
-msgstr "任务​日志"
+msgstr "任务日志"
 
 #: Source/diablo.cpp:1554
 msgid "Open Quest log."
-msgstr "打开​任务​日志​界面。"
+msgstr "打开任务日志界面。"
 
 #: Source/diablo.cpp:1561
 msgid "Spellbook"
@@ -1353,27 +1329,23 @@ msgstr "法术书"
 
 #: Source/diablo.cpp:1562
 msgid "Open Spellbook."
-msgstr "打开​法术​书。"
+msgstr "打开法术书。"
 
 #: Source/diablo.cpp:1570
 msgid "Quick Message {}"
-msgstr "快捷​消息 {}"
+msgstr "快捷消息 {}"
 
 #: Source/diablo.cpp:1571
 msgid "Use Quick Message in chat."
-msgstr "使用​快捷​消息​进行​交谈。"
+msgstr "使用快捷消息进行交谈。"
 
 #: Source/diablo.cpp:1580
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide Info Screens"
-msgstr "空​格: 隐藏​所有​信息​栏"
+msgstr "隐藏屏幕提示"
 
 #: Source/diablo.cpp:1581
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide all info screens."
-msgstr "空​格: 隐藏​所有​信息​栏"
+msgstr "隐藏所有屏幕提示。"
 
 #: Source/diablo.cpp:1601
 msgid "Zoom"
@@ -1381,27 +1353,23 @@ msgstr "缩放"
 
 #: Source/diablo.cpp:1602
 msgid "Zoom Game Screen."
-msgstr "缩放​游戏​界面。"
+msgstr "缩放游戏界面。"
 
 #: Source/diablo.cpp:1612
-#, fuzzy
-#| msgid "Save Game"
 msgid "Pause Game"
-msgstr "保存​游戏"
+msgstr "暂停游戏"
 
 #: Source/diablo.cpp:1613
-#, fuzzy
-#| msgid "Saves the game."
 msgid "Pauses the game."
-msgstr "保存​游戏。"
+msgstr "暂停当前游戏。"
 
 #: Source/diablo.cpp:1618
 msgid "Decrease Gamma"
-msgstr "减少​伽马"
+msgstr "减少伽马"
 
 #: Source/diablo.cpp:1619
 msgid "Reduce screen brightness."
-msgstr "减少​屏幕​亮度。"
+msgstr "减少屏幕亮度。"
 
 #: Source/diablo.cpp:1626
 msgid "Increase Gamma"
@@ -1409,7 +1377,7 @@ msgstr "增加​伽马"
 
 #: Source/diablo.cpp:1627
 msgid "Increase screen brightness."
-msgstr "增加​屏幕​亮度。"
+msgstr "增加屏幕亮度。"
 
 #: Source/diablo.cpp:1634
 msgid "Help"
@@ -1421,36 +1389,32 @@ msgstr "打开​帮助​屏幕。"
 
 #: Source/diablo.cpp:1642
 msgid "Screenshot"
-msgstr ""
+msgstr "屏幕截图"
 
 #: Source/diablo.cpp:1643
 msgid "Takes a screenshot."
-msgstr ""
+msgstr "截取当前屏幕画面的图片。"
 
 #: Source/diablo.cpp:1649
 msgid "Game info"
-msgstr "游戏​信息"
+msgstr "游戏信息"
 
 #: Source/diablo.cpp:1650
 msgid "Displays game infos."
-msgstr "显示​游戏​信息。"
+msgstr "显示游戏信息。"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1654
 msgid "{:s} {:s}"
-msgstr ""
+msgstr "{:s} {:s}"
 
 #: Source/diablo.cpp:1663
-#, fuzzy
-#| msgid "Chat"
 msgid "Chat Log"
-msgstr "交谈"
+msgstr "聊天记录"
 
 #: Source/diablo.cpp:1664
-#, fuzzy
-#| msgid "Displays game infos."
 msgid "Displays chat log."
-msgstr "显示​游戏​信息。"
+msgstr "显示聊天记录。"
 
 #: Source/discord/discord.cpp:66 Source/objects.cpp:136
 msgid "Town"
@@ -1458,7 +1422,7 @@ msgstr "城镇"
 
 #: Source/discord/discord.cpp:66
 msgid "Cathedral"
-msgstr "大​教堂"
+msgstr "大​教堂​"
 
 #: Source/discord/discord.cpp:66
 msgid "Catacombs"
@@ -1470,7 +1434,7 @@ msgstr "洞窟"
 
 #: Source/discord/discord.cpp:66
 msgid "Nest"
-msgstr "巢​穴"
+msgstr "巢穴"
 
 #: Source/discord/discord.cpp:66
 msgid "Crypt"
@@ -1489,12 +1453,12 @@ msgstr "层 {} {}"
 #. TRANSLATORS: Discord state i.e. "Nightmare difficulty"
 #: Source/discord/discord.cpp:102
 msgid "{} difficulty"
-msgstr "难度​：​{}"
+msgstr "难度：{}"
 
 #. TRANSLATORS: Discord activity, not in game
 #: Source/discord/discord.cpp:182
 msgid "In Menu"
-msgstr "菜​单​中"
+msgstr "菜单中"
 
 #: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
@@ -1822,7 +1786,7 @@ msgstr "空​格: 隐藏​所有​信息​栏"
 
 #: Source/help.cpp:32
 msgid "S: Open Speedbook"
-msgstr "S: 打开​快捷​法术书"
+msgstr "S: 打开​快捷法术书"
 
 #: Source/help.cpp:33
 msgid "B: Open Spellbook"
@@ -1933,7 +1897,7 @@ msgstr ""
 
 #: Source/help.cpp:69
 msgid "$Gold:"
-msgstr "金币​(​$​G):"
+msgstr "金币($G):"
 
 #: Source/help.cpp:70
 msgid ""
@@ -1959,7 +1923,7 @@ msgstr ""
 
 #: Source/help.cpp:80
 msgid "$Using the Speedbook for Spells:"
-msgstr "使用​快捷​法术​书施法​(​$​U)​："
+msgstr "​使用快捷法术书施法(​$​U)："
 
 #: Source/help.cpp:81
 msgid ""
@@ -1967,8 +1931,8 @@ msgid ""
 "allows you to select a skill or spell for immediate use. To use a readied "
 "skill or spell, simply right-click in the main play area."
 msgstr ""
-"左键​单击​“​准备​就绪​的​技能​”​按钮​将​打开​“​快捷​法术​书​”，它​将​让​您​能够​选择​技能​或者​法术​"
-"快速​使用。要​使用​准备​好​的​技能​或​法术，仅​需​右​键​点击​游戏​可​用​区域。"
+"左键​单击​“​准备就绪的技能​”​按钮​将​打开​“​快捷法术书​”，它将让您能够选择技能或者法术"
+"快速使用。​要使用​准备​好​的​技能​或​法术，仅需右键点击游戏可用区域。"
 
 #: Source/help.cpp:85
 msgid ""
@@ -1978,7 +1942,7 @@ msgstr "Shift + 左键​单击​“​选择​当前​法术​”​按钮�
 
 #: Source/help.cpp:87
 msgid "$Setting Spell Hotkeys:"
-msgstr "设置​技能​热键(​$​S)​："
+msgstr "设置​技能​热键(​$​S)："
 
 #: Source/help.cpp:88
 msgid ""
@@ -1986,12 +1950,12 @@ msgid ""
 "opening the 'speedbook' as described in the section above. Press the F5, F6, "
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
-"您​最多​可以​为​技能、法术​或​卷轴​分配​四​个​热键。 首先​打开​上​一​节​所述​的​“​快捷​法术书​"
-"”。 选​中​施法​目标​后，它​将​高亮，这时​按 F5、F6、F7 或 F8 键施法。"
+"您​最多​可以​为​技能、法术​或​卷轴​分配​四​个​热键。 首先​打开​上​一​节​所述​的​“​快捷法术书​"
+"”。 选​中施法目标后，它将高亮，这时按 F5、F6、F7 或 F8 键施法。"
 
 #: Source/help.cpp:93
 msgid "$Spell Books:"
-msgstr "法术书(​$​S)​："
+msgstr "法术书(​$​S)："
 
 #: Source/help.cpp:94
 msgid ""
@@ -2001,7 +1965,7 @@ msgstr "阅读​不止​一​本​书​可以​增加​您​对​该​
 
 #: Source/help.cpp:177
 msgid "Shareware Hellfire Help"
-msgstr "共​享版​地​狱火​帮助"
+msgstr "共​享版​地狱火​帮助"
 
 #: Source/help.cpp:177
 msgid "Hellfire Help"
@@ -3829,22 +3793,18 @@ msgstr "防水​之​油"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
 #: Source/items.cpp:1134
-#, fuzzy
-#| msgid "{0} of {1}"
 msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{1}{0}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1142
-#, fuzzy
 msgctxt "spell"
 msgid "{0} {1} of {2}"
 msgstr "{2}{0}{1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1160
-#, fuzzy
 msgid "{0} {1} of {2}"
 msgstr "{2}{0}{1}"
 
@@ -4009,19 +3969,19 @@ msgstr "右击​阅读"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
 msgid "Select from spell book, then"
-msgstr ""
+msgstr "从法术书中选择，之后"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
-msgstr ""
+msgstr "施放法术进行阅读"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
-msgstr ""
+msgstr "打开物品使用"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
-msgstr ""
+msgstr "激活阅读"
 
 #: Source/items.cpp:1825
 msgid "Right-click to read, then"
@@ -4037,7 +3997,7 @@ msgstr "右击​使用"
 
 #: Source/items.cpp:1854
 msgid "Activate to use"
-msgstr ""
+msgstr "激活使用"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -4045,7 +4005,7 @@ msgstr "右击​查看"
 
 #: Source/items.cpp:1869
 msgid "Activate to view"
-msgstr ""
+msgstr "激活显示"
 
 #: Source/items.cpp:1873
 msgctxt "player"
@@ -4104,40 +4064,32 @@ msgid "Resist Fire: {:+d}%"
 msgstr "火焰​抗性: {:+d}%"
 
 #: Source/items.cpp:3564
-#, fuzzy
-#| msgid "Resist Fire: {:+d}%"
 msgid "Resist Fire: {:+d}% MAX"
-msgstr "火焰​抗性: {:+d}%"
+msgstr "火焰​抗性: {:+d}% 最大值"
 
 #: Source/items.cpp:3568
 msgid "Resist Lightning: {:+d}%"
 msgstr "闪电​抗性: {:+d}%"
 
 #: Source/items.cpp:3570
-#, fuzzy
-#| msgid "Resist Lightning: {:+d}%"
 msgid "Resist Lightning: {:+d}% MAX"
-msgstr "闪电​抗性: {:+d}%"
+msgstr "闪电​抗性: {:+d}% 最大值"
 
 #: Source/items.cpp:3574
 msgid "Resist Magic: {:+d}%"
 msgstr "抵抗​魔法: {:+d}%"
 
 #: Source/items.cpp:3576
-#, fuzzy
-#| msgid "Resist Magic: {:+d}%"
 msgid "Resist Magic: {:+d}% MAX"
-msgstr "抵抗​魔法: {:+d}%"
+msgstr "抵抗​魔法: {:+d}% 最大值"
 
 #: Source/items.cpp:3580
 msgid "Resist All: {:+d}%"
 msgstr "所有​抗性: {:+d}%"
 
 #: Source/items.cpp:3582
-#, fuzzy
-#| msgid "Resist All: {:+d}%"
 msgid "Resist All: {:+d}% MAX"
-msgstr "所有​抗性: {:+d}%"
+msgstr "所有​抗性: {:+d}% 最大值"
 
 #: Source/items.cpp:3585
 msgid "spells are increased {:d} level"
@@ -4487,11 +4439,11 @@ msgstr "未​鉴定"
 
 #: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
 msgid "Unable to open save file archive"
-msgstr "无法​打开​保存​文件​存档"
+msgstr "无法​打开存档文件"
 
 #: Source/loadsave.cpp:1833
 msgid "Invalid save file"
-msgstr "无效​的​保存​文件"
+msgstr "无效​的存档​文件"
 
 #: Source/loadsave.cpp:1864
 msgid "Player is on a Hellfire only level"
@@ -4733,27 +4685,21 @@ msgid "Flayed One"
 msgstr "剥​皮魔"
 
 #: Source/monstdat.cpp:76
-#, fuzzy
 msgctxt "monster"
 msgid "Wyrm"
 msgstr "游龙"
 
 #: Source/monstdat.cpp:77
-#, fuzzy
-#| msgid "Cave Slug"
 msgctxt "monster"
 msgid "Cave Slug"
 msgstr "洞​穴蛞蝓"
 
 #: Source/monstdat.cpp:78
-#, fuzzy
 msgctxt "monster"
 msgid "Devil Wyrm"
 msgstr "邪恶游龙"
 
 #: Source/monstdat.cpp:79
-#, fuzzy
-#| msgid "Devourer"
 msgctxt "monster"
 msgid "Devourer"
 msgstr "吞食​虫"
@@ -4804,7 +4750,6 @@ msgid "oldboned"
 msgstr "老​骨头"
 
 #: Source/monstdat.cpp:89
-#, fuzzy
 msgctxt "monster"
 msgid "Red Death"
 msgstr "红色​死神"
@@ -4945,7 +4890,6 @@ msgid "Blood Knight"
 msgstr "血​骑士"
 
 #: Source/monstdat.cpp:117
-#, fuzzy
 msgctxt "monster"
 msgid "The Shredded"
 msgstr "撕​裂者"
@@ -4961,8 +4905,6 @@ msgid "Pain Master"
 msgstr "痛楚​大师"
 
 #: Source/monstdat.cpp:120
-#, fuzzy
-#| msgid "Reality Weaver"
 msgctxt "monster"
 msgid "Reality Weaver"
 msgstr "现实​编织者"
@@ -5033,22 +4975,16 @@ msgid "Stinger"
 msgstr "钉​刺者"
 
 #: Source/monstdat.cpp:134
-#, fuzzy
-#| msgid "Psychorb"
 msgctxt "monster"
 msgid "Psychorb"
-msgstr "精神​失控者"
+msgstr "癫狂球体"
 
 #: Source/monstdat.cpp:135
-#, fuzzy
-#| msgid "Arachnon"
 msgctxt "monster"
 msgid "Arachnon"
 msgstr "蛛​网​魔"
 
 #: Source/monstdat.cpp:136
-#, fuzzy
-#| msgid "Felltwin"
 msgctxt "monster"
 msgid "Felltwin"
 msgstr "孪​生者"
@@ -5059,15 +4995,11 @@ msgid "Hork Spawn"
 msgstr "腐尸​诞生者"
 
 #: Source/monstdat.cpp:138
-#, fuzzy
-#| msgid "Venomtail"
 msgctxt "monster"
 msgid "Venomtail"
 msgstr "毒尾"
 
 #: Source/monstdat.cpp:139
-#, fuzzy
-#| msgid "Necromorb"
 msgctxt "monster"
 msgid "Necromorb"
 msgstr "死​尸"
@@ -5078,13 +5010,11 @@ msgid "Spider Lord"
 msgstr "蜘蛛​领主"
 
 #: Source/monstdat.cpp:141
-#, fuzzy
 msgctxt "monster"
 msgid "Lashworm"
 msgstr "鞭状蠕​虫"
 
 #: Source/monstdat.cpp:142
-#, fuzzy
 msgctxt "monster"
 msgid "Torchant"
 msgstr "火​蚂蚁"
@@ -5145,8 +5075,6 @@ msgid "Arch Lich"
 msgstr "高​阶​巫妖"
 
 #: Source/monstdat.cpp:154
-#, fuzzy
-#| msgid "Biclops"
 msgctxt "monster"
 msgid "Biclops"
 msgstr "双​钩"
@@ -5220,17 +5148,14 @@ msgid "Bonehead Keenaxe"
 msgstr "骷​髅头​基纳克斯"
 
 #: Source/monstdat.cpp:487
-#, fuzzy
 msgctxt "monster"
 msgid "Bladeskin the Slasher"
 msgstr "刀​刃皮肤·鞭​笞者"
 
 #: Source/monstdat.cpp:488
-#, fuzzy
-#| msgid "Soulpus"
 msgctxt "monster"
 msgid "Soulpus"
-msgstr "放逐​之魂"
+msgstr "脓包鬼灵"
 
 #: Source/monstdat.cpp:489
 msgctxt "monster"
@@ -5248,7 +5173,6 @@ msgid "Rotfeast the Hungry"
 msgstr "饥饿​的​食腐狂"
 
 #: Source/monstdat.cpp:492
-#, fuzzy
 msgctxt "monster"
 msgid "Gutshank the Quick"
 msgstr "迅捷​的​古特申克"
@@ -5264,7 +5188,6 @@ msgid "Bongo"
 msgstr "邦​戈"
 
 #: Source/monstdat.cpp:495
-#, fuzzy
 msgctxt "monster"
 msgid "Rotcarnage"
 msgstr "腐肉​搅​碎者"
@@ -5305,7 +5228,6 @@ msgid "Goretongue"
 msgstr "血​肉舌"
 
 #: Source/monstdat.cpp:503
-#, fuzzy
 msgctxt "monster"
 msgid "Pulsecrawler"
 msgstr "脉​冲​爬行者"
@@ -5386,7 +5308,6 @@ msgid "Warmaggot the Mad"
 msgstr "疯狂​的​战斗蛆​虫"
 
 #: Source/monstdat.cpp:519
-#, fuzzy
 msgctxt "monster"
 msgid "Glasskull the Jagged"
 msgstr "玻璃​颅​·锯齿"
@@ -5502,7 +5423,6 @@ msgid "Bluehorn"
 msgstr "蓝角"
 
 #: Source/monstdat.cpp:542
-#, fuzzy
 msgctxt "monster"
 msgid "Warpfire Hellspawn"
 msgstr "地狱​诞生​的​扭曲​烈​焰"
@@ -5628,7 +5548,6 @@ msgid "The Vizier"
 msgstr "维兹尔"
 
 #: Source/monstdat.cpp:567
-#, fuzzy
 msgctxt "monster"
 msgid "Zamphir"
 msgstr "赞菲尔"
@@ -5655,8 +5574,6 @@ msgstr "恐惧​之​钉"
 
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:573
-#, fuzzy
-#| msgid "Doomlock"
 msgctxt "monster"
 msgid "Doomlock"
 msgstr "杜姆洛克"
@@ -6134,37 +6051,37 @@ msgstr "关"
 
 #: Source/options.cpp:539
 msgid "Start Up"
-msgstr "起​始​模式"
+msgstr "起始模式"
 
 #: Source/options.cpp:539
 msgid "Start Up Settings"
-msgstr "起​始​模式​设置"
+msgstr "起始模式设置"
 
 #: Source/options.cpp:540
 msgid "Game Mode"
-msgstr "游戏​模式"
+msgstr "游戏模式"
 
 #: Source/options.cpp:540
 msgid "Play Diablo or Hellfire."
-msgstr "游玩​暗黑​破坏​神原版​或​地狱火​资料片。"
+msgstr "游玩暗黑破坏神原版或地狱火资料片。"
 
 #: Source/options.cpp:546
 msgid "Restrict to Shareware"
-msgstr "限制​只​使用​共​享版"
+msgstr "限制只使用共​享版"
 
 #: Source/options.cpp:546
 msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
-msgstr "使得​游戏​兼容​DEMO版。使得​那些​没有​完整版​的​玩家​可以​游玩​多​人​模式。"
+msgstr "使得游戏兼容DEMO版。使得那些没有完整版的玩家可以游玩多人模式。"
 
 #: Source/options.cpp:547 Source/options.cpp:553
 msgid "Intro"
-msgstr "开​场​动画"
+msgstr "开场动画"
 
 #: Source/options.cpp:547 Source/options.cpp:553
 msgid "Shown Intro cinematic."
-msgstr "播​放​开场​动画。"
+msgstr "播放开场动画。"
 
 #: Source/options.cpp:559
 msgid "Splash"
@@ -6172,11 +6089,11 @@ msgstr "花絮"
 
 #: Source/options.cpp:559
 msgid "Shown splash screen."
-msgstr "显示​花絮​界面。"
+msgstr "显示花絮界面。"
 
 #: Source/options.cpp:561
 msgid "Logo and Title Screen"
-msgstr "标志​和​标题界面"
+msgstr "标志和标题界面"
 
 #: Source/options.cpp:562
 msgid "Title Screen"
@@ -6184,43 +6101,43 @@ msgstr "标题界面"
 
 #: Source/options.cpp:581
 msgid "Diablo specific Settings"
-msgstr "暗​黑​破坏​神原版​特殊​设置"
+msgstr "暗黑破坏神原版特殊设置"
 
 #: Source/options.cpp:595
 msgid "Hellfire specific Settings"
-msgstr "地​狱火​特殊​设置"
+msgstr "地狱火特殊设置"
 
 #: Source/options.cpp:609
 msgid "Audio"
-msgstr "音​频"
+msgstr "音频"
 
 #: Source/options.cpp:609
 msgid "Audio Settings"
-msgstr "音​频​设置"
+msgstr "音频设置"
 
 #: Source/options.cpp:612
 msgid "Walking Sound"
-msgstr "行走​音效"
+msgstr "行走音效"
 
 #: Source/options.cpp:612
 msgid "Player emits sound when walking."
-msgstr "玩​家​行走​的​时候​发出​的​脚步声。"
+msgstr "玩家行走的时候发出的脚步声。"
 
 #: Source/options.cpp:613
 msgid "Auto Equip Sound"
-msgstr "自动​装备​音效"
+msgstr "自动装备音效"
 
 #: Source/options.cpp:613
 msgid "Automatically equipping items on pickup emits the equipment sound."
-msgstr "拾​取​到​物品​后​自动​装备​物品​时​发出​的​音效。"
+msgstr "拾取到物品后自动装备物品时发出的音效。"
 
 #: Source/options.cpp:614
 msgid "Item Pickup Sound"
-msgstr "物品​拾取​音效"
+msgstr "物品拾取音效"
 
 #: Source/options.cpp:614
 msgid "Picking up items emits the items pickup sound."
-msgstr "拾​取​物品​时​发出​的​音效。"
+msgstr "拾取物品时发出的音效。"
 
 #: Source/options.cpp:615
 msgid "Sample Rate"
@@ -6228,31 +6145,31 @@ msgstr "采样率"
 
 #: Source/options.cpp:615
 msgid "Output sample rate (Hz)."
-msgstr "音​频​输出​采样率​(​赫兹)"
+msgstr "音频输出采样率(赫兹)"
 
 #: Source/options.cpp:616
 msgid "Channels"
-msgstr "声道​数量"
+msgstr "声道数量"
 
 #: Source/options.cpp:616
 msgid "Number of output channels."
-msgstr "音频​输出​使用​的​声道​数量。"
+msgstr "音频输出使用的声道数量。"
 
 #: Source/options.cpp:617
 msgid "Buffer Size"
-msgstr "缓冲​大​小"
+msgstr "缓冲大小"
 
 #: Source/options.cpp:617
 msgid "Buffer size (number of frames per channel)."
-msgstr "缓冲​大​小​(​每​个​通道​每​帧​)"
+msgstr "缓冲大小(每个通道每帧)"
 
 #: Source/options.cpp:618
 msgid "Resampling Quality"
-msgstr "重​采样​质量"
+msgstr "重采样质量"
 
 #: Source/options.cpp:618
 msgid "Quality of the resampler, from 0 (lowest) to 10 (highest)."
-msgstr "重​采样​质量，0​(​最​低​)​至​10(​最​大​)。"
+msgstr "重采样质量，0(最低)至10(最大)。"
 
 #: Source/options.cpp:641
 msgid "Resolution"
@@ -6264,8 +6181,8 @@ msgid ""
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
 "Fit to Screen is used."
 msgstr ""
-"分辨率​将​影响​你​在​游戏​中​的​可​见​范围。注意​：​当​使用​缩放、整​倍​缩放​或​适应​屏幕​时​可能​"
-"不同​于​屏幕​使用​的​分辨率。"
+"分辨率将影响你在游戏中的可见范围。注意：当使用缩放、整倍缩放或适应屏幕时可能"
+"不同于屏幕使用的分辨率。"
 
 #: Source/options.cpp:737
 msgid "Graphics"
@@ -6273,25 +6190,25 @@ msgstr "图像"
 
 #: Source/options.cpp:737
 msgid "Graphics Settings"
-msgstr "图像​设置"
+msgstr "图像设置"
 
 #: Source/options.cpp:738
 msgid "Fullscreen"
-msgstr "全​屏幕"
+msgstr "全屏幕"
 
 #: Source/options.cpp:738
 msgid "Display the game in windowed or fullscreen mode."
-msgstr "显示​游戏​以​窗口​或是​全​屏幕​模式。"
+msgstr "显示游戏以窗口或是全屏幕模式。"
 
 #: Source/options.cpp:740
 msgid "Fit to Screen"
-msgstr "适应​屏幕"
+msgstr "适应屏幕"
 
 #: Source/options.cpp:740
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
-msgstr "自动​设置​游戏​窗口​大小​为​你​的​桌面​比例​和​对应​分辨率。"
+msgstr "自动设置游戏窗口大小为你的桌面比例和对应分辨率。"
 
 #: Source/options.cpp:743
 msgid "Upscale"
@@ -6302,20 +6219,20 @@ msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
 msgstr ""
-"允许​图像​按照​游戏​分辨率缩放​到​你​的​显示器​分辨率。在​不​改变​显示器​分辨率​大​小时，调"
-"整​窗口​调整​大小。"
+"允许图像按照游戏分辨率缩放到你的显示器分辨率。在不改变显示器分辨率大小时，调"
+"整窗口调整大小。"
 
 #: Source/options.cpp:744
 msgid "Scaling Quality"
-msgstr "缩​放​品质"
+msgstr "缩放品质"
 
 #: Source/options.cpp:744
 msgid "Enables optional filters to the output image when upscaling."
-msgstr "在​输出​缩放​图像​时​启用​可选​的​过滤​方式。"
+msgstr "在输出缩放图像时启用可选的过滤方式。"
 
 #: Source/options.cpp:746
 msgid "Nearest Pixel"
-msgstr "近似​采样"
+msgstr "近似采样"
 
 #: Source/options.cpp:747
 msgid "Bilinear"
@@ -6323,103 +6240,101 @@ msgstr "双线性"
 
 #: Source/options.cpp:748
 msgid "Anisotropic"
-msgstr "各​向​异性"
+msgstr "各向异性"
 
 #: Source/options.cpp:750
 msgid "Integer Scaling"
-msgstr "整​倍​缩放"
+msgstr "整倍缩放"
 
 #: Source/options.cpp:750
 msgid "Scales the image using whole number pixel ratio."
-msgstr "点​对​点​对​图像​进行​缩放。"
+msgstr "点对点对图像进行缩放。"
 
 #: Source/options.cpp:751
 msgid "Vertical Sync"
-msgstr "垂直​同步"
+msgstr "垂直同步"
 
 #: Source/options.cpp:751
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
 msgstr ""
-"强制​等待​垂直​同步。防止​因​绘制帧​时​导致​的​撕裂​效果。关闭​该​项​有助于​在​某些​系统​上​减"
-"少​鼠标​延迟。"
+"强制等待垂直同步。防止因绘制帧时导致的撕裂效果。关闭该项有助于在某些系统上减"
+"少鼠标延迟。"
 
 #: Source/options.cpp:754
 msgid "Color Cycling"
-msgstr "颜色​循环"
+msgstr "颜色循环"
 
 #: Source/options.cpp:754
 msgid "Color cycling effect used for water, lava, and acid animation."
-msgstr "在​水流、岩浆​和​酸​液​动画​上​使用​颜色​循环​特效。"
+msgstr "在水流、岩浆和酸液动画上使用颜色循环特效。"
 
 #: Source/options.cpp:755
-#, fuzzy
-#| msgid "Use alternate nest palette"
 msgid "Alternate nest art"
-msgstr "使用​备用​嵌​套​调色板"
+msgstr "替换巢穴美术"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
-msgstr ""
+msgstr "游戏将会使用一个其他的调色板来显示地狱火资料片中的巢穴地图地面贴图。"
 
 #: Source/options.cpp:757
 msgid "Hardware Cursor"
-msgstr "硬件​指针"
+msgstr "硬件指针"
 
 #: Source/options.cpp:757
 msgid "Use a hardware cursor"
-msgstr "使用​硬件​鼠​标"
+msgstr "使用硬件鼠标"
 
 #: Source/options.cpp:758
 msgid "Hardware Cursor For Items"
-msgstr "物品​使用​硬件​鼠​标"
+msgstr "物品使用硬件鼠标"
 
 #: Source/options.cpp:758
 msgid "Use a hardware cursor for items."
-msgstr "物品​装备​拾起​的​鼠标​使用​硬件​鼠标​模式。"
+msgstr "物品装备拾起的鼠标使用硬件鼠标模式。"
 
 #: Source/options.cpp:759
 msgid "Hardware Cursor Maximum Size"
-msgstr "硬件​鼠标​最​大​尺寸"
+msgstr "硬件鼠标最大尺寸"
 
 #: Source/options.cpp:759
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
 "software."
-msgstr "硬件​鼠​标的​最​大​宽​高。软件​的​回报​的​最​大​鼠标​尺寸。"
+msgstr "硬件鼠标的最大宽高。软件的回报的最大鼠标尺寸。"
 
 #: Source/options.cpp:761
 msgid "FPS Limiter"
-msgstr "FPS​限制"
+msgstr "FPS限制"
 
 #: Source/options.cpp:761
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
-msgstr "限制​帧数​以​防止​CPU​的​过​多​占用。推荐​使用​屏幕刷新率。"
+msgstr "限制帧数以防止CPU的过多占用。推荐使用屏幕刷新率。"
 
 #: Source/options.cpp:762
 msgid "Show FPS"
-msgstr "显示​FPS"
+msgstr "显示FPS"
 
 #: Source/options.cpp:762
 msgid "Displays the FPS in the upper left corner of the screen."
-msgstr "在​屏幕​的​左上角​显示​每​秒​帧数。"
+msgstr "在屏幕的左上角显示每秒帧数。"
 
 #: Source/options.cpp:763
 msgid "Show health values"
-msgstr ""
+msgstr "显示生命值"
 
 #: Source/options.cpp:763
 msgid "Displays current / max health value on health globe."
-msgstr ""
+msgstr "在法力球上显示当前/最大生命值。"
 
 #: Source/options.cpp:764
 msgid "Show mana values"
-msgstr ""
+msgstr "显示法力值"
 
 #: Source/options.cpp:764
 msgid "Displays current / max mana value on mana globe."
-msgstr ""
+msgstr "在法力球上显示当前/最大法力值。"
 
 #: Source/options.cpp:813
 msgid "Gameplay"
@@ -6427,256 +6342,256 @@ msgstr "游戏性"
 
 #: Source/options.cpp:813
 msgid "Gameplay Settings"
-msgstr "游戏性​设置"
+msgstr "游戏性设置"
 
 #: Source/options.cpp:815
 msgid "Run in Town"
-msgstr "城镇​中​奔跑"
+msgstr "城镇中奔跑"
 
 #: Source/options.cpp:815
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
-msgstr "在​原版​或​地狱​火​的​城镇​中​启用​慢跑​和​快跑。这个​选​项​已经​在​资料​片​中​被​应用。"
+msgstr "在原版或地狱火的城镇中启用慢跑和快跑。这个选项已经在资料片中被应用。"
 
 #: Source/options.cpp:816
 msgid "Grab Input"
-msgstr "限制​鼠​标"
+msgstr "限制鼠标"
 
 #: Source/options.cpp:816
 msgid "When enabled mouse is locked to the game window."
-msgstr "启用​后​鼠标​将​被​限制​在​游戏​窗口​中。"
+msgstr "启用后鼠标将被限制在游戏窗口中。"
 
 #: Source/options.cpp:817
 msgid "Theo Quest"
-msgstr "西奥​任务"
+msgstr "西奥任务"
 
 #: Source/options.cpp:817
 msgid "Enable Little Girl quest."
-msgstr "启动​小​女孩​任务。"
+msgstr "启动小女孩任务。"
 
 #: Source/options.cpp:818
 msgid "Cow Quest"
-msgstr "奶牛​任务"
+msgstr "奶牛任务"
 
 #: Source/options.cpp:818
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
-msgstr "启用​小丑​任务。农夫​莱斯特​将​被​替换​为​完整​的​纳特。"
+msgstr "启用小丑任务。农夫​莱斯特将被替换为完整​的​纳特。"
 
 #: Source/options.cpp:819
 msgid "Friendly Fire"
-msgstr "友方​伤害"
+msgstr "友方伤害"
 
 #: Source/options.cpp:819
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
-msgstr "是否​允许​发射物​或​法术​在​多​人​游戏​中​伤害​友方​玩家。"
+msgstr "是否允许发射物或法术在多人游戏中伤害友方玩家。"
 
 #: Source/options.cpp:820
 msgid "Test Bard"
-msgstr "测试​吟游​诗人"
+msgstr "测试​吟游诗人"
 
 #: Source/options.cpp:820
 msgid "Force the Bard character type to appear in the hero selection menu."
-msgstr "强制​吟游​诗人​角色​出现​在​英雄​选择​菜单。"
+msgstr "强制吟游诗人角色出现在英雄选择菜单。"
 
 #: Source/options.cpp:821
 msgid "Test Barbarian"
-msgstr "测试​野​蛮​人"
+msgstr "测试野​蛮​人"
 
 #: Source/options.cpp:821
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
-msgstr "强制​野蛮人​角色​出现​在​英雄​选择​菜单。"
+msgstr "强制野蛮人角色出现在英雄选择菜单。"
 
 #: Source/options.cpp:822
 msgid "Experience Bar"
-msgstr "经验​条"
+msgstr "经验条"
 
 #: Source/options.cpp:822
 msgid "Experience Bar is added to the UI at the bottom of the screen."
-msgstr "在​用户​界面​的​底部​显示​经验条。"
+msgstr "在用户界面的底部显示经验条。"
 
 #: Source/options.cpp:823
 msgid "Enemy Health Bar"
-msgstr "敌对​生命​条"
+msgstr "敌对生命条"
 
 #: Source/options.cpp:823
 msgid "Enemy Health Bar is displayed at the top of the screen."
-msgstr "敌人​的​生命​条​将​被​显示​在​屏幕​的​顶部。"
+msgstr "敌人的生命条将被显示在屏幕的顶部。"
 
 #: Source/options.cpp:824
 msgid "Auto Gold Pickup"
-msgstr "自动​拾取​金币"
+msgstr "自动拾取金币"
 
 #: Source/options.cpp:824
 msgid "Gold is automatically collected when in close proximity to the player."
-msgstr "靠近​玩家​的​金币​将​会​被​自动​拾取。"
+msgstr "靠近玩家的金币将会被自动拾取。"
 
 #: Source/options.cpp:825
 msgid "Auto Elixir Pickup"
-msgstr "自动​拾取​药剂"
+msgstr "自动拾取药剂"
 
 #: Source/options.cpp:825
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
-msgstr "靠近​玩家​的​药剂​将​会​被​自动​拾取。"
+msgstr "靠近玩家的药剂将会被自动拾取。"
 
 #: Source/options.cpp:826
 msgid "Auto Pickup in Town"
-msgstr "城镇​中​自动​拾取"
+msgstr "城镇中自动拾取"
 
 #: Source/options.cpp:826
 msgid "Automatically pickup items in town."
-msgstr "是否​城镇​中​也​会​自动​拾取​物品。"
+msgstr "是否城镇中也会自动拾取物品。"
 
 #: Source/options.cpp:827
 msgid "Adria Refills Mana"
-msgstr "艾德莉亚​补充​法​力值"
+msgstr "艾德莉亚补充法力值"
 
 #: Source/options.cpp:827
 msgid "Adria will refill your mana when you visit her shop."
-msgstr "艾德莉亚​将​会​在​你​光顾​他​的​商店​时​为​你​完全​回复​你​的​法力值。"
+msgstr "艾德莉亚将会在你光顾他的商店时为你完全回复你的法力值。"
 
 #: Source/options.cpp:828
 msgid "Auto Equip Weapons"
-msgstr "自动​装备​武器"
+msgstr "自动装备武器"
 
 #: Source/options.cpp:828
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
-msgstr "启用​时​会​自动​装备​拾取​的​武器。"
+msgstr "启用时会自动装备拾取的武器。"
 
 #: Source/options.cpp:829
 msgid "Auto Equip Armor"
-msgstr "自动​装备​护甲"
+msgstr "自动装备护甲"
 
 #: Source/options.cpp:829
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
-msgstr "启用​时​会​自动​装备​拾取​的​护甲。"
+msgstr "启用时会自动装备拾取的护甲。"
 
 #: Source/options.cpp:830
 msgid "Auto Equip Helms"
-msgstr "自动​装备​头盔"
+msgstr "自动装备头盔"
 
 #: Source/options.cpp:830
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
-msgstr "启用​时​会​自动​装备​拾取​的​头盔。"
+msgstr "启用时会自动装备拾取的头盔。"
 
 #: Source/options.cpp:831
 msgid "Auto Equip Shields"
-msgstr "自动​装备​盾​牌"
+msgstr "自动装备盾牌"
 
 #: Source/options.cpp:831
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
-msgstr "启用​时​会​自动​装备​拾取​的​盾牌。"
+msgstr "启用时会自动装备拾取的盾牌。"
 
 #: Source/options.cpp:832
 msgid "Auto Equip Jewelry"
-msgstr "自动​装备​首饰"
+msgstr "自动装备首饰"
 
 #: Source/options.cpp:832
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
-msgstr "启用​时​会​自动​装备​拾取​的​首饰。"
+msgstr "启用时会自动装备拾取的首饰。"
 
 #: Source/options.cpp:833
 msgid "Randomize Quests"
-msgstr "随机化​任务"
+msgstr "随机化任务"
 
 #: Source/options.cpp:833
 msgid "Randomly selecting available quests for new games."
-msgstr "在​新​游戏​中​随机化​选择​的​可用​任务。"
+msgstr "在新游戏中随机化选择的可用任务。"
 
 #: Source/options.cpp:834
 msgid "Show Monster Type"
-msgstr "显示​怪物​类型"
+msgstr "显示怪物类型"
 
 #: Source/options.cpp:834
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
-msgstr "鼠​标悬停​在​怪物​身​上​将​会​在​用户​界面​中​显示​描述框，描述​怪物​类型​等​信息。"
+msgstr "鼠标悬停在怪物身上将会在用户界面中显示描述框，描述怪物类型等信息。"
 
 #: Source/options.cpp:835
 msgid "Auto Refill Belt"
-msgstr "自动​填充腰​带"
+msgstr "自动填充腰带"
 
 #: Source/options.cpp:835
 msgid "Refill belt from inventory when belt item is consumed."
-msgstr "背包​中​的​消耗​品会​自动​填充​到​腰带​中。"
+msgstr "背包中的消耗品会自动填充到腰带中。"
 
 #: Source/options.cpp:836
 msgid "Disable Crippling Shrines"
-msgstr "停用​坑​爹​神殿"
+msgstr "停用坑爹神殿"
 
 #: Source/options.cpp:836
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
-"当​启用​后​药锅、炫目、山羊、华丽​和​破碎​圣坛​将​无法​被​点击，标签​也​将​提示​关闭。"
+"当启用后药锅、炫目、山羊、华丽和破碎圣坛将无法被点击，标签也将提示关闭。"
 
 #: Source/options.cpp:837
 msgid "Quick Cast"
-msgstr "快速​施法"
+msgstr "快速施法"
 
 #: Source/options.cpp:837
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
-msgstr "法术​快捷键​会​立即​释放​该​法术​而​不​是​切换施法​按钮。"
+msgstr "法术快捷键会立即释放该法术而不是切换施法按钮。"
 
 #: Source/options.cpp:838
 msgid "Heal Potion Pickup"
-msgstr "拾​取 生命​恢复​药剂"
+msgstr "拾取 生命恢复药剂"
 
 #: Source/options.cpp:838
 msgid "Number of Healing potions to pick up automatically."
-msgstr "生命​恢复​药水​自动​拾取​数量。"
+msgstr "生命​恢复​药​水自动拾取数量。"
 
 #: Source/options.cpp:839
 msgid "Full Heal Potion Pickup"
-msgstr "拾​取 完全​生命​恢复​药剂"
+msgstr "拾取 完全生命恢复药剂"
 
 #: Source/options.cpp:839
 msgid "Number of Full Healing potions to pick up automatically."
-msgstr "完全​生命​恢复​药水​自动​拾取​数量。"
+msgstr "完全​生命恢复​药​水自动拾取数量。"
 
 #: Source/options.cpp:840
 msgid "Mana Potion Pickup"
-msgstr "拾​取 法力​恢复​药剂"
+msgstr "拾取 法力恢复药剂"
 
 #: Source/options.cpp:840
 msgid "Number of Mana potions to pick up automatically."
-msgstr "法力​恢复​药水​自动​拾取​数量。"
+msgstr "法力恢复​药​水自动拾取数量。"
 
 #: Source/options.cpp:841
 msgid "Full Mana Potion Pickup"
-msgstr "拾​取 完全​法力​恢复​药剂"
+msgstr "拾取 完全法力恢复药剂"
 
 #: Source/options.cpp:841
 msgid "Number of Full Mana potions to pick up automatically."
-msgstr "完全​法力​恢复​药水​自动​拾取​数量。"
+msgstr "完全​法力恢复​药​水自动拾取数量。"
 
 #: Source/options.cpp:842
 msgid "Rejuvenation Potion Pickup"
-msgstr "拾​取 活力​恢复​药​水"
+msgstr "拾取 活力​恢复​药​水"
 
 #: Source/options.cpp:842
 msgid "Number of Rejuvenation potions to pick up automatically."
-msgstr "活力​恢复​药水​自动​拾取​数量。"
+msgstr "活力​恢复​药​水自动拾取数量。"
 
 #: Source/options.cpp:843
 msgid "Full Rejuvenation Potion Pickup"
-msgstr "拾​取 完全​活力​恢复​药​水"
+msgstr "拾取 完全​活力​恢复​药​水"
 
 #: Source/options.cpp:843
 msgid "Number of Full Rejuvenation potions to pick up automatically."
-msgstr "完全​活力​恢复​药水​自动​拾取​数量。"
+msgstr "完全​活力​恢复​药​水自动拾取数量。"
 
 #: Source/options.cpp:886
 msgid "Controller"
@@ -6684,7 +6599,7 @@ msgstr "控制器"
 
 #: Source/options.cpp:886
 msgid "Controller Settings"
-msgstr "控制器​设置"
+msgstr "控制器设置"
 
 #: Source/options.cpp:895
 msgid "Network"
@@ -6692,7 +6607,7 @@ msgstr "网络"
 
 #: Source/options.cpp:895
 msgid "Network Settings"
-msgstr "网络​设置"
+msgstr "网络设置"
 
 #: Source/options.cpp:907
 msgid "Chat"
@@ -6700,7 +6615,7 @@ msgstr "交谈"
 
 #: Source/options.cpp:907
 msgid "Chat Settings"
-msgstr "聊天​设置"
+msgstr "聊天设置"
 
 #: Source/options.cpp:916 Source/options.cpp:1032
 msgid "Language"
@@ -6708,19 +6623,19 @@ msgstr "语言"
 
 #: Source/options.cpp:916
 msgid "Define what language to use in game."
-msgstr "设置​游戏​将​使用​哪​种​语言。"
+msgstr "设置游戏将使用哪种语言。"
 
 #: Source/options.cpp:1032
 msgid "Language Settings"
-msgstr "语言​设置"
+msgstr "语言设置"
 
 #: Source/options.cpp:1044
 msgid "Keymapping"
-msgstr "键位​映射"
+msgstr "键位映射"
 
 #: Source/options.cpp:1044
 msgid "Keymapping Settings"
-msgstr "键位​映射​设置"
+msgstr "键位映射设置"
 
 #: Source/panels/charpanel.cpp:130
 msgid "Level"
@@ -6841,7 +6756,7 @@ msgstr[0] "法杖 ({:d} 充能)"
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
-msgstr "等级 {:d}"
+msgstr "等级 ​{:d}"
 
 #: Source/panels/spell_book.cpp:166
 msgid "Unusable"
@@ -6889,10 +6804,8 @@ msgid "Failed to open player archive for writing."
 msgstr "无法​加载​玩​家​数据​进行​写入。"
 
 #: Source/pfile.cpp:308
-#, fuzzy
-#| msgid "Failed to open player archive for writing."
 msgid "Failed to open stash archive for writing."
-msgstr "无法​加载​玩​家​数据​进行​写入。"
+msgstr "无法打开储藏箱档案进行写入。"
 
 #: Source/pfile.cpp:419
 msgid "Unable to open archive"
@@ -6912,30 +6825,24 @@ msgstr "因​无法​写入，无法​保存​存档"
 
 #: Source/plrmsg.cpp:83 Source/qol/chatlog.cpp:127
 msgid "{:s} (lvl {:d}): "
-msgstr "{:s} (​等级 {:d}): "
+msgstr "{:s} (等级 {:d}): "
 
 #: Source/qol/chatlog.cpp:155
 msgid "Chat History (Messages: {:d})"
-msgstr ""
+msgstr "聊天历史 (消息: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-#, fuzzy
-#| msgid "{:d} gold piece"
-#| msgid_plural "{:d} gold pieces"
 msgid "{:d} gold"
-msgstr "{:d}​金币​堆"
+msgstr "{:d} 金币"
 
 #: Source/qol/stash.cpp:586
-#, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
-#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "你​有 {:d} 金币。你​想要​取出​多少？"
+msgstr "你想要取出多少金币？"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
 msgid ","
-msgstr ""
+msgstr ","
 
 #: Source/qol/xpbar.cpp:146
 msgid "Level {:d}"
@@ -6951,7 +6858,7 @@ msgstr "最​大​等级"
 
 #: Source/qol/xpbar.cpp:161
 msgid "Next Level: {:s}"
-msgstr "下​一​级: {:s}"
+msgstr "下一级: {:s}"
 
 #: Source/qol/xpbar.cpp:162
 msgid "{:s} to Level {:d}"
@@ -7202,7 +7109,6 @@ msgid "Apocalypse"
 msgstr "天​启"
 
 #: Source/spelldat.cpp:40
-#, fuzzy
 msgctxt "spell"
 msgid "Etherealize"
 msgstr "灵化术"
@@ -7367,7 +7273,7 @@ msgstr "吉莉安"
 
 #: Source/stores.cpp:98
 msgid "Wirt"
-msgstr "怀​特"
+msgstr "怀特"
 
 #: Source/stores.cpp:217 Source/stores.cpp:224
 msgid "Back"
@@ -7621,7 +7527,7 @@ msgstr "不​可​用"
 
 #: Source/stores.cpp:1259
 msgid "in the shareware"
-msgstr "在​共​享版​中"
+msgstr "在共​享版​中​"
 
 #: Source/stores.cpp:1260
 msgid "version"
@@ -7649,7 +7555,7 @@ msgstr "与​吉莉安​交谈"
 
 #: Source/stores.cpp:1311
 msgid "Access Storage"
-msgstr ""
+msgstr "访问储藏"
 
 #: Source/stores.cpp:1321 Source/towners.cpp:205
 msgid "Farnham the Drunk"
@@ -10991,7 +10897,7 @@ msgstr ""
 #: Source/textdat.cpp:632
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are full of shadows that move just beyond the corners "
+"prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""
