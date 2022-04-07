@@ -571,60 +571,24 @@ void DoLighting(Point position, int nRadius, int lnum)
 		}
 	}
 
-	int mult = xoff + 8 * yoff;
-	for (int y = 0; y < minY; y++) {
-		for (int x = 1; x < maxX; x++) {
-			int radiusBlock = lightblock[mult][y][x];
-			if (radiusBlock < 128) {
-				Point temp = position + Displacement { x, y };
+	for (int i = 0; i < 4; i++) {
+		int mult = xoff + 8 * yoff;
+		int yBound = i > 0 && i < 3 ? maxY : minY;
+		int xBound = i < 2 ? maxX : minX;
+		for (int y = 0; y < yBound; y++) {
+			for (int x = 1; x < xBound; x++) {
+				int radiusBlock = lightblock[mult][y + blockY][x + blockX];
+				if (radiusBlock >= 128)
+					continue;
+				Point temp = position + (Displacement { x, y }).Rotate(-i);
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (InDungeonBounds(temp))
-					if (v < GetLight(temp))
-						SetLight(temp, v);
+				if (!InDungeonBounds(temp))
+					continue;
+				if (v < GetLight(temp))
+					SetLight(temp, v);
 			}
 		}
-	}
-	RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
-	mult = xoff + 8 * yoff;
-	for (int y = 0; y < maxY; y++) {
-		for (int x = 1; x < maxX; x++) {
-			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
-			if (radiusBlock < 128) {
-				Point temp = position + Displacement { y, -x };
-				int8_t v = lightradius[nRadius][radiusBlock];
-				if (InDungeonBounds(temp))
-					if (v < GetLight(temp))
-						SetLight(temp, v);
-			}
-		}
-	}
-	RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
-	mult = xoff + 8 * yoff;
-	for (int y = 0; y < maxY; y++) {
-		for (int x = 1; x < minX; x++) {
-			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
-			if (radiusBlock < 128) {
-				Point temp = position - Displacement { x, y };
-				int8_t v = lightradius[nRadius][radiusBlock];
-				if (InDungeonBounds(temp))
-					if (v < GetLight(temp))
-						SetLight(temp, v);
-			}
-		}
-	}
-	RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
-	mult = xoff + 8 * yoff;
-	for (int y = 0; y < minY; y++) {
-		for (int x = 1; x < minX; x++) {
-			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
-			if (radiusBlock < 128) {
-				Point temp = position + Displacement { -y, x };
-				int8_t v = lightradius[nRadius][radiusBlock];
-				if (InDungeonBounds(temp))
-					if (v < GetLight(temp))
-						SetLight(temp, v);
-			}
-		}
+		RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
 	}
 }
 

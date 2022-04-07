@@ -125,6 +125,18 @@ struct Displacement {
 		return { (deltaY - deltaX) * 32, (deltaY + deltaX) * -16 };
 	}
 
+	constexpr Displacement Rotate(int quadrants)
+	{
+		constexpr int Sines[] = { 0, 1, 0, -1 };
+
+		quadrants = (quadrants % 4 + 4) % 4;
+
+		int sine = Sines[quadrants];
+		int cosine = Sines[(quadrants + 1) % 4];
+
+		return Displacement { deltaX * cosine - deltaY * sine, deltaX * sine + deltaY * cosine };
+	}
+
 private:
 	static constexpr Displacement fromDirection(Direction direction)
 	{
