@@ -1,6 +1,7 @@
 include(functions/devilutionx_library)
 
 add_devilutionx_object_library(libdevilutionx_switch
+  romfs.cpp
   network.cpp
   keyboard.cpp
   docking.cpp
