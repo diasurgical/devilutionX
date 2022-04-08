@@ -1084,7 +1084,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item.get()));
 			} else if (item->IsType(UiType::List)) {
 				static_cast<UiList *>(item.get())->Release();
-			}	
+			}
 		}
 	}
 

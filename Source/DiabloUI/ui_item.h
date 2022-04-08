@@ -413,17 +413,17 @@ public:
 	{
 		return spacing_;
 	}
-	
+
 	[[nodiscard]] bool IsPressed(size_t index) const
 	{
 		return pressed_item_index_ == index;
 	}
-	
+
 	void Press(size_t index)
 	{
 		pressed_item_index_ = index;
 	}
-	
+
 	void Release()
 	{
 		pressed_item_index_ = -1;
