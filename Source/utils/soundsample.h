@@ -29,7 +29,9 @@ public:
 	bool IsPlaying();
 	void Play(int logSoundVolume, int logUserVolume, int logPan);
 	void Stop();
-	int SetChunkStream(std::string filePath);
+
+	// Returns 0 on success.
+	int SetChunkStream(std::string filePath, bool isMp3, bool logErrors = true);
 
 	void SetFinishCallback(Aulib::Stream::Callback &&callback)
 	{
@@ -43,7 +45,7 @@ public:
 	 * @param dwBytes Length of buffer
 	 * @return 0 on success, -1 otherwise
 	 */
-	int SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes);
+	int SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes, bool isMp3);
 #endif
 
 #ifndef STREAM_ALL_AUDIO
@@ -59,8 +61,8 @@ public:
 		return SetChunkStream(other.file_path_);
 #else
 		if (other.IsStreaming())
-			return SetChunkStream(other.file_path_);
-		return SetChunk(other.file_data_, other.file_data_size_);
+			return SetChunkStream(other.file_path_, isMp3_);
+		return SetChunk(other.file_data_, other.file_data_size_, isMp3_);
 #endif
 	}
 
@@ -75,6 +77,8 @@ private:
 
 	// Set for streaming audio to allow for duplicating it:
 	std::string file_path_;
+
+	bool isMp3_;
 
 	std::unique_ptr<Aulib::Stream> stream_;
 };

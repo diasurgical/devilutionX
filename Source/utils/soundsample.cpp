@@ -4,6 +4,7 @@
 #include <cmath>
 #include <utility>
 
+#include <Aulib/DecoderDrmp3.h>
 #include <Aulib/DecoderDrwav.h>
 #include <Aulib/ResamplerSpeex.h>
 #include <SDL.h>
@@ -54,6 +55,19 @@ float PanLogToLinear(int logPan)
 	auto factor = std::pow(LogBase, static_cast<float>(-std::abs(logPan)) / StereoSeparation);
 
 	return copysign(1.F - factor, static_cast<float>(logPan));
+}
+
+std::unique_ptr<Aulib::Decoder> CreateDecoder(bool isMp3)
+{
+	if (isMp3)
+		return std::make_unique<Aulib::DecoderDrmp3>();
+	return std::make_unique<Aulib::DecoderDrwav>();
+}
+
+std::unique_ptr<Aulib::Stream> CreateStream(SDL_RWops *handle, bool isMp3)
+{
+	return std::make_unique<Aulib::Stream>(handle, CreateDecoder(isMp3),
+	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
 }
 
 } // namespace
@@ -113,28 +127,30 @@ void SoundSample::Stop()
 		stream_->stop();
 }
 
-int SoundSample::SetChunkStream(std::string filePath)
+int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors)
 {
-	file_path_ = std::move(filePath);
-	SDL_RWops *handle = OpenAsset(file_path_.c_str(), /*threadsafe=*/true);
+	SDL_RWops *handle = OpenAsset(filePath.c_str(), /*threadsafe=*/true);
 	if (handle == nullptr) {
-		LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
+		if (logErrors)
+			LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
-
-	stream_ = std::make_unique<Aulib::Stream>(handle, std::make_unique<Aulib::DecoderDrwav>(),
-	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
+	file_path_ = std::move(filePath);
+	isMp3_ = isMp3;
+	stream_ = CreateStream(handle, isMp3_);
 	if (!stream_->open()) {
 		stream_ = nullptr;
-		LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
+		if (logErrors)
+			LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
 	return 0;
 }
 
 #ifndef STREAM_ALL_AUDIO
-int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes)
+int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes, bool isMp3)
 {
+	isMp3_ = isMp3;
 	file_data_ = std::move(fileData);
 	file_data_size_ = dwBytes;
 	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), dwBytes);
@@ -142,8 +158,7 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 		return -1;
 	}
 
-	stream_ = std::make_unique<Aulib::Stream>(buf, std::make_unique<Aulib::DecoderDrwav>(),
-	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
+	stream_ = CreateStream(buf, isMp3_);
 	if (!stream_->open()) {
 		stream_ = nullptr;
 		file_data_ = nullptr;

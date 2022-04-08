@@ -27,7 +27,7 @@ set(USE_DEC_FLUIDSYNTH OFF)
 set(USE_DEC_BASSMIDI OFF)
 set(USE_DEC_WILDMIDI OFF)
 set(USE_DEC_ADLMIDI OFF)
-set(USE_DEC_DRMP3 OFF)
+set(USE_DEC_DRMP3 ON)
 
 include(FetchContent)
 FetchContent_Declare(SDL_audiolib
