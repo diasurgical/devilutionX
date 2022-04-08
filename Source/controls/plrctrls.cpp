@@ -1443,7 +1443,7 @@ struct RightStickAccumulator {
 	float hiresDY;
 };
 
-bool IsStickMovmentSignificant()
+bool IsStickMovementSignificant()
 {
 	return leftStickX >= 0.5 || leftStickX <= -0.5
 	    || leftStickY >= 0.5 || leftStickY <= -0.5
@@ -1466,14 +1466,16 @@ ControlTypes GetInputTypeFromEvent(const SDL_Event &event)
 		return event.wheel.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
 	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
 		return ControlTypes::VirtualGamepad;
-	if (event.type == SDL_CONTROLLERAXISMOTION && IsStickMovmentSignificant())
+	if (event.type == SDL_CONTROLLERAXISMOTION
+	    && (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT || event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT
+	        || IsStickMovementSignificant()))
 		return ControlTypes::Gamepad;
 	if (event.type >= SDL_CONTROLLERBUTTONDOWN && event.type <= SDL_CONTROLLERDEVICEREMAPPED)
 		return ControlTypes::Gamepad;
 	if (IsAnyOf(event.type, SDL_JOYDEVICEADDED, SDL_JOYDEVICEREMOVED))
 		return ControlTypes::Gamepad;
 #endif
-	if (event.type == SDL_JOYAXISMOTION && IsStickMovmentSignificant())
+	if (event.type == SDL_JOYAXISMOTION && IsStickMovementSignificant())
 		return ControlTypes::Gamepad;
 	if (event.type >= SDL_JOYBALLMOTION && event.type <= SDL_JOYBUTTONUP)
 		return ControlTypes::Gamepad;
@@ -1500,14 +1502,8 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 		return true;
 	}
 
-	if (IsAnyOf(gamepadEvent.button, ControllerButton_BUTTON_RIGHTSTICK, ControllerButton_BUTTON_BACK)) {
-		return true;
-	}
-
-	return false;
+	return SimulatingMouseWithSelectAndDPad || IsSimulatedMouseClickBinding(gamepadEvent);
 }
-
-bool IsNextMouseButtonClickEventSimulated = false;
 
 void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
 {
@@ -1524,11 +1520,6 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 }
 
 } // namespace
-
-void NextMouseButtonClickEventIsSimulated()
-{
-	IsNextMouseButtonClickEventSimulated = true;
-}
 
 string_view ControlTypeToString(ControlTypes controlType)
 {
@@ -1566,20 +1557,7 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 
 	ControlTypes newControlDevice = inputType;
 	ControlTypes newControlMode = inputType;
-	const bool isSimulatedMouseButtonEvent = IsNextMouseButtonClickEventSimulated
-	    && (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN)
-	    && ControlDevice != ControlTypes::KeyboardAndMouse;
-	if (isSimulatedMouseButtonEvent) {
-		IsNextMouseButtonClickEventSimulated = false;
-
-		// `inputType` here will be `KeyboardAndMouse` because this is a (simulated) mouse event.
-		// Restore it to the original control device.
-		newControlDevice = ControlDevice;
-	}
-
-	if (isSimulatedMouseButtonEvent) {
-		newControlMode = ControlTypes::KeyboardAndMouse;
-	} else if (ContinueSimulatedMouseEvent(event, gamepadEvent)) {
+	if (ContinueSimulatedMouseEvent(event, gamepadEvent)) {
 		newControlMode = ControlMode;
 	}
 

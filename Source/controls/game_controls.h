@@ -71,6 +71,8 @@ struct GameAction {
 
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
 
+bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent);
+
 AxisDirection GetMoveDirection();
 
 extern bool start_modifier_active;

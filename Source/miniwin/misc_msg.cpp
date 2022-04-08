@@ -394,13 +394,6 @@ void ProcessGamepadEvents(GameAction &action)
 			sbookflag = !sbookflag;
 		}
 		break;
-	case GameActionType_SEND_MOUSE_CLICK:
-		Uint8 simulatedButton = action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
-		SDL_Event clickEvent;
-		SetMouseButtonEvent(clickEvent, action.send_mouse_click.up ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN, simulatedButton, MousePosition);
-		NextMouseButtonClickEventIsSimulated();
-		SDL_PushEvent(&clickEvent);
-		break;
 	}
 }
 
@@ -483,6 +476,12 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		} else if (action.type == GameActionType_SEND_KEY) {
 			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = action.send_key.vk_code;
+		} else if (action.type == GameActionType_SEND_MOUSE_CLICK) {
+			lpMsg->message = action.send_mouse_click.up
+			    ? (action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? DVL_WM_LBUTTONUP : DVL_WM_RBUTTONUP)
+			    : (action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? DVL_WM_LBUTTONDOWN : DVL_WM_RBUTTONDOWN);
+			lpMsg->wParam = 0;
+			lpMsg->lParam = (static_cast<int16_t>(MousePosition.y) << 16) | static_cast<int16_t>(MousePosition.x);
 		} else {
 			ProcessGamepadEvents(action);
 		}
