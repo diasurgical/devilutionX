@@ -1,1 +1,7 @@
+#ifdef __MINGW32__
+#include "winuser.h"
+#define MANIFEST_RESOURCE_ID 1
+MANIFEST_RESOURCE_ID RT_MANIFEST "devilutionx.exe.manifest"
+#endif
+
 IDI_ICON1               ICON    DISCARDABLE     "icon.ico"
