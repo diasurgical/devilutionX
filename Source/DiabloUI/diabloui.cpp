@@ -912,10 +912,21 @@ Uint32 dbClickTimer;
 
 bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 {
-	if (event.type != SDL_MOUSEBUTTONUP || event.button.button != SDL_BUTTON_LEFT)
+	if (event.button.button != SDL_BUTTON_LEFT)
+		return false;
+
+	if (event.type != SDL_MOUSEBUTTONUP && event.type != SDL_MOUSEBUTTONDOWN)
 		return false;
 
 	std::size_t index = uiList->indexAt(event.button.y);
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		uiList->Press(index);
+		return true;
+	}
+
+	if (event.type == SDL_MOUSEBUTTONUP && !uiList->IsPressed(index))
+		return false;
+
 	index += listOffset;
 
 	if (gfnListFocus != nullptr && SelectedItem != index) {
@@ -1038,6 +1049,8 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 		for (const auto &item : items) {
 			if (item->IsType(UiType::Button)) {
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
+			} else if (item->IsType(UiType::List)) {
+				static_cast<UiList *>(item)->Release();
 			}
 		}
 	}
@@ -1069,6 +1082,8 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 		for (const auto &item : items) {
 			if (item->IsType(UiType::Button)) {
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item.get()));
+			} else if (item->IsType(UiType::List)) {
+				static_cast<UiList *>(item.get())->Release();
 			}
 		}
 	}
