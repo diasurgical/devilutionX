@@ -24,11 +24,6 @@ enum class ControlTypes : uint8_t {
 
 string_view ControlTypeToString(ControlTypes controlType);
 
-/**
- * @brief Call this after sending a simulated mouse button click event.
- */
-void NextMouseButtonClickEventIsSimulated();
-
 extern ControlTypes ControlMode;
 
 /**

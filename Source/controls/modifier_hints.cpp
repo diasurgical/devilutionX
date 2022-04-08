@@ -5,8 +5,9 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
-#include "controls/controller.h"
+#include "controls/controller_motion.h"
 #include "controls/game_controls.h"
+#include "controls/plrctrls.h"
 #include "engine/load_cel.hpp"
 #include "engine/render/text_render.hpp"
 #include "options.h"
@@ -155,7 +156,7 @@ void DrawStartModifierMenu(const Surface &out)
 
 void DrawSelectModifierMenu(const Surface &out)
 {
-	if (!select_modifier_active)
+	if (!select_modifier_active || SimulatingMouseWithSelectAndDPad)
 		return;
 
 	if (sgOptions.Controller.bDpadHotkeys) {

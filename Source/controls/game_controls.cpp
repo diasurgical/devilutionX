@@ -441,6 +441,20 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 	return false;
 }
 
+bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
+{
+	switch (ctrlEvent.button) {
+	case ControllerButton_BUTTON_LEFTSTICK:
+	case ControllerButton_BUTTON_LEFTSHOULDER:
+	case ControllerButton_BUTTON_RIGHTSHOULDER:
+		return select_modifier_active;
+	case ControllerButton_BUTTON_RIGHTSTICK:
+		return true;
+	default:
+		return false;
+	}
+}
+
 AxisDirection GetMoveDirection()
 {
 	return GetLeftStickOrDpadDirection(/*allowDpad=*/!sgOptions.Controller.bDpadHotkeys);
