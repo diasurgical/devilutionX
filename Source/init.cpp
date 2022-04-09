@@ -151,6 +151,8 @@ void init_cleanup()
 
 void LoadCoreArchives()
 {
+	paths::SetMpqDir(paths::PrefPath());
+
 	auto paths = GetMPQSearchPaths();
 
 #if !defined(__ANDROID__) && !defined(__APPLE__)
