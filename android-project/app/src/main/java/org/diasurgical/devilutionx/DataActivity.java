@@ -76,9 +76,23 @@ public class DataActivity extends Activity {
 				if (!isDownloadingTranslation) {
 					isDownloadingTranslation = true;
 					sendDownloadRequest(
-						"https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq",
-						"pl.mpq",
-						"Translation Data"
+							"https://github.com/diasurgical/devilutionx-assets/releases/download/v2/pl.mpq",
+							"pl.mpq",
+							"Translation Data"
+					);
+				}
+				return true;
+			}
+		}
+		if (lang.startsWith("ru")) {
+			File ru_mpq = new File(externalDir + "/ru.mpq");
+			if (!ru_mpq.exists()) {
+				if (!isDownloadingTranslation) {
+					isDownloadingTranslation = true;
+					sendDownloadRequest(
+							"https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq",
+							"ru.mpq",
+							"Translation Data"
 					);
 				}
 				return true;
@@ -90,7 +104,7 @@ public class DataActivity extends Activity {
 				if (!isDownloadingFonts) {
 					isDownloadingFonts = true;
 					sendDownloadRequest(
-						"https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq",
+						"https://github.com/diasurgical/devilutionx-assets/releases/download/v2/fonts.mpq",
 						"fonts.mpq",
 						"Extra Game Fonts"
 					);
