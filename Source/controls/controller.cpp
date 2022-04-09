@@ -100,7 +100,9 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	const Joystick *joystick = Joystick::Get(event);
 	if (joystick != nullptr) {
 		result.button = devilution::Joystick::ToControllerButton(event);
-		result.state = event.jbutton.state;
+		result.state = ControllerButtonState_PRESSED;
+		if (IsAnyOf(event.type, SDL_JOYBUTTONUP, SDL_JOYBUTTONDOWN))
+			result.state = event.jbutton.state;
 	}
 
 	return result;
