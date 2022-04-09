@@ -37,7 +37,7 @@ if(CITRO3D_ROOT)
 endif()
 
 # Search below ${DEVKITPRO}, ${DEVKITARM} etc.
-set(_CITRO3D_SEARCH_REROOTED
+set(_CITRO3D_SEARCH_CMAKE_REROOTED
   PATHS / /citro3d /libctru /ctrulib
   NO_DEFAULT_PATH
   ONLY_CMAKE_FIND_ROOT_PATH)
