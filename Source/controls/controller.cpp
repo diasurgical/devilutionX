@@ -90,10 +90,15 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	GameController *const controller = GameController::Get(event);
 	if (controller != nullptr) {
 		result.button = controller->ToControllerButton(event);
-		result.state = event.cbutton.state;
-
-		if (result.button != ControllerButton_NONE)
+		if (result.button != ControllerButton_NONE) {
+			if (result.button == ControllerButton_AXIS_TRIGGERLEFT || result.button == ControllerButton_AXIS_TRIGGERRIGHT) {
+				result.up = !controller->IsPressed(result.button);
+				result.state = result.up ? SDL_RELEASED : SDL_PRESSED;
+			} else {
+				result.state = event.cbutton.state;
+			}
 			return result;
+		}
 	}
 #endif
 

@@ -124,6 +124,10 @@ SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerBut
 
 bool GameController::IsPressed(ControllerButton button) const
 {
+	if (button == ControllerButton_AXIS_TRIGGERLEFT)
+		return trigger_left_is_down_;
+	if (button == ControllerButton_AXIS_TRIGGERRIGHT)
+		return trigger_right_is_down_;
 	const SDL_GameControllerButton gcButton = ToSdlGameControllerButton(button);
 	return SDL_GameControllerHasButton(sdl_game_controller_, gcButton) && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
 }
