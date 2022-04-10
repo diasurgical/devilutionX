@@ -521,22 +521,38 @@ void CalcPlrItemMin(Player &player)
 	}
 }
 
+uint8_t CalculateMagicRequirementForBook(spell_id spell, int8_t spellLevel)
+{
+	int magicRequirement = spelldata[spell].sMinInt;
+
+	while (spellLevel != 0) {
+		magicRequirement += 20 * magicRequirement / 100;
+		spellLevel--;
+		if (magicRequirement + 20 * magicRequirement / 100 > 255) {
+			magicRequirement = 255;
+			break;
+		}
+	}
+
+	return magicRequirement;
+}
+
 void CalcPlrBookVals(Player &player)
 {
-	for (Item &item : InventoryPlayerItemsRange { player }) {
+	auto processItem = [](Player &player, Item &item) {
 		if (item._itype == ItemType::Misc && item._iMiscId == IMISC_BOOK) {
-			item._iMinMag = spelldata[item._iSpell].sMinInt;
-			int8_t spellLevel = player._pSplLvl[item._iSpell];
-
-			while (spellLevel != 0) {
-				item._iMinMag += 20 * item._iMinMag / 100;
-				spellLevel--;
-				if (item._iMinMag + 20 * item._iMinMag / 100 > 255) {
-					item._iMinMag = 255;
-					spellLevel = 0;
-				}
-			}
+			spell_id spell = item._iSpell;
+			int8_t spellLevel = player._pSplLvl[spell];
+			item._iMinMag = CalculateMagicRequirementForBook(spell, spellLevel);
 			item._iStatFlag = player.CanUseItem(item);
+		}
+	};
+	for (Item &item : InventoryPlayerItemsRange { player }) {
+		processItem(player, item);
+	}
+	if (&player == MyPlayer) {
+		for (Item &item : Stash.stashList) {
+			processItem(player, item);
 		}
 	}
 }
