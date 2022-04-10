@@ -453,7 +453,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 		PlaySfxLoc(MissilesData[missile._mitype].miSFX, missile.position.tile);
 }
 
-void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, bool ignoreStart, bool ifCollidesDontMoveToHitTile)
+bool MoveMissile(Missile &missile, const std::function<bool(Point)> &checkTile, bool ifCheckTileFailsDontMoveToTile = false)
 {
 	Point prevTile = missile.position.tile;
 	missile.position.traveled += missile.position.velocity;
@@ -465,16 +465,10 @@ void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, boo
 	else
 		possibleVisitTiles = prevTile.ManhattanDistance(missile.position.tile);
 
-	int16_t tileTargetHash = dMonster[missile.position.tile.x][missile.position.tile.y] ^ dPlayer[missile.position.tile.x][missile.position.tile.y];
+	if (possibleVisitTiles == 0)
+		return false;
 
-	if (possibleVisitTiles == 0) {
-		// missile didn't change the tile... check that we perform CheckMissileCol only once for any monster/player to avoid multiple hits for slow missiles
-		if (missile.lastCollisionTargetHash == tileTargetHash)
-			return;
-	}
-	// remember what target CheckMissileCol was checked against
-	missile.lastCollisionTargetHash = tileTargetHash;
-	// Did the missile skipped a tile?
+	// Did the missile skip a tile?
 	if (possibleVisitTiles > 1) {
 		// Implementation note: If someone knows the correct math to calculate this without this step for step increase loop, I would really appreciate it.
 		auto incVelocity = missile.position.velocity * (0.01f / (float)(possibleVisitTiles - 1));
@@ -490,42 +484,69 @@ void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, boo
 
 			auto tile = missile.position.start + Displacement { dx, dy };
 
-			// we are at the orginal calculated position => resume with normal logic
+			// we are at the original calculated position => resume with normal logic
 			if (tile == missile.position.tile)
 				break;
 
-			// don't call CheckMissileCol more than once for a tile
+			// don't call checkTile more than once for a tile
 			if (prevTile == tile)
 				continue;
+
 			prevTile = tile;
 
-			CheckMissileCol(missile, mindam, maxdam, false, tile, false);
-
-			// Did missile hit anything?
-			if (missile._mirange != 0)
-				continue;
-
-			if ((missile._miHitFlag && MissilesData[missile._mitype].MovementDistribution == MissileMovementDistrubution::Blockable) || IsMissileBlockedByTile(tile)) {
+			if (!checkTile(tile)) {
 				missile.position.traveled = traveled;
-				if (ifCollidesDontMoveToHitTile && missile._mirange == 0) {
+				if (ifCheckTileFailsDontMoveToTile) {
 					missile.position.traveled -= incVelocity;
 					UpdateMissilePos(missile);
 					missile.position.StopMissile();
 				} else {
 					UpdateMissilePos(missile);
 				}
-				return;
+				return true;
 			}
+
 		} while (true);
 	}
-	if (ignoreStart && missile.position.start == missile.position.tile)
-		return;
-	CheckMissileCol(missile, mindam, maxdam, false, missile.position.tile, false);
-	if (ifCollidesDontMoveToHitTile && missile._mirange == 0) {
+
+	if (!checkTile(missile.position.tile) && ifCheckTileFailsDontMoveToTile) {
 		missile.position.traveled -= missile.position.velocity;
 		UpdateMissilePos(missile);
 		missile.position.StopMissile();
 	}
+
+	return true;
+}
+
+void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, bool ignoreStart, bool ifCollidesDontMoveToHitTile)
+{
+	auto checkTile = [&](Point tile) {
+		if (ignoreStart && missile.position.start == tile)
+			return true;
+
+		CheckMissileCol(missile, mindam, maxdam, false, tile, false);
+
+		// Did missile hit anything?
+		if (missile._mirange != 0)
+			return true;
+
+		if (missile._miHitFlag && MissilesData[missile._mitype].MovementDistribution == MissileMovementDistrubution::Blockable)
+			return false;
+
+		return !IsMissileBlockedByTile(tile);
+	};
+
+	bool tileChanged = MoveMissile(missile, checkTile, ifCollidesDontMoveToHitTile);
+
+	int16_t tileTargetHash = dMonster[missile.position.tile.x][missile.position.tile.y] ^ dPlayer[missile.position.tile.x][missile.position.tile.y];
+
+	// missile didn't change the tile... check that we perform CheckMissileCol only once for any monster/player to avoid multiple hits for slow missiles
+	if (!tileChanged && missile.lastCollisionTargetHash != tileTargetHash) {
+		CheckMissileCol(missile, mindam, maxdam, false, missile.position.tile, false);
+	}
+
+	// remember what target CheckMissileCol was checked against
+	missile.lastCollisionTargetHash = tileTargetHash;
 }
 
 void SetMissAnim(Missile &missile, int animtype)
