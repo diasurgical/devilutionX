@@ -661,20 +661,24 @@ void SyncPositionWithParent(Missile &missile, const AddMissileParameter &paramet
 void SpawnLightning(Missile &missile, int dam)
 {
 	missile._mirange--;
-	missile.position.traveled += missile.position.velocity;
-	UpdateMissilePos(missile);
+	MoveMissile(
+	    missile, [&](Point tile) {
+		    assert(InDungeonBounds(tile));
+		    int pn = dPiece[tile.x][tile.y];
+		    assert(pn >= 0 && pn <= MAXTILES);
 
-	Point position = missile.position.tile;
-	assert(InDungeonBounds(position));
+		    if (!missile.IsTrap() || tile != missile.position.start) {
+			    if (TileHasAny(pn, TileProperties::BlockMissile)) {
+				    missile._mirange = 0;
+				    return false;
+			    }
+		    }
+
+		    return true;
+	    });
+
+	auto position = missile.position.tile;
 	int pn = dPiece[position.x][position.y];
-	assert(pn >= 0 && pn <= MAXTILES);
-
-	if (!missile.IsTrap() || position != missile.position.start) {
-		if (TileHasAny(pn, TileProperties::BlockMissile)) {
-			missile._mirange = 0;
-		}
-	}
-
 	if (!TileHasAny(pn, TileProperties::BlockMissile)) {
 		if (position != Point { missile.var1, missile.var2 } && InDungeonBounds(position)) {
 			missile_id type = MIS_LIGHTNING;
