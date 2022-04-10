@@ -67,6 +67,7 @@ DJunk sgJunk;
 bool sgbDeltaChanged;
 BYTE sgbDeltaChunks;
 std::list<TMegaPkt> MegaPktList;
+Item ItemLimbo;
 
 void GetNextPacket()
 {
@@ -857,7 +858,7 @@ DWORD OnPutItem(const TCmd *pCmd, int pnum)
 		if (currlevel == Players[pnum].plrlevel) {
 			int ii;
 			if (pnum == MyPlayerId)
-				ii = InvPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+				ii = InvPutItem(Players[pnum], position, ItemLimbo);
 			else
 				ii = SyncPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			if (ii != -1) {
@@ -2607,6 +2608,8 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 		cmd.bAC = item._iAC;
 		cmd.dwBuff = item.dwBuff;
 	}
+
+	ItemLimbo = item;
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
