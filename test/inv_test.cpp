@@ -32,14 +32,14 @@ TEST(Inv, UseScroll_from_inventory)
 {
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
 	Players[MyPlayerId]._pNumInv = 5;
-	EXPECT_TRUE(UseScroll());
+	EXPECT_TRUE(UseScroll(Players[MyPlayerId]._pRSpell));
 }
 
 // Test that the scroll is used in the belt in correct conditions
 TEST(Inv, UseScroll_from_belt)
 {
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	EXPECT_TRUE(UseScroll());
+	EXPECT_TRUE(UseScroll(Players[MyPlayerId]._pRSpell));
 }
 
 // Test that the scroll is not used in the inventory for each invalid condition
@@ -52,23 +52,23 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
 	pcurs = CURSOR_IDENTIFY;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
 	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
 	Players[MyPlayerId].InvList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
 	Players[MyPlayerId].InvList[2]._itype = ItemType::None;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 }
 
 // Test that the scroll is not used in the belt for each invalid condition
@@ -79,23 +79,23 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
 	pcurs = CURSOR_IDENTIFY;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
 	leveltype = DTYPE_TOWN;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
 	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_HEAL);
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
 	Players[MyPlayerId].SpdList[2]._iMiscId = IMISC_STAFF;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
 	Players[MyPlayerId].SpdList[2]._itype = ItemType::None;
-	EXPECT_FALSE(UseScroll());
+	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 }
 
 // Test gold calculation
