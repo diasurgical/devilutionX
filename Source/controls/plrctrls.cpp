@@ -2017,8 +2017,14 @@ void PerformSecondaryAction()
 void QuickCast(int slot)
 {
 	auto &myPlayer = Players[MyPlayerId];
+	spell_id spell = myPlayer._pSplHotKey[slot];
+	spell_type spellType = myPlayer._pSplTHotKey[slot];
 
-	CheckPlrSpell(false, myPlayer._pSplHotKey[slot], myPlayer._pSplTHotKey[slot]);
+	if (ControlMode != ControlTypes::KeyboardAndMouse) {
+		UpdateSpellTarget(spell);
+	}
+
+	CheckPlrSpell(false, spell, spellType);
 }
 
 } // namespace devilution
