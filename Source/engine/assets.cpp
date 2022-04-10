@@ -43,8 +43,8 @@ SDL_RWops *OpenAsset(const char *filename, bool threadsafe)
 
 	// Files next to the MPQ archives override MPQ contents.
 	SDL_RWops *rwops;
-	if (paths::MpqDir()) {
-		const std::string path = *paths::MpqDir() + relativePath;
+	{
+		const std::string path = paths::PrefPath() + relativePath;
 		// Avoid spamming DEBUG messages if the file does not exist.
 		if ((FileExists(path.c_str())) && (rwops = SDL_RWFromFile(path.c_str(), "rb")) != nullptr) {
 			LogVerbose("Loaded MPQ file override: {}", path);
