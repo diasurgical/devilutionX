@@ -201,7 +201,7 @@ int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t ci);
 void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
 bool CanPut(Point position);
 bool TryInvPut();
-int InvPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
+int InvPutItem(Player &player, Point position, Item &item);
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int8_t CheckInvHLight();
