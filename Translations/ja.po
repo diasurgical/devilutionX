@@ -866,15 +866,15 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji "
+"which is licensed under CC-BY 4.0. The port also makes use of SDL which is "
+"licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
-"\t​この​移植​版​で​は、SIL Open Font License​に​基づい​て​ライセンス​さ​れ​た​CharisSILB、"
-"Unifont、Noto、および​CC-BY 4.0​に​基づい​て​ライセンス​さ​れ​た​Twitmoji​を​使用​し​て​い​"
-"ます。また、この​移植​版​で​は、zlib-license​で​ライセンス​さ​れ​て​いる​SDL​も​使用​し​て​い​"
-"ます。詳細​は、ReadMe​を​ご覧​ください。"
+"\t​この​移植​版​で​は、SIL Open Font License​に​基づい​て​ライセンス​さ​れ​た​Charis SIL、"
+"New Athena Unicode、Unifont、Noto、および​CC-BY 4.0​に​基づい​て​ライセンス​さ​れ​た​"
+"Twitmoji​を​使用​し​て​い​ます。また、この​移植​版​で​は、zlib-license​で​ライセンス​さ​れ​"
+"て​いる​SDL​も​使用​し​て​い​ます。詳細​は、ReadMe​を​ご覧​ください。"
 
 #: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"

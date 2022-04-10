@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-31 02:27+0200\n"
+"POT-Creation-Date: 2022-04-10 04:33+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: Μιχάλης Χατζηβασιλείου\n"
@@ -18,371 +18,295 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr ""
-"Greek Translation Team for DevilutionX: \n"
-"Main, Technical, QA and Testing: Michael Chatzivasileiou aka xGnoSiSx\n"
-"\n"
-"Game Design - Σχεδιασμός Παιχνιδιού"
+msgstr "Σχεδιασμός Παιχνιδιού"
 
 #: Source/DiabloUI/credits_lines.cpp:10
-#, fuzzy
 msgid "Senior Designers"
 msgstr "Προϊστάμενοι Σχεδιασμού"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
-#, fuzzy
 msgid "Additional Design"
 msgstr "Επιπλέον Σχεδιαστές"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
-#, fuzzy
 msgid "Lead Programmer"
 msgstr "Κύριος Προγραμματιστής"
 
 #: Source/DiabloUI/credits_lines.cpp:19
-#, fuzzy
 msgid "Senior Programmers"
 msgstr "Προϊστάμενοι Προγραμματιστές"
 
 #: Source/DiabloUI/credits_lines.cpp:23
-#, fuzzy
 msgid "Programming"
 msgstr "Προγραμματιστές"
 
 #: Source/DiabloUI/credits_lines.cpp:26
-#, fuzzy
 msgid "Special Guest Programmers"
 msgstr "Ειδικοί Έκτακτοι Προγραμματιστές"
 
 #: Source/DiabloUI/credits_lines.cpp:29
-#, fuzzy
 msgid "Battle.net Programming"
 msgstr "Προγραμματισμός Battle.net"
 
 #: Source/DiabloUI/credits_lines.cpp:32
-#, fuzzy
 msgid "Serial Communications Programming"
 msgstr "Προγραμματισμός Σειριακών Επικοινωνιών"
 
 #: Source/DiabloUI/credits_lines.cpp:35
-#, fuzzy
 msgid "Installer Programming"
 msgstr "Προγραμματισμός Εγκατάστασης"
 
 #: Source/DiabloUI/credits_lines.cpp:38
-#, fuzzy
 msgid "Art Directors"
 msgstr "Καλλιτεχνικοί Διευθυντές"
 
 #: Source/DiabloUI/credits_lines.cpp:41
-#, fuzzy
 msgid "Artwork"
 msgstr "Καλλιτεχνία"
 
 #: Source/DiabloUI/credits_lines.cpp:48
-#, fuzzy
 msgid "Technical Artwork"
 msgstr "Τεχνική Καλλιτεχνία"
 
 #: Source/DiabloUI/credits_lines.cpp:52
-#, fuzzy
 msgid "Cinematic Art Directors"
 msgstr "Σκηνοθέτες Κινηματογραφικής Τέχνης"
 
 #: Source/DiabloUI/credits_lines.cpp:55
-#, fuzzy
 msgid "3D Cinematic Artwork"
 msgstr "3D Κινηματογραφική Τέχνη"
 
 #: Source/DiabloUI/credits_lines.cpp:61
-#, fuzzy
 msgid "Cinematic Technical Artwork"
 msgstr "Κινηματογραφική Τεχνική Τέχνη"
 
 #: Source/DiabloUI/credits_lines.cpp:64
-#, fuzzy
 msgid "Executive Producer"
 msgstr "Εκτελεστικός Παραγωγός"
 
 #: Source/DiabloUI/credits_lines.cpp:67
-#, fuzzy
 msgid "Producer"
 msgstr "Παραγωγός"
 
 #: Source/DiabloUI/credits_lines.cpp:70
-#, fuzzy
 msgid "Associate Producer"
 msgstr "Συνεργάτης Παραγωγός"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
-#, fuzzy
 msgid "Diablo Strike Team"
 msgstr "Ομάδα κρούσης Diablo"
 
-#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:71
-#, fuzzy
+#: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
 msgid "Music"
 msgstr "Μουσική"
 
 #: Source/DiabloUI/credits_lines.cpp:80
-#, fuzzy
 msgid "Sound Design"
 msgstr "Σχεδιασμός Ήχου"
 
 #: Source/DiabloUI/credits_lines.cpp:83
-#, fuzzy
 msgid "Cinematic Music & Sound"
 msgstr "Κινηματογραφική Μουσική και Ήχος"
 
 #: Source/DiabloUI/credits_lines.cpp:86
-#, fuzzy
 msgid "Voice Production, Direction & Casting"
 msgstr "Παραγωγή φωνής, κατεύθυνση & κάστινγκ"
 
 #: Source/DiabloUI/credits_lines.cpp:89
-#, fuzzy
 msgid "Script & Story"
 msgstr "Σενάριο & Ιστορία"
 
 #: Source/DiabloUI/credits_lines.cpp:93
-#, fuzzy
 msgid "Voice Editing"
 msgstr "Επεξεργασία Φωνής"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
-#, fuzzy
 msgid "Voices"
 msgstr "Φωνές"
 
 #: Source/DiabloUI/credits_lines.cpp:101
-#, fuzzy
 msgid "Recording Engineer"
 msgstr "Μηχανικός Εγγραφής Ήχου"
 
 #: Source/DiabloUI/credits_lines.cpp:104
-#, fuzzy
 msgid "Manual Design & Layout"
 msgstr "Σχεδιασμός και Μορφή Ενχειριδίου"
 
 #: Source/DiabloUI/credits_lines.cpp:108
-#, fuzzy
 msgid "Manual Artwork"
 msgstr "Καλλιτεχνία Εγχειριδίου"
 
 #: Source/DiabloUI/credits_lines.cpp:112
-#, fuzzy
 msgid "Provisional Director of QA (Lead Tester)"
 msgstr "Προσωρινός διευθυντής του QA (Προϊστάμενος Ελεγκτής)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
-#, fuzzy
 msgid "QA Assault Team (Testers)"
 msgstr "Ομάδα επίθεσης QA (Ελεγκτές)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
-#, fuzzy
 msgid "QA Special Ops Team (Compatibility Testers)"
 msgstr "QA Ειδική Ομάδα Επιχειρήσεων (Ελεγκτές Συμβατότητας)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
-#, fuzzy
 msgid "QA Artillery Support (Additional Testers) "
 msgstr "Υποστήριξη πυροβολικού QA (πρόσθετοι ελεγκτές) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
-#, fuzzy
 msgid "QA Counterintelligence"
 msgstr "Αντικατασκοπεία QA"
 
 #. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
-#, fuzzy
 msgid "Order of Network Information Services"
 msgstr "Ομάδα Υπηρεσιών Δικτυακών Πληροφοριών"
 
 #: Source/DiabloUI/credits_lines.cpp:134
-#, fuzzy
 msgid "Customer Support"
 msgstr "Υποστήριξη Πελατών"
 
 #: Source/DiabloUI/credits_lines.cpp:139
-#, fuzzy
 msgid "Sales"
 msgstr "Πωλήσεις"
 
 #: Source/DiabloUI/credits_lines.cpp:142
-#, fuzzy
 msgid "Dunsel"
 msgstr "Άχρηστα"
 
 #: Source/DiabloUI/credits_lines.cpp:145
-#, fuzzy
 msgid "Mr. Dabiri's Background Vocalists"
 msgstr "Τραγουδιστές Υπόβαθρου του κ. Dabiri"
 
 #: Source/DiabloUI/credits_lines.cpp:149
-#, fuzzy
 msgid "Public Relations"
 msgstr "Δημόσιες Σχέσεις"
 
 #: Source/DiabloUI/credits_lines.cpp:152
-#, fuzzy
 msgid "Marketing"
 msgstr "Μάρκετινγκ"
 
 #: Source/DiabloUI/credits_lines.cpp:155
-#, fuzzy
 msgid "International Sales"
 msgstr "Διεθνείς Πωλήσεις"
 
 #: Source/DiabloUI/credits_lines.cpp:158
-#, fuzzy
 msgid "U.S. Sales"
 msgstr "Πωλήσεις U.S"
 
 #: Source/DiabloUI/credits_lines.cpp:161
-#, fuzzy
 msgid "Manufacturing"
 msgstr "Παραγωγή"
 
 #: Source/DiabloUI/credits_lines.cpp:164
-#, fuzzy
 msgid "Legal & Business"
 msgstr "Νομικά & Επιχειρηματικά"
 
 #: Source/DiabloUI/credits_lines.cpp:167
-#, fuzzy
 msgid "Special Thanks To"
 msgstr "Ειδικές Ευχαριστίες στους"
 
 #: Source/DiabloUI/credits_lines.cpp:171
-#, fuzzy
 msgid "Thanks To"
 msgstr "Ευχαριστούμε τους"
 
 #: Source/DiabloUI/credits_lines.cpp:200
-#, fuzzy
 msgid "In memory of"
 msgstr "Στην μνήμη του"
 
 #: Source/DiabloUI/credits_lines.cpp:206
-#, fuzzy
 msgid "Very Special Thanks to"
 msgstr "Πολύ Ειδικές Ευχαριστίες στους"
 
 #: Source/DiabloUI/credits_lines.cpp:212
-#, fuzzy
 msgid "General Manager"
 msgstr "Γενικός Μάνατζερ"
 
 #: Source/DiabloUI/credits_lines.cpp:218
-#, fuzzy
 msgid "Software Engineering"
 msgstr "Μηχανική Λογισμικού"
 
 #: Source/DiabloUI/credits_lines.cpp:221
-#, fuzzy
 msgid "Art Director"
 msgstr "Διευθυντής Τέχνης"
 
 #: Source/DiabloUI/credits_lines.cpp:224
-#, fuzzy
 msgid "Artists"
 msgstr "Καλιτέχνες"
 
 #: Source/DiabloUI/credits_lines.cpp:228
-#, fuzzy
 msgid "Design"
 msgstr "Σχεδιασμός"
 
 #: Source/DiabloUI/credits_lines.cpp:235
-#, fuzzy
 msgid "Sound Design, SFX & Audio Engineering"
 msgstr "Σχεδιασμός Ήχου, SFX & Μηχανική Φωνής"
 
 #: Source/DiabloUI/credits_lines.cpp:238
-#, fuzzy
 msgid "Quality Assurance Lead"
 msgstr "Προϊστάμενος  Διαπίστευσης Ποιότητας"
 
 #: Source/DiabloUI/credits_lines.cpp:241
-#, fuzzy
 msgid "Testers"
 msgstr "Έλεγχος"
 
 #: Source/DiabloUI/credits_lines.cpp:246
-#, fuzzy
 msgid "Manual"
 msgstr "Εγχειρίδιο"
 
 #: Source/DiabloUI/credits_lines.cpp:255
-#, fuzzy
 msgid "\tAdditional Work"
 msgstr "\t Επιπλέον Εργασίες"
 
 #: Source/DiabloUI/credits_lines.cpp:257
-#, fuzzy
 msgid "Quest Text Writing"
 msgstr "Συγγραφή Κειμένων Αποστολών"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
-#, fuzzy
 msgid "Thanks to"
 msgstr "Ευχαριστούμε τούς παρακάτω"
 
 #: Source/DiabloUI/credits_lines.cpp:265
-#, fuzzy
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
 msgstr "\t\t\tΕιδικές Ευχαριστίες στην Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
-#, fuzzy
 msgid "\t\t\tSierra On-Line Inc. Northwest"
 msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
-#, fuzzy
 msgid "Quality Assurance Manager"
 msgstr "Μάνατζερ Διαπίστευσης Ποιότητας"
 
 #: Source/DiabloUI/credits_lines.cpp:275
-#, fuzzy
 msgid "Quality Assurance Lead Tester"
 msgstr "Προϊστάμενος και Ελεγκτής Διαπίστευσης Ποιότητας"
 
 #: Source/DiabloUI/credits_lines.cpp:278
-#, fuzzy
 msgid "Main Testers"
 msgstr "Κύριοι Ελεγκτές"
 
 #: Source/DiabloUI/credits_lines.cpp:281
-#, fuzzy
 msgid "Additional Testers"
 msgstr "Επιπλέον Ελεγκτές"
 
 #: Source/DiabloUI/credits_lines.cpp:286
-#, fuzzy
 msgid "Product Marketing Manager"
 msgstr "Μάνατζερ Μάρκετινγκ Προϊόντος"
 
 #: Source/DiabloUI/credits_lines.cpp:289
-#, fuzzy
 msgid "Public Relations Manager"
 msgstr "Μάνατζερ Δημοσίων Σχέσεων"
 
 #: Source/DiabloUI/credits_lines.cpp:292
-#, fuzzy
 msgid "Associate Product Manager"
 msgstr "Βοηθός Μάνατζερ Προϊόντος"
 
 #: Source/DiabloUI/credits_lines.cpp:301
-#, fuzzy
 msgid "The Ring of One Thousand"
 msgstr "Ο Κύκλος των Χιλίων"
 
 #: Source/DiabloUI/credits_lines.cpp:547
-#, fuzzy
 msgid "\tNo souls were sold in the making of this game."
 msgstr "\tΔεν πουλήθηκαν ψυχές κατά την ανάπτυξη του παιχνιδιού."
 
@@ -542,7 +466,7 @@ msgstr "Είσοδος σε Παιχνίδι"
 msgid "Public Games"
 msgstr "Ανοικτά Παιχνίδια"
 
-#: Source/DiabloUI/selgame.cpp:155 Source/error.cpp:64
+#: Source/DiabloUI/selgame.cpp:155 Source/error.cpp:62
 msgid "Loading..."
 msgstr "Φόρτωση..."
 
@@ -620,19 +544,19 @@ msgstr "Κόλαση"
 msgid "Difficulty: {:s}"
 msgstr "Δυσκολία: {:s}"
 
-#: Source/DiabloUI/selgame.cpp:220 Source/gamemenu.cpp:165
+#: Source/DiabloUI/selgame.cpp:220 Source/gamemenu.cpp:161
 msgid "Speed: Normal"
 msgstr "Ταχύτητα: Κανονική"
 
-#: Source/DiabloUI/selgame.cpp:223 Source/gamemenu.cpp:163
+#: Source/DiabloUI/selgame.cpp:223 Source/gamemenu.cpp:159
 msgid "Speed: Fast"
 msgstr "Ταχύτητα: Γρήγορη"
 
-#: Source/DiabloUI/selgame.cpp:226 Source/gamemenu.cpp:161
+#: Source/DiabloUI/selgame.cpp:226 Source/gamemenu.cpp:157
 msgid "Speed: Faster"
 msgstr "Ταχύτητα: Γρηγορότερη"
 
-#: Source/DiabloUI/selgame.cpp:229 Source/gamemenu.cpp:159
+#: Source/DiabloUI/selgame.cpp:229 Source/gamemenu.cpp:155
 msgid "Speed: Fastest"
 msgstr "Ταχύτητα: Ταχύτατη"
 
@@ -804,7 +728,7 @@ msgstr "Το αρχείο παιχνιδιού Υπάρχει ήδη"
 msgid "Load Game"
 msgstr "Φόρτωση Παιχνιδιού"
 
-#: Source/DiabloUI/selhero.cpp:175 Source/gamemenu.cpp:37 Source/gamemenu.cpp:50
+#: Source/DiabloUI/selhero.cpp:175 Source/gamemenu.cpp:37 Source/gamemenu.cpp:48
 #: Source/multi.cpp:737
 msgid "New Game"
 msgstr "Νέο Παιχνίδι"
@@ -918,12 +842,11 @@ msgstr "Πατήστε οποιοδήποτε πλήκτρο για αλλαγή
 msgid "Unbind key"
 msgstr "Αποδέσμευσή πλήκτρου"
 
-#: Source/DiabloUI/settingsmenu.cpp:347 Source/gamemenu.cpp:65
+#: Source/DiabloUI/settingsmenu.cpp:347 Source/gamemenu.cpp:61
 msgid "Previous Menu"
 msgstr "Προηγούμενο Μενού"
 
 #: Source/DiabloUI/support_lines.cpp:8
-#, fuzzy
 msgid ""
 "We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
 "community where we talk about things related to Diablo, and the Hellfire "
@@ -934,7 +857,6 @@ msgstr ""
 "το Ντιάμπλο, και την προέκταση του το Χελφαϊερ."
 
 #: Source/DiabloUI/support_lines.cpp:10
-#, fuzzy
 msgid ""
 "DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
 "this address: https://github.com/diasurgical/devilutionX To help us better "
@@ -948,12 +870,10 @@ msgstr ""
 "του προβλήματος."
 
 #: Source/DiabloUI/support_lines.cpp:13
-#, fuzzy
 msgid "Disclaimer:"
 msgstr "Αποποίηση Ευθύνης:"
 
 #: Source/DiabloUI/support_lines.cpp:14
-#, fuzzy
 msgid ""
 "\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
 "GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
@@ -969,31 +889,29 @@ msgstr ""
 "com."
 
 #: Source/DiabloUI/support_lines.cpp:17
-#, fuzzy
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji which "
+"is licensed under CC-BY 4.0. The port also makes use of SDL which is licensed "
+"under the zlib-license. See the ReadMe for further details."
 msgstr ""
-"\tΤο παρών λογισμικό χρησιμοποιεί την γραμματοσειρες  CharisSILB, Unifont, και "
-"Noto που είναι άδειοδιτημένες κάτω από την Ανοικτή Άδεια Γραμματοσοειρών SIL, "
-"καθώς και την γραμματοσειρά Twitmoji, που είναι αδειοδοτημένη κάτω από το CC-"
-"BY 4.0. Το λογισμικό επίσης χρησιμοποιεί το SDL που είναι αδειοδοτημένο κάτω "
-"από την άδεια zlib. Δείτε το ReadMe για περεταίρω λεπτομέρειες."
+"\tΤο παρών λογισμικό χρησιμοποιεί την γραμματοσειρες  Charis SIL, New Athena "
+"Unicode, Unifont, και Noto που είναι άδειοδιτημένες κάτω από την Ανοικτή Άδεια "
+"Γραμματοσοειρών SIL, καθώς και την γραμματοσειρά Twitmoji, που είναι "
+"αδειοδοτημένη κάτω από το CC-BY 4.0. Το λογισμικό επίσης χρησιμοποιεί το SDL "
+"που είναι αδειοδοτημένο κάτω από την άδεια zlib. Δείτε το ReadMe για περεταίρω "
+"λεπτομέρειες."
 
 #: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:38
-#, fuzzy
 msgid "Error"
 msgstr "Σφάλμα"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
 #: Source/appfat.cpp:100
-#, fuzzy
 msgid ""
 "{:s}\n"
 "\n"
@@ -1004,7 +922,6 @@ msgstr ""
 "Το σφάλμα έλαβε χώρα στο: {:s} γραμμή {:d}"
 
 #: Source/appfat.cpp:109
-#, fuzzy
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
@@ -1015,13 +932,11 @@ msgstr ""
 "Βεβαιωθείτε ότι βρίσκετε το φάκελο του παιχνιδιού."
 
 #: Source/appfat.cpp:114
-#, fuzzy
 msgid "Data File Error"
 msgstr "Σφάλμα στο αρχείο δεδομένων"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
 #: Source/appfat.cpp:120
-#, fuzzy
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -1030,7 +945,6 @@ msgstr ""
 "{:s}"
 
 #: Source/appfat.cpp:122
-#, fuzzy
 msgid "Read-Only Directory Error"
 msgstr "Σφάλμα Καταλόγου Μόνο για Ανάγνωση"
 
@@ -1086,7 +1000,7 @@ msgstr "Χάρτης"
 msgid "Main Menu"
 msgstr "Κυρίως Μενού"
 
-#: Source/control.cpp:162 Source/diablo.cpp:1537
+#: Source/control.cpp:162 Source/diablo.cpp:1538
 msgid "Inventory"
 msgstr "Αντικείμενα"
 
@@ -1154,36 +1068,36 @@ msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Φορτίο"
 msgstr[1] "{:d} Φορτία"
 
-#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
+#: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3471
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} χρυσό νόμισμα"
 msgstr[1] "{:d} χρυσά νομίσματα"
 
-#: Source/control.cpp:863
+#: Source/control.cpp:862
 msgid "Requirements not met"
 msgstr "Απαιτήσεις δεν έχουν εκπληρωθεί"
 
-#: Source/control.cpp:897
+#: Source/control.cpp:896
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Επίπεδο: {:d}"
 
-#: Source/control.cpp:898
+#: Source/control.cpp:897
 msgid "Hit Points {:d} of {:d}"
 msgstr "Πόντοι Ζωής {:d} από {:d}"
 
-#: Source/control.cpp:932
+#: Source/control.cpp:931
 msgid "Level Up"
 msgstr "Νέο Επίπεδο"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1040
+#: Source/control.cpp:1039
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "Έχεις {:d} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
 msgstr[1] "Έχεις {:d} χρυσά νομίσματα. Πόσα θέλεις να αφαιρέσεις;"
 
-#: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
+#: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
 #, fuzzy
 msgid ""
@@ -1196,104 +1110,104 @@ msgstr ""
 "Βεβαιωθείτε ότι το αρχείο devilutionx.mpq είναι στον φάκελο του παιχνιδιού και "
 "ότι είναι ενημερωμένο."
 
-#: Source/cursor.cpp:220
+#: Source/cursor.cpp:233
 msgid "Town Portal"
 msgstr "Πύλη Πόλης"
 
-#: Source/cursor.cpp:221
+#: Source/cursor.cpp:234
 msgid "from {:s}"
 msgstr "από {:s}"
 
-#: Source/cursor.cpp:235
+#: Source/cursor.cpp:248
 msgid "Portal to"
 msgstr "Πύλη πρός"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:249
 msgid "The Unholy Altar"
 msgstr "Ο Ανίερος Βωμός"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:249
 msgid "level 15"
 msgstr "επίπεδο 15"
 
-#: Source/diablo.cpp:119
+#: Source/diablo.cpp:120
 msgid "I need help! Come Here!"
 msgstr "Χρειάζομαι βοήθεια! Έλα εδώ!"
 
-#: Source/diablo.cpp:120
+#: Source/diablo.cpp:121
 msgid "Follow me."
 msgstr "Ακολούθα με."
 
-#: Source/diablo.cpp:121
+#: Source/diablo.cpp:122
 msgid "Here's something for you."
 msgstr "Έχω κάτι για σένα."
 
-#: Source/diablo.cpp:122
+#: Source/diablo.cpp:123
 msgid "Now you DIE!"
 msgstr "Τώρα θα ΠΕΘΑΝΕΙΣ!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:821
+#: Source/diablo.cpp:822
 msgid "Options:\n"
 msgstr "Επιλογές\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:822
+#: Source/diablo.cpp:823
 msgid "Print this message and exit"
 msgstr "Εμφάνιση αυτού του μηνύματος και έξοδος"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:823
+#: Source/diablo.cpp:824
 msgid "Print the version and exit"
 msgstr "Εμφάνιση της έκδοσης και έξοδος"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:824
+#: Source/diablo.cpp:825
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Ορισμός φακέλου για το diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:825
+#: Source/diablo.cpp:826
 msgid "Specify the folder of save files"
 msgstr "Ορισμός φακέλου για τα αποθηκευμένα παιχνίδια"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:826
+#: Source/diablo.cpp:827
 msgid "Specify the location of diablo.ini"
 msgstr "Ορισμός φακέλου για το diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:827
+#: Source/diablo.cpp:828
 msgid "Skip startup videos"
 msgstr "Παράλειψη αρχικών βίντεο"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:828
+#: Source/diablo.cpp:829
 msgid "Display frames per second"
 msgstr "Προβολή αριθμού καρέ ανά δεπτερόλεπτο"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:829
+#: Source/diablo.cpp:830
 msgid "Enable verbose logging"
 msgstr "Ενεργοποίηση λεπτομερών εγγραφών"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:830
+#: Source/diablo.cpp:831
 msgid "Record a demo file"
 msgstr "Εγγραφή αρχείου δράσης"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:831
+#: Source/diablo.cpp:832
 msgid "Play a demo file"
 msgstr "Αναπαραγωγή αρχείου δράσης"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:832
+#: Source/diablo.cpp:833
 msgid "Disable all frame limiting during demo playback"
 msgstr "Απενεργοποίηση ορίων καρέ κατά την αναπαραγωγή αρχείου δράσης"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:833
+#: Source/diablo.cpp:834
 msgid ""
 "\n"
 "Game selection:\n"
@@ -1302,22 +1216,22 @@ msgstr ""
 "Επιλογή παιχνιδιού:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:834
+#: Source/diablo.cpp:835
 msgid "Force Shareware mode"
 msgstr "Εξαναγκαστική κατάστασή Δοκιμαστικής έκδοσης"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:835
+#: Source/diablo.cpp:836
 msgid "Force Diablo mode"
 msgstr "Εξαναγκαστική κατάστασή σε Diablo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:836
+#: Source/diablo.cpp:837
 msgid "Force Hellfire mode"
 msgstr "Εξαναγκαστική κατάστασή σε Hellfire"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:837
+#: Source/diablo.cpp:838
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1325,7 +1239,7 @@ msgstr ""
 "\n"
 "Επιλογές Χελφάϊερ:\n"
 
-#: Source/diablo.cpp:843
+#: Source/diablo.cpp:844
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1333,218 +1247,218 @@ msgstr ""
 "\n"
 "Αναφορά σφαλμάτων στην σελίδα https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:955
+#: Source/diablo.cpp:956
 msgid "version {:s}"
 msgstr "έκδοση {:s}"
 
-#: Source/diablo.cpp:1276
+#: Source/diablo.cpp:1277
 msgid "-- Network timeout --"
 msgstr "-- Τέλος χρονικού ορίου Δικτύου --"
 
-#: Source/diablo.cpp:1277
+#: Source/diablo.cpp:1278
 msgid "-- Waiting for players --"
 msgstr "-- Αναμονή για παίκτες --"
 
-#: Source/diablo.cpp:1296
+#: Source/diablo.cpp:1297
 msgid "No help available"
 msgstr "Δεν υπάρχει διαθέσιμη βοήθεια"
 
-#: Source/diablo.cpp:1297
+#: Source/diablo.cpp:1298
 msgid "while in stores"
 msgstr "όσο βρίσκεσαι σε μαγαζί"
 
-#: Source/diablo.cpp:1439
+#: Source/diablo.cpp:1440
 msgid "Belt item {}"
 msgstr "Αντικείμενο Ζώνης {}"
 
-#: Source/diablo.cpp:1440
+#: Source/diablo.cpp:1441
 msgid "Use Belt item."
 msgstr "Χρήση αντικειμένου Ζώνης."
 
-#: Source/diablo.cpp:1455
+#: Source/diablo.cpp:1456
 msgid "Quick spell {}"
 msgstr "Γρήγορο ξόρκι {}"
 
-#: Source/diablo.cpp:1456
+#: Source/diablo.cpp:1457
 msgid "Hotkey for skill or spell."
 msgstr "Πλήκτρο για δεξιότητα ή ξόρκι."
 
-#: Source/diablo.cpp:1474
+#: Source/diablo.cpp:1475
 msgid "Speedbook"
 msgstr "Γρήγορο Βιβλίου"
 
-#: Source/diablo.cpp:1475
+#: Source/diablo.cpp:1476
 msgid "Open Speedbook."
 msgstr "Άνοιγμα Γρήγορου Βιβλίου."
 
-#: Source/diablo.cpp:1482
+#: Source/diablo.cpp:1483
 msgid "Quick save"
 msgstr "Άμεση αποθήκευση"
 
-#: Source/diablo.cpp:1483
+#: Source/diablo.cpp:1484
 msgid "Saves the game."
 msgstr "Αποθηκεύει το παιχνίδι."
 
-#: Source/diablo.cpp:1490
+#: Source/diablo.cpp:1491
 msgid "Quick load"
 msgstr "Άμεση φώρτοση"
 
-#: Source/diablo.cpp:1491
+#: Source/diablo.cpp:1492
 msgid "Loads the game."
 msgstr "Φορτώνει το παιχνίδι."
 
-#: Source/diablo.cpp:1499
+#: Source/diablo.cpp:1500
 msgid "Quit game"
 msgstr "Έξοδος παιχνιδιού"
 
-#: Source/diablo.cpp:1500
+#: Source/diablo.cpp:1501
 msgid "Closes the game."
 msgstr "Κλείνει το παιχνίδι."
 
-#: Source/diablo.cpp:1506
+#: Source/diablo.cpp:1507
 msgid "Stop hero"
 msgstr "Σταμάτημα ήρωα"
 
-#: Source/diablo.cpp:1507
+#: Source/diablo.cpp:1508
 msgid "Stops walking and cancel pending actions."
 msgstr "Σταματά το περπάτημα και ακυρώνει δράσεις που υπολείπονται."
 
-#: Source/diablo.cpp:1514
+#: Source/diablo.cpp:1515
 msgid "Item highlighting"
 msgstr "Επισήμανση αντικειμένων"
 
-#: Source/diablo.cpp:1515
+#: Source/diablo.cpp:1516
 msgid "Show/hide items on ground."
 msgstr "Εμφανίζει ή κρύβει τα αντικείμενα στο έδαφος."
 
-#: Source/diablo.cpp:1521
+#: Source/diablo.cpp:1522
 msgid "Toggle item highlighting"
 msgstr "Εναλλαγή επισήμανσης αντικείμενων"
 
-#: Source/diablo.cpp:1522
+#: Source/diablo.cpp:1523
 msgid "Permanent show/hide items on ground."
 msgstr "Μόνιμη εμφάνιση/απόκρυψη αντικειμένων στο έδαφος."
 
-#: Source/diablo.cpp:1528
+#: Source/diablo.cpp:1529
 msgid "Toggle automap"
 msgstr "Εναλλαγή αυτόματου χάρτη"
 
-#: Source/diablo.cpp:1529
+#: Source/diablo.cpp:1530
 msgid "Toggles if automap is displayed."
 msgstr "Εναλλαγή εμφάνισης του αυτόματου χάρτη."
 
-#: Source/diablo.cpp:1538
+#: Source/diablo.cpp:1539
 msgid "Open Inventory screen."
 msgstr "Ανοίγει την καρτέλα Αντικειμένων (σάκος)."
 
-#: Source/diablo.cpp:1545
+#: Source/diablo.cpp:1546
 msgid "Character"
 msgstr "Ήρωας"
 
-#: Source/diablo.cpp:1546
+#: Source/diablo.cpp:1547
 msgid "Open Character screen."
 msgstr "Ανοίγει την καρτέλα του ήρωα."
 
-#: Source/diablo.cpp:1553
+#: Source/diablo.cpp:1554
 msgid "Quest log"
 msgstr "Ιστορία"
 
-#: Source/diablo.cpp:1554
+#: Source/diablo.cpp:1555
 msgid "Open Quest log."
 msgstr "Ανοίγει την καρτέλα με τις Αποστολές της Ιστορίας."
 
-#: Source/diablo.cpp:1561
+#: Source/diablo.cpp:1562
 msgid "Spellbook"
 msgstr "Ξόρκια"
 
-#: Source/diablo.cpp:1562
+#: Source/diablo.cpp:1563
 msgid "Open Spellbook."
 msgstr "Ανοίγει την Καρτέλα του Βιβλίου με τα Ξόρκια."
 
-#: Source/diablo.cpp:1570
+#: Source/diablo.cpp:1571
 msgid "Quick Message {}"
 msgstr "Άμεσο Μήνυμα {}"
 
-#: Source/diablo.cpp:1571
+#: Source/diablo.cpp:1572
 msgid "Use Quick Message in chat."
 msgstr "Χρήση για άμεσο μήνυμα στην συνομιλία."
 
-#: Source/diablo.cpp:1580
+#: Source/diablo.cpp:1581
 msgid "Hide Info Screens"
 msgstr "Κλείσιμο των καρτελών πληροφορίας"
 
-#: Source/diablo.cpp:1581
+#: Source/diablo.cpp:1582
 msgid "Hide all info screens."
 msgstr "Κλείσιμο όλων των καρτελών."
 
-#: Source/diablo.cpp:1601
+#: Source/diablo.cpp:1602
 msgid "Zoom"
 msgstr "Μεγένθυση"
 
-#: Source/diablo.cpp:1602
+#: Source/diablo.cpp:1603
 msgid "Zoom Game Screen."
 msgstr "Μεγεθύνει την προβολή του παιχνιδιού."
 
-#: Source/diablo.cpp:1612
+#: Source/diablo.cpp:1613
 msgid "Pause Game"
 msgstr "Παύση Παιχνιδιού"
 
-#: Source/diablo.cpp:1613
+#: Source/diablo.cpp:1614
 msgid "Pauses the game."
 msgstr "Σταματάει την δράση στο παιχνίδι."
 
-#: Source/diablo.cpp:1618
+#: Source/diablo.cpp:1619
 msgid "Decrease Gamma"
 msgstr "Μείωση συντελεστή φωτεινότητας Gamma"
 
-#: Source/diablo.cpp:1619
+#: Source/diablo.cpp:1620
 msgid "Reduce screen brightness."
 msgstr "Μείωση φωτεινότητας."
 
-#: Source/diablo.cpp:1626
+#: Source/diablo.cpp:1627
 msgid "Increase Gamma"
 msgstr "Αύξηση συντελεστή φωτεινότητας Gamma"
 
-#: Source/diablo.cpp:1627
+#: Source/diablo.cpp:1628
 msgid "Increase screen brightness."
 msgstr "Αύξηση φωτεινότητας."
 
-#: Source/diablo.cpp:1634
+#: Source/diablo.cpp:1635
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: Source/diablo.cpp:1635
+#: Source/diablo.cpp:1636
 msgid "Open Help Screen."
 msgstr "Ανοίγει την Καρτέλα Βοήθειας."
 
-#: Source/diablo.cpp:1642
+#: Source/diablo.cpp:1643
 msgid "Screenshot"
 msgstr "Στιγμιότυπο οθόνης"
 
-#: Source/diablo.cpp:1643
+#: Source/diablo.cpp:1644
 msgid "Takes a screenshot."
 msgstr "Λαμβάνει και αποθηκεύει την οθόνη σαν εικόνα."
 
-#: Source/diablo.cpp:1649
+#: Source/diablo.cpp:1650
 msgid "Game info"
 msgstr "Πληροφορίες Παιχνιδιού"
 
-#: Source/diablo.cpp:1650
+#: Source/diablo.cpp:1651
 msgid "Displays game infos."
 msgstr "Εμφανίζει τις πληροφορίες του παιχνιδιού σε εξέλιξη."
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1654
+#: Source/diablo.cpp:1655
 msgid "{:s} {:s}"
 msgstr "{:s} {:s}"
 
-#: Source/diablo.cpp:1663
+#: Source/diablo.cpp:1664
 #, fuzzy
 #| msgid "Chat"
 msgid "Chat Log"
 msgstr "Συνομιλία"
 
-#: Source/diablo.cpp:1664
+#: Source/diablo.cpp:1665
 #, fuzzy
 #| msgid "Displays game infos."
 msgid "Displays chat log."
@@ -1606,255 +1520,255 @@ msgstr "Αδυναμία σύνδεσης"
 msgid "error: read 0 bytes from server"
 msgstr "σφάλμα: ανάγνωση 0 bytes από τον εξυπηρετητή"
 
-#: Source/error.cpp:55
+#: Source/error.cpp:53
 msgid "No automap available in town"
 msgstr "Ο χάρτης δεν είναι διαθέσιμος στην πόλη"
 
-#: Source/error.cpp:56
+#: Source/error.cpp:54
 msgid "No multiplayer functions in demo"
 msgstr "Το δωρεάν παιχνίδι δεν επιτρέπει λειτουργίες για πολλούς παίκτες"
 
-#: Source/error.cpp:57
+#: Source/error.cpp:55
 msgid "Direct Sound Creation Failed"
 msgstr "Αποτυχία δημιουργίας υποσυστήματος Direct Sound"
 
-#: Source/error.cpp:58
+#: Source/error.cpp:56
 msgid "Not available in shareware version"
 msgstr "Δεν είναι διαθέσιμο στην δωρεάν έκδοση"
 
-#: Source/error.cpp:59
+#: Source/error.cpp:57
 msgid "Not enough space to save"
 msgstr "Δεν υπάρχει αρκετός ελεύθερος χώρος για αποθήκευση"
 
-#: Source/error.cpp:60
+#: Source/error.cpp:58
 msgid "No Pause in town"
 msgstr "Δεν επιτρέπεται η Παύση στην Πόλη"
 
-#: Source/error.cpp:61
+#: Source/error.cpp:59
 msgid "Copying to a hard disk is recommended"
 msgstr "Προτείνουμε να αντιγράψετε το αρχείο στον σκληρό δίσκο"
 
-#: Source/error.cpp:62
+#: Source/error.cpp:60
 msgid "Multiplayer sync problem"
 msgstr "Πρόβλημα συγχρονισμού τετραπλού παιχνιδιού"
 
-#: Source/error.cpp:63
+#: Source/error.cpp:61
 msgid "No pause in multiplayer"
 msgstr "Δεν επιτρέπεται η Παύση στο τετραπλό"
 
-#: Source/error.cpp:65
+#: Source/error.cpp:63
 msgid "Saving..."
 msgstr "Αποθήκευση..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:66
+#: Source/error.cpp:64
 msgid "Some are weakened as one grows strong"
 msgstr "Κάποια αδυνατούν καθώς ένα δυναμώνει πολύ"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:67
+#: Source/error.cpp:65
 msgid "New strength is forged through destruction"
 msgstr "Νέα δύναμη σφυρηλατείται μέσα από την καταστροφή"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:68
+#: Source/error.cpp:66
 msgid "Those who defend seldom attack"
 msgstr "Όσοι αμύνονται σπάνια επιτίθενται"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:69
+#: Source/error.cpp:67
 msgid "The sword of justice is swift and sharp"
 msgstr "Το σπαθί της δικαιοσύνης είναι γρήγορο και κοφτερό"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:70
+#: Source/error.cpp:68
 msgid "While the spirit is vigilant the body thrives"
 msgstr "Όταν το πνεύμα είναι άγρυπνο, το σώμα ευδοκιμάζει"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:71
+#: Source/error.cpp:69
 msgid "The powers of mana refocused renews"
 msgstr "Η δύναμη του μάνα εστιασμένη ανανεώνει"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:72
+#: Source/error.cpp:70
 msgid "Time cannot diminish the power of steel"
 msgstr "Ο χρόνος δεν μπορεί να εξασθενίσει την δύναμη του ατσαλιού"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:73
+#: Source/error.cpp:71
 msgid "Magic is not always what it seems to be"
 msgstr "Η μαγεία δεν είναι πάντα αυτό που φαίνεται"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:74
+#: Source/error.cpp:72
 msgid "What once was opened now is closed"
 msgstr "Ότι ήταν κάποτε ανοικτό είναι πάλι κλειστό"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:75
+#: Source/error.cpp:73
 msgid "Intensity comes at the cost of wisdom"
 msgstr "Η σφοδρότητα έρχεται με κόστος την σοφία"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:76
+#: Source/error.cpp:74
 msgid "Arcane power brings destruction"
 msgstr "Η απόκρυφη δύναμη φέρνει καταστροφή"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:77
+#: Source/error.cpp:75
 msgid "That which cannot be held cannot be harmed"
 msgstr "Αυτό που δεν πιάνεται δεν μπορεί να βλαφθεί"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:78
+#: Source/error.cpp:76
 msgid "Crimson and Azure become as the sun"
 msgstr "Ερυθρό και κυανό γίνονται σαν τον ήλιο"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:79
+#: Source/error.cpp:77
 msgid "Knowledge and wisdom at the cost of self"
 msgstr "Γνώση και σοφία με κόστος ο εαυτό σου"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:80
+#: Source/error.cpp:78
 msgid "Drink and be refreshed"
 msgstr "Πιές και αναζωογονήσου"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:81
+#: Source/error.cpp:79
 msgid "Wherever you go, there you are"
 msgstr "Όπου και αν πας, εκεί είσαι"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:82
+#: Source/error.cpp:80
 msgid "Energy comes at the cost of wisdom"
 msgstr "Η ενέργεια έρχεται με κόστος την σοφία"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:83
+#: Source/error.cpp:81
 msgid "Riches abound when least expected"
 msgstr "Βρίθεις από πλούτη εκεί που δεν το περιμένεις"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:84
+#: Source/error.cpp:82
 msgid "Where avarice fails, patience gains reward"
 msgstr "Όταν η φιλαργυρία αποτυγχάνει, η υπομονή προσφέρει αμοιβή"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:85
+#: Source/error.cpp:83
 msgid "Blessed by a benevolent companion!"
 msgstr "Ένας καλοκάγαθος σύντροφός σου, σε ευλόγησε!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:86
+#: Source/error.cpp:84
 msgid "The hands of men may be guided by fate"
 msgstr "Τα χέρια των ανθρώπων καθοδηγούνται από την μοίρα"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:87
+#: Source/error.cpp:85
 msgid "Strength is bolstered by heavenly faith"
 msgstr "Η δύναμη ενισχύεται με την ουράνια πίστη"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:88
+#: Source/error.cpp:86
 msgid "The essence of life flows from within"
 msgstr "Η ουσία της ζωής ρέει εκ των έσω"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:89
+#: Source/error.cpp:87
 msgid "The way is made clear when viewed from above"
 msgstr "Το μονοπάτι είναι ξεκάθαρο όταν το δείς από ψηλά"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:90
+#: Source/error.cpp:88
 msgid "Salvation comes at the cost of wisdom"
 msgstr "Η σωτήρια έρχεται με κόστος την σοφία"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:91
+#: Source/error.cpp:89
 msgid "Mysteries are revealed in the light of reason"
 msgstr "Μυστήρια αποκαλύπτονται στο φώς της λογικής"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:92
+#: Source/error.cpp:90
 msgid "Those who are last may yet be first"
 msgstr "Αυτοί που είναι τελευταίοι, μπορεί τελικά τα γίνουν πρώτοι"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:93
+#: Source/error.cpp:91
 msgid "Generosity brings its own rewards"
 msgstr "Η γενναιοδωρία φέρνει τις δικές της αμοιβές"
 
-#: Source/error.cpp:94
+#: Source/error.cpp:92
 msgid "You must be at least level 8 to use this."
 msgstr "Πρέπει να είσαι το λιγότερο επίπεδο 8 για να χρησιμοποιήσεις αυτό."
 
-#: Source/error.cpp:95
+#: Source/error.cpp:93
 msgid "You must be at least level 13 to use this."
 msgstr "Πρέπει να είσαι το λιγότερο επίπεδο 13 για να χρησιμοποιήσεις αυτό."
 
-#: Source/error.cpp:96
+#: Source/error.cpp:94
 msgid "You must be at least level 17 to use this."
 msgstr "Πρέπει να είσαι το λιγότερο επίπεδο 17 για να χρησιμοποιήσεις αυτό."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:97
+#: Source/error.cpp:95
 msgid "Arcane knowledge gained!"
 msgstr "Απόκτησες απόκρυφη γνώση!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:98
+#: Source/error.cpp:96
 msgid "That which does not kill you..."
 msgstr "Ότι δεν σε σκοτώνει..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:99
+#: Source/error.cpp:97
 msgid "Knowledge is power."
 msgstr "Η γνώση είναι δύναμη."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:100
+#: Source/error.cpp:98
 msgid "Give and you shall receive."
 msgstr "Δώσε και θα λάβεις."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:101
+#: Source/error.cpp:99
 msgid "Some experience is gained by touch."
 msgstr "Κάποια εμπειρία αποκτάται με το άγγιγμα."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:102
+#: Source/error.cpp:100
 msgid "There's no place like home."
 msgstr "Σπίτι μου, σπιτάκι μου και φτωχοκαλυβάκι μου."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:103
+#: Source/error.cpp:101
 msgid "Spiritual energy is restored."
 msgstr "Η πνευματική σου ενέργεια αποκαθίσταται."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:104
+#: Source/error.cpp:102
 msgid "You feel more agile."
 msgstr "Αισθάνεσαι πιο ευκίνητος."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:105
+#: Source/error.cpp:103
 msgid "You feel stronger."
 msgstr "Αισθάνεσαι πιο δυνατός."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:106
+#: Source/error.cpp:104
 msgid "You feel wiser."
 msgstr "Αισθάνεσαι πιο σοφός."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:107
+#: Source/error.cpp:105
 msgid "You feel refreshed."
 msgstr "Αισθάνεσαι ανανεωμένος."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:108
+#: Source/error.cpp:106
 msgid "That which can break will."
 msgstr "Ότι σπάει θα σπάσει."
 
@@ -1862,35 +1776,35 @@ msgstr "Ότι σπάει θα σπάσει."
 msgid "Save Game"
 msgstr "Σώσιμο Παιχνιδιού"
 
-#: Source/gamemenu.cpp:36 Source/gamemenu.cpp:49
+#: Source/gamemenu.cpp:36 Source/gamemenu.cpp:47
 msgid "Options"
 msgstr "Επιλογές"
 
-#: Source/gamemenu.cpp:40 Source/gamemenu.cpp:53
+#: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
 msgid "Quit Game"
 msgstr "Έξοδος Παχνιδιού"
 
-#: Source/gamemenu.cpp:51
+#: Source/gamemenu.cpp:49
 msgid "Restart In Town"
 msgstr "Ανάσταση στην Πόλη"
 
-#: Source/gamemenu.cpp:63
+#: Source/gamemenu.cpp:59
 msgid "Gamma"
 msgstr "Γάμα"
 
-#: Source/gamemenu.cpp:64 Source/gamemenu.cpp:171
+#: Source/gamemenu.cpp:60 Source/gamemenu.cpp:167
 msgid "Speed"
 msgstr "Ταχύτητα"
 
-#: Source/gamemenu.cpp:72
+#: Source/gamemenu.cpp:68
 msgid "Music Disabled"
 msgstr "Μουσική Απενεργοποιημένη"
 
-#: Source/gamemenu.cpp:76
+#: Source/gamemenu.cpp:72
 msgid "Sound"
 msgstr "Ήχος"
 
-#: Source/gamemenu.cpp:77
+#: Source/gamemenu.cpp:73
 msgid "Sound Disabled"
 msgstr "Ήχος Απενεργοποιημένος"
 
@@ -2147,12 +2061,10 @@ msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq ή spawn.mpq"
 
 #: Source/init.cpp:216
-#, fuzzy
 msgid "Some Hellfire MPQs are missing"
 msgstr "Μερικά αρχεία MPQ του Χελφαϊερ, λείπουν"
 
 #: Source/init.cpp:216
-#, fuzzy
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -2161,7 +2073,6 @@ msgstr ""
 "Παρακαλούμε αντιγράψτε όλα τα hf*.mpq αρχεία."
 
 #: Source/init.cpp:224
-#, fuzzy
 msgid "Unable to create main window"
 msgstr "Ανικανότητα δημιουργίας του κυρίως παραθύρου"
 
@@ -2405,7 +2316,7 @@ msgid "Quilted Armor"
 msgstr "Kαπιτονέ πανοπλία"
 
 #: Source/itemdat.cpp:111 Source/itemdat.cpp:112 Source/itemdat.cpp:113
-#: Source/itemdat.cpp:114 Source/objects.cpp:5482
+#: Source/itemdat.cpp:114 Source/objects.cpp:5476
 msgid "Armor"
 msgstr "Θώρακας"
 
@@ -4124,497 +4035,497 @@ msgstr "μερική αναπλήρωση ζωής και μάνα"
 msgid "restore all life and mana"
 msgstr "ολική αναπλήρωση ζωής και μάνα"
 
-#: Source/items.cpp:1811 Source/items.cpp:1860
+#: Source/items.cpp:1811 Source/items.cpp:1851
 msgid "Right-click to read"
 msgstr "Δεξί-κλικ για διάβασμα"
 
-#: Source/items.cpp:1814 Source/items.cpp:1835
-msgid "Select from spell book, then"
-msgstr ""
-
-#: Source/items.cpp:1815 Source/items.cpp:1836
-msgid "cast spell to read"
-msgstr ""
-
-#: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
+#: Source/items.cpp:1814 Source/items.cpp:1829 Source/items.cpp:1843
 msgid "Open inventory to use"
 msgstr ""
 
-#: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
+#: Source/items.cpp:1816 Source/items.cpp:1831 Source/items.cpp:1853
 msgid "Activate to read"
 msgstr ""
 
-#: Source/items.cpp:1825
+#: Source/items.cpp:1822
 msgid "Right-click to read, then"
 msgstr "Δεξί-κλικ για διάβασμα, και"
 
-#: Source/items.cpp:1826
+#: Source/items.cpp:1823
 msgid "left-click to target"
 msgstr "αριστερό-κλικ στον στόχο"
 
-#: Source/items.cpp:1849
+#: Source/items.cpp:1826
+msgid "Select from spell book, then"
+msgstr ""
+
+#: Source/items.cpp:1827
+msgid "cast spell to read"
+msgstr ""
+
+#: Source/items.cpp:1840
 msgid "Right-click to use"
 msgstr "Δεξί-κλικ για χρήση"
 
-#: Source/items.cpp:1854
+#: Source/items.cpp:1845
 msgid "Activate to use"
 msgstr "Συνεργάτης Παραγωγός"
 
-#: Source/items.cpp:1867
+#: Source/items.cpp:1858
 msgid "Right-click to view"
 msgstr "Δεξί-κλικ για προβολή"
 
-#: Source/items.cpp:1869
+#: Source/items.cpp:1860
 msgid "Activate to view"
 msgstr ""
 
-#: Source/items.cpp:1873
+#: Source/items.cpp:1864
 msgctxt "player"
 msgid "Level: {:d}"
 msgstr "Επίπεδο: {:d}"
 
-#: Source/items.cpp:1876
+#: Source/items.cpp:1867
 msgid "Doubles gold capacity"
 msgstr "Διπλασιάζει τον αποθηκευτικό χώρο για τον χρυσό"
 
-#: Source/items.cpp:1887 Source/stores.cpp:279
+#: Source/items.cpp:1878 Source/stores.cpp:279
 msgid "Required:"
 msgstr "Απαιτεί:"
 
-#: Source/items.cpp:1889 Source/stores.cpp:281
+#: Source/items.cpp:1880 Source/stores.cpp:281
 msgid " {:d} Str"
 msgstr " {:d} Δυν"
 
-#: Source/items.cpp:1891 Source/stores.cpp:283
+#: Source/items.cpp:1882 Source/stores.cpp:283
 msgid " {:d} Mag"
 msgstr " {:d} Μαγ"
 
-#: Source/items.cpp:1893 Source/stores.cpp:285
+#: Source/items.cpp:1884 Source/stores.cpp:285
 msgid " {:d} Dex"
 msgstr " {:d} Επι"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3250 Source/player.cpp:3149
+#: Source/items.cpp:3241 Source/player.cpp:3145
 msgid "Ear of {:s}"
 msgstr "Το αυτί του(ης) {:s}"
 
-#: Source/items.cpp:3546
+#: Source/items.cpp:3537
 msgid "chance to hit: {:+d}%"
 msgstr "πιθανότητα για χτύπημα: {:+d}%"
 
-#: Source/items.cpp:3549
+#: Source/items.cpp:3540
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% ζημιά"
 
-#: Source/items.cpp:3552 Source/items.cpp:3750
+#: Source/items.cpp:3543 Source/items.cpp:3741
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "για χτύπημα: {:+d}%, {:+d}% ζημιά"
 
-#: Source/items.cpp:3555
+#: Source/items.cpp:3546
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% θωράκιση"
 
-#: Source/items.cpp:3558
+#: Source/items.cpp:3549
 msgid "armor class: {:d}"
 msgstr "κλάση θωράκισης: {:d}"
 
-#: Source/items.cpp:3562 Source/items.cpp:3736
+#: Source/items.cpp:3553 Source/items.cpp:3727
 msgid "Resist Fire: {:+d}%"
 msgstr "Αντοχή Φωτιάς: {:+d}%"
 
-#: Source/items.cpp:3564
+#: Source/items.cpp:3555
 msgid "Resist Fire: {:+d}% MAX"
 msgstr "Αντοχή Φωτιάς {:+d}% ΜΕΓΙΣΤΟ"
 
-#: Source/items.cpp:3568
+#: Source/items.cpp:3559
 msgid "Resist Lightning: {:+d}%"
 msgstr "Αντοχή Κεραυνού: {:+d}%"
 
-#: Source/items.cpp:3570
+#: Source/items.cpp:3561
 msgid "Resist Lightning: {:+d}% MAX"
 msgstr "Αντοχή Κεραυνού: {:+d}% ΜΕΓΙΣΤΟ"
 
-#: Source/items.cpp:3574
+#: Source/items.cpp:3565
 msgid "Resist Magic: {:+d}%"
 msgstr "Αντοχή Μαγείας: {:+d}%"
 
-#: Source/items.cpp:3576
+#: Source/items.cpp:3567
 msgid "Resist Magic: {:+d}% MAX"
 msgstr "Αντοχή Μαγείας: {:+d}% ΜΕΓΙΣΤΟ"
 
-#: Source/items.cpp:3580
+#: Source/items.cpp:3571
 msgid "Resist All: {:+d}%"
 msgstr "Αντοχή Πάντων: {:+d}%"
 
-#: Source/items.cpp:3582
+#: Source/items.cpp:3573
 msgid "Resist All: {:+d}% MAX"
 msgstr "Αντοχή Πάντων: {:+d}% ΜΕΓΙΣΤΟ"
 
-#: Source/items.cpp:3585
+#: Source/items.cpp:3576
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "τα ξόρκια κερδίζουν {:d} επίπεδο"
 msgstr[1] "τα ξόρκια κερδίζουν {:d} επίπεδα"
 
-#: Source/items.cpp:3587
+#: Source/items.cpp:3578
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "τα ξόρκια μειώνονται {:d} επίπεδο"
 msgstr[1] "τα ξόρκια μειώνονται {:d} επίπεδα"
 
-#: Source/items.cpp:3589
+#: Source/items.cpp:3580
 msgid "spell levels unchanged (?)"
 msgstr "επίπεδα ξορκιών απαράλαχτα (?)"
 
-#: Source/items.cpp:3591
+#: Source/items.cpp:3582
 msgid "Extra charges"
 msgstr "Επιπλέον φορτία"
 
-#: Source/items.cpp:3593
+#: Source/items.cpp:3584
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} φορτίο"
 msgstr[1] "{:d} {:s} φορτία"
 
-#: Source/items.cpp:3596
+#: Source/items.cpp:3587
 msgid "Fire hit damage: {:d}"
 msgstr "Ζημιά χτυπήματος φωτιάς {:d}"
 
-#: Source/items.cpp:3598
+#: Source/items.cpp:3589
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "Ζημιά χτυπήματος φωτιάς {:d}-{:d}"
 
-#: Source/items.cpp:3601
+#: Source/items.cpp:3592
 msgid "Lightning hit damage: {:d}"
 msgstr "Ζημιά χτυπήματος κεραυνού {:d}"
 
-#: Source/items.cpp:3603
+#: Source/items.cpp:3594
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "Ζημιά χτυπήματος κεραυνού {:d}-{:d}"
 
-#: Source/items.cpp:3606
+#: Source/items.cpp:3597
 msgid "{:+d} to strength"
 msgstr "{:+d} στην δύναμη"
 
-#: Source/items.cpp:3609
+#: Source/items.cpp:3600
 msgid "{:+d} to magic"
 msgstr "{:+d} στην μαγεία"
 
-#: Source/items.cpp:3612
+#: Source/items.cpp:3603
 msgid "{:+d} to dexterity"
 msgstr "{:+d} στην επιδεξιότητα"
 
-#: Source/items.cpp:3615
+#: Source/items.cpp:3606
 msgid "{:+d} to vitality"
 msgstr "{:+d} στην ζωτικότητα"
 
-#: Source/items.cpp:3618
+#: Source/items.cpp:3609
 msgid "{:+d} to all attributes"
 msgstr "{:+d} σε όλα τα στατιστικά"
 
-#: Source/items.cpp:3621
+#: Source/items.cpp:3612
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} ζημιά από εχθρούς"
 
-#: Source/items.cpp:3624
+#: Source/items.cpp:3615
 msgid "Hit Points: {:+d}"
 msgstr "Πόντοι Ζωής {:+d}"
 
-#: Source/items.cpp:3627
+#: Source/items.cpp:3618
 msgid "Mana: {:+d}"
 msgstr "Μάνα {:+d}"
 
-#: Source/items.cpp:3629
+#: Source/items.cpp:3620
 msgid "high durability"
 msgstr "υψηλή ανθεκτικότητα"
 
-#: Source/items.cpp:3631
+#: Source/items.cpp:3622
 msgid "decreased durability"
 msgstr "μειωμένη ανθεκτικότητα"
 
-#: Source/items.cpp:3633
+#: Source/items.cpp:3624
 msgid "indestructible"
 msgstr "άφθαρτο"
 
-#: Source/items.cpp:3635
+#: Source/items.cpp:3626
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% εμβέλεια φωτός"
 
-#: Source/items.cpp:3637
+#: Source/items.cpp:3628
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% εμβέλεια φωτός"
 
-#: Source/items.cpp:3639
+#: Source/items.cpp:3630
 msgid "multiple arrows per shot"
 msgstr "πολλαπλά βέλη ανά βολή"
 
-#: Source/items.cpp:3642
+#: Source/items.cpp:3633
 msgid "fire arrows damage: {:d}"
 msgstr "ζημιά βέλους φωτιάς {:d}"
 
-#: Source/items.cpp:3644
+#: Source/items.cpp:3635
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "ζημιά βέλους φωτιάς {:d}-{:d}"
 
-#: Source/items.cpp:3647
+#: Source/items.cpp:3638
 msgid "lightning arrows damage {:d}"
 msgstr "ζημιά βέλους Κεραυνού {:d}"
 
-#: Source/items.cpp:3649
+#: Source/items.cpp:3640
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "ζημιά βέλους Κεραυνού {:d}-{:d}"
 
-#: Source/items.cpp:3652
+#: Source/items.cpp:3643
 msgid "fireball damage: {:d}"
 msgstr "ζημιά οβίδας φωτιάς: {:d}"
 
-#: Source/items.cpp:3654
+#: Source/items.cpp:3645
 msgid "fireball damage: {:d}-{:d}"
 msgstr "ζημιά οβίδας φωτιάς: {:d}-{:d}"
 
-#: Source/items.cpp:3656
+#: Source/items.cpp:3647
 msgid "attacker takes 1-3 damage"
 msgstr "ο επιτιθέμενος δέχεται 1-3 ζημιά"
 
-#: Source/items.cpp:3658
+#: Source/items.cpp:3649
 msgid "user loses all mana"
 msgstr "ο χρήστης χάνει όλα τα μάνα του"
 
-#: Source/items.cpp:3660
+#: Source/items.cpp:3651
 msgid "you can't heal"
 msgstr "δεν μπορείς να θεραπευθείς"
 
-#: Source/items.cpp:3662
+#: Source/items.cpp:3653
 msgid "absorbs half of trap damage"
 msgstr "απορροφά την μισή ζημιά από παγίδες"
 
-#: Source/items.cpp:3664
+#: Source/items.cpp:3655
 msgid "knocks target back"
 msgstr "σπρώχνει τον στόχο πίσω"
 
-#: Source/items.cpp:3666
+#: Source/items.cpp:3657
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% ζημιά εναντίων δαιμονων"
 
-#: Source/items.cpp:3668
+#: Source/items.cpp:3659
 msgid "All Resistance equals 0"
 msgstr "Όλες οι Αντοχές γίνονται 0"
 
-#: Source/items.cpp:3670
+#: Source/items.cpp:3661
 msgid "hit monster doesn't heal"
 msgstr "ο κτύπος δεν επιτρέπει θεραπεία"
 
-#: Source/items.cpp:3673
+#: Source/items.cpp:3664
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "με κτύπο κλέβει 3% μάνα"
 
-#: Source/items.cpp:3675
+#: Source/items.cpp:3666
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "με κτύπο κλέβει 5% μάνα"
 
-#: Source/items.cpp:3679
+#: Source/items.cpp:3670
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "με κτύπο κλέβει 3% ζωή"
 
-#: Source/items.cpp:3681
+#: Source/items.cpp:3672
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "με κτύπο κλέβει 5% ζωή"
 
-#: Source/items.cpp:3684
+#: Source/items.cpp:3675
 msgid "penetrates target's armor"
 msgstr "διαπερνά θωράκιση"
 
-#: Source/items.cpp:3687
+#: Source/items.cpp:3678
 msgid "quick attack"
 msgstr "ταχεία επίθεση"
 
-#: Source/items.cpp:3689
+#: Source/items.cpp:3680
 msgid "fast attack"
 msgstr "γρήγορη επίθεση"
 
-#: Source/items.cpp:3691
+#: Source/items.cpp:3682
 msgid "faster attack"
 msgstr "γρηγορότερη επίθεση"
 
-#: Source/items.cpp:3693
+#: Source/items.cpp:3684
 msgid "fastest attack"
 msgstr "γρηγορότατη επίθεση"
 
-#: Source/items.cpp:3694 Source/items.cpp:3702 Source/items.cpp:3760
+#: Source/items.cpp:3685 Source/items.cpp:3693 Source/items.cpp:3751
 msgid "Another ability (NW)"
 msgstr "Άλλη δεξιότητα (NW)"
 
-#: Source/items.cpp:3697
+#: Source/items.cpp:3688
 msgid "fast hit recovery"
 msgstr "γρήγορη ανάρρωση από χτύπημα"
 
-#: Source/items.cpp:3699
+#: Source/items.cpp:3690
 msgid "faster hit recovery"
 msgstr "γρηγορότερη ανάρρωση από χτύπημα"
 
-#: Source/items.cpp:3701
+#: Source/items.cpp:3692
 msgid "fastest hit recovery"
 msgstr "γρηγορότατη ανάρρωση από χτύπημα"
 
-#: Source/items.cpp:3704
+#: Source/items.cpp:3695
 msgid "fast block"
 msgstr "γρήγορο μπλοκάρισμα"
 
-#: Source/items.cpp:3706
+#: Source/items.cpp:3697
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "προσθέτει {:d} πόντο ζημιάς"
 msgstr[1] "προσθέτει {:d} πόντους ζημιάς"
 
-#: Source/items.cpp:3708
+#: Source/items.cpp:3699
 msgid "fires random speed arrows"
 msgstr "ρίχνει βέλη τυχαίας ταχύτητας"
 
-#: Source/items.cpp:3710
+#: Source/items.cpp:3701
 msgid "unusual item damage"
 msgstr "ασυνήθης ζημιά για αντικείμενο"
 
-#: Source/items.cpp:3712
+#: Source/items.cpp:3703
 msgid "altered durability"
 msgstr "αλλαγμένη ανθεκτικότητα"
 
-#: Source/items.cpp:3714
+#: Source/items.cpp:3705
 msgid "Faster attack swing"
 msgstr "Γρηγορότερη κίνηση επίθεσης"
 
-#: Source/items.cpp:3716
+#: Source/items.cpp:3707
 msgid "one handed sword"
 msgstr "μονόχειρο σπαθί"
 
-#: Source/items.cpp:3718
+#: Source/items.cpp:3709
 msgid "constantly lose hit points"
 msgstr "χάνεις συνέχεια πόντους ζωής"
 
-#: Source/items.cpp:3720
+#: Source/items.cpp:3711
 msgid "life stealing"
 msgstr "κλέβει ζωή"
 
-#: Source/items.cpp:3722
+#: Source/items.cpp:3713
 msgid "no strength requirement"
 msgstr "καμία απαίτηση δύναμης"
 
-#: Source/items.cpp:3724
+#: Source/items.cpp:3715
 msgid "see with infravision"
 msgstr "βλέπεις με υπέρυθρη όραση"
 
-#: Source/items.cpp:3729
+#: Source/items.cpp:3720
 msgid "lightning damage: {:d}"
 msgstr "ζημιά κεραυνού: {:d}"
 
-#: Source/items.cpp:3731
+#: Source/items.cpp:3722
 msgid "lightning damage: {:d}-{:d}"
 msgstr "ζημιά κεραυνού: {:d}-{:d}"
 
-#: Source/items.cpp:3733
+#: Source/items.cpp:3724
 msgid "charged bolts on hits"
 msgstr "ρήψη Φορτισμένων Βλημάτων ανά κτύπημα"
 
-#: Source/items.cpp:3740
+#: Source/items.cpp:3731
 msgid "occasional triple damage"
 msgstr "περιστασιακή τριπλή ζημιά"
 
-#: Source/items.cpp:3742
+#: Source/items.cpp:3733
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "φθορά {:+d}% ζημιά"
 
-#: Source/items.cpp:3744
+#: Source/items.cpp:3735
 msgid "2x dmg to monst, 1x to you"
 msgstr "2x ζημ στους εχθρούς, 1x σε σένα"
 
-#: Source/items.cpp:3746
+#: Source/items.cpp:3737
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Τυχαία ζημιά 0 - 500%"
 
-#: Source/items.cpp:3748
+#: Source/items.cpp:3739
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "χαμηλή ανθ, {:+d}% ζημιά"
 
-#: Source/items.cpp:3752
+#: Source/items.cpp:3743
 msgid "extra AC vs demons"
 msgstr "επιπλέον ΚΘ εναντίων δαιμόνων"
 
-#: Source/items.cpp:3754
+#: Source/items.cpp:3745
 msgid "extra AC vs undead"
 msgstr "επιπλέον ΚΘ εναντίων απέθαντων"
 
-#: Source/items.cpp:3756
+#: Source/items.cpp:3747
 msgid "50% Mana moved to Health"
 msgstr "50% των Μάνα πάει στην Ζωή"
 
-#: Source/items.cpp:3758
+#: Source/items.cpp:3749
 msgid "40% Health moved to Mana"
 msgstr "40% Ζωής πάει στα Μάνα"
 
-#: Source/items.cpp:3795 Source/items.cpp:3833
+#: Source/items.cpp:3786 Source/items.cpp:3824
 msgid "damage: {:d}  Indestructible"
 msgstr "ζημιά: {:d}  Άφθαρτο"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3797 Source/items.cpp:3835
+#: Source/items.cpp:3788 Source/items.cpp:3826
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "ζημιά: {:d}  Ανθ: {:d}/{:d}"
 
-#: Source/items.cpp:3800 Source/items.cpp:3838
+#: Source/items.cpp:3791 Source/items.cpp:3829
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "ζημιά: {:d}-{:d}  Άφθαρτο"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3802 Source/items.cpp:3840
+#: Source/items.cpp:3793 Source/items.cpp:3831
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "ζημιά: {:d}-{:d}  Ανθ: {:d}/{:d}"
 
-#: Source/items.cpp:3807 Source/items.cpp:3850
+#: Source/items.cpp:3798 Source/items.cpp:3841
 msgid "armor: {:d}  Indestructible"
 msgstr "θωράκιση: {:d} Άφθαρτη"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3809 Source/items.cpp:3852
+#: Source/items.cpp:3800 Source/items.cpp:3843
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "θωράκιση: {:d}  Ανθ: {:d}/{:d}"
 
-#: Source/items.cpp:3812 Source/items.cpp:3843 Source/items.cpp:3856
+#: Source/items.cpp:3803 Source/items.cpp:3834 Source/items.cpp:3847
 #: Source/stores.cpp:253
 msgid "Charges: {:d}/{:d}"
 msgstr "Φορτία: {:d}/{:d}"
 
-#: Source/items.cpp:3821
+#: Source/items.cpp:3812
 msgid "unique item"
 msgstr "μοναδικό Αντικείμενο"
 
-#: Source/items.cpp:3846 Source/items.cpp:3854 Source/items.cpp:3860
+#: Source/items.cpp:3837 Source/items.cpp:3845 Source/items.cpp:3851
 msgid "Not Identified"
 msgstr "Μη Ταυτοποιημένο"
 
-#: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
+#: Source/loadsave.cpp:1870 Source/loadsave.cpp:2388
 msgid "Unable to open save file archive"
 msgstr "Αδυναμία ανοίγματος αρχείου παιχνιδιού"
 
-#: Source/loadsave.cpp:1833
+#: Source/loadsave.cpp:1873
 msgid "Invalid save file"
 msgstr "Εσφαλμένο αρχείο παιχνιδιού"
 
-#: Source/loadsave.cpp:1864
+#: Source/loadsave.cpp:1904
 msgid "Player is on a Hellfire only level"
 msgstr "Ο παίκτης είναι σε επίπεδο που υπάρχει μόνο στο Χελφαϊερ"
 
-#: Source/loadsave.cpp:2095
+#: Source/loadsave.cpp:2150
 msgid "Invalid game state"
 msgstr "Εσφαλμένη κατάσταση παιχνιδιού"
 
@@ -5743,71 +5654,71 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Μάντης του Χαμού"
 
-#: Source/monster.cpp:3382
+#: Source/monster.cpp:3384
 msgid "Animal"
 msgstr "Ζώο"
 
-#: Source/monster.cpp:3384
+#: Source/monster.cpp:3386
 msgid "Demon"
 msgstr "Δαίμονας"
 
-#: Source/monster.cpp:3386
+#: Source/monster.cpp:3388
 msgid "Undead"
 msgstr "Απέθαντος"
 
-#: Source/monster.cpp:4648
+#: Source/monster.cpp:4643
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Είδος: {:s} Έσφαξες: {:d}"
 
-#: Source/monster.cpp:4650
+#: Source/monster.cpp:4645
 msgid "Total kills: {:d}"
 msgstr "Σύνολο που έσφαξες: {:d}"
 
-#: Source/monster.cpp:4682
+#: Source/monster.cpp:4677
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Πόντοι Ζωής: {:d}-{:d}"
 
-#: Source/monster.cpp:4687
+#: Source/monster.cpp:4682
 msgid "No magic resistance"
 msgstr "Καμία μαγική αντοχή"
 
-#: Source/monster.cpp:4690
+#: Source/monster.cpp:4685
 msgid "Resists:"
 msgstr "Αντοχές:"
 
-#: Source/monster.cpp:4692 Source/monster.cpp:4702
+#: Source/monster.cpp:4687 Source/monster.cpp:4697
 msgid " Magic"
 msgstr " Μαγεία"
 
-#: Source/monster.cpp:4694 Source/monster.cpp:4704
+#: Source/monster.cpp:4689 Source/monster.cpp:4699
 msgid " Fire"
 msgstr " Φωτιά"
 
-#: Source/monster.cpp:4696 Source/monster.cpp:4706
+#: Source/monster.cpp:4691 Source/monster.cpp:4701
 msgid " Lightning"
 msgstr " Κεραυνός"
 
-#: Source/monster.cpp:4700
+#: Source/monster.cpp:4695
 msgid "Immune:"
 msgstr "Ανοσίες:"
 
-#: Source/monster.cpp:4717
+#: Source/monster.cpp:4712
 msgid "Type: {:s}"
 msgstr "Είδος: {:s}"
 
-#: Source/monster.cpp:4722 Source/monster.cpp:4728
+#: Source/monster.cpp:4717 Source/monster.cpp:4723
 msgid "No resistances"
 msgstr "Καμία Αντοχή"
 
-#: Source/monster.cpp:4723 Source/monster.cpp:4732
+#: Source/monster.cpp:4718 Source/monster.cpp:4727
 msgid "No Immunities"
 msgstr "Καμία Ανοσία"
 
-#: Source/monster.cpp:4726
+#: Source/monster.cpp:4721
 msgid "Some Magic Resistances"
 msgstr "Μερικές Μαγικές Αντοχές"
 
-#: Source/monster.cpp:4730
+#: Source/monster.cpp:4725
 msgid "Some Magic Immunities"
 msgstr "Μερικές Μαγικές Ανοσίες"
 
@@ -5825,12 +5736,10 @@ msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Ο παίκτης  '{:s}' (Επίπεδο {:d}) μόλις μπήκε στο παιχνίδι"
 
 #: Source/msg.cpp:1993
-#, fuzzy
 msgid "The game ended"
 msgstr "Το παιχνίδι έληξε"
 
 #: Source/msg.cpp:1999
-#, fuzzy
 msgid "Unable to get level data"
 msgstr "Αδυναμία λήψης δεδομένων πίστας"
 
@@ -6052,158 +5961,158 @@ msgstr "Πρακτικά: Το Τέλος"
 msgid "A Spellbook"
 msgstr "Ένα Βιβλίο με ξόρκια"
 
-#: Source/objects.cpp:5389
+#: Source/objects.cpp:5383
 msgid "Crucified Skeleton"
 msgstr "Σταυρωμένος Σκελετός"
 
-#: Source/objects.cpp:5393
+#: Source/objects.cpp:5387
 msgid "Lever"
 msgstr "Μοχλός"
 
-#: Source/objects.cpp:5402
+#: Source/objects.cpp:5396
 msgid "Open Door"
 msgstr "Ανοιχτή Πόρτα"
 
-#: Source/objects.cpp:5404
+#: Source/objects.cpp:5398
 msgid "Closed Door"
 msgstr "Κλειστή Πόρτα"
 
-#: Source/objects.cpp:5406
+#: Source/objects.cpp:5400
 msgid "Blocked Door"
 msgstr "Μπλοκαρισμένη Πόρτα"
 
-#: Source/objects.cpp:5411
+#: Source/objects.cpp:5405
 msgid "Ancient Tome"
 msgstr "Αρχαίος Τόμος"
 
-#: Source/objects.cpp:5413
+#: Source/objects.cpp:5407
 msgid "Book of Vileness"
 msgstr "Βιβλίο της Αχρειότητας"
 
-#: Source/objects.cpp:5418
+#: Source/objects.cpp:5412
 msgid "Skull Lever"
 msgstr "Μοχλός με Νεκροκεφαλή"
 
-#: Source/objects.cpp:5421
+#: Source/objects.cpp:5415
 msgid "Mythical Book"
 msgstr "Μυθικό Βιβλίο"
 
-#: Source/objects.cpp:5425
+#: Source/objects.cpp:5419
 msgid "Small Chest"
 msgstr "Μικρό Σεντούκι"
 
-#: Source/objects.cpp:5429
+#: Source/objects.cpp:5423
 msgid "Chest"
 msgstr "Σεντούκι"
 
-#: Source/objects.cpp:5434
+#: Source/objects.cpp:5428
 msgid "Large Chest"
 msgstr "Μεγάλο Σεντούκι"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5431
 msgid "Sarcophagus"
 msgstr "Σαρκοφάγος"
 
-#: Source/objects.cpp:5440
+#: Source/objects.cpp:5434
 msgid "Bookshelf"
 msgstr "Ράφι Βιβλίων"
 
-#: Source/objects.cpp:5444
+#: Source/objects.cpp:5438
 msgid "Bookcase"
 msgstr "Βιβλιοθήκη"
 
-#: Source/objects.cpp:5449
+#: Source/objects.cpp:5443
 msgid "Pod"
 msgstr "Λοβός"
 
-#: Source/objects.cpp:5451
+#: Source/objects.cpp:5445
 msgid "Urn"
 msgstr "Τεφροδόχος"
 
-#: Source/objects.cpp:5453
+#: Source/objects.cpp:5447
 msgid "Barrel"
 msgstr "Βαρέλι"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5457
+#: Source/objects.cpp:5451
 msgid "{:s} Shrine"
 msgstr "{:s} Βωμός"
 
-#: Source/objects.cpp:5460
+#: Source/objects.cpp:5454
 msgid "Skeleton Tome"
 msgstr "Σκελετωμένο Αναλόγιο"
 
-#: Source/objects.cpp:5463
+#: Source/objects.cpp:5457
 msgid "Library Book"
 msgstr "Αναλόγιο Εγγράφου"
 
-#: Source/objects.cpp:5466
+#: Source/objects.cpp:5460
 msgid "Blood Fountain"
 msgstr "Σιντριβάνι Αίματος"
 
-#: Source/objects.cpp:5469
+#: Source/objects.cpp:5463
 msgid "Decapitated Body"
 msgstr "Αποκεφαλισμένο Πτώμα"
 
-#: Source/objects.cpp:5472
+#: Source/objects.cpp:5466
 msgid "Book of the Blind"
 msgstr "Το Βιβλίο των Τυφλών"
 
-#: Source/objects.cpp:5475
+#: Source/objects.cpp:5469
 msgid "Book of Blood"
 msgstr "Το Βιβλίο του Αίματος"
 
-#: Source/objects.cpp:5478
+#: Source/objects.cpp:5472
 msgid "Purifying Spring"
 msgstr "Εξαγνιστική Πηγή"
 
-#: Source/objects.cpp:5485 Source/objects.cpp:5509
+#: Source/objects.cpp:5479 Source/objects.cpp:5503
 msgid "Weapon Rack"
 msgstr "Οπλοβαστός"
 
-#: Source/objects.cpp:5488
+#: Source/objects.cpp:5482
 msgid "Goat Shrine"
 msgstr "Bωμός της Κατσίκας"
 
-#: Source/objects.cpp:5491
+#: Source/objects.cpp:5485
 msgid "Cauldron"
 msgstr "Καζάνι"
 
-#: Source/objects.cpp:5494
+#: Source/objects.cpp:5488
 msgid "Murky Pool"
 msgstr "Θολή Δεξαμενή"
 
-#: Source/objects.cpp:5497
+#: Source/objects.cpp:5491
 msgid "Fountain of Tears"
 msgstr "Σιντριβάνι των Δακρύων"
 
-#: Source/objects.cpp:5500
+#: Source/objects.cpp:5494
 msgid "Steel Tome"
 msgstr "Ατσαλένιος Τόμος"
 
-#: Source/objects.cpp:5503
+#: Source/objects.cpp:5497
 msgid "Pedestal of Blood"
 msgstr "Βωμός του Αίματος"
 
-#: Source/objects.cpp:5512
+#: Source/objects.cpp:5506
 msgid "Mushroom Patch"
 msgstr "Μανιτάρια"
 
-#: Source/objects.cpp:5515
+#: Source/objects.cpp:5509
 msgid "Vile Stand"
 msgstr "Αχρείa Βάση"
 
-#: Source/objects.cpp:5518
+#: Source/objects.cpp:5512
 msgid "Slain Hero"
 msgstr "Σκοτωμένος Ήρωας"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5525
+#: Source/objects.cpp:5519
 msgid "Trapped {:s}"
 msgstr "{:s} με παγίδα"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5530
+#: Source/objects.cpp:5524
 msgid "{:s} (disabled)"
 msgstr "{:s} (απενεργοποιημένο)"
 
@@ -7006,32 +6915,26 @@ msgid "Spell Hotkey {:s}"
 msgstr "Πλήκτρο για Ξόρκι {:s}"
 
 #: Source/pfile.cpp:266
-#, fuzzy
 msgid "Failed to open player archive for writing."
 msgstr "Αποτυχία ανοίγματος αρχείου παίκτη για εγγραφή."
 
 #: Source/pfile.cpp:308
-#, fuzzy
 msgid "Failed to open stash archive for writing."
 msgstr "Αποτυχία ανοίγματος αρχείου παίκτη για εγγραφή."
 
 #: Source/pfile.cpp:419
-#, fuzzy
 msgid "Unable to open archive"
 msgstr "Αποτυχία κατά το άνοιγα αρχείου"
 
 #: Source/pfile.cpp:421
-#, fuzzy
 msgid "Unable to load character"
 msgstr "Αποτυχία κατά την φόρτωση χαρακτήρα"
 
 #: Source/pfile.cpp:445 Source/pfile.cpp:465
-#, fuzzy
 msgid "Unable to read to save file archive"
 msgstr "Αποτυχία ανάγνωσης από αρχείο παιχνιδιού"
 
 #: Source/pfile.cpp:484
-#, fuzzy
 msgid "Unable to write to save file archive"
 msgstr "Αποτυχία εγγραφής σε αρχείο παιχνιδιού"
 
@@ -7047,10 +6950,9 @@ msgstr ""
 msgid "{:d} gold"
 msgstr "{:d} χρυσά"
 
-#: Source/qol/stash.cpp:586
+#: Source/qol/stash.cpp:619
 #, fuzzy
 #| msgid "You have {:d} gold piece. How many do you want to remove?"
-#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
 msgstr "Έχεις {:d} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
 
@@ -8798,7 +8700,7 @@ msgstr ""
 "Νιώθω μέσα του μεγάλη τιμή και μεγάλη ενοχή. Βοήθησέ τον, και θα βοήθησες όλο "
 "το Τρίστραμ."
 
-#. TRANSLATORS: Quest dialog spoken by  Wirt
+#. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:170
 msgid ""
 "Wait, let me guess. Cain was swallowed up in a gigantic fissure that opened "
@@ -8987,7 +8889,7 @@ msgstr ""
 "Ο Γκρίσγουαλντ δεν μπορεί να πουλήσει το αμόνι του. Τι θα κάνει τότε; Και εγώ "
 "θα θύμωνα και εγώ αν κάποιος μου έπαιρνε το αμόνι μου!"
 
-#. TRANSLATORS: Quest dialog spoken by
+#. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:194
 msgid ""
 "There are many artifacts within the Labyrinth that hold powers beyond the "
@@ -9010,7 +8912,7 @@ msgstr ""
 "Εάν έβρισκες αυτό το τεχνούργημα για τον Γκρίσγουαλντ, θα μπορούσε να θέσει "
 "σοβαρά προβλήματα στην επιχείρησή μου εδώ. Ωχ τι λέω, δεν θα το βρεις ποτέ."
 
-#. TRANSLATORS: Quest dialog spoken by
+#. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:198
 msgid ""
 "The Gateway of Blood and the Halls of Fire are landmarks of mystic origin. "
@@ -11590,8 +11492,8 @@ msgstr ""
 #: Source/textdat.cpp:632
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are full of shadows that move just beyond the corners "
-"of my vision.  The faint scrabble of claws dances at the edges of my hearing. "
+"prisoner.  The crypts are full of shadows that move just beyond the corners of "
+"my vision.  The faint scrabble of claws dances at the edges of my hearing. "
 "They are searching, I think, for this journal."
 msgstr ""
 "Το σπίτι μου διαφθείρεται σιγά σιγά από την κακία αυτού του ανεπιθύμητου "

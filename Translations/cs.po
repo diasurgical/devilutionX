@@ -865,15 +865,15 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji "
+"which is licensed under CC-BY 4.0. The port also makes use of SDL which is "
+"licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
-"\tTento port využívá CharisSILB, Unifont a Noto, které jsou licencované pod "
-"SIL Open Font License, a také Twitmoji licencované pod CC-BY 4.0. Port také "
-"využívá SDL, které jsou licencované pod zlib-license. Přečti si ReadMe pro "
-"více informací."
+"\tTento port využívá Charis SIL, New Athena Unicode, Unifont a Noto, které "
+"jsou licencované pod SIL Open Font License, a také Twitmoji licencované pod "
+"CC-BY 4.0. Port také využívá SDL, které jsou licencované pod zlib-license. "
+"Přečti si ReadMe pro více informací."
 
 #: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
