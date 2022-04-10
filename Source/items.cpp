@@ -539,12 +539,12 @@ uint8_t CalculateMagicRequirementForBook(spell_id spell, int8_t spellLevel)
 
 void CalcPlrBookVals(Player &player)
 {
-	auto processItem = [](Player &plr, Item &item) {
+	auto processItem = [](Player &player, Item &item) {
 		if (item._itype == ItemType::Misc && item._iMiscId == IMISC_BOOK) {
 			spell_id spell = item._iSpell;
-			int8_t spellLevel = plr._pSplLvl[spell];
+			int8_t spellLevel = player._pSplLvl[spell];
 			item._iMinMag = CalculateMagicRequirementForBook(spell, spellLevel);
-			item._iStatFlag = plr.CanUseItem(item);
+			item._iStatFlag = player.CanUseItem(item);
 		}
 	};
 	for (Item &item : InventoryPlayerItemsRange { player }) {
