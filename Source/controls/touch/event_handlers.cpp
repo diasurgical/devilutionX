@@ -95,6 +95,17 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 	}
 }
 
+void HandleCharacterPanelInteraction(const SDL_Event &event)
+{
+	if (!chrflag)
+		return;
+
+	if (event.type == SDL_FINGERDOWN)
+		CheckChrBtns();
+	else if (event.type == SDL_FINGERUP && chrbtnactive)
+		ReleaseChrBtns(false);
+}
+
 void HandleStashPanelInteraction(const SDL_Event &event)
 {
 	if (pcurs >= CURSOR_FIRSTITEM)
@@ -133,6 +144,7 @@ void HandleTouchEvent(const SDL_Event &event)
 		return;
 
 	HandleBottomPanelInteraction(event);
+	HandleCharacterPanelInteraction(event);
 	HandleStashPanelInteraction(event);
 }
 
