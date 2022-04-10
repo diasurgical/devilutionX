@@ -24,7 +24,6 @@ std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
 std::optional<std::string> assetsPath;
-std::optional<std::string> mpqDir;
 
 void AddTrailingSlash(std::string &path)
 {
@@ -99,11 +98,6 @@ const std::string &AssetsPath()
 	return *assetsPath;
 }
 
-const std::optional<std::string> &MpqDir()
-{
-	return mpqDir;
-}
-
 void SetBasePath(const std::string &path)
 {
 	basePath = path;
@@ -126,11 +120,6 @@ void SetAssetsPath(const std::string &path)
 {
 	assetsPath = path;
 	AddTrailingSlash(*assetsPath);
-}
-
-void SetMpqDir(const std::string &path)
-{
-	mpqDir = std::string(path);
 }
 
 } // namespace paths

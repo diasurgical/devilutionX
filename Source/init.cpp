@@ -69,7 +69,6 @@ std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, string_
 		mpqAbsPath = path + mpqName.data();
 		if ((archive = MpqArchive::Open(mpqAbsPath.c_str(), error))) {
 			LogVerbose("  Found: {} in {}", mpqName, path);
-			paths::SetMpqDir(path);
 			return archive;
 		}
 		if (error != 0) {
