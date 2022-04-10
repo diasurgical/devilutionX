@@ -1307,7 +1307,6 @@ void HelpKeyPressed()
 			stream_stop();
 		}
 		QuestLogIsOpen = false;
-		AutomapActive = false;
 		CancelCurrentDiabloMsg();
 		gamemenu_off();
 		DisplayHelp();
