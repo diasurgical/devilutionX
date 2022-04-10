@@ -65,39 +65,41 @@ public class DataActivity extends Activity {
 		super.onDestroy();
 	}
 
+	protected boolean pendingTranslationFile(String language) {
+		String lang = Locale.getDefault().toString();
+		if (!lang.startsWith(language)) {
+			return false;
+		}
+
+		File translationFile = new File(externalDir + "/" + language + ".mpq");
+		if (translationFile.exists()) {
+			isDownloadingTranslation = false;
+			return false;
+		}
+
+		if (isDownloadingTranslation) {
+			return true;
+		}
+
+		isDownloadingTranslation = true;
+		sendDownloadRequest(
+				"https://github.com/diasurgical/devilutionx-assets/releases/download/v2/" + language + ".mpq",
+				language + ".mpq",
+				"Translation Data"
+		);
+
+		return true;
+	}
+
 	/**
 	 * Check if the game data is present
 	 */
 	private boolean missingGameData() {
 		String lang = Locale.getDefault().toString();
-		if (lang.startsWith("pl")) {
-			File pl_mpq = new File(externalDir + "/pl.mpq");
-			if (!pl_mpq.exists()) {
-				if (!isDownloadingTranslation) {
-					isDownloadingTranslation = true;
-					sendDownloadRequest(
-							"https://github.com/diasurgical/devilutionx-assets/releases/download/v2/pl.mpq",
-							"pl.mpq",
-							"Translation Data"
-					);
-				}
-				return true;
-			}
+		if (pendingTranslationFile("pl") || pendingTranslationFile("ru")) {
+			return true;
 		}
-		if (lang.startsWith("ru")) {
-			File ru_mpq = new File(externalDir + "/ru.mpq");
-			if (!ru_mpq.exists()) {
-				if (!isDownloadingTranslation) {
-					isDownloadingTranslation = true;
-					sendDownloadRequest(
-							"https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq",
-							"ru.mpq",
-							"Translation Data"
-					);
-				}
-				return true;
-			}
-		}
+
 		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
 			File fonts_mpq = new File(externalDir + "/fonts.mpq");
 			if (!fonts_mpq.exists()) {
@@ -126,14 +128,10 @@ public class DataActivity extends Activity {
 	public void sendDownloadRequest(View view) {
 		isDownloadingSpawn = true;
 		sendDownloadRequest(
-			"https://github.com/d07RiV/diabloweb/raw/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq",
+			"https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq",
 			"spawn.mpq",
 			getString(R.string.shareware_data)
 		);
-
-		if (mReceiver == null)
-			mReceiver = new DownloadReceiver();
-		registerReceiver(mReceiver, new IntentFilter("android.intent.action.DOWNLOAD_COMPLETE"));
 
 		view.setEnabled(false);
 
@@ -148,6 +146,11 @@ public class DataActivity extends Activity {
 				.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
 		request.setDestinationInExternalFilesDir(this, null, fileName);
+
+		if (mReceiver == null) {
+			mReceiver = new DownloadReceiver();
+			registerReceiver(mReceiver, new IntentFilter("android.intent.action.DOWNLOAD_COMPLETE"));
+		}
 
 		DownloadManager downloadManager = (DownloadManager)this.getSystemService(Context.DOWNLOAD_SERVICE);
 		pendingDownloads++;
@@ -180,10 +183,10 @@ public class DataActivity extends Activity {
 			cur.close();
 
 			if (pendingDownloads == 0) {
-				if (isDownloadingSpawn) {
-					isDownloadingSpawn = false;
-					startGame();
-				}
+				isDownloadingSpawn = false;
+				isDownloadingFonts = false;
+				isDownloadingTranslation = false;
+				startGame();
 				findViewById(R.id.download_button).setEnabled(true);
 			}
 		}
