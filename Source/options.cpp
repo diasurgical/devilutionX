@@ -1138,7 +1138,7 @@ void KeymapperOptions::Action::SaveToIni(string_view category) const
 	}
 	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
 	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
-		Log("Keymapper: no name found for key '{}'", key);
+		LogVerbose("Keymapper: no name found for key '{}'", key);
 		return;
 	}
 	SetIniValue(category.data(), key.data(), keyNameIt->second.c_str());
