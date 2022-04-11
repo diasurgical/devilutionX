@@ -72,9 +72,9 @@ void SetSimulatingMouseWithDpad(bool value)
 		return;
 	SimulatingMouseWithSelectAndDPad = value;
 	if (value) {
-		LogDebug("Control: begin simulating mouse with D-Pad");
+		LogVerbose("Control: begin simulating mouse with D-Pad");
 	} else {
-		LogDebug("Control: end simulating mouse with D-Pad");
+		LogVerbose("Control: end simulating mouse with D-Pad");
 	}
 }
 

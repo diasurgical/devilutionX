@@ -1507,7 +1507,7 @@ bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonE
 
 void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
 {
-	if (SDL_LOG_PRIORITY_DEBUG < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
 		return;
 	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
 		return;
@@ -1516,7 +1516,7 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 			return std::string { ControlTypeToString(before) };
 		return fmt::format("{} -> {}", ControlTypeToString(before), ControlTypeToString(after));
 	};
-	LogDebug("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
+	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
 }
 
 } // namespace
