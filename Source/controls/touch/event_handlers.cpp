@@ -7,6 +7,7 @@
 #include "engine.h"
 #include "gmenu.h"
 #include "inv.h"
+#include "panels/spell_book.hpp"
 #include "qol/stash.h"
 #include "scrollrt.h"
 #include "stores.h"
@@ -68,7 +69,16 @@ bool HandleStoreInteraction(const SDL_Event &event)
 	return true;
 }
 
-bool HandleSpeedbookInteraction(const SDL_Event &event)
+void HandleSpellBookInteraction(const SDL_Event &event)
+{
+	if (!sbookflag)
+		return;
+
+	if (event.type == SDL_FINGERUP)
+		CheckSBook();
+}
+
+bool HandleSpeedBookInteraction(const SDL_Event &event)
 {
 	if (!spselflag)
 		return false;
@@ -140,9 +150,10 @@ void HandleTouchEvent(const SDL_Event &event)
 	if (HandleStoreInteraction(event))
 		return;
 
-	if (HandleSpeedbookInteraction(event))
+	if (HandleSpeedBookInteraction(event))
 		return;
 
+	HandleSpellBookInteraction(event);
 	HandleBottomPanelInteraction(event);
 	HandleCharacterPanelInteraction(event);
 	HandleStashPanelInteraction(event);
