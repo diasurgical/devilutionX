@@ -58,11 +58,11 @@ public:
 	int DuplicateFrom(const SoundSample &other)
 	{
 #ifdef STREAM_ALL_AUDIO
-		return SetChunkStream(other.file_path_);
+		return SetChunkStream(other.file_path_, other.isMp3_);
 #else
 		if (other.IsStreaming())
-			return SetChunkStream(other.file_path_, isMp3_);
-		return SetChunk(other.file_data_, other.file_data_size_, isMp3_);
+			return SetChunkStream(other.file_path_, other.isMp3_);
+		return SetChunk(other.file_data_, other.file_data_size_, other.isMp3_);
 #endif
 	}
 
