@@ -286,7 +286,7 @@ int32_t KeystateForMouse(int32_t ret)
 
 bool FalseAvail(const char *name, int value)
 {
-	LogDebug("Unhandled SDL event: {} {}", name, value);
+	LogVerbose("Unhandled SDL event: {} {}", name, value);
 	return true;
 }
 
@@ -786,11 +786,9 @@ bool TranslateMessage(const tagMSG *lpMsg)
 				}
 			}
 
-#ifdef _DEBUG
 			if (key >= 32) {
-				Log("char: {:c}", key);
+				LogVerbose("char: {:c}", key);
 			}
-#endif
 
 			// XXX: This does not add extended info to lParam
 			PostMessage(DVL_WM_CHAR, key, 0);
