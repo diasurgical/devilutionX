@@ -43,94 +43,94 @@ BYTE dung[20][20];
 const BYTE L4ConvTbl[16] = { 30, 6, 1, 6, 2, 6, 6, 6, 9, 6, 1, 6, 2, 6, 3, 6 };
 
 /** Miniset: Stairs up. */
-const BYTE L4USTAIRS[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	 6, 6, 6, 6, // search
-	 6, 6, 6, 6,
-	 6, 6, 6, 6,
-	 6, 6, 6, 6,
-	 6, 6, 6, 6,
-
-	 0,  0,  0,  0, // replace
-	36, 38, 35,  0,
-	37, 34, 33, 32,
-	 0,  0, 31,  0,
-	 0,  0,  0,  0,
-	// clang-format on
+const Miniset L4USTAIRS {
+	{ 4, 5 },
+	{
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 36, 38, 35, 0 },
+	    { 37, 34, 33, 32 },
+	    { 0, 0, 31, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stairs up to town. */
-const BYTE L4TWARP[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	6, 6, 6, 6, // search
-	6, 6, 6, 6,
-	6, 6, 6, 6,
-	6, 6, 6, 6,
-	6, 6, 6, 6,
-
-	  0,   0,   0,   0, // replace
-	134, 136, 133,   0,
-	135, 132, 131, 130,
-	  0,   0, 129,   0,
-	  0,   0,   0,   0,
-	// clang-format on
+const Miniset L4TWARP {
+	{ 4, 5 },
+	{
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	    { 6, 6, 6, 6 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 134, 136, 133, 0 },
+	    { 135, 132, 131, 130 },
+	    { 0, 0, 129, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stairs down. */
-const BYTE L4DSTAIRS[] = {
-	// clang-format off
-	5, 5, // width, height
-
-	6, 6, 6, 6, 6, // search
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-
-	0,  0,  0,  0, 0, // replace
-	0,  0, 45, 41, 0,
-	0, 44, 43, 40, 0,
-	0, 46, 42, 39, 0,
-	0,  0,  0,  0, 0,
-	// clang-format on
+const Miniset L4DSTAIRS {
+	{ 5, 5 },
+	{
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	},
+	{
+	    { 0, 0, 0, 0, 0 },
+	    { 0, 0, 45, 41, 0 },
+	    { 0, 44, 43, 40, 0 },
+	    { 0, 46, 42, 39, 0 },
+	    { 0, 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Pentagram. */
-const BYTE L4PENTA[] = {
-	// clang-format off
-	5, 5, // width, height
-
-	6, 6, 6, 6, 6, // search
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-
-	0,   0,   0,   0, 0, // replace
-	0,  98, 100, 103, 0,
-	0,  99, 102, 105, 0,
-	0, 101, 104, 106, 0,
-	0,   0,   0,   0, 0,
-	// clang-format on
+const Miniset L4PENTA {
+	{ 5, 5 },
+	{
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	},
+	{
+	    { 0, 0, 0, 0, 0 },
+	    { 0, 98, 100, 103, 0 },
+	    { 0, 99, 102, 105, 0 },
+	    { 0, 101, 104, 106, 0 },
+	    { 0, 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Pentagram portal. */
-const BYTE L4PENTA2[] = {
-	// clang-format off
-	5, 5, // width, height
-
-	6, 6, 6, 6, 6, // search
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-	6, 6, 6, 6, 6,
-
-	0,   0,   0,   0, 0, // replace
-	0, 107, 109, 112, 0,
-	0, 108, 111, 114, 0,
-	0, 110, 113, 115, 0,
-	0,   0,   0,   0, 0,
-	// clang-format on
+const Miniset L4PENTA2 {
+	{ 5, 5 },
+	{
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	    { 6, 6, 6, 6, 6 },
+	},
+	{
+	    { 0, 0, 0, 0, 0 },
+	    { 0, 107, 109, 112, 0 },
+	    { 0, 108, 111, 114, 0 },
+	    { 0, 110, 113, 115, 0 },
+	    { 0, 0, 0, 0, 0 },
+	}
 };
 
 /** Maps tile IDs to their corresponding undecorated tile ID. */
@@ -168,13 +168,13 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
+bool PlaceMiniSet(const Miniset &miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
 	int sx;
 	int sy;
 
-	int sw = miniset[0];
-	int sh = miniset[1];
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
 
 	int numt = 1;
 	if (tmax - tmin != 0) {
@@ -201,17 +201,9 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 				sy = GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
-			int ii = 2;
 
-			for (int yy = 0; yy < sh && abort; yy++) {
-				for (int xx = 0; xx < sw && abort; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii])
-						abort = false;
-					if (dflags[xx + sx][yy + sy] != 0)
-						abort = false;
-					ii++;
-				}
-			}
+			if (abort)
+				abort = miniset.matches({ sx, sy });
 
 			if (!abort) {
 				sx++;
@@ -227,17 +219,8 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 		if (bailcnt >= 200) {
 			return false;
 		}
-		int ii = sw * sh + 2;
 
-		for (int yy = 0; yy < sh; yy++) {
-			for (int xx = 0; xx < sw; xx++) {
-				if (miniset[ii] != 0) {
-					dungeon[xx + sx][yy + sy] = miniset[ii];
-					dflags[xx + sx][yy + sy] |= 8;
-				}
-				ii++;
-			}
-		}
+		miniset.place({ sx, sy }, 8);
 	}
 
 	if (currlevel == 15 && Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed

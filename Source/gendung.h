@@ -294,6 +294,38 @@ constexpr bool IsTileLit(Point position)
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Lit);
 }
 
+struct Miniset {
+	Size size;
+	/* these are indexed as [y][x] */
+	unsigned char search[5][5];
+	unsigned char replace[5][5];
+
+	bool matches(Point position) const
+	{
+		for (int yy = 0; yy < size.height; yy++) {
+			for (int xx = 0; xx < size.width; xx++) {
+				if (search[yy][xx] != 0 && dungeon[xx + position.x][yy + position.y] != search[yy][xx])
+					return false;
+				if (dflags[xx + position.x][yy + position.y] != 0)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	void place(Point position, unsigned char extraFlags = 0) const
+	{
+		for (int y = 0; y < size.height; y++) {
+			for (int x = 0; x < size.width; x++) {
+				if (replace[y][x] == 0)
+					continue;
+				dungeon[x + position.x][y + position.y] = replace[y][x];
+				dflags[x + position.x][y + position.y] |= extraFlags;
+			}
+		}
+	}
+};
+
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();
