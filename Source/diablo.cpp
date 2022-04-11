@@ -146,7 +146,6 @@ bool was_archives_init = false;
 /** To know if surfaces have been initialized or not */
 bool was_window_init = false;
 bool was_ui_init = false;
-bool was_snd_init = false;
 
 void StartGame(interface_mode uMsg)
 {
@@ -1007,7 +1006,6 @@ void DiabloInit()
 	DiabloInitScreen();
 
 	snd_init();
-	was_snd_init = true;
 
 	ui_sound_init();
 
@@ -1047,7 +1045,7 @@ void DiabloDeinit()
 {
 	FreeItemGFX();
 
-	if (was_snd_init)
+	if (gbSndInited)
 		effects_cleanup_sfx();
 	snd_deinit();
 	if (was_ui_init)
