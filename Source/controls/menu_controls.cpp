@@ -34,6 +34,20 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		return GetMenuHeldUpDownAction();
 	}
 
+	if (ctrlEvent.state == ControllerButtonState_HELD) {
+		bool processHeldEvent = IsAnyOf(ctrlEvent.button,
+		    ControllerButton_BUTTON_DPAD_UP,
+		    ControllerButton_BUTTON_DPAD_DOWN,
+		    ControllerButton_BUTTON_DPAD_LEFT,
+		    ControllerButton_BUTTON_DPAD_RIGHT,
+		    ControllerButton_BUTTON_LEFTSHOULDER,
+		    ControllerButton_BUTTON_RIGHTSHOULDER);
+
+		if (!processHeldEvent) {
+			return MenuAction_NONE;
+		}
+	}
+
 	if (!ctrlEvent.up) {
 		switch (ctrlEvent.button) {
 		case ControllerButton_IGNORE:
