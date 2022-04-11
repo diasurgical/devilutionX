@@ -7430,33 +7430,36 @@ msgstr "Schmiede verlassen"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Hier meine Angebote:             Euer Gold: {:d}"
+msgid "I have these items for sale:"
+msgstr "Hier meine Angebote:"
+
+msgid "Your gold: {:d}"
+msgstr "Euer Gold: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Hier meine besonderen Angebote:             Euer Gold: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "Hier meine besonderen Angebote:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "Ihr habt nichts zu verkaufen.             Euer Gold: {:d}"
+msgid "You have nothing I want."
+msgstr "Ihr habt nichts zu verkaufen."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "Was wollt Ihr verkaufen?             Euer Gold: {:d}"
+msgid "Which item is for sale?"
+msgstr "Was wollt Ihr verkaufen?"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "Ihr habt nichts zu Reparieren.             Euer Gold: {:d}"
+msgid "You have nothing to repair."
+msgstr "Ihr habt nichts zu Reparieren."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "Was soll repariert werden?             Euer Gold: {:d}"
+msgid "Repair which item?"
+msgstr "Was soll repariert werden?"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7480,13 +7483,13 @@ msgstr "Hütte verlassen"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "Ihr habt nichts aufzuladen.             Euer Gold: {:d}"
+msgid "You have nothing to recharge."
+msgstr "Ihr habt nichts aufzuladen."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "Was soll ich aufladen?             Euer Gold: {:d}"
+msgid "Recharge which item?"
+msgstr "Was soll ich aufladen?"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7551,8 +7554,8 @@ msgstr "Auf Wiedersehen"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "Hier mein Angebot:             Dein Gold: {:d}"
+msgid "I have this item for sale:"
+msgstr "Hier mein Angebot:"
 
 #: Source/stores.cpp:1037
 msgid "Leave"
@@ -7584,13 +7587,13 @@ msgstr "Gegenstand identifizieren"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "Ihr habt nichts zu identifizieren             Euer Gold: {:d}"
+msgid "You have nothing to identify."
+msgstr "Ihr habt nichts zu identifizieren"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Was soll ich identifizieren?             Euer Gold: {:d}"
+msgid "Identify which item?"
+msgstr "Was soll ich identifizieren?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"

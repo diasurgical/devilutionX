@@ -7443,33 +7443,36 @@ msgstr "Напуснете ателието"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Продавам тези предмети.             Вашето злато: {:d}"
+msgid "I have these items for sale:"
+msgstr "Продавам тези предмети."
+
+msgid "Your gold: {:d}"
+msgstr "Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Продавам тези изключителни предмети.    Вашето злато: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "Продавам тези изключителни предмети."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "Нямате нищо, което ми трябва.       Вашето злато: {:d}"
+msgid "You have nothing I want."
+msgstr "Нямате нищо, което ми трябва."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "Кой предмет е за продажба?             Вашето злато: {:d}"
+msgid "Which item is for sale?"
+msgstr "Кой предмет е за продажба?"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "Нямате предмет за поправка.         Вашето злато: {:d}"
+msgid "You have nothing to repair."
+msgstr "Нямате предмет за поправка."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "Кой предмет е за поправка?      Вашето злато: {:d}"
+msgid "Repair which item?"
+msgstr "Кой предмет е за поправка?"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7493,13 +7496,13 @@ msgstr "Напуснете Колибата"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "Нямате предмет за презареждане.       Вашето злато: {:d}"
+msgid "You have nothing to recharge."
+msgstr "Нямате предмет за презареждане."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "Кой предмет е за презареждане?             Вашето злато: {:d}"
+msgid "Recharge which item?"
+msgstr "Кой предмет е за презареждане?"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7564,8 +7567,8 @@ msgstr "Кажете довиждане"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "Имам този предмет за продан:             Вашето злато: {:d}"
+msgid "I have this item for sale:"
+msgstr "Имам този предмет за продан:"
 
 #: Source/stores.cpp:1037
 msgid "Leave"
@@ -7597,13 +7600,13 @@ msgstr "Разпознаване на предмет"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "Нямате нищо за разпознаване.             Вашето злато: {:d}"
+msgid "You have nothing to identify."
+msgstr "Нямате нищо за разпознаване."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Кой предмет е за разпознаване?             Вашето злато: {:d}"
+msgid "Identify which item?"
+msgstr "Кой предмет е за разпознаване?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"

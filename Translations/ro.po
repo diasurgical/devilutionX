@@ -12,8 +12,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==0 || (n!=1 && n%100>=1 && n"
-"%100<=19) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n==0 || (n!=1 && n%100>=1 && "
+"n%100<=19) ? 1 : 2);\n"
 "X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
@@ -7538,33 +7538,36 @@ msgstr "Ieșiți din magazin"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Am aceste obiecte de vânzare:             Galbeni: {:d}"
+msgid "I have these items for sale:"
+msgstr "Am aceste obiecte de vânzare:"
+
+msgid "Your gold: {:d}"
+msgstr "Galbeni: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Am aceste obiecte de lux de vânzare:             Galbeni: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "Am aceste obiecte de lux de vânzare:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "Nu aveți nimic din ce aș vrea.             Galbeni: {:d}"
+msgid "You have nothing I want."
+msgstr "Nu aveți nimic din ce aș vrea."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "Care obiect e de vânzare?             Galbeni: {:d}"
+msgid "Which item is for sale?"
+msgstr "Care obiect e de vânzare?"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "Nu aveți nimic de reparat.             Galbeni: {:d}"
+msgid "You have nothing to repair."
+msgstr "Nu aveți nimic de reparat."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "Repar care obiect?             Galbeni: {:d}"
+msgid "Repair which item?"
+msgstr "Repar care obiect?"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7588,13 +7591,13 @@ msgstr "Ieșiți din colibă"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "Nu aveți nimic de reîncărcat.             Galbeni: {:d}"
+msgid "You have nothing to recharge."
+msgstr "Nu aveți nimic de reîncărcat."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "Reîncărcați care obiect?             Galbeni: {:d}"
+msgid "Recharge which item?"
+msgstr "Reîncărcați care obiect?"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7659,8 +7662,8 @@ msgstr "Spuneți la revedere"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "Am acest obiect de vânzare:             Galbeni: {:d}"
+msgid "I have this item for sale:"
+msgstr "Am acest obiect de vânzare:"
 
 #: Source/stores.cpp:1037
 msgid "Leave"
@@ -7692,13 +7695,13 @@ msgstr "Identificați un obiect"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "Nu aveți nimic de identificat.             Galbeni: {:d}"
+msgid "You have nothing to identify."
+msgstr "Nu aveți nimic de identificat."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Identific care obiect?             Galbeni: {:d}"
+msgid "Identify which item?"
+msgstr "Identific care obiect?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"
