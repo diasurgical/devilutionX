@@ -574,7 +574,15 @@ void LoadUiGFX()
 	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
 	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
 	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
+
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	// Set the palette because `ArtCursor` may be used as the hardware cursor.
+	if (ArtCursor.surface != nullptr) {
+		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
+	}
+#endif
 
 	LoadHeros();
 }
