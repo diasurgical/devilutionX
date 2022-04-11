@@ -490,14 +490,8 @@ msgstr ""
 "Skapa ett nytt spel som vem som helst kan gå med i med valfri svårighetsgrad."
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter Game ID to join a game already in progress."
-msgstr ""
-"Skriv in en IP eller ett värdnamn och gå med ett spel som redan pågår på den "
-"adressen."
+msgstr "Skriv in ett spel-ID för att gå med ett spel som redan pågår."
 
 #: Source/DiabloUI/selgame.cpp:196
 msgid "Enter an IP or a hostname to join a game already in progress."
@@ -4015,24 +4009,20 @@ msgid "Right-click to read"
 msgstr "Högerklicka för att läsa"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
-#, fuzzy
-#| msgid "Select current spell button"
 msgid "Select from spell book, then"
-msgstr "Välj nuvarande trollformelsknapp"
+msgstr "Välj från magibok, därefter"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
-msgstr ""
+msgstr "använd trollformel för att läsa"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
-#, fuzzy
-#| msgid "Open Inventory screen."
 msgid "Open inventory to use"
-msgstr "Öppna Ägodelsskärm."
+msgstr "Öppna ägodelsskärm för att använda"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
-msgstr ""
+msgstr "Aktivera för att läsa"
 
 #: Source/items.cpp:1825
 msgid "Right-click to read, then"
@@ -4047,10 +4037,8 @@ msgid "Right-click to use"
 msgstr "Högerklicka för att använda"
 
 #: Source/items.cpp:1854
-#, fuzzy
-#| msgid "Associate Producer"
 msgid "Activate to use"
-msgstr "Produktionsassistent"
+msgstr "Aktivera för att använda"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -4058,11 +4046,9 @@ msgstr "Högerklicka för att visa"
 
 #: Source/items.cpp:1869
 msgid "Activate to view"
-msgstr ""
+msgstr "Aktivera för att visa"
 
 #: Source/items.cpp:1873
-#, fuzzy
-#| msgid "Level: {:d}"
 msgctxt "player"
 msgid "Level: {:d}"
 msgstr "Nivå: {:d}"
@@ -6338,10 +6324,8 @@ msgstr ""
 "Färgcyklingseffekt som används för vatten-, lava-, och syraanimationer."
 
 #: Source/options.cpp:755
-#, fuzzy
-#| msgid "Use alternate nest palette"
 msgid "Alternate nest art"
-msgstr "Använd alternativ palett för nästet"
+msgstr "Alternativ grafik för nästet"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
@@ -6898,10 +6882,8 @@ msgid "Failed to open player archive for writing."
 msgstr "Kunde inte öppna spelararkivet för att skriva."
 
 #: Source/pfile.cpp:308
-#, fuzzy
-#| msgid "Failed to open player archive for writing."
 msgid "Failed to open stash archive for writing."
-msgstr "Kunde inte öppna spelararkivet för att skriva."
+msgstr "Kunde inte öppna förrådsarkivet för att skriva."
 
 #: Source/pfile.cpp:419
 msgid "Unable to open archive"
@@ -6932,11 +6914,8 @@ msgid "{:d} gold"
 msgstr "{:d} guld"
 
 #: Source/qol/stash.cpp:586
-#, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
-#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "Du har {:d} guldmynt. Hur många vill du dra ifrån?"
+msgstr "Hur många guldmynt vill du dra ifrån?"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
