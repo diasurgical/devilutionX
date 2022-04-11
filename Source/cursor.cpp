@@ -219,6 +219,7 @@ void InitLevelCursor()
 	pcursmonst = -1;
 	pcursobj = -1;
 	pcursitem = -1;
+	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
 	ClearCursor();
 }
