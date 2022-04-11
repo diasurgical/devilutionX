@@ -144,13 +144,9 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 	case CursorType::UserInterface:
 		// ArtCursor is null while loading the game on the progress screen,
 		// called via palette fade from ShowProgress.
-		if (ArtCursor.surface != nullptr) {
-			SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
-			SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
-			CurrentCursorInfo.SetEnabled(
-			    IsCursorSizeAllowed(Size { ArtCursor.surface->w, ArtCursor.surface->h })
-			    && SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
-		}
+		CurrentCursorInfo.SetEnabled(
+		    ArtCursor.surface != nullptr && IsCursorSizeAllowed(Size { ArtCursor.surface->w, ArtCursor.surface->h })
+		    && SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
 		break;
 	case CursorType::Unknown:
 		CurrentCursorInfo.SetEnabled(false);
