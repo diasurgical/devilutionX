@@ -466,6 +466,11 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
+	if (IsAnyOf(ctrlEvent.button, ControllerButtonPrimary, ControllerButtonSecondary, ControllerButtonTertiary) && IsAnyOf(ControllerButtonHeld, ctrlEvent.button, ControllerButton_NONE)) {
+		ControllerButtonHeld = ctrlEvent.up ? ControllerButton_NONE : ctrlEvent.button;
+		LastMouseButtonAction = MouseActionType::None;
+	}
+
 	GameAction action;
 	if (GetGameAction(e, ctrlEvent, &action)) {
 		if (movie_playing) {
