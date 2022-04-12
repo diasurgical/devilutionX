@@ -15,7 +15,6 @@
 #include "doom.h"
 #include "gmenu.h"
 #include "options.h"
-#include "plrctrls.h"
 #include "qol/stash.h"
 #include "stores.h"
 
@@ -23,8 +22,9 @@ namespace devilution {
 
 bool start_modifier_active = false;
 bool select_modifier_active = false;
-const ControllerButton ControllerButton_ATTACK = ControllerButton_BUTTON_B;
-const ControllerButton ControllerButton_CAST_SPELL = ControllerButton_BUTTON_X;
+const ControllerButton ControllerButtonPrimary = ControllerButton_BUTTON_B;
+const ControllerButton ControllerButtonSecondary = ControllerButton_BUTTON_Y;
+const ControllerButton ControllerButtonTertiary = ControllerButton_BUTTON_X;
 
 namespace {
 
@@ -195,23 +195,6 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 		return true;
 	default:
 		break;
-	}
-
-	if (ctrlEvent.state == ControllerButtonState_HELD) {
-		if (CanControlHero() && !chrflag && !select_modifier_active && !start_modifier_active) {
-			switch (ctrlEvent.button) {
-			case ControllerButton_ATTACK:
-				*action = GameAction(GameActionType_PRIMARY_ACTION);
-				break;
-			case ControllerButton_CAST_SPELL:
-				*action = GameAction(GameActionType_CAST_SPELL);
-				break;
-			default:
-				break;
-			}
-		}
-
-		return true;
 	}
 
 	if (!inGameMenu) {

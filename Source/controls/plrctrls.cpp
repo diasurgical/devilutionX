@@ -33,6 +33,7 @@
 #include "qol/stash.h"
 #include "stores.h"
 #include "towners.h"
+#include "track.h"
 #include "trigs.h"
 #include "utils/log.hpp"
 
@@ -42,6 +43,7 @@ namespace devilution {
 
 ControlTypes ControlMode = ControlTypes::None;
 ControlTypes ControlDevice = ControlTypes::None;
+ControllerButton ControllerButtonHeld = ControllerButton_NONE;
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
@@ -59,16 +61,6 @@ bool InGameMenu()
 	    || gmenu_is_active()
 	    || PauseMode == 2
 	    || Players[MyPlayerId]._pInvincible;
-}
-
-bool CanControlHero()
-{
-	return !InGameMenu()
-	    && !invflag
-	    && !spselflag
-	    && !QuestLogIsOpen
-	    && !sbookflag
-	    && !DoomFlag;
 }
 
 namespace {
@@ -506,6 +498,7 @@ void Interact()
 		}
 
 		NetSendCmdLoc(MyPlayerId, true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
+		LastMouseButtonAction = MouseActionType::Attack;
 		return;
 	}
 
@@ -515,16 +508,19 @@ void Interact()
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
+		LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 		return;
 	}
 
 	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
 		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;
 	}
 
 	if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		LastMouseButtonAction = MouseActionType::OperateObject;
 		return;
 	}
 }
@@ -1663,11 +1659,22 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 
+	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
+	if (ControllerButtonHeld != ControllerButton_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
+		InvalidateTargets();
+
+		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
+			FindTrigger();
+		}
+		return;
+	}
+
 	// Clear focuse set by cursor
 	pcursplr = -1;
 	pcursmonst = -1;
 	pcursitem = -1;
 	pcursobj = -1;
+
 	pcursmissile = nullptr;
 	pcurstrig = -1;
 	pcursquest = Q_INVALID;
@@ -1918,6 +1925,12 @@ void PerformSpellAction()
 
 	UpdateSpellTarget(myPlayer._pRSpell);
 	CheckPlrSpell(false);
+	if (pcursplr != -1)
+		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
+	else if (pcursmonst != -1)
+		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
+	else
+		LastMouseButtonAction = MouseActionType::Spell;
 }
 
 void CtrlUseInvItem()
@@ -2000,6 +2013,7 @@ void PerformSecondaryAction()
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursPosition, pcursitem);
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		LastMouseButtonAction = MouseActionType::OperateObject;
 	} else {
 		if (pcursmissile != nullptr) {
 			MakePlrPath(myPlayer, pcursmissile->position.tile, true);
@@ -2025,6 +2039,12 @@ void QuickCast(int slot)
 	}
 
 	CheckPlrSpell(false, spell, spellType);
+	if (pcursplr != -1)
+		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
+	else if (pcursmonst != -1)
+		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
+	else
+		LastMouseButtonAction = MouseActionType::Spell;
 }
 
 } // namespace devilution

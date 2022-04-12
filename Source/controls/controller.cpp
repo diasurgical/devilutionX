@@ -7,53 +7,8 @@
 #endif
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
-#include "controls/game_controls.h"
-#include "controls/plrctrls.h"
-#include "player.h"
 
 namespace devilution {
-
-namespace {
-
-bool skipTick = false;
-bool heldControllerButtonEventsLocked = false;
-ControllerButton actionButtons[2] = { ControllerButton_ATTACK, ControllerButton_CAST_SPELL };
-
-bool CreateActionButtonEvent(SDL_Event *event, ControllerButton button)
-{
-	SDL_JoystickID which;
-
-#ifndef USE_SDL1
-	if (GameController::IsPressedOnAnyController(button, &which)) {
-		event->type = SDL_CONTROLLERBUTTONDOWN;
-		event->cbutton.button = GameController::ToSdlGameControllerButton(button);
-		event->cbutton.state = ControllerButtonState_HELD;
-		event->cbutton.which = which;
-
-		return true;
-	}
-#endif
-#if HAS_KBCTRL == 1
-	if (IsKbCtrlButtonPressed(button)) {
-		event->type = SDL_KEYDOWN;
-		event->key.keysym.sym = ControllerButtonToKbCtrlKeyCode(button);
-		event->key.state = ControllerButtonState_HELD;
-
-		return true;
-	}
-#endif
-	if (Joystick::IsPressedOnAnyJoystick(button)) {
-		event->type = SDL_JOYBUTTONDOWN;
-		event->jbutton.button = Joystick::ToSdlJoyButton(button);
-		event->jbutton.state = ControllerButtonState_HELD;
-
-		return true;
-	}
-
-	return false;
-}
-
-} // namespace
 
 void UnlockControllerState(const SDL_Event &event)
 {
@@ -67,7 +22,7 @@ void UnlockControllerState(const SDL_Event &event)
 
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 {
-	ControllerButtonEvent result { ControllerButton_NONE, false, ControllerButtonState_RELEASED };
+	ControllerButtonEvent result { ControllerButton_NONE, false };
 	switch (event.type) {
 #ifndef USE_SDL1
 	case SDL_CONTROLLERBUTTONUP:
@@ -93,9 +48,6 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 		if (result.button != ControllerButton_NONE) {
 			if (result.button == ControllerButton_AXIS_TRIGGERLEFT || result.button == ControllerButton_AXIS_TRIGGERRIGHT) {
 				result.up = !controller->IsPressed(result.button);
-				result.state = result.up ? SDL_RELEASED : SDL_PRESSED;
-			} else {
-				result.state = event.cbutton.state;
 			}
 			return result;
 		}
@@ -105,9 +57,6 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	const Joystick *joystick = Joystick::Get(event);
 	if (joystick != nullptr) {
 		result.button = devilution::Joystick::ToControllerButton(event);
-		result.state = ControllerButtonState_PRESSED;
-		if (IsAnyOf(event.type, SDL_JOYBUTTONUP, SDL_JOYBUTTONDOWN))
-			result.state = event.jbutton.state;
 	}
 
 	return result;
@@ -149,42 +98,6 @@ bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)
 #else
 	return false;
 #endif
-}
-
-void UnlockHeldControllerButtonEvents(const SDL_Event &event)
-{
-	ControllerButtonEvent ctrlEvent = ToControllerButtonEvent(event);
-
-	for (int i = 0; i < 2; ++i)
-		if (actionButtons[i] == ctrlEvent.button) {
-			heldControllerButtonEventsLocked = !CanControlHero();
-
-			break;
-		}
-}
-
-int PollActionButtonPressed(SDL_Event *event)
-{
-	if (heldControllerButtonEventsLocked)
-		return 0;
-
-	if (skipTick) {
-		skipTick = false;
-
-		return 0;
-	}
-
-	if (!Players[MyPlayerId].CanChangeAction())
-		return 0;
-
-	for (int i = 0; i < 2; ++i)
-		if (CreateActionButtonEvent(event, actionButtons[i])) {
-			skipTick = true; // 1 tick is skipped for allowing the player animation to change
-
-			return 1;
-		}
-
-	return 0;
 }
 
 } // namespace devilution

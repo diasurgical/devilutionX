@@ -77,7 +77,8 @@ AxisDirection GetMoveDirection();
 
 extern bool start_modifier_active;
 extern bool select_modifier_active;
-extern const ControllerButton ControllerButton_ATTACK;
-extern const ControllerButton ControllerButton_CAST_SPELL;
+extern const ControllerButton ControllerButtonPrimary;
+extern const ControllerButton ControllerButtonSecondary;
+extern const ControllerButton ControllerButtonTertiary;
 
 } // namespace devilution

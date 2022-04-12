@@ -36,6 +36,8 @@ extern ControlTypes ControlMode;
  */
 extern ControlTypes ControlDevice;
 
+extern ControllerButton ControllerButtonHeld;
+
 // Runs every frame.
 // Handles menu movement.
 void plrctrls_every_frame();
@@ -53,8 +55,6 @@ void HandleRightStickMotion();
 
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
 bool InGameMenu();
-
-bool CanControlHero();
 
 void SetPointAndClick(bool value);
 

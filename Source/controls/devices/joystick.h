@@ -34,9 +34,9 @@ public:
 		return instance_id_;
 	}
 
+private:
 	static int ToSdlJoyButton(ControllerButton button);
 
-private:
 	bool IsHatButtonPressed(ControllerButton button) const;
 
 	SDL_Joystick *sdl_joystick_ = NULL;
