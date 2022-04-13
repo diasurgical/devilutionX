@@ -318,6 +318,9 @@ void ReinitializeTexture()
 	if (texture)
 		texture.reset();
 
+	if (renderer == nullptr)
+		return;
+
 	auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 
