@@ -36,8 +36,6 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	}
 #if HAS_KBCTRL == 1
 	result.button = KbCtrlToControllerButton(event);
-	result.state = event.key.state;
-
 	if (result.button != ControllerButton_NONE)
 		return result;
 #endif
