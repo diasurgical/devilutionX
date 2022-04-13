@@ -97,7 +97,10 @@ void RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		break;
 	case MouseActionType::Spell:
-		CheckPlrSpell(true);
+		if (ControlMode != ControlTypes::KeyboardAndMouse) {
+			UpdateSpellTarget(MyPlayer->_pRSpell);
+		}
+		CheckPlrSpell(ControlMode == ControlTypes::KeyboardAndMouse);
 		break;
 	case MouseActionType::SpellMonsterTarget:
 		if (pcursmonst != -1)
