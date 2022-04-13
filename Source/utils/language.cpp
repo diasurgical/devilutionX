@@ -116,7 +116,7 @@ void SetPluralForm(char *string)
 		return;
 	}
 
-	// bg, da, de, es, it, sv
+	// en, bg, da, de, es, it, sv
 	if (strcmp(expression, "(n != 1)") == 0) {
 		GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
 		return;
@@ -328,8 +328,10 @@ void LanguageInitialize()
 		if ((rw = OpenAsset((lang + ext).c_str())) != nullptr)
 			break;
 	}
-	if (rw == nullptr)
+	if (rw == nullptr) {
+		SetPluralForm("(n != 1)"); // Reset to English plural form
 		return;
+	}
 
 	// Read header and do sanity checks
 	MoHead head;
