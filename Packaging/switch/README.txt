@@ -4,7 +4,7 @@
  - Put `devilutionx.nro` and `devilutionx.mpq` in into `/switch/devilutionx`
  - Copy diabdat.mpq from your CD (or GoG install folder) to `/switch/devilutionx`.
  - To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq.
- - For Chinese, Japanese, and Korean text support download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq and add it to the game folder.
+ - For Chinese, Japanese, and Korean text support download https://github.com/diasurgical/devilutionx-assets/releases/download/v2/fonts.mpq and add it to the game folder.
  - For the Polish voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v2/pl.mpq.
  - For the Russian voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq.
  - Launch `devilutionx.nro`. (Do not use album to launch; see the note below.)
