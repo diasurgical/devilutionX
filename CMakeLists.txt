@@ -247,18 +247,8 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  # Change __FILE__ to only show the path relative to the project folder
-  get_target_property(libdevilutionx_SRCS ${BIN_TARGET} SOURCES)
-  foreach(SOURCE_FILE ${libdevilutionx_SRCS})
-    set_source_files_properties(${SOURCE_FILE} PROPERTIES
-      COMPILE_DEFINITIONS __FILE__="${SOURCE_FILE}"
-    )
-  endforeach(SOURCE_FILE)
-
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
-endif()
+include(functions/set_relative_file_macro)
+set_relative_file_macro(${BIN_TARGET})
 
 if(APPLE)
   set_source_files_properties("./Packaging/apple/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
