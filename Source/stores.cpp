@@ -266,10 +266,10 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 			productLine = fmt::format(_("Damage: {:d}-{:d}  "), item._iMinDam, item._iMaxDam);
 		else if (item._iClass == ICLASS_ARMOR)
 			productLine = fmt::format(_("Armor: {:d}  "), item._iAC);
-		else if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
-			productLine = fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur);
+		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
+			productLine += fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur);
 		else
-			productLine = _("Indestructible,  ");
+			productLine += _("Indestructible,  ");
 	}
 
 	int8_t str = item._iMinStr;
