@@ -467,7 +467,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	}
 
 	if (IsAnyOf(ctrlEvent.button, ControllerButtonPrimary, ControllerButtonSecondary, ControllerButtonTertiary) && IsAnyOf(ControllerButtonHeld, ctrlEvent.button, ControllerButton_NONE)) {
-		ControllerButtonHeld = ctrlEvent.up ? ControllerButton_NONE : ctrlEvent.button;
+		ControllerButtonHeld = (ctrlEvent.up || IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) ? ControllerButton_NONE : ctrlEvent.button;
 		LastMouseButtonAction = MouseActionType::None;
 	}
 
