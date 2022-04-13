@@ -3687,10 +3687,7 @@ bool DoOil(Player &player, int cii)
 			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
 		return "";
 	case IPL_TARGAC:
-		if (gbIsHellfire)
-			return _("penetrates target's armor");
-		else
-			return _("penetrates target's armor") + fmt::format(" ({:d})", item._iPLEnAc);
+		return _("penetrates target's armor");
 	case IPL_FASTATTACK:
 		if ((item._iFlags & ISPL_QUICKATTACK) != 0)
 			return _("quick attack");
