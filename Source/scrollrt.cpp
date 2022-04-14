@@ -891,7 +891,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				cel_transparency_active = false; // Turn transparency off here for debugging
 			}
 #endif
-			CelClippedBlitLightTransTo(out, targetBufferPosition, *pSpecialCels, bArch);
+			CelClippedBlitLightTransTo(out, targetBufferPosition, *pSpecialCels, bArch - 1);
 #ifdef _DEBUG
 			if (GetAsyncKeyState(DVL_VK_MENU)) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
