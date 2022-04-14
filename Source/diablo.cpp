@@ -150,6 +150,11 @@ bool was_ui_init = false;
 void StartGame(interface_mode uMsg)
 {
 	zoomflag = true;
+	if (*sgOptions.Graphics.zoomStart) {
+		zoomflag = false;
+	} else {
+		zoomflag = true;
+	}
 	CalcViewportGeometry();
 	cineflag = false;
 	InitCursor();
