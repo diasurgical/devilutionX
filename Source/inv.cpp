@@ -296,10 +296,17 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 {
 	auto &player = Players[pnum];
 
-	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursSize.width / 2));
-	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursSize.height / 2));
-	Size itemSize { icursSize28 };
+	int i = cursorPosition.x;
+	int j = cursorPosition.y;
+
+	Size itemSize = GetInventorySize(player.HoldItem);
+
+	if (!IsHardwareCursor()) {
+		// offset the cursor position to match the hot pixel we'd use for a hardware cursor
+		i += itemSize.width * INV_SLOT_HALF_SIZE_PX;
+		j += itemSize.height * INV_SLOT_HALF_SIZE_PX;
+	}
+
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
@@ -317,12 +324,12 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			}
 		}
 		if (r == SLOTXY_CHEST_LAST) {
-			if ((itemSize.width & 1) == 0)
+			if (itemSize.width % 2 == 0)
 				i -= INV_SLOT_HALF_SIZE_PX;
-			if ((itemSize.height & 1) == 0)
+			if (itemSize.height % 2 == 0)
 				j -= INV_SLOT_HALF_SIZE_PX;
 		}
-		if (r == SLOTXY_INV_LAST && (itemSize.height & 1) == 0)
+		if (r == SLOTXY_INV_LAST && itemSize.height % 2 == 0)
 			j += INV_SLOT_HALF_SIZE_PX;
 	}
 	if (!done)
