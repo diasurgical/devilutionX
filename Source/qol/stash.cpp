@@ -69,7 +69,7 @@ Point FindSlotUnderCursor(Point cursorPosition)
 	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
 		Rectangle cell {
 			GetStashSlotCoord(point),
-			InventorySlotSizeInPixels
+			InventorySlotSizeInPixels + 1
 		};
 
 		if (cell.Contains(cursorPosition)) {
