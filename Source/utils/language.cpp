@@ -82,6 +82,18 @@ char *StrTrimRight(char *s)
 	return s;
 }
 
+string_view TrimLeft(string_view str)
+{
+	str.remove_prefix(std::min(str.find_first_not_of(" \t"), str.size()));
+	return str;
+}
+
+string_view TrimRight(string_view str)
+{
+	str.remove_suffix(str.size() - (str.find_last_not_of(" \t") + 1));
+	return str;
+}
+
 // English, Danish, Spanish, Italian, Swedish
 int PluralForms = 2;
 std::function<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
@@ -89,47 +101,41 @@ std::function<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 
 /**
  * Match plural=(n != 1);"
  */
-void SetPluralForm(char *string)
+void SetPluralForm(string_view expression)
 {
-	char *expression = strstr(string, "plural");
-	if (expression == nullptr)
+	const string_view key = "plural=";
+	const string_view::size_type keyPos = expression.find(key);
+	if (keyPos == string_view::npos)
 		return;
+	expression.remove_prefix(keyPos + key.size());
 
-	expression = strstr(expression, "=");
-	if (expression == nullptr)
-		return;
-	expression += 1;
-
-	for (unsigned i = 0; i < strlen(expression); i++) {
-		if (expression[i] == ';') {
-			expression[i] = '\0';
-			break;
-		}
+	const string_view::size_type semicolonPos = expression.find(';');
+	if (semicolonPos != string_view::npos) {
+		expression.remove_suffix(expression.size() - semicolonPos);
 	}
 
-	expression = StrTrimRight(expression);
-	expression = StrTrimLeft(expression);
+	expression = TrimLeft(TrimRight(expression));
 
 	// ko, zh_CN, zh_TW
-	if (strcmp(expression, "0") == 0) {
+	if (expression == "0") {
 		GetLocalPluralId = [](int /*n*/) -> int { return 0; };
 		return;
 	}
 
 	// en, bg, da, de, es, it, sv
-	if (strcmp(expression, "(n != 1)") == 0) {
+	if (expression == "(n != 1)") {
 		GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
 		return;
 	}
 
 	// fr, pt_BR
-	if (strcmp(expression, "(n > 1)") == 0) {
+	if (expression == "(n > 1)") {
 		GetLocalPluralId = [](int n) -> int { return n > 1 ? 1 : 0; };
 		return;
 	}
 
 	// hr, ru
-	if (strcmp(expression, "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") == 0) {
+	if (expression == "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") {
 		GetLocalPluralId = [](int n) -> int {
 			if (n % 10 == 1 && n % 100 != 11)
 				return 0;
@@ -141,7 +147,7 @@ void SetPluralForm(char *string)
 	}
 
 	// pl
-	if (strcmp(expression, "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") == 0) {
+	if (expression == "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") {
 		GetLocalPluralId = [](int n) -> int {
 			if (n == 1)
 				return 0;
@@ -153,7 +159,7 @@ void SetPluralForm(char *string)
 	}
 
 	// ro
-	if (strcmp(expression, "(n==1 ? 0 : n==0 || (n!=1 && n%100>=1 && n%100<=19) ? 1 : 2)") == 0) {
+	if (expression == "(n==1 ? 0 : n==0 || (n!=1 && n%100>=1 && n%100<=19) ? 1 : 2)") {
 		GetLocalPluralId = [](int n) -> int {
 			if (n == 1)
 				return 0;
@@ -165,7 +171,7 @@ void SetPluralForm(char *string)
 	}
 
 	// cs
-	if (strcmp(expression, "(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2") == 0) {
+	if (expression == "(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2") {
 		GetLocalPluralId = [](int n) -> int {
 			if (n == 1)
 				return 0;
@@ -182,9 +188,9 @@ void SetPluralForm(char *string)
 /**
  * Parse "nplurals=2;"
  */
-void ParsePluralForms(char *string)
+void ParsePluralForms(const char *string)
 {
-	char *value = strstr(string, "nplurals");
+	const char *value = strstr(string, "nplurals");
 	if (value == nullptr)
 		return;
 
