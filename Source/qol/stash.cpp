@@ -60,12 +60,6 @@ void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, 
 
 Point FindSlotUnderCursor(Point cursorPosition)
 {
-	if ((icursSize28.width & 1) == 0)
-		cursorPosition.x -= INV_SLOT_HALF_SIZE_PX;
-	if ((icursSize28.height & 1) == 0)
-		cursorPosition.y -= INV_SLOT_HALF_SIZE_PX;
-	cursorPosition.y -= (icursSize28.height - 1) / 2 * INV_SLOT_SIZE_PX;
-
 	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
 		Rectangle cell {
 			GetStashSlotCoord(point),
@@ -84,25 +78,30 @@ void CheckStashPaste(Point cursorPosition)
 {
 	auto &player = Players[MyPlayerId];
 
-	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	if (!IsHardwareCursor()) {
-		cursorPosition += Displacement(icursSize / 2);
+	const Size itemSize = GetInventorySize(player.HoldItem);
+	const Displacement hotPixelOffset = Displacement(itemSize * INV_SLOT_HALF_SIZE_PX);
+	if (IsHardwareCursor()) {
+		// It's more natural to select the top left cell of the region the sprite is overlapping when putting an item
+		//  into an inventory grid, so compensate for the adjusted hot pixel of hardware cursors.
+		cursorPosition -= hotPixelOffset;
 	}
 
 	if (player.HoldItem._itype == ItemType::Gold) {
 		Stash.gold += player.HoldItem._ivalue;
 		Stash.dirty = true;
-		if (!IsHardwareCursor())
-			SetCursorPos(cursorPosition);
+		if (!IsHardwareCursor()) {
+			// To make software cursors behave like hardware cursors we need to adjust the hand cursor position manually
+			SetCursorPos(cursorPosition + hotPixelOffset);
+		}
 		NewCursor(CURSOR_HAND);
 		return;
 	}
 
-	Point firstSlot = FindSlotUnderCursor(cursorPosition);
+	// Make the hot pixel the center of the top-left cell of the item, this favors the cell which contains more of the
+	//  item sprite
+	Point firstSlot = FindSlotUnderCursor(cursorPosition + Displacement(INV_SLOT_HALF_SIZE_PX));
 	if (firstSlot == InvalidStashPoint)
 		return;
-
-	const Size itemSize = icursSize28;
 
 	if (firstSlot.x + itemSize.width > 10 || firstSlot.y + itemSize.height > 10) {
 		return; // Item does not fit
@@ -145,8 +144,10 @@ void CheckStashPaste(Point cursorPosition)
 
 	Stash.dirty = true;
 
-	if (cn == CURSOR_HAND && !IsHardwareCursor())
-		SetCursorPos(cursorPosition);
+	if (cn == CURSOR_HAND && !IsHardwareCursor()) {
+		// To make software cursors behave like hardware cursors we need to adjust the hand cursor position manually
+		SetCursorPos(cursorPosition + hotPixelOffset);
+	}
 	NewCursor(cn);
 }
 
