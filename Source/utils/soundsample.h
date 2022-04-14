@@ -6,18 +6,10 @@
 
 #include <Aulib/Stream.h>
 
+#include "sound_defs.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 
 namespace devilution {
-
-/**
- * @brief Converts log volume passed in into linear volume.
- * @param logVolume Logarithmic volume in the range [logMin..logMax]
- * @param logMin Volume range minimum (usually ATTENUATION_MIN for game sounds and VOLUME_MIN for volume sliders)
- * @param logMax Volume range maximum (usually 0)
- * @return Linear volume in the range [0..1]
- */
-float VolumeLogToLinear(int logVolume, int logMin, int logMax);
 
 class SoundSample final {
 public:
@@ -25,10 +17,13 @@ public:
 	SoundSample(SoundSample &&) noexcept = default;
 	SoundSample &operator=(SoundSample &&) noexcept = default;
 
+	[[nodiscard]] bool IsLoaded() const
+	{
+		return stream_ != nullptr;
+	}
+
 	void Release();
 	bool IsPlaying();
-	void Play(int logSoundVolume, int logUserVolume, int logPan);
-	void Stop();
 
 	// Returns 0 on success.
 	int SetChunkStream(std::string filePath, bool isMp3, bool logErrors = true);
@@ -66,6 +61,45 @@ public:
 #endif
 	}
 
+	/**
+	 * @brief Start playing the sound for a given number of iterations (0 means loop).
+	 */
+	bool Play(int numIterations = 1);
+
+	/**
+	 * @brief Start playing the sound with the given sound and user volume, and a stereo position.
+	 */
+	bool PlayWithVolumeAndPan(int logSoundVolume, int logUserVolume, int logPan)
+	{
+		SetVolume(logSoundVolume + logUserVolume * (ATTENUATION_MIN / VOLUME_MIN), ATTENUATION_MIN, 0);
+		SetStereoPosition(logPan);
+		return Play();
+	}
+
+	/**
+	 * @brief Stop playing the sound
+	 */
+	void Stop()
+	{
+		stream_->stop();
+	}
+
+	void SetVolume(int logVolume, int logMin, int logMax);
+	void SetStereoPosition(int logPan);
+
+	void Mute()
+	{
+		stream_->mute();
+	}
+
+	void Unmute()
+	{
+		stream_->unmute();
+	}
+
+	/**
+	 * @return Audio duration in ms
+	 */
 	int GetLength() const;
 
 private:
