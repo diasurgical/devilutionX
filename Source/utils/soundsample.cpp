@@ -70,13 +70,20 @@ std::unique_ptr<Aulib::Stream> CreateStream(SDL_RWops *handle, bool isMp3)
 	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
 }
 
-} // namespace
-
+/**
+ * @brief Converts log volume passed in into linear volume.
+ * @param logVolume Logarithmic volume in the range [logMin..logMax]
+ * @param logMin Volume range minimum (usually ATTENUATION_MIN for game sounds and VOLUME_MIN for volume sliders)
+ * @param logMax Volume range maximum (usually 0)
+ * @return Linear volume in the range [0..1]
+ */
 float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 {
 	const auto logScaled = math::Remap(static_cast<float>(logMin), static_cast<float>(logMax), MillibelMin, MillibelMax, static_cast<float>(logVolume));
 	return std::pow(LogBase, logScaled / VolumeScale); // linVolume
 }
+
+} // namespace
 
 ///// SoundSample /////
 
@@ -97,34 +104,13 @@ bool SoundSample::IsPlaying()
 	return stream_ && stream_->isPlaying();
 }
 
-/**
- * @brief Start playing the sound
- */
-void SoundSample::Play(int logSoundVolume, int logUserVolume, int logPan)
+bool SoundSample::Play(int numIterations)
 {
-	if (!stream_)
-		return;
-
-	const int combinedLogVolume = logSoundVolume + logUserVolume * (ATTENUATION_MIN / VOLUME_MIN);
-	const float linearVolume = VolumeLogToLinear(combinedLogVolume, ATTENUATION_MIN, 0);
-	stream_->setVolume(linearVolume);
-
-	const float linearPan = PanLogToLinear(logPan);
-	stream_->setStereoPosition(linearPan);
-
-	if (!stream_->play()) {
+	if (!stream_->play(numIterations)) {
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
-		return;
+		return false;
 	}
-}
-
-/**
- * @brief Stop playing the sound
- */
-void SoundSample::Stop()
-{
-	if (stream_)
-		stream_->stop();
+	return true;
 }
 
 int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors)
@@ -170,9 +156,16 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 }
 #endif
 
-/**
- * @return Audio duration in ms
- */
+void SoundSample::SetVolume(int logVolume, int logMin, int logMax)
+{
+	stream_->setVolume(VolumeLogToLinear(logVolume, logMin, logMax));
+}
+
+void SoundSample::SetStereoPosition(int logPan)
+{
+	stream_->setStereoPosition(PanLogToLinear(logPan));
+}
+
 int SoundSample::GetLength() const
 {
 	if (!stream_)
