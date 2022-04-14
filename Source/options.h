@@ -397,6 +397,8 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Enable vsync on the output. */
 	OptionEntryBoolean vSync;
 #endif
+	/** @brief Zoom on start. */
+	OptionEntryBoolean zoomStart;
 	/** @brief Gamma correction level. */
 	OptionEntryInt<int> gammaCorrection;
 	/** @brief Enable color cycling animations. */
