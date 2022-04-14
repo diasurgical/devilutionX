@@ -51,6 +51,12 @@ struct Size {
 		return *this;
 	}
 
+	constexpr friend Size operator*(Size a, const int factor)
+	{
+		a *= factor;
+		return a;
+	}
+
 	constexpr friend Size operator/(Size a, const int factor)
 	{
 		a /= factor;
