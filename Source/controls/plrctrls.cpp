@@ -772,21 +772,17 @@ Point FindClosestStashSlot(Point mousePos)
 /**
  * @brief Figures out where on the body to move when on the first row
  */
-Point InventoryMoveToBody(int slot)
+inv_xy_slot InventoryMoveToBody(int slot)
 {
 	PreviousInventoryColumn = slot - SLOTXY_INV_ROW1_FIRST;
 	if (slot <= SLOTXY_INV_ROW1_FIRST + 2) { // first 3 general slots
-		Slot = SLOTXY_RING_LEFT;
-		return InvGetEquipSlotCoord(INVLOC_RING_LEFT);
-	} else if (slot <= SLOTXY_INV_ROW1_FIRST + 6) { // middle 4 general slots
-		Slot = SLOTXY_CHEST_FIRST;
-		return InvGetEquipSlotCoord(INVLOC_CHEST);
-	} else { // last 3 general slots
-		Slot = SLOTXY_RING_RIGHT;
-		return InvGetEquipSlotCoord(INVLOC_RING_RIGHT);
+		return SLOTXY_RING_LEFT;
 	}
-
-	return GetSlotCoord(0);
+	if (slot <= SLOTXY_INV_ROW1_FIRST + 6) { // middle 4 general slots
+		return SLOTXY_CHEST_FIRST;
+	}
+	// last 3 general slots
+	return SLOTXY_RING_RIGHT;
 }
 
 void InventoryMove(AxisDirection dir)
@@ -932,7 +928,8 @@ void InventoryMove(AxisDirection dir)
 			}
 		} else {
 			if (Slot >= SLOTXY_INV_ROW1_FIRST && Slot <= SLOTXY_INV_ROW1_LAST) {
-				mousePos = InventoryMoveToBody(Slot);
+				Slot = InventoryMoveToBody(Slot);
+				mousePos = InvGetEquipSlotCoordFromInvSlot(Slot);
 			} else if (Slot == SLOTXY_CHEST_FIRST || Slot == SLOTXY_HAND_LEFT_FIRST) {
 				Slot = SLOTXY_HEAD_FIRST;
 				mousePos = InvGetEquipSlotCoord(INVLOC_HEAD);
@@ -950,7 +947,8 @@ void InventoryMove(AxisDirection dir)
 				if (itemId != 0) {
 					for (int i = 1; i < 5; i++) {
 						if (Slot - i * INV_ROW_SLOT_SIZE < SLOTXY_INV_ROW1_FIRST) {
-							mousePos = InventoryMoveToBody(Slot - (i - 1) * INV_ROW_SLOT_SIZE);
+							Slot = InventoryMoveToBody(Slot - (i - 1) * INV_ROW_SLOT_SIZE);
+							mousePos = InvGetEquipSlotCoordFromInvSlot(Slot);
 							break;
 						}
 						if (itemId != GetItemIdOnSlot(Slot - i * INV_ROW_SLOT_SIZE)) {
