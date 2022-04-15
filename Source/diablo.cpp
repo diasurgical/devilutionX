@@ -705,7 +705,12 @@ void RunGameLoop(interface_mode uMsg)
 	saveProc = SetWindowProc(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
-	gbProcessPlayers = true;
+	if (Quests[Q_DIABLO]._qactive != QUEST_DONE)
+		gbProcessPlayers = true;
+	else {
+		PlaySFX(USFX_DIABLOD);
+		gbProcessPlayers = false;
+	}
 	gbRunGameResult = true;
 	force_redraw = 255;
 	DrawAndBlit();
