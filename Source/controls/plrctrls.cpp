@@ -662,11 +662,7 @@ Size GetItemSizeOnSlot(int slot)
 		if (ii != 0) {
 			Item &item = MyPlayer->InvList[ii - 1];
 			if (!item.isEmpty()) {
-				auto size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
-				size.width /= InventorySlotSizeInPixels.width;
-				size.height /= InventorySlotSizeInPixels.height;
-
-				return size;
+				return GetInventorySize(item);
 			}
 		}
 	}
