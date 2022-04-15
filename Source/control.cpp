@@ -927,7 +927,7 @@ void ReleaseLvlBtn()
 void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
-		int nCel = lvlbtndown ? 3 : 2;
+		int nCel = lvlbtndown ? 2 : 1;
 		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
 	}
