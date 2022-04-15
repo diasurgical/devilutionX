@@ -477,14 +477,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				player.HoldItem = player.InvBody[INVLOC_HAND_LEFT];
 			if (pnum == MyPlayerId)
 				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-			else
-				SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			bool done2h = AutoPlaceItemInInventory(player, player.HoldItem, true);
 			player.HoldItem = tempitem;
 			if (pnum == MyPlayerId)
 				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-			else
-				SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			if (!done2h)
 				return;
 
@@ -1665,7 +1661,6 @@ void AutoGetItem(int pnum, Item *itemPointer, int ii)
 	CheckQuestItem(player, item);
 	UpdateBookLevel(player, item);
 	item._iStatFlag = player.CanUseItem(item);
-	SetICursor(item._iCurs + CURSOR_FIRSTITEM);
 
 	bool done;
 	bool autoEquipped = false;
