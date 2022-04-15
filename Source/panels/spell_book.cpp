@@ -17,7 +17,7 @@
 #include "utils/language.h"
 #include "utils/stdcompat/optional.hpp"
 
-#define SPLICONLAST (gbIsHellfire ? 52 : 43)
+#define SPLICONLAST (gbIsHellfire ? 51 : 42)
 
 namespace devilution {
 
