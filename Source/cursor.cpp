@@ -109,15 +109,11 @@ const uint16_t InvItemHeight2[] = {
 Size cursSize;
 /** Current highlighted monster */
 int pcursmonst = -1;
-/** Size of current cursor in inventory cells */
-Size icursSize28;
 
 /** inv_item value */
 int8_t pcursinvitem;
 /** StashItem value */
 uint16_t pcursstashitem;
-/** Pixel size of the current cursor image */
-Size icursSize;
 /** Current highlighted item */
 int8_t pcursitem;
 /** Current highlighted object */
@@ -165,12 +161,6 @@ Size GetInvItemSize(int cursId)
 	return { InvItemWidth1[i], InvItemHeight1[i] };
 }
 
-void SetICursor(int cursId)
-{
-	icursSize = cursId == CURSOR_NONE ? Size { 0, 0 } : GetInvItemSize(cursId);
-	icursSize28 = icursSize / 28;
-}
-
 void ResetCursor()
 {
 	NewCursor(pcurs);
@@ -183,7 +173,6 @@ void NewCursor(int cursId)
 	}
 	pcurs = cursId;
 	cursSize = cursId == CURSOR_NONE ? Size { 0, 0 } : GetInvItemSize(cursId);
-	SetICursor(cursId);
 
 	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
 		if (ArtCursor.surface == nullptr && cursId == CURSOR_NONE)
