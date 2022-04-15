@@ -1733,12 +1733,14 @@ void PerformPrimaryAction()
 		} else if (GetRightPanel().Contains(MousePosition) || GetMainPanel().Contains(MousePosition)) {
 			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
+			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+
 			// Find any item occupying a slot that is currently under the cursor
-			int8_t itemUnderCursor = [](int inventorySlot) {
+			int8_t itemUnderCursor = [](int inventorySlot, Size cursorSizeInCells) {
 				if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
 					return 0;
-				for (int x = 0; x < icursSize28.width; x++) {
-					for (int y = 0; y < icursSize28.height; y++) {
+				for (int x = 0; x < cursorSizeInCells.width; x++) {
+					for (int y = 0; y < cursorSizeInCells.height; y++) {
 						int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
 						if (slotUnderCursor > SLOTXY_INV_LAST)
 							continue;
@@ -1748,7 +1750,7 @@ void PerformPrimaryAction()
 					}
 				}
 				return 0;
-			}(inventorySlot);
+			}(inventorySlot, cursorSizeInCells);
 
 			// The cursor will need to be shifted to
 			// this slot if the item is swapped or lifted
@@ -1767,22 +1769,21 @@ void PerformPrimaryAction()
 		} else if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
 			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
 
+			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
+
 			// Find any item occupying a slot that is currently under the cursor
-			uint16_t itemUnderCursor = [](Point stashSlot) -> uint16_t {
+			uint16_t itemUnderCursor = [](Point stashSlot, Size cursorSizeInCells) -> uint16_t {
 				if (stashSlot != InvalidStashPoint)
 					return 0;
-				for (int x = 0; x < icursSize28.width; x++) {
-					for (int y = 0; y < icursSize28.height; y++) {
-						Point slotUnderCursor = stashSlot + Displacement { x, y };
-						if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
-							continue;
-						uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slotUnderCursor.x][slotUnderCursor.y];
-						if (itemId != 0)
-							return itemId;
-					}
+				for (Point slotUnderCursor : PointsInRectangleRange { { stashSlot, cursorSizeInCells } }) {
+					if (slotUnderCursor.x >= 10 || slotUnderCursor.y >= 10)
+						continue;
+					uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slotUnderCursor.x][slotUnderCursor.y];
+					if (itemId != 0)
+						return itemId;
 				}
 				return 0;
-			}(stashSlot);
+			}(stashSlot, cursorSizeInCells);
 
 			// The cursor will need to be shifted to
 			// this slot if the item is swapped or lifted
