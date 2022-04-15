@@ -564,7 +564,6 @@ void AttrIncBtnSnap(AxisDirection dir)
 Point InvGetEquipSlotCoord(const inv_body_loc invSlot)
 {
 	Point result = GetPanelPosition(UiPanels::Inventory);
-	result.x -= (icursSize28.width - 1) * (InventorySlotSizeInPixels.width / 2);
 	switch (invSlot) {
 	case INVLOC_HEAD:
 		result.x += ((InvRect[SLOTXY_HEAD_FIRST].x + InvRect[SLOTXY_HEAD_LAST].x) / 2);
@@ -996,10 +995,14 @@ void InventoryMove(AxisDirection dir)
 	}
 	// move cursor to the center of the slot if not holding anything or top left is holding an object
 	if (isHoldingItem) {
-		if (Slot >= SLOTXY_INV_FIRST)
-			mousePos.y -= InventorySlotSizeInPixels.height;
-		else
-			mousePos.y -= (int)((itemSize.height / 2.0) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
+		if (Slot < SLOTXY_INV_FIRST) {
+			// The coordinates we get for body slots are based on the centre of the region relative to the hand cursor
+			// Need to adjust the position for items larger than 1x1 so they're aligned as expected
+			mousePos.x -= (itemSize.width - 1) * INV_SLOT_HALF_SIZE_PX;
+			mousePos.y -= (itemSize.height - 1) * INV_SLOT_HALF_SIZE_PX;
+		}
+		// Also the y position is off... so shift the mouse a cell up to compensate.
+		mousePos.y -= InventorySlotSizeInPixels.height;
 	} else {
 		// get item under new slot if navigating on the inventory
 		if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
