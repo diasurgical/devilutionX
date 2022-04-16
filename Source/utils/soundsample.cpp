@@ -6,7 +6,6 @@
 
 #include <Aulib/DecoderDrmp3.h>
 #include <Aulib/DecoderDrwav.h>
-#include <Aulib/ResamplerSpeex.h>
 #include <SDL.h>
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -16,6 +15,7 @@
 
 #include "engine/assets.hpp"
 #include "options.h"
+#include "utils/aulib.hpp"
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/stubs.h"
@@ -66,8 +66,7 @@ std::unique_ptr<Aulib::Decoder> CreateDecoder(bool isMp3)
 
 std::unique_ptr<Aulib::Stream> CreateStream(SDL_RWops *handle, bool isMp3)
 {
-	return std::make_unique<Aulib::Stream>(handle, CreateDecoder(isMp3),
-	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
+	return std::make_unique<Aulib::Stream>(handle, CreateDecoder(isMp3), CreateAulibResampler(), /*closeRw=*/true);
 }
 
 /**
