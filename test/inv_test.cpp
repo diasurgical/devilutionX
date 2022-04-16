@@ -224,3 +224,25 @@ TEST(Inv, RemoveScroll_belt)
 	RemoveScroll(Players[MyPlayerId]);
 	EXPECT_EQ(Players[MyPlayerId].SpdList[3]._itype, ItemType::None);
 }
+
+TEST(Inv, ItemSize)
+{
+	Item testItem {};
+
+	// Inventory sizes are currently determined by examining the sprite size
+	// rune of stone and grey suit are adjacent in the sprite list so provide an easy check for off-by-one errors
+	InitializeItem(testItem, IDI_RUNEOFSTONE);
+	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
+	InitializeItem(testItem, IDI_GREYSUIT);
+	EXPECT_EQ(GetInventorySize(testItem), Size(2, 2));
+
+	// auric amulet is the first used hellfire sprite, but there's multiple unused sprites before it in the list.
+	// unfortunately they're the same size so this is less valuable as a test.
+	InitializeItem(testItem, IDI_AURIC);
+	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
+
+	// gold is the last diablo sprite, off by ones will end up loading a 1x1 unused sprite from hellfire but maybe
+	//  this'll segfault if we make a mistake in the future?
+	InitializeItem(testItem, IDI_GOLD);
+	EXPECT_EQ(GetInventorySize(testItem), Size(1, 1));
+}
