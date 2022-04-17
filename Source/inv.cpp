@@ -475,12 +475,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				player.HoldItem = player.InvBody[INVLOC_HAND_RIGHT];
 			else
 				player.HoldItem = player.InvBody[INVLOC_HAND_LEFT];
-			if (pnum == MyPlayerId)
-				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			bool done2h = AutoPlaceItemInInventory(player, player.HoldItem, true);
 			player.HoldItem = tempitem;
-			if (pnum == MyPlayerId)
-				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			if (!done2h)
 				return;
 
@@ -853,7 +849,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 
 				holdItem._itype = ItemType::None;
 			} else {
-				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
+				NewCursor(holdItem);
 				if (!IsHardwareCursor() && !dropItem) {
 					// For a hardware cursor, we set the "hot point" to the center of the item instead.
 					Size cursSize = GetInvItemSize(holdItem._iCurs + CURSOR_FIRSTITEM);
@@ -1641,7 +1637,7 @@ void InvGetItem(int pnum, int ii)
 	CleanupItems(ii);
 	pcursitem = -1;
 	if (!player.HoldItem.isEmpty())
-		NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+		NewCursor(player.HoldItem);
 }
 
 void AutoGetItem(int pnum, Item *itemPointer, int ii)

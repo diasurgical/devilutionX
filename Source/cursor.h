@@ -44,7 +44,15 @@ extern DVL_API_FOR_TEST int pcurs;
 void InitCursor();
 void FreeCursor();
 void ResetCursor();
+
+struct Item;
+/**
+ * @brief Use the item sprite as the cursor (or show the default hand cursor if the item isEmpty)
+ */
+void NewCursor(const Item &item);
+
 void NewCursor(int cursId);
+
 void InitLevelCursor();
 void CheckRportal();
 void CheckTown();

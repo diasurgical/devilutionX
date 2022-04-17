@@ -165,6 +165,15 @@ void ResetCursor()
 	NewCursor(pcurs);
 }
 
+void NewCursor(const Item &item)
+{
+	if (item.isEmpty()) {
+		NewCursor(CURSOR_HAND);
+	} else {
+		NewCursor(item._iCurs + CURSOR_FIRSTITEM);
+	}
+}
+
 void NewCursor(int cursId)
 {
 	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
