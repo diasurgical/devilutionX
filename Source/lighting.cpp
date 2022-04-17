@@ -531,8 +531,9 @@ void DoLighting(Point position, int nRadius, int lnum)
 	int blockY = 0;
 
 	if (lnum >= 0) {
-		xoff = Lights[lnum].position.offset.x;
-		yoff = Lights[lnum].position.offset.y;
+		Light &light = Lights[lnum];
+		xoff = light.position.offset.x;
+		yoff = light.position.offset.y;
 		if (xoff < 0) {
 			xoff += 8;
 			position -= { 1, 0 };
@@ -924,11 +925,12 @@ int AddLight(Point position, int r)
 
 	if (ActiveLightCount < MAXLIGHTS) {
 		lid = ActiveLights[ActiveLightCount++];
-		Lights[lid].position.tile = position;
-		Lights[lid]._lradius = r;
-		Lights[lid].position.offset = { 0, 0 };
-		Lights[lid]._ldel = false;
-		Lights[lid]._lunflag = false;
+		Light &light = Lights[lid];
+		light.position.tile = position;
+		light._lradius = r;
+		light.position.offset = { 0, 0 };
+		light._ldel = false;
+		light._lunflag = false;
 		UpdateLighting = true;
 	}
 
@@ -951,10 +953,11 @@ void ChangeLightRadius(int i, int r)
 		return;
 	}
 
-	Lights[i]._lunflag = true;
-	Lights[i].position.old = Lights[i].position.tile;
-	Lights[i].oldRadius = Lights[i]._lradius;
-	Lights[i]._lradius = r;
+	Light &light = Lights[i];
+	light._lunflag = true;
+	light.position.old = light.position.tile;
+	light.oldRadius = light._lradius;
+	light._lradius = r;
 	UpdateLighting = true;
 }
 
@@ -964,10 +967,11 @@ void ChangeLightXY(int i, Point position)
 		return;
 	}
 
-	Lights[i]._lunflag = true;
-	Lights[i].position.old = Lights[i].position.tile;
-	Lights[i].oldRadius = Lights[i]._lradius;
-	Lights[i].position.tile = position;
+	Light &light = Lights[i];
+	light._lunflag = true;
+	light.position.old = light.position.tile;
+	light.oldRadius = light._lradius;
+	light.position.tile = position;
 	UpdateLighting = true;
 }
 
@@ -977,10 +981,11 @@ void ChangeLightOffset(int i, Point position)
 		return;
 	}
 
-	Lights[i]._lunflag = true;
-	Lights[i].position.old = Lights[i].position.tile;
-	Lights[i].oldRadius = Lights[i]._lradius;
-	Lights[i].position.offset = position;
+	Light &light = Lights[i];
+	light._lunflag = true;
+	light.position.old = light.position.tile;
+	light.oldRadius = light._lradius;
+	light.position.offset = position;
 	UpdateLighting = true;
 }
 
@@ -990,11 +995,12 @@ void ChangeLight(int i, Point position, int r)
 		return;
 	}
 
-	Lights[i]._lunflag = true;
-	Lights[i].position.old = Lights[i].position.tile;
-	Lights[i].oldRadius = Lights[i]._lradius;
-	Lights[i].position.tile = position;
-	Lights[i]._lradius = r;
+	Light &light = Lights[i];
+	light._lunflag = true;
+	light.position.old = light.position.tile;
+	light.oldRadius = light._lradius;
+	light.position.tile = position;
+	light._lradius = r;
 	UpdateLighting = true;
 }
 
@@ -1006,28 +1012,27 @@ void ProcessLightList()
 
 	if (UpdateLighting) {
 		for (int i = 0; i < ActiveLightCount; i++) {
-			int j = ActiveLights[i];
-			if (Lights[j]._ldel) {
-				DoUnLight(Lights[j].position.tile.x, Lights[j].position.tile.y, Lights[j]._lradius);
+			Light &light = Lights[ActiveLights[i]];
+			if (light._ldel) {
+				DoUnLight(light.position.tile.x, light.position.tile.y, light._lradius);
 			}
-			if (Lights[j]._lunflag) {
-				DoUnLight(Lights[j].position.old.x, Lights[j].position.old.y, Lights[j].oldRadius);
-				Lights[j]._lunflag = false;
+			if (light._lunflag) {
+				DoUnLight(light.position.old.x, light.position.old.y, light.oldRadius);
+				light._lunflag = false;
 			}
 		}
 		for (int i = 0; i < ActiveLightCount; i++) {
 			int j = ActiveLights[i];
-			if (!Lights[j]._ldel) {
-				DoLighting(Lights[j].position.tile, Lights[j]._lradius, j);
+			Light &light = Lights[j];
+			if (!light._ldel) {
+				DoLighting(light.position.tile, light._lradius, j);
 			}
 		}
 		int i = 0;
 		while (i < ActiveLightCount) {
 			if (Lights[ActiveLights[i]]._ldel) {
 				ActiveLightCount--;
-				BYTE temp = ActiveLights[ActiveLightCount];
-				ActiveLights[ActiveLightCount] = ActiveLights[i];
-				ActiveLights[i] = temp;
+				std::swap(ActiveLights[ActiveLightCount], ActiveLights[i]);
 			} else {
 				i++;
 			}

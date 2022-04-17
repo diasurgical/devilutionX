@@ -1212,8 +1212,8 @@ void UpdateMonsterLights()
 				continue;
 			}
 
-			Light *lid = &Lights[monster.mlid];
-			if (monster.position.tile != lid->position.tile) {
+			Light &light = Lights[monster.mlid];
+			if (monster.position.tile != light.position.tile) {
 				ChangeLightXY(monster.mlid, monster.position.tile);
 			}
 		}
