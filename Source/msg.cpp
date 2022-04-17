@@ -719,7 +719,7 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 				if (message.bPnum != MyPlayerId)
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
-					InvGetItem(MyPlayerId, ii);
+					InvGetItem(*MyPlayer, ii);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
@@ -742,13 +742,12 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 			if ((currlevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
 					if (currlevel != message.bLevel) {
-						auto &player = Players[MyPlayerId];
-						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+						int ii = SyncPutItem(*MyPlayer, MyPlayer->position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
-							InvGetItem(MyPlayerId, ii);
+							InvGetItem(*MyPlayer, ii);
 					} else {
 						int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
-						InvGetItem(MyPlayerId, ActiveItems[activeItemIndex]);
+						InvGetItem(*MyPlayer, ActiveItems[activeItemIndex]);
 					}
 				} else {
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
