@@ -69,6 +69,57 @@ BYTE sgbDeltaChunks;
 std::list<TMegaPkt> MegaPktList;
 Item ItemLimbo;
 
+/** @brief Last send player command for the local player. */
+TCmdLocParam4 lastSendPlayerCmd;
+
+/**
+ * @brief Throttles that a player command is only send once per game tick.
+ * This is a workaround for a desync that happens when a command is processed in different game ticks for different clients. See https://github.com/diasurgical/devilutionX/issues/2681 for details.
+ * When a proper fix is implemented this workaround can be removed.
+ */
+bool WasPlayerCmdAlreadyRequested(_cmd_id bCmd, Point position = {}, uint16_t wParam1 = 0, uint16_t wParam2 = 0, uint16_t wParam3 = 0, uint16_t wParam4 = 0)
+{
+	switch (bCmd) {
+	// All known commands that result in a changed player action (player.destAction)
+	case _cmd_id::CMD_RATTACKID:
+	case _cmd_id::CMD_SPELLID:
+	case _cmd_id::CMD_TSPELLID:
+	case _cmd_id::CMD_ATTACKID:
+	case _cmd_id::CMD_RATTACKPID:
+	case _cmd_id::CMD_SPELLPID:
+	case _cmd_id::CMD_TSPELLPID:
+	case _cmd_id::CMD_ATTACKPID:
+	case _cmd_id::CMD_ATTACKXY:
+	case _cmd_id::CMD_SATTACKXY:
+	case _cmd_id::CMD_RATTACKXY:
+	case _cmd_id::CMD_SPELLXY:
+	case _cmd_id::CMD_TSPELLXY:
+	case _cmd_id::CMD_SPELLXYD:
+	case _cmd_id::CMD_WALKXY:
+	case _cmd_id::CMD_TALKXY:
+	case _cmd_id::CMD_DISARMXY:
+	case _cmd_id::CMD_OPOBJXY:
+	case _cmd_id::CMD_GOTOGETITEM:
+	case _cmd_id::CMD_GOTOAGETITEM:
+		break;
+	default:
+		// None player actions should work normally
+		return false;
+	}
+
+	TCmdLocParam4 newSendParam = { bCmd, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y), wParam1, wParam2, wParam3, wParam4 };
+
+	if (lastSendPlayerCmd.bCmd == newSendParam.bCmd && lastSendPlayerCmd.x == newSendParam.x && lastSendPlayerCmd.y == newSendParam.y
+	    && lastSendPlayerCmd.wParam1 == newSendParam.wParam1 && lastSendPlayerCmd.wParam2 == newSendParam.wParam2 && lastSendPlayerCmd.wParam3 == newSendParam.wParam3 && lastSendPlayerCmd.wParam4 == newSendParam.wParam4) {
+		// Command already send in this game tick => don't send again / throttle
+		return true;
+	}
+
+	lastSendPlayerCmd = newSendParam;
+
+	return false;
+}
+
 void GetNextPacket()
 {
 	MegaPktList.emplace_back();
@@ -1963,6 +2014,11 @@ DWORD OnOpenCrypt(const TCmd *pCmd)
 
 } // namespace
 
+void ClearLastSendPlayerCmd()
+{
+	lastSendPlayerCmd = {};
+}
+
 void msg_send_drop_pkt(int pnum, int reason)
 {
 	TFakeDropPlr cmd;
@@ -2367,6 +2423,9 @@ void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE 
 
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 {
+	if (playerId == MyPlayerId && WasPlayerCmdAlreadyRequested(bCmd, position))
+		return;
+
 	TCmdLoc cmd;
 
 	cmd.bCmd = bCmd;
@@ -2383,6 +2442,9 @@ void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1))
+		return;
+
 	TCmdLocParam1 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2400,6 +2462,9 @@ void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1, wParam2))
+		return;
+
 	TCmdLocParam2 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2418,6 +2483,9 @@ void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1, wParam2, wParam3))
+		return;
+
 	TCmdLocParam3 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2437,6 +2505,9 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 
 void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1, wParam2, wParam3, wParam4))
+		return;
+
 	TCmdLocParam4 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2457,6 +2528,9 @@ void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wParam1))
+		return;
+
 	TCmdParam1 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2485,6 +2559,9 @@ void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 
 void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wParam1, wParam2, wParam3))
+		return;
+
 	TCmdParam3 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2502,6 +2579,9 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wParam1, wParam2, wParam3, wParam4))
+		return;
+
 	TCmdParam4 cmd;
 
 	cmd.bCmd = bCmd;

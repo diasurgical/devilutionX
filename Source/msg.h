@@ -790,6 +790,8 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
 void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
+/** @brief Clears last send player command for the local player. This is used when a game tick changes. */
+void ClearLastSendPlayerCmd();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE cl);
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);

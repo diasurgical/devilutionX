@@ -2375,6 +2375,7 @@ void game_loop(bool bStartup)
 		}
 		TimeoutCursor(false);
 		GameLogic();
+		ClearLastSendPlayerCmd();
 
 		if (!gbRunGame || !gbIsMultiplayer || demo::IsRunning() || demo::IsRecording() || !nthread_has_500ms_passed())
 			break;
