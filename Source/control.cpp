@@ -295,6 +295,7 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 		case ItemType::Staff:
 			c = 7;
 			break;
+		case ItemType::Shield:
 		default:
 			c = 0;
 			break;
