@@ -40,3 +40,37 @@ jobs:
         omitName: true
         omitPrereleaseDuringUpdate: true
         token: ${{ secrets.GITHUB_TOKEN }}
+  make_src_dist_fully_vendored:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt-get update &&
+        sudo apt-get install -y cmake curl libsdl2-dev libsdl2-image-dev libfmt-dev libsodium-dev libbz2-dev libgtest-dev libgmock-dev git smpq gettext python-is-python3
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      run: tools/make_src_dist.py --fully_vendored && mv build-src-dist/devilutionx-*.tar.xz devilutionx-src-fully-vendored.tar.xz
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-src-fully-vendored.tar.xz
+        path: devilutionx-src-fully-vendored.tar.xz
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "devilutionx-src-fully-vendored.tar.xz"
+        allowUpdates: true
+        omitBody: true
+        omitName: true
+        omitPrereleaseDuringUpdate: true
+        token: ${{ secrets.GITHUB_TOKEN }}
