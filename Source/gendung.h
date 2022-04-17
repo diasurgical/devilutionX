@@ -297,8 +297,8 @@ constexpr bool IsTileLit(Point position)
 struct Miniset {
 	Size size;
 	/* these are indexed as [y][x] */
-	unsigned char search[5][5];
-	unsigned char replace[5][5];
+	unsigned char search[11][11];
+	unsigned char replace[11][11];
 
 	bool matches(Point position) const
 	{
