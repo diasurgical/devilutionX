@@ -372,7 +372,7 @@ void RemoveGold(Player &player, int goldIndex)
 		player.RemoveInvItem(gi);
 
 	MakeGoldStack(player.HoldItem, dropGoldValue);
-	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+	NewCursor(player.HoldItem);
 
 	player._pGold = CalculateGold(player);
 	dropGoldValue = 0;

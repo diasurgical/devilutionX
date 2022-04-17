@@ -222,7 +222,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 
 			holdItem._itype = ItemType::None;
 		} else {
-			NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
+			NewCursor(holdItem);
 			if (!IsHardwareCursor()) {
 				// For a hardware cursor, we set the "hot point" to the center of the item instead.
 				Size cursSize = GetInvItemSize(holdItem._iCurs + CURSOR_FIRSTITEM);
