@@ -815,7 +815,7 @@ msgstr "Nie"
 
 #: Source/DiabloUI/settingsmenu.cpp:304
 msgid "Bound key:"
-msgstr "Powiązany klucz:"
+msgstr "Powiązany klawisz:"
 
 #: Source/DiabloUI/settingsmenu.cpp:339
 msgid "Press any key to change."
@@ -837,7 +837,7 @@ msgid ""
 msgstr ""
 "Utrzymujemy serwer czatu pod adresem Discord.gg/YQKCAYQ Podążaj za linkami, "
 "aby dołączyć do naszej społeczności, gdzie rozmawiamy o rzeczach związanych "
-"z Diablo i rozszerzeniem Hellfire."
+"z Diablo i dodatkiem Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -1256,7 +1256,7 @@ msgstr "Element pasa {}"
 
 #: Source/diablo.cpp:1440
 msgid "Use Belt item."
-msgstr "Sięgnięcie po przedmiot z pasa."
+msgstr "Użycie przedmiotu z pasa."
 
 #: Source/diablo.cpp:1455
 msgid "Quick spell {}"
@@ -1280,7 +1280,7 @@ msgstr "Szybki zapis"
 
 #: Source/diablo.cpp:1483
 msgid "Saves the game."
-msgstr "Zapisuje Grę."
+msgstr "Zapisuje grę."
 
 #: Source/diablo.cpp:1490
 msgid "Quick load"
@@ -1392,7 +1392,7 @@ msgstr "Wstrzymuje grę."
 
 #: Source/diablo.cpp:1618
 msgid "Decrease Gamma"
-msgstr "Zmniejsza Gamme"
+msgstr "Zmniejsz jasność"
 
 #: Source/diablo.cpp:1619
 msgid "Reduce screen brightness."
@@ -1400,7 +1400,7 @@ msgstr "Zmniejsza jasność ekranu."
 
 #: Source/diablo.cpp:1626
 msgid "Increase Gamma"
-msgstr "Zwiększ Gamme"
+msgstr "Zwiększ jasność"
 
 #: Source/diablo.cpp:1627
 msgid "Increase screen brightness."
@@ -1930,7 +1930,7 @@ msgstr ""
 
 #: Source/help.cpp:69
 msgid "$Gold:"
-msgstr "$Złota:"
+msgstr "$Złoto:"
 
 #: Source/help.cpp:70
 msgid ""
@@ -6134,11 +6134,11 @@ msgstr "Pokaż intro."
 
 #: Source/options.cpp:559
 msgid "Splash"
-msgstr "Rozprysk"
+msgstr "Powitanie"
 
 #: Source/options.cpp:559
 msgid "Shown splash screen."
-msgstr "Pokaż splash screen."
+msgstr "Pokaż ekran powitalny."
 
 #: Source/options.cpp:561
 msgid "Logo and Title Screen"
@@ -6179,7 +6179,7 @@ msgstr "Auto Wyposażenie Dźwięk"
 #: Source/options.cpp:613
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr ""
-"Automatyczne wyposażanie przedmiotów przy podnoszeniu powoduje emisję "
+"Automatyczne zakładanie przedmiotów przy podnoszeniu powoduje emisję "
 "dźwięku."
 
 #: Source/options.cpp:614
@@ -6280,7 +6280,7 @@ msgstr ""
 
 #: Source/options.cpp:744
 msgid "Scaling Quality"
-msgstr "Jakość skalowania"
+msgstr "Rodzaj skalowania"
 
 #: Source/options.cpp:744
 msgid "Enables optional filters to the output image when upscaling."
@@ -6293,11 +6293,11 @@ msgstr "Najbliższy piksel"
 
 #: Source/options.cpp:747
 msgid "Bilinear"
-msgstr "Bilinearny"
+msgstr "Bilinearne"
 
 #: Source/options.cpp:748
 msgid "Anisotropic"
-msgstr "Anizotropowy"
+msgstr "Anizotropowe"
 
 #: Source/options.cpp:750
 msgid "Integer Scaling"
@@ -6322,7 +6322,7 @@ msgstr ""
 
 #: Source/options.cpp:754
 msgid "Color Cycling"
-msgstr "Przełącznie kolorów"
+msgstr "Przełączanie kolorów"
 
 #: Source/options.cpp:754
 msgid "Color cycling effect used for water, lava, and acid animation."
@@ -6348,11 +6348,11 @@ msgstr "Użyj kursora sprzętowego"
 
 #: Source/options.cpp:758
 msgid "Hardware Cursor For Items"
-msgstr "Kursor sprzętowy dla elementów"
+msgstr "Kursor sprzętowy dla przedmiotów"
 
 #: Source/options.cpp:758
 msgid "Use a hardware cursor for items."
-msgstr "Użyj kursora sprzętowego dla elementów."
+msgstr "Użyj kursora sprzętowego dla przedmiotów."
 
 #: Source/options.cpp:759
 msgid "Hardware Cursor Maximum Size"
@@ -6386,7 +6386,7 @@ msgstr "Wyświetlanie liczby FPS w lewym górnym rogu ekranu."
 
 #: Source/options.cpp:763
 msgid "Show health values"
-msgstr "Pokaż wartości Zdrowia"
+msgstr "Pokaż ilość życia"
 
 #: Source/options.cpp:763
 msgid "Displays current / max health value on health globe."
@@ -6394,7 +6394,7 @@ msgstr "Wyświetla aktualną / maksymalną wartość stanu zdrowia na kuli zdrow
 
 #: Source/options.cpp:764
 msgid "Show mana values"
-msgstr "Pokaż wartości many"
+msgstr "Pokaż ilość many"
 
 #: Source/options.cpp:764
 msgid "Displays current / max mana value on mana globe."
@@ -6418,7 +6418,7 @@ msgid ""
 "introduced in the expansion."
 msgstr ""
 "Włączenie biegania/szybkiego chodzenia w mieście dla Diablo i Hellfire. "
-"Opcja ta została wprowadzona w rozszerzeniu."
+"Opcja ta została wprowadzona w dodatku."
 
 #: Source/options.cpp:816
 msgid "Grab Input"
@@ -6456,7 +6456,7 @@ msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
 msgstr ""
-"Umożliwienie zadawania obrażeń od strzałów/czarów między graczami w trybie "
+"Umożliwienie zadawania obrażeń od strzał/czarów między graczami w trybie "
 "wieloosobowym, nawet jeśli włączony jest tryb przyjazny."
 
 #: Source/options.cpp:820
@@ -6530,55 +6530,55 @@ msgstr "Adria uzupełni twoją manę, gdy odwiedzisz jej sklep."
 
 #: Source/options.cpp:828
 msgid "Auto Equip Weapons"
-msgstr "Automatycznie Wyposaż Broń"
+msgstr "Automatycznie Załóż Broń"
 
 #: Source/options.cpp:828
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
-"Broń zostanie automatycznie wyposażona przy podnoszeniu lub zakupie, jeśli "
+"Broń zostanie automatycznie założona przy podnoszeniu lub zakupie, jeśli "
 "dana opcja jest włączona."
 
 #: Source/options.cpp:829
 msgid "Auto Equip Armor"
-msgstr "Automatycznie Wyposaż Pancerz"
+msgstr "Automatycznie Załóż Pancerz"
 
 #: Source/options.cpp:829
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
-"Pancerze będą automatycznie wyposażane przy podnoszeniu lub zakupie, jeśli "
+"Pancerze będą automatycznie zakładane przy podnoszeniu lub zakupie, jeśli "
 "dana opcja jest włączona."
 
 #: Source/options.cpp:830
 msgid "Auto Equip Helms"
-msgstr "Automatycznie Wyposaż Hełmy"
+msgstr "Automatycznie Załóż Hełmy"
 
 #: Source/options.cpp:830
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
-"Hełmy będą automatycznie wyposażane przy podnoszeniu lub zakupie, jeśli dana "
+"Hełmy będą automatycznie zakładane przy podnoszeniu lub zakupie, jeśli dana "
 "opcja jest włączona."
 
 #: Source/options.cpp:831
 msgid "Auto Equip Shields"
-msgstr "Automatycznie Wyposaż Tarczę"
+msgstr "Automatycznie Załóż Tarcze"
 
 #: Source/options.cpp:831
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
-"Tarcze będą automatycznie wyposażane przy podnoszeniu lub zakupie, jeśli "
+"Tarcze będą automatycznie zakładane przy podnoszeniu lub zakupie, jeśli "
 "dana opcja jest włączona."
 
 #: Source/options.cpp:832
 msgid "Auto Equip Jewelry"
-msgstr "Automatycznie Wyposaż Biżuterię"
+msgstr "Automatycznie Załóż Biżuterię"
 
 #: Source/options.cpp:832
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
-"Biżuteria zostanie automatycznie wyposażona przy podnoszeniu lub zakupie, "
+"Biżuteria zostanie automatycznie założona przy podnoszeniu lub zakupie, "
 "jeśli dana opcja jest włączona."
 
 #: Source/options.cpp:833
@@ -6607,7 +6607,7 @@ msgstr "Automatycznie uzupełnij pas"
 
 #: Source/options.cpp:835
 msgid "Refill belt from inventory when belt item is consumed."
-msgstr "Uzupełnij pasek z ekwipunku, gdy element pasa zostanie zużyty."
+msgstr "Uzupełnij pasek z ekwipunku, gdy przedmiot w nim zostanie zużyty."
 
 #: Source/options.cpp:836
 msgid "Disable Crippling Shrines"
@@ -6619,7 +6619,7 @@ msgid ""
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
 "Po włączeniu opcji Kociołki, Fascynujące Kapliczki, Kozie Kapliczki, "
-"Zdobione Kapliczki i Święte Kapliczki nie można klikać i są one oznaczane "
+"Zdobione Kapliczki i Święte Kapliczki nie mogą zostać kliknięte i są one oznaczane "
 "jako wyłączone."
 
 #: Source/options.cpp:837
@@ -6701,7 +6701,7 @@ msgstr "Ustawienia Sieciowe"
 
 #: Source/options.cpp:907
 msgid "Chat"
-msgstr "Chat"
+msgstr "Czat"
 
 #: Source/options.cpp:907
 msgid "Chat Settings"
