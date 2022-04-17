@@ -1,0 +1,22 @@
+app-id: org.diasurgical.DevilutionX
+runtime: org.freedesktop.Platform
+runtime-version: '21.08'
+sdk: org.freedesktop.Sdk
+command: devilutionx
+rename-desktop-file: devilutionx.desktop
+finish-args:
+    - --socket=fallback-x11
+    - --socket=wayland
+    - --device=dri
+    - --share=network
+    - --socket=pulseaudio
+    - --filesystem=xdg-config
+modules:
+    - name: devilutionX
+      buildsystem: cmake-ninja
+      config-opts:
+        - -DBUILD_TESTING=OFF
+        - -DCMAKE_BUILD_TYPE=Release
+      sources:
+        - type: archive
+          path: ./devilutionx-src-full-1.4.0-aab970dc.tar.xz
