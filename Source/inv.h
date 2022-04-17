@@ -187,7 +187,7 @@ void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
  * Check for interactions with belt
  */
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld);
-void InvGetItem(int pnum, int ii);
+void InvGetItem(Player &player, int ii);
 void AutoGetItem(int pnum, Item *item, int ii);
 
 /**

@@ -864,7 +864,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 }
 
-void UpdateBookLevel(Player &player, Item &book)
+void UpdateBookLevel(const Player &player, Item &book)
 {
 	if (book._iMiscId != IMISC_BOOK)
 		return;
@@ -1611,7 +1611,7 @@ void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 	}
 }
 
-void InvGetItem(int pnum, int ii)
+void InvGetItem(Player &player, int ii)
 {
 	auto &item = Items[ii];
 	if (dropGoldFlag) {
@@ -1622,22 +1622,26 @@ void InvGetItem(int pnum, int ii)
 	if (dItem[item.position.x][item.position.y] == 0)
 		return;
 
-	auto &player = Players[pnum];
-
-	if (MyPlayerId == pnum && !player.HoldItem.isEmpty())
-		NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile, player.HoldItem);
-
 	item._iCreateInfo &= ~CF_PREGEN;
-	player.HoldItem = item;
-	CheckQuestItem(player, player.HoldItem);
-	UpdateBookLevel(player, player.HoldItem);
-	player.HoldItem._iStatFlag = player.CanUseItem(player.HoldItem);
-	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player, player.HoldItem))
-		player.HoldItem._itype == ItemType::None;
+	CheckQuestItem(player, item);
+	UpdateBookLevel(player, item);
+	item._iStatFlag = player.CanUseItem(item);
+
+	if (item._itype != ItemType::Gold || !GoldAutoPlace(player, item)) {
+		// The item needs to go into the players hand
+		if (MyPlayer == &player && !player.HoldItem.isEmpty()) {
+			// drop whatever the player is currently holding
+			NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile, player.HoldItem);
+		}
+
+		// need to copy here instead of move so CleanupItems still has access to the position
+		player.HoldItem = item;
+		NewCursor(player.HoldItem);
+	}
+
+	// This potentially moves items in memory so must be done after we've made a copy
 	CleanupItems(ii);
 	pcursitem = -1;
-	if (!player.HoldItem.isEmpty())
-		NewCursor(player.HoldItem);
 }
 
 void AutoGetItem(int pnum, Item *itemPointer, int ii)
