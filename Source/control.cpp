@@ -281,22 +281,23 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	if (c == 0) {
 		switch (pItem._itype) {
 		case ItemType::Sword:
-			c = 2;
+			c = 1;
 			break;
 		case ItemType::Axe:
-			c = 6;
-			break;
-		case ItemType::Bow:
-			c = 7;
-			break;
-		case ItemType::Mace:
 			c = 5;
 			break;
-		case ItemType::Staff:
-			c = 8;
+		case ItemType::Bow:
+			c = 6;
 			break;
+		case ItemType::Mace:
+			c = 4;
+			break;
+		case ItemType::Staff:
+			c = 7;
+			break;
+		case ItemType::Shield:
 		default:
-			c = 1;
+			c = 0;
 			break;
 		}
 	}
@@ -1008,8 +1009,8 @@ void DrawDurIcon(const Surface &out)
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 4);
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 2);
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
 	DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
