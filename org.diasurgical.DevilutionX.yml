@@ -20,3 +20,6 @@ modules:
       sources:
         - type: archive
           path: ./devilutionx-src-full-1.4.0-aab970dc.tar.xz
+      post-install:
+        - "mv ${FLATPAK_DEST}/share/applications/devilutionx-hellfire.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}-hellfire.desktop"
+        - "mv ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/devilutionx-hellfire.png ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/${FLATPAK_ID}-hellfire.png"
