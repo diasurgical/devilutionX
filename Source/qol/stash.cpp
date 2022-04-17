@@ -91,6 +91,7 @@ void CheckStashPaste(Point cursorPosition)
 
 	if (player.HoldItem._itype == ItemType::Gold) {
 		Stash.gold += player.HoldItem._ivalue;
+		PlaySFX(IS_GOLD);
 		Stash.dirty = true;
 		if (!IsHardwareCursor())
 			SetCursorPos(cursorPosition);
