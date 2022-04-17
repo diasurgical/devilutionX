@@ -1809,7 +1809,7 @@ void UpdateSpellTarget(spell_id spell)
  */
 bool TryDropItem()
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (myPlayer.HoldItem.isEmpty()) {
 		return false;
@@ -1818,11 +1818,13 @@ bool TryDropItem()
 	if (currlevel == 0) {
 		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
 			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 }, myPlayer.HoldItem);
+			myPlayer.HoldItem.Clear();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
 		if (UseItemOpensCrypt(myPlayer.HoldItem, myPlayer.position.tile)) {
 			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 }, myPlayer.HoldItem);
+			myPlayer.HoldItem.Clear();
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
