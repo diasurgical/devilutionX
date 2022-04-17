@@ -594,6 +594,7 @@ void WithdrawGoldKeyPress(char vkey)
 	if (vkey == DVL_VK_RETURN) {
 		if (WithdrawGoldValue > 0) {
 			WithdrawGold(myPlayer, WithdrawGoldValue);
+			PlaySFX(IS_GOLD);
 		}
 		CloseGoldWithdraw();
 	} else if (vkey == DVL_VK_ESCAPE) {
