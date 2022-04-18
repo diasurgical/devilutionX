@@ -9,6 +9,9 @@
 
 namespace devilution {
 
+// Whether we're currently simulating the mouse with SELECT + D-Pad.
+extern bool SimulatingMouseWithSelectAndDPad;
+
 // Raw axis values.
 extern float leftStickXUnscaled, leftStickYUnscaled, rightStickXUnscaled, rightStickYUnscaled;
 

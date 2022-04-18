@@ -641,8 +641,16 @@ void RenderCl2OutlineClippedXY(const Surface &out, Point position, const byte *s
 
 	if (position.y == dstHeight) {
 		// After-bottom line - can only draw north.
-		src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
-		    /*ClipWidth=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		if (position.x <= 0) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+			    /*ClipWidth=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		}
 		position.y -= static_cast<int>(skipSize.wholeLines);
 	}
 	if (src == srcEnd)
@@ -711,10 +719,17 @@ void RenderCl2OutlineClippedXY(const Surface &out, Point position, const byte *s
 		return;
 
 	if (position.y == -1) {
-		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
-		RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
-		    /*ClipWidth=*/true>(
-		    out, position, src, srcWidth, clipX, color, skipSize);
+		// Before-top line - can only draw south.
+		if (position.x <= 0) {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+			    /*ClipWidth=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		}
 	}
 }
 

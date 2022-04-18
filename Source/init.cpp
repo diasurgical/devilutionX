@@ -69,7 +69,6 @@ std::optional<MpqArchive> LoadMPQ(const std::vector<std::string> &paths, string_
 		mpqAbsPath = path + mpqName.data();
 		if ((archive = MpqArchive::Open(mpqAbsPath.c_str(), error))) {
 			LogVerbose("  Found: {} in {}", mpqName, path);
-			paths::SetMpqDir(path);
 			return archive;
 		}
 		if (error != 0) {
@@ -94,7 +93,7 @@ std::vector<std::string> GetMPQSearchPaths()
 #if defined(__linux__) && !defined(__ANDROID__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
-#elif defined(__3DS__)
+#elif defined(__3DS__) || defined(__SWITCH__)
 	paths.emplace_back("romfs:/");
 #elif (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__)
 	char gogpath[_FSG_PATH_MAX];

@@ -35,7 +35,16 @@ namespace devilution {
 #define DEFAULT_HEIGHT 480
 #endif
 #ifndef DEFAULT_AUDIO_SAMPLE_RATE
+#if defined(_WIN64) || defined(_WIN32)
+// The sound API used by SDL in Windows (WASAPI) isn't great
+// at upsampling from 22050 Hz on some drivers.
+//
+// Upsample ourselves on Windows by default.
+// See https://github.com/diasurgical/devilutionX/issues/1390
+#define DEFAULT_AUDIO_SAMPLE_RATE 48000
+#else
 #define DEFAULT_AUDIO_SAMPLE_RATE 22050
+#endif
 #endif
 #ifndef DEFAULT_AUDIO_CHANNELS
 #define DEFAULT_AUDIO_CHANNELS 2
@@ -1138,7 +1147,7 @@ void KeymapperOptions::Action::SaveToIni(string_view category) const
 	}
 	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
 	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
-		Log("Keymapper: no name found for key '{}'", key);
+		LogVerbose("Keymapper: no name found for key '{}'", key);
 		return;
 	}
 	SetIniValue(category.data(), key.data(), keyNameIt->second.c_str());

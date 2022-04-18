@@ -105,7 +105,6 @@ void ToggleChatLog()
 		}
 		QuestLogIsOpen = false;
 		HelpFlag = false;
-		AutomapActive = false;
 		CancelCurrentDiabloMsg();
 		gamemenu_off();
 		SkipLines = 0;

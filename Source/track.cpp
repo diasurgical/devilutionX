@@ -7,6 +7,8 @@
 
 #include <SDL.h>
 
+#include "controls/game_controls.h"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/point.hpp"
 #include "player.h"
@@ -33,12 +35,37 @@ void RepeatWalk(Player &player)
 
 } // namespace
 
+void InvalidateTargets()
+{
+	if (pcursmonst != -1) {
+		const Monster &monster = Monsters[pcursmonst];
+		if (monster._mDelFlag || monster._mhitpoints >> 6 <= 0
+		    || (monster._mFlags & MFLAG_HIDDEN) != 0
+		    || !IsTileLit(monster.position.tile)) {
+			pcursmonst = -1;
+		}
+	}
+
+	if (pcursobj != -1) {
+		if (Objects[pcursobj]._oSelFlag < 1)
+			pcursobj = -1;
+	}
+
+	if (pcursplr != -1) {
+		Player &targetPlayer = Players[pcursplr];
+		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
+		    || currlevel != targetPlayer.plrlevel || targetPlayer._pHitPoints >> 6 <= 0
+		    || !IsTileLit(targetPlayer.position.tile))
+			pcursplr = -1;
+	}
+}
+
 void RepeatMouseAction()
 {
 	if (pcurs != CURSOR_HAND)
 		return;
 
-	if (sgbMouseDown == CLICK_NONE)
+	if (sgbMouseDown == CLICK_NONE && ControllerButtonHeld == ControllerButton_NONE)
 		return;
 
 	if (stextflag != STORE_NONE)
@@ -70,7 +97,10 @@ void RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		break;
 	case MouseActionType::Spell:
-		CheckPlrSpell(true);
+		if (ControlMode != ControlTypes::KeyboardAndMouse) {
+			UpdateSpellTarget(MyPlayer->_pRSpell);
+		}
+		CheckPlrSpell(ControlMode == ControlTypes::KeyboardAndMouse);
 		break;
 	case MouseActionType::SpellMonsterTarget:
 		if (pcursmonst != -1)

@@ -321,8 +321,9 @@ void ToggleSpell(int slot)
 		return;
 	}
 
-	if ((spells & GetSpellBitmask(myPlayer._pSplHotKey[slot])) != 0) {
-		myPlayer._pRSpell = myPlayer._pSplHotKey[slot];
+	const spell_id spellId = myPlayer._pSplHotKey[slot];
+	if (spellId != SPL_INVALID && spellId != SPL_NULL && (spells & GetSpellBitmask(spellId)) != 0) {
+		myPlayer._pRSpell = spellId;
 		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
 		force_redraw = 255;
 	}

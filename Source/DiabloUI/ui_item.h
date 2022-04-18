@@ -381,6 +381,8 @@ public:
 	{
 		for (const auto &item : vItems)
 			m_vecItems.push_back(item.get());
+
+		pressed_item_index_ = -1;
 	}
 
 	[[nodiscard]] SDL_Rect itemRect(int i) const
@@ -412,6 +414,21 @@ public:
 		return spacing_;
 	}
 
+	[[nodiscard]] bool IsPressed(size_t index) const
+	{
+		return pressed_item_index_ == index;
+	}
+
+	void Press(size_t index)
+	{
+		pressed_item_index_ = index;
+	}
+
+	void Release()
+	{
+		pressed_item_index_ = -1;
+	}
+
 	// private:
 	size_t viewportSize;
 	Sint16 m_x, m_y;
@@ -420,5 +437,8 @@ public:
 
 private:
 	int spacing_;
+
+	// State
+	size_t pressed_item_index_;
 };
 } // namespace devilution

@@ -1837,14 +1837,14 @@ bool TryInvPut()
 	return CanPut(myPlayer.position.tile);
 }
 
-int InvPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
+int InvPutItem(Player &player, Point position, Item &item)
 {
 	if (player.plrlevel == 0) {
-		if (idx == IDI_RUNEBOMB && OpensHive(position)) {
+		if (item.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
 			OpenHive();
 			return -1;
 		}
-		if (idx == IDI_MAPOFDOOM && OpensGrave(position)) {
+		if (item.IDidx == IDI_MAPOFDOOM && OpensGrave(position)) {
 			OpenCrypt();
 			return -1;
 		}
@@ -1854,8 +1854,21 @@ int InvPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, in
 		return -1;
 
 	assert(CanPut(position));
+	int ii = AllocateItem();
 
-	return SyncDropItem(position, idx, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff, toHit, maxDam, minStr, minMag, minDex, ac);
+	dItem[position.x][position.y] = ii + 1;
+	Items[ii] = item;
+	Items[ii].position = position;
+	RespawnItem(Items[ii], true);
+
+	if (currlevel == 21 && position == CornerStone.position) {
+		CornerStone.item = Items[ii];
+		InitQTextMsg(TEXT_CORNSTN);
+		Quests[Q_CORNSTN]._qlog = false;
+		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
+	}
+
+	return ii;
 }
 
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
@@ -2027,20 +2040,19 @@ void RemoveScroll(Player &player)
 	}
 }
 
-bool UseScroll()
+bool UseScroll(const spell_id spell)
 {
 	if (pcurs != CURSOR_HAND)
 		return false;
 
 	Player &myPlayer = Players[MyPlayerId];
-	const spell_id spellId = myPlayer._pRSpell;
 
-	if (leveltype == DTYPE_TOWN && !spelldata[spellId].sTownSpell)
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
 		return false;
 
 	const InventoryAndBeltPlayerItemsRange items { myPlayer };
-	return std::any_of(items.begin(), items.end(), [spellId](const Item &item) {
-		return item.IsScrollOf(spellId);
+	return std::any_of(items.begin(), items.end(), [spell](const Item &item) {
+		return item.IsScrollOf(spell);
 	});
 }
 
@@ -2055,7 +2067,7 @@ void UseStaffCharge(Player &player)
 	CalcPlrStaff(player);
 }
 
-bool UseStaff()
+bool UseStaff(const spell_id spell)
 {
 	if (pcurs != CURSOR_HAND) {
 		return false;
@@ -2063,7 +2075,7 @@ bool UseStaff()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], myPlayer._pRSpell);
+	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], spell);
 }
 
 Item &GetInventoryItem(Player &player, int location)

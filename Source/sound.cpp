@@ -10,6 +10,7 @@
 #include <memory>
 #include <mutex>
 
+#include <Aulib/DecoderDrmp3.h>
 #include <Aulib/DecoderDrwav.h>
 #include <Aulib/ResamplerSpeex.h>
 #include <Aulib/Stream.h>
@@ -45,7 +46,22 @@ std::optional<Aulib::Stream> music;
 std::unique_ptr<char[]> musicBuffer;
 #endif
 
-void LoadMusic(SDL_RWops *handle)
+std::unique_ptr<Aulib::Decoder> CreateDecoder(bool isMp3)
+{
+	if (isMp3)
+		return std::make_unique<Aulib::DecoderDrmp3>();
+	return std::make_unique<Aulib::DecoderDrwav>();
+}
+
+std::string GetMp3Path(const char *path)
+{
+	std::string mp3Path = path;
+	const std::string::size_type dot = mp3Path.find_last_of('.');
+	mp3Path.replace(dot + 1, mp3Path.size() - (dot + 1), "mp3");
+	return mp3Path;
+}
+
+void LoadMusic(SDL_RWops *handle, bool isMp3)
 {
 #ifdef DISABLE_STREAMING_MUSIC
 	size_t bytestoread = SDL_RWsize(handle);
@@ -55,7 +71,7 @@ void LoadMusic(SDL_RWops *handle)
 
 	handle = SDL_RWFromConstMem(musicBuffer.get(), bytestoread);
 #endif
-	music.emplace(handle, std::make_unique<Aulib::DecoderDrwav>(),
+	music.emplace(handle, CreateDecoder(isMp3),
 	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
 }
 
@@ -151,28 +167,36 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 {
-
 	auto snd = std::make_unique<TSnd>();
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
 
 #ifndef STREAM_ALL_AUDIO
 	if (stream) {
 #endif
-		if (snd->DSB.SetChunkStream(path) != 0) {
-			ErrSdl();
+		if (snd->DSB.SetChunkStream(GetMp3Path(path), /*isMp3=*/true, /*logErrors=*/false) != 0) {
+			SDL_ClearError();
+			if (snd->DSB.SetChunkStream(path, /*isMp3=*/false, /*logErrors=*/true) != 0) {
+				ErrSdl();
+			}
 		}
 #ifndef STREAM_ALL_AUDIO
 	} else {
-		SDL_RWops *file = OpenAsset(path);
+		bool isMp3 = true;
+		SDL_RWops *file = OpenAsset(GetMp3Path(path).c_str());
 		if (file == nullptr) {
-			ErrDlg("OpenAsset failed", path, __FILE__, __LINE__);
+			SDL_ClearError();
+			isMp3 = false;
+			file = OpenAsset(path);
+			if (file == nullptr) {
+				ErrDlg("OpenAsset failed", path, __FILE__, __LINE__);
+			}
 		}
 		size_t dwBytes = SDL_RWsize(file);
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
 		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
 			ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()), __FILE__, __LINE__);
 		}
-		int error = snd->DSB.SetChunk(waveFile, dwBytes);
+		int error = snd->DSB.SetChunk(waveFile, dwBytes, isMp3);
 		SDL_RWclose(file);
 		if (error != 0) {
 			ErrSdl();
@@ -245,9 +269,16 @@ void music_start(uint8_t nTrack)
 #else
 		const bool threadsafe = true;
 #endif
-		SDL_RWops *handle = OpenAsset(trackPath, threadsafe);
+		bool isMp3 = true;
+		SDL_RWops *handle = OpenAsset(GetMp3Path(trackPath).c_str());
+		if (handle == nullptr) {
+			SDL_ClearError();
+			handle = OpenAsset(trackPath, threadsafe);
+			isMp3 = false;
+		}
+
 		if (handle != nullptr) {
-			LoadMusic(handle);
+			LoadMusic(handle, isMp3);
 			if (!music->open()) {
 				LogError(LogCategory::Audio, "Aulib::Stream::open (from music_start): {}", SDL_GetError());
 				CleanupMusic();

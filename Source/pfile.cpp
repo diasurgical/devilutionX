@@ -309,7 +309,7 @@ void sfile_write_stash()
 
 	SaveStash();
 
-	StashWriter.Close(false);
+	StashWriter.Close();
 
 	Stash.dirty = false;
 }

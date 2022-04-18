@@ -22,6 +22,9 @@ namespace devilution {
 
 bool start_modifier_active = false;
 bool select_modifier_active = false;
+const ControllerButton ControllerButtonPrimary = ControllerButton_BUTTON_B;
+const ControllerButton ControllerButtonSecondary = ControllerButton_BUTTON_Y;
+const ControllerButton ControllerButtonTertiary = ControllerButton_BUTTON_X;
 
 namespace {
 
@@ -121,22 +124,32 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				return true;
 			}
 			if (VirtualGamepadState.primaryActionButton.isHeld && VirtualGamepadState.primaryActionButton.didStateChange) {
-				if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+				if (!inGameMenu && !QuestLogIsOpen && !sbookflag) {
 					*action = GameAction(GameActionType_PRIMARY_ACTION);
-				else if (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen)
+					if (ControllerButtonHeld == ControllerButton_NONE) {
+						ControllerButtonHeld = ControllerButtonPrimary;
+					}
+				} else if (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen) {
 					*action = GameActionSendKey { DVL_VK_RETURN, false };
-				else
+				} else {
 					*action = GameActionSendKey { DVL_VK_SPACE, false };
+				}
 				return true;
 			}
 			if (VirtualGamepadState.secondaryActionButton.isHeld && VirtualGamepadState.secondaryActionButton.didStateChange) {
-				if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+				if (!inGameMenu && !QuestLogIsOpen && !sbookflag) {
 					*action = GameAction(GameActionType_SECONDARY_ACTION);
+					if (ControllerButtonHeld == ControllerButton_NONE)
+						ControllerButtonHeld = ControllerButtonSecondary;
+				}
 				return true;
 			}
 			if (VirtualGamepadState.spellActionButton.isHeld && VirtualGamepadState.spellActionButton.didStateChange) {
-				if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+				if (!inGameMenu && !QuestLogIsOpen && !sbookflag) {
 					*action = GameAction(GameActionType_CAST_SPELL);
+					if (ControllerButtonHeld == ControllerButton_NONE)
+						ControllerButtonHeld = ControllerButtonTertiary;
+				}
 				return true;
 			}
 			if (VirtualGamepadState.cancelButton.isHeld && VirtualGamepadState.cancelButton.didStateChange) {
@@ -161,6 +174,13 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				if (!QuestLogIsOpen && !sbookflag && stextflag == STORE_NONE)
 					*action = GameAction(GameActionType_USE_MANA_POTION);
 				return true;
+			}
+		} else if (event.type == SDL_FINGERUP) {
+			if ((!VirtualGamepadState.primaryActionButton.isHeld && ControllerButtonHeld == ControllerButtonPrimary)
+			    || (!VirtualGamepadState.secondaryActionButton.isHeld && ControllerButtonHeld == ControllerButtonSecondary)
+			    || (!VirtualGamepadState.spellActionButton.isHeld && ControllerButtonHeld == ControllerButtonTertiary)) {
+				ControllerButtonHeld = ControllerButton_NONE;
+				LastMouseButtonAction = MouseActionType::None;
 			}
 		}
 	}
@@ -419,6 +439,20 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 #endif
 
 	return false;
+}
+
+bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent)
+{
+	switch (ctrlEvent.button) {
+	case ControllerButton_BUTTON_LEFTSTICK:
+	case ControllerButton_BUTTON_LEFTSHOULDER:
+	case ControllerButton_BUTTON_RIGHTSHOULDER:
+		return select_modifier_active;
+	case ControllerButton_BUTTON_RIGHTSTICK:
+		return true;
+	default:
+		return false;
+	}
 }
 
 AxisDirection GetMoveDirection()

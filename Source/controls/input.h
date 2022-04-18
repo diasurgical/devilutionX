@@ -9,8 +9,10 @@ namespace devilution {
 inline int PollEvent(SDL_Event *event)
 {
 	int result = SDL_PollEvent(event);
-	if (result != 0)
+	if (result != 0) {
 		UnlockControllerState(*event);
+	}
+
 	return result;
 }
 

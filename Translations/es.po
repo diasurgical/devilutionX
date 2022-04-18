@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2022-03-31 09:36-0300\n"
-"PO-Revision-Date: 2022-03-31 10:00-0300\n"
+"PO-Revision-Date: 2022-04-02 13:09-0300\n"
 "Last-Translator: Emiliano Augusto Gonzalez <emigonza@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -283,7 +283,7 @@ msgstr "\t\t\tSierra On-Line Inc. Noroeste"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr "Gerente de Garantía de la Calidad"
+msgstr "Gerente de Garantía de Calidad"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
@@ -439,7 +439,7 @@ msgstr "El equipo está ejecutando un modo de juego ({:s}) diferente al tuyo."
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:99
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
-msgstr "Su versión {:s} no coincide con el host {:d}.{:d}.{:d}."
+msgstr "Su versión {:s} no coincide con el anfitrión {:d}.{:d}.{:d}."
 
 #: Source/DiabloUI/selgame.cpp:134 Source/DiabloUI/selgame.cpp:533
 msgid "Description:"
@@ -505,7 +505,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:201
 msgid "Join the public game already in progress."
-msgstr "Únase a un juego público que ya esté en curso."
+msgstr "Unirse a un juego público que ya esté en curso."
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
@@ -876,15 +876,15 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji "
+"which is licensed under CC-BY 4.0. The port also makes use of SDL which is "
+"licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
-"\tEsta adaptación hace uso de CharisSILB, Unifont, y Noto que están "
-"licenciados bajo la SIL Open Font License, así como Twitmoji que está "
-"licenciado bajo CC-BY 4.0.  También hace uso de SDL que está licenciado bajo "
-"la licencia zlib. Para más detalles, consulte el Léame."
+"\tEsta adaptación hace uso de Charis SIL, New Athena Unicode, Unifont, y "
+"Noto que están licenciados bajo la SIL Open Font License, así como Twitmoji "
+"que está licenciado bajo CC-BY 4.0.  También hace uso de SDL que está "
+"licenciado bajo la licencia zlib. Para más detalles, consulte el Léame."
 
 #: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -4024,7 +4024,7 @@ msgstr "Haga clic derecho para leer"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
 msgid "Select from spell book, then"
-msgstr "Seleccionar desde el libro de hechizos, entoncesl"
+msgstr "Seleccionar desde el libro de hechizos, entonces"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
@@ -7463,33 +7463,36 @@ msgstr "Salir de la tienda"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Tengo estos artículos a la venta:             Tu oro: {:d}"
+msgid "I have these items for sale:"
+msgstr "Tengo estos artículos a la venta:"
+
+msgid "Your gold: {:d}"
+msgstr "Tu oro: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Tengo estos artículos premium a la venta:     Tu oro: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "Tengo estos artículos premium a la venta:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "No tienes nada que yo quiera.             Tu oro: {:d}"
+msgid "You have nothing I want."
+msgstr "No tienes nada que yo quiera."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "¿Qué artículo está a la venta?             Tu oro: {:d}"
+msgid "Which item is for sale?"
+msgstr "¿Qué artículo está a la venta?"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "No tienes nada que reparar.             Tu oro: {:d}"
+msgid "You have nothing to repair."
+msgstr "No tienes nada que reparar."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "¿Reparar qué artículo?             Tu oro: {:d}"
+msgid "Repair which item?"
+msgstr "¿Reparar qué artículo?"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7513,13 +7516,13 @@ msgstr "Deja la choza"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "No tienes nada que recargar.             Tu oro: {:d}"
+msgid "You have nothing to recharge."
+msgstr "No tienes nada que recargar."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "¿Recargar qué artículo?             Tu oro: {:d}"
+msgid "Recharge which item?"
+msgstr "¿Recargar qué artículo?"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7584,8 +7587,8 @@ msgstr "Decir adiós"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "Tengo este artículo a la venta:             Tu oro: {:d}"
+msgid "I have this item for sale:"
+msgstr "Tengo este artículo a la venta:"
 
 #: Source/stores.cpp:1037
 msgid "Leave"
@@ -7617,13 +7620,13 @@ msgstr "Identificar un artículo"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "No tienes nada que identificar.             Tu oro: {:d}"
+msgid "You have nothing to identify."
+msgstr "No tienes nada que identificar."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "¿Identificac cúal artículo?             Tu oro: {:d}"
+msgid "Identify which item?"
+msgstr "¿Identificac cúal artículo?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"
@@ -11471,7 +11474,7 @@ msgstr ""
 #: Source/textdat.cpp:632
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
+"prisoner.  The crypts are full of shadows that move just beyond the corners "
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""

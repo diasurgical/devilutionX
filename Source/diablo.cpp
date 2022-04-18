@@ -146,7 +146,6 @@ bool was_archives_init = false;
 /** To know if surfaces have been initialized or not */
 bool was_window_init = false;
 bool was_ui_init = false;
-bool was_snd_init = false;
 
 void StartGame(interface_mode uMsg)
 {
@@ -445,6 +444,10 @@ void ClosePanels()
 
 void PressKey(int vkey)
 {
+	if (vkey == DVL_VK_PAUSE) {
+		diablo_pause_game();
+		return;
+	}
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
 	}
@@ -556,10 +559,6 @@ void PressKey(int vkey)
 void PressChar(char vkey)
 {
 	if (gmenu_is_active() || IsTalkActive() || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
-		return;
-	}
-	if (vkey == 'p' || vkey == 'P') {
-		diablo_pause_game();
 		return;
 	}
 	if (PauseMode == 2) {
@@ -1007,7 +1006,6 @@ void DiabloInit()
 	DiabloInitScreen();
 
 	snd_init();
-	was_snd_init = true;
 
 	ui_sound_init();
 
@@ -1047,7 +1045,7 @@ void DiabloDeinit()
 {
 	FreeItemGFX();
 
-	if (was_snd_init)
+	if (gbSndInited)
 		effects_cleanup_sfx();
 	snd_deinit();
 	if (was_ui_init)
@@ -1307,7 +1305,6 @@ void HelpKeyPressed()
 			stream_stop();
 		}
 		QuestLogIsOpen = false;
-		AutomapActive = false;
 		CancelCurrentDiabloMsg();
 		gamemenu_off();
 		DisplayHelp();
@@ -1612,7 +1609,7 @@ void InitKeymapActions()
 	    "Pause Game",
 	    N_("Pause Game"),
 	    N_("Pauses the game."),
-	    DVL_VK_PAUSE,
+	    'P',
 	    diablo_pause_game);
 	sgOptions.Keymapper.AddAction(
 	    "DecreaseGamma",

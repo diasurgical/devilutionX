@@ -19,8 +19,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
@@ -889,15 +889,15 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji "
+"which is licensed under CC-BY 4.0. The port also makes use of SDL which is "
+"licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
-"\tЭтот порт использует CharisSILB, Unifont и Noto, которые лицензированы по "
-"SIL Open Font License, а также Twitmoji, которые лицензированы по CC-BY 4.0. "
-"В порте также используется SDL, лицензируемая по zlib-license. Более "
-"подробную информацию смотрите в ReadMe."
+"\tЭтот порт использует Charis SIL, New Athena Unicode, Unifont и Noto, "
+"которые лицензированы по SIL Open Font License, а также Twitmoji, которые "
+"лицензированы по CC-BY 4.0. В порте также используется SDL, лицензируемая по "
+"zlib-license. Более подробную информацию смотрите в ReadMe."
 
 #: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -7540,34 +7540,37 @@ msgstr "Покинуть магазин"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "У меня есть на продажу:                Ваше золото: {:d}"
+msgid "I have these items for sale:"
+msgstr "У меня есть на продажу:"
+
+msgid "Your gold: {:d}"
+msgstr "Ваше золото: {:d}"
 
 # “премиальные прдеметы” не влезают в длину строки
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "У меня есть на продажу:                Ваше золото: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "У меня есть на продажу:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "У вас нет ничего нужного мне.      Ваше золото: {:d}"
+msgid "You have nothing I want."
+msgstr "У вас нет ничего нужного мне."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "Какой предмет продать?            Ваше золото: {:d}"
+msgid "Which item is for sale?"
+msgstr "Какой предмет продать?"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "У вас нечего чинить.                  Ваше золото: {:d}"
+msgid "You have nothing to repair."
+msgstr "У вас нечего чинить."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "Какой предмет починить?      Ваше золото: {:d}"
+msgid "Repair which item?"
+msgstr "Какой предмет починить?"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7591,13 +7594,13 @@ msgstr "Покинуть хижину"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "У вас нечего заряжать.                  Ваше золото: {:d}"
+msgid "You have nothing to recharge."
+msgstr "У вас нечего заряжать."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "Какой предмет зарядить?        Ваше золото: {:d}"
+msgid "Recharge which item?"
+msgstr "Какой предмет зарядить?"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7662,8 +7665,8 @@ msgstr "Попрощаться"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "У меня есть на продажу:              Ваше золото: {:d}"
+msgid "I have this item for sale:"
+msgstr "У меня есть на продажу:"
 
 # уйти
 # выйти
@@ -7697,8 +7700,8 @@ msgstr "Идентифицировать предмет"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "У вас нечего идентифицировать.          Ваше золото: {:d}"
+msgid "You have nothing to identify."
+msgstr "У вас нечего идентифицировать."
 
 # Нужно выровнять с остальными строками
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
@@ -11522,7 +11525,7 @@ msgstr ""
 #: Source/textdat.cpp:632
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
+"prisoner.  The crypts are full of shadows that move just beyond the corners "
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""

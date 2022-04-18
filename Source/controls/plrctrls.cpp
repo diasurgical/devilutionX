@@ -4,6 +4,10 @@
 #include <cstdint>
 #include <list>
 
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #include "automap.h"
 #include "control.h"
 #include "controls/controller_motion.h"
@@ -29,13 +33,17 @@
 #include "qol/stash.h"
 #include "stores.h"
 #include "towners.h"
+#include "track.h"
 #include "trigs.h"
+#include "utils/log.hpp"
 
 #define SPLICONLENGTH 56
 
 namespace devilution {
 
 ControlTypes ControlMode = ControlTypes::None;
+ControlTypes ControlDevice = ControlTypes::None;
+ControllerButton ControllerButtonHeld = ControllerButton_NONE;
 int pcurstrig = -1;
 Missile *pcursmissile = nullptr;
 quest_id pcursquest = Q_INVALID;
@@ -490,6 +498,7 @@ void Interact()
 		}
 
 		NetSendCmdLoc(MyPlayerId, true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
+		LastMouseButtonAction = MouseActionType::Attack;
 		return;
 	}
 
@@ -499,16 +508,19 @@ void Interact()
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
+		LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 		return;
 	}
 
 	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
 		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;
 	}
 
 	if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		LastMouseButtonAction = MouseActionType::OperateObject;
 		return;
 	}
 }
@@ -1427,7 +1439,7 @@ struct RightStickAccumulator {
 	float hiresDY;
 };
 
-bool IsStickMovmentSignificant()
+bool IsStickMovementSignificant()
 {
 	return leftStickX >= 0.5 || leftStickX <= -0.5
 	    || leftStickY >= 0.5 || leftStickY <= -0.5
@@ -1450,14 +1462,16 @@ ControlTypes GetInputTypeFromEvent(const SDL_Event &event)
 		return event.wheel.which == SDL_TOUCH_MOUSEID ? ControlTypes::VirtualGamepad : ControlTypes::KeyboardAndMouse;
 	if (IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
 		return ControlTypes::VirtualGamepad;
-	if (event.type == SDL_CONTROLLERAXISMOTION && IsStickMovmentSignificant())
+	if (event.type == SDL_CONTROLLERAXISMOTION
+	    && (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT || event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT
+	        || IsStickMovementSignificant()))
 		return ControlTypes::Gamepad;
 	if (event.type >= SDL_CONTROLLERBUTTONDOWN && event.type <= SDL_CONTROLLERDEVICEREMAPPED)
 		return ControlTypes::Gamepad;
 	if (IsAnyOf(event.type, SDL_JOYDEVICEADDED, SDL_JOYDEVICEREMOVED))
 		return ControlTypes::Gamepad;
 #endif
-	if (event.type == SDL_JOYAXISMOTION && IsStickMovmentSignificant())
+	if (event.type == SDL_JOYAXISMOTION && IsStickMovementSignificant())
 		return ControlTypes::Gamepad;
 	if (event.type >= SDL_JOYBALLMOTION && event.type <= SDL_JOYBUTTONUP)
 		return ControlTypes::Gamepad;
@@ -1467,7 +1481,7 @@ ControlTypes GetInputTypeFromEvent(const SDL_Event &event)
 
 float rightStickLastMove = 0;
 
-bool ContinueSimulatingMouse(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
+bool ContinueSimulatedMouseEvent(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
 	if (IsAutomapActive())
 		return false;
@@ -1484,18 +1498,46 @@ bool ContinueSimulatingMouse(const SDL_Event &event, const ControllerButtonEvent
 		return true;
 	}
 
-	if (IsAnyOf(gamepadEvent.button, ControllerButton_BUTTON_RIGHTSTICK, ControllerButton_BUTTON_BACK)) {
-		return true;
-	}
+	return SimulatingMouseWithSelectAndDPad || IsSimulatedMouseClickBinding(gamepadEvent);
+}
 
-	return false;
+void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes newControlMode)
+{
+	if (SDL_LOG_PRIORITY_VERBOSE < SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION))
+		return;
+	if (newControlDevice == ControlDevice && newControlMode == ControlMode)
+		return;
+	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
+		if (before == after)
+			return std::string { ControlTypeToString(before) };
+		return fmt::format("{} -> {}", ControlTypeToString(before), ControlTypeToString(after));
+	};
+	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
 }
 
 } // namespace
 
+string_view ControlTypeToString(ControlTypes controlType)
+{
+	switch (controlType) {
+	case ControlTypes::None:
+		return "None";
+	case ControlTypes::KeyboardAndMouse:
+		return "KeyboardAndMouse";
+	case ControlTypes::Gamepad:
+		return "Gamepad";
+	case ControlTypes::VirtualGamepad:
+		return "VirtualGamepad";
+	}
+	return "Invalid";
+}
+
 void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &gamepadEvent)
 {
 	ControlTypes inputType = GetInputTypeFromEvent(event);
+
+	if (inputType == ControlTypes::None)
+		return;
 
 #ifdef __vita__
 	if (inputType == ControlTypes::VirtualGamepad) {
@@ -1509,22 +1551,29 @@ void DetectInputMethod(const SDL_Event &event, const ControllerButtonEvent &game
 	}
 #endif
 
-	if (ControlMode == ControlTypes::KeyboardAndMouse && inputType == ControlTypes::Gamepad && ContinueSimulatingMouse(event, gamepadEvent)) {
-		return;
+	ControlTypes newControlDevice = inputType;
+	ControlTypes newControlMode = inputType;
+	if (ContinueSimulatedMouseEvent(event, gamepadEvent)) {
+		newControlMode = ControlMode;
 	}
 
-	if (inputType != ControlTypes::None && inputType != ControlMode) {
-		ControlMode = inputType;
+	LogControlDeviceAndModeChange(newControlDevice, newControlMode);
+
+	if (newControlDevice != ControlDevice) {
+		ControlDevice = newControlDevice;
 
 #ifndef USE_SDL1
-		if (ControlMode != ControlTypes::KeyboardAndMouse) {
+		if (ControlDevice != ControlTypes::KeyboardAndMouse) {
 			if (IsHardwareCursor())
 				SetHardwareCursor(CursorInfo::UnknownCursor());
 		} else {
 			ResetCursor();
 		}
 #endif
+	}
 
+	if (newControlMode != ControlMode) {
+		ControlMode = newControlMode;
 		CalculatePanelAreas();
 	}
 }
@@ -1566,9 +1615,11 @@ void HandleRightStickMotion()
 		static int lastMouseSetTick = 0;
 		const int now = SDL_GetTicks();
 		if (now - lastMouseSetTick > 0) {
-			ControlMode = ControlTypes::KeyboardAndMouse;
 			ResetCursor();
 			SetCursorPos({ x, y });
+			LogControlDeviceAndModeChange(ControlDevice, ControlTypes::KeyboardAndMouse);
+
+			ControlMode = ControlTypes::KeyboardAndMouse;
 			lastMouseSetTick = now;
 		}
 	}
@@ -1608,11 +1659,22 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 
+	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
+	if (ControllerButtonHeld != ControllerButton_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
+		InvalidateTargets();
+
+		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
+			FindTrigger();
+		}
+		return;
+	}
+
 	// Clear focuse set by cursor
 	pcursplr = -1;
 	pcursmonst = -1;
 	pcursitem = -1;
 	pcursobj = -1;
+
 	pcursmissile = nullptr;
 	pcurstrig = -1;
 	pcursquest = Q_INVALID;
@@ -1768,7 +1830,7 @@ bool SpellHasActorTarget()
 	return pcursplr != -1 || pcursmonst != -1;
 }
 
-void UpdateSpellTarget()
+void UpdateSpellTarget(spell_id spell)
 {
 	if (SpellHasActorTarget())
 		return;
@@ -1778,7 +1840,7 @@ void UpdateSpellTarget()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	int range = myPlayer._pRSpell == SPL_TELEPORT ? 4 : 1;
+	int range = spell == SPL_TELEPORT ? 4 : 1;
 
 	cursPosition = myPlayer.position.future + Displacement(myPlayer._pdir) * range;
 }
@@ -1861,39 +1923,58 @@ void PerformSpellAction()
 		return;
 	}
 
-	UpdateSpellTarget();
+	UpdateSpellTarget(myPlayer._pRSpell);
 	CheckPlrSpell(false);
+	if (pcursplr != -1)
+		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
+	else if (pcursmonst != -1)
+		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
+	else
+		LastMouseButtonAction = MouseActionType::Spell;
 }
 
 void CtrlUseInvItem()
 {
-	if (pcursinvitem == -1)
-		return;
-
-	auto &myPlayer = Players[MyPlayerId];
-
-	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-	if (item.IsScroll() && spelldata[item._iSpell].sTargeted) {
+	if (pcursinvitem == -1) {
 		return;
 	}
+
+	auto &myPlayer = Players[MyPlayerId];
+	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
+	if (item.IsScroll()) {
+		if (TargetsMonster(item._iSpell)) {
+			return;
+		}
+		if (spelldata[item._iSpell].sTargeted) {
+			UpdateSpellTarget(item._iSpell);
+		}
+	}
+
 	int itemId = GetItemIdOnSlot(Slot);
 	if (item.isEquipment()) {
 		CheckInvItem(true, false); // auto-equip if it's an equipment
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
 	}
-	if (itemId != GetItemIdOnSlot(Slot))
+	if (itemId != GetItemIdOnSlot(Slot)) {
 		ResetInvCursorPosition();
+	}
 }
 
 void CtrlUseStashItem()
 {
-	if (pcursstashitem == uint16_t(-1))
+	if (pcursstashitem == uint16_t(-1)) {
 		return;
+	}
 
 	const Item &item = Stash.stashList[pcursstashitem];
-	if (item.IsScroll() && spelldata[item._iSpell].sTargeted) {
-		return;
+	if (item.IsScroll()) {
+		if (TargetsMonster(item._iSpell)) {
+			return;
+		}
+		if (spelldata[item._iSpell].sTargeted) {
+			UpdateSpellTarget(item._iSpell);
+		}
 	}
 
 	if (item.isEquipment()) {
@@ -1932,6 +2013,7 @@ void PerformSecondaryAction()
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursPosition, pcursitem);
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		LastMouseButtonAction = MouseActionType::OperateObject;
 	} else {
 		if (pcursmissile != nullptr) {
 			MakePlrPath(myPlayer, pcursmissile->position.tile, true);
@@ -1949,8 +2031,20 @@ void PerformSecondaryAction()
 void QuickCast(int slot)
 {
 	auto &myPlayer = Players[MyPlayerId];
+	spell_id spell = myPlayer._pSplHotKey[slot];
+	spell_type spellType = myPlayer._pSplTHotKey[slot];
 
-	CheckPlrSpell(false, myPlayer._pSplHotKey[slot], myPlayer._pSplTHotKey[slot]);
+	if (ControlMode != ControlTypes::KeyboardAndMouse) {
+		UpdateSpellTarget(spell);
+	}
+
+	CheckPlrSpell(false, spell, spellType);
+	if (pcursplr != -1)
+		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
+	else if (pcursmonst != -1)
+		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
+	else
+		LastMouseButtonAction = MouseActionType::Spell;
 }
 
 } // namespace devilution

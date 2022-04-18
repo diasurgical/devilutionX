@@ -3587,10 +3587,10 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		addflag = spellcheck == SpellCheckResult::Success;
 		break;
 	case RSPLTYPE_SCROLL:
-		addflag = UseScroll();
+		addflag = UseScroll(spellID);
 		break;
 	case RSPLTYPE_CHARGES:
-		addflag = UseStaff();
+		addflag = UseStaff(spellID);
 		break;
 	case RSPLTYPE_INVALID:
 		return;
