@@ -2849,9 +2849,12 @@ void CreatePlrItems(int playerId)
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
 
-		InitializeItem(player.HoldItem, IDI_WARRCLUB);
-		GenerateNewSeed(player.HoldItem);
-		AutoPlaceItemInInventory(player, player.HoldItem, true);
+		{
+			Item club;
+			InitializeItem(club, IDI_WARRCLUB);
+			GenerateNewSeed(club);
+			AutoPlaceItemInInventorySlot(player, 0, club, true);
+		}
 
 		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GenerateNewSeed(player.SpdList[0]);
