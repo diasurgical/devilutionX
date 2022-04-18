@@ -171,7 +171,7 @@ std::vector<std::string> GetLocales()
 
 	CFRelease(languages);
 #elif PS4
-    locales.emplace_back("en_US");
+    // std::locale is unavailable on PS4, so we just let the fallback language get loaded
 #else
 	try {
 		std::string locale = std::locale("").name();
