@@ -198,8 +198,23 @@ void AutoGetItem(int pnum, Item *item, int ii);
  */
 int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t ci);
 void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
+
+/**
+ * @brief Checks if the tile has room for an item
+ * @param position tile coordinates
+ * @return True if the space is free of obstructions, false if blocked
+ */
 bool CanPut(Point position);
-bool TryInvPut();
+
+/**
+ * @brief Checks for free spaces in the three "adjacent" tiles in the given direction and also the given position.
+ * @see CanPut
+ * @param position base tile coordinates
+ * @param facing direction to check, tiles "left" and "right" of this direction will also be checked.
+ * @return True if any of the four tiles checked can accept an item, false if all blocked
+ */
+bool CanPut(Point position, Direction facing);
+
 int InvPutItem(Player &player, Point position, Item &item);
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
@@ -212,7 +227,6 @@ Item &GetInventoryItem(Player &player, int location);
 bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(Player &player);
-bool DropItemBeforeTrig();
 
 /**
  * @brief Gets the size, in inventory cells, of the given item.

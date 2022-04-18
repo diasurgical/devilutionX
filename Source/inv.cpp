@@ -1763,27 +1763,24 @@ bool CanPut(Point position)
 	return true;
 }
 
-bool TryInvPut()
+bool CanPut(Point position, Direction dir)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
-
-	Direction dir = GetDirection(myPlayer.position.tile, cursPosition);
-	if (CanPut(myPlayer.position.tile + dir)) {
+	if (CanPut(position + dir)) {
 		return true;
 	}
 
-	if (CanPut(myPlayer.position.tile + Left(dir))) {
+	if (CanPut(position + Left(dir))) {
 		return true;
 	}
 
-	if (CanPut(myPlayer.position.tile + Right(dir))) {
+	if (CanPut(position + Right(dir))) {
 		return true;
 	}
 
-	return CanPut(myPlayer.position.tile);
+	return CanPut(position);
 }
 
 int InvPutItem(Player &player, Point position, Item &item)
@@ -2188,17 +2185,6 @@ int CalculateGold(Player &player)
 	}
 
 	return gold;
-}
-
-bool DropItemBeforeTrig()
-{
-	if (!TryInvPut()) {
-		return false;
-	}
-
-	NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, Players[MyPlayerId].HoldItem);
-	NewCursor(CURSOR_HAND);
-	return true;
 }
 
 Size GetInventorySize(const Item &item)

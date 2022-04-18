@@ -1809,7 +1809,7 @@ void UpdateSpellTarget(spell_id spell)
  */
 bool TryDropItem()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = *MyPlayer;
 
 	if (myPlayer.HoldItem.isEmpty()) {
 		return false;
@@ -1830,18 +1830,21 @@ bool TryDropItem()
 		}
 	}
 
-	cursPosition = myPlayer.position.future + Direction::SouthEast;
-	if (!DropItemBeforeTrig()) {
-		// Try to drop on the other side
-		cursPosition = myPlayer.position.future + Direction::SouthWest;
-		DropItemBeforeTrig();
+	Point position = myPlayer.position.future;
+	Direction direction = myPlayer._pdir;
+	if (!CanPut(position, direction)) {
+		direction = Opposite(direction);
+		// if we can't drop in front of the player, can we drop it behind?
+		if (!CanPut(position, direction)) {
+			myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
+			return false;
+		}
 	}
 
-	if (pcurs != CURSOR_HAND) {
-		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
-	}
-
-	return pcurs == CURSOR_HAND;
+	NetSendCmdPItem(true, CMD_PUTITEM, position + direction, myPlayer.HoldItem);
+	myPlayer.HoldItem.Clear();
+	NewCursor(CURSOR_HAND);
+	return true;
 }
 
 void PerformSpellAction()
