@@ -266,15 +266,15 @@ void selgame_GameSelection_Select(int value)
 	selgame_enteringGame = true;
 	selgame_selectedGame = value;
 
+	gfnHeroInfo(UpdateHeroLevel);
+
+	selgame_FreeVectors();
+
 	if (value > 2) {
 		CopyUtf8(selgame_Ip, Gamelist[value - 3].name, sizeof(selgame_Ip));
 		selgame_Password_Select(value);
 		return;
 	}
-
-	gfnHeroInfo(UpdateHeroLevel);
-
-	selgame_FreeVectors();
 
 	UiAddBackground(&vecSelGameDialog);
 	UiAddLogo(&vecSelGameDialog);

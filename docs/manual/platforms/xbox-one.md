@@ -1,8 +1,9 @@
 # DevilutionX (Diablo 1) for Microsoft Xbox One/Series
 
 ## Installation
-
-1. Download and unzip [devilutionx-xbox-one.zip](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-xbox-one.zip).
+1. Download and unzip [devilutionx-xbox-one-series.zip
+](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-xbox-one-series.zip
+).
 2. In Xbox Device Portal click on `Add` button located at `Home/My games & apps`
 3. In the first popup - called `Deploy or Install Application` choose `devilutionX..appx` and then click `Next`
 4. In the second popup - called `Choose any necessary dependencies` choose `Microsoft.VCLibs..appx` and then click `Start`

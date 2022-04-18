@@ -21,6 +21,7 @@
 #include "platform/locale.hpp"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
+#include "sound_defs.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -37,7 +38,16 @@ namespace devilution {
 #define DEFAULT_HEIGHT 480
 #endif
 #ifndef DEFAULT_AUDIO_SAMPLE_RATE
+#if defined(_WIN64) || defined(_WIN32)
+// The sound API used by SDL in Windows (WASAPI) isn't great
+// at upsampling from 22050 Hz on some drivers.
+//
+// Upsample ourselves on Windows by default.
+// See https://github.com/diasurgical/devilutionX/issues/1390
+#define DEFAULT_AUDIO_SAMPLE_RATE 48000
+#else
 #define DEFAULT_AUDIO_SAMPLE_RATE 22050
+#endif
 #endif
 #ifndef DEFAULT_AUDIO_CHANNELS
 #define DEFAULT_AUDIO_CHANNELS 2
@@ -611,7 +621,14 @@ AudioOptions::AudioOptions()
     , sampleRate("Sample Rate", OptionEntryFlags::CantChangeInGame, N_("Sample Rate"), N_("Output sample rate (Hz)."), DEFAULT_AUDIO_SAMPLE_RATE, { 22050, 44100, 48000 })
     , channels("Channels", OptionEntryFlags::CantChangeInGame, N_("Channels"), N_("Number of output channels."), DEFAULT_AUDIO_CHANNELS, { 1, 2 })
     , bufferSize("Buffer Size", OptionEntryFlags::CantChangeInGame, N_("Buffer Size"), N_("Buffer size (number of frames per channel)."), DEFAULT_AUDIO_BUFFER_SIZE, { 1024, 2048, 5120 })
-    , resamplingQuality("Resampling Quality", OptionEntryFlags::CantChangeInGame, N_("Resampling Quality"), N_("Quality of the resampler, from 0 (lowest) to 10 (highest)."), DEFAULT_AUDIO_RESAMPLING_QUALITY, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+    , resamplingQuality("Resampling Quality",
+          OptionEntryFlags::CantChangeInGame |
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
+              OptionEntryFlags::Invisible,
+#else
+              OptionEntryFlags::None,
+#endif
+          N_("Resampling Quality"), N_("Quality of the resampler, from 0 (lowest) to 10 (highest)."), DEFAULT_AUDIO_RESAMPLING_QUALITY, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
 {
 	sampleRate.SetValueChangedCallback(OptionAudioChanged);
 	channels.SetValueChangedCallback(OptionAudioChanged);

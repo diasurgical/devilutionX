@@ -31,6 +31,6 @@ set(USE_DEC_DRMP3 ON)
 
 include(FetchContent)
 FetchContent_Declare(SDL_audiolib
-  URL https://github.com/realnc/SDL_audiolib/archive/1a69135313c79817b38a3a99826d4ac28d627fdf.tar.gz
-  URL_HASH MD5=0bb189ccf8d26e01d10a97a24d298d2a)
+  URL https://github.com/realnc/SDL_audiolib/archive/e503dc0200d0833da4b2dd9fa1dbf1baf02ca591.tar.gz
+  URL_HASH MD5=9460b91b44caa7cbb7f713214d248307)
 FetchContent_MakeAvailableExcludeFromAll(SDL_audiolib)

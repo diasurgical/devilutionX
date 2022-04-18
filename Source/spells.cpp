@@ -146,7 +146,7 @@ int GetManaAmount(Player &player, spell_id sn)
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
 		ma = (spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
-		ma = ((BYTE)player._pMaxManaBase - adj);
+		ma = (player._pMaxManaBase >> 6) - adj;
 	} else {
 		ma = (spelldata[sn].sManaCost - adj);
 	}
