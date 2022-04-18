@@ -19,8 +19,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 "X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
@@ -1326,9 +1326,10 @@ msgstr "Остановить персонажа"
 msgid "Stops walking and cancel pending actions."
 msgstr "Останавливает ходьбу и отменяет отложенные действия."
 
+# Подсвечиваем всё-таки не один предмет, а все. Так логичнее.
 #: Source/diablo.cpp:1514
 msgid "Item highlighting"
-msgstr "Подсветка предмета"
+msgstr "Подсветка предметов"
 
 #: Source/diablo.cpp:1515
 msgid "Show/hide items on ground."
@@ -1336,7 +1337,7 @@ msgstr "Показать/скрыть предметы на земле."
 
 #: Source/diablo.cpp:1521
 msgid "Toggle item highlighting"
-msgstr "Переключить подсветку предмета"
+msgstr "Переключить подсветку предметов"
 
 #: Source/diablo.cpp:1522
 msgid "Permanent show/hide items on ground."
@@ -1386,13 +1387,15 @@ msgstr "Быстрое сообщение {}"
 msgid "Use Quick Message in chat."
 msgstr "Используйте быстрое сообщение в чате."
 
+# "Экран" в "панель" .
 #: Source/diablo.cpp:1580
 msgid "Hide Info Screens"
-msgstr "Скрыть информационные экраны"
+msgstr "Скрыть информационные панели"
 
+# Слегка разбавляем тавтологию. На усмотрение.
 #: Source/diablo.cpp:1581
 msgid "Hide all info screens."
-msgstr "Скрыть все информационные панели."
+msgstr "Спрятать все информационные панели."
 
 #: Source/diablo.cpp:1601
 msgid "Zoom"
@@ -1691,7 +1694,7 @@ msgstr "Спасение достигается ценой мудрости"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:91
 msgid "Mysteries are revealed in the light of reason"
-msgstr "Тайны раскрываются в свете разума"
+msgstr "Тайны раскрываются светом разума"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:92
@@ -3646,7 +3649,7 @@ msgstr "Острие Бури"
 # Попробуйте перевести лучше
 #: Source/itemdat.cpp:490
 msgid "Gleamsong"
-msgstr "Мерцающая Песнь"
+msgstr "Блистающая Песнь"
 
 #: Source/itemdat.cpp:491
 msgid "Thundercall"
@@ -6257,7 +6260,7 @@ msgstr "Звук ходьбы"
 # (The original phrase is formulated in a quite, ahem, specific way. Might need to update the English translation itself.)
 #: Source/options.cpp:612
 msgid "Player emits sound when walking."
-msgstr "Игрок издает звук при ходьбе."
+msgstr "Персонаж издает звук при ходьбе."
 
 #: Source/options.cpp:613
 msgid "Auto Equip Sound"
@@ -6445,10 +6448,12 @@ msgstr "Аппаратный курсор для предметов"
 msgid "Use a hardware cursor for items."
 msgstr "Использовать аппаратный курсор для предметов."
 
+# Если оставить слово "максимальный", то не влезает в границы интерфейса (2 символа).
 #: Source/options.cpp:759
 msgid "Hardware Cursor Maximum Size"
-msgstr "Максимальный размер аппаратного курсора"
+msgstr "Предельный размер аппаратного курсора"
 
+# "Максимальный" на "предельный" менять не стал..
 #: Source/options.cpp:759
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
@@ -6459,13 +6464,13 @@ msgstr ""
 
 #: Source/options.cpp:761
 msgid "FPS Limiter"
-msgstr "Ограничитель FPS"
+msgstr "Ограничить FPS"
 
 #: Source/options.cpp:761
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
-"FPS ограничен, чтобы избежать высокой нагрузки на процессор. Лимит учитывает "
-"частоту обновления."
+"FPS ограничен, чтобы избежать высокой нагрузки на процессор. Учитывается "
+"частота обновления."
 
 #: Source/options.cpp:762
 msgid "Show FPS"
@@ -6513,7 +6518,7 @@ msgstr ""
 
 #: Source/options.cpp:816
 msgid "Grab Input"
-msgstr "Захватить ввод"
+msgstr "Захват ввода"
 
 #: Source/options.cpp:816
 msgid "When enabled mouse is locked to the game window."
@@ -6589,8 +6594,8 @@ msgstr "Автоподбор золота"
 #: Source/options.cpp:824
 msgid "Gold is automatically collected when in close proximity to the player."
 msgstr ""
-"Золото автоматически подбирается, когда игрок находится в непосредственной "
-"близости от него."
+"Золото автоматически подбирается, когда персонаж находится в "
+"непосредственной близости от него."
 
 #: Source/options.cpp:825
 msgid "Auto Elixir Pickup"
@@ -6600,8 +6605,8 @@ msgstr "Автоподбор эликсиров"
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
 msgstr ""
-"Эликсиры автоматически подбираются, когда игрок находится в непосредственной "
-"близости от них."
+"Эликсиры автоматически подбираются, когда персонаж находится в "
+"непосредственной близости от них."
 
 #: Source/options.cpp:826
 msgid "Auto Pickup in Town"
@@ -6723,17 +6728,19 @@ msgstr ""
 "Горячие клавиши заклинаний мгновенно вызывают заклинание, а не переключают "
 "готовое."
 
+# Пункт здесь и ниже находится в меню перед числом, так что.. так будет логичнее.
 #: Source/options.cpp:838
 msgid "Heal Potion Pickup"
-msgstr "Подбор Зелий Исцеления"
+msgstr "Подобрать Зелья Исцеления"
 
 #: Source/options.cpp:838
 msgid "Number of Healing potions to pick up automatically."
 msgstr "Количество Зелий Исцеления, которое нужно подобрать автоматически."
 
+# Очень большая фраза, число переносится на другую строку; как уменьшить - не знаю.
 #: Source/options.cpp:839
 msgid "Full Heal Potion Pickup"
-msgstr "Подбор Зелий Полного Исцеления"
+msgstr "Подобрать Зелья Полного Исцеления"
 
 #: Source/options.cpp:839
 msgid "Number of Full Healing potions to pick up automatically."
@@ -6742,7 +6749,7 @@ msgstr ""
 
 #: Source/options.cpp:840
 msgid "Mana Potion Pickup"
-msgstr "Подбор Зелий Маны"
+msgstr "Подобрать Зелья Маны"
 
 #: Source/options.cpp:840
 msgid "Number of Mana potions to pick up automatically."
@@ -6750,7 +6757,7 @@ msgstr "Количество Зелий Маны, которое нужно по
 
 #: Source/options.cpp:841
 msgid "Full Mana Potion Pickup"
-msgstr "Подбор Зелий Полной Маны"
+msgstr "Подобрать Зелья Полной Маны"
 
 #: Source/options.cpp:841
 msgid "Number of Full Mana potions to pick up automatically."
@@ -6758,15 +6765,16 @@ msgstr "Количество Зелий Полной Маны, которое н
 
 #: Source/options.cpp:842
 msgid "Rejuvenation Potion Pickup"
-msgstr "Подбор Зелий Омоложения"
+msgstr "Подобрать Зелья Омоложения"
 
 #: Source/options.cpp:842
 msgid "Number of Rejuvenation potions to pick up automatically."
 msgstr "Количество Зелий Омоложения, которое нужно подобрать автоматически."
 
+# Очень большая фраза, число переносится на другую строку; как уменьшить - не знаю.
 #: Source/options.cpp:843
 msgid "Full Rejuvenation Potion Pickup"
-msgstr "Подбор Зелий Полного Омоложения"
+msgstr "Подобрать Зелья Полного Омоложения"
 
 #: Source/options.cpp:843
 msgid "Number of Full Rejuvenation potions to pick up automatically."
@@ -6809,13 +6817,14 @@ msgstr "Определите, какой язык использовать в и
 msgid "Language Settings"
 msgstr "Настройки языка"
 
+# Раскладка - это всё-таки больше к физическому расположению клавиш.
 #: Source/options.cpp:1044
 msgid "Keymapping"
-msgstr "Раскладка клавиш"
+msgstr "Привязка клавиш"
 
 #: Source/options.cpp:1044
 msgid "Keymapping Settings"
-msgstr "Настройки раскладки клавиш"
+msgstr "Настройка привязок клавиш"
 
 #: Source/panels/charpanel.cpp:130
 msgid "Level"
