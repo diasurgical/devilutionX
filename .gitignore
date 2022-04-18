@@ -11,6 +11,9 @@
 *.project
 *.workspace
 
+# CLion
+cmake-build-*
+
 # Devilution Comparer
 devilution-comparer
 comparer-config.toml

@@ -348,6 +348,7 @@ if(VITA)
 endif()
 
 if(PS4)
+  target_include_directories(libmpq PRIVATE "${PROJECT_SOURCE_DIR}/Source/platform/ps4")
   add_custom_command(
     TARGET devilutionx_mpq POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} "${PROJECT_SOURCE_DIR}/Packaging/ps4/")
