@@ -93,7 +93,6 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size);
  * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
  */
 bool CanBePlacedOnBelt(const Item &item);
-int SwapItem(Item &a, Item &b);
 
 /**
  * @brief Function type which performs an operation on the given item.

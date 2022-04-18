@@ -292,10 +292,8 @@ bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool p
 	return true;
 }
 
-void CheckInvPaste(int pnum, Point cursorPosition)
+void CheckInvPaste(Player &player, Point cursorPosition)
 {
-	auto &player = Players[pnum];
-
 	int i = cursorPosition.x;
 	int j = cursorPosition.y;
 
@@ -415,10 +413,9 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (player._pmode > PM_WALK3 && IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT))
 		return;
 
-	if (pnum == MyPlayerId)
+	if (&player == MyPlayer)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
-	int cn = CURSOR_HAND;
 	switch (il) {
 	case ILOC_HELM:
 	case ILOC_RING:
@@ -441,9 +438,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		inv_body_loc slot = iLocToInvLoc(il);
 		Item previouslyEquippedItem = player.InvBody[slot];
 		ChangeEquipment(player, slot, player.HoldItem);
-		if (!previouslyEquippedItem.isEmpty()) {
+		if (previouslyEquippedItem.isEmpty()) {
+			player.HoldItem.Clear();
+		} else {
 			player.HoldItem = previouslyEquippedItem;
-			cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
 		}
 		break;
 	}
@@ -462,25 +460,24 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			RemoveEquipment(player, otherHand, false);
 		}
 		ChangeEquipment(player, pasteHand, player.HoldItem);
-		if (!previouslyEquippedItem.isEmpty()) {
+		if (previouslyEquippedItem.isEmpty()) {
+			player.HoldItem.Clear();
+		} else {
 			player.HoldItem = previouslyEquippedItem;
-			cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
 		}
 		break;
 	}
 	case ILOC_TWOHAND:
 		if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && !player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-			Item tempitem = player.HoldItem;
-			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
-				player.HoldItem = player.InvBody[INVLOC_HAND_RIGHT];
-			else
-				player.HoldItem = player.InvBody[INVLOC_HAND_LEFT];
-			bool done2h = AutoPlaceItemInInventory(player, player.HoldItem, true);
-			player.HoldItem = tempitem;
+			inv_body_loc locationToUnequip = INVLOC_HAND_LEFT;
+			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+				locationToUnequip = INVLOC_HAND_RIGHT;
+			}
+			bool done2h = AutoPlaceItemInInventory(player, player.InvBody[locationToUnequip], true);
 			if (!done2h)
 				return;
 
-			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+			if (locationToUnequip == INVLOC_HAND_RIGHT) {
 				RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 			} else {
 				// CMD_CHANGEPLRITEMS will eventually be sent for the left hand
@@ -491,16 +488,16 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_LEFT];
 			ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem);
-			if (!previouslyEquippedItem.isEmpty()) {
+			if (previouslyEquippedItem.isEmpty()) {
+				player.HoldItem.Clear();
+			} else {
 				player.HoldItem = previouslyEquippedItem;
-				cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
 			}
 		} else {
 			Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_RIGHT];
 			RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 			ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem);
 			player.HoldItem = previouslyEquippedItem;
-			cn = previouslyEquippedItem._iCurs + CURSOR_FIRSTITEM;
 		}
 		break;
 	case ILOC_UNEQUIPABLE:
@@ -512,36 +509,36 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				int ig = player.HoldItem._ivalue + gt;
 				if (ig <= MaxGold) {
 					player.InvList[invIndex]._ivalue = ig;
-					player._pGold += player.HoldItem._ivalue;
 					SetPlrHandGoldCurs(player.InvList[invIndex]);
+					player._pGold += player.HoldItem._ivalue;
+					player.HoldItem.Clear();
 				} else {
 					ig = MaxGold - gt;
 					player._pGold += ig;
 					player.HoldItem._ivalue -= ig;
+					SetPlrHandGoldCurs(player.HoldItem);
 					player.InvList[invIndex]._ivalue = MaxGold;
 					player.InvList[invIndex]._iCurs = ICURS_GOLD_LARGE;
-					// BUGFIX: incorrect values here are leftover from beta (fixed)
-					cn = GetGoldCursor(player.HoldItem._ivalue);
-					cn += CURSOR_FIRSTITEM;
 				}
 			} else {
 				int invIndex = player._pNumInv;
-				player.InvList[invIndex] = player.HoldItem;
+				player._pGold += player.HoldItem._ivalue;
+				player.InvList[invIndex] = std::move(player.HoldItem);
+				player.HoldItem.Clear();
 				player._pNumInv++;
 				player.InvGrid[ii] = player._pNumInv;
-				player._pGold += player.HoldItem._ivalue;
-				SetPlrHandGoldCurs(player.InvList[invIndex]);
 			}
 		} else {
 			if (it == 0) {
-				player.InvList[player._pNumInv] = player.HoldItem;
+				player.InvList[player._pNumInv] = std::move(player.HoldItem);
+				player.HoldItem.Clear();
 				player._pNumInv++;
 				it = player._pNumInv;
 			} else {
 				int invIndex = it - 1;
 				if (player.HoldItem._itype == ItemType::Gold)
 					player._pGold += player.HoldItem._ivalue;
-				cn = SwapItem(player.InvList[invIndex], player.HoldItem);
+				std::swap(player.InvList[invIndex], player.HoldItem);
 				if (player.HoldItem._itype == ItemType::Gold)
 					player._pGold = CalculateGold(player);
 				for (auto &itemIndex : player.InvGrid) {
@@ -565,7 +562,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		if (player.SpdList[ii].isEmpty()) {
 			player.SpdList[ii] = player.HoldItem;
 		} else {
-			cn = SwapItem(player.SpdList[ii], player.HoldItem);
+			std::swap(player.SpdList[ii], player.HoldItem);
 			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
 		}
@@ -576,10 +573,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		break;
 	}
 	CalcPlrInv(player, true);
-	if (pnum == MyPlayerId) {
-		if (cn == CURSOR_HAND && !IsHardwareCursor())
+	if (&player == MyPlayer) {
+		if (player.HoldItem.isEmpty() && !IsHardwareCursor())
 			SetCursorPos(MousePosition + Displacement { itemSize * INV_SLOT_HALF_SIZE_PX });
-		NewCursor(cn);
+		NewCursor(player.HoldItem);
 	}
 }
 
@@ -1134,13 +1131,6 @@ bool CanBePlacedOnBelt(const Item &item)
 	    && AllItemsList[item.IDidx].iUsable;
 }
 
-int SwapItem(Item &a, Item &b)
-{
-	std::swap(a, b);
-
-	return b._iCurs + CURSOR_FIRSTITEM;
-}
-
 void FreeInvGFX()
 {
 	pInvCels = std::nullopt;
@@ -1594,7 +1584,7 @@ void TransferItemToStash(Player &player, int location)
 void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (!MyPlayer->HoldItem.isEmpty()) {
-		CheckInvPaste(MyPlayerId, MousePosition);
+		CheckInvPaste(*MyPlayer, MousePosition);
 	} else if (IsStashOpen && isCtrlHeld) {
 		TransferItemToStash(*MyPlayer, pcursinvitem);
 	} else {
