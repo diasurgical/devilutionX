@@ -91,6 +91,12 @@ public class DevilutionXSDLActivity extends SDLActivity {
 				return true;
 			}
 		}
+		if (lang.startsWith("ru")) {
+			File ru_mpq = new File(externalDir + "/ru.mpq");
+			if (!ru_mpq.exists()) {
+				return true;
+			}
+		}
 		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
 			File fonts_mpq = new File(externalDir + "/fonts.mpq");
 			if (!fonts_mpq.exists()) {

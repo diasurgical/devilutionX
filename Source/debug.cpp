@@ -169,17 +169,16 @@ std::string DebugCmdGiveGoldCheat(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	for (int8_t &itemId : myPlayer.InvGrid) {
-		if (itemId != 0)
+	for (int8_t &itemIndex : myPlayer.InvGrid) {
+		if (itemIndex != 0)
 			continue;
 
-		int ni = myPlayer._pNumInv++;
-		InitializeItem(myPlayer.InvList[ni], IDI_GOLD);
-		GenerateNewSeed(myPlayer.InvList[ni]);
-		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
-		myPlayer._pGold += GOLD_MAX_LIMIT;
-		itemId = myPlayer._pNumInv;
+		Item &goldItem = myPlayer.InvList[myPlayer._pNumInv];
+		MakeGoldStack(goldItem, GOLD_MAX_LIMIT);
+		myPlayer._pNumInv++;
+		itemIndex = myPlayer._pNumInv;
+
+		myPlayer._pGold += goldItem._ivalue;
 	}
 	CalcPlrInv(myPlayer, true);
 
@@ -190,15 +189,15 @@ std::string DebugCmdTakeGoldCheat(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	for (auto itemId : myPlayer.InvGrid) {
-		itemId -= 1;
+	for (auto itemIndex : myPlayer.InvGrid) {
+		itemIndex -= 1;
 
-		if (itemId < 0)
+		if (itemIndex < 0)
 			continue;
-		if (myPlayer.InvList[itemId]._itype != ItemType::Gold)
+		if (myPlayer.InvList[itemIndex]._itype != ItemType::Gold)
 			continue;
 
-		myPlayer.RemoveInvItem(itemId);
+		myPlayer.RemoveInvItem(itemIndex);
 	}
 
 	myPlayer._pGold = 0;
@@ -784,7 +783,7 @@ std::string DebugCmdItemInfo(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 	Item *pItem = nullptr;
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!myPlayer.HoldItem.isEmpty()) {
 		pItem = &myPlayer.HoldItem;
 	} else if (pcursinvitem != -1) {
 		if (pcursinvitem <= INVITEM_INV_LAST)

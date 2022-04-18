@@ -38,14 +38,11 @@ const int LineHeight = 38;
 
 std::vector<std::string> TextLines;
 
-void LoadText(const char *text)
+void LoadText(string_view text)
 {
 	TextLines.clear();
 
-	char tempstr[2560];
-	strcpy(tempstr, text);
-
-	const std::string paragraphs = WordWrapString(tempstr, 543, GameFont30);
+	const std::string paragraphs = WordWrapString(text, 543, GameFont30);
 
 	size_t previous = 0;
 	while (true) {
@@ -148,7 +145,7 @@ void InitQTextMsg(_speech_id m)
 
 void DrawQTextBack(const Surface &out)
 {
-	CelDrawTo(out, { PANEL_X + 24, 327 + UI_OFFSET_Y }, *pTextBoxCels, 1);
+	CelDrawTo(out, { PANEL_X + 24, 327 + UI_OFFSET_Y }, *pTextBoxCels, 0);
 	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 

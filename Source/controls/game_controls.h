@@ -71,9 +71,14 @@ struct GameAction {
 
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
 
+bool IsSimulatedMouseClickBinding(ControllerButtonEvent ctrlEvent);
+
 AxisDirection GetMoveDirection();
 
 extern bool start_modifier_active;
 extern bool select_modifier_active;
+extern const ControllerButton ControllerButtonPrimary;
+extern const ControllerButton ControllerButtonSecondary;
+extern const ControllerButton ControllerButtonTertiary;
 
 } // namespace devilution

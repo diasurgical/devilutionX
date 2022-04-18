@@ -5,8 +5,11 @@ include(functions/emscripten_system_library)
 
 if(EMSCRIPTEN)
   emscripten_system_library("zlib" ZLIB::ZLIB USE_ZLIB=1)
-elseif(UWP_LIB)
-  add_subdirectory(3rdParty/zlib)
+else()
+  dependency_options("zlib" DEVILUTIONX_SYSTEM_ZLIB ON DEVILUTIONX_STATIC_ZLIB)
+  if(NOT DEVILUTIONX_SYSTEM_ZLIB)
+    add_subdirectory(3rdParty/zlib)
+  endif()
 endif()
 
 dependency_options("bzip2" DEVILUTIONX_SYSTEM_BZIP2 ON DEVILUTIONX_STATIC_BZIP2)

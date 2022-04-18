@@ -70,6 +70,10 @@ const char *packet_type_to_string(uint8_t packetType)
 		return "PT_INFO_REQUEST";
 	case PT_INFO_REPLY:
 		return "PT_INFO_REPLY";
+	case PT_ECHO_REQUEST:
+		return "PT_ECHO_REQUEST";
+	case PT_ECHO_REPLY:
+		return "PT_ECHO_REQUEST";
 	default:
 		return nullptr;
 	}
@@ -160,6 +164,13 @@ plr_t packet::NewPlayer()
 	assert(have_decrypted);
 	CheckPacketTypeOneOf({ PT_JOIN_ACCEPT, PT_CONNECT, PT_DISCONNECT }, m_type);
 	return m_newplr;
+}
+
+timestamp_t packet::Time()
+{
+	assert(have_decrypted);
+	CheckPacketTypeOneOf({ PT_ECHO_REQUEST, PT_ECHO_REPLY }, m_type);
+	return m_time;
 }
 
 const buffer_t &packet::Info()

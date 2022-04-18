@@ -3,8 +3,9 @@
 ## How To Play:
  - Install VPK
  - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)) to the `ux0:/data/diasurgical/devilution/`.
- - For Chinese, Japanese, and Korean text support download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq and add it to the game folder.
- - For the Polish voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq.
+ - For Chinese, Japanese, and Korean text support download https://github.com/diasurgical/devilutionx-assets/releases/download/v2/fonts.mpq and add it to the game folder.
+ - For the Polish voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v2/pl.mpq.
+ - For the Russian voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq.
 
 # Building from Source
 

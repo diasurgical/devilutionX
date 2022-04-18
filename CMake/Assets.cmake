@@ -56,6 +56,8 @@ set(devilutionx_assets
   data/panel8bucp.pcx
   data/monstertags.pcx
   data/resistance.pcx
+  data/stash.pcx
+  data/stashnavbtns.pcx
   data/talkbutton.pcx
   data/xpbar.pcx
   fonts/12-00.bin
@@ -71,6 +73,8 @@ set(devilutionx_assets
   fonts/12-1f4.pcx
   fonts/12-1f6.pcx
   fonts/12-1f9.pcx
+  fonts/12-20.bin
+  fonts/12-20.pcx
   fonts/12-26.pcx
   fonts/22-00.bin
   fonts/22-00.pcx
@@ -84,6 +88,8 @@ set(devilutionx_assets
   fonts/22-04.pcx
   fonts/22-05.bin
   fonts/22-05.pcx
+  fonts/22-20.bin
+  fonts/22-20.pcx
   fonts/24-00.bin
   fonts/24-00.pcx
   fonts/24-01.bin
@@ -97,6 +103,8 @@ set(devilutionx_assets
   fonts/24-1f4.pcx
   fonts/24-1f6.pcx
   fonts/24-1f9.pcx
+  fonts/24-20.bin
+  fonts/24-20.pcx
   fonts/24-26.pcx
   fonts/30-00.bin
   fonts/30-00.pcx
@@ -108,6 +116,8 @@ set(devilutionx_assets
   fonts/30-03.pcx
   fonts/30-04.bin
   fonts/30-04.pcx
+  fonts/30-20.bin
+  fonts/30-20.pcx
   fonts/42-00.bin
   fonts/42-00.pcx
   fonts/42-01.bin
@@ -118,6 +128,8 @@ set(devilutionx_assets
   fonts/42-03.pcx
   fonts/42-04.bin
   fonts/42-04.pcx
+  fonts/42-20.bin
+  fonts/42-20.pcx
   fonts/46-00.bin
   fonts/46-00.pcx
   fonts/46-01.bin
@@ -128,6 +140,8 @@ set(devilutionx_assets
   fonts/46-03.pcx
   fonts/46-04.bin
   fonts/46-04.pcx
+  fonts/46-20.bin
+  fonts/46-20.pcx
   fonts/black.trn
   fonts/blue.trn
   fonts/buttonface.trn

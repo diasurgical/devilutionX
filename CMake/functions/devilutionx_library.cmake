@@ -1,4 +1,5 @@
 include(functions/genex)
+include(functions/set_relative_file_macro)
 
 # This function is equivalent to `add_library` but applies DevilutionX-specific
 # compilation flags to it.
@@ -66,6 +67,8 @@ function(add_devilutionx_library NAME)
   endif()
 
   target_compile_definitions(${NAME} PUBLIC ${DEVILUTIONX_DEFINITIONS})
+
+  set_relative_file_macro(${NAME})
 endfunction()
 
 # Same as add_devilutionx_library(${NAME} OBJECT) with an additional

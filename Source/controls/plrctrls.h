@@ -1,7 +1,10 @@
 #pragma once
 // Controller actions implementation
 
+#include <cstddef>
 #include <cstdint>
+
+#include <SDL.h>
 
 #include "controls/controller.h"
 #include "player.h"
@@ -20,7 +23,21 @@ enum class ControlTypes : uint8_t {
 	VirtualGamepad,
 };
 
+string_view ControlTypeToString(ControlTypes controlType);
+
 extern ControlTypes ControlMode;
+
+/**
+ * @brief Controlling device type.
+ *
+ * While simulating a mouse, `ControlMode` is set to `KeyboardAndMouse`,
+ * even though a gamepad is used to control it.
+ *
+ * This value is always set to the actual active device type.
+ */
+extern ControlTypes ControlDevice;
+
+extern ControllerButton ControllerButtonHeld;
 
 // Runs every frame.
 // Handles menu movement.
@@ -56,11 +73,12 @@ void PerformPrimaryAction();
 
 // Open chests, doors, pickup items.
 void PerformSecondaryAction();
+void UpdateSpellTarget(spell_id spell);
 bool TryDropItem();
 void InvalidateInventorySlot();
 void FocusOnInventory();
 void PerformSpellAction();
-void QuickCast(int slot);
+void QuickCast(size_t slot);
 
 extern int speedspellcount;
 

@@ -22,6 +22,7 @@
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -33,6 +34,7 @@ namespace devilution {
 #define MAX_SPELL_LEVEL 15
 #define PLR_NAME_LEN 32
 
+constexpr size_t NumHotkeys = 12;
 constexpr int BaseHitChance = 50;
 
 /** Walking directions */
@@ -250,8 +252,8 @@ struct Player {
 	uint64_t _pAblSpells;  // Bitmask of abilities
 	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
 	SpellFlag _pSpellFlags;
-	spell_id _pSplHotKey[4];
-	spell_type _pSplTHotKey[4];
+	spell_id _pSplHotKey[NumHotkeys];
+	spell_type _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
@@ -556,6 +558,20 @@ struct Player {
 	int GetManaShieldDamageReduction();
 
 	/**
+	 * @brief Gets the effective spell level for the player, considering item bonuses
+	 * @param spell spell_id enum member identifying the spell
+	 * @return effective spell level
+	 */
+	int GetSpellLevel(spell_id spell) const
+	{
+		if (spell == SPL_INVALID || static_cast<std::size_t>(spell) >= sizeof(_pSplLvl)) {
+			return 0;
+		}
+
+		return std::max<int8_t>(_pISplLvlAdd + _pSplLvl[static_cast<std::size_t>(spell)], 0);
+	}
+
+	/**
 	 * @brief Return monster armor value after including player's armor piercing % (hellfire only)
 	 * @param monsterArmor - monster armor before applying % armor pierce
 	 * @param isMelee - indicates if it's melee or ranged combat
@@ -677,13 +693,13 @@ struct Player {
 	{
 		if (_pmode == PM_STAND)
 			return true;
-		if (_pmode == PM_ATTACK && AnimInfo.CurrentFrame > _pAFNum)
+		if (_pmode == PM_ATTACK && AnimInfo.CurrentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_RATTACK && AnimInfo.CurrentFrame > _pAFNum)
+		if (_pmode == PM_RATTACK && AnimInfo.CurrentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_SPELL && AnimInfo.CurrentFrame > _pSFNum)
+		if (_pmode == PM_SPELL && AnimInfo.CurrentFrame >= _pSFNum)
 			return true;
-		if (IsWalking() && AnimInfo.CurrentFrame == AnimInfo.NumberOfFrames)
+		if (IsWalking() && AnimInfo.CurrentFrame == AnimInfo.NumberOfFrames - 1)
 			return true;
 		return false;
 	}
@@ -740,6 +756,9 @@ void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);
 void StartPlayerKill(int pnum, int earflag);
+/**
+ * @brief Strip the top off gold piles that are larger than MaxGold
+ */
 void StripTopGold(Player &player);
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);

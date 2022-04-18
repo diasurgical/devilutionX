@@ -19,9 +19,9 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	// or
 	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
 	if (RelevantFramesForDistributing <= 0)
-		return std::max(1, CurrentFrame);
+		return std::max(0, CurrentFrame);
 
-	if (CurrentFrame > RelevantFramesForDistributing)
+	if (CurrentFrame >= RelevantFramesForDistributing)
 		return CurrentFrame;
 
 	float ticksSinceSequenceStarted = TicksSinceSequenceStarted;
@@ -33,26 +33,25 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	// we don't use the processed game ticks alone but also the fraction of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
 	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + ticksSinceSequenceStarted;
 
-	// 1 added for rounding reasons. float to int cast always truncate.
-	int absoluteAnimationFrame = 1 + static_cast<int>(totalTicksForCurrentAnimationSequence * TickModifier);
+	int absoluteAnimationFrame = static_cast<int>(totalTicksForCurrentAnimationSequence * TickModifier);
 	if (SkippedFramesFromPreviousAnimation > 0) {
 		// absoluteAnimationFrames contains also the Frames from the previous Animation, so if we want to get the current Frame we have to remove them
 		absoluteAnimationFrame -= SkippedFramesFromPreviousAnimation;
-		if (absoluteAnimationFrame <= 0) {
+		if (absoluteAnimationFrame < 0) {
 			// We still display the remains of the previous Animation
 			absoluteAnimationFrame = NumberOfFrames + absoluteAnimationFrame;
 		}
-	} else if (absoluteAnimationFrame > RelevantFramesForDistributing) {
+	} else if (absoluteAnimationFrame >= RelevantFramesForDistributing) {
 		// this can happen if we are at the last frame and the next game tick is due (gfProgressToNextGameTick >= 1.0f)
-		if (absoluteAnimationFrame > (RelevantFramesForDistributing + 1)) {
+		if (absoluteAnimationFrame >= (RelevantFramesForDistributing + 1)) {
 			// we should never have +2 frames even if next game tick is due
 			Log("GetFrameToUseForRendering: Calculated an invalid Animation Frame (Calculated {} MaxFrame {})", absoluteAnimationFrame, RelevantFramesForDistributing);
 		}
-		return RelevantFramesForDistributing;
+		return RelevantFramesForDistributing - 1;
 	}
-	if (absoluteAnimationFrame <= 0) {
+	if (absoluteAnimationFrame < 0) {
 		Log("GetFrameToUseForRendering: Calculated an invalid Animation Frame (Calculated {})", absoluteAnimationFrame);
-		return 1;
+		return 0;
 	}
 	return absoluteAnimationFrame;
 }
@@ -65,7 +64,7 @@ float AnimationInfo::GetAnimationProgress() const
 	if (RelevantFramesForDistributing <= 0) {
 		// This logic is used if animation distribution is not active (see GetFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		ticksSinceSequenceStarted = static_cast<float>(((CurrentFrame - 1) * TicksPerFrame) + TickCounterOfCurrentFrame);
+		ticksSinceSequenceStarted = static_cast<float>((CurrentFrame * TicksPerFrame) + TickCounterOfCurrentFrame);
 		tickModifier = 1.0F / static_cast<float>(TicksPerFrame);
 	}
 
@@ -77,10 +76,10 @@ float AnimationInfo::GetAnimationProgress() const
 
 void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
 {
-	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
+	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame + 1 >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames - 1) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
 		// So now we should add them back to the new Animation. This increases the speed of the current Animation but the game logic/ticks isn't affected.
-		SkippedFramesFromPreviousAnimation = NumberOfFrames - CurrentFrame;
+		SkippedFramesFromPreviousAnimation = NumberOfFrames - CurrentFrame - 1;
 	} else {
 		SkippedFramesFromPreviousAnimation = 0;
 	}
@@ -92,7 +91,7 @@ void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int numb
 
 	this->celSprite = celSprite;
 	NumberOfFrames = numberOfFrames;
-	CurrentFrame = 1 + numSkippedFrames;
+	CurrentFrame = numSkippedFrames;
 	TickCounterOfCurrentFrame = 0;
 	TicksPerFrame = ticksPerFrame;
 	TicksSinceSequenceStarted = 0.F;
@@ -173,9 +172,9 @@ void AnimationInfo::ChangeAnimationData(std::optional<CelSprite> celSprite, int 
 	if (numberOfFrames != NumberOfFrames || ticksPerFrame != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
 		if (numberOfFrames >= 1)
-			CurrentFrame = clamp(CurrentFrame, 1, numberOfFrames);
+			CurrentFrame = clamp(CurrentFrame, 0, numberOfFrames - 1);
 		else
-			CurrentFrame = 0;
+			CurrentFrame = -1;
 
 		NumberOfFrames = numberOfFrames;
 		TicksPerFrame = ticksPerFrame;
@@ -195,15 +194,15 @@ void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool don
 	if (TickCounterOfCurrentFrame >= TicksPerFrame) {
 		TickCounterOfCurrentFrame = 0;
 		if (reverseAnimation) {
-			CurrentFrame--;
-			if (CurrentFrame == 0) {
-				CurrentFrame = NumberOfFrames;
+			--CurrentFrame;
+			if (CurrentFrame == -1) {
+				CurrentFrame = NumberOfFrames - 1;
 				TicksSinceSequenceStarted = 0.F;
 			}
 		} else {
-			CurrentFrame++;
-			if (CurrentFrame > NumberOfFrames) {
-				CurrentFrame = 1;
+			++CurrentFrame;
+			if (CurrentFrame >= NumberOfFrames) {
+				CurrentFrame = 0;
 				TicksSinceSequenceStarted = 0.F;
 			}
 		}

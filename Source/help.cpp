@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "DiabloUI/ui_flags.hpp"
-#include "control.h"
 #include "engine/render/text_render.hpp"
 #include "init.h"
 #include "minitext.h"
@@ -148,12 +147,9 @@ void InitHelp()
 		return;
 
 	HelpFlag = false;
-	char tempString[1024];
 
 	for (const auto *text : HelpText) {
-		strcpy(tempString, _(text));
-
-		const std::string paragraph = WordWrapString(tempString, 577);
+		const std::string paragraph = WordWrapString(_(text), 577);
 
 		size_t previous = 0;
 		while (true) {
@@ -176,7 +172,7 @@ void DrawHelp(const Surface &out)
 	const int lineHeight = LineHeight();
 	const int blankLineHeight = BlankLineHeight();
 
-	const char *title;
+	string_view title;
 	if (gbIsHellfire)
 		title = gbIsSpawn ? _("Shareware Hellfire Help") : _("Hellfire Help");
 	else

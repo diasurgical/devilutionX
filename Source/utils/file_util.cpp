@@ -140,7 +140,7 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 #endif
 }
 
-void RemoveFile(const char *lpFileName)
+void RemoveFile(string_view lpFileName)
 {
 #if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(lpFileName);
@@ -150,7 +150,7 @@ void RemoveFile(const char *lpFileName)
 	}
 	::DeleteFileW(&pathUtf16[0]);
 #else
-	std::string name = lpFileName;
+	std::string name { lpFileName };
 	std::replace(name.begin(), name.end(), '\\', '/');
 	FILE *f = fopen(name.c_str(), "r+");
 	if (f != nullptr) {

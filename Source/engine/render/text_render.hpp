@@ -152,7 +152,19 @@ int GetLineWidth(string_view fmt, DrawStringFormatArg *args, std::size_t argsLen
 
 int GetLineHeight(string_view text, GameFontTables fontIndex);
 
-[[nodiscard]] std::string WordWrapString(string_view text, size_t width, GameFontTables size = GameFont12, int spacing = 1);
+/**
+ * @brief Builds a multi-line version of the given text so it'll fit within the given width.
+ *
+ * This function will not break words, if the given width is smaller than the width of the longest word in the given
+ * font then it will likely overflow the output region.
+ *
+ * @param text Source text
+ * @param width Width in pixels of the output region
+ * @param size Font size to use for the width calculation
+ * @param spacing Any adjustment to apply between each character
+ * @return A copy of the source text with newlines inserted where appropriate
+ */
+[[nodiscard]] std::string WordWrapString(string_view text, unsigned width, GameFontTables size = GameFont12, int spacing = 1);
 
 /**
  * @brief Draws a line of text within a clipping rectangle (positioned relative to the origin of the output buffer).

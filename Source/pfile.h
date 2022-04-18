@@ -29,8 +29,13 @@ private:
 };
 
 MpqWriter &CurrentSaveArchive();
+MpqWriter &StashArchive();
+std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum);
+std::optional<MpqArchive> OpenStashArchive();
 const char *pfile_get_password();
+std::unique_ptr<byte[]> ReadArchive(MpqArchive &archive, const char *pszName, size_t *pdwLen = nullptr);
 void pfile_write_hero(bool writeGameData = false, bool clearTables = !gbIsMultiplayer);
+void sfile_write_stash();
 bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *));
 void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats);
 uint32_t pfile_ui_get_first_unused_save_num();

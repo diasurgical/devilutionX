@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -41,14 +42,13 @@ extern bool drawmanaflag;
 extern bool chrbtnactive;
 extern DVL_API_FOR_TEST int pnumlines;
 extern UiFlags InfoColor;
-extern char tempstr[256];
 extern int sbooktab;
 extern int8_t initialDropGoldIndex;
 extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern bool drawbtnflag;
-extern char infostr[128];
+extern std::string InfoString;
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
@@ -57,6 +57,7 @@ const Rectangle &GetMainPanel();
 const Rectangle &GetLeftPanel();
 const Rectangle &GetRightPanel();
 extern std::optional<OwnedSurface> pBtmBuff;
+extern std::optional<OwnedCelSprite> pGBoxBuff;
 extern SDL_Rect PanBtnPos[8];
 
 void CalculatePanelAreas();
@@ -68,11 +69,10 @@ inline bool CanPanelsCoverView()
 {
 	return GetScreenWidth() <= PANEL_WIDTH && GetScreenHeight() <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
-
 void DrawSpellList(const Surface &out);
 void SetSpell();
-void SetSpeedSpell(int slot);
-void ToggleSpell(int slot);
+void SetSpeedSpell(size_t slot);
+void ToggleSpell(size_t slot);
 
 void AddPanelString(string_view str);
 void ClearPanel();

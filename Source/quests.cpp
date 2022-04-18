@@ -25,6 +25,7 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -148,7 +149,7 @@ void DrawWarLord(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
 		}
 	}
@@ -170,7 +171,7 @@ void DrawSChamber(quest_id q, int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
 		}
 	}
@@ -194,7 +195,7 @@ void DrawLTBanner(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				pdungeon[x + i][y + j] = tileId;
 			}
@@ -218,7 +219,7 @@ void DrawBlind(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				pdungeon[x + i][y + j] = tileId;
 			}
@@ -242,7 +243,7 @@ void DrawBlood(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[x + i][y + j] = tileId;
 			}
@@ -266,7 +267,7 @@ int QuestLogMouseToEntry()
 	return -1;
 }
 
-void PrintQLString(const Surface &out, int x, int y, const char *str, bool marked, bool disabled = false)
+void PrintQLString(const Surface &out, int x, int y, string_view str, bool marked, bool disabled = false)
 {
 	int width = GetLineWidth(str);
 	x += std::max((257 - width) / 2, 0);
@@ -447,7 +448,7 @@ bool ForceQuests()
 			int ql = quest._qslvl - 1;
 
 			if (EntranceBoundaryContains(quest.position, cursPosition)) {
-				strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
+				InfoString = fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql]));
 				cursPosition = quest.position;
 				return true;
 			}
@@ -657,12 +658,6 @@ void ResyncMPQuests()
 		nakrulQuest._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, nakrulQuest);
 	}
-
-	auto &cowQuest = Quests[Q_JERSEY];
-	if (cowQuest._qactive == QUEST_INIT && currlevel == cowQuest._qlevel - 1) {
-		cowQuest._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, cowQuest);
-	}
 }
 
 void ResyncQuests()
@@ -748,7 +743,7 @@ void DrawQuestLog(const Surface &out)
 		SelectedQuest = l;
 	}
 	const auto x = InnerPanel.position.x;
-	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 0);
 	int y = InnerPanel.position.y + ListYOffset;
 	for (int i = 0; i < EncounteredQuestCount; i++) {
 		if (i == FirstFinishedQuest) {

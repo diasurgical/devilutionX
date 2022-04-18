@@ -95,7 +95,7 @@ void ToggleChatLog()
 		ChatLogFlag = false;
 	} else {
 		stextflag = STORE_NONE;
-		invflag = false;
+		CloseInventory();
 		chrflag = false;
 		sbookflag = false;
 		spselflag = false;
@@ -105,7 +105,6 @@ void ToggleChatLog()
 		}
 		QuestLogIsOpen = false;
 		HelpFlag = false;
-		AutomapActive = false;
 		CancelCurrentDiabloMsg();
 		gamemenu_off();
 		SkipLines = 0;

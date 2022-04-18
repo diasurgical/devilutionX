@@ -87,6 +87,47 @@ void CalculatePreferredWindowSize(int &width, int &height)
 		height = mode.h * width / mode.w;
 	}
 }
+
+void FreeRenderer()
+{
+#ifdef _WIN32
+	bool wasD3D9 = false;
+	bool wasD3D11 = false;
+	if (renderer != nullptr) {
+		SDL_RendererInfo previousRendererInfo;
+		SDL_GetRendererInfo(renderer, &previousRendererInfo);
+		wasD3D9 = (std::string_view(previousRendererInfo.name) == "direct3d");
+		wasD3D11 = (std::string_view(previousRendererInfo.name) == "direct3d11");
+	}
+#endif
+
+	if (renderer != nullptr) {
+		SDL_DestroyRenderer(renderer);
+		renderer = nullptr;
+	}
+
+#ifdef _WIN32
+	// On Windows 11 the directx9 VSYNC timer doesn't get recreated properly, see https://github.com/libsdl-org/SDL/issues/5099
+	// Furthermore, the direct3d11 driver "poisons" the window so it can't be used by another renderer
+	if ((wasD3D9 && *sgOptions.Graphics.upscale && *sgOptions.Graphics.vSync) || (wasD3D11 && !*sgOptions.Graphics.upscale)) {
+		std::string title = SDL_GetWindowTitle(ghMainWnd);
+		Uint32 flags = SDL_GetWindowFlags(ghMainWnd);
+		Rectangle dimensions;
+
+		SDL_GetWindowPosition(ghMainWnd, &dimensions.position.x, &dimensions.position.y);
+		SDL_GetWindowSize(ghMainWnd, &dimensions.size.width, &dimensions.size.height);
+		SDL_DestroyWindow(ghMainWnd);
+
+		ghMainWnd = SDL_CreateWindow(
+		    title.c_str(),
+		    dimensions.position.x,
+		    dimensions.position.y,
+		    dimensions.size.width,
+		    dimensions.size.height,
+		    flags);
+	}
+#endif
+}
 #endif
 
 void AdjustToScreenGeometry(Size windowSize)
@@ -243,11 +284,14 @@ bool SpawnWindow(const char *lpWindowName)
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	if (*sgOptions.Gameplay.grabInput) {
-		flags |= SDL_WINDOW_INPUT_GRABBED;
-	}
-
 	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowSize.width, windowSize.height, flags);
+
+	// Note: https://github.com/libsdl-org/SDL/issues/962
+	// This is a solution to a problem related to SDL mouse grab.
+	// See https://github.com/diasurgical/devilutionX/issues/4251
+	if (ghMainWnd != nullptr)
+		SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
+
 #endif
 	if (ghMainWnd == nullptr) {
 		ErrSdl();
@@ -273,6 +317,9 @@ void ReinitializeTexture()
 {
 	if (texture)
 		texture.reset();
+
+	if (renderer == nullptr)
+		return;
 
 	auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
@@ -306,10 +353,7 @@ void ReinitializeRenderer()
 	if (texture)
 		texture.reset();
 
-	if (renderer != nullptr) {
-		SDL_DestroyRenderer(renderer);
-		renderer = nullptr;
-	}
+	FreeRenderer();
 
 	if (*sgOptions.Graphics.upscale) {
 		Uint32 rendererFlags = 0;
@@ -318,24 +362,10 @@ void ReinitializeRenderer()
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 
-#ifdef _WIN32
-		// On Windows 11 the directx9 VSYNC timer doesn't get recreated properly, see https://github.com/libsdl-org/SDL/issues/5099
-		// Attempt to use the directx11 driver instead if we have vsync active.
-		const char *const renderHint = SDL_GetHint(SDL_HINT_RENDER_DRIVER);
-		if ((rendererFlags & SDL_RENDERER_PRESENTVSYNC) != 0 && SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d11") != SDL_TRUE) {
-			Log("Error when trying to set hint for direct3d11, using default render driver");
-		}
-#endif
-
 		renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
 		if (renderer == nullptr) {
 			ErrSdl();
 		}
-
-#ifdef _WIN32
-		// Restore any system/user defined hint just in case they turn off upscale/vsync.
-		SDL_SetHint(SDL_HINT_RENDER_DRIVER, renderHint);
-#endif
 
 		ReinitializeTexture();
 

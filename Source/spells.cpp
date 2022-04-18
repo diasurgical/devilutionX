@@ -113,6 +113,16 @@ bool IsWallSpell(spell_id spl)
 	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;
 }
 
+bool TargetsMonster(spell_id id)
+{
+	return id == SPL_FIREBALL
+	    || id == SPL_FIREWALL
+	    || id == SPL_FLAME
+	    || id == SPL_LIGHTNING
+	    || id == SPL_STONE
+	    || id == SPL_WAVE;
+}
+
 int GetManaAmount(Player &player, spell_id sn)
 {
 	int ma; // mana amount
@@ -136,7 +146,7 @@ int GetManaAmount(Player &player, spell_id sn)
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
 		ma = (spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
-		ma = ((BYTE)player._pMaxManaBase - adj);
+		ma = (player._pMaxManaBase >> 6) - adj;
 	} else {
 		ma = (spelldata[sn].sManaCost - adj);
 	}
@@ -247,10 +257,6 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 
 void DoResurrect(int pnum, uint16_t rid)
 {
-	if (pnum == MyPlayerId) {
-		NewCursor(CURSOR_HAND);
-	}
-
 	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
 		return;
 	}
@@ -293,42 +299,32 @@ void DoResurrect(int pnum, uint16_t rid)
 	}
 }
 
-void DoHealOther(int pnum, uint16_t rid)
+void DoHealOther(const Player &caster, Player &target)
 {
-	if (pnum == MyPlayerId) {
-		NewCursor(CURSOR_HAND);
-	}
-
-	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
-		return;
-	}
-	auto &player = Players[pnum];
-	auto &target = Players[rid];
-
 	if ((target._pHitPoints >> 6) <= 0) {
 		return;
 	}
 
 	int hp = (GenerateRnd(10) + 1) << 6;
-	for (int i = 0; i < player._pLevel; i++) {
+	for (int i = 0; i < caster._pLevel; i++) {
 		hp += (GenerateRnd(4) + 1) << 6;
 	}
-	for (int i = 0; i < GetSpellLevel(pnum, SPL_HEALOTHER); i++) {
+	for (int i = 0; i < caster.GetSpellLevel(SPL_HEALOTHER); i++) {
 		hp += (GenerateRnd(6) + 1) << 6;
 	}
 
-	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
+	if (caster._pClass == HeroClass::Warrior || caster._pClass == HeroClass::Barbarian) {
 		hp *= 2;
-	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard) {
+	} else if (caster._pClass == HeroClass::Rogue || caster._pClass == HeroClass::Bard) {
 		hp += hp / 2;
-	} else if (player._pClass == HeroClass::Monk) {
+	} else if (caster._pClass == HeroClass::Monk) {
 		hp *= 3;
 	}
 
 	target._pHitPoints = std::min(target._pHitPoints + hp, target._pMaxHP);
 	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
 
-	if (rid == MyPlayerId) {
+	if (&target == MyPlayer) {
 		drawhpflag = true;
 	}
 }

@@ -10,11 +10,7 @@
 #include <memory>
 #include <mutex>
 
-#include <Aulib/DecoderDrwav.h>
-#include <Aulib/ResamplerSpeex.h>
-#include <Aulib/Stream.h>
 #include <SDL.h>
-#include <aulib.h>
 
 #include "engine/assets.hpp"
 #include "init.h"
@@ -39,33 +35,60 @@ bool gbSoundOn = true;
 
 namespace {
 
-std::optional<Aulib::Stream> music;
+SoundSample music;
 
-#ifdef DISABLE_STREAMING_MUSIC
-std::unique_ptr<char[]> musicBuffer;
-#endif
-
-void LoadMusic(SDL_RWops *handle)
+std::string GetMp3Path(const char *path)
 {
-#ifdef DISABLE_STREAMING_MUSIC
-	size_t bytestoread = SDL_RWsize(handle);
-	musicBuffer.reset(new char[bytestoread]);
-	SDL_RWread(handle, musicBuffer.get(), bytestoread, 1);
-	SDL_RWclose(handle);
-
-	handle = SDL_RWFromConstMem(musicBuffer.get(), bytestoread);
-#endif
-	music.emplace(handle, std::make_unique<Aulib::DecoderDrwav>(),
-	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
+	std::string mp3Path = path;
+	const std::string::size_type dot = mp3Path.find_last_of('.');
+	mp3Path.replace(dot + 1, mp3Path.size() - (dot + 1), "mp3");
+	return mp3Path;
 }
 
-void CleanupMusic()
+bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample &result)
 {
-	music = std::nullopt;
-	sgnMusicTrack = NUM_MUSIC;
-#ifdef DISABLE_STREAMING_MUSIC
-	musicBuffer = nullptr;
+#ifndef STREAM_ALL_AUDIO
+	if (stream) {
 #endif
+		if (result.SetChunkStream(GetMp3Path(path), /*isMp3=*/true, /*logErrors=*/false) != 0) {
+			SDL_ClearError();
+			if (result.SetChunkStream(path, /*isMp3=*/false, /*logErrors=*/true) != 0) {
+				if (errorDialog)
+					ErrSdl();
+				return false;
+			}
+		}
+#ifndef STREAM_ALL_AUDIO
+	} else {
+		bool isMp3 = true;
+		SDL_RWops *file = OpenAsset(GetMp3Path(path).c_str());
+		if (file == nullptr) {
+			SDL_ClearError();
+			isMp3 = false;
+			file = OpenAsset(path);
+			if (file == nullptr) {
+				if (errorDialog)
+					ErrDlg("OpenAsset failed", path, __FILE__, __LINE__);
+				return false;
+			}
+		}
+		size_t dwBytes = SDL_RWsize(file);
+		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
+		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
+			if (errorDialog)
+				ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()), __FILE__, __LINE__);
+			return false;
+		}
+		int error = result.SetChunk(waveFile, dwBytes, isMp3);
+		SDL_RWclose(file);
+		if (error != 0) {
+			if (errorDialog)
+				ErrSdl();
+			return false;
+		}
+	}
+#endif
+	return true;
 }
 
 std::list<std::unique_ptr<SoundSample>> duplicateSounds;
@@ -145,47 +168,24 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 			return;
 	}
 
-	sound->Play(lVolume, *sgOptions.Audio.soundVolume, lPan);
+	sound->PlayWithVolumeAndPan(lVolume, *sgOptions.Audio.soundVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 {
-
 	auto snd = std::make_unique<TSnd>();
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
-
-#ifndef STREAM_ALL_AUDIO
-	if (stream) {
+#ifndef NOSOUND
+	LoadAudioFile(path, stream, /*errorDialog=*/true, snd->DSB);
 #endif
-		if (snd->DSB.SetChunkStream(path) != 0) {
-			ErrSdl();
-		}
-#ifndef STREAM_ALL_AUDIO
-	} else {
-		SDL_RWops *file = OpenAsset(path);
-		if (file == nullptr) {
-			ErrDlg("OpenAsset failed", path, __FILE__, __LINE__);
-		}
-		size_t dwBytes = SDL_RWsize(file);
-		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
-		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
-			ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()).c_str(), __FILE__, __LINE__);
-		}
-		int error = snd->DSB.SetChunk(waveFile, dwBytes);
-		SDL_RWclose(file);
-		if (error != 0) {
-			ErrSdl();
-		}
-	}
-#endif
-
 	return snd;
 }
 
 TSnd::~TSnd()
 {
-	DSB.Stop();
+	if (DSB.IsLoaded())
+		DSB.Stop();
 	DSB.Release();
 }
 
@@ -224,8 +224,8 @@ void snd_deinit()
 
 void music_stop()
 {
-	if (music)
-		CleanupMusic();
+	music.Release();
+	sgnMusicTrack = NUM_MUSIC;
 }
 
 void music_start(uint8_t nTrack)
@@ -234,38 +234,33 @@ void music_start(uint8_t nTrack)
 
 	assert(nTrack < NUM_MUSIC);
 	music_stop();
-	if (gbMusicOn) {
-		if (spawn_mpq)
-			trackPath = SpawnMusicTracks[nTrack];
-		else
-			trackPath = MusicTracks[nTrack];
+	if (!gbMusicOn)
+		return;
+	if (spawn_mpq)
+		trackPath = SpawnMusicTracks[nTrack];
+	else
+		trackPath = MusicTracks[nTrack];
 
 #ifdef DISABLE_STREAMING_MUSIC
-		const bool threadsafe = false;
+	const bool stream = false;
 #else
-		const bool threadsafe = true;
+	const bool stream = true;
 #endif
-		SDL_RWops *handle = OpenAsset(trackPath, threadsafe);
-		if (handle != nullptr) {
-			LoadMusic(handle);
-			if (!music->open()) {
-				LogError(LogCategory::Audio, "Aulib::Stream::open (from music_start): {}", SDL_GetError());
-				CleanupMusic();
-				return;
-			}
-
-			music->setVolume(VolumeLogToLinear(*sgOptions.Audio.musicVolume, VOLUME_MIN, VOLUME_MAX));
-			if (!diablo_is_focused())
-				music_mute();
-			if (!music->play(/*iterations=*/0)) {
-				LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
-				CleanupMusic();
-				return;
-			}
-
-			sgnMusicTrack = (_music_id)nTrack;
-		}
+	if (!LoadAudioFile(trackPath, stream, /*errorDialog=*/false, music)) {
+		music_stop();
+		return;
 	}
+
+	music.SetVolume(*sgOptions.Audio.musicVolume, VOLUME_MIN, VOLUME_MAX);
+	if (!diablo_is_focused())
+		music_mute();
+	if (!music.Play(/*numIterations=*/0)) {
+		LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
+		music_stop();
+		return;
+	}
+
+	sgnMusicTrack = (_music_id)nTrack;
 }
 
 void sound_disable_music(bool disable)
@@ -284,8 +279,8 @@ int sound_get_or_set_music_volume(int volume)
 
 	sgOptions.Audio.musicVolume.SetValue(volume);
 
-	if (music)
-		music->setVolume(VolumeLogToLinear(*sgOptions.Audio.musicVolume, VOLUME_MIN, VOLUME_MAX));
+	if (music.IsLoaded())
+		music.SetVolume(*sgOptions.Audio.musicVolume, VOLUME_MIN, VOLUME_MAX);
 
 	return *sgOptions.Audio.musicVolume;
 }
@@ -302,14 +297,14 @@ int sound_get_or_set_sound_volume(int volume)
 
 void music_mute()
 {
-	if (music)
-		music->mute();
+	if (music.IsLoaded())
+		music.Mute();
 }
 
 void music_unmute()
 {
-	if (music)
-		music->unmute();
+	if (music.IsLoaded())
+		music.Unmute();
 }
 
 } // namespace devilution

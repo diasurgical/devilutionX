@@ -7,6 +7,8 @@
 #include "engine.h"
 #include "gmenu.h"
 #include "inv.h"
+#include "panels/spell_book.hpp"
+#include "qol/stash.h"
 #include "scrollrt.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"
@@ -29,8 +31,16 @@ void SimulateMouseMovement(const SDL_Event &event)
 {
 	Point position = ScaleToScreenCoordinates(event.tfinger.x, event.tfinger.y);
 
-	if (!spselflag && invflag && !GetMainPanel().Contains(position) && !GetRightPanel().Contains(position))
-		return;
+	bool isInMainPanel = GetMainPanel().Contains(position);
+	bool isInLeftPanel = GetLeftPanel().Contains(position);
+	bool isInRightPanel = GetRightPanel().Contains(position);
+	if (IsStashOpen) {
+		if (!spselflag && !isInMainPanel && !isInLeftPanel && !isInRightPanel)
+			return;
+	} else if (invflag) {
+		if (!spselflag && !isInMainPanel && !isInRightPanel)
+			return;
+	}
 
 	MousePosition = position;
 
@@ -59,7 +69,16 @@ bool HandleStoreInteraction(const SDL_Event &event)
 	return true;
 }
 
-bool HandleSpeedbookInteraction(const SDL_Event &event)
+void HandleSpellBookInteraction(const SDL_Event &event)
+{
+	if (!sbookflag)
+		return;
+
+	if (event.type == SDL_FINGERUP)
+		CheckSBook();
+}
+
+bool HandleSpeedBookInteraction(const SDL_Event &event)
 {
 	if (!spselflag)
 		return false;
@@ -70,7 +89,7 @@ bool HandleSpeedbookInteraction(const SDL_Event &event)
 
 void HandleBottomPanelInteraction(const SDL_Event &event)
 {
-	if (pcurs >= CURSOR_FIRSTITEM)
+	if (!MyPlayer->HoldItem.isEmpty())
 		return;
 
 	ClearPanBtn();
@@ -83,6 +102,29 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 		DoPanBtn();
 		if (panbtndown)
 			CheckBtnUp();
+	}
+}
+
+void HandleCharacterPanelInteraction(const SDL_Event &event)
+{
+	if (!chrflag)
+		return;
+
+	if (event.type == SDL_FINGERDOWN)
+		CheckChrBtns();
+	else if (event.type == SDL_FINGERUP && chrbtnactive)
+		ReleaseChrBtns(false);
+}
+
+void HandleStashPanelInteraction(const SDL_Event &event)
+{
+	if (!MyPlayer->HoldItem.isEmpty())
+		return;
+
+	if (event.type != SDL_FINGERUP) {
+		CheckStashButtonPress(MousePosition);
+	} else {
+		CheckStashButtonRelease(MousePosition);
 	}
 }
 
@@ -108,10 +150,13 @@ void HandleTouchEvent(const SDL_Event &event)
 	if (HandleStoreInteraction(event))
 		return;
 
-	if (HandleSpeedbookInteraction(event))
+	if (HandleSpeedBookInteraction(event))
 		return;
 
+	HandleSpellBookInteraction(event);
 	HandleBottomPanelInteraction(event);
+	HandleCharacterPanelInteraction(event);
+	HandleStashPanelInteraction(event);
 }
 
 bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)

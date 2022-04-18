@@ -18,15 +18,15 @@ jobs:
 
     - name: Create Build Environment
       run: >
-        sudo apt update &&
-        sudo apt install -y cmake file g++ git libfmt-dev libsdl-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
+        sudo apt-get update &&
+        sudo apt-get install -y cmake file g++ git libfmt-dev libsdl-dev libsodium-dev libpng-dev libbz2-dev rpm smpq
 
     - name: Cache CMake build folder
       uses: actions/cache@v2
       with:
         path: build
-        key: linux-x86_64-sdl1-cmake-v2-${{ github.sha }}
-        restore-keys: linux-x86_64-sdl1-cmake-v2-
+        key: linux-x86_64-sdl1-cmake-v3-${{ github.sha }}
+        restore-keys: linux-x86_64-sdl1-cmake-v3-
 
     - name: Configure CMake
       shell: bash

@@ -1,3 +1,5 @@
 #pragma once
 
-void vita_start_text_input(const char *guide_text, const char *initial_text, int max_length);
+#include "utils/stdcompat/string_view.hpp"
+
+void vita_start_text_input(devilution::string_view guide_text, devilution::string_view initial_text, unsigned max_length);

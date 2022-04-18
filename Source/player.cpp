@@ -27,11 +27,13 @@
 #include "options.h"
 #include "player.h"
 #include "qol/autopickup.h"
+#include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -369,9 +371,10 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 	if (data == nullptr && gbQuietMode)
 		return;
 
-	for (int i = 0; i < 8; i++) {
-		byte *pCelStart = CelGetFrame(data.get(), i);
-		anim[i].emplace(pCelStart, width);
+	const byte *directionFrames[8];
+	CelGetDirectionFrames(data.get(), directionFrames);
+	for (size_t i = 0; i < 8; i++) {
+		anim[i].emplace(directionFrames[i], width);
 	}
 }
 
@@ -514,16 +517,10 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN) {
-		auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-		if (player._pmode == PM_SPELL)
-			animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-		NewPlrAnim(player, GetPlayerGraphicForSpell(player._pSpell), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-	} else {
-		// Start new stand animation so that currentframe is reset
-		d = player._pdir;
-		StartStand(pnum, d);
-	}
+	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
+	if (player._pmode == PM_SPELL)
+		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
+	NewPlrAnim(player, GetPlayerGraphicForSpell(player._pSpell), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
 
 	PlaySfxLoc(spelldata[player._pSpell].sSFX, player.position.tile);
 
@@ -584,14 +581,12 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 			continue;
 
 		if (amount < item._ivalue) {
-			Item gold {};
-			InitializeItem(gold, IDI_GOLD);
-			SetGoldSeed(player, gold);
+			Item goldItem;
+			MakeGoldStack(goldItem, amount);
+			DeadItem(player, std::move(goldItem), { 0, 0 });
 
-			gold._ivalue = amount;
 			item._ivalue -= amount;
-			SetPlrHandGoldCurs(gold);
-			DeadItem(player, std::move(gold), { 0, 0 });
+
 			return 0;
 		}
 
@@ -667,14 +662,14 @@ bool DoWalk(int pnum, int variant)
 
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
-		if (player.AnimInfo.CurrentFrame == 1
-		    || player.AnimInfo.CurrentFrame == 5) {
+		if (player.AnimInfo.CurrentFrame == 0
+		    || player.AnimInfo.CurrentFrame == 4) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
 		}
 	}
 
 	// Check if we reached new tile
-	if (player.AnimInfo.CurrentFrame >= player._pWFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pWFrames - 1) {
 
 		// Update the player's tile position
 		switch (variant) {
@@ -730,8 +725,7 @@ bool WeaponDecay(Player &player, int ii)
 	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && HasAnyOf(player.InvBody[ii]._iDamAcFlags, ItemSpecialEffectHf::Decay)) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
-			NetSendCmdDelItem(true, ii);
-			player.InvBody[ii]._itype = ItemType::None;
+			RemoveEquipment(player, static_cast<inv_body_loc>(ii), true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -767,8 +761,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -781,8 +774,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -795,8 +787,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -809,8 +800,7 @@ bool DamageWeapon(int pnum, int durrnd)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 			return true;
 		}
@@ -1118,13 +1108,13 @@ bool DoAttack(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
+	if (player.AnimInfo.CurrentFrame == player._pAFNum - 2) {
 		PlaySfxLoc(PS_SWING, player.position.tile);
 	}
 
 	bool didhit = false;
 
-	if (player.AnimInfo.CurrentFrame == player._pAFNum) {
+	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
 		Point position = player.position.tile + player._pdir;
 		int dx = position.x;
 		int dy = position.y;
@@ -1211,7 +1201,7 @@ bool DoAttack(int pnum)
 		}
 	}
 
-	if (player.AnimInfo.CurrentFrame == player._pAFrames) {
+	if (player.AnimInfo.CurrentFrame == player._pAFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1228,10 +1218,11 @@ bool DoRangeAttack(int pnum)
 	auto &player = Players[pnum];
 
 	int arrows = 0;
-	if (player.AnimInfo.CurrentFrame == player._pAFNum) {
+	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
 		arrows = 1;
 	}
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.CurrentFrame == player._pAFNum + 2) {
+
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.CurrentFrame == player._pAFNum + 1) {
 		arrows = 2;
 	}
 
@@ -1282,7 +1273,7 @@ bool DoRangeAttack(int pnum)
 		}
 	}
 
-	if (player.AnimInfo.CurrentFrame >= player._pAFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pAFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1308,8 +1299,7 @@ void DamageParryItem(int pnum)
 
 		player.InvBody[INVLOC_HAND_LEFT]._iDurability--;
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
-			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+			RemoveEquipment(player, INVLOC_HAND_LEFT, true);
 			CalcPlrInv(player, true);
 		}
 	}
@@ -1318,8 +1308,7 @@ void DamageParryItem(int pnum)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability != DUR_INDESTRUCTIBLE) {
 			player.InvBody[INVLOC_HAND_RIGHT]._iDurability--;
 			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
-				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
-				player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+				RemoveEquipment(player, INVLOC_HAND_RIGHT, true);
 				CalcPlrInv(player, true);
 			}
 		}
@@ -1333,7 +1322,7 @@ bool DoBlock(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame >= player._pBFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pBFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 
@@ -1387,11 +1376,10 @@ void DamageArmor(int pnum)
 	}
 
 	if (a != 0) {
-		NetSendCmdDelItem(true, INVLOC_CHEST);
+		RemoveEquipment(player, INVLOC_CHEST, true);
 	} else {
-		NetSendCmdDelItem(true, INVLOC_HEAD);
+		RemoveEquipment(player, INVLOC_HEAD, true);
 	}
-	pi->_itype = ItemType::None;
 	CalcPlrInv(player, true);
 }
 
@@ -1402,8 +1390,7 @@ bool DoSpell(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : ((player.AnimInfo.CurrentFrame * player.AnimInfo.TicksPerFrame) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (currentSpellFrame == (player._pSFNum + 1)) {
+	if (player.AnimInfo.CurrentFrame == player._pSFNum) {
 		CastSpell(
 		    pnum,
 		    player._pSpell,
@@ -1418,7 +1405,7 @@ bool DoSpell(int pnum)
 		}
 	}
 
-	if (currentSpellFrame >= player._pSFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pSFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1434,7 +1421,7 @@ bool DoGotHit(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame >= player._pHFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pHFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		if (GenerateRnd(4) != 0) {
@@ -1454,7 +1441,7 @@ bool DoDeath(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames) {
+	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames - 1) {
 		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
 			player.AnimInfo.TicksPerFrame = 1000000000;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
@@ -1736,7 +1723,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		return;
 	}
 
-	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame > player._pAFNum) {
+	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
 			StartAttack(pnum, d);
@@ -1767,7 +1754,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame > player._pAFNum) {
+	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(pnum, d, player.destParam1, player.destParam2);
@@ -1783,8 +1770,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.TicksPerFrame + 1) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (player._pmode == PM_SPELL && currentSpellFrame > player._pSFNum) {
+	if (player._pmode == PM_SPELL && player.AnimInfo.CurrentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
@@ -1937,34 +1923,35 @@ bool Player::HasItem(int item, int *idx) const
 
 void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
-	iv++;
-
 	// Iterate through invGrid and remove every reference to item
-	for (int8_t &itemId : InvGrid) {
-		if (itemId == iv || itemId == -iv) {
-			itemId = 0;
+	for (int8_t &itemIndex : InvGrid) {
+		if (abs(itemIndex) - 1 == iv) {
+			itemIndex = 0;
 		}
 	}
 
-	iv--;
+	InvList[iv].Clear();
+
 	_pNumInv--;
 
 	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
-		InvList[iv] = InvList[_pNumInv];
+		InvList[iv] = std::move(InvList[_pNumInv]);
+		InvList[_pNumInv].Clear();
 
-		for (int8_t &itemId : InvGrid) {
-			if (itemId == _pNumInv + 1) {
-				itemId = iv + 1;
+		for (int8_t &itemIndex : InvGrid) {
+			if (itemIndex == _pNumInv + 1) {
+				itemIndex = iv + 1;
 			}
-			if (itemId == -(_pNumInv + 1)) {
-				itemId = -(iv + 1);
+			if (itemIndex == -(_pNumInv + 1)) {
+				itemIndex = -(iv + 1);
 			}
 		}
 	}
 
-	if (calcScrolls)
+	if (calcScrolls) {
 		CalcScrolls();
+	}
 }
 
 bool Player::TryRemoveInvItemById(int item)
@@ -1979,7 +1966,7 @@ bool Player::TryRemoveInvItemById(int item)
 
 void Player::RemoveSpdBarItem(int iv)
 {
-	SpdList[iv]._itype = ItemType::None;
+	SpdList[iv].Clear();
 
 	CalcScrolls();
 	force_redraw = 255;
@@ -2256,7 +2243,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		}
 	}
 
-	if (!graphic || (leveltype == DTYPE_TOWN && IsAnyOf(graphic, player_graphic::Fire, player_graphic::Lightning, player_graphic::Magic)))
+	if (!graphic)
 		return;
 
 	LoadPlrGFX(*this, *graphic);
@@ -2286,8 +2273,8 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 
 	auto animWeaponId = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
 	int animationWidth = 96;
+	bool useUnarmedAnimationInTown = false;
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	switch (graphic) {
@@ -2322,27 +2309,24 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 			animationWidth = 98;
 		break;
 	case player_graphic::Lightning:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "LM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
 			animationWidth = 128;
 		break;
 	case player_graphic::Fire:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "FM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
 			animationWidth = 128;
 		break;
 	case player_graphic::Magic:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "QM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
@@ -2367,6 +2351,21 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		app_fatal("PLR:2");
 	}
 
+	if (leveltype == DTYPE_TOWN && useUnarmedAnimationInTown) {
+		// If the hero don't hold the weapon in town then we should use the unarmed animation for casting
+		switch (animWeaponId) {
+		case PlayerWeaponGraphic::Mace:
+		case PlayerWeaponGraphic::Sword:
+			animWeaponId = PlayerWeaponGraphic::Unarmed;
+			break;
+		case PlayerWeaponGraphic::SwordShield:
+		case PlayerWeaponGraphic::MaceShield:
+			animWeaponId = PlayerWeaponGraphic::UnarmedShield;
+			break;
+		}
+	}
+
+	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)]);
 	sprintf(pszName, R"(PlrGFX\%s\%s\%s%s.CL2)", cs, prefix, prefix, szCel);
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
@@ -2634,11 +2633,8 @@ void CreatePlayer(int playerId, HeroClass c)
 		player._pSplLvl[SPL_FIREBOLT] = 2;
 	}
 
-	// interestingly, only the first three hotkeys are reset
-	// TODO: BUGFIX: clear all 4 hotkeys instead of 3 (demo leftover)
-	for (int i = 0; i < 3; i++) {
-		player._pSplHotKey[i] = SPL_INVALID;
-	}
+	// Initializing the hotkey bindings to no selection
+	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SPL_INVALID);
 
 	PlayerWeaponGraphic animWeaponId = PlayerWeaponGraphic::Unarmed;
 	switch (c) {
@@ -2842,12 +2838,12 @@ void InitPlayer(Player &player, bool firstTime)
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South, player._pNFrames, 4);
-			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1) + 1;
+			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1);
 			player.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 2);
-			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
 		}
 
 		player._pdir = Direction::South;
@@ -3127,7 +3123,7 @@ StartPlayerKill(int pnum, int earflag)
 
 	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
 		for (auto &item : player.InvBody) {
-			item._itype = ItemType::None;
+			item.Clear();
 		}
 		CalcPlrInv(player, false);
 	}
@@ -3141,9 +3137,8 @@ StartPlayerKill(int pnum, int earflag)
 		if (pnum == MyPlayerId) {
 			drawhpflag = true;
 
-			if (pcurs >= CURSOR_FIRSTITEM) {
+			if (!player.HoldItem.isEmpty()) {
 				DeadItem(player, std::move(player.HoldItem), { 0, 0 });
-				player.HoldItem._itype = ItemType::None;
 				NewCursor(CURSOR_HAND);
 			}
 
@@ -3153,7 +3148,7 @@ StartPlayerKill(int pnum, int earflag)
 					if (earflag != 0) {
 						Item ear;
 						InitializeItem(ear, IDI_EAR);
-						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
+						CopyUtf8(ear._iName, fmt::format(_("Ear of {:s}"), player._pName), sizeof(ear._iName));
 						switch (player._pClass) {
 						case HeroClass::Sorcerer:
 							ear._iCurs = ICURS_EAR_SORCERER;
@@ -3181,7 +3176,7 @@ StartPlayerKill(int pnum, int earflag)
 						for (auto &item : player.InvBody) {
 							pdd = Left(pdd);
 							DeadItem(player, std::move(item), Displacement(pdd));
-							item._itype = ItemType::None;
+							item.Clear();
 						}
 
 						CalcPlrInv(player, false);
@@ -3199,11 +3194,9 @@ void StripTopGold(Player &player)
 		if (item._itype == ItemType::Gold) {
 			if (item._ivalue > MaxGold) {
 				Item excessGold;
-				InitializeItem(excessGold, IDI_GOLD);
-				SetGoldSeed(player, excessGold);
-				excessGold._ivalue = item._ivalue - MaxGold;
-				SetPlrHandGoldCurs(excessGold);
+				MakeGoldStack(excessGold, item._ivalue - MaxGold);
 				item._ivalue = MaxGold;
+
 				if (!GoldAutoPlace(player, excessGold)) {
 					DeadItem(player, std::move(excessGold), { 0, 0 });
 				}
@@ -3581,8 +3574,8 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
+		    ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
+		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))                 // inside right panel
 		) {
 			if (spellID != SPL_HEAL
 			    && spellID != SPL_IDENTIFY
@@ -3600,10 +3593,10 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		addflag = spellcheck == SpellCheckResult::Success;
 		break;
 	case RSPLTYPE_SCROLL:
-		addflag = UseScroll();
+		addflag = UseScroll(spellID);
 		break;
 	case RSPLTYPE_CHARGES:
-		addflag = UseStaff();
+		addflag = UseStaff(spellID);
 		break;
 	case RSPLTYPE_INVALID:
 		return;

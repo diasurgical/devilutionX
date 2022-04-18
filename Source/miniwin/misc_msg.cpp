@@ -28,6 +28,7 @@
 #include "miniwin/miniwin.h"
 #include "movie.h"
 #include "panels/spell_list.hpp"
+#include "qol/stash.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -67,7 +68,7 @@ void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point 
 
 void SetCursorPos(Point position)
 {
-	if (ControlMode != ControlTypes::KeyboardAndMouse) {
+	if (ControlDevice != ControlTypes::KeyboardAndMouse) {
 		MousePosition = position;
 		return;
 	}
@@ -285,7 +286,7 @@ int32_t KeystateForMouse(int32_t ret)
 
 bool FalseAvail(const char *name, int value)
 {
-	LogDebug("Unhandled SDL event: {} {}", name, value);
+	LogVerbose("Unhandled SDL event: {} {}", name, value);
 	return true;
 }
 
@@ -295,14 +296,14 @@ bool FalseAvail(const char *name, int value)
  */
 bool BlurInventory()
 {
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!MyPlayer->HoldItem.isEmpty()) {
 		if (!TryDropItem()) {
 			Players[MyPlayerId].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
 		}
 	}
 
-	invflag = false;
+	CloseInventory();
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
 	if (chrflag)
@@ -315,12 +316,20 @@ void ProcessGamepadEvents(GameAction &action)
 {
 	switch (action.type) {
 	case GameActionType_NONE:
+	case GameActionType_SEND_KEY:
+	case GameActionType_SEND_MOUSE_CLICK:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
-		UseBeltItem(BLT_HEALING);
+		if (IsStashOpen)
+			Stash.PreviousPage();
+		else
+			UseBeltItem(BLT_HEALING);
 		break;
 	case GameActionType_USE_MANA_POTION:
-		UseBeltItem(BLT_MANA);
+		if (IsStashOpen)
+			Stash.NextPage();
+		else
+			UseBeltItem(BLT_MANA);
 		break;
 	case GameActionType_PRIMARY_ACTION:
 		PerformPrimaryAction();
@@ -340,12 +349,16 @@ void ProcessGamepadEvents(GameAction &action)
 			chrflag = false;
 			QuestLogIsOpen = false;
 			sbookflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
 		}
 		break;
 	case GameActionType_TOGGLE_CHARACTER_INFO:
 		chrflag = !chrflag;
 		if (chrflag) {
 			QuestLogIsOpen = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
 			spselflag = false;
 			if (pcurs == CURSOR_DISARM)
 				NewCursor(CURSOR_HAND);
@@ -356,6 +369,8 @@ void ProcessGamepadEvents(GameAction &action)
 		if (!QuestLogIsOpen) {
 			StartQuestlog();
 			chrflag = false;
+			CloseGoldWithdraw();
+			IsStashOpen = false;
 			spselflag = false;
 		} else {
 			QuestLogIsOpen = false;
@@ -375,16 +390,10 @@ void ProcessGamepadEvents(GameAction &action)
 		break;
 	case GameActionType_TOGGLE_SPELL_BOOK:
 		if (BlurInventory()) {
-			invflag = false;
+			CloseInventory();
 			spselflag = false;
 			sbookflag = !sbookflag;
 		}
-		break;
-	case GameActionType_SEND_MOUSE_CLICK:
-		Uint8 simulatedButton = action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
-		SDL_Event clickEvent;
-		SetMouseButtonEvent(clickEvent, action.send_mouse_click.up ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN, simulatedButton, MousePosition);
-		SDL_PushEvent(&clickEvent);
 		break;
 	}
 }
@@ -457,6 +466,11 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
+	if (IsAnyOf(ctrlEvent.button, ControllerButtonPrimary, ControllerButtonSecondary, ControllerButtonTertiary) && IsAnyOf(ControllerButtonHeld, ctrlEvent.button, ControllerButton_NONE)) {
+		ControllerButtonHeld = (ctrlEvent.up || IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) ? ControllerButton_NONE : ctrlEvent.button;
+		LastMouseButtonAction = MouseActionType::None;
+	}
+
 	GameAction action;
 	if (GetGameAction(e, ctrlEvent, &action)) {
 		if (movie_playing) {
@@ -468,6 +482,12 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		} else if (action.type == GameActionType_SEND_KEY) {
 			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = action.send_key.vk_code;
+		} else if (action.type == GameActionType_SEND_MOUSE_CLICK) {
+			lpMsg->message = action.send_mouse_click.up
+			    ? (action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? DVL_WM_LBUTTONUP : DVL_WM_RBUTTONUP)
+			    : (action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? DVL_WM_LBUTTONDOWN : DVL_WM_RBUTTONDOWN);
+			lpMsg->wParam = 0;
+			lpMsg->lParam = (static_cast<int16_t>(MousePosition.y) << 16) | static_cast<int16_t>(MousePosition.x);
 		} else {
 			ProcessGamepadEvents(action);
 		}
@@ -603,6 +623,10 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 		if (gbRunGame && dropGoldFlag) {
 			GoldDropNewText(e.text.text);
+			break;
+		}
+		if (gbRunGame && IsWithdrawGoldOpen) {
+			GoldWithdrawNewText(e.text.text);
 			break;
 		}
 		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
@@ -768,11 +792,9 @@ bool TranslateMessage(const tagMSG *lpMsg)
 				}
 			}
 
-#ifdef _DEBUG
 			if (key >= 32) {
-				Log("char: {:c}", key);
+				LogVerbose("char: {:c}", key);
 			}
-#endif
 
 			// XXX: This does not add extended info to lParam
 			PostMessage(DVL_WM_CHAR, key, 0);

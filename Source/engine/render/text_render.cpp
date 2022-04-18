@@ -6,6 +6,7 @@
 #include "text_render.hpp"
 
 #include <array>
+#include <cstddef>
 #include <unordered_map>
 #include <utility>
 
@@ -502,7 +503,7 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 	return maxSpacing - spacingRedux;
 }
 
-std::string WordWrapString(string_view text, size_t width, GameFontTables size, int spacing)
+std::string WordWrapString(string_view text, unsigned width, GameFontTables size, int spacing)
 {
 	std::string output;
 	if (text.empty() || text[0] == '\0')
@@ -511,28 +512,28 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 	output.reserve(text.size());
 	const char *begin = text.data();
 	const char *processedEnd = text.data();
-	int lastBreakablePos = -1;
-	int lastBreakableLen;
+	string_view::size_type lastBreakablePos = string_view::npos;
+	std::size_t lastBreakableLen;
 	bool lastBreakableKeep = false;
 	uint32_t currentUnicodeRow = 0;
-	size_t lineWidth = 0;
+	unsigned lineWidth = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
 
 	char32_t codepoint = U'\0'; // the current codepoint
 	char32_t nextCodepoint;     // the next codepoint
-	uint8_t nextCodepointLen;
+	std::size_t nextCodepointLen;
 	string_view remaining = text;
 	nextCodepoint = DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen);
 	do {
 		codepoint = nextCodepoint;
-		const uint8_t codepointLen = nextCodepointLen;
+		const std::size_t codepointLen = nextCodepointLen;
 		if (codepoint == Utf8DecodeError)
 			break;
 		remaining.remove_prefix(codepointLen);
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 
 		if (codepoint == U'\n') { // Existing line break, scan next line
-			lastBreakablePos = -1;
+			lastBreakablePos = string_view::npos;
 			lineWidth = 0;
 			output.append(processedEnd, remaining.data());
 			processedEnd = remaining.data();
@@ -551,7 +552,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 
 		const bool isWhitespace = IsWhitespace(codepoint);
 		if (isWhitespace || IsBreakAllowed(codepoint, nextCodepoint)) {
-			lastBreakablePos = static_cast<int>(remaining.data() - begin - codepointLen);
+			lastBreakablePos = remaining.data() - begin - codepointLen;
 			lastBreakableLen = codepointLen;
 			lastBreakableKeep = !isWhitespace;
 			continue;
@@ -561,7 +562,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 			continue; // String is still within the limit, continue to the next symbol
 		}
 
-		if (lastBreakablePos == -1) { // Single word longer than width
+		if (lastBreakablePos == string_view::npos) { // Single word longer than width
 			continue;
 		}
 
@@ -576,7 +577,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 		// Restart from the beginning of the new line.
 		remaining = text.substr(lastBreakablePos + lastBreakableLen);
 		processedEnd = remaining.data();
-		lastBreakablePos = -1;
+		lastBreakablePos = string_view::npos;
 		lineWidth = 0;
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 	} while (!remaining.empty() && remaining[0] != '\0');
@@ -739,7 +740,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 
 uint8_t PentSpn2Spin()
 {
-	return (SDL_GetTicks() / 50) % 8 + 1;
+	return (SDL_GetTicks() / 50) % 8;
 }
 
 } // namespace devilution

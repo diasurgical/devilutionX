@@ -4,6 +4,7 @@
 #include "stores.h"
 #include "storm/storm_net.hpp"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -50,25 +51,25 @@ void SelconnLoad()
 	UiAddLogo(&vecSelConnDlg);
 
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(Sint16)(UI_OFFSET_Y + 161), 590, 35 };
-	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("Multi Player Game"), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("Multi Player Game").c_str(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 218), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtText>(selconn_MaxPlayers, rect2, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 256), DESCRIPTION_WIDTH, 21 };
-	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("Requirements:"), rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("Requirements:").c_str(), rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
 	SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 275), DESCRIPTION_WIDTH, 66 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtText>(selconn_Description, rect4, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark, 1, 16));
 
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 30), (Sint16)(UI_OFFSET_Y + 356), 220, 31 };
-	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("no gateway needed"), rect5, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver, 0));
+	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("no gateway needed").c_str(), rect5, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver, 0));
 
 	SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 35), (Sint16)(UI_OFFSET_Y + 393), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtText>(selconn_Gateway, rect6, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
 	SDL_Rect rect7 = { (Sint16)(PANEL_LEFT + 300), (Sint16)(UI_OFFSET_Y + 211), 295, 33 };
-	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("Select Connection"), rect7, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelConnDlg.push_back(std::make_unique<UiArtText>(_("Select Connection").c_str(), rect7, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	SDL_Rect rect8 = { (Sint16)(PANEL_LEFT + 16), (Sint16)(UI_OFFSET_Y + 427), 250, 35 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtTextButton>(_("Change Gateway"), nullptr, rect8, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold | UiFlags::ElementHidden));
@@ -104,21 +105,21 @@ void SelconnFocus(int value)
 	int players = MAX_PLRS;
 	switch (vecConnItems[value]->m_value) {
 	case SELCONN_TCP:
-		strcpy(selconn_Description, _("All computers must be connected to a TCP-compatible network."));
+		CopyUtf8(selconn_Description, _("All computers must be connected to a TCP-compatible network."), sizeof(selconn_Description));
 		players = MAX_PLRS;
 		break;
 	case SELCONN_ZT:
-		strcpy(selconn_Description, _("All computers must be connected to the internet."));
+		CopyUtf8(selconn_Description, _("All computers must be connected to the internet."), sizeof(selconn_Description));
 		players = MAX_PLRS;
 		break;
 	case SELCONN_LOOPBACK:
-		strcpy(selconn_Description, _("Play by yourself with no network exposure."));
+		CopyUtf8(selconn_Description, _("Play by yourself with no network exposure."), sizeof(selconn_Description));
 		players = 1;
 		break;
 	}
 
-	strcpy(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players).c_str());
-	strcpy(selconn_Description, WordWrapString(selconn_Description, DESCRIPTION_WIDTH).c_str());
+	CopyUtf8(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players), sizeof(selconn_MaxPlayers));
+	CopyUtf8(selconn_Description, WordWrapString(selconn_Description, DESCRIPTION_WIDTH), sizeof(selconn_Description));
 }
 
 void SelconnSelect(int value)

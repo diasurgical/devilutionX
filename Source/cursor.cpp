@@ -7,6 +7,8 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/art.h"
+#include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/plrctrls.h"
 #include "doom.h"
@@ -18,24 +20,25 @@
 #include "inv.h"
 #include "missiles.h"
 #include "qol/itemlabels.h"
+#include "qol/stash.h"
 #include "towners.h"
 #include "track.h"
 #include "trigs.h"
 #include "utils/attributes.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 namespace {
 /** Cursor images CEL */
 std::optional<OwnedCelSprite> pCursCels;
 std::optional<OwnedCelSprite> pCursCels2;
-constexpr uint16_t InvItems1Size = 180;
 
 /** Maps from objcurs.cel frame number to frame width. */
 const uint16_t InvItemWidth1[] = {
 	// clang-format off
 	// Cursors
-	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
+	33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
 	// Items
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -56,7 +59,6 @@ const uint16_t InvItemWidth1[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 };
 const uint16_t InvItemWidth2[] = {
-	0,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -65,12 +67,14 @@ const uint16_t InvItemWidth2[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
 	// clang-format on
 };
+constexpr uint16_t InvItems1Size = sizeof(InvItemWidth1) / sizeof(InvItemWidth1[0]);
+constexpr uint16_t InvItems2Size = sizeof(InvItemWidth2) / sizeof(InvItemWidth2[0]);
 
 /** Maps from objcurs.cel frame number to frame height. */
-const uint16_t InvItemHeight1[] = {
+const uint16_t InvItemHeight1[InvItems1Size] = {
 	// clang-format off
 	// Cursors
-	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
+	29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
 	// Items
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -90,8 +94,7 @@ const uint16_t InvItemHeight1[] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 };
-const uint16_t InvItemHeight2[] = {
-	0,
+const uint16_t InvItemHeight2[InvItems2Size] = {
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -103,17 +106,13 @@ const uint16_t InvItemHeight2[] = {
 
 } // namespace
 
-/** Pixel size of the current cursor image */
-Size cursSize;
 /** Current highlighted monster */
 int pcursmonst = -1;
-/** Size of current cursor in inventory cells */
-Size icursSize28;
 
 /** inv_item value */
 int8_t pcursinvitem;
-/** Pixel size of the current cursor image */
-Size icursSize;
+/** StashItem value */
+uint16_t pcursstashitem;
 /** Current highlighted item */
 int8_t pcursitem;
 /** Current highlighted object */
@@ -143,27 +142,22 @@ void FreeCursor()
 	ClearCursor();
 }
 
-const OwnedCelSprite &GetInvItemSprite(int i)
+const OwnedCelSprite &GetInvItemSprite(int cursId)
 {
-	return i < InvItems1Size ? *pCursCels : *pCursCels2;
+	return cursId <= InvItems1Size ? *pCursCels : *pCursCels2;
 }
 
-int GetInvItemFrame(int i)
+int GetInvItemFrame(int cursId)
 {
-	return i < InvItems1Size ? i : i - (InvItems1Size - 1);
+	return cursId <= InvItems1Size ? cursId - 1 : cursId - InvItems1Size - 1;
 }
 
 Size GetInvItemSize(int cursId)
 {
-	if (cursId >= InvItems1Size)
-		return { InvItemWidth2[cursId - (InvItems1Size - 1)], InvItemHeight2[cursId - (InvItems1Size - 1)] };
-	return { InvItemWidth1[cursId], InvItemHeight1[cursId] };
-}
-
-void SetICursor(int cursId)
-{
-	icursSize = GetInvItemSize(cursId);
-	icursSize28 = icursSize / 28;
+	const int i = cursId - 1;
+	if (i >= InvItems1Size)
+		return { InvItemWidth2[i - InvItems1Size], InvItemHeight2[i - InvItems1Size] };
+	return { InvItemWidth1[i], InvItemHeight1[i] };
 }
 
 void ResetCursor()
@@ -171,13 +165,31 @@ void ResetCursor()
 	NewCursor(pcurs);
 }
 
+void NewCursor(const Item &item)
+{
+	if (item.isEmpty()) {
+		NewCursor(CURSOR_HAND);
+	} else {
+		NewCursor(item._iCurs + CURSOR_FIRSTITEM);
+	}
+}
+
 void NewCursor(int cursId)
 {
+	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
+		MyPlayer->HoldItem.Clear();
+	}
 	pcurs = cursId;
-	cursSize = GetInvItemSize(cursId);
-	SetICursor(cursId);
-	if (IsHardwareCursorEnabled() && ControlMode == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo() != CursorInfo::GameCursor(cursId) && cursId != CURSOR_NONE) {
-		SetHardwareCursor(CursorInfo::GameCursor(cursId));
+
+	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
+		if (ArtCursor.surface == nullptr && cursId == CURSOR_NONE)
+			return;
+
+		const CursorInfo newCursor = ArtCursor.surface == nullptr
+		    ? CursorInfo::GameCursor(cursId)
+		    : CursorInfo::UserInterfaceCursor();
+		if (newCursor != GetCurrentCursorInfo())
+			SetHardwareCursor(newCursor);
 	}
 }
 
@@ -185,8 +197,8 @@ void CelDrawCursor(const Surface &out, Point position, int cursId)
 {
 	const auto &sprite = GetInvItemSprite(cursId);
 	const int frame = GetInvItemFrame(cursId);
-	if (IsItemSprite(cursId)) {
-		const auto &heldItem = Players[MyPlayerId].HoldItem;
+	if (!MyPlayer->HoldItem.isEmpty()) {
+		const auto &heldItem = MyPlayer->HoldItem;
 		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
 		CelDrawItem(heldItem, out, position, sprite, frame);
 	} else {
@@ -202,6 +214,7 @@ void InitLevelCursor()
 	pcursmonst = -1;
 	pcursobj = -1;
 	pcursitem = -1;
+	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
 	ClearCursor();
 }
@@ -213,9 +226,8 @@ void CheckTown()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, _("Town Portal"));
-				strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile._misource]._pName).c_str());
-				AddPanelString(tempstr);
+				InfoString = _("Town Portal");
+				AddPanelString(fmt::format(_("from {:s}"), Players[missile._misource]._pName));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -229,12 +241,8 @@ void CheckRportal()
 			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
-				strcpy(infostr, _("Portal to"));
-				if (!setlevel)
-					strcpy(tempstr, _("The Unholy Altar"));
-				else
-					strcpy(tempstr, _("level 15"));
-				AddPanelString(tempstr);
+				InfoString = _("Portal to");
+				AddPanelString(!setlevel ? _("The Unholy Altar") : _("level 15"));
 				cursPosition = missile.position.tile;
 			}
 		}
@@ -250,7 +258,7 @@ void CheckCursMove()
 	int sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen) {
+		if (chrflag || QuestLogIsOpen || IsStashOpen) {
 			sx -= GetScreenWidth() / 4;
 		} else if (invflag || sbookflag) {
 			sx += GetScreenWidth() / 4;
@@ -335,26 +343,10 @@ void CheckCursMove()
 	const Point currentTile { mx, my };
 
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
-	if (sgbMouseDown != CLICK_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
-		if (pcursmonst != -1) {
-			const auto &monster = Monsters[pcursmonst];
-			if (monster._mDelFlag || monster._mhitpoints >> 6 <= 0
-			    || (monster._mFlags & MFLAG_HIDDEN) != 0
-			    || !IsTileLit(monster.position.tile)) {
-				pcursmonst = -1;
-			}
-		} else if (pcursobj != -1) {
-			if (Objects[pcursobj]._oSelFlag < 1)
-				pcursobj = -1;
-		} else if (pcursplr != -1) {
-			auto &targetPlayer = Players[pcursplr];
-			if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
-			    || currlevel != targetPlayer.plrlevel || targetPlayer._pHitPoints >> 6 <= 0
-			    || !IsTileLit(targetPlayer.position.tile))
-				pcursplr = -1;
-		}
+	if ((sgbMouseDown != CLICK_NONE || ControllerButtonHeld != ControllerButton_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
+		InvalidateTargets();
 
-		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursplr == -1) {
+		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
 			cursPosition = { mx, my };
 			CheckTrigForce();
 			CheckTown();
@@ -373,6 +365,7 @@ void CheckCursMove()
 		drawsbarflag = true;
 	}
 	pcursinvitem = -1;
+	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
 	ShowUniqueItemInfoBox = false;
 	panelflag = false;
@@ -381,7 +374,7 @@ void CheckCursMove()
 	if (myPlayer._pInvincible) {
 		return;
 	}
-	if (pcurs >= CURSOR_FIRSTITEM || spselflag) {
+	if (!myPlayer.HoldItem.isEmpty() || spselflag) {
 		cursPosition = { mx, my };
 		return;
 	}
@@ -396,10 +389,13 @@ void CheckCursMove()
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
+	if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
+		pcursstashitem = CheckStashHLight(MousePosition);
+	}
 	if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) {
+	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) {
 		return;
 	}
 

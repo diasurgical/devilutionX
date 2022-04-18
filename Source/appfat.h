@@ -8,6 +8,7 @@
 #include <SDL.h>
 
 #include "utils/attributes.h"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -49,16 +50,16 @@ void DrawDlg(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
 /**
  * @brief Terminates the game and displays an error dialog box based on the given dialog_id.
  */
-[[noreturn]] void ErrDlg(const char *title, const char *error, const char *logFilePath, int logLineNr);
+[[noreturn]] void ErrDlg(const char *title, string_view error, string_view logFilePath, int logLineNr);
 
 /**
  * @brief Terminates the game with an insert CD error dialog.
  */
-[[noreturn]] void InsertCDDlg(const char *archiveName);
+[[noreturn]] void InsertCDDlg(string_view archiveName);
 
 /**
  * @brief Terminates the game with a read-only directory error dialog.
  */
-[[noreturn]] void DirErrorDlg(const char *error);
+[[noreturn]] void DirErrorDlg(string_view error);
 
 } // namespace devilution

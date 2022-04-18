@@ -2,8 +2,8 @@ include(functions/FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(zlib
-    URL https://www.zlib.net/zlib-1.2.11.tar.gz
-    URL_HASH MD5=1c9f62f0778697a09d36121ead88e08e
+    URL https://www.zlib.net/zlib-1.2.12.tar.gz
+    URL_HASH MD5=5fc414a9726be31427b440b434d05f78
 )
 FetchContent_MakeAvailableExcludeFromAll(zlib)
 
@@ -45,5 +45,5 @@ target_include_directories(ZLIB PUBLIC ${zlib_BINARY_DIR})
 
 add_library(ZLIB::ZLIB ALIAS ZLIB)
 
-set(ZLIB_LIBRARY "${CMAKE_CURRENT_BINARY_DIR}/3dsParty/zlib" PARENT_SCOPE)
+set(ZLIB_LIBRARY ZLIB::ZLIB PARENT_SCOPE)
 set(ZLIB_INCLUDE_DIR HINTS ${zlib_SOURCE_DIR} ${zlib_BINARY_DIR} PARENT_SCOPE)

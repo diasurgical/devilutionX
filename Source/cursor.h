@@ -32,11 +32,9 @@ enum cursor_id : uint8_t {
 	CURSOR_FIRSTITEM,
 };
 
-extern DVL_API_FOR_TEST Size cursSize;
 extern int pcursmonst;
-extern DVL_API_FOR_TEST Size icursSize28;
-extern DVL_API_FOR_TEST Size icursSize;
 extern int8_t pcursinvitem;
+extern uint16_t pcursstashitem;
 extern int8_t pcursitem;
 extern int8_t pcursobj;
 extern int8_t pcursplr;
@@ -45,18 +43,20 @@ extern DVL_API_FOR_TEST int pcurs;
 
 void InitCursor();
 void FreeCursor();
-void SetICursor(int cursId);
 void ResetCursor();
+
+struct Item;
+/**
+ * @brief Use the item sprite as the cursor (or show the default hand cursor if the item isEmpty)
+ */
+void NewCursor(const Item &item);
+
 void NewCursor(int cursId);
+
 void InitLevelCursor();
 void CheckRportal();
 void CheckTown();
 void CheckCursMove();
-
-inline bool IsItemSprite(int cursId)
-{
-	return cursId >= CURSOR_FIRSTITEM;
-}
 
 void CelDrawCursor(const Surface &out, Point position, int cursId);
 
@@ -64,7 +64,7 @@ void CelDrawCursor(const Surface &out, Point position, int cursId);
 const OwnedCelSprite &GetInvItemSprite(int i);
 
 /** Returns the CEL frame index for the given inventory index. */
-int GetInvItemFrame(int i);
+int GetInvItemFrame(int cursId);
 
 /** Returns the width and height for an inventory index. */
 Size GetInvItemSize(int cursId);

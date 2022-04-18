@@ -19,15 +19,15 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo dpkg --add-architecture i386 &&
-        sudo apt update -y &&
-        sudo apt install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsodium-dev:i386 libpng-dev:i386 libbz2-dev:i386 rpm wget smpq
+        sudo apt-get update -y &&
+        sudo apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsodium-dev:i386 libpng-dev:i386 libbz2-dev:i386 rpm wget smpq
 
     - name: Cache CMake build folder
       uses: actions/cache@v2
       with:
         path: build
-        key: linux-x86-cmake-v3-${{ github.sha }}
-        restore-keys: linux-x86-cmake-v3-
+        key: linux-x86-cmake-v4-${{ github.sha }}
+        restore-keys: linux-x86-cmake-v4-
 
     - name: Configure CMake
       shell: bash

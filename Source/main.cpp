@@ -4,6 +4,7 @@
 #ifdef __SWITCH__
 #include "platform/switch/network.h"
 #include "platform/switch/random.hpp"
+#include "platform/switch/romfs.hpp"
 #endif
 #ifdef __3DS__
 #include "platform/ctr/system.h"
@@ -28,6 +29,7 @@ extern "C" const char *__asan_default_options() // NOLINT(bugprone-reserved-iden
 extern "C" int main(int argc, char **argv)
 {
 #ifdef __SWITCH__
+	switch_romfs_init();
 	switch_enable_network();
 	randombytes_switchrandom_init();
 #endif

@@ -98,7 +98,7 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 
 bool SetHardwareCursorFromSprite(int pcurs)
 {
-	const bool isItem = IsItemSprite(pcurs);
+	const bool isItem = !MyPlayer->HoldItem.isEmpty();
 	if (isItem && !*sgOptions.Graphics.hardwareCursorForItems)
 		return false;
 
@@ -144,11 +144,9 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 	case CursorType::UserInterface:
 		// ArtCursor is null while loading the game on the progress screen,
 		// called via palette fade from ShowProgress.
-		if (ArtCursor.surface != nullptr) {
-			CurrentCursorInfo.SetEnabled(
-			    IsCursorSizeAllowed(Size { ArtCursor.surface->w, ArtCursor.surface->h })
-			    && SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
-		}
+		CurrentCursorInfo.SetEnabled(
+		    ArtCursor.surface != nullptr && IsCursorSizeAllowed(Size { ArtCursor.surface->w, ArtCursor.surface->h })
+		    && SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
 		break;
 	case CursorType::Unknown:
 		CurrentCursorInfo.SetEnabled(false);

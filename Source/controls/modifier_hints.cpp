@@ -5,8 +5,9 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
-#include "controls/controller.h"
+#include "controls/controller_motion.h"
 #include "controls/game_controls.h"
+#include "controls/plrctrls.h"
 #include "engine/load_cel.hpp"
 #include "engine/render/text_render.hpp"
 #include "options.h"
@@ -130,7 +131,7 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 	for (int slot = 0; slot < 4; ++slot) {
 		splId = myPlayer._pSplHotKey[slot];
 
-		if (splId != SPL_INVALID && (spells & GetSpellBitmask(splId)) != 0)
+		if (splId != SPL_INVALID && splId != SPL_NULL && (spells & GetSpellBitmask(splId)) != 0)
 			splType = (currlevel == 0 && !spelldata[splId].sTownSpell) ? RSPLTYPE_INVALID : myPlayer._pSplTHotKey[slot];
 		else {
 			splType = RSPLTYPE_INVALID;
@@ -155,7 +156,7 @@ void DrawStartModifierMenu(const Surface &out)
 
 void DrawSelectModifierMenu(const Surface &out)
 {
-	if (!select_modifier_active)
+	if (!select_modifier_active || SimulatingMouseWithSelectAndDPad)
 		return;
 
 	if (sgOptions.Controller.bDpadHotkeys) {
@@ -175,7 +176,8 @@ void InitModifierHints()
 	if (hintBox.surface == nullptr || hintBoxBackground.surface == nullptr) {
 		app_fatal("%s", _("Failed to load UI resources.\n"
 		                  "\n"
-		                  "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
+		                  "Make sure devilutionx.mpq is in the game folder and that it is up to date.")
+		                    .c_str());
 	}
 }
 

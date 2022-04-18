@@ -1420,10 +1420,8 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 					}
 				}
 				if (ii != -1) {
-					InitializeItem(player.HoldItem, ii);
-					GenerateNewSeed(player.HoldItem);
-					player.HoldItem._iStatFlag = true;
-					player.SpdList[si] = player.HoldItem;
+					InitializeItem(player.SpdList[si], ii);
+					player.SpdList[si]._iStatFlag = true;
 				}
 				if (!hasPlayedSFX) {
 					PlaySfxLoc(IS_POPPOP2, target);
@@ -2797,6 +2795,8 @@ void MI_LArrow(Missile &missile)
 				}
 				eAnim = MFILE_MAGBLOS;
 				eRst = MISR_FIRE;
+				break;
+			default:
 				break;
 			}
 			SetMissAnim(missile, eAnim);

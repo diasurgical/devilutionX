@@ -10,13 +10,24 @@
 
 namespace devilution {
 
-/**
- * Returns the pointer to the start of the frame data (often a header).
+/*
+ * When a CEL is a multi-direction animation, it begins with 8 offsets to the start of
+ * the animation for each direction.
+ *
+ * Fills the `out` array with a pointer to each direction.
  */
-inline byte *CelGetFrame(byte *data, int frame)
+inline void CelGetDirectionFrames(const byte *data, const byte **out)
 {
-	const std::uint32_t begin = LoadLE32(&data[frame * sizeof(std::uint32_t)]);
-	return &data[begin];
+	for (size_t i = 0; i < 8; ++i) {
+		out[i] = &data[LoadLE32(&data[i * 4])];
+	}
+}
+
+inline void CelGetDirectionFrames(byte *data, byte **out)
+{
+	for (size_t i = 0; i < 8; ++i) {
+		out[i] = &data[LoadLE32(&data[i * 4])];
+	}
 }
 
 /**
@@ -24,8 +35,8 @@ inline byte *CelGetFrame(byte *data, int frame)
  */
 inline byte *CelGetFrame(byte *data, int frame, int *frameSize)
 {
-	const std::uint32_t begin = LoadLE32(&data[frame * sizeof(std::uint32_t)]);
-	*frameSize = static_cast<int>(LoadLE32(&data[(frame + 1) * sizeof(std::uint32_t)]) - begin);
+	const std::uint32_t begin = LoadLE32(&data[(frame + 1) * sizeof(std::uint32_t)]);
+	*frameSize = static_cast<int>(LoadLE32(&data[(frame + 2) * sizeof(std::uint32_t)]) - begin);
 	return &data[begin];
 }
 
@@ -34,8 +45,8 @@ inline byte *CelGetFrame(byte *data, int frame, int *frameSize)
  */
 inline const byte *CelGetFrame(const byte *data, int frame, int *frameSize)
 {
-	const std::uint32_t begin = LoadLE32(&data[frame * sizeof(std::uint32_t)]);
-	*frameSize = static_cast<int>(LoadLE32(&data[(frame + 1) * sizeof(std::uint32_t)]) - begin);
+	const std::uint32_t begin = LoadLE32(&data[(frame + 1) * sizeof(std::uint32_t)]);
+	*frameSize = static_cast<int>(LoadLE32(&data[(frame + 2) * sizeof(std::uint32_t)]) - begin);
 	return &data[begin];
 }
 

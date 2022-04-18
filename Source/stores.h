@@ -77,9 +77,6 @@ extern char storehidx[48];
 /** Copies of the players items as presented in the store */
 extern DVL_API_FOR_TEST Item storehold[48];
 
-/** Temporary item used to generate gold piles by various function */
-extern Item golditem;
-
 /** Items sold by Griswold */
 extern Item smithitem[SMITH_ITEMS];
 /** Number of premium items for sale by Griswold */

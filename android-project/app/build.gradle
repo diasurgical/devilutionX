@@ -14,8 +14,8 @@ android {
 		}
 		minSdkVersion 18
 		targetSdkVersion 31
-		versionCode 20
-		versionName "1.3.0"
+		versionCode 22
+		versionName "1.4.0"
 		externalNativeBuild {
 			cmake {
 				arguments "-DANDROID_STL=c++_static"
@@ -28,6 +28,10 @@ android {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
+	}
+	applicationVariants.all { variant ->
+		tasks["merge${variant.name.capitalize()}Assets"]
+			.dependsOn("externalNativeBuild${variant.name.capitalize()}")
 	}
 	if (!project.hasProperty('EXCLUDE_NATIVE_LIBS')) {
 		sourceSets.main {
