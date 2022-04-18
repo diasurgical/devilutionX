@@ -177,7 +177,7 @@ void NewCursor(const Item &item)
 void NewCursor(int cursId)
 {
 	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
-		MyPlayer->HoldItem._itype = ItemType::None;
+		MyPlayer->HoldItem.Clear();
 	}
 	pcurs = cursId;
 

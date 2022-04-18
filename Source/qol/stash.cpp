@@ -182,7 +182,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 	}
 
 	Item &holdItem = player.HoldItem;
-	holdItem._itype = ItemType::None;
+	holdItem.Clear();
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
@@ -221,7 +221,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 				}
 			}
 
-			holdItem._itype = ItemType::None;
+			holdItem.Clear();
 		} else {
 			NewCursor(holdItem);
 			if (!IsHardwareCursor()) {
