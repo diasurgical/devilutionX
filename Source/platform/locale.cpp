@@ -170,6 +170,8 @@ std::vector<std::string> GetLocales()
 	}
 
 	CFRelease(languages);
+#elif PS4
+    locales.emplace_back("en_US");
 #else
 	try {
 		std::string locale = std::locale("").name();
