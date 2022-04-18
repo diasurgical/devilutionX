@@ -484,7 +484,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				RemoveEquipment(player, INVLOC_HAND_RIGHT, false);
 			} else {
 				// CMD_CHANGEPLRITEMS will eventually be sent for the left hand
-				player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+				player.InvBody[INVLOC_HAND_LEFT].Clear();
 			}
 		}
 
@@ -623,7 +623,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 
 	Item &holdItem = player.HoldItem;
-	holdItem._itype = ItemType::None;
+	holdItem.Clear();
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
@@ -794,7 +794,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 					holdItem = player.InvBody[invloc];
 					if (player.InvBody[invloc]._itype != ItemType::None) {
 						if (invloc != NUM_INVLOC && AutoPlaceItemInInventory(player, holdItem, true)) {
-							player.InvBody[invloc]._itype = ItemType::None;
+							player.InvBody[invloc].Clear();
 						}
 					}
 					holdItem = player.InvList[iv - 1];
@@ -817,7 +817,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				beltItem._itype = ItemType::None;
+				beltItem.Clear();
 				drawsbarflag = true;
 			}
 		}
@@ -847,7 +847,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 					}
 				}
 
-				holdItem._itype = ItemType::None;
+				holdItem.Clear();
 			} else {
 				NewCursor(holdItem);
 				if (!IsHardwareCursor() && !dropItem) {
@@ -986,7 +986,7 @@ void CleanupItems(int ii)
 	dItem[item.position.x][item.position.y] = 0;
 
 	if (currlevel == 21 && item.position == CornerStone.position) {
-		CornerStone.item._itype = ItemType::None;
+		CornerStone.item.Clear();
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item.position = { 0, 0 };
 		CornerStone.item._iAnimFlag = false;
@@ -1317,7 +1317,7 @@ void RemoveEquipment(Player &player, inv_body_loc bodyLocation, bool hiPri)
 		NetSendCmdDelItem(hiPri, bodyLocation);
 	}
 
-	player.InvBody[bodyLocation]._itype = ItemType::None;
+	player.InvBody[bodyLocation].Clear();
 }
 
 bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem)
@@ -1553,9 +1553,9 @@ void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int 
 	}
 
 	if (bLoc == INVLOC_HAND_LEFT && player.GetItemLocation(item) == ILOC_TWOHAND) {
-		player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+		player.InvBody[INVLOC_HAND_RIGHT].Clear();
 	} else if (bLoc == INVLOC_HAND_RIGHT && player.GetItemLocation(item) == ILOC_TWOHAND) {
-		player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
+		player.InvBody[INVLOC_HAND_LEFT].Clear();
 	}
 
 	CalcPlrInv(player, true);
@@ -1563,7 +1563,7 @@ void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int 
 
 void inv_update_rem_item(Player &player, inv_body_loc iv)
 {
-	player.InvBody[iv]._itype = ItemType::None;
+	player.InvBody[iv].Clear();
 
 	CalcPlrInv(player, player._pmode != PM_DEATH);
 }

@@ -243,6 +243,14 @@ struct Item {
 	uint32_t _iDamAcFlags = 0;
 
 	/**
+	 * @brief Resets the item so isEmpty() returns true without needing to reinitialise the whole object
+	 */
+	void Clear()
+	{
+		this->_itype = ItemType::None;
+	}
+
+	/**
 	 * @brief Checks whether this item is empty or not.
 	 * @return 'True' in case the item is empty and 'False' otherwise.
 	 */

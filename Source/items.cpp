@@ -2344,7 +2344,7 @@ void InitItems()
 	memset(dItem, 0, sizeof(dItem));
 
 	for (auto &item : Items) {
-		item._itype = ItemType::None;
+		item.Clear();
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
 		item._iSelFlag = 0;
@@ -2824,7 +2824,7 @@ void CreatePlrItems(int playerId)
 	auto &player = Players[playerId];
 
 	for (auto &item : player.InvBody) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	// converting this to a for loop creates a `rep stosd` instruction,
@@ -2832,13 +2832,13 @@ void CreatePlrItems(int playerId)
 	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
 
 	for (auto &item : player.InvList) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	player._pNumInv = 0;
 
 	for (auto &item : player.SpdList) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	switch (player._pClass) {
@@ -3290,7 +3290,7 @@ void CornerstoneLoad(Point position)
 		return;
 	}
 
-	CornerStone.item._itype = ItemType::None;
+	CornerStone.item.Clear();
 	CornerStone.activated = true;
 	if (dItem[position.x][position.y] != 0) {
 		int ii = dItem[position.x][position.y] - 1;
@@ -4098,7 +4098,7 @@ void SpawnSmith(int lvl)
 		newItem._iIdentified = true;
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
-		smithitem[i]._itype = ItemType::None;
+		smithitem[i].Clear();
 
 	SortVendor(smithitem + PinnedItemCount);
 }
@@ -4177,7 +4177,7 @@ void SpawnWitch(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item._itype = ItemType::None;
+			item.Clear();
 			continue;
 		}
 
@@ -4336,7 +4336,7 @@ void SpawnHealer(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item._itype = ItemType::None;
+			item.Clear();
 			continue;
 		}
 
@@ -4639,7 +4639,7 @@ void RepairItem(Item &item, int lvl)
 	}
 
 	if (item._iMaxDur <= 0) {
-		item._itype = ItemType::None;
+		item.Clear();
 		return;
 	}
 
@@ -4648,7 +4648,7 @@ void RepairItem(Item &item, int lvl)
 		rep += lvl + GenerateRnd(lvl);
 		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
 		if (item._iMaxDur == 0) {
-			item._itype = ItemType::None;
+			item.Clear();
 			return;
 		}
 	} while (rep + item._iDurability < item._iMaxDur);

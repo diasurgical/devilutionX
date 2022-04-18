@@ -1929,14 +1929,14 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 		}
 	}
 
-	InvList[iv]._itype = ItemType::None;
+	InvList[iv].Clear();
 
 	_pNumInv--;
 
 	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
-		InvList[iv] = InvList[_pNumInv];
-		InvList[_pNumInv]._itype = ItemType::None;
+		InvList[iv] = std::move(InvList[_pNumInv]);
+		InvList[_pNumInv].Clear();
 
 		for (int8_t &itemIndex : InvGrid) {
 			if (itemIndex == _pNumInv + 1) {
@@ -1965,7 +1965,7 @@ bool Player::TryRemoveInvItemById(int item)
 
 void Player::RemoveSpdBarItem(int iv)
 {
-	SpdList[iv]._itype = ItemType::None;
+	SpdList[iv].Clear();
 
 	CalcScrolls();
 	force_redraw = 255;
@@ -3122,7 +3122,7 @@ StartPlayerKill(int pnum, int earflag)
 
 	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
 		for (auto &item : player.InvBody) {
-			item._itype = ItemType::None;
+			item.Clear();
 		}
 		CalcPlrInv(player, false);
 	}
@@ -3175,7 +3175,7 @@ StartPlayerKill(int pnum, int earflag)
 						for (auto &item : player.InvBody) {
 							pdd = Left(pdd);
 							DeadItem(player, std::move(item), Displacement(pdd));
-							item._itype = ItemType::None;
+							item.Clear();
 						}
 
 						CalcPlrInv(player, false);

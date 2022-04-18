@@ -510,7 +510,7 @@ void StartSmithSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -593,7 +593,7 @@ void StartSmithRepair()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -784,7 +784,7 @@ void StartWitchSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -877,7 +877,7 @@ void StartWitchRecharge()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -1162,7 +1162,7 @@ void StartStorytellerIdentify()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.Clear();
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -1376,12 +1376,12 @@ void SmithBuyItem(Item &item)
 	StoreAutoPlace(item, true);
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == SMITH_ITEMS - 1) {
-		smithitem[SMITH_ITEMS - 1]._itype = ItemType::None;
+		smithitem[SMITH_ITEMS - 1].Clear();
 	} else {
 		for (; !smithitem[idx + 1].isEmpty(); idx++) {
-			smithitem[idx] = smithitem[idx + 1];
+			smithitem[idx] = std::move(smithitem[idx + 1]);
 		}
-		smithitem[idx]._itype = ItemType::None;
+		smithitem[idx].Clear();
 	}
 	CalcPlrInv(*MyPlayer, true);
 }
@@ -1432,7 +1432,7 @@ void SmithBuyPItem(Item &item)
 		}
 	}
 
-	premiumitems[xx]._itype = ItemType::None;
+	premiumitems[xx].Clear();
 	numpremium--;
 	SpawnPremium(MyPlayerId);
 }
@@ -1630,12 +1630,12 @@ void WitchBuyItem(Item &item)
 
 	if (idx >= 3) {
 		if (idx == WITCH_ITEMS - 1) {
-			witchitem[WITCH_ITEMS - 1]._itype = ItemType::None;
+			witchitem[WITCH_ITEMS - 1].Clear();
 		} else {
 			for (; !witchitem[idx + 1].isEmpty(); idx++) {
-				witchitem[idx] = witchitem[idx + 1];
+				witchitem[idx] = std::move(witchitem[idx + 1]);
 			}
-			witchitem[idx]._itype = ItemType::None;
+			witchitem[idx].Clear();
 		}
 	}
 
@@ -1769,7 +1769,7 @@ void BoyBuyItem(Item &item)
 {
 	TakePlrsMoney(item._iIvalue);
 	StoreAutoPlace(item, true);
-	boyitem._itype = ItemType::None;
+	boyitem.Clear();
 	stextshold = STORE_BOY;
 	CalcPlrInv(*MyPlayer, true);
 	stextlhold = 12;
@@ -1803,12 +1803,12 @@ void HealerBuyItem(Item &item)
 	}
 	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == 19) {
-		healitem[19]._itype = ItemType::None;
+		healitem[19].Clear();
 	} else {
 		for (; !healitem[idx + 1].isEmpty(); idx++) {
-			healitem[idx] = healitem[idx + 1];
+			healitem[idx] = std::move(healitem[idx + 1]);
 		}
-		healitem[idx]._itype = ItemType::None;
+		healitem[idx].Clear();
 	}
 	CalcPlrInv(*MyPlayer, true);
 }
@@ -2187,9 +2187,9 @@ void InitStores()
 	premiumlevel = 1;
 
 	for (auto &premiumitem : premiumitems)
-		premiumitem._itype = ItemType::None;
+		premiumitem.Clear();
 
-	boyitem._itype = ItemType::None;
+	boyitem.Clear();
 	boylevel = 0;
 }
 
