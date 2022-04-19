@@ -197,7 +197,7 @@ struct Item {
 	uint8_t _iMinDam = 0;
 	uint8_t _iMaxDam = 0;
 	int16_t _iAC = 0;
-	uint32_t _iFlags = 0; // item_special_effect
+	ItemSpecialEffect _iFlags = ItemSpecialEffect::None;
 	enum item_misc_id _iMiscId = IMISC_NONE;
 	enum spell_id _iSpell = SPL_NULL;
 	int _iCharges = 0;
@@ -240,7 +240,7 @@ struct Item {
 	bool _iStatFlag = false;
 	_item_indexes IDidx = IDI_NONE;
 	uint32_t dwBuff = 0;
-	uint32_t _iDamAcFlags = 0;
+	ItemSpecialEffectHf _iDamAcFlags = ItemSpecialEffectHf::None;
 
 	/**
 	 * @brief Resets the item so isEmpty() returns true without needing to reinitialise the whole object

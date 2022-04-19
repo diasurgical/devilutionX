@@ -749,7 +749,7 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iPLDam -= r;
 		break;
 	case IPL_DOPPELGANGER:
-		item._iDamAcFlags |= ISPLHF_DOPPELGANGER;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Doppelganger;
 		[[fallthrough]];
 	case IPL_TOHIT_DAMP:
 		r = RndPL(power.param1, power.param2);
@@ -799,16 +799,16 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iMaxCharges = power.param2;
 		break;
 	case IPL_FIREDAM:
-		item._iFlags |= ISPL_FIREDAM;
-		item._iFlags &= ~ISPL_LIGHTDAM;
+		item._iFlags |= ItemSpecialEffect::FireDamage;
+		item._iFlags &= ~ItemSpecialEffect::LightningDamage;
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 0;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_LIGHTDAM:
-		item._iFlags |= ISPL_LIGHTDAM;
-		item._iFlags &= ~ISPL_FIREDAM;
+		item._iFlags |= ItemSpecialEffect::LightningDamage;
+		item._iFlags &= ~ItemSpecialEffect::FireDamage;
 		item._iLMinDam = power.param1;
 		item._iLMaxDam = power.param2;
 		item._iFMinDam = 0;
@@ -894,68 +894,68 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iPLLight -= power.param1;
 		break;
 	case IPL_MULT_ARROWS:
-		item._iFlags |= ISPL_MULT_ARROWS;
+		item._iFlags |= ItemSpecialEffect::MultipleArrows;
 		break;
 	case IPL_FIRE_ARROWS:
-		item._iFlags |= ISPL_FIRE_ARROWS;
-		item._iFlags &= ~ISPL_LIGHT_ARROWS;
+		item._iFlags |= ItemSpecialEffect::FireArrows;
+		item._iFlags &= ~ItemSpecialEffect::LightningArrows;
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 0;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_LIGHT_ARROWS:
-		item._iFlags |= ISPL_LIGHT_ARROWS;
-		item._iFlags &= ~ISPL_FIRE_ARROWS;
+		item._iFlags |= ItemSpecialEffect::LightningArrows;
+		item._iFlags &= ~ItemSpecialEffect::FireArrows;
 		item._iLMinDam = power.param1;
 		item._iLMaxDam = power.param2;
 		item._iFMinDam = 0;
 		item._iFMaxDam = 0;
 		break;
 	case IPL_FIREBALL:
-		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
+		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 0;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_THORNS:
-		item._iFlags |= ISPL_THORNS;
+		item._iFlags |= ItemSpecialEffect::Thorns;
 		break;
 	case IPL_NOMANA:
-		item._iFlags |= ISPL_NOMANA;
+		item._iFlags |= ItemSpecialEffect::NoMana;
 		drawmanaflag = true;
 		break;
 	case IPL_NOHEALPLR:
-		item._iFlags |= ISPL_NOHEALPLR;
+		item._iFlags |= ItemSpecialEffect::NoHealOnPlayer;
 		break;
 	case IPL_ABSHALFTRAP:
-		item._iFlags |= ISPL_ABSHALFTRAP;
+		item._iFlags |= ItemSpecialEffect::HalfTrapDamage;
 		break;
 	case IPL_KNOCKBACK:
-		item._iFlags |= ISPL_KNOCKBACK;
+		item._iFlags |= ItemSpecialEffect::Knockback;
 		break;
 	case IPL_3XDAMVDEM:
-		item._iFlags |= ISPL_3XDAMVDEM;
+		item._iFlags |= ItemSpecialEffect::TripleDemonDamage;
 		break;
 	case IPL_ALLRESZERO:
-		item._iFlags |= ISPL_ALLRESZERO;
+		item._iFlags |= ItemSpecialEffect::ZeroResistance;
 		break;
 	case IPL_NOHEALMON:
-		item._iFlags |= ISPL_NOHEALMON;
+		item._iFlags |= ItemSpecialEffect::NoHealOnMonsters;
 		break;
 	case IPL_STEALMANA:
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_STEALMANA_3;
+			item._iFlags |= ItemSpecialEffect::StealMana3;
 		if (power.param1 == 5)
-			item._iFlags |= ISPL_STEALMANA_5;
+			item._iFlags |= ItemSpecialEffect::StealMana5;
 		drawmanaflag = true;
 		break;
 	case IPL_STEALLIFE:
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_STEALLIFE_3;
+			item._iFlags |= ItemSpecialEffect::StealLife3;
 		if (power.param1 == 5)
-			item._iFlags |= ISPL_STEALLIFE_5;
+			item._iFlags |= ItemSpecialEffect::StealLife5;
 		drawhpflag = true;
 		break;
 	case IPL_TARGAC:
@@ -966,30 +966,30 @@ int SaveItemPower(Item &item, ItemPower &power)
 		break;
 	case IPL_FASTATTACK:
 		if (power.param1 == 1)
-			item._iFlags |= ISPL_QUICKATTACK;
+			item._iFlags |= ItemSpecialEffect::QuickAttack;
 		if (power.param1 == 2)
-			item._iFlags |= ISPL_FASTATTACK;
+			item._iFlags |= ItemSpecialEffect::FastAttack;
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_FASTERATTACK;
+			item._iFlags |= ItemSpecialEffect::FasterAttack;
 		if (power.param1 == 4)
-			item._iFlags |= ISPL_FASTESTATTACK;
+			item._iFlags |= ItemSpecialEffect::FastestAttack;
 		break;
 	case IPL_FASTRECOVER:
 		if (power.param1 == 1)
-			item._iFlags |= ISPL_FASTRECOVER;
+			item._iFlags |= ItemSpecialEffect::FastHitRecovery;
 		if (power.param1 == 2)
-			item._iFlags |= ISPL_FASTERRECOVER;
+			item._iFlags |= ItemSpecialEffect::FasterHitRecovery;
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_FASTESTRECOVER;
+			item._iFlags |= ItemSpecialEffect::FastestHitRecovery;
 		break;
 	case IPL_FASTBLOCK:
-		item._iFlags |= ISPL_FASTBLOCK;
+		item._iFlags |= ItemSpecialEffect::FastBlock;
 		break;
 	case IPL_DAMMOD:
 		item._iPLDamMod += r;
 		break;
 	case IPL_RNDARROWVEL:
-		item._iFlags |= ISPL_RNDARROWVEL;
+		item._iFlags |= ItemSpecialEffect::RandomArrowVelocity;
 		break;
 	case IPL_SETDAM:
 		item._iMinDam = power.param1;
@@ -1000,19 +1000,19 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iMaxDur = power.param1;
 		break;
 	case IPL_FASTSWING:
-		item._iFlags |= ISPL_FASTERATTACK;
+		item._iFlags |= ItemSpecialEffect::FasterAttack;
 		break;
 	case IPL_ONEHAND:
 		item._iLoc = ILOC_ONEHAND;
 		break;
 	case IPL_DRAINLIFE:
-		item._iFlags |= ISPL_DRAINLIFE;
+		item._iFlags |= ItemSpecialEffect::DrainLife;
 		break;
 	case IPL_RNDSTEALLIFE:
-		item._iFlags |= ISPL_RNDSTEALLIFE;
+		item._iFlags |= ItemSpecialEffect::RandomStealLife;
 		break;
 	case IPL_INFRAVISION:
-		item._iFlags |= ISPL_INFRAVISION;
+		item._iFlags |= ItemSpecialEffect::Infravision;
 		break;
 	case IPL_NOMINSTR:
 		item._iMinStr = 0;
@@ -1021,14 +1021,14 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iCurs = power.param1;
 		break;
 	case IPL_ADDACLIFE:
-		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
+		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 1;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_ADDMANAAC:
-		item._iFlags |= (ISPL_LIGHTDAM | ISPL_FIREDAM);
+		item._iFlags |= (ItemSpecialEffect::LightningDamage | ItemSpecialEffect::FireDamage);
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 2;
@@ -1053,23 +1053,23 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iPLMR -= r;
 		break;
 	case IPL_DEVASTATION:
-		item._iDamAcFlags |= ISPLHF_DEVASTATION;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Devastation;
 		break;
 	case IPL_DECAY:
-		item._iDamAcFlags |= ISPLHF_DECAY;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Decay;
 		item._iPLDam += r;
 		break;
 	case IPL_PERIL:
-		item._iDamAcFlags |= ISPLHF_PERIL;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Peril;
 		break;
 	case IPL_JESTERS:
-		item._iDamAcFlags |= ISPLHF_JESTERS;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Jesters;
 		break;
 	case IPL_ACDEMON:
-		item._iDamAcFlags |= ISPLHF_ACDEMON;
+		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstDemons;
 		break;
 	case IPL_ACUNDEAD:
-		item._iDamAcFlags |= ISPLHF_ACUNDEAD;
+		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstUndead;
 		break;
 	case IPL_MANATOLIFE: {
 		int portion = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100) << 6;
@@ -2388,9 +2388,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int btohit = 0; // bonus chance to hit
 	int bac = 0;    // bonus accuracy
 
-	int iflgs = ISPL_NONE; // item_special_effect flags
+	ItemSpecialEffect iflgs = ItemSpecialEffect::None; // item_special_effect flags
 
-	int pDamAcFlags = 0;
+	ItemSpecialEffectHf pDamAcFlags = ItemSpecialEffectHf::None;
 
 	int sadd = 0; // added strength
 	int madd = 0; // added magic
@@ -2582,7 +2582,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		lr -= player._pLevel;
 	}
 
-	if ((iflgs & ISPL_ALLRESZERO) != 0) {
+	if (HasAnyOf(iflgs, ItemSpecialEffect::ZeroResistance)) {
 		// reset resistances to zero if the respective special effect is active
 		mr = 0;
 		fr = 0;
@@ -2628,17 +2628,17 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pILMinDam = lmin;
 	player._pILMaxDam = lmax;
 
-	player._pInfraFlag = (iflgs & ISPL_INFRAVISION) != 0;
+	player._pInfraFlag = HasAnyOf(iflgs, ItemSpecialEffect::Infravision);
 
 	player._pBlockFlag = false;
 	if (player._pClass == HeroClass::Monk) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			player._pBlockFlag = true;
-			player._pIFlags |= ISPL_FASTBLOCK;
+			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
 		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 			player._pBlockFlag = true;
-			player._pIFlags |= ISPL_FASTBLOCK;
+			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
 		if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
 			player._pBlockFlag = true;
@@ -3678,35 +3678,35 @@ bool DoOil(Player &player, int cii)
 	case IPL_NOHEALMON:
 		return _("hit monster doesn't heal");
 	case IPL_STEALMANA:
-		if ((item._iFlags & ISPL_STEALMANA_3) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana3))
 			return _(/*xgettext:no-c-format*/ "hit steals 3% mana");
-		if ((item._iFlags & ISPL_STEALMANA_5) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana5))
 			return _(/*xgettext:no-c-format*/ "hit steals 5% mana");
 		return "";
 	case IPL_STEALLIFE:
-		if ((item._iFlags & ISPL_STEALLIFE_3) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife3))
 			return _(/*xgettext:no-c-format*/ "hit steals 3% life");
-		if ((item._iFlags & ISPL_STEALLIFE_5) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife5))
 			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
 		return "";
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
 	case IPL_FASTATTACK:
-		if ((item._iFlags & ISPL_QUICKATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::QuickAttack))
 			return _("quick attack");
-		if ((item._iFlags & ISPL_FASTATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastAttack))
 			return _("fast attack");
-		if ((item._iFlags & ISPL_FASTERATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterAttack))
 			return _("faster attack");
-		if ((item._iFlags & ISPL_FASTESTATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastestAttack))
 			return _("fastest attack");
 		return _("Another ability (NW)");
 	case IPL_FASTRECOVER:
-		if ((item._iFlags & ISPL_FASTRECOVER) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastHitRecovery))
 			return _("fast hit recovery");
-		if ((item._iFlags & ISPL_FASTERRECOVER) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterHitRecovery))
 			return _("faster hit recovery");
-		if ((item._iFlags & ISPL_FASTESTRECOVER) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastestHitRecovery))
 			return _("fastest hit recovery");
 		return _("Another ability (NW)");
 	case IPL_FASTBLOCK:
@@ -3976,7 +3976,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		player._pMemSpells |= GetSpellBitmask(spl);
 		if (player._pSplLvl[spl] < MAX_SPELL_LEVEL)
 			player._pSplLvl[spl]++;
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
+		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 			player._pMana += spelldata[spl].sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
 			player._pManaBase += spelldata[spl].sManaCost << 6;

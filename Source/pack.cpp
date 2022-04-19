@@ -132,7 +132,7 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 
 	pPack->wReflections = SDL_SwapLE16(player.wReflections);
 	pPack->pDifficulty = SDL_SwapLE32(player.pDifficulty);
-	pPack->pDamAcFlags = SDL_SwapLE32(player.pDamAcFlags);
+	pPack->pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(static_cast<uint32_t>(player.pDamAcFlags)));
 	pPack->pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
 	pPack->bIsHellfire = gbIsHellfire ? 1 : 0;
 
@@ -291,7 +291,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	player.pBattleNet = pPack->pBattleNet != 0;
 	player.pManaShield = pPack->pManaShield != 0;
 	player.pDifficulty = static_cast<_difficulty>(difficulty);
-	player.pDamAcFlags = SDL_SwapLE32(pPack->pDamAcFlags);
+	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(SDL_SwapLE32(static_cast<uint32_t>(pPack->pDamAcFlags)));
 
 	return true;
 }

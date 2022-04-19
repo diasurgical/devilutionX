@@ -1363,9 +1363,9 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		hper = 1000;
 #endif
 	int ac = player.GetArmor();
-	if ((player.pDamAcFlags & ISPLHF_ACDEMON) != 0 && monster.MData->mMonstClass == MonsterClass::Demon)
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstDemons) && monster.MData->mMonstClass == MonsterClass::Demon)
 		ac += 40;
-	if ((player.pDamAcFlags & ISPLHF_ACUNDEAD) != 0 && monster.MData->mMonstClass == MonsterClass::Undead)
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.MData->mMonstClass == MonsterClass::Undead)
 		ac += 20;
 	hit += 2 * (monster.mLevel - player._pLevel)
 	    + 30
@@ -1417,8 +1417,9 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 			CheckReflect(i, pnum, dam);
 		ApplyPlrDamage(pnum, 0, 0, dam);
 	}
+
 	// Reflect can also kill a monster, so make sure the monster is still alive
-	if ((player._pIFlags & ISPL_THORNS) != 0 && monster._mmode != MonsterMode::Death) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Thorns) && monster._mmode != MonsterMode::Death) {
 		int mdam = (GenerateRnd(3) + 1) << 6;
 		monster._mhitpoints -= mdam;
 		if (monster._mhitpoints >> 6 <= 0)
