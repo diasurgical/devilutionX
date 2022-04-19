@@ -97,6 +97,7 @@ void diablo_focus_unpause();
 bool PressEscKey();
 void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
+bool isDiabloAlive(bool isMultiplayer, bool playSFX);
 
 /**
  * @param bStartup Process additional ticks before returning
