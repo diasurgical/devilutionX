@@ -127,8 +127,7 @@ void CheckStashPaste(Point cursorPosition)
 	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
 
 	if (stashIndex == StashStruct::EmptyCell) {
-		Stash.stashList.emplace_back(std::move(player.HoldItem));
-		player.HoldItem.Clear();
+		Stash.stashList.emplace_back(player.HoldItem.pop());
 		// stashList will have at most 10 000 items, up to 65 535 are supported with uint16_t indexes
 		stashIndex = static_cast<uint16_t>(Stash.stashList.size() - 1);
 	} else {
