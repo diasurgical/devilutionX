@@ -6953,7 +6953,7 @@ msgstr "Combien de pièces d'or voulez-vous retirer ?"
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
 msgid ","
-msgstr ""
+msgstr " "
 
 #: Source/qol/xpbar.cpp:146
 msgid "Level {:d}"
