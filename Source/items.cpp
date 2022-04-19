@@ -1996,9 +1996,6 @@ int RndPremiumItem(int minlvl, int maxlvl)
 
 void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 {
-	int itemValue = 0;
-	bool keepGoing = false;
-
 	auto &player = Players[playerId];
 
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
@@ -2027,7 +2024,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 				break;
 			}
 		} else {
-
+			int itemValue = 0;
 			switch (premiumItem._itype) {
 			case ItemType::LightArmor:
 			case ItemType::MediumArmor:
