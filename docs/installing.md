@@ -130,6 +130,17 @@ If you'd like to use this option, scan the QR code below.
 
 </details>
 
+<details><summary>Playstation 4</summary>
+
+ - Install devilutionx-ps4.pkg
+ - Copy the MPQ files (e.g., using ftp) to `/user/data/diasurgical/devilution/`
+ - Create the file `/user/data/diasurgical/devilution/diablo.ini` with the following contents:
+    ```
+    [Language]
+    Code=en
+    ```
+</details>
+
 <details><summary>Playstation Vita</summary>
 
  - Install devilutionx.vpk

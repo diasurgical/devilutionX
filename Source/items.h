@@ -245,7 +245,7 @@ struct Item {
 	/**
 	 * @brief Resets the item so isEmpty() returns true without needing to reinitialise the whole object
 	 */
-	void Clear()
+	DVL_REINITIALIZES void Clear()
 	{
 		this->_itype = ItemType::None;
 	}
