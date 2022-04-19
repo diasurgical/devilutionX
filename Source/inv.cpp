@@ -560,7 +560,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	case ILOC_BELT: {
 		int ii = r - SLOTXY_BELT_FIRST;
 		if (player.SpdList[ii].isEmpty()) {
-			player.SpdList[ii] = player.HoldItem;
+			player.SpdList[ii] = std::move(player.HoldItem);
+			player.HoldItem.Clear();
 		} else {
 			std::swap(player.SpdList[ii], player.HoldItem);
 			if (player.HoldItem._itype == ItemType::Gold)
