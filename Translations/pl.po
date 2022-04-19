@@ -7449,10 +7449,8 @@ msgid "You have nothing I want."
 msgstr "Nie masz rzeczy, których potrzebuję."
 
 #: Source/stores.cpp:567 Source/stores.cpp:842
-#, fuzzy
-#| msgid "I have these items for sale:"
 msgid "Which item is for sale?"
-msgstr "Podstawowe przedmioty na sprzedaż:"
+msgstr "Który przedmiot chcesz sprzedać?"
 
 #: Source/stores.cpp:638
 msgid "You have nothing to repair."
