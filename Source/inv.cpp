@@ -437,10 +437,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		};
 		inv_body_loc slot = iLocToInvLoc(il);
 		Item previouslyEquippedItem = player.InvBody[slot];
-		ChangeEquipment(player, slot, player.HoldItem);
-		if (previouslyEquippedItem.isEmpty()) {
-			player.HoldItem.Clear();
-		} else {
+		ChangeEquipment(player, slot, player.HoldItem.pop());
+		if (!previouslyEquippedItem.isEmpty()) {
 			player.HoldItem = previouslyEquippedItem;
 		}
 		break;
@@ -459,10 +457,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		if (dequipTwoHandedWeapon) {
 			RemoveEquipment(player, otherHand, false);
 		}
-		ChangeEquipment(player, pasteHand, player.HoldItem);
-		if (previouslyEquippedItem.isEmpty()) {
-			player.HoldItem.Clear();
-		} else {
+		ChangeEquipment(player, pasteHand, player.HoldItem.pop());
+		if (!previouslyEquippedItem.isEmpty()) {
 			player.HoldItem = previouslyEquippedItem;
 		}
 		break;
@@ -487,10 +483,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 		if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			Item previouslyEquippedItem = player.InvBody[INVLOC_HAND_LEFT];
-			ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem);
-			if (previouslyEquippedItem.isEmpty()) {
-				player.HoldItem.Clear();
-			} else {
+			ChangeEquipment(player, INVLOC_HAND_LEFT, player.HoldItem.pop());
+			if (!previouslyEquippedItem.isEmpty()) {
 				player.HoldItem = previouslyEquippedItem;
 			}
 		} else {
@@ -523,15 +517,13 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 			} else {
 				int invIndex = player._pNumInv;
 				player._pGold += player.HoldItem._ivalue;
-				player.InvList[invIndex] = std::move(player.HoldItem);
-				player.HoldItem.Clear();
+				player.InvList[invIndex] = player.HoldItem.pop();
 				player._pNumInv++;
 				player.InvGrid[ii] = player._pNumInv;
 			}
 		} else {
 			if (it == 0) {
-				player.InvList[player._pNumInv] = std::move(player.HoldItem);
-				player.HoldItem.Clear();
+				player.InvList[player._pNumInv] = player.HoldItem.pop();
 				player._pNumInv++;
 				it = player._pNumInv;
 			} else {
@@ -560,8 +552,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	case ILOC_BELT: {
 		int ii = r - SLOTXY_BELT_FIRST;
 		if (player.SpdList[ii].isEmpty()) {
-			player.SpdList[ii] = std::move(player.HoldItem);
-			player.HoldItem.Clear();
+			player.SpdList[ii] = player.HoldItem.pop();
 		} else {
 			std::swap(player.SpdList[ii], player.HoldItem);
 			if (player.HoldItem._itype == ItemType::Gold)

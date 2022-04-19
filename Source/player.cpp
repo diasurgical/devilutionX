@@ -1936,8 +1936,7 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 
 	// If the item at the end of inventory array isn't the one we removed, we need to swap its position in the array with the removed item
 	if (_pNumInv > 0 && _pNumInv != iv) {
-		InvList[iv] = std::move(InvList[_pNumInv]);
-		InvList[_pNumInv].Clear();
+		InvList[iv] = InvList[_pNumInv].pop();
 
 		for (int8_t &itemIndex : InvGrid) {
 			if (itemIndex == _pNumInv + 1) {
@@ -3175,8 +3174,7 @@ StartPlayerKill(int pnum, int earflag)
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = Left(pdd);
-							DeadItem(player, std::move(item), Displacement(pdd));
-							item.Clear();
+							DeadItem(player, item.pop(), Displacement(pdd));
 						}
 
 						CalcPlrInv(player, false);

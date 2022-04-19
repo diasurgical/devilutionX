@@ -243,6 +243,16 @@ struct Item {
 	ItemSpecialEffectHf _iDamAcFlags = ItemSpecialEffectHf::None;
 
 	/**
+	 * @brief Clears this item and returns the old value
+	 */
+	Item pop() &
+	{
+		Item temp = std::move(*this);
+		Clear();
+		return temp;
+	}
+
+	/**
 	 * @brief Resets the item so isEmpty() returns true without needing to reinitialise the whole object
 	 */
 	DVL_REINITIALIZES void Clear()
