@@ -705,12 +705,7 @@ void RunGameLoop(interface_mode uMsg)
 	saveProc = SetWindowProc(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
-	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !gbIsMultiplayer) {
-		PlaySFX(USFX_DIABLOD);
-		gbProcessPlayers = false;
-	} else {
-		gbProcessPlayers = true;
-	}
+	gbProcessPlayers = isDiabloAlive(gbIsMultiplayer, false);
 	gbRunGameResult = true;
 	force_redraw = 255;
 	DrawAndBlit();
@@ -2307,6 +2302,16 @@ void diablo_color_cyc_logic()
 	} else if (leveltype == DTYPE_CAVES) {
 		palette_update_caves();
 	}
+}
+
+bool isDiabloAlive(bool isMultiplayer, bool playSFX)
+{
+	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !isMultiplayer) {
+		if (playSFX)
+			PlaySFX(USFX_DIABLOD);
+		return false;
+	} else
+		return true;
 }
 
 } // namespace devilution
