@@ -2169,9 +2169,11 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 
 	plvl = clamp(plvl, 1, 30);
 
-	int maxCount = 65000;
-	if (gbIsHellfire)
-		maxCount = 150;
+	int maxCount = 150;
+	if (!gbIsHellfire) {
+		// Diablo logic could lead to an infinite loop if a suitable item can never be generated, using an arbitrary cutoff here to let the game continue.
+		maxCount = 65000;
+	}
 
 	for (int count = 0; count < maxCount; count++) {
 		premiumItem = {};
