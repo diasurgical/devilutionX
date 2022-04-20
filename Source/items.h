@@ -248,14 +248,14 @@ struct Item {
 	Item pop() &
 	{
 		Item temp = std::move(*this);
-		Clear();
+		clear();
 		return temp;
 	}
 
 	/**
 	 * @brief Resets the item so isEmpty() returns true without needing to reinitialise the whole object
 	 */
-	DVL_REINITIALIZES void Clear()
+	DVL_REINITIALIZES void clear()
 	{
 		this->_itype = ItemType::None;
 	}
@@ -375,17 +375,17 @@ struct Item {
 		}
 	}
 
-	[[nodiscard]] bool IsScroll() const
+	[[nodiscard]] bool isScroll() const
 	{
 		return _iMiscId == IMISC_SCROLL || _iMiscId == IMISC_SCROLLT;
 	}
 
-	[[nodiscard]] bool IsScrollOf(spell_id spellId) const
+	[[nodiscard]] bool isScrollOf(spell_id spellId) const
 	{
-		return IsScroll() && _iSpell == spellId;
+		return isScroll() && _iSpell == spellId;
 	}
 
-	[[nodiscard]] bool KeyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
+	[[nodiscard]] bool keyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
 	{
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
 	}
@@ -413,7 +413,7 @@ struct Item {
 	 * @brief Sets the current Animation for the Item
 	 * @param showAnimation Definies if the Animation (Flipping) is shown or if only the final Frame (item on the ground) is shown
 	 */
-	void SetNewAnimation(bool showAnimation);
+	void setNewAnimation(bool showAnimation);
 };
 
 struct ItemGetRecordStruct {

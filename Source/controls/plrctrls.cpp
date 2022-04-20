@@ -1672,7 +1672,7 @@ void UseBeltItem(int type)
 		}
 
 		bool isRejuvenation = IsAnyOf(item._iMiscId, IMISC_REJUV, IMISC_FULLREJUV);
-		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.IsScrollOf(SPL_HEAL);
+		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SPL_HEAL);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
 		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
@@ -1900,7 +1900,7 @@ void CtrlUseInvItem()
 
 	auto &myPlayer = Players[MyPlayerId];
 	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-	if (item.IsScroll()) {
+	if (item.isScroll()) {
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
@@ -1927,7 +1927,7 @@ void CtrlUseStashItem()
 	}
 
 	const Item &item = Stash.stashList[pcursstashitem];
-	if (item.IsScroll()) {
+	if (item.isScroll()) {
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}

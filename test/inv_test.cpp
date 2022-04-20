@@ -47,7 +47,7 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 {
 	// Empty the belt to prevent using a scroll from the belt
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i].Clear();
+		Players[MyPlayerId].SpdList[i].clear();
 	}
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
@@ -67,7 +67,7 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].InvList[2].Clear();
+	Players[MyPlayerId].InvList[2].clear();
 	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 }
 
@@ -94,7 +94,7 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].SpdList[2].Clear();
+	Players[MyPlayerId].SpdList[2].clear();
 	EXPECT_FALSE(UseScroll(Players[MyPlayerId]._pRSpell));
 }
 
@@ -182,7 +182,7 @@ TEST(Inv, RemoveSpdBarItem)
 {
 	// Clear the belt
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i].Clear();
+		Players[MyPlayerId].SpdList[i].clear();
 	}
 	// Put an item in the belt: | x | x | item | x | x | x | x | x |
 	Players[MyPlayerId].SpdList[3]._itype = ItemType::Misc;
@@ -213,7 +213,7 @@ TEST(Inv, RemoveScroll_belt)
 {
 	// Clear the belt
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i].Clear();
+		Players[MyPlayerId].SpdList[i].clear();
 	}
 	// Put a firebolt scroll into the belt
 	Players[MyPlayerId]._pSpell = static_cast<spell_id>(SPL_FIREBOLT);

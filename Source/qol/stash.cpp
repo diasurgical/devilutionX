@@ -88,7 +88,7 @@ void CheckStashPaste(Point cursorPosition)
 
 	if (player.HoldItem._itype == ItemType::Gold) {
 		Stash.gold += player.HoldItem._ivalue;
-		player.HoldItem.Clear();
+		player.HoldItem.clear();
 		PlaySFX(IS_GOLD);
 		Stash.dirty = true;
 		if (!IsHardwareCursor()) {
@@ -181,7 +181,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 	}
 
 	Item &holdItem = player.HoldItem;
-	holdItem.Clear();
+	holdItem.clear();
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
@@ -220,7 +220,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 				}
 			}
 
-			holdItem.Clear();
+			holdItem.clear();
 		} else {
 			NewCursor(holdItem);
 			if (!IsHardwareCursor()) {
@@ -470,7 +470,7 @@ bool UseStashItem(uint16_t c)
 		WithdrawGoldValue = 0;
 	}
 
-	if (item->IsScroll()) {
+	if (item->isScroll()) {
 		return true;
 	}
 

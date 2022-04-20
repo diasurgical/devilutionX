@@ -1593,7 +1593,7 @@ void RemoveInvalidItem(Item &item)
 	}
 
 	if (isInvalid) {
-		item.Clear();
+		item.clear();
 	}
 }
 

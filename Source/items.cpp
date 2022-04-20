@@ -2344,7 +2344,7 @@ void InitItems()
 	memset(dItem, 0, sizeof(dItem));
 
 	for (auto &item : Items) {
-		item.Clear();
+		item.clear();
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
 		item._iSelFlag = 0;
@@ -2824,7 +2824,7 @@ void CreatePlrItems(int playerId)
 	auto &player = Players[playerId];
 
 	for (auto &item : player.InvBody) {
-		item.Clear();
+		item.clear();
 	}
 
 	// converting this to a for loop creates a `rep stosd` instruction,
@@ -2832,13 +2832,13 @@ void CreatePlrItems(int playerId)
 	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
 
 	for (auto &item : player.InvList) {
-		item.Clear();
+		item.clear();
 	}
 
 	player._pNumInv = 0;
 
 	for (auto &item : player.SpdList) {
-		item.Clear();
+		item.clear();
 	}
 
 	switch (player._pClass) {
@@ -3036,7 +3036,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 
 void SetupItem(Item &item)
 {
-	item.SetNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
+	item.setNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
 	item._iIdentified = false;
 }
 
@@ -3290,7 +3290,7 @@ void CornerstoneLoad(Point position)
 		return;
 	}
 
-	CornerStone.item.Clear();
+	CornerStone.item.clear();
 	CornerStone.activated = true;
 	if (dItem[position.x][position.y] != 0) {
 		int ii = dItem[position.x][position.y] - 1;
@@ -3378,7 +3378,7 @@ void SpawnRewardItem(int itemid, Point position, bool sendmsg)
 	dItem[position.x][position.y] = ii + 1;
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(item, itemid, curlv);
-	item.SetNewAnimation(true);
+	item.setNewAnimation(true);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item._iIdentified = true;
@@ -3407,7 +3407,7 @@ void SpawnTheodore(Point position, bool sendmsg)
 void RespawnItem(Item &item, bool flipFlag)
 {
 	int it = ItemCAnimTbl[item._iCurs];
-	item.SetNewAnimation(flipFlag);
+	item.setNewAnimation(flipFlag);
 	item._iRequest = false;
 
 	if (IsAnyOf(item._iCurs, ICURS_MAGIC_ROCK, ICURS_TAVERN_SIGN, ICURS_ANVIL_OF_FURY))
@@ -4098,7 +4098,7 @@ void SpawnSmith(int lvl)
 		newItem._iIdentified = true;
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
-		smithitem[i].Clear();
+		smithitem[i].clear();
 
 	SortVendor(smithitem + PinnedItemCount);
 }
@@ -4177,7 +4177,7 @@ void SpawnWitch(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item.Clear();
+			item.clear();
 			continue;
 		}
 
@@ -4336,7 +4336,7 @@ void SpawnHealer(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item.Clear();
+			item.clear();
 			continue;
 		}
 
@@ -4605,7 +4605,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 }
 #endif
 
-void Item::SetNewAnimation(bool showAnimation)
+void Item::setNewAnimation(bool showAnimation)
 {
 	int it = ItemCAnimTbl[_iCurs];
 	int numberOfFrames = ItemAnimLs[it];
@@ -4639,7 +4639,7 @@ void RepairItem(Item &item, int lvl)
 	}
 
 	if (item._iMaxDur <= 0) {
-		item.Clear();
+		item.clear();
 		return;
 	}
 
@@ -4648,7 +4648,7 @@ void RepairItem(Item &item, int lvl)
 		rep += lvl + GenerateRnd(lvl);
 		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
 		if (item._iMaxDur == 0) {
-			item.Clear();
+			item.clear();
 			return;
 		}
 	} while (rep + item._iDurability < item._iMaxDur);
