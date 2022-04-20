@@ -171,6 +171,9 @@ enum icreateinfo_flag2 {
 // All item animation frames have this width.
 constexpr int ItemAnimWidth = 96;
 
+// Defined in player.h, forward declared here to allow for functions which operate in the context of a player.
+struct Player;
+
 struct Item {
 	/** Randomly generated identifier */
 	int32_t _iSeed = 0;
@@ -396,6 +399,12 @@ struct Item {
 	 * @param showAnimation Definies if the Animation (Flipping) is shown or if only the final Frame (item on the ground) is shown
 	 */
 	void SetNewAnimation(bool showAnimation);
+
+	/**
+	 * @brief If this item is a spell book, calculates the magic requirement to learn a new level, then for all items sets _iStatFlag
+	 * @param player Player to compare stats against requirements
+	 */
+	void updateRequiredStatsCacheForPlayer(const Player &player);
 };
 
 struct ItemGetRecordStruct {
@@ -410,8 +419,6 @@ struct CornerStoneStruct {
 	bool activated;
 	Item item;
 };
-
-struct Player;
 
 /** Contains the items on ground in the current game. */
 extern Item Items[MAXITEMS + 1];
