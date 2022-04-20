@@ -561,7 +561,7 @@ void StashStruct::PreviousPage(unsigned offset)
 void StashStruct::RefreshItemStatFlags()
 {
 	for (auto &item : Stash.stashList) {
-		item._iStatFlag = MyPlayer->CanUseItem(item);
+		item.updateRequiredStatsCacheForPlayer(*MyPlayer);
 	}
 }
 

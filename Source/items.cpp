@@ -4626,6 +4626,23 @@ void Item::setNewAnimation(bool showAnimation)
 	}
 }
 
+void Item::updateRequiredStatsCacheForPlayer(const Player &player)
+{
+	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
+		_iMinMag = spelldata[_iSpell].sMinInt;
+		int8_t spellLevel = player._pSplLvl[_iSpell];
+		while (spellLevel != 0) {
+			_iMinMag += 20 * _iMinMag / 100;
+			spellLevel--;
+			if (_iMinMag + 20 * _iMinMag / 100 > 255) {
+				_iMinMag = 255;
+				spellLevel = 0;
+			}
+		}
+	}
+	_iStatFlag = player.CanUseItem(*this);
+}
+
 void initItemGetRecords()
 {
 	memset(itemrecord, 0, sizeof(itemrecord));
