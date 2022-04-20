@@ -726,7 +726,7 @@ void RunGameLoop(interface_mode uMsg)
 	saveProc = SetWindowProc(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
-	gbProcessPlayers = isDiabloAlive(gbIsMultiplayer, false);
+	gbProcessPlayers = IsDiabloAlive(true);
 	gbRunGameResult = true;
 	force_redraw = 255;
 	DrawAndBlit();
@@ -2364,9 +2364,9 @@ void diablo_color_cyc_logic()
 	}
 }
 
-bool isDiabloAlive(bool isMultiplayer, bool playSFX)
+bool IsDiabloAlive(bool playSFX)
 {
-	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !isMultiplayer) {
+	if (Quests[Q_DIABLO]._qactive == QUEST_DONE && !gbIsMultiplayer) {
 		if (playSFX)
 			PlaySFX(USFX_DIABLOD);
 		return false;
