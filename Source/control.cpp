@@ -724,7 +724,7 @@ void CheckPanelInfo()
 				AddPanelString(fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[spellId].sNameText)));
 				const InventoryAndBeltPlayerItemsRange items { myPlayer };
 				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
-					return item.IsScrollOf(spellId);
+					return item.isScrollOf(spellId);
 				});
 				AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 			} break;

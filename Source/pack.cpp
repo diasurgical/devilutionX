@@ -154,7 +154,7 @@ void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire)
 	}
 
 	if (!IsItemAvailable(idx)) {
-		item.Clear();
+		item.clear();
 		return;
 	}
 
