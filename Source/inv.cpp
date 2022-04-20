@@ -853,23 +853,6 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 }
 
-void UpdateBookLevel(const Player &player, Item &book)
-{
-	if (book._iMiscId != IMISC_BOOK)
-		return;
-
-	book._iMinMag = spelldata[book._iSpell].sMinInt;
-	int8_t spellLevel = player._pSplLvl[book._iSpell];
-	while (spellLevel != 0) {
-		book._iMinMag += 20 * book._iMinMag / 100;
-		spellLevel--;
-		if (book._iMinMag + 20 * book._iMinMag / 100 > 255) {
-			book._iMinMag = -1;
-			spellLevel = 0;
-		}
-	}
-}
-
 void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 {
 	int idx = noteItem.IDidx;
@@ -1606,8 +1589,7 @@ void InvGetItem(Player &player, int ii)
 
 	item._iCreateInfo &= ~CF_PREGEN;
 	CheckQuestItem(player, item);
-	UpdateBookLevel(player, item);
-	item._iStatFlag = player.CanUseItem(item);
+	item.updateRequiredStatsCacheForPlayer(player);
 
 	if (item._itype != ItemType::Gold || !GoldAutoPlace(player, item)) {
 		// The item needs to go into the players hand
@@ -1641,8 +1623,7 @@ void AutoGetItem(int pnum, Item *itemPointer, int ii)
 
 	item._iCreateInfo &= ~CF_PREGEN;
 	CheckQuestItem(player, item);
-	UpdateBookLevel(player, item);
-	item._iStatFlag = player.CanUseItem(item);
+	item.updateRequiredStatsCacheForPlayer(player);
 
 	bool done;
 	bool autoEquipped = false;

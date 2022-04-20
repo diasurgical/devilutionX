@@ -514,49 +514,6 @@ void CalcSelfItems(Player &player)
 	} while (changeflag);
 }
 
-void CalcPlrItemMin(Player &player)
-{
-	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
-		item._iStatFlag = player.CanUseItem(item);
-	}
-}
-
-uint8_t CalculateMagicRequirementForBook(spell_id spell, int8_t spellLevel)
-{
-	int magicRequirement = spelldata[spell].sMinInt;
-
-	while (spellLevel != 0) {
-		magicRequirement += 20 * magicRequirement / 100;
-		spellLevel--;
-		if (magicRequirement + 20 * magicRequirement / 100 > 255) {
-			magicRequirement = 255;
-			break;
-		}
-	}
-
-	return magicRequirement;
-}
-
-void CalcPlrBookVals(Player &player)
-{
-	auto processItem = [](Player &player, Item &item) {
-		if (item._itype == ItemType::Misc && item._iMiscId == IMISC_BOOK) {
-			spell_id spell = item._iSpell;
-			int8_t spellLevel = player._pSplLvl[spell];
-			item._iMinMag = CalculateMagicRequirementForBook(spell, spellLevel);
-			item._iStatFlag = player.CanUseItem(item);
-		}
-	};
-	for (Item &item : InventoryPlayerItemsRange { player }) {
-		processItem(player, item);
-	}
-	if (&player == MyPlayer) {
-		for (Item &item : Stash.stashList) {
-			processItem(player, item);
-		}
-	}
-}
-
 bool GetItemSpace(Point position, int8_t inum)
 {
 	int xx = 0;
@@ -2744,12 +2701,18 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 void CalcPlrInv(Player &player, bool loadgfx)
 {
-	CalcPlrItemMin(player);
+	// Determine the players current stats, this updates the statFlag on all equipped items that became unusable after
+	//  a change in equipment.
 	CalcSelfItems(player);
+
+	// Determine the current item bonuses gained from usable equipped items
 	CalcPlrItemVals(player, loadgfx);
-	CalcPlrItemMin(player);
-	if (&player == &Players[MyPlayerId]) {
-		CalcPlrBookVals(player);
+
+	if (&player == MyPlayer) {
+		// Now that stat gains from equipped items have been calculated, mark unusable scrolls etc
+		for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
+			item.updateRequiredStatsCacheForPlayer(player);
+		}
 		player.CalcScrolls();
 		CalcPlrStaff(player);
 		if (IsStashOpen) {
@@ -3982,8 +3945,14 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 			player._pManaBase += spelldata[spl].sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
-		if (pnum == MyPlayerId)
-			CalcPlrBookVals(player);
+		if (&player == MyPlayer) {
+			for (Item &item : InventoryPlayerItemsRange { player }) {
+				item.updateRequiredStatsCacheForPlayer(player);
+			}
+			if (IsStashOpen) {
+				Stash.RefreshItemStatFlags();
+			}
+		}
 		drawmanaflag = true;
 		break;
 	case IMISC_MAPOFDOOM:
