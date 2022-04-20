@@ -26,6 +26,7 @@
 #include "utils/endian.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/cstddef.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -56,6 +57,7 @@ bool PublicGame;
 BYTE gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
+Uint32 playerInfoTimers[MAX_PLRS];
 
 /**
  * Contains the set of supported event types supported by the multiplayer
@@ -131,6 +133,47 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.bstr = myPlayer._pBaseStr;
 	pkt->hdr.bmag = myPlayer._pBaseMag;
 	pkt->hdr.bdex = myPlayer._pBaseDex;
+}
+
+bool IsNetPlayerValid(const Player &player)
+{
+	return player._pLevel >= 1
+	    && player._pLevel <= MAXCHARLEVEL
+	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
+	    && player.plrlevel < NUMLEVELS
+	    && player.pDifficulty <= DIFF_LAST
+	    && InDungeonBounds(player.position.tile)
+	    && !string_view(player._pName).empty();
+}
+
+void CheckPlayerInfoTimeouts()
+{
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (i == MyPlayerId) {
+			continue;
+		}
+
+		Uint32 &timerStart = playerInfoTimers[i];
+		bool isPlayerConnected = (player_state[i] & PS_CONNECTED) != 0;
+		bool isPlayerValid = isPlayerConnected && IsNetPlayerValid(Players[i]);
+		if (isPlayerConnected && !isPlayerValid && timerStart == 0) {
+			timerStart = SDL_GetTicks();
+		}
+		if (!isPlayerConnected || isPlayerValid) {
+			timerStart = 0;
+		}
+
+		if (timerStart == 0) {
+			continue;
+		}
+
+		// Time the player out after 15 seconds
+		// if we do not receive valid player info
+		if (SDL_GetTicks() - timerStart >= 15000) {
+			SNetDropPlayer(i, LEAVE_DROP);
+			timerStart = 0;
+		}
+	}
 }
 
 void SendPacket(int playerId, const byte *packet, size_t size)
@@ -576,6 +619,14 @@ void multi_process_network_packets()
 		if (pkt->wLen != dwMsgSize)
 			continue;
 		auto &player = Players[dwID];
+		if (!IsNetPlayerValid(player)) {
+			_cmd_id cmd = *(const _cmd_id *)(pkt + 1);
+			if (IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
+				// Distrust all messages until
+				// player info is received
+				continue;
+			}
+		}
 		Point syncPosition = { pkt->px, pkt->py };
 		player.position.last = syncPosition;
 		if (dwID != MyPlayerId) {
@@ -618,6 +669,7 @@ void multi_process_network_packets()
 	}
 	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 		nthread_terminate_game("SNetReceiveMsg");
+	CheckPlayerInfoTimeouts();
 }
 
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
