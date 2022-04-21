@@ -510,7 +510,7 @@ void StartSmithSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item.Clear();
+		item.clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -593,7 +593,7 @@ void StartSmithRepair()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item.Clear();
+		item.clear();
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -784,7 +784,7 @@ void StartWitchSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item.Clear();
+		item.clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -877,7 +877,7 @@ void StartWitchRecharge()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item.Clear();
+		item.clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -1162,7 +1162,7 @@ void StartStorytellerIdentify()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item.Clear();
+		item.clear();
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -1376,12 +1376,12 @@ void SmithBuyItem(Item &item)
 	StoreAutoPlace(item, true);
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == SMITH_ITEMS - 1) {
-		smithitem[SMITH_ITEMS - 1].Clear();
+		smithitem[SMITH_ITEMS - 1].clear();
 	} else {
 		for (; !smithitem[idx + 1].isEmpty(); idx++) {
 			smithitem[idx] = std::move(smithitem[idx + 1]);
 		}
-		smithitem[idx].Clear();
+		smithitem[idx].clear();
 	}
 	CalcPlrInv(*MyPlayer, true);
 }
@@ -1432,7 +1432,7 @@ void SmithBuyPItem(Item &item)
 		}
 	}
 
-	premiumitems[xx].Clear();
+	premiumitems[xx].clear();
 	numpremium--;
 	SpawnPremium(MyPlayerId);
 }
@@ -1630,12 +1630,12 @@ void WitchBuyItem(Item &item)
 
 	if (idx >= 3) {
 		if (idx == WITCH_ITEMS - 1) {
-			witchitem[WITCH_ITEMS - 1].Clear();
+			witchitem[WITCH_ITEMS - 1].clear();
 		} else {
 			for (; !witchitem[idx + 1].isEmpty(); idx++) {
 				witchitem[idx] = std::move(witchitem[idx + 1]);
 			}
-			witchitem[idx].Clear();
+			witchitem[idx].clear();
 		}
 	}
 
@@ -1769,7 +1769,7 @@ void BoyBuyItem(Item &item)
 {
 	TakePlrsMoney(item._iIvalue);
 	StoreAutoPlace(item, true);
-	boyitem.Clear();
+	boyitem.clear();
 	stextshold = STORE_BOY;
 	CalcPlrInv(*MyPlayer, true);
 	stextlhold = 12;
@@ -1803,12 +1803,12 @@ void HealerBuyItem(Item &item)
 	}
 	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == 19) {
-		healitem[19].Clear();
+		healitem[19].clear();
 	} else {
 		for (; !healitem[idx + 1].isEmpty(); idx++) {
 			healitem[idx] = std::move(healitem[idx + 1]);
 		}
-		healitem[idx].Clear();
+		healitem[idx].clear();
 	}
 	CalcPlrInv(*MyPlayer, true);
 }
@@ -2187,9 +2187,9 @@ void InitStores()
 	premiumlevel = 1;
 
 	for (auto &premiumitem : premiumitems)
-		premiumitem.Clear();
+		premiumitem.clear();
 
-	boyitem.Clear();
+	boyitem.clear();
 	boylevel = 0;
 }
 

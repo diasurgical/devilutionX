@@ -514,49 +514,6 @@ void CalcSelfItems(Player &player)
 	} while (changeflag);
 }
 
-void CalcPlrItemMin(Player &player)
-{
-	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
-		item._iStatFlag = player.CanUseItem(item);
-	}
-}
-
-uint8_t CalculateMagicRequirementForBook(spell_id spell, int8_t spellLevel)
-{
-	int magicRequirement = spelldata[spell].sMinInt;
-
-	while (spellLevel != 0) {
-		magicRequirement += 20 * magicRequirement / 100;
-		spellLevel--;
-		if (magicRequirement + 20 * magicRequirement / 100 > 255) {
-			magicRequirement = 255;
-			break;
-		}
-	}
-
-	return magicRequirement;
-}
-
-void CalcPlrBookVals(Player &player)
-{
-	auto processItem = [](Player &player, Item &item) {
-		if (item._itype == ItemType::Misc && item._iMiscId == IMISC_BOOK) {
-			spell_id spell = item._iSpell;
-			int8_t spellLevel = player._pSplLvl[spell];
-			item._iMinMag = CalculateMagicRequirementForBook(spell, spellLevel);
-			item._iStatFlag = player.CanUseItem(item);
-		}
-	};
-	for (Item &item : InventoryPlayerItemsRange { player }) {
-		processItem(player, item);
-	}
-	if (&player == MyPlayer) {
-		for (Item &item : Stash.stashList) {
-			processItem(player, item);
-		}
-	}
-}
-
 bool GetItemSpace(Point position, int8_t inum)
 {
 	int xx = 0;
@@ -2344,7 +2301,7 @@ void InitItems()
 	memset(dItem, 0, sizeof(dItem));
 
 	for (auto &item : Items) {
-		item.Clear();
+		item.clear();
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
 		item._iSelFlag = 0;
@@ -2744,12 +2701,18 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 void CalcPlrInv(Player &player, bool loadgfx)
 {
-	CalcPlrItemMin(player);
+	// Determine the players current stats, this updates the statFlag on all equipped items that became unusable after
+	//  a change in equipment.
 	CalcSelfItems(player);
+
+	// Determine the current item bonuses gained from usable equipped items
 	CalcPlrItemVals(player, loadgfx);
-	CalcPlrItemMin(player);
-	if (&player == &Players[MyPlayerId]) {
-		CalcPlrBookVals(player);
+
+	if (&player == MyPlayer) {
+		// Now that stat gains from equipped items have been calculated, mark unusable scrolls etc
+		for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
+			item.updateRequiredStatsCacheForPlayer(player);
+		}
 		player.CalcScrolls();
 		CalcPlrStaff(player);
 		if (IsStashOpen) {
@@ -2824,7 +2787,7 @@ void CreatePlrItems(int playerId)
 	auto &player = Players[playerId];
 
 	for (auto &item : player.InvBody) {
-		item.Clear();
+		item.clear();
 	}
 
 	// converting this to a for loop creates a `rep stosd` instruction,
@@ -2832,13 +2795,13 @@ void CreatePlrItems(int playerId)
 	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
 
 	for (auto &item : player.InvList) {
-		item.Clear();
+		item.clear();
 	}
 
 	player._pNumInv = 0;
 
 	for (auto &item : player.SpdList) {
-		item.Clear();
+		item.clear();
 	}
 
 	switch (player._pClass) {
@@ -3036,7 +2999,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 
 void SetupItem(Item &item)
 {
-	item.SetNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
+	item.setNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
 	item._iIdentified = false;
 }
 
@@ -3290,7 +3253,7 @@ void CornerstoneLoad(Point position)
 		return;
 	}
 
-	CornerStone.item.Clear();
+	CornerStone.item.clear();
 	CornerStone.activated = true;
 	if (dItem[position.x][position.y] != 0) {
 		int ii = dItem[position.x][position.y] - 1;
@@ -3378,7 +3341,7 @@ void SpawnRewardItem(int itemid, Point position, bool sendmsg)
 	dItem[position.x][position.y] = ii + 1;
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(item, itemid, curlv);
-	item.SetNewAnimation(true);
+	item.setNewAnimation(true);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item._iIdentified = true;
@@ -3407,7 +3370,7 @@ void SpawnTheodore(Point position, bool sendmsg)
 void RespawnItem(Item &item, bool flipFlag)
 {
 	int it = ItemCAnimTbl[item._iCurs];
-	item.SetNewAnimation(flipFlag);
+	item.setNewAnimation(flipFlag);
 	item._iRequest = false;
 
 	if (IsAnyOf(item._iCurs, ICURS_MAGIC_ROCK, ICURS_TAVERN_SIGN, ICURS_ANVIL_OF_FURY))
@@ -3982,8 +3945,14 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 			player._pManaBase += spelldata[spl].sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
-		if (pnum == MyPlayerId)
-			CalcPlrBookVals(player);
+		if (&player == MyPlayer) {
+			for (Item &item : InventoryPlayerItemsRange { player }) {
+				item.updateRequiredStatsCacheForPlayer(player);
+			}
+			if (IsStashOpen) {
+				Stash.RefreshItemStatFlags();
+			}
+		}
 		drawmanaflag = true;
 		break;
 	case IMISC_MAPOFDOOM:
@@ -4098,7 +4067,7 @@ void SpawnSmith(int lvl)
 		newItem._iIdentified = true;
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
-		smithitem[i].Clear();
+		smithitem[i].clear();
 
 	SortVendor(smithitem + PinnedItemCount);
 }
@@ -4177,7 +4146,7 @@ void SpawnWitch(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item.Clear();
+			item.clear();
 			continue;
 		}
 
@@ -4336,7 +4305,7 @@ void SpawnHealer(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item.Clear();
+			item.clear();
 			continue;
 		}
 
@@ -4605,7 +4574,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 }
 #endif
 
-void Item::SetNewAnimation(bool showAnimation)
+void Item::setNewAnimation(bool showAnimation)
 {
 	int it = ItemCAnimTbl[_iCurs];
 	int numberOfFrames = ItemAnimLs[it];
@@ -4626,6 +4595,23 @@ void Item::SetNewAnimation(bool showAnimation)
 	}
 }
 
+void Item::updateRequiredStatsCacheForPlayer(const Player &player)
+{
+	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
+		_iMinMag = spelldata[_iSpell].sMinInt;
+		int8_t spellLevel = player._pSplLvl[_iSpell];
+		while (spellLevel != 0) {
+			_iMinMag += 20 * _iMinMag / 100;
+			spellLevel--;
+			if (_iMinMag + 20 * _iMinMag / 100 > 255) {
+				_iMinMag = 255;
+				spellLevel = 0;
+			}
+		}
+	}
+	_iStatFlag = player.CanUseItem(*this);
+}
+
 void initItemGetRecords()
 {
 	memset(itemrecord, 0, sizeof(itemrecord));
@@ -4639,7 +4625,7 @@ void RepairItem(Item &item, int lvl)
 	}
 
 	if (item._iMaxDur <= 0) {
-		item.Clear();
+		item.clear();
 		return;
 	}
 
@@ -4648,7 +4634,7 @@ void RepairItem(Item &item, int lvl)
 		rep += lvl + GenerateRnd(lvl);
 		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
 		if (item._iMaxDur == 0) {
-			item.Clear();
+			item.clear();
 			return;
 		}
 	} while (rep + item._iDurability < item._iMaxDur);

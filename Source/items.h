@@ -171,6 +171,9 @@ enum icreateinfo_flag2 {
 // All item animation frames have this width.
 constexpr int ItemAnimWidth = 96;
 
+// Defined in player.h, forward declared here to allow for functions which operate in the context of a player.
+struct Player;
+
 struct Item {
 	/** Randomly generated identifier */
 	int32_t _iSeed = 0;
@@ -243,9 +246,19 @@ struct Item {
 	ItemSpecialEffectHf _iDamAcFlags = ItemSpecialEffectHf::None;
 
 	/**
+	 * @brief Clears this item and returns the old value
+	 */
+	Item pop() &
+	{
+		Item temp = std::move(*this);
+		clear();
+		return temp;
+	}
+
+	/**
 	 * @brief Resets the item so isEmpty() returns true without needing to reinitialise the whole object
 	 */
-	DVL_REINITIALIZES void Clear()
+	DVL_REINITIALIZES void clear()
 	{
 		this->_itype = ItemType::None;
 	}
@@ -365,17 +378,17 @@ struct Item {
 		}
 	}
 
-	[[nodiscard]] bool IsScroll() const
+	[[nodiscard]] bool isScroll() const
 	{
 		return _iMiscId == IMISC_SCROLL || _iMiscId == IMISC_SCROLLT;
 	}
 
-	[[nodiscard]] bool IsScrollOf(spell_id spellId) const
+	[[nodiscard]] bool isScrollOf(spell_id spellId) const
 	{
-		return IsScroll() && _iSpell == spellId;
+		return isScroll() && _iSpell == spellId;
 	}
 
-	[[nodiscard]] bool KeyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
+	[[nodiscard]] bool keyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo) const
 	{
 		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
 	}
@@ -403,7 +416,13 @@ struct Item {
 	 * @brief Sets the current Animation for the Item
 	 * @param showAnimation Definies if the Animation (Flipping) is shown or if only the final Frame (item on the ground) is shown
 	 */
-	void SetNewAnimation(bool showAnimation);
+	void setNewAnimation(bool showAnimation);
+
+	/**
+	 * @brief If this item is a spell book, calculates the magic requirement to learn a new level, then for all items sets _iStatFlag
+	 * @param player Player to compare stats against requirements
+	 */
+	void updateRequiredStatsCacheForPlayer(const Player &player);
 };
 
 struct ItemGetRecordStruct {
@@ -418,8 +437,6 @@ struct CornerStoneStruct {
 	bool activated;
 	Item item;
 };
-
-struct Player;
 
 /** Contains the items on ground in the current game. */
 extern Item Items[MAXITEMS + 1];

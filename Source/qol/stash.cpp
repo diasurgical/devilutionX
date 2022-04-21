@@ -88,7 +88,7 @@ void CheckStashPaste(Point cursorPosition)
 
 	if (player.HoldItem._itype == ItemType::Gold) {
 		Stash.gold += player.HoldItem._ivalue;
-		player.HoldItem.Clear();
+		player.HoldItem.clear();
 		PlaySFX(IS_GOLD);
 		Stash.dirty = true;
 		if (!IsHardwareCursor()) {
@@ -127,8 +127,7 @@ void CheckStashPaste(Point cursorPosition)
 	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
 
 	if (stashIndex == StashStruct::EmptyCell) {
-		Stash.stashList.emplace_back(std::move(player.HoldItem));
-		player.HoldItem.Clear();
+		Stash.stashList.emplace_back(player.HoldItem.pop());
 		// stashList will have at most 10 000 items, up to 65 535 are supported with uint16_t indexes
 		stashIndex = static_cast<uint16_t>(Stash.stashList.size() - 1);
 	} else {
@@ -182,7 +181,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 	}
 
 	Item &holdItem = player.HoldItem;
-	holdItem.Clear();
+	holdItem.clear();
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
@@ -221,7 +220,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 				}
 			}
 
-			holdItem.Clear();
+			holdItem.clear();
 		} else {
 			NewCursor(holdItem);
 			if (!IsHardwareCursor()) {
@@ -471,7 +470,7 @@ bool UseStashItem(uint16_t c)
 		WithdrawGoldValue = 0;
 	}
 
-	if (item->IsScroll()) {
+	if (item->isScroll()) {
 		return true;
 	}
 
@@ -562,7 +561,7 @@ void StashStruct::PreviousPage(unsigned offset)
 void StashStruct::RefreshItemStatFlags()
 {
 	for (auto &item : Stash.stashList) {
-		item._iStatFlag = MyPlayer->CanUseItem(item);
+		item.updateRequiredStatsCacheForPlayer(*MyPlayer);
 	}
 }
 

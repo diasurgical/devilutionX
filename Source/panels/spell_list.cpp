@@ -184,7 +184,7 @@ void DrawSpellList(const Surface &out)
 			InfoString = fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText));
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
-				return item.IsScrollOf(spellId);
+				return item.isScrollOf(spellId);
 			});
 			AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 		} break;

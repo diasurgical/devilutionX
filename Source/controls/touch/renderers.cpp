@@ -369,7 +369,7 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 				return GAMEPAD_HEALING;
 			if (item._iMiscId == IMISC_FULLHEAL)
 				return GAMEPAD_FULL_HEALING;
-			if (item.IsScrollOf(SPL_HEAL))
+			if (item.isScrollOf(SPL_HEAL))
 				return GAMEPAD_SCROLL_OF_HEALING;
 		}
 
@@ -453,7 +453,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 		if (pcursinvitem != -1) {
 			Item &item = GetInventoryItem(*MyPlayer, pcursinvitem);
-			if (!item.IsScroll() || !spelldata[item._iSpell].sTargeted) {
+			if (!item.isScroll() || !spelldata[item._iSpell].sTargeted) {
 				if (!item.isEquipment()) {
 					return GetApplyButtonType(virtualPadButton->isHeld);
 				}
