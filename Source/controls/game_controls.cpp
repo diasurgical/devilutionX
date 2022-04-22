@@ -310,7 +310,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 #endif
 				return true;
 			case ControllerButton_BUTTON_B: // Right button
-				// Not mapped. TODO: map to attack in place.
+				*action = GameActionSendKey { sgOptions.Keymapper.KeyForAction("Toggle Item Highlighting"), ctrlEvent.up };
 				return true;
 			case ControllerButton_BUTTON_A: // Bottom button
 				if (!ctrlEvent.up)
