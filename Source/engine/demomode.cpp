@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "controls/plrctrls.h"
 #include "demomode.h"
 #include "menu.h"
 #include "nthread.h"
@@ -126,6 +127,7 @@ void InitPlayBack(int demoNumber, bool timedemo)
 {
 	DemoNumber = demoNumber;
 	Timedemo = timedemo;
+	ControlMode = ControlTypes::KeyboardAndMouse;
 
 	if (!LoadDemoMessages(demoNumber)) {
 		SDL_Log("Unable to load demo file");
