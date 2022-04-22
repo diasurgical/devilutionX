@@ -2449,6 +2449,9 @@ void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, position, wParam1, wParam3);
 }
 
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
@@ -2491,6 +2494,9 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, {}, wParam1, wParam2);
 }
 
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
@@ -2506,6 +2512,9 @@ void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, {}, wParam1, wParam2);
 }
 
 void NetSendCmdQuest(bool bHiPri, const Quest &quest)

@@ -2135,7 +2135,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	case _cmd_id::CMD_TSPELLID: {
 		auto &monster = Monsters[wParam1];
 		dir = GetDirection(position.future, monster.position.future);
-		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam1));
+		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam2));
 		break;
 	}
 	case _cmd_id::CMD_ATTACKID: {
@@ -2158,7 +2158,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	case _cmd_id::CMD_TSPELLPID: {
 		auto &targetPlayer = Players[wParam1];
 		dir = GetDirection(position.future, targetPlayer.position.future);
-		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam1));
+		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam2));
 		break;
 	}
 	case _cmd_id::CMD_ATTACKPID: {
@@ -2185,8 +2185,8 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam1));
 		break;
 	case _cmd_id::CMD_SPELLXYD:
-		dir = static_cast<Direction>(wParam1);
-		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam2));
+		dir = static_cast<Direction>(wParam2);
+		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam1));
 		break;
 	case _cmd_id::CMD_WALKXY:
 		minimalWalkDistance = 1;
