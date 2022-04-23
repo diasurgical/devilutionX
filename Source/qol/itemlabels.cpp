@@ -13,6 +13,7 @@
 #include "gmenu.h"
 #include "inv.h"
 #include "itemlabels.h"
+#include "options.h"
 #include "qol/stash.h"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
@@ -32,7 +33,6 @@ std::vector<ItemLabel> labelQueue;
 bool altPressed = false;
 bool isLabelHighlighted = false;
 std::array<std::optional<int>, ITEMTYPES> labelCenterOffsets;
-bool invertHighlightToggle = false;
 
 const int BorderX = 4;               // minimal horizontal space between labels
 const int BorderY = 2;               // minimal vertical space between labels
@@ -44,7 +44,7 @@ const int Height = 11 + MarginY * 2; // going above 13 scatters labels of items 
 
 void ToggleItemLabelHighlight()
 {
-	invertHighlightToggle = !invertHighlightToggle;
+	sgOptions.Gameplay.showItemLabels.SetValue(!*sgOptions.Gameplay.showItemLabels);
 }
 
 void AltPressed(bool pressed)
@@ -59,7 +59,7 @@ bool IsItemLabelHighlighted()
 
 bool IsHighlightingLabelsEnabled()
 {
-	return altPressed != invertHighlightToggle;
+	return altPressed != *sgOptions.Gameplay.showItemLabels;
 }
 
 void AddItemToLabelQueue(int id, int x, int y)
