@@ -370,19 +370,9 @@ class UiList : public UiItemBase {
 public:
 	using vUiListItem = std::vector<std::unique_ptr<UiListItem>>;
 
-	UiList(const vUiListItem &vItems, size_t viewportSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
-	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * viewportSize) }, flags)
-	    , viewportSize(viewportSize)
-	    , m_x(x)
-	    , m_y(y)
-	    , m_width(item_width)
-	    , m_height(item_height)
-	    , spacing_(spacing)
+	UiList(const vUiListItem &vItems, size_t viewportMaxSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
+	    : UiList(PrivateConstructor {}, vItems, std::min<size_t>(viewportMaxSize, vItems.size()), x, y, item_width, item_height, flags, spacing)
 	{
-		for (const auto &item : vItems)
-			m_vecItems.push_back(item.get());
-
-		pressed_item_index_ = -1;
 	}
 
 	[[nodiscard]] SDL_Rect itemRect(int i) const
@@ -436,6 +426,24 @@ public:
 	std::vector<UiListItem *> m_vecItems;
 
 private:
+	struct PrivateConstructor final {
+	};
+
+	UiList(PrivateConstructor tag, const vUiListItem &vItems, size_t viewportSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags, int spacing)
+	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * viewportSize) }, flags)
+	    , viewportSize(viewportSize)
+	    , m_x(x)
+	    , m_y(y)
+	    , m_width(item_width)
+	    , m_height(item_height)
+	    , spacing_(spacing)
+	{
+		for (const auto &item : vItems)
+			m_vecItems.push_back(item.get());
+
+		pressed_item_index_ = -1;
+	}
+
 	int spacing_;
 
 	// State
