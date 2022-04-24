@@ -442,6 +442,8 @@ bool InitSingle(GameData *gameData)
 	MyPlayer = &Players[MyPlayerId];
 	gbIsMultiplayer = false;
 
+	pfile_read_player_from_save(gSaveNumber, *MyPlayer);
+
 	return true;
 }
 
