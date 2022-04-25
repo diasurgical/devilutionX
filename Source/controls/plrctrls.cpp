@@ -1840,7 +1840,7 @@ bool TryDropItem()
 	}
 
 	NetSendCmdPItem(true, CMD_PUTITEM, position + direction, myPlayer.HoldItem);
-	myPlayer.HoldItem.Clear();
+	myPlayer.HoldItem.clear();
 	NewCursor(CURSOR_HAND);
 	return true;
 }
