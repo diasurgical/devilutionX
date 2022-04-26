@@ -363,10 +363,12 @@ void LanguageInitialize()
 		SDL_RWclose(rw);
 		return;
 	}
-	// FIXME: Endianness.
 	if (static_cast<uint32_t>(SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings)) != head.nbMappings) {
 		SDL_RWclose(rw);
 		return;
+	}
+	for (size_t i = 0; i < head.nbMappings; ++i) {
+		SwapLE(src[i]);
 	}
 
 	// Read entries of target strings

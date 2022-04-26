@@ -18,6 +18,9 @@
 #include "controls/plrctrls.h"
 #include "discord/discord.h"
 #include "dx.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_pcx_as_cel.hpp"
+#include "engine/render/cel_render.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
@@ -44,8 +47,10 @@
 
 namespace devilution {
 
-std::array<Art, 3> ArtLogos;
-std::array<Art, 3> ArtFocus;
+// These are stored as PCX but we load them as CEL to reduce memory usage.
+std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
+std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
+
 Art ArtBackgroundWidescreen;
 Art ArtBackground;
 Art ArtCursor;
@@ -567,13 +572,13 @@ void LoadHeros()
 void LoadUiGFX()
 {
 	if (gbIsHellfire) {
-		LoadMaskedArt("ui_art\\hf_logo2.pcx", &ArtLogos[LOGO_MED], 16);
+		ArtLogos[LOGO_MED] = LoadPcxAssetAsCel("ui_art\\hf_logo2.pcx", /*numFrames=*/16);
 	} else {
-		LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
+		ArtLogos[LOGO_MED] = LoadPcxAssetAsCel("ui_art\\smlogo.pcx", /*numFrames=*/15, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
 	}
-	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
-	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
-	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
+	ArtFocus[FOCUS_SMALL] = LoadPcxAssetAsCel("ui_art\\focus16.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+	ArtFocus[FOCUS_MED] = LoadPcxAssetAsCel("ui_art\\focus.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+	ArtFocus[FOCUS_BIG] = LoadPcxAssetAsCel("ui_art\\focus42.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
 
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
 
@@ -594,9 +599,9 @@ void UnloadUiGFX()
 	ArtHero.Unload();
 	ArtCursor.Unload();
 	for (auto &art : ArtFocus)
-		art.Unload();
+		art = std::nullopt;
 	for (auto &art : ArtLogos)
-		art.Unload();
+		art = std::nullopt;
 }
 
 void UiInitialize()
@@ -700,7 +705,8 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
 {
 	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y + y), 0, 0 };
-	vecDialog->push_back(std::make_unique<UiImage>(&ArtLogos[size], rect, UiFlags::AlignCenter, /*bAnimated=*/true));
+	vecDialog->push_back(std::make_unique<UiImageCel>(
+	    CelSpriteWithFrameHeight { ArtLogos[size]->sprite, ArtLogos[size]->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 }
 
 void UiFadeIn()
@@ -723,6 +729,19 @@ void UiFadeIn()
 	RenderPresent();
 }
 
+void DrawCel(CelSpriteWithFrameHeight sprite, Point p)
+{
+	const Surface &out = Surface(DiabloUiSurface());
+	CelDrawTo(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, 0);
+}
+
+void DrawAnimatedCel(CelSpriteWithFrameHeight sprite, Point p)
+{
+	const Surface &out = Surface(DiabloUiSurface());
+	const int frame = GetAnimationFrame(LoadLE32(sprite.sprite.Data()));
+	CelDrawTo(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, frame);
+}
+
 void DrawSelector(const SDL_Rect &rect)
 {
 	int size = FOCUS_SMALL;
@@ -730,13 +749,13 @@ void DrawSelector(const SDL_Rect &rect)
 		size = FOCUS_BIG;
 	else if (rect.h >= 30)
 		size = FOCUS_MED;
-	Art *art = &ArtFocus[size];
+	CelSpriteWithFrameHeight sprite { ArtFocus[size]->sprite, ArtFocus[size]->frameHeight };
 
-	int frame = GetAnimationFrame(art->frames);
-	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher than the box
+	// TODO FOCUS_MED appares higher than the box
+	const int y = rect.y + (rect.h - static_cast<int>(sprite.frameHeight)) / 2;
 
-	DrawArt({ rect.x, y }, art, frame);
-	DrawArt({ rect.x + rect.w - art->w(), y }, art, frame);
+	DrawAnimatedCel(sprite, { rect.x, y });
+	DrawAnimatedCel(sprite, { rect.x + rect.w - sprite.sprite.Width(), y });
 }
 
 void UiClearScreen()
@@ -794,13 +813,26 @@ void Render(const UiImage *uiImage)
 {
 	int x = uiImage->m_rect.x;
 	if (uiImage->IsCentered() && uiImage->GetArt() != nullptr) {
-		const int xOffset = GetCenterOffset(uiImage->GetArt()->w(), uiImage->m_rect.w);
-		x += xOffset;
+		x += GetCenterOffset(uiImage->GetArt()->w(), uiImage->m_rect.w);
 	}
 	if (uiImage->IsAnimated()) {
 		DrawAnimatedArt(uiImage->GetArt(), { x, uiImage->m_rect.y });
 	} else {
 		DrawArt({ x, uiImage->m_rect.y }, uiImage->GetArt(), uiImage->GetFrame(), uiImage->m_rect.w);
+	}
+}
+
+void Render(const UiImageCel *uiImage)
+{
+	const CelSpriteWithFrameHeight &sprite = uiImage->GetSprite();
+	int x = uiImage->m_rect.x;
+	if (uiImage->IsCentered()) {
+		x += GetCenterOffset(sprite.sprite.Width(), uiImage->m_rect.w);
+	}
+	if (uiImage->IsAnimated()) {
+		DrawAnimatedCel(sprite, { x, uiImage->m_rect.y });
+	} else {
+		DrawCel(sprite, { x, uiImage->m_rect.y });
 	}
 }
 
@@ -885,6 +917,9 @@ void RenderItem(UiItemBase *item)
 		break;
 	case UiType::Image:
 		Render(static_cast<UiImage *>(item));
+		break;
+	case UiType::ImageCel:
+		Render(static_cast<UiImageCel *>(item));
 		break;
 	case UiType::ArtTextButton:
 		Render(static_cast<UiArtTextButton *>(item));

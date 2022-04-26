@@ -343,7 +343,8 @@ void LeftMouseDown(int wParam)
 			} else if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 				CheckSBook();
 			} else if (!MyPlayer->HoldItem.isEmpty()) {
-				if (TryInvPut()) {
+				Point currentPosition = MyPlayer->position.tile;
+				if (CanPut(currentPosition, GetDirection(currentPosition, cursPosition))) {
 					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, MyPlayer->HoldItem);
 					NewCursor(CURSOR_HAND);
 				}
@@ -2337,6 +2338,7 @@ void game_loop(bool bStartup)
 		}
 		TimeoutCursor(false);
 		GameLogic();
+		ClearLastSendPlayerCmd();
 
 		if (!gbRunGame || !gbIsMultiplayer || demo::IsRunning() || demo::IsRecording() || !nthread_has_500ms_passed())
 			break;

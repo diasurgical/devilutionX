@@ -122,8 +122,6 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 	if (pSaveNumberFromOptions != nullptr)
 		pSaveNumberFromOptions->SetValue(gSaveNumber);
 
-	pfile_read_player_from_save(gSaveNumber, Players[MyPlayerId]);
-
 	return true;
 }
 
