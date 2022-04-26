@@ -2223,6 +2223,8 @@ void SetupTownStores()
 			if (myPlayer._pLvlVisited[i])
 				l = i;
 		}
+	} else {
+		SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
 	}
 
 	l = clamp(l + 2, 6, 16);
