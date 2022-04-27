@@ -1781,12 +1781,11 @@ int DiabloMain(int argc, char **argv)
 	// Finally load game data
 	LoadGameArchives();
 
-	SaveOptions();
 	DiabloInit();
-
 #ifdef __UWP__
 	onInitialized();
 #endif
+	SaveOptions();
 
 	DiabloSplash();
 	mainmenu_loop();
