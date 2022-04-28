@@ -18,6 +18,7 @@ namespace {
 Art healthBox;
 Art resistance;
 Art health;
+Art healthBlue;
 Art playerExpTags;
 
 } // namespace
@@ -29,6 +30,11 @@ void InitMonsterHealthBar()
 
 	LoadMaskedArt("data\\healthbox.pcx", &healthBox, 1, 1);
 	LoadArt("data\\health.pcx", &health);
+	std::array<uint8_t, 256> data;
+	data[234] = 185;
+	data[235] = 186;
+	data[236] = 187;
+	LoadMaskedArt("data\\health.pcx", &healthBlue, 1, 1, &data);
 	LoadMaskedArt("data\\resistance.pcx", &resistance, 6, 1);
 	LoadMaskedArt("data\\monstertags.pcx", &playerExpTags, 5, 1);
 
@@ -46,6 +52,7 @@ void FreeMonsterHealthBar()
 {
 	healthBox.Unload();
 	health.Unload();
+	healthBlue.Unload();
 	resistance.Unload();
 }
 
@@ -56,6 +63,7 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	assert(healthBox.surface != nullptr);
 	assert(health.surface != nullptr);
+	assert(healthBlue.surface != nullptr);
 	assert(resistance.surface != nullptr);
 
 	if (currlevel == 0)
@@ -95,7 +103,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	DrawHalfTransparentRectTo(out, position.x + border, position.y + border, width - (border * 2), height - (border * 2));
 	int barProgress = (barWidth * currLife) / monster._mmaxhp;
 	if (barProgress != 0) {
-		DrawArt(out, position + Displacement { border + 1, border + 1 }, &health, 0, barProgress, height - (border * 2) - 2);
+		DrawArt(out, position + Displacement { border + 1, border + 1 }, multiplier > 0 ? &healthBlue : &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
 	constexpr auto getBorderColor = [](MonsterClass monsterClass) {
