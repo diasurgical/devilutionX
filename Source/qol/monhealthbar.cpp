@@ -4,6 +4,8 @@
  * Adds monster health bar QoL feature
  */
 
+#include <fmt/format.h>
+
 #include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "cursor.h"
@@ -64,6 +66,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	const Monster &monster = Monsters[pcursmonst];
 
 	const int width = healthBox.w();
+	const int barWidth = health.w();
 	const int height = healthBox.h();
 	Point position = { (gnScreenWidth - width) / 2, 18 };
 
@@ -76,11 +79,21 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	const int border = 3;
 
-	const int maxLife = std::max(monster._mmaxhp, monster._mhitpoints);
+	int multiplier = 0;
+	int currLife = monster._mhitpoints;
+	// lifestealing monsters can reach HP exceeding their max
+	if (monster._mhitpoints > monster._mmaxhp) {
+		multiplier = monster._mhitpoints / monster._mmaxhp;
+		currLife = monster._mhitpoints - monster._mmaxhp * multiplier;
+		if (currLife == 0 && multiplier > 0) {
+			multiplier--;
+			currLife = monster._mmaxhp;
+		}
+	}
 
 	DrawArt(out, position, &healthBox);
 	DrawHalfTransparentRectTo(out, position.x + border, position.y + border, width - (border * 2), height - (border * 2));
-	int barProgress = (width * monster._mhitpoints) / maxLife;
+	int barProgress = (barWidth * currLife) / monster._mmaxhp;
 	if (barProgress != 0) {
 		DrawArt(out, position + Displacement { border + 1, border + 1 }, &health, 0, barProgress, height - (border * 2) - 2);
 	}
@@ -121,6 +134,8 @@ void DrawMonsterHealthBar(const Surface &out)
 		style |= UiFlags::ColorWhite;
 	DrawString(out, monster.mName, { position, { width, height } }, style);
 
+	if (multiplier > 0)
+		DrawString(out, fmt::format("x{:d}", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
 	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };

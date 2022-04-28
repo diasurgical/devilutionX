@@ -4311,6 +4311,7 @@ void ProcessMonsters()
 			} else {
 				monster._mhitpoints += monster.mLevel;
 			}
+			monster._mhitpoints = std::min(monster._mhitpoints, monster._mmaxhp); // prevent going over max HP with part of a single regen tick
 		}
 
 		if (IsTileVisible(monster.position.tile) && monster._msquelch == 0) {
