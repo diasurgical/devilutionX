@@ -193,15 +193,7 @@ void GamemenuMusicVolume(bool bActivate)
 		} else {
 			gbMusicOn = true;
 			sound_get_or_set_music_volume(VOLUME_MAX);
-			int lt;
-			if (currlevel >= 17) {
-				if (currlevel > 20)
-					lt = TMUSIC_L5;
-				else
-					lt = TMUSIC_L6;
-			} else
-				lt = leveltype;
-			music_start(lt);
+			music_start((_music_id)leveltype);
 		}
 	} else {
 		int volume = GamemenuSliderMusicSound(&sgOptionsMenu[0]);
@@ -213,15 +205,7 @@ void GamemenuMusicVolume(bool bActivate)
 			}
 		} else if (!gbMusicOn) {
 			gbMusicOn = true;
-			int lt;
-			if (currlevel >= 17) {
-				if (currlevel > 20)
-					lt = TMUSIC_L5;
-				else
-					lt = TMUSIC_L6;
-			} else
-				lt = leveltype;
-			music_start(lt);
+			music_start((_music_id)leveltype);
 		}
 	}
 

@@ -121,8 +121,8 @@ const char *const SpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
-	"Music\\DLvlE.wav",
 	"Music\\DLvlF.wav",
+	"Music\\DLvlE.wav",
 	"Music\\sintro.wav",
 };
 /** Maps from track ID to track name. */
@@ -132,8 +132,8 @@ const char *const MusicTracks[NUM_MUSIC] = {
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
-	"Music\\DLvlE.wav",
 	"Music\\DLvlF.wav",
+	"Music\\DLvlE.wav",
 	"Music\\Dintro.wav",
 };
 
@@ -228,7 +228,7 @@ void music_stop()
 	sgnMusicTrack = NUM_MUSIC;
 }
 
-void music_start(uint8_t nTrack)
+void music_start(_music_id nTrack)
 {
 	const char *trackPath;
 

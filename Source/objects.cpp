@@ -303,7 +303,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
-	return leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
+	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
 }
 
 bool CanPlaceWallTrap(int xp, int yp)
@@ -486,6 +486,16 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 
 void InitRndBarrels()
 {
+	_object_id barrelId = OBJ_BARREL;
+	_object_id explosiveBarrelId = OBJ_BARRELEX;
+	if (leveltype == DTYPE_NEST) {
+		barrelId = OBJ_POD;
+		explosiveBarrelId = OBJ_PODEX;
+	} else if (leveltype == DTYPE_CRYPT) {
+		barrelId = OBJ_URN;
+		explosiveBarrelId = OBJ_URNEX;
+	}
+
 	/** number of groups of barrels to generate */
 	int numobjs = GenerateRnd(5) + 3;
 	for (int i = 0; i < numobjs; i++) {
@@ -495,7 +505,7 @@ void InitRndBarrels()
 			xp = GenerateRnd(80) + 16;
 			yp = GenerateRnd(80) + 16;
 		} while (!RndLocOk(xp, yp));
-		_object_id o = (GenerateRnd(4) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
+		_object_id o = (GenerateRnd(4) != 0) ? barrelId : explosiveBarrelId;
 		AddObject(o, { xp, yp });
 		bool found = true;
 		/** regulates chance to stop placing barrels in current group */
@@ -518,7 +528,7 @@ void InitRndBarrels()
 					break;
 			}
 			if (found) {
-				o = (GenerateRnd(5) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
+				o = (GenerateRnd(5) != 0) ? barrelId : explosiveBarrelId;
 				AddObject(o, { xp, yp });
 				c++;
 			}
@@ -533,9 +543,9 @@ void AddCryptObjects(int x1, int y1, int x2, int y2)
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
 			if (pn == 77)
-				AddObject(OBJ_L1LDOOR, { i, j });
+				AddObject(OBJ_L5LDOOR, { i, j });
 			if (pn == 80)
-				AddObject(OBJ_L1RDOOR, { i, j });
+				AddObject(OBJ_L5RDOOR, { i, j });
 		}
 	}
 }
@@ -892,18 +902,18 @@ void AddCryptStoryBook(int s)
 				return;
 		}
 	}
-	AddCryptBook(OBJ_STORYBOOK, s, xp, yp);
-	AddObject(OBJ_STORYCANDLE, { xp - 2, yp + 1 });
-	AddObject(OBJ_STORYCANDLE, { xp - 2, yp });
-	AddObject(OBJ_STORYCANDLE, { xp - 1, yp - 1 });
-	AddObject(OBJ_STORYCANDLE, { xp + 1, yp - 1 });
-	AddObject(OBJ_STORYCANDLE, { xp + 2, yp });
-	AddObject(OBJ_STORYCANDLE, { xp + 2, yp + 1 });
+	AddCryptBook(OBJ_L5BOOKS, s, xp, yp);
+	AddObject(OBJ_L5CANDLE, { xp - 2, yp + 1 });
+	AddObject(OBJ_L5CANDLE, { xp - 2, yp });
+	AddObject(OBJ_L5CANDLE, { xp - 1, yp - 1 });
+	AddObject(OBJ_L5CANDLE, { xp + 1, yp - 1 });
+	AddObject(OBJ_L5CANDLE, { xp + 2, yp });
+	AddObject(OBJ_L5CANDLE, { xp + 2, yp + 1 });
 }
 
 void AddNakrulBook(int a1, int a2, int a3)
 {
-	AddCryptBook(OBJ_STORYBOOK, a1, a2, a3);
+	AddCryptBook(OBJ_L5BOOKS, a1, a2, a3);
 }
 
 void AddNakrulGate()
@@ -1137,6 +1147,17 @@ void InitializeL1Door(Object &door)
 	}
 }
 
+void InitializeL5Door(Object &door)
+{
+	door.InitializeDoor();
+	door._oVar1 = dPiece[door.position.x][door.position.y];
+	if (door._otype == _object_id::OBJ_L5LDOOR) {
+		door._oVar2 = dPiece[door.position.x][door.position.y - 1];
+	} else { // _object_id::OBJ_L5RDOOR
+		door._oVar2 = dPiece[door.position.x - 1][door.position.y];
+	}
+}
+
 void InitializeMicroDoor(Object &door)
 {
 	door.InitializeDoor();
@@ -1186,10 +1207,9 @@ void AddFlameLvr(int i)
 void AddTrap(int i)
 {
 	int mt = currlevel / 3 + 1;
-	if (currlevel > 16) {
+	if (leveltype == DTYPE_NEST) {
 		mt = (currlevel - 4) / 3 + 1;
-	}
-	if (currlevel > 20) {
+	} else if (leveltype == DTYPE_CRYPT) {
 		mt = (currlevel - 8) / 3 + 1;
 	}
 	mt = GenerateRnd(mt);
@@ -1212,15 +1232,15 @@ void AddObjectLight(int i, int r)
 	}
 }
 
-void AddBarrel(int i, int t)
+void AddBarrel(Object barrel)
 {
-	Objects[i]._oVar1 = 0;
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oVar2 = (t == OBJ_BARRELEX) ? 0 : GenerateRnd(10);
-	Objects[i]._oVar3 = GenerateRnd(3);
+	barrel._oVar1 = 0;
+	barrel._oRndSeed = AdvanceRndSeed();
+	barrel._oVar2 = barrel.isExplosive() ? 0 : GenerateRnd(10);
+	barrel._oVar3 = GenerateRnd(3);
 
-	if (Objects[i]._oVar2 >= 8)
-		Objects[i]._oVar4 = PreSpawnSkeleton();
+	if (barrel._oVar2 >= 8)
+		barrel._oVar4 = PreSpawnSkeleton();
 }
 
 void AddShrine(int i)
@@ -1570,7 +1590,7 @@ void UpdateFlameTrap(int i)
 		if (Objects[i]._oVar4 != 0)
 			ActivateTrapLine(Objects[i]._otype, Objects[i]._oVar1);
 	} else {
-		int damage[4] = { 6, 8, 10, 12 };
+		int damage[6] = { 6, 8, 10, 12, 10, 12 };
 
 		int mindam = damage[leveltype - 1];
 		int maxdam = mindam * 2;
@@ -1593,7 +1613,7 @@ void UpdateFlameTrap(int i)
 
 void UpdateBurningCrossDamage(int i)
 {
-	int damage[4] = { 6, 8, 10, 12 };
+	int damage[6] = { 6, 8, 10, 12, 10, 12 };
 
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -1710,95 +1730,97 @@ void SetDoorPiece(Point position)
 void DoorSet(Point position, bool isLeftDoor)
 {
 	int pn = dPiece[position.x][position.y];
-	if (currlevel < 17) {
-		switch (pn) {
-		case 43:
-			ObjSetMicro(position, 392);
-			break;
-		case 45:
-			ObjSetMicro(position, 394);
-			break;
-		case 50:
-			ObjSetMicro(position, isLeftDoor ? 411 : 412);
-			break;
-		case 54:
-			ObjSetMicro(position, 397);
-			break;
-		case 55:
-			ObjSetMicro(position, 398);
-			break;
-		case 61:
-			ObjSetMicro(position, 399);
-			break;
-		case 67:
-			ObjSetMicro(position, 400);
-			break;
-		case 68:
-			ObjSetMicro(position, 401);
-			break;
-		case 69:
-			ObjSetMicro(position, 403);
-			break;
-		case 70:
-			ObjSetMicro(position, 404);
-			break;
-		case 72:
-			ObjSetMicro(position, 406);
-			break;
-		case 212:
-			ObjSetMicro(position, 407);
-			break;
-		case 354:
-			ObjSetMicro(position, 409);
-			break;
-		case 355:
-			ObjSetMicro(position, 410);
-			break;
-		case 411:
-		case 412:
-			ObjSetMicro(position, 396);
-			break;
-		}
-	} else {
-		switch (pn) {
-		case 75:
-			ObjSetMicro(position, 204);
-			break;
-		case 79:
-			ObjSetMicro(position, 208);
-			break;
-		case 86:
-			ObjSetMicro(position, isLeftDoor ? 232 : 234);
-			break;
-		case 91:
-			ObjSetMicro(position, 215);
-			break;
-		case 93:
-			ObjSetMicro(position, 218);
-			break;
-		case 99:
-			ObjSetMicro(position, 220);
-			break;
-		case 111:
-			ObjSetMicro(position, 222);
-			break;
-		case 113:
-			ObjSetMicro(position, 224);
-			break;
-		case 115:
-			ObjSetMicro(position, 226);
-			break;
-		case 117:
-			ObjSetMicro(position, 228);
-			break;
-		case 119:
-			ObjSetMicro(position, 230);
-			break;
-		case 232:
-		case 234:
-			ObjSetMicro(position, 212);
-			break;
-		}
+	switch (pn) {
+	case 43:
+		ObjSetMicro(position, 392);
+		break;
+	case 45:
+		ObjSetMicro(position, 394);
+		break;
+	case 50:
+		ObjSetMicro(position, isLeftDoor ? 411 : 412);
+		break;
+	case 54:
+		ObjSetMicro(position, 397);
+		break;
+	case 55:
+		ObjSetMicro(position, 398);
+		break;
+	case 61:
+		ObjSetMicro(position, 399);
+		break;
+	case 67:
+		ObjSetMicro(position, 400);
+		break;
+	case 68:
+		ObjSetMicro(position, 401);
+		break;
+	case 69:
+		ObjSetMicro(position, 403);
+		break;
+	case 70:
+		ObjSetMicro(position, 404);
+		break;
+	case 72:
+		ObjSetMicro(position, 406);
+		break;
+	case 212:
+		ObjSetMicro(position, 407);
+		break;
+	case 354:
+		ObjSetMicro(position, 409);
+		break;
+	case 355:
+		ObjSetMicro(position, 410);
+		break;
+	case 411:
+	case 412:
+		ObjSetMicro(position, 396);
+		break;
+	}
+}
+
+void CryptDoorSet(Point position, bool isLeftDoor)
+{
+	int pn = dPiece[position.x][position.y];
+	switch (pn) {
+	case 75:
+		ObjSetMicro(position, 204);
+		break;
+	case 79:
+		ObjSetMicro(position, 208);
+		break;
+	case 86:
+		ObjSetMicro(position, isLeftDoor ? 232 : 234);
+		break;
+	case 91:
+		ObjSetMicro(position, 215);
+		break;
+	case 93:
+		ObjSetMicro(position, 218);
+		break;
+	case 99:
+		ObjSetMicro(position, 220);
+		break;
+	case 111:
+		ObjSetMicro(position, 222);
+		break;
+	case 113:
+		ObjSetMicro(position, 224);
+		break;
+	case 115:
+		ObjSetMicro(position, 226);
+		break;
+	case 117:
+		ObjSetMicro(position, 228);
+		break;
+	case 119:
+		ObjSetMicro(position, 230);
+		break;
+	case 232:
+	case 234:
+		ObjSetMicro(position, 212);
+		break;
 	}
 }
 
@@ -1830,20 +1852,10 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 	if (door._oVar4 == 0) {
 		if (pnum == MyPlayerId && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
-		if (currlevel < 21) {
-			if (!deltaload)
-				PlaySfxLoc(IS_DOOROPEN, door.position);
-			ObjSetMicro(door.position, 395);
-		} else {
-			if (!deltaload)
-				PlaySfxLoc(IS_CROPEN, door.position);
-			ObjSetMicro(door.position, 209);
-		}
-		if (currlevel < 17) {
-			dSpecial[door.position.x][door.position.y] = 8;
-		} else {
-			dSpecial[door.position.x][door.position.y] = 2;
-		}
+		if (!deltaload)
+			PlaySfxLoc(IS_DOOROPEN, door.position);
+		ObjSetMicro(door.position, 395);
+		dSpecial[door.position.x][door.position.y] = 8;
 		SetDoorPiece(door.position + Direction::NorthEast);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -1854,13 +1866,8 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		return;
 	}
 
-	if (currlevel < 21) {
-		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, door.position);
-	} else {
-		if (!deltaload)
-			PlaySfxLoc(IS_CRCLOS, door.position);
-	}
+	if (!deltaload)
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 	if (!deltaload && IsDoorClear(door.position)) {
 		if (pnum == MyPlayerId && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
@@ -1870,17 +1877,10 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 
 		// Restore the normal tile where the open door used to be
 		auto openPosition = door.position + Direction::NorthWest;
-		if (currlevel < 17) {
-			if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
-				ObjSetMicro(openPosition, 411);
-			else
-				ObjSetMicro(openPosition, door._oVar2);
-		} else {
-			if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
-				ObjSetMicro(openPosition, 232);
-			else
-				ObjSetMicro(openPosition, door._oVar2);
-		}
+		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
+			ObjSetMicro(openPosition, 411);
+		else
+			ObjSetMicro(openPosition, door._oVar2);
 
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
@@ -1904,23 +1904,13 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 	if (door._oVar4 == 0) {
 		if (pnum == MyPlayerId && sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
-		if (currlevel < 21) {
-			if (!deltaload)
-				PlaySfxLoc(IS_DOOROPEN, door.position);
-			if (door._oVar1 == 214)
-				ObjSetMicro(door.position, 408);
-			else
-				ObjSetMicro(door.position, 393);
-		} else {
-			if (!deltaload)
-				PlaySfxLoc(IS_CROPEN, door.position);
-			ObjSetMicro(door.position, 206);
-		}
-		if (currlevel < 17) {
-			dSpecial[door.position.x][door.position.y] = 7;
-		} else {
-			dSpecial[door.position.x][door.position.y] = 1;
-		}
+		if (!deltaload)
+			PlaySfxLoc(IS_DOOROPEN, door.position);
+		if (door._oVar1 == 214)
+			ObjSetMicro(door.position, 408);
+		else
+			ObjSetMicro(door.position, 393);
+		dSpecial[door.position.x][door.position.y] = 7;
 		SetDoorPiece(door.position + Direction::NorthWest);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -1931,13 +1921,8 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		return;
 	}
 
-	if (currlevel < 21) {
-		if (!deltaload)
-			PlaySfxLoc(IS_DOORCLOS, door.position);
-	} else {
-		if (!deltaload)
-			PlaySfxLoc(IS_CRCLOS, door.position);
-	}
+	if (!deltaload)
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 	if (IsDoorClear(door.position)) {
 		if (pnum == MyPlayerId && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
@@ -1947,17 +1932,10 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 
 		// Restore the normal tile where the open door used to be
 		auto openPosition = door.position + Direction::NorthEast;
-		if (currlevel < 17) {
-			if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
-				ObjSetMicro(openPosition, 412);
-			else
-				ObjSetMicro(openPosition, door._oVar2);
-		} else {
-			if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
-				ObjSetMicro(openPosition, 234);
-			else
-				ObjSetMicro(openPosition, door._oVar2);
-		}
+		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
+			ObjSetMicro(openPosition, 412);
+		else
+			ObjSetMicro(openPosition, door._oVar2);
 
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
@@ -2136,6 +2114,110 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
+void OperateL5RDoor(int pnum, int oi, bool sendflag)
+{
+	Object &door = Objects[oi];
+
+	if (door._oVar4 == 2) {
+		if (!deltaload)
+			PlaySfxLoc(IS_DOORCLOS, door.position);
+		return;
+	}
+
+	if (door._oVar4 == 0) {
+		if (pnum == MyPlayerId && sendflag)
+			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
+		if (!deltaload)
+			PlaySfxLoc(IS_CROPEN, door.position);
+		ObjSetMicro(door.position, 209);
+		dSpecial[door.position.x][door.position.y] = 2;
+		SetDoorPiece(door.position + Direction::NorthEast);
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		CryptDoorSet(door.position + Direction::NorthWest, false);
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
+		RedoPlayerVision();
+		return;
+	}
+
+	if (!deltaload)
+		PlaySfxLoc(IS_CRCLOS, door.position);
+	if (!deltaload && IsDoorClear(door.position)) {
+		if (pnum == MyPlayerId && sendflag)
+			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position, door._oVar1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthWest;
+		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
+			ObjSetMicro(openPosition, 232);
+		else
+			ObjSetMicro(openPosition, door._oVar2);
+
+		dSpecial[door.position.x][door.position.y] = 0;
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
+		RedoPlayerVision();
+	} else {
+		door._oVar4 = 2;
+	}
+}
+
+void OperateL5LDoor(int pnum, int oi, bool sendflag)
+{
+	Object &door = Objects[oi];
+
+	if (door._oVar4 == 2) {
+		if (!deltaload)
+			PlaySfxLoc(IS_DOORCLOS, door.position);
+		return;
+	}
+
+	if (door._oVar4 == 0) {
+		if (pnum == MyPlayerId && sendflag)
+			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
+		if (!deltaload)
+			PlaySfxLoc(IS_CROPEN, door.position);
+		ObjSetMicro(door.position, 206);
+		dSpecial[door.position.x][door.position.y] = 1;
+		SetDoorPiece(door.position + Direction::NorthWest);
+		door._oAnimFrame += 2;
+		door._oPreFlag = true;
+		CryptDoorSet(door.position + Direction::NorthEast, true);
+		door._oVar4 = 1;
+		door._oSelFlag = 2;
+		RedoPlayerVision();
+		return;
+	}
+
+	if (!deltaload)
+		PlaySfxLoc(IS_CRCLOS, door.position);
+	if (IsDoorClear(door.position)) {
+		if (pnum == MyPlayerId && sendflag)
+			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
+		door._oVar4 = 0;
+		door._oSelFlag = 3;
+		ObjSetMicro(door.position, door._oVar1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthEast;
+		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
+			ObjSetMicro(openPosition, 234);
+		else
+			ObjSetMicro(openPosition, door._oVar2);
+
+		dSpecial[door.position.x][door.position.y] = 0;
+		door._oAnimFrame -= 2;
+		door._oPreFlag = false;
+		RedoPlayerVision();
+	} else {
+		door._oVar4 = 2;
+	}
+}
+
 void OperateL1Door(int pnum, int i, bool sendflag)
 {
 	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
@@ -2144,6 +2226,16 @@ void OperateL1Door(int pnum, int i, bool sendflag)
 		OperateL1LDoor(pnum, i, sendflag);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L1RDOOR)
 		OperateL1RDoor(pnum, i, sendflag);
+}
+
+void OperateL5Door(int pnum, int i, bool sendflag)
+{
+	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
+	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
+	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L5LDOOR)
+		OperateL5LDoor(pnum, i, sendflag);
+	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L5RDOOR)
+		OperateL5RDoor(pnum, i, sendflag);
 }
 
 bool AreAllLeversActivated(int leverId)
@@ -3949,7 +4041,7 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 	if (deltaload)
 		return;
 
-	CreateTypeItem(Objects[i].position, leveltype > 1, weaponType, IMISC_NONE, sendmsg, false);
+	CreateTypeItem(Objects[i].position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendmsg, false);
 
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -4001,7 +4093,7 @@ void OperateStoryBook(int pnum, int i)
 			NetSendCmd(false, CMD_NAKRUL);
 			return;
 		}
-	} else if (currlevel >= 21) {
+	} else if (leveltype == DTYPE_CRYPT) {
 		Quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
 		Quests[Q_NAKRUL]._qlog = true;
 		Quests[Q_NAKRUL]._qmsg = msg;
@@ -4083,6 +4175,25 @@ void SyncOpL3Door(int pnum, int cmd, int i)
 		OperateL3RDoor(-1, i, false);
 }
 
+void SyncOpL5Door(int pnum, int cmd, int i)
+{
+	if (pnum == MyPlayerId)
+		return;
+
+	bool doSync = false;
+	if (cmd == CMD_OPENDOOR && Objects[i]._oVar4 == 0)
+		doSync = true;
+	if (cmd == CMD_CLOSEDOOR && Objects[i]._oVar4 == 1)
+		doSync = true;
+	if (!doSync)
+		return;
+
+	if (Objects[i]._otype == OBJ_L5LDOOR)
+		OperateL5LDoor(-1, i, false);
+	if (Objects[i]._otype == OBJ_L5RDOOR)
+		OperateL5RDoor(-1, i, false);
+}
+
 /**
  * @brief Checks if all active crux objects of the given type have been broken.
  *
@@ -4160,10 +4271,10 @@ void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendms
 		return;
 	}
 
-	if (barrel._otype == OBJ_BARRELEX) {
-		if (currlevel >= 21 && currlevel <= 24)
+	if (barrel.isExplosive()) {
+		if (barrel._otype == _object_id::OBJ_URNEX)
 			PlaySfxLoc(IS_POPPOP3, barrel.position);
-		else if (currlevel >= 17 && currlevel <= 20)
+		else if (barrel._otype == _object_id::OBJ_PODEX)
 			PlaySfxLoc(IS_POPPOP8, barrel.position);
 		else
 			PlaySfxLoc(IS_BARLFIRE, barrel.position);
@@ -4178,15 +4289,15 @@ void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendms
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = ObjectAtPosition({ xp, yp }, false);
-				if (adjacentObject != nullptr && adjacentObject->_otype == _object_id::OBJ_BARRELEX && !adjacentObject->IsBroken()) {
+				if (adjacentObject != nullptr && adjacentObject->isExplosive() && !adjacentObject->IsBroken()) {
 					BreakBarrel(pnum, *adjacentObject, dam, true, sendmsg);
 				}
 			}
 		}
 	} else {
-		if (currlevel >= 21 && currlevel <= 24)
+		if (barrel._otype == _object_id::OBJ_URN)
 			PlaySfxLoc(IS_POPPOP2, barrel.position);
-		else if (currlevel >= 17 && currlevel <= 20)
+		else if (barrel._otype == _object_id::OBJ_POD)
 			PlaySfxLoc(IS_POPPOP5, barrel.position);
 		else
 			PlaySfxLoc(IS_BARREL, barrel.position);
@@ -4261,30 +4372,16 @@ void SyncL1Doors(Object &door)
 
 	bool isLeftDoor = door._otype == _object_id::OBJ_L1LDOOR; // otherwise the door is type OBJ_L1RDOOR
 
-	if (currlevel < 17) {
-		if (isLeftDoor) {
-			ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
-			dSpecial[door.position.x][door.position.y] = 7;
-			SetDoorPiece(door.position + Direction::NorthWest);
-			DoorSet(door.position + Direction::NorthEast, isLeftDoor);
-		} else {
-			ObjSetMicro(door.position, 395);
-			dSpecial[door.position.x][door.position.y] = 8;
-			SetDoorPiece(door.position + Direction::NorthEast);
-			DoorSet(door.position + Direction::NorthWest, isLeftDoor);
-		}
+	if (isLeftDoor) {
+		ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
+		dSpecial[door.position.x][door.position.y] = 7;
+		SetDoorPiece(door.position + Direction::NorthWest);
+		DoorSet(door.position + Direction::NorthEast, isLeftDoor);
 	} else {
-		if (isLeftDoor) {
-			ObjSetMicro(door.position, 206);
-			dSpecial[door.position.x][door.position.y] = 1;
-			SetDoorPiece(door.position + Direction::NorthWest);
-			DoorSet(door.position + Direction::NorthEast, isLeftDoor);
-		} else {
-			ObjSetMicro(door.position, 209);
-			dSpecial[door.position.x][door.position.y] = 2;
-			SetDoorPiece(door.position + Direction::NorthEast);
-			DoorSet(door.position + Direction::NorthWest, isLeftDoor);
-		}
+		ObjSetMicro(door.position, 395);
+		dSpecial[door.position.x][door.position.y] = 8;
+		SetDoorPiece(door.position + Direction::NorthEast);
+		DoorSet(door.position + Direction::NorthWest, isLeftDoor);
 	}
 }
 
@@ -4323,6 +4420,31 @@ void SyncL3Doors(Object &door)
 	case 2:
 		ObjSetMicro(door.position, isLeftDoor ? 538 : 541);
 		break;
+	}
+}
+
+void SyncL5Doors(Object &door)
+{
+	if (door._oVar4 == 0) {
+		door._oMissFlag = false;
+		return;
+	}
+
+	door._oMissFlag = true;
+	door._oSelFlag = 2;
+
+	bool isLeftDoor = door._otype == _object_id::OBJ_L5LDOOR; // otherwise the door is type OBJ_L5RDOOR
+
+	if (isLeftDoor) {
+		ObjSetMicro(door.position, 206);
+		dSpecial[door.position.x][door.position.y] = 1;
+		SetDoorPiece(door.position + Direction::NorthWest);
+		CryptDoorSet(door.position + Direction::NorthEast, isLeftDoor);
+	} else {
+		ObjSetMicro(door.position, 209);
+		dSpecial[door.position.x][door.position.y] = 2;
+		SetDoorPiece(door.position + Direction::NorthEast);
+		CryptDoorSet(door.position + Direction::NorthWest, isLeftDoor);
 	}
 }
 
@@ -4391,44 +4513,35 @@ bool IsItemBlockingObjectAtPosition(Point position)
 
 void InitObjectGFX()
 {
-	bool fileload[56] = {};
+	bool filesLoaded[65] = {};
 
-	int lvl = currlevel;
-	if (currlevel >= 21 && currlevel <= 24)
-		lvl -= 20;
-	else if (currlevel >= 17 && currlevel <= 20)
-		lvl -= 8;
-	for (int i = 0; AllObjects[i].oload != -1; i++) {
-		if (AllObjects[i].oload == 1
-		    && lvl >= AllObjects[i].ominlvl
-		    && lvl <= AllObjects[i].omaxlvl) {
-			fileload[AllObjects[i].ofindex] = true;
+	for (const ObjectData objectData : AllObjects) {
+		if (objectData.ominlvl != 0 && currlevel >= objectData.ominlvl && currlevel <= objectData.omaxlvl) {
+			filesLoaded[objectData.ofindex] = true;
 		}
-		if (AllObjects[i].otheme != THEME_NONE) {
+		if (objectData.otheme != THEME_NONE) {
 			for (int j = 0; j < numthemes; j++) {
-				if (themes[j].ttype == AllObjects[i].otheme)
-					fileload[AllObjects[i].ofindex] = true;
+				if (themes[j].ttype == objectData.otheme)
+					filesLoaded[objectData.ofindex] = true;
 			}
 		}
 
-		if (AllObjects[i].oquest != -1) {
-			if (Quests[AllObjects[i].oquest].IsAvailable())
-				fileload[AllObjects[i].ofindex] = true;
+		if (objectData.oquest != Q_INVALID) {
+			if (Quests[objectData.oquest].IsAvailable())
+				filesLoaded[objectData.ofindex] = true;
 		}
 	}
 
-	for (int i = OFILE_L1BRAZ; i <= OFILE_LZSTAND; i++) {
-		if (fileload[i]) {
-			ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
-			char filestr[32];
-			sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
-			if (currlevel >= 17 && currlevel < 21)
-				sprintf(filestr, "Objects\\%s.CEL", ObjHiveLoadList[i]);
-			else if (currlevel >= 21)
-				sprintf(filestr, "Objects\\%s.CEL", ObjCryptLoadList[i]);
-			pObjCels[numobjfiles] = LoadFileInMem(filestr);
-			numobjfiles++;
+	for (int i = OFILE_L1BRAZ; i <= OFILE_L5BOOKS; i++) {
+		if (!filesLoaded[i]) {
+			continue;
 		}
+
+		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
+		char filestr[32];
+		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
+		pObjCels[numobjfiles] = LoadFileInMem(filestr);
+		numobjfiles++;
 	}
 }
 
@@ -4464,6 +4577,21 @@ void AddL2Objs(int x1, int y1, int x2, int y2)
 				AddObject(OBJ_L2LDOOR, { i, j });
 			if (pn == 17 || pn == 542)
 				AddObject(OBJ_L2RDOOR, { i, j });
+		}
+	}
+}
+
+void AddL5Objs(int x1, int y1, int x2, int y2)
+{
+	for (int j = y1; j < y2; j++) {
+		for (int i = x1; i < x2; i++) {
+			int pn = dPiece[i][j];
+			if (pn == 270)
+				AddObject(OBJ_L1LIGHT, { i, j });
+			if (pn == 44 || pn == 51 || pn == 214)
+				AddObject(OBJ_L5LDOOR, { i, j });
+			if (pn == 46 || pn == 56)
+				AddObject(OBJ_L5RDOOR, { i, j });
 		}
 	}
 }
@@ -4513,10 +4641,7 @@ void InitObjects()
 			if (Quests[Q_LTBANNER].IsAvailable())
 				AddObject(OBJ_SIGNCHEST, { 2 * setpc_x + 26, 2 * setpc_y + 19 });
 			InitRndLocBigObj(10, 15, OBJ_SARC);
-			if (currlevel >= 21)
-				AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
-			else
-				AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
 		}
 		if (leveltype == DTYPE_CATACOMBS) {
@@ -4580,7 +4705,7 @@ void InitObjects()
 			}
 			InitRndBarrels();
 		}
-		if (leveltype == DTYPE_CAVES) {
+		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
 			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
 		}
@@ -4616,12 +4741,17 @@ void InitObjects()
 			InitRndBarrels();
 			AddL4Goodies();
 		}
+		if (leveltype == DTYPE_CRYPT) {
+			InitRndLocBigObj(10, 15, OBJ_L5SARC);
+			AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
+			InitRndBarrels();
+		}
 		InitRndLocObj(5, 10, OBJ_CHEST1);
 		InitRndLocObj(3, 6, OBJ_CHEST2);
 		InitRndLocObj(1, 5, OBJ_CHEST3);
 		if (leveltype != DTYPE_HELL)
 			AddObjTraps();
-		if (leveltype > DTYPE_CATHEDRAL)
+		if (IsAnyOf(leveltype, DTYPE_CATACOMBS, DTYPE_CAVES, DTYPE_HELL, DTYPE_NEST))
 			AddChestTraps();
 		ApplyObjectLighting = false;
 	}
@@ -4629,17 +4759,15 @@ void InitObjects()
 
 void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 {
-	bool filesLoaded[56];
-	char filestr[32];
+	bool filesLoaded[65] = {};
 
 	ClrAllObjects();
-	for (auto &fileLoaded : filesLoaded)
-		fileLoaded = false;
 	ApplyObjectLighting = true;
 
-	for (int i = 0; AllObjects[i].oload != -1; i++) {
-		if (AllObjects[i].oload == 1 && leveltype == AllObjects[i].olvltype)
-			filesLoaded[AllObjects[i].ofindex] = true;
+	for (const ObjectData objectData : AllObjects) {
+		if (leveltype == objectData.olvltype) {
+			filesLoaded[objectData.ofindex] = true;
+		}
 	}
 
 	int width = SDL_SwapLE16(dunData[0]);
@@ -4662,11 +4790,13 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 		}
 	}
 
-	for (int i = OFILE_L1BRAZ; i <= OFILE_LZSTAND; i++) {
-		if (!filesLoaded[i])
+	for (int i = OFILE_L1BRAZ; i <= OFILE_L5BOOKS; i++) {
+		if (!filesLoaded[i]) {
 			continue;
+		}
 
-		ObjFileList[numobjfiles] = (object_graphic_id)i;
+		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
+		char filestr[32];
 		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
 		pObjCels[numobjfiles] = LoadFileInMem(filestr);
 		numobjfiles++;
@@ -4704,6 +4834,7 @@ void AddObject(_object_id objType, Point objPos)
 		AddObjectLight(oi, 5);
 		break;
 	case OBJ_STORYCANDLE:
+	case OBJ_L5CANDLE:
 		AddObjectLight(oi, 3);
 		break;
 	case OBJ_TORCHL:
@@ -4725,6 +4856,10 @@ void AddObject(_object_id objType, Point objPos)
 	case OBJ_L3RDOOR:
 		InitializeMicroDoor(object);
 		break;
+	case OBJ_L5LDOOR:
+	case OBJ_L5RDOOR:
+		InitializeL5Door(object);
+		break;
 	case OBJ_BOOK2R:
 		object.InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
 		break;
@@ -4745,6 +4880,7 @@ void AddObject(_object_id objType, Point objPos)
 		}
 		break;
 	case OBJ_SARC:
+	case OBJ_L5SARC:
 		AddSarc(oi);
 		break;
 	case OBJ_FLAMEHOLE:
@@ -4762,7 +4898,11 @@ void AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		AddBarrel(oi, objType);
+	case OBJ_POD:
+	case OBJ_PODEX:
+	case OBJ_URN:
+	case OBJ_URNEX:
+		AddBarrel(object);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -4809,6 +4949,7 @@ void AddObject(_object_id objType, Point objPos)
 		AddMagicCircle(oi);
 		break;
 	case OBJ_STORYBOOK:
+	case OBJ_L5BOOKS:
 		AddStoryBook(oi);
 		break;
 	case OBJ_BCROSS:
@@ -4845,6 +4986,8 @@ void OperateTrap(Object &trap)
 	case OBJ_L2RDOOR:
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
+	case OBJ_L5LDOOR:
+	case OBJ_L5RDOOR:
 		if (trigger._oVar4 == 0)
 			return;
 		break;
@@ -4854,6 +4997,8 @@ void OperateTrap(Object &trap)
 	case OBJ_CHEST3:
 	case OBJ_SWITCHSKL:
 	case OBJ_SARC:
+	case OBJ_L5LEVER:
+	case OBJ_L5SARC:
 		if (trigger._oSelFlag != 0)
 			return;
 		break;
@@ -4896,6 +5041,7 @@ void ProcessObjects()
 			UpdateObjectLight(oi, 5);
 			break;
 		case OBJ_STORYCANDLE:
+		case OBJ_L5CANDLE:
 			UpdateObjectLight(oi, 3);
 			break;
 		case OBJ_CRUX1:
@@ -4903,6 +5049,10 @@ void ProcessObjects()
 		case OBJ_CRUX3:
 		case OBJ_BARREL:
 		case OBJ_BARRELEX:
+		case OBJ_POD:
+		case OBJ_PODEX:
+		case OBJ_URN:
+		case OBJ_URNEX:
 		case OBJ_SHRINEL:
 		case OBJ_SHRINER:
 			ObjectStopAnim(oi);
@@ -4913,6 +5063,8 @@ void ProcessObjects()
 		case OBJ_L2RDOOR:
 		case OBJ_L3LDOOR:
 		case OBJ_L3RDOOR:
+		case OBJ_L5LDOOR:
+		case OBJ_L5RDOOR:
 			UpdateDoor(oi);
 			break;
 		case OBJ_TORCHL:
@@ -4922,6 +5074,7 @@ void ProcessObjects()
 			UpdateObjectLight(oi, 8);
 			break;
 		case OBJ_SARC:
+		case OBJ_L5SARC:
 			UpdateSarcoffagus(oi);
 			break;
 		case OBJ_FLAMEHOLE:
@@ -5014,6 +5167,14 @@ void MonstCheckDoors(Monster &monster)
 				if (dpx <= 1 && dpy == 1 && Objects[oi]._otype == OBJ_L3LDOOR)
 					OperateL3LDoor(MyPlayerId, oi, true);
 			}
+			if ((Objects[oi]._otype == OBJ_L5LDOOR || Objects[oi]._otype == OBJ_L5RDOOR) && Objects[oi]._oVar4 == 0) {
+				int dpx = abs(Objects[oi].position.x - mx);
+				int dpy = abs(Objects[oi].position.y - my);
+				if (dpx == 1 && dpy <= 1 && Objects[oi]._otype == OBJ_L5LDOOR)
+					OperateL5LDoor(MyPlayerId, oi, true);
+				if (dpx <= 1 && dpy == 1 && Objects[oi]._otype == OBJ_L5RDOOR)
+					OperateL5RDoor(MyPlayerId, oi, true);
+			}
 		}
 	}
 }
@@ -5026,13 +5187,16 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
+	if (leveltype == DTYPE_CATHEDRAL) {
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 		AddL1Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {
 		ObjL2Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 		AddL2Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+	}
+	if (leveltype == DTYPE_CRYPT) {
+		AddL5Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
 }
 
@@ -5044,7 +5208,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
+	if (leveltype == DTYPE_CATHEDRAL) {
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {
@@ -5125,7 +5289,20 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		if (pnum == MyPlayerId)
 			OperateL3Door(pnum, i, true);
 		break;
+	case OBJ_L5LDOOR:
+	case OBJ_L5RDOOR:
+		if (teleFlag) {
+			if (Objects[i]._otype == OBJ_L5LDOOR)
+				OperateL5LDoor(pnum, i, true);
+			if (Objects[i]._otype == OBJ_L5RDOOR)
+				OperateL5RDoor(pnum, i, true);
+			break;
+		}
+		if (pnum == MyPlayerId)
+			OperateL5Door(pnum, i, true);
+		break;
 	case OBJ_LEVER:
+	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
 		OperateLever(pnum, i);
 		break;
@@ -5144,6 +5321,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateChest(pnum, i, sendmsg);
 		break;
 	case OBJ_SARC:
+	case OBJ_L5SARC:
 		OperateSarc(pnum, i, sendmsg);
 		break;
 	case OBJ_FLAMELVR:
@@ -5186,6 +5364,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateFountains(pnum, i);
 		break;
 	case OBJ_STORYBOOK:
+	case OBJ_L5BOOKS:
 		OperateStoryBook(pnum, i);
 		break;
 	case OBJ_PEDISTAL:
@@ -5227,7 +5406,12 @@ void SyncOpObject(int pnum, int cmd, int i)
 	case OBJ_L3RDOOR:
 		SyncOpL3Door(pnum, cmd, i);
 		break;
+	case OBJ_L5LDOOR:
+	case OBJ_L5RDOOR:
+		SyncOpL5Door(pnum, cmd, i);
+		break;
 	case OBJ_LEVER:
+	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
 		OperateLever(pnum, i);
 		break;
@@ -5240,6 +5424,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateChest(pnum, i, false);
 		break;
 	case OBJ_SARC:
+	case OBJ_L5SARC:
 		OperateSarc(pnum, i, false);
 		break;
 	case OBJ_BLINDBOOK:
@@ -5277,6 +5462,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateFountains(pnum, i);
 		break;
 	case OBJ_STORYBOOK:
+	case OBJ_L5BOOKS:
 		OperateStoryBook(pnum, i);
 		break;
 	case OBJ_PEDISTAL:
@@ -5351,12 +5537,17 @@ void SyncObjectAnim(Object &object)
 	case OBJ_L3RDOOR:
 		SyncL3Doors(object);
 		break;
+	case OBJ_L5LDOOR:
+	case OBJ_L5RDOOR:
+		SyncL5Doors(object);
+		break;
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
 		SyncCrux(object);
 		break;
 	case OBJ_LEVER:
+	case OBJ_L5LEVER:
 	case OBJ_BOOK2L:
 	case OBJ_SWITCHSKL:
 		SyncLever(object);
@@ -5383,6 +5574,7 @@ void GetObjectStr(const Object &object)
 		InfoString = _("Crucified Skeleton");
 		break;
 	case OBJ_LEVER:
+	case OBJ_L5LEVER:
 	case OBJ_FLAMELVR:
 		InfoString = _("Lever");
 		break;
@@ -5392,6 +5584,8 @@ void GetObjectStr(const Object &object)
 	case OBJ_L2RDOOR:
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
+	case OBJ_L5LDOOR:
+	case OBJ_L5RDOOR:
 		if (object._oVar4 == 1)
 			InfoString = _("Open Door");
 		if (object._oVar4 == 0)
@@ -5428,6 +5622,7 @@ void GetObjectStr(const Object &object)
 		InfoString = _("Large Chest");
 		break;
 	case OBJ_SARC:
+	case OBJ_L5SARC:
 		InfoString = _("Sarcophagus");
 		break;
 	case OBJ_BOOKSHELF:
@@ -5439,12 +5634,15 @@ void GetObjectStr(const Object &object)
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		if (currlevel >= 17 && currlevel <= 20)      // for hive levels
-			InfoString = _("Pod");                   // Then a barrel is called a pod
-		else if (currlevel >= 21 && currlevel <= 24) // for crypt levels
-			InfoString = _("Urn");                   // Then a barrel is called an urn
-		else
-			InfoString = _("Barrel");
+		InfoString = _("Barrel");
+		break;
+	case OBJ_POD:
+	case OBJ_PODEX:
+		InfoString = _("Pod");
+		break;
+	case OBJ_URN:
+	case OBJ_URNEX:
+		InfoString = _("Urn");
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -5497,6 +5695,7 @@ void GetObjectStr(const Object &object)
 		InfoString = _("Pedestal of Blood");
 		break;
 	case OBJ_STORYBOOK:
+	case OBJ_L5BOOKS:
 		InfoString = _(StoryBookName[object._oVar3]);
 		break;
 	case OBJ_WEAPONRACK:
@@ -5561,7 +5760,7 @@ void AddNakrulLeaver()
 			break;
 		}
 	}
-	AddObject(OBJ_LEVER, { UberRow + 3, UberCol - 1 });
+	AddObject(OBJ_L5LEVER, { UberRow + 3, UberCol - 1 });
 }
 
 } // namespace devilution

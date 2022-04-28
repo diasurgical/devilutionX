@@ -4139,7 +4139,7 @@ void DoEnding()
 	int musicVolume = sound_get_or_set_music_volume(1);
 	sound_get_or_set_music_volume(0);
 
-	music_start(TMUSIC_L2);
+	music_start(TMUSIC_CATACOMBS);
 	loop_movie = true;
 	play_movie("gendata\\loopdend.smk", true);
 	loop_movie = false;
