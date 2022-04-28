@@ -486,6 +486,10 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
       DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}-hellfire.png"
     )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/devilutionx.metainfo.xml"
+      DESTINATION "share/metainfo"
+      RENAME "${project_name}.metainfo.xml"
+    )
 
     # -G DEB
     set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
