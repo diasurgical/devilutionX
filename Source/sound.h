@@ -19,12 +19,12 @@ namespace devilution {
 
 enum _music_id : uint8_t {
 	TMUSIC_TOWN,
-	TMUSIC_L1,
-	TMUSIC_L2,
-	TMUSIC_L3,
-	TMUSIC_L4,
-	TMUSIC_L5,
-	TMUSIC_L6,
+	TMUSIC_CATHEDRAL,
+	TMUSIC_CATACOMBS,
+	TMUSIC_CAVES,
+	TMUSIC_HELL,
+	TMUSIC_NEST,
+	TMUSIC_CRYPT,
 	TMUSIC_INTRO,
 	NUM_MUSIC,
 };
@@ -59,7 +59,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream = false);
 void snd_init();
 void snd_deinit();
 void music_stop();
-void music_start(uint8_t nTrack);
+void music_start(_music_id nTrack);
 void sound_disable_music(bool disable);
 int sound_get_or_set_music_volume(int volume);
 int sound_get_or_set_sound_volume(int volume);

@@ -141,7 +141,7 @@ bool TFit_Obj5(int t)
 
 bool TFit_SkelRoom(int t)
 {
-	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
+	if (IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS, DTYPE_CRYPT)) {
 		return false;
 	}
 
@@ -193,7 +193,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, int frequency)
 
 bool TFit_Obj3(int8_t regionId)
 {
-	char objrnd[4] = { 4, 4, 3, 5 };
+	int objrnd[6] = { 4, 4, 3, 5, 3, 4 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -229,7 +229,7 @@ bool CheckThemeReqs(theme_id t)
 		}
 		break;
 	case THEME_ARMORSTAND:
-		if (leveltype == DTYPE_CATHEDRAL) {
+		if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
 			return false;
 		}
 		break;
@@ -249,7 +249,7 @@ bool CheckThemeReqs(theme_id t)
 		}
 		break;
 	case THEME_WEAPONRACK:
-		if (leveltype == DTYPE_CATHEDRAL) {
+		if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
 			return false;
 		}
 		break;
@@ -363,7 +363,7 @@ bool CheckThemeRoom(int tv)
 		}
 	}
 
-	if (leveltype == DTYPE_CATHEDRAL && (tarea < 9 || tarea > 100))
+	if (IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) && (tarea < 9 || tarea > 100))
 		return false;
 
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -400,7 +400,7 @@ void InitThemes()
 	if (currlevel == 16)
 		return;
 
-	if (leveltype == DTYPE_CATHEDRAL) {
+	if (IsAnyOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT)) {
 		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;
@@ -412,32 +412,34 @@ void InitThemes()
 				numthemes++;
 			}
 		}
+		return;
 	}
-	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
-		for (int i = 0; i < themeCount; i++)
-			themes[i].ttype = THEME_NONE;
-		if (Quests[Q_ZHAR].IsAvailable()) {
-			for (int j = 0; j < themeCount; j++) {
-				themes[j].ttval = themeLoc[j].ttval;
-				if (SpecialThemeFit(j, THEME_LIBRARY)) {
-					themes[j].ttype = THEME_LIBRARY;
-					zharlib = j;
-					break;
-				}
+
+	for (int i = 0; i < themeCount; i++) {
+		themes[i].ttype = THEME_NONE;
+	}
+
+	if (Quests[Q_ZHAR].IsAvailable()) {
+		for (int j = 0; j < themeCount; j++) {
+			themes[j].ttval = themeLoc[j].ttval;
+			if (SpecialThemeFit(j, THEME_LIBRARY)) {
+				themes[j].ttype = THEME_LIBRARY;
+				zharlib = j;
+				break;
 			}
 		}
-		for (int i = 0; i < themeCount; i++) {
-			if (themes[i].ttype == THEME_NONE) {
-				themes[i].ttval = themeLoc[i].ttval;
-				theme_id j = ThemeGood[GenerateRnd(4)];
-				while (!SpecialThemeFit(i, j)) {
-					j = (theme_id)GenerateRnd(17);
-				}
-				themes[i].ttype = j;
-			}
-		}
-		numthemes += themeCount;
 	}
+	for (int i = 0; i < themeCount; i++) {
+		if (themes[i].ttype == THEME_NONE) {
+			themes[i].ttval = themeLoc[i].ttval;
+			theme_id j = ThemeGood[GenerateRnd(4)];
+			while (!SpecialThemeFit(i, j)) {
+				j = (theme_id)GenerateRnd(17);
+			}
+			themes[i].ttype = j;
+		}
+	}
+	numthemes += themeCount;
 }
 
 void HoldThemeRooms()
@@ -445,7 +447,7 @@ void HoldThemeRooms()
 	if (currlevel == 16)
 		return;
 
-	if (leveltype != DTYPE_CATHEDRAL) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT) {
 		DRLG_HoldThemeRooms();
 		return;
 	}
@@ -498,8 +500,8 @@ void PlaceThemeMonsts(int t, int f)
  */
 void Theme_Barrel(int t)
 {
-	char barrnd[4] = { 2, 6, 4, 8 };
-	char monstrnd[4] = { 5, 7, 3, 9 };
+	int barrnd[6] = { 2, 6, 4, 8, 4, 2 };
+	int monstrnd[6] = { 5, 7, 3, 9, 3, 5 };
 
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
@@ -524,7 +526,7 @@ void Theme_Barrel(int t)
  */
 void Theme_Shrine(int t)
 {
-	char monstrnd[4] = { 6, 6, 3, 9 };
+	int monstrnd[6] = { 6, 6, 3, 9, 3, 6 };
 
 	TFit_Shrine(t);
 	if (themeVar1 == 1) {
@@ -546,7 +548,7 @@ void Theme_Shrine(int t)
  */
 void Theme_MonstPit(int t)
 {
-	uint8_t monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	int r = GenerateRnd(100) + 1;
 	int ixp = 0;
@@ -578,7 +580,7 @@ void Theme_MonstPit(int t)
  */
 void Theme_SkelRoom(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	TFit_SkelRoom(t);
 
@@ -651,8 +653,8 @@ void Theme_SkelRoom(int t)
  */
 void Theme_Treasure(int t)
 {
-	int8_t treasrnd[4] = { 4, 9, 7, 10 };
-	int8_t monstrnd[4] = { 6, 8, 3, 7 };
+	int treasrnd[6] = { 4, 9, 7, 10, 7, 4 };
+	int monstrnd[6] = { 6, 8, 3, 7, 3, 6 };
 
 	AdvanceRndSeed();
 	for (int yp = 0; yp < MAXDUNY; yp++) {
@@ -669,7 +671,7 @@ void Theme_Treasure(int t)
 					CreateRndItem({ xp, yp }, false, false, true);
 					ItemNoFlippy();
 				}
-				if (rv >= treasureType - 2 && leveltype != DTYPE_CATHEDRAL) {
+				if (rv >= treasureType - 2 && IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT)) {
 					Item &item = Items[ActiveItems[ActiveItemCount - 1]];
 					if (item.IDidx == IDI_GOLD) {
 						item._ivalue = std::max(item._ivalue / 2, 1);
@@ -688,8 +690,8 @@ void Theme_Treasure(int t)
  */
 void Theme_Library(int t)
 {
-	char librnd[4] = { 1, 2, 2, 5 };
-	char monstrnd[4] = { 5, 7, 3, 9 };
+	int librnd[6] = { 1, 2, 2, 5, 2, 1 };
+	int monstrnd[6] = { 5, 7, 3, 9, 3, 5 };
 
 	TFit_Shrine(t);
 
@@ -735,8 +737,8 @@ void Theme_Library(int t)
  */
 void Theme_Torture(int t)
 {
-	char tortrnd[4] = { 6, 8, 3, 8 };
-	char monstrnd[4] = { 6, 8, 3, 9 };
+	int tortrnd[6] = { 6, 8, 3, 8, 3, 6 };
+	int monstrnd[6] = { 6, 8, 3, 9, 3, 6 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -758,7 +760,7 @@ void Theme_Torture(int t)
  */
 void Theme_BloodFountain(int t)
 {
-	char monstrnd[4] = { 6, 8, 3, 9 };
+	int monstrnd[6] = { 6, 8, 3, 9, 3, 6 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_BLOODFTN, { themex, themey });
@@ -772,8 +774,8 @@ void Theme_BloodFountain(int t)
  */
 void Theme_Decap(int t)
 {
-	char decaprnd[4] = { 6, 8, 3, 8 };
-	char monstrnd[4] = { 6, 8, 3, 9 };
+	int decaprnd[6] = { 6, 8, 3, 8, 3, 6 };
+	int monstrnd[6] = { 6, 8, 3, 9, 3, 6 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -796,7 +798,7 @@ void Theme_Decap(int t)
  */
 void Theme_PurifyingFountain(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_PURIFYINGFTN, { themex, themey });
@@ -810,8 +812,8 @@ void Theme_PurifyingFountain(int t)
  */
 void Theme_ArmorStand(int t)
 {
-	char armorrnd[4] = { 6, 8, 3, 8 };
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int armorrnd[6] = { 6, 8, 3, 8, 3, 6 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	if (armorFlag) {
 		TFit_Obj3(themes[t].ttval);
@@ -857,7 +859,7 @@ void Theme_GoatShrine(int t)
  */
 void Theme_Cauldron(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_CAULDRON, { themex, themey });
@@ -871,7 +873,7 @@ void Theme_Cauldron(int t)
  */
 void Theme_MurkyFountain(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_MURKYFTN, { themex, themey });
@@ -885,7 +887,7 @@ void Theme_MurkyFountain(int t)
  */
 void Theme_TearFountain(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_TEARFTN, { themex, themey });
@@ -900,8 +902,8 @@ void Theme_TearFountain(int t)
 void Theme_BrnCross(int t)
 {
 	int8_t regionId = themes[t].ttval;
-	char monstrnd[4] = { 6, 8, 3, 9 };
-	char bcrossrnd[4] = { 5, 7, 3, 8 };
+	int monstrnd[6] = { 6, 8, 3, 9, 3, 6 };
+	int bcrossrnd[6] = { 5, 7, 3, 8, 3, 5 };
 
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
@@ -925,8 +927,8 @@ void Theme_BrnCross(int t)
 void Theme_WeaponRack(int t)
 {
 	int8_t regionId = themes[t].ttval;
-	char weaponrnd[4] = { 6, 8, 5, 8 };
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int weaponrnd[6] = { 6, 8, 5, 8, 5, 6 };
+	int monstrnd[6] = { 6, 7, 3, 9, 3, 6 };
 
 	if (weaponFlag) {
 		TFit_Obj3(regionId);
@@ -963,7 +965,7 @@ void UpdateL4Trans()
 
 void CreateThemeRooms()
 {
-	if (currlevel == 16) {
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		return;
 	}
 	ApplyObjectLighting = true;

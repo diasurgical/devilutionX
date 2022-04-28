@@ -66,17 +66,17 @@ Cutscenes PickCutscene(interface_mode uMsg)
 		case DTYPE_TOWN:
 			return CutTown;
 		case DTYPE_CATHEDRAL:
-			if (lvl > 16)
-				return CutLevel5;
 			return CutLevel1;
 		case DTYPE_CATACOMBS:
 			return CutLevel2;
 		case DTYPE_CAVES:
-			if (lvl > 16)
-				return CutLevel6;
 			return CutLevel3;
 		case DTYPE_HELL:
 			return CutLevel4;
+		case DTYPE_NEST:
+			return CutLevel6;
+		case DTYPE_CRYPT:
+			return CutLevel5;
 		default:
 			return CutLevel1;
 		}
