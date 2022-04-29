@@ -584,8 +584,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 		auto &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
-			const Displacement center { CalculateWidth2(player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96), 0 };
-			const Point playerRenderPosition { targetBufferPosition + player.position.offset - center };
+			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
 			DrawPlayer(out, i, tilePosition, playerRenderPosition);
 		}
 	}
