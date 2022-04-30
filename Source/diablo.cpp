@@ -2044,7 +2044,7 @@ void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
-	_music_id neededTrack = static_cast<_music_id>(leveltype);
+	_music_id neededTrack = GetLevelMusic(leveltype);
 
 	if (neededTrack != sgnMusicTrack)
 		music_stop();

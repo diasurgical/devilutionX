@@ -222,6 +222,28 @@ void snd_deinit()
 	gbSndInited = false;
 }
 
+_music_id GetLevelMusic(dungeon_type dungeonType)
+{
+	switch (dungeonType) {
+	case DTYPE_TOWN:
+		return TMUSIC_TOWN;
+	case DTYPE_CATHEDRAL:
+		return TMUSIC_CATHEDRAL;
+	case DTYPE_CATACOMBS:
+		return TMUSIC_CATACOMBS;
+	case DTYPE_CAVES:
+		return TMUSIC_CAVES;
+	case DTYPE_HELL:
+		return TMUSIC_HELL;
+	case DTYPE_NEST:
+		return TMUSIC_NEST;
+	case DTYPE_CRYPT:
+		return TMUSIC_CRYPT;
+	default:
+		return TMUSIC_INTRO;
+	}
+}
+
 void music_stop()
 {
 	music.Release();
@@ -260,7 +282,7 @@ void music_start(_music_id nTrack)
 		return;
 	}
 
-	sgnMusicTrack = (_music_id)nTrack;
+	sgnMusicTrack = nTrack;
 }
 
 void sound_disable_music(bool disable)

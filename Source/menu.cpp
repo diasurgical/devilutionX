@@ -20,27 +20,31 @@ uint32_t gSaveNumber;
 
 namespace {
 
-/** The active music track id for the main menu. */
-_music_id menu_music_track_id = TMUSIC_INTRO;
+_music_id NextTrack()
+{
+	if (gbIsSpawn) {
+		return TMUSIC_INTRO;
+	}
+
+	switch (sgnMusicTrack) {
+	case TMUSIC_INTRO:
+		return TMUSIC_CATACOMBS;
+	case TMUSIC_CATACOMBS:
+		return TMUSIC_CAVES;
+	case TMUSIC_CAVES:
+		return TMUSIC_HELL;
+	case TMUSIC_HELL:
+		return TMUSIC_NEST;
+	case TMUSIC_NEST:
+		return TMUSIC_CRYPT;
+	default:
+		return TMUSIC_INTRO;
+	}
+}
 
 void RefreshMusic()
 {
-	music_start(menu_music_track_id);
-
-	if (gbIsSpawn && !gbIsHellfire) {
-		return;
-	}
-
-	int nextTrack = (int)menu_music_track_id;
-	do {
-		nextTrack++;
-		if (nextTrack == NUM_MUSIC || (!gbIsHellfire && nextTrack > TMUSIC_HELL))
-			nextTrack = TMUSIC_CATACOMBS;
-		if (gbIsSpawn && nextTrack > TMUSIC_CATHEDRAL)
-			nextTrack = TMUSIC_NEST;
-	} while (nextTrack == TMUSIC_TOWN || nextTrack == TMUSIC_CATHEDRAL);
-
-	menu_music_track_id = (_music_id)nextTrack;
+	music_start(NextTrack());
 }
 
 bool InitMenu(_selhero_selections type)

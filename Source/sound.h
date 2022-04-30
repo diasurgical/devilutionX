@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 
+#include "gendung.h"
 #include "miniwin/miniwin.h"
 
 #ifndef NOSOUND
@@ -58,6 +59,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream = false);
 void snd_init();
 void snd_deinit();
+_music_id GetLevelMusic(dungeon_type dungeonType);
 void music_stop();
 void music_start(_music_id nTrack);
 void sound_disable_music(bool disable);
