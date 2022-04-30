@@ -103,6 +103,9 @@ std::vector<std::string> GetLocales()
 		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
 	locales.emplace_back(vita_locales[language]);
 	sceAppUtilShutdown();
+
+#elif defined(__ORBIS__)
+	// use default
 #elif defined(__3DS__)
 	locales.push_back(n3ds::GetLocale());
 #elif defined(_WIN32)
