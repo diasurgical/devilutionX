@@ -4,8 +4,163 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## DevilutionX 1.3.0
+## DevilutionX 1.4.0
+### Features
+#### Translations
+- Added support for Ukraine 🇺🇦
+- Added Greek localization
+- Added Japanese translation
+- Added Swedish translation
+- Fix some items causing crashes for Spanish and French translations
+- Improve Bulgarian localization
+- Improve Chinese (Simplified) localization
+- Improve Croatian localization
+- Improve Czech localization
+- Improve French localization
+- Improve German localization
+- Improve Italian localization
+- Improve Korean localization
+- Improve Portuguese localization
+- Improve Romanian localization
+- Improve Russian localization (optional dub by Stream)
+- Improve Spanish localization
+#### Gameplay
+- Added a stash at Gillian's house
+- Remove missile limit
+- Added settings menu
+- Added xp share indicator to monster health bar
+- Added option to see exact health/mana
+#### Platforms
+- Added support for iOS
+- Added support for Nintendo 2DS
+- Added support for PlayStation 4
+- Added support for Xbox One/Series
+- Discord Rich Presence
+- Android: Auto Backup
+- Android: Added game data import shortcut
+- Windows: Auto detect language
+- Windows: Prefer Direct3D 11 for upscaling
+#### Graphics / Audio
+- Always draw hotkeys on spell list
+- Do not stop music when navigating in the main menu
+- Don't hide automap when opening help screen
+- Don't restart music if the same track is played
+- Match unique monster's missiles color to their owner's
+- Show game Difficulty in Automap
+- Use unique unused graphics for Long War Bow
+- Display numeric max resists on character panel
+- Add additional emojis
+- Mute videos when minimized
+- MP3 support
+- Remove stippled transparency option
+#### Multiplayer
+- Improve how public games are displayed
+- Revamped chat
+- Added a chat log
+- Enable dungeon messages
+- OpenDingux Lepus: Enable ZeroTier
+#### Controls
+- A large number of actions can now be mapped to custom keys
+- Increase spell hotkeys from 4 to 12
+- Quick cast option
+- Added support for touch controls on all devices
+- Prevent spells from targeting other players in friendly mode
+- Slightly more responsive player control
+- Add support for multiple lines in quick messages
+- Make main menu react to mouse up instead of mouse down
+- Android: Auto hide touch UI when not in use
+- mouse: Support for extra buttons
+- gamepad: Hold button to repeat action
+- gamepad: Make scrolls usable from the inventory
+- gamepad: Graphical circle menus
+- touch: Spend stat points when clicking the buttons
+- touch: Disable stand button when in town
+- touch: Enable navigating the spell book
+- 3DS: Add support for the C-stick
+#### Stability / Performance / System
+- Embed assets
+- Fine grain control of startup splashes
+- Load custom assets from save folder instead of last known MPQ folder
+- Reduce default debug output
+- Reduce memory consumption during movies
+- Support compressed MPQs
+### Bugfixes
+#### Gameplay
+- Ring of Engagement having too high armor penetration in Hellfire
+#### Platforms
+- Android: Remove broken quit menu
+- Vita/Switch/3DS: Fix support for voice packs
+#### Graphics / Audio
+- Correct Diablo's HP (in non-Hellfire games)
+- Correct the number of items sold by Adria (in non-Hellfire games)
+- Berserked monsters not fighting each other
+- Colored border showing around hardware cursor
+- Durability overflow not behaving as expected
+- Hero flickering briefly when dying from a barrel
+- Only use Hardware Cursor if supported
+- Various text rendering improvements
+- Windows: Restore default audio driver (WASAPI)
+- Windows: Fix window scaling
+#### Multiplayer
+- Correct network error messages
+- Improve handling of high latency
+- Multiplayer being paused after minimizing during loading
+#### Controls
+- Fix some joysticks not working
+- Item highlighting getting stuck when walking on top of items
+- Missing OK button on error screens
+- Targeting entrances below the original panel height
+- macOS: Mouse confined to a portion of the screen
+- gamepad: Minor improvement to UI navigation
+#### Stability / Performance / System
+- Fix multiple crashes
+- Improve multiplayer stability
+### Bugfixes for original Diablo bugs
+#### Gameplay
+- Add gold to inventory in a consistent manner
+- Correct cow collision box
+- Final Dungeon Message not playing
+- Knockback being able to push monsters on top of each other
+- Lightning Arrow extra damage not always being applied
+- Mana Shield effectiveness not improving with spell level
+- Minor rounding error in monster damage
+- Negative stats incorrectly preventing use of items
+- Shrines incorrectly lowering Life/Mana below the minimum
+- Some empty tiles in hell blocking movement and missiles
+- Some levels changing layout after loading
+- Some monsters were placed on top of doors
+#### Graphics / Audio
+- Align various game texts
+- Center panel text when holding red items
+- Correct death animation when wearing armor
+- Missing torches near traps
+#### Multiplayer
+- Fix multiple dsync issues
+- Auric amulet affecting all players
+#### Stability / Performance / System
+- Various stability issues
+- Various item corruption issues
+- Various typos
+- Game freezing if low level hero interacts with the slain hero
+- Support systems with no GPU
+### Bugfixes for original Hellfire bugs
+#### Gameplay
+- Mana Shield effectiveness decreasing with spell level
+- Torchant and Hellbat damage range being ignored
+- Monsters dying multiple times from Reflect + Thorn
+- Monk's staff did not take damage when blocking
+#### Graphics / Audio
+- Blocked arrows always rotate south
+#### Multiplayer
+- Main quest items disappearing
+- Cow quest getting stuck
+### Known issues
+#### Platform
+- PS4: The games fail to launch without a default ini, please see #4443
+- Clicking an empty hero slot will crash the game
+- Xbo/s: Missing translation files (download and add devilutionx.mpq)
 
+## DevilutionX 1.3.0
 ### Features
 #### Platforms
 - Added support for [Android](https://play.google.com/store/apps/details?id=org.diasurgical.devilutionx) (please leave us a review 🤗)
