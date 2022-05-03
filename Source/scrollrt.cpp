@@ -1390,7 +1390,7 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
 		}
 		if (drawDesc) {
-			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 60);
+			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 63);
 		}
 		if (drawMana) {
 			DoBlitScreen(PANEL_LEFT + 460, PANEL_TOP, 88, 72);
