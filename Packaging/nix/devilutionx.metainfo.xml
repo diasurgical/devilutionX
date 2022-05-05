@@ -3,7 +3,7 @@
   <id>org.diasurgical.DevilutionX</id>
   
   <name>DevilutionX</name>
-  <summary>Diablo/Hellfire source port for modern operating systems</summary>
+  <summary>Diablo/Hellfire reimplementation for modern operating systems</summary>
   
   <metadata_license>CC-BY-SA-4.0</metadata_license>
   <project_license>UPL-1.0</project_license>
@@ -17,7 +17,7 @@
   
   <description>
     <p>
-      DevilutionX is a source port of Diablo and Hellfire that strives to make it simple to run the game while providing engine improvements, bugfixes, and some optional quality of life features. This includes support for modern operating systems and higher resolutions, controller and touch control support, stash, optional experience and enemy health bars, etc.
+      DevilutionX is a reimplementation of Diablo and Hellfire that strives to make it simple to run the game while providing engine improvements, bugfixes, and some optional quality of life features. This includes support for modern operating systems and higher resolutions, controller and touch control support, stash, optional experience and enemy health bars, etc.
     </p>
     <p>
       Note: DevilutionX requires data files from original Diablo/Hellfire. Alternatively, a demo version of Diablo can be downloaded.
