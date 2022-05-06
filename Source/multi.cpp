@@ -621,7 +621,7 @@ void multi_process_network_packets()
 		auto &player = Players[dwID];
 		if (!IsNetPlayerValid(player)) {
 			_cmd_id cmd = *(const _cmd_id *)(pkt + 1);
-			if (IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
+			if (gbBufferMsgs == 0 && IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
 				// Distrust all messages until
 				// player info is received
 				continue;
