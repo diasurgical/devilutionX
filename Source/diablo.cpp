@@ -2173,7 +2173,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				[[maybe_unused]] uint32_t mid3Seed = GetLCGEngineState();
 				InitMissiles();
 				InitCorpses();
-#if _DEBUG
+#ifdef _DEBUG
 				SetDebugLevelSeedInfos(mid1Seed, mid2Seed, mid3Seed, GetLCGEngineState());
 #endif
 
