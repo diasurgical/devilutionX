@@ -13,6 +13,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "sound.h"
+#include "sound_defs.hpp"
 #include "utils/language.h"
 
 namespace devilution {

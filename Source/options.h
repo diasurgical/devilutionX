@@ -7,7 +7,9 @@
 #include <SDL_version.h>
 
 #include "pack.h"
+#include "sound_defs.hpp"
 #include "utils/enum_traits.h"
+#include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
@@ -41,6 +43,18 @@ enum class ScalingQuality {
 	AnisotropicFiltering,
 };
 
+enum class Resampler {
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
+	Speex = 0,
+#endif
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
+	SDL,
+#endif
+};
+
+string_view ResamplerToString(Resampler resampler);
+std::optional<Resampler> ResamplerFromString(string_view resampler);
+
 enum class OptionEntryType {
 	Boolean,
 	List,
@@ -72,8 +86,8 @@ use_enum_as_flags(OptionEntryFlags);
 class OptionEntryBase {
 public:
 	OptionEntryBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
-	    : key(key)
-	    , flags(flags)
+	    : flags(flags)
+	    , key(key)
 	    , name(name)
 	    , description(description)
 	{
@@ -89,9 +103,10 @@ public:
 	virtual void LoadFromIni(string_view category) = 0;
 	virtual void SaveToIni(string_view category) const = 0;
 
+	OptionEntryFlags flags;
+
 protected:
 	string_view key;
-	OptionEntryFlags flags;
 	string_view name;
 	string_view description;
 	void NotifyValueChanged();
@@ -301,6 +316,29 @@ private:
 	void CheckResolutionsAreInitialized() const;
 };
 
+class OptionEntryResampler : public OptionEntryListBase {
+public:
+	OptionEntryResampler();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	Resampler operator*() const
+	{
+		return resampler_;
+	}
+
+private:
+	void UpdateDependentOptions() const;
+
+	Resampler resampler_;
+};
+
 struct OptionCategoryBase {
 	OptionCategoryBase(string_view key, string_view name, string_view description);
 
@@ -366,13 +404,15 @@ struct AudioOptions : OptionCategoryBase {
 	/** @brief Picking up items emits the items pickup sound. */
 	OptionEntryBoolean itemPickupSound;
 
-	/** @brief Output sample rate (Hz) */
+	/** @brief Output sample rate (Hz). */
 	OptionEntryInt<std::uint32_t> sampleRate;
 	/** @brief The number of output channels (1 or 2) */
 	OptionEntryInt<std::uint8_t> channels;
 	/** @brief Buffer size (number of frames per channel) */
 	OptionEntryInt<std::uint32_t> bufferSize;
-	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest) */
+	/** @brief Resampler implementation. */
+	OptionEntryResampler resampler;
+	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest). Available for the speex resampler only. */
 	OptionEntryInt<std::uint8_t> resamplingQuality;
 };
 

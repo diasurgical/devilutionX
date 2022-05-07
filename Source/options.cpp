@@ -64,6 +64,15 @@ constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::Invisible;
 constexpr OptionEntryFlags OnlyIfSupportsWindowed = OptionEntryFlags::None;
 #endif
 
+constexpr size_t NumResamplers =
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
+    1 +
+#endif
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
+    1 +
+#endif
+    0;
+
 std::string GetIniPath()
 {
 	auto path = paths::ConfigPath() + std::string("diablo.ini");
@@ -145,9 +154,11 @@ float GetIniFloat(const char *sectionName, const char *keyName, float defaultVal
 	return (float)GetIni().GetDoubleValue(sectionName, keyName, defaultValue);
 }
 
-bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "")
+bool GetIniValue(string_view sectionName, string_view keyName, char *string, int stringSize, const char *defaultString = "")
 {
-	const char *value = GetIni().GetValue(sectionName, keyName);
+	std::string sectionNameStr { sectionName };
+	std::string keyNameStr { keyName };
+	const char *value = GetIni().GetValue(sectionNameStr.c_str(), keyNameStr.c_str());
 	if (value == nullptr) {
 		CopyUtf8(string, defaultString, stringSize);
 		return false;
@@ -186,11 +197,14 @@ void SetIniValue(const char *keyname, const char *valuename, float value)
 	GetIni().SetDoubleValue(keyname, valuename, value, nullptr, true);
 }
 
-void SetIniValue(const char *sectionName, const char *keyName, const char *value)
+void SetIniValue(string_view sectionName, string_view keyName, string_view value)
 {
-	IniChangedChecker changedChecker(sectionName, keyName);
+	std::string sectionNameStr { sectionName };
+	std::string keyNameStr { keyName };
+	std::string valueStr { value };
+	IniChangedChecker changedChecker(sectionNameStr.c_str(), keyNameStr.c_str());
 	auto &ini = GetIni();
-	ini.SetValue(sectionName, keyName, value, nullptr, true);
+	ini.SetValue(sectionNameStr.c_str(), keyNameStr.c_str(), valueStr.c_str(), nullptr, true);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, const std::vector<std::string> &stringValues)
@@ -612,19 +626,13 @@ AudioOptions::AudioOptions()
     , sampleRate("Sample Rate", OptionEntryFlags::CantChangeInGame, N_("Sample Rate"), N_("Output sample rate (Hz)."), DEFAULT_AUDIO_SAMPLE_RATE, { 22050, 44100, 48000 })
     , channels("Channels", OptionEntryFlags::CantChangeInGame, N_("Channels"), N_("Number of output channels."), DEFAULT_AUDIO_CHANNELS, { 1, 2 })
     , bufferSize("Buffer Size", OptionEntryFlags::CantChangeInGame, N_("Buffer Size"), N_("Buffer size (number of frames per channel)."), DEFAULT_AUDIO_BUFFER_SIZE, { 1024, 2048, 5120 })
-    , resamplingQuality("Resampling Quality",
-          OptionEntryFlags::CantChangeInGame |
-#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
-              OptionEntryFlags::Invisible,
-#else
-              OptionEntryFlags::None,
-#endif
-          N_("Resampling Quality"), N_("Quality of the resampler, from 0 (lowest) to 10 (highest)."), DEFAULT_AUDIO_RESAMPLING_QUALITY, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+    , resamplingQuality("Resampling Quality", OptionEntryFlags::CantChangeInGame, N_("Resampling Quality"), N_("Quality of the resampler, from 0 (lowest) to 10 (highest)."), DEFAULT_AUDIO_RESAMPLING_QUALITY, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
 {
 	sampleRate.SetValueChangedCallback(OptionAudioChanged);
 	channels.SetValueChangedCallback(OptionAudioChanged);
 	bufferSize.SetValueChangedCallback(OptionAudioChanged);
 	resamplingQuality.SetValueChangedCallback(OptionAudioChanged);
+	resampler.SetValueChangedCallback(OptionAudioChanged);
 }
 std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 {
@@ -637,6 +645,7 @@ std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 		&sampleRate,
 		&channels,
 		&bufferSize,
+		&resampler,
 		&resamplingQuality,
 	};
 }
@@ -735,6 +744,67 @@ void OptionEntryResolution::SetActiveListIndex(size_t index)
 {
 	size = resolutions[index].first;
 	NotifyValueChanged();
+}
+
+OptionEntryResampler::OptionEntryResampler()
+    : OptionEntryListBase("Resampler", OptionEntryFlags::CantChangeInGame
+            // When there are exactly 2 options there is no submenu, so we need to recreate the UI
+            // to reflect the change in the "Resampling quality" setting visibility.
+            | (NumResamplers == 2 ? OptionEntryFlags::RecreateUI : OptionEntryFlags::None),
+        N_("Resampler"), N_("Audio resampler"))
+{
+}
+void OptionEntryResampler::LoadFromIni(string_view category)
+{
+	char resamplerStr[32];
+	if (GetIniValue(category, key, resamplerStr, sizeof(resamplerStr))) {
+		std::optional<Resampler> resampler = ResamplerFromString(resamplerStr);
+		if (resampler) {
+			resampler_ = *resampler;
+			UpdateDependentOptions();
+			return;
+		}
+	}
+	resampler_ = Resampler::DEVILUTIONX_DEFAULT_RESAMPLER;
+	UpdateDependentOptions();
+}
+
+void OptionEntryResampler::SaveToIni(string_view category) const
+{
+	SetIniValue(category, key, ResamplerToString(resampler_));
+}
+
+size_t OptionEntryResampler::GetListSize() const
+{
+	return NumResamplers;
+}
+
+string_view OptionEntryResampler::GetListDescription(size_t index) const
+{
+	return ResamplerToString(static_cast<Resampler>(index));
+}
+
+size_t OptionEntryResampler::GetActiveListIndex() const
+{
+	return static_cast<size_t>(resampler_);
+}
+
+void OptionEntryResampler::SetActiveListIndex(size_t index)
+{
+	resampler_ = static_cast<Resampler>(index);
+	UpdateDependentOptions();
+	NotifyValueChanged();
+}
+
+void OptionEntryResampler::UpdateDependentOptions() const
+{
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
+	if (resampler_ == Resampler::Speex) {
+		sgOptions.Audio.resamplingQuality.flags &= ~OptionEntryFlags::Invisible;
+	} else {
+		sgOptions.Audio.resamplingQuality.flags |= OptionEntryFlags::Invisible;
+	}
+#endif
 }
 
 GraphicsOptions::GraphicsOptions()
@@ -922,7 +992,7 @@ OptionEntryLanguageCode::OptionEntryLanguageCode()
 }
 void OptionEntryLanguageCode::LoadFromIni(string_view category)
 {
-	if (GetIniValue(category.data(), key.data(), szCode, sizeof(szCode))) {
+	if (GetIniValue(category, key, szCode, sizeof(szCode))) {
 		if (HasTranslation(szCode)) {
 			// User preferred language is available
 			return;
@@ -965,7 +1035,7 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 }
 void OptionEntryLanguageCode::SaveToIni(string_view category) const
 {
-	SetIniValue(category.data(), key.data(), szCode);
+	SetIniValue(category, key, szCode);
 }
 
 void OptionEntryLanguageCode::CheckLanguagesAreInitialized() const
@@ -1243,6 +1313,40 @@ uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
 		}
 	}
 	return DVL_VK_INVALID;
+}
+
+namespace {
+constexpr char ResamplerSpeex[] = "Speex";
+constexpr char ResamplerSDL[] = "SDL";
+} // namespace
+
+string_view ResamplerToString(Resampler resampler)
+{
+	switch (resampler) {
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
+	case Resampler::Speex:
+		return ResamplerSpeex;
+#endif
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
+	case Resampler::SDL:
+		return ResamplerSDL;
+#endif
+	default:
+		return "";
+	}
+}
+
+std::optional<Resampler> ResamplerFromString(string_view resampler)
+{
+#ifdef DEVILUTIONX_RESAMPLER_SPEEX
+	if (resampler == ResamplerSpeex)
+		return Resampler::Speex;
+#endif
+#ifdef DVL_AULIB_SUPPORTS_SDL_RESAMPLER
+	if (resampler == ResamplerSDL)
+		return Resampler::SDL;
+#endif
+	return std::nullopt;
 }
 
 } // namespace devilution
