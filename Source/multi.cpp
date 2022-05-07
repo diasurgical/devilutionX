@@ -226,6 +226,10 @@ void ParseTurn(int pnum, uint32_t turn)
 
 void PlayerLeftMsg(int pnum, bool left)
 {
+	if (pnum == MyPlayerId) {
+		return;
+	}
+
 	auto &player = Players[pnum];
 
 	if (!player.plractive) {
