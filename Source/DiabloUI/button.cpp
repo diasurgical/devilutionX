@@ -1,29 +1,28 @@
 #include "DiabloUI/button.h"
-#include "DiabloUI/art_draw.h"
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/errorart.h"
+#include "engine/render/pcx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/display.h"
 
 namespace devilution {
 
-Art SmlButton;
-
-void LoadSmlButtonArt()
+PcxSprite ButtonSprite(bool pressed)
 {
-	LoadArt(&SmlButton, ButtonData, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT * 2, 2);
+	return PcxSprite { pressed ? ButtonPcxPressed : ButtonPcxDefault, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 }
 
 void RenderButton(UiButton *button)
 {
-	DrawArt({ button->m_rect.x, button->m_rect.y }, button->GetArt(), button->GetFrame(), button->m_rect.w, button->m_rect.h);
+	const Surface &out = Surface(DiabloUiSurface());
+	RenderPcxSprite(out, ButtonSprite(button->IsPressed()), { button->m_rect.x, button->m_rect.y });
 
 	Rectangle textRect { { button->m_rect.x, button->m_rect.y }, { button->m_rect.w, button->m_rect.h } };
 	if (!button->IsPressed()) {
 		--textRect.position.y;
 	}
 
-	const Surface &out = Surface(DiabloUiSurface());
 	DrawString(out, button->GetText(), textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
 }
 

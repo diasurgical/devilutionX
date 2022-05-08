@@ -33,11 +33,10 @@ void ProgressLoad()
 	ArtPopupSm = LoadPcxAsset("ui_art\\spopup.pcx");
 	ArtProgBG = LoadPcxAsset("ui_art\\prog_bg.pcx");
 	ProgFil = LoadPcxAsset("ui_art\\prog_fil.pcx");
-	LoadSmlButtonArt();
 
 	const Point uiPosition = GetUIRectangle().position;
 	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 265), (Sint16)(uiPosition.y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-	vecProgress.push_back(std::make_unique<UiButton>(&SmlButton, _("Cancel"), &DialogActionCancel, rect3));
+	vecProgress.push_back(std::make_unique<UiButton>(_("Cancel"), &DialogActionCancel, rect3));
 }
 
 void ProgressFree()
@@ -46,7 +45,6 @@ void ProgressFree()
 	ArtPopupSm = std::nullopt;
 	ArtProgBG = std::nullopt;
 	ProgFil = std::nullopt;
-	UnloadSmlButtonArt();
 }
 
 void ProgressRender(BYTE progress)
@@ -65,7 +63,8 @@ void ProgressRender(BYTE progress)
 		const int w = 227 * progress / 100;
 		RenderPcxSprite(out.subregion(x, 0, w, out.h()), PcxSprite { *ProgFil }, { 0, position.y + 52 });
 	}
-	DrawArt({ GetCenterOffset(110), position.y + 99 }, &SmlButton, 2, 110);
+	// Not rendering an actual button, only the top 2 rows of its graphics.
+	RenderPcxSprite(out.subregionY(position.y + 99, 2), ButtonSprite(/*pressed=*/false), { GetCenterOffset(110), 0 });
 }
 
 } // namespace
