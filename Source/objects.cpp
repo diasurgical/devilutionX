@@ -1439,15 +1439,15 @@ void AddMushPatch()
 	}
 }
 
-void UpdateObjectLight(int i, int lightRadius)
+void UpdateObjectLight(Object &light, int lightRadius)
 {
-	if (Objects[i]._oVar1 == -1) {
+	if (light._oVar1 == -1) {
 		return;
 	}
 
 	bool turnon = false;
-	int ox = Objects[i].position.x;
-	int oy = Objects[i].position.y;
+	int ox = light.position.x;
+	int oy = light.position.y;
 	int tr = lightRadius + 10;
 	if (!DisableLighting) {
 		for (int p = 0; p < MAX_PLRS && !turnon; p++) {
@@ -1462,45 +1462,43 @@ void UpdateObjectLight(int i, int lightRadius)
 		}
 	}
 	if (turnon) {
-		if (Objects[i]._oVar1 == 0)
-			Objects[i]._olid = AddLight(Objects[i].position, lightRadius);
-		Objects[i]._oVar1 = 1;
+		if (light._oVar1 == 0)
+			light._olid = AddLight(light.position, lightRadius);
+		light._oVar1 = 1;
 	} else {
-		if (Objects[i]._oVar1 == 1)
-			AddUnLight(Objects[i]._olid);
-		Objects[i]._oVar1 = 0;
+		if (light._oVar1 == 1)
+			AddUnLight(light._olid);
+		light._oVar1 = 0;
 	}
 }
 
-void UpdateCircle(int i)
+void UpdateCircle(Object &circle)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer.position.tile != Objects[i].position) {
-		if (Objects[i]._otype == OBJ_MCIRCLE1)
-			Objects[i]._oAnimFrame = 1;
-		if (Objects[i]._otype == OBJ_MCIRCLE2)
-			Objects[i]._oAnimFrame = 3;
-		Objects[i]._oVar6 = 0;
+	if (myPlayer.position.tile != circle.position) {
+		if (circle._otype == OBJ_MCIRCLE1)
+			circle._oAnimFrame = 1;
+		if (circle._otype == OBJ_MCIRCLE2)
+			circle._oAnimFrame = 3;
+		circle._oVar6 = 0;
 		return;
 	}
 
-	int ox = Objects[i].position.x;
-	int oy = Objects[i].position.y;
-	if (Objects[i]._otype == OBJ_MCIRCLE1)
-		Objects[i]._oAnimFrame = 2;
-	if (Objects[i]._otype == OBJ_MCIRCLE2)
-		Objects[i]._oAnimFrame = 4;
-	if (ox == 45 && oy == 47) {
-		Objects[i]._oVar6 = 2;
-	} else if (ox == 26 && oy == 46) {
-		Objects[i]._oVar6 = 1;
+	if (circle._otype == OBJ_MCIRCLE1)
+		circle._oAnimFrame = 2;
+	if (circle._otype == OBJ_MCIRCLE2)
+		circle._oAnimFrame = 4;
+	if (circle.position == Point { 45, 47 }) {
+		circle._oVar6 = 2;
+	} else if (circle.position == Point { 26, 46 }) {
+		circle._oVar6 = 1;
 	} else {
-		Objects[i]._oVar6 = 0;
+		circle._oVar6 = 0;
 	}
-	if (ox == 35 && oy == 36 && Objects[i]._oVar5 == 3) {
-		Objects[i]._oVar6 = 4;
-		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+	if (circle.position == Point { 35, 36 } && circle._oVar5 == 3) {
+		circle._oVar6 = 4;
+		ObjChangeMapResync(circle._oVar1, circle._oVar2, circle._oVar3, circle._oVar4);
 		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 			Quests[Q_BETRAYER]._qvar1 = 4;
 		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
@@ -1511,37 +1509,37 @@ void UpdateCircle(int i)
 	}
 }
 
-void ObjectStopAnim(int i)
+void ObjectStopAnim(Object &object)
 {
-	if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen) {
-		Objects[i]._oAnimCnt = 0;
-		Objects[i]._oAnimDelay = 1000;
+	if (object._oAnimFrame == object._oAnimLen) {
+		object._oAnimCnt = 0;
+		object._oAnimDelay = 1000;
 	}
 }
 
-void UpdateDoor(int i)
+void UpdateDoor(Object &door)
 {
-	if (Objects[i]._oVar4 == 0) {
-		Objects[i]._oSelFlag = 3;
-		Objects[i]._oMissFlag = false;
+	if (door._oVar4 == 0) {
+		door._oSelFlag = 3;
+		door._oMissFlag = false;
 		return;
 	}
 
-	int dx = Objects[i].position.x;
-	int dy = Objects[i].position.y;
+	int dx = door.position.x;
+	int dy = door.position.y;
 	bool dok = dMonster[dx][dy] == 0;
 	dok = dok && dItem[dx][dy] == 0;
 	dok = dok && dCorpse[dx][dy] == 0;
 	dok = dok && dPlayer[dx][dy] == 0;
-	Objects[i]._oSelFlag = 2;
-	Objects[i]._oVar4 = dok ? 1 : 2;
-	Objects[i]._oMissFlag = true;
+	door._oSelFlag = 2;
+	door._oVar4 = dok ? 1 : 2;
+	door._oMissFlag = true;
 }
 
-void UpdateSarcoffagus(int i)
+void UpdateSarcoffagus(Object &sarcoffagus)
 {
-	if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen)
-		Objects[i]._oAnimFlag = 0;
+	if (sarcoffagus._oAnimFrame == sarcoffagus._oAnimLen)
+		sarcoffagus._oAnimFlag = 0;
 }
 
 void ActivateTrapLine(int ttype, int tid)
@@ -1557,46 +1555,46 @@ void ActivateTrapLine(int ttype, int tid)
 	}
 }
 
-void UpdateFlameTrap(int i)
+void UpdateFlameTrap(Object &trap)
 {
-	if (Objects[i]._oVar2 != 0) {
-		if (Objects[i]._oVar4 != 0) {
-			Objects[i]._oAnimFrame--;
-			if (Objects[i]._oAnimFrame == 1) {
-				Objects[i]._oVar4 = 0;
-				AddUnLight(Objects[i]._olid);
-			} else if (Objects[i]._oAnimFrame <= 4) {
-				ChangeLightRadius(Objects[i]._olid, Objects[i]._oAnimFrame);
+	if (trap._oVar2 != 0) {
+		if (trap._oVar4 != 0) {
+			trap._oAnimFrame--;
+			if (trap._oAnimFrame == 1) {
+				trap._oVar4 = 0;
+				AddUnLight(trap._olid);
+			} else if (trap._oAnimFrame <= 4) {
+				ChangeLightRadius(trap._olid, trap._oAnimFrame);
 			}
 		}
-	} else if (Objects[i]._oVar4 == 0) {
-		if (Objects[i]._oVar3 == 2) {
-			int x = Objects[i].position.x - 2;
-			int y = Objects[i].position.y;
+	} else if (trap._oVar4 == 0) {
+		if (trap._oVar3 == 2) {
+			int x = trap.position.x - 2;
+			int y = trap.position.y;
 			for (int j = 0; j < 5; j++) {
 				if (dPlayer[x][y] != 0 || dMonster[x][y] != 0)
-					Objects[i]._oVar4 = 1;
+					trap._oVar4 = 1;
 				x++;
 			}
 		} else {
-			int x = Objects[i].position.x;
-			int y = Objects[i].position.y - 2;
+			int x = trap.position.x;
+			int y = trap.position.y - 2;
 			for (int k = 0; k < 5; k++) {
 				if (dPlayer[x][y] != 0 || dMonster[x][y] != 0)
-					Objects[i]._oVar4 = 1;
+					trap._oVar4 = 1;
 				y++;
 			}
 		}
-		if (Objects[i]._oVar4 != 0)
-			ActivateTrapLine(Objects[i]._otype, Objects[i]._oVar1);
+		if (trap._oVar4 != 0)
+			ActivateTrapLine(trap._otype, trap._oVar1);
 	} else {
 		int damage[6] = { 6, 8, 10, 12, 10, 12 };
 
 		int mindam = damage[leveltype - 1];
 		int maxdam = mindam * 2;
 
-		int x = Objects[i].position.x;
-		int y = Objects[i].position.y;
+		int x = trap.position.x;
+		int y = trap.position.y;
 		if (dMonster[x][y] > 0)
 			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
 		if (dPlayer[x][y] > 0) {
@@ -1604,14 +1602,14 @@ void UpdateFlameTrap(int i)
 			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
 		}
 
-		if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen)
-			Objects[i]._oAnimFrame = 11;
-		if (Objects[i]._oAnimFrame <= 5)
-			ChangeLightRadius(Objects[i]._olid, Objects[i]._oAnimFrame);
+		if (trap._oAnimFrame == trap._oAnimLen)
+			trap._oAnimFrame = 11;
+		if (trap._oAnimFrame <= 5)
+			ChangeLightRadius(trap._olid, trap._oAnimFrame);
 	}
 }
 
-void UpdateBurningCrossDamage(int i)
+void UpdateBurningCrossDamage(Object &cross)
 {
 	int damage[6] = { 6, 8, 10, 12, 10, 12 };
 
@@ -1624,7 +1622,7 @@ void UpdateBurningCrossDamage(int i)
 	if (fireResist > 0)
 		damage[leveltype - 1] -= fireResist * damage[leveltype - 1] / 100;
 
-	if (myPlayer.position.tile.x != Objects[i].position.x || myPlayer.position.tile.y != Objects[i].position.y - 1)
+	if (myPlayer.position.tile != cross.position + Displacement { 0, -1 })
 		return;
 
 	ApplyPlrDamage(MyPlayerId, 0, 0, damage[leveltype - 1]);
@@ -5030,19 +5028,19 @@ void OperateTrap(Object &trap)
 void ProcessObjects()
 {
 	for (int i = 0; i < ActiveObjectCount; ++i) {
-		int oi = ActiveObjects[i];
-		switch (Objects[oi]._otype) {
+		Object &object = Objects[ActiveObjects[i]];
+		switch (object._otype) {
 		case OBJ_L1LIGHT:
-			UpdateObjectLight(oi, 10);
+			UpdateObjectLight(object, 10);
 			break;
 		case OBJ_SKFIRE:
 		case OBJ_CANDLE2:
 		case OBJ_BOOKCANDLE:
-			UpdateObjectLight(oi, 5);
+			UpdateObjectLight(object, 5);
 			break;
 		case OBJ_STORYCANDLE:
 		case OBJ_L5CANDLE:
-			UpdateObjectLight(oi, 3);
+			UpdateObjectLight(object, 3);
 			break;
 		case OBJ_CRUX1:
 		case OBJ_CRUX2:
@@ -5055,7 +5053,7 @@ void ProcessObjects()
 		case OBJ_URNEX:
 		case OBJ_SHRINEL:
 		case OBJ_SHRINER:
-			ObjectStopAnim(oi);
+			ObjectStopAnim(object);
 			break;
 		case OBJ_L1LDOOR:
 		case OBJ_L1RDOOR:
@@ -5065,49 +5063,49 @@ void ProcessObjects()
 		case OBJ_L3RDOOR:
 		case OBJ_L5LDOOR:
 		case OBJ_L5RDOOR:
-			UpdateDoor(oi);
+			UpdateDoor(object);
 			break;
 		case OBJ_TORCHL:
 		case OBJ_TORCHR:
 		case OBJ_TORCHL2:
 		case OBJ_TORCHR2:
-			UpdateObjectLight(oi, 8);
+			UpdateObjectLight(object, 8);
 			break;
 		case OBJ_SARC:
 		case OBJ_L5SARC:
-			UpdateSarcoffagus(oi);
+			UpdateSarcoffagus(object);
 			break;
 		case OBJ_FLAMEHOLE:
-			UpdateFlameTrap(oi);
+			UpdateFlameTrap(object);
 			break;
 		case OBJ_TRAPL:
 		case OBJ_TRAPR:
-			OperateTrap(Objects[oi]);
+			OperateTrap(object);
 			break;
 		case OBJ_MCIRCLE1:
 		case OBJ_MCIRCLE2:
-			UpdateCircle(oi);
+			UpdateCircle(object);
 			break;
 		case OBJ_BCROSS:
 		case OBJ_TBCROSS:
-			UpdateObjectLight(oi, 10);
-			UpdateBurningCrossDamage(oi);
+			UpdateObjectLight(object, 10);
+			UpdateBurningCrossDamage(object);
 			break;
 		default:
 			break;
 		}
-		if (Objects[oi]._oAnimFlag == 0)
+		if (object._oAnimFlag == 0)
 			continue;
 
-		Objects[oi]._oAnimCnt++;
+		object._oAnimCnt++;
 
-		if (Objects[oi]._oAnimCnt < Objects[oi]._oAnimDelay)
+		if (object._oAnimCnt < object._oAnimDelay)
 			continue;
 
-		Objects[oi]._oAnimCnt = 0;
-		Objects[oi]._oAnimFrame++;
-		if (Objects[oi]._oAnimFrame > Objects[oi]._oAnimLen)
-			Objects[oi]._oAnimFrame = 1;
+		object._oAnimCnt = 0;
+		object._oAnimFrame++;
+		if (object._oAnimFrame > object._oAnimLen)
+			object._oAnimFrame = 1;
 	}
 
 	for (int i = 0; i < ActiveObjectCount;) {
