@@ -9,6 +9,8 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "engine/load_pcx.hpp"
+#include "engine/pcx_sprite.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
@@ -21,6 +23,7 @@ namespace devilution {
 namespace {
 
 Art dialogArt;
+std::optional<OwnedPcxSprite> dialogPcx;
 std::string wrappedText;
 
 bool dialogEnd;
@@ -160,6 +163,21 @@ void LoadFallbackPalette()
 	BlackPalette();
 }
 
+std::optional<PcxSprite> LoadDialogSprite(bool hasCaption, bool isError)
+{
+	constexpr uint8_t TransparentColor = 255;
+	if (!hasCaption) {
+		dialogPcx = LoadPcxAsset(isError ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", TransparentColor);
+		return PcxSprite { *dialogPcx };
+	}
+	if (isError) {
+		LoadArt(&dialogArt, PopupData, 385, 280);
+		return std::nullopt;
+	}
+	dialogPcx = LoadPcxAsset("ui_art\\lpopup.pcx", TransparentColor);
+	return PcxSprite { *dialogPcx };
+}
+
 void Init(string_view caption, string_view text, bool error, bool renderBehind)
 {
 	if (!renderBehind) {
@@ -172,32 +190,35 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 		}
 	}
 
-	if (caption.empty()) {
-		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
-	} else if (error) {
-		LoadArt(&dialogArt, PopupData, 385, 280);
-	} else {
-		LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
-	}
-	LoadSmlButtonArt();
-
-	const int textWidth = dialogArt.w() - 40;
+	std::optional<PcxSprite> dialogSprite = LoadDialogSprite(!caption.empty(), error);
+	const int dialogWidth = dialogSprite ? dialogSprite->width() : dialogArt.w();
+	const int textWidth = dialogWidth - 40;
 
 	wrappedText = WordWrapString(text, textWidth, FontSizeDialog);
 
 	const Point uiPosition = GetUIRectangle().position;
 	if (caption.empty()) {
-		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogArt.w(), dialogArt.h());
-		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
+		if (dialogSprite) {
+			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogSprite->width(), dialogSprite->height());
+			vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
+		} else {
+			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogArt.w(), dialogArt.h());
+			vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
+		}
 
 		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 200, uiPosition.y + 211, textWidth, 80);
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
 		SDL_Rect rect3 = MakeSdlRect(uiPosition.x + 265, uiPosition.y + 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
-		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect3));
+		vecOkDialog.push_back(std::make_unique<UiButton>(_("OK"), &DialogActionOK, rect3));
 	} else {
-		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogArt.w(), dialogArt.h());
-		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
+		if (dialogSprite) {
+			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogSprite->width(), dialogSprite->height());
+			vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
+		} else {
+			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogArt.w(), dialogArt.h());
+			vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
+		}
 
 		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 110, textWidth, 20);
 		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogYellow));
@@ -206,14 +227,14 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect3, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
 		SDL_Rect rect4 = MakeSdlRect(uiPosition.x + 264, uiPosition.y + 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
-		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect4));
+		vecOkDialog.push_back(std::make_unique<UiButton>(_("OK"), &DialogActionOK, rect4));
 	}
 }
 
 void Deinit()
 {
 	dialogArt.Unload();
-	UnloadSmlButtonArt();
+	dialogPcx = std::nullopt;
 	vecOkDialog.clear();
 	ArtBackground = std::nullopt;
 }

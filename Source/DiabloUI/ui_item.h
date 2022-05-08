@@ -383,24 +383,12 @@ class UiButton : public UiItemBase {
 public:
 	using Callback = void (*)();
 
-	UiButton(Art *art, string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiButton(string_view text, Callback action, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Button, rect, flags)
-	    , art_(art)
 	    , text_(text)
 	    , action_(action)
 	    , pressed_(false)
 	{
-	}
-
-	[[nodiscard]] int GetFrame() const
-	{
-		// Frame 1 is a held button sprite, frame 0 is the default
-		return IsPressed() ? 1 : 0;
-	}
-
-	[[nodiscard]] Art *GetArt() const
-	{
-		return art_;
 	}
 
 	[[nodiscard]] string_view GetText() const
@@ -429,8 +417,6 @@ public:
 	}
 
 private:
-	Art *art_;
-
 	string_view text_;
 	Callback action_;
 
