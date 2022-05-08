@@ -125,7 +125,7 @@ void UiInitGameSelectionList(string_view search)
 	const Point uiPosition = GetUIRectangle().position;
 
 	SDL_Rect rectScrollbar = { (Sint16)(uiPosition.x + 590), (Sint16)(uiPosition.y + 244), 25, 178 };
-	vecSelGameDialog.push_back(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, rectScrollbar));
+	vecSelGameDialog.push_back(std::make_unique<UiScrollbar>(PcxSprite { *ArtScrollBarBackground }, PcxSprite { *ArtScrollBarThumb }, PcxSpriteSheet { *ArtScrollBarArrow }, rectScrollbar));
 
 	SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_(ConnectionNames[provider]).c_str(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
