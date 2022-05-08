@@ -88,3 +88,5 @@ CheckOptions:
   - { key: bugprone-signed-char-misuse.CharTypdefsToIgnore, value: "std::int8_t" }
 
   - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: true }
+
+  - { key: readability-identifier-length.MinimumLoopCounterNameLength, value: 1 }
