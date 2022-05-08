@@ -25,8 +25,8 @@ const uint8_t *SkipRestOfPcxLine(const uint8_t *src, unsigned remainingWidth)
 	}
 	return src;
 }
-template <bool UseColorMap>
-void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, const uint8_t *colorMap)
+template <bool UseColorMap, bool HasTransparency>
+void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, const uint8_t *colorMap, uint8_t transparentColor)
 {
 	while (position.y < 0 && srcHeight != 0) {
 		src = SkipRestOfPcxLine(src, srcWidth);
@@ -42,11 +42,18 @@ void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsign
 		for (unsigned x = 0; x < srcWidth;) {
 			const uint8_t value = *src++;
 			if (value <= PcxMaxSinglePixel) {
-				*dst++ = UseColorMap ? colorMap[value] : value;
+				const uint8_t color = UseColorMap ? colorMap[value] : value;
+				if (!(HasTransparency && color == transparentColor)) {
+					*dst = color;
+				}
+				++dst;
 				++x;
 			} else {
 				const uint8_t runLength = value & PcxRunLengthMask;
-				std::memset(dst, UseColorMap ? colorMap[*src++] : *src++, runLength);
+				const uint8_t color = UseColorMap ? colorMap[*src++] : *src++;
+				if (!(HasTransparency && color == transparentColor)) {
+					std::memset(dst, color, runLength);
+				}
 				dst += runLength;
 				x += runLength;
 			}
@@ -56,8 +63,8 @@ void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsign
 	}
 }
 
-template <bool UseColorMap>
-void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, ClipX clipX, const uint8_t *colorMap)
+template <bool UseColorMap, bool HasTransparency>
+void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, ClipX clipX, const uint8_t *colorMap, uint8_t transparentColor)
 {
 	while (position.y < 0 && srcHeight != 0) {
 		src = SkipRestOfPcxLine(src, srcWidth);
@@ -84,12 +91,17 @@ void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsig
 				const uint8_t runLength = value & PcxRunLengthMask;
 				if (runLength > remainingLeftClip) {
 					const uint8_t overshoot = runLength - remainingLeftClip;
+					const uint8_t color = UseColorMap ? colorMap[*src++] : *src++;
 					if (overshoot > remainingWidth) {
-						std::memset(dst, UseColorMap ? colorMap[*src++] : *src++, remainingWidth);
+						if (!(HasTransparency && color == transparentColor)) {
+							std::memset(dst, color, remainingWidth);
+						}
 						dst += remainingWidth;
 						remainingWidth = 0;
 					} else {
-						std::memset(dst, UseColorMap ? colorMap[*src++] : *src++, overshoot);
+						if (!(HasTransparency && color == transparentColor)) {
+							std::memset(dst, color, overshoot);
+						}
 						dst += overshoot;
 						remainingWidth -= overshoot;
 					}
@@ -110,13 +122,18 @@ void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsig
 				continue;
 			}
 			const uint8_t runLength = value & PcxRunLengthMask;
+			const uint8_t color = UseColorMap ? colorMap[*src++] : *src++;
 			if (runLength > remainingWidth) {
-				std::memset(dst, UseColorMap ? colorMap[*src++] : *src++, remainingWidth);
+				if (!(HasTransparency && color == transparentColor)) {
+					std::memset(dst, color, remainingWidth);
+				}
 				dst += remainingWidth;
 				remainingWidth -= runLength;
 				break;
 			} else {
-				std::memset(dst, UseColorMap ? colorMap[*src++] : *src++, runLength);
+				if (!(HasTransparency && color == transparentColor)) {
+					std::memset(dst, color, runLength);
+				}
 			}
 			dst += runLength;
 			remainingWidth -= runLength;
@@ -136,9 +153,17 @@ void BlitPcxSprite(const Surface &out, Point position, PcxSprite sprite, const u
 	if (clipX.width <= 0)
 		return;
 	if (static_cast<unsigned>(clipX.width) == sprite.width()) {
-		BlitPcxClipY<UseColorMap>(out, position, sprite.data(), sprite.width(), sprite.height(), colorMap);
+		if (sprite.transparentColor()) {
+			BlitPcxClipY<UseColorMap, /*HasTransparency=*/true>(out, position, sprite.data(), sprite.width(), sprite.height(), colorMap, *sprite.transparentColor());
+		} else {
+			BlitPcxClipY<UseColorMap, /*HasTransparency=*/false>(out, position, sprite.data(), sprite.width(), sprite.height(), colorMap, 0);
+		}
 	} else {
-		BlitPcxClipXY<UseColorMap>(out, position, sprite.data(), sprite.width(), sprite.height(), clipX, colorMap);
+		if (sprite.transparentColor()) {
+			BlitPcxClipXY<UseColorMap, /*HasTransparency=*/true>(out, position, sprite.data(), sprite.width(), sprite.height(), clipX, colorMap, *sprite.transparentColor());
+		} else {
+			BlitPcxClipXY<UseColorMap, /*HasTransparency=*/false>(out, position, sprite.data(), sprite.width(), sprite.height(), clipX, colorMap, 0);
+		}
 	}
 }
 

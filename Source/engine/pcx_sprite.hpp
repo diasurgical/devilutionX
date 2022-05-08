@@ -4,6 +4,8 @@
 #include <memory>
 #include <utility>
 
+#include "utils/stdcompat/optional.hpp"
+
 namespace devilution {
 
 class OwnedPcxSprite;
@@ -14,10 +16,11 @@ class OwnedPcxSpriteSheet;
  */
 class PcxSprite {
 public:
-	PcxSprite(const uint8_t *data, uint16_t width, uint16_t height)
+	PcxSprite(const uint8_t *data, uint16_t width, uint16_t height, std::optional<uint8_t> transparentColor = std::nullopt)
 	    : data_(data)
 	    , width_(width)
 	    , height_(height)
+	    , transparent_color_(transparentColor)
 	{
 	}
 
@@ -38,18 +41,25 @@ public:
 		return height_;
 	}
 
+	[[nodiscard]] std::optional<uint8_t> transparentColor() const
+	{
+		return transparent_color_;
+	}
+
 private:
 	const uint8_t *data_;
 	uint16_t width_;
 	uint16_t height_;
+	std::optional<uint8_t> transparent_color_;
 };
 
 class OwnedPcxSprite {
 public:
-	OwnedPcxSprite(std::unique_ptr<uint8_t[]> &&data, uint16_t width, uint16_t height)
+	OwnedPcxSprite(std::unique_ptr<uint8_t[]> &&data, uint16_t width, uint16_t height, std::optional<uint8_t> transparentColor = std::nullopt)
 	    : data_(std::move(data))
 	    , width_(width)
 	    , height_(height)
+	    , transparent_color_(transparentColor)
 	{
 	}
 
@@ -60,13 +70,14 @@ private:
 	std::unique_ptr<uint8_t[]> data_;
 	uint16_t width_;
 	uint16_t height_;
+	std::optional<uint8_t> transparent_color_;
 
 	friend class PcxSprite;
 	friend class OwnedPcxSpriteSheet;
 };
 
 inline PcxSprite::PcxSprite(const OwnedPcxSprite &owned)
-    : PcxSprite(owned.data_.get(), owned.width_, owned.height_)
+    : PcxSprite(owned.data_.get(), owned.width_, owned.height_, owned.transparent_color_)
 {
 }
 
@@ -75,12 +86,13 @@ inline PcxSprite::PcxSprite(const OwnedPcxSprite &owned)
  */
 class PcxSpriteSheet {
 public:
-	PcxSpriteSheet(const uint8_t *data, const uint32_t *frameOffsets, uint16_t numFrames, uint16_t width, uint16_t frameHeight)
+	PcxSpriteSheet(const uint8_t *data, const uint32_t *frameOffsets, uint16_t numFrames, uint16_t width, uint16_t frameHeight, std::optional<uint8_t> transparentColor = std::nullopt)
 	    : data_(data)
 	    , frame_offsets_(frameOffsets)
 	    , num_frames_(numFrames)
 	    , width_(width)
 	    , frame_height_(frameHeight)
+	    , transparent_color_(transparentColor)
 	{
 	}
 
@@ -88,7 +100,7 @@ public:
 
 	[[nodiscard]] PcxSprite sprite(uint16_t frame) const
 	{
-		return PcxSprite { data_ + frame_offsets_[frame], width_, frame_height_ };
+		return PcxSprite { data_ + frame_offsets_[frame], width_, frame_height_, transparent_color_ };
 	}
 
 	[[nodiscard]] uint16_t numFrames() const
@@ -112,21 +124,23 @@ private:
 	uint16_t num_frames_;
 	uint16_t width_;
 	uint16_t frame_height_;
+	std::optional<uint8_t> transparent_color_;
 };
 
 class OwnedPcxSpriteSheet {
 public:
-	OwnedPcxSpriteSheet(std::unique_ptr<uint8_t[]> &&data, std::unique_ptr<uint32_t[]> &&frameOffsets, uint16_t numFrames, uint16_t width, uint16_t frameHeight)
+	OwnedPcxSpriteSheet(std::unique_ptr<uint8_t[]> &&data, std::unique_ptr<uint32_t[]> &&frameOffsets, uint16_t numFrames, uint16_t width, uint16_t frameHeight, std::optional<uint8_t> transparentColor = std::nullopt)
 	    : data_(std::move(data))
 	    , frame_offsets_(std::move(frameOffsets))
 	    , num_frames_(numFrames)
 	    , width_(width)
 	    , frame_height_(frameHeight)
+	    , transparent_color_(transparentColor)
 	{
 	}
 
 	OwnedPcxSpriteSheet(OwnedPcxSprite &&sprite, std::unique_ptr<uint32_t[]> &&frameOffsets, uint16_t numFrames)
-	    : OwnedPcxSpriteSheet(std::move(sprite.data_), std::move(frameOffsets), numFrames, sprite.width_, sprite.height_ / numFrames)
+	    : OwnedPcxSpriteSheet(std::move(sprite.data_), std::move(frameOffsets), numFrames, sprite.width_, sprite.height_ / numFrames, sprite.transparent_color_)
 	{
 	}
 
@@ -139,12 +153,13 @@ private:
 	uint16_t num_frames_;
 	uint16_t width_;
 	uint16_t frame_height_;
+	std::optional<uint8_t> transparent_color_;
 
 	friend class PcxSpriteSheet;
 };
 
 inline PcxSpriteSheet::PcxSpriteSheet(const OwnedPcxSpriteSheet &owned)
-    : PcxSpriteSheet(owned.data_.get(), owned.frame_offsets_.get(), owned.num_frames_, owned.width_, owned.frame_height_)
+    : PcxSpriteSheet(owned.data_.get(), owned.frame_offsets_.get(), owned.num_frames_, owned.width_, owned.frame_height_, owned.transparent_color_)
 {
 }
 
