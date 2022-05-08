@@ -1498,9 +1498,11 @@ void UpdateCircle(Object &circle)
 	}
 	if (circle.position == Point { 35, 36 } && circle._oVar5 == 3) {
 		circle._oVar6 = 4;
-		ObjChangeMapResync(circle._oVar1, circle._oVar2, circle._oVar3, circle._oVar4);
-		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
-			Quests[Q_BETRAYER]._qvar1 = 4;
+		if (Quests[Q_BETRAYER]._qvar1 <= 4) {
+			ObjChangeMap(circle._oVar1, circle._oVar2, circle._oVar3, circle._oVar4);
+			if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
+				Quests[Q_BETRAYER]._qvar1 = 4;
+		}
 		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
@@ -2338,7 +2340,7 @@ void OperateBook(int pnum, Object &book)
 		    0);
 	}
 	if (setlvlnum == SL_VILEBETRAYER) {
-		ObjChangeMapResync(
+		ObjChangeMap(
 		    book._oVar1,
 		    book._oVar2,
 		    book._oVar3,

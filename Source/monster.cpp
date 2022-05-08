@@ -3174,7 +3174,7 @@ void LazarusAi(int i)
 			}
 
 			if (monster.mtalkmsg == TEXT_VILE13 && !effect_is_playing(USFX_LAZ1) && monster._mgoal == MGOAL_TALKING) {
-				ObjChangeMapResync(1, 18, 20, 24);
+				ObjChangeMap(1, 18, 20, 24);
 				RedoPlayerVision();
 				Quests[Q_BETRAYER]._qvar1 = 6;
 				monster._mgoal = MGOAL_NORMAL;
