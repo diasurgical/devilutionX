@@ -6,13 +6,15 @@
 
 #include <cstdint>
 
-#include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "dx.h"
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
+#include "engine/load_pcx.hpp"
+#include "engine/pcx_sprite.hpp"
 #include "engine/render/cel_render.hpp"
+#include "engine/render/pcx_render.hpp"
 #include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"
@@ -36,12 +38,12 @@ const BYTE BarColor[3] = { 138, 43, 254 };
 /** The screen position of the top left corner of the progress bar. */
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
-Art ArtCutsceneWidescreen;
+std::optional<OwnedPcxSprite> ArtCutsceneWidescreen;
 
 void FreeInterface()
 {
 	sgpBackCel = std::nullopt;
-	ArtCutsceneWidescreen.Unload();
+	ArtCutsceneWidescreen = std::nullopt;
 }
 
 Cutscenes PickCutscene(interface_mode uMsg)
@@ -102,7 +104,7 @@ void InitCutscene(interface_mode uMsg)
 
 	switch (PickCutscene(uMsg)) {
 	case CutStart:
-		LoadArt("Gendata\\cutstartw.pcx", &ArtCutsceneWidescreen);
+		ArtCutsceneWidescreen = LoadPcxAsset("Gendata\\cutstartw.pcx");
 		celPath = "Gendata\\Cutstart.cel";
 		palPath = "Gendata\\Cutstart.pal";
 		progress_id = 1;
@@ -143,13 +145,13 @@ void InitCutscene(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutPortal:
-		LoadArt("Gendata\\Cutportlw.pcx", &ArtCutsceneWidescreen);
+		ArtCutsceneWidescreen = LoadPcxAsset("Gendata\\Cutportlw.pcx");
 		celPath = "Gendata\\Cutportl.cel";
 		palPath = "Gendata\\Cutportl.pal";
 		progress_id = 1;
 		break;
 	case CutPortalRed:
-		LoadArt("Gendata\\Cutportrw.pcx", &ArtCutsceneWidescreen);
+		ArtCutsceneWidescreen = LoadPcxAsset("Gendata\\Cutportrw.pcx");
 		celPath = "Gendata\\Cutportr.cel";
 		palPath = "Gendata\\Cutportr.pal";
 		progress_id = 1;
@@ -172,7 +174,10 @@ void DrawCutscene()
 {
 	const Rectangle &uiRectangle = GetUIRectangle();
 	const Surface &out = GlobalBackBuffer();
-	DrawArt(out, { uiRectangle.position.x - (ArtCutsceneWidescreen.w() - uiRectangle.size.width) / 2, uiRectangle.position.y }, &ArtCutsceneWidescreen);
+	if (ArtCutsceneWidescreen) {
+		const PcxSprite sprite { *ArtCutsceneWidescreen };
+		RenderPcxSprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
+	}
 	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, *sgpBackCel, 0);
 
 	constexpr int ProgressHeight = 22;
