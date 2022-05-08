@@ -3,6 +3,7 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
+#include "engine/load_pcx.hpp"
 #include "engine/load_pcx_as_cel.hpp"
 #include "utils/language.h"
 
@@ -14,10 +15,8 @@ std::vector<std::unique_ptr<UiItemBase>> vecTitleScreen;
 void TitleLoad()
 {
 	if (gbIsHellfire) {
-		// This is a 2.4 MiB PCX file without transparency (4.6 MiB as an SDL surface).
 		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
-
-		LoadArt("ui_art\\hf_titlew.pcx", &ArtBackgroundWidescreen);
+		ArtBackgroundWidescreen = LoadPcxAsset("ui_art\\hf_titlew.pcx");
 	} else {
 		LoadBackgroundArt("ui_art\\title.pcx");
 		ArtLogos[LOGO_BIG] = LoadPcxAssetAsCel("ui_art\\logo.pcx", /*numFrames=*/15, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
@@ -26,8 +25,8 @@ void TitleLoad()
 
 void TitleFree()
 {
-	ArtBackground.Unload();
-	ArtBackgroundWidescreen.Unload();
+	ArtBackground = std::nullopt;
+	ArtBackgroundWidescreen = std::nullopt;
 	ArtLogos[LOGO_BIG] = std::nullopt;
 
 	vecTitleScreen.clear();
@@ -41,8 +40,9 @@ void UiTitleDialog()
 	const Point uiPosition = GetUIRectangle().position;
 	if (gbIsHellfire) {
 		SDL_Rect rect = { 0, uiPosition.y, 0, 0 };
-		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
-		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackground, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
+		if (ArtBackgroundWidescreen)
+			vecTitleScreen.push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rect, UiFlags::AlignCenter));
+		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedPcx>(PcxSpriteSheet { *ArtBackground }, rect, UiFlags::AlignCenter));
 	} else {
 		UiAddBackground(&vecTitleScreen);
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);

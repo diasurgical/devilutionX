@@ -19,7 +19,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelYesNoDialog;
 
 void SelyesnoFree()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 
 	vecSelYesNoDialogItems.clear();
 

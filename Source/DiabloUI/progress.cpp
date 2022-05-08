@@ -5,6 +5,9 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "engine/load_pcx.hpp"
+#include "engine/pcx_sprite.hpp"
+#include "engine/render/pcx_render.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
@@ -13,10 +16,9 @@
 namespace devilution {
 namespace {
 Art dialogArt;
-Art progressArt;
-Art ArtPopupSm;
-Art ArtProgBG;
-Art ProgFil;
+std::optional<OwnedPcxSprite> ArtPopupSm;
+std::optional<OwnedPcxSprite> ArtProgBG;
+std::optional<OwnedPcxSprite> ProgFil;
 std::vector<std::unique_ptr<UiItemBase>> vecProgress;
 bool endMenu;
 
@@ -28,9 +30,9 @@ void DialogActionCancel()
 void ProgressLoad()
 {
 	LoadBackgroundArt("ui_art\\black.pcx");
-	LoadArt("ui_art\\spopup.pcx", &ArtPopupSm);
-	LoadArt("ui_art\\prog_bg.pcx", &ArtProgBG);
-	LoadArt("ui_art\\prog_fil.pcx", &ProgFil);
+	ArtPopupSm = LoadPcxAsset("ui_art\\spopup.pcx");
+	ArtProgBG = LoadPcxAsset("ui_art\\prog_bg.pcx");
+	ProgFil = LoadPcxAsset("ui_art\\prog_fil.pcx");
 	LoadSmlButtonArt();
 
 	const Point uiPosition = GetUIRectangle().position;
@@ -40,24 +42,28 @@ void ProgressLoad()
 
 void ProgressFree()
 {
-	ArtBackground.Unload();
-	ArtPopupSm.Unload();
-	ArtProgBG.Unload();
-	ProgFil.Unload();
+	ArtBackground = std::nullopt;
+	ArtPopupSm = std::nullopt;
+	ArtProgBG = std::nullopt;
+	ProgFil = std::nullopt;
 	UnloadSmlButtonArt();
 }
 
 void ProgressRender(BYTE progress)
 {
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
-	DrawArt({ 0, 0 }, &ArtBackground);
+
+	const Surface &out = Surface(DiabloUiSurface());
+	RenderPcxSprite(out, PcxSpriteSheet { *ArtBackground }.sprite(0), { 0, 0 });
 
 	Point position = { GetCenterOffset(280), GetCenterOffset(144, gnScreenHeight) };
 
-	DrawArt(position, &ArtPopupSm, 0, 280, 140);
-	DrawArt({ GetCenterOffset(227), position.y + 52 }, &ArtProgBG, 0, 227);
+	RenderPcxSprite(out, PcxSprite { *ArtPopupSm }, position);
+	RenderPcxSprite(out, PcxSprite { *ArtProgBG }, { GetCenterOffset(227), position.y + 52 });
 	if (progress != 0) {
-		DrawArt({ GetCenterOffset(227), position.y + 52 }, &ProgFil, 0, 227 * progress / 100);
+		const int x = GetCenterOffset(227);
+		const int w = 227 * progress / 100;
+		RenderPcxSprite(out.subregion(x, 0, w, out.h()), PcxSprite { *ProgFil }, { 0, position.y + 52 });
 	}
 	DrawArt({ GetCenterOffset(110), position.y + 99 }, &SmlButton, 2, 110);
 }

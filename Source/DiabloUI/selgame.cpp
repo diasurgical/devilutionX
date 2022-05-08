@@ -60,7 +60,7 @@ void selgame_Init()
 
 void selgame_Free()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 	UnloadScrollBar();
 	selgame_FreeVectors();
 }

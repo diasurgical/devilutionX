@@ -89,7 +89,7 @@ void SelconnLoad()
 
 void SelconnFree()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 
 	vecConnItems.clear();
 
