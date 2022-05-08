@@ -20,7 +20,7 @@ namespace devilution {
 
 namespace {
 
-void PrintSBookSpellType(const Surface &out, Point position, const std::string &text, uint8_t rectColorIndex)
+void PrintSBookSpellType(const Surface &out, Point position, string_view text, uint8_t rectColorIndex)
 {
 	Point rect { position };
 	rect += Displacement { 0, -SPLICONLENGTH + 1 };
@@ -124,7 +124,7 @@ void DrawSpell(const Surface &out)
 
 void DrawSpellList(const Surface &out)
 {
-	InfoString.clear();
+	InfoString = {};
 	ClearPanel();
 
 	Player &myPlayer = *MyPlayer;

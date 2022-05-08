@@ -30,6 +30,6 @@ void ReinitializeIntegerScale();
 #endif
 void ReinitializeRenderer();
 void ResizeWindow();
-void UiErrorOkDialog(const char *caption, const char *text, bool error = true);
+void UiErrorOkDialog(string_view caption, string_view text, bool error = true);
 
 } // namespace devilution

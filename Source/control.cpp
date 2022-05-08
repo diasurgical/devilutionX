@@ -45,6 +45,7 @@
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/string_or_view.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef _DEBUG
@@ -74,7 +75,7 @@ bool talkflag;
 bool sbookflag;
 bool chrflag;
 bool drawbtnflag;
-std::string InfoString;
+StringOrView InfoString;
 bool panelflag;
 int initialDropGoldValue;
 bool panbtndown;
@@ -579,7 +580,7 @@ void InitControlPan()
 		buttonEnabled = false;
 	chrbtnactive = false;
 	pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
-	InfoString.clear();
+	InfoString = {};
 	ClearPanel();
 	drawhpflag = true;
 	drawmanaflag = true;
@@ -867,7 +868,7 @@ void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && !spselflag) {
-		InfoString.clear();
+		InfoString = {};
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
@@ -882,9 +883,9 @@ void DrawInfoBox(const Surface &out)
 			InfoString = _("Requirements not met");
 		} else {
 			if (myPlayer.HoldItem._iIdentified)
-				InfoString = myPlayer.HoldItem._iIName;
+				InfoString = string_view(myPlayer.HoldItem._iIName);
 			else
-				InfoString = myPlayer.HoldItem._iName;
+				InfoString = string_view(myPlayer.HoldItem._iName);
 			InfoColor = myPlayer.HoldItem.getTextColor();
 		}
 	} else {
@@ -896,7 +897,7 @@ void DrawInfoBox(const Surface &out)
 			if (leveltype != DTYPE_TOWN) {
 				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
-				InfoString = monster.mName;
+				InfoString = string_view(monster.mName);
 				ClearPanel();
 				if (monster._uniqtype != 0) {
 					InfoColor = UiFlags::ColorWhitegold;
@@ -905,13 +906,13 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(monster.MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				InfoString = std::string(Towners[pcursmonst].name);
+				InfoString = string_view(Towners[pcursmonst].name);
 			}
 		}
 		if (pcursplr != -1) {
 			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
-			InfoString = target._pName;
+			InfoString = string_view(target._pName);
 			ClearPanel();
 			AddPanelString(fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
 			AddPanelString(fmt::format(_("Hit Points {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6));

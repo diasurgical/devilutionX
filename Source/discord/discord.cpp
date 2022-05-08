@@ -59,7 +59,7 @@ std::string GetLocationString()
 {
 	// Quest Level Name
 	if (setlevel) {
-		return _(QuestLevelNames[setlvlnum]);
+		return std::string(_(QuestLevelNames[setlvlnum]));
 	}
 
 	// Dungeon Name
@@ -86,7 +86,7 @@ std::string GetLocationString()
 
 std::string GetCharacterString()
 {
-	const std::string &charClassStr = _(ClassStrTbl[static_cast<int>(MyPlayer->_pClass)]);
+	const string_view charClassStr = _(ClassStrTbl[static_cast<int>(MyPlayer->_pClass)]);
 	return fmt::format(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}"), tracked_data.playerLevel, charClassStr);
 }
 
@@ -98,7 +98,7 @@ std::string GetDetailString()
 std::string GetStateString()
 {
 	constexpr std::array<const char *, 3> DifficultyStrs = { N_("Normal"), N_("Nightmare"), N_("Hell") };
-	std::string difficultyStr = _(DifficultyStrs[sgGameInitInfo.nDifficulty]);
+	const string_view difficultyStr = _(DifficultyStrs[sgGameInitInfo.nDifficulty]);
 	return fmt::format(_(/* TRANSLATORS: Discord state i.e. "Nightmare difficulty" */ "{} difficulty"), difficultyStr);
 }
 
@@ -179,7 +179,7 @@ void UpdateMenu(bool forced)
 
 		discord::Activity activity = {};
 		activity.SetName(PROJECT_NAME);
-		activity.SetState(_(/* TRANSLATORS: Discord activity, not in game */ "In Menu").c_str());
+		activity.SetState(_(/* TRANSLATORS: Discord activity, not in game */ "In Menu").data());
 
 		activity.GetTimestamps().SetStart(start_time);
 

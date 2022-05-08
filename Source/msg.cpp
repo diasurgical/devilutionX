@@ -11,6 +11,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
+#include "config.h"
 #include "control.h"
 #include "dead.h"
 #include "drlg_l1.h"
@@ -534,7 +535,7 @@ void DeltaPutItem(const TCmdPItem &message, Point position, uint8_t bLevel)
 		    && item.dwSeed == message.dwSeed) {
 			if (item.bCmd == TCmdPItem::DroppedItem)
 				return;
-			app_fatal("%s", _("Trying to drop a floor item?").c_str());
+			app_fatal(_("Trying to drop a floor item?"));
 		}
 	}
 
@@ -1036,7 +1037,7 @@ DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
 
@@ -1071,7 +1072,7 @@ DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
 
@@ -1102,7 +1103,7 @@ DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
 
@@ -1229,7 +1230,7 @@ DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
 
@@ -1261,7 +1262,7 @@ DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
 
@@ -1293,7 +1294,7 @@ DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
 
@@ -1323,7 +1324,7 @@ DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 
 	auto spell = static_cast<spell_id>(message.wParam2);
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
-		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
 
@@ -2053,13 +2054,13 @@ bool msg_wait_resync()
 	}
 
 	if (gbGameDestroyed) {
-		DrawDlg("%s", _("The game ended").c_str());
+		UiErrorOkDialog(PROJECT_NAME, _("The game ended"), /*error=*/false);
 		FreePackets();
 		return false;
 	}
 
 	if (sgbDeltaChunks != MAX_CHUNKS) {
-		DrawDlg("%s", _("Unable to get level data").c_str());
+		UiErrorOkDialog(PROJECT_NAME, _("Unable to get level data"), /*error=*/false);
 		FreePackets();
 		return false;
 	}

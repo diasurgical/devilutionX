@@ -241,29 +241,29 @@ void AddItemListBackButton(bool selectable = false)
 
 void PrintStoreItem(const Item &item, int l, UiFlags flags)
 {
-	std::string productLine = "";
+	std::string productLine;
 
 	if (item._iIdentified) {
 		if (item._iMagical != ITEM_QUALITY_UNIQUE) {
 			if (item._iPrePower != -1) {
-				productLine.append(PrintItemPower(item._iPrePower, item));
+				AppendStrView(productLine, PrintItemPower(item._iPrePower, item));
 			}
 		}
 		if (item._iSufPower != -1) {
 			if (!productLine.empty())
-				productLine.append(_(",  "));
-			productLine.append(PrintItemPower(item._iSufPower, item));
+				AppendStrView(productLine, _(",  "));
+			AppendStrView(productLine, PrintItemPower(item._iSufPower, item));
 		}
 	}
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		if (!productLine.empty())
-			productLine.append(_(",  "));
+			AppendStrView(productLine, _(",  "));
 		productLine.append(fmt::format(_("Charges: {:d}/{:d}"), item._iCharges, item._iMaxCharges));
 	}
 	if (!productLine.empty()) {
 		AddSText(40, l, productLine, flags, false);
 		l++;
-		productLine = "";
+		productLine.clear();
 	}
 
 	if (item._itype != ItemType::Misc) {
@@ -274,7 +274,7 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
 			productLine += fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur);
 		else
-			productLine += _("Indestructible,  ");
+			AppendStrView(productLine, _("Indestructible,  "));
 	}
 
 	int8_t str = item._iMinStr;
@@ -282,9 +282,9 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 	int8_t dex = item._iMinDex;
 
 	if (str == 0 && mag == 0 && dex == 0) {
-		productLine.append(_("No required attributes"));
+		AppendStrView(productLine, _("No required attributes"));
 	} else {
-		productLine.append(_("Required:"));
+		AppendStrView(productLine, _("Required:"));
 		if (str != 0)
 			productLine.append(fmt::format(_(" {:d} Str"), str));
 		if (mag != 0)

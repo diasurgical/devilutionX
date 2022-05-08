@@ -14,6 +14,7 @@
 #include "itemdat.h"
 #include "monster.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/string_or_view.hpp"
 
 namespace devilution {
 
@@ -495,7 +496,7 @@ void CheckIdentify(Player &player, int cii);
 void DoRepair(Player &player, int cii);
 void DoRecharge(Player &player, int cii);
 bool DoOil(Player &player, int cii);
-[[nodiscard]] std::string PrintItemPower(char plidx, const Item &item);
+[[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);

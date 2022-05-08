@@ -1932,10 +1932,10 @@ int8_t CheckInvHLight()
 	} else {
 		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {
-			InfoString = pi->_iIName;
+			InfoString = string_view(pi->_iIName);
 			PrintItemDetails(*pi);
 		} else {
-			InfoString = pi->_iName;
+			InfoString = string_view(pi->_iName);
 			PrintItemDur(*pi);
 		}
 	}

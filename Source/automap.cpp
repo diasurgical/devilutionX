@@ -480,7 +480,7 @@ void DrawAutomapText(const Surface &out)
 
 	if (gbIsMultiplayer) {
 		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
-			std::string description = _("Game: ");
+			std::string description = std::string(_("Game: "));
 			description.append(szPlayerName);
 			DrawString(out, description, linePosition);
 			linePosition.y += 15;
@@ -488,10 +488,10 @@ void DrawAutomapText(const Surface &out)
 
 		std::string description;
 		if (!PublicGame) {
-			description = _("Password: ");
+			description = std::string(_("Password: "));
 			description.append(szPlayerDescript);
 		} else {
-			description = _("Public Game");
+			description = std::string(_("Public Game"));
 		}
 		DrawString(out, description, linePosition);
 		linePosition.y += 15;

@@ -195,7 +195,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster._mmode = MonsterMode::Stand;
 	monster.MType = &LevelMonsterTypes[mtype];
 	monster.MData = monster.MType->MData;
-	monster.mName = pgettext("monster", monster.MData->mName).c_str();
+	monster.mName = pgettext("monster", monster.MData->mName).data();
 	monster.AnimInfo = {};
 	monster.ChangeAnimationData(MonsterGraphic::Stand);
 	monster.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(monster.AnimInfo.TicksPerFrame - 1);
@@ -3490,7 +3490,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	}
 
 	monster.mExp *= 2;
-	monster.mName = pgettext("monster", uniqueMonsterData.mName).c_str();
+	monster.mName = pgettext("monster", uniqueMonsterData.mName).data();
 	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
@@ -4523,9 +4523,9 @@ void SyncMonsterAnim(Monster &monster)
 #endif
 	monster.MData = LevelMonsterTypes[monster._mMTidx].MData;
 	if (monster._uniqtype != 0)
-		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName).c_str();
+		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName).data();
 	else
-		monster.mName = pgettext("monster", monster.MData->mName).c_str();
+		monster.mName = pgettext("monster", monster.MData->mName).data();
 
 	if (monster._uniqtype != 0)
 		InitTRNForUniqueMonster(monster);
@@ -4657,23 +4657,23 @@ void PrintMonstHistory(int mt)
 			AddPanelString(_("No magic resistance"));
 		} else {
 			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
-				std::string resists = _("Resists:");
+				std::string resists = std::string(_("Resists:"));
 				if ((res & RESIST_MAGIC) != 0)
-					resists.append(_(" Magic"));
+					AppendStrView(resists, _(" Magic"));
 				if ((res & RESIST_FIRE) != 0)
-					resists.append(_(" Fire"));
+					AppendStrView(resists, _(" Fire"));
 				if ((res & RESIST_LIGHTNING) != 0)
-					resists.append(_(" Lightning"));
+					AppendStrView(resists, _(" Lightning"));
 				AddPanelString(resists);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
-				std::string immune = _("Immune:");
+				std::string immune = std::string(_("Immune:"));
 				if ((res & IMMUNE_MAGIC) != 0)
-					immune.append(_(" Magic"));
+					AppendStrView(immune, _(" Magic"));
 				if ((res & IMMUNE_FIRE) != 0)
-					immune.append(_(" Fire"));
+					AppendStrView(immune, _(" Fire"));
 				if ((res & IMMUNE_LIGHTNING) != 0)
-					immune.append(_(" Lightning"));
+					AppendStrView(immune, _(" Lightning"));
 				AddPanelString(immune);
 			}
 		}

@@ -303,7 +303,7 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clearTables)
     , clear_tables_(clearTables)
 {
 	if (!OpenArchive(save_num_))
-		app_fatal("%s", _("Failed to open player archive for writing.").c_str());
+		app_fatal(_("Failed to open player archive for writing."));
 }
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
@@ -370,7 +370,7 @@ void sfile_write_stash()
 		return;
 
 	if (!StashWriter.Open(GetStashSavePath().c_str()))
-		app_fatal("%s", _("Failed to open stash archive for writing.").c_str());
+		app_fatal(_("Failed to open stash archive for writing."));
 
 	SaveStash();
 
@@ -481,9 +481,9 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	{
 		std::optional<MpqArchive> archive = OpenSaveArchive(saveNum);
 		if (!archive)
-			app_fatal("%s", _("Unable to open archive").c_str());
+			app_fatal(_("Unable to open archive"));
 		if (!ReadHero(*archive, &pkplr))
-			app_fatal("%s", _("Unable to load character").c_str());
+			app_fatal(_("Unable to load character"));
 
 		gbValidSaveFile = ArchiveContainsGame(*archive);
 		if (gbValidSaveFile)
@@ -507,7 +507,7 @@ bool LevelFileExists()
 
 	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to read to save file archive").c_str());
+		app_fatal(_("Unable to read to save file archive"));
 
 	bool hasFile = SaveWriter.HasFile(szName);
 	SaveWriter.Close();
@@ -527,7 +527,7 @@ void GetPermLevelNames(char *szPerm)
 	uint32_t saveNum = gSaveNumber;
 	GetTempLevelNames(szPerm);
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to read to save file archive").c_str());
+		app_fatal(_("Unable to read to save file archive"));
 
 	bool hasFile = SaveWriter.HasFile(szPerm);
 	SaveWriter.Close();
@@ -546,7 +546,7 @@ void pfile_remove_temp_files()
 
 	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
-		app_fatal("%s", _("Unable to write to save file archive").c_str());
+		app_fatal(_("Unable to write to save file archive"));
 	SaveWriter.RemoveHashEntries(GetTempSaveNames);
 	SaveWriter.Close();
 }

@@ -13,7 +13,7 @@ namespace devilution {
 extern bool ChatLogFlag;
 
 void ToggleChatLog();
-void AddMessageToChatLog(const std::string &message, Player *player = nullptr, UiFlags flags = UiFlags::ColorWhite);
+void AddMessageToChatLog(string_view message, Player *player = nullptr, UiFlags flags = UiFlags::ColorWhite);
 void DrawChatLog(const Surface &out);
 void ChatLogScrollUp();
 void ChatLogScrollDown();

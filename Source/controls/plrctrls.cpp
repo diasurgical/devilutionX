@@ -1645,7 +1645,7 @@ void plrctrls_after_check_curs_move()
 		return;
 	}
 	if (!invflag) {
-		InfoString.clear();
+		InfoString = {};
 		ClearPanel();
 		FindActor();
 		FindItemOrObject();

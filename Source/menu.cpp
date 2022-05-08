@@ -151,7 +151,7 @@ void mainmenu_loop()
 		if (demo::IsRunning())
 			menu = MAINMENU_SINGLE_PLAYER;
 		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("%s", _("Unable to display mainmenu").c_str());
+			app_fatal(_("Unable to display mainmenu"));
 
 		switch (menu) {
 		case MAINMENU_NONE:

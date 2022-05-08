@@ -631,9 +631,11 @@ void GetBookSpell(Item &item, int lvl)
 		if (s == maxSpells)
 			s = 1;
 	}
-	std::string spellName = pgettext("spell", spelldata[bs].sNameText);
-	CopyUtf8(item._iName, std::string(item._iName + spellName), sizeof(item._iIName));
-	CopyUtf8(item._iIName, std::string(item._iIName + spellName), sizeof(item._iIName));
+	const string_view spellName = pgettext("spell", spelldata[bs].sNameText);
+	const size_t iNameLen = string_view(item._iName).size();
+	const size_t iINameLen = string_view(item._iIName).size();
+	CopyUtf8(item._iName + iNameLen, spellName, sizeof(item._iName) - iNameLen);
+	CopyUtf8(item._iIName + iINameLen, spellName, sizeof(item._iIName) - iINameLen);
 	item._iSpell = bs;
 	item._iMinMag = spelldata[bs].sMinInt;
 	item._ivalue += spelldata[bs].sBookCost;
@@ -1847,7 +1849,7 @@ void PrintItemInfo(const Item &item)
 	uint8_t dex = item._iMinDex;
 	uint8_t mag = item._iMinMag;
 	if (str != 0 || mag != 0 || dex != 0) {
-		std::string text = _("Required:");
+		std::string text = std::string(_("Required:"));
 		if (str != 0)
 			text.append(fmt::format(_(" {:d} Str"), str));
 		if (mag != 0)
@@ -3443,9 +3445,9 @@ void GetItemStr(Item &item)
 {
 	if (item._itype != ItemType::Gold) {
 		if (item._iIdentified)
-			InfoString = item._iIName;
+			InfoString = string_view(item._iIName);
 		else
-			InfoString = item._iName;
+			InfoString = string_view(item._iName);
 
 		InfoColor = item.getTextColor();
 	} else {
@@ -3511,7 +3513,7 @@ bool DoOil(Player &player, int cii)
 	return true;
 }
 
-[[nodiscard]] std::string PrintItemPower(char plidx, const Item &item)
+[[nodiscard]] StringOrView PrintItemPower(char plidx, const Item &item)
 {
 	switch (plidx) {
 	case IPL_TOHIT:
@@ -3646,13 +3648,13 @@ bool DoOil(Player &player, int cii)
 			return _(/*xgettext:no-c-format*/ "hit steals 3% mana");
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana5))
 			return _(/*xgettext:no-c-format*/ "hit steals 5% mana");
-		return "";
+		return {};
 	case IPL_STEALLIFE:
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife3))
 			return _(/*xgettext:no-c-format*/ "hit steals 3% life");
 		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife5))
 			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
-		return "";
+		return {};
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
 	case IPL_FASTATTACK:
@@ -3696,7 +3698,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_INFRAVISION:
 		return _("see with infravision");
 	case IPL_INVCURS:
-		return " ";
+		return { string_view(" ") };
 	case IPL_ADDACLIFE:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(_("lightning damage: {:d}"), item._iFMinDam);
@@ -3708,7 +3710,7 @@ bool DoOil(Player &player, int cii)
 		if (item._iPLFR > 0)
 			return fmt::format(_("Resist Fire: {:+d}%"), item._iPLFR);
 		else
-			return " ";
+			return { string_view(" ") };
 	case IPL_DEVASTATION:
 		return _("occasional triple damage");
 	case IPL_DECAY:
@@ -3716,7 +3718,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_PERIL:
 		return _("2x dmg to monst, 1x to you");
 	case IPL_JESTERS:
-		return _(/*xgettext:no-c-format*/ "Random 0 - 500% damage");
+		return std::string(_(/*xgettext:no-c-format*/ "Random 0 - 500% damage"));
 	case IPL_CRYSTALLINE:
 		return fmt::format(_(/*xgettext:no-c-format*/ "low dur, {:+d}% damage"), item._iPLDam);
 	case IPL_DOPPELGANGER:
