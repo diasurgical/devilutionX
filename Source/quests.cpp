@@ -688,9 +688,7 @@ void ResyncQuests()
 			TransVal = tren;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
-			int x = setpc_x;
-			int y = setpc_y;
-			ObjChangeMapResync(x, y, x + setpc_w + 1, y + setpc_h + 1);
+			ObjChangeMapResync(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
