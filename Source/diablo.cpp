@@ -73,6 +73,7 @@
 #include "track.h"
 #include "trigs.h"
 #include "utils/console.h"
+#include "utils/display.h"
 #include "utils/language.h"
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
@@ -88,7 +89,6 @@
 
 namespace devilution {
 
-SDL_Window *ghMainWnd;
 uint32_t glSeedTbl[NUMLEVELS];
 dungeon_type gnLevelTypeTbl[NUMLEVELS];
 Point MousePosition;
