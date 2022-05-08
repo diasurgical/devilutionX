@@ -1,9 +1,12 @@
 #include "utils/language.h"
 
 #include <functional>
-#include <map>
 #include <memory>
 #include <vector>
+
+#if __cplusplus >= 202002L
+#include <version>
+#endif
 
 #include "engine/assets.hpp"
 #include "options.h"
@@ -12,19 +15,46 @@
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
 
-using namespace devilution;
 #define MO_MAGIC 0x950412de
+
+#if defined(__cpp_lib_generic_unordered_lookup)
+#include <unordered_map>
 
 namespace {
 
-struct CStringCmp {
-	bool operator()(const char *s1, const char *s2) const
+using namespace devilution;
+
+struct StringHash {
+	using is_transparent = void;
+
+	auto operator()(const char *str) const noexcept
 	{
-		return strcmp(s1, s2) < 0;
+		return std::hash<string_view> {}(str);
+	}
+
+	auto operator()(string_view str) const noexcept
+	{
+		return std::hash<string_view> {}(str);
+	}
+
+	auto operator()(const std::string &str) const noexcept
+	{
+		return std::hash<string_view> {}(str);
 	}
 };
 
+std::vector<std::unordered_map<std::string, std::string, StringHash, std::equal_to<>>> translation = { {}, {} };
+} // namespace
+#else
+#include <map>
+namespace {
+using namespace devilution;
+
 std::vector<std::map<std::string, std::string, std::less<>>> translation = { {}, {} };
+} // namespace
+#endif
+
+namespace {
 
 struct MoHead {
 	uint32_t magic;
@@ -254,42 +284,42 @@ bool ReadEntry(SDL_RWops *rw, MoEntry *e, std::vector<char> &result)
 
 } // namespace
 
-const std::string &LanguageParticularTranslate(const char *context, const char *message)
+string_view LanguageParticularTranslate(string_view context, string_view message)
 {
-	constexpr const char *glue = "\004";
+	constexpr const char Glue = '\004';
 
-	std::string key = context;
-	key += glue;
-	key += message;
+	std::string key = std::string(context);
+	key.reserve(key.size() + 1 + message.size());
+	key += Glue;
+	AppendStrView(key, message);
 
 	auto it = translation[0].find(key);
 	if (it == translation[0].end()) {
-		it = translation[0].insert({ key, message }).first;
+		return message;
 	}
 
 	return it->second;
 }
 
-const std::string &LanguagePluralTranslate(const char *singular, const char *plural, int count)
+string_view LanguagePluralTranslate(string_view singular, string_view plural, int count)
 {
 	int n = GetLocalPluralId(count);
 
 	auto it = translation[n].find(singular);
 	if (it == translation[n].end()) {
 		if (count != 1)
-			it = translation[1].insert({ singular, plural }).first;
-		else
-			it = translation[0].insert({ singular, singular }).first;
+			return plural;
+		return singular;
 	}
 
 	return it->second;
 }
 
-const std::string &LanguageTranslate(const char *key)
+string_view LanguageTranslate(string_view key)
 {
 	auto it = translation[0].find(key);
 	if (it == translation[0].end()) {
-		it = translation[0].insert({ key, key }).first;
+		return key;
 	}
 
 	return it->second;

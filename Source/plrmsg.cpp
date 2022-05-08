@@ -73,7 +73,7 @@ void EventPlrMsg(string_view text, UiFlags style)
 	message.text = std::string(text);
 	message.from = string_view(message.text.data(), 0);
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
-	AddMessageToChatLog(std::string(text));
+	AddMessageToChatLog(text);
 }
 
 void SendPlrMsg(Player &player, string_view text)
@@ -87,7 +87,7 @@ void SendPlrMsg(Player &player, string_view text)
 	message.text = from + std::string(text);
 	message.from = string_view(message.text.data(), from.size());
 	message.lineHeight = GetLineHeight(message.text, GameFont12) + 3;
-	AddMessageToChatLog(std::string(text), &player);
+	AddMessageToChatLog(text, &player);
 }
 
 void InitPlrMsg()

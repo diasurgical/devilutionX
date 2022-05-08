@@ -31,13 +31,8 @@ namespace devilution {
  * @param ... (see printf)
  */
 [[noreturn]] void app_fatal(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
+[[noreturn]] void app_fatal(string_view str);
 
-/**
- * @brief Displays a warning message box based on the given formatted error message.
- * @param pszFmt Error message format
- * @param ... Additional parameters for message format
- */
-void DrawDlg(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
 #ifdef _DEBUG
 /**
  * @brief Show an error and exit the application.

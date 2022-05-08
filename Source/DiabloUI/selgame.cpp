@@ -77,7 +77,7 @@ bool IsGameCompatible(const GameData &data)
 static std::string GetErrorMessageIncompatibility(const GameData &data)
 {
 	if (data.programid != GAME_ID) {
-		std::string gameMode;
+		string_view gameMode;
 		switch (data.programid) {
 		case GameIdDiabloFull:
 			gameMode = _("Diablo");
@@ -92,7 +92,7 @@ static std::string GetErrorMessageIncompatibility(const GameData &data)
 			gameMode = _("Hellfire Shareware");
 			break;
 		default:
-			return _("The host is running a different game than you.");
+			return std::string(_("The host is running a different game than you."));
 		}
 		return fmt::format(_("The host is running a different game mode ({:s}) than you."), gameMode);
 	} else {
@@ -128,16 +128,16 @@ void UiInitGameSelectionList(string_view search)
 	vecSelGameDialog.push_back(std::make_unique<UiScrollbar>(PcxSprite { *ArtScrollBarBackground }, PcxSprite { *ArtScrollBarThumb }, PcxSpriteSheet { *ArtScrollBarArrow }, rectScrollbar));
 
 	SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_(ConnectionNames[provider]).c_str(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_(ConnectionNames[provider]).data(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 211), 205, 192 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Description:").c_str(), rect2, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Description:").data(), rect2, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 
 	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 256), DESCRIPTION_WIDTH, 192 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Description, rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark, 1, 16));
 
 	SDL_Rect rect4 = { (Sint16)(uiPosition.x + 300), (Sint16)(uiPosition.y + 211), 295, 33 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Action").c_str(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Action").data(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 #ifdef PACKET_ENCRYPTION
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Game"), 0, UiFlags::ColorUiGold));
@@ -220,7 +220,7 @@ void selgame_GameSelection_Focus(int value)
 		break;
 	default:
 		const auto &gameInfo = Gamelist[vecSelGameDlgItems[value]->m_value - 3];
-		std::string infoString = _("Join the public game already in progress.");
+		std::string infoString = std::string(_("Join the public game already in progress."));
 		infoString.append("\n\n");
 		if (IsGameCompatible(gameInfo.gameData)) {
 			string_view difficulty;
@@ -239,16 +239,16 @@ void selgame_GameSelection_Focus(int value)
 			infoString.append("\n");
 			switch (gameInfo.gameData.nTickRate) {
 			case 20:
-				infoString.append(_("Speed: Normal"));
+				AppendStrView(infoString, _("Speed: Normal"));
 				break;
 			case 30:
-				infoString.append(_("Speed: Fast"));
+				AppendStrView(infoString, _("Speed: Fast"));
 				break;
 			case 40:
-				infoString.append(_("Speed: Faster"));
+				AppendStrView(infoString, _("Speed: Faster"));
 				break;
 			case 50:
-				infoString.append(_("Speed: Fastest"));
+				AppendStrView(infoString, _("Speed: Fastest"));
 				break;
 			default:
 				// This should not occure, so no translations is needed
@@ -256,7 +256,7 @@ void selgame_GameSelection_Focus(int value)
 				break;
 			}
 			infoString.append("\n");
-			infoString.append(_("Players: "));
+			AppendStrView(infoString, _("Players: "));
 			for (auto &playerName : gameInfo.players) {
 				infoString.append(playerName);
 				infoString.append(" ");
@@ -315,10 +315,10 @@ void selgame_GameSelection_Select(int value)
 	switch (value) {
 	case 0:
 	case 1: {
-		title = _("Create Game").c_str();
+		title = _("Create Game").data();
 
 		SDL_Rect rect4 = { (Sint16)(uiPosition.x + 299), (Sint16)(uiPosition.y + 211), 295, 35 };
-		vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Difficulty").c_str(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+		vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Difficulty").data(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Normal"), DIFF_NORMAL));
 		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Nightmare"), DIFF_NIGHTMARE));
@@ -341,9 +341,9 @@ void selgame_GameSelection_Select(int value)
 
 		const char *inputHint;
 		if (provider == SELCONN_ZT) {
-			inputHint = _("Enter Game ID").c_str();
+			inputHint = _("Enter Game ID").data();
 		} else {
-			inputHint = _("Enter address").c_str();
+			inputHint = _("Enter address").data();
 		}
 
 		SDL_Rect rect4 = { (Sint16)(uiPosition.x + 305), (Sint16)(uiPosition.y + 211), 285, 33 };
@@ -405,9 +405,9 @@ bool IsDifficultyAllowed(int value)
 	selgame_Free();
 
 	if (value == 1)
-		UiSelOkDialog(title, _("Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty.").c_str(), false);
+		UiSelOkDialog(title, _("Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty.").data(), false);
 	if (value == 2)
-		UiSelOkDialog(title, _("Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty.").c_str(), false);
+		UiSelOkDialog(title, _("Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty.").data(), false);
 
 	selgame_Init();
 
@@ -476,7 +476,7 @@ void selgame_GameSpeedSelection()
 	const Point uiPosition = GetUIRectangle().position;
 
 	SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Create Game").c_str(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Create Game").data(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 34), (Sint16)(uiPosition.y + 211), 205, 33 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Label, rect2, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
@@ -485,7 +485,7 @@ void selgame_GameSpeedSelection()
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Description, rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark, 1, 16));
 
 	SDL_Rect rect4 = { (Sint16)(uiPosition.x + 299), (Sint16)(uiPosition.y + 211), 295, 35 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Game Speed").c_str(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Game Speed").data(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Normal"), 20));
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Fast"), 30));
@@ -555,16 +555,16 @@ void selgame_Password_Init(int /*value*/)
 	const Point uiPosition = GetUIRectangle().position;
 
 	SDL_Rect rect1 = { (Sint16)(uiPosition.x + 24), (Sint16)(uiPosition.y + 161), 590, 35 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_(ConnectionNames[provider]).c_str(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_(ConnectionNames[provider]).data(), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 211), 205, 192 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Description:").c_str(), rect2, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Description:").data(), rect2, UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 
 	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 35), (Sint16)(uiPosition.y + 256), DESCRIPTION_WIDTH, 192 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Description, rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark, 1, 16));
 
 	SDL_Rect rect4 = { (Sint16)(uiPosition.x + 305), (Sint16)(uiPosition.y + 211), 285, 33 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Enter Password").c_str(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Enter Password").data(), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	// Allow password to be empty only when joining games
 	bool allowEmpty = selgame_selectedGame == 2;
@@ -629,7 +629,7 @@ void selgame_Password_Select(int /*value*/)
 			std::string error = SDL_GetError();
 			if (error.empty())
 				error = "Unknown network error";
-			UiSelOkDialog(_("Multi Player Game").c_str(), error.c_str(), false);
+			UiSelOkDialog(_("Multi Player Game").data(), error.c_str(), false);
 			selgame_Init();
 			selgame_Password_Init(selgame_selectedGame);
 		}
@@ -650,7 +650,7 @@ void selgame_Password_Select(int /*value*/)
 		std::string error = SDL_GetError();
 		if (error.empty())
 			error = "Unknown network error";
-		UiSelOkDialog(_("Multi Player Game").c_str(), error.c_str(), false);
+		UiSelOkDialog(_("Multi Player Game").data(), error.c_str(), false);
 		selgame_Init();
 		selgame_Password_Init(0);
 	}

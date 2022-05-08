@@ -48,7 +48,7 @@ void UiTitleDialog()
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
 		SDL_Rect rect = { (Sint16)(uiPosition.x), (Sint16)(uiPosition.y + 410), 640, 26 };
-		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").c_str(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));
+		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").data(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 	}
 
 	bool endMenu = false;

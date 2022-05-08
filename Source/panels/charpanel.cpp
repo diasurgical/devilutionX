@@ -125,7 +125,7 @@ PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, MyPlayer->_pName }; } },
 	{ "", { 161, 14 }, 149, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, _(ClassStrTbl[static_cast<std::size_t>(MyPlayer->_pClass)]) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(ClassStrTbl[static_cast<std::size_t>(MyPlayer->_pClass)])) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
 	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pLevel) }; } },
@@ -134,7 +134,7 @@ PanelEntry panelEntries[] = {
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
 	        if (MyPlayer->_pLevel == MAXCHARLEVEL) {
-		        return StyledText { UiFlags::ColorWhitegold, _("None") };
+		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
 	        return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pNextExper) };
 	    } },
@@ -219,7 +219,7 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 		return;
 
 	constexpr int Spacing = 0;
-	const std::string &textStr = LanguageTranslate(entry.label.c_str());
+	const string_view textStr = LanguageTranslate(entry.label);
 	string_view text;
 	std::string wrapped;
 	if (entry.labelLength > 0) {

@@ -277,11 +277,11 @@ void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std
 	} while (!dialogEnd);
 }
 
-void UiOkDialog(const char *caption, const char *text, bool error, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
+void UiOkDialog(string_view caption, string_view text, bool error, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
 {
 	static bool inDialog = false;
 
-	if (caption != nullptr) {
+	if (!caption.empty()) {
 		LogError("{}\n{}", caption, text);
 	} else {
 		LogError("{}", text);
@@ -291,7 +291,9 @@ void UiOkDialog(const char *caption, const char *text, bool error, const std::ve
 		if (!gbQuietMode) {
 			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
 				Log("{}", SDL_GetError());
-			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, caption, text, nullptr) <= -1) {
+			std::string captionStr = std::string(caption);
+			std::string textStr = std::string(caption);
+			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, captionStr.c_str(), textStr.c_str(), nullptr) <= -1) {
 				Log("{}", SDL_GetError());
 			}
 		}
@@ -313,19 +315,19 @@ void UiOkDialog(const char *caption, const char *text, bool error, const std::ve
 
 } // namespace
 
-void UiErrorOkDialog(const char *caption, const char *text, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
+void UiErrorOkDialog(string_view caption, string_view text, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
 {
 	UiOkDialog(caption, text, /*error=*/true, renderBehind);
 }
 
-void UiErrorOkDialog(const char *caption, const char *text, bool error)
+void UiErrorOkDialog(string_view caption, string_view text, bool error)
 {
 	UiOkDialog(caption, text, error, vecNULL);
 }
 
-void UiErrorOkDialog(const char *text, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
+void UiErrorOkDialog(string_view text, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
 {
-	UiErrorOkDialog(nullptr, text, renderBehind);
+	UiErrorOkDialog({}, text, renderBehind);
 }
 
 } // namespace devilution

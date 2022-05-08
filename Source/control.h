@@ -19,6 +19,7 @@
 #include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/string_or_view.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -41,7 +42,7 @@ extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern bool drawbtnflag;
-extern std::string InfoString;
+extern StringOrView InfoString;
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;

@@ -176,10 +176,9 @@ void InitModifierHints()
 	LoadMaskedArt("data\\hinticons.pcx", &hintIcons, 6, 1);
 
 	if (hintBox.surface == nullptr || hintBoxBackground.surface == nullptr) {
-		app_fatal("%s", _("Failed to load UI resources.\n"
-		                  "\n"
-		                  "Make sure devilutionx.mpq is in the game folder and that it is up to date.")
-		                    .c_str());
+		app_fatal(_("Failed to load UI resources.\n"
+		            "\n"
+		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 	}
 }
 

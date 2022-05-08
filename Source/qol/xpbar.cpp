@@ -58,7 +58,7 @@ std::string PrintWithSeparator(int n)
 		mlength = 3;
 	out.append(number.substr(0, mlength));
 	for (int i = mlength; i < length; i += 3) {
-		out.append(_(/* TRANSLATORS: Thousands separator */ ","));
+		AppendStrView(out, _(/* TRANSLATORS: Thousands separator */ ","));
 		out.append(number.substr(i, 3));
 	}
 
@@ -73,10 +73,9 @@ void InitXPBar()
 		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
 
 		if (xpbarArt.surface == nullptr) {
-			app_fatal("%s", _("Failed to load UI resources.\n"
-			                  "\n"
-			                  "Make sure devilutionx.mpq is in the game folder and that it is up to date.")
-			                    .c_str());
+			app_fatal(_("Failed to load UI resources.\n"
+			            "\n"
+			            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 		}
 	}
 }

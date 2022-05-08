@@ -113,7 +113,7 @@ void ToggleChatLog()
 	}
 }
 
-void AddMessageToChatLog(const std::string &message, Player *player, UiFlags flags)
+void AddMessageToChatLog(string_view message, Player *player, UiFlags flags)
 {
 	MessageCounter++;
 	time_t tm = time(nullptr);
@@ -121,10 +121,10 @@ void AddMessageToChatLog(const std::string &message, Player *player, UiFlags fla
 	int oldSize = ChatLogLines.size();
 	ChatLogLines.emplace_back(MultiColoredText { "", { {} } });
 	if (player == nullptr) {
-		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { message, flags } } });
+		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { std::string(message), flags } } });
 	} else {
 		std::string playerInfo = fmt::format(_("{:s} (lvl {:d}): "), player->_pName, player->_pLevel);
-		ChatLogLines.emplace_back(MultiColoredText { message, { {} }, 20 });
+		ChatLogLines.emplace_back(MultiColoredText { std::string(message), { {} }, 20 });
 		UiFlags nameColor = player == MyPlayer ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
 		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor } } });
 	}
