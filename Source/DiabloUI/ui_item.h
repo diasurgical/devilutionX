@@ -287,7 +287,7 @@ private:
 
 class UiScrollbar : public UiItemBase {
 public:
-	UiScrollbar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiScrollbar(PcxSprite bg, PcxSprite thumb, PcxSpriteSheet arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Scrollbar, rect, flags)
 	    , m_bg(bg)
 	    , m_thumb(thumb)
@@ -296,9 +296,9 @@ public:
 	}
 
 	// private:
-	Art *m_bg;
-	Art *m_thumb;
-	Art *m_arrow;
+	PcxSprite m_bg;
+	PcxSprite m_thumb;
+	PcxSpriteSheet m_arrow;
 };
 
 //=============================================================================

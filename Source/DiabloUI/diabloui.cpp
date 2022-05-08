@@ -891,33 +891,36 @@ void Render(const UiList *uiList)
 
 void Render(const UiScrollbar *uiSb)
 {
+	const Surface out = Surface(DiabloUiSurface());
+
 	// Bar background (tiled):
 	{
-		const int bgYEnd = DownArrowRect(uiSb).y;
-		int bgY = uiSb->m_rect.y + uiSb->m_arrow->h();
-		while (bgY < bgYEnd) {
-			std::size_t drawH = std::min(bgY + uiSb->m_bg->h(), bgYEnd) - bgY;
-			DrawArt({ uiSb->m_rect.x, bgY }, uiSb->m_bg, 0, SCROLLBAR_BG_WIDTH, drawH);
-			bgY += drawH;
+		const int bgY = uiSb->m_rect.y + uiSb->m_arrow.frameHeight();
+		const int bgH = DownArrowRect(uiSb).y - bgY;
+		const Surface backgroundOut = out.subregion(uiSb->m_rect.x, bgY, SCROLLBAR_BG_WIDTH, bgH);
+		int y = 0;
+		while (y < bgH) {
+			RenderPcxSprite(backgroundOut, uiSb->m_bg, { 0, y });
+			y += uiSb->m_bg.height();
 		}
 	}
 
 	// Arrows:
 	{
 		const SDL_Rect rect = UpArrowRect(uiSb);
-		const int frame = static_cast<int>(scrollBarState.upArrowPressed ? ScrollBarArrowFrame_UP_ACTIVE : ScrollBarArrowFrame_UP);
-		DrawArt({ rect.x, rect.y }, uiSb->m_arrow, frame, rect.w);
+		const auto frame = static_cast<uint16_t>(scrollBarState.upArrowPressed ? ScrollBarArrowFrame_UP_ACTIVE : ScrollBarArrowFrame_UP);
+		RenderPcxSprite(out.subregion(rect.x, 0, SCROLLBAR_ARROW_WIDTH, out.h()), uiSb->m_arrow.sprite(frame), { 0, rect.y });
 	}
 	{
 		const SDL_Rect rect = DownArrowRect(uiSb);
-		const int frame = static_cast<int>(scrollBarState.downArrowPressed ? ScrollBarArrowFrame_DOWN_ACTIVE : ScrollBarArrowFrame_DOWN);
-		DrawArt({ rect.x, rect.y }, uiSb->m_arrow, frame, rect.w);
+		const auto frame = static_cast<uint16_t>(scrollBarState.downArrowPressed ? ScrollBarArrowFrame_DOWN_ACTIVE : ScrollBarArrowFrame_DOWN);
+		RenderPcxSprite(out.subregion(rect.x, 0, SCROLLBAR_ARROW_WIDTH, out.h()), uiSb->m_arrow.sprite(frame), { 0, rect.y });
 	}
 
 	// Thumb:
 	if (SelectedItemMax > 0) {
 		const SDL_Rect rect = ThumbRect(uiSb, SelectedItem, SelectedItemMax + 1);
-		DrawArt({ rect.x, rect.y }, uiSb->m_thumb);
+		RenderPcxSprite(out, uiSb->m_thumb, { rect.x, rect.y });
 	}
 }
 
