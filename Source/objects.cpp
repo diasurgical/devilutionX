@@ -4511,24 +4511,11 @@ bool IsItemBlockingObjectAtPosition(Point position)
 	return false;
 }
 
-void InitObjectGFX()
+void LoadLevelObjects(bool filesLoaded[65])
 {
-	bool filesLoaded[65] = {};
-
 	for (const ObjectData objectData : AllObjects) {
-		if (objectData.ominlvl != 0 && currlevel >= objectData.ominlvl && currlevel <= objectData.omaxlvl) {
+		if (leveltype == objectData.olvltype) {
 			filesLoaded[objectData.ofindex] = true;
-		}
-		if (objectData.otheme != THEME_NONE) {
-			for (int j = 0; j < numthemes; j++) {
-				if (themes[j].ttype == objectData.otheme)
-					filesLoaded[objectData.ofindex] = true;
-			}
-		}
-
-		if (objectData.oquest != Q_INVALID) {
-			if (Quests[objectData.oquest].IsAvailable())
-				filesLoaded[objectData.ofindex] = true;
 		}
 	}
 
@@ -4543,6 +4530,39 @@ void InitObjectGFX()
 		pObjCels[numobjfiles] = LoadFileInMem(filestr);
 		numobjfiles++;
 	}
+}
+
+void InitObjectGFX()
+{
+	bool filesLoaded[65] = {};
+
+	if (IsAnyOf(currlevel, 4, 8, 12)) {
+		filesLoaded[OFILE_BKSLBRNT] = true;
+		filesLoaded[OFILE_CANDLE2] = true;
+	}
+
+	for (const ObjectData objectData : AllObjects) {
+		if (objectData.ominlvl != 0 && currlevel >= objectData.ominlvl && currlevel <= objectData.omaxlvl) {
+			if (IsAnyOf(objectData.ofindex, OFILE_TRAPHOLE, OFILE_TRAPHOLE) && leveltype == DTYPE_HELL) {
+				continue;
+			}
+
+			filesLoaded[objectData.ofindex] = true;
+		}
+		if (objectData.otheme != THEME_NONE) {
+			for (int j = 0; j < numthemes; j++) {
+				if (themes[j].ttype == objectData.otheme) {
+					filesLoaded[objectData.ofindex] = true;
+				}
+			}
+		}
+
+		if (objectData.oquest != Q_INVALID && Quests[objectData.oquest].IsAvailable()) {
+			filesLoaded[objectData.ofindex] = true;
+		}
+	}
+
+	LoadLevelObjects(filesLoaded);
 }
 
 void FreeObjectGFX()
@@ -4764,12 +4784,6 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 	ClrAllObjects();
 	ApplyObjectLighting = true;
 
-	for (const ObjectData objectData : AllObjects) {
-		if (leveltype == objectData.olvltype) {
-			filesLoaded[objectData.ofindex] = true;
-		}
-	}
-
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
@@ -4790,17 +4804,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 		}
 	}
 
-	for (int i = OFILE_L1BRAZ; i <= OFILE_L5BOOKS; i++) {
-		if (!filesLoaded[i]) {
-			continue;
-		}
-
-		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
-		char filestr[32];
-		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
-		pObjCels[numobjfiles] = LoadFileInMem(filestr);
-		numobjfiles++;
-	}
+	LoadLevelObjects(filesLoaded);
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
