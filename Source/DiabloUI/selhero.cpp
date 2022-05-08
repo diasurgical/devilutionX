@@ -66,7 +66,7 @@ void SelheroUiFocusNavigationYesNo()
 
 void SelheroFree()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 
 	vecSelHeroDialog.clear();
 
@@ -229,7 +229,7 @@ void SelheroClassSelectorSelect(int value)
 {
 	auto hClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
 	if (gbIsSpawn && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !hfbard_mpq))) {
-		ArtBackground.Unload();
+		ArtBackground = std::nullopt;
 		UiSelOkDialog(nullptr, _("The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.").c_str(), false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 		SelheroListSelect(selhero_SaveCount);
@@ -275,7 +275,7 @@ void SelheroNameSelect(int /*value*/)
 {
 	// only check names in multiplayer, we don't care about them in single
 	if (selhero_isMultiPlayer && !UiValidPlayerName(selhero_heroInfo.name)) {
-		ArtBackground.Unload();
+		ArtBackground = std::nullopt;
 		UiSelOkDialog(title, _("Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n").c_str(), false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 	} else {

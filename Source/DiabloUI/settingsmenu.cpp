@@ -73,8 +73,8 @@ void CleanUpSettingsUI()
 	vecDialog.clear();
 	vecOptions.clear();
 
-	ArtBackground.Unload();
-	ArtBackgroundWidescreen.Unload();
+	ArtBackground = std::nullopt;
+	ArtBackgroundWidescreen = std::nullopt;
 	UnloadScrollBar();
 }
 

@@ -163,9 +163,9 @@ void LoadFallbackPalette()
 void Init(string_view caption, string_view text, bool error, bool renderBehind)
 {
 	if (!renderBehind) {
-		ArtBackground.Unload();
+		ArtBackground = std::nullopt;
 		LoadBackgroundArt("ui_art\\black.pcx");
-		if (ArtBackground.surface == nullptr) {
+		if (!ArtBackground) {
 			LoadFallbackPalette();
 			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
 				Log("{}", SDL_GetError());
@@ -215,7 +215,7 @@ void Deinit()
 	dialogArt.Unload();
 	UnloadSmlButtonArt();
 	vecOkDialog.clear();
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 }
 
 void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
@@ -249,7 +249,7 @@ void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std
 			UiRenderItems(renderBehind);
 		}
 		UiRenderItems(items);
-		if (ArtBackground.surface != nullptr) {
+		if (ArtBackground) {
 			DrawMouse();
 		}
 		UiFadeIn();

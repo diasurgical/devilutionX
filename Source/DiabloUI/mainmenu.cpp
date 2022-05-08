@@ -2,6 +2,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/selok.h"
 #include "control.h"
+#include "engine/load_pcx.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -46,7 +47,7 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 
 	if (!gbIsSpawn || gbIsHellfire) {
 		if (gbIsHellfire)
-			LoadArt("ui_art\\mainmenuw.pcx", &ArtBackgroundWidescreen);
+			ArtBackgroundWidescreen = LoadPcxAsset("ui_art\\mainmenuw.pcx");
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");
 	} else {
 		LoadBackgroundArt("ui_art\\swmmenu.pcx");
@@ -76,8 +77,8 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 
 void MainmenuFree()
 {
-	ArtBackgroundWidescreen.Unload();
-	ArtBackground.Unload();
+	ArtBackgroundWidescreen = std::nullopt;
+	ArtBackground = std::nullopt;
 
 	vecMainMenuDialog.clear();
 

@@ -19,8 +19,11 @@
 #include "discord/discord.h"
 #include "dx.h"
 #include "engine/cel_sprite.hpp"
+#include "engine/load_pcx.hpp"
 #include "engine/load_pcx_as_cel.hpp"
+#include "engine/pcx_sprite.hpp"
 #include "engine/render/cel_render.hpp"
+#include "engine/render/pcx_render.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
@@ -51,8 +54,8 @@ namespace devilution {
 std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
 std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 
-Art ArtBackgroundWidescreen;
-Art ArtBackground;
+std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
+std::optional<OwnedPcxSpriteSheet> ArtBackground;
 Art ArtCursor;
 Art ArtHero;
 
@@ -672,8 +675,8 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 void LoadBackgroundArt(const char *pszFile, int frames)
 {
 	SDL_Color pPal[256];
-	LoadArt(pszFile, &ArtBackground, frames, pPal);
-	if (ArtBackground.surface == nullptr)
+	ArtBackground = LoadPcxSpriteSheetAsset(pszFile, static_cast<uint16_t>(frames), pPal);
+	if (!ArtBackground)
 		return;
 
 	LoadPalInMem(pPal);
@@ -697,13 +700,13 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
 	int uiPositionY = GetUIRectangle().position.y;
-	if (ArtBackgroundWidescreen.surface != nullptr) {
+	if (ArtBackgroundWidescreen) {
 		SDL_Rect rectw = { 0, uiPositionY, 0, 0 };
-		vecDialog->push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, rectw, UiFlags::AlignCenter));
+		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rectw, UiFlags::AlignCenter));
 	}
 
 	SDL_Rect rect = { 0, uiPositionY, 0, 0 };
-	vecDialog->push_back(std::make_unique<UiImage>(&ArtBackground, rect, UiFlags::AlignCenter));
+	vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSpriteSheet { *ArtBackground }.sprite(0), rect, UiFlags::AlignCenter));
 }
 
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
@@ -840,6 +843,26 @@ void Render(const UiImageCel *uiImage)
 	}
 }
 
+void Render(const UiImagePcx *uiImage)
+{
+	PcxSprite sprite = uiImage->GetSprite();
+	int x = uiImage->m_rect.x;
+	if (uiImage->IsCentered()) {
+		x += GetCenterOffset(sprite.width(), uiImage->m_rect.w);
+	}
+	RenderPcxSprite(Surface(DiabloUiSurface()), sprite, { x, uiImage->m_rect.y });
+}
+
+void Render(const UiImageAnimatedPcx *uiImage)
+{
+	PcxSprite sprite = uiImage->GetSprite(GetAnimationFrame(uiImage->NumFrames()));
+	int x = uiImage->m_rect.x;
+	if (uiImage->IsCentered()) {
+		x += GetCenterOffset(sprite.width(), uiImage->m_rect.w);
+	}
+	RenderPcxSprite(Surface(DiabloUiSurface()), sprite, { x, uiImage->m_rect.y });
+}
+
 void Render(const UiArtTextButton *uiButton)
 {
 	Rectangle rect { { uiButton->m_rect.x, uiButton->m_rect.y }, { uiButton->m_rect.w, uiButton->m_rect.h } };
@@ -924,6 +947,12 @@ void RenderItem(UiItemBase *item)
 		break;
 	case UiType::ImageCel:
 		Render(static_cast<UiImageCel *>(item));
+		break;
+	case UiType::ImagePcx:
+		Render(static_cast<UiImagePcx *>(item));
+		break;
+	case UiType::ImageAnimatedPcx:
+		Render(static_cast<UiImageAnimatedPcx *>(item));
 		break;
 	case UiType::ArtTextButton:
 		Render(static_cast<UiArtTextButton *>(item));

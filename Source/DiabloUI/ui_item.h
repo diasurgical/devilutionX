@@ -8,6 +8,7 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "engine/cel_sprite.hpp"
+#include "engine/pcx_sprite.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
@@ -20,6 +21,8 @@ enum class UiType {
 	ArtTextButton,
 	Image,
 	ImageCel,
+	ImagePcx,
+	ImageAnimatedPcx,
 	Button,
 	List,
 	Scrollbar,
@@ -171,6 +174,57 @@ private:
 	CelSpriteWithFrameHeight sprite_;
 	bool animated_;
 	int frame_;
+};
+
+//=============================================================================
+class UiImagePcx : public UiItemBase {
+public:
+	UiImagePcx(PcxSprite sprite, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImagePcx, rect, flags)
+	    , sprite_(sprite)
+	{
+	}
+
+	[[nodiscard]] bool IsCentered() const
+	{
+		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
+	}
+
+	[[nodiscard]] PcxSprite GetSprite() const
+	{
+		return sprite_;
+	}
+
+private:
+	PcxSprite sprite_;
+};
+
+//=============================================================================
+class UiImageAnimatedPcx : public UiItemBase {
+public:
+	UiImageAnimatedPcx(PcxSpriteSheet sheet, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImageAnimatedPcx, rect, flags)
+	    , sheet_(sheet)
+	{
+	}
+
+	[[nodiscard]] bool IsCentered() const
+	{
+		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
+	}
+
+	[[nodiscard]] PcxSprite GetSprite(uint16_t frame) const
+	{
+		return sheet_.sprite(frame);
+	}
+
+	[[nodiscard]] uint16_t NumFrames() const
+	{
+		return sheet_.numFrames();
+	}
+
+private:
+	PcxSpriteSheet sheet_;
 };
 
 //=============================================================================

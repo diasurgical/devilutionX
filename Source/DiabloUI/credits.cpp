@@ -10,6 +10,8 @@
 #include "control.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
+#include "engine/load_pcx.hpp"
+#include "engine/render/pcx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "utils/display.h"
@@ -63,8 +65,8 @@ public:
 
 	~CreditsRenderer()
 	{
-		ArtBackgroundWidescreen.Unload();
-		ArtBackground.Unload();
+		ArtBackgroundWidescreen = std::nullopt;
+		ArtBackground = std::nullopt;
 	}
 
 	void Render();
@@ -95,8 +97,9 @@ void CreditsRenderer::Render()
 
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	const Point uiPosition = GetUIRectangle().position;
-	DrawArt(uiPosition - Displacement { 320, 0 }, &ArtBackgroundWidescreen);
-	DrawArt(uiPosition, &ArtBackground);
+	if (ArtBackgroundWidescreen)
+		RenderPcxSprite(Surface(DiabloUiSurface()), PcxSprite { *ArtBackgroundWidescreen }, uiPosition - Displacement { 320, 0 });
+	RenderPcxSprite(Surface(DiabloUiSurface()), PcxSpriteSheet { *ArtBackground }.sprite(0), uiPosition);
 
 	const std::size_t linesBegin = std::max(offsetY / LINE_H, 0);
 	const std::size_t linesEnd = std::min(linesBegin + MAX_VISIBLE_LINES, linesToRender.size());
@@ -167,7 +170,7 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 
 bool UiCreditsDialog()
 {
-	LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
+	ArtBackgroundWidescreen = LoadPcxAsset("ui_art\\creditsw.pcx");
 	LoadBackgroundArt("ui_art\\credits.pcx");
 
 	return TextDialog(CreditLines, CreditLinesSize);
@@ -176,10 +179,10 @@ bool UiCreditsDialog()
 bool UiSupportDialog()
 {
 	if (gbIsHellfire) {
-		LoadArt("ui_art\\supportw.pcx", &ArtBackgroundWidescreen);
+		ArtBackgroundWidescreen = LoadPcxAsset("ui_art\\supportw.pcx");
 		LoadBackgroundArt("ui_art\\support.pcx");
 	} else {
-		LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
+		ArtBackgroundWidescreen = LoadPcxAsset("ui_art\\creditsw.pcx");
 		LoadBackgroundArt("ui_art\\credits.pcx");
 	}
 

@@ -23,7 +23,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelOkDialog;
 
 void selok_Free()
 {
-	ArtBackground.Unload();
+	ArtBackground = std::nullopt;
 
 	vecSelOkDialogItems.clear();
 
