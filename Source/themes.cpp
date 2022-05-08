@@ -720,14 +720,10 @@ void Theme_Library(int t)
 		}
 	}
 
-	if (Quests[Q_ZHAR].IsAvailable()) {
-		if (t == zharlib) {
-			return;
-		}
-		PlaceThemeMonsts(t, monstrnd[leveltype]); /// BUGFIX: `leveltype - 1`
-	} else {
-		PlaceThemeMonsts(t, monstrnd[leveltype]); /// BUGFIX: `leveltype - 1`
+	if (Quests[Q_ZHAR].IsAvailable() && t == zharlib) {
+		return;
 	}
+	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
 /**
