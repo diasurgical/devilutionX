@@ -672,7 +672,7 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 void LoadBackgroundArt(const char *pszFile, int frames)
 {
 	SDL_Color pPal[256];
-	ArtBackground = LoadPcxSpriteSheetAsset(pszFile, static_cast<uint16_t>(frames), pPal);
+	ArtBackground = LoadPcxSpriteSheetAsset(pszFile, static_cast<uint16_t>(frames), /*transparentColor=*/std::nullopt, pPal);
 	if (!ArtBackground)
 		return;
 

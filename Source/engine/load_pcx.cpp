@@ -50,7 +50,7 @@ std::unique_ptr<uint32_t[]> LoadFrameOffsets(PcxSprite sprite, uint16_t numFrame
 
 } // namespace
 
-std::optional<OwnedPcxSprite> LoadPcxAsset(const char *path, SDL_Color *outPalette)
+std::optional<OwnedPcxSprite> LoadPcxAsset(const char *path, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
 {
 	SDL_RWops *handle = OpenAsset(path);
 	if (handle == nullptr) {
@@ -110,12 +110,12 @@ std::optional<OwnedPcxSprite> LoadPcxAsset(const char *path, SDL_Color *outPalet
 
 	SDL_RWclose(handle);
 
-	return OwnedPcxSprite { std::move(fileBuffer), static_cast<uint16_t>(width), static_cast<uint16_t>(height) };
+	return OwnedPcxSprite { std::move(fileBuffer), static_cast<uint16_t>(width), static_cast<uint16_t>(height), transparentColor };
 }
 
-std::optional<OwnedPcxSpriteSheet> LoadPcxSpriteSheetAsset(const char *path, uint16_t numFrames, SDL_Color *palette)
+std::optional<OwnedPcxSpriteSheet> LoadPcxSpriteSheetAsset(const char *path, uint16_t numFrames, std::optional<uint8_t> transparentColor, SDL_Color *palette)
 {
-	std::optional<OwnedPcxSprite> ownedSprite = LoadPcxAsset(path, palette);
+	std::optional<OwnedPcxSprite> ownedSprite = LoadPcxAsset(path, transparentColor, palette);
 	if (ownedSprite == std::nullopt)
 		return std::nullopt;
 	std::unique_ptr<uint32_t[]> frameOffsets = LoadFrameOffsets(PcxSprite { *ownedSprite }, numFrames);
