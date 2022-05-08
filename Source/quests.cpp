@@ -392,7 +392,7 @@ void CheckQuests()
 		int rporty = quest.position.y;
 		AddMissile({ rportx, rporty }, { rportx, rporty }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 1;
-		if (quest._qactive == QUEST_ACTIVE) {
+		if (quest._qactive == QUEST_ACTIVE && quest._qvar1 == 2) {
 			quest._qvar1 = 3;
 		}
 	}
