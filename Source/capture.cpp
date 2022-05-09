@@ -130,9 +130,9 @@ bool CapturePix(const Surface &buf, std::ofstream *out)
 
 std::ofstream CaptureFile(std::string *dstPath)
 {
-	char filename[sizeof("screen00.PCX") / sizeof(char)];
-	for (int i = 0; i <= 99; ++i) {
-		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
+	char filename[sizeof("screen0000000000.PCX") / sizeof(char)];
+	for (uint32_t i = 0; i <= 4294967295; ++i) {
+		snprintf(filename, sizeof(filename) / sizeof(char), "screen%d.PCX", i);
 		*dstPath = paths::PrefPath() + filename;
 		if (!FileExists(dstPath->c_str())) {
 			return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
