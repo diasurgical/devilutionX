@@ -4139,7 +4139,7 @@ void DoEnding()
 	int musicVolume = sound_get_or_set_music_volume(1);
 	sound_get_or_set_music_volume(0);
 
-	music_start(TMUSIC_L2);
+	music_start(TMUSIC_CATACOMBS);
 	loop_movie = true;
 	play_movie("gendata\\loopdend.smk", true);
 	loop_movie = false;
@@ -4311,6 +4311,7 @@ void ProcessMonsters()
 			} else {
 				monster._mhitpoints += monster.mLevel;
 			}
+			monster._mhitpoints = std::min(monster._mhitpoints, monster._mmaxhp); // prevent going over max HP with part of a single regen tick
 		}
 
 		if (IsTileVisible(monster.position.tile) && monster._msquelch == 0) {

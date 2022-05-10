@@ -226,6 +226,10 @@ void ParseTurn(int pnum, uint32_t turn)
 
 void PlayerLeftMsg(int pnum, bool left)
 {
+	if (pnum == MyPlayerId) {
+		return;
+	}
+
 	auto &player = Players[pnum];
 
 	if (!player.plractive) {
@@ -347,10 +351,10 @@ dungeon_type InitLevelType(int l)
 		return DTYPE_CAVES;
 	if (l >= 13 && l <= 16)
 		return DTYPE_HELL;
-	if (l >= 21 && l <= 24)
-		return DTYPE_CATHEDRAL; // Crypt
 	if (l >= 17 && l <= 20)
-		return DTYPE_CAVES; // Hive
+		return DTYPE_NEST;
+	if (l >= 21 && l <= 24)
+		return DTYPE_CRYPT;
 
 	return DTYPE_CATHEDRAL;
 }
@@ -621,7 +625,7 @@ void multi_process_network_packets()
 		auto &player = Players[dwID];
 		if (!IsNetPlayerValid(player)) {
 			_cmd_id cmd = *(const _cmd_id *)(pkt + 1);
-			if (IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
+			if (gbBufferMsgs == 0 && IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
 				// Distrust all messages until
 				// player info is received
 				continue;
