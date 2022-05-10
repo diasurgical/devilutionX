@@ -4,10 +4,10 @@
  * Implementation of the screenshot function.
  */
 #include <cstdint>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
 #include <fmt/chrono.h>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
 
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
