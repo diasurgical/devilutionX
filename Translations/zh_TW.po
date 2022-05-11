@@ -1154,8 +1154,8 @@ msgstr "現​在​你​死定​了！"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "選​項: \n"
+msgid "Options:"
+msgstr "選​項:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1216,9 +1216,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
+msgid "Game selection:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1240,20 +1238,12 @@ msgstr "地​獄火​幫助"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"地​獄火選項: \n"
+msgid "Hellfire options:"
+msgstr "地​獄火選項:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"報​告錯​誤​https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "報​告錯​誤​https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"

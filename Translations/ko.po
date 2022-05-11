@@ -1110,8 +1110,8 @@ msgstr "그럼 이제 죽어!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
-msgid "Options:\n"
-msgstr "선택 사항:\n"
+msgid "Options:"
+msgstr "선택 사항:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:823
@@ -1170,12 +1170,8 @@ msgstr "데모 플레이 프레임 제한 해제"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"게임 선택:\n"
+msgid "Game selection:"
+msgstr "게임 선택:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:835
@@ -1194,20 +1190,12 @@ msgstr "강제 헬파이어 모드"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:838
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"헬파이어 설정:\n"
+msgid "Hellfire options:"
+msgstr "헬파이어 설정:"
 
 #: Source/diablo.cpp:844
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"https://github.com/diasurgical/devilutionX/ 에 버그 리포트하기\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "https://github.com/diasurgical/devilutionX/ 에 버그 리포트하기"
 
 #: Source/diablo.cpp:956
 msgid "version {:s}"
