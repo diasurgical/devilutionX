@@ -1232,7 +1232,7 @@ void AddObjectLight(int i, int r)
 	}
 }
 
-void AddBarrel(Object barrel)
+void AddBarrel(Object &barrel)
 {
 	barrel._oVar1 = 0;
 	barrel._oRndSeed = AdvanceRndSeed();
