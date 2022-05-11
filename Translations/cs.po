@@ -1123,8 +1123,8 @@ msgstr "Teď chcípneš!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Nastavení:\n"
+msgid "Options:"
+msgstr "Nastavení:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1183,12 +1183,8 @@ msgstr "Vypnout omezení snímků během přehrávání dema"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Výběr hry:\n"
+msgid "Game selection:"
+msgstr "Výběr hry:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1207,20 +1203,12 @@ msgstr "Vynutit Hellfire mód"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Hellfire nastavení:\n"
+msgid "Hellfire options:"
+msgstr "Hellfire nastavení:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Chyby hlašte na https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Chyby hlašte na https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
