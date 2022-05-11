@@ -816,32 +816,64 @@ void RunGameLoop(interface_mode uMsg)
 	}
 }
 
+void PrintWithRightPadding(string_view str, size_t width)
+{
+	printInConsole(str);
+	if (str.size() >= width)
+		return;
+	printInConsole(std::string(width - str.size(), ' '));
+}
+
+void PrintHelpOption(string_view flags, string_view description)
+{
+	printInConsole("    ");
+	PrintWithRightPadding(flags, 20);
+	printInConsole(" ");
+	PrintWithRightPadding(description, 30);
+	printNewlineInConsole();
+}
+
 [[noreturn]] void PrintHelpAndExit()
 {
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "Options:\n").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-h, --help", _("Print this message and exit").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--version", _("Print the version and exit").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--data-dir", _("Specify the folder of diabdat.mpq").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--save-dir", _("Specify the folder of save files").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--record <#>", _("Record a demo file").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--demo <#>", _("Play a demo file").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--timedemo", _("Disable all frame limiting during demo playback").c_str());
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nGame selection:\n").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force Shareware mode").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force Diablo mode").c_str());
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--hellfire", _("Force Hellfire mode").c_str());
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n").c_str());
+	printInConsole((/* TRANSLATORS: Commandline Option */ "Options:"));
+	printNewlineInConsole();
+	PrintHelpOption("-h, --help", _(/* TRANSLATORS: Commandline Option */ "Print this message and exit"));
+	PrintHelpOption("--version", _(/* TRANSLATORS: Commandline Option */ "Print the version and exit"));
+	PrintHelpOption("--data-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the folder of diabdat.mpq"));
+	PrintHelpOption("--save-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the folder of save files"));
+	PrintHelpOption("--config-dir", _(/* TRANSLATORS: Commandline Option */ "Specify the location of diablo.ini"));
+	PrintHelpOption("-n", _(/* TRANSLATORS: Commandline Option */ "Skip startup videos"));
+	PrintHelpOption("-f", _(/* TRANSLATORS: Commandline Option */ "Display frames per second"));
+	PrintHelpOption("--verbose", _(/* TRANSLATORS: Commandline Option */ "Enable verbose logging"));
+	PrintHelpOption("--record <#>", _(/* TRANSLATORS: Commandline Option */ "Record a demo file"));
+	PrintHelpOption("--demo <#>", _(/* TRANSLATORS: Commandline Option */ "Play a demo file"));
+	PrintHelpOption("--timedemo", _(/* TRANSLATORS: Commandline Option */ "Disable all frame limiting during demo playback"));
+	printNewlineInConsole();
+	printInConsole(_(/* TRANSLATORS: Commandline Option */ "Game selection:"));
+	printNewlineInConsole();
+	PrintHelpOption("--spawn", _(/* TRANSLATORS: Commandline Option */ "Force Shareware mode"));
+	PrintHelpOption("--diablo", _(/* TRANSLATORS: Commandline Option */ "Force Diablo mode"));
+	PrintHelpOption("--hellfire", _(/* TRANSLATORS: Commandline Option */ "Force Hellfire mode"));
+	printInConsole(_(/* TRANSLATORS: Commandline Option */ "Hellfire options:"));
+	printNewlineInConsole();
 #ifdef _DEBUG
-	printInConsole("\nDebug options:\n");
-	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	printInConsole("    %-20s %-30s\n", "+<internal command>", "Pass commands to the engine");
+	printNewlineInConsole();
+	printInConsole("Debug options:");
+	printNewlineInConsole();
+	PrintHelpOption("-i", "Ignore network timeout");
+	PrintHelpOption("+<internal command>", "Pass commands to the engine");
 #endif
-	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n").c_str());
+	printNewlineInConsole();
+	printInConsole(_("Report bugs at https://github.com/diasurgical/devilutionX/"));
+	printNewlineInConsole();
 	diablo_quit(0);
+}
+
+void PrintFlagsRequiresArgument(string_view flag)
+{
+	printInConsole(flag);
+	printInConsole("requires an argument");
+	printNewlineInConsole();
 }
 
 void DiabloParseFlags(int argc, char **argv)
@@ -858,29 +890,32 @@ void DiabloParseFlags(int argc, char **argv)
 		if (arg == "-h" || arg == "--help") {
 			PrintHelpAndExit();
 		} else if (arg == "--version") {
-			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
+			printInConsole(PROJECT_NAME);
+			printInConsole(" v");
+			printInConsole(PROJECT_VERSION);
+			printNewlineInConsole();
 			diablo_quit(0);
 		} else if (arg == "--data-dir") {
 			if (i + 1 == argc) {
-				printInConsole("%s requires an argument\n", "--data-dir");
+				PrintFlagsRequiresArgument("--data-dir");
 				diablo_quit(0);
 			}
 			paths::SetBasePath(argv[++i]);
 		} else if (arg == "--save-dir") {
 			if (i + 1 == argc) {
-				printInConsole("%s requires an argument\n", "--save-dir");
+				PrintFlagsRequiresArgument("--save-dir");
 				diablo_quit(0);
 			}
 			paths::SetPrefPath(argv[++i]);
 		} else if (arg == "--config-dir") {
 			if (i + 1 == argc) {
-				printInConsole("%s requires an argument\n", "--config-dir");
+				PrintFlagsRequiresArgument("--config-dir");
 				diablo_quit(0);
 			}
 			paths::SetConfigPath(argv[++i]);
 		} else if (arg == "--demo") {
 			if (i + 1 == argc) {
-				printInConsole("%s requires an argument\n", "--demo");
+				PrintFlagsRequiresArgument("--demo");
 				diablo_quit(0);
 			}
 			demoNumber = SDL_atoi(argv[++i]);
@@ -889,7 +924,7 @@ void DiabloParseFlags(int argc, char **argv)
 			timedemo = true;
 		} else if (arg == "--record") {
 			if (i + 1 == argc) {
-				printInConsole("%s requires an argument\n", "--record");
+				PrintFlagsRequiresArgument("--record");
 				diablo_quit(0);
 			}
 			recordNumber = SDL_atoi(argv[++i]);
@@ -921,7 +956,10 @@ void DiabloParseFlags(int argc, char **argv)
 			argumentIndexOfLastCommandPart = i;
 #endif
 		} else {
-			printInConsole("unrecognized option '%s'\n", argv[i]);
+			printInConsole("unrecognized option '");
+			printInConsole(argv[i]);
+			printInConsole("'");
+			printNewlineInConsole();
 			PrintHelpAndExit();
 		}
 	}

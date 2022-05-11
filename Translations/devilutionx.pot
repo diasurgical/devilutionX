@@ -1030,7 +1030,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
-msgid "Options:\n"
+msgid "Options:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1090,9 +1090,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
-msgid ""
-"\n"
-"Game selection:\n"
+msgid "Game selection:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1112,15 +1110,11 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:838
-msgid ""
-"\n"
-"Hellfire options:\n"
+msgid "Hellfire options:"
 msgstr ""
 
 #: Source/diablo.cpp:844
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
 msgstr ""
 
 #: Source/diablo.cpp:956

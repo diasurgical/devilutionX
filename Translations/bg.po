@@ -1125,8 +1125,8 @@ msgstr "Сега ще УМРЕШ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Настройки:\n"
+msgid "Options:"
+msgstr "Настройки:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1185,12 +1185,8 @@ msgstr "Забраняване на всички лимити на кадри п
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Избор на игра:\n"
+msgid "Game selection:"
+msgstr "Избор на игра:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1209,20 +1205,12 @@ msgstr "Принудителен режим Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Настройки на Hellfire:\n"
+msgid "Hellfire options:"
+msgstr "Настройки на Hellfire:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Докладвайте несъответствия на https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Докладвайте несъответствия на https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"

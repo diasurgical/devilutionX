@@ -1131,8 +1131,8 @@ msgstr "Stirb!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Optionen:\n"
+msgid "Options:"
+msgstr "Optionen:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1191,12 +1191,8 @@ msgstr "Alle Frame-Begrenzungen bei Demo-Wiedergabe ausschalten"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Spielauswahl:\n"
+msgid "Game selection:"
+msgstr "Spielauswahl:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1215,20 +1211,12 @@ msgstr "Hellfire erzwingen"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Hellfire-Optionen:\n"
+msgid "Hellfire options:"
+msgstr "Hellfire-Optionen:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Bugs melden unter https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Bugs melden unter https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"

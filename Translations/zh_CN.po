@@ -1104,8 +1104,8 @@ msgstr "现在​你​死定​了！"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "选​项: \n"
+msgid "Options:"
+msgstr "选​项: "
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1164,12 +1164,8 @@ msgstr "播放​录像​回放​时​禁​用​帧​数​限制"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"​游戏​选项​：​\n"
+msgid "Game selection:"
+msgstr "​游戏​选项​：​"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1188,20 +1184,12 @@ msgstr "强制​地狱火​模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"​地​狱火​选项: \n"
+msgid "Hellfire options:"
+msgstr "​地​狱火​选项: "
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"​报告​错误​https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "​报告​错误​https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
