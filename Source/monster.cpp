@@ -4992,32 +4992,6 @@ void decode_enemy(Monster &monster, int enemyId)
 	}
 }
 
-void StartKillOrHitMonster(int m, int pnum, int dam)
-{
-	auto &monster = Monsters[m];
-
-	if ((monster._mhitpoints >> 6) <= 0) {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartKill(m, pnum);
-			monster.Petrify();
-		} else {
-			M_StartKill(m, pnum);
-		}
-	} else {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartHit(m, pnum, dam);
-			monster.Petrify();
-		} else {
-			if (pnum >= 0) {
-				const auto &player = Players[pnum];
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
-					M_GetKnockback(m);
-			}
-			M_StartHit(m, pnum, dam);
-		}
-	}
-}
-
 void Monster::CheckStandAnimationIsLoaded(Direction mdir)
 {
 	if (IsAnyOf(_mmode, MonsterMode::Stand, MonsterMode::Talk)) {

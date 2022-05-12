@@ -334,9 +334,6 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 	int mx = position.x;
 	int my = position.y;
 
-	//PlayerMissile pPlMis = missile;
-	//TrapMissile pTrapMis = missile;
-
 	if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			int mid = dMonster[mx][my];
@@ -841,6 +838,36 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
+void StartKillOrHitMonster(int m, int pnum, int dam, bool resist)
+{
+	auto &monster = Monsters[m];
+
+	if ((monster._mhitpoints >> 6) <= 0) {
+		if (monster._mmode == MonsterMode::Petrified) {
+			M_StartKill(m, pnum);
+			monster.Petrify();
+		} else {
+			M_StartKill(m, pnum);
+		}
+	} else {
+		if (resist) {
+			PlayEffect(monster, 1);
+		} else if (monster._mmode == MonsterMode::Petrified) {
+			if (m > MAX_PLRS - 1)
+				M_StartHit(m, pnum, dam);
+			monster.Petrify();
+		} else {
+			if (pnum >= 0) {
+				const auto &player = Players[pnum];
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+					M_GetKnockback(m);
+			}
+			if (m > MAX_PLRS - 1)
+				M_StartHit(m, pnum, dam);
+		}
+	}
+}
+
 int PlayerMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster)
 {
 	int hper = 0;
@@ -892,7 +919,7 @@ void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int
 	    || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
 		monster._mFlags |= MFLAG_NOHEAL;
 
-	StartKillOrHitMonster(m, pnum, dam);
+	StartKillOrHitMonster(m, pnum, dam, resist);
 
 	if (monster._msquelch == 0) {
 		monster._msquelch = UINT8_MAX;
@@ -921,7 +948,7 @@ void TrapMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m
 	if (DebugGodMode)
 		monster._mhitpoints = 0;
 #endif
-	StartKillOrHitMonster(m, pnum, dam);
+	StartKillOrHitMonster(m, pnum, dam, resist);
 }
 
 

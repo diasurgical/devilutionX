@@ -321,6 +321,5 @@ bool CanTalkToMonst(const Monster &monster);
 bool LiftGargoylesOrIgnoreMages(Monster &monster, bool *ret);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemyId);
-void StartKillOrHitMonster(int m, int pnum, int dam);
 
 } // namespace devilution
