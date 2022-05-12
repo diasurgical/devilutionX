@@ -537,32 +537,6 @@ void InitRndBarrels()
 	}
 }
 
-void AddCryptObjects(int x1, int y1, int x2, int y2)
-{
-	for (int j = y1; j < y2; j++) {
-		for (int i = x1; i < x2; i++) {
-			int pn = dPiece[i][j];
-			if (pn == 77)
-				AddObject(OBJ_L5LDOOR, { i, j });
-			if (pn == 80)
-				AddObject(OBJ_L5RDOOR, { i, j });
-		}
-	}
-}
-
-void AddL3Objs(int x1, int y1, int x2, int y2)
-{
-	for (int j = y1; j < y2; j++) {
-		for (int i = x1; i < x2; i++) {
-			int pn = dPiece[i][j];
-			if (pn == 531)
-				AddObject(OBJ_L3LDOOR, { i, j });
-			if (pn == 534)
-				AddObject(OBJ_L3RDOOR, { i, j });
-		}
-	}
-}
-
 void AddL2Torches()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -4601,16 +4575,27 @@ void AddL2Objs(int x1, int y1, int x2, int y2)
 	}
 }
 
-void AddL5Objs(int x1, int y1, int x2, int y2)
+void AddL3Objs(int x1, int y1, int x2, int y2)
 {
 	for (int j = y1; j < y2; j++) {
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
-			if (pn == 270)
-				AddObject(OBJ_L1LIGHT, { i, j });
-			if (pn == 44 || pn == 51 || pn == 214)
+			if (pn == 531)
+				AddObject(OBJ_L3LDOOR, { i, j });
+			if (pn == 534)
+				AddObject(OBJ_L3RDOOR, { i, j });
+		}
+	}
+}
+
+void AddCryptObjects(int x1, int y1, int x2, int y2)
+{
+	for (int j = y1; j < y2; j++) {
+		for (int i = x1; i < x2; i++) {
+			int pn = dPiece[i][j];
+			if (pn == 77)
 				AddObject(OBJ_L5LDOOR, { i, j });
-			if (pn == 46 || pn == 56)
+			if (pn == 80)
 				AddObject(OBJ_L5RDOOR, { i, j });
 		}
 	}
@@ -5199,8 +5184,11 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 		ObjL2Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 		AddL2Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
+	if (leveltype == DTYPE_CAVES) {
+		AddL3Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+	}
 	if (leveltype == DTYPE_CRYPT) {
-		AddL5Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
+		AddCryptObjects(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
 }
 
