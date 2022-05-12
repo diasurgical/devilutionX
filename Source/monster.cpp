@@ -1299,7 +1299,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 		if (monster._mmode == MonsterMode::Petrified)
 			hit = 0;
 		bool unused;
-		if (!CheckMonsterHit(monster, &unused) && hit < hper) {
+		if (!LiftGargoylesOrIgnoreMages(monster, &unused) && hit < hper) {
 			int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 			monster._mhitpoints -= dam;
 			if (monster._mhitpoints >> 6 <= 0) {
@@ -4951,7 +4951,7 @@ bool CanTalkToMonst(const Monster &monster)
 	return IsAnyOf(monster._mgoal, MGOAL_INQUIRING, MGOAL_TALKING);
 }
 
-bool CheckMonsterHit(Monster &monster, bool *ret)
+bool LiftGargoylesOrIgnoreMages(Monster &monster, bool *ret)
 {
 	if (monster._mAi == AI_GARG && (monster._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
 		monster._mFlags &= ~MFLAG_ALLOW_SPECIAL;
@@ -4992,6 +4992,32 @@ void decode_enemy(Monster &monster, int enemyId)
 	}
 }
 
+void StartKillOrHitMonster(int m, int pnum, int dam)
+{
+	auto &monster = Monsters[m];
+
+	if ((monster._mhitpoints >> 6) <= 0) {
+		if (monster._mmode == MonsterMode::Petrified) {
+			M_StartKill(m, pnum);
+			monster.Petrify();
+		} else {
+			M_StartKill(m, pnum);
+		}
+	} else {
+		if (monster._mmode == MonsterMode::Petrified) {
+			M_StartHit(m, pnum, dam);
+			monster.Petrify();
+		} else {
+			if (pnum >= 0) {
+				const auto &player = Players[pnum];
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+					M_GetKnockback(m);
+			}
+			M_StartHit(m, pnum, dam);
+		}
+	}
+}
+
 void Monster::CheckStandAnimationIsLoaded(Direction mdir)
 {
 	if (IsAnyOf(_mmode, MonsterMode::Stand, MonsterMode::Talk)) {
@@ -5016,6 +5042,43 @@ bool Monster::IsWalking() const
 	default:
 		return false;
 	}
+}
+
+bool Monster::IsImmune(missile_id mName) const
+{
+	missile_resistance missileElement = MissilesData[mName].mResist;
+
+	if (((mMagicRes & IMMUNE_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((mMagicRes & IMMUNE_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((mMagicRes & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
+	    || ((mMagicRes & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
+		return true;
+	if (mName == MIS_HBOLT && MType->mtype != MT_DIABLO && MData->mMonstClass != MonsterClass::Undead)
+		return true;
+	return false;
+}
+
+bool Monster::IsResistant(missile_id mName) const
+{
+	missile_resistance missileElement = MissilesData[mName].mResist;
+
+	if (((mMagicRes & RESIST_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((mMagicRes & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((mMagicRes & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
+		return true;
+	if (gbIsHellfire && mName == MIS_HBOLT && (MType->mtype == MT_DIABLO || MType->mtype == MT_BONEDEMN))
+		return true;
+	return false;
+}
+
+bool Monster::IsPossibleToHit() const
+{
+	if (_mhitpoints >> 6 <= 0
+	    || mtalkmsg != TEXT_NONE
+	    || (MType->mtype == MT_ILLWEAV && _mgoal == MGOAL_RETREAT)
+	    || _mmode == MonsterMode::Charge)
+		return false;
+	return true;
 }
 
 } // namespace devilution

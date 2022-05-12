@@ -132,6 +132,26 @@ struct Missile {
 	{
 		return _misource == -1;
 	}
+
+	bool TryHitMonster(int m, int mindam, int maxdam, bool shift);
+
+private:
+	bool IsMonsterPossibleToHit(devilution::Monster &monster) const;
+	virtual int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster);
+	virtual void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m);
+};
+
+class TrapMissile : public Missile {
+
+public:
+	TrapMissile(const Missile &M)
+	    : Missile(M) {};
+	TrapMissile()
+	    : Missile() {};
+
+private:
+	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) override;
+	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) override;
 };
 
 extern std::list<Missile> Missiles;
@@ -160,7 +180,6 @@ int GetSpellLevel(int playerId, spell_id sn);
  * @return the direction of the p1->p2 vector
  */
 Direction16 GetDirection16(Point p1, Point p2);
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**

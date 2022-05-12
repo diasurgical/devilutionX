@@ -823,17 +823,8 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 	auto &player = Players[pnum];
 
-	if ((monster._mhitpoints >> 6) <= 0) {
+	if (!monster.IsPossibleToHit())
 		return false;
-	}
-
-	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT) {
-		return false;
-	}
-
-	if (monster._mmode == MonsterMode::Charge) {
-		return false;
-	}
 
 	if (adjacentDamage) {
 		if (player._pLevel > 20)
@@ -851,7 +842,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	hper = clamp(hper, 5, 95);
 
 	bool ret = false;
-	if (CheckMonsterHit(monster, &ret)) {
+	if (LiftGargoylesOrIgnoreMages(monster, &ret)) {
 		return ret;
 	}
 
@@ -994,24 +985,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		monster._mhitpoints = 0; /* double check */
 	}
 #endif
-	if ((monster._mhitpoints >> 6) <= 0) {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartKill(m, pnum);
-			monster.Petrify();
-		} else {
-			M_StartKill(m, pnum);
-		}
-	} else {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartHit(m, pnum, dam);
-			monster.Petrify();
-		} else {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback)) {
-				M_GetKnockback(m);
-			}
-			M_StartHit(m, pnum, dam);
-		}
-	}
+	StartKillOrHitMonster(m, pnum, dam);
 
 	return true;
 }
