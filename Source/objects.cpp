@@ -1538,10 +1538,10 @@ void UpdateDoor(Object &door)
 	door._oMissFlag = true;
 }
 
-void UpdateSarcoffagus(Object &sarcoffagus)
+void UpdateSarcophagus(Object &sarcophagus)
 {
-	if (sarcoffagus._oAnimFrame == sarcoffagus._oAnimLen)
-		sarcoffagus._oAnimFlag = 0;
+	if (sarcophagus._oAnimFrame == sarcophagus._oAnimLen)
+		sarcophagus._oAnimFlag = 0;
 }
 
 void ActivateTrapLine(int ttype, int tid)
@@ -5079,7 +5079,7 @@ void ProcessObjects()
 			break;
 		case OBJ_SARC:
 		case OBJ_L5SARC:
-			UpdateSarcoffagus(object);
+			UpdateSarcophagus(object);
 			break;
 		case OBJ_FLAMEHOLE:
 			UpdateFlameTrap(object);
