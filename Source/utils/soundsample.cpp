@@ -4,8 +4,8 @@
 #include <cmath>
 #include <utility>
 
+#include <Aulib/DecoderDrmp3.h>
 #include <Aulib/DecoderDrwav.h>
-#include <Aulib/ResamplerSpeex.h>
 #include <SDL.h>
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -15,6 +15,7 @@
 
 #include "engine/assets.hpp"
 #include "options.h"
+#include "utils/aulib.hpp"
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/stubs.h"
@@ -56,13 +57,32 @@ float PanLogToLinear(int logPan)
 	return copysign(1.F - factor, static_cast<float>(logPan));
 }
 
-} // namespace
+std::unique_ptr<Aulib::Decoder> CreateDecoder(bool isMp3)
+{
+	if (isMp3)
+		return std::make_unique<Aulib::DecoderDrmp3>();
+	return std::make_unique<Aulib::DecoderDrwav>();
+}
 
+std::unique_ptr<Aulib::Stream> CreateStream(SDL_RWops *handle, bool isMp3)
+{
+	return std::make_unique<Aulib::Stream>(handle, CreateDecoder(isMp3), CreateAulibResampler(), /*closeRw=*/true);
+}
+
+/**
+ * @brief Converts log volume passed in into linear volume.
+ * @param logVolume Logarithmic volume in the range [logMin..logMax]
+ * @param logMin Volume range minimum (usually ATTENUATION_MIN for game sounds and VOLUME_MIN for volume sliders)
+ * @param logMax Volume range maximum (usually 0)
+ * @return Linear volume in the range [0..1]
+ */
 float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 {
 	const auto logScaled = math::Remap(static_cast<float>(logMin), static_cast<float>(logMax), MillibelMin, MillibelMax, static_cast<float>(logVolume));
 	return std::pow(LogBase, logScaled / VolumeScale); // linVolume
 }
+
+} // namespace
 
 ///// SoundSample /////
 
@@ -83,58 +103,39 @@ bool SoundSample::IsPlaying()
 	return stream_ && stream_->isPlaying();
 }
 
-/**
- * @brief Start playing the sound
- */
-void SoundSample::Play(int logSoundVolume, int logUserVolume, int logPan)
+bool SoundSample::Play(int numIterations)
 {
-	if (!stream_)
-		return;
-
-	const int combinedLogVolume = logSoundVolume + logUserVolume * (ATTENUATION_MIN / VOLUME_MIN);
-	const float linearVolume = VolumeLogToLinear(combinedLogVolume, ATTENUATION_MIN, 0);
-	stream_->setVolume(linearVolume);
-
-	const float linearPan = PanLogToLinear(logPan);
-	stream_->setStereoPosition(linearPan);
-
-	if (!stream_->play()) {
+	if (!stream_->play(numIterations)) {
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
-		return;
+		return false;
 	}
+	return true;
 }
 
-/**
- * @brief Stop playing the sound
- */
-void SoundSample::Stop()
+int SoundSample::SetChunkStream(std::string filePath, bool isMp3, bool logErrors)
 {
-	if (stream_)
-		stream_->stop();
-}
-
-int SoundSample::SetChunkStream(std::string filePath)
-{
-	file_path_ = std::move(filePath);
-	SDL_RWops *handle = OpenAsset(file_path_.c_str(), /*threadsafe=*/true);
+	SDL_RWops *handle = OpenAsset(filePath.c_str(), /*threadsafe=*/true);
 	if (handle == nullptr) {
-		LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
+		if (logErrors)
+			LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
-
-	stream_ = std::make_unique<Aulib::Stream>(handle, std::make_unique<Aulib::DecoderDrwav>(),
-	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
+	file_path_ = std::move(filePath);
+	isMp3_ = isMp3;
+	stream_ = CreateStream(handle, isMp3_);
 	if (!stream_->open()) {
 		stream_ = nullptr;
-		LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
+		if (logErrors)
+			LogError(LogCategory::Audio, "Aulib::Stream::open (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
 	return 0;
 }
 
 #ifndef STREAM_ALL_AUDIO
-int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes)
+int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes, bool isMp3)
 {
+	isMp3_ = isMp3;
 	file_data_ = std::move(fileData);
 	file_data_size_ = dwBytes;
 	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), dwBytes);
@@ -142,8 +143,7 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 		return -1;
 	}
 
-	stream_ = std::make_unique<Aulib::Stream>(buf, std::make_unique<Aulib::DecoderDrwav>(),
-	    std::make_unique<Aulib::ResamplerSpeex>(*sgOptions.Audio.resamplingQuality), /*closeRw=*/true);
+	stream_ = CreateStream(buf, isMp3_);
 	if (!stream_->open()) {
 		stream_ = nullptr;
 		file_data_ = nullptr;
@@ -155,9 +155,16 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 }
 #endif
 
-/**
- * @return Audio duration in ms
- */
+void SoundSample::SetVolume(int logVolume, int logMin, int logMax)
+{
+	stream_->setVolume(VolumeLogToLinear(logVolume, logMin, logMax));
+}
+
+void SoundSample::SetStereoPosition(int logPan)
+{
+	stream_->setStereoPosition(PanLogToLinear(logPan));
+}
+
 int SoundSample::GetLength() const
 {
 	if (!stream_)

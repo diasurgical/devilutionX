@@ -8,7 +8,7 @@ namespace devilution {
 extern bool TestPlayerDoGotHit(int pnum);
 }
 
-int RunBlockTest(int frames, int flags)
+int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
 	int pnum = 0;
 	auto &player = Players[pnum];
@@ -28,56 +28,63 @@ int RunBlockTest(int frames, int flags)
 	return i;
 }
 
-#define NORM 0
-#define BAL ISPL_FASTRECOVER
-#define STA ISPL_FASTERRECOVER
-#define HAR ISPL_FASTESTRECOVER
-#define BALSTA (ISPL_FASTRECOVER | ISPL_FASTERRECOVER)
-#define BALHAR (ISPL_FASTRECOVER | ISPL_FASTESTRECOVER)
-#define STAHAR (ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
-#define ZEN (ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)
-#define WAR 6
-#define ROU 7
-#define SRC 8
+constexpr ItemSpecialEffect Normal = ItemSpecialEffect::None;
+constexpr ItemSpecialEffect Balance = ItemSpecialEffect::FastHitRecovery;
+constexpr ItemSpecialEffect Stability = ItemSpecialEffect::FasterHitRecovery;
+constexpr ItemSpecialEffect Harmony = ItemSpecialEffect::FastestHitRecovery;
+constexpr ItemSpecialEffect BalanceStability = Balance | Stability;
+constexpr ItemSpecialEffect BalanceHarmony = Balance | Harmony;
+constexpr ItemSpecialEffect StabilityHarmony = Stability | Harmony;
+constexpr ItemSpecialEffect Zen = Balance | Stability | Harmony;
 
-int BlockData[][3] = {
-	{ 6, WAR, NORM },
-	{ 7, ROU, NORM },
-	{ 8, SRC, NORM },
+constexpr int Warrior = 6;
+constexpr int Rogue = 7;
+constexpr int Sorcerer = 8;
 
-	{ 5, WAR, BAL },
-	{ 6, ROU, BAL },
-	{ 7, SRC, BAL },
+struct BlockTestCase {
+	int expectedRecoveryFrame;
+	int maxRecoveryFrame;
+	ItemSpecialEffect itemFlags;
+};
 
-	{ 4, WAR, STA },
-	{ 5, ROU, STA },
-	{ 6, SRC, STA },
+BlockTestCase BlockData[] = {
+	{ 6, Warrior, Normal },
+	{ 7, Rogue, Normal },
+	{ 8, Sorcerer, Normal },
 
-	{ 3, WAR, HAR },
-	{ 4, ROU, HAR },
-	{ 5, SRC, HAR },
+	{ 5, Warrior, Balance },
+	{ 6, Rogue, Balance },
+	{ 7, Sorcerer, Balance },
 
-	{ 4, WAR, BALSTA },
-	{ 5, ROU, BALSTA },
-	{ 6, SRC, BALSTA },
+	{ 4, Warrior, Stability },
+	{ 5, Rogue, Stability },
+	{ 6, Sorcerer, Stability },
 
-	{ 3, WAR, BALHAR },
-	{ 4, ROU, BALHAR },
-	{ 5, SRC, BALHAR },
+	{ 3, Warrior, Harmony },
+	{ 4, Rogue, Harmony },
+	{ 5, Sorcerer, Harmony },
 
-	{ 3, WAR, STAHAR },
-	{ 4, ROU, STAHAR },
-	{ 5, SRC, STAHAR },
+	{ 4, Warrior, BalanceStability },
+	{ 5, Rogue, BalanceStability },
+	{ 6, Sorcerer, BalanceStability },
 
-	{ 2, WAR, ZEN },
-	{ 3, ROU, ZEN },
-	{ 4, SRC, ZEN },
+	{ 3, Warrior, BalanceHarmony },
+	{ 4, Rogue, BalanceHarmony },
+	{ 5, Sorcerer, BalanceHarmony },
+
+	{ 3, Warrior, StabilityHarmony },
+	{ 4, Rogue, StabilityHarmony },
+	{ 5, Sorcerer, StabilityHarmony },
+
+	{ 2, Warrior, Zen },
+	{ 3, Rogue, Zen },
+	{ 4, Sorcerer, Zen },
 };
 
 TEST(Player, PM_DoGotHit)
 {
 	for (size_t i = 0; i < sizeof(BlockData) / sizeof(*BlockData); i++) {
-		EXPECT_EQ(BlockData[i][0], RunBlockTest(BlockData[i][1], BlockData[i][2]));
+		EXPECT_EQ(BlockData[i].expectedRecoveryFrame, RunBlockTest(BlockData[i].maxRecoveryFrame, BlockData[i].itemFlags));
 	}
 }
 
@@ -126,7 +133,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pBattleNet, 0);
 	ASSERT_EQ(player.pManaShield, 0);
 	ASSERT_EQ(player.pDifficulty, 0);
-	ASSERT_EQ(player.pDamAcFlags, 0);
+	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MAX_PATH_LENGTH), 0);
@@ -161,7 +168,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIBonusAC, 0);
 	ASSERT_EQ(player._pIBonusDamMod, 0);
 	ASSERT_EQ(player._pISpells, 0);
-	ASSERT_EQ(player._pIFlags, 0);
+	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
 	ASSERT_EQ(player._pIGetHit, 0);
 	ASSERT_EQ(player._pISplLvlAdd, 0);
 	ASSERT_EQ(player._pISplDur, 0);

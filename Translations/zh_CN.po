@@ -414,30 +414,24 @@ msgid "Diablo"
 msgstr "迪亚波罗"
 
 #: Source/DiabloUI/selgame.cpp:86
-#, fuzzy
-#| msgid "Shareware"
 msgid "Diablo Shareware"
-msgstr "共​享版"
+msgstr "《暗黑破坏神》共​享版"
 
 #: Source/DiabloUI/selgame.cpp:89 Source/options.cpp:544 Source/options.cpp:595
 msgid "Hellfire"
 msgstr "地狱火"
 
 #: Source/DiabloUI/selgame.cpp:92
-#, fuzzy
-#| msgid "Shareware"
 msgid "Hellfire Shareware"
-msgstr "共​享版"
+msgstr "《地狱火》共​享版"
 
 #: Source/DiabloUI/selgame.cpp:95
 msgid "The host is running a different game than you."
 msgstr "主机​运行​的​游戏​与​您​不同。"
 
 #: Source/DiabloUI/selgame.cpp:97
-#, fuzzy
-#| msgid "The host is running a different game than you."
 msgid "The host is running a different game mode ({:s}) than you."
-msgstr "主机​运行​的​游戏​与​您​不同。"
+msgstr "主机运行的({:s})模式与你当前的模式不同。"
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:99
@@ -466,10 +460,8 @@ msgid "Join Game"
 msgstr "加入​游戏"
 
 #: Source/DiabloUI/selgame.cpp:150
-#, fuzzy
-#| msgid "Public Game"
 msgid "Public Games"
-msgstr "公开​游戏"
+msgstr "公开游戏"
 
 #: Source/DiabloUI/selgame.cpp:155 Source/error.cpp:64
 msgid "Loading..."
@@ -498,26 +490,16 @@ msgid ""
 msgstr "创建​一​个​公开​游戏，任何​人​都​可​加入​的，游戏​难度​将​依据​你​的​设定。"
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter Game ID to join a game already in progress."
-msgstr "输入​IP​或​主机名，然后​加入​在​该​地址​正在​进行​的​游戏。"
+msgstr "输入游戏ID来加入一个正在进行的游戏。"
 
 #: Source/DiabloUI/selgame.cpp:196
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter an IP or a hostname to join a game already in progress."
-msgstr "输入​IP​或​主机名，然后​加入​在​该​地址​正在​进行​的​游戏。"
+msgstr "输入一个IP或者主机名称来加入一个正在进行的游戏。"
 
 #: Source/DiabloUI/selgame.cpp:201
-#, fuzzy
-#| msgid "Join the public game already in progress at this address."
 msgid "Join the public game already in progress."
-msgstr "加入​该​地址​已经​处于​进行​中​的​公开​游戏。"
+msgstr "加入一个正在进行的公开游戏。"
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
 #: Source/DiabloUI/selgame.cpp:360 Source/DiabloUI/selgame.cpp:464
@@ -540,10 +522,8 @@ msgstr "地狱"
 
 #. TRANSLATORS: {:s} means: Game Difficulty.
 #: Source/DiabloUI/selgame.cpp:216 Source/automap.cpp:532
-#, fuzzy
-#| msgid "{:s} {:s}, Difficulty: {:s}"
 msgid "Difficulty: {:s}"
-msgstr "{:s} {:s}, 难度: {:s}"
+msgstr "难度: {:s}"
 
 #: Source/DiabloUI/selgame.cpp:220 Source/gamemenu.cpp:165
 msgid "Speed: Normal"
@@ -562,27 +542,20 @@ msgid "Speed: Fastest"
 msgstr "速度: 最​快"
 
 #: Source/DiabloUI/selgame.cpp:237
-#, fuzzy
-#| msgctxt "monster"
-#| msgid "Slayer"
 msgid "Players: "
-msgstr "屠杀者"
+msgstr "玩家数: "
 
 #: Source/DiabloUI/selgame.cpp:297
 msgid "Select Difficulty"
 msgstr "选择​难度"
 
 #: Source/DiabloUI/selgame.cpp:315
-#, fuzzy
-#| msgid "Join TCP Games"
 msgid "Join {:s} Games"
-msgstr "加入​TCP​游戏"
+msgstr "加入 {:s} 游戏"
 
 #: Source/DiabloUI/selgame.cpp:320
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter Game ID"
-msgstr "输入​名称"
+msgstr "输入游戏ID"
 
 #: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
@@ -762,7 +735,7 @@ msgstr "无法​创建​角色。"
 
 #: Source/DiabloUI/selhero.cpp:436 Source/DiabloUI/selhero.cpp:439
 msgid "Level:"
-msgstr "层数:"
+msgstr "等级:"
 
 #: Source/DiabloUI/selhero.cpp:444
 msgid "Strength:"
@@ -882,14 +855,14 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji "
+"which is licensed under CC-BY 4.0. The port also makes use of SDL which is "
+"licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
-"\t​这个​移植​使用​了 CharisSILB、Unifont 和 Noto，它们​处于​SIL Open Font License、"
-"CC-BY 4.0​和​Twitmoji许可​授权。该​移植​还​使用​了​SDL，处于​zlib-license许可。更​多​细"
-"节​请​参见​ReadMe。"
+"\t​这个​移植​使用​了 Charis SIL、New Athena Unicode、Unifont 和 Noto，它们​处于​"
+"SIL Open Font License、CC-BY 4.0​和​Twitmoji许可​授权。该​移植​还​使用​了​SDL，处于​"
+"zlib-license许可。更​多​细节​请​参见​ReadMe。"
 
 #: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -938,14 +911,10 @@ msgid "Read-Only Directory Error"
 msgstr "只​读​目录​错误"
 
 #: Source/automap.cpp:484
-#, fuzzy
-#| msgid "game: "
 msgid "Game: "
 msgstr "游戏: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "password: "
 msgid "Password: "
 msgstr "密码: "
 
@@ -963,7 +932,7 @@ msgstr "墓穴: {:d} 层"
 
 #: Source/automap.cpp:513
 msgid "Level: {:d}"
-msgstr "等级: {:d}"
+msgstr "层数: {:d}"
 
 #: Source/control.cpp:155
 msgid "Tab"
@@ -1070,7 +1039,7 @@ msgstr "未​满足​条件"
 
 #: Source/control.cpp:897
 msgid "{:s}, Level: {:d}"
-msgstr "{:s}，层数: {:d}"
+msgstr "{:s}, 等级: {:d}"
 
 #: Source/control.cpp:898
 msgid "Hit Points {:d} of {:d}"
@@ -1115,7 +1084,7 @@ msgstr "不​洁​祭坛"
 
 #: Source/cursor.cpp:236
 msgid "level 15"
-msgstr "15​级"
+msgstr "15​层"
 
 #: Source/diablo.cpp:119
 msgid "I need help! Come Here!"
@@ -1135,8 +1104,8 @@ msgstr "现在​你​死定​了！"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "选​项: \n"
+msgid "Options:"
+msgstr "选​项: "
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1195,12 +1164,8 @@ msgstr "播放​录像​回放​时​禁​用​帧​数​限制"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"​游戏​选项​：​\n"
+msgid "Game selection:"
+msgstr "​游戏​选项​：​"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1219,20 +1184,12 @@ msgstr "强制​地狱火​模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"​地​狱火​选项: \n"
+msgid "Hellfire options:"
+msgstr "​地​狱火​选项: "
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"​报告​错误​https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "​报告​错误​https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
@@ -1311,32 +1268,28 @@ msgid "Stops walking and cancel pending actions."
 msgstr "停止移动和正在执行的动作。"
 
 #: Source/diablo.cpp:1514
-#, fuzzy
-#| msgid "lightning"
 msgid "Item highlighting"
-msgstr "闪​电"
+msgstr "物品高亮"
 
 #: Source/diablo.cpp:1515
 msgid "Show/hide items on ground."
-msgstr ""
+msgstr "显示/隐藏地面物品。"
 
 #: Source/diablo.cpp:1521
-#, fuzzy
-#| msgid "Resist lightning"
 msgid "Toggle item highlighting"
-msgstr "闪电​抗性"
+msgstr "切换物品高亮"
 
 #: Source/diablo.cpp:1522
 msgid "Permanent show/hide items on ground."
-msgstr ""
+msgstr "永久显示/隐藏地面上的物品。"
 
 #: Source/diablo.cpp:1528
 msgid "Toggle automap"
-msgstr ""
+msgstr "开关自动地图"
 
 #: Source/diablo.cpp:1529
 msgid "Toggles if automap is displayed."
-msgstr ""
+msgstr "切换是否显示自动地图。"
 
 #: Source/diablo.cpp:1538
 msgid "Open Inventory screen."
@@ -1375,16 +1328,12 @@ msgid "Use Quick Message in chat."
 msgstr "使用快捷消息进行交谈。"
 
 #: Source/diablo.cpp:1580
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide Info Screens"
-msgstr "空​格: 隐藏​所有​信息​栏"
+msgstr "隐藏屏幕提示"
 
 #: Source/diablo.cpp:1581
-#, fuzzy
-#| msgid "Space: Hide all info screens"
 msgid "Hide all info screens."
-msgstr "空​格: 隐藏​所有​信息​栏"
+msgstr "隐藏所有屏幕提示。"
 
 #: Source/diablo.cpp:1601
 msgid "Zoom"
@@ -1395,16 +1344,12 @@ msgid "Zoom Game Screen."
 msgstr "缩放游戏界面。"
 
 #: Source/diablo.cpp:1612
-#, fuzzy
-#| msgid "Save Game"
 msgid "Pause Game"
-msgstr "保存​游戏"
+msgstr "暂停游戏"
 
 #: Source/diablo.cpp:1613
-#, fuzzy
-#| msgid "Saves the game."
 msgid "Pauses the game."
-msgstr "保存游戏。"
+msgstr "暂停当前游戏。"
 
 #: Source/diablo.cpp:1618
 msgid "Decrease Gamma"
@@ -1432,11 +1377,11 @@ msgstr "打开​帮助​屏幕。"
 
 #: Source/diablo.cpp:1642
 msgid "Screenshot"
-msgstr ""
+msgstr "屏幕截图"
 
 #: Source/diablo.cpp:1643
 msgid "Takes a screenshot."
-msgstr ""
+msgstr "截取当前屏幕画面的图片。"
 
 #: Source/diablo.cpp:1649
 msgid "Game info"
@@ -1448,23 +1393,16 @@ msgstr "显示游戏信息。"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1654
-#, fuzzy
-#| msgid "{:d} {:s} charge"
-#| msgid_plural "{:d} {:s} charges"
 msgid "{:s} {:s}"
-msgstr "{:d} {:s} 充能"
+msgstr "{:s} {:s}"
 
 #: Source/diablo.cpp:1663
-#, fuzzy
-#| msgid "Chat"
 msgid "Chat Log"
-msgstr "交谈"
+msgstr "聊天记录"
 
 #: Source/diablo.cpp:1664
-#, fuzzy
-#| msgid "Displays game infos."
 msgid "Displays chat log."
-msgstr "显示游戏信息。"
+msgstr "显示聊天记录。"
 
 #: Source/discord/discord.cpp:66 Source/objects.cpp:136
 msgid "Town"
@@ -3843,22 +3781,18 @@ msgstr "防水​之​油"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
 #: Source/items.cpp:1134
-#, fuzzy
-#| msgid "{0} of {1}"
 msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{1}{0}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1142
-#, fuzzy
 msgctxt "spell"
 msgid "{0} {1} of {2}"
 msgstr "{2}{0}{1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1160
-#, fuzzy
 msgid "{0} {1} of {2}"
 msgstr "{2}{0}{1}"
 
@@ -4023,19 +3957,19 @@ msgstr "右击​阅读"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
 msgid "Select from spell book, then"
-msgstr ""
+msgstr "从法术书中选择，之后"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
-msgstr ""
+msgstr "施放法术进行阅读"
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
-msgstr ""
+msgstr "打开物品使用"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
-msgstr ""
+msgstr "激活阅读"
 
 #: Source/items.cpp:1825
 msgid "Right-click to read, then"
@@ -4051,7 +3985,7 @@ msgstr "右击​使用"
 
 #: Source/items.cpp:1854
 msgid "Activate to use"
-msgstr ""
+msgstr "激活使用"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -4059,7 +3993,7 @@ msgstr "右击​查看"
 
 #: Source/items.cpp:1869
 msgid "Activate to view"
-msgstr ""
+msgstr "激活显示"
 
 #: Source/items.cpp:1873
 msgctxt "player"
@@ -4118,40 +4052,32 @@ msgid "Resist Fire: {:+d}%"
 msgstr "火焰​抗性: {:+d}%"
 
 #: Source/items.cpp:3564
-#, fuzzy
-#| msgid "Resist Fire: {:+d}%"
 msgid "Resist Fire: {:+d}% MAX"
-msgstr "火焰​抗性: {:+d}%"
+msgstr "火焰​抗性: {:+d}% 最大值"
 
 #: Source/items.cpp:3568
 msgid "Resist Lightning: {:+d}%"
 msgstr "闪电​抗性: {:+d}%"
 
 #: Source/items.cpp:3570
-#, fuzzy
-#| msgid "Resist Lightning: {:+d}%"
 msgid "Resist Lightning: {:+d}% MAX"
-msgstr "闪电​抗性: {:+d}%"
+msgstr "闪电​抗性: {:+d}% 最大值"
 
 #: Source/items.cpp:3574
 msgid "Resist Magic: {:+d}%"
 msgstr "抵抗​魔法: {:+d}%"
 
 #: Source/items.cpp:3576
-#, fuzzy
-#| msgid "Resist Magic: {:+d}%"
 msgid "Resist Magic: {:+d}% MAX"
-msgstr "抵抗​魔法: {:+d}%"
+msgstr "抵抗​魔法: {:+d}% 最大值"
 
 #: Source/items.cpp:3580
 msgid "Resist All: {:+d}%"
 msgstr "所有​抗性: {:+d}%"
 
 #: Source/items.cpp:3582
-#, fuzzy
-#| msgid "Resist All: {:+d}%"
 msgid "Resist All: {:+d}% MAX"
-msgstr "所有​抗性: {:+d}%"
+msgstr "所有​抗性: {:+d}% 最大值"
 
 #: Source/items.cpp:3585
 msgid "spells are increased {:d} level"
@@ -4501,11 +4427,11 @@ msgstr "未​鉴定"
 
 #: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
 msgid "Unable to open save file archive"
-msgstr "无法​打开​保存​文件​存档"
+msgstr "无法​打开存档文件"
 
 #: Source/loadsave.cpp:1833
 msgid "Invalid save file"
-msgstr "无效​的​保存​文件"
+msgstr "无效​的存档​文件"
 
 #: Source/loadsave.cpp:1864
 msgid "Player is on a Hellfire only level"
@@ -4747,27 +4673,21 @@ msgid "Flayed One"
 msgstr "剥​皮魔"
 
 #: Source/monstdat.cpp:76
-#, fuzzy
 msgctxt "monster"
 msgid "Wyrm"
 msgstr "游龙"
 
 #: Source/monstdat.cpp:77
-#, fuzzy
-#| msgid "Cave Slug"
 msgctxt "monster"
 msgid "Cave Slug"
 msgstr "洞​穴蛞蝓"
 
 #: Source/monstdat.cpp:78
-#, fuzzy
 msgctxt "monster"
 msgid "Devil Wyrm"
 msgstr "邪恶游龙"
 
 #: Source/monstdat.cpp:79
-#, fuzzy
-#| msgid "Devourer"
 msgctxt "monster"
 msgid "Devourer"
 msgstr "吞食​虫"
@@ -4818,7 +4738,6 @@ msgid "oldboned"
 msgstr "老​骨头"
 
 #: Source/monstdat.cpp:89
-#, fuzzy
 msgctxt "monster"
 msgid "Red Death"
 msgstr "红色​死神"
@@ -4959,7 +4878,6 @@ msgid "Blood Knight"
 msgstr "血​骑士"
 
 #: Source/monstdat.cpp:117
-#, fuzzy
 msgctxt "monster"
 msgid "The Shredded"
 msgstr "撕​裂者"
@@ -4975,8 +4893,6 @@ msgid "Pain Master"
 msgstr "痛楚​大师"
 
 #: Source/monstdat.cpp:120
-#, fuzzy
-#| msgid "Reality Weaver"
 msgctxt "monster"
 msgid "Reality Weaver"
 msgstr "现实​编织者"
@@ -5047,22 +4963,16 @@ msgid "Stinger"
 msgstr "钉​刺者"
 
 #: Source/monstdat.cpp:134
-#, fuzzy
-#| msgid "Psychorb"
 msgctxt "monster"
 msgid "Psychorb"
-msgstr "精神​失控者"
+msgstr "癫狂球体"
 
 #: Source/monstdat.cpp:135
-#, fuzzy
-#| msgid "Arachnon"
 msgctxt "monster"
 msgid "Arachnon"
 msgstr "蛛​网​魔"
 
 #: Source/monstdat.cpp:136
-#, fuzzy
-#| msgid "Felltwin"
 msgctxt "monster"
 msgid "Felltwin"
 msgstr "孪​生者"
@@ -5073,15 +4983,11 @@ msgid "Hork Spawn"
 msgstr "腐尸​诞生者"
 
 #: Source/monstdat.cpp:138
-#, fuzzy
-#| msgid "Venomtail"
 msgctxt "monster"
 msgid "Venomtail"
 msgstr "毒尾"
 
 #: Source/monstdat.cpp:139
-#, fuzzy
-#| msgid "Necromorb"
 msgctxt "monster"
 msgid "Necromorb"
 msgstr "死​尸"
@@ -5092,13 +4998,11 @@ msgid "Spider Lord"
 msgstr "蜘蛛​领主"
 
 #: Source/monstdat.cpp:141
-#, fuzzy
 msgctxt "monster"
 msgid "Lashworm"
 msgstr "鞭状蠕​虫"
 
 #: Source/monstdat.cpp:142
-#, fuzzy
 msgctxt "monster"
 msgid "Torchant"
 msgstr "火​蚂蚁"
@@ -5159,8 +5063,6 @@ msgid "Arch Lich"
 msgstr "高​阶​巫妖"
 
 #: Source/monstdat.cpp:154
-#, fuzzy
-#| msgid "Biclops"
 msgctxt "monster"
 msgid "Biclops"
 msgstr "双​钩"
@@ -5234,17 +5136,14 @@ msgid "Bonehead Keenaxe"
 msgstr "骷​髅头​基纳克斯"
 
 #: Source/monstdat.cpp:487
-#, fuzzy
 msgctxt "monster"
 msgid "Bladeskin the Slasher"
 msgstr "刀​刃皮肤·鞭​笞者"
 
 #: Source/monstdat.cpp:488
-#, fuzzy
-#| msgid "Soulpus"
 msgctxt "monster"
 msgid "Soulpus"
-msgstr "放逐​之魂"
+msgstr "脓包鬼灵"
 
 #: Source/monstdat.cpp:489
 msgctxt "monster"
@@ -5262,7 +5161,6 @@ msgid "Rotfeast the Hungry"
 msgstr "饥饿​的​食腐狂"
 
 #: Source/monstdat.cpp:492
-#, fuzzy
 msgctxt "monster"
 msgid "Gutshank the Quick"
 msgstr "迅捷​的​古特申克"
@@ -5278,7 +5176,6 @@ msgid "Bongo"
 msgstr "邦​戈"
 
 #: Source/monstdat.cpp:495
-#, fuzzy
 msgctxt "monster"
 msgid "Rotcarnage"
 msgstr "腐肉​搅​碎者"
@@ -5319,7 +5216,6 @@ msgid "Goretongue"
 msgstr "血​肉舌"
 
 #: Source/monstdat.cpp:503
-#, fuzzy
 msgctxt "monster"
 msgid "Pulsecrawler"
 msgstr "脉​冲​爬行者"
@@ -5400,7 +5296,6 @@ msgid "Warmaggot the Mad"
 msgstr "疯狂​的​战斗蛆​虫"
 
 #: Source/monstdat.cpp:519
-#, fuzzy
 msgctxt "monster"
 msgid "Glasskull the Jagged"
 msgstr "玻璃​颅​·锯齿"
@@ -5516,7 +5411,6 @@ msgid "Bluehorn"
 msgstr "蓝角"
 
 #: Source/monstdat.cpp:542
-#, fuzzy
 msgctxt "monster"
 msgid "Warpfire Hellspawn"
 msgstr "地狱​诞生​的​扭曲​烈​焰"
@@ -5642,7 +5536,6 @@ msgid "The Vizier"
 msgstr "维兹尔"
 
 #: Source/monstdat.cpp:567
-#, fuzzy
 msgctxt "monster"
 msgid "Zamphir"
 msgstr "赞菲尔"
@@ -5669,8 +5562,6 @@ msgstr "恐惧​之​钉"
 
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:573
-#, fuzzy
-#| msgid "Doomlock"
 msgctxt "monster"
 msgid "Doomlock"
 msgstr "杜姆洛克"
@@ -5704,34 +5595,24 @@ msgid "No magic resistance"
 msgstr "没有​魔法​抗性"
 
 #: Source/monster.cpp:4690
-#, fuzzy
-#| msgid "Resists: "
 msgid "Resists:"
-msgstr "抗性: "
+msgstr "抗性:"
 
 #: Source/monster.cpp:4692 Source/monster.cpp:4702
-#, fuzzy
-#| msgid "Magic"
 msgid " Magic"
-msgstr "魔法"
+msgstr " 魔法"
 
 #: Source/monster.cpp:4694 Source/monster.cpp:4704
-#, fuzzy
-#| msgid "Fire "
 msgid " Fire"
-msgstr "火焰 "
+msgstr " 火焰"
 
 #: Source/monster.cpp:4696 Source/monster.cpp:4706
-#, fuzzy
-#| msgid "Lightning"
 msgid " Lightning"
-msgstr "闪​电"
+msgstr " 闪​电"
 
 #: Source/monster.cpp:4700
-#, fuzzy
-#| msgid "Immune: "
 msgid "Immune:"
-msgstr "免疫: "
+msgstr "免疫:"
 
 #: Source/monster.cpp:4717
 msgid "Type: {:s}"
@@ -6378,14 +6259,12 @@ msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr "在水流、岩浆和酸液动画上使用颜色循环特效。"
 
 #: Source/options.cpp:755
-#, fuzzy
-#| msgid "Use alternate nest palette"
 msgid "Alternate nest art"
-msgstr "使用​备用​嵌​套​调色板"
+msgstr "替换巢穴美术"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
-msgstr ""
+msgstr "游戏将会使用一个其他的调色板来显示地狱火资料片中的巢穴地图地面贴图。"
 
 #: Source/options.cpp:757
 msgid "Hardware Cursor"
@@ -6431,19 +6310,19 @@ msgstr "在屏幕的左上角显示每秒帧数。"
 
 #: Source/options.cpp:763
 msgid "Show health values"
-msgstr ""
+msgstr "显示生命值"
 
 #: Source/options.cpp:763
 msgid "Displays current / max health value on health globe."
-msgstr ""
+msgstr "在法力球上显示当前/最大生命值。"
 
 #: Source/options.cpp:764
 msgid "Show mana values"
-msgstr ""
+msgstr "显示法力值"
 
 #: Source/options.cpp:764
 msgid "Displays current / max mana value on mana globe."
-msgstr ""
+msgstr "在法力球上显示当前/最大法力值。"
 
 #: Source/options.cpp:813
 msgid "Gameplay"
@@ -6913,10 +6792,8 @@ msgid "Failed to open player archive for writing."
 msgstr "无法​加载​玩​家​数据​进行​写入。"
 
 #: Source/pfile.cpp:308
-#, fuzzy
-#| msgid "Failed to open player archive for writing."
 msgid "Failed to open stash archive for writing."
-msgstr "无法​加载​玩​家​数据​进行​写入。"
+msgstr "无法打开储藏箱档案进行写入。"
 
 #: Source/pfile.cpp:419
 msgid "Unable to open archive"
@@ -6940,52 +6817,40 @@ msgstr "{:s} (等级 {:d}): "
 
 #: Source/qol/chatlog.cpp:155
 msgid "Chat History (Messages: {:d})"
-msgstr ""
+msgstr "聊天历史 (消息: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-#, fuzzy
-#| msgid "{:d} gold piece"
-#| msgid_plural "{:d} gold pieces"
 msgid "{:d} gold"
-msgstr "{:d}金币堆"
+msgstr "{:d} 金币"
 
 #: Source/qol/stash.cpp:586
-#, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
-#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "你有 {:d} 金币。你想要取出多少？"
+msgstr "你想要取出多少金币？"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
 msgid ","
-msgstr ""
+msgstr ","
 
 #: Source/qol/xpbar.cpp:146
 msgid "Level {:d}"
-msgstr "等级​{:d}"
+msgstr "等级 ​{:d}"
 
 #: Source/qol/xpbar.cpp:152 Source/qol/xpbar.cpp:160
-#, fuzzy
-#| msgid "Experience: "
 msgid "Experience: {:s}"
-msgstr "经验: "
+msgstr "经验: {:s}"
 
 #: Source/qol/xpbar.cpp:153
 msgid "Maximum Level"
 msgstr "最​大​等级"
 
 #: Source/qol/xpbar.cpp:161
-#, fuzzy
-#| msgid "Next Level: "
 msgid "Next Level: {:s}"
-msgstr "下​一​级: "
+msgstr "下一级: {:s}"
 
 #: Source/qol/xpbar.cpp:162
-#, fuzzy
-#| msgid " to Level {:d}"
 msgid "{:s} to Level {:d}"
-msgstr " 到 {:d} 级"
+msgstr "{:s} 到 {:d} 级"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:44
@@ -7232,7 +7097,6 @@ msgid "Apocalypse"
 msgstr "天​启"
 
 #: Source/spelldat.cpp:40
-#, fuzzy
 msgctxt "spell"
 msgid "Etherealize"
 msgstr "灵化术"
@@ -7467,33 +7331,36 @@ msgstr "离开​商店"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "我​有​这些​东西​要​卖: 你​的​金币: {:d}"
+msgid "I have these items for sale:"
+msgstr "我​有​这些​东西​要​卖:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "我​这​有些​高档品​出售: 你​的​金币: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "我​这​有些​高档品​出售:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "你​没有​我​想要​的​东西。你​的​金币: {:d}"
+msgid "You have nothing I want."
+msgstr "你​没有​我​想要​的​东西。"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "要​出售​哪​件​物品？你​的​金币: {:d}"
+msgid "Which item is for sale?"
+msgstr "要​出售​哪​件​物品？"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "你​没有​需要​修理​的​物品。你​的​金币: {:d}"
+msgid "You have nothing to repair."
+msgstr "你​没有​需要​修理​的​物品。"
+
+msgid "Your gold: {:d}"
+msgstr "你​的​金币: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "哪​件​物品​需要​修理？你​的​金币: {:d}"
+msgid "Repair which item?"
+msgstr "哪​件​物品​需要​修理？"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7517,13 +7384,13 @@ msgstr "离开​小​屋"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "你​没有​物品​需要​充能。你​的​金币: {:d}"
+msgid "You have nothing to recharge."
+msgstr "你​没有​物品​需要​充能。"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "给​哪​件​物品​充能？你​的​金币: {:d}"
+msgid "Recharge which item?"
+msgstr "给​哪​件​物品​充能？"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7588,8 +7455,8 @@ msgstr "再见"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "我​有​这个​东西​要​卖: 你​的​金币: {:d}"
+msgid "I have this item for sale:"
+msgstr "我​有​这个​东西​要​卖:"
 
 #: Source/stores.cpp:1037
 msgid "Leave"
@@ -7621,13 +7488,13 @@ msgstr "鉴定​一​件​物品"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
+msgid "You have nothing to identify."
 msgstr "你​没有​可以​鉴定​的​物品。你​的​金币: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "鉴定​哪​一​件​物品？你​的​金币: {:d}"
+msgid "Identify which item?"
+msgstr "鉴定​哪​一​件​物品？"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"
@@ -7679,7 +7546,7 @@ msgstr "与​吉莉安​交谈"
 
 #: Source/stores.cpp:1311
 msgid "Access Storage"
-msgstr ""
+msgstr "访问储藏"
 
 #: Source/stores.cpp:1321 Source/towners.cpp:205
 msgid "Farnham the Drunk"
@@ -11021,7 +10888,7 @@ msgstr ""
 #: Source/textdat.cpp:632
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
+"prisoner.  The crypts are full of shadows that move just beyond the corners "
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""

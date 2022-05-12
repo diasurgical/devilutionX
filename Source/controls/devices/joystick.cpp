@@ -111,8 +111,6 @@ ControllerButton Joystick::ToControllerButton(const SDL_Event &event)
 
 int Joystick::ToSdlJoyButton(ControllerButton button)
 {
-	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
-		UNIMPLEMENTED();
 	switch (button) {
 #ifdef JOY_BUTTON_A
 	case ControllerButton_BUTTON_A:
@@ -153,6 +151,14 @@ int Joystick::ToSdlJoyButton(ControllerButton button)
 #ifdef JOY_BUTTON_RIGHTSHOULDER
 	case ControllerButton_BUTTON_RIGHTSHOULDER:
 		return JOY_BUTTON_RIGHTSHOULDER;
+#endif
+#ifdef JOY_BUTTON_TRIGGERLEFT
+	case ControllerButton_AXIS_TRIGGERLEFT:
+		return JOY_BUTTON_TRIGGERLEFT;
+#endif
+#ifdef JOY_BUTTON_TRIGGERRIGHT
+	case ControllerButton_AXIS_TRIGGERRIGHT:
+		return JOY_BUTTON_TRIGGERRIGHT;
 #endif
 #ifdef JOY_BUTTON_DPAD_UP
 	case ControllerButton_BUTTON_DPAD_UP:

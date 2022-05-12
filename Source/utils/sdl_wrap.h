@@ -10,15 +10,17 @@
 #include "appfat.h"
 #include "utils/sdl_ptrs.h"
 
+#define NonNull(x) NullErrDlg(x, __FILE__, __LINE__)
+
 namespace devilution {
 
 namespace SDLWrap {
 
 template <typename T>
-T NonNull(T x)
+T NullErrDlg(T x, const char *file, int line)
 {
 	if (x == nullptr)
-		ErrSdl();
+		ErrDlg("SDL Error", SDL_GetError(), file, line);
 	return x;
 }
 

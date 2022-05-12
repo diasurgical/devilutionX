@@ -6,6 +6,7 @@
 #include "text_render.hpp"
 
 #include <array>
+#include <cstddef>
 #include <unordered_map>
 #include <utility>
 
@@ -16,11 +17,13 @@
 #include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
+#include "engine/load_pcx_as_cel.hpp"
 #include "engine/point.hpp"
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
+#include "utils/stdcompat/optional.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -31,7 +34,9 @@ namespace {
 
 constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 
-std::unordered_map<uint32_t, Art> Fonts;
+using Font = const OwnedCelSpriteWithFrameHeight;
+std::unordered_map<uint32_t, std::optional<OwnedCelSpriteWithFrameHeight>> Fonts;
+
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
 std::array<uint8_t, 6> CJKWidth = { 17, 24, 28, 41, 47, 16 };
@@ -161,32 +166,48 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 	return kerning;
 }
 
-Art *LoadFont(GameFontTables size, text_color color, uint16_t row)
+uint32_t GetFontId(GameFontTables size, text_color color, uint16_t row)
 {
-	uint32_t fontId = (color << 24) | (size << 16) | row;
+	return (color << 24) | (size << 16) | row;
+}
+
+void GetFontPath(GameFontTables size, uint16_t row, char *out)
+{
+	sprintf(out, "fonts\\%i-%02x.pcx", FontSizes[size], row);
+}
+
+const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color color, uint16_t row)
+{
+	const uint32_t fontId = GetFontId(size, color, row);
 
 	auto hotFont = Fonts.find(fontId);
 	if (hotFont != Fonts.end()) {
-		return &hotFont->second;
+		return &*hotFont->second;
 	}
 
 	char path[32];
-	sprintf(path, "fonts\\%i-%02x.pcx", FontSizes[size], row);
+	GetFontPath(size, row, &path[0]);
 
-	auto *font = &Fonts[fontId];
+	std::optional<OwnedCelSpriteWithFrameHeight> &font = Fonts[fontId];
+	constexpr unsigned NumFrames = 256;
+	font = LoadPcxAssetAsCel(path, NumFrames);
+	if (!font) {
+		LogError("Error loading font: {}", path);
+		return nullptr;
+	}
 
 	if (ColorTranlations[color] != nullptr) {
 		std::array<uint8_t, 256> colorMapping;
 		LoadFileInMem(ColorTranlations[color], colorMapping);
-		LoadMaskedArt(path, font, 256, 1, &colorMapping);
-	} else {
-		LoadMaskedArt(path, font, 256, 1);
-	}
-	if (font->surface == nullptr) {
-		LogError("Missing font: {}", path);
+		CelApplyTrans(font->sprite.MutableData(), colorMapping);
 	}
 
-	return font;
+	return &(*font);
+}
+
+void DrawFont(const Surface &out, Point position, const OwnedCelSpriteWithFrameHeight *font, int frame)
+{
+	CelDrawTo(out, { position.x, static_cast<int>(position.y + font->frameHeight) }, CelSprite { font->sprite }, frame);
 }
 
 bool IsWhitespace(char32_t c)
@@ -324,7 +345,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
     UiFlags flags, GameFontTables size, text_color color)
 {
-	Art *font = nullptr;
+	Font *font = nullptr;
 	std::array<uint8_t, 256> *kerning = nullptr;
 	uint32_t currentUnicodeRow = 0;
 
@@ -366,7 +387,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 				continue;
 		}
 
-		DrawArt(out, characterPosition, font, frame);
+		DrawFont(out, characterPosition, font, frame);
 		characterPosition.x += (*kerning)[frame] + spacing;
 	}
 	return text.data() - remaining.data();
@@ -502,7 +523,7 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 	return maxSpacing - spacingRedux;
 }
 
-std::string WordWrapString(string_view text, size_t width, GameFontTables size, int spacing)
+std::string WordWrapString(string_view text, unsigned width, GameFontTables size, int spacing)
 {
 	std::string output;
 	if (text.empty() || text[0] == '\0')
@@ -511,28 +532,28 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 	output.reserve(text.size());
 	const char *begin = text.data();
 	const char *processedEnd = text.data();
-	int lastBreakablePos = -1;
-	int lastBreakableLen;
+	string_view::size_type lastBreakablePos = string_view::npos;
+	std::size_t lastBreakableLen;
 	bool lastBreakableKeep = false;
 	uint32_t currentUnicodeRow = 0;
-	size_t lineWidth = 0;
+	unsigned lineWidth = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
 
 	char32_t codepoint = U'\0'; // the current codepoint
 	char32_t nextCodepoint;     // the next codepoint
-	uint8_t nextCodepointLen;
+	std::size_t nextCodepointLen;
 	string_view remaining = text;
 	nextCodepoint = DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen);
 	do {
 		codepoint = nextCodepoint;
-		const uint8_t codepointLen = nextCodepointLen;
+		const std::size_t codepointLen = nextCodepointLen;
 		if (codepoint == Utf8DecodeError)
 			break;
 		remaining.remove_prefix(codepointLen);
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 
 		if (codepoint == U'\n') { // Existing line break, scan next line
-			lastBreakablePos = -1;
+			lastBreakablePos = string_view::npos;
 			lineWidth = 0;
 			output.append(processedEnd, remaining.data());
 			processedEnd = remaining.data();
@@ -551,7 +572,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 
 		const bool isWhitespace = IsWhitespace(codepoint);
 		if (isWhitespace || IsBreakAllowed(codepoint, nextCodepoint)) {
-			lastBreakablePos = static_cast<int>(remaining.data() - begin - codepointLen);
+			lastBreakablePos = remaining.data() - begin - codepointLen;
 			lastBreakableLen = codepointLen;
 			lastBreakableKeep = !isWhitespace;
 			continue;
@@ -561,7 +582,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 			continue; // String is still within the limit, continue to the next symbol
 		}
 
-		if (lastBreakablePos == -1) { // Single word longer than width
+		if (lastBreakablePos == string_view::npos) { // Single word longer than width
 			continue;
 		}
 
@@ -576,7 +597,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 		// Restart from the beginning of the new line.
 		remaining = text.substr(lastBreakablePos + lastBreakableLen);
 		processedEnd = remaining.data();
-		lastBreakablePos = -1;
+		lastBreakablePos = string_view::npos;
 		lineWidth = 0;
 		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 	} while (!remaining.empty() && remaining[0] != '\0');
@@ -625,7 +646,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		DrawArt(out, characterPosition, LoadFont(size, color, 0), '|');
+		DrawFont(out, characterPosition, LoadFont(size, color, 0), '|');
 	}
 
 	return bytesDrawn;
@@ -664,7 +685,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 
 	characterPosition.y += BaseLineOffset[size];
 
-	Art *font = nullptr;
+	Font *font = nullptr;
 	std::array<uint8_t, 256> *kerning = nullptr;
 
 	char32_t prev = U'\0';
@@ -725,7 +746,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 			}
 		}
 
-		DrawArt(out, characterPosition, font, frame);
+		DrawFont(out, characterPosition, font, frame);
 		characterPosition.x += (*kerning)[frame] + spacing;
 		prev = next;
 	}
@@ -733,13 +754,13 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		DrawArt(out, characterPosition, LoadFont(size, color, 0), '|');
+		DrawFont(out, characterPosition, LoadFont(size, color, 0), '|');
 	}
 }
 
 uint8_t PentSpn2Spin()
 {
-	return (SDL_GetTicks() / 50) % 8 + 1;
+	return (SDL_GetTicks() / 50) % 8;
 }
 
 } // namespace devilution

@@ -641,8 +641,16 @@ void RenderCl2OutlineClippedXY(const Surface &out, Point position, const byte *s
 
 	if (position.y == dstHeight) {
 		// After-bottom line - can only draw north.
-		src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
-		    /*ClipWidth=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		if (position.x <= 0) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else {
+			src = RenderCl2OutlineRowClipped</*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
+			    /*ClipWidth=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		}
 		position.y -= static_cast<int>(skipSize.wholeLines);
 	}
 	if (src == srcEnd)
@@ -711,10 +719,17 @@ void RenderCl2OutlineClippedXY(const Surface &out, Point position, const byte *s
 		return;
 
 	if (position.y == -1) {
-		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
-		RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
-		    /*ClipWidth=*/true>(
-		    out, position, src, srcWidth, clipX, color, skipSize);
+		// Before-top line - can only draw south.
+		if (position.x <= 0) {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else if (position.x + clipX.width >= out.w()) {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		} else {
+			src = RenderCl2OutlineRowClipped</*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
+			    /*ClipWidth=*/true>(out, position, src, srcWidth, clipX, color, skipSize);
+		}
 	}
 }
 
@@ -730,11 +745,11 @@ void RenderCl2Outline(const Surface &out, Point position, const byte *src, std::
 
 } // namespace
 
-void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
+void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int numFrames)
 {
 	assert(p != nullptr);
 
-	for (int i = 1; i <= nCel; i++) {
+	for (int i = 0; i < numFrames; ++i) {
 		constexpr int FrameHeaderSize = 10;
 		int nDataSize;
 		byte *dst = CelGetFrame(p, i, &nDataSize) + FrameHeaderSize;
@@ -765,7 +780,7 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
 
 void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -775,7 +790,7 @@ void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 
 void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite cel, int frame)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -785,7 +800,7 @@ void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite c
 
 void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, uint8_t *trn)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -794,7 +809,7 @@ void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, ui
 
 void Cl2DrawLight(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 {
-	assert(frame > 0);
+	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);

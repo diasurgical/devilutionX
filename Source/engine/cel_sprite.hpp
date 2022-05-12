@@ -40,7 +40,7 @@ public:
 		return data_ptr_;
 	}
 
-	[[nodiscard]] uint16_t Width(std::size_t frame = 1) const
+	[[nodiscard]] uint16_t Width(std::size_t frame = 0) const
 	{
 		return width_.HoldsPointer() ? width_.AsPointer()[frame] : width_.AsValue();
 	}
@@ -80,6 +80,11 @@ public:
 	OwnedCelSprite(OwnedCelSprite &&) noexcept = default;
 	OwnedCelSprite &operator=(OwnedCelSprite &&) noexcept = default;
 
+	[[nodiscard]] byte *MutableData()
+	{
+		return data_.get();
+	}
+
 private:
 	std::unique_ptr<byte[]> data_;
 };
@@ -88,5 +93,15 @@ inline CelSprite::CelSprite(const OwnedCelSprite &owned)
     : CelSprite(static_cast<const CelSprite &>(owned))
 {
 }
+
+struct CelSpriteWithFrameHeight {
+	CelSprite sprite;
+	unsigned frameHeight;
+};
+
+struct OwnedCelSpriteWithFrameHeight {
+	OwnedCelSprite sprite;
+	unsigned frameHeight;
+};
 
 } // namespace devilution

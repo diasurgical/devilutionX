@@ -31,39 +31,35 @@ void GamemenuSpeed(bool bActivate);
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
-    // dwFlags,      pszStr,              fnMenu
-	{ GMENU_ENABLED, N_("Save Game"),     &gamemenu_save_game  },
-	{ GMENU_ENABLED, N_("Options"),       &GamemenuOptions    },
-	{ GMENU_ENABLED, N_("New Game"),      &GamemenuNewGame   },
-	{ GMENU_ENABLED, N_("Load Game"),     &gamemenu_load_game  },
-#ifndef NOEXIT
-	{ GMENU_ENABLED, N_("Quit Game"),     &gamemenu_quit_game  },
-#endif
-	{ GMENU_ENABLED, nullptr,              nullptr             }
+	// dwFlags,      pszStr,          fnMenu
+	{ GMENU_ENABLED, N_("Save Game"), &gamemenu_save_game },
+	{ GMENU_ENABLED, N_("Options"),   &GamemenuOptions    },
+	{ GMENU_ENABLED, N_("New Game"),  &GamemenuNewGame    },
+	{ GMENU_ENABLED, N_("Load Game"), &gamemenu_load_game },
+	{ GMENU_ENABLED, N_("Quit Game"), &gamemenu_quit_game },
+	{ GMENU_ENABLED, nullptr,         nullptr             }
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
-    // dwFlags,      pszStr,                fnMenu
-	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions      },
+	// dwFlags,      pszStr,                fnMenu
+	{ GMENU_ENABLED, N_("Options"),         &GamemenuOptions     },
 	{ GMENU_ENABLED, N_("New Game"),        &GamemenuNewGame     },
 	{ GMENU_ENABLED, N_("Restart In Town"), &GamemenuRestartTown },
-#ifndef NOEXIT
-	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game    },
-#endif
-	{ GMENU_ENABLED, nullptr,                nullptr               },
+	{ GMENU_ENABLED, N_("Quit Game"),       &gamemenu_quit_game  },
+	{ GMENU_ENABLED, nullptr,               nullptr              },
 	// clang-format on
 };
 TMenuItem sgOptionsMenu[] = {
 	// clang-format off
-    // dwFlags,                     pszStr,              fnMenu
+	// dwFlags,                     pszStr,              fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,             &GamemenuMusicVolume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, nullptr,             &GamemenuSoundVolume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, N_("Gamma"),         &GamemenuGamma         },
-	{ GMENU_ENABLED | GMENU_SLIDER, N_("Speed"),         &GamemenuSpeed         },
-	{ GMENU_ENABLED               , N_("Previous Menu"), &GamemenuPrevious      },
-	{ GMENU_ENABLED               , nullptr,              nullptr                },
+	{ GMENU_ENABLED | GMENU_SLIDER, N_("Gamma"),         &GamemenuGamma        },
+	{ GMENU_ENABLED | GMENU_SLIDER, N_("Speed"),         &GamemenuSpeed        },
+	{ GMENU_ENABLED               , N_("Previous Menu"), &GamemenuPrevious     },
+	{ GMENU_ENABLED               , nullptr,             nullptr               },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
@@ -197,15 +193,7 @@ void GamemenuMusicVolume(bool bActivate)
 		} else {
 			gbMusicOn = true;
 			sound_get_or_set_music_volume(VOLUME_MAX);
-			int lt;
-			if (currlevel >= 17) {
-				if (currlevel > 20)
-					lt = TMUSIC_L5;
-				else
-					lt = TMUSIC_L6;
-			} else
-				lt = leveltype;
-			music_start(lt);
+			music_start(GetLevelMusic(leveltype));
 		}
 	} else {
 		int volume = GamemenuSliderMusicSound(&sgOptionsMenu[0]);
@@ -217,15 +205,7 @@ void GamemenuMusicVolume(bool bActivate)
 			}
 		} else if (!gbMusicOn) {
 			gbMusicOn = true;
-			int lt;
-			if (currlevel >= 17) {
-				if (currlevel > 20)
-					lt = TMUSIC_L5;
-				else
-					lt = TMUSIC_L6;
-			} else
-				lt = leveltype;
-			music_start(lt);
+			music_start(GetLevelMusic(leveltype));
 		}
 	}
 
@@ -294,13 +274,15 @@ void GamemenuSpeed(bool bActivate)
 
 } // namespace
 
-#ifndef NOEXIT
 void gamemenu_quit_game(bool bActivate)
 {
 	GamemenuNewGame(bActivate);
+#ifndef NOEXIT
 	gbRunGameResult = false;
-}
+#else
+	ReturnToMainMenu = true;
 #endif
+}
 
 void gamemenu_load_game(bool /*bActivate*/)
 {

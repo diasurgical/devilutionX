@@ -85,6 +85,7 @@ def main():
 	if args.fully_vendored:
 		for dep in _DEPS_NOT_VENDORED_BY_DEFAULT:
 			configure_args.append(f'-DDEVILUTIONX_SYSTEM_{dep.upper()}=OFF')
+		configure_args.append('-DDISCORD_INTEGRATION=ON')
 	cmake(*configure_args)
 	cmake('--build', _BUILD_DIR, '--target', 'devilutionx_mpq')
 
@@ -188,6 +189,7 @@ set(DEVILUTIONX_MPQ "${CMAKE_CURRENT_SOURCE_DIR}/devilutionx.mpq" PARENT_SCOPE)
 				dep.upper().encode(), dep.encode()))
 		if fully_vendored:
 			f.write(b'\n# These dependencies are not usually vendored but this distribution includes them\n')
+			f.write(b'set(FETCHCONTENT_SOURCE_DIR_DISCORDSRC "${CMAKE_CURRENT_SOURCE_DIR}/discordsrc-src" CACHE STRING "")\n')
 			for dep in _DEPS_NOT_VENDORED_BY_DEFAULT:
 				f.write(b'set(FETCHCONTENT_SOURCE_DIR_%s "${CMAKE_CURRENT_SOURCE_DIR}/%s-src" CACHE STRING "")\n' % (
 					dep.upper().encode(), dep.encode()))

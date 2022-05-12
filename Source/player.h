@@ -34,6 +34,7 @@ namespace devilution {
 #define MAX_SPELL_LEVEL 15
 #define PLR_NAME_LEN 32
 
+constexpr size_t NumHotkeys = 12;
 constexpr int BaseHitChance = 50;
 
 /** Walking directions */
@@ -251,8 +252,8 @@ struct Player {
 	uint64_t _pAblSpells;  // Bitmask of abilities
 	uint64_t _pScrlSpells; // Bitmask of spells available via scrolls
 	SpellFlag _pSpellFlags;
-	spell_id _pSplHotKey[4];
-	spell_type _pSplTHotKey[4];
+	spell_id _pSplHotKey[NumHotkeys];
+	spell_type _pSplTHotKey[NumHotkeys];
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
@@ -325,7 +326,7 @@ struct Player {
 	/** Bitmask of staff spell */
 	uint64_t _pISpells;
 	/** Bitmask using item_special_effect */
-	int _pIFlags;
+	ItemSpecialEffect _pIFlags;
 	int _pIGetHit;
 	int8_t _pISplLvlAdd;
 	int _pISplDur;
@@ -345,7 +346,7 @@ struct Player {
 	uint16_t wReflections;
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
-	uint32_t pDamAcFlags;
+	ItemSpecialEffectHf pDamAcFlags;
 
 	void CalcScrolls();
 
@@ -661,7 +662,7 @@ struct Player {
 	 */
 	void RestoreFullMana()
 	{
-		if ((_pIFlags & ISPL_NOMANA) == 0) {
+		if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 			_pMana = _pMaxMana;
 			_pManaBase = _pMaxManaBase;
 		}
@@ -692,13 +693,13 @@ struct Player {
 	{
 		if (_pmode == PM_STAND)
 			return true;
-		if (_pmode == PM_ATTACK && AnimInfo.CurrentFrame > _pAFNum)
+		if (_pmode == PM_ATTACK && AnimInfo.CurrentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_RATTACK && AnimInfo.CurrentFrame > _pAFNum)
+		if (_pmode == PM_RATTACK && AnimInfo.CurrentFrame >= _pAFNum)
 			return true;
-		if (_pmode == PM_SPELL && AnimInfo.CurrentFrame > _pSFNum)
+		if (_pmode == PM_SPELL && AnimInfo.CurrentFrame >= _pSFNum)
 			return true;
-		if (IsWalking() && AnimInfo.CurrentFrame == AnimInfo.NumberOfFrames)
+		if (IsWalking() && AnimInfo.CurrentFrame == AnimInfo.NumberOfFrames - 1)
 			return true;
 		return false;
 	}

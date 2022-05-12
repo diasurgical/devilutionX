@@ -18,6 +18,9 @@
 #include "controls/plrctrls.h"
 #include "discord/discord.h"
 #include "dx.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_pcx_as_cel.hpp"
+#include "engine/render/cel_render.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
@@ -44,8 +47,10 @@
 
 namespace devilution {
 
-std::array<Art, 3> ArtLogos;
-std::array<Art, 3> ArtFocus;
+// These are stored as PCX but we load them as CEL to reduce memory usage.
+std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
+std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
+
 Art ArtBackgroundWidescreen;
 Art ArtBackground;
 Art ArtCursor;
@@ -567,14 +572,22 @@ void LoadHeros()
 void LoadUiGFX()
 {
 	if (gbIsHellfire) {
-		LoadMaskedArt("ui_art\\hf_logo2.pcx", &ArtLogos[LOGO_MED], 16);
+		ArtLogos[LOGO_MED] = LoadPcxAssetAsCel("ui_art\\hf_logo2.pcx", /*numFrames=*/16);
 	} else {
-		LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
+		ArtLogos[LOGO_MED] = LoadPcxAssetAsCel("ui_art\\smlogo.pcx", /*numFrames=*/15, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
 	}
-	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
-	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
-	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
+	ArtFocus[FOCUS_SMALL] = LoadPcxAssetAsCel("ui_art\\focus16.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+	ArtFocus[FOCUS_MED] = LoadPcxAssetAsCel("ui_art\\focus.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+	ArtFocus[FOCUS_BIG] = LoadPcxAssetAsCel("ui_art\\focus42.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
+
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	// Set the palette because `ArtCursor` may be used as the hardware cursor.
+	if (ArtCursor.surface != nullptr) {
+		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
+	}
+#endif
 
 	LoadHeros();
 }
@@ -586,9 +599,9 @@ void UnloadUiGFX()
 	ArtHero.Unload();
 	ArtCursor.Unload();
 	for (auto &art : ArtFocus)
-		art.Unload();
+		art = std::nullopt;
 	for (auto &art : ArtLogos)
-		art.Unload();
+		art = std::nullopt;
 }
 
 void UiInitialize()
@@ -666,11 +679,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeTc = 0;
 	fadeValue = 0;
 
-	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
-		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
-#endif
+	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && ControlDevice == ControlTypes::KeyboardAndMouse && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
 	}
 
@@ -696,7 +705,8 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
 {
 	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y + y), 0, 0 };
-	vecDialog->push_back(std::make_unique<UiImage>(&ArtLogos[size], rect, UiFlags::AlignCenter, /*bAnimated=*/true));
+	vecDialog->push_back(std::make_unique<UiImageCel>(
+	    CelSpriteWithFrameHeight { ArtLogos[size]->sprite, ArtLogos[size]->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 }
 
 void UiFadeIn()
@@ -719,6 +729,19 @@ void UiFadeIn()
 	RenderPresent();
 }
 
+void DrawCel(CelSpriteWithFrameHeight sprite, Point p)
+{
+	const Surface &out = Surface(DiabloUiSurface());
+	CelDrawTo(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, 0);
+}
+
+void DrawAnimatedCel(CelSpriteWithFrameHeight sprite, Point p)
+{
+	const Surface &out = Surface(DiabloUiSurface());
+	const int frame = GetAnimationFrame(LoadLE32(sprite.sprite.Data()));
+	CelDrawTo(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, frame);
+}
+
 void DrawSelector(const SDL_Rect &rect)
 {
 	int size = FOCUS_SMALL;
@@ -726,13 +749,13 @@ void DrawSelector(const SDL_Rect &rect)
 		size = FOCUS_BIG;
 	else if (rect.h >= 30)
 		size = FOCUS_MED;
-	Art *art = &ArtFocus[size];
+	CelSpriteWithFrameHeight sprite { ArtFocus[size]->sprite, ArtFocus[size]->frameHeight };
 
-	int frame = GetAnimationFrame(art->frames);
-	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher than the box
+	// TODO FOCUS_MED appares higher than the box
+	const int y = rect.y + (rect.h - static_cast<int>(sprite.frameHeight)) / 2;
 
-	DrawArt({ rect.x, y }, art, frame);
-	DrawArt({ rect.x + rect.w - art->w(), y }, art, frame);
+	DrawAnimatedCel(sprite, { rect.x, y });
+	DrawAnimatedCel(sprite, { rect.x + rect.w - sprite.sprite.Width(), y });
 }
 
 void UiClearScreen()
@@ -757,7 +780,7 @@ void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler)
 
 	// Must happen after the very first UiFadeIn, which sets the cursor.
 	if (IsHardwareCursor())
-		SetHardwareCursorVisible(ControlMode == ControlTypes::KeyboardAndMouse);
+		SetHardwareCursorVisible(ControlDevice == ControlTypes::KeyboardAndMouse);
 
 #ifdef __3DS__
 	// Keyboard blocks until input is finished
@@ -790,13 +813,26 @@ void Render(const UiImage *uiImage)
 {
 	int x = uiImage->m_rect.x;
 	if (uiImage->IsCentered() && uiImage->GetArt() != nullptr) {
-		const int xOffset = GetCenterOffset(uiImage->GetArt()->w(), uiImage->m_rect.w);
-		x += xOffset;
+		x += GetCenterOffset(uiImage->GetArt()->w(), uiImage->m_rect.w);
 	}
 	if (uiImage->IsAnimated()) {
 		DrawAnimatedArt(uiImage->GetArt(), { x, uiImage->m_rect.y });
 	} else {
 		DrawArt({ x, uiImage->m_rect.y }, uiImage->GetArt(), uiImage->GetFrame(), uiImage->m_rect.w);
+	}
+}
+
+void Render(const UiImageCel *uiImage)
+{
+	const CelSpriteWithFrameHeight &sprite = uiImage->GetSprite();
+	int x = uiImage->m_rect.x;
+	if (uiImage->IsCentered()) {
+		x += GetCenterOffset(sprite.sprite.Width(), uiImage->m_rect.w);
+	}
+	if (uiImage->IsAnimated()) {
+		DrawAnimatedCel(sprite, { x, uiImage->m_rect.y });
+	} else {
+		DrawCel(sprite, { x, uiImage->m_rect.y });
 	}
 }
 
@@ -882,6 +918,9 @@ void RenderItem(UiItemBase *item)
 	case UiType::Image:
 		Render(static_cast<UiImage *>(item));
 		break;
+	case UiType::ImageCel:
+		Render(static_cast<UiImageCel *>(item));
+		break;
 	case UiType::ArtTextButton:
 		Render(static_cast<UiArtTextButton *>(item));
 		break;
@@ -916,10 +955,21 @@ Uint32 dbClickTimer;
 
 bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 {
-	if (event.type != SDL_MOUSEBUTTONUP || event.button.button != SDL_BUTTON_LEFT)
+	if (event.button.button != SDL_BUTTON_LEFT)
+		return false;
+
+	if (event.type != SDL_MOUSEBUTTONUP && event.type != SDL_MOUSEBUTTONDOWN)
 		return false;
 
 	std::size_t index = uiList->indexAt(event.button.y);
+	if (event.type == SDL_MOUSEBUTTONDOWN) {
+		uiList->Press(index);
+		return true;
+	}
+
+	if (event.type == SDL_MOUSEBUTTONUP && !uiList->IsPressed(index))
+		return false;
+
 	index += listOffset;
 
 	if (gfnListFocus != nullptr && SelectedItem != index) {
@@ -1042,6 +1092,8 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 		for (const auto &item : items) {
 			if (item->IsType(UiType::Button)) {
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
+			} else if (item->IsType(UiType::List)) {
+				static_cast<UiList *>(item)->Release();
 			}
 		}
 	}
@@ -1073,6 +1125,8 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 		for (const auto &item : items) {
 			if (item->IsType(UiType::Button)) {
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item.get()));
+			} else if (item->IsType(UiType::List)) {
+				static_cast<UiList *>(item.get())->Release();
 			}
 		}
 	}
@@ -1082,7 +1136,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 
 void DrawMouse()
 {
-	if (ControlMode != ControlTypes::KeyboardAndMouse || IsHardwareCursor())
+	if (ControlDevice != ControlTypes::KeyboardAndMouse || IsHardwareCursor())
 		return;
 
 	DrawArt(MousePosition, &ArtCursor);

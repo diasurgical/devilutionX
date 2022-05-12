@@ -583,7 +583,7 @@ msgstr "選​擇​難度"
 
 #: Source/DiabloUI/selgame.cpp:315
 msgid "Join {:s} Games"
-msgstr "加入​{:s}遊​戲"
+msgstr "加入​{:s}​遊戲"
 
 #: Source/DiabloUI/selgame.cpp:320
 msgid "Enter Game ID"
@@ -890,10 +890,10 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji "
+"which is licensed under CC-BY 4.0. The port also makes use of SDL which is "
+"licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
 
 #: Source/DiabloUI/title.cpp:46
@@ -1154,8 +1154,8 @@ msgstr "現​在​你​死定​了！"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "選​項: \n"
+msgid "Options:"
+msgstr "選​項:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1216,9 +1216,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
+msgid "Game selection:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1240,20 +1238,12 @@ msgstr "地​獄火​幫助"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"地​獄火選項: \n"
+msgid "Hellfire options:"
+msgstr "地​獄火選項:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"報​告錯​誤​https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "報​告錯​誤​https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
@@ -4196,7 +4186,7 @@ msgstr "火焰​抗性: {:+d}%"
 
 #: Source/items.cpp:3564
 msgid "Resist Fire: {:+d}% MAX"
-msgstr "火焰​抗性: 最​大{:+d}%"
+msgstr "火焰​抗性: 最​大​{:+d}%"
 
 #: Source/items.cpp:3568
 msgid "Resist Lightning: {:+d}%"
@@ -4204,7 +4194,7 @@ msgstr "閃​電​抗性: {:+d}%"
 
 #: Source/items.cpp:3570
 msgid "Resist Lightning: {:+d}% MAX"
-msgstr "閃​電​抗性: 最​大{:+d}%"
+msgstr "閃​電​抗性: 最​大​{:+d}%"
 
 #: Source/items.cpp:3574
 msgid "Resist Magic: {:+d}%"
@@ -4212,7 +4202,7 @@ msgstr "抵抗​魔法: {:+d}%"
 
 #: Source/items.cpp:3576
 msgid "Resist Magic: {:+d}% MAX"
-msgstr "抵抗​魔法: 最​大{:+d}%"
+msgstr "抵抗​魔法: 最​大​{:+d}%"
 
 #: Source/items.cpp:3580
 msgid "Resist All: {:+d}%"
@@ -6216,7 +6206,7 @@ msgstr " 火"
 
 #: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid " Lightning"
-msgstr " 閃​電"
+msgstr " 閃電"
 
 #: Source/monster.cpp:4700
 msgid "Immune:"
@@ -7487,7 +7477,7 @@ msgstr "只​傷害亡​靈"
 #, fuzzy
 #| msgid "{:d} Scroll"
 msgid "Scroll"
-msgstr "{:s}卷軸"
+msgstr "{:s}​卷​軸"
 
 #: Source/panels/spell_list.cpp:204
 #, fuzzy
@@ -7562,7 +7552,7 @@ msgstr "下​一​級: {:s}"
 
 #: Source/qol/xpbar.cpp:162
 msgid "{:s} to Level {:d}"
-msgstr "{:s}到​{:d}​級"
+msgstr "{:s}​到​{:d}​級"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:44
@@ -8161,35 +8151,38 @@ msgstr "修理​專案"
 msgid "Leave the shop"
 msgstr "離​開​商店"
 
+msgid "Your gold: {:d}"
+msgstr "你​的​金幣: {:d}"
+
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "我​有​這​些​東西​要​賣: 你​的​金幣: {:d}"
+msgid "I have these items for sale:"
+msgstr "我​有​這​些​東西​要​賣:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "我​有​這​些​高檔​商品​出售: 你​的​金幣: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "我​有​這​些​高檔​商品​出售:"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "你​沒​有​我​想要​的​東西。你​的​金幣: {:d}"
+msgid "You have nothing I want."
+msgstr "你​沒​有​我​想要​的​東西。"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "哪​件​商品​在​出售？你​的​金幣: {:d}"
+msgid "Which item is for sale?"
+msgstr "哪​件​商品​在​出售？"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "你​沒什麼​可​修​的。你​的​金幣: {:d}"
+msgid "You have nothing to repair."
+msgstr "你​沒什麼​可​修​的。"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "修理​哪​個​專案？你​的​金幣: {:d}"
+msgid "Repair which item?"
+msgstr "修理​哪​個​專案？"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -8213,13 +8206,13 @@ msgstr "離​開​小​屋"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "你​沒什麼​好​充電​的。你​的​金幣: {:d}"
+msgid "You have nothing to recharge."
+msgstr "你​沒什麼​好​充電​的。"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "給​哪​個​專案​充值？你​的​金幣: {:d}"
+msgid "Recharge which item?"
+msgstr "給​哪​個​專案​充值？"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -8284,8 +8277,8 @@ msgstr "說​再​見"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "我​有​這個​東西​要​賣: 你​的​金幣: {:d}"
+msgid "I have this item for sale:"
+msgstr "我​有​這個​東西​要​賣:"
 
 #: Source/stores.cpp:1037
 msgid "Leave"
@@ -8317,13 +8310,13 @@ msgstr "標​識​專案"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "你​沒什麼​可​指認​的。你​的​金幣: {:d}"
+msgid "You have nothing to identify."
+msgstr "你​沒什麼​可​指認​的。"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "確定​哪​一​項？你​的​金幣: {:d}"
+msgid "Identify which item?"
+msgstr "確定​哪​一​項？"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"
@@ -11724,7 +11717,7 @@ msgstr ""
 #: Source/textdat.cpp:632
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
+"prisoner.  The crypts are full of shadows that move just beyond the corners "
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""

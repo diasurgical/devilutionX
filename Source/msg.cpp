@@ -38,7 +38,7 @@
 namespace devilution {
 
 bool deltaload;
-BYTE gbBufferMsgs;
+uint8_t gbBufferMsgs;
 int dwRecCount;
 
 namespace {
@@ -59,14 +59,66 @@ uint32_t sgdwOwnerWait;
 uint32_t sgdwRecvOffset;
 int sgnCurrMegaPlayer;
 DLevel sgLevels[NUMLEVELS];
-BYTE sbLastCmd;
+uint8_t sbLastCmd;
 byte sgRecvBuf[sizeof(DLevel) + 1];
 _cmd_id sgbRecvCmd;
 LocalLevel sgLocals[NUMLEVELS];
 DJunk sgJunk;
 bool sgbDeltaChanged;
-BYTE sgbDeltaChunks;
+uint8_t sgbDeltaChunks;
 std::list<TMegaPkt> MegaPktList;
+Item ItemLimbo;
+
+/** @brief Last sent player command for the local player. */
+TCmdLocParam4 lastSentPlayerCmd;
+
+/**
+ * @brief Throttles that a player command is only sent once per game tick.
+ * This is a workaround for a desync that happens when a command is processed in different game ticks for different clients. See https://github.com/diasurgical/devilutionX/issues/2681 for details.
+ * When a proper fix is implemented this workaround can be removed.
+ */
+bool WasPlayerCmdAlreadyRequested(_cmd_id bCmd, Point position = {}, uint16_t wParam1 = 0, uint16_t wParam2 = 0, uint16_t wParam3 = 0, uint16_t wParam4 = 0)
+{
+	switch (bCmd) {
+	// All known commands that result in a changed player action (player.destAction)
+	case _cmd_id::CMD_RATTACKID:
+	case _cmd_id::CMD_SPELLID:
+	case _cmd_id::CMD_TSPELLID:
+	case _cmd_id::CMD_ATTACKID:
+	case _cmd_id::CMD_RATTACKPID:
+	case _cmd_id::CMD_SPELLPID:
+	case _cmd_id::CMD_TSPELLPID:
+	case _cmd_id::CMD_ATTACKPID:
+	case _cmd_id::CMD_ATTACKXY:
+	case _cmd_id::CMD_SATTACKXY:
+	case _cmd_id::CMD_RATTACKXY:
+	case _cmd_id::CMD_SPELLXY:
+	case _cmd_id::CMD_TSPELLXY:
+	case _cmd_id::CMD_SPELLXYD:
+	case _cmd_id::CMD_WALKXY:
+	case _cmd_id::CMD_TALKXY:
+	case _cmd_id::CMD_DISARMXY:
+	case _cmd_id::CMD_OPOBJXY:
+	case _cmd_id::CMD_GOTOGETITEM:
+	case _cmd_id::CMD_GOTOAGETITEM:
+		break;
+	default:
+		// None player actions should work normally
+		return false;
+	}
+
+	TCmdLocParam4 newSendParam = { bCmd, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y), wParam1, wParam2, wParam3, wParam4 };
+
+	if (lastSentPlayerCmd.bCmd == newSendParam.bCmd && lastSentPlayerCmd.x == newSendParam.x && lastSentPlayerCmd.y == newSendParam.y
+	    && lastSentPlayerCmd.wParam1 == newSendParam.wParam1 && lastSentPlayerCmd.wParam2 == newSendParam.wParam2 && lastSentPlayerCmd.wParam3 == newSendParam.wParam3 && lastSentPlayerCmd.wParam4 == newSendParam.wParam4) {
+		// Command already send in this game tick => don't send again / throttle
+		return true;
+	}
+
+	lastSentPlayerCmd = newSendParam;
+
+	return false;
+}
 
 void GetNextPacket()
 {
@@ -289,10 +341,10 @@ void DeltaImportJunk(const byte *src)
 	}
 }
 
-DWORD CompressData(byte *buffer, byte *end)
+uint32_t CompressData(byte *buffer, byte *end)
 {
-	DWORD size = end - buffer - 1;
-	DWORD pkSize = PkwareCompress(buffer + 1, size);
+	const auto size = static_cast<uint32_t>(end - buffer - 1);
+	const uint32_t pkSize = PkwareCompress(buffer + 1, size);
 
 	*buffer = size != pkSize ? byte { 1 } : byte { 0 };
 
@@ -376,7 +428,7 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 	monster._mhitpoints = message._mhitpoints;
 }
 
-void DeltaLeaveSync(BYTE bLevel)
+void DeltaLeaveSync(uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -403,7 +455,7 @@ void DeltaLeaveSync(BYTE bLevel)
 	memcpy(&sgLocals[bLevel].automapsv, AutomapView, sizeof(AutomapView));
 }
 
-void DeltaSyncObject(int oi, _cmd_id bCmd, BYTE bLevel)
+void DeltaSyncObject(int oi, _cmd_id bCmd, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -412,7 +464,7 @@ void DeltaSyncObject(int oi, _cmd_id bCmd, BYTE bLevel)
 	sgLevels[bLevel].object[oi].bCmd = bCmd;
 }
 
-bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
+bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return true;
@@ -469,7 +521,7 @@ bool DeltaGetItem(const TCmdGItem &message, BYTE bLevel)
 	return true;
 }
 
-void DeltaPutItem(const TCmdPItem &message, Point position, BYTE bLevel)
+void DeltaPutItem(const TCmdPItem &message, Point position, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -700,7 +752,7 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 			int ii = -1;
 			if (InDungeonBounds(position)) {
 				ii = abs(dItem[position.x][position.y]) - 1;
-				if (ii >= 0 && !Items[ii].KeyAttributesMatch(message.dwSeed, static_cast<_item_indexes>(message.wIndx), message.wCI)) {
+				if (ii >= 0 && !Items[ii].keyAttributesMatch(message.dwSeed, static_cast<_item_indexes>(message.wIndx), message.wCI)) {
 					ii = -1;
 				}
 			}
@@ -718,7 +770,7 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 				if (message.bPnum != MyPlayerId)
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
-					InvGetItem(MyPlayerId, ii);
+					InvGetItem(*MyPlayer, ii);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
@@ -741,13 +793,12 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 			if ((currlevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
 					if (currlevel != message.bLevel) {
-						auto &player = Players[MyPlayerId];
-						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+						int ii = SyncPutItem(*MyPlayer, MyPlayer->position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
-							InvGetItem(MyPlayerId, ii);
+							InvGetItem(*MyPlayer, ii);
 					} else {
 						int activeItemIndex = FindGetItem(message.dwSeed, message.wIndx, message.wCI);
-						InvGetItem(MyPlayerId, ActiveItems[activeItemIndex]);
+						InvGetItem(*MyPlayer, ActiveItems[activeItemIndex]);
 					}
 				} else {
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
@@ -857,7 +908,7 @@ DWORD OnPutItem(const TCmd *pCmd, int pnum)
 		if (currlevel == Players[pnum].plrlevel) {
 			int ii;
 			if (pnum == MyPlayerId)
-				ii = InvPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+				ii = InvPutItem(Players[pnum], position, ItemLimbo);
 			else
 				ii = SyncPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			if (ii != -1) {
@@ -1609,7 +1660,7 @@ DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= MAXCHARLEVEL && pnum != MyPlayerId)
-		Players[pnum]._pLevel = message.wParam1;
+		Players[pnum]._pLevel = static_cast<int8_t>(message.wParam1);
 
 	return sizeof(message);
 }
@@ -1695,7 +1746,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 				player._pgfxnum &= ~0xF;
 				player._pmode = PM_DEATH;
 				NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
-				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
 				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
 
@@ -1962,6 +2013,11 @@ DWORD OnOpenCrypt(const TCmd *pCmd)
 
 } // namespace
 
+void ClearLastSendPlayerCmd()
+{
+	lastSentPlayerCmd = {};
+}
+
 void msg_send_drop_pkt(int pnum, int reason)
 {
 	TFakeDropPlr cmd;
@@ -2024,14 +2080,14 @@ void DeltaExportData(int pnum)
 			dstEnd = DeltaExportItem(dstEnd, sgLevels[i].item);
 			dstEnd = DeltaExportObject(dstEnd, sgLevels[i].object);
 			dstEnd = DeltaExportMonster(dstEnd, sgLevels[i].monster);
-			int size = CompressData(dst.get(), dstEnd);
+			uint32_t size = CompressData(dst.get(), dstEnd);
 			dthread_send_delta(pnum, static_cast<_cmd_id>(i + CMD_DLEVEL_0), std::move(dst), size);
 		}
 
 		std::unique_ptr<byte[]> dst { new byte[sizeof(DJunk) + 1] };
 		byte *dstEnd = &dst.get()[1];
 		dstEnd = DeltaExportJunk(dstEnd);
-		int size = CompressData(dst.get(), dstEnd);
+		uint32_t size = CompressData(dst.get(), dstEnd);
 		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, std::move(dst), size);
 	}
 
@@ -2048,7 +2104,7 @@ void delta_init()
 	deltaload = false;
 }
 
-void delta_kill_monster(int mi, Point position, BYTE bLevel)
+void delta_kill_monster(int mi, Point position, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -2061,7 +2117,7 @@ void delta_kill_monster(int mi, Point position, BYTE bLevel)
 	pD->_mhitpoints = 0;
 }
 
-void delta_monster_hp(int mi, int hp, BYTE bLevel)
+void delta_monster_hp(int mi, int hp, uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -2350,7 +2406,7 @@ void NetSendCmd(bool bHiPri, _cmd_id bCmd)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE cl)
+void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl)
 {
 	TCmdGolem cmd;
 
@@ -2366,6 +2422,9 @@ void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE 
 
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 {
+	if (playerId == MyPlayerId && WasPlayerCmdAlreadyRequested(bCmd, position))
+		return;
+
 	TCmdLoc cmd;
 
 	cmd.bCmd = bCmd;
@@ -2382,6 +2441,9 @@ void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1))
+		return;
+
 	TCmdLocParam1 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2399,6 +2461,9 @@ void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1, wParam2))
+		return;
+
 	TCmdLocParam2 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2417,6 +2482,9 @@ void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1, wParam2, wParam3))
+		return;
+
 	TCmdLocParam3 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2436,6 +2504,9 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 
 void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, position, wParam1, wParam2, wParam3, wParam4))
+		return;
+
 	TCmdLocParam4 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2449,10 +2520,16 @@ void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, position, wParam1, wParam3);
 }
 
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wParam1))
+		return;
+
 	TCmdParam1 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2481,6 +2558,9 @@ void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 
 void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wParam1, wParam2, wParam3))
+		return;
+
 	TCmdParam3 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2491,10 +2571,16 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, {}, wParam1, wParam2);
 }
 
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
 {
+	if (WasPlayerCmdAlreadyRequested(bCmd, {}, wParam1, wParam2, wParam3, wParam4))
+		return;
+
 	TCmdParam4 cmd;
 
 	cmd.bCmd = bCmd;
@@ -2506,6 +2592,9 @@ void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, {}, wParam1, wParam2);
 }
 
 void NetSendCmdQuest(bool bHiPri, const Quest &quest)
@@ -2523,7 +2612,7 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint8_t ii)
 {
 	TCmdGItem cmd;
 
@@ -2608,13 +2697,15 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 		cmd.dwBuff = item.dwBuff;
 	}
 
+	ItemLimbo = item;
+
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdChItem(bool bHiPri, BYTE bLoc)
+void NetSendCmdChItem(bool bHiPri, uint8_t bLoc)
 {
 	TCmdChItem cmd;
 
@@ -2635,7 +2726,7 @@ void NetSendCmdChItem(bool bHiPri, BYTE bLoc)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDelItem(bool bHiPri, BYTE bLoc)
+void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc)
 {
 	TCmdDelItem cmd;
 

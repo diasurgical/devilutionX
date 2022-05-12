@@ -142,7 +142,8 @@ bool ChangeOptionValue(OptionEntryBase *pOption, size_t listIndex)
 
 void ItemSelected(int value)
 {
-	auto &vecItem = vecDialogItems[value];
+	const auto index = static_cast<size_t>(value);
+	auto &vecItem = vecDialogItems[index];
 	int vecItemValue = vecItem->m_value;
 	if (vecItemValue < 0) {
 		auto specialMenuEntry = static_cast<SpecialMenuEntry>(vecItemValue);
@@ -187,7 +188,7 @@ void ItemSelected(int value)
 		}
 		if (updateValueDescription) {
 			auto args = CreateDrawStringFormatArgForEntry(pOption);
-			bool optionUsesTwoLines = ((value + 1) < vecDialogItems.size() && vecDialogItems[value]->m_value == vecDialogItems[value + 1]->m_value);
+			bool optionUsesTwoLines = ((index + 1) < vecDialogItems.size() && vecDialogItems[index]->m_value == vecDialogItems[index + 1]->m_value);
 			if (NeedsTwoLinesToDisplayOption(args) != optionUsesTwoLines) {
 				selectedOption = pOption;
 				endMenu = true;
@@ -196,7 +197,7 @@ void ItemSelected(int value)
 				for (auto &arg : args)
 					vecItem->args.push_back(arg);
 				if (optionUsesTwoLines) {
-					vecDialogItems[value + 1]->m_text = pOption->GetValueDescription().data();
+					vecDialogItems[index + 1]->m_text = pOption->GetValueDescription().data();
 				}
 			}
 		}

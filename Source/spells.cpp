@@ -113,6 +113,16 @@ bool IsWallSpell(spell_id spl)
 	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;
 }
 
+bool TargetsMonster(spell_id id)
+{
+	return id == SPL_FIREBALL
+	    || id == SPL_FIREWALL
+	    || id == SPL_FLAME
+	    || id == SPL_LIGHTNING
+	    || id == SPL_STONE
+	    || id == SPL_WAVE;
+}
+
 int GetManaAmount(Player &player, spell_id sn)
 {
 	int ma; // mana amount
@@ -136,7 +146,7 @@ int GetManaAmount(Player &player, spell_id sn)
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
 		ma = (spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
-		ma = ((BYTE)player._pMaxManaBase - adj);
+		ma = (player._pMaxManaBase >> 6) - adj;
 	} else {
 		ma = (spelldata[sn].sManaCost - adj);
 	}

@@ -84,6 +84,7 @@ set(libdevilutionx_SRCS
   engine/demomode.cpp
   engine/direction.cpp
   engine/load_cel.cpp
+  engine/load_pcx_as_cel.cpp
   engine/random.cpp
   engine/render/automap_render.cpp
   engine/render/cel_render.cpp
@@ -107,6 +108,8 @@ set(libdevilutionx_SRCS
   utils/language.cpp
   utils/logged_fstream.cpp
   utils/paths.cpp
+  utils/pcx.cpp
+  utils/pcx_to_cel.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
   utils/utf8.cpp

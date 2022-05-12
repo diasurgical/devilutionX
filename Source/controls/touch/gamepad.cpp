@@ -2,7 +2,6 @@
 
 #include "control.h"
 #include "controls/touch/gamepad.h"
-#include "diablo.h"
 #include "quests.h"
 #include "utils/display.h"
 #include "utils/ui_fwd.h"

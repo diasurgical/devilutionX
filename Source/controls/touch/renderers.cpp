@@ -138,8 +138,9 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 
 	Point position { 0, 0 };
 	for (item_cursor_graphic graphic : potionGraphics) {
-		const int frame = CURSOR_FIRSTITEM + graphic;
-		const OwnedCelSprite &potionSprite = GetInvItemSprite(frame);
+		const int cursorID = CURSOR_FIRSTITEM + graphic;
+		const int frame = GetInvItemFrame(cursorID);
+		const OwnedCelSprite &potionSprite = GetInvItemSprite(cursorID);
 		position.y += potionSize.height;
 		CelClippedDrawTo(Surface(surface.get()), position, potionSprite, frame);
 	}
@@ -369,7 +370,7 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 				return GAMEPAD_HEALING;
 			if (item._iMiscId == IMISC_FULLHEAL)
 				return GAMEPAD_FULL_HEALING;
-			if (item.IsScrollOf(SPL_HEAL))
+			if (item.isScrollOf(SPL_HEAL))
 				return GAMEPAD_SCROLL_OF_HEALING;
 		}
 
@@ -453,7 +454,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 		if (pcursinvitem != -1) {
 			Item &item = GetInventoryItem(*MyPlayer, pcursinvitem);
-			if (!item.IsScroll() || !spelldata[item._iSpell].sTargeted) {
+			if (!item.isScroll() || !spelldata[item._iSpell].sTargeted) {
 				if (!item.isEquipment()) {
 					return GetApplyButtonType(virtualPadButton->isHeld);
 				}
@@ -466,7 +467,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 {
-	if (pcurs >= CURSOR_FIRSTITEM)
+	if (!MyPlayer->HoldItem.isEmpty())
 		return GetDropButtonType(virtualPadButton->isHeld);
 
 	if (invflag && pcursinvitem != -1 && pcurs == CURSOR_HAND) {

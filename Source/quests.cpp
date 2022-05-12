@@ -149,7 +149,7 @@ void DrawWarLord(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
 		}
 	}
@@ -171,7 +171,7 @@ void DrawSChamber(quest_id q, int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
 		}
 	}
@@ -195,7 +195,7 @@ void DrawLTBanner(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				pdungeon[x + i][y + j] = tileId;
 			}
@@ -219,7 +219,7 @@ void DrawBlind(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				pdungeon[x + i][y + j] = tileId;
 			}
@@ -243,7 +243,7 @@ void DrawBlood(int x, int y)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[x + i][y + j] = tileId;
 			}
@@ -392,7 +392,7 @@ void CheckQuests()
 		int rporty = quest.position.y;
 		AddMissile({ rportx, rporty }, { rportx, rporty }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 1;
-		if (quest._qactive == QUEST_ACTIVE) {
+		if (quest._qactive == QUEST_ACTIVE && quest._qvar1 == 2) {
 			quest._qvar1 = 3;
 		}
 	}
@@ -688,9 +688,7 @@ void ResyncQuests()
 			TransVal = tren;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
-			int x = setpc_x;
-			int y = setpc_y;
-			ObjChangeMapResync(x, y, x + setpc_w + 1, y + setpc_h + 1);
+			ObjChangeMapResync(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
@@ -743,7 +741,7 @@ void DrawQuestLog(const Surface &out)
 		SelectedQuest = l;
 	}
 	const auto x = InnerPanel.position.x;
-	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 0);
 	int y = InnerPanel.position.y + ListYOffset;
 	for (int i = 0; i < EncounteredQuestCount; i++) {
 		if (i == FirstFinishedQuest) {

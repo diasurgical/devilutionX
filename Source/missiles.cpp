@@ -277,7 +277,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;
 
-	if ((gbIsHellfire && (player._pIFlags & ISPL_NOHEALMON) != 0) || (!gbIsHellfire && (player._pIFlags & ISPL_FIRE_ARROWS) != 0))
+	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
 		monster._mFlags |= MFLAG_NOHEAL;
 
 	if (monster._mhitpoints >> 6 <= 0) {
@@ -295,7 +295,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 				M_StartHit(m, pnum, dam);
 			monster.Petrify();
 		} else {
-			if (MissilesData[t].mType == 0 && (player._pIFlags & ISPL_KNOCKBACK) != 0) {
+			if (MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback)) {
 				M_GetKnockback(m);
 			}
 			if (m > MAX_PLRS - 1)
@@ -1124,13 +1124,13 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		if (!shift) {
 			dam = (mind << 6) + GenerateRnd(((maxd - mind) << 6) + 1);
 			if (monster == nullptr)
-				if ((player._pIFlags & ISPL_ABSHALFTRAP) != 0)
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
 			dam += player._pIGetHit * 64;
 		} else {
 			dam = mind + GenerateRnd(maxd - mind + 1);
 			if (monster == nullptr)
-				if ((player._pIFlags & ISPL_ABSHALFTRAP) != 0)
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
 			dam += player._pIGetHit;
 		}
@@ -1424,10 +1424,8 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 					}
 				}
 				if (ii != -1) {
-					InitializeItem(player.HoldItem, ii);
-					GenerateNewSeed(player.HoldItem);
-					player.HoldItem._iStatFlag = true;
-					player.SpdList[si] = player.HoldItem;
+					InitializeItem(player.SpdList[si], ii);
+					player.SpdList[si]._iStatFlag = true;
 				}
 				if (!hasPlayedSFX) {
 					PlaySfxLoc(IS_POPPOP2, target);
@@ -1473,13 +1471,13 @@ void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter)
 		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
 			av += (player._pLevel - 1) / 8;
 
-		if ((player._pIFlags & ISPL_QUICKATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
 			av++;
-		if ((player._pIFlags & ISPL_FASTATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
 			av += 2;
-		if ((player._pIFlags & ISPL_FASTERATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
 			av += 4;
-		if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 			av += 8;
 	}
 
@@ -1690,13 +1688,13 @@ void AddLArrow(Missile &missile, const AddMissileParameter &parameter)
 			av += (player._pLevel) / 8;
 
 		if (gbIsHellfire) {
-			if ((player._pIFlags & ISPL_QUICKATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
 				av++;
-			if ((player._pIFlags & ISPL_FASTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
 				av += 2;
-			if ((player._pIFlags & ISPL_FASTERATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
 				av += 4;
-			if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 				av += 8;
 		} else {
 			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
@@ -1722,7 +1720,7 @@ void AddArrow(Missile &missile, const AddMissileParameter &parameter)
 	if (missile._micaster == TARGET_MONSTERS) {
 		auto &player = Players[missile._misource];
 
-		if ((player._pIFlags & ISPL_RNDARROWVEL) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
 			av = GenerateRnd(32) + 16;
 		}
 		if (player._pClass == HeroClass::Rogue)
@@ -1731,13 +1729,13 @@ void AddArrow(Missile &missile, const AddMissileParameter &parameter)
 			av += (player._pLevel - 1) / 8;
 
 		if (gbIsHellfire) {
-			if ((player._pIFlags & ISPL_QUICKATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
 				av++;
-			if ((player._pIFlags & ISPL_FASTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
 				av += 2;
-			if ((player._pIFlags & ISPL_FASTERATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
 				av += 4;
-			if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 				av += 8;
 		}
 	}

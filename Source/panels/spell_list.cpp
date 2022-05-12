@@ -85,7 +85,7 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 {
 	auto &myPlayer = Players[MyPlayerId];
-	for (int t = 0; t < 4; t++) {
+	for (size_t t = 0; t < NumHotkeys; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
 		auto quickSpellActionKey = fmt::format("QuickSpell{}", t + 1);
@@ -113,7 +113,7 @@ void DrawSpell(const Surface &out)
 	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
-	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 27;
+	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 26;
 	const Point position { PANEL_X + 565, PANEL_Y + 119 };
 	DrawSpellCel(out, position, nCel);
 
@@ -184,7 +184,7 @@ void DrawSpellList(const Surface &out)
 			InfoString = fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText));
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
-				return item.IsScrollOf(spellId);
+				return item.isScrollOf(spellId);
 			});
 			AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 		} break;
@@ -277,7 +277,7 @@ void SetSpell()
 	force_redraw = 255;
 }
 
-void SetSpeedSpell(int slot)
+void SetSpeedSpell(size_t slot)
 {
 	spell_id pSpell;
 	spell_type pSplType;
@@ -286,7 +286,7 @@ void SetSpeedSpell(int slot)
 		return;
 	}
 	auto &myPlayer = Players[MyPlayerId];
-	for (int i = 0; i < 4; ++i) {
+	for (size_t i = 0; i < NumHotkeys; ++i) {
 		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
 			myPlayer._pSplHotKey[i] = SPL_INVALID;
 	}
@@ -294,7 +294,7 @@ void SetSpeedSpell(int slot)
 	myPlayer._pSplTHotKey[slot] = pSplType;
 }
 
-void ToggleSpell(int slot)
+void ToggleSpell(size_t slot)
 {
 	uint64_t spells;
 
@@ -321,8 +321,9 @@ void ToggleSpell(int slot)
 		return;
 	}
 
-	if ((spells & GetSpellBitmask(myPlayer._pSplHotKey[slot])) != 0) {
-		myPlayer._pRSpell = myPlayer._pSplHotKey[slot];
+	const spell_id spellId = myPlayer._pSplHotKey[slot];
+	if (spellId != SPL_INVALID && spellId != SPL_NULL && (spells & GetSpellBitmask(spellId)) != 0) {
+		myPlayer._pRSpell = spellId;
 		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
 		force_redraw = 255;
 	}

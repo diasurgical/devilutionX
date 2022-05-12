@@ -28,7 +28,8 @@ int WithdrawGoldValue;
 
 namespace {
 
-constexpr unsigned CountStashPages = 50;
+constexpr unsigned CountStashPages = 100;
+constexpr unsigned LastStashPage = CountStashPages - 1;
 
 int InitialWithdrawGoldValue;
 
@@ -52,23 +53,17 @@ Art StashNavButtonArt;
  */
 void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, Size itemSize)
 {
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, itemSize })) {
-		Stash.stashGrids[page][position.x + point.x][position.y + point.y] = stashListIndex + 1;
+	for (auto point : PointsInRectangleRange({ position, itemSize })) {
+		Stash.stashGrids[page][point.x][point.y] = stashListIndex + 1;
 	}
 }
 
 Point FindSlotUnderCursor(Point cursorPosition)
 {
-	if ((icursSize28.width & 1) == 0)
-		cursorPosition.x -= INV_SLOT_HALF_SIZE_PX;
-	if ((icursSize28.height & 1) == 0)
-		cursorPosition.y -= INV_SLOT_HALF_SIZE_PX;
-	cursorPosition.y -= (icursSize28.height - 1) / 2 * INV_SLOT_SIZE_PX;
-
 	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
 		Rectangle cell {
 			GetStashSlotCoord(point),
-			InventorySlotSizeInPixels
+			InventorySlotSizeInPixels + 1
 		};
 
 		if (cell.Contains(cursorPosition)) {
@@ -83,38 +78,45 @@ void CheckStashPaste(Point cursorPosition)
 {
 	auto &player = Players[MyPlayerId];
 
-	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	if (!IsHardwareCursor()) {
-		cursorPosition += Displacement(icursSize / 2);
+	const Size itemSize = GetInventorySize(player.HoldItem);
+	const Displacement hotPixelOffset = Displacement(itemSize * INV_SLOT_HALF_SIZE_PX);
+	if (IsHardwareCursor()) {
+		// It's more natural to select the top left cell of the region the sprite is overlapping when putting an item
+		//  into an inventory grid, so compensate for the adjusted hot pixel of hardware cursors.
+		cursorPosition -= hotPixelOffset;
 	}
 
 	if (player.HoldItem._itype == ItemType::Gold) {
 		Stash.gold += player.HoldItem._ivalue;
+		player.HoldItem.clear();
+		PlaySFX(IS_GOLD);
 		Stash.dirty = true;
-		if (!IsHardwareCursor())
-			SetCursorPos(cursorPosition);
+		if (!IsHardwareCursor()) {
+			// To make software cursors behave like hardware cursors we need to adjust the hand cursor position manually
+			SetCursorPos(cursorPosition + hotPixelOffset);
+		}
 		NewCursor(CURSOR_HAND);
 		return;
 	}
 
-	Point firstSlot = FindSlotUnderCursor(cursorPosition);
+	// Make the hot pixel the center of the top-left cell of the item, this favors the cell which contains more of the
+	//  item sprite
+	Point firstSlot = FindSlotUnderCursor(cursorPosition + Displacement(INV_SLOT_HALF_SIZE_PX));
 	if (firstSlot == InvalidStashPoint)
 		return;
-
-	const Size itemSize = icursSize28;
 
 	if (firstSlot.x + itemSize.width > 10 || firstSlot.y + itemSize.height > 10) {
 		return; // Item does not fit
 	}
 
-	// Check that no more then 1 item is replaced by the move
-	uint16_t it = 0;
+	// Check that no more than 1 item is replaced by the move
+	StashStruct::StashCell stashIndex = StashStruct::EmptyCell;
 	for (auto point : PointsInRectangleRange({ firstSlot, itemSize })) {
-		uint16_t iv = Stash.stashGrids[Stash.GetPage()][point.x][point.y];
-		if (iv == 0 || it == iv)
+		StashStruct::StashCell iv = Stash.GetItemIdAtPosition(point);
+		if (iv == StashStruct::EmptyCell || stashIndex == iv)
 			continue;
-		if (it == 0) {
-			it = iv; // Found first item
+		if (stashIndex == StashStruct::EmptyCell) {
+			stashIndex = iv; // Found first item
 			continue;
 		}
 		return; // Found a second item
@@ -124,17 +126,16 @@ void CheckStashPaste(Point cursorPosition)
 
 	player.HoldItem.position = firstSlot + Displacement { 0, itemSize.height - 1 };
 
-	int cn = CURSOR_HAND;
-	uint16_t stashIndex;
-	if (it == 0) {
-		Stash.stashList.push_back(player.HoldItem);
-		stashIndex = Stash.stashList.size() - 1;
+	if (stashIndex == StashStruct::EmptyCell) {
+		Stash.stashList.emplace_back(player.HoldItem.pop());
+		// stashList will have at most 10 000 items, up to 65 535 are supported with uint16_t indexes
+		stashIndex = static_cast<uint16_t>(Stash.stashList.size() - 1);
 	} else {
-		stashIndex = it - 1;
-		cn = SwapItem(Stash.stashList[stashIndex], player.HoldItem);
-		for (auto &row : Stash.stashGrids[Stash.GetPage()]) {
+		// remove item from stash grid
+		std::swap(Stash.stashList[stashIndex], player.HoldItem);
+		for (auto &row : Stash.GetCurrentGrid()) {
 			for (auto &itemId : row) {
-				if (itemId == it)
+				if (itemId - 1 == stashIndex)
 					itemId = 0;
 			}
 		}
@@ -144,9 +145,11 @@ void CheckStashPaste(Point cursorPosition)
 
 	Stash.dirty = true;
 
-	if (cn == CURSOR_HAND && !IsHardwareCursor())
-		SetCursorPos(cursorPosition);
-	NewCursor(cn);
+	if (player.HoldItem.isEmpty() && !IsHardwareCursor()) {
+		// To make software cursors behave like hardware cursors we need to adjust the hand cursor position manually
+		SetCursorPos(cursorPosition + hotPixelOffset);
+	}
+	NewCursor(player.HoldItem);
 }
 
 void CheckStashCut(Point cursorPosition, bool automaticMove)
@@ -178,15 +181,13 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 	}
 
 	Item &holdItem = player.HoldItem;
-	holdItem._itype = ItemType::None;
+	holdItem.clear();
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
 
-	uint16_t ii = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y];
-	if (ii != 0) {
-		uint16_t iv = ii - 1;
-
+	StashStruct::StashCell iv = Stash.GetItemIdAtPosition(slot);
+	if (iv != StashStruct::EmptyCell) {
 		holdItem = Stash.stashList[iv];
 		if (automaticMove) {
 			if (CanBePlacedOnBelt(holdItem)) {
@@ -219,11 +220,12 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 				}
 			}
 
-			holdItem._itype = ItemType::None;
+			holdItem.clear();
 		} else {
-			NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
+			NewCursor(holdItem);
 			if (!IsHardwareCursor()) {
 				// For a hardware cursor, we set the "hot point" to the center of the item instead.
+				Size cursSize = GetInvItemSize(holdItem._iCurs + CURSOR_FIRSTITEM);
 				SetCursorPos(cursorPosition - Displacement(cursSize / 2));
 			}
 		}
@@ -293,19 +295,19 @@ void CheckStashButtonRelease(Point mousePosition)
 	if (stashButton.Contains(mousePosition)) {
 		switch (StashButtonPressed) {
 		case 0:
-			Stash.SetPage(Stash.GetPage() - 10);
+			Stash.PreviousPage(10);
 			break;
 		case 1:
-			Stash.SetPage(Stash.GetPage() - 1);
+			Stash.PreviousPage();
 			break;
 		case 2:
 			StartGoldWithdraw();
 			break;
 		case 3:
-			Stash.SetPage(Stash.GetPage() + 1);
+			Stash.NextPage();
 			break;
 		case 4:
-			Stash.SetPage(Stash.GetPage() + 10);
+			Stash.NextPage(10);
 			break;
 		}
 	}
@@ -341,18 +343,17 @@ void DrawStash(const Surface &out)
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
 
 	for (auto slot : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
-		if (Stash.stashGrids[Stash.GetPage()][slot.x][slot.y] != 0) {
+		if (Stash.IsItemAtPosition(slot)) {
 			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels);
 		}
 	}
 
 	for (auto slot : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
-		uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y];
-		if (itemId == 0) {
+		StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
+		if (itemId == StashStruct::EmptyCell) {
 			continue; // No item in the given slot
 		}
 
-		itemId -= 1;
 		Item &item = Stash.stashList[itemId];
 		if (item.position != slot) {
 			continue; // Not the first slot of the item
@@ -381,7 +382,7 @@ void DrawStash(const Surface &out)
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 {
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!MyPlayer->HoldItem.isEmpty()) {
 		CheckStashPaste(mousePosition);
 	} else if (isCtrlHeld) {
 		TransferItemToInventory(*MyPlayer, pcursstashitem);
@@ -412,12 +413,11 @@ uint16_t CheckStashHLight(Point mousePosition)
 
 	ClearPanel();
 
-	uint16_t itemId = Stash.stashGrids[Stash.GetPage()][slot.x][slot.y];
-	if (itemId == 0) {
+	StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
+	if (itemId == StashStruct::EmptyCell) {
 		return -1;
 	}
 
-	itemId -= 1;
 	Item &item = Stash.stashList[itemId];
 	if (item.isEmpty()) {
 		return -1;
@@ -470,7 +470,7 @@ bool UseStashItem(uint16_t c)
 		WithdrawGoldValue = 0;
 	}
 
-	if (item->IsScroll()) {
+	if (item->isScroll()) {
 		return true;
 	}
 
@@ -497,11 +497,11 @@ bool UseStashItem(uint16_t c)
 	return true;
 }
 
-void StashStruct::RemoveStashItem(uint16_t iv)
+void StashStruct::RemoveStashItem(StashStruct::StashCell iv)
 {
 	// Iterate through stashGrid and remove every reference to item
-	for (auto &row : Stash.stashGrids[Stash.GetPage()]) {
-		for (uint16_t &itemId : row) {
+	for (auto &row : Stash.GetCurrentGrid()) {
+		for (StashStruct::StashCell &itemId : row) {
 			if (itemId - 1 == iv) {
 				itemId = 0;
 			}
@@ -513,14 +513,14 @@ void StashStruct::RemoveStashItem(uint16_t iv)
 	}
 
 	// If the item at the end of stash array isn't the one we removed, we need to swap its position in the array with the removed item
-	std::size_t lastItemIndex = stashList.size() - 1;
+	StashStruct::StashCell lastItemIndex = static_cast<StashStruct::StashCell>(stashList.size() - 1);
 	if (lastItemIndex != iv) {
 		stashList[iv] = stashList[lastItemIndex];
 
 		for (auto &pair : Stash.stashGrids) {
 			auto &grid = pair.second;
 			for (auto &row : grid) {
-				for (uint16_t &itemId : row) {
+				for (StashStruct::StashCell &itemId : row) {
 					if (itemId == lastItemIndex + 1) {
 						itemId = iv + 1;
 					}
@@ -534,13 +534,34 @@ void StashStruct::RemoveStashItem(uint16_t iv)
 
 void StashStruct::SetPage(unsigned newPage)
 {
-	page = std::min(newPage, CountStashPages - 1);
+	page = std::min(newPage, LastStashPage);
+	dirty = true;
+}
+
+void StashStruct::NextPage(unsigned offset)
+{
+	if (page <= LastStashPage) {
+		page += std::min(offset, LastStashPage - page);
+	} else {
+		page = LastStashPage;
+	}
+	dirty = true;
+}
+
+void StashStruct::PreviousPage(unsigned offset)
+{
+	if (page <= LastStashPage) {
+		page -= std::min(offset, page);
+	} else {
+		page = LastStashPage;
+	}
+	dirty = true;
 }
 
 void StashStruct::RefreshItemStatFlags()
 {
 	for (auto &item : Stash.stashList) {
-		item._iStatFlag = MyPlayer->CanUseItem(item);
+		item.updateRequiredStatsCacheForPlayer(*MyPlayer);
 	}
 }
 
@@ -574,6 +595,7 @@ void WithdrawGoldKeyPress(char vkey)
 	if (vkey == DVL_VK_RETURN) {
 		if (WithdrawGoldValue > 0) {
 			WithdrawGold(myPlayer, WithdrawGoldValue);
+			PlaySFX(IS_GOLD);
 		}
 		CloseGoldWithdraw();
 	} else if (vkey == DVL_VK_ESCAPE) {
@@ -591,7 +613,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 
 	const int dialogX = 30;
 
-	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), *pGBoxBuff, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), *pGBoxBuff, 0);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw?"), 200);
@@ -666,7 +688,7 @@ bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 				continue;
 			if (persistItem) {
 				Stash.stashList.push_back(item);
-				uint16_t stashIndex = Stash.stashList.size() - 1;
+				uint16_t stashIndex = static_cast<uint16_t>(Stash.stashList.size() - 1);
 				Stash.stashList[stashIndex].position = stashPosition + Displacement { 0, itemSize.height - 1 };
 				AddItemToStashGrid(pageIndex, stashPosition, stashIndex, itemSize);
 				Stash.dirty = true;

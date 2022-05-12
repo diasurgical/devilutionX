@@ -31,7 +31,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 	stream_stop();
 	effects_play_sound("Sfx\\Misc\\blank.wav");
 
-	if (IsHardwareCursorEnabled() && ControlMode == ControlTypes::KeyboardAndMouse) {
+	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
 		SetHardwareCursorVisible(false);
 	}
 

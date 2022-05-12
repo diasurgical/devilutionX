@@ -12,7 +12,7 @@ else()
 endif()
 include(FetchContent)
 FetchContent_Declare(libfmt
-  URL https://github.com/fmtlib/fmt/archive/dbbd711f4635838290a10b1b3d8d378937a8741b.zip
-  URL_HASH MD5=0d7ec2a3a3a7c401d0b230dff194c119
+  URL https://github.com/fmtlib/fmt/archive/22d31b31f0e9b4e4654ba67ee881f3564c2cc297.tar.gz
+  URL_HASH MD5=d4e8744846cb9e94a80aca932ed2d5c0
 )
 FetchContent_MakeAvailableExcludeFromAll(libfmt)

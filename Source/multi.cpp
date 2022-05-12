@@ -26,6 +26,7 @@
 #include "utils/endian.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/cstddef.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -56,6 +57,7 @@ bool PublicGame;
 BYTE gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
+Uint32 playerInfoTimers[MAX_PLRS];
 
 /**
  * Contains the set of supported event types supported by the multiplayer
@@ -77,7 +79,7 @@ void BufferInit(TBuffer *pBuf)
 	pBuf->bData[0] = byte { 0 };
 }
 
-void CopyPacket(TBuffer *buf, const byte *packet, uint8_t size)
+void CopyPacket(TBuffer *buf, const byte *packet, size_t size)
 {
 	if (buf->dwNextWriteOffset + size + 2 > 0x1000) {
 		return;
@@ -108,7 +110,7 @@ byte *ReceivePacket(TBuffer *pBuf, byte *body, size_t *size)
 			*size -= chunkSize;
 		}
 		memcpy(pBuf->bData, srcPtr, (pBuf->bData - srcPtr) + pBuf->dwNextWriteOffset + 1);
-		pBuf->dwNextWriteOffset += (pBuf->bData - srcPtr);
+		pBuf->dwNextWriteOffset += static_cast<uint32_t>(pBuf->bData - srcPtr);
 		return body;
 	}
 	return body;
@@ -133,12 +135,53 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.bdex = myPlayer._pBaseDex;
 }
 
+bool IsNetPlayerValid(const Player &player)
+{
+	return player._pLevel >= 1
+	    && player._pLevel <= MAXCHARLEVEL
+	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
+	    && player.plrlevel < NUMLEVELS
+	    && player.pDifficulty <= DIFF_LAST
+	    && InDungeonBounds(player.position.tile)
+	    && !string_view(player._pName).empty();
+}
+
+void CheckPlayerInfoTimeouts()
+{
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (i == MyPlayerId) {
+			continue;
+		}
+
+		Uint32 &timerStart = playerInfoTimers[i];
+		bool isPlayerConnected = (player_state[i] & PS_CONNECTED) != 0;
+		bool isPlayerValid = isPlayerConnected && IsNetPlayerValid(Players[i]);
+		if (isPlayerConnected && !isPlayerValid && timerStart == 0) {
+			timerStart = SDL_GetTicks();
+		}
+		if (!isPlayerConnected || isPlayerValid) {
+			timerStart = 0;
+		}
+
+		if (timerStart == 0) {
+			continue;
+		}
+
+		// Time the player out after 15 seconds
+		// if we do not receive valid player info
+		if (SDL_GetTicks() - timerStart >= 15000) {
+			SNetDropPlayer(i, LEAVE_DROP);
+			timerStart = 0;
+		}
+	}
+}
+
 void SendPacket(int playerId, const byte *packet, size_t size)
 {
 	TPkt pkt;
 
 	NetReceivePlayerData(&pkt);
-	pkt.hdr.wLen = size + sizeof(pkt.hdr);
+	pkt.hdr.wLen = static_cast<uint16_t>(size + sizeof(pkt.hdr));
 	memcpy(pkt.body, packet, size);
 	if (!SNetSendMessage(playerId, &pkt.hdr, pkt.hdr.wLen))
 		nthread_terminate_game("SNetSendMessage0");
@@ -147,9 +190,9 @@ void SendPacket(int playerId, const byte *packet, size_t size)
 void MonsterSeeds()
 {
 	sgdwGameLoops++;
-	uint32_t l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
+	const uint32_t seed = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
 	for (int i = 0; i < MAXMONSTERS; i++)
-		Monsters[i]._mAISeed = l + i;
+		Monsters[i]._mAISeed = seed + i;
 }
 
 void HandleTurnUpperBit(int pnum)
@@ -183,6 +226,10 @@ void ParseTurn(int pnum, uint32_t turn)
 
 void PlayerLeftMsg(int pnum, bool left)
 {
+	if (pnum == MyPlayerId) {
+		return;
+	}
+
 	auto &player = Players[pnum];
 
 	if (!player.plractive) {
@@ -304,10 +351,10 @@ dungeon_type InitLevelType(int l)
 		return DTYPE_CAVES;
 	if (l >= 13 && l <= 16)
 		return DTYPE_HELL;
-	if (l >= 21 && l <= 24)
-		return DTYPE_CATHEDRAL; // Crypt
 	if (l >= 17 && l <= 20)
-		return DTYPE_CAVES; // Hive
+		return DTYPE_NEST;
+	if (l >= 21 && l <= 24)
+		return DTYPE_CRYPT;
 
 	return DTYPE_CATHEDRAL;
 }
@@ -399,6 +446,8 @@ bool InitSingle(GameData *gameData)
 	MyPlayer = &Players[MyPlayerId];
 	gbIsMultiplayer = false;
 
+	pfile_read_player_from_save(gSaveNumber, *MyPlayer);
+
 	return true;
 }
 
@@ -435,7 +484,7 @@ bool InitMulti(GameData *gameData)
 void InitGameInfo()
 {
 	sgGameInitInfo.size = sizeof(sgGameInitInfo);
-	sgGameInitInfo.dwSeed = time(nullptr);
+	sgGameInitInfo.dwSeed = static_cast<uint32_t>(time(nullptr));
 	sgGameInitInfo.programid = GAME_ID;
 	sgGameInitInfo.versionMajor = PROJECT_VERSION_MAJOR;
 	sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
@@ -470,8 +519,8 @@ void NetSendHiPri(int playerId, const byte *data, size_t size)
 		byte *lowpriBody = ReceivePacket(&sgLoPriBuf, hipriBody, &msgSize);
 		msgSize = sync_all_monsters(lowpriBody, msgSize);
 		size_t len = gdwNormalMsgSize - msgSize;
-		pkt.hdr.wLen = len;
-		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, len))
+		pkt.hdr.wLen = static_cast<uint16_t>(len);
+		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, static_cast<unsigned>(len)))
 			nthread_terminate_game("SNetSendMessage");
 	}
 }
@@ -480,13 +529,13 @@ void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size)
 {
 	TPkt pkt;
 	NetReceivePlayerData(&pkt);
-	size_t t = size + sizeof(pkt.hdr);
-	pkt.hdr.wLen = t;
+	size_t len = size + sizeof(pkt.hdr);
+	pkt.hdr.wLen = static_cast<uint16_t>(len);
 	memcpy(pkt.body, data, size);
-	size_t p = 0;
-	for (size_t v = 1; p < MAX_PLRS; p++, v <<= 1) {
+	size_t playerID = 0;
+	for (size_t v = 1; playerID < MAX_PLRS; playerID++, v <<= 1) {
 		if ((v & pmask) != 0) {
-			if (!SNetSendMessage(p, &pkt.hdr, t) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
+			if (!SNetSendMessage(playerID, &pkt.hdr, len) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
 				nthread_terminate_game("SNetSendMessage");
 				return;
 			}
@@ -574,6 +623,14 @@ void multi_process_network_packets()
 		if (pkt->wLen != dwMsgSize)
 			continue;
 		auto &player = Players[dwID];
+		if (!IsNetPlayerValid(player)) {
+			_cmd_id cmd = *(const _cmd_id *)(pkt + 1);
+			if (gbBufferMsgs == 0 && IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
+				// Distrust all messages until
+				// player info is received
+				continue;
+			}
+		}
 		Point syncPosition = { pkt->px, pkt->py };
 		player.position.last = syncPosition;
 		if (dwID != MyPlayerId) {
@@ -616,6 +673,7 @@ void multi_process_network_packets()
 	}
 	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 		nthread_terminate_game("SNetReceiveMsg");
+	CheckPlayerInfoTimeouts();
 }
 
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
@@ -804,7 +862,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	player._pgfxnum &= ~0xF;
 	player._pmode = PM_DEATH;
 	NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
-	player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+	player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
 	dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 }
 

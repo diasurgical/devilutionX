@@ -281,22 +281,23 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	if (c == 0) {
 		switch (pItem._itype) {
 		case ItemType::Sword:
-			c = 2;
+			c = 1;
 			break;
 		case ItemType::Axe:
-			c = 6;
-			break;
-		case ItemType::Bow:
-			c = 7;
-			break;
-		case ItemType::Mace:
 			c = 5;
 			break;
-		case ItemType::Staff:
-			c = 8;
+		case ItemType::Bow:
+			c = 6;
 			break;
+		case ItemType::Mace:
+			c = 4;
+			break;
+		case ItemType::Staff:
+			c = 7;
+			break;
+		case ItemType::Shield:
 		default:
-			c = 1;
+			c = 0;
 			break;
 		}
 	}
@@ -371,7 +372,7 @@ void RemoveGold(Player &player, int goldIndex)
 		player.RemoveInvItem(gi);
 
 	MakeGoldStack(player.HoldItem, dropGoldValue);
-	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+	NewCursor(player.HoldItem);
 
 	player._pGold = CalculateGold(player);
 	dropGoldValue = 0;
@@ -528,16 +529,16 @@ void InitControlPan()
 
 	LoadCharPanel();
 	LoadSpellIcons();
-	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 1);
+	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 0);
 	{
 		const Point bulbsPosition { 0, 87 };
 		const OwnedCelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
-		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 1);
-		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 2);
+		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 0);
+		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 1);
 	}
 	talkflag = false;
 	if (IsChatAvailable()) {
-		CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
+		CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 0);
 		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
@@ -596,16 +597,16 @@ void DrawCtrlBtns(const Surface &out)
 			DrawPanelBox(out, MakeSdlRect(PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20), { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
 		} else {
 			Point position { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 };
-			CelDrawTo(out, position, *pPanelButtons, i + 1);
+			CelDrawTo(out, position, *pPanelButtons, i);
 			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
 		}
 	}
 	if (PanelButtonIndex == 8) {
-		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 2 : 1);
+		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 1 : 0);
 		if (gbFriendlyMode)
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 4 : 3);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 3 : 2);
 		else
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 6 : 5);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 5 : 4);
 	}
 }
 
@@ -723,7 +724,7 @@ void CheckPanelInfo()
 				AddPanelString(fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[spellId].sNameText)));
 				const InventoryAndBeltPlayerItemsRange items { myPlayer };
 				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
-					return item.IsScrollOf(spellId);
+					return item.isScrollOf(spellId);
 				});
 				AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 			} break;
@@ -845,22 +846,21 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
+	DrawPanelBox(out, { 177, 62, 288, 63 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && !spselflag) {
 		InfoString.clear();
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
+	auto &myPlayer = Players[MyPlayerId];
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
-	} else if (pcurs >= CURSOR_FIRSTITEM) {
-		auto &myPlayer = Players[MyPlayerId];
+	} else if (!myPlayer.HoldItem.isEmpty()) {
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
 			InfoString = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
 		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
-			ClearPanel();
-			AddPanelString(_("Requirements not met"));
+			InfoString = _("Requirements not met");
 		} else {
 			if (myPlayer.HoldItem._iIdentified)
 				InfoString = myPlayer.HoldItem._iIName;
@@ -928,7 +928,7 @@ void ReleaseLvlBtn()
 void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
-		int nCel = lvlbtndown ? 3 : 2;
+		int nCel = lvlbtndown ? 2 : 1;
 		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
 	}
@@ -1009,8 +1009,8 @@ void DrawDurIcon(const Surface &out)
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 4);
-	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 2);
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
 	DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
@@ -1032,7 +1032,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 {
 	const int dialogX = 30;
 
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 0);
 
 	const std::string description = fmt::format(
 	    ngettext(

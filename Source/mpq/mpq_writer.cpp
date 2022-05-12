@@ -86,7 +86,7 @@ bool IsUnallocatedBlock(const MpqBlockEntry *block)
 bool MpqWriter::Open(const char *path)
 {
 	Close(/*clearTables=*/false);
-	LogDebug("Opening {}", path);
+	LogVerbose("Opening {}", path);
 	exists_ = FileExists(path);
 	std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 	if (exists_) {
@@ -94,7 +94,7 @@ bool MpqWriter::Open(const char *path)
 			Log(R"(GetFileSize("{}") failed with "{}")", path, std::strerror(errno));
 			return false;
 		}
-		LogDebug("GetFileSize(\"{}\") = {}", path, size_);
+		LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
 	} else {
 		mode |= std::ios::trunc;
 	}
@@ -157,14 +157,14 @@ bool MpqWriter::Close(bool clearTables)
 {
 	if (!stream_.IsOpen())
 		return true;
-	LogDebug("Closing {}", name_);
+	LogVerbose("Closing {} with clearTables={}", name_, clearTables);
 
 	bool result = true;
 	if (modified_ && !(stream_.Seekp(0, std::ios::beg) && WriteHeaderAndTables()))
 		result = false;
 	stream_.Close();
 	if (modified_ && result && size_ != 0) {
-		LogDebug("ResizeFile(\"{}\", {})", name_, size_);
+		LogVerbose("ResizeFile(\"{}\", {})", name_, size_);
 		result = ResizeFile(name_.c_str(), size_);
 	}
 	name_.clear();

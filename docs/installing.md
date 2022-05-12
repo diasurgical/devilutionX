@@ -3,9 +3,10 @@
 First, you will need access to the game's MPQ files.
 - Locate `DIABDAT.MPQ` on your CD, or in the [GoG](https://www.gog.com/game/diablo) installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)).
 - For the Diablo: Hellfire expansion you will also need `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq`.
-- DevilutionX comes with [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/devilutionx.mpq) which is required to run the game properly.
-- Chinese, Korean, and Japanese users will also need [fonts.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq) or the text will be missing.
-- For Polish voice support you need [pl.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq)
+- DevilutionX comes with [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/devilutionx.mpq) which is required to run the game properly.
+- Chinese, Korean, and Japanese users will also need [fonts.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/fonts.mpq) or the text will be missing.
+- For Polish voice support you need [pl.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/pl.mpq)
+- For Russian voice support you need [ru.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v2/ru.mpq)
 
 Download the latest [DevilutionX release](https://github.com/diasurgical/devilutionX/releases) for your system (if available) and extract the contents to a location of your choosing, or [build from source](building.md). Then follow the system-specific instructions below.
 
@@ -127,6 +128,17 @@ If you'd like to use this option, scan the QR code below.
 
 [Nintendo 3DS manual](/docs/manual/platforms/3ds.md)
 
+</details>
+
+<details><summary>Playstation 4</summary>
+
+ - Install devilutionx-ps4.pkg
+ - Copy the MPQ files (e.g., using ftp) to `/user/data/diasurgical/devilution/`
+ - Create the file `/user/data/diasurgical/devilution/diablo.ini` with the following contents:
+    ```
+    [Language]
+    Code=en
+    ```
 </details>
 
 <details><summary>Playstation Vita</summary>

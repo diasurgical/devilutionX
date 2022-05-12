@@ -42,3 +42,11 @@
 #else
 #define DVL_API_FOR_TEST
 #endif
+
+#if defined(__clang__)
+#define DVL_REINITIALIZES [[clang::reinitializes]]
+#elif DVL_HAVE_ATTRIBUTE(reinitializes)
+#define DVL_REINITIALIZES __attribute__((reinitializes))
+#else
+#define DVL_REINITIALIZES
+#endif

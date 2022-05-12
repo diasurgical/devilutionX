@@ -170,7 +170,15 @@ struct Object {
 	 */
 	[[nodiscard]] constexpr bool IsBarrel() const
 	{
-		return IsAnyOf(_otype, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX);
+		return IsAnyOf(_otype, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX, _object_id::OBJ_POD, _object_id::OBJ_PODEX, _object_id::OBJ_URN, _object_id::OBJ_URNEX);
+	}
+
+	/**
+	 * @brief Check if this object contains explosives or caustic material
+	 */
+	[[nodiscard]] constexpr bool isExplosive() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_BARRELEX, _object_id::OBJ_PODEX, _object_id::OBJ_URNEX);
 	}
 
 	/**
@@ -220,7 +228,7 @@ struct Object {
 	 */
 	[[nodiscard]] constexpr bool IsDoor() const
 	{
-		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR);
+		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR, _object_id::OBJ_L5LDOOR, _object_id::OBJ_L5RDOOR);
 	}
 
 	/**
@@ -280,6 +288,7 @@ void InitObjectGFX();
 void FreeObjectGFX();
 void AddL1Objs(int x1, int y1, int x2, int y2);
 void AddL2Objs(int x1, int y1, int x2, int y2);
+void AddL5Objs(int x1, int y1, int x2, int y2);
 void InitObjects();
 void SetMapObjects(const uint16_t *dunData, int startx, int starty);
 /**

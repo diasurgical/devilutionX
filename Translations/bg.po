@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-03-31 01:58+0200\n"
+"POT-Creation-Date: 2022-04-02 17:52+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -492,27 +492,17 @@ msgid ""
 msgstr "Създайте публична игра с трудност по Ваш избор."
 
 #: Source/DiabloUI/selgame.cpp:194
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter Game ID to join a game already in progress."
-msgstr "Напишете IP или hostname и се присъединете към текущата игра."
+msgstr "Въведете Game ID за да се присъединете към игра."
 
 #: Source/DiabloUI/selgame.cpp:196
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Enter an IP or a hostname to join a game already in progress."
-msgstr "Напишете IP или hostname и се присъединете към текущата игра."
+msgstr "Въведете IP или hostname и се присъединете към текущата игра."
 
 #: Source/DiabloUI/selgame.cpp:201
-#, fuzzy
-#| msgid "Join the public game already in progress at this address."
 msgid "Join the public game already in progress."
 msgstr ""
-"Присъединете към текущата публична игра на този адрес\n"
+"Присъединете към текущата публична игра.\n"
 "."
 
 #: Source/DiabloUI/selgame.cpp:207 Source/DiabloUI/selgame.cpp:299
@@ -568,10 +558,8 @@ msgid "Join {:s} Games"
 msgstr "Присъедини се към {:s} игри"
 
 #: Source/DiabloUI/selgame.cpp:320
-#, fuzzy
-#| msgid "Enter Name"
 msgid "Enter Game ID"
-msgstr "Въведете име"
+msgstr "Въведете Game ID"
 
 #: Source/DiabloUI/selgame.cpp:322
 msgid "Enter address"
@@ -883,15 +871,15 @@ msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
+"\tThis port makes use of Charis SIL, New Athena Unicode, Unifont, and Noto "
+"which are licensed under the SIL Open Font License, as well as Twitmoji "
+"which is licensed under CC-BY 4.0. The port also makes use of SDL which is "
+"licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
-"\tТози порт използва шрифтовете CharisSILB, Unifont, и Noto лицензирани под "
-"SIL Open Font License, както и Twitmoji лицензирани под CC-BY 4.0. Този порт "
-"използва също SDL, лицензиран под zlib-license. Виж ReadMe (ПрочетиМе) за "
-"повече информация."
+"\tТози порт използва шрифтовете Charis SIL, New Athena Unicode, Unifont, и "
+"Noto лицензирани под SIL Open Font License, както и Twitmoji лицензирани под "
+"CC-BY 4.0. Този порт използва също SDL, лицензиран под zlib-license. Виж "
+"ReadMe (ПрочетиМе) за повече информация."
 
 #: Source/DiabloUI/title.cpp:46
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -1059,7 +1047,7 @@ msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Заряд"
 msgstr[1] "{:d} Заряди"
 
-#: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
+#: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3480
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} златна монета"
@@ -1099,23 +1087,23 @@ msgstr ""
 "\n"
 "Уверете се, че файлът devilutionx.mpq е в папката на играта и е актуален."
 
-#: Source/cursor.cpp:220
+#: Source/cursor.cpp:223
 msgid "Town Portal"
 msgstr "Градски портал"
 
-#: Source/cursor.cpp:221
+#: Source/cursor.cpp:224
 msgid "from {:s}"
 msgstr "от {:s}"
 
-#: Source/cursor.cpp:235
+#: Source/cursor.cpp:238
 msgid "Portal to"
 msgstr "Портал до"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "The Unholy Altar"
 msgstr "Нечестивия олтар"
 
-#: Source/cursor.cpp:236
+#: Source/cursor.cpp:239
 msgid "level 15"
 msgstr "Ниво 15 "
 
@@ -1137,8 +1125,8 @@ msgstr "Сега ще УМРЕШ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Настройки:\n"
+msgid "Options:"
+msgstr "Настройки:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1197,12 +1185,8 @@ msgstr "Забраняване на всички лимити на кадри п
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Избор на игра:\n"
+msgid "Game selection:"
+msgstr "Избор на игра:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1221,20 +1205,12 @@ msgstr "Принудителен режим Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Настройки на Hellfire:\n"
+msgid "Hellfire options:"
+msgstr "Настройки на Hellfire:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Докладвайте несъответствия на https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Докладвайте несъответствия на https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
@@ -4029,19 +4005,19 @@ msgstr "Десен клик за прочитане"
 
 #: Source/items.cpp:1814 Source/items.cpp:1835
 msgid "Select from spell book, then"
-msgstr ""
+msgstr "Изберете от книгата със заклинания,"
 
 #: Source/items.cpp:1815 Source/items.cpp:1836
 msgid "cast spell to read"
-msgstr ""
+msgstr "след това изричане на заклинанието за прочит "
 
 #: Source/items.cpp:1817 Source/items.cpp:1838 Source/items.cpp:1852
 msgid "Open inventory to use"
-msgstr ""
+msgstr "Отворете инвентар за да използвате"
 
 #: Source/items.cpp:1819 Source/items.cpp:1840 Source/items.cpp:1862
 msgid "Activate to read"
-msgstr ""
+msgstr "Активиране за прочит"
 
 #: Source/items.cpp:1825
 msgid "Right-click to read, then"
@@ -4057,7 +4033,7 @@ msgstr "Десен клик за използване"
 
 #: Source/items.cpp:1854
 msgid "Activate to use"
-msgstr ""
+msgstr "Активиране за използване"
 
 #: Source/items.cpp:1867
 msgid "Right-click to view"
@@ -4065,7 +4041,7 @@ msgstr "Десен клик за поглед"
 
 #: Source/items.cpp:1869
 msgid "Activate to view"
-msgstr ""
+msgstr "Активиране за поглед"
 
 #: Source/items.cpp:1873
 msgctxt "player"
@@ -4093,7 +4069,7 @@ msgid " {:d} Dex"
 msgstr " {:d} Сръч"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3250 Source/player.cpp:3149
+#: Source/items.cpp:3250 Source/player.cpp:3148
 msgid "Ear of {:s}"
 msgstr "Ухо на {:s}"
 
@@ -4501,19 +4477,19 @@ msgstr "уникат"
 msgid "Not Identified"
 msgstr "Неразпознат"
 
-#: Source/loadsave.cpp:1830 Source/loadsave.cpp:2333
+#: Source/loadsave.cpp:1832 Source/loadsave.cpp:2338
 msgid "Unable to open save file archive"
 msgstr "Невъзможно отваряне на файл за запис"
 
-#: Source/loadsave.cpp:1833
+#: Source/loadsave.cpp:1835
 msgid "Invalid save file"
 msgstr "Невалиден файлов запис"
 
-#: Source/loadsave.cpp:1864
+#: Source/loadsave.cpp:1866
 msgid "Player is on a Hellfire only level"
 msgstr "Играчът е на ниво само за Hellfire"
 
-#: Source/loadsave.cpp:2095
+#: Source/loadsave.cpp:2100
 msgid "Invalid game state"
 msgstr "Невалидно игрово състояние"
 
@@ -6347,14 +6323,13 @@ msgstr ""
 "анимация на вода, лава и киселина."
 
 #: Source/options.cpp:755
-#, fuzzy
-#| msgid "Use alternate nest palette"
 msgid "Alternate nest art"
-msgstr "Използване на вторична палитра за ниво Свърталище"
+msgstr "Алтернативна палитра за Свърталище"
 
 #: Source/options.cpp:755
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
 msgstr ""
+"Играта ще използва алтернативна палитра за Hellfire нивата от Свърталището."
 
 #: Source/options.cpp:757
 msgid "Hardware Cursor"
@@ -6948,7 +6923,7 @@ msgstr "История на Чата (Съобщения: {:d})"
 msgid "{:d} gold"
 msgstr "{:d} злато"
 
-#: Source/qol/stash.cpp:586
+#: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"
 msgstr "Колко златни монети искате да изтеглите?"
 
@@ -7456,33 +7431,36 @@ msgstr "Напуснете ателието"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
-msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Продавам тези предмети.             Вашето злато: {:d}"
+msgid "I have these items for sale:"
+msgstr "Продавам тези предмети."
+
+msgid "Your gold: {:d}"
+msgstr "Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
-msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Продавам тези изключителни предмети.    Вашето злато: {:d}"
+msgid "I have these premium items for sale:"
+msgstr "Продавам тези изключителни предмети."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:544 Source/stores.cpp:818
-msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "Нямате нищо, което ми трябва.       Вашето злато: {:d}"
+msgid "You have nothing I want."
+msgstr "Нямате нищо, което ми трябва."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:555 Source/stores.cpp:829
-msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "Кой предмет е за продажба?             Вашето злато: {:d}"
+msgid "Which item is for sale?"
+msgstr "Кой предмет е за продажба?"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
-msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "Нямате предмет за поправка.         Вашето злато: {:d}"
+msgid "You have nothing to repair."
+msgstr "Нямате предмет за поправка."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
-msgid "Repair which item?             Your gold: {:d}"
-msgstr "Кой предмет е за поправка?      Вашето злато: {:d}"
+msgid "Repair which item?"
+msgstr "Кой предмет е за поправка?"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7506,13 +7484,13 @@ msgstr "Напуснете Колибата"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:891
-msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "Нямате предмет за презареждане.       Вашето злато: {:d}"
+msgid "You have nothing to recharge."
+msgstr "Нямате предмет за презареждане."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
-msgid "Recharge which item?             Your gold: {:d}"
-msgstr "Кой предмет е за презареждане?             Вашето злато: {:d}"
+msgid "Recharge which item?"
+msgstr "Кой предмет е за презареждане?"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7577,8 +7555,8 @@ msgstr "Кажете довиждане"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1015
-msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "Имам този предмет за продан:             Вашето злато: {:d}"
+msgid "I have this item for sale:"
+msgstr "Имам този предмет за продан:"
 
 #: Source/stores.cpp:1037
 msgid "Leave"
@@ -7610,13 +7588,13 @@ msgstr "Разпознаване на предмет"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
-msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "Нямате нищо за разпознаване.             Вашето злато: {:d}"
+msgid "You have nothing to identify."
+msgstr "Нямате нищо за разпознаване."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Кой предмет е за разпознаване?             Вашето злато: {:d}"
+msgid "Identify which item?"
+msgstr "Кой предмет е за разпознаване?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"
@@ -11431,7 +11409,7 @@ msgstr ""
 #: Source/textdat.cpp:632
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
-"prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
+"prisoner.  The crypts are full of shadows that move just beyond the corners "
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""

@@ -18,7 +18,15 @@ namespace devilution {
  * Returns a pair of X coordinates containing the start (inclusive) and end (exclusive)
  * of fully transparent columns in the sprite.
  */
-std::pair<int, int> MeasureSolidHorizontalBounds(CelSprite cel, int frame = 1);
+std::pair<int, int> MeasureSolidHorizontalBounds(CelSprite cel, int frame = 0);
+
+/**
+ * @brief Apply the color swaps to a CEL sprite
+ *
+ * @param p CEL buffer
+ * @param translation Palette translation table
+ */
+void CelApplyTrans(byte *p, const std::array<uint8_t, 256> &translation);
 
 /**
  * @brief Blit CEL sprite to the back buffer at the given coordinates

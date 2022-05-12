@@ -62,6 +62,9 @@ int stextsel;
 /** Text lines */
 STextStruct stext[STORE_LINES];
 
+/** Whether to render the player's gold amount in the top left */
+bool RenderGold;
+
 /** Does the current panel have a scrollbar */
 bool stextscrl;
 /** Remember last scoll position */
@@ -84,6 +87,9 @@ talk_id stextshold;
 _speech_id gossipstart;
 /** End of possible gossip dialogs for current store */
 _speech_id gossipend;
+
+/** Temporary item used to hold the the item being traided */
+Item StoreItem;
 
 /** Maps from towner IDs to NPC names. */
 const char *const TownerNames[] = {
@@ -156,7 +162,7 @@ void CalculateLineHeights()
 
 void DrawSTextBack(const Surface &out)
 {
-	CelDrawTo(out, { PANEL_X + 320 + 24, 327 + UI_OFFSET_Y }, *pSTextBoxCels, 1);
+	CelDrawTo(out, { PANEL_X + 320 + 24, 327 + UI_OFFSET_Y }, *pSTextBoxCels, 0);
 	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
 }
 
@@ -165,17 +171,17 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 	int yd1 = y1 * 12 + 44 + UI_OFFSET_Y;
 	int yd2 = y2 * 12 + 44 + UI_OFFSET_Y;
 	if (stextscrlubtn != -1)
-		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 12);
+		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 11);
 	else
-		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 10);
+		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 9);
 	if (stextscrldbtn != -1)
-		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 11);
+		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 10);
 	else
-		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 9);
+		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 8);
 	yd1 += 12;
 	int yd3 = yd1;
 	for (; yd3 < yd2; yd3 += 12) {
-		CelDrawTo(out, { PANEL_X + 601, yd3 }, *pSTextSlidCels, 14);
+		CelDrawTo(out, { PANEL_X + 601, yd3 }, *pSTextSlidCels, 13);
 	}
 	if (stextsel == BackButtonLine())
 		yd3 = stextlhold;
@@ -185,7 +191,7 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) / 4)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDrawTo(out, { PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3 }, *pSTextSlidCels, 13);
+	CelDrawTo(out, { PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3 }, *pSTextSlidCels, 12);
 }
 
 void AddSLine(int y)
@@ -263,10 +269,10 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 			productLine = fmt::format(_("Damage: {:d}-{:d}  "), item._iMinDam, item._iMaxDam);
 		else if (item._iClass == ICLASS_ARMOR)
 			productLine = fmt::format(_("Armor: {:d}  "), item._iAC);
-		else if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
-			productLine = fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur);
+		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
+			productLine += fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur);
 		else
-			productLine = _("Indestructible,  ");
+			productLine += _("Indestructible,  ");
 	}
 
 	int8_t str = item._iMinStr;
@@ -287,19 +293,19 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 	AddSText(40, l++, productLine, flags, false);
 }
 
-void StoreAutoPlace()
+bool StoreAutoPlace(Item &item, bool persistItem)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem)) {
-		return;
+	if (AutoEquipEnabled(myPlayer, item) && AutoEquip(MyPlayerId, item, persistItem)) {
+		return true;
 	}
 
-	if (AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, true)) {
-		return;
+	if (AutoPlaceItemInBelt(myPlayer, item, persistItem)) {
+		return true;
 	}
 
-	AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, true);
+	return AutoPlaceItemInInventory(myPlayer, item, persistItem);
 }
 
 void StartSmith()
@@ -350,14 +356,20 @@ uint32_t TotalPlayerGold()
 	return MyPlayer->_pGold + Stash.gold;
 }
 
+// TODO: Change `_iIvalue` to be unsigned instead of passing `int` here.
+bool PlayerCanAfford(int price)
+{
+	return TotalPlayerGold() >= static_cast<uint32_t>(price);
+}
+
 void StartSmithBuy()
 {
 	stextsize = true;
 	stextscrl = true;
 	stextsval = 0;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("I have these items for sale:"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 	ScrollSmithBuy(stextsval);
 	AddItemListBackButton();
@@ -421,8 +433,8 @@ bool StartSmithPremiumBuy()
 	stextscrl = true;
 	stextsval = 0;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("I have these premium items for sale:"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 	AddItemListBackButton();
 
@@ -498,7 +510,7 @@ void StartSmithSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -540,8 +552,8 @@ void StartSmithSell()
 	if (!sellOk) {
 		stextscrl = false;
 
-		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		RenderGold = true;
+		AddSText(20, 1, _("You have nothing I want."), UiFlags::ColorWhitegold, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -551,8 +563,8 @@ void StartSmithSell()
 	stextsval = 0;
 	stextsmax = myPlayer._pNumInv;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("Which item is for sale?"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -581,7 +593,7 @@ void StartSmithRepair()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -622,8 +634,8 @@ void StartSmithRepair()
 	if (!repairok) {
 		stextscrl = false;
 
-		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to repair.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		RenderGold = true;
+		AddSText(20, 1, _("You have nothing to repair."), UiFlags::ColorWhitegold, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -633,8 +645,8 @@ void StartSmithRepair()
 	stextsval = 0;
 	stextsmax = myPlayer._pNumInv;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Repair which item?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("Repair which item?"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 
 	ScrollSmithSell(stextsval);
@@ -721,8 +733,8 @@ void StartWitchBuy()
 	stextsval = 0;
 	stextsmax = 20;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("I have these items for sale:"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 	ScrollWitchBuy(stextsval);
 	AddItemListBackButton();
@@ -772,7 +784,7 @@ void StartWitchSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -814,8 +826,9 @@ void StartWitchSell()
 	if (!sellok) {
 		stextscrl = false;
 
-		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing I want.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		RenderGold = true;
+		AddSText(20, 1, _("You have nothing I want."), UiFlags::ColorWhitegold, false);
+
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -825,8 +838,8 @@ void StartWitchSell()
 	stextsval = 0;
 	stextsmax = myPlayer._pNumInv;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Which item is for sale?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("Which item is for sale?"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -864,7 +877,7 @@ void StartWitchRecharge()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -887,8 +900,8 @@ void StartWitchRecharge()
 	if (!rechargeok) {
 		stextscrl = false;
 
-		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		RenderGold = true;
+		AddSText(20, 1, _("You have nothing to recharge."), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -898,8 +911,8 @@ void StartWitchRecharge()
 	stextsval = 0;
 	stextsmax = myPlayer._pNumInv;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Recharge which item?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("Recharge which item?"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
@@ -910,6 +923,7 @@ void StoreNoMoney()
 	StartStore(stextshold);
 	stextscrl = false;
 	stextsize = true;
+	RenderGold = true;
 	ClearSText(5, 23);
 	AddSText(0, 14, _("You do not have enough gold"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 }
@@ -922,13 +936,11 @@ void StoreNoRoom()
 	AddSText(0, 14, _("You do not have enough room in inventory"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
 }
 
-void StoreConfirm()
+void StoreConfirm(Item &item)
 {
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-
-	auto &item = Players[MyPlayerId].HoldItem;
 
 	UiFlags itemColor = item.getTextColorWithStatCheck();
 
@@ -1011,8 +1023,8 @@ void SStartBoyBuy()
 	stextsize = true;
 	stextscrl = false;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have this item for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("I have this item for sale:"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 
 	boyitem._iStatFlag = MyPlayer->CanUseItem(boyitem);
@@ -1092,8 +1104,8 @@ void StartHealerBuy()
 	stextscrl = true;
 	stextsval = 0;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("I have these items for sale:             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("I have these items for sale:"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 
 	ScrollHealerBuy(stextsval);
@@ -1150,7 +1162,7 @@ void StartStorytellerIdentify()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -1210,8 +1222,8 @@ void StartStorytellerIdentify()
 	if (!idok) {
 		stextscrl = false;
 
-		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		AddSText(0, 1, fmt::format(_("You have nothing to identify.             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		RenderGold = true;
+		AddSText(20, 1, _("You have nothing to identify."), UiFlags::ColorWhitegold, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
@@ -1221,21 +1233,19 @@ void StartStorytellerIdentify()
 	stextsval = 0;
 	stextsmax = myPlayer._pNumInv;
 
-	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	AddSText(0, 1, fmt::format(_("Identify which item?             Your gold: {:d}"), TotalPlayerGold()), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	RenderGold = true;
+	AddSText(20, 1, _("Identify which item?"), UiFlags::ColorWhitegold, false);
 	AddSLine(3);
 
 	ScrollSmithSell(stextsval);
 	AddItemListBackButton();
 }
 
-void StartStorytellerIdentifyShow()
+void StartStorytellerIdentifyShow(Item &item)
 {
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-
-	auto &item = Players[MyPlayerId].HoldItem;
 
 	UiFlags itemColor = item.getTextColorWithStatCheck();
 
@@ -1358,25 +1368,22 @@ void SmithEnter()
 /**
  * @brief Purchases an item from the smith.
  */
-void SmithBuyItem()
+void SmithBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	auto &item = myPlayer.HoldItem;
-
 	TakePlrsMoney(item._iIvalue);
 	if (item._iMagical == ITEM_QUALITY_NORMAL)
 		item._iIdentified = false;
-	StoreAutoPlace();
+	StoreAutoPlace(item, true);
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == SMITH_ITEMS - 1) {
-		smithitem[SMITH_ITEMS - 1]._itype = ItemType::None;
+		smithitem[SMITH_ITEMS - 1].clear();
 	} else {
 		for (; !smithitem[idx + 1].isEmpty(); idx++) {
-			smithitem[idx] = smithitem[idx + 1];
+			smithitem[idx] = std::move(smithitem[idx + 1]);
 		}
-		smithitem[idx]._itype = ItemType::None;
+		smithitem[idx].clear();
 	}
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 }
 
 void SmithBuyEnter()
@@ -1391,37 +1398,30 @@ void SmithBuyEnter()
 	stextvhold = stextsval;
 	stextshold = STORE_SBUY;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	if (TotalPlayerGold() < smithitem[idx]._iIvalue) {
+	if (!PlayerCanAfford(smithitem[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = smithitem[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(smithitem[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = smithitem[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 /**
  * @brief Purchases a premium item from the smith.
  */
-void SmithBuyPItem()
+void SmithBuyPItem(Item &item)
 {
-	auto &item = Players[MyPlayerId].HoldItem;
-
 	TakePlrsMoney(item._iIvalue);
-
 	if (item._iMagical == ITEM_QUALITY_NORMAL)
 		item._iIdentified = false;
-
-	StoreAutoPlace();
+	StoreAutoPlace(item, true);
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	int xx = 0;
@@ -1432,7 +1432,7 @@ void SmithBuyPItem()
 		}
 	}
 
-	premiumitems[xx]._itype = ItemType::None;
+	premiumitems[xx].clear();
 	numpremium--;
 	SpawnPremium(MyPlayerId);
 }
@@ -1458,28 +1458,25 @@ void SmithPremiumBuyEnter()
 		}
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
-
-	if (TotalPlayerGold() < premiumitems[idx]._iIvalue) {
+	if (!PlayerCanAfford(premiumitems[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = premiumitems[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(premiumitems[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = premiumitems[idx];
+	StartStore(STORE_CONFIRM);
 }
 
-bool StoreGoldFit(int idx)
+bool StoreGoldFit(Item &item)
 {
-	int cost = storehold[idx]._iIvalue;
+	int cost = item._iIvalue;
 
-	Size itemSize = GetInventorySize(storehold[idx]);
+	Size itemSize = GetInventorySize(item);
 	int itemRoomForGold = itemSize.width * itemSize.height * MaxGold;
 
 	if (cost <= itemRoomForGold) {
@@ -1526,30 +1523,33 @@ void SmithSellEnter()
 	}
 
 	stextlhold = stextsel;
-	int idx = stextsval + ((stextsel - stextup) / 4);
 	stextshold = STORE_SSELL;
 	stextvhold = stextsval;
-	Players[MyPlayerId].HoldItem = storehold[idx];
 
-	if (StoreGoldFit(idx))
-		StartStore(STORE_CONFIRM);
-	else
+	int idx = stextsval + ((stextsel - stextup) / 4);
+
+	if (!StoreGoldFit(storehold[idx])) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 /**
  * @brief Repairs an item in the player's inventory or body in the smith.
  */
-void SmithRepairItem()
+void SmithRepairItem(int price)
 {
-	auto &myPlayer = Players[MyPlayerId];
-
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+	TakePlrsMoney(price);
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iDurability = storehold[idx]._iMaxDur;
 
 	int8_t i = storehidx[idx];
+
+	auto &myPlayer = *MyPlayer;
 
 	if (i < 0) {
 		if (i == -1)
@@ -1580,13 +1580,13 @@ void SmithRepairEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	auto &myPlayer = Players[MyPlayerId];
-
-	myPlayer.HoldItem = storehold[idx];
-	if (TotalPlayerGold() < storehold[idx]._iIvalue)
+	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
-	else
-		StartStore(STORE_CONFIRM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void WitchEnter()
@@ -1618,30 +1618,28 @@ void WitchEnter()
 /**
  * @brief Purchases an item from the witch.
  */
-void WitchBuyItem()
+void WitchBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 
 	if (idx < 3)
-		myPlayer.HoldItem._iSeed = AdvanceRndSeed();
+		item._iSeed = AdvanceRndSeed();
 
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
-	StoreAutoPlace();
+	TakePlrsMoney(item._iIvalue);
+	StoreAutoPlace(item, true);
 
 	if (idx >= 3) {
 		if (idx == WITCH_ITEMS - 1) {
-			witchitem[WITCH_ITEMS - 1]._itype = ItemType::None;
+			witchitem[WITCH_ITEMS - 1].clear();
 		} else {
 			for (; !witchitem[idx + 1].isEmpty(); idx++) {
-				witchitem[idx] = witchitem[idx + 1];
+				witchitem[idx] = std::move(witchitem[idx + 1]);
 			}
-			witchitem[idx]._itype = ItemType::None;
+			witchitem[idx].clear();
 		}
 	}
 
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 }
 
 void WitchBuyEnter()
@@ -1656,23 +1654,20 @@ void WitchBuyEnter()
 	stextvhold = stextsval;
 	stextshold = STORE_WBUY;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	if (TotalPlayerGold() < witchitem[idx]._iIvalue) {
+	if (!PlayerCanAfford(witchitem[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = witchitem[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false) || AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(witchitem[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = witchitem[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void WitchSellEnter()
@@ -1688,24 +1683,27 @@ void WitchSellEnter()
 	stextvhold = stextsval;
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	Players[MyPlayerId].HoldItem = storehold[idx];
-	if (StoreGoldFit(idx))
-		StartStore(STORE_CONFIRM);
-	else
+
+	if (!StoreGoldFit(storehold[idx])) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 /**
  * @brief Recharges an item in the player's inventory or body in the witch.
  */
-void WitchRechargeItem()
+void WitchRechargeItem(int price)
 {
-	auto &myPlayer = Players[MyPlayerId];
-
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+	TakePlrsMoney(price);
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iCharges = storehold[idx]._iMaxCharges;
+
+	auto &myPlayer = *MyPlayer;
 
 	int8_t i = storehidx[idx];
 	if (i < 0)
@@ -1728,20 +1726,21 @@ void WitchRechargeEnter()
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	myPlayer.HoldItem = storehold[idx];
-	if (TotalPlayerGold() < storehold[idx]._iIvalue)
+
+	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
-	else
-		StartStore(STORE_CONFIRM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void BoyEnter()
 {
 	if (!boyitem.isEmpty() && stextsel == 18) {
-		if (TotalPlayerGold() < 50) {
+		if (!PlayerCanAfford(50)) {
 			stextshold = STORE_BOY;
 			stextlhold = 18;
 			stextvhold = stextsval;
@@ -1766,25 +1765,21 @@ void BoyEnter()
 	StartStore(STORE_GOSSIP);
 }
 
-void BoyBuyItem()
+void BoyBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
-	StoreAutoPlace();
-	boyitem._itype = ItemType::None;
+	TakePlrsMoney(item._iIvalue);
+	StoreAutoPlace(item, true);
+	boyitem.clear();
 	stextshold = STORE_BOY;
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 	stextlhold = 12;
 }
 
 /**
  * @brief Purchases an item from the healer.
  */
-void HealerBuyItem()
+void HealerBuyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	auto &item = myPlayer.HoldItem;
-
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (!gbIsMultiplayer) {
 		if (idx < 2)
@@ -1797,7 +1792,7 @@ void HealerBuyItem()
 	TakePlrsMoney(item._iIvalue);
 	if (item._iMagical == ITEM_QUALITY_NORMAL)
 		item._iIdentified = false;
-	StoreAutoPlace();
+	StoreAutoPlace(item, true);
 
 	if (!gbIsMultiplayer) {
 		if (idx < 2)
@@ -1808,14 +1803,14 @@ void HealerBuyItem()
 	}
 	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == 19) {
-		healitem[19]._itype = ItemType::None;
+		healitem[19].clear();
 	} else {
 		for (; !healitem[idx + 1].isEmpty(); idx++) {
-			healitem[idx] = healitem[idx + 1];
+			healitem[idx] = std::move(healitem[idx + 1]);
 		}
-		healitem[idx]._itype = ItemType::None;
+		healitem[idx].clear();
 	}
-	CalcPlrInv(myPlayer, true);
+	CalcPlrInv(*MyPlayer, true);
 }
 
 void BoyBuyEnter()
@@ -1834,29 +1829,22 @@ void BoyBuyEnter()
 	else
 		price += boyitem._iIvalue / 2;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	if (TotalPlayerGold() < price) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = boyitem;
-	myPlayer.HoldItem._iIvalue = price;
-
-	bool done = false;
-	if (AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false)) {
-		done = true;
+	if (!StoreAutoPlace(boyitem, false)) {
+		StartStore(STORE_NOROOM);
+		return;
 	}
 
-	if (!done) {
-		done = AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false);
-	}
-
-	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
+	StoreItem = boyitem;
+	StoreItem._iIvalue = price;
+	StartStore(STORE_CONFIRM);
 }
 
-void StorytellerIdentifyItem()
+void StorytellerIdentifyItem(Item &item)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -1879,43 +1867,43 @@ void StorytellerIdentifyItem()
 	} else {
 		myPlayer.InvList[idx]._iIdentified = true;
 	}
-	myPlayer.HoldItem._iIdentified = true;
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+	item._iIdentified = true;
+	TakePlrsMoney(item._iIvalue);
 	CalcPlrInv(myPlayer, true);
 }
 
-void ConfirmEnter()
+void ConfirmEnter(Item &item)
 {
 	if (stextsel == 18) {
 		switch (stextshold) {
 		case STORE_SBUY:
-			SmithBuyItem();
+			SmithBuyItem(item);
 			break;
 		case STORE_SSELL:
 		case STORE_WSELL:
 			StoreSellItem();
 			break;
 		case STORE_SREPAIR:
-			SmithRepairItem();
+			SmithRepairItem(item._iIvalue);
 			break;
 		case STORE_WBUY:
-			WitchBuyItem();
+			WitchBuyItem(item);
 			break;
 		case STORE_WRECHARGE:
-			WitchRechargeItem();
+			WitchRechargeItem(item._iIvalue);
 			break;
 		case STORE_BBOY:
-			BoyBuyItem();
+			BoyBuyItem(item);
 			break;
 		case STORE_HBUY:
-			HealerBuyItem();
+			HealerBuyItem(item);
 			break;
 		case STORE_SIDENTIFY:
-			StorytellerIdentifyItem();
+			StorytellerIdentifyItem(item);
 			StartStore(STORE_IDSHOW);
 			return;
 		case STORE_SPBUY:
-			SmithBuyPItem();
+			SmithBuyPItem(item);
 			break;
 		default:
 			break;
@@ -1969,21 +1957,18 @@ void HealerBuyEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	if (TotalPlayerGold() < healitem[idx]._iIvalue) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
 
-	myPlayer.HoldItem = healitem[idx];
-
-	bool done = AutoEquipEnabled(myPlayer, myPlayer.HoldItem) && AutoEquip(MyPlayerId, myPlayer.HoldItem, false);
-
-	if (done || AutoPlaceItemInInventory(myPlayer, myPlayer.HoldItem, false) || AutoPlaceItemInBelt(myPlayer, myPlayer.HoldItem, false))
-		StartStore(STORE_CONFIRM);
-	else
+	if (!StoreAutoPlace(healitem[idx], false)) {
 		StartStore(STORE_NOROOM);
+		return;
+	}
+
+	StoreItem = healitem[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void StorytellerEnter()
@@ -2018,14 +2003,15 @@ void StorytellerIdentifyEnter()
 	stextlhold = stextsel;
 	stextvhold = stextsval;
 
-	auto &myPlayer = Players[MyPlayerId];
-
 	int idx = stextsval + ((stextsel - stextup) / 4);
-	myPlayer.HoldItem = storehold[idx];
-	if (TotalPlayerGold() < storehold[idx]._iIvalue)
+
+	if (!PlayerCanAfford(storehold[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
-	else
-		StartStore(STORE_CONFIRM);
+		return;
+	}
+
+	StoreItem = storehold[idx];
+	StartStore(STORE_CONFIRM);
 }
 
 void TalkEnter()
@@ -2201,9 +2187,9 @@ void InitStores()
 	premiumlevel = 1;
 
 	for (auto &premiumitem : premiumitems)
-		premiumitem._itype = ItemType::None;
+		premiumitem.clear();
 
-	boyitem._itype = ItemType::None;
+	boyitem.clear();
 	boylevel = 0;
 }
 
@@ -2218,6 +2204,8 @@ void SetupTownStores()
 			if (myPlayer._pLvlVisited[i])
 				l = i;
 		}
+	} else {
+		SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
 	}
 
 	l = clamp(l + 2, 6, 16);
@@ -2302,6 +2290,7 @@ void StartStore(talk_id s)
 	sbookflag = false;
 	CloseInventory();
 	chrflag = false;
+	RenderGold = false;
 	QuestLogIsOpen = false;
 	CloseGoldDrop();
 	ClearSText(0, STORE_LINES);
@@ -2352,7 +2341,7 @@ void StartStore(talk_id s)
 		StoreNoRoom();
 		break;
 	case STORE_CONFIRM:
-		StoreConfirm();
+		StoreConfirm(StoreItem);
 		break;
 	case STORE_BOY:
 		StartBoy();
@@ -2381,7 +2370,7 @@ void StartStore(talk_id s)
 		StartTalk();
 		break;
 	case STORE_IDSHOW:
-		StartStorytellerIdentifyShow();
+		StartStorytellerIdentifyShow(StoreItem);
 		break;
 	case STORE_TAVERN:
 		StartTavern();
@@ -2446,6 +2435,10 @@ void DrawSText(const Surface &out)
 			DrawSLine(out, UI_OFFSET_Y + PaddingTop + stext[i].y + TextHeight() / 2);
 		if (stext[i].IsText())
 			PrintSString(out, stext[i]._sx, i, stext[i]._sstr, stext[i].flags, stext[i]._sval);
+	}
+
+	if (RenderGold) {
+		PrintSString(out, 28, 1, fmt::format(_("Your gold: {:d}"), TotalPlayerGold()).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
 	}
 
 	if (stextscrl)
@@ -2690,7 +2683,7 @@ void StoreEnter()
 		stextsval = stextvhold;
 		break;
 	case STORE_CONFIRM:
-		ConfirmEnter();
+		ConfirmEnter(StoreItem);
 		break;
 	case STORE_BOY:
 		BoyEnter();

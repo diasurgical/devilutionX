@@ -13,78 +13,6 @@
 
 namespace devilution {
 namespace {
-constexpr size_t PcxHeaderSize = 128;
-constexpr unsigned NumPaletteColors = 256;
-constexpr unsigned PcxPaletteSize = 1 + NumPaletteColors * 3;
-
-bool LoadPcxMeta(SDL_RWops *handle, int &width, int &height, std::uint8_t &bpp)
-{
-	PCXHeader pcxhdr;
-	if (SDL_RWread(handle, &pcxhdr, PcxHeaderSize, 1) == 0) {
-		return false;
-	}
-	width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
-	height = SDL_SwapLE16(pcxhdr.Ymax) - SDL_SwapLE16(pcxhdr.Ymin) + 1;
-	bpp = pcxhdr.BitsPerPixel;
-	return true;
-}
-
-bool LoadPcxPixelsAndPalette(SDL_RWops *handle, int width, int height, std::uint8_t bpp,
-    uint8_t *buffer, std::size_t bufferPitch, SDL_Color *palette)
-{
-	const bool has256ColorPalette = palette != nullptr && bpp == 8;
-	std::uint32_t pixelDataSize = SDL_RWsize(handle);
-	if (pixelDataSize == static_cast<std::uint32_t>(-1)) {
-		return false;
-	}
-	pixelDataSize -= PcxHeaderSize + (has256ColorPalette ? PcxPaletteSize : 0);
-
-	// We read 1 extra byte because it delimits the palette.
-	const size_t readSize = pixelDataSize + (has256ColorPalette ? PcxPaletteSize : 0);
-	std::unique_ptr<uint8_t[]> fileBuffer { new uint8_t[readSize] };
-	if (SDL_RWread(handle, fileBuffer.get(), readSize, 1) == 0) {
-		return false;
-	}
-	const unsigned xSkip = bufferPitch - width;
-	const unsigned srcSkip = width % 2;
-	uint8_t *dataPtr = fileBuffer.get();
-	for (int j = 0; j < height; j++) {
-		for (int x = 0; x < width;) {
-			constexpr std::uint8_t PcxMaxSinglePixel = 0xBF;
-			const std::uint8_t byte = *dataPtr++;
-			if (byte <= PcxMaxSinglePixel) {
-				*buffer++ = byte;
-				++x;
-				continue;
-			}
-			constexpr std::uint8_t PcxRunLengthMask = 0x3F;
-			const std::uint8_t runLength = (byte & PcxRunLengthMask);
-			std::memset(buffer, *dataPtr++, runLength);
-			buffer += runLength;
-			x += runLength;
-		}
-		dataPtr += srcSkip;
-		buffer += xSkip;
-	}
-
-	if (has256ColorPalette) {
-		[[maybe_unused]] constexpr unsigned PcxPaletteSeparator = 0x0C;
-		assert(*dataPtr == PcxPaletteSeparator);
-		++dataPtr;
-
-		auto *out = palette;
-		for (unsigned i = 0; i < NumPaletteColors; ++i) {
-			out->r = *dataPtr++;
-			out->g = *dataPtr++;
-			out->b = *dataPtr++;
-#ifndef USE_SDL1
-			out->a = SDL_ALPHA_OPAQUE;
-#endif
-			++out;
-		}
-	}
-	return true;
-}
 
 Uint32 GetPcxSdlPixelFormat(unsigned bpp)
 {
@@ -148,21 +76,8 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, con
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask, const std::array<uint8_t, 256> *colorMapping)
 {
 	LoadArt(pszFile, art, frames, nullptr, colorMapping);
-	if (art->surface == nullptr)
-		return;
-	SDL_Surface *surface = art->surface.get();
-#if SDL_VERSION_ATLEAST(2, 0, 0)
-#ifdef DEVILUTIONX_MASKED_ART_RLE
-	SDL_SetSurfaceRLE(surface, 1);
-#endif
-	SDL_SetColorKey(surface, SDL_TRUE, mask);
-#else
-	int flags = SDL_SRCCOLORKEY;
-#ifdef DEVILUTIONX_MASKED_ART_RLE
-	flags |= SDL_RLEACCEL;
-#endif
-	SDL_SetColorKey(surface, flags, mask);
-#endif
+	if (art->surface != nullptr)
+		SDLC_SetColorKey(art->surface.get(), mask);
 }
 
 void LoadArt(Art *art, const std::uint8_t *artData, int w, int h, int frames)

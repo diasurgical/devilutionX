@@ -93,7 +93,6 @@ void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size);
  * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
  */
 bool CanBePlacedOnBelt(const Item &item);
-int SwapItem(Item &a, Item &b);
 
 /**
  * @brief Function type which performs an operation on the given item.
@@ -187,7 +186,7 @@ void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
  * Check for interactions with belt
  */
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld);
-void InvGetItem(int pnum, int ii);
+void InvGetItem(Player &player, int ii);
 void AutoGetItem(int pnum, Item *item, int ii);
 
 /**
@@ -199,21 +198,35 @@ void AutoGetItem(int pnum, Item *item, int ii);
  */
 int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t ci);
 void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
+
+/**
+ * @brief Checks if the tile has room for an item
+ * @param position tile coordinates
+ * @return True if the space is free of obstructions, false if blocked
+ */
 bool CanPut(Point position);
-bool TryInvPut();
-int InvPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
+
+/**
+ * @brief Checks for free spaces in the three "adjacent" tiles in the given direction and also the given position.
+ * @see CanPut
+ * @param position base tile coordinates
+ * @param facing direction to check, tiles "left" and "right" of this direction will also be checked.
+ * @return True if any of the four tiles checked can accept an item, false if all blocked
+ */
+bool CanPut(Point position, Direction facing);
+
+int InvPutItem(Player &player, Point position, Item &item);
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int8_t CheckInvHLight();
 void RemoveScroll(Player &player);
-bool UseScroll();
+bool UseScroll(spell_id spell);
 void UseStaffCharge(Player &player);
-bool UseStaff();
+bool UseStaff(spell_id spell);
 Item &GetInventoryItem(Player &player, int location);
 bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(Player &player);
-bool DropItemBeforeTrig();
 
 /**
  * @brief Gets the size, in inventory cells, of the given item.

@@ -1691,7 +1691,7 @@ void SetRoom(int rx1, int ry1)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[rx1 + i][ry1 + j] = tileId;
 				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
@@ -2422,7 +2422,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(*tileLayer);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
 			tileLayer++;
 			if (tileId != 0) {
 				dungeon[i][j] = tileId;
@@ -2468,7 +2468,7 @@ void LoadPreL1Dungeon(const char *path)
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(*tileLayer);
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
 			tileLayer++;
 			if (tileId != 0) {
 				dungeon[i][j] = tileId;

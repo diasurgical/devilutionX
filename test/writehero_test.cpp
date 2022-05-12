@@ -259,7 +259,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pBattleNet, 0);
 	ASSERT_EQ(player.pManaShield, 0);
 	ASSERT_EQ(player.pDifficulty, 0);
-	ASSERT_EQ(player.pDamAcFlags, 0);
+	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MAX_PATH_LENGTH), 25);
@@ -267,7 +267,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.AnimInfo.TicksPerFrame, 4);
 	ASSERT_EQ(player.AnimInfo.TickCounterOfCurrentFrame, 1);
 	ASSERT_EQ(player.AnimInfo.NumberOfFrames, 20);
-	ASSERT_EQ(player.AnimInfo.CurrentFrame, 1);
+	ASSERT_EQ(player.AnimInfo.CurrentFrame, 0);
 	ASSERT_EQ(player._pSpell, -1);
 	ASSERT_EQ(player._pSplType, 4);
 	ASSERT_EQ(player._pSplFrom, 0);
@@ -309,7 +309,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pIBonusAC, 0);
 	ASSERT_EQ(player._pIBonusDamMod, 0);
 	ASSERT_EQ(player._pISpells, 0);
-	ASSERT_EQ(player._pIFlags, 0);
+	ASSERT_EQ(player._pIFlags, ItemSpecialEffect::None);
 	ASSERT_EQ(player._pIGetHit, 0);
 	ASSERT_EQ(player._pISplLvlAdd, 0);
 	ASSERT_EQ(player._pISplDur, 0);

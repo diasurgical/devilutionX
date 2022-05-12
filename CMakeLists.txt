@@ -59,8 +59,6 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
-option(DEVILUTIONX_MASKED_ART_RLE "RLE-compress masked art in memory (e.g. fonts). Slightly lower RAM usage at a significant performance cost." OFF)
-
 if(TSAN)
   set(ASAN OFF)
 endif()
@@ -247,18 +245,8 @@ if(BUILD_TESTING)
   add_subdirectory(test)
 endif()
 
-if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  # Change __FILE__ to only show the path relative to the project folder
-  get_target_property(libdevilutionx_SRCS ${BIN_TARGET} SOURCES)
-  foreach(SOURCE_FILE ${libdevilutionx_SRCS})
-    set_source_files_properties(${SOURCE_FILE} PROPERTIES
-      COMPILE_DEFINITIONS __FILE__="${SOURCE_FILE}"
-    )
-  endforeach(SOURCE_FILE)
-
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
-endif()
+include(functions/set_relative_file_macro)
+set_relative_file_macro(${BIN_TARGET})
 
 if(APPLE)
   set_source_files_properties("./Packaging/apple/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
@@ -300,6 +288,21 @@ if(APPLE)
 endif()
 
 if(NINTENDO_SWITCH)
+  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
+
+  add_custom_target(romfs_directory
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
+
+  add_custom_target(romfs_files
+    COMMAND ${CMAKE_COMMAND} -E copy ${DEVILUTIONX_MPQ} ${APP_ROMFS}
+    DEPENDS ${DEVILUTIONX_MPQ})
+
+  # the romfs_directory target will create this directory at build time,
+  # but the nx_create_nro function requires it to also exist at configure time
+  file(MAKE_DIRECTORY ${APP_ROMFS})
+
+  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
+
   nx_generate_nacp (${BIN_TARGET}.nacp
     NAME    "DevilutionX"
     AUTHOR  "Devilution Team"
@@ -307,9 +310,12 @@ if(NINTENDO_SWITCH)
   )
 
   nx_create_nro(${BIN_TARGET}
-    NACP ${BIN_TARGET}.nacp
-    ICON "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
+    NACP  ${BIN_TARGET}.nacp
+    ICON  "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
+    ROMFS ${APP_ROMFS}
   )
+
+  add_dependencies(${BIN_TARGET}_nro romfs_files)
 
 endif()
 
@@ -435,6 +441,12 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
         DESTINATION "LICENSE"
       )
     endforeach()
+
+    if(DISCORD_SHARED_LIB)
+      install(FILES "${DISCORD_SHARED_LIB}"
+        DESTINATION "."
+      )
+    endif()
 
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(TOLOWER ${PROJECT_NAME} project_name)

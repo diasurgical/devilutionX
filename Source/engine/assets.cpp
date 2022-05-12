@@ -41,12 +41,21 @@ SDL_RWops *OpenAsset(const char *filename, bool threadsafe)
 	if (relativePath[0] == '/')
 		return SDL_RWFromFile(relativePath.c_str(), "rb");
 
-	// Files next to the MPQ archives override MPQ contents.
 	SDL_RWops *rwops;
-	if (paths::MpqDir()) {
-		const std::string path = *paths::MpqDir() + relativePath;
-		// Avoid spamming DEBUG messages if the file does not exist.
-		if ((FileExists(path.c_str())) && (rwops = SDL_RWFromFile(path.c_str(), "rb")) != nullptr) {
+
+	// SDL always logs an error in Debug mode.
+	// We check the file presence in Debug mode to avoid this.
+	const bool isDebug = SDL_LOG_PRIORITY_DEBUG >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION);
+
+	const auto loadFile = [&rwops, isDebug](const std::string &path) {
+		return (!isDebug || FileExists(path.c_str()))
+		    && (rwops = SDL_RWFromFile(path.c_str(), "rb")) != nullptr;
+	};
+
+	// Files in the `PrefPath()` directory can override MPQ contents.
+	{
+		const std::string path = paths::PrefPath() + relativePath;
+		if (loadFile(path)) {
 			LogVerbose("Loaded MPQ file override: {}", path);
 			return rwops;
 		}
@@ -59,8 +68,7 @@ SDL_RWops *OpenAsset(const char *filename, bool threadsafe)
 		return SDL_RWops_FromMpqFile(*archive, fileNumber, filename, threadsafe);
 
 	// Load from the `/assets` directory next to the devilutionx binary.
-	const std::string path = paths::AssetsPath() + relativePath;
-	if ((rwops = SDL_RWFromFile(path.c_str(), "rb")) != nullptr)
+	if (loadFile(paths::AssetsPath() + relativePath))
 		return rwops;
 
 #if defined(__ANDROID__) || defined(__APPLE__)

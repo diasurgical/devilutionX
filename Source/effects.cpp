@@ -9,6 +9,7 @@
 #include "init.h"
 #include "player.h"
 #include "sound.h"
+#include "sound_defs.hpp"
 #include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
@@ -1083,7 +1084,8 @@ void StreamPlay(TSFX *pSFX, int lVolume, int lPan)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == nullptr)
 			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
-		pSFX->pSnd->DSB.Play(lVolume, sound_get_or_set_sound_volume(1), lPan);
+		if (pSFX->pSnd->DSB.IsLoaded())
+			pSFX->pSnd->DSB.PlayWithVolumeAndPan(lVolume, sound_get_or_set_sound_volume(1), lPan);
 		sgpStreamSFX = pSFX;
 	}
 }
@@ -1122,7 +1124,7 @@ void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
 	if (pSFX->pSnd == nullptr)
 		pSFX->pSnd = sound_file_load(pSFX->pszName);
 
-	if (pSFX->pSnd != nullptr)
+	if (pSFX->pSnd != nullptr && pSFX->pSnd->DSB.IsLoaded())
 		snd_play_snd(pSFX->pSnd.get(), lVolume, lPan);
 }
 
@@ -1283,9 +1285,11 @@ void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory)
 
 void sound_stop()
 {
+	if (!gbSndInited)
+		return;
 	ClearDuplicateSounds();
 	for (auto &sfx : sgSFX) {
-		if (sfx.pSnd != nullptr) {
+		if (sfx.pSnd != nullptr && sfx.pSnd->DSB.IsLoaded()) {
 			sfx.pSnd->DSB.Stop();
 		}
 	}

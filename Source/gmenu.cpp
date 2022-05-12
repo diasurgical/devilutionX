@@ -106,12 +106,12 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 	int w = GmenuGetLineWidth(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		int x = 16 + w / 2;
-		CelDrawTo(out, { x + PANEL_LEFT, y + 40 }, *optbar_cel, 1);
+		CelDrawTo(out, { x + PANEL_LEFT, y + 40 }, *optbar_cel, 0);
 		uint16_t step = pItem->dwFlags & 0xFFF;
 		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 		uint16_t pos = step * 256 / steps;
 		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y + 38, pos + 13, 28);
-		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y + 38 }, *option_cel, 1);
+		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y + 38 }, *option_cel, 0);
 	}
 
 	int x = (gnScreenWidth - w) / 2;
@@ -179,7 +179,7 @@ void FreeGMenu()
 
 void gmenu_init_menu()
 {
-	LogoAnim_frame = 1;
+	LogoAnim_frame = 0;
 	sgpCurrentMenu = nullptr;
 	sgpCurrItem = nullptr;
 	gmenu_current_option = nullptr;
@@ -230,9 +230,9 @@ void gmenu_draw(const Surface &out)
 		if (gbIsHellfire) {
 			const uint32_t ticks = SDL_GetTicks();
 			if ((int)(ticks - LogoAnim_tick) > 25) {
-				LogoAnim_frame++;
-				if (LogoAnim_frame > 16)
-					LogoAnim_frame = 1;
+				++LogoAnim_frame;
+				if (LogoAnim_frame >= 16)
+					LogoAnim_frame = 0;
 				LogoAnim_tick = ticks;
 			}
 		}

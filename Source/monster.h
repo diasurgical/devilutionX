@@ -160,9 +160,6 @@ struct CMonster {
 		return Anims[static_cast<int>(graphic)];
 	}
 	std::unique_ptr<TSnd> Snds[4][2];
-	uint16_t mMinHP;
-	uint16_t mMaxHP;
-	uint8_t mAFNum;
 	int8_t mdeadval;
 	const MonsterData *MData;
 };

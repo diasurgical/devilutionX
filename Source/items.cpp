@@ -443,7 +443,7 @@ void AddInitItems()
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames;
+		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -512,33 +512,6 @@ void CalcSelfItems(Player &player)
 			}
 		}
 	} while (changeflag);
-}
-
-void CalcPlrItemMin(Player &player)
-{
-	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
-		item._iStatFlag = player.CanUseItem(item);
-	}
-}
-
-void CalcPlrBookVals(Player &player)
-{
-	for (Item &item : InventoryPlayerItemsRange { player }) {
-		if (item._itype == ItemType::Misc && item._iMiscId == IMISC_BOOK) {
-			item._iMinMag = spelldata[item._iSpell].sMinInt;
-			int8_t spellLevel = player._pSplLvl[item._iSpell];
-
-			while (spellLevel != 0) {
-				item._iMinMag += 20 * item._iMinMag / 100;
-				spellLevel--;
-				if (item._iMinMag + 20 * item._iMinMag / 100 > 255) {
-					item._iMinMag = 255;
-					spellLevel = 0;
-				}
-			}
-			item._iStatFlag = player.CanUseItem(item);
-		}
-	}
 }
 
 bool GetItemSpace(Point position, int8_t inum)
@@ -708,8 +681,15 @@ int CalculateToHitBonus(int level)
 	}
 }
 
-int SaveItemPower(Item &item, const ItemPower &power)
+int SaveItemPower(Item &item, ItemPower &power)
 {
+	if (!gbIsHellfire) {
+		if (power.type == IPL_TARGAC) {
+			power.param1 = 1 << power.param1;
+			power.param2 = 3 << power.param2;
+		}
+	}
+
 	int r = RndPL(power.param1, power.param2);
 
 	switch (power.type) {
@@ -726,7 +706,7 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iPLDam -= r;
 		break;
 	case IPL_DOPPELGANGER:
-		item._iDamAcFlags |= ISPLHF_DOPPELGANGER;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Doppelganger;
 		[[fallthrough]];
 	case IPL_TOHIT_DAMP:
 		r = RndPL(power.param1, power.param2);
@@ -776,16 +756,16 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iMaxCharges = power.param2;
 		break;
 	case IPL_FIREDAM:
-		item._iFlags |= ISPL_FIREDAM;
-		item._iFlags &= ~ISPL_LIGHTDAM;
+		item._iFlags |= ItemSpecialEffect::FireDamage;
+		item._iFlags &= ~ItemSpecialEffect::LightningDamage;
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 0;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_LIGHTDAM:
-		item._iFlags |= ISPL_LIGHTDAM;
-		item._iFlags &= ~ISPL_FIREDAM;
+		item._iFlags |= ItemSpecialEffect::LightningDamage;
+		item._iFlags &= ~ItemSpecialEffect::FireDamage;
 		item._iLMinDam = power.param1;
 		item._iLMaxDam = power.param2;
 		item._iFMinDam = 0;
@@ -871,68 +851,68 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iPLLight -= power.param1;
 		break;
 	case IPL_MULT_ARROWS:
-		item._iFlags |= ISPL_MULT_ARROWS;
+		item._iFlags |= ItemSpecialEffect::MultipleArrows;
 		break;
 	case IPL_FIRE_ARROWS:
-		item._iFlags |= ISPL_FIRE_ARROWS;
-		item._iFlags &= ~ISPL_LIGHT_ARROWS;
+		item._iFlags |= ItemSpecialEffect::FireArrows;
+		item._iFlags &= ~ItemSpecialEffect::LightningArrows;
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 0;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_LIGHT_ARROWS:
-		item._iFlags |= ISPL_LIGHT_ARROWS;
-		item._iFlags &= ~ISPL_FIRE_ARROWS;
+		item._iFlags |= ItemSpecialEffect::LightningArrows;
+		item._iFlags &= ~ItemSpecialEffect::FireArrows;
 		item._iLMinDam = power.param1;
 		item._iLMaxDam = power.param2;
 		item._iFMinDam = 0;
 		item._iFMaxDam = 0;
 		break;
 	case IPL_FIREBALL:
-		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
+		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 0;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_THORNS:
-		item._iFlags |= ISPL_THORNS;
+		item._iFlags |= ItemSpecialEffect::Thorns;
 		break;
 	case IPL_NOMANA:
-		item._iFlags |= ISPL_NOMANA;
+		item._iFlags |= ItemSpecialEffect::NoMana;
 		drawmanaflag = true;
 		break;
 	case IPL_NOHEALPLR:
-		item._iFlags |= ISPL_NOHEALPLR;
+		item._iFlags |= ItemSpecialEffect::NoHealOnPlayer;
 		break;
 	case IPL_ABSHALFTRAP:
-		item._iFlags |= ISPL_ABSHALFTRAP;
+		item._iFlags |= ItemSpecialEffect::HalfTrapDamage;
 		break;
 	case IPL_KNOCKBACK:
-		item._iFlags |= ISPL_KNOCKBACK;
+		item._iFlags |= ItemSpecialEffect::Knockback;
 		break;
 	case IPL_3XDAMVDEM:
-		item._iFlags |= ISPL_3XDAMVDEM;
+		item._iFlags |= ItemSpecialEffect::TripleDemonDamage;
 		break;
 	case IPL_ALLRESZERO:
-		item._iFlags |= ISPL_ALLRESZERO;
+		item._iFlags |= ItemSpecialEffect::ZeroResistance;
 		break;
 	case IPL_NOHEALMON:
-		item._iFlags |= ISPL_NOHEALMON;
+		item._iFlags |= ItemSpecialEffect::NoHealOnMonsters;
 		break;
 	case IPL_STEALMANA:
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_STEALMANA_3;
+			item._iFlags |= ItemSpecialEffect::StealMana3;
 		if (power.param1 == 5)
-			item._iFlags |= ISPL_STEALMANA_5;
+			item._iFlags |= ItemSpecialEffect::StealMana5;
 		drawmanaflag = true;
 		break;
 	case IPL_STEALLIFE:
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_STEALLIFE_3;
+			item._iFlags |= ItemSpecialEffect::StealLife3;
 		if (power.param1 == 5)
-			item._iFlags |= ISPL_STEALLIFE_5;
+			item._iFlags |= ItemSpecialEffect::StealLife5;
 		drawhpflag = true;
 		break;
 	case IPL_TARGAC:
@@ -943,30 +923,30 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		break;
 	case IPL_FASTATTACK:
 		if (power.param1 == 1)
-			item._iFlags |= ISPL_QUICKATTACK;
+			item._iFlags |= ItemSpecialEffect::QuickAttack;
 		if (power.param1 == 2)
-			item._iFlags |= ISPL_FASTATTACK;
+			item._iFlags |= ItemSpecialEffect::FastAttack;
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_FASTERATTACK;
+			item._iFlags |= ItemSpecialEffect::FasterAttack;
 		if (power.param1 == 4)
-			item._iFlags |= ISPL_FASTESTATTACK;
+			item._iFlags |= ItemSpecialEffect::FastestAttack;
 		break;
 	case IPL_FASTRECOVER:
 		if (power.param1 == 1)
-			item._iFlags |= ISPL_FASTRECOVER;
+			item._iFlags |= ItemSpecialEffect::FastHitRecovery;
 		if (power.param1 == 2)
-			item._iFlags |= ISPL_FASTERRECOVER;
+			item._iFlags |= ItemSpecialEffect::FasterHitRecovery;
 		if (power.param1 == 3)
-			item._iFlags |= ISPL_FASTESTRECOVER;
+			item._iFlags |= ItemSpecialEffect::FastestHitRecovery;
 		break;
 	case IPL_FASTBLOCK:
-		item._iFlags |= ISPL_FASTBLOCK;
+		item._iFlags |= ItemSpecialEffect::FastBlock;
 		break;
 	case IPL_DAMMOD:
 		item._iPLDamMod += r;
 		break;
 	case IPL_RNDARROWVEL:
-		item._iFlags |= ISPL_RNDARROWVEL;
+		item._iFlags |= ItemSpecialEffect::RandomArrowVelocity;
 		break;
 	case IPL_SETDAM:
 		item._iMinDam = power.param1;
@@ -977,19 +957,19 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iMaxDur = power.param1;
 		break;
 	case IPL_FASTSWING:
-		item._iFlags |= ISPL_FASTERATTACK;
+		item._iFlags |= ItemSpecialEffect::FasterAttack;
 		break;
 	case IPL_ONEHAND:
 		item._iLoc = ILOC_ONEHAND;
 		break;
 	case IPL_DRAINLIFE:
-		item._iFlags |= ISPL_DRAINLIFE;
+		item._iFlags |= ItemSpecialEffect::DrainLife;
 		break;
 	case IPL_RNDSTEALLIFE:
-		item._iFlags |= ISPL_RNDSTEALLIFE;
+		item._iFlags |= ItemSpecialEffect::RandomStealLife;
 		break;
 	case IPL_INFRAVISION:
-		item._iFlags |= ISPL_INFRAVISION;
+		item._iFlags |= ItemSpecialEffect::Infravision;
 		break;
 	case IPL_NOMINSTR:
 		item._iMinStr = 0;
@@ -998,14 +978,14 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iCurs = power.param1;
 		break;
 	case IPL_ADDACLIFE:
-		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
+		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 1;
 		item._iLMaxDam = 0;
 		break;
 	case IPL_ADDMANAAC:
-		item._iFlags |= (ISPL_LIGHTDAM | ISPL_FIREDAM);
+		item._iFlags |= (ItemSpecialEffect::LightningDamage | ItemSpecialEffect::FireDamage);
 		item._iFMinDam = power.param1;
 		item._iFMaxDam = power.param2;
 		item._iLMinDam = 2;
@@ -1030,23 +1010,23 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iPLMR -= r;
 		break;
 	case IPL_DEVASTATION:
-		item._iDamAcFlags |= ISPLHF_DEVASTATION;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Devastation;
 		break;
 	case IPL_DECAY:
-		item._iDamAcFlags |= ISPLHF_DECAY;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Decay;
 		item._iPLDam += r;
 		break;
 	case IPL_PERIL:
-		item._iDamAcFlags |= ISPLHF_PERIL;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Peril;
 		break;
 	case IPL_JESTERS:
-		item._iDamAcFlags |= ISPLHF_JESTERS;
+		item._iDamAcFlags |= ItemSpecialEffectHf::Jesters;
 		break;
 	case IPL_ACDEMON:
-		item._iDamAcFlags |= ISPLHF_ACDEMON;
+		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstDemons;
 		break;
 	case IPL_ACUNDEAD:
-		item._iDamAcFlags |= ISPLHF_ACUNDEAD;
+		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstUndead;
 		break;
 	case IPL_MANATOLIFE: {
 		int portion = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100) << 6;
@@ -1082,14 +1062,6 @@ int PLVal(int pv, int p1, int p2, int minv, int maxv)
 void SaveItemAffix(Item &item, const PLStruct &affix)
 {
 	auto power = affix.power;
-
-	if (!gbIsHellfire) {
-		if (power.type == IPL_TARGAC) {
-			power.param1 = 1 << power.param1;
-			power.param2 = 3 << power.param2;
-		}
-	}
-
 	int value = SaveItemPower(item, power);
 
 	value = PLVal(value, power.param1, power.param2, affix.minVal, affix.maxVal);
@@ -1489,7 +1461,7 @@ void GetUniqueItem(Item &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
-	for (const auto &power : UniqueItems[uid].powers) {
+	for (auto power : UniqueItems[uid].powers) {
 		if (power.type == IPL_INVALID)
 			break;
 		SaveItemPower(item, power);
@@ -1671,7 +1643,7 @@ void SpawnRock()
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
-	item.AnimInfo.CurrentFrame = 11;
+	item.AnimInfo.CurrentFrame = 10;
 }
 
 void ItemDoppel()
@@ -1800,7 +1772,7 @@ void PrintItemOil(char iDidx)
 
 void DrawUniqueInfoWindow(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 1);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 0);
 	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SPANEL_WIDTH + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
@@ -1810,10 +1782,7 @@ void PrintItemMisc(const Item &item)
 		if (ControlMode == ControlTypes::KeyboardAndMouse) {
 			AddPanelString(_("Right-click to read"));
 		} else {
-			if (item.IsScrollOf(SPL_TELEPORT) || item.IsScrollOf(SPL_TOWN)) {
-				AddPanelString(_("Select from spell book, then"));
-				AddPanelString(_("cast spell to read"));
-			} else if (!invflag) {
+			if (!invflag) {
 				AddPanelString(_("Open inventory to use"));
 			} else {
 				AddPanelString(_("Activate to read"));
@@ -1825,13 +1794,7 @@ void PrintItemMisc(const Item &item)
 			AddPanelString(_("Right-click to read, then"));
 			AddPanelString(_("left-click to target"));
 		} else {
-			if (item.IsScrollOf(SPL_FIREBALL)
-			    || item.IsScrollOf(SPL_FIREWALL)
-			    || item.IsScrollOf(SPL_FLAME)
-			    || item.IsScrollOf(SPL_GUARDIAN)
-			    || item.IsScrollOf(SPL_LIGHTNING)
-			    || item.IsScrollOf(SPL_STONE)
-			    || item.IsScrollOf(SPL_WAVE)) {
+			if (TargetsMonster(item._iSpell)) {
 				AddPanelString(_("Select from spell book, then"));
 				AddPanelString(_("cast spell to read"));
 			} else if (!invflag) {
@@ -2338,7 +2301,7 @@ void InitItems()
 	memset(dItem, 0, sizeof(dItem));
 
 	for (auto &item : Items) {
-		item._itype = ItemType::None;
+		item.clear();
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
 		item._iSelFlag = 0;
@@ -2382,9 +2345,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int btohit = 0; // bonus chance to hit
 	int bac = 0;    // bonus accuracy
 
-	int iflgs = ISPL_NONE; // item_special_effect flags
+	ItemSpecialEffect iflgs = ItemSpecialEffect::None; // item_special_effect flags
 
-	int pDamAcFlags = 0;
+	ItemSpecialEffectHf pDamAcFlags = ItemSpecialEffectHf::None;
 
 	int sadd = 0; // added strength
 	int madd = 0; // added magic
@@ -2576,7 +2539,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		lr -= player._pLevel;
 	}
 
-	if ((iflgs & ISPL_ALLRESZERO) != 0) {
+	if (HasAnyOf(iflgs, ItemSpecialEffect::ZeroResistance)) {
 		// reset resistances to zero if the respective special effect is active
 		mr = 0;
 		fr = 0;
@@ -2622,17 +2585,17 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pILMinDam = lmin;
 	player._pILMaxDam = lmax;
 
-	player._pInfraFlag = (iflgs & ISPL_INFRAVISION) != 0;
+	player._pInfraFlag = HasAnyOf(iflgs, ItemSpecialEffect::Infravision);
 
 	player._pBlockFlag = false;
 	if (player._pClass == HeroClass::Monk) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			player._pBlockFlag = true;
-			player._pIFlags |= ISPL_FASTBLOCK;
+			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
 		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 			player._pBlockFlag = true;
-			player._pIFlags |= ISPL_FASTBLOCK;
+			player._pIFlags |= ItemSpecialEffect::FastBlock;
 		}
 		if (player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT].isEmpty())
 			player._pBlockFlag = true;
@@ -2738,12 +2701,18 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 void CalcPlrInv(Player &player, bool loadgfx)
 {
-	CalcPlrItemMin(player);
+	// Determine the players current stats, this updates the statFlag on all equipped items that became unusable after
+	//  a change in equipment.
 	CalcSelfItems(player);
+
+	// Determine the current item bonuses gained from usable equipped items
 	CalcPlrItemVals(player, loadgfx);
-	CalcPlrItemMin(player);
-	if (&player == &Players[MyPlayerId]) {
-		CalcPlrBookVals(player);
+
+	if (&player == MyPlayer) {
+		// Now that stat gains from equipped items have been calculated, mark unusable scrolls etc
+		for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
+			item.updateRequiredStatsCacheForPlayer(player);
+		}
 		player.CalcScrolls();
 		CalcPlrStaff(player);
 		if (IsStashOpen) {
@@ -2818,7 +2787,7 @@ void CreatePlrItems(int playerId)
 	auto &player = Players[playerId];
 
 	for (auto &item : player.InvBody) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	// converting this to a for loop creates a `rep stosd` instruction,
@@ -2826,13 +2795,13 @@ void CreatePlrItems(int playerId)
 	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
 
 	for (auto &item : player.InvList) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	player._pNumInv = 0;
 
 	for (auto &item : player.SpdList) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 
 	switch (player._pClass) {
@@ -2843,9 +2812,12 @@ void CreatePlrItems(int playerId)
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
 		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
 
-		InitializeItem(player.HoldItem, IDI_WARRCLUB);
-		GenerateNewSeed(player.HoldItem);
-		AutoPlaceItemInInventory(player, player.HoldItem, true);
+		{
+			Item club;
+			InitializeItem(club, IDI_WARRCLUB);
+			GenerateNewSeed(club);
+			AutoPlaceItemInInventorySlot(player, 0, club, true);
+		}
 
 		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GenerateNewSeed(player.SpdList[0]);
@@ -3027,7 +2999,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 
 void SetupItem(Item &item)
 {
-	item.SetNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
+	item.setNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
 	item._iIdentified = false;
 }
 
@@ -3281,7 +3253,7 @@ void CornerstoneLoad(Point position)
 		return;
 	}
 
-	CornerStone.item._itype = ItemType::None;
+	CornerStone.item.clear();
 	CornerStone.activated = true;
 	if (dItem[position.x][position.y] != 0) {
 		int ii = dItem[position.x][position.y] - 1;
@@ -3352,7 +3324,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	item._iPostDraw = true;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames;
+		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
 		item._iAnimFlag = false;
 	}
 }
@@ -3369,7 +3341,7 @@ void SpawnRewardItem(int itemid, Point position, bool sendmsg)
 	dItem[position.x][position.y] = ii + 1;
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(item, itemid, curlv);
-	item.SetNewAnimation(true);
+	item.setNewAnimation(true);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item._iIdentified = true;
@@ -3398,7 +3370,7 @@ void SpawnTheodore(Point position, bool sendmsg)
 void RespawnItem(Item &item, bool flipFlag)
 {
 	int it = ItemCAnimTbl[item._iCurs];
-	item.SetNewAnimation(flipFlag);
+	item.setNewAnimation(flipFlag);
 	item._iRequest = false;
 
 	if (IsAnyOf(item._iCurs, ICURS_MAGIC_ROCK, ICURS_TAVERN_SIGN, ICURS_ANVIL_OF_FURY))
@@ -3436,16 +3408,16 @@ void ProcessItems()
 			continue;
 		item.AnimInfo.ProcessAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.CurrentFrame == 11)
-				item.AnimInfo.CurrentFrame = 1;
-			if (item._iSelFlag == 2 && item.AnimInfo.CurrentFrame == 21)
-				item.AnimInfo.CurrentFrame = 11;
+			if (item._iSelFlag == 1 && item.AnimInfo.CurrentFrame == 10)
+				item.AnimInfo.CurrentFrame = 0;
+			if (item._iSelFlag == 2 && item.AnimInfo.CurrentFrame == 20)
+				item.AnimInfo.CurrentFrame = 10;
 		} else {
-			if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames / 2)
+			if (item.AnimInfo.CurrentFrame == (item.AnimInfo.NumberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
 
-			if (item.AnimInfo.CurrentFrame >= item.AnimInfo.NumberOfFrames) {
-				item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames;
+			if (item.AnimInfo.CurrentFrame >= item.AnimInfo.NumberOfFrames - 1) {
+				item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
 				item._iAnimFlag = false;
 				item._iSelFlag = 1;
 			}
@@ -3669,35 +3641,35 @@ bool DoOil(Player &player, int cii)
 	case IPL_NOHEALMON:
 		return _("hit monster doesn't heal");
 	case IPL_STEALMANA:
-		if ((item._iFlags & ISPL_STEALMANA_3) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana3))
 			return _(/*xgettext:no-c-format*/ "hit steals 3% mana");
-		if ((item._iFlags & ISPL_STEALMANA_5) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealMana5))
 			return _(/*xgettext:no-c-format*/ "hit steals 5% mana");
 		return "";
 	case IPL_STEALLIFE:
-		if ((item._iFlags & ISPL_STEALLIFE_3) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife3))
 			return _(/*xgettext:no-c-format*/ "hit steals 3% life");
-		if ((item._iFlags & ISPL_STEALLIFE_5) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::StealLife5))
 			return _(/*xgettext:no-c-format*/ "hit steals 5% life");
 		return "";
 	case IPL_TARGAC:
 		return _("penetrates target's armor");
 	case IPL_FASTATTACK:
-		if ((item._iFlags & ISPL_QUICKATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::QuickAttack))
 			return _("quick attack");
-		if ((item._iFlags & ISPL_FASTATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastAttack))
 			return _("fast attack");
-		if ((item._iFlags & ISPL_FASTERATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterAttack))
 			return _("faster attack");
-		if ((item._iFlags & ISPL_FASTESTATTACK) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastestAttack))
 			return _("fastest attack");
 		return _("Another ability (NW)");
 	case IPL_FASTRECOVER:
-		if ((item._iFlags & ISPL_FASTRECOVER) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastHitRecovery))
 			return _("fast hit recovery");
-		if ((item._iFlags & ISPL_FASTERRECOVER) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FasterHitRecovery))
 			return _("faster hit recovery");
-		if ((item._iFlags & ISPL_FASTESTRECOVER) != 0)
+		if (HasAnyOf(item._iFlags, ItemSpecialEffect::FastestHitRecovery))
 			return _("fastest hit recovery");
 		return _("Another ability (NW)");
 	case IPL_FASTBLOCK:
@@ -3932,7 +3904,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_SCROLL:
-		if (spelldata[spl].sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
 			if (pnum == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);
@@ -3949,7 +3921,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_SCROLLT:
-		if (spelldata[spl].sTargeted) {
+		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
 			if (pnum == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);
@@ -3967,14 +3939,20 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		player._pMemSpells |= GetSpellBitmask(spl);
 		if (player._pSplLvl[spl] < MAX_SPELL_LEVEL)
 			player._pSplLvl[spl]++;
-		if ((player._pIFlags & ISPL_NOMANA) == 0) {
+		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 			player._pMana += spelldata[spl].sManaCost << 6;
 			player._pMana = std::min(player._pMana, player._pMaxMana);
 			player._pManaBase += spelldata[spl].sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
-		if (pnum == MyPlayerId)
-			CalcPlrBookVals(player);
+		if (&player == MyPlayer) {
+			for (Item &item : InventoryPlayerItemsRange { player }) {
+				item.updateRequiredStatsCacheForPlayer(player);
+			}
+			if (IsStashOpen) {
+				Stash.RefreshItemStatFlags();
+			}
+		}
 		drawmanaflag = true;
 		break;
 	case IMISC_MAPOFDOOM:
@@ -4089,7 +4067,7 @@ void SpawnSmith(int lvl)
 		newItem._iIdentified = true;
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
-		smithitem[i]._itype = ItemType::None;
+		smithitem[i].clear();
 
 	SortVendor(smithitem + PinnedItemCount);
 }
@@ -4168,7 +4146,7 @@ void SpawnWitch(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item._itype = ItemType::None;
+			item.clear();
 			continue;
 		}
 
@@ -4327,7 +4305,7 @@ void SpawnHealer(int lvl)
 		}
 
 		if (i >= itemCount) {
-			item._itype = ItemType::None;
+			item.clear();
 			continue;
 		}
 
@@ -4354,7 +4332,7 @@ void MakeGoldStack(Item &goldItem, int value)
 int ItemNoFlippy()
 {
 	int r = ActiveItems[ActiveItemCount - 1];
-	Items[r].AnimInfo.CurrentFrame = Items[r].AnimInfo.NumberOfFrames;
+	Items[r].AnimInfo.CurrentFrame = Items[r].AnimInfo.NumberOfFrames - 1;
 	Items[r]._iAnimFlag = false;
 	Items[r]._iSelFlag = 1;
 
@@ -4596,7 +4574,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 }
 #endif
 
-void Item::SetNewAnimation(bool showAnimation)
+void Item::setNewAnimation(bool showAnimation)
 {
 	int it = ItemCAnimTbl[_iCurs];
 	int numberOfFrames = ItemAnimLs[it];
@@ -4611,10 +4589,27 @@ void Item::SetNewAnimation(bool showAnimation)
 		_iAnimFlag = true;
 		_iSelFlag = 0;
 	} else {
-		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames;
+		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames - 1;
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}
+}
+
+void Item::updateRequiredStatsCacheForPlayer(const Player &player)
+{
+	if (_itype == ItemType::Misc && _iMiscId == IMISC_BOOK) {
+		_iMinMag = spelldata[_iSpell].sMinInt;
+		int8_t spellLevel = player._pSplLvl[_iSpell];
+		while (spellLevel != 0) {
+			_iMinMag += 20 * _iMinMag / 100;
+			spellLevel--;
+			if (_iMinMag + 20 * _iMinMag / 100 > 255) {
+				_iMinMag = 255;
+				spellLevel = 0;
+			}
+		}
+	}
+	_iStatFlag = player.CanUseItem(*this);
 }
 
 void initItemGetRecords()
@@ -4630,7 +4625,7 @@ void RepairItem(Item &item, int lvl)
 	}
 
 	if (item._iMaxDur <= 0) {
-		item._itype = ItemType::None;
+		item.clear();
 		return;
 	}
 
@@ -4639,7 +4634,7 @@ void RepairItem(Item &item, int lvl)
 		rep += lvl + GenerateRnd(lvl);
 		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
 		if (item._iMaxDur == 0) {
-			item._itype = ItemType::None;
+			item.clear();
 			return;
 		}
 	} while (rep + item._iDurability < item._iMaxDur);

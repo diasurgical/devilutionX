@@ -460,7 +460,7 @@ void selhero_Init()
 	SDL_Rect rect13 = { (Sint16)(PANEL_LEFT + 159), (Sint16)(UI_OFFSET_Y + 422), 40, 21 };
 	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[4], rect13, UiFlags::AlignCenter | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
-#if _DEBUG
+#ifdef _DEBUG
 	SDL_Rect rect14 = { (Sint16)(PANEL_LEFT + 39), (Sint16)(UI_OFFSET_Y + 443), 110, 21 };
 	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Savegame:").c_str(), rect14, UiFlags::AlignRight | UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 	SDL_Rect rect15 = { (Sint16)(PANEL_LEFT + 159), (Sint16)(UI_OFFSET_Y + 443), 40, 21 };

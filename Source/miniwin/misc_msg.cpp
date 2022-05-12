@@ -68,7 +68,7 @@ void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point 
 
 void SetCursorPos(Point position)
 {
-	if (ControlMode != ControlTypes::KeyboardAndMouse) {
+	if (ControlDevice != ControlTypes::KeyboardAndMouse) {
 		MousePosition = position;
 		return;
 	}
@@ -286,7 +286,7 @@ int32_t KeystateForMouse(int32_t ret)
 
 bool FalseAvail(const char *name, int value)
 {
-	LogDebug("Unhandled SDL event: {} {}", name, value);
+	LogVerbose("Unhandled SDL event: {} {}", name, value);
 	return true;
 }
 
@@ -296,7 +296,7 @@ bool FalseAvail(const char *name, int value)
  */
 bool BlurInventory()
 {
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!MyPlayer->HoldItem.isEmpty()) {
 		if (!TryDropItem()) {
 			Players[MyPlayerId].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
@@ -317,16 +317,17 @@ void ProcessGamepadEvents(GameAction &action)
 	switch (action.type) {
 	case GameActionType_NONE:
 	case GameActionType_SEND_KEY:
+	case GameActionType_SEND_MOUSE_CLICK:
 		break;
 	case GameActionType_USE_HEALTH_POTION:
 		if (IsStashOpen)
-			Stash.SetPage(Stash.GetPage() - 1);
+			Stash.PreviousPage();
 		else
 			UseBeltItem(BLT_HEALING);
 		break;
 	case GameActionType_USE_MANA_POTION:
 		if (IsStashOpen)
-			Stash.SetPage(Stash.GetPage() + 1);
+			Stash.NextPage();
 		else
 			UseBeltItem(BLT_MANA);
 		break;
@@ -393,12 +394,6 @@ void ProcessGamepadEvents(GameAction &action)
 			spselflag = false;
 			sbookflag = !sbookflag;
 		}
-		break;
-	case GameActionType_SEND_MOUSE_CLICK:
-		Uint8 simulatedButton = action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
-		SDL_Event clickEvent;
-		SetMouseButtonEvent(clickEvent, action.send_mouse_click.up ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN, simulatedButton, MousePosition);
-		SDL_PushEvent(&clickEvent);
 		break;
 	}
 }
@@ -471,6 +466,11 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
+	if (IsAnyOf(ctrlEvent.button, ControllerButtonPrimary, ControllerButtonSecondary, ControllerButtonTertiary) && IsAnyOf(ControllerButtonHeld, ctrlEvent.button, ControllerButton_NONE)) {
+		ControllerButtonHeld = (ctrlEvent.up || IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) ? ControllerButton_NONE : ctrlEvent.button;
+		LastMouseButtonAction = MouseActionType::None;
+	}
+
 	GameAction action;
 	if (GetGameAction(e, ctrlEvent, &action)) {
 		if (movie_playing) {
@@ -482,6 +482,12 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		} else if (action.type == GameActionType_SEND_KEY) {
 			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = action.send_key.vk_code;
+		} else if (action.type == GameActionType_SEND_MOUSE_CLICK) {
+			lpMsg->message = action.send_mouse_click.up
+			    ? (action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? DVL_WM_LBUTTONUP : DVL_WM_RBUTTONUP)
+			    : (action.send_mouse_click.button == GameActionSendMouseClick::LEFT ? DVL_WM_LBUTTONDOWN : DVL_WM_RBUTTONDOWN);
+			lpMsg->wParam = 0;
+			lpMsg->lParam = (static_cast<int16_t>(MousePosition.y) << 16) | static_cast<int16_t>(MousePosition.x);
 		} else {
 			ProcessGamepadEvents(action);
 		}
@@ -786,11 +792,9 @@ bool TranslateMessage(const tagMSG *lpMsg)
 				}
 			}
 
-#ifdef _DEBUG
 			if (key >= 32) {
-				Log("char: {:c}", key);
+				LogVerbose("char: {:c}", key);
 			}
-#endif
 
 			// XXX: This does not add extended info to lParam
 			PostMessage(DVL_WM_CHAR, key, 0);

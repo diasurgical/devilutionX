@@ -16,14 +16,14 @@ constexpr char32_t Utf8DecodeError = 0xD83F;
  * Sets `len` to the length of the code point in bytes.
  * Returns `Utf8DecodeError` on error.
  */
-char32_t DecodeFirstUtf8CodePoint(string_view input, uint8_t *len);
+char32_t DecodeFirstUtf8CodePoint(string_view input, std::size_t *len);
 
 /**
  * Decodes and removes the first code point from UTF8-encoded input.
  */
 inline char32_t ConsumeFirstUtf8CodePoint(string_view *input)
 {
-	uint8_t len;
+	std::size_t len;
 	const char32_t result = DecodeFirstUtf8CodePoint(*input, &len);
 	input->remove_prefix(len);
 	return result;

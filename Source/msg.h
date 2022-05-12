@@ -775,7 +775,7 @@ struct TBuffer {
 };
 
 extern bool deltaload;
-extern BYTE gbBufferMsgs;
+extern uint8_t gbBufferMsgs;
 extern int dwRecCount;
 
 void msg_send_drop_pkt(int pnum, int reason);
@@ -784,14 +784,16 @@ void run_delta_info();
 void DeltaExportData(int pnum);
 void DeltaSyncJunk();
 void delta_init();
-void delta_kill_monster(int mi, Point position, BYTE bLevel);
-void delta_monster_hp(int mi, int hp, BYTE bLevel);
+void delta_kill_monster(int mi, Point position, uint8_t bLevel);
+void delta_monster_hp(int mi, int hp, uint8_t bLevel);
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
 void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
+/** @brief Clears last send player command for the local player. This is used when a game tick changes. */
+void ClearLastSendPlayerCmd();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
-void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE cl);
+void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl);
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
@@ -802,10 +804,10 @@ void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii);
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint8_t ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
-void NetSendCmdChItem(bool bHiPri, BYTE bLoc);
-void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
+void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
+void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
