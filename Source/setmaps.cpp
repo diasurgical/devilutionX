@@ -5,9 +5,13 @@
  */
 #include "setmaps.h"
 
+#ifdef _DEBUG
+#include "debug.h"
+#endif
 #include "drlg_l1.h"
 #include "drlg_l2.h"
 #include "drlg_l3.h"
+#include "drlg_l4.h"
 #include "engine/load_file.hpp"
 #include "objdat.h"
 #include "objects.h"
@@ -197,6 +201,41 @@ void LoadSetMap()
 		InitNoTriggers();
 		break;
 	case SL_NONE:
+#ifdef _DEBUG
+		switch (setlvltype) {
+		case DTYPE_CATHEDRAL:
+			LoadPreL1Dungeon(TestMapPath.c_str());
+			LoadL1Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+			break;
+		case DTYPE_CATACOMBS:
+			LoadPreL2Dungeon(TestMapPath.c_str());
+			LoadL2Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
+			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
+			break;
+		case DTYPE_CAVES:
+			LoadPreL3Dungeon(TestMapPath.c_str());
+			LoadL3Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
+			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
+			break;
+		case DTYPE_HELL:
+			LoadPreL4Dungeon(TestMapPath.c_str());
+			LoadL4Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
+			break;
+		case DTYPE_NEST:
+			LoadPreL3Dungeon(TestMapPath.c_str());
+			LoadL3Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
+			break;
+		case DTYPE_CRYPT:
+			LoadPreL1Dungeon(TestMapPath.c_str());
+			LoadL1Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
+			AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
+			break;
+		}
+		LoadRndLvlPal(setlvltype);
+		SetMapTransparency(TestMapPath.c_str());
+		InitNoTriggers();
+#endif
 		break;
 	}
 }
