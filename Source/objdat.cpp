@@ -100,7 +100,7 @@ const _object_id ObjTypeConv[] = {
 	OBJ_NULL,
 	OBJ_NULL,
 	OBJ_NULL,
-	OBJ_PEDISTAL,
+	OBJ_PEDESTAL,
 	OBJ_NULL,
 	OBJ_NULL,
 	OBJ_NULL,

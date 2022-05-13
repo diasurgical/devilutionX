@@ -1124,7 +1124,8 @@ DWORD OnOperateObjectTile(const TCmd *pCmd, Player &player)
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
-		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
+		Object &object = Objects[message.wParam1];
+		MakePlrPath(player, position, !object._oSolidFlag && !object._oDoorFlag);
 		player.destAction = ACTION_OPERATE;
 		player.destParam1 = message.wParam1;
 	}
@@ -1138,7 +1139,8 @@ DWORD OnDisarm(const TCmd *pCmd, Player &player)
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
-		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
+		Object &object = Objects[message.wParam1];
+		MakePlrPath(player, position, !object._oSolidFlag && !object._oDoorFlag);
 		player.destAction = ACTION_DISARM;
 		player.destParam1 = message.wParam1;
 	}
@@ -2387,8 +2389,9 @@ void DeltaLoadLevel()
 		}
 
 		for (int i = 0; i < ActiveObjectCount; i++) {
-			if (Objects[ActiveObjects[i]].IsTrap()) {
-				OperateTrap(Objects[ActiveObjects[i]]);
+			Object &object = Objects[ActiveObjects[i]];
+			if (object.IsTrap()) {
+				OperateTrap(object);
 			}
 		}
 	}
