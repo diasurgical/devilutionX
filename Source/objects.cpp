@@ -827,6 +827,26 @@ void AddCryptStoryBook(int s)
 	AddObject(OBJ_L5CANDLE, *position + Displacement { 2, 1 });
 }
 
+void AddNakrulLever()
+{
+	while (true) {
+		int xp = GenerateRnd(80) + 16;
+		int yp = GenerateRnd(80) + 16;
+		if (RndLocOk(xp - 1, yp - 1)
+		    && RndLocOk(xp, yp - 1)
+		    && RndLocOk(xp + 1, yp - 1)
+		    && RndLocOk(xp - 1, yp)
+		    && RndLocOk(xp, yp)
+		    && RndLocOk(xp + 1, yp)
+		    && RndLocOk(xp - 1, yp + 1)
+		    && RndLocOk(xp, yp + 1)
+		    && RndLocOk(xp + 1, yp + 1)) {
+			break;
+		}
+	}
+	AddObject(OBJ_L5LEVER, { UberRow + 3, UberCol - 1 });
+}
+
 void AddNakrulBook(int a1, Point position)
 {
 	AddCryptBook(OBJ_L5BOOKS, a1, position);
@@ -834,7 +854,7 @@ void AddNakrulBook(int a1, Point position)
 
 void AddNakrulGate()
 {
-	AddNakrulLeaver();
+	AddNakrulLever();
 	switch (GenerateRnd(6)) {
 	case 0:
 		AddNakrulBook(6, { UberRow + 3, UberCol });
@@ -970,9 +990,8 @@ void AddLazStand()
 void DeleteObject(int oi, int i)
 {
 	const Object &object = Objects[oi];
-	int ox = object.position.x;
-	int oy = object.position.y;
-	dObject[ox][oy] = 0;
+	Point position = object.position;
+	dObject[position.x][position.y] = 0;
 	AvailableObjects[-ActiveObjectCount + MAXOBJECTS] = oi;
 	ActiveObjectCount--;
 	if (ObjectUnderCursor == &object) // Unselect object if this was highlighted by player
@@ -981,12 +1000,12 @@ void DeleteObject(int oi, int i)
 		ActiveObjects[i] = ActiveObjects[ActiveObjectCount];
 }
 
-void AddChest(Object &chest, _object_id type)
+void AddChest(Object &chest)
 {
 	if (FlipCoin())
 		chest._oAnimFrame += 3;
 	chest._oRndSeed = AdvanceRndSeed();
-	switch (type) {
+	switch (chest._otype) {
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
 		if (setlevel) {
@@ -1406,12 +1425,12 @@ void UpdateSarcophagus(Object &sarcophagus)
 void ActivateTrapLine(int ttype, int tid)
 {
 	for (int i = 0; i < ActiveObjectCount; i++) {
-		int oi = ActiveObjects[i];
-		if (Objects[oi]._otype == ttype && Objects[oi]._oVar1 == tid) {
-			Objects[oi]._oVar4 = 1;
-			Objects[oi]._oAnimFlag = true;
-			Objects[oi]._oAnimDelay = 1;
-			Objects[oi]._olid = AddLight(Objects[oi].position, 1);
+		Object &trap = Objects[ActiveObjects[i]];
+		if (trap._otype == ttype && trap._oVar1 == tid) {
+			trap._oVar4 = 1;
+			trap._oAnimFlag = true;
+			trap._oAnimDelay = 1;
+			trap._olid = AddLight(trap.position, 1);
 		}
 	}
 }
@@ -2070,10 +2089,10 @@ void OperateL5Door(const Player &player, Object &door)
 bool AreAllLeversActivated(int leverId)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		int oi = ActiveObjects[j];
-		if (Objects[oi]._otype == OBJ_SWITCHSKL
-		    && Objects[oi]._oVar8 == leverId
-		    && Objects[oi]._oSelFlag != 0) {
+		Object &lever = Objects[ActiveObjects[j]];
+		if (lever._otype == OBJ_SWITCHSKL
+		    && lever._oVar8 == leverId
+		    && lever._oSelFlag != 0) {
 			return false;
 		}
 	}
@@ -2727,12 +2746,11 @@ void OperateShrineEnchanted(Player &player)
 void OperateShrineThaumaturgic(const Player &player)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		int v1 = ActiveObjects[j];
-		assert(v1 >= 0 && v1 < MAXOBJECTS);
-		if (Objects[v1].IsChest() && Objects[v1]._oSelFlag == 0) {
-			Objects[v1]._oRndSeed = AdvanceRndSeed();
-			Objects[v1]._oSelFlag = 1;
-			Objects[v1]._oAnimFrame -= 2;
+		Object &object = Objects[ActiveObjects[j]];
+		if (object.IsChest() && object._oSelFlag == 0) {
+			object._oRndSeed = AdvanceRndSeed();
+			object._oSelFlag = 1;
+			object._oAnimFrame -= 2;
 		}
 	}
 
@@ -4227,7 +4245,7 @@ void InitObjects()
 				}
 				Quests[Q_BLOOD]._qmsg = spId;
 				AddBookLever(OBJ_BLOODBOOK, { SetPiece.position + Displacement { 0, 3 }, { 2, 4 } }, spId);
-				AddObject(OBJ_PEDISTAL, SetPiece.position.megaToWorld() + Displacement { 9, 16 });
+				AddObject(OBJ_PEDESTAL, SetPiece.position.megaToWorld() + Displacement { 9, 16 });
 			}
 			InitRndBarrels();
 		}
@@ -4339,7 +4357,7 @@ Object *AddObject(_object_id objType, Point objPos)
 	dObject[objPos.x][objPos.y] = oi + 1;
 	Object &object = Objects[oi];
 	SetupObject(object, objPos, objType);
-	switch (objType) {
+	switch (object._otype) {
 	case OBJ_L1LIGHT:
 	case OBJ_SKFIRE:
 	case OBJ_CANDLE1:
@@ -4380,12 +4398,12 @@ Object *AddObject(_object_id objType, Point objPos)
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
 	case OBJ_CHEST3:
-		AddChest(object, objType);
+		AddChest(object);
 		break;
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		AddChest(object, objType);
+		AddChest(object);
 		object._oTrapFlag = true;
 		if (leveltype == DTYPE_CATACOMBS) {
 			object._oVar4 = GenerateRnd(2);
@@ -4461,7 +4479,7 @@ Object *AddObject(_object_id objType, Point objPos)
 		object._oRndSeed = AdvanceRndSeed();
 		AddObjectLight(object, 5);
 		break;
-	case OBJ_PEDISTAL:
+	case OBJ_PEDESTAL:
 		AddPedestalOfBlood(object);
 		break;
 	case OBJ_WARWEAP:
@@ -4845,7 +4863,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		if (sendmsg)
 			OperateStoryBook(object);
 		break;
-	case OBJ_PEDISTAL:
+	case OBJ_PEDESTAL:
 		OperatePedestal(player, object);
 		break;
 	case OBJ_WARWEAP:
@@ -5029,7 +5047,7 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 		if (sendmsg)
 			OperateStoryBook(object);
 		break;
-	case OBJ_PEDISTAL:
+	case OBJ_PEDESTAL:
 		OperatePedestal(player, object);
 		break;
 	case OBJ_WARWEAP:
@@ -5134,7 +5152,7 @@ void SyncObjectAnim(Object &object)
 	case OBJ_STEELTOME:
 		SyncQSTLever(object);
 		break;
-	case OBJ_PEDISTAL:
+	case OBJ_PEDESTAL:
 		SyncPedestal(object, SetPiece.position, SetPiece.size.width);
 		break;
 	default:
@@ -5268,7 +5286,7 @@ void GetObjectStr(const Object &object)
 	case OBJ_STEELTOME:
 		InfoString = _("Steel Tome");
 		break;
-	case OBJ_PEDISTAL:
+	case OBJ_PEDESTAL:
 		InfoString = _("Pedestal of Blood");
 		break;
 	case OBJ_STORYBOOK:
@@ -5297,7 +5315,7 @@ void GetObjectStr(const Object &object)
 		}
 	}
 	if (object.IsDisabled()) {
-		InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)")), InfoString);
+		InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls lever */ "{:s} (disabled)")), InfoString);
 		InfoColor = UiFlags::ColorRed;
 	}
 }
@@ -5308,26 +5326,6 @@ void SyncNakrulRoom()
 	dPiece[UberRow][UberCol - 1] = 300;
 	dPiece[UberRow][UberCol - 2] = 299;
 	dPiece[UberRow][UberCol + 1] = 298;
-}
-
-void AddNakrulLeaver()
-{
-	while (true) {
-		int xp = GenerateRnd(80) + 16;
-		int yp = GenerateRnd(80) + 16;
-		if (RndLocOk(xp - 1, yp - 1)
-		    && RndLocOk(xp, yp - 1)
-		    && RndLocOk(xp + 1, yp - 1)
-		    && RndLocOk(xp - 1, yp)
-		    && RndLocOk(xp, yp)
-		    && RndLocOk(xp + 1, yp)
-		    && RndLocOk(xp - 1, yp + 1)
-		    && RndLocOk(xp, yp + 1)
-		    && RndLocOk(xp + 1, yp + 1)) {
-			break;
-		}
-	}
-	AddObject(OBJ_L5LEVER, { UberRow + 3, UberCol - 1 });
 }
 
 } // namespace devilution

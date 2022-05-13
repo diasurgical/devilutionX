@@ -2507,8 +2507,9 @@ void DeltaLoadLevel()
 		}
 
 		for (int i = 0; i < ActiveObjectCount; i++) {
-			if (Objects[ActiveObjects[i]].IsTrap()) {
-				OperateTrap(Objects[ActiveObjects[i]]);
+			Object &object = Objects[ActiveObjects[i]];
+			if (object.IsTrap()) {
+				OperateTrap(object);
 			}
 		}
 	}

@@ -1623,10 +1623,11 @@ void SpawnRock()
 	if (ActiveItemCount >= MAXITEMS)
 		return;
 
-	Object *stand = nullptr;
+	const Object *stand = nullptr;
 	for (int i = 0; i < ActiveObjectCount; i++) {
-		if (Objects[ActiveObjects[i]]._otype == OBJ_STAND) {
-			stand = &Objects[ActiveObjects[i]];
+		const Object &object = Objects[ActiveObjects[i]];
+		if (object._otype == OBJ_STAND) {
+			stand = &object;
 			break;
 		}
 	}
@@ -1635,7 +1636,7 @@ void SpawnRock()
 		return;
 
 	int ii = AllocateItem();
-	auto &item = Items[ii];
+	Item &item = Items[ii];
 
 	item.position = stand->position;
 	dItem[item.position.x][item.position.y] = ii + 1;
