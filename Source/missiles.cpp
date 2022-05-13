@@ -838,34 +838,32 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-void StartKillOrHitMonster(int m, int pnum, int dam, bool resist)
+void StartKillMonsterByMissile(int m, int pnum)
+{
+	auto &monster = Monsters[m];
+	M_StartKill(m, pnum);
+	if (monster._mmode == MonsterMode::Petrified)
+		monster.Petrify();
+}
+
+void StartHitMonsterByMissile(int m, int pnum, int dam)
 {
 	auto &monster = Monsters[m];
 
-	if ((monster._mhitpoints >> 6) <= 0) {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartKill(m, pnum);
-			monster.Petrify();
-		} else {
-			M_StartKill(m, pnum);
-		}
-	} else {
-		if (resist) {
-			PlayEffect(monster, 1);
-		} else if (monster._mmode == MonsterMode::Petrified) {
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, pnum, dam);
-			monster.Petrify();
-		} else {
-			if (pnum >= 0) {
-				const auto &player = Players[pnum];
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
-					M_GetKnockback(m);
-			}
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, pnum, dam);
-		}
+	bool hasKnockback = false;
+	if (pnum >= 0) {
+		const auto &player = Players[pnum];
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+			hasKnockback = true;
 	}
+
+	bool isPetrified = monster._mmode == MonsterMode::Petrified;
+	if (!isPetrified && hasKnockback)
+		M_GetKnockback(m);
+	if (m > MAX_PLRS - 1)
+		M_StartHit(m, pnum, dam);
+	if (isPetrified)
+		monster.Petrify();
 }
 
 int PlayerMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster)
@@ -919,7 +917,12 @@ void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int
 	    || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
 		monster._mFlags |= MFLAG_NOHEAL;
 
-	StartKillOrHitMonster(m, pnum, dam, resist);
+	if ((monster._mhitpoints >> 6) <= 0)
+		StartKillMonsterByMissile(m, pnum);
+	else if (resist)
+		PlayEffect(monster, 1);
+	else
+		StartHitMonsterByMissile(m, pnum, dam);
 
 	if (monster._msquelch == 0) {
 		monster._msquelch = UINT8_MAX;
@@ -948,9 +951,13 @@ void TrapMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m
 	if (DebugGodMode)
 		monster._mhitpoints = 0;
 #endif
-	StartKillOrHitMonster(m, pnum, dam, resist);
+	if ((monster._mhitpoints >> 6) <= 0)
+		StartKillMonsterByMissile(m, pnum);
+	else if (resist)
+		PlayEffect(monster, 1);
+	else
+		StartHitMonsterByMissile(m, pnum, dam);
 }
-
 
 bool Missile::TryHitMonster(int m, int mindam, int maxdam, bool shift)
 {
