@@ -1275,25 +1275,9 @@ void AddBookcase(Object &bookcase)
 	bookcase._oPreFlag = true;
 }
 
-void AddBookstand(Object &stand)
+void SetupObjectRNG(Object &object)
 {
-	stand._oRndSeed = AdvanceRndSeed();
-}
-
-void AddBloodFtn(Object &fountain)
-{
-	fountain._oRndSeed = AdvanceRndSeed();
-}
-
-void AddPurifyingFountain(int i)
-{
-	Object &fountain = Objects[i];
-	int ox = fountain.position.x;
-	int oy = fountain.position.y;
-	dObject[ox][oy - 1] = -(i + 1);
-	dObject[ox - 1][oy] = -(i + 1);
-	dObject[ox - 1][oy - 1] = -(i + 1);
-	fountain._oRndSeed = AdvanceRndSeed();
+	object._oRndSeed = AdvanceRndSeed();
 }
 
 void AddArmorStand(Object &stand)
@@ -1306,17 +1290,7 @@ void AddArmorStand(Object &stand)
 	stand._oRndSeed = AdvanceRndSeed();
 }
 
-void AddGoatShrine(Object &shrine)
-{
-	shrine._oRndSeed = AdvanceRndSeed();
-}
-
-void AddCauldron(Object &cauldron)
-{
-	cauldron._oRndSeed = AdvanceRndSeed();
-}
-
-void AddMurkyFountain(int i)
+void AddLargeFountain(int i)
 {
 	Object &fountain = Objects[i];
 	int ox = fountain.position.x;
@@ -1324,11 +1298,6 @@ void AddMurkyFountain(int i)
 	dObject[ox][oy - 1] = -(i + 1);
 	dObject[ox - 1][oy] = -(i + 1);
 	dObject[ox - 1][oy - 1] = -(i + 1);
-	fountain._oRndSeed = AdvanceRndSeed();
-}
-
-void AddTearFountain(Object &fountain)
-{
 	fountain._oRndSeed = AdvanceRndSeed();
 }
 
@@ -4930,32 +4899,22 @@ void AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		AddBookstand(object);
-		break;
 	case OBJ_BLOODFTN:
-		AddBloodFtn(object);
+	case OBJ_GOATSHRINE:
+	case OBJ_CAULDRON:
+	case OBJ_TEARFTN:
+		SetupObjectRNG(object);
 		break;
 	case OBJ_DECAP:
 		AddDecap(object);
 		break;
 	case OBJ_PURIFYINGFTN:
-		AddPurifyingFountain(oi);
+	case OBJ_MURKYFTN:
+		AddLargeFountain(oi);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
 		AddArmorStand(object);
-		break;
-	case OBJ_GOATSHRINE:
-		AddGoatShrine(object);
-		break;
-	case OBJ_CAULDRON:
-		AddCauldron(object);
-		break;
-	case OBJ_MURKYFTN:
-		AddMurkyFountain(oi);
-		break;
-	case OBJ_TEARFTN:
-		AddTearFountain(object);
 		break;
 	case OBJ_BOOK2L:
 		AddVilebook(object);
