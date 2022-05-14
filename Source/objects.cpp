@@ -568,7 +568,7 @@ void AddL2Torches()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			Point testPosition = { i, j };
-			if (!TileContainsSetPiece(testPosition))
+			if (TileContainsSetPiece(testPosition))
 				continue;
 
 			int pn = dPiece[i][j];
