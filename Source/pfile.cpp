@@ -383,8 +383,8 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	SaveWriter.RemoveHashEntries(GetFileName);
 	CopyUtf8(hero_names[saveNum], heroinfo->name, sizeof(hero_names[saveNum]));
 
-	auto &player = Players[0];
-	CreatePlayer(0, heroinfo->heroclass);
+	Player &player = Players[0];
+	CreatePlayer(player, heroinfo->heroclass);
 	CopyUtf8(player._pName, heroinfo->name, PLR_NAME_LEN);
 	PackPlayer(&pkplr, player, true, false);
 	EncodeHero(&pkplr);

@@ -1953,12 +1953,10 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
+void SpawnOnePremium(Item &premiumItem, int plvl, Player &player)
 {
 	int itemValue = 0;
 	bool keepGoing = false;
-
-	auto &player = Players[playerId];
 
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
@@ -2575,7 +2573,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pMaxHP = ihp + player._pMaxHPBase;
 	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
 
-	if (&player == &Players[MyPlayerId] && (player._pHitPoints >> 6) <= 0) {
+	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(player, 0);
 	}
 
@@ -2685,7 +2683,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pgfxnum = gfxNum;
 	}
 
-	if (&player == &Players[MyPlayerId]) {
+	if (&player == MyPlayer) {
 		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
 			int half = MaxGold;
 			MaxGold = GOLD_MAX_LIMIT;
@@ -2784,10 +2782,8 @@ void SetPlrHandGoldCurs(Item &gold)
 	gold._iCurs = GetGoldCursor(gold._ivalue);
 }
 
-void CreatePlrItems(int playerId)
+void CreatePlrItems(Player &player)
 {
-	auto &player = Players[playerId];
-
 	for (auto &item : player.InvBody) {
 		item.clear();
 	}
@@ -3866,10 +3862,10 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_ELIXSTR:
-		ModifyPlrStr(pnum, 1);
+		ModifyPlrStr(player, 1);
 		break;
 	case IMISC_ELIXMAG:
-		ModifyPlrMag(pnum, 1);
+		ModifyPlrMag(player, 1);
 		if (gbIsHellfire) {
 			player.RestoreFullMana();
 			if (&player == MyPlayer) {
@@ -3878,10 +3874,10 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_ELIXDEX:
-		ModifyPlrDex(pnum, 1);
+		ModifyPlrDex(player, 1);
 		break;
 	case IMISC_ELIXVIT:
-		ModifyPlrVit(pnum, 1);
+		ModifyPlrVit(player, 1);
 		if (gbIsHellfire) {
 			player.RestoreFullLife();
 			if (&player == MyPlayer) {
@@ -3908,7 +3904,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 	case IMISC_SCROLL:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (pnum == MyPlayerId)
+			if (&player == MyPlayer)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -3918,14 +3914,14 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;
 			player.destParam2 = cursPosition.y;
-			if (pnum == MyPlayerId && spl == SPL_NOVA)
+			if (&player == MyPlayer && spl == SPL_NOVA)
 				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
 		}
 		break;
 	case IMISC_SCROLLT:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (pnum == MyPlayerId)
+			if (&player == MyPlayer)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -3983,34 +3979,34 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		NewCursor(CURSOR_OIL);
 		break;
 	case IMISC_SPECELIX:
-		ModifyPlrStr(pnum, 3);
-		ModifyPlrMag(pnum, 3);
-		ModifyPlrDex(pnum, 3);
-		ModifyPlrVit(pnum, 3);
+		ModifyPlrStr(player, 3);
+		ModifyPlrMag(player, 3);
+		ModifyPlrDex(player, 3);
+		ModifyPlrVit(player, 3);
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SPL_RUNEFIRE;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
 		player._pTSpell = SPL_RUNELIGHT;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
 		player._pTSpell = SPL_RUNENOVA;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
 		player._pTSpell = SPL_RUNEIMMOLAT;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
 		player._pTSpell = SPL_RUNESTONE;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	default:
@@ -4074,15 +4070,15 @@ void SpawnSmith(int lvl)
 	SortVendor(smithitem + PinnedItemCount);
 }
 
-void SpawnPremium(int pnum)
+void SpawnPremium(Player &player)
 {
-	int8_t lvl = Players[pnum]._pLevel;
+	int8_t lvl = player._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
 			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(premiumitems[i], plvl, pnum);
+				SpawnOnePremium(premiumitems[i], plvl, player);
 			}
 		}
 		numpremium = maxItems;
@@ -4092,17 +4088,17 @@ void SpawnPremium(int pnum)
 		if (gbIsHellfire) {
 			// Discard first 3 items and shift next 10
 			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], pnum);
+			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], player);
 			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], pnum);
+			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], player);
 			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], pnum);
+			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], player);
 		} else {
 			// Discard first 2 items and shift next 3
 			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], pnum);
+			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], player);
 			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], pnum);
+			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], player);
 		}
 	}
 }

@@ -464,7 +464,7 @@ int GetGoldCursor(int value);
  * @param h The item to update
  */
 void SetPlrHandGoldCurs(Item &gold);
-void CreatePlrItems(int playerId);
+void CreatePlrItems(Player &player);
 bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
@@ -503,7 +503,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensCrypt(const Item &item, Point position);
 void SpawnSmith(int lvl);
-void SpawnPremium(int pnum);
+void SpawnPremium(Player &player);
 void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);

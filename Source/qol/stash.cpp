@@ -193,7 +193,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 			if (CanBePlacedOnBelt(holdItem)) {
 				automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true);
 			} else {
-				automaticallyMoved = automaticallyEquipped = AutoEquip(MyPlayerId, holdItem);
+				automaticallyMoved = automaticallyEquipped = AutoEquip(player, holdItem);
 			}
 		}
 

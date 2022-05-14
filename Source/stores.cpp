@@ -297,7 +297,7 @@ bool StoreAutoPlace(Item &item, bool persistItem)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (AutoEquipEnabled(myPlayer, item) && AutoEquip(MyPlayerId, item, persistItem)) {
+	if (AutoEquipEnabled(myPlayer, item) && AutoEquip(myPlayer, item, persistItem)) {
 		return true;
 	}
 
@@ -1428,7 +1428,7 @@ void SmithBuyPItem(Item &item)
 
 	premiumitems[xx].clear();
 	numpremium--;
-	SpawnPremium(MyPlayerId);
+	SpawnPremium(*MyPlayer);
 }
 
 void SmithPremiumBuyEnter()
@@ -2207,7 +2207,7 @@ void SetupTownStores()
 	SpawnWitch(l);
 	SpawnHealer(l);
 	SpawnBoy(myPlayer._pLevel);
-	SpawnPremium(MyPlayerId);
+	SpawnPremium(myPlayer);
 }
 
 void FreeStoreMem()

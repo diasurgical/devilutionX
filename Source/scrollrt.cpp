@@ -459,13 +459,13 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 /**
  * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, Point position, bool lighting)
+void DrawPlayerIconHelper(const Surface &out, Player &player, missile_graphic_id missileGraphicId, Point position, bool lighting)
 {
 	position.x -= MissileSpriteData[missileGraphicId].animWidth2;
 
 	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		Cl2Draw(out, position.x, position.y, cel, 0);
 		return;
 	}
@@ -485,32 +485,28 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
  * @param position Output buffer coordinates
  * @param lighting Should lighting be applied
  */
-void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting)
+void DrawPlayerIcons(const Surface &out, Player &player, Point position, bool lighting)
 {
-	auto &player = Players[pnum];
 	if (player.pManaShield)
-		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, position, lighting);
+		DrawPlayerIconHelper(out, player, MFILE_MANASHLD, position, lighting);
 	if (player.wReflections > 0)
-		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, position + Displacement { 0, 16 }, lighting);
+		DrawPlayerIconHelper(out, player, MFILE_REFLECT, position + Displacement { 0, 16 }, lighting);
 }
 
 /**
  * @brief Render a player sprite
  * @param out Output buffer
- * @param pnum Player id
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  * @param pCelBuff sprite buffer
  * @param nCel frame
  * @param nWidth width
  */
-void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
+void DrawPlayer(const Surface &out, Player &player, Point tilePosition, Point targetBufferPosition)
 {
 	if (!IsTileLit(tilePosition) && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
-
-	auto &player = Players[pnum];
 
 	std::optional<CelSprite> sprite = player.AnimInfo.celSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
@@ -521,7 +517,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	}
 
 	if (!sprite) {
-		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, player._pName);
+		Log("Drawing player \"{}\": NULL CelSprite", player._pName);
 		return;
 	}
 
@@ -533,8 +529,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		if (player._pmode <= PM_QUIT)
 			szMode = PlayerModeNames[player._pmode];
 		Log(
-		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
-		    pnum,
+		    "Drawing player \"{}\" {}: facing {}, frame {} of {}",
 		    player._pName,
 		    szMode,
 		    DirectionToString(player._pdir),
@@ -543,18 +538,18 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	if (pnum == pcursplr)
+	if (pcursplr != -1 && &player == &Players[pcursplr])
 		Cl2DrawOutline(out, 165, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		Cl2Draw(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
-		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
+		DrawPlayerIcons(out, player, targetBufferPosition, true);
 		return;
 	}
 
 	if (!IsTileLit(tilePosition) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawTRN(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel, GetInfravisionTRN());
-		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
+		DrawPlayerIcons(out, player, targetBufferPosition, true);
 		return;
 	}
 
@@ -565,7 +560,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		LightTableIndex -= 5;
 
 	Cl2DrawLight(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
-	DrawPlayerIcons(out, pnum, targetBufferPosition, false);
+	DrawPlayerIcons(out, player, targetBufferPosition, false);
 
 	LightTableIndex = l;
 }
@@ -580,12 +575,11 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 {
 	dFlags[tilePosition.x][tilePosition.y] &= ~DungeonFlag::DeadPlayer;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &player = Players[i];
+	for (Player &player : Players) {
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
 			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
-			DrawPlayer(out, i, tilePosition, playerRenderPosition);
+			DrawPlayer(out, player, tilePosition, playerRenderPosition);
 		}
 	}
 }
@@ -807,7 +801,7 @@ void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBuffer
 		Log("draw player: tried to draw illegal player {}", p);
 		return;
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	Displacement offset = player.position.offset;
 	if (player.IsWalking()) {
@@ -816,7 +810,7 @@ void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBuffer
 
 	const Point playerRenderPosition { targetBufferPosition + offset };
 
-	DrawPlayer(out, p, tilePosition, playerRenderPosition);
+	DrawPlayer(out, player, tilePosition, playerRenderPosition);
 }
 
 /**

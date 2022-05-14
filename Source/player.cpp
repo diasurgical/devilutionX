@@ -386,31 +386,21 @@ void ClearStateVariables(Player &player)
 	player.position.offset2 = { 0, 0 };
 }
 
-void StartWalkStand(int pnum)
+void StartWalkStand(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalkStand: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	player._pmode = PM_STAND;
 	player.position.future = player.position.tile;
 	player.position.offset = { 0, 0 };
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
 	}
 }
 
-void ChangeOffset(int pnum)
+void ChangeOffset(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_ChangeOffset: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	int px = player.position.offset2.deltaX / 256;
 	int py = player.position.offset2.deltaY / 256;
 
@@ -425,7 +415,7 @@ void ChangeOffset(int pnum)
 	px -= player.position.offset2.deltaX >> 8;
 	py -= player.position.offset2.deltaY >> 8;
 
-	if (pnum == MyPlayerId && ScrollInfo._sdir != ScrollDirection::None) {
+	if (&player == MyPlayer && ScrollInfo._sdir != ScrollDirection::None) {
 		ScrollInfo.offset += { px, py };
 	}
 
@@ -460,7 +450,7 @@ void StartAttack(int pnum, Direction d)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
 	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 1, animationFlags, skippedAnimationFrames, player._pAFNum);
 	player._pmode = PM_ATTACK;
-	FixPlayerLocation(pnum, d);
+	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 }
 
@@ -489,7 +479,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 1, animationFlags, skippedAnimationFrames, player._pAFNum);
 
 	player._pmode = PM_RATTACK;
-	FixPlayerLocation(pnum, d);
+	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 	player.position.temp = { cx, cy };
 }
@@ -526,7 +516,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 
 	player._pmode = PM_SPELL;
 
-	FixPlayerLocation(pnum, d);
+	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 
 	player.position.temp = { cx, cy };
@@ -599,13 +589,8 @@ int DropGold(Player &player, int amount, bool skipFullStacks)
 	return amount;
 }
 
-void DropHalfPlayersGold(int pnum)
+void DropHalfPlayersGold(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("DropHalfPlayersGold: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	int remainingGold = DropGold(player, player._pGold / 2, true);
 	if (remainingGold > 0) {
 		DropGold(player, remainingGold, false);
@@ -616,8 +601,8 @@ void DropHalfPlayersGold(int pnum)
 
 void InitLevelChange(int pnum)
 {
-	auto &player = Players[pnum];
-	auto &myPlayer = Players[MyPlayerId];
+	Player &player = Players[pnum];
+	Player &myPlayer = Players[MyPlayerId];
 
 	RemovePlrMissiles(pnum);
 	player.pManaShield = false;
@@ -626,9 +611,9 @@ void InitLevelChange(int pnum)
 	if (pnum != MyPlayerId && myPlayer.pManaShield)
 		NetSendCmd(true, CMD_SETSHIELD);
 	// share info about your reflect charges when another player joins the level
-	if (pnum != MyPlayerId)
+	if (pnum != MyPlayerId) {
 		NetSendCmdParam1(true, CMD_SETREFLECT, myPlayer.wReflections);
-	if (pnum == MyPlayerId && qtextflag) {
+	} else if (qtextflag) {
 		qtextflag = false;
 		stream_stop();
 	}
@@ -701,7 +686,7 @@ bool DoWalk(int pnum, int variant)
 		}
 
 		if (player.walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
+			StartWalkStand(player);
 		} else {
 			StartStand(pnum, player.tempDirection);
 		}
@@ -716,7 +701,7 @@ bool DoWalk(int pnum, int variant)
 		AutoPickup(pnum);
 		return true;
 	} // We didn't reach new tile so update player's "sub-tile" position
-	ChangeOffset(pnum);
+	ChangeOffset(player);
 	return false;
 }
 
@@ -734,16 +719,11 @@ bool WeaponDecay(Player &player, int ii)
 	return false;
 }
 
-bool DamageWeapon(int pnum, int durrnd)
+bool DamageWeapon(Player &player, int durrnd)
 {
-	if (pnum != MyPlayerId) {
+	if (&player != MyPlayer) {
 		return false;
 	}
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("DamageWeapon: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 
 	if (WeaponDecay(player, INVLOC_HAND_LEFT))
 		return true;
@@ -1016,7 +996,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	return true;
 }
 
-bool PlrHitPlr(int pnum, int8_t p)
+bool PlrHitPlr(Player &attacker, int8_t p)
 {
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("PlrHitPlr: illegal target player %i", p);
@@ -1030,11 +1010,6 @@ bool PlrHitPlr(int pnum, int8_t p)
 	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize)) {
 		return false;
 	}
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrHitPlr: illegal attacking player %i", pnum);
-	}
-	auto &attacker = Players[pnum];
 
 	int hit = GenerateRnd(100);
 
@@ -1083,7 +1058,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		}
 		drawhpflag = true;
 	}
-	if (pnum == MyPlayerId) {
+	if (&attacker == MyPlayer) {
 		NetSendCmdDamage(true, p, skdam);
 	}
 	StartPlrHit(p, skdam, false);
@@ -1155,7 +1130,7 @@ bool DoAttack(int pnum)
 			} else {
 				p = -(dPlayer[dx][dy] + 1);
 			}
-			didhit = PlrHitPlr(pnum, p);
+			didhit = PlrHitPlr(player, p);
 		} else {
 			Object *object = ObjectAtPosition(position, false);
 			if (object != nullptr) {
@@ -1194,7 +1169,7 @@ bool DoAttack(int pnum)
 			}
 		}
 
-		if (didhit && DamageWeapon(pnum, 30)) {
+		if (didhit && DamageWeapon(player, 30)) {
 			StartStand(pnum, player._pdir);
 			ClearStateVariables(player);
 			return true;
@@ -1266,7 +1241,7 @@ bool DoRangeAttack(int pnum)
 			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, player.position.tile);
 		}
 
-		if (DamageWeapon(pnum, 40)) {
+		if (DamageWeapon(player, 40)) {
 			StartStand(pnum, player._pdir);
 			ClearStateVariables(player);
 			return true;
@@ -1281,16 +1256,11 @@ bool DoRangeAttack(int pnum)
 	return false;
 }
 
-void DamageParryItem(int pnum)
+void DamageParryItem(Player &player)
 {
-	if (pnum != MyPlayerId) {
+	if (&player != MyPlayer) {
 		return;
 	}
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("DamageParryItem: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 
 	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
@@ -1327,7 +1297,7 @@ bool DoBlock(int pnum)
 		ClearStateVariables(player);
 
 		if (GenerateRnd(10) == 0) {
-			DamageParryItem(pnum);
+			DamageParryItem(player);
 		}
 		return true;
 	}
@@ -1335,25 +1305,17 @@ bool DoBlock(int pnum)
 	return false;
 }
 
-void DamageArmor(int pnum)
+void DamageArmor(Player &player)
 {
-	int a;
-	Item *pi;
-
-	if (pnum != MyPlayerId) {
+	if (&player != MyPlayer) {
 		return;
 	}
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("DamageArmor: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 
 	if (player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		return;
 	}
 
-	a = GenerateRnd(3);
+	int a = GenerateRnd(3);
 	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		a = 1;
 	}
@@ -1361,6 +1323,7 @@ void DamageArmor(int pnum)
 		a = 0;
 	}
 
+	Item *pi;
 	if (a != 0) {
 		pi = &player.InvBody[INVLOC_CHEST];
 	} else {
@@ -1425,7 +1388,7 @@ bool DoGotHit(int pnum)
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		if (GenerateRnd(4) != 0) {
-			DamageArmor(pnum);
+			DamageArmor(player);
 		}
 
 		return true;
@@ -1434,18 +1397,13 @@ bool DoGotHit(int pnum)
 	return false;
 }
 
-bool DoDeath(int pnum)
+bool DoDeath(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoDeath: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames - 1) {
 		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
 			player.AnimInfo.TicksPerFrame = 1000000000;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
-		} else if (pnum == MyPlayerId && player.AnimInfo.TickCounterOfCurrentFrame == 30) {
+		} else if (&player == MyPlayer && player.AnimInfo.TickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
 			if (!gbIsMultiplayer) {
 				gamemenu_on();
@@ -1679,7 +1637,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				} else {
-					TryDisarm(pnum, targetId);
+					TryDisarm(player, targetId);
 					OperateObject(pnum, targetId, false);
 				}
 			}
@@ -1717,7 +1675,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			break;
 		}
 
-		FixPlayerLocation(pnum, player._pdir);
+		FixPlayerLocation(player, player._pdir);
 		player.destAction = ACTION_NONE;
 
 		return;
@@ -1787,17 +1745,11 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	}
 }
 
-bool PlrDeathModeOK(int p)
+bool PlrDeathModeOK(Player &player)
 {
-	if (p != MyPlayerId) {
+	if (&player != MyPlayer) {
 		return true;
 	}
-
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("PlrDeathModeOK: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	if (player._pmode == PM_DEATH) {
 		return true;
 	}
@@ -2526,13 +2478,8 @@ void SetPlrAnims(Player &player)
 /**
  * @param c The hero class.
  */
-void CreatePlayer(int playerId, HeroClass c)
+void CreatePlayer(Player &player, HeroClass c)
 {
-	if ((DWORD)playerId >= MAX_PLRS) {
-		app_fatal("CreatePlayer: illegal player %i", playerId);
-	}
-	auto &player = Players[playerId];
-
 	player.Reset();
 	SetRndSeed(SDL_GetTicks());
 
@@ -2669,7 +2616,7 @@ void CreatePlayer(int playerId, HeroClass c)
 	player.wReflections = 0;
 
 	InitDungMsgs(player);
-	CreatePlrItems(playerId);
+	CreatePlrItems(player);
 	SetRndSeed(0);
 }
 
@@ -2683,13 +2630,8 @@ int CalcStatDiff(Player &player)
 	return diff;
 }
 
-void NextPlrLevel(int pnum)
+void NextPlrLevel(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("NextPlrLevel: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	player._pLevel++;
 	player._pMaxLvl++;
 
@@ -2710,7 +2652,7 @@ void NextPlrLevel(int pnum)
 	player._pMaxHPBase += hp;
 	player._pHPBase = player._pMaxHPBase;
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		drawhpflag = true;
 	}
 
@@ -2728,7 +2670,7 @@ void NextPlrLevel(int pnum)
 		player._pManaBase = player._pMaxManaBase;
 	}
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		drawmanaflag = true;
 	}
 
@@ -2738,16 +2680,11 @@ void NextPlrLevel(int pnum)
 	CalcPlrInv(player, true);
 }
 
-void AddPlrExperience(int pnum, int lvl, int exp)
+void AddPlrExperience(Player &player, int lvl, int exp)
 {
-	if (pnum != MyPlayerId) {
+	if (&player != MyPlayer) {
 		return;
 	}
-
-	if (pnum >= MAX_PLRS || pnum < 0) {
-		app_fatal("AddPlrExperience: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 
 	if (player._pHitPoints <= 0) {
 		return;
@@ -2786,7 +2723,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	}
 	if (newLvl != player._pLevel) {
 		for (int i = newLvl - player._pLevel; i > 0; i--) {
-			NextPlrLevel(pnum);
+			NextPlrLevel(player);
 		}
 	}
 
@@ -2805,7 +2742,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	if (totplrs != 0) {
 		int e = exp / totplrs;
 		if ((pmask & (1 << MyPlayerId)) != 0)
-			AddPlrExperience(MyPlayerId, lvl, e);
+			AddPlrExperience(*MyPlayer, lvl, e);
 	}
 }
 
@@ -2936,17 +2873,12 @@ void SetPlayerOld(Player &player)
 	player.position.old = player.position.tile;
 }
 
-void FixPlayerLocation(int pnum, Direction bDir)
+void FixPlayerLocation(Player &player, Direction bDir)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("FixPlayerLocation: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	player.position.future = player.position.tile;
 	player.position.offset = { 0, 0 };
 	player._pdir = bDir;
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
@@ -2969,7 +2901,7 @@ void StartStand(int pnum, Direction dir)
 
 	NewPlrAnim(player, player_graphic::Stand, dir, player._pNFrames, 4);
 	player._pmode = PM_STAND;
-	FixPlayerLocation(pnum, dir);
+	FixPlayerLocation(player, dir);
 	FixPlrWalkTags(pnum);
 	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	SetPlayerOld(player);
@@ -2997,7 +2929,7 @@ void StartPlrBlock(int pnum, Direction dir)
 	NewPlrAnim(player, player_graphic::Block, dir, player._pBFrames, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	player._pmode = PM_BLOCK;
-	FixPlayerLocation(pnum, dir);
+	FixPlayerLocation(player, dir);
 	SetPlayerOld(player);
 }
 
@@ -3075,7 +3007,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	NewPlrAnim(player, player_graphic::Hit, pd, player._pHFrames, 1, AnimationDistributionFlags::None, skippedAnimationFrames);
 
 	player._pmode = PM_GOTHIT;
-	FixPlayerLocation(pnum, pd);
+	FixPlayerLocation(player, pd);
 	FixPlrWalkTags(pnum);
 	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	SetPlayerOld(player);
@@ -3128,7 +3060,7 @@ StartPlayerKill(int pnum, int earflag)
 	}
 
 	if (player.plrlevel == currlevel) {
-		FixPlayerLocation(pnum, player._pdir);
+		FixPlayerLocation(player, player._pdir);
 		RemovePlrFromMap(pnum);
 		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
@@ -3142,7 +3074,7 @@ StartPlayerKill(int pnum, int earflag)
 			}
 
 			if (!diablolevel) {
-				DropHalfPlayersGold(pnum);
+				DropHalfPlayersGold(player);
 				if (earflag != -1) {
 					if (earflag != 0) {
 						Item ear;
@@ -3267,7 +3199,7 @@ void SyncPlrKill(int pnum, int earflag)
 void RemovePlrMissiles(int pnum)
 {
 	if (currlevel != 0 && pnum == MyPlayerId) {
-		auto &golem = Monsters[MyPlayerId];
+		Monster &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
 			AddCorpse(golem.position.tile, golem.MType->mdeadval, golem._mdir);
@@ -3330,14 +3262,8 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 	}
 }
 
-void RestartTownLvl(int pnum)
+void RestartTownLvl(Player &player)
 {
-	InitLevelChange(pnum);
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("RestartTownLvl: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	player.plrlevel = 0;
 	player._pInvincible = false;
 
@@ -3348,7 +3274,7 @@ void RestartTownLvl(int pnum)
 
 	CalcPlrInv(player, false);
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
 		PostMessage(WM_DIABRETOWN, 0, 0);
@@ -3417,7 +3343,7 @@ void ProcessPlayers()
 		if (player.plractive && currlevel == player.plrlevel && (pnum == MyPlayerId || !player._pLvlChanging)) {
 			CheckCheatStats(player);
 
-			if (!PlrDeathModeOK(pnum) && (player._pHitPoints >> 6) <= 0) {
+			if (!PlrDeathModeOK(player) && (player._pHitPoints >> 6) <= 0) {
 				SyncPlrKill(pnum, -1);
 			}
 
@@ -3461,7 +3387,7 @@ void ProcessPlayers()
 					tplayer = DoGotHit(pnum);
 					break;
 				case PM_DEATH:
-					tplayer = DoDeath(pnum);
+					tplayer = DoDeath(player);
 					break;
 				}
 				CheckNewPath(pnum, tplayer);
@@ -3638,13 +3564,8 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 	}
 }
 
-void SyncPlrAnim(int pnum)
+void SyncPlrAnim(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SyncPlrAnim: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	player_graphic graphic;
 	switch (player._pmode) {
 	case PM_STAND:
@@ -3666,7 +3587,7 @@ void SyncPlrAnim(int pnum)
 		break;
 	case PM_SPELL:
 		graphic = player_graphic::Fire;
-		if (pnum == MyPlayerId) {
+		if (&player == MyPlayer) {
 			switch (spelldata[player._pSpell].sType) {
 			case STYPE_FIRE:
 				graphic = player_graphic::Fire;
@@ -3764,13 +3685,8 @@ void CheckStats(Player &player)
 	}
 }
 
-void ModifyPlrStr(int p, int l)
+void ModifyPlrStr(Player &player, int l)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrStr: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Strength) - player._pBaseStr);
 
 	player._pStrength += l;
@@ -3778,18 +3694,13 @@ void ModifyPlrStr(int p, int l)
 
 	CalcPlrInv(player, true);
 
-	if (p == MyPlayerId) {
+	if (&player == MyPlayer) {
 		NetSendCmdParam1(false, CMD_SETSTR, player._pBaseStr);
 	}
 }
 
-void ModifyPlrMag(int p, int l)
+void ModifyPlrMag(Player &player, int l)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrMag: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
 
 	player._pMagic += l;
@@ -3811,36 +3722,26 @@ void ModifyPlrMag(int p, int l)
 
 	CalcPlrInv(player, true);
 
-	if (p == MyPlayerId) {
+	if (&player == MyPlayer) {
 		NetSendCmdParam1(false, CMD_SETMAG, player._pBaseMag);
 	}
 }
 
-void ModifyPlrDex(int p, int l)
+void ModifyPlrDex(Player &player, int l)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrDex: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	l = clamp(l, 0 - player._pBaseDex, player.GetMaximumAttributeValue(CharacterAttribute::Dexterity) - player._pBaseDex);
 
 	player._pDexterity += l;
 	player._pBaseDex += l;
 	CalcPlrInv(player, true);
 
-	if (p == MyPlayerId) {
+	if (&player == MyPlayer) {
 		NetSendCmdParam1(false, CMD_SETDEX, player._pBaseDex);
 	}
 }
 
-void ModifyPlrVit(int p, int l)
+void ModifyPlrVit(Player &player, int l)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("ModifyPlrVit: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	l = clamp(l, 0 - player._pBaseVit, player.GetMaximumAttributeValue(CharacterAttribute::Vitality) - player._pBaseVit);
 
 	player._pVitality += l;
@@ -3858,7 +3759,7 @@ void ModifyPlrVit(int p, int l)
 
 	CalcPlrInv(player, true);
 
-	if (p == MyPlayerId) {
+	if (&player == MyPlayer) {
 		NetSendCmdParam1(false, CMD_SETVIT, player._pBaseVit);
 	}
 }

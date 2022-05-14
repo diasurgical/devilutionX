@@ -552,20 +552,18 @@ void DeltaPutItem(const TCmdPItem &message, Point position, uint8_t bLevel)
 
 bool IOwnLevel(int nReqLevel)
 {
-	int i;
-
-	for (i = 0; i < MAX_PLRS; i++) {
-		if (!Players[i].plractive)
+	for (Player &player : Players) {
+		if (!player.plractive)
 			continue;
-		if (Players[i]._pLvlChanging)
+		if (player._pLvlChanging)
 			continue;
-		if (Players[i].plrlevel != nReqLevel)
+		if (player.plrlevel != nReqLevel)
 			continue;
-		if (i == MyPlayerId && gbBufferMsgs != 0)
+		if (&player == MyPlayer && gbBufferMsgs != 0)
 			continue;
-		break;
+		return &player == MyPlayer;
 	}
-	return i == MyPlayerId;
+	return false;
 }
 
 void DeltaOpenPortal(int pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
@@ -578,9 +576,9 @@ void DeltaOpenPortal(int pnum, Point position, uint8_t bLevel, dungeon_type bLTy
 	sgJunk.portal[pnum].setlvl = bSetLvl ? 1 : 0;
 }
 
-void CheckUpdatePlayer(int pnum)
+void CheckUpdatePlayer(Player &player)
 {
-	if (gbIsMultiplayer && pnum == MyPlayerId)
+	if (gbIsMultiplayer && &player == MyPlayer)
 		pfile_update(true);
 }
 
@@ -660,7 +658,7 @@ DWORD OnAddStrength(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrStr(pnum, message.wParam1);
+		ModifyPlrStr(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -672,7 +670,7 @@ DWORD OnAddMagic(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrMag(pnum, message.wParam1);
+		ModifyPlrMag(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -684,7 +682,7 @@ DWORD OnAddDexterity(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrDex(pnum, message.wParam1);
+		ModifyPlrDex(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -696,7 +694,7 @@ DWORD OnAddVitality(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrVit(pnum, message.wParam1);
+		ModifyPlrVit(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -838,7 +836,7 @@ DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 				if (message.bPnum != MyPlayerId)
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
-					AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
+					AutoGetItem(*MyPlayer, Items[message.bCursitem], message.bCursitem);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
@@ -864,9 +862,9 @@ DWORD OnAutoGetItem(const TCmd *pCmd, int pnum)
 						auto &player = Players[MyPlayerId];
 						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
-							AutoGetItem(MyPlayerId, &Items[ii], ii);
+							AutoGetItem(*MyPlayer, Items[ii], ii);
 					} else {
-						AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
+						AutoGetItem(*MyPlayer, Items[message.bCursitem], message.bCursitem);
 					}
 				} else {
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
@@ -905,22 +903,23 @@ DWORD OnPutItem(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
 		const Point position { message.x, message.y };
-		if (currlevel == Players[pnum].plrlevel) {
+		Player &player = Players[pnum];
+		if (currlevel == player.plrlevel) {
 			int ii;
 			if (pnum == MyPlayerId)
-				ii = InvPutItem(Players[pnum], position, ItemLimbo);
+				ii = InvPutItem(player, position, ItemLimbo);
 			else
-				ii = SyncPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+				ii = SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			if (ii != -1) {
 				PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-				DeltaPutItem(message, Items[ii].position, Players[pnum].plrlevel);
-				CheckUpdatePlayer(pnum);
+				DeltaPutItem(message, Items[ii].position, player.plrlevel);
+				CheckUpdatePlayer(player);
 			}
 			return sizeof(message);
 		} else {
 			PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-			DeltaPutItem(message, position, Players[pnum].plrlevel);
-			CheckUpdatePlayer(pnum);
+			DeltaPutItem(message, position, player.plrlevel);
+			CheckUpdatePlayer(player);
 		}
 	}
 
@@ -935,18 +934,19 @@ DWORD OnSyncPutItem(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (IsPItemValid(message)) {
 		const Point position { message.x, message.y };
-		if (currlevel == Players[pnum].plrlevel) {
-			int ii = SyncPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+		Player &player = Players[pnum];
+		if (currlevel == player.plrlevel) {
+			int ii = SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			if (ii != -1) {
 				PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-				DeltaPutItem(message, Items[ii].position, Players[pnum].plrlevel);
-				CheckUpdatePlayer(pnum);
+				DeltaPutItem(message, Items[ii].position, player.plrlevel);
+				CheckUpdatePlayer(player);
 			}
 			return sizeof(message);
 		} else {
 			PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-			DeltaPutItem(message, position, Players[pnum].plrlevel);
-			CheckUpdatePlayer(pnum);
+			DeltaPutItem(message, position, player.plrlevel);
+			CheckUpdatePlayer(player);
 		}
 	}
 
@@ -1360,7 +1360,7 @@ DWORD OnResurrect(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (message.wParam1 < MAX_PLRS) {
 		DoResurrect(pnum, message.wParam1);
-		CheckUpdatePlayer(pnum);
+		CheckUpdatePlayer(Players[pnum]);
 	}
 
 	return sizeof(message);
@@ -1523,7 +1523,7 @@ DWORD OnPlayerDeath(const TCmd *pCmd, int pnum)
 	else if (pnum != MyPlayerId)
 		StartPlayerKill(pnum, message.wParam1);
 	else
-		CheckUpdatePlayer(pnum);
+		CheckUpdatePlayer(Players[pnum]);
 
 	return sizeof(message);
 }
@@ -1819,7 +1819,7 @@ DWORD OnRestartTown(const TCmd *pCmd, int pnum)
 			MyPlayerIsDead = false;
 			gamemenu_off();
 		}
-		RestartTownLvl(pnum);
+		RestartTownLvl(Players[pnum]);
 	}
 
 	return sizeof(*pCmd);
@@ -1909,7 +1909,7 @@ DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
-		NextPlrLevel(pnum);
+		NextPlrLevel(Players[pnum]);
 	}
 #endif
 	return sizeof(*pCmd);
@@ -1921,7 +1921,7 @@ DWORD OnCheatSpellLevel(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	} else {
-		auto &player = Players[pnum];
+		Player &player = Players[pnum];
 		player._pSplLvl[player._pRSpell]++;
 	}
 #endif
@@ -1933,14 +1933,13 @@ DWORD OnDebug(const TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
-DWORD OnNova(const TCmd *pCmd, int pnum)
+DWORD OnNova(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs != 1) {
-		auto &player = Players[pnum];
-		if (currlevel == player.plrlevel && pnum != MyPlayerId && InDungeonBounds(position)) {
+		if (currlevel == player.plrlevel && &player != MyPlayer && InDungeonBounds(position)) {
 			ClrPlrPath(player);
 			player._pSpell = SPL_NOVA;
 			player._pSplType = RSPLTYPE_INVALID;
@@ -2228,9 +2227,9 @@ void DeltaSaveLevel()
 	if (!gbIsMultiplayer)
 		return;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		if (i != MyPlayerId)
-			ResetPlayerGFX(Players[i]);
+	for (Player &player : Players) {
+		if (&player != MyPlayer)
+			ResetPlayerGFX(player);
 	}
 	Players[MyPlayerId]._pLvlVisited[currlevel] = true;
 	DeltaLeaveSync(currlevel);
@@ -2931,7 +2930,7 @@ uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_CHEAT_SPELL_LEVEL:
 		return OnCheatSpellLevel(pCmd, pnum);
 	case CMD_NOVA:
-		return OnNova(pCmd, pnum);
+		return OnNova(pCmd, player);
 	case CMD_SETSHIELD:
 		return OnSetShield(pCmd, player);
 	case CMD_REMSHIELD:

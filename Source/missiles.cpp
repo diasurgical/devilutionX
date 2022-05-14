@@ -307,14 +307,13 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	return true;
 }
 
-bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
+bool Plr2PlrMHit(Player &player, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
 	if (sgGameInitInfo.bFriendlyFire == 0 && gbFriendlyMode)
 		return false;
 
 	*blocked = false;
 
-	auto &player = Players[pnum];
 	auto &target = Players[p];
 
 	if (target._pInvincible) {
@@ -387,7 +386,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		dam /= 2;
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdDamage(true, p, dam);
 		target.Say(HeroSpeech::ArghClang);
 		return true;
@@ -397,7 +396,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		StartPlrBlock(p, GetDirection(target.position.tile, player.position.tile));
 		*blocked = true;
 	} else {
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdDamage(true, p, dam);
 		StartPlrHit(p, dam, false);
 	}
@@ -455,7 +454,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			if (dPlayer[mx][my] > 0
 			    && dPlayer[mx][my] - 1 != missile._misource
 			    && Plr2PlrMHit(
-			        missile._misource,
+			        Players[missile._misource],
 			        dPlayer[mx][my] - 1,
 			        mindam,
 			        maxdam,
@@ -911,7 +910,7 @@ int GetSpellLevel(int playerId, spell_id sn)
 {
 	auto &player = Players[playerId];
 
-	if (playerId != MyPlayerId)
+	if (&player != MyPlayer)
 		return 1; // BUGFIX spell level will be wrong in multiplayer
 
 	return std::max(player._pISplLvlAdd + player._pSplLvl[sn], 0);
@@ -1182,8 +1181,7 @@ void InitMissiles()
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_INFRA) {
-				int src = missile._misource;
-				if (src == MyPlayerId)
+				if (missile._misource == MyPlayerId)
 					CalcPlrItemVals(myPlayer, true);
 			}
 		}
@@ -3253,7 +3251,7 @@ void MI_SpecArrow(Missile &missile)
 	Direction dir = Direction::South;
 	mienemy_type micaster = TARGET_PLAYERS;
 	if (!missile.IsTrap()) {
-		auto &player = Players[id];
+		Player &player = Players[id];
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
@@ -3329,11 +3327,10 @@ void MI_Town(Missile &missile)
 		missile.var2++;
 	}
 
-	for (int p = 0; p < MAX_PLRS; p++) {
-		auto &player = Players[p];
+	for (Player &player : Players) {
 		if (player.plractive && currlevel == player.plrlevel && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
 			ClrPlrPath(player);
-			if (p == MyPlayerId) {
+			if (&player == MyPlayer) {
 				NetSendCmdParam1(true, CMD_WARP, missile._misource);
 				player._pmode = PM_NEWLVL;
 			}
