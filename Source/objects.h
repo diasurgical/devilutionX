@@ -306,7 +306,7 @@ void RedoPlayerVision();
 void MonstCheckDoors(Monster &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
-void TryDisarm(Player &player, int i);
+void TryDisarm(const Player &player, Object &target);
 int ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);

@@ -1419,7 +1419,7 @@ void UpdateObjectLight(Object &light, int lightRadius)
 	int oy = light.position.y;
 	int tr = lightRadius + 10;
 	if (!DisableLighting) {
-		for (Player &player : Players) {
+		for (const Player &player : Players) {
 			if (!player.plractive) {
 				continue;
 			}
@@ -5194,12 +5194,10 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	}
 }
 
-void TryDisarm(Player &player, int i)
+void TryDisarm(const Player &player, Object &target)
 {
 	if (&player == MyPlayer)
 		NewCursor(CURSOR_HAND);
-
-	Object &target = Objects[i];
 
 	if (!target._oTrapFlag) {
 		return;
@@ -5210,7 +5208,7 @@ void TryDisarm(Player &player, int i)
 	}
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		Object &trap = Objects[ActiveObjects[j]];
-		if (trap.IsTrap() && dObject[trap._oVar1][trap._oVar2] - 1 == i) {
+		if (trap.IsTrap() && ObjectAtPosition({trap._oVar1, trap._oVar2}) == &target) {
 			trap._oVar4 = 1;
 			target._oTrapFlag = false;
 		}

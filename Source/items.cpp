@@ -1623,9 +1623,9 @@ void SpawnRock()
 	if (ActiveItemCount >= MAXITEMS)
 		return;
 
-	Object *stand = nullptr;
+	const Object *stand = nullptr;
 	for (int i = 0; i < ActiveObjectCount; i++) {
-		Object &object = Objects[ActiveObjects[i]];
+		const Object &object = Objects[ActiveObjects[i]];
 		if (object._otype == OBJ_STAND) {
 			stand = &object;
 			break;
@@ -1953,7 +1953,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-void SpawnOnePremium(Item &premiumItem, int plvl, Player &player)
+void SpawnOnePremium(Item &premiumItem, int plvl, const Player &player)
 {
 	int itemValue = 0;
 	bool keepGoing = false;
@@ -4070,7 +4070,7 @@ void SpawnSmith(int lvl)
 	SortVendor(smithitem + PinnedItemCount);
 }
 
-void SpawnPremium(Player &player)
+void SpawnPremium(const Player &player)
 {
 	int8_t lvl = player._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
