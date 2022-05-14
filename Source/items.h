@@ -504,7 +504,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensCrypt(const Item &item, Point position);
 void SpawnSmith(int lvl);
-void SpawnPremium(Player &player);
+void SpawnPremium(const Player &player);
 void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);
 void SpawnHealer(int lvl);
