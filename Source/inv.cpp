@@ -2064,7 +2064,6 @@ bool UseInvItem(int pnum, int cii)
 				}
 			}
 		}
-
 	}
 
 	constexpr int SpeechDelay = 10;
