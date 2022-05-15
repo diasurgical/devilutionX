@@ -24,6 +24,7 @@
 #include "monster.h"
 #include "plrmsg.h"
 #include "quests.h"
+#include "qol/floatingnumbers.h"
 #include "setmaps.h"
 #include "spells.h"
 #include "towners.h"
@@ -885,6 +886,13 @@ std::string DebugCmdToggleFPS(const string_view parameter)
 	return "";
 }
 
+std::string DebugCmdDisplayFloatingNumber(const string_view parameter)
+{
+	AddFloatingNumber(MyPlayer->position.tile, static_cast<FloatingType>(atoi(parameter.data())), 666);
+	return "";
+}
+
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -920,6 +928,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
+	{ "float", "Displays a floating number ", "{type}", &DebugCmdDisplayFloatingNumber},
 };
 
 } // namespace
