@@ -161,7 +161,7 @@ PanelEntry panelEntries[] = {
 	        return StyledText { UiFlags::ColorRed, (MyPlayer->_pStatPts > 0 ? fmt::format("{:d}", MyPlayer->_pStatPts) : "") };
 	    } },
 
-	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98 },
+	{ P_("currency", "Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98 },
 	{ "", { TopRightLabelX, 127 }, 99, 0,
 	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pGold) }; } },
 
