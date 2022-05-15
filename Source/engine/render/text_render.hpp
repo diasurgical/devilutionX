@@ -37,7 +37,7 @@ enum text_color : uint8_t {
 	ColorUiSilverDark,
 
 	ColorDialogWhite,
-	ColorDialogYellow,
+	ColorYellow,
 
 	ColorGold,
 	ColorBlack,
@@ -46,6 +46,7 @@ enum text_color : uint8_t {
 	ColorWhitegold,
 	ColorRed,
 	ColorBlue,
+	ColorOrange,
 
 	ColorButtonface,
 	ColorButtonpushed,

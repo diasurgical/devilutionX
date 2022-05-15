@@ -33,6 +33,7 @@
 #include "missiles.h"
 #include "movie.h"
 #include "options.h"
+#include "qol/floatingnumbers.h"
 #include "spelldat.h"
 #include "storm/storm_net.hpp"
 #include "towners.h"
@@ -1086,7 +1087,7 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 		return;
 
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
-	ApplyMonsterDamage(target, dam);
+	ApplyMonsterDamage(DamageType::Physical, target, dam);
 
 	if (attacker.isPlayerMinion()) {
 		int playerId = attacker.getId();
@@ -1113,7 +1114,7 @@ int CheckReflect(Monster &monster, Player &player, int dam)
 		NetSendCmdParam1(true, CMD_SETREFLECT, 0);
 	// reflects 20-30% damage
 	int mdam = dam * RandomIntBetween(20, 30, true) / 100;
-	ApplyMonsterDamage(monster, mdam);
+	ApplyMonsterDamage(DamageType::Physical, monster, mdam);
 	if (monster.hitPoints >> 6 <= 0)
 		M_StartKill(monster, player);
 	else
@@ -1197,13 +1198,13 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 			int reflectedDamage = CheckReflect(monster, player, dam);
 			dam = std::max(dam - reflectedDamage, 0);
 		}
-		ApplyPlrDamage(player, 0, 0, dam);
+		ApplyPlrDamage(DamageType::Physical, player, 0, 0, dam);
 	}
 
 	// Reflect can also kill a monster, so make sure the monster is still alive
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Thorns) && monster.mode != MonsterMode::Death) {
 		int mdam = (GenerateRnd(3) + 1) << 6;
-		ApplyMonsterDamage(monster, mdam);
+		ApplyMonsterDamage(DamageType::Physical, monster, mdam);
 		if (monster.hitPoints >> 6 <= 0)
 			M_StartKill(monster, player);
 		else
@@ -3568,8 +3569,10 @@ void AddDoppelganger(Monster &monster)
 	}
 }
 
-void ApplyMonsterDamage(Monster &monster, int damage)
+void ApplyMonsterDamage(DamageType damageType, Monster &monster, int damage)
 {
+	AddFloatingNumber(damageType, monster, damage);
+
 	monster.hitPoints -= damage;
 
 	if (monster.hitPoints >> 6 <= 0) {

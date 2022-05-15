@@ -21,6 +21,7 @@
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
 #include "init.h"
+#include "misdat.h"
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
@@ -456,7 +457,7 @@ void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
 Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap);
 void AddDoppelganger(Monster &monster);
-void ApplyMonsterDamage(Monster &monster, int damage);
+void ApplyMonsterDamage(DamageType damageType, Monster &monster, int damage);
 bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
 void M_ClearSquares(const Monster &monster);

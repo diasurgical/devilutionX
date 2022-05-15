@@ -34,6 +34,7 @@
 #include "panels/charpanel.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
+#include "qol/floatingnumbers.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
@@ -984,101 +985,94 @@ Displacement tileShift;
 int tileColums;
 int tileRows;
 
+void CalcFirstTilePosition(Point &position, Displacement &offset)
+{
+	// Adjust by player offset and tile grid alignment
+	Player &myPlayer = *MyPlayer;
+	offset = tileOffset;
+	if (myPlayer.isWalking())
+		offset += GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+
+	position += tileShift;
+
+	// Skip rendering parts covered by the panels
+	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
+		int multiplier = (*sgOptions.Graphics.zoom) ? 1 : 2;
+		position += Displacement(Direction::East) * multiplier;
+		offset.deltaX += -TILE_WIDTH * multiplier / 2 / 2;
+
+		if (IsLeftPanelOpen() && !*sgOptions.Graphics.zoom) {
+			offset.deltaX += SidePanelSize.width;
+			// SidePanelSize.width accounted for in Zoom()
+		}
+	}
+
+	// Draw areas moving in and out of the screen
+	if (myPlayer.isWalking()) {
+		switch (myPlayer._pdir) {
+		case Direction::North:
+		case Direction::NorthEast:
+			offset.deltaY -= TILE_HEIGHT;
+			position += Direction::North;
+			break;
+		case Direction::SouthWest:
+		case Direction::West:
+			offset.deltaX -= TILE_WIDTH;
+			position += Direction::West;
+			break;
+		case Direction::NorthWest:
+			offset.deltaX -= TILE_WIDTH / 2;
+			offset.deltaY -= TILE_HEIGHT / 2;
+			position += Direction::NorthWest;
+		default:
+			break;
+		}
+	}
+}
+
 /**
  * @brief Configure render and process screen rows
  * @param fullOut Buffer to render to
- * @param position Center of view in dPiece coordinate
+ * @param position First tile of view in dPiece coordinate
+ * @param offset Amount to offset the rendering in screen space
  */
-void DrawGame(const Surface &fullOut, Point position)
+void DrawGame(const Surface &fullOut, Point position, Displacement offset)
 {
 	// Limit rendering to the view area
 	const Surface &out = !*sgOptions.Graphics.zoom
 	    ? fullOut.subregionY(0, gnViewportHeight)
 	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
-	// Adjust by player offset and tile grid alignment
-	Player &myPlayer = *MyPlayer;
-	Displacement offset = {};
-	if (myPlayer.isWalking())
-		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-	int sx = offset.deltaX + tileOffset.deltaX;
-	int sy = offset.deltaY + tileOffset.deltaY;
-
 	int columns = tileColums;
 	int rows = tileRows;
 
-	position += tileShift;
-
 	// Skip rendering parts covered by the panels
-	if (CanPanelsCoverView()) {
-		if (!*sgOptions.Graphics.zoom) {
-			if (IsLeftPanelOpen()) {
-				position += Displacement(Direction::East) * 2;
-				columns -= 4;
-				sx += SidePanelSize.width - TILE_WIDTH / 2;
-			}
-			if (IsRightPanelOpen()) {
-				position += Displacement(Direction::East) * 2;
-				columns -= 4;
-				sx += -TILE_WIDTH / 2;
-			}
-		} else {
-			if (IsLeftPanelOpen()) {
-				position += Direction::East;
-				columns -= 2;
-				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
-			}
-			if (IsRightPanelOpen()) {
-				position += Direction::East;
-				columns -= 2;
-				sx += -TILE_WIDTH / 2 / 2;
-			}
-		}
+	if (CanPanelsCoverView() && (IsLeftPanelOpen() || IsRightPanelOpen())) {
+		columns -= (*sgOptions.Graphics.zoom) ? 2 : 4;
 	}
 
 	UpdateMissilesRendererData();
 
 	// Draw areas moving in and out of the screen
-	if (myPlayer.isWalking()) {
-		switch (myPlayer._pdir) {
+	if (MyPlayer->isWalking()) {
+		switch (MyPlayer->_pdir) {
 		case Direction::NoDirection:
 			break;
 		case Direction::North:
-			sy -= TILE_HEIGHT;
-			position += Direction::North;
+		case Direction::South:
 			rows += 2;
 			break;
 		case Direction::NorthEast:
-			sy -= TILE_HEIGHT;
-			position += Direction::North;
 			columns++;
 			rows += 2;
 			break;
 		case Direction::East:
+		case Direction::West:
 			columns++;
 			break;
 		case Direction::SouthEast:
-			columns++;
-			rows++;
-			break;
-		case Direction::South:
-			rows += 2;
-			break;
 		case Direction::SouthWest:
-			sx -= TILE_WIDTH;
-			position += Direction::West;
-			columns++;
-			rows++;
-			break;
-		case Direction::West:
-			sx -= TILE_WIDTH;
-			position += Direction::West;
-			columns++;
-			break;
 		case Direction::NorthWest:
-			sx -= TILE_WIDTH / 2;
-			sy -= TILE_HEIGHT / 2;
-			position += Direction::NorthWest;
 			columns++;
 			rows++;
 			break;
@@ -1089,8 +1083,8 @@ void DrawGame(const Surface &fullOut, Point position)
 	DunRenderStats.clear();
 #endif
 
-	DrawFloor(out, position, { sx, sy }, rows, columns);
-	DrawTileContent(out, position, { sx, sy }, rows, columns);
+	DrawFloor(out, position, Point {} + offset, rows, columns);
+	DrawTileContent(out, position, Point {} + offset, rows, columns);
 
 	if (*sgOptions.Graphics.zoom) {
 		Zoom(fullOut.subregionY(0, gnViewportHeight));
@@ -1126,7 +1120,9 @@ void DrawView(const Surface &out, Point startPosition)
 #ifdef _DEBUG
 	DebugCoordsMap.clear();
 #endif
-	DrawGame(out, startPosition);
+	Displacement offset = {};
+	CalcFirstTilePosition(startPosition, offset);
+	DrawGame(out, startPosition, offset);
 	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
@@ -1195,6 +1191,7 @@ void DrawView(const Surface &out, Point startPosition)
 #endif
 	DrawMonsterHealthBar(out);
 	DrawItemNameLabels(out);
+	DrawFloatingNumbers(out, startPosition, offset);
 
 	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);
