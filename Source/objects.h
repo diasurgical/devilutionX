@@ -21,6 +21,14 @@ struct Player;
 
 #define MAXOBJECTS 127
 
+enum {
+	// clang-format off
+	DOOR_CLOSED  =  0,
+	DOOR_OPEN    =  1,
+	DOOR_BLOCKED =  2,
+	// clang-format on
+};
+
 struct Object {
 	_object_id _otype;
 	Point position;
@@ -128,8 +136,11 @@ struct Object {
 	 */
 	constexpr void InitializeDoor()
 	{
+		_oPreFlag = false;
 		_oDoorFlag = true;
-		_oVar4 = 0;
+		_oVar4 = DOOR_CLOSED;
+		_oSelFlag = 3;
+		_oMissFlag = false;
 	}
 
 	/**
@@ -308,8 +319,9 @@ void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 void TryDisarm(const Player &player, Object &target);
 int ItemMiscIdIdx(item_misc_id imiscid);
-void OperateObject(int pnum, int i, bool TeleFlag);
+void OperateObject(int pnum, int i);
 void SyncOpObject(int pnum, int cmd, int i);
+void DeltaSyncOpObject(int i);
 void BreakObject(int pnum, Object &object);
 void SyncBreakObj(int pnum, Object &object);
 void SyncObjectAnim(Object &object);

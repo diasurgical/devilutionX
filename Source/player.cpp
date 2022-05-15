@@ -1627,7 +1627,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				} else {
-					OperateObject(pnum, targetId, false);
+					OperateObject(pnum, targetId);
 				}
 			}
 			break;
@@ -1638,13 +1638,13 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					StartAttack(pnum, d);
 				} else {
 					TryDisarm(player, *object);
-					OperateObject(pnum, targetId, false);
+					OperateObject(pnum, targetId);
 				}
 			}
 			break;
 		case ACTION_OPERATETK:
 			if (object->_oBreak != 1) {
-				OperateObject(pnum, targetId, true);
+				OperateObject(pnum, targetId);
 			}
 			break;
 		case ACTION_PICKUPITEM:

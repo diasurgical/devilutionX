@@ -1567,7 +1567,7 @@ DWORD OnCloseDoor(const TCmd *pCmd, int pnum)
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
 			SyncOpObject(pnum, CMD_CLOSEDOOR, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_CLOSEDOOR, playerLevel);
+		DeltaSyncObject(message.wParam1, CMD_INVALID, playerLevel);
 	}
 
 	return sizeof(message);
@@ -2374,10 +2374,9 @@ void DeltaLoadLevel()
 		for (int i = 0; i < MAXOBJECTS; i++) {
 			switch (sgLevels[currlevel].object[i].bCmd) {
 			case CMD_OPENDOOR:
-			case CMD_CLOSEDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				SyncOpObject(-1, sgLevels[currlevel].object[i].bCmd, i);
+				DeltaSyncOpObject(i);
 				break;
 			case CMD_BREAKOBJ:
 				SyncBreakObj(-1, Objects[i]);
