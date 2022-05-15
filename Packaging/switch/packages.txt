@@ -1,0 +1,11 @@
+switch-mesa
+switch-glad
+switch-glm
+switch-libpng
+switch-sdl2
+switch-libsodium
+libnx
+devkitA64
+general-tools
+switch-tools
+switch-bzip2
