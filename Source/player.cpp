@@ -27,6 +27,7 @@
 #include "options.h"
 #include "player.h"
 #include "qol/autopickup.h"
+#include "qol/floatingnumbers.h"
 #include "qol/stash.h"
 #include "spells.h"
 #include "stores.h"
@@ -983,6 +984,9 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		monster._mhitpoints = 0; /* double check */
 	}
 #endif
+
+	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, FloatingType::DamagePhysical, dam >> 6);
+
 	if ((monster._mhitpoints >> 6) <= 0) {
 		M_StartKill(m, pnum);
 	} else {
@@ -2756,6 +2760,8 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		player._pLevel = 50;
 		return;
 	}
+
+	AddFloatingNumber(pnum == MyPlayerId, MyPlayer->position.tile, FloatingType::Experience, clampedExp);
 
 	// Increase player level if applicable
 	int newLvl = 0;

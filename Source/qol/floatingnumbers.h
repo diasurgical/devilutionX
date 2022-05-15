@@ -16,9 +16,10 @@ enum class FloatingType : uint8_t {
 	DamageFire,
 	DamageLightning,
 	DamageMagic,
+	DamageAcid,
 };
 
-void AddFloatingNumber(Point pos, FloatingType type, int value);
+void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value);
 void DrawFloatingNumbers(const Surface &out);
 void UpdateFloatingNumbersCoordsMap(Point dungeon, Point screen);
 

@@ -27,6 +27,7 @@
 #include "missiles.h"
 #include "monster.h"
 #include "options.h"
+#include "qol/floatingnumbers.h"
 #include "setmaps.h"
 #include "stores.h"
 #include "themes.h"
@@ -3334,10 +3335,13 @@ bool OperateShrineGlowing(int pnum)
 	ModifyPlrMag(MyPlayerId, static_cast<int>(std::min<uint32_t>(myPlayer._pExperience / 1000, 5)));
 
 	// Take 5% of the players experience to offset the bonus, unless they're very low level in which case take all their experience.
+	uint32_t oldExp = myPlayer._pExperience;
 	if (myPlayer._pExperience > 5000)
 		myPlayer._pExperience = static_cast<uint32_t>(myPlayer._pExperience * 0.95);
 	else
 		myPlayer._pExperience = 0;
+
+	AddFloatingNumber(pnum == MyPlayerId, MyPlayer->position.tile, FloatingType::Experience, static_cast<int32_t> (myPlayer._pExperience - oldExp));
 
 	if (*sgOptions.Gameplay.experienceBar)
 		force_redraw = 255;

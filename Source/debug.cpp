@@ -23,8 +23,8 @@
 #include "monstdat.h"
 #include "monster.h"
 #include "plrmsg.h"
-#include "quests.h"
 #include "qol/floatingnumbers.h"
+#include "quests.h"
 #include "setmaps.h"
 #include "spells.h"
 #include "towners.h"
@@ -888,7 +888,7 @@ std::string DebugCmdToggleFPS(const string_view parameter)
 
 std::string DebugCmdDisplayFloatingNumber(const string_view parameter)
 {
-	AddFloatingNumber(MyPlayer->position.tile, static_cast<FloatingType>(atoi(parameter.data())), 666);
+	AddFloatingNumber(true, MyPlayer->position.tile, static_cast<FloatingType>(atoi(parameter.data())), 666);
 	return "";
 }
 

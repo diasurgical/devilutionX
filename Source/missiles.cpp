@@ -21,6 +21,7 @@
 #include "inv.h"
 #include "lighting.h"
 #include "monster.h"
+#include "qol/floatingnumbers.h"
 #include "spells.h"
 #include "trigs.h"
 
@@ -246,6 +247,23 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		dam <<= 6;
 	if (resist)
 		dam >>= 2;
+
+	FloatingType type = FloatingType::DamagePhysical;
+	switch (mir) {
+	case MISR_FIRE:
+		type = FloatingType::DamageFire;
+		break;
+	case MISR_LIGHTNING:
+		type = FloatingType::DamageLightning;
+		break;
+	case MISR_MAGIC:
+		type = FloatingType::DamageMagic;
+		break;
+	case MISR_ACID:
+		type = FloatingType::DamageAcid;
+		break;
+	}
+	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, type, dam >> 6);
 
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;

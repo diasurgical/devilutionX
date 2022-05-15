@@ -30,7 +30,7 @@ std::unordered_map<int, Point> FloatingCoordsMap;
 
 } // namespace
 
-void AddFloatingNumber(Point pos, FloatingType type, int value)
+void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value)
 {
 	double distanceX = gnScreenWidth * ScreenPercentToTravel / 100;
 	double distanceY = gnScreenHeight * ScreenPercentToTravel / 100;
@@ -44,7 +44,7 @@ void AddFloatingNumber(Point pos, FloatingType type, int value)
 	switch (type) {
 	case FloatingType::Experience:
 		color = UiFlags::ColorWhite;
-		text = fmt::format("+{:d} XP", value);
+		text = fmt::format("{:d} XP", value);
 		break;
 	case FloatingType::DamagePhysical:
 		color = UiFlags::ColorGold;
@@ -56,7 +56,10 @@ void AddFloatingNumber(Point pos, FloatingType type, int value)
 		color = UiFlags::ColorBlue;
 		break;
 	case FloatingType::DamageMagic:
-		color = UiFlags::ColorWhite;
+		color = UiFlags::ColorWhitegold;
+		break;
+	case FloatingType::DamageAcid:
+		color = UiFlags::ColorDialogYellow;
 		break;
 	}
 	FloatingQueue.push_back(FloatingNumber { pos, endOffset, text, SDL_GetTicks() + Lifetime, color });
@@ -74,6 +77,8 @@ void DrawFloatingNumbers(const Surface &out)
 	for (auto & floatingNum : FloatingQueue) {
 		Point pos = floatingNum.startPos;
 		pos = FloatingCoordsMap[pos.x + pos.y * MAXDUNX];
+		if (pos == Point { 0, 0 })
+			continue;
 		constexpr int tileAndHalf = TILE_HEIGHT * 1.5;
 		pos += { TILE_WIDTH / 2, -tileAndHalf };
 
@@ -85,6 +90,8 @@ void DrawFloatingNumbers(const Surface &out)
 		uint32_t timeLeft = floatingNum.time - SDL_GetTicks();
 		float mul = 1 - (timeLeft / (float)Lifetime);
 		Point endPos = pos + floatingNum.endOffset * mul;
+		if (endPos.x < 0 || endPos.x >= gnScreenWidth || endPos.y < 0 || endPos.y >= gnScreenHeight)
+			continue;
 		DrawString(out, floatingNum.text, endPos, floatingNum.color);
 	}
 }
