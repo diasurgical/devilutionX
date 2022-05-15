@@ -459,13 +459,13 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 /**
  * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-void DrawPlayerIconHelper(const Surface &out, Player &player, missile_graphic_id missileGraphicId, Point position, bool lighting)
+void DrawPlayerIconHelper(const Surface &out, bool locale, missile_graphic_id missileGraphicId, Point position, bool lighting)
 {
 	position.x -= MissileSpriteData[missileGraphicId].animWidth2;
 
 	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
 
-	if (&player == MyPlayer) {
+	if (locale) {
 		Cl2Draw(out, position.x, position.y, cel, 0);
 		return;
 	}
@@ -488,9 +488,9 @@ void DrawPlayerIconHelper(const Surface &out, Player &player, missile_graphic_id
 void DrawPlayerIcons(const Surface &out, Player &player, Point position, bool lighting)
 {
 	if (player.pManaShield)
-		DrawPlayerIconHelper(out, player, MFILE_MANASHLD, position, lighting);
+		DrawPlayerIconHelper(out, &player == MyPlayer, MFILE_MANASHLD, position, lighting);
 	if (player.wReflections > 0)
-		DrawPlayerIconHelper(out, player, MFILE_REFLECT, position + Displacement { 0, 16 }, lighting);
+		DrawPlayerIconHelper(out, &player == MyPlayer, MFILE_REFLECT, position + Displacement { 0, 16 }, lighting);
 }
 
 /**
