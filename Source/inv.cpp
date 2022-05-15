@@ -1591,7 +1591,13 @@ void InvGetItem(Player &player, int ii)
 	CheckQuestItem(player, item);
 	item.updateRequiredStatsCacheForPlayer(player);
 
-	if (item._itype != ItemType::Gold || !GoldAutoPlace(player, item)) {
+	if (item._itype == ItemType::Gold && GoldAutoPlace(player, item)) {
+		if (MyPlayer == &player) {
+			// Non-gold items (or gold when you have a full inventory) go to the hand then provide audible feedback on
+			//  paste. To give the same feedback for auto-placed gold we play the sound effect now.
+			PlaySFX(IS_GOLD);
+		}
+	} else {
 		// The item needs to go into the players hand
 		if (MyPlayer == &player && !player.HoldItem.isEmpty()) {
 			// drop whatever the player is currently holding
