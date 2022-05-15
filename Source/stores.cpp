@@ -580,7 +580,6 @@ bool SmithRepairOk(int i)
 void StartSmithRepair()
 {
 	stextsize = true;
-	bool repairok = false;
 	storenumh = 0;
 
 	for (auto &item : storehold) {
@@ -591,25 +590,21 @@ void StartSmithRepair()
 
 	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
 	if (!helmet.isEmpty() && helmet._iDurability != helmet._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&helmet, -1);
 	}
 
 	auto &armor = myPlayer.InvBody[INVLOC_CHEST];
 	if (!armor.isEmpty() && armor._iDurability != armor._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&armor, -2);
 	}
 
 	auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
 	if (!leftHand.isEmpty() && leftHand._iDurability != leftHand._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&leftHand, -3);
 	}
 
 	auto &rightHand = myPlayer.InvBody[INVLOC_HAND_RIGHT];
 	if (!rightHand.isEmpty() && rightHand._iDurability != rightHand._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&rightHand, -4);
 	}
 
@@ -617,12 +612,11 @@ void StartSmithRepair()
 		if (storenumh >= 48)
 			break;
 		if (SmithRepairOk(i)) {
-			repairok = true;
 			AddStoreHoldRepair(&myPlayer.InvList[i], i);
 		}
 	}
 
-	if (!repairok) {
+	if (storenumh == 0) {
 		stextscrl = false;
 
 		RenderGold = true;
