@@ -30,6 +30,7 @@
 #include "panels/charpanel.hpp"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
+#include "qol/floatingnumbers.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
@@ -979,6 +980,7 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
+				UpdateFloatingNumbersCoordsMap(tilePosition, targetBufferPosition);
 #ifdef _DEBUG
 				DebugCoordsMap[tilePosition.x + tilePosition.y * MAXDUNX] = targetBufferPosition;
 #endif
@@ -1264,6 +1266,7 @@ void DrawView(const Surface &out, Point startPosition)
 #endif
 	DrawMonsterHealthBar(out);
 	DrawItemNameLabels(out);
+	DrawFloatingNumbers(out);
 
 	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);

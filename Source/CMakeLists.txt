@@ -102,6 +102,7 @@ set(libdevilutionx_SRCS
   qol/stash.cpp
   qol/xpbar.cpp
   qol/itemlabels.cpp
+  qol/floatingnumbers.cpp
   utils/console.cpp
   utils/display.cpp
   utils/file_util.cpp

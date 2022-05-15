@@ -57,6 +57,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/chatlog.h"
+#include "qol/floatingnumbers.h"
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
