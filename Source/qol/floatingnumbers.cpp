@@ -132,7 +132,8 @@ void DrawFloatingNumbers(const Surface &out)
 		Point endPos = pos + floatingNum.endOffset * mul;
 		if (endPos.x < 0 || endPos.x >= gnScreenWidth || endPos.y < 0 || endPos.y >= gnScreenHeight)
 			continue;
-		UiFlags shadowStyle = (floatingNum.style & (UiFlags::FontSize12 | UiFlags::FontSize24 | UiFlags::FontSize30)) | UiFlags::ColorBlack;
+		constexpr UiFlags allSizes = UiFlags::FontSize12 | UiFlags::FontSize24 | UiFlags::FontSize30 | UiFlags::FontSize42 | UiFlags::FontSize46;
+		UiFlags shadowStyle = (floatingNum.style & allSizes) | UiFlags::ColorBlack;
 		DrawString(out, floatingNum.text, endPos + Displacement { -1, -1 }, shadowStyle);
 		DrawString(out, floatingNum.text, endPos + Displacement { 1, 1 }, shadowStyle);
 		DrawString(out, floatingNum.text, endPos + Displacement { -1, 1 }, shadowStyle);
