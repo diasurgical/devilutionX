@@ -20,14 +20,16 @@ struct FloatingNumber {
 	Displacement endOffset;
 	std::string text;
 	uint32_t time;
+	uint32_t lastMerge;
 	UiFlags style;
 	FloatingType type;
 	int value;
 	int index;
 };
 
-constexpr int Lifetime = 2000; // in milliseconds;
-constexpr double ScreenPercentToTravel = 20;
+constexpr int Lifetime = 2500; // in milliseconds;
+constexpr int MergeTime = 150; // how long after the number got spawned new numbers will get merged into it (merging resets timer)
+constexpr double ScreenPercentToTravel = 30;
 
 std::deque<FloatingNumber> FloatingQueue;
 std::unordered_map<int, Point> FloatingCoordsMap;
@@ -46,10 +48,9 @@ void ClearExpiredNumbers()
 UiFlags GetFontSizeByDamage(int value)
 {
 	value >>= 6;
-	SDL_Log("VALUE: %d", value);
-	if (value >= 50)
+	if (value >= 500)
 		return UiFlags::FontSize30;
-	if (value >= 25)
+	if (value >= 100)
 		return UiFlags::FontSize24;
 	return UiFlags::FontSize12;
 }
@@ -95,14 +96,15 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 	ClearExpiredNumbers();
 	for (auto &num : FloatingQueue) {
 		//uint32_t timeLeft = floatingNum.time - SDL_GetTicks();
-		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index) {
+		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index && (SDL_GetTicks() - (int)num.lastMerge <= MergeTime)) {
 			num.value += value;
+			num.lastMerge = SDL_GetTicks();
 			UpdateFloatingData(num);
 			return;
 		}
 	}
 	FloatingNumber num = FloatingNumber {
-		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + Lifetime, style, type, value, index
+		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + Lifetime, SDL_GetTicks(), style, type, value, index
 	};
 	UpdateFloatingData(num);
 	num.style |= style; // for handling styles from debug command
@@ -130,10 +132,11 @@ void DrawFloatingNumbers(const Surface &out)
 		Point endPos = pos + floatingNum.endOffset * mul;
 		if (endPos.x < 0 || endPos.x >= gnScreenWidth || endPos.y < 0 || endPos.y >= gnScreenHeight)
 			continue;
-		DrawString(out, floatingNum.text, endPos + Displacement { -1, -1 }, floatingNum.style | UiFlags::ColorBlack);
-		DrawString(out, floatingNum.text, endPos + Displacement { 1, 1 }, floatingNum.style | UiFlags::ColorBlack);
-		DrawString(out, floatingNum.text, endPos + Displacement { -1, 1 }, floatingNum.style | UiFlags::ColorBlack);
-		DrawString(out, floatingNum.text, endPos + Displacement { 1, -1 }, floatingNum.style | UiFlags::ColorBlack);
+		UiFlags shadowStyle = (floatingNum.style & (UiFlags::FontSize12 | UiFlags::FontSize24 | UiFlags::FontSize30)) | UiFlags::ColorBlack;
+		DrawString(out, floatingNum.text, endPos + Displacement { -1, -1 }, shadowStyle);
+		DrawString(out, floatingNum.text, endPos + Displacement { 1, 1 }, shadowStyle);
+		DrawString(out, floatingNum.text, endPos + Displacement { -1, 1 }, shadowStyle);
+		DrawString(out, floatingNum.text, endPos + Displacement { 1, -1 }, shadowStyle);
 		DrawString(out, floatingNum.text, endPos, floatingNum.style);
 	}
 }
