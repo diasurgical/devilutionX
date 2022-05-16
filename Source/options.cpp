@@ -1394,6 +1394,33 @@ uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
 	return DVL_VK_INVALID;
 }
 
+FloatingNumbersOptions::FloatingNumbersOptions()
+    : OptionCategoryBase("FloatingNumbers", N_("Floating Numbers"), N_("Floating Numbers Settings"))
+    , enableFloatingNumbers("Enable floating numbers", OptionEntryFlags::None, N_("Enable floating numbers"), N_("Enables floating numbers on gaining XP / dealing dmg etc."), false)
+    , floatingNumbersFromOthers("Show numbers from other players", OptionEntryFlags::None, N_("Numbers from other players"), N_("Show floating numbers that aren't your own."), false)
+    , floatingNumbersLifetime("Floating numbers lifetime", OptionEntryFlags::None, N_("Floating numbers lifetime"), N_("Time in milliseconds to display floating numbers"), 2500, { 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 7500, 10000 })
+    , maxHorizontalDistance("Max horizontal distance", OptionEntryFlags::None, N_("Horizontal distance %"), N_("What part of the screen numbers can travel horizontally"), 25, { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100 })
+    , maxVerticalDistance("Max vertical distance", OptionEntryFlags::None, N_("Vertical distance %"), N_("What part of the screen numbers can travel vertically"), 25, { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100 })
+    , mergeTime("Merge time", OptionEntryFlags::None, N_("Merge time"), N_("Time in milliseconds during which another number of the same origin and type will get merged into existing one"), 100, { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 })
+    , mediumThreshold("Medium damage threshold", OptionEntryFlags::None, N_("Medium damage threshold"), N_("Damage above this value will be displayed with medium font (size 24)"), 100, { -1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250 })
+    , bigThreshold("Big damage threshold", OptionEntryFlags::None, N_("Big damage threshold"), N_("Damage above this value will be displayed with big font (size 30)"), 300, { -1, 50, 75, 100, 150, 200, 250, 300, 350, 400, 500, 750, 1000 })
+{
+}
+
+std::vector<OptionEntryBase *> FloatingNumbersOptions::GetEntries()
+{
+	return {
+		&enableFloatingNumbers,
+		&floatingNumbersFromOthers,
+		&floatingNumbersLifetime,
+		&maxHorizontalDistance,
+		&maxVerticalDistance,
+		&mergeTime,
+		&mediumThreshold,
+		&bigThreshold,
+	};
+}
+
 namespace {
 constexpr char ResamplerSpeex[] = "Speex";
 constexpr char ResamplerSDL[] = "SDL";

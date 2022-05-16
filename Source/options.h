@@ -660,6 +660,28 @@ private:
 	std::unordered_map<std::string, int> keyNameToKeyID;
 };
 
+struct FloatingNumbersOptions : OptionCategoryBase {
+	FloatingNumbersOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
+	/** @brief Enable floating numbers. */
+	OptionEntryBoolean enableFloatingNumbers;
+	/** @brief Display floating numbers from other players. */
+	OptionEntryBoolean floatingNumbersFromOthers;
+	/** @brief How many milliseconds does a floating number last */
+	OptionEntryInt<int> floatingNumbersLifetime;
+	/** @brief What screen % horizontally can the floating numbers travel */
+	OptionEntryInt<int> maxHorizontalDistance;
+	/** @brief What screen % vertically can the floating numbers travel */
+	OptionEntryInt<int> maxVerticalDistance;
+	/** @brief Max delay in milliseconds during which numbers of the same origin will merge into one */
+	OptionEntryInt<int> mergeTime;
+	/** @brief Medium damage number threshold */
+	OptionEntryInt<int> mediumThreshold;
+	/** @brief Big damage number threshold */
+	OptionEntryInt<int> bigThreshold;
+};
+
 struct Options {
 	StartUpOptions StartUp;
 	DiabloOptions Diablo;
@@ -672,6 +694,7 @@ struct Options {
 	ChatOptions Chat;
 	LanguageOptions Language;
 	KeymapperOptions Keymapper;
+	FloatingNumbersOptions FloatingNumbers;
 
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
@@ -687,6 +710,7 @@ struct Options {
 			&Network,
 			&Chat,
 			&Keymapper,
+			&FloatingNumbers,
 		};
 	}
 };

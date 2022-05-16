@@ -8,6 +8,7 @@
 #include "diablo.h"
 #include "engine/render/text_render.hpp"
 #include "floatingnumbers.h"
+#include "options.h"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -27,10 +28,6 @@ struct FloatingNumber {
 	int index;
 };
 
-constexpr int Lifetime = 2500; // in milliseconds;
-constexpr int MergeTime = 150; // how long after the number got spawned new numbers will get merged into it (merging resets timer)
-constexpr double ScreenPercentToTravel = 30;
-
 std::deque<FloatingNumber> FloatingQueue;
 std::unordered_map<int, Point> FloatingCoordsMap;
 
@@ -48,9 +45,9 @@ void ClearExpiredNumbers()
 UiFlags GetFontSizeByDamage(int value)
 {
 	value >>= 6;
-	if (value >= 500)
+	if (*sgOptions.FloatingNumbers.bigThreshold != -1 && value >= *sgOptions.FloatingNumbers.bigThreshold)
 		return UiFlags::FontSize30;
-	if (value >= 100)
+	if (*sgOptions.FloatingNumbers.mediumThreshold != -1 && value >= *sgOptions.FloatingNumbers.mediumThreshold)
 		return UiFlags::FontSize24;
 	return UiFlags::FontSize12;
 }
@@ -86,8 +83,12 @@ void UpdateFloatingData(FloatingNumber &num)
 
 void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, int index, UiFlags style)
 {
-	double distanceX = gnScreenWidth * ScreenPercentToTravel / 100;
-	double distanceY = gnScreenHeight * ScreenPercentToTravel / 100;
+	if (!*sgOptions.FloatingNumbers.enableFloatingNumbers)
+		return;
+	if (!*sgOptions.FloatingNumbers.floatingNumbersFromOthers && !isMyPlayer)
+		return;
+	double distanceX = gnScreenWidth * *sgOptions.FloatingNumbers.maxHorizontalDistance / 100.0;
+	double distanceY = gnScreenHeight * *sgOptions.FloatingNumbers.maxVerticalDistance / 100.0;
 	double angle = (500 + rand() % 500) * 0.0062831853;
 	int xCoord = cos(angle) * distanceX;
 	int yCoord = sin(angle) * distanceY;
@@ -95,7 +96,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 
 	ClearExpiredNumbers();
 	for (auto &num : FloatingQueue) {
-		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index && (SDL_GetTicks() - (int)num.lastMerge <= MergeTime)) {
+		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index && (SDL_GetTicks() - (int)num.lastMerge <= *sgOptions.FloatingNumbers.mergeTime)) {
 			num.value += value;
 			num.lastMerge = SDL_GetTicks();
 			UpdateFloatingData(num);
@@ -103,7 +104,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 		}
 	}
 	FloatingNumber num = FloatingNumber {
-		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + Lifetime, SDL_GetTicks(), style, type, value, index
+		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + *sgOptions.FloatingNumbers.floatingNumbersLifetime, SDL_GetTicks(), style, type, value, index
 	};
 	UpdateFloatingData(num);
 	num.style |= style; // for handling styles from debug command
@@ -112,6 +113,8 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 
 void DrawFloatingNumbers(const Surface &out)
 {
+	if (!*sgOptions.FloatingNumbers.enableFloatingNumbers)
+		return;
 	ClearExpiredNumbers();
 	for (auto &floatingNum : FloatingQueue) {
 		Point pos = floatingNum.startPos;
@@ -127,7 +130,7 @@ void DrawFloatingNumbers(const Surface &out)
 		}
 		pos.x -= GetLineWidth(floatingNum.text) / 2;
 		uint32_t timeLeft = floatingNum.time - SDL_GetTicks();
-		float mul = 1 - (timeLeft / (float)Lifetime);
+		float mul = 1 - (timeLeft / (float)*sgOptions.FloatingNumbers.floatingNumbersLifetime);
 		Point endPos = pos + floatingNum.endOffset * mul;
 		if (endPos.x < 0 || endPos.x >= gnScreenWidth || endPos.y < 0 || endPos.y >= gnScreenHeight)
 			continue;
@@ -143,11 +146,15 @@ void DrawFloatingNumbers(const Surface &out)
 
 void UpdateFloatingNumbersCoordsMap(Point dungeon, Point screen)
 {
+	if (!*sgOptions.FloatingNumbers.enableFloatingNumbers)
+		return;
 	FloatingCoordsMap[dungeon.x + dungeon.y * MAXDUNX] = screen;
 }
 
 void ClearFloatingNumbersCoordsMap()
 {
+	if (!*sgOptions.FloatingNumbers.enableFloatingNumbers)
+		return;
 	FloatingCoordsMap.clear();
 }
 
