@@ -3341,7 +3341,7 @@ bool OperateShrineGlowing(int pnum)
 	else
 		myPlayer._pExperience = 0;
 
-	AddFloatingNumber(pnum == MyPlayerId, MyPlayer->position.tile, FloatingType::Experience, static_cast<int32_t> (myPlayer._pExperience - oldExp), -1);
+	AddFloatingNumber(pnum == MyPlayerId, MyPlayer->position.tile, FloatingType::Experience, static_cast<int32_t>(myPlayer._pExperience - oldExp), -1);
 
 	if (*sgOptions.Gameplay.experienceBar)
 		force_redraw = 255;

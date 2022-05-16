@@ -932,7 +932,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
-	{ "float", "Displays a floating number using (1 << {value}) UI Style - can use multiple values ", "{value}", &DebugCmdDisplayFloatingNumber},
+	{ "float", "Displays a floating number using (1 << {value}) UI Style - can use multiple values ", "{value}", &DebugCmdDisplayFloatingNumber },
 };
 
 } // namespace

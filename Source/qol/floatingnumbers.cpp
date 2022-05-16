@@ -3,7 +3,7 @@
 #include <deque>
 #include <fmt/format.h>
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 
 #include "diablo.h"
 #include "engine/render/text_render.hpp"
@@ -55,7 +55,7 @@ UiFlags GetFontSizeByDamage(int value)
 	return UiFlags::FontSize12;
 }
 
-void UpdateFloatingData(FloatingNumber& num)
+void UpdateFloatingData(FloatingNumber &num)
 {
 	num.style &= ~(UiFlags::FontSize12 | UiFlags::FontSize24 | UiFlags::FontSize30);
 	num.text = fmt::format("{:d}", num.value >> 6);
@@ -95,7 +95,6 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 
 	ClearExpiredNumbers();
 	for (auto &num : FloatingQueue) {
-		//uint32_t timeLeft = floatingNum.time - SDL_GetTicks();
 		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index && (SDL_GetTicks() - (int)num.lastMerge <= MergeTime)) {
 			num.value += value;
 			num.lastMerge = SDL_GetTicks();
