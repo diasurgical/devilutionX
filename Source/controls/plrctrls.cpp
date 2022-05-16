@@ -181,7 +181,7 @@ void FindItemOrObject()
 			// No object or non-interactive object
 			continue;
 		}
-		if (targetPosition == futurePosition && object->_oDoorFlag) {
+		if (targetPosition == futurePosition && object->IsDoor()) {
 			continue; // Ignore doorway so we don't get stuck behind barrels
 		}
 

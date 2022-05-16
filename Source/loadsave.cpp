@@ -792,7 +792,7 @@ void LoadObject(LoadHelper &file, Object &object)
 	file.Skip(3); // Alignment
 	object._oPreFlag = file.NextBool32();
 	object._oTrapFlag = file.NextBool32();
-	object._oDoorFlag = file.NextBool32();
+	file.Skip<uint32_t>(); // _oDoorFlag
 	object._olid = file.NextLE<int32_t>();
 	object._oRndSeed = file.NextLE<uint32_t>();
 	object._oVar1 = file.NextLE<int32_t>();
@@ -1514,7 +1514,7 @@ void SaveObject(SaveHelper &file, const Object &object)
 	file.Skip(3); // Alignment
 	file.WriteLE<uint32_t>(object._oPreFlag ? 1 : 0);
 	file.WriteLE<uint32_t>(object._oTrapFlag ? 1 : 0);
-	file.WriteLE<uint32_t>(object._oDoorFlag ? 1 : 0);
+	file.WriteLE<uint32_t>(object.IsDoor() ? 1 : 0);
 	file.WriteLE<int32_t>(object._olid);
 	file.WriteLE<uint32_t>(object._oRndSeed);
 	file.WriteLE<int32_t>(object._oVar1);

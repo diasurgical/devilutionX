@@ -48,7 +48,6 @@ struct Object {
 	uint8_t _oSelFlag;
 	bool _oPreFlag;
 	bool _oTrapFlag;
-	bool _oDoorFlag;
 	int _olid;
 	/**
 	 * Saves the absolute value of the engine state (typically from a call to AdvanceRndSeed()) to later use when spawning items from a container object
@@ -137,7 +136,6 @@ struct Object {
 	constexpr void InitializeDoor()
 	{
 		_oPreFlag = false;
-		_oDoorFlag = true;
 		_oVar4 = DOOR_CLOSED;
 		_oSelFlag = 3;
 		_oMissFlag = false;
@@ -321,7 +319,7 @@ void TryDisarm(const Player &player, Object &target);
 int ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i);
 void SyncOpObject(int pnum, int cmd, int i);
-void DeltaSyncOpObject(int i);
+void DeltaSyncOpObject(Object &object);
 void BreakObject(int pnum, Object &object);
 void SyncBreakObj(int pnum, Object &object);
 void SyncObjectAnim(Object &object);

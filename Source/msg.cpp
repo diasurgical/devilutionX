@@ -1125,7 +1125,7 @@ DWORD OnOperateObjectTile(const TCmd *pCmd, Player &player)
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
 		Object &object = Objects[message.wParam1];
-		MakePlrPath(player, position, !object._oSolidFlag && !object._oDoorFlag);
+		MakePlrPath(player, position, !object._oSolidFlag && !object.IsDoor());
 		player.destAction = ACTION_OPERATE;
 		player.destParam1 = message.wParam1;
 	}
@@ -1140,7 +1140,7 @@ DWORD OnDisarm(const TCmd *pCmd, Player &player)
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
 		Object &object = Objects[message.wParam1];
-		MakePlrPath(player, position, !object._oSolidFlag && !object._oDoorFlag);
+		MakePlrPath(player, position, !object._oSolidFlag && !object.IsDoor());
 		player.destAction = ACTION_DISARM;
 		player.destParam1 = message.wParam1;
 	}
@@ -2376,7 +2376,7 @@ void DeltaLoadLevel()
 			case CMD_OPENDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				DeltaSyncOpObject(i);
+				DeltaSyncOpObject(Objects[i]);
 				break;
 			case CMD_BREAKOBJ:
 				SyncBreakObj(-1, Objects[i]);
