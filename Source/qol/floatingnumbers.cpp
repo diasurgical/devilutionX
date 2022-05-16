@@ -19,7 +19,7 @@ struct FloatingNumber {
 	Displacement endOffset;
 	std::string text;
 	uint32_t time;
-	UiFlags color;
+	UiFlags style;
 };
 
 constexpr int Lifetime = 2000; // in milliseconds;
@@ -30,7 +30,7 @@ std::unordered_map<int, Point> FloatingCoordsMap;
 
 } // namespace
 
-void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value)
+void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, UiFlags style)
 {
 	double distanceX = gnScreenWidth * ScreenPercentToTravel / 100;
 	double distanceY = gnScreenHeight * ScreenPercentToTravel / 100;
@@ -39,7 +39,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value)
 	int yCoord = sin(angle) * distanceY;
 	Displacement endOffset = { xCoord, yCoord };
 	std::string text = fmt::format("{:d}", value);
-	UiFlags color = UiFlags::ColorBlue;
+	UiFlags color = UiFlags::None;
 
 	switch (type) {
 	case FloatingType::Experience:
@@ -62,7 +62,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value)
 		color = UiFlags::ColorDialogYellow;
 		break;
 	}
-	FloatingQueue.push_back(FloatingNumber { pos, endOffset, text, SDL_GetTicks() + Lifetime, color });
+	FloatingQueue.push_back(FloatingNumber { pos, endOffset, text, SDL_GetTicks() + Lifetime, color | style });
 }
 
 void DrawFloatingNumbers(const Surface &out)
@@ -92,11 +92,11 @@ void DrawFloatingNumbers(const Surface &out)
 		Point endPos = pos + floatingNum.endOffset * mul;
 		if (endPos.x < 0 || endPos.x >= gnScreenWidth || endPos.y < 0 || endPos.y >= gnScreenHeight)
 			continue;
-		DrawString(out, floatingNum.text, endPos + Displacement { -1, -1 }, UiFlags::ColorBlack);
-		DrawString(out, floatingNum.text, endPos + Displacement { 1, 1 }, UiFlags::ColorBlack);
-		DrawString(out, floatingNum.text, endPos + Displacement { -1, 1 }, UiFlags::ColorBlack);
-		DrawString(out, floatingNum.text, endPos + Displacement { 1, -1 }, UiFlags::ColorBlack);
-		DrawString(out, floatingNum.text, endPos, floatingNum.color);
+		DrawString(out, floatingNum.text, endPos + Displacement { -1, -1 }, floatingNum.style | UiFlags::ColorBlack);
+		DrawString(out, floatingNum.text, endPos + Displacement { 1, 1 }, floatingNum.style | UiFlags::ColorBlack);
+		DrawString(out, floatingNum.text, endPos + Displacement { -1, 1 }, floatingNum.style | UiFlags::ColorBlack);
+		DrawString(out, floatingNum.text, endPos + Displacement { 1, -1 }, floatingNum.style | UiFlags::ColorBlack);
+		DrawString(out, floatingNum.text, endPos, floatingNum.style);
 	}
 }
 

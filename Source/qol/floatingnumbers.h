@@ -12,6 +12,7 @@
 namespace devilution {
 
 enum class FloatingType : uint8_t {
+	None,
 	Experience,
 	DamagePhysical,
 	DamageFire,
@@ -20,7 +21,7 @@ enum class FloatingType : uint8_t {
 	DamageAcid,
 };
 
-void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value);
+void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, UiFlags style = UiFlags::None);
 void DrawFloatingNumbers(const Surface &out);
 void UpdateFloatingNumbersCoordsMap(Point dungeon, Point screen);
 void ClearFloatingNumbersCoordsMap();

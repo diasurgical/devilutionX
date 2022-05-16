@@ -888,7 +888,12 @@ std::string DebugCmdToggleFPS(const string_view parameter)
 
 std::string DebugCmdDisplayFloatingNumber(const string_view parameter)
 {
-	AddFloatingNumber(true, MyPlayer->position.tile, static_cast<FloatingType>(atoi(parameter.data())), 666);
+	UiFlags style = UiFlags::None;
+	std::stringstream paramsStream(parameter.data());
+	for (std::string tmp; std::getline(paramsStream, tmp, ' ');) {
+		style |= static_cast<UiFlags>(1 << atoi(tmp.c_str()));
+	}
+	AddFloatingNumber(true, MyPlayer->position.tile, FloatingType::None, 666, style);
 	return "";
 }
 
@@ -927,7 +932,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
-	{ "float", "Displays a floating number ", "{type}", &DebugCmdDisplayFloatingNumber},
+	{ "float", "Displays a floating number using (1 << {value}) UI Style - can use multiple values ", "{value}", &DebugCmdDisplayFloatingNumber},
 };
 
 } // namespace
