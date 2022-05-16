@@ -22,8 +22,8 @@ struct FloatingNumber {
 	UiFlags color;
 };
 
-constexpr int Lifetime = 3000; // in milliseconds;
-constexpr double ScreenPercentToTravel = 30;
+constexpr int Lifetime = 2000; // in milliseconds;
+constexpr double ScreenPercentToTravel = 20;
 
 std::deque<FloatingNumber> FloatingQueue;
 std::unordered_map<int, Point> FloatingCoordsMap;
@@ -34,7 +34,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value)
 {
 	double distanceX = gnScreenWidth * ScreenPercentToTravel / 100;
 	double distanceY = gnScreenHeight * ScreenPercentToTravel / 100;
-	double angle = (rand() % 1000) * 0.0062831853;
+	double angle = (500 + rand() % 500) * 0.0062831853;
 	int xCoord = cos(angle) * distanceX;
 	int yCoord = sin(angle) * distanceY;
 	Displacement endOffset = { xCoord, yCoord };
@@ -74,7 +74,7 @@ void DrawFloatingNumbers(const Surface &out)
 		else
 			break;
 	}
-	for (auto & floatingNum : FloatingQueue) {
+	for (auto &floatingNum : FloatingQueue) {
 		Point pos = floatingNum.startPos;
 		pos = FloatingCoordsMap[pos.x + pos.y * MAXDUNX];
 		if (pos == Point { 0, 0 })
@@ -92,6 +92,10 @@ void DrawFloatingNumbers(const Surface &out)
 		Point endPos = pos + floatingNum.endOffset * mul;
 		if (endPos.x < 0 || endPos.x >= gnScreenWidth || endPos.y < 0 || endPos.y >= gnScreenHeight)
 			continue;
+		DrawString(out, floatingNum.text, endPos + Displacement { -1, -1 }, UiFlags::ColorBlack);
+		DrawString(out, floatingNum.text, endPos + Displacement { 1, 1 }, UiFlags::ColorBlack);
+		DrawString(out, floatingNum.text, endPos + Displacement { -1, 1 }, UiFlags::ColorBlack);
+		DrawString(out, floatingNum.text, endPos + Displacement { 1, -1 }, UiFlags::ColorBlack);
 		DrawString(out, floatingNum.text, endPos, floatingNum.color);
 	}
 }
@@ -99,6 +103,30 @@ void DrawFloatingNumbers(const Surface &out)
 void UpdateFloatingNumbersCoordsMap(Point dungeon, Point screen)
 {
 	FloatingCoordsMap[dungeon.x + dungeon.y * MAXDUNX] = screen;
+}
+
+void ClearFloatingNumbersCoordsMap()
+{
+	FloatingCoordsMap.clear();
+}
+
+FloatingType GetFloatingNumberTypeFromMissile(missile_resistance mir)
+{
+	switch (mir) {
+	case MISR_FIRE:
+		return FloatingType::DamageFire;
+		break;
+	case MISR_LIGHTNING:
+		return FloatingType::DamageLightning;
+		break;
+	case MISR_MAGIC:
+		return FloatingType::DamageMagic;
+		break;
+	case MISR_ACID:
+		return FloatingType::DamageAcid;
+		break;
+	}
+	return FloatingType::DamagePhysical;
 }
 
 } // namespace devilution

@@ -248,22 +248,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (resist)
 		dam >>= 2;
 
-	FloatingType type = FloatingType::DamagePhysical;
-	switch (mir) {
-	case MISR_FIRE:
-		type = FloatingType::DamageFire;
-		break;
-	case MISR_LIGHTNING:
-		type = FloatingType::DamageLightning;
-		break;
-	case MISR_MAGIC:
-		type = FloatingType::DamageMagic;
-		break;
-	case MISR_ACID:
-		type = FloatingType::DamageAcid;
-		break;
-	}
-	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, type, dam >> 6);
+	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, GetFloatingNumberTypeFromMissile(mir), dam >> 6);
 
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;
@@ -910,9 +895,12 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	if (!shift)
 		dam <<= 6;
 	if (resist)
-		monster._mhitpoints -= dam / 4;
-	else
-		monster._mhitpoints -= dam;
+		dam >>= 2;
+
+	AddFloatingNumber(true, monster.position.tile, GetFloatingNumberTypeFromMissile(mir), dam >> 6);
+
+	monster._mhitpoints -= dam;
+
 #ifdef _DEBUG
 	if (DebugGodMode)
 		monster._mhitpoints = 0;

@@ -892,7 +892,6 @@ std::string DebugCmdDisplayFloatingNumber(const string_view parameter)
 	return "";
 }
 
-
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },

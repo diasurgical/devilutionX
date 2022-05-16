@@ -1194,6 +1194,7 @@ void DrawGame(const Surface &fullOut, Point position)
  */
 void DrawView(const Surface &out, Point startPosition)
 {
+	ClearFloatingNumbersCoordsMap();
 #ifdef _DEBUG
 	DebugCoordsMap.clear();
 #endif
