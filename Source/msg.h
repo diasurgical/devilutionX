@@ -774,7 +774,6 @@ struct TBuffer {
 	byte bData[4096];
 };
 
-extern bool deltaload;
 extern uint8_t gbBufferMsgs;
 extern int dwRecCount;
 

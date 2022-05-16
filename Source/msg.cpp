@@ -37,7 +37,6 @@
 
 namespace devilution {
 
-bool deltaload;
 uint8_t gbBufferMsgs;
 int dwRecCount;
 
@@ -1614,7 +1613,7 @@ DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel) {
-			SyncBreakObj(message.wParam1, Objects[message.wParam2]);
+			SyncBreakObj(message.wParam1, Objects[message.wParam2], false);
 		}
 		DeltaSyncObject(message.wParam2, CMD_BREAKOBJ, playerLevel);
 	}
@@ -2102,7 +2101,6 @@ void delta_init()
 	memset(&sgJunk, 0xFF, sizeof(sgJunk));
 	memset(sgLevels, 0xFF, sizeof(sgLevels));
 	memset(sgLocals, 0, sizeof(sgLocals));
-	deltaload = false;
 }
 
 void delta_kill_monster(int mi, Point position, uint8_t bLevel)
@@ -2263,7 +2261,6 @@ void DeltaLoadLevel()
 	if (!gbIsMultiplayer)
 		return;
 
-	deltaload = true;
 	if (currlevel != 0) {
 		for (int i = 0; i < ActiveMonsterCount; i++) {
 			if (sgLevels[currlevel].monster[i]._mx == 0xFF)
@@ -2379,7 +2376,7 @@ void DeltaLoadLevel()
 				DeltaSyncOpObject(Objects[i]);
 				break;
 			case CMD_BREAKOBJ:
-				SyncBreakObj(-1, Objects[i]);
+				SyncBreakObj(-1, Objects[i], true);
 				break;
 			default:
 				break;
@@ -2389,11 +2386,10 @@ void DeltaLoadLevel()
 		for (int i = 0; i < ActiveObjectCount; i++) {
 			Object &object = Objects[ActiveObjects[i]];
 			if (object.IsTrap()) {
-				OperateTrap(object);
+				OperateTrap(object, true);
 			}
 		}
 	}
-	deltaload = false;
 }
 
 void NetSendCmd(bool bHiPri, _cmd_id bCmd)

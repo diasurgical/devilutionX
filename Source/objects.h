@@ -309,7 +309,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty);
  * @param objPos tile coordinates
  */
 void AddObject(_object_id objType, Point objPos);
-void OperateTrap(Object &trap);
+void OperateTrap(Object &trap, bool deltaload);
 void ProcessObjects();
 void RedoPlayerVision();
 void MonstCheckDoors(Monster &monster);
@@ -321,7 +321,7 @@ void OperateObject(int pnum, int i);
 void SyncOpObject(int pnum, int cmd, int i);
 void DeltaSyncOpObject(Object &object);
 void BreakObject(int pnum, Object &object);
-void SyncBreakObj(int pnum, Object &object);
+void SyncBreakObj(int pnum, Object &object, bool deltaload);
 void SyncObjectAnim(Object &object);
 /**
  * @brief Updates the text drawn in the info box to describe the given object

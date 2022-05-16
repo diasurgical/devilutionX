@@ -1982,8 +1982,7 @@ void OperateLever(int i, bool sendflag)
 		return;
 	}
 
-	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, object.position);
+	PlaySfxLoc(IS_LEVER, object.position);
 
 	TriggerLever(object);
 
@@ -2039,8 +2038,7 @@ void OperateBook(int pnum, Object &book)
 		if (player._pSplLvl[SPL_GUARDIAN] < MAX_SPELL_LEVEL)
 			player._pSplLvl[SPL_GUARDIAN]++;
 		Quests[Q_SCHAMB]._qactive = QUEST_DONE;
-		if (!deltaload)
-			PlaySfxLoc(IS_QUESTDN, book.position);
+		PlaySfxLoc(IS_QUESTDN, book.position);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
 		    player.position.tile,
@@ -2280,9 +2278,7 @@ void OperateSlainHero(Player &player, int i, bool sendmsg)
 
 void OperateTrapLever(Object &flameLever)
 {
-	if (!deltaload) {
-		PlaySfxLoc(IS_LEVER, flameLever.position);
-	}
+	PlaySfxLoc(IS_LEVER, flameLever.position);
 
 	if (flameLever._oAnimFrame == 1) {
 		flameLever._oAnimFrame = 2;
@@ -3632,12 +3628,11 @@ void BreakCrux(Object &crux)
 	if (!AreAllCruxesOfTypeBroken(crux._oVar8))
 		return;
 
-	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, crux.position);
+	PlaySfxLoc(IS_LEVER, crux.position);
 	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
-void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendmsg)
+void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendmsg, bool deltaload)
 {
 	if (barrel._oSelFlag == 0)
 		return;
@@ -3691,7 +3686,7 @@ void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendms
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = ObjectAtPosition({ xp, yp }, false);
 				if (adjacentObject != nullptr && adjacentObject->isExplosive() && !adjacentObject->IsBroken()) {
-					BreakBarrel(pnum, *adjacentObject, dam, true, sendmsg);
+					BreakBarrel(pnum, *adjacentObject, dam, true, sendmsg, deltaload);
 				}
 			}
 		}
@@ -4297,7 +4292,7 @@ void AddObject(_object_id objType, Point objPos)
 	ActiveObjectCount++;
 }
 
-void OperateTrap(Object &trap)
+void OperateTrap(Object &trap, bool deltaload)
 {
 	if (trap._oVar4 != 0)
 		return;
@@ -4406,7 +4401,7 @@ void ProcessObjects()
 			break;
 		case OBJ_TRAPL:
 		case OBJ_TRAPR:
-			OperateTrap(object);
+			OperateTrap(object, false);
 			break;
 		case OBJ_MCIRCLE1:
 		case OBJ_MCIRCLE2:
@@ -4828,16 +4823,16 @@ void BreakObject(int pnum, Object &object)
 	}
 
 	if (object.IsBarrel()) {
-		BreakBarrel(pnum, object, objdam, false, true);
+		BreakBarrel(pnum, object, objdam, false, true, false);
 	} else if (object.IsCrux()) {
 		BreakCrux(object);
 	}
 }
 
-void SyncBreakObj(int pnum, Object &object)
+void SyncBreakObj(int pnum, Object &object, bool deltaload)
 {
 	if (object.IsBarrel()) {
-		BreakBarrel(pnum, object, 0, true, false);
+		BreakBarrel(pnum, object, 0, true, false, deltaload);
 	}
 }
 
