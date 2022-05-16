@@ -115,16 +115,12 @@ FloatingType GetFloatingNumberTypeFromMissile(missile_resistance mir)
 	switch (mir) {
 	case MISR_FIRE:
 		return FloatingType::DamageFire;
-		break;
 	case MISR_LIGHTNING:
 		return FloatingType::DamageLightning;
-		break;
 	case MISR_MAGIC:
 		return FloatingType::DamageMagic;
-		break;
 	case MISR_ACID:
 		return FloatingType::DamageAcid;
-		break;
 	}
 	return FloatingType::DamagePhysical;
 }
