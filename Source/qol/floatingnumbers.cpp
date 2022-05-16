@@ -15,11 +15,15 @@ namespace devilution {
 namespace {
 
 struct FloatingNumber {
+	bool myDmg;
 	Point startPos;
 	Displacement endOffset;
 	std::string text;
 	uint32_t time;
 	UiFlags style;
+	FloatingType type;
+	int value;
+	int index;
 };
 
 constexpr int Lifetime = 2000; // in milliseconds;
@@ -28,44 +32,7 @@ constexpr double ScreenPercentToTravel = 20;
 std::deque<FloatingNumber> FloatingQueue;
 std::unordered_map<int, Point> FloatingCoordsMap;
 
-} // namespace
-
-void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, UiFlags style)
-{
-	double distanceX = gnScreenWidth * ScreenPercentToTravel / 100;
-	double distanceY = gnScreenHeight * ScreenPercentToTravel / 100;
-	double angle = (500 + rand() % 500) * 0.0062831853;
-	int xCoord = cos(angle) * distanceX;
-	int yCoord = sin(angle) * distanceY;
-	Displacement endOffset = { xCoord, yCoord };
-	std::string text = fmt::format("{:d}", value);
-	UiFlags color = UiFlags::None;
-
-	switch (type) {
-	case FloatingType::Experience:
-		color = UiFlags::ColorWhite;
-		text = fmt::format("{:d} XP", value);
-		break;
-	case FloatingType::DamagePhysical:
-		color = UiFlags::ColorGold;
-		break;
-	case FloatingType::DamageFire:
-		color = UiFlags::ColorRed;
-		break;
-	case FloatingType::DamageLightning:
-		color = UiFlags::ColorBlue;
-		break;
-	case FloatingType::DamageMagic:
-		color = UiFlags::ColorWhitegold;
-		break;
-	case FloatingType::DamageAcid:
-		color = UiFlags::ColorDialogYellow;
-		break;
-	}
-	FloatingQueue.push_back(FloatingNumber { pos, endOffset, text, SDL_GetTicks() + Lifetime, color | style });
-}
-
-void DrawFloatingNumbers(const Surface &out)
+void ClearExpiredNumbers()
 {
 	while (!FloatingQueue.empty()) {
 		FloatingNumber &num = FloatingQueue.front();
@@ -74,6 +41,77 @@ void DrawFloatingNumbers(const Surface &out)
 		else
 			break;
 	}
+}
+
+UiFlags GetFontSizeByDamage(int value)
+{
+	value >>= 6;
+	SDL_Log("VALUE: %d", value);
+	if (value >= 50)
+		return UiFlags::FontSize30;
+	if (value >= 25)
+		return UiFlags::FontSize24;
+	return UiFlags::FontSize12;
+}
+
+void UpdateFloatingData(FloatingNumber& num)
+{
+	num.style &= ~(UiFlags::FontSize12 | UiFlags::FontSize24 | UiFlags::FontSize30);
+	num.text = fmt::format("{:d}", num.value >> 6);
+	switch (num.type) {
+	case FloatingType::Experience:
+		num.style |= UiFlags::ColorWhite | UiFlags::FontSize12;
+		num.text = fmt::format("{:d} XP", num.value);
+		break;
+	case FloatingType::DamagePhysical:
+		num.style |= UiFlags::ColorGold | GetFontSizeByDamage(num.value);
+		break;
+	case FloatingType::DamageFire:
+		num.style |= UiFlags::ColorRed | GetFontSizeByDamage(num.value);
+		break;
+	case FloatingType::DamageLightning:
+		num.style |= UiFlags::ColorBlue | GetFontSizeByDamage(num.value);
+		break;
+	case FloatingType::DamageMagic:
+		num.style |= UiFlags::ColorWhitegold | GetFontSizeByDamage(num.value);
+		break;
+	case FloatingType::DamageAcid:
+		num.style |= UiFlags::ColorDialogYellow | GetFontSizeByDamage(num.value);
+		break;
+	}
+}
+
+} // namespace
+
+void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, int index, UiFlags style)
+{
+	double distanceX = gnScreenWidth * ScreenPercentToTravel / 100;
+	double distanceY = gnScreenHeight * ScreenPercentToTravel / 100;
+	double angle = (500 + rand() % 500) * 0.0062831853;
+	int xCoord = cos(angle) * distanceX;
+	int yCoord = sin(angle) * distanceY;
+	Displacement endOffset = { xCoord, yCoord };
+
+	ClearExpiredNumbers();
+	for (auto &num : FloatingQueue) {
+		//uint32_t timeLeft = floatingNum.time - SDL_GetTicks();
+		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index) {
+			num.value += value;
+			UpdateFloatingData(num);
+			return;
+		}
+	}
+	FloatingNumber num = FloatingNumber {
+		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + Lifetime, style, type, value, index
+	};
+	UpdateFloatingData(num);
+	num.style |= style; // for handling styles from debug command
+	FloatingQueue.push_back(num);
+}
+
+void DrawFloatingNumbers(const Surface &out)
+{
+	ClearExpiredNumbers();
 	for (auto &floatingNum : FloatingQueue) {
 		Point pos = floatingNum.startPos;
 		pos = FloatingCoordsMap[pos.x + pos.y * MAXDUNX];

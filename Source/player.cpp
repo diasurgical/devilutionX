@@ -985,7 +985,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 #endif
 
-	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, FloatingType::DamagePhysical, dam >> 6);
+	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, FloatingType::DamagePhysical, dam, m);
 
 	if ((monster._mhitpoints >> 6) <= 0) {
 		M_StartKill(m, pnum);
@@ -2761,7 +2761,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		return;
 	}
 
-	AddFloatingNumber(pnum == MyPlayerId, MyPlayer->position.tile, FloatingType::Experience, clampedExp);
+	AddFloatingNumber(pnum == MyPlayerId, MyPlayer->position.tile, FloatingType::Experience, clampedExp, -1);
 
 	// Increase player level if applicable
 	int newLvl = 0;

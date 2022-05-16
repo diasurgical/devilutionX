@@ -46,6 +46,8 @@ enum text_color : uint8_t {
 	ColorWhitegold,
 	ColorRed,
 	ColorBlue,
+	ColorOrange,
+	ColorBrown,
 
 	ColorButtonface,
 	ColorButtonpushed,

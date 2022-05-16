@@ -21,7 +21,7 @@ enum class FloatingType : uint8_t {
 	DamageAcid,
 };
 
-void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, UiFlags style = UiFlags::None);
+void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, int index, UiFlags style = UiFlags::None);
 void DrawFloatingNumbers(const Surface &out);
 void UpdateFloatingNumbersCoordsMap(Point dungeon, Point screen);
 void ClearFloatingNumbersCoordsMap();

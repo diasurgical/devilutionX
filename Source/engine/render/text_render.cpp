@@ -45,7 +45,7 @@ constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 constexpr int SmallFontTallLineHeight = 16;
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
-std::array<const char *, 14> ColorTranlations = {
+std::array<const char *, 16> ColorTranlations = {
 	"fonts\\goldui.trn",
 	"fonts\\grayui.trn",
 	"fonts\\golduis.trn",
@@ -61,6 +61,9 @@ std::array<const char *, 14> ColorTranlations = {
 	"fonts\\whitegold.trn",
 	"fonts\\red.trn",
 	"fonts\\blue.trn",
+
+	"fonts\\orange.trn",
+	"fonts\\brown.trn",
 
 	"fonts\\buttonface.trn",
 	"fonts\\buttonpushed.trn",
@@ -86,29 +89,33 @@ text_color GetColorFromFlags(UiFlags flags)
 {
 	if (HasAnyOf(flags, UiFlags::ColorWhite))
 		return ColorWhite;
-	else if (HasAnyOf(flags, UiFlags::ColorBlue))
+	if (HasAnyOf(flags, UiFlags::ColorBlue))
 		return ColorBlue;
-	else if (HasAnyOf(flags, UiFlags::ColorRed))
+	if (HasAnyOf(flags, UiFlags::ColorRed))
 		return ColorRed;
-	else if (HasAnyOf(flags, UiFlags::ColorBlack))
+	if (HasAnyOf(flags, UiFlags::ColorBlack))
 		return ColorBlack;
-	else if (HasAnyOf(flags, UiFlags::ColorGold))
+	if (HasAnyOf(flags, UiFlags::ColorGold))
 		return ColorGold;
-	else if (HasAnyOf(flags, UiFlags::ColorUiGold))
+	if (HasAnyOf(flags, UiFlags::ColorOrange))
+		return ColorOrange;
+	if (HasAnyOf(flags, UiFlags::ColorBrown))
+		return ColorBrown;
+	if (HasAnyOf(flags, UiFlags::ColorUiGold))
 		return ColorUiGold;
-	else if (HasAnyOf(flags, UiFlags::ColorUiSilver))
+	if (HasAnyOf(flags, UiFlags::ColorUiSilver))
 		return ColorUiSilver;
-	else if (HasAnyOf(flags, UiFlags::ColorUiGoldDark))
+	if (HasAnyOf(flags, UiFlags::ColorUiGoldDark))
 		return ColorUiGoldDark;
-	else if (HasAnyOf(flags, UiFlags::ColorUiSilverDark))
+	if (HasAnyOf(flags, UiFlags::ColorUiSilverDark))
 		return ColorUiSilverDark;
-	else if (HasAnyOf(flags, UiFlags::ColorDialogWhite))
+	if (HasAnyOf(flags, UiFlags::ColorDialogWhite))
 		return ColorDialogWhite;
-	else if (HasAnyOf(flags, UiFlags::ColorDialogYellow))
+	if (HasAnyOf(flags, UiFlags::ColorDialogYellow))
 		return ColorDialogYellow;
-	else if (HasAnyOf(flags, UiFlags::ColorButtonface))
+	if (HasAnyOf(flags, UiFlags::ColorButtonface))
 		return ColorButtonface;
-	else if (HasAnyOf(flags, UiFlags::ColorButtonpushed))
+	if (HasAnyOf(flags, UiFlags::ColorButtonpushed))
 		return ColorButtonpushed;
 
 	return ColorWhitegold;

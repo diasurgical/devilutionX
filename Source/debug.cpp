@@ -893,7 +893,7 @@ std::string DebugCmdDisplayFloatingNumber(const string_view parameter)
 	for (std::string tmp; std::getline(paramsStream, tmp, ' ');) {
 		style |= static_cast<UiFlags>(1 << atoi(tmp.c_str()));
 	}
-	AddFloatingNumber(true, MyPlayer->position.tile, FloatingType::None, 666, style);
+	AddFloatingNumber(true, MyPlayer->position.tile, FloatingType::None, 666 << 6, -1, style);
 	return "";
 }
 
