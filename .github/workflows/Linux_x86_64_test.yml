@@ -35,5 +35,6 @@ jobs:
       - name: Run tests
         run: cd build && ctest --output-on-failure
       - name: Upload results
-        uses: codecov/codecov-action@v2
-        # using default arguments, no token required for public repos
+        uses: codecov/codecov-action@v3
+        with:
+          gcov: true
