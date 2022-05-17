@@ -247,6 +247,8 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 		case ColorGray16:
 			colorMapping = createTRNForColor(PAL16_GRAY, 1, 1, 1);
 			break;
+		default:
+			break;
 		}
 		CelApplyTrans(font->sprite.MutableData(), colorMapping);
 	}
