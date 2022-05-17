@@ -30,5 +30,5 @@ function(dependency_options LIB_NAME SYSTEM_OPTION_NAME DEFAULT_SYSTEM_VALUE STA
   else()
     set(_msg_source "library from source")
   endif()
-  message("-- 📚 ${LIB_NAME}: ${_msg_type} ${_msg_source}")
+  message("-- ${LIB_NAME}: ${_msg_type} ${_msg_source}")
 endfunction()
