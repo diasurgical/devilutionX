@@ -69,11 +69,11 @@ uint8_t sgbDeltaChunks;
 std::list<TMegaPkt> MegaPktList;
 Item ItemLimbo;
 
-/** @brief Last send player command for the local player. */
-TCmdLocParam4 lastSendPlayerCmd;
+/** @brief Last sent player command for the local player. */
+TCmdLocParam4 lastSentPlayerCmd;
 
 /**
- * @brief Throttles that a player command is only send once per game tick.
+ * @brief Throttles that a player command is only sent once per game tick.
  * This is a workaround for a desync that happens when a command is processed in different game ticks for different clients. See https://github.com/diasurgical/devilutionX/issues/2681 for details.
  * When a proper fix is implemented this workaround can be removed.
  */
@@ -109,13 +109,13 @@ bool WasPlayerCmdAlreadyRequested(_cmd_id bCmd, Point position = {}, uint16_t wP
 
 	TCmdLocParam4 newSendParam = { bCmd, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y), wParam1, wParam2, wParam3, wParam4 };
 
-	if (lastSendPlayerCmd.bCmd == newSendParam.bCmd && lastSendPlayerCmd.x == newSendParam.x && lastSendPlayerCmd.y == newSendParam.y
-	    && lastSendPlayerCmd.wParam1 == newSendParam.wParam1 && lastSendPlayerCmd.wParam2 == newSendParam.wParam2 && lastSendPlayerCmd.wParam3 == newSendParam.wParam3 && lastSendPlayerCmd.wParam4 == newSendParam.wParam4) {
+	if (lastSentPlayerCmd.bCmd == newSendParam.bCmd && lastSentPlayerCmd.x == newSendParam.x && lastSentPlayerCmd.y == newSendParam.y
+	    && lastSentPlayerCmd.wParam1 == newSendParam.wParam1 && lastSentPlayerCmd.wParam2 == newSendParam.wParam2 && lastSentPlayerCmd.wParam3 == newSendParam.wParam3 && lastSentPlayerCmd.wParam4 == newSendParam.wParam4) {
 		// Command already send in this game tick => don't send again / throttle
 		return true;
 	}
 
-	lastSendPlayerCmd = newSendParam;
+	lastSentPlayerCmd = newSendParam;
 
 	return false;
 }
@@ -2015,7 +2015,7 @@ DWORD OnOpenCrypt(const TCmd *pCmd)
 
 void ClearLastSendPlayerCmd()
 {
-	lastSendPlayerCmd = {};
+	lastSentPlayerCmd = {};
 }
 
 void msg_send_drop_pkt(int pnum, int reason)

@@ -1147,8 +1147,8 @@ msgstr "Sada UMRI!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Mogućnosti:\n"
+msgid "Options:"
+msgstr "Mogućnosti:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1207,12 +1207,8 @@ msgstr "Onemogući sva ograničenja sličica tijekom demo reprodukcije"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Odabir igre:\n"
+msgid "Game selection:"
+msgstr "Odabir igre:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1231,20 +1227,12 @@ msgstr "Prisili Hellfire izdanje"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Hellfire mogućnosti:\n"
+msgid "Hellfire options:"
+msgstr "Hellfire mogućnosti:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Prijavite greške na https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Prijavite greške na https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"

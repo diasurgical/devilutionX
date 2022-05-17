@@ -1122,8 +1122,8 @@ msgstr "Dags att DÖ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Alternativ:\n"
+msgid "Options:"
+msgstr "Alternativ:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1182,12 +1182,8 @@ msgstr "Stäng av alla framebegränsningar vid demouppspelning"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Spelval:\n"
+msgid "Game selection:"
+msgstr "Spelval:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1206,20 +1202,12 @@ msgstr "Tvinga Hellfireläge"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Hellfire-alternativ:\n"
+msgid "Hellfire options:"
+msgstr "Hellfire-alternativ:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Rapportera buggar på https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Rapportera buggar på https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"

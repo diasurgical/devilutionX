@@ -1117,8 +1117,8 @@ msgstr "さあ、死ぬ​ん​だ​!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "オプション:\n"
+msgid "Options:"
+msgstr "オプション:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1177,12 +1177,9 @@ msgstr "Disable all frame limiting during demo playback"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
+msgid "Game selection:"
 msgstr ""
-"\n"
-"Game selection:\n"
+"Game selection:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1201,20 +1198,14 @@ msgstr "Force Hellfire mode"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
+msgid "Hellfire options:"
 msgstr ""
-"\n"
-"Hellfire options:\n"
+"Hellfire options:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
 msgstr ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+"Report bugs at https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
