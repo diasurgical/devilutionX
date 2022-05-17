@@ -209,6 +209,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
  * @param spacing Additional space to add between characters.
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
+ * @param outline Allows drawing outline in chosen color around the text
  */
 inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, std::optional<uint8_t> outline = std::nullopt)
 {
