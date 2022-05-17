@@ -132,27 +132,30 @@ struct Missile {
 	{
 		return _misource == -1;
 	}
-
-	bool TryHitMonster(int m, int mindam, int maxdam, bool shift);
-
-private:
-	bool IsMonsterPossibleToHit(devilution::Monster &monster) const;
-	virtual int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster);
-	virtual void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m);
 };
 
-class TrapMissile : public Missile {
+class Collidable {
+public:
+	Missile *cm;
+	bool IsMonsterPossibleToHit(devilution::Monster &monster) const;
+};
+
+class TrapMissile : public Collidable {
 
 public:
-	TrapMissile(const Missile &M)
-	    : Missile(M) {};
-	TrapMissile()
-	    : Missile() {};
-
-private:
-	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) override;
-	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) override;
+	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster);
+	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m);
 };
+
+class PlayerMissile : public Collidable {
+
+public:
+	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster);
+	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m);
+};
+
+template <typename Collidable>
+bool TryHitMonster(Collidable &col, int m, int mindam, int maxdam, bool shift);
 
 extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
