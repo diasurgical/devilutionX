@@ -1,10 +1,12 @@
 #pragma once
 
+#include <cstdint> // uint64_t
+
 #include "utils/enum_traits.h"
 
 namespace devilution {
 
-enum class UiFlags {
+enum class UiFlags: uint64_t {
 	// clang-format off
 	None               = 0,
 
@@ -44,6 +46,14 @@ enum class UiFlags {
 
 	/** @brief Ensures that the if current element is active that the next element is also visible. */
 	NeedsNextElement   = 1 << 28,
+
+	ColorBlue8         = 1 << 29,
+	ColorRed8          = 1 << 30,
+	ColorYellow8       = 1ULL << 31,
+	ColorOrange8       = 1ULL << 32,
+	ColorOrange16      = 1ULL << 33,
+	ColorBeige16       = 1ULL << 34,
+	ColorGray16        = 1ULL << 35,
 	// clang-format on
 };
 use_enum_as_flags(UiFlags);

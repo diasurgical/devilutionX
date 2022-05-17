@@ -65,16 +65,16 @@ void UpdateFloatingData(FloatingNumber &num)
 		num.style |= UiFlags::ColorGold | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageFire:
-		num.style |= UiFlags::ColorRed | GetFontSizeByDamage(num.value);
+		num.style |= UiFlags::ColorRed8 | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageLightning:
-		num.style |= UiFlags::ColorBlue | GetFontSizeByDamage(num.value);
+		num.style |= UiFlags::ColorBlue8 | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageMagic:
-		num.style |= UiFlags::ColorWhitegold | GetFontSizeByDamage(num.value);
+		num.style |= UiFlags::ColorOrange8 | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageAcid:
-		num.style |= UiFlags::ColorDialogYellow | GetFontSizeByDamage(num.value);
+		num.style |= UiFlags::ColorYellow8 | GetFontSizeByDamage(num.value);
 		break;
 	}
 }

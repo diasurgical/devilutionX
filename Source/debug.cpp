@@ -891,7 +891,8 @@ std::string DebugCmdDisplayFloatingNumber(const string_view parameter)
 	UiFlags style = UiFlags::None;
 	std::stringstream paramsStream(parameter.data());
 	for (std::string tmp; std::getline(paramsStream, tmp, ' ');) {
-		style |= static_cast<UiFlags>(1 << atoi(tmp.c_str()));
+		auto flag = static_cast<UiFlags>(1ULL << atoi(tmp.c_str()));
+		style |= flag;
 	}
 	AddFloatingNumber(true, MyPlayer->position.tile, FloatingType::None, 666 << 6, -1, style);
 	return "";

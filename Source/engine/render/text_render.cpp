@@ -94,6 +94,20 @@ text_color GetColorFromFlags(UiFlags flags)
 		return ColorBlack;
 	else if (HasAnyOf(flags, UiFlags::ColorGold))
 		return ColorGold;
+	else if (HasAnyOf(flags, UiFlags::ColorBlue8))
+		return ColorBlue8;
+	else if (HasAnyOf(flags, UiFlags::ColorRed8))
+		return ColorRed8;
+	else if (HasAnyOf(flags, UiFlags::ColorYellow8))
+		return ColorYellow8;
+	else if (HasAnyOf(flags, UiFlags::ColorOrange8))
+		return ColorOrange8;
+	else if (HasAnyOf(flags, UiFlags::ColorOrange16))
+		return ColorOrange16;
+	else if (HasAnyOf(flags, UiFlags::ColorBeige16))
+		return ColorBeige16;
+	else if (HasAnyOf(flags, UiFlags::ColorGray16))
+		return ColorGray16;
 	else if (HasAnyOf(flags, UiFlags::ColorUiGold))
 		return ColorUiGold;
 	else if (HasAnyOf(flags, UiFlags::ColorUiSilver))
@@ -196,9 +210,44 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 		return nullptr;
 	}
 
-	if (ColorTranlations[color] != nullptr) {
+	if (color < ColorTranlations.size()) {
+		if (ColorTranlations[color] != nullptr) {
+			std::array<uint8_t, 256> colorMapping;
+			LoadFileInMem(ColorTranlations[color], colorMapping);
+			CelApplyTrans(font->sprite.MutableData(), colorMapping);
+		}
+	} else {
 		std::array<uint8_t, 256> colorMapping;
-		LoadFileInMem(ColorTranlations[color], colorMapping);
+		auto createTRNForColor = [](uint8_t color, int divisor = 1, int leftOffset = 0, int rightOffset = 0) {
+			std::array<uint8_t, 256> trn;
+			for (int i = 0; i < 256; i++) {
+				trn[i] = color + leftOffset + i % (16 - rightOffset) / divisor;
+			}
+			return trn;
+		};
+		switch (color) {
+		case ColorBlue8:
+			colorMapping = createTRNForColor(PAL8_BLUE, 2);
+			break;
+		case ColorRed8:
+			colorMapping = createTRNForColor(PAL8_RED, 2);
+			break;
+		case ColorYellow8:
+			colorMapping = createTRNForColor(PAL8_YELLOW, 2);
+			break;
+		case ColorOrange8:
+			colorMapping = createTRNForColor(PAL8_ORANGE, 2);
+			break;
+		case ColorOrange16:
+			colorMapping = createTRNForColor(PAL16_ORANGE);
+			break;
+		case ColorBeige16:
+			colorMapping = createTRNForColor(PAL16_BEIGE);
+			break;
+		case ColorGray16:
+			colorMapping = createTRNForColor(PAL16_GRAY, 1, 1, 1);
+			break;
+		}
 		CelApplyTrans(font->sprite.MutableData(), colorMapping);
 	}
 
