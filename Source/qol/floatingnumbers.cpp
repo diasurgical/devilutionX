@@ -52,29 +52,34 @@ UiFlags GetFontSizeByDamage(int value)
 	return UiFlags::FontSize12;
 }
 
+UiFlags ShiftIndex(int index)
+{
+	return static_cast<UiFlags>(1ULL << index);
+}
+
 void UpdateFloatingData(FloatingNumber &num)
 {
 	num.style &= ~(UiFlags::FontSize12 | UiFlags::FontSize24 | UiFlags::FontSize30);
 	num.text = fmt::format("{:d}", num.value >> 6);
 	switch (num.type) {
 	case FloatingType::Experience:
-		num.style |= UiFlags::ColorWhite | UiFlags::FontSize12;
+		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.expGainColor) | UiFlags::FontSize12;
 		num.text = fmt::format("{:d} XP", num.value);
 		break;
 	case FloatingType::DamagePhysical:
-		num.style |= UiFlags::ColorGold | GetFontSizeByDamage(num.value);
+		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.physicalDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageFire:
-		num.style |= UiFlags::ColorRed8 | GetFontSizeByDamage(num.value);
+		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.fireDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageLightning:
-		num.style |= UiFlags::ColorBlue8 | GetFontSizeByDamage(num.value);
+		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.lightningDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageMagic:
-		num.style |= UiFlags::ColorOrange8 | GetFontSizeByDamage(num.value);
+		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.magicDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageAcid:
-		num.style |= UiFlags::ColorYellow8 | GetFontSizeByDamage(num.value);
+		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.acidDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	}
 }

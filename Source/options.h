@@ -680,6 +680,13 @@ struct FloatingNumbersOptions : OptionCategoryBase {
 	OptionEntryInt<int> mediumThreshold;
 	/** @brief Big damage number threshold */
 	OptionEntryInt<int> bigThreshold;
+	/** @brief Floating numbers colors */
+	OptionEntryEnum<int> expGainColor;
+	OptionEntryEnum<int> physicalDamageColor;
+	OptionEntryEnum<int> fireDamageColor;
+	OptionEntryEnum<int> lightningDamageColor;
+	OptionEntryEnum<int> magicDamageColor;
+	OptionEntryEnum<int> acidDamageColor;
 };
 
 struct Options {
