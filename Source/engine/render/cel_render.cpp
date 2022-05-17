@@ -669,10 +669,10 @@ void CelDrawUnsafeTo(const Surface &out, Point position, CelSprite cel, int fram
 	RenderCelClipY(out, position, pRLEBytes, nDataSize, cel.Width(frame), RenderLineMemcpy, NullLineEndFn);
 }
 
-void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame, bool skipColorIndexZero)
+void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame, bool skipColorIndexZero, bool clipped)
 {
 	int nDataSize;
-	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const byte *src = (clipped ? CelGetFrameClipped(cel.Data(), frame, &nDataSize) : CelGetFrame(cel.Data(), frame, &nDataSize));
 	if (skipColorIndexZero)
 		RenderCelOutline<true>(out, position, src, nDataSize, cel.Width(frame), col);
 	else

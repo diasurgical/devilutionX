@@ -254,9 +254,13 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 	return &(*font);
 }
 
-void DrawFont(const Surface &out, Point position, const OwnedCelSpriteWithFrameHeight *font, int frame)
+void DrawFont(const Surface &out, Point position, const OwnedCelSpriteWithFrameHeight *font, int frame, std::optional<uint8_t> outline = std::nullopt)
 {
-	CelDrawTo(out, { position.x, static_cast<int>(position.y + font->frameHeight) }, CelSprite { font->sprite }, frame);
+	Point pos = { position.x, static_cast<int>(position.y + font->frameHeight) };
+	if (outline.has_value()) {
+		CelBlitOutlineTo(out, outline.value(), pos, font->sprite, frame, true, false);
+	}
+	CelDrawTo(out, pos, font->sprite, frame);
 }
 
 bool IsWhitespace(char32_t c)
@@ -392,7 +396,7 @@ int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLe
 
 int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &characterPosition,
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
-    UiFlags flags, GameFontTables size, text_color color)
+    UiFlags flags, GameFontTables size, text_color color, std::optional<uint8_t> outline = std::nullopt)
 {
 	Font *font = nullptr;
 	std::array<uint8_t, 256> *kerning = nullptr;
@@ -436,7 +440,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 				continue;
 		}
 
-		DrawFont(out, characterPosition, font, frame);
+		DrawFont(out, characterPosition, font, frame, outline);
 		characterPosition.x += (*kerning)[frame] + spacing;
 	}
 	return text.data() - remaining.data();
@@ -657,7 +661,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 /**
  * @todo replace Rectangle with cropped Surface
  */
-uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
+uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight, std::optional<uint8_t> outline)
 {
 	GameFontTables size = GetSizeFromFlags(flags);
 	text_color color = GetColorFromFlags(flags);
@@ -690,7 +694,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 	characterPosition.y += BaseLineOffset[size];
 
-	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
+	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color, outline);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());

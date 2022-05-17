@@ -193,7 +193,7 @@ int GetLineHeight(string_view text, GameFontTables fontIndex);
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  * @return The number of bytes rendered, including characters "drawn" outside the buffer.
  */
-uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
+uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, std::optional<uint8_t> outline = std::nullopt);
 
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.
@@ -210,9 +210,9 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  */
-inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
+inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, std::optional<uint8_t> outline = std::nullopt)
 {
-	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight);
+	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight, outline);
 }
 
 /**
