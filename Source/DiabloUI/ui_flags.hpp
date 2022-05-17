@@ -6,7 +6,7 @@
 
 namespace devilution {
 
-enum class UiFlags: uint64_t {
+enum class UiFlags : uint64_t {
 	// clang-format off
 	None               = 0,
 
