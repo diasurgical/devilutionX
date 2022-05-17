@@ -86,29 +86,29 @@ text_color GetColorFromFlags(UiFlags flags)
 {
 	if (HasAnyOf(flags, UiFlags::ColorWhite))
 		return ColorWhite;
-	if (HasAnyOf(flags, UiFlags::ColorBlue))
+	else if (HasAnyOf(flags, UiFlags::ColorBlue))
 		return ColorBlue;
-	if (HasAnyOf(flags, UiFlags::ColorRed))
+	else if (HasAnyOf(flags, UiFlags::ColorRed))
 		return ColorRed;
-	if (HasAnyOf(flags, UiFlags::ColorBlack))
+	else if (HasAnyOf(flags, UiFlags::ColorBlack))
 		return ColorBlack;
-	if (HasAnyOf(flags, UiFlags::ColorGold))
+	else if (HasAnyOf(flags, UiFlags::ColorGold))
 		return ColorGold;
-	if (HasAnyOf(flags, UiFlags::ColorUiGold))
+	else if (HasAnyOf(flags, UiFlags::ColorUiGold))
 		return ColorUiGold;
-	if (HasAnyOf(flags, UiFlags::ColorUiSilver))
+	else if (HasAnyOf(flags, UiFlags::ColorUiSilver))
 		return ColorUiSilver;
-	if (HasAnyOf(flags, UiFlags::ColorUiGoldDark))
+	else if (HasAnyOf(flags, UiFlags::ColorUiGoldDark))
 		return ColorUiGoldDark;
-	if (HasAnyOf(flags, UiFlags::ColorUiSilverDark))
+	else if (HasAnyOf(flags, UiFlags::ColorUiSilverDark))
 		return ColorUiSilverDark;
-	if (HasAnyOf(flags, UiFlags::ColorDialogWhite))
+	else if (HasAnyOf(flags, UiFlags::ColorDialogWhite))
 		return ColorDialogWhite;
-	if (HasAnyOf(flags, UiFlags::ColorDialogYellow))
+	else if (HasAnyOf(flags, UiFlags::ColorDialogYellow))
 		return ColorDialogYellow;
-	if (HasAnyOf(flags, UiFlags::ColorButtonface))
+	else if (HasAnyOf(flags, UiFlags::ColorButtonface))
 		return ColorButtonface;
-	if (HasAnyOf(flags, UiFlags::ColorButtonpushed))
+	else if (HasAnyOf(flags, UiFlags::ColorButtonpushed))
 		return ColorButtonpushed;
 
 	return ColorWhitegold;
