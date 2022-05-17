@@ -257,8 +257,8 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 void DrawFont(const Surface &out, Point position, const OwnedCelSpriteWithFrameHeight *font, int frame, std::optional<uint8_t> outline = std::nullopt)
 {
 	Point pos = { position.x, static_cast<int>(position.y + font->frameHeight) };
-	if (outline.has_value()) {
-		CelBlitOutlineTo(out, outline.value(), pos, font->sprite, frame, true, false);
+	if (outline) {
+		CelBlitOutlineTo(out, *outline, pos, font->sprite, frame, true, false);
 	}
 	CelDrawTo(out, pos, font->sprite, frame);
 }
