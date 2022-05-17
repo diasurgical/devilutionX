@@ -44,6 +44,9 @@ enum class UiFlags {
 
 	/** @brief Ensures that the if current element is active that the next element is also visible. */
 	NeedsNextElement   = 1 << 28,
+
+	/** @brief Special colors created from combining multiple color flags. */
+	ColorOrange = ColorRed | ColorBlue,
 	// clang-format on
 };
 use_enum_as_flags(UiFlags);

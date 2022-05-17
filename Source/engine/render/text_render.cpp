@@ -84,6 +84,11 @@ GameFontTables GetSizeFromFlags(UiFlags flags)
 
 text_color GetColorFromFlags(UiFlags flags)
 {
+	// flags combined from more than 1 color and loaded from TRNs dynamically
+	if (HasAnyOf(flags, UiFlags::ColorOrange))
+		return ColorOrange;
+
+
 	if (HasAnyOf(flags, UiFlags::ColorWhite))
 		return ColorWhite;
 	else if (HasAnyOf(flags, UiFlags::ColorBlue))
@@ -176,7 +181,7 @@ void GetFontPath(GameFontTables size, uint16_t row, char *out)
 	sprintf(out, "fonts\\%i-%02x.pcx", FontSizes[size], row);
 }
 
-const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color color, uint16_t row)
+const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color color, uint16_t row, std::optional<std::array<uint8_t, 256>> trn = std::nullopt)
 {
 	const uint32_t fontId = GetFontId(size, color, row);
 
@@ -196,10 +201,12 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 		return nullptr;
 	}
 
-	if (ColorTranlations[color] != nullptr) {
+	if (color < ColorTranlations.size() && ColorTranlations[color] != nullptr) {
 		std::array<uint8_t, 256> colorMapping;
 		LoadFileInMem(ColorTranlations[color], colorMapping);
 		CelApplyTrans(font->sprite.MutableData(), colorMapping);
+	} else if (trn.has_value()) {
+		CelApplyTrans(font->sprite.MutableData(), trn.value());
 	}
 
 	return &(*font);
@@ -343,7 +350,7 @@ int GetLineHeight(string_view fmt, DrawStringFormatArg *args, std::size_t argsLe
 
 int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &characterPosition,
     int spacing, int lineHeight, int lineWidth, int rightMargin, int bottomMargin,
-    UiFlags flags, GameFontTables size, text_color color)
+    UiFlags flags, GameFontTables size, text_color color, std::optional<std::array<uint8_t, 256>> trn = std::nullopt)
 {
 	Font *font = nullptr;
 	std::array<uint8_t, 256> *kerning = nullptr;
@@ -361,7 +368,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 		const uint32_t unicodeRow = GetUnicodeRow(next);
 		if (unicodeRow != currentUnicodeRow || font == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
-			font = LoadFont(size, color, unicodeRow);
+			font = LoadFont(size, color, unicodeRow, trn);
 			currentUnicodeRow = unicodeRow;
 		}
 
@@ -608,7 +615,7 @@ std::string WordWrapString(string_view text, unsigned width, GameFontTables size
 /**
  * @todo replace Rectangle with cropped Surface
  */
-uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
+uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight, std::optional<std::array<uint8_t, 256>> trn)
 {
 	GameFontTables size = GetSizeFromFlags(flags);
 	text_color color = GetColorFromFlags(flags);
@@ -641,7 +648,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 	characterPosition.y += BaseLineOffset[size];
 
-	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
+	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color, trn);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());

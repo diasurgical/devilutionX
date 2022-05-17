@@ -49,6 +49,9 @@ enum text_color : uint8_t {
 
 	ColorButtonface,
 	ColorButtonpushed,
+
+	// special colors from combining multiple color flags
+	ColorOrange,
 };
 
 /**
@@ -183,9 +186,10 @@ int GetLineHeight(string_view text, GameFontTables fontIndex);
  * @param spacing Additional space to add between characters.
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
+ * @param trn Allows defining a TRN for the text and recoloring it
  * @return The number of bytes rendered, including characters "drawn" outside the buffer.
  */
-uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1);
+uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, std::optional<std::array<uint8_t, 256>> trn = std::nullopt);
 
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.
@@ -202,9 +206,9 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  */
-inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
+inline void DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, std::optional<std::array<uint8_t, 256>> trn = std::nullopt)
 {
-	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight);
+	DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight, trn);
 }
 
 /**
