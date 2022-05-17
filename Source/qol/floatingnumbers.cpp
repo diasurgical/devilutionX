@@ -71,7 +71,7 @@ void UpdateFloatingData(FloatingNumber &num)
 		num.style |= UiFlags::ColorBlue | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageMagic:
-		num.style |= UiFlags::ColorOrange | GetFontSizeByDamage(num.value);
+		num.style |= UiFlags::ColorWhitegold | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageAcid:
 		num.style |= UiFlags::ColorDialogYellow | GetFontSizeByDamage(num.value);
@@ -111,27 +111,10 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 	FloatingQueue.push_back(num);
 }
 
-void PrepareSpecialFonts(const Surface &out)
-{
-	static bool done = false;
-	if (!done) {
-		done = true;
-		UiFlags sizes[5] = { UiFlags::FontSize12, UiFlags::FontSize24, UiFlags::FontSize30, UiFlags::FontSize42, UiFlags::FontSize46 };
-		for (auto size : sizes) {
-			std::optional<std::array<uint8_t, 256>> trn = std::array<uint8_t, 256> {};
-			for (int i = 0; i < 256; i++) {
-				trn.value()[i] = 255 - i;
-			}
-			DrawString(out, " ", { 0, 0 }, UiFlags::ColorOrange | size, 1, -1, trn); // space here is important, empty string won't load TRN
-		}
-	}
-}
-
 void DrawFloatingNumbers(const Surface &out)
 {
 	if (!*sgOptions.FloatingNumbers.enableFloatingNumbers)
 		return;
-	PrepareSpecialFonts(out);
 	ClearExpiredNumbers();
 	for (auto &floatingNum : FloatingQueue) {
 		Point pos = floatingNum.startPos;
