@@ -1394,29 +1394,30 @@ uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
 	return DVL_VK_INVALID;
 }
 
-size_t log2(size_t n)
+constexpr size_t log2(size_t n)
 {
 	return ((n < 2) ? 0 : 1 + log2(n >> 1));
 }
 
-int index(UiFlags flag)
+constexpr int index(UiFlags flag)
 {
 	return log2(static_cast<size_t>(flag));
 }
 
-std::initializer_list<std::pair<int, string_view>> ColorList = {
-	{ index(UiFlags::ColorGold), N_("Gold") },
-	{ index(UiFlags::ColorYellow8), N_("Yellow") },
-	{ index(UiFlags::ColorWhite), N_("White") },
-	{ index(UiFlags::ColorRed), N_("Light red") },
-	{ index(UiFlags::ColorRed8), N_("Dark red") },
-	{ index(UiFlags::ColorBlue), N_("Light blue") },
-	{ index(UiFlags::ColorBlue8), N_("Dark blue") },
-	{ index(UiFlags::ColorOrange16), N_("Light orange") },
-	{ index(UiFlags::ColorOrange8), N_("Dark orange") },
-	{ index(UiFlags::ColorBeige16), N_("Beige") },
-	{ index(UiFlags::ColorGray16), N_("Gray") },
-};
+#define COLOR_LIST                                                 \
+	{                                                              \
+		{ index(UiFlags::ColorGold), N_("Gold") },                 \
+		    { index(UiFlags::ColorYellow8), N_("Yellow") },        \
+		    { index(UiFlags::ColorWhite), N_("White") },           \
+		    { index(UiFlags::ColorRed), N_("Light red") },         \
+		    { index(UiFlags::ColorRed8), N_("Dark red") },         \
+		    { index(UiFlags::ColorBlue), N_("Light blue") },       \
+		    { index(UiFlags::ColorBlue8), N_("Dark blue") },       \
+		    { index(UiFlags::ColorOrange16), N_("Light orange") }, \
+		    { index(UiFlags::ColorOrange8), N_("Dark orange") },   \
+		    { index(UiFlags::ColorBeige16), N_("Beige") },         \
+		    { index(UiFlags::ColorGray16), N_("Gray") },           \
+	}
 
 FloatingNumbersOptions::FloatingNumbersOptions()
     : OptionCategoryBase("FloatingNumbers", N_("Floating Numbers"), N_("Floating Numbers Settings"))
@@ -1428,12 +1429,12 @@ FloatingNumbersOptions::FloatingNumbersOptions()
     , mergeTime("Merge time", OptionEntryFlags::None, N_("Merge time"), N_("Time in milliseconds during which another number of the same origin and type will get merged into existing one"), 100, { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 })
     , mediumThreshold("Medium damage threshold", OptionEntryFlags::None, N_("Medium damage threshold"), N_("Damage above this value will be displayed with medium font (size 24)"), 100, { -1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250 })
     , bigThreshold("Big damage threshold", OptionEntryFlags::None, N_("Big damage threshold"), N_("Damage above this value will be displayed with big font (size 30)"), 300, { -1, 50, 75, 100, 150, 200, 250, 300, 350, 400, 500, 750, 1000 })
-    , expGainColor("Exp gain color", OptionEntryFlags::None, N_("Exp gain color"), N_("Color for experience floating number"), index(UiFlags::ColorWhite), ColorList)
-    , physicalDamageColor("Physical damage color", OptionEntryFlags::None, N_("Physical damage color"), N_("Color for physical damage floating number"), index(UiFlags::ColorGold), ColorList)
-    , fireDamageColor("Fire damage color", OptionEntryFlags::None, N_("Fire damage color"), N_("Color for fire damage floating number"), index(UiFlags::ColorRed8), ColorList)
-    , lightningDamageColor("Lightning damage color", OptionEntryFlags::None, N_("Lightning damage color"), N_("Color for lightning damage floating number"), index(UiFlags::ColorBlue), ColorList)
-    , magicDamageColor("Magic damage color", OptionEntryFlags::None, N_("Magic damage color"), N_("Color for magic damage floating number"), index(UiFlags::ColorOrange8), ColorList)
-    , acidDamageColor("Acid damage color", OptionEntryFlags::None, N_("Acid damage color"), N_("Color for acid damage floating number"), index(UiFlags::ColorYellow8), ColorList)
+    , expGainColor("Exp gain color", OptionEntryFlags::None, N_("Exp gain color"), N_("Color for experience floating number"), index(UiFlags::ColorWhite), COLOR_LIST)
+    , physicalDamageColor("Physical damage color", OptionEntryFlags::None, N_("Physical damage color"), N_("Color for physical damage floating number"), index(UiFlags::ColorGold), COLOR_LIST)
+    , fireDamageColor("Fire damage color", OptionEntryFlags::None, N_("Fire damage color"), N_("Color for fire damage floating number"), index(UiFlags::ColorRed8), COLOR_LIST)
+    , lightningDamageColor("Lightning damage color", OptionEntryFlags::None, N_("Lightning damage color"), N_("Color for lightning damage floating number"), index(UiFlags::ColorBlue), COLOR_LIST)
+    , magicDamageColor("Magic damage color", OptionEntryFlags::None, N_("Magic damage color"), N_("Color for magic damage floating number"), index(UiFlags::ColorOrange8), COLOR_LIST)
+    , acidDamageColor("Acid damage color", OptionEntryFlags::None, N_("Acid damage color"), N_("Color for acid damage floating number"), index(UiFlags::ColorYellow8), COLOR_LIST)
 {
 }
 

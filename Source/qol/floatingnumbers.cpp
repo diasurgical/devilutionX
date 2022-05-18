@@ -52,7 +52,7 @@ UiFlags GetFontSizeByDamage(int value)
 	return UiFlags::FontSize12;
 }
 
-UiFlags ShiftIndex(int index)
+UiFlags IndexToFlag(int index)
 {
 	return static_cast<UiFlags>(1ULL << index);
 }
@@ -63,23 +63,23 @@ void UpdateFloatingData(FloatingNumber &num)
 	num.text = fmt::format("{:d}", num.value >> 6);
 	switch (num.type) {
 	case FloatingType::Experience:
-		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.expGainColor) | UiFlags::FontSize12;
+		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.expGainColor) | UiFlags::FontSize12;
 		num.text = fmt::format("{:d} XP", num.value);
 		break;
 	case FloatingType::DamagePhysical:
-		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.physicalDamageColor) | GetFontSizeByDamage(num.value);
+		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.physicalDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageFire:
-		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.fireDamageColor) | GetFontSizeByDamage(num.value);
+		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.fireDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageLightning:
-		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.lightningDamageColor) | GetFontSizeByDamage(num.value);
+		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.lightningDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageMagic:
-		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.magicDamageColor) | GetFontSizeByDamage(num.value);
+		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.magicDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	case FloatingType::DamageAcid:
-		num.style |= ShiftIndex(*sgOptions.FloatingNumbers.acidDamageColor) | GetFontSizeByDamage(num.value);
+		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.acidDamageColor) | GetFontSizeByDamage(num.value);
 		break;
 	}
 }
@@ -94,7 +94,9 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 		return;
 	double distanceX = gnScreenWidth * *sgOptions.FloatingNumbers.maxHorizontalDistance / 100.0;
 	double distanceY = gnScreenHeight * *sgOptions.FloatingNumbers.maxVerticalDistance / 100.0;
-	double angle = (500 + rand() % 500) * 0.0062831853;
+	constexpr double PI = 3.14159265358979323846;
+	constexpr double mul = PI * 2 / 1000.0;
+	double angle = (500 + rand() % 500) * mul;
 	int xCoord = cos(angle) * distanceX;
 	int yCoord = sin(angle) * distanceY;
 	Displacement endOffset = { xCoord, yCoord };
