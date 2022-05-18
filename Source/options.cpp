@@ -444,6 +444,10 @@ string_view OptionEntryListBase::GetValueDescription() const
 {
 	return GetListDescription(GetActiveListIndex());
 }
+UiFlags OptionEntryListBase::GetValueColor() const
+{
+	return GetListColor(GetActiveListIndex());
+}
 
 void OptionEntryEnumBase::LoadFromIni(string_view category)
 {
@@ -463,6 +467,12 @@ void OptionEntryEnumBase::AddEntry(int value, string_view name)
 	entryValues.push_back(value);
 	entryNames.push_back(name);
 }
+void OptionEntryEnumBase::AddEntry(int value, string_view name, UiFlags color)
+{
+	entryValues.push_back(value);
+	entryNames.push_back(name);
+	entryColors.push_back(color);
+}
 size_t OptionEntryEnumBase::GetListSize() const
 {
 	return entryValues.size();
@@ -470,6 +480,12 @@ size_t OptionEntryEnumBase::GetListSize() const
 string_view OptionEntryEnumBase::GetListDescription(size_t index) const
 {
 	return _(entryNames[index].data());
+}
+UiFlags OptionEntryEnumBase::GetListColor(size_t index) const
+{
+	if (!entryColors.empty())
+		return entryColors[index];
+	return UiFlags::None;
 }
 size_t OptionEntryEnumBase::GetActiveListIndex() const
 {
@@ -1404,19 +1420,19 @@ constexpr int index(UiFlags flag)
 	return log2(static_cast<size_t>(flag));
 }
 
-#define COLOR_LIST                                                 \
-	{                                                              \
-		{ index(UiFlags::ColorGold), N_("Gold") },                 \
-		    { index(UiFlags::ColorYellow8), N_("Yellow") },        \
-		    { index(UiFlags::ColorWhite), N_("White") },           \
-		    { index(UiFlags::ColorRed), N_("Light red") },         \
-		    { index(UiFlags::ColorRed8), N_("Dark red") },         \
-		    { index(UiFlags::ColorBlue), N_("Light blue") },       \
-		    { index(UiFlags::ColorBlue8), N_("Dark blue") },       \
-		    { index(UiFlags::ColorOrange16), N_("Light orange") }, \
-		    { index(UiFlags::ColorOrange8), N_("Dark orange") },   \
-		    { index(UiFlags::ColorBeige16), N_("Beige") },         \
-		    { index(UiFlags::ColorGray16), N_("Gray") },           \
+#define COLOR_LIST                                                                             \
+	{                                                                                          \
+		{ index(UiFlags::ColorGold), { N_("Gold"), UiFlags::ColorGold } },                     \
+		    { index(UiFlags::ColorYellow8), { N_("Yellow"), UiFlags::ColorYellow8 } },         \
+		    { index(UiFlags::ColorWhite), { N_("White"), UiFlags::ColorWhite } },              \
+		    { index(UiFlags::ColorRed), { N_("Light red"), UiFlags::ColorRed } },              \
+		    { index(UiFlags::ColorRed8), { N_("Dark red"), UiFlags::ColorRed8 } },             \
+		    { index(UiFlags::ColorBlue), { N_("Light blue"), UiFlags::ColorBlue } },           \
+		    { index(UiFlags::ColorBlue8), { N_("Dark blue"), UiFlags::ColorBlue8 } },          \
+		    { index(UiFlags::ColorOrange16), { N_("Light orange"), UiFlags::ColorOrange16 } }, \
+		    { index(UiFlags::ColorOrange8), { N_("Dark orange"), UiFlags::ColorOrange8 } },    \
+		    { index(UiFlags::ColorBeige16), { N_("Beige"), UiFlags::ColorBeige16 } },          \
+		    { index(UiFlags::ColorGray16), { N_("Gray"), UiFlags::ColorGray16 } },             \
 	}
 
 FloatingNumbersOptions::FloatingNumbersOptions()

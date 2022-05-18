@@ -6,6 +6,7 @@
 
 #include <SDL_version.h>
 
+#include "engine/render/text_render.hpp"
 #include "pack.h"
 #include "sound_defs.hpp"
 #include "utils/enum_traits.h"
@@ -100,6 +101,10 @@ public:
 	void SetValueChangedCallback(std::function<void()> callback);
 
 	[[nodiscard]] virtual string_view GetValueDescription() const = 0;
+	[[nodiscard]] virtual UiFlags GetValueColor() const
+	{
+		return UiFlags::None;
+	}
 	virtual void LoadFromIni(string_view category) = 0;
 	virtual void SaveToIni(string_view category) const = 0;
 
@@ -143,11 +148,16 @@ class OptionEntryListBase : public OptionEntryBase {
 public:
 	[[nodiscard]] virtual size_t GetListSize() const = 0;
 	[[nodiscard]] virtual string_view GetListDescription(size_t index) const = 0;
+	[[nodiscard]] virtual UiFlags GetListColor(size_t index) const
+	{
+		return UiFlags::None;
+	}
 	[[nodiscard]] virtual size_t GetActiveListIndex() const = 0;
 	virtual void SetActiveListIndex(size_t index) = 0;
 
 	[[nodiscard]] OptionEntryType GetType() const override;
 	[[nodiscard]] string_view GetValueDescription() const override;
+	[[nodiscard]] virtual UiFlags GetValueColor() const override;
 
 protected:
 	OptionEntryListBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
@@ -163,6 +173,7 @@ public:
 
 	[[nodiscard]] size_t GetListSize() const override;
 	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] UiFlags GetListColor(size_t index) const override;
 	[[nodiscard]] size_t GetActiveListIndex() const override;
 	void SetActiveListIndex(size_t index) override;
 
@@ -181,12 +192,14 @@ protected:
 	void SetValueInternal(int value);
 
 	void AddEntry(int value, string_view name);
+	void AddEntry(int value, string_view name, UiFlags color);
 
 private:
 	int defaultValue;
 	int value;
 	std::vector<string_view> entryNames;
 	std::vector<int> entryValues;
+	std::vector<UiFlags> entryColors;
 };
 
 template <typename T>
@@ -197,6 +210,13 @@ public:
 	{
 		for (auto entry : entries) {
 			AddEntry(static_cast<int>(entry.first), entry.second);
+		}
+	}
+	OptionEntryEnum(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<std::pair<T, DrawStringFormatArg>> entries)
+	    : OptionEntryEnumBase(key, flags, name, description, static_cast<int>(defaultValue))
+	{
+		for (auto entry : entries) {
+			AddEntry(static_cast<int>(entry.first), entry.second.GetFormatted(), entry.second.GetFlags());
 		}
 	}
 	[[nodiscard]] T operator*() const

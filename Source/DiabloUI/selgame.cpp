@@ -147,7 +147,7 @@ void UiInitGameSelectionList(string_view search)
 
 	if (provider == SELCONN_ZT) {
 		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>("", -1, UiFlags::ElementDisabled));
-		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Public Games"), -1, UiFlags::ElementDisabled | UiFlags::ColorWhitegold));
+		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Public Games"), -1, UiFlags::ElementDisabled | UiFlags::ColorOrange16));
 
 		if (Gamelist.empty()) {
 			// We expect the game list to be received after 3 seconds
