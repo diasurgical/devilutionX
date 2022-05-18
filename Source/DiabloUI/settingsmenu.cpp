@@ -301,12 +301,14 @@ void UiSettingsMenu()
 			auto *pOptionList = static_cast<OptionEntryListBase *>(selectedOption);
 			for (size_t i = 0; i < pOptionList->GetListSize(); i++) {
 				if (pOptionList->GetListColor(i) != UiFlags::None) {
-					vecDialogItems.push_back(std::make_unique<UiListItem>("{} {}", std::vector<DrawStringFormatArg> { {
-					                                                                                                      pOptionList->GetListDescription(i),
-					                                                                                                      UiFlags::ColorUiGold,
-					                                                                                                  },
-					                                                                   { "#", pOptionList->GetListColor(i) } },
-					    i, UiFlags::ColorUiGold));
+					auto vecArgs = std::vector<DrawStringFormatArg> {
+						{
+						    pOptionList->GetListDescription(i),
+						    UiFlags::ColorUiGold,
+						},
+						{ "#", pOptionList->GetListColor(i) }
+					};
+					vecDialogItems.push_back(std::make_unique<UiListItem>("{} {}", vecArgs, i, UiFlags::ColorUiGold));
 				} else {
 					vecDialogItems.push_back(std::make_unique<UiListItem>(pOptionList->GetListDescription(i), i, UiFlags::ColorUiGold));
 				}
