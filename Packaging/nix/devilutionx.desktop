@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=DevilutionX
 GenericName=DevilutionX
-Comment=Play Diablo I on Linux
-Comment[da]=Spil Diablo I på Linux
-Comment[hr]=Igrajte Diablo I na Linuxu
-Comment[it]=Gioca a Diablo I su Linux
+Comment=Play Diablo I
+Comment[da]=Spil Diablo I
+Comment[hr]=Igrajte Diablo I
+Comment[it]=Gioca a Diablo I
+Comment[ru]=Играть в Diablo I
+Comment[ua]=Грати в Diablo I
 Exec=devilutionx --diablo
 Icon=devilutionx
 Terminal=false
