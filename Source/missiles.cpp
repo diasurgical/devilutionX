@@ -317,7 +317,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 		if (missile._micaster == TARGET_MONSTERS) {
 			int mid = dMonster[mx][my];
 			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
-				if (TryHitMonster((PlayerMissile { &missile }), abs(mid) - 1, mindam, maxdam, shift)) {
+				if (TryHitMonster(PlayerMissile(missile), abs(mid) - 1, mindam, maxdam, shift)) {
 					if (!nodel)
 						missile._mirange = 0;
 					missile._miHitFlag = true;
@@ -346,7 +346,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0
 			    && dMonster[mx][my] > 0
 			    && (Monsters[dMonster[mx][my] - 1]._mFlags & MFLAG_GOLEM) != 0
-			    && TryHitMonster((TrapMissile { &missile }), dMonster[mx][my] - 1, mindam, maxdam, shift)) {
+			    && TryHitMonster(TrapMissile(missile), dMonster[mx][my] - 1, mindam, maxdam, shift)) {
 				if (!nodel)
 					missile._mirange = 0;
 				missile._miHitFlag = true;
@@ -375,12 +375,12 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 		if (mid > 0) {
 			mid -= 1;
 			if (missile._micaster == TARGET_BOTH) {
-				if (TryHitMonster((PlayerMissile { &missile }), mid, mindam, maxdam, shift)) {
+				if (TryHitMonster(PlayerMissile(missile), mid, mindam, maxdam, shift)) {
 					if (!nodel)
 						missile._mirange = 0;
 					missile._miHitFlag = true;
 				}
-			} else if (TryHitMonster((TrapMissile { &missile }), mid, mindam, maxdam, shift)) {
+			} else if (TryHitMonster(TrapMissile(missile), mid, mindam, maxdam, shift)) {
 				if (!nodel)
 					missile._mirange = 0;
 				missile._miHitFlag = true;

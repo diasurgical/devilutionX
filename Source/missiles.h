@@ -143,6 +143,10 @@ public:
 class TrapMissile : public Collidable {
 
 public:
+	TrapMissile(Missile missile)
+	{
+		cm = &missile;
+	}
 	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const;
 	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const ;
 };
@@ -150,6 +154,10 @@ public:
 class PlayerMissile : public Collidable {
 
 public:
+	PlayerMissile(Missile missile)
+	{
+		cm = &missile;
+	}
 	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const;
 	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const;
 };
