@@ -845,7 +845,7 @@ void StartHitMonsterByMissile(int m, int pnum, int dam)
 		monster.Petrify();
 }
 
-int PlayerMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster)
+int PlayerMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const
 {
 	int hper = 0;
 	if (pnum != -1) {
@@ -863,7 +863,7 @@ int PlayerMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &mon
 	return hper;
 }
 
-void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m)
+void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const
 {
 	auto &monster = Monsters[m];
 	bool resist = monster.IsResistant(cm->_mitype);
@@ -909,12 +909,12 @@ void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int
 	}
 }
 
-int TrapMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster)
+int TrapMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const
 {
 	return 90 - (BYTE)monster.mArmorClass - cm->_midist;
 }
 
-void TrapMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m)
+void TrapMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const
 {
 	auto &monster = Monsters[m];
 	bool resist = monster.IsResistant(cm->_mitype);
@@ -939,7 +939,7 @@ void TrapMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m
 }
 
 template <typename Collidable>
-bool TryHitMonster(Collidable &col, int m, int mindam, int maxdam, bool shift)
+bool TryHitMonster(Collidable const &col, int m, int mindam, int maxdam, bool shift)
 {
 	auto &monster = Monsters[m];
 

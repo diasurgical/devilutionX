@@ -143,19 +143,19 @@ public:
 class TrapMissile : public Collidable {
 
 public:
-	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster);
-	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m);
+	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const;
+	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const ;
 };
 
 class PlayerMissile : public Collidable {
 
 public:
-	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster);
-	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m);
+	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const;
+	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const;
 };
 
 template <typename Collidable>
-bool TryHitMonster(Collidable &col, int m, int mindam, int maxdam, bool shift);
+bool TryHitMonster(Collidable const &col, int m, int mindam, int maxdam, bool shift);
 
 extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
