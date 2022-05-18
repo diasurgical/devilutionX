@@ -51,7 +51,11 @@ struct TSnd {
 };
 
 extern bool gbSndInited;
+#ifndef NOSOUND
 extern _music_id sgnMusicTrack;
+#else
+inline const _music_id sgnMusicTrack = NUM_MUSIC;
+#endif
 
 void ClearDuplicateSounds();
 void snd_stop_snd(TSnd *pSnd);
