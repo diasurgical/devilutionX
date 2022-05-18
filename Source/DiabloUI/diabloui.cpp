@@ -47,6 +47,8 @@
 
 namespace devilution {
 
+bool UseUIPalette = true;
+
 // These are stored as PCX but we load them as CEL to reduce memory usage.
 std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
 std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
@@ -606,6 +608,7 @@ void UnloadUiGFX()
 
 void UiInitialize()
 {
+	UseUIPalette = true;
 	LoadUiGFX();
 
 	if (ArtCursor.surface != nullptr) {
@@ -617,6 +620,7 @@ void UiInitialize()
 
 void UiDestroy()
 {
+	UseUIPalette = false;
 	UnloadFonts();
 	UnloadUiGFX();
 }

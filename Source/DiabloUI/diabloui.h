@@ -13,6 +13,7 @@
 
 namespace devilution {
 
+extern bool UseUIPalette;
 extern std::size_t SelectedItem;
 extern bool textInputActive;
 

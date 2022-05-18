@@ -210,7 +210,7 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 		return nullptr;
 	}
 
-	if (color < ColorTranlations.size() && (gbRunGame || IsAnyOf(color, ColorUiGold, ColorUiSilver, ColorUiGoldDark, ColorUiSilverDark))) {
+	if (color < ColorTranlations.size() && (!UseUIPalette || IsAnyOf(color, ColorUiGold, ColorUiSilver, ColorUiGoldDark, ColorUiSilverDark))) {
 		if (ColorTranlations[color] != nullptr) {
 			std::array<uint8_t, 256> colorMapping;
 			LoadFileInMem(ColorTranlations[color], colorMapping);
@@ -220,7 +220,7 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 		std::array<uint8_t, 256> colorMapping;
 		auto createTRNForColor = [](uint8_t color, int divisor = 1, int leftOffset = 0, int rightOffset = 0) {
 			std::array<uint8_t, 256> trn;
-			if (!gbRunGame) // menu palette seems to be roughly shifted by 16 so do the shift to be able to display ingame fonts in menu
+			if (UseUIPalette) // menu palette seems to be roughly shifted by 16 so do the shift to be able to display ingame colors in menu
 				leftOffset -= 16;
 			for (int i = 0; i < 256; i++) {
 				trn[i] = color + leftOffset + i % (16 - rightOffset) / divisor;
