@@ -688,6 +688,8 @@ struct FloatingNumbersOptions : OptionCategoryBase {
 	OptionEntryBoolean enableFloatingNumbers;
 	/** @brief Display floating numbers from other players. */
 	OptionEntryBoolean floatingNumbersFromOthers;
+	/** @brief Limit angles only to those that display nicely */
+	OptionEntryBoolean limitAngles;
 	/** @brief How many milliseconds does a floating number last */
 	OptionEntryInt<int> floatingNumbersLifetime;
 	/** @brief What screen % horizontally can the floating numbers travel */
