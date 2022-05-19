@@ -1026,10 +1026,10 @@ void Zoom(const Surface &out)
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen || IsStashOpen) {
+		if (IsLeftPanelOpen()) {
 			viewportWidth -= SPANEL_WIDTH;
 			viewportOffsetX = SPANEL_WIDTH;
-		} else if (invflag || sbookflag) {
+		} else if (IsRightPanelOpen()) {
 			viewportWidth -= SPANEL_WIDTH;
 		}
 	}
@@ -1106,23 +1106,23 @@ void DrawGame(const Surface &fullOut, Point position)
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
-			if (chrflag || QuestLogIsOpen || IsStashOpen) {
+			if (IsLeftPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
 			}
-			if (invflag || sbookflag) {
+			if (IsRightPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
-			if (chrflag || QuestLogIsOpen || IsStashOpen) {
+			if (IsLeftPanelOpen()) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
 			}
-			if (invflag || sbookflag) {
+			if (IsRightPanelOpen()) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2;

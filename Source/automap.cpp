@@ -10,8 +10,6 @@
 #include "control.h"
 #include "engine/load_file.hpp"
 #include "engine/render/automap_render.hpp"
-#include "inv.h"
-#include "monster.h"
 #include "palette.h"
 #include "player.h"
 #include "setmaps.h"
@@ -376,9 +374,9 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 			};
 
 			if (CanPanelsCoverView()) {
-				if (invflag || sbookflag)
+				if (IsRightPanelOpen())
 					screen.x -= 160;
-				if (chrflag || QuestLogIsOpen)
+				if (IsLeftPanelOpen())
 					screen.x += 160;
 			}
 			screen.y -= AmLine8;
@@ -413,9 +411,9 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	};
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag)
+		if (IsRightPanelOpen())
 			base.x -= gnScreenWidth / 4;
-		if (chrflag || QuestLogIsOpen)
+		if (IsLeftPanelOpen())
 			base.x += gnScreenWidth / 4;
 	}
 	base.y -= AmLine16;
@@ -705,10 +703,10 @@ void DrawAutomap(const Surface &out)
 	screen.y += AutoMapScale * myPlayerOffset.deltaY / 100 / 2;
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag) {
+		if (IsRightPanelOpen()) {
 			screen.x -= gnScreenWidth / 4;
 		}
-		if (chrflag || QuestLogIsOpen) {
+		if (IsLeftPanelOpen()) {
 			screen.x += gnScreenWidth / 4;
 		}
 	}

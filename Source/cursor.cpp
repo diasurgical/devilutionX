@@ -258,9 +258,9 @@ void CheckCursMove()
 	int sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen || IsStashOpen) {
+		if (IsLeftPanelOpen()) {
 			sx -= GetScreenWidth() / 4;
-		} else if (invflag || sbookflag) {
+		} else if (IsRightPanelOpen()) {
 			sx += GetScreenWidth() / 4;
 		}
 	}
@@ -395,7 +395,7 @@ void CheckCursMove()
 	if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) {
+	if (IsLeftPanelOpen() && GetLeftPanel().Contains(MousePosition)) {
 		return;
 	}
 

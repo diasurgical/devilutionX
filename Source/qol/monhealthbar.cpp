@@ -79,9 +79,9 @@ void DrawMonsterHealthBar(const Surface &out)
 	Point position = { (gnScreenWidth - width) / 2, 18 };
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag)
+		if (IsRightPanelOpen())
 			position.x -= SPANEL_WIDTH / 2;
-		if (chrflag || QuestLogIsOpen)
+		if (IsLeftPanelOpen())
 			position.x += SPANEL_WIDTH / 2;
 	}
 
