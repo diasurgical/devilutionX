@@ -1294,12 +1294,13 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
 
-	if (monster._mhitpoints >> 6 > 0 && (monster.MType->mtype != MT_ILLWEAV || monster._mgoal != MGOAL_RETREAT)) {
+	if (!monster.IsPossibleToHit()) {
 		int hit = GenerateRnd(100);
 		if (monster._mmode == MonsterMode::Petrified)
 			hit = 0;
-		bool unused;
-		if (!LiftGargoylesOrIgnoreMages(monster, &unused) && hit < hper) {
+		if (monster.TryLiftGargoyle())
+			return;
+		if (hit < hper) {
 			int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 			monster._mhitpoints -= dam;
 			if (monster._mhitpoints >> 6 <= 0) {
@@ -4951,25 +4952,6 @@ bool CanTalkToMonst(const Monster &monster)
 	return IsAnyOf(monster._mgoal, MGOAL_INQUIRING, MGOAL_TALKING);
 }
 
-bool LiftGargoylesOrIgnoreMages(Monster &monster, bool *ret)
-{
-	if (monster._mAi == AI_GARG && (monster._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
-		monster._mFlags &= ~MFLAG_ALLOW_SPECIAL;
-		monster._mmode = MonsterMode::SpecialMeleeAttack;
-		*ret = true;
-		return true;
-	}
-
-	if (monster.MType->mtype >= MT_COUNSLR && monster.MType->mtype <= MT_ADVOCATE) {
-		if (monster._mgoal != MGOAL_NORMAL) {
-			*ret = false;
-			return true;
-		}
-	}
-
-	return false;
-}
-
 int encode_enemy(Monster &monster)
 {
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0)
@@ -5052,7 +5034,21 @@ bool Monster::IsPossibleToHit() const
 	    || (MType->mtype == MT_ILLWEAV && _mgoal == MGOAL_RETREAT)
 	    || _mmode == MonsterMode::Charge)
 		return false;
+	if ((MType->mtype >= MT_COUNSLR && MType->mtype <= MT_ADVOCATE) && _mgoal != MGOAL_NORMAL) {
+		GenerateRnd(100); // Vanilla Compatibility Note: Pushing RNG, as original function CheckMonsterHit was called after CTH roll
+		return false;
+	}
 	return true;
+}
+
+bool  Monster::TryLiftGargoyle()
+{
+	if (_mAi == AI_GARG && (_mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
+		_mFlags &= ~MFLAG_ALLOW_SPECIAL;
+		_mmode = MonsterMode::SpecialMeleeAttack;
+		return true;
+	}
+	return false;
 }
 
 } // namespace devilution

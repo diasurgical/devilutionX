@@ -952,10 +952,8 @@ bool TryHitMonster(Collidable const &col, int m, int mindam, int maxdam, bool sh
 	int hper = col.CalculateCTHAgainstMonster(pnum, monster);
 	hper = clamp(hper, 5, 95);
 
-	bool ret;
-	if (LiftGargoylesOrIgnoreMages(monster, &ret)) {
-		return ret;
-	}
+	if (monster.TryLiftGargoyle())
+		return true;
 
 	if (hit >= hper && monster._mmode != MonsterMode::Petrified) {
 #ifdef _DEBUG

@@ -261,6 +261,7 @@ struct Monster { // note: missing field _mAFNum
 	bool IsImmune(missile_id mitype) const;
 	bool IsResistant(missile_id mitype) const;
 	bool IsPossibleToHit() const;
+	bool TryLiftGargoyle();
 };
 
 extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
@@ -318,7 +319,6 @@ int PreSpawnSkeleton();
 void TalktoMonster(Monster &monster);
 void SpawnGolem(int i, Point position, Missile &missile);
 bool CanTalkToMonst(const Monster &monster);
-bool LiftGargoylesOrIgnoreMages(Monster &monster, bool *ret);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemyId);
 
