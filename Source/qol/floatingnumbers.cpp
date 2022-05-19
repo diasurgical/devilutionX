@@ -101,6 +101,10 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 	int yCoord = sin(angle) * distanceY;
 	Displacement endOffset = { xCoord, yCoord };
 
+	Point startPos = FloatingCoordsMap[pos.x + pos.y * MAXDUNX];
+	constexpr int tileAndHalf = TILE_HEIGHT * 1.5;
+	startPos += { TILE_WIDTH / 2, -tileAndHalf };
+
 	ClearExpiredNumbers();
 	for (auto &num : FloatingQueue) {
 		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index && (SDL_GetTicks() - (int)num.lastMerge <= *sgOptions.FloatingNumbers.mergeTime)) {
@@ -111,7 +115,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 		}
 	}
 	FloatingNumber num = FloatingNumber {
-		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + *sgOptions.FloatingNumbers.floatingNumbersLifetime, SDL_GetTicks(), style, type, value, index
+		isMyPlayer, startPos, endOffset, "", SDL_GetTicks() + *sgOptions.FloatingNumbers.floatingNumbersLifetime, SDL_GetTicks(), style, type, value, index
 	};
 	UpdateFloatingData(num);
 	num.style |= style; // for handling styles from debug command
@@ -125,12 +129,6 @@ void DrawFloatingNumbers(const Surface &out)
 	ClearExpiredNumbers();
 	for (auto &floatingNum : FloatingQueue) {
 		Point pos = floatingNum.startPos;
-		pos = FloatingCoordsMap[pos.x + pos.y * MAXDUNX];
-		if (pos == Point { 0, 0 })
-			continue;
-		constexpr int tileAndHalf = TILE_HEIGHT * 1.5;
-		pos += { TILE_WIDTH / 2, -tileAndHalf };
-
 		if (!zoomflag) {
 			pos.x *= 2;
 			pos.y *= 2;
