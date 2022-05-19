@@ -166,6 +166,11 @@ void ClearFloatingNumbersCoordsMap()
 	FloatingCoordsMap.clear();
 }
 
+void ClearFloatingNumbers()
+{
+	FloatingQueue.clear();
+}
+
 FloatingType GetFloatingNumberTypeFromMissile(missile_resistance mir)
 {
 	switch (mir) {

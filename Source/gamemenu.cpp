@@ -12,6 +12,7 @@
 #include "loadsave.h"
 #include "options.h"
 #include "pfile.h"
+#include "qol/floatingnumbers.h"
 #include "sound.h"
 #include "sound_defs.hpp"
 #include "utils/language.h"
@@ -289,6 +290,7 @@ void gamemenu_load_game(bool /*bActivate*/)
 {
 	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
 	gamemenu_off();
+	ClearFloatingNumbers();
 	NewCursor(CURSOR_NONE);
 	InitDiabloMsg(EMSG_LOADING);
 	force_redraw = 255;

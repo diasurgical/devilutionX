@@ -25,6 +25,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 void DrawFloatingNumbers(const Surface &out);
 void UpdateFloatingNumbersCoordsMap(Point dungeon, Point screen);
 void ClearFloatingNumbersCoordsMap();
+void ClearFloatingNumbers();
 FloatingType GetFloatingNumberTypeFromMissile(missile_resistance mir);
 
 } // namespace devilution
