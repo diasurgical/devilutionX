@@ -1,9 +1,9 @@
 #include "itemlabels.h"
 
+#include <ctime>
 #include <deque>
 #include <fmt/format.h>
 #include <string>
-#include <ctime>
 #include <unordered_map>
 
 #include "diablo.h"
@@ -102,7 +102,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 	double distanceY = gnScreenHeight * *sgOptions.FloatingNumbers.maxVerticalDistance / 100.0;
 	constexpr double PI = 3.14159265358979323846;
 	constexpr double mul = PI * 2 / 360.0;
-	double goodAngles[] = { 0, 45, 90, 135, 180 }; //these angles render nicely, without jumping around
+	double goodAngles[] = { 0, 45, 90, 135, 180 }; // these angles render nicely, without jumping around
 	double angle = (180 + (*sgOptions.FloatingNumbers.limitAngles ? goodAngles[rand() % 5] : rand() % 180)) * mul;
 	int xCoord = cos(angle) * distanceX;
 	int yCoord = sin(angle) * distanceY;
