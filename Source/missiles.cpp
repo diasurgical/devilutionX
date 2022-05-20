@@ -251,26 +251,14 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		monster._mFlags |= MFLAG_NOHEAL;
 
 	if (monster._mhitpoints >> 6 <= 0) {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartKill(m, pnum);
-			monster.Petrify();
-		} else {
-			M_StartKill(m, pnum);
-		}
+		M_StartKill(m, pnum);
+	} else if (resist) {
+		PlayEffect(monster, 1);
 	} else {
-		if (resist) {
-			PlayEffect(monster, 1);
-		} else if (monster._mmode == MonsterMode::Petrified) {
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, pnum, dam);
-			monster.Petrify();
-		} else {
-			if (MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback)) {
-				M_GetKnockback(m);
-			}
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, pnum, dam);
-		}
+		if (monster._mmode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+			M_GetKnockback(m);
+		if (m > MAX_PLRS - 1)
+			M_StartHit(m, pnum, dam);
 	}
 
 	if (monster._msquelch == 0) {
@@ -959,23 +947,12 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		monster._mhitpoints = 0;
 #endif
 	if (monster._mhitpoints >> 6 <= 0) {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartKill(m, -1);
-			monster.Petrify();
-		} else {
-			M_StartKill(m, -1);
-		}
+		M_StartKill(m, -1);
+	} else if (resist) {
+		PlayEffect(monster, 1);
 	} else {
-		if (resist) {
-			PlayEffect(monster, 1);
-		} else if (monster._mmode == MonsterMode::Petrified) {
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, -1, dam);
-			monster.Petrify();
-		} else {
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, -1, dam);
-		}
+		if (m > MAX_PLRS - 1)
+			M_StartHit(m, -1, dam);
 	}
 	return true;
 }
