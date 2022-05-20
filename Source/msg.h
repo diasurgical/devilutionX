@@ -372,6 +372,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmdString)
 	CMD_STRING,
+	// Toggles friendly Mode
+	//
+	// body (TCmd)
+	CMD_FRIENDLYMODE,
 	// Set player strength.
 	//
 	// body (TCmdParam1):

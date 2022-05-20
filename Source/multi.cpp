@@ -335,7 +335,10 @@ void SendPlayerInfo(int pnum, _cmd_id cmd)
 	static_assert(alignof(PlayerPack) == 1, "Fix pkplr alignment");
 	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PlayerPack)] };
 
-	PackPlayer(reinterpret_cast<PlayerPack *>(pkplr.get()), Players[MyPlayerId], true, true);
+	PlayerPack *pPack = reinterpret_cast<PlayerPack *>(pkplr.get());
+	auto &myPlayer = Players[MyPlayerId];
+	PackPlayer(pPack, myPlayer, true, true);
+	pPack->friendlyMode = myPlayer.friendlyMode ? 1 : 0;
 	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
 }
 
@@ -831,6 +834,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	if (!UnPackPlayer(&packedPlayer, player, true)) {
 		return;
 	}
+	player.friendlyMode = packedPlayer.friendlyMode != 0;
 
 	if (!recv) {
 		return;

@@ -1882,6 +1882,13 @@ DWORD OnString(const TCmd *pCmd, Player &player)
 	return len + 2; // length of string + nul terminator + sizeof(p->bCmd)
 }
 
+DWORD OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-parameters)
+{
+	player.friendlyMode = !player.friendlyMode;
+	force_redraw = 255;
+	return sizeof(*pCmd);
+}
+
 DWORD OnSyncQuest(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdQuest *>(pCmd);
@@ -2921,6 +2928,8 @@ uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 		return OnSetVitality(pCmd, pnum);
 	case CMD_STRING:
 		return OnString(pCmd, player);
+	case CMD_FRIENDLYMODE:
+		return OnFriendlyMode(pCmd, player);
 	case CMD_SYNCQUEST:
 		return OnSyncQuest(pCmd, pnum);
 	case CMD_CHEAT_EXPERIENCE:

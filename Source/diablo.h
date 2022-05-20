@@ -118,7 +118,6 @@ struct QuickMessage {
 
 constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
 extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
-extern bool gbFriendlyMode;
 /**
  * @brief Specifices what game logic step is currently executed
  */

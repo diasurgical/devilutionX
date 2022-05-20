@@ -611,7 +611,8 @@ void DrawCtrlBtns(const Surface &out)
 	}
 	if (PanelButtonIndex == 8) {
 		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 1 : 0);
-		if (gbFriendlyMode)
+		auto &myPlayer = Players[MyPlayerId];
+		if (myPlayer.friendlyMode)
 			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 3 : 2);
 		else
 			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 5 : 4);
@@ -699,7 +700,8 @@ void CheckPanelInfo()
 			if (i != 7) {
 				InfoString = _(PanBtnStr[i]);
 			} else {
-				if (gbFriendlyMode)
+				auto &myPlayer = Players[MyPlayerId];
+				if (myPlayer.friendlyMode)
 					InfoString = _("Player friendly");
 				else
 					InfoString = _("Player attack");
@@ -824,7 +826,8 @@ void CheckBtnUp()
 				control_type_message();
 			break;
 		case PanelButtonFriendly:
-			gbFriendlyMode = !gbFriendlyMode;
+			// Toggle friendly Mode
+			NetSendCmd(true, CMD_FRIENDLYMODE);
 			break;
 		}
 	}
