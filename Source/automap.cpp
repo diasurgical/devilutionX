@@ -732,7 +732,7 @@ void DrawAutomap(const Surface &out)
 
 	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
 		auto &player = Players[playerId];
-		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging) {
+		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging && (&player == &myPlayer || player.friendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, playerId);
 		}
 	}
