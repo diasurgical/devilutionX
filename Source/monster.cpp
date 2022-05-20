@@ -1306,18 +1306,13 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 			int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 			monster._mhitpoints -= dam;
 			if (monster._mhitpoints >> 6 <= 0) {
-				if (monster._mmode == MonsterMode::Petrified) {
-					StartDeathFromMonster(i, mid);
+				StartDeathFromMonster(i, mid);
+				if (monster._mmode == MonsterMode::Petrified)
 					monster.Petrify();
-				} else {
-					StartDeathFromMonster(i, mid);
-				}
 			} else {
+				MonsterHitMonster(mid, i, dam);
 				if (monster._mmode == MonsterMode::Petrified) {
-					MonsterHitMonster(mid, i, dam);
 					monster.Petrify();
-				} else {
-					MonsterHitMonster(mid, i, dam);
 				}
 			}
 		}
