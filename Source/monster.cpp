@@ -1128,6 +1128,8 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	M_FallenFear(monster.position.tile);
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
+	if (monster._mmode == MonsterMode::Petrified)
+		monster.Petrify();
 }
 
 void StartDeathFromMonster(int i, int mid)
@@ -1294,28 +1296,23 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
 
-	if (monster._mhitpoints >> 6 > 0 && (monster.MType->mtype != MT_ILLWEAV || monster._mgoal != MGOAL_RETREAT)) {
+	if (!monster.IsPossibleToHit()) {
 		int hit = GenerateRnd(100);
 		if (monster._mmode == MonsterMode::Petrified)
 			hit = 0;
-		bool unused;
-		if (!CheckMonsterHit(monster, &unused) && hit < hper) {
+		if (monster.TryLiftGargoyle())
+			return;
+		if (hit < hper) {
 			int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 			monster._mhitpoints -= dam;
 			if (monster._mhitpoints >> 6 <= 0) {
-				if (monster._mmode == MonsterMode::Petrified) {
-					StartDeathFromMonster(i, mid);
+				StartDeathFromMonster(i, mid);
+				if (monster._mmode == MonsterMode::Petrified)
 					monster.Petrify();
-				} else {
-					StartDeathFromMonster(i, mid);
-				}
 			} else {
-				if (monster._mmode == MonsterMode::Petrified) {
-					MonsterHitMonster(mid, i, dam);
+				MonsterHitMonster(mid, i, dam);
+				if (monster._mmode == MonsterMode::Petrified)
 					monster.Petrify();
-				} else {
-					MonsterHitMonster(mid, i, dam);
-				}
 			}
 		}
 	}
@@ -4071,12 +4068,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 		monster.position.old = position;
 	}
 
-	if (monster._mmode == MonsterMode::Petrified) {
-		StartMonsterDeath(i, pnum, false);
-		monster.Petrify();
-	} else {
-		StartMonsterDeath(i, pnum, false);
-	}
+	StartMonsterDeath(i, pnum, false);
 }
 
 void M_UpdateLeader(int i)
@@ -4951,25 +4943,6 @@ bool CanTalkToMonst(const Monster &monster)
 	return IsAnyOf(monster._mgoal, MGOAL_INQUIRING, MGOAL_TALKING);
 }
 
-bool CheckMonsterHit(Monster &monster, bool *ret)
-{
-	if (monster._mAi == AI_GARG && (monster._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
-		monster._mFlags &= ~MFLAG_ALLOW_SPECIAL;
-		monster._mmode = MonsterMode::SpecialMeleeAttack;
-		*ret = true;
-		return true;
-	}
-
-	if (monster.MType->mtype >= MT_COUNSLR && monster.MType->mtype <= MT_ADVOCATE) {
-		if (monster._mgoal != MGOAL_NORMAL) {
-			*ret = false;
-			return true;
-		}
-	}
-
-	return false;
-}
-
 int encode_enemy(Monster &monster)
 {
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0)
@@ -5016,6 +4989,57 @@ bool Monster::IsWalking() const
 	default:
 		return false;
 	}
+}
+
+bool Monster::IsImmune(missile_id mName) const
+{
+	missile_resistance missileElement = MissilesData[mName].mResist;
+
+	if (((mMagicRes & IMMUNE_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((mMagicRes & IMMUNE_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((mMagicRes & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
+	    || ((mMagicRes & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
+		return true;
+	if (mName == MIS_HBOLT && MType->mtype != MT_DIABLO && MData->mMonstClass != MonsterClass::Undead)
+		return true;
+	return false;
+}
+
+bool Monster::IsResistant(missile_id mName) const
+{
+	missile_resistance missileElement = MissilesData[mName].mResist;
+
+	if (((mMagicRes & RESIST_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((mMagicRes & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((mMagicRes & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
+		return true;
+	if (gbIsHellfire && mName == MIS_HBOLT && (MType->mtype == MT_DIABLO || MType->mtype == MT_BONEDEMN))
+		return true;
+	return false;
+}
+
+bool Monster::IsPossibleToHit() const
+{
+	if (_mhitpoints >> 6 <= 0
+	    || mtalkmsg != TEXT_NONE
+	    || (MType->mtype == MT_ILLWEAV && _mgoal == MGOAL_RETREAT)
+	    || _mmode == MonsterMode::Charge)
+		return false;
+	if ((MType->mtype >= MT_COUNSLR && MType->mtype <= MT_ADVOCATE) && _mgoal != MGOAL_NORMAL) {
+		GenerateRnd(100); // Vanilla Compatibility Note: Pushing RNG, as original function CheckMonsterHit was called after CTH roll
+		return false;
+	}
+	return true;
+}
+
+bool  Monster::TryLiftGargoyle()
+{
+	if (_mAi == AI_GARG && (_mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
+		_mFlags &= ~MFLAG_ALLOW_SPECIAL;
+		_mmode = MonsterMode::SpecialMeleeAttack;
+		return true;
+	}
+	return false;
 }
 
 } // namespace devilution
