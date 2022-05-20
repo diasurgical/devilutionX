@@ -137,33 +137,41 @@ struct Missile {
 class Collidable {
 public:
 	Missile *cm;
-	bool IsMonsterPossibleToHit(devilution::Monster &monster) const;
+	int m_minDam;
+	int m_maxDam;
+	bool m_shift;
 };
 
 class TrapMissile : public Collidable {
 
 public:
-	TrapMissile(Missile missile)
+	TrapMissile(Missile missile, int minDam, int maxDam, bool shift)
 	{
 		cm = &missile;
+		m_minDam = minDam;
+		m_maxDam = maxDam;
+		m_shift = shift;
 	}
-	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const;
-	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const ;
+	int calculateCTHAgainstMonster(devilution::Monster &monster) const;
+	void hitMonster(int m) const;
 };
 
 class PlayerMissile : public Collidable {
 
 public:
-	PlayerMissile(Missile missile)
+	PlayerMissile(Missile missile, int minDam, int maxDam, bool shift)
 	{
 		cm = &missile;
+		m_minDam = minDam;
+		m_maxDam = maxDam;
+		m_shift = shift;
 	}
-	int CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const;
-	void HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const;
+	int calculateCTHAgainstMonster(devilution::Monster &monster) const;
+	void hitMonster(int m) const;
 };
 
 template <typename Collidable>
-bool TryHitMonster(Collidable const &col, int m, int mindam, int maxdam, bool shift);
+bool TryHitMonster(Collidable const &col, int m);
 
 extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;

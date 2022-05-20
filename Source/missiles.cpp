@@ -317,7 +317,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 		if (missile._micaster == TARGET_MONSTERS) {
 			int mid = dMonster[mx][my];
 			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
-				if (TryHitMonster(PlayerMissile(missile), abs(mid) - 1, mindam, maxdam, shift)) {
+				if (TryHitMonster(PlayerMissile(missile, mindam, maxdam, shift), abs(mid) - 1)) {
 					if (!nodel)
 						missile._mirange = 0;
 					missile._miHitFlag = true;
@@ -346,7 +346,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0
 			    && dMonster[mx][my] > 0
 			    && (Monsters[dMonster[mx][my] - 1]._mFlags & MFLAG_GOLEM) != 0
-			    && TryHitMonster(TrapMissile(missile), dMonster[mx][my] - 1, mindam, maxdam, shift)) {
+			    && TryHitMonster(TrapMissile(missile, mindam, maxdam, shift), dMonster[mx][my] - 1)) {
 				if (!nodel)
 					missile._mirange = 0;
 				missile._miHitFlag = true;
@@ -375,12 +375,12 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 		if (mid > 0) {
 			mid -= 1;
 			if (missile._micaster == TARGET_BOTH) {
-				if (TryHitMonster(PlayerMissile(missile), mid, mindam, maxdam, shift)) {
+				if (TryHitMonster(PlayerMissile(missile, mindam, maxdam, shift), mid)) {
 					if (!nodel)
 						missile._mirange = 0;
 					missile._miHitFlag = true;
 				}
-			} else if (TryHitMonster(TrapMissile(missile), mid, mindam, maxdam, shift)) {
+			} else if (TryHitMonster(TrapMissile(missile, mindam, maxdam, shift), mid)) {
 				if (!nodel)
 					missile._mirange = 0;
 				missile._miHitFlag = true;
@@ -845,8 +845,9 @@ void StartHitMonsterByMissile(int m, int pnum, int dam)
 		monster.Petrify();
 }
 
-int PlayerMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const
+int PlayerMissile::calculateCTHAgainstMonster(devilution::Monster &monster) const
 {
+	int pnum = cm->_misource;
 	int hper = 0;
 	if (pnum != -1) {
 		const auto &player = Players[pnum];
@@ -863,18 +864,18 @@ int PlayerMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &mon
 	return hper;
 }
 
-void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const
+void PlayerMissile::hitMonster(int m) const
 {
 	auto &monster = Monsters[m];
 	bool resist = monster.IsResistant(cm->_mitype);
-
+	int pnum = cm->_misource;
 	const auto &player = Players[pnum];
 
 	int dam;
 	if (cm->_mitype == MIS_BONESPIRIT) {
 		dam = monster._mhitpoints / 3 >> 6;
 	} else {
-		dam = mindam + GenerateRnd(maxdam - mindam + 1);
+		dam = m_minDam + GenerateRnd(m_maxDam - m_minDam + 1);
 		if (MissilesData[cm->_mitype].mType == 0 && MissilesData[cm->_mitype].mResist == MISR_NONE) {
 			dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 			if (player._pClass == HeroClass::Rogue)
@@ -882,8 +883,7 @@ void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int
 			else
 				dam += player._pDamageMod / 2;
 		}
-
-		if (!shift)
+		if (!m_shift)
 			dam <<= 6;
 		if (resist)
 			dam >>= 2;
@@ -909,18 +909,19 @@ void PlayerMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int
 	}
 }
 
-int TrapMissile::CalculateCTHAgainstMonster(int pnum, devilution::Monster &monster) const
+int TrapMissile::calculateCTHAgainstMonster(devilution::Monster &monster) const
 {
 	return 90 - (BYTE)monster.mArmorClass - cm->_midist;
 }
 
-void TrapMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m) const
+void TrapMissile::hitMonster(int m) const
 {
 	auto &monster = Monsters[m];
 	bool resist = monster.IsResistant(cm->_mitype);
+	int pnum = cm->_misource;
 
-	int dam = mindam + GenerateRnd(maxdam - mindam + 1);
-	if (!shift)
+	int dam = m_minDam + GenerateRnd(m_maxDam - m_minDam + 1);
+	if (!m_shift)
 		dam <<= 6;
 	if (resist)
 		monster._mhitpoints -= dam / 4;
@@ -939,17 +940,17 @@ void TrapMissile::HitMonster(int pnum, int mindam, int maxdam, bool shift, int m
 }
 
 template <typename Collidable>
-bool TryHitMonster(Collidable const &col, int m, int mindam, int maxdam, bool shift)
+bool TryHitMonster(Collidable const &col, int m)
 {
 	auto &monster = Monsters[m];
 
-	if (!col.IsMonsterPossibleToHit(monster))
+	if (!monster.IsPossibleToHit() || monster.IsImmune(col.cm->_mitype))
 		return false;
 
 	int pnum = col.cm->_misource;
 
 	int hit = GenerateRnd(100);
-	int hper = col.CalculateCTHAgainstMonster(pnum, monster);
+	int hper = col.calculateCTHAgainstMonster(monster);
 	hper = clamp(hper, 5, 95);
 
 	if (monster.TryLiftGargoyle())
@@ -961,14 +962,7 @@ bool TryHitMonster(Collidable const &col, int m, int mindam, int maxdam, bool sh
 #endif
 			return false;
 	}
-	col.HitMonster(pnum, mindam, maxdam, shift, m);
-	return true;
-}
-
-bool Collidable::IsMonsterPossibleToHit(devilution::Monster &monster) const
-{
-	if (!monster.IsPossibleToHit() || monster.IsImmune(cm->_mitype))
-		return false;
+	col.hitMonster(m);
 	return true;
 }
 
