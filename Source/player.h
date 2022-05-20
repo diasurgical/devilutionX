@@ -347,6 +347,8 @@ struct Player {
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
 	ItemSpecialEffectHf pDamAcFlags;
+	/** @brief Specifies whether players are in non-PvP mode. */
+	bool friendlyMode = true;
 
 	void CalcScrolls();
 

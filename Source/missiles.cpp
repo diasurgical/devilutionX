@@ -309,13 +309,13 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
-	if (sgGameInitInfo.bFriendlyFire == 0 && gbFriendlyMode)
+	auto &player = Players[pnum];
+	auto &target = Players[p];
+
+	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
 		return false;
 
 	*blocked = false;
-
-	auto &player = Players[pnum];
-	auto &target = Players[p];
 
 	if (target._pInvincible) {
 		return false;

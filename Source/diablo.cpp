@@ -113,8 +113,6 @@ char gszProductName[64] = "DevilutionX vUnknown";
 bool DebugDisableNetworkTimeout = false;
 std::vector<std::string> DebugCmdsFromCommandLine;
 #endif
-/** Specifies whether players are in non-PvP mode. */
-bool gbFriendlyMode = true;
 GameLogicStep gGameLogicStep = GameLogicStep::None;
 QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 	{ "QuickMessage1", N_("I need help! Come Here!") },
@@ -254,7 +252,7 @@ void LeftMouseCmd(bool bShift)
 				LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 			}
-		} else if (pcursplr != -1 && !gbFriendlyMode) {
+		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
 		}
@@ -274,7 +272,7 @@ void LeftMouseCmd(bool bShift)
 		} else if (pcursmonst != -1) {
 			LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else if (pcursplr != -1 && !gbFriendlyMode) {
+		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 		}

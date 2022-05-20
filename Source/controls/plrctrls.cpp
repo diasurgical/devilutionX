@@ -365,7 +365,7 @@ void CheckPlayerNearby()
 	auto &myPlayer = Players[MyPlayerId];
 
 	int spl = myPlayer._pRSpell;
-	if (gbFriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
+	if (myPlayer.friendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
@@ -512,7 +512,7 @@ void Interact()
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
+	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !Players[MyPlayerId].friendlyMode) {
 		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;

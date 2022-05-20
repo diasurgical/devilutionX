@@ -1148,7 +1148,7 @@ bool DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			didhit = PlrHitMonst(pnum, m);
-		} else if (dPlayer[dx][dy] != 0 && !gbFriendlyMode) {
+		} else if (dPlayer[dx][dy] != 0 && !player.friendlyMode) {
 			BYTE p = dPlayer[dx][dy];
 			if (dPlayer[dx][dy] > 0) {
 				p = dPlayer[dx][dy] - 1;
@@ -3627,7 +3627,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, spellID, spellType, sl);
-	} else if (pcursplr != -1 && !isShiftHeld && !gbFriendlyMode) {
+	} else if (pcursplr != -1 && !isShiftHeld && !myPlayer.friendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, spellID, spellType, sl);
