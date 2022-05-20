@@ -1124,10 +1124,10 @@ void DrawTalkPan(const Surface &out)
 		if (i == MyPlayerId)
 			continue;
 
-		UiFlags color = UiFlags::ColorRed;
+		auto &player = Players[i];
+		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition { 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y };
 		if (WhisperList[i]) {
-			color = UiFlags::ColorWhitegold;
 			if (TalkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
 				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
@@ -1140,7 +1140,6 @@ void DrawTalkPan(const Surface &out)
 			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
 		}
-		auto &player = Players[i];
 		if (player.plractive) {
 			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
 		}
