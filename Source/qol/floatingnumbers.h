@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/point.hpp"
 #include "misdat.h"

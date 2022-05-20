@@ -1,4 +1,4 @@
-#include "itemlabels.h"
+#include "floatingnumbers.h"
 
 #include <ctime>
 #include <deque>
@@ -8,7 +8,6 @@
 
 #include "diablo.h"
 #include "engine/render/text_render.hpp"
-#include "floatingnumbers.h"
 #include "options.h"
 #include "utils/ui_fwd.h"
 
