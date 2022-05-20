@@ -258,6 +258,9 @@ struct Monster { // note: missing field _mAFNum
 	 * @brief Is the monster currently walking?
 	 */
 	bool IsWalking() const;
+	bool IsImmune(missile_id mitype) const;
+	bool IsResistant(missile_id mitype) const;
+	bool IsPossibleToHit() const;
 };
 
 extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
