@@ -947,8 +947,6 @@ bool TryHitMonster(Collidable const &col, int m)
 	if (!monster.IsPossibleToHit() || monster.IsImmune(col.cm->_mitype))
 		return false;
 
-	int pnum = col.cm->_misource;
-
 	int hit = GenerateRnd(100);
 	int hper = col.calculateCTHAgainstMonster(monster);
 	hper = clamp(hper, 5, 95);
