@@ -985,8 +985,6 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 #endif
 	if ((monster._mhitpoints >> 6) <= 0) {
 		M_StartKill(m, pnum);
-		if (monster._mmode == MonsterMode::Petrified)
-			monster.Petrify();
 	} else {
 		if (!(monster._mmode == MonsterMode::Petrified) && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(m);

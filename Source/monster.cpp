@@ -1128,6 +1128,8 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	M_FallenFear(monster.position.tile);
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
+	if (monster._mmode == MonsterMode::Petrified)
+		monster.Petrify();
 }
 
 void StartDeathFromMonster(int i, int mid)
@@ -4072,12 +4074,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 		monster.position.old = position;
 	}
 
-	if (monster._mmode == MonsterMode::Petrified) {
-		StartMonsterDeath(i, pnum, false);
-		monster.Petrify();
-	} else {
-		StartMonsterDeath(i, pnum, false);
-	}
+	StartMonsterDeath(i, pnum, false);
 }
 
 void M_UpdateLeader(int i)

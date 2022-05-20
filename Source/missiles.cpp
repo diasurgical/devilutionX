@@ -817,14 +817,6 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-void StartKillMonsterByMissile(int m, int pnum)
-{
-	auto &monster = Monsters[m];
-	M_StartKill(m, pnum);
-	if (monster._mmode == MonsterMode::Petrified)
-		monster.Petrify();
-}
-
 void StartHitMonsterByMissile(int m, int pnum, int dam)
 {
 	auto &monster = Monsters[m];
@@ -897,7 +889,7 @@ void PlayerMissile::hitMonster(int m) const
 		monster._mFlags |= MFLAG_NOHEAL;
 
 	if ((monster._mhitpoints >> 6) <= 0)
-		StartKillMonsterByMissile(m, pnum);
+		M_StartKill(m, pnum);
 	else if (resist)
 		PlayEffect(monster, 1);
 	else
@@ -932,7 +924,7 @@ void TrapMissile::hitMonster(int m) const
 		monster._mhitpoints = 0;
 #endif
 	if ((monster._mhitpoints >> 6) <= 0)
-		StartKillMonsterByMissile(m, pnum);
+		M_StartKill(m, pnum);
 	else if (resist)
 		PlayEffect(monster, 1);
 	else
