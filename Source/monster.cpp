@@ -1115,6 +1115,7 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 		PlayEffect(monster, 2);
 
 	Direction md = pnum >= 0 ? GetMonsterDirection(monster) : monster._mdir;
+	bool wasPetrified = (monster._mmode == MonsterMode::Petrified);
 	NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monster._mmode = MonsterMode::Death;
 	monster._mgoal = MGOAL_NONE;
@@ -1128,6 +1129,8 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	M_FallenFear(monster.position.tile);
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
+	if (wasPetrified)
+		monster.Petrify();
 }
 
 void StartDeathFromMonster(int i, int mid)
@@ -1161,7 +1164,7 @@ void StartDeathFromMonster(int i, int mid)
 	Direction md = Opposite(killer._mdir);
 	if (monster.MType->mtype == MT_GOLEM)
 		md = Direction::South;
-
+	bool wasPetrified = (monster._mmode == MonsterMode::Petrified);
 	NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monster._mmode = MonsterMode::Death;
 	monster.position.offset = { 0, 0 };
@@ -1176,6 +1179,8 @@ void StartDeathFromMonster(int i, int mid)
 
 	if (gbIsHellfire)
 		M_StartStand(killer, killer._mdir);
+	if (wasPetrified)
+		monster.Petrify();
 }
 
 void StartFadein(Monster &monster, Direction md, bool backwards)
@@ -1304,19 +1309,9 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 			int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 			monster._mhitpoints -= dam;
 			if (monster._mhitpoints >> 6 <= 0) {
-				if (monster._mmode == MonsterMode::Petrified) {
-					StartDeathFromMonster(i, mid);
-					monster.Petrify();
-				} else {
-					StartDeathFromMonster(i, mid);
-				}
+				StartDeathFromMonster(i, mid);
 			} else {
-				if (monster._mmode == MonsterMode::Petrified) {
-					MonsterHitMonster(mid, i, dam);
-					monster.Petrify();
-				} else {
-					MonsterHitMonster(mid, i, dam);
-				}
+				MonsterHitMonster(mid, i, dam);
 			}
 		}
 	}
@@ -4072,12 +4067,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 		monster.position.old = position;
 	}
 
-	if (monster._mmode == MonsterMode::Petrified) {
-		StartMonsterDeath(i, pnum, false);
-		monster.Petrify();
-	} else {
-		StartMonsterDeath(i, pnum, false);
-	}
+	StartMonsterDeath(i, pnum, false);
 }
 
 void M_UpdateLeader(int i)
