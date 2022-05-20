@@ -841,10 +841,8 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	hper += player.GetMeleePiercingToHit() - player.CalculateArmorPierce(monster.mArmorClass, true);
 	hper = clamp(hper, 5, 95);
 
-	bool ret = false;
-	if (CheckMonsterHit(monster, &ret)) {
-		return ret;
-	}
+	if (monster.TryLiftGargoyle())
+		return true;
 
 	if (hit >= hper) {
 #ifdef _DEBUG

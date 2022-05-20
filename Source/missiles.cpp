@@ -212,9 +212,8 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (monster._mmode == MonsterMode::Petrified)
 		hit = 0;
 
-	bool ret = false;
-	if (CheckMonsterHit(monster, &ret))
-		return ret;
+	if (monster.TryLiftGargoyle())
+		return true;
 
 	if (hit >= hper) {
 #ifdef _DEBUG
@@ -938,10 +937,8 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	int hit = GenerateRnd(100);
 	int hper = 90 - (BYTE)monster.mArmorClass - dist;
 	hper = clamp(hper, 5, 95);
-	bool ret;
-	if (CheckMonsterHit(monster, &ret)) {
-		return ret;
-	}
+	if (monster.TryLiftGargoyle())
+		return true;
 	if (hit >= hper && monster._mmode != MonsterMode::Petrified) {
 #ifdef _DEBUG
 		if (!DebugGodMode)
