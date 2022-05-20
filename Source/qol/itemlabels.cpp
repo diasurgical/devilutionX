@@ -13,6 +13,7 @@
 #include "gmenu.h"
 #include "inv.h"
 #include "itemlabels.h"
+#include "qol/stash.h"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 
@@ -94,9 +95,9 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 bool IsMouseOverGameArea()
 {
-	if ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))
+	if ((IsRightPanelOpen()) && GetRightPanel().Contains(MousePosition))
 		return false;
-	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition))
+	if ((IsLeftPanelOpen()) && GetLeftPanel().Contains(MousePosition))
 		return false;
 	if (GetMainPanel().Contains(MousePosition))
 		return false;

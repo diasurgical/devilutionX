@@ -3568,8 +3568,8 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))                 // inside right panel
+		    (IsLeftPanelOpen() && GetLeftPanel().Contains(MousePosition))      // inside left panel
+		    || (IsRightPanelOpen() && GetRightPanel().Contains(MousePosition)) // inside right panel
 		) {
 			if (spellID != SPL_HEAL
 			    && spellID != SPL_IDENTIFY

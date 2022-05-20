@@ -55,6 +55,8 @@ extern bool spselflag;
 const Rectangle &GetMainPanel();
 const Rectangle &GetLeftPanel();
 const Rectangle &GetRightPanel();
+bool IsLeftPanelOpen();
+bool IsRightPanelOpen();
 extern std::optional<OwnedSurface> pBtmBuff;
 extern std::optional<OwnedCelSprite> pGBoxBuff;
 extern SDL_Rect PanBtnPos[8];

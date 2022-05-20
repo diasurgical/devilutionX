@@ -3770,7 +3770,7 @@ bool DoOil(Player &player, int cii)
 void DrawUniqueInfo(const Surface &out)
 {
 	const Point position = GetRightPanel().position - Displacement { SPANEL_WIDTH, 0 };
-	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(position)) {
+	if (IsLeftPanelOpen() && GetLeftPanel().Contains(position)) {
 		return;
 	}
 

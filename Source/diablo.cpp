@@ -430,9 +430,9 @@ void ReleaseKey(int vkey)
 void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
-		if (!chrflag && !QuestLogIsOpen && !IsStashOpen && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+		if (!IsLeftPanelOpen() && IsRightPanelOpen() && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 			SetCursorPos(MousePosition + Displacement { 160, 0 });
-		} else if (!invflag && !sbookflag && (chrflag || QuestLogIsOpen) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+		} else if (!IsRightPanelOpen() && IsLeftPanelOpen() && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
 			SetCursorPos(MousePosition - Displacement { 160, 0 });
 		}
 	}
@@ -1355,7 +1355,7 @@ void InventoryKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	invflag = !invflag;
-	if (!chrflag && !QuestLogIsOpen && !IsStashOpen && CanPanelsCoverView()) {
+	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
@@ -1376,7 +1376,7 @@ void CharacterSheetKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	chrflag = !chrflag;
-	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+	if (!IsRightPanelOpen() && CanPanelsCoverView()) {
 		if (!chrflag) { // We closed the character sheet
 			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
@@ -1401,7 +1401,7 @@ void QuestLogKeyPressed()
 	} else {
 		QuestLogIsOpen = false;
 	}
-	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+	if (!IsRightPanelOpen() && CanPanelsCoverView()) {
 		if (!QuestLogIsOpen) { // We closed the quest log
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
@@ -1438,7 +1438,7 @@ void SpellBookKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	sbookflag = !sbookflag;
-	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
+	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
@@ -2042,7 +2042,7 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (invflag || chrflag || sbookflag || QuestLogIsOpen) {
+	if (IsLeftPanelOpen() || IsRightPanelOpen()) {
 		ClosePanels();
 		rv = true;
 	}
