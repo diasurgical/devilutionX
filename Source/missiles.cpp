@@ -189,33 +189,8 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 {
 	auto &monster = Monsters[m];
 
-	bool resist = false;
-	if (monster.mtalkmsg != TEXT_NONE
-	    || monster._mhitpoints >> 6 <= 0
-	    || (t == MIS_HBOLT && monster.MType->mtype != MT_DIABLO && monster.MData->mMonstClass != MonsterClass::Undead)) {
+	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
 		return false;
-	}
-	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT)
-		return false;
-	if (monster._mmode == MonsterMode::Charge)
-		return false;
-
-	uint8_t mor = monster.mMagicRes;
-	missile_resistance mir = MissilesData[t].mResist;
-
-	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & IMMUNE_LIGHTNING) != 0 && mir == MISR_LIGHTNING)
-	    || ((mor & IMMUNE_ACID) != 0 && mir == MISR_ACID))
-		return false;
-
-	if (((mor & RESIST_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & RESIST_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & RESIST_LIGHTNING) != 0 && mir == MISR_LIGHTNING))
-		resist = true;
-
-	if (gbIsHellfire && t == MIS_HBOLT && (monster.MType->mtype == MT_DIABLO || monster.MType->mtype == MT_BONEDEMN))
-		resist = true;
 
 	int hit = GenerateRnd(100);
 	int hper = 0;
@@ -257,14 +232,14 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 	const auto &player = Players[pnum];
 
-	if (MissilesData[t].mType == 0 && mir == MISR_NONE) {
+	if (MissilesData[t].mType == 0 && MissilesData[t].mResist == MISR_NONE) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 		if (player._pClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
 		else
 			dam += player._pDamageMod / 2;
 	}
-
+	bool resist = monster.IsResistant(t);
 	if (!shift)
 		dam <<= 6;
 	if (resist)
@@ -957,31 +932,8 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 {
 	auto &monster = Monsters[m];
 
-	bool resist = false;
-	if (monster.mtalkmsg != TEXT_NONE) {
+	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
 		return false;
-	}
-	if (monster._mhitpoints >> 6 <= 0) {
-		return false;
-	}
-	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT)
-		return false;
-	if (monster._mmode == MonsterMode::Charge)
-		return false;
-
-	missile_resistance mir = MissilesData[t].mResist;
-	int mor = monster.mMagicRes;
-	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & IMMUNE_LIGHTNING) != 0 && mir == MISR_LIGHTNING)) {
-		return false;
-	}
-
-	if (((mor & RESIST_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & RESIST_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & RESIST_LIGHTNING) != 0 && mir == MISR_LIGHTNING)) {
-		resist = true;
-	}
 
 	int hit = GenerateRnd(100);
 	int hper = 90 - (BYTE)monster.mArmorClass - dist;
@@ -997,6 +949,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 			return false;
 	}
 
+	bool resist = monster.IsResistant(t);
 	int dam = mindam + GenerateRnd(maxdam - mindam + 1);
 	if (!shift)
 		dam <<= 6;

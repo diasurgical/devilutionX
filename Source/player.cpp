@@ -823,17 +823,8 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 	auto &player = Players[pnum];
 
-	if ((monster._mhitpoints >> 6) <= 0) {
+	if (!monster.IsPossibleToHit())
 		return false;
-	}
-
-	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT) {
-		return false;
-	}
-
-	if (monster._mmode == MonsterMode::Charge) {
-		return false;
-	}
 
 	if (adjacentDamage) {
 		if (player._pLevel > 20)
