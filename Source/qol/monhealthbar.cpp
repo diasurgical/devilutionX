@@ -145,15 +145,16 @@ void DrawMonsterHealthBar(const Surface &out)
 	if (multiplier > 0)
 		DrawString(out, fmt::format("x{:d}", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
 	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
-		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
-		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
+		MonsterResists res = monster.mResists;
+		bool immunes[] = { res.isMagicImmune(), res.isFireImmune(), res.isLightningImmune() };
+		bool resists[] = { res.isMagicResistant(), res.isFireResistant(), res.isLightningResistant() };
 
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
-			if ((monster.mMagicRes & immunes[i]) != 0) {
+			if (immunes[i]) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
-			} else if ((monster.mMagicRes & resists[i]) != 0) {
+			} else if (resists[i]) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}

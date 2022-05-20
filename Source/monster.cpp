@@ -220,7 +220,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.mMinDamage2 = monster.MData->mMinDamage2;
 	monster.mMaxDamage2 = monster.MData->mMaxDamage2;
 	monster.mArmorClass = monster.MData->mArmorClass;
-	monster.mMagicRes = monster.MData->mMagicRes;
+	monster.mResists = monster.MData->mNormalResist;
 	monster.leader = 0;
 	monster.leaderRelation = LeaderRelation::None;
 	monster._mFlags = monster.MData->mFlags;
@@ -249,6 +249,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
 		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
 		monster.mArmorClass += NIGHTMARE_AC_BONUS;
+		monster.mResists = monster.MData->mNightmareResist;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster._mmaxhp = 4 * monster._mmaxhp;
 		if (gbIsHellfire)
@@ -265,7 +266,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 		monster.mArmorClass += HELL_AC_BONUS;
-		monster.mMagicRes = monster.MData->mMagicRes2;
+		monster.mResists = monster.MData->mHellResist;
 	}
 }
 
@@ -1908,8 +1909,8 @@ bool IsTileSafe(const Monster &monster, Point position)
 		return true;
 	}
 
-	bool fearsFire = (monster.mMagicRes & IMMUNE_FIRE) == 0 || monster.MType->mtype == MT_DIABLO;
-	bool fearsLightning = (monster.mMagicRes & IMMUNE_LIGHTNING) == 0 || monster.MType->mtype == MT_DIABLO;
+	bool fearsFire = !monster.mResists.isFireImmune() || monster.MType->mtype == MT_DIABLO;
+	bool fearsLightning = !monster.mResists.isLightningImmune() || monster.MType->mtype == MT_DIABLO;
 
 	for (auto &missile : Missiles) {
 		if (missile.position.tile == position) {
@@ -3501,7 +3502,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	monster.mMaxDamage = uniqueMonsterData.mMaxDamage;
 	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
 	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
-	monster.mMagicRes = uniqueMonsterData.mMagicRes;
+	monster.mResists = uniqueMonsterData.mResists;
 	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
 		monster.mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
@@ -3809,7 +3810,7 @@ void monster_some_crypt()
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.mArmorClass -= 50;
 	int hp = monster._mmaxhp / 2;
-	monster.mMagicRes = 0;
+	monster.mResists.setResistsToZero();
 	monster._mhitpoints = hp;
 	monster._mmaxhp = hp;
 }
@@ -4639,9 +4640,11 @@ void PrintMonstHistory(int mt)
 		AddPanelString(fmt::format(_("Total kills: {:d}"), MonsterKillCounts[mt]));
 	}
 
+	auto &monsterType = MonstersData[mt];
+
 	if (MonsterKillCounts[mt] >= 30) {
-		int minHP = MonstersData[mt].mMinHP;
-		int maxHP = MonstersData[mt].mMaxHP;
+		int minHP = monsterType.mMinHP;
+		int maxHP = monsterType.mMaxHP;
 		if (!gbIsHellfire && mt == MT_DIABLO) {
 			minHP /= 2;
 			maxHP /= 2;
@@ -4671,30 +4674,43 @@ void PrintMonstHistory(int mt)
 		AddPanelString(fmt::format(_("Hit Points: {:d}-{:d}"), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].mMagicRes : MonstersData[mt].mMagicRes2;
-		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
-			AddPanelString(_("No magic resistance"));
-		} else {
-			if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0) {
+		MonsterResists res;
+		switch (sgGameInitInfo.nDifficulty) {
+		case DIFF_NIGHTMARE:
+			res = monsterType.mNightmareResist;
+			break;
+		case DIFF_HELL:
+			res = monsterType.mHellResist;
+			break;
+		case DIFF_NORMAL:
+		default:
+			res = monsterType.mNormalResist;
+			break;
+		}
+
+		if (res.hasResistancesOrImmunities()) {
+			if (res.hasResistances()) {
 				std::string resists = _("Resists:");
-				if ((res & RESIST_MAGIC) != 0)
+				if (res.isMagicResistant())
 					resists.append(_(" Magic"));
-				if ((res & RESIST_FIRE) != 0)
+				if (res.isFireResistant())
 					resists.append(_(" Fire"));
-				if ((res & RESIST_LIGHTNING) != 0)
+				if (res.isLightningResistant())
 					resists.append(_(" Lightning"));
 				AddPanelString(resists);
 			}
-			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
+			if (res.hasImmunities()) {
 				std::string immune = _("Immune:");
-				if ((res & IMMUNE_MAGIC) != 0)
+				if (res.isMagicImmune())
 					immune.append(_(" Magic"));
-				if ((res & IMMUNE_FIRE) != 0)
+				if (res.isFireImmune())
 					immune.append(_(" Fire"));
-				if ((res & IMMUNE_LIGHTNING) != 0)
+				if (res.isLightningImmune())
 					immune.append(_(" Lightning"));
 				AddPanelString(immune);
 			}
+		} else {
+			AddPanelString(_("No magic resistance"));
 		}
 	}
 }
@@ -4706,20 +4722,20 @@ void PrintUniqueHistory()
 		AddPanelString(fmt::format(_("Type: {:s}"), GetMonsterTypeText(*monster.MData)));
 	}
 
-	int res = monster.mMagicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
-	if (res == 0) {
-		AddPanelString(_("No resistances"));
-		AddPanelString(_("No Immunities"));
-	} else {
-		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0)
+	MonsterResists const res = monster.mResists;
+	if (res.hasResistancesOrImmunities()) {
+		if (res.hasResistances())
 			AddPanelString(_("Some Magic Resistances"));
 		else
 			AddPanelString(_("No resistances"));
-		if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
+		if (res.hasImmunities()) {
 			AddPanelString(_("Some Magic Immunities"));
 		} else {
 			AddPanelString(_("No Immunities"));
 		}
+	} else {
+		AddPanelString(_("No resistances"));
+		AddPanelString(_("No Immunities"));
 	}
 }
 
