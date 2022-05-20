@@ -97,6 +97,14 @@ const Rectangle &GetRightPanel()
 {
 	return RightPanel;
 }
+bool IsLeftPanelOpen()
+{
+	return chrflag || QuestLogIsOpen || IsStashOpen;
+}
+bool IsRightPanelOpen()
+{
+	return invflag || sbookflag;
+}
 
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
@@ -998,13 +1006,13 @@ void DrawDurIcon(const Surface &out)
 	bool hasRoomUnderPanels = MainPanel.position.y - (RightPanel.position.y + RightPanel.size.height) >= 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || QuestLogIsOpen || IsStashOpen) && (invflag || sbookflag))
+		if (IsLeftPanelOpen() && IsRightPanelOpen())
 			return;
 	}
 
 	int x = MainPanel.position.x + MainPanel.size.width - 32 - 16;
 	if (!hasRoomUnderPanels) {
-		if ((invflag || sbookflag) && MainPanel.position.x + MainPanel.size.width > RightPanel.position.x)
+		if (IsRightPanelOpen() && MainPanel.position.x + MainPanel.size.width > RightPanel.position.x)
 			x -= MainPanel.position.x + MainPanel.size.width - RightPanel.position.x;
 	}
 
