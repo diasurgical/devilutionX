@@ -1311,9 +1311,8 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 					monster.Petrify();
 			} else {
 				MonsterHitMonster(mid, i, dam);
-				if (monster._mmode == MonsterMode::Petrified) {
+				if (monster._mmode == MonsterMode::Petrified)
 					monster.Petrify();
-				}
 			}
 		}
 	}
