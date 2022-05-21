@@ -89,7 +89,7 @@ bool HandleSpeedBookInteraction(const SDL_Event &event)
 
 void HandleBottomPanelInteraction(const SDL_Event &event)
 {
-	if (!MyPlayer->HoldItem.isEmpty())
+	if (!gbRunGame || !MyPlayer->HoldItem.isEmpty())
 		return;
 
 	ClearPanBtn();
