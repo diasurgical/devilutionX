@@ -1115,9 +1115,10 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 		PlayEffect(monster, 2);
 
 	Direction md = pnum >= 0 ? GetMonsterDirection(monster) : monster._mdir;
-	bool wasPetrified = (monster._mmode == MonsterMode::Petrified);
-	NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
-	monster._mmode = MonsterMode::Death;
+	if (monster._mmode != MonsterMode::Petrified) {
+		NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+		monster._mmode = MonsterMode::Death;
+	}
 	monster._mgoal = MGOAL_NONE;
 	monster.position.offset = { 0, 0 };
 	monster._mVar1 = 0;
@@ -1129,8 +1130,6 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	M_FallenFear(monster.position.tile);
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
-	if (wasPetrified)
-		monster.Petrify();
 }
 
 void StartDeathFromMonster(int i, int mid)
@@ -1164,9 +1163,10 @@ void StartDeathFromMonster(int i, int mid)
 	Direction md = Opposite(killer._mdir);
 	if (monster.MType->mtype == MT_GOLEM)
 		md = Direction::South;
-	bool wasPetrified = (monster._mmode == MonsterMode::Petrified);
-	NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
-	monster._mmode = MonsterMode::Death;
+	if (monster._mmode != MonsterMode::Petrified) {
+		NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+		monster._mmode = MonsterMode::Death;
+	}
 	monster.position.offset = { 0, 0 };
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
@@ -1179,8 +1179,6 @@ void StartDeathFromMonster(int i, int mid)
 
 	if (gbIsHellfire)
 		M_StartStand(killer, killer._mdir);
-	if (wasPetrified)
-		monster.Petrify();
 }
 
 void StartFadein(Monster &monster, Direction md, bool backwards)
