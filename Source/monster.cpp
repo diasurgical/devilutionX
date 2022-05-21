@@ -4999,13 +4999,11 @@ bool Monster::IsResistant(missile_id mName) const
 
 bool Monster::IsPossibleToHit() const
 {
-	if (_mhitpoints >> 6 <= 0
+	return !(_mhitpoints >> 6 <= 0
 	    || mtalkmsg != TEXT_NONE
-	    || MType->mtype == MT_ILLWEAV && _mgoal == MGOAL_RETREAT
+	    || (MType->mtype == MT_ILLWEAV && _mgoal == MGOAL_RETREAT)
 	    || _mmode == MonsterMode::Charge
-	    || MType->mtype >= MT_COUNSLR && MType->mtype <= MT_ADVOCATE && _mgoal != MGOAL_NORMAL)
-		return false;
-	return true;
+	    || (MType->mtype >= MT_COUNSLR && MType->mtype <= MT_ADVOCATE && _mgoal != MGOAL_NORMAL));
 }
 
 bool Monster::TryLiftGargoyle()
