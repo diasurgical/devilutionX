@@ -1174,9 +1174,8 @@ void StartDeathFromMonster(int i, int mid)
 	dMonster[monster.position.tile.x][monster.position.tile.y] = mid + 1;
 	CheckQuestKill(monster, true);
 	M_FallenFear(monster.position.tile);
-	if (monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID)
+	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster._mint + 1, 0);
-
 	if (gbIsHellfire)
 		M_StartStand(killer, killer._mdir);
 }
