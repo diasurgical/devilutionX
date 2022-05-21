@@ -1095,56 +1095,15 @@ void MonsterHitMonster(int mid, int i, int dam)
 	}
 }
 
-void StartMonsterDeath(int i, int pnum, bool sendmsg)
+void MonsterDeath(int mid, int pnum, Direction md, bool sendmsg)
 {
-	assert(i >= 0 && i < MAXMONSTERS);
-	auto &monster = Monsters[i];
-	assert(monster.MType != nullptr);
-
-	if (pnum >= 0)
-		monster.mWhoHit |= 1 << pnum;
-	if (pnum < MAX_PLRS && i >= MAX_PLRS) /// BUGFIX: i >= MAX_PLRS (fixed)
-		AddPlrMonstExper(monster.mLevel, monster.mExp, monster.mWhoHit);
-	MonsterKillCounts[monster.MType->mtype]++;
-	monster._mhitpoints = 0;
-	SetRndSeed(monster._mRndSeed);
-	SpawnLoot(monster, sendmsg);
-	if (monster.MType->mtype == MT_DIABLO)
-		DiabloDeath(monster, true);
-	else
-		PlayEffect(monster, 2);
-
-	Direction md = pnum >= 0 ? GetMonsterDirection(monster) : monster._mdir;
-	if (monster._mmode != MonsterMode::Petrified) {
-		NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
-		monster._mmode = MonsterMode::Death;
-	}
-	monster._mgoal = MGOAL_NONE;
-	monster.position.offset = { 0, 0 };
-	monster._mVar1 = 0;
-	monster.position.tile = monster.position.old;
-	monster.position.future = monster.position.old;
-	M_ClearSquares(i);
-	dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
-	CheckQuestKill(monster, sendmsg);
-	M_FallenFear(monster.position.tile);
-	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
-		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
-}
-
-void StartDeathFromMonster(int i, int mid)
-{
-	assert(i >= 0 && i < MAXMONSTERS);
-	auto &killer = Monsters[i];
 	assert(mid >= 0 && mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
 
-	delta_kill_monster(mid, monster.position.tile, currlevel);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
-
-	if (i < MAX_PLRS) {
-		monster.mWhoHit |= 1 << i;
+	if (pnum < MAX_PLRS) {
+		if (pnum >= 0)
+			monster.mWhoHit |= 1 << pnum;
 		if (mid >= MAX_PLRS)
 			AddPlrMonstExper(monster.mLevel, monster.mExp, monster.mWhoHit);
 	}
@@ -1153,29 +1112,53 @@ void StartDeathFromMonster(int i, int mid)
 	monster._mhitpoints = 0;
 	SetRndSeed(monster._mRndSeed);
 
-	SpawnLoot(monster, true);
+	SpawnLoot(monster, sendmsg);
 
 	if (monster.MType->mtype == MT_DIABLO)
 		DiabloDeath(monster, true);
 	else
 		PlayEffect(monster, 2);
 
-	Direction md = Opposite(killer._mdir);
-	if (monster.MType->mtype == MT_GOLEM)
-		md = Direction::South;
 	if (monster._mmode != MonsterMode::Petrified) {
+		if (monster.MType->mtype == MT_GOLEM)
+			md = Direction::South;
 		NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 		monster._mmode = MonsterMode::Death;
 	}
+	monster._mgoal = MGOAL_NONE;
+	monster._mVar1 = 0;
 	monster.position.offset = { 0, 0 };
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
 	M_ClearSquares(mid);
 	dMonster[monster.position.tile.x][monster.position.tile.y] = mid + 1;
-	CheckQuestKill(monster, true);
+	CheckQuestKill(monster, sendmsg);
 	M_FallenFear(monster.position.tile);
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster._mint + 1, 0);
+}
+
+void StartMonsterDeath(int mid, int pnum, bool sendmsg)
+{
+	assert(mid >= 0 && mid < MAXMONSTERS);
+	Monster &monster = Monsters[mid];
+
+	Direction md = pnum >= 0 ? GetDirection(monster.position.tile, Players[pnum].position.tile) : monster._mdir;
+	MonsterDeath(mid, pnum, md, sendmsg);
+}
+
+void StartDeathFromMonster(int i, int mid)
+{
+	assert(i >= 0 && i < MAXMONSTERS);
+	Monster &killer = Monsters[i];
+	assert(mid >= 0 && mid < MAXMONSTERS);
+	Monster &monster = Monsters[mid];
+
+	delta_kill_monster(mid, monster.position.tile, currlevel);
+	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
+
+	Direction md = GetDirection(monster.position.tile, killer.position.tile);
+	MonsterDeath(mid, i, md, true);
 	if (gbIsHellfire)
 		M_StartStand(killer, killer._mdir);
 }
