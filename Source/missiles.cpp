@@ -2101,19 +2101,17 @@ void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monste
 
 void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 {
-	auto &monster = Monsters[missile._misource];
+	Monster &monster = Monsters[missile._misource];
 
-	MonsterGraphic graphic = MonsterGraphic::Special;
-	if (monster.MType->mtype < MT_HORNED || monster.MType->mtype > MT_OBLORD) {
-		if (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE) {
-			graphic = MonsterGraphic::Walk;
-		} else {
-			graphic = MonsterGraphic::Attack;
-		}
+	MonsterGraphic graphic = MonsterGraphic::Walk;
+	if (IsAnyOf(monster.MType->mtype, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
+		graphic = MonsterGraphic::Special;
+	} else if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
+		graphic = MonsterGraphic::Attack;
 	}
 	UpdateMissileVelocity(missile, parameter.dst, 18);
 	InitMissileAnimationFromMonster(missile, parameter.midir, monster, graphic);
-	if (monster.MType->mtype >= MT_NSNAKE && monster.MType->mtype <= MT_GSNAKE)
+	if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		missile._miAnimFrame = 7;
 	if (monster._uniqtype != 0) {
 		missile._mlid = monster.mlid;
@@ -4101,9 +4099,9 @@ void missiles_process_charge()
 		CMonster *mon = Monsters[missile._misource].MType;
 
 		MonsterGraphic graphic;
-		if (mon->mtype >= MT_HORNED && mon->mtype <= MT_OBLORD) {
+		if (IsAnyOf(mon->mtype, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
 			graphic = MonsterGraphic::Special;
-		} else if (mon->mtype >= MT_NSNAKE && mon->mtype <= MT_GSNAKE) {
+		} else if (IsAnyOf(mon->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
 			graphic = MonsterGraphic::Attack;
 		} else {
 			graphic = MonsterGraphic::Walk;

@@ -312,8 +312,8 @@ void MissToMonst(Missile &missile, Point position);
  * @brief Check that the given tile is available to the monster
  */
 bool IsTileAvailable(const Monster &monster, Point position);
-bool IsSkel(int mt);
-bool IsGoat(int mt);
+bool IsSkel(_monster_id mt);
+bool IsGoat(_monster_id mt);
 bool SpawnSkeleton(int ii, Point position);
 int PreSpawnSkeleton();
 void TalktoMonster(Monster &monster);
