@@ -89,7 +89,7 @@ bool HandleSpeedBookInteraction(const SDL_Event &event)
 
 void HandleBottomPanelInteraction(const SDL_Event &event)
 {
-	if (pcurs >= CURSOR_FIRSTITEM)
+	if (!gbRunGame || pcurs >= CURSOR_FIRSTITEM)
 		return;
 
 	ClearPanBtn();
