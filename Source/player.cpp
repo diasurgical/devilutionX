@@ -989,8 +989,6 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		if (!(monster._mmode == MonsterMode::Petrified) && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(m);
 		M_StartHit(m, pnum, dam);
-		if (monster._mmode == MonsterMode::Petrified)
-			monster.Petrify();
 	}
 
 	return true;

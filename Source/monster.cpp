@@ -1115,6 +1115,7 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 		PlayEffect(monster, 2);
 
 	Direction md = pnum >= 0 ? GetMonsterDirection(monster) : monster._mdir;
+	bool wasPetrified = (monster._mmode == MonsterMode::Petrified);
 	NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monster._mmode = MonsterMode::Death;
 	monster._mgoal = MGOAL_NONE;
@@ -1129,6 +1130,8 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
 	if (monster._mmode == MonsterMode::Petrified)
+		monster.Petrify();
+	if (wasPetrified)
 		monster.Petrify();
 }
 
@@ -1163,7 +1166,7 @@ void StartDeathFromMonster(int i, int mid)
 	Direction md = Opposite(killer._mdir);
 	if (monster.MType->mtype == MT_GOLEM)
 		md = Direction::South;
-
+	bool wasPetrified = (monster._mmode == MonsterMode::Petrified);
 	NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monster._mmode = MonsterMode::Death;
 	monster.position.offset = { 0, 0 };
@@ -1178,6 +1181,8 @@ void StartDeathFromMonster(int i, int mid)
 
 	if (gbIsHellfire)
 		M_StartStand(killer, killer._mdir);
+	if (wasPetrified)
+		monster.Petrify();
 }
 
 void StartFadein(Monster &monster, Direction md, bool backwards)
@@ -1307,12 +1312,8 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 			monster._mhitpoints -= dam;
 			if (monster._mhitpoints >> 6 <= 0) {
 				StartDeathFromMonster(i, mid);
-				if (monster._mmode == MonsterMode::Petrified)
-					monster.Petrify();
 			} else {
 				MonsterHitMonster(mid, i, dam);
-				if (monster._mmode == MonsterMode::Petrified)
-					monster.Petrify();
 			}
 		}
 	}

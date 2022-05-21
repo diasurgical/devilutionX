@@ -817,7 +817,7 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-void StartHitMonsterByMissile(int m, int pnum, int dam)
+void StartHitMonsterByMissile(int m, int pnum, int dam, missile_id misName)
 {
 	auto &monster = Monsters[m];
 
@@ -829,12 +829,10 @@ void StartHitMonsterByMissile(int m, int pnum, int dam)
 	}
 
 	bool isPetrified = monster._mmode == MonsterMode::Petrified;
-	if (!isPetrified && hasKnockback)
+	if (!isPetrified && hasKnockback && MissilesData[misName].mType == 0)
 		M_GetKnockback(m);
 	if (m > MAX_PLRS - 1)
 		M_StartHit(m, pnum, dam);
-	if (isPetrified)
-		monster.Petrify();
 }
 
 int PlayerMissile::calculateCTHAgainstMonster(devilution::Monster &monster) const
@@ -893,7 +891,7 @@ void PlayerMissile::hitMonster(int m) const
 	else if (resist)
 		PlayEffect(monster, 1);
 	else
-		StartHitMonsterByMissile(m, pnum, dam);
+		StartHitMonsterByMissile(m, pnum, dam, cm->_mitype);
 
 	if (monster._msquelch == 0) {
 		monster._msquelch = UINT8_MAX;
@@ -928,7 +926,7 @@ void TrapMissile::hitMonster(int m) const
 	else if (resist)
 		PlayEffect(monster, 1);
 	else
-		StartHitMonsterByMissile(m, pnum, dam);
+		StartHitMonsterByMissile(m, pnum, dam, cm->_mitype);
 }
 
 template <typename Collidable>
