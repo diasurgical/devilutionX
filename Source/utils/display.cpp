@@ -135,12 +135,6 @@ void AdjustToScreenGeometry(Size windowSize)
 {
 	gnScreenWidth = windowSize.width;
 	gnScreenHeight = windowSize.height;
-
-	gnViewportHeight = gnScreenHeight;
-	if (gnScreenWidth <= PANEL_WIDTH) {
-		// Part of the screen is fully obscured by the UI
-		gnViewportHeight -= PANEL_HEIGHT;
-	}
 }
 
 Size GetPreferredWindowSize()

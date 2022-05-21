@@ -436,6 +436,12 @@ void CalculatePanelAreas()
 		RightPanel.position.x = gnScreenWidth - RightPanel.size.width - LeftPanel.position.x;
 	}
 	RightPanel.position.y = LeftPanel.position.y;
+
+	gnViewportHeight = gnScreenHeight;
+	if (gnScreenWidth <= PANEL_WIDTH) {
+		// Part of the screen is fully obscured by the UI
+		gnViewportHeight -= PANEL_HEIGHT;
+	}
 }
 
 bool IsChatAvailable()
