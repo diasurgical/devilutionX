@@ -1581,9 +1581,7 @@ bool MonsterFadeout(Monster &monster)
 	}
 
 	monster._mFlags &= ~MFLAG_LOCK_ANIMATION;
-	if (IsNoneOf(monster.MType->mtype, MT_INCIN, MT_FLAMLRD, MT_DOOMFIRE, MT_HELLBURN)) {
-		monster._mFlags |= MFLAG_HIDDEN;
-	}
+	monster._mFlags |= MFLAG_HIDDEN;
 
 	M_StartStand(monster, monster._mdir);
 
@@ -4735,53 +4733,55 @@ void MissToMonst(Missile &missile, Point position)
 	monster._mdir = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster._mdir);
-	if (IsAnyOf(monster.MType->mtype, MT_INCIN, MT_FLAMLRD, MT_DOOMFIRE, MT_HELLBURN)) {
-		StartFadein(monster, monster._mdir, false);
-	} else {
-		if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0)
-			M_StartHit(m, -1, 0);
-		else
-			MonsterHitMonster(m, -1, 0);
-	}
+	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0)
+		M_StartHit(m, -1, 0);
+	else
+		MonsterHitMonster(m, -1, 0);
+
+	if (monster.MType->mtype == MT_GLOOM)
+		return;
 
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
+		if (dPlayer[oldPosition.x][oldPosition.y] <= 0)
+			return;
+
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
-		if (dPlayer[oldPosition.x][oldPosition.y] > 0) {
-			if (IsNoneOf(monster.MType->mtype, MT_GLOOM, MT_INCIN, MT_FLAMLRD, MT_DOOMFIRE, MT_HELLBURN)) {
-				MonsterAttackPlayer(m, dPlayer[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
-				if (pnum == dPlayer[oldPosition.x][oldPosition.y] - 1 && IsNoneOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
-					auto &player = Players[pnum];
-					if (player._pmode != PM_GOTHIT && player._pmode != PM_DEATH)
-						StartPlrHit(pnum, 0, true);
-					Point newPosition = oldPosition + monster._mdir;
-					if (PosOkPlayer(player, newPosition)) {
-						player.position.tile = newPosition;
-						FixPlayerLocation(pnum, player._pdir);
-						FixPlrWalkTags(pnum);
-						dPlayer[newPosition.x][newPosition.y] = pnum + 1;
-						SetPlayerOld(player);
-					}
-				}
-			}
+		MonsterAttackPlayer(m, pnum, 500, monster.mMinDamage2, monster.mMaxDamage2);
+
+		if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
+			return;
+
+		Player &player = Players[pnum];
+		if (player._pmode != PM_GOTHIT && player._pmode != PM_DEATH)
+			StartPlrHit(pnum, 0, true);
+		Point newPosition = oldPosition + monster._mdir;
+		if (PosOkPlayer(player, newPosition)) {
+			player.position.tile = newPosition;
+			FixPlayerLocation(pnum, player._pdir);
+			FixPlrWalkTags(pnum);
+			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
+			SetPlayerOld(player);
 		}
 		return;
 	}
 
-	if (dMonster[oldPosition.x][oldPosition.y] > 0) {
-		if (IsNoneOf(monster.MType->mtype, MT_GLOOM, MT_INCIN, MT_FLAMLRD, MT_DOOMFIRE, MT_HELLBURN)) {
-			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
-			if (IsNoneOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
-				Point newPosition = oldPosition + monster._mdir;
-				if (IsTileAvailable(Monsters[dMonster[oldPosition.x][oldPosition.y] - 1], newPosition)) {
-					m = dMonster[oldPosition.x][oldPosition.y];
-					dMonster[newPosition.x][newPosition.y] = m;
-					dMonster[oldPosition.x][oldPosition.y] = 0;
-					m--;
-					monster.position.tile = newPosition;
-					monster.position.future = newPosition;
-				}
-			}
-		}
+	if (dMonster[oldPosition.x][oldPosition.y] <= 0)
+		return;
+
+	int mid = dMonster[oldPosition.x][oldPosition.y] - 1;
+	MonsterAttackMonster(m, mid, 500, monster.mMinDamage2, monster.mMaxDamage2);
+
+	if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
+		return;
+
+	Point newPosition = oldPosition + monster._mdir;
+	if (IsTileAvailable(Monsters[mid], newPosition)) {
+		m = dMonster[oldPosition.x][oldPosition.y];
+		dMonster[newPosition.x][newPosition.y] = m;
+		dMonster[oldPosition.x][oldPosition.y] = 0;
+		m--;
+		monster.position.tile = newPosition;
+		monster.position.future = newPosition;
 	}
 }
 
