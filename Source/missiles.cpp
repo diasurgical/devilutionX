@@ -194,23 +194,25 @@ void MoveMissilePos(Missile &missile)
 
 bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
-	auto &monster = Monsters[m];
+	Monster &monster = Monsters[m];
 
 	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
 		return false;
 
-	int hit = GenerateRnd(100);
-	int hper = PlayerMissileCalculateCTHAgainstMonster(pnum, t, dist, monster);
-	hper = clamp(hper, 5, 95);
-
 	if (monster.TryLiftGargoyle())
 		return true;
 
-	if (hit >= hper && monster._mmode != MonsterMode::Petrified) {
+	if (monster._mmode != MonsterMode::Petrified) {
+		int hit = GenerateRnd(100);
+		int hper = PlayerMissileCalculateCTHAgainstMonster(pnum, t, dist, monster);
+		hper = clamp(hper, 5, 95);
+
+		if (hit >= hper) {
 #ifdef _DEBUG
-		if (!DebugGodMode)
+			if (!DebugGodMode)
 #endif
-			return false;
+				return false;
+		}
 	}
 
 	int dam = PlayerMissileCalculateDamageAgainstMonster(pnum, mindam, maxdam, t, monster);
@@ -822,8 +824,7 @@ Direction16 GetDirection16(Point p1, Point p2)
 
 void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName)
 {
-	auto &monster = Monsters[mid];
-	const auto &player = Players[pnum];
+	Monster &monster = Monsters[mid];
 
 	bool hasKnockback = false;
 	if (pnum >= 0 && pnum < MAX_PLRS) {
@@ -848,18 +849,17 @@ void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName)
 
 int PlayerMissileCalculateCTHAgainstMonster(int pnum, missile_id mName, int dist, Monster &monster)
 {
+	if (pnum == -1)
+		return GenerateRnd(75) - monster.mLevel * 2;
+
 	int hper = 0;
-	if (pnum != -1) {
-		const Player &player = Players[pnum];
-		if (MissilesData[mName].mType == 0) {
-			hper = player.GetRangedPiercingToHit();
-			hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
-			hper -= (dist * dist) / 2;
-		} else {
-			hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
-		}
+	const Player &player = Players[pnum];
+	if (MissilesData[mName].mType == 0) {
+		hper = player.GetRangedPiercingToHit();
+		hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
+		hper -= (dist * dist) / 2;
 	} else {
-		hper = GenerateRnd(75) - monster.mLevel * 2;
+		hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
 	}
 	return hper;
 }
@@ -885,7 +885,7 @@ int PlayerMissileCalculateDamageAgainstMonster(int pnum, int minDam, int maxDam,
 
 void PlayerMissileHitMonster(int pnum, int dam, int m, missile_id mName)
 {
-	auto &monster = Monsters[m];
+	Monster &monster = Monsters[m];
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;
 
@@ -903,7 +903,7 @@ void PlayerMissileHitMonster(int pnum, int dam, int m, missile_id mName)
 
 int TrapMissileCalculateCTHAgainstMonster(int dist, Monster &monster)
 {
-	return 90 - (BYTE)monster.mArmorClass - dist;
+	return 90 - monster.mArmorClass - dist;
 }
 
 int TrapMissileCalculateDamageAgainstMonster(int minDam, int maxDam, int mName, Monster &monster)
@@ -915,7 +915,7 @@ int TrapMissileCalculateDamageAgainstMonster(int minDam, int maxDam, int mName, 
 
 void TrapMissileHitMonster(int mid, int dam, missile_id mName)
 {
-	auto &monster = Monsters[mid];
+	Monster &monster = Monsters[mid];
 	monster._mhitpoints -= dam;
 #ifdef _DEBUG
 	if (DebugGodMode)
@@ -926,23 +926,25 @@ void TrapMissileHitMonster(int mid, int dam, missile_id mName)
 
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
-	auto &monster = Monsters[m];
+	Monster &monster = Monsters[m];
 
 	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
 		return false;
 
-	int hit = GenerateRnd(100);
-	int hper = TrapMissileCalculateCTHAgainstMonster(dist, monster);
-	hper = clamp(hper, 5, 95);
-
 	if (monster.TryLiftGargoyle())
 		return true;
 
-	if (hit >= hper && monster._mmode != MonsterMode::Petrified) {
+	if (monster._mmode != MonsterMode::Petrified) {
+		int hit = GenerateRnd(100);
+		int hper = TrapMissileCalculateCTHAgainstMonster(dist, monster);
+		hper = clamp(hper, 5, 95);
+
+		if (hit >= hper) {
 #ifdef _DEBUG
-		if (!DebugGodMode)
+			if (!DebugGodMode)
 #endif
-			return false;
+				return false;
+		}
 	}
 
 	int dam;
