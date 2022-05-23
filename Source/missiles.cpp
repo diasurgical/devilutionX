@@ -29,12 +29,6 @@ namespace devilution {
 std::list<Missile> Missiles;
 bool MissilePreFlag;
 
-// temporary declarations, for review purposes
-int PlayerMissileCalculateCTHAgainstMonster(int pnum, missile_id mName, int dist, Monster &monster);
-int PlayerMissileCalculateDamageAgainstMonster(int pnum, int minDam, int maxDam, missile_id mName, Monster &monster);
-void PlayerMissileHitMonster(int pnum, int dam, int m, missile_id mName);
-void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName);
-
 namespace {
 
 int AddClassHealingBonus(int hp, HeroClass heroClass)
@@ -192,40 +186,6 @@ void MoveMissilePos(Missile &missile)
 	}
 }
 
-bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
-{
-	Monster &monster = Monsters[m];
-
-	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
-		return false;
-
-	if (monster.TryLiftGargoyle())
-		return true;
-
-	if (monster._mmode != MonsterMode::Petrified) {
-		int hit = GenerateRnd(100);
-		int hper = PlayerMissileCalculateCTHAgainstMonster(pnum, t, dist, monster);
-		hper = clamp(hper, 5, 95);
-
-		if (hit >= hper) {
-#ifdef _DEBUG
-			if (!DebugGodMode)
-#endif
-				return false;
-		}
-	}
-
-	int dam = PlayerMissileCalculateDamageAgainstMonster(pnum, mindam, maxdam, t, monster);
-	if (!shift)
-		dam <<= 6;
-	if (monster.IsResistant(t))
-		dam >>= 2;
-
-	PlayerMissileHitMonster(pnum, dam, m, t);
-
-	return true;
-}
-
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
 	Player &player = Players[pnum];
@@ -357,21 +317,21 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
-				isMonsterHit = MonsterMHit(missile._misource, abs(mid) - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+				isMonsterHit = TryHitMonster(PlayerMissile(missile, minDamage, maxDamage, isDamageShifted), abs(mid) - 1);
 			}
 		} else {
 			Monster &attackingMonster = Monsters[missile._misource];
 			if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
 			    && mid > 0
 			    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
-				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+				isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
 		}
 	} else {
 		if (mid > 0) {
 			if (missile._micaster == TARGET_BOTH)
-				isMonsterHit = MonsterMHit(missile._misource, mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+				isMonsterHit = TryHitMonster(PlayerMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
 			else
-				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+				isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
 		}
 	}
 
@@ -847,31 +807,31 @@ void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName)
 	}
 }
 
-int PlayerMissileCalculateCTHAgainstMonster(int pnum, missile_id mName, int dist, Monster &monster)
+int PlayerMissile::CalculateCTH(Monster &monster) const
 {
-	if (pnum == -1)
+	if (colMissile->_misource == -1)
 		return GenerateRnd(75) - monster.mLevel * 2;
 
 	int hper = 0;
-	const Player &player = Players[pnum];
-	if (MissilesData[mName].mType == 0) {
+	const Player &player = Players[colMissile->_misource];
+	if (MissilesData[colMissile->_mitype].mType == 0) {
 		hper = player.GetRangedPiercingToHit();
 		hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
-		hper -= (dist * dist) / 2;
+		hper -= (colMissile->_midist * colMissile->_midist) / 2;
 	} else {
-		hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
+		hper = player.GetMagicToHit() - (monster.mLevel * 2) - colMissile->_midist;
 	}
 	return hper;
 }
 
-int PlayerMissileCalculateDamageAgainstMonster(int pnum, int minDam, int maxDam, missile_id mName, Monster &monster)
+int PlayerMissile::CalculateDamage(Monster &monster) const
 {
-	if (mName == MIS_BONESPIRIT)
+	if (colMissile->_mitype == MIS_BONESPIRIT)
 		return monster._mhitpoints / 3 >> 6;
 
-	int dam = minDam + GenerateRnd(maxDam - minDam + 1);
-	const Player &player = Players[pnum];
-	if (MissilesData[mName].mType == 0 && MissilesData[mName].mResist == MISR_NONE) {
+	int dam = m_minDamage + GenerateRnd(m_maxDamage - m_minDamage + 1);
+	const Player &player = Players[colMissile->_misource];
+	if (MissilesData[colMissile->_mitype].mType == 0 && MissilesData[colMissile->_mitype].mResist == MISR_NONE) {
 		dam += (dam * player._pIBonusDam / 100) + player._pIBonusDamMod;
 		if (player._pClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
@@ -883,17 +843,17 @@ int PlayerMissileCalculateDamageAgainstMonster(int pnum, int minDam, int maxDam,
 	return dam;
 }
 
-void PlayerMissileHitMonster(int pnum, int dam, int m, missile_id mName)
+void PlayerMissile::HitMonster(int mid, int dam) const
 {
-	Monster &monster = Monsters[m];
-	if (pnum == MyPlayerId)
+	Monster &monster = Monsters[mid];
+	if (colMissile->_misource == MyPlayerId)
 		monster._mhitpoints -= dam;
 
-	const auto &player = Players[pnum];
+	const auto &player = Players[colMissile->_misource];
 	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
 		monster._mFlags |= MFLAG_NOHEAL;
 
-	MissileHitMonsterConsequences(m, pnum, dam, mName);
+	MissileHitMonsterConsequences(mid, colMissile->_misource, dam, colMissile->_mitype);
 
 	if (monster._msquelch == 0) {
 		monster._msquelch = UINT8_MAX;
@@ -901,19 +861,19 @@ void PlayerMissileHitMonster(int pnum, int dam, int m, missile_id mName)
 	}
 }
 
-int TrapMissileCalculateCTHAgainstMonster(int dist, Monster &monster)
+int TrapMissile::CalculateCTH(Monster &monster) const
 {
-	return 90 - monster.mArmorClass - dist;
+	return 90 - monster.mArmorClass - colMissile->_midist;
 }
 
-int TrapMissileCalculateDamageAgainstMonster(int minDam, int maxDam, int mName, Monster &monster)
+int TrapMissile::CalculateDamage(Monster &monster) const
 {
-	return (mName == MIS_BONESPIRIT)
+	return (colMissile->_mitype == MIS_BONESPIRIT)
 	    ? monster._mhitpoints / 3 >> 6
-	    : minDam + GenerateRnd(maxDam - minDam + 1);
+	    : m_minDamage + GenerateRnd(m_maxDamage - m_minDamage + 1);
 }
 
-void TrapMissileHitMonster(int mid, int dam, missile_id mName)
+void TrapMissile::HitMonster(int mid, int dam) const
 {
 	Monster &monster = Monsters[mid];
 	monster._mhitpoints -= dam;
@@ -921,14 +881,15 @@ void TrapMissileHitMonster(int mid, int dam, missile_id mName)
 	if (DebugGodMode)
 		monster._mhitpoints = 0;
 #endif
-	MissileHitMonsterConsequences(mid, -1, dam, mName);
+	MissileHitMonsterConsequences(mid, -1, dam, colMissile->_mitype);
 }
 
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
+template <typename TCollidable>
+bool TryHitMonster(TCollidable const &col, int mid)
 {
-	Monster &monster = Monsters[m];
+	Monster &monster = Monsters[mid];
 
-	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
+	if (!monster.IsPossibleToHit() || monster.IsImmune(col.colMissile->_mitype))
 		return false;
 
 	if (monster.TryLiftGargoyle())
@@ -936,7 +897,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 
 	if (monster._mmode != MonsterMode::Petrified) {
 		int hit = GenerateRnd(100);
-		int hper = TrapMissileCalculateCTHAgainstMonster(dist, monster);
+		int hper = col.CalculateCTH(monster);
 		hper = clamp(hper, 5, 95);
 
 		if (hit >= hper) {
@@ -947,18 +908,13 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		}
 	}
 
-	int dam;
-	if (t == MIS_BONESPIRIT)
-		dam = monster._mhitpoints / 3 >> 6;
-	else
-		dam = TrapMissileCalculateDamageAgainstMonster(mindam, maxdam, t, monster);
-
-	if (!shift)
+	int dam = col.CalculateDamage(monster);
+	if (!col.m_isDamageShifted)
 		dam <<= 6;
-	if (monster.IsResistant(t))
+	if (monster.IsResistant(col.colMissile->_mitype))
 		dam >>= 2;
 
-	TrapMissileHitMonster(m, dam, t);
+	col.HitMonster(mid, dam);
 
 	return true;
 }
