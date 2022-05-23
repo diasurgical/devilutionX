@@ -257,7 +257,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	} else {
 		if (monster._mmode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(m);
-		if (m > MAX_PLRS - 1)
+		if (monster.MType->mtype != MT_GOLEM)
 			M_StartHit(m, pnum, dam);
 	}
 
@@ -660,10 +660,10 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 
 	if (!LineClearMissile(position, target))
 		return false;
-	int mi = dMonster[target.x][target.y] - 1;
-	if (mi < MAX_PLRS)
+	const Monster &monster = Monsters[dMonster[target.x][target.y] - 1];
+	if (monster.MType->mtype == MT_GOLEM)
 		return false;
-	if (Monsters[mi]._mhitpoints >> 6 <= 0)
+	if (monster._mhitpoints >> 6 <= 0)
 		return false;
 
 	Direction dir = GetDirection(position, target);
@@ -951,7 +951,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
-		if (m > MAX_PLRS - 1)
+		if (monster.MType->mtype != MT_GOLEM)
 			M_StartHit(m, -1, dam);
 	}
 	return true;
@@ -1210,14 +1210,14 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 		    }
 
 		    int monsterId = abs(dMonster[target.x][target.y]) - 1;
-		    if (monsterId < MAX_PLRS) { // exclude player golems (and tiles which contain no monsters)
+		    if (monsterId < 0)
 			    return false;
-		    }
 
-		    const auto &monster = Monsters[monsterId];
+		    const Monster &monster = Monsters[monsterId];
+		    if (monster.MType->mtype == MT_GOLEM)
+			    return false;
 		    if ((monster._mFlags & MFLAG_BERSERK) != 0)
 			    return false;
-
 		    if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
 			    return false;
 		    if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
@@ -3662,7 +3662,10 @@ void MI_Apoca(Missile &missile)
 	int k;
 	for (j = missile.var2; j < missile.var3 && !exit; j++) {
 		for (k = missile.var4; k < missile.var5 && !exit; k++) {
-			if (dMonster[k][j] < MAX_PLRS)
+			int mid = dMonster[k][j] - 1;
+			if (mid < 0)
+				continue;
+			if (Monsters[mid].MType->mtype == MT_GOLEM)
 				continue;
 			if (nSolidTable[dPiece[k][j]])
 				continue;
