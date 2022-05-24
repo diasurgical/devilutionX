@@ -170,14 +170,15 @@ void InitCutscene(interface_mode uMsg)
 
 void DrawCutscene()
 {
+	const Rectangle &uiRectangle = GetUIRectangle();
 	const Surface &out = GlobalBackBuffer();
-	DrawArt(out, { PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y }, &ArtCutsceneWidescreen);
-	CelDrawTo(out, { PANEL_X, 480 - 1 + UI_OFFSET_Y }, *sgpBackCel, 0);
+	DrawArt(out, { uiRectangle.position.x - (ArtCutsceneWidescreen.w() - uiRectangle.size.width) / 2, uiRectangle.position.y }, &ArtCutsceneWidescreen);
+	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, *sgpBackCel, 0);
 
 	constexpr int ProgressHeight = 22;
 	SDL_Rect rect = MakeSdlRect(
-	    out.region.x + BarPos[progress_id][0] + PANEL_X,
-	    out.region.y + BarPos[progress_id][1] + UI_OFFSET_Y,
+	    out.region.x + BarPos[progress_id][0] + uiRectangle.position.x,
+	    out.region.y + BarPos[progress_id][1] + uiRectangle.position.y,
 	    sgdwProgress,
 	    ProgressHeight);
 	SDL_FillRect(out.surface, &rect, BarColor[progress_id]);

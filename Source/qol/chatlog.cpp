@@ -146,10 +146,11 @@ void DrawChatLog(const Surface &out)
 		UnreadFlag = false;
 	}
 
+	const Point uiPosition = GetUIRectangle().position;
 	const int lineHeight = LineHeight();
 	const int blankLineHeight = BlankLineHeight();
-	const int sx = PANEL_X + PaddingLeft;
-	const int sy = UI_OFFSET_Y;
+	const int sx = uiPosition.x + PaddingLeft;
+	const int sy = uiPosition.y;
 
 	DrawString(out, fmt::format(_("Chat History (Messages: {:d})"), MessageCounter),
 	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },

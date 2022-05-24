@@ -162,26 +162,28 @@ void CalculateLineHeights()
 
 void DrawSTextBack(const Surface &out)
 {
-	CelDrawTo(out, { PANEL_X + 320 + 24, 327 + UI_OFFSET_Y }, *pSTextBoxCels, 0);
-	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
+	const Point uiPosition = GetUIRectangle().position;
+	CelDrawTo(out, { uiPosition.x + 320 + 24, 327 + uiPosition.y }, *pSTextBoxCels, 0);
+	DrawHalfTransparentRectTo(out, uiPosition.x + 347, uiPosition.y + 28, 265, 297);
 }
 
 void DrawSSlider(const Surface &out, int y1, int y2)
 {
-	int yd1 = y1 * 12 + 44 + UI_OFFSET_Y;
-	int yd2 = y2 * 12 + 44 + UI_OFFSET_Y;
+	const Point uiPosition = GetUIRectangle().position;
+	int yd1 = y1 * 12 + 44 + uiPosition.y;
+	int yd2 = y2 * 12 + 44 + uiPosition.y;
 	if (stextscrlubtn != -1)
-		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 11);
+		CelDrawTo(out, { uiPosition.x + 601, yd1 }, *pSTextSlidCels, 11);
 	else
-		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 9);
+		CelDrawTo(out, { uiPosition.x + 601, yd1 }, *pSTextSlidCels, 9);
 	if (stextscrldbtn != -1)
-		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 10);
+		CelDrawTo(out, { uiPosition.x + 601, yd2 }, *pSTextSlidCels, 10);
 	else
-		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 8);
+		CelDrawTo(out, { uiPosition.x + 601, yd2 }, *pSTextSlidCels, 8);
 	yd1 += 12;
 	int yd3 = yd1;
 	for (; yd3 < yd2; yd3 += 12) {
-		CelDrawTo(out, { PANEL_X + 601, yd3 }, *pSTextSlidCels, 13);
+		CelDrawTo(out, { uiPosition.x + 601, yd3 }, *pSTextSlidCels, 13);
 	}
 	if (stextsel == BackButtonLine())
 		yd3 = stextlhold;
@@ -191,7 +193,7 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) / 4)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDrawTo(out, { PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3 }, *pSTextSlidCels, 12);
+	CelDrawTo(out, { uiPosition.x + 601, (y1 + 1) * 12 + 44 + uiPosition.y + yd3 }, *pSTextSlidCels, 12);
 }
 
 void AddSLine(int y)
@@ -2217,12 +2219,13 @@ void FreeStoreMem()
 
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price)
 {
-	int sx = PANEL_X + 32 + margin;
+	const Point uiPosition = GetUIRectangle().position;
+	int sx = uiPosition.x + 32 + margin;
 	if (!stextsize) {
 		sx += 320;
 	}
 
-	const int sy = UI_OFFSET_Y + PaddingTop + stext[line].y + stext[line]._syoff;
+	const int sy = uiPosition.y + PaddingTop + stext[line].y + stext[line]._syoff;
 
 	int width = stextsize ? 575 : 255;
 	if (stextscrl && line >= 4 && line <= 20) {
@@ -2245,6 +2248,7 @@ void PrintSString(const Surface &out, int margin, int line, const char *text, Ui
 
 void DrawSLine(const Surface &out, int sy)
 {
+	const Point uiPosition = GetUIRectangle().position;
 	int sx = 26;
 	int width = 587;
 
@@ -2253,8 +2257,8 @@ void DrawSLine(const Surface &out, int sy)
 		width -= SPANEL_WIDTH;
 	}
 
-	BYTE *src = out.at(PANEL_LEFT + sx, UI_OFFSET_Y + 25);
-	BYTE *dst = out.at(PANEL_X + sx, sy);
+	BYTE *src = out.at(uiPosition.x + sx, uiPosition.y + 25);
+	BYTE *dst = out.at(uiPosition.x + sx, sy);
 
 	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, width);
@@ -2424,9 +2428,10 @@ void DrawSText(const Surface &out)
 	}
 
 	CalculateLineHeights();
+	const Point uiPosition = GetUIRectangle().position;
 	for (int i = 0; i < STORE_LINES; i++) {
 		if (stext[i].IsDivider())
-			DrawSLine(out, UI_OFFSET_Y + PaddingTop + stext[i].y + TextHeight() / 2);
+			DrawSLine(out, uiPosition.y + PaddingTop + stext[i].y + TextHeight() / 2);
 		if (stext[i].IsText())
 			PrintSString(out, stext[i]._sx, i, stext[i]._sstr, stext[i].flags, stext[i]._sval);
 	}
@@ -2719,22 +2724,23 @@ void StoreEnter()
 
 void CheckStoreBtn()
 {
+	const Point uiPosition = GetUIRectangle().position;
 	if (qtextflag) {
 		qtextflag = false;
 		if (leveltype == DTYPE_TOWN)
 			stream_stop();
-	} else if (stextsel != -1 && MousePosition.y >= (PaddingTop + UI_OFFSET_Y) && MousePosition.y <= (320 + UI_OFFSET_Y)) {
+	} else if (stextsel != -1 && MousePosition.y >= (PaddingTop + uiPosition.y) && MousePosition.y <= (320 + uiPosition.y)) {
 		if (!stextsize) {
-			if (MousePosition.x < 344 + PANEL_LEFT || MousePosition.x > 616 + PANEL_LEFT)
+			if (MousePosition.x < 344 + uiPosition.x || MousePosition.x > 616 + uiPosition.x)
 				return;
 		} else {
-			if (MousePosition.x < 24 + PANEL_LEFT || MousePosition.x > 616 + PANEL_LEFT)
+			if (MousePosition.x < 24 + uiPosition.x || MousePosition.x > 616 + uiPosition.x)
 				return;
 		}
 
-		const int relativeY = MousePosition.y - (UI_OFFSET_Y + PaddingTop);
+		const int relativeY = MousePosition.y - (uiPosition.y + PaddingTop);
 
-		if (stextscrl && MousePosition.x > 600 + PANEL_LEFT) {
+		if (stextscrl && MousePosition.x > 600 + uiPosition.x) {
 			// Scroll bar is always measured in terms of the small line height.
 			int y = relativeY / SmallLineHeight;
 			if (y == 4) {

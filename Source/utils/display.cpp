@@ -58,6 +58,12 @@ Uint16 GetViewportHeight()
 	return gnViewportHeight;
 }
 
+Rectangle UIRectangle;
+const Rectangle &GetUIRectangle()
+{
+	return UIRectangle;
+}
+
 namespace {
 
 #ifndef USE_SDL1
@@ -131,10 +137,22 @@ void FreeRenderer()
 }
 #endif
 
+void CalculateUIRectangle()
+{
+	constexpr int UIWidth = 640;
+	constexpr int UIHeight = 480;
+	UIRectangle = {
+		{ (gnScreenWidth - UIWidth) / 2, (gnScreenHeight - UIHeight) / 2 },
+		{ UIWidth, UIHeight }
+	};
+}
+
 void AdjustToScreenGeometry(Size windowSize)
 {
 	gnScreenWidth = windowSize.width;
 	gnScreenHeight = windowSize.height;
+	CalculateUIRectangle();
+	CalculatePanelAreas();
 }
 
 Size GetPreferredWindowSize()
