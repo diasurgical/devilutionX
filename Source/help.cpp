@@ -178,8 +178,9 @@ void DrawHelp(const Surface &out)
 	else
 		title = gbIsSpawn ? _("Shareware Diablo Help") : _("Diablo Help");
 
-	const int sx = PANEL_X + PaddingLeft;
-	const int sy = UI_OFFSET_Y;
+	const Point uiPosition = GetUIRectangle().position;
+	const int sx = uiPosition.x + PaddingLeft;
+	const int sy = uiPosition.y;
 
 	DrawString(out, title,
 	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },

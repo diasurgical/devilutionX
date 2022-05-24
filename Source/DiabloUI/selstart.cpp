@@ -37,12 +37,14 @@ void UiSelStartUpGameOption()
 	LoadMaskedArt("ui_art\\hf_logo2.pcx", &artLogo, 16);
 	UiAddBackground(&vecDialog);
 
-	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y), 0, 0 };
+	const Point uiPosition = GetUIRectangle().position;
+
+	SDL_Rect rect = { 0, (Sint16)(uiPosition.y), 0, 0 };
 	vecDialog.push_back(std::make_unique<UiImage>(&artLogo, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Enter Hellfire"), static_cast<int>(StartUpGameMode::Hellfire)));
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Switch to Diablo"), static_cast<int>(StartUpGameMode::Diablo)));
-	vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, vecDialogItems.size(), PANEL_LEFT + 64, (UI_OFFSET_Y + 240), 510, 43, UiFlags::AlignCenter | UiFlags::FontSize42 | UiFlags::ColorUiGold, 5));
+	vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, vecDialogItems.size(), uiPosition.x + 64, (uiPosition.y + 240), 510, 43, UiFlags::AlignCenter | UiFlags::FontSize42 | UiFlags::ColorUiGold, 5));
 
 	UiInitList(nullptr, ItemSelected, EscPressed, vecDialog, true);
 

@@ -33,7 +33,8 @@ void ProgressLoad()
 	LoadArt("ui_art\\prog_fil.pcx", &ProgFil);
 	LoadSmlButtonArt();
 
-	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
+	const Point uiPosition = GetUIRectangle().position;
+	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 265), (Sint16)(uiPosition.y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 	vecProgress.push_back(std::make_unique<UiButton>(&SmlButton, _("Cancel"), &DialogActionCancel, rect3));
 }
 
