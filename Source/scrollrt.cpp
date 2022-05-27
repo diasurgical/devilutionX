@@ -1386,25 +1386,26 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 		DoBlitScreen(0, 0, gnScreenWidth, dwHgt);
 	}
 	if (dwHgt < gnScreenHeight) {
+		const Point mainPanelPosition = GetMainPanel().position;
 		if (drawSbar) {
-			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
+			DoBlitScreen(mainPanelPosition.x + 204, mainPanelPosition.y + 5, 232, 28);
 		}
 		if (drawDesc) {
-			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 63);
+			DoBlitScreen(mainPanelPosition.x + 176, mainPanelPosition.y + 46, 288, 63);
 		}
 		if (drawMana) {
-			DoBlitScreen(PANEL_LEFT + 460, PANEL_TOP, 88, 72);
-			DoBlitScreen(PANEL_LEFT + 564, PANEL_TOP + 64, 56, 56);
+			DoBlitScreen(mainPanelPosition.x + 460, mainPanelPosition.y, 88, 72);
+			DoBlitScreen(mainPanelPosition.x + 564, mainPanelPosition.y + 64, 56, 56);
 		}
 		if (drawHp) {
-			DoBlitScreen(PANEL_LEFT + 96, PANEL_TOP, 88, 72);
+			DoBlitScreen(mainPanelPosition.x + 96, mainPanelPosition.y, 88, 72);
 		}
 		if (drawBtn) {
-			DoBlitScreen(PANEL_LEFT + 8, PANEL_TOP + 5, 72, 119);
-			DoBlitScreen(PANEL_LEFT + 556, PANEL_TOP + 5, 72, 48);
+			DoBlitScreen(mainPanelPosition.x + 8, mainPanelPosition.y + 5, 72, 119);
+			DoBlitScreen(mainPanelPosition.x + 556, mainPanelPosition.y + 5, 72, 48);
 			if (gbIsMultiplayer) {
-				DoBlitScreen(PANEL_LEFT + 84, PANEL_TOP + 91, 36, 32);
-				DoBlitScreen(PANEL_LEFT + 524, PANEL_TOP + 91, 36, 32);
+				DoBlitScreen(mainPanelPosition.x + 84, mainPanelPosition.y + 91, 36, 32);
+				DoBlitScreen(mainPanelPosition.x + 524, mainPanelPosition.y + 91, 36, 32);
 			}
 		}
 		if (sgdwCursWdtOld != 0) {
@@ -1453,11 +1454,12 @@ void ShiftGrid(int *x, int *y, int horizontal, int vertical)
 
 int RowsCoveredByPanel()
 {
-	if (GetScreenWidth() <= PANEL_WIDTH) {
+	auto &mainPanelSize = GetMainPanel().size;
+	if (GetScreenWidth() <= mainPanelSize.width) {
 		return 0;
 	}
 
-	int rows = PANEL_HEIGHT / TILE_HEIGHT;
+	int rows = mainPanelSize.height / TILE_HEIGHT;
 	if (!zoomflag) {
 		rows /= 2;
 	}
@@ -1692,7 +1694,9 @@ void DrawAndBlit()
 	bool ddsdesc = false;
 	bool ctrlPan = false;
 
-	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255 || IsHighlightingLabelsEnabled()) {
+	const Rectangle &mainPanel = GetMainPanel();
+
+	if (gnScreenWidth > mainPanel.size.width || force_redraw == 255 || IsHighlightingLabelsEnabled()) {
 		drawhpflag = true;
 		drawmanaflag = true;
 		drawbtnflag = true;
@@ -1737,9 +1741,9 @@ void DrawAndBlit()
 	}
 	DrawXPBar(out);
 	if (*sgOptions.Graphics.showHealthValues)
-		DrawFlaskValues(out, { PANEL_X + 134, PANEL_Y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
+		DrawFlaskValues(out, { mainPanel.position.x + 134, mainPanel.position.y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
 	if (*sgOptions.Graphics.showManaValues)
-		DrawFlaskValues(out, { PANEL_X + PANEL_WIDTH - 138, PANEL_Y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
+		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
 
 	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());

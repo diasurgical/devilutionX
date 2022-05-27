@@ -114,7 +114,7 @@ void DrawSpell(const Surface &out)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 26;
-	const Point position { PANEL_X + 565, PANEL_Y + 119 };
+	const Point position = GetMainPanel().position + Displacement { 565, 119 };
 	DrawSpellCel(out, position, nCel);
 
 	std::optional<string_view> hotkeyName = GetHotkeyName(spl, myPlayer._pRSplType);
@@ -211,9 +211,10 @@ std::vector<SpellListItem> GetSpellListItems()
 	std::vector<SpellListItem> spellListItems;
 
 	uint64_t mask;
+	const Point mainPanelPosition = GetMainPanel().position;
 
-	int x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-	int y = PANEL_Y - 17;
+	int x = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
+	int y = mainPanelPosition.y - 17;
 
 	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
 		auto &myPlayer = Players[MyPlayerId];
@@ -242,15 +243,15 @@ std::vector<SpellListItem> GetSpellListItems()
 			bool isSelected = (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH);
 			spellListItems.emplace_back(SpellListItem { { x, y }, (spell_type)i, (spell_id)j, isSelected });
 			x -= SPLICONLENGTH;
-			if (x == PANEL_X + 12 - SPLICONLENGTH) {
-				x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+			if (x == mainPanelPosition.x + 12 - SPLICONLENGTH) {
+				x = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
 				y -= SPLICONLENGTH;
 			}
 		}
-		if (mask != 0 && x != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
+		if (mask != 0 && x != mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS)
 			x -= SPLICONLENGTH;
-		if (x == PANEL_X + 12 - SPLICONLENGTH) {
-			x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+		if (x == mainPanelPosition.x + 12 - SPLICONLENGTH) {
+			x = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
 			y -= SPLICONLENGTH;
 		}
 	}
@@ -332,8 +333,9 @@ void ToggleSpell(size_t slot)
 void DoSpeedBook()
 {
 	spselflag = true;
-	int xo = PANEL_X + 12 + SPLICONLENGTH * 10;
-	int yo = PANEL_Y - 17;
+	const Point mainPanelPosition = GetMainPanel().position;
+	int xo = mainPanelPosition.x + 12 + SPLICONLENGTH * 10;
+	int yo = mainPanelPosition.y - 17;
 	int x = xo + SPLICONLENGTH / 2;
 	int y = yo - SPLICONLENGTH / 2;
 
@@ -364,17 +366,17 @@ void DoSpeedBook()
 						y = yo - SPLICONLENGTH / 2;
 					}
 					xo -= SPLICONLENGTH;
-					if (xo == PANEL_X + 12 - SPLICONLENGTH) {
-						xo = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+					if (xo == mainPanelPosition.x + 12 - SPLICONLENGTH) {
+						xo = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
 						yo -= SPLICONLENGTH;
 					}
 				}
 				spell <<= 1ULL;
 			}
-			if (spells != 0 && xo != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
+			if (spells != 0 && xo != mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS)
 				xo -= SPLICONLENGTH;
-			if (xo == PANEL_X + 12 - SPLICONLENGTH) {
-				xo = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+			if (xo == mainPanelPosition.x + 12 - SPLICONLENGTH) {
+				xo = mainPanelPosition.x + 12 + SPLICONLENGTH * SPLROWICONLS;
 				yo -= SPLICONLENGTH;
 			}
 		}
