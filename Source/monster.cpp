@@ -1364,7 +1364,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	if (player.isAbleToBlock()) {
 		blkper = GenerateRnd(100);
 	}
-	int blk = player.GetBlockChance() - (monster.mLevel * 2);
+	int blk = player.GetBlockChance(monster.mLevel);
 	blk = clamp(blk, 0, 100);
 	if (hper >= hit)
 		return;

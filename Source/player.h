@@ -543,14 +543,11 @@ struct Player {
 
 	/**
 	 * @brief Return block chance
-	 * @param useLevel - indicate if player's level should be added to block chance (the only case where it isn't is blocking a trap)
+	 * @param attackerLevel - to calculate doubled level difference between player and attacker. No difference for traps.
 	 */
-	int GetBlockChance(bool useLevel = true) const
+	int GetBlockChance(int attackerLevel) const
 	{
-		int blkper = _pDexterity + _pBaseToBlk;
-		if (useLevel)
-			blkper += _pLevel * 2;
-		return blkper;
+		return _pDexterity + _pBaseToBlk + 2 * (_pLevel - attackerLevel);
 	}
 
 	/**

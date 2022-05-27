@@ -298,23 +298,20 @@ bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int d
 	if (hitRoll >= hitChance) {
 		return false;
 	}
-	// CTB
-	int blockRoll = 100;
-	if (!isDamShifted && target.isAbleToBlock()) {
-		blockRoll = GenerateRnd(100);
-	}
-
-	int blockChance = target.GetBlockChance() - (attacker._pLevel * 2);
-	blockChance = clamp(blockChance, 0, 100);
-
 	// GET RESISTANCE
 	int8_t resPer = target.getResistance(MissilesData[mName].mResist);
 	// BLOCK
-	*blocked = false;
-	if (resPer <= 0 && blockRoll < blockChance) {
-		StartPlrBlock(pnumTarget, GetDirection(target.position.tile, attacker.position.tile));
-		*blocked = true;
-		return true;
+	if (!isDamShifted && mName != MIS_ACIDPUD && target.isAbleToBlock()) {
+		int blockRoll = GenerateRnd(100);
+		int blockChance = target.GetBlockChance(attacker._pLevel);
+		blockChance = clamp(blockChance, 0, 100);
+
+		*blocked = false;
+		if (resPer <= 0 && blockRoll < blockChance) {
+			StartPlrBlock(pnumTarget, GetDirection(target.position.tile, attacker.position.tile));
+			*blocked = true;
+			return true;
+		}
 	}
 	// DAMAGE calc
 	int dam;
@@ -946,14 +943,13 @@ bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxD
 #endif
 	int hitChance = 40;
 	if (MissilesData[mName].mType == 0) {
-		int tac = target.GetArmor();
 		if (monster != nullptr) {
 			hitChance = monster->mHit
 			    + ((monster->mLevel - target._pLevel) * 2)
 			    + 30
-			    - (dist * 2) - tac;
+			    - (dist * 2) - target.GetArmor();
 		} else {
-			hitChance = 100 - (tac / 2) - (dist * 2);
+			hitChance = 100 - (target.GetArmor() / 2) - (dist * 2);
 		}
 	} else if (monster != nullptr) {
 		hitChance += (monster->mLevel * 2) - (target._pLevel * 2) - (dist * 2);
@@ -965,33 +961,26 @@ bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxD
 	if (hitRoll >= hitChance) {
 		return false;
 	}
-	// CTB
-	int blockRoll = 100;
-	if (target.isAbleToBlock()) {
-		blockRoll = GenerateRnd(100);
-	}
-
-	if (isDamShifted)
-		blockRoll = 100;
-	if (mName == MIS_ACIDPUD)
-		blockRoll = 100;
-
-	int blockChance = target.GetBlockChance(false);
-	if (monster != nullptr)
-		blockChance -= (monster->mLevel - target._pLevel) * 2;
-	blockChance = clamp(blockChance, 0, 100);
 	// GET RESISTANCE
 	int8_t resPer = target.getResistance(MissilesData[mName].mResist);
 	// BLOCK
-	*blocked = false;
-	if ((resPer <= 0 || gbIsHellfire) && blockRoll < blockChance) {
-		Direction dir = target._pdir;
-		if (monster != nullptr) {
-			dir = GetDirection(target.position.tile, monster->position.tile);
+	if (!isDamShifted && mName != MIS_ACIDPUD && target.isAbleToBlock()) {
+		int blockRoll = GenerateRnd(100);
+		int blockChance = target.GetBlockChance(target._pLevel);
+		if (monster != nullptr)
+			blockChance = target.GetBlockChance(monster->mLevel);
+		blockChance = clamp(blockChance, 0, 100);
+
+		*blocked = false;
+		if ((resPer <= 0 || gbIsHellfire) && blockRoll < blockChance) {
+			Direction dir = target._pdir;
+			if (monster != nullptr) {
+				dir = GetDirection(target.position.tile, monster->position.tile);
+			}
+			*blocked = true;
+			StartPlrBlock(pnumTarget, dir);
+			return true;
 		}
-		*blocked = true;
-		StartPlrBlock(pnumTarget, dir);
-		return true;
 	}
 	// DAMAGE calc
 	int dam;
