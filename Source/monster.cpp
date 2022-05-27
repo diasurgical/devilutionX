@@ -1340,7 +1340,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 
 	auto &player = Players[pnum];
 
-	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
+	if (!player.isPossibleToHit() || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
 		return;
 	if (monster.position.tile.WalkingDistance(player.position.tile) >= 2)
 		return;
@@ -1358,16 +1358,10 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	hit += 2 * (monster.mLevel - player._pLevel)
 	    + 30
 	    - ac;
-	int minhit = 15;
-	if (currlevel == 14)
-		minhit = 20;
-	if (currlevel == 15)
-		minhit = 25;
-	if (currlevel == 16)
-		minhit = 30;
+	int minhit = getMonstersAndTrapsAutoHitAgainstPlayer(15);
 	hit = std::max(hit, minhit);
 	int blkper = 100;
-	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
+	if (player.isAbleToBlock()) {
 		blkper = GenerateRnd(100);
 	}
 	int blk = player.GetBlockChance() - (monster.mLevel * 2);

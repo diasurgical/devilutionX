@@ -17,6 +17,7 @@
 #include "gendung.h"
 #include "interfac.h"
 #include "items.h"
+#include "misdat.h"
 #include "multi.h"
 #include "path.h"
 #include "spelldat.h"
@@ -706,6 +707,45 @@ struct Player {
 		return false;
 	}
 
+	bool isPossibleToHit() const
+	{
+		return ((_pHitPoints >> 6 > 0)
+		    && !_pInvincible);
+	}
+
+	bool isImmune(missile_id mName) const
+	{
+		return (MissilesData[mName].mType == 0 && HasAnyOf(_pSpellFlags, SpellFlag::Etherealize)
+		    || mName == MIS_HBOLT);
+	}
+
+	bool isAbleToBlock() const
+	{
+		return ((_pmode == PM_STAND || _pmode == PM_ATTACK)
+		    && _pBlockFlag);
+	}
+
+	int8_t getResistance(missile_resistance mResist) const
+	{
+		int8_t resPer;
+		switch (mResist) {
+		case MISR_FIRE:
+			resPer = _pFireResist;
+			break;
+		case MISR_LIGHTNING:
+			resPer = _pLghtResist;
+			break;
+		case MISR_MAGIC:
+		case MISR_ACID:
+			resPer = _pMagResist;
+			break;
+		default:
+			resPer = 0;
+			break;
+		}
+		return resPer;
+	}
+
 	/**
 	 * @brief Updates previewCelSprite according to new requested command
 	 * @param cmdId What command is requested
@@ -788,6 +828,7 @@ void SetPlrDex(Player &player, int v);
 void SetPlrVit(Player &player, int v);
 void InitDungMsgs(Player &player);
 void PlayDungMsgs();
+int getMonstersAndTrapsAutoHitAgainstPlayer(int minHit);
 
 /* data */
 

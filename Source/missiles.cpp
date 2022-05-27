@@ -269,7 +269,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	return true;
 }
 
-bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int dist, missile_id mName, bool isShifted, bool *blocked)
+bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int dist, missile_id mName, bool isDamShifted, bool *blocked)
 {
 	auto &attacker = Players[pnumAttacker];
 	auto &target = Players[pnumTarget];
@@ -277,17 +277,8 @@ bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int d
 	if (sgGameInitInfo.bFriendlyFire == 0 && attacker.friendlyMode)
 		return false;
 
-	if (target._pInvincible) {
+	if (!target.isPossibleToHit() || target.isImmune(mName))
 		return false;
-	}
-
-	if (mName == MIS_HBOLT) {
-		return false;
-	}
-
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize) && MissilesData[mName].mType == 0) {
-		return false;
-	}
 	// CTH
 	int hitRoll = GenerateRnd(100);
 
@@ -309,7 +300,7 @@ bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int d
 	}
 	// CTB
 	int blockRoll = 100;
-	if (!isShifted && (target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+	if (!isDamShifted && target.isAbleToBlock()) {
 		blockRoll = GenerateRnd(100);
 	}
 
@@ -317,22 +308,7 @@ bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int d
 	blockChance = clamp(blockChance, 0, 100);
 
 	// GET RESISTANCE
-	int8_t resPer;
-	switch (MissilesData[mName].mResist) {
-	case MISR_FIRE:
-		resPer = target._pFireResist;
-		break;
-	case MISR_LIGHTNING:
-		resPer = target._pLghtResist;
-		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
-		resPer = target._pMagResist;
-		break;
-	default:
-		resPer = 0;
-		break;
-	}
+	int8_t resPer = target.getResistance(MissilesData[mName].mResist);
 	// BLOCK
 	*blocked = false;
 	if (resPer <= 0 && blockRoll < blockChance) {
@@ -348,7 +324,7 @@ bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int d
 		dam = minDam + GenerateRnd(maxDam - minDam + 1);
 		if (MissilesData[mName].mType == 0 && MissilesData[mName].mResist == MISR_NONE)
 			dam += attacker._pIBonusDamMod + attacker._pDamageMod + dam * attacker._pIBonusDam / 100;
-		if (!isShifted)
+		if (!isDamShifted)
 			dam <<= 6;
 	}
 	if (MissilesData[mName].mType != 0)
@@ -956,21 +932,12 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	return true;
 }
 
-bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxDam, missile_id mName, bool isShifted, int earFlag, bool *blocked)
+bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxDam, missile_id mName, bool isDamShifted, int earFlag, bool *blocked)
 {
 	auto &target = Players[pnumTarget];
 	// check immunities
-	if (target._pHitPoints >> 6 <= 0) {
+	if (!target.isPossibleToHit() || target.isImmune(mName))
 		return false;
-	}
-
-	if (target._pInvincible) {
-		return false;
-	}
-
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize) && MissilesData[mName].mType == 0) {
-		return false;
-	}
 	// CTH
 	int hitRoll = GenerateRnd(100);
 #ifdef _DEBUG
@@ -992,13 +959,7 @@ bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxD
 		hitChance += (monster->mLevel * 2) - (target._pLevel * 2) - (dist * 2);
 	}
 
-	int minhit = 10;
-	if (currlevel == 14)
-		minhit = 20;
-	if (currlevel == 15)
-		minhit = 25;
-	if (currlevel == 16)
-		minhit = 30;
+	int minhit = getMonstersAndTrapsAutoHitAgainstPlayer(10);
 	hitChance = std::max(hitChance, minhit);
 	// HIT ?
 	if (hitRoll >= hitChance) {
@@ -1006,11 +967,11 @@ bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxD
 	}
 	// CTB
 	int blockRoll = 100;
-	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+	if (target.isAbleToBlock()) {
 		blockRoll = GenerateRnd(100);
 	}
 
-	if (isShifted)
+	if (isDamShifted)
 		blockRoll = 100;
 	if (mName == MIS_ACIDPUD)
 		blockRoll = 100;
@@ -1020,22 +981,7 @@ bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxD
 		blockChance -= (monster->mLevel - target._pLevel) * 2;
 	blockChance = clamp(blockChance, 0, 100);
 	// GET RESISTANCE
-	int8_t resPer;
-	switch (MissilesData[mName].mResist) {
-	case MISR_FIRE:
-		resPer = target._pFireResist;
-		break;
-	case MISR_LIGHTNING:
-		resPer = target._pLghtResist;
-		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
-		resPer = target._pMagResist;
-		break;
-	default:
-		resPer = 0;
-		break;
-	}
+	int8_t resPer = target.getResistance(MissilesData[mName].mResist);
 	// BLOCK
 	*blocked = false;
 	if ((resPer <= 0 || gbIsHellfire) && blockRoll < blockChance) {
@@ -1052,7 +998,7 @@ bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxD
 	if (mName == MIS_BONESPIRIT) {
 		dam = target._pHitPoints / 3;
 	} else {
-		if (!isShifted) {
+		if (!isDamShifted) {
 			dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 			if (monster == nullptr)
 				if (HasAnyOf(target._pIFlags, ItemSpecialEffect::HalfTrapDamage))
