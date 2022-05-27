@@ -13,6 +13,7 @@
 #include "miniwin/miniwin.h"
 #include "misdat.h"
 #include "monster.h"
+#include "player.h"
 #include "spelldat.h"
 
 namespace devilution {
@@ -173,10 +174,14 @@ public:
 		this->minDamage = minDamage;
 		this->maxDamage = maxDamage;
 		this->isDamageShifted = isDamageShifted;
+		attacker_ = &Players[colMissile->_misource];
 	}
 	int calculateCTH(Monster &monster) const;
 	int calculateDamage(Monster &monster) const;
 	void hitMonster(int mid, int dam) const;
+
+private:
+	const Player *attacker_;
 };
 
 template <typename TCollidable>

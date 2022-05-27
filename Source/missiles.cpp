@@ -813,13 +813,12 @@ int PlayerMissile::calculateCTH(Monster &monster) const
 		return GenerateRnd(75) - monster.mLevel * 2;
 
 	int hper = 0;
-	const Player &player = Players[colMissile->_misource];
 	if (MissilesData[colMissile->_mitype].mType == 0) {
-		hper = player.GetRangedPiercingToHit();
-		hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
+		hper = attacker_->GetRangedPiercingToHit();
+		hper -= attacker_->CalculateArmorPierce(monster.mArmorClass, false);
 		hper -= (colMissile->_midist * colMissile->_midist) / 2;
 	} else {
-		hper = player.GetMagicToHit() - (monster.mLevel * 2) - colMissile->_midist;
+		hper = attacker_->GetMagicToHit() - (monster.mLevel * 2) - colMissile->_midist;
 	}
 	return hper;
 }
@@ -830,14 +829,13 @@ int PlayerMissile::calculateDamage(Monster &monster) const
 		return monster._mhitpoints / 3 >> 6;
 
 	int dam = minDamage + GenerateRnd(maxDamage - minDamage + 1);
-	const Player &player = Players[colMissile->_misource];
 	if (MissilesData[colMissile->_mitype].mType == 0 && MissilesData[colMissile->_mitype].mResist == MISR_NONE) {
-		dam += (dam * player._pIBonusDam / 100) + player._pIBonusDamMod;
-		if (player._pClass == HeroClass::Rogue)
-			dam += player._pDamageMod;
+		dam += (dam * attacker_->_pIBonusDamMod / 100) + attacker_->_pIBonusDam;
+		if (attacker_->_pClass == HeroClass::Rogue)
+			dam += attacker_->_pDamageMod;
 		else
-			dam += player._pDamageMod / 2;
-		if (monster.MData->mMonstClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
+			dam += attacker_->_pDamageMod / 2;
+		if (monster.MData->mMonstClass == MonsterClass::Demon && HasAnyOf(attacker_->_pIFlags, ItemSpecialEffect::TripleDemonDamage))
 			dam *= 3;
 	}
 	return dam;
@@ -849,15 +847,15 @@ void PlayerMissile::hitMonster(int mid, int dam) const
 	if (colMissile->_misource == MyPlayerId)
 		monster._mhitpoints -= dam;
 
-	const Player &player = Players[colMissile->_misource];
-	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
+	if ((gbIsHellfire && HasAnyOf(attacker_->_pIFlags, ItemSpecialEffect::NoHealOnMonsters))
+	    || (!gbIsHellfire && HasAnyOf(attacker_->_pIFlags, ItemSpecialEffect::FireArrows)))
 		monster._mFlags |= MFLAG_NOHEAL;
 
 	MissileHitMonsterConsequences(mid, colMissile->_misource, dam, colMissile->_mitype);
 
 	if (monster._msquelch == 0) {
 		monster._msquelch = UINT8_MAX;
-		monster.position.last = player.position.tile;
+		monster.position.last = attacker_->position.tile;
 	}
 }
 
