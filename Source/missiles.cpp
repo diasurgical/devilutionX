@@ -273,11 +273,9 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 {
 	auto &player = Players[pnum];
 	auto &target = Players[p];
-
+	// check immunities
 	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
 		return false;
-
-	*blocked = false;
 
 	if (target._pInvincible) {
 		return false;
@@ -290,7 +288,35 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize) && MissilesData[mtype].mType == 0) {
 		return false;
 	}
+	// CTH
+	int hper = GenerateRnd(100);
 
+	int hit;
+	if (MissilesData[mtype].mType == 0) {
+		hit = player.GetRangedToHit()
+		    - (dist * dist / 2)
+		    - target.GetArmor();
+	} else {
+		hit = player.GetMagicToHit()
+		    - (target._pLevel * 2)
+		    - dist;
+	}
+
+	hit = clamp(hit, 5, 95);
+	// HIT?
+	if (hper >= hit) {
+		return false;
+	}
+	// CTB
+	int blkper = 100;
+	if (!shift && (target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+		blkper = GenerateRnd(100);
+	}
+
+	int blk = target.GetBlockChance() - (player._pLevel * 2);
+	blk = clamp(blk, 0, 100);
+
+	// GET RESISTANCE
 	int8_t resper;
 	switch (MissilesData[mtype].mResist) {
 	case MISR_FIRE:
@@ -307,34 +333,9 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		resper = 0;
 		break;
 	}
-
-	int hper = GenerateRnd(100);
-
-	int hit;
-	if (MissilesData[mtype].mType == 0) {
-		hit = player.GetRangedToHit()
-		    - (dist * dist / 2)
-		    - target.GetArmor();
-	} else {
-		hit = player.GetMagicToHit()
-		    - (target._pLevel * 2)
-		    - dist;
-	}
-
-	hit = clamp(hit, 5, 95);
-
-	if (hper >= hit) {
-		return false;
-	}
-
-	int blkper = 100;
-	if (!shift && (target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
-		blkper = GenerateRnd(100);
-	}
-
-	int blk = target.GetBlockChance() - (player._pLevel * 2);
-	blk = clamp(blk, 0, 100);
-
+	// BLOCK will be here
+	*blocked = false;
+	// DAMAGE calc
 	int dam;
 	if (mtype == MIS_BONESPIRIT) {
 		dam = target._pHitPoints / 3;
@@ -347,6 +348,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 	}
 	if (MissilesData[mtype].mType != 0)
 		dam /= 2;
+	// HIT (AND BLOCK temporary)
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
 		if (pnum == MyPlayerId)
@@ -959,10 +961,8 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked)
 {
-	*blocked = false;
-
 	auto &player = Players[pnum];
-
+	// check immunities
 	if (player._pHitPoints >> 6 <= 0) {
 		return false;
 	}
@@ -974,7 +974,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize) && MissilesData[mtype].mType == 0) {
 		return false;
 	}
-
+	// CTH
 	int hit = GenerateRnd(100);
 #ifdef _DEBUG
 	if (DebugGodMode)
@@ -1003,7 +1003,11 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	if (currlevel == 16)
 		minhit = 30;
 	hper = std::max(hper, minhit);
-
+	// HIT ?
+	if (hit >= hper) {
+		return false;
+	}
+	// CTB
 	int blk = 100;
 	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
 		blk = GenerateRnd(100);
@@ -1018,7 +1022,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	if (monster != nullptr)
 		blkper -= (monster->mLevel - player._pLevel) * 2;
 	blkper = clamp(blkper, 0, 100);
-
+	// GET RESISTANCE
 	int8_t resper;
 	switch (MissilesData[mtype].mResist) {
 	case MISR_FIRE:
@@ -1035,11 +1039,18 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		resper = 0;
 		break;
 	}
-
-	if (hit >= hper) {
-		return false;
+	// BLOCK
+	*blocked = false;
+	if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
+		Direction dir = player._pdir;
+		if (monster != nullptr) {
+			dir = GetDirection(player.position.tile, monster->position.tile);
+		}
+		*blocked = true;
+		StartPlrBlock(pnum, dir);
+		return true;
 	}
-
+	// DAMAGE calc
 	int dam;
 	if (mtype == MIS_BONESPIRIT) {
 		dam = player._pHitPoints / 3;
@@ -1060,17 +1071,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 
 		dam = std::max(dam, 64);
 	}
-
-	if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
-		Direction dir = player._pdir;
-		if (monster != nullptr) {
-			dir = GetDirection(player.position.tile, monster->position.tile);
-		}
-		*blocked = true;
-		StartPlrBlock(pnum, dir);
-		return true;
-	}
-
+	// HIT
 	if (resper > 0) {
 		dam -= dam * resper / 100;
 		if (pnum == MyPlayerId) {
