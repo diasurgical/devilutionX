@@ -137,9 +137,9 @@ struct Missile {
 class Collidable {
 public:
 	Missile *colMissile;
-	int m_minDamage;
-	int m_maxDamage;
-	bool m_isDamageShifted;
+	int minDamage;
+	int maxDamage;
+	bool isDamageShifted;
 };
 
 class TrapMissile : public Collidable {
@@ -148,13 +148,20 @@ public:
 	TrapMissile(Missile missile, int minDamage, int maxDamage, bool isDamageShifted)
 	{
 		colMissile = &missile;
-		m_minDamage = minDamage;
-		m_maxDamage = maxDamage;
-		m_isDamageShifted = isDamageShifted;
+		this->minDamage = minDamage;
+		this->maxDamage = maxDamage;
+		this->isDamageShifted = isDamageShifted;
 	}
-	int CalculateCTH(Monster &monster) const;
-	int CalculateDamage(Monster &monster) const;
-	void HitMonster(int mid, int dam) const;
+	TrapMissile(Missile missile, int minDamage, int maxDamage, bool isDamageShifted, int distance, int miSource, missile_id mName)
+	    : TrapMissile(missile, minDamage, maxDamage, isDamageShifted)
+	{
+		colMissile->_midist = distance;
+		colMissile->_misource = miSource;
+		colMissile->_mitype = mName;
+	}
+	int calculateCTH(Monster &monster) const;
+	int calculateDamage(Monster &monster) const;
+	void hitMonster(int mid, int dam) const;
 };
 
 class PlayerMissile : public Collidable {
@@ -163,13 +170,13 @@ public:
 	PlayerMissile(Missile missile, int minDamage, int maxDamage, bool isDamageShifted)
 	{
 		colMissile = &missile;
-		m_minDamage = minDamage;
-		m_maxDamage = maxDamage;
-		m_isDamageShifted = isDamageShifted;
+		this->minDamage = minDamage;
+		this->maxDamage = maxDamage;
+		this->isDamageShifted = isDamageShifted;
 	}
-	int CalculateCTH(Monster &monster) const;
-	int CalculateDamage(Monster &monster) const;
-	void HitMonster(int mid, int dam) const;
+	int calculateCTH(Monster &monster) const;
+	int calculateDamage(Monster &monster) const;
+	void hitMonster(int mid, int dam) const;
 };
 
 template <typename TCollidable>

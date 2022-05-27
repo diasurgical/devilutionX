@@ -807,7 +807,7 @@ void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName)
 	}
 }
 
-int PlayerMissile::CalculateCTH(Monster &monster) const
+int PlayerMissile::calculateCTH(Monster &monster) const
 {
 	if (colMissile->_misource == -1)
 		return GenerateRnd(75) - monster.mLevel * 2;
@@ -824,12 +824,12 @@ int PlayerMissile::CalculateCTH(Monster &monster) const
 	return hper;
 }
 
-int PlayerMissile::CalculateDamage(Monster &monster) const
+int PlayerMissile::calculateDamage(Monster &monster) const
 {
 	if (colMissile->_mitype == MIS_BONESPIRIT)
 		return monster._mhitpoints / 3 >> 6;
 
-	int dam = m_minDamage + GenerateRnd(m_maxDamage - m_minDamage + 1);
+	int dam = minDamage + GenerateRnd(maxDamage - minDamage + 1);
 	const Player &player = Players[colMissile->_misource];
 	if (MissilesData[colMissile->_mitype].mType == 0 && MissilesData[colMissile->_mitype].mResist == MISR_NONE) {
 		dam += (dam * player._pIBonusDam / 100) + player._pIBonusDamMod;
@@ -843,13 +843,13 @@ int PlayerMissile::CalculateDamage(Monster &monster) const
 	return dam;
 }
 
-void PlayerMissile::HitMonster(int mid, int dam) const
+void PlayerMissile::hitMonster(int mid, int dam) const
 {
 	Monster &monster = Monsters[mid];
 	if (colMissile->_misource == MyPlayerId)
 		monster._mhitpoints -= dam;
 
-	const auto &player = Players[colMissile->_misource];
+	const Player &player = Players[colMissile->_misource];
 	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
 		monster._mFlags |= MFLAG_NOHEAL;
 
@@ -861,19 +861,19 @@ void PlayerMissile::HitMonster(int mid, int dam) const
 	}
 }
 
-int TrapMissile::CalculateCTH(Monster &monster) const
+int TrapMissile::calculateCTH(Monster &monster) const
 {
 	return 90 - monster.mArmorClass - colMissile->_midist;
 }
 
-int TrapMissile::CalculateDamage(Monster &monster) const
+int TrapMissile::calculateDamage(Monster &monster) const
 {
 	return (colMissile->_mitype == MIS_BONESPIRIT)
 	    ? monster._mhitpoints / 3 >> 6
-	    : m_minDamage + GenerateRnd(m_maxDamage - m_minDamage + 1);
+	    : minDamage + GenerateRnd(maxDamage - minDamage + 1);
 }
 
-void TrapMissile::HitMonster(int mid, int dam) const
+void TrapMissile::hitMonster(int mid, int dam) const
 {
 	Monster &monster = Monsters[mid];
 	monster._mhitpoints -= dam;
@@ -897,7 +897,7 @@ bool TryHitMonster(TCollidable const &col, int mid)
 
 	if (monster._mmode != MonsterMode::Petrified) {
 		int hit = GenerateRnd(100);
-		int hper = col.CalculateCTH(monster);
+		int hper = col.calculateCTH(monster);
 		hper = clamp(hper, 5, 95);
 
 		if (hit >= hper) {
@@ -908,13 +908,13 @@ bool TryHitMonster(TCollidable const &col, int mid)
 		}
 	}
 
-	int dam = col.CalculateDamage(monster);
-	if (!col.m_isDamageShifted)
+	int dam = col.calculateDamage(monster);
+	if (!col.isDamageShifted)
 		dam <<= 6;
 	if (monster.IsResistant(col.colMissile->_mitype))
 		dam >>= 2;
 
-	col.HitMonster(mid, dam);
+	col.hitMonster(mid, dam);
 
 	return true;
 }
