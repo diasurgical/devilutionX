@@ -333,8 +333,13 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		resper = 0;
 		break;
 	}
-	// BLOCK will be here
+	// BLOCK
 	*blocked = false;
+	if (resper <= 0 && blkper < blk) {
+		StartPlrBlock(p, GetDirection(target.position.tile, player.position.tile));
+		*blocked = true;
+		return true;
+	}
 	// DAMAGE calc
 	int dam;
 	if (mtype == MIS_BONESPIRIT) {
@@ -348,23 +353,15 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 	}
 	if (MissilesData[mtype].mType != 0)
 		dam /= 2;
-	// HIT (AND BLOCK temporary)
-	if (resper > 0) {
+	if (resper > 0)
 		dam -= (dam * resper) / 100;
-		if (pnum == MyPlayerId)
-			NetSendCmdDamage(true, p, dam);
+	// HIT
+	if (pnum == MyPlayerId)
+		NetSendCmdDamage(true, p, dam);
+	if (resper > 0)
 		target.Say(HeroSpeech::ArghClang);
-		return true;
-	}
-
-	if (blkper < blk) {
-		StartPlrBlock(p, GetDirection(target.position.tile, player.position.tile));
-		*blocked = true;
-	} else {
-		if (pnum == MyPlayerId)
-			NetSendCmdDamage(true, p, dam);
+	else
 		StartPlrHit(p, dam, false);
-	}
 
 	return true;
 }
@@ -1071,27 +1068,18 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 
 		dam = std::max(dam, 64);
 	}
-	// HIT
-	if (resper > 0) {
+	if (resper > 0)
 		dam -= dam * resper / 100;
-		if (pnum == MyPlayerId) {
-			ApplyPlrDamage(pnum, 0, 0, dam, earflag);
-		}
-
-		if (player._pHitPoints >> 6 > 0) {
-			player.Say(HeroSpeech::ArghClang);
-		}
-		return true;
-	}
-
-	if (pnum == MyPlayerId) {
+	// HIT
+	if (pnum == MyPlayerId)
 		ApplyPlrDamage(pnum, 0, 0, dam, earflag);
-	}
 
 	if (player._pHitPoints >> 6 > 0) {
-		StartPlrHit(pnum, dam, false);
+		if (resper > 0)
+			player.Say(HeroSpeech::ArghClang);
+		else
+			StartPlrHit(pnum, dam, false);
 	}
-
 	return true;
 }
 
