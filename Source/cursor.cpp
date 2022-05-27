@@ -264,8 +264,9 @@ void CheckCursMove()
 			sx += GetScreenWidth() / 4;
 		}
 	}
-	if (sy > GetMainPanel().position.y - 1 && MousePosition.x >= GetMainPanel().position.x && MousePosition.x < GetMainPanel().position.x + PANEL_WIDTH && track_isscrolling()) {
-		sy = GetMainPanel().position.y - 1;
+	const Rectangle &mainPanel = GetMainPanel();
+	if (mainPanel.Contains(MousePosition) && track_isscrolling()) {
+		sy = mainPanel.position.y - 1;
 	}
 
 	if (!zoomflag) {
@@ -378,7 +379,7 @@ void CheckCursMove()
 		cursPosition = { mx, my };
 		return;
 	}
-	if (GetMainPanel().Contains(MousePosition)) {
+	if (mainPanel.Contains(MousePosition)) {
 		CheckPanelInfo();
 		return;
 	}

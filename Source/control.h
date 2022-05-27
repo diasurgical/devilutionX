@@ -23,13 +23,6 @@
 
 namespace devilution {
 
-#define PANEL_WIDTH 640
-#define PANEL_HEIGHT 128
-#define PANEL_TOP (gnScreenHeight - PANEL_HEIGHT)
-#define PANEL_LEFT (gnScreenWidth - PANEL_WIDTH) / 2
-#define PANEL_X PANEL_LEFT
-#define PANEL_Y PANEL_TOP
-
 #define SPANEL_WIDTH 320
 #define SPANEL_HEIGHT 352
 
@@ -69,7 +62,8 @@ bool IsChatAvailable();
  */
 inline bool CanPanelsCoverView()
 {
-	return GetScreenWidth() <= PANEL_WIDTH && GetScreenHeight() <= SPANEL_HEIGHT + PANEL_HEIGHT;
+	const Rectangle &mainPanel = GetMainPanel();
+	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SPANEL_HEIGHT + mainPanel.size.height;
 }
 void DrawSpellList(const Surface &out);
 void SetSpell();

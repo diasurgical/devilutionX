@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "control.h"
 #include "diablo.h"
 #include "scrollrt.h"
 #include "utils/ui_fwd.h"
@@ -146,6 +147,7 @@ TEST(Scroll_rt, calc_tiles_covered_by_panel_original)
 {
 	gnScreenWidth = 640;
 	zoomflag = true;
+	CalculatePanelAreas();
 	EXPECT_EQ(RowsCoveredByPanel(), 0);
 }
 
@@ -153,6 +155,7 @@ TEST(Scroll_rt, calc_tiles_covered_by_panel_960)
 {
 	gnScreenWidth = 960;
 	zoomflag = true;
+	CalculatePanelAreas();
 	EXPECT_EQ(RowsCoveredByPanel(), 4);
 }
 
@@ -160,5 +163,6 @@ TEST(Scroll_rt, calc_tiles_covered_by_panel_960_zoom)
 {
 	gnScreenWidth = 960;
 	zoomflag = false;
+	CalculatePanelAreas();
 	EXPECT_EQ(RowsCoveredByPanel(), 2);
 }
