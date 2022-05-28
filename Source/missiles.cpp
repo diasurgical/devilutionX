@@ -3919,10 +3919,8 @@ void MI_Element(Missile &missile)
 		Point c = missile.position.tile;
 		Point p = Players[id].position.tile;
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
-		if (!CheckBlock(p, c))
-			CheckMissileCol(missile, dam, dam, true, c, true);
 
-		constexpr Displacement Offsets[] = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
+		constexpr Displacement Offsets[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
 		for (Displacement offset : Offsets) {
 			if (!CheckBlock(p, c + offset))
 				CheckMissileCol(missile, dam, dam, true, c + offset, true);
