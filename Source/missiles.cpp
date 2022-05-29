@@ -2933,7 +2933,6 @@ void MI_Fireball(Missile &missile)
 	missile._mirange--;
 
 	int id = missile._misource;
-	Point p = (missile._micaster == TARGET_MONSTERS) ? Players[id].position.tile : Monsters[id].position.tile;
 
 	if (missile._miAnimType == MFILE_BIGEXP) {
 		if (missile._mirange == 0) {
@@ -2956,7 +2955,7 @@ void MI_Fireball(Missile &missile)
 
 			constexpr Displacement Pattern[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
 			for (auto shift : Pattern) {
-				if (!CheckBlock(p, m + shift))
+				if (!CheckBlock(missile.position.start, m + shift))
 					CheckMissileCol(missile, minDam, maxDam, false, m + shift, true);
 			}
 
@@ -3917,12 +3916,12 @@ void MI_Element(Missile &missile)
 	int id = missile._misource;
 	if (missile._miAnimType == MFILE_BIGEXP) {
 		Point c = missile.position.tile;
-		Point p = Players[id].position.tile;
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
 
+		Point startPoint = missile.var3 == 2 ? Point { missile.var4, missile.var5 } : missile.position.start;
 		constexpr Displacement Offsets[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
 		for (Displacement offset : Offsets) {
-			if (!CheckBlock(p, c + offset))
+			if (!CheckBlock(startPoint, c + offset))
 				CheckMissileCol(missile, dam, dam, true, c + offset, true);
 		}
 
