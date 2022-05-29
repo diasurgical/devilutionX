@@ -77,7 +77,7 @@ bool UiProgressDialog(int (*fnfunc)())
 		ProgressRender(progress);
 		UiRenderItems(vecProgress);
 		DrawMouse();
-		RenderPresent();
+		UiFadeIn();
 
 		while (PollEvent(&event) != 0) {
 			switch (event.type) {
