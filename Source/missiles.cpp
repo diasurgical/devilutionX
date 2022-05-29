@@ -387,7 +387,7 @@ void RotateBlockedMissile(Missile &missile)
 	SetMissDir(missile, dir);
 }
 
-void CheckMissileCol(Missile &missile, int minDam, int maxDam, bool shift, Point position, bool noDel)
+void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDamageShifted, Point position, bool dontDeleteOnCollision)
 {
 	if (!InDungeonBounds(position))
 		return;
@@ -400,52 +400,52 @@ void CheckMissileCol(Missile &missile, int minDam, int maxDam, bool shift, Point
 	if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
-				isMonsterHit = MonsterMHit(missile._misource, abs(mid) - 1, minDam, maxDam, missile._midist, missile._mitype, shift);
+				isMonsterHit = MonsterMHit(missile._misource, abs(mid) - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 			}
 		} else {
-			auto &monster = Monsters[missile._misource];
-			if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0
+			Monster &AttackingMonster = Monsters[missile._misource];
+			if ((AttackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
 			    && mid > 0
 			    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
-				isMonsterHit = MonsterTrapHit(mid - 1, minDam, maxDam, missile._midist, missile._mitype, shift);
+				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	} else {
 		if (mid > 0) {
 			if (missile._micaster == TARGET_BOTH)
-				MonsterMHit(missile._misource, mid - 1, minDam, maxDam, missile._midist, missile._mitype, shift);
+				isMonsterHit = MonsterMHit(missile._misource, mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 			else
-				isMonsterHit = MonsterTrapHit(mid - 1, minDam, maxDam, missile._midist, missile._mitype, shift);
+				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	}
 
 	if (isMonsterHit) {
-		if (!noDel)
+		if (!dontDeleteOnCollision)
 			missile._mirange = 0;
 		missile._miHitFlag = true;
 	}
 
 	bool isPlayerHit = false;
 	bool blocked = false;
-	int pid = dPlayer[mx][my];
+	const int pid = dPlayer[mx][my];
 	if (pid > 0) {
 		if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 			if (missile._micaster == TARGET_MONSTERS) {
 				if ((pid - 1) != missile._misource)
-					isPlayerHit = Plr2PlrMHit(missile._misource, pid - 1, minDam, maxDam, missile._midist, missile._mitype, shift, &blocked);
+					isPlayerHit = Plr2PlrMHit(missile._misource, pid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
 			} else {
 				Monster &monster = Monsters[missile._misource];
-				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDam, maxDam, missile._mitype, shift, 0, &blocked);
+				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
 			}
 		} else {
 			int earflag = (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING) ? 1 : 0;
-			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDam, maxDam, missile._mitype, shift, earflag, &blocked);
+			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
 		}
 	}
 
 	if (isPlayerHit) {
 		if (gbIsHellfire && blocked) {
 			RotateBlockedMissile(missile);
-		} else if (!noDel) {
+		} else if (!dontDeleteOnCollision) {
 			missile._mirange = 0;
 		}
 		missile._miHitFlag = true;
@@ -457,7 +457,7 @@ void CheckMissileCol(Missile &missile, int minDam, int maxDam, bool shift, Point
 			BreakObject(-1, *object);
 		}
 
-		if (!noDel)
+		if (!dontDeleteOnCollision)
 			missile._mirange = 0;
 		missile._miHitFlag = false;
 	}
