@@ -426,7 +426,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 
 	bool isPlayerHit = false;
 	bool blocked = false;
-	const int pid = dPlayer[mx][my];
+	const int8_t pid = dPlayer[mx][my];
 	if (pid > 0) {
 		if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 			if (missile._micaster == TARGET_MONSTERS) {
