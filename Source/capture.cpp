@@ -4,6 +4,7 @@
  * Implementation of the screenshot function.
  */
 #include <cstdint>
+#include <fmt/chrono.h>
 #include <fstream>
 
 #include "DiabloUI/diabloui.h"
@@ -130,15 +131,16 @@ bool CapturePix(const Surface &buf, std::ofstream *out)
 
 std::ofstream CaptureFile(std::string *dstPath)
 {
-	char filename[sizeof("screen00.PCX") / sizeof(char)];
-	for (int i = 0; i <= 99; ++i) {
-		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
-		*dstPath = paths::PrefPath() + filename;
-		if (!FileExists(dstPath->c_str())) {
-			return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
-		}
+	std::time_t tt = std::time(nullptr);
+	std::tm *tm = std::localtime(&tt);
+	std::string filename = fmt::format("Screenshot from {:%Y-%m-%d %H-%M-%S}", *tm);
+	*dstPath = paths::PrefPath() + filename + ".PCX";
+	int i = 0;
+	while (FileExists(dstPath->c_str())) {
+		i++;
+		*dstPath = paths::PrefPath() + filename + "-" + std::to_string(i) + ".PCX";
 	}
-	return {};
+	return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
 }
 
 /**

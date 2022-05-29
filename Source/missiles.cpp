@@ -189,33 +189,8 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 {
 	auto &monster = Monsters[m];
 
-	bool resist = false;
-	if (monster.mtalkmsg != TEXT_NONE
-	    || monster._mhitpoints >> 6 <= 0
-	    || (t == MIS_HBOLT && monster.MType->mtype != MT_DIABLO && monster.MData->mMonstClass != MonsterClass::Undead)) {
+	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
 		return false;
-	}
-	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT)
-		return false;
-	if (monster._mmode == MonsterMode::Charge)
-		return false;
-
-	uint8_t mor = monster.mMagicRes;
-	missile_resistance mir = MissilesData[t].mResist;
-
-	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & IMMUNE_LIGHTNING) != 0 && mir == MISR_LIGHTNING)
-	    || ((mor & IMMUNE_ACID) != 0 && mir == MISR_ACID))
-		return false;
-
-	if (((mor & RESIST_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & RESIST_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & RESIST_LIGHTNING) != 0 && mir == MISR_LIGHTNING))
-		resist = true;
-
-	if (gbIsHellfire && t == MIS_HBOLT && (monster.MType->mtype == MT_DIABLO || monster.MType->mtype == MT_BONEDEMN))
-		resist = true;
 
 	int hit = GenerateRnd(100);
 	int hper = 0;
@@ -237,9 +212,8 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (monster._mmode == MonsterMode::Petrified)
 		hit = 0;
 
-	bool ret = false;
-	if (CheckMonsterHit(monster, &ret))
-		return ret;
+	if (monster.TryLiftGargoyle())
+		return true;
 
 	if (hit >= hper) {
 #ifdef _DEBUG
@@ -257,14 +231,14 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 	const auto &player = Players[pnum];
 
-	if (MissilesData[t].mType == 0 && mir == MISR_NONE) {
+	if (MissilesData[t].mType == 0 && MissilesData[t].mResist == MISR_NONE) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 		if (player._pClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
 		else
 			dam += player._pDamageMod / 2;
 	}
-
+	bool resist = monster.IsResistant(t);
 	if (!shift)
 		dam <<= 6;
 	if (resist)
@@ -273,30 +247,18 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;
 
-	if ((gbIsHellfire && (player._pIFlags & ISPL_NOHEALMON) != 0) || (!gbIsHellfire && (player._pIFlags & ISPL_FIRE_ARROWS) != 0))
+	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
 		monster._mFlags |= MFLAG_NOHEAL;
 
 	if (monster._mhitpoints >> 6 <= 0) {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartKill(m, pnum);
-			monster.Petrify();
-		} else {
-			M_StartKill(m, pnum);
-		}
+		M_StartKill(m, pnum);
+	} else if (resist) {
+		PlayEffect(monster, 1);
 	} else {
-		if (resist) {
-			PlayEffect(monster, 1);
-		} else if (monster._mmode == MonsterMode::Petrified) {
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, pnum, dam);
-			monster.Petrify();
-		} else {
-			if (MissilesData[t].mType == 0 && (player._pIFlags & ISPL_KNOCKBACK) != 0) {
-				M_GetKnockback(m);
-			}
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, pnum, dam);
-		}
+		if (monster._mmode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+			M_GetKnockback(m);
+		if (monster.MType->mtype != MT_GOLEM)
+			M_StartHit(m, pnum, dam);
 	}
 
 	if (monster._msquelch == 0) {
@@ -309,13 +271,13 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
-	if (sgGameInitInfo.bFriendlyFire == 0 && gbFriendlyMode)
+	auto &player = Players[pnum];
+	auto &target = Players[p];
+
+	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
 		return false;
 
 	*blocked = false;
-
-	auto &player = Players[pnum];
-	auto &target = Players[p];
 
 	if (target._pInvincible) {
 		return false;
@@ -698,10 +660,10 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 
 	if (!LineClearMissile(position, target))
 		return false;
-	int mi = dMonster[target.x][target.y] - 1;
-	if (mi < MAX_PLRS)
+	const Monster &monster = Monsters[dMonster[target.x][target.y] - 1];
+	if (monster.MType->mtype == MT_GOLEM)
 		return false;
-	if (Monsters[mi]._mhitpoints >> 6 <= 0)
+	if (monster._mhitpoints >> 6 <= 0)
 		return false;
 
 	Direction dir = GetDirection(position, target);
@@ -957,39 +919,14 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 {
 	auto &monster = Monsters[m];
 
-	bool resist = false;
-	if (monster.mtalkmsg != TEXT_NONE) {
+	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
 		return false;
-	}
-	if (monster._mhitpoints >> 6 <= 0) {
-		return false;
-	}
-	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT)
-		return false;
-	if (monster._mmode == MonsterMode::Charge)
-		return false;
-
-	missile_resistance mir = MissilesData[t].mResist;
-	int mor = monster.mMagicRes;
-	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & IMMUNE_LIGHTNING) != 0 && mir == MISR_LIGHTNING)) {
-		return false;
-	}
-
-	if (((mor & RESIST_MAGIC) != 0 && mir == MISR_MAGIC)
-	    || ((mor & RESIST_FIRE) != 0 && mir == MISR_FIRE)
-	    || ((mor & RESIST_LIGHTNING) != 0 && mir == MISR_LIGHTNING)) {
-		resist = true;
-	}
 
 	int hit = GenerateRnd(100);
 	int hper = 90 - (BYTE)monster.mArmorClass - dist;
 	hper = clamp(hper, 5, 95);
-	bool ret;
-	if (CheckMonsterHit(monster, &ret)) {
-		return ret;
-	}
+	if (monster.TryLiftGargoyle())
+		return true;
 	if (hit >= hper && monster._mmode != MonsterMode::Petrified) {
 #ifdef _DEBUG
 		if (!DebugGodMode)
@@ -997,6 +934,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 			return false;
 	}
 
+	bool resist = monster.IsResistant(t);
 	int dam = mindam + GenerateRnd(maxdam - mindam + 1);
 	if (!shift)
 		dam <<= 6;
@@ -1009,23 +947,12 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		monster._mhitpoints = 0;
 #endif
 	if (monster._mhitpoints >> 6 <= 0) {
-		if (monster._mmode == MonsterMode::Petrified) {
-			M_StartKill(m, -1);
-			monster.Petrify();
-		} else {
-			M_StartKill(m, -1);
-		}
+		M_StartKill(m, -1);
+	} else if (resist) {
+		PlayEffect(monster, 1);
 	} else {
-		if (resist) {
-			PlayEffect(monster, 1);
-		} else if (monster._mmode == MonsterMode::Petrified) {
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, -1, dam);
-			monster.Petrify();
-		} else {
-			if (m > MAX_PLRS - 1)
-				M_StartHit(m, -1, dam);
-		}
+		if (monster.MType->mtype != MT_GOLEM)
+			M_StartHit(m, -1, dam);
 	}
 	return true;
 }
@@ -1120,13 +1047,13 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		if (!shift) {
 			dam = (mind << 6) + GenerateRnd(((maxd - mind) << 6) + 1);
 			if (monster == nullptr)
-				if ((player._pIFlags & ISPL_ABSHALFTRAP) != 0)
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
 			dam += player._pIGetHit * 64;
 		} else {
 			dam = mind + GenerateRnd(maxd - mind + 1);
 			if (monster == nullptr)
-				if ((player._pIFlags & ISPL_ABSHALFTRAP) != 0)
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
 			dam += player._pIGetHit;
 		}
@@ -1283,14 +1210,14 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 		    }
 
 		    int monsterId = abs(dMonster[target.x][target.y]) - 1;
-		    if (monsterId < MAX_PLRS) { // exclude player golems (and tiles which contain no monsters)
+		    if (monsterId < 0)
 			    return false;
-		    }
 
-		    const auto &monster = Monsters[monsterId];
+		    const Monster &monster = Monsters[monsterId];
+		    if (monster.MType->mtype == MT_GOLEM)
+			    return false;
 		    if ((monster._mFlags & MFLAG_BERSERK) != 0)
 			    return false;
-
 		    if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
 			    return false;
 		    if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
@@ -1467,13 +1394,13 @@ void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter)
 		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
 			av += (player._pLevel - 1) / 8;
 
-		if ((player._pIFlags & ISPL_QUICKATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
 			av++;
-		if ((player._pIFlags & ISPL_FASTATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
 			av += 2;
-		if ((player._pIFlags & ISPL_FASTERATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
 			av += 4;
-		if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 			av += 8;
 	}
 
@@ -1684,13 +1611,13 @@ void AddLArrow(Missile &missile, const AddMissileParameter &parameter)
 			av += (player._pLevel) / 8;
 
 		if (gbIsHellfire) {
-			if ((player._pIFlags & ISPL_QUICKATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
 				av++;
-			if ((player._pIFlags & ISPL_FASTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
 				av += 2;
-			if ((player._pIFlags & ISPL_FASTERATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
 				av += 4;
-			if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 				av += 8;
 		} else {
 			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
@@ -1716,7 +1643,7 @@ void AddArrow(Missile &missile, const AddMissileParameter &parameter)
 	if (missile._micaster == TARGET_MONSTERS) {
 		auto &player = Players[missile._misource];
 
-		if ((player._pIFlags & ISPL_RNDARROWVEL) != 0) {
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
 			av = GenerateRnd(32) + 16;
 		}
 		if (player._pClass == HeroClass::Rogue)
@@ -1725,13 +1652,13 @@ void AddArrow(Missile &missile, const AddMissileParameter &parameter)
 			av += (player._pLevel - 1) / 8;
 
 		if (gbIsHellfire) {
-			if ((player._pIFlags & ISPL_QUICKATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::QuickAttack))
 				av++;
-			if ((player._pIFlags & ISPL_FASTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack))
 				av += 2;
-			if ((player._pIFlags & ISPL_FASTERATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack))
 				av += 4;
-			if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastestAttack))
 				av += 8;
 		}
 	}
@@ -2174,19 +2101,17 @@ void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monste
 
 void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 {
-	auto &monster = Monsters[missile._misource];
+	Monster &monster = Monsters[missile._misource];
 
-	MonsterGraphic graphic = MonsterGraphic::Special;
-	if (monster.MType->mtype < MT_HORNED || monster.MType->mtype > MT_OBLORD) {
-		if (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE) {
-			graphic = MonsterGraphic::Walk;
-		} else {
-			graphic = MonsterGraphic::Attack;
-		}
+	MonsterGraphic graphic = MonsterGraphic::Walk;
+	if (IsAnyOf(monster.MType->mtype, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
+		graphic = MonsterGraphic::Special;
+	} else if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
+		graphic = MonsterGraphic::Attack;
 	}
 	UpdateMissileVelocity(missile, parameter.dst, 18);
 	InitMissileAnimationFromMonster(missile, parameter.midir, monster, graphic);
-	if (monster.MType->mtype >= MT_NSNAKE && monster.MType->mtype <= MT_GSNAKE)
+	if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		missile._miAnimFrame = 7;
 	if (monster._uniqtype != 0) {
 		missile._mlid = monster.mlid;
@@ -3737,7 +3662,10 @@ void MI_Apoca(Missile &missile)
 	int k;
 	for (j = missile.var2; j < missile.var3 && !exit; j++) {
 		for (k = missile.var4; k < missile.var5 && !exit; k++) {
-			if (dMonster[k][j] < MAX_PLRS)
+			int mid = dMonster[k][j] - 1;
+			if (mid < 0)
+				continue;
+			if (Monsters[mid].MType->mtype == MT_GOLEM)
 				continue;
 			if (nSolidTable[dPiece[k][j]])
 				continue;
@@ -4174,9 +4102,9 @@ void missiles_process_charge()
 		CMonster *mon = Monsters[missile._misource].MType;
 
 		MonsterGraphic graphic;
-		if (mon->mtype >= MT_HORNED && mon->mtype <= MT_OBLORD) {
+		if (IsAnyOf(mon->mtype, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
 			graphic = MonsterGraphic::Special;
-		} else if (mon->mtype >= MT_NSNAKE && mon->mtype <= MT_GSNAKE) {
+		} else if (IsAnyOf(mon->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
 			graphic = MonsterGraphic::Attack;
 		} else {
 			graphic = MonsterGraphic::Walk;

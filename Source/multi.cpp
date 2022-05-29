@@ -26,6 +26,7 @@
 #include "utils/endian.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/cstddef.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -56,6 +57,7 @@ bool PublicGame;
 BYTE gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
+Uint32 playerInfoTimers[MAX_PLRS];
 
 /**
  * Contains the set of supported event types supported by the multiplayer
@@ -133,6 +135,47 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.bdex = myPlayer._pBaseDex;
 }
 
+bool IsNetPlayerValid(const Player &player)
+{
+	return player._pLevel >= 1
+	    && player._pLevel <= MAXCHARLEVEL
+	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
+	    && player.plrlevel < NUMLEVELS
+	    && player.pDifficulty <= DIFF_LAST
+	    && InDungeonBounds(player.position.tile)
+	    && !string_view(player._pName).empty();
+}
+
+void CheckPlayerInfoTimeouts()
+{
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (i == MyPlayerId) {
+			continue;
+		}
+
+		Uint32 &timerStart = playerInfoTimers[i];
+		bool isPlayerConnected = (player_state[i] & PS_CONNECTED) != 0;
+		bool isPlayerValid = isPlayerConnected && IsNetPlayerValid(Players[i]);
+		if (isPlayerConnected && !isPlayerValid && timerStart == 0) {
+			timerStart = SDL_GetTicks();
+		}
+		if (!isPlayerConnected || isPlayerValid) {
+			timerStart = 0;
+		}
+
+		if (timerStart == 0) {
+			continue;
+		}
+
+		// Time the player out after 15 seconds
+		// if we do not receive valid player info
+		if (SDL_GetTicks() - timerStart >= 15000) {
+			SNetDropPlayer(i, LEAVE_DROP);
+			timerStart = 0;
+		}
+	}
+}
+
 void SendPacket(int playerId, const byte *packet, size_t size)
 {
 	TPkt pkt;
@@ -183,6 +226,10 @@ void ParseTurn(int pnum, uint32_t turn)
 
 void PlayerLeftMsg(int pnum, bool left)
 {
+	if (pnum == MyPlayerId) {
+		return;
+	}
+
 	auto &player = Players[pnum];
 
 	if (!player.plractive) {
@@ -288,7 +335,10 @@ void SendPlayerInfo(int pnum, _cmd_id cmd)
 	static_assert(alignof(PlayerPack) == 1, "Fix pkplr alignment");
 	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PlayerPack)] };
 
-	PackPlayer(reinterpret_cast<PlayerPack *>(pkplr.get()), Players[MyPlayerId], true, true);
+	PlayerPack *pPack = reinterpret_cast<PlayerPack *>(pkplr.get());
+	auto &myPlayer = Players[MyPlayerId];
+	PackPlayer(pPack, myPlayer, true, true);
+	pPack->friendlyMode = myPlayer.friendlyMode ? 1 : 0;
 	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
 }
 
@@ -304,10 +354,10 @@ dungeon_type InitLevelType(int l)
 		return DTYPE_CAVES;
 	if (l >= 13 && l <= 16)
 		return DTYPE_HELL;
-	if (l >= 21 && l <= 24)
-		return DTYPE_CATHEDRAL; // Crypt
 	if (l >= 17 && l <= 20)
-		return DTYPE_CAVES; // Hive
+		return DTYPE_NEST;
+	if (l >= 21 && l <= 24)
+		return DTYPE_CRYPT;
 
 	return DTYPE_CATHEDRAL;
 }
@@ -398,6 +448,8 @@ bool InitSingle(GameData *gameData)
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
 	gbIsMultiplayer = false;
+
+	pfile_read_player_from_save(gSaveNumber, *MyPlayer);
 
 	return true;
 }
@@ -574,6 +626,14 @@ void multi_process_network_packets()
 		if (pkt->wLen != dwMsgSize)
 			continue;
 		auto &player = Players[dwID];
+		if (!IsNetPlayerValid(player)) {
+			_cmd_id cmd = *(const _cmd_id *)(pkt + 1);
+			if (gbBufferMsgs == 0 && IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
+				// Distrust all messages until
+				// player info is received
+				continue;
+			}
+		}
 		Point syncPosition = { pkt->px, pkt->py };
 		player.position.last = syncPosition;
 		if (dwID != MyPlayerId) {
@@ -616,6 +676,7 @@ void multi_process_network_packets()
 	}
 	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 		nthread_terminate_game("SNetReceiveMsg");
+	CheckPlayerInfoTimeouts();
 }
 
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
@@ -773,6 +834,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	if (!UnPackPlayer(&packedPlayer, player, true)) {
 		return;
 	}
+	player.friendlyMode = packedPlayer.friendlyMode != 0;
 
 	if (!recv) {
 		return;

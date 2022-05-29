@@ -322,55 +322,58 @@ enum unique_base_item : int8_t {
 	UITYPE_INVALID = -1,
 };
 
-enum item_special_effect {
+enum class ItemSpecialEffect {
 	// clang-format off
-	ISPL_NONE           = 0,
-	ISPL_INFRAVISION    = 1 << 0,
-	ISPL_RNDSTEALLIFE   = 1 << 1,
-	ISPL_RNDARROWVEL    = 1 << 2,
-	ISPL_FIRE_ARROWS    = 1 << 3,
-	ISPL_FIREDAM        = 1 << 4,
-	ISPL_LIGHTDAM       = 1 << 5,
-	ISPL_DRAINLIFE      = 1 << 6,
-	ISPL_UNKNOWN_1      = 1 << 7,
-	ISPL_NOHEALPLR      = 1 << 8,
-	ISPL_MULT_ARROWS    = 1 << 9,
-	ISPL_UNKNOWN_3      = 1 << 10,
-	ISPL_KNOCKBACK      = 1 << 11,
-	ISPL_NOHEALMON      = 1 << 12,
-	ISPL_STEALMANA_3    = 1 << 13,
-	ISPL_STEALMANA_5    = 1 << 14,
-	ISPL_STEALLIFE_3    = 1 << 15,
-	ISPL_STEALLIFE_5    = 1 << 16,
-	ISPL_QUICKATTACK    = 1 << 17,
-	ISPL_FASTATTACK     = 1 << 18,
-	ISPL_FASTERATTACK   = 1 << 19,
-	ISPL_FASTESTATTACK  = 1 << 20,
-	ISPL_FASTRECOVER    = 1 << 21,
-	ISPL_FASTERRECOVER  = 1 << 22,
-	ISPL_FASTESTRECOVER = 1 << 23,
-	ISPL_FASTBLOCK      = 1 << 24,
-	ISPL_LIGHT_ARROWS   = 1 << 25,
-	ISPL_THORNS         = 1 << 26,
-	ISPL_NOMANA         = 1 << 27,
-	ISPL_ABSHALFTRAP    = 1 << 28,
-	ISPL_UNKNOWN_4      = 1 << 29,
-	ISPL_3XDAMVDEM      = 1 << 30,
-	ISPL_ALLRESZERO     = 1 << 31,
+	None                   = 0,
+	Infravision            = 1 << 0,
+	RandomStealLife        = 1 << 1,
+	RandomArrowVelocity    = 1 << 2,
+	FireArrows             = 1 << 3,
+	FireDamage             = 1 << 4,
+	LightningDamage        = 1 << 5,
+	DrainLife              = 1 << 6,
+	Unknown7               = 1 << 7,
+	NoHealOnPlayer         = 1 << 8,
+	MultipleArrows         = 1 << 9,
+	Unknown10              = 1 << 10,
+	Knockback              = 1 << 11,
+	NoHealOnMonsters       = 1 << 12,
+	StealMana3             = 1 << 13,
+	StealMana5             = 1 << 14,
+	StealLife3             = 1 << 15,
+	StealLife5             = 1 << 16,
+	QuickAttack            = 1 << 17,
+	FastAttack             = 1 << 18,
+	FasterAttack           = 1 << 19,
+	FastestAttack          = 1 << 20,
+	FastHitRecovery        = 1 << 21,
+	FasterHitRecovery      = 1 << 22,
+	FastestHitRecovery     = 1 << 23,
+	FastBlock              = 1 << 24,
+	LightningArrows        = 1 << 25,
+	Thorns                 = 1 << 26,
+	NoMana                 = 1 << 27,
+	HalfTrapDamage         = 1 << 28,
+	Unknown29              = 1 << 29,
+	TripleDemonDamage      = 1 << 30,
+	ZeroResistance         = 1 << 31,
 	// clang-format on
 };
+use_enum_as_flags(ItemSpecialEffect);
 
-typedef enum item_special_effect_hf {
+enum class ItemSpecialEffectHf : uint32_t {
 	// clang-format off
-	ISPLHF_DEVASTATION  = 1 << 0,
-	ISPLHF_DECAY        = 1 << 1,
-	ISPLHF_PERIL        = 1 << 2,
-	ISPLHF_JESTERS      = 1 << 3,
-	ISPLHF_DOPPELGANGER = 1 << 4,
-	ISPLHF_ACDEMON      = 1 << 5,
-	ISPLHF_ACUNDEAD     = 1 << 6,
+	None               = 0,
+	Devastation        = 1 << 0,
+	Decay              = 1 << 1,
+	Peril              = 1 << 2,
+	Jesters            = 1 << 3,
+	Doppelganger       = 1 << 4,
+	ACAgainstDemons    = 1 << 5,
+	ACAgainstUndead    = 1 << 6,
 	// clang-format on
-} item_special_effect_hf;
+};
+use_enum_as_flags(ItemSpecialEffectHf);
 
 enum item_misc_id : int8_t {
 	IMISC_NONE,
@@ -449,7 +452,7 @@ struct ItemData {
 	uint8_t iMinStr;
 	uint8_t iMinMag;
 	uint8_t iMinDex;
-	uint32_t iFlags; // item_special_effect as bit flags
+	ItemSpecialEffect iFlags; // ItemSpecialEffect as bit flags
 	enum item_misc_id iMiscId;
 	enum spell_id iSpell;
 	bool iUsable;

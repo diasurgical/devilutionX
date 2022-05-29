@@ -249,7 +249,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iMinDam = file.NextLE<int32_t>();
 	item._iMaxDam = file.NextLE<int32_t>();
 	item._iAC = file.NextLE<int32_t>();
-	item._iFlags = file.NextLE<uint32_t>();
+	item._iFlags = static_cast<ItemSpecialEffect>(file.NextLE<uint32_t>());
 	item._iMiscId = static_cast<item_misc_id>(file.NextLE<int32_t>());
 	item._iSpell = static_cast<spell_id>(file.NextLE<int32_t>());
 	item._iCharges = file.NextLE<int32_t>();
@@ -301,9 +301,9 @@ void LoadItemData(LoadHelper &file, Item &item)
 	}
 	item.dwBuff = file.NextLE<uint32_t>();
 	if (gbIsHellfireSaveGame)
-		item._iDamAcFlags = file.NextLE<uint32_t>();
+		item._iDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	else
-		item._iDamAcFlags = 0;
+		item._iDamAcFlags = ItemSpecialEffectHf::None;
 
 	RemoveInvalidItem(item);
 }
@@ -494,7 +494,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(4); // Alignment
 
 	player._pISpells = file.NextLE<uint64_t>();
-	player._pIFlags = file.NextLE<int32_t>();
+	player._pIFlags = static_cast<ItemSpecialEffect>(file.NextLE<int32_t>());
 	player._pIGetHit = file.NextLE<int32_t>();
 	player._pISplLvlAdd = file.NextLE<int8_t>();
 	file.Skip(1); // Unused
@@ -530,7 +530,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	player.pDiabloKillLevel = file.NextLE<uint32_t>();
 	player.pDifficulty = static_cast<_difficulty>(file.NextLE<uint32_t>());
-	player.pDamAcFlags = file.NextLE<uint32_t>();
+	player.pDamAcFlags = static_cast<ItemSpecialEffectHf>(file.NextLE<uint32_t>());
 	file.Skip(20); // Available bytes
 	CalcPlrItemVals(player, false);
 
@@ -729,9 +729,48 @@ void LoadMissile(LoadHelper *file)
 	}
 }
 
+_object_id ConvertFromHellfireObject(_object_id type)
+{
+	if (leveltype == DTYPE_NEST) {
+		switch (type) {
+		case OBJ_BARREL:
+			return OBJ_POD;
+		case OBJ_BARRELEX:
+			return OBJ_PODEX;
+		default:
+			break;
+		}
+	}
+
+	if (leveltype == DTYPE_CRYPT) {
+		switch (type) {
+		case OBJ_BARREL:
+			return OBJ_URN;
+		case OBJ_BARRELEX:
+			return OBJ_URNEX;
+		case OBJ_STORYBOOK:
+			return OBJ_L5BOOKS;
+		case OBJ_STORYCANDLE:
+			return OBJ_L5CANDLE;
+		case OBJ_L1LDOOR:
+			return OBJ_L5LDOOR;
+		case OBJ_L1RDOOR:
+			return OBJ_L5RDOOR;
+		case OBJ_LEVER:
+			return OBJ_L5LEVER;
+		case OBJ_SARC:
+			return OBJ_L5SARC;
+		default:
+			break;
+		}
+	}
+
+	return type;
+}
+
 void LoadObject(LoadHelper &file, Object &object)
 {
-	object._otype = static_cast<_object_id>(file.NextLE<int32_t>());
+	object._otype = ConvertFromHellfireObject(static_cast<_object_id>(file.NextLE<int32_t>()));
 	object.position.x = file.NextLE<int32_t>();
 	object.position.y = file.NextLE<int32_t>();
 	object._oLight = file.NextBool32();
@@ -931,6 +970,17 @@ void LoadDroppedItems(LoadHelper &file, size_t savedItemCount)
 	}
 }
 
+int getHellfireLevelType(int type)
+{
+	if (type == DTYPE_CRYPT)
+		return DTYPE_CATHEDRAL;
+
+	if (type == DTYPE_NEST)
+		return DTYPE_CAVES;
+
+	return type;
+}
+
 void SaveItem(SaveHelper &file, const Item &item)
 {
 	auto idx = item.IDidx;
@@ -975,7 +1025,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item._iMinDam);
 	file.WriteLE<int32_t>(item._iMaxDam);
 	file.WriteLE<int32_t>(item._iAC);
-	file.WriteLE<uint32_t>(item._iFlags);
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iFlags));
 	file.WriteLE<int32_t>(item._iMiscId);
 	file.WriteLE<int32_t>(item._iSpell);
 	file.WriteLE<int32_t>(item._iCharges);
@@ -1021,7 +1071,7 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(idx);
 	file.WriteLE<uint32_t>(item.dwBuff);
 	if (gbIsHellfire)
-		file.WriteLE<uint32_t>(item._iDamAcFlags);
+		file.WriteLE<uint32_t>(static_cast<uint32_t>(item._iDamAcFlags));
 }
 
 void SavePlayer(SaveHelper &file, const Player &player)
@@ -1215,7 +1265,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(4); // Alignment
 
 	file.WriteLE<uint64_t>(player._pISpells);
-	file.WriteLE<int32_t>(player._pIFlags);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player._pIFlags));
 	file.WriteLE<int32_t>(player._pIGetHit);
 
 	file.WriteLE<int8_t>(player._pISplLvlAdd);
@@ -1243,7 +1293,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	file.WriteLE<uint32_t>(player.pDiabloKillLevel);
 	file.WriteLE<uint32_t>(player.pDifficulty);
-	file.WriteLE<uint32_t>(player.pDamAcFlags);
+	file.WriteLE<uint32_t>(static_cast<uint32_t>(player.pDamAcFlags));
 	file.Skip(20); // Available bytes
 
 	// Omit pointer _pNData
@@ -1401,9 +1451,48 @@ void SaveMissile(SaveHelper *file, const Missile &missile)
 	file->WriteLE<uint32_t>(missile.limitReached ? 1 : 0);
 }
 
+_object_id ConvertToHellfireObject(_object_id type)
+{
+	if (leveltype == DTYPE_NEST) {
+		switch (type) {
+		case OBJ_POD:
+			return OBJ_BARREL;
+		case OBJ_PODEX:
+			return OBJ_BARRELEX;
+		default:
+			break;
+		}
+	}
+
+	if (leveltype == DTYPE_CRYPT) {
+		switch (type) {
+		case OBJ_URN:
+			return OBJ_BARREL;
+		case OBJ_URNEX:
+			return OBJ_BARRELEX;
+		case OBJ_L5BOOKS:
+			return OBJ_STORYBOOK;
+		case OBJ_L5CANDLE:
+			return OBJ_STORYCANDLE;
+		case OBJ_L5LDOOR:
+			return OBJ_L1LDOOR;
+		case OBJ_L5RDOOR:
+			return OBJ_L1RDOOR;
+		case OBJ_L5LEVER:
+			return OBJ_LEVER;
+		case OBJ_L5SARC:
+			return OBJ_SARC;
+		default:
+			break;
+		}
+	}
+
+	return type;
+}
+
 void SaveObject(SaveHelper &file, const Object &object)
 {
-	file.WriteLE<int32_t>(object._otype);
+	file.WriteLE<int32_t>(ConvertToHellfireObject(object._otype));
 	file.WriteLE<int32_t>(object.position.x);
 	file.WriteLE<int32_t>(object.position.y);
 	file.WriteLE<uint32_t>(object._oLight ? 1 : 0);
@@ -1587,13 +1676,13 @@ void RemoveInvalidItem(Item &item)
 	if (!gbIsHellfire) {
 		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
 		isInvalid = isInvalid || (item._iMiscId == IMISC_BOOK && GetSpellBookLevel(item._iSpell) == -1);
-		isInvalid = isInvalid || item._iDamAcFlags != 0;
+		isInvalid = isInvalid || item._iDamAcFlags != ItemSpecialEffectHf::None;
 		isInvalid = isInvalid || item._iPrePower > IPL_LASTDIABLO;
 		isInvalid = isInvalid || item._iSufPower > IPL_LASTDIABLO;
 	}
 
 	if (isInvalid) {
-		item._itype = ItemType::None;
+		item.clear();
 	}
 }
 
@@ -2162,7 +2251,7 @@ void SaveGameData()
 	file.WriteLE<uint8_t>(setlevel ? 1 : 0);
 	file.WriteBE<uint32_t>(setlvlnum);
 	file.WriteBE<uint32_t>(currlevel);
-	file.WriteBE<uint32_t>(leveltype);
+	file.WriteBE<uint32_t>(getHellfireLevelType(leveltype));
 	file.WriteBE<int32_t>(ViewPosition.x);
 	file.WriteBE<int32_t>(ViewPosition.y);
 	file.WriteLE<uint8_t>(invflag ? 1 : 0);
@@ -2177,7 +2266,7 @@ void SaveGameData()
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		file.WriteBE<uint32_t>(glSeedTbl[i]);
-		file.WriteBE<int32_t>(gnLevelTypeTbl[i]);
+		file.WriteBE<int32_t>(getHellfireLevelType(gnLevelTypeTbl[i]));
 	}
 
 	auto &myPlayer = Players[MyPlayerId];

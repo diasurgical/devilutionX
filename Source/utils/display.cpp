@@ -37,6 +37,7 @@
 namespace devilution {
 
 extern SDLSurfaceUniquePtr RendererTextureSurface; /** defined in dx.cpp */
+SDL_Window *ghMainWnd;
 
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;

@@ -7,6 +7,7 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
+#include "engine/cel_sprite.hpp"
 #include "player.h"
 #include "utils/display.h"
 
@@ -66,8 +67,8 @@ struct _uiheroinfo {
 	bool spawned;
 };
 
-extern std::array<Art, 3> ArtLogos;
-extern std::array<Art, 3> ArtFocus;
+extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
+extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 extern Art ArtBackground;
 extern Art ArtBackgroundWidescreen;
 extern Art ArtCursor;
@@ -78,18 +79,7 @@ extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 
 inline SDL_Surface *DiabloUiSurface()
 {
-	auto *output_surface = GetOutputSurface();
-
-#ifdef USE_SDL1
-	// When using a non double-buffered hardware surface, render the UI
-	// to an off-screen surface first to avoid flickering / tearing.
-	if ((output_surface->flags & SDL_HWSURFACE) != 0
-	    && (output_surface->flags & SDL_DOUBLEBUF) == 0) {
-		return PalSurface;
-	}
-#endif
-
-	return output_surface;
+	return PalSurface;
 }
 
 void UiDestroy();

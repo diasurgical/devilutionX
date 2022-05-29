@@ -3,6 +3,7 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
+#include "engine/load_pcx_as_cel.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -13,11 +14,13 @@ std::vector<std::unique_ptr<UiItemBase>> vecTitleScreen;
 void TitleLoad()
 {
 	if (gbIsHellfire) {
+		// This is a 2.4 MiB PCX file without transparency (4.6 MiB as an SDL surface).
 		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
+
 		LoadArt("ui_art\\hf_titlew.pcx", &ArtBackgroundWidescreen);
 	} else {
 		LoadBackgroundArt("ui_art\\title.pcx");
-		LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
+		ArtLogos[LOGO_BIG] = LoadPcxAssetAsCel("ui_art\\logo.pcx", /*numFrames=*/15, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
 	}
 }
 
@@ -25,7 +28,7 @@ void TitleFree()
 {
 	ArtBackground.Unload();
 	ArtBackgroundWidescreen.Unload();
-	ArtLogos[LOGO_BIG].Unload();
+	ArtLogos[LOGO_BIG] = std::nullopt;
 
 	vecTitleScreen.clear();
 }
@@ -34,6 +37,7 @@ void TitleFree()
 
 void UiTitleDialog()
 {
+	TitleLoad();
 	if (gbIsHellfire) {
 		SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
 		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
@@ -45,7 +49,6 @@ void UiTitleDialog()
 		SDL_Rect rect = { (Sint16)(PANEL_LEFT), (Sint16)(UI_OFFSET_Y + 410), 640, 26 };
 		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").c_str(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 	}
-	TitleLoad();
 
 	bool endMenu = false;
 	Uint32 timeOut = SDL_GetTicks() + 7000;

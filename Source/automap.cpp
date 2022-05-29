@@ -10,8 +10,6 @@
 #include "control.h"
 #include "engine/load_file.hpp"
 #include "engine/render/automap_render.hpp"
-#include "inv.h"
-#include "monster.h"
 #include "palette.h"
 #include "player.h"
 #include "setmaps.h"
@@ -376,9 +374,9 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 			};
 
 			if (CanPanelsCoverView()) {
-				if (invflag || sbookflag)
+				if (IsRightPanelOpen())
 					screen.x -= 160;
-				if (chrflag || QuestLogIsOpen)
+				if (IsLeftPanelOpen())
 					screen.x += 160;
 			}
 			screen.y -= AmLine8;
@@ -413,9 +411,9 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	};
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag)
+		if (IsRightPanelOpen())
 			base.x -= gnScreenWidth / 4;
-		if (chrflag || QuestLogIsOpen)
+		if (IsLeftPanelOpen())
 			base.x += gnScreenWidth / 4;
 	}
 	base.y -= AmLine16;
@@ -537,17 +535,17 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 {
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
-		if (currlevel < 21)
-			return LoadFileInMem<AutomapTile>("Levels\\L1Data\\L1.AMP", &tileCount);
-		return LoadFileInMem<AutomapTile>("NLevels\\L5Data\\L5.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("Levels\\L1Data\\L1.AMP", &tileCount);
 	case DTYPE_CATACOMBS:
 		return LoadFileInMem<AutomapTile>("Levels\\L2Data\\L2.AMP", &tileCount);
 	case DTYPE_CAVES:
-		if (currlevel < 17)
-			return LoadFileInMem<AutomapTile>("Levels\\L3Data\\L3.AMP", &tileCount);
-		return LoadFileInMem<AutomapTile>("NLevels\\L6Data\\L6.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("Levels\\L3Data\\L3.AMP", &tileCount);
 	case DTYPE_HELL:
 		return LoadFileInMem<AutomapTile>("Levels\\L4Data\\L4.AMP", &tileCount);
+	case DTYPE_NEST:
+		return LoadFileInMem<AutomapTile>("NLevels\\L6Data\\L6.AMP", &tileCount);
+	case DTYPE_CRYPT:
+		return LoadFileInMem<AutomapTile>("NLevels\\L5Data\\L5.AMP", &tileCount);
 	default:
 		return nullptr;
 	}
@@ -705,10 +703,10 @@ void DrawAutomap(const Surface &out)
 	screen.y += AutoMapScale * myPlayerOffset.deltaY / 100 / 2;
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag) {
+		if (IsRightPanelOpen()) {
 			screen.x -= gnScreenWidth / 4;
 		}
-		if (chrflag || QuestLogIsOpen) {
+		if (IsLeftPanelOpen()) {
 			screen.x += gnScreenWidth / 4;
 		}
 	}
@@ -734,7 +732,7 @@ void DrawAutomap(const Surface &out)
 
 	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
 		auto &player = Players[playerId];
-		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging) {
+		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging && (&player == &myPlayer || player.friendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, playerId);
 		}
 	}

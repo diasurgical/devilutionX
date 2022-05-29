@@ -7,6 +7,7 @@
 
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
+#include "engine/cel_sprite.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
@@ -18,6 +19,7 @@ enum class UiType {
 	ArtText,
 	ArtTextButton,
 	Image,
+	ImageCel,
 	Button,
 	List,
 	Scrollbar,
@@ -125,6 +127,48 @@ public:
 
 private:
 	Art *art_;
+	bool animated_;
+	int frame_;
+};
+
+//=============================================================================
+class UiImageCel : public UiItemBase {
+public:
+	UiImageCel(CelSpriteWithFrameHeight sprite, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
+	    : UiItemBase(UiType::ImageCel, rect, flags)
+	    , sprite_(sprite)
+	    , animated_(animated)
+	    , frame_(frame)
+	{
+	}
+
+	[[nodiscard]] bool IsCentered() const
+	{
+		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
+	}
+
+	[[nodiscard]] CelSpriteWithFrameHeight GetSprite() const
+	{
+		return sprite_;
+	}
+
+	[[nodiscard]] bool IsAnimated() const
+	{
+		return animated_;
+	}
+
+	[[nodiscard]] int GetFrame() const
+	{
+		return frame_;
+	}
+
+	void SetFrame(int frame)
+	{
+		frame_ = frame;
+	}
+
+private:
+	CelSpriteWithFrameHeight sprite_;
 	bool animated_;
 	int frame_;
 };
@@ -370,19 +414,9 @@ class UiList : public UiItemBase {
 public:
 	using vUiListItem = std::vector<std::unique_ptr<UiListItem>>;
 
-	UiList(const vUiListItem &vItems, size_t viewportSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
-	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * viewportSize) }, flags)
-	    , viewportSize(viewportSize)
-	    , m_x(x)
-	    , m_y(y)
-	    , m_width(item_width)
-	    , m_height(item_height)
-	    , spacing_(spacing)
+	UiList(const vUiListItem &vItems, size_t viewportMaxSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
+	    : UiList(PrivateConstructor {}, vItems, std::min<size_t>(viewportMaxSize, vItems.size()), x, y, item_width, item_height, flags, spacing)
 	{
-		for (const auto &item : vItems)
-			m_vecItems.push_back(item.get());
-
-		pressed_item_index_ = -1;
 	}
 
 	[[nodiscard]] SDL_Rect itemRect(int i) const
@@ -436,6 +470,24 @@ public:
 	std::vector<UiListItem *> m_vecItems;
 
 private:
+	struct PrivateConstructor final {
+	};
+
+	UiList(PrivateConstructor tag, const vUiListItem &vItems, size_t viewportSize, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags, int spacing)
+	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * viewportSize) }, flags)
+	    , viewportSize(viewportSize)
+	    , m_x(x)
+	    , m_y(y)
+	    , m_width(item_width)
+	    , m_height(item_height)
+	    , spacing_(spacing)
+	{
+		for (const auto &item : vItems)
+			m_vecItems.push_back(item.get());
+
+		pressed_item_index_ = -1;
+	}
+
 	int spacing_;
 
 	// State

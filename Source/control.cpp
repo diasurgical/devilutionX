@@ -97,6 +97,14 @@ const Rectangle &GetRightPanel()
 {
 	return RightPanel;
 }
+bool IsLeftPanelOpen()
+{
+	return chrflag || QuestLogIsOpen || IsStashOpen;
+}
+bool IsRightPanelOpen()
+{
+	return invflag || sbookflag;
+}
 
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
@@ -372,7 +380,7 @@ void RemoveGold(Player &player, int goldIndex)
 		player.RemoveInvItem(gi);
 
 	MakeGoldStack(player.HoldItem, dropGoldValue);
-	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+	NewCursor(player.HoldItem);
 
 	player._pGold = CalculateGold(player);
 	dropGoldValue = 0;
@@ -603,7 +611,8 @@ void DrawCtrlBtns(const Surface &out)
 	}
 	if (PanelButtonIndex == 8) {
 		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 1 : 0);
-		if (gbFriendlyMode)
+		auto &myPlayer = Players[MyPlayerId];
+		if (myPlayer.friendlyMode)
 			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 3 : 2);
 		else
 			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 5 : 4);
@@ -691,7 +700,8 @@ void CheckPanelInfo()
 			if (i != 7) {
 				InfoString = _(PanBtnStr[i]);
 			} else {
-				if (gbFriendlyMode)
+				auto &myPlayer = Players[MyPlayerId];
+				if (myPlayer.friendlyMode)
 					InfoString = _("Player friendly");
 				else
 					InfoString = _("Player attack");
@@ -724,7 +734,7 @@ void CheckPanelInfo()
 				AddPanelString(fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[spellId].sNameText)));
 				const InventoryAndBeltPlayerItemsRange items { myPlayer };
 				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
-					return item.IsScrollOf(spellId);
+					return item.isScrollOf(spellId);
 				});
 				AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
 			} break;
@@ -816,7 +826,8 @@ void CheckBtnUp()
 				control_type_message();
 			break;
 		case PanelButtonFriendly:
-			gbFriendlyMode = !gbFriendlyMode;
+			// Toggle friendly Mode
+			NetSendCmd(true, CMD_FRIENDLYMODE);
 			break;
 		}
 	}
@@ -846,16 +857,16 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
+	DrawPanelBox(out, { 177, 62, 288, 63 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && !spselflag) {
 		InfoString.clear();
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
+	auto &myPlayer = Players[MyPlayerId];
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
-	} else if (pcurs >= CURSOR_FIRSTITEM) {
-		auto &myPlayer = Players[MyPlayerId];
+	} else if (!myPlayer.HoldItem.isEmpty()) {
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
 			InfoString = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
@@ -998,13 +1009,13 @@ void DrawDurIcon(const Surface &out)
 	bool hasRoomUnderPanels = MainPanel.position.y - (RightPanel.position.y + RightPanel.size.height) >= 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || QuestLogIsOpen || IsStashOpen) && (invflag || sbookflag))
+		if (IsLeftPanelOpen() && IsRightPanelOpen())
 			return;
 	}
 
 	int x = MainPanel.position.x + MainPanel.size.width - 32 - 16;
 	if (!hasRoomUnderPanels) {
-		if ((invflag || sbookflag) && MainPanel.position.x + MainPanel.size.width > RightPanel.position.x)
+		if (IsRightPanelOpen() && MainPanel.position.x + MainPanel.size.width > RightPanel.position.x)
 			x -= MainPanel.position.x + MainPanel.size.width - RightPanel.position.x;
 	}
 
@@ -1113,10 +1124,10 @@ void DrawTalkPan(const Surface &out)
 		if (i == MyPlayerId)
 			continue;
 
-		UiFlags color = UiFlags::ColorRed;
+		auto &player = Players[i];
+		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition { 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y };
 		if (WhisperList[i]) {
-			color = UiFlags::ColorWhitegold;
 			if (TalkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
 				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
@@ -1129,7 +1140,6 @@ void DrawTalkPan(const Surface &out)
 			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
 		}
-		auto &player = Players[i];
 		if (player.plractive) {
 			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
 		}

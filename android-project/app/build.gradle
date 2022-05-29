@@ -7,14 +7,14 @@ if (buildAsApplication) {
 }
 
 android {
-	compileSdkVersion 31
+	compileSdkVersion 32
 	defaultConfig {
 		if (buildAsApplication) {
 			applicationId "org.diasurgical.devilutionx"
 		}
 		minSdkVersion 18
-		targetSdkVersion 31
-		versionCode 21
+		targetSdkVersion 32
+		versionCode 22
 		versionName "1.4.0"
 		externalNativeBuild {
 			cmake {

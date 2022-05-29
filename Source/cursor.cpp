@@ -68,6 +68,7 @@ const uint16_t InvItemWidth2[] = {
 	// clang-format on
 };
 constexpr uint16_t InvItems1Size = sizeof(InvItemWidth1) / sizeof(InvItemWidth1[0]);
+constexpr uint16_t InvItems2Size = sizeof(InvItemWidth2) / sizeof(InvItemWidth2[0]);
 
 /** Maps from objcurs.cel frame number to frame height. */
 const uint16_t InvItemHeight1[InvItems1Size] = {
@@ -93,7 +94,7 @@ const uint16_t InvItemHeight1[InvItems1Size] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 };
-const uint16_t InvItemHeight2[] = {
+const uint16_t InvItemHeight2[InvItems2Size] = {
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
@@ -105,8 +106,6 @@ const uint16_t InvItemHeight2[] = {
 
 } // namespace
 
-/** Pixel size of the current cursor image */
-Size cursSize;
 /** Current highlighted monster */
 int pcursmonst = -1;
 
@@ -166,13 +165,21 @@ void ResetCursor()
 	NewCursor(pcurs);
 }
 
+void NewCursor(const Item &item)
+{
+	if (item.isEmpty()) {
+		NewCursor(CURSOR_HAND);
+	} else {
+		NewCursor(item._iCurs + CURSOR_FIRSTITEM);
+	}
+}
+
 void NewCursor(int cursId)
 {
 	if (cursId < CURSOR_HOURGLASS && MyPlayer != nullptr) {
-		MyPlayer->HoldItem._itype = ItemType::None;
+		MyPlayer->HoldItem.clear();
 	}
 	pcurs = cursId;
-	cursSize = cursId == CURSOR_NONE ? Size { 0, 0 } : GetInvItemSize(cursId);
 
 	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
 		if (ArtCursor.surface == nullptr && cursId == CURSOR_NONE)
@@ -190,8 +197,8 @@ void CelDrawCursor(const Surface &out, Point position, int cursId)
 {
 	const auto &sprite = GetInvItemSprite(cursId);
 	const int frame = GetInvItemFrame(cursId);
-	if (IsItemSprite(cursId)) {
-		const auto &heldItem = Players[MyPlayerId].HoldItem;
+	if (!MyPlayer->HoldItem.isEmpty()) {
+		const auto &heldItem = MyPlayer->HoldItem;
 		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
 		CelDrawItem(heldItem, out, position, sprite, frame);
 	} else {
@@ -251,9 +258,9 @@ void CheckCursMove()
 	int sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen || IsStashOpen) {
+		if (IsLeftPanelOpen()) {
 			sx -= GetScreenWidth() / 4;
-		} else if (invflag || sbookflag) {
+		} else if (IsRightPanelOpen()) {
 			sx += GetScreenWidth() / 4;
 		}
 	}
@@ -367,7 +374,7 @@ void CheckCursMove()
 	if (myPlayer._pInvincible) {
 		return;
 	}
-	if (pcurs >= CURSOR_FIRSTITEM || spselflag) {
+	if (!myPlayer.HoldItem.isEmpty() || spselflag) {
 		cursPosition = { mx, my };
 		return;
 	}
@@ -388,7 +395,7 @@ void CheckCursMove()
 	if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) {
+	if (IsLeftPanelOpen() && GetLeftPanel().Contains(MousePosition)) {
 		return;
 	}
 

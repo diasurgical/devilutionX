@@ -365,7 +365,7 @@ void CheckPlayerNearby()
 	auto &myPlayer = Players[MyPlayerId];
 
 	int spl = myPlayer._pRSpell;
-	if (gbFriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
+	if (myPlayer.friendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
@@ -512,7 +512,7 @@ void Interact()
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
+	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !Players[MyPlayerId].friendlyMode) {
 		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 		return;
@@ -713,16 +713,16 @@ void ResetInvCursorPosition()
 			mousePos = GetSlotCoord(Slot);
 		}
 
-		if (pcurs >= CURSOR_FIRSTITEM) {
+		if (!MyPlayer->HoldItem.isEmpty()) {
 			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 		}
 	} else if (Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 		mousePos = GetSlotCoord(Slot);
-		if (pcurs >= CURSOR_FIRSTITEM)
+		if (!MyPlayer->HoldItem.isEmpty())
 			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX };
 	} else {
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
-		if (pcurs >= CURSOR_FIRSTITEM) {
+		if (!MyPlayer->HoldItem.isEmpty()) {
 			Size itemSize = GetInventorySize(MyPlayer->HoldItem);
 			mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, -INV_SLOT_HALF_SIZE_PX * itemSize.height };
 		}
@@ -1085,7 +1085,7 @@ void StashMove(AxisDirection dir)
 	// Jump from general inventory to stash
 	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 		int firstSlot = Slot;
-		if (pcurs < CURSOR_FIRSTITEM) {
+		if (MyPlayer->HoldItem.isEmpty()) {
 			int8_t itemId = GetItemIdOnSlot(Slot);
 			if (itemId != 0) {
 				firstSlot = FindFirstSlotOnItem(itemId);
@@ -1672,7 +1672,7 @@ void UseBeltItem(int type)
 		}
 
 		bool isRejuvenation = IsAnyOf(item._iMiscId, IMISC_REJUV, IMISC_FULLREJUV);
-		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.IsScrollOf(SPL_HEAL);
+		bool isHealing = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_HEAL, IMISC_FULLHEAL) || item.isScrollOf(SPL_HEAL);
 		bool isMana = isRejuvenation || IsAnyOf(item._iMiscId, IMISC_MANA, IMISC_FULLMANA);
 
 		if ((type == BLT_HEALING && isHealing) || (type == BLT_MANA && isMana)) {
@@ -1809,7 +1809,7 @@ void UpdateSpellTarget(spell_id spell)
  */
 bool TryDropItem()
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = *MyPlayer;
 
 	if (myPlayer.HoldItem.isEmpty()) {
 		return false;
@@ -1817,29 +1817,32 @@ bool TryDropItem()
 
 	if (currlevel == 0) {
 		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 }, myPlayer.HoldItem);
+			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 }, myPlayer.HoldItem.pop());
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
 		if (UseItemOpensCrypt(myPlayer.HoldItem, myPlayer.position.tile)) {
-			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 }, myPlayer.HoldItem);
+			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 }, myPlayer.HoldItem.pop());
 			NewCursor(CURSOR_HAND);
 			return true;
 		}
 	}
 
-	cursPosition = myPlayer.position.future + Direction::SouthEast;
-	if (!DropItemBeforeTrig()) {
-		// Try to drop on the other side
-		cursPosition = myPlayer.position.future + Direction::SouthWest;
-		DropItemBeforeTrig();
+	Point position = myPlayer.position.future;
+	Direction direction = myPlayer._pdir;
+	if (!CanPut(position, direction)) {
+		direction = Opposite(direction);
+		// if we can't drop in front of the player, can we drop it behind?
+		if (!CanPut(position, direction)) {
+			myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
+			return false;
+		}
 	}
 
-	if (pcurs != CURSOR_HAND) {
-		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
-	}
-
-	return pcurs == CURSOR_HAND;
+	NetSendCmdPItem(true, CMD_PUTITEM, position + direction, myPlayer.HoldItem);
+	myPlayer.HoldItem.clear();
+	NewCursor(CURSOR_HAND);
+	return true;
 }
 
 void PerformSpellAction()
@@ -1848,7 +1851,7 @@ void PerformSpellAction()
 		return;
 
 	if (invflag) {
-		if (pcurs >= CURSOR_FIRSTITEM)
+		if (!MyPlayer->HoldItem.isEmpty())
 			TryDropItem();
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
@@ -1864,7 +1867,7 @@ void PerformSpellAction()
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
@@ -1900,7 +1903,7 @@ void CtrlUseInvItem()
 
 	auto &myPlayer = Players[MyPlayerId];
 	Item &item = GetInventoryItem(myPlayer, pcursinvitem);
-	if (item.IsScroll()) {
+	if (item.isScroll()) {
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
@@ -1927,7 +1930,7 @@ void CtrlUseStashItem()
 	}
 
 	const Item &item = Stash.stashList[pcursstashitem];
-	if (item.IsScroll()) {
+	if (item.isScroll()) {
 		if (TargetsMonster(item._iSpell)) {
 			return;
 		}
@@ -1963,7 +1966,7 @@ void PerformSecondaryAction()
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (!MyPlayer->HoldItem.isEmpty() && !TryDropItem())
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);

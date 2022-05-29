@@ -89,7 +89,7 @@ bool HandleSpeedBookInteraction(const SDL_Event &event)
 
 void HandleBottomPanelInteraction(const SDL_Event &event)
 {
-	if (pcurs >= CURSOR_FIRSTITEM)
+	if (!gbRunGame || !MyPlayer->HoldItem.isEmpty())
 		return;
 
 	ClearPanBtn();
@@ -118,7 +118,7 @@ void HandleCharacterPanelInteraction(const SDL_Event &event)
 
 void HandleStashPanelInteraction(const SDL_Event &event)
 {
-	if (pcurs >= CURSOR_FIRSTITEM)
+	if (!IsStashOpen || !MyPlayer->HoldItem.isEmpty())
 		return;
 
 	if (event.type != SDL_FINGERUP) {

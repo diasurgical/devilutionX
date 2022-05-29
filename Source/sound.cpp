@@ -121,8 +121,8 @@ const char *const SpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
-	"Music\\DLvlE.wav",
 	"Music\\DLvlF.wav",
+	"Music\\DLvlE.wav",
 	"Music\\sintro.wav",
 };
 /** Maps from track ID to track name. */
@@ -132,8 +132,8 @@ const char *const MusicTracks[NUM_MUSIC] = {
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
-	"Music\\DLvlE.wav",
 	"Music\\DLvlF.wav",
+	"Music\\DLvlE.wav",
 	"Music\\Dintro.wav",
 };
 
@@ -222,13 +222,35 @@ void snd_deinit()
 	gbSndInited = false;
 }
 
+_music_id GetLevelMusic(dungeon_type dungeonType)
+{
+	switch (dungeonType) {
+	case DTYPE_TOWN:
+		return TMUSIC_TOWN;
+	case DTYPE_CATHEDRAL:
+		return TMUSIC_CATHEDRAL;
+	case DTYPE_CATACOMBS:
+		return TMUSIC_CATACOMBS;
+	case DTYPE_CAVES:
+		return TMUSIC_CAVES;
+	case DTYPE_HELL:
+		return TMUSIC_HELL;
+	case DTYPE_NEST:
+		return TMUSIC_NEST;
+	case DTYPE_CRYPT:
+		return TMUSIC_CRYPT;
+	default:
+		return TMUSIC_INTRO;
+	}
+}
+
 void music_stop()
 {
 	music.Release();
 	sgnMusicTrack = NUM_MUSIC;
 }
 
-void music_start(uint8_t nTrack)
+void music_start(_music_id nTrack)
 {
 	const char *trackPath;
 
@@ -260,7 +282,7 @@ void music_start(uint8_t nTrack)
 		return;
 	}
 
-	sgnMusicTrack = (_music_id)nTrack;
+	sgnMusicTrack = nTrack;
 }
 
 void sound_disable_music(bool disable)

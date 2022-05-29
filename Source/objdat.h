@@ -89,6 +89,15 @@ enum object_graphic_id : int8_t {
 	OFILE_BKSLBRNT,
 	OFILE_MUSHPTCH,
 	OFILE_LZSTAND,
+	OFILE_POD,
+	OFILE_PODEX,
+	OFILE_L5DOORS,
+	OFILE_L5LEVER,
+	OFILE_L5CANDLE,
+	OFILE_L5SARC,
+	OFILE_URN,
+	OFILE_URNEX,
+	OFILE_L5BOOKS,
 	OFILE_NULL = -1,
 };
 
@@ -192,6 +201,16 @@ enum _object_id : int8_t {
 	OBJ_SLAINHERO,
 	OBJ_SIGNCHEST,
 	OBJ_BOOKSHELFR,
+	OBJ_POD,
+	OBJ_PODEX,
+	OBJ_URN,
+	OBJ_URNEX,
+	OBJ_L5BOOKS,
+	OBJ_L5CANDLE,
+	OBJ_L5LDOOR,
+	OBJ_L5RDOOR,
+	OBJ_L5LEVER,
+	OBJ_L5SARC,
 	OBJ_NULL = -1,
 };
 
@@ -224,7 +243,6 @@ enum quest_id : int8_t {
 };
 
 struct ObjectData {
-	int oload; // Todo create enum
 	object_graphic_id ofindex;
 	int8_t ominlvl;
 	int8_t omaxlvl;
@@ -244,9 +262,7 @@ struct ObjectData {
 };
 
 extern const _object_id ObjTypeConv[];
-extern const ObjectData AllObjects[];
+extern const ObjectData AllObjects[109];
 extern const char *const ObjMasterLoadList[];
-extern const char *ObjCryptLoadList[];
-extern const char *ObjHiveLoadList[];
 
 } // namespace devilution

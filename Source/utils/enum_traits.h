@@ -107,6 +107,12 @@ constexpr bool HasAnyOf(EnumType lhs, EnumType test)
 }
 
 template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
+constexpr bool HasAllOf(EnumType lhs, EnumType test)
+{
+	return (lhs & test) == test;
+}
+
+template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
 constexpr bool HasNoneOf(EnumType lhs, EnumType test)
 {
 	return !HasAnyOf(lhs, test);

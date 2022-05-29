@@ -32,6 +32,7 @@
 
 namespace devilution {
 
+std::string TestMapPath;
 std::optional<OwnedCelSprite> pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
@@ -218,7 +219,7 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	return fmt::format("Welcome to level {}.", level);
 }
 
-std::string DebugCmdLoadMap(const string_view parameter)
+std::string DebugCmdLoadQuestMap(const string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "What mapid do you want to visit?";
@@ -250,6 +251,47 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	}
 
 	return fmt::format("Mapid {} is not known. Do you want to write a mod?", level);
+}
+
+std::string DebugCmdLoadMap(const string_view parameter)
+{
+	TestMapPath.clear();
+	int mapType = 0;
+	Point spawn = {};
+
+	std::stringstream paramsStream(parameter.data());
+	int count = 0;
+	for (std::string tmp; std::getline(paramsStream, tmp, ' ');) {
+		switch (count) {
+		case 0:
+			TestMapPath = fmt::format("{:s}.dun", tmp);
+			break;
+		case 1:
+			mapType = atoi(tmp.c_str());
+			break;
+		case 2:
+			spawn.x = atoi(tmp.c_str());
+			break;
+		case 3:
+			spawn.y = atoi(tmp.c_str());
+			break;
+		}
+		count++;
+	}
+
+	if (TestMapPath.empty() || mapType < DTYPE_CATHEDRAL || mapType > DTYPE_LAST || !InDungeonBounds(spawn))
+		return "Directions not understood";
+
+	ReturnLvlPosition = ViewPosition;
+	ReturnLevel = currlevel;
+	ReturnLevelType = leveltype;
+
+	setlvltype = static_cast<dungeon_type>(mapType);
+	ViewPosition = spawn;
+
+	StartNewLvl(MyPlayerId, WM_DIABSETLVL, SL_NONE);
+
+	return "Welcome to this unique place.";
 }
 
 std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
@@ -502,17 +544,17 @@ std::string DebugCmdArrow(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
-	myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
+	myPlayer._pIFlags &= ~ItemSpecialEffect::FireArrows;
+	myPlayer._pIFlags &= ~ItemSpecialEffect::LightningArrows;
 
 	if (parameter == "normal") {
 		// we removed the parameter at the top
 	} else if (parameter == "fire") {
-		myPlayer._pIFlags |= ISPL_FIRE_ARROWS;
+		myPlayer._pIFlags |= ItemSpecialEffect::FireArrows;
 	} else if (parameter == "lightning") {
-		myPlayer._pIFlags |= ISPL_LIGHT_ARROWS;
+		myPlayer._pIFlags |= ItemSpecialEffect::LightningArrows;
 	} else if (parameter == "explosion") {
-		myPlayer._pIFlags |= (ISPL_FIRE_ARROWS | ISPL_LIGHT_ARROWS);
+		myPlayer._pIFlags |= (ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows);
 	} else {
 		return "Unknown is sometimes similar to nothing (unkown effect).";
 	}
@@ -783,7 +825,7 @@ std::string DebugCmdItemInfo(const string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 	Item *pItem = nullptr;
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!myPlayer.HoldItem.isEmpty()) {
 		pItem = &myPlayer.HoldItem;
 	} else if (pcursinvitem != -1) {
 		if (pcursinvitem <= INVITEM_INV_LAST)
@@ -853,7 +895,8 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "give map", "Reveal the map.", "", &DebugCmdMapReveal },
 	{ "take map", "Hide the map.", "", &DebugCmdMapHide },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
-	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
+	{ "questmap", "Load a quest level {level}.", "{level}", &DebugCmdLoadQuestMap },
+	{ "map", "Load custom level from a given {path}.dun.", "{path} {type} {x} {y}", &DebugCmdLoadMap },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
 	{ "restart", "Resets specified {level}.", "{level} ({seed})", &DebugCmdResetLevel },
 	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },

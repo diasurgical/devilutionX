@@ -141,7 +141,7 @@ bool TFit_Obj5(int t)
 
 bool TFit_SkelRoom(int t)
 {
-	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
+	if (IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS)) {
 		return false;
 	}
 
@@ -193,7 +193,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, int frequency)
 
 bool TFit_Obj3(int8_t regionId)
 {
-	char objrnd[4] = { 4, 4, 3, 5 };
+	int objrnd[4] = { 4, 4, 3, 5 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -397,8 +397,9 @@ void InitThemes()
 	treasureFlag = true;
 	weaponFlag = true;
 
-	if (currlevel == 16)
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		return;
+	}
 
 	if (leveltype == DTYPE_CATHEDRAL) {
 		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
@@ -412,38 +413,41 @@ void InitThemes()
 				numthemes++;
 			}
 		}
+		return;
 	}
-	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
-		for (int i = 0; i < themeCount; i++)
-			themes[i].ttype = THEME_NONE;
-		if (Quests[Q_ZHAR].IsAvailable()) {
-			for (int j = 0; j < themeCount; j++) {
-				themes[j].ttval = themeLoc[j].ttval;
-				if (SpecialThemeFit(j, THEME_LIBRARY)) {
-					themes[j].ttype = THEME_LIBRARY;
-					zharlib = j;
-					break;
-				}
+
+	for (int i = 0; i < themeCount; i++) {
+		themes[i].ttype = THEME_NONE;
+	}
+
+	if (Quests[Q_ZHAR].IsAvailable()) {
+		for (int j = 0; j < themeCount; j++) {
+			themes[j].ttval = themeLoc[j].ttval;
+			if (SpecialThemeFit(j, THEME_LIBRARY)) {
+				themes[j].ttype = THEME_LIBRARY;
+				zharlib = j;
+				break;
 			}
 		}
-		for (int i = 0; i < themeCount; i++) {
-			if (themes[i].ttype == THEME_NONE) {
-				themes[i].ttval = themeLoc[i].ttval;
-				theme_id j = ThemeGood[GenerateRnd(4)];
-				while (!SpecialThemeFit(i, j)) {
-					j = (theme_id)GenerateRnd(17);
-				}
-				themes[i].ttype = j;
-			}
-		}
-		numthemes += themeCount;
 	}
+	for (int i = 0; i < themeCount; i++) {
+		if (themes[i].ttype == THEME_NONE) {
+			themes[i].ttval = themeLoc[i].ttval;
+			theme_id j = ThemeGood[GenerateRnd(4)];
+			while (!SpecialThemeFit(i, j)) {
+				j = (theme_id)GenerateRnd(17);
+			}
+			themes[i].ttype = j;
+		}
+	}
+	numthemes += themeCount;
 }
 
 void HoldThemeRooms()
 {
-	if (currlevel == 16)
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		return;
+	}
 
 	if (leveltype != DTYPE_CATHEDRAL) {
 		DRLG_HoldThemeRooms();
@@ -498,8 +502,8 @@ void PlaceThemeMonsts(int t, int f)
  */
 void Theme_Barrel(int t)
 {
-	char barrnd[4] = { 2, 6, 4, 8 };
-	char monstrnd[4] = { 5, 7, 3, 9 };
+	int barrnd[4] = { 2, 6, 4, 8 };
+	int monstrnd[4] = { 5, 7, 3, 9 };
 
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
@@ -524,7 +528,7 @@ void Theme_Barrel(int t)
  */
 void Theme_Shrine(int t)
 {
-	char monstrnd[4] = { 6, 6, 3, 9 };
+	int monstrnd[4] = { 6, 6, 3, 9 };
 
 	TFit_Shrine(t);
 	if (themeVar1 == 1) {
@@ -546,7 +550,7 @@ void Theme_Shrine(int t)
  */
 void Theme_MonstPit(int t)
 {
-	uint8_t monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	int r = GenerateRnd(100) + 1;
 	int ixp = 0;
@@ -578,7 +582,7 @@ void Theme_MonstPit(int t)
  */
 void Theme_SkelRoom(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	TFit_SkelRoom(t);
 
@@ -651,8 +655,8 @@ void Theme_SkelRoom(int t)
  */
 void Theme_Treasure(int t)
 {
-	int8_t treasrnd[4] = { 4, 9, 7, 10 };
-	int8_t monstrnd[4] = { 6, 8, 3, 7 };
+	int treasrnd[4] = { 4, 9, 7, 10 };
+	int monstrnd[4] = { 6, 8, 3, 7 };
 
 	AdvanceRndSeed();
 	for (int yp = 0; yp < MAXDUNY; yp++) {
@@ -688,8 +692,8 @@ void Theme_Treasure(int t)
  */
 void Theme_Library(int t)
 {
-	char librnd[4] = { 1, 2, 2, 5 };
-	char monstrnd[4] = { 5, 7, 3, 9 };
+	int librnd[4] = { 1, 2, 2, 5 };
+	int monstrnd[4] = { 5, 7, 3, 9 };
 
 	TFit_Shrine(t);
 
@@ -718,14 +722,10 @@ void Theme_Library(int t)
 		}
 	}
 
-	if (Quests[Q_ZHAR].IsAvailable()) {
-		if (t == zharlib) {
-			return;
-		}
-		PlaceThemeMonsts(t, monstrnd[leveltype]); /// BUGFIX: `leveltype - 1`
-	} else {
-		PlaceThemeMonsts(t, monstrnd[leveltype]); /// BUGFIX: `leveltype - 1`
+	if (Quests[Q_ZHAR].IsAvailable() && t == zharlib) {
+		return;
 	}
+	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
 /**
@@ -735,8 +735,8 @@ void Theme_Library(int t)
  */
 void Theme_Torture(int t)
 {
-	char tortrnd[4] = { 6, 8, 3, 8 };
-	char monstrnd[4] = { 6, 8, 3, 9 };
+	int tortrnd[4] = { 6, 8, 3, 8 };
+	int monstrnd[4] = { 6, 8, 3, 9 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -758,7 +758,7 @@ void Theme_Torture(int t)
  */
 void Theme_BloodFountain(int t)
 {
-	char monstrnd[4] = { 6, 8, 3, 9 };
+	int monstrnd[4] = { 6, 8, 3, 9 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_BLOODFTN, { themex, themey });
@@ -772,8 +772,8 @@ void Theme_BloodFountain(int t)
  */
 void Theme_Decap(int t)
 {
-	char decaprnd[4] = { 6, 8, 3, 8 };
-	char monstrnd[4] = { 6, 8, 3, 9 };
+	int decaprnd[4] = { 6, 8, 3, 8 };
+	int monstrnd[4] = { 6, 8, 3, 9 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -796,7 +796,7 @@ void Theme_Decap(int t)
  */
 void Theme_PurifyingFountain(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_PURIFYINGFTN, { themex, themey });
@@ -810,8 +810,8 @@ void Theme_PurifyingFountain(int t)
  */
 void Theme_ArmorStand(int t)
 {
-	char armorrnd[4] = { 6, 8, 3, 8 };
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int armorrnd[4] = { 6, 8, 3, 8 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	if (armorFlag) {
 		TFit_Obj3(themes[t].ttval);
@@ -857,7 +857,7 @@ void Theme_GoatShrine(int t)
  */
 void Theme_Cauldron(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_CAULDRON, { themex, themey });
@@ -871,7 +871,7 @@ void Theme_Cauldron(int t)
  */
 void Theme_MurkyFountain(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_MURKYFTN, { themex, themey });
@@ -885,7 +885,7 @@ void Theme_MurkyFountain(int t)
  */
 void Theme_TearFountain(int t)
 {
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	TFit_Obj5(t);
 	AddObject(OBJ_TEARFTN, { themex, themey });
@@ -900,8 +900,8 @@ void Theme_TearFountain(int t)
 void Theme_BrnCross(int t)
 {
 	int8_t regionId = themes[t].ttval;
-	char monstrnd[4] = { 6, 8, 3, 9 };
-	char bcrossrnd[4] = { 5, 7, 3, 8 };
+	int monstrnd[4] = { 6, 8, 3, 9 };
+	int bcrossrnd[4] = { 5, 7, 3, 8 };
 
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
@@ -925,8 +925,8 @@ void Theme_BrnCross(int t)
 void Theme_WeaponRack(int t)
 {
 	int8_t regionId = themes[t].ttval;
-	char weaponrnd[4] = { 6, 8, 5, 8 };
-	char monstrnd[4] = { 6, 7, 3, 9 };
+	int weaponrnd[4] = { 6, 8, 5, 8 };
+	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	if (weaponFlag) {
 		TFit_Obj3(regionId);
@@ -963,9 +963,10 @@ void UpdateL4Trans()
 
 void CreateThemeRooms()
 {
-	if (currlevel == 16) {
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		return;
 	}
+
 	ApplyObjectLighting = true;
 	for (int i = 0; i < numthemes; i++) {
 		themex = 0;

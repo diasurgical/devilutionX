@@ -265,12 +265,17 @@ bool ShouldShowCursor()
  */
 void DrawCursor(const Surface &out)
 {
-	if (pcurs <= CURSOR_NONE || cursSize.width == 0 || cursSize.height == 0 || !ShouldShowCursor()) {
+	if (pcurs <= CURSOR_NONE || !ShouldShowCursor()) {
+		return;
+	}
+
+	Size cursSize = GetInvItemSize(pcurs);
+	if (cursSize.width == 0 || cursSize.height == 0) {
 		return;
 	}
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
-	const int outlineWidth = IsItemSprite(pcurs) ? 1 : 0;
+	const int outlineWidth = !MyPlayer->HoldItem.isEmpty() ? 1 : 0;
 
 	if (MousePosition.x < -cursSize.width - outlineWidth || MousePosition.x - outlineWidth >= out.w() || MousePosition.y < -cursSize.height - outlineWidth || MousePosition.y - outlineWidth >= out.h())
 		return;
@@ -579,8 +584,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 		auto &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
-			const Displacement center { CalculateWidth2(player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96), 0 };
-			const Point playerRenderPosition { targetBufferPosition + player.position.offset - center };
+			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
 			DrawPlayer(out, i, tilePosition, playerRenderPosition);
 		}
 	}
@@ -1022,10 +1026,10 @@ void Zoom(const Surface &out)
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen || IsStashOpen) {
+		if (IsLeftPanelOpen()) {
 			viewportWidth -= SPANEL_WIDTH;
 			viewportOffsetX = SPANEL_WIDTH;
-		} else if (invflag || sbookflag) {
+		} else if (IsRightPanelOpen()) {
 			viewportWidth -= SPANEL_WIDTH;
 		}
 	}
@@ -1102,23 +1106,23 @@ void DrawGame(const Surface &fullOut, Point position)
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
-			if (chrflag || QuestLogIsOpen || IsStashOpen) {
+			if (IsLeftPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
 			}
-			if (invflag || sbookflag) {
+			if (IsRightPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
-			if (chrflag || QuestLogIsOpen || IsStashOpen) {
+			if (IsLeftPanelOpen()) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
 			}
-			if (invflag || sbookflag) {
+			if (IsRightPanelOpen()) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2;
@@ -1386,7 +1390,7 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
 		}
 		if (drawDesc) {
-			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 60);
+			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 63);
 		}
 		if (drawMana) {
 			DoBlitScreen(PANEL_LEFT + 460, PANEL_TOP, 88, 72);
@@ -1573,7 +1577,7 @@ void ScrollView()
 {
 	bool scroll;
 
-	if (pcurs >= CURSOR_FIRSTITEM)
+	if (!MyPlayer->HoldItem.isEmpty())
 		return;
 
 	scroll = false;

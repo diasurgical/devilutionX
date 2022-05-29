@@ -1150,8 +1150,8 @@ msgstr "Τώρα θα ΠΕΘΑΝΕΙΣ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
-msgid "Options:\n"
-msgstr "Επιλογές\n"
+msgid "Options:"
+msgstr "Επιλογές"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:823
@@ -1210,12 +1210,8 @@ msgstr "Απενεργοποίηση ορίων καρέ κατά την ανα�
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Επιλογή παιχνιδιού:\n"
+msgid "Game selection:"
+msgstr "Επιλογή παιχνιδιού:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:835
@@ -1234,20 +1230,12 @@ msgstr "Εξαναγκαστική κατάστασή σε Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:838
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Επιλογές Χελφάϊερ:\n"
+msgid "Hellfire options:"
+msgstr "Επιλογές Χελφάϊερ:"
 
 #: Source/diablo.cpp:844
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Αναφορά σφαλμάτων στην σελίδα https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Αναφορά σφαλμάτων στην σελίδα https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:956
 msgid "version {:s}"

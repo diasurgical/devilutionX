@@ -394,11 +394,11 @@ msgstr "Changer de Passerelle"
 #: Source/DiabloUI/selconn.cpp:108
 msgid "All computers must be connected to a TCP-compatible network."
 msgstr ""
-"Tous les ordinateurs doivent être connectées à un réseau compatible TCP."
+"Tous les ordinateurs doivent être connectés à un réseau compatible TCP."
 
 #: Source/DiabloUI/selconn.cpp:112
 msgid "All computers must be connected to the internet."
-msgstr "Toutes les ordinateurs doivent être connectées à internet."
+msgstr "Tous les ordinateurs doivent être connectés à internet."
 
 #: Source/DiabloUI/selconn.cpp:116
 msgid "Play by yourself with no network exposure."
@@ -571,8 +571,8 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Difficulté Normale\n"
-"C'est là qu'un personnage débutant devrait commencer sa quête pour vaincre "
-"Diablo."
+"C'est le mode avec lequel un personnage débutant devrait commencer sa quête "
+"pour vaincre Diablo."
 
 #: Source/DiabloUI/selgame.cpp:365
 msgid ""
@@ -580,9 +580,10 @@ msgid ""
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
-"Difficulté Cauchemar.\n"
+"Difficulté Cauchemar\n"
 "Les habitants du Labyrinthe ont été renforcés et se révéleront être un plus "
-"grand défi. Ceci est recommandé uniquement pour les personnages expérimentés."
+"grand défi. Ce mode est recommandé uniquement pour les personnages "
+"expérimentés."
 
 #: Source/DiabloUI/selgame.cpp:369
 msgid ""
@@ -592,8 +593,8 @@ msgid ""
 msgstr ""
 "Difficulté Enfer\n"
 "Les créatures les plus puissantes des bas-fonds rôdent à l'entrée de "
-"l'enfer. Seuls les personnages les plus expérimentés devraient s'aventurer "
-"dans ce domaine."
+"l'enfer. Seuls les personnages les plus expérimentés devraient relever ce "
+"défi."
 
 #: Source/DiabloUI/selgame.cpp:384
 msgid ""
@@ -613,7 +614,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:462
 msgid "Select Game Speed"
-msgstr "Sélection Vitesse du Jeu"
+msgstr "Sélection Vitesse"
 
 #: Source/DiabloUI/selgame.cpp:465 Source/DiabloUI/selgame.cpp:488
 msgid "Fast"
@@ -625,7 +626,7 @@ msgstr "Plus Rapide"
 
 #: Source/DiabloUI/selgame.cpp:467 Source/DiabloUI/selgame.cpp:496
 msgid "Fastest"
-msgstr "Le Plus Rapide"
+msgstr "La Plus Rapide"
 
 #: Source/DiabloUI/selgame.cpp:485
 msgid ""
@@ -633,8 +634,8 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Vitesse normale\n"
-"C'est là que le personnage débutant devrait commencer sa quête pour vaincre "
-"Diablo."
+"C'est le mode avec lequel un personnage débutant devrait commencer sa quête "
+"pour vaincre Diablo."
 
 #: Source/DiabloUI/selgame.cpp:489
 msgid ""
@@ -644,7 +645,8 @@ msgid ""
 msgstr ""
 "Vitesse rapide\n"
 "Les habitants du Labyrinthe ont été accélérés et s'avéreront être un plus "
-"grand défi. Ceci est recommandé uniquement pour les personnages expérimentés."
+"grand défi. Ce mode est recommandé uniquement pour les personnages "
+"expérimentés."
 
 #: Source/DiabloUI/selgame.cpp:493
 msgid ""
@@ -663,8 +665,8 @@ msgid ""
 "true speed demon should enter at this pace."
 msgstr ""
 "Vitesse la plus rapide\n"
-"Les sbires de la pègre se précipiteront pour attaquer sans hésitation. Seul "
-"un vrai démon de vitesse devrait utiliser cette vitesse."
+"Les sbires des souterrains se précipiteront pour attaquer sans hésitation. "
+"Seul un vrai démon de vitesse devrait relever ce défi."
 
 #: Source/DiabloUI/selgame.cpp:539 Source/DiabloUI/selgame.cpp:544
 msgid "Enter Password"
@@ -708,7 +710,7 @@ msgstr "Nouveau Héros Solo"
 
 #: Source/DiabloUI/selhero.cpp:171
 msgid "Save File Exists"
-msgstr "Une Sauvegarde Existe"
+msgstr "Une Partie Existe"
 
 #: Source/DiabloUI/selhero.cpp:174 Source/gamemenu.cpp:38
 msgid "Load Game"
@@ -960,7 +962,7 @@ msgstr "Tab"
 
 #: Source/control.cpp:155
 msgid "Esc"
-msgstr "ESC"
+msgstr "Esc"
 
 #: Source/control.cpp:155
 msgid "Enter"
@@ -1000,7 +1002,7 @@ msgstr "Joueur Amical"
 
 #: Source/control.cpp:696
 msgid "Player attack"
-msgstr "Joueur hostile"
+msgstr "Joueur Hostile"
 
 #: Source/control.cpp:699
 msgid "Hotkey: {:s}"
@@ -1032,7 +1034,7 @@ msgstr "Sort Niveau {:d}"
 
 #: Source/control.cpp:723 Source/panels/spell_list.cpp:184
 msgid "Scroll of {:s}"
-msgstr "Parchemin de {:s}"
+msgstr "Parchemin: {:s}"
 
 #: Source/control.cpp:728 Source/panels/spell_list.cpp:189
 msgid "{:d} Scroll"
@@ -1042,7 +1044,7 @@ msgstr[1] "{:d} Parchemins"
 
 #: Source/control.cpp:731 Source/panels/spell_list.cpp:196
 msgid "Staff of {:s}"
-msgstr "Baton de {:s}"
+msgstr "Bâton: {:s}"
 
 #: Source/control.cpp:732 Source/panels/spell_list.cpp:198
 msgid "{:d} Charge"
@@ -1092,7 +1094,7 @@ msgstr ""
 
 #: Source/cursor.cpp:220
 msgid "Town Portal"
-msgstr "Portail vers la ville"
+msgstr "Portail de ville"
 
 #: Source/cursor.cpp:221
 msgid "from {:s}"
@@ -1104,7 +1106,7 @@ msgstr "Portail vers"
 
 #: Source/cursor.cpp:236
 msgid "The Unholy Altar"
-msgstr "L'Autel impie"
+msgstr "L'Autel Impie"
 
 #: Source/cursor.cpp:236
 msgid "level 15"
@@ -1124,12 +1126,12 @@ msgstr "Voici quelque chose pour vous."
 
 #: Source/diablo.cpp:122
 msgid "Now you DIE!"
-msgstr "Maintenant tu meurs!"
+msgstr "Maintenant tu MEURS!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Maintenant tu meurs!\n"
+msgid "Options:"
+msgstr "Options:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1164,7 +1166,7 @@ msgstr "Passe les vidéos d'intro"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:828
 msgid "Display frames per second"
-msgstr "Affiche le nombre de frame par seconde"
+msgstr "Affiche le nombre d'image par seconde"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:829
@@ -1189,12 +1191,8 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Selection de la Partie:\n"
+msgid "Game selection:"
+msgstr "Selection de la Partie:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1209,24 +1207,16 @@ msgstr "Forcer le mode Diablo"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:836
 msgid "Force Hellfire mode"
-msgstr "Force le mode Hellfire"
+msgstr "Forcer le mode Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"options Hellfire:\n"
+msgid "Hellfire options:"
+msgstr "Options Hellfire:"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Signalez les bogues sur https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Signalez les bogues sur https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
@@ -1234,7 +1224,7 @@ msgstr "version {:s}"
 
 #: Source/diablo.cpp:1276
 msgid "-- Network timeout --"
-msgstr "-- timeout réseau--"
+msgstr "-- Timeout réseau--"
 
 #: Source/diablo.cpp:1277
 msgid "-- Waiting for players --"
@@ -1278,7 +1268,7 @@ msgstr "Sauvegarde rapide"
 
 #: Source/diablo.cpp:1483
 msgid "Saves the game."
-msgstr "Sauvegarder la Partie."
+msgstr "Sauvegarde la Partie."
 
 #: Source/diablo.cpp:1490
 msgid "Quick load"
@@ -1286,7 +1276,7 @@ msgstr "Chargement rapide"
 
 #: Source/diablo.cpp:1491
 msgid "Loads the game."
-msgstr "Charger la Partie."
+msgstr "Charge la Partie."
 
 #: Source/diablo.cpp:1499
 msgid "Quit game"
@@ -1294,7 +1284,7 @@ msgstr "Quitter"
 
 #: Source/diablo.cpp:1500
 msgid "Closes the game."
-msgstr "Fermer le Jeu."
+msgstr "Ferme le Jeu."
 
 #: Source/diablo.cpp:1506
 msgid "Stop hero"
@@ -1473,12 +1463,12 @@ msgstr "{} {}"
 #. TRANSLATORS: Discord character, i.e. "Lv 6 Warrior"
 #: Source/discord/discord.cpp:90
 msgid "Lv {} {}"
-msgstr "Nv {} {}"
+msgstr "Nv {} - {}"
 
 #. TRANSLATORS: Discord state i.e. "Nightmare difficulty"
 #: Source/discord/discord.cpp:102
 msgid "{} difficulty"
-msgstr "{} difficulté"
+msgstr "Difficulté {}"
 
 #. TRANSLATORS: Discord activity, not in game
 #: Source/discord/discord.cpp:182
@@ -1600,7 +1590,7 @@ msgstr "Ce qui ne peut être tenu ne peut être blessé"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:78
 msgid "Crimson and Azure become as the sun"
-msgstr "Crimson et Azure deviennent comme le soleil"
+msgstr "Pourpre et Azur deviennent Soleil"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:79
@@ -1799,7 +1789,7 @@ msgstr "F1:    Ouvrir l'Écran d'Aide"
 
 #: Source/help.cpp:29
 msgid "Esc:   Display Main Menu"
-msgstr "Esc: Afficher Menu Principal"
+msgstr "Esc:   Afficher Menu Principal"
 
 #: Source/help.cpp:30
 msgid "Tab:   Display Auto-map"
@@ -1950,7 +1940,7 @@ msgstr ""
 
 #: Source/help.cpp:73
 msgid "$Skills & Spells:"
-msgstr "$Compétences et sorts:"
+msgstr "$Compétences & Sorts:"
 
 #: Source/help.cpp:74
 msgid ""
@@ -2067,7 +2057,7 @@ msgstr "Epée Courte"
 
 #: Source/itemdat.cpp:55 Source/itemdat.cpp:124
 msgid "Buckler"
-msgstr "Bocle"
+msgstr "Écu"
 
 #: Source/itemdat.cpp:56 Source/itemdat.cpp:192 Source/itemdat.cpp:193
 msgid "Club"
@@ -2079,7 +2069,7 @@ msgstr "Arc Court"
 
 #: Source/itemdat.cpp:58
 msgid "Short Staff of Mana"
-msgstr "Bâton Court de Mana"
+msgstr "Bâton Court - Mana"
 
 #: Source/itemdat.cpp:59
 msgid "Cleaver"
@@ -2095,7 +2085,7 @@ msgstr "Rabat Empyréen"
 
 #: Source/itemdat.cpp:62
 msgid "Magic Rock"
-msgstr "Pierre Magique"
+msgstr "Roche Céleste"
 
 #: Source/itemdat.cpp:63 Source/itemdat.cpp:436
 msgid "Optic Amulet"
@@ -2107,7 +2097,7 @@ msgstr "Anneau de Vérité"
 
 #: Source/itemdat.cpp:65
 msgid "Tavern Sign"
-msgstr "Panneau de la Taverne"
+msgstr "Pancarte de la Taverne"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:438
 msgid "Harlequin Crest"
@@ -2167,7 +2157,7 @@ msgstr "Parchemin d'identification"
 
 #: Source/itemdat.cpp:80 Source/itemdat.cpp:151
 msgid "Scroll of Town Portal"
-msgstr "Parchemin de la ville"
+msgstr "Parchemin de Portail de ville"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:440
 msgid "Arkaine's Valor"
@@ -2230,15 +2220,15 @@ msgstr "Amulette Aurique"
 
 #: Source/itemdat.cpp:95
 msgid "Torn Note 1"
-msgstr "Note Torn 1"
+msgstr "Note Déchirée 1"
 
 #: Source/itemdat.cpp:96
 msgid "Torn Note 2"
-msgstr "Note Torn 2"
+msgstr "Note Déchirée 2"
 
 #: Source/itemdat.cpp:97
 msgid "Torn Note 3"
-msgstr "Note Torn 3"
+msgstr "Note Déchirée 3"
 
 #: Source/itemdat.cpp:98
 msgid "Reconstructed Note"
@@ -2258,15 +2248,15 @@ msgstr "Capuchon"
 
 #: Source/itemdat.cpp:102
 msgid "Skull Cap"
-msgstr "Calotte"
+msgstr "Cervellière"
 
 #: Source/itemdat.cpp:103 Source/itemdat.cpp:104 Source/itemdat.cpp:106
 msgid "Helm"
-msgstr "Casque"
+msgstr "Heaume"
 
 #: Source/itemdat.cpp:104
 msgid "Full Helm"
-msgstr "Heaume Complet"
+msgstr "Grand Heaume"
 
 #: Source/itemdat.cpp:105
 msgid "Crown"
@@ -2274,7 +2264,7 @@ msgstr "Couronne"
 
 #: Source/itemdat.cpp:106
 msgid "Great Helm"
-msgstr "Grand Heaume"
+msgstr "Bassinet"
 
 #: Source/itemdat.cpp:107
 msgid "Cape"
@@ -2282,11 +2272,11 @@ msgstr "Cape"
 
 #: Source/itemdat.cpp:108
 msgid "Rags"
-msgstr "Vêtement"
+msgstr "Guenilles"
 
 #: Source/itemdat.cpp:109
 msgid "Cloak"
-msgstr "Manteau"
+msgstr "Cape à Capuche"
 
 #: Source/itemdat.cpp:110
 msgid "Robe"
@@ -2303,11 +2293,11 @@ msgstr "Armure"
 
 #: Source/itemdat.cpp:112
 msgid "Leather Armor"
-msgstr "Armure de Cuir"
+msgstr "Armure en Cuir"
 
 #: Source/itemdat.cpp:113
 msgid "Hard Leather Armor"
-msgstr "Armure en Cuir Dur"
+msgstr "Armure en Cuir Bouilli"
 
 #: Source/itemdat.cpp:114
 msgid "Studded Leather Armor"
@@ -2315,7 +2305,7 @@ msgstr "Armure en Cuir Clouté"
 
 #: Source/itemdat.cpp:115
 msgid "Ring Mail"
-msgstr "Broigne"
+msgstr "Cotte de Mailles"
 
 #: Source/itemdat.cpp:115 Source/itemdat.cpp:116 Source/itemdat.cpp:117
 #: Source/itemdat.cpp:119
@@ -2324,7 +2314,7 @@ msgstr "Maille"
 
 #: Source/itemdat.cpp:116
 msgid "Chain Mail"
-msgstr "Cotte de Mailles"
+msgstr "Tunique de Mailles"
 
 #: Source/itemdat.cpp:117
 msgid "Scale Mail"
@@ -2332,32 +2322,32 @@ msgstr "Armure en Écailles"
 
 #: Source/itemdat.cpp:118
 msgid "Breast Plate"
-msgstr "Plastron"
+msgstr "Cuirasse"
 
 #: Source/itemdat.cpp:118 Source/itemdat.cpp:120 Source/itemdat.cpp:121
 #: Source/itemdat.cpp:122 Source/itemdat.cpp:123
 msgid "Plate"
-msgstr "Plate"
+msgstr "Armure"
 
 #: Source/itemdat.cpp:119
 msgid "Splint Mail"
-msgstr "Clibanion de Mailles"
+msgstr "Brigandine"
 
 #: Source/itemdat.cpp:120
 msgid "Plate Mail"
-msgstr "Cotte de mailles plates"
+msgstr "Demi Armure"
 
 #: Source/itemdat.cpp:121
 msgid "Field Plate"
-msgstr "Plate"
+msgstr "Armure de Tournoi"
 
 #: Source/itemdat.cpp:122
 msgid "Gothic Plate"
-msgstr "Plate Gotique"
+msgstr "Armure Gothique"
 
 #: Source/itemdat.cpp:123
 msgid "Full Plate Mail"
-msgstr "Harnois"
+msgstr "Armure Complète"
 
 #: Source/itemdat.cpp:124 Source/itemdat.cpp:125 Source/itemdat.cpp:126
 #: Source/itemdat.cpp:127 Source/itemdat.cpp:128 Source/itemdat.cpp:129
@@ -2370,7 +2360,7 @@ msgstr "Petit Bouclier"
 
 #: Source/itemdat.cpp:126
 msgid "Large Shield"
-msgstr "Bouclier Large"
+msgstr "Grand Bouclier"
 
 #: Source/itemdat.cpp:127
 msgid "Kite Shield"
@@ -2382,7 +2372,7 @@ msgstr "Pavois"
 
 #: Source/itemdat.cpp:129
 msgid "Gothic Shield"
-msgstr "Bouclier Gotique"
+msgstr "Bouclier Gothique"
 
 #: Source/itemdat.cpp:134
 msgid "Potion of Rejuvenation"
@@ -2398,7 +2388,7 @@ msgstr "Huile de Précision"
 
 #: Source/itemdat.cpp:138 Source/items.cpp:169
 msgid "Oil of Sharpness"
-msgstr "Huilde d'Affutage"
+msgstr "Huile d'Affutage"
 
 #: Source/itemdat.cpp:139
 msgid "Oil"
@@ -2438,11 +2428,11 @@ msgstr "Parchemin de Mur de Feu"
 
 #: Source/itemdat.cpp:150
 msgid "Scroll of Inferno"
-msgstr "Parchemin de l'enfer"
+msgstr "Parchemin d'Inferno"
 
 #: Source/itemdat.cpp:152
 msgid "Scroll of Flash"
-msgstr "Parchemin d'Éclat"
+msgstr "Parchemin de Flash"
 
 #: Source/itemdat.cpp:153
 msgid "Scroll of Infravision"
@@ -2450,7 +2440,7 @@ msgstr "Parchemin d'Infravision"
 
 #: Source/itemdat.cpp:154
 msgid "Scroll of Phasing"
-msgstr "Parchemin de Phase"
+msgstr "Parchemin de Phasage"
 
 #: Source/itemdat.cpp:155
 msgid "Scroll of Mana Shield"
@@ -2470,7 +2460,7 @@ msgstr "Parchemin de Malédiction de Pierre"
 
 #: Source/itemdat.cpp:159
 msgid "Scroll of Chain Lightning"
-msgstr "Parchemin de chaîne d'éclairs"
+msgstr "Parchemin de Chaîne d'Éclairs"
 
 #: Source/itemdat.cpp:160
 msgid "Scroll of Guardian"
@@ -2486,7 +2476,7 @@ msgstr "Parchemin de Golem"
 
 #: Source/itemdat.cpp:165
 msgid "Scroll of Teleport"
-msgstr "Parchemin de Teleport"
+msgstr "Parchemin de Téléportation"
 
 #: Source/itemdat.cpp:166
 msgid "Scroll of Apocalypse"
@@ -2495,7 +2485,7 @@ msgstr "Parchemin de l'Apocalypse"
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
 msgid "Book of "
-msgstr "Livre de "
+msgstr "Livre : "
 
 #: Source/itemdat.cpp:173
 msgid "Falchion"
@@ -2519,23 +2509,23 @@ msgstr "Sabre"
 
 #: Source/itemdat.cpp:178
 msgid "Long Sword"
-msgstr "Épée Longue"
+msgstr "Rapière"
 
 #: Source/itemdat.cpp:179
 msgid "Broad Sword"
-msgstr "Épée large"
+msgstr "Épée Large"
 
 #: Source/itemdat.cpp:180
 msgid "Bastard Sword"
-msgstr "Épée bâtarde"
+msgstr "Fauchard"
 
 #: Source/itemdat.cpp:181
 msgid "Two-Handed Sword"
-msgstr "Épée à 2 mains"
+msgstr "Épée à Deux Mains"
 
 #: Source/itemdat.cpp:182
 msgid "Great Sword"
-msgstr "Grande Epée"
+msgstr "Grande Épée"
 
 #: Source/itemdat.cpp:183
 msgid "Small Axe"
@@ -2548,15 +2538,15 @@ msgstr "Hache"
 
 #: Source/itemdat.cpp:185
 msgid "Large Axe"
-msgstr "Hache Large"
+msgstr "Grosse Hache"
 
 #: Source/itemdat.cpp:186
 msgid "Broad Axe"
-msgstr "Doloire"
+msgstr "Hache Large"
 
 #: Source/itemdat.cpp:187
 msgid "Battle Axe"
-msgstr "Hache de Guerre"
+msgstr "Hache Danoise"
 
 #: Source/itemdat.cpp:188
 msgid "Great Axe"
@@ -2564,7 +2554,7 @@ msgstr "Grande Hache"
 
 #: Source/itemdat.cpp:189 Source/itemdat.cpp:190
 msgid "Mace"
-msgstr "Masse"
+msgstr "Masse d'Armes"
 
 #: Source/itemdat.cpp:190
 msgid "Morning Star"
@@ -2598,7 +2588,7 @@ msgstr "Arc"
 
 #: Source/itemdat.cpp:197
 msgid "Hunter's Bow"
-msgstr "Arc de Chasseur"
+msgstr "Arc de Chasse"
 
 #: Source/itemdat.cpp:198
 msgid "Long Bow"
@@ -2606,7 +2596,7 @@ msgstr "Arc Long"
 
 #: Source/itemdat.cpp:199
 msgid "Composite Bow"
-msgstr "Arc Composite"
+msgstr "Arc à Poulies"
 
 #: Source/itemdat.cpp:200
 msgid "Short Battle Bow"
@@ -2640,7 +2630,7 @@ msgstr "Bâton Composite"
 
 #: Source/itemdat.cpp:207
 msgid "Quarter Staff"
-msgstr "Bâton Court"
+msgstr "Bâton de Quart"
 
 #: Source/itemdat.cpp:208
 msgid "War Staff"
@@ -2669,11 +2659,11 @@ msgstr "Rune de Foudre"
 
 #: Source/itemdat.cpp:216
 msgid "Greater Rune of Fire"
-msgstr "Rune de Feu Supérieur"
+msgstr "Rune Supérieure de Feu"
 
 #: Source/itemdat.cpp:217
 msgid "Greater Rune of Lightning"
-msgstr "Rune de Foudre Supérieure"
+msgstr "Rune Supérieure de Foudre"
 
 #: Source/itemdat.cpp:218
 msgid "Rune of Stone"
@@ -2681,44 +2671,44 @@ msgstr "Rune de Pierre"
 
 #: Source/itemdat.cpp:219
 msgid "Short Staff of Charged Bolt"
-msgstr "Bâton Court de Piton chargé"
+msgstr "Bâton Court - Éclair Chargé"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:229
 msgid "Tin"
-msgstr "Étain"
+msgstr "en Étain"
 
 #: Source/itemdat.cpp:230
 msgid "Brass"
-msgstr "Laiton"
+msgstr "en Laiton"
 
 #: Source/itemdat.cpp:231
 msgid "Bronze"
-msgstr "Bronze"
+msgstr "en Bronze"
 
 #: Source/itemdat.cpp:232
 msgid "Iron"
-msgstr "Fer"
+msgstr "en Fer"
 
 #: Source/itemdat.cpp:233
 msgid "Steel"
-msgstr "Acier"
+msgstr "en Acier"
 
 #: Source/itemdat.cpp:234
 msgid "Silver"
-msgstr "Argent"
+msgstr "en Argent"
 
 #: Source/itemdat.cpp:236
 msgid "Platinum"
-msgstr "Platine"
+msgstr "en Platine"
 
 #: Source/itemdat.cpp:237
 msgid "Mithril"
-msgstr "Mithril"
+msgstr "en Mithril"
 
 #: Source/itemdat.cpp:238
 msgid "Meteoric"
-msgstr "Météorique"
+msgstr "en Météore"
 
 #: Source/itemdat.cpp:239 Source/objects.cpp:109
 msgid "Weird"
@@ -2734,7 +2724,7 @@ msgstr "Inutile"
 
 #: Source/itemdat.cpp:242
 msgid "Bent"
-msgstr "Courbé"
+msgstr "Courbe"
 
 #: Source/itemdat.cpp:243
 msgid "Weak"
@@ -2742,27 +2732,27 @@ msgstr "Faible"
 
 #: Source/itemdat.cpp:244
 msgid "Jagged"
-msgstr "Déchiqueté"
+msgstr "de Déchirure"
 
 #: Source/itemdat.cpp:245
 msgid "Deadly"
-msgstr "Mortel"
+msgstr "de Violence"
 
 #: Source/itemdat.cpp:246
 msgid "Heavy"
-msgstr "Lord"
+msgstr "de Cruauté"
 
 #: Source/itemdat.cpp:247
 msgid "Vicious"
-msgstr "Vicieux"
+msgstr "d'Atrocité"
 
 #: Source/itemdat.cpp:248
 msgid "Brutal"
-msgstr "Brutal"
+msgstr "de Brutalité"
 
 #: Source/itemdat.cpp:249
 msgid "Massive"
-msgstr "Massif"
+msgstr "Énorme"
 
 #: Source/itemdat.cpp:250
 msgid "Savage"
@@ -2770,7 +2760,7 @@ msgstr "Sauvage"
 
 #: Source/itemdat.cpp:251
 msgid "Ruthless"
-msgstr "Impitoyable"
+msgstr "Implacable"
 
 #: Source/itemdat.cpp:252
 msgid "Merciless"
@@ -2778,47 +2768,47 @@ msgstr "Impitoyable"
 
 #: Source/itemdat.cpp:253
 msgid "Clumsy"
-msgstr "Maladroit"
+msgstr "de Maladresse"
 
 #: Source/itemdat.cpp:254
 msgid "Dull"
-msgstr "Terne"
+msgstr "de Gaucherie"
 
 #: Source/itemdat.cpp:255
 msgid "Sharp"
-msgstr "Pointu"
+msgstr "de Boucher"
 
 #: Source/itemdat.cpp:256 Source/itemdat.cpp:266
 msgid "Fine"
-msgstr "Fine"
+msgstr "de Fantassin"
 
 #: Source/itemdat.cpp:257
 msgid "Warrior's"
-msgstr "Du Guerrier"
+msgstr "de Guerrier"
 
 #: Source/itemdat.cpp:258
 msgid "Soldier's"
-msgstr "Du Soldat"
+msgstr "de Soldat"
 
 #: Source/itemdat.cpp:259
 msgid "Lord's"
-msgstr "Du Seigneur"
+msgstr "de Seigneur"
 
 #: Source/itemdat.cpp:260
 msgid "Knight's"
-msgstr "Du Chevalier"
+msgstr "de Chevalier"
 
 #: Source/itemdat.cpp:261
 msgid "Master's"
-msgstr "Du Maitre"
+msgstr "de Maître"
 
 #: Source/itemdat.cpp:262
 msgid "Champion's"
-msgstr "Du Champion"
+msgstr "de Champion"
 
 #: Source/itemdat.cpp:263
 msgid "King's"
-msgstr "Du Roi"
+msgstr "de Roi"
 
 #: Source/itemdat.cpp:264
 msgid "Vulnerable"
@@ -2826,11 +2816,11 @@ msgstr "Vulnérable"
 
 #: Source/itemdat.cpp:265
 msgid "Rusted"
-msgstr "Rouillé"
+msgstr "Fragile"
 
 #: Source/itemdat.cpp:267
 msgid "Strong"
-msgstr "Fort"
+msgstr "Solide"
 
 #: Source/itemdat.cpp:268
 msgid "Grand"
@@ -2838,111 +2828,111 @@ msgstr "Grandiose"
 
 #: Source/itemdat.cpp:269
 msgid "Valiant"
-msgstr "Vaillant"
+msgstr "de Vaillance"
 
 #: Source/itemdat.cpp:270
 msgid "Glorious"
-msgstr "Glorieux"
+msgstr "de Gloire"
 
 #: Source/itemdat.cpp:271
 msgid "Blessed"
-msgstr "Béni"
+msgstr "de Bénédiction"
 
 #: Source/itemdat.cpp:272
 msgid "Saintly"
-msgstr "Saint"
+msgstr "de Sainteté"
 
 #: Source/itemdat.cpp:273
 msgid "Awesome"
-msgstr "Impressionnant"
+msgstr "Fantastique"
 
 #: Source/itemdat.cpp:274 Source/objects.cpp:121
 msgid "Holy"
-msgstr "Sacré"
+msgstr "d'Apôtre"
 
 #: Source/itemdat.cpp:275
 msgid "Godly"
-msgstr "Pieux"
+msgstr "de Dieux"
 
 #: Source/itemdat.cpp:276
 msgid "Red"
-msgstr "Rouge"
+msgstr "de Jaspe"
 
 #: Source/itemdat.cpp:277 Source/itemdat.cpp:278
 msgid "Crimson"
-msgstr "Cramoisi"
+msgstr "de Cornaline"
 
 #: Source/itemdat.cpp:279
 msgid "Garnet"
-msgstr "Grenat"
+msgstr "de Grenat"
 
 #: Source/itemdat.cpp:280
 msgid "Ruby"
-msgstr "Rubis"
+msgstr "de Rubis"
 
 #: Source/itemdat.cpp:281
 msgid "Blue"
-msgstr "Bleu"
+msgstr "de Turquoise"
 
 #: Source/itemdat.cpp:282
 msgid "Azure"
-msgstr "Azure"
+msgstr "d'Azurite"
 
 #: Source/itemdat.cpp:283
 msgid "Lapis"
-msgstr "Lapis"
+msgstr "de Lapis"
 
 #: Source/itemdat.cpp:284
 msgid "Cobalt"
-msgstr "Cobalt"
+msgstr "de Cobalt"
 
 #: Source/itemdat.cpp:285
 msgid "Sapphire"
-msgstr "Saphir"
+msgstr "de Saphir"
 
 #: Source/itemdat.cpp:286
 msgid "White"
-msgstr "Blanc"
+msgstr "de Porcelaine"
 
 #: Source/itemdat.cpp:287
 msgid "Pearl"
-msgstr "Perle"
+msgstr "de Perle"
 
 #: Source/itemdat.cpp:288
 msgid "Ivory"
-msgstr "Ivoire"
+msgstr "d'Ivoire"
 
 #: Source/itemdat.cpp:289
 msgid "Crystal"
-msgstr "Cristal"
+msgstr "de Cristal"
 
 #: Source/itemdat.cpp:290
 msgid "Diamond"
-msgstr "Diamant"
+msgstr "de Diamant"
 
 #: Source/itemdat.cpp:291
 msgid "Topaz"
-msgstr "Topaze"
+msgstr "de Topaze"
 
 #: Source/itemdat.cpp:292
 msgid "Amber"
-msgstr "Ambre"
+msgstr "d'Ambre"
 
 #: Source/itemdat.cpp:293
 msgid "Jade"
-msgstr "Jade"
+msgstr "de Jade"
 
 #: Source/itemdat.cpp:294
 msgid "Obsidian"
-msgstr "Obsidienne"
+msgstr "d'Obsidienne"
 
 #: Source/itemdat.cpp:295
 msgid "Emerald"
-msgstr "Émeraude"
+msgstr "d'Émeraude"
 
 #: Source/itemdat.cpp:296
 msgid "Hyena's"
-msgstr "de Hyena"
+msgstr "de la Hyène"
 
 #: Source/itemdat.cpp:297
 msgid "Frog's"
@@ -2958,7 +2948,7 @@ msgstr "du Corbeau"
 
 #: Source/itemdat.cpp:300
 msgid "Snake's"
-msgstr "du Serpent"
+msgstr "du Lézard"
 
 #: Source/itemdat.cpp:301
 msgid "Serpent's"
@@ -2966,7 +2956,7 @@ msgstr "du Serpent"
 
 #: Source/itemdat.cpp:302
 msgid "Drake's"
-msgstr "de Drake"
+msgstr "de la Manticore"
 
 #: Source/itemdat.cpp:303
 msgid "Dragon's"
@@ -2974,11 +2964,11 @@ msgstr "du Dragon"
 
 #: Source/itemdat.cpp:304
 msgid "Wyrm's"
-msgstr "de Wyrm"
+msgstr "du Wyrm"
 
 #: Source/itemdat.cpp:305
 msgid "Hydra's"
-msgstr "de Hydra"
+msgstr "de l'Hydre"
 
 #: Source/itemdat.cpp:306
 msgid "Angel's"
@@ -2990,426 +2980,426 @@ msgstr "d'Arch-Ange"
 
 #: Source/itemdat.cpp:308
 msgid "Plentiful"
-msgstr "Abondant"
+msgstr "Prolifique"
 
 #: Source/itemdat.cpp:309
 msgid "Bountiful"
-msgstr "Prolifique"
+msgstr "Intarissable"
 
 #: Source/itemdat.cpp:310
 msgid "Flaming"
-msgstr "Flamboyant"
+msgstr "de Flamme"
 
 #: Source/itemdat.cpp:311
 msgid "Lightning"
-msgstr "Foudre"
+msgstr "de Foudre"
 
 #: Source/itemdat.cpp:312
 msgid "Jester's"
-msgstr "de Jester"
+msgstr "du Fou"
 
 #: Source/itemdat.cpp:313
 msgid "Crystalline"
-msgstr "Cristalline"
+msgstr "d'Outre-Terre"
 
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:315
 msgid "Doppelganger's"
-msgstr "de Doppelganger"
+msgstr "du Métamorphe"
 
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:325
 msgid "quality"
-msgstr "qualité"
+msgstr "de Qualité"
 
 #: Source/itemdat.cpp:326
 msgid "maiming"
-msgstr "mutilant"
+msgstr "de Blessure"
 
 #: Source/itemdat.cpp:327
 msgid "slaying"
-msgstr "occiseur"
+msgstr "d'Extermination"
 
 #: Source/itemdat.cpp:328
 msgid "gore"
-msgstr "gore"
+msgstr "de Tuerie"
 
 #: Source/itemdat.cpp:329
 msgid "carnage"
-msgstr "carnage"
+msgstr "de Carnage"
 
 #: Source/itemdat.cpp:330
 msgid "slaughter"
-msgstr "massacre"
+msgstr "de Massacre"
 
 #: Source/itemdat.cpp:331
 msgid "pain"
-msgstr "douleur"
+msgstr "de Douleur"
 
 #: Source/itemdat.cpp:332
 msgid "tears"
-msgstr "larmes"
+msgstr "de Larmes"
 
 #: Source/itemdat.cpp:333
 msgid "health"
-msgstr "santé"
+msgstr "de Santé"
 
 #: Source/itemdat.cpp:334
 msgid "protection"
-msgstr "protection"
+msgstr "de Protection"
 
 #: Source/itemdat.cpp:335
 msgid "absorption"
-msgstr "absorption"
+msgstr "d'Absorption"
 
 #: Source/itemdat.cpp:336
 msgid "deflection"
-msgstr "déviation"
+msgstr "de Déviation"
 
 #: Source/itemdat.cpp:337
 msgid "osmosis"
-msgstr "osmose"
+msgstr "d'Osmose"
 
 #: Source/itemdat.cpp:338
 msgid "frailty"
-msgstr "fragilité"
+msgstr "de Fragilité"
 
 #: Source/itemdat.cpp:339
 msgid "weakness"
-msgstr "faiblesse"
+msgstr "de Faiblesse"
 
 #: Source/itemdat.cpp:340
 msgid "strength"
-msgstr "force"
+msgstr "de Force"
 
 #: Source/itemdat.cpp:341
 msgid "might"
-msgstr "puissance"
+msgstr "de Puissance"
 
 #: Source/itemdat.cpp:342
 msgid "power"
-msgstr "pouvoir"
+msgstr "de Pouvoir"
 
 #: Source/itemdat.cpp:343
 msgid "giants"
-msgstr "géants"
+msgstr "de Géant"
 
 #: Source/itemdat.cpp:344
 msgid "titans"
-msgstr "titans"
+msgstr "de Titan"
 
 #: Source/itemdat.cpp:345
 msgid "paralysis"
-msgstr "paralysie"
+msgstr "de Paralysie"
 
 #: Source/itemdat.cpp:346
 msgid "atrophy"
-msgstr "atrophie"
+msgstr "d'Atrophie"
 
 #: Source/itemdat.cpp:347
 msgid "dexterity"
-msgstr "dextérité"
+msgstr "de Dextérité"
 
 #: Source/itemdat.cpp:348
 msgid "skill"
-msgstr "compétence"
+msgstr "d'Aptitude"
 
 #: Source/itemdat.cpp:349
 msgid "accuracy"
-msgstr "précision"
+msgstr "d'Exactitude"
 
 #: Source/itemdat.cpp:350
 msgid "precision"
-msgstr "precision"
+msgstr "de Précision"
 
 #: Source/itemdat.cpp:351
 msgid "perfection"
-msgstr "perfection"
+msgstr "de Perfection"
 
 #: Source/itemdat.cpp:352
 msgid "the fool"
-msgstr "l'idiot"
+msgstr "de l'Idiot"
 
 #: Source/itemdat.cpp:353
 msgid "dyslexia"
-msgstr "dyslexie"
+msgstr "de Dyslexie"
 
 #: Source/itemdat.cpp:354
 msgid "magic"
-msgstr "magie"
+msgstr "de Magie"
 
 #: Source/itemdat.cpp:355
 msgid "the mind"
-msgstr "l'esprit"
+msgstr "de l'Esprit"
 
 #: Source/itemdat.cpp:356
 msgid "brilliance"
-msgstr "éclat"
+msgstr "d'Intelligence"
 
 #: Source/itemdat.cpp:357
 msgid "sorcery"
-msgstr "sorcellerie"
+msgstr "de Sorcellerie"
 
 #: Source/itemdat.cpp:358
 msgid "wizardry"
-msgstr "sorcellerie"
+msgstr "d'Archimagie"
 
 #: Source/itemdat.cpp:359
 msgid "illness"
-msgstr "maladie"
+msgstr "de Maladie"
 
 #: Source/itemdat.cpp:360
 msgid "disease"
-msgstr "maladie"
+msgstr "de Nausée"
 
 #: Source/itemdat.cpp:361
 msgid "vitality"
-msgstr "vitalité"
+msgstr "de Vitalité"
 
 #: Source/itemdat.cpp:362
 msgid "zest"
-msgstr "zeste"
+msgstr "d'Entrain"
 
 #: Source/itemdat.cpp:363
 msgid "vim"
-msgstr "ardeur"
+msgstr "d'Ardeur"
 
 #: Source/itemdat.cpp:364
 msgid "vigor"
-msgstr "vigueur"
+msgstr "de Vigueur"
 
 #: Source/itemdat.cpp:365
 msgid "life"
-msgstr "vie"
+msgstr "de Vie"
 
 #: Source/itemdat.cpp:366
 msgid "trouble"
-msgstr "problème"
+msgstr "de Difficulté"
 
 #: Source/itemdat.cpp:367
 msgid "the pit"
-msgstr "la fosse"
+msgstr "de la Fosse"
 
 #: Source/itemdat.cpp:368
 msgid "the sky"
-msgstr "le ciel"
+msgstr "du Ciel"
 
 #: Source/itemdat.cpp:369
 msgid "the moon"
-msgstr "la lune"
+msgstr "de la Lune"
 
 #: Source/itemdat.cpp:370
 msgid "the stars"
-msgstr "les étoiles"
+msgstr "des Étoiles"
 
 #: Source/itemdat.cpp:371
 msgid "the heavens"
-msgstr "le paradis"
+msgstr "du Paradis"
 
 #: Source/itemdat.cpp:372
 msgid "the zodiac"
-msgstr "le zodiac"
+msgstr "du Zodiaque"
 
 #: Source/itemdat.cpp:373
 msgid "the vulture"
-msgstr "le vautour"
+msgstr "du Vautour"
 
 #: Source/itemdat.cpp:374
 msgid "the jackal"
-msgstr "le chacal"
+msgstr "du Chacal"
 
 #: Source/itemdat.cpp:375
 msgid "the fox"
-msgstr "le renard"
+msgstr "du Renard"
 
 #: Source/itemdat.cpp:376
 msgid "the jaguar"
-msgstr "le jaguar"
+msgstr "du Jaguar"
 
 #: Source/itemdat.cpp:377
 msgid "the eagle"
-msgstr "l'aigle"
+msgstr "de l'Aigle"
 
 #: Source/itemdat.cpp:378
 msgid "the wolf"
-msgstr "le loup"
+msgstr "du Loup"
 
 #: Source/itemdat.cpp:379
 msgid "the tiger"
-msgstr "le tigre"
+msgstr "du Tigre"
 
 #: Source/itemdat.cpp:380
 msgid "the lion"
-msgstr "le lion"
+msgstr "du Lion"
 
 #: Source/itemdat.cpp:381
 msgid "the mammoth"
-msgstr "le mammouth"
+msgstr "du Mammouth"
 
 #: Source/itemdat.cpp:382
 msgid "the whale"
-msgstr "la baleine"
+msgstr "de la Baleine"
 
 #: Source/itemdat.cpp:383
 msgid "fragility"
-msgstr "fragilité"
+msgstr "de Verre"
 
 #: Source/itemdat.cpp:384
 msgid "brittleness"
-msgstr "fragilité"
+msgstr "de Fragilité"
 
 #: Source/itemdat.cpp:385
 msgid "sturdiness"
-msgstr "solidité"
+msgstr "de Solidité"
 
 #: Source/itemdat.cpp:386
 msgid "craftsmanship"
-msgstr "artisanat"
+msgstr "d'Artisan"
 
 #: Source/itemdat.cpp:387
 msgid "structure"
-msgstr "structure"
+msgstr "de Maître"
 
 #: Source/itemdat.cpp:388
 msgid "the ages"
-msgstr "les âges"
+msgstr "des Âges"
 
 #: Source/itemdat.cpp:389
 msgid "the dark"
-msgstr "l'obscurité"
+msgstr "des Ténèbres"
 
 #: Source/itemdat.cpp:390
 msgid "the night"
-msgstr "la nuit"
+msgstr "de la Nuit"
 
 #: Source/itemdat.cpp:391
 msgid "light"
-msgstr "lumière"
+msgstr "de Lumière"
 
 #: Source/itemdat.cpp:392
 msgid "radiance"
-msgstr "éclat"
+msgstr "d'Éclat"
 
 #: Source/itemdat.cpp:393
 msgid "flame"
-msgstr "flamme"
+msgstr "de Flamme"
 
 #: Source/itemdat.cpp:394
 msgid "fire"
-msgstr "feu"
+msgstr "de Feu"
 
 #: Source/itemdat.cpp:395
 msgid "burning"
-msgstr "brûlant"
+msgstr "de Brûlure"
 
 #: Source/itemdat.cpp:396
 msgid "shock"
-msgstr "choc"
+msgstr "de Choc"
 
 #: Source/itemdat.cpp:397
 msgid "lightning"
-msgstr "foudre"
+msgstr "de Foudre"
 
 #: Source/itemdat.cpp:398
 msgid "thunder"
-msgstr "tonnerre"
+msgstr "du Tonnerre"
 
 #: Source/itemdat.cpp:399
 msgid "many"
-msgstr "plusieurs"
+msgstr "Durable"
 
 #: Source/itemdat.cpp:400
 msgid "plenty"
-msgstr "beaucoup"
+msgstr "Insatiable"
 
 #: Source/itemdat.cpp:401
 msgid "thorns"
-msgstr "épines"
+msgstr "d'Épines"
 
 #: Source/itemdat.cpp:402
 msgid "corruption"
-msgstr "corruption"
+msgstr "de Corruption"
 
 #: Source/itemdat.cpp:403
 msgid "thieves"
-msgstr "voleurs"
+msgstr "du Voleur"
 
 #: Source/itemdat.cpp:404
 msgid "the bear"
-msgstr "l'ours"
+msgstr "de l'Ours"
 
 #: Source/itemdat.cpp:405
 msgid "the bat"
-msgstr "la chauve-souris"
+msgstr "de la Chauve-Souris"
 
 #: Source/itemdat.cpp:406
 msgid "vampires"
-msgstr "vampies"
+msgstr "du Vampire"
 
 #: Source/itemdat.cpp:407
 msgid "the leech"
-msgstr "la sangsues"
+msgstr "de la Sangsue"
 
 #: Source/itemdat.cpp:408
 msgid "blood"
-msgstr "sang"
+msgstr "de Sang"
 
 #: Source/itemdat.cpp:409
 msgid "piercing"
-msgstr "perçant"
+msgstr "de Perçage"
 
 #: Source/itemdat.cpp:410
 msgid "puncturing"
-msgstr "perforant"
+msgstr "de Perforation"
 
 #: Source/itemdat.cpp:411
 msgid "bashing"
-msgstr "tranchant"
+msgstr "d'Empalement"
 
 #: Source/itemdat.cpp:412
 msgid "readiness"
-msgstr "préparation"
+msgstr "de Préparation"
 
 #: Source/itemdat.cpp:413
 msgid "swiftness"
-msgstr "rapidité"
+msgstr "de Rapidité"
 
 #: Source/itemdat.cpp:414
 msgid "speed"
-msgstr "vitesse"
+msgstr "de Vitesse"
 
 #: Source/itemdat.cpp:415
 msgid "haste"
-msgstr "hâte"
+msgstr "de Hâte"
 
 #: Source/itemdat.cpp:416
 msgid "balance"
-msgstr "équilibre"
+msgstr "d'Équilibre"
 
 #: Source/itemdat.cpp:417
 msgid "stability"
-msgstr "stabilité"
+msgstr "de Stabilité"
 
 #: Source/itemdat.cpp:418
 msgid "harmony"
-msgstr "harmonie"
+msgstr "d'Harmonie"
 
 #: Source/itemdat.cpp:419
 msgid "blocking"
-msgstr "blocage"
+msgstr "de Blocage"
 
 #: Source/itemdat.cpp:420
 msgid "devastation"
-msgstr "dévastation"
+msgstr "de Dévastation"
 
 #: Source/itemdat.cpp:421
 msgid "decay"
-msgstr "pourriture"
+msgstr "de Flétrissure"
 
 #. TRANSLATORS: Item suffix section end.
 #: Source/itemdat.cpp:423
 msgid "peril"
-msgstr "péril"
+msgstr "de Péril"
 
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:433
@@ -3849,28 +3839,28 @@ msgstr "Huile d'Imperméabilité"
 #: Source/items.cpp:1134
 msgctxt "spell"
 msgid "{0} of {1}"
-msgstr "{0} de {1}"
+msgstr "{0} - {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
 #: Source/items.cpp:1142
 msgctxt "spell"
 msgid "{0} {1} of {2}"
-msgstr "{0} {1} de {2}"
+msgstr "{1} {0} - {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1160
 msgid "{0} {1} of {2}"
-msgstr "{0} {1} de {2}"
+msgstr "{1} {0} {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
 #: Source/items.cpp:1163
 msgid "{0} {1}"
-msgstr "{0} {1}"
+msgstr "{1} {0}"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
 #: Source/items.cpp:1166
 msgid "{0} of {1}"
-msgstr "{0} de {1}"
+msgstr "{0} {1}"
 
 #: Source/items.cpp:1701 Source/items.cpp:1709
 msgid "increases a weapon's"
@@ -4093,16 +4083,16 @@ msgstr "Oreille de {:s}"
 
 #: Source/items.cpp:3546
 msgid "chance to hit: {:+d}%"
-msgstr "chance de toucher: {:+d} %"
+msgstr "toucher: {:+d}%"
 
 #: Source/items.cpp:3549
 #, no-c-format
 msgid "{:+d}% damage"
-msgstr "{:+d}% dégats"
+msgstr "{:+d}% dégâts"
 
 #: Source/items.cpp:3552 Source/items.cpp:3750
 msgid "to hit: {:+d}%, {:+d}% damage"
-msgstr "toucher: {:+d}%, {:+d}% dégats"
+msgstr "toucher: {:+d}%, {:+d}% dégâts"
 
 #: Source/items.cpp:3555
 #, no-c-format
@@ -4148,14 +4138,14 @@ msgstr "Résistance à tout: {:+d}% MAX"
 #: Source/items.cpp:3585
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] "les sorts sont augmentés de {:d} niveau"
-msgstr[1] "les sorts sont augmentés de {:d} niveaux"
+msgstr[0] "sorts augmentés de {:d} niveau"
+msgstr[1] "sorts augmentés de {:d} niveaux"
 
 #: Source/items.cpp:3587
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
-msgstr[0] "les sorts sont réduits de {:d} niveau"
-msgstr[1] "les sorts sont réduits de {:d} niveaux"
+msgstr[0] "sorts diminués de {:d} niveau"
+msgstr[1] "sorts diminués de {:d} niveaux"
 
 #: Source/items.cpp:3589
 msgid "spell levels unchanged (?)"
@@ -4213,7 +4203,7 @@ msgstr "{:+d} dégâts des ennemis"
 
 #: Source/items.cpp:3624
 msgid "Hit Points: {:+d}"
-msgstr "Points de vie:{:+d}"
+msgstr "Points de vie: {:+d}"
 
 #: Source/items.cpp:3627
 msgid "Mana: {:+d}"
@@ -4279,11 +4269,11 @@ msgstr "l'utilisateur perd tout son mana"
 
 #: Source/items.cpp:3660
 msgid "you can't heal"
-msgstr "vous ne pouvez pas vous guérir"
+msgstr "vous ne pouvez pas guérir"
 
 #: Source/items.cpp:3662
 msgid "absorbs half of trap damage"
-msgstr "absorbe la moitié des dégâts de piège"
+msgstr "-50% des dégâts de piège"
 
 #: Source/items.cpp:3664
 msgid "knocks target back"
@@ -4348,15 +4338,15 @@ msgstr "Une autre Capacité (NW)"
 
 #: Source/items.cpp:3697
 msgid "fast hit recovery"
-msgstr "récupération rapide des coups"
+msgstr "récup rapide après coups"
 
 #: Source/items.cpp:3699
 msgid "faster hit recovery"
-msgstr "récupération plus rapide des coups"
+msgstr "récup plus rapide après coups"
 
 #: Source/items.cpp:3701
 msgid "fastest hit recovery"
-msgstr "récupération la plus rapide des coups"
+msgstr "récup la plus rapide après coups"
 
 #: Source/items.cpp:3704
 msgid "fast block"
@@ -4365,8 +4355,8 @@ msgstr "blocage rapide"
 #: Source/items.cpp:3706
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] "ajoute {:d} point aux dégâts"
-msgstr[1] "ajoute {:d} points aux dégâts"
+msgstr[0] "+{:d} dégâts"
+msgstr[1] "+{:d} dégâts"
 
 #: Source/items.cpp:3708
 msgid "fires random speed arrows"
@@ -4374,7 +4364,7 @@ msgstr "tire des flèches de vitesse aléatoires"
 
 #: Source/items.cpp:3710
 msgid "unusual item damage"
-msgstr "dommages inhabituels aux objets"
+msgstr "dégâts inhabituels"
 
 #: Source/items.cpp:3712
 msgid "altered durability"
@@ -4390,7 +4380,7 @@ msgstr "épée à une main"
 
 #: Source/items.cpp:3718
 msgid "constantly lose hit points"
-msgstr "perdre constamment des points de vie"
+msgstr "perds constamment des points de vie"
 
 #: Source/items.cpp:3720
 msgid "life stealing"
@@ -4418,7 +4408,7 @@ msgstr "éclair chargé à l'impact"
 
 #: Source/items.cpp:3740
 msgid "occasional triple damage"
-msgstr "triple dommage occasionnel"
+msgstr "chance de tripler les dégâts"
 
 #: Source/items.cpp:3742
 #, no-c-format
@@ -4432,7 +4422,7 @@ msgstr "2x dgt au monstre, 1x à vous"
 #: Source/items.cpp:3746
 #, no-c-format
 msgid "Random 0 - 500% damage"
-msgstr "Dégâts 0-500% aléatoire"
+msgstr "Dégâts aléatoire entre 0-500%"
 
 #: Source/items.cpp:3748
 #, no-c-format
@@ -4441,7 +4431,7 @@ msgstr "faible dur, {:+d}% de dégât"
 
 #: Source/items.cpp:3752
 msgid "extra AC vs demons"
-msgstr "extra CA vs démons"
+msgstr "extra CA vs Démons"
 
 #: Source/items.cpp:3754
 msgid "extra AC vs undead"
@@ -4630,7 +4620,7 @@ msgstr "Seigneur Invisible"
 #: Source/monstdat.cpp:49
 msgctxt "monster"
 msgid "Hidden"
-msgstr "Hidden"
+msgstr "Caché"
 
 #: Source/monstdat.cpp:50
 msgctxt "monster"
@@ -4655,12 +4645,12 @@ msgstr "Seigneur Satyre"
 #: Source/monstdat.cpp:54 Source/monstdat.cpp:62
 msgctxt "monster"
 msgid "Flesh Clan"
-msgstr "Clan de la Chaire"
+msgstr "Clan de la Chair"
 
 #: Source/monstdat.cpp:55 Source/monstdat.cpp:63
 msgctxt "monster"
 msgid "Stone Clan"
-msgstr "Clan de Pierre"
+msgstr "Clan de la Pierre"
 
 #: Source/monstdat.cpp:56 Source/monstdat.cpp:64
 msgctxt "monster"
@@ -4695,7 +4685,7 @@ msgstr "Familier"
 #: Source/monstdat.cpp:66
 msgctxt "monster"
 msgid "Acid Beast"
-msgstr "Bête acide"
+msgstr "Bête Acide"
 
 #: Source/monstdat.cpp:67
 msgctxt "monster"
@@ -4705,7 +4695,7 @@ msgstr "Cracheur de Poison"
 #: Source/monstdat.cpp:68
 msgctxt "monster"
 msgid "Pit Beast"
-msgstr "Bête de fosse"
+msgstr "Bête des Fosses"
 
 #: Source/monstdat.cpp:69
 msgctxt "monster"
@@ -4805,22 +4795,22 @@ msgstr "Seigneur d'Obsidienne"
 #: Source/monstdat.cpp:88
 msgctxt "monster"
 msgid "oldboned"
-msgstr "vieux-os"
+msgstr "Vieux Os"
 
 #: Source/monstdat.cpp:89
 msgctxt "monster"
 msgid "Red Death"
-msgstr "Red Death"
+msgstr "Mort Rouge"
 
 #: Source/monstdat.cpp:90
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr "Démon Litch"
+msgstr "Démon Liche"
 
 #: Source/monstdat.cpp:91
 msgctxt "monster"
 msgid "Undead Balrog"
-msgstr "Balrog Mort-vivant"
+msgstr "Balrog Mort-Vivant"
 
 #: Source/monstdat.cpp:92
 msgctxt "monster"
@@ -4850,12 +4840,12 @@ msgstr "Orage Rouge"
 #: Source/monstdat.cpp:97
 msgctxt "monster"
 msgid "Storm Rider"
-msgstr "Cavalier de Tempête"
+msgstr "Cavalier des Tempêtes"
 
 #: Source/monstdat.cpp:98
 msgctxt "monster"
 msgid "Storm Lord"
-msgstr "Seigneur de Tempête"
+msgstr "Seigneur des Tempêtes"
 
 #: Source/monstdat.cpp:99
 msgctxt "monster"
@@ -4925,7 +4915,7 @@ msgstr "Vipère d'Or"
 #: Source/monstdat.cpp:112
 msgctxt "monster"
 msgid "Azure Drake"
-msgstr "Drake Azure"
+msgstr "Drake d'Azur"
 
 #: Source/monstdat.cpp:113
 msgctxt "monster"
@@ -5020,7 +5010,7 @@ msgstr "Le Seigneur des Ténèbres"
 #: Source/monstdat.cpp:131
 msgctxt "monster"
 msgid "The Arch-Litch Malignus"
-msgstr "L'Arche-Liche Malignus"
+msgstr "L'Archi-Liche Malignus"
 
 #: Source/monstdat.cpp:132
 msgctxt "monster"
@@ -5030,7 +5020,7 @@ msgstr "Sanglier Infernal"
 #: Source/monstdat.cpp:133
 msgctxt "monster"
 msgid "Stinger"
-msgstr "Dard"
+msgstr "Piqueur"
 
 #: Source/monstdat.cpp:134
 msgctxt "monster"
@@ -5130,7 +5120,7 @@ msgstr "Démon Osseux"
 #: Source/monstdat.cpp:153
 msgctxt "monster"
 msgid "Arch Lich"
-msgstr "Arche-Liche"
+msgstr "Archi-Liche"
 
 #: Source/monstdat.cpp:154
 msgctxt "monster"
@@ -5193,7 +5183,7 @@ msgstr "Lachdanan"
 #: Source/monstdat.cpp:481
 msgctxt "monster"
 msgid "Warlord of Blood"
-msgstr "Seigneur de Guerre de Sang"
+msgstr "Seigneur de Guerre du Sang"
 
 #: Source/monstdat.cpp:484
 msgctxt "monster"
@@ -5761,7 +5751,7 @@ msgstr "Magique"
 
 #: Source/objects.cpp:111
 msgid "Stone"
-msgstr "Pierre"
+msgstr "de Pierre"
 
 #: Source/objects.cpp:112
 msgid "Religious"
@@ -5801,7 +5791,7 @@ msgstr "Sacré"
 
 #: Source/objects.cpp:123
 msgid "Spiritual"
-msgstr "Spirituelle"
+msgstr "Spirituel"
 
 #: Source/objects.cpp:124
 msgid "Spooky"
@@ -5845,7 +5835,7 @@ msgstr "Brillant"
 
 #: Source/objects.cpp:134
 msgid "Mendicant's"
-msgstr "De Mendiant"
+msgstr "de Mendiant"
 
 #: Source/objects.cpp:135
 msgid "Sparkling"
@@ -5862,7 +5852,7 @@ msgstr "Solaire"
 #. TRANSLATORS: Shrine Name Block end
 #: Source/objects.cpp:140
 msgid "Murphy's"
-msgstr "De Murphy"
+msgstr "de Murphy"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:270
@@ -6019,7 +6009,7 @@ msgstr "Baril"
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5457
 msgid "{:s} Shrine"
-msgstr "{:s} Sanctuaire"
+msgstr "Sanctuaire {:s}"
 
 #: Source/objects.cpp:5460
 msgid "Skeleton Tome"
@@ -6047,7 +6037,7 @@ msgstr "Livre de Sang"
 
 #: Source/objects.cpp:5478
 msgid "Purifying Spring"
-msgstr "Printemps Purifiant"
+msgstr "Bassin Purifiant"
 
 #: Source/objects.cpp:5485 Source/objects.cpp:5509
 msgid "Weapon Rack"
@@ -6533,7 +6523,7 @@ msgstr "Ramassage auto en ville"
 
 #: Source/options.cpp:826
 msgid "Automatically pickup items in town."
-msgstr "Récupérer automatiquement les items en villes."
+msgstr "Récupérer automatiquement les objets en villes."
 
 #: Source/options.cpp:827
 msgid "Adria Refills Mana"
@@ -6755,7 +6745,7 @@ msgstr "Expérience"
 
 #: Source/panels/charpanel.cpp:134
 msgid "Next level"
-msgstr "Prochain niveau"
+msgstr "Prochain Niveau"
 
 #: Source/panels/charpanel.cpp:142
 msgid "Base"
@@ -6791,11 +6781,11 @@ msgstr "Classe d'armure"
 
 #: Source/panels/charpanel.cpp:170
 msgid "To hit"
-msgstr "Chances de toucher"
+msgstr "Toucher"
 
 #: Source/panels/charpanel.cpp:172
 msgid "Damage"
-msgstr "Dommage"
+msgstr "Dégâts"
 
 #: Source/panels/charpanel.cpp:179
 msgid "Life"
@@ -6807,15 +6797,15 @@ msgstr "Mana"
 
 #: Source/panels/charpanel.cpp:188
 msgid "Resist magic"
-msgstr "Résistance à la Magie"
+msgstr "Résistance Magie"
 
 #: Source/panels/charpanel.cpp:190
 msgid "Resist fire"
-msgstr "Résistance au Feu"
+msgstr "Résistance Feu"
 
 #: Source/panels/charpanel.cpp:192
 msgid "Resist lightning"
-msgstr "Résistance à la Foudre"
+msgstr "Résistance Foudre"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
@@ -6884,7 +6874,7 @@ msgstr "Dégâts: {:d}-{:d}"
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
-msgstr "Dom: 1/3 cible pv"
+msgstr "Dég: 1/3 PV cible"
 
 #. TRANSLATORS: UI constrains, keep short please.
 #: Source/panels/spell_book.cpp:182
@@ -6898,7 +6888,7 @@ msgstr "Sort"
 
 #: Source/panels/spell_list.cpp:172
 msgid "Damages undead only"
-msgstr "Dommages aux morts-vivants uniquement"
+msgstr "Morts-Vivants uniquement"
 
 #: Source/panels/spell_list.cpp:183
 msgid "Scroll"
@@ -6945,11 +6935,8 @@ msgid "{:d} gold"
 msgstr "{:d} or"
 
 #: Source/qol/stash.cpp:586
-#, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
-#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "Vous avez {:d} pièce d'or. Combien voulez-vous en supprimer ?"
+msgstr "Combien de pièces d'or voulez-vous retirer ?"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
@@ -6966,7 +6953,7 @@ msgstr "Expérience: {:s}"
 
 #: Source/qol/xpbar.cpp:153
 msgid "Maximum Level"
-msgstr "Level Maximum"
+msgstr "Niveau Maximum"
 
 #: Source/qol/xpbar.cpp:161
 msgid "Next Level: {:s}"
@@ -6979,7 +6966,7 @@ msgstr "{:s} vers le Niveau: {:d}"
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:44
 msgid "The Magic Rock"
-msgstr "Pierre Magique"
+msgstr "La Roche Céleste"
 
 #: Source/quests.cpp:46
 msgid "Gharbad The Weak"
@@ -6999,11 +6986,11 @@ msgstr "Le Boucher"
 
 #: Source/quests.cpp:51
 msgid "Ogden's Sign"
-msgstr "Panneau d'Ogden"
+msgstr "Pancarte d'Ogden"
 
 #: Source/quests.cpp:52
 msgid "Halls of the Blind"
-msgstr "Halles des Aveugles"
+msgstr "Hall des Aveugles"
 
 #: Source/quests.cpp:53
 msgid "Valor"
@@ -7011,7 +6998,7 @@ msgstr "Valeur"
 
 #: Source/quests.cpp:55
 msgid "Warlord of Blood"
-msgstr "Seigneur de Guerre de Sang"
+msgstr "Seigneur de Guerre du Sang"
 
 #: Source/quests.cpp:56
 msgid "The Curse of King Leoric"
@@ -7024,7 +7011,7 @@ msgstr "Réserve d'Eau Empoisonnée"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:58 Source/quests.cpp:94
 msgid "The Chamber of Bone"
-msgstr "La Chambre d'Os"
+msgstr "La Chambre des Ossements"
 
 #: Source/quests.cpp:59
 msgid "Archbishop Lazarus"
@@ -7044,7 +7031,7 @@ msgstr "Petite Fille"
 
 #: Source/quests.cpp:63
 msgid "Wandering Trader"
-msgstr "Marchand errant"
+msgstr "Marchand Errant"
 
 #: Source/quests.cpp:64
 msgid "The Defiler"
@@ -7086,7 +7073,7 @@ msgstr "L'Autel impie"
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
 #: Source/quests.cpp:451
 msgid "To {:s}"
-msgstr "De {:s}"
+msgstr "Vers {:s}"
 
 #: Source/setmaps.cpp:24
 msgid "Skeleton King's Lair"
@@ -7094,7 +7081,7 @@ msgstr "L'Antre du Roi Squelette"
 
 #: Source/setmaps.cpp:25
 msgid "Chamber of Bone"
-msgstr "Chambre d'Os"
+msgstr "Chambre des Ossements"
 
 #: Source/setmaps.cpp:28
 msgid "Archbishop Lazarus' Lair"
@@ -7103,7 +7090,7 @@ msgstr "L'Antre de l’Archevêque Lazarus"
 #: Source/spelldat.cpp:16
 msgctxt "spell"
 msgid "Firebolt"
-msgstr "Feu"
+msgstr "Trait de Feu"
 
 #: Source/spelldat.cpp:17
 msgctxt "spell"
@@ -7123,7 +7110,7 @@ msgstr "Flash"
 #: Source/spelldat.cpp:20
 msgctxt "spell"
 msgid "Identify"
-msgstr "Identifier un objet"
+msgstr "Identifier"
 
 #: Source/spelldat.cpp:21
 msgctxt "spell"
@@ -7133,7 +7120,7 @@ msgstr "Mur de Feu"
 #: Source/spelldat.cpp:22
 msgctxt "spell"
 msgid "Town Portal"
-msgstr "Portail vers la ville"
+msgstr "Portail de Ville"
 
 #: Source/spelldat.cpp:23
 msgctxt "spell"
@@ -7168,7 +7155,7 @@ msgstr "Gardien"
 #: Source/spelldat.cpp:29
 msgctxt "spell"
 msgid "Chain Lightning"
-msgstr "Chaîne d'éclair"
+msgstr "Chaîne d'Éclair"
 
 #: Source/spelldat.cpp:30
 msgctxt "spell"
@@ -7178,7 +7165,7 @@ msgstr "Vague de Flammes"
 #: Source/spelldat.cpp:31
 msgctxt "spell"
 msgid "Doom Serpents"
-msgstr "Serpents de la Fatalité"
+msgstr "Serpents Mortels"
 
 #: Source/spelldat.cpp:32
 msgctxt "spell"
@@ -7198,7 +7185,7 @@ msgstr "Invisibilité"
 #: Source/spelldat.cpp:35
 msgctxt "spell"
 msgid "Inferno"
-msgstr "Enfer"
+msgstr "Inferno"
 
 #: Source/spelldat.cpp:36
 msgctxt "spell"
@@ -7223,12 +7210,12 @@ msgstr "Apocalypse"
 #: Source/spelldat.cpp:40
 msgctxt "spell"
 msgid "Etherealize"
-msgstr "Éthéré"
+msgstr "Éthéréaliser"
 
 #: Source/spelldat.cpp:41
 msgctxt "spell"
 msgid "Item Repair"
-msgstr "Répare les objets"
+msgstr "Répare les Objets"
 
 #: Source/spelldat.cpp:42
 msgctxt "spell"
@@ -7253,7 +7240,7 @@ msgstr "Éclair Chargé"
 #: Source/spelldat.cpp:46
 msgctxt "spell"
 msgid "Holy Bolt"
-msgstr "Feu Sacré"
+msgstr "Trait Sacré"
 
 #: Source/spelldat.cpp:47
 msgctxt "spell"
@@ -7278,7 +7265,7 @@ msgstr "Étoile de Sang"
 #: Source/spelldat.cpp:51
 msgctxt "spell"
 msgid "Bone Spirit"
-msgstr "Esprit des Os"
+msgstr "Esprit d'Os"
 
 #: Source/spelldat.cpp:52
 msgctxt "spell"
@@ -7293,7 +7280,7 @@ msgstr "le Mage"
 #: Source/spelldat.cpp:54
 msgctxt "spell"
 msgid "the Jester"
-msgstr "le Bouffon"
+msgstr "le Fou"
 
 #: Source/spelldat.cpp:55
 msgctxt "spell"
@@ -7308,7 +7295,7 @@ msgstr "Immolation"
 #: Source/spelldat.cpp:57
 msgctxt "spell"
 msgid "Warp"
-msgstr "Chaîne"
+msgstr "Déplacement"
 
 #: Source/spelldat.cpp:58
 msgctxt "spell"
@@ -7393,7 +7380,7 @@ msgstr "Retour"
 
 #: Source/stores.cpp:246 Source/stores.cpp:252
 msgid ",  "
-msgstr ", "
+msgstr ",  "
 
 #: Source/stores.cpp:263
 msgid "Damage: {:d}-{:d}  "
@@ -7484,7 +7471,7 @@ msgstr "Vous n'avez rien à réparer."
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637
 msgid "Repair which item?"
-msgstr "Réparer quel article?"
+msgstr "Réparer quel objet?"
 
 #: Source/stores.cpp:664
 msgid "Witch's shack"
@@ -7496,7 +7483,7 @@ msgstr "Parler à Adria"
 
 #: Source/stores.cpp:667 Source/stores.cpp:1063
 msgid "Buy items"
-msgstr "Acheter des articles"
+msgstr "Acheter des objets"
 
 #: Source/stores.cpp:669
 msgid "Recharge staves"
@@ -7514,7 +7501,7 @@ msgstr "Vous n'avez rien à recharger."
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:902
 msgid "Recharge which item?"
-msgstr "Recharger quel article?"
+msgstr "Recharger quel objet?"
 
 #: Source/stores.cpp:914
 msgid "You do not have enough gold"
@@ -7530,23 +7517,23 @@ msgstr "Avons-nous un accord?"
 
 #: Source/stores.cpp:964
 msgid "Are you sure you want to identify this item?"
-msgstr "Êtes-vous sûr de vouloir identifier cet élément?"
+msgstr "Êtes-vous sûr de vouloir identifier cet objet?"
 
 #: Source/stores.cpp:970
 msgid "Are you sure you want to buy this item?"
-msgstr "Êtes-vous sûr de vouloir acheter cet article?"
+msgstr "Êtes-vous sûr de vouloir acheter cet objet?"
 
 #: Source/stores.cpp:973
 msgid "Are you sure you want to recharge this item?"
-msgstr "Voulez-vous vraiment recharger cet article?"
+msgstr "Voulez-vous vraiment recharger cet objet?"
 
 #: Source/stores.cpp:977
 msgid "Are you sure you want to sell this item?"
-msgstr "Êtes-vous sûr de vouloir vendre cet article?"
+msgstr "Êtes-vous sûr de vouloir vendre cet objet?"
 
 #: Source/stores.cpp:980
 msgid "Are you sure you want to repair this item?"
-msgstr "Êtes-vous sûr de vouloir réparer cet article?"
+msgstr "Êtes-vous sûr de vouloir réparer cet objet?"
 
 #: Source/stores.cpp:994 Source/towners.cpp:150
 msgid "Wirt the Peg-legged boy"
@@ -7618,7 +7605,7 @@ msgstr "Vous n'avez rien à identifier."
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
 msgid "Identify which item?"
-msgstr "Identifier quel article?"
+msgstr "Identifier quel objet?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"
@@ -7862,9 +7849,9 @@ msgstr ""
 "Je vois que ce comportement étrange vous intrigue également. Je suppose que "
 "puisque de nombreux démons craignent la lumière du soleil et croient qu'il "
 "détient un grand pouvoir, il se peut que le soleil levant représenté sur la "
-"pancarte dont vous parlez les ait amenés à croire qu'il détient aussi des "
+"pancarte dont vous parlez les ait amenés à croire qu'elle détient aussi des "
 "pouvoirs arcaniques. Hum, peut-être qu'ils ne sont pas tous aussi "
-"intelligents qu'on le craignait..."
+"intelligents qu'on le craignait…"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -7880,14 +7867,13 @@ msgid ""
 msgstr ""
 "Maître, j'ai une étrange expérience à raconter. Je sais que vous avez une "
 "grande connaissance de ces monstruosités qui habitent le labyrinthe, et "
-"c'est quelque chose que je ne peux pas comprendre pour la vie même de moi... "
-"J'ai été réveillé pendant la nuit par un bruit de grattement juste à "
-"l'extérieur de ma taverne. Quand j'ai regardé de ma chambre, j'ai vu les "
-"formes de petites créatures ressemblant à des démons dans la cour de "
-"l'auberge. Peu de temps après, ils se sont enfuis, mais pas avant d'avoir "
-"volé la pancarte de mon auberge. Je ne sais pas pourquoi les démons "
-"voleraient ma pancarte mais laisseraient ma famille en paix... c'est "
-"étrange, non ?"
+"c'est quelque chose que je ne peux pas comprendre moi-même… J'ai été "
+"réveillé pendant la nuit par un bruit de grattement juste à l'extérieur de "
+"ma taverne. Quand j'ai regardé depuis ma chambre, j'ai vu les formes de "
+"petites créatures ressemblant à des démons dans la cour de l'auberge. Peu de "
+"temps après, ils se sont enfuis, mais pas avant d'avoir volé la pancarte de "
+"mon auberge. Je ne sais pas pourquoi les démons voleraient ma pancarte mais "
+"laisseraient ma famille en paix… c'est étrange, non ?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
@@ -7899,11 +7885,11 @@ msgid ""
 "ago. Perhaps it may be of some value to you."
 msgstr ""
 "Oh, vous n'aviez pas à rapporter ma pancarte, mais je suppose que cela "
-"m'épargne la dépense d'en faire une autre. Eh bien, laissez-moi voir, qu'est-"
-"ce que je pourrais vous donner en récompense de l'avoir retrouvé ? Hmmm, "
-"qu'avons-nous ici... ah, oui ! Cette casquette a été laissée dans l'une des "
-"chambres par un magicien qui y a séjourné il y a quelque temps. Peut-être "
-"que cela peut vous être utile."
+"m'épargne la dépense d'en faire une nouvelle. Eh bien, laissez-moi voir, "
+"qu'est-ce que je pourrais vous donner en récompense de l'avoir retrouvé ? "
+"Hmmm, qu'avons-nous ici… ah, oui ! Cette casquette a été laissée dans l'une "
+"des chambres par un magicien qui y a séjourné il y a quelque temps. Peut-"
+"être que cela peut vous être utile."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -7977,8 +7963,8 @@ msgstr ""
 "Quoi - est-ce qu'il dit que j'ai pris ça? Je suppose que Griswold est de son "
 "côté aussi.\n"
 " \n"
-"Écoutez, j'ai le simple vol de pancartes il y a des mois. Vous ne pouvez pas "
-"faire de profit sur un morceau de bois."
+"Écoutez, j'ai arrêté le vol de pancartes il y a des mois. Vous ne faite pas "
+"assez de profit sur un morceau de bois."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:55
@@ -8321,13 +8307,13 @@ msgid ""
 "the attempt to steal that treasure would be forever bound to defend it. A "
 "twisted, but strangely fitting, end?"
 msgstr ""
-"Un livre qui parle d'une chambre d'ossements humains ? Eh bien, une Chambre "
-"d'Os est mentionnée dans certains écrits archaïques que j'ai étudiés dans "
-"les bibliothèques de l'Orient. Ces tomes en laissaient penser que lorsque "
-"les seigneurs des enfers voulaient protéger de grands trésors, ils créaient "
-"des domaines où ceux qui mourraient en tentant de voler ce trésor seraient à "
-"jamais tenus de le défendre. Une fin tordue, mais étrangement appropriée "
-"non ?"
+"Un livre qui parle d'une chambre d'ossements humains ? Eh bien, une chambre "
+"d'ossements est mentionnée dans certains écrits archaïques que j'ai étudiés "
+"dans les bibliothèques de l'Orient. Ces tomes en laissaient penser que "
+"lorsque les seigneurs des enfers voulaient protéger de grands trésors, ils "
+"créaient des domaines où ceux qui mourraient en tentant de voler ce trésor "
+"seraient à jamais tenus de le défendre. Une fin tordue, mais étrangement "
+"appropriée non ?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
@@ -8390,7 +8376,7 @@ msgstr ""
 "Vous deviendrez un serviteur éternel des seigneurs des ténèbres si vous "
 "périssez dans ce domaine maudit.\n"
 " \n"
-"Entrez dans la Chambre d'Os à vos risques et périls."
+"Entrez dans la Chambre des Ossements à vos risques et périls."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -8542,10 +8528,10 @@ msgstr ""
 "Vous récitez une comptine intéressante écrite dans un style qui me rappelle "
 "d'autres œuvres. Laissez-moi réfléchir maintenant - qu'est-ce que c'était ?\n"
 " \n"
-"... Les ténèbres enveloppent le Caché. Des yeux brillants invisibles avec "
-"seulement le son de griffes de rasoir grattant brièvement pour tourmenter "
-"ces pauvres âmes qui ont été rendues aveugles pour l'éternité. La prison "
-"pour ces damnés s'appelle les Salles des Aveugles..."
+"…Les ténèbres enveloppent le Caché. Des yeux brillants invisibles avec "
+"seulement le son de griffes acérées grattant brièvement pour tourmenter ces "
+"pauvres âmes qui ont été rendues aveugles pour l'éternité. La prison pour "
+"ces damnés s'appelle le Hall des Aveugles…"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -9069,7 +9055,7 @@ msgstr ""
 "décrivez. Son histoire se trouve dans les anciennes chroniques de la Guerre "
 "du Péché...\n"
 " \n"
-"Taché par mille ans de guerre, de sang et de mort, le Seigneur de Guerre de "
+"Taché par mille ans de guerre, de sang et de mort, le Seigneur de Guerre du "
 "Sang se dresse sur une montagne de victimes en lambeaux. Sa lame sombre crie "
 "une malédiction noire aux vivants ; une invitation torturée à tous ceux qui "
 "se présenteraient devant cet Exécuteur de l'Enfer.\n"
@@ -9113,7 +9099,7 @@ msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
 msgstr ""
-"Des légendes sombres et terribles entourent l'unique Seigneur de Guerre de "
+"Des légendes sombres et terribles entourent l'unique Seigneur de Guerre du "
 "Sang. Soyez bien préparé, mon ami, car il ne montre ni pitié ni quartier."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
@@ -9166,11 +9152,12 @@ msgid ""
 "man could possess. I do not know what secrets it holds, my friend, but "
 "finding this stone would certainly prove most valuable."
 msgstr ""
-"Griswold parle de la Pierre Céleste qui était destinée à l'enclave située à "
+"Griswold parle de la Roche Céleste qui était destinée à l'enclave située à "
 "l'est. Elle y était emmené pour une étude plus approfondie. Cette pierre "
 "brillait d'une énergie qui accordait en quelque sorte une vision plus grande "
 "qu'un homme normal ne pouvait posséder. Je ne sais pas quels secrets elle "
-"recèle, mon ami, mais trouver cette pierre serait certainement très précieux."
+"recèle, mon ami, mais trouver cette pierre serait certainement très "
+"intéressant."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -9183,7 +9170,7 @@ msgstr ""
 "La caravane s'est arrêtée ici pour prendre des provisions pour leur voyage "
 "vers l'est. Je leur ai vendu toute une gamme de fruits frais et d'excellents "
 "ris de veau que Garda venait de finir de cuire. Dommage ce qui leur est "
-"arrivé..."
+"arrivé…"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:235
@@ -9192,7 +9179,7 @@ msgid ""
 "I will say this. If rocks are falling from the sky, you had better be "
 "careful!"
 msgstr ""
-"Je ne sais pas ce qu'ils pensaient pouvoir voir avec cette pierre, mais je "
+"Je ne sais pas ce qu'ils pensaient pouvoir voir avec cette roche, mais je "
 "dirai ceci. Si des rochers tombent du ciel, vous feriez mieux de faire "
 "attention !"
 
@@ -9226,11 +9213,11 @@ msgid ""
 msgstr ""
 "Restez un instant - j'ai une histoire que vous pourriez trouver "
 "intéressante. Une caravane à destination des royaumes de l'Est est passée "
-"par ici il y a quelque temps. Elle transportait soi-disant un morceau du "
-"ciel qui était tombé sur terre ! La caravane a été prise en embuscade par "
-"des cavaliers masqués juste au nord d'ici le long de la chaussée. J'ai "
-"cherché dans l'épave ce rocher céleste, mais il était introuvable. Si vous "
-"le trouvez, je crois que je peux en faire quelque chose d'utile."
+"par ici il y a quelque temps. Elle transportait soi-disant une roche céleste "
+"qui était tombé sur terre ! La caravane a été prise en embuscade par des "
+"cavaliers masqués juste au nord d'ici le long de la chaussée. J'ai cherché "
+"dans l'épave cette roche céleste, mais elle était introuvable. Si vous la "
+"trouvez, je crois que je peux en faire quelque chose d'utile."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:241
@@ -9238,8 +9225,8 @@ msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it."
 msgstr ""
-"J'attends toujours que vous m'apportiez cette pierre venue du ciel. Je sais "
-"que je peux en faire quelque chose de puissant."
+"J'attends toujours que vous m'apportiez cette roche céleste. Je sais que je "
+"peux en faire quelque chose de puissant."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold(Quest End)
 #: Source/textdat.cpp:243
@@ -9252,7 +9239,7 @@ msgstr ""
 "Laisse-moi voir ça - oui... oui, c'est ce que je pensais. Accordez moi un "
 "instant...\n"
 " \n"
-"Ah, voilà. J'ai disposé des morceaux de la pierre dans une bague en argent "
+"Ah, voilà. J'ai disposé des morceaux de la roche dans une bague en argent "
 "que mon père m'a laissée. J'espère qu'elle vous servira bien."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
@@ -9262,9 +9249,9 @@ msgid ""
 "green and red and silver. Don't remember what happened to it, though. I "
 "really miss that ring..."
 msgstr ""
-"J'avais une belle bague; elle était vraiment cher, avec du bleu et du vert "
+"J'avais une belle bague; elle était vraiment chère, avec du bleu et du vert "
 "et du rouge et de l'argent. J'me souviens pas de ce qui lui est arrivé, "
-"cependant. Cette bague me manque vraiment..."
+"cependant. Cette bague me manque vraiment…"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
@@ -9273,9 +9260,9 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all."
 msgstr ""
-"La Pierre Céleste est très puissante, et s'il n'y avait que Griswold qui "
-"vous proposait de la trouver, je l'empêcherais. Il exploiterais ses pouvoirs "
-"et son utilisation sera pour notre bien à tous."
+"La Roche Céleste est très puissante, et si ce n'était pas Griswold qui vous "
+"demandait de la trouver, je l'empêcherais. Il va exploiter ses pouvoirs et "
+"son utilisation pour notre bien à tous."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:249
@@ -9284,9 +9271,9 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work."
 msgstr ""
-"Si quelqu'un peut faire quelque chose avec ce rocher, Griswold peut le "
-"faire. Il sait ce qu'il fait, et autant j'essaye de lui voler ses clients, "
-"autant je respecte la qualité de son travail."
+"Si quelqu'un peut faire quelque chose avec cette roche, c'est bien Griswold. "
+"Il sait ce qu'il fait, et autant j'essaye de lui voler ses clients, autant "
+"je respecte la qualité de son travail."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:251
@@ -10725,9 +10712,10 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
-"Au-delà du Panthéon des Héros se trouve la Chambre d'Os. La mort éternelle "
-"attend quiconque chercherait à voler les trésors se trouvant dans cette "
-"pièce. Ainsi parle le Seigneur de la Terreur, et c'est ainsi qu'il est écrit."
+"Au-delà du Panthéon des Héros se trouve la Chambre des Ossements. La mort "
+"éternelle attend quiconque chercherait à voler les trésors se trouvant dans "
+"cette pièce. Ainsi parle le Seigneur de la Terreur, et c'est ainsi qu'il est "
+"écrit."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -10752,14 +10740,14 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
-"Je peux voir ce que vous ne voyez pas.\n"
-"Vision laiteuse puis les yeux du trépas.\n"
-"Quand tu te tourneras, ils s'en seront allés,\n"
+"Je peux voir ce que tu ne peux voir.\n"
+"Vision laiteuse puis yeux noir.\n"
+"Tu te tourneras ils s'en seront allés,\n"
 "Chuchotant leur chanson cachée.\n"
-"Alors tu vois ce qui ne peut pas être,\n"
-"Les ombres se déplacent là où la lumière devrait être.\n"
-"Hors de l'esprit, hors du mal,\n"
-"Jeté dans les Aveugles Salles."
+"Alors tu verras l'impensable,\n"
+"Ombres et lumière indiscernable.\n"
+"Hors des ténèbres, incrédule,\n"
+"Jeté dans le Hall des Aveugles."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
@@ -10769,7 +10757,7 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"Les armureries de l'Enfer abritent le Seigneur de Guerre de Sang. Dans son "
+"Les armureries de l'Enfer abritent le Seigneur de Guerre du Sang. Dans son "
 "sillage gisaient les corps mutilés de milliers de personnes. Les anges et "
 "les hommes ont été abattus pour accomplir ses sacrifices sans fin envers les "
 "Ténèbres qui crient pour une chose : du sang."
@@ -11018,10 +11006,10 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written."
 msgstr ""
-"Au-delà du Panthéon des Héros se trouve la Chambre d'Os. La mort éternelle "
-"attend quiconque chercherait à voler les trésors se trouvant dans cette "
-"pièce. Ainsi a parlé le Seigneur de la Terreur, et c'est ainsi qu'il est "
-"écrit."
+"Au-delà du Panthéon des Héros se trouve la Chambre des Ossements. La mort "
+"éternelle attend quiconque chercherait à voler les trésors se trouvant dans "
+"cette pièce. Ainsi a parlé le Seigneur de la Terreur, et c'est ainsi qu'il "
+"est écrit."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -11031,7 +11019,7 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"Les armureries de l'Enfer abritent le Seigneur de Guerre de Sang. Dans son "
+"Les armureries de l'Enfer abritent le Seigneur de Guerre du Sang. Dans son "
 "sillage gisaient les corps mutilés de milliers de personnes. Anges et hommes "
 "furent abattus pour accomplir ses sacrifices sans fin envers les ténèbres "
 "qui crient pour une chose : du sang."

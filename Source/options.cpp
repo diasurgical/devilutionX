@@ -13,7 +13,6 @@
 #include <SimpleIni.h>
 
 #include "control.h"
-#include "diablo.h"
 #include "discord/discord.h"
 #include "engine/demomode.h"
 #include "hwcursor.hpp"
@@ -22,6 +21,7 @@
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
 #include "sound_defs.hpp"
+#include "utils/display.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/log.hpp"

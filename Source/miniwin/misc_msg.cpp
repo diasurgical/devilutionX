@@ -296,7 +296,7 @@ bool FalseAvail(const char *name, int value)
  */
 bool BlurInventory()
 {
-	if (pcurs >= CURSOR_FIRSTITEM) {
+	if (!MyPlayer->HoldItem.isEmpty()) {
 		if (!TryDropItem()) {
 			Players[MyPlayerId].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;

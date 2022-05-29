@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2022-04-12 16:32+0300\n"
+"POT-Creation-Date: 2022-05-12 15:20+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Oleksandr Kalko (tsunami_state) <tsunami.wave@ukr.net>\n"
 "Language-Team: \n"
@@ -333,7 +333,7 @@ msgstr "Грати Одному"
 msgid "Multi Player"
 msgstr "Грати в Мережі"
 
-#: Source/DiabloUI/mainmenu.cpp:40 Source/DiabloUI/settingsmenu.cpp:259
+#: Source/DiabloUI/mainmenu.cpp:40 Source/DiabloUI/settingsmenu.cpp:260
 msgid "Settings"
 msgstr "Налаштування"
 
@@ -382,7 +382,7 @@ msgstr "Вимоги:"
 
 #: Source/DiabloUI/selconn.cpp:66
 msgid "no gateway needed"
-msgstr "gateway не потрібен"
+msgstr "шлюз не потрібен"
 
 #: Source/DiabloUI/selconn.cpp:72
 msgid "Select Connection"
@@ -390,7 +390,7 @@ msgstr "Виберіть З'єднання"
 
 #: Source/DiabloUI/selconn.cpp:75
 msgid "Change Gateway"
-msgstr "Змінити Gateway"
+msgstr "Змінити шлюз"
 
 #: Source/DiabloUI/selconn.cpp:108
 msgid "All computers must be connected to a TCP-compatible network."
@@ -408,7 +408,7 @@ msgstr "Грайте самостійно без доступу до мереж.
 msgid "Players Supported: {:d}"
 msgstr "Підтримується Гравців: {:d}"
 
-#: Source/DiabloUI/selgame.cpp:83 Source/options.cpp:542 Source/options.cpp:581
+#: Source/DiabloUI/selgame.cpp:83 Source/options.cpp:548 Source/options.cpp:587
 #: Source/quests.cpp:49
 msgid "Diablo"
 msgstr "Diablo"
@@ -417,7 +417,7 @@ msgstr "Diablo"
 msgid "Diablo Shareware"
 msgstr "Демо-версія Diablo"
 
-#: Source/DiabloUI/selgame.cpp:89 Source/options.cpp:544 Source/options.cpp:595
+#: Source/DiabloUI/selgame.cpp:89 Source/options.cpp:550 Source/options.cpp:601
 msgid "Hellfire"
 msgstr "Hellfire"
 
@@ -470,7 +470,7 @@ msgstr "Завантажується…"
 
 #. TRANSLATORS: type of dungeon (i.e. Cathedral, Caves)
 #: Source/DiabloUI/selgame.cpp:157 Source/discord/discord.cpp:71
-#: Source/options.cpp:563 Source/panels/charpanel.cpp:137
+#: Source/options.cpp:569 Source/panels/charpanel.cpp:137
 msgid "None"
 msgstr "Немає"
 
@@ -708,7 +708,7 @@ msgid "Load Game"
 msgstr "Завантажити Гру"
 
 #: Source/DiabloUI/selhero.cpp:175 Source/gamemenu.cpp:37
-#: Source/gamemenu.cpp:48 Source/multi.cpp:737
+#: Source/gamemenu.cpp:48 Source/multi.cpp:795
 msgid "New Game"
 msgstr "Нова Гра"
 
@@ -801,27 +801,27 @@ msgstr "Зайти в Hellfire"
 msgid "Switch to Diablo"
 msgstr "Перейти в Diablo"
 
-#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:986
+#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:998
 msgid "Yes"
 msgstr "Так"
 
-#: Source/DiabloUI/selyesno.cpp:56 Source/stores.cpp:987
+#: Source/DiabloUI/selyesno.cpp:56 Source/stores.cpp:999
 msgid "No"
 msgstr "Ні"
 
-#: Source/DiabloUI/settingsmenu.cpp:304
+#: Source/DiabloUI/settingsmenu.cpp:305
 msgid "Bound key:"
 msgstr "Прив'язана клавіша:"
 
-#: Source/DiabloUI/settingsmenu.cpp:339
+#: Source/DiabloUI/settingsmenu.cpp:340
 msgid "Press any key to change."
 msgstr "Натисніть на бажану клавішу."
 
-#: Source/DiabloUI/settingsmenu.cpp:341
+#: Source/DiabloUI/settingsmenu.cpp:342
 msgid "Unbind key"
 msgstr "Прив'язати клавішу"
 
-#: Source/DiabloUI/settingsmenu.cpp:347 Source/gamemenu.cpp:61
+#: Source/DiabloUI/settingsmenu.cpp:348 Source/gamemenu.cpp:61
 msgid "Previous Menu"
 msgstr "Попереднє Меню"
 
@@ -876,7 +876,7 @@ msgstr ""
 "ліцензований під CC-BY 4.0. Порт також використовує SDL що ліцензований під "
 "zlib-ліцензією. Дивіться файл ReadMe щоб дізнатися більше."
 
-#: Source/DiabloUI/title.cpp:46
+#: Source/DiabloUI/title.cpp:50
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Авторські права © 1996-2001 Blizzard Entertainment"
 
@@ -974,7 +974,7 @@ msgstr "Автокарта"
 msgid "Main Menu"
 msgstr "Головне Меню"
 
-#: Source/control.cpp:162 Source/diablo.cpp:1538
+#: Source/control.cpp:162 Source/diablo.cpp:1564
 msgid "Inventory"
 msgstr "Інвентар"
 
@@ -986,96 +986,96 @@ msgstr "Книга Магії"
 msgid "Send Message"
 msgstr "Відправити Повідомлення"
 
-#: Source/control.cpp:694
+#: Source/control.cpp:695
 msgid "Player friendly"
 msgstr "Дружній гравець"
 
-#: Source/control.cpp:696
+#: Source/control.cpp:697
 msgid "Player attack"
 msgstr "Гравець атакує"
 
-#: Source/control.cpp:699
+#: Source/control.cpp:700
 msgid "Hotkey: {:s}"
 msgstr "Гаряча клавіша: {:s}"
 
-#: Source/control.cpp:706
+#: Source/control.cpp:707
 msgid "Select current spell button"
 msgstr "Виберіть кнопку для чар"
 
-#: Source/control.cpp:709
+#: Source/control.cpp:710
 msgid "Hotkey: 's'"
 msgstr "Гаряча клавіша: 's'"
 
-#: Source/control.cpp:715 Source/panels/spell_list.cpp:163
+#: Source/control.cpp:716 Source/panels/spell_list.cpp:163
 msgid "{:s} Skill"
 msgstr "{:s} Талант"
 
-#: Source/control.cpp:718 Source/panels/spell_list.cpp:170
+#: Source/control.cpp:719 Source/panels/spell_list.cpp:170
 msgid "{:s} Spell"
 msgstr "Чари {:s}"
 
-#: Source/control.cpp:720 Source/panels/spell_list.cpp:175
+#: Source/control.cpp:721 Source/panels/spell_list.cpp:175
 msgid "Spell Level 0 - Unusable"
 msgstr "0-овий Рівень Чар - Невикористовні"
 
-#: Source/control.cpp:720 Source/panels/spell_list.cpp:177
+#: Source/control.cpp:721 Source/panels/spell_list.cpp:177
 msgid "Spell Level {:d}"
 msgstr "Рівень Чар {:d}"
 
-#: Source/control.cpp:723 Source/panels/spell_list.cpp:184
+#: Source/control.cpp:724 Source/panels/spell_list.cpp:184
 msgid "Scroll of {:s}"
-msgstr "Згорток {:s}"
+msgstr "Сувій {:s}"
 
-#: Source/control.cpp:728 Source/panels/spell_list.cpp:189
+#: Source/control.cpp:729 Source/panels/spell_list.cpp:189
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
-msgstr[0] "{:d} Згорток"
-msgstr[1] "{:d} Згортка"
-msgstr[2] "{:d} Згортків"
+msgstr[0] "{:d} Сувій"
+msgstr[1] "{:d} Сувія"
+msgstr[2] "{:d} Сувоїв"
 
-#: Source/control.cpp:731 Source/panels/spell_list.cpp:196
+#: Source/control.cpp:732 Source/panels/spell_list.cpp:196
 msgid "Staff of {:s}"
 msgstr "Посох {:s}"
 
-#: Source/control.cpp:732 Source/panels/spell_list.cpp:198
+#: Source/control.cpp:733 Source/panels/spell_list.cpp:198
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Заряд"
 msgstr[1] "{:d} Заряда"
 msgstr[2] "{:d} Зарядів"
 
-#: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3487
+#: Source/control.cpp:861 Source/inv.cpp:1923 Source/items.cpp:3452
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} золота монета"
 msgstr[1] "{:d} золоті монети"
 msgstr[2] "{:d} золотих монет"
 
-#: Source/control.cpp:862
+#: Source/control.cpp:863
 msgid "Requirements not met"
 msgstr "Вимоги не виконані"
 
-#: Source/control.cpp:896
+#: Source/control.cpp:897
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Рівень {:d}"
 
-#: Source/control.cpp:897
+#: Source/control.cpp:898
 msgid "Hit Points {:d} of {:d}"
 msgstr "Здоров'я {:d} з {:d}"
 
-#: Source/control.cpp:931
+#: Source/control.cpp:932
 msgid "Level Up"
 msgstr "Новий Рівень"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1039
+#: Source/control.cpp:1040
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "У тебе {:d} золота монета. Скільки ти хочеш забрати?"
 msgstr[1] "У тебе {:d} золоті монети. Скільки ти хочеш забрати?"
 msgstr[2] "У тебе {:d} золотих монет. Скільки ти хочеш забрати?"
 
-#: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:36
+#: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:44
 #: Source/qol/xpbar.cpp:76
 msgid ""
 "Failed to load UI resources.\n"
@@ -1086,23 +1086,23 @@ msgstr ""
 "\n"
 "Впевніться що devilutionx.mpq в папці гри і актуальної версії."
 
-#: Source/cursor.cpp:233
+#: Source/cursor.cpp:229
 msgid "Town Portal"
 msgstr "Портал в Місто"
 
-#: Source/cursor.cpp:234
+#: Source/cursor.cpp:230
 msgid "from {:s}"
 msgstr "з {:s}"
 
-#: Source/cursor.cpp:248
+#: Source/cursor.cpp:244
 msgid "Portal to"
 msgstr "Портал в"
 
-#: Source/cursor.cpp:249
+#: Source/cursor.cpp:245
 msgid "The Unholy Altar"
 msgstr "Нечестивий Вівтар"
 
-#: Source/cursor.cpp:249
+#: Source/cursor.cpp:245
 msgid "level 15"
 msgstr "рівень 15"
 
@@ -1123,316 +1123,299 @@ msgid "Now you DIE!"
 msgstr "А тепер ПОМРИ!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:822
-msgid "Options:\n"
-msgstr "Опції:\n"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:823
+#: Source/diablo.cpp:841
 msgid "Print this message and exit"
 msgstr "Показати це повідомлення і вийти"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:824
+#: Source/diablo.cpp:842
 msgid "Print the version and exit"
 msgstr "Показати версію і вийти"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:825
+#: Source/diablo.cpp:843
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Визначити папку з diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:826
+#: Source/diablo.cpp:844
 msgid "Specify the folder of save files"
 msgstr "Визначити папку з збереженнями"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:827
+#: Source/diablo.cpp:845
 msgid "Specify the location of diablo.ini"
 msgstr "Визначити папку з diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:828
+#: Source/diablo.cpp:846
 msgid "Skip startup videos"
 msgstr "Пропустити заставки"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:829
+#: Source/diablo.cpp:847
 msgid "Display frames per second"
 msgstr "Показати кадри в секунду"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:830
+#: Source/diablo.cpp:848
 msgid "Enable verbose logging"
 msgstr "Ввімкнути велемовне логування"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:831
+#: Source/diablo.cpp:849
 msgid "Record a demo file"
 msgstr "Записати демо"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:832
+#: Source/diablo.cpp:850
 msgid "Play a demo file"
 msgstr "Зіграти демо"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:833
+#: Source/diablo.cpp:851
 msgid "Disable all frame limiting during demo playback"
 msgstr "Віключити ліміт кадрів під час програшу демо"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:834
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Вибір гри:\n"
+#: Source/diablo.cpp:853
+msgid "Game selection:"
+msgstr "Вибір гри:"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:835
+#: Source/diablo.cpp:855
 msgid "Force Shareware mode"
 msgstr "Примусити режим демо-версії"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:836
+#: Source/diablo.cpp:856
 msgid "Force Diablo mode"
 msgstr "Примусити режим Diablo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:837
+#: Source/diablo.cpp:857
 msgid "Force Hellfire mode"
 msgstr "Примусити режим Hellfire"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:838
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Опції Hellfire:\n"
+#: Source/diablo.cpp:858
+msgid "Hellfire options:"
+msgstr "Опції Hellfire:"
 
-#: Source/diablo.cpp:844
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Пишіть про помилки на https://github.com/diasurgical/devilutionX/\n"
+#: Source/diablo.cpp:868
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Пишіть про помилки на https://github.com/diasurgical/devilutionX/"
 
-#: Source/diablo.cpp:956
+#: Source/diablo.cpp:994
 msgid "version {:s}"
 msgstr "версія {:s}"
 
-#: Source/diablo.cpp:1277
+#: Source/diablo.cpp:1304
 msgid "-- Network timeout --"
 msgstr "-- Тайм-аут мережі --"
 
-#: Source/diablo.cpp:1278
+#: Source/diablo.cpp:1305
 msgid "-- Waiting for players --"
 msgstr "-- Чекаємо гравців --"
 
-#: Source/diablo.cpp:1297
+#: Source/diablo.cpp:1324
 msgid "No help available"
 msgstr "Допомога недоступна"
 
-#: Source/diablo.cpp:1298
+#: Source/diablo.cpp:1325
 msgid "while in stores"
 msgstr "в магазинах"
 
-#: Source/diablo.cpp:1440
+#: Source/diablo.cpp:1466
 msgid "Belt item {}"
 msgstr "Предмет з Поясу {}"
 
-#: Source/diablo.cpp:1441
+#: Source/diablo.cpp:1467
 msgid "Use Belt item."
 msgstr "Використати предмет з Поясу."
 
-#: Source/diablo.cpp:1456
+#: Source/diablo.cpp:1482
 msgid "Quick spell {}"
 msgstr "Швидкі Чари {}"
 
-#: Source/diablo.cpp:1457
+#: Source/diablo.cpp:1483
 msgid "Hotkey for skill or spell."
 msgstr "Гаряча клавіша для чар або таланту."
 
-#: Source/diablo.cpp:1475
+#: Source/diablo.cpp:1501
 msgid "Speedbook"
 msgstr "Швидка Книга Чар"
 
-#: Source/diablo.cpp:1476
+#: Source/diablo.cpp:1502
 msgid "Open Speedbook."
 msgstr "Відкрити Швидку Книгу Чар."
 
-#: Source/diablo.cpp:1483
+#: Source/diablo.cpp:1509
 msgid "Quick save"
 msgstr "Швидке Збереження"
 
-#: Source/diablo.cpp:1484
+#: Source/diablo.cpp:1510
 msgid "Saves the game."
 msgstr "Зберігає гру."
 
-#: Source/diablo.cpp:1491
+#: Source/diablo.cpp:1517
 msgid "Quick load"
 msgstr "Швидке Завантаження"
 
-#: Source/diablo.cpp:1492
+#: Source/diablo.cpp:1518
 msgid "Loads the game."
 msgstr "Завантажує гру."
 
-#: Source/diablo.cpp:1500
+#: Source/diablo.cpp:1526
 msgid "Quit game"
 msgstr "Вийти з Гри"
 
-#: Source/diablo.cpp:1501
+#: Source/diablo.cpp:1527
 msgid "Closes the game."
 msgstr "Закриває гру."
 
-#: Source/diablo.cpp:1507
+#: Source/diablo.cpp:1533
 msgid "Stop hero"
 msgstr "Зупинити героя"
 
-#: Source/diablo.cpp:1508
+#: Source/diablo.cpp:1534
 msgid "Stops walking and cancel pending actions."
 msgstr "Зупиняє ходьбу і незакінчені дії."
 
-#: Source/diablo.cpp:1515
+#: Source/diablo.cpp:1541
 msgid "Item highlighting"
 msgstr "Підствітлення Предметів"
 
-#: Source/diablo.cpp:1516
+#: Source/diablo.cpp:1542
 msgid "Show/hide items on ground."
 msgstr "Показати/Сховати предмети на землі."
 
-#: Source/diablo.cpp:1522
+#: Source/diablo.cpp:1548
 msgid "Toggle item highlighting"
 msgstr "Постійне підсвітлення предметів"
 
-#: Source/diablo.cpp:1523
+#: Source/diablo.cpp:1549
 msgid "Permanent show/hide items on ground."
 msgstr "Постійно показувати/ховати предмети на землі."
 
-#: Source/diablo.cpp:1529
+#: Source/diablo.cpp:1555
 msgid "Toggle automap"
 msgstr "Автокарта"
 
-#: Source/diablo.cpp:1530
+#: Source/diablo.cpp:1556
 msgid "Toggles if automap is displayed."
 msgstr "Перемикає відображення автокарти."
 
-#: Source/diablo.cpp:1539
+#: Source/diablo.cpp:1565
 msgid "Open Inventory screen."
 msgstr "Відкрити вікно Інвентаря."
 
-#: Source/diablo.cpp:1546
+#: Source/diablo.cpp:1572
 msgid "Character"
 msgstr "Герой"
 
-#: Source/diablo.cpp:1547
+#: Source/diablo.cpp:1573
 msgid "Open Character screen."
 msgstr "Відкрити вікно Героя."
 
-#: Source/diablo.cpp:1554
+#: Source/diablo.cpp:1580
 msgid "Quest log"
 msgstr "Журнал"
 
-#: Source/diablo.cpp:1555
+#: Source/diablo.cpp:1581
 msgid "Open Quest log."
 msgstr "Відкрити Журнал квестів."
 
-#: Source/diablo.cpp:1562
+#: Source/diablo.cpp:1588
 msgid "Spellbook"
 msgstr "Книга Магії"
 
-#: Source/diablo.cpp:1563
+#: Source/diablo.cpp:1589
 msgid "Open Spellbook."
 msgstr "Відкрити Книгу Чар."
 
-#: Source/diablo.cpp:1571
+#: Source/diablo.cpp:1597
 msgid "Quick Message {}"
 msgstr "Швидке Повідомлення {}"
 
-#: Source/diablo.cpp:1572
+#: Source/diablo.cpp:1598
 msgid "Use Quick Message in chat."
 msgstr "Відправити Швидке Повідомлення в чат."
 
-#: Source/diablo.cpp:1581
+#: Source/diablo.cpp:1607
 msgid "Hide Info Screens"
 msgstr "Сховати Вікна"
 
-#: Source/diablo.cpp:1582
+#: Source/diablo.cpp:1608
 msgid "Hide all info screens."
 msgstr "Ховає всі інформаційні вікна."
 
-#: Source/diablo.cpp:1602
+#: Source/diablo.cpp:1628
 msgid "Zoom"
 msgstr "Збільшення"
 
-#: Source/diablo.cpp:1603
+#: Source/diablo.cpp:1629
 msgid "Zoom Game Screen."
 msgstr "Збільшити/зменшити екран гри."
 
-#: Source/diablo.cpp:1613
+#: Source/diablo.cpp:1639
 msgid "Pause Game"
 msgstr "Зупинити Гру"
 
-#: Source/diablo.cpp:1614
+#: Source/diablo.cpp:1640
 msgid "Pauses the game."
 msgstr "Ставить гру на паузу."
 
-#: Source/diablo.cpp:1619
+#: Source/diablo.cpp:1645
 msgid "Decrease Gamma"
 msgstr "Зменшити Гамму"
 
-#: Source/diablo.cpp:1620
+#: Source/diablo.cpp:1646
 msgid "Reduce screen brightness."
 msgstr "Зменшити яскравість екрану."
 
-#: Source/diablo.cpp:1627
+#: Source/diablo.cpp:1653
 msgid "Increase Gamma"
 msgstr "Збільшити Гамму"
 
-#: Source/diablo.cpp:1628
+#: Source/diablo.cpp:1654
 msgid "Increase screen brightness."
 msgstr "Збільшити яскравість екрану."
 
-#: Source/diablo.cpp:1635
+#: Source/diablo.cpp:1661
 msgid "Help"
 msgstr "Допомога"
 
-#: Source/diablo.cpp:1636
+#: Source/diablo.cpp:1662
 msgid "Open Help Screen."
 msgstr "Відкрити вікно Допомоги."
 
-#: Source/diablo.cpp:1643
+#: Source/diablo.cpp:1669
 msgid "Screenshot"
 msgstr "Знімок екрана"
 
-#: Source/diablo.cpp:1644
+#: Source/diablo.cpp:1670
 msgid "Takes a screenshot."
 msgstr "Робить знімок екрана."
 
-#: Source/diablo.cpp:1650
+#: Source/diablo.cpp:1676
 msgid "Game info"
 msgstr "Інформація про гру"
 
-#: Source/diablo.cpp:1651
+#: Source/diablo.cpp:1677
 msgid "Displays game infos."
 msgstr "Показує інформацію про гру."
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1655
+#: Source/diablo.cpp:1681
 msgid "{:s} {:s}"
 msgstr "{:s} {:s}"
 
-#: Source/diablo.cpp:1664
+#: Source/diablo.cpp:1690
 msgid "Chat Log"
 msgstr "Лог Чату"
 
-#: Source/diablo.cpp:1665
+#: Source/diablo.cpp:1691
 msgid "Displays chat log."
 msgstr "Показує лог чату."
 
@@ -1917,7 +1900,7 @@ msgid ""
 "box. Items may be used by either pressing the corresponding number or right-"
 "clicking on the item."
 msgstr ""
-"Маленькі предмети, що можна використати (наприклад зілля і згортки) "
+"Маленькі предмети, що можна використати (наприклад зілля і сувої) "
 "автоматично кладуться в Пояс в верхній частині Інформаційної Панелі. Коли "
 "предмет кладеться в пояс, над ним з'являється цифра. Предмети в Поясі можна "
 "використати натиснувши клавішу з номером, або кліком правої кнопки миші на "
@@ -1985,7 +1968,7 @@ msgid ""
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
 "Ви можете встановити до чотирьох гарячих клавіш для чар, талантів або "
-"згортків. Відкрийте 'Швидку Книгу Чар' як описано вище. Наведіть курсор на "
+"сувоїв. Відкрийте 'Швидку Книгу Чар' як описано вище. Наведіть курсор на "
 "бажані чари і натисніть клавішу F5, F6, F7 або F8 для призначення."
 
 #: Source/help.cpp:93
@@ -2016,19 +1999,19 @@ msgstr "Допомога Демо-версії Diablo"
 msgid "Diablo Help"
 msgstr "Допомога Diablo"
 
-#: Source/help.cpp:209 Source/qol/chatlog.cpp:181
+#: Source/help.cpp:209 Source/qol/chatlog.cpp:180
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Натисніть ESC щоб закрити або клавіші зі стрілками для прокрутки."
 
-#: Source/init.cpp:195
+#: Source/init.cpp:194
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq або spawn.mpq"
 
-#: Source/init.cpp:216
+#: Source/init.cpp:215
 msgid "Some Hellfire MPQs are missing"
 msgstr "Деякі файли MPQ для Hellfire відсутні"
 
-#: Source/init.cpp:216
+#: Source/init.cpp:215
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -2036,7 +2019,7 @@ msgstr ""
 "Не всі файли MPQ для Hellfire були знайдені.\n"
 "Будь ласка скопіюйте всі файли hf*.mpq."
 
-#: Source/init.cpp:224
+#: Source/init.cpp:223
 msgid "Unable to create main window"
 msgstr "Не зміг створити головне вікно"
 
@@ -2146,11 +2129,11 @@ msgstr "Зілля Мани"
 
 #: Source/itemdat.cpp:79 Source/itemdat.cpp:147
 msgid "Scroll of Identify"
-msgstr "Згорток Розпізнавання"
+msgstr "Сувій Розпізнавання"
 
 #: Source/itemdat.cpp:80 Source/itemdat.cpp:151
 msgid "Scroll of Town Portal"
-msgstr "Згорток Порталу в Місто"
+msgstr "Сувій Порталу в Місто"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:440
 msgid "Arkaine's Valor"
@@ -2178,7 +2161,7 @@ msgstr "Посох Лазаря"
 
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:148
 msgid "Scroll of Resurrect"
-msgstr "Згорток Воскрешення"
+msgstr "Сувій Воскрешення"
 
 #: Source/itemdat.cpp:88 Source/itemdat.cpp:136 Source/items.cpp:172
 msgid "Blacksmith Oil"
@@ -2280,7 +2263,7 @@ msgid "Quilted Armor"
 msgstr "Стьобана Броня"
 
 #: Source/itemdat.cpp:111 Source/itemdat.cpp:112 Source/itemdat.cpp:113
-#: Source/itemdat.cpp:114 Source/objects.cpp:5476
+#: Source/itemdat.cpp:114 Source/objects.cpp:5678
 msgid "Armor"
 msgstr "Броня"
 
@@ -2405,75 +2388,75 @@ msgstr "Еліксир Живучості"
 
 #: Source/itemdat.cpp:144
 msgid "Scroll of Healing"
-msgstr "Згорток Зцілення"
+msgstr "Сувій Зцілення"
 
 #: Source/itemdat.cpp:145
 msgid "Scroll of Search"
-msgstr "Згорток Пошуку"
+msgstr "Сувій Пошуку"
 
 #: Source/itemdat.cpp:146
 msgid "Scroll of Lightning"
-msgstr "Згорток Блискавки"
+msgstr "Сувій Блискавки"
 
 #: Source/itemdat.cpp:149
 msgid "Scroll of Fire Wall"
-msgstr "Згорток Стіни Вогню"
+msgstr "Сувій Стіни Вогню"
 
 #: Source/itemdat.cpp:150
 msgid "Scroll of Inferno"
-msgstr "Згорток Пекла"
+msgstr "Сувій Пекла"
 
 #: Source/itemdat.cpp:152
 msgid "Scroll of Flash"
-msgstr "Згорток Спалаху"
+msgstr "Сувій Спалаху"
 
 #: Source/itemdat.cpp:153
 msgid "Scroll of Infravision"
-msgstr "Згорток Інфрабачення"
+msgstr "Сувій Інфрабачення"
 
 #: Source/itemdat.cpp:154
 msgid "Scroll of Phasing"
-msgstr "Згорток Фазування"
+msgstr "Сувій Фазування"
 
 #: Source/itemdat.cpp:155
 msgid "Scroll of Mana Shield"
-msgstr "Згорток Щита Мани"
+msgstr "Сувій Щита Мани"
 
 #: Source/itemdat.cpp:156
 msgid "Scroll of Flame Wave"
-msgstr "Згорток Хвилі Вогню"
+msgstr "Сувій Хвилі Вогню"
 
 #: Source/itemdat.cpp:157
 msgid "Scroll of Fireball"
-msgstr "Згорток Кулі Вогню"
+msgstr "Сувій Кулі Вогню"
 
 #: Source/itemdat.cpp:158
 msgid "Scroll of Stone Curse"
-msgstr "Згорток Кам'яного Прокляття"
+msgstr "Сувій Прокляття Каменю"
 
 #: Source/itemdat.cpp:159
 msgid "Scroll of Chain Lightning"
-msgstr "Згорток Ланцюгової Блискавки"
+msgstr "Сувій Ланцюгової Блискавки"
 
 #: Source/itemdat.cpp:160
 msgid "Scroll of Guardian"
-msgstr "Згорток Охоронця"
+msgstr "Сувій Охоронця"
 
 #: Source/itemdat.cpp:162
 msgid "Scroll of Nova"
-msgstr "Згорток Нови"
+msgstr "Сувій Нови"
 
 #: Source/itemdat.cpp:163
 msgid "Scroll of Golem"
-msgstr "Згорток Голему"
+msgstr "Сувій Голему"
 
 #: Source/itemdat.cpp:165
 msgid "Scroll of Teleport"
-msgstr "Згорток Телепорту"
+msgstr "Сувій Телепорту"
 
 #: Source/itemdat.cpp:166
 msgid "Scroll of Apocalypse"
-msgstr "Згорток Апокаліпсису"
+msgstr "Сувій Апокаліпсису"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170
@@ -3829,679 +3812,679 @@ msgid "Oil of Imperviousness"
 msgstr "Масло Непроникності"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall
-#: Source/items.cpp:1150
+#: Source/items.cpp:1106
 msgctxt "spell"
 msgid "{0} of {1}"
 msgstr "{0} {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1158
+#: Source/items.cpp:1114
 msgctxt "spell"
 msgid "{0} {1} of {2}"
 msgstr "{0} {1} {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1176
+#: Source/items.cpp:1132
 msgid "{0} {1} of {2}"
 msgstr "{0} {1} {2}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#: Source/items.cpp:1179
+#: Source/items.cpp:1135
 msgid "{0} {1}"
 msgstr "{0} {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale
-#: Source/items.cpp:1182
+#: Source/items.cpp:1138
 msgid "{0} of {1}"
 msgstr "{0} {1}"
 
-#: Source/items.cpp:1717 Source/items.cpp:1725
+#: Source/items.cpp:1673 Source/items.cpp:1681
 msgid "increases a weapon's"
 msgstr "підвищує у зброї"
 
-#: Source/items.cpp:1718
+#: Source/items.cpp:1674
 msgid "chance to hit"
 msgstr "шанс удару"
 
-#: Source/items.cpp:1721
+#: Source/items.cpp:1677
 msgid "greatly increases a"
 msgstr "набагато підвищує"
 
-#: Source/items.cpp:1722
+#: Source/items.cpp:1678
 msgid "weapon's chance to hit"
 msgstr "шанс удару зброї"
 
-#: Source/items.cpp:1726
+#: Source/items.cpp:1682
 msgid "damage potential"
 msgstr "потенціал шкоди"
 
-#: Source/items.cpp:1729
+#: Source/items.cpp:1685
 msgid "greatly increases a weapon's"
 msgstr "набагато підвищує у зброї"
 
-#: Source/items.cpp:1730
+#: Source/items.cpp:1686
 msgid "damage potential - not bows"
 msgstr "потенціал шкоди — крім луків"
 
-#: Source/items.cpp:1733
+#: Source/items.cpp:1689
 msgid "reduces attributes needed"
 msgstr "знижує вимоги атрибутів"
 
-#: Source/items.cpp:1734
+#: Source/items.cpp:1690
 msgid "to use armor or weapons"
 msgstr "шоб використати броню чи зброю"
 
-#: Source/items.cpp:1737
+#: Source/items.cpp:1693
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "відновлює 20%"
 
-#: Source/items.cpp:1738
+#: Source/items.cpp:1694
 msgid "item's durability"
 msgstr "міцність предмету"
 
-#: Source/items.cpp:1741
+#: Source/items.cpp:1697
 msgid "increases an item's"
 msgstr "підвищує у предмета"
 
-#: Source/items.cpp:1742
+#: Source/items.cpp:1698
 msgid "current and max durability"
 msgstr "поточну і макс міцність"
 
-#: Source/items.cpp:1745
+#: Source/items.cpp:1701
 msgid "makes an item indestructible"
 msgstr "робить предмет неруйновним"
 
-#: Source/items.cpp:1748
+#: Source/items.cpp:1704
 msgid "increases the armor class"
 msgstr "підвищує клас броні"
 
-#: Source/items.cpp:1749
+#: Source/items.cpp:1705
 msgid "of armor and shields"
 msgstr "броні і щитів"
 
-#: Source/items.cpp:1752
+#: Source/items.cpp:1708
 msgid "greatly increases the armor"
 msgstr "набагато підвищує у броні"
 
-#: Source/items.cpp:1753
+#: Source/items.cpp:1709
 msgid "class of armor and shields"
 msgstr "клас броні і щитів"
 
-#: Source/items.cpp:1756 Source/items.cpp:1763
+#: Source/items.cpp:1712 Source/items.cpp:1719
 msgid "sets fire trap"
 msgstr "ставить пастку вогню"
 
-#: Source/items.cpp:1760
+#: Source/items.cpp:1716
 msgid "sets lightning trap"
 msgstr "ставить пастку блискавки"
 
-#: Source/items.cpp:1766
+#: Source/items.cpp:1722
 msgid "sets petrification trap"
 msgstr "ставить пастку окам'яніння"
 
-#: Source/items.cpp:1769
+#: Source/items.cpp:1725
 msgid "restore all life"
 msgstr "відновлює все життя"
 
-#: Source/items.cpp:1772
+#: Source/items.cpp:1728
 msgid "restore some life"
 msgstr "відновлює трохи життя"
 
-#: Source/items.cpp:1775
+#: Source/items.cpp:1731
 msgid "recover life"
 msgstr "відновлює життя"
 
-#: Source/items.cpp:1778
+#: Source/items.cpp:1734
 msgid "deadly heal"
 msgstr "смертельне відновлення"
 
-#: Source/items.cpp:1781
+#: Source/items.cpp:1737
 msgid "restore some mana"
 msgstr "відновлює трохи мани"
 
-#: Source/items.cpp:1784
+#: Source/items.cpp:1740
 msgid "restore all mana"
 msgstr "відновлює всю ману"
 
-#: Source/items.cpp:1787
+#: Source/items.cpp:1743
 msgid "increase strength"
 msgstr "підвищує силу"
 
-#: Source/items.cpp:1790
+#: Source/items.cpp:1746
 msgid "increase magic"
 msgstr "підвищує магію"
 
-#: Source/items.cpp:1793
+#: Source/items.cpp:1749
 msgid "increase dexterity"
 msgstr "підвищує спритність"
 
-#: Source/items.cpp:1796
+#: Source/items.cpp:1752
 msgid "increase vitality"
 msgstr "підвищує живучість"
 
-#: Source/items.cpp:1800
+#: Source/items.cpp:1756
 msgid "decrease strength"
 msgstr "знижує силу"
 
-#: Source/items.cpp:1803
+#: Source/items.cpp:1759
 msgid "decrease dexterity"
 msgstr "знижує спритність"
 
-#: Source/items.cpp:1806
+#: Source/items.cpp:1762
 msgid "decrease vitality"
 msgstr "живучість"
 
-#: Source/items.cpp:1809
+#: Source/items.cpp:1765
 msgid "restore some life and mana"
 msgstr "відновлює трохи життя і мани"
 
-#: Source/items.cpp:1812
+#: Source/items.cpp:1768
 msgid "restore all life and mana"
 msgstr "відновлює все життя і ману"
 
-#: Source/items.cpp:1827 Source/items.cpp:1867
+#: Source/items.cpp:1783 Source/items.cpp:1823
 msgid "Right-click to read"
 msgstr "Правий клік щоб прочитати"
 
-#: Source/items.cpp:1830 Source/items.cpp:1845 Source/items.cpp:1859
+#: Source/items.cpp:1786 Source/items.cpp:1801 Source/items.cpp:1815
 msgid "Open inventory to use"
 msgstr "Відкрийте інвентар щоб використати"
 
-#: Source/items.cpp:1832 Source/items.cpp:1847 Source/items.cpp:1869
+#: Source/items.cpp:1788 Source/items.cpp:1803 Source/items.cpp:1825
 msgid "Activate to read"
 msgstr "Активуйте щоб прочитати"
 
-#: Source/items.cpp:1838
+#: Source/items.cpp:1794
 msgid "Right-click to read, then"
 msgstr "Правий клік щоб прочитати, потім"
 
-#: Source/items.cpp:1839
+#: Source/items.cpp:1795
 msgid "left-click to target"
 msgstr "лівий клік для наведення"
 
-#: Source/items.cpp:1842
+#: Source/items.cpp:1798
 msgid "Select from spell book, then"
 msgstr "Виберіть з книги чар, потім"
 
-#: Source/items.cpp:1843
+#: Source/items.cpp:1799
 msgid "cast spell to read"
 msgstr "зачаруйте чари щоб прочитати"
 
-#: Source/items.cpp:1856
+#: Source/items.cpp:1812
 msgid "Right-click to use"
 msgstr "Правий клік щоб використати"
 
-#: Source/items.cpp:1861
+#: Source/items.cpp:1817
 msgid "Activate to use"
 msgstr "Активуйте щоб використати"
 
-#: Source/items.cpp:1874
+#: Source/items.cpp:1830
 msgid "Right-click to view"
 msgstr "Правий клік щоб оглянути"
 
-#: Source/items.cpp:1876
+#: Source/items.cpp:1832
 msgid "Activate to view"
 msgstr "Активуйте щоб оглянути"
 
-#: Source/items.cpp:1880
+#: Source/items.cpp:1836
 msgctxt "player"
 msgid "Level: {:d}"
 msgstr "Рівень: {:d}"
 
-#: Source/items.cpp:1883
+#: Source/items.cpp:1839
 msgid "Doubles gold capacity"
 msgstr "Подвоює ємність золота"
 
-#: Source/items.cpp:1894 Source/stores.cpp:279
+#: Source/items.cpp:1850 Source/stores.cpp:285
 msgid "Required:"
 msgstr "Вимоги:"
 
-#: Source/items.cpp:1896 Source/stores.cpp:281
+#: Source/items.cpp:1852 Source/stores.cpp:287
 msgid " {:d} Str"
 msgstr " {:d} Сил"
 
-#: Source/items.cpp:1898 Source/stores.cpp:283
+#: Source/items.cpp:1854 Source/stores.cpp:289
 msgid " {:d} Mag"
 msgstr " {:d} Маг"
 
-#: Source/items.cpp:1900 Source/stores.cpp:285
+#: Source/items.cpp:1856 Source/stores.cpp:291
 msgid " {:d} Dex"
 msgstr " {:d} Спр"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3257 Source/player.cpp:3145
+#: Source/items.cpp:3222 Source/player.cpp:3150
 msgid "Ear of {:s}"
 msgstr "Вухо {:s}"
 
-#: Source/items.cpp:3553
+#: Source/items.cpp:3518
 msgid "chance to hit: {:+d}%"
 msgstr "шанс удару: {:+d}%"
 
-#: Source/items.cpp:3556
+#: Source/items.cpp:3521
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% шкоди"
 
-#: Source/items.cpp:3559 Source/items.cpp:3757
+#: Source/items.cpp:3524 Source/items.cpp:3722
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "шанс: {:+d}%, {:+d}% шкоди"
 
-#: Source/items.cpp:3562
+#: Source/items.cpp:3527
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% броні"
 
-#: Source/items.cpp:3565
+#: Source/items.cpp:3530
 msgid "armor class: {:d}"
 msgstr "клас броні: {:d}"
 
-#: Source/items.cpp:3569 Source/items.cpp:3743
+#: Source/items.cpp:3534 Source/items.cpp:3708
 msgid "Resist Fire: {:+d}%"
 msgstr "Спротив Вогню: {:+d}%"
 
-#: Source/items.cpp:3571
+#: Source/items.cpp:3536
 msgid "Resist Fire: {:+d}% MAX"
 msgstr "Спротив Вогню: {:+d}% МАКС"
 
-#: Source/items.cpp:3575
+#: Source/items.cpp:3540
 msgid "Resist Lightning: {:+d}%"
 msgstr "Спротив Блискавці: {:+d}%"
 
-#: Source/items.cpp:3577
+#: Source/items.cpp:3542
 msgid "Resist Lightning: {:+d}% MAX"
 msgstr "Спротив Блискавці: {:+d}% МАКС"
 
-#: Source/items.cpp:3581
+#: Source/items.cpp:3546
 msgid "Resist Magic: {:+d}%"
 msgstr "Спротив Магії: {:+d}%"
 
-#: Source/items.cpp:3583
+#: Source/items.cpp:3548
 msgid "Resist Magic: {:+d}% MAX"
 msgstr "Спротив Магії: {:+d}% МАКС"
 
-#: Source/items.cpp:3587
+#: Source/items.cpp:3552
 msgid "Resist All: {:+d}%"
 msgstr "Спротив Всьому: {:+d}%"
 
-#: Source/items.cpp:3589
+#: Source/items.cpp:3554
 msgid "Resist All: {:+d}% MAX"
 msgstr "Спротив Всьому: {:+d}% МАКС"
 
-#: Source/items.cpp:3592
+#: Source/items.cpp:3557
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "чари покращені на {:d} рівень"
 msgstr[1] "чари покращені на {:d} рівня"
 msgstr[2] "чари покращені на {:d} рівнів"
 
-#: Source/items.cpp:3594
+#: Source/items.cpp:3559
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "чари погіршені на {:d} рівень"
 msgstr[1] "чари погіршені на {:d} рівня"
 msgstr[2] "чари погіршені на {:d} рівнів"
 
-#: Source/items.cpp:3596
+#: Source/items.cpp:3561
 msgid "spell levels unchanged (?)"
 msgstr "рівень чар не змінюється (?)"
 
-#: Source/items.cpp:3598
+#: Source/items.cpp:3563
 msgid "Extra charges"
 msgstr "Додаткові заряди"
 
-#: Source/items.cpp:3600
+#: Source/items.cpp:3565
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} заряд"
 msgstr[1] "{:d} {:s} заряди"
 msgstr[2] "{:d} {:s} зарядів"
 
-#: Source/items.cpp:3603
+#: Source/items.cpp:3568
 msgid "Fire hit damage: {:d}"
 msgstr "Шкода вогнем: {:d}"
 
-#: Source/items.cpp:3605
+#: Source/items.cpp:3570
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "Шкода вогнем: {:d}-{:d}"
 
-#: Source/items.cpp:3608
+#: Source/items.cpp:3573
 msgid "Lightning hit damage: {:d}"
 msgstr "Шкода блискавкою: {:d}"
 
-#: Source/items.cpp:3610
+#: Source/items.cpp:3575
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "Шкода блискавкою: {:d}-{:d}"
 
-#: Source/items.cpp:3613
+#: Source/items.cpp:3578
 msgid "{:+d} to strength"
 msgstr "{:+d} до сили"
 
-#: Source/items.cpp:3616
+#: Source/items.cpp:3581
 msgid "{:+d} to magic"
 msgstr "{:+d} до магії"
 
-#: Source/items.cpp:3619
+#: Source/items.cpp:3584
 msgid "{:+d} to dexterity"
 msgstr "{:+d} до спритності"
 
-#: Source/items.cpp:3622
+#: Source/items.cpp:3587
 msgid "{:+d} to vitality"
 msgstr "{:+d} до живучості"
 
-#: Source/items.cpp:3625
+#: Source/items.cpp:3590
 msgid "{:+d} to all attributes"
 msgstr "{:+d} до всіх атрибутів"
 
-#: Source/items.cpp:3628
+#: Source/items.cpp:3593
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} шкоди від ворогів"
 
-#: Source/items.cpp:3631
+#: Source/items.cpp:3596
 msgid "Hit Points: {:+d}"
 msgstr "Здоров'я {:+d}"
 
-#: Source/items.cpp:3634
+#: Source/items.cpp:3599
 msgid "Mana: {:+d}"
 msgstr "Мана: {:+d}"
 
-#: Source/items.cpp:3636
+#: Source/items.cpp:3601
 msgid "high durability"
 msgstr "висока міцність"
 
-#: Source/items.cpp:3638
+#: Source/items.cpp:3603
 msgid "decreased durability"
 msgstr "зменшена міцність"
 
-#: Source/items.cpp:3640
+#: Source/items.cpp:3605
 msgid "indestructible"
 msgstr "неруйновний"
 
-#: Source/items.cpp:3642
+#: Source/items.cpp:3607
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "радіус світла +{:d}%"
 
-#: Source/items.cpp:3644
+#: Source/items.cpp:3609
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "радіус світла -{:d}%"
 
-#: Source/items.cpp:3646
+#: Source/items.cpp:3611
 msgid "multiple arrows per shot"
 msgstr "стріляє декілька стріл відразу"
 
-#: Source/items.cpp:3649
+#: Source/items.cpp:3614
 msgid "fire arrows damage: {:d}"
 msgstr "шкода вогняних стріл: {:d}"
 
-#: Source/items.cpp:3651
+#: Source/items.cpp:3616
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "шкода вогняних стріл: {:d}-{:d}"
 
-#: Source/items.cpp:3654
+#: Source/items.cpp:3619
 msgid "lightning arrows damage {:d}"
 msgstr "шкода стріл блискавки: {:d}"
 
-#: Source/items.cpp:3656
+#: Source/items.cpp:3621
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "шкода стріл блискавки: {:d}-{:d}"
 
-#: Source/items.cpp:3659
+#: Source/items.cpp:3624
 msgid "fireball damage: {:d}"
 msgstr "шкода кулі вогню: {:d}"
 
-#: Source/items.cpp:3661
+#: Source/items.cpp:3626
 msgid "fireball damage: {:d}-{:d}"
 msgstr "шкода кулі вогню: {:d}-{:d}"
 
-#: Source/items.cpp:3663
+#: Source/items.cpp:3628
 msgid "attacker takes 1-3 damage"
 msgstr "володар отримує 1-3 шкоди"
 
-#: Source/items.cpp:3665
+#: Source/items.cpp:3630
 msgid "user loses all mana"
 msgstr "поглинає всю ману"
 
-#: Source/items.cpp:3667
+#: Source/items.cpp:3632
 msgid "you can't heal"
 msgstr "ти не можеш цілитися"
 
-#: Source/items.cpp:3669
+#: Source/items.cpp:3634
 msgid "absorbs half of trap damage"
 msgstr "полгинає половину шкоди пасток"
 
-#: Source/items.cpp:3671
+#: Source/items.cpp:3636
 msgid "knocks target back"
 msgstr "відбиває ворога назад"
 
-#: Source/items.cpp:3673
+#: Source/items.cpp:3638
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% шкоди проти демонів"
 
-#: Source/items.cpp:3675
+#: Source/items.cpp:3640
 msgid "All Resistance equals 0"
 msgstr "Всі Спротиви рівні 0"
 
-#: Source/items.cpp:3677
+#: Source/items.cpp:3642
 msgid "hit monster doesn't heal"
 msgstr "вдарений монстр не цілиться"
 
-#: Source/items.cpp:3680
+#: Source/items.cpp:3645
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "удар краде 3% мани"
 
-#: Source/items.cpp:3682
+#: Source/items.cpp:3647
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "удар краде 5% мани"
 
-#: Source/items.cpp:3686
+#: Source/items.cpp:3651
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "удар краде 3% життя"
 
-#: Source/items.cpp:3688
+#: Source/items.cpp:3653
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "удар краде 5% життя"
 
-#: Source/items.cpp:3691
+#: Source/items.cpp:3656
 msgid "penetrates target's armor"
 msgstr "пробиває броню"
 
-#: Source/items.cpp:3694
+#: Source/items.cpp:3659
 msgid "quick attack"
 msgstr "моторна атака"
 
-#: Source/items.cpp:3696
+#: Source/items.cpp:3661
 msgid "fast attack"
 msgstr "швидка атака"
 
-#: Source/items.cpp:3698
+#: Source/items.cpp:3663
 msgid "faster attack"
 msgstr "швидша атака"
 
-#: Source/items.cpp:3700
+#: Source/items.cpp:3665
 msgid "fastest attack"
 msgstr "найшвидша атака"
 
 # Що за NW?
-#: Source/items.cpp:3701 Source/items.cpp:3709 Source/items.cpp:3767
+#: Source/items.cpp:3666 Source/items.cpp:3674 Source/items.cpp:3732
 msgid "Another ability (NW)"
 msgstr "Інше уміння (NW)"
 
-#: Source/items.cpp:3704
+#: Source/items.cpp:3669
 msgid "fast hit recovery"
 msgstr "швидке відновлення після удару"
 
-#: Source/items.cpp:3706
+#: Source/items.cpp:3671
 msgid "faster hit recovery"
 msgstr "швидше відновлення після удару"
 
-#: Source/items.cpp:3708
+#: Source/items.cpp:3673
 msgid "fastest hit recovery"
 msgstr "найшвидше відновлення після удару"
 
-#: Source/items.cpp:3711
+#: Source/items.cpp:3676
 msgid "fast block"
 msgstr "швидкий блок"
 
-#: Source/items.cpp:3713
+#: Source/items.cpp:3678
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "додає {:d} очко до шкоди"
 msgstr[1] "додає {:d} очка до шкоди"
 msgstr[2] "додає {:d} очків до шкоди"
 
-#: Source/items.cpp:3715
+#: Source/items.cpp:3680
 msgid "fires random speed arrows"
 msgstr "стріляє кілька швидких стріл"
 
-#: Source/items.cpp:3717
+#: Source/items.cpp:3682
 msgid "unusual item damage"
 msgstr "у предмету незвичайна шкода"
 
-#: Source/items.cpp:3719
+#: Source/items.cpp:3684
 msgid "altered durability"
 msgstr "змінена міцність"
 
-#: Source/items.cpp:3721
+#: Source/items.cpp:3686
 msgid "Faster attack swing"
 msgstr "Швидший змах атаки"
 
-#: Source/items.cpp:3723
+#: Source/items.cpp:3688
 msgid "one handed sword"
 msgstr "одноручний меч"
 
-#: Source/items.cpp:3725
+#: Source/items.cpp:3690
 msgid "constantly lose hit points"
 msgstr "постійно втрачаєш очки життя"
 
-#: Source/items.cpp:3727
+#: Source/items.cpp:3692
 msgid "life stealing"
 msgstr "краде життя"
 
-#: Source/items.cpp:3729
+#: Source/items.cpp:3694
 msgid "no strength requirement"
 msgstr "немає вимог по силі"
 
-#: Source/items.cpp:3731
+#: Source/items.cpp:3696
 msgid "see with infravision"
 msgstr "бачить інфрабаченням"
 
-#: Source/items.cpp:3736
+#: Source/items.cpp:3701
 msgid "lightning damage: {:d}"
 msgstr "шкода блискавкою: {:d}"
 
-#: Source/items.cpp:3738
+#: Source/items.cpp:3703
 msgid "lightning damage: {:d}-{:d}"
 msgstr "шкода блискавкою: {:d}-{:d}"
 
-#: Source/items.cpp:3740
+#: Source/items.cpp:3705
 msgid "charged bolts on hits"
 msgstr "при ударі стріляє зарядженою стрілою"
 
-#: Source/items.cpp:3747
+#: Source/items.cpp:3712
 msgid "occasional triple damage"
 msgstr "випадкова потрійна шкода"
 
-#: Source/items.cpp:3749
+#: Source/items.cpp:3714
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "шкода згасає {:+d}%"
 
-#: Source/items.cpp:3751
+#: Source/items.cpp:3716
 msgid "2x dmg to monst, 1x to you"
 msgstr "2х шкд монстрам, 1х шкд тобі"
 
-#: Source/items.cpp:3753
+#: Source/items.cpp:3718
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Випадкова шкода 0 - 500%"
 
-#: Source/items.cpp:3755
+#: Source/items.cpp:3720
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "низька міц, {:+d}% шкоди"
 
 # ШУ- шанс удару
-#: Source/items.cpp:3759
+#: Source/items.cpp:3724
 msgid "extra AC vs demons"
 msgstr "додат. ШУ проти демонів"
 
 # ШУ - шанс удару
-#: Source/items.cpp:3761
+#: Source/items.cpp:3726
 msgid "extra AC vs undead"
 msgstr "додат. ШУ проти нечисті"
 
-#: Source/items.cpp:3763
+#: Source/items.cpp:3728
 msgid "50% Mana moved to Health"
 msgstr "50% Мани перенесене в Здоров'я"
 
-#: Source/items.cpp:3765
+#: Source/items.cpp:3730
 msgid "40% Health moved to Mana"
 msgstr "40% Здоров'я перенесене в Ману"
 
-#: Source/items.cpp:3802 Source/items.cpp:3840
+#: Source/items.cpp:3767 Source/items.cpp:3805
 msgid "damage: {:d}  Indestructible"
 msgstr "шкода: {:d}  Неруйновний"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3804 Source/items.cpp:3842
+#: Source/items.cpp:3769 Source/items.cpp:3807
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "шкода: {:d}  Міц: {:d}/{:d}"
 
-#: Source/items.cpp:3807 Source/items.cpp:3845
+#: Source/items.cpp:3772 Source/items.cpp:3810
 msgid "damage: {:d}-{:d}  Indestructible"
-msgstr "damage: {:d}-{:d}  Indestructible"
+msgstr "шкода: {:d}-{:d}  Неруйновний"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3809 Source/items.cpp:3847
+#: Source/items.cpp:3774 Source/items.cpp:3812
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "damage: {:d}-{:d}  Dur: {:d}/{:d}"
+msgstr "шкода: {:d}-{:d}  Міц: {:d}/{:d}"
 
-#: Source/items.cpp:3814 Source/items.cpp:3857
+#: Source/items.cpp:3779 Source/items.cpp:3822
 msgid "armor: {:d}  Indestructible"
 msgstr "броня: {:d}  Неруйновний"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:3816 Source/items.cpp:3859
+#: Source/items.cpp:3781 Source/items.cpp:3824
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "броня: {:d}  Міц: {:d}/{:d}"
 
-#: Source/items.cpp:3819 Source/items.cpp:3850 Source/items.cpp:3863
-#: Source/stores.cpp:253
+#: Source/items.cpp:3784 Source/items.cpp:3815 Source/items.cpp:3828
+#: Source/stores.cpp:259
 msgid "Charges: {:d}/{:d}"
 msgstr "Заряди: {:d}/{:d}"
 
-#: Source/items.cpp:3828
+#: Source/items.cpp:3793
 msgid "unique item"
 msgstr "унікальний предмет"
 
-#: Source/items.cpp:3853 Source/items.cpp:3861 Source/items.cpp:3867
+#: Source/items.cpp:3818 Source/items.cpp:3826 Source/items.cpp:3832
 msgid "Not Identified"
 msgstr "Не Розпізнано"
 
-#: Source/loadsave.cpp:1870 Source/loadsave.cpp:2388
+#: Source/loadsave.cpp:1959 Source/loadsave.cpp:2477
 msgid "Unable to open save file archive"
 msgstr "Неможливо відкрити архів збереження"
 
-#: Source/loadsave.cpp:1873
+#: Source/loadsave.cpp:1962
 msgid "Invalid save file"
 msgstr "Файл збереження зламаний"
 
-#: Source/loadsave.cpp:1904
+#: Source/loadsave.cpp:1993
 msgid "Player is on a Hellfire only level"
 msgstr "Гравець на рівні, доступному тільки в Hellfire"
 
-#: Source/loadsave.cpp:2150
+#: Source/loadsave.cpp:2239
 msgid "Invalid game state"
 msgstr "Невірний стан гри"
 
-#: Source/menu.cpp:149
+#: Source/menu.cpp:154
 msgid "Unable to display mainmenu"
 msgstr "Неможливо показати головне меню"
 
@@ -5626,109 +5609,109 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Замок Загибіелі"
 
-#: Source/monster.cpp:3384
+#: Source/monster.cpp:3387
 msgid "Animal"
 msgstr "Тварина"
 
-#: Source/monster.cpp:3386
+#: Source/monster.cpp:3389
 msgid "Demon"
 msgstr "Демон"
 
-#: Source/monster.cpp:3388
+#: Source/monster.cpp:3391
 msgid "Undead"
 msgstr "Нечисть"
 
-#: Source/monster.cpp:4643
+#: Source/monster.cpp:4637
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Тип: {:s}  Вбито: {:d}"
 
-#: Source/monster.cpp:4645
+#: Source/monster.cpp:4639
 msgid "Total kills: {:d}"
 msgstr "Всього вбито: {:d}"
 
-#: Source/monster.cpp:4677
+#: Source/monster.cpp:4671
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Життя {:d} з {:d}"
 
-#: Source/monster.cpp:4682
+#: Source/monster.cpp:4676
 msgid "No magic resistance"
 msgstr "Не спротивлюється магії"
 
-#: Source/monster.cpp:4685
+#: Source/monster.cpp:4679
 msgid "Resists:"
 msgstr "Спротив:"
 
-#: Source/monster.cpp:4687 Source/monster.cpp:4697
+#: Source/monster.cpp:4681 Source/monster.cpp:4691
 msgid " Magic"
 msgstr " Магія"
 
-#: Source/monster.cpp:4689 Source/monster.cpp:4699
+#: Source/monster.cpp:4683 Source/monster.cpp:4693
 msgid " Fire"
 msgstr " Вогонь"
 
-#: Source/monster.cpp:4691 Source/monster.cpp:4701
+#: Source/monster.cpp:4685 Source/monster.cpp:4695
 msgid " Lightning"
 msgstr " Блискавка"
 
-#: Source/monster.cpp:4695
+#: Source/monster.cpp:4689
 msgid "Immune:"
 msgstr "Імунітет:"
 
-#: Source/monster.cpp:4712
+#: Source/monster.cpp:4706
 msgid "Type: {:s}"
 msgstr "Тип: {:s}"
 
-#: Source/monster.cpp:4717 Source/monster.cpp:4723
+#: Source/monster.cpp:4711 Source/monster.cpp:4717
 msgid "No resistances"
 msgstr "Немає спротиву"
 
-#: Source/monster.cpp:4718 Source/monster.cpp:4727
+#: Source/monster.cpp:4712 Source/monster.cpp:4721
 msgid "No Immunities"
 msgstr "Немає Імунітету"
 
-#: Source/monster.cpp:4721
+#: Source/monster.cpp:4715
 msgid "Some Magic Resistances"
 msgstr "Декілька Магічних Спротивів"
 
-#: Source/monster.cpp:4725
+#: Source/monster.cpp:4719
 msgid "Some Magic Immunities"
 msgstr "Декілька Магічних Імунітетів"
 
-#: Source/msg.cpp:485
+#: Source/msg.cpp:537
 msgid "Trying to drop a floor item?"
 msgstr "Пробуєте кинути предмет що на підлозі?"
 
-#: Source/msg.cpp:988 Source/msg.cpp:1023 Source/msg.cpp:1054
-#: Source/msg.cpp:1181 Source/msg.cpp:1213 Source/msg.cpp:1245
-#: Source/msg.cpp:1275
+#: Source/msg.cpp:1039 Source/msg.cpp:1074 Source/msg.cpp:1105
+#: Source/msg.cpp:1232 Source/msg.cpp:1264 Source/msg.cpp:1296
+#: Source/msg.cpp:1326
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} зворожував заборонені чари."
 
-#: Source/msg.cpp:1683 Source/multi.cpp:738 Source/multi.cpp:787
+#: Source/msg.cpp:1734 Source/multi.cpp:796 Source/multi.cpp:845
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Гравець '{:s}' (рівень {:d}) приєднався до гри"
 
-#: Source/msg.cpp:1993
+#: Source/msg.cpp:2049
 msgid "The game ended"
 msgstr "Гра закінчилась"
 
-#: Source/msg.cpp:1999
+#: Source/msg.cpp:2055
 msgid "Unable to get level data"
 msgstr "Неможливо дістати дані рівня"
 
-#: Source/multi.cpp:198
+#: Source/multi.cpp:245
 msgid "Player '{:s}' just left the game"
 msgstr "Гравець '{:s}' покинув гру"
 
-#: Source/multi.cpp:201
+#: Source/multi.cpp:248
 msgid "Player '{:s}' killed Diablo and left the game!"
 msgstr "Гравець '{:s}' вбив Діабло і покинув гру!"
 
-#: Source/multi.cpp:205
+#: Source/multi.cpp:252
 msgid "Player '{:s}' dropped due to timeout"
 msgstr "Гравець '{:s}' відключився через таймаут"
 
-#: Source/multi.cpp:789
+#: Source/multi.cpp:847
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "Гравець '{:s}' (рівень {:d}) вже в грі"
 
@@ -5862,12 +5845,12 @@ msgstr "Великий Конфлікт"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:271
 msgid "The Wages of Sin are War"
-msgstr "Розплата Гріху і Війни"
+msgstr "Розплата за Гріхи — це Війна"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:272
 msgid "The Tale of the Horadrim"
-msgstr "Оповідь про Хорадріма"
+msgstr "Розповідь про Хорадріма"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:273
@@ -5887,7 +5870,7 @@ msgstr "Зв'язування Трьох"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:276
 msgid "The Realms Beyond"
-msgstr "Царства за Межами"
+msgstr "Виміри за Межами"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:277
@@ -5902,223 +5885,223 @@ msgstr "Чорний Король"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:279
 msgid "Journal: The Ensorcellment"
-msgstr "Журнал: Чаклунство"
+msgstr "Щоденник: Чаклунство"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:280
 msgid "Journal: The Meeting"
-msgstr "Журнал: Зустріч"
+msgstr "Щоденник: Зустріч"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:281
 msgid "Journal: The Tirade"
-msgstr "Журнал: Тирада"
+msgstr "Щоденник: Тирада"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:282
 msgid "Journal: His Power Grows"
-msgstr "Журнал: Його Сила Росте"
+msgstr "Щоденник: Його Сила Росте"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:283
 msgid "Journal: NA-KRUL"
-msgstr "Журнал: НА-КРУЛ"
+msgstr "Щоденник: НА-КРУЛ"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:284
 msgid "Journal: The End"
-msgstr "Журнал: Кінець"
+msgstr "Щоденник: Кінець"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:285
 msgid "A Spellbook"
 msgstr "Книга Чар"
 
-#: Source/objects.cpp:5383
+#: Source/objects.cpp:5578
 msgid "Crucified Skeleton"
 msgstr "Розп'ятий Скелет"
 
-#: Source/objects.cpp:5387
+#: Source/objects.cpp:5583
 msgid "Lever"
 msgstr "Важіль"
 
-#: Source/objects.cpp:5396
+#: Source/objects.cpp:5594
 msgid "Open Door"
 msgstr "Відкриті Двері"
 
-#: Source/objects.cpp:5398
+#: Source/objects.cpp:5596
 msgid "Closed Door"
 msgstr "Закриті Двері"
 
-#: Source/objects.cpp:5400
+#: Source/objects.cpp:5598
 msgid "Blocked Door"
 msgstr "Заблоковані Двері"
 
-#: Source/objects.cpp:5405
+#: Source/objects.cpp:5603
 msgid "Ancient Tome"
 msgstr "Стародавній Том"
 
-#: Source/objects.cpp:5407
+#: Source/objects.cpp:5605
 msgid "Book of Vileness"
 msgstr "Кинга Підлості"
 
-#: Source/objects.cpp:5412
+#: Source/objects.cpp:5610
 msgid "Skull Lever"
 msgstr "Черепний Важіль"
 
-#: Source/objects.cpp:5415
+#: Source/objects.cpp:5613
 msgid "Mythical Book"
 msgstr "Міфічна Книга"
 
-#: Source/objects.cpp:5419
+#: Source/objects.cpp:5617
 msgid "Small Chest"
 msgstr "Маленька Скриня"
 
-#: Source/objects.cpp:5423
+#: Source/objects.cpp:5621
 msgid "Chest"
 msgstr "Скриня"
 
-#: Source/objects.cpp:5428
+#: Source/objects.cpp:5626
 msgid "Large Chest"
 msgstr "Велика Скриня"
 
-#: Source/objects.cpp:5431
+#: Source/objects.cpp:5630
 msgid "Sarcophagus"
 msgstr "Саркофаг"
 
-#: Source/objects.cpp:5434
+#: Source/objects.cpp:5633
 msgid "Bookshelf"
 msgstr "Полиця з Книгами"
 
-#: Source/objects.cpp:5438
+#: Source/objects.cpp:5637
 msgid "Bookcase"
 msgstr "Шкаф з Книгами"
 
-# How does the pod look like?
-#: Source/objects.cpp:5443
-msgid "Pod"
-msgstr "Банка"
-
-#: Source/objects.cpp:5445
-msgid "Urn"
-msgstr "Урна"
-
-#: Source/objects.cpp:5447
+#: Source/objects.cpp:5641
 msgid "Barrel"
 msgstr "Бочка"
 
+# How does the pod look like?
+#: Source/objects.cpp:5645
+msgid "Pod"
+msgstr "Банка"
+
+#: Source/objects.cpp:5649
+msgid "Urn"
+msgstr "Урна"
+
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5451
+#: Source/objects.cpp:5653
 msgid "{:s} Shrine"
 msgstr "{:s} Вівтар"
 
-#: Source/objects.cpp:5454
+#: Source/objects.cpp:5656
 msgid "Skeleton Tome"
 msgstr "Скелетний Том"
 
-#: Source/objects.cpp:5457
+#: Source/objects.cpp:5659
 msgid "Library Book"
 msgstr "Бібліотечна Книга"
 
-#: Source/objects.cpp:5460
+#: Source/objects.cpp:5662
 msgid "Blood Fountain"
 msgstr "Кривавий Фонтан"
 
-#: Source/objects.cpp:5463
+#: Source/objects.cpp:5665
 msgid "Decapitated Body"
 msgstr "Обезглавлений Труп"
 
-#: Source/objects.cpp:5466
+#: Source/objects.cpp:5668
 msgid "Book of the Blind"
 msgstr "Книга Сліпих"
 
-#: Source/objects.cpp:5469
+#: Source/objects.cpp:5671
 msgid "Book of Blood"
 msgstr "Книга Крові"
 
-#: Source/objects.cpp:5472
+#: Source/objects.cpp:5674
 msgid "Purifying Spring"
 msgstr "Очищальне Джерело"
 
-#: Source/objects.cpp:5479 Source/objects.cpp:5503
+#: Source/objects.cpp:5681 Source/objects.cpp:5706
 msgid "Weapon Rack"
 msgstr "Стелаж зі Зброєю"
 
-#: Source/objects.cpp:5482
+#: Source/objects.cpp:5684
 msgid "Goat Shrine"
 msgstr "Вівтар Кози"
 
-#: Source/objects.cpp:5485
+#: Source/objects.cpp:5687
 msgid "Cauldron"
 msgstr "Казан"
 
-#: Source/objects.cpp:5488
+#: Source/objects.cpp:5690
 msgid "Murky Pool"
 msgstr "Мутний Ставок"
 
-#: Source/objects.cpp:5491
+#: Source/objects.cpp:5693
 msgid "Fountain of Tears"
 msgstr "Фонтан Сліз"
 
-#: Source/objects.cpp:5494
+#: Source/objects.cpp:5696
 msgid "Steel Tome"
 msgstr "Сталевий Том"
 
-#: Source/objects.cpp:5497
+#: Source/objects.cpp:5699
 msgid "Pedestal of Blood"
 msgstr "П'єдестал Крові"
 
-#: Source/objects.cpp:5506
+#: Source/objects.cpp:5709
 msgid "Mushroom Patch"
 msgstr "Грибна Галявина"
 
-#: Source/objects.cpp:5509
+#: Source/objects.cpp:5712
 msgid "Vile Stand"
 msgstr "Огидний Стелаж"
 
-#: Source/objects.cpp:5512
+#: Source/objects.cpp:5715
 msgid "Slain Hero"
 msgstr "Вбитий Герой"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5519
+#: Source/objects.cpp:5722
 msgid "Trapped {:s}"
 msgstr "{:s} з пасткою"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5524
+#: Source/objects.cpp:5727
 msgid "{:s} (disabled)"
 msgstr "{:s} (не активно)"
 
-#: Source/options.cpp:420 Source/options.cpp:551 Source/options.cpp:557
+#: Source/options.cpp:426 Source/options.cpp:557 Source/options.cpp:563
 msgid "ON"
 msgstr "УВІМК"
 
-#: Source/options.cpp:420 Source/options.cpp:549 Source/options.cpp:555
+#: Source/options.cpp:426 Source/options.cpp:555 Source/options.cpp:561
 msgid "OFF"
 msgstr "ВИМК"
 
-#: Source/options.cpp:539
+#: Source/options.cpp:545
 msgid "Start Up"
 msgstr "Запуск"
 
-#: Source/options.cpp:539
+#: Source/options.cpp:545
 msgid "Start Up Settings"
 msgstr "Налаштування Запуску"
 
-#: Source/options.cpp:540
+#: Source/options.cpp:546
 msgid "Game Mode"
 msgstr "Режим Гри"
 
-#: Source/options.cpp:540
+#: Source/options.cpp:546
 msgid "Play Diablo or Hellfire."
 msgstr "Грати в Diablo або в Hellfire."
 
-#: Source/options.cpp:546
+#: Source/options.cpp:552
 msgid "Restrict to Shareware"
 msgstr "Обмежити гру до Демо"
 
-#: Source/options.cpp:546
+#: Source/options.cpp:552
 msgid ""
 "Makes the game compatible with the demo. Enables multiplayer with friends "
 "who don't own a full copy of Diablo."
@@ -6126,107 +6109,107 @@ msgstr ""
 "Робить гру сумісною з демо-версією. Дозволяє гру по мережі з друзями у яких "
 "немає повної копії Diablo."
 
-#: Source/options.cpp:547 Source/options.cpp:553
+#: Source/options.cpp:553 Source/options.cpp:559
 msgid "Intro"
 msgstr "Ролик"
 
-#: Source/options.cpp:547 Source/options.cpp:553
+#: Source/options.cpp:553 Source/options.cpp:559
 msgid "Shown Intro cinematic."
 msgstr "Показати початковий ролик."
 
-#: Source/options.cpp:559
+#: Source/options.cpp:565
 msgid "Splash"
 msgstr "Заставка"
 
-#: Source/options.cpp:559
+#: Source/options.cpp:565
 msgid "Shown splash screen."
 msgstr "Показана заставка."
 
-#: Source/options.cpp:561
+#: Source/options.cpp:567
 msgid "Logo and Title Screen"
 msgstr "Логотип і Початковий Екран"
 
-#: Source/options.cpp:562
+#: Source/options.cpp:568
 msgid "Title Screen"
 msgstr "Початковий Екран"
 
-#: Source/options.cpp:581
+#: Source/options.cpp:587
 msgid "Diablo specific Settings"
 msgstr "Налаштування Diablo"
 
-#: Source/options.cpp:595
+#: Source/options.cpp:601
 msgid "Hellfire specific Settings"
 msgstr "Настройки Hellfire"
 
-#: Source/options.cpp:609
+#: Source/options.cpp:615
 msgid "Audio"
 msgstr "Аудіо"
 
-#: Source/options.cpp:609
+#: Source/options.cpp:615
 msgid "Audio Settings"
 msgstr "Налаштування Аудіо"
 
-#: Source/options.cpp:612
+#: Source/options.cpp:618
 msgid "Walking Sound"
 msgstr "Звук Ходьби"
 
-#: Source/options.cpp:612
+#: Source/options.cpp:618
 msgid "Player emits sound when walking."
 msgstr "При ходьбі гравець видає звук."
 
-#: Source/options.cpp:613
+#: Source/options.cpp:619
 msgid "Auto Equip Sound"
 msgstr "Звук Автоспорядження"
 
-#: Source/options.cpp:613
+#: Source/options.cpp:619
 msgid "Automatically equipping items on pickup emits the equipment sound."
 msgstr "Автоматичне спорядження предметів видає звук спорядження."
 
-#: Source/options.cpp:614
+#: Source/options.cpp:620
 msgid "Item Pickup Sound"
 msgstr "Звук Підбору Предмету"
 
-#: Source/options.cpp:614
+#: Source/options.cpp:620
 msgid "Picking up items emits the items pickup sound."
 msgstr "Підбір предметів видає звук підбору."
 
-#: Source/options.cpp:615
+#: Source/options.cpp:621
 msgid "Sample Rate"
 msgstr "Частота Дискретизації"
 
-#: Source/options.cpp:615
+#: Source/options.cpp:621
 msgid "Output sample rate (Hz)."
 msgstr "Частота дискретизації звуку (в Гц)"
 
-#: Source/options.cpp:616
+#: Source/options.cpp:622
 msgid "Channels"
 msgstr "Канали"
 
-#: Source/options.cpp:616
+#: Source/options.cpp:622
 msgid "Number of output channels."
 msgstr "Кількість каналів звуку."
 
-#: Source/options.cpp:617
+#: Source/options.cpp:623
 msgid "Buffer Size"
 msgstr "Розмір Буферу"
 
-#: Source/options.cpp:617
+#: Source/options.cpp:623
 msgid "Buffer size (number of frames per channel)."
 msgstr "Розмір буферу (кількість кадрів на канал)."
 
-#: Source/options.cpp:618
+#: Source/options.cpp:631
 msgid "Resampling Quality"
 msgstr "Якість Семплування"
 
-#: Source/options.cpp:618
+#: Source/options.cpp:631
 msgid "Quality of the resampler, from 0 (lowest) to 10 (highest)."
 msgstr "Якість семлеру, від 0 (найнижча) до 10 (найвища)."
 
-#: Source/options.cpp:641
+#: Source/options.cpp:654
 msgid "Resolution"
 msgstr "Роздільна Здатність"
 
-#: Source/options.cpp:641
+#: Source/options.cpp:654
 msgid ""
 "Affect the game's internal resolution and determine your view area. Note: "
 "This can differ from screen resolution, when Upscaling, Integer Scaling or "
@@ -6237,27 +6220,27 @@ msgstr ""
 "використовуються \"Збільшення Зображення\", \"Коефіцієнт Масштабування\" або "
 "\"Налаштувати по Екрану\"."
 
-#: Source/options.cpp:737
+#: Source/options.cpp:750
 msgid "Graphics"
 msgstr "Графіка"
 
-#: Source/options.cpp:737
+#: Source/options.cpp:750
 msgid "Graphics Settings"
 msgstr "Налаштування Графіки"
 
-#: Source/options.cpp:738
+#: Source/options.cpp:751
 msgid "Fullscreen"
 msgstr "Повноекранний Режим"
 
-#: Source/options.cpp:738
+#: Source/options.cpp:751
 msgid "Display the game in windowed or fullscreen mode."
 msgstr "Показує гру в режимі повного екрану чи вікна."
 
-#: Source/options.cpp:740
+#: Source/options.cpp:753
 msgid "Fit to Screen"
 msgstr "Налаштувати по Екрану"
 
-#: Source/options.cpp:740
+#: Source/options.cpp:753
 msgid ""
 "Automatically adjust the game window to your current desktop screen aspect "
 "ratio and resolution."
@@ -6265,11 +6248,11 @@ msgstr ""
 "Автоматично налаштовує вікно гри згідно співвідношення сторін і роздільної "
 "здатності екрану."
 
-#: Source/options.cpp:743
+#: Source/options.cpp:756
 msgid "Upscale"
 msgstr "Збільшення Зображення"
 
-#: Source/options.cpp:743
+#: Source/options.cpp:756
 msgid ""
 "Enables image scaling from the game resolution to your monitor resolution. "
 "Prevents changing the monitor resolution and allows window resizing."
@@ -6277,39 +6260,39 @@ msgstr ""
 "Дозволяє збільшення зображення гри. Забороняє зміну роздільної здатності "
 "монітора. Дозволяє міняти розмір вікна."
 
-#: Source/options.cpp:744
+#: Source/options.cpp:757
 msgid "Scaling Quality"
 msgstr "Якість Масштабування"
 
-#: Source/options.cpp:744
+#: Source/options.cpp:757
 msgid "Enables optional filters to the output image when upscaling."
 msgstr "Накладає опційні фільтри до збільшеної картинки."
 
-#: Source/options.cpp:746
+#: Source/options.cpp:759
 msgid "Nearest Pixel"
 msgstr "Найближчий Піксель"
 
-#: Source/options.cpp:747
+#: Source/options.cpp:760
 msgid "Bilinear"
 msgstr "Білінійний"
 
-#: Source/options.cpp:748
+#: Source/options.cpp:761
 msgid "Anisotropic"
 msgstr "Анізотропний"
 
-#: Source/options.cpp:750
+#: Source/options.cpp:763
 msgid "Integer Scaling"
 msgstr "Коефіцієнт Масштабування"
 
-#: Source/options.cpp:750
+#: Source/options.cpp:763
 msgid "Scales the image using whole number pixel ratio."
 msgstr "Збільшує зображення гри по коефіцієнту."
 
-#: Source/options.cpp:751
+#: Source/options.cpp:764
 msgid "Vertical Sync"
 msgstr "Вертикальна Синхронізація"
 
-#: Source/options.cpp:751
+#: Source/options.cpp:764
 msgid ""
 "Forces waiting for Vertical Sync. Prevents tearing effect when drawing a "
 "frame. Disabling it can help with mouse lag on some systems."
@@ -6318,47 +6301,47 @@ msgstr ""
 "розриву зображення. Якщо налаштування вимкнене, то це може зменшити лаг на "
 "деяких системах."
 
-#: Source/options.cpp:754
+#: Source/options.cpp:767
 msgid "Color Cycling"
 msgstr "Циклування Кольорів"
 
-#: Source/options.cpp:754
+#: Source/options.cpp:767
 msgid "Color cycling effect used for water, lava, and acid animation."
 msgstr ""
 "Ефект циклування кольорів, що використовується для анімації води, лави та "
 "кислоти."
 
-#: Source/options.cpp:755
+#: Source/options.cpp:768
 msgid "Alternate nest art"
 msgstr "Альтернативна палітра для Гнізда"
 
-#: Source/options.cpp:755
+#: Source/options.cpp:768
 msgid "The game will use an alternative palette for Hellfire’s nest tileset."
 msgstr ""
 "У грі буде використовуватися альтернативна палітра для плиток Гнізда з "
 "Hellfire."
 
-#: Source/options.cpp:757
+#: Source/options.cpp:770
 msgid "Hardware Cursor"
 msgstr "Апаратний Курсор"
 
-#: Source/options.cpp:757
+#: Source/options.cpp:770
 msgid "Use a hardware cursor"
 msgstr "Використовувати апаратно-прискорений курсор"
 
-#: Source/options.cpp:758
+#: Source/options.cpp:771
 msgid "Hardware Cursor For Items"
 msgstr "Апаратний Курсор для Предметів"
 
-#: Source/options.cpp:758
+#: Source/options.cpp:771
 msgid "Use a hardware cursor for items."
 msgstr "Використовувати апаратно-прискорений курсор для предметів."
 
-#: Source/options.cpp:759
+#: Source/options.cpp:772
 msgid "Hardware Cursor Maximum Size"
 msgstr "Макс Розмір Аппаратного Курсору"
 
-#: Source/options.cpp:759
+#: Source/options.cpp:772
 msgid ""
 "Maximum width / height for the hardware cursor. Larger cursors fall back to "
 "software."
@@ -6366,53 +6349,53 @@ msgstr ""
 "Максимальна широта / висота для апаратно-прискореного курсору. Більші "
 "курсори використовують програмний спосіб."
 
-#: Source/options.cpp:761
+#: Source/options.cpp:774
 msgid "FPS Limiter"
 msgstr "Ліміт Кадрів в Секунду"
 
-#: Source/options.cpp:761
+#: Source/options.cpp:774
 msgid "FPS is limited to avoid high CPU load. Limit considers refresh rate."
 msgstr ""
 "Кадри в секунду лімітовані, щоб запобігти високе використання процессора. "
 "Ліміт враховує частоту оновлення монітора."
 
-#: Source/options.cpp:762
+#: Source/options.cpp:775
 msgid "Show FPS"
 msgstr "Показати Кадри в Секунду"
 
-#: Source/options.cpp:762
+#: Source/options.cpp:775
 msgid "Displays the FPS in the upper left corner of the screen."
 msgstr "Показує лічильник кадрів в секунду в верхньому лівому кутку екрана."
 
-#: Source/options.cpp:763
+#: Source/options.cpp:776
 msgid "Show health values"
 msgstr "Показати значення здоров'я"
 
-#: Source/options.cpp:763
+#: Source/options.cpp:776
 msgid "Displays current / max health value on health globe."
 msgstr "Показує значення поточного/максимального здоров'я на кулі здоров'я."
 
-#: Source/options.cpp:764
+#: Source/options.cpp:777
 msgid "Show mana values"
 msgstr "Показати значення мани"
 
-#: Source/options.cpp:764
+#: Source/options.cpp:777
 msgid "Displays current / max mana value on mana globe."
 msgstr "Показує значення поточної/максимальної мани на кулі мани."
 
-#: Source/options.cpp:813
+#: Source/options.cpp:826
 msgid "Gameplay"
 msgstr "Гра"
 
-#: Source/options.cpp:813
+#: Source/options.cpp:826
 msgid "Gameplay Settings"
 msgstr "Налаштування Гри"
 
-#: Source/options.cpp:815
+#: Source/options.cpp:828
 msgid "Run in Town"
 msgstr "Біг в Місті"
 
-#: Source/options.cpp:815
+#: Source/options.cpp:828
 msgid ""
 "Enable jogging/fast walking in town for Diablo and Hellfire. This option was "
 "introduced in the expansion."
@@ -6420,36 +6403,36 @@ msgstr ""
 "Вмикає біг/швидку ходьбу в Місті для Diablo та Hellfire. Цю опцію вперше "
 "додали в Hellfire."
 
-#: Source/options.cpp:816
+#: Source/options.cpp:829
 msgid "Grab Input"
 msgstr "Захопити Мишу"
 
-#: Source/options.cpp:816
+#: Source/options.cpp:829
 msgid "When enabled mouse is locked to the game window."
 msgstr "Миша прив'язана до вікна гри коли це налаштування ввімкнено."
 
-#: Source/options.cpp:817
+#: Source/options.cpp:830
 msgid "Theo Quest"
 msgstr "Квест Тео"
 
-#: Source/options.cpp:817
+#: Source/options.cpp:830
 msgid "Enable Little Girl quest."
 msgstr "Дозволяє квест Маленької Дівчинки."
 
-#: Source/options.cpp:818
+#: Source/options.cpp:831
 msgid "Cow Quest"
 msgstr "Квест Корови"
 
-#: Source/options.cpp:818
+#: Source/options.cpp:831
 msgid ""
 "Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."
 msgstr "Дозволяє квест Джерсі. Замість Фермера Лестера буде Повний Псих."
 
-#: Source/options.cpp:819
+#: Source/options.cpp:832
 msgid "Friendly Fire"
 msgstr "Дружній Вогонь"
 
-#: Source/options.cpp:819
+#: Source/options.cpp:832
 msgid ""
 "Allow arrow/spell damage between players in multiplayer even when the "
 "friendly mode is on."
@@ -6457,152 +6440,152 @@ msgstr ""
 "Дозволяє шкоду від чар/стріл гравцям в мережевій грі, навіть якщо ввімкнений "
 "дружній режим."
 
-#: Source/options.cpp:820
+#: Source/options.cpp:833
 msgid "Test Bard"
 msgstr "Тестовий Бард"
 
-#: Source/options.cpp:820
+#: Source/options.cpp:833
 msgid "Force the Bard character type to appear in the hero selection menu."
 msgstr "Примусити \"Бард\" з'явитися в меню вибору типу героя."
 
-#: Source/options.cpp:821
+#: Source/options.cpp:834
 msgid "Test Barbarian"
 msgstr "Тестовий Варвар"
 
-#: Source/options.cpp:821
+#: Source/options.cpp:834
 msgid ""
 "Force the Barbarian character type to appear in the hero selection menu."
 msgstr "Примусити \"Варвар\" з'явитися в меню вибору типу героя."
 
-#: Source/options.cpp:822
+#: Source/options.cpp:835
 msgid "Experience Bar"
 msgstr "Шкала Досвіду"
 
-#: Source/options.cpp:822
+#: Source/options.cpp:835
 msgid "Experience Bar is added to the UI at the bottom of the screen."
 msgstr "Додає внизу екрана Шкалу Досвіду."
 
-#: Source/options.cpp:823
+#: Source/options.cpp:836
 msgid "Enemy Health Bar"
 msgstr "Шкала Ворожого Життя"
 
-#: Source/options.cpp:823
+#: Source/options.cpp:836
 msgid "Enemy Health Bar is displayed at the top of the screen."
 msgstr "Додає внизу екрана Шкалу Ворожого Життя."
 
-#: Source/options.cpp:824
+#: Source/options.cpp:837
 msgid "Auto Gold Pickup"
 msgstr "Автопідбір Золота"
 
-#: Source/options.cpp:824
+#: Source/options.cpp:837
 msgid "Gold is automatically collected when in close proximity to the player."
 msgstr ""
 "Золото автоматично збирається коли гравець знаходиться близько до нього."
 
-#: Source/options.cpp:825
+#: Source/options.cpp:838
 msgid "Auto Elixir Pickup"
 msgstr "Автопідбір Еліксирів"
 
-#: Source/options.cpp:825
+#: Source/options.cpp:838
 msgid ""
 "Elixirs are automatically collected when in close proximity to the player."
 msgstr ""
 "Еліксири автоматично збираються коли гравець знаходиться близько до них."
 
-#: Source/options.cpp:826
+#: Source/options.cpp:839
 msgid "Auto Pickup in Town"
 msgstr "Автопідбір в Місті"
 
-#: Source/options.cpp:826
+#: Source/options.cpp:839
 msgid "Automatically pickup items in town."
 msgstr "Предмети в Місті автоматично збираються."
 
-#: Source/options.cpp:827
+#: Source/options.cpp:840
 msgid "Adria Refills Mana"
 msgstr "Адрія Поповнює Ману"
 
-#: Source/options.cpp:827
+#: Source/options.cpp:840
 msgid "Adria will refill your mana when you visit her shop."
 msgstr "Адрія поповнить ману коли гравець відвідує її магазин."
 
-#: Source/options.cpp:828
+#: Source/options.cpp:841
 msgid "Auto Equip Weapons"
 msgstr "Автоспорядження Зброї"
 
-#: Source/options.cpp:828
+#: Source/options.cpp:841
 msgid ""
 "Weapons will be automatically equipped on pickup or purchase if enabled."
 msgstr "Зброя буде автоматично споряджена після її підбору або покупки."
 
-#: Source/options.cpp:829
+#: Source/options.cpp:842
 msgid "Auto Equip Armor"
 msgstr "Автоспорядження Броні"
 
-#: Source/options.cpp:829
+#: Source/options.cpp:842
 msgid "Armor will be automatically equipped on pickup or purchase if enabled."
 msgstr "Броня буде автоматично споряджена після її підбору або покупки."
 
-#: Source/options.cpp:830
+#: Source/options.cpp:843
 msgid "Auto Equip Helms"
 msgstr "Автоспорядження Шоломів"
 
-#: Source/options.cpp:830
+#: Source/options.cpp:843
 msgid "Helms will be automatically equipped on pickup or purchase if enabled."
 msgstr "Шоломи будуть автоматично споряджені після їх підбору або покупки."
 
-#: Source/options.cpp:831
+#: Source/options.cpp:844
 msgid "Auto Equip Shields"
 msgstr "Автоспорядження Щитів"
 
-#: Source/options.cpp:831
+#: Source/options.cpp:844
 msgid ""
 "Shields will be automatically equipped on pickup or purchase if enabled."
 msgstr "Щити будуть автоматично споряджені після їх підбору або покупки."
 
-#: Source/options.cpp:832
+#: Source/options.cpp:845
 msgid "Auto Equip Jewelry"
 msgstr "Автоспорядження Коштовностей"
 
-#: Source/options.cpp:832
+#: Source/options.cpp:845
 msgid ""
 "Jewelry will be automatically equipped on pickup or purchase if enabled."
 msgstr ""
 "Коштовності будуть автоматично споряджені після їх підбору або покупки."
 
-#: Source/options.cpp:833
+#: Source/options.cpp:846
 msgid "Randomize Quests"
 msgstr "Рандомізація Квестів"
 
-#: Source/options.cpp:833
+#: Source/options.cpp:846
 msgid "Randomly selecting available quests for new games."
 msgstr "Квести випадково вибираються для нової гри."
 
-#: Source/options.cpp:834
+#: Source/options.cpp:847
 msgid "Show Monster Type"
 msgstr "Показати Тип Монстра"
 
-#: Source/options.cpp:834
+#: Source/options.cpp:847
 msgid ""
 "Hovering over a monster will display the type of monster in the description "
 "box in the UI."
 msgstr ""
 "Наведення курсора миші над монстром покаже його тип в Панелі Інформації."
 
-#: Source/options.cpp:835
+#: Source/options.cpp:848
 msgid "Auto Refill Belt"
 msgstr "Автозаповнення Пояса"
 
-#: Source/options.cpp:835
+#: Source/options.cpp:848
 msgid "Refill belt from inventory when belt item is consumed."
 msgstr ""
 "Коли предмет з Поясу використовується, Пояс автоматично поповнюється з "
 "інвентаря."
 
-#: Source/options.cpp:836
+#: Source/options.cpp:849
 msgid "Disable Crippling Shrines"
 msgstr "Вимкнути Псуючі Вівтарі"
 
-#: Source/options.cpp:836
+#: Source/options.cpp:849
 msgid ""
 "When enabled Cauldrons, Fascinating Shrines, Goat Shrines, Ornate Shrines "
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
@@ -6610,105 +6593,105 @@ msgstr ""
 "Коли це налаштування ввімкнене, гравець не зможе клікнути на Казани, "
 "Чарівливі, Барвисті, Святі Вівтарі і Вівтарі Кози."
 
-#: Source/options.cpp:837
+#: Source/options.cpp:850
 msgid "Quick Cast"
 msgstr "Швидке Чаклування"
 
-#: Source/options.cpp:837
+#: Source/options.cpp:850
 msgid ""
 "Spell hotkeys instantly cast the spell, rather than switching the readied "
 "spell."
 msgstr "Гаряча клавішу чар буде відразу чаклувати попередньо вибрані чари."
 
-#: Source/options.cpp:838
+#: Source/options.cpp:851
 msgid "Heal Potion Pickup"
 msgstr "Підбір Зілля Зцілення"
 
-#: Source/options.cpp:838
+#: Source/options.cpp:851
 msgid "Number of Healing potions to pick up automatically."
 msgstr "Кількість Зілля Зцілення щоб автоматично підібрати."
 
-#: Source/options.cpp:839
+#: Source/options.cpp:852
 msgid "Full Heal Potion Pickup"
 msgstr "Підбір Зілля Повного Зцілення"
 
-#: Source/options.cpp:839
+#: Source/options.cpp:852
 msgid "Number of Full Healing potions to pick up automatically."
 msgstr "Кількість Зілля Повного Зцілення щоб автоматично підібрати."
 
-#: Source/options.cpp:840
+#: Source/options.cpp:853
 msgid "Mana Potion Pickup"
 msgstr "Підбір Зілля Мани"
 
-#: Source/options.cpp:840
+#: Source/options.cpp:853
 msgid "Number of Mana potions to pick up automatically."
 msgstr "Кількість Зілля Мани щоб автоматично підібрати."
 
-#: Source/options.cpp:841
+#: Source/options.cpp:854
 msgid "Full Mana Potion Pickup"
 msgstr "Підбір Зілля Повної Мани"
 
-#: Source/options.cpp:841
+#: Source/options.cpp:854
 msgid "Number of Full Mana potions to pick up automatically."
 msgstr "Кількість Зілля Повної щоб автоматично підібрати."
 
-#: Source/options.cpp:842
+#: Source/options.cpp:855
 msgid "Rejuvenation Potion Pickup"
 msgstr "Підбір Зілля Омолодження"
 
-#: Source/options.cpp:842
+#: Source/options.cpp:855
 msgid "Number of Rejuvenation potions to pick up automatically."
 msgstr "Кількість Зілля Омолодження щоб автоматично підібрати."
 
-#: Source/options.cpp:843
+#: Source/options.cpp:856
 msgid "Full Rejuvenation Potion Pickup"
 msgstr "Підбір Зілля Повного Омолодження"
 
-#: Source/options.cpp:843
+#: Source/options.cpp:856
 msgid "Number of Full Rejuvenation potions to pick up automatically."
 msgstr "Кількість Зілля Повного Омолодження щоб автоматично підібрати."
 
-#: Source/options.cpp:886
+#: Source/options.cpp:899
 msgid "Controller"
 msgstr "Контроллер"
 
-#: Source/options.cpp:886
+#: Source/options.cpp:899
 msgid "Controller Settings"
 msgstr "Налаштування Контроллеру"
 
-#: Source/options.cpp:895
+#: Source/options.cpp:908
 msgid "Network"
 msgstr "Мережа"
 
-#: Source/options.cpp:895
+#: Source/options.cpp:908
 msgid "Network Settings"
 msgstr "Налаштування Мережі"
 
-#: Source/options.cpp:907
+#: Source/options.cpp:920
 msgid "Chat"
 msgstr "Чат"
 
-#: Source/options.cpp:907
+#: Source/options.cpp:920
 msgid "Chat Settings"
 msgstr "Налаштування Чату"
 
-#: Source/options.cpp:916 Source/options.cpp:1032
+#: Source/options.cpp:929 Source/options.cpp:1045
 msgid "Language"
 msgstr "Мова"
 
-#: Source/options.cpp:916
+#: Source/options.cpp:929
 msgid "Define what language to use in game."
 msgstr "Визначте мову гри."
 
-#: Source/options.cpp:1032
+#: Source/options.cpp:1045
 msgid "Language Settings"
 msgstr "Налаштування Мови"
 
-#: Source/options.cpp:1044
+#: Source/options.cpp:1057
 msgid "Keymapping"
 msgstr "Назначення Клавіш"
 
-#: Source/options.cpp:1044
+#: Source/options.cpp:1057
 msgid "Keymapping Settings"
 msgstr "Налаштування Назначення"
 
@@ -6870,7 +6853,7 @@ msgstr "Б'є тільки нечисть"
 
 #: Source/panels/spell_list.cpp:183
 msgid "Scroll"
-msgstr "Згорток"
+msgstr "Сувій"
 
 #: Source/panels/spell_list.cpp:204
 msgid "Spell Hotkey {:s}"
@@ -6900,11 +6883,11 @@ msgstr "Неможливо писати в архів збереження"
 msgid "Unable to write to save file archive"
 msgstr "Неможливо прочитати архів збереження"
 
-#: Source/plrmsg.cpp:83 Source/qol/chatlog.cpp:127
+#: Source/plrmsg.cpp:83 Source/qol/chatlog.cpp:126
 msgid "{:s} (lvl {:d}): "
 msgstr "{:s} (рів {:d}): "
 
-#: Source/qol/chatlog.cpp:155
+#: Source/qol/chatlog.cpp:154
 msgid "Chat History (Messages: {:d})"
 msgstr "Історія Чату (Повідомлень: {:d})"
 
@@ -7320,334 +7303,324 @@ msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "Руна Каменю"
 
-#: Source/stores.cpp:90
+#: Source/stores.cpp:96
 msgid "Griswold"
 msgstr "Грізволд"
 
-#: Source/stores.cpp:91
+#: Source/stores.cpp:97
 msgid "Pepin"
 msgstr "Пепін"
 
-#: Source/stores.cpp:93
+#: Source/stores.cpp:99
 msgid "Ogden"
 msgstr "Одген"
 
-#: Source/stores.cpp:94
+#: Source/stores.cpp:100
 msgid "Cain"
 msgstr "Каїн"
 
-#: Source/stores.cpp:95
+#: Source/stores.cpp:101
 msgid "Farnham"
 msgstr "Фарнхем"
 
-#: Source/stores.cpp:96
+#: Source/stores.cpp:102
 msgid "Adria"
 msgstr "Адрія"
 
-#: Source/stores.cpp:97 Source/stores.cpp:1308
+#: Source/stores.cpp:103 Source/stores.cpp:1318
 msgid "Gillian"
 msgstr "Гілліан"
 
-#: Source/stores.cpp:98
+#: Source/stores.cpp:104
 msgid "Wirt"
 msgstr "Вірт"
 
-#: Source/stores.cpp:217 Source/stores.cpp:224
+#: Source/stores.cpp:223 Source/stores.cpp:230
 msgid "Back"
 msgstr "Назад"
 
-#: Source/stores.cpp:246 Source/stores.cpp:252
+#: Source/stores.cpp:252 Source/stores.cpp:258
 msgid ",  "
 msgstr ", "
 
-#: Source/stores.cpp:263
+#: Source/stores.cpp:269
 msgid "Damage: {:d}-{:d}  "
 msgstr "Шкода: {:d}-{:d}  "
 
-#: Source/stores.cpp:265
+#: Source/stores.cpp:271
 msgid "Armor: {:d}  "
 msgstr "Броня: {:d}  "
 
-#: Source/stores.cpp:267
+#: Source/stores.cpp:273
 msgid "Dur: {:d}/{:d},  "
 msgstr "Міц: {:d}/{:d},  "
 
-#: Source/stores.cpp:269
+#: Source/stores.cpp:275
 msgid "Indestructible,  "
 msgstr "Неруйновний,  "
 
-#: Source/stores.cpp:277
+#: Source/stores.cpp:283
 msgid "No required attributes"
 msgstr "Немає вимог"
 
-#: Source/stores.cpp:309 Source/stores.cpp:1059 Source/stores.cpp:1295
+#: Source/stores.cpp:315 Source/stores.cpp:1071 Source/stores.cpp:1305
 msgid "Welcome to the"
 msgstr "Ласкаво просимо"
 
-#: Source/stores.cpp:310
+#: Source/stores.cpp:316
 msgid "Blacksmith's shop"
 msgstr "Ковальська Майстерня"
 
-#: Source/stores.cpp:311 Source/stores.cpp:665 Source/stores.cpp:1061
-#: Source/stores.cpp:1119 Source/stores.cpp:1297 Source/stores.cpp:1309
-#: Source/stores.cpp:1322
+#: Source/stores.cpp:317 Source/stores.cpp:677 Source/stores.cpp:1073
+#: Source/stores.cpp:1131 Source/stores.cpp:1307 Source/stores.cpp:1319
+#: Source/stores.cpp:1332
 msgid "Would you like to:"
 msgstr "Ви хочете:"
 
-#: Source/stores.cpp:312
+#: Source/stores.cpp:318
 msgid "Talk to Griswold"
 msgstr "Поговорити з Грізвольдом"
 
-#: Source/stores.cpp:313
+#: Source/stores.cpp:319
 msgid "Buy basic items"
 msgstr "Купити прості предмети"
 
-#: Source/stores.cpp:314
+#: Source/stores.cpp:320
 msgid "Buy premium items"
 msgstr "Купити преміальні предмети"
 
-#: Source/stores.cpp:315 Source/stores.cpp:668
+#: Source/stores.cpp:321 Source/stores.cpp:680
 msgid "Sell items"
 msgstr "Продати предмети"
 
-#: Source/stores.cpp:316
+#: Source/stores.cpp:322
 msgid "Repair items"
 msgstr "Відремонтувати предмети"
 
-#: Source/stores.cpp:317
+#: Source/stores.cpp:323
 msgid "Leave the shop"
 msgstr "Покинути магазин"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096
+#: Source/stores.cpp:372 Source/stores.cpp:737 Source/stores.cpp:1108
 msgid "I have these items for sale:"
 msgstr "В мене продаються такі предмети:"
 
-msgid "Your gold: {:d}"
-msgstr "Ваше золото: {:d}"
-
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:425
+#: Source/stores.cpp:437
 msgid "I have these premium items for sale:"
 msgstr "Є такі преміальні предмети:"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:544 Source/stores.cpp:818
+#: Source/stores.cpp:556 Source/stores.cpp:830
 msgid "You have nothing I want."
 msgstr "Вам немає що продати."
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:555 Source/stores.cpp:829
+#: Source/stores.cpp:567 Source/stores.cpp:842
 msgid "Which item is for sale?"
 msgstr "Який предмет продати?"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:626
+#: Source/stores.cpp:638
 msgid "You have nothing to repair."
 msgstr "Немає чого ремонтувати."
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:637
+#: Source/stores.cpp:649
 msgid "Repair which item?"
 msgstr "Який предмет ремонтувати?"
 
-#: Source/stores.cpp:664
+#: Source/stores.cpp:676
 msgid "Witch's shack"
 msgstr "Хатина відьми"
 
-#: Source/stores.cpp:666
+#: Source/stores.cpp:678
 msgid "Talk to Adria"
 msgstr "Поговорити з Адрією"
 
-#: Source/stores.cpp:667 Source/stores.cpp:1063
+#: Source/stores.cpp:679 Source/stores.cpp:1075
 msgid "Buy items"
 msgstr "Купити предмети"
 
-#: Source/stores.cpp:669
+#: Source/stores.cpp:681
 msgid "Recharge staves"
 msgstr "Перезарядити посохи"
 
-#: Source/stores.cpp:670
+#: Source/stores.cpp:682
 msgid "Leave the shack"
 msgstr "Покинути хатину"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:891
+#: Source/stores.cpp:904
 msgid "You have nothing to recharge."
-msgstr "Немає чого заряджати"
+msgstr "Немає чого заряджати."
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:902
+#: Source/stores.cpp:915
 msgid "Recharge which item?"
 msgstr "Який предмет зарядити?"
 
-#: Source/stores.cpp:914
+#: Source/stores.cpp:928
 msgid "You do not have enough gold"
 msgstr "У Вас недостатньо золота"
 
-#: Source/stores.cpp:922
+#: Source/stores.cpp:936
 msgid "You do not have enough room in inventory"
 msgstr "У Вас недостатньо місця в інвентарі"
 
-#: Source/stores.cpp:961
+#: Source/stores.cpp:973
 msgid "Do we have a deal?"
 msgstr "Домовились?"
 
-#: Source/stores.cpp:964
+#: Source/stores.cpp:976
 msgid "Are you sure you want to identify this item?"
 msgstr "Ви впевнені, що хочете розпізнати цей предмет?"
 
-#: Source/stores.cpp:970
+#: Source/stores.cpp:982
 msgid "Are you sure you want to buy this item?"
 msgstr "Ви впевнені, що хочете купити цей предмет?"
 
-#: Source/stores.cpp:973
+#: Source/stores.cpp:985
 msgid "Are you sure you want to recharge this item?"
 msgstr "Ви впевнені, що хочете зарядити цей предмет?"
 
-#: Source/stores.cpp:977
+#: Source/stores.cpp:989
 msgid "Are you sure you want to sell this item?"
 msgstr "Ви впевнені, що хочете продати цей предмет?"
 
-#: Source/stores.cpp:980
+#: Source/stores.cpp:992
 msgid "Are you sure you want to repair this item?"
 msgstr "Ви впевнені, що хочете відремонтувати цей предмет?"
 
-#: Source/stores.cpp:994 Source/towners.cpp:150
+#: Source/stores.cpp:1006 Source/towners.cpp:150
 msgid "Wirt the Peg-legged boy"
 msgstr "Одноногий хлопчик Вірт"
 
-#: Source/stores.cpp:997 Source/stores.cpp:1004
+#: Source/stores.cpp:1009 Source/stores.cpp:1016
 msgid "Talk to Wirt"
 msgstr "Поговорити з Віртом"
 
-#: Source/stores.cpp:998
+#: Source/stores.cpp:1010
 msgid "I have something for sale,"
 msgstr "В мене є щось на продаж,"
 
-#: Source/stores.cpp:999
+#: Source/stores.cpp:1011
 msgid "but it will cost 50 gold"
 msgstr "але воно коштує 50 золота"
 
-#: Source/stores.cpp:1000
+#: Source/stores.cpp:1012
 msgid "just to take a look. "
 msgstr "подивись. "
 
-#: Source/stores.cpp:1001
+#: Source/stores.cpp:1013
 msgid "What have you got?"
 msgstr "Що в тебе є?"
 
-#: Source/stores.cpp:1002 Source/stores.cpp:1005 Source/stores.cpp:1122
-#: Source/stores.cpp:1312
+#: Source/stores.cpp:1014 Source/stores.cpp:1017 Source/stores.cpp:1134
+#: Source/stores.cpp:1322
 msgid "Say goodbye"
 msgstr "Попрощатися"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1015
+#: Source/stores.cpp:1027
 msgid "I have this item for sale:"
 msgstr "В мене продаються такі предмети:"
 
-#: Source/stores.cpp:1037
+#: Source/stores.cpp:1049
 msgid "Leave"
 msgstr "Покинути"
 
-#: Source/stores.cpp:1060
+#: Source/stores.cpp:1072
 msgid "Healer's home"
 msgstr "Дім цілителя"
 
-#: Source/stores.cpp:1062
+#: Source/stores.cpp:1074
 msgid "Talk to Pepin"
 msgstr "Поговорити з Пепіном"
 
-#: Source/stores.cpp:1064
+#: Source/stores.cpp:1076
 msgid "Leave Healer's home"
 msgstr "Покинути дім цілителя"
 
-#: Source/stores.cpp:1118
+#: Source/stores.cpp:1130
 msgid "The Town Elder"
 msgstr "Старець Міста"
 
-#: Source/stores.cpp:1120
+#: Source/stores.cpp:1132
 msgid "Talk to Cain"
 msgstr "Поговорити з Каїном"
 
-#: Source/stores.cpp:1121
+#: Source/stores.cpp:1133
 msgid "Identify an item"
 msgstr "Розпізнати предмет"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1214
+#: Source/stores.cpp:1226
 msgid "You have nothing to identify."
 msgstr "Немає чого розпізнавати."
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1225
+#: Source/stores.cpp:1237
 msgid "Identify which item?"
 msgstr "Який предмет розпізнати?"
 
-#: Source/stores.cpp:1242
+#: Source/stores.cpp:1252
 msgid "This item is:"
 msgstr "Предмет:"
 
-#: Source/stores.cpp:1245
+#: Source/stores.cpp:1255
 msgid "Done"
 msgstr "Готово"
 
-#: Source/stores.cpp:1254
+#: Source/stores.cpp:1264
 msgid "Talk to {:s}"
 msgstr "Поговорити з {:s}"
 
-#: Source/stores.cpp:1257
+#: Source/stores.cpp:1267
 msgid "Talking to {:s}"
 msgstr "Говоримо з {:s}"
 
-#: Source/stores.cpp:1258
+#: Source/stores.cpp:1268
 msgid "is not available"
 msgstr "недоступне"
 
-#: Source/stores.cpp:1259
+#: Source/stores.cpp:1269
 msgid "in the shareware"
 msgstr "в демо-версії"
 
-#: Source/stores.cpp:1260
+#: Source/stores.cpp:1270
 msgid "version"
 msgstr "версії"
 
-#: Source/stores.cpp:1287
+#: Source/stores.cpp:1297
 msgid "Gossip"
 msgstr "Плітки"
 
-#: Source/stores.cpp:1296
+#: Source/stores.cpp:1306
 msgid "Rising Sun"
 msgstr "Світанкове Сонце"
 
-#: Source/stores.cpp:1298
+#: Source/stores.cpp:1308
 msgid "Talk to Ogden"
 msgstr "Поговорити з Огденом"
 
-#: Source/stores.cpp:1299
+#: Source/stores.cpp:1309
 msgid "Leave the tavern"
 msgstr "Покинути таверну"
 
-#: Source/stores.cpp:1310
+#: Source/stores.cpp:1320
 msgid "Talk to Gillian"
 msgstr "Поговорити з Гілліан"
 
-#: Source/stores.cpp:1311
+#: Source/stores.cpp:1321
 msgid "Access Storage"
 msgstr "Зайти до схованки"
 
-#: Source/stores.cpp:1321 Source/towners.cpp:205
+#: Source/stores.cpp:1331 Source/towners.cpp:205
 msgid "Farnham the Drunk"
 msgstr "П'яниця Фарнхем"
 
-#: Source/stores.cpp:1323
+#: Source/stores.cpp:1333
 msgid "Talk to Farnham"
 msgstr "Поговорити з Фарнхемом"
 
-#: Source/stores.cpp:1324
+#: Source/stores.cpp:1334
 msgid "Say Goodbye"
 msgstr "Попрощатися"
+
+#: Source/stores.cpp:2441
+msgid "Your gold: {:d}"
+msgstr "Ваше золото: {:d}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
@@ -8028,7 +8001,7 @@ msgstr ""
 " \n"
 "Знай це, друже мій — Зло, проти якого ти борешся, це темний Володар Жахів. "
 "Він відомий смертним як Діабло. Саме він був ув’язнений у Лабіринті багато "
-"століть тому, і я боюся, що він знову прагне посіяти хаос у царстві людства. "
+"століть тому, і я боюся, що він знову прагне посіяти хаос у виміру людства. "
 "Ти маєш пройти через портал і знищити Діабло поки не пізно!"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
@@ -8705,7 +8678,7 @@ msgstr ""
 "шукали, але так і не знайшли. Створене з металевих кісток демонів з Лезової "
 "Темниці, Ковадло Люті було виплавлене навколо черепів п’яти наймогутніших "
 "магів підземного світу. На нім вирізані руни сили та хаосу, і будь-яка зброя "
-"або броня, виковане на цьому ковадлі, буде занурене в царство Хаосу, "
+"або броня, виковане на цьому ковадлі, буде занурене в вимір Хаосу, "
 "наповнюючи її магічними властивостями. Кажуть, що через непередбачуваність "
 "Хаосу важко знати, яким буде результат…"
 
@@ -8852,6 +8825,21 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
+"Ворота крові та Зали вогню — пам’ятки містичного походження. Де б ти не "
+"знайшов цю книгу, безумовно являється місцем великої сили.\n"
+" \n"
+"Легенди розповідають про п'єдестал, вирізаний з обсидіанового каменю, на "
+"інкрустованій кісткою поверхні якого є калюжа киплячої крові. Є також натяки "
+"на Камені Крові, що відкриють двері, за якими є стародавній скарб…\n"
+" \n"
+"Природа цього скарбу оповита припущеннями, друже, але кажуть, що стародавній "
+"герой Аркейн поклав святий обладунок Доблесть у таємне сховище. Аркейн був "
+"першим смертним, який переломив хід Війни Гріхів і вигнав легіони темряви "
+"назад у Палаюче Пекло.\n"
+" \n"
+"Перед смертю Аркейна, його обладунки були заховані в таємному сховищі. "
+"Кажуть, що коли цей святий обладунок знову знадобиться, постане герой, що "
+"надягне Доблесть. Можливо, ти і є той герой…"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -8942,6 +8930,16 @@ msgid ""
 "Legion of Darkness during the Sin War, he lost his humanity to his "
 "insatiable hunger for blood."
 msgstr ""
+"Я знаю лише одну легенду, що говорить про такого воїна. Ця історія міститься "
+"в стародавніх хроніках Війни Гріхів…\n"
+" \n"
+"Забруднений тисячею років війни, крові та смерті, Воєвода Крові стоїть на "
+"горі пошматованих трупів. Його темний меч кляне чорне прокляття всьому "
+"живому; запрошення на тортури будь-кому, хто стане перед цим Катом Пекла.\n"
+" \n"
+"Також написано, що, хоча він колись був смертним, що воював поруч із "
+"Легіоном Темряви під час Війни гріхів, він втратив свою людяність через "
+"ненаситну кровожерність."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:215
@@ -8950,6 +8948,8 @@ msgid ""
 "master. I hope that you do not have to fight him, for he sounds extremely "
 "dangerous."
 msgstr ""
+"Боюся, що я нічого не чув про такого злісного воїна, добрий майстре. "
+"Сподіваюся, вам не доведеться з ним битися, бо він здається дуже небезпечним."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:217
@@ -8957,6 +8957,7 @@ msgid ""
 "Cain would be able to tell you much more about something like this than I "
 "would ever wish to know."
 msgstr ""
+"Каїн розповість тобі набагато більше про щось подібне, ніж я хотів би знати."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:219
@@ -8964,6 +8965,8 @@ msgid ""
 "If you are to battle such a fierce opponent, may Light be your guide and "
 "your defender. I will keep you in my thoughts."
 msgstr ""
+"Якщо тобі треба битися з таким запеклим супротивником, то нехай Світло буде "
+"твоїм провідником і захисником. Я буду думати про тебе."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:221
@@ -8971,6 +8974,8 @@ msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
 msgstr ""
+"Темні та злі легенди оточують Воєводу Крові. Будь готовим, мій друже, бо він "
+"не покаже милосердя і не почує поблажок."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:223
@@ -8979,6 +8984,9 @@ msgid ""
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that?"
 msgstr ""
+"Завжди треба говорити про Кров? А як щодо квітів, сонця та тієї гарної "
+"дівчини, що приносить випивку. Слухай сюди, друже - ти настирний, ти це "
+"знаєш?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:225
@@ -8987,6 +8995,8 @@ msgid ""
 "years knowing only warfare. I am sorry... I can not see if you will defeat "
 "him."
 msgstr ""
+"Його майстерність меча вражає, і він прожив тисячі років, знаючи лише війну. "
+"Мені жаль… Я не бачу, чи зможеш ти перемогти його."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:227
@@ -8994,6 +9004,8 @@ msgid ""
 "I haven't ever dealt with this Warlord you speak of, but he sounds like he's "
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
+"Я ніколи не мав справи з цим Воєводою, що ти говориш, але здається, що в "
+"нього часто ламаються мечі. Я не проти, щоб постачати його армію…"
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
@@ -9013,6 +9025,11 @@ msgid ""
 "man could possess. I do not know what secrets it holds, my friend, but "
 "finding this stone would certainly prove most valuable."
 msgstr ""
+"Грізволд говорить про Небесний Камінь, що був призначений для анклаву, "
+"розташованому на сході. Його везли туди для подальшого дослідження. Цей "
+"камінь світився енергією, яка якимось чином надавала бачення, що виходить за "
+"межі того, чим могла володіти звичайна людина. Я не знаю, які секрети він "
+"приховує, друже, але знайти цей камінь, безумовно, виявилося б найціннішим."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -9033,6 +9050,8 @@ msgid ""
 "I will say this. If rocks are falling from the sky, you had better be "
 "careful!"
 msgstr ""
+"Я не знаю, що вони думали, що вони могли побачити з тим каменем, але скажу "
+"так. Якщо з неба падає каміння, будь обережним!"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:237
@@ -9044,6 +9063,11 @@ msgid ""
 "I don't see how you could hope to find anything that they would have been "
 "carrying."
 msgstr ""
+"Що ж, караван якихось дуже важливих людей зупинявся тут, але це було досить "
+"давно. У них були дивні акценти, і наскільки я пам’ятаю, вони готувались "
+"ідти в далеку подорож.\n"
+" \n"
+"Я не знаю, як ти сподіваєшся знайти те, що вони несли."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:239
@@ -9069,6 +9093,8 @@ msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it."
 msgstr ""
+"Я все ще чекаю, коли ти принесеш мені той камінь з небес. Я знаю, що можу "
+"зробити з нього щось могутнє."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold(Quest End)
 #: Source/textdat.cpp:243
@@ -9078,6 +9104,10 @@ msgid ""
 "Ah, Here you are. I arranged pieces of the stone within a silver ring that "
 "my father left me. I hope it serves you well."
 msgstr ""
+"Дай мені подивитись - так… так, він такий, як я уявляв. Дай мені хвилинку…\n"
+" \n"
+"Ах, ось. Я розташував шматки каменю в срібному перстні, який залишив мені "
+"батько. Сподіваюся, він добре тобі послужить."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:245
@@ -9086,6 +9116,9 @@ msgid ""
 "green and red and silver. Don't remember what happened to it, though. I "
 "really miss that ring..."
 msgstr ""
+"Колись у мене був гарний перстень; він був дуже дорогий, синій і зелений, і "
+"червоний, і срібний. Не пам’ятаю, що з цим сталося. Я дуже сумую за цим "
+"перстнем…"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
@@ -9094,6 +9127,9 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all."
 msgstr ""
+"Небесний Камінь дуже могутній, і якби хтось, окрім Грізволда, запропонував "
+"тобі його знайти, я б запобігла цьому. Він приборкає його силу, і ця сила "
+"буде на благо всім нам."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:249
@@ -9138,6 +9174,11 @@ msgid ""
 "that its alchemy holds. If you can remove the brain of a demon when you kill "
 "it, I would be grateful if you could bring it to me."
 msgstr ""
+"Відьма сказала мені, що ти шукаєш мозок демона, щоб допомогти мені створити "
+"еліксир. Він має бути дуже цінним для тих, хто постраждав від тих мерзенних "
+"звірів, якщо я зможу розкрити таємниці їхньої алхімії. Якщо ти зможеш "
+"видалити мозок демона, коли його вб'єш, я був би вдячний, якби ти приніс "
+"його мені."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:257
@@ -9146,6 +9187,9 @@ msgid ""
 "without this, but it can't hurt to have this to study. Would you please "
 "carry this to the witch? I believe that she is expecting it."
 msgstr ""
+"Чудово, це саме те, що мені потрібно. Я зміг закінчити еліксир без нього, "
+"але не завадить мати його для вивчення. Не міг б ти віднести це до відьми? Я "
+"думаю, що вона чекає на це."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:259
@@ -9153,6 +9197,7 @@ msgid ""
 "I think Ogden might have some mushrooms in the storage cellar. Why don't you "
 "ask him?"
 msgstr ""
+"Думаю, в погребі в Огдена можуть бути гриби. Чому б тобі не запитати його?"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:261
@@ -9161,6 +9206,9 @@ msgid ""
 "I can offer you no more help than that, but it sounds like... a huge, "
 "gargantuan, swollen, bloated mushroom! Well, good hunting, I suppose."
 msgstr ""
+"Якщо його немає у Адрії, то можеш бути певним, що це справді рідкість. Я не "
+"зможу допомогти тобі більше, але це звучить як… величезний, гігантський, "
+"набряклий, роздутий гриб! Ну що ж, гарного полювання."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
@@ -9168,6 +9216,8 @@ msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key!"
 msgstr ""
+"Огден мішає ДОБРИЙ чорний гриб, але якщо я його вип’ю, мені стає погано. "
+"Слухай, слухай… ось секрет - головне — помірність!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -9176,6 +9226,9 @@ msgid ""
 "your eyes open for a black mushroom. It should be fairly large and easy to "
 "identify. If you find it, bring it to me, won't you?"
 msgstr ""
+"Що ми тут маємо? Цікаво, схоже на книгу реактивів. Добре гляди, щоб знайти "
+"чорний гриб. Його легко впізнати, він повинен бути досить великим. Якщо "
+"знайдеш, його принеси мені, будь ласка?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:267
@@ -9183,6 +9236,8 @@ msgid ""
 "It's a big, black mushroom that I need. Now run off and get it for me so "
 "that I can use it for a special concoction that I am working on."
 msgstr ""
+"Мені потрібен великий чорний гриб. Тепер біжи і принеси його мені, щоб я "
+"могла використати його для спеціального варева, над яким я працюю."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:269
@@ -9193,6 +9248,11 @@ msgid ""
 "intends to make an elixir from it. If you help him find what he needs, "
 "please see if you can get a sample of the elixir for me."
 msgstr ""
+"Так, це ідеально підійде для варева, що я роблю. До речі, цілитель шукає "
+"мозок якогось демона, щоб лікувати тих, кого вразила його згубна отрута. "
+"Вважаю, що він хоче зробити з нього еліксир. Якщо ти допоможеш йому знайти "
+"те, що потрібно, то будь ласка, подивись, чи можеш отримати для мене зразок "
+"еліксиру."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:271
@@ -9202,6 +9262,10 @@ msgid ""
 "that grotesque organ that you are holding, and then bring me the elixir. "
 "Simple when you think about it, isn't it?"
 msgstr ""
+"Чому ти приніс це сюди? Наразі мені не потрібен мозок демона. Мені потрібен "
+"еліксир, над яким працює Цілитель. Йому потрібен той гротескний орган, який "
+"ти тримаєш, а потім принеси мені еліксир. Доволі просто, якщо подумаєш, чи "
+"не так?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (Quest End)
 #: Source/textdat.cpp:273
@@ -9209,6 +9273,8 @@ msgid ""
 "What? Now you bring me that elixir from the healer? I was able to finish my "
 "brew without it. Why don't you just keep it..."
 msgstr ""
+"Що? Тепер ти приніс мені той еліксир від цілителя? Я змогла доробити варево "
+"без нього. Чому б тобі не залишити його собі…"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:275
@@ -9216,6 +9282,8 @@ msgid ""
 "I don't have any mushrooms of any size or color for sale. How about "
 "something a bit more useful?"
 msgstr ""
+"Я не продаю гриби будь-якого розміру чи кольору. Може тобі потрібне щось "
+"більш корисне?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:277
@@ -9240,6 +9308,23 @@ msgid ""
 "before the stars align, for we may never have a chance to rid the world of "
 "his evil again!"
 msgstr ""
+"Отже, легенда Карти реальна. Навіть я ніколи не вірив у неї! Гадаю, настав "
+"час сказати тобі правду про те, хто я, мій друже. Бачиш, я не той, яким себе "
+"видаю…\n"
+" \n"
+"Моє справжнє ім’я — Старець Декард Кейн, і я — останній нащадок "
+"стародавнього Братства, що було присвячене зберіганню та захисту таємниць "
+"вічного зла. Зла, яке, очевидно, тепер вийшло на волю…\n"
+" \n"
+"Зло, якому ви протидієш, це темний Лордом Жаху, відомим смертним людям як "
+"Діабло. Саме він був ув’язнений у Лабіринті багато століть тому. Карта, яку "
+"ти зараз тримаєш, була створена багато років тому, щоб відзначити час, коли "
+"Діабло знову повстане з ув’язнення. Коли дві зірки на цій карті зрівняються, "
+"Діабло буде на піку своєї сили. Він буде майже непереможним...\n"
+" \n"
+"Тепер ти в гонці з часом, друже! Знайди Діабло та знищ його до того, як "
+"зірки зійдуться, бо можливо у нас ніколи більше не буде шансу позбавити світ "
+"від його зла!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:279
@@ -9247,6 +9332,8 @@ msgid ""
 "Our time is running short! I sense his dark power building and only you can "
 "stop him from attaining his full might."
 msgstr ""
+"В нас немає часу! Я відчуваю його темну силу, і тільки ти можеш перешкодити "
+"йому досягти повної сили."
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -9256,6 +9343,10 @@ msgid ""
 "and you will need all your courage and strength to defeat him. May the Light "
 "protect and guide you, my friend. I will help in any way that I am able."
 msgstr ""
+"Я впевнений, що ти старався як міг, але боюся, що навіть твоєї сили і волі "
+"не вистачить. Діабло зараз на піку своєї земної могутності, і тобі "
+"знадобиться вся твоя мужність і сила, щоб перемогти його. Нехай Світло "
+"оберігає і веде тебе, друже. Я допоможу всім, чим зможу."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (currently unused)
 #: Source/textdat.cpp:283
@@ -9264,6 +9355,9 @@ msgid ""
 "that I would know anything? It sounds like this is a very serious matter. "
 "You should hurry along and see the storyteller as Adria suggests."
 msgstr ""
+"Якщо відьма не може тобі допомогти і пропонує звернутися Каїна, чому ти "
+"думаєш, що я щось знаю? Схоже, справа дуже серйозна. Поспіши і зустрінься з "
+"розповідачем, як каже Адрія."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin (currently unused)
 #: Source/textdat.cpp:285
@@ -9274,6 +9368,10 @@ msgid ""
 "I can see that it is a map of the stars in our sky, but any more than that "
 "is beyond my talents."
 msgstr ""
+"Я не можу розібрати що написано на цій карті, але, можливо, Адрія чи Каїн "
+"допоможуть тобі розібрати, від чого вона.\n"
+" \n"
+"Я бачу, що це карта зірок на нашому небі, але більше за це я не вмію."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian (currently unused)
 #: Source/textdat.cpp:287
@@ -9283,6 +9381,10 @@ msgid ""
 "Cain is very knowledgeable about ancient writings, and that is easily the "
 "oldest looking piece of paper that I have ever seen."
 msgstr ""
+"Найкраще запитати про такі речі нашого розповідача.\n"
+" \n"
+"Каїн дуже добре обізнаний у стародавніх писаннях, а це, безсумнівно, "
+"найстаріший папірець, який я коли-небудь бачила."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold (currently unused)
 #: Source/textdat.cpp:289
@@ -9291,6 +9393,8 @@ msgid ""
 "have no idea how to read this, Cain or Adria may be able to provide the "
 "answers that you seek."
 msgstr ""
+"Я ніколи не бачив такої карти. Де ти її взяв? Хоча я поняття не маю, як її "
+"читати, можливо Каїн чи Адрія зможуть дати відповіді на твої питання."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (currently unused)
 #: Source/textdat.cpp:291
@@ -9871,6 +9975,10 @@ msgid ""
 "or pierce on the undead, but against a living, breathing enemy, a sword will "
 "better slice their flesh!"
 msgstr ""
+"Подивись на це лезо, на рівновагу. У правильних руках і проти правильного "
+"ворога, меч — майстер усієї зброї. Гострому лезу мало чого рубати чи "
+"прорізати в нежиті, але проти живого, дихаючого ворога, немає нічого краще, "
+"ніж меч!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:388
@@ -10080,6 +10188,9 @@ msgid ""
 "brutes! Oh, I don't care what Griswold says, they can't make anything like "
 "they used to in the old days..."
 msgstr ""
+"Я знаю, що у тебе свої ідеї, і я знаю, що ти в це не повіриш, але та зброя, "
+"що в тебе просто не годиться проти тих нелюдів! О, мені байдуже, що говорить "
+"Грізволд, вони нічого не можуть зробити, як у старі часи…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
@@ -10118,6 +10229,11 @@ msgid ""
 "be kept at the ready in your mind. Know also that these scrolls can be read "
 "but once, so use them with care."
 msgstr ""
+"Найбільша сила часто триває найкоротше. Ти можеш знайти стародавні слова "
+"сили, написані на пергаментних сувоях. Сила цих сувоїв полягає тому, що і "
+"учень, і адепт чарує їх з однаковим умінням. Їх слабкість полягає в тому, що "
+"їх треба прочитати вголос, і неможливо втримати в голові. Також знай, що "
+"такі сувої можна прочитати лише раз, тому використовуй їх обережно."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:432
@@ -10128,6 +10244,11 @@ msgid ""
 "magical energies many times over. I have the ability to restore their power "
 "- but know that nothing is done without a price."
 msgstr ""
+"Хоча сонячна спека безмірна, просте полум’я свічки становить більшу "
+"небезпеку. Жодна енергія, якою б великою вона не була, не може бути "
+"використана без належного зосередження. Для багатьох заклинань зачаровані "
+"Посохи можна заряджати магічною енергією багато раз. Я можу відновити їхню "
+"силу - але знай, що нічого не робиться безкоштовно."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
@@ -10136,6 +10257,9 @@ msgid ""
 "or scroll that you cannot decipher, do not hesitate to bring it to me. If I "
 "can make sense of it I will share what I find."
 msgstr ""
+"Сума наших знань — у сумі її людей. Якщо ти знайдеш книгу чи сувій, що ти не "
+"можете розшифрувати, не соромся принести його мені. Я поділюся тим, що "
+"знайшла, якщо я можу зрозуміти їх."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
@@ -10144,6 +10268,9 @@ msgid ""
 "blacksmith Griswold is more of a sorcerer than he knows. His ability to meld "
 "fire and metal is unequaled in this land."
 msgstr ""
+"Для людини, що знає лише Залізо, немає більшої магії, ніж Сталь. Коваль "
+"Грізволд більше чаклує, ніж знає. Його здатності об'єднувати вогонь і метал "
+"не має рівних на цій землі."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
@@ -10153,6 +10280,9 @@ msgid ""
 "matriarch over her own. She fears me, but it is only because she does not "
 "understand me."
 msgstr ""
+"Псування має силу обману, але невинність володіє могутністю чистоти. Молода "
+"жінка Гілліан має чисте серце, ставить потреби свого матріарха над своїми. "
+"Вона боїться мене, але тільки тому, що не розуміє мене."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -10162,6 +10292,10 @@ msgid ""
 "not look. His knowledge of what lies beneath the cathedral is far greater "
 "than even he allows himself to realize."
 msgstr ""
+"Скриня, відкрита в темряві, не має більше скарбу, ніж коли її відкрили на "
+"світлі. Розповідач Каїн — загадкова людина, але тільки для тих, хто не "
+"дивиться. Його знання про те, що лежить під собором, набагато більше, ніж "
+"навіть він собі уявляє."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -10171,6 +10305,10 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
+"Чим більше ти довіряєш одній людині, тим гірше розчарування. Фарнхем втратив "
+"свою душу, але не від якогось демона. Вона була втрачена, коли він побачив "
+"своїх односельчан, зраджених Архієпископом Лазарем. У нього є цінні знання, "
+"але ти маєш відокремити факти від вигадок."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -10181,6 +10319,10 @@ msgid ""
 "understanding of the creation of elixirs and potions. He is as great an ally "
 "as you have in Tristram."
 msgstr ""
+"Рука, серце і розум можуть творити чудеса, коли вони в повній гармонії. "
+"Цілитель Пепін бачить тіло так, як навіть я не можу. Його здатність цілити "
+"хворих і поранених посилюється його розумінням варіння еліксирів і зілля. "
+"Він твій найкращий союзник в Трістрамі."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
@@ -10193,6 +10335,13 @@ msgid ""
 "reproachful, Wirt can provide assistance for your battle against the "
 "encroaching Darkness."
 msgstr ""
+"Є багато, чого ми не можемо побачити в майбутньому, але коли воно настане, "
+"ним володітимуть діти. У хлопчика Вірта темнота на душі, але він не "
+"становить загрози ні місту, ні його жителям. Його таємні стосунки з "
+"шибениками та негласними гільдіями сусідніх міст дають йому доступ до "
+"багатьох пристроїв, що нелегко знайти в Трістрамі. Хоча його методи можуть "
+"бути докірливими, Вірт може допомогти тобі в боротьбі з Темрявою, що "
+"вторгається."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -10205,6 +10354,13 @@ msgid ""
 "found there, provide a glimpse of a life that the people here remember. It "
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
+"Земляні стіни та солом'яний навіс не зроблять дому. Корчмар Огден грає "
+"більшу роль у місті, ніж багато хто розуміє. Він надає притулок для Гілліан "
+"і її матріарха, підтримує те життя, що залишилось у Фарнхема, і є якорем для "
+"всіх, хто залишився в місті, яким колись був Трістрам. Його таверна та "
+"прості задоволення, які ще можна знайти там, дають хоч на мить побачити "
+"життя, що було раніше. Саме ця пам’ять продовжує живити їхні надії на твій "
+"успіх."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
@@ -10267,6 +10423,10 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
+"Якби я був на пару років старшим, я б засипав її всіма багатствами, що "
+"зібрав, і дозволь мені тебе запевнити, що в мене є дуже хороші речі. "
+"Джилліан — красива дівчина, і вона повинна вибратися з Трістрама якомога "
+"скоріше. Хм… можливо, я візьму її з собою, коли піду…"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
@@ -10302,6 +10462,10 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
+"Старий Пепін найкращий в своїй справі, поки тобі не треба щось прикріпити.\n"
+" \n"
+"Якби у мене були хоч одне з тих зіллів, що він варить, у мене все ще була б "
+"нога…"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
@@ -10311,6 +10475,11 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
+"Адрія справді турбує мене. Звісно, Каїн кидає в мурашки тим, що може "
+"розповісти тобі про минуле, але ця відьма може зазирнути у твоє минуле. Вона "
+"завжди якось отримує все, що їй потрібно. Адрія отримує в свої руки більше "
+"товарів, ніж я бачив, що проходять через ворота Королівського Базару під час "
+"Великого Фестивалю."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
@@ -10332,6 +10501,8 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
+"За Залом Героїв стоїть Палата Кості. Вічна смерть чекає кожного, хто захоче "
+"вкрасти скарби, що в цій кімнаті. Так говорить Володар Жахів, і так написано."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -10340,7 +10511,10 @@ msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken..."
 msgstr ""
+"…і тому, замкнена за Воротами Крові та за Залами Вогню, Доблесть чекає, коли "
+"Герой Світла прокинеться..."
 
+# TBD: Make this rhyme
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
 #: Source/textdat.cpp:529 Source/textdat.cpp:537
@@ -10354,6 +10528,14 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
+"Я бачу те, чого не бачиш ти.\n"
+"Зір туманний, потім очі гниють.\n"
+"Коли ти обернешся, їх вже не буде,\n"
+"Шепочуть свою приховану пісню.\n"
+"Тоді ти побачиш, чого бути не може,\n"
+"Тіні рухаються там, де має бути світло.\n"
+"З темряви, з розуму,\n"
+"Падай в Зали Сліпих."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
@@ -10363,6 +10545,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
+"Збройниці пекла є домом для Воєводи Крові. За ним лежали понівечені тіла "
+"тисяч. Ангели і люди були вирубані, щоб здійснити його нескінченні жертви "
+"Темним, що кричать про одне – кров."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
@@ -10375,6 +10560,13 @@ msgid ""
 "sky. Neither side ever gains sway for long as the forces of Light and "
 "Darkness constantly vie for control over all creation."
 msgstr ""
+"Стережись і свідчи про істини, що тут лежать, бо вони є останньою спадщиною "
+"Хорадріма. Є війна, яка вирує навіть зараз, за межами відомих нам полів — "
+"між утопічними королівствами Високих Небес і хаотичними ямами Палаючого "
+"Пекла. Ця війна відома як Великий конфлікт, і вона лютувала і горіла довше, "
+"ніж будь-яка з зірок на небі. Жодна зі сторін ніколи не отримує владу "
+"надовго, оскільки сили Світла і Темряви постійно змагаються за контроль над "
+"усім творінням."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:507
@@ -10387,6 +10579,12 @@ msgid ""
 "have even allied themselves with either side, and helped to dictate the "
 "course of the Sin War."
 msgstr ""
+"Стережись і свідчи про істини, які тут лежать, бо вони є останньою спадщиною "
+"Хорадріма. Коли Вічний конфлікт між Високими Небесами і Палаючим Пеклом "
+"випаде на землю смертних, це називається Війною Гріха. Ангели і демони "
+"ходять замасковані серед людей, воюючи таємно, подалі від допитливих очей "
+"смертних. Деякі сміливі, могутні смертні навіть об’єдналися з будь-якою "
+"стороною і допомогли вирішити хід Війни Гріхів."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:509
@@ -10410,6 +10608,23 @@ msgid ""
 "faith. If Diablo were to be released, he would seek a body that is easily "
 "controlled as he would be very weak - perhaps that of an old man or a child."
 msgstr ""
+"Стережись і свідчи про істини, які тут лежать, бо вони є останньою спадщиною "
+"Хорадріма. Майже триста років тому стало відомо, що три головні зла "
+"палаючого пекла таємничим чином прийшли в наш світ. Три брати десятиліттями "
+"спустошували землі сходу, а людство тремтіло від них. Наш Орден – Хорадрім – "
+"був заснований групою потайливих магів, щоб вистежити та захопити Три Зла "
+"раз і назавжди.\n"
+" \n"
+"Оригінальний Хорадрім захопив два з Трьох Зол у потужних артефактах, відомих "
+"як Камені душі, і поховав їх глибоко під пустельними східними пісками. Третє "
+"Зло уникнуло полону і втекло на захід разом із багатьма Хорадрімами в "
+"погоні. Третє Зло - відоме як Діабло, Володар Жаху - врешті-решт був "
+"схоплений, його сутність поміщена в Камінь душі та похований в цьому "
+"Лабіринті.\n"
+" \n"
+"Будьте попереджені, що камінь душі слід утримувати від відкриття тими, хто "
+"не вірить. Якщо Діабло звільниться, він буде шукати тіло, яким легко "
+"керувати, оскільки він дуже слабкий — можливо, тіло старого або дитини."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:511
@@ -10422,6 +10637,12 @@ msgid ""
 "the factions of Belial and Azmodan while the forces of the High Heavens "
 "continually battered upon the very Gates of Hell."
 msgstr ""
+"Так сталося, що в Палаючих Пеклах відбулася велика революція, відома як "
+"Темне Заслання. Менші Зла повалили Три Перші Зла і вигнали їхні духовні "
+"форми в вимір смертних. Демони Беліал (Володар Брехні) і Азмодан (Володар "
+"Гріха) боролися за правління Пекла під час відсутності Трьох братів. Усе "
+"Пекло поділилося між фракціями Беліала та Азмодана, в той час як сили "
+"Високих Небес безперервно били по самих Воротах Пекла."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:513
@@ -10432,6 +10653,11 @@ msgid ""
 "secretive Order of mortal magi named the Horadrim, who quickly became adept "
 "at hunting demons. They also made many dark enemies in the underworlds."
 msgstr ""
+"Багато демонів подорожували в вимір смертних у пошуках Трьох Братів. За ними "
+"слідували ангели, що полювали на них у великих містах Сходу. Ангели вступили "
+"в союз з таємним орденом смертних магів, що зветься Хорадрім, які швидко "
+"стали досвідченими в полюванні на демонів. Також вони нажили собі багато "
+"темних ворогів у підземних світах."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:515
@@ -10450,6 +10676,18 @@ msgid ""
 "He will then arise to free his Brothers and once more fan the flames of the "
 "Sin War..."
 msgstr ""
+"Так сталося, що Три Перших Зла були вигнані у формі духів в вимір смертних, "
+"і після того, як вони десятиліттями сіяли хаос на Сході, їх зловив проклятий "
+"Орден смертного Хорадріма. Хорадрім використовував артефакти, які "
+"називаються Каменями Душі, щоб вмістити сутність Мефісто, Володаря "
+"Ненависті, і його брата Ваала, Володаря Руйнування. Наймолодший брат - "
+"Діабло, Лорд Жаху - втік на захід.\n"
+" \n"
+"Врешті-решт Хорадрім також захопив Діабло в Камені Душі і поховав його під "
+"стародавнім, забутим собором. Там Володар Жаху спить і чекає часу свого "
+"відродження. Знайте, що він буде шукати молоде і сильне тіло, яким можна "
+"володіти, — тіло, що є невинним і яким легко керувати. Тоді він встане, щоб "
+"звільнити своїх братів і ще раз розпалити полум'я Війни Гріхів…"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:517
@@ -10461,6 +10699,12 @@ msgid ""
 "that have brought this discord to the realms of man. My lord has named the "
 "battle for this world and all who exist here the Sin War."
 msgstr ""
+"Всі похвали Діабло - Лорду Жаху і Тому, Хто Вижив Темне Заслання. Коли він "
+"прокинувся від довгого сну, мій Володар і Вчитель розповів мені про "
+"таємниці, які небагато смертних знають. Він сказав мені, що царства Високих "
+"Небес і палаючі ями Пекла, воюють у вічній війні. Він розкрив сили, які "
+"принесли цей розбрат у царства людей. Мій повелитель назвав битву за цей "
+"світ і всіх, хто в ньому існує, Війною Гріхів."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:519
@@ -10472,6 +10716,12 @@ msgid ""
 "beneath the sands of the east. Once my Lord releases his Brothers, the Sin "
 "War will once again know the fury of the Three."
 msgstr ""
+"Слава і Хвала Діабло - Повелителю Жаху і Лідеру Трьох. Мій Повелитель "
+"говорив мені про своїх братів, Мефісто і Ваала, які давно були вигнані в цей "
+"світ. Мій Володар хоче дочекатися і використати свою дивовижну силу, щоб він "
+"міг звільнити своїх полонених братів з їх гробниць під пісками сходу. Як "
+"тільки мій Повелитель звільнить своїх братів, Війна гріхів знову пізнає лють "
+"Трьох."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:521
@@ -10486,6 +10736,15 @@ msgid ""
 "Diablo's call and pray that I will be rewarded when he at last emerges as "
 "the Lord of this world."
 msgstr ""
+"Радуйся і принеси жертву Діабло - Повелителю Жаху і Винищувачу Душ. Коли я "
+"розбудив свого Вчителя від сну, він спробував заволодіти смертним тілом. "
+"Діабло намагався заволодіти тілом Короля Леоріка, але мій господар був "
+"занадто слабкий від ув’язнення. Моєму Повелителю був потрібен простий і "
+"невинний якір у цьому світі, і він знайшов, що хлопчик Альбрехт ідеально "
+"підходить для цього. У той час як добрий Король Леорік збожеволів від "
+"невдалої спроби вселитись в нього, я викрав його сина Альбрехта і привів "
+"його до свого господаря. Тепер я чекаю поклику Діабло і молюся, щоб мене "
+"винагородили, коли він нарешті стане Володарем цього світу."
 
 #. TRANSLATORS: Neutral Text spoken by Ogden
 #: Source/textdat.cpp:523
@@ -10531,6 +10790,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
+"Збройниці Пекла — дім для Воєводи Крові. За ним лежали понівечені тіла "
+"тисяч. Ангели і люди були вирізані, щоб виконати його нескінченні жертви "
+"Темним, які кричать про одне – кров."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
@@ -10539,6 +10801,9 @@ msgid ""
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
 "the sands of time confuse your search."
 msgstr ""
+"Продовжуй свої звідини.  Знайти втрачений скарб непросто.  Знайти схований "
+"скарб ще важче.  Дам тобі ось таку пораду.  Не дозволяй піскам часу "
+"заплутати твої пошуки."
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
@@ -10548,6 +10813,10 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
+"Що?!  Це дурість.  Тут, у Трістрамі, немає скарбів.  Дай мені подивитись!!  "
+"О, подивись, малюнки тут неточні.  Вони зовсім не відповідають нашому "
+"місту.  Я б мав на увазі те, що під собором, а не те, що лежить під нашим "
+"ґрунтом."
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
@@ -10555,6 +10824,8 @@ msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well."
 msgstr ""
+"У мене немає часу говорити про якусь карту, що ти шукаєш.  У мене багато "
+"хворих, яким потрібна моя і твоя допомога."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
@@ -10563,6 +10834,9 @@ msgid ""
 "His honor stripped and his visage altered.  He is trapped in immortal "
 "torment.  Charged to conceal the very thing that could free him."
 msgstr ""
+"Колись гордий Ісволл піймався в пастку глибоко під землею. Його позбавили "
+"честі і змінили обличчя.  Його захопили в пастку безкінечних мук. "
+"Призначений ховати саме те, що могло б його звільнити."
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
@@ -10571,6 +10845,9 @@ msgid ""
 "at you later when you were running around the town with your nose in the "
 "dirt.  I'd ignore it."
 msgstr ""
+"Б’юся об заклад, що Вірт побачив, як ти ідеш, і прикинувся лише для того, "
+"щоб потім сміятися з тебе, як ти бігаєш по місту носом в грунт. Я б його "
+"проігнорував."
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
@@ -10580,6 +10857,10 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
+"Був час, коли це місто було частою зупинкою для мандрівників звідусіль.  З "
+"тих пір багато чого змінилося.  Але приховані печери та закопані скарби – "
+"звичайні фантазії будь-якої дитини.  Вірт іноді вдається до юнацьких ігор.  "
+"Так що це може бути просто його уява."
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
@@ -10587,6 +10868,8 @@ msgid ""
 "Listen here.  Come close.  I don't know if you know what I know, but you've "
 "have really got something here.  That's a map."
 msgstr ""
+"Слухай сюди.  Підійди ближче.  Не знаю, чи ти знаєш те, що я знаю, але у "
+"тебе тут справді щось є.  Це карта."
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
@@ -10598,6 +10881,12 @@ msgid ""
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
+"Моя бабуся часто розповідає мені історії про дивні сили, які населяють "
+"цвинтар біля церкви.  Може тобі було б цікаво почути одну з них.  Вона "
+"сказала, що якби ти залишиш належне подання на цвинтарі, увійдеш до собору, "
+"щоб помолитися за померлих, а потім повернешся, то подання якимось дивним "
+"чином зміниться.  Я не знаю, чи це лише маразм старої хворої жінки, але "
+"сьогодні все здається можливим."
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
@@ -10606,6 +10895,9 @@ msgid ""
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?"
 msgstr ""
+"Хммм.  Значить, величезний і таємничий скарб.  Мммм.  Можливо, мені було б "
+"цікаво взяти в тебе кілька речей.  Або ще краще, хіба тобі не потрібні "
+"рідкісні та дорогі припаси, щоб пройти це випробування?"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
@@ -10618,6 +10910,13 @@ msgid ""
 "you could destroy it, I would be forever grateful. I'd do it myself, but "
 "someone has to stay here with the cows..."
 msgstr ""
+"Отже, ти герой, про якого всі говорили. Можливо, ти міг би допомогти "
+"бідному, простому фермеру вийти з жахливої ситуації? На півдні звідси, на "
+"краю мого саду, з землі надулася якась жахлива річ! Я не можу дістатися до "
+"своїх посівів чи тюків сіна, і мої бідні корови будуть голодувати. Відьма "
+"дала ось це мені і сказала, що це підірве ту штуку з мого поля. Якби ти міг "
+"її знищити, я був би навіки вдячний. Я б це зробив сам, але хтось має "
+"залишитися тут з коровами…"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
@@ -10625,6 +10924,8 @@ msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
 msgstr ""
+"Я знав, що все не може бути так просто, як казала та відьма. Це сумний світ, "
+"коли ти не можеш довіряти навіть своїм сусідам."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
@@ -10633,6 +10934,9 @@ msgid ""
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
 "you know. You've got to find it, and then blast that horror out of our town."
 msgstr ""
+"Вона зникло? Ти відправив її назад до темних закутків Аїда, що породили "
+"його? Що? О, тільки не кажи мені, що ти її не знайшов! Такі речі коштують "
+"недешево. Ти маєш знайти її, а потім підірвати ту жахливу річ."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -10642,6 +10946,10 @@ msgid ""
 "church, and so forth, these are trying times. I am but a poor farmer, but "
 "here -- take this with my great thanks."
 msgstr ""
+"Я почув вибух звідти! Велике тобі спасибі, добрий незнайомець. Що з усіма "
+"цими речами, що виходять із землі, монстрами, що захоплюють церкву, і так "
+"далі, це важкі часи. Я лише бідний фермер, але ось — візьми це, і мою велику "
+"подяку."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
@@ -10651,6 +10959,10 @@ msgid ""
 "those creatures you could come back... and spare a little time to help a "
 "poor farmer?"
 msgstr ""
+"Ой, така в мене біда... може... Ні, я не можу нав'язуватись тобі, коли у "
+"тебе інші неприємності. Може, після того, як ти очистиш церкву від тих "
+"створінь, ти повернешся... і виділиш трохи часу, щоб допомогти бідному "
+"фермеру?"
 
 # I you find a better onomatopeia of crying in Ukrainian, I'm all ears
 #. TRANSLATORS: Quest text spoken by Little Girl
@@ -10745,6 +11057,19 @@ msgid ""
 "within all things and beyond all things. Light and unity are the products of "
 "this holy foundation, a unity of purpose and a unity of possession."
 msgstr ""
+"І в рік Золотого Світла було так постановлено, щоб був зведений великий "
+"Собор.  Наріжний камінь цього святого місця мав бути висічений з "
+"напівпрозорого каменю Антіраель, названого на честь ангела, який розділив "
+"свою владу з Хорадрімом.\n"
+" \n"
+"У рік довгих тіней земля затряслася, а собор розколовся і рухнув.  Коли "
+"розпочалося будівництво катакомб і замків, а людство стояло проти "
+"спустошення Війни Гріхів, руїни були знайдені в пошуках каменів.  Так "
+"сталося, що наріжний камінь зник з очей людей.\n"
+" \n"
+"Камінь був від цього світу – і від усіх світів – оскільки Світло є у всіх "
+"речах, і поза всіма речами. Світло і єдність є наслідками цієї святої "
+"основи, єдність мети і єдність володіння."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
@@ -10775,6 +11100,14 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden."
 msgstr ""
+"Ну добре, добре.  Насправді я не корова.  Зазвичай я так не ходжу; але я "
+"сидів вдома і займався власними справами, і раптом з підлоги почали вилазити "
+"жуки, лози, цибулини... це було жахливо!  Якби в мене був час нормально "
+"одягнутися, я б виглядав не так погано.  Гей!  Ти б не міг піти до моєї хати "
+"і забрати костюм?  Коричневий, а не сірий, той для вечору.  Я б зробив це "
+"сам, але я не хочу, щоб мене бачили в цьому убранні.  Ось візьми це, може "
+"знадобиться... щоб вбити ті речі, що обросли на моїй хаті.  Її не пропустиш, "
+"вона на півдні від розвилки річки... ну знаєш... та, де город заріс ."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
@@ -10791,6 +11124,8 @@ msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!"
 msgstr ""
+"Гей, у тебе є мій костюм?  Швидко, давай його сюди!  Ти не повіриш як ці "
+"вуха сверблять!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
@@ -10799,6 +11134,9 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit."
 msgstr ""
+"Ні ні ні ні!  Це мій СІРИЙ костюм!  Це для вечора! На офіційні випадки!  Я "
+"не можу ось ЦЕ носити.  Ти що, дивак якийсь?  Мені потрібен КОРИЧНЕВИЙ "
+"костюм."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
@@ -10809,6 +11147,11 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao."
 msgstr ""
+"Ах, так НАБАГАТО краще.  Хух!  Нарешті трохи гідності! Мої роги прямі?  "
+"Добре. Дивись.  Дуже дякую за допомогу.  Ось візьми ось це в подарунок; і, "
+"знаєш… невеличка порада по моді… тобі б знадобилось трохи… тобі б краще "
+"замінити… нутизнаєшпрощояговорю?  Цей мотив шукача пригод такий… ретро.  "
+"Невеличка порада, га?  Чао."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
@@ -10816,7 +11159,8 @@ msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
 msgstr ""
-"Подивись.  Я корова. А ти, ти приманка. Наберись досвіду!  Тоді і поговоримо…"
+"Подивись.  Я корова.  А ти, ти приманка.  Наберись досвіду!  Тоді і "
+"поговоримо…"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -10824,6 +11168,8 @@ msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
 msgstr ""
+"Мабуть, я дав тобі насправді страшне завдання. Якби я міг якось… Тобі б "
+"допоміг глечик смачного свіжого молока?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
@@ -10840,6 +11186,9 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
 msgstr ""
+"Мені потрібно щось зробити, але я не буду зобов'язувати незнайомця. Можливо "
+"після того, як ти пробув тут деякий час, мені буде зручніше просити про "
+"послугу."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
@@ -10847,6 +11196,8 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
 msgstr ""
+"Я бачу у тобі потенціал для величі.  Можливо, колись, поки ти виконуєш свою "
+"долю, ти зможеш зайти і зробити мені невеличку послугу?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
@@ -10855,12 +11206,16 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!"
 msgstr ""
+"Я думаю, що ти міг би мені допомогти, але, хіба що після того, як станете "
+"трохи сильнішим. Я не хотів би зашкодити єдиному шансу села знищити загрозу "
+"в церкві!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
 msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk."
 msgstr ""
+"Я — корова, що сама всього досягла.  Досягни чогось, і… от тоді і поговоримо."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:622
@@ -10868,6 +11223,8 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
+"Мені не потрібно пояснюватися кожному туристу, що проходить повз!  Хіба тобі "
+"не треба вбивати монстрів?  Поговоримо пізніше.  Якщо ти виживеш…"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
@@ -10876,7 +11233,12 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
+"Перестань мене турбувати.  Я шукаю когось справді героїчного.  І ти не "
+"підходиш.  Я не можу тобі довіряти, тебе будь-коли з’їдять монстри… Мені "
+"потрібен досвідчений герой."
 
+# Puns are lost in translation :(
+# I'm all ears if you happen to know how to restore them
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
 msgid ""
@@ -10892,6 +11254,16 @@ msgid ""
 "it's just south of the fork in the river... you know... the one with the "
 "overgrown vegetable garden."
 msgstr ""
+"Добре, я перестану з маячнею.  Я не хотів заплутати тебе.  Я сидів вдома в "
+"поганому настрої, коли все стало зовсім погано; з підлоги виліз цілий натовп "
+"монстрів!  Я злякався. Просто так сталося, що я був одягнений у цю Джерсі, "
+"коли вибіг за двері, і тепер я виглядаю вкрай смішно.  Якби в мене був "
+"якийсь нормальний одяг, то було б не так погано.  Гей!  Ти б не міг піти до "
+"моєї хати і забрати костюм?  Коричневий, а не сірий, той для вечору. Я б "
+"зробив це сам, але я не хочу, щоб хтось бачив мене таким.  Я б зробив це "
+"сам, але я не хочу, щоб мене бачили в цьому убранні.  Ось візьми це, може "
+"знадобиться... щоб вбити ті речі, що обросли на моїй хаті.  Її не пропустиш, "
+"вона на півдні від розвилки річки... ну знаєш... та, де город заріс."
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
@@ -10901,6 +11273,10 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low."
 msgstr ""
+"Сьогодні хмарно та прохолодно.  Закидаючи сітки некромантії через порожнечу, "
+"впіймав два нових підвиди літаючих кошмарів. Гарний робочий день.  Треба не "
+"забути замовити ще трохи кажанового гуано та чорних свічок від Адрії; В мене "
+"вони закінчуються."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
@@ -10909,6 +11285,9 @@ msgid ""
 "creature -- to no avail.  My methods of enslaving lesser demons seem to have "
 "no effect on this fearsome beast."
 msgstr ""
+"Я пробував заклинання, погрози, відречення та торг із цим негідним "
+"створінням — безрезультатно.  Мої методи поневолення менших демонів, "
+"здається, не впливають на цього страшного звіра."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
@@ -10918,6 +11297,9 @@ msgid ""
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""
+"Мій дім повільно псується підлістю цього ненависного в’язня.  Склепи повні "
+"тіней, що рухаються відразу за кутами зору.  Краєм вуха чується ледве "
+"помітне дряпання кігтів. Я думаю, що вони шукають цей щоденник."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
@@ -10927,6 +11309,10 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name."
 msgstr ""
+"У своїй тираді істота видала своє ім'я — На-Крул.  Я намагався дослідити це "
+"ім'я, але менші демони якимось чином знищили мою бібліотеку.  На-Крул… Ім’я "
+"наповнює мене холодним жахом. Я вважаю за краще думати про нього лише як про "
+"Істоту, а не розмірковувати про його справжнє ім’я."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
@@ -10936,6 +11322,10 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice."
 msgstr ""
+"Гнівне виття істоти, що в пастці, не дає мені виспатись.  Він лютує проти "
+"того, хто послав його в Порожнечу, і кличе на мене огидні прокляття за те, "
+"що я зловив його. Його слова наповнюють моє серце жахом, але я не можу "
+"заглушити його голос."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
@@ -10945,6 +11335,10 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge."
 msgstr ""
+"В мене майже немає часу.  Я повинен записати способи як ослабити демона, а "
+"потім сховати цей текст, щоб його слуги не використали мої знання, щоб "
+"звільнити свого володаря. Я сподіваюся, що той, хто знайде цей журнал, буде "
+"шукати знання."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
@@ -10962,6 +11356,18 @@ msgid ""
 "only these spells to gain entry or his power may be too great for you to "
 "defeat."
 msgstr ""
+"Той, хто знайде цей сувій, призначається в тому, щоб зупинити демонічну "
+"істоту, що ходить у цих стінах.  Мій час закінчився. Навіть зараз його "
+"пекельні слуги шкребуть слабкі двері, за якими я ховаюся.\n"
+" \n"
+"Я поранив демона таємною магією і заточив його у цих стінах, але боюся, що "
+"цього буде недостатньо.\n"
+" \n"
+"Заклинання, знайдені в трьох моїх гримуарах, забезпечать тобі захищений вхід "
+"до його виміру, але лише якщо їх використати в належній послідовності. "
+"Важелі біля входу знімуть бар'єри і звільнять демона; не торкайся їх! "
+"Використовуй лише ці заклинання, щоб ввійти, інакше його сила може виявитися "
+"занадто великою, щоб перемогти його."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
@@ -11009,23 +11415,23 @@ msgstr "Цілитель Пепін"
 msgid "Cain the Elder"
 msgstr "Старець Каїн"
 
-#: Source/towners.cpp:218
+#: Source/towners.cpp:216
 msgid "Cow"
 msgstr "Корова"
 
-#: Source/towners.cpp:242
+#: Source/towners.cpp:240
 msgid "Lester the farmer"
 msgstr "Фермер Лестер"
 
-#: Source/towners.cpp:255
+#: Source/towners.cpp:253
 msgid "Complete Nut"
 msgstr "Повний Псих"
 
-#: Source/towners.cpp:264
+#: Source/towners.cpp:262
 msgid "Celia"
 msgstr "Селія"
 
-#: Source/towners.cpp:277
+#: Source/towners.cpp:275
 msgid "Slain Townsman"
 msgstr "Вбитий Житель"
 
