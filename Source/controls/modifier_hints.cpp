@@ -52,6 +52,7 @@ enum HintIcon : uint8_t {
 	IconSpells,
 	IconMap,
 	IconMenu,
+	IconHighlightItems,
 	IconNull
 };
 
@@ -149,7 +150,7 @@ void DrawStartModifierMenu(const Surface &out)
 	if (!start_modifier_active)
 		return;
 	static const CircleMenuHint DPad(/*top=*/HintIcon::IconMenu, /*right=*/HintIcon::IconInv, /*bottom=*/HintIcon::IconMap, /*left=*/HintIcon::IconChar);
-	static const CircleMenuHint Buttons(/*top=*/HintIcon::IconNull, /*right=*/HintIcon::IconNull, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconQuests);
+	static const CircleMenuHint Buttons(/*top=*/HintIcon::IconNull, /*right=*/HintIcon::IconHighlightItems, /*bottom=*/HintIcon::IconSpells, /*left=*/HintIcon::IconQuests);
 	DrawCircleMenuHint(out, DPad, { PANEL_LEFT + CircleMarginX, PANEL_TOP - CircleTop });
 	DrawCircleMenuHint(out, Buttons, { PANEL_LEFT + PANEL_WIDTH - HintBoxSize * 3 - CircleMarginX - HintBoxMargin * 2, PANEL_TOP - CircleTop });
 }
@@ -171,7 +172,7 @@ void InitModifierHints()
 {
 	LoadMaskedArt("data\\hintbox.pcx", &hintBox, 1, 1);
 	LoadMaskedArt("data\\hintboxbackground.pcx", &hintBoxBackground, 1, 1);
-	LoadMaskedArt("data\\hinticons.pcx", &hintIcons, 6, 1);
+	LoadMaskedArt("data\\hinticons.pcx", &hintIcons, 7, 1);
 
 	if (hintBox.surface == nullptr || hintBoxBackground.surface == nullptr) {
 		app_fatal("%s", _("Failed to load UI resources.\n"
