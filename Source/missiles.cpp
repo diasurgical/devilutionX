@@ -107,11 +107,15 @@ void UpdateMissileVelocity(Missile &missile, Point destination, int v)
 	if (missile.position.tile == destination)
 		return;
 
-	double dxp = (destination.x + missile.position.tile.y - missile.position.tile.x - destination.y) * (1 << 21);
-	double dyp = (destination.y + destination.x - missile.position.tile.x - missile.position.tile.y) * (1 << 21);
+	// rotate so that +x leads to the right of screen and +y leads to the bottom (screen space but without the scaling factor)
+	double dxp = (destination.x + missile.position.tile.y - missile.position.tile.x - destination.y);
+	double dyp = (destination.y + destination.x - missile.position.tile.x - missile.position.tile.y);
 	double dr = sqrt(dxp * dxp + dyp * dyp);
-	missile.position.velocity.deltaX = static_cast<int>((dxp * (v << 16)) / dr);
-	missile.position.velocity.deltaY = static_cast<int>((dyp * (v << 15)) / dr);
+	// velocity is stored in screen coordinates so apply the scaling factor to the y axis while normalizing.
+	double normalizedX = dxp / dr;
+	double normalizedY = dyp / dr / 2;
+	missile.position.velocity.deltaX = static_cast<int>(normalizedX * (v << 16));
+	missile.position.velocity.deltaY = static_cast<int>(normalizedY * (v << 16));
 }
 
 /**
