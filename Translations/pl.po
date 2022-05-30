@@ -4470,7 +4470,7 @@ msgstr "unikat"
 
 #: Source/items.cpp:3855 Source/items.cpp:3863 Source/items.cpp:3869
 msgid "Not Identified"
-msgstr "Niezidentyfikowano"
+msgstr "Nie zidentyfikowano"
 
 #: Source/loadsave.cpp:1870 Source/loadsave.cpp:2388
 msgid "Unable to open save file archive"
@@ -6778,15 +6778,18 @@ msgstr "Mana"
 
 #: Source/panels/charpanel.cpp:188
 msgid "Resist magic"
-msgstr "Odporność na Magię"
+msgstr ""
+"Odporności:\n"
+"Magia\n"
+" "
 
 #: Source/panels/charpanel.cpp:190
 msgid "Resist fire"
-msgstr "Odporność na Ogień"
+msgstr "Ogień"
 
 #: Source/panels/charpanel.cpp:192
 msgid "Resist lightning"
-msgstr "Odpor. na Błyskawice"
+msgstr "Błyskawice"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
