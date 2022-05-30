@@ -1,6 +1,9 @@
 #pragma once
 
 #include <cmath>
+#ifdef BUILD_TESTING
+#include <ostream>
+#endif
 
 #include "direction.hpp"
 #include "size.hpp"
@@ -120,9 +123,21 @@ struct Displacement {
 	 *
 	 * @return A representation of the original displacement in screen coordinates.
 	 */
-	constexpr Displacement WorldToScreen() const
+	constexpr Displacement worldToScreen() const
 	{
 		return { (deltaY - deltaX) * 32, (deltaY + deltaX) * -16 };
+	}
+
+	/**
+	 * @brief Returns a new Displacement object in world coordinates.
+	 *
+	 * This is an inverse matrix of the worldToScreen transformation.
+	 *
+	 * @return A representation of the original displacement in world coordinates.
+	 */
+	constexpr Displacement screenToWorld() const
+	{
+		return { (2 * deltaY + deltaX) / -64, (2 * deltaY - deltaX) / -64 };
 	}
 
 	constexpr Displacement Rotate(int quadrants)
@@ -136,6 +151,19 @@ struct Displacement {
 
 		return Displacement { deltaX * cosine - deltaY * sine, deltaX * sine + deltaY * cosine };
 	}
+
+#ifdef BUILD_TESTING
+	/**
+	 * @brief Format displacements nicely in test failure messages
+	 * @param stream output stream, expected to have overloads for int and char*
+	 * @param offset Object to display
+	 * @return the stream, to allow chaining
+	 */
+	friend std::ostream &operator<<(std::ostream &stream, const Displacement &offset)
+	{
+		return stream << "(x: " << offset.deltaX << ", y: " << offset.deltaY << ")";
+	}
+#endif
 
 private:
 	static constexpr Displacement fromDirection(Direction direction)
