@@ -269,100 +269,72 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	return true;
 }
 
-bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
+bool Plr2PlrMHit(int pnumAttacker, int pnumTarget, int minDam, int maxDam, int dist, missile_id mName, bool isDamShifted, bool *blocked)
 {
-	auto &player = Players[pnum];
-	auto &target = Players[p];
-
-	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
+	auto &attacker = Players[pnumAttacker];
+	auto &target = Players[pnumTarget];
+	// check immunities
+	if (sgGameInitInfo.bFriendlyFire == 0 && attacker.friendlyMode)
 		return false;
 
-	*blocked = false;
-
-	if (target._pInvincible) {
+	if (!target.isPossibleToHit() || target.isImmune(mName))
 		return false;
-	}
+	// CTH
+	int hitRoll = GenerateRnd(100);
 
-	if (mtype == MIS_HBOLT) {
-		return false;
-	}
-
-	if (HasAnyOf(target._pSpellFlags, SpellFlag::Etherealize) && MissilesData[mtype].mType == 0) {
-		return false;
-	}
-
-	int8_t resper;
-	switch (MissilesData[mtype].mResist) {
-	case MISR_FIRE:
-		resper = target._pFireResist;
-		break;
-	case MISR_LIGHTNING:
-		resper = target._pLghtResist;
-		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
-		resper = target._pMagResist;
-		break;
-	default:
-		resper = 0;
-		break;
-	}
-
-	int hper = GenerateRnd(100);
-
-	int hit;
-	if (MissilesData[mtype].mType == 0) {
-		hit = player.GetRangedToHit()
+	int hitChance;
+	if (MissilesData[mName].mType == 0) {
+		hitChance = attacker.GetRangedToHit()
 		    - (dist * dist / 2)
 		    - target.GetArmor();
 	} else {
-		hit = player.GetMagicToHit()
+		hitChance = attacker.GetMagicToHit()
 		    - (target._pLevel * 2)
 		    - dist;
 	}
 
-	hit = clamp(hit, 5, 95);
-
-	if (hper >= hit) {
+	hitChance = clamp(hitChance, 5, 95);
+	// HIT?
+	if (hitRoll >= hitChance) {
 		return false;
 	}
+	// GET RESISTANCE
+	int8_t resPer = target.getResistance(MissilesData[mName].mResist);
+	// BLOCK
+	if (!isDamShifted && mName != MIS_ACIDPUD && target.isAbleToBlock()) {
+		int blockRoll = GenerateRnd(100);
+		int blockChance = target.GetBlockChance(attacker._pLevel);
+		blockChance = clamp(blockChance, 0, 100);
 
-	int blkper = 100;
-	if (!shift && (target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
-		blkper = GenerateRnd(100);
+		*blocked = false;
+		if (resPer <= 0 && blockRoll < blockChance) {
+			StartPlrBlock(pnumTarget, GetDirection(target.position.tile, attacker.position.tile));
+			*blocked = true;
+			return true;
+		}
 	}
-
-	int blk = target.GetBlockChance() - (player._pLevel * 2);
-	blk = clamp(blk, 0, 100);
-
+	// DAMAGE calc
 	int dam;
-	if (mtype == MIS_BONESPIRIT) {
+	if (mName == MIS_BONESPIRIT) {
 		dam = target._pHitPoints / 3;
 	} else {
-		dam = mindam + GenerateRnd(maxdam - mindam + 1);
-		if (MissilesData[mtype].mType == 0 && MissilesData[mtype].mResist == MISR_NONE)
-			dam += player._pIBonusDamMod + player._pDamageMod + dam * player._pIBonusDam / 100;
-		if (!shift)
+		dam = minDam + GenerateRnd(maxDam - minDam + 1);
+		if (MissilesData[mName].mType == 0 && MissilesData[mName].mResist == MISR_NONE)
+			dam += attacker._pIBonusDamMod + attacker._pDamageMod + dam * attacker._pIBonusDam / 100;
+		if (!isDamShifted)
 			dam <<= 6;
 	}
-	if (MissilesData[mtype].mType != 0)
+	if (MissilesData[mName].mType != 0)
 		dam /= 2;
-	if (resper > 0) {
-		dam -= (dam * resper) / 100;
-		if (pnum == MyPlayerId)
-			NetSendCmdDamage(true, p, dam);
+	if (resPer > 0)
+		dam -= (dam * resPer) / 100;
+	// HIT
+	if (pnumAttacker == MyPlayerId)
+		NetSendCmdDamage(true, pnumTarget, dam);
+	if (resPer > 0)
 		target.Say(HeroSpeech::ArghClang);
-		return true;
-	}
-
-	if (blkper < blk) {
-		StartPlrBlock(p, GetDirection(target.position.tile, player.position.tile));
-		*blocked = true;
-	} else {
-		if (pnum == MyPlayerId)
-			NetSendCmdDamage(true, p, dam);
-		StartPlrHit(p, dam, false);
-	}
+	else
+		StartPlrHit(pnumTarget, dam, false);
 
 	return true;
 }
@@ -904,140 +876,92 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	return true;
 }
 
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked)
+bool PlayerMHit(int pnumTarget, Monster *monster, int dist, int minDam, int maxDam, missile_id mName, bool isDamShifted, int earFlag, bool *blocked)
 {
-	*blocked = false;
-
-	auto &player = Players[pnum];
-
-	if (player._pHitPoints >> 6 <= 0) {
+	auto &target = Players[pnumTarget];
+	// check immunities
+	if (!target.isPossibleToHit() || target.isImmune(mName))
 		return false;
-	}
-
-	if (player._pInvincible) {
-		return false;
-	}
-
-	if (HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize) && MissilesData[mtype].mType == 0) {
-		return false;
-	}
-
-	int hit = GenerateRnd(100);
+	// CTH
+	int hitRoll = GenerateRnd(100);
 #ifdef _DEBUG
 	if (DebugGodMode)
-		hit = 1000;
+		hitRoll = 1000;
 #endif
-	int hper = 40;
-	if (MissilesData[mtype].mType == 0) {
-		int tac = player.GetArmor();
+	int hitChance = 40;
+	if (MissilesData[mName].mType == 0) {
 		if (monster != nullptr) {
-			hper = monster->mHit
-			    + ((monster->mLevel - player._pLevel) * 2)
+			hitChance = monster->mHit
+			    + ((monster->mLevel - target._pLevel) * 2)
 			    + 30
-			    - (dist * 2) - tac;
+			    - (dist * 2) - target.GetArmor();
 		} else {
-			hper = 100 - (tac / 2) - (dist * 2);
+			hitChance = 100 - (target.GetArmor() / 2) - (dist * 2);
 		}
 	} else if (monster != nullptr) {
-		hper += (monster->mLevel * 2) - (player._pLevel * 2) - (dist * 2);
+		hitChance += (monster->mLevel * 2) - (target._pLevel * 2) - (dist * 2);
 	}
 
-	int minhit = 10;
-	if (currlevel == 14)
-		minhit = 20;
-	if (currlevel == 15)
-		minhit = 25;
-	if (currlevel == 16)
-		minhit = 30;
-	hper = std::max(hper, minhit);
-
-	int blk = 100;
-	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
-		blk = GenerateRnd(100);
-	}
-
-	if (shift)
-		blk = 100;
-	if (mtype == MIS_ACIDPUD)
-		blk = 100;
-
-	int blkper = player.GetBlockChance(false);
-	if (monster != nullptr)
-		blkper -= (monster->mLevel - player._pLevel) * 2;
-	blkper = clamp(blkper, 0, 100);
-
-	int8_t resper;
-	switch (MissilesData[mtype].mResist) {
-	case MISR_FIRE:
-		resper = player._pFireResist;
-		break;
-	case MISR_LIGHTNING:
-		resper = player._pLghtResist;
-		break;
-	case MISR_MAGIC:
-	case MISR_ACID:
-		resper = player._pMagResist;
-		break;
-	default:
-		resper = 0;
-		break;
-	}
-
-	if (hit >= hper) {
+	int minhit = getMonstersAndTrapsAutoHitAgainstPlayer(10);
+	hitChance = std::max(hitChance, minhit);
+	// HIT ?
+	if (hitRoll >= hitChance) {
 		return false;
 	}
+	// GET RESISTANCE
+	int8_t resPer = target.getResistance(MissilesData[mName].mResist);
+	// BLOCK
+	if (!isDamShifted && mName != MIS_ACIDPUD && target.isAbleToBlock()) {
+		int blockRoll = GenerateRnd(100);
+		int blockChance = target.GetBlockChance(target._pLevel);
+		if (monster != nullptr)
+			blockChance = target.GetBlockChance(monster->mLevel);
+		blockChance = clamp(blockChance, 0, 100);
 
+		*blocked = false;
+		if ((resPer <= 0 || gbIsHellfire) && blockRoll < blockChance) {
+			Direction dir = target._pdir;
+			if (monster != nullptr) {
+				dir = GetDirection(target.position.tile, monster->position.tile);
+			}
+			*blocked = true;
+			StartPlrBlock(pnumTarget, dir);
+			return true;
+		}
+	}
+	// DAMAGE calc
 	int dam;
-	if (mtype == MIS_BONESPIRIT) {
-		dam = player._pHitPoints / 3;
+	if (mName == MIS_BONESPIRIT) {
+		dam = target._pHitPoints / 3;
 	} else {
-		if (!shift) {
-			dam = (mind << 6) + GenerateRnd(((maxd - mind) << 6) + 1);
+		if (!isDamShifted) {
+			dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 			if (monster == nullptr)
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
+				if (HasAnyOf(target._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
-			dam += player._pIGetHit * 64;
+			dam += target._pIGetHit * 64;
 		} else {
-			dam = mind + GenerateRnd(maxd - mind + 1);
+			dam = minDam + GenerateRnd(maxDam - minDam + 1);
 			if (monster == nullptr)
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::HalfTrapDamage))
+				if (HasAnyOf(target._pIFlags, ItemSpecialEffect::HalfTrapDamage))
 					dam /= 2;
-			dam += player._pIGetHit;
+			dam += target._pIGetHit;
 		}
 
 		dam = std::max(dam, 64);
 	}
+	if (resPer > 0)
+		dam -= dam * resPer / 100;
+	// HIT
+	if (pnumTarget == MyPlayerId)
+		ApplyPlrDamage(pnumTarget, 0, 0, dam, earFlag);
 
-	if ((resper <= 0 || gbIsHellfire) && blk < blkper) {
-		Direction dir = player._pdir;
-		if (monster != nullptr) {
-			dir = GetDirection(player.position.tile, monster->position.tile);
-		}
-		*blocked = true;
-		StartPlrBlock(pnum, dir);
-		return true;
+	if (target._pHitPoints >> 6 > 0) {
+		if (resPer > 0)
+			target.Say(HeroSpeech::ArghClang);
+		else
+			StartPlrHit(pnumTarget, dam, false);
 	}
-
-	if (resper > 0) {
-		dam -= dam * resper / 100;
-		if (pnum == MyPlayerId) {
-			ApplyPlrDamage(pnum, 0, 0, dam, earflag);
-		}
-
-		if (player._pHitPoints >> 6 > 0) {
-			player.Say(HeroSpeech::ArghClang);
-		}
-		return true;
-	}
-
-	if (pnum == MyPlayerId) {
-		ApplyPlrDamage(pnum, 0, 0, dam, earflag);
-	}
-
-	if (player._pHitPoints >> 6 > 0) {
-		StartPlrHit(pnum, dam, false);
-	}
-
 	return true;
 }
 

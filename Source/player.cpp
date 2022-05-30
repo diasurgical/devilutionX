@@ -1020,11 +1020,11 @@ bool PlrHitPlr(int pnum, int8_t p)
 	hper = clamp(hper, 5, 95);
 
 	int blk = 100;
-	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
+	if (target.isAbleToBlock()) {
 		blk = GenerateRnd(100);
 	}
 
-	int blkper = target.GetBlockChance() - (attacker._pLevel * 2);
+	int blkper = target.GetBlockChance(attacker._pLevel);
 	blkper = clamp(blkper, 0, 100);
 
 	if (hit >= hper) {
@@ -3949,6 +3949,17 @@ void PlayDungMsgs()
 	} else {
 		sfxdelay = 0;
 	}
+}
+
+int getMonstersAndTrapsAutoHitAgainstPlayer(int minHit)
+{
+	if (currlevel == 14)
+		minHit = 20;
+	if (currlevel == 15)
+		minHit = 25;
+	if (currlevel == 16)
+		minHit = 30;
+	return minHit;
 }
 
 #ifdef BUILD_TESTING
