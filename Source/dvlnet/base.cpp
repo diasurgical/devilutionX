@@ -397,6 +397,7 @@ bool base::SNetLeaveGame(int type)
 	auto pkt = pktfty->make_packet<PT_DISCONNECT>(plr_self, PLR_BROADCAST,
 	    plr_self, type);
 	send(*pkt);
+	plr_self = PLR_BROADCAST;
 	return true;
 }
 
