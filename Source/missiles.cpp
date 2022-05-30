@@ -611,7 +611,10 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 
 	if (!LineClearMissile(position, target))
 		return false;
-	const Monster &monster = Monsters[dMonster[target.x][target.y] - 1];
+	int mid = dMonster[target.x][target.y] - 1;
+	if (mid < 0)
+		return false;
+	const Monster &monster = Monsters[mid];
 	if (monster.MType->mtype == MT_GOLEM)
 		return false;
 	if (monster._mhitpoints >> 6 <= 0)
