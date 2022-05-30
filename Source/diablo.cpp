@@ -1228,6 +1228,12 @@ void UpdateMonsterLights()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
+
+		if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+			int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
+			monster.mlid = AddLight(monster.position.tile, lightRadius);
+		}
+
 		if (monster.mlid != NO_LIGHT) {
 			if (monster.mlid == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
 				monster.mlid = NO_LIGHT;
