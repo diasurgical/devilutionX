@@ -24,7 +24,7 @@ namespace devilution {
 struct LightPosition {
 	Point tile;
 	/** Pixel offset from tile. */
-	Point offset;
+	Displacement offset;
 	/** Prevous position. */
 	Point old;
 };
@@ -62,7 +62,7 @@ int AddLight(Point position, int r);
 void AddUnLight(int i);
 void ChangeLightRadius(int i, int r);
 void ChangeLightXY(int i, Point position);
-void ChangeLightOffset(int i, Point position);
+void ChangeLightOffset(int i, Displacement offset);
 void ChangeLight(int i, Point position, int r);
 void ProcessLightList();
 void SavePreLighting();

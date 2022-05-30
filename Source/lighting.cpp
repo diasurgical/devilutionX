@@ -532,8 +532,8 @@ void DoLighting(Point position, int nRadius, int lnum)
 
 	if (lnum >= 0) {
 		Light &light = Lights[lnum];
-		xoff = light.position.offset.x;
-		yoff = light.position.offset.y;
+		xoff = light.position.offset.deltaX;
+		yoff = light.position.offset.deltaY;
 		if (xoff < 0) {
 			xoff += 8;
 			position -= { 1, 0 };
@@ -975,7 +975,7 @@ void ChangeLightXY(int i, Point position)
 	UpdateLighting = true;
 }
 
-void ChangeLightOffset(int i, Point position)
+void ChangeLightOffset(int i, Displacement offset)
 {
 	if (DisableLighting || i == NO_LIGHT) {
 		return;
@@ -985,7 +985,7 @@ void ChangeLightOffset(int i, Point position)
 	light._lunflag = true;
 	light.position.old = light.position.tile;
 	light.oldRadius = light._lradius;
-	light.position.offset = position;
+	light.position.offset = offset;
 	UpdateLighting = true;
 }
 

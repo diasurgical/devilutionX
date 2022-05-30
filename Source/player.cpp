@@ -206,8 +206,8 @@ void PmChangeLightOff(Player &player)
 	y = (y / 8) * (y < 0 ? 1 : -1);
 	int lx = x + (l->position.tile.x * 8);
 	int ly = y + (l->position.tile.y * 8);
-	int offx = l->position.offset.x + (l->position.tile.x * 8);
-	int offy = l->position.offset.y + (l->position.tile.y * 8);
+	int offx = l->position.offset.deltaX + (l->position.tile.x * 8);
+	int offy = l->position.offset.deltaY + (l->position.tile.y * 8);
 
 	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
 		return;

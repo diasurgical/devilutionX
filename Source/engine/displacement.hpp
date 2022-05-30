@@ -140,6 +140,25 @@ struct Displacement {
 		return { (2 * deltaY + deltaX) / -64, (2 * deltaY - deltaX) / -64 };
 	}
 
+	/**
+	 * @brief Missiles flip the axes for some reason -_-
+	 * @return negated world displacement, for use with missile movement routines.
+	 */
+	constexpr Displacement screenToMissile() const
+	{
+		return -screenToWorld();
+	}
+
+	constexpr Displacement screenToLight() const
+	{
+		return { (2 * deltaY + deltaX) / 8, (2 * deltaY - deltaX) / 8 };
+	}
+
+	constexpr Displacement operator>>(size_t factor)
+	{
+		return Displacement(deltaX >> factor, deltaY >> factor);
+	}
+
 	constexpr Displacement Rotate(int quadrants)
 	{
 		constexpr int Sines[] = { 0, 1, 0, -1 };
