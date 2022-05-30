@@ -647,11 +647,6 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	if (monster.mlid == 0)
 		monster.mlid = NO_LIGHT; // Correct incorect values in old saves
 
-	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
-		int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
-		monster.mlid = AddLight(monster.position.tile, lightRadius);
-	}
-
 	// Omit pointer mName;
 	// Omit pointer MType;
 	// Omit pointer MData;
