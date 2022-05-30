@@ -406,7 +406,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 			Monster &attackingMonster = Monsters[missile._misource];
 			if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
 			    && mid > 0
-			    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
+			    && ((Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0 || (attackingMonster._mFlags & MFLAG_BERSERK) != 0))
 				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	} else {
