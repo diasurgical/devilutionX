@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 
+#include "engine/rectangle.hpp"
 #include "utils/attributes.h"
 
 namespace devilution {
@@ -13,6 +14,9 @@ extern DVL_API_FOR_TEST Uint16 gnViewportHeight;
 Uint16 GetScreenWidth();
 Uint16 GetScreenHeight();
 Uint16 GetViewportHeight();
+
+/** @brief Returns the UI (Menus, Messages, Help) can use. Currently this is 640x480 like vanilla. */
+const Rectangle &GetUIRectangle();
 
 float GetDpiScalingFactor();
 /**

@@ -105,13 +105,14 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 {
 	int w = GmenuGetLineWidth(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
+		int uiPositionX = GetUIRectangle().position.x;
 		int x = 16 + w / 2;
-		CelDrawTo(out, { x + PANEL_LEFT, y + 40 }, *optbar_cel, 0);
+		CelDrawTo(out, { x + uiPositionX, y + 40 }, *optbar_cel, 0);
 		uint16_t step = pItem->dwFlags & 0xFFF;
 		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 		uint16_t pos = step * 256 / steps;
-		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y + 38, pos + 13, 28);
-		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y + 38 }, *option_cel, 0);
+		GmenuClearBuffer(out, x + 2 + uiPositionX, y + 38, pos + 13, 28);
+		CelDrawTo(out, { x + 2 + pos + uiPositionX, y + 38 }, *option_cel, 0);
 	}
 
 	int x = (gnScreenWidth - w) / 2;
@@ -135,10 +136,11 @@ void GameMenuMove()
 
 bool GmenuMouseNavigation()
 {
-	if (MousePosition.x < 282 + PANEL_LEFT) {
+	int uiPositionX = GetUIRectangle().position.x;
+	if (MousePosition.x < 282 + uiPositionX) {
 		return false;
 	}
-	if (MousePosition.x > 538 + PANEL_LEFT) {
+	if (MousePosition.x > 538 + uiPositionX) {
 		return false;
 	}
 	return true;
@@ -146,13 +148,14 @@ bool GmenuMouseNavigation()
 
 int GmenuGetMouseSlider()
 {
-	if (MousePosition.x < 282 + PANEL_LEFT) {
+	int uiPositionX = GetUIRectangle().position.x;
+	if (MousePosition.x < 282 + uiPositionX) {
 		return 0;
 	}
-	if (MousePosition.x > 538 + PANEL_LEFT) {
+	if (MousePosition.x > 538 + uiPositionX) {
 		return 256;
 	}
-	return MousePosition.x - 282 - PANEL_LEFT;
+	return MousePosition.x - 282 - uiPositionX;
 }
 
 } // namespace
@@ -165,7 +168,7 @@ void gmenu_draw_pause(const Surface &out)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		LightTableIndex = 0;
-		DrawString(out, _("Pause"), { { 0, 0 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize46 | UiFlags::ColorGold | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
+		DrawString(out, _("Pause"), { { 0, 0 }, { gnScreenWidth, GetMainPanel().position.y } }, UiFlags::FontSize46 | UiFlags::ColorGold | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
 	}
 }
 
@@ -236,8 +239,9 @@ void gmenu_draw(const Surface &out)
 				LogoAnim_tick = ticks;
 			}
 		}
-		CelDrawTo(out, { (gnScreenWidth - sgpLogo->Width()) / 2, 102 + UI_OFFSET_Y }, *sgpLogo, LogoAnim_frame);
-		int y = 110 + UI_OFFSET_Y;
+		int uiPositionY = GetUIRectangle().position.y;
+		CelDrawTo(out, { (gnScreenWidth - sgpLogo->Width()) / 2, 102 + uiPositionY }, *sgpLogo, LogoAnim_frame);
+		int y = 110 + uiPositionY;
 		TMenuItem *i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu != nullptr) {
 			while (i->fnMenu != nullptr) {
@@ -311,13 +315,14 @@ bool gmenu_left_mouse(bool isDown)
 	if (sgpCurrentMenu == nullptr) {
 		return false;
 	}
+	const Point uiPosition = GetUIRectangle().position;
 	if (MousePosition.y >= GetMainPanel().position.y) {
 		return false;
 	}
-	if (MousePosition.y - (117 + GetUIOffsetY()) < 0) {
+	if (MousePosition.y - (117 + uiPosition.y) < 0) {
 		return true;
 	}
-	int i = (MousePosition.y - (117 + GetUIOffsetY())) / 45;
+	int i = (MousePosition.y - (117 + uiPosition.y)) / 45;
 	if (i >= sgCurrentMenuIdx) {
 		return true;
 	}

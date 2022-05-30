@@ -387,130 +387,77 @@ void RotateBlockedMissile(Missile &missile)
 	SetMissDir(missile, dir);
 }
 
-void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point position, bool nodel)
+void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDamageShifted, Point position, bool dontDeleteOnCollision)
 {
 	if (!InDungeonBounds(position))
 		return;
 
-	bool blocked;
-
 	int mx = position.x;
 	int my = position.y;
 
+	bool isMonsterHit = false;
+	const int mid = dMonster[mx][my];
 	if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 		if (missile._micaster == TARGET_MONSTERS) {
-			int mid = dMonster[mx][my];
 			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
-				if (MonsterMHit(
-				        missile._misource,
-				        abs(mid) - 1,
-				        mindam,
-				        maxdam,
-				        missile._midist,
-				        missile._mitype,
-				        shift)) {
-					if (!nodel)
-						missile._mirange = 0;
-					missile._miHitFlag = true;
-				}
-			}
-			if (dPlayer[mx][my] > 0
-			    && dPlayer[mx][my] - 1 != missile._misource
-			    && Plr2PlrMHit(
-			        missile._misource,
-			        dPlayer[mx][my] - 1,
-			        mindam,
-			        maxdam,
-			        missile._midist,
-			        missile._mitype,
-			        shift,
-			        &blocked)) {
-				if (gbIsHellfire && blocked) {
-					RotateBlockedMissile(missile);
-				} else if (!nodel) {
-					missile._mirange = 0;
-				}
-				missile._miHitFlag = true;
+				isMonsterHit = MonsterMHit(missile._misource, abs(mid) - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 			}
 		} else {
-			auto &monster = Monsters[missile._misource];
-			if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0
-			    && dMonster[mx][my] > 0
-			    && (Monsters[dMonster[mx][my] - 1]._mFlags & MFLAG_GOLEM) != 0
-			    && MonsterTrapHit(dMonster[mx][my] - 1, mindam, maxdam, missile._midist, missile._mitype, shift)) {
-				if (!nodel)
-					missile._mirange = 0;
-				missile._miHitFlag = true;
-			}
-			if (dPlayer[mx][my] > 0
-			    && PlayerMHit(
-			        dPlayer[mx][my] - 1,
-			        &monster,
-			        missile._midist,
-			        mindam,
-			        maxdam,
-			        missile._mitype,
-			        shift,
-			        0,
-			        &blocked)) {
-				if (gbIsHellfire && blocked) {
-					RotateBlockedMissile(missile);
-				} else if (!nodel) {
-					missile._mirange = 0;
-				}
-				missile._miHitFlag = true;
-			}
+			Monster &attackingMonster = Monsters[missile._misource];
+			if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
+			    && mid > 0
+			    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
+				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	} else {
-		int mid = dMonster[mx][my];
 		if (mid > 0) {
-			mid -= 1;
-			if (missile._micaster == TARGET_BOTH) {
-				if (MonsterMHit(
-				        missile._misource,
-				        mid,
-				        mindam,
-				        maxdam,
-				        missile._midist,
-				        missile._mitype,
-				        shift)) {
-					if (!nodel)
-						missile._mirange = 0;
-					missile._miHitFlag = true;
-				}
-			} else if (MonsterTrapHit(mid, mindam, maxdam, missile._midist, missile._mitype, shift)) {
-				if (!nodel)
-					missile._mirange = 0;
-				missile._miHitFlag = true;
-			}
-		}
-		if (dPlayer[mx][my] > 0) {
-			if (PlayerMHit(
-			        dPlayer[mx][my] - 1,
-			        nullptr,
-			        missile._midist,
-			        mindam,
-			        maxdam,
-			        missile._mitype,
-			        shift,
-			        (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING) ? 1 : 0,
-			        &blocked)) {
-				if (gbIsHellfire && blocked) {
-					RotateBlockedMissile(missile);
-				} else if (!nodel) {
-					missile._mirange = 0;
-				}
-				missile._miHitFlag = true;
-			}
+			if (missile._micaster == TARGET_BOTH)
+				isMonsterHit = MonsterMHit(missile._misource, mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			else
+				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	}
+
+	if (isMonsterHit) {
+		if (!dontDeleteOnCollision)
+			missile._mirange = 0;
+		missile._miHitFlag = true;
+	}
+
+	bool isPlayerHit = false;
+	bool blocked = false;
+	const int8_t pid = dPlayer[mx][my];
+	if (pid > 0) {
+		if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
+			if (missile._micaster == TARGET_MONSTERS) {
+				if ((pid - 1) != missile._misource)
+					isPlayerHit = Plr2PlrMHit(missile._misource, pid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
+			} else {
+				Monster &monster = Monsters[missile._misource];
+				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
+			}
+		} else {
+			int earflag = (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING) ? 1 : 0;
+			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
+		}
+	}
+
+	if (isPlayerHit) {
+		if (gbIsHellfire && blocked) {
+			RotateBlockedMissile(missile);
+		} else if (!dontDeleteOnCollision) {
+			missile._mirange = 0;
+		}
+		missile._miHitFlag = true;
+	}
+
 	if (IsMissileBlockedByTile({ mx, my })) {
 		Object *object = ObjectAtPosition({ mx, my });
 		if (object != nullptr && object->IsBreakable()) {
 			BreakObject(-1, *object);
 		}
 
-		if (!nodel)
+		if (!dontDeleteOnCollision)
 			missile._mirange = 0;
 		missile._miHitFlag = false;
 	}
@@ -2933,7 +2880,6 @@ void MI_Fireball(Missile &missile)
 	missile._mirange--;
 
 	int id = missile._misource;
-	Point p = (missile._micaster == TARGET_MONSTERS) ? Players[id].position.tile : Monsters[id].position.tile;
 
 	if (missile._miAnimType == MFILE_BIGEXP) {
 		if (missile._mirange == 0) {
@@ -2951,28 +2897,28 @@ void MI_Fireball(Missile &missile)
 		}
 		MoveMissileAndCheckMissileCol(missile, minDam, maxDam, true, false);
 		if (missile._mirange == 0) {
-			Point m = missile.position.tile;
+			const Point missilePosition = missile.position.tile;
 			ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
 
-			constexpr Displacement Pattern[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
-			for (auto shift : Pattern) {
-				if (!CheckBlock(p, m + shift))
-					CheckMissileCol(missile, minDam, maxDam, false, m + shift, true);
+			constexpr Displacement Offsets[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
+			for (Displacement offset : Offsets) {
+				if (!CheckBlock(missile.position.start, missilePosition + offset))
+					CheckMissileCol(missile, minDam, maxDam, false, missilePosition + offset, true);
 			}
 
-			if (!TransList[dTransVal[m.x][m.y]]
-			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]]) || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]])))) {
+			if (!TransList[dTransVal[missilePosition.x][missilePosition.y]]
+			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && nSolidTable[dPiece[missilePosition.x][missilePosition.y + 1]]) || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && nSolidTable[dPiece[missilePosition.x][missilePosition.y - 1]])))) {
 				missile.position.tile += Displacement { 1, 1 };
 				missile.position.offset.deltaY -= 32;
 			}
 			if (missile.position.velocity.deltaY > 0
-			    && ((TransList[dTransVal[m.x + 1][m.y]] && nSolidTable[dPiece[m.x + 1][m.y]])
-			        || (TransList[dTransVal[m.x - 1][m.y]] && nSolidTable[dPiece[m.x - 1][m.y]]))) {
+			    && ((TransList[dTransVal[missilePosition.x + 1][missilePosition.y]] && nSolidTable[dPiece[missilePosition.x + 1][missilePosition.y]])
+			        || (TransList[dTransVal[missilePosition.x - 1][missilePosition.y]] && nSolidTable[dPiece[missilePosition.x - 1][missilePosition.y]]))) {
 				missile.position.offset.deltaY -= 32;
 			}
 			if (missile.position.velocity.deltaX > 0
-			    && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]])
-			        || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]]))) {
+			    && ((TransList[dTransVal[missilePosition.x][missilePosition.y + 1]] && nSolidTable[dPiece[missilePosition.x][missilePosition.y + 1]])
+			        || (TransList[dTransVal[missilePosition.x][missilePosition.y - 1]] && nSolidTable[dPiece[missilePosition.x][missilePosition.y - 1]]))) {
 				missile.position.offset.deltaX -= 32;
 			}
 			missile._mimfnum = 0;
@@ -3915,17 +3861,15 @@ void MI_Element(Missile &missile)
 	missile._mirange--;
 	int dam = missile._midam;
 	int id = missile._misource;
+	const Point missilePosition = missile.position.tile;
 	if (missile._miAnimType == MFILE_BIGEXP) {
-		Point c = missile.position.tile;
-		Point p = Players[id].position.tile;
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
-		if (!CheckBlock(p, c))
-			CheckMissileCol(missile, dam, dam, true, c, true);
 
-		constexpr Displacement Offsets[] = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
+		Point startPoint = missile.var3 == 2 ? Point { missile.var4, missile.var5 } : missile.position.start;
+		constexpr Displacement Offsets[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
 		for (Displacement offset : Offsets) {
-			if (!CheckBlock(p, c + offset))
-				CheckMissileCol(missile, dam, dam, true, c + offset, true);
+			if (!CheckBlock(startPoint, missilePosition + offset))
+				CheckMissileCol(missile, dam, dam, true, missilePosition + offset, true);
 		}
 
 		if (missile._mirange == 0) {
@@ -3934,27 +3878,26 @@ void MI_Element(Missile &missile)
 		}
 	} else {
 		MoveMissileAndCheckMissileCol(missile, dam, dam, false, false);
-		Point c = missile.position.tile;
-		if (missile.var3 == 0 && c == Point { missile.var4, missile.var5 })
+		if (missile.var3 == 0 && missilePosition == Point { missile.var4, missile.var5 })
 			missile.var3 = 1;
 		if (missile.var3 == 1) {
 			missile.var3 = 2;
 			missile._mirange = 255;
-			auto *monster = FindClosest(c, 19);
-			if (monster != nullptr) {
-				Direction sd = GetDirection(c, monster->position.tile);
+			auto *nextMonster = FindClosest(missilePosition, 19);
+			if (nextMonster != nullptr) {
+				Direction sd = GetDirection(missilePosition, nextMonster->position.tile);
 				SetMissDir(missile, sd);
-				UpdateMissileVelocity(missile, monster->position.tile, 16);
+				UpdateMissileVelocity(missile, nextMonster->position.tile, 16);
 			} else {
 				Direction sd = Players[id]._pdir;
 				SetMissDir(missile, sd);
-				UpdateMissileVelocity(missile, c + sd, 16);
+				UpdateMissileVelocity(missile, missilePosition + sd, 16);
 			}
 		}
-		if (c != Point { missile.var1, missile.var2 }) {
-			missile.var1 = c.x;
-			missile.var2 = c.y;
-			ChangeLight(missile._mlid, c, 8);
+		if (missilePosition != Point { missile.var1, missile.var2 }) {
+			missile.var1 = missilePosition.x;
+			missile.var2 = missilePosition.y;
+			ChangeLight(missile._mlid, missilePosition, 8);
 		}
 		if (missile._mirange == 0) {
 			missile._mimfnum = 0;

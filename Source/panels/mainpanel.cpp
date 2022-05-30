@@ -43,7 +43,7 @@ void RenderMainButton(int buttonId, string_view text, int frame)
 	Point panelPosition { PanBtnPos[buttonId].x + 4, PanBtnPos[buttonId].y + 17 };
 	DrawButtonOnPanel(panelPosition, text, frame);
 	if (IsChatAvailable())
-		DrawButtonOnPanel(panelPosition + Displacement { 0, PANEL_HEIGHT + 16 }, text, frame);
+		DrawButtonOnPanel(panelPosition + Displacement { 0, GetMainPanel().size.height + 16 }, text, frame);
 
 	const Surface out(PanelButtonDown.surface.get());
 	Point position { 0, 19 * buttonId };
@@ -60,7 +60,7 @@ void RenderMainButton(int buttonId, string_view text, int frame)
 void DrawTalkButton(int buttonId)
 {
 	string_view text = _("voice");
-	Point position { 176, PANEL_HEIGHT + 101 + 18 * buttonId };
+	Point position { 176, GetMainPanel().size.height + 101 + 18 * buttonId };
 	DrawArt(*pBtmBuff, position, &TalkButton);
 	int width = std::min(GetLineWidth(text, GameFont12, 1), PanelButton.w());
 	DrawArt(*pBtmBuff, position + Displacement { (TalkButton.w() - width) / 2, 6 }, &PanelButtonGrime, 1, width, 9);

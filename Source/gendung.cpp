@@ -385,7 +385,7 @@ void FillSolidBlockTbls()
 		nMissileTable[i + 1] = (bv & 0x04) != 0;
 		nTransTable[i + 1] = (bv & 0x08) != 0;
 		nTrapTable[i + 1] = (bv & 0x80) != 0;
-		block_lvid[i + 1] = (bv & 0x70) >> 4;
+		block_lvid[i + 1] = (bv & 0x30) >> 4;
 	}
 }
 

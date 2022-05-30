@@ -2942,7 +2942,7 @@ bool OperateShrineThaumaturgic(int pnum)
 	return true;
 }
 
-bool OperateShrineFascinating(int pnum)
+bool OperateShrineCostOfWisdom(int pnum, spell_id spellId, diablo_message message)
 {
 	if (deltaload)
 		return false;
@@ -2951,14 +2951,14 @@ bool OperateShrineFascinating(int pnum)
 
 	auto &player = Players[pnum];
 
-	player._pMemSpells |= GetSpellBitmask(SPL_FIREBOLT);
+	player._pMemSpells |= GetSpellBitmask(spellId);
 
-	if (player._pSplLvl[SPL_FIREBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_FIREBOLT]++;
-	if (player._pSplLvl[SPL_FIREBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_FIREBOLT]++;
+	if (player._pSplLvl[spellId] < MAX_SPELL_LEVEL)
+		player._pSplLvl[spellId]++;
+	if (player._pSplLvl[spellId] < MAX_SPELL_LEVEL)
+		player._pSplLvl[spellId]++;
 
-	DWORD t = player._pMaxManaBase / 10;
+	uint32_t t = player._pMaxManaBase / 10;
 	int v1 = player._pMana - player._pManaBase;
 	int v2 = player._pMaxMana - player._pMaxManaBase;
 	player._pManaBase -= t;
@@ -2974,7 +2974,7 @@ bool OperateShrineFascinating(int pnum)
 		player._pMaxManaBase = 0;
 	}
 
-	InitDiabloMsg(EMSG_SHRINE_FASCINATING);
+	InitDiabloMsg(message);
 
 	return true;
 }
@@ -3100,43 +3100,6 @@ bool OperateShrineHoly(int pnum)
 	return true;
 }
 
-bool OperateShrineSacred(int pnum)
-{
-	if (deltaload)
-		return false;
-	if (pnum != MyPlayerId)
-		return false;
-
-	auto &player = Players[pnum];
-
-	player._pMemSpells |= GetSpellBitmask(SPL_CBOLT);
-
-	if (player._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_CBOLT]++;
-	if (player._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_CBOLT]++;
-
-	uint32_t t = player._pMaxManaBase / 10;
-	int v1 = player._pMana - player._pManaBase;
-	int v2 = player._pMaxMana - player._pMaxManaBase;
-	player._pManaBase -= t;
-	player._pMana -= t;
-	player._pMaxMana -= t;
-	player._pMaxManaBase -= t;
-	if (player._pMana >> 6 <= 0) {
-		player._pMana = v1;
-		player._pManaBase = 0;
-	}
-	if (player._pMaxMana >> 6 <= 0) {
-		player._pMaxMana = v2;
-		player._pMaxManaBase = 0;
-	}
-
-	InitDiabloMsg(EMSG_SHRINE_SACRED);
-
-	return true;
-}
-
 bool OperateShrineSpiritual(int pnum)
 {
 	if (deltaload)
@@ -3250,42 +3213,6 @@ bool OperateShrineSecluded(int pnum)
 			UpdateAutomapExplorer({ x, y }, MAP_EXP_SHRINE);
 
 	InitDiabloMsg(EMSG_SHRINE_SECLUDED);
-
-	return true;
-}
-
-bool OperateShrineOrnate(int pnum)
-{
-	if (deltaload)
-		return false;
-	if (pnum != MyPlayerId)
-		return false;
-
-	auto &player = Players[pnum];
-
-	player._pMemSpells |= GetSpellBitmask(SPL_HBOLT);
-	if (player._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_HBOLT]++;
-	if (player._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_HBOLT]++;
-
-	uint32_t t = player._pMaxManaBase / 10;
-	int v1 = player._pMana - player._pManaBase;
-	int v2 = player._pMaxMana - player._pMaxManaBase;
-	player._pManaBase -= t;
-	player._pMana -= t;
-	player._pMaxMana -= t;
-	player._pMaxManaBase -= t;
-	if (player._pMana >> 6 <= 0) {
-		player._pMana = v1;
-		player._pManaBase = 0;
-	}
-	if (player._pMaxMana >> 6 <= 0) {
-		player._pMaxMana = v2;
-		player._pMaxManaBase = 0;
-	}
-
-	InitDiabloMsg(EMSG_SHRINE_ORNATE);
 
 	return true;
 }
@@ -3644,7 +3571,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineFascinating:
-		if (!OperateShrineFascinating(pnum))
+		if (!OperateShrineCostOfWisdom(pnum, SPL_FIREBOLT, EMSG_SHRINE_FASCINATING))
 			return;
 		break;
 	case ShrineCryptic:
@@ -3668,7 +3595,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineSacred:
-		if (!OperateShrineSacred(pnum))
+		if (!OperateShrineCostOfWisdom(pnum, SPL_CBOLT, EMSG_SHRINE_SACRED))
 			return;
 		break;
 	case ShrineSpiritual:
@@ -3696,7 +3623,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineOrnate:
-		if (!OperateShrineOrnate(pnum))
+		if (!OperateShrineCostOfWisdom(pnum, SPL_HBOLT, EMSG_SHRINE_ORNATE))
 			return;
 		break;
 	case ShrineGlimmering:
