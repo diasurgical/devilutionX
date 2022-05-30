@@ -1291,21 +1291,23 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
 
-	if (!monster.IsPossibleToHit()) {
-		int hit = GenerateRnd(100);
-		if (monster._mmode == MonsterMode::Petrified)
-			hit = 0;
-		if (monster.TryLiftGargoyle())
-			return;
-		if (hit < hper) {
-			int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
-			monster._mhitpoints -= dam;
-			if (monster._mhitpoints >> 6 <= 0) {
-				StartDeathFromMonster(i, mid);
-			} else {
-				MonsterHitMonster(mid, i, dam);
-			}
-		}
+	if (!monster.IsPossibleToHit())
+		return;
+
+	int hit = GenerateRnd(100);
+	if (monster._mmode == MonsterMode::Petrified)
+		hit = 0;
+	if (monster.TryLiftGargoyle())
+		return;
+	if (hit >= hper)
+		return;
+
+	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
+	monster._mhitpoints -= dam;
+	if (monster._mhitpoints >> 6 <= 0) {
+		StartDeathFromMonster(i, mid);
+	} else {
+		MonsterHitMonster(mid, i, dam);
 	}
 }
 
