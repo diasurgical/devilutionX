@@ -280,7 +280,10 @@ void UiFocusPageDown()
 
 void SelheroCatToName(const char *inBuf, char *outBuf, int cnt)
 {
-	strncat(outBuf, inBuf, cnt - strlen(outBuf));
+	size_t outLen = strlen(outBuf);
+	char *dest = outBuf + outLen;
+	size_t destCount = cnt - outLen;
+	CopyUtf8(dest, inBuf, destCount);
 }
 
 bool HandleMenuAction(MenuAction menuAction)
