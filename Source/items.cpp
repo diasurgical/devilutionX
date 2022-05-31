@@ -992,7 +992,7 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iLMaxDam = 0;
 		break;
 	case IPL_FIRERESCLVL:
-		item._iPLFR = 30 - Players[MyPlayerId]._pLevel;
+		item._iPLFR = 30 - MyPlayer->_pLevel;
 		item._iPLFR = std::max<int16_t>(item._iPLFR, 0);
 		break;
 	case IPL_FIRERES_CURSE:
@@ -1029,12 +1029,12 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iDamAcFlags |= ItemSpecialEffectHf::ACAgainstUndead;
 		break;
 	case IPL_MANATOLIFE: {
-		int portion = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100) << 6;
+		int portion = ((MyPlayer->_pMaxManaBase >> 6) * 50 / 100) << 6;
 		item._iPLMana -= portion;
 		item._iPLHP += portion;
 	} break;
 	case IPL_LIFETOMANA: {
-		int portion = ((Players[MyPlayerId]._pMaxHPBase >> 6) * 40 / 100) << 6;
+		int portion = ((MyPlayer->_pMaxHPBase >> 6) * 40 / 100) << 6;
 		item._iPLHP -= portion;
 		item._iPLMana += portion;
 	} break;
@@ -1956,7 +1956,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 	int itemValue = 0;
 	bool keepGoing = false;
 
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
@@ -2078,7 +2078,7 @@ bool HealerItemOk(int i)
 		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
 	if (!gbIsMultiplayer) {
-		auto &myPlayer = Players[MyPlayerId];
+		Player &myPlayer = *MyPlayer;
 
 		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
 			return !gbIsHellfire || myPlayer._pBaseStr < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);
@@ -2573,7 +2573,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pMaxHP = ihp + player._pMaxHPBase;
 	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
 
-	if (&player == &Players[MyPlayerId] && (player._pHitPoints >> 6) <= 0) {
+	if (&player == MyPlayer && (player._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(player, 0);
 	}
 
@@ -2683,7 +2683,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player._pgfxnum = gfxNum;
 	}
 
-	if (&player == &Players[MyPlayerId]) {
+	if (&player == MyPlayer) {
 		if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
 			int half = MaxGold;
 			MaxGold = GOLD_MAX_LIMIT;
@@ -2784,7 +2784,7 @@ void SetPlrHandGoldCurs(Item &gold)
 
 void CreatePlrItems(int playerId)
 {
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 
 	for (auto &item : player.InvBody) {
 		item.clear();
@@ -2999,7 +2999,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 
 void SetupItem(Item &item)
 {
-	item.setNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
+	item.setNewAnimation(MyPlayer->pLvlLoad == 0);
 	item._iIdentified = false;
 }
 
@@ -3736,7 +3736,7 @@ bool DoOil(Player &player, int cii)
 void DrawUniqueInfo(const Surface &out)
 {
 	const Point position = GetRightPanel().position - Displacement { SPANEL_WIDTH, 0 };
-	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(position)) {
+	if (IsLeftPanelOpen() && GetLeftPanel().Contains(position)) {
 		return;
 	}
 
@@ -3835,7 +3835,7 @@ void PrintItemDur(const Item &item)
 
 void UseItem(int pnum, item_misc_id mid, spell_id spl)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	switch (mid) {
 	case IMISC_HEAL:
@@ -4178,7 +4178,7 @@ void SpawnBoy(int lvl)
 	bool keepgoing = false;
 	int count = 0;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	HeroClass pc = myPlayer._pClass;
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
@@ -4453,7 +4453,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
-	Point pos = Players[MyPlayerId].position.tile;
+	Point pos = MyPlayer->position.tile;
 	GetSuperItemSpace(pos, ii);
 
 	uint32_t begin = SDL_GetTicks();
@@ -4535,7 +4535,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
-	Point pos = Players[MyPlayerId].position.tile;
+	Point pos = MyPlayer->position.tile;
 	GetSuperItemSpace(pos, ii);
 
 	int i = 0;

@@ -190,24 +190,6 @@ The location of this tool will need to be [added to the system's PATH environmen
 7. Use build/debug etc. commands inside Visual Studio Solution like with any normal Visual Studio project.
 </details>
 
-<details><summary>Nintendo Switch</summary>
-Run:
-
-```
-Packaging/switch/build.sh
-```
-
-This will install the [Switch devkit](https://switchbrew.org/wiki/Setting_up_Development_Environment) and build a DevilutionX Switch package. If you already have the devkit installed, or are on a non-Debian system, pass the the devkit path to the script like this:
-
-```
-DEVKITPRO=<path to devkit> Packaging/switch/build.sh
-```
-
-The nro-file will be generated in the build folder. Test with an emulator (RyuJinx) or real hardware.
-
-[Nintendo Switch manual](docs/manual/platforms/switch.md)
-</details>
-
 <details><summary>Android</summary>
 
 ### Installing dependencies
@@ -220,6 +202,38 @@ Click "Open Existing Project" and choose "android-project" folder in DevilutionX
 Wait until Gradle sync is completed.
 In Android Studio, go to "Build -> Make Project" or use the shortcut Ctrl+F9
 You can find the compiled APK in `/android-project/app/build/outputs/apk/`
+</details>
+
+<details><summary>Nintendo Switch</summary>
+
+### Installing dependencies
+
+https://devkitpro.org/wiki/Getting_Started
+
+
+- Install (dkp-)pacman: https://devkitpro.org/wiki/devkitPro_pacman
+
+- Install required packages with (dkp-)pacman:
+```
+sudo (dkp-)pacman -S --needed - < Packaging/switch/packages.txt
+```
+
+- Install smpq (if building from git or a source archive without devilutionx.mpq)
+DevilutionX requires some core assets to render UI elements and fonts even if game data is not available. While some
+platforms can load this from the filesystem as loose files the switch build currently only supports bundling the mpq
+archive inside the nro. If you're building DevilutionX on a supported platform a prebuilt binary may be available from
+your package distribution system (e.g. `sudo apt install smpq` or `yum install smpq`), on windows you can
+[download the latest version from Launchpad.net](https://launchpad.net/smpq/+download), and unix based OSes can build
+from source using [tools/build_and_install_smpq.sh](../tools/build_and_install_smpq.sh)
+
+### Compiling
+```bash
+cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_ASSETS_MPQ=ON
+cmake --build build -j $(getconf _NPROCESSORS_ONLN)
+```
+The nro-file will be generated in the build folder. Test with an emulator (RyuJinx) or real hardware.
+
+[Nintendo Switch manual](manual/platforms/switch.md)
 </details>
 
 <details><summary>Nintendo 3DS</summary>

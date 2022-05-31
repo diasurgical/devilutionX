@@ -1,0 +1,40 @@
+name: Linux_x86_64_test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsodium-dev libpng-dev libbz2-dev
+      - name: Cache CMake build folder
+        uses: actions/cache@v3
+        with:
+          path: build
+          key: linux-x86-64-test-cmake-v1-${{ github.sha }}
+          restore-keys: linux-x86-64-test-cmake-v1-
+      - name: Build tests
+        run: |
+          cmake -S. -Bbuild -DENABLE_CODECOVERAGE=ON
+          cmake --build build -j $(nproc)
+      - name: Run tests
+        run: cd build && ctest --output-on-failure
+      - name: Upload results
+        uses: codecov/codecov-action@v3
+        with:
+          gcov: true

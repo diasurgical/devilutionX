@@ -4,6 +4,8 @@
  * Adds monster health bar QoL feature
  */
 
+#include <fmt/format.h>
+
 #include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "cursor.h"
@@ -16,6 +18,7 @@ namespace {
 Art healthBox;
 Art resistance;
 Art health;
+Art healthBlue;
 Art playerExpTags;
 
 } // namespace
@@ -27,6 +30,11 @@ void InitMonsterHealthBar()
 
 	LoadMaskedArt("data\\healthbox.pcx", &healthBox, 1, 1);
 	LoadArt("data\\health.pcx", &health);
+	std::array<uint8_t, 256> data;
+	data[234] = 185;
+	data[235] = 186;
+	data[236] = 187;
+	LoadMaskedArt("data\\health.pcx", &healthBlue, 1, 1, &data);
 	LoadMaskedArt("data\\resistance.pcx", &resistance, 6, 1);
 	LoadMaskedArt("data\\monstertags.pcx", &playerExpTags, 5, 1);
 
@@ -44,6 +52,7 @@ void FreeMonsterHealthBar()
 {
 	healthBox.Unload();
 	health.Unload();
+	healthBlue.Unload();
 	resistance.Unload();
 }
 
@@ -54,6 +63,7 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	assert(healthBox.surface != nullptr);
 	assert(health.surface != nullptr);
+	assert(healthBlue.surface != nullptr);
 	assert(resistance.surface != nullptr);
 
 	if (currlevel == 0)
@@ -64,25 +74,36 @@ void DrawMonsterHealthBar(const Surface &out)
 	const Monster &monster = Monsters[pcursmonst];
 
 	const int width = healthBox.w();
+	const int barWidth = health.w();
 	const int height = healthBox.h();
 	Point position = { (gnScreenWidth - width) / 2, 18 };
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag)
+		if (IsRightPanelOpen())
 			position.x -= SPANEL_WIDTH / 2;
-		if (chrflag || QuestLogIsOpen)
+		if (IsLeftPanelOpen())
 			position.x += SPANEL_WIDTH / 2;
 	}
 
 	const int border = 3;
 
-	const int maxLife = std::max(monster._mmaxhp, monster._mhitpoints);
+	int multiplier = 0;
+	int currLife = monster._mhitpoints;
+	// lifestealing monsters can reach HP exceeding their max
+	if (monster._mhitpoints > monster._mmaxhp) {
+		multiplier = monster._mhitpoints / monster._mmaxhp;
+		currLife = monster._mhitpoints - monster._mmaxhp * multiplier;
+		if (currLife == 0 && multiplier > 0) {
+			multiplier--;
+			currLife = monster._mmaxhp;
+		}
+	}
 
 	DrawArt(out, position, &healthBox);
 	DrawHalfTransparentRectTo(out, position.x + border, position.y + border, width - (border * 2), height - (border * 2));
-	int barProgress = (width * monster._mhitpoints) / maxLife;
+	int barProgress = (barWidth * currLife) / monster._mmaxhp;
 	if (barProgress != 0) {
-		DrawArt(out, position + Displacement { border + 1, border + 1 }, &health, 0, barProgress, height - (border * 2) - 2);
+		DrawArt(out, position + Displacement { border + 1, border + 1 }, multiplier > 0 ? &healthBlue : &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
 	constexpr auto getBorderColor = [](MonsterClass monsterClass) {
@@ -121,6 +142,8 @@ void DrawMonsterHealthBar(const Surface &out)
 		style |= UiFlags::ColorWhite;
 	DrawString(out, monster.mName, { position, { width, height } }, style);
 
+	if (multiplier > 0)
+		DrawString(out, fmt::format("x{:d}", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
 	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };

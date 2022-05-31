@@ -37,6 +37,7 @@
 namespace devilution {
 
 extern SDLSurfaceUniquePtr RendererTextureSurface; /** defined in dx.cpp */
+SDL_Window *ghMainWnd;
 
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
@@ -55,6 +56,12 @@ Uint16 GetScreenHeight()
 Uint16 GetViewportHeight()
 {
 	return gnViewportHeight;
+}
+
+Rectangle UIRectangle;
+const Rectangle &GetUIRectangle()
+{
+	return UIRectangle;
 }
 
 namespace {
@@ -130,16 +137,22 @@ void FreeRenderer()
 }
 #endif
 
+void CalculateUIRectangle()
+{
+	constexpr int UIWidth = 640;
+	constexpr int UIHeight = 480;
+	UIRectangle = {
+		{ (gnScreenWidth - UIWidth) / 2, (gnScreenHeight - UIHeight) / 2 },
+		{ UIWidth, UIHeight }
+	};
+}
+
 void AdjustToScreenGeometry(Size windowSize)
 {
 	gnScreenWidth = windowSize.width;
 	gnScreenHeight = windowSize.height;
-
-	gnViewportHeight = gnScreenHeight;
-	if (gnScreenWidth <= PANEL_WIDTH) {
-		// Part of the screen is fully obscured by the UI
-		gnViewportHeight -= PANEL_HEIGHT;
-	}
+	CalculateUIRectangle();
+	CalculatePanelAreas();
 }
 
 Size GetPreferredWindowSize()

@@ -98,7 +98,7 @@ void DrawQTextContent(const Surface &out)
 {
 	int y = CalculateTextPosition();
 
-	const int sx = PANEL_X + 48;
+	const int sx = GetUIRectangle().position.x + 48;
 	const int sy = 0 - (y % LineHeight);
 
 	const unsigned int skipLines = y / LineHeight;
@@ -145,14 +145,15 @@ void InitQTextMsg(_speech_id m)
 
 void DrawQTextBack(const Surface &out)
 {
-	CelDrawTo(out, { PANEL_X + 24, 327 + UI_OFFSET_Y }, *pTextBoxCels, 0);
-	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
+	const Point uiPosition = GetUIRectangle().position;
+	CelDrawTo(out, uiPosition + Displacement { 24, 327 }, *pTextBoxCels, 0);
+	DrawHalfTransparentRectTo(out, uiPosition.x + 27, uiPosition.y + 28, 585, 297);
 }
 
 void DrawQText(const Surface &out)
 {
 	DrawQTextBack(out);
-	DrawQTextContent(out.subregionY(UI_OFFSET_Y + 49, 260));
+	DrawQTextContent(out.subregionY(GetUIRectangle().position.y + 49, 260));
 }
 
 } // namespace devilution

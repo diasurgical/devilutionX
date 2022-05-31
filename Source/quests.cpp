@@ -392,7 +392,7 @@ void CheckQuests()
 		int rporty = quest.position.y;
 		AddMissile({ rportx, rporty }, { rportx, rporty }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 1;
-		if (quest._qactive == QUEST_ACTIVE) {
+		if (quest._qactive == QUEST_ACTIVE && quest._qvar1 == 2) {
 			quest._qvar1 = 3;
 		}
 	}
@@ -414,17 +414,17 @@ void CheckQuests()
 		    && ActiveMonsterCount == 4
 		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
 			Quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, Players[MyPlayerId].position.tile);
+			PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
 			UpdatePWaterPalette();
 			WaterDone = 32;
 		}
-	} else if (Players[MyPlayerId]._pmode == PM_STAND) {
+	} else if (MyPlayer->_pmode == PM_STAND) {
 		for (auto &quest : Quests) {
 			if (currlevel == quest._qlevel
 			    && quest._qslvl != 0
 			    && quest._qactive != QUEST_NOTAVAIL
-			    && Players[MyPlayerId].position.tile == quest.position) {
+			    && MyPlayer->position.tile == quest.position) {
 				if (quest._qlvltype != DTYPE_NONE) {
 					setlvltype = quest._qlvltype;
 				}
@@ -463,7 +463,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 	if (gbIsSpawn)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (monster.MType->mtype == MT_SKING) {
 		auto &quest = Quests[Q_SKELKING];
@@ -688,9 +688,7 @@ void ResyncQuests()
 			TransVal = tren;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
-			int x = setpc_x;
-			int y = setpc_y;
-			ObjChangeMapResync(x, y, x + setpc_w + 1, y + setpc_h + 1);
+			ObjChangeMapResync(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;

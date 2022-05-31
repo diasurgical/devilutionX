@@ -1,5 +1,7 @@
 #include "engine/random.hpp"
 
+#include <limits>
+
 #include "utils/stdcompat/abs.hpp"
 
 namespace devilution {
@@ -29,7 +31,9 @@ uint32_t GetLCGEngineState()
 
 int32_t GetRndSeed()
 {
-	return abs(static_cast<int32_t>(sglGameSeed));
+	const int32_t seed = static_cast<int32_t>(sglGameSeed);
+	// since abs(INT_MIN) is undefined behavior, handle this value specially
+	return seed == std::numeric_limits<int32_t>::min() ? std::numeric_limits<int32_t>::min() : abs(seed);
 }
 
 int32_t AdvanceRndSeed()

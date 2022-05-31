@@ -289,7 +289,7 @@ void pfile_write_hero(bool writeGameData, bool clearTables)
 		RenameTempToPerm();
 	}
 	PlayerPack pkplr;
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer, false);
 	EncodeHero(&pkplr);
@@ -330,7 +330,7 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 				if (hasSaveGame)
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
-				auto &player = Players[0];
+				Player &player = Players[0];
 
 				player = {};
 
@@ -383,7 +383,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	SaveWriter.RemoveHashEntries(GetFileName);
 	CopyUtf8(hero_names[saveNum], heroinfo->name, sizeof(hero_names[saveNum]));
 
-	auto &player = Players[0];
+	Player &player = Players[0];
 	CreatePlayer(0, heroinfo->heroclass);
 	CopyUtf8(player._pName, heroinfo->name, PLR_NAME_LEN);
 	PackPlayer(&pkplr, player, true, false);

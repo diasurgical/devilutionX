@@ -273,7 +273,7 @@ void ChangeEquipment(Player &player, inv_body_loc bodyLocation, const Item &item
 
 bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool persistItem)
 {
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 
 	if (!CanEquip(player, item, bodyLocation)) {
 		return false;
@@ -574,7 +574,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropItem)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pmode > PM_WALK3) {
 		return;
@@ -868,7 +868,7 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 		}
 	}
 
-	Players[MyPlayerId].Say(HeroSpeech::JustWhatIWasLookingFor, 10);
+	MyPlayer->Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 
 	for (auto note : notes) {
 		if (idx != note) {
@@ -885,7 +885,7 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 
 void CheckQuestItem(Player &player, Item &questItem)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (questItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		Quests[Q_BLIND]._qactive = QUEST_DONE;
@@ -926,7 +926,7 @@ void CheckQuestItem(Player &player, Item &questItem)
 		Quests[Q_GRAVE]._qlog = false;
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		if (Quests[Q_GRAVE]._qvar1 != 1) {
-			Players[MyPlayerId].Say(HeroSpeech::UhHuh, 10);
+			MyPlayer->Say(HeroSpeech::UhHuh, 10);
 			Quests[Q_GRAVE]._qvar1 = 1;
 		}
 	}
@@ -1037,7 +1037,7 @@ void StartGoldDrop()
 
 	initialDropGoldIndex = pcursinvitem;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (pcursinvitem <= INVITEM_INV_LAST)
 		initialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
@@ -1113,7 +1113,7 @@ void FreeInvGFX()
 
 void InitInv()
 {
-	switch (Players[MyPlayerId]._pClass) {
+	switch (MyPlayer->_pClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
 		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
@@ -1158,7 +1158,7 @@ void DrawInv(const Surface &out)
 		{ 133, 160 }, // chest
 	};
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
 		if (!myPlayer.InvBody[slot].isEmpty()) {
@@ -1245,16 +1245,18 @@ void DrawInvBelt(const Surface &out)
 		return;
 	}
 
-	DrawPanelBox(out, { 205, 21, 232, 28 }, { PANEL_X + 205, PANEL_Y + 5 });
+	const Point mainPanelPosition = GetMainPanel().position;
 
-	auto &myPlayer = Players[MyPlayerId];
+	DrawPanelBox(out, { 205, 21, 232, 28 }, mainPanelPosition + Displacement { 205, 5 });
+
+	Player &myPlayer = *MyPlayer;
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		if (myPlayer.SpdList[i].isEmpty()) {
 			continue;
 		}
 
-		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1 };
+		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].y + mainPanelPosition.y - 1 };
 		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
@@ -1569,7 +1571,7 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 {
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x
 	    && MousePosition.y > mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y) {
 		CheckInvItem(isShiftHeld, isCtrlHeld);
@@ -1591,7 +1593,13 @@ void InvGetItem(Player &player, int ii)
 	CheckQuestItem(player, item);
 	item.updateRequiredStatsCacheForPlayer(player);
 
-	if (item._itype != ItemType::Gold || !GoldAutoPlace(player, item)) {
+	if (item._itype == ItemType::Gold && GoldAutoPlace(player, item)) {
+		if (MyPlayer == &player) {
+			// Non-gold items (or gold when you have a full inventory) go to the hand then provide audible feedback on
+			//  paste. To give the same feedback for auto-placed gold we play the sound effect now.
+			PlaySFX(IS_GOLD);
+		}
+	} else {
 		// The item needs to go into the players hand
 		if (MyPlayer == &player && !player.HoldItem.isEmpty()) {
 			// drop whatever the player is currently holding
@@ -1611,7 +1619,7 @@ void InvGetItem(Player &player, int ii)
 void AutoGetItem(int pnum, Item *itemPointer, int ii)
 {
 	Item &item = *itemPointer;
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (dropGoldFlag) {
 		CloseGoldDrop();
@@ -1870,7 +1878,7 @@ int8_t CheckInvHLight()
 	int8_t rv = -1;
 	InfoColor = UiFlags::ColorWhite;
 	Item *pi = nullptr;
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	ClearPanel();
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {
@@ -1964,7 +1972,7 @@ bool UseScroll(const spell_id spell)
 	if (pcurs != CURSOR_HAND)
 		return false;
 
-	Player &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
 		return false;
@@ -1992,7 +2000,7 @@ bool UseStaff(const spell_id spell)
 		return false;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], spell);
 }
@@ -2013,7 +2021,7 @@ bool UseInvItem(int pnum, int cii)
 	int c;
 	Item *item;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId)
 		return true;
@@ -2043,6 +2051,19 @@ bool UseInvItem(int pnum, int cii)
 				item = &player.InvList[c];
 				speedlist = false;
 				break;
+			}
+		}
+
+		// If speedlist item is not inventory, use same item at the end of the speedlist if exists.
+		if (speedlist && *sgOptions.Gameplay.autoRefillBelt) {
+			for (int i = INVITEM_BELT_LAST - INVITEM_BELT_FIRST; i > c; i--) {
+				Item &candidate = player.SpdList[i];
+
+				if (!candidate.isEmpty() && candidate._iMiscId == item->_iMiscId && candidate._iSpell == item->_iSpell) {
+					c = i;
+					item = &candidate;
+					break;
+				}
 			}
 		}
 	}

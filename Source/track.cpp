@@ -74,7 +74,7 @@ void RepeatMouseAction()
 	if (LastMouseButtonAction == MouseActionType::None)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (myPlayer.destAction != ACTION_NONE)
 		return;
 	if (myPlayer._pInvincible)
@@ -93,7 +93,7 @@ void RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
 		break;
 	case MouseActionType::AttackPlayerTarget:
-		if (pcursplr != -1 && !gbFriendlyMode)
+		if (pcursplr != -1 && !myPlayer.friendlyMode)
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		break;
 	case MouseActionType::Spell:
@@ -107,7 +107,7 @@ void RepeatMouseAction()
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::SpellPlayerTarget:
-		if (pcursplr != -1 && !gbFriendlyMode)
+		if (pcursplr != -1 && !myPlayer.friendlyMode)
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::OperateObject:

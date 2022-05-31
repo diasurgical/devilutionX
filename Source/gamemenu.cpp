@@ -13,6 +13,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "sound.h"
+#include "sound_defs.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -77,7 +78,7 @@ void GamemenuUpdateSingle()
 {
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 
-	bool enable = Players[MyPlayerId]._pmode != PM_DEATH && !MyPlayerIsDead;
+	bool enable = MyPlayer->_pmode != PM_DEATH && !MyPlayerIsDead;
 
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
@@ -94,7 +95,7 @@ void GamemenuPrevious(bool /*bActivate*/)
 
 void GamemenuNewGame(bool /*bActivate*/)
 {
-	for (auto &player : Players) {
+	for (Player &player : Players) {
 		player._pmode = PM_QUIT;
 		player._pInvincible = true;
 	}
@@ -193,15 +194,7 @@ void GamemenuMusicVolume(bool bActivate)
 		} else {
 			gbMusicOn = true;
 			sound_get_or_set_music_volume(VOLUME_MAX);
-			int lt;
-			if (currlevel >= 17) {
-				if (currlevel > 20)
-					lt = TMUSIC_L5;
-				else
-					lt = TMUSIC_L6;
-			} else
-				lt = leveltype;
-			music_start(lt);
+			music_start(GetLevelMusic(leveltype));
 		}
 	} else {
 		int volume = GamemenuSliderMusicSound(&sgOptionsMenu[0]);
@@ -213,15 +206,7 @@ void GamemenuMusicVolume(bool bActivate)
 			}
 		} else if (!gbMusicOn) {
 			gbMusicOn = true;
-			int lt;
-			if (currlevel >= 17) {
-				if (currlevel > 20)
-					lt = TMUSIC_L5;
-				else
-					lt = TMUSIC_L6;
-			} else
-				lt = leveltype;
-			music_start(lt);
+			music_start(GetLevelMusic(leveltype));
 		}
 	}
 
@@ -328,7 +313,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 		return;
 	}
 
-	if (Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead) {
+	if (MyPlayer->_pmode == PM_DEATH || MyPlayerIsDead) {
 		gamemenu_off();
 		return;
 	}

@@ -97,6 +97,14 @@ const Rectangle &GetRightPanel()
 {
 	return RightPanel;
 }
+bool IsLeftPanelOpen()
+{
+	return chrflag || QuestLogIsOpen || IsStashOpen;
+}
+bool IsRightPanelOpen()
+{
+	return invflag || sbookflag;
+}
 
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
@@ -210,10 +218,10 @@ void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset,
 	int emptyPortion = clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
 
 	// Draw the empty part of the flask
-	DrawFlask(out, sourceBuffer, { 13, 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 }, emptyPortion);
+	DrawFlask(out, sourceBuffer, { 13, 3 }, GetMainPanel().position + Displacement { offset, -13 }, emptyPortion);
 	if (emptyPortion < 13)
 		// Draw the filled part of the flask
-		DrawFlask(out, *pBtmBuff, { offset, emptyPortion + 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
+		DrawFlask(out, *pBtmBuff, { offset, emptyPortion + 3 }, GetMainPanel().position + Displacement { offset, -13 + emptyPortion }, 13 - emptyPortion);
 }
 
 /**
@@ -229,12 +237,12 @@ void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset,
 	int filled = clamp(fillPer, 0, 69);
 
 	if (filled < 69)
-		DrawFlaskTop(out, { PANEL_X + offset, PANEL_Y }, sourceBuffer, 16, 85 - filled);
+		DrawFlaskTop(out, GetMainPanel().position + Displacement { offset, 0 }, sourceBuffer, 16, 85 - filled);
 
 	// It appears that the panel defaults to having a filled flask and DrawFlaskTop only overlays the appropriate amount of empty space.
 	// This draw might not be necessary?
 	if (filled > 0)
-		DrawPanelBox(out, MakeSdlRect(offset, 85 - filled, 88, filled), { PANEL_X + offset, PANEL_Y + 69 - filled });
+		DrawPanelBox(out, MakeSdlRect(offset, 85 - filled, 88, filled), GetMainPanel().position + Displacement { offset, 69 - filled });
 }
 
 void SetButtonStateDown(int btnId)
@@ -252,7 +260,7 @@ void PrintInfo(const Surface &out)
 	const int LineStart[] = { 70, 58, 52, 48, 46 };
 	const int LineHeights[] = { 30, 24, 18, 15, 12 };
 
-	Rectangle line { { PANEL_X + 177, PANEL_Y + LineStart[pnumlines] }, { 288, 12 } };
+	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[pnumlines] }, { 288, 12 } };
 
 	if (!InfoString.empty()) {
 		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
@@ -303,7 +311,7 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	}
 	if (pItem._iDurability > 2)
 		c += 8;
-	CelDrawTo(out, { x, -17 + PANEL_Y }, *pDurIcons, c);
+	CelDrawTo(out, { x, -17 + GetMainPanel().position.y }, *pDurIcons, c);
 	return x - 32 - 8;
 }
 
@@ -380,7 +388,7 @@ void RemoveGold(Player &player, int goldIndex)
 
 bool IsLevelUpButtonVisible()
 {
-	if (spselflag || chrflag || Players[MyPlayerId]._pStatPts == 0) {
+	if (spselflag || chrflag || MyPlayer->_pStatPts == 0) {
 		return false;
 	}
 	if (ControlMode == ControlTypes::VirtualGamepad) {
@@ -400,9 +408,12 @@ bool IsLevelUpButtonVisible()
 
 void CalculatePanelAreas()
 {
+	constexpr uint16_t PanelWidth = 640;
+	constexpr uint16_t PanelHeight = 128;
+
 	MainPanel = {
-		{ (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT },
-		{ PANEL_WIDTH, PANEL_HEIGHT }
+		{ (gnScreenWidth - PanelWidth) / 2, gnScreenHeight - PanelHeight },
+		{ PanelWidth, PanelHeight }
 	};
 	LeftPanel = {
 		{ 0, 0 },
@@ -416,11 +427,11 @@ void CalculatePanelAreas()
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		LeftPanel.position.x = gnScreenWidth / 2 - LeftPanel.size.width;
 	} else {
-		if (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width > PANEL_WIDTH) {
-			LeftPanel.position.x = (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width - PANEL_WIDTH) / 2;
+		if (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width > MainPanel.size.width) {
+			LeftPanel.position.x = (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width - MainPanel.size.width) / 2;
 		}
 	}
-	LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT) / 2;
+	LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - MainPanel.size.height) / 2;
 
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		RightPanel.position.x = gnScreenWidth / 2;
@@ -428,6 +439,12 @@ void CalculatePanelAreas()
 		RightPanel.position.x = gnScreenWidth - RightPanel.size.width - LeftPanel.position.x;
 	}
 	RightPanel.position.y = LeftPanel.position.y;
+
+	gnViewportHeight = gnScreenHeight;
+	if (gnScreenWidth <= MainPanel.size.width) {
+		// Part of the screen is fully obscured by the UI
+		gnViewportHeight -= MainPanel.size.height;
+	}
 }
 
 bool IsChatAvailable()
@@ -479,25 +496,25 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 void DrawLifeFlaskUpper(const Surface &out)
 {
 	constexpr int LifeFlaskUpperOffset = 109;
-	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
+	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, MyPlayer->_pHPPer);
 }
 
 void DrawManaFlaskUpper(const Surface &out)
 {
 	constexpr int ManaFlaskUpperOffset = 475;
-	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, Players[MyPlayerId]._pManaPer);
+	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, MyPlayer->_pManaPer);
 }
 
 void DrawLifeFlaskLower(const Surface &out)
 {
 	constexpr int LifeFlaskLowerOffset = 96;
-	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, Players[MyPlayerId]._pHPPer);
+	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, MyPlayer->_pHPPer);
 }
 
 void DrawManaFlaskLower(const Surface &out)
 {
 	constexpr int ManaFlaskLowerOffeset = 464;
-	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, Players[MyPlayerId]._pManaPer);
+	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, MyPlayer->_pManaPer);
 }
 
 void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
@@ -517,19 +534,19 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 
 void control_update_life_mana()
 {
-	Players[MyPlayerId].UpdateManaPercentage();
-	Players[MyPlayerId].UpdateHitPointPercentage();
+	MyPlayer->UpdateManaPercentage();
+	MyPlayer->UpdateHitPointPercentage();
 }
 
 void InitControlPan()
 {
-	pBtmBuff.emplace(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (IsChatAvailable() ? 2 : 1));
+	pBtmBuff.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + 16) * (IsChatAvailable() ? 2 : 1));
 	pManaBuff.emplace(88, 88);
 	pLifeBuff.emplace(88, 88);
 
 	LoadCharPanel();
 	LoadSpellIcons();
-	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 0);
+	CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", GetMainPanel().size.width), 0);
 	{
 		const Point bulbsPosition { 0, 87 };
 		const OwnedCelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
@@ -538,7 +555,7 @@ void InitControlPan()
 	}
 	talkflag = false;
 	if (IsChatAvailable()) {
-		CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 0);
+		CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width), 0);
 		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
@@ -586,27 +603,28 @@ void InitControlPan()
 
 void DrawCtrlPan(const Surface &out)
 {
-	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT), { PANEL_X, PANEL_Y });
+	DrawPanelBox(out, MakeSdlRect(0, sgbPlrTalkTbl + 16, GetMainPanel().size.width, GetMainPanel().size.height), GetMainPanel().position);
 	DrawInfoBox(out);
 }
 
 void DrawCtrlBtns(const Surface &out)
 {
+	const Point mainPanelPosition = GetMainPanel().position;
 	for (int i = 0; i < 6; i++) {
 		if (!PanelButtons[i]) {
-			DrawPanelBox(out, MakeSdlRect(PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20), { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
+			DrawPanelBox(out, MakeSdlRect(PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20), mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y });
 		} else {
-			Point position { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 };
+			Point position = mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y + 18 };
 			CelDrawTo(out, position, *pPanelButtons, i);
 			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
 		}
 	}
 	if (PanelButtonIndex == 8) {
-		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 1 : 0);
-		if (gbFriendlyMode)
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 3 : 2);
+		CelDrawTo(out, mainPanelPosition + Displacement { 87, 122 }, *multiButtons, PanelButtons[6] ? 1 : 0);
+		if (MyPlayer->friendlyMode)
+			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, *multiButtons, PanelButtons[7] ? 3 : 2);
 		else
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 5 : 4);
+			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, *multiButtons, PanelButtons[7] ? 5 : 4);
 	}
 }
 
@@ -620,7 +638,7 @@ void ClearPanBtn()
 
 void DoPanBtn()
 {
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 
 	for (int i = 0; i < PanelButtonIndex; i++) {
 		int x = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
@@ -635,7 +653,7 @@ void DoPanBtn()
 	}
 	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
-			auto &myPlayer = Players[MyPlayerId];
+			Player &myPlayer = *MyPlayer;
 			myPlayer._pRSpell = SPL_INVALID;
 			myPlayer._pRSplType = RSPLTYPE_INVALID;
 			force_redraw = 255;
@@ -648,7 +666,7 @@ void DoPanBtn()
 
 void control_check_btn_press()
 {
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 	int x = PanBtnPos[3].x + mainPanelPosition.x + PanBtnPos[3].w;
 	int y = PanBtnPos[3].y + mainPanelPosition.y + PanBtnPos[3].h;
 	if (MousePosition.x >= PanBtnPos[3].x + mainPanelPosition.x
@@ -682,7 +700,7 @@ void DoAutoMap()
 void CheckPanelInfo()
 {
 	panelflag = false;
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 	ClearPanel();
 	for (int i = 0; i < PanelButtonIndex; i++) {
 		int xend = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
@@ -691,7 +709,7 @@ void CheckPanelInfo()
 			if (i != 7) {
 				InfoString = _(PanBtnStr[i]);
 			} else {
-				if (gbFriendlyMode)
+				if (MyPlayer->friendlyMode)
 					InfoString = _("Player friendly");
 				else
 					InfoString = _("Player attack");
@@ -708,7 +726,7 @@ void CheckPanelInfo()
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
 		AddPanelString(_("Hotkey: 's'"));
-		auto &myPlayer = Players[MyPlayerId];
+		Player &myPlayer = *MyPlayer;
 		const spell_id spellId = myPlayer._pRSpell;
 		if (spellId != SPL_INVALID && spellId != SPL_NULL) {
 			switch (myPlayer._pRSplType) {
@@ -748,7 +766,7 @@ void CheckPanelInfo()
 void CheckBtnUp()
 {
 	bool gamemenuOff = true;
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 
 	drawbtnflag = true;
 	panbtndown = false;
@@ -816,7 +834,8 @@ void CheckBtnUp()
 				control_type_message();
 			break;
 		case PanelButtonFriendly:
-			gbFriendlyMode = !gbFriendlyMode;
+			// Toggle friendly Mode
+			NetSendCmd(true, CMD_FRIENDLYMODE);
 			break;
 		}
 	}
@@ -846,13 +865,13 @@ void FreeControlPan()
 
 void DrawInfoBox(const Surface &out)
 {
-	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
+	DrawPanelBox(out, { 177, 62, 288, 63 }, GetMainPanel().position + Displacement { 177, 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && !spselflag) {
 		InfoString.clear();
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
 	} else if (!myPlayer.HoldItem.isEmpty()) {
@@ -908,14 +927,14 @@ void CheckLvlBtn()
 		return;
 	}
 
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 	if (!lvlbtndown && MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y)
 		lvlbtndown = true;
 }
 
 void ReleaseLvlBtn()
 {
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
 		QuestLogIsOpen = false;
 		CloseGoldWithdraw();
@@ -929,14 +948,14 @@ void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
-		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
-		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
+		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		CelDrawTo(out, GetMainPanel().position + Displacement { 40, -17 }, *pChrButtons, nCel);
 	}
 }
 
 void CheckChrBtns()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (chrbtnactive || myPlayer._pStatPts == 0)
 		return;
@@ -966,7 +985,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.Contains(MousePosition)) {
-			auto &myPlayer = Players[MyPlayerId];
+			Player &myPlayer = *MyPlayer;
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
 				statPointsToAdd = CapStatPointsToAdd(myPlayer._pStatPts, myPlayer, attribute);
@@ -998,17 +1017,17 @@ void DrawDurIcon(const Surface &out)
 	bool hasRoomUnderPanels = MainPanel.position.y - (RightPanel.position.y + RightPanel.size.height) >= 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || QuestLogIsOpen || IsStashOpen) && (invflag || sbookflag))
+		if (IsLeftPanelOpen() && IsRightPanelOpen())
 			return;
 	}
 
 	int x = MainPanel.position.x + MainPanel.size.width - 32 - 16;
 	if (!hasRoomUnderPanels) {
-		if ((invflag || sbookflag) && MainPanel.position.x + MainPanel.size.width > RightPanel.position.x)
+		if (IsRightPanelOpen() && MainPanel.position.x + MainPanel.size.width > RightPanel.position.x)
 			x -= MainPanel.position.x + MainPanel.size.width - RightPanel.position.x;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 3);
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 2);
 	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
@@ -1061,7 +1080,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 void control_drop_gold(char vkey)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
 		CloseGoldDrop();
@@ -1088,20 +1107,22 @@ void DrawTalkPan(const Surface &out)
 
 	force_redraw = 255;
 
-	DrawPanelBox(out, MakeSdlRect(175, sgbPlrTalkTbl + 20, 294, 5), { PANEL_X + 175, PANEL_Y + 4 });
+	const Point mainPanelPosition = GetMainPanel().position;
+
+	DrawPanelBox(out, MakeSdlRect(175, sgbPlrTalkTbl + 20, 294, 5), mainPanelPosition + Displacement { 175, 4 });
 	int off = 0;
 	for (int i = 293; i > 283; off++, i--) {
-		DrawPanelBox(out, MakeSdlRect((off / 2) + 175, sgbPlrTalkTbl + off + 25, i, 1), { (off / 2) + PANEL_X + 175, off + PANEL_Y + 9 });
+		DrawPanelBox(out, MakeSdlRect((off / 2) + 175, sgbPlrTalkTbl + off + 25, i, 1), mainPanelPosition + Displacement { (off / 2) + 175, off + 9 });
 	}
-	DrawPanelBox(out, MakeSdlRect(185, sgbPlrTalkTbl + 35, 274, 30), { PANEL_X + 185, PANEL_Y + 19 });
-	DrawPanelBox(out, MakeSdlRect(180, sgbPlrTalkTbl + 65, 284, 5), { PANEL_X + 180, PANEL_Y + 49 });
+	DrawPanelBox(out, MakeSdlRect(185, sgbPlrTalkTbl + 35, 274, 30), mainPanelPosition + Displacement { 185, 19 });
+	DrawPanelBox(out, MakeSdlRect(180, sgbPlrTalkTbl + 65, 284, 5), mainPanelPosition + Displacement { 180, 49 });
 	for (int i = 0; i < 10; i++) {
-		DrawPanelBox(out, MakeSdlRect(180, sgbPlrTalkTbl + i + 70, i + 284, 1), { PANEL_X + 180, i + PANEL_Y + 54 });
+		DrawPanelBox(out, MakeSdlRect(180, sgbPlrTalkTbl + i + 70, i + 284, 1), mainPanelPosition + Displacement { 180, i + 54 });
 	}
-	DrawPanelBox(out, MakeSdlRect(170, sgbPlrTalkTbl + 80, 310, 55), { PANEL_X + 170, PANEL_Y + 64 });
+	DrawPanelBox(out, MakeSdlRect(170, sgbPlrTalkTbl + 80, 310, 55), mainPanelPosition + Displacement { 170, 64 });
 
-	int x = PANEL_LEFT + 200;
-	int y = PANEL_Y + 10;
+	int x = mainPanelPosition.x + 200;
+	int y = mainPanelPosition.y + 10;
 
 	uint32_t idx = DrawString(out, TalkMessage, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
 	if (idx < sizeof(TalkMessage))
@@ -1113,10 +1134,10 @@ void DrawTalkPan(const Surface &out)
 		if (i == MyPlayerId)
 			continue;
 
-		UiFlags color = UiFlags::ColorRed;
-		const Point talkPanPosition { 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y };
+		Player &player = Players[i];
+		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
+		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {
-			color = UiFlags::ColorWhitegold;
 			if (TalkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
 				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
@@ -1129,7 +1150,6 @@ void DrawTalkPan(const Surface &out)
 			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
 		}
-		auto &player = Players[i];
 		if (player.plractive) {
 			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
 		}
@@ -1143,7 +1163,7 @@ bool control_check_talk_btn()
 	if (!talkflag)
 		return false;
 
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 
 	if (MousePosition.x < 172 + mainPanelPosition.x)
 		return false;
@@ -1171,7 +1191,7 @@ void control_release_talk_btn()
 	for (bool &talkButtonDown : TalkButtonsDown)
 		talkButtonDown = false;
 
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 
 	if (MousePosition.x < 172 + mainPanelPosition.x || MousePosition.y < 69 + mainPanelPosition.y || MousePosition.x > 233 + mainPanelPosition.x || MousePosition.y > 123 + mainPanelPosition.y)
 		return;
@@ -1193,13 +1213,13 @@ void control_type_message()
 		return;
 
 	talkflag = true;
-	SDL_Rect rect = MakeSdlRect(PANEL_LEFT + 200, PANEL_Y + 22, 250, 39);
+	SDL_Rect rect = MakeSdlRect(GetMainPanel().position.x + 200, GetMainPanel().position.y + 22, 250, 39);
 	SDL_SetTextInputRect(&rect);
 	TalkMessage[0] = '\0';
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
-	sgbPlrTalkTbl = PANEL_HEIGHT + 16;
+	sgbPlrTalkTbl = GetMainPanel().size.height + 16;
 	force_redraw = 255;
 	TalkSaveIndex = NextTalkSave;
 	SDL_StartTextInput();

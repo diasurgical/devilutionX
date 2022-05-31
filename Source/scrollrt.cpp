@@ -254,7 +254,7 @@ bool ShouldShowCursor()
 		return true;
 	if (invflag)
 		return true;
-	if (chrflag && Players[MyPlayerId]._pStatPts > 0)
+	if (chrflag && MyPlayer->_pStatPts > 0)
 		return true;
 
 	return false;
@@ -448,7 +448,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		trn = monster.uniqueTRN.get();
 	if (monster._mmode == MonsterMode::Petrified)
 		trn = GetStoneTRN();
-	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
+	if (MyPlayer->_pInfraFlag && LightTableIndex > 8)
 		trn = GetInfravisionTRN();
 	if (trn != nullptr)
 		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, trn);
@@ -487,7 +487,7 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
  */
 void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	if (player.pManaShield)
 		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, position, lighting);
 	if (player.wReflections > 0)
@@ -506,11 +506,11 @@ void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting
  */
 void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
 {
-	if (!IsTileLit(tilePosition) && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
+	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	std::optional<CelSprite> sprite = player.AnimInfo.celSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
@@ -552,7 +552,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
+	if (!IsTileLit(tilePosition) || (MyPlayer->_pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawTRN(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel, GetInfravisionTRN());
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
@@ -581,11 +581,10 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 	dFlags[tilePosition.x][tilePosition.y] &= ~DungeonFlag::DeadPlayer;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &player = Players[i];
+		Player &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
-			const Displacement center { CalculateWidth2(player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96), 0 };
-			const Point playerRenderPosition { targetBufferPosition + player.position.offset - center };
+			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
 			DrawPlayer(out, i, tilePosition, playerRenderPosition);
 		}
 	}
@@ -762,7 +761,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (!IsTileLit(tilePosition) && !Players[MyPlayerId]._pInfraFlag)
+	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag)
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
@@ -808,7 +807,7 @@ void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBuffer
 		Log("draw player: tried to draw illegal player {}", p);
 		return;
 	}
-	auto &player = Players[p];
+	Player &player = Players[p];
 
 	Displacement offset = player.position.offset;
 	if (player.IsWalking()) {
@@ -1027,10 +1026,10 @@ void Zoom(const Surface &out)
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen || IsStashOpen) {
+		if (IsLeftPanelOpen()) {
 			viewportWidth -= SPANEL_WIDTH;
 			viewportOffsetX = SPANEL_WIDTH;
-		} else if (invflag || sbookflag) {
+		} else if (IsRightPanelOpen()) {
 			viewportWidth -= SPANEL_WIDTH;
 		}
 	}
@@ -1092,7 +1091,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
@@ -1107,23 +1106,23 @@ void DrawGame(const Surface &fullOut, Point position)
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
-			if (chrflag || QuestLogIsOpen || IsStashOpen) {
+			if (IsLeftPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
 			}
-			if (invflag || sbookflag) {
+			if (IsRightPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
-			if (chrflag || QuestLogIsOpen || IsStashOpen) {
+			if (IsLeftPanelOpen()) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
 			}
-			if (invflag || sbookflag) {
+			if (IsRightPanelOpen()) {
 				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2;
@@ -1387,25 +1386,26 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 		DoBlitScreen(0, 0, gnScreenWidth, dwHgt);
 	}
 	if (dwHgt < gnScreenHeight) {
+		const Point mainPanelPosition = GetMainPanel().position;
 		if (drawSbar) {
-			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
+			DoBlitScreen(mainPanelPosition.x + 204, mainPanelPosition.y + 5, 232, 28);
 		}
 		if (drawDesc) {
-			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 60);
+			DoBlitScreen(mainPanelPosition.x + 176, mainPanelPosition.y + 46, 288, 63);
 		}
 		if (drawMana) {
-			DoBlitScreen(PANEL_LEFT + 460, PANEL_TOP, 88, 72);
-			DoBlitScreen(PANEL_LEFT + 564, PANEL_TOP + 64, 56, 56);
+			DoBlitScreen(mainPanelPosition.x + 460, mainPanelPosition.y, 88, 72);
+			DoBlitScreen(mainPanelPosition.x + 564, mainPanelPosition.y + 64, 56, 56);
 		}
 		if (drawHp) {
-			DoBlitScreen(PANEL_LEFT + 96, PANEL_TOP, 88, 72);
+			DoBlitScreen(mainPanelPosition.x + 96, mainPanelPosition.y, 88, 72);
 		}
 		if (drawBtn) {
-			DoBlitScreen(PANEL_LEFT + 8, PANEL_TOP + 5, 72, 119);
-			DoBlitScreen(PANEL_LEFT + 556, PANEL_TOP + 5, 72, 48);
+			DoBlitScreen(mainPanelPosition.x + 8, mainPanelPosition.y + 5, 72, 119);
+			DoBlitScreen(mainPanelPosition.x + 556, mainPanelPosition.y + 5, 72, 48);
 			if (gbIsMultiplayer) {
-				DoBlitScreen(PANEL_LEFT + 84, PANEL_TOP + 91, 36, 32);
-				DoBlitScreen(PANEL_LEFT + 524, PANEL_TOP + 91, 36, 32);
+				DoBlitScreen(mainPanelPosition.x + 84, mainPanelPosition.y + 91, 36, 32);
+				DoBlitScreen(mainPanelPosition.x + 524, mainPanelPosition.y + 91, 36, 32);
 			}
 		}
 		if (sgdwCursWdtOld != 0) {
@@ -1454,11 +1454,12 @@ void ShiftGrid(int *x, int *y, int horizontal, int vertical)
 
 int RowsCoveredByPanel()
 {
-	if (GetScreenWidth() <= PANEL_WIDTH) {
+	auto &mainPanelSize = GetMainPanel().size;
+	if (GetScreenWidth() <= mainPanelSize.width) {
 		return 0;
 	}
 
-	int rows = PANEL_HEIGHT / TILE_HEIGHT;
+	int rows = mainPanelSize.height / TILE_HEIGHT;
 	if (!zoomflag) {
 		rows /= 2;
 	}
@@ -1693,7 +1694,9 @@ void DrawAndBlit()
 	bool ddsdesc = false;
 	bool ctrlPan = false;
 
-	if (gnScreenWidth > PANEL_WIDTH || force_redraw == 255 || IsHighlightingLabelsEnabled()) {
+	const Rectangle &mainPanel = GetMainPanel();
+
+	if (gnScreenWidth > mainPanel.size.width || force_redraw == 255 || IsHighlightingLabelsEnabled()) {
 		drawhpflag = true;
 		drawmanaflag = true;
 		drawbtnflag = true;
@@ -1738,9 +1741,9 @@ void DrawAndBlit()
 	}
 	DrawXPBar(out);
 	if (*sgOptions.Graphics.showHealthValues)
-		DrawFlaskValues(out, { PANEL_X + 134, PANEL_Y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
+		DrawFlaskValues(out, { mainPanel.position.x + 134, mainPanel.position.y + 28 }, MyPlayer->_pHitPoints >> 6, MyPlayer->_pMaxHP >> 6);
 	if (*sgOptions.Graphics.showManaValues)
-		DrawFlaskValues(out, { PANEL_X + PANEL_WIDTH - 138, PANEL_Y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
+		DrawFlaskValues(out, { mainPanel.position.x + mainPanel.size.width - 138, mainPanel.position.y + 28 }, MyPlayer->_pMana >> 6, MyPlayer->_pMaxMana >> 6);
 
 	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());

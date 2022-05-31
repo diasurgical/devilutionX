@@ -60,6 +60,9 @@ void DthreadHandler()
 
 void dthread_remove_player(uint8_t pnum)
 {
+	if (!DthreadRunning)
+		return;
+
 	std::lock_guard<SdlMutex> lock(*DthreadMutex);
 	InfoList.remove_if([&](auto &pkt) {
 		return pkt.pnum == pnum;
@@ -68,7 +71,7 @@ void dthread_remove_player(uint8_t pnum)
 
 void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uint32_t len)
 {
-	if (!gbIsMultiplayer)
+	if (!gbIsMultiplayer || !DthreadRunning)
 		return;
 
 	DThreadPkt pkt { pnum, cmd, std::move(data), len };

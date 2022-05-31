@@ -185,26 +185,27 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 
 	wrappedText = WordWrapString(text, textWidth, FontSizeDialog);
 
+	const Point uiPosition = GetUIRectangle().position;
 	if (caption.empty()) {
-		SDL_Rect rect1 = MakeSdlRect(PANEL_LEFT + 180, UI_OFFSET_Y + 168, dialogArt.w(), dialogArt.h());
+		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogArt.w(), dialogArt.h());
 		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 
-		SDL_Rect rect2 = MakeSdlRect(PANEL_LEFT + 200, UI_OFFSET_Y + 211, textWidth, 80);
+		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 200, uiPosition.y + 211, textWidth, 80);
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
-		SDL_Rect rect3 = MakeSdlRect(PANEL_LEFT + 265, UI_OFFSET_Y + 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
+		SDL_Rect rect3 = MakeSdlRect(uiPosition.x + 265, uiPosition.y + 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect3));
 	} else {
-		SDL_Rect rect1 = MakeSdlRect(PANEL_LEFT + 127, UI_OFFSET_Y + 100, dialogArt.w(), dialogArt.h());
+		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogArt.w(), dialogArt.h());
 		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 
-		SDL_Rect rect2 = MakeSdlRect(PANEL_LEFT + 147, UI_OFFSET_Y + 110, textWidth, 20);
+		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 110, textWidth, 20);
 		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogYellow));
 
-		SDL_Rect rect3 = MakeSdlRect(PANEL_LEFT + 147, UI_OFFSET_Y + 141, textWidth, 190);
+		SDL_Rect rect3 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 141, textWidth, 190);
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect3, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
-		SDL_Rect rect4 = MakeSdlRect(PANEL_LEFT + 264, UI_OFFSET_Y + 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
+		SDL_Rect rect4 = MakeSdlRect(uiPosition.x + 264, uiPosition.y + 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect4));
 	}
 }

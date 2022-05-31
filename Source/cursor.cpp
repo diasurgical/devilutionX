@@ -258,14 +258,15 @@ void CheckCursMove()
 	int sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
-		if (chrflag || QuestLogIsOpen || IsStashOpen) {
+		if (IsLeftPanelOpen()) {
 			sx -= GetScreenWidth() / 4;
-		} else if (invflag || sbookflag) {
+		} else if (IsRightPanelOpen()) {
 			sx += GetScreenWidth() / 4;
 		}
 	}
-	if (sy > GetMainPanel().position.y - 1 && MousePosition.x >= GetMainPanel().position.x && MousePosition.x < GetMainPanel().position.x + PANEL_WIDTH && track_isscrolling()) {
-		sy = GetMainPanel().position.y - 1;
+	const Rectangle &mainPanel = GetMainPanel();
+	if (mainPanel.Contains(MousePosition) && track_isscrolling()) {
+		sy = mainPanel.position.y - 1;
 	}
 
 	if (!zoomflag) {
@@ -277,7 +278,7 @@ void CheckCursMove()
 	int xo = 0;
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
@@ -378,7 +379,7 @@ void CheckCursMove()
 		cursPosition = { mx, my };
 		return;
 	}
-	if (GetMainPanel().Contains(MousePosition)) {
+	if (mainPanel.Contains(MousePosition)) {
 		CheckPanelInfo();
 		return;
 	}
@@ -395,7 +396,7 @@ void CheckCursMove()
 	if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen || IsStashOpen) && GetLeftPanel().Contains(MousePosition)) {
+	if (IsLeftPanelOpen() && GetLeftPanel().Contains(MousePosition)) {
 		return;
 	}
 

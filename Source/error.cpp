@@ -141,14 +141,15 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg(const Surface &out)
 {
-	int dialogStartY = ((gnScreenHeight - PANEL_HEIGHT) / 2) - (ErrorWindowHeight / 2) + 9;
+	auto &uiRectanglePosition = GetUIRectangle().position;
+	int dialogStartY = ((gnScreenHeight - GetMainPanel().size.height) / 2) - (ErrorWindowHeight / 2) + 9;
 
-	CelDrawTo(out, { PANEL_X + 101, dialogStartY }, *pSTextSlidCels, 0);
-	CelDrawTo(out, { PANEL_X + 101, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 1);
-	CelDrawTo(out, { PANEL_X + 527, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 2);
-	CelDrawTo(out, { PANEL_X + 527, dialogStartY }, *pSTextSlidCels, 3);
+	CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY }, *pSTextSlidCels, 0);
+	CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 1);
+	CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 2);
+	CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY }, *pSTextSlidCels, 3);
 
-	int sx = PANEL_X + 109;
+	int sx = uiRectanglePosition.x + 109;
 	for (int i = 0; i < 35; i++) {
 		CelDrawTo(out, { sx, dialogStartY }, *pSTextSlidCels, 4);
 		CelDrawTo(out, { sx, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 6);
@@ -156,16 +157,16 @@ void DrawDiabloMsg(const Surface &out)
 	}
 	int drawnYborder = 12;
 	while ((drawnYborder + 12) < ErrorWindowHeight) {
-		CelDrawTo(out, { PANEL_X + 101, dialogStartY + drawnYborder }, *pSTextSlidCels, 5);
-		CelDrawTo(out, { PANEL_X + 527, dialogStartY + drawnYborder }, *pSTextSlidCels, 7);
+		CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY + drawnYborder }, *pSTextSlidCels, 5);
+		CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY + drawnYborder }, *pSTextSlidCels, 7);
 		drawnYborder += 12;
 	}
 
-	DrawHalfTransparentRectTo(out, PANEL_X + 104, dialogStartY - 8, 432, ErrorWindowHeight);
+	DrawHalfTransparentRectTo(out, uiRectanglePosition.x + 104, dialogStartY - 8, 432, ErrorWindowHeight);
 
 	int lineNumber = 0;
 	for (auto &line : TextLines) {
-		DrawString(out, line, { { PANEL_X + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
+		DrawString(out, line, { { uiRectanglePosition.x + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
 		lineNumber += 1;
 	}
 

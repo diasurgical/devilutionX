@@ -53,7 +53,7 @@ void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
 {
-	auto &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 	if ((player._pClass == HeroClass::Monk) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
 	spell_type st = RSPLTYPE_SPELL;
@@ -92,7 +92,7 @@ void InitSpellBook()
 	}
 	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
 
-	Player &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {
 		SpellPages[0][0] = SPL_REPAIR;
 	} else if (player._pClass == HeroClass::Rogue) {
@@ -128,7 +128,7 @@ void DrawSpellBook(const Surface &out)
 		}
 		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), *pSBkBtnCel, sbooktab);
 	}
-	auto &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 
 	const int lineHeight = 18;
@@ -194,7 +194,7 @@ void CheckSBook()
 	Rectangle tabArea = { GetPanelPosition(UiPanels::Spell, { 7, 320 }), { 311 - 7, 349 - 320 } };
 	if (iconArea.Contains(MousePosition)) {
 		spell_id sn = SpellPages[sbooktab][(MousePosition.y - GetRightPanel().position.y - 18) / 43];
-		auto &player = Players[MyPlayerId];
+		Player &player = *MyPlayer;
 		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = RSPLTYPE_SPELL;

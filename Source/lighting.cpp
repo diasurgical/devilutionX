@@ -894,7 +894,7 @@ void ToggleLighting()
 	}
 
 	memcpy(dLight, dPreLight, sizeof(dLight));
-	for (const auto &player : Players) {
+	for (const Player &player : Players) {
 		if (player.plractive && player.plrlevel == currlevel) {
 			DoLighting(player.position.tile, player._pLightRad, -1);
 		}
@@ -1131,10 +1131,23 @@ void ProcessVisionList()
 		if (vision._ldel)
 			continue;
 
+		MapExplorationType doautomap = MAP_EXP_SELF;
+		if (!vision._lflags) {
+			doautomap = MAP_EXP_OTHERS;
+			for (const Player &player : Players) {
+				// Find player for this vision
+				if (!player.plractive || player.plrlevel != currlevel || player._pvid != vision._lid)
+					continue;
+				// Check that player allows automap sharing
+				if (!player.friendlyMode)
+					doautomap = MAP_EXP_NONE;
+				break;
+			}
+		}
 		DoVision(
 		    vision.position.tile,
 		    vision._lradius,
-		    vision._lflags ? MAP_EXP_SELF : MAP_EXP_OTHERS,
+		    doautomap,
 		    vision._lflags);
 	}
 	bool delflag;

@@ -86,7 +86,7 @@ std::string GetLocationString()
 
 std::string GetCharacterString()
 {
-	const std::string &charClassStr = _(ClassStrTbl[static_cast<int>(Players[MyPlayerId]._pClass)]);
+	const std::string &charClassStr = _(ClassStrTbl[static_cast<int>(MyPlayer->_pClass)]);
 	return fmt::format(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}"), tracked_data.playerLevel, charClassStr);
 }
 
@@ -104,12 +104,12 @@ std::string GetStateString()
 
 std::string GetTooltipString()
 {
-	return fmt::format("{} - {}", Players[MyPlayerId]._pName, GetCharacterString());
+	return fmt::format("{} - {}", MyPlayer->_pName, GetCharacterString());
 }
 
 std::string GetPlayerAssetString()
 {
-	char heroChar = CharChar[static_cast<int>(Players[MyPlayerId]._pClass)];
+	char heroChar = CharChar[static_cast<int>(MyPlayer->_pClass)];
 	char armourChar = ArmourChar[tracked_data.playerGfx >> 4];
 	char wpnChar = WepChar[tracked_data.playerGfx & 0xF];
 
@@ -134,7 +134,7 @@ void UpdateGame()
 		return;
 
 	auto newData = PlayerData {
-		leveltype, setlvlnum, currlevel, Players[MyPlayerId]._pLevel, Players[MyPlayerId]._pgfxnum
+		leveltype, setlvlnum, currlevel, MyPlayer->_pLevel, MyPlayer->_pgfxnum
 	};
 	if (newData != tracked_data) {
 		tracked_data = newData;

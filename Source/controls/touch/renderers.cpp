@@ -159,7 +159,7 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 
 bool InteractsWithCharButton(Point point)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (myPlayer._pStatPts == 0)
 		return false;
 	for (auto attribute : enum_values<CharacterAttribute>()) {

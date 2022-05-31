@@ -125,7 +125,7 @@ void AddMessageToChatLog(const std::string &message, Player *player, UiFlags fla
 	} else {
 		std::string playerInfo = fmt::format(_("{:s} (lvl {:d}): "), player->_pName, player->_pLevel);
 		ChatLogLines.emplace_back(MultiColoredText { message, { {} }, 20 });
-		UiFlags nameColor = player == &Players[MyPlayerId] ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
+		UiFlags nameColor = player == MyPlayer ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
 		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor } } });
 	}
 
@@ -146,10 +146,11 @@ void DrawChatLog(const Surface &out)
 		UnreadFlag = false;
 	}
 
+	const Point uiPosition = GetUIRectangle().position;
 	const int lineHeight = LineHeight();
 	const int blankLineHeight = BlankLineHeight();
-	const int sx = PANEL_X + PaddingLeft;
-	const int sy = UI_OFFSET_Y;
+	const int sx = uiPosition.x + PaddingLeft;
+	const int sy = uiPosition.y;
 
 	DrawString(out, fmt::format(_("Chat History (Messages: {:d})"), MessageCounter),
 	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },

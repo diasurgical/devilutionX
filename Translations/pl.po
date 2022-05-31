@@ -1131,8 +1131,8 @@ msgstr "Teraz ZGINIESZ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:821
-msgid "Options:\n"
-msgstr "Opcje\n"
+msgid "Options:"
+msgstr "Opcje"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:822
@@ -1191,12 +1191,8 @@ msgstr "Wyłącz limit klatek podczas odtwarzania demo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Wybór gry:\n"
+msgid "Game selection:"
+msgstr "Wybór gry:"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:834
@@ -1215,20 +1211,12 @@ msgstr "Wymuś tryb Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
-msgid ""
-"\n"
-"Hellfire options:\n"
-msgstr ""
-"\n"
-"Opcje Hellfire\n"
+msgid "Hellfire options:"
+msgstr "Opcje Hellfire"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
-msgstr ""
-"\n"
-"Zgłoś błędy na https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
+msgstr "Zgłoś błędy na https://github.com/diasurgical/devilutionX/"
 
 #: Source/diablo.cpp:955
 msgid "version {:s}"
@@ -7966,7 +7954,7 @@ msgstr ""
 "Hej - Ty co zabijać wszystkich!  Ty zdobyć mi Czarodziejski Znak albo my "
 "atakować!  Ty nie odejść żywo!  \n"
 " \n"
-"Ty zabić dużych brzydali i przynieść nam Magia. Iść za róg i drzwi, znale/ć "
+"Ty zabić dużych brzydali i przynieść nam Magia. Iść za róg i drzwi, znaleźć "
 "brzydali. \n"
 " \n"
 "Ty dać, ty odejść!"
@@ -8028,7 +8016,7 @@ msgstr ""
 " \n"
 "Arcybiskup Lazarus, kiedyś najbardziej zaufany doradca Króla Leoryka, "
 "zachęcił grupę prostych mieszczan do zejścia \n"
-"w głąb Labiryntu. Mieli odnale/ć zaginionego księcia, Albrechta. \n"
+"w głąb Labiryntu. Mieli odnaleźć zaginionego księcia, Albrechta. \n"
 " \n"
 "Po długim czasie, z całej grupy, żywych wróciło tylko kilku. \n"
 " \n"
@@ -8088,7 +8076,7 @@ msgstr ""
 "To właśnie jego uwięziono wewnątrz Labiryntu wiele wieków temu. Obawiam się, "
 "że znowu zacznie siać grozę w krainie śmiertelników. \n"
 " \n"
-"Musisz przejść przez portal i zniszczyć Diablo, nim będzie za pó/no!"
+"Musisz przejść przez portal i zniszczyć Diablo, nim będzie za późno!"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:67
@@ -8153,7 +8141,7 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
-"D/gały, potem gryzły, były wszędzie. Kłamca!  KłAMCA!  Wszyscy zginęli!  Nie "
+"Dźgały, potem gryzły, były wszędzie. Kłamca!  KłAMCA!  Wszyscy zginęli!  Nie "
 "żyją!  Słyszysz?  \n"
 " \n"
 "Po prostu padali, jeden po drugim... ich krew tryskała po całej podłodze... "
@@ -8201,8 +8189,8 @@ msgid ""
 "be tainted."
 msgstr ""
 "Hmm, nie mam zbyt wielu informacji na ten temat.  Słyszałem niegdyś o "
-"tunelu, który prowadzi do podziemnego jeziora.  Prawdopodobnie jest ono /"
-"ródłem wypełniającym nasze studnie.  \n"
+"tunelu, który prowadzi do podziemnego jeziora.  Prawdopodobnie jest ono "
+"źródłem wypełniającym nasze studnie.  \n"
 " \n"
 "Niestety, nie wiem co dokładnie mogło doprowadzić do skażenia naszej wody."
 
@@ -8237,9 +8225,9 @@ msgstr ""
 "i cuchnąca.  Kilku mieszkańców wioski miało po jej wypiciu objawy "
 "zatrucia, \n"
 "a nasze rezerwy świeżej wody błyskawicznie się wyczerpują.  Jestem "
-"przekonany, że gdzieś w pobliżu jest przejście prowadzące do /ródeł "
-"zaopatrujących nasze miasto.  Proszę, znajd/ przyczynę tego problemu, "
-"inaczej /le się to dla nas skończy."
+"przekonany, że gdzieś w pobliżu jest przejście prowadzące do źródeł "
+"zaopatrujących nasze miasto.  Proszę, znajdź przyczynę tego problemu, "
+"inaczej źle się to dla nas skończy."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92

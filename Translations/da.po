@@ -1216,7 +1216,7 @@ msgstr "Har du lyst til:"
 #: Source/diablo.cpp:821
 #, fuzzy
 #| msgid "Options"
-msgid "Options:\n"
+msgid "Options:"
 msgstr "Indstillinger"
 
 #. TRANSLATORS: Commandline Option
@@ -1283,9 +1283,7 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:833
-msgid ""
-"\n"
-"Game selection:\n"
+msgid "Game selection:"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
@@ -1308,15 +1306,11 @@ msgstr "Afslut Hellfire"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:837
 #, fuzzy
-msgid ""
-"\n"
-"Hellfire options:\n"
+msgid "Hellfire options:"
 msgstr "Indstillinger"
 
 #: Source/diablo.cpp:843
-msgid ""
-"\n"
-"Report bugs at https://github.com/diasurgical/devilutionX/\n"
+msgid "Report bugs at https://github.com/diasurgical/devilutionX/"
 msgstr ""
 
 #: Source/diablo.cpp:955

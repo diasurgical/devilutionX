@@ -162,26 +162,28 @@ void CalculateLineHeights()
 
 void DrawSTextBack(const Surface &out)
 {
-	CelDrawTo(out, { PANEL_X + 320 + 24, 327 + UI_OFFSET_Y }, *pSTextBoxCels, 0);
-	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
+	const Point uiPosition = GetUIRectangle().position;
+	CelDrawTo(out, { uiPosition.x + 320 + 24, 327 + uiPosition.y }, *pSTextBoxCels, 0);
+	DrawHalfTransparentRectTo(out, uiPosition.x + 347, uiPosition.y + 28, 265, 297);
 }
 
 void DrawSSlider(const Surface &out, int y1, int y2)
 {
-	int yd1 = y1 * 12 + 44 + UI_OFFSET_Y;
-	int yd2 = y2 * 12 + 44 + UI_OFFSET_Y;
+	const Point uiPosition = GetUIRectangle().position;
+	int yd1 = y1 * 12 + 44 + uiPosition.y;
+	int yd2 = y2 * 12 + 44 + uiPosition.y;
 	if (stextscrlubtn != -1)
-		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 11);
+		CelDrawTo(out, { uiPosition.x + 601, yd1 }, *pSTextSlidCels, 11);
 	else
-		CelDrawTo(out, { PANEL_X + 601, yd1 }, *pSTextSlidCels, 9);
+		CelDrawTo(out, { uiPosition.x + 601, yd1 }, *pSTextSlidCels, 9);
 	if (stextscrldbtn != -1)
-		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 10);
+		CelDrawTo(out, { uiPosition.x + 601, yd2 }, *pSTextSlidCels, 10);
 	else
-		CelDrawTo(out, { PANEL_X + 601, yd2 }, *pSTextSlidCels, 8);
+		CelDrawTo(out, { uiPosition.x + 601, yd2 }, *pSTextSlidCels, 8);
 	yd1 += 12;
 	int yd3 = yd1;
 	for (; yd3 < yd2; yd3 += 12) {
-		CelDrawTo(out, { PANEL_X + 601, yd3 }, *pSTextSlidCels, 13);
+		CelDrawTo(out, { uiPosition.x + 601, yd3 }, *pSTextSlidCels, 13);
 	}
 	if (stextsel == BackButtonLine())
 		yd3 = stextlhold;
@@ -191,7 +193,7 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) / 4)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDrawTo(out, { PANEL_X + 601, (y1 + 1) * 12 + 44 + UI_OFFSET_Y + yd3 }, *pSTextSlidCels, 12);
+	CelDrawTo(out, { uiPosition.x + 601, (y1 + 1) * 12 + 44 + uiPosition.y + yd3 }, *pSTextSlidCels, 12);
 }
 
 void AddSLine(int y)
@@ -295,17 +297,17 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 
 bool StoreAutoPlace(Item &item, bool persistItem)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 
-	if (AutoEquipEnabled(myPlayer, item) && AutoEquip(MyPlayerId, item, persistItem)) {
+	if (AutoEquipEnabled(player, item) && AutoEquip(MyPlayerId, item, persistItem)) {
 		return true;
 	}
 
-	if (AutoPlaceItemInBelt(myPlayer, item, persistItem)) {
+	if (AutoPlaceItemInBelt(player, item, persistItem)) {
 		return true;
 	}
 
-	return AutoPlaceItemInInventory(myPlayer, item, persistItem);
+	return AutoPlaceItemInInventory(player, item, persistItem);
 }
 
 void StartSmith()
@@ -450,9 +452,9 @@ bool SmithSellOk(int i)
 	Item *pI;
 
 	if (i >= 0) {
-		pI = &Players[MyPlayerId].InvList[i];
+		pI = &MyPlayer->InvList[i];
 	} else {
-		pI = &Players[MyPlayerId].SpdList[-(i + 1)];
+		pI = &MyPlayer->SpdList[-(i + 1)];
 	}
 
 	if (pI->isEmpty())
@@ -513,7 +515,7 @@ void StartSmithSell()
 		item.clear();
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 
 	for (int8_t i = 0; i < myPlayer._pNumInv; i++) {
 		if (storenumh >= 48)
@@ -572,7 +574,7 @@ void StartSmithSell()
 
 bool SmithRepairOk(int i)
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.InvList[i].isEmpty())
 		return false;
@@ -589,36 +591,31 @@ bool SmithRepairOk(int i)
 void StartSmithRepair()
 {
 	stextsize = true;
-	bool repairok = false;
 	storenumh = 0;
 
 	for (auto &item : storehold) {
 		item.clear();
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
 	if (!helmet.isEmpty() && helmet._iDurability != helmet._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&helmet, -1);
 	}
 
 	auto &armor = myPlayer.InvBody[INVLOC_CHEST];
 	if (!armor.isEmpty() && armor._iDurability != armor._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&armor, -2);
 	}
 
 	auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
 	if (!leftHand.isEmpty() && leftHand._iDurability != leftHand._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&leftHand, -3);
 	}
 
 	auto &rightHand = myPlayer.InvBody[INVLOC_HAND_RIGHT];
 	if (!rightHand.isEmpty() && rightHand._iDurability != rightHand._iMaxDur) {
-		repairok = true;
 		AddStoreHoldRepair(&rightHand, -4);
 	}
 
@@ -626,12 +623,11 @@ void StartSmithRepair()
 		if (storenumh >= 48)
 			break;
 		if (SmithRepairOk(i)) {
-			repairok = true;
 			AddStoreHoldRepair(&myPlayer.InvList[i], i);
 		}
 	}
 
-	if (!repairok) {
+	if (storenumh == 0) {
 		stextscrl = false;
 
 		RenderGold = true;
@@ -658,7 +654,7 @@ void FillManaPlayer()
 	if (!*sgOptions.Gameplay.adriaRefillsMana)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pMana != myPlayer._pMaxMana) {
 		PlaySFX(IS_CAST8);
@@ -715,7 +711,7 @@ void WitchBookLevel(Item &bookItem)
 	if (bookItem._iMiscId != IMISC_BOOK)
 		return;
 	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
-	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[bookItem._iSpell];
+	int8_t spellLevel = MyPlayer->_pSplLvl[bookItem._iSpell];
 	while (spellLevel > 0) {
 		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
 		spellLevel--;
@@ -758,9 +754,9 @@ bool WitchSellOk(int i)
 	bool rv = false;
 
 	if (i >= 0)
-		pI = &Players[MyPlayerId].InvList[i];
+		pI = &MyPlayer->InvList[i];
 	else
-		pI = &Players[MyPlayerId].SpdList[-(i + 1)];
+		pI = &MyPlayer->SpdList[-(i + 1)];
 
 	if (pI->_itype == ItemType::Misc)
 		rv = true;
@@ -787,7 +783,7 @@ void StartWitchSell()
 		item.clear();
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 
 	for (int i = 0; i < myPlayer._pNumInv; i++) {
 		if (storenumh >= 48)
@@ -847,7 +843,7 @@ void StartWitchSell()
 
 bool WitchRechargeOk(int i)
 {
-	const auto &item = Players[MyPlayerId].InvList[i];
+	const auto &item = MyPlayer->InvList[i];
 
 	if (item._itype == ItemType::Staff && item._iCharges != item._iMaxCharges) {
 		return true;
@@ -880,7 +876,7 @@ void StartWitchRecharge()
 		item.clear();
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	const auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
 
 	if ((leftHand._itype == ItemType::Staff || leftHand._iMiscId == IMISC_UNIQUE) && leftHand._iCharges != leftHand._iMaxCharges) {
@@ -1053,7 +1049,7 @@ void SStartBoyBuy()
 
 void HealPlayer()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pHitPoints != myPlayer._pMaxHP) {
 		PlaySFX(IS_CAST8);
@@ -1165,7 +1161,7 @@ void StartStorytellerIdentify()
 		item.clear();
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	auto &helmet = myPlayer.InvBody[INVLOC_HEAD];
 	if (IdItemOk(&helmet)) {
@@ -1491,7 +1487,7 @@ bool StoreGoldFit(Item &item)
  */
 void StoreSellItem()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (storehidx[idx] >= 0)
@@ -1549,7 +1545,7 @@ void SmithRepairItem(int price)
 
 	int8_t i = storehidx[idx];
 
-	auto &myPlayer = *MyPlayer;
+	Player &myPlayer = *MyPlayer;
 
 	if (i < 0) {
 		if (i == -1)
@@ -1703,7 +1699,7 @@ void WitchRechargeItem(int price)
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iCharges = storehold[idx]._iMaxCharges;
 
-	auto &myPlayer = *MyPlayer;
+	Player &myPlayer = *MyPlayer;
 
 	int8_t i = storehidx[idx];
 	if (i < 0)
@@ -1846,7 +1842,7 @@ void BoyBuyEnter()
 
 void StorytellerIdentifyItem(Item &item)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int8_t idx = storehidx[((stextlhold - stextup) / 4) + stextvhold];
 	if (idx < 0) {
@@ -2195,7 +2191,7 @@ void InitStores()
 
 void SetupTownStores()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int l = myPlayer._pLevel / 2;
 	if (!gbIsMultiplayer) {
@@ -2223,12 +2219,13 @@ void FreeStoreMem()
 
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price)
 {
-	int sx = PANEL_X + 32 + margin;
+	const Point uiPosition = GetUIRectangle().position;
+	int sx = uiPosition.x + 32 + margin;
 	if (!stextsize) {
 		sx += 320;
 	}
 
-	const int sy = UI_OFFSET_Y + PaddingTop + stext[line].y + stext[line]._syoff;
+	const int sy = uiPosition.y + PaddingTop + stext[line].y + stext[line]._syoff;
 
 	int width = stextsize ? 575 : 255;
 	if (stextscrl && line >= 4 && line <= 20) {
@@ -2251,6 +2248,7 @@ void PrintSString(const Surface &out, int margin, int line, const char *text, Ui
 
 void DrawSLine(const Surface &out, int sy)
 {
+	const Point uiPosition = GetUIRectangle().position;
 	int sx = 26;
 	int width = 587;
 
@@ -2259,8 +2257,8 @@ void DrawSLine(const Surface &out, int sy)
 		width -= SPANEL_WIDTH;
 	}
 
-	BYTE *src = out.at(PANEL_LEFT + sx, UI_OFFSET_Y + 25);
-	BYTE *dst = out.at(PANEL_X + sx, sy);
+	BYTE *src = out.at(uiPosition.x + sx, uiPosition.y + 25);
+	BYTE *dst = out.at(uiPosition.x + sx, sy);
 
 	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, width);
@@ -2430,9 +2428,10 @@ void DrawSText(const Surface &out)
 	}
 
 	CalculateLineHeights();
+	const Point uiPosition = GetUIRectangle().position;
 	for (int i = 0; i < STORE_LINES; i++) {
 		if (stext[i].IsDivider())
-			DrawSLine(out, UI_OFFSET_Y + PaddingTop + stext[i].y + TextHeight() / 2);
+			DrawSLine(out, uiPosition.y + PaddingTop + stext[i].y + TextHeight() / 2);
 		if (stext[i].IsText())
 			PrintSString(out, stext[i]._sx, i, stext[i]._sstr, stext[i].flags, stext[i]._sval);
 	}
@@ -2624,7 +2623,7 @@ void StoreNext()
 
 void TakePlrsMoney(int cost)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pGold -= std::min(cost, myPlayer._pGold);
 
@@ -2725,22 +2724,23 @@ void StoreEnter()
 
 void CheckStoreBtn()
 {
+	const Point uiPosition = GetUIRectangle().position;
 	if (qtextflag) {
 		qtextflag = false;
 		if (leveltype == DTYPE_TOWN)
 			stream_stop();
-	} else if (stextsel != -1 && MousePosition.y >= (PaddingTop + UI_OFFSET_Y) && MousePosition.y <= (320 + UI_OFFSET_Y)) {
+	} else if (stextsel != -1 && MousePosition.y >= (PaddingTop + uiPosition.y) && MousePosition.y <= (320 + uiPosition.y)) {
 		if (!stextsize) {
-			if (MousePosition.x < 344 + PANEL_LEFT || MousePosition.x > 616 + PANEL_LEFT)
+			if (MousePosition.x < 344 + uiPosition.x || MousePosition.x > 616 + uiPosition.x)
 				return;
 		} else {
-			if (MousePosition.x < 24 + PANEL_LEFT || MousePosition.x > 616 + PANEL_LEFT)
+			if (MousePosition.x < 24 + uiPosition.x || MousePosition.x > 616 + uiPosition.x)
 				return;
 		}
 
-		const int relativeY = MousePosition.y - (UI_OFFSET_Y + PaddingTop);
+		const int relativeY = MousePosition.y - (uiPosition.y + PaddingTop);
 
-		if (stextscrl && MousePosition.x > 600 + PANEL_LEFT) {
+		if (stextscrl && MousePosition.x > 600 + uiPosition.x) {
 			// Scroll bar is always measured in terms of the small line height.
 			int y = relativeY / SmallLineHeight;
 			if (y == 4) {

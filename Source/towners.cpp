@@ -888,7 +888,7 @@ bool DebugTalkToTowner(std::string targetName)
 {
 	SetupTownStores();
 	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	for (auto &townerData : TownersData) {
 		if (!IsTownerPresent(townerData.type))
 			continue;

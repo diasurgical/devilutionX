@@ -75,7 +75,9 @@ struct PlayerPack {
 	uint32_t pDiabloKillLevel;
 	uint32_t pDifficulty;
 	ItemSpecialEffectHf pDamAcFlags;
-	int32_t dwReserved[5]; // For future use
+	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
+	uint8_t friendlyMode;
+	uint8_t dwReserved[19]; // For future use
 };
 #pragma pack(pop)
 

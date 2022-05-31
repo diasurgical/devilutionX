@@ -73,7 +73,7 @@ bool IsWarpOpen(dungeon_type type)
 	if (gbIsMultiplayer && type != DTYPE_NEST) // Opening the nest is part of in town quest
 		return true;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (type == DTYPE_CATACOMBS && (myPlayer.pTownWarps & 1) != 0)
 		return true;
@@ -761,12 +761,14 @@ void CheckTrigForce()
 			trigflag = ForceTownTrig();
 			break;
 		case DTYPE_CATHEDRAL:
+		case DTYPE_CRYPT:
 			trigflag = ForceL1Trig();
 			break;
 		case DTYPE_CATACOMBS:
 			trigflag = ForceL2Trig();
 			break;
 		case DTYPE_CAVES:
+		case DTYPE_NEST:
 			trigflag = ForceL3Trig();
 			break;
 		case DTYPE_HELL:
@@ -801,7 +803,7 @@ void CheckTrigForce()
 
 void CheckTriggers()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pmode != PM_STAND)
 		return;
