@@ -860,8 +860,8 @@ void LoadLighting(LoadHelper *file, Light *pLight)
 	pLight->position.old.x = file->NextLE<int32_t>();
 	pLight->position.old.y = file->NextLE<int32_t>();
 	pLight->oldRadius = file->NextLE<int32_t>();
-	pLight->position.offset.x = file->NextLE<int32_t>();
-	pLight->position.offset.y = file->NextLE<int32_t>();
+	pLight->position.offset.deltaX = file->NextLE<int32_t>();
+	pLight->position.offset.deltaY = file->NextLE<int32_t>();
 	pLight->_lflags = file->NextBool32();
 }
 
@@ -1571,8 +1571,8 @@ void SaveLighting(SaveHelper *file, Light *pLight)
 	file->WriteLE<int32_t>(pLight->position.old.x);
 	file->WriteLE<int32_t>(pLight->position.old.y);
 	file->WriteLE<int32_t>(pLight->oldRadius);
-	file->WriteLE<int32_t>(pLight->position.offset.x);
-	file->WriteLE<int32_t>(pLight->position.offset.y);
+	file->WriteLE<int32_t>(pLight->position.offset.deltaX);
+	file->WriteLE<int32_t>(pLight->position.offset.deltaY);
 	file->WriteLE<uint32_t>(pLight->_lflags ? 1 : 0);
 }
 

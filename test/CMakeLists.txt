@@ -24,6 +24,7 @@ set(tests
   file_util_test
   inv_test
   lighting_test
+  math_test
   missiles_test
   pack_test
   path_test

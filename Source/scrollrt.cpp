@@ -616,8 +616,8 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 	Point screenPosition = targetBufferPosition - Displacement { CalculateWidth2(objectToDraw._oAnimWidth), 0 };
 	if (objectToDraw.position != tilePosition) {
 		// drawing a large or offset object, calculate the correct position for the center of the sprite
-		Displacement screenOffset = objectToDraw.position - tilePosition;
-		screenPosition -= screenOffset.WorldToScreen();
+		Displacement worldOffset = objectToDraw.position - tilePosition;
+		screenPosition -= worldOffset.worldToScreen();
 	}
 
 	byte *pCelBuff = objectToDraw._oAnimData;

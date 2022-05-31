@@ -141,18 +141,15 @@ void PutMissile(Missile &missile)
 
 void UpdateMissilePos(Missile &missile)
 {
-	int mx = missile.position.traveled.deltaX >> 16;
-	int my = missile.position.traveled.deltaY >> 16;
-	int dx = mx + 2 * my;
-	int dy = 2 * my - mx;
-	int lx = dx / 8;
-	dx = dx / 64;
-	int ly = dy / 8;
-	dy = dy / 64;
-	missile.position.tile = missile.position.start + Displacement { dx, dy };
-	missile.position.offset.deltaX = mx + (dy * 32) - (dx * 32);
-	missile.position.offset.deltaY = my - (dx * 16) - (dy * 16);
-	ChangeLightOffset(missile._mlid, { lx - (dx * 8), ly - (dy * 8) });
+	Displacement pixelsTravelled = missile.position.traveled >> 16;
+
+	Displacement tileOffset = pixelsTravelled.screenToMissile();
+	missile.position.tile = missile.position.start + tileOffset;
+
+	missile.position.offset = pixelsTravelled + tileOffset.worldToScreen();
+
+	Displacement absoluteLightOffset = pixelsTravelled.screenToLight();
+	ChangeLightOffset(missile._mlid, absoluteLightOffset - tileOffset * 8);
 }
 
 /**
@@ -185,7 +182,7 @@ void MoveMissilePos(Missile &missile)
 	auto target = missile.position.tile + moveDirection;
 	if (IsTileAvailable(Monsters[missile._misource], target)) {
 		missile.position.tile = target;
-		missile.position.offset += Displacement(moveDirection).WorldToScreen();
+		missile.position.offset += Displacement(moveDirection).worldToScreen();
 	}
 }
 
