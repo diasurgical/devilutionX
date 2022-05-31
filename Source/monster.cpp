@@ -1309,6 +1309,12 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	} else {
 		MonsterHitMonster(mid, i, dam);
 	}
+
+	Monster &attackingMonster = Monsters[i];
+	if (monster._msquelch == 0) {
+		monster._msquelch = UINT8_MAX;
+		monster.position.last = attackingMonster.position.tile;
+	}
 }
 
 void CheckReflect(int mon, int pnum, int dam)
