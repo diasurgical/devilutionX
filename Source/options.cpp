@@ -1420,19 +1420,19 @@ constexpr int index(UiFlags flag)
 	return log2(static_cast<size_t>(flag));
 }
 
-#define COLOR_LIST                                                                             \
-	{                                                                                          \
-		{ index(UiFlags::ColorGold), { N_("Gold"), UiFlags::ColorGold } },                     \
-		    { index(UiFlags::ColorYellow8), { N_("Yellow"), UiFlags::ColorYellow8 } },         \
-		    { index(UiFlags::ColorWhite), { N_("White"), UiFlags::ColorWhite } },              \
-		    { index(UiFlags::ColorRed), { N_("Light red"), UiFlags::ColorRed } },              \
-		    { index(UiFlags::ColorRed8), { N_("Dark red"), UiFlags::ColorRed8 } },             \
-		    { index(UiFlags::ColorBlue), { N_("Light blue"), UiFlags::ColorBlue } },           \
-		    { index(UiFlags::ColorBlue8), { N_("Dark blue"), UiFlags::ColorBlue8 } },          \
-		    { index(UiFlags::ColorOrange16), { N_("Light orange"), UiFlags::ColorOrange16 } }, \
-		    { index(UiFlags::ColorOrange8), { N_("Dark orange"), UiFlags::ColorOrange8 } },    \
-		    { index(UiFlags::ColorBeige16), { N_("Beige"), UiFlags::ColorBeige16 } },          \
-		    { index(UiFlags::ColorGray16), { N_("Gray"), UiFlags::ColorGray16 } },             \
+#define COLOR_LIST                                                                                      \
+	{                                                                                                   \
+		{ index(UiFlags::ColorGold), { P_("color", "Gold"), UiFlags::ColorGold } },                     \
+		    { index(UiFlags::ColorYellow8), { P_("color", "Yellow"), UiFlags::ColorYellow8 } },         \
+		    { index(UiFlags::ColorWhite), { P_("color", "White"), UiFlags::ColorWhite } },              \
+		    { index(UiFlags::ColorRed), { P_("color", "Light red"), UiFlags::ColorRed } },              \
+		    { index(UiFlags::ColorRed8), { P_("color", "Dark red"), UiFlags::ColorRed8 } },             \
+		    { index(UiFlags::ColorBlue), { P_("color", "Light blue"), UiFlags::ColorBlue } },           \
+		    { index(UiFlags::ColorBlue8), { P_("color", "Dark blue"), UiFlags::ColorBlue8 } },          \
+		    { index(UiFlags::ColorOrange16), { P_("color", "Light orange"), UiFlags::ColorOrange16 } }, \
+		    { index(UiFlags::ColorOrange8), { P_("color", "Dark orange"), UiFlags::ColorOrange8 } },    \
+		    { index(UiFlags::ColorBeige16), { P_("color", "Beige"), UiFlags::ColorBeige16 } },          \
+		    { index(UiFlags::ColorGray16), { P_("color", "Gray"), UiFlags::ColorGray16 } },             \
 	}
 
 FloatingNumbersOptions::FloatingNumbersOptions()
