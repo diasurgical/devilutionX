@@ -303,7 +303,7 @@ void UiSettingsMenu()
 				if (pOptionList->GetListColor(i) != UiFlags::None) {
 					auto vecArgs = std::vector<DrawStringFormatArg> {
 						{
-						    pOptionList->GetListDescription(i),
+						    pgettext("color", pOptionList->GetListDescription(i).data()),
 						    UiFlags::ColorUiGold,
 						},
 						{ "#", pOptionList->GetListColor(i) }
