@@ -100,9 +100,7 @@ static std::string GetErrorMessageIncompatibility(const GameData &data)
 	}
 }
 
-} // namespace
-
-void selgame_GameSelection_Init()
+void UiInitGameSelectionList(string_view search)
 {
 	selgame_enteringGame = false;
 	selgame_selectedGame = 0;
@@ -178,7 +176,29 @@ void selgame_GameSelection_Init()
 		int itemValue = vecSelGameDlgItems[index]->m_value;
 		selgame_GameSelection_Select(itemValue);
 	};
+
+	if (search.size() > 0) {
+		for (unsigned i = 0; i < vecSelGameDlgItems.size(); i++) {
+			int gameIndex = vecSelGameDlgItems[i]->m_value - 3;
+			if (gameIndex < 0)
+				continue;
+			if (search == Gamelist[gameIndex].name)
+				HighlightedItem = i;
+		}
+	}
+
+	if (HighlightedItem >= vecSelGameDlgItems.size()) {
+		HighlightedItem = vecSelGameDlgItems.size() - 1;
+	}
+
 	UiInitList(selgame_GameSelection_Focus, selectFn, selgame_GameSelection_Esc, vecSelGameDialog, true, nullptr, nullptr, HighlightedItem);
+}
+
+} // namespace
+
+void selgame_GameSelection_Init()
+{
+	UiInitGameSelectionList("");
 }
 
 void selgame_GameSelection_Focus(int value)
@@ -662,12 +682,14 @@ void RefreshGameList()
 	}
 
 	if (lastUpdate == 0 || currentTime - lastUpdate > 5000) {
+		int gameIndex = vecSelGameDlgItems[HighlightedItem]->m_value - 3;
+		std::string gameSearch = gameIndex >= 0 ? Gamelist[gameIndex].name : "";
 		std::vector<GameInfo> gamelist = DvlNet_GetGamelist();
 		Gamelist.clear();
 		for (unsigned i = 0; i < gamelist.size(); i++) {
 			Gamelist.push_back(gamelist[i]);
 		}
-		selgame_GameSelection_Init();
+		UiInitGameSelectionList(gameSearch);
 		lastUpdate = currentTime;
 	}
 }
