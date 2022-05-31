@@ -197,14 +197,19 @@ void SetIniValue(const char *keyname, const char *valuename, float value)
 	GetIni().SetDoubleValue(keyname, valuename, value, nullptr, true);
 }
 
+void SetIniValue(const char *sectionName, const char *keyName, const char *value)
+{
+	IniChangedChecker changedChecker(sectionName, keyName);
+	auto &ini = GetIni();
+	ini.SetValue(sectionName, keyName, value, nullptr, true);
+}
+
 void SetIniValue(string_view sectionName, string_view keyName, string_view value)
 {
 	std::string sectionNameStr { sectionName };
 	std::string keyNameStr { keyName };
 	std::string valueStr { value };
-	IniChangedChecker changedChecker(sectionNameStr.c_str(), keyNameStr.c_str());
-	auto &ini = GetIni();
-	ini.SetValue(sectionNameStr.c_str(), keyNameStr.c_str(), valueStr.c_str(), nullptr, true);
+	SetIniValue(sectionNameStr.c_str(), keyNameStr.c_str(), valueStr.c_str());
 }
 
 void SetIniValue(const char *keyname, const char *valuename, const std::vector<std::string> &stringValues)
