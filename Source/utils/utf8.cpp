@@ -13,9 +13,10 @@ namespace {
 string_view TruncateUtf8(string_view str, std::size_t len)
 {
 	if (str.size() > len) {
-		str.remove_suffix(str.size() - len);
-		while (!str.empty() && !IsTrailUtf8CodeUnit(str.back()))
-			str.remove_suffix(1);
+		std::size_t truncIndex = len;
+		while (truncIndex > 0 && IsTrailUtf8CodeUnit(str[truncIndex]))
+			truncIndex--;
+		str.remove_suffix(str.size() - truncIndex);
 	}
 	return str;
 }
