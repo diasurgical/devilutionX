@@ -339,6 +339,34 @@ private:
 	Resampler resampler_;
 };
 
+class OptionEntryAudioDevice : public OptionEntryListBase {
+public:
+	OptionEntryAudioDevice();
+
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] size_t GetListSize() const override;
+	[[nodiscard]] string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+	std::string operator*() const
+	{
+		for (size_t i = 0; i < GetListSize(); i++) {
+			string_view deviceName = GetDeviceName(i);
+			if (deviceName == deviceName_)
+				return deviceName_;
+		}
+		return "";
+	}
+
+private:
+	string_view GetDeviceName(size_t index) const;
+
+	std::string deviceName_;
+};
+
 struct OptionCategoryBase {
 	OptionCategoryBase(string_view key, string_view name, string_view description);
 
@@ -414,6 +442,8 @@ struct AudioOptions : OptionCategoryBase {
 	OptionEntryResampler resampler;
 	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest). Available for the speex resampler only. */
 	OptionEntryInt<std::uint8_t> resamplingQuality;
+	/** @brief Audio device. */
+	OptionEntryAudioDevice device;
 };
 
 struct GraphicsOptions : OptionCategoryBase {
