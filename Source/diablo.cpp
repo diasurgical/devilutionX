@@ -131,8 +131,6 @@ extern void plrctrls_after_check_curs_move();
 extern void plrctrls_every_frame();
 extern void plrctrls_after_game_logic();
 
-bool was_ui_init = false;
-
 namespace {
 
 char gszVersionNumber[64] = "internal version unknown";

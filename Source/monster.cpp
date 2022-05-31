@@ -1324,7 +1324,7 @@ void CheckReflect(int mon, int pnum, int dam)
 	int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 	monster._mhitpoints -= mdam;
 	dam = std::max(dam - mdam, 0);
-	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, FloatingType::DamagePhysical, dam, mon);
+	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, FloatingType::DamagePhysical, mdam, mon);
 	if (monster._mhitpoints >> 6 <= 0)
 		M_StartKill(mon, pnum);
 	else
@@ -1414,7 +1414,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Thorns) && monster._mmode != MonsterMode::Death) {
 		int mdam = (GenerateRnd(3) + 1) << 6;
 		monster._mhitpoints -= mdam;
-		AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, FloatingType::DamagePhysical, dam, i);
+		AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, FloatingType::DamagePhysical, mdam, i);
 		if (monster._mhitpoints >> 6 <= 0)
 			M_StartKill(i, pnum);
 		else

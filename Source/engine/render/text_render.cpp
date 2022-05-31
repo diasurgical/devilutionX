@@ -7,6 +7,7 @@
 
 #include <array>
 #include <cstddef>
+#include <numeric> // iota
 #include <unordered_map>
 #include <utility>
 
@@ -220,10 +221,11 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 		std::array<uint8_t, 256> colorMapping;
 		auto createTRNForColor = [](uint8_t color, int divisor = 1, int leftOffset = 0, int rightOffset = 0) {
 			std::array<uint8_t, 256> trn;
+			std::iota(trn.begin(), trn.end(), 0);
 			if (UseUIPalette) // menu palette seems to be roughly shifted by 16 so do the shift to be able to display ingame colors in menu
 				leftOffset -= 16;
-			for (int i = 0; i < 256; i++) {
-				trn[i] = color + leftOffset + i % (16 - rightOffset) / divisor;
+			for (int i = 192; i < 208 - rightOffset; i++) {
+				trn[i] = color + leftOffset + i % 16 / divisor;
 			}
 			return trn;
 		};
@@ -259,7 +261,7 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 			colorMapping = createTRNForColor(PAL16_BEIGE);
 			break;
 		case ColorGray16:
-			colorMapping = createTRNForColor(PAL16_GRAY, 1, 1, 1);
+			colorMapping = createTRNForColor(PAL16_GRAY, 1, 0, 1);
 			break;
 		default:
 			break;

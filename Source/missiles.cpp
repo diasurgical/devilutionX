@@ -248,7 +248,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (resist)
 		dam >>= 2;
 
-	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, GetFloatingNumberTypeFromMissile(mir), dam, m);
+	AddFloatingNumber(pnum == MyPlayerId, monster.position.tile, GetFloatingNumberTypeFromMissile(MissilesData[t].mResist), dam, m);
 
 	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;
@@ -897,7 +897,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	if (resist)
 		dam >>= 2;
 
-	AddFloatingNumber(true, monster.position.tile, GetFloatingNumberTypeFromMissile(mir), dam, m);
+	AddFloatingNumber(true, monster.position.tile, GetFloatingNumberTypeFromMissile(MissilesData[t].mResist), dam, m);
 
 	monster._mhitpoints -= dam;
 
