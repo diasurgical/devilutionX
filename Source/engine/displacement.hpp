@@ -78,6 +78,20 @@ struct Displacement {
 		return *this;
 	}
 
+	constexpr Displacement &operator/=(const int factor)
+	{
+		deltaX /= factor;
+		deltaY /= factor;
+		return *this;
+	}
+
+	constexpr Displacement &operator/=(const float factor)
+	{
+		deltaX = static_cast<int>(deltaX / factor);
+		deltaY = static_cast<int>(deltaY / factor);
+		return *this;
+	}
+
 	constexpr friend Displacement operator+(Displacement a, Displacement b)
 	{
 		a += b;
@@ -102,14 +116,41 @@ struct Displacement {
 		return a;
 	}
 
+	constexpr friend Displacement operator/(Displacement a, const int factor)
+	{
+		a /= factor;
+		return a;
+	}
+
+	constexpr friend Displacement operator/(Displacement a, const float factor)
+	{
+		a /= factor;
+		return a;
+	}
+
 	constexpr friend Displacement operator-(const Displacement &a)
 	{
 		return { -a.deltaX, -a.deltaY };
 	}
 
+	constexpr friend Displacement operator<<(Displacement a, unsigned factor)
+	{
+		return { a.deltaX << factor, a.deltaY << factor };
+	}
+
+	constexpr friend Displacement operator>>(Displacement a, unsigned factor)
+	{
+		return { a.deltaX >> factor, a.deltaY >> factor };
+	}
+
 	constexpr friend Displacement abs(Displacement a)
 	{
 		return { abs(a.deltaX), abs(a.deltaY) };
+	}
+
+	float magnitude() const
+	{
+		return static_cast<float>(hypot(deltaX, deltaY));
 	}
 
 	/**
@@ -154,9 +195,34 @@ struct Displacement {
 		return { (2 * deltaY + deltaX) / 8, (2 * deltaY - deltaX) / 8 };
 	}
 
-	constexpr Displacement operator>>(size_t factor)
+	/**
+	 * @brief Returns a 16 bit fixed point normalised displacement in isometric projection
+	 *
+	 * This will return a displacement of the form (-1.0 to 1.0, -0.5 to 0.5), to get a full tile offset you can multiply by 16
+	 */
+	Displacement worldToNormalScreen() const
 	{
-		return Displacement(deltaX >> factor, deltaY >> factor);
+		// Most transformations between world and screen space take shortcuts when scaling to simplify the math. This
+		//  routine is typically used with missiles where we want a normal vector that can be multiplied with a target
+		//  velocity (given in pixels). We could normalize the vector first but then we'd need to scale it during
+		//  rotation from world to screen space. To save performing unnecessary divisions we rotate first without
+		//  correcting the scaling. This gives a vector in elevation projection aligned with screen space.
+		Displacement rotated { (deltaY - deltaX), -(deltaY + deltaX) };
+		// then normalize this vector
+		Displacement rotatedAndNormalized = rotated.normalized();
+		// and finally scale the y axis to bring it to isometric projection
+		return { rotatedAndNormalized.deltaX, rotatedAndNormalized.deltaY / 2 };
+	}
+
+	/**
+	 * @brief Calculates a 16 bit fixed point normalized displacement (having magnitude of ~1.0) from the current Displacement
+	 */
+	Displacement normalized() const
+	{
+		float magnitude = this->magnitude();
+		Displacement normalDisplacement = *this << 16;
+		normalDisplacement /= magnitude;
+		return normalDisplacement;
 	}
 
 	constexpr Displacement Rotate(int quadrants)
