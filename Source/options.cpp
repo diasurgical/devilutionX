@@ -638,9 +638,11 @@ AudioOptions::AudioOptions()
 	bufferSize.SetValueChangedCallback(OptionAudioChanged);
 	resamplingQuality.SetValueChangedCallback(OptionAudioChanged);
 	resampler.SetValueChangedCallback(OptionAudioChanged);
+	device.SetValueChangedCallback(OptionAudioChanged);
 }
 std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 {
+	// clang-format off
 	return {
 		&soundVolume,
 		&musicVolume,
@@ -652,7 +654,11 @@ std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 		&bufferSize,
 		&resampler,
 		&resamplingQuality,
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		&device,
+#endif
 	};
+	// clang-format on
 }
 
 OptionEntryResolution::OptionEntryResolution()
@@ -810,6 +816,74 @@ void OptionEntryResampler::UpdateDependentOptions() const
 		sgOptions.Audio.resamplingQuality.flags |= OptionEntryFlags::Invisible;
 	}
 #endif
+}
+
+OptionEntryAudioDevice::OptionEntryAudioDevice()
+    : OptionEntryListBase("Device", OptionEntryFlags::CantChangeInGame, N_("Device"), N_("Audio device"))
+{
+}
+void OptionEntryAudioDevice::LoadFromIni(string_view category)
+{
+	char deviceStr[100];
+	GetIniValue(category, key, deviceStr, sizeof(deviceStr), "");
+	deviceName_ = deviceStr;
+}
+
+void OptionEntryAudioDevice::SaveToIni(string_view category) const
+{
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	SetIniValue(category, key, deviceName_);
+#endif
+}
+
+size_t OptionEntryAudioDevice::GetListSize() const
+{
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	return SDL_GetNumAudioDevices(false) + 1;
+#else
+	return 1;
+#endif
+}
+
+string_view OptionEntryAudioDevice::GetListDescription(size_t index) const
+{
+	constexpr size_t MaxWidth = 500;
+
+	string_view deviceName = GetDeviceName(index);
+	if (deviceName.empty())
+		return "System Default";
+
+	while (GetLineWidth(deviceName, GameFont24, 1) > MaxWidth) {
+		size_t lastSymbolIndex = FindLastUtf8Symbols(deviceName);
+		deviceName = string_view(deviceName.data(), lastSymbolIndex);
+	}
+
+	return deviceName;
+}
+
+size_t OptionEntryAudioDevice::GetActiveListIndex() const
+{
+	for (size_t i = 0; i < GetListSize(); i++) {
+		string_view deviceName = GetDeviceName(i);
+		if (deviceName == deviceName_)
+			return i;
+	}
+	return 0;
+}
+
+void OptionEntryAudioDevice::SetActiveListIndex(size_t index)
+{
+	deviceName_ = std::string { GetDeviceName(index) };
+	NotifyValueChanged();
+}
+
+string_view OptionEntryAudioDevice::GetDeviceName(size_t index) const
+{
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	if (index != 0)
+		return SDL_GetAudioDeviceName(index - 1, false);
+#endif
+	return "";
 }
 
 GraphicsOptions::GraphicsOptions()
