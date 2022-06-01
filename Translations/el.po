@@ -6866,7 +6866,7 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Ράβδος ({:d} φορτίο}"
 msgstr[1] "Ράβδος ({:d} φορτία}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
@@ -6876,22 +6876,22 @@ msgstr "Επίπ. {:d}"
 msgid "Unusable"
 msgstr "Άχρηστο"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr "Θεραπεύει {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr "Ζημια: {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr "Ζημιά: 1/3 ζωής"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"

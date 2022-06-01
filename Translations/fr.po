@@ -6851,7 +6851,7 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Bâton ({:d} charge)"
 msgstr[1] "Bâton ({:d} charges)"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
@@ -6861,22 +6861,22 @@ msgstr "Niveau {:d}"
 msgid "Unusable"
 msgstr "Inutilisable"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr "Soin: {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr "Dégâts: {:d}-{:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr "Dég: 1/3 PV cible"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"
