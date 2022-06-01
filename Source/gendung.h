@@ -134,7 +134,7 @@ struct ShadowStruct {
 };
 
 /** Contains the tile IDs of the map. */
-extern uint8_t dungeon[DMAXX][DMAXY];
+extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 /** Contains a backup of the tile IDs of the map. */
 extern uint8_t pdungeon[DMAXX][DMAXY];
 extern uint8_t dflags[DMAXX][DMAXY];
@@ -152,7 +152,7 @@ extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern bool setloadflag;
 extern std::optional<OwnedCelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
-extern std::unique_ptr<MegaTile[]> pMegaTiles;
+extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
 extern std::unique_ptr<uint16_t[]> pLevelPieces;
 extern std::unique_ptr<byte[]> pDungeonCels;
 /**
@@ -190,7 +190,7 @@ extern _setlevels setlvlnum;
 /** Specifies the player viewpoint X-coordinate of the map. */
 extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
-extern Point ViewPosition;
+extern DVL_API_FOR_TEST Point ViewPosition;
 extern ScrollStruct ScrollInfo;
 extern int MicroTileLen;
 extern char TransVal;
@@ -201,7 +201,7 @@ extern DVL_API_FOR_TEST int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
-extern int8_t dTransVal[MAXDUNX][MAXDUNY];
+extern DVL_API_FOR_TEST int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern DVL_API_FOR_TEST char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
 /** Holds various information about dungeon tiles, @see DungeonFlag */
