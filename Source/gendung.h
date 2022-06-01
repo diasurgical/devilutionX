@@ -183,7 +183,7 @@ extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern DVL_API_FOR_TEST dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
-extern uint8_t currlevel;
+extern DVL_API_FOR_TEST uint8_t currlevel;
 extern bool setlevel;
 /** Specifies the active quest level of the current game. */
 extern _setlevels setlvlnum;
