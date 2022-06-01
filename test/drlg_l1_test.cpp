@@ -30,13 +30,16 @@ TEST(Drlg_l1, DRLG_Init_Globals)
 
 void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entry)
 {
-	pMegaTiles = std::make_unique<MegaTile[]>(1648);
-
-	MyPlayer->pOriginalCathedral = !hellfire;
+	if (level >= 1 && level <= 4) {
+		MyPlayer->pOriginalCathedral = !hellfire;
+		pMegaTiles = std::make_unique<MegaTile[]>(206);
+		leveltype = DTYPE_CATHEDRAL;
+	} else if (level >= 21 && level <= 24) {
+		pMegaTiles = std::make_unique<MegaTile[]>(216);
+		leveltype = DTYPE_CRYPT;
+	}
 
 	currlevel = level;
-	leveltype = DTYPE_CATHEDRAL;
-
 	CreateL5Dungeon(seed, entry);
 
 	std::string path = paths::BasePath();
@@ -155,6 +158,45 @@ TEST(Drlg_l1, CreateL5Dungeon_hellfire_4_1190318991)
 	TestCreateL5Dungeon(true, 4, 1190318991, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition.x, 77);
 	EXPECT_EQ(ViewPosition.y, 45);
+}
+
+TEST(Drlg_l1, CreateL5Dungeon_crypt_1_2122696790)
+{
+	TestCreateL5Dungeon(true, 21, 2122696790, ENTRY_TWARPUP);
+	EXPECT_EQ(ViewPosition.x, 61);
+	EXPECT_EQ(ViewPosition.y, 80);
+	TestCreateL5Dungeon(true, 21, 2122696790, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition.x, 53);
+	EXPECT_EQ(ViewPosition.y, 67);
+}
+
+TEST(Drlg_l1, CreateL5Dungeon_crypt_2_1191662129)
+{
+	Quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
+
+	TestCreateL5Dungeon(true, 22, 1191662129, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition.x, 71);
+	EXPECT_EQ(ViewPosition.y, 47);
+	TestCreateL5Dungeon(true, 22, 1191662129, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition.x, 85);
+	EXPECT_EQ(ViewPosition.y, 71);
+}
+
+TEST(Drlg_l1, CreateL5Dungeon_crypt_3_97055268)
+{
+	TestCreateL5Dungeon(true, 23, 97055268, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition.x, 71);
+	EXPECT_EQ(ViewPosition.y, 57);
+	TestCreateL5Dungeon(true, 23, 97055268, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition.x, 81);
+	EXPECT_EQ(ViewPosition.y, 59);
+}
+
+TEST(Drlg_l1, CreateL5Dungeon_crypt_4_1324803725)
+{
+	TestCreateL5Dungeon(true, 24, 1324803725, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition.x, 79);
+	EXPECT_EQ(ViewPosition.y, 47);
 }
 
 } // namespace
