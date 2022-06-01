@@ -239,6 +239,24 @@ void ShowProgress(interface_mode uMsg)
 
 	Player &myPlayer = *MyPlayer;
 
+	auto saveLevelStep = []() {
+		if (!gbIsMultiplayer)
+			SaveLevel();
+		else
+			DeltaSaveLevel();
+		IncProgress();
+	};
+
+	auto freeGameMemStep = []() {
+		FreeGameMem();
+		IncProgress();
+	};
+
+	auto loadGameLevelStep = [](bool initialLevelLoad, lvl_entry entry) {
+		LoadGameLevel(initialLevelLoad, entry);
+		IncProgress();
+	};
+
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
 		IncProgress();
@@ -250,135 +268,77 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABNEWGAME:
 		myPlayer.pOriginalCathedral = !gbIsHellfire;
 		IncProgress();
-		FreeGameMem();
-		IncProgress();
+		freeGameMemStep();
 		pfile_remove_temp_files();
 		IncProgress();
-		LoadGameLevel(true, ENTRY_MAIN);
-		IncProgress();
+		loadGameLevelStep(true, ENTRY_MAIN);
 		break;
 	case WM_DIABNEXTLVL:
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
-		FreeGameMem();
+		saveLevelStep();
+		freeGameMemStep();
 		setlevel = false;
 		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		IncProgress();
-		LoadGameLevel(false, ENTRY_MAIN);
-		IncProgress();
+		loadGameLevelStep(false, ENTRY_MAIN);
 		break;
 	case WM_DIABPREVLVL:
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
-		FreeGameMem();
+		saveLevelStep();
+		freeGameMemStep();
 		currlevel--;
 		leveltype = gnLevelTypeTbl[currlevel];
 		assert(myPlayer.plrlevel == currlevel);
-		IncProgress();
-		LoadGameLevel(false, ENTRY_PREV);
-		IncProgress();
+		loadGameLevelStep(false, ENTRY_PREV);
 		break;
 	case WM_DIABSETLVL:
 		SetReturnLvlPos();
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
+		saveLevelStep();
 		setlevel = true;
 		leveltype = setlvltype;
-		FreeGameMem();
-		IncProgress();
-		LoadGameLevel(false, ENTRY_SETLVL);
-		IncProgress();
+		freeGameMemStep();
+		loadGameLevelStep(false, ENTRY_SETLVL);
 		break;
 	case WM_DIABRTNLVL:
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
+		saveLevelStep();
 		setlevel = false;
-		FreeGameMem();
-		IncProgress();
+		freeGameMemStep();
 		GetReturnLvlPos();
-		LoadGameLevel(false, ENTRY_RTNLVL);
-		IncProgress();
+		loadGameLevelStep(false, ENTRY_RTNLVL);
 		break;
 	case WM_DIABWARPLVL:
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
-		FreeGameMem();
+		saveLevelStep();
+		freeGameMemStep();
 		GetPortalLevel();
-		IncProgress();
-		LoadGameLevel(false, ENTRY_WARPLVL);
-		IncProgress();
+		loadGameLevelStep(false, ENTRY_WARPLVL);
 		break;
 	case WM_DIABTOWNWARP:
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
-		FreeGameMem();
+		saveLevelStep();
+		freeGameMemStep();
 		setlevel = false;
 		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		IncProgress();
-		LoadGameLevel(false, ENTRY_TWARPDN);
-		IncProgress();
+		loadGameLevelStep(false, ENTRY_TWARPDN);
 		break;
 	case WM_DIABTWARPUP:
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
-		FreeGameMem();
+		saveLevelStep();
+		freeGameMemStep();
 		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		IncProgress();
-		LoadGameLevel(false, ENTRY_TWARPUP);
-		IncProgress();
+		loadGameLevelStep(false, ENTRY_TWARPUP);
 		break;
 	case WM_DIABRETOWN:
 		IncProgress();
-		if (!gbIsMultiplayer) {
-			SaveLevel();
-		} else {
-			DeltaSaveLevel();
-		}
-		IncProgress();
-		FreeGameMem();
+		saveLevelStep();
+		freeGameMemStep();
 		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		IncProgress();
-		LoadGameLevel(false, ENTRY_MAIN);
-		IncProgress();
+		loadGameLevelStep(false, ENTRY_MAIN);
 		break;
 	}
 
