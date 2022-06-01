@@ -129,12 +129,12 @@ void SetMapTransparency(const char *path)
 	width *= 2;
 	height *= 2;
 
-	const uint16_t *transparantLayer = &dunData[layer2Offset + width * height * 3];
+	const uint16_t *transparentLayer = &dunData[layer2Offset + width * height * 3];
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparantLayer);
-			transparantLayer++;
+			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparentLayer);
+			transparentLayer++;
 		}
 	}
 }
