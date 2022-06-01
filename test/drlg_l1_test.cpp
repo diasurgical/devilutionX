@@ -27,7 +27,7 @@ TEST(Drlg_l1, DRLG_Init_Globals)
 	EXPECT_EQ(dLight[0][0], 0);
 }
 
-void TestCreateL5Dungeon(bool hellfire, int level, int seed, lvl_entry entry)
+void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entry)
 {
 	pMegaTiles = std::make_unique<MegaTile[]>(1648);
 
@@ -47,8 +47,8 @@ void TestCreateL5Dungeon(bool hellfire, int level, int seed, lvl_entry entry)
 	else
 		dunPath = fmt::format("../test/fixtures/diablo/{}-{}.dun", level, seed);
 	auto dunData = LoadFileInMem<uint16_t>(dunPath.c_str());
-	EXPECT_EQ(DMAXX, dunData[0]);
-	EXPECT_EQ(DMAXY, dunData[1]);
+	ASSERT_EQ(DMAXX, dunData[0]);
+	ASSERT_EQ(DMAXY, dunData[1]);
 
 	const uint16_t *tileLayer = &dunData[2];
 
@@ -56,7 +56,7 @@ void TestCreateL5Dungeon(bool hellfire, int level, int seed, lvl_entry entry)
 		for (int x = 0; x < DMAXX; x++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
 			tileLayer++;
-			EXPECT_EQ(dungeon[x][y], tileId);
+			ASSERT_EQ(dungeon[x][y], tileId);
 		}
 	}
 
@@ -66,7 +66,7 @@ void TestCreateL5Dungeon(bool hellfire, int level, int seed, lvl_entry entry)
 		for (int x = 16; x < 16 + DMAXX * 2; x++) {
 			auto sectorId = static_cast<uint8_t>(SDL_SwapLE16(*transparentLayer));
 			transparentLayer++;
-			EXPECT_EQ(dTransVal[x][y], sectorId);
+			ASSERT_EQ(dTransVal[x][y], sectorId) << "Room/region indexes don't match";
 		}
 	}
 }
