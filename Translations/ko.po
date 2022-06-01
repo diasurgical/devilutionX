@@ -6783,7 +6783,7 @@ msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "지팡이 ({:d}회 충전)"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 msgctxt "spellbook"
 msgid "Level {:d}"
@@ -6793,22 +6793,22 @@ msgstr "레벨 {:d}"
 msgid "Unusable"
 msgstr "사용 불가"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 msgid "Heals: {:d} - {:d}"
 msgstr "회복: {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 msgid "Damage: {:d} - {:d}"
 msgstr "피해: {:d} - {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr "피해: 대상 HP 1/3"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 msgctxt "spellbook"
 msgid "Mana: {:d}"

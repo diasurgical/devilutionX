@@ -161,7 +161,7 @@ void DrawSpellBook(const Surface &out)
 			default: {
 				int mana = GetManaAmount(player, sn) >> 6;
 				int lvl = std::max(player._pSplLvl[sn] + player._pISplLvlAdd, 0);
-				PrintSBookStr(out, line0, fmt::format(pgettext(/* TRANSLATORS: UI constrains, keep short please.*/ "spellbook", "Level {:d}"), lvl), UiFlags::AlignRight);
+				PrintSBookStr(out, line0, fmt::format(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}"), lvl), UiFlags::AlignRight);
 				if (lvl == 0) {
 					PrintSBookStr(out, line1, _("Unusable"), UiFlags::AlignRight);
 				} else {
@@ -171,15 +171,15 @@ void DrawSpellBook(const Surface &out)
 						GetDamageAmt(sn, &min, &max);
 						if (min != -1) {
 							if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Heals: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Heals: {:d} - {:d}"), min, max), UiFlags::AlignRight);
 							} else {
-								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Damage: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}"), min, max), UiFlags::AlignRight);
 							}
 						}
 					} else {
-						PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constrains, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight);
+						PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constraints, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight);
 					}
-					PrintSBookStr(out, line1, fmt::format(pgettext(/* TRANSLATORS: UI constrains, keep short please.*/ "spellbook", "Mana: {:d}"), mana));
+					PrintSBookStr(out, line1, fmt::format(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Mana: {:d}"), mana));
 				}
 			} break;
 			}

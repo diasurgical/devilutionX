@@ -45,7 +45,7 @@ constexpr std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 constexpr int SmallFontTallLineHeight = 16;
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
-std::array<const char *, 14> ColorTranlations = {
+std::array<const char *, 14> ColorTranslations = {
 	"fonts\\goldui.trn",
 	"fonts\\grayui.trn",
 	"fonts\\golduis.trn",
@@ -196,9 +196,9 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 		return nullptr;
 	}
 
-	if (ColorTranlations[color] != nullptr) {
+	if (ColorTranslations[color] != nullptr) {
 		std::array<uint8_t, 256> colorMapping;
-		LoadFileInMem(ColorTranlations[color], colorMapping);
+		LoadFileInMem(ColorTranslations[color], colorMapping);
 		CelApplyTrans(font->sprite.MutableData(), colorMapping);
 	}
 

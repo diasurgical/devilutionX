@@ -156,7 +156,7 @@ extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
 extern std::unique_ptr<uint16_t[]> pLevelPieces;
 extern std::unique_ptr<byte[]> pDungeonCels;
 /**
- * List of transparancy masks to use for dPieces
+ * List of transparency masks to use for dPieces
  */
 extern std::array<uint8_t, MAXTILES + 1> block_lvid;
 /**
