@@ -20,6 +20,7 @@ set(tests
   diablo_test
   drlg_common_test
   drlg_l1_test
+  drlg_l2_test
   effects_test
   file_util_test
   inv_test
