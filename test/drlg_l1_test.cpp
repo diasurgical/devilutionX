@@ -78,11 +78,9 @@ void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entr
 TEST(Drlg_l1, CreateL5Dungeon_diablo_1_743271966)
 {
 	TestCreateL5Dungeon(false, 1, 743271966, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 51);
-	EXPECT_EQ(ViewPosition.y, 82);
+	EXPECT_EQ(ViewPosition, Point(51, 82));
 	TestCreateL5Dungeon(false, 1, 743271966, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 81);
-	EXPECT_EQ(ViewPosition.y, 47);
+	EXPECT_EQ(ViewPosition, Point(81, 47));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_diablo_2_1383137027)
@@ -91,41 +89,33 @@ TEST(Drlg_l1, CreateL5Dungeon_diablo_2_1383137027)
 	Quests[Q_PWATER]._qactive = QUEST_INIT;
 
 	TestCreateL5Dungeon(false, 2, 1383137027, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 57);
-	EXPECT_EQ(ViewPosition.y, 74);
+	EXPECT_EQ(ViewPosition, Point(57, 74));
 	TestCreateL5Dungeon(false, 2, 1383137027, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 57);
-	EXPECT_EQ(ViewPosition.y, 79);
+	EXPECT_EQ(ViewPosition, Point(57, 79));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_diablo_3_844660068)
 {
 	TestCreateL5Dungeon(false, 3, 844660068, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 67);
-	EXPECT_EQ(ViewPosition.y, 52);
+	EXPECT_EQ(ViewPosition, Point(67, 52));
 	TestCreateL5Dungeon(false, 3, 844660068, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 85);
-	EXPECT_EQ(ViewPosition.y, 45);
+	EXPECT_EQ(ViewPosition, Point(85, 45));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_diablo_4_609325643)
 {
 	TestCreateL5Dungeon(false, 4, 609325643, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 85);
-	EXPECT_EQ(ViewPosition.y, 78);
+	EXPECT_EQ(ViewPosition, Point(85, 78));
 	TestCreateL5Dungeon(false, 4, 609325643, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 55);
-	EXPECT_EQ(ViewPosition.y, 47);
+	EXPECT_EQ(ViewPosition, Point(55, 47));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_hellfire_1_401921334)
 {
 	TestCreateL5Dungeon(true, 1, 401921334, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 79);
-	EXPECT_EQ(ViewPosition.y, 80);
+	EXPECT_EQ(ViewPosition, Point(79, 80));
 	TestCreateL5Dungeon(true, 1, 401921334, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 49);
-	EXPECT_EQ(ViewPosition.y, 63);
+	EXPECT_EQ(ViewPosition, Point(49, 63));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_hellfire_2_128964898)
@@ -133,41 +123,33 @@ TEST(Drlg_l1, CreateL5Dungeon_hellfire_2_128964898)
 	Quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateL5Dungeon(true, 2, 128964898, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 55);
-	EXPECT_EQ(ViewPosition.y, 68);
+	EXPECT_EQ(ViewPosition, Point(55, 68));
 	TestCreateL5Dungeon(true, 2, 128964898, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 49);
-	EXPECT_EQ(ViewPosition.y, 63);
+	EXPECT_EQ(ViewPosition, Point(49, 63));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_hellfire_3_1799396623)
 {
 	TestCreateL5Dungeon(true, 3, 1799396623, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 59);
-	EXPECT_EQ(ViewPosition.y, 68);
+	EXPECT_EQ(ViewPosition, Point(59, 68));
 	TestCreateL5Dungeon(true, 3, 1799396623, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 47);
-	EXPECT_EQ(ViewPosition.y, 55);
+	EXPECT_EQ(ViewPosition, Point(47, 55));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_hellfire_4_1190318991)
 {
 	TestCreateL5Dungeon(true, 4, 1190318991, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 67);
-	EXPECT_EQ(ViewPosition.y, 80);
+	EXPECT_EQ(ViewPosition, Point(67, 80));
 	TestCreateL5Dungeon(true, 4, 1190318991, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 77);
-	EXPECT_EQ(ViewPosition.y, 45);
+	EXPECT_EQ(ViewPosition, Point(77, 45));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_crypt_1_2122696790)
 {
 	TestCreateL5Dungeon(true, 21, 2122696790, ENTRY_TWARPUP);
-	EXPECT_EQ(ViewPosition.x, 61);
-	EXPECT_EQ(ViewPosition.y, 80);
+	EXPECT_EQ(ViewPosition, Point(61, 80));
 	TestCreateL5Dungeon(true, 21, 2122696790, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 53);
-	EXPECT_EQ(ViewPosition.y, 67);
+	EXPECT_EQ(ViewPosition, Point(53, 67));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_crypt_2_1191662129)
@@ -175,28 +157,23 @@ TEST(Drlg_l1, CreateL5Dungeon_crypt_2_1191662129)
 	Quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateL5Dungeon(true, 22, 1191662129, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 71);
-	EXPECT_EQ(ViewPosition.y, 47);
+	EXPECT_EQ(ViewPosition, Point(71, 47));
 	TestCreateL5Dungeon(true, 22, 1191662129, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 85);
-	EXPECT_EQ(ViewPosition.y, 71);
+	EXPECT_EQ(ViewPosition, Point(85, 71));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_crypt_3_97055268)
 {
 	TestCreateL5Dungeon(true, 23, 97055268, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 71);
-	EXPECT_EQ(ViewPosition.y, 57);
+	EXPECT_EQ(ViewPosition, Point(71, 57));
 	TestCreateL5Dungeon(true, 23, 97055268, ENTRY_PREV);
-	EXPECT_EQ(ViewPosition.x, 81);
-	EXPECT_EQ(ViewPosition.y, 59);
+	EXPECT_EQ(ViewPosition, Point(81, 59));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_crypt_4_1324803725)
 {
 	TestCreateL5Dungeon(true, 24, 1324803725, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition.x, 79);
-	EXPECT_EQ(ViewPosition.y, 47);
+	EXPECT_EQ(ViewPosition, Point(79, 47));
 }
 
 } // namespace

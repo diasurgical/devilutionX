@@ -16,6 +16,14 @@ struct Point {
 	int x;
 	int y;
 
+	Point() = default;
+
+	constexpr Point(int x, int y)
+	    : x(x)
+	    , y(y)
+	{
+	}
+
 	constexpr bool operator==(const Point &other) const
 	{
 		return x == other.x && y == other.y;
