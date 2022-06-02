@@ -1139,12 +1139,12 @@ void DrawTalkPan(const Surface &out)
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {
 			if (TalkButtonsDown[talkBtn]) {
-				int nCel = talkBtn != 0 ? 4 : 3;
+				int nCel = talkBtn != 0 ? 3 : 2;
 				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 				DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, 2);
 			}
 		} else {
-			int nCel = talkBtn != 0 ? 2 : 1;
+			int nCel = talkBtn != 0 ? 1 : 0;
 			if (TalkButtonsDown[talkBtn])
 				nCel += 4;
 			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
