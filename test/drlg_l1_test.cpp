@@ -35,7 +35,7 @@ void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entr
 		pMegaTiles = std::make_unique<MegaTile[]>(206);
 		leveltype = DTYPE_CATHEDRAL;
 	} else if (level >= 21 && level <= 24) {
-		pMegaTiles = std::make_unique<MegaTile[]>(216);
+		pMegaTiles = std::make_unique<MegaTile[]>(217);
 		leveltype = DTYPE_CRYPT;
 	}
 
@@ -60,7 +60,7 @@ void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entr
 		for (int x = 0; x < DMAXX; x++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
 			tileLayer++;
-			ASSERT_EQ(dungeon[x][y], tileId);
+			ASSERT_EQ(dungeon[x][y], tileId) << "Tiles don't match at " << x << "x" << y;
 		}
 	}
 
@@ -70,7 +70,7 @@ void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entr
 		for (int x = 16; x < 16 + DMAXX * 2; x++) {
 			auto sectorId = static_cast<uint8_t>(SDL_SwapLE16(*transparentLayer));
 			transparentLayer++;
-			ASSERT_EQ(dTransVal[x][y], sectorId) << "Room/region indexes don't match";
+			ASSERT_EQ(dTransVal[x][y], sectorId) << "Room/region indexes don't match at " << x << "x" << y;
 		}
 	}
 }
