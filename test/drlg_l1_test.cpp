@@ -60,7 +60,7 @@ void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entr
 		for (int x = 0; x < DMAXX; x++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
 			tileLayer++;
-			ASSERT_EQ(dungeon[x][y], tileId) << "Tile don't match at " << x << "x" << y;
+			ASSERT_EQ(dungeon[x][y], tileId) << "Tiles don't match at " << x << "x" << y;
 		}
 	}
 
