@@ -47,12 +47,12 @@ void TestCreateL5Dungeon(bool hellfire, int level, uint32_t seed, lvl_entry entr
 	paths::SetPrefPath(path);
 	std::string dunPath;
 	if (hellfire)
-		dunPath = fmt::format("../test/fixtures/hellfire/{}-{}.dun", level, seed);
+		dunPath = fmt::format("test/fixtures/hellfire/{}-{}.dun", level, seed);
 	else
-		dunPath = fmt::format("../test/fixtures/diablo/{}-{}.dun", level, seed);
+		dunPath = fmt::format("test/fixtures/diablo/{}-{}.dun", level, seed);
 	auto dunData = LoadFileInMem<uint16_t>(dunPath.c_str());
-	ASSERT_EQ(DMAXX, dunData[0]);
-	ASSERT_EQ(DMAXY, dunData[1]);
+	ASSERT_NE(dunData, nullptr) << "Unable to load test fixture " << dunPath;
+	ASSERT_EQ(Size(DMAXX, DMAXY), Size(dunData[0], dunData[1]));
 
 	const uint16_t *tileLayer = &dunData[2];
 

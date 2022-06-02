@@ -21,10 +21,10 @@ void TestCreateL2Dungeon(int level, uint32_t seed, lvl_entry entry)
 	std::string path = paths::BasePath();
 
 	paths::SetPrefPath(path);
-	std::string dunPath = fmt::format("../test/fixtures/diablo/{}-{}.dun", level, seed);
+	std::string dunPath = fmt::format("test/fixtures/diablo/{}-{}.dun", level, seed);
 	auto dunData = LoadFileInMem<uint16_t>(dunPath.c_str());
-	ASSERT_EQ(DMAXX, dunData[0]);
-	ASSERT_EQ(DMAXY, dunData[1]);
+	ASSERT_NE(dunData, nullptr) << "Unable to load test fixture " << dunPath;
+	ASSERT_EQ(Size(DMAXX, DMAXY), Size(dunData[0], dunData[1]));
 
 	const uint16_t *tileLayer = &dunData[2];
 

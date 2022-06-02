@@ -37,6 +37,8 @@ set(tests
   writehero_test
 )
 
+include(Fixtures.cmake)
+
 foreach(test_target ${tests})
   add_executable(${test_target} "${test_target}.cpp")
   gtest_discover_tests(${test_target})
