@@ -7161,7 +7161,7 @@ msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Understøttede spillere: {:d}"
 msgstr[1] "Understøttede spillere: {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 #, fuzzy
 #| msgid "Level:"
@@ -7173,24 +7173,24 @@ msgstr "Niveau:"
 msgid "Unusable"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 #, fuzzy
 msgid "Heals: {:d} - {:d}"
 msgstr "Understøttede spillere: {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 #, fuzzy
 msgid "Damage: {:d} - {:d}"
 msgstr "Understøttede spillere: {:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 msgid "Dmg: 1/3 target hp"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 #, fuzzy
 msgctxt "spellbook"

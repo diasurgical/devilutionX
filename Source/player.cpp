@@ -2333,7 +2333,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	}
 
 	if (leveltype == DTYPE_TOWN && useUnarmedAnimationInTown) {
-		// If the hero don't hold the weapon in town then we should use the unarmed animation for casting
+		// If the hero doesn't hold the weapon in town then we should use the unarmed animation for casting
 		switch (animWeaponId) {
 		case PlayerWeaponGraphic::Mace:
 		case PlayerWeaponGraphic::Sword:

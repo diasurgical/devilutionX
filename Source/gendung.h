@@ -156,7 +156,7 @@ extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
 extern std::unique_ptr<uint16_t[]> pLevelPieces;
 extern std::unique_ptr<byte[]> pDungeonCels;
 /**
- * List of transparancy masks to use for dPieces
+ * List of transparency masks to use for dPieces
  */
 extern std::array<uint8_t, MAXTILES + 1> block_lvid;
 /**
@@ -183,7 +183,7 @@ extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern DVL_API_FOR_TEST dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
-extern uint8_t currlevel;
+extern DVL_API_FOR_TEST uint8_t currlevel;
 extern bool setlevel;
 /** Specifies the active quest level of the current game. */
 extern _setlevels setlvlnum;

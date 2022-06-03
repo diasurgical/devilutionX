@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include <fmt/format.h>
+#include <fstream>
 
 #include "debug.h"
 
@@ -293,6 +294,82 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	StartNewLvl(MyPlayerId, WM_DIABSETLVL, SL_NONE);
 
 	return "Welcome to this unique place.";
+}
+
+void WriteLE16(std::ofstream &out, uint16_t val)
+{
+	const uint16_t littleEndian = SDL_SwapLE16(val);
+	char data[2];
+	memcpy(data, &littleEndian, 2);
+	out.write(data, 2);
+}
+
+std::string ExportDun(const string_view parameter)
+{
+	std::ofstream dunFile;
+
+	std::string levelName = fmt::format("{}-{}.dun", currlevel, glSeedTbl[currlevel]);
+
+	dunFile.open(levelName, std::ios::out | std::ios::app | std::ios::binary);
+
+	WriteLE16(dunFile, DMAXX);
+	WriteLE16(dunFile, DMAXY);
+
+	/** Tiles. */
+	for (int y = 0; y < DMAXY; y++) {
+		for (int x = 0; x < DMAXX; x++) {
+			WriteLE16(dunFile, dungeon[x][y]);
+		}
+	}
+
+	/** Padding */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			WriteLE16(dunFile, 0);
+		}
+	}
+
+	/** Monsters */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			uint16_t monsterId = 0;
+			if (dMonster[x][y] > 0) {
+				for (int i = 0; i < 157; i++) {
+					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].MType->mtype) {
+						monsterId = i + 1;
+						break;
+					}
+				}
+			}
+			WriteLE16(dunFile, monsterId);
+		}
+	}
+
+	/** Objects */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			uint16_t objectId = 0;
+			if (dObject[x][y] > 0) {
+				for (int i = 0; i < 147; i++) {
+					if (ObjTypeConv[i] == Objects[abs(dObject[x][y]) - 1]._otype) {
+						objectId = i;
+						break;
+					}
+				}
+			}
+			WriteLE16(dunFile, objectId);
+		}
+	}
+
+	/** Transparency */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			WriteLE16(dunFile, dTransVal[x][y]);
+		}
+	}
+	dunFile.close();
+
+	return fmt::format("{} saved. Happy mapping!", levelName);
 }
 
 std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
@@ -910,6 +987,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "questmap", "Load a quest level {level}.", "{level}", &DebugCmdLoadQuestMap },
 	{ "map", "Load custom level from a given {path}.dun.", "{path} {type} {x} {y}", &DebugCmdLoadMap },
+	{ "exportdun", "Save the current level as a dun-file.", "", &ExportDun },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
 	{ "restart", "Resets specified {level}.", "{level} ({seed})", &DebugCmdResetLevel },
 	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },

@@ -334,7 +334,7 @@ TEST(Writehero, pfile_write_hero)
 	giNumberOfLevels = 17;
 
 	MyPlayerId = 0;
-	MyPlayer = MyPlayer;
+	MyPlayer = &Players[MyPlayerId];
 	*MyPlayer = {};
 
 	_uiheroinfo info {};

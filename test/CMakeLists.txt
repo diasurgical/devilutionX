@@ -20,6 +20,7 @@ set(tests
   diablo_test
   drlg_common_test
   drlg_l1_test
+  drlg_l2_test
   effects_test
   file_util_test
   inv_test
@@ -35,6 +36,8 @@ set(tests
   stores_test
   writehero_test
 )
+
+include(Fixtures.cmake)
 
 foreach(test_target ${tests})
   add_executable(${test_target} "${test_target}.cpp")
