@@ -115,7 +115,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 	int maxAngle = 180;
 	if (*sgOptions.FloatingNumbers.minAngle <= *sgOptions.FloatingNumbers.maxAngle) {
 		minAngle = *sgOptions.FloatingNumbers.minAngle;
-		maxAngle = *sgOptions.FloatingNumbers.maxAngle; 
+		maxAngle = *sgOptions.FloatingNumbers.maxAngle;
 	}
 	double angle = (180 + (*sgOptions.FloatingNumbers.limitAngles ? goodAngles[rand() % 3] : (minAngle + rand() % (maxAngle - minAngle + 1)))) * mul;
 	int xCoord = cos(angle) * distanceX;
