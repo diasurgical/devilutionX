@@ -111,7 +111,13 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 	constexpr double PI = 3.14159265358979323846;
 	constexpr double mul = PI * 2 / 360.0;
 	double goodAngles[] = { 45, 90, 135 }; // these angles render nicely, without jumping around
-	double angle = (180 + (*sgOptions.FloatingNumbers.limitAngles ? goodAngles[rand() % 3] : rand() % 180)) * mul;
+	int minAngle = 0;
+	int maxAngle = 180;
+	if (*sgOptions.FloatingNumbers.minAngle <= *sgOptions.FloatingNumbers.maxAngle) {
+		minAngle = *sgOptions.FloatingNumbers.minAngle;
+		maxAngle = *sgOptions.FloatingNumbers.maxAngle; 
+	}
+	double angle = (180 + (*sgOptions.FloatingNumbers.limitAngles ? goodAngles[rand() % 3] : (minAngle + rand() % (maxAngle - minAngle + 1)))) * mul;
 	int xCoord = cos(angle) * distanceX;
 	int yCoord = sin(angle) * distanceY;
 	Displacement endOffset = { xCoord, yCoord };

@@ -1441,6 +1441,8 @@ FloatingNumbersOptions::FloatingNumbersOptions()
     , showDamageTakenByPlayers("Damage taken by players", OptionEntryFlags::None, N_("Damage taken by players"), N_("Enables showing damage taken by players."), true)
     , floatingNumbersFromOthers("Show numbers from other players", OptionEntryFlags::None, N_("Numbers from other players"), N_("Show floating numbers that aren't your own."), false)
     , limitAngles("Limit angles", OptionEntryFlags::None, N_("Limit angles"), N_("Only use 45/90/135 angles instead of full 0-180 range - for smooth movement"), true)
+    , minAngle("Min angle", OptionEntryFlags::None, N_("Min. angle"), N_("If limit angles is off, define min. random angle"), 0, { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180 })
+    , maxAngle("Max angle", OptionEntryFlags::None, N_("Max. angle"), N_("If limit angles is off, define max. random angle"), 180, { 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180 })
     , floatingNumbersLifetime("Floating numbers lifetime", OptionEntryFlags::None, N_("Floating numbers lifetime"), N_("Time in milliseconds to display floating numbers"), 2500, { 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 7500, 10000 })
     , maxHorizontalDistance("Max horizontal distance", OptionEntryFlags::None, N_("Horizontal distance %"), N_("What part of the screen numbers can travel horizontally"), 25, { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100 })
     , maxVerticalDistance("Max vertical distance", OptionEntryFlags::None, N_("Vertical distance %"), N_("What part of the screen numbers can travel vertically"), 25, { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100 })
@@ -1463,6 +1465,8 @@ std::vector<OptionEntryBase *> FloatingNumbersOptions::GetEntries()
 		&showDamageTakenByPlayers,
 		&floatingNumbersFromOthers,
 		&limitAngles,
+		&minAngle,
+		&maxAngle,
 		&floatingNumbersLifetime,
 		&maxHorizontalDistance,
 		&maxVerticalDistance,

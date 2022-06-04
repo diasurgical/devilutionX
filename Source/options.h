@@ -692,6 +692,10 @@ struct FloatingNumbersOptions : OptionCategoryBase {
 	OptionEntryBoolean floatingNumbersFromOthers;
 	/** @brief Limit angles only to those that display nicely */
 	OptionEntryBoolean limitAngles;
+	/** @brief If limitAngles is turned off, define min angle (default 0-180) */
+	OptionEntryInt<int> minAngle;
+	/** @brief If limitAngles is turned off, define max angle (default 0-180) */
+	OptionEntryInt<int> maxAngle;
 	/** @brief How many milliseconds does a floating number last */
 	OptionEntryInt<int> floatingNumbersLifetime;
 	/** @brief What screen % horizontally can the floating numbers travel */
