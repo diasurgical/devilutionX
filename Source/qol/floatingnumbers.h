@@ -9,6 +9,7 @@
 #include "engine.h"
 #include "engine/point.hpp"
 #include "misdat.h"
+#include "spelldat.h"
 
 namespace devilution {
 
@@ -27,6 +28,6 @@ void DrawFloatingNumbers(const Surface &out);
 void UpdateFloatingNumbersCoordsMap(Point dungeon, Point screen);
 void ClearFloatingNumbersCoordsMap();
 void ClearFloatingNumbers();
-FloatingType GetFloatingNumberTypeFromMissile(missile_resistance mir);
+FloatingType GetFloatingNumberTypeFromMissile(missile_id mtype);
 
 } // namespace devilution

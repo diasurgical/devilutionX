@@ -173,8 +173,9 @@ void ClearFloatingNumbers()
 	FloatingQueue.clear();
 }
 
-FloatingType GetFloatingNumberTypeFromMissile(missile_resistance mir)
+FloatingType GetFloatingNumberTypeFromMissile(missile_id mtype)
 {
+	auto mir = MissilesData[mtype].mResist;
 	switch (mir) {
 	case MISR_FIRE:
 		return FloatingType::DamageFire;
