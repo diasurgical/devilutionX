@@ -12,6 +12,7 @@
 #include "monster.h"
 #include "objects.h"
 #include "portal.h"
+#include "qol/floatingnumbers.h"
 #include "quests.h"
 
 namespace devilution {
@@ -644,6 +645,7 @@ struct TCmdDamage {
 	_cmd_id bCmd;
 	uint8_t bPlr;
 	uint32_t dwDam;
+	FloatingType dmgType;
 };
 
 struct TCmdMonDamage {
@@ -812,7 +814,7 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, FloatingType dmgType);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);

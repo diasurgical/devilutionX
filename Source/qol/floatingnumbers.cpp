@@ -26,6 +26,7 @@ struct FloatingNumber {
 	FloatingType type;
 	int value;
 	int index;
+	bool reverseDirection;
 };
 
 std::deque<FloatingNumber> FloatingQueue;
@@ -69,6 +70,7 @@ void UpdateFloatingData(FloatingNumber &num)
 		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.expGainColor) | UiFlags::FontSize12;
 		num.text = fmt::format("{:d} XP", num.value);
 		break;
+	case FloatingType::DamageOther:
 	case FloatingType::DamagePhysical:
 		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.physicalDamageColor) | GetFontSizeByDamage(num.value);
 		break;
@@ -95,6 +97,10 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 		return;
 	if (!*sgOptions.FloatingNumbers.floatingNumbersFromOthers && !isMyPlayer)
 		return;
+	if (type == FloatingType::None)
+		return;
+	if (!*sgOptions.FloatingNumbers.showDamageTakenByPlayers && damageToPlayer)
+		return;
 	static bool initRand = false;
 	if (!initRand) {
 		srand(time(NULL));
@@ -104,15 +110,17 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 	double distanceY = gnScreenHeight * *sgOptions.FloatingNumbers.maxVerticalDistance / 100.0;
 	constexpr double PI = 3.14159265358979323846;
 	constexpr double mul = PI * 2 / 360.0;
-	double goodAngles[] = { 0, 45, 90, 135, 180 }; // these angles render nicely, without jumping around
-	double angle = (180 + (*sgOptions.FloatingNumbers.limitAngles ? goodAngles[rand() % 5] : rand() % 180)) * mul;
+	double goodAngles[] = { 45, 90, 135 }; // these angles render nicely, without jumping around
+	double angle = (180 + (*sgOptions.FloatingNumbers.limitAngles ? goodAngles[rand() % 3] : rand() % 180)) * mul;
 	int xCoord = cos(angle) * distanceX;
 	int yCoord = sin(angle) * distanceY;
 	Displacement endOffset = { xCoord, yCoord };
+	if (damageToPlayer)
+		endOffset *= -1;
 
 	ClearExpiredNumbers();
 	for (auto &num : FloatingQueue) {
-		if (index != -1 && num.myDmg == isMyPlayer && num.type == type && num.index == index && (SDL_GetTicks() - (int)num.lastMerge <= *sgOptions.FloatingNumbers.mergeTime)) {
+		if (index != -1 && num.myDmg == isMyPlayer && num.reverseDirection == damageToPlayer && num.type == type && num.index == index && (SDL_GetTicks() - (int)num.lastMerge <= *sgOptions.FloatingNumbers.mergeTime)) {
 			num.value += value;
 			num.lastMerge = SDL_GetTicks();
 			UpdateFloatingData(num);
@@ -120,7 +128,7 @@ void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value,
 		}
 	}
 	FloatingNumber num = FloatingNumber {
-		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + *sgOptions.FloatingNumbers.floatingNumbersLifetime, SDL_GetTicks(), style, type, value, index
+		isMyPlayer, pos, endOffset, "", SDL_GetTicks() + *sgOptions.FloatingNumbers.floatingNumbersLifetime, SDL_GetTicks(), style, type, value, index, damageToPlayer
 	};
 	UpdateFloatingData(num);
 	num.style |= style; // for handling styles from debug command

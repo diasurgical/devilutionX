@@ -1438,8 +1438,9 @@ constexpr int index(UiFlags flag)
 FloatingNumbersOptions::FloatingNumbersOptions()
     : OptionCategoryBase("FloatingNumbers", N_("Floating Numbers"), N_("Floating Numbers Settings"))
     , enableFloatingNumbers("Enable floating numbers", OptionEntryFlags::None, N_("Enable floating numbers"), N_("Enables floating numbers on gaining XP / dealing dmg etc."), false)
+    , showDamageTakenByPlayers("Damage taken by players", OptionEntryFlags::None, N_("Damage taken by players"), N_("Enables showing damage taken by players."), true)
     , floatingNumbersFromOthers("Show numbers from other players", OptionEntryFlags::None, N_("Numbers from other players"), N_("Show floating numbers that aren't your own."), false)
-    , limitAngles("Limit angles", OptionEntryFlags::None, N_("Limit angles"), N_("Only use 0/45/90/135/180 angles instead of full 0-180 range - for smooth movement"), true)
+    , limitAngles("Limit angles", OptionEntryFlags::None, N_("Limit angles"), N_("Only use 45/90/135 angles instead of full 0-180 range - for smooth movement"), true)
     , floatingNumbersLifetime("Floating numbers lifetime", OptionEntryFlags::None, N_("Floating numbers lifetime"), N_("Time in milliseconds to display floating numbers"), 2500, { 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 7500, 10000 })
     , maxHorizontalDistance("Max horizontal distance", OptionEntryFlags::None, N_("Horizontal distance %"), N_("What part of the screen numbers can travel horizontally"), 25, { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100 })
     , maxVerticalDistance("Max vertical distance", OptionEntryFlags::None, N_("Vertical distance %"), N_("What part of the screen numbers can travel vertically"), 25, { 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100 })
@@ -1459,6 +1460,7 @@ std::vector<OptionEntryBase *> FloatingNumbersOptions::GetEntries()
 {
 	return {
 		&enableFloatingNumbers,
+		&showDamageTakenByPlayers,
 		&floatingNumbersFromOthers,
 		&limitAngles,
 		&floatingNumbersLifetime,

@@ -686,6 +686,8 @@ struct FloatingNumbersOptions : OptionCategoryBase {
 
 	/** @brief Enable floating numbers. */
 	OptionEntryBoolean enableFloatingNumbers;
+	/** @brief Enable showing damage taken by players. */
+	OptionEntryBoolean showDamageTakenByPlayers;
 	/** @brief Display floating numbers from other players. */
 	OptionEntryBoolean floatingNumbersFromOthers;
 	/** @brief Limit angles only to those that display nicely */

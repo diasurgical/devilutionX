@@ -922,7 +922,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
 			dam2 += player._pIGetHit << 6;
 			if (dam2 >= 0) {
-				ApplyPlrDamage(pnum, 0, 1, dam2);
+				ApplyPlrDamage(FloatingType::DamageOther, pnum, 0, 1, dam2);
 			}
 			dam *= 2;
 		}
@@ -1066,7 +1066,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		drawhpflag = true;
 	}
 	if (pnum == MyPlayerId) {
-		NetSendCmdDamage(true, p, skdam);
+		NetSendCmdDamage(true, p, skdam, FloatingType::DamagePhysical);
 	}
 	StartPlrHit(p, skdam, false);
 
@@ -3188,11 +3188,12 @@ void StripTopGold(Player &player)
 	player._pGold = CalculateGold(player);
 }
 
-void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
+void ApplyPlrDamage(FloatingType dmgType, int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int earflag /*= 0*/)
 {
 	Player &player = Players[pnum];
 
 	int totalDamage = (dam << 6) + frac;
+	AddFloatingNumber(pnum == MyPlayerId, player.position.tile, dmgType, totalDamage, pnum, UiFlags::None, true);
 	if (totalDamage > 0 && player.pManaShield) {
 		int8_t manaShieldLevel = player._pSplLvl[SPL_MANASHIELD];
 		if (manaShieldLevel > 0) {
@@ -3407,7 +3408,7 @@ void ProcessPlayers()
 
 			if (pnum == MyPlayerId) {
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && currlevel != 0) {
-					ApplyPlrDamage(pnum, 0, 0, 4);
+					ApplyPlrDamage(FloatingType::None, pnum, 0, 0, 4);
 				}
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
 					player._pManaBase -= player._pMana;

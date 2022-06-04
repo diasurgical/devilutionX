@@ -1407,7 +1407,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	if (pnum == MyPlayerId) {
 		if (player.wReflections > 0)
 			CheckReflect(i, pnum, dam);
-		ApplyPlrDamage(pnum, 0, 0, dam);
+		ApplyPlrDamage(FloatingType::DamagePhysical, pnum, 0, 0, dam);
 	}
 
 	// Reflect can also kill a monster, so make sure the monster is still alive

@@ -21,6 +21,7 @@ enum class FloatingType : uint8_t {
 	DamageLightning,
 	DamageMagic,
 	DamageAcid,
+	DamageOther,
 };
 
 void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, int index, UiFlags style = UiFlags::None, bool damageToPlayer = false);

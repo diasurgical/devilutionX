@@ -356,7 +356,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
 		if (pnum == MyPlayerId)
-			NetSendCmdDamage(true, p, dam);
+			NetSendCmdDamage(true, p, dam, GetFloatingNumberTypeFromMissile(mtype));
 		target.Say(HeroSpeech::ArghClang);
 		return true;
 	}
@@ -366,7 +366,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		*blocked = true;
 	} else {
 		if (pnum == MyPlayerId)
-			NetSendCmdDamage(true, p, dam);
+			NetSendCmdDamage(true, p, dam, GetFloatingNumberTypeFromMissile(mtype));
 		StartPlrHit(p, dam, false);
 	}
 
@@ -1033,7 +1033,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	if (resper > 0) {
 		dam -= dam * resper / 100;
 		if (pnum == MyPlayerId) {
-			ApplyPlrDamage(pnum, 0, 0, dam, earflag);
+			ApplyPlrDamage(GetFloatingNumberTypeFromMissile(mtype), pnum, 0, 0, dam, earflag);
 		}
 
 		if (player._pHitPoints >> 6 > 0) {
@@ -1043,7 +1043,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	}
 
 	if (pnum == MyPlayerId) {
-		ApplyPlrDamage(pnum, 0, 0, dam, earflag);
+		ApplyPlrDamage(GetFloatingNumberTypeFromMissile(mtype), pnum, 0, 0, dam, earflag);
 	}
 
 	if (player._pHitPoints >> 6 > 0) {
@@ -1083,7 +1083,7 @@ void InitMissiles()
 				if (missile._misource == MyPlayerId) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
-					ApplyPlrDamage(MyPlayerId, 0, 1, missingHP + missile.var2);
+					ApplyPlrDamage(FloatingType::DamageOther, MyPlayerId, 0, 1, missingHP + missile.var2);
 				}
 			}
 		}
@@ -2091,7 +2091,7 @@ void AddFlare(Missile &missile, const AddMissileParameter &parameter)
 	missile._mlid = AddLight(missile.position.start, 8);
 	if (missile._micaster == TARGET_MONSTERS) {
 		UseMana(missile._misource, SPL_FLARE);
-		ApplyPlrDamage(missile._misource, 5);
+		ApplyPlrDamage(FloatingType::DamageOther, missile._misource, 5);
 	} else if (missile._misource > 0) {
 		auto &monster = Monsters[missile._misource];
 		if (monster.MType->mtype == MT_SUCCUBUS)
@@ -2544,7 +2544,7 @@ void AddBoneSpirit(Missile &missile, const AddMissileParameter &parameter)
 	missile._mlid = AddLight(missile.position.start, 8);
 	if (missile._micaster == TARGET_MONSTERS) {
 		UseMana(missile._misource, SPL_BONESPIRIT);
-		ApplyPlrDamage(missile._misource, 6);
+		ApplyPlrDamage(FloatingType::DamageOther, missile._misource, 6);
 	}
 }
 
@@ -3741,7 +3741,7 @@ void MI_Blodboil(Missile &missile)
 	}
 
 	CalcPlrItemVals(player, true);
-	ApplyPlrDamage(id, 0, 1, hpdif);
+	ApplyPlrDamage(FloatingType::DamageOther, id, 0, 1, hpdif);
 	force_redraw = 255;
 	player.Say(HeroSpeech::HeavyBreathing);
 }

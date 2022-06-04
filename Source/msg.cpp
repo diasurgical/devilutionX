@@ -1532,7 +1532,7 @@ DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
 
 	if (message.bPlr == MyPlayerId && currlevel != 0 && gbBufferMsgs != 1) {
 		if (currlevel == player.plrlevel && message.dwDam <= 192000 && Players[message.bPlr]._pHitPoints >> 6 > 0) {
-			ApplyPlrDamage(message.bPlr, 0, 0, message.dwDam, 1);
+			ApplyPlrDamage(message.dmgType, message.bPlr, 0, 0, message.dwDam, 1);
 		}
 	}
 
@@ -2736,13 +2736,14 @@ void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam)
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam, FloatingType dmgType)
 {
 	TCmdDamage cmd;
 
 	cmd.bCmd = CMD_PLRDAMAGE;
 	cmd.bPlr = bPlr;
 	cmd.dwDam = dwDam;
+	cmd.dmgType = dmgType;
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
