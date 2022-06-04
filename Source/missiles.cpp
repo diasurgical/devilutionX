@@ -314,25 +314,25 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 
 	bool isMonsterHit = false;
 	const int mid = dMonster[mx][my];
-	if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
-		if (missile._micaster == TARGET_MONSTERS) {
-			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
+	if (mid != 0) {
+		if (!missile.IsTrap()) {
+
+			if (missile._micaster == TARGET_MONSTERS
+			    && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified))
 				isMonsterHit = TryHitMonster(PlayerMissile(missile, minDamage, maxDamage, isDamageShifted), abs(mid) - 1);
+
+			if (missile._micaster == TARGET_PLAYERS && mid > 0) {
+				Monster &attackingMonster = Monsters[missile._misource];
+				if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
+				    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
+					isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
 			}
-		} else {
-			Monster &attackingMonster = Monsters[missile._misource];
-			if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
-			    && mid > 0
-			    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
-				isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
-		}
-	} else {
-		if (mid > 0) {
-			if (missile._micaster == TARGET_BOTH)
+
+			if (missile._micaster == TARGET_BOTH && mid > 0)
 				isMonsterHit = TryHitMonster(PlayerMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
-			else
-				isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
-		}
+
+		} else if (mid > 0)
+			isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
 	}
 
 	if (isMonsterHit) {
@@ -354,7 +354,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
 			}
 		} else {
-			int earflag = (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING) ? 1 : 0;
+			int earflag = (!missile.IsTrap() && (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING)) ? 1 : 0;
 			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
 		}
 	}
@@ -788,7 +788,7 @@ void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName)
 
 	bool hasKnockback = false;
 	if (pnum >= 0 && pnum < MAX_PLRS) {
-		const auto &player = Players[pnum];
+		const Player &player = Players[pnum];
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			hasKnockback = true;
 	}
@@ -809,9 +809,6 @@ void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName)
 
 int PlayerMissile::calculateCTH(Monster &monster) const
 {
-	if (colMissile->_misource == -1)
-		return GenerateRnd(75) - monster.mLevel * 2;
-
 	int hper = 0;
 	if (MissilesData[colMissile->_mitype].mType == 0) {
 		hper = attacker_->GetRangedPiercingToHit();
@@ -861,7 +858,9 @@ void PlayerMissile::hitMonster(int mid, int dam) const
 
 int TrapMissile::calculateCTH(Monster &monster) const
 {
-	return 90 - monster.mArmorClass - colMissile->_midist;
+	return (colMissile->_mitype == MIS_FIREWALL
+	        ? GenerateRnd(75) - monster.mLevel * 2
+	        : 90 - monster.mArmorClass - colMissile->_midist);
 }
 
 int TrapMissile::calculateDamage(Monster &monster) const
