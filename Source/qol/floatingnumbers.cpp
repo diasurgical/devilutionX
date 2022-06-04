@@ -61,6 +61,9 @@ void UpdateFloatingData(FloatingNumber &num)
 {
 	num.style &= ~(UiFlags::FontSize12 | UiFlags::FontSize24 | UiFlags::FontSize30);
 	num.text = fmt::format("{:d}", num.value >> 6);
+	if (num.value > 0 && num.value < 64) {
+		num.text = fmt::format("{:.2f}", num.value / 64.0);
+	}
 	switch (num.type) {
 	case FloatingType::Experience:
 		num.style |= IndexToFlag(*sgOptions.FloatingNumbers.expGainColor) | UiFlags::FontSize12;
@@ -86,7 +89,7 @@ void UpdateFloatingData(FloatingNumber &num)
 
 } // namespace
 
-void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, int index, UiFlags style)
+void AddFloatingNumber(bool isMyPlayer, Point pos, FloatingType type, int value, int index, UiFlags style, bool damageToPlayer)
 {
 	if (!*sgOptions.FloatingNumbers.enableFloatingNumbers)
 		return;
