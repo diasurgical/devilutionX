@@ -31,6 +31,19 @@ TEST(Drlg_l3, CreateL3Dungeon_diablo_10_1630062353)
 	EXPECT_EQ(ViewPosition, Point(19, 47));
 }
 
+TEST(Drlg_l3, CreateL3Dungeon_diablo_10_879635115)
+{
+	LoadExpectedLevelData("diablo/10-879635115.dun");
+
+	Quests[Q_ANVIL]._qlevel = 10;
+	Quests[Q_ANVIL]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(10, 879635115, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(75, 41));
+	TestCreateDungeon(10, 879635115, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(27, 45));
+}
+
 TEST(Drlg_l3, CreateL3Dungeon_diablo_11_384626536)
 {
 	LoadExpectedLevelData("diablo/11-384626536.dun");
