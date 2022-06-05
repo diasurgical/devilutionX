@@ -47,7 +47,7 @@ void TestCreateL2Dungeon(int level, uint32_t seed, lvl_entry entry)
 	}
 }
 
-TEST(Drlg_l1, CreateL2Dungeon_diablo_5_1677631846)
+TEST(Drlg_l2, CreateL2Dungeon_diablo_5_1677631846)
 {
 	TestCreateL2Dungeon(5, 1677631846, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(27, 28));
@@ -55,7 +55,7 @@ TEST(Drlg_l1, CreateL2Dungeon_diablo_5_1677631846)
 	EXPECT_EQ(ViewPosition, Point(26, 62));
 }
 
-TEST(Drlg_l1, CreateL2Dungeon_diablo_6_2034738122)
+TEST(Drlg_l2, CreateL2Dungeon_diablo_6_2034738122)
 {
 	TestCreateL2Dungeon(6, 2034738122, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(33, 26));
@@ -63,7 +63,7 @@ TEST(Drlg_l1, CreateL2Dungeon_diablo_6_2034738122)
 	EXPECT_EQ(ViewPosition, Point(34, 52));
 }
 
-TEST(Drlg_l1, CreateL2Dungeon_diablo_7_680552750)
+TEST(Drlg_l2, CreateL2Dungeon_diablo_7_680552750)
 {
 	TestCreateL2Dungeon(7, 680552750, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(27, 26));
@@ -71,7 +71,7 @@ TEST(Drlg_l1, CreateL2Dungeon_diablo_7_680552750)
 	EXPECT_EQ(ViewPosition, Point(78, 52));
 }
 
-TEST(Drlg_l1, CreateL2Dungeon_diablo_8_1999936419)
+TEST(Drlg_l2, CreateL2Dungeon_diablo_8_1999936419)
 {
 	TestCreateL2Dungeon(8, 1999936419, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(39, 74));

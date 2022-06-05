@@ -52,7 +52,7 @@ void TestCreateL4Dungeon(bool changed, int level, uint32_t seed, lvl_entry entry
 	}
 }
 
-TEST(Drlg_l1, CreateL4Dungeon_diablo_13_428074402)
+TEST(Drlg_l4, CreateL4Dungeon_diablo_13_428074402)
 {
 	TestCreateL4Dungeon(false, 13, 428074402, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(26, 64));
@@ -60,7 +60,7 @@ TEST(Drlg_l1, CreateL4Dungeon_diablo_13_428074402)
 	EXPECT_EQ(ViewPosition, Point(47, 79));
 }
 
-TEST(Drlg_l1, CreateL4Dungeon_diablo_14_717625719)
+TEST(Drlg_l4, CreateL4Dungeon_diablo_14_717625719)
 {
 	TestCreateL4Dungeon(false, 14, 717625719, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(90, 64));
@@ -68,7 +68,7 @@ TEST(Drlg_l1, CreateL4Dungeon_diablo_14_717625719)
 	EXPECT_EQ(ViewPosition, Point(49, 31));
 }
 
-TEST(Drlg_l1, CreateL4Dungeon_diablo_15_1583642716)
+TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1583642716)
 {
 	Quests[Q_DIABLO]._qactive = QUEST_INIT;
 	TestCreateL4Dungeon(false, 15, 1583642716, ENTRY_MAIN);
