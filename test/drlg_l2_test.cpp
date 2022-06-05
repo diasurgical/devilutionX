@@ -3,6 +3,7 @@
 
 #include "drlg_test.hpp"
 #include "gendung.h"
+#include "quests.h"
 
 using namespace devilution;
 
@@ -32,10 +33,25 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_7_680552750)
 {
 	LoadExpectedLevelData("diablo/7-680552750.dun");
 
+	Quests[Q_BLIND]._qactive = QUEST_NOTAVAIL;
+
 	TestCreateDungeon(7, 680552750, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(27, 26));
 	TestCreateDungeon(7, 680552750, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition, Point(78, 52));
+}
+
+TEST(Drlg_l2, CreateL2Dungeon_diablo_7_1607627156)
+{
+	LoadExpectedLevelData("diablo/7-1607627156.dun");
+
+	Quests[Q_BLIND]._qlevel = 7;
+	Quests[Q_BLIND]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(7, 1607627156, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(53, 26));
+	TestCreateDungeon(7, 1607627156, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(50, 88));
 }
 
 TEST(Drlg_l2, CreateL2Dungeon_diablo_8_1999936419)

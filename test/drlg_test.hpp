@@ -36,9 +36,11 @@ std::unique_ptr<uint16_t[]> DunData;
 
 void LoadExpectedLevelData(const char *fixture)
 {
-	paths::SetPrefPath(paths::BasePath());
-
 	std::string dunPath = "test/fixtures/";
+
+	paths::SetPrefPath(paths::BasePath());
+	paths::SetAssetsPath(paths::BasePath() + "/" + dunPath);
+
 	dunPath.append(fixture);
 	DunData = LoadFileInMem<uint16_t>(dunPath.c_str());
 	ASSERT_NE(DunData, nullptr) << "Unable to load test fixture " << dunPath;

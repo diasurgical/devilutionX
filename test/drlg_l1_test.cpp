@@ -44,6 +44,7 @@ TEST(Drlg_l1, CreateL5Dungeon_diablo_2_1383137027)
 
 	Quests[Q_PWATER]._qlevel = 2;
 	Quests[Q_PWATER]._qactive = QUEST_INIT;
+	Quests[Q_BUTCHER]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(2, 1383137027, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(57, 74));
@@ -56,6 +57,7 @@ TEST(Drlg_l1, CreateL5Dungeon_diablo_3_844660068)
 	LoadExpectedLevelData("diablo/3-844660068.dun");
 
 	MyPlayer->pOriginalCathedral = true;
+	Quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(3, 844660068, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(67, 52));
@@ -68,6 +70,7 @@ TEST(Drlg_l1, CreateL5Dungeon_diablo_4_609325643)
 	LoadExpectedLevelData("diablo/4-609325643.dun");
 
 	MyPlayer->pOriginalCathedral = true;
+	Quests[Q_LTBANNER]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(4, 609325643, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(85, 78));
@@ -93,6 +96,7 @@ TEST(Drlg_l1, CreateL5Dungeon_hellfire_2_128964898)
 
 	MyPlayer->pOriginalCathedral = false;
 	Quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
+	Quests[Q_BUTCHER]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(2, 128964898, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(55, 68));
@@ -105,6 +109,7 @@ TEST(Drlg_l1, CreateL5Dungeon_hellfire_3_1799396623)
 	LoadExpectedLevelData("hellfire/3-1799396623.dun");
 
 	MyPlayer->pOriginalCathedral = false;
+	Quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(3, 1799396623, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(59, 68));
@@ -112,16 +117,45 @@ TEST(Drlg_l1, CreateL5Dungeon_hellfire_3_1799396623)
 	EXPECT_EQ(ViewPosition, Point(47, 55));
 }
 
+TEST(Drlg_l1, CreateL5Dungeon_hellfire_3_1512491184)
+{
+	LoadExpectedLevelData("hellfire/3-1512491184.dun");
+
+	MyPlayer->pOriginalCathedral = false;
+	Quests[Q_SKELKING]._qlevel = 3;
+	Quests[Q_SKELKING]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(3, 1512491184, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(47, 72));
+	TestCreateDungeon(3, 1512491184, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(79, 45));
+}
+
 TEST(Drlg_l1, CreateL5Dungeon_hellfire_4_1190318991)
 {
 	LoadExpectedLevelData("hellfire/4-1190318991.dun");
 
 	MyPlayer->pOriginalCathedral = false;
+	Quests[Q_LTBANNER]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(4, 1190318991, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(67, 80));
 	TestCreateDungeon(4, 1190318991, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition, Point(77, 45));
+}
+
+TEST(Drlg_l1, CreateL5Dungeon_hellfire_4_1924296259)
+{
+	LoadExpectedLevelData("hellfire/4-1924296259.dun");
+
+	MyPlayer->pOriginalCathedral = false;
+	Quests[Q_LTBANNER]._qlevel = 4;
+	Quests[Q_LTBANNER]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(4, 1924296259, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(83, 54));
+	TestCreateDungeon(4, 1924296259, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(52, 88));
 }
 
 TEST(Drlg_l1, CreateL5Dungeon_crypt_1_2122696790)
@@ -137,8 +171,6 @@ TEST(Drlg_l1, CreateL5Dungeon_crypt_1_2122696790)
 TEST(Drlg_l1, CreateL5Dungeon_crypt_2_1191662129)
 {
 	LoadExpectedLevelData("hellfire/22-1191662129.dun");
-
-	Quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(22, 1191662129, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(71, 47));

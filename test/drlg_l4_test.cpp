@@ -50,4 +50,12 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1583642716)
 	EXPECT_EQ(ViewPosition, Point(87, 69));
 }
 
+TEST(Drlg_l4, CreateL4Dungeon_diablo_16_741281013)
+{
+	LoadExpectedLevelData("diablo/16-741281013.dun");
+
+	TestCreateDungeon(16, 741281013, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(58, 42));
+}
+
 } // namespace
