@@ -62,7 +62,7 @@ Cutscenes PickCutscene(interface_mode uMsg)
 		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
 			return CutGate;
 
-		switch (gnLevelTypeTbl[lvl]) {
+		switch (GetLevelType(lvl)) {
 		case DTYPE_TOWN:
 			return CutTown;
 		case DTYPE_CATHEDRAL:
@@ -268,7 +268,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		setlevel = false;
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
@@ -283,7 +283,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		FreeGameMem();
 		currlevel--;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		assert(myPlayer.plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_PREV);
@@ -345,7 +345,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		setlevel = false;
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_TWARPDN);
 		IncProgress();
@@ -360,7 +360,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		FreeGameMem();
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_TWARPUP);
 		IncProgress();
@@ -375,7 +375,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		FreeGameMem();
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();

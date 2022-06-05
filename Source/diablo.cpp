@@ -37,6 +37,7 @@
 #include "engine/random.hpp"
 #include "error.h"
 #include "gamemenu.h"
+#include "gendung.h"
 #include "gmenu.h"
 #include "help.h"
 #include "hwcursor.hpp"
@@ -90,7 +91,6 @@
 namespace devilution {
 
 uint32_t glSeedTbl[NUMLEVELS];
-dungeon_type gnLevelTypeTbl[NUMLEVELS];
 Point MousePosition;
 bool gbRunGame;
 bool gbRunGameResult;
@@ -1172,34 +1172,31 @@ void LoadAllGFX()
 }
 
 /**
- * @param lvldir method of entry
+ * @param entry Where is the player entering from
  */
-void CreateLevel(lvl_entry lvldir)
+void CreateLevel(lvl_entry entry)
 {
+	CreateDungeon(glSeedTbl[currlevel], entry);
+
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		CreateTown(lvldir);
 		InitTownTriggers();
 		break;
 	case DTYPE_CATHEDRAL:
 	case DTYPE_CRYPT:
-		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL1Triggers();
 		Freeupstairs();
 		break;
 	case DTYPE_CATACOMBS:
-		CreateL2Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL2Triggers();
 		Freeupstairs();
 		break;
 	case DTYPE_CAVES:
 	case DTYPE_NEST:
-		CreateL3Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL3Triggers();
 		Freeupstairs();
 		break;
 	case DTYPE_HELL:
-		CreateL4Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL4Triggers();
 		Freeupstairs();
 		break;

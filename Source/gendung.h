@@ -233,6 +233,9 @@ extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
+dungeon_type GetLevelType(int level);
+void CreateDungeon(uint32_t rseed, lvl_entry entry);
+
 constexpr bool InDungeonBounds(Point position)
 {
 	return position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY;
