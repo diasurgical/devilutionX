@@ -692,7 +692,6 @@ bool ForceL4Trig()
 
 void Freeupstairs()
 {
-
 	for (int i = 0; i < numtrigs; i++) {
 		int tx = trigs[i].position.x;
 		int ty = trigs[i].position.y;

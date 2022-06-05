@@ -342,26 +342,6 @@ void SendPlayerInfo(int pnum, _cmd_id cmd)
 	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
 }
 
-dungeon_type InitLevelType(int l)
-{
-	if (l == 0)
-		return DTYPE_TOWN;
-	if (l >= 1 && l <= 4)
-		return DTYPE_CATHEDRAL;
-	if (l >= 5 && l <= 8)
-		return DTYPE_CATACOMBS;
-	if (l >= 9 && l <= 12)
-		return DTYPE_CAVES;
-	if (l >= 13 && l <= 16)
-		return DTYPE_HELL;
-	if (l >= 17 && l <= 20)
-		return DTYPE_NEST;
-	if (l >= 21 && l <= 24)
-		return DTYPE_CRYPT;
-
-	return DTYPE_CATHEDRAL;
-}
-
 void SetupLocalPositions()
 {
 	currlevel = 0;
@@ -785,7 +765,6 @@ bool NetInit(bool bSinglePlayer)
 
 	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
-		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
 	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128))
 		nthread_terminate_game("SNetGetGameInfo1");

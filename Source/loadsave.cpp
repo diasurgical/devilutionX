@@ -893,7 +893,7 @@ void ConvertLevels()
 		if (!LevelFileExists())
 			continue;
 
-		leveltype = gnLevelTypeTbl[i];
+		leveltype = GetLevelType(currlevel);
 
 		LoadLevel();
 		SaveLevel();
@@ -1979,7 +1979,7 @@ void LoadGame(bool firstflag)
 	currlevel = file.NextBE<uint32_t>();
 	leveltype = static_cast<dungeon_type>(file.NextBE<uint32_t>());
 	if (!setlevel)
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 	int viewX = file.NextBE<int32_t>();
 	int viewY = file.NextBE<int32_t>();
 	invflag = file.NextBool8();
@@ -2264,9 +2264,11 @@ void SaveGameData()
 	file.WriteBE<uint32_t>(static_cast<uint32_t>(std::min(Missiles.size(), MaxMissilesForSaveGame)));
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
+	leveltype = GetLevelType(currlevel);
+
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		file.WriteBE<uint32_t>(glSeedTbl[i]);
-		file.WriteBE<int32_t>(getHellfireLevelType(gnLevelTypeTbl[i]));
+		file.WriteBE<int32_t>(getHellfireLevelType(GetLevelType(i)));
 	}
 
 	Player &myPlayer = *MyPlayer;
