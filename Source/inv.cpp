@@ -862,17 +862,17 @@ void TryCombineNaKrulNotes(Player &player, Item &noteItem)
 		return;
 	}
 
-	for (auto note : notes) {
-		if (idx != note && !player.HasItem(note)) {
+	for (_item_indexes note : notes) {
+		if (idx != note && !HasInventoryItemWithId(player, note)) {
 			return; // the player doesn't have all notes
 		}
 	}
 
 	MyPlayer->Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 
-	for (auto note : notes) {
+	for (_item_indexes note : notes) {
 		if (idx != note) {
-			player.TryRemoveInvItemById(note);
+			RemoveInventoryItemById(player, note);
 		}
 	}
 
@@ -1941,30 +1941,6 @@ int8_t CheckInvHLight()
 	}
 
 	return rv;
-}
-
-void RemoveScroll(Player &player)
-{
-	const spell_id spellId = player._pSpell;
-	const auto isCurrentSpell = [spellId](const Item &item) {
-		return item.isScrollOf(spellId);
-	};
-	{
-		const InventoryPlayerItemsRange items { player };
-		const auto scrollIt = std::find_if(items.begin(), items.end(), isCurrentSpell);
-		if (scrollIt != items.end()) {
-			player.RemoveInvItem(static_cast<int>(scrollIt.Index()));
-			return;
-		}
-	}
-	{
-		const BeltPlayerItemsRange items { player };
-		const auto scrollIt = std::find_if(items.begin(), items.end(), isCurrentSpell);
-		if (scrollIt != items.end()) {
-			player.RemoveSpdBarItem(static_cast<int>(scrollIt.Index()));
-			return;
-		}
-	}
 }
 
 bool UseScroll(const spell_id spell)

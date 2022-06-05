@@ -1886,19 +1886,6 @@ void Player::CalcScrolls()
 	EnsureValidReadiedSpell(*this);
 }
 
-bool Player::HasItem(int item, int *idx) const
-{
-	for (int i = 0; i < _pNumInv; i++) {
-		if (InvList[i].IDidx == item) {
-			if (idx != nullptr)
-				*idx = i;
-			return true;
-		}
-	}
-
-	return false;
-}
-
 void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
 	// Iterate through invGrid and remove every reference to item
@@ -1929,16 +1916,6 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 	if (calcScrolls) {
 		CalcScrolls();
 	}
-}
-
-bool Player::TryRemoveInvItemById(int item)
-{
-	int idx;
-	if (HasItem(item, &idx)) {
-		RemoveInvItem(idx);
-		return true;
-	}
-	return false;
 }
 
 void Player::RemoveSpdBarItem(int iv)

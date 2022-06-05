@@ -2633,7 +2633,7 @@ void OperatePedistal(int pnum, int i)
 		return;
 	}
 
-	if (Objects[i]._oVar6 == 3 || !Players[pnum].TryRemoveInvItemById(IDI_BLDSTONE)) {
+	if (Objects[i]._oVar6 == 3 || !RemoveInventoryItemById(Players[pnum], IDI_BLDSTONE)) {
 		return;
 	}
 
