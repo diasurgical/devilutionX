@@ -440,7 +440,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 					InitQTextMsg(TEXT_MUSH11);
 					return;
 				}
-				if (HasInventoryItemWithId(player, IDI_SPECELIX)) {
+				if (HasInventoryOrBeltItemWithId(player, IDI_SPECELIX)) {
 					InitQTextMsg(TEXT_MUSH12);
 					Quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					AllItemsList[IDI_SPECELIX].iUsable = true; /// BUGFIX: This will cause the elixir to be usable in the next game
