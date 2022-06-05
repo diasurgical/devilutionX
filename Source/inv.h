@@ -304,7 +304,7 @@ bool RemoveInventoryItem(Player &player, Predicate &&predicate)
 	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
 	if (it == items.end())
 		return false;
-	player.RemoveInvItem(static_cast<int>(it.Index()));
+	player.RemoveInvItem(static_cast<int>(it.index()));
 	return true;
 }
 
@@ -320,7 +320,7 @@ bool RemoveBeltItem(Player &player, Predicate &&predicate)
 	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
 	if (it == items.end())
 		return false;
-	player.RemoveSpdBarItem(static_cast<int>(it.Index()));
+	player.RemoveSpdBarItem(static_cast<int>(it.index()));
 	return true;
 }
 
