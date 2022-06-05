@@ -354,7 +354,7 @@ inline bool RemoveInventoryItemById(Player &player, _item_indexes id)
  */
 inline bool RemoveBeltItemById(Player &player, _item_indexes id)
 {
-	return RemoveInventoryItem(player, [id](const Item &item) {
+	return RemoveBeltItem(player, [id](const Item &item) {
 		return item.IDidx == id;
 	});
 }
