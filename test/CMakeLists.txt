@@ -21,6 +21,7 @@ set(tests
   drlg_common_test
   drlg_l1_test
   drlg_l2_test
+  drlg_l3_test
   drlg_l4_test
   effects_test
   file_util_test
