@@ -17,6 +17,8 @@ TEST(Drlg_l3, CreateL3Dungeon_diablo_9_262005438)
 	EXPECT_EQ(ViewPosition, Point(41, 73));
 	TestCreateDungeon(9, 262005438, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition, Point(73, 59));
+	TestCreateDungeon(9, 262005438, ENTRY_TWARPUP);
+	EXPECT_EQ(ViewPosition, Point(37, 35));
 }
 
 TEST(Drlg_l3, CreateL3Dungeon_diablo_10_1630062353)
@@ -99,8 +101,6 @@ TEST(Drlg_l3, CreateL3Dungeon_hive_4_1511478689)
 	LoadExpectedLevelData("hellfire/20-1511478689.dun");
 
 	TestCreateDungeon(20, 1511478689, ENTRY_MAIN);
-	EXPECT_EQ(ViewPosition, Point(65, 41));
-	TestCreateDungeon(20, 1511478689, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition, Point(65, 41));
 }
 
