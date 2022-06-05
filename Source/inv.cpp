@@ -1948,13 +1948,10 @@ bool UseScroll(const spell_id spell)
 	if (pcurs != CURSOR_HAND)
 		return false;
 
-	Player &myPlayer = *MyPlayer;
-
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
 		return false;
 
-	const InventoryAndBeltPlayerItemsRange items { myPlayer };
-	return std::any_of(items.begin(), items.end(), [spell](const Item &item) {
+	return HasInventoryOrBeltItem(*MyPlayer, [spell](const Item &item) {
 		return item.isScrollOf(spell);
 	});
 }
