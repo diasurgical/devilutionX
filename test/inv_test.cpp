@@ -192,7 +192,7 @@ TEST(Inv, RemoveSpdBarItem)
 }
 
 // Test removing a scroll from the inventory
-TEST(Inv, RemoveScroll_inventory)
+TEST(Inv, RemoveCurrentSpellScroll_inventory)
 {
 	clear_inventory();
 
@@ -203,13 +203,13 @@ TEST(Inv, RemoveScroll_inventory)
 	MyPlayer->InvList[0]._iMiscId = IMISC_SCROLL;
 	MyPlayer->InvList[0]._iSpell = SPL_FIREBOLT;
 
-	RemoveScroll(*MyPlayer);
+	RemoveCurrentSpellScroll(*MyPlayer);
 	EXPECT_EQ(MyPlayer->InvGrid[0], 0);
 	EXPECT_EQ(MyPlayer->_pNumInv, 0);
 }
 
 // Test removing a scroll from the belt
-TEST(Inv, RemoveScroll_belt)
+TEST(Inv, RemoveCurrentSpellScroll_belt)
 {
 	// Clear the belt
 	for (int i = 0; i < MAXBELTITEMS; i++) {
@@ -221,7 +221,7 @@ TEST(Inv, RemoveScroll_belt)
 	MyPlayer->SpdList[3]._iMiscId = IMISC_SCROLL;
 	MyPlayer->SpdList[3]._iSpell = SPL_FIREBOLT;
 
-	RemoveScroll(*MyPlayer);
+	RemoveCurrentSpellScroll(*MyPlayer);
 	EXPECT_TRUE(MyPlayer->SpdList[3].isEmpty());
 }
 

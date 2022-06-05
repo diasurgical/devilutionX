@@ -4877,14 +4877,14 @@ void TalktoMonster(Monster &monster)
 	}
 
 	if (Quests[Q_LTBANNER].IsAvailable() && Quests[Q_LTBANNER]._qvar1 == 2) {
-		if (player.TryRemoveInvItemById(IDI_BANNER)) {
+		if (RemoveInventoryItemById(player, IDI_BANNER)) {
 			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monster.mtalkmsg = TEXT_BANNER12;
 			monster._mgoal = MGOAL_INQUIRING;
 		}
 	}
 	if (Quests[Q_VEIL].IsAvailable() && monster.mtalkmsg >= TEXT_VEIL9) {
-		if (player.TryRemoveInvItemById(IDI_GLDNELIX)) {
+		if (RemoveInventoryItemById(player, IDI_GLDNELIX)) {
 			monster.mtalkmsg = TEXT_VEIL11;
 			monster._mgoal = MGOAL_INQUIRING;
 		}

@@ -181,7 +181,7 @@ void UseMana(int id, spell_id sn)
 	case RSPLTYPE_INVALID:
 		break;
 	case RSPLTYPE_SCROLL:
-		RemoveScroll(myPlayer);
+		RemoveCurrentSpellScroll(myPlayer);
 		break;
 	case RSPLTYPE_CHARGES:
 		UseStaffCharge(myPlayer);

@@ -5,7 +5,6 @@
 #include <utility>
 #include <vector>
 
-#include "inv.h"
 #include "items.h"
 #include "player.h"
 
