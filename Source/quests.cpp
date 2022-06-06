@@ -131,20 +131,20 @@ void DrawButcher()
 	DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
 }
 
-void DrawSkelKing(quest_id q, int x, int y)
+void DrawSkelKing(quest_id q, Point position)
 {
-	Quests[q].position = { 2 * x + 28, 2 * y + 23 };
+	Quests[q].position = { 2 * position.x + 28, 2 * position.y + 23 };
 }
 
-void DrawWarLord(int x, int y)
+void DrawWarLord(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	setpc_x = x;
-	setpc_y = y;
+	setpc_x = position.x;
+	setpc_y = position.y;
 	setpc_w = width;
 	setpc_h = height;
 
@@ -153,20 +153,20 @@ void DrawWarLord(int x, int y)
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
+			dungeon[position.x + i][position.y + j] = (tileId != 0) ? tileId : 6;
 		}
 	}
 }
 
-void DrawSChamber(quest_id q, int x, int y)
+void DrawSChamber(quest_id q, Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	setpc_x = x;
-	setpc_y = y;
+	setpc_x = position.x;
+	setpc_y = position.y;
 	setpc_w = width;
 	setpc_h = height;
 
@@ -175,22 +175,22 @@ void DrawSChamber(quest_id q, int x, int y)
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
+			dungeon[position.x + i][position.y + j] = (tileId != 0) ? tileId : 3;
 		}
 	}
 
-	Quests[q].position = { 2 * x + 22, 2 * y + 23 };
+	Quests[q].position = { 2 * position.x + 22, 2 * position.y + 23 };
 }
 
-void DrawLTBanner(int x, int y)
+void DrawLTBanner(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	setpc_x = x;
-	setpc_y = y;
+	setpc_x = position.x;
+	setpc_y = position.y;
 	setpc_w = width;
 	setpc_h = height;
 
@@ -200,21 +200,21 @@ void DrawLTBanner(int x, int y)
 		for (int i = 0; i < width; i++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
-				pdungeon[x + i][y + j] = tileId;
+				pdungeon[position.x + i][position.y + j] = tileId;
 			}
 		}
 	}
 }
 
-void DrawBlind(int x, int y)
+void DrawBlind(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	setpc_x = x;
-	setpc_y = y;
+	setpc_x = position.x;
+	setpc_y = position.y;
 	setpc_w = width;
 	setpc_h = height;
 
@@ -224,21 +224,21 @@ void DrawBlind(int x, int y)
 		for (int i = 0; i < width; i++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
-				pdungeon[x + i][y + j] = tileId;
+				pdungeon[position.x + i][position.y + j] = tileId;
 			}
 		}
 	}
 }
 
-void DrawBlood(int x, int y)
+void DrawBlood(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
 
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	setpc_x = x;
-	setpc_y = y;
+	setpc_x = position.x;
+	setpc_y = position.y;
 	setpc_w = width;
 	setpc_h = height;
 
@@ -248,7 +248,7 @@ void DrawBlood(int x, int y)
 		for (int i = 0; i < width; i++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
-				dungeon[x + i][y + j] = tileId;
+				dungeon[position.x + i][position.y + j] = tileId;
 			}
 		}
 	}
@@ -522,7 +522,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 	}
 }
 
-void DRLG_CheckQuests(int x, int y)
+void DRLG_CheckQuests(Point position)
 {
 	for (auto &quest : Quests) {
 		if (quest.IsAvailable()) {
@@ -531,22 +531,22 @@ void DRLG_CheckQuests(int x, int y)
 				DrawButcher();
 				break;
 			case Q_LTBANNER:
-				DrawLTBanner(x, y);
+				DrawLTBanner(position);
 				break;
 			case Q_BLIND:
-				DrawBlind(x, y);
+				DrawBlind(position);
 				break;
 			case Q_BLOOD:
-				DrawBlood(x, y);
+				DrawBlood(position);
 				break;
 			case Q_WARLORD:
-				DrawWarLord(x, y);
+				DrawWarLord(position);
 				break;
 			case Q_SKELKING:
-				DrawSkelKing(quest._qidx, x, y);
+				DrawSkelKing(quest._qidx, position);
 				break;
 			case Q_SCHAMB:
-				DrawSChamber(quest._qidx, x, y);
+				DrawSChamber(quest._qidx, position);
 				break;
 			default:
 				break;

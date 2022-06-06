@@ -23,6 +23,7 @@ namespace devilution {
 uint8_t dungeon[DMAXX][DMAXY];
 uint8_t pdungeon[DMAXX][DMAXY];
 bool Protected[DMAXX][DMAXY];
+Rectangle SetPiecesRoom;
 int setpc_x;
 int setpc_y;
 int setpc_w;
@@ -527,6 +528,7 @@ void DRLG_AreaTrans(int num, BYTE *list)
 
 void DRLG_InitSetPC()
 {
+	SetPiecesRoom = { { -1, -1 }, { -1, -1 } };
 	setpc_x = 0;
 	setpc_y = 0;
 	setpc_w = 0;

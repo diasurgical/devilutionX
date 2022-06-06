@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
+#include "engine/rectangle.hpp"
 #include "scrollrt.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
@@ -130,6 +131,7 @@ extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 extern uint8_t pdungeon[DMAXX][DMAXY];
 /** Tile that may not be overwritten by the level generator */
 extern bool Protected[DMAXX][DMAXY];
+extern Rectangle SetPiecesRoom;
 /** Specifies the active set level X-coordinate of the map. */
 extern int setpc_x;
 /** Specifies the active set level Y-coordinate of the map. */

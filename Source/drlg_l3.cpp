@@ -1674,72 +1674,54 @@ void PoolFix()
 	}
 }
 
-bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
+bool PlaceMiniSet(const BYTE *miniset, bool setview)
 {
 	int sw = miniset[0];
 	int sh = miniset[1];
+	int sx = GenerateRnd(DMAXX - sw) - 1;
+	int sy = GenerateRnd(DMAXY - sh);
 
-	int numt = 1;
-	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
-	}
-
-	int sx = 0;
-	int sy = 0;
-	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
-		bool abort = false;
-		int bailcnt;
-
-		for (bailcnt = 0; !abort && bailcnt < 200;) {
-			bailcnt++;
-			abort = true;
-			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				abort = false;
-			}
-			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				abort = false;
-			}
-			int ii = 2;
-
-			for (int yy = 0; yy < sh && abort; yy++) {
-				for (int xx = 0; xx < sw && abort; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii])
-						abort = false;
-					if (Protected[xx + sx][yy + sy])
-						abort = false;
-					ii++;
-				}
-			}
-
-			if (!abort) {
-				sx++;
-				if (sx == DMAXX - sw) {
-					sx = 0;
-					sy++;
-					if (sy == DMAXY - sh) {
-						sy = 0;
-					}
-				}
-			}
-		}
-		if (bailcnt >= 200) {
+	for (int bailcnt = 0;; bailcnt++) {
+		if (bailcnt > 198)
 			return false;
-		}
-		int ii = sw * sh + 2;
 
-		for (int yy = 0; yy < sh; yy++) {
-			for (int xx = 0; xx < sw; xx++) {
-				if (miniset[ii] != 0) {
-					dungeon[xx + sx][yy + sy] = miniset[ii];
-				}
+		sx++;
+		if (sx == DMAXX - sw) {
+			sx = 0;
+			sy++;
+			if (sy == DMAXY - sh) {
+				sy = 0;
+			}
+		}
+
+		if (SetPiecesRoom.Contains({ sx, sy })) {
+			continue;
+		}
+
+		int ii = 2;
+
+		bool success = true;
+		for (int yy = 0; yy < sh && success; yy++) {
+			for (int xx = 0; xx < sw && success; xx++) {
+				if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
+					success = false;
+				if (Protected[xx + sx][sy + yy])
+					success = false;
 				ii++;
 			}
+		}
+		if (success)
+			break;
+	}
+
+	int ii = sw * sh + 2;
+
+	for (int yy = 0; yy < sh; yy++) {
+		for (int xx = 0; xx < sw; xx++) {
+			if (miniset[ii] != 0) {
+				dungeon[xx + sx][sy + yy] = miniset[ii];
+			}
+			ii++;
 		}
 	}
 
@@ -2242,17 +2224,17 @@ bool Lockout()
 bool PlaceCaveStairs(lvl_entry entry)
 {
 	// Place stairs up
-	if (!PlaceMiniSet(L3UP, 1, 1, -1, -1, entry == ENTRY_MAIN))
+	if (!PlaceMiniSet(L3UP, entry == ENTRY_MAIN))
 		return false;
 
 	// Place stairs down
-	if (!PlaceMiniSet(L3DOWN, 1, 1, -1, -1, entry == ENTRY_PREV))
+	if (!PlaceMiniSet(L3DOWN, entry == ENTRY_PREV))
 		return false;
 	if (entry == ENTRY_PREV)
 		ViewPosition += { 2, -2 };
 
 	// Place town warp stairs
-	if (currlevel == 9 && !PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, entry == ENTRY_TWARPDN))
+	if (currlevel == 9 && !PlaceMiniSet(L3HOLDWARP, entry == ENTRY_TWARPDN))
 		return false;
 
 	return true;
@@ -2261,12 +2243,12 @@ bool PlaceCaveStairs(lvl_entry entry)
 bool PlaceNestStairs(lvl_entry entry)
 {
 	// Place stairs up
-	if (!PlaceMiniSet(currlevel != 17 ? L6UP : L6HOLDWARP, 1, 1, -1, -1, entry == ENTRY_MAIN || entry == ENTRY_TWARPDN))
+	if (!PlaceMiniSet(currlevel != 17 ? L6UP : L6HOLDWARP, entry == ENTRY_MAIN || entry == ENTRY_TWARPDN))
 		return false;
 
 	// Place stairs down
 	if (currlevel != 20) {
-		if (!PlaceMiniSet(L6DOWN, 1, 1, -1, -1, entry == ENTRY_PREV))
+		if (!PlaceMiniSet(L6DOWN, entry == ENTRY_PREV))
 			return false;
 		if (entry == ENTRY_PREV)
 			ViewPosition += { 2, -2 };
