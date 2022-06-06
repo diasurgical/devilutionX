@@ -3256,6 +3256,7 @@ void RecreateEar(Item &item, uint16_t ic, int iseed, int id, int dur, int mdur, 
 	std::string itemName = fmt::format(_(/* TRANSLATORS: {:s} will be a Character Name */ "Ear of {:s}"), heroName);
 
 	CopyUtf8(item._iName, itemName, sizeof(item._iName));
+	CopyUtf8(item._iIName, heroName, sizeof(item._iIName));
 
 	item._iCurs = ((ivalue >> 6) & 3) + ICURS_EAR_SORCERER;
 	item._ivalue = ivalue & 0x3F;
