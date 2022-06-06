@@ -129,7 +129,7 @@ std::vector<std::string> GetMPQSearchPaths()
 void init_cleanup()
 {
 	if (gbIsMultiplayer && gbRunGame) {
-		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
+		pfile_write_hero(/*writeGameData=*/false);
 		sfile_write_stash();
 	}
 

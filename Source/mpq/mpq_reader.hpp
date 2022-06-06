@@ -59,6 +59,8 @@ public:
 	// Requires the block offset table to be open
 	std::size_t GetBlockSize(uint32_t fileNumber, uint32_t blockNumber, int32_t &error);
 
+	bool HasFile(const char *filename) const;
+
 private:
 	MpqArchive(std::string path, mpq_archive_s *archive)
 	    : path_(std::move(path))

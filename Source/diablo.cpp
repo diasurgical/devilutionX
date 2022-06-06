@@ -796,7 +796,7 @@ void RunGameLoop(interface_mode uMsg)
 	demo::NotifyGameLoopEnd();
 
 	if (gbIsMultiplayer) {
-		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
+		pfile_write_hero(/*writeGameData=*/false);
 		sfile_write_stash();
 	}
 
