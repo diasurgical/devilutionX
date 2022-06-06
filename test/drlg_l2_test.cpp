@@ -13,6 +13,9 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_5_1677631846)
 {
 	LoadExpectedLevelData("diablo/5-1677631846.dun");
 
+	InitQuests();
+	Quests[Q_BLOOD]._qactive = QUEST_NOTAVAIL;
+
 	TestCreateDungeon(5, 1677631846, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(27, 28));
 	TestCreateDungeon(5, 1677631846, ENTRY_PREV);

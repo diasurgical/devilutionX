@@ -6,6 +6,7 @@
 #pragma once
 
 #include "engine/load_file.hpp"
+#include "themes.h"
 #include "utils/paths.h"
 
 using namespace devilution;
@@ -55,6 +56,7 @@ void TestCreateDungeon(int level, uint32_t seed, lvl_entry entry)
 	pMegaTiles = std::make_unique<MegaTile[]>(GetTileCount(leveltype));
 
 	CreateDungeon(seed, entry);
+	CreateThemeRooms();
 
 	const uint16_t *tileLayer = &DunData[2];
 

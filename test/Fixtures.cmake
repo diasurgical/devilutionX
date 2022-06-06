@@ -20,7 +20,9 @@ set(devilutionx_fixtures
   diablo/11-384626536.dun
   diablo/12-2104541047.dun
   diablo/13-428074402.dun
+  diablo/13-594689775.dun
   diablo/14-717625719.dun
+  diablo/15-1256511996.dun
   diablo/15-1583642716.dun
   diablo/15-1583642716-changed.dun
   diablo/16-741281013.dun
@@ -55,6 +57,9 @@ set(devilutionx_fixtures
   Levels/L4Data/diab3b.DUN
   Levels/L4Data/diab4a.DUN
   Levels/L4Data/diab4b.DUN
+  Levels/L4Data/Vile1.DUN
+  Levels/L4Data/Warlord.DUN
+  Levels/L4Data/Warlord2.DUN
 )
 
 foreach(fixture ${devilutionx_fixtures})
