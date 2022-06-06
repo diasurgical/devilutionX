@@ -123,7 +123,7 @@ void AddMessageToChatLog(string_view message, Player *player, UiFlags flags)
 	if (player == nullptr) {
 		ChatLogLines.emplace_back(MultiColoredText { "{0} {1}", { { timestamp, UiFlags::ColorRed }, { std::string(message), flags } } });
 	} else {
-		std::string playerInfo = fmt::format(_("{:s} (lvl {:d}): "), player->_pName, player->_pLevel);
+		std::string playerInfo = fmt::format(fmt::runtime(_("{:s} (lvl {:d}): ")), player->_pName, player->_pLevel);
 		ChatLogLines.emplace_back(MultiColoredText { std::string(message), { {} }, 20 });
 		UiFlags nameColor = player == MyPlayer ? UiFlags::ColorWhitegold : UiFlags::ColorBlue;
 		ChatLogLines.emplace_back(MultiColoredText { "{0} - {1}", { { timestamp, UiFlags::ColorRed }, { playerInfo, nameColor } } });
@@ -152,7 +152,7 @@ void DrawChatLog(const Surface &out)
 	const int sx = uiPosition.x + PaddingLeft;
 	const int sy = uiPosition.y;
 
-	DrawString(out, fmt::format(_("Chat History (Messages: {:d})"), MessageCounter),
+	DrawString(out, fmt::format(fmt::runtime(_("Chat History (Messages: {:d})")), MessageCounter),
 	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },
 	    (UnreadFlag ? UiFlags::ColorRed : UiFlags::ColorWhitegold) | UiFlags::AlignCenter);
 

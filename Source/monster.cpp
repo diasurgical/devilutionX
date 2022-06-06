@@ -4615,9 +4615,9 @@ void M_FallenFear(Point position)
 void PrintMonstHistory(int mt)
 {
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
+		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}  Kills: {:d}")), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]));
 	} else {
-		AddPanelString(fmt::format(_("Total kills: {:d}"), MonsterKillCounts[mt]));
+		AddPanelString(fmt::format(fmt::runtime(_("Total kills: {:d}")), MonsterKillCounts[mt]));
 	}
 
 	if (MonsterKillCounts[mt] >= 30) {
@@ -4649,7 +4649,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		AddPanelString(fmt::format(_("Hit Points: {:d}-{:d}"), minHP, maxHP));
+		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
 		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].mMagicRes : MonstersData[mt].mMagicRes2;
@@ -4684,7 +4684,7 @@ void PrintUniqueHistory()
 {
 	auto &monster = Monsters[pcursmonst];
 	if (*sgOptions.Gameplay.showMonsterType) {
-		AddPanelString(fmt::format(_("Type: {:s}"), GetMonsterTypeText(*monster.MData)));
+		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(*monster.MData)));
 	}
 
 	int res = monster.mMagicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);

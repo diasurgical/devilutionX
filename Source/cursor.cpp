@@ -227,7 +227,7 @@ void CheckTown()
 				trigflag = true;
 				ClearPanel();
 				InfoString = _("Town Portal");
-				AddPanelString(fmt::format(_("from {:s}"), Players[missile._misource]._pName));
+				AddPanelString(fmt::format(fmt::runtime(_("from {:s}")), Players[missile._misource]._pName));
 				cursPosition = missile.position.tile;
 			}
 		}

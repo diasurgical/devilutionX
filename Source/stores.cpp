@@ -258,7 +258,7 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 	if (item._iMiscId == IMISC_STAFF && item._iMaxCharges != 0) {
 		if (!productLine.empty())
 			AppendStrView(productLine, _(",  "));
-		productLine.append(fmt::format(_("Charges: {:d}/{:d}"), item._iCharges, item._iMaxCharges));
+		productLine.append(fmt::format(fmt::runtime(_("Charges: {:d}/{:d}")), item._iCharges, item._iMaxCharges));
 	}
 	if (!productLine.empty()) {
 		AddSText(40, l, productLine, flags, false);
@@ -268,11 +268,11 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 
 	if (item._itype != ItemType::Misc) {
 		if (item._iClass == ICLASS_WEAPON)
-			productLine = fmt::format(_("Damage: {:d}-{:d}  "), item._iMinDam, item._iMaxDam);
+			productLine = fmt::format(fmt::runtime(_("Damage: {:d}-{:d}  ")), item._iMinDam, item._iMaxDam);
 		else if (item._iClass == ICLASS_ARMOR)
-			productLine = fmt::format(_("Armor: {:d}  "), item._iAC);
+			productLine = fmt::format(fmt::runtime(_("Armor: {:d}  ")), item._iAC);
 		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur != 0)
-			productLine += fmt::format(_("Dur: {:d}/{:d},  "), item._iDurability, item._iMaxDur);
+			productLine += fmt::format(fmt::runtime(_("Dur: {:d}/{:d},  ")), item._iDurability, item._iMaxDur);
 		else
 			AppendStrView(productLine, _("Indestructible,  "));
 	}
@@ -286,11 +286,11 @@ void PrintStoreItem(const Item &item, int l, UiFlags flags)
 	} else {
 		AppendStrView(productLine, _("Required:"));
 		if (str != 0)
-			productLine.append(fmt::format(_(" {:d} Str"), str));
+			productLine.append(fmt::format(fmt::runtime(_(" {:d} Str")), str));
 		if (mag != 0)
-			productLine.append(fmt::format(_(" {:d} Mag"), mag));
+			productLine.append(fmt::format(fmt::runtime(_(" {:d} Mag")), mag));
 		if (dex != 0)
-			productLine.append(fmt::format(_(" {:d} Dex"), dex));
+			productLine.append(fmt::format(fmt::runtime(_(" {:d} Dex")), dex));
 	}
 	AddSText(40, l++, productLine, flags, false);
 }
@@ -1257,10 +1257,10 @@ void StartTalk()
 
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, fmt::format(_("Talk to {:s}"), _(TownerNames[talker])), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 2, fmt::format(fmt::runtime(_("Talk to {:s}")), _(TownerNames[talker])), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(5);
 	if (gbIsSpawn) {
-		AddSText(0, 10, fmt::format(_("Talking to {:s}"), _(TownerNames[talker])), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
+		AddSText(0, 10, fmt::format(fmt::runtime(_("Talking to {:s}")), _(TownerNames[talker])), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 		AddSText(0, 12, _("is not available"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 		AddSText(0, 14, _("in the shareware"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 		AddSText(0, 16, _("version"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
@@ -2437,7 +2437,7 @@ void DrawSText(const Surface &out)
 	}
 
 	if (RenderGold) {
-		PrintSString(out, 28, 1, fmt::format(_("Your gold: {:d}"), TotalPlayerGold()).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
+		PrintSString(out, 28, 1, fmt::format(fmt::runtime(_("Your gold: {:d}")), TotalPlayerGold()).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
 	}
 
 	if (stextscrl)

@@ -45,7 +45,7 @@ std::string format(string_view fmt, Args &&...args)
 {
 	FMT_TRY
 	{
-		return fmt::format(fmt, std::forward<Args>(args)...);
+		return fmt::format(fmt::runtime(fmt), std::forward<Args>(args)...);
 	}
 	FMT_CATCH(const fmt::format_error &e)
 	{

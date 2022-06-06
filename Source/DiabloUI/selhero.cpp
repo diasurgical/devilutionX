@@ -564,7 +564,7 @@ static void UiSelHeroDialog(
 			} else {
 				CopyUtf8(dialogTitle, _("Delete Single Player Hero"), sizeof(dialogTitle));
 			}
-			strcpy(dialogText, fmt::format(_("Are you sure you want to delete the character \"{:s}\"?"), selhero_heroInfo.name).c_str());
+			strcpy(dialogText, fmt::format(fmt::runtime(_("Are you sure you want to delete the character \"{:s}\"?")), selhero_heroInfo.name).c_str());
 
 			if (UiSelHeroYesNoDialog(dialogTitle, dialogText))
 				fnremove(&selhero_heroInfo);

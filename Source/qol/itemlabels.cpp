@@ -70,7 +70,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 	std::string textOnGround;
 	if (item._itype == ItemType::Gold) {
-		textOnGround = fmt::format(_("{:d} gold"), item._ivalue);
+		textOnGround = fmt::format(fmt::runtime(_("{:d} gold")), item._ivalue);
 	} else {
 		textOnGround = item._iIdentified ? item._iIName : item._iName;
 	}

@@ -79,7 +79,7 @@ std::string GetLocationString()
 		else if (tracked_data.dungeonArea == DTYPE_CRYPT)
 			level -= 20;
 
-		return fmt::format(_(/* TRANSLATORS: dungeon type and floor number i.e. "Cathedral 3"*/ "{} {}"), dungeonStr, level);
+		return fmt::format(fmt::runtime(_(/* TRANSLATORS: dungeon type and floor number i.e. "Cathedral 3"*/ "{} {}")), dungeonStr, level);
 	}
 	return dungeonStr;
 }
@@ -87,7 +87,7 @@ std::string GetLocationString()
 std::string GetCharacterString()
 {
 	const string_view charClassStr = _(ClassStrTbl[static_cast<int>(MyPlayer->_pClass)]);
-	return fmt::format(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}"), tracked_data.playerLevel, charClassStr);
+	return fmt::format(fmt::runtime(_(/* TRANSLATORS: Discord character, i.e. "Lv 6 Warrior" */ "Lv {} {}")), tracked_data.playerLevel, charClassStr);
 }
 
 std::string GetDetailString()
@@ -99,7 +99,7 @@ std::string GetStateString()
 {
 	constexpr std::array<const char *, 3> DifficultyStrs = { N_("Normal"), N_("Nightmare"), N_("Hell") };
 	const string_view difficultyStr = _(DifficultyStrs[sgGameInitInfo.nDifficulty]);
-	return fmt::format(_(/* TRANSLATORS: Discord state i.e. "Nightmare difficulty" */ "{} difficulty"), difficultyStr);
+	return fmt::format(fmt::runtime(_(/* TRANSLATORS: Discord state i.e. "Nightmare difficulty" */ "{} difficulty")), difficultyStr);
 }
 
 std::string GetTooltipString()

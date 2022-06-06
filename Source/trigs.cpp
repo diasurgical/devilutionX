@@ -415,7 +415,7 @@ bool ForceL1Trig()
 	for (int i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L1UpList[i]) {
 			if (currlevel > 1)
-				InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
+				InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 			else
 				InfoString = _("Up to town");
 			for (int j = 0; j < numtrigs; j++) {
@@ -428,7 +428,7 @@ bool ForceL1Trig()
 	}
 	for (int i = 0; L1DownList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L1DownList[i]) {
-			InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
+			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursPosition = trigs[j].position;
@@ -450,7 +450,7 @@ bool ForceL2Trig()
 					int dx = abs(trigs[j].position.x - cursPosition.x);
 					int dy = abs(trigs[j].position.y - cursPosition.y);
 					if (dx < 4 && dy < 4) {
-						InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
+						InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 						cursPosition = trigs[j].position;
 						return true;
 					}
@@ -461,7 +461,7 @@ bool ForceL2Trig()
 
 	for (int i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L2DownList[i]) {
-			InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
+			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursPosition = trigs[j].position;
@@ -496,7 +496,7 @@ bool ForceL3Trig()
 {
 	for (int i = 0; L3UpList[i] != -1; ++i) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L3UpList[i]) {
-			InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
+			InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -513,7 +513,7 @@ bool ForceL3Trig()
 		if (dPiece[cursPosition.x][cursPosition.y] == L3DownList[i]
 		    || dPiece[cursPosition.x + 1][cursPosition.y] == L3DownList[i]
 		    || dPiece[cursPosition.x + 2][cursPosition.y] == L3DownList[i]) {
-			InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
+			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursPosition = trigs[j].position;
@@ -548,7 +548,7 @@ bool ForceL4Trig()
 {
 	for (int i = 0; L4UpList[i] != -1; ++i) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L4UpList[i]) {
-			InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
+			InfoString = fmt::format(fmt::runtime(_("Up to level {:d}")), currlevel - 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					cursPosition = trigs[j].position;
@@ -560,7 +560,7 @@ bool ForceL4Trig()
 
 	for (int i = 0; L4DownList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L4DownList[i]) {
-			InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
+			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel + 1);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursPosition = trigs[j].position;
@@ -609,7 +609,7 @@ bool ForceHiveTrig()
 {
 	for (int i = 0; L6UpList[i] != -1; ++i) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L6UpList[i]) {
-			InfoString = fmt::format(_("Up to Nest level {:d}"), currlevel - 17);
+			InfoString = fmt::format(fmt::runtime(_("Up to Nest level {:d}")), currlevel - 17);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					cursPosition = trigs[j].position;
@@ -622,7 +622,7 @@ bool ForceHiveTrig()
 		if (dPiece[cursPosition.x][cursPosition.y] == L6DownList[i]
 		    || dPiece[cursPosition.x + 1][cursPosition.y] == L6DownList[i]
 		    || dPiece[cursPosition.x + 2][cursPosition.y] == L6DownList[i]) {
-			InfoString = fmt::format(_("Down to level {:d}"), currlevel - 15);
+			InfoString = fmt::format(fmt::runtime(_("Down to level {:d}")), currlevel - 15);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursPosition = trigs[j].position;
@@ -657,7 +657,7 @@ bool ForceCryptTrig()
 {
 	for (int i = 0; L5UpList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L5UpList[i]) {
-			InfoString = fmt::format(_("Up to Crypt level {:d}"), currlevel - 21);
+			InfoString = fmt::format(fmt::runtime(_("Up to Crypt level {:d}")), currlevel - 21);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					cursPosition = trigs[j].position;
@@ -672,7 +672,7 @@ bool ForceCryptTrig()
 	}
 	for (int i = 0; L5DownList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L5DownList[i]) {
-			InfoString = fmt::format(_("Down to Crypt level {:d}"), currlevel - 19);
+			InfoString = fmt::format(fmt::runtime(_("Down to Crypt level {:d}")), currlevel - 19);
 			for (int j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursPosition = trigs[j].position;
@@ -720,7 +720,7 @@ bool ForceSKingTrig()
 {
 	for (int i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L1UpList[i]) {
-			InfoString = fmt::format(_("Back to Level {:d}"), Quests[Q_SKELKING]._qlevel);
+			InfoString = fmt::format(fmt::runtime(_("Back to Level {:d}")), Quests[Q_SKELKING]._qlevel);
 			cursPosition = trigs[0].position;
 
 			return true;
@@ -734,7 +734,7 @@ bool ForceSChambTrig()
 {
 	for (int i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L2DownList[i]) {
-			InfoString = fmt::format(_("Back to Level {:d}"), Quests[Q_SCHAMB]._qlevel);
+			InfoString = fmt::format(fmt::runtime(_("Back to Level {:d}")), Quests[Q_SCHAMB]._qlevel);
 			cursPosition = trigs[0].position;
 
 			return true;
@@ -748,7 +748,7 @@ bool ForcePWaterTrig()
 {
 	for (int i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursPosition.x][cursPosition.y] == L3DownList[i]) {
-			InfoString = fmt::format(_("Back to Level {:d}"), Quests[Q_PWATER]._qlevel);
+			InfoString = fmt::format(fmt::runtime(_("Back to Level {:d}")), Quests[Q_PWATER]._qlevel);
 			cursPosition = trigs[0].position;
 
 			return true;

@@ -252,7 +252,7 @@ void PlayerLeftMsg(int pnum, bool left)
 			pszFmt = _("Player '{:s}' dropped due to timeout");
 			break;
 		}
-		EventPlrMsg(fmt::format(pszFmt, player._pName));
+		EventPlrMsg(fmt::format(fmt::runtime(pszFmt), player._pName));
 	}
 	player.plractive = false;
 	player._pName[0] = '\0';
@@ -775,7 +775,7 @@ bool NetInit(bool bSinglePlayer)
 	Player &myPlayer = *MyPlayer;
 	// separator for marking messages from a different game
 	AddMessageToChatLog(_("New Game"), nullptr, UiFlags::ColorRed);
-	AddMessageToChatLog(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), myPlayer._pName, myPlayer._pLevel));
+	AddMessageToChatLog(fmt::format(fmt::runtime(_("Player '{:s}' (level {:d}) just joined the game")), myPlayer._pName, myPlayer._pLevel));
 
 	return true;
 }
@@ -829,7 +829,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	} else {
 		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(szEvent, player._pName, player._pLevel));
+	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player._pLevel));
 
 	SyncInitPlr(pnum);
 

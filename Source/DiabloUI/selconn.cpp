@@ -120,7 +120,7 @@ void SelconnFocus(int value)
 		break;
 	}
 
-	CopyUtf8(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players), sizeof(selconn_MaxPlayers));
+	CopyUtf8(selconn_MaxPlayers, fmt::format(fmt::runtime(_("Players Supported: {:d}")), players), sizeof(selconn_MaxPlayers));
 	CopyUtf8(selconn_Description, WordWrapString(selconn_Description, DESCRIPTION_WIDTH), sizeof(selconn_Description));
 }
 
