@@ -19,11 +19,12 @@ set(devilutionx_fixtures
   diablo/12-2104541047.dun
   diablo/13-428074402.dun
   diablo/14-717625719.dun
-  diablo/15-1583642716-changed.dun
   diablo/15-1583642716.dun
+  diablo/15-1583642716-changed.dun
   diablo/16-741281013.dun
   hellfire/1-401921334.dun
   hellfire/2-128964898.dun
+  hellfire/2-1180526547.dun
   hellfire/3-1512491184.dun
   hellfire/3-1799396623.dun
   hellfire/4-1190318991.dun
@@ -38,6 +39,7 @@ set(devilutionx_fixtures
   hellfire/24-1324803725.dun
   Levels/L1Data/Banner1.DUN
   Levels/L1Data/Banner2.DUN
+  Levels/L1Data/rnd6.DUN
   Levels/L1Data/SKngDO.DUN
   Levels/L2Data/Blind1.DUN
   Levels/L4Data/diab1.DUN
