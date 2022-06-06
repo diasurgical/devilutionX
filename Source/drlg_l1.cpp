@@ -732,71 +732,68 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
+bool PlaceMiniSet(const BYTE *miniset, bool setview)
 {
-	int sx;
-	int sy;
-
 	int sw = miniset[0];
 	int sh = miniset[1];
+	int sx = GenerateRnd(DMAXX - sw) - 1;
+	int sy = GenerateRnd(DMAXY - sh);
 
-	int numt = 1;
-	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
-	}
+	for (int bailcnt = 0;; bailcnt++) {
+		if (bailcnt > 4000)
+			return false;
 
-	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
-		bool abort = false;
-		int found = 0;
-
-		while (!abort) {
-			abort = true;
-			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx++;
-				abort = false;
-			}
-			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sy++;
-				abort = false;
-			}
-
-			int ii = 2;
-
-			for (int yy = 0; yy < sh && abort; yy++) {
-				for (int xx = 0; xx < sw && abort; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
-						abort = false;
-					if (Protected[xx + sx][sy + yy])
-						abort = false;
-					ii++;
-				}
-			}
-
-			if (!abort) {
-				sx++;
-				if (sx == DMAXX - sw) {
-					sx = 0;
-					sy++;
-					if (sy == DMAXY - sh) {
-						sy = 0;
-					}
-				}
-				if (++found > 4000)
-					return false;
+		sx++;
+		if (sx == DMAXX - sw) {
+			sx = 0;
+			sy++;
+			if (sy == DMAXY - sh) {
+				sy = 0;
 			}
 		}
 
-		int ii = sw * sh + 2;
+		if (SetPiecesRoom.Contains({ sx, sy })) {
+			continue;
+		}
 
-		for (int yy = 0; yy < sh; yy++) {
-			for (int xx = 0; xx < sw; xx++) {
-				if (miniset[ii] != 0) {
-					dungeon[xx + sx][sy + yy] = miniset[ii];
-				}
+		// Limit the position of SetPieces for compatibility with Diablo bug
+		bool valid = true;
+		if (sx <= 12) {
+			sx++;
+			valid = false;
+		}
+		if (sy <= 12) {
+			sy++;
+			valid = false;
+		}
+		if (!valid) {
+			continue;
+		}
+
+		int ii = 2;
+
+		bool success = true;
+		for (int yy = 0; yy < sh && success; yy++) {
+			for (int xx = 0; xx < sw && success; xx++) {
+				if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
+					success = false;
+				if (Protected[xx + sx][sy + yy])
+					success = false;
 				ii++;
 			}
+		}
+		if (success)
+			break;
+	}
+
+	int ii = sw * sh + 2;
+
+	for (int yy = 0; yy < sh; yy++) {
+		for (int xx = 0; xx < sw; xx++) {
+			if (miniset[ii] != 0) {
+				dungeon[xx + sx][sy + yy] = miniset[ii];
+			}
+			ii++;
 		}
 	}
 
@@ -2100,21 +2097,21 @@ bool PlaceCathedralStairs(lvl_entry entry)
 
 	// Place poison water entrance
 	if (Quests[Q_PWATER].IsAvailable()) {
-		if (!PlaceMiniSet(PWATERIN, 1, 1, 0, 0, entry == ENTRY_RTNLVL))
+		if (!PlaceMiniSet(PWATERIN, entry == ENTRY_RTNLVL))
 			success = false;
 		if (entry == ENTRY_RTNLVL)
 			ViewPosition += Displacement { 2, 3 };
 	}
 
 	// Place stairs up
-	if (!PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, 1, 1, 0, 0, entry == ENTRY_MAIN)) {
+	if (!PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, entry == ENTRY_MAIN)) {
 		if (MyPlayer->pOriginalCathedral)
 			return false;
 		success = false;
 	}
 
 	// Place stairs down
-	if (!Quests[Q_LTBANNER].IsAvailable() && !PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV))
+	if (!Quests[Q_LTBANNER].IsAvailable() && !PlaceMiniSet(STAIRSDOWN, entry == ENTRY_PREV))
 		success = false;
 	if (entry == ENTRY_PREV) {
 		if (Quests[Q_LTBANNER].IsAvailable())
@@ -2132,14 +2129,14 @@ bool PlaceCryptStairs(lvl_entry entry)
 
 	// Place stairs up
 	bool enteringFromAbove = entry == ENTRY_MAIN || entry == ENTRY_TWARPDN;
-	if (!PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, 1, 1, 0, 0, enteringFromAbove))
+	if (!PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, enteringFromAbove))
 		success = false;
 	if (enteringFromAbove)
 		ViewPosition.y++;
 
 	// Place stairs down
 	if (currlevel != 24) {
-		if (!PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV))
+		if (!PlaceMiniSet(L5STAIRSDOWN, entry == ENTRY_PREV))
 			success = false;
 		if (entry == ENTRY_PREV)
 			ViewPosition.y += 3;
@@ -2257,7 +2254,12 @@ void GenerateLevel(lvl_entry entry)
 	} else {
 		Substitution();
 		ApplyShadowsPatterns();
-		PlaceMiniSet(LAMPS, 5, 10, 0, 0, false);
+
+		int numt = GenerateRnd(5) + 5;
+		for (int i = 0; i < numt; i++) {
+			PlaceMiniSet(LAMPS, false);
+		}
+
 		FillFloor();
 	}
 
@@ -2268,7 +2270,7 @@ void GenerateLevel(lvl_entry entry)
 	}
 
 	DRLG_Init_Globals();
-	DRLG_CheckQuests(setpc_x, setpc_y);
+	DRLG_CheckQuests({ setpc_x, setpc_y });
 }
 
 void Pass3()

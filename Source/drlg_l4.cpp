@@ -28,10 +28,6 @@ namespace {
 bool hallok[20];
 int l4holdx;
 int l4holdy;
-int SP4x1;
-int SP4y1;
-int SP4x2;
-int SP4y2;
 BYTE L4dungeon[80][80];
 BYTE dung[20][20];
 // int dword_52A4DC;
@@ -168,60 +164,35 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const Miniset &miniset, int tmin, int tmax, int cx, int cy, bool setview)
+bool PlaceMiniSet(const Miniset &miniset, bool setview)
 {
-	int sx;
-	int sy;
-
 	int sw = miniset.size.width;
 	int sh = miniset.size.height;
+	int sx = GenerateRnd(DMAXX - sw) - 1;
+	int sy = GenerateRnd(DMAXY - sh);
 
-	int numt = 1;
-	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
-	}
-
-	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
-		bool abort = false;
-		int bailcnt;
-		for (bailcnt = 0; !abort && bailcnt < 200; bailcnt++) {
-			abort = true;
-			if (sx >= SP4x1 && sx <= SP4x2 && sy >= SP4y1 && sy <= SP4y2) {
-				abort = false;
-			}
-			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				abort = false;
-			}
-			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				abort = false;
-			}
-
-			if (abort)
-				abort = miniset.matches({ sx, sy });
-
-			if (!abort) {
-				sx++;
-				if (sx == DMAXX - sw) {
-					sx = 0;
-					sy++;
-					if (sy == DMAXY - sh) {
-						sy = 0;
-					}
-				}
-			}
-		}
-		if (bailcnt >= 200) {
+	for (int bailcnt = 0;; bailcnt++) {
+		if (bailcnt > 198)
 			return false;
+
+		sx++;
+		if (sx == DMAXX - sw) {
+			sx = 0;
+			sy++;
+			if (sy == DMAXY - sh) {
+				sy = 0;
+			}
 		}
 
-		miniset.place({ sx, sy }, true);
+		if (SetPiecesRoom.Contains({ sx, sy })) {
+			continue;
+		}
+
+		if (miniset.matches({ sx, sy }))
+			break;
 	}
+
+	miniset.place({ sx, sy }, true);
 
 	if (currlevel == 15 && Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
 		Quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
@@ -264,7 +235,7 @@ void InitDungeonFlags()
 	}
 }
 
-void SetRoom(const uint16_t *dunData, int rx1, int ry1)
+void SetRoom(const uint16_t *dunData, Point position)
 {
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
@@ -275,10 +246,10 @@ void SetRoom(const uint16_t *dunData, int rx1, int ry1)
 		for (int i = 0; i < width; i++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
-				dungeon[i + rx1][j + ry1] = tileId;
-				Protected[i + rx1][j + ry1] = true;
+				dungeon[position.x + i][position.y + j] = tileId;
+				Protected[position.x + i][position.y + j] = true;
 			} else {
-				dungeon[i + rx1][j + ry1] = 6;
+				dungeon[position.x + i][position.y + j] = 6;
 			}
 		}
 	}
@@ -402,29 +373,23 @@ void FirstRoom()
 		l4holdy = y;
 	}
 	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-		SP4x1 = x + 1;
-		SP4y1 = y + 1;
-		SP4x2 = SP4x1 + w;
-		SP4y2 = SP4y1 + h;
+		SetPiecesRoom = { { x + 1, y + 1 }, { w + 1, h + 1 } };
 	} else {
-		SP4x1 = 0;
-		SP4y1 = 0;
-		SP4x2 = 0;
-		SP4y2 = 0;
+		SetPiecesRoom = {};
 	}
 
 	MapRoom(x, y, w, h);
 	GenerateRoom(x, y, w, h, GenerateRnd(2));
 }
 
-void SetSetPiecesRoom(int rx1, int ry1)
+void SetSetPiecesRoom(Point position)
 {
-	setpc_x = rx1;
-	setpc_y = ry1;
+	setpc_x = position.x;
+	setpc_y = position.y;
 	setpc_w = SDL_SwapLE16(pSetPiece[0]);
 	setpc_h = SDL_SwapLE16(pSetPiece[1]);
 
-	SetRoom(pSetPiece.get(), rx1, ry1);
+	SetRoom(pSetPiece.get(), position);
 }
 
 void MakeDungeon()
@@ -1145,25 +1110,25 @@ void LoadDiabQuads(bool preflag)
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
 		diabquad1x = 4 + l4holdx;
 		diabquad1y = 4 + l4holdy;
-		SetRoom(dunData.get(), diabquad1x, diabquad1y);
+		SetRoom(dunData.get(), { diabquad1x, diabquad1y });
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
 		diabquad2x = 27 - l4holdx;
 		diabquad2y = 1 + l4holdy;
-		SetRoom(dunData.get(), diabquad2x, diabquad2y);
+		SetRoom(dunData.get(), { diabquad2x, diabquad2y });
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
 		diabquad3x = 1 + l4holdx;
 		diabquad3y = 27 - l4holdy;
-		SetRoom(dunData.get(), diabquad3x, diabquad3y);
+		SetRoom(dunData.get(), { diabquad3x, diabquad3y });
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
 		diabquad4x = 28 - l4holdx;
 		diabquad4y = 28 - l4holdy;
-		SetRoom(dunData.get(), diabquad4x, diabquad4y);
+		SetRoom(dunData.get(), { diabquad4x, diabquad4y });
 	}
 }
 
@@ -1286,7 +1251,7 @@ void GeneralFix()
 bool PlaceStairs(lvl_entry entry)
 {
 	// Place stairs up
-	if (!PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, entry == ENTRY_MAIN))
+	if (!PlaceMiniSet(L4USTAIRS, entry == ENTRY_MAIN))
 		return false;
 	if (entry == ENTRY_MAIN)
 		ViewPosition.x++;
@@ -1294,13 +1259,13 @@ bool PlaceStairs(lvl_entry entry)
 	if (currlevel != 15) {
 		// Place stairs down
 		if (currlevel != 16 && !Quests[Q_WARLORD].IsAvailable()) {
-			if (!PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, entry == ENTRY_PREV))
+			if (!PlaceMiniSet(L4DSTAIRS, entry == ENTRY_PREV))
 				return false;
 		}
 
 		// Place town warp stairs
 		if (currlevel == 13) {
-			if (!PlaceMiniSet(L4TWARP, 1, 1, -1, -1, entry == ENTRY_TWARPDN))
+			if (!PlaceMiniSet(L4TWARP, entry == ENTRY_TWARPDN))
 				return false;
 			if (entry == ENTRY_TWARPDN)
 				ViewPosition.x++;
@@ -1308,7 +1273,7 @@ bool PlaceStairs(lvl_entry entry)
 	} else {
 		// Place hell gate
 		bool isGateOpen = gbIsMultiplayer || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
-		if (!PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA, 1, 1, -1, -1, entry == ENTRY_PREV))
+		if (!PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA, entry == ENTRY_PREV))
 			return false;
 	}
 
@@ -1346,8 +1311,8 @@ void GenerateLevel(lvl_entry entry)
 			SaveQuads();
 		}
 		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-			for (int spi = SP4x1; spi < SP4x2; spi++) {
-				for (int spj = SP4y1; spj < SP4y2; spj++) {
+			for (int spi = SetPiecesRoom.position.x; spi < SetPiecesRoom.position.x + SetPiecesRoom.size.width - 1; spi++) {
+				for (int spj = SetPiecesRoom.position.y; spj < SetPiecesRoom.position.y + SetPiecesRoom.size.height - 1; spj++) {
 					Protected[spi][spj] = true;
 				}
 			}
@@ -1356,7 +1321,7 @@ void GenerateLevel(lvl_entry entry)
 		FloodTransparencyValues(6);
 		FixTransparency();
 		if (setloadflag) {
-			SetSetPiecesRoom(SP4x1, SP4y1);
+			SetSetPiecesRoom(SetPiecesRoom.position);
 		}
 		if (currlevel == 16) {
 			LoadDiabQuads(true);
@@ -1384,7 +1349,7 @@ void GenerateLevel(lvl_entry entry)
 		}
 	}
 
-	DRLG_CheckQuests(SP4x1, SP4y1);
+	DRLG_CheckQuests(SetPiecesRoom.position);
 
 	if (currlevel == 15) {
 		for (int j = 0; j < DMAXY; j++) {
@@ -1442,7 +1407,7 @@ void LoadL4Dungeon(const char *path, int vx, int vy)
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	SetRoom(dunData.get(), 0, 0);
+	SetRoom(dunData.get(), { 0, 0 });
 
 	ViewPosition = { vx, vy };
 
@@ -1462,7 +1427,7 @@ void LoadPreL4Dungeon(const char *path)
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	SetRoom(dunData.get(), 0, 0);
+	SetRoom(dunData.get(), { 0, 0 });
 }
 
 } // namespace devilution

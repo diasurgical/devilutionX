@@ -23,10 +23,6 @@ BYTE predungeon[DMAXX][DMAXY];
 
 namespace {
 
-int nSx1;
-int nSy1;
-int nSx2;
-int nSy2;
 int nRoomCnt;
 ROOMNODE RoomList[81];
 std::list<HALLNODE> HallList;
@@ -1645,60 +1641,35 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const Miniset &miniset, int tmin, int tmax, int cx, int cy, bool setview)
+bool PlaceMiniSet(const Miniset &miniset, bool setview)
 {
 	int sw = miniset.size.width;
 	int sh = miniset.size.height;
+	int sx = GenerateRnd(DMAXX - sw) - 1;
+	int sy = GenerateRnd(DMAXY - sh);
 
-	int numt = 1;
-	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
-	}
-
-	int sx = 0;
-	int sy = 0;
-	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
-		bool abort = false;
-		int bailcnt;
-
-		for (bailcnt = 0; !abort && bailcnt < 200; bailcnt++) {
-			abort = true;
-			if (sx >= nSx1 && sx <= nSx2 && sy >= nSy1 && sy <= nSy2) {
-				abort = false;
-			}
-			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				abort = false;
-			}
-			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				abort = false;
-			}
-
-			if (abort)
-				abort = miniset.matches({ sx, sy });
-
-			if (!abort) {
-				sx++;
-				if (sx == DMAXX - sw) {
-					sx = 0;
-					sy++;
-					if (sy == DMAXY - sh) {
-						sy = 0;
-					}
-				}
-			}
-		}
-		if (bailcnt >= 200) {
+	for (int bailcnt = 0;; bailcnt++) {
+		if (bailcnt > 198)
 			return false;
+
+		sx++;
+		if (sx == DMAXX - sw) {
+			sx = 0;
+			sy++;
+			if (sy == DMAXY - sh) {
+				sy = 0;
+			}
 		}
 
-		miniset.place({ sx, sy });
+		if (SetPiecesRoom.Contains({ sx, sy })) {
+			continue;
+		}
+
+		if (miniset.matches({ sx, sy }))
+			break;
 	}
+
+	miniset.place({ sx, sy });
 
 	if (setview) {
 		ViewPosition = Point { 21, 22 } + Displacement { sx, sy } * 2;
@@ -1714,7 +1685,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
-			if (sx >= nSx1 && sx <= nSx2 && sy >= nSy1 && sy <= nSy2)
+			if (SetPiecesRoom.Contains({ sx, sy }))
 				continue;
 			if (!miniset.matches({ sx, sy }))
 				continue;
@@ -1958,10 +1929,7 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 	DefineRoom(nRx1, nRy1, nRx2, nRy2, forceHW);
 
 	if (forceHW) {
-		nSx1 = nRx1 + 2;
-		nSy1 = nRy1 + 2;
-		nSx2 = nRx2;
-		nSy2 = nRy2;
+		SetPiecesRoom = { { nRx1 + 2, nRy1 + 2 }, { nRx2 - nRx1 - 1, nRy2 - nRy1 - 1 } };
 	}
 
 	int nRid = nRoomCnt;
@@ -2265,46 +2233,49 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if ((x < nSx1 || x > nSx2) && (y < nSy1 || y > nSy2) && GenerateRnd(4) == 0) {
-				uint8_t c = BTYPESL2[dungeon[x][y]];
-				if (c != 0) {
-					int rv = GenerateRnd(16);
-					int i = -1;
-					while (rv >= 0) {
-						i++;
-						if (i == sizeof(BTYPESL2)) {
-							i = 0;
-						}
-						if (c == BTYPESL2[i]) {
-							rv--;
-						}
-					}
+			if (SetPiecesRoom.Contains({ x, y }))
+				continue;
+			if (GenerateRnd(4) != 0)
+				continue;
 
-					int j;
-					for (j = y - 2; j < y + 2; j++) {
-						for (int k = x - 2; k < x + 2; k++) {
-							if (dungeon[k][j] == i) {
-								j = y + 3;
-								k = x + 2;
-							}
+			uint8_t c = BTYPESL2[dungeon[x][y]];
+			if (c != 0) {
+				int rv = GenerateRnd(16);
+				int i = -1;
+				while (rv >= 0) {
+					i++;
+					if (i == sizeof(BTYPESL2)) {
+						i = 0;
+					}
+					if (c == BTYPESL2[i]) {
+						rv--;
+					}
+				}
+
+				int j;
+				for (j = y - 2; j < y + 2; j++) {
+					for (int k = x - 2; k < x + 2; k++) {
+						if (dungeon[k][j] == i) {
+							j = y + 3;
+							k = x + 2;
 						}
 					}
-					if (j < y + 3) {
-						dungeon[x][y] = i;
-					}
+				}
+				if (j < y + 3) {
+					dungeon[x][y] = i;
 				}
 			}
 		}
 	}
 }
 
-void SetRoom(int rx1, int ry1)
+void SetRoom(Point position)
 {
 	int width = SDL_SwapLE16(pSetPiece[0]);
 	int height = SDL_SwapLE16(pSetPiece[1]);
 
-	setpc_x = rx1;
-	setpc_y = ry1;
+	setpc_x = position.x;
+	setpc_y = position.y;
 	setpc_w = width;
 	setpc_h = height;
 
@@ -2314,10 +2285,10 @@ void SetRoom(int rx1, int ry1)
 		for (int i = 0; i < width; i++) {
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
-				dungeon[rx1 + i][ry1 + j] = tileId;
-				Protected[rx1 + i][ry1 + j] = true;
+				dungeon[position.x + i][position.y + j] = tileId;
+				Protected[position.x + i][position.y + j] = true;
 			} else {
-				dungeon[rx1 + i][ry1 + j] = 3;
+				dungeon[position.x + i][position.y + j] = 3;
 			}
 		}
 	}
@@ -2867,20 +2838,20 @@ void FixDoors()
 bool PlaceStairs(lvl_entry entry)
 {
 	// Place stairs up
-	if (!PlaceMiniSet(USTAIRS, 1, 1, -1, -1, entry == ENTRY_MAIN))
+	if (!PlaceMiniSet(USTAIRS, entry == ENTRY_MAIN))
 		return false;
 	if (entry == ENTRY_MAIN)
 		ViewPosition.y -= 2;
 
 	// Place stairs down
-	if (!PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, entry == ENTRY_PREV))
+	if (!PlaceMiniSet(DSTAIRS, entry == ENTRY_PREV))
 		return false;
 	if (entry == ENTRY_PREV)
 		ViewPosition.x--;
 
 	// Place town warp stairs
 	if (currlevel == 5) {
-		if (!PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, entry == ENTRY_TWARPDN))
+		if (!PlaceMiniSet(WARPSTAIRS, entry == ENTRY_TWARPDN))
 			return false;
 		if (entry == ENTRY_TWARPDN)
 			ViewPosition.y -= 2;
@@ -2900,7 +2871,7 @@ void GenerateLevel(lvl_entry entry)
 		}
 		FixTilesPatterns();
 		if (setloadflag) {
-			SetRoom(nSx1, nSy1);
+			SetRoom(SetPiecesRoom.position);
 		}
 		FloodTransparencyValues(3);
 		FixTransparency();
@@ -3031,7 +3002,7 @@ void GenerateLevel(lvl_entry entry)
 	}
 
 	DRLG_Init_Globals();
-	DRLG_CheckQuests(nSx1, nSy1);
+	DRLG_CheckQuests(SetPiecesRoom.position);
 }
 
 void LoadDungeonData(const uint16_t *dunData)
@@ -3113,11 +3084,6 @@ void LoadPreL2Dungeon(const char *path)
 
 void CreateL2Dungeon(uint32_t rseed, lvl_entry entry)
 {
-	nSx1 = -1;
-	nSy1 = -1;
-	nSx2 = -1;
-	nSy2 = -1;
-
 	SetRndSeed(rseed);
 
 	dminPosition = { 16, 16 };
