@@ -284,7 +284,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABNEXTLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}
@@ -300,7 +300,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABPREVLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}
@@ -317,7 +317,7 @@ void ShowProgress(interface_mode uMsg)
 		SetReturnLvlPos();
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}
@@ -332,7 +332,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABRTNLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}
@@ -347,7 +347,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABWARPLVL:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}
@@ -361,7 +361,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABTOWNWARP:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}
@@ -377,7 +377,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABTWARPUP:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}
@@ -392,7 +392,7 @@ void ShowProgress(interface_mode uMsg)
 	case WM_DIABRETOWN:
 		IncProgress();
 		if (!gbIsMultiplayer) {
-			SaveLevel();
+			pfile_save_level();
 		} else {
 			DeltaSaveLevel();
 		}

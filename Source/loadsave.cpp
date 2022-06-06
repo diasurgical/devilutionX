@@ -877,54 +877,32 @@ void LoadPortal(LoadHelper *file, int i)
 	pPortal->setlvl = file->NextBool32();
 }
 
-void ConvertLevels()
+void GetTempLevelNames(char *szTemp)
 {
-	// Backup current level state
-	bool tmpSetlevel = setlevel;
-	_setlevels tmpSetlvlnum = setlvlnum;
-	int tmpCurrlevel = currlevel;
-	dungeon_type tmpLeveltype = leveltype;
+	if (setlevel)
+		sprintf(szTemp, "temps%02d", setlvlnum);
+	else
+		sprintf(szTemp, "templ%02d", currlevel);
+}
 
-	gbSkipSync = true;
+void GetPermLevelNames(char *szPerm)
+{
+	if (setlevel)
+		sprintf(szPerm, "perms%02d", setlvlnum);
+	else
+		sprintf(szPerm, "perml%02d", currlevel);
+}
 
-	setlevel = false; // Convert regular levels
-	for (int i = 0; i < giNumberOfLevels; i++) {
-		currlevel = i;
-		if (!LevelFileExists())
-			continue;
+bool LevelFileExists(MpqWriter &archive)
+{
+	char szName[MAX_PATH];
 
-		leveltype = GetLevelType(currlevel);
+	GetTempLevelNames(szName);
+	if (archive.HasFile(szName))
+		return true;
 
-		LoadLevel();
-		SaveLevel();
-	}
-
-	setlevel = true; // Convert quest levels
-	for (auto &quest : Quests) {
-		if (quest._qactive == QUEST_NOTAVAIL) {
-			continue;
-		}
-
-		leveltype = quest._qlvltype;
-		if (leveltype == DTYPE_NONE) {
-			continue;
-		}
-
-		setlvlnum = quest._qslvl;
-		if (!LevelFileExists())
-			continue;
-
-		LoadLevel();
-		SaveLevel();
-	}
-
-	gbSkipSync = false;
-
-	// Restor current level state
-	setlevel = tmpSetlevel;
-	setlvlnum = tmpSetlvlnum;
-	currlevel = tmpCurrlevel;
-	leveltype = tmpLeveltype;
+	GetPermLevelNames(szName);
+	return archive.HasFile(szName);
 }
 
 void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
@@ -1627,11 +1605,11 @@ void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t
 
 constexpr uint32_t VersionAdditionalMissiles = 0;
 
-void SaveAdditionalMissiles()
+void SaveAdditionalMissiles(MpqWriter &saveWriter)
 {
 	constexpr size_t BytesWrittenBySaveMissile = 180;
 	uint32_t missileCountAdditional = (Missiles.size() > MaxMissilesForSaveGame) ? static_cast<uint32_t>(Missiles.size() - MaxMissilesForSaveGame) : 0;
-	SaveHelper file(CurrentSaveArchive(), "additionalMissiles", sizeof(uint32_t) + sizeof(uint32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
+	SaveHelper file(saveWriter, "additionalMissiles", sizeof(uint32_t) + sizeof(uint32_t) + (missileCountAdditional * BytesWrittenBySaveMissile));
 
 	file.WriteLE<uint32_t>(VersionAdditionalMissiles);
 	file.WriteLE<uint32_t>(missileCountAdditional);
@@ -1670,6 +1648,56 @@ const int DiabloItemSaveSize = 368;
 const int HellfireItemSaveSize = 372;
 
 } // namespace
+
+void ConvertLevels(MpqWriter &saveWriter)
+{
+	// Backup current level state
+	bool tmpSetlevel = setlevel;
+	_setlevels tmpSetlvlnum = setlvlnum;
+	int tmpCurrlevel = currlevel;
+	dungeon_type tmpLeveltype = leveltype;
+
+	gbSkipSync = true;
+
+	setlevel = false; // Convert regular levels
+	for (int i = 0; i < giNumberOfLevels; i++) {
+		currlevel = i;
+		if (!LevelFileExists(saveWriter))
+			continue;
+
+		leveltype = GetLevelType(currlevel);
+
+		LoadLevel();
+		SaveLevel(saveWriter);
+	}
+
+	setlevel = true; // Convert quest levels
+	for (auto &quest : Quests) {
+		if (quest._qactive == QUEST_NOTAVAIL) {
+			continue;
+		}
+
+		leveltype = quest._qlvltype;
+		if (leveltype == DTYPE_NONE) {
+			continue;
+		}
+
+		setlvlnum = quest._qslvl;
+		if (!LevelFileExists(saveWriter))
+			continue;
+
+		LoadLevel();
+		SaveLevel(saveWriter);
+	}
+
+	gbSkipSync = false;
+
+	// Restor current level state
+	setlevel = tmpSetlevel;
+	setlvlnum = tmpSetlvlnum;
+	currlevel = tmpCurrlevel;
+	leveltype = tmpLeveltype;
+}
 
 void RemoveInvalidItem(Item &item)
 {
@@ -1864,11 +1892,11 @@ void LoadHotkeys()
 	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<uint8_t>());
 }
 
-void SaveHotkeys()
+void SaveHotkeys(MpqWriter &saveWriter)
 {
 	Player &myPlayer = *MyPlayer;
 
-	SaveHelper file(CurrentSaveArchive(), "hotkeys", HotkeysSize());
+	SaveHelper file(saveWriter, "hotkeys", HotkeysSize());
 
 	// Write the number of spell hotkeys
 	file.WriteLE<uint8_t>(static_cast<uint8_t>(NumHotkeys));
@@ -2013,7 +2041,7 @@ void LoadGame(bool firstflag)
 		LoadPortal(&file, i);
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
-		ConvertLevels();
+		pfile_convert_levels();
 		RemoveEmptyInventory(myPlayer);
 	}
 
@@ -2153,10 +2181,10 @@ void LoadGame(bool firstflag)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-void SaveHeroItems(Player &player)
+void SaveHeroItems(MpqWriter &saveWriter, Player &player)
 {
 	size_t itemCount = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file(CurrentSaveArchive(), "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
+	SaveHelper file(saveWriter, "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
 
@@ -2168,7 +2196,7 @@ void SaveHeroItems(Player &player)
 		SaveItem(file, item);
 }
 
-void SaveStash()
+void SaveStash(MpqWriter &stashWriter)
 {
 	const char *filename;
 	if (!gbIsMultiplayer)
@@ -2179,7 +2207,7 @@ void SaveStash()
 	const int itemSize = (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize);
 
 	SaveHelper file(
-	    StashArchive(),
+	    stashWriter,
 	    filename,
 	    sizeof(uint8_t)
 	        + sizeof(uint32_t)
@@ -2225,9 +2253,9 @@ void SaveStash()
 	file.WriteLE<uint32_t>(static_cast<uint32_t>(Stash.GetPage()));
 }
 
-void SaveGameData()
+void SaveGameData(MpqWriter &saveWriter)
 {
-	SaveHelper file(CurrentSaveArchive(), "game", 320 * 1024);
+	SaveHelper file(saveWriter, "game", 320 * 1024);
 
 	if (gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("SHAR"));
@@ -2386,7 +2414,7 @@ void SaveGameData()
 	file.WriteLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.WriteBE<int32_t>(AutoMapScale);
 
-	SaveAdditionalMissiles();
+	SaveAdditionalMissiles(saveWriter);
 }
 
 void SaveGame()
@@ -2396,10 +2424,8 @@ void SaveGame()
 	sfile_write_stash();
 }
 
-void SaveLevel()
+void SaveLevel(MpqWriter &saveWriter)
 {
-	PFileScopedArchiveWriter scopedWriter;
-
 	Player &myPlayer = *MyPlayer;
 
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
@@ -2409,7 +2435,7 @@ void SaveLevel()
 
 	char szName[MAX_PATH];
 	GetTempLevelNames(szName);
-	SaveHelper file(CurrentSaveArchive(), szName, 256 * 1024);
+	SaveHelper file(saveWriter, szName, 256 * 1024);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -2475,8 +2501,11 @@ void SaveLevel()
 void LoadLevel()
 {
 	char szName[MAX_PATH];
-	GetPermLevelNames(szName);
-	LoadHelper file(OpenSaveArchive(gSaveNumber), szName);
+	std::optional<MpqArchive> archive = OpenSaveArchive(gSaveNumber);
+	GetTempLevelNames(szName);
+	if (!archive || !archive->HasFile(szName))
+		GetPermLevelNames(szName);
+	LoadHelper file(std::move(archive), szName);
 	if (!file.IsValid())
 		app_fatal(_("Unable to open save file archive"));
 

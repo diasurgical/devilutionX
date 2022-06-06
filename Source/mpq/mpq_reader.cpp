@@ -142,4 +142,11 @@ std::size_t MpqArchive::GetBlockSize(uint32_t fileNumber, uint32_t blockNumber, 
 	return blockSize;
 }
 
+bool MpqArchive::HasFile(const char *filename) const
+{
+	std::uint32_t fileNumber;
+	int32_t error = libmpq__file_number(archive_, filename, &fileNumber);
+	return error == 0;
+}
+
 } // namespace devilution
