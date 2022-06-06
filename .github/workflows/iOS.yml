@@ -24,8 +24,8 @@ jobs:
       uses: actions/cache@v2
       with:
         path: build
-        key: ios-cmake-v2-${{ github.sha }}
-        restore-keys: ios-cmake-v2-
+        key: ios-cmake-v3-${{ github.sha }}
+        restore-keys: ios-cmake-v3-
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
