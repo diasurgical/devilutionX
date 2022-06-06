@@ -121,6 +121,9 @@ int QuestGroup3[3] = { Q_MUSHROOM, Q_ZHAR, Q_ANVIL };
  */
 int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 
+/**
+ * @brief There is no reason to run this, the room has already had a proper sector assigned
+ */
 void DrawButcher()
 {
 	int x = 2 * setpc_x + 16;
