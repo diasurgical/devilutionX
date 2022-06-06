@@ -937,6 +937,8 @@ void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
 			continue;
 		if (pItem[i]._iSeed != tempItem._iSeed)
 			continue;
+		if (tempItem.IDidx == IDI_EAR)
+			continue;
 		pItem[i] = tempItem;
 	}
 }

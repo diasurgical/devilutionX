@@ -2626,15 +2626,15 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint
 	cmd.wIndx = Items[ii].IDidx;
 
 	if (Items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = Items[ii]._iName[8] | (Items[ii]._iName[7] << 8);
-		cmd.dwSeed = Items[ii]._iName[12] | ((Items[ii]._iName[11] | ((Items[ii]._iName[10] | (Items[ii]._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = Items[ii]._iName[13];
-		cmd.bDur = Items[ii]._iName[14];
-		cmd.bMDur = Items[ii]._iName[15];
-		cmd.bCh = Items[ii]._iName[16];
-		cmd.bMCh = Items[ii]._iName[17];
-		cmd.wValue = Items[ii]._ivalue | (Items[ii]._iName[18] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = Items[ii]._iName[22] | ((Items[ii]._iName[21] | ((Items[ii]._iName[20] | (Items[ii]._iName[19] << 8)) << 8)) << 8);
+		cmd.wCI = Items[ii]._iIName[1] | (Items[ii]._iIName[0] << 8);
+		cmd.dwSeed = Items[ii]._iIName[5] | ((Items[ii]._iIName[4] | ((Items[ii]._iIName[3] | (Items[ii]._iIName[2] << 8)) << 8)) << 8);
+		cmd.bId = Items[ii]._iIName[6];
+		cmd.bDur = Items[ii]._iIName[7];
+		cmd.bMDur = Items[ii]._iIName[8];
+		cmd.bCh = Items[ii]._iIName[9];
+		cmd.bMCh = Items[ii]._iIName[10];
+		cmd.wValue = Items[ii]._ivalue | (Items[ii]._iIName[11] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
+		cmd.dwBuff = Items[ii]._iIName[15] | ((Items[ii]._iIName[14] | ((Items[ii]._iIName[13] | (Items[ii]._iIName[12] << 8)) << 8)) << 8);
 	} else {
 		cmd.wCI = Items[ii]._iCreateInfo;
 		cmd.dwSeed = Items[ii]._iSeed;
@@ -2669,15 +2669,15 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 	cmd.wIndx = item.IDidx;
 
 	if (item.IDidx == IDI_EAR) {
-		cmd.wCI = item._iName[8] | (item._iName[7] << 8);
-		cmd.dwSeed = item._iName[12] | ((item._iName[11] | ((item._iName[10] | (item._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = item._iName[13];
-		cmd.bDur = item._iName[14];
-		cmd.bMDur = item._iName[15];
-		cmd.bCh = item._iName[16];
-		cmd.bMCh = item._iName[17];
-		cmd.wValue = item._ivalue | (item._iName[18] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = item._iName[22] | ((item._iName[21] | ((item._iName[20] | (item._iName[19] << 8)) << 8)) << 8);
+		cmd.wCI = item._iIName[1] | (item._iIName[0] << 8);
+		cmd.dwSeed = item._iIName[5] | ((item._iIName[4] | ((item._iIName[3] | (item._iIName[2] << 8)) << 8)) << 8);
+		cmd.bId = item._iIName[6];
+		cmd.bDur = item._iIName[7];
+		cmd.bMDur = item._iIName[8];
+		cmd.bCh = item._iIName[9];
+		cmd.bMCh = item._iIName[10];
+		cmd.wValue = item._ivalue | (item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6);
+		cmd.dwBuff = item._iIName[15] | ((item._iIName[14] | ((item._iIName[13] | (item._iIName[12] << 8)) << 8)) << 8);
 	} else {
 		cmd.wCI = item._iCreateInfo;
 		cmd.dwSeed = item._iSeed;
