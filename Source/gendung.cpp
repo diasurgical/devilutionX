@@ -476,22 +476,6 @@ void DRLG_InitTrans()
 	TransVal = 1;
 }
 
-void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
-{
-	x1 = 2 * x1 + 17;
-	y1 = 2 * y1 + 17;
-	x2 = 2 * x2 + 16;
-	y2 = 2 * y2 + 16;
-
-	for (int j = y1; j <= y2; j++) {
-		for (int i = x1; i <= x2; i++) {
-			dTransVal[i][j] = TransVal;
-		}
-	}
-
-	TransVal++;
-}
-
 void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 {
 	for (int j = y1; j <= y2; j++) {
@@ -500,6 +484,16 @@ void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 		}
 	}
 	TransVal++;
+}
+
+void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
+{
+	x1 = 2 * x1 + 17;
+	y1 = 2 * y1 + 17;
+	x2 = 2 * x2 + 16;
+	y2 = 2 * y2 + 16;
+
+	DRLG_RectTrans(x1, y1, x2, y2);
 }
 
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
