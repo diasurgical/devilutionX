@@ -7,7 +7,9 @@ set(devilutionx_fixtures
   diablo/2-1383137027.dun
   diablo/3-844660068.dun
   diablo/4-609325643.dun
+  diablo/5-68685319.dun
   diablo/5-1677631846.dun
+  diablo/6-1824554527.dun
   diablo/6-2034738122.dun
   diablo/7-680552750.dun
   diablo/7-1607627156.dun
@@ -42,6 +44,10 @@ set(devilutionx_fixtures
   Levels/L1Data/rnd6.DUN
   Levels/L1Data/SKngDO.DUN
   Levels/L2Data/Blind1.DUN
+  Levels/L2Data/Blood1.DUN
+  Levels/L2Data/Blood2.DUN
+  Levels/L2Data/Bonestr1.DUN
+  Levels/L2Data/Bonestr2.DUN
   Levels/L4Data/diab1.DUN
   Levels/L4Data/diab2a.DUN
   Levels/L4Data/diab2b.DUN
