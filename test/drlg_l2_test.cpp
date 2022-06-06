@@ -21,9 +21,27 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_5_1677631846)
 	EXPECT_EQ(ViewPosition, Point(33, 56));
 }
 
+TEST(Drlg_l2, CreateL2Dungeon_diablo_5_68685319)
+{
+	LoadExpectedLevelData("diablo/5-68685319.dun");
+
+	InitQuests();
+	Quests[Q_BLOOD]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(5, 68685319, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(37, 36));
+	TestCreateDungeon(5, 68685319, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(44, 28));
+	TestCreateDungeon(5, 68685319, ENTRY_TWARPUP);
+	EXPECT_EQ(ViewPosition, Point(45, 76));
+}
+
 TEST(Drlg_l2, CreateL2Dungeon_diablo_6_2034738122)
 {
 	LoadExpectedLevelData("diablo/6-2034738122.dun");
+
+	InitQuests();
+	Quests[Q_SCHAMB]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(6, 2034738122, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(33, 26));
@@ -31,10 +49,24 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_6_2034738122)
 	EXPECT_EQ(ViewPosition, Point(34, 52));
 }
 
+TEST(Drlg_l2, CreateL2Dungeon_diablo_6_1824554527)
+{
+	LoadExpectedLevelData("diablo/6-1824554527.dun");
+
+	InitQuests();
+	Quests[Q_SCHAMB]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(6, 1824554527, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(35, 36));
+	TestCreateDungeon(6, 1824554527, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(28, 76));
+}
+
 TEST(Drlg_l2, CreateL2Dungeon_diablo_7_680552750)
 {
 	LoadExpectedLevelData("diablo/7-680552750.dun");
 
+	InitQuests();
 	Quests[Q_BLIND]._qactive = QUEST_NOTAVAIL;
 
 	TestCreateDungeon(7, 680552750, ENTRY_MAIN);
@@ -47,7 +79,7 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_7_1607627156)
 {
 	LoadExpectedLevelData("diablo/7-1607627156.dun");
 
-	Quests[Q_BLIND]._qlevel = 7;
+	InitQuests();
 	Quests[Q_BLIND]._qactive = QUEST_INIT;
 
 	TestCreateDungeon(7, 1607627156, ENTRY_MAIN);
