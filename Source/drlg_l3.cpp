@@ -20,8 +20,6 @@ namespace devilution {
 
 namespace {
 
-/** This will be true if a lava pool has been generated for the level */
-uint8_t lavapool;
 int lockoutcnt;
 bool lockout[DMAXX][DMAXY];
 
@@ -1518,14 +1516,89 @@ bool Spawn(int x, int y, int *totarea)
 	return false;
 }
 
+bool HivePlaceSetRandom(const BYTE *miniset, int rndper)
+{
+	bool placed = false;
+	int sw = miniset[0];
+	int sh = miniset[1];
+
+	for (int sy = 0; sy < DMAXX - sh; sy++) {
+		for (int sx = 0; sx < DMAXY - sw; sx++) {
+			bool found = true;
+			int ii = 2;
+			for (int yy = 0; yy < sh && found; yy++) {
+				for (int xx = 0; xx < sw && found; xx++) {
+					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
+						found = false;
+					}
+					if (dflags[xx + sx][yy + sy] != 0) {
+						found = false;
+					}
+					ii++;
+				}
+			}
+			int kk = sw * sh + 2;
+			if (found) {
+				if (miniset[kk] >= 84 && miniset[kk] <= 100) {
+					// BUGFIX: accesses to dungeon can go out of bounds
+					// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84.
+					if (dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
+						found = false;
+					}
+					if (dungeon[sx + 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
+						found = false;
+					}
+					if (dungeon[sx][sy + 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
+						found = false;
+					}
+					if (dungeon[sx][sy - 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
+						found = false;
+					}
+				}
+			}
+			if (found && GenerateRnd(100) < rndper) {
+				placed = true;
+				for (int yy = 0; yy < sh; yy++) {
+					for (int xx = 0; xx < sw; xx++) {
+						if (miniset[kk] != 0) {
+							dungeon[xx + sx][yy + sy] = miniset[kk];
+						}
+						kk++;
+					}
+				}
+			}
+		}
+	}
+
+	return placed;
+}
+
+bool PlaceSlimePool()
+{
+	int lavapool = 0;
+
+	if (HivePlaceSetRandom(HivePattern41, 30))
+		lavapool++;
+	if (HivePlaceSetRandom(HivePattern42, 40))
+		lavapool++;
+	if (HivePlaceSetRandom(HivePattern39, 50))
+		lavapool++;
+	if (HivePlaceSetRandom(HivePattern40, 60))
+		lavapool++;
+
+	return lavapool >= 3;
+}
+
 /**
  * Flood fills dirt and wall tiles looking for
  * an area of at most 40 tiles and disconnected from the map edge.
- * If it finds one, converts it to lava tiles and sets lavapool to true.
+ * If it finds one, converts it to lava tiles and return true.
  */
-void Pool()
+bool PlaceLavaPool()
 {
 	constexpr uint8_t Poolsub[15] = { 0, 35, 26, 36, 25, 29, 34, 7, 33, 28, 27, 37, 32, 31, 30 };
+
+	bool lavePoolPlaced = false;
 
 	for (int duny = 0; duny < DMAXY; duny++) {
 		for (int dunx = 0; dunx < DMAXY; dunx++) {
@@ -1565,13 +1638,24 @@ void Pool()
 							if (k != 0 && k <= 37) {
 								dungeon[i][j] = k;
 							}
-							lavapool = 1;
+							lavePoolPlaced = true;
 						}
 					}
 				}
 			}
 		}
 	}
+
+	return lavePoolPlaced;
+}
+
+bool PlacePool()
+{
+	if (leveltype == DTYPE_NEST) {
+		return PlaceSlimePool();
+	}
+
+	return PlaceLavaPool();
 }
 
 void PoolFix()
@@ -1651,7 +1735,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 			}
 		}
 		if (bailcnt >= 200) {
-			return true;
+			return false;
 		}
 		int ii = sw * sh + 2;
 
@@ -1669,7 +1753,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 		ViewPosition = Point { 17, 19 } + Displacement { sx, sy } * 2;
 	}
 
-	return false;
+	return true;
 }
 
 void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
@@ -1723,63 +1807,6 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 			}
 		}
 	}
-}
-
-bool HivePlaceSetRandom(const BYTE *miniset, int rndper)
-{
-	bool placed = false;
-	int sw = miniset[0];
-	int sh = miniset[1];
-
-	for (int sy = 0; sy < DMAXX - sh; sy++) {
-		for (int sx = 0; sx < DMAXY - sw; sx++) {
-			bool found = true;
-			int ii = 2;
-			for (int yy = 0; yy < sh && found; yy++) {
-				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = false;
-					}
-					if (dflags[xx + sx][yy + sy] != 0) {
-						found = false;
-					}
-					ii++;
-				}
-			}
-			int kk = sw * sh + 2;
-			if (found) {
-				if (miniset[kk] >= 84 && miniset[kk] <= 100) {
-					// BUGFIX: accesses to dungeon can go out of bounds
-					// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84.
-					if (dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (dungeon[sx + 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (dungeon[sx][sy + 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (dungeon[sx][sy - 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-				}
-			}
-			if (found && GenerateRnd(100) < rndper) {
-				placed = true;
-				for (int yy = 0; yy < sh; yy++) {
-					for (int xx = 0; xx < sw; xx++) {
-						if (miniset[kk] != 0) {
-							dungeon[xx + sx][yy + sy] = miniset[kk];
-						}
-						kk++;
-					}
-				}
-			}
-		}
-	}
-
-	return placed;
 }
 
 bool FenceVerticalUp(int i, int y)
@@ -2078,7 +2105,7 @@ void Fence()
 	FenceDoorFix();
 }
 
-bool Anvil()
+bool PlaceAnvil()
 {
 	int sw = L3ANVIL[0];
 	int sh = L3ANVIL[1];
@@ -2114,7 +2141,7 @@ bool Anvil()
 		}
 	}
 	if (trys >= 200) {
-		return true;
+		return false;
 	}
 
 	int ii = sw * sh + 2;
@@ -2133,7 +2160,7 @@ bool Anvil()
 	setpc_w = sw;
 	setpc_h = sh;
 
-	return false;
+	return true;
 }
 
 void Warp()
@@ -2218,143 +2245,88 @@ bool Lockout()
 	return t == lockoutcnt;
 }
 
+bool PlaceCaveStairs(lvl_entry entry)
+{
+	// Place stairs up
+	if (!PlaceMiniSet(L3UP, 1, 1, -1, -1, entry == ENTRY_MAIN))
+		return false;
+
+	// Place stairs down
+	if (!PlaceMiniSet(L3DOWN, 1, 1, -1, -1, entry == ENTRY_PREV))
+		return false;
+	if (entry == ENTRY_PREV)
+		ViewPosition += { 2, -2 };
+
+	// Place town warp stairs
+	if (currlevel == 9 && !PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, entry == ENTRY_TWARPDN))
+		return false;
+
+	return true;
+}
+
+bool PlaceNestStairs(lvl_entry entry)
+{
+	// Place stairs up
+	if (!PlaceMiniSet(currlevel != 17 ? L6UP : L6HOLDWARP, 1, 1, -1, -1, entry == ENTRY_MAIN || entry == ENTRY_TWARPDN))
+		return false;
+
+	// Place stairs down
+	if (currlevel != 20) {
+		if (!PlaceMiniSet(L6DOWN, 1, 1, -1, -1, entry == ENTRY_PREV))
+			return false;
+		if (entry == ENTRY_PREV)
+			ViewPosition += { 2, -2 };
+	}
+
+	return true;
+}
+
+bool PlaceStairs(lvl_entry entry)
+{
+	if (leveltype == DTYPE_NEST) {
+		return PlaceNestStairs(entry);
+	}
+
+	return PlaceCaveStairs(entry);
+}
+
 void GenerateLevel(lvl_entry entry)
 {
-	bool found;
-	bool genok;
-
-	lavapool = 0;
-
-	do {
-		do {
-			do {
-				InitDungeonFlags();
-				int x1 = GenerateRnd(20) + 10;
-				int y1 = GenerateRnd(20) + 10;
-				int x2 = x1 + 2;
-				int y2 = y1 + 2;
-				FillRoom(x1, y1, x2, y2);
-				CreateBlock(x1, y1, 2, 0);
-				CreateBlock(x2, y1, 2, 1);
-				CreateBlock(x1, y2, 2, 2);
-				CreateBlock(x1, y1, 2, 3);
-				if (Quests[Q_ANVIL].IsAvailable()) {
-					x1 = GenerateRnd(10) + 10;
-					y1 = GenerateRnd(10) + 10;
-					x2 = x1 + 12;
-					y2 = y1 + 12;
-					FloorArea(x1, y1, x2, y2);
-				}
-				FillDiagonals();
-				FillSingles();
-				FillStraights();
-				FillDiagonals();
-				Edges();
-				if (GetFloorArea() >= 600) {
-					found = Lockout();
-				} else {
-					found = false;
-				}
-			} while (!found);
-			MakeMegas();
-			if (entry == ENTRY_MAIN) {
-				if (currlevel < 17) {
-					genok = PlaceMiniSet(L3UP, 1, 1, -1, -1, true);
-				} else {
-					if (currlevel != 17)
-						genok = PlaceMiniSet(L6UP, 1, 1, -1, -1, true);
-					else
-						genok = PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true);
-				}
-				if (!genok) {
-					if (currlevel < 17) {
-						genok = PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false);
-					} else {
-						if (currlevel != 20)
-							genok = PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false);
-					}
-					if (!genok && currlevel == 9) {
-						genok = PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false);
-					}
-				}
-			} else if (entry == ENTRY_PREV) {
-				if (currlevel < 17) {
-					genok = PlaceMiniSet(L3UP, 1, 1, -1, -1, false);
-				} else {
-					if (currlevel != 17)
-						genok = PlaceMiniSet(L6UP, 1, 1, -1, -1, false);
-					else
-						genok = PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, false);
-				}
-				if (!genok) {
-					if (currlevel < 17) {
-						genok = PlaceMiniSet(L3DOWN, 1, 1, -1, -1, true);
-						ViewPosition += { 2, -2 };
-					} else {
-						if (currlevel != 20) {
-							genok = PlaceMiniSet(L6DOWN, 1, 1, -1, -1, true);
-							ViewPosition += { 2, -2 };
-						}
-					}
-					if (!genok && currlevel == 9) {
-						genok = PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false);
-					}
-				}
-			} else {
-				if (currlevel < 17) {
-					genok = PlaceMiniSet(L3UP, 1, 1, -1, -1, false);
-				} else {
-					if (currlevel != 17)
-						genok = PlaceMiniSet(L6UP, 1, 1, -1, -1, false);
-					else
-						genok = PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true);
-				}
-				if (!genok) {
-					if (currlevel < 17) {
-						genok = PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false);
-					} else {
-						if (currlevel != 20)
-							genok = PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false);
-					}
-					if (!genok && currlevel == 9) {
-						genok = PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, true);
-					}
-				}
-			}
-			if (!genok && Quests[Q_ANVIL].IsAvailable()) {
-				genok = Anvil();
-			}
-		} while (genok);
-		if (currlevel < 17) {
-			Pool();
-		} else {
-			if (HivePlaceSetRandom(HivePattern41, 30))
-				lavapool++;
-			if (HivePlaceSetRandom(HivePattern42, 40))
-				lavapool++;
-			if (HivePlaceSetRandom(HivePattern39, 50))
-				lavapool++;
-			if (HivePlaceSetRandom(HivePattern40, 60))
-				lavapool++;
-			if (lavapool < 3)
-				lavapool = 0;
+	while (true) {
+		InitDungeonFlags();
+		int x1 = GenerateRnd(20) + 10;
+		int y1 = GenerateRnd(20) + 10;
+		int x2 = x1 + 2;
+		int y2 = y1 + 2;
+		FillRoom(x1, y1, x2, y2);
+		CreateBlock(x1, y1, 2, 0);
+		CreateBlock(x2, y1, 2, 1);
+		CreateBlock(x1, y2, 2, 2);
+		CreateBlock(x1, y1, 2, 3);
+		if (Quests[Q_ANVIL].IsAvailable()) {
+			x1 = GenerateRnd(10) + 10;
+			y1 = GenerateRnd(10) + 10;
+			x2 = x1 + 12;
+			y2 = y1 + 12;
+			FloorArea(x1, y1, x2, y2);
 		}
-	} while (lavapool == 0);
+		FillDiagonals();
+		FillSingles();
+		FillStraights();
+		FillDiagonals();
+		Edges();
+		if (GetFloorArea() < 600 || !Lockout())
+			continue;
+		MakeMegas();
+		if (!PlaceStairs(entry))
+			continue;
+		if (Quests[Q_ANVIL].IsAvailable() && !PlaceAnvil())
+			continue;
+		if (PlacePool())
+			break;
+	}
 
-	if (currlevel < 17)
-		PoolFix();
-	if (currlevel < 17)
-		Warp();
-
-	if (currlevel < 17) {
-		PlaceMiniSetRandom(L3ISLE1, 70);
-		PlaceMiniSetRandom(L3ISLE2, 70);
-		PlaceMiniSetRandom(L3ISLE3, 30);
-		PlaceMiniSetRandom(L3ISLE4, 30);
-		PlaceMiniSetRandom(L3ISLE1, 100);
-		PlaceMiniSetRandom(L3ISLE2, 100);
-		PlaceMiniSetRandom(L3ISLE5, 90);
-	} else {
+	if (leveltype == DTYPE_NEST) {
 		PlaceMiniSetRandom(L6ISLE1, 70);
 		PlaceMiniSetRandom(L6ISLE2, 70);
 		PlaceMiniSetRandom(L6ISLE3, 30);
@@ -2362,55 +2334,6 @@ void GenerateLevel(lvl_entry entry)
 		PlaceMiniSetRandom(L6ISLE1, 100);
 		PlaceMiniSetRandom(L6ISLE2, 100);
 		PlaceMiniSetRandom(L6ISLE5, 90);
-	}
-
-	if (currlevel < 17)
-		HallOfHeroes();
-	if (currlevel < 17)
-		River();
-
-	if (Quests[Q_ANVIL].IsAvailable()) {
-		dungeon[setpc_x + 7][setpc_y + 5] = 7;
-		dungeon[setpc_x + 8][setpc_y + 5] = 7;
-		dungeon[setpc_x + 9][setpc_y + 5] = 7;
-		if (dungeon[setpc_x + 10][setpc_y + 5] == 17 || dungeon[setpc_x + 10][setpc_y + 5] == 18) {
-			dungeon[setpc_x + 10][setpc_y + 5] = 45;
-		}
-	}
-
-	if (currlevel < 17)
-		DRLG_PlaceThemeRooms(5, 10, 7, 0, false);
-
-	if (currlevel < 17) {
-		Fence();
-		PlaceMiniSetRandom(L3TITE1, 10);
-		PlaceMiniSetRandom(L3TITE2, 10);
-		PlaceMiniSetRandom(L3TITE3, 10);
-		PlaceMiniSetRandom(L3TITE6, 20);
-		PlaceMiniSetRandom(L3TITE7, 20);
-		PlaceMiniSetRandom(L3TITE8, 20);
-		PlaceMiniSetRandom(L3TITE9, 20);
-		PlaceMiniSetRandom(L3TITE10, 20);
-		PlaceMiniSetRandom(L3TITE11, 30);
-		PlaceMiniSetRandom(L3TITE12, 20);
-		PlaceMiniSetRandom(L3TITE13, 20);
-		PlaceMiniSetRandom(L3CREV1, 30);
-		PlaceMiniSetRandom(L3CREV2, 30);
-		PlaceMiniSetRandom(L3CREV3, 30);
-		PlaceMiniSetRandom(L3CREV4, 30);
-		PlaceMiniSetRandom(L3CREV5, 30);
-		PlaceMiniSetRandom(L3CREV6, 30);
-		PlaceMiniSetRandom(L3CREV7, 30);
-		PlaceMiniSetRandom(L3CREV8, 30);
-		PlaceMiniSetRandom(L3CREV9, 30);
-		PlaceMiniSetRandom(L3CREV10, 30);
-		PlaceMiniSetRandom(L3CREV11, 30);
-		PlaceMiniSetRandom(L3XTRA1, 25);
-		PlaceMiniSetRandom(L3XTRA2, 25);
-		PlaceMiniSetRandom(L3XTRA3, 25);
-		PlaceMiniSetRandom(L3XTRA4, 25);
-		PlaceMiniSetRandom(L3XTRA5, 25);
-	} else {
 		PlaceMiniSetRandom(HivePattern1, 20);
 		PlaceMiniSetRandom(HivePattern2, 20);
 		PlaceMiniSetRandom(HivePattern3, 20);
@@ -2459,6 +2382,59 @@ void GenerateLevel(lvl_entry entry)
 		PlaceMiniSetRandom(HivePattern22, 25);
 		PlaceMiniSetRandom(HivePattern27, 25);
 		PlaceMiniSetRandom(HivePattern28, 25);
+	} else {
+		PoolFix();
+		Warp();
+
+		PlaceMiniSetRandom(L3ISLE1, 70);
+		PlaceMiniSetRandom(L3ISLE2, 70);
+		PlaceMiniSetRandom(L3ISLE3, 30);
+		PlaceMiniSetRandom(L3ISLE4, 30);
+		PlaceMiniSetRandom(L3ISLE1, 100);
+		PlaceMiniSetRandom(L3ISLE2, 100);
+		PlaceMiniSetRandom(L3ISLE5, 90);
+
+		HallOfHeroes();
+		River();
+
+		if (Quests[Q_ANVIL].IsAvailable()) {
+			dungeon[setpc_x + 7][setpc_y + 5] = 7;
+			dungeon[setpc_x + 8][setpc_y + 5] = 7;
+			dungeon[setpc_x + 9][setpc_y + 5] = 7;
+			if (dungeon[setpc_x + 10][setpc_y + 5] == 17 || dungeon[setpc_x + 10][setpc_y + 5] == 18) {
+				dungeon[setpc_x + 10][setpc_y + 5] = 45;
+			}
+		}
+
+		DRLG_PlaceThemeRooms(5, 10, 7, 0, false);
+		Fence();
+		PlaceMiniSetRandom(L3TITE1, 10);
+		PlaceMiniSetRandom(L3TITE2, 10);
+		PlaceMiniSetRandom(L3TITE3, 10);
+		PlaceMiniSetRandom(L3TITE6, 20);
+		PlaceMiniSetRandom(L3TITE7, 20);
+		PlaceMiniSetRandom(L3TITE8, 20);
+		PlaceMiniSetRandom(L3TITE9, 20);
+		PlaceMiniSetRandom(L3TITE10, 20);
+		PlaceMiniSetRandom(L3TITE11, 30);
+		PlaceMiniSetRandom(L3TITE12, 20);
+		PlaceMiniSetRandom(L3TITE13, 20);
+		PlaceMiniSetRandom(L3CREV1, 30);
+		PlaceMiniSetRandom(L3CREV2, 30);
+		PlaceMiniSetRandom(L3CREV3, 30);
+		PlaceMiniSetRandom(L3CREV4, 30);
+		PlaceMiniSetRandom(L3CREV5, 30);
+		PlaceMiniSetRandom(L3CREV6, 30);
+		PlaceMiniSetRandom(L3CREV7, 30);
+		PlaceMiniSetRandom(L3CREV8, 30);
+		PlaceMiniSetRandom(L3CREV9, 30);
+		PlaceMiniSetRandom(L3CREV10, 30);
+		PlaceMiniSetRandom(L3CREV11, 30);
+		PlaceMiniSetRandom(L3XTRA1, 25);
+		PlaceMiniSetRandom(L3XTRA2, 25);
+		PlaceMiniSetRandom(L3XTRA3, 25);
+		PlaceMiniSetRandom(L3XTRA4, 25);
+		PlaceMiniSetRandom(L3XTRA5, 25);
 	}
 
 	for (int j = 0; j < DMAXY; j++) {
@@ -2475,6 +2451,43 @@ void Pass3()
 	DRLG_LPass3(8 - 1);
 }
 
+void PlaceCaveLights()
+{
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
+				DoLighting({ i, j }, 7, -1);
+			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
+				DoLighting({ i, j }, 7, -1);
+			} else if (IsAnyOf(dPiece[i][j], 150, 152)) {
+				DoLighting({ i, j }, 7, -1);
+			}
+		}
+	}
+}
+
+void PlaceHiveLights()
+{
+
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] >= 382 && dPiece[i][j] <= 457) {
+				DoLighting({ i, j }, 9, -1);
+			}
+		}
+	}
+}
+
+void PlaceLights()
+{
+	if (leveltype == DTYPE_NEST) {
+		PlaceHiveLights();
+		return;
+	}
+
+	PlaceCaveLights();
+}
+
 } // namespace
 
 void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
@@ -2488,29 +2501,7 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 	DRLG_InitSetPC();
 	GenerateLevel(entry);
 	Pass3();
-
-	if (currlevel < 17) {
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) {
-				if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
-					DoLighting({ i, j }, 7, -1);
-				} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
-					DoLighting({ i, j }, 7, -1);
-				} else if (IsAnyOf(dPiece[i][j], 150, 152)) {
-					DoLighting({ i, j }, 7, -1);
-				}
-			}
-		}
-	} else {
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) {
-				if (dPiece[i][j] >= 382 && dPiece[i][j] <= 457) {
-					DoLighting({ i, j }, 9, -1);
-				}
-			}
-		}
-	}
-
+	PlaceLights();
 	DRLG_SetPC();
 }
 

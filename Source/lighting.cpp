@@ -565,7 +565,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 	}
 
 	if (InDungeonBounds(position)) {
-		if (currlevel < 17) {
+		if (IsNoneOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 			SetLight(position, 0);
 		} else if (GetLight(position) > lightradius[nRadius][0]) {
 			SetLight(position, lightradius[nRadius][0]);
@@ -799,7 +799,7 @@ void MakeLightTable()
 		}
 		tbl += 224;
 	}
-	if (currlevel >= 17) {
+	if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		tbl = LightTables.data();
 		for (int i = 0; i < lights; i++) {
 			*tbl++ = 0;
@@ -856,7 +856,7 @@ void MakeLightTable()
 		}
 	}
 
-	if (currlevel >= 17) {
+	if (IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
 		for (int j = 0; j < 16; j++) {
 			double fa = (sqrt((double)(16 - j))) / 128;
 			fa *= fa;

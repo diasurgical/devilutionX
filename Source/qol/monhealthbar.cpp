@@ -66,7 +66,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	assert(healthBlue.surface != nullptr);
 	assert(resistance.surface != nullptr);
 
-	if (currlevel == 0)
+	if (leveltype == DTYPE_TOWN)
 		return;
 	if (pcursmonst == -1)
 		return;

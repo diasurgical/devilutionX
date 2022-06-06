@@ -432,10 +432,10 @@ void DeltaLeaveSync(uint8_t bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
-	if (currlevel == 0)
+	if (leveltype == DTYPE_TOWN) {
 		glSeedTbl[0] = AdvanceRndSeed();
-	if (currlevel <= 0)
 		return;
+	}
 
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
@@ -1035,7 +1035,7 @@ DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
-	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
@@ -1070,7 +1070,7 @@ DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
-	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
@@ -1101,7 +1101,7 @@ DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
-	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
@@ -1228,7 +1228,7 @@ DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
-	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
@@ -1260,7 +1260,7 @@ DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
-	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
@@ -1292,7 +1292,7 @@ DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
-	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
@@ -1322,7 +1322,7 @@ DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
-	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell.").c_str(), player._pName);
 		return sizeof(message);
 	}
@@ -1530,7 +1530,7 @@ DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdDamage *>(pCmd);
 
-	if (message.bPlr == MyPlayerId && currlevel != 0 && gbBufferMsgs != 1) {
+	if (message.bPlr == MyPlayerId && leveltype != DTYPE_TOWN && gbBufferMsgs != 1) {
 		if (currlevel == player.plrlevel && message.dwDam <= 192000 && Players[message.bPlr]._pHitPoints >> 6 > 0) {
 			ApplyPlrDamage(message.bPlr, 0, 0, message.dwDam, 1);
 		}
@@ -1771,7 +1771,7 @@ DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 
 		ActivatePortal(pnum, position, level, dungeonType, isSetLevel);
 		if (pnum != MyPlayerId) {
-			if (currlevel == 0) {
+			if (leveltype == DTYPE_TOWN) {
 				AddInTownPortal(pnum);
 			} else if (currlevel == Players[pnum].plrlevel) {
 				bool addPortal = true;
@@ -2012,7 +2012,7 @@ DWORD OnOpenCrypt(const TCmd *pCmd)
 	if (gbBufferMsgs != 1) {
 		TownOpenGrave();
 		InitTownTriggers();
-		if (currlevel == 0)
+		if (leveltype == DTYPE_TOWN)
 			PlaySFX(IS_SARC);
 	}
 	return sizeof(*pCmd);
@@ -2270,7 +2270,7 @@ void DeltaLoadLevel()
 		return;
 
 	deltaload = true;
-	if (currlevel != 0) {
+	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < ActiveMonsterCount; i++) {
 			if (sgLevels[currlevel].monster[i]._mx == 0xFF)
 				continue;
@@ -2376,7 +2376,7 @@ void DeltaLoadLevel()
 		}
 	}
 
-	if (currlevel != 0) {
+	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < MAXOBJECTS; i++) {
 			switch (sgLevels[currlevel].object[i].bCmd) {
 			case CMD_OPENDOOR:

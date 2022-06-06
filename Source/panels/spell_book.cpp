@@ -71,7 +71,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 			st = RSPLTYPE_INVALID;
 		}
 	}
-	if (townok && currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[ii].sTownSpell) {
+	if (townok && leveltype == DTYPE_TOWN && st != RSPLTYPE_INVALID && !spelldata[ii].sTownSpell) {
 		st = RSPLTYPE_INVALID;
 	}
 

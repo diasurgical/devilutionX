@@ -164,7 +164,7 @@ TMenuItem *sgpCurrentMenu;
 
 void gmenu_draw_pause(const Surface &out)
 {
-	if (currlevel != 0)
+	if (leveltype != DTYPE_TOWN)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		LightTableIndex = 0;

@@ -1283,12 +1283,50 @@ void GeneralFix()
 	}
 }
 
+bool PlaceStairs(lvl_entry entry)
+{
+	// Place stairs up
+	if (!PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, entry == ENTRY_MAIN))
+		return false;
+	if (entry == ENTRY_MAIN)
+		ViewPosition.x++;
+
+	if (currlevel != 15) {
+		// Place stairs down
+		if (currlevel != 16 && !Quests[Q_WARLORD].IsAvailable()) {
+			if (!PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, entry == ENTRY_PREV))
+				return false;
+		}
+
+		// Place town warp stairs
+		if (currlevel == 13) {
+			if (!PlaceMiniSet(L4TWARP, 1, 1, -1, -1, entry == ENTRY_TWARPDN))
+				return false;
+			if (entry == ENTRY_TWARPDN)
+				ViewPosition.x++;
+		}
+	} else {
+		// Place hell gate
+		bool isGateOpen = gbIsMultiplayer || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
+		if (!PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA, 1, 1, -1, -1, entry == ENTRY_PREV))
+			return false;
+	}
+
+	if (entry == ENTRY_PREV) {
+		if (Quests[Q_WARLORD].IsAvailable())
+			ViewPosition = Point { 22, 22 } + Displacement { setpc_x, setpc_y } * 2;
+		else
+			ViewPosition.y++;
+	}
+
+	return true;
+}
+
 void GenerateLevel(lvl_entry entry)
 {
 	constexpr int Minarea = 173;
 	int ar;
-	bool doneflag;
-	do {
+	while (true) {
 		DRLG_InitTrans();
 
 		do {
@@ -1323,79 +1361,9 @@ void GenerateLevel(lvl_entry entry)
 		if (currlevel == 16) {
 			LoadDiabQuads(true);
 		}
-		if (Quests[Q_WARLORD].IsAvailable()) {
-			if (entry == ENTRY_MAIN) {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true);
-				if (doneflag && currlevel == 13) {
-					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
-				}
-				ViewPosition.x++;
-			} else if (entry == ENTRY_PREV) {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
-				if (doneflag && currlevel == 13) {
-					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
-				}
-				ViewPosition = Point { 22, 22 } + Displacement { setpc_x, setpc_y } * 2;
-			} else {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
-				if (doneflag && currlevel == 13) {
-					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true);
-				}
-				ViewPosition.x++;
-			}
-		} else if (currlevel != 15) {
-			if (entry == ENTRY_MAIN) {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true);
-				if (doneflag && currlevel != 16) {
-					doneflag = PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false);
-				}
-				if (doneflag && currlevel == 13) {
-					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
-				}
-				ViewPosition.x++;
-			} else if (entry == ENTRY_PREV) {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
-				if (doneflag && currlevel != 16) {
-					doneflag = PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, true);
-				}
-				if (doneflag && currlevel == 13) {
-					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
-				}
-				ViewPosition.y++;
-			} else {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
-				if (doneflag && currlevel != 16) {
-					doneflag = PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false);
-				}
-				if (doneflag && currlevel == 13) {
-					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true);
-				}
-				ViewPosition.x++;
-			}
-		} else {
-			if (entry == ENTRY_MAIN) {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true);
-				if (doneflag) {
-					if (!gbIsMultiplayer && Quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
-						doneflag = PlaceMiniSet(L4PENTA, 1, 1, -1, -1, false);
-					} else {
-						doneflag = PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, false);
-					}
-				}
-				ViewPosition.x++;
-			} else {
-				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
-				if (doneflag) {
-					if (!gbIsMultiplayer && Quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
-						doneflag = PlaceMiniSet(L4PENTA, 1, 1, -1, -1, true);
-					} else {
-						doneflag = PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, true);
-					}
-				}
-				ViewPosition.y++;
-			}
-		}
-	} while (!doneflag);
+		if (PlaceStairs(entry))
+			break;
+	}
 
 	GeneralFix();
 

@@ -1816,7 +1816,7 @@ bool TryDropItem()
 		return false;
 	}
 
-	if (currlevel == 0) {
+	if (leveltype == DTYPE_TOWN) {
 		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
 			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 }, myPlayer.HoldItem.pop());
 			NewCursor(CURSOR_HAND);

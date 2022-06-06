@@ -687,7 +687,7 @@ void control_check_btn_press()
 
 void DoAutoMap()
 {
-	if (currlevel != 0 || gbIsMultiplayer) {
+	if (leveltype != DTYPE_TOWN || gbIsMultiplayer) {
 		if (!AutomapActive)
 			StartAutomap();
 		else

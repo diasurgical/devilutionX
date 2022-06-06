@@ -144,40 +144,17 @@ void InitTownTriggers()
 void InitL1Triggers()
 {
 	numtrigs = 0;
-	if (currlevel < 17) {
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) {
-				if (dPiece[i][j] == 129) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
-					numtrigs++;
-				}
-				if (dPiece[i][j] == 115) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
-					numtrigs++;
-				}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] == 129) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
+				numtrigs++;
 			}
-		}
-	} else {
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) {
-				if (dPiece[i][j] == 184) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
-					trigs[numtrigs]._tlvl = 0;
-					numtrigs++;
-				}
-				if (dPiece[i][j] == 158) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
-					numtrigs++;
-				}
-				if (dPiece[i][j] == 126) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
-					numtrigs++;
-				}
+			if (dPiece[i][j] == 115) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+				numtrigs++;
 			}
 		}
 	}
@@ -214,50 +191,25 @@ void InitL2Triggers()
 
 void InitL3Triggers()
 {
-	if (currlevel < 17) {
-		numtrigs = 0;
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) {
-				if (dPiece[i][j] == 171) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
-					numtrigs++;
-				}
-
-				if (dPiece[i][j] == 168) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
-					numtrigs++;
-				}
-
-				if (dPiece[i][j] == 549) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
-					numtrigs++;
-				}
+	numtrigs = 0;
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] == 171) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
+				numtrigs++;
 			}
-		}
-	} else {
-		numtrigs = 0;
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) {
-				if (dPiece[i][j] == 66) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
-					numtrigs++;
-				}
 
-				if (dPiece[i][j] == 63) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
-					numtrigs++;
-				}
+			if (dPiece[i][j] == 168) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+				numtrigs++;
+			}
 
-				if (dPiece[i][j] == 80) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
-					numtrigs++;
-				}
+			if (dPiece[i][j] == 549) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
+				numtrigs++;
 			}
 		}
 	}
@@ -293,6 +245,59 @@ void InitL4Triggers()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 370 && Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+				numtrigs++;
+			}
+		}
+	}
+	trigflag = false;
+}
+
+void InitHiveTriggers()
+{
+	numtrigs = 0;
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] == 66) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
+				numtrigs++;
+			}
+
+			if (dPiece[i][j] == 63) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+				numtrigs++;
+			}
+
+			if (dPiece[i][j] == 80) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
+				numtrigs++;
+			}
+		}
+	}
+	trigflag = false;
+}
+
+void InitCryptTriggers()
+{
+	numtrigs = 0;
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] == 184) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
+				trigs[numtrigs]._tlvl = 0;
+				numtrigs++;
+			}
+			if (dPiece[i][j] == 158) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
+				numtrigs++;
+			}
+			if (dPiece[i][j] == 126) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -407,73 +412,27 @@ bool ForceTownTrig()
 
 bool ForceL1Trig()
 {
-	if (currlevel < 17) {
-		for (int i = 0; L1UpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L1UpList[i]) {
-				if (currlevel > 1)
-					InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
-				else
-					InfoString = _("Up to town");
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
-						cursPosition = trigs[j].position;
-						return true;
-					}
+	for (int i = 0; L1UpList[i] != -1; i++) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L1UpList[i]) {
+			if (currlevel > 1)
+				InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
+			else
+				InfoString = _("Up to town");
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
+					cursPosition = trigs[j].position;
+					return true;
 				}
 			}
 		}
-		for (int i = 0; L1DownList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L1DownList[i]) {
-				InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
-						cursPosition = trigs[j].position;
-						return true;
-					}
-				}
-			}
-		}
-	} else {
-		for (int i = 0; L5UpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L5UpList[i]) {
-				InfoString = fmt::format(_("Up to Crypt level {:d}"), currlevel - 21);
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
-						cursPosition = trigs[j].position;
-						return true;
-					}
-				}
-			}
-		}
-		if (dPiece[cursPosition.x][cursPosition.y] == 317) {
-			InfoString = _("Cornerstone of the World");
-			return true;
-		}
-		for (int i = 0; L5DownList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L5DownList[i]) {
-				InfoString = fmt::format(_("Down to Crypt level {:d}"), currlevel - 19);
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
-						cursPosition = trigs[j].position;
-						return true;
-					}
-				}
-			}
-		}
-		if (currlevel == 21) {
-			for (int i = 0; L5TWarpUpList[i] != -1; i++) {
-				if (dPiece[cursPosition.x][cursPosition.y] == L5TWarpUpList[i]) {
-					for (int j = 0; j < numtrigs; j++) {
-						if (trigs[j]._tmsg == WM_DIABTWARPUP) {
-							int dx = abs(trigs[j].position.x - cursPosition.x);
-							int dy = abs(trigs[j].position.y - cursPosition.y);
-							if (dx < 4 && dy < 4) {
-								InfoString = _("Up to town");
-								cursPosition = trigs[j].position;
-								return true;
-							}
-						}
-					}
+	}
+	for (int i = 0; L1DownList[i] != -1; i++) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L1DownList[i]) {
+			InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
+					cursPosition = trigs[j].position;
+					return true;
 				}
 			}
 		}
@@ -535,57 +494,30 @@ bool ForceL2Trig()
 
 bool ForceL3Trig()
 {
-	if (currlevel < 17) {
-		for (int i = 0; L3UpList[i] != -1; ++i) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L3UpList[i]) {
-				InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
-						int dx = abs(trigs[j].position.x - cursPosition.x);
-						int dy = abs(trigs[j].position.y - cursPosition.y);
-						if (dx < 4 && dy < 4) {
-							cursPosition = trigs[j].position;
-							return true;
-						}
-					}
-				}
-			}
-		}
-		for (int i = 0; L3DownList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L3DownList[i]
-			    || dPiece[cursPosition.x + 1][cursPosition.y] == L3DownList[i]
-			    || dPiece[cursPosition.x + 2][cursPosition.y] == L3DownList[i]) {
-				InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
+	for (int i = 0; L3UpList[i] != -1; ++i) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L3UpList[i]) {
+			InfoString = fmt::format(_("Up to level {:d}"), currlevel - 1);
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
+					int dx = abs(trigs[j].position.x - cursPosition.x);
+					int dy = abs(trigs[j].position.y - cursPosition.y);
+					if (dx < 4 && dy < 4) {
 						cursPosition = trigs[j].position;
 						return true;
 					}
 				}
 			}
 		}
-	} else {
-		for (int i = 0; L6UpList[i] != -1; ++i) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L6UpList[i]) {
-				InfoString = fmt::format(_("Up to Nest level {:d}"), currlevel - 17);
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
-						cursPosition = trigs[j].position;
-						return true;
-					}
-				}
-			}
-		}
-		for (int i = 0; L6DownList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L6DownList[i]
-			    || dPiece[cursPosition.x + 1][cursPosition.y] == L6DownList[i]
-			    || dPiece[cursPosition.x + 2][cursPosition.y] == L6DownList[i]) {
-				InfoString = fmt::format(_("Down to level {:d}"), currlevel - 15);
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
-						cursPosition = trigs[j].position;
-						return true;
-					}
+	}
+	for (int i = 0; L3DownList[i] != -1; i++) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L3DownList[i]
+		    || dPiece[cursPosition.x + 1][cursPosition.y] == L3DownList[i]
+		    || dPiece[cursPosition.x + 2][cursPosition.y] == L3DownList[i]) {
+			InfoString = fmt::format(_("Down to level {:d}"), currlevel + 1);
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
+					cursPosition = trigs[j].position;
+					return true;
 				}
 			}
 		}
@@ -594,23 +526,6 @@ bool ForceL3Trig()
 	if (currlevel == 9) {
 		for (int i = 0; L3TWarpUpList[i] != -1; i++) {
 			if (dPiece[cursPosition.x][cursPosition.y] == L3TWarpUpList[i]) {
-				for (int j = 0; j < numtrigs; j++) {
-					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
-						int dx = abs(trigs[j].position.x - cursPosition.x);
-						int dy = abs(trigs[j].position.y - cursPosition.y);
-						if (dx < 4 && dy < 4) {
-							InfoString = _("Up to town");
-							cursPosition = trigs[j].position;
-							return true;
-						}
-					}
-				}
-			}
-		}
-	}
-	if (currlevel == 17) {
-		for (int i = 0; L6TWarpUpList[i] != -1; i++) {
-			if (dPiece[cursPosition.x][cursPosition.y] == L6TWarpUpList[i]) {
 				for (int j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
 						int dx = abs(trigs[j].position.x - cursPosition.x);
@@ -690,6 +605,103 @@ bool ForceL4Trig()
 	return false;
 }
 
+bool ForceHiveTrig()
+{
+	for (int i = 0; L6UpList[i] != -1; ++i) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L6UpList[i]) {
+			InfoString = fmt::format(_("Up to Nest level {:d}"), currlevel - 17);
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
+					cursPosition = trigs[j].position;
+					return true;
+				}
+			}
+		}
+	}
+	for (int i = 0; L6DownList[i] != -1; i++) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L6DownList[i]
+		    || dPiece[cursPosition.x + 1][cursPosition.y] == L6DownList[i]
+		    || dPiece[cursPosition.x + 2][cursPosition.y] == L6DownList[i]) {
+			InfoString = fmt::format(_("Down to level {:d}"), currlevel - 15);
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
+					cursPosition = trigs[j].position;
+					return true;
+				}
+			}
+		}
+	}
+
+	if (currlevel == 17) {
+		for (int i = 0; L6TWarpUpList[i] != -1; i++) {
+			if (dPiece[cursPosition.x][cursPosition.y] == L6TWarpUpList[i]) {
+				for (int j = 0; j < numtrigs; j++) {
+					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
+						int dx = abs(trigs[j].position.x - cursPosition.x);
+						int dy = abs(trigs[j].position.y - cursPosition.y);
+						if (dx < 4 && dy < 4) {
+							InfoString = _("Up to town");
+							cursPosition = trigs[j].position;
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+bool ForceCryptTrig()
+{
+	for (int i = 0; L5UpList[i] != -1; i++) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L5UpList[i]) {
+			InfoString = fmt::format(_("Up to Crypt level {:d}"), currlevel - 21);
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
+					cursPosition = trigs[j].position;
+					return true;
+				}
+			}
+		}
+	}
+	if (dPiece[cursPosition.x][cursPosition.y] == 317) {
+		InfoString = _("Cornerstone of the World");
+		return true;
+	}
+	for (int i = 0; L5DownList[i] != -1; i++) {
+		if (dPiece[cursPosition.x][cursPosition.y] == L5DownList[i]) {
+			InfoString = fmt::format(_("Down to Crypt level {:d}"), currlevel - 19);
+			for (int j = 0; j < numtrigs; j++) {
+				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
+					cursPosition = trigs[j].position;
+					return true;
+				}
+			}
+		}
+	}
+	if (currlevel == 21) {
+		for (int i = 0; L5TWarpUpList[i] != -1; i++) {
+			if (dPiece[cursPosition.x][cursPosition.y] == L5TWarpUpList[i]) {
+				for (int j = 0; j < numtrigs; j++) {
+					if (trigs[j]._tmsg == WM_DIABTWARPUP) {
+						int dx = abs(trigs[j].position.x - cursPosition.x);
+						int dy = abs(trigs[j].position.y - cursPosition.y);
+						if (dx < 4 && dy < 4) {
+							InfoString = _("Up to town");
+							cursPosition = trigs[j].position;
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 void Freeupstairs()
 {
 	for (int i = 0; i < numtrigs; i++) {
@@ -760,18 +772,22 @@ void CheckTrigForce()
 			trigflag = ForceTownTrig();
 			break;
 		case DTYPE_CATHEDRAL:
-		case DTYPE_CRYPT:
 			trigflag = ForceL1Trig();
 			break;
 		case DTYPE_CATACOMBS:
 			trigflag = ForceL2Trig();
 			break;
 		case DTYPE_CAVES:
-		case DTYPE_NEST:
 			trigflag = ForceL3Trig();
 			break;
 		case DTYPE_HELL:
 			trigflag = ForceL4Trig();
+			break;
+		case DTYPE_NEST:
+			trigflag = ForceHiveTrig();
+			break;
+		case DTYPE_CRYPT:
+			trigflag = ForceCryptTrig();
 			break;
 		default:
 			break;

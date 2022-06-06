@@ -341,7 +341,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 {
 	int skippedFrames = -2;
-	if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
+	if (leveltype == DTYPE_TOWN && sgGameInitInfo.bRunInTown != 0)
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
@@ -416,7 +416,7 @@ void ChangeOffset(int pnum)
 
 	player.position.offset2 += player.position.velocity;
 
-	if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0) {
+	if (leveltype == DTYPE_TOWN && sgGameInitInfo.bRunInTown != 0) {
 		player.position.offset2 += player.position.velocity;
 	}
 
@@ -661,7 +661,7 @@ bool DoWalk(int pnum, int variant)
 	Player &player = Players[pnum];
 
 	// Play walking sound effect on certain animation frames
-	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
+	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.CurrentFrame == 0
 		    || player.AnimInfo.CurrentFrame == 4) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
@@ -1528,7 +1528,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			int xvel3 = 2048;
 			int xvel = 1024;
 			int yvel = 512;
-			if (currlevel != 0) {
+			if (leveltype != DTYPE_TOWN) {
 				xvel3 = PWVel[static_cast<std::size_t>(player._pClass)][0];
 				xvel = PWVel[static_cast<std::size_t>(player._pClass)][1];
 				yvel = PWVel[static_cast<std::size_t>(player._pClass)][2];
@@ -2803,7 +2803,7 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pdir = Direction::South;
 
 		if (&player == &myPlayer) {
-			if (!firstTime || currlevel != 0) {
+			if (!firstTime || leveltype != DTYPE_TOWN) {
 				player.position.tile = ViewPosition;
 			}
 		} else {
@@ -3211,7 +3211,7 @@ void SyncPlrKill(int pnum, int earflag)
 {
 	Player &player = Players[pnum];
 
-	if (player._pHitPoints <= 0 && currlevel == 0) {
+	if (player._pHitPoints <= 0 && leveltype == DTYPE_TOWN) {
 		SetPlayerHitPoints(player, 64);
 		return;
 	}
@@ -3222,7 +3222,7 @@ void SyncPlrKill(int pnum, int earflag)
 
 void RemovePlrMissiles(int pnum)
 {
-	if (currlevel != 0 && pnum == MyPlayerId) {
+	if (leveltype != DTYPE_TOWN && pnum == MyPlayerId) {
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
@@ -3378,7 +3378,7 @@ void ProcessPlayers()
 			}
 
 			if (pnum == MyPlayerId) {
-				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && currlevel != 0) {
+				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::DrainLife) && leveltype != DTYPE_TOWN) {
 					ApplyPlrDamage(pnum, 0, 0, 4);
 				}
 				if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoMana) && player._pManaBase > 0) {
@@ -3458,7 +3458,7 @@ bool PosOkPlayer(const Player &player, Point position)
 	}
 
 	if (dMonster[position.x][position.y] != 0) {
-		if (currlevel == 0) {
+		if (leveltype == DTYPE_TOWN) {
 			return false;
 		}
 		if (dMonster[position.x][position.y] <= 0) {

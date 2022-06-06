@@ -1728,7 +1728,7 @@ bool CanPut(Point position)
 		return false;
 	}
 
-	if (currlevel == 0) {
+	if (leveltype == DTYPE_TOWN) {
 		if (dMonster[position.x][position.y] != 0) {
 			return false;
 		}
@@ -2084,11 +2084,11 @@ bool UseInvItem(int pnum, int cii)
 		dropGoldValue = 0;
 	}
 
-	if (item->isScroll() && currlevel == 0 && !spelldata[item->_iSpell].sTownSpell) {
+	if (item->isScroll() && leveltype == DTYPE_TOWN && !spelldata[item->_iSpell].sTownSpell) {
 		return true;
 	}
 
-	if (item->_iMiscId > IMISC_RUNEFIRST && item->_iMiscId < IMISC_RUNELAST && currlevel == 0) {
+	if (item->_iMiscId > IMISC_RUNEFIRST && item->_iMiscId < IMISC_RUNELAST && leveltype == DTYPE_TOWN) {
 		return true;
 	}
 

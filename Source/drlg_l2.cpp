@@ -2864,10 +2864,34 @@ void FixDoors()
 	}
 }
 
+bool PlaceStairs(lvl_entry entry)
+{
+	// Place stairs up
+	if (!PlaceMiniSet(USTAIRS, 1, 1, -1, -1, entry == ENTRY_MAIN))
+		return false;
+	if (entry == ENTRY_MAIN)
+		ViewPosition.y -= 2;
+
+	// Place stairs down
+	if (!PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, entry == ENTRY_PREV))
+		return false;
+	if (entry == ENTRY_PREV)
+		ViewPosition.x--;
+
+	// Place town warp stairs
+	if (currlevel == 5) {
+		if (!PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, entry == ENTRY_TWARPDN))
+			return false;
+		if (entry == ENTRY_TWARPDN)
+			ViewPosition.y -= 2;
+	}
+
+	return true;
+}
+
 void GenerateLevel(lvl_entry entry)
 {
-	bool doneflag = false;
-	while (!doneflag) {
+	while (true) {
 		nRoomCnt = 0;
 		InitDungeonFlags();
 		DRLG_InitTrans();
@@ -2880,34 +2904,8 @@ void GenerateLevel(lvl_entry entry)
 		}
 		FloodTransparencyValues(3);
 		FixTransparency();
-		if (entry == ENTRY_MAIN) {
-			doneflag = PlaceMiniSet(USTAIRS, 1, 1, -1, -1, true);
-			if (doneflag) {
-				doneflag = PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false);
-				if (doneflag && currlevel == 5) {
-					doneflag = PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false);
-				}
-			}
-			ViewPosition.y -= 2;
-		} else if (entry == ENTRY_PREV) {
-			doneflag = PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false);
-			if (doneflag) {
-				doneflag = PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, true);
-				if (doneflag && currlevel == 5) {
-					doneflag = PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false);
-				}
-			}
-			ViewPosition.x--;
-		} else {
-			doneflag = PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false);
-			if (doneflag) {
-				doneflag = PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false);
-				if (doneflag && currlevel == 5) {
-					doneflag = PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, true);
-				}
-			}
-			ViewPosition.y -= 2;
-		}
+		if (PlaceStairs(entry))
+			break;
 	}
 
 	FixLockout();
