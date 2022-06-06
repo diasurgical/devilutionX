@@ -394,11 +394,11 @@ void SaveOptions()
 
 string_view OptionEntryBase::GetName() const
 {
-	return _(name.data());
+	return _(name);
 }
 string_view OptionEntryBase::GetDescription() const
 {
-	return _(description.data());
+	return _(description);
 }
 OptionEntryFlags OptionEntryBase::GetFlags() const
 {
@@ -544,11 +544,11 @@ string_view OptionCategoryBase::GetKey() const
 }
 string_view OptionCategoryBase::GetName() const
 {
-	return _(name.data());
+	return _(name);
 }
 string_view OptionCategoryBase::GetDescription() const
 {
-	return _(description.data());
+	return _(description);
 }
 
 StartUpOptions::StartUpOptions()
@@ -1252,8 +1252,8 @@ KeymapperOptions::Action::Action(string_view key, string_view name, string_view 
 string_view KeymapperOptions::Action::GetName() const
 {
 	if (dynamicIndex == 0)
-		return _(name.data());
-	dynamicName = fmt::format(fmt::runtime(_(name.data())), dynamicIndex);
+		return _(name);
+	dynamicName = fmt::format(fmt::runtime(_(name)), dynamicIndex);
 	return dynamicName;
 }
 
