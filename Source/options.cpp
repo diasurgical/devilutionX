@@ -1244,7 +1244,7 @@ KeymapperOptions::Action::Action(string_view key, string_view name, string_view 
     , dynamicIndex(index)
 {
 	if (index != 0) {
-		dynamicKey = fmt::format(fmt::string_view(key.data(), key.size()), index);
+		dynamicKey = fmt::format(fmt::runtime(fmt::string_view(key.data(), key.size())), index);
 		this->key = dynamicKey;
 	}
 }
@@ -1253,7 +1253,7 @@ string_view KeymapperOptions::Action::GetName() const
 {
 	if (dynamicIndex == 0)
 		return _(name.data());
-	dynamicName = fmt::format(_(name.data()), dynamicIndex);
+	dynamicName = fmt::format(fmt::runtime(_(name.data())), dynamicIndex);
 	return dynamicName;
 }
 

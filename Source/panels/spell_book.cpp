@@ -156,12 +156,12 @@ void DrawSpellBook(const Surface &out)
 				break;
 			case RSPLTYPE_CHARGES: {
 				int charges = player.InvBody[INVLOC_HAND_LEFT]._iCharges;
-				PrintSBookStr(out, line1, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges));
+				PrintSBookStr(out, line1, fmt::format(fmt::runtime(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges)), charges));
 			} break;
 			default: {
 				int mana = GetManaAmount(player, sn) >> 6;
 				int lvl = std::max(player._pSplLvl[sn] + player._pISplLvlAdd, 0);
-				PrintSBookStr(out, line0, fmt::format(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}"), lvl), UiFlags::AlignRight);
+				PrintSBookStr(out, line0, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}")), lvl), UiFlags::AlignRight);
 				if (lvl == 0) {
 					PrintSBookStr(out, line1, _("Unusable"), UiFlags::AlignRight);
 				} else {
@@ -171,15 +171,15 @@ void DrawSpellBook(const Surface &out)
 						GetDamageAmt(sn, &min, &max);
 						if (min != -1) {
 							if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Heals: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+								PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Heals: {:d} - {:d}")), min, max), UiFlags::AlignRight);
 							} else {
-								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+								PrintSBookStr(out, line1, fmt::format(fmt::runtime(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}")), min, max), UiFlags::AlignRight);
 							}
 						}
 					} else {
 						PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constraints, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight);
 					}
-					PrintSBookStr(out, line1, fmt::format(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Mana: {:d}"), mana));
+					PrintSBookStr(out, line1, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Mana: {:d}")), mana));
 				}
 			} break;
 			}

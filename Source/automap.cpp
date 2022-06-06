@@ -506,13 +506,13 @@ void DrawAutomapText(const Surface &out)
 		std::string description;
 		switch (leveltype) {
 		case DTYPE_NEST:
-			description = fmt::format(_("Level: Nest {:d}"), currlevel - 16);
+			description = fmt::format(fmt::runtime(_("Level: Nest {:d}")), currlevel - 16);
 			break;
 		case DTYPE_CRYPT:
-			description = fmt::format(_("Level: Crypt {:d}"), currlevel - 20);
+			description = fmt::format(fmt::runtime(_("Level: Crypt {:d}")), currlevel - 20);
 			break;
 		default:
-			description = fmt::format(_("Level: {:d}"), currlevel);
+			description = fmt::format(fmt::runtime(_("Level: {:d}")), currlevel);
 			break;
 		}
 
@@ -532,7 +532,7 @@ void DrawAutomapText(const Surface &out)
 		break;
 	}
 
-	std::string description = fmt::format(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}"), difficulty);
+	std::string description = fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty);
 	DrawString(out, description, linePosition);
 }
 

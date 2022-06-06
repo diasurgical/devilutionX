@@ -160,48 +160,48 @@ void DrawSpellList(const Surface &out)
 		case RSPLTYPE_SKILL:
 			spellColor = PAL16_YELLOW - 46;
 			PrintSBookSpellType(out, spellListItem.location, _("Skill"), spellColor);
-			InfoString = fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText));
+			InfoString = fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", spellDataItem.sSkillText));
 			break;
 		case RSPLTYPE_SPELL:
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_BLUE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
-			InfoString = fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText));
+			InfoString = fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spellDataItem.sNameText));
 			if (spellId == SPL_HBOLT) {
 				AddPanelString(_("Damages undead only"));
 			}
 			if (spellLevel == 0)
 				AddPanelString(_("Spell Level 0 - Unusable"));
 			else
-				AddPanelString(fmt::format(_("Spell Level {:d}"), spellLevel));
+				AddPanelString(fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
 			break;
 		case RSPLTYPE_SCROLL: {
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_RED - 59;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), spellColor);
-			InfoString = fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText));
+			InfoString = fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", spellDataItem.sNameText));
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
 				return item.isScrollOf(spellId);
 			});
-			AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount));
+			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
 		} break;
 		case RSPLTYPE_CHARGES: {
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_ORANGE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
-			InfoString = fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText));
+			InfoString = fmt::format(fmt::runtime(_("Staff of {:s}")), pgettext("spell", spellDataItem.sNameText));
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-			AddPanelString(fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges));
+			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Charge", "{:d} Charges", charges)), charges));
 		} break;
 		case RSPLTYPE_INVALID:
 			break;
 		}
 		if (hotkeyName) {
-			AddPanelString(fmt::format(_("Spell Hotkey {:s}"), *hotkeyName));
+			AddPanelString(fmt::format(fmt::runtime(_("Spell Hotkey {:s}")), *hotkeyName));
 		}
 	}
 }

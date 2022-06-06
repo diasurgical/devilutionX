@@ -3102,7 +3102,7 @@ StartPlayerKill(int pnum, int earflag)
 					if (earflag != 0) {
 						Item ear;
 						InitializeItem(ear, IDI_EAR);
-						CopyUtf8(ear._iName, fmt::format(_("Ear of {:s}"), player._pName), sizeof(ear._iName));
+						CopyUtf8(ear._iName, fmt::format(fmt::runtime(_("Ear of {:s}")), player._pName), sizeof(ear._iName));
 						CopyUtf8(ear._iIName, player._pName, sizeof(ear._iIName));
 						switch (player._pClass) {
 						case HeroClass::Sorcerer:

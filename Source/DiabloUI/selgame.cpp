@@ -94,9 +94,9 @@ static std::string GetErrorMessageIncompatibility(const GameData &data)
 		default:
 			return std::string(_("The host is running a different game than you."));
 		}
-		return fmt::format(_("The host is running a different game mode ({:s}) than you."), gameMode);
+		return fmt::format(fmt::runtime(_("The host is running a different game mode ({:s}) than you.")), gameMode);
 	} else {
-		return fmt::format(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version {:s} does not match the host {:d}.{:d}.{:d}."), PROJECT_VERSION, data.versionMajor, data.versionMinor, data.versionPatch);
+		return fmt::format(fmt::runtime(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version {:s} does not match the host {:d}.{:d}.{:d}.")), PROJECT_VERSION, data.versionMajor, data.versionMinor, data.versionPatch);
 	}
 }
 
@@ -235,7 +235,7 @@ void selgame_GameSelection_Focus(int value)
 				difficulty = _("Hell");
 				break;
 			}
-			infoString.append(fmt::format(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}"), difficulty));
+			infoString.append(fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty));
 			infoString.append("\n");
 			switch (gameInfo.gameData.nTickRate) {
 			case 20:
@@ -336,7 +336,7 @@ void selgame_GameSelection_Select(int value)
 		break;
 	}
 	case 2: {
-		selgame_Title = fmt::format(_("Join {:s} Games"), _(ConnectionNames[provider]));
+		selgame_Title = fmt::format(fmt::runtime(_("Join {:s} Games")), _(ConnectionNames[provider]));
 		title = selgame_Title.c_str();
 
 		const char *inputHint;

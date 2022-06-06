@@ -278,7 +278,7 @@ public:
 		} else {
 			if (!args_[*result].HasFormatted()) {
 				const auto fmtStr = positional ? "{}" : fmt::string_view(rest.data(), fmtLen);
-				args_[*result].SetFormatted(fmt::format(fmtStr, args_[*result].GetIntValue()));
+				args_[*result].SetFormatted(fmt::format(fmt::runtime(fmtStr), args_[*result].GetIntValue()));
 			}
 			rest.remove_prefix(fmtLen);
 		}

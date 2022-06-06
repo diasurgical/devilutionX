@@ -1928,7 +1928,7 @@ int8_t CheckInvHLight()
 
 	if (pi->_itype == ItemType::Gold) {
 		int nGold = pi->_ivalue;
-		InfoString = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
+		InfoString = fmt::format(fmt::runtime(ngettext("{:d} gold piece", "{:d} gold pieces", nGold)), nGold);
 	} else {
 		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {

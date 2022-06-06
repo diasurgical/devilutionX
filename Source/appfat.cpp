@@ -92,7 +92,7 @@ void ErrDlg(const char *title, string_view error, string_view logFilePath, int l
 {
 	FreeDlg();
 
-	std::string text = fmt::format(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}"), error, logFilePath, logLineNr);
+	std::string text = fmt::format(fmt::runtime(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}")), error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
 	app_fatal(nullptr);
@@ -101,9 +101,9 @@ void ErrDlg(const char *title, string_view error, string_view logFilePath, int l
 void InsertCDDlg(string_view archiveName)
 {
 	std::string text = fmt::format(
-	    _("Unable to open main data archive ({:s}).\n"
-	      "\n"
-	      "Make sure that it is in the game folder."),
+	    fmt::runtime(_("Unable to open main data archive ({:s}).\n"
+	                   "\n"
+	                   "Make sure that it is in the game folder.")),
 	    archiveName);
 
 	UiErrorOkDialog(_("Data File Error"), text);
@@ -112,7 +112,7 @@ void InsertCDDlg(string_view archiveName)
 
 void DirErrorDlg(string_view error)
 {
-	std::string text = fmt::format(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}"), error);
+	std::string text = fmt::format(fmt::runtime(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}")), error);
 
 	UiErrorOkDialog(_("Read-Only Directory Error"), text);
 	app_fatal(nullptr);
