@@ -35,9 +35,7 @@ namespace {
 /** List of character names for the character selection screen. */
 char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 
-std::string savePrefix;
-
-std::string GetSavePath(uint32_t saveNum)
+std::string GetSavePath(uint32_t saveNum, std::string savePrefix = "")
 {
 	std::string path = paths::PrefPath();
 	const char *ext = ".sv";
@@ -260,6 +258,23 @@ bool CompareSaves(const std::string &actualSavePath, const std::string &referenc
 	return compareResult;
 }
 
+void pfile_write_hero(MpqWriter &saveWriter, bool writeGameData)
+{
+	if (writeGameData) {
+		SaveGameData(saveWriter);
+		RenameTempToPerm(saveWriter);
+	}
+	PlayerPack pkplr;
+	Player &myPlayer = *MyPlayer;
+
+	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer, false);
+	EncodeHero(saveWriter, &pkplr);
+	if (!gbVanilla) {
+		SaveHotkeys(saveWriter);
+		SaveHeroItems(saveWriter, myPlayer);
+	}
+}
+
 } // namespace
 
 std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum)
@@ -303,41 +318,26 @@ const char *pfile_get_password()
 void pfile_write_hero(bool writeGameData)
 {
 	MpqWriter saveWriter = GetSaveWriter(gSaveNumber);
-	if (writeGameData) {
-		SaveGameData(saveWriter);
-		RenameTempToPerm(saveWriter);
-	}
-	PlayerPack pkplr;
-	Player &myPlayer = *MyPlayer;
-
-	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer, false);
-	EncodeHero(saveWriter, &pkplr);
-	if (!gbVanilla) {
-		SaveHotkeys(saveWriter);
-		SaveHeroItems(saveWriter, myPlayer);
-	}
+	pfile_write_hero(saveWriter, writeGameData);
 }
 
 void pfile_write_hero_demo(int demo)
 {
-	savePrefix = fmt::format("demo_{}_reference_", demo);
-	pfile_write_hero(true);
-	savePrefix.clear();
+	std::string savePath = GetSavePath(gSaveNumber, fmt::format("demo_{}_reference_", demo));
+	auto saveWriter = MpqWriter(savePath.c_str());
+	pfile_write_hero(saveWriter, true);
 }
 
 HeroCompareResult pfile_compare_hero_demo(int demo)
 {
-	savePrefix = fmt::format("demo_{}_reference_", demo);
-	std::string referenceSavePath = GetSavePath(gSaveNumber);
-	savePrefix.clear();
+	std::string referenceSavePath = GetSavePath(gSaveNumber, fmt::format("demo_{}_reference_", demo));
 
 	if (!FileExists(referenceSavePath.c_str()))
 		return HeroCompareResult::ReferenceNotFound;
 
-	savePrefix = fmt::format("demo_{}_actual_", demo);
-	pfile_write_hero(true);
-	std::string actualSavePath = GetSavePath(gSaveNumber);
-	savePrefix.clear();
+	std::string actualSavePath = GetSavePath(gSaveNumber, fmt::format("demo_{}_actual_", demo));
+	auto saveWriter = MpqWriter(actualSavePath.c_str());
+	pfile_write_hero(saveWriter, true);
 
 	bool compareResult = CompareSaves(actualSavePath, referenceSavePath);
 	return compareResult ? HeroCompareResult::Same : HeroCompareResult::Difference;
