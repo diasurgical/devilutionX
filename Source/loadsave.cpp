@@ -642,7 +642,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 		monster.mlid = NO_LIGHT; // Correct incorect values in old saves
 
 	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
-		int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
+		int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
 		monster.mlid = AddLight(monster.position.tile, lightRadius);
 	}
 
@@ -1991,7 +1991,7 @@ void LoadGame(bool firstflag)
 	int tmpNummissiles = file.NextBE<int32_t>();
 	int tmpNobjects = file.NextBE<int32_t>();
 
-	if (!gbIsHellfire && currlevel > 17)
+	if (!gbIsHellfire && IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT))
 		app_fatal("%s", _("Player is on a Hellfire only level").c_str());
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
@@ -2404,7 +2404,7 @@ void SaveLevel()
 
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
 
-	if (currlevel == 0)
+	if (leveltype == DTYPE_TOWN)
 		glSeedTbl[0] = AdvanceRndSeed();
 
 	char szName[MAX_PATH];

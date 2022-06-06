@@ -55,7 +55,7 @@ void AddWarpMissile(int i, Point position)
 	if (missile != nullptr) {
 		SetMissDir(*missile, 1);
 
-		if (currlevel != 0)
+		if (leveltype != DTYPE_TOWN)
 			missile->_mlid = AddLight(missile->position.tile, 15);
 	}
 
@@ -67,7 +67,7 @@ void SyncPortals()
 	for (int i = 0; i < MAXPORTAL; i++) {
 		if (!Portals[i].open)
 			continue;
-		if (currlevel == 0)
+		if (leveltype == DTYPE_TOWN)
 			AddWarpMissile(i, WarpDrop[i]);
 		else {
 			int lvl = currlevel;
@@ -106,7 +106,7 @@ bool PortalOnLevel(int i)
 	if (Portals[i].level == currlevel)
 		return true;
 
-	return currlevel == 0;
+	return leveltype == DTYPE_TOWN;
 }
 
 void RemovePortalMissile(int id)
@@ -131,7 +131,7 @@ void SetCurrentPortal(int p)
 
 void GetPortalLevel()
 {
-	if (currlevel != 0) {
+	if (leveltype != DTYPE_TOWN) {
 		setlevel = false;
 		currlevel = 0;
 		MyPlayer->plrlevel = 0;
@@ -160,7 +160,7 @@ void GetPortalLevel()
 
 void GetPortalLvlPos()
 {
-	if (currlevel == 0) {
+	if (leveltype == DTYPE_TOWN) {
 		ViewPosition = WarpDrop[portalindex] + Displacement { 1, 1 };
 	} else {
 		ViewPosition = Portals[portalindex].position;

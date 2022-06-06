@@ -110,7 +110,7 @@ void DrawSpell(const Surface &out)
 		if (tlvl <= 0)
 			st = RSPLTYPE_INVALID;
 	}
-	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
+	if (leveltype == DTYPE_TOWN && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 26;
@@ -134,7 +134,7 @@ void DrawSpellList(const Surface &out)
 		spell_type transType = spellListItem.type;
 		int spellLevel = 0;
 		const SpellData &spellDataItem = spelldata[static_cast<size_t>(spellListItem.id)];
-		if (currlevel == 0 && !spellDataItem.sTownSpell) {
+		if (leveltype == DTYPE_TOWN && !spellDataItem.sTownSpell) {
 			transType = RSPLTYPE_INVALID;
 		}
 		if (spellListItem.type == RSPLTYPE_SPELL) {

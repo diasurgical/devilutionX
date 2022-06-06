@@ -3762,9 +3762,7 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 		CreateTypeItem(Objects[i].position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendmsg, false);
 	} else if (currlevel >= 10 && currlevel <= 12) {
 		CreateTypeItem(Objects[i].position, false, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
-	} else if (currlevel >= 13 && currlevel <= 16) {
-		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
-	} else if (currlevel >= 17) {
+	} else if (currlevel >= 13) {
 		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
 	}
 	if (pnum == MyPlayerId)
@@ -4637,7 +4635,7 @@ void InitObjects()
 			}
 			InitRndBarrels();
 		}
-		if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
+		if (leveltype == DTYPE_CAVES) {
 			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
 		}
@@ -4672,6 +4670,9 @@ void InitObjects()
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
+		}
+		if (leveltype == DTYPE_NEST) {
+			InitRndBarrels();
 		}
 		if (leveltype == DTYPE_CRYPT) {
 			InitRndLocBigObj(10, 15, OBJ_L5SARC);

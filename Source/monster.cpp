@@ -3852,7 +3852,7 @@ void InitMonsters()
 			int mtype = scattertypes[GenerateRnd(numscattypes)];
 			if (currlevel == 1 || GenerateRnd(2) == 0)
 				na = 1;
-			else if (currlevel == 2 || (currlevel >= 21 && currlevel <= 24))
+			else if (currlevel == 2 || leveltype == DTYPE_CRYPT)
 				na = GenerateRnd(2) + 2;
 			else
 				na = GenerateRnd(3) + 3;

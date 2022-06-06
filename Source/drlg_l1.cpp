@@ -759,7 +759,7 @@ void ApplyShadowsPatterns()
 	}
 }
 
-int PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int noquad)
+bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int noquad)
 {
 	int sx;
 	int sy;
@@ -830,7 +830,7 @@ int PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool s
 					}
 				}
 				if (++found > 4000)
-					return -1;
+					return false;
 			}
 		}
 
@@ -859,14 +859,7 @@ int PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool s
 		ViewPosition = Point { 19, 20 } + Displacement { sx, sy } * 2;
 	}
 
-	if (sx < cx && sy < cy)
-		return 0;
-	if (sx > cx && sy < cy)
-		return 1;
-	if (sx < cx && sy > cy)
-		return 2;
-
-	return 3;
+	return true;
 }
 
 void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
@@ -1988,32 +1981,32 @@ void FixTransparency()
 
 void FixDirtTiles()
 {
-	if (currlevel < 21) {
-		for (int j = 0; j < DMAXY - 1; j++) {
-			for (int i = 0; i < DMAXX - 1; i++) {
-				if (dungeon[i][j] == 21 && dungeon[i + 1][j] != 19) {
-					dungeon[i][j] = 202;
-				}
-				if (dungeon[i][j] == 19 && dungeon[i + 1][j] != 19) {
-					dungeon[i][j] = 200;
-				}
-				if (dungeon[i][j] == 24 && dungeon[i + 1][j] != 19) {
-					dungeon[i][j] = 205;
-				}
-				if (dungeon[i][j] == 18 && dungeon[i][j + 1] != 18) {
-					dungeon[i][j] = 199;
-				}
-				if (dungeon[i][j] == 21 && dungeon[i][j + 1] != 18) {
-					dungeon[i][j] = 202;
-				}
-				if (dungeon[i][j] == 23 && dungeon[i][j + 1] != 18) {
-					dungeon[i][j] = 204;
-				}
+	for (int j = 0; j < DMAXY - 1; j++) {
+		for (int i = 0; i < DMAXX - 1; i++) {
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] != 19) {
+				dungeon[i][j] = 202;
+			}
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] != 19) {
+				dungeon[i][j] = 200;
+			}
+			if (dungeon[i][j] == 24 && dungeon[i + 1][j] != 19) {
+				dungeon[i][j] = 205;
+			}
+			if (dungeon[i][j] == 18 && dungeon[i][j + 1] != 18) {
+				dungeon[i][j] = 199;
+			}
+			if (dungeon[i][j] == 21 && dungeon[i][j + 1] != 18) {
+				dungeon[i][j] = 202;
+			}
+			if (dungeon[i][j] == 23 && dungeon[i][j + 1] != 18) {
+				dungeon[i][j] = 204;
 			}
 		}
-		return;
 	}
+}
 
+void FixCryptDirtTiles()
+{
 	for (int j = 0; j < DMAXY - 1; j++) {
 		for (int i = 0; i < DMAXX - 1; i++) {
 			if (dungeon[i][j] == 19)
@@ -2168,6 +2161,69 @@ void CryptPatternGroup7(int rndper)
 	PlaceMiniSetRandom(CryptPattern8, rndper);
 }
 
+bool PlaceCathedralStairs(lvl_entry entry)
+{
+	bool success = true;
+
+	// Place poison water entrance
+	if (Quests[Q_PWATER].IsAvailable()) {
+		if (!PlaceMiniSet(PWATERIN, 1, 1, 0, 0, entry == ENTRY_RTNLVL, -1))
+			success = false;
+		if (entry == ENTRY_RTNLVL)
+			ViewPosition += Displacement { 2, 3 };
+	}
+
+	// Place stairs up
+	if (!PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, 1, 1, 0, 0, entry == ENTRY_MAIN, -1)) {
+		if (MyPlayer->pOriginalCathedral)
+			return false;
+		success = false;
+	}
+
+	// Place stairs down
+	if (!Quests[Q_LTBANNER].IsAvailable() && !PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV, -1))
+		success = false;
+	if (entry == ENTRY_PREV) {
+		if (Quests[Q_LTBANNER].IsAvailable())
+			ViewPosition = Point { 20, 28 } + Displacement { setpc_x, setpc_y } * 2;
+		else
+			ViewPosition.y--;
+	}
+
+	return success;
+}
+
+bool PlaceCryptStairs(lvl_entry entry)
+{
+	bool success = true;
+
+	// Place stairs up
+	bool enteringFromAbove = entry == ENTRY_MAIN || entry == ENTRY_TWARPDN;
+	if (!PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, 1, 1, 0, 0, enteringFromAbove, -1))
+		success = false;
+	if (enteringFromAbove)
+		ViewPosition.y++;
+
+	// Place stairs down
+	if (currlevel != 24) {
+		if (!PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV, -1))
+			success = false;
+		if (entry == ENTRY_PREV)
+			ViewPosition.y += 3;
+	}
+
+	return success;
+}
+
+bool PlaceStairs(lvl_entry entry)
+{
+	if (leveltype == DTYPE_CRYPT) {
+		return PlaceCryptStairs(entry);
+	}
+
+	return PlaceCathedralStairs(entry);
+}
+
 void GenerateLevel(lvl_entry entry)
 {
 	int minarea = 761;
@@ -2182,8 +2238,7 @@ void GenerateLevel(lvl_entry entry)
 		break;
 	}
 
-	bool doneflag;
-	do {
+	while (true) {
 		DRLG_InitTrans();
 
 		do {
@@ -2198,111 +2253,9 @@ void GenerateLevel(lvl_entry entry)
 		AddWall();
 		ClearFlags();
 		FloodTransparencyValues(13);
-
-		doneflag = true;
-
-		if (Quests[Q_PWATER].IsAvailable()) {
-			if (entry == ENTRY_MAIN) {
-				if (PlaceMiniSet(PWATERIN, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-			} else {
-				if (PlaceMiniSet(PWATERIN, 1, 1, 0, 0, false, -1) < 0)
-					doneflag = false;
-				ViewPosition.y--;
-			}
-		}
-		if (Quests[Q_LTBANNER].IsAvailable()) {
-			if (entry == ENTRY_MAIN) {
-				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-			} else {
-				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
-					doneflag = false;
-				if (entry == ENTRY_PREV) {
-					ViewPosition = Point { 20, 28 } + Displacement { setpc_x, setpc_y } * 2;
-				} else {
-					ViewPosition.y--;
-				}
-			}
-		} else if (entry == ENTRY_MAIN) {
-			if (currlevel < 21) {
-				if (!MyPlayer->pOriginalCathedral) {
-					if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
-						doneflag = false;
-					if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
-						doneflag = false;
-				} else {
-					if (PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
-						doneflag = false;
-					else if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
-						doneflag = false;
-				}
-			} else if (currlevel == 21) {
-				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1) < 0)
-					doneflag = false;
-				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
-					doneflag = false;
-				ViewPosition.y++;
-			} else {
-				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-				if (currlevel != 24) {
-					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
-						doneflag = false;
-				}
-				ViewPosition.y++;
-			}
-		} else if (!MyPlayer->pOriginalCathedral && entry == ENTRY_PREV) {
-			if (currlevel < 21) {
-				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
-					doneflag = false;
-				if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-				ViewPosition.y--;
-			} else if (currlevel == 21) {
-				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1) < 0)
-					doneflag = false;
-				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-				ViewPosition.y += 3;
-			} else {
-				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-				if (currlevel != 24) {
-					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
-						doneflag = false;
-				}
-				ViewPosition.y += 3;
-			}
-		} else {
-			if (currlevel < 21) {
-				if (!MyPlayer->pOriginalCathedral) {
-					if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
-						doneflag = false;
-					if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
-						doneflag = false;
-				} else {
-					if (PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
-						doneflag = false;
-					else if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
-						doneflag = false;
-					ViewPosition.y--;
-				}
-			} else if (currlevel == 21) {
-				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
-					doneflag = false;
-			} else {
-				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
-					doneflag = false;
-				if (currlevel != 24) {
-					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
-						doneflag = false;
-				}
-			}
-		}
-	} while (!doneflag);
+		if (PlaceStairs(entry))
+			break;
+	}
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
@@ -2316,7 +2269,11 @@ void GenerateLevel(lvl_entry entry)
 	}
 
 	FixTransparency();
-	FixDirtTiles();
+	if (leveltype == DTYPE_CRYPT) {
+		FixCryptDirtTiles();
+	} else {
+		FixDirtTiles();
+	}
 	FixCornerTiles();
 
 	for (int j = 0; j < DMAXY; j++) {
@@ -2326,9 +2283,7 @@ void GenerateLevel(lvl_entry entry)
 		}
 	}
 
-	if (currlevel < 21) {
-		Substitution();
-	} else {
+	if (leveltype == DTYPE_CRYPT) {
 		CryptPatternGroup1(10);
 		PlaceMiniSetRandom(CryptPattern1, 95);
 		PlaceMiniSetRandom(CryptPattern2, 95);
@@ -2374,9 +2329,8 @@ void GenerateLevel(lvl_entry entry)
 			CryptLavafloor();
 			break;
 		}
-	}
-
-	if (currlevel < 21) {
+	} else {
+		Substitution();
 		ApplyShadowsPatterns();
 		PlaceMiniSet(LAMPS, 5, 10, 0, 0, false, -1);
 		FillFloor();
@@ -2440,7 +2394,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 	Pass3();
 	DRLG_Init_Globals();
 
-	if (currlevel < 17)
+	if (leveltype != DTYPE_CRYPT)
 		InitDungeonPieces();
 
 	SetMapMonsters(dunData.get(), { 0, 0 });
@@ -2508,10 +2462,10 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 	Pass3();
 	FreeQuestSetPieces();
 
-	if (currlevel < 17) {
-		InitDungeonPieces();
-	} else {
+	if (leveltype == DTYPE_CRYPT) {
 		InitCryptPieces();
+	} else {
+		InitDungeonPieces();
 	}
 
 	DRLG_SetPC();

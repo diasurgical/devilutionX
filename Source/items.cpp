@@ -383,13 +383,13 @@ bool IsSuffixValidForItemType(int i, AffixItemType flgs)
 
 int ItemsGetCurrlevel()
 {
-	int lvl = currlevel;
-	if (currlevel >= 17 && currlevel <= 20)
-		lvl = currlevel - 8;
-	if (currlevel >= 21 && currlevel <= 24)
-		lvl = currlevel - 7;
+	if (leveltype == DTYPE_NEST)
+		return currlevel - 8;
 
-	return lvl;
+	if (leveltype == DTYPE_CRYPT)
+		return currlevel - 7;
+
+	return currlevel;
 }
 
 bool ItemPlace(Point position)
