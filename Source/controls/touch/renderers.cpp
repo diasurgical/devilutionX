@@ -454,7 +454,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 		if (pcursinvitem != -1) {
 			Item &item = GetInventoryItem(*MyPlayer, pcursinvitem);
-			if (!item.isScroll() || !spelldata[item._iSpell].sTargeted) {
+			if (!item.isScroll() || !TargetsMonster(item._iSpell)) {
 				if (!item.isEquipment()) {
 					return GetApplyButtonType(virtualPadButton->isHeld);
 				}
