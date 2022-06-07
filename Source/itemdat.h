@@ -332,7 +332,7 @@ enum class ItemSpecialEffect {
 	FireDamage             = 1 << 4,
 	LightningDamage        = 1 << 5,
 	DrainLife              = 1 << 6,
-	Unknown7               = 1 << 7,
+	SpecialArrows          = 1 << 7,
 	NoHealOnPlayer         = 1 << 8,
 	MultipleArrows         = 1 << 9,
 	Unknown10              = 1 << 10,
@@ -536,8 +536,8 @@ enum item_effect_type : int8_t {
 	IPL_RNDSTEALLIFE,
 	IPL_INFRAVISION, // unused
 	IPL_SETAC,
-	IPL_ADDACLIFE,
-	IPL_ADDMANAAC,
+	IPL_LIGHTNING,
+	IPL_CHARGEDBOLT,
 	IPL_FIRERESCLVL, // unused
 	IPL_AC_CURSE,
 	IPL_LASTDIABLO = IPL_AC_CURSE,
