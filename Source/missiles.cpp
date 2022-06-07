@@ -3130,20 +3130,8 @@ void MI_SpecArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		switch (missile.var7) {
-		case 0:
-			mitype = MIS_FIRENOVA;
-			break;
-		case 1:
-			mitype = MIS_LIGHTARROW;
-			break;
-		case 2:
-			mitype = MIS_CBOLTARROW;
-			break;
-		case 3:
-			mitype = MIS_HBOLTARROW;
-			break;
-		}
+		mitype = (missile_id)missile.var7;
+		
 	}
 	AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 	if (mitype == MIS_CBOLTARROW) {
