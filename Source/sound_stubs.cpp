@@ -6,6 +6,7 @@ namespace devilution {
 bool gbSndInited;
 bool gbMusicOn;
 bool gbSoundOn;
+_music_id sgnMusicTrack = NUM_MUSIC;
 
 // Disable clang-format here because our config says:
 // AllowShortFunctionsOnASingleLine: None

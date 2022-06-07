@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=DevilutionX Hellfire
 GenericName=DevilutionX Hellfire
-Comment=Play Diablo: Hellfire on Linux
-Comment[da]=Spil Diablo: Hellfire på Linux
-Comment[hr]=Igrajte Diablo: Hellfire na Linuxu
-Comment[it]=Gioca a Diablo: Hellfire su Linux
+Comment=Play Diablo: Hellfire
+Comment[da]=Spil Diablo: Hellfire
+Comment[hr]=Igrajte Diablo: Hellfire
+Comment[it]=Gioca a Diablo: Hellfire
+Comment[ru]=Играть в Diablo: Hellfire
+Comment[ua]=Грати в Diablo: Hellfire
 Exec=devilutionx --hellfire
 Icon=devilutionx-hellfire
 Terminal=false

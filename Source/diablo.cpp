@@ -37,6 +37,7 @@
 #include "engine/random.hpp"
 #include "error.h"
 #include "gamemenu.h"
+#include "gendung.h"
 #include "gmenu.h"
 #include "help.h"
 #include "hwcursor.hpp"
@@ -90,7 +91,6 @@
 namespace devilution {
 
 uint32_t glSeedTbl[NUMLEVELS];
-dungeon_type gnLevelTypeTbl[NUMLEVELS];
 Point MousePosition;
 bool gbRunGame;
 bool gbRunGameResult;
@@ -113,8 +113,6 @@ char gszProductName[64] = "DevilutionX vUnknown";
 bool DebugDisableNetworkTimeout = false;
 std::vector<std::string> DebugCmdsFromCommandLine;
 #endif
-/** Specifies whether players are in non-PvP mode. */
-bool gbFriendlyMode = true;
 GameLogicStep gGameLogicStep = GameLogicStep::None;
 QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 	{ "QuickMessage1", N_("I need help! Come Here!") },
@@ -180,7 +178,7 @@ void FreeGame()
 	FreeInfoBoxGfx();
 	FreeStoreMem();
 
-	for (auto &player : Players)
+	for (Player &player : Players)
 		ResetPlayerGFX(player);
 
 	FreeCursor();
@@ -220,7 +218,7 @@ void LeftMouseCmd(bool bShift)
 {
 	bool bNear;
 
-	assert(MousePosition.y < GetMainPanel().position.y || MousePosition.x < GetMainPanel().position.x || MousePosition.x >= GetMainPanel().position.x + PANEL_WIDTH);
+	assert(!GetMainPanel().Contains(MousePosition));
 
 	if (leveltype == DTYPE_TOWN) {
 		CloseGoldWithdraw();
@@ -236,7 +234,7 @@ void LeftMouseCmd(bool bShift)
 		return;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	bNear = myPlayer.position.tile.WalkingDistance(cursPosition) < 2;
 	if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 		NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
@@ -254,7 +252,7 @@ void LeftMouseCmd(bool bShift)
 				LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 			}
-		} else if (pcursplr != -1 && !gbFriendlyMode) {
+		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
 		}
@@ -274,7 +272,7 @@ void LeftMouseCmd(bool bShift)
 		} else if (pcursmonst != -1) {
 			LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else if (pcursplr != -1 && !gbFriendlyMode) {
+		} else if (pcursplr != -1 && !myPlayer.friendlyMode) {
 			LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 			NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 		}
@@ -384,7 +382,7 @@ void RightMouseDown(bool isShiftHeld)
 {
 	LastMouseButtonAction = MouseActionType::None;
 
-	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
+	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || MyPlayer->_pInvincible) {
 		return;
 	}
 
@@ -431,9 +429,9 @@ void ReleaseKey(int vkey)
 void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
-		if (!chrflag && !QuestLogIsOpen && !IsStashOpen && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+		if (!IsLeftPanelOpen() && IsRightPanelOpen() && MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 			SetCursorPos(MousePosition + Displacement { 160, 0 });
-		} else if (!invflag && !sbookflag && (chrflag || QuestLogIsOpen) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+		} else if (!IsRightPanelOpen() && IsLeftPanelOpen() && MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 			SetCursorPos(MousePosition - Displacement { 160, 0 });
 		}
 	}
@@ -886,6 +884,7 @@ void DiabloParseFlags(int argc, char **argv)
 	bool timedemo = false;
 	int demoNumber = -1;
 	int recordNumber = -1;
+	bool createDemoReference = false;
 	for (int i = 1; i < argc; i++) {
 		const string_view arg = argv[i];
 		if (arg == "-h" || arg == "--help") {
@@ -929,6 +928,8 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(0);
 			}
 			recordNumber = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("--create-reference", argv[i]) == 0) {
+			createDemoReference = true;
 		} else if (arg == "-n") {
 			gbShowIntro = false;
 		} else if (arg == "-f") {
@@ -973,7 +974,7 @@ void DiabloParseFlags(int argc, char **argv)
 	if (demoNumber != -1)
 		demo::InitPlayBack(demoNumber, timedemo);
 	if (recordNumber != -1)
-		demo::InitRecording(recordNumber);
+		demo::InitRecording(recordNumber, createDemoReference);
 }
 
 void DiabloInitScreen()
@@ -1171,34 +1172,31 @@ void LoadAllGFX()
 }
 
 /**
- * @param lvldir method of entry
+ * @param entry Where is the player entering from
  */
-void CreateLevel(lvl_entry lvldir)
+void CreateLevel(lvl_entry entry)
 {
+	CreateDungeon(glSeedTbl[currlevel], entry);
+
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		CreateTown(lvldir);
 		InitTownTriggers();
 		break;
 	case DTYPE_CATHEDRAL:
 	case DTYPE_CRYPT:
-		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL1Triggers();
 		Freeupstairs();
 		break;
 	case DTYPE_CATACOMBS:
-		CreateL2Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL2Triggers();
 		Freeupstairs();
 		break;
 	case DTYPE_CAVES:
 	case DTYPE_NEST:
-		CreateL3Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL3Triggers();
 		Freeupstairs();
 		break;
 	case DTYPE_HELL:
-		CreateL4Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL4Triggers();
 		Freeupstairs();
 		break;
@@ -1212,7 +1210,7 @@ void CreateLevel(lvl_entry lvldir)
 void UnstuckChargers()
 {
 	if (gbIsMultiplayer) {
-		for (auto &player : Players) {
+		for (Player &player : Players) {
 			if (!player.plractive)
 				continue;
 			if (player._pLvlChanging)
@@ -1236,7 +1234,7 @@ void UpdateMonsterLights()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 		if (monster.mlid != NO_LIGHT) {
-			if (monster.mlid == Players[MyPlayerId]._plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
+			if (monster.mlid == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
 				monster.mlid = NO_LIGHT;
 				continue;
 			}
@@ -1346,7 +1344,7 @@ void InventoryKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	invflag = !invflag;
-	if (!chrflag && !QuestLogIsOpen && !IsStashOpen && CanPanelsCoverView()) {
+	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
@@ -1367,7 +1365,7 @@ void CharacterSheetKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	chrflag = !chrflag;
-	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+	if (!IsRightPanelOpen() && CanPanelsCoverView()) {
 		if (!chrflag) { // We closed the character sheet
 			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
@@ -1392,13 +1390,13 @@ void QuestLogKeyPressed()
 	} else {
 		QuestLogIsOpen = false;
 	}
-	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+	if (!IsRightPanelOpen() && CanPanelsCoverView()) {
 		if (!QuestLogIsOpen) { // We closed the quest log
-			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x > 160 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		} else if (!chrflag) { // We opened the character quest log
-			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		}
@@ -1429,7 +1427,7 @@ void SpellBookKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	sbookflag = !sbookflag;
-	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
+	if (!IsLeftPanelOpen() && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < GetMainPanel().position.y) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
@@ -1445,7 +1443,7 @@ void SpellBookKeyPressed()
 
 bool IsPlayerDead()
 {
-	return Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead;
+	return MyPlayer->_pmode == PM_DEATH || MyPlayerIsDead;
 }
 
 bool IsGameRunning()
@@ -1467,7 +1465,7 @@ void InitKeymapActions()
 		    N_("Use Belt item."),
 		    '1' + i,
 		    [i] {
-			    auto &myPlayer = Players[MyPlayerId];
+			    Player &myPlayer = *MyPlayer;
 			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
 				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			    }
@@ -1533,7 +1531,7 @@ void InitKeymapActions()
 	    N_("Stop hero"),
 	    N_("Stops walking and cancel pending actions."),
 	    DVL_VK_INVALID,
-	    [] { Players[MyPlayerId].Stop(); },
+	    [] { MyPlayer->Stop(); },
 	    nullptr,
 	    CanPlayerTakeAction);
 	sgOptions.Keymapper.AddAction(
@@ -1747,7 +1745,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 			InitLevels();
 			InitQuests();
 			InitPortals();
-			InitDungMsgs(Players[MyPlayerId]);
+			InitDungMsgs(*MyPlayer);
 			DeltaSyncJunk();
 		}
 		giNumberOfLevels = gbIsHellfire ? 25 : 17;
@@ -1849,7 +1847,7 @@ bool TryIconCurs()
 		return true;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1)
@@ -2032,7 +2030,7 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (invflag || chrflag || sbookflag || QuestLogIsOpen) {
+	if (IsLeftPanelOpen() || IsRightPanelOpen()) {
 		ClosePanels();
 		rv = true;
 	}
@@ -2127,7 +2125,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	InitLevelMonsters();
 	IncProgress();
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (!setlevel) {
 		CreateLevel(lvldir);
@@ -2159,7 +2157,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		IncProgress();
 
-		for (auto &player : Players) {
+		for (Player &player : Players) {
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
@@ -2174,7 +2172,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		bool visited = false;
 		int players = gbIsMultiplayer ? MAX_PLRS : 1;
 		for (int i = 0; i < players; i++) {
-			auto &player = Players[i];
+			Player &player = Players[i];
 			if (player.plractive)
 				visited = visited || player._pLvlVisited[currlevel];
 		}
@@ -2260,7 +2258,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			GetPortalLvlPos();
 		IncProgress();
 
-		for (auto &player : Players) {
+		for (Player &player : Players) {
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
@@ -2286,7 +2284,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SyncPortals();
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &player = Players[i];
+		Player &player = Players[i];
 		if (player.plractive && player.plrlevel == currlevel && (!player._pLvlChanging || i == MyPlayerId)) {
 			if (player._pHitPoints > 0) {
 				if (!gbIsMultiplayer)

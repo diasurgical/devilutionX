@@ -6914,7 +6914,7 @@ msgstr[0] "Toiag ({:d} încărcătură)"
 msgstr[1] "Staff ({:d} încărcături)"
 msgstr[2] "Staff ({:d} de încărcături)"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 #, fuzzy
 #| msgid "Level {:d}"
@@ -6926,28 +6926,28 @@ msgstr "Nivel {:d}"
 msgid "Unusable"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 #, fuzzy
 #| msgid "Charges: {:d}/{:d}"
 msgid "Heals: {:d} - {:d}"
 msgstr "Încărcături: {:d}/{:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 #, fuzzy
 #| msgid "Damage: {:d}-{:d}  "
 msgid "Damage: {:d} - {:d}"
 msgstr "Daune: {:d}-{:d}  "
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 #, fuzzy
 #| msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgid "Dmg: 1/3 target hp"
 msgstr "Mana: {:d}  Dam: 1/3 tgt hp"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 #, fuzzy
 #| msgid "Mana: {:d}   Dam: n/a"

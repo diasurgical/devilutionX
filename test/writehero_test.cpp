@@ -343,7 +343,7 @@ TEST(Writehero, pfile_write_hero)
 	pfile_ui_save_create(&info);
 	PlayerPack pks;
 	PackPlayerTest(&pks);
-	UnPackPlayer(&pks, Players[MyPlayerId], true);
+	UnPackPlayer(&pks, *MyPlayer, true);
 	AssertPlayer(Players[0]);
 	pfile_write_hero();
 

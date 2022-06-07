@@ -860,8 +860,8 @@ void LoadLighting(LoadHelper *file, Light *pLight)
 	pLight->position.old.x = file->NextLE<int32_t>();
 	pLight->position.old.y = file->NextLE<int32_t>();
 	pLight->oldRadius = file->NextLE<int32_t>();
-	pLight->position.offset.x = file->NextLE<int32_t>();
-	pLight->position.offset.y = file->NextLE<int32_t>();
+	pLight->position.offset.deltaX = file->NextLE<int32_t>();
+	pLight->position.offset.deltaY = file->NextLE<int32_t>();
 	pLight->_lflags = file->NextBool32();
 }
 
@@ -893,7 +893,7 @@ void ConvertLevels()
 		if (!LevelFileExists())
 			continue;
 
-		leveltype = gnLevelTypeTbl[i];
+		leveltype = GetLevelType(currlevel);
 
 		LoadLevel();
 		SaveLevel();
@@ -936,6 +936,8 @@ void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
 		if (pItem[i].isEmpty() || tempItem.isEmpty())
 			continue;
 		if (pItem[i]._iSeed != tempItem._iSeed)
+			continue;
+		if (tempItem.IDidx == IDI_EAR)
 			continue;
 		pItem[i] = tempItem;
 	}
@@ -1571,8 +1573,8 @@ void SaveLighting(SaveHelper *file, Light *pLight)
 	file->WriteLE<int32_t>(pLight->position.old.x);
 	file->WriteLE<int32_t>(pLight->position.old.y);
 	file->WriteLE<int32_t>(pLight->oldRadius);
-	file->WriteLE<int32_t>(pLight->position.offset.x);
-	file->WriteLE<int32_t>(pLight->position.offset.y);
+	file->WriteLE<int32_t>(pLight->position.offset.deltaX);
+	file->WriteLE<int32_t>(pLight->position.offset.deltaY);
 	file->WriteLE<uint32_t>(pLight->_lflags ? 1 : 0);
 }
 
@@ -1826,7 +1828,7 @@ void LoadHotkeys()
 	if (!file.IsValid())
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	size_t nHotkeys = 4; // Defaults to old save format number
 
 	// Refill the spell arrays with no selection
@@ -1864,7 +1866,7 @@ void LoadHotkeys()
 
 void SaveHotkeys()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	SaveHelper file(CurrentSaveArchive(), "hotkeys", HotkeysSize());
 
@@ -1979,7 +1981,7 @@ void LoadGame(bool firstflag)
 	currlevel = file.NextBE<uint32_t>();
 	leveltype = static_cast<dungeon_type>(file.NextBE<uint32_t>());
 	if (!setlevel)
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 	int viewX = file.NextBE<int32_t>();
 	int viewY = file.NextBE<int32_t>();
 	invflag = file.NextBool8();
@@ -1997,7 +1999,7 @@ void LoadGame(bool firstflag)
 		file.Skip(4); // Skip loading gnLevelTypeTbl
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	LoadPlayer(file, myPlayer);
 
@@ -2264,12 +2266,14 @@ void SaveGameData()
 	file.WriteBE<uint32_t>(static_cast<uint32_t>(std::min(Missiles.size(), MaxMissilesForSaveGame)));
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
+	leveltype = GetLevelType(currlevel);
+
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		file.WriteBE<uint32_t>(glSeedTbl[i]);
-		file.WriteBE<int32_t>(getHellfireLevelType(gnLevelTypeTbl[i]));
+		file.WriteBE<int32_t>(getHellfireLevelType(GetLevelType(i)));
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	myPlayer.pDifficulty = sgGameInitInfo.nDifficulty;
 	SavePlayer(file, myPlayer);
 
@@ -2396,7 +2400,7 @@ void SaveLevel()
 {
 	PFileScopedArchiveWriter scopedWriter;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
 
@@ -2547,7 +2551,7 @@ void LoadLevel()
 		UpdateLighting = true;
 	}
 
-	for (auto &player : Players) {
+	for (Player &player : Players) {
 		if (player.plractive && currlevel == player.plrlevel)
 			Lights[player._plid]._lunflag = true;
 	}

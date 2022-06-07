@@ -328,7 +328,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 				return;
 			}
 
-			if (bannerQuest._qvar2 == 1 && player.TryRemoveInvItemById(IDI_BANNER)) {
+			if (bannerQuest._qvar2 == 1 && RemoveInventoryItemById(player, IDI_BANNER)) {
 				bannerQuest._qactive = QUEST_DONE;
 				bannerQuest._qvar1 = 3;
 				SpawnUnique(UITEM_HARCREST, barOwner.position + Direction::SouthWest);
@@ -375,7 +375,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 				return;
 			}
 
-			if (Quests[Q_ROCK]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ROCK)) {
+			if (Quests[Q_ROCK]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ROCK)) {
 				Quests[Q_ROCK]._qactive = QUEST_DONE;
 				SpawnUnique(UITEM_INFRARING, blackSmith.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_INFRA7);
@@ -395,7 +395,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 				return;
 			}
 
-			if (Quests[Q_ANVIL]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ANVIL)) {
+			if (Quests[Q_ANVIL]._qvar2 == 1 && RemoveInventoryItemById(player, IDI_ANVIL)) {
 				Quests[Q_ANVIL]._qactive = QUEST_DONE;
 				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_ANVIL7);
@@ -411,7 +411,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 void TalkToWitch(Player &player, Towner & /*witch*/)
 {
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
-		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_FUNGALTM)) {
+		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_FUNGALTM)) {
 			Quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
 			Quests[Q_MUSHROOM]._qlog = true;
 			Quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
@@ -420,7 +420,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 		}
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 			if (Quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_MUSHGIVEN) {
-				if (player.TryRemoveInvItemById(IDI_MUSHROOM)) {
+				if (RemoveInventoryItemById(player, IDI_MUSHROOM)) {
 					Quests[Q_MUSHROOM]._qvar1 = QS_MUSHGIVEN;
 					QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
 					QuestDialogTable[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
@@ -435,12 +435,12 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 				}
 			}
 			if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
-				if (player.HasItem(IDI_BRAIN)) {
+				if (HasInventoryItemWithId(player, IDI_BRAIN)) {
 					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH11;
 					InitQTextMsg(TEXT_MUSH11);
 					return;
 				}
-				if (player.HasItem(IDI_SPECELIX)) {
+				if (HasInventoryOrBeltItemWithId(player, IDI_SPECELIX)) {
 					InitQTextMsg(TEXT_MUSH12);
 					Quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					AllItemsList[IDI_SPECELIX].iUsable = true; /// BUGFIX: This will cause the elixir to be usable in the next game
@@ -456,7 +456,7 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 
 void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
 {
-	if (!player._pLvlVisited[21] && player.HasItem(IDI_MAPOFDOOM)) {
+	if (!player._pLvlVisited[21] && HasInventoryItemWithId(player, IDI_MAPOFDOOM)) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		Quests[Q_GRAVE]._qlog = true;
 		Quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
@@ -492,7 +492,7 @@ void TalkToHealer(Player &player, Towner &healer)
 		}
 	}
 	if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
-		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.TryRemoveInvItemById(IDI_BRAIN)) {
+		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && RemoveInventoryItemById(player, IDI_BRAIN)) {
 			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0);
 			InitQTextMsg(TEXT_MUSH4);
 			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
@@ -515,7 +515,7 @@ void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 {
 	auto &betrayerQuest = Quests[Q_BETRAYER];
 	if (!gbIsMultiplayer) {
-		if (betrayerQuest._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_LAZSTAFF)) {
+		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_LAZSTAFF)) {
 			InitQTextMsg(TEXT_VILE1);
 			betrayerQuest._qlog = true;
 			betrayerQuest._qactive = QUEST_ACTIVE;
@@ -582,7 +582,7 @@ void TalkToFarmer(Player &player, Towner &farmer)
 	switch (quest._qactive) {
 	case QUEST_NOTAVAIL:
 	case QUEST_INIT:
-		if (player.HasItem(IDI_RUNEBOMB)) {
+		if (HasInventoryItemWithId(player, IDI_RUNEBOMB)) {
 			InitQTextMsg(TEXT_FARMER2);
 			quest._qactive = QUEST_ACTIVE;
 			quest._qvar1 = 1;
@@ -615,7 +615,7 @@ void TalkToFarmer(Player &player, Towner &farmer)
 			NetSendCmdQuest(true, quest);
 		break;
 	case QUEST_ACTIVE:
-		InitQTextMsg(player.HasItem(IDI_RUNEBOMB) ? TEXT_FARMER2 : TEXT_FARMER3);
+		InitQTextMsg(HasInventoryItemWithId(player, IDI_RUNEBOMB) ? TEXT_FARMER2 : TEXT_FARMER3);
 		break;
 	case QUEST_DONE:
 		InitQTextMsg(TEXT_FARMER4);
@@ -635,14 +635,14 @@ void TalkToFarmer(Player &player, Towner &farmer)
 
 void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 {
-	if (player.TryRemoveInvItemById(IDI_GREYSUIT)) {
+	if (RemoveInventoryItemById(player, IDI_GREYSUIT)) {
 		InitQTextMsg(TEXT_JERSEY7);
 		return;
 	}
 
 	auto &quest = Quests[Q_JERSEY];
 
-	if (player.TryRemoveInvItemById(IDI_BROWNSUIT)) {
+	if (RemoveInventoryItemById(player, IDI_BROWNSUIT)) {
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + Direction::SouthEast);
 		InitQTextMsg(TEXT_JERSEY8);
 		quest._qactive = QUEST_DONE;
@@ -652,7 +652,7 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 		return;
 	}
 
-	if (player.HasItem(IDI_RUNEBOMB)) {
+	if (HasInventoryItemWithId(player, IDI_RUNEBOMB)) {
 		InitQTextMsg(TEXT_JERSEY5);
 		quest._qactive = QUEST_ACTIVE;
 		quest._qvar1 = 1;
@@ -721,7 +721,7 @@ void TalkToGirl(Player &player, Towner &girl)
 {
 	auto &quest = Quests[Q_GIRL];
 
-	if (quest._qactive != QUEST_DONE && player.TryRemoveInvItemById(IDI_THEODORE)) {
+	if (quest._qactive != QUEST_DONE && RemoveInventoryItemById(player, IDI_THEODORE)) {
 		InitQTextMsg(TEXT_GIRL4);
 		CreateAmulet(girl.position, 13, true, false);
 		quest._qlog = false;
@@ -888,7 +888,7 @@ bool DebugTalkToTowner(std::string targetName)
 {
 	SetupTownStores();
 	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	for (auto &townerData : TownersData) {
 		if (!IsTownerPresent(townerData.type))
 			continue;

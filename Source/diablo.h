@@ -59,7 +59,6 @@ enum class MouseActionType : int {
 };
 
 extern uint32_t glSeedTbl[NUMLEVELS];
-extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern Point MousePosition;
 extern bool gbRunGame;
 extern bool gbRunGameResult;
@@ -118,7 +117,6 @@ struct QuickMessage {
 
 constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
 extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
-extern bool gbFriendlyMode;
 /**
  * @brief Specifices what game logic step is currently executed
  */

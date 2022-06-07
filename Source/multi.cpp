@@ -118,7 +118,7 @@ byte *ReceivePacket(TBuffer *pBuf, byte *body, size_t *size)
 
 void NetReceivePlayerData(TPkt *pkt)
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	const Point target = myPlayer.GetTargetPosition();
 
 	pkt->hdr.wCheck = LoadBE32("\0\0ip");
@@ -230,7 +230,7 @@ void PlayerLeftMsg(int pnum, bool left)
 		return;
 	}
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (!player.plractive) {
 		return;
@@ -335,28 +335,11 @@ void SendPlayerInfo(int pnum, _cmd_id cmd)
 	static_assert(alignof(PlayerPack) == 1, "Fix pkplr alignment");
 	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PlayerPack)] };
 
-	PackPlayer(reinterpret_cast<PlayerPack *>(pkplr.get()), Players[MyPlayerId], true, true);
+	PlayerPack *pPack = reinterpret_cast<PlayerPack *>(pkplr.get());
+	Player &myPlayer = *MyPlayer;
+	PackPlayer(pPack, myPlayer, true, true);
+	pPack->friendlyMode = myPlayer.friendlyMode ? 1 : 0;
 	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
-}
-
-dungeon_type InitLevelType(int l)
-{
-	if (l == 0)
-		return DTYPE_TOWN;
-	if (l >= 1 && l <= 4)
-		return DTYPE_CATHEDRAL;
-	if (l >= 5 && l <= 8)
-		return DTYPE_CATACOMBS;
-	if (l >= 9 && l <= 12)
-		return DTYPE_CAVES;
-	if (l >= 13 && l <= 16)
-		return DTYPE_HELL;
-	if (l >= 17 && l <= 20)
-		return DTYPE_NEST;
-	if (l >= 21 && l <= 24)
-		return DTYPE_CRYPT;
-
-	return DTYPE_CATHEDRAL;
 }
 
 void SetupLocalPositions()
@@ -371,7 +354,7 @@ void SetupLocalPositions()
 	x += plrxoff[MyPlayerId];
 	y += plryoff[MyPlayerId];
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer.position.tile = { x, y };
 	myPlayer.position.future = { x, y };
@@ -622,7 +605,7 @@ void multi_process_network_packets()
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
-		auto &player = Players[dwID];
+		Player &player = Players[dwID];
 		if (!IsNetPlayerValid(player)) {
 			_cmd_id cmd = *(const _cmd_id *)(pkt + 1);
 			if (gbBufferMsgs == 0 && IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
@@ -736,7 +719,7 @@ bool NetInit(bool bSinglePlayer)
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
 		memset(sgdwPlayerLeftReasonTbl, 0, sizeof(sgdwPlayerLeftReasonTbl));
 		memset(sgbSendDeltaTbl, 0, sizeof(sgbSendDeltaTbl));
-		for (auto &player : Players) {
+		for (Player &player : Players) {
 			player.Reset();
 		}
 		memset(sgwPackPlrOffsetTbl, 0, sizeof(sgwPackPlrOffsetTbl));
@@ -767,7 +750,7 @@ bool NetInit(bool bSinglePlayer)
 		SetupLocalPositions();
 		SendPlayerInfo(SNPLAYER_OTHERS, CMD_SEND_PLRINFO);
 
-		auto &myPlayer = Players[MyPlayerId];
+		Player &myPlayer = *MyPlayer;
 		ResetPlayerGFX(myPlayer);
 		myPlayer.plractive = true;
 		gbActivePlayers = 1;
@@ -782,7 +765,6 @@ bool NetInit(bool bSinglePlayer)
 
 	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
-		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
 	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128))
 		nthread_terminate_game("SNetGetGameInfo1");
@@ -790,7 +772,7 @@ bool NetInit(bool bSinglePlayer)
 		nthread_terminate_game("SNetGetGameInfo2");
 	PublicGame = DvlNet_IsPublicGame();
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	// separator for marking messages from a different game
 	AddMessageToChatLog(_("New Game"), nullptr, UiFlags::ColorRed);
 	AddMessageToChatLog(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), myPlayer._pName, myPlayer._pLevel));
@@ -806,7 +788,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 		return;
 	}
 	assert(pnum >= 0 && pnum < MAX_PLRS);
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	auto &packedPlayer = PackedPlayerBuffer[pnum];
 
 	if (sgwPackPlrOffsetTbl[pnum] != header.wOffset) {
@@ -831,6 +813,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	if (!UnPackPlayer(&packedPlayer, player, true)) {
 		return;
 	}
+	player.friendlyMode = packedPlayer.friendlyMode != 0;
 
 	if (!recv) {
 		return;

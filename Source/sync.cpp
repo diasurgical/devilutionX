@@ -24,7 +24,7 @@ void SyncOneMonster()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int m = ActiveMonsters[i];
 		auto &monster = Monsters[m];
-		sgnMonsterPriority[m] = Players[MyPlayerId].position.tile.ManhattanDistance(monster.position.tile);
+		sgnMonsterPriority[m] = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
 		if (monster._msquelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
@@ -108,15 +108,15 @@ void SyncPlrInv(TSyncHeader *pHdr)
 		pHdr->bItemY = item.position.y;
 		pHdr->wItemIndx = item.IDidx;
 		if (item.IDidx == IDI_EAR) {
-			pHdr->wItemCI = (item._iName[7] << 8) | item._iName[8];
-			pHdr->dwItemSeed = (item._iName[9] << 24) | (item._iName[10] << 16) | (item._iName[11] << 8) | item._iName[12];
-			pHdr->bItemId = item._iName[13];
-			pHdr->bItemDur = item._iName[14];
-			pHdr->bItemMDur = item._iName[15];
-			pHdr->bItemCh = item._iName[16];
-			pHdr->bItemMCh = item._iName[17];
-			pHdr->wItemVal = (item._iName[18] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6) | item._ivalue;
-			pHdr->dwItemBuff = (item._iName[19] << 24) | (item._iName[20] << 16) | (item._iName[21] << 8) | item._iName[22];
+			pHdr->wItemCI = (item._iIName[0] << 8) | item._iIName[1];
+			pHdr->dwItemSeed = (item._iIName[2] << 24) | (item._iIName[3] << 16) | (item._iIName[4] << 8) | item._iIName[5];
+			pHdr->bItemId = item._iIName[6];
+			pHdr->bItemDur = item._iIName[7];
+			pHdr->bItemMDur = item._iIName[8];
+			pHdr->bItemCh = item._iIName[9];
+			pHdr->bItemMCh = item._iIName[10];
+			pHdr->wItemVal = (item._iIName[11] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6) | item._ivalue;
+			pHdr->dwItemBuff = (item._iIName[12] << 24) | (item._iIName[13] << 16) | (item._iIName[14] << 8) | item._iIName[15];
 		} else {
 			pHdr->wItemCI = item._iCreateInfo;
 			pHdr->dwItemSeed = item._iSeed;
@@ -133,7 +133,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 
 	pHdr->bPInvLoc = -1;
 	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
-	const auto &item = Players[MyPlayerId].InvBody[sgnSyncPInv];
+	const auto &item = MyPlayer->InvBody[sgnSyncPInv];
 	if (!item.isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
 		pHdr->wPInvIndx = item.IDidx;
@@ -160,7 +160,7 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 	const int enemyId = monsterSync._menemy;
 
 	if (monster._msquelch != 0) {
-		uint32_t delta = Players[MyPlayerId].position.tile.ManhattanDistance(monster.position.tile);
+		uint32_t delta = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
 		if (delta > 255) {
 			delta = 255;
 		}

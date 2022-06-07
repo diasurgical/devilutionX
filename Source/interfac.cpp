@@ -56,13 +56,13 @@ Cutscenes PickCutscene(interface_mode uMsg)
 	case WM_DIABPREVLVL:
 	case WM_DIABTOWNWARP:
 	case WM_DIABTWARPUP: {
-		int lvl = Players[MyPlayerId].plrlevel;
+		int lvl = MyPlayer->plrlevel;
 		if (lvl == 1 && uMsg == WM_DIABNEXTLVL)
 			return CutTown;
 		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
 			return CutGate;
 
-		switch (gnLevelTypeTbl[lvl]) {
+		switch (GetLevelType(lvl)) {
 		case DTYPE_TOWN:
 			return CutTown;
 		case DTYPE_CATHEDRAL:
@@ -170,14 +170,15 @@ void InitCutscene(interface_mode uMsg)
 
 void DrawCutscene()
 {
+	const Rectangle &uiRectangle = GetUIRectangle();
 	const Surface &out = GlobalBackBuffer();
-	DrawArt(out, { PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y }, &ArtCutsceneWidescreen);
-	CelDrawTo(out, { PANEL_X, 480 - 1 + UI_OFFSET_Y }, *sgpBackCel, 0);
+	DrawArt(out, { uiRectangle.position.x - (ArtCutsceneWidescreen.w() - uiRectangle.size.width) / 2, uiRectangle.position.y }, &ArtCutsceneWidescreen);
+	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, *sgpBackCel, 0);
 
 	constexpr int ProgressHeight = 22;
 	SDL_Rect rect = MakeSdlRect(
-	    out.region.x + BarPos[progress_id][0] + PANEL_X,
-	    out.region.y + BarPos[progress_id][1] + UI_OFFSET_Y,
+	    out.region.x + BarPos[progress_id][0] + uiRectangle.position.x,
+	    out.region.y + BarPos[progress_id][1] + uiRectangle.position.y,
 	    sgdwProgress,
 	    ProgressHeight);
 	SDL_FillRect(out.surface, &rect, BarColor[progress_id]);
@@ -236,7 +237,7 @@ void ShowProgress(interface_mode uMsg)
 	sound_init();
 	IncProgress();
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
@@ -267,7 +268,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		setlevel = false;
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
@@ -282,7 +283,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		FreeGameMem();
 		currlevel--;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		assert(myPlayer.plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_PREV);
@@ -344,7 +345,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		setlevel = false;
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_TWARPDN);
 		IncProgress();
@@ -359,7 +360,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		FreeGameMem();
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_TWARPUP);
 		IncProgress();
@@ -374,7 +375,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		FreeGameMem();
 		currlevel = myPlayer.plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
+		leveltype = GetLevelType(currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();

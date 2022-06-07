@@ -82,11 +82,18 @@ enum monster_treasure : uint16_t {
 	// clang-format on
 };
 
+enum class MonsterAvailability : uint8_t {
+	Never,
+	Always,
+	Retail,
+};
+
 struct MonsterData {
 	const char *mName;
 	const char *GraphicType;
 	const char *sndfile;
 	const char *TransFile;
+	MonsterAvailability availability;
 	uint16_t width;
 	uint16_t mImage;
 	bool has_special;
@@ -266,12 +273,6 @@ enum _monster_id : int16_t {
 	MT_INVALID = -1,
 };
 
-enum _monster_availability : uint8_t {
-	MAT_NEVER,
-	MAT_ALWAYS,
-	MAT_RETAIL,
-};
-
 /**
  * @brief Defines if and how a group of monsters should be spawned with the unique monster
  */
@@ -314,7 +315,6 @@ struct UniqueMonsterData {
 
 extern const MonsterData MonstersData[];
 extern const _monster_id MonstConvTbl[];
-extern const char MonstAvailTbl[];
 extern const UniqueMonsterData UniqueMonstersData[];
 
 } // namespace devilution

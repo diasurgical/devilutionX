@@ -159,7 +159,7 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 
 bool InteractsWithCharButton(Point point)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	if (myPlayer._pStatPts == 0)
 		return false;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
@@ -454,7 +454,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 		if (pcursinvitem != -1) {
 			Item &item = GetInventoryItem(*MyPlayer, pcursinvitem);
-			if (!item.isScroll() || !spelldata[item._iSpell].sTargeted) {
+			if (!item.isScroll() || !TargetsMonster(item._iSpell)) {
 				if (!item.isEquipment()) {
 					return GetApplyButtonType(virtualPadButton->isHeld);
 				}

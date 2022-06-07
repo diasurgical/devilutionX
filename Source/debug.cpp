@@ -9,6 +9,7 @@
 #include <sstream>
 
 #include <fmt/format.h>
+#include <fstream>
 
 #include "debug.h"
 
@@ -87,7 +88,7 @@ uint32_t glEndSeed[NUMLEVELS];
 
 void SetSpellLevelCheat(spell_id spl, int spllvl)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pMemSpells |= GetSpellBitmask(spl);
 	myPlayer._pSplLvl[spl] = spllvl;
@@ -168,7 +169,7 @@ std::string DebugCmdHelp(const string_view parameter)
 
 std::string DebugCmdGiveGoldCheat(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	for (int8_t &itemIndex : myPlayer.InvGrid) {
 		if (itemIndex != 0)
@@ -188,7 +189,7 @@ std::string DebugCmdGiveGoldCheat(const string_view parameter)
 
 std::string DebugCmdTakeGoldCheat(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	for (auto itemIndex : myPlayer.InvGrid) {
 		itemIndex -= 1;
@@ -208,7 +209,7 @@ std::string DebugCmdTakeGoldCheat(const string_view parameter)
 
 std::string DebugCmdWarpToLevel(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return fmt::format("Level {} is not known. Do you want to write a mod?", level);
@@ -294,6 +295,82 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	return "Welcome to this unique place.";
 }
 
+void WriteLE16(std::ofstream &out, uint16_t val)
+{
+	const uint16_t littleEndian = SDL_SwapLE16(val);
+	char data[2];
+	memcpy(data, &littleEndian, 2);
+	out.write(data, 2);
+}
+
+std::string ExportDun(const string_view parameter)
+{
+	std::ofstream dunFile;
+
+	std::string levelName = fmt::format("{}-{}.dun", currlevel, glSeedTbl[currlevel]);
+
+	dunFile.open(levelName, std::ios::out | std::ios::app | std::ios::binary);
+
+	WriteLE16(dunFile, DMAXX);
+	WriteLE16(dunFile, DMAXY);
+
+	/** Tiles. */
+	for (int y = 0; y < DMAXY; y++) {
+		for (int x = 0; x < DMAXX; x++) {
+			WriteLE16(dunFile, dungeon[x][y]);
+		}
+	}
+
+	/** Padding */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			WriteLE16(dunFile, 0);
+		}
+	}
+
+	/** Monsters */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			uint16_t monsterId = 0;
+			if (dMonster[x][y] > 0) {
+				for (int i = 0; i < 157; i++) {
+					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].MType->mtype) {
+						monsterId = i + 1;
+						break;
+					}
+				}
+			}
+			WriteLE16(dunFile, monsterId);
+		}
+	}
+
+	/** Objects */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			uint16_t objectId = 0;
+			if (dObject[x][y] > 0) {
+				for (int i = 0; i < 147; i++) {
+					if (ObjTypeConv[i] == Objects[abs(dObject[x][y]) - 1]._otype) {
+						objectId = i;
+						break;
+					}
+				}
+			}
+			WriteLE16(dunFile, objectId);
+		}
+	}
+
+	/** Transparency */
+	for (int y = 16; y < MAXDUNY - 16; y++) {
+		for (int x = 16; x < MAXDUNX - 16; x++) {
+			WriteLE16(dunFile, dTransVal[x][y]);
+		}
+	}
+	dunFile.close();
+
+	return fmt::format("{} saved. Happy mapping!", levelName);
+}
+
 std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
 	{ "griswold", _talker_id::TOWN_SMITH },
 	{ "pepin", _talker_id::TOWN_HEALER },
@@ -310,7 +387,7 @@ std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
 
 std::string DebugCmdVisitTowner(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (setlevel || myPlayer.plrlevel != 0)
 		return "What kind of friends do you have in dungeons?";
@@ -350,7 +427,7 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 
 std::string DebugCmdResetLevel(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	std::stringstream paramsStream(parameter.data());
 	std::string singleParameter;
@@ -469,14 +546,14 @@ std::string DebugCmdSetSpellsLevel(const string_view parameter)
 		}
 	}
 	if (level == 0)
-		Players[MyPlayerId]._pMemSpells = 0;
+		MyPlayer->_pMemSpells = 0;
 
 	return "Knowledge is power.";
 }
 
 std::string DebugCmdRefillHealthMana(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	myPlayer.RestoreFullLife();
 	myPlayer.RestoreFullMana();
 	drawhpflag = true;
@@ -487,7 +564,7 @@ std::string DebugCmdRefillHealthMana(const string_view parameter)
 
 std::string DebugCmdChangeHealth(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	int change = -1;
 
 	if (!parameter.empty())
@@ -506,7 +583,7 @@ std::string DebugCmdChangeHealth(const string_view parameter)
 
 std::string DebugCmdChangeMana(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	int change = -1;
 
 	if (!parameter.empty())
@@ -542,7 +619,7 @@ std::string DebugCmdExit(const string_view parameter)
 
 std::string DebugCmdArrow(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pIFlags &= ~ItemSpecialEffect::FireArrows;
 	myPlayer._pIFlags &= ~ItemSpecialEffect::LightningArrows;
@@ -641,7 +718,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 		LevelMonsterTypes[id].mdeadval = 1;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int spawnedMonster = 0;
 
@@ -727,7 +804,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 		LevelMonsterTypes[id].mdeadval = 1;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int spawnedMonster = 0;
 
@@ -823,7 +900,7 @@ std::string DebugCmdScrollView(const string_view parameter)
 
 std::string DebugCmdItemInfo(const string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 	Item *pItem = nullptr;
 	if (!myPlayer.HoldItem.isEmpty()) {
 		pItem = &myPlayer.HoldItem;
@@ -866,7 +943,7 @@ std::string DebugCmdPlayerInfo(const string_view parameter)
 	int playerId = atoi(parameter.data());
 	if (playerId < 0 || playerId >= MAX_PLRS)
 		return "My friend, we need a valid playerId.";
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 	if (!player.plractive)
 		return "Player is not active";
 
@@ -897,6 +974,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "questmap", "Load a quest level {level}.", "{level}", &DebugCmdLoadQuestMap },
 	{ "map", "Load custom level from a given {path}.dun.", "{path} {type} {x} {y}", &DebugCmdLoadMap },
+	{ "exportdun", "Save the current level as a dun-file.", "", &ExportDun },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
 	{ "restart", "Resets specified {level}.", "{level} ({seed})", &DebugCmdResetLevel },
 	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },

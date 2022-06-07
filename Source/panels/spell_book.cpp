@@ -53,7 +53,7 @@ void PrintSBookStr(const Surface &out, Point position, string_view text, UiFlags
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
 {
-	auto &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 	if ((player._pClass == HeroClass::Monk) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
 	spell_type st = RSPLTYPE_SPELL;
@@ -92,7 +92,7 @@ void InitSpellBook()
 	}
 	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
 
-	Player &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {
 		SpellPages[0][0] = SPL_REPAIR;
 	} else if (player._pClass == HeroClass::Rogue) {
@@ -128,7 +128,7 @@ void DrawSpellBook(const Surface &out)
 		}
 		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), *pSBkBtnCel, sbooktab);
 	}
-	auto &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 
 	const int lineHeight = 18;
@@ -161,7 +161,7 @@ void DrawSpellBook(const Surface &out)
 			default: {
 				int mana = GetManaAmount(player, sn) >> 6;
 				int lvl = std::max(player._pSplLvl[sn] + player._pISplLvlAdd, 0);
-				PrintSBookStr(out, line0, fmt::format(pgettext(/* TRANSLATORS: UI constrains, keep short please.*/ "spellbook", "Level {:d}"), lvl), UiFlags::AlignRight);
+				PrintSBookStr(out, line0, fmt::format(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}"), lvl), UiFlags::AlignRight);
 				if (lvl == 0) {
 					PrintSBookStr(out, line1, _("Unusable"), UiFlags::AlignRight);
 				} else {
@@ -171,15 +171,15 @@ void DrawSpellBook(const Surface &out)
 						GetDamageAmt(sn, &min, &max);
 						if (min != -1) {
 							if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Heals: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Heals: {:d} - {:d}"), min, max), UiFlags::AlignRight);
 							} else {
-								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constrains, keep short please.*/ "Damage: {:d} - {:d}"), min, max), UiFlags::AlignRight);
+								PrintSBookStr(out, line1, fmt::format(_(/* TRANSLATORS: UI constraints, keep short please.*/ "Damage: {:d} - {:d}"), min, max), UiFlags::AlignRight);
 							}
 						}
 					} else {
-						PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constrains, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight);
+						PrintSBookStr(out, line1, _(/* TRANSLATORS: UI constraints, keep short please.*/ "Dmg: 1/3 target hp"), UiFlags::AlignRight);
 					}
-					PrintSBookStr(out, line1, fmt::format(pgettext(/* TRANSLATORS: UI constrains, keep short please.*/ "spellbook", "Mana: {:d}"), mana));
+					PrintSBookStr(out, line1, fmt::format(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Mana: {:d}"), mana));
 				}
 			} break;
 			}
@@ -194,7 +194,7 @@ void CheckSBook()
 	Rectangle tabArea = { GetPanelPosition(UiPanels::Spell, { 7, 320 }), { 311 - 7, 349 - 320 } };
 	if (iconArea.Contains(MousePosition)) {
 		spell_id sn = SpellPages[sbooktab][(MousePosition.y - GetRightPanel().position.y - 18) / 43];
-		auto &player = Players[MyPlayerId];
+		Player &player = *MyPlayer;
 		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = RSPLTYPE_SPELL;

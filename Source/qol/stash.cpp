@@ -76,7 +76,7 @@ Point FindSlotUnderCursor(Point cursorPosition)
 
 void CheckStashPaste(Point cursorPosition)
 {
-	auto &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 
 	const Size itemSize = GetInventorySize(player.HoldItem);
 	const Displacement hotPixelOffset = Displacement(itemSize * INV_SLOT_HALF_SIZE_PX);
@@ -154,7 +154,7 @@ void CheckStashPaste(Point cursorPosition)
 
 void CheckStashCut(Point cursorPosition, bool automaticMove)
 {
-	auto &player = Players[MyPlayerId];
+	Player &player = *MyPlayer;
 
 	if (IsWithdrawGoldOpen) {
 		IsWithdrawGoldOpen = false;
@@ -585,7 +585,7 @@ void StartGoldWithdraw()
 
 void WithdrawGoldKeyPress(char vkey)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
 		CloseGoldWithdraw();

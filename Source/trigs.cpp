@@ -73,7 +73,7 @@ bool IsWarpOpen(dungeon_type type)
 	if (gbIsMultiplayer && type != DTYPE_NEST) // Opening the nest is part of in town quest
 		return true;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (type == DTYPE_CATACOMBS && (myPlayer.pTownWarps & 1) != 0)
 		return true;
@@ -692,7 +692,6 @@ bool ForceL4Trig()
 
 void Freeupstairs()
 {
-
 	for (int i = 0; i < numtrigs; i++) {
 		int tx = trigs[i].position.x;
 		int ty = trigs[i].position.y;
@@ -803,7 +802,7 @@ void CheckTrigForce()
 
 void CheckTriggers()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pmode != PM_STAND)
 		return;

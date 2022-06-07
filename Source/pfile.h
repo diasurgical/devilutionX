@@ -28,6 +28,15 @@ private:
 	bool clear_tables_;
 };
 
+/**
+ * @brief Comparsion result of pfile_compare_hero_demo
+ */
+enum class HeroCompareResult {
+	ReferenceNotFound,
+	Same,
+	Difference,
+};
+
 MpqWriter &CurrentSaveArchive();
 MpqWriter &StashArchive();
 std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum);
@@ -35,6 +44,17 @@ std::optional<MpqArchive> OpenStashArchive();
 const char *pfile_get_password();
 std::unique_ptr<byte[]> ReadArchive(MpqArchive &archive, const char *pszName, size_t *pdwLen = nullptr);
 void pfile_write_hero(bool writeGameData = false, bool clearTables = !gbIsMultiplayer);
+/**
+ * @brief Save a reference game-state (save game) for the demo recording
+ * @param demo that is recorded
+ */
+void pfile_write_hero_demo(int demo);
+/**
+ * @brief Compares the actual game-state (savegame) with a reference game-state (save game from demo recording)
+ * @param demo for the comparsion
+ * @return The comparsion result.
+ */
+HeroCompareResult pfile_compare_hero_demo(int demo);
 void sfile_write_stash();
 bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *));
 void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats);

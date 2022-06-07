@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "engine/point.hpp"
+#include "inv_iterators.hpp"
 #include "items.h"
 #include "palette.h"
 #include "player.h"
@@ -219,7 +220,6 @@ int InvPutItem(Player &player, Point position, Item &item);
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int8_t CheckInvHLight();
-void RemoveScroll(Player &player);
 bool UseScroll(spell_id spell);
 void UseStaffCharge(Player &player);
 bool UseStaff(spell_id spell);
@@ -234,6 +234,153 @@ int CalculateGold(Player &player);
  * @return The size, in inventory cells, of the item.
  */
 Size GetInventorySize(const Item &item);
+
+/**
+ * @brief Checks whether the player has an inventory item matching the predicate.
+ */
+template <typename Predicate>
+bool HasInventoryItem(Player &player, Predicate &&predicate)
+{
+	const InventoryPlayerItemsRange items { player };
+	return std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate)) != items.end();
+}
+
+/**
+ * @brief Checks whether the player has a belt item matching the predicate.
+ */
+template <typename Predicate>
+bool HasBeltItem(Player &player, Predicate &&predicate)
+{
+	const BeltPlayerItemsRange items { player };
+	return std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate)) != items.end();
+}
+
+/**
+ * @brief Checks whether the player has an inventory or a belt item matching the predicate.
+ */
+template <typename Predicate>
+bool HasInventoryOrBeltItem(Player &player, Predicate &&predicate)
+{
+	return HasInventoryItem(player, predicate) || HasBeltItem(player, predicate);
+}
+
+/**
+ * @brief Checks whether the player has an inventory item with the given ID (IDidx).
+ */
+inline bool HasInventoryItemWithId(Player &player, _item_indexes id)
+{
+	return HasInventoryItem(player, [id](const Item &item) {
+		return item.IDidx == id;
+	});
+}
+
+/**
+ * @brief Checks whether the player has a belt item with the given ID (IDidx).
+ */
+inline bool HasBeltItemWithId(Player &player, _item_indexes id)
+{
+	return HasBeltItem(player, [id](const Item &item) {
+		return item.IDidx == id;
+	});
+}
+
+/**
+ * @brief Checks whether the player has an inventory or a belt item with the given ID (IDidx).
+ */
+inline bool HasInventoryOrBeltItemWithId(Player &player, _item_indexes id)
+{
+	return HasInventoryItemWithId(player, id) || HasBeltItemWithId(player, id);
+}
+
+/**
+ * @brief Removes the first inventory item matching the predicate.
+ *
+ * @return Whether an item was found and removed.
+ */
+template <typename Predicate>
+bool RemoveInventoryItem(Player &player, Predicate &&predicate)
+{
+	const InventoryPlayerItemsRange items { player };
+	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
+	if (it == items.end())
+		return false;
+	player.RemoveInvItem(static_cast<int>(it.index()));
+	return true;
+}
+
+/**
+ * @brief Removes the first belt item matching the predicate.
+ *
+ * @return Whether an item was found and removed.
+ */
+template <typename Predicate>
+bool RemoveBeltItem(Player &player, Predicate &&predicate)
+{
+	const BeltPlayerItemsRange items { player };
+	const auto it = std::find_if(items.begin(), items.end(), std::forward<Predicate>(predicate));
+	if (it == items.end())
+		return false;
+	player.RemoveSpdBarItem(static_cast<int>(it.index()));
+	return true;
+}
+
+/**
+ * @brief Removes the first inventory or belt item matching the predicate.
+ *
+ * @return Whether an item was found and removed.
+ */
+template <typename Predicate>
+bool RemoveInventoryOrBeltItem(Player &player, Predicate &&predicate)
+{
+	return RemoveInventoryItem(player, predicate) || RemoveBeltItem(player, predicate);
+}
+
+/**
+ * @brief Removes the first inventory item with the given id (IDidx).
+ *
+ * @return Whether an item was found and removed.
+ */
+inline bool RemoveInventoryItemById(Player &player, _item_indexes id)
+{
+	return RemoveInventoryItem(player, [id](const Item &item) {
+		return item.IDidx == id;
+	});
+}
+
+/**
+ * @brief Removes the first belt item with the given id (IDidx).
+ *
+ * @return Whether an item was found and removed.
+ */
+inline bool RemoveBeltItemById(Player &player, _item_indexes id)
+{
+	return RemoveBeltItem(player, [id](const Item &item) {
+		return item.IDidx == id;
+	});
+}
+
+/**
+ * @brief Removes the first inventory or belt item with the given id (IDidx).
+ *
+ * @return Whether an item was found and removed.
+ */
+inline bool RemoveInventoryOrBeltItemById(Player &player, _item_indexes id)
+{
+	return RemoveInventoryItemById(player, id) || RemoveBeltItemById(player, id);
+}
+
+/**
+ * @brief Removes the first inventory or belt scroll with the player's current spell.
+ *
+ * @return Whether a scroll was found and removed.
+ */
+inline bool RemoveCurrentSpellScroll(Player &player)
+{
+	const spell_id spellId = player._pSpell;
+	return RemoveInventoryOrBeltItem(player, [spellId](const Item &item) {
+		return item.isScrollOf(spellId);
+	});
+}
 
 /* data */
 

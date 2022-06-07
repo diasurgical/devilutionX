@@ -94,8 +94,9 @@ void CreditsRenderer::Render()
 	prev_offset_y_ = offsetY;
 
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
-	DrawArt({ PANEL_LEFT - 320, UI_OFFSET_Y }, &ArtBackgroundWidescreen);
-	DrawArt({ PANEL_LEFT, UI_OFFSET_Y }, &ArtBackground);
+	const Point uiPosition = GetUIRectangle().position;
+	DrawArt(uiPosition - Displacement { 320, 0 }, &ArtBackgroundWidescreen);
+	DrawArt(uiPosition, &ArtBackground);
 
 	const std::size_t linesBegin = std::max(offsetY / LINE_H, 0);
 	const std::size_t linesEnd = std::min(linesBegin + MAX_VISIBLE_LINES, linesToRender.size());
@@ -107,15 +108,15 @@ void CreditsRenderer::Render()
 	}
 
 	SDL_Rect viewport = VIEWPORT;
-	viewport.x += PANEL_LEFT;
-	viewport.y += UI_OFFSET_Y;
+	viewport.x += uiPosition.x;
+	viewport.y += uiPosition.y;
 	ScaleOutputRect(&viewport);
 	SDL_SetClipRect(DiabloUiSurface(), &viewport);
 
 	// We use unscaled coordinates for calculation throughout.
-	Sint16 destY = UI_OFFSET_Y + VIEWPORT.y - (offsetY - linesBegin * LINE_H);
+	Sint16 destY = uiPosition.y + VIEWPORT.y - (offsetY - linesBegin * LINE_H);
 	for (std::size_t i = linesBegin; i < linesEnd; ++i, destY += LINE_H) {
-		Sint16 destX = PANEL_LEFT + VIEWPORT.x + 31;
+		Sint16 destX = uiPosition.x + VIEWPORT.x + 31;
 
 		auto &lineContent = linesToRender[i];
 

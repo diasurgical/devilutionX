@@ -7,11 +7,16 @@
 
 #include "gendung.h"
 
+#include "drlg_l1.h"
+#include "drlg_l2.h"
+#include "drlg_l3.h"
+#include "drlg_l4.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "init.h"
 #include "lighting.h"
 #include "options.h"
+#include "town.h"
 
 namespace devilution {
 
@@ -373,6 +378,51 @@ void FindTransparencyValues(Point floor, uint8_t floorID)
 
 } // namespace
 
+dungeon_type GetLevelType(int level)
+{
+	if (level == 0)
+		return DTYPE_TOWN;
+	if (level <= 4)
+		return DTYPE_CATHEDRAL;
+	if (level <= 8)
+		return DTYPE_CATACOMBS;
+	if (level <= 12)
+		return DTYPE_CAVES;
+	if (level <= 16)
+		return DTYPE_HELL;
+	if (level <= 20)
+		return DTYPE_NEST;
+	if (level <= 24)
+		return DTYPE_CRYPT;
+
+	return DTYPE_NONE;
+}
+
+void CreateDungeon(uint32_t rseed, lvl_entry entry)
+{
+	switch (leveltype) {
+	case DTYPE_TOWN:
+		CreateTown(entry);
+		break;
+	case DTYPE_CATHEDRAL:
+	case DTYPE_CRYPT:
+		CreateL5Dungeon(rseed, entry);
+		break;
+	case DTYPE_CATACOMBS:
+		CreateL2Dungeon(rseed, entry);
+		break;
+	case DTYPE_CAVES:
+	case DTYPE_NEST:
+		CreateL3Dungeon(rseed, entry);
+		break;
+	case DTYPE_HELL:
+		CreateL4Dungeon(rseed, entry);
+		break;
+	default:
+		app_fatal("Invalid level type");
+	}
+}
+
 void FillSolidBlockTbls()
 {
 	size_t tileCount;
@@ -385,7 +435,7 @@ void FillSolidBlockTbls()
 		nMissileTable[i + 1] = (bv & 0x04) != 0;
 		nTransTable[i + 1] = (bv & 0x08) != 0;
 		nTrapTable[i + 1] = (bv & 0x80) != 0;
-		block_lvid[i + 1] = (bv & 0x70) >> 4;
+		block_lvid[i + 1] = (bv & 0x30) >> 4;
 	}
 }
 

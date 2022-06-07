@@ -10,8 +10,6 @@
 #include "control.h"
 #include "engine/load_file.hpp"
 #include "engine/render/automap_render.hpp"
-#include "inv.h"
-#include "monster.h"
 #include "palette.h"
 #include "player.h"
 #include "setmaps.h"
@@ -346,11 +344,11 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 
 void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 {
-	auto &myPlayer = Players[MyPlayerId];
-	Point tile = myPlayer.position.tile;
-	if (myPlayer._pmode == PM_WALK3) {
-		tile = myPlayer.position.future;
-		if (myPlayer._pdir == Direction::West)
+	const Player &player = *MyPlayer;
+	Point tile = player.position.tile;
+	if (player._pmode == PM_WALK3) {
+		tile = player.position.future;
+		if (player._pdir == Direction::West)
 			tile.x++;
 		else
 			tile.y++;
@@ -372,13 +370,13 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 
 			Point screen = {
 				(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-				(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+				(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - GetMainPanel().size.height) / 2
 			};
 
 			if (CanPanelsCoverView()) {
-				if (invflag || sbookflag)
+				if (IsRightPanelOpen())
 					screen.x -= 160;
-				if (chrflag || QuestLogIsOpen)
+				if (IsLeftPanelOpen())
 					screen.x += 160;
 			}
 			screen.y -= AmLine8;
@@ -394,7 +392,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 {
 	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
 
-	auto &player = Players[playerId];
+	Player &player = Players[playerId];
 	Point tile = player.position.tile;
 	if (player._pmode == PM_WALK3) {
 		tile = player.position.future;
@@ -409,13 +407,13 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 
 	Point base = {
 		((playerOffset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - GetMainPanel().size.height) / 2
 	};
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag)
+		if (IsRightPanelOpen())
 			base.x -= gnScreenWidth / 4;
-		if (chrflag || QuestLogIsOpen)
+		if (IsLeftPanelOpen())
 			base.x += gnScreenWidth / 4;
 	}
 	base.y -= AmLine16;
@@ -667,7 +665,7 @@ void DrawAutomap(const Surface &out)
 
 	Automap += AutomapOffset;
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const Player &myPlayer = *MyPlayer;
 	Displacement myPlayerOffset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
@@ -683,7 +681,7 @@ void DrawAutomap(const Surface &out)
 
 	Point screen {
 		gnScreenWidth / 2,
-		(gnScreenHeight - PANEL_HEIGHT) / 2
+		(gnScreenHeight - GetMainPanel().size.height) / 2
 	};
 	if ((cells & 1) != 0) {
 		screen.x -= AmLine64 * ((cells - 1) / 2);
@@ -705,10 +703,10 @@ void DrawAutomap(const Surface &out)
 	screen.y += AutoMapScale * myPlayerOffset.deltaY / 100 / 2;
 
 	if (CanPanelsCoverView()) {
-		if (invflag || sbookflag) {
+		if (IsRightPanelOpen()) {
 			screen.x -= gnScreenWidth / 4;
 		}
-		if (chrflag || QuestLogIsOpen) {
+		if (IsLeftPanelOpen()) {
 			screen.x += gnScreenWidth / 4;
 		}
 	}
@@ -733,8 +731,8 @@ void DrawAutomap(const Surface &out)
 	}
 
 	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
-		auto &player = Players[playerId];
-		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging) {
+		Player &player = Players[playerId];
+		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging && (&player == &myPlayer || player.friendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, playerId);
 		}
 	}

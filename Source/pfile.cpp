@@ -38,12 +38,16 @@ MpqWriter StashWriter;
 /** List of character names for the character selection screen. */
 char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 
+std::string savePrefix;
+
 std::string GetSavePath(uint32_t saveNum)
 {
 	std::string path = paths::PrefPath();
 	const char *ext = ".sv";
 	if (gbIsHellfire)
 		ext = ".hsv";
+
+	path.append(savePrefix);
 
 	if (gbIsSpawn) {
 		if (!gbIsMultiplayer) {
@@ -218,6 +222,42 @@ bool ArchiveContainsGame(MpqArchive &hsArchive)
 	return IsHeaderValid(hdr);
 }
 
+bool CompareSaves(const std::string &actualSavePath, const std::string &referenceSavePath)
+{
+	std::vector<std::string> possibleFileNamesToCheck;
+	possibleFileNamesToCheck.emplace_back("hero");
+	possibleFileNamesToCheck.emplace_back("game");
+	possibleFileNamesToCheck.emplace_back("additionalMissiles");
+	char szPerm[MAX_PATH];
+	for (int i = 0; GetPermSaveNames(i, szPerm); i++) {
+		possibleFileNamesToCheck.emplace_back(szPerm);
+	}
+
+	std::int32_t error;
+	auto actualArchive = *MpqArchive::Open(actualSavePath.c_str(), error);
+	auto referenceArchive = *MpqArchive::Open(referenceSavePath.c_str(), error);
+
+	bool compareResult = true;
+	for (const auto &fileName : possibleFileNamesToCheck) {
+		size_t fileSizeActual;
+		auto fileDataActual = ReadArchive(actualArchive, fileName.c_str(), &fileSizeActual);
+		size_t fileSizeReference;
+		auto fileDataReference = ReadArchive(referenceArchive, fileName.c_str(), &fileSizeReference);
+		if (fileDataActual.get() == nullptr && fileDataReference.get() == nullptr) {
+			continue;
+		}
+		if (fileSizeActual != fileSizeReference) {
+			compareResult = false;
+			break;
+		}
+		if (memcmp(fileDataReference.get(), fileDataActual.get(), fileSizeActual) != 0) {
+			compareResult = false;
+			break;
+		}
+	}
+	return compareResult;
+}
+
 } // namespace
 
 std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum)
@@ -289,7 +329,7 @@ void pfile_write_hero(bool writeGameData, bool clearTables)
 		RenameTempToPerm();
 	}
 	PlayerPack pkplr;
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer, false);
 	EncodeHero(&pkplr);
@@ -297,6 +337,31 @@ void pfile_write_hero(bool writeGameData, bool clearTables)
 		SaveHotkeys();
 		SaveHeroItems(myPlayer);
 	}
+}
+
+void pfile_write_hero_demo(int demo)
+{
+	savePrefix = fmt::format("demo_{}_reference_", demo);
+	pfile_write_hero(true, true);
+	savePrefix.clear();
+}
+
+HeroCompareResult pfile_compare_hero_demo(int demo)
+{
+	savePrefix = fmt::format("demo_{}_reference_", demo);
+	std::string referenceSavePath = GetSavePath(gSaveNumber);
+	savePrefix.clear();
+
+	if (!FileExists(referenceSavePath.c_str()))
+		return HeroCompareResult::ReferenceNotFound;
+
+	savePrefix = fmt::format("demo_{}_actual_", demo);
+	pfile_write_hero(true, true);
+	std::string actualSavePath = GetSavePath(gSaveNumber);
+	savePrefix.clear();
+
+	bool compareResult = CompareSaves(actualSavePath, referenceSavePath);
+	return compareResult ? HeroCompareResult::Same : HeroCompareResult::Difference;
 }
 
 void sfile_write_stash()
@@ -330,7 +395,7 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 				if (hasSaveGame)
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
-				auto &player = Players[0];
+				Player &player = Players[0];
 
 				player = {};
 
@@ -383,7 +448,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	SaveWriter.RemoveHashEntries(GetFileName);
 	CopyUtf8(hero_names[saveNum], heroinfo->name, sizeof(hero_names[saveNum]));
 
-	auto &player = Players[0];
+	Player &player = Players[0];
 	CreatePlayer(0, heroinfo->heroclass);
 	CopyUtf8(player._pName, heroinfo->name, PLR_NAME_LEN);
 	PackPlayer(&pkplr, player, true, false);

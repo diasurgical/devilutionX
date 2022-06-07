@@ -258,6 +258,10 @@ struct Monster { // note: missing field _mAFNum
 	 * @brief Is the monster currently walking?
 	 */
 	bool IsWalking() const;
+	bool IsImmune(missile_id mitype) const;
+	bool IsResistant(missile_id mitype) const;
+	bool IsPossibleToHit() const;
+	bool TryLiftGargoyle();
 };
 
 extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
@@ -308,14 +312,13 @@ void MissToMonst(Missile &missile, Point position);
  * @brief Check that the given tile is available to the monster
  */
 bool IsTileAvailable(const Monster &monster, Point position);
-bool IsSkel(int mt);
-bool IsGoat(int mt);
+bool IsSkel(_monster_id mt);
+bool IsGoat(_monster_id mt);
 bool SpawnSkeleton(int ii, Point position);
 int PreSpawnSkeleton();
 void TalktoMonster(Monster &monster);
 void SpawnGolem(int i, Point position, Missile &missile);
 bool CanTalkToMonst(const Monster &monster);
-bool CheckMonsterHit(Monster &monster, bool *ret);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemyId);
 

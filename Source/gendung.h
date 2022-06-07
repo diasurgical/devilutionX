@@ -134,7 +134,7 @@ struct ShadowStruct {
 };
 
 /** Contains the tile IDs of the map. */
-extern uint8_t dungeon[DMAXX][DMAXY];
+extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 /** Contains a backup of the tile IDs of the map. */
 extern uint8_t pdungeon[DMAXX][DMAXY];
 extern uint8_t dflags[DMAXX][DMAXY];
@@ -152,11 +152,11 @@ extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern bool setloadflag;
 extern std::optional<OwnedCelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
-extern std::unique_ptr<MegaTile[]> pMegaTiles;
+extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
 extern std::unique_ptr<uint16_t[]> pLevelPieces;
 extern std::unique_ptr<byte[]> pDungeonCels;
 /**
- * List of transparancy masks to use for dPieces
+ * List of transparency masks to use for dPieces
  */
 extern std::array<uint8_t, MAXTILES + 1> block_lvid;
 /**
@@ -183,14 +183,14 @@ extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern DVL_API_FOR_TEST dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
-extern uint8_t currlevel;
+extern DVL_API_FOR_TEST uint8_t currlevel;
 extern bool setlevel;
 /** Specifies the active quest level of the current game. */
 extern _setlevels setlvlnum;
 /** Specifies the player viewpoint X-coordinate of the map. */
 extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
-extern Point ViewPosition;
+extern DVL_API_FOR_TEST Point ViewPosition;
 extern ScrollStruct ScrollInfo;
 extern int MicroTileLen;
 extern char TransVal;
@@ -201,7 +201,7 @@ extern DVL_API_FOR_TEST int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
-extern int8_t dTransVal[MAXDUNX][MAXDUNY];
+extern DVL_API_FOR_TEST int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern DVL_API_FOR_TEST char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
 /** Holds various information about dungeon tiles, @see DungeonFlag */
@@ -232,6 +232,9 @@ extern DVL_API_FOR_TEST int8_t dObject[MAXDUNX][MAXDUNY];
 extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
+
+dungeon_type GetLevelType(int level);
+void CreateDungeon(uint32_t rseed, lvl_entry entry);
 
 constexpr bool InDungeonBounds(Point position)
 {

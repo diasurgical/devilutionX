@@ -134,7 +134,7 @@ void GetPortalLevel()
 	if (currlevel != 0) {
 		setlevel = false;
 		currlevel = 0;
-		Players[MyPlayerId].plrlevel = 0;
+		MyPlayer->plrlevel = 0;
 		leveltype = DTYPE_TOWN;
 		return;
 	}
@@ -143,12 +143,12 @@ void GetPortalLevel()
 		setlevel = true;
 		setlvlnum = (_setlevels)Portals[portalindex].level;
 		currlevel = Portals[portalindex].level;
-		Players[MyPlayerId].plrlevel = setlvlnum;
+		MyPlayer->plrlevel = setlvlnum;
 		leveltype = Portals[portalindex].ltype;
 	} else {
 		setlevel = false;
 		currlevel = Portals[portalindex].level;
-		Players[MyPlayerId].plrlevel = currlevel;
+		MyPlayer->plrlevel = currlevel;
 		leveltype = Portals[portalindex].ltype;
 	}
 

@@ -4,13 +4,16 @@ runtime-version: '21.08'
 sdk: org.freedesktop.Sdk
 command: devilutionx
 rename-desktop-file: devilutionx.desktop
+rename-appdata-file: devilutionx.metainfo.xml
+rename-icon: devilutionx
+
 finish-args:
     - --socket=fallback-x11
     - --socket=wayland
     - --device=dri
     - --share=network
+    - --share-ipc
     - --socket=pulseaudio
-    - --filesystem=xdg-config
 modules:
     - name: devilutionX
       buildsystem: cmake-ninja

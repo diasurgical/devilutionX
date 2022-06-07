@@ -347,6 +347,8 @@ struct Player {
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
 	ItemSpecialEffectHf pDamAcFlags;
+	/** @brief Specifies whether players are in non-PvP mode. */
+	bool friendlyMode = true;
 
 	void CalcScrolls();
 
@@ -357,20 +359,12 @@ struct Player {
 		    && _pDexterity >= item._iMinDex;
 	}
 
-	bool HasItem(int item, int *idx = nullptr) const;
-
 	/**
 	 * @brief Remove an item from player inventory
 	 * @param iv invList index of item to be removed
 	 * @param calcScrolls If true, CalcScrolls() gets called after removing item
 	 */
 	void RemoveInvItem(int iv, bool calcScrolls = true);
-
-	/**
-	 * @brief Remove an item from player inventory and return true if the player has the item, return false otherwise
-	 * @param item IDidx of item to be removed
-	 */
-	bool TryRemoveInvItemById(int item);
 
 	void RemoveSpdBarItem(int iv);
 

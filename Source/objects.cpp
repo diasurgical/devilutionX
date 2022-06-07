@@ -724,7 +724,7 @@ void AddDiabObjs()
 void AddCryptObject(Object &object, int a2)
 {
 	if (a2 > 5) {
-		auto &myPlayer = Players[MyPlayerId];
+		Player &myPlayer = *MyPlayer;
 		switch (a2) {
 		case 6:
 			switch (myPlayer._pClass) {
@@ -1448,7 +1448,7 @@ void UpdateObjectLight(Object &light, int lightRadius)
 
 void UpdateCircle(Object &circle)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer.position.tile != circle.position) {
 		if (circle._otype == OBJ_MCIRCLE1)
@@ -1589,7 +1589,7 @@ void UpdateBurningCrossDamage(Object &cross)
 {
 	int damage[6] = { 6, 8, 10, 12, 10, 12 };
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (myPlayer._pmode == PM_DEATH)
 		return;
@@ -2257,7 +2257,7 @@ void OperateBook(int pnum, Object &book)
 		return;
 	}
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		bool missileAdded = false;
@@ -2385,7 +2385,7 @@ void OperateChamberOfBoneBook(Object &questBook)
 	}
 
 	_speech_id textdef;
-	switch (Players[MyPlayerId]._pClass) {
+	switch (MyPlayer->_pClass) {
 	case HeroClass::Warrior:
 		textdef = TEXT_BONER;
 		break;
@@ -2436,7 +2436,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		}
 	}
 	if (Objects[i].IsTrappedChest()) {
-		auto &player = Players[pnum];
+		Player &player = Players[pnum];
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
 		missile_id mtype;
 		switch (Objects[i]._oVar4) {
@@ -2533,7 +2533,7 @@ void OperateSlainHero(int pnum, int i)
 		return;
 	}
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pClass == HeroClass::Warrior) {
 		CreateMagicArmor(Objects[i].position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
@@ -2548,7 +2548,7 @@ void OperateSlainHero(int pnum, int i)
 	} else if (player._pClass == HeroClass::Barbarian) {
 		CreateMagicWeapon(Objects[i].position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
 	}
-	Players[MyPlayerId].Say(HeroSpeech::RestInPeaceMyFriend);
+	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
@@ -2633,7 +2633,7 @@ void OperatePedistal(int pnum, int i)
 		return;
 	}
 
-	if (Objects[i]._oVar6 == 3 || !Players[pnum].TryRemoveInvItemById(IDI_BLDSTONE)) {
+	if (Objects[i]._oVar6 == 3 || !RemoveInventoryItemById(Players[pnum], IDI_BLDSTONE)) {
 		return;
 	}
 
@@ -2702,7 +2702,7 @@ bool OperateShrineHidden(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int cnt = 0;
 	for (const auto &item : player.InvBody) {
@@ -2755,7 +2755,7 @@ bool OperateShrineGloomy(int pnum)
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	// Increment armor class by 2 and decrements max damage by 1.
 	for (Item &item : PlayerItemsRange(player)) {
@@ -2793,7 +2793,7 @@ bool OperateShrineWeird(int pnum)
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
 		player.InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
@@ -2824,7 +2824,7 @@ bool OperateShrineMagical(int pnum)
 	if (deltaload)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	AddMissile(
 	    player.position.tile,
@@ -2884,7 +2884,7 @@ bool OperateShrineEnchanted(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	int cnt = 0;
 	uint64_t spell = 1;
@@ -2942,23 +2942,23 @@ bool OperateShrineThaumaturgic(int pnum)
 	return true;
 }
 
-bool OperateShrineFascinating(int pnum)
+bool OperateShrineCostOfWisdom(int pnum, spell_id spellId, diablo_message message)
 {
 	if (deltaload)
 		return false;
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
-	player._pMemSpells |= GetSpellBitmask(SPL_FIREBOLT);
+	player._pMemSpells |= GetSpellBitmask(spellId);
 
-	if (player._pSplLvl[SPL_FIREBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_FIREBOLT]++;
-	if (player._pSplLvl[SPL_FIREBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_FIREBOLT]++;
+	if (player._pSplLvl[spellId] < MAX_SPELL_LEVEL)
+		player._pSplLvl[spellId]++;
+	if (player._pSplLvl[spellId] < MAX_SPELL_LEVEL)
+		player._pSplLvl[spellId]++;
 
-	DWORD t = player._pMaxManaBase / 10;
+	uint32_t t = player._pMaxManaBase / 10;
 	int v1 = player._pMana - player._pManaBase;
 	int v2 = player._pMaxMana - player._pMaxManaBase;
 	player._pManaBase -= t;
@@ -2974,7 +2974,7 @@ bool OperateShrineFascinating(int pnum)
 		player._pMaxManaBase = 0;
 	}
 
-	InitDiabloMsg(EMSG_SHRINE_FASCINATING);
+	InitDiabloMsg(message);
 
 	return true;
 }
@@ -2984,7 +2984,7 @@ bool OperateShrineCryptic(int pnum)
 	if (deltaload)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	AddMissile(
 	    player.position.tile,
@@ -3065,7 +3065,7 @@ bool OperateShrineDivine(int pnum, Point spawnPosition)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (currlevel < 4) {
 		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLMANA, false, true);
@@ -3100,43 +3100,6 @@ bool OperateShrineHoly(int pnum)
 	return true;
 }
 
-bool OperateShrineSacred(int pnum)
-{
-	if (deltaload)
-		return false;
-	if (pnum != MyPlayerId)
-		return false;
-
-	auto &player = Players[pnum];
-
-	player._pMemSpells |= GetSpellBitmask(SPL_CBOLT);
-
-	if (player._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_CBOLT]++;
-	if (player._pSplLvl[SPL_CBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_CBOLT]++;
-
-	uint32_t t = player._pMaxManaBase / 10;
-	int v1 = player._pMana - player._pManaBase;
-	int v2 = player._pMaxMana - player._pMaxManaBase;
-	player._pManaBase -= t;
-	player._pMana -= t;
-	player._pMaxMana -= t;
-	player._pMaxManaBase -= t;
-	if (player._pMana >> 6 <= 0) {
-		player._pMana = v1;
-		player._pManaBase = 0;
-	}
-	if (player._pMaxMana >> 6 <= 0) {
-		player._pMaxMana = v2;
-		player._pMaxManaBase = 0;
-	}
-
-	InitDiabloMsg(EMSG_SHRINE_SACRED);
-
-	return true;
-}
-
 bool OperateShrineSpiritual(int pnum)
 {
 	if (deltaload)
@@ -3144,7 +3107,7 @@ bool OperateShrineSpiritual(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	for (int8_t &itemIndex : player.InvGrid) {
 		if (itemIndex == 0) {
@@ -3172,7 +3135,7 @@ bool OperateShrineSpooky(int pnum)
 		return true;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	myPlayer._pHitPoints = myPlayer._pMaxHP;
 	myPlayer._pHPBase = myPlayer._pMaxHPBase;
@@ -3254,42 +3217,6 @@ bool OperateShrineSecluded(int pnum)
 	return true;
 }
 
-bool OperateShrineOrnate(int pnum)
-{
-	if (deltaload)
-		return false;
-	if (pnum != MyPlayerId)
-		return false;
-
-	auto &player = Players[pnum];
-
-	player._pMemSpells |= GetSpellBitmask(SPL_HBOLT);
-	if (player._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_HBOLT]++;
-	if (player._pSplLvl[SPL_HBOLT] < MAX_SPELL_LEVEL)
-		player._pSplLvl[SPL_HBOLT]++;
-
-	uint32_t t = player._pMaxManaBase / 10;
-	int v1 = player._pMana - player._pManaBase;
-	int v2 = player._pMaxMana - player._pMaxManaBase;
-	player._pManaBase -= t;
-	player._pMana -= t;
-	player._pMaxMana -= t;
-	player._pMaxManaBase -= t;
-	if (player._pMana >> 6 <= 0) {
-		player._pMana = v1;
-		player._pManaBase = 0;
-	}
-	if (player._pMaxMana >> 6 <= 0) {
-		player._pMaxMana = v2;
-		player._pMaxManaBase = 0;
-	}
-
-	InitDiabloMsg(EMSG_SHRINE_ORNATE);
-
-	return true;
-}
-
 bool OperateShrineGlimmering(int pnum)
 {
 	if (deltaload)
@@ -3330,7 +3257,7 @@ bool OperateShrineTainted(int pnum)
 	ModifyPlrDex(MyPlayerId, v3);
 	ModifyPlrVit(MyPlayerId, v4);
 
-	CheckStats(Players[MyPlayerId]);
+	CheckStats(*MyPlayer);
 
 	InitDiabloMsg(EMSG_SHRINE_TAINTED2);
 
@@ -3352,7 +3279,7 @@ bool OperateShrineOily(int pnum, Point spawnPosition)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	switch (myPlayer._pClass) {
 	case HeroClass::Warrior:
@@ -3401,7 +3328,7 @@ bool OperateShrineGlowing(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	// Add 0-5 points to Magic (0.1% of the players XP)
 	ModifyPlrMag(MyPlayerId, static_cast<int>(std::min<uint32_t>(myPlayer._pExperience / 1000, 5)));
@@ -3429,7 +3356,7 @@ bool OperateShrineMendicant(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	int gold = myPlayer._pGold / 2;
 	AddPlrExperience(MyPlayerId, myPlayer._pLevel, gold);
@@ -3455,7 +3382,7 @@ bool OperateShrineSparkling(int pnum, Point spawnPosition)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	AddPlrExperience(MyPlayerId, myPlayer._pLevel, 1000 * currlevel);
 
@@ -3489,7 +3416,7 @@ bool OperateShrineTown(int pnum, Point spawnPosition)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	AddMissile(
 	    spawnPosition,
@@ -3513,7 +3440,7 @@ bool OperateShrineShimmering(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
@@ -3558,7 +3485,7 @@ bool OperateShrineMurphys(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	bool broke = false;
 	for (auto &item : myPlayer.InvBody) {
@@ -3644,7 +3571,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineFascinating:
-		if (!OperateShrineFascinating(pnum))
+		if (!OperateShrineCostOfWisdom(pnum, SPL_FIREBOLT, EMSG_SHRINE_FASCINATING))
 			return;
 		break;
 	case ShrineCryptic:
@@ -3668,7 +3595,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineSacred:
-		if (!OperateShrineSacred(pnum))
+		if (!OperateShrineCostOfWisdom(pnum, SPL_CBOLT, EMSG_SHRINE_SACRED))
 			return;
 		break;
 	case ShrineSpiritual:
@@ -3696,7 +3623,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 			return;
 		break;
 	case ShrineOrnate:
-		if (!OperateShrineOrnate(pnum))
+		if (!OperateShrineCostOfWisdom(pnum, SPL_HBOLT, EMSG_SHRINE_ORNATE))
 			return;
 		break;
 	case ShrineGlimmering:
@@ -3893,7 +3820,7 @@ void OperateCauldron(int pnum, int i, _sfx_id sType)
 
 bool OperateFountains(int pnum, int i)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	bool applied = false;
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
@@ -4658,7 +4585,7 @@ void InitObjects()
 			AddL2Torches();
 			if (Quests[Q_BLIND].IsAvailable()) {
 				_speech_id spId;
-				switch (Players[MyPlayerId]._pClass) {
+				switch (MyPlayer->_pClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLINDING;
 					break;
@@ -4684,7 +4611,7 @@ void InitObjects()
 			}
 			if (Quests[Q_BLOOD].IsAvailable()) {
 				_speech_id spId;
-				switch (Players[MyPlayerId]._pClass) {
+				switch (MyPlayer->_pClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLOODY;
 					break;
@@ -4717,7 +4644,7 @@ void InitObjects()
 		if (leveltype == DTYPE_HELL) {
 			if (Quests[Q_WARLORD].IsAvailable()) {
 				_speech_id spId;
-				switch (Players[MyPlayerId]._pClass) {
+				switch (MyPlayer->_pClass) {
 				case HeroClass::Warrior:
 					spId = TEXT_BLOODWAR;
 					break;
@@ -5111,7 +5038,7 @@ void ProcessObjects()
 
 void RedoPlayerVision()
 {
-	for (auto &player : Players) {
+	for (Player &player : Players) {
 		if (player.plractive && currlevel == player.plrlevel) {
 			ChangeVisionXY(player._pvid, player.position.tile);
 		}
@@ -5482,7 +5409,7 @@ void BreakObject(int pnum, Object &object)
 {
 	int objdam = 10;
 	if (pnum != -1) {
-		auto &player = Players[pnum];
+		Player &player = Players[pnum];
 		int mind = player._pIMinDam;
 		int maxd = player._pIMaxDam;
 		objdam = GenerateRnd(maxd - mind + 1) + mind;
@@ -5705,7 +5632,7 @@ void GetObjectStr(const Object &object)
 	default:
 		break;
 	}
-	if (Players[MyPlayerId]._pClass == HeroClass::Rogue) {
+	if (MyPlayer->_pClass == HeroClass::Rogue) {
 		if (object._oTrapFlag) {
 			InfoString = fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), InfoString);
 			InfoColor = UiFlags::ColorRed;

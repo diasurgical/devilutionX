@@ -121,6 +121,9 @@ int QuestGroup3[3] = { Q_MUSHROOM, Q_ZHAR, Q_ANVIL };
  */
 int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 
+/**
+ * @brief There is no reason to run this, the room has already had a proper sector assigned
+ */
 void DrawButcher()
 {
 	int x = 2 * setpc_x + 16;
@@ -414,17 +417,17 @@ void CheckQuests()
 		    && ActiveMonsterCount == 4
 		    && Quests[Q_PWATER]._qactive != QUEST_DONE) {
 			Quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, Players[MyPlayerId].position.tile);
+			PlaySfxLoc(IS_QUESTDN, MyPlayer->position.tile);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
 			UpdatePWaterPalette();
 			WaterDone = 32;
 		}
-	} else if (Players[MyPlayerId]._pmode == PM_STAND) {
+	} else if (MyPlayer->_pmode == PM_STAND) {
 		for (auto &quest : Quests) {
 			if (currlevel == quest._qlevel
 			    && quest._qslvl != 0
 			    && quest._qactive != QUEST_NOTAVAIL
-			    && Players[MyPlayerId].position.tile == quest.position) {
+			    && MyPlayer->position.tile == quest.position) {
 				if (quest._qlvltype != DTYPE_NONE) {
 					setlvltype = quest._qlvltype;
 				}
@@ -463,7 +466,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 	if (gbIsSpawn)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	if (monster.MType->mtype == MT_SKING) {
 		auto &quest = Quests[Q_SKELKING];

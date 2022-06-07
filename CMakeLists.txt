@@ -59,6 +59,9 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
+option(DEVILUTIONX_RESAMPLER_SPEEX "Build with Speex resampler" ON)
+option(DEVILUTIONX_RESAMPLER_SDL "Build with SDL resampler" ON)
+
 if(TSAN)
   set(ASAN OFF)
 endif()
@@ -153,6 +156,19 @@ if(NONET)
   set(DISABLE_ZERO_TIER ON)
   set(PACKET_ENCRYPTION OFF)
 endif()
+
+if(USE_SDL1)
+  set(DEVILUTIONX_RESAMPLER_SDL OFF)
+endif()
+if(DEVILUTIONX_RESAMPLER_SPEEX)
+  list(APPEND _resamplers Speex)
+endif()
+if(DEVILUTIONX_RESAMPLER_SDL)
+  list(APPEND _resamplers SDL)
+endif()
+list(GET _resamplers 0 _default_resampler)
+set(DEVILUTIONX_DEFAULT_RESAMPLER ${_default_resampler} CACHE STRING "Default resampler")
+set_property(CACHE DEVILUTIONX_DEFAULT_RESAMPLER PROPERTY STRINGS ${_resamplers})
 
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
@@ -485,6 +501,10 @@ if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/hellfire.png"
       DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}-hellfire.png"
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/devilutionx.metainfo.xml"
+      DESTINATION "share/metainfo"
+      RENAME "${project_name}.metainfo.xml"
     )
 
     # -G DEB

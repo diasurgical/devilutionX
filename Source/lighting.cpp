@@ -532,8 +532,8 @@ void DoLighting(Point position, int nRadius, int lnum)
 
 	if (lnum >= 0) {
 		Light &light = Lights[lnum];
-		xoff = light.position.offset.x;
-		yoff = light.position.offset.y;
+		xoff = light.position.offset.deltaX;
+		yoff = light.position.offset.deltaY;
 		if (xoff < 0) {
 			xoff += 8;
 			position -= { 1, 0 };
@@ -894,7 +894,7 @@ void ToggleLighting()
 	}
 
 	memcpy(dLight, dPreLight, sizeof(dLight));
-	for (const auto &player : Players) {
+	for (const Player &player : Players) {
 		if (player.plractive && player.plrlevel == currlevel) {
 			DoLighting(player.position.tile, player._pLightRad, -1);
 		}
@@ -975,7 +975,7 @@ void ChangeLightXY(int i, Point position)
 	UpdateLighting = true;
 }
 
-void ChangeLightOffset(int i, Point position)
+void ChangeLightOffset(int i, Displacement offset)
 {
 	if (DisableLighting || i == NO_LIGHT) {
 		return;
@@ -985,7 +985,7 @@ void ChangeLightOffset(int i, Point position)
 	light._lunflag = true;
 	light.position.old = light.position.tile;
 	light.oldRadius = light._lradius;
-	light.position.offset = position;
+	light.position.offset = offset;
 	UpdateLighting = true;
 }
 
@@ -1131,10 +1131,23 @@ void ProcessVisionList()
 		if (vision._ldel)
 			continue;
 
+		MapExplorationType doautomap = MAP_EXP_SELF;
+		if (!vision._lflags) {
+			doautomap = MAP_EXP_OTHERS;
+			for (const Player &player : Players) {
+				// Find player for this vision
+				if (!player.plractive || player.plrlevel != currlevel || player._pvid != vision._lid)
+					continue;
+				// Check that player allows automap sharing
+				if (!player.friendlyMode)
+					doautomap = MAP_EXP_NONE;
+				break;
+			}
+		}
 		DoVision(
 		    vision.position.tile,
 		    vision._lradius,
-		    vision._lflags ? MAP_EXP_SELF : MAP_EXP_OTHERS,
+		    doautomap,
 		    vision._lflags);
 	}
 	bool delflag;

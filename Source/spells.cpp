@@ -66,7 +66,7 @@ void ClearReadiedSpell(Player &player)
 
 void PlacePlayer(int pnum)
 {
-	auto &player = Players[pnum];
+	Player &player = Players[pnum];
 	Point newPosition = {};
 
 	if (player.plrlevel == currlevel) {
@@ -174,14 +174,14 @@ void UseMana(int id, spell_id sn)
 	if (id != MyPlayerId)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = *MyPlayer;
 
 	switch (myPlayer._pSplType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_INVALID:
 		break;
 	case RSPLTYPE_SCROLL:
-		RemoveScroll(myPlayer);
+		RemoveCurrentSpellScroll(myPlayer);
 		break;
 	case RSPLTYPE_CHARGES:
 		UseStaffCharge(myPlayer);
@@ -225,7 +225,7 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 		return SpellCheckResult::Fail_Level0;
 	}
 
-	auto &player = Players[id];
+	Player &player = Players[id];
 	if (player._pMana < GetManaAmount(player, sn)) {
 		return SpellCheckResult::Fail_NoMana;
 	}

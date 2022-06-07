@@ -7422,7 +7422,7 @@ msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "{:s}的職員"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:164
 #, fuzzy
 #| msgid "Level {:d}"
@@ -7434,28 +7434,28 @@ msgstr "等​級{:d}"
 msgid "Unusable"
 msgstr ""
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:174
 #, fuzzy
 #| msgid "Charges: {:d}/{:d}"
 msgid "Heals: {:d} - {:d}"
 msgstr "充能: {:d}/{:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:176
 #, fuzzy
 #| msgid "Damage: {:d}-{:d}  "
 msgid "Damage: {:d} - {:d}"
 msgstr "傷害: {:d}-{:d}"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:180
 #, fuzzy
 #| msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgid "Dmg: 1/3 target hp"
 msgstr "法力: {:d} 傷害: 1/3 tgt hp"
 
-#. TRANSLATORS: UI constrains, keep short please.
+#. TRANSLATORS: UI constraints, keep short please.
 #: Source/panels/spell_book.cpp:182
 #, fuzzy
 #| msgid "Mana: {:+d}"
@@ -8177,7 +8177,7 @@ msgstr "哪​件​商品​在​出售？"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:626
 msgid "You have nothing to repair."
-msgstr "你​沒什麼​可​修​的。"
+msgstr "你​沒什麼​可修​的。"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637

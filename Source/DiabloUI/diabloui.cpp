@@ -693,18 +693,19 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
+	int uiPositionY = GetUIRectangle().position.y;
 	if (ArtBackgroundWidescreen.surface != nullptr) {
-		SDL_Rect rectw = { 0, UI_OFFSET_Y, 0, 0 };
+		SDL_Rect rectw = { 0, uiPositionY, 0, 0 };
 		vecDialog->push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, rectw, UiFlags::AlignCenter));
 	}
 
-	SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
+	SDL_Rect rect = { 0, uiPositionY, 0, 0 };
 	vecDialog->push_back(std::make_unique<UiImage>(&ArtBackground, rect, UiFlags::AlignCenter));
 }
 
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
 {
-	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y + y), 0, 0 };
+	SDL_Rect rect = { 0, (Sint16)(GetUIRectangle().position.y + y), 0, 0 };
 	vecDialog->push_back(std::make_unique<UiImageCel>(
 	    CelSpriteWithFrameHeight { ArtLogos[size]->sprite, ArtLogos[size]->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 }
