@@ -851,9 +851,10 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 			return false;
 	}
 
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage) && HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
-		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
-		AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::SpecialArrows)) {
+		int midam = player._pSpecEffectMinDam + GenerateRnd(player._pSpecEffectMaxDam - player._pSpecEffectMinDam);
+		Missile* tempMissile = AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+		tempMissile->var7 = player._pSpecEffect;
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
@@ -1110,12 +1111,11 @@ bool DoAttack(int pnum)
 			}
 		}
 
-		if (!HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
-			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
-				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-			} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
-				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-			}
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
+			AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+		}
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
+			AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 		}
 
 		if (dMonster[dx][dy] != 0) {
@@ -1225,12 +1225,12 @@ bool DoRangeAttack(int pnum)
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningArrows)) {
 			mistype = MIS_LARROW;
 		}
-		if (HasAllOf(player._pIFlags, ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows)) {
-			dmg = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::SpecialArrows)) {
+			dmg = player._pSpecEffectMinDam + GenerateRnd(player._pSpecEffectMaxDam - player._pSpecEffectMinDam);
 			mistype = MIS_SPECARROW;
 		}
 
-		AddMissile(
+		Missile* tempMissile = AddMissile(
 		    player.position.tile,
 		    player.position.temp + Displacement { xoff, yoff },
 		    player._pdir,
@@ -1239,6 +1239,8 @@ bool DoRangeAttack(int pnum)
 		    pnum,
 		    dmg,
 		    0);
+
+		tempMissile->var7 = player._pSpecEffect;
 
 		if (arrow == 0 && mistype != MIS_SPECARROW) {
 			PlaySfxLoc(arrows != 1 ? IS_STING1 : PS_BFIRE, player.position.tile);

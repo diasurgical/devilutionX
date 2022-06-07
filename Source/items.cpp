@@ -870,11 +870,10 @@ int SaveItemPower(Item &item, ItemPower &power)
 		item._iFMaxDam = 0;
 		break;
 	case IPL_FIREBALL:
-		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iFlags |= ItemSpecialEffect::SpecialArrows;
+		item._iSpecEffectMinDam = power.param1;
+		item._iSpecEffectMaxDam = power.param2;
+		item._iSpecEffect = MIS_FIRENOVA;
 		break;
 	case IPL_THORNS:
 		item._iFlags |= ItemSpecialEffect::Thorns;
@@ -977,19 +976,17 @@ int SaveItemPower(Item &item, ItemPower &power)
 	case IPL_INVCURS:
 		item._iCurs = power.param1;
 		break;
-	case IPL_ADDACLIFE:
-		item._iFlags |= (ItemSpecialEffect::LightningArrows | ItemSpecialEffect::FireArrows);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 1;
-		item._iLMaxDam = 0;
+	case IPL_LIGHTNING:
+		item._iFlags |= ItemSpecialEffect::SpecialArrows;
+		item._iSpecEffectMinDam = power.param1;
+		item._iSpecEffectMaxDam = power.param2;
+		item._iSpecEffect = MIS_LIGHTARROW;
 		break;
-	case IPL_ADDMANAAC:
-		item._iFlags |= (ItemSpecialEffect::LightningDamage | ItemSpecialEffect::FireDamage);
-		item._iFMinDam = power.param1;
-		item._iFMaxDam = power.param2;
-		item._iLMinDam = 2;
-		item._iLMaxDam = 0;
+	case IPL_CHARGEDBOLT:
+		item._iFlags |= ItemSpecialEffect::SpecialArrows;
+		item._iSpecEffectMinDam = power.param1;
+		item._iSpecEffectMaxDam = power.param2;
+		item._iSpecEffect = MIS_CBOLTARROW;
 		break;
 	case IPL_FIRERESCLVL:
 		item._iPLFR = 30 - MyPlayer->_pLevel;
@@ -3697,12 +3694,12 @@ bool DoOil(Player &player, int cii)
 		return _("see with infravision");
 	case IPL_INVCURS:
 		return " ";
-	case IPL_ADDACLIFE:
+	case IPL_LIGHTNING:
 		if (item._iFMinDam == item._iFMaxDam)
 			return fmt::format(_("lightning damage: {:d}"), item._iFMinDam);
 		else
 			return fmt::format(_("lightning damage: {:d}-{:d}"), item._iFMinDam, item._iFMaxDam);
-	case IPL_ADDMANAAC:
+	case IPL_CHARGEDBOLT:
 		return _("charged bolts on hits");
 	case IPL_FIRERESCLVL:
 		if (item._iPLFR > 0)

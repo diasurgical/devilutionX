@@ -349,6 +349,9 @@ struct Player {
 	ItemSpecialEffectHf pDamAcFlags;
 	/** @brief Specifies whether players are in non-PvP mode. */
 	bool friendlyMode = true;
+	missile_id _pSpecEffect = MIS_ARROW;
+	uint8_t _pSpecEffectMinDam = 0;
+	uint8_t _pSpecEffectMaxDam = 0;
 
 	void CalcScrolls();
 

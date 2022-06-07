@@ -3130,7 +3130,7 @@ void MI_SpecArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		switch (player._pILMinDam) {
+		switch (missile.var7) {
 		case 0:
 			mitype = MIS_FIRENOVA;
 			break;
