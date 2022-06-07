@@ -2372,6 +2372,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	int fmax = 0; // maximum fire damage
 	int lmin = 0; // minimum lightning damage
 	int lmax = 0; // maximum lightning damage
+	int smin = 0; // minimum special effect damage
+	int smax = 0; // maximum special effect damage
+	missile_id SpecEffect = MIS_ARROW;
 
 	for (auto &item : player.InvBody) {
 		if (!item.isEmpty() && item._iStatFlag) {
@@ -2415,6 +2418,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				fmax += item._iFMaxDam;
 				lmin += item._iLMinDam;
 				lmax += item._iLMaxDam;
+				smin += item._iSpecEffectMinDam;
+				smax += item._iSpecEffectMaxDam;
+				if (item._iSpecEffect != MIS_ARROW)
+					SpecEffect = item._iSpecEffect;
 			}
 		}
 	}
@@ -2581,6 +2588,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pIFMaxDam = fmax;
 	player._pILMinDam = lmin;
 	player._pILMaxDam = lmax;
+	player._pSpecEffect = SpecEffect;
+	player._pSpecEffectMinDam = smin;
+	player._pSpecEffectMaxDam = smax;
 
 	player._pInfraFlag = HasAnyOf(iflgs, ItemSpecialEffect::Infravision);
 
