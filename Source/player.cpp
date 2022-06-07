@@ -853,7 +853,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::SpecialArrows)) {
 		int midam = player._pSpecEffectMinDam + GenerateRnd(player._pSpecEffectMaxDam - player._pSpecEffectMinDam);
-		Missile* missile = AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+		Missile *missile = AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		missile->var7 = player._pSpecEffect;
 	}
 	int mind = player._pIMinDam;
@@ -1230,7 +1230,7 @@ bool DoRangeAttack(int pnum)
 			mistype = MIS_SPECARROW;
 		}
 
-		Missile* missile = AddMissile(
+		Missile *missile = AddMissile(
 		    player.position.tile,
 		    player.position.temp + Displacement { xoff, yoff },
 		    player._pdir,

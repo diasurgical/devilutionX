@@ -3131,7 +3131,6 @@ void MI_SpecArrow(Missile &missile)
 		micaster = TARGET_MONSTERS;
 
 		mitype = (missile_id)missile.var7;
-		
 	}
 	AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 	if (mitype == MIS_CBOLTARROW) {
