@@ -3,6 +3,7 @@ if(NOT DEFINED DEVILUTIONX_TEST_FIXTURES_OUTPUT_DIRECTORY)
 endif()
 
 set(devilutionx_fixtures
+  diablo/1-2588.dun
   diablo/1-743271966.dun
   diablo/2-1383137027.dun
   diablo/3-844660068.dun

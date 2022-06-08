@@ -24,6 +24,18 @@ TEST(Drlg_l1, DRLG_Init_Globals)
 	EXPECT_EQ(dLight[0][0], 0);
 }
 
+TEST(Drlg_l1, CreateL5Dungeon_diablo_1_2588)
+{
+	LoadExpectedLevelData("diablo/1-2588.dun");
+
+	MyPlayer->pOriginalCathedral = true;
+
+	TestCreateDungeon(1, 2588, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(77, 46));
+	TestCreateDungeon(1, 2588, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(49, 49));
+}
+
 TEST(Drlg_l1, CreateL5Dungeon_diablo_1_743271966)
 {
 	LoadExpectedLevelData("diablo/1-743271966.dun");
