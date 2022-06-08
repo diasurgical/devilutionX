@@ -1098,7 +1098,7 @@ void OptionEntryLanguageCode::LoadFromIni(string_view category)
 		}
 	}
 
-	LogVerbose("Found {} user preferred locales", locales);
+	LogVerbose("Found user preferred locales: {}", fmt::join(locales, ", "));
 
 	for (const auto &locale : locales) {
 		LogVerbose("Trying to load translation: {}", locale);
