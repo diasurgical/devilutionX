@@ -34,3 +34,5 @@ FetchContent_Declare(SDL_audiolib
   URL https://github.com/realnc/SDL_audiolib/archive/e503dc0200d0833da4b2dd9fa1dbf1baf02ca591.tar.gz
   URL_HASH MD5=9460b91b44caa7cbb7f713214d248307)
 FetchContent_MakeAvailableExcludeFromAll(SDL_audiolib)
+
+add_library(SDL_audiolib::SDL_audiolib ALIAS SDL_audiolib)
