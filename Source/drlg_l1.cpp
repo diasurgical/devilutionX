@@ -1046,12 +1046,12 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 			ch = (GenerateRnd(5) + 2) & ~1;
 			cx1 = x - cw;
 			cy1 = h / 2 + y - ch / 2;
-			ran = CheckRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
+			ran = CheckRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1") (workaround applied below)
 			num++;
 		} while (!ran && num < 20);
 
 		if (ran)
-			MapRoom(cx1, cy1, cw, ch);
+			MapRoom(cx1, cy1, std::min(DMAXX - cx1, cw), std::min(DMAXX - cy1, ch));
 		int cx2 = x + w;
 		bool ran2 = CheckRoom(cx2, cy1 - 1, cw + 1, ch + 2);
 		if (ran2)
