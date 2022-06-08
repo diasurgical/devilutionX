@@ -732,7 +732,7 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int noquad)
+bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
 	int sx;
 	int sy;
@@ -760,25 +760,6 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
 				sy++;
 				abort = false;
-			}
-
-			switch (noquad) {
-			case 0:
-				if (sx < cx && sy < cy)
-					abort = false;
-				break;
-			case 1:
-				if (sx > cx && sy < cy)
-					abort = false;
-				break;
-			case 2:
-				if (sx < cx && sy > cy)
-					abort = false;
-				break;
-			case 3:
-				if (sx > cx && sy > cy)
-					abort = false;
-				break;
 			}
 
 			int ii = 2;
@@ -2119,21 +2100,21 @@ bool PlaceCathedralStairs(lvl_entry entry)
 
 	// Place poison water entrance
 	if (Quests[Q_PWATER].IsAvailable()) {
-		if (!PlaceMiniSet(PWATERIN, 1, 1, 0, 0, entry == ENTRY_RTNLVL, -1))
+		if (!PlaceMiniSet(PWATERIN, 1, 1, 0, 0, entry == ENTRY_RTNLVL))
 			success = false;
 		if (entry == ENTRY_RTNLVL)
 			ViewPosition += Displacement { 2, 3 };
 	}
 
 	// Place stairs up
-	if (!PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, 1, 1, 0, 0, entry == ENTRY_MAIN, -1)) {
+	if (!PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, 1, 1, 0, 0, entry == ENTRY_MAIN)) {
 		if (MyPlayer->pOriginalCathedral)
 			return false;
 		success = false;
 	}
 
 	// Place stairs down
-	if (!Quests[Q_LTBANNER].IsAvailable() && !PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV, -1))
+	if (!Quests[Q_LTBANNER].IsAvailable() && !PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV))
 		success = false;
 	if (entry == ENTRY_PREV) {
 		if (Quests[Q_LTBANNER].IsAvailable())
@@ -2151,14 +2132,14 @@ bool PlaceCryptStairs(lvl_entry entry)
 
 	// Place stairs up
 	bool enteringFromAbove = entry == ENTRY_MAIN || entry == ENTRY_TWARPDN;
-	if (!PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, 1, 1, 0, 0, enteringFromAbove, -1))
+	if (!PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, 1, 1, 0, 0, enteringFromAbove))
 		success = false;
 	if (enteringFromAbove)
 		ViewPosition.y++;
 
 	// Place stairs down
 	if (currlevel != 24) {
-		if (!PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV, -1))
+		if (!PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, entry == ENTRY_PREV))
 			success = false;
 		if (entry == ENTRY_PREV)
 			ViewPosition.y += 3;
@@ -2276,7 +2257,7 @@ void GenerateLevel(lvl_entry entry)
 	} else {
 		Substitution();
 		ApplyShadowsPatterns();
-		PlaceMiniSet(LAMPS, 5, 10, 0, 0, false, -1);
+		PlaceMiniSet(LAMPS, 5, 10, 0, 0, false);
 		FillFloor();
 	}
 
