@@ -1790,7 +1790,7 @@ void InitDungeonFlags()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			predungeon[i][j] = 32;
-			dflags[i][j] = 0;
+			Protected[i][j] = false;
 		}
 	}
 }
@@ -1829,7 +1829,7 @@ void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool forceHW)
 		for (int i = nX1; i < nX2; i++) {
 			/// BUGFIX: Should loop j between nY1 and nY2 instead of always using nY1.
 			while (i < nY2) {
-				dflags[i][nY1] |= DLRG_PROTECTED;
+				Protected[i][nY1] = true;
 				i++;
 			}
 		}
@@ -2315,7 +2315,7 @@ void SetRoom(int rx1, int ry1)
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[rx1 + i][ry1 + j] = tileId;
-				dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
+				Protected[rx1 + i][ry1 + j] = true;
 			} else {
 				dungeon[rx1 + i][ry1 + j] = 3;
 			}
@@ -2800,7 +2800,7 @@ void FixLockout()
 	}
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
-			if ((dflags[i][j] & DLRG_PROTECTED) != 0) {
+			if (Protected[i][j]) {
 				continue;
 			}
 			if ((dungeon[i][j] == 2 || dungeon[i][j] == 5) && dungeon[i][j - 1] == 3 && dungeon[i][j + 1] == 3) {
@@ -2817,7 +2817,7 @@ void FixLockout()
 					}
 					i++;
 				}
-				if (!doorok && (dflags[i - 1][j] & DLRG_PROTECTED) == 0) {
+				if (!doorok && !Protected[i - 1][j]) {
 					dungeon[i - 1][j] = 5;
 				}
 			}
@@ -2825,7 +2825,7 @@ void FixLockout()
 	}
 	for (int j = 1; j < DMAXX - 1; j++) { /* check: might be flipped */
 		for (int i = 1; i < DMAXY - 1; i++) {
-			if ((dflags[j][i] & DLRG_PROTECTED) != 0) {
+			if (Protected[j][i]) {
 				continue;
 			}
 			if ((dungeon[j][i] == 1 || dungeon[j][i] == 4) && dungeon[j - 1][i] == 3 && dungeon[j + 1][i] == 3) {
@@ -2842,7 +2842,7 @@ void FixLockout()
 					}
 					i++;
 				}
-				if (!doorok && (dflags[j][i - 1] & DLRG_PROTECTED) == 0) {
+				if (!doorok && !Protected[j][i - 1]) {
 					dungeon[j][i - 1] = 4;
 				}
 			}
@@ -3042,7 +3042,7 @@ void LoadDungeonData(const uint16_t *dunData)
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 12;
-			dflags[i][j] = 0;
+			Protected[i][j] = false;
 		}
 	}
 
@@ -3057,7 +3057,7 @@ void LoadDungeonData(const uint16_t *dunData)
 			tileLayer++;
 			if (tileId != 0) {
 				dungeon[i][j] = tileId;
-				dflags[i][j] |= DLRG_PROTECTED;
+				Protected[i][j] = true;
 			} else {
 				dungeon[i][j] = 3;
 			}

@@ -220,7 +220,7 @@ bool PlaceMiniSet(const Miniset &miniset, int tmin, int tmax, int cx, int cy, bo
 			return false;
 		}
 
-		miniset.place({ sx, sy }, 8);
+		miniset.place({ sx, sy }, true);
 	}
 
 	if (currlevel == 15 && Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
@@ -259,7 +259,7 @@ void InitDungeonFlags()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 30;
-			dflags[i][j] = 0;
+			Protected[i][j] = false;
 		}
 	}
 }
@@ -276,7 +276,7 @@ void SetRoom(const uint16_t *dunData, int rx1, int ry1)
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[i + rx1][j + ry1] = tileId;
-				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
+				Protected[i + rx1][j + ry1] = true;
 			} else {
 				dungeon[i + rx1][j + ry1] = 6;
 			}
@@ -490,7 +490,7 @@ int HorizontalWallOk(int i, int j)
 {
 	int x;
 	for (x = 1; dungeon[i + x][j] == 6; x++) {
-		if (dflags[i + x][j] != 0) {
+		if (Protected[i + x][j]) {
 			break;
 		}
 		if (dungeon[i + x][j - 1] != 6) {
@@ -511,7 +511,7 @@ int VerticalWallOk(int i, int j)
 {
 	int y;
 	for (y = 1; dungeon[i][j + y] == 6; y++) {
-		if (dflags[i][j + y] != 0) {
+		if (Protected[i][j + y]) {
 			break;
 		}
 		if (dungeon[i - 1][j + y] != 6) {
@@ -619,7 +619,7 @@ void AddWall()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (dflags[i][j] != 0) {
+			if (Protected[i][j]) {
 				continue;
 			}
 			for (auto d : { 10, 12, 13, 15, 16, 21, 22 }) {
@@ -999,7 +999,7 @@ void Substitution()
 		for (int x = 0; x < DMAXX; x++) {
 			if (GenerateRnd(3) == 0) {
 				uint8_t c = L4BTYPES[dungeon[x][y]];
-				if (c != 0 && dflags[x][y] == 0) {
+				if (c != 0 && !Protected[x][y]) {
 					int rv = GenerateRnd(16);
 					int i = -1;
 					while (rv >= 0) {
@@ -1022,7 +1022,7 @@ void Substitution()
 			int rv = GenerateRnd(10);
 			if (rv == 0) {
 				uint8_t c = dungeon[x][y];
-				if (L4BTYPES[c] == 6 && dflags[x][y] == 0) {
+				if (L4BTYPES[c] == 6 && !Protected[x][y]) {
 					dungeon[x][y] = GenerateRnd(3) + 95;
 				}
 			}
@@ -1131,10 +1131,10 @@ void SaveQuads()
 
 	for (int j = 0; j < 14; j++) {
 		for (int i = 0; i < 14; i++) {
-			dflags[i + x][j + y] = 1;
-			dflags[DMAXX - 1 - i - x][j + y] = 1;
-			dflags[i + x][DMAXY - 1 - j - y] = 1;
-			dflags[DMAXX - 1 - i - x][DMAXY - 1 - j - y] = 1;
+			Protected[i + x][j + y] = true;
+			Protected[DMAXX - 1 - i - x][j + y] = true;
+			Protected[i + x][DMAXY - 1 - j - y] = true;
+			Protected[DMAXX - 1 - i - x][DMAXY - 1 - j - y] = true;
 		}
 	}
 }
@@ -1348,7 +1348,7 @@ void GenerateLevel(lvl_entry entry)
 		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 			for (int spi = SP4x1; spi < SP4x2; spi++) {
 				for (int spj = SP4y1; spj < SP4y2; spj++) {
-					dflags[spi][spj] = 1;
+					Protected[spi][spj] = true;
 				}
 			}
 		}

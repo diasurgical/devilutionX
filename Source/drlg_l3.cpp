@@ -843,13 +843,7 @@ const BYTE HivePattern42[] = {
 void InitDungeonFlags()
 {
 	memset(dungeon, 0, sizeof(dungeon));
-
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 0;
-			dflags[i][j] = 0;
-		}
-	}
+	memset(Protected, 0, sizeof(Protected));
 }
 
 bool FillRoom(int x1, int y1, int x2, int y2)
@@ -1531,7 +1525,7 @@ bool HivePlaceSetRandom(const BYTE *miniset, int rndper)
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
 						found = false;
 					}
-					if (dflags[xx + sx][yy + sy] != 0) {
+					if (Protected[xx + sx][yy + sy]) {
 						found = false;
 					}
 					ii++;
@@ -1717,7 +1711,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 				for (int xx = 0; xx < sw && abort; xx++) {
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii])
 						abort = false;
-					if (dflags[xx + sx][yy + sy] != 0)
+					if (Protected[xx + sx][yy + sy])
 						abort = false;
 					ii++;
 				}
@@ -1770,7 +1764,7 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
 						found = false;
 					}
-					if (dflags[xx + sx][yy + sy] != 0) {
+					if (Protected[xx + sx][yy + sy]) {
 						found = false;
 					}
 					ii++;
@@ -2123,7 +2117,7 @@ bool PlaceAnvil()
 				if (L3ANVIL[ii] != 0 && dungeon[xx + sx][yy + sy] != L3ANVIL[ii]) {
 					found = false;
 				}
-				if (dflags[xx + sx][yy + sy] != 0) {
+				if (Protected[xx + sx][yy + sy]) {
 					found = false;
 				}
 				ii++;
@@ -2150,7 +2144,7 @@ bool PlaceAnvil()
 			if (L3ANVIL[ii] != 0) {
 				dungeon[xx + sx][yy + sy] = L3ANVIL[ii];
 			}
-			dflags[xx + sx][yy + sy] |= DLRG_PROTECTED;
+			Protected[xx + sx][yy + sy] = true;
 			ii++;
 		}
 	}

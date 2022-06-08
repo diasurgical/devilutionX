@@ -73,7 +73,7 @@ enum class DebugGridTextItem : uint16_t {
 	AutomapView,
 	dungeon,
 	pdungeon,
-	dflags,
+	Protected,
 };
 
 DebugGridTextItem SelectedDebugGridTextItem;
@@ -854,7 +854,7 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"AutomapView",
 		"dungeon",
 		"pdungeon",
-		"dflags",
+		"Protected",
 	};
 
 	if (parameter == "clear") {
@@ -1071,7 +1071,7 @@ bool IsDebugGridInMegatiles()
 	case DebugGridTextItem::AutomapView:
 	case DebugGridTextItem::dungeon:
 	case DebugGridTextItem::pdungeon:
-	case DebugGridTextItem::dflags:
+	case DebugGridTextItem::Protected:
 		return true;
 	default:
 		return false;
@@ -1156,8 +1156,8 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	case DebugGridTextItem::pdungeon:
 		info = pdungeon[megaCoords.x][megaCoords.y];
 		break;
-	case DebugGridTextItem::dflags:
-		info = dflags[megaCoords.x][megaCoords.y];
+	case DebugGridTextItem::Protected:
+		info = Protected[megaCoords.x][megaCoords.y];
 		break;
 	case DebugGridTextItem::None:
 		return false;
