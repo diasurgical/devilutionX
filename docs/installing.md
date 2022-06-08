@@ -37,6 +37,7 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 - Copy the MPQ files to the folder containing the DevilutionX exe, or to the data folder. The data folder path may differ, but will normally be `%AppData%\diasurgical\devilution`
 - Run `devilutionx.exe`
+- A graphical tutorial called DevilutionXWindowsInstallation is included in this directory.
 
 </details>
 
