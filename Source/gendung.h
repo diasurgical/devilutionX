@@ -62,15 +62,6 @@ enum lvl_entry : uint8_t {
 	ENTRY_TWARPUP,
 };
 
-enum {
-	// clang-format off
-	DLRG_HDOOR     = 1 << 0,
-	DLRG_VDOOR     = 1 << 1,
-	DLRG_CHAMBER   = 1 << 6,
-	DLRG_PROTECTED = 1 << 7,
-	// clang-format on
-};
-
 enum class DungeonFlag : uint8_t {
 	// clang-format off
 	None        = 0, // Only used by lighting/automap
@@ -137,7 +128,8 @@ struct ShadowStruct {
 extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 /** Contains a backup of the tile IDs of the map. */
 extern uint8_t pdungeon[DMAXX][DMAXY];
-extern uint8_t dflags[DMAXX][DMAXY];
+/** Tile that may not be overwritten by the level generator */
+extern bool Protected[DMAXX][DMAXY];
 /** Specifies the active set level X-coordinate of the map. */
 extern int setpc_x;
 /** Specifies the active set level Y-coordinate of the map. */
@@ -309,21 +301,22 @@ struct Miniset {
 			for (int xx = 0; xx < size.width; xx++) {
 				if (search[yy][xx] != 0 && dungeon[xx + position.x][yy + position.y] != search[yy][xx])
 					return false;
-				if (dflags[xx + position.x][yy + position.y] != 0)
+				if (Protected[xx + position.x][yy + position.y])
 					return false;
 			}
 		}
 		return true;
 	}
 
-	void place(Point position, unsigned char extraFlags = 0) const
+	void place(Point position, bool protect = false) const
 	{
 		for (int y = 0; y < size.height; y++) {
 			for (int x = 0; x < size.width; x++) {
 				if (replace[y][x] == 0)
 					continue;
 				dungeon[x + position.x][y + position.y] = replace[y][x];
-				dflags[x + position.x][y + position.y] |= extraFlags;
+				if (protect)
+					Protected[x + position.x][y + position.y] = true;
 			}
 		}
 	}

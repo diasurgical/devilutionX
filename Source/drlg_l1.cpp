@@ -24,7 +24,8 @@ namespace {
 
 /** Represents a tile ID map of twice the size, repeating each tile of the original map in blocks of 4. */
 BYTE L5dungeon[80][80];
-uint8_t L5dflags[DMAXX][DMAXY];
+/** Marks where walls may not be added to the level */
+bool Chamber[DMAXX][DMAXX];
 /** Specifies whether a single player quest DUN has been loaded. */
 bool L5setloadflag;
 /** Specifies whether to generate a horizontal room at position 1 in the Cathedral. */
@@ -691,13 +692,13 @@ void ApplyShadowsPatterns()
 				if (shadow.s3 != 0 && shadow.s3 != sd[1][0])
 					continue;
 
-				if (shadow.nv1 != 0 && L5dflags[x - 1][y - 1] == 0) {
+				if (shadow.nv1 != 0 && !Protected[x - 1][y - 1]) {
 					dungeon[x - 1][y - 1] = shadow.nv1;
 				}
-				if (shadow.nv2 != 0 && L5dflags[x][y - 1] == 0) {
+				if (shadow.nv2 != 0 && !Protected[x][y - 1]) {
 					dungeon[x][y - 1] = shadow.nv2;
 				}
-				if (shadow.nv3 != 0 && L5dflags[x - 1][y] == 0) {
+				if (shadow.nv3 != 0 && !Protected[x - 1][y]) {
 					dungeon[x - 1][y] = shadow.nv3;
 				}
 			}
@@ -706,21 +707,21 @@ void ApplyShadowsPatterns()
 
 	for (int y = 1; y < DMAXY; y++) {
 		for (int x = 1; x < DMAXX; x++) {
-			if (dungeon[x - 1][y] == 139 && L5dflags[x - 1][y] == 0) {
+			if (dungeon[x - 1][y] == 139 && !Protected[x - 1][y]) {
 				uint8_t tnv3 = 139;
 				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 141;
 				}
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 149 && L5dflags[x - 1][y] == 0) {
+			if (dungeon[x - 1][y] == 149 && !Protected[x - 1][y]) {
 				uint8_t tnv3 = 149;
 				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 153;
 				}
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 148 && L5dflags[x - 1][y] == 0) {
+			if (dungeon[x - 1][y] == 148 && !Protected[x - 1][y]) {
 				uint8_t tnv3 = 148;
 				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 154;
@@ -786,7 +787,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 				for (int xx = 0; xx < sw && abort; xx++) {
 					if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
 						abort = false;
-					if (L5dflags[xx + sx][sy + yy] != 0)
+					if (Protected[xx + sx][sy + yy])
 						abort = false;
 					ii++;
 				}
@@ -848,16 +849,14 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
 						found = false;
 					}
-					if (dflags[xx + sx][yy + sy] != 0) {
-						found = false;
-					}
+					// BUGFIX: Check if tile is Protected (fixing this breaks crypt levels)
 					ii++;
 				}
 			}
 			int kk = sw * sh + 2;
 			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found) {
 				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
-				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 - NOT A BUG - "fixing" this breaks crypt
+				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 (fixing this breaks crypt levels)
 
 				constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
 					return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY) && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY) && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
@@ -893,7 +892,7 @@ void FillFloor()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (L5dflags[i][j] == 0 && dungeon[i][j] == CathedralTile::Floor) {
+			if (!Protected[i][j] && dungeon[i][j] == CathedralTile::Floor) {
 				int rv = GenerateRnd(3);
 
 				if (rv == 1)
@@ -956,16 +955,8 @@ void InitDungeonFlags()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 0;
-			L5dflags[i][j] = 0;
-		}
-	}
-}
-
-void ClearFlags()
-{
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			L5dflags[i][j] &= ~DLRG_CHAMBER;
+			Protected[i][j] = false;
+			Chamber[i][j] = false;
 		}
 	}
 }
@@ -1193,7 +1184,7 @@ int HorizontalWallOk(int i, int j)
 {
 	int x;
 	for (x = 1; dungeon[i + x][j] == 13; x++) {
-		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || L5dflags[i + x][j] != 0)
+		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || Protected[i + x][j] || Chamber[i + x][j])
 			break;
 	}
 
@@ -1217,7 +1208,7 @@ int VerticalWallOk(int i, int j)
 {
 	int y;
 	for (y = 1; dungeon[i][j + y] == 13; y++) {
-		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || L5dflags[i][j + y] != 0)
+		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || Protected[i][j + y] || Chamber[i][j + y])
 			break;
 	}
 
@@ -1275,7 +1266,7 @@ void HorizontalWall(int i, int j, CathedralTile p, int dx)
 
 	dungeon[i + xx][j] = wt;
 	if (wt == CathedralTile::HDoor) {
-		L5dflags[i + xx][j] |= DLRG_PROTECTED;
+		Protected[i + xx][j] = true;
 	}
 }
 
@@ -1317,7 +1308,7 @@ void VerticalWall(int i, int j, CathedralTile p, int dy)
 
 	dungeon[i][j + yy] = wt;
 	if (wt == CathedralTile::VDoor) {
-		L5dflags[i][j + yy] |= DLRG_PROTECTED;
+		Protected[i][j + yy] = true;
 	}
 }
 
@@ -1325,7 +1316,7 @@ void AddWall()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (L5dflags[i][j] == 0) {
+			if (!Protected[i][j] && !Chamber[i][j]) {
 				if (dungeon[i][j] == CathedralTile::Corner) {
 					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
@@ -1419,7 +1410,7 @@ void GenerateChamber(int sx, int sy, bool topflag, bool bottomflag, bool leftfla
 	for (int j = 1; j < 11; j++) {
 		for (int i = 1; i < 11; i++) {
 			dungeon[i + sx][j + sy] = CathedralTile::Floor;
-			L5dflags[i + sx][j + sy] |= DLRG_CHAMBER;
+			Chamber[i + sx][j + sy] = true;
 		}
 	}
 
@@ -1582,7 +1573,7 @@ void SetCornerRoom(int rx1, int ry1)
 		for (int i = 0; i < rw; i++) {
 			if (CornerstoneRoomPattern[sp] != 0) {
 				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
-				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
+				Protected[rx1 + i][ry1 + j] = true;
 			} else {
 				dungeon[rx1 + i][ry1 + j] = CathedralTile::Floor;
 			}
@@ -1597,7 +1588,7 @@ void Substitution()
 		for (int x = 0; x < DMAXX; x++) {
 			if (GenerateRnd(4) == 0) {
 				uint8_t c = L5BTYPES[dungeon[x][y]];
-				if (c != 0 && L5dflags[x][y] == 0) {
+				if (c != 0 && !Protected[x][y]) {
 					int rv = GenerateRnd(16);
 					int i = -1;
 					while (rv >= 0) {
@@ -1612,14 +1603,14 @@ void Substitution()
 
 					// BUGFIX: Add `&& y > 0` to the if statement. (fixed)
 					if (i == 89 && y > 0) {
-						if (L5BTYPES[dungeon[x][y - 1]] != 79 || L5dflags[x][y - 1] != 0)
+						if (L5BTYPES[dungeon[x][y - 1]] != 79 || Protected[x][y - 1])
 							i = 79;
 						else
 							dungeon[x][y - 1] = 90;
 					}
 					// BUGFIX: Add `&& x + 1 < DMAXX` to the if statement. (fixed)
 					if (i == 91 && x + 1 < DMAXX) {
-						if (L5BTYPES[dungeon[x + 1][y]] != 80 || L5dflags[x + 1][y] != 0)
+						if (L5BTYPES[dungeon[x + 1][y]] != 80 || Protected[x + 1][y])
 							i = 80;
 						else
 							dungeon[x + 1][y] = 92;
@@ -1648,7 +1639,7 @@ void SetRoom(int rx1, int ry1)
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[rx1 + i][ry1 + j] = tileId;
-				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
+				Protected[rx1 + i][ry1 + j] = true;
 			} else {
 				dungeon[rx1 + i][ry1 + j] = CathedralTile::Floor;
 			}
@@ -1676,7 +1667,7 @@ void SetCryptRoom(int rx1, int ry1)
 		for (int i = 0; i < rw; i++) {
 			if (UberRoomPattern[sp] != 0) {
 				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
-				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
+				Protected[rx1 + i][ry1 + j] = true;
 			} else {
 				dungeon[rx1 + i][ry1 + j] = CathedralTile::Floor;
 			}
@@ -1988,9 +1979,9 @@ void FixCornerTiles()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
-			if ((L5dflags[i][j] & DLRG_PROTECTED) == 0 && dungeon[i][j] == 17 && dungeon[i - 1][j] == CathedralTile::Floor && dungeon[i][j - 1] == CathedralTile::VWall) {
+			if (!Protected[i][j] && dungeon[i][j] == 17 && dungeon[i - 1][j] == CathedralTile::Floor && dungeon[i][j - 1] == CathedralTile::VWall) {
 				dungeon[i][j] = 16;
-				L5dflags[i][j - 1] &= DLRG_PROTECTED;
+				// BUGFIX: Set tile as Protected
 			}
 			if (dungeon[i][j] == 202 && dungeon[i + 1][j] == CathedralTile::Floor && dungeon[i][j + 1] == CathedralTile::VWall) {
 				dungeon[i][j] = 8;
@@ -2212,7 +2203,6 @@ void GenerateLevel(lvl_entry entry)
 		FillChambers();
 		FixTilesPatterns();
 		AddWall();
-		ClearFlags();
 		FloodTransparencyValues(13);
 		if (PlaceStairs(entry))
 			break;
@@ -2317,7 +2307,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 22;
-			L5dflags[i][j] = 0;
+			Protected[i][j] = false;
 		}
 	}
 
@@ -2334,7 +2324,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 			tileLayer++;
 			if (tileId != 0) {
 				dungeon[i][j] = tileId;
-				L5dflags[i][j] |= DLRG_PROTECTED;
+				Protected[i][j] = true;
 			} else {
 				dungeon[i][j] = CathedralTile::Floor;
 			}
@@ -2360,7 +2350,7 @@ void LoadPreL1Dungeon(const char *path)
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 22;
-			L5dflags[i][j] = 0;
+			Protected[i][j] = false;
 		}
 	}
 
@@ -2380,7 +2370,7 @@ void LoadPreL1Dungeon(const char *path)
 			tileLayer++;
 			if (tileId != 0) {
 				dungeon[i][j] = tileId;
-				L5dflags[i][j] |= DLRG_PROTECTED;
+				Protected[i][j] = true;
 			} else {
 				dungeon[i][j] = CathedralTile::Floor;
 			}
