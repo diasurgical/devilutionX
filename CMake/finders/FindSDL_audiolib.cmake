@@ -24,4 +24,3 @@ if(SDL_audiolib_FOUND)
   set(SDL_audiolib_LIBRARIES ${SDL_audiolib_LIBRARY})
   set(SDL_audiolib_INCLUDE_DIRS ${SDL_audiolib_INCLUDE_DIR})
 endif()
-
