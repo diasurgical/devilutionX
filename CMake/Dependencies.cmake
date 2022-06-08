@@ -119,7 +119,7 @@ endif()
 
 if(NOT NOSOUND)
   if(NOT DEFINED DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
-	find_package(SDL_audiolib QUIET)
+    find_package(SDL_audiolib QUIET)
     if(SDL_audiolib_FOUND)
       message("-- Found SDL_audiolib")
     else()
