@@ -563,8 +563,8 @@ const ItemPack PackedHellfireItems[] = {
 };
 
 constexpr ItemSpecialEffect GnatStingSpecialEffect = ItemSpecialEffect::MultipleArrows | ItemSpecialEffect::QuickAttack;
-constexpr ItemSpecialEffect ThunderclapSpecialEffect = ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage;
-constexpr ItemSpecialEffect ExplosiveArrows = ItemSpecialEffect::FireArrows | ItemSpecialEffect::LightningArrows;
+constexpr ItemSpecialEffect ThunderclapSpecialEffect = ItemSpecialEffect::SpecialArrows;
+constexpr ItemSpecialEffect ExplosiveArrows = ItemSpecialEffect::SpecialArrows;
 
 const TestItemStruct HellfireItems[] = {
 	// clang-format off
