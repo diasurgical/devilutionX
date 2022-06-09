@@ -171,7 +171,7 @@ const ObjectData AllObjects[109] = {
 	{ OFILE_CHEST2,    1,      24, DTYPE_NONE,      THEME_NONE,              Q_INVALID,          0,          1,        0,         96, true,       true,      true,            0,        1, true      },
 	{ OFILE_CHEST3,    1,      24, DTYPE_NONE,      THEME_NONE,              Q_INVALID,          0,          1,        0,         96, true,       true,      true,            0,        1, true      },
 	{ OFILE_L1BRAZ,    0,       0, DTYPE_NONE,      THEME_NONE,              Q_INVALID,          0,          0,        0,          0, false,      false,     false,           0,        0, false     },
-	{ OFILE_CANDLE2,   0,       0, DTYPE_NONE,      THEME_SHRINE,            Q_INVALID,          1,          2,        4,         96, true,       true,      true,            0,        0, false     },
+	{ OFILE_CANDLE2,   0,       0, DTYPE_NONE,      THEME_SHRINE,            Q_PWATER,           1,          2,        4,         96, true,       true,      true,            0,        0, false     },
 	{ OFILE_L1BRAZ,    0,       0, DTYPE_NONE,      THEME_NONE,              Q_INVALID,          0,          0,        0,          0, false,      false,     false,           0,        0, false     },
 	{ OFILE_BANNER,    0,       0, DTYPE_NONE,      THEME_SKELROOM,          Q_INVALID,          0,          2,        0,         96, true,       true,      true,            0,        0, false     },
 	{ OFILE_BANNER,    0,       0, DTYPE_NONE,      THEME_SKELROOM,          Q_INVALID,          0,          1,        0,         96, true,       true,      true,            0,        0, false     },
