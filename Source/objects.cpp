@@ -1225,6 +1225,7 @@ void AddBarrel(int i, int t)
 
 void AddShrine(int i)
 {
+	Objects[i]._oRndSeed = AdvanceRndSeed();
 	bool slist[NumberOfShrineTypes];
 
 	Objects[i]._oPreFlag = true;
