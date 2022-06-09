@@ -150,6 +150,11 @@ public:
 	{
 		return Next<uint32_t>() != 0;
 	}
+
+	size_t getSize() const
+	{
+		return m_size_;
+	}
 };
 
 class SaveHelper {
@@ -1918,6 +1923,21 @@ void SaveHotkeys(MpqWriter &saveWriter)
 	// Write the selected spell last
 	file.WriteLE<int32_t>(myPlayer._pRSpell);
 	file.WriteLE<uint8_t>(myPlayer._pRSplType);
+}
+
+void LoadStatistics()
+{
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "statistics");
+	if (!file.IsValid())
+		return;
+
+	MyPlayer->deathCount = file.NextLE<uint32_t>();
+}
+
+void SaveStatistics(MpqWriter &saveWriter)
+{
+	SaveHelper file(saveWriter, "statistics", sizeof(uint32_t));
+	file.WriteLE<uint32_t>(MyPlayer->deathCount);
 }
 
 void LoadHeroItems(Player &player)

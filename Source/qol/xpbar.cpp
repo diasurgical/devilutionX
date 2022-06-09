@@ -124,7 +124,7 @@ bool CheckXPBarInfo()
 
 	const int8_t charLevel = player._pLevel;
 
-	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}")), charLevel));
+	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}  Deaths: {:d}")), charLevel, player.deathCount));
 
 	if (charLevel == MAXCHARLEVEL) {
 		// Show a maximum level indicator for max level players.

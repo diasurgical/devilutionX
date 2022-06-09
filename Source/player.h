@@ -350,6 +350,7 @@ struct Player {
 	ItemSpecialEffectHf pDamAcFlags;
 	/** @brief Specifies whether players are in non-PvP mode. */
 	bool friendlyMode = true;
+	uint32_t deathCount;
 
 	void CalcScrolls();
 
