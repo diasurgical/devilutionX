@@ -453,57 +453,6 @@ const BYTE L3ISLE5[] = {
 	7, 7,
 	// clang-format on
 };
-/** Miniset: Use random floor tile 1. */
-const BYTE L3XTRA1[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	7, // search
-
-	106, // replace
-	// clang-format on
-};
-/** Miniset: Use random floor tile 2. */
-const BYTE L3XTRA2[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	7, // search
-
-	107, // replace
-	// clang-format on
-};
-/** Miniset: Use random floor tile 3. */
-const BYTE L3XTRA3[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	7, // search
-
-	108, // replace
-	// clang-format on
-};
-/** Miniset: Use random horizontal wall tile. */
-const BYTE L3XTRA4[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	9, // search
-
-	109, // replace
-	// clang-format on
-};
-/** Miniset: Use random vertical wall tile. */
-const BYTE L3XTRA5[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	10, // search
-
-	110, // replace
-	// clang-format on
-};
-
 /** Miniset: Anvil of Fury island. */
 const BYTE L3ANVIL[] = {
 	// clang-format off
@@ -534,14 +483,6 @@ const BYTE L3ANVIL[] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
 	// clang-format on
 };
-const BYTE HivePattern1[] = { 1, 1, 8, 25 };
-const BYTE HivePattern2[] = { 1, 1, 8, 26 };
-const BYTE HivePattern3[] = { 1, 1, 8, 27 };
-const BYTE HivePattern4[] = { 1, 1, 8, 28 };
-const BYTE HivePattern5[] = { 1, 1, 7, 29 };
-const BYTE HivePattern6[] = { 1, 1, 7, 30 };
-const BYTE HivePattern7[] = { 1, 1, 7, 31 };
-const BYTE HivePattern8[] = { 1, 1, 7, 32 };
 const BYTE HivePattern9[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -568,24 +509,6 @@ const BYTE HivePattern10[] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE HivePattern11[] = { 1, 1, 9, 33 };
-const BYTE HivePattern12[] = { 1, 1, 9, 34 };
-const BYTE HivePattern13[] = { 1, 1, 9, 35 };
-const BYTE HivePattern14[] = { 1, 1, 9, 36 };
-const BYTE HivePattern15[] = { 1, 1, 9, 37 };
-const BYTE HivePattern16[] = { 1, 1, 11, 38 };
-const BYTE HivePattern17[] = { 1, 1, 10, 39 };
-const BYTE HivePattern18[] = { 1, 1, 10, 40 };
-const BYTE HivePattern19[] = { 1, 1, 10, 41 };
-const BYTE HivePattern20[] = { 1, 1, 10, 42 };
-const BYTE HivePattern21[] = { 1, 1, 10, 43 };
-const BYTE HivePattern22[] = { 1, 1, 11, 44 };
-const BYTE HivePattern23[] = { 1, 1, 9, 45 };
-const BYTE HivePattern24[] = { 1, 1, 9, 46 };
-const BYTE HivePattern25[] = { 1, 1, 10, 47 };
-const BYTE HivePattern26[] = { 1, 1, 10, 48 };
-const BYTE HivePattern27[] = { 1, 1, 11, 49 };
-const BYTE HivePattern28[] = { 1, 1, 11, 50 };
 const BYTE HivePattern29[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -1732,6 +1655,28 @@ bool PlaceMiniSet(const BYTE *miniset, bool setview)
 	return true;
 }
 
+bool CanReplaceTile(uint8_t replace, Point tile)
+{
+	if (replace < 84 || replace > 100) {
+		return true;
+	}
+
+	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
+	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
+		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
+		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)
+		    && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
+	};
+	if (ComparisonWithBoundsCheck(tile + Direction::NorthWest, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::SouthEast, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::SouthWest, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::NorthEast, tile + Direction::NorthWest)) {
+		return false;
+	}
+
+	return true;
+}
+
 void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 {
 	int sw = miniset[0];
@@ -1752,37 +1697,29 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 					ii++;
 				}
 			}
+			if (!found)
+				continue;
 			int kk = sw * sh + 2;
-			if (found) {
-				if (miniset[kk] >= 84 && miniset[kk] <= 100) {
-					// BUGFIX: accesses to dungeon can go out of bounds (fixed)
-					// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84.
-					if (sx - 1 >= 0 && dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
+			if (!CanReplaceTile(miniset[kk], { sx, sy }))
+				continue;
+			if (GenerateRnd(100) >= rndper)
+				continue;
+			for (int yy = 0; yy < sh; yy++) {
+				for (int xx = 0; xx < sw; xx++) {
+					if (miniset[kk] != 0) {
+						dungeon[xx + sx][yy + sy] = miniset[kk];
 					}
-					if (sx + 1 < 40 && sx - 1 >= 0 && dungeon[sx + 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (sy + 1 < 40 && sx - 1 >= 0 && dungeon[sx][sy + 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (sy - 1 >= 0 && sx - 1 >= 0 && dungeon[sx][sy - 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-				}
-			}
-			if (found && GenerateRnd(100) < rndper) {
-				for (int yy = 0; yy < sh; yy++) {
-					for (int xx = 0; xx < sw; xx++) {
-						if (miniset[kk] != 0) {
-							dungeon[xx + sx][yy + sy] = miniset[kk];
-						}
-						kk++;
-					}
+					kk++;
 				}
 			}
 		}
 	}
+}
+
+void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
+{
+	uint8_t miniSet[4] { 1, 1, search, replace };
+	PlaceMiniSetRandom(miniSet, rndper);
 }
 
 bool FenceVerticalUp(int i, int y)
@@ -2310,10 +2247,10 @@ void GenerateLevel(lvl_entry entry)
 		PlaceMiniSetRandom(L6ISLE1, 100);
 		PlaceMiniSetRandom(L6ISLE2, 100);
 		PlaceMiniSetRandom(L6ISLE5, 90);
-		PlaceMiniSetRandom(HivePattern1, 20);
-		PlaceMiniSetRandom(HivePattern2, 20);
-		PlaceMiniSetRandom(HivePattern3, 20);
-		PlaceMiniSetRandom(HivePattern4, 20);
+		PlaceMiniSetRandom1x1(8, 25, 20);
+		PlaceMiniSetRandom1x1(8, 26, 20);
+		PlaceMiniSetRandom1x1(8, 27, 20);
+		PlaceMiniSetRandom1x1(8, 28, 20);
 		PlaceMiniSetRandom(HivePattern29, 10);
 		PlaceMiniSetRandom(HivePattern30, 15);
 		PlaceMiniSetRandom(HivePattern31, 20);
@@ -2336,28 +2273,28 @@ void GenerateLevel(lvl_entry entry)
 		PlaceMiniSetRandom(HivePattern29, 55);
 		PlaceMiniSetRandom(HivePattern9, 40);
 		PlaceMiniSetRandom(HivePattern10, 45);
-		PlaceMiniSetRandom(HivePattern5, 25);
-		PlaceMiniSetRandom(HivePattern6, 25);
-		PlaceMiniSetRandom(HivePattern7, 25);
-		PlaceMiniSetRandom(HivePattern8, 25);
-		PlaceMiniSetRandom(HivePattern11, 25);
-		PlaceMiniSetRandom(HivePattern12, 25);
-		PlaceMiniSetRandom(HivePattern13, 25);
-		PlaceMiniSetRandom(HivePattern14, 25);
-		PlaceMiniSetRandom(HivePattern15, 25);
-		PlaceMiniSetRandom(HivePattern17, 25);
-		PlaceMiniSetRandom(HivePattern18, 25);
-		PlaceMiniSetRandom(HivePattern19, 25);
-		PlaceMiniSetRandom(HivePattern20, 25);
-		PlaceMiniSetRandom(HivePattern21, 25);
-		PlaceMiniSetRandom(HivePattern23, 25);
-		PlaceMiniSetRandom(HivePattern24, 25);
-		PlaceMiniSetRandom(HivePattern25, 25);
-		PlaceMiniSetRandom(HivePattern26, 25);
-		PlaceMiniSetRandom(HivePattern16, 25);
-		PlaceMiniSetRandom(HivePattern22, 25);
-		PlaceMiniSetRandom(HivePattern27, 25);
-		PlaceMiniSetRandom(HivePattern28, 25);
+		PlaceMiniSetRandom1x1(7, 29, 25);
+		PlaceMiniSetRandom1x1(7, 30, 25);
+		PlaceMiniSetRandom1x1(7, 31, 25);
+		PlaceMiniSetRandom1x1(7, 32, 25);
+		PlaceMiniSetRandom1x1(9, 33, 25);
+		PlaceMiniSetRandom1x1(9, 34, 25);
+		PlaceMiniSetRandom1x1(9, 35, 25);
+		PlaceMiniSetRandom1x1(9, 36, 25);
+		PlaceMiniSetRandom1x1(9, 37, 25);
+		PlaceMiniSetRandom1x1(10, 39, 25);
+		PlaceMiniSetRandom1x1(10, 40, 25);
+		PlaceMiniSetRandom1x1(10, 41, 25);
+		PlaceMiniSetRandom1x1(10, 42, 25);
+		PlaceMiniSetRandom1x1(10, 43, 25);
+		PlaceMiniSetRandom1x1(9, 45, 25);
+		PlaceMiniSetRandom1x1(9, 46, 25);
+		PlaceMiniSetRandom1x1(10, 47, 25);
+		PlaceMiniSetRandom1x1(10, 48, 25);
+		PlaceMiniSetRandom1x1(11, 38, 25);
+		PlaceMiniSetRandom1x1(11, 44, 25);
+		PlaceMiniSetRandom1x1(11, 49, 25);
+		PlaceMiniSetRandom1x1(11, 50, 25);
 	} else {
 		PoolFix();
 		Warp();
@@ -2406,11 +2343,11 @@ void GenerateLevel(lvl_entry entry)
 		PlaceMiniSetRandom(L3CREV9, 30);
 		PlaceMiniSetRandom(L3CREV10, 30);
 		PlaceMiniSetRandom(L3CREV11, 30);
-		PlaceMiniSetRandom(L3XTRA1, 25);
-		PlaceMiniSetRandom(L3XTRA2, 25);
-		PlaceMiniSetRandom(L3XTRA3, 25);
-		PlaceMiniSetRandom(L3XTRA4, 25);
-		PlaceMiniSetRandom(L3XTRA5, 25);
+		PlaceMiniSetRandom1x1(7, 106, 25);
+		PlaceMiniSetRandom1x1(7, 107, 25);
+		PlaceMiniSetRandom1x1(7, 108, 25);
+		PlaceMiniSetRandom1x1(9, 109, 25);
+		PlaceMiniSetRandom1x1(10, 110, 25);
 	}
 
 	for (int j = 0; j < DMAXY; j++) {

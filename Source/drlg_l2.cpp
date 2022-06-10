@@ -1320,76 +1320,6 @@ const Miniset BIG10 {
 	    { 3, 3 },
 	}
 };
-/** Miniset: Crumbled vertical wall 1. */
-const Miniset RUINS1 {
-	{ 1, 1 },
-	{
-	    { 1 },
-	},
-	{
-	    { 80 },
-	}
-};
-/** Miniset: Crumbled vertical wall 2. */
-const Miniset RUINS2 {
-	{ 1, 1 },
-	{
-	    { 1 },
-	},
-	{
-	    { 81 },
-	}
-};
-/** Miniset: Crumbled vertical wall 3. */
-const Miniset RUINS3 {
-	{ 1, 1 },
-	{
-	    { 1 },
-	},
-	{
-	    { 82 },
-	}
-};
-/** Miniset: Crumbled horizontal wall 1. */
-const Miniset RUINS4 {
-	{ 1, 1 },
-	{
-	    { 2 },
-	},
-	{
-	    { 84 },
-	}
-};
-/** Miniset: Crumbled horizontal wall 2. */
-const Miniset RUINS5 {
-	{ 1, 1 },
-	{
-	    { 2 },
-	},
-	{
-	    { 85 },
-	}
-};
-/** Miniset: Crumbled horizontal wall 3. */
-const Miniset RUINS6 {
-	{ 1, 1 },
-	{
-	    { 2 },
-	},
-	{
-	    { 86 },
-	}
-};
-/** Miniset: Crumbled north pillar. */
-const Miniset RUINS7 {
-	{ 1, 1 },
-	{
-	    { 8 },
-	},
-	{
-	    { 87 },
-	}
-};
 /** Miniset: Bloody gib 1. */
 const Miniset PANCREAS1 {
 	{ 5, 3 },
@@ -1692,17 +1622,24 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 			bool found = true;
 			for (int yy = std::max(sy - sh, 0); yy < std::min(sy + 2 * sh, DMAXY) && found; yy++) {
 				for (int xx = std::max(sx - sw, 0); xx < std::min(sx + 2 * sw, DMAXX); xx++) {
-					// BUGFIX: yy and xx can go out of bounds (fixed)
 					if (dungeon[xx][yy] == miniset.replace[0][0]) {
 						found = false;
 						break;
 					}
 				}
 			}
-			if (found && GenerateRnd(100) < rndper)
-				miniset.place({ sx, sy });
+			if (!found)
+				continue;
+			if (GenerateRnd(100) >= rndper)
+				continue;
+			miniset.place({ sx, sy });
 		}
 	}
+}
+
+void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
+{
+	PlaceMiniSetRandom({ { 1, 1 }, { search }, { replace } }, rndper);
 }
 
 void LoadQuestSetPieces()
@@ -2973,13 +2910,13 @@ void GenerateLevel(lvl_entry entry)
 	PlaceMiniSetRandom(HARCH39, 100);
 	PlaceMiniSetRandom(HARCH40, 100);
 	PlaceMiniSetRandom(CRUSHCOL, 99);
-	PlaceMiniSetRandom(RUINS1, 10);
-	PlaceMiniSetRandom(RUINS2, 10);
-	PlaceMiniSetRandom(RUINS3, 10);
-	PlaceMiniSetRandom(RUINS4, 10);
-	PlaceMiniSetRandom(RUINS5, 10);
-	PlaceMiniSetRandom(RUINS6, 10);
-	PlaceMiniSetRandom(RUINS7, 50);
+	PlaceMiniSetRandom1x1(1, 80, 10);
+	PlaceMiniSetRandom1x1(1, 81, 10);
+	PlaceMiniSetRandom1x1(1, 82, 10);
+	PlaceMiniSetRandom1x1(2, 84, 10);
+	PlaceMiniSetRandom1x1(2, 85, 10);
+	PlaceMiniSetRandom1x1(2, 86, 10);
+	PlaceMiniSetRandom1x1(8, 87, 50);
 	PlaceMiniSetRandom(PANCREAS1, 1);
 	PlaceMiniSetRandom(PANCREAS2, 1);
 	PlaceMiniSetRandom(BIG1, 3);

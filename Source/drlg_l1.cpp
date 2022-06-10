@@ -268,8 +268,6 @@ const BYTE PWATERIN[] = {
 	 0,   0,   0,   0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern1[4] = { 1, 1, 11, 95 };
-const BYTE CryptPattern2[8] = { 1, 1, 12, 96 };
 const BYTE CryptPattern3[8] = {
 	// clang-format off
 	1, 3, // width, height
@@ -292,10 +290,6 @@ const BYTE CryptPattern4[8] = {
 	94, 93, 92, // replace
 	// clang-format on
 };
-const BYTE CryptPattern5[4] = { 1, 1, 13, 97 };
-const BYTE CryptPattern6[4] = { 1, 1, 13, 98 };
-const BYTE CryptPattern7[4] = { 1, 1, 13, 99 };
-const BYTE CryptPattern8[4] = { 1, 1, 13, 100 };
 const BYTE CryptPattern9[20] = {
 	// clang-format off
 	3, 3, // width, height
@@ -309,32 +303,6 @@ const BYTE CryptPattern9[20] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern10[4] = { 1, 1, 11, 185 };
-const BYTE CryptPattern11[4] = { 1, 1, 11, 186 };
-const BYTE CryptPattern12[4] = { 1, 1, 12, 187 };
-const BYTE CryptPattern13[4] = { 1, 1, 12, 188 };
-const BYTE CryptPattern14[4] = { 1, 1, 89, 173 };
-const BYTE CryptPattern15[4] = { 1, 1, 89, 174 };
-const BYTE CryptPattern16[4] = { 1, 1, 90, 175 };
-const BYTE CryptPattern17[4] = { 1, 1, 90, 176 };
-const BYTE CryptPattern18[4] = { 1, 1, 91, 177 };
-const BYTE CryptPattern19[4] = { 1, 1, 91, 178 };
-const BYTE CryptPattern20[4] = { 1, 1, 92, 179 };
-const BYTE CryptPattern21[4] = { 1, 1, 92, 180 };
-const BYTE CryptPattern22[4] = { 1, 1, 92, 181 };
-const BYTE CryptPattern23[4] = { 1, 1, 92, 182 };
-const BYTE CryptPattern24[4] = { 1, 1, 92, 183 };
-const BYTE CryptPattern25[4] = { 1, 1, 92, 184 };
-const BYTE CryptPattern26[4] = { 1, 1, 98, 189 };
-const BYTE CryptPattern27[4] = { 1, 1, 98, 190 };
-const BYTE CryptPattern28[4] = { 1, 1, 97, 191 };
-const BYTE CryptPattern29[4] = { 1, 1, 15, 192 };
-const BYTE CryptPattern30[4] = { 1, 1, 99, 193 };
-const BYTE CryptPattern31[4] = { 1, 1, 99, 194 };
-const BYTE CryptPattern32[4] = { 1, 1, 100, 195 };
-const BYTE CryptPattern33[4] = { 1, 1, 101, 196 };
-const BYTE CryptPattern34[4] = { 1, 1, 101, 197 };
-const BYTE CryptPattern35[8] = { 1, 1, 101, 198 };
 const BYTE CryptPattern36[24] = {
 	// clang-format off
 	3, 3, // width, height
@@ -412,65 +380,6 @@ const BYTE CryptPattern41[20] = {
 	 0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern42[4] = { 1, 1, 13, 163 };
-const BYTE CryptPattern43[4] = { 1, 1, 13, 164 };
-const BYTE CryptPattern44[4] = { 1, 1, 13, 165 };
-const BYTE CryptPattern45[4] = { 1, 1, 13, 166 };
-const BYTE CryptPattern46[4] = { 1, 1, 1, 112 };
-const BYTE CryptPattern47[4] = { 1, 1, 2, 113 };
-const BYTE CryptPattern48[4] = { 1, 1, 3, 114 };
-const BYTE CryptPattern49[4] = { 1, 1, 4, 115 };
-const BYTE CryptPattern50[4] = { 1, 1, 5, 116 };
-const BYTE CryptPattern51[4] = { 1, 1, 6, 117 };
-const BYTE CryptPattern52[4] = { 1, 1, 7, 118 };
-const BYTE CryptPattern53[4] = { 1, 1, 8, 119 };
-const BYTE CryptPattern54[4] = { 1, 1, 9, 120 };
-const BYTE CryptPattern55[4] = { 1, 1, 10, 121 };
-const BYTE CryptPattern56[4] = { 1, 1, 11, 122 };
-const BYTE CryptPattern57[4] = { 1, 1, 12, 123 };
-const BYTE CryptPattern58[4] = { 1, 1, 13, 124 };
-const BYTE CryptPattern59[4] = { 1, 1, 14, 125 };
-const BYTE CryptPattern60[4] = { 1, 1, 15, 126 };
-const BYTE CryptPattern61[4] = { 1, 1, 16, 127 };
-const BYTE CryptPattern62[4] = { 1, 1, 17, 128 };
-const BYTE CryptPattern63[4] = { 1, 1, 1, 129 };
-const BYTE CryptPattern64[4] = { 1, 1, 2, 130 };
-const BYTE CryptPattern65[4] = { 1, 1, 3, 131 };
-const BYTE CryptPattern66[4] = { 1, 1, 4, 132 };
-const BYTE CryptPattern67[4] = { 1, 1, 5, 133 };
-const BYTE CryptPattern68[4] = { 1, 1, 6, 134 };
-const BYTE CryptPattern69[4] = { 1, 1, 7, 135 };
-const BYTE CryptPattern70[4] = { 1, 1, 8, 136 };
-const BYTE CryptPattern71[4] = { 1, 1, 9, 137 };
-const BYTE CryptPattern72[4] = { 1, 1, 10, 138 };
-const BYTE CryptPattern73[4] = { 1, 1, 11, 139 };
-const BYTE CryptPattern74[4] = { 1, 1, 12, 140 };
-const BYTE CryptPattern75[4] = { 1, 1, 13, 141 };
-const BYTE CryptPattern76[4] = { 1, 1, 14, 142 };
-const BYTE CryptPattern77[4] = { 1, 1, 15, 143 };
-const BYTE CryptPattern78[4] = { 1, 1, 16, 144 };
-const BYTE CryptPattern79[4] = { 1, 1, 17, 145 };
-const BYTE CryptPattern80[4] = { 1, 1, 1, 146 };
-const BYTE CryptPattern81[4] = { 1, 1, 2, 147 };
-const BYTE CryptPattern82[4] = { 1, 1, 3, 148 };
-const BYTE CryptPattern83[4] = { 1, 1, 4, 149 };
-const BYTE CryptPattern84[4] = { 1, 1, 5, 150 };
-const BYTE CryptPattern85[4] = { 1, 1, 6, 151 };
-const BYTE CryptPattern86[4] = { 1, 1, 7, 152 };
-const BYTE CryptPattern87[4] = { 1, 1, 8, 153 };
-const BYTE CryptPattern88[4] = { 1, 1, 9, 154 };
-const BYTE CryptPattern89[4] = { 1, 1, 10, 155 };
-const BYTE CryptPattern90[4] = { 1, 1, 11, 156 };
-const BYTE CryptPattern91[4] = { 1, 1, 12, 157 };
-const BYTE CryptPattern92[4] = { 1, 1, 13, 158 };
-const BYTE CryptPattern93[4] = { 1, 1, 14, 159 };
-const BYTE CryptPattern94[4] = { 1, 1, 15, 160 };
-const BYTE CryptPattern95[4] = { 1, 1, 16, 161 };
-const BYTE CryptPattern96[4] = { 1, 1, 17, 162 };
-const BYTE CryptPattern97[4] = { 1, 1, 1, 199 };
-const BYTE CryptPattern98[4] = { 1, 1, 1, 201 };
-const BYTE CryptPattern99[4] = { 1, 1, 2, 200 };
-const BYTE CryptPattern100[4] = { 1, 1, 2, 202 };
 
 /* data */
 
@@ -813,6 +722,28 @@ bool PlaceMiniSet(const BYTE *miniset, bool setview)
 	return true;
 }
 
+bool CanReplaceTile(uint8_t replace, Point tile)
+{
+	if (replace < 84 || replace > 100) {
+		return true;
+	}
+
+	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
+	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
+		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
+		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)
+		    && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
+	};
+	if (ComparisonWithBoundsCheck(tile + Direction::NorthWest, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::SouthEast, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::SouthWest, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::NorthEast, tile + Direction::NorthWest)) {
+		return false;
+	}
+
+	return true;
+}
+
 void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 {
 	int sw = miniset[0];
@@ -827,43 +758,33 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
 						found = false;
 					}
-					// BUGFIX: Check if tile is Protected (fixing this breaks crypt levels)
+					// BUGFIX: Check if tile is Protected (fixing this breaks compatability)
 					ii++;
 				}
 			}
+			if (!found)
+				continue;
 			int kk = sw * sh + 2;
-			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found) {
-				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
-				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 (fixing this breaks crypt levels)
-
-				constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
-					return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY) && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY) && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
-				};
-				if (ComparisonWithBoundsCheck({ sx - 1, sy }, { sx - 1, sy })) {
-					found = false;
-				}
-				if (ComparisonWithBoundsCheck({ sx + 1, sy }, { sx - 1, sy })) {
-					found = false;
-				}
-				if (ComparisonWithBoundsCheck({ sx, sy + 1 }, { sx - 1, sy })) {
-					found = false;
-				}
-				if (ComparisonWithBoundsCheck({ sx, sy - 1 }, { sx - 1, sy })) {
-					found = false;
-				}
-			}
-			if (found && GenerateRnd(100) < rndper) {
-				for (int yy = 0; yy < sh; yy++) {
-					for (int xx = 0; xx < sw; xx++) {
-						if (miniset[kk] != 0) {
-							dungeon[xx + sx][yy + sy] = miniset[kk];
-						}
-						kk++;
+			if (!CanReplaceTile(miniset[kk], { sx, sy }))
+				continue;
+			if (GenerateRnd(100) >= rndper)
+				continue;
+			for (int yy = 0; yy < sh; yy++) {
+				for (int xx = 0; xx < sw; xx++) {
+					if (miniset[kk] != 0) {
+						dungeon[xx + sx][yy + sy] = miniset[kk];
 					}
+					kk++;
 				}
 			}
 		}
 	}
+}
+
+void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
+{
+	uint8_t miniSet[4] { 1, 1, search, replace };
+	PlaceMiniSetRandom(miniSet, rndper);
 }
 
 void FillFloor()
@@ -1970,73 +1891,73 @@ void FixCornerTiles()
 
 void CryptPatternGroup1(int rndper)
 {
-	PlaceMiniSetRandom(CryptPattern97, rndper);
-	PlaceMiniSetRandom(CryptPattern98, rndper);
-	PlaceMiniSetRandom(CryptPattern99, rndper);
-	PlaceMiniSetRandom(CryptPattern100, rndper);
+	PlaceMiniSetRandom1x1(1, 199, rndper);
+	PlaceMiniSetRandom1x1(1, 201, rndper);
+	PlaceMiniSetRandom1x1(2, 200, rndper);
+	PlaceMiniSetRandom1x1(2, 202, rndper);
 }
 
 void CryptPatternGroup2(int rndper)
 {
-	PlaceMiniSetRandom(CryptPattern46, rndper);
-	PlaceMiniSetRandom(CryptPattern47, rndper);
-	PlaceMiniSetRandom(CryptPattern48, rndper);
-	PlaceMiniSetRandom(CryptPattern49, rndper);
-	PlaceMiniSetRandom(CryptPattern50, rndper);
-	PlaceMiniSetRandom(CryptPattern51, rndper);
-	PlaceMiniSetRandom(CryptPattern52, rndper);
-	PlaceMiniSetRandom(CryptPattern53, rndper);
-	PlaceMiniSetRandom(CryptPattern54, rndper);
-	PlaceMiniSetRandom(CryptPattern55, rndper);
-	PlaceMiniSetRandom(CryptPattern56, rndper);
-	PlaceMiniSetRandom(CryptPattern57, rndper);
-	PlaceMiniSetRandom(CryptPattern58, rndper);
-	PlaceMiniSetRandom(CryptPattern59, rndper);
-	PlaceMiniSetRandom(CryptPattern60, rndper);
-	PlaceMiniSetRandom(CryptPattern61, rndper);
-	PlaceMiniSetRandom(CryptPattern62, rndper);
+	PlaceMiniSetRandom1x1(1, 112, rndper);
+	PlaceMiniSetRandom1x1(2, 113, rndper);
+	PlaceMiniSetRandom1x1(3, 114, rndper);
+	PlaceMiniSetRandom1x1(4, 115, rndper);
+	PlaceMiniSetRandom1x1(5, 116, rndper);
+	PlaceMiniSetRandom1x1(6, 117, rndper);
+	PlaceMiniSetRandom1x1(7, 118, rndper);
+	PlaceMiniSetRandom1x1(8, 119, rndper);
+	PlaceMiniSetRandom1x1(9, 120, rndper);
+	PlaceMiniSetRandom1x1(10, 121, rndper);
+	PlaceMiniSetRandom1x1(11, 122, rndper);
+	PlaceMiniSetRandom1x1(12, 123, rndper);
+	PlaceMiniSetRandom1x1(13, 124, rndper);
+	PlaceMiniSetRandom1x1(14, 125, rndper);
+	PlaceMiniSetRandom1x1(15, 126, rndper);
+	PlaceMiniSetRandom1x1(16, 127, rndper);
+	PlaceMiniSetRandom1x1(17, 128, rndper);
 }
 
 void CryptPatternGroup3(int rndper)
 {
-	PlaceMiniSetRandom(CryptPattern63, rndper);
-	PlaceMiniSetRandom(CryptPattern64, rndper);
-	PlaceMiniSetRandom(CryptPattern65, rndper);
-	PlaceMiniSetRandom(CryptPattern66, rndper);
-	PlaceMiniSetRandom(CryptPattern67, rndper);
-	PlaceMiniSetRandom(CryptPattern68, rndper);
-	PlaceMiniSetRandom(CryptPattern69, rndper);
-	PlaceMiniSetRandom(CryptPattern70, rndper);
-	PlaceMiniSetRandom(CryptPattern71, rndper);
-	PlaceMiniSetRandom(CryptPattern72, rndper);
-	PlaceMiniSetRandom(CryptPattern73, rndper);
-	PlaceMiniSetRandom(CryptPattern74, rndper);
-	PlaceMiniSetRandom(CryptPattern75, rndper);
-	PlaceMiniSetRandom(CryptPattern76, rndper);
-	PlaceMiniSetRandom(CryptPattern77, rndper);
-	PlaceMiniSetRandom(CryptPattern78, rndper);
-	PlaceMiniSetRandom(CryptPattern79, rndper);
+	PlaceMiniSetRandom1x1(1, 129, rndper);
+	PlaceMiniSetRandom1x1(2, 130, rndper);
+	PlaceMiniSetRandom1x1(3, 131, rndper);
+	PlaceMiniSetRandom1x1(4, 132, rndper);
+	PlaceMiniSetRandom1x1(5, 133, rndper);
+	PlaceMiniSetRandom1x1(6, 134, rndper);
+	PlaceMiniSetRandom1x1(7, 135, rndper);
+	PlaceMiniSetRandom1x1(8, 136, rndper);
+	PlaceMiniSetRandom1x1(9, 137, rndper);
+	PlaceMiniSetRandom1x1(10, 138, rndper);
+	PlaceMiniSetRandom1x1(11, 139, rndper);
+	PlaceMiniSetRandom1x1(12, 140, rndper);
+	PlaceMiniSetRandom1x1(13, 141, rndper);
+	PlaceMiniSetRandom1x1(14, 142, rndper);
+	PlaceMiniSetRandom1x1(15, 143, rndper);
+	PlaceMiniSetRandom1x1(16, 144, rndper);
+	PlaceMiniSetRandom1x1(17, 145, rndper);
 }
 
 void CryptPatternGroup4(int rndper)
 {
-	PlaceMiniSetRandom(CryptPattern80, rndper);
-	PlaceMiniSetRandom(CryptPattern81, rndper);
-	PlaceMiniSetRandom(CryptPattern82, rndper);
-	PlaceMiniSetRandom(CryptPattern83, rndper);
-	PlaceMiniSetRandom(CryptPattern84, rndper);
-	PlaceMiniSetRandom(CryptPattern85, rndper);
-	PlaceMiniSetRandom(CryptPattern86, rndper);
-	PlaceMiniSetRandom(CryptPattern87, rndper);
-	PlaceMiniSetRandom(CryptPattern88, rndper);
-	PlaceMiniSetRandom(CryptPattern89, rndper);
-	PlaceMiniSetRandom(CryptPattern90, rndper);
-	PlaceMiniSetRandom(CryptPattern91, rndper);
-	PlaceMiniSetRandom(CryptPattern92, rndper);
-	PlaceMiniSetRandom(CryptPattern93, rndper);
-	PlaceMiniSetRandom(CryptPattern94, rndper);
-	PlaceMiniSetRandom(CryptPattern95, rndper);
-	PlaceMiniSetRandom(CryptPattern96, rndper);
+	PlaceMiniSetRandom1x1(1, 146, rndper);
+	PlaceMiniSetRandom1x1(2, 147, rndper);
+	PlaceMiniSetRandom1x1(3, 148, rndper);
+	PlaceMiniSetRandom1x1(4, 149, rndper);
+	PlaceMiniSetRandom1x1(5, 150, rndper);
+	PlaceMiniSetRandom1x1(6, 151, rndper);
+	PlaceMiniSetRandom1x1(7, 152, rndper);
+	PlaceMiniSetRandom1x1(8, 153, rndper);
+	PlaceMiniSetRandom1x1(9, 154, rndper);
+	PlaceMiniSetRandom1x1(10, 155, rndper);
+	PlaceMiniSetRandom1x1(11, 156, rndper);
+	PlaceMiniSetRandom1x1(12, 157, rndper);
+	PlaceMiniSetRandom1x1(13, 158, rndper);
+	PlaceMiniSetRandom1x1(14, 159, rndper);
+	PlaceMiniSetRandom1x1(15, 160, rndper);
+	PlaceMiniSetRandom1x1(16, 161, rndper);
+	PlaceMiniSetRandom1x1(17, 162, rndper);
 }
 
 void CryptPatternGroup5(int rndper)
@@ -2047,48 +1968,48 @@ void CryptPatternGroup5(int rndper)
 	PlaceMiniSetRandom(CryptPattern39, rndper);
 	PlaceMiniSetRandom(CryptPattern40, rndper);
 	PlaceMiniSetRandom(CryptPattern41, rndper);
-	PlaceMiniSetRandom(CryptPattern42, rndper);
-	PlaceMiniSetRandom(CryptPattern43, rndper);
-	PlaceMiniSetRandom(CryptPattern44, rndper);
-	PlaceMiniSetRandom(CryptPattern45, rndper);
+	PlaceMiniSetRandom1x1(13, 163, rndper);
+	PlaceMiniSetRandom1x1(13, 164, rndper);
+	PlaceMiniSetRandom1x1(13, 165, rndper);
+	PlaceMiniSetRandom1x1(13, 166, rndper);
 }
 
 void CryptPatternGroup6(int rndper)
 {
-	PlaceMiniSetRandom(CryptPattern10, rndper);
-	PlaceMiniSetRandom(CryptPattern12, rndper);
-	PlaceMiniSetRandom(CryptPattern11, rndper);
-	PlaceMiniSetRandom(CryptPattern13, rndper);
-	PlaceMiniSetRandom(CryptPattern14, rndper);
-	PlaceMiniSetRandom(CryptPattern15, rndper);
-	PlaceMiniSetRandom(CryptPattern16, rndper);
-	PlaceMiniSetRandom(CryptPattern17, rndper);
-	PlaceMiniSetRandom(CryptPattern18, rndper);
-	PlaceMiniSetRandom(CryptPattern19, rndper);
-	PlaceMiniSetRandom(CryptPattern20, rndper);
-	PlaceMiniSetRandom(CryptPattern21, rndper);
-	PlaceMiniSetRandom(CryptPattern22, rndper);
-	PlaceMiniSetRandom(CryptPattern23, rndper);
-	PlaceMiniSetRandom(CryptPattern24, rndper);
-	PlaceMiniSetRandom(CryptPattern25, rndper);
-	PlaceMiniSetRandom(CryptPattern26, rndper);
-	PlaceMiniSetRandom(CryptPattern27, rndper);
-	PlaceMiniSetRandom(CryptPattern28, rndper);
-	PlaceMiniSetRandom(CryptPattern29, rndper);
-	PlaceMiniSetRandom(CryptPattern30, rndper);
-	PlaceMiniSetRandom(CryptPattern31, rndper);
-	PlaceMiniSetRandom(CryptPattern32, rndper);
-	PlaceMiniSetRandom(CryptPattern33, rndper);
-	PlaceMiniSetRandom(CryptPattern34, rndper);
-	PlaceMiniSetRandom(CryptPattern35, rndper);
+	PlaceMiniSetRandom1x1(11, 185, rndper);
+	PlaceMiniSetRandom1x1(12, 187, rndper);
+	PlaceMiniSetRandom1x1(11, 186, rndper);
+	PlaceMiniSetRandom1x1(12, 188, rndper);
+	PlaceMiniSetRandom1x1(89, 173, rndper);
+	PlaceMiniSetRandom1x1(89, 174, rndper);
+	PlaceMiniSetRandom1x1(90, 175, rndper);
+	PlaceMiniSetRandom1x1(90, 176, rndper);
+	PlaceMiniSetRandom1x1(91, 177, rndper);
+	PlaceMiniSetRandom1x1(91, 178, rndper);
+	PlaceMiniSetRandom1x1(92, 179, rndper);
+	PlaceMiniSetRandom1x1(92, 180, rndper);
+	PlaceMiniSetRandom1x1(92, 181, rndper);
+	PlaceMiniSetRandom1x1(92, 182, rndper);
+	PlaceMiniSetRandom1x1(92, 183, rndper);
+	PlaceMiniSetRandom1x1(92, 184, rndper);
+	PlaceMiniSetRandom1x1(98, 189, rndper);
+	PlaceMiniSetRandom1x1(98, 190, rndper);
+	PlaceMiniSetRandom1x1(97, 191, rndper);
+	PlaceMiniSetRandom1x1(15, 192, rndper);
+	PlaceMiniSetRandom1x1(99, 193, rndper);
+	PlaceMiniSetRandom1x1(99, 194, rndper);
+	PlaceMiniSetRandom1x1(100, 195, rndper);
+	PlaceMiniSetRandom1x1(101, 196, rndper);
+	PlaceMiniSetRandom1x1(101, 197, rndper);
+	PlaceMiniSetRandom1x1(101, 198, rndper);
 }
 
 void CryptPatternGroup7(int rndper)
 {
-	PlaceMiniSetRandom(CryptPattern5, rndper);
-	PlaceMiniSetRandom(CryptPattern6, rndper);
-	PlaceMiniSetRandom(CryptPattern7, rndper);
-	PlaceMiniSetRandom(CryptPattern8, rndper);
+	PlaceMiniSetRandom1x1(13, 97, rndper);
+	PlaceMiniSetRandom1x1(13, 98, rndper);
+	PlaceMiniSetRandom1x1(13, 99, rndper);
+	PlaceMiniSetRandom1x1(13, 100, rndper);
 }
 
 bool PlaceCathedralStairs(lvl_entry entry)
@@ -2207,8 +2128,8 @@ void GenerateLevel(lvl_entry entry)
 
 	if (leveltype == DTYPE_CRYPT) {
 		CryptPatternGroup1(10);
-		PlaceMiniSetRandom(CryptPattern1, 95);
-		PlaceMiniSetRandom(CryptPattern2, 95);
+		PlaceMiniSetRandom1x1(11, 95, 95);
+		PlaceMiniSetRandom1x1(12, 96, 95);
 		PlaceMiniSetRandom(CryptPattern3, 100);
 		PlaceMiniSetRandom(CryptPattern4, 100);
 		PlaceMiniSetRandom(CryptPattern9, 60);
