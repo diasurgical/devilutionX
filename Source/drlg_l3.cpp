@@ -29,680 +29,654 @@ bool lockout[DMAXX][DMAXY];
  */
 const BYTE L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
 /** Miniset: Stairs up. */
-const Miniset L3UP {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L3UP {
+	{ {
 	    { 8, 8, 0 },
 	    { 10, 10, 0 },
 	    { 7, 7, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 51, 50, 0 },
 	    { 48, 49, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset L6UP {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L6UP {
+	{ {
 	    { 8, 8, 0 },
 	    { 10, 10, 0 },
 	    { 7, 7, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 20, 19, 0 },
 	    { 17, 18, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stairs down. */
-const Miniset L3DOWN {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L3DOWN {
+	{ {
 	    { 8, 9, 7 },
 	    { 8, 9, 7 },
 	    { 0, 0, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 47, 0 },
 	    { 0, 46, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset L6DOWN {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L6DOWN {
+	{ {
 	    { 8, 9, 7 },
 	    { 8, 9, 7 },
 	    { 0, 0, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 16, 0 },
 	    { 0, 15, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stairs up to town. */
-const Miniset L3HOLDWARP {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L3HOLDWARP {
+	{ {
 	    { 8, 8, 0 },
 	    { 10, 10, 0 },
 	    { 7, 7, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 125, 125, 0 },
 	    { 125, 125, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset L6HOLDWARP {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L6HOLDWARP {
+	{ {
 	    { 8, 8, 0 },
 	    { 10, 10, 0 },
 	    { 7, 7, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 24, 23, 0 },
 	    { 21, 22, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite white stalactite 1. */
-const Miniset L3TITE1 {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> L3TITE1 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0 },
 	    { 0, 57, 58, 0 },
 	    { 0, 56, 55, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite white stalactite 2. */
-const Miniset L3TITE2 {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> L3TITE2 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0 },
 	    { 0, 61, 62, 0 },
 	    { 0, 60, 59, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite white stalactite 3. */
-const Miniset L3TITE3 {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> L3TITE3 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0 },
 	    { 0, 65, 66, 0 },
 	    { 0, 64, 63, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite white stalactite horizontal. */
-const Miniset L3TITE6 {
-	{ 5, 4 },
-	{
+const Miniset<5, 4> L3TITE6 {
+	{ {
 	    { 7, 7, 7, 7, 7 },
 	    { 7, 7, 7, 0, 7 },
 	    { 7, 7, 7, 0, 7 },
 	    { 7, 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0, 0 },
 	    { 0, 77, 78, 0, 0 },
 	    { 0, 76, 74, 75, 0 },
 	    { 0, 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite white stalactite vertical. */
-const Miniset L3TITE7 {
-	{ 4, 5 },
-	{
+const Miniset<4, 5> L3TITE7 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 0, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0 },
 	    { 0, 83, 0, 0 },
 	    { 0, 82, 80, 0 },
 	    { 0, 81, 79, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite 1. */
-const Miniset L3TITE8 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L3TITE8 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 52, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite 2. */
-const Miniset L3TITE9 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L3TITE9 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 53, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite 3. */
-const Miniset L3TITE10 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L3TITE10 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 54, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite 4. */
-const Miniset L3TITE11 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> L3TITE11 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 67, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stalagmite on vertical wall. */
-const Miniset L3TITE12 {
-	{ 2, 1 },
-	{ { 9, 7 } },
-	{ { 68, 0 } }
+const Miniset<2, 1> L3TITE12 {
+	{ {
+	    { 9, 7 },
+	} },
+	{ {
+	    { 68, 0 },
+	} }
 };
 /** Miniset: Stalagmite on horizontal wall. */
-const Miniset L3TITE13 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> L3TITE13 {
+	{ {
 	    { 10 },
 	    { 7 },
-	},
-	{
+	} },
+	{ {
 	    { 69 },
 	    { 0 },
-	}
+	} }
 };
 /** Miniset: Cracked vertical wall 1. */
-const Miniset L3CREV1 {
-	{ 2, 1 },
-	{ { 8, 7 } },
-	{ { 84, 85 } }
+const Miniset<2, 1> L3CREV1 {
+	{ {
+	    { 8, 7 },
+	} },
+	{ {
+	    { 84, 85 },
+	} }
 };
 /** Miniset: Cracked vertical wall - north corner. */
-const Miniset L3CREV2 {
-	{ 2, 1 },
-	{ { 8, 11 } },
-	{ { 86, 87 } }
+const Miniset<2, 1> L3CREV2 {
+	{ {
+	    { 8, 11 },
+	} },
+	{ {
+	    { 86, 87 },
+	} }
 };
 /** Miniset: Cracked horizontal wall 1. */
-const Miniset L3CREV3 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> L3CREV3 {
+	{ {
 	    { 8 },
 	    { 10 },
-	},
-	{
+	} },
+	{ {
 	    { 89 },
 	    { 88 },
-	}
+	} }
 };
 /** Miniset: Cracked vertical wall 2. */
-const Miniset L3CREV4 {
-	{ 2, 1 },
-	{ { 8, 7 } },
-	{ { 90, 91 } }
+const Miniset<2, 1> L3CREV4 {
+	{ {
+	    { 8, 7 },
+	} },
+	{ {
+	    { 90, 91 },
+	} }
 };
 /** Miniset: Cracked horizontal wall - north corner. */
-const Miniset L3CREV5 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> L3CREV5 {
+	{ {
 	    { 8 },
 	    { 11 },
-	},
-	{
+	} },
+	{ {
 	    { 92 },
 	    { 93 },
-	}
+	} }
 };
 /** Miniset: Cracked horizontal wall 2. */
-const Miniset L3CREV6 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> L3CREV6 {
+	{ {
 	    { 8 },
 	    { 10 },
-	},
-	{
+	} },
+	{ {
 	    { 95 },
 	    { 94 },
-	}
+	} }
 };
 /** Miniset: Cracked vertical wall - west corner. */
-const Miniset L3CREV7 {
-	{ 2, 1 },
-	{ { 8, 7 } },
-	{ { 96, 101 } }
+const Miniset<2, 1> L3CREV7 {
+	{ {
+	    { 8, 7 },
+	} },
+	{ {
+	    { 96, 101 },
+	} }
 };
 /** Miniset: Cracked horizontal wall - north. */
-const Miniset L3CREV8 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> L3CREV8 {
+	{ {
 	    { 2 },
 	    { 8 },
-	},
-	{
+	} },
+	{ {
 	    { 102 },
 	    { 97 },
-	}
+	} }
 };
 /** Miniset: Cracked vertical wall - east corner. */
-const Miniset L3CREV9 {
-	{ 2, 1 },
-	{ { 3, 8 } },
-	{ { 103, 98 } }
+const Miniset<2, 1> L3CREV9 {
+	{ {
+	    { 3, 8 },
+	} },
+	{ {
+	    { 103, 98 },
+	} }
 };
 /** Miniset: Cracked vertical wall - west. */
-const Miniset L3CREV10 {
-	{ 2, 1 },
-	{ { 4, 8 } },
-	{ { 104, 99 } }
+const Miniset<2, 1> L3CREV10 {
+	{ {
+	    { 4, 8 },
+	} },
+	{ {
+	    { 104, 99 },
+	} }
 };
 /** Miniset: Cracked horizontal wall - south corner. */
-const Miniset L3CREV11 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> L3CREV11 {
+	{ {
 	    { 6 },
 	    { 8 },
-	},
-	{
+	} },
+	{ {
 	    { 105 },
 	    { 100 },
-	}
+	} }
 };
 /** Miniset: Replace broken wall with floor 1. */
-const Miniset L3ISLE1 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> L3ISLE1 {
+	{ {
 	    { 5, 14 },
 	    { 4, 9 },
 	    { 13, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7 },
 	    { 7, 7 },
 	    { 7, 7 },
-	}
+	} }
 };
 /** Miniset: Replace small wall with floor 2. */
-const Miniset L3ISLE2 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> L3ISLE2 {
+	{ {
 	    { 5, 2, 14 },
 	    { 13, 10, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	}
+	} }
 };
 /** Miniset: Replace small wall with lava 1. */
-const Miniset L3ISLE3 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> L3ISLE3 {
+	{ {
 	    { 5, 14 },
 	    { 4, 9 },
 	    { 13, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 29, 30 },
 	    { 25, 28 },
 	    { 31, 32 },
-	}
+	} }
 };
 /** Miniset: Replace small wall with lava 2. */
-const Miniset L3ISLE4 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> L3ISLE4 {
+	{ {
 	    { 5, 2, 14 },
 	    { 13, 10, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 29, 26, 30 },
 	    { 31, 27, 32 },
-	}
+	} }
 };
 /** Miniset: Replace small wall with floor 3. */
-const Miniset L3ISLE5 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> L3ISLE5 {
+	{ {
 	    { 5, 14 },
 	    { 13, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7 },
 	    { 7, 7 },
-	}
+	} }
 };
-const Miniset HivePattern9 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern9 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 126, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern10 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern10 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 124, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern29 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern29 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 67, 0, 0 },
 	    { 66, 51, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern30 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern30 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 69, 0, 0 },
 	    { 68, 52, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern31 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern31 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 70, 0, 0 },
 	    { 71, 53, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern32 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern32 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 73, 0, 0 },
 	    { 72, 54, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern33 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern33 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 75, 0, 0 },
 	    { 74, 55, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern34 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern34 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 77, 0, 0 },
 	    { 76, 56, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern35 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern35 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 79, 0, 0 },
 	    { 78, 57, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern36 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern36 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 81, 0, 0 },
 	    { 80, 58, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern37 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern37 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 83, 0, 0 },
 	    { 82, 59, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset HivePattern38 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> HivePattern38 {
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 84, 0, 0 },
 	    { 85, 60, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset L6ISLE1 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> L6ISLE1 {
+	{ {
 	    { 5, 14 },
 	    { 4, 9 },
 	    { 13, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7 },
 	    { 7, 7 },
 	    { 7, 7 },
-	}
+	} }
 };
-const Miniset L6ISLE2 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> L6ISLE2 {
+	{ {
 	    { 5, 2, 14 },
 	    { 13, 10, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7, 7 },
 	    { 7, 7, 7 },
-	}
+	} }
 };
-const Miniset L6ISLE3 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> L6ISLE3 {
+	{ {
 	    { 5, 14 },
 	    { 4, 9 },
 	    { 13, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 107, 115 },
 	    { 119, 122 },
 	    { 131, 123 },
-	}
+	} }
 };
-const Miniset L6ISLE4 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> L6ISLE4 {
+	{ {
 	    { 5, 2, 14 },
 	    { 13, 10, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 107, 120, 115 },
 	    { 131, 121, 123 },
-	}
+	} }
 };
-const Miniset L6ISLE5 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> L6ISLE5 {
+	{ {
 	    { 5, 14 },
 	    { 13, 12 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7 },
 	    { 7, 7 },
-	}
+	} }
 };
-const Miniset HivePattern39 {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> HivePattern39 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 107, 115, 7 },
 	    { 7, 131, 123, 7 },
 	    { 7, 7, 7, 7 },
-	}
+	} }
 };
-const Miniset HivePattern40 {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> HivePattern40 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 108, 7 },
 	    { 7, 109, 112, 7 },
 	    { 7, 7, 7, 7 },
-	}
+	} }
 };
-const Miniset HivePattern41 {
-	{ 4, 5 },
-	{
+const Miniset<4, 5> HivePattern41 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 107, 115, 7 },
 	    { 7, 119, 122, 7 },
 	    { 7, 131, 123, 7 },
 	    { 7, 7, 7, 7 },
-	}
+	} }
 };
-const Miniset HivePattern42 {
-	{ 4, 5 },
-	{
+const Miniset<4, 5> HivePattern42 {
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
 	    { 7, 7, 7, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 7, 7, 7, 7 },
 	    { 7, 126, 108, 7 },
 	    { 7, 7, 117, 7 },
 	    { 7, 109, 112, 7 },
 	    { 7, 7, 7, 7 },
-	}
+	} }
 };
 
 void InitDungeonFlags()
@@ -1401,11 +1375,9 @@ bool CanReplaceTile(uint8_t replace, Point tile)
  * @brief Randomly places the given miniset throughout the dungeon wherever it would fit
  * @return true if at least one instance was placed
  */
-bool PlaceMiniSetRandom(const Miniset &miniset, int rndper)
+template <MinisetDimension sw, MinisetDimension sh>
+bool PlaceMiniSetRandom(const Miniset<sw, sh> &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-
 	bool placed = false;
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
@@ -1425,7 +1397,7 @@ bool PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 {
-	PlaceMiniSetRandom({ { 1, 1 }, { search }, { replace } }, rndper);
+	PlaceMiniSetRandom<1, 1>({ { { search } }, { { replace } } }, rndper);
 }
 
 bool PlaceSlimePool()

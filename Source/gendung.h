@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <memory>
 
 #include "engine.h"
@@ -282,19 +283,21 @@ constexpr bool IsTileLit(Point position)
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Lit);
 }
 
+using MinisetDimension = uint8_t;
+
+template <MinisetDimension Width, MinisetDimension Height>
 struct Miniset {
-	Size size;
 	/* these are indexed as [y][x] */
-	uint8_t search[6][6];
-	uint8_t replace[6][6];
+	std::array<std::array<uint8_t, Width>, Height> search;
+	std::array<std::array<uint8_t, Width>, Height> replace;
 
 	/**
 	 * @param respectProtected Match bug from Crypt levels
 	 */
 	bool matches(Point position, bool respectProtected = true) const
 	{
-		for (int yy = 0; yy < size.height; yy++) {
-			for (int xx = 0; xx < size.width; xx++) {
+		for (int yy = 0; yy < Height; yy++) {
+			for (int xx = 0; xx < Width; xx++) {
 				if (search[yy][xx] != 0 && dungeon[xx + position.x][yy + position.y] != search[yy][xx])
 					return false;
 				if (respectProtected && Protected[xx + position.x][yy + position.y])
@@ -306,8 +309,8 @@ struct Miniset {
 
 	void place(Point position, bool protect = false) const
 	{
-		for (int y = 0; y < size.height; y++) {
-			for (int x = 0; x < size.width; x++) {
+		for (int y = 0; y < Height; y++) {
+			for (int x = 0; x < Width; x++) {
 				if (replace[y][x] == 0)
 					continue;
 				dungeon[x + position.x][y + position.y] = replace[y][x];
@@ -315,6 +318,11 @@ struct Miniset {
 					Protected[x + position.x][y + position.y] = true;
 			}
 		}
+	}
+
+	constexpr Size size() const
+	{
+		return { Width, Height };
 	}
 };
 
@@ -328,11 +336,19 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
 void Make_SetPC(Rectangle area);
+std::optional<Point> FindMatchingPosition(std::function<bool(Point)> matcher, Size maxDimensions, int tries = 199, bool drlg1Quirk = false);
 /**
  * @param tries Tiles to try, 1600 will scan the full map
  * @param drlg1Quirk Match buggy behaviour of Diablo's Cathedral
  */
-std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 199, bool drlg1Quirk = false);
+template <MinisetDimension width, MinisetDimension height>
+std::optional<Point> PlaceMiniSet(const Miniset<width, height> &miniset, int tries = 199, bool drlg1Quirk = false)
+{
+	auto position = FindMatchingPosition([&](Point origin) { return miniset.matches(origin); }, { DMAXX - width, DMAXY - height }, tries, drlg1Quirk);
+	if (position)
+		miniset.place(*position);
+	return position;
+}
 void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId = 0);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();

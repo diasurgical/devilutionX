@@ -529,17 +529,15 @@ void Make_SetPC(Rectangle area)
 	}
 }
 
-std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries, bool drlg1Quirk)
+std::optional<Point> FindMatchingPosition(std::function<bool(Point)> matches, Size maxDimensions, int tries, bool drlg1Quirk)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-	Point position { GenerateRnd(DMAXX - sw), GenerateRnd(DMAXY - sh) };
+	Point position { GenerateRnd(maxDimensions.width), GenerateRnd(maxDimensions.height) };
 
 	for (int i = 0; i < tries; i++, position.x++) {
-		if (position.x == DMAXX - sw) {
+		if (position.x == maxDimensions.width) {
 			position.x = 0;
 			position.y++;
-			if (position.y == DMAXY - sh) {
+			if (position.y == maxDimensions.height) {
 				position.y = 0;
 			}
 		}
@@ -562,12 +560,8 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries, bool drlg1Q
 
 		if (SetPieceRoom.Contains(position))
 			continue;
-		if (!miniset.matches(position))
-			continue;
-
-		miniset.place(position);
-
-		return position;
+		if (matches(position))
+			return position;
 	}
 
 	return {};

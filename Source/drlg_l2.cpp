@@ -36,1426 +36,1322 @@ const BYTE BTYPESL2[161] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 
 const BYTE BSTYPESL2[161] = { 0, 1, 2, 3, 0, 0, 6, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 6, 6, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 6, 2, 2, 2, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 3, 3, 2, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /** Miniset: Arch vertical. */
-const Miniset VARCH1 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH1 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH2 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH2 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH3 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH3 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH4 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH4 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH5 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH5 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH6 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH6 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH7 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH7 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH8 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH8 {
+	{ {
 	    { 3, 0 },
 	    { 3, 1 },
 	    { 3, 4 },
 	    { 0, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH9 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH9 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH10 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH10 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH11 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH11 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH12 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH12 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH13 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH13 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH14 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH14 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH15 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH15 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - corner. */
-const Miniset VARCH16 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH16 {
+	{ {
 	    { 3, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH17 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH17 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH18 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH18 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH19 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH19 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH20 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH20 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH21 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH21 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH22 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH22 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH23 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH23 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - open wall. */
-const Miniset VARCH24 {
-	{ 2, 3 },
-	{
+const Miniset<2, 3> VARCH24 {
+	{ {
 	    { 2, 7 },
 	    { 3, 4 },
 	    { 0, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 141, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH25 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH25 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH26 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH26 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH27 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH27 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH28 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH28 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH29 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH29 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH30 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH30 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH31 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH31 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical. */
-const Miniset VARCH32 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH32 {
+	{ {
 	    { 3, 0 },
 	    { 3, 4 },
 	    { 3, 1 },
 	    { 0, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 48, 0 },
 	    { 51, 39 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH33 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH33 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH34 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH34 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH35 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH35 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH36 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH36 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH37 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH37 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH38 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH38 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH39 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH39 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch vertical - room west entrance. */
-const Miniset VARCH40 {
-	{ 2, 4 },
-	{
+const Miniset<2, 4> VARCH40 {
+	{ {
 	    { 2, 0 },
 	    { 3, 8 },
 	    { 3, 4 },
 	    { 0, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 142, 0 },
 	    { 51, 42 },
 	    { 47, 44 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH1 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH1 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH2 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH2 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH3 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH3 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH4 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH4 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH5 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH5 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH6 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH6 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH7 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH7 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH8 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH8 {
+	{ {
 	    { 3, 3, 0 },
 	    { 2, 5, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH9 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH9 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH10 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH10 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH11 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH11 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH12 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH12 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH13 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH13 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH14 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH14 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH15 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH15 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - north corner. */
-const Miniset HARCH16 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH16 {
+	{ {
 	    { 3, 3, 0 },
 	    { 8, 5, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH17 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH17 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH18 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH18 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH19 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH19 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH20 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH20 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH21 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH21 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH22 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH22 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH23 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH23 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - wall. */
-const Miniset HARCH24 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH24 {
+	{ {
 	    { 1, 3, 0 },
 	    { 8, 5, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 43, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH25 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH25 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH26 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH26 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH27 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH27 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH28 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH28 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH29 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH29 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH30 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH30 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH31 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH31 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal. */
-const Miniset HARCH32 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH32 {
+	{ {
 	    { 3, 3, 0 },
 	    { 5, 2, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 49, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH33 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH33 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 9 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH34 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH34 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 6 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH35 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH35 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 8 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH36 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH36 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 7 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH37 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH37 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 15 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH38 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH38 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 16 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH39 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH39 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Arch horizontal - west corner. */
-const Miniset HARCH40 {
-	{ 3, 2 },
-	{
+const Miniset<3, 2> HARCH40 {
+	{ {
 	    { 1, 3, 0 },
 	    { 9, 5, 14 },
-	},
-	{
+	} },
+	{ {
 	    { 140, 46, 0 },
 	    { 40, 45, 0 },
-	}
+	} }
 };
 /** Miniset: Stairs up. */
-const Miniset USTAIRS {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> USTAIRS {
+	{ {
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0 },
 	    { 0, 72, 77, 0 },
 	    { 0, 76, 0, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stairs down. */
-const Miniset DSTAIRS {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> DSTAIRS {
+	{ {
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0 },
 	    { 0, 48, 71, 0 },
 	    { 0, 50, 78, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Stairs to town. */
-const Miniset WARPSTAIRS {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> WARPSTAIRS {
+	{ {
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
 	    { 3, 3, 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0 },
 	    { 0, 158, 160, 0 },
 	    { 0, 159, 0, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Crumbled south pillar. */
-const Miniset CRUSHCOL {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CRUSHCOL {
+	{ {
 	    { 3, 1, 3 },
 	    { 2, 6, 3 },
 	    { 3, 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 83, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Vertical oil spill. */
-const Miniset BIG1 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> BIG1 {
+	{ {
 	    { 3, 3 },
 	    { 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 113, 0 },
 	    { 112, 0 },
-	}
+	} }
 };
 /** Miniset: Horizontal oil spill. */
-const Miniset BIG2 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> BIG2 {
+	{ {
 	    { 3, 3 },
 	    { 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 114, 115 },
 	    { 0, 0 },
-	}
+	} }
 };
 /** Miniset: Horizontal platform. */
-const Miniset BIG3 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> BIG3 {
+	{ {
 	    { 1 },
 	    { 1 },
-	},
-	{
+	} },
+	{ {
 	    { 117 },
 	    { 116 },
-	}
+	} }
 };
 /** Miniset: Vertical platform. */
-const Miniset BIG4 {
-	{ 2, 1 },
-	{
+const Miniset<2, 1> BIG4 {
+	{ {
 	    { 2, 2 },
-	},
-	{
+	} },
+	{ {
 	    { 118, 119 },
-	}
+	} }
 };
 /** Miniset: Large oil spill. */
-const Miniset BIG5 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> BIG5 {
+	{ {
 	    { 3, 3 },
 	    { 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 120, 122 },
 	    { 121, 123 },
-	}
+	} }
 };
 /** Miniset: Vertical wall with debris. */
-const Miniset BIG6 {
-	{ 1, 2 },
-	{
+const Miniset<1, 2> BIG6 {
+	{ {
 	    { 1 },
 	    { 1 },
-	},
-	{
+	} },
+	{ {
 	    { 125 },
 	    { 124 },
-	}
+	} }
 };
 /** Miniset: Horizontal wall with debris. */
-const Miniset BIG7 {
-	{ 2, 1 },
-	{
+const Miniset<2, 1> BIG7 {
+	{ {
 	    { 2, 2 },
-	},
-	{
+	} },
+	{ {
 	    { 126, 127 },
-	}
+	} }
 };
 /** Miniset: Rock pile. */
-const Miniset BIG8 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> BIG8 {
+	{ {
 	    { 3, 3 },
 	    { 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 128, 130 },
 	    { 129, 131 },
-	}
+	} }
 };
 /** Miniset: Vertical wall collapsed. */
-const Miniset BIG9 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> BIG9 {
+	{ {
 	    { 1, 3 },
 	    { 1, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 133, 135 },
 	    { 132, 134 },
-	}
+	} }
 };
 /** Miniset: Horizontal wall collapsed. */
-const Miniset BIG10 {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> BIG10 {
+	{ {
 	    { 2, 2 },
 	    { 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 136, 137 },
 	    { 3, 3 },
-	}
+	} }
 };
 /** Miniset: Bloody gib 1. */
-const Miniset PANCREAS1 {
-	{ 5, 3 },
-	{
+const Miniset<5, 3> PANCREAS1 {
+	{ {
 	    { 3, 3, 3, 3, 3 },
 	    { 3, 3, 3, 3, 3 },
 	    { 3, 3, 3, 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0, 0 },
 	    { 0, 0, 108, 0, 0 },
 	    { 0, 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Bloody gib 2. */
-const Miniset PANCREAS2 {
-	{ 5, 3 },
-	{
+const Miniset<5, 3> PANCREAS2 {
+	{ {
 	    { 3, 3, 3, 3, 3 },
 	    { 3, 3, 3, 3, 3 },
 	    { 3, 3, 3, 3, 3 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0, 0 },
 	    { 0, 0, 110, 0, 0 },
 	    { 0, 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 1. */
-const Miniset CTRDOOR1 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR1 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 9, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 2. */
-const Miniset CTRDOOR2 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR2 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 8, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 3. */
-const Miniset CTRDOOR3 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR3 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 6, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 4. */
-const Miniset CTRDOOR4 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR4 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 7, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 5. */
-const Miniset CTRDOOR5 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR5 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 15, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 6. */
-const Miniset CTRDOOR6 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR6 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 13, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 7. */
-const Miniset CTRDOOR7 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR7 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 16, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: Move vertical doors away from west pillar 8. */
-const Miniset CTRDOOR8 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CTRDOOR8 {
+	{ {
 	    { 3, 1, 3 },
 	    { 0, 4, 0 },
 	    { 0, 14, 0 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 4, 0 },
 	    { 0, 1, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 
 int Patterns[100][10] = {
@@ -1568,11 +1464,9 @@ void ApplyShadowsPatterns()
 	}
 }
 
-void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
+template <MinisetDimension sw, MinisetDimension sh>
+void PlaceMiniSetRandom(const Miniset<sw, sh> &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
 			if (SetPieceRoom.Contains({ sx, sy }))
@@ -1599,7 +1493,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 {
-	PlaceMiniSetRandom({ { 1, 1 }, { search }, { replace } }, rndper);
+	PlaceMiniSetRandom<1, 1>({ { { search } }, { { replace } } }, rndper);
 }
 
 void LoadQuestSetPieces()

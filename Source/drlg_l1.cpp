@@ -140,266 +140,252 @@ const BYTE L5BTYPES[] = {
 	0, 0, 0, 0, 0, 0, 0
 };
 /** Miniset: stairs up on a corner wall. */
-const Miniset STAIRSUP {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> STAIRSUP {
+	{ {
 	    { 13, 13, 13, 13 },
 	    { 2, 2, 2, 2 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 66, 6, 0 },
 	    { 63, 64, 65, 0 },
 	    { 0, 67, 68, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
-const Miniset L5STAIRSUPHF {
-	{ 4, 5 },
-	{
+const Miniset<4, 5> L5STAIRSUPHF {
+	{ {
 	    { 22, 22, 22, 22 },
 	    { 22, 22, 22, 22 },
 	    { 2, 2, 2, 2 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 54, 23, 0 },
 	    { 0, 53, 18, 0 },
 	    { 55, 56, 57, 0 },
 	    { 58, 59, 60, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: stairs up. */
-const Miniset L5STAIRSUP {
-	{ 4, 4 },
-	{
+const Miniset<4, 4> L5STAIRSUP {
+	{ {
 	    { 22, 22, 22, 22 },
 	    { 2, 2, 2, 2 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 66, 23, 0 },
 	    { 63, 64, 65, 0 },
 	    { 0, 67, 68, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: stairs down. */
-const Miniset STAIRSDOWN {
-	{ 4, 3 },
-	{
+const Miniset<4, 3> STAIRSDOWN {
+	{ {
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 62, 57, 58, 0 },
 	    { 61, 59, 60, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
-const Miniset L5STAIRSDOWN {
-	{ 4, 5 },
-	{
+const Miniset<4, 5> L5STAIRSDOWN {
+	{ {
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 52, 0 },
 	    { 0, 48, 51, 0 },
 	    { 0, 47, 50, 0 },
 	    { 45, 46, 49, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
-const Miniset L5STAIRSTOWN {
-	{ 4, 5 },
-	{
+const Miniset<4, 5> L5STAIRSTOWN {
+	{ {
 	    { 22, 22, 22, 22 },
 	    { 22, 22, 22, 22 },
 	    { 2, 2, 2, 2 },
 	    { 13, 13, 13, 13 },
 	    { 13, 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 62, 23, 0 },
 	    { 0, 61, 18, 0 },
 	    { 63, 64, 65, 0 },
 	    { 66, 67, 68, 0 },
 	    { 0, 0, 0, 0 },
-	}
+	} }
 };
 /** Miniset: candlestick. */
-const Miniset LAMPS {
-	{ 2, 2 },
-	{
+const Miniset<2, 2> LAMPS {
+	{ {
 	    { 13, 0 },
 	    { 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 129, 0 },
 	    { 130, 128 },
-	}
+	} }
 };
 /** Miniset: Poisoned Water Supply entrance. */
-const Miniset PWATERIN {
-	{ 6, 6 },
-	{
+const Miniset<6, 6> PWATERIN {
+	{ {
 	    { 13, 13, 13, 13, 13, 13 },
 	    { 13, 13, 13, 13, 13, 13 },
 	    { 13, 13, 13, 13, 13, 13 },
 	    { 13, 13, 13, 13, 13, 13 },
 	    { 13, 13, 13, 13, 13, 13 },
 	    { 13, 13, 13, 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0, 0, 0, 0 },
 	    { 0, 202, 200, 200, 84, 0 },
 	    { 0, 199, 203, 203, 83, 0 },
 	    { 0, 85, 206, 80, 81, 0 },
 	    { 0, 0, 134, 135, 0, 0 },
 	    { 0, 0, 0, 0, 0, 0 },
-	}
+	} }
 };
-const Miniset VWallSection {
-	{ 1, 3 },
-	{
+const Miniset<1, 3> VWallSection {
+	{ {
 	    { 1 },
 	    { 1 },
 	    { 1 },
-	},
-	{
+	} },
+	{ {
 	    { 91 },
 	    { 90 },
 	    { 89 },
-	}
+	} }
 };
-const Miniset HWallSection {
-	{ 3, 1 },
-	{ { 2, 2, 2 } },
-	{ { 94, 93, 92 } }
+const Miniset<3, 1> HWallSection {
+	{ {
+	    { 2, 2, 2 },
+	} },
+	{ {
+	    { 94, 93, 92 },
+	} }
 };
-const Miniset CryptFloorLave {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CryptFloorLave {
+	{ {
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 101, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset CryptPillar1 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CryptPillar1 {
+	{ {
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 167, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset CryptPillar2 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CryptPillar2 {
+	{ {
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 168, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset CryptPillar3 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CryptPillar3 {
+	{ {
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 169, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset CryptPillar4 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CryptPillar4 {
+	{ {
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 170, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset CryptPillar5 {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CryptPillar5 {
+	{ {
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
-	},
-	{
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 171, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
-const Miniset CryptStar {
-	{ 3, 3 },
-	{
+const Miniset<3, 3> CryptStar {
+	{ {
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
 	    { 13, 13, 13 },
-	},
-	{
+
+	} },
+	{ {
 	    { 0, 0, 0 },
 	    { 0, 172, 0 },
 	    { 0, 0, 0 },
-	}
+	} }
 };
 
-const Miniset UberRoomPattern {
-	{ 4, 6 },
+const Miniset<4, 6> UberRoomPattern {
 	{},
-	{
+	{ {
 	    { 115, 130, 6, 13 },
 	    { 129, 108, 1, 13 },
 	    { 1, 107, 103, 13 },
 	    { 146, 106, 102, 13 },
 	    { 129, 168, 1, 13 },
 	    { 7, 2, 3, 13 },
-	}
+	} }
 };
-const Miniset CornerstoneRoomPattern {
-	{ 5, 5 },
+const Miniset<5, 5> CornerstoneRoomPattern {
 	{},
-	{
+	{ {
 	    { 4, 2, 2, 2, 6 },
 	    { 1, 111, 172, 13, 1 },
 	    { 1, 172, 13, 13, 25 },
 	    { 1, 13, 13, 13, 1 },
 	    { 7, 2, 2, 2, 3 },
-	}
+	} }
 };
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
@@ -763,11 +749,9 @@ bool CanReplaceTile(uint8_t replace, Point tile)
 	return true;
 }
 
-void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
+template <MinisetDimension sw, MinisetDimension sh>
+void PlaceMiniSetRandom(const Miniset<sw, sh> &miniset, int rndper)
 {
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
 			if (!miniset.matches({ sx, sy }, false))
@@ -783,7 +767,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 {
-	PlaceMiniSetRandom({ { 1, 1 }, { search }, { replace } }, rndper);
+	PlaceMiniSetRandom<1, 1>({ { { search } }, { { replace } } }, rndper);
 }
 
 void FillFloor()
@@ -1457,7 +1441,7 @@ void FixTilesPatterns()
 
 void SetCornerRoom(int rx1, int ry1)
 {
-	SetPiece = { { rx1, ry1 }, CornerstoneRoomPattern.size };
+	SetPiece = { { rx1, ry1 }, CornerstoneRoomPattern.size() };
 
 	CornerstoneRoomPattern.place({ rx1, ry1 }, true);
 }
@@ -1506,7 +1490,7 @@ void SetCryptRoom(int rx1, int ry1)
 {
 	UberRow = 2 * rx1 + 6;
 	UberCol = 2 * ry1 + 8;
-	SetPiece = { { rx1, ry1 }, UberRoomPattern.size };
+	SetPiece = { { rx1, ry1 }, UberRoomPattern.size() };
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
