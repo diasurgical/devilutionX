@@ -6222,21 +6222,19 @@ msgstr ""
 
 #: Source/options.cpp:765
 msgid "Resampler"
-msgstr ""
+msgstr "Cемплер"
 
 #: Source/options.cpp:765
 msgid "Audio resampler"
-msgstr ""
+msgstr "Аудіо cемплер"
 
 #: Source/options.cpp:822
 msgid "Device"
-msgstr ""
+msgstr "Пристрій"
 
 #: Source/options.cpp:822
-#, fuzzy
-#| msgid "Audio Settings"
 msgid "Audio device"
-msgstr "Налаштування Аудіо"
+msgstr "Пристрій аудіо"
 
 #: Source/options.cpp:890
 msgid "Graphics"
