@@ -453,36 +453,6 @@ const BYTE L3ISLE5[] = {
 	7, 7,
 	// clang-format on
 };
-/** Miniset: Anvil of Fury island. */
-const BYTE L3ANVIL[] = {
-	// clang-format off
-	11, 11, // width, height
-
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, // search
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-
-	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0, // replace
-	0,  0, 29, 26, 26, 26, 26, 26, 30,  0, 0,
-	0, 29, 34, 33, 33, 37, 36, 33, 35, 30, 0,
-	0, 25, 33, 37, 27, 32, 31, 36, 33, 28, 0,
-	0, 25, 37, 32,  7,  7,  7, 31, 27, 32, 0,
-	0, 25, 28,  7,  7,  7,  7,  2,  2,  2, 0,
-	0, 25, 35, 30,  7,  7,  7, 29, 26, 30, 0,
-	0, 25, 33, 35, 26, 30, 29, 34, 33, 28, 0,
-	0, 31, 36, 33, 33, 35, 34, 33, 37, 32, 0,
-	0,  0, 31, 27, 27, 27, 27, 27, 32,  0, 0,
-	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
-	// clang-format on
-};
 const BYTE HivePattern9[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -2020,58 +1990,68 @@ void Fence()
 
 bool PlaceAnvil()
 {
-	int sw = L3ANVIL[0];
-	int sh = L3ANVIL[1];
-	int sx = GenerateRnd(DMAXX - sw);
-	int sy = GenerateRnd(DMAXY - sh);
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+	int sx = GenerateRnd(DMAXX - width - 2) - 1;
+	int sy = GenerateRnd(DMAXY - height - 2);
 
-	bool found = false;
-	int trys = 0;
-	while (!found && trys < 200) {
-		trys++;
-		found = true;
-		int ii = 2;
-		for (int yy = 0; yy < sh && found; yy++) {
-			for (int xx = 0; xx < sw && found; xx++) {
-				if (L3ANVIL[ii] != 0 && dungeon[xx + sx][yy + sy] != L3ANVIL[ii]) {
+	for (int trys = 0;; trys++) {
+		if (trys > 198)
+			return false;
+
+		sx++;
+		if (sx == DMAXX - width - 2) {
+			sx = 0;
+			sy++;
+			if (sy == DMAXY - height - 2) {
+				sy = 0;
+			}
+		}
+
+		bool found = true;
+		for (int yy = 0; yy < height + 2 && found; yy++) {
+			for (int xx = 0; xx < width + 2 && found; xx++) {
+				if (dungeon[xx + sx][yy + sy] != 7) {
 					found = false;
 				}
 				if (Protected[xx + sx][yy + sy]) {
 					found = false;
 				}
-				ii++;
 			}
 		}
-		if (!found) {
-			sx++;
-			if (sx == DMAXX - sw) {
-				sx = 0;
-				sy++;
-				if (sy == DMAXY - sh) {
-					sy = 0;
-				}
-			}
-		}
-	}
-	if (trys >= 200) {
-		return false;
-	}
-
-	int ii = sw * sh + 2;
-	for (int yy = 0; yy < sh; yy++) {
-		for (int xx = 0; xx < sw; xx++) {
-			if (L3ANVIL[ii] != 0) {
-				dungeon[xx + sx][yy + sy] = L3ANVIL[ii];
-			}
-			Protected[xx + sx][yy + sy] = true;
-			ii++;
-		}
+		if (found)
+			break;
 	}
 
 	setpc_x = sx;
 	setpc_y = sy;
-	setpc_w = sw;
-	setpc_h = sh;
+	setpc_w = width + 2;
+	setpc_h = height + 2;
+
+	for (int yy = 0; yy < setpc_h; yy++) {
+		for (int xx = 0; xx < setpc_w; xx++) {
+			Protected[xx + sx][yy + sy] = true;
+		}
+	}
+
+	sx++;
+	sy++;
+
+	const uint16_t *tileLayer = &dunData[2];
+	for (int yy = 0; yy < height; yy++) {
+		for (int xx = 0; xx < width; xx++) {
+			int tileId = tileLayer[xx + yy * width];
+			if (tileId != 0) {
+				dungeon[xx + sx][yy + sy] = tileId;
+			}
+		}
+	}
+
+	// Hack to avoid rivers entering the island, reversed later
+	dungeon[setpc_x + 7][setpc_y + 5] = 2;
+	dungeon[setpc_x + 8][setpc_y + 5] = 2;
+	dungeon[setpc_x + 9][setpc_y + 5] = 2;
 
 	return true;
 }
