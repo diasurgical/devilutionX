@@ -268,7 +268,7 @@ const BYTE PWATERIN[] = {
 	 0,   0,   0,   0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern3[8] = {
+const BYTE VWallSection[8] = {
 	// clang-format off
 	1, 3, // width, height
 
@@ -281,7 +281,7 @@ const BYTE CryptPattern3[8] = {
 	89,
 	// clang-format on
 };
-const BYTE CryptPattern4[8] = {
+const BYTE HWallSection[8] = {
 	// clang-format off
 	3, 1, // width, height
 
@@ -290,7 +290,7 @@ const BYTE CryptPattern4[8] = {
 	94, 93, 92, // replace
 	// clang-format on
 };
-const BYTE CryptPattern9[20] = {
+const BYTE CryptFloorLave[20] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -303,7 +303,7 @@ const BYTE CryptPattern9[20] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern36[24] = {
+const BYTE CryptPillar1[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -316,7 +316,7 @@ const BYTE CryptPattern36[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern37[24] = {
+const BYTE CryptPillar2[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -329,7 +329,7 @@ const BYTE CryptPattern37[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern38[24] = {
+const BYTE CryptPillar3[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -341,7 +341,7 @@ const BYTE CryptPattern38[24] = {
 	0, 169, 0,
 	0,   0, 0,
 };
-const BYTE CryptPattern39[24] = {
+const BYTE CryptPillar4[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -354,7 +354,7 @@ const BYTE CryptPattern39[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern40[24] = {
+const BYTE CryptPillar5[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -367,7 +367,7 @@ const BYTE CryptPattern40[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE CryptPattern41[20] = {
+const BYTE CryptStar[20] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -412,7 +412,7 @@ BYTE CornerstoneRoomPattern[27] = {
  */
 BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
-enum CathedralTile : uint8_t {
+enum Tile : uint8_t {
 	// clang-format off
 	VWall          =  1,
 	HWall          =  2,
@@ -428,7 +428,9 @@ enum CathedralTile : uint8_t {
 	HArch          = 12,
 	Floor          = 13,
 	HWallVArch     = 14,
-	Pilar          = 15,
+	Pillar         = 15,
+	Pillar1        = 16,
+	Pillar2        = 17,
 	DirtCorner     = 21,
 	VDoor          = 25,
 	HDoor          = 26,
@@ -440,6 +442,109 @@ enum CathedralTile : uint8_t {
 	HFence         = 36,
 	HWallVFence    = 37,
 	EntranceStairs = 64,
+	// clang-format on
+};
+
+enum CryptTile : uint8_t {
+	// clang-format off
+	VWall5      =  89,
+	VWall6      =  90,
+	VWall7      =  91,
+	HWall5      =  92,
+	HWall6      =  93,
+	HWall7      =  94,
+	VArch5      =  95,
+	HArch5      =  96,
+	Floor6      =  97,
+	Floor7      =  98,
+	Floor8      =  99,
+	Floor9      = 100,
+	Floor10     = 101,
+	VWall2      = 112,
+	HWall2      = 113,
+	Corner2     = 114,
+	DWall2      = 115,
+	DArch2      = 116,
+	VWallEnd2   = 117,
+	HWallEnd2   = 118,
+	HArchEnd2   = 119,
+	VArchEnd2   = 120,
+	HArchVWall2 = 121,
+	VArch2      = 122,
+	HArch2      = 123,
+	Floor2      = 124,
+	HWallVArch2 = 125,
+	Pillar3     = 126,
+	Pillar4     = 127,
+	Pillar5     = 128,
+	VWall3      = 129,
+	HWall3      = 130,
+	Corner3     = 131,
+	DWall3      = 132,
+	DArch3      = 133,
+	VWallEnd3   = 134,
+	HWallEnd3   = 135,
+	HArchEnd3   = 136,
+	VArchEnd3   = 137,
+	HArchVWall3 = 138,
+	VArch3      = 139,
+	HArch3      = 140,
+	Floor3      = 141,
+	HWallVArch3 = 142,
+	Pillar6     = 143,
+	Pillar7     = 144,
+	Pillar8     = 145,
+	VWall4      = 146,
+	HWall4      = 147,
+	Corner4     = 148,
+	DWall4      = 149,
+	DArch4      = 150,
+	VWallEnd4   = 151,
+	HWallEnd4   = 152,
+	HArchEnd4   = 153,
+	VArchEnd4   = 154,
+	HArchVWall4 = 155,
+	VArch4      = 156,
+	HArch4      = 157,
+	Floor4      = 158,
+	HWallVArch4 = 159,
+	Pillar9     = 160,
+	Pillar10    = 161,
+	Pillar11    = 162,
+	Floor11     = 163,
+	Floor12     = 164,
+	Floor13     = 165,
+	Floor14     = 166,
+	VWall8      = 173,
+	VWall9      = 174,
+	VWall10     = 175,
+	VWall11     = 176,
+	VWall12     = 177,
+	VWall13     = 178,
+	HWall8      = 179,
+	HWall9      = 180,
+	HWall10     = 181,
+	HWall11     = 182,
+	HWall12     = 183,
+	HWall13     = 184,
+	VArch6      = 185,
+	VArch7      = 186,
+	HArch6      = 187,
+	HArch7      = 188,
+	Floor15     = 189,
+	Floor16     = 190,
+	Floor17     = 191,
+	Pillar12    = 192,
+	Floor18     = 193,
+	Floor19     = 194,
+	Floor20     = 195,
+	Floor21     = 196,
+	Floor22     = 197,
+	Floor23     = 198,
+	VDemon      = 199,
+	HDemon      = 200,
+	VSuccubus   = 201,
+	HSuccubus   = 202,
 	// clang-format on
 };
 
@@ -791,7 +896,7 @@ void FillFloor()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (!Protected[i][j] && dungeon[i][j] == CathedralTile::Floor) {
+			if (!Protected[i][j] && dungeon[i][j] == Tile::Floor) {
 				int rv = GenerateRnd(3);
 
 				if (rv == 1)
@@ -864,7 +969,7 @@ void MapRoom(int x, int y, int width, int height)
 {
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
-			dungeon[x + i][y + j] = CathedralTile::VWall;
+			dungeon[x + i][y + j] = Tile::VWall;
 		}
 	}
 }
@@ -968,12 +1073,12 @@ void FirstRoom()
 			ye = 22;
 
 		for (int y = ys; y < ye; y++) {
-			dungeon[17][y] = CathedralTile::VWall;
-			dungeon[18][y] = CathedralTile::VWall;
-			dungeon[19][y] = CathedralTile::VWall;
-			dungeon[20][y] = CathedralTile::VWall;
-			dungeon[21][y] = CathedralTile::VWall;
-			dungeon[22][y] = CathedralTile::VWall;
+			dungeon[17][y] = Tile::VWall;
+			dungeon[18][y] = Tile::VWall;
+			dungeon[19][y] = Tile::VWall;
+			dungeon[20][y] = Tile::VWall;
+			dungeon[21][y] = Tile::VWall;
+			dungeon[22][y] = Tile::VWall;
 		}
 
 		if (VR1)
@@ -1009,12 +1114,12 @@ void FirstRoom()
 			xe = 22;
 
 		for (int x = xs; x < xe; x++) {
-			dungeon[x][17] = CathedralTile::VWall;
-			dungeon[x][18] = CathedralTile::VWall;
-			dungeon[x][19] = CathedralTile::VWall;
-			dungeon[x][20] = CathedralTile::VWall;
-			dungeon[x][21] = CathedralTile::VWall;
-			dungeon[x][22] = CathedralTile::VWall;
+			dungeon[x][17] = Tile::VWall;
+			dungeon[x][18] = Tile::VWall;
+			dungeon[x][19] = Tile::VWall;
+			dungeon[x][20] = Tile::VWall;
+			dungeon[x][21] = Tile::VWall;
+			dungeon[x][22] = Tile::VWall;
 		}
 
 		if (HR1)
@@ -1036,7 +1141,7 @@ int FindArea()
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			if (dungeon[i][j] == CathedralTile::VWall)
+			if (dungeon[i][j] == Tile::VWall)
 				rv++;
 		}
 	}
@@ -1127,33 +1232,33 @@ int VerticalWallOk(int i, int j)
 	return -1;
 }
 
-void HorizontalWall(int i, int j, CathedralTile p, int dx)
+void HorizontalWall(int i, int j, Tile p, int dx)
 {
-	CathedralTile dt = CathedralTile::HWall;
-	CathedralTile wt = CathedralTile::HDoor;
+	Tile dt = Tile::HWall;
+	Tile wt = Tile::HDoor;
 
 	switch (GenerateRnd(4)) {
 	case 2: // Add arch
-		dt = CathedralTile::HArch;
-		wt = CathedralTile::HArch;
-		if (p == CathedralTile::HWall)
-			p = CathedralTile::HArch;
-		else if (p == CathedralTile::DWall)
-			p = CathedralTile::HArchVWall;
+		dt = Tile::HArch;
+		wt = Tile::HArch;
+		if (p == Tile::HWall)
+			p = Tile::HArch;
+		else if (p == Tile::DWall)
+			p = Tile::HArchVWall;
 		break;
 	case 3: // Add Fence
-		dt = CathedralTile::HFence;
-		if (p == CathedralTile::HWall)
-			p = CathedralTile::HFence;
-		else if (p == CathedralTile::DWall)
-			p = CathedralTile::HFenceVWall;
+		dt = Tile::HFence;
+		if (p == Tile::HWall)
+			p = Tile::HFence;
+		else if (p == Tile::DWall)
+			p = Tile::HFenceVWall;
 		break;
 	default:
 		break;
 	}
 
 	if (GenerateRnd(6) == 5)
-		wt = CathedralTile::HArch;
+		wt = Tile::HArch;
 
 	dungeon[i][j] = p;
 
@@ -1164,38 +1269,38 @@ void HorizontalWall(int i, int j, CathedralTile p, int dx)
 	int xx = GenerateRnd(dx - 1) + 1;
 
 	dungeon[i + xx][j] = wt;
-	if (wt == CathedralTile::HDoor) {
+	if (wt == Tile::HDoor) {
 		Protected[i + xx][j] = true;
 	}
 }
 
-void VerticalWall(int i, int j, CathedralTile p, int dy)
+void VerticalWall(int i, int j, Tile p, int dy)
 {
-	CathedralTile dt = CathedralTile::VWall;
-	CathedralTile wt = CathedralTile::VDoor;
+	Tile dt = Tile::VWall;
+	Tile wt = Tile::VDoor;
 
 	switch (GenerateRnd(4)) {
 	case 2: // Add arch
-		dt = CathedralTile::VArch;
-		wt = CathedralTile::VArch;
-		if (p == CathedralTile::VWall)
-			p = CathedralTile::VArch;
-		else if (p == CathedralTile::DWall)
-			p = CathedralTile::HWallVArch;
+		dt = Tile::VArch;
+		wt = Tile::VArch;
+		if (p == Tile::VWall)
+			p = Tile::VArch;
+		else if (p == Tile::DWall)
+			p = Tile::HWallVArch;
 		break;
 	case 3: // Add Fence
-		dt = CathedralTile::VFence;
-		if (p == CathedralTile::VWall)
-			p = CathedralTile::VFence;
-		else if (p == CathedralTile::DWall)
-			p = CathedralTile::HWallVFence;
+		dt = Tile::VFence;
+		if (p == Tile::VWall)
+			p = Tile::VFence;
+		else if (p == Tile::DWall)
+			p = Tile::HWallVFence;
 		break;
 	default:
 		break;
 	}
 
 	if (GenerateRnd(6) == 5)
-		wt = CathedralTile::VArch;
+		wt = Tile::VArch;
 
 	dungeon[i][j] = p;
 
@@ -1206,7 +1311,7 @@ void VerticalWall(int i, int j, CathedralTile p, int dy)
 	int yy = GenerateRnd(dy - 1) + 1;
 
 	dungeon[i][j + yy] = wt;
-	if (wt == CathedralTile::VDoor) {
+	if (wt == Tile::VDoor) {
 		Protected[i][j + yy] = true;
 	}
 }
@@ -1216,46 +1321,46 @@ void AddWall()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			if (!Protected[i][j] && !Chamber[i][j]) {
-				if (dungeon[i][j] == CathedralTile::Corner) {
+				if (dungeon[i][j] == Tile::Corner) {
 					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
-						HorizontalWall(i, j, CathedralTile::HWall, x);
+						HorizontalWall(i, j, Tile::HWall, x);
 					}
 				}
-				if (dungeon[i][j] == CathedralTile::Corner) {
+				if (dungeon[i][j] == Tile::Corner) {
 					AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
-						VerticalWall(i, j, CathedralTile::VWall, y);
+						VerticalWall(i, j, Tile::VWall, y);
 					}
 				}
-				if (dungeon[i][j] == CathedralTile::VWallEnd) {
+				if (dungeon[i][j] == Tile::VWallEnd) {
 					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
-						HorizontalWall(i, j, CathedralTile::DWall, x);
+						HorizontalWall(i, j, Tile::DWall, x);
 					}
 				}
-				if (dungeon[i][j] == CathedralTile::HWallEnd) {
+				if (dungeon[i][j] == Tile::HWallEnd) {
 					AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
-						VerticalWall(i, j, CathedralTile::DWall, y);
+						VerticalWall(i, j, Tile::DWall, y);
 					}
 				}
-				if (dungeon[i][j] == CathedralTile::HWall) {
+				if (dungeon[i][j] == Tile::HWall) {
 					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
-						HorizontalWall(i, j, CathedralTile::HWall, x);
+						HorizontalWall(i, j, Tile::HWall, x);
 					}
 				}
-				if (dungeon[i][j] == CathedralTile::VWall) {
+				if (dungeon[i][j] == Tile::VWall) {
 					AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
-						VerticalWall(i, j, CathedralTile::VWall, y);
+						VerticalWall(i, j, Tile::VWall, y);
 					}
 				}
 			}
@@ -1266,72 +1371,72 @@ void AddWall()
 void GenerateChamber(int sx, int sy, bool topflag, bool bottomflag, bool leftflag, bool rightflag)
 {
 	if (topflag) {
-		dungeon[sx + 2][sy] = CathedralTile::HArch;
-		dungeon[sx + 3][sy] = CathedralTile::HArch;
-		dungeon[sx + 4][sy] = CathedralTile::Corner;
-		dungeon[sx + 7][sy] = CathedralTile::VArchEnd;
-		dungeon[sx + 8][sy] = CathedralTile::HArch;
-		dungeon[sx + 9][sy] = CathedralTile::HWall;
+		dungeon[sx + 2][sy] = Tile::HArch;
+		dungeon[sx + 3][sy] = Tile::HArch;
+		dungeon[sx + 4][sy] = Tile::Corner;
+		dungeon[sx + 7][sy] = Tile::VArchEnd;
+		dungeon[sx + 8][sy] = Tile::HArch;
+		dungeon[sx + 9][sy] = Tile::HWall;
 	}
 	if (bottomflag) {
 		sy += 11;
-		dungeon[sx + 2][sy] = CathedralTile::HArchVWall;
-		dungeon[sx + 3][sy] = CathedralTile::HArch;
-		dungeon[sx + 4][sy] = CathedralTile::HArchEnd;
-		dungeon[sx + 7][sy] = CathedralTile::DArch;
-		dungeon[sx + 8][sy] = CathedralTile::HArch;
-		if (dungeon[sx + 9][sy] != CathedralTile::DWall) {
-			dungeon[sx + 9][sy] = CathedralTile::DirtCorner;
+		dungeon[sx + 2][sy] = Tile::HArchVWall;
+		dungeon[sx + 3][sy] = Tile::HArch;
+		dungeon[sx + 4][sy] = Tile::HArchEnd;
+		dungeon[sx + 7][sy] = Tile::DArch;
+		dungeon[sx + 8][sy] = Tile::HArch;
+		if (dungeon[sx + 9][sy] != Tile::DWall) {
+			dungeon[sx + 9][sy] = Tile::DirtCorner;
 		}
 		sy -= 11;
 	}
 	if (leftflag) {
-		dungeon[sx][sy + 2] = CathedralTile::VArch;
-		dungeon[sx][sy + 3] = CathedralTile::VArch;
-		dungeon[sx][sy + 4] = CathedralTile::Corner;
-		dungeon[sx][sy + 7] = CathedralTile::HArchEnd;
-		dungeon[sx][sy + 8] = CathedralTile::VArch;
-		dungeon[sx][sy + 9] = CathedralTile::VWall;
+		dungeon[sx][sy + 2] = Tile::VArch;
+		dungeon[sx][sy + 3] = Tile::VArch;
+		dungeon[sx][sy + 4] = Tile::Corner;
+		dungeon[sx][sy + 7] = Tile::HArchEnd;
+		dungeon[sx][sy + 8] = Tile::VArch;
+		dungeon[sx][sy + 9] = Tile::VWall;
 	}
 	if (rightflag) {
 		sx += 11;
-		dungeon[sx][sy + 2] = CathedralTile::HWallVArch;
-		dungeon[sx][sy + 3] = CathedralTile::VArch;
-		dungeon[sx][sy + 4] = CathedralTile::VArchEnd;
-		dungeon[sx][sy + 7] = CathedralTile::DArch;
-		dungeon[sx][sy + 8] = CathedralTile::VArch;
-		if (dungeon[sx][sy + 9] != CathedralTile::DWall) {
-			dungeon[sx][sy + 9] = CathedralTile::DirtCorner;
+		dungeon[sx][sy + 2] = Tile::HWallVArch;
+		dungeon[sx][sy + 3] = Tile::VArch;
+		dungeon[sx][sy + 4] = Tile::VArchEnd;
+		dungeon[sx][sy + 7] = Tile::DArch;
+		dungeon[sx][sy + 8] = Tile::VArch;
+		if (dungeon[sx][sy + 9] != Tile::DWall) {
+			dungeon[sx][sy + 9] = Tile::DirtCorner;
 		}
 		sx -= 11;
 	}
 
 	for (int j = 1; j < 11; j++) {
 		for (int i = 1; i < 11; i++) {
-			dungeon[i + sx][j + sy] = CathedralTile::Floor;
+			dungeon[i + sx][j + sy] = Tile::Floor;
 			Chamber[i + sx][j + sy] = true;
 		}
 	}
 
-	dungeon[sx + 4][sy + 4] = CathedralTile::Pilar;
-	dungeon[sx + 7][sy + 4] = CathedralTile::Pilar;
-	dungeon[sx + 4][sy + 7] = CathedralTile::Pilar;
-	dungeon[sx + 7][sy + 7] = CathedralTile::Pilar;
+	dungeon[sx + 4][sy + 4] = Tile::Pillar;
+	dungeon[sx + 7][sy + 4] = Tile::Pillar;
+	dungeon[sx + 4][sy + 7] = Tile::Pillar;
+	dungeon[sx + 7][sy + 7] = Tile::Pillar;
 }
 
 void GenerateHall(int x1, int y1, int x2, int y2)
 {
 	if (y1 == y2) {
 		for (int i = x1; i < x2; i++) {
-			dungeon[i][y1] = CathedralTile::HArch;
-			dungeon[i][y1 + 3] = CathedralTile::HArch;
+			dungeon[i][y1] = Tile::HArch;
+			dungeon[i][y1 + 3] = Tile::HArch;
 		}
 		return;
 	}
 
 	for (int i = y1; i < y2; i++) {
-		dungeon[x1][i] = CathedralTile::VArch;
-		dungeon[x1 + 3][i] = CathedralTile::VArch;
+		dungeon[x1][i] = Tile::VArch;
+		dungeon[x1 + 3][i] = Tile::VArch;
 	}
 }
 
@@ -1474,7 +1579,7 @@ void SetCornerRoom(int rx1, int ry1)
 				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
 				Protected[rx1 + i][ry1 + j] = true;
 			} else {
-				dungeon[rx1 + i][ry1 + j] = CathedralTile::Floor;
+				dungeon[rx1 + i][ry1 + j] = Tile::Floor;
 			}
 			sp++;
 		}
@@ -1540,7 +1645,7 @@ void SetRoom(int rx1, int ry1)
 				dungeon[rx1 + i][ry1 + j] = tileId;
 				Protected[rx1 + i][ry1 + j] = true;
 			} else {
-				dungeon[rx1 + i][ry1 + j] = CathedralTile::Floor;
+				dungeon[rx1 + i][ry1 + j] = Tile::Floor;
 			}
 		}
 	}
@@ -1568,7 +1673,7 @@ void SetCryptRoom(int rx1, int ry1)
 				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
 				Protected[rx1 + i][ry1 + j] = true;
 			} else {
-				dungeon[rx1 + i][ry1 + j] = CathedralTile::Floor;
+				dungeon[rx1 + i][ry1 + j] = Tile::Floor;
 			}
 			sp++;
 		}
@@ -1878,138 +1983,144 @@ void FixCornerTiles()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
-			if (!Protected[i][j] && dungeon[i][j] == 17 && dungeon[i - 1][j] == CathedralTile::Floor && dungeon[i][j - 1] == CathedralTile::VWall) {
+			if (!Protected[i][j] && dungeon[i][j] == 17 && dungeon[i - 1][j] == Tile::Floor && dungeon[i][j - 1] == Tile::VWall) {
 				dungeon[i][j] = 16;
 				// BUGFIX: Set tile as Protected
 			}
-			if (dungeon[i][j] == 202 && dungeon[i + 1][j] == CathedralTile::Floor && dungeon[i][j + 1] == CathedralTile::VWall) {
+			if (dungeon[i][j] == 202 && dungeon[i + 1][j] == Tile::Floor && dungeon[i][j + 1] == Tile::VWall) {
 				dungeon[i][j] = 8;
 			}
 		}
 	}
 }
 
-void CryptPatternGroup1(int rndper)
+void CryptStatues(int rndper)
 {
-	PlaceMiniSetRandom1x1(1, 199, rndper);
-	PlaceMiniSetRandom1x1(1, 201, rndper);
-	PlaceMiniSetRandom1x1(2, 200, rndper);
-	PlaceMiniSetRandom1x1(2, 202, rndper);
+	PlaceMiniSetRandom1x1(Tile::VWall, CryptTile::VDemon, rndper);
+	PlaceMiniSetRandom1x1(Tile::VWall, CryptTile::VSuccubus, rndper);
+	PlaceMiniSetRandom1x1(Tile::HWall, CryptTile::HDemon, rndper);
+	PlaceMiniSetRandom1x1(Tile::HWall, CryptTile::HSuccubus, rndper);
 }
 
-void CryptPatternGroup2(int rndper)
+void CryptCracked(int rndper)
 {
-	PlaceMiniSetRandom1x1(1, 112, rndper);
-	PlaceMiniSetRandom1x1(2, 113, rndper);
-	PlaceMiniSetRandom1x1(3, 114, rndper);
-	PlaceMiniSetRandom1x1(4, 115, rndper);
-	PlaceMiniSetRandom1x1(5, 116, rndper);
-	PlaceMiniSetRandom1x1(6, 117, rndper);
-	PlaceMiniSetRandom1x1(7, 118, rndper);
-	PlaceMiniSetRandom1x1(8, 119, rndper);
-	PlaceMiniSetRandom1x1(9, 120, rndper);
-	PlaceMiniSetRandom1x1(10, 121, rndper);
-	PlaceMiniSetRandom1x1(11, 122, rndper);
-	PlaceMiniSetRandom1x1(12, 123, rndper);
-	PlaceMiniSetRandom1x1(13, 124, rndper);
-	PlaceMiniSetRandom1x1(14, 125, rndper);
-	PlaceMiniSetRandom1x1(15, 126, rndper);
-	PlaceMiniSetRandom1x1(16, 127, rndper);
-	PlaceMiniSetRandom1x1(17, 128, rndper);
+	// clang-format off
+	PlaceMiniSetRandom1x1(Tile::VWall,      CryptTile::VWall2,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HWall,      CryptTile::HWall2,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Corner,     CryptTile::Corner2,     rndper);
+	PlaceMiniSetRandom1x1(Tile::DWall,      CryptTile::DWall2,      rndper);
+	PlaceMiniSetRandom1x1(Tile::DArch,      CryptTile::DArch2,      rndper);
+	PlaceMiniSetRandom1x1(Tile::VWallEnd,   CryptTile::VWallEnd2,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HWallEnd,   CryptTile::HWallEnd2,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HArchEnd,   CryptTile::HArchEnd2,   rndper);
+	PlaceMiniSetRandom1x1(Tile::VArchEnd,   CryptTile::VArchEnd2,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HArchVWall, CryptTile::HArchVWall2, rndper);
+	PlaceMiniSetRandom1x1(Tile::VArch,      CryptTile::VArch2,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HArch,      CryptTile::HArch2,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor,      CryptTile::Floor2,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HWallVArch, CryptTile::HWallVArch2, rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar,      CryptTile::Pillar3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar1,     CryptTile::Pillar4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar2,     CryptTile::Pillar5,      rndper);
+	// clang-format on
 }
 
-void CryptPatternGroup3(int rndper)
+void CryptBroken(int rndper)
 {
-	PlaceMiniSetRandom1x1(1, 129, rndper);
-	PlaceMiniSetRandom1x1(2, 130, rndper);
-	PlaceMiniSetRandom1x1(3, 131, rndper);
-	PlaceMiniSetRandom1x1(4, 132, rndper);
-	PlaceMiniSetRandom1x1(5, 133, rndper);
-	PlaceMiniSetRandom1x1(6, 134, rndper);
-	PlaceMiniSetRandom1x1(7, 135, rndper);
-	PlaceMiniSetRandom1x1(8, 136, rndper);
-	PlaceMiniSetRandom1x1(9, 137, rndper);
-	PlaceMiniSetRandom1x1(10, 138, rndper);
-	PlaceMiniSetRandom1x1(11, 139, rndper);
-	PlaceMiniSetRandom1x1(12, 140, rndper);
-	PlaceMiniSetRandom1x1(13, 141, rndper);
-	PlaceMiniSetRandom1x1(14, 142, rndper);
-	PlaceMiniSetRandom1x1(15, 143, rndper);
-	PlaceMiniSetRandom1x1(16, 144, rndper);
-	PlaceMiniSetRandom1x1(17, 145, rndper);
+	// clang-format off
+	PlaceMiniSetRandom1x1(Tile::VWall,      CryptTile::VWall3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HWall,      CryptTile::HWall3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Corner,     CryptTile::Corner3,     rndper);
+	PlaceMiniSetRandom1x1(Tile::DWall,      CryptTile::DWall3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::DArch,      CryptTile::DArch3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::VWallEnd,   CryptTile::VWallEnd3,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HWallEnd,   CryptTile::HWallEnd3,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HArchEnd,   CryptTile::HArchEnd3,   rndper);
+	PlaceMiniSetRandom1x1(Tile::VArchEnd,   CryptTile::VArchEnd3,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HArchVWall, CryptTile::HArchVWall3, rndper);
+	PlaceMiniSetRandom1x1(Tile::VArch,      CryptTile::VArch3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HArch,      CryptTile::HArch3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor,      CryptTile::Floor3,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HWallVArch, CryptTile::HWallVArch3, rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar,      CryptTile::Pillar6,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar1,     CryptTile::Pillar7,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar2,     CryptTile::Pillar8,      rndper);
+	// clang-format on
 }
 
-void CryptPatternGroup4(int rndper)
+void CryptLeaking(int rndper)
 {
-	PlaceMiniSetRandom1x1(1, 146, rndper);
-	PlaceMiniSetRandom1x1(2, 147, rndper);
-	PlaceMiniSetRandom1x1(3, 148, rndper);
-	PlaceMiniSetRandom1x1(4, 149, rndper);
-	PlaceMiniSetRandom1x1(5, 150, rndper);
-	PlaceMiniSetRandom1x1(6, 151, rndper);
-	PlaceMiniSetRandom1x1(7, 152, rndper);
-	PlaceMiniSetRandom1x1(8, 153, rndper);
-	PlaceMiniSetRandom1x1(9, 154, rndper);
-	PlaceMiniSetRandom1x1(10, 155, rndper);
-	PlaceMiniSetRandom1x1(11, 156, rndper);
-	PlaceMiniSetRandom1x1(12, 157, rndper);
-	PlaceMiniSetRandom1x1(13, 158, rndper);
-	PlaceMiniSetRandom1x1(14, 159, rndper);
-	PlaceMiniSetRandom1x1(15, 160, rndper);
-	PlaceMiniSetRandom1x1(16, 161, rndper);
-	PlaceMiniSetRandom1x1(17, 162, rndper);
+	// clang-format off
+	PlaceMiniSetRandom1x1(Tile::VWall,      CryptTile::VWall4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HWall,      CryptTile::HWall4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Corner,     CryptTile::Corner4,     rndper);
+	PlaceMiniSetRandom1x1(Tile::DWall,      CryptTile::DWall4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::DArch,      CryptTile::DArch4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::VWallEnd,   CryptTile::VWallEnd4,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HWallEnd,   CryptTile::HWallEnd4,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HArchEnd,   CryptTile::HArchEnd4,   rndper);
+	PlaceMiniSetRandom1x1(Tile::VArchEnd,   CryptTile::VArchEnd4,   rndper);
+	PlaceMiniSetRandom1x1(Tile::HArchVWall, CryptTile::HArchVWall4, rndper);
+	PlaceMiniSetRandom1x1(Tile::VArch,      CryptTile::VArch4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HArch,      CryptTile::HArch4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor,      CryptTile::Floor4,      rndper);
+	PlaceMiniSetRandom1x1(Tile::HWallVArch, CryptTile::HWallVArch4, rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar,      CryptTile::Pillar9,      rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar1,     CryptTile::Pillar10,     rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar2,     CryptTile::Pillar11,     rndper);
+	// clang-format on
 }
 
-void CryptPatternGroup5(int rndper)
+void CryptSubstitions1(int rndper)
 {
-	PlaceMiniSetRandom(CryptPattern36, rndper);
-	PlaceMiniSetRandom(CryptPattern37, rndper);
-	PlaceMiniSetRandom(CryptPattern38, rndper);
-	PlaceMiniSetRandom(CryptPattern39, rndper);
-	PlaceMiniSetRandom(CryptPattern40, rndper);
-	PlaceMiniSetRandom(CryptPattern41, rndper);
-	PlaceMiniSetRandom1x1(13, 163, rndper);
-	PlaceMiniSetRandom1x1(13, 164, rndper);
-	PlaceMiniSetRandom1x1(13, 165, rndper);
-	PlaceMiniSetRandom1x1(13, 166, rndper);
+	PlaceMiniSetRandom1x1(Tile::VArch, CryptTile::VArch6, rndper);
+	PlaceMiniSetRandom1x1(Tile::HArch, CryptTile::HArch6, rndper);
+	PlaceMiniSetRandom1x1(Tile::VArch, CryptTile::VArch7, rndper);
+	PlaceMiniSetRandom1x1(Tile::HArch, CryptTile::HArch7, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::VWall5, CryptTile::VWall8, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::VWall5, CryptTile::VWall9, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::VWall6, CryptTile::VWall10, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::VWall6, CryptTile::VWall11, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::VWall7, CryptTile::VWall12, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::VWall7, CryptTile::VWall13, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::HWall5, CryptTile::HWall8, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::HWall5, CryptTile::HWall9, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::HWall5, CryptTile::HWall10, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::HWall5, CryptTile::HWall11, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::HWall5, CryptTile::HWall12, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::HWall5, CryptTile::HWall13, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor7, CryptTile::Floor15, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor7, CryptTile::Floor16, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor6, CryptTile::Floor17, rndper);
+	PlaceMiniSetRandom1x1(Tile::Pillar, CryptTile::Pillar12, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor8, CryptTile::Floor18, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor8, CryptTile::Floor19, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor9, CryptTile::Floor20, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor10, CryptTile::Floor21, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor10, CryptTile::Floor22, rndper);
+	PlaceMiniSetRandom1x1(CryptTile::Floor10, CryptTile::Floor23, rndper);
 }
 
-void CryptPatternGroup6(int rndper)
+void CryptSubstitions2(int rndper)
 {
-	PlaceMiniSetRandom1x1(11, 185, rndper);
-	PlaceMiniSetRandom1x1(12, 187, rndper);
-	PlaceMiniSetRandom1x1(11, 186, rndper);
-	PlaceMiniSetRandom1x1(12, 188, rndper);
-	PlaceMiniSetRandom1x1(89, 173, rndper);
-	PlaceMiniSetRandom1x1(89, 174, rndper);
-	PlaceMiniSetRandom1x1(90, 175, rndper);
-	PlaceMiniSetRandom1x1(90, 176, rndper);
-	PlaceMiniSetRandom1x1(91, 177, rndper);
-	PlaceMiniSetRandom1x1(91, 178, rndper);
-	PlaceMiniSetRandom1x1(92, 179, rndper);
-	PlaceMiniSetRandom1x1(92, 180, rndper);
-	PlaceMiniSetRandom1x1(92, 181, rndper);
-	PlaceMiniSetRandom1x1(92, 182, rndper);
-	PlaceMiniSetRandom1x1(92, 183, rndper);
-	PlaceMiniSetRandom1x1(92, 184, rndper);
-	PlaceMiniSetRandom1x1(98, 189, rndper);
-	PlaceMiniSetRandom1x1(98, 190, rndper);
-	PlaceMiniSetRandom1x1(97, 191, rndper);
-	PlaceMiniSetRandom1x1(15, 192, rndper);
-	PlaceMiniSetRandom1x1(99, 193, rndper);
-	PlaceMiniSetRandom1x1(99, 194, rndper);
-	PlaceMiniSetRandom1x1(100, 195, rndper);
-	PlaceMiniSetRandom1x1(101, 196, rndper);
-	PlaceMiniSetRandom1x1(101, 197, rndper);
-	PlaceMiniSetRandom1x1(101, 198, rndper);
+	PlaceMiniSetRandom(CryptPillar1, rndper);
+	PlaceMiniSetRandom(CryptPillar2, rndper);
+	PlaceMiniSetRandom(CryptPillar3, rndper);
+	PlaceMiniSetRandom(CryptPillar4, rndper);
+	PlaceMiniSetRandom(CryptPillar5, rndper);
+	PlaceMiniSetRandom(CryptStar, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor11, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor12, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor13, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor14, rndper);
 }
 
-void CryptPatternGroup7(int rndper)
+void CryptFloor(int rndper)
 {
-	PlaceMiniSetRandom1x1(13, 97, rndper);
-	PlaceMiniSetRandom1x1(13, 98, rndper);
-	PlaceMiniSetRandom1x1(13, 99, rndper);
-	PlaceMiniSetRandom1x1(13, 100, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor6, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor7, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor8, rndper);
+	PlaceMiniSetRandom1x1(Tile::Floor, CryptTile::Floor9, rndper);
 }
 
 bool PlaceCathedralStairs(lvl_entry entry)
@@ -2109,7 +2220,7 @@ void GenerateLevel(lvl_entry entry)
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == CathedralTile::EntranceStairs) {
+			if (dungeon[i][j] == Tile::EntranceStairs) {
 				int xx = 2 * i + 16; /* todo: fix loop */
 				int yy = 2 * j + 16;
 				DRLG_CopyTrans(xx, yy + 1, xx, yy);
@@ -2127,48 +2238,48 @@ void GenerateLevel(lvl_entry entry)
 	FixCornerTiles();
 
 	if (leveltype == DTYPE_CRYPT) {
-		CryptPatternGroup1(10);
-		PlaceMiniSetRandom1x1(11, 95, 95);
-		PlaceMiniSetRandom1x1(12, 96, 95);
-		PlaceMiniSetRandom(CryptPattern3, 100);
-		PlaceMiniSetRandom(CryptPattern4, 100);
-		PlaceMiniSetRandom(CryptPattern9, 60);
+		CryptStatues(10);
+		PlaceMiniSetRandom1x1(Tile::VArch, CryptTile::VArch5, 95);
+		PlaceMiniSetRandom1x1(Tile::HArch, CryptTile::HArch5, 95);
+		PlaceMiniSetRandom(VWallSection, 100);
+		PlaceMiniSetRandom(HWallSection, 100);
+		PlaceMiniSetRandom(CryptFloorLave, 60);
 		CryptLavafloor();
 		switch (currlevel) {
 		case 21:
-			CryptPatternGroup2(30);
-			CryptPatternGroup3(15);
-			CryptPatternGroup4(5);
+			CryptCracked(30);
+			CryptBroken(15);
+			CryptLeaking(5);
 			CryptLavafloor();
-			CryptPatternGroup7(10);
-			CryptPatternGroup6(5);
-			CryptPatternGroup5(20);
+			CryptFloor(10);
+			CryptSubstitions1(5);
+			CryptSubstitions2(20);
 			break;
 		case 22:
-			CryptPatternGroup7(10);
-			CryptPatternGroup6(10);
-			CryptPatternGroup5(20);
-			CryptPatternGroup2(30);
-			CryptPatternGroup3(20);
-			CryptPatternGroup4(10);
+			CryptFloor(10);
+			CryptSubstitions1(10);
+			CryptSubstitions2(20);
+			CryptCracked(30);
+			CryptBroken(20);
+			CryptLeaking(10);
 			CryptLavafloor();
 			break;
 		case 23:
-			CryptPatternGroup7(10);
-			CryptPatternGroup6(15);
-			CryptPatternGroup5(30);
-			CryptPatternGroup2(30);
-			CryptPatternGroup3(20);
-			CryptPatternGroup4(15);
+			CryptFloor(10);
+			CryptSubstitions1(15);
+			CryptSubstitions2(30);
+			CryptCracked(30);
+			CryptBroken(20);
+			CryptLeaking(15);
 			CryptLavafloor();
 			break;
 		default:
-			CryptPatternGroup7(10);
-			CryptPatternGroup6(20);
-			CryptPatternGroup5(30);
-			CryptPatternGroup2(30);
-			CryptPatternGroup3(20);
-			CryptPatternGroup4(20);
+			CryptFloor(10);
+			CryptSubstitions1(20);
+			CryptSubstitions2(30);
+			CryptCracked(30);
+			CryptBroken(20);
+			CryptLeaking(20);
 			CryptLavafloor();
 			break;
 		}
@@ -2230,7 +2341,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 				dungeon[i][j] = tileId;
 				Protected[i][j] = true;
 			} else {
-				dungeon[i][j] = CathedralTile::Floor;
+				dungeon[i][j] = Tile::Floor;
 			}
 		}
 	}
@@ -2276,7 +2387,7 @@ void LoadPreL1Dungeon(const char *path)
 				dungeon[i][j] = tileId;
 				Protected[i][j] = true;
 			} else {
-				dungeon[i][j] = CathedralTile::Floor;
+				dungeon[i][j] = Tile::Floor;
 			}
 		}
 	}
