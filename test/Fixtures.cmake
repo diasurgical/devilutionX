@@ -51,6 +51,7 @@ set(devilutionx_fixtures
   Levels/L2Data/Blood2.DUN
   Levels/L2Data/Bonestr1.DUN
   Levels/L2Data/Bonestr2.DUN
+  Levels/L3Data/Anvil.DUN
   Levels/L4Data/diab1.DUN
   Levels/L4Data/diab2a.DUN
   Levels/L4Data/diab2b.DUN
