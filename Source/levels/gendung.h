@@ -37,8 +37,25 @@ enum _setlevels : int8_t {
 	SL_POISONWATER,
 	SL_VILEBETRAYER,
 
-	SL_LAST = SL_VILEBETRAYER,
+	SL_ARENA_CHURCH,
+	SL_ARENA_HELL,
+	SL_ARENA_CIRCLE_OF_LIFE,
+
+	SL_FIRST_ARENA = SL_ARENA_CHURCH,
+	SL_LAST = SL_ARENA_CIRCLE_OF_LIFE,
 };
+
+inline bool IsArenaLevel(_setlevels setLevel)
+{
+	switch (setLevel) {
+	case SL_ARENA_CHURCH:
+	case SL_ARENA_HELL:
+	case SL_ARENA_CIRCLE_OF_LIFE:
+		return true;
+	default:
+		return false;
+	}
+}
 
 enum dungeon_type : int8_t {
 	DTYPE_TOWN,

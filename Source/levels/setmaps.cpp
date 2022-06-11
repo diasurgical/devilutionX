@@ -26,6 +26,9 @@ const char *const QuestLevelNames[] = {
 	N_("Maze"),
 	N_("Poisoned Water Supply"),
 	N_("Archbishop Lazarus' Lair"),
+	N_("Church Arena"),
+	N_("Hell Arena"),
+	N_("Circle of Life Arena"),
 };
 
 namespace {
@@ -62,6 +65,39 @@ void SetMapTransparency(const char *path)
 {
 	auto dunData = LoadFileInMem<uint16_t>(path);
 	LoadTransparency(dunData.get());
+}
+
+void LoadCustomMap(const char *path, Point viewPosition)
+{
+	switch (setlvltype) {
+	case DTYPE_CATHEDRAL:
+	case DTYPE_CRYPT:
+		LoadL1Dungeon(path, viewPosition);
+		break;
+	case DTYPE_CATACOMBS:
+		LoadL2Dungeon(path, viewPosition);
+		break;
+	case DTYPE_CAVES:
+	case DTYPE_NEST:
+		LoadL3Dungeon(path, viewPosition);
+		break;
+	case DTYPE_HELL:
+		LoadL4Dungeon(path, viewPosition);
+		break;
+	case DTYPE_TOWN:
+	case DTYPE_NONE:
+		break;
+	}
+	LoadRndLvlPal(setlvltype);
+}
+
+void LoadArenaMap(const char *path, Point viewPosition, Point exitTrigger)
+{
+	LoadCustomMap(path, viewPosition);
+	trigflag = false;
+	numtrigs = 1;
+	trigs[0].position = exitTrigger;
+	trigs[0]._tmsg = WM_DIABRTNLVL;
 }
 
 } // namespace
@@ -111,28 +147,18 @@ void LoadSetMap()
 		AddVileObjs();
 		InitNoTriggers();
 		break;
+	case SL_ARENA_CHURCH:
+		LoadArenaMap("arena\\church.dun", { 37, 22 }, { 36, 20 });
+		break;
+	case SL_ARENA_HELL:
+		LoadArenaMap("arena\\hell.dun", { 44, 32 }, { 43, 32 });
+		break;
+	case SL_ARENA_CIRCLE_OF_LIFE:
+		LoadArenaMap("arena\\circle_of_death.dun", { 48, 34 }, { 47, 34 });
+		break;
 	case SL_NONE:
 #ifdef _DEBUG
-		switch (setlvltype) {
-		case DTYPE_CATHEDRAL:
-		case DTYPE_CRYPT:
-			LoadL1Dungeon(TestMapPath.c_str(), ViewPosition);
-			break;
-		case DTYPE_CATACOMBS:
-			LoadL2Dungeon(TestMapPath.c_str(), ViewPosition);
-			break;
-		case DTYPE_CAVES:
-		case DTYPE_NEST:
-			LoadL3Dungeon(TestMapPath.c_str(), ViewPosition);
-			break;
-		case DTYPE_HELL:
-			LoadL4Dungeon(TestMapPath.c_str(), ViewPosition);
-			break;
-		case DTYPE_TOWN:
-		case DTYPE_NONE:
-			break;
-		}
-		LoadRndLvlPal(setlvltype);
+		LoadCustomMap(TestMapPath.c_str(), ViewPosition);
 		InitNoTriggers();
 #endif
 		break;

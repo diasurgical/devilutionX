@@ -48,6 +48,28 @@ OptionalOwnedClxSpriteList ArtCutsceneWidescreen;
 uint32_t CustomEventsBegin = SDL_USEREVENT;
 constexpr uint32_t NumCustomEvents = WM_LAST - WM_FIRST + 1;
 
+Cutscenes GetCutSceneFromLevelType(dungeon_type type)
+{
+	switch (type) {
+	case DTYPE_TOWN:
+		return CutTown;
+	case DTYPE_CATHEDRAL:
+		return CutLevel1;
+	case DTYPE_CATACOMBS:
+		return CutLevel2;
+	case DTYPE_CAVES:
+		return CutLevel3;
+	case DTYPE_HELL:
+		return CutLevel4;
+	case DTYPE_NEST:
+		return CutLevel6;
+	case DTYPE_CRYPT:
+		return CutLevel5;
+	default:
+		return CutLevel1;
+	}
+}
+
 Cutscenes PickCutscene(interface_mode uMsg)
 {
 	switch (uMsg) {
@@ -65,25 +87,7 @@ Cutscenes PickCutscene(interface_mode uMsg)
 			return CutTown;
 		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
 			return CutGate;
-
-		switch (GetLevelType(lvl)) {
-		case DTYPE_TOWN:
-			return CutTown;
-		case DTYPE_CATHEDRAL:
-			return CutLevel1;
-		case DTYPE_CATACOMBS:
-			return CutLevel2;
-		case DTYPE_CAVES:
-			return CutLevel3;
-		case DTYPE_HELL:
-			return CutLevel4;
-		case DTYPE_NEST:
-			return CutLevel6;
-		case DTYPE_CRYPT:
-			return CutLevel5;
-		default:
-			return CutLevel1;
-		}
+		return GetCutSceneFromLevelType(GetLevelType(lvl));
 	}
 	case WM_DIABWARPLVL:
 		return CutPortal;
@@ -93,6 +97,11 @@ Cutscenes PickCutscene(interface_mode uMsg)
 			return CutLevel2;
 		if (setlvlnum == SL_VILEBETRAYER)
 			return CutPortalRed;
+		if (IsArenaLevel(setlvlnum)) {
+			if (uMsg == WM_DIABSETLVL)
+				return GetCutSceneFromLevelType(setlvltype);
+			return CutTown;
+		}
 		return CutLevel1;
 	default:
 		app_fatal("Unknown progress mode");

@@ -2949,7 +2949,7 @@ StartPlayerKill(Player &player, int earflag)
 		NetSendCmdParam1(true, CMD_PLRDEAD, earflag);
 	}
 
-	bool diablolevel = gbIsMultiplayer && player.plrlevel == 16;
+	bool diablolevel = gbIsMultiplayer && (player.isOnLevel(16) || player.isOnArenaLevel());
 
 	player.Say(HeroSpeech::AuughUh);
 

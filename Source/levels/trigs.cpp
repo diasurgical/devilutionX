@@ -758,6 +758,45 @@ bool ForcePWaterTrig()
 	return false;
 }
 
+bool ForceArenaTrig()
+{
+	int *checkList = nullptr;
+	switch (setlvltype) {
+	case DTYPE_TOWN:
+		checkList = TownWarp1List;
+		break;
+	case DTYPE_CATHEDRAL:
+		checkList = L1UpList;
+		break;
+	case DTYPE_CATACOMBS:
+		checkList = L2TWarpUpList;
+		break;
+	case DTYPE_CAVES:
+		checkList = L3TWarpUpList;
+		break;
+	case DTYPE_HELL:
+		checkList = L4TWarpUpList;
+		break;
+	case DTYPE_NEST:
+		checkList = L5TWarpUpList;
+		break;
+	case DTYPE_CRYPT:
+		checkList = L6TWarpUpList;
+		break;
+	default:
+		return false;
+	}
+	for (int i = 0; checkList[i] != -1; i++) {
+		if (dPiece[cursPosition.x][cursPosition.y] == checkList[i]) {
+			InfoString = _("Up to town");
+			cursPosition = trigs[0].position;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void CheckTrigForce()
 {
 	trigflag = false;
@@ -807,6 +846,8 @@ void CheckTrigForce()
 			trigflag = ForcePWaterTrig();
 			break;
 		default:
+			if (IsArenaLevel(setlvlnum))
+				trigflag = ForceArenaTrig();
 			break;
 		}
 	}
