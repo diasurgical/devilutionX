@@ -26,6 +26,7 @@
 #include "init.h"
 #include "inv.h"
 #include "inv_iterators.hpp"
+#include "levels/setmaps.h"
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "minitext.h"
@@ -317,12 +318,113 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	return x - 32 - 8;
 }
 
+struct TextCmdItem {
+	const std::string text;
+	const std::string description;
+	const std::string requiredParameter;
+	std::string (*actionProc)(const string_view);
+};
+
+extern std::vector<TextCmdItem> TextCmdList;
+
+std::string TextCmdHelp(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret;
+		StrAppend(ret, _("Available Commands:"));
+		for (const TextCmdItem &textCmd : TextCmdList) {
+			StrAppend(ret, " ", _(textCmd.text));
+		}
+		return ret;
+	}
+	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return elem.text == parameter; });
+	if (textCmdIterator == TextCmdList.end())
+		return StrCat(_("Command "), parameter, _(" is unkown."));
+	auto &textCmdItem = *textCmdIterator;
+	if (textCmdItem.requiredParameter.empty())
+		return StrCat(_("Description: "), _(textCmdItem.description), _("\nParameters: No additional parameter needed."));
+	return StrCat(_("Description: "), _(textCmdItem.description), _("\nParameters: "), _(textCmdItem.requiredParameter));
+}
+
+void AppendArenaOverview(std::string &ret)
+{
+	for (int arena = SL_FIRST_ARENA; arena <= SL_LAST; arena++) {
+		StrAppend(ret, "\n", arena - SL_FIRST_ARENA + 1, " (", QuestLevelNames[arena], ")");
+	}
+}
+
+const dungeon_type DungeonTypeForArena[] = {
+	dungeon_type::DTYPE_CATHEDRAL, // SL_ARENA_CHURCH
+	dungeon_type::DTYPE_HELL,      // SL_ARENA_HELL
+	dungeon_type::DTYPE_HELL,      // SL_ARENA_CIRCLE_OF_LIFE
+};
+
+std::string TextCmdArena(const string_view parameter)
+{
+	std::string ret;
+	if (!gbIsMultiplayer) {
+		StrAppend(ret, _("Arenas are only supported in multiplayer."));
+		return ret;
+	}
+
+	if (parameter.empty()) {
+		StrAppend(ret, _("What arena do you want to visit?"));
+		AppendArenaOverview(ret);
+		return ret;
+	}
+
+	int arenaNumber = atoi(parameter.data());
+	_setlevels arenaLevel = static_cast<_setlevels>(arenaNumber - 1 + SL_FIRST_ARENA);
+	if (arenaNumber < 0 || !IsArenaLevel(arenaLevel)) {
+		StrAppend(ret, _("Invalid arena-number. Valid numbers are:"));
+		AppendArenaOverview(ret);
+		return ret;
+	}
+
+	if (!MyPlayer->isOnLevel(0) && !MyPlayer->isOnArenaLevel()) {
+		StrAppend(ret, _("To enter a arena, you need to be in town or another arena."));
+		return ret;
+	}
+
+	setlvltype = DungeonTypeForArena[arenaLevel - SL_FIRST_ARENA];
+	StartNewLvl(*MyPlayer, WM_DIABSETLVL, arenaLevel);
+	return ret;
+}
+
+std::vector<TextCmdItem> TextCmdList = {
+	{ N_("/help"), N_("Prints help overview or help for a specific command."), N_("({command})"), &TextCmdHelp },
+	{ N_("/arena"), N_("Enter a PvP Arena."), N_("{arena-number}"), &TextCmdArena }
+};
+
+bool CheckTextCommand(const string_view text)
+{
+	if (text.size() < 1 || text[0] != '/')
+		return false;
+
+	auto textCmdIterator = std::find_if(TextCmdList.begin(), TextCmdList.end(), [&](const TextCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
+	if (textCmdIterator == TextCmdList.end()) {
+		InitDiabloMsg(StrCat(_("Command \""), text, "\" is unknown."));
+		return true;
+	}
+
+	TextCmdItem &textCmd = *textCmdIterator;
+	string_view parameter = "";
+	if (text.length() > (textCmd.text.length() + 1))
+		parameter = text.substr(textCmd.text.length() + 1);
+	const std::string result = textCmd.actionProc(parameter);
+	if (result != "")
+		InitDiabloMsg(result);
+	return true;
+}
+
 void ResetTalkMsg()
 {
 #ifdef _DEBUG
 	if (CheckDebugTextCommand(TalkMessage))
 		return;
 #endif
+	if (CheckTextCommand(TalkMessage))
+		return;
 
 	uint32_t pmask = 0;
 
@@ -1294,6 +1396,8 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 		if (CheckDebugTextCommand(msg))
 			continue;
 #endif
+		if (CheckTextCommand(msg))
+			continue;
 		char charMsg[MAX_SEND_STR_LEN];
 		CopyUtf8(charMsg, msg, sizeof(charMsg));
 		NetSendCmdString(0xFFFFFF, charMsg);

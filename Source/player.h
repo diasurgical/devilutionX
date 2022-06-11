@@ -742,6 +742,11 @@ struct Player {
 	{
 		return this->plrIsOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);
 	}
+	/** @brief Checks if the player is on a arena level. */
+	bool isOnArenaLevel() const
+	{
+		return plrIsOnSetLevel && IsArenaLevel(static_cast<_setlevels>(plrlevel));
+	}
 	void setLevel(uint8_t level)
 	{
 		this->plrlevel = level;

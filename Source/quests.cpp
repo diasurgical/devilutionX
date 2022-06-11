@@ -514,6 +514,13 @@ void SetReturnLvlPos()
 		break;
 	case SL_NONE:
 		break;
+	default:
+		if (IsArenaLevel(setlvlnum)) {
+			ReturnLvlPosition = Towners[TOWN_DRUNK].position + Displacement { 1, 0 };
+			ReturnLevel = 0;
+			ReturnLevelType = DTYPE_TOWN;
+		}
+		break;
 	}
 }
 
