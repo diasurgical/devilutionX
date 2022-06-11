@@ -29,708 +29,680 @@ bool lockout[DMAXX][DMAXY];
  */
 const BYTE L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
 /** Miniset: Stairs up. */
-const BYTE L3UP[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	 8,  8, 0, // search
-	10, 10, 0,
-	 7,  7, 0,
-
-	51, 50, 0, // replace
-	48, 49, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset L3UP {
+	{ 3, 3 },
+	{
+	    { 8, 8, 0 },
+	    { 10, 10, 0 },
+	    { 7, 7, 0 },
+	},
+	{
+	    { 51, 50, 0 },
+	    { 48, 49, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE L6UP[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	 8,  8, 0, // search
-	10, 10, 0,
-	 7,  7, 0,
-
-	20, 19, 0, // replace
-	17, 18, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset L6UP {
+	{ 3, 3 },
+	{
+	    { 8, 8, 0 },
+	    { 10, 10, 0 },
+	    { 7, 7, 0 },
+	},
+	{
+	    { 20, 19, 0 },
+	    { 17, 18, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Stairs down. */
-const BYTE L3DOWN[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	8, 9, 7, // search
-	8, 9, 7,
-	0, 0, 0,
-
-	0, 47, 0, // replace
-	0, 46, 0,
-	0,  0, 0,
-	// clang-format on
+const Miniset L3DOWN {
+	{ 3, 3 },
+	{
+	    { 8, 9, 7 },
+	    { 8, 9, 7 },
+	    { 0, 0, 0 },
+	},
+	{
+	    { 0, 47, 0 },
+	    { 0, 46, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE L6DOWN[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	8, 9, 7, // search
-	8, 9, 7,
-	0, 0, 0,
-
-	0, 16, 0, // replace
-	0, 15, 0,
-	0,  0, 0,
-	// clang-format on
+const Miniset L6DOWN {
+	{ 3, 3 },
+	{
+	    { 8, 9, 7 },
+	    { 8, 9, 7 },
+	    { 0, 0, 0 },
+	},
+	{
+	    { 0, 16, 0 },
+	    { 0, 15, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Stairs up to town. */
-const BYTE L3HOLDWARP[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	 8,  8, 0, // search
-	10, 10, 0,
-	 7,  7, 0,
-
-	125, 125, 0, // replace
-	125, 125, 0,
-	  0,   0, 0,
-	// clang-format on
+const Miniset L3HOLDWARP {
+	{ 3, 3 },
+	{
+	    { 8, 8, 0 },
+	    { 10, 10, 0 },
+	    { 7, 7, 0 },
+	},
+	{
+	    { 125, 125, 0 },
+	    { 125, 125, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE L6HOLDWARP[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	 8,  8, 0, // search
-	10, 10, 0,
-	 7,  7, 0,
-
-	24, 23, 0, // replace
-	21, 22, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset L6HOLDWARP {
+	{ 3, 3 },
+	{
+	    { 8, 8, 0 },
+	    { 10, 10, 0 },
+	    { 7, 7, 0 },
+	},
+	{
+	    { 24, 23, 0 },
+	    { 21, 22, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite white stalactite 1. */
-const BYTE L3TITE1[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	0,  0,  0, 0, // replace
-	0, 57, 58, 0,
-	0, 56, 55, 0,
-	0,  0,  0, 0,
-	// clang-format on
+const Miniset L3TITE1 {
+	{ 4, 4 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 0, 57, 58, 0 },
+	    { 0, 56, 55, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite white stalactite 2. */
-const BYTE L3TITE2[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	0,  0,  0, 0, // replace
-	0, 61, 62, 0,
-	0, 60, 59, 0,
-	0,  0,  0, 0,
-	// clang-format on
+const Miniset L3TITE2 {
+	{ 4, 4 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 0, 61, 62, 0 },
+	    { 0, 60, 59, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite white stalactite 3. */
-const BYTE L3TITE3[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	0,  0,  0, 0, // replace
-	0, 65, 66, 0,
-	0, 64, 63, 0,
-	0,  0,  0, 0,
-	// clang-format on
+const Miniset L3TITE3 {
+	{ 4, 4 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 0, 65, 66, 0 },
+	    { 0, 64, 63, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite white stalactite horizontal. */
-const BYTE L3TITE6[] = {
-	// clang-format off
-	5, 4, // width, height
-
-	7, 7, 7, 7, 7, // search
-	7, 7, 7, 0, 7,
-	7, 7, 7, 0, 7,
-	7, 7, 7, 7, 7,
-
-	0,  0,  0,  0, 0, // replace
-	0, 77, 78,  0, 0,
-	0, 76, 74, 75, 0,
-	0,  0,  0,  0, 0,
-	// clang-format on
+const Miniset L3TITE6 {
+	{ 5, 4 },
+	{
+	    { 7, 7, 7, 7, 7 },
+	    { 7, 7, 7, 0, 7 },
+	    { 7, 7, 7, 0, 7 },
+	    { 7, 7, 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0, 0, 0 },
+	    { 0, 77, 78, 0, 0 },
+	    { 0, 76, 74, 75, 0 },
+	    { 0, 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite white stalactite vertical. */
-const BYTE L3TITE7[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 0, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	0,  0,  0, 0, // replace
-	0, 83,  0, 0,
-	0, 82, 80, 0,
-	0, 81, 79, 0,
-	0,  0,  0, 0,
-	// clang-format on
+const Miniset L3TITE7 {
+	{ 4, 5 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 0, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 0, 83, 0, 0 },
+	    { 0, 82, 80, 0 },
+	    { 0, 81, 79, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite 1. */
-const BYTE L3TITE8[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	0,  0, 0, // replace
-	0, 52, 0,
-	0,  0, 0,
-	// clang-format on
+const Miniset L3TITE8 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 52, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite 2. */
-const BYTE L3TITE9[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	0,  0, 0, // replace
-	0, 53, 0,
-	0,  0, 0,
-	// clang-format on
+const Miniset L3TITE9 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 53, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite 3. */
-const BYTE L3TITE10[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	0,  0, 0, // replace
-	0, 54, 0,
-	0,  0, 0,
-	// clang-format on
+const Miniset L3TITE10 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 54, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite 4. */
-const BYTE L3TITE11[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	0,  0, 0, // replace
-	0, 67, 0,
-	0,  0, 0,
-	// clang-format on
+const Miniset L3TITE11 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 67, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Stalagmite on vertical wall. */
-const BYTE L3TITE12[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	9, 7, // search
-
-	68, 0, // replace
-	// clang-format on
+const Miniset L3TITE12 {
+	{ 2, 1 },
+	{ { 9, 7 } },
+	{ { 68, 0 } }
 };
 /** Miniset: Stalagmite on horizontal wall. */
-const BYTE L3TITE13[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	10, // search
-	 7,
-
-	69, // replace
-	 0,
-	// clang-format on
+const Miniset L3TITE13 {
+	{ 1, 2 },
+	{
+	    { 10 },
+	    { 7 },
+	},
+	{
+	    { 69 },
+	    { 0 },
+	}
 };
 /** Miniset: Cracked vertical wall 1. */
-const BYTE L3CREV1[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	8, 7, // search
-
-	84, 85, // replace
-	// clang-format on
+const Miniset L3CREV1 {
+	{ 2, 1 },
+	{ { 8, 7 } },
+	{ { 84, 85 } }
 };
 /** Miniset: Cracked vertical wall - north corner. */
-const BYTE L3CREV2[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	8, 11, // search
-
-	86, 87, // replace
-	// clang-format on
+const Miniset L3CREV2 {
+	{ 2, 1 },
+	{ { 8, 11 } },
+	{ { 86, 87 } }
 };
 /** Miniset: Cracked horizontal wall 1. */
-const BYTE L3CREV3[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	 8, // search
-	10,
-
-	89, // replace
-	88,
-	// clang-format on
+const Miniset L3CREV3 {
+	{ 1, 2 },
+	{
+	    { 8 },
+	    { 10 },
+	},
+	{
+	    { 89 },
+	    { 88 },
+	}
 };
 /** Miniset: Cracked vertical wall 2. */
-const BYTE L3CREV4[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	8, 7, // search
-
-	90, 91, // replace
-	// clang-format on
+const Miniset L3CREV4 {
+	{ 2, 1 },
+	{ { 8, 7 } },
+	{ { 90, 91 } }
 };
 /** Miniset: Cracked horizontal wall - north corner. */
-const BYTE L3CREV5[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	 8, // search
-	11,
-
-	92, // replace
-	93,
-	// clang-format on
+const Miniset L3CREV5 {
+	{ 1, 2 },
+	{
+	    { 8 },
+	    { 11 },
+	},
+	{
+	    { 92 },
+	    { 93 },
+	}
 };
 /** Miniset: Cracked horizontal wall 2. */
-const BYTE L3CREV6[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	 8, // search
-	10,
-
-	95, // replace
-	94,
-	// clang-format on
+const Miniset L3CREV6 {
+	{ 1, 2 },
+	{
+	    { 8 },
+	    { 10 },
+	},
+	{
+	    { 95 },
+	    { 94 },
+	}
 };
 /** Miniset: Cracked vertical wall - west corner. */
-const BYTE L3CREV7[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	8, 7, // search
-
-	96, 101, // replace
-	// clang-format on
+const Miniset L3CREV7 {
+	{ 2, 1 },
+	{ { 8, 7 } },
+	{ { 96, 101 } }
 };
 /** Miniset: Cracked horizontal wall - north. */
-const BYTE L3CREV8[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	2, // search
-	8,
-
-	102, // replace
-	 97,
-	// clang-format on
+const Miniset L3CREV8 {
+	{ 1, 2 },
+	{
+	    { 2 },
+	    { 8 },
+	},
+	{
+	    { 102 },
+	    { 97 },
+	}
 };
 /** Miniset: Cracked vertical wall - east corner. */
-const BYTE L3CREV9[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	3, 8, // search
-
-	103, 98, // replace
-	// clang-format on
+const Miniset L3CREV9 {
+	{ 2, 1 },
+	{ { 3, 8 } },
+	{ { 103, 98 } }
 };
 /** Miniset: Cracked vertical wall - west. */
-const BYTE L3CREV10[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	4, 8, // search
-
-	104, 99, // replace
-	// clang-format on
+const Miniset L3CREV10 {
+	{ 2, 1 },
+	{ { 4, 8 } },
+	{ { 104, 99 } }
 };
 /** Miniset: Cracked horizontal wall - south corner. */
-const BYTE L3CREV11[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	6, // search
-	8,
-
-	105, // replace
-	100,
-	// clang-format on
+const Miniset L3CREV11 {
+	{ 1, 2 },
+	{
+	    { 6 },
+	    { 8 },
+	},
+	{
+	    { 105 },
+	    { 100 },
+	}
 };
 /** Miniset: Replace broken wall with floor 1. */
-const BYTE L3ISLE1[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	5, 14, // search
-	4,  9,
-	13, 12,
-
-	7, 7, // replace
-	7, 7,
-	7, 7,
-	// clang-format on
+const Miniset L3ISLE1 {
+	{ 2, 3 },
+	{
+	    { 5, 14 },
+	    { 4, 9 },
+	    { 13, 12 },
+	},
+	{
+	    { 7, 7 },
+	    { 7, 7 },
+	    { 7, 7 },
+	}
 };
 /** Miniset: Replace small wall with floor 2. */
-const BYTE L3ISLE2[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	 5,  2, 14, // search
-	13, 10, 12,
-
-	7, 7, 7, // replace
-	7, 7, 7,
-	// clang-format on
+const Miniset L3ISLE2 {
+	{ 3, 2 },
+	{
+	    { 5, 2, 14 },
+	    { 13, 10, 12 },
+	},
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	}
 };
 /** Miniset: Replace small wall with lava 1. */
-const BYTE L3ISLE3[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	 5, 14, // search
-	 4,  9,
-	13, 12,
-
-	29, 30, // replace
-	25, 28,
-	31, 32,
-	// clang-format on
+const Miniset L3ISLE3 {
+	{ 2, 3 },
+	{
+	    { 5, 14 },
+	    { 4, 9 },
+	    { 13, 12 },
+	},
+	{
+	    { 29, 30 },
+	    { 25, 28 },
+	    { 31, 32 },
+	}
 };
 /** Miniset: Replace small wall with lava 2. */
-const BYTE L3ISLE4[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	 5,  2, 14, // search
-	13, 10, 12,
-
-	29, 26, 30, // replace
-	31, 27, 32,
-	// clang-format on
+const Miniset L3ISLE4 {
+	{ 3, 2 },
+	{
+	    { 5, 2, 14 },
+	    { 13, 10, 12 },
+	},
+	{
+	    { 29, 26, 30 },
+	    { 31, 27, 32 },
+	}
 };
 /** Miniset: Replace small wall with floor 3. */
-const BYTE L3ISLE5[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	 5, 14, // search
-	13, 12,
-
-	7, 7, // replace
-	7, 7,
-	// clang-format on
+const Miniset L3ISLE5 {
+	{ 2, 2 },
+	{
+	    { 5, 14 },
+	    { 13, 12 },
+	},
+	{
+	    { 7, 7 },
+	    { 7, 7 },
+	}
 };
-const BYTE HivePattern9[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	0,   0, 0, // replace
-	0, 126, 0,
-	0,   0, 0,
-	// clang-format on
+const Miniset HivePattern9 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 126, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern10[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	0,   0, 0, // replace
-	0, 124, 0,
-	0,   0, 0,
-	// clang-format on
+const Miniset HivePattern10 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 124, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern29[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	67,  0, 0, // replace
-	66, 51, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern29 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 67, 0, 0 },
+	    { 66, 51, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern30[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	69,  0, 0, // replace
-	68, 52, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern30 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 69, 0, 0 },
+	    { 68, 52, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern31[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	70,  0, 0, // replace
-	71, 53, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern31 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 70, 0, 0 },
+	    { 71, 53, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern32[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	73,  0, 0, // replace
-	72, 54, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern32 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 73, 0, 0 },
+	    { 72, 54, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern33[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	75,  0, 0, // replace
-	74, 55, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern33 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 75, 0, 0 },
+	    { 74, 55, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern34[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	77,  0, 0, // replace
-	76, 56, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern34 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 77, 0, 0 },
+	    { 76, 56, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern35[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	79,  0, 0, // replace
-	78, 57, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern35 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 79, 0, 0 },
+	    { 78, 57, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern36[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	81,  0, 0, // replace
-	80, 58, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern36 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 81, 0, 0 },
+	    { 80, 58, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern37[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	83,  0, 0, // replace
-	82, 59, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern37 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 83, 0, 0 },
+	    { 82, 59, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE HivePattern38[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	7, 7, 7, // search
-	7, 7, 7,
-	7, 7, 7,
-
-	84,  0, 0, // replace
-	85, 60, 0,
-	 0,  0, 0,
-	// clang-format on
+const Miniset HivePattern38 {
+	{ 3, 3 },
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	},
+	{
+	    { 84, 0, 0 },
+	    { 85, 60, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE L6ISLE1[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	 5, 14, // search
-	 4,  9,
-	13, 12,
-
-	7, 7, // replace
-	7, 7,
-	7, 7,
-	// clang-format on
+const Miniset L6ISLE1 {
+	{ 2, 3 },
+	{
+	    { 5, 14 },
+	    { 4, 9 },
+	    { 13, 12 },
+	},
+	{
+	    { 7, 7 },
+	    { 7, 7 },
+	    { 7, 7 },
+	}
 };
-const BYTE L6ISLE2[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	 5,  2, 14, // search
-	13, 10, 12,
-
-	7, 7, 7, // replace
-	7, 7, 7,
-	// clang-format on
+const Miniset L6ISLE2 {
+	{ 3, 2 },
+	{
+	    { 5, 2, 14 },
+	    { 13, 10, 12 },
+	},
+	{
+	    { 7, 7, 7 },
+	    { 7, 7, 7 },
+	}
 };
-const BYTE L6ISLE3[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	 5, 14, // search
-	 4,  9,
-	13, 12,
-
-	107, 115, // replace
-	119, 122,
-	131, 123,
-	// clang-format on
+const Miniset L6ISLE3 {
+	{ 2, 3 },
+	{
+	    { 5, 14 },
+	    { 4, 9 },
+	    { 13, 12 },
+	},
+	{
+	    { 107, 115 },
+	    { 119, 122 },
+	    { 131, 123 },
+	}
 };
-const BYTE L6ISLE4[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	 5,  2, 14, // search
-	13, 10, 12,
-
-	107, 120, 115, // replace
-	131, 121, 123,
-	// clang-format on
+const Miniset L6ISLE4 {
+	{ 3, 2 },
+	{
+	    { 5, 2, 14 },
+	    { 13, 10, 12 },
+	},
+	{
+	    { 107, 120, 115 },
+	    { 131, 121, 123 },
+	}
 };
-const BYTE L6ISLE5[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	 5, 14, // search
-	13, 12,
-
-	7, 7, // replace
-	7, 7,
-	// clang-format on
+const Miniset L6ISLE5 {
+	{ 2, 2 },
+	{
+	    { 5, 14 },
+	    { 13, 12 },
+	},
+	{
+	    { 7, 7 },
+	    { 7, 7 },
+	}
 };
-const BYTE HivePattern39[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	7,   7,   7, 7, // replace
-	7, 107, 115, 7,
-	7, 131, 123, 7,
-	7,   7,   7, 7,
-	// clang-format on
+const Miniset HivePattern39 {
+	{ 4, 4 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 107, 115, 7 },
+	    { 7, 131, 123, 7 },
+	    { 7, 7, 7, 7 },
+	}
 };
-const BYTE HivePattern40[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	7,   7,   7, 7, // replace
-	7,   7, 108, 7,
-	7, 109, 112, 7,
-	7,   7,   7, 7,
-	// clang-format on
+const Miniset HivePattern40 {
+	{ 4, 4 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 108, 7 },
+	    { 7, 109, 112, 7 },
+	    { 7, 7, 7, 7 },
+	}
 };
-const BYTE HivePattern41[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	7,   7,   7, 7, // replace
-	7, 107, 115, 7,
-	7, 119, 122, 7,
-	7, 131, 123, 7,
-	7,   7,   7, 7,
-	// clang-format on
+const Miniset HivePattern41 {
+	{ 4, 5 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 107, 115, 7 },
+	    { 7, 119, 122, 7 },
+	    { 7, 131, 123, 7 },
+	    { 7, 7, 7, 7 },
+	}
 };
-const BYTE HivePattern42[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	7, 7, 7, 7, // search
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-	7, 7, 7, 7,
-
-	7,   7,   7, 7, // replace
-	7, 126, 108, 7,
-	7,   7, 117, 7,
-	7, 109, 112, 7,
-	7,   7,   7, 7,
-	// clang-format on
+const Miniset HivePattern42 {
+	{ 4, 5 },
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	    { 7, 7, 7, 7 },
+	},
+	{
+	    { 7, 7, 7, 7 },
+	    { 7, 126, 108, 7 },
+	    { 7, 7, 117, 7 },
+	    { 7, 109, 112, 7 },
+	    { 7, 7, 7, 7 },
+	}
 };
 
 void InitDungeonFlags()
@@ -1403,74 +1375,105 @@ bool Spawn(int x, int y, int *totarea)
 	return false;
 }
 
-bool HivePlaceSetRandom(const BYTE *miniset, int rndper)
+bool PlaceMiniSet(const Miniset &miniset, bool setview)
 {
-	bool placed = false;
-	int sw = miniset[0];
-	int sh = miniset[1];
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
+	int sx = GenerateRnd(DMAXX - sw) - 1;
+	int sy = GenerateRnd(DMAXY - sh);
 
+	for (int bailcnt = 0;; bailcnt++) {
+		if (bailcnt > 198)
+			return false;
+
+		sx++;
+		if (sx == DMAXX - sw) {
+			sx = 0;
+			sy++;
+			if (sy == DMAXY - sh) {
+				sy = 0;
+			}
+		}
+
+		if (SetPiecesRoom.Contains({ sx, sy }))
+			continue;
+		if (miniset.matches({ sx, sy }))
+			break;
+	}
+
+	miniset.place({ sx, sy });
+
+	if (setview) {
+		ViewPosition = Point { 17, 19 } + Displacement { sx, sy } * 2;
+	}
+
+	return true;
+}
+
+bool CanReplaceTile(uint8_t replace, Point tile)
+{
+	if (replace < 84 || replace > 100) {
+		return true;
+	}
+
+	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
+	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
+		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
+		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)
+		    && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
+	};
+	if (ComparisonWithBoundsCheck(tile + Direction::NorthWest, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::SouthEast, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::SouthWest, tile + Direction::NorthWest)
+	    || ComparisonWithBoundsCheck(tile + Direction::NorthEast, tile + Direction::NorthWest)) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * @brief Randomly places the given miniset throughout the dungeon wherever it would fit
+ * @return true if at least one instance was placed
+ */
+bool PlaceMiniSetRandom(const Miniset &miniset, int rndper)
+{
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
+
+	bool placed = false;
 	for (int sy = 0; sy < DMAXX - sh; sy++) {
 		for (int sx = 0; sx < DMAXY - sw; sx++) {
-			bool found = true;
-			int ii = 2;
-			for (int yy = 0; yy < sh && found; yy++) {
-				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = false;
-					}
-					if (Protected[xx + sx][yy + sy]) {
-						found = false;
-					}
-					ii++;
-				}
-			}
-			int kk = sw * sh + 2;
-			if (found) {
-				if (miniset[kk] >= 84 && miniset[kk] <= 100) {
-					// BUGFIX: accesses to dungeon can go out of bounds
-					// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84.
-					if (dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (dungeon[sx + 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (dungeon[sx][sy + 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-					if (dungeon[sx][sy - 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
-						found = false;
-					}
-				}
-			}
-			if (found && GenerateRnd(100) < rndper) {
-				placed = true;
-				for (int yy = 0; yy < sh; yy++) {
-					for (int xx = 0; xx < sw; xx++) {
-						if (miniset[kk] != 0) {
-							dungeon[xx + sx][yy + sy] = miniset[kk];
-						}
-						kk++;
-					}
-				}
-			}
+			if (!miniset.matches({ sx, sy }))
+				continue;
+			if (!CanReplaceTile(miniset.replace[0][0], { sx, sy }))
+				continue;
+			if (GenerateRnd(100) >= rndper)
+				continue;
+			miniset.place({ sx, sy });
+			placed = true;
 		}
 	}
 
 	return placed;
 }
 
+void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
+{
+	PlaceMiniSetRandom({ { 1, 1 }, { search }, { replace } }, rndper);
+}
+
 bool PlaceSlimePool()
 {
 	int lavapool = 0;
 
-	if (HivePlaceSetRandom(HivePattern41, 30))
+	if (PlaceMiniSetRandom(HivePattern41, 30))
 		lavapool++;
-	if (HivePlaceSetRandom(HivePattern42, 40))
+	if (PlaceMiniSetRandom(HivePattern42, 40))
 		lavapool++;
-	if (HivePlaceSetRandom(HivePattern39, 50))
+	if (PlaceMiniSetRandom(HivePattern39, 50))
 		lavapool++;
-	if (HivePlaceSetRandom(HivePattern40, 60))
+	if (PlaceMiniSetRandom(HivePattern40, 60))
 		lavapool++;
 
 	return lavapool >= 3;
@@ -1565,131 +1568,6 @@ void PoolFix()
 			}
 		}
 	}
-}
-
-bool PlaceMiniSet(const BYTE *miniset, bool setview)
-{
-	int sw = miniset[0];
-	int sh = miniset[1];
-	int sx = GenerateRnd(DMAXX - sw) - 1;
-	int sy = GenerateRnd(DMAXY - sh);
-
-	for (int bailcnt = 0;; bailcnt++) {
-		if (bailcnt > 198)
-			return false;
-
-		sx++;
-		if (sx == DMAXX - sw) {
-			sx = 0;
-			sy++;
-			if (sy == DMAXY - sh) {
-				sy = 0;
-			}
-		}
-
-		if (SetPiecesRoom.Contains({ sx, sy })) {
-			continue;
-		}
-
-		int ii = 2;
-
-		bool success = true;
-		for (int yy = 0; yy < sh && success; yy++) {
-			for (int xx = 0; xx < sw && success; xx++) {
-				if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
-					success = false;
-				if (Protected[xx + sx][sy + yy])
-					success = false;
-				ii++;
-			}
-		}
-		if (success)
-			break;
-	}
-
-	int ii = sw * sh + 2;
-
-	for (int yy = 0; yy < sh; yy++) {
-		for (int xx = 0; xx < sw; xx++) {
-			if (miniset[ii] != 0) {
-				dungeon[xx + sx][sy + yy] = miniset[ii];
-			}
-			ii++;
-		}
-	}
-
-	if (setview) {
-		ViewPosition = Point { 17, 19 } + Displacement { sx, sy } * 2;
-	}
-
-	return true;
-}
-
-bool CanReplaceTile(uint8_t replace, Point tile)
-{
-	if (replace < 84 || replace > 100) {
-		return true;
-	}
-
-	// BUGFIX: p2 is a workaround for a bug, only p1 should have been used (fixing this breaks compatability)
-	constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
-		return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY)
-		    && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY)
-		    && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
-	};
-	if (ComparisonWithBoundsCheck(tile + Direction::NorthWest, tile + Direction::NorthWest)
-	    || ComparisonWithBoundsCheck(tile + Direction::SouthEast, tile + Direction::NorthWest)
-	    || ComparisonWithBoundsCheck(tile + Direction::SouthWest, tile + Direction::NorthWest)
-	    || ComparisonWithBoundsCheck(tile + Direction::NorthEast, tile + Direction::NorthWest)) {
-		return false;
-	}
-
-	return true;
-}
-
-void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
-{
-	int sw = miniset[0];
-	int sh = miniset[1];
-
-	for (int sy = 0; sy < DMAXX - sh; sy++) {
-		for (int sx = 0; sx < DMAXY - sw; sx++) {
-			bool found = true;
-			int ii = 2;
-			for (int yy = 0; yy < sh && found; yy++) {
-				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = false;
-					}
-					if (Protected[xx + sx][yy + sy]) {
-						found = false;
-					}
-					ii++;
-				}
-			}
-			if (!found)
-				continue;
-			int kk = sw * sh + 2;
-			if (!CanReplaceTile(miniset[kk], { sx, sy }))
-				continue;
-			if (GenerateRnd(100) >= rndper)
-				continue;
-			for (int yy = 0; yy < sh; yy++) {
-				for (int xx = 0; xx < sw; xx++) {
-					if (miniset[kk] != 0) {
-						dungeon[xx + sx][yy + sy] = miniset[kk];
-					}
-					kk++;
-				}
-			}
-		}
-	}
-}
-
-void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
-{
-	uint8_t miniSet[4] { 1, 1, search, replace };
-	PlaceMiniSetRandom(miniSet, rndper);
 }
 
 bool FenceVerticalUp(int i, int y)
