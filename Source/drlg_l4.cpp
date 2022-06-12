@@ -194,9 +194,6 @@ bool PlaceMiniSet(const Miniset &miniset, bool setview)
 
 	miniset.place({ sx, sy }, true);
 
-	if (currlevel == 15 && Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
-		Quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
-	}
 	if (setview) {
 		ViewPosition = Point { 21, 22 } + Displacement { sx, sy } * 2;
 	}
@@ -1341,11 +1338,12 @@ void GenerateLevel(lvl_entry entry)
 	if (currlevel == 15) {
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) {
-				if (dungeon[i][j] == 98) {
+				if (IsAnyOf(dungeon[i][j], 98, 107)) {
 					Make_SetPC(i - 1, j - 1, 5, 5);
-				}
-				if (dungeon[i][j] == 107) {
-					Make_SetPC(i - 1, j - 1, 5, 5);
+					if (Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
+						// Set the portal position to the location of the northmost pentagram tile.
+						Quests[Q_BETRAYER].position = { i, j };
+					}
 				}
 			}
 		}
