@@ -162,11 +162,19 @@ struct Point {
 	}
 
 	/**
-	 * @brief Converte from mega tile cordinates to dungeon piece cordinates
+	 * @brief Converts a coordinate in megatiles to the northmost of the 4 corresponding world tiles
 	 */
-	constexpr Point megaToWorld()
+	constexpr Point megaToWorld() const
 	{
 		return { 16 + 2 * x, 16 + 2 * y };
+	}
+
+	/**
+	 * @brief Converts a coordinate in world tiles back to the corresponding megatile
+	 */
+	constexpr Point worldToMega() const
+	{
+		return { (x - 16) / 2, (y - 16) / 2 };
 	}
 
 #ifdef BUILD_TESTING
