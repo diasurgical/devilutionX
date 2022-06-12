@@ -6,7 +6,7 @@
 int main(int argc, char **argv)
 {
 	// Disable error dialogs.
-	devilution::gbQuietMode = true;
+	devilution::HeadlessMode = true;
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	// Disable hardware cursor while testing.

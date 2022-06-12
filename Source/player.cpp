@@ -375,7 +375,7 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 {
 	data = nullptr;
 	data = LoadFileInMem(path);
-	if (data == nullptr && gbQuietMode)
+	if (data == nullptr && HeadlessMode)
 		return;
 
 	const byte *directionFrames[8];

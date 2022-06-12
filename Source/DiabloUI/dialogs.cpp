@@ -153,7 +153,7 @@ void UiOkDialog(string_view caption, string_view text, bool error, const std::ve
 	}
 
 	if (!gbActive || inDialog) {
-		if (!gbQuietMode) {
+		if (!HeadlessMode) {
 			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
 				LogError("{}", SDL_GetError());
 			std::string captionStr = std::string(caption);

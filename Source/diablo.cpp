@@ -104,7 +104,7 @@ int force_redraw;
 int PauseMode;
 bool gbBard;
 bool gbBarbarian;
-bool gbQuietMode = false;
+bool HeadlessMode = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";
@@ -153,7 +153,7 @@ void StartGame(interface_mode uMsg)
 #ifdef _DEBUG
 	LoadDebugGFX();
 #endif
-	assert(gbQuietMode || ghMainWnd);
+	assert(HeadlessMode || ghMainWnd);
 	music_stop();
 	InitMonsterHealthBar();
 	InitXPBar();
@@ -693,7 +693,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		if (gbIsMultiplayer)
 			pfile_write_hero();
 		nthread_ignore_mutex(true);
-		if (!gbQuietMode) {
+		if (!HeadlessMode) {
 			PaletteFadeOut(8);
 			sound_stop();
 		}
@@ -701,7 +701,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		sgbMouseDown = CLICK_NONE;
 		ShowProgress((interface_mode)uMsg);
 		force_redraw = 255;
-		if (!gbQuietMode) {
+		if (!HeadlessMode) {
 			DrawAndBlit();
 			LoadPWaterPalette();
 			if (gbRunGame)
@@ -723,13 +723,13 @@ void RunGameLoop(interface_mode uMsg)
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
-	assert(gbQuietMode || ghMainWnd);
+	assert(HeadlessMode || ghMainWnd);
 	EventHandler previousHandler = SetEventHandler(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
 	gbProcessPlayers = true;
 	gbRunGameResult = true;
-	if (!gbQuietMode) {
+	if (!HeadlessMode) {
 		force_redraw = 255;
 		DrawAndBlit();
 		LoadPWaterPalette();
@@ -804,7 +804,7 @@ void RunGameLoop(interface_mode uMsg)
 		sfile_write_stash();
 	}
 
-	if (!gbQuietMode) {
+	if (!HeadlessMode) {
 		PaletteFadeOut(8);
 		NewCursor(CURSOR_NONE);
 		ClearScreenBuffer();
@@ -812,7 +812,7 @@ void RunGameLoop(interface_mode uMsg)
 		scrollrt_draw_game_screen();
 	}
 	previousHandler = SetEventHandler(previousHandler);
-	assert(gbQuietMode || previousHandler == GameEventHandler);
+	assert(HeadlessMode || previousHandler == GameEventHandler);
 	FreeGame();
 
 	if (cineflag) {
@@ -2307,7 +2307,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 	IncProgress();
 
-	if (firstflag && !gbQuietMode) {
+	if (firstflag && !HeadlessMode) {
 		InitControlPan();
 	}
 	IncProgress();

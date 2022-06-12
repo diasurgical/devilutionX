@@ -220,7 +220,7 @@ void interface_msg_pump()
 
 void IncProgress()
 {
-	if (gbQuietMode)
+	if (HeadlessMode)
 		return;
 	interface_msg_pump();
 	if (!IsProgress)
@@ -233,7 +233,7 @@ void IncProgress()
 
 void CompleteProgress()
 {
-	if (gbQuietMode)
+	if (HeadlessMode)
 		return;
 	if (!IsProgress)
 		return;
@@ -250,7 +250,7 @@ void ShowProgress(interface_mode uMsg)
 
 	EventHandler previousHandler = SetEventHandler(DisableInputEventHandler);
 
-	if (!gbQuietMode) {
+	if (!HeadlessMode) {
 		assert(ghMainWnd);
 
 		interface_msg_pump();
@@ -427,7 +427,7 @@ void ShowProgress(interface_mode uMsg)
 		break;
 	}
 
-	if (!gbQuietMode) {
+	if (!HeadlessMode) {
 		assert(ghMainWnd);
 
 		PaletteFadeOut(8);
