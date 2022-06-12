@@ -3263,14 +3263,14 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 	case WM_DIABPREVLVL:
 	case WM_DIABRTNLVL:
 	case WM_DIABTOWNWARP:
-		player.plrlevel = lvl;
+		player.setLevel(lvl);
 		break;
 	case WM_DIABSETLVL:
 		setlvlnum = (_setlevels)lvl;
 		break;
 	case WM_DIABTWARPUP:
 		myPlayer.pTownWarps |= 1 << (leveltype - 2);
-		player.plrlevel = lvl;
+		player.setLevel(lvl);
 		break;
 	case WM_DIABRETOWN:
 		break;
@@ -3296,7 +3296,7 @@ void RestartTownLvl(int pnum)
 	}
 	Player &player = Players[pnum];
 
-	player.plrlevel = 0;
+	player.setLevel(0);
 	player._pInvincible = false;
 
 	SetPlayerHitPoints(player, 64);
@@ -3321,9 +3321,9 @@ void StartWarpLvl(int pnum, int pidx)
 
 	if (gbIsMultiplayer) {
 		if (!player.isOnLevel(0)) {
-			player.plrlevel = 0;
+			player.setLevel(0);
 		} else {
-			player.plrlevel = Portals[pidx].level;
+			player.setLevel(Portals[pidx].level);
 		}
 	}
 

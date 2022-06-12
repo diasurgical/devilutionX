@@ -718,6 +718,14 @@ struct Player {
 	{
 		return this->plrlevel == level;
 	}
+	void setLevel(uint8_t level)
+	{
+		this->plrlevel = level;
+	}
+	void setLevel(_setlevels level)
+	{
+		this->plrlevel = static_cast<uint8_t>(level);
+	}
 };
 
 extern DVL_API_FOR_TEST int MyPlayerId;

@@ -358,7 +358,7 @@ void SetupLocalPositions()
 
 	myPlayer.position.tile = { x, y };
 	myPlayer.position.future = { x, y };
-	myPlayer.plrlevel = currlevel;
+	myPlayer.setLevel(currlevel);
 	myPlayer._pLvlChanging = true;
 	myPlayer.pLvlLoad = 0;
 	myPlayer._pmode = PM_NEWLVL;

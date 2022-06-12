@@ -218,7 +218,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 
 	player.position.tile = position;
 	player.position.future = position;
-	player.plrlevel = dungeonLevel;
+	player.setLevel(dungeonLevel);
 
 	player._pClass = heroClass;
 

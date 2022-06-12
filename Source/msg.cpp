@@ -1736,7 +1736,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 
 	if (player.plractive && MyPlayerId != pnum) {
 		player.position.tile = position;
-		player.plrlevel = playerLevel;
+		player.setLevel(playerLevel);
 		ResetPlayerGFX(player);
 		if (player.isOnActiveLevel()) {
 			SyncInitPlr(pnum);

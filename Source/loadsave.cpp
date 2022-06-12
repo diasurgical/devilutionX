@@ -322,7 +322,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.destParam2 = file.NextLE<int32_t>();
 	player.destParam3 = file.NextLE<int32_t>();
 	player.destParam4 = file.NextLE<int32_t>();
-	player.plrlevel = file.NextLE<uint32_t>();
+	player.setLevel(file.NextLE<uint32_t>());
 	player.position.tile.x = file.NextLE<int32_t>();
 	player.position.tile.y = file.NextLE<int32_t>();
 	player.position.future.x = file.NextLE<int32_t>();
