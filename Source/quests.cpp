@@ -133,7 +133,7 @@ void DrawButcher()
 
 void DrawSkelKing(quest_id q, Point position)
 {
-	Quests[q].position = { 2 * position.x + 28, 2 * position.y + 23 };
+	Quests[q].position = position.megaToWorld() + Displacement { 12, 7 };
 }
 
 void DrawWarLord(Point position)
@@ -179,7 +179,7 @@ void DrawSChamber(quest_id q, Point position)
 		}
 	}
 
-	Quests[q].position = { 2 * position.x + 22, 2 * position.y + 23 };
+	Quests[q].position = position.megaToWorld() + Displacement { 6, 7 };
 }
 
 void DrawLTBanner(Point position)
@@ -375,7 +375,7 @@ void CheckQuests()
 
 	auto &quest = Quests[Q_BETRAYER];
 	if (quest.IsAvailable() && gbIsMultiplayer && quest._qvar1 == 2) {
-		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
+		AddObject(OBJ_ALTBOY, Point(setpc_x, setpc_y).megaToWorld() + Displacement { 4, 6 });
 		quest._qvar1 = 3;
 		NetSendCmdQuest(true, quest);
 	}
@@ -389,11 +389,8 @@ void CheckQuests()
 	    && quest._qvar1 >= 2
 	    && (quest._qactive == QUEST_ACTIVE || quest._qactive == QUEST_DONE)
 	    && (quest._qvar2 == 0 || quest._qvar2 == 2)) {
-		quest.position.x = 2 * quest.position.x + 16;
-		quest.position.y = 2 * quest.position.y + 16;
-		int rportx = quest.position.x;
-		int rporty = quest.position.y;
-		AddMissile({ rportx, rporty }, { rportx, rporty }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		Point portalLocation = quest.position.megaToWorld();
+		AddMissile(portalLocation, portalLocation, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 1;
 		if (quest._qactive == QUEST_ACTIVE && quest._qvar1 == 2) {
 			quest._qvar1 = 3;
@@ -404,9 +401,8 @@ void CheckQuests()
 	    && setlevel
 	    && setlvlnum == SL_VILEBETRAYER
 	    && quest._qvar2 == 4) {
-		int rportx = 35;
-		int rporty = 32;
-		AddMissile({ rportx, rporty }, { rportx, rporty }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		Point portalLocation { 35, 32 };
+		AddMissile(portalLocation, portalLocation, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 3;
 	}
 
@@ -640,7 +636,7 @@ void ResyncMPQuests()
 		NetSendCmdQuest(true, betrayerQuest);
 	}
 	if (betrayerQuest.IsAvailable())
-		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
+		AddObject(OBJ_ALTBOY, Point(setpc_x, setpc_y).megaToWorld() + Displacement { 4, 6 });
 
 	auto &cryptQuest = Quests[Q_GRAVE];
 	if (cryptQuest._qactive == QUEST_INIT && currlevel == cryptQuest._qlevel - 1) {
