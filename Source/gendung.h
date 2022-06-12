@@ -294,16 +294,19 @@ constexpr bool IsTileLit(Point position)
 struct Miniset {
 	Size size;
 	/* these are indexed as [y][x] */
-	uint8_t search[5][5];
-	uint8_t replace[5][5];
+	uint8_t search[6][6];
+	uint8_t replace[6][6];
 
-	bool matches(Point position) const
+	/**
+	 * @param respectProtected Match bug from Crypt levels
+	 */
+	bool matches(Point position, bool respectProtected = true) const
 	{
 		for (int yy = 0; yy < size.height; yy++) {
 			for (int xx = 0; xx < size.width; xx++) {
 				if (search[yy][xx] != 0 && dungeon[xx + position.x][yy + position.y] != search[yy][xx])
 					return false;
-				if (Protected[xx + position.x][yy + position.y])
+				if (respectProtected && Protected[xx + position.x][yy + position.y])
 					return false;
 			}
 		}

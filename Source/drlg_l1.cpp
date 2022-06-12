@@ -140,271 +140,266 @@ const BYTE L5BTYPES[] = {
 	0, 0, 0, 0, 0, 0, 0
 };
 /** Miniset: stairs up on a corner wall. */
-const BYTE STAIRSUP[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	13, 13, 13, 13, // search
-	 2,  2,  2,  2,
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-
-	 0, 66,  6,  0, // replace
-	63, 64, 65,  0,
-	 0, 67, 68,  0,
-	 0,  0,  0,  0,
-	// clang-format on
+const Miniset STAIRSUP {
+	{ 4, 4 },
+	{
+	    { 13, 13, 13, 13 },
+	    { 2, 2, 2, 2 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	},
+	{
+	    { 0, 66, 6, 0 },
+	    { 63, 64, 65, 0 },
+	    { 0, 67, 68, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
-const BYTE L5STAIRSUPHF[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	22, 22, 22, 22, // search
-	22, 22, 22, 22,
-	 2,  2,  2,  2,
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-
-	 0, 54, 23,  0, // replace
-	 0, 53, 18,  0,
-	55, 56, 57,  0,
-	58, 59, 60,  0,
-	 0,  0,  0,  0
-	// clang-format on
+const Miniset L5STAIRSUPHF {
+	{ 4, 5 },
+	{
+	    { 22, 22, 22, 22 },
+	    { 22, 22, 22, 22 },
+	    { 2, 2, 2, 2 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	},
+	{
+	    { 0, 54, 23, 0 },
+	    { 0, 53, 18, 0 },
+	    { 55, 56, 57, 0 },
+	    { 58, 59, 60, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: stairs up. */
-const BYTE L5STAIRSUP[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	22, 22, 22, 22, // search
-	 2,  2,  2,  2,
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-
-	 0, 66, 23,  0, // replace
-	63, 64, 65,  0,
-	 0, 67, 68,  0,
-	 0,  0,  0,  0,
-	// clang-format on
+const Miniset L5STAIRSUP {
+	{ 4, 4 },
+	{
+	    { 22, 22, 22, 22 },
+	    { 2, 2, 2, 2 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	},
+	{
+	    { 0, 66, 23, 0 },
+	    { 63, 64, 65, 0 },
+	    { 0, 67, 68, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: stairs down. */
-const BYTE STAIRSDOWN[] = {
-	// clang-format off
-	4, 3, // width, height
-
-	13, 13, 13, 13, // search
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-
-	62, 57, 58,  0, // replace
-	61, 59, 60,  0,
-	 0,  0,  0,  0,
-	// clang-format on
+const Miniset STAIRSDOWN {
+	{ 4, 3 },
+	{
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	},
+	{
+	    { 62, 57, 58, 0 },
+	    { 61, 59, 60, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
-const BYTE L5STAIRSDOWN[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	13, 13, 13, 13, // search
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-
-	 0,  0, 52,  0, // replace
-	 0, 48, 51,  0,
-	 0, 47, 50,  0,
-	45, 46, 49,  0,
-	 0,  0,  0,  0,
-	// clang-format on
+const Miniset L5STAIRSDOWN {
+	{ 4, 5 },
+	{
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 52, 0 },
+	    { 0, 48, 51, 0 },
+	    { 0, 47, 50, 0 },
+	    { 45, 46, 49, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
-const BYTE L5STAIRSTOWN[] = {
-	// clang-format off
-	4, 5, // width, height
-
-	22, 22, 22, 22, // search
-	22, 22, 22, 22,
-	 2,  2,  2,  2,
-	13, 13, 13, 13,
-	13, 13, 13, 13,
-
-	 0, 62, 23,  0, // replace
-	 0, 61, 18,  0,
-	63, 64, 65,  0,
-	66, 67, 68,  0,
-	 0,  0,  0,  0,
-	// clang-format on
+const Miniset L5STAIRSTOWN {
+	{ 4, 5 },
+	{
+	    { 22, 22, 22, 22 },
+	    { 22, 22, 22, 22 },
+	    { 2, 2, 2, 2 },
+	    { 13, 13, 13, 13 },
+	    { 13, 13, 13, 13 },
+	},
+	{
+	    { 0, 62, 23, 0 },
+	    { 0, 61, 18, 0 },
+	    { 63, 64, 65, 0 },
+	    { 66, 67, 68, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: candlestick. */
-const BYTE LAMPS[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	13,  0, // search
-	13, 13,
-
-	129,   0, // replace
-	130, 128,
-	// clang-format on
+const Miniset LAMPS {
+	{ 2, 2 },
+	{
+	    { 13, 0 },
+	    { 13, 13 },
+	},
+	{
+	    { 129, 0 },
+	    { 130, 128 },
+	}
 };
 /** Miniset: Poisoned Water Supply entrance. */
-const BYTE PWATERIN[] = {
-	// clang-format off
-	6, 6, // width, height
-
-	13, 13, 13, 13, 13, 13, // search
-	13, 13, 13, 13, 13, 13,
-	13, 13, 13, 13, 13, 13,
-	13, 13, 13, 13, 13, 13,
-	13, 13, 13, 13, 13, 13,
-	13, 13, 13, 13, 13, 13,
-
-	 0,   0,   0,   0,   0, 0, // replace
-	 0, 202, 200, 200,  84, 0,
-	 0, 199, 203, 203,  83, 0,
-	 0,  85, 206,  80,  81, 0,
-	 0,   0, 134, 135,   0, 0,
-	 0,   0,   0,   0,   0, 0,
-	// clang-format on
+const Miniset PWATERIN {
+	{ 6, 6 },
+	{
+	    { 13, 13, 13, 13, 13, 13 },
+	    { 13, 13, 13, 13, 13, 13 },
+	    { 13, 13, 13, 13, 13, 13 },
+	    { 13, 13, 13, 13, 13, 13 },
+	    { 13, 13, 13, 13, 13, 13 },
+	    { 13, 13, 13, 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0, 0, 0, 0 },
+	    { 0, 202, 200, 200, 84, 0 },
+	    { 0, 199, 203, 203, 83, 0 },
+	    { 0, 85, 206, 80, 81, 0 },
+	    { 0, 0, 134, 135, 0, 0 },
+	    { 0, 0, 0, 0, 0, 0 },
+	}
 };
-const BYTE VWallSection[8] = {
-	// clang-format off
-	1, 3, // width, height
-
-	1, // search
-	1,
-	1,
-
-	91, // replace
-	90,
-	89,
-	// clang-format on
+const Miniset VWallSection {
+	{ 1, 3 },
+	{
+	    { 1 },
+	    { 1 },
+	    { 1 },
+	},
+	{
+	    { 91 },
+	    { 90 },
+	    { 89 },
+	}
 };
-const BYTE HWallSection[8] = {
-	// clang-format off
-	3, 1, // width, height
-
-	 2,  2,  2, // search
-
-	94, 93, 92, // replace
-	// clang-format on
+const Miniset HWallSection {
+	{ 3, 1 },
+	{ { 2, 2, 2 } },
+	{ { 94, 93, 92 } }
 };
-const BYTE CryptFloorLave[20] = {
-	// clang-format off
-	3, 3, // width, height
-
-	13, 13, 13, // search
-	13, 13, 13,
-	13, 13, 13,
-
-	0,   0, 0, // replace
-	0, 101, 0,
-	0,   0, 0,
-	// clang-format on
+const Miniset CryptFloorLave {
+	{ 3, 3 },
+	{
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 101, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE CryptPillar1[24] = {
-	// clang-format off
-	3, 3, // width, height
-
-	13, 13, 13, // search
-	13, 13, 13,
-	13, 13, 13,
-
-	0,   0, 0, // replace
-	0, 167, 0,
-	0,   0, 0,
-	// clang-format on
+const Miniset CryptPillar1 {
+	{ 3, 3 },
+	{
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 167, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE CryptPillar2[24] = {
-	// clang-format off
-	3, 3, // width, height
-
-	13, 13, 13, // search
-	13, 13, 13,
-	13, 13, 13,
-
-	0,   0, 0, // replace
-	0, 168, 0,
-	0,   0, 0,
-	// clang-format on
+const Miniset CryptPillar2 {
+	{ 3, 3 },
+	{
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 168, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE CryptPillar3[24] = {
-	// clang-format off
-	3, 3, // width, height
-
-	13, 13, 13, // search
-	13, 13, 13,
-	13, 13, 13,
-
-	0,   0, 0, // replace
-	0, 169, 0,
-	0,   0, 0,
+const Miniset CryptPillar3 {
+	{ 3, 3 },
+	{
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 169, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE CryptPillar4[24] = {
-	// clang-format off
-	3, 3, // width, height
-
-	13, 13, 13, // search
-	13, 13, 13,
-	13, 13, 13,
-
-	0,   0, 0, // replace
-	0, 170, 0,
-	0,   0, 0,
-	// clang-format on
+const Miniset CryptPillar4 {
+	{ 3, 3 },
+	{
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 170, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE CryptPillar5[24] = {
-	// clang-format off
-	3, 3, // width, height
-
-	13, 13, 13, // search
-	13, 13, 13,
-	13, 13, 13,
-
-	0,   0, 0, // replace
-	0, 171, 0,
-	0,   0, 0,
-	// clang-format on
+const Miniset CryptPillar5 {
+	{ 3, 3 },
+	{
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 171, 0 },
+	    { 0, 0, 0 },
+	}
 };
-const BYTE CryptStar[20] = {
-	// clang-format off
-	3, 3, // width, height
-
-	13, 13, 13, // search
-	13, 13, 13,
-	13, 13, 13,
-
-	 0,   0, 0, // replace
-	 0, 172, 0,
-	 0,   0, 0,
-	// clang-format on
+const Miniset CryptStar {
+	{ 3, 3 },
+	{
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	    { 13, 13, 13 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 172, 0 },
+	    { 0, 0, 0 },
+	}
 };
 
-/* data */
-
-BYTE UberRoomPattern[26] = {
-	// clang-format off
-	4, 6, // width, height
-
-	115, 130,   6, 13, // pattern
-	129, 108,   1, 13,
-	  1, 107, 103, 13,
-	146, 106, 102, 13,
-	129, 168,   1, 13,
-	  7,   2,   3, 13,
-	// clang-format on
+const Miniset UberRoomPattern {
+	{ 4, 6 },
+	{},
+	{
+	    { 115, 130, 6, 13 },
+	    { 129, 108, 1, 13 },
+	    { 1, 107, 103, 13 },
+	    { 146, 106, 102, 13 },
+	    { 129, 168, 1, 13 },
+	    { 7, 2, 3, 13 },
+	}
 };
-BYTE CornerstoneRoomPattern[27] = {
-	// clang-format off
-	5, 5, // width, height
-
-	4,   2,   2, 2,  6, // pattern
-	1, 111, 172, 0,  1,
-	1, 172,   0, 0, 25,
-	1,   0,   0, 0,  1,
-	7,   2,   2, 2,  3,
-	// clang-format on
+const Miniset CornerstoneRoomPattern {
+	{ 5, 5 },
+	{},
+	{
+	    { 4, 2, 2, 2, 6 },
+	    { 1, 111, 172, 13, 1 },
+	    { 1, 172, 13, 13, 25 },
+	    { 1, 13, 13, 13, 1 },
+	    { 7, 2, 2, 2, 3 },
+	}
 };
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
@@ -746,10 +741,10 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const BYTE *miniset, bool setview)
+bool PlaceMiniSet(const Miniset &miniset, bool setview)
 {
-	int sw = miniset[0];
-	int sh = miniset[1];
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
 	int sx = GenerateRnd(DMAXX - sw) - 1;
 	int sy = GenerateRnd(DMAXY - sh);
 
@@ -766,10 +761,6 @@ bool PlaceMiniSet(const BYTE *miniset, bool setview)
 			}
 		}
 
-		if (SetPiecesRoom.Contains({ sx, sy })) {
-			continue;
-		}
-
 		// Limit the position of SetPieces for compatibility with Diablo bug
 		bool valid = true;
 		if (sx <= 12) {
@@ -784,34 +775,15 @@ bool PlaceMiniSet(const BYTE *miniset, bool setview)
 			continue;
 		}
 
-		int ii = 2;
-
-		bool success = true;
-		for (int yy = 0; yy < sh && success; yy++) {
-			for (int xx = 0; xx < sw && success; xx++) {
-				if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
-					success = false;
-				if (Protected[xx + sx][sy + yy])
-					success = false;
-				ii++;
-			}
-		}
-		if (success)
+		if (SetPiecesRoom.Contains({ sx, sy }))
+			continue;
+		if (miniset.matches({ sx, sy }))
 			break;
 	}
 
-	int ii = sw * sh + 2;
+	miniset.place({ sx, sy });
 
-	for (int yy = 0; yy < sh; yy++) {
-		for (int xx = 0; xx < sw; xx++) {
-			if (miniset[ii] != 0) {
-				dungeon[xx + sx][sy + yy] = miniset[ii];
-			}
-			ii++;
-		}
-	}
-
-	if (miniset == PWATERIN) {
+	if (&miniset == &PWATERIN) {
 		int8_t t = TransVal;
 		TransVal = 0;
 		DRLG_MRectTrans(sx, sy + 2, sx + 5, sy + 4);
@@ -849,47 +821,27 @@ bool CanReplaceTile(uint8_t replace, Point tile)
 	return true;
 }
 
-void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
+void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
-	int sw = miniset[0];
-	int sh = miniset[1];
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
 
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
-			bool found = true;
-			int ii = 2;
-			for (int yy = 0; yy < sh && found; yy++) {
-				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = false;
-					}
-					// BUGFIX: Check if tile is Protected (fixing this breaks compatability)
-					ii++;
-				}
-			}
-			if (!found)
+			if (!miniset.matches({ sx, sy }, false))
 				continue;
-			int kk = sw * sh + 2;
-			if (!CanReplaceTile(miniset[kk], { sx, sy }))
+			if (!CanReplaceTile(miniset.replace[0][0], { sx, sy }))
 				continue;
 			if (GenerateRnd(100) >= rndper)
 				continue;
-			for (int yy = 0; yy < sh; yy++) {
-				for (int xx = 0; xx < sw; xx++) {
-					if (miniset[kk] != 0) {
-						dungeon[xx + sx][yy + sy] = miniset[kk];
-					}
-					kk++;
-				}
-			}
+			miniset.place({ sx, sy });
 		}
 	}
 }
 
 void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 {
-	uint8_t miniSet[4] { 1, 1, search, replace };
-	PlaceMiniSetRandom(miniSet, rndper);
+	PlaceMiniSetRandom({ { 1, 1 }, { search }, { replace } }, rndper);
 }
 
 void FillFloor()
@@ -1563,27 +1515,12 @@ void FixTilesPatterns()
 
 void SetCornerRoom(int rx1, int ry1)
 {
-	int rw = CornerstoneRoomPattern[0];
-	int rh = CornerstoneRoomPattern[1];
-
 	setpc_x = rx1;
 	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
+	setpc_w = CornerstoneRoomPattern.size.width;
+	setpc_h = CornerstoneRoomPattern.size.height;
 
-	int sp = 2;
-
-	for (int j = 0; j < rh; j++) {
-		for (int i = 0; i < rw; i++) {
-			if (CornerstoneRoomPattern[sp] != 0) {
-				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
-				Protected[rx1 + i][ry1 + j] = true;
-			} else {
-				dungeon[rx1 + i][ry1 + j] = Tile::Floor;
-			}
-			sp++;
-		}
-	}
+	CornerstoneRoomPattern.place({ rx1, ry1 }, true);
 }
 
 void Substitution()
@@ -1653,31 +1590,16 @@ void SetRoom(int rx1, int ry1)
 
 void SetCryptRoom(int rx1, int ry1)
 {
-	int rw = UberRoomPattern[0];
-	int rh = UberRoomPattern[1];
-
 	UberRow = 2 * rx1 + 6;
 	UberCol = 2 * ry1 + 8;
 	setpc_x = rx1;
 	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
+	setpc_w = UberRoomPattern.size.width;
+	setpc_h = UberRoomPattern.size.height;
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
-	int sp = 2;
-
-	for (int j = 0; j < rh; j++) {
-		for (int i = 0; i < rw; i++) {
-			if (UberRoomPattern[sp] != 0) {
-				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
-				Protected[rx1 + i][ry1 + j] = true;
-			} else {
-				dungeon[rx1 + i][ry1 + j] = Tile::Floor;
-			}
-			sp++;
-		}
-	}
+	UberRoomPattern.place({ rx1, ry1 }, true);
 }
 
 void FillChambers()
