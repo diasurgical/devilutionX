@@ -1578,7 +1578,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
-			if (SetPiecesRoom.Contains({ sx, sy }))
+			if (SetPieceRoom.Contains({ sx, sy }))
 				continue;
 			if (!miniset.matches({ sx, sy }))
 				continue;
@@ -1611,8 +1611,6 @@ void LoadQuestSetPieces()
 
 	if (Quests[Q_BLIND].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
-		pSetPiece[13] = SDL_SwapLE16(154);  // Close outer wall
-		pSetPiece[100] = SDL_SwapLE16(154); // Close outer wall
 		setloadflag = true;
 	} else if (Quests[Q_BLOOD].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood1.DUN");
@@ -1829,7 +1827,7 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 	DefineRoom(nRx1, nRy1, nRx2, nRy2, forceHW);
 
 	if (forceHW) {
-		SetPiecesRoom = { { nRx1 + 2, nRy1 + 2 }, { nRx2 - nRx1 - 1, nRy2 - nRy1 - 1 } };
+		SetPieceRoom = { { nRx1 + 2, nRy1 + 2 }, { nRx2 - nRx1 - 1, nRy2 - nRy1 - 1 } };
 	}
 
 	int nRid = nRoomCnt;
@@ -2133,7 +2131,7 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if (SetPiecesRoom.Contains({ x, y }))
+			if (SetPieceRoom.Contains({ x, y }))
 				continue;
 			if (GenerateRnd(4) != 0)
 				continue;
@@ -2164,31 +2162,6 @@ void Substitution()
 				if (j < y + 3) {
 					dungeon[x][y] = i;
 				}
-			}
-		}
-	}
-}
-
-void SetRoom(Point position)
-{
-	int width = SDL_SwapLE16(pSetPiece[0]);
-	int height = SDL_SwapLE16(pSetPiece[1]);
-
-	setpc_x = position.x;
-	setpc_y = position.y;
-	setpc_w = width;
-	setpc_h = height;
-
-	uint16_t *tileLayer = &pSetPiece[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			if (tileId != 0) {
-				dungeon[position.x + i][position.y + j] = tileId;
-				Protected[position.x + i][position.y + j] = true;
-			} else {
-				dungeon[position.x + i][position.y + j] = 3;
 			}
 		}
 	}
@@ -2776,7 +2749,8 @@ void GenerateLevel(lvl_entry entry)
 		}
 		FixTilesPatterns();
 		if (setloadflag) {
-			SetRoom(SetPiecesRoom.position);
+			PlaceDunTiles(pSetPiece.get(), SetPieceRoom.position, 3);
+			SetPiece = { SetPieceRoom.position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
 		}
 		FloodTransparencyValues(3);
 		FixTransparency();
@@ -2907,7 +2881,7 @@ void GenerateLevel(lvl_entry entry)
 	}
 
 	DRLG_Init_Globals();
-	DRLG_CheckQuests(SetPiecesRoom.position);
+	DRLG_CheckQuests(SetPieceRoom.position);
 }
 
 void LoadDungeonData(const uint16_t *dunData)
@@ -2918,27 +2892,10 @@ void LoadDungeonData(const uint16_t *dunData)
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 12;
-			Protected[i][j] = false;
 		}
 	}
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
-			tileLayer++;
-			if (tileId != 0) {
-				dungeon[i][j] = tileId;
-				Protected[i][j] = true;
-			} else {
-				dungeon[i][j] = 3;
-			}
-		}
-	}
+	PlaceDunTiles(dunData, { 0, 0 }, 3);
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
@@ -2959,7 +2916,6 @@ void Pass3()
 void LoadL2Dungeon(const char *path, int vx, int vy)
 {
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
 	LoadDungeonData(dunData.get());
 
 	Pass3();
@@ -2969,16 +2925,14 @@ void LoadL2Dungeon(const char *path, int vx, int vy)
 
 	ViewPosition = { vx, vy };
 
-	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
 	SetMapObjects(dunData.get(), 0, 0);
 }
 
 void LoadPreL2Dungeon(const char *path)
 {
-	{
-		auto dunData = LoadFileInMem<uint16_t>(path);
-		LoadDungeonData(dunData.get());
-	}
+	auto dunData = LoadFileInMem<uint16_t>(path);
+	LoadDungeonData(dunData.get());
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
