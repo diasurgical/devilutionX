@@ -73,6 +73,18 @@ Item ItemLimbo;
 /** @brief Last sent player command for the local player. */
 TCmdLocParam4 lastSentPlayerCmd;
 
+/** @brief Gets a delta level. */
+DLevel &GetDeltaLevel(uint8_t level)
+{
+	return sgLevels[level];
+}
+
+/** @brief Gets a delta level. */
+DLevel &GetDeltaLevel(const Player &player)
+{
+	return GetDeltaLevel(player.plrlevel);
+}
+
 /**
  * @brief Throttles that a player command is only sent once per game tick.
  * This is a workaround for a desync that happens when a command is processed in different game ticks for different clients. See https://github.com/diasurgical/devilutionX/issues/2681 for details.
@@ -362,9 +374,10 @@ void DeltaImportData(_cmd_id cmd, DWORD recvOffset)
 		DeltaImportJunk(src);
 	} else if (cmd >= CMD_DLEVEL_0 && cmd <= CMD_DLEVEL_24) {
 		uint8_t i = cmd - CMD_DLEVEL_0;
-		src += DeltaImportItem(src, sgLevels[i].item);
-		src += DeltaImportObject(src, sgLevels[i].object);
-		DeltaImportMonster(src, sgLevels[i].monster);
+		DLevel &deltaLevel = GetDeltaLevel(i);
+		src += DeltaImportItem(src, deltaLevel.item);
+		src += DeltaImportObject(src, deltaLevel.object);
+		DeltaImportMonster(src, deltaLevel.monster);
 	} else {
 		app_fatal("Unkown network message type: %i", cmd);
 	}
@@ -420,7 +433,7 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr &monster = sgLevels[level].monster[pnum];
+	DMonsterStr &monster = GetDeltaLevel(level).monster[pnum];
 	monster._mx = message._mx;
 	monster._my = message._my;
 	monster._mactive = UINT8_MAX;
@@ -438,13 +451,15 @@ void DeltaLeaveSync(uint8_t bLevel)
 		return;
 	}
 
+	DLevel &deltaLevel = GetDeltaLevel(bLevel);
+
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
 		auto &monster = Monsters[ma];
 		if (monster._mhitpoints == 0)
 			continue;
 		sgbDeltaChanged = true;
-		DMonsterStr &delta = sgLevels[bLevel].monster[ma];
+		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta._mx = monster.position.tile.x;
 		delta._my = monster.position.tile.y;
 		delta._mdir = monster._mdir;
@@ -462,7 +477,7 @@ void DeltaSyncObject(int oi, _cmd_id bCmd, uint8_t bLevel)
 		return;
 
 	sgbDeltaChanged = true;
-	sgLevels[bLevel].object[oi].bCmd = bCmd;
+	GetDeltaLevel(bLevel).object[oi].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -470,7 +485,9 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 	if (!gbIsMultiplayer)
 		return true;
 
-	for (TCmdPItem &item : sgLevels[bLevel].item) {
+	DLevel &deltaLevel = GetDeltaLevel(bLevel);
+
+	for (TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd == CMD_INVALID || item.wIndx != message.wIndx || item.wCI != message.wCI || item.dwSeed != message.dwSeed)
 			continue;
 
@@ -494,7 +511,7 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 	if ((message.wCI & CF_PREGEN) == 0)
 		return false;
 
-	for (TCmdPItem &item : sgLevels[bLevel].item) {
+	for (TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
 			item.bCmd = TCmdPItem::PickedUpItem;
@@ -527,7 +544,9 @@ void DeltaPutItem(const TCmdPItem &message, Point position, uint8_t bLevel)
 	if (!gbIsMultiplayer)
 		return;
 
-	for (const TCmdPItem &item : sgLevels[bLevel].item) {
+	DLevel &deltaLevel = GetDeltaLevel(bLevel);
+
+	for (const TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd != TCmdPItem::PickedUpItem
 		    && item.bCmd != CMD_INVALID
 		    && item.wIndx == message.wIndx
@@ -539,7 +558,7 @@ void DeltaPutItem(const TCmdPItem &message, Point position, uint8_t bLevel)
 		}
 	}
 
-	for (TCmdPItem &item : sgLevels[bLevel].item) {
+	for (TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
 			memcpy(&item, &message, sizeof(TCmdPItem));
@@ -2084,9 +2103,10 @@ void DeltaExportData(int pnum)
 		for (int i = 0; i < NUMLEVELS; i++) {
 			std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1] };
 			byte *dstEnd = &dst.get()[1];
-			dstEnd = DeltaExportItem(dstEnd, sgLevels[i].item);
-			dstEnd = DeltaExportObject(dstEnd, sgLevels[i].object);
-			dstEnd = DeltaExportMonster(dstEnd, sgLevels[i].monster);
+			DLevel &deltaLevel = sgLevels[i];
+			dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
+			dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
+			dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
 			uint32_t size = CompressData(dst.get(), dstEnd);
 			dthread_send_delta(pnum, static_cast<_cmd_id>(i + CMD_DLEVEL_0), std::move(dst), size);
 		}
@@ -2117,7 +2137,7 @@ void delta_kill_monster(int mi, Point position, uint8_t bLevel)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &sgLevels[bLevel].monster[mi];
+	DMonsterStr *pD = &GetDeltaLevel(bLevel).monster[mi];
 	pD->_mx = position.x;
 	pD->_my = position.y;
 	pD->_mdir = Monsters[mi]._mdir;
@@ -2130,7 +2150,7 @@ void delta_monster_hp(int mi, int hp, uint8_t bLevel)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &sgLevels[bLevel].monster[mi];
+	DMonsterStr *pD = &GetDeltaLevel(bLevel).monster[mi];
 	if (pD->_mhitpoints > hp)
 		pD->_mhitpoints = hp;
 }
@@ -2143,7 +2163,7 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	assert(level < NUMLEVELS);
 	sgbDeltaChanged = true;
 
-	DMonsterStr &monster = sgLevels[level].monster[monsterSync._mndx];
+	DMonsterStr &monster = GetDeltaLevel(level).monster[monsterSync._mndx];
 	if (monster._mhitpoints == 0)
 		return;
 
@@ -2190,7 +2210,9 @@ void DeltaAddItem(int ii)
 	if (!gbIsMultiplayer)
 		return;
 
-	for (const TCmdPItem &item : sgLevels[currlevel].item) {
+	DLevel &deltaLevel = GetDeltaLevel(currlevel);
+
+	for (const TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd != CMD_INVALID
 		    && item.wIndx == Items[ii].IDidx
 		    && item.wCI == Items[ii]._iCreateInfo
@@ -2200,7 +2222,7 @@ void DeltaAddItem(int ii)
 		}
 	}
 
-	for (TCmdPItem &item : sgLevels[currlevel].item) {
+	for (TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd != CMD_INVALID)
 			continue;
 
@@ -2270,23 +2292,24 @@ void DeltaLoadLevel()
 		return;
 
 	deltaload = true;
+	DLevel &deltaLevel = GetDeltaLevel(currlevel);
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < ActiveMonsterCount; i++) {
-			if (sgLevels[currlevel].monster[i]._mx == 0xFF)
+			if (deltaLevel.monster[i]._mx == 0xFF)
 				continue;
 
 			M_ClearSquares(i);
-			int x = sgLevels[currlevel].monster[i]._mx;
-			int y = sgLevels[currlevel].monster[i]._my;
+			int x = deltaLevel.monster[i]._mx;
+			int y = deltaLevel.monster[i]._my;
 			auto &monster = Monsters[i];
 			monster.position.tile = { x, y };
 			monster.position.old = { x, y };
 			monster.position.future = { x, y };
-			if (sgLevels[currlevel].monster[i]._mhitpoints != -1) {
-				monster._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
-				monster.mWhoHit = sgLevels[currlevel].monster[i].mWhoHit;
+			if (deltaLevel.monster[i]._mhitpoints != -1) {
+				monster._mhitpoints = deltaLevel.monster[i]._mhitpoints;
+				monster.mWhoHit = deltaLevel.monster[i].mWhoHit;
 			}
-			if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
+			if (deltaLevel.monster[i]._mhitpoints == 0) {
 				M_ClearSquares(i);
 				if (monster._mAi != AI_DIABLO) {
 					if (monster._uniqtype == 0) {
@@ -2299,7 +2322,7 @@ void DeltaLoadLevel()
 				monster._mDelFlag = true;
 				M_UpdateLeader(i);
 			} else {
-				decode_enemy(monster, sgLevels[currlevel].monster[i]._menemy);
+				decode_enemy(monster, deltaLevel.monster[i]._menemy);
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
 					dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 				if (monster.MType->mtype == MT_GOLEM) {
@@ -2308,21 +2331,21 @@ void DeltaLoadLevel()
 				} else {
 					M_StartStand(monster, monster._mdir);
 				}
-				monster._msquelch = sgLevels[currlevel].monster[i]._mactive;
+				monster._msquelch = deltaLevel.monster[i]._mactive;
 			}
 		}
 		memcpy(AutomapView, &sgLocals[currlevel], sizeof(AutomapView));
 	}
 
 	for (int i = 0; i < MAXITEMS; i++) {
-		if (sgLevels[currlevel].item[i].bCmd == CMD_INVALID)
+		if (deltaLevel.item[i].bCmd == CMD_INVALID)
 			continue;
 
-		if (sgLevels[currlevel].item[i].bCmd == TCmdPItem::PickedUpItem) {
+		if (deltaLevel.item[i].bCmd == TCmdPItem::PickedUpItem) {
 			int activeItemIndex = FindGetItem(
-			    sgLevels[currlevel].item[i].dwSeed,
-			    sgLevels[currlevel].item[i].wIndx,
-			    sgLevels[currlevel].item[i].wCI);
+			    deltaLevel.item[i].dwSeed,
+			    deltaLevel.item[i].wIndx,
+			    deltaLevel.item[i].wCI);
 			if (activeItemIndex != -1) {
 				const auto &position = Items[ActiveItems[activeItemIndex]].position;
 				if (dItem[position.x][position.y] == ActiveItems[activeItemIndex] + 1)
@@ -2330,46 +2353,46 @@ void DeltaLoadLevel()
 				DeleteItem(activeItemIndex);
 			}
 		}
-		if (sgLevels[currlevel].item[i].bCmd == TCmdPItem::DroppedItem) {
+		if (deltaLevel.item[i].bCmd == TCmdPItem::DroppedItem) {
 			int ii = AllocateItem();
 			auto &item = Items[ii];
 
-			if (sgLevels[currlevel].item[i].wIndx == IDI_EAR) {
+			if (deltaLevel.item[i].wIndx == IDI_EAR) {
 				RecreateEar(
 				    item,
-				    sgLevels[currlevel].item[i].wCI,
-				    sgLevels[currlevel].item[i].dwSeed,
-				    sgLevels[currlevel].item[i].bId,
-				    sgLevels[currlevel].item[i].bDur,
-				    sgLevels[currlevel].item[i].bMDur,
-				    sgLevels[currlevel].item[i].bCh,
-				    sgLevels[currlevel].item[i].bMCh,
-				    sgLevels[currlevel].item[i].wValue,
-				    sgLevels[currlevel].item[i].dwBuff);
+				    deltaLevel.item[i].wCI,
+				    deltaLevel.item[i].dwSeed,
+				    deltaLevel.item[i].bId,
+				    deltaLevel.item[i].bDur,
+				    deltaLevel.item[i].bMDur,
+				    deltaLevel.item[i].bCh,
+				    deltaLevel.item[i].bMCh,
+				    deltaLevel.item[i].wValue,
+				    deltaLevel.item[i].dwBuff);
 			} else {
 				RecreateItem(
 				    item,
-				    sgLevels[currlevel].item[i].wIndx,
-				    sgLevels[currlevel].item[i].wCI,
-				    sgLevels[currlevel].item[i].dwSeed,
-				    sgLevels[currlevel].item[i].wValue,
-				    (sgLevels[currlevel].item[i].dwBuff & CF_HELLFIRE) != 0);
-				if (sgLevels[currlevel].item[i].bId != 0)
+				    deltaLevel.item[i].wIndx,
+				    deltaLevel.item[i].wCI,
+				    deltaLevel.item[i].dwSeed,
+				    deltaLevel.item[i].wValue,
+				    (deltaLevel.item[i].dwBuff & CF_HELLFIRE) != 0);
+				if (deltaLevel.item[i].bId != 0)
 					item._iIdentified = true;
-				item._iDurability = sgLevels[currlevel].item[i].bDur;
-				item._iMaxDur = sgLevels[currlevel].item[i].bMDur;
-				item._iCharges = sgLevels[currlevel].item[i].bCh;
-				item._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
-				item._iPLToHit = sgLevels[currlevel].item[i].wToHit;
-				item._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
-				item._iMinStr = sgLevels[currlevel].item[i].bMinStr;
-				item._iMinMag = sgLevels[currlevel].item[i].bMinMag;
-				item._iMinDex = sgLevels[currlevel].item[i].bMinDex;
-				item._iAC = sgLevels[currlevel].item[i].bAC;
-				item.dwBuff = sgLevels[currlevel].item[i].dwBuff;
+				item._iDurability = deltaLevel.item[i].bDur;
+				item._iMaxDur = deltaLevel.item[i].bMDur;
+				item._iCharges = deltaLevel.item[i].bCh;
+				item._iMaxCharges = deltaLevel.item[i].bMCh;
+				item._iPLToHit = deltaLevel.item[i].wToHit;
+				item._iMaxDam = deltaLevel.item[i].wMaxDam;
+				item._iMinStr = deltaLevel.item[i].bMinStr;
+				item._iMinMag = deltaLevel.item[i].bMinMag;
+				item._iMinDex = deltaLevel.item[i].bMinDex;
+				item._iAC = deltaLevel.item[i].bAC;
+				item.dwBuff = deltaLevel.item[i].dwBuff;
 			}
-			int x = sgLevels[currlevel].item[i].x;
-			int y = sgLevels[currlevel].item[i].y;
+			int x = deltaLevel.item[i].x;
+			int y = deltaLevel.item[i].y;
 			item.position = GetItemPosition({ x, y });
 			dItem[item.position.x][item.position.y] = ii + 1;
 			RespawnItem(Items[ii], false);
@@ -2378,12 +2401,12 @@ void DeltaLoadLevel()
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < MAXOBJECTS; i++) {
-			switch (sgLevels[currlevel].object[i].bCmd) {
+			switch (deltaLevel.object[i].bCmd) {
 			case CMD_OPENDOOR:
 			case CMD_CLOSEDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				SyncOpObject(-1, sgLevels[currlevel].object[i].bCmd, i);
+				SyncOpObject(-1, deltaLevel.object[i].bCmd, i);
 				break;
 			case CMD_BREAKOBJ:
 				SyncBreakObj(-1, Objects[i]);
