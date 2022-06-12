@@ -8,6 +8,7 @@
 
 #include <fmt/format.h>
 #include <list>
+#include <unordered_map>
 
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
@@ -76,6 +77,10 @@ struct DLevel {
 };
 
 struct LocalLevel {
+	LocalLevel(const uint8_t (&other)[DMAXX][DMAXY])
+	{
+		memcpy(&automapsv, &other, sizeof(automapsv));
+	}
 	uint8_t automapsv[DMAXX][DMAXY];
 };
 
@@ -104,11 +109,11 @@ struct DJunk {
 uint32_t sgdwOwnerWait;
 uint32_t sgdwRecvOffset;
 int sgnCurrMegaPlayer;
-DLevel sgLevels[NUMLEVELS];
+std::unordered_map<uint8_t, DLevel> DeltaLevels;
 uint8_t sbLastCmd;
 byte sgRecvBuf[sizeof(DLevel) + 1];
 _cmd_id sgbRecvCmd;
-LocalLevel sgLocals[NUMLEVELS];
+std::unordered_map<uint8_t, LocalLevel> LocalLevels;
 DJunk sgJunk;
 bool sgbDeltaChanged;
 uint8_t sgbDeltaChunks;
@@ -121,7 +126,14 @@ TCmdLocParam4 lastSentPlayerCmd;
 /** @brief Gets a delta level. */
 DLevel &GetDeltaLevel(uint8_t level)
 {
-	return sgLevels[level];
+	auto keyIt = DeltaLevels.find(level);
+	if (keyIt != DeltaLevels.end())
+		return keyIt->second;
+	auto emplaceRet = DeltaLevels.emplace(level, DLevel {});
+	assert(emplaceRet.second);
+	DLevel &deltaLevel = emplaceRet.first->second;
+	memset(&deltaLevel, 0xFF, sizeof(DLevel));
+	return deltaLevel;
 }
 
 /** @brief Gets a delta level. */
@@ -513,7 +525,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 		delta._mactive = monster._msquelch;
 		delta.mWhoHit = monster.mWhoHit;
 	}
-	memcpy(&sgLocals[bLevel].automapsv, AutomapView, sizeof(AutomapView));
+	LocalLevels.insert_or_assign(bLevel, AutomapView);
 }
 
 void DeltaSyncObject(int oi, _cmd_id bCmd, uint8_t bLevel)
@@ -2145,15 +2157,15 @@ void run_delta_info()
 void DeltaExportData(int pnum)
 {
 	if (sgbDeltaChanged) {
-		for (int i = 0; i < NUMLEVELS; i++) {
+		for (auto &it : DeltaLevels) {
 			std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1] };
 			byte *dstEnd = &dst.get()[1];
-			DLevel &deltaLevel = sgLevels[i];
+			DLevel &deltaLevel = it.second;
 			dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
 			dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
 			dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
 			uint32_t size = CompressData(dst.get(), dstEnd);
-			dthread_send_delta(pnum, static_cast<_cmd_id>(i + CMD_DLEVEL_0), std::move(dst), size);
+			dthread_send_delta(pnum, static_cast<_cmd_id>(it.first + CMD_DLEVEL_0), std::move(dst), size);
 		}
 
 		std::unique_ptr<byte[]> dst { new byte[sizeof(DJunk) + 1] };
@@ -2171,8 +2183,8 @@ void delta_init()
 {
 	sgbDeltaChanged = false;
 	memset(&sgJunk, 0xFF, sizeof(sgJunk));
-	memset(sgLevels, 0xFF, sizeof(sgLevels));
-	memset(sgLocals, 0, sizeof(sgLocals));
+	DeltaLevels.clear();
+	LocalLevels.clear();
 	deltaload = false;
 }
 
@@ -2379,7 +2391,11 @@ void DeltaLoadLevel()
 				monster._msquelch = deltaLevel.monster[i]._mactive;
 			}
 		}
-		memcpy(AutomapView, &sgLocals[currlevel], sizeof(AutomapView));
+		auto localLevelIt = LocalLevels.find(currlevel);
+		if (localLevelIt != LocalLevels.end())
+			memcpy(AutomapView, &localLevelIt->second, sizeof(AutomapView));
+		else
+			memset(AutomapView, 0, sizeof(AutomapView));
 	}
 
 	for (int i = 0; i < MAXITEMS; i++) {
