@@ -169,6 +169,14 @@ struct Point {
 		return { 16 + 2 * x, 16 + 2 * y };
 	}
 
+	/**
+	 * @brief Converts a coordinate in world tiles back to the corresponding megatile
+	 */
+	constexpr Point worldToMega() const
+	{
+		return { (x - 16) / 2, (y - 16) / 2 };
+	}
+
 #ifdef BUILD_TESTING
 	/**
 	 * @brief Format points nicely in test failure messages
