@@ -582,7 +582,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		Player &player = Players[i];
-		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == currlevel && player.position.tile == tilePosition) {
+		if (player.plractive && player._pHitPoints == 0 && player.isOnActiveLevel() && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
 			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
 			DrawPlayer(out, i, tilePosition, playerRenderPosition);

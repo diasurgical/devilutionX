@@ -54,7 +54,7 @@ void InvalidateTargets()
 	if (pcursplr != -1) {
 		Player &targetPlayer = Players[pcursplr];
 		if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
-		    || currlevel != targetPlayer.plrlevel || targetPlayer._pHitPoints >> 6 <= 0
+		    || !targetPlayer.isOnActiveLevel() || targetPlayer._pHitPoints >> 6 <= 0
 		    || !IsTileLit(targetPlayer.position.tile))
 			pcursplr = -1;
 	}

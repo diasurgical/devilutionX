@@ -68,7 +68,7 @@ void PlacePlayer(int pnum)
 {
 	Player &player = Players[pnum];
 
-	if (player.plrlevel != currlevel)
+	if (!player.isOnActiveLevel())
 		return;
 
 	Point newPosition = [&]() {
@@ -291,7 +291,7 @@ void DoResurrect(int pnum, uint16_t rid)
 
 	CalcPlrInv(target, true);
 
-	if (target.plrlevel == currlevel) {
+	if (target.isOnActiveLevel()) {
 		StartStand(rid, target._pdir);
 	} else {
 		target._pmode = PM_STAND;

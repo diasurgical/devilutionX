@@ -895,7 +895,7 @@ void ToggleLighting()
 
 	memcpy(dLight, dPreLight, sizeof(dLight));
 	for (const Player &player : Players) {
-		if (player.plractive && player.plrlevel == currlevel) {
+		if (player.plractive && player.isOnActiveLevel()) {
 			DoLighting(player.position.tile, player._pLightRad, -1);
 		}
 	}
@@ -1136,7 +1136,7 @@ void ProcessVisionList()
 			doautomap = MAP_EXP_OTHERS;
 			for (const Player &player : Players) {
 				// Find player for this vision
-				if (!player.plractive || player.plrlevel != currlevel || player._pvid != vision._lid)
+				if (!player.plractive || !player.isOnActiveLevel() || player._pvid != vision._lid)
 					continue;
 				// Check that player allows automap sharing
 				if (!player.friendlyMode)
