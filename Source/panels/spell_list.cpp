@@ -163,7 +163,7 @@ void DrawSpellList(const Surface &out)
 			InfoString = fmt::format(fmt::runtime(_("{:s} Skill")), pgettext("spell", spellDataItem.sSkillText));
 			break;
 		case RSPLTYPE_SPELL:
-			if (myPlayer.plrlevel != 0) {
+			if (!myPlayer.isOnLevel(0)) {
 				spellColor = PAL16_BLUE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
@@ -177,7 +177,7 @@ void DrawSpellList(const Surface &out)
 				AddPanelString(fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
 			break;
 		case RSPLTYPE_SCROLL: {
-			if (myPlayer.plrlevel != 0) {
+			if (!myPlayer.isOnLevel(0)) {
 				spellColor = PAL16_RED - 59;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), spellColor);
@@ -189,7 +189,7 @@ void DrawSpellList(const Surface &out)
 			AddPanelString(fmt::format(fmt::runtime(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount)), scrollCount));
 		} break;
 		case RSPLTYPE_CHARGES: {
-			if (myPlayer.plrlevel != 0) {
+			if (!myPlayer.isOnLevel(0)) {
 				spellColor = PAL16_ORANGE + 5;
 			}
 			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);

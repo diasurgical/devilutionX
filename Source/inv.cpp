@@ -1760,7 +1760,7 @@ bool CanPut(Point position, Direction dir)
 
 int InvPutItem(Player &player, Point position, Item &item)
 {
-	if (player.plrlevel == 0) {
+	if (player.isOnLevel(0)) {
 		if (item.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
 			OpenHive();
 			return -1;
@@ -1794,7 +1794,7 @@ int InvPutItem(Player &player, Point position, Item &item)
 
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
-	if (player.plrlevel == 0) {
+	if (player.isOnLevel(0)) {
 		if (idx == IDI_RUNEBOMB && OpensHive(position))
 			return -1;
 		if (idx == IDI_MAPOFDOOM && OpensGrave(position))
@@ -2047,7 +2047,7 @@ bool UseInvItem(int pnum, int cii)
 		return true;
 	}
 
-	if (player.plrlevel == 0) {
+	if (player.isOnLevel(0)) {
 		if (UseItemOpensHive(*item, player.position.tile)) {
 			OpenHive();
 			player.RemoveInvItem(c);

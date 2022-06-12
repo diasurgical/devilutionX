@@ -712,6 +712,12 @@ struct Player {
 	{
 		return currlevel == this->plrlevel;
 	}
+
+	/** @brief Checks if the player is on the correspondig level. */
+	bool isOnLevel(uint8_t level) const
+	{
+		return this->plrlevel == level;
+	}
 };
 
 extern DVL_API_FOR_TEST int MyPlayerId;
