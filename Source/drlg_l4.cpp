@@ -1289,20 +1289,16 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
-	constexpr int Minarea = 173;
-	int ar;
 	while (true) {
 		DRLG_InitTrans();
 
+		constexpr int Minarea = 173;
 		do {
 			InitDungeonFlags();
 			FirstRoom();
 			FixRim();
-			ar = GetArea();
-			if (ar >= Minarea) {
-				UShape();
-			}
-		} while (ar < Minarea);
+		} while (GetArea() < Minarea);
+		UShape();
 
 		MakeDungeon();
 		MakeDmt();
