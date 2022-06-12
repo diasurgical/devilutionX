@@ -97,11 +97,8 @@ struct ScrollStruct {
 };
 
 struct THEME_LOC {
-	int16_t x;
-	int16_t y;
+	Rectangle room;
 	int16_t ttval;
-	int16_t width;
-	int16_t height;
 };
 
 struct MegaTile {
@@ -131,15 +128,9 @@ extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 extern uint8_t pdungeon[DMAXX][DMAXY];
 /** Tile that may not be overwritten by the level generator */
 extern bool Protected[DMAXX][DMAXY];
-extern Rectangle SetPiecesRoom;
-/** Specifies the active set level X-coordinate of the map. */
-extern int setpc_x;
-/** Specifies the active set level Y-coordinate of the map. */
-extern int setpc_y;
-/** Specifies the width of the active set level of the map. */
-extern int setpc_w;
-/** Specifies the height of the active set level of the map. */
-extern int setpc_h;
+extern Rectangle SetPieceRoom;
+/** Specifies the active set quest piece in coordinate. */
+extern Rectangle SetPiece;
 /** Contains the contents of the single player quest DUN file. */
 extern std::unique_ptr<uint16_t[]> pSetPiece;
 /** Specifies whether a single player quest DUN has been loaded. */
@@ -330,17 +321,19 @@ struct Miniset {
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();
-void DRLG_MRectTrans(int x1, int y1, int x2, int y2);
-void DRLG_RectTrans(int x1, int y1, int x2, int y2);
+void DRLG_MRectTrans(Point origin, Point extent);
+void DRLG_MRectTrans(Rectangle area);
+void DRLG_RectTrans(Rectangle area);
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
-void Make_SetPC(int x, int y, int w, int h);
+void Make_SetPC(Rectangle area);
 /**
  * @param tries Tiles to try, 1600 will scan the full map
  * @param drlg1Quirk Match buggy behaviour of Diablo's Cathedral
  */
-std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 198, bool drlg1Quirk = false);
+std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 199, bool drlg1Quirk = false);
+void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId = 0);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
 void DRLG_LPass3(int lv);

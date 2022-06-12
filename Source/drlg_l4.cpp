@@ -14,20 +14,15 @@
 
 namespace devilution {
 
-int diabquad1x;
-int diabquad1y;
-int diabquad2x;
-int diabquad2y;
-int diabquad3x;
-int diabquad3y;
-int diabquad4x;
-int diabquad4y;
+Point DiabloQuad1;
+Point DiabloQuad2;
+Point DiabloQuad3;
+Point DiabloQuad4;
 
 namespace {
 
 bool hallok[20];
-int l4holdx;
-int l4holdy;
+Point L4Hold;
 BYTE L4dungeon[80][80];
 BYTE dung[20][20];
 // int dword_52A4DC;
@@ -195,26 +190,6 @@ void InitDungeonFlags()
 	}
 }
 
-void SetRoom(const uint16_t *dunData, Point position)
-{
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			if (tileId != 0) {
-				dungeon[position.x + i][position.y + j] = tileId;
-				Protected[position.x + i][position.y + j] = true;
-			} else {
-				dungeon[position.x + i][position.y + j] = 6;
-			}
-		}
-	}
-}
-
 void MapRoom(int x, int y, int width, int height)
 {
 	for (int j = 0; j < height && j + y < 20; j++) {
@@ -329,27 +304,23 @@ void FirstRoom()
 	int y = GenerateRnd(ymax - ymin + 1) + ymin;
 
 	if (currlevel == 16) {
-		l4holdx = x;
-		l4holdy = y;
+		L4Hold = { x, y };
 	}
 	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-		SetPiecesRoom = { { x + 1, y + 1 }, { w + 1, h + 1 } };
+		SetPieceRoom = { { x + 1, y + 1 }, { w + 1, h + 1 } };
 	} else {
-		SetPiecesRoom = {};
+		SetPieceRoom = {};
 	}
 
 	MapRoom(x, y, w, h);
 	GenerateRoom(x, y, w, h, GenerateRnd(2));
 }
 
-void SetSetPiecesRoom(Point position)
+void SetSetPieceRoom(Point position)
 {
-	setpc_x = position.x;
-	setpc_y = position.y;
-	setpc_w = SDL_SwapLE16(pSetPiece[0]);
-	setpc_h = SDL_SwapLE16(pSetPiece[1]);
+	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
 
-	SetRoom(pSetPiece.get(), position);
+	PlaceDunTiles(pSetPiece.get(), position, 6);
 }
 
 void MakeDungeon()
@@ -1049,17 +1020,14 @@ int GetArea()
 	return rv;
 }
 
-void SaveQuads()
+void ProtectQuads()
 {
-	int x = l4holdx;
-	int y = l4holdy;
-
-	for (int j = 0; j < 14; j++) {
-		for (int i = 0; i < 14; i++) {
-			Protected[i + x][j + y] = true;
-			Protected[DMAXX - 1 - i - x][j + y] = true;
-			Protected[i + x][DMAXY - 1 - j - y] = true;
-			Protected[DMAXX - 1 - i - x][DMAXY - 1 - j - y] = true;
+	for (int y = 0; y < 14; y++) {
+		for (int x = 0; x < 14; x++) {
+			Protected[L4Hold.x + x][L4Hold.y + y] = true;
+			Protected[DMAXX - 1 - x - L4Hold.x][L4Hold.y + y] = true;
+			Protected[L4Hold.x + x][DMAXY - 1 - y - L4Hold.y] = true;
+			Protected[DMAXX - 1 - x - L4Hold.x][DMAXY - 1 - y - L4Hold.y] = true;
 		}
 	}
 }
@@ -1068,27 +1036,23 @@ void LoadDiabQuads(bool preflag)
 {
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
-		diabquad1x = 4 + l4holdx;
-		diabquad1y = 4 + l4holdy;
-		SetRoom(dunData.get(), { diabquad1x, diabquad1y });
+		DiabloQuad1 = L4Hold + Displacement { 4, 4 };
+		PlaceDunTiles(dunData.get(), DiabloQuad1, 6);
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
-		diabquad2x = 27 - l4holdx;
-		diabquad2y = 1 + l4holdy;
-		SetRoom(dunData.get(), { diabquad2x, diabquad2y });
+		DiabloQuad2 = { 27 - L4Hold.x, 1 + L4Hold.y };
+		PlaceDunTiles(dunData.get(), DiabloQuad2, 6);
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
-		diabquad3x = 1 + l4holdx;
-		diabquad3y = 27 - l4holdy;
-		SetRoom(dunData.get(), { diabquad3x, diabquad3y });
+		DiabloQuad3 = { 1 + L4Hold.x, 27 - L4Hold.y };
+		PlaceDunTiles(dunData.get(), DiabloQuad3, 6);
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
-		diabquad4x = 28 - l4holdx;
-		diabquad4y = 28 - l4holdy;
-		SetRoom(dunData.get(), { diabquad4x, diabquad4y });
+		DiabloQuad4 = { 28 - L4Hold.x, 28 - L4Hold.y };
+		PlaceDunTiles(dunData.get(), DiabloQuad4, 6);
 	}
 }
 
@@ -1215,7 +1179,7 @@ bool PlaceStairs(lvl_entry entry)
 		if (currlevel != 16) {
 			if (Quests[Q_WARLORD].IsAvailable()) {
 				if (entry == ENTRY_PREV)
-					ViewPosition = Point(setpc_x, setpc_y).megaToWorld() + Displacement { 6, 6 };
+					ViewPosition = SetPiece.position.megaToWorld() + Displacement { 6, 6 };
 			} else {
 				position = PlaceMiniSet(L4DSTAIRS);
 				if (!position)
@@ -1263,11 +1227,11 @@ void GenerateLevel(lvl_entry entry)
 		MakeDmt();
 		FixTilesPatterns();
 		if (currlevel == 16) {
-			SaveQuads();
+			ProtectQuads();
 		}
 		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-			for (int spi = SetPiecesRoom.position.x; spi < SetPiecesRoom.position.x + SetPiecesRoom.size.width - 1; spi++) {
-				for (int spj = SetPiecesRoom.position.y; spj < SetPiecesRoom.position.y + SetPiecesRoom.size.height - 1; spj++) {
+			for (int spi = SetPieceRoom.position.x; spi < SetPieceRoom.position.x + SetPieceRoom.size.width - 1; spi++) {
+				for (int spj = SetPieceRoom.position.y; spj < SetPieceRoom.position.y + SetPieceRoom.size.height - 1; spj++) {
 					Protected[spi][spj] = true;
 				}
 			}
@@ -1276,7 +1240,7 @@ void GenerateLevel(lvl_entry entry)
 		FloodTransparencyValues(6);
 		FixTransparency();
 		if (setloadflag) {
-			SetSetPiecesRoom(SetPiecesRoom.position);
+			SetSetPieceRoom(SetPieceRoom.position);
 		}
 		if (currlevel == 16) {
 			LoadDiabQuads(true);
@@ -1304,13 +1268,13 @@ void GenerateLevel(lvl_entry entry)
 		}
 	}
 
-	DRLG_CheckQuests(SetPiecesRoom.position);
+	DRLG_CheckQuests(SetPieceRoom.position);
 
 	if (currlevel == 15) {
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) {
 				if (IsAnyOf(dungeon[i][j], 98, 107)) {
-					Make_SetPC(i - 1, j - 1, 5, 5);
+					Make_SetPC({ { i - 1, j - 1 }, { 5, 5 } });
 					if (Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
 						// Set the portal position to the location of the northmost pentagram tile.
 						Quests[Q_BETRAYER].position = { i, j };
@@ -1362,15 +1326,14 @@ void LoadL4Dungeon(const char *path, int vx, int vy)
 	InitDungeonFlags();
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	SetRoom(dunData.get(), { 0, 0 });
+	PlaceDunTiles(dunData.get(), { 0, 0 }, 6);
 
 	ViewPosition = { vx, vy };
 
 	Pass3();
 	DRLG_Init_Globals();
 
-	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
 	SetMapObjects(dunData.get(), 0, 0);
 }
 
@@ -1382,8 +1345,7 @@ void LoadPreL4Dungeon(const char *path)
 	InitDungeonFlags();
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	SetRoom(dunData.get(), { 0, 0 });
+	PlaceDunTiles(dunData.get(), { 0, 0 }, 6);
 }
 
 } // namespace devilution

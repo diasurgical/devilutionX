@@ -1457,10 +1457,7 @@ void FixTilesPatterns()
 
 void SetCornerRoom(int rx1, int ry1)
 {
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = CornerstoneRoomPattern.size.width;
-	setpc_h = CornerstoneRoomPattern.size.height;
+	SetPiece = { { rx1, ry1 }, CornerstoneRoomPattern.size };
 
 	CornerstoneRoomPattern.place({ rx1, ry1 }, true);
 }
@@ -1505,39 +1502,11 @@ void Substitution()
 	}
 }
 
-void SetRoom(int rx1, int ry1)
-{
-	int width = SDL_SwapLE16(L5pSetPiece[0]);
-	int height = SDL_SwapLE16(L5pSetPiece[1]);
-
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = width;
-	setpc_h = height;
-
-	uint16_t *tileLayer = &L5pSetPiece[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			if (tileId != 0) {
-				dungeon[rx1 + i][ry1 + j] = tileId;
-				Protected[rx1 + i][ry1 + j] = true;
-			} else {
-				dungeon[rx1 + i][ry1 + j] = Tile::Floor;
-			}
-		}
-	}
-}
-
 void SetCryptRoom(int rx1, int ry1)
 {
 	UberRow = 2 * rx1 + 6;
 	UberCol = 2 * ry1 + 8;
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = UberRoomPattern.size.width;
-	setpc_h = UberRoomPattern.size.height;
+	SetPiece = { { rx1, ry1 }, UberRoomPattern.size };
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
@@ -1704,6 +1673,7 @@ void FillChambers()
 		}
 	}
 	if (L5setloadflag) {
+		Point position;
 		if (VR1 || VR2 || VR3) {
 			int c = 1;
 			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
@@ -1723,13 +1693,13 @@ void FillChambers()
 
 			switch (c) {
 			case 0:
-				SetRoom(16, 2);
+				position = { 16, 2 };
 				break;
 			case 1:
-				SetRoom(16, 16);
+				position = { 16, 16 };
 				break;
 			case 2:
-				SetRoom(16, 30);
+				position = { 16, 30 };
 				break;
 			}
 		} else {
@@ -1751,16 +1721,18 @@ void FillChambers()
 
 			switch (c) {
 			case 0:
-				SetRoom(2, 16);
+				position = { 2, 16 };
 				break;
 			case 1:
-				SetRoom(16, 16);
+				position = { 16, 16 };
 				break;
 			case 2:
-				SetRoom(30, 16);
+				position = { 30, 16 };
 				break;
 			}
 		}
+		PlaceDunTiles(L5pSetPiece.get(), position, Tile::Floor);
+		SetPiece = { position, { SDL_SwapLE16(L5pSetPiece[0]), SDL_SwapLE16(L5pSetPiece[1]) } };
 	}
 }
 
@@ -1994,14 +1966,14 @@ bool PlaceCathedralStairs(lvl_entry entry)
 
 	// Place poison water entrance
 	if (Quests[Q_PWATER].IsAvailable()) {
-		position = PlaceMiniSet(PWATERIN, 4000, true);
+		position = PlaceMiniSet(PWATERIN, DMAXX * DMAXY, true);
 		if (!position) {
 			success = false;
 		} else {
 			int8_t t = TransVal;
 			TransVal = 0;
 			Point miniPosition = *position;
-			DRLG_MRectTrans(miniPosition.x, miniPosition.y + 2, miniPosition.x + 5, miniPosition.y + 4);
+			DRLG_MRectTrans({ miniPosition + Displacement { 0, 2 }, { 5, 2 } });
 			TransVal = t;
 			Quests[Q_PWATER].position = miniPosition.megaToWorld() + Displacement { 5, 7 };
 			if (entry == ENTRY_RTNLVL)
@@ -2010,7 +1982,7 @@ bool PlaceCathedralStairs(lvl_entry entry)
 	}
 
 	// Place stairs up
-	position = PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, 4000, true);
+	position = PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, DMAXX * DMAXY, true);
 	if (!position) {
 		if (MyPlayer->pOriginalCathedral)
 			return false;
@@ -2022,9 +1994,9 @@ bool PlaceCathedralStairs(lvl_entry entry)
 	// Place stairs down
 	if (Quests[Q_LTBANNER].IsAvailable()) {
 		if (entry == ENTRY_PREV)
-			ViewPosition = Point(setpc_x, setpc_y).megaToWorld() + Displacement { 4, 12 };
+			ViewPosition = SetPiece.position.megaToWorld() + Displacement { 4, 12 };
 	} else {
-		position = PlaceMiniSet(STAIRSDOWN, 4000, true);
+		position = PlaceMiniSet(STAIRSDOWN, DMAXX * DMAXY, true);
 		if (!position) {
 			success = false;
 		} else if (entry == ENTRY_PREV) {
@@ -2041,7 +2013,7 @@ bool PlaceCryptStairs(lvl_entry entry)
 	std::optional<Point> position;
 
 	// Place stairs up
-	position = PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, 4000, true);
+	position = PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, DMAXX * DMAXY, true);
 	if (!position) {
 		success = false;
 	} else if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN) {
@@ -2050,7 +2022,7 @@ bool PlaceCryptStairs(lvl_entry entry)
 
 	// Place stairs down
 	if (currlevel != 24) {
-		position = PlaceMiniSet(L5STAIRSDOWN, 4000, true);
+		position = PlaceMiniSet(L5STAIRSDOWN, DMAXX * DMAXY, true);
 		if (!position)
 			success = false;
 		else if (entry == ENTRY_PREV)
@@ -2172,7 +2144,7 @@ void GenerateLevel(lvl_entry entry)
 
 		int numt = GenerateRnd(5) + 5;
 		for (int i = 0; i < numt; i++) {
-			PlaceMiniSet(LAMPS, 4000, true);
+			PlaceMiniSet(LAMPS, DMAXX * DMAXY, true);
 		}
 
 		FillFloor();
@@ -2185,7 +2157,7 @@ void GenerateLevel(lvl_entry entry)
 	}
 
 	DRLG_Init_Globals();
-	DRLG_CheckQuests({ setpc_x, setpc_y });
+	DRLG_CheckQuests(SetPiece.position);
 }
 
 void Pass3()
@@ -2210,24 +2182,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 	}
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
-			tileLayer++;
-			if (tileId != 0) {
-				dungeon[i][j] = tileId;
-				Protected[i][j] = true;
-			} else {
-				dungeon[i][j] = Tile::Floor;
-			}
-		}
-	}
+	PlaceDunTiles(dunData.get(), { 0, 0 }, Tile::Floor);
 
 	FillFloor();
 
@@ -2239,7 +2194,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 	if (leveltype != DTYPE_CRYPT)
 		InitDungeonPieces();
 
-	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
 	SetMapObjects(dunData.get(), 0, 0);
 }
 
@@ -2256,24 +2211,7 @@ void LoadPreL1Dungeon(const char *path)
 	dmaxPosition = { 96, 96 };
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(*tileLayer));
-			tileLayer++;
-			if (tileId != 0) {
-				dungeon[i][j] = tileId;
-				Protected[i][j] = true;
-			} else {
-				dungeon[i][j] = Tile::Floor;
-			}
-		}
-	}
+	PlaceDunTiles(dunData.get(), { 0, 0 }, Tile::Floor);
 
 	FillFloor();
 

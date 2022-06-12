@@ -126,9 +126,8 @@ int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
  */
 void DrawButcher()
 {
-	int x = 2 * setpc_x + 16;
-	int y = 2 * setpc_y + 16;
-	DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
+	Point position = SetPiece.position.megaToWorld() + Displacement { 3, 3 };
+	DRLG_RectTrans({ position, { 7, 7 } });
 }
 
 void DrawSkelKing(quest_id q, Point position)
@@ -140,44 +139,18 @@ void DrawWarLord(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
-	setpc_x = position.x;
-	setpc_y = position.y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			dungeon[position.x + i][position.y + j] = (tileId != 0) ? tileId : 6;
-		}
-	}
+	PlaceDunTiles(dunData.get(), position, 6);
 }
 
 void DrawSChamber(quest_id q, Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
-	setpc_x = position.x;
-	setpc_y = position.y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			dungeon[position.x + i][position.y + j] = (tileId != 0) ? tileId : 3;
-		}
-	}
+	PlaceDunTiles(dunData.get(), position, 3);
 
 	Quests[q].position = position.megaToWorld() + Displacement { 6, 7 };
 }
@@ -189,10 +162,7 @@ void DrawLTBanner(Point position)
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	setpc_x = position.x;
-	setpc_y = position.y;
-	setpc_w = width;
-	setpc_h = height;
+	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
 	const uint16_t *tileLayer = &dunData[2];
 
@@ -206,52 +176,22 @@ void DrawLTBanner(Point position)
 	}
 }
 
+/**
+ * Close outer wall
+ */
 void DrawBlind(Point position)
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	setpc_x = position.x;
-	setpc_y = position.y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			if (tileId != 0) {
-				pdungeon[position.x + i][position.y + j] = tileId;
-			}
-		}
-	}
+	dungeon[position.x][position.y + 1] = 154;
+	dungeon[position.x + 10][position.y + 8] = 154;
 }
 
 void DrawBlood(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
 
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
-	setpc_x = position.x;
-	setpc_y = position.y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			if (tileId != 0) {
-				dungeon[position.x + i][position.y + j] = tileId;
-			}
-		}
-	}
+	PlaceDunTiles(dunData.get(), position, 0);
 }
 
 int QuestLogMouseToEntry()
@@ -375,7 +315,7 @@ void CheckQuests()
 
 	auto &quest = Quests[Q_BETRAYER];
 	if (quest.IsAvailable() && gbIsMultiplayer && quest._qvar1 == 2) {
-		AddObject(OBJ_ALTBOY, Point(setpc_x, setpc_y).megaToWorld() + Displacement { 4, 6 });
+		AddObject(OBJ_ALTBOY, SetPiece.position.megaToWorld() + Displacement { 4, 6 });
 		quest._qvar1 = 3;
 		NetSendCmdQuest(true, quest);
 	}
@@ -636,7 +576,7 @@ void ResyncMPQuests()
 		NetSendCmdQuest(true, betrayerQuest);
 	}
 	if (betrayerQuest.IsAvailable())
-		AddObject(OBJ_ALTBOY, Point(setpc_x, setpc_y).megaToWorld() + Displacement { 4, 6 });
+		AddObject(OBJ_ALTBOY, SetPiece.position.megaToWorld() + Displacement { 4, 6 });
 
 	auto &cryptQuest = Quests[Q_GRAVE];
 	if (cryptQuest._qactive == QUEST_INIT && currlevel == cryptQuest._qlevel - 1) {
@@ -665,32 +605,32 @@ void ResyncQuests()
 	if (Quests[Q_LTBANNER].IsAvailable()) {
 		if (Quests[Q_LTBANNER]._qvar1 == 1) {
 			ObjChangeMapResync(
-			    setpc_w + setpc_x - 2,
-			    setpc_h + setpc_y - 2,
-			    setpc_w + setpc_x + 1,
-			    setpc_h + setpc_y + 1);
+			    SetPiece.position.x + SetPiece.size.width - 2,
+			    SetPiece.position.y + SetPiece.size.height - 2,
+			    SetPiece.position.x + SetPiece.size.width + 1,
+			    SetPiece.position.y + SetPiece.size.height + 1);
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 2) {
 			ObjChangeMapResync(
-			    setpc_w + setpc_x - 2,
-			    setpc_h + setpc_y - 2,
-			    setpc_w + setpc_x + 1,
-			    setpc_h + setpc_y + 1);
-			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
+			    SetPiece.position.x + SetPiece.size.width - 2,
+			    SetPiece.position.y + SetPiece.size.height - 2,
+			    SetPiece.position.x + SetPiece.size.width + 1,
+			    SetPiece.position.y + SetPiece.size.height + 1);
+			ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2);
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
+			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
 			TransVal = tren;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
-			ObjChangeMapResync(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
+			ObjChangeMapResync(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1);
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
+			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
 			TransVal = tren;
 		}
 	}

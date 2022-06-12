@@ -1407,8 +1407,8 @@ bool PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 	int sh = miniset.size.height;
 
 	bool placed = false;
-	for (int sy = 0; sy < DMAXX - sh; sy++) {
-		for (int sx = 0; sx < DMAXY - sw; sx++) {
+	for (int sy = 0; sy < DMAXY - sh; sy++) {
+		for (int sx = 0; sx < DMAXX - sw; sx++) {
 			if (!miniset.matches({ sx, sy }))
 				continue;
 			if (!CanReplaceTile(miniset.replace[0][0], { sx, sy }))
@@ -1836,14 +1836,13 @@ bool PlaceAnvil()
 	auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
-	int sx = GenerateRnd(DMAXX - width - 2) - 1;
+	int sx = GenerateRnd(DMAXX - width - 2);
 	int sy = GenerateRnd(DMAXY - height - 2);
 
-	for (int trys = 0;; trys++) {
+	for (int trys = 0;; trys++, sx++) {
 		if (trys > 198)
 			return false;
 
-		sx++;
 		if (sx == DMAXX - width - 2) {
 			sx = 0;
 			sy++;
@@ -1867,34 +1866,20 @@ bool PlaceAnvil()
 			break;
 	}
 
-	setpc_x = sx;
-	setpc_y = sy;
-	setpc_w = width + 2;
-	setpc_h = height + 2;
+	SetPiece = { { sx, sy }, { width + 2, height + 2 } };
 
-	for (int yy = 0; yy < setpc_h; yy++) {
-		for (int xx = 0; xx < setpc_w; xx++) {
+	for (int yy = 0; yy < SetPiece.size.width; yy++) {
+		for (int xx = 0; xx < SetPiece.size.height; xx++) {
 			Protected[xx + sx][yy + sy] = true;
 		}
 	}
 
-	sx++;
-	sy++;
-
-	const uint16_t *tileLayer = &dunData[2];
-	for (int yy = 0; yy < height; yy++) {
-		for (int xx = 0; xx < width; xx++) {
-			int tileId = tileLayer[xx + yy * width];
-			if (tileId != 0) {
-				dungeon[xx + sx][yy + sy] = tileId;
-			}
-		}
-	}
+	PlaceDunTiles(dunData.get(), { sx + 1, sy + 1 }, 7);
 
 	// Hack to avoid rivers entering the island, reversed later
-	dungeon[setpc_x + 7][setpc_y + 5] = 2;
-	dungeon[setpc_x + 8][setpc_y + 5] = 2;
-	dungeon[setpc_x + 9][setpc_y + 5] = 2;
+	dungeon[SetPiece.position.x + 7][SetPiece.position.y + 5] = 2;
+	dungeon[SetPiece.position.x + 8][SetPiece.position.y + 5] = 2;
+	dungeon[SetPiece.position.x + 9][SetPiece.position.y + 5] = 2;
 
 	return true;
 }
@@ -2151,11 +2136,11 @@ void GenerateLevel(lvl_entry entry)
 		River();
 
 		if (Quests[Q_ANVIL].IsAvailable()) {
-			dungeon[setpc_x + 7][setpc_y + 5] = 7;
-			dungeon[setpc_x + 8][setpc_y + 5] = 7;
-			dungeon[setpc_x + 9][setpc_y + 5] = 7;
-			if (dungeon[setpc_x + 10][setpc_y + 5] == 17 || dungeon[setpc_x + 10][setpc_y + 5] == 18) {
-				dungeon[setpc_x + 10][setpc_y + 5] = 45;
+			dungeon[SetPiece.position.x + 7][SetPiece.position.y + 5] = 7;
+			dungeon[SetPiece.position.x + 8][SetPiece.position.y + 5] = 7;
+			dungeon[SetPiece.position.x + 9][SetPiece.position.y + 5] = 7;
+			if (dungeon[SetPiece.position.x + 10][SetPiece.position.y + 5] == 17 || dungeon[SetPiece.position.x + 10][SetPiece.position.y + 5] == 18) {
+				dungeon[SetPiece.position.x + 10][SetPiece.position.y + 5] = 45;
 			}
 		}
 
@@ -2267,18 +2252,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 	DRLG_InitTrans();
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			dungeon[i][j] = (tileId != 0) ? tileId : 7;
-		}
-	}
+	PlaceDunTiles(dunData.get(), { 0, 0 }, 7);
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
@@ -2293,7 +2267,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 
 	ViewPosition = { vx, vy };
 
-	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
 	SetMapObjects(dunData.get(), 0, 0);
 
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -2315,18 +2289,7 @@ void LoadPreL3Dungeon(const char *path)
 	DRLG_InitTrans();
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
-			dungeon[i][j] = (tileId != 0) ? tileId : 7;
-		}
-	}
+	PlaceDunTiles(dunData.get(), { 0, 0 }, 7);
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)

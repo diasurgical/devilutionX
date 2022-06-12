@@ -451,16 +451,14 @@ void AddCandles()
 void AddBookLever(Rectangle affectedArea, _speech_id msg)
 {
 	int cnt = 0;
-	int xp;
-	int yp;
+	Point position;
 	bool exit = false;
 	while (!exit) {
 		exit = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
+		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
 		for (int n = -2; n <= 2; n++) {
 			for (int m = -2; m <= 2; m++) {
-				if (!RndLocOk(xp + m, yp + n))
+				if (!RndLocOk(position.x + m, position.y + n))
 					exit = false;
 			}
 		}
@@ -472,15 +470,14 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 	}
 
 	if (Quests[Q_BLIND].IsAvailable())
-		AddObject(OBJ_BLINDBOOK, { xp, yp });
+		AddObject(OBJ_BLINDBOOK, position);
 	if (Quests[Q_WARLORD].IsAvailable())
-		AddObject(OBJ_STEELTOME, { xp, yp });
+		AddObject(OBJ_STEELTOME, position);
 	if (Quests[Q_BLOOD].IsAvailable()) {
-		xp = 2 * setpc_x + 25;
-		yp = 2 * setpc_y + 40;
-		AddObject(OBJ_BLOODBOOK, { xp, yp });
+		position = SetPiece.position.megaToWorld() + Displacement { 9, 24 };
+		AddObject(OBJ_BLOODBOOK, position);
 	}
-	ObjectAtPosition({ xp, yp })->InitializeQuestBook(affectedArea, leverid, msg);
+	ObjectAtPosition(position)->InitializeQuestBook(affectedArea, leverid, msg);
 	leverid++;
 }
 
@@ -648,7 +645,7 @@ void AddChestTraps()
 	}
 }
 
-void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int leveridx)
+void LoadMapObjects(const char *path, Point start, Rectangle mapRange = {}, int leveridx = 0)
 {
 	LoadingMapObjects = true;
 	ApplyObjectLighting = true;
@@ -666,46 +663,14 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int lever
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
 
-	start += Displacement { 16, 16 };
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
-				ObjectAtPosition(mapPos)->InitializeLoadedObject(mapRange, leveridx);
-			}
-		}
-	}
-
-	ApplyObjectLighting = false;
-	LoadingMapObjects = false;
-}
-
-void LoadMapObjs(const char *path, Point start)
-{
-	LoadingMapObjects = true;
-	ApplyObjectLighting = true;
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	int layer2Offset = 2 + width * height;
-
-	// The rest of the layers are at dPiece scale
-	width *= 2;
-	height *= 2;
-
-	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
-
-	start += Displacement { 16, 16 };
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
-			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], start + Displacement { i, j });
+				if (leveridx > 0)
+					ObjectAtPosition(mapPos)->InitializeLoadedObject(mapRange, leveridx);
 			}
 		}
 	}
@@ -716,9 +681,9 @@ void LoadMapObjs(const char *path, Point start)
 
 void AddDiabObjs()
 {
-	LoadMapObjects("Levels\\L4Data\\diab1.DUN", { 2 * diabquad1x, 2 * diabquad1y }, { { diabquad2x, diabquad2y }, { 11, 12 } }, 1);
-	LoadMapObjects("Levels\\L4Data\\diab2a.DUN", { 2 * diabquad2x, 2 * diabquad2y }, { { diabquad3x, diabquad3y }, { 11, 11 } }, 2);
-	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", { 2 * diabquad3x, 2 * diabquad3y }, { { diabquad4x, diabquad4y }, { 9, 9 } }, 3);
+	LoadMapObjects("Levels\\L4Data\\diab1.DUN", DiabloQuad1.megaToWorld(), { DiabloQuad2, { 11, 12 } }, 1);
+	LoadMapObjects("Levels\\L4Data\\diab2a.DUN", DiabloQuad2.megaToWorld(), { DiabloQuad3, { 11, 11 } }, 2);
+	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", DiabloQuad3.megaToWorld(), { DiabloQuad4, { 9, 9 } }, 3);
 }
 
 void AddCryptObject(Object &object, int a2)
@@ -1337,10 +1302,10 @@ void AddBrnCross(int i)
 
 void AddPedistal(int i)
 {
-	Objects[i]._oVar1 = setpc_x;
-	Objects[i]._oVar2 = setpc_y;
-	Objects[i]._oVar3 = setpc_x + setpc_w;
-	Objects[i]._oVar4 = setpc_y + setpc_h;
+	Objects[i]._oVar1 = SetPiece.position.x;
+	Objects[i]._oVar2 = SetPiece.position.y;
+	Objects[i]._oVar3 = SetPiece.position.x + SetPiece.size.width;
+	Objects[i]._oVar4 = SetPiece.position.y + SetPiece.size.height;
 	Objects[i]._oVar6 = 0;
 }
 
@@ -2327,8 +2292,6 @@ void OperateBook(int pnum, Object &book)
 
 void OperateBookLever(int pnum, int i)
 {
-	int x = 2 * setpc_x + 16;
-	int y = 2 * setpc_y + 16;
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
@@ -2342,7 +2305,7 @@ void OperateBookLever(int pnum, int i)
 			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLOOD]._qlog = true;
 			Quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 25, 2 * setpc_y + 33 }, 0, 1);
+			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1);
 		}
 		if (Objects[i]._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
@@ -2353,10 +2316,10 @@ void OperateBookLever(int pnum, int i)
 			if (Objects[i]._otype != OBJ_BLOODBOOK)
 				ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
 			if (Objects[i]._otype == OBJ_BLINDBOOK) {
-				SpawnUnique(UITEM_OPTAMULET, Point { x, y } + Displacement { 5, 5 });
+				SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
 				auto tren = TransVal;
 				TransVal = 9;
-				DRLG_MRectTrans(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+				DRLG_MRectTrans({ Objects[i]._oVar1, Objects[i]._oVar2 }, { Objects[i]._oVar3, Objects[i]._oVar4 });
 				TransVal = tren;
 			}
 		}
@@ -2643,21 +2606,21 @@ void OperatePedistal(int pnum, int i)
 	if (Objects[i]._oVar6 == 1) {
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, Objects[i].position);
-		ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 19, 2 * setpc_y + 26 }, 0, 1);
+		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
+		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1);
 	}
 	if (Objects[i]._oVar6 == 2) {
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, Objects[i].position);
-		ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 31, 2 * setpc_y + 26 }, 0, 1);
+		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
+		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1);
 	}
 	if (Objects[i]._oVar6 == 3) {
 		if (!deltaload)
 			PlaySfxLoc(LS_BLODSTAR, Objects[i].position);
 		ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", { 2 * setpc_x, 2 * setpc_y });
-		SpawnUnique(UITEM_ARMOFVAL, Point { setpc_x, setpc_y } * 2 + Displacement { 25, 19 });
+		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", SetPiece.position.megaToWorld());
+		SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
 		Objects[i]._oSelFlag = 0;
 	}
 }
@@ -4240,7 +4203,7 @@ void SyncQSTLever(const Object &qstLever)
 		if (qstLever._otype == OBJ_BLINDBOOK) {
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4);
+			DRLG_MRectTrans({ qstLever._oVar1, qstLever._oVar2 }, { qstLever._oVar3, qstLever._oVar4 });
 			TransVal = tren;
 		}
 	}
@@ -4256,7 +4219,7 @@ void SyncPedestal(const Object &pedestal, Point origin, int width)
 	}
 	if (pedestal._oVar6 == 3) {
 		ObjChangeMapResync(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
-		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", origin * 2);
+		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", origin.megaToWorld());
 	}
 }
 
@@ -4570,7 +4533,7 @@ void InitObjects()
 			if (Quests[Q_PWATER].IsAvailable())
 				AddCandles();
 			if (Quests[Q_LTBANNER].IsAvailable())
-				AddObject(OBJ_SIGNCHEST, { 2 * setpc_x + 26, 2 * setpc_y + 19 });
+				AddObject(OBJ_SIGNCHEST, SetPiece.position.megaToWorld() + Displacement { 10, 3 });
 			InitRndLocBigObj(10, 15, OBJ_SARC);
 			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
@@ -4605,8 +4568,8 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLIND]._qmsg = spId;
-				AddBookLever({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } }, spId);
-				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", { 2 * setpc_x, 2 * setpc_y });
+				AddBookLever({ SetPiece.position, { SetPiece.size.width + 1, SetPiece.size.height + 1 } }, spId);
+				LoadMapObjects("Levels\\L2Data\\Blind2.DUN", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BLOOD].IsAvailable()) {
 				_speech_id spId;
@@ -4631,8 +4594,8 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLOOD]._qmsg = spId;
-				AddBookLever({ { setpc_x, setpc_y + 3 }, { 2, 4 } }, spId);
-				AddObject(OBJ_PEDISTAL, { 2 * setpc_x + 25, 2 * setpc_y + 32 });
+				AddBookLever({ { SetPiece.position + Displacement { 0, 3 } }, { 2, 4 } }, spId);
+				AddObject(OBJ_PEDISTAL, SetPiece.position.megaToWorld() + Displacement { 9, 16 });
 			}
 			InitRndBarrels();
 		}
@@ -4664,8 +4627,8 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_WARLORD]._qmsg = spId;
-				AddBookLever({ { setpc_x, setpc_y }, { setpc_w, setpc_h } }, spId);
-				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", { 2 * setpc_x, 2 * setpc_y });
+				AddBookLever(SetPiece, spId);
+				LoadMapObjects("Levels\\L4Data\\Warlord.DUN", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BETRAYER].IsAvailable() && !gbIsMultiplayer)
 				AddLazStand();
@@ -4779,7 +4742,7 @@ void AddObject(_object_id objType, Point objPos)
 		InitializeL5Door(object);
 		break;
 	case OBJ_BOOK2R:
-		object.InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
+		object.InitializeBook({ SetPiece.position, { SetPiece.size.width + 1, SetPiece.size.height + 1 } });
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -5479,7 +5442,7 @@ void SyncObjectAnim(Object &object)
 		SyncQSTLever(object);
 		break;
 	case OBJ_PEDISTAL:
-		SyncPedestal(object, { setpc_x, setpc_y }, setpc_w);
+		SyncPedestal(object, SetPiece.position, SetPiece.size.width);
 		break;
 	default:
 		break;

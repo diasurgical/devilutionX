@@ -9,14 +9,10 @@
 
 namespace devilution {
 
-extern int diabquad1x;
-extern int diabquad1y;
-extern int diabquad2x;
-extern int diabquad2y;
-extern int diabquad3x;
-extern int diabquad3y;
-extern int diabquad4x;
-extern int diabquad4y;
+extern Point DiabloQuad1;
+extern Point DiabloQuad2;
+extern Point DiabloQuad3;
+extern Point DiabloQuad4;
 void CreateL4Dungeon(uint32_t rseed, lvl_entry entry);
 void LoadL4Dungeon(const char *path, int vx, int vy);
 void LoadPreL4Dungeon(const char *path);

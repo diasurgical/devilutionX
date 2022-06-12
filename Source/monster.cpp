@@ -18,6 +18,7 @@
 #include "drlg_l4.h"
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "engine/render/cl2_render.hpp"
 #include "init.h"
@@ -284,26 +285,17 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	}
 }
 
-bool CanPlaceMonster(int xp, int yp)
+bool CanPlaceMonster(Point position)
 {
-	if (!InDungeonBounds({ xp, yp })
-	    || dMonster[xp][yp] != 0
-	    || dPlayer[xp][yp] != 0) {
-		return false;
-	}
-
-	if (IsTileVisible({ xp, yp })) {
-		return false;
-	}
-
-	if (TileContainsSetPiece({ xp, yp })) {
-		return false;
-	}
-
-	return !IsTileOccupied({ xp, yp });
+	return InDungeonBounds(position)
+	    && dMonster[position.x][position.y] == 0
+	    && dPlayer[position.x][position.y] == 0
+	    && !IsTileVisible(position)
+	    && !TileContainsSetPiece(position)
+	    && !IsTileOccupied(position);
 }
 
-void PlaceMonster(int i, int mtype, int x, int y)
+void PlaceMonster(int i, int mtype, Point position)
 {
 	if (LevelMonsterTypes[mtype].mtype == MT_NAKRUL) {
 		for (int j = 0; j < ActiveMonsterCount; j++) {
@@ -315,10 +307,10 @@ void PlaceMonster(int i, int mtype, int x, int y)
 			}
 		}
 	}
-	dMonster[x][y] = i + 1;
+	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	InitMonster(Monsters[i], rd, mtype, { x, y });
+	InitMonster(Monsters[i], rd, mtype, position);
 }
 
 void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
@@ -346,7 +338,7 @@ void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int lea
 			do {
 				xp = GenerateRnd(80) + 16;
 				yp = GenerateRnd(80) + 16;
-			} while (!CanPlaceMonster(xp, yp));
+			} while (!CanPlaceMonster({ xp, yp }));
 		}
 		int x1 = xp;
 		int y1 = yp;
@@ -357,14 +349,14 @@ void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int lea
 
 		int j = 0;
 		for (int try2 = 0; j < num && try2 < 100; xp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
-			if (!CanPlaceMonster(xp, yp)
+			if (!CanPlaceMonster({ xp, yp })
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
 			    || (uniqueMonsterPack == UniqueMonsterPack::Leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
 				try2++;
 				continue;
 			}
 
-			PlaceMonster(ActiveMonsterCount, mtype, xp, yp);
+			PlaceMonster(ActiveMonsterCount, mtype, { xp, yp });
 			if (uniqueMonsterPack != UniqueMonsterPack::None) {
 				auto &minion = Monsters[ActiveMonsterCount];
 				minion._mmaxhp *= 2;
@@ -412,15 +404,13 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	int count = 0;
-	int xp;
-	int yp;
+	Point position;
 	while (true) {
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
+		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
 		int count2 = 0;
-		for (int x = xp - 3; x < xp + 3; x++) {
-			for (int y = yp - 3; y < yp + 3; y++) {
-				if (InDungeonBounds({ x, y }) && CanPlaceMonster(x, y)) {
+		for (int x = position.x - 3; x < position.x + 3; x++) {
+			for (int y = position.y - 3; y < position.y + 3; y++) {
+				if (InDungeonBounds({ x, y }) && CanPlaceMonster({ x, y })) {
 					count2++;
 				}
 			}
@@ -433,66 +423,51 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			}
 		}
 
-		if (CanPlaceMonster(xp, yp)) {
+		if (CanPlaceMonster(position)) {
 			break;
 		}
 	}
 
 	if (uniqindex == UMT_SNOTSPIL) {
-		xp = 2 * setpc_x + 24;
-		yp = 2 * setpc_y + 28;
+		position = SetPiece.position.megaToWorld() + Displacement { 8, 12 };
 	}
 	if (uniqindex == UMT_WARLORD) {
-		xp = 2 * setpc_x + 22;
-		yp = 2 * setpc_y + 23;
+		position = SetPiece.position.megaToWorld() + Displacement { 6, 7 };
 	}
 	if (uniqindex == UMT_ZHAR) {
 		for (int i = 0; i < themeCount; i++) {
 			if (i == zharlib) {
-				xp = 2 * themeLoc[i].x + 20;
-				yp = 2 * themeLoc[i].y + 20;
+				position = themeLoc[i].room.position.megaToWorld() + Displacement { 4, 4 };
 				break;
 			}
 		}
 	}
 	if (!gbIsMultiplayer) {
 		if (uniqindex == UMT_LAZARUS) {
-			xp = 32;
-			yp = 46;
+			position = { 32, 46 };
 		}
 		if (uniqindex == UMT_RED_VEX) {
-			xp = 40;
-			yp = 45;
+			position = { 40, 45 };
 		}
 		if (uniqindex == UMT_BLACKJADE) {
-			xp = 38;
-			yp = 49;
+			position = { 38, 49 };
 		}
 		if (uniqindex == UMT_SKELKING) {
-			xp = 35;
-			yp = 47;
+			position = { 35, 47 };
 		}
 	} else {
 		if (uniqindex == UMT_LAZARUS) {
-			xp = 2 * setpc_x + 19;
-			yp = 2 * setpc_y + 22;
+			position = SetPiece.position.megaToWorld() + Displacement { 3, 6 };
 		}
 		if (uniqindex == UMT_RED_VEX) {
-			xp = 2 * setpc_x + 21;
-			yp = 2 * setpc_y + 19;
+			position = SetPiece.position.megaToWorld() + Displacement { 5, 3 };
 		}
 		if (uniqindex == UMT_BLACKJADE) {
-			xp = 2 * setpc_x + 21;
-			yp = 2 * setpc_y + 25;
+			position = SetPiece.position.megaToWorld() + Displacement { 5, 9 };
 		}
 	}
 	if (uniqindex == UMT_BUTCHER) {
-		bool done = false;
-		for (yp = 0; yp < MAXDUNY && !done; yp++) {
-			for (xp = 0; xp < MAXDUNX && !done; xp++) {
-				done = dPiece[xp][yp] == 367;
-			}
-		}
+		position = SetPiece.position.megaToWorld() + Displacement { 4, 4 };
 	}
 
 	if (uniqindex == UMT_NAKRUL) {
@@ -500,11 +475,10 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			UberDiabloMonsterIndex = -1;
 			return;
 		}
-		xp = UberRow - 2;
-		yp = UberCol;
+		position = { UberRow - 2, UberCol };
 		UberDiabloMonsterIndex = ActiveMonsterCount;
 	}
-	PlaceMonster(ActiveMonsterCount, uniqtype, xp, yp);
+	PlaceMonster(ActiveMonsterCount, uniqtype, position);
 	PrepareUniqueMonst(monster, uniqindex, miniontype, bosspacksize, uniqueMonsterData);
 }
 
@@ -608,23 +582,23 @@ void PlaceQuestMonsters()
 
 		if (Quests[Q_LTBANNER].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
+			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 		if (Quests[Q_BLOOD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
+			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 		if (Quests[Q_BLIND].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind2.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
+			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 		if (Quests[Q_ANVIL].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x + 1, setpc_y + 1 } * 2);
+			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld() + Displacement { 2, 2 });
 		}
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
+			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 			AddMonsterType(UniqueMonstersData[UMT_WARLORD].mtype, PLACE_SCATTER);
 		}
 		if (Quests[Q_VEIL].IsAvailable()) {
@@ -641,7 +615,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
+			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
 
 		if (currlevel == 24) {
@@ -673,19 +647,19 @@ void LoadDiabMonsts()
 {
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
-		SetMapMonsters(dunData.get(), Point { diabquad1x, diabquad1y } * 2);
+		SetMapMonsters(dunData.get(), DiabloQuad1.megaToWorld());
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab2a.DUN");
-		SetMapMonsters(dunData.get(), Point { diabquad2x, diabquad2y } * 2);
+		SetMapMonsters(dunData.get(), DiabloQuad2.megaToWorld());
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab3a.DUN");
-		SetMapMonsters(dunData.get(), Point { diabquad3x, diabquad3y } * 2);
+		SetMapMonsters(dunData.get(), DiabloQuad3.megaToWorld());
 	}
 	{
 		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab4a.DUN");
-		SetMapMonsters(dunData.get(), Point { diabquad4x, diabquad4y } * 2);
+		SetMapMonsters(dunData.get(), DiabloQuad4.megaToWorld());
 	}
 }
 
@@ -1645,10 +1619,10 @@ bool MonsterTalk(Monster &monster)
 	}
 	if (monster._uniqtype - 1 == UMT_SNOTSPIL) {
 		if (monster.mtalkmsg == TEXT_BANNER10 && (monster._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
-			ObjChangeMap(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
+			ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
+			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
 			TransVal = tren;
 			Quests[Q_LTBANNER]._qvar1 = 2;
 			if (Quests[Q_LTBANNER]._qactive == QUEST_INIT)
@@ -2896,7 +2870,7 @@ void SnotSpilAi(int i)
 	if (IsTileVisible(monster.position.tile)) {
 		if (monster.mtalkmsg == TEXT_BANNER12) {
 			if (!effect_is_playing(USFX_SNOT3) && monster._mgoal == MGOAL_TALKING) {
-				ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
+				ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + SetPiece.size.width + 1, SetPiece.position.y + SetPiece.size.height + 1);
 				Quests[Q_LTBANNER]._qvar1 = 3;
 				RedoPlayerVision();
 				monster._msquelch = UINT8_MAX;
@@ -3899,7 +3873,7 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 			auto monsterId = static_cast<uint8_t>(SDL_SwapLE16(monsterLayer[j * width + i]));
 			if (monsterId != 0) {
 				int mtype = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
-				PlaceMonster(ActiveMonsterCount++, mtype, i + startPosition.x + 16, j + startPosition.y + 16);
+				PlaceMonster(ActiveMonsterCount++, mtype, startPosition + Displacement { i, j });
 			}
 		}
 	}

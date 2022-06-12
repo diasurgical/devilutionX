@@ -23,11 +23,8 @@ namespace devilution {
 uint8_t dungeon[DMAXX][DMAXY];
 uint8_t pdungeon[DMAXX][DMAXY];
 bool Protected[DMAXX][DMAXY];
-Rectangle SetPiecesRoom;
-int setpc_x;
-int setpc_y;
-int setpc_w;
-int setpc_h;
+Rectangle SetPieceRoom;
+Rectangle SetPiece;
 std::unique_ptr<uint16_t[]> pSetPiece;
 bool setloadflag;
 std::optional<OwnedCelSprite> pSpecialCels;
@@ -175,10 +172,10 @@ bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *wi
 
 void CreateThemeRoom(int themeIndex)
 {
-	const int lx = themeLoc[themeIndex].x;
-	const int ly = themeLoc[themeIndex].y;
-	const int hx = lx + themeLoc[themeIndex].width;
-	const int hy = ly + themeLoc[themeIndex].height;
+	const int lx = themeLoc[themeIndex].room.position.x;
+	const int ly = themeLoc[themeIndex].room.position.y;
+	const int hx = lx + themeLoc[themeIndex].room.size.width;
+	const int hy = ly + themeLoc[themeIndex].room.size.height;
 
 	for (int yy = ly; yy < hy; yy++) {
 		for (int xx = lx; xx < hx; xx++) {
@@ -477,24 +474,31 @@ void DRLG_InitTrans()
 	TransVal = 1;
 }
 
-void DRLG_RectTrans(int x1, int y1, int x2, int y2)
+void DRLG_RectTrans(Rectangle area)
 {
-	for (int j = y1; j <= y2; j++) {
-		for (int i = x1; i <= x2; i++) {
+	Point position = area.position;
+	Size size = area.size;
+
+	for (int j = position.y; j <= position.y + size.height; j++) {
+		for (int i = position.x; i <= position.x + size.width; i++) {
 			dTransVal[i][j] = TransVal;
 		}
 	}
+
 	TransVal++;
 }
 
-void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
+void DRLG_MRectTrans(Rectangle area)
 {
-	x1 = 2 * x1 + 16 + 1;
-	y1 = 2 * y1 + 16 + 1;
-	x2 = 2 * x2 + 16;
-	y2 = 2 * y2 + 16;
+	Point position = area.position.megaToWorld();
+	Size size = area.size * 2;
 
-	DRLG_RectTrans(x1, y1, x2, y2);
+	DRLG_RectTrans({ position + Displacement { 1, 1 }, { size.width - 1, size.height - 1 } });
+}
+
+void DRLG_MRectTrans(Point origin, Point extent)
+{
+	DRLG_MRectTrans({ origin, { extent.x - origin.x, extent.y - origin.y } });
 }
 
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
@@ -504,37 +508,23 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 
 void DRLG_InitSetPC()
 {
-	SetPiecesRoom = { { -1, -1 }, { -1, -1 } };
-	setpc_x = 0;
-	setpc_y = 0;
-	setpc_w = 0;
-	setpc_h = 0;
+	SetPieceRoom = { { -1, -1 }, { -1, -1 } };
+	SetPiece = { { 0, 0 }, { 0, 0 } };
 }
 
 void DRLG_SetPC()
 {
-	int w = 2 * setpc_w;
-	int h = 2 * setpc_h;
-	int x = 2 * setpc_x + 16;
-	int y = 2 * setpc_y + 16;
-
-	for (int j = 0; j < h; j++) {
-		for (int i = 0; i < w; i++) {
-			dFlags[i + x][j + y] |= DungeonFlag::Populated;
-		}
-	}
+	Make_SetPC(SetPiece);
 }
 
-void Make_SetPC(int x, int y, int w, int h)
+void Make_SetPC(Rectangle area)
 {
-	int dw = 2 * w;
-	int dh = 2 * h;
-	int dx = 2 * x + 16;
-	int dy = 2 * y + 16;
+	Point position = area.position.megaToWorld();
+	Size size = area.size * 2;
 
-	for (int j = 0; j < dh; j++) {
-		for (int i = 0; i < dw; i++) {
-			dFlags[i + dx][j + dy] |= DungeonFlag::Populated;
+	for (int j = 0; j < size.height; j++) {
+		for (int i = 0; i < size.width; i++) {
+			dFlags[position.x + i][position.y + j] |= DungeonFlag::Populated;
 		}
 	}
 }
@@ -543,30 +533,26 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries, bool drlg1Q
 {
 	int sw = miniset.size.width;
 	int sh = miniset.size.height;
-	int sx = GenerateRnd(DMAXX - sw);
-	int sy = GenerateRnd(DMAXY - sh);
+	Point position { GenerateRnd(DMAXX - sw), GenerateRnd(DMAXY - sh) };
 
-	for (int bailcnt = 0;; bailcnt++, sx++) {
-		if (bailcnt > tries)
-			return {};
-
-		if (sx == DMAXX - sw) {
-			sx = 0;
-			sy++;
-			if (sy == DMAXY - sh) {
-				sy = 0;
+	for (int i = 0; i < tries; i++, position.x++) {
+		if (position.x == DMAXX - sw) {
+			position.x = 0;
+			position.y++;
+			if (position.y == DMAXY - sh) {
+				position.y = 0;
 			}
 		}
 
 		// Limit the position of SetPieces for compatibility with Diablo bug
 		if (drlg1Quirk) {
 			bool valid = true;
-			if (sx <= 12) {
-				sx++;
+			if (position.x <= 12) {
+				position.x++;
 				valid = false;
 			}
-			if (sy <= 12) {
-				sy++;
+			if (position.y <= 12) {
+				position.y++;
 				valid = false;
 			}
 			if (!valid) {
@@ -574,15 +560,37 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries, bool drlg1Q
 			}
 		}
 
-		if (SetPiecesRoom.Contains({ sx, sy }))
+		if (SetPieceRoom.Contains(position))
 			continue;
-		if (miniset.matches({ sx, sy }))
-			break;
+		if (!miniset.matches(position))
+			continue;
+
+		miniset.place(position);
+
+		return position;
 	}
 
-	miniset.place({ sx, sy });
+	return {};
+}
 
-	return Point(sx, sy);
+void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId)
+{
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
+			if (tileId != 0) {
+				dungeon[position.x + i][position.y + j] = tileId;
+				Protected[position.x + i][position.y + j] = true;
+			} else if (floorId != 0) {
+				dungeon[position.x + i][position.y + j] = floorId;
+			}
+		}
+	}
 }
 
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)
@@ -604,27 +612,25 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 					if (themeH < min || themeH > max)
 						themeH = min;
 				}
-				themeLoc[themeCount].x = i + 1;
-				themeLoc[themeCount].y = j + 1;
-				themeLoc[themeCount].width = themeW;
-				themeLoc[themeCount].height = themeH;
-				if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST))
-					DRLG_RectTrans(2 * i + 20, 2 * j + 20, 2 * (i + themeW) + 15, 2 * (j + themeH) + 15);
-				else
-					DRLG_MRectTrans(i + 1, j + 1, i + themeW, j + themeH);
+				themeLoc[themeCount].room = { { i + 1, j + 1 }, { themeW, themeH } };
+				if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
+					DRLG_RectTrans({ Point(i + 2, j + 2).megaToWorld(), { themeW * 2 - 5, themeH * 2 - 5 } });
+				} else {
+					DRLG_MRectTrans({ { i + 1, j + 1 }, { themeW - 1, themeH - 1 } });
+				}
 				themeLoc[themeCount].ttval = TransVal - 1;
 				CreateThemeRoom(themeCount);
 				themeCount++;
 			}
 		}
 	}
-}
+} // namespace
 
 void DRLG_HoldThemeRooms()
 {
 	for (int i = 0; i < themeCount; i++) {
-		for (int y = themeLoc[i].y; y < themeLoc[i].y + themeLoc[i].height - 1; y++) {
-			for (int x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width - 1; x++) {
+		for (int y = themeLoc[i].room.position.y; y < themeLoc[i].room.position.y + themeLoc[i].room.size.height - 1; y++) {
+			for (int x = themeLoc[i].room.position.x; x < themeLoc[i].room.position.x + themeLoc[i].room.size.width - 1; x++) {
 				int xx = 2 * x + 16;
 				int yy = 2 * y + 16;
 				dFlags[xx][yy] |= DungeonFlag::Populated;
@@ -697,8 +703,8 @@ void DRLG_Init_Globals()
 bool SkipThemeRoom(int x, int y)
 {
 	for (int i = 0; i < themeCount; i++) {
-		if (x >= themeLoc[i].x - 2 && x <= themeLoc[i].x + themeLoc[i].width + 2
-		    && y >= themeLoc[i].y - 2 && y <= themeLoc[i].y + themeLoc[i].height + 2)
+		if (x >= themeLoc[i].room.position.x - 2 && x <= themeLoc[i].room.position.x + themeLoc[i].room.size.width + 2
+		    && y >= themeLoc[i].room.position.y - 2 && y <= themeLoc[i].room.position.y + themeLoc[i].room.size.height + 2)
 			return false;
 	}
 
