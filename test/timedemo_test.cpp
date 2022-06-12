@@ -40,7 +40,7 @@ void RunTimedemo(std::string timedemoFolderName)
 	gbIsHellfire = false;
 	gbMusicOn = false;
 	gbSoundOn = false;
-	gbQuietMode = true;
+	HeadlessMode = true;
 	demo::InitPlayBack(demoNumber, true);
 
 	pfile_ui_set_hero_infos(Dummy_GetHeroInfo);

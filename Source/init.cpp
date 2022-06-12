@@ -187,7 +187,7 @@ void LoadGameArchives()
 		if (spawn_mpq)
 			gbIsSpawn = true;
 	}
-	if (!gbQuietMode) {
+	if (!HeadlessMode) {
 		SDL_RWops *handle = OpenAsset("ui_art\\title.pcx");
 		if (handle == nullptr) {
 			LogError("{}", SDL_GetError());

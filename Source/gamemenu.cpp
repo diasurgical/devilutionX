@@ -101,7 +101,7 @@ void GamemenuNewGame(bool /*bActivate*/)
 	}
 
 	MyPlayerIsDead = false;
-	if (!gbQuietMode) {
+	if (!HeadlessMode) {
 		force_redraw = 255;
 		scrollrt_draw_game_screen();
 	}
