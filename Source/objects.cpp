@@ -1612,7 +1612,7 @@ void ObjSetMini(Point position, int v)
 {
 	MegaTile mega = pMegaTiles[v - 1];
 
-	Point megaOrigin = position * 2 + Displacement { 16, 16 };
+	Point megaOrigin = position.megaToWorld();
 
 	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1) + 1);
 	ObjSetMicro(megaOrigin + Direction::SouthEast, SDL_SwapLE16(mega.micro2) + 1);

@@ -164,41 +164,6 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const Miniset &miniset, bool setview)
-{
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-	int sx = GenerateRnd(DMAXX - sw) - 1;
-	int sy = GenerateRnd(DMAXY - sh);
-
-	for (int bailcnt = 0;; bailcnt++) {
-		if (bailcnt > 198)
-			return false;
-
-		sx++;
-		if (sx == DMAXX - sw) {
-			sx = 0;
-			sy++;
-			if (sy == DMAXY - sh) {
-				sy = 0;
-			}
-		}
-
-		if (SetPiecesRoom.Contains({ sx, sy }))
-			continue;
-		if (miniset.matches({ sx, sy }))
-			break;
-	}
-
-	miniset.place({ sx, sy }, true);
-
-	if (setview) {
-		ViewPosition = Point { 21, 22 } + Displacement { sx, sy } * 2;
-	}
-
-	return true;
-}
-
 void LoadQuestSetPieces()
 {
 	setloadflag = false;
@@ -1236,38 +1201,46 @@ void GeneralFix()
 
 bool PlaceStairs(lvl_entry entry)
 {
+	std::optional<Point> position;
+
 	// Place stairs up
-	if (!PlaceMiniSet(L4USTAIRS, entry == ENTRY_MAIN))
+	position = PlaceMiniSet(L4USTAIRS);
+	if (!position)
 		return false;
 	if (entry == ENTRY_MAIN)
-		ViewPosition.x++;
+		ViewPosition = position->megaToWorld() + Displacement { 6, 6 };
 
 	if (currlevel != 15) {
 		// Place stairs down
-		if (currlevel != 16 && !Quests[Q_WARLORD].IsAvailable()) {
-			if (!PlaceMiniSet(L4DSTAIRS, entry == ENTRY_PREV))
-				return false;
+		if (currlevel != 16) {
+			if (Quests[Q_WARLORD].IsAvailable()) {
+				if (entry == ENTRY_PREV)
+					ViewPosition = Point(setpc_x, setpc_y).megaToWorld() + Displacement { 6, 6 };
+			} else {
+				position = PlaceMiniSet(L4DSTAIRS);
+				if (!position)
+					return false;
+				if (entry == ENTRY_PREV)
+					ViewPosition = position->megaToWorld() + Displacement { 5, 7 };
+			}
 		}
 
 		// Place town warp stairs
 		if (currlevel == 13) {
-			if (!PlaceMiniSet(L4TWARP, entry == ENTRY_TWARPDN))
+			position = PlaceMiniSet(L4TWARP);
+			if (!position)
 				return false;
 			if (entry == ENTRY_TWARPDN)
-				ViewPosition.x++;
+				ViewPosition = position->megaToWorld() + Displacement { 6, 6 };
 		}
 	} else {
 		// Place hell gate
 		bool isGateOpen = gbIsMultiplayer || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
-		if (!PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA, entry == ENTRY_PREV))
+		position = PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA);
+		if (!position)
 			return false;
-	}
-
-	if (entry == ENTRY_PREV) {
-		if (Quests[Q_WARLORD].IsAvailable())
-			ViewPosition = Point { 22, 22 } + Displacement { setpc_x, setpc_y } * 2;
-		else
-			ViewPosition.y++;
+		if (entry == ENTRY_PREV)
+			ViewPosition = position->megaToWorld() + Displacement { 5, 7 };
 	}
 
 	return true;

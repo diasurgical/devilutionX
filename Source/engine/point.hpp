@@ -161,6 +161,14 @@ struct Point {
 		return std::max<int>(offset.deltaX, offset.deltaY);
 	}
 
+	/**
+	 * @brief Converte from mega tile cordinates to dungeon piece cordinates
+	 */
+	constexpr Point megaToWorld()
+	{
+		return { 16 + 2 * x, 16 + 2 * y };
+	}
+
 #ifdef BUILD_TESTING
 	/**
 	 * @brief Format points nicely in test failure messages

@@ -1375,41 +1375,6 @@ bool Spawn(int x, int y, int *totarea)
 	return false;
 }
 
-bool PlaceMiniSet(const Miniset &miniset, bool setview)
-{
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-	int sx = GenerateRnd(DMAXX - sw) - 1;
-	int sy = GenerateRnd(DMAXY - sh);
-
-	for (int bailcnt = 0;; bailcnt++) {
-		if (bailcnt > 198)
-			return false;
-
-		sx++;
-		if (sx == DMAXX - sw) {
-			sx = 0;
-			sy++;
-			if (sy == DMAXY - sh) {
-				sy = 0;
-			}
-		}
-
-		if (SetPiecesRoom.Contains({ sx, sy }))
-			continue;
-		if (miniset.matches({ sx, sy }))
-			break;
-	}
-
-	miniset.place({ sx, sy });
-
-	if (setview) {
-		ViewPosition = Point { 17, 19 } + Displacement { sx, sy } * 2;
-	}
-
-	return true;
-}
-
 bool CanReplaceTile(uint8_t replace, Point tile)
 {
 	if (replace < 84 || replace > 100) {
@@ -2018,35 +1983,52 @@ bool Lockout()
 
 bool PlaceCaveStairs(lvl_entry entry)
 {
+	std::optional<Point> position;
+
 	// Place stairs up
-	if (!PlaceMiniSet(L3UP, entry == ENTRY_MAIN))
+	position = PlaceMiniSet(L3UP);
+	if (!position)
 		return false;
+	if (entry == ENTRY_MAIN)
+		ViewPosition = position->megaToWorld() + Displacement { 1, 3 };
 
 	// Place stairs down
-	if (!PlaceMiniSet(L3DOWN, entry == ENTRY_PREV))
+	position = PlaceMiniSet(L3DOWN);
+	if (!position)
 		return false;
 	if (entry == ENTRY_PREV)
-		ViewPosition += { 2, -2 };
+		ViewPosition = position->megaToWorld() + Displacement { 3, 1 };
 
 	// Place town warp stairs
-	if (currlevel == 9 && !PlaceMiniSet(L3HOLDWARP, entry == ENTRY_TWARPDN))
-		return false;
+	if (currlevel == 9) {
+		position = PlaceMiniSet(L3HOLDWARP);
+		if (!position)
+			return false;
+		if (entry == ENTRY_TWARPDN)
+			ViewPosition = position->megaToWorld() + Displacement { 1, 3 };
+	}
 
 	return true;
 }
 
 bool PlaceNestStairs(lvl_entry entry)
 {
+	std::optional<Point> position;
+
 	// Place stairs up
-	if (!PlaceMiniSet(currlevel != 17 ? L6UP : L6HOLDWARP, entry == ENTRY_MAIN || entry == ENTRY_TWARPDN))
+	position = PlaceMiniSet(currlevel != 17 ? L6UP : L6HOLDWARP);
+	if (!position)
 		return false;
+	if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN)
+		ViewPosition = position->megaToWorld() + Displacement { 1, 3 };
 
 	// Place stairs down
 	if (currlevel != 20) {
-		if (!PlaceMiniSet(L6DOWN, entry == ENTRY_PREV))
+		position = PlaceMiniSet(L6DOWN);
+		if (!position)
 			return false;
 		if (entry == ENTRY_PREV)
-			ViewPosition += { 2, -2 };
+			ViewPosition = position->megaToWorld() + Displacement { 3, 1 };
 	}
 
 	return true;
