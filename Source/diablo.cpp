@@ -1218,7 +1218,7 @@ void UnstuckChargers()
 				continue;
 			if (player._pLvlChanging)
 				continue;
-			if (player.plrlevel != MyPlayer->plrlevel)
+			if (!player.isOnActiveLevel())
 				continue;
 			if (&player == MyPlayer)
 				continue;
@@ -2161,7 +2161,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (Player &player : Players) {
-			if (player.plractive && currlevel == player.plrlevel) {
+			if (player.plractive && player.isOnActiveLevel()) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(player, firstflag);
@@ -2262,7 +2262,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (Player &player : Players) {
-			if (player.plractive && currlevel == player.plrlevel) {
+			if (player.plractive && player.isOnActiveLevel()) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(player, firstflag);
@@ -2288,7 +2288,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		Player &player = Players[i];
-		if (player.plractive && player.plrlevel == currlevel && (!player._pLvlChanging || i == MyPlayerId)) {
+		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || i == MyPlayerId)) {
 			if (player._pHitPoints > 0) {
 				if (!gbIsMultiplayer)
 					dPlayer[player.position.tile.x][player.position.tile.y] = i + 1;

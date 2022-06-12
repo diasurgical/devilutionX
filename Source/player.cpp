@@ -2782,7 +2782,7 @@ void InitPlayer(Player &player, bool firstTime)
 		player.wReflections = 0;
 	}
 
-	if (player.plrlevel == currlevel) {
+	if (player.isOnActiveLevel()) {
 
 		SetPlrAnims(player);
 
@@ -3084,7 +3084,7 @@ StartPlayerKill(int pnum, int earflag)
 		CalcPlrInv(player, false);
 	}
 
-	if (player.plrlevel == currlevel) {
+	if (player.isOnActiveLevel()) {
 		FixPlayerLocation(pnum, player._pdir);
 		RemovePlrFromMap(pnum);
 		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
@@ -3372,7 +3372,7 @@ void ProcessPlayers()
 
 	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
 		Player &player = Players[pnum];
-		if (player.plractive && currlevel == player.plrlevel && (pnum == MyPlayerId || !player._pLvlChanging)) {
+		if (player.plractive && player.isOnActiveLevel() && (pnum == MyPlayerId || !player._pLvlChanging)) {
 			CheckCheatStats(player);
 
 			if (!PlrDeathModeOK(pnum) && (player._pHitPoints >> 6) <= 0) {
@@ -3657,7 +3657,7 @@ void SyncInitPlrPos(int pnum)
 {
 	Player &player = Players[pnum];
 
-	if (!gbIsMultiplayer || player.plrlevel != currlevel) {
+	if (!gbIsMultiplayer || !player.isOnActiveLevel()) {
 		return;
 	}
 

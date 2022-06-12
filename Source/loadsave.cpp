@@ -2581,7 +2581,7 @@ void LoadLevel()
 	}
 
 	for (Player &player : Players) {
-		if (player.plractive && currlevel == player.plrlevel)
+		if (player.plractive && player.isOnActiveLevel())
 			Lights[player._plid]._lunflag = true;
 	}
 }

@@ -3204,7 +3204,7 @@ void MI_Town(Missile &missile)
 
 	for (int p = 0; p < MAX_PLRS; p++) {
 		Player &player = Players[p];
-		if (player.plractive && currlevel == player.plrlevel && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
+		if (player.plractive && player.isOnActiveLevel() && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
 			ClrPlrPath(player);
 			if (p == MyPlayerId) {
 				NetSendCmdParam1(true, CMD_WARP, missile._misource);

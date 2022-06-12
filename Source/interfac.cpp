@@ -308,7 +308,7 @@ void ShowProgress(interface_mode uMsg)
 		FreeGameMem();
 		currlevel--;
 		leveltype = GetLevelType(currlevel);
-		assert(myPlayer.plrlevel == currlevel);
+		assert(myPlayer.isOnActiveLevel());
 		IncProgress();
 		LoadGameLevel(false, ENTRY_PREV);
 		IncProgress();

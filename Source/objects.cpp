@@ -1349,7 +1349,7 @@ void UpdateObjectLight(Object &light, int lightRadius)
 	if (!DisableLighting) {
 		for (int p = 0; p < MAX_PLRS && !turnon; p++) {
 			if (Players[p].plractive) {
-				if (currlevel == Players[p].plrlevel) {
+				if (Players[p].isOnActiveLevel()) {
 					int dx = abs(Players[p].position.tile.x - ox);
 					int dy = abs(Players[p].position.tile.y - oy);
 					if (dx < tr && dy < tr)
@@ -4947,7 +4947,7 @@ void ProcessObjects()
 void RedoPlayerVision()
 {
 	for (Player &player : Players) {
-		if (player.plractive && currlevel == player.plrlevel) {
+		if (player.plractive && player.isOnActiveLevel()) {
 			ChangeVisionXY(player._pvid, player.position.tile);
 		}
 	}

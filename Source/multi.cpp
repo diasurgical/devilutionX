@@ -627,7 +627,7 @@ void multi_process_network_packets()
 			player._pBaseMag = pkt->bmag;
 			player._pBaseDex = pkt->bdex;
 			if (!cond && player.plractive && player._pHitPoints != 0) {
-				if (currlevel == player.plrlevel && !player._pLvlChanging) {
+				if (player.isOnActiveLevel() && !player._pLvlChanging) {
 					int dx = abs(player.position.tile.x - pkt->px);
 					int dy = abs(player.position.tile.y - pkt->py);
 					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
@@ -833,7 +833,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 
 	SyncInitPlr(pnum);
 
-	if (player.plrlevel != currlevel) {
+	if (!player.isOnActiveLevel()) {
 		return;
 	}
 
