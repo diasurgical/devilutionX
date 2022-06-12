@@ -63,14 +63,22 @@ TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1583642716)
 	TestCreateDungeon(15, 1583642716, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition, Point(87, 69));
 
+	Quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
+	TestCreateDungeon(15, 1583642716, ENTRY_MAIN); // Betrayer quest does not change level gen
+	EXPECT_EQ(ViewPosition, Point(44, 26));
+	EXPECT_EQ(Quests[Q_BETRAYER].position, Point(34, 24)) << "Ensure the portal to lazarus has a spawn position if the player has activated the quest";
+
 	LoadExpectedLevelData("diablo/15-1583642716-changed.dun");
 
+	Quests[Q_BETRAYER]._qactive = QUEST_DONE;
 	Quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
 
 	TestCreateDungeon(15, 1583642716, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(44, 26));
+	EXPECT_EQ(Quests[Q_BETRAYER].position, Point(34, 24)) << "Not really required? current bugfix sets this position anyway";
 	TestCreateDungeon(15, 1583642716, ENTRY_PREV);
 	EXPECT_EQ(ViewPosition, Point(87, 69));
+	EXPECT_EQ(Quests[Q_BETRAYER].position, Point(34, 24)) << "Not really required? current bugfix sets this position anyway";
 }
 
 TEST(Drlg_l4, CreateL4Dungeon_diablo_15_1256511996)
