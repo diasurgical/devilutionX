@@ -338,6 +338,11 @@ void DRLG_AreaTrans(int num, BYTE *List);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
 void Make_SetPC(int x, int y, int w, int h);
+/**
+ * @param tries Tiles to try, 1600 will scan the full map
+ * @param drlg1Quirk Match buggy behaviour of Diablo's Cathedral
+ */
+std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 198, bool drlg1Quirk = false);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
 void DRLG_LPass3(int lv);

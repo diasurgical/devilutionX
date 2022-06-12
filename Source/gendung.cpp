@@ -489,8 +489,8 @@ void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 
 void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
 {
-	x1 = 2 * x1 + 17;
-	y1 = 2 * y1 + 17;
+	x1 = 2 * x1 + 16 + 1;
+	y1 = 2 * y1 + 16 + 1;
 	x2 = 2 * x2 + 16;
 	y2 = 2 * y2 + 16;
 
@@ -561,6 +561,52 @@ void Make_SetPC(int x, int y, int w, int h)
 			dFlags[i + dx][j + dy] |= DungeonFlag::Populated;
 		}
 	}
+}
+
+std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries, bool drlg1Quirk)
+{
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
+	int sx = GenerateRnd(DMAXX - sw);
+	int sy = GenerateRnd(DMAXY - sh);
+
+	for (int bailcnt = 0;; bailcnt++, sx++) {
+		if (bailcnt > tries)
+			return {};
+
+		if (sx == DMAXX - sw) {
+			sx = 0;
+			sy++;
+			if (sy == DMAXY - sh) {
+				sy = 0;
+			}
+		}
+
+		// Limit the position of SetPieces for compatibility with Diablo bug
+		if (drlg1Quirk) {
+			bool valid = true;
+			if (sx <= 12) {
+				sx++;
+				valid = false;
+			}
+			if (sy <= 12) {
+				sy++;
+				valid = false;
+			}
+			if (!valid) {
+				continue;
+			}
+		}
+
+		if (SetPiecesRoom.Contains({ sx, sy }))
+			continue;
+		if (miniset.matches({ sx, sy }))
+			break;
+	}
+
+	miniset.place({ sx, sy });
+
+	return Point(sx, sy);
 }
 
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)

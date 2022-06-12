@@ -1571,41 +1571,6 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const Miniset &miniset, bool setview)
-{
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-	int sx = GenerateRnd(DMAXX - sw) - 1;
-	int sy = GenerateRnd(DMAXY - sh);
-
-	for (int bailcnt = 0;; bailcnt++) {
-		if (bailcnt > 198)
-			return false;
-
-		sx++;
-		if (sx == DMAXX - sw) {
-			sx = 0;
-			sy++;
-			if (sy == DMAXY - sh) {
-				sy = 0;
-			}
-		}
-
-		if (SetPiecesRoom.Contains({ sx, sy }))
-			continue;
-		if (miniset.matches({ sx, sy }))
-			break;
-	}
-
-	miniset.place({ sx, sy });
-
-	if (setview) {
-		ViewPosition = Point { 21, 22 } + Displacement { sx, sy } * 2;
-	}
-
-	return true;
-}
-
 void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
 	int sw = miniset.size.width;
@@ -2772,24 +2737,29 @@ void FixDoors()
 
 bool PlaceStairs(lvl_entry entry)
 {
+	std::optional<Point> position;
+
 	// Place stairs up
-	if (!PlaceMiniSet(USTAIRS, entry == ENTRY_MAIN))
+	position = PlaceMiniSet(USTAIRS);
+	if (!position)
 		return false;
 	if (entry == ENTRY_MAIN)
-		ViewPosition.y -= 2;
+		ViewPosition = position->megaToWorld() + Displacement { 5, 4 };
 
 	// Place stairs down
-	if (!PlaceMiniSet(DSTAIRS, entry == ENTRY_PREV))
+	position = PlaceMiniSet(DSTAIRS);
+	if (!position)
 		return false;
 	if (entry == ENTRY_PREV)
-		ViewPosition.x--;
+		ViewPosition = position->megaToWorld() + Displacement { 4, 6 };
 
 	// Place town warp stairs
 	if (currlevel == 5) {
-		if (!PlaceMiniSet(WARPSTAIRS, entry == ENTRY_TWARPDN))
+		position = PlaceMiniSet(WARPSTAIRS);
+		if (!position)
 			return false;
 		if (entry == ENTRY_TWARPDN)
-			ViewPosition.y -= 2;
+			ViewPosition = position->megaToWorld() + Displacement { 5, 4 };
 	}
 
 	return true;

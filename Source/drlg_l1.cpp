@@ -741,64 +741,6 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const Miniset &miniset, bool setview)
-{
-	int sw = miniset.size.width;
-	int sh = miniset.size.height;
-	int sx = GenerateRnd(DMAXX - sw) - 1;
-	int sy = GenerateRnd(DMAXY - sh);
-
-	for (int bailcnt = 0;; bailcnt++) {
-		if (bailcnt > 4000)
-			return false;
-
-		sx++;
-		if (sx == DMAXX - sw) {
-			sx = 0;
-			sy++;
-			if (sy == DMAXY - sh) {
-				sy = 0;
-			}
-		}
-
-		// Limit the position of SetPieces for compatibility with Diablo bug
-		bool valid = true;
-		if (sx <= 12) {
-			sx++;
-			valid = false;
-		}
-		if (sy <= 12) {
-			sy++;
-			valid = false;
-		}
-		if (!valid) {
-			continue;
-		}
-
-		if (SetPiecesRoom.Contains({ sx, sy }))
-			continue;
-		if (miniset.matches({ sx, sy }))
-			break;
-	}
-
-	miniset.place({ sx, sy });
-
-	if (&miniset == &PWATERIN) {
-		int8_t t = TransVal;
-		TransVal = 0;
-		DRLG_MRectTrans(sx, sy + 2, sx + 5, sy + 4);
-		TransVal = t;
-
-		Quests[Q_PWATER].position = { 2 * sx + 21, 2 * sy + 22 };
-	}
-
-	if (setview) {
-		ViewPosition = Point { 19, 20 } + Displacement { sx, sy } * 2;
-	}
-
-	return true;
-}
-
 bool CanReplaceTile(uint8_t replace, Point tile)
 {
 	if (replace < 84 || replace > 100) {
@@ -2048,30 +1990,46 @@ void CryptFloor(int rndper)
 bool PlaceCathedralStairs(lvl_entry entry)
 {
 	bool success = true;
+	std::optional<Point> position;
 
 	// Place poison water entrance
 	if (Quests[Q_PWATER].IsAvailable()) {
-		if (!PlaceMiniSet(PWATERIN, entry == ENTRY_RTNLVL))
+		position = PlaceMiniSet(PWATERIN, 4000, true);
+		if (!position) {
 			success = false;
-		if (entry == ENTRY_RTNLVL)
-			ViewPosition += Displacement { 2, 3 };
+		} else {
+			int8_t t = TransVal;
+			TransVal = 0;
+			Point miniPosition = *position;
+			DRLG_MRectTrans(miniPosition.x, miniPosition.y + 2, miniPosition.x + 5, miniPosition.y + 4);
+			TransVal = t;
+			Quests[Q_PWATER].position = miniPosition.megaToWorld() + Displacement { 5, 7 };
+			if (entry == ENTRY_RTNLVL)
+				ViewPosition = Quests[Q_PWATER].position;
+		}
 	}
 
 	// Place stairs up
-	if (!PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, entry == ENTRY_MAIN)) {
+	position = PlaceMiniSet(MyPlayer->pOriginalCathedral ? L5STAIRSUP : STAIRSUP, 4000, true);
+	if (!position) {
 		if (MyPlayer->pOriginalCathedral)
 			return false;
 		success = false;
+	} else if (entry == ENTRY_MAIN) {
+		ViewPosition = position->megaToWorld() + Displacement { 3, 4 };
 	}
 
 	// Place stairs down
-	if (!Quests[Q_LTBANNER].IsAvailable() && !PlaceMiniSet(STAIRSDOWN, entry == ENTRY_PREV))
-		success = false;
-	if (entry == ENTRY_PREV) {
-		if (Quests[Q_LTBANNER].IsAvailable())
-			ViewPosition = Point { 20, 28 } + Displacement { setpc_x, setpc_y } * 2;
-		else
-			ViewPosition.y--;
+	if (Quests[Q_LTBANNER].IsAvailable()) {
+		if (entry == ENTRY_PREV)
+			ViewPosition = Point(setpc_x, setpc_y).megaToWorld() + Displacement { 4, 12 };
+	} else {
+		position = PlaceMiniSet(STAIRSDOWN, 4000, true);
+		if (!position) {
+			success = false;
+		} else if (entry == ENTRY_PREV) {
+			ViewPosition = position->megaToWorld() + Displacement { 3, 3 };
+		}
 	}
 
 	return success;
@@ -2080,20 +2038,23 @@ bool PlaceCathedralStairs(lvl_entry entry)
 bool PlaceCryptStairs(lvl_entry entry)
 {
 	bool success = true;
+	std::optional<Point> position;
 
 	// Place stairs up
-	bool enteringFromAbove = entry == ENTRY_MAIN || entry == ENTRY_TWARPDN;
-	if (!PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, enteringFromAbove))
+	position = PlaceMiniSet(currlevel != 21 ? L5STAIRSUPHF : L5STAIRSTOWN, 4000, true);
+	if (!position) {
 		success = false;
-	if (enteringFromAbove)
-		ViewPosition.y++;
+	} else if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN) {
+		ViewPosition = position->megaToWorld() + Displacement { 3, 5 };
+	}
 
 	// Place stairs down
 	if (currlevel != 24) {
-		if (!PlaceMiniSet(L5STAIRSDOWN, entry == ENTRY_PREV))
+		position = PlaceMiniSet(L5STAIRSDOWN, 4000, true);
+		if (!position)
 			success = false;
-		if (entry == ENTRY_PREV)
-			ViewPosition.y += 3;
+		else if (entry == ENTRY_PREV)
+			ViewPosition = position->megaToWorld() + Displacement { 3, 7 };
 	}
 
 	return success;
@@ -2211,7 +2172,7 @@ void GenerateLevel(lvl_entry entry)
 
 		int numt = GenerateRnd(5) + 5;
 		for (int i = 0; i < numt; i++) {
-			PlaceMiniSet(LAMPS, false);
+			PlaceMiniSet(LAMPS, 4000, true);
 		}
 
 		FillFloor();
