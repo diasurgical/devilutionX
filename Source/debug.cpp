@@ -213,7 +213,7 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return fmt::format("Level {} is not known. Do you want to write a mod?", level);
-	if (!setlevel && myPlayer.plrlevel == level)
+	if (!setlevel && myPlayer.isOnLevel(level))
 		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
 
 	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
@@ -389,7 +389,7 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 {
 	Player &myPlayer = *MyPlayer;
 
-	if (setlevel || myPlayer.plrlevel != 0)
+	if (setlevel || !myPlayer.isOnLevel(0))
 		return "What kind of friends do you have in dungeons?";
 
 	if (parameter.empty()) {
@@ -443,7 +443,7 @@ std::string DebugCmdResetLevel(const string_view parameter)
 		glSeedTbl[level] = seed;
 	}
 
-	if (myPlayer.plrlevel == level)
+	if (myPlayer.isOnLevel(level))
 		return fmt::format("Level {} can't be cleaned, cause you still occupy it!", level);
 	return fmt::format("Level {} was restored and looks fabulous.", level);
 }

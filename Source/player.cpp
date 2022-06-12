@@ -3320,7 +3320,7 @@ void StartWarpLvl(int pnum, int pidx)
 	InitLevelChange(pnum);
 
 	if (gbIsMultiplayer) {
-		if (player.plrlevel != 0) {
+		if (!player.isOnLevel(0)) {
 			player.plrlevel = 0;
 		} else {
 			player.plrlevel = Portals[pidx].level;

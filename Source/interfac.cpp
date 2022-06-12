@@ -416,7 +416,7 @@ void ShowProgress(interface_mode uMsg)
 	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel);
 	plrmsg_delay(false);
 
-	if (gbSomebodyWonGameKludge && myPlayer.plrlevel == 16) {
+	if (gbSomebodyWonGameKludge && myPlayer.isOnLevel(16)) {
 		PrepDoEnding();
 	}
 
