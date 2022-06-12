@@ -54,6 +54,51 @@ struct TMegaPkt {
 	}
 };
 
+#pragma pack(push, 1)
+struct DMonsterStr {
+	uint8_t _mx;
+	uint8_t _my;
+	Direction _mdir;
+	uint8_t _menemy;
+	uint8_t _mactive;
+	int32_t _mhitpoints;
+	int8_t mWhoHit;
+};
+
+struct DObjectStr {
+	_cmd_id bCmd;
+};
+
+struct DLevel {
+	TCmdPItem item[MAXITEMS];
+	DObjectStr object[MAXOBJECTS];
+	DMonsterStr monster[MAXMONSTERS];
+};
+
+struct LocalLevel {
+	uint8_t automapsv[DMAXX][DMAXY];
+};
+
+struct DPortal {
+	uint8_t x;
+	uint8_t y;
+	uint8_t level;
+	uint8_t ltype;
+	uint8_t setlvl;
+};
+
+struct MultiQuests {
+	quest_state qstate;
+	uint8_t qlog;
+	uint8_t qvar1;
+};
+
+struct DJunk {
+	DPortal portal[MAXPORTAL];
+	MultiQuests quests[MAXMULTIQUESTS];
+};
+#pragma pack(pop)
+
 #define MAX_CHUNKS (NUMLEVELS + 4)
 
 uint32_t sgdwOwnerWait;
