@@ -1591,10 +1591,8 @@ bool PlaceMiniSet(const Miniset &miniset, bool setview)
 			}
 		}
 
-		if (SetPiecesRoom.Contains({ sx, sy })) {
+		if (SetPiecesRoom.Contains({ sx, sy }))
 			continue;
-		}
-
 		if (miniset.matches({ sx, sy }))
 			break;
 	}
