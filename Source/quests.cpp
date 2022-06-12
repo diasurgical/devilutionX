@@ -487,35 +487,33 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 	} else if (monster._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		Quests[Q_ZHAR]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
-	} else if (monster._uniqtype - 1 == UMT_LAZARUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
+	} else if (monster._uniqtype - 1 == UMT_LAZARUS) { //"Arch-Bishop Lazarus"
 		auto &betrayerQuest = Quests[Q_BETRAYER];
-		auto &diabloQuest = Quests[Q_DIABLO];
 		betrayerQuest._qactive = QUEST_DONE;
+		myPlayer.Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 		betrayerQuest._qvar1 = 7;
+		auto &diabloQuest = Quests[Q_DIABLO];
 		diabloQuest._qactive = QUEST_ACTIVE;
 
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) {
-				if (dPiece[i][j] == 370) {
-					trigs[numtrigs].position = { i, j };
-					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
-					numtrigs++;
+		if (gbIsMultiplayer) {
+			for (int j = 0; j < MAXDUNY; j++) {
+				for (int i = 0; i < MAXDUNX; i++) {
+					if (dPiece[i][j] == 370) {
+						trigs[numtrigs].position = { i, j };
+						trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+						numtrigs++;
+					}
 				}
 			}
+			if (sendmsg) {
+				NetSendCmdQuest(true, betrayerQuest);
+				NetSendCmdQuest(true, diabloQuest);
+			}
+		} else {
+			InitVPTriggers();
+			betrayerQuest._qvar2 = 4;
+			AddMissile({ 35, 32 }, { 35, 32 }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		}
-		myPlayer.Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
-		if (sendmsg) {
-			NetSendCmdQuest(true, betrayerQuest);
-			NetSendCmdQuest(true, diabloQuest);
-		}
-	} else if (monster._uniqtype - 1 == UMT_LAZARUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
-		Quests[Q_BETRAYER]._qactive = QUEST_DONE;
-		InitVPTriggers();
-		Quests[Q_BETRAYER]._qvar1 = 7;
-		Quests[Q_BETRAYER]._qvar2 = 4;
-		Quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
-		AddMissile({ 35, 32 }, { 35, 32 }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
-		myPlayer.Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 	} else if (monster._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		Quests[Q_WARLORD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::YourReignOfPainHasEnded, 30);
