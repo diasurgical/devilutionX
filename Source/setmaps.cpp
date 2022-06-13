@@ -113,11 +113,6 @@ void LoadSetMap()
 		InitSChambTriggers();
 		break;
 	case SL_MAZE:
-		LoadPreL1Dungeon("Levels\\L1Data\\Lv1MazeA.DUN");
-		LoadL1Dungeon("Levels\\L1Data\\Lv1MazeB.DUN", 20, 50);
-		LoadPalette("Levels\\L1Data\\L1_5.pal");
-		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
-		SetMapTransparency("Levels\\L1Data\\Lv1MazeA.DUN");
 		break;
 	case SL_POISONWATER:
 		if (Quests[Q_PWATER]._qactive == QUEST_INIT)
