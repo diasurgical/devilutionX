@@ -333,8 +333,6 @@ void DRLG_InitTrans();
 void DRLG_MRectTrans(int x1, int y1, int x2, int y2);
 void DRLG_RectTrans(int x1, int y1, int x2, int y2);
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy);
-void DRLG_ListTrans(int num, BYTE *List);
-void DRLG_AreaTrans(int num, BYTE *List);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
 void Make_SetPC(int x, int y, int w, int h);
