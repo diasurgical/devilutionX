@@ -186,15 +186,15 @@ void InitMonsterTRN(CMonster &monst)
 	}
 }
 
-void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
+void InitMonster(Monster &monster, Direction rd, int monsterTypeIndex, Point position)
 {
 	monster._mdir = rd;
 	monster.position.tile = position;
 	monster.position.future = position;
 	monster.position.old = position;
-	monster._mMTidx = mtype;
+	monster._mMTidx = monsterTypeIndex;
 	monster._mmode = MonsterMode::Stand;
-	monster.MType = &LevelMonsterTypes[mtype];
+	monster.MType = &LevelMonsterTypes[monsterTypeIndex];
 	monster.MData = monster.MType->MData;
 	monster.mName = pgettext("monster", monster.MData->mName).c_str();
 	monster.AnimInfo = {};
@@ -295,11 +295,11 @@ bool CanPlaceMonster(Point position)
 	    && !IsTileOccupied(position);
 }
 
-void PlaceMonster(int i, int mtype, Point position)
+void PlaceMonster(int i, int monsterTypeIndex, Point position)
 {
-	if (LevelMonsterTypes[mtype].mtype == MT_NAKRUL) {
+	if (LevelMonsterTypes[monsterTypeIndex].mtype == MT_NAKRUL) {
 		for (int j = 0; j < ActiveMonsterCount; j++) {
-			if (Monsters[j]._mMTidx == mtype) {
+			if (Monsters[j]._mMTidx == monsterTypeIndex) {
 				return;
 			}
 			if (Monsters[j].MType->mtype == MT_NAKRUL) {
@@ -310,118 +310,127 @@ void PlaceMonster(int i, int mtype, Point position)
 	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	InitMonster(Monsters[i], rd, mtype, position);
+	InitMonster(Monsters[i], rd, monsterTypeIndex, position);
 }
 
-void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
+/**
+ * @brief Walk in a random direction untill the given position is a valid for spawning a monster
+ */
+std::optional<Point> GetNextSpawnPosition(Point position, int roomId, Rectangle area)
 {
-	int placed = 0;
+	for (int try2 = 0; try2 < 100; try2++, position += static_cast<Direction>(GenerateRnd(8))) {
+		if (!CanPlaceMonster(position))
+			continue;
+		if (dTransVal[position.x][position.y] != roomId)
+			continue;
+		if (!area.Contains(position))
+			continue;
+		return position;
+	}
 
-	auto &leader = Monsters[leaderId];
+	return {};
+}
 
-	for (int try1 = 0; try1 < 10; try1++) {
-		while (placed != 0) {
-			ActiveMonsterCount--;
-			placed--;
-			const auto &position = Monsters[ActiveMonsterCount].position.tile;
-			dMonster[position.x][position.y] = 0;
-		}
+bool PlaceGroup(std::optional<Point> startPosition, int monsterTypeIndex, int num, Rectangle area)
+{
+	num = std::min(num, totalmonsters - ActiveMonsterCount);
 
-		int xp;
-		int yp;
-		if (uniqueMonsterPack != UniqueMonsterPack::None) {
-			int offset = GenerateRnd(8);
-			auto position = leader.position.tile + static_cast<Direction>(offset);
-			xp = position.x;
-			yp = position.y;
+	for (int attempts = 0; attempts < 10; attempts++) {
+		Point position;
+		if (startPosition) {
+			position = *startPosition;
 		} else {
 			do {
-				xp = GenerateRnd(80) + 16;
-				yp = GenerateRnd(80) + 16;
-			} while (!CanPlaceMonster({ xp, yp }));
-		}
-		int x1 = xp;
-		int y1 = yp;
-
-		if (num + ActiveMonsterCount > totalmonsters) {
-			num = totalmonsters - ActiveMonsterCount;
+				position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+			} while (!CanPlaceMonster(position));
 		}
 
-		int j = 0;
-		for (int try2 = 0; j < num && try2 < 100; xp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
-			if (!CanPlaceMonster({ xp, yp })
-			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
-			    || (uniqueMonsterPack == UniqueMonsterPack::Leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
-				try2++;
-				continue;
-			}
+		int roomId = dTransVal[position.x][position.y];
 
-			PlaceMonster(ActiveMonsterCount, mtype, { xp, yp });
-			if (uniqueMonsterPack != UniqueMonsterPack::None) {
-				auto &minion = Monsters[ActiveMonsterCount];
-				minion._mmaxhp *= 2;
-				minion._mhitpoints = minion._mmaxhp;
-				minion._mint = leader._mint;
+		int placed = 0;
+		while (true) {
+			std::optional<Point> nextPosition = GetNextSpawnPosition(position, roomId, area);
+			if (!nextPosition)
+				break;
 
-				if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
-					minion.leader = leaderId;
-					minion.leaderRelation = LeaderRelation::Leashed;
-					minion._mAi = leader._mAi;
-				}
-
-				if (minion._mAi != AI_GARG) {
-					minion.ChangeAnimationData(MonsterGraphic::Stand);
-					minion.AnimInfo.CurrentFrame = GenerateRnd(minion.AnimInfo.NumberOfFrames - 1);
-					minion._mFlags &= ~MFLAG_ALLOW_SPECIAL;
-					minion._mmode = MonsterMode::Stand;
-				}
-			}
+			position = *nextPosition;
+			PlaceMonster(ActiveMonsterCount, monsterTypeIndex, position);
 			ActiveMonsterCount++;
 			placed++;
-			j++;
+			if (placed == num)
+				return true;
+
+			position += static_cast<Direction>(GenerateRnd(8));
 		}
 
-		if (placed >= num) {
-			break;
+		for (int i = 0; i < placed; i++) {
+			ActiveMonsterCount--;
+			Point position = Monsters[ActiveMonsterCount].position.tile;
+			dMonster[position.x][position.y] = 0;
+		}
+	}
+
+	return false;
+}
+
+void PlaceMinions(int monsterTypeIndex, int packSize, UniqueMonsterPack uniqueMonsterPack, int leaderId)
+{
+	Monster &leader = Monsters[leaderId];
+
+	if (!PlaceGroup(leader.position.tile, monsterTypeIndex, packSize, Rectangle { leader.position.tile, 3 }))
+		return;
+
+	for (int i = ActiveMonsterCount - packSize - 1; i < ActiveMonsterCount; i++) {
+		Monster &minion = Monsters[i];
+		minion._mmaxhp *= 2;
+		minion._mhitpoints = minion._mmaxhp;
+		minion._mint = leader._mint;
+
+		if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
+			minion.leader = leaderId;
+			minion.leaderRelation = LeaderRelation::Leashed;
+			minion._mAi = leader._mAi;
+		}
+
+		if (minion._mAi != AI_GARG) {
+			minion.ChangeAnimationData(MonsterGraphic::Stand);
+			minion.AnimInfo.CurrentFrame = GenerateRnd(minion.AnimInfo.NumberOfFrames - 1);
+			minion._mFlags &= ~MFLAG_ALLOW_SPECIAL;
+			minion._mmode = MonsterMode::Stand;
 		}
 	}
 
 	if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
-		leader.packsize = placed;
+		leader.packsize = packSize;
 	}
 }
 
-void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
+void PlaceUniqueMonst(int uniqindex, int minionIndex, int bosspacksize)
 {
 	auto &monster = Monsters[ActiveMonsterCount];
 	const auto &uniqueMonsterData = UniqueMonstersData[uniqindex];
 
-	int uniqtype;
-	for (uniqtype = 0; uniqtype < LevelMonsterTypeCount; uniqtype++) {
-		if (LevelMonsterTypes[uniqtype].mtype == uniqueMonsterData.mtype) {
+	int monsterTypeIndex;
+	for (monsterTypeIndex = 0; monsterTypeIndex < LevelMonsterTypeCount; monsterTypeIndex++) {
+		if (LevelMonsterTypes[monsterTypeIndex].mtype == uniqueMonsterData.mtype) {
 			break;
 		}
 	}
 
-	int count = 0;
 	Point position;
-	while (true) {
-		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
-		int count2 = 0;
-		for (int x = position.x - 3; x < position.x + 3; x++) {
-			for (int y = position.y - 3; y < position.y + 3; y++) {
-				if (InDungeonBounds({ x, y }) && CanPlaceMonster({ x, y })) {
-					count2++;
-				}
-			}
-		}
+	for (int tries = 0;; tries++) {
+		if (tries > 997)
+			return;
 
-		if (count2 < 9) {
-			count++;
-			if (count < 1000) {
-				continue;
+		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		int freeSpots = 0;
+		for (Point testPosition : PointsInRectangleRange(Rectangle { position, 3 })) {
+			if (CanPlaceMonster(testPosition)) {
+				freeSpots++;
 			}
 		}
+		if (freeSpots < 9)
+			continue;
 
 		if (CanPlaceMonster(position)) {
 			break;
@@ -478,8 +487,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		position = { UberRow - 2, UberCol };
 		UberDiabloMonsterIndex = ActiveMonsterCount;
 	}
-	PlaceMonster(ActiveMonsterCount, uniqtype, position);
-	PrepareUniqueMonst(monster, uniqindex, miniontype, bosspacksize, uniqueMonsterData);
+	PlaceMonster(ActiveMonsterCount, monsterTypeIndex, position);
+	PrepareUniqueMonst(monster, uniqindex, minionIndex, bosspacksize, uniqueMonsterData);
 }
 
 int AddMonsterType(_monster_id type, placeflag placeflag)
@@ -539,28 +548,25 @@ void ClrAllMonsters()
 
 void PlaceUniqueMonsters()
 {
-	for (int u = 0; UniqueMonstersData[u].mtype != -1; u++) {
+	for (int u = 0; UniqueMonstersData[u].mtype != MT_INVALID; u++) {
 		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
-		bool done = false;
-		int mt;
-		for (mt = 0; mt < LevelMonsterTypeCount; mt++) {
-			done = (LevelMonsterTypes[mt].mtype == UniqueMonstersData[u].mtype);
-			if (done)
-				break;
-		}
 		if (u == UMT_GARBUD && Quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
-			done = false;
+			continue;
 		if (u == UMT_ZHAR && Quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
-			done = false;
+			continue;
 		if (u == UMT_SNOTSPIL && Quests[Q_LTBANNER]._qactive == QUEST_NOTAVAIL)
-			done = false;
+			continue;
 		if (u == UMT_LACHDAN && Quests[Q_VEIL]._qactive == QUEST_NOTAVAIL)
-			done = false;
+			continue;
 		if (u == UMT_WARLORD && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
-			done = false;
-		if (done)
-			PlaceUniqueMonst(u, mt, 8);
+			continue;
+		for (int minionIndex = 0; minionIndex < LevelMonsterTypeCount; minionIndex++) {
+			if (LevelMonsterTypes[minionIndex].mtype == UniqueMonstersData[u].mtype) {
+				PlaceUniqueMonst(u, minionIndex, 8);
+				break;
+			}
+		}
 	}
 }
 
@@ -568,7 +574,7 @@ void PlaceQuestMonsters()
 {
 	if (!setlevel) {
 		if (Quests[Q_BUTCHER].IsAvailable()) {
-			PlaceUniqueMonst(UMT_BUTCHER, 0, 0);
+			PlaceUniqueMonst(UMT_BUTCHER, -1, 0);
 		}
 
 		if (currlevel == Quests[Q_SKELKING]._qlevel && gbIsMultiplayer) {
@@ -611,9 +617,9 @@ void PlaceQuestMonsters()
 		if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			AddMonsterType(UniqueMonstersData[UMT_LAZARUS].mtype, PLACE_UNIQUE);
 			AddMonsterType(UniqueMonstersData[UMT_RED_VEX].mtype, PLACE_UNIQUE);
-			PlaceUniqueMonst(UMT_LAZARUS, 0, 0);
-			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
-			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
+			PlaceUniqueMonst(UMT_LAZARUS, -1, 0);
+			PlaceUniqueMonst(UMT_RED_VEX, -1, 0);
+			PlaceUniqueMonst(UMT_BLACKJADE, -1, 0);
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
@@ -636,10 +642,10 @@ void PlaceQuestMonsters()
 				}
 			}
 			if (UberDiabloMonsterIndex == -1)
-				PlaceUniqueMonst(UMT_NAKRUL, 0, 0);
+				PlaceUniqueMonst(UMT_NAKRUL, -1, 0);
 		}
 	} else if (setlvlnum == SL_SKELKING) {
-		PlaceUniqueMonst(UMT_SKELKING, 0, 0);
+		PlaceUniqueMonst(UMT_SKELKING, -1, 0);
 	}
 }
 
@@ -3453,7 +3459,7 @@ void InitTRNForUniqueMonster(Monster &monster)
 	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
 }
 
-void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
+void PrepareUniqueMonst(Monster &monster, int uniqindex, int minionIndex, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
 {
 	monster._uniqtype = uniqindex + 1;
 
@@ -3551,8 +3557,8 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 
 	ActiveMonsterCount++;
 
-	if (uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
-		PlaceGroup(miniontype, bosspacksize, uniqueMonsterData.monsterPack, ActiveMonsterCount - 1);
+	if (minionIndex != -1 && bosspacksize != 0 && uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
+		PlaceMinions(minionIndex, bosspacksize, uniqueMonsterData.monsterPack, ActiveMonsterCount - 1);
 	}
 
 	if (monster._mAi != AI_GARG) {
@@ -3801,14 +3807,14 @@ void InitMonsters()
 	if (!setlevel) {
 		if (!gbIsSpawn)
 			PlaceUniqueMonsters();
-		int na = 0;
+		int monsterCount = 0;
 		for (int s = 16; s < 96; s++) {
 			for (int t = 16; t < 96; t++) {
 				if (!IsTileSolid({ s, t }))
-					na++;
+					monsterCount++;
 			}
 		}
-		int numplacemonsters = na / 30;
+		int numplacemonsters = monsterCount / 30;
 		if (gbIsMultiplayer)
 			numplacemonsters += numplacemonsters / 2;
 		if (ActiveMonsterCount + numplacemonsters > MAXMONSTERS - 10)
@@ -3823,14 +3829,15 @@ void InitMonsters()
 			}
 		}
 		while (ActiveMonsterCount < totalmonsters) {
-			int mtype = scattertypes[GenerateRnd(numscattypes)];
+			int monsterTypeIndex = scattertypes[GenerateRnd(numscattypes)];
+			int groupSize = 1;
 			if (currlevel == 1 || GenerateRnd(2) == 0)
-				na = 1;
+				groupSize = 1;
 			else if (currlevel == 2 || leveltype == DTYPE_CRYPT)
-				na = GenerateRnd(2) + 2;
+				groupSize = GenerateRnd(2) + 2;
 			else
-				na = GenerateRnd(3) + 3;
-			PlaceGroup(mtype, na, UniqueMonsterPack::None, 0);
+				groupSize = GenerateRnd(3) + 3;
+			PlaceGroup({}, monsterTypeIndex, groupSize, { { 16, 16 }, { 80, 80 } });
 		}
 	}
 	for (int i = 0; i < nt; i++) {
@@ -3852,9 +3859,9 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 		AddMonsterType(UniqueMonstersData[UMT_LAZARUS].mtype, PLACE_UNIQUE);
 		AddMonsterType(UniqueMonstersData[UMT_RED_VEX].mtype, PLACE_UNIQUE);
 		AddMonsterType(UniqueMonstersData[UMT_BLACKJADE].mtype, PLACE_UNIQUE);
-		PlaceUniqueMonst(UMT_LAZARUS, 0, 0);
-		PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
-		PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
+		PlaceUniqueMonst(UMT_LAZARUS, -1, 0);
+		PlaceUniqueMonst(UMT_RED_VEX, -1, 0);
+		PlaceUniqueMonst(UMT_BLACKJADE, -1, 0);
 	}
 
 	int width = SDL_SwapLE16(dunData[0]);
@@ -3872,20 +3879,20 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 		for (int i = 0; i < width; i++) {
 			auto monsterId = static_cast<uint8_t>(SDL_SwapLE16(monsterLayer[j * width + i]));
 			if (monsterId != 0) {
-				int mtype = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
-				PlaceMonster(ActiveMonsterCount++, mtype, startPosition + Displacement { i, j });
+				int monsterTypeIndex = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
+				PlaceMonster(ActiveMonsterCount++, monsterTypeIndex, startPosition + Displacement { i, j });
 			}
 		}
 	}
 }
 
-int AddMonster(Point position, Direction dir, int mtype, bool inMap)
+int AddMonster(Point position, Direction dir, int monsterTypeIndex, bool inMap)
 {
 	if (ActiveMonsterCount < MAXMONSTERS) {
 		int i = ActiveMonsters[ActiveMonsterCount++];
 		if (inMap)
 			dMonster[position.x][position.y] = i + 1;
-		InitMonster(Monsters[i], dir, mtype, position);
+		InitMonster(Monsters[i], dir, monsterTypeIndex, position);
 		return i;
 	}
 

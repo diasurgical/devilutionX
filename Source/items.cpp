@@ -412,12 +412,13 @@ bool ItemPlace(Point position)
 
 Point GetRandomAvailableItemPosition()
 {
-	Point position = {};
-	do {
-		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
-	} while (!ItemPlace(position));
+	while (true) {
+		Point position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		if (ItemPlace(position))
+			return position;
+	}
 
-	return position;
+	return {};
 }
 
 void AddInitItems()

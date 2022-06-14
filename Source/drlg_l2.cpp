@@ -2926,7 +2926,7 @@ void LoadL2Dungeon(const char *path, int vx, int vy)
 	ViewPosition = { vx, vy };
 
 	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
-	SetMapObjects(dunData.get(), 0, 0);
+	SetMapObjects(dunData.get(), Point(0, 0).megaToWorld());
 }
 
 void LoadPreL2Dungeon(const char *path)

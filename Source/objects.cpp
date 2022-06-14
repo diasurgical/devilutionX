@@ -96,10 +96,6 @@ int numobjfiles;
 /** Tracks progress through the tome sequence that spawns Na-Krul (see OperateNakrulBook()) */
 int NaKrulTomeSequence;
 
-/** Specifies the X-coordinate delta between barrels. */
-int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
-/** Specifies the Y-coordinate delta between barrels. */
-int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 /** Maps from shrine_id to shrine name. */
 const char *const ShrineNames[] = {
 	// TRANSLATORS: Shrine Name Block
@@ -291,19 +287,36 @@ _speech_id StoryText[3][3] = {
 	{ TEXT_BOOK31, TEXT_BOOK32, TEXT_BOOK33 }
 };
 
-bool RndLocOk(int xp, int yp)
+bool IsAvailableObjectPosition(Point position)
 {
-	if (dMonster[xp][yp] != 0)
-		return false;
-	if (dPlayer[xp][yp] != 0)
-		return false;
-	if (IsObjectAtPosition({ xp, yp }))
-		return false;
-	if (TileContainsSetPiece({ xp, yp }))
-		return false;
-	if (nSolidTable[dPiece[xp][yp]])
-		return false;
-	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
+	return dMonster[position.x][position.y] == 0
+	    && dPlayer[position.x][position.y] == 0
+	    && !IsObjectAtPosition(position)
+	    && !TileContainsSetPiece(position)
+	    && !nSolidTable[dPiece[position.x][position.y]]
+	    && (IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[position.x][position.y] <= 126 || dPiece[position.x][position.y] >= 144);
+}
+
+bool IsAvailableObjectPosition(Rectangle area)
+{
+	for (Point testPosition : PointsInRectangleRange(area)) {
+		if (!IsAvailableObjectPosition(testPosition)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+Point GetRandomAvailableObjectPosition()
+{
+	while (true) {
+		Point position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		if (IsAvailableObjectPosition(position))
+			return position;
+	}
+
+	return {};
 }
 
 bool CanPlaceWallTrap(int xp, int yp)
@@ -316,24 +329,15 @@ bool CanPlaceWallTrap(int xp, int yp)
 	return nTrapTable[dPiece[xp][yp]];
 }
 
-void InitRndLocObj(int min, int max, _object_id objtype)
+void InitRndLocObj(int min, int max, _object_id objtype, int range = 1)
 {
 	int numobjs = GenerateRnd(max - min) + min;
 
 	for (int i = 0; i < numobjs; i++) {
 		while (true) {
-			int xp = GenerateRnd(80) + 16;
-			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
-				AddObject(objtype, { xp, yp });
+			Point position = GetRandomAvailableObjectPosition();
+			if (IsAvailableObjectPosition(Rectangle { position, range })) {
+				AddObject(objtype, position);
 				break;
 			}
 		}
@@ -343,54 +347,16 @@ void InitRndLocObj(int min, int max, _object_id objtype)
 void InitRndLocBigObj(int min, int max, _object_id objtype)
 {
 	int numobjs = GenerateRnd(max - min) + min;
+
 	for (int i = 0; i < numobjs; i++) {
 		while (true) {
-			int xp = GenerateRnd(80) + 16;
-			int yp = GenerateRnd(80) + 16;
-			if (RndLocOk(xp - 1, yp - 2)
-			    && RndLocOk(xp, yp - 2)
-			    && RndLocOk(xp + 1, yp - 2)
-			    && RndLocOk(xp - 1, yp - 1)
-			    && RndLocOk(xp, yp - 1)
-			    && RndLocOk(xp + 1, yp - 1)
-			    && RndLocOk(xp - 1, yp)
-			    && RndLocOk(xp, yp)
-			    && RndLocOk(xp + 1, yp)
-			    && RndLocOk(xp - 1, yp + 1)
-			    && RndLocOk(xp, yp + 1)
-			    && RndLocOk(xp + 1, yp + 1)) {
-				AddObject(objtype, { xp, yp });
+			Point position = GetRandomAvailableObjectPosition();
+			if (IsAvailableObjectPosition(Rectangle { position + Displacement { 0, -2 }, { 2, 1 } })
+			    && IsAvailableObjectPosition(Rectangle { position, 1 })) {
+				AddObject(objtype, position);
 				break;
 			}
 		}
-	}
-}
-
-void InitRndLocObj5x5(int min, int max, _object_id objtype)
-{
-	int numobjs = min + GenerateRnd(max - min);
-	for (int i = 0; i < numobjs; i++) {
-		int xp;
-		int yp;
-		int cnt = 0;
-		bool exit = false;
-		while (!exit) {
-			exit = true;
-			xp = GenerateRnd(80) + 16;
-			yp = GenerateRnd(80) + 16;
-			for (int n = -2; n <= 2; n++) {
-				for (int m = -2; m <= 2; m++) {
-					if (!RndLocOk(xp + m, yp + n))
-						exit = false;
-				}
-			}
-			if (!exit) {
-				cnt++;
-				if (cnt > 20000)
-					return;
-			}
-		}
-		AddObject(objtype, { xp, yp });
 	}
 }
 
@@ -450,87 +416,47 @@ void AddCandles()
  */
 void AddBookLever(Rectangle affectedArea, _speech_id msg)
 {
-	int cnt = 0;
-	Point position;
-	bool exit = false;
-	while (!exit) {
-		exit = true;
-		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
-		for (int n = -2; n <= 2; n++) {
-			for (int m = -2; m <= 2; m++) {
-				if (!RndLocOk(position.x + m, position.y + n))
-					exit = false;
+	for (int tries = 0; tries < 19999; tries++) {
+		Point position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		if (IsAvailableObjectPosition(Rectangle { position, 2 })) {
+			if (Quests[Q_BLIND].IsAvailable())
+				AddObject(OBJ_BLINDBOOK, position);
+			else if (Quests[Q_WARLORD].IsAvailable())
+				AddObject(OBJ_STEELTOME, position);
+			else if (Quests[Q_BLOOD].IsAvailable()) {
+				position = SetPiece.position.megaToWorld() + Displacement { 9, 24 };
+				AddObject(OBJ_BLOODBOOK, position);
 			}
-		}
-		if (!exit) {
-			cnt++;
-			if (cnt > 20000)
-				return;
+			ObjectAtPosition(position)->InitializeQuestBook(affectedArea, leverid, msg);
+			leverid++;
+			break;
 		}
 	}
-
-	if (Quests[Q_BLIND].IsAvailable())
-		AddObject(OBJ_BLINDBOOK, position);
-	if (Quests[Q_WARLORD].IsAvailable())
-		AddObject(OBJ_STEELTOME, position);
-	if (Quests[Q_BLOOD].IsAvailable()) {
-		position = SetPiece.position.megaToWorld() + Displacement { 9, 24 };
-		AddObject(OBJ_BLOODBOOK, position);
-	}
-	ObjectAtPosition(position)->InitializeQuestBook(affectedArea, leverid, msg);
-	leverid++;
 }
 
-void InitRndBarrels()
+void InitRndBarrels(_object_id barrelId = OBJ_BARREL, _object_id explosiveBarrelId = OBJ_BARRELEX)
 {
-	_object_id barrelId = OBJ_BARREL;
-	_object_id explosiveBarrelId = OBJ_BARRELEX;
-	if (leveltype == DTYPE_NEST) {
-		barrelId = OBJ_POD;
-		explosiveBarrelId = OBJ_PODEX;
-	} else if (leveltype == DTYPE_CRYPT) {
-		barrelId = OBJ_URN;
-		explosiveBarrelId = OBJ_URNEX;
-	}
-
 	/** number of groups of barrels to generate */
-	int numobjs = GenerateRnd(5) + 3;
-	for (int i = 0; i < numobjs; i++) {
-		int xp;
-		int yp;
+	int groups = GenerateRnd(5) + 3;
+
+	for (int i = 0; i < groups; i++) {
+		Point position = GetRandomAvailableObjectPosition();
+
+		AddObject(GenerateRnd(4) != 0 ? barrelId : explosiveBarrelId, position);
+
+		int barrelsInGroup = 1;
 		do {
-			xp = GenerateRnd(80) + 16;
-			yp = GenerateRnd(80) + 16;
-		} while (!RndLocOk(xp, yp));
-		_object_id o = (GenerateRnd(4) != 0) ? barrelId : explosiveBarrelId;
-		AddObject(o, { xp, yp });
-		bool found = true;
-		/** regulates chance to stop placing barrels in current group */
-		int p = 0;
-		/** number of barrels in current group */
-		int c = 1;
-		while (GenerateRnd(p) == 0 && found) {
-			/** number of tries of placing next barrel in current group */
-			int t = 0;
-			found = false;
-			while (true) {
-				if (t >= 3)
+			for (int tries = 0;; tries++) {
+				if (tries >= 3)
+					return;
+				position += static_cast<Direction>(GenerateRnd(8));
+				if (IsAvailableObjectPosition(position)) {
+					AddObject(GenerateRnd(5) != 0 ? barrelId : explosiveBarrelId, position);
+					barrelsInGroup++;
 					break;
-				int dir = GenerateRnd(8);
-				xp += bxadd[dir];
-				yp += byadd[dir];
-				found = RndLocOk(xp, yp);
-				t++;
-				if (found)
-					break;
+				}
 			}
-			if (found) {
-				o = (GenerateRnd(5) != 0) ? barrelId : explosiveBarrelId;
-				AddObject(o, { xp, yp });
-				c++;
-			}
-			p = c / 2;
-		}
+		} while (GenerateRnd(barrelsInGroup / 2) == 0);
 	}
 }
 
@@ -804,7 +730,7 @@ void SetupObject(Object &object, Point position, _object_id ot)
 	object._oDoorFlag = false;
 }
 
-void AddCryptBook(_object_id ot, int v2, int ox, int oy)
+void AddCryptBook(_object_id ot, int v2, Point position)
 {
 	if (ActiveObjectCount >= MAXOBJECTS)
 		return;
@@ -812,47 +738,41 @@ void AddCryptBook(_object_id ot, int v2, int ox, int oy)
 	int oi = AvailableObjects[0];
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
-	dObject[ox][oy] = oi + 1;
+	dObject[position.x][position.y] = oi + 1;
 	Object &object = Objects[oi];
-	SetupObject(object, { ox, oy }, ot);
+	SetupObject(object, position, ot);
 	AddCryptObject(object, v2);
 	ActiveObjectCount++;
 }
 
+Point FindPositionForStoryBook()
+{
+	Point position;
+	for (int tries = 0; tries < 19999; tries++) {
+		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		if (IsAvailableObjectPosition({ position + Displacement { -3, -2 }, { 7, 5 } }))
+			break;
+	}
+
+	return position;
+}
+
 void AddCryptStoryBook(int s)
 {
-	int cnt = 0;
-	int xp;
-	int yp;
-	bool exit = false;
-	while (!exit) {
-		exit = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
-		for (int n = -2; n <= 2; n++) {
-			for (int m = -3; m <= 3; m++) {
-				if (!RndLocOk(xp + m, yp + n))
-					exit = false;
-			}
-		}
-		if (!exit) {
-			cnt++;
-			if (cnt > 20000)
-				return;
-		}
-	}
-	AddCryptBook(OBJ_L5BOOKS, s, xp, yp);
-	AddObject(OBJ_L5CANDLE, { xp - 2, yp + 1 });
-	AddObject(OBJ_L5CANDLE, { xp - 2, yp });
-	AddObject(OBJ_L5CANDLE, { xp - 1, yp - 1 });
-	AddObject(OBJ_L5CANDLE, { xp + 1, yp - 1 });
-	AddObject(OBJ_L5CANDLE, { xp + 2, yp });
-	AddObject(OBJ_L5CANDLE, { xp + 2, yp + 1 });
+	Point position = FindPositionForStoryBook();
+
+	AddCryptBook(OBJ_L5BOOKS, s, position);
+	AddObject(OBJ_L5CANDLE, position + Displacement { -2, 1 });
+	AddObject(OBJ_L5CANDLE, position + Displacement { -2, 0 });
+	AddObject(OBJ_L5CANDLE, position + Displacement { -1, -1 });
+	AddObject(OBJ_L5CANDLE, position + Displacement { 1, -1 });
+	AddObject(OBJ_L5CANDLE, position + Displacement { 2, 0 });
+	AddObject(OBJ_L5CANDLE, position + Displacement { 2, 1 });
 }
 
 void AddNakrulBook(int a1, int a2, int a3)
 {
-	AddCryptBook(OBJ_L5BOOKS, a1, a2, a3);
+	AddCryptBook(OBJ_L5BOOKS, a1, { a2, a3 });
 }
 
 void AddNakrulGate()
@@ -894,33 +814,15 @@ void AddNakrulGate()
 
 void AddStoryBooks()
 {
-	int cnt = 0;
-	int xp;
-	int yp;
-	bool done = false;
-	while (!done) {
-		done = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
-		for (int yy = -2; yy <= 2; yy++) {
-			for (int xx = -3; xx <= 3; xx++) {
-				if (!RndLocOk(xx + xp, yy + yp))
-					done = false;
-			}
-		}
-		if (!done) {
-			cnt++;
-			if (cnt > 20000)
-				return;
-		}
-	}
-	AddObject(OBJ_STORYBOOK, { xp, yp });
-	AddObject(OBJ_STORYCANDLE, { xp - 2, yp + 1 });
-	AddObject(OBJ_STORYCANDLE, { xp - 2, yp });
-	AddObject(OBJ_STORYCANDLE, { xp - 1, yp - 1 });
-	AddObject(OBJ_STORYCANDLE, { xp + 1, yp - 1 });
-	AddObject(OBJ_STORYCANDLE, { xp + 2, yp });
-	AddObject(OBJ_STORYCANDLE, { xp + 2, yp + 1 });
+	Point position = FindPositionForStoryBook();
+
+	AddObject(OBJ_STORYBOOK, position);
+	AddObject(OBJ_STORYCANDLE, position + Displacement { -2, 1 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { -2, 0 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { -1, -1 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { 1, -1 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { 2, 0 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { 2, 1 });
 }
 
 void AddHookedBodies(int freq)
@@ -979,38 +881,27 @@ void AddL4Goodies()
 
 void AddLazStand()
 {
-	int cnt = 0;
-	int xp;
-	int yp;
-	bool found = false;
-	while (!found) {
-		found = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
-		for (int yy = -3; yy <= 3; yy++) {
-			for (int xx = -2; xx <= 3; xx++) {
-				if (!RndLocOk(xp + xx, yp + yy))
-					found = false;
-			}
+	Point position;
+	for (int tries = 0;; tries++) {
+		if (tries >= 9999) {
+			AddObject(OBJ_LAZSTAND, { 1, 1 });
+			return;
 		}
-		if (!found) {
-			cnt++;
-			if (cnt > 10000) {
-				InitRndLocObj(1, 1, OBJ_LAZSTAND);
-				return;
-			}
-		}
+		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		if (IsAvailableObjectPosition({ position + Displacement { -3, -2 }, { 7, 6 } }))
+			break;
 	}
-	AddObject(OBJ_LAZSTAND, { xp, yp });
-	AddObject(OBJ_TNUDEM2, { xp, yp + 2 });
-	AddObject(OBJ_STORYCANDLE, { xp + 1, yp + 2 });
-	AddObject(OBJ_TNUDEM3, { xp + 2, yp + 2 });
-	AddObject(OBJ_TNUDEW1, { xp, yp - 2 });
-	AddObject(OBJ_STORYCANDLE, { xp + 1, yp - 2 });
-	AddObject(OBJ_TNUDEW2, { xp + 2, yp - 2 });
-	AddObject(OBJ_STORYCANDLE, { xp - 1, yp - 1 });
-	AddObject(OBJ_TNUDEW3, { xp - 1, yp });
-	AddObject(OBJ_STORYCANDLE, { xp - 1, yp + 1 });
+
+	AddObject(OBJ_LAZSTAND, position);
+	AddObject(OBJ_TNUDEM2, position + Displacement { 0, 2 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { 1, 2 });
+	AddObject(OBJ_TNUDEM3, position + Displacement { 2, 2 });
+	AddObject(OBJ_TNUDEW1, position + Displacement { 0, -2 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { 1, -2 });
+	AddObject(OBJ_TNUDEW2, position + Displacement { 2, -2 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { -1, -1 });
+	AddObject(OBJ_TNUDEW3, position + Displacement { -1, 0 });
+	AddObject(OBJ_STORYCANDLE, position + Displacement { -1, 1 });
 }
 
 void DeleteObject(int oi, int i)
@@ -1341,41 +1232,33 @@ void AddTorturedBody(int i)
 	Objects[i]._oPreFlag = true;
 }
 
-void GetRndObjLoc(int randarea, int *xx, int *yy)
+/**
+ * @brief Make 999 attempts at randmly finding a area of the requested size, try a single time more for each size smaller then requested
+ * @return Found location
+ */
+Point GetRndObjLoc(int randarea)
 {
-	if (randarea == 0)
-		return;
-
-	int tries = 0;
-	while (true) {
-		tries++;
-		if (tries > 1000 && randarea > 1)
+	Point position;
+	for (int tries = 0;; tries++) {
+		if (tries > 999 && randarea > 1)
 			randarea--;
-		*xx = GenerateRnd(MAXDUNX);
-		*yy = GenerateRnd(MAXDUNY);
-		bool failed = false;
-		for (int i = 0; i < randarea && !failed; i++) {
-			for (int j = 0; j < randarea && !failed; j++) {
-				failed = !RndLocOk(i + *xx, j + *yy);
-			}
-		}
-		if (!failed)
+		position = Point { GenerateRnd(MAXDUNX), GenerateRnd(MAXDUNY) };
+		if (IsAvailableObjectPosition({ position, { randarea, randarea } }))
 			break;
 	}
+
+	return position;
 }
 
 void AddMushPatch()
 {
-	int y;
-	int x;
-
 	if (ActiveObjectCount < MAXOBJECTS) {
 		int i = AvailableObjects[0];
-		GetRndObjLoc(5, &x, &y);
-		dObject[x + 1][y + 1] = -(i + 1);
-		dObject[x + 2][y + 1] = -(i + 1);
-		dObject[x + 1][y + 2] = -(i + 1);
-		AddObject(OBJ_MUSHPATCH, { x + 2, y + 2 });
+		Point position = GetRndObjLoc(5);
+		dObject[position.x + 1][position.y + 1] = -(i + 1);
+		dObject[position.x + 2][position.y + 1] = -(i + 1);
+		dObject[position.x + 1][position.y + 2] = -(i + 1);
+		AddObject(OBJ_MUSHPATCH, position + Displacement { 2, 2 });
 	}
 }
 
@@ -4492,11 +4375,7 @@ void AddCryptObjects(int x1, int y1, int x2, int y2)
 
 void AddSlainHero()
 {
-	int x;
-	int y;
-
-	GetRndObjLoc(5, &x, &y);
-	AddObject(OBJ_SLAINHERO, { x + 2, y + 2 });
+	AddObject(OBJ_SLAINHERO, GetRndObjLoc(5) + Displacement { 2, 2 });
 }
 
 void InitObjects()
@@ -4540,9 +4419,9 @@ void InitObjects()
 		}
 		if (leveltype == DTYPE_CATACOMBS) {
 			if (Quests[Q_ROCK].IsAvailable())
-				InitRndLocObj5x5(1, 1, OBJ_STAND);
+				InitRndLocObj(1, 1, OBJ_STAND, 2);
 			if (Quests[Q_SCHAMB].IsAvailable())
-				InitRndLocObj5x5(1, 1, OBJ_BOOK2R);
+				InitRndLocObj(1, 1, OBJ_BOOK2R, 2);
 			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddL2Torches();
 			if (Quests[Q_BLIND].IsAvailable()) {
@@ -4636,12 +4515,12 @@ void InitObjects()
 			AddL4Goodies();
 		}
 		if (leveltype == DTYPE_NEST) {
-			InitRndBarrels();
+			InitRndBarrels(OBJ_POD, OBJ_PODEX);
 		}
 		if (leveltype == DTYPE_CRYPT) {
 			InitRndLocBigObj(10, 15, OBJ_L5SARC);
 			AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
-			InitRndBarrels();
+			InitRndBarrels(OBJ_URN, OBJ_URNEX);
 		}
 		InitRndLocObj(5, 10, OBJ_CHEST1);
 		InitRndLocObj(3, 6, OBJ_CHEST2);
@@ -4654,7 +4533,7 @@ void InitObjects()
 	}
 }
 
-void SetMapObjects(const uint16_t *dunData, int startx, int starty)
+void SetMapObjects(const uint16_t *dunData, Point start)
 {
 	bool filesLoaded[65] = {};
 
@@ -4672,9 +4551,9 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[x + y * width]));
 			if (objectId != 0) {
 				filesLoaded[AllObjects[ObjTypeConv[objectId]].ofindex] = true;
 			}
@@ -4683,11 +4562,12 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 
 	LoadLevelObjects(filesLoaded);
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[x + y * width]));
 			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
+				AddObject(ObjTypeConv[objectId], start + Displacement { x, y });
+				SDL_Log("Object at %dx%d", start.x + x, start.y + y);
 			}
 		}
 	}
