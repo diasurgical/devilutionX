@@ -344,8 +344,8 @@ void InitGlobals()
 
 	dminPosition = Point(0, 0).megaToWorld();
 	dmaxPosition = Point(40, 40).megaToWorld();
-	SetPieceRoom = { { -1, -1 }, { -1, -1 } };
-	SetPiece = { { 0, 0 }, { 0, 0 } };
+	SetPieceRoom = { { -1, -1 }, Size { -1, -1 } };
+	SetPiece = {};
 }
 
 } // namespace
@@ -495,12 +495,13 @@ void DRLG_MRectTrans(Rectangle area)
 	Point position = area.position.megaToWorld();
 	Size size = area.size * 2;
 
-	DRLG_RectTrans({ position + Displacement { 1, 1 }, { size.width - 1, size.height - 1 } });
+	DRLG_RectTrans({ position + Displacement { 1, 1 }, size - 1 });
 }
 
 void DRLG_MRectTrans(Point origin, Point extent)
 {
-	DRLG_MRectTrans({ origin, { extent.x - origin.x, extent.y - origin.y } });
+	// This does not use the Rectangle(Point, Point) constructor because of the off by one in DRLG_RectTrans
+	DRLG_MRectTrans({ origin, Size { extent.x - origin.x, extent.y - origin.y } });
 }
 
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
@@ -681,7 +682,7 @@ void SetSetPieceRoom(Point position, int floorId)
 		return;
 
 	PlaceDunTiles(pSetPiece.get(), position, floorId);
-	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
+	SetPiece = { position, Size { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
 }
 
 void FreeQuestSetPieces()

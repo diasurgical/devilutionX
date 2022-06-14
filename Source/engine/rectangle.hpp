@@ -31,6 +31,21 @@ struct Rectangle {
 	{
 	}
 
+	/**
+	 * @brief Constructs a rectangle starting at the origin large enough to contain the extent
+	 *
+	 * The resulting rectangle will return true for both contains(origin) and contains(extent). The size of the
+	 * resulting rectangle is one larger than the distance between the points.
+	 *
+	 * @param origin top-left/northern most tile of the rectangle
+	 * @param extent bottom-right/southern most tile of the rectangle
+	 */
+	explicit constexpr Rectangle(Point origin, Point extent)
+	    : position(origin)
+	    , size(extent.x - origin.x + 1, extent.y - origin.y + 1)
+	{
+	}
+
 	constexpr bool contains(Point point) const
 	{
 		return point.x >= this->position.x

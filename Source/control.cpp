@@ -264,7 +264,7 @@ void PrintInfo(const Surface &out)
 	const int LineStart[] = { 70, 58, 52, 48, 46 };
 	const int LineHeights[] = { 30, 24, 18, 15, 12 };
 
-	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[pnumlines] }, { 288, 12 } };
+	Rectangle line { GetMainPanel().position + Displacement { 177, LineStart[pnumlines] }, Size { 288, 12 } };
 
 	if (!InfoString.empty()) {
 		DrawString(out, InfoString, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
@@ -970,7 +970,7 @@ void DrawLevelUpIcon(const Surface &out)
 {
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
-		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, Size { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		ClxDraw(out, GetMainPanel().position + Displacement { 40, -17 }, (*pChrButtons)[nCel]);
 	}
 }
@@ -1089,7 +1089,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), Size { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
 	std::string value;
 	if (amount > 0) {
@@ -1146,7 +1146,7 @@ void DrawTalkPan(const Surface &out)
 	int x = mainPanelPosition.x + 200;
 	int y = mainPanelPosition.y + 10;
 
-	uint32_t idx = DrawString(out, TalkMessage, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
+	uint32_t idx = DrawString(out, TalkMessage, { { x, y }, Size { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
 	if (idx < sizeof(TalkMessage))
 		TalkMessage[idx] = '\0';
 
@@ -1172,7 +1172,7 @@ void DrawTalkPan(const Surface &out)
 			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
 		if (player.plractive) {
-			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
+			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, Size { 204, 0 } }, color);
 		}
 
 		talkBtn++;

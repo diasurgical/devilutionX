@@ -81,7 +81,7 @@ int FirstFinishedQuest;
 /** Currently selected quest list item */
 int SelectedQuest;
 
-constexpr Rectangle InnerPanel { { 32, 26 }, { 280, 300 } };
+constexpr Rectangle InnerPanel { { 32, 26 }, Size { 280, 300 } };
 constexpr int LineHeight = 12;
 constexpr int MaxSpacing = LineHeight * 2;
 int ListYOffset;
@@ -127,7 +127,7 @@ int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 void DrawButcher()
 {
 	Point position = SetPiece.position.megaToWorld() + Displacement { 3, 3 };
-	DRLG_RectTrans({ position, { 7, 7 } });
+	DRLG_RectTrans({ position, Size { 7, 7 } });
 }
 
 void DrawSkelKing(quest_id q, Point position)
@@ -139,7 +139,7 @@ void DrawWarLord(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("levels\\l4data\\warlord2.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, Size { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
 	PlaceDunTiles(dunData.get(), position, 6);
 }
@@ -148,7 +148,7 @@ void DrawSChamber(quest_id q, Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\bonestr1.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, Size { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
 	PlaceDunTiles(dunData.get(), position, 3);
 
@@ -162,7 +162,7 @@ void DrawLTBanner(Point position)
 	int width = SDL_SwapLE16(dunData[0]);
 	int height = SDL_SwapLE16(dunData[1]);
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, Size { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
 	const uint16_t *tileLayer = &dunData[2];
 
@@ -189,7 +189,7 @@ void DrawBlood(Point position)
 {
 	auto dunData = LoadFileInMem<uint16_t>("levels\\l2data\\blood2.dun");
 
-	SetPiece = { position, { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
+	SetPiece = { position, Size { SDL_SwapLE16(dunData[0]), SDL_SwapLE16(dunData[1]) } };
 
 	PlaceDunTiles(dunData.get(), position, 0);
 }
@@ -217,7 +217,7 @@ void PrintQLString(const Surface &out, int x, int y, string_view str, bool marke
 	if (marked) {
 		ClxDraw(out, GetPanelPosition(UiPanels::Quest, { x - 20, y + 13 }), (*pSPentSpn2Cels)[PentSpn2Spin()]);
 	}
-	DrawString(out, str, { GetPanelPosition(UiPanels::Quest, { x, y }), { 257, 0 } }, disabled ? UiFlags::ColorWhitegold : UiFlags::ColorWhite);
+	DrawString(out, str, { GetPanelPosition(UiPanels::Quest, { x, y }), Size { 257, 0 } }, disabled ? UiFlags::ColorWhitegold : UiFlags::ColorWhite);
 	if (marked) {
 		ClxDraw(out, GetPanelPosition(UiPanels::Quest, { x + width + 7, y + 13 }), (*pSPentSpn2Cels)[PentSpn2Spin()]);
 	}
@@ -619,7 +619,7 @@ void ResyncQuests()
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
+			DRLG_MRectTrans({ SetPiece.position, Size { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
 			TransVal = tren;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 == 3) {
@@ -628,7 +628,7 @@ void ResyncQuests()
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans({ SetPiece.position, { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
+			DRLG_MRectTrans({ SetPiece.position, Size { SetPiece.size.width / 2 + 4, SetPiece.size.height / 2 } });
 			TransVal = tren;
 		}
 	}

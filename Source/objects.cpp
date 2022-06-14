@@ -683,9 +683,9 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange = {}, int 
 
 void AddDiabObjs()
 {
-	LoadMapObjects("levels\\l4data\\diab1.dun", DiabloQuad1.megaToWorld(), { DiabloQuad2, { 11, 12 } }, 1);
-	LoadMapObjects("levels\\l4data\\diab2a.dun", DiabloQuad2.megaToWorld(), { DiabloQuad3, { 11, 11 } }, 2);
-	LoadMapObjects("levels\\l4data\\diab3a.dun", DiabloQuad3.megaToWorld(), { DiabloQuad4, { 9, 9 } }, 3);
+	LoadMapObjects("levels\\l4data\\diab1.dun", DiabloQuad1.megaToWorld(), { DiabloQuad2, Size { 11, 12 } }, 1);
+	LoadMapObjects("levels\\l4data\\diab2a.dun", DiabloQuad2.megaToWorld(), { DiabloQuad3, Size { 11, 11 } }, 2);
+	LoadMapObjects("levels\\l4data\\diab3a.dun", DiabloQuad3.megaToWorld(), { DiabloQuad4, Size { 9, 9 } }, 3);
 }
 
 void AddCryptObject(Object &object, int a2)
@@ -3847,7 +3847,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLOOD]._qmsg = spId;
-				AddBookLever(OBJ_BLOODBOOK, { SetPiece.position + Displacement { 0, 3 }, { 2, 4 } }, spId);
+				AddBookLever(OBJ_BLOODBOOK, { SetPiece.position + Displacement { 0, 3 }, Size { 2, 4 } }, spId);
 				AddObject(OBJ_PEDESTAL, SetPiece.position.megaToWorld() + Displacement { 9, 16 });
 			}
 			InitRndBarrels();
@@ -3989,7 +3989,7 @@ Object *AddObject(_object_id objType, Point objPos)
 		AddDoor(object);
 		break;
 	case OBJ_BOOK2R:
-		object.InitializeBook({ SetPiece.position, { SetPiece.size.width + 1, SetPiece.size.height + 1 } });
+		object.InitializeBook({ SetPiece.position, SetPiece.size + 1 });
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:

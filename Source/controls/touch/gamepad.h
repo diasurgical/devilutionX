@@ -45,7 +45,7 @@ struct VirtualMenuButton : VirtualButton {
 	Rectangle area;
 
 	VirtualMenuButton()
-	    : area({ { 0, 0 }, { 0, 0 } })
+	    : area({})
 	{
 	}
 
@@ -77,7 +77,7 @@ struct VirtualMenuPanel {
 	Rectangle area;
 
 	VirtualMenuPanel()
-	    : area({ { 0, 0 }, { 0, 0 } })
+	    : area({})
 	{
 	}
 

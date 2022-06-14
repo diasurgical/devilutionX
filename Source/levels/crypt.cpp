@@ -686,7 +686,7 @@ void SetCryptRoom()
 
 	auto dunData = LoadFileInMem<uint16_t>("nlevels\\l5data\\uberroom.dun");
 
-	SetPiece = { position, { dunData[0], dunData[1] } };
+	SetPiece = { position, Size { dunData[0], dunData[1] } };
 
 	PlaceDunTiles(dunData.get(), position, 0);
 }
@@ -697,7 +697,7 @@ void SetCornerRoom()
 
 	auto dunData = LoadFileInMem<uint16_t>("nlevels\\l5data\\cornerstone.dun");
 
-	SetPiece = { position, { dunData[0], dunData[1] } };
+	SetPiece = { position, Size { dunData[0], dunData[1] } };
 
 	PlaceDunTiles(dunData.get(), position, 0);
 }
