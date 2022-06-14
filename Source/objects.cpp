@@ -857,7 +857,7 @@ void AddNakrulBook(int a1, int a2, int a3)
 
 void AddNakrulGate()
 {
-	AddNakrulLeaver();
+	AddObject(OBJ_L5LEVER, { UberRow + 3, UberCol - 1 });
 	switch (GenerateRnd(6)) {
 	case 0:
 		AddNakrulBook(6, UberRow + 3, UberCol);
@@ -5625,26 +5625,6 @@ void SyncNakrulRoom()
 	dPiece[UberRow][UberCol + 1] = 299;
 
 	SetDungeonMicros();
-}
-
-void AddNakrulLeaver()
-{
-	while (true) {
-		int xp = GenerateRnd(80) + 16;
-		int yp = GenerateRnd(80) + 16;
-		if (RndLocOk(xp - 1, yp - 1)
-		    && RndLocOk(xp, yp - 1)
-		    && RndLocOk(xp + 1, yp - 1)
-		    && RndLocOk(xp - 1, yp)
-		    && RndLocOk(xp, yp)
-		    && RndLocOk(xp + 1, yp)
-		    && RndLocOk(xp - 1, yp + 1)
-		    && RndLocOk(xp, yp + 1)
-		    && RndLocOk(xp + 1, yp + 1)) {
-			break;
-		}
-	}
-	AddObject(OBJ_L5LEVER, { UberRow + 3, UberCol - 1 });
 }
 
 } // namespace devilution
