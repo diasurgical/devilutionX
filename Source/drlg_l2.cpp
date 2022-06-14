@@ -5,7 +5,6 @@
  */
 #include "drlg_l2.h"
 
-#include <algorithm>
 #include <list>
 
 #include "diablo.h"
@@ -16,6 +15,7 @@
 #include "player.h"
 #include "quests.h"
 #include "setmaps.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -27,9 +27,6 @@ int nRoomCnt;
 ROOMNODE RoomList[81];
 std::list<HALLNODE> HallList;
 
-int Area_Min = 2;
-int Room_Max = 10;
-int Room_Min = 4;
 const int DirXadd[5] = { 0, 0, 1, 0, -1 };
 const int DirYadd[5] = { 0, -1, 0, 1, 0 };
 const ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
@@ -1767,21 +1764,21 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 
 	int nAw = nX2 - nX1;
 	int nAh = nY2 - nY1;
-	if (nAw < Area_Min || nAh < Area_Min) {
+
+	constexpr int AreaMin = 2;
+	if (nAw < AreaMin || nAh < AreaMin) {
 		return;
 	}
 
+	constexpr int RoomMax = 10;
+	constexpr int RoomMin = 4;
 	int nRw = nAw;
-	if (nAw > Room_Max) {
-		nRw = GenerateRnd(Room_Max - Room_Min) + Room_Min;
-	} else if (nAw > Room_Min) {
-		nRw = GenerateRnd(nAw - Room_Min) + Room_Min;
+	if (nAw > RoomMin) {
+		nRw = GenerateRnd(std::min(nAw, RoomMax) - RoomMin) + RoomMin;
 	}
 	int nRh = nAh;
-	if (nAh > Room_Max) {
-		nRh = GenerateRnd(Room_Max - Room_Min) + Room_Min;
-	} else if (nAh > Room_Min) {
-		nRh = GenerateRnd(nAh - Room_Min) + Room_Min;
+	if (nAh > RoomMin) {
+		nRh = GenerateRnd(std::min(nAh, RoomMax) - RoomMin) + RoomMin;
 	}
 
 	if (forceHW) {
@@ -1802,30 +1799,11 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 		nRy1 = nY2 - nRh;
 	}
 
-	if (nRx1 >= 38) {
-		nRx1 = 38;
-	}
-	if (nRy1 >= 38) {
-		nRy1 = 38;
-	}
-	if (nRx1 <= 1) {
-		nRx1 = 1;
-	}
-	if (nRy1 <= 1) {
-		nRy1 = 1;
-	}
-	if (nRx2 >= 38) {
-		nRx2 = 38;
-	}
-	if (nRy2 >= 38) {
-		nRy2 = 38;
-	}
-	if (nRx2 <= 1) {
-		nRx2 = 1;
-	}
-	if (nRy2 <= 1) {
-		nRy2 = 1;
-	}
+	nRx1 = clamp(nRx1, 1, 38);
+	nRy1 = clamp(nRy1, 1, 38);
+	nRx2 = clamp(nRx2, 1, 38);
+	nRy2 = clamp(nRy2, 1, 38);
+
 	DefineRoom(nRx1, nRy1, nRx2, nRy2, forceHW);
 
 	if (forceHW) {
