@@ -127,7 +127,7 @@ int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 void DrawButcher()
 {
 	Point position = SetPiece.position.megaToWorld() + Displacement { 3, 3 };
-	DRLG_RectTrans({ position, Size { 7, 7 } });
+	DRLG_RectTrans({ position, Size { 8, 8 } });
 }
 
 void DrawSkelKing(quest_id q, Point position)
