@@ -240,7 +240,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 		dir = Players[id].tempDirection;
 	}
 
-	for (int i = 0; spelldata[spl].sMissiles[i] != MIS_NULL && i < 3; i++) {
+	for (int i = 0; i < 3 && spelldata[spl].sMissiles[i] != MIS_NULL; i++) {
 		AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 	}
 
