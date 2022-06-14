@@ -113,20 +113,19 @@ TEST(RandomTest, ShiftModDistributionSingleRange)
 	ASSERT_EQ(GenerateRnd(1), 0) << "Interval [0, 1) must return 0 when AbsDistribution yields INT_MIN";
 }
 
-// When called with an upper bound less than 0xFFFF this distribution function discards the low 16 bits of the output
+// When called with an upper bound less than or equal to 0x7FFF this distribution function discards the low 16 bits of the output
 // from the default distribution by performing a shift right of 16 bits. This relies on implementation defined
 // behaviour for negative numbers, the expectation is shift right uses sign carry. See C++17 [expr.shift]
 TEST(RandomTest, ShiftModDistributionSignCarry)
 {
-	// This distribution is used when the upper bound is a value in [1, 65535)
+	// This distribution is used when the upper bound is a value in [1, 32768)
 	// Using an upper bound of 1 means the result always maps to 0, see RandomTest_ShiftModDistributionSingleRange
 
-	// The only negative value return from AbsDistribution is -2147483648
+	// The only negative value returned from AbsDistribution is -2147483648
 	// A sign-preserving shift right of 16 bits gives a result of -32768.
-	SetRndSeed(1457187811); // Test mod with no division
-	ASSERT_EQ(GenerateRnd(65535 - 1), -32768) << "Distribution must map negative numbers using sign carry shifts";
+	// This is greater in magnitude than the limit so always results in a division.
 	SetRndSeed(1457187811); // Test mod when a division occurs
-	ASSERT_EQ(GenerateRnd(32768 - 1), -1) << "Distribution must map negative numbers using sign carry shifts";
+	ASSERT_EQ(GenerateRnd(32767), -1) << "Distribution must map negative numbers using sign carry shifts";
 }
 
 // The Diablo LCG implementation attempts to improve the quality of generated numbers that would only use the low
@@ -134,9 +133,9 @@ TEST(RandomTest, ShiftModDistributionSignCarry)
 // be an inconsistency with the implementation in devilutionx, see the comment for RandomTest_ShiftModDistributionHighBits
 TEST(RandomTest, ShiftModDistributionLowBits)
 {
-	// All the following seeds generate values less than 2^16, so after shifting they give a 0 value
-	constexpr auto maxBound = 65534;
+	constexpr auto maxBound = 32767;
 
+	// All the following seeds generate values less than 2^16, so after shifting they give a 0 value
 	SetRndSeed(3604671459U); // yields 0
 	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 0";
 	SetRndSeed(0); // yields 1
@@ -187,7 +186,7 @@ TEST(RandomTest, ShiftModDistributionLowBits)
 // i.e., no cast from unsigned to signed, no modulo when building the return value.
 TEST(RandomTest, ShiftModDistributionHighBits)
 {
-	constexpr auto maxBound = 65534;
+	constexpr auto maxBound = 32767;
 	SetRndSeed(3267226595U); // yields 65536
 	ASSERT_EQ(GenerateRnd(maxBound), 1) << "Invalid distribution when generator yields 65536";
 	SetRndSeed(3942116323U); // yields -65536
@@ -213,20 +212,24 @@ TEST(RandomTest, ShiftModDistributionHighBits)
 	SetRndSeed(2724598777); // yields -1212022642
 	ASSERT_EQ(GenerateRnd(maxBound), 18493) << "Invalid distribution when generator yields -1212022642";
 	SetRndSeed(76596137); // yields 2147483646
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution when generator yields 2147483646";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 2147483646";
 	SetRndSeed(2837779485); // yields -2147483646
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution when generator yields -2147483646";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -2147483646";
 	SetRndSeed(766891974); // yields 2147483647
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution when generator yields 2147483647";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields 2147483647";
 	SetRndSeed(2147483648); // yields -2147483647
-	ASSERT_EQ(GenerateRnd(maxBound), 32767) << "Invalid distribution when generator yields -2147483647";
+	ASSERT_EQ(GenerateRnd(maxBound), 0) << "Invalid distribution when generator yields -2147483647";
 }
 
 TEST(RandomTest, ModDistributionSignPreserving)
 {
-	// This distribution is used when the upper bound is a value in [65535, 2147483647]
+	// This distribution is used when the upper bound is a value in [32768, 2147483647]
 
 	// Sign preserving modulo when no division is performed cannot be tested in isolation with the current implementation.
+	SetRndSeed(1457187811);
+	ASSERT_EQ(GenerateRnd(32768), 0) << "Distribution must map negative numbers using sign preserving modulo";
+	SetRndSeed(1457187811);
+	ASSERT_EQ(GenerateRnd(32769), -2) << "Distribution must map negative numbers using sign preserving modulo";
 	SetRndSeed(1457187811);
 	ASSERT_EQ(GenerateRnd(65535), -32768) << "Distribution must map negative numbers using sign preserving modulo";
 	SetRndSeed(1457187811);
