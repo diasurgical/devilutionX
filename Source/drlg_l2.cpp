@@ -1604,17 +1604,12 @@ void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 
 void LoadQuestSetPieces()
 {
-	setloadflag = false;
-
 	if (Quests[Q_BLIND].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
-		setloadflag = true;
 	} else if (Quests[Q_BLOOD].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood1.DUN");
-		setloadflag = true;
 	} else if (Quests[Q_SCHAMB].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr2.DUN");
-		setloadflag = true;
 	}
 }
 
@@ -2726,7 +2721,7 @@ void GenerateLevel(lvl_entry entry)
 			continue;
 		}
 		FixTilesPatterns();
-		if (setloadflag) {
+		if (pSetPiece != nullptr) {
 			PlaceDunTiles(pSetPiece.get(), SetPieceRoom.position, 3);
 			SetPiece = { SetPieceRoom.position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
 		}

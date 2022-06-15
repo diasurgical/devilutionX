@@ -26,23 +26,14 @@ namespace {
 BYTE L5dungeon[80][80];
 /** Marks where walls may not be added to the level */
 bool Chamber[DMAXX][DMAXX];
-/** Specifies whether a single player quest DUN has been loaded. */
-bool L5setloadflag;
-/** Specifies whether to generate a horizontal room at position 1 in the Cathedral. */
-bool HR1;
-/** Specifies whether to generate a horizontal room at position 2 in the Cathedral. */
-bool HR2;
-/** Specifies whether to generate a horizontal room at position 3 in the Cathedral. */
-bool HR3;
-
-/** Specifies whether to generate a vertical room at position 1 in the Cathedral. */
-bool VR1;
-/** Specifies whether to generate a vertical room at position 2 in the Cathedral. */
-bool VR2;
-/** Specifies whether to generate a vertical room at position 3 in the Cathedral. */
-bool VR3;
-/** Contains the contents of the single player quest DUN file. */
-std::unique_ptr<uint16_t[]> L5pSetPiece;
+/** Specifies whether to generate a horizontal or vertical layout. */
+bool VerticalLayout;
+/** Specifies whether to generate a room at position 1 in the Cathedral. */
+bool HasChamber1;
+/** Specifies whether to generate a room at position 2 in the Cathedral. */
+bool HasChamber2;
+/** Specifies whether to generate a room at position 3 in the Cathedral. */
+bool HasChamber3;
 
 /** Contains shadows for 2x2 blocks of base tile IDs in the Cathedral. */
 const ShadowStruct SPATS[37] = {
@@ -804,23 +795,18 @@ void FillFloor()
 
 void LoadQuestSetPieces()
 {
-	L5setloadflag = false;
-
 	if (Quests[Q_BUTCHER].IsAvailable()) {
-		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\rnd6.DUN");
-		L5setloadflag = true;
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\rnd6.DUN");
 	} else if (Quests[Q_SKELKING].IsAvailable() && !gbIsMultiplayer) {
-		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\SKngDO.DUN");
-		L5setloadflag = true;
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\SKngDO.DUN");
 	} else if (Quests[Q_LTBANNER].IsAvailable()) {
-		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner2.DUN");
-		L5setloadflag = true;
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner2.DUN");
 	}
 }
 
 void FreeQuestSetPieces()
 {
-	L5pSetPiece = nullptr;
+	pSetPiece = nullptr;
 }
 
 void InitDungeonPieces()
@@ -944,24 +930,26 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 
 void FirstRoom()
 {
-	if (GenerateRnd(2) == 0) {
+	VerticalLayout = GenerateRnd(2) == 0;
+
+	if (VerticalLayout) {
 		int ys = 1;
 		int ye = DMAXY - 1;
 
-		VR1 = (GenerateRnd(2) != 0);
-		VR2 = (GenerateRnd(2) != 0);
-		VR3 = (GenerateRnd(2) != 0);
+		HasChamber1 = (GenerateRnd(2) != 0);
+		HasChamber2 = (GenerateRnd(2) != 0);
+		HasChamber3 = (GenerateRnd(2) != 0);
 
-		if (!VR1 || !VR3)
-			VR2 = true;
-		if (VR1)
+		if (!HasChamber1 || !HasChamber3)
+			HasChamber2 = true;
+		if (HasChamber1)
 			MapRoom(15, 1, 10, 10);
 		else
 			ys = 18;
 
-		if (VR2)
+		if (HasChamber2)
 			MapRoom(15, 15, 10, 10);
-		if (VR3)
+		if (HasChamber3)
 			MapRoom(15, 29, 10, 10);
 		else
 			ye = 22;
@@ -975,34 +963,30 @@ void FirstRoom()
 			dungeon[22][y] = Tile::VWall;
 		}
 
-		if (VR1)
+		if (HasChamber1)
 			GenerateRoom(15, 1, 10, 10, 0);
-		if (VR2)
+		if (HasChamber2)
 			GenerateRoom(15, 15, 10, 10, 0);
-		if (VR3)
+		if (HasChamber3)
 			GenerateRoom(15, 29, 10, 10, 0);
-
-		HR3 = false;
-		HR2 = false;
-		HR1 = false;
 	} else {
 		int xs = 1;
 		int xe = DMAXX - 1;
 
-		HR1 = GenerateRnd(2) != 0;
-		HR2 = GenerateRnd(2) != 0;
-		HR3 = GenerateRnd(2) != 0;
+		HasChamber1 = GenerateRnd(2) != 0;
+		HasChamber2 = GenerateRnd(2) != 0;
+		HasChamber3 = GenerateRnd(2) != 0;
 
-		if (!HR1 || !HR3)
-			HR2 = true;
-		if (HR1)
+		if (!HasChamber1 || !HasChamber3)
+			HasChamber2 = true;
+		if (HasChamber1)
 			MapRoom(1, 15, 10, 10);
 		else
 			xs = 18;
 
-		if (HR2)
+		if (HasChamber2)
 			MapRoom(15, 15, 10, 10);
-		if (HR3)
+		if (HasChamber3)
 			MapRoom(29, 15, 10, 10);
 		else
 			xe = 22;
@@ -1016,16 +1000,12 @@ void FirstRoom()
 			dungeon[x][22] = Tile::VWall;
 		}
 
-		if (HR1)
+		if (HasChamber1)
 			GenerateRoom(1, 15, 10, 10, 1);
-		if (HR2)
+		if (HasChamber2)
 			GenerateRoom(15, 15, 10, 10, 1);
-		if (HR3)
+		if (HasChamber3)
 			GenerateRoom(29, 15, 10, 10, 1);
-
-		VR3 = false;
-		VR2 = false;
-		VR1 = false;
 	}
 }
 
@@ -1455,13 +1435,6 @@ void FixTilesPatterns()
 	}
 }
 
-void SetCornerRoom(int rx1, int ry1)
-{
-	SetPiece = { { rx1, ry1 }, CornerstoneRoomPattern.size };
-
-	CornerstoneRoomPattern.place({ rx1, ry1 }, true);
-}
-
 void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
@@ -1502,237 +1475,119 @@ void Substitution()
 	}
 }
 
-void SetCryptRoom(int rx1, int ry1)
+Point SelectChamber()
 {
-	UberRow = 2 * rx1 + 6;
-	UberCol = 2 * ry1 + 8;
-	SetPiece = { { rx1, ry1 }, UberRoomPattern.size };
+	int chamber;
+	if (!HasChamber1)
+		chamber = GenerateRnd(2) != 0 ? 3 : 2;
+	else if (!HasChamber2)
+		chamber = GenerateRnd(2) != 0 ? 1 : 3;
+	else if (!HasChamber3)
+		chamber = GenerateRnd(2) != 0 ? 1 : 2;
+	else
+		chamber = GenerateRnd(3) + 1;
+
+	switch (chamber) {
+	case 1:
+		return VerticalLayout ? Point { 16, 2 } : Point { 2, 16 };
+	case 3:
+		return VerticalLayout ? Point { 16, 30 } : Point { 30, 16 };
+	default:
+		return { 16, 16 };
+	}
+}
+
+void SetSetPieceRoom()
+{
+	if (pSetPiece == nullptr)
+		return;
+
+	Point position = SelectChamber();
+	PlaceDunTiles(pSetPiece.get(), position, Tile::Floor);
+	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
+}
+
+void SetCryptRoom()
+{
+	Point position = SelectChamber();
+
+	UberRow = 2 * position.x + 6;
+	UberCol = 2 * position.y + 8;
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
-	UberRoomPattern.place({ rx1, ry1 }, true);
+	SetPiece = { position, UberRoomPattern.size };
+
+	UberRoomPattern.place(position, true);
+}
+
+void SetCornerRoom()
+{
+	Point position = SelectChamber();
+
+	SetPiece = { position, CornerstoneRoomPattern.size };
+
+	CornerstoneRoomPattern.place(position, true);
 }
 
 void FillChambers()
 {
-	if (HR1)
-		GenerateChamber(0, 14, false, false, false, true);
+	if (!VerticalLayout) {
+		if (HasChamber1)
+			GenerateChamber(0, 14, false, false, false, true);
 
-	if (HR2) {
-		if (HR1 && !HR3)
-			GenerateChamber(14, 14, false, false, true, false);
-		if (!HR1 && HR3)
-			GenerateChamber(14, 14, false, false, false, true);
-		if (HR1 && HR3)
-			GenerateChamber(14, 14, false, false, true, true);
-		if (!HR1 && !HR3)
-			GenerateChamber(14, 14, false, false, false, false);
-	}
-
-	if (HR3)
-		GenerateChamber(28, 14, false, false, true, false);
-	if (HR1 && HR2)
-		GenerateHall(12, 18, 14, 18);
-	if (HR2 && HR3)
-		GenerateHall(26, 18, 28, 18);
-	if (HR1 && !HR2 && HR3)
-		GenerateHall(12, 18, 28, 18);
-	if (VR1)
-		GenerateChamber(14, 0, false, true, false, false);
-
-	if (VR2) {
-		if (VR1 && !VR3)
-			GenerateChamber(14, 14, true, false, false, false);
-		if (!VR1 && VR3)
-			GenerateChamber(14, 14, false, true, false, false);
-		if (VR1 && VR3)
-			GenerateChamber(14, 14, true, true, false, false);
-		if (!VR1 && !VR3)
-			GenerateChamber(14, 14, false, false, false, false);
-	}
-
-	if (VR3)
-		GenerateChamber(14, 28, true, false, false, false);
-	if (VR1 && VR2)
-		GenerateHall(18, 12, 18, 14);
-	if (VR2 && VR3)
-		GenerateHall(18, 26, 18, 28);
-	if (VR1 && !VR2 && VR3)
-		GenerateHall(18, 12, 18, 28);
-
-	if (currlevel == 24) {
-		if (VR1 || VR2 || VR3) {
-			int c = 1;
-			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
-				c = 2;
-			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
-				c = 0;
-
-			if (VR1 && !VR2 && VR3) {
-				c = (GenerateRnd(2) != 0) ? 0 : 2;
-			}
-
-			if (VR1 && VR2 && VR3)
-				c = GenerateRnd(3);
-
-			switch (c) {
-			case 0:
-				SetCryptRoom(16, 2);
-				break;
-			case 1:
-				SetCryptRoom(16, 16);
-				break;
-			case 2:
-				SetCryptRoom(16, 30);
-				break;
-			}
-		} else {
-			int c = 1;
-			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
-				c = 2;
-			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
-				c = 0;
-
-			if (HR1 && !HR2 && HR3) {
-				c = (GenerateRnd(2) != 0) ? 0 : 2;
-			}
-
-			if (HR1 && HR2 && HR3)
-				c = GenerateRnd(3);
-
-			switch (c) {
-			case 0:
-				SetCryptRoom(2, 16);
-				break;
-			case 1:
-				SetCryptRoom(16, 16);
-				break;
-			case 2:
-				SetCryptRoom(30, 16);
-				break;
-			}
+		if (HasChamber2) {
+			if (HasChamber1 && !HasChamber3)
+				GenerateChamber(14, 14, false, false, true, false);
+			if (!HasChamber1 && HasChamber3)
+				GenerateChamber(14, 14, false, false, false, true);
+			if (HasChamber1 && HasChamber3)
+				GenerateChamber(14, 14, false, false, true, true);
+			if (!HasChamber1 && !HasChamber3)
+				GenerateChamber(14, 14, false, false, false, false);
 		}
-	}
-	if (currlevel == 21) {
-		if (VR1 || VR2 || VR3) {
-			int c = 1;
-			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
-				c = 2;
-			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
-				c = 0;
 
-			if (VR1 && !VR2 && VR3) {
-				if (GenerateRnd(2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
+		if (HasChamber3)
+			GenerateChamber(28, 14, false, false, true, false);
+		if (HasChamber1 && HasChamber2)
+			GenerateHall(12, 18, 14, 18);
+		if (HasChamber2 && HasChamber3)
+			GenerateHall(26, 18, 28, 18);
+		if (HasChamber1 && !HasChamber2 && HasChamber3)
+			GenerateHall(12, 18, 28, 18);
+	} else {
+		if (HasChamber1)
+			GenerateChamber(14, 0, false, true, false, false);
 
-			if (VR1 && VR2 && VR3)
-				c = GenerateRnd(3);
-
-			switch (c) {
-			case 0:
-				SetCornerRoom(16, 2);
-				break;
-			case 1:
-				SetCornerRoom(16, 16);
-				break;
-			case 2:
-				SetCornerRoom(16, 30);
-				break;
-			}
-		} else {
-			int c = 1;
-			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
-				c = 2;
-			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
-				c = 0;
-
-			if (HR1 && !HR2 && HR3) {
-				if (GenerateRnd(2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (HR1 && HR2 && HR3)
-				c = GenerateRnd(3);
-
-			switch (c) {
-			case 0:
-				SetCornerRoom(2, 16);
-				break;
-			case 1:
-				SetCornerRoom(16, 16);
-				break;
-			case 2:
-				SetCornerRoom(30, 16);
-				break;
-			}
+		if (HasChamber2) {
+			if (HasChamber1 && !HasChamber3)
+				GenerateChamber(14, 14, true, false, false, false);
+			if (!HasChamber1 && HasChamber3)
+				GenerateChamber(14, 14, false, true, false, false);
+			if (HasChamber1 && HasChamber3)
+				GenerateChamber(14, 14, true, true, false, false);
+			if (!HasChamber1 && !HasChamber3)
+				GenerateChamber(14, 14, false, false, false, false);
 		}
+
+		if (HasChamber3)
+			GenerateChamber(14, 28, true, false, false, false);
+		if (HasChamber1 && HasChamber2)
+			GenerateHall(18, 12, 18, 14);
+		if (HasChamber2 && HasChamber3)
+			GenerateHall(18, 26, 18, 28);
+		if (HasChamber1 && !HasChamber2 && HasChamber3)
+			GenerateHall(18, 12, 18, 28);
 	}
-	if (L5setloadflag) {
-		Point position;
-		if (VR1 || VR2 || VR3) {
-			int c = 1;
-			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
-				c = 2;
-			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
-				c = 0;
 
-			if (VR1 && !VR2 && VR3) {
-				if (GenerateRnd(2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (VR1 && VR2 && VR3)
-				c = GenerateRnd(3);
-
-			switch (c) {
-			case 0:
-				position = { 16, 2 };
-				break;
-			case 1:
-				position = { 16, 16 };
-				break;
-			case 2:
-				position = { 16, 30 };
-				break;
-			}
-		} else {
-			int c = 1;
-			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
-				c = 2;
-			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
-				c = 0;
-
-			if (HR1 && !HR2 && HR3) {
-				if (GenerateRnd(2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (HR1 && HR2 && HR3)
-				c = GenerateRnd(3);
-
-			switch (c) {
-			case 0:
-				position = { 2, 16 };
-				break;
-			case 1:
-				position = { 16, 16 };
-				break;
-			case 2:
-				position = { 30, 16 };
-				break;
-			}
+	if (leveltype == DTYPE_CRYPT) {
+		if (currlevel == 24) {
+			SetCryptRoom();
+		} else if (currlevel == 21) {
+			SetCornerRoom();
 		}
-		PlaceDunTiles(L5pSetPiece.get(), position, Tile::Floor);
-		SetPiece = { position, { SDL_SwapLE16(L5pSetPiece[0]), SDL_SwapLE16(L5pSetPiece[1]) } };
+	} else {
+		SetSetPieceRoom();
 	}
 }
 

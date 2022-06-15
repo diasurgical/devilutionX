@@ -26,7 +26,6 @@ bool Protected[DMAXX][DMAXY];
 Rectangle SetPieceRoom;
 Rectangle SetPiece;
 std::unique_ptr<uint16_t[]> pSetPiece;
-bool setloadflag;
 std::optional<OwnedCelSprite> pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<uint16_t[]> pLevelPieces;
