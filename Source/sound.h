@@ -54,7 +54,6 @@ extern bool gbSndInited;
 extern _music_id sgnMusicTrack;
 
 void ClearDuplicateSounds();
-void snd_stop_snd(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream = false);
 void snd_init();
