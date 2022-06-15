@@ -422,12 +422,25 @@ enum Tile : uint8_t {
 	HDoor          = 26,
 	HFenceVWall    = 27,
 	HDoorVDoor     = 28,
+	DFence         = 29,
 	VDoorEnd       = 30,
 	HDoorEnd       = 31,
+	VFenceEnd      = 32,
 	VFence         = 35,
 	HFence         = 36,
 	HWallVFence    = 37,
+	HArchVFence    = 38,
+	HArchVDoor     = 39,
 	EntranceStairs = 64,
+	// clang-format on
+};
+
+enum CathedralTile : uint8_t {
+	// clang-format off
+	HWallShadow  = 148,
+	HArchShadow  = 149,
+	HArchShadow2 = 153,
+	HWallShadow2 = 154,
 	// clang-format on
 };
 
@@ -501,6 +514,7 @@ enum CryptTile : uint8_t {
 	Floor12     = 164,
 	Floor13     = 165,
 	Floor14     = 166,
+	PillarHalf  = 167,
 	VWall8      = 173,
 	VWall9      = 174,
 	VWall10     = 175,
@@ -531,6 +545,21 @@ enum CryptTile : uint8_t {
 	HDemon      = 200,
 	VSuccubus   = 201,
 	HSuccubus   = 202,
+	Shadow1     = 203,
+	Shadow2     = 204,
+	Shadow3     = 205,
+	Shadow4     = 206,
+	Shadow5     = 207,
+	Shadow6     = 208,
+	Shadow7     = 209,
+	Shadow8     = 210,
+	Shadow9     = 211,
+	Shadow10    = 212,
+	Shadow11    = 213,
+	Shadow12    = 214,
+	Shadow13    = 215,
+	Shadow14    = 216,
+	Shadow15    = 217,
 	// clang-format on
 };
 
@@ -547,124 +576,124 @@ void InitCryptPieces()
 	}
 }
 
-void CryptLavafloor()
+void ApplyCryptShadowsPatterns()
 {
-	for (int j = 1; j < 40; j++) {
-		for (int i = 1; i < 40; i++) {
+	for (int j = 1; j < DMAXY; j++) {
+		for (int i = 1; i < DMAXX; i++) {
 			switch (dungeon[i][j]) {
-			case 5:
-			case 116:
-			case 133:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
+			case DArch:
+			case DArch2:
+			case DArch3:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow1;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow2;
+				if (dungeon[i][j - 1] == Floor)
+					dungeon[i][j - 1] = Shadow3;
 				break;
-			case 7:
-			case 15:
-			case 17:
-			case 118:
-			case 126:
-			case 128:
-			case 135:
-			case 152:
-			case 160:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
+			case HWallEnd:
+			case HWallEnd2:
+			case HWallEnd3:
+			case HWallEnd4:
+			case Pillar:
+			case Pillar2:
+			case Pillar3:
+			case Pillar5:
+			case Pillar9:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow4;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow5;
 				break;
-			case 8:
-			case 11:
-			case 14:
-			case 95:
-			case 119:
-			case 125:
-			case 136:
-			case 142:
-			case 153:
-			case 156:
-			case 159:
-			case 185:
-			case 186:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
+			case HArchEnd:
+			case HArchEnd2:
+			case HArchEnd3:
+			case HArchEnd4:
+			case HWallVArch:
+			case HWallVArch2:
+			case HWallVArch3:
+			case HWallVArch4:
+			case VArch:
+			case VArch4:
+			case VArch5:
+			case VArch6:
+			case VArch7:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow1;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow2;
 				break;
-			case 9:
-			case 120:
-			case 154:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
+			case VArchEnd:
+			case VArchEnd2:
+			case VArchEnd4:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow4;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow5;
+				if (dungeon[i][j - 1] == Floor)
+					dungeon[i][j - 1] = Shadow3;
 				break;
-			case 10:
-			case 12:
-			case 121:
-			case 123:
-			case 138:
-			case 155:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
+			case HArch:
+			case HArch2:
+			case HArchVWall:
+			case HArchVWall2:
+			case HArchVWall3:
+			case HArchVWall4:
+				if (dungeon[i][j - 1] == Floor)
+					dungeon[i][j - 1] = Shadow3;
 				break;
-			case 96:
-			case 187:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 208;
+			case HArch5:
+			case HArch6:
+				if (dungeon[i][j - 1] == Floor)
+					dungeon[i][j - 1] = Shadow6;
 				break;
-			case 122:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 211;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 212;
+			case VArch2:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow9;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow10;
 				break;
-			case 137:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 213;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 214;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
+			case VArchEnd3:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = CryptTile::Shadow11;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = CryptTile::Shadow12;
+				if (dungeon[i][j - 1] == Floor)
+					dungeon[i][j - 1] = Shadow3;
 				break;
-			case 139:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 215;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 216;
+			case VArch3:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow13;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow14;
 				break;
-			case 140:
-			case 157:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 217;
+			case HArch3:
+			case HArch4:
+				if (dungeon[i][j - 1] == Floor)
+					dungeon[i][j - 1] = Shadow15;
 				break;
-			case 143:
-			case 145:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 213;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 214;
+			case Pillar6:
+			case Pillar8:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = CryptTile::Shadow11;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = CryptTile::Shadow12;
 				break;
-			case 150:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 217;
+			case DArch4:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow1;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow2;
+				if (dungeon[i][j - 1] == Floor)
+					dungeon[i][j - 1] = Shadow15;
 				break;
-			case 162:
-			case 167:
-			case 192:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 209;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 210;
+			case Pillar11:
+			case Pillar12:
+			case PillarHalf:
+				if (dungeon[i - 1][j] == Floor)
+					dungeon[i - 1][j] = Shadow7;
+				if (dungeon[i - 1][j - 1] == Floor)
+					dungeon[i - 1][j - 1] = Shadow8;
 				break;
 			}
 		}
@@ -707,24 +736,27 @@ void ApplyShadowsPatterns()
 
 	for (int y = 1; y < DMAXY; y++) {
 		for (int x = 1; x < DMAXX; x++) {
-			if (dungeon[x - 1][y] == 139 && !Protected[x - 1][y]) {
+			if (Protected[x - 1][y])
+				continue;
+
+			if (dungeon[x - 1][y] == 139) {
 				uint8_t tnv3 = 139;
-				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
+				if (IsAnyOf(dungeon[x][y], DFence, VFenceEnd, VFence, HWallVFence, HArchVFence, HArchVDoor)) {
 					tnv3 = 141;
 				}
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 149 && !Protected[x - 1][y]) {
-				uint8_t tnv3 = 149;
-				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
-					tnv3 = 153;
+			if (dungeon[x - 1][y] == HArchShadow) {
+				uint8_t tnv3 = HArchShadow;
+				if (IsAnyOf(dungeon[x][y], DFence, VFenceEnd, VFence, HWallVFence, HArchVFence, HArchVDoor)) {
+					tnv3 = HArchShadow2;
 				}
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 148 && !Protected[x - 1][y]) {
-				uint8_t tnv3 = 148;
-				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
-					tnv3 = 154;
+			if (dungeon[x - 1][y] == HWallShadow) {
+				uint8_t tnv3 = HWallShadow;
+				if (IsAnyOf(dungeon[x][y], DFence, VFenceEnd, VFence, HWallVFence, HArchVFence, HArchVDoor)) {
+					tnv3 = HWallShadow2;
 				}
 				dungeon[x - 1][y] = tnv3;
 			}
@@ -1929,13 +1961,13 @@ void GenerateLevel(lvl_entry entry)
 		PlaceMiniSetRandom(VWallSection, 100);
 		PlaceMiniSetRandom(HWallSection, 100);
 		PlaceMiniSetRandom(CryptFloorLave, 60);
-		CryptLavafloor();
+		ApplyCryptShadowsPatterns();
 		switch (currlevel) {
 		case 21:
 			CryptCracked(30);
 			CryptBroken(15);
 			CryptLeaking(5);
-			CryptLavafloor();
+			ApplyCryptShadowsPatterns();
 			CryptFloor(10);
 			CryptSubstitions1(5);
 			CryptSubstitions2(20);
@@ -1947,7 +1979,7 @@ void GenerateLevel(lvl_entry entry)
 			CryptCracked(30);
 			CryptBroken(20);
 			CryptLeaking(10);
-			CryptLavafloor();
+			ApplyCryptShadowsPatterns();
 			break;
 		case 23:
 			CryptFloor(10);
@@ -1956,7 +1988,7 @@ void GenerateLevel(lvl_entry entry)
 			CryptCracked(30);
 			CryptBroken(20);
 			CryptLeaking(15);
-			CryptLavafloor();
+			ApplyCryptShadowsPatterns();
 			break;
 		default:
 			CryptFloor(10);
@@ -1965,7 +1997,7 @@ void GenerateLevel(lvl_entry entry)
 			CryptCracked(30);
 			CryptBroken(20);
 			CryptLeaking(20);
-			CryptLavafloor();
+			ApplyCryptShadowsPatterns();
 			break;
 		}
 	} else {
