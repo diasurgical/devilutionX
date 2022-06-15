@@ -473,6 +473,15 @@ SDL_Surface *GetOutputSurface()
 #endif
 }
 
+bool IsDoubleBuffered()
+{
+#ifdef USE_SDL1
+	return (GetOutputSurface()->flags & SDL_DOUBLEBUF) == SDL_DOUBLEBUF;
+#else
+	return true;
+#endif
+}
+
 bool OutputRequiresScaling()
 {
 #ifdef USE_SDL1

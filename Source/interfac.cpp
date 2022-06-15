@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <SDL.h>
+
 #include "control.h"
 #include "dx.h"
 #include "engine.h"
@@ -39,12 +41,6 @@ const BYTE BarColor[3] = { 138, 43, 254 };
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 std::optional<OwnedPcxSprite> ArtCutsceneWidescreen;
-
-void FreeInterface()
-{
-	sgpBackCel = std::nullopt;
-	ArtCutsceneWidescreen = std::nullopt;
-}
 
 Cutscenes PickCutscene(interface_mode uMsg)
 {
@@ -97,7 +93,7 @@ Cutscenes PickCutscene(interface_mode uMsg)
 	}
 }
 
-void InitCutscene(interface_mode uMsg)
+void LoadCutsceneBackground(interface_mode uMsg)
 {
 	const char *celPath;
 	const char *palPath;
@@ -170,7 +166,13 @@ void InitCutscene(interface_mode uMsg)
 	sgdwProgress = 0;
 }
 
-void DrawCutscene()
+void FreeCutsceneBackground()
+{
+	sgpBackCel = std::nullopt;
+	ArtCutsceneWidescreen = std::nullopt;
+}
+
+void DrawCutsceneBackground()
 {
 	const Rectangle &uiRectangle = GetUIRectangle();
 	const Surface &out = GlobalBackBuffer();
@@ -179,7 +181,12 @@ void DrawCutscene()
 		RenderPcxSprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
 	}
 	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, *sgpBackCel, 0);
+}
 
+void DrawCutsceneForeground()
+{
+	const Rectangle &uiRectangle = GetUIRectangle();
+	const Surface &out = GlobalBackBuffer();
 	constexpr int ProgressHeight = 22;
 	SDL_Rect rect = MakeSdlRect(
 	    out.region.x + BarPos[progress_id][0] + uiRectangle.position.x,
@@ -188,7 +195,8 @@ void DrawCutscene()
 	    ProgressHeight);
 	SDL_FillRect(out.surface, &rect, BarColor[progress_id]);
 
-	BltFast(&rect, &rect);
+	if (DiabloUiSurface() == PalSurface)
+		BltFast(&rect, &rect);
 	RenderPresent();
 }
 
@@ -212,8 +220,7 @@ bool IncProgress()
 	sgdwProgress += 23;
 	if (sgdwProgress > 534)
 		sgdwProgress = 534;
-	if (sgpBackCel)
-		DrawCutscene();
+	DrawCutsceneForeground();
 	return sgdwProgress >= 534;
 }
 
@@ -230,9 +237,21 @@ void ShowProgress(interface_mode uMsg)
 	interface_msg_pump();
 	ClearScreenBuffer();
 	scrollrt_draw_game_screen();
-	InitCutscene(uMsg);
 	BlackPalette();
-	DrawCutscene();
+
+	// Blit the background once and then free it.
+	LoadCutsceneBackground(uMsg);
+	DrawCutsceneBackground();
+	if (RenderDirectlyToOutputSurface && IsDoubleBuffered()) {
+		// Blit twice for triple buffering.
+		for (unsigned i = 0; i < 2; ++i) {
+			if (DiabloUiSurface() == PalSurface)
+				BltFast(nullptr, nullptr);
+			RenderPresent();
+			DrawCutsceneBackground();
+		}
+	}
+	FreeCutsceneBackground();
 
 	if (IsHardwareCursor())
 		SetHardwareCursorVisible(false);
@@ -390,7 +409,6 @@ void ShowProgress(interface_mode uMsg)
 	assert(ghMainWnd);
 
 	PaletteFadeOut(8);
-	FreeInterface();
 
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == DisableInputWndProc);

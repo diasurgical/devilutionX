@@ -1,3 +1,5 @@
+#include <SDL.h>
+
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
@@ -27,11 +29,15 @@ void DialogActionCancel()
 	endMenu = true;
 }
 
-void ProgressLoad()
+void ProgressLoadBackground()
 {
 	LoadBackgroundArt("ui_art\\black.pcx");
 	ArtPopupSm = LoadPcxAsset("ui_art\\spopup.pcx");
 	ArtProgBG = LoadPcxAsset("ui_art\\prog_bg.pcx");
+}
+
+void ProgressLoadForeground()
+{
 	ProgFil = LoadPcxAsset("ui_art\\prog_fil.pcx");
 
 	const Point uiPosition = GetUIRectangle().position;
@@ -39,25 +45,40 @@ void ProgressLoad()
 	vecProgress.push_back(std::make_unique<UiButton>(_("Cancel"), &DialogActionCancel, rect3));
 }
 
-void ProgressFree()
+void ProgressFreeBackground()
 {
 	ArtBackground = std::nullopt;
 	ArtPopupSm = std::nullopt;
 	ArtProgBG = std::nullopt;
+}
+
+void ProgressFreeForeground()
+{
+	vecProgress.clear();
 	ProgFil = std::nullopt;
 }
 
-void ProgressRender(BYTE progress)
+Point GetPosition()
+{
+	return { GetCenterOffset(280), GetCenterOffset(144, gnScreenHeight) };
+}
+
+void ProgressRenderBackground()
 {
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 
 	const Surface &out = Surface(DiabloUiSurface());
 	RenderPcxSprite(out, PcxSpriteSheet { *ArtBackground }.sprite(0), { 0, 0 });
 
-	Point position = { GetCenterOffset(280), GetCenterOffset(144, gnScreenHeight) };
-
+	const Point position = GetPosition();
 	RenderPcxSprite(out, PcxSprite { *ArtPopupSm }, position);
 	RenderPcxSprite(out, PcxSprite { *ArtProgBG }, { GetCenterOffset(227), position.y + 52 });
+}
+
+void ProgressRenderForeground(int progress)
+{
+	const Surface &out = Surface(DiabloUiSurface());
+	const Point position = GetPosition();
 	if (progress != 0) {
 		const int x = GetCenterOffset(227);
 		const int w = 227 * progress / 100;
@@ -71,8 +92,21 @@ void ProgressRender(BYTE progress)
 
 bool UiProgressDialog(int (*fnfunc)())
 {
-	ProgressLoad();
 	SetFadeLevel(256);
+
+	// Blit the background once and then free it.
+	ProgressLoadBackground();
+	ProgressRenderBackground();
+	if (RenderDirectlyToOutputSurface && IsDoubleBuffered()) {
+		// Blit twice for triple buffering.
+		for (unsigned i = 0; i < 2; ++i) {
+			UiFadeIn();
+			ProgressRenderBackground();
+		}
+	}
+	ProgressFreeBackground();
+
+	ProgressLoadForeground();
 
 	endMenu = false;
 	int progress = 0;
@@ -80,7 +114,7 @@ bool UiProgressDialog(int (*fnfunc)())
 	SDL_Event event;
 	while (!endMenu && progress < 100) {
 		progress = fnfunc();
-		ProgressRender(progress);
+		ProgressRenderForeground(progress);
 		UiRenderItems(vecProgress);
 		DrawMouse();
 		UiFadeIn();
@@ -113,7 +147,7 @@ bool UiProgressDialog(int (*fnfunc)())
 			UiHandleEvents(&event);
 		}
 	}
-	ProgressFree();
+	ProgressFreeForeground();
 
 	return progress == 100;
 }
