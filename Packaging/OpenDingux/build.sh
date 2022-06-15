@@ -91,7 +91,7 @@ cmake_build() {
 }
 
 strip_bin() {
-	"${TOOLCHAIN}/usr/bin/"*-linux-strip "${BUILD_DIR}/devilutionx"
+	"${TOOLCHAIN}/usr/bin/"*-linux-strip -s -R .comment -R .gnu.version "${BUILD_DIR}/devilutionx"
 }
 
 build_debug() {
