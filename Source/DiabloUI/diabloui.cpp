@@ -701,7 +701,7 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
 	int uiPositionY = GetUIRectangle().position.y;
 	if (ArtBackgroundWidescreen) {
-		SDL_Rect rectw = { 0, uiPositionY, 0, 0 };
+		SDL_Rect rectw = MakeSdlRect(0, uiPositionY, 0, 0);
 		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rectw, UiFlags::AlignCenter));
 	}
 

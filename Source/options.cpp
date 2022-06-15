@@ -847,7 +847,7 @@ size_t OptionEntryAudioDevice::GetListSize() const
 
 string_view OptionEntryAudioDevice::GetListDescription(size_t index) const
 {
-	constexpr size_t MaxWidth = 500;
+	constexpr int MaxWidth = 500;
 
 	string_view deviceName = GetDeviceName(index);
 	if (deviceName.empty())

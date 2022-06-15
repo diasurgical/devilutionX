@@ -43,7 +43,7 @@ std::vector<std::unique_ptr<UiListItem>> vecSelGameDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelGameDialog;
 std::vector<GameInfo> Gamelist;
 uint32_t firstPublicGameInfoRequestSend = 0;
-int HighlightedItem;
+unsigned HighlightedItem;
 
 void selgame_FreeVectors()
 {
@@ -177,7 +177,7 @@ void UiInitGameSelectionList(string_view search)
 		selgame_GameSelection_Select(itemValue);
 	};
 
-	if (search.size() > 0) {
+	if (!search.empty()) {
 		for (unsigned i = 0; i < vecSelGameDlgItems.size(); i++) {
 			int gameIndex = vecSelGameDlgItems[i]->m_value - 3;
 			if (gameIndex < 0)
@@ -203,8 +203,10 @@ void selgame_GameSelection_Init()
 
 void selgame_GameSelection_Focus(int value)
 {
-	HighlightedItem = value;
-	switch (vecSelGameDlgItems[value]->m_value) {
+	const auto index = static_cast<unsigned>(value);
+	HighlightedItem = index;
+	const UiListItem &item = *vecSelGameDlgItems[index];
+	switch (item.m_value) {
 	case 0:
 		CopyUtf8(selgame_Description, _("Create a new game with a difficulty setting of your choice."), sizeof(selgame_Description));
 		break;
@@ -219,7 +221,7 @@ void selgame_GameSelection_Focus(int value)
 		}
 		break;
 	default:
-		const auto &gameInfo = Gamelist[vecSelGameDlgItems[value]->m_value - 3];
+		const GameInfo &gameInfo = Gamelist[item.m_value - 3];
 		std::string infoString = std::string(_("Join the public game already in progress."));
 		infoString.append("\n\n");
 		if (IsGameCompatible(gameInfo.gameData)) {
@@ -236,7 +238,7 @@ void selgame_GameSelection_Focus(int value)
 				break;
 			}
 			infoString.append(fmt::format(fmt::runtime(_(/* TRANSLATORS: {:s} means: Game Difficulty. */ "Difficulty: {:s}")), difficulty));
-			infoString.append("\n");
+			infoString += '\n';
 			switch (gameInfo.gameData.nTickRate) {
 			case 20:
 				AppendStrView(infoString, _("Speed: Normal"));
@@ -255,11 +257,11 @@ void selgame_GameSelection_Focus(int value)
 				infoString.append(fmt::format("Speed: {}", gameInfo.gameData.nTickRate));
 				break;
 			}
-			infoString.append("\n");
+			infoString += '\n';
 			AppendStrView(infoString, _("Players: "));
 			for (auto &playerName : gameInfo.players) {
 				infoString.append(playerName);
-				infoString.append(" ");
+				infoString += ' ';
 			}
 		} else {
 			infoString.append(GetErrorMessageIncompatibility(gameInfo.gameData));
