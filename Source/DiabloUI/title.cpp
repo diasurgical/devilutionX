@@ -6,6 +6,7 @@
 #include "engine/load_pcx.hpp"
 #include "engine/load_pcx_as_cel.hpp"
 #include "utils/language.h"
+#include "utils/sdl_geometry.h"
 
 namespace devilution {
 namespace {
@@ -39,7 +40,7 @@ void UiTitleDialog()
 	TitleLoad();
 	const Point uiPosition = GetUIRectangle().position;
 	if (gbIsHellfire) {
-		SDL_Rect rect = { 0, uiPosition.y, 0, 0 };
+		SDL_Rect rect = MakeSdlRect(0, uiPosition.y, 0, 0);
 		if (ArtBackgroundWidescreen)
 			vecTitleScreen.push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rect, UiFlags::AlignCenter));
 		vecTitleScreen.push_back(std::make_unique<UiImageAnimatedPcx>(PcxSpriteSheet { *ArtBackground }, rect, UiFlags::AlignCenter));
@@ -47,7 +48,7 @@ void UiTitleDialog()
 		UiAddBackground(&vecTitleScreen);
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
-		SDL_Rect rect = { (Sint16)(uiPosition.x), (Sint16)(uiPosition.y + 410), 640, 26 };
+		SDL_Rect rect = MakeSdlRect(uiPosition.x, uiPosition.y + 410, 640, 26);
 		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").data(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 	}
 

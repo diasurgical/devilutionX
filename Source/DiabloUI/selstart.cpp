@@ -5,6 +5,7 @@
 #include "engine/load_pcx.hpp"
 #include "options.h"
 #include "utils/language.h"
+#include "utils/sdl_geometry.h"
 
 namespace devilution {
 namespace {
@@ -39,7 +40,7 @@ void UiSelStartUpGameOption()
 	UiAddBackground(&vecDialog);
 
 	const Point uiPosition = GetUIRectangle().position;
-	SDL_Rect rect = { 0, (Sint16)(uiPosition.y), 0, 0 };
+	SDL_Rect rect = MakeSdlRect(0, uiPosition.y, 0, 0);
 	vecDialog.push_back(std::make_unique<UiImage>(&artLogo, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Enter Hellfire"), static_cast<int>(StartUpGameMode::Hellfire)));
