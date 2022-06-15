@@ -705,13 +705,13 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rectw, UiFlags::AlignCenter));
 	}
 
-	SDL_Rect rect = { 0, uiPositionY, 0, 0 };
+	SDL_Rect rect = MakeSdlRect(0, uiPositionY, 0, 0);
 	vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSpriteSheet { *ArtBackground }.sprite(0), rect, UiFlags::AlignCenter));
 }
 
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
 {
-	SDL_Rect rect = { 0, (Sint16)(GetUIRectangle().position.y + y), 0, 0 };
+	SDL_Rect rect = MakeSdlRect(0, GetUIRectangle().position.y + y, 0, 0);
 	vecDialog->push_back(std::make_unique<UiImageCel>(
 	    CelSpriteWithFrameHeight { ArtLogos[size]->sprite, ArtLogos[size]->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 }
