@@ -148,6 +148,46 @@ void TownCloseGrave()
 	SetDungeonMicros();
 }
 
+void InitTownPieces()
+{
+
+	for (int y = 0; y < MAXDUNY; y++) {
+		for (int x = 0; x < MAXDUNX; x++) {
+			if (dPiece[x][y] == 360) {
+				dSpecial[x][y] = 1;
+			} else if (dPiece[x][y] == 358) {
+				dSpecial[x][y] = 2;
+			} else if (dPiece[x][y] == 129) {
+				dSpecial[x][y] = 6;
+			} else if (dPiece[x][y] == 130) {
+				dSpecial[x][y] = 7;
+			} else if (dPiece[x][y] == 128) {
+				dSpecial[x][y] = 8;
+			} else if (dPiece[x][y] == 117) {
+				dSpecial[x][y] = 9;
+			} else if (dPiece[x][y] == 157) {
+				dSpecial[x][y] = 10;
+			} else if (dPiece[x][y] == 158) {
+				dSpecial[x][y] = 11;
+			} else if (dPiece[x][y] == 156) {
+				dSpecial[x][y] = 12;
+			} else if (dPiece[x][y] == 162) {
+				dSpecial[x][y] = 13;
+			} else if (dPiece[x][y] == 160) {
+				dSpecial[x][y] = 14;
+			} else if (dPiece[x][y] == 214) {
+				dSpecial[x][y] = 15;
+			} else if (dPiece[x][y] == 212) {
+				dSpecial[x][y] = 16;
+			} else if (dPiece[x][y] == 217) {
+				dSpecial[x][y] = 17;
+			} else if (dPiece[x][y] == 216) {
+				dSpecial[x][y] = 18;
+			}
+		}
+	}
+}
+
 /**
  * @brief Initialize all of the levels data
  */
@@ -196,6 +236,8 @@ void DrlgTPass3()
 	} else {
 		FillTile(60, 70, 71);
 	}
+
+	InitTownPieces();
 }
 
 } // namespace
@@ -284,8 +326,6 @@ void CreateTown(lvl_entry entry)
 {
 	dminPosition = { 10, 10 };
 	dmaxPosition = { 84, 84 };
-	DRLG_InitTrans();
-	DRLG_Init_Globals();
 
 	if (entry == ENTRY_MAIN) { // New game
 		ViewPosition = { 75, 68 };
@@ -310,50 +350,6 @@ void CreateTown(lvl_entry entry)
 	}
 
 	DrlgTPass3();
-	memset(dFlags, 0, sizeof(dFlags));
-	memset(dLight, 0, sizeof(dLight));
-	memset(dFlags, 0, sizeof(dFlags));
-	memset(dPlayer, 0, sizeof(dPlayer));
-	memset(dMonster, 0, sizeof(dMonster));
-	memset(dObject, 0, sizeof(dObject));
-	memset(dItem, 0, sizeof(dItem));
-	memset(dSpecial, 0, sizeof(dSpecial));
-
-	for (int y = 0; y < MAXDUNY; y++) {
-		for (int x = 0; x < MAXDUNX; x++) {
-			if (dPiece[x][y] == 360) {
-				dSpecial[x][y] = 1;
-			} else if (dPiece[x][y] == 358) {
-				dSpecial[x][y] = 2;
-			} else if (dPiece[x][y] == 129) {
-				dSpecial[x][y] = 6;
-			} else if (dPiece[x][y] == 130) {
-				dSpecial[x][y] = 7;
-			} else if (dPiece[x][y] == 128) {
-				dSpecial[x][y] = 8;
-			} else if (dPiece[x][y] == 117) {
-				dSpecial[x][y] = 9;
-			} else if (dPiece[x][y] == 157) {
-				dSpecial[x][y] = 10;
-			} else if (dPiece[x][y] == 158) {
-				dSpecial[x][y] = 11;
-			} else if (dPiece[x][y] == 156) {
-				dSpecial[x][y] = 12;
-			} else if (dPiece[x][y] == 162) {
-				dSpecial[x][y] = 13;
-			} else if (dPiece[x][y] == 160) {
-				dSpecial[x][y] = 14;
-			} else if (dPiece[x][y] == 214) {
-				dSpecial[x][y] = 15;
-			} else if (dPiece[x][y] == 212) {
-				dSpecial[x][y] = 16;
-			} else if (dPiece[x][y] == 217) {
-				dSpecial[x][y] = 17;
-			} else if (dPiece[x][y] == 216) {
-				dSpecial[x][y] = 18;
-			}
-		}
-	}
 }
 
 } // namespace devilution

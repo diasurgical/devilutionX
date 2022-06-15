@@ -324,7 +324,6 @@ void DRLG_MRectTrans(Rectangle area);
 void DRLG_RectTrans(Rectangle area);
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy);
 void DRLG_InitSetPC();
-void DRLG_SetPC();
 void Make_SetPC(Rectangle area);
 /**
  * @param tries Tiles to try, 1600 will scan the full map
@@ -334,6 +333,8 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries = 199, bool 
 void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId = 0);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
+void SetSetPieceRoom(Point position, int floorId);
+void FreeQuestSetPieces();
 void DRLG_LPass3(int lv);
 void DRLG_Init_Globals();
 bool SkipThemeRoom(int x, int y);

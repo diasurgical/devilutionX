@@ -117,7 +117,6 @@ void LoadSetMap()
 	case SL_POISONWATER:
 		if (Quests[Q_PWATER]._qactive == QUEST_INIT)
 			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
-		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN");
 		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();

@@ -804,11 +804,6 @@ void LoadQuestSetPieces()
 	}
 }
 
-void FreeQuestSetPieces()
-{
-	pSetPiece = nullptr;
-}
-
 void InitDungeonPieces()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -1497,16 +1492,6 @@ Point SelectChamber()
 	}
 }
 
-void SetSetPieceRoom()
-{
-	if (pSetPiece == nullptr)
-		return;
-
-	Point position = SelectChamber();
-	PlaceDunTiles(pSetPiece.get(), position, Tile::Floor);
-	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
-}
-
 void SetCryptRoom()
 {
 	Point position = SelectChamber();
@@ -1586,8 +1571,8 @@ void FillChambers()
 		} else if (currlevel == 21) {
 			SetCornerRoom();
 		}
-	} else {
-		SetSetPieceRoom();
+	} else if (pSetPiece != nullptr) {
+		SetSetPieceRoom(SelectChamber(), Tile::Floor);
 	}
 }
 
@@ -1910,6 +1895,8 @@ void GenerateLevel(lvl_entry entry)
 		break;
 	}
 
+	LoadQuestSetPieces();
+
 	while (true) {
 		DRLG_InitTrans();
 
@@ -1927,6 +1914,8 @@ void GenerateLevel(lvl_entry entry)
 		if (PlaceStairs(entry))
 			break;
 	}
+
+	FreeQuestSetPieces();
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
@@ -2005,117 +1994,80 @@ void GenerateLevel(lvl_entry entry)
 		FillFloor();
 	}
 
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			pdungeon[i][j] = dungeon[i][j];
-		}
-	}
+	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	DRLG_Init_Globals();
 	DRLG_CheckQuests(SetPiece.position);
 }
 
 void Pass3()
 {
 	DRLG_LPass3(22 - 1);
+
+	if (leveltype == DTYPE_CRYPT)
+		InitCryptPieces();
+	else
+		InitDungeonPieces();
 }
 
 } // namespace
-
-void LoadL1Dungeon(const char *path, int vx, int vy)
-{
-	dminPosition = { 16, 16 };
-	dmaxPosition = { 96, 96 };
-
-	DRLG_InitTrans();
-
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 22;
-			Protected[i][j] = false;
-		}
-	}
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-	PlaceDunTiles(dunData.get(), { 0, 0 }, Tile::Floor);
-
-	FillFloor();
-
-	ViewPosition = { vx, vy };
-
-	Pass3();
-	DRLG_Init_Globals();
-
-	if (leveltype != DTYPE_CRYPT)
-		InitDungeonPieces();
-
-	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
-	SetMapObjects(dunData.get(), 0, 0);
-}
-
-void LoadPreL1Dungeon(const char *path)
-{
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 22;
-			Protected[i][j] = false;
-		}
-	}
-
-	dminPosition = { 16, 16 };
-	dmaxPosition = { 96, 96 };
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-	PlaceDunTiles(dunData.get(), { 0, 0 }, Tile::Floor);
-
-	FillFloor();
-
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			pdungeon[i][j] = dungeon[i][j];
-		}
-	}
-}
 
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
 
-	dminPosition = { 16, 16 };
-	dmaxPosition = { 96, 96 };
-
 	UberRow = 0;
 	UberCol = 0;
-	IsUberRoomOpened = false;
-	IsUberLeverActivated = false;
-	UberDiabloMonsterIndex = 0;
 
-	DRLG_InitTrans();
-	DRLG_InitSetPC();
-	LoadQuestSetPieces();
 	GenerateLevel(entry);
+
 	Pass3();
-	FreeQuestSetPieces();
 
 	if (leveltype == DTYPE_CRYPT) {
-		InitCryptPieces();
-	} else {
-		InitDungeonPieces();
-	}
-
-	DRLG_SetPC();
-
-	for (int j = dminPosition.y; j < dmaxPosition.y; j++) {
-		for (int i = dminPosition.x; i < dmaxPosition.x; i++) {
-			if (dPiece[i][j] == 290) {
-				UberRow = i;
-				UberCol = j;
-			}
-			if (dPiece[i][j] == 317) {
-				CornerStone.position = { i, j };
+		for (int j = dminPosition.y; j < dmaxPosition.y; j++) {
+			for (int i = dminPosition.x; i < dmaxPosition.x; i++) {
+				if (dPiece[i][j] == 290) {
+					UberRow = i;
+					UberCol = j;
+				}
+				if (dPiece[i][j] == 317) {
+					CornerStone.position = { i, j };
+				}
 			}
 		}
 	}
+}
+
+void LoadPreL1Dungeon(const char *path)
+{
+	memset(dungeon, 22, sizeof(dungeon));
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+	PlaceDunTiles(dunData.get(), { 0, 0 }, Tile::Floor);
+
+	if (leveltype == DTYPE_CATHEDRAL)
+		FillFloor();
+
+	memcpy(pdungeon, dungeon, sizeof(pdungeon));
+}
+
+void LoadL1Dungeon(const char *path, int vx, int vy)
+{
+	ViewPosition = { vx, vy };
+
+	DRLG_Init_Globals();
+
+	memset(dungeon, 22, sizeof(dungeon));
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+	PlaceDunTiles(dunData.get(), { 0, 0 }, Tile::Floor);
+
+	if (leveltype == DTYPE_CATHEDRAL)
+		FillFloor();
+
+	Pass3();
+
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
+	SetMapObjects(dunData.get(), 0, 0);
 }
 
 } // namespace devilution
