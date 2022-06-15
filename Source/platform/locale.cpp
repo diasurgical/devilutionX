@@ -29,6 +29,7 @@
 namespace devilution {
 namespace {
 
+#if (defined(_WIN32) && WINVER >= 0x0600) || (defined(__APPLE__) && defined(USE_COREFOUNDATION))
 std::string IetfToPosix(string_view langCode)
 {
 	/*
@@ -51,6 +52,7 @@ std::string IetfToPosix(string_view langCode)
 
 	return posixLangCode;
 }
+#endif
 
 } // namespace
 
@@ -156,7 +158,7 @@ std::vector<std::string> GetLocales()
 		locales.push_back(std::move(locale));
 	}
 #endif
-#elif defined(__APPLE__) and defined(USE_COREFOUNDATION)
+#elif defined(__APPLE__) && defined(USE_COREFOUNDATION)
 	// Get the user's language list (in order of preference)
 	CFArrayRef languages = CFLocaleCopyPreferredLanguages();
 	CFIndex numLanguages = CFArrayGetCount(languages);

@@ -2316,6 +2316,8 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		case PlayerWeaponGraphic::MaceShield:
 			animWeaponId = PlayerWeaponGraphic::UnarmedShield;
 			break;
+		default:
+			break;
 		}
 	}
 

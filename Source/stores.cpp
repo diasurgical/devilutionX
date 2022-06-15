@@ -1825,7 +1825,7 @@ void BoyBuyEnter()
 	else
 		price += boyitem._iIvalue / 2;
 
-	if (TotalPlayerGold() < price) {
+	if (!PlayerCanAfford(price)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}
@@ -1953,7 +1953,7 @@ void HealerBuyEnter()
 
 	int idx = stextsval + ((stextsel - stextup) / 4);
 
-	if (TotalPlayerGold() < healitem[idx]._iIvalue) {
+	if (!PlayerCanAfford(healitem[idx]._iIvalue)) {
 		StartStore(STORE_NOMONEY);
 		return;
 	}

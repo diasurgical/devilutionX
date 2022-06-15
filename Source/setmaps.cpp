@@ -167,6 +167,9 @@ void LoadSetMap()
 			LoadL1Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
 			AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
 			break;
+		case DTYPE_TOWN:
+		case DTYPE_NONE:
+			break;
 		}
 		LoadRndLvlPal(setlvltype);
 		SetMapTransparency(TestMapPath.c_str());
