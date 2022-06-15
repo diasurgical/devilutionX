@@ -168,11 +168,6 @@ void LoadQuestSetPieces()
 	}
 }
 
-void FreeQuestSetPieces()
-{
-	pSetPiece = nullptr;
-}
-
 void InitDungeonFlags()
 {
 	memset(dung, 0, sizeof(dung));
@@ -310,16 +305,6 @@ void FirstRoom()
 
 	MapRoom(x, y, w, h);
 	GenerateRoom(x, y, w, h, GenerateRnd(2));
-}
-
-void SetSetPieceRoom(Point position)
-{
-	if (pSetPiece == nullptr)
-		return;
-
-	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
-
-	PlaceDunTiles(pSetPiece.get(), position, 6);
 }
 
 void MakeDungeon()
@@ -1211,6 +1196,8 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
+	LoadQuestSetPieces();
+
 	while (true) {
 		DRLG_InitTrans();
 
@@ -1238,13 +1225,15 @@ void GenerateLevel(lvl_entry entry)
 		AddWall();
 		FloodTransparencyValues(6);
 		FixTransparency();
-		SetSetPieceRoom(SetPieceRoom.position);
+		SetSetPieceRoom(SetPieceRoom.position, 6);
 		if (currlevel == 16) {
 			LoadDiabQuads(true);
 		}
 		if (PlaceStairs(entry))
 			break;
 	}
+
+	FreeQuestSetPieces();
 
 	GeneralFix();
 
@@ -1255,15 +1244,8 @@ void GenerateLevel(lvl_entry entry)
 	ApplyShadowsPatterns();
 	FixCornerTiles();
 	Substitution();
-	DRLG_Init_Globals();
 
-	if (Quests[Q_WARLORD].IsAvailable()) {
-		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++) {
-				pdungeon[i][j] = dungeon[i][j];
-			}
-		}
-	}
+	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	DRLG_CheckQuests(SetPieceRoom.position);
 
@@ -1281,11 +1263,6 @@ void GenerateLevel(lvl_entry entry)
 		}
 	}
 	if (currlevel == 16) {
-		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++) {
-				pdungeon[i][j] = dungeon[i][j];
-			}
-		}
 		LoadDiabQuads(false);
 	}
 }
@@ -1301,48 +1278,36 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
 
-	dminPosition = Point(0, 0).megaToWorld();
-	dmaxPosition = Point(40, 40).megaToWorld();
-
-	ViewPosition = { 40, 40 };
-
-	DRLG_InitSetPC();
-	LoadQuestSetPieces();
 	GenerateLevel(entry);
-	Pass3();
-	FreeQuestSetPieces();
-	DRLG_SetPC();
-}
-
-void LoadL4Dungeon(const char *path, int vx, int vy)
-{
-	dminPosition = Point(0, 0).megaToWorld();
-	dmaxPosition = Point(40, 40).megaToWorld();
-
-	DRLG_InitTrans();
-	InitDungeonFlags();
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-	PlaceDunTiles(dunData.get(), { 0, 0 }, 6);
-
-	ViewPosition = { vx, vy };
 
 	Pass3();
-	DRLG_Init_Globals();
-
-	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
-	SetMapObjects(dunData.get(), 0, 0);
 }
 
 void LoadPreL4Dungeon(const char *path)
 {
-	dminPosition = Point(0, 0).megaToWorld();
-	dmaxPosition = Point(40, 40).megaToWorld();
-
-	InitDungeonFlags();
+	memset(dungeon, 30, sizeof(dungeon));
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 	PlaceDunTiles(dunData.get(), { 0, 0 }, 6);
+
+	memcpy(pdungeon, dungeon, sizeof(pdungeon));
+}
+
+void LoadL4Dungeon(const char *path, int vx, int vy)
+{
+	ViewPosition = { vx, vy };
+
+	DRLG_Init_Globals();
+
+	memset(dungeon, 30, sizeof(dungeon));
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+	PlaceDunTiles(dunData.get(), { 0, 0 }, 6);
+
+	Pass3();
+
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
+	SetMapObjects(dunData.get(), 0, 0);
 }
 
 } // namespace devilution

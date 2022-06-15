@@ -1831,11 +1831,16 @@ void Fence()
 	FenceDoorFix();
 }
 
+void LoadQuestSetPieces()
+{
+	if (Quests[Q_ANVIL].IsAvailable())
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
+}
+
 bool PlaceAnvil()
 {
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
+	int width = SDL_SwapLE16(pSetPiece[0]);
+	int height = SDL_SwapLE16(pSetPiece[1]);
 	int sx = GenerateRnd(DMAXX - width - 2);
 	int sy = GenerateRnd(DMAXY - height - 2);
 
@@ -1866,6 +1871,7 @@ bool PlaceAnvil()
 			break;
 	}
 
+	PlaceDunTiles(pSetPiece.get(), { sx + 1, sy + 1 }, 7);
 	SetPiece = { { sx, sy }, { width + 2, height + 2 } };
 
 	for (int yy = 0; yy < SetPiece.size.width; yy++) {
@@ -1873,8 +1879,6 @@ bool PlaceAnvil()
 			Protected[xx + sx][yy + sy] = true;
 		}
 	}
-
-	PlaceDunTiles(dunData.get(), { sx + 1, sy + 1 }, 7);
 
 	// Hack to avoid rivers entering the island, reversed later
 	dungeon[SetPiece.position.x + 7][SetPiece.position.y + 5] = 2;
@@ -2030,6 +2034,8 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
+	LoadQuestSetPieces();
+
 	while (true) {
 		InitDungeonFlags();
 		int x1 = GenerateRnd(20) + 10;
@@ -2063,6 +2069,8 @@ void GenerateLevel(lvl_entry entry)
 		if (PlacePool())
 			break;
 	}
+
+	FreeQuestSetPieces();
 
 	if (leveltype == DTYPE_NEST) {
 		PlaceMiniSetRandom(L6ISLE1, 70);
@@ -2175,13 +2183,7 @@ void GenerateLevel(lvl_entry entry)
 		PlaceMiniSetRandom1x1(10, 110, 25);
 	}
 
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			pdungeon[i][j] = dungeon[i][j];
-		}
-	}
-
-	DRLG_Init_Globals();
+	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 }
 
 void Pass3()
@@ -2232,74 +2234,38 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
 
-	dminPosition = { 16, 16 };
-	dmaxPosition = { 96, 96 };
-
-	DRLG_InitTrans();
-	DRLG_InitSetPC();
 	GenerateLevel(entry);
+
 	Pass3();
 	PlaceLights();
-	DRLG_SetPC();
-}
-
-void LoadL3Dungeon(const char *path, int vx, int vy)
-{
-	dminPosition = { 16, 16 };
-	dmaxPosition = { 96, 96 };
-
-	InitDungeonFlags();
-	DRLG_InitTrans();
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-	PlaceDunTiles(dunData.get(), { 0, 0 }, 7);
-
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			if (dungeon[i][j] == 0) {
-				dungeon[i][j] = 8;
-			}
-		}
-	}
-
-	Pass3();
-	DRLG_Init_Globals();
-
-	ViewPosition = { vx, vy };
-
-	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
-	SetMapObjects(dunData.get(), 0, 0);
-
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
-				DoLighting({ i, j }, 7, -1);
-			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
-				DoLighting({ i, j }, 7, -1);
-			} else if (IsAnyOf(dPiece[i][j], 150, 152)) {
-				DoLighting({ i, j }, 7, -1);
-			}
-		}
-	}
 }
 
 void LoadPreL3Dungeon(const char *path)
 {
-	InitDungeonFlags();
-	DRLG_InitTrans();
+	memset(dungeon, 8, sizeof(dungeon));
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 	PlaceDunTiles(dunData.get(), { 0, 0 }, 7);
 
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			if (dungeon[i][j] == 0) {
-				dungeon[i][j] = 8;
-			}
-		}
-	}
-
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
+}
+
+void LoadL3Dungeon(const char *path, int vx, int vy)
+{
+	ViewPosition = { vx, vy };
+
+	DRLG_Init_Globals();
+
+	memset(dungeon, 8, sizeof(dungeon));
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+	PlaceDunTiles(dunData.get(), { 0, 0 }, 7);
+
+	Pass3();
+	PlaceLights();
+
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
+	SetMapObjects(dunData.get(), 0, 0);
 }
 
 } // namespace devilution

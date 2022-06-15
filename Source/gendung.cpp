@@ -397,6 +397,8 @@ dungeon_type GetLevelType(int level)
 
 void CreateDungeon(uint32_t rseed, lvl_entry entry)
 {
+	DRLG_Init_Globals();
+
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		CreateTown(entry);
@@ -418,6 +420,8 @@ void CreateDungeon(uint32_t rseed, lvl_entry entry)
 	default:
 		app_fatal("Invalid level type");
 	}
+
+	Make_SetPC(SetPiece);
 }
 
 void FillSolidBlockTbls()
@@ -509,11 +513,6 @@ void DRLG_InitSetPC()
 {
 	SetPieceRoom = { { -1, -1 }, { -1, -1 } };
 	SetPiece = { { 0, 0 }, { 0, 0 } };
-}
-
-void DRLG_SetPC()
-{
-	Make_SetPC(SetPiece);
 }
 
 void Make_SetPC(Rectangle area)
@@ -641,6 +640,20 @@ void DRLG_HoldThemeRooms()
 	}
 }
 
+void SetSetPieceRoom(Point position, int floorId)
+{
+	if (pSetPiece == nullptr)
+		return;
+
+	PlaceDunTiles(pSetPiece.get(), position, floorId);
+	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
+}
+
+void FreeQuestSetPieces()
+{
+	pSetPiece = nullptr;
+}
+
 void DRLG_LPass3(int lv)
 {
 	{
@@ -689,6 +702,9 @@ void DRLG_LPass3(int lv)
 
 void DRLG_Init_Globals()
 {
+	dminPosition = Point(0, 0).megaToWorld();
+	dmaxPosition = Point(40, 40).megaToWorld();
+	memset(dItem, 0, sizeof(dItem));
 	memset(dFlags, 0, sizeof(dFlags));
 	memset(dPlayer, 0, sizeof(dPlayer));
 	memset(dMonster, 0, sizeof(dMonster));
@@ -697,6 +713,8 @@ void DRLG_Init_Globals()
 	memset(dSpecial, 0, sizeof(dSpecial));
 	int8_t c = DisableLighting ? 0 : 15;
 	memset(dLight, c, sizeof(dLight));
+	DRLG_InitTrans();
+	DRLG_InitSetPC();
 }
 
 bool SkipThemeRoom(int x, int y)
