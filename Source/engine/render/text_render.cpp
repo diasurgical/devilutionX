@@ -17,9 +17,10 @@
 #include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
-#include "engine/load_pcx_as_cel.hpp"
+#include "engine/load_pcx.hpp"
 #include "engine/point.hpp"
 #include "palette.h"
+#include "pcx_render.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
@@ -34,8 +35,8 @@ namespace {
 
 constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 
-using Font = const OwnedCelSpriteWithFrameHeight;
-std::unordered_map<uint32_t, std::optional<OwnedCelSpriteWithFrameHeight>> Fonts;
+using Font = const OwnedPcxSpriteSheet;
+std::unordered_map<uint32_t, std::optional<OwnedPcxSpriteSheet>> Fonts;
 
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
@@ -65,6 +66,8 @@ std::array<const char *, 14> ColorTranslations = {
 	"fonts\\buttonface.trn",
 	"fonts\\buttonpushed.trn",
 };
+
+std::array<std::optional<std::array<uint8_t, 256>>, 14> ColorTranslationsData;
 
 GameFontTables GetSizeFromFlags(UiFlags flags)
 {
@@ -166,9 +169,9 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 	return kerning;
 }
 
-uint32_t GetFontId(GameFontTables size, text_color color, uint16_t row)
+uint32_t GetFontId(GameFontTables size, uint16_t row)
 {
-	return (color << 24) | (size << 16) | row;
+	return (size << 16) | row;
 }
 
 void GetFontPath(GameFontTables size, uint16_t row, char *out)
@@ -176,10 +179,14 @@ void GetFontPath(GameFontTables size, uint16_t row, char *out)
 	sprintf(out, "fonts\\%i-%02x.pcx", FontSizes[size], row);
 }
 
-const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color color, uint16_t row)
+const OwnedPcxSpriteSheet *LoadFont(GameFontTables size, text_color color, uint16_t row)
 {
-	const uint32_t fontId = GetFontId(size, color, row);
+	if (ColorTranslations[color] != nullptr && !ColorTranslationsData[color]) {
+		ColorTranslationsData[color].emplace();
+		LoadFileInMem(ColorTranslations[color], *ColorTranslationsData[color]);
+	}
 
+	const uint32_t fontId = GetFontId(size, row);
 	auto hotFont = Fonts.find(fontId);
 	if (hotFont != Fonts.end()) {
 		return &*hotFont->second;
@@ -188,26 +195,25 @@ const OwnedCelSpriteWithFrameHeight *LoadFont(GameFontTables size, text_color co
 	char path[32];
 	GetFontPath(size, row, &path[0]);
 
-	std::optional<OwnedCelSpriteWithFrameHeight> &font = Fonts[fontId];
+	std::optional<OwnedPcxSpriteSheet> &font = Fonts[fontId];
 	constexpr unsigned NumFrames = 256;
-	font = LoadPcxAssetAsCel(path, NumFrames);
+	font = LoadPcxSpriteSheetAsset(path, NumFrames, /*transparentColor=*/1);
 	if (!font) {
 		LogError("Error loading font: {}", path);
 		return nullptr;
 	}
 
-	if (ColorTranslations[color] != nullptr) {
-		std::array<uint8_t, 256> colorMapping;
-		LoadFileInMem(ColorTranslations[color], colorMapping);
-		CelApplyTrans(font->sprite.MutableData(), colorMapping);
-	}
-
 	return &(*font);
 }
 
-void DrawFont(const Surface &out, Point position, const OwnedCelSpriteWithFrameHeight *font, int frame)
+void DrawFont(const Surface &out, Point position, const OwnedPcxSpriteSheet *font, text_color color, int frame)
 {
-	CelDrawTo(out, { position.x, static_cast<int>(position.y + font->frameHeight) }, CelSprite { font->sprite }, frame);
+	PcxSprite glyph = PcxSpriteSheet { *font }.sprite(frame);
+	if (ColorTranslationsData[color]) {
+		RenderPcxSpriteWithColorMap(out, glyph, position, *ColorTranslationsData[color]);
+	} else {
+		RenderPcxSprite(out, glyph, position);
+	}
 }
 
 bool IsWhitespace(char32_t c)
@@ -387,7 +393,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 				continue;
 		}
 
-		DrawFont(out, characterPosition, font, frame);
+		DrawFont(out, characterPosition, font, color, frame);
 		characterPosition.x += (*kerning)[frame] + spacing;
 	}
 	return text.data() - remaining.data();
@@ -646,7 +652,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		DrawFont(out, characterPosition, LoadFont(size, color, 0), '|');
+		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
 
 	return bytesDrawn;
@@ -746,7 +752,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 			}
 		}
 
-		DrawFont(out, characterPosition, font, frame);
+		DrawFont(out, characterPosition, font, color, frame);
 		characterPosition.x += (*kerning)[frame] + spacing;
 		prev = next;
 	}
@@ -754,7 +760,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		DrawFont(out, characterPosition, LoadFont(size, color, 0), '|');
+		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
 }
 
