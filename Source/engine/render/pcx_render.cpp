@@ -28,6 +28,8 @@ const uint8_t *SkipRestOfPcxLine(const uint8_t *src, unsigned remainingWidth)
 template <bool UseColorMap, bool HasTransparency>
 void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, const uint8_t *colorMap, uint8_t transparentColor)
 {
+	if (position.y >= out.h())
+		return;
 	while (position.y < 0 && srcHeight != 0) {
 		src = SkipRestOfPcxLine(src, srcWidth);
 		++position.y;
@@ -42,17 +44,16 @@ void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsign
 		for (unsigned x = 0; x < srcWidth;) {
 			const uint8_t value = *src++;
 			if (value <= PcxMaxSinglePixel) {
-				const uint8_t color = UseColorMap ? colorMap[value] : value;
-				if (!(HasTransparency && color == transparentColor)) {
-					*dst = color;
+				if (!(HasTransparency && value == transparentColor)) {
+					*dst = UseColorMap ? colorMap[value] : value;
 				}
 				++dst;
 				++x;
 			} else {
 				const uint8_t runLength = value & PcxRunLengthMask;
-				const uint8_t color = UseColorMap ? colorMap[*src++] : *src++;
+				const uint8_t color = *src++;
 				if (!(HasTransparency && color == transparentColor)) {
-					std::memset(dst, color, runLength);
+					std::memset(dst, UseColorMap ? colorMap[color] : color, runLength);
 				}
 				dst += runLength;
 				x += runLength;
@@ -66,6 +67,8 @@ void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsign
 template <bool UseColorMap, bool HasTransparency>
 void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, ClipX clipX, const uint8_t *colorMap, uint8_t transparentColor)
 {
+	if (position.y >= out.h() || position.x >= out.w())
+		return;
 	while (position.y < 0 && srcHeight != 0) {
 		src = SkipRestOfPcxLine(src, srcWidth);
 		++position.y;
@@ -91,15 +94,16 @@ void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsig
 				const uint8_t runLength = value & PcxRunLengthMask;
 				if (runLength > remainingLeftClip) {
 					const uint8_t overshoot = runLength - remainingLeftClip;
-					const uint8_t color = UseColorMap ? colorMap[*src++] : *src++;
+					const uint8_t originalColor = *src++;
+					const uint8_t color = UseColorMap ? colorMap[originalColor] : originalColor;
 					if (overshoot > remainingWidth) {
-						if (!(HasTransparency && color == transparentColor)) {
+						if (!(HasTransparency && originalColor == transparentColor)) {
 							std::memset(dst, color, remainingWidth);
 						}
 						dst += remainingWidth;
 						remainingWidth = 0;
 					} else {
-						if (!(HasTransparency && color == transparentColor)) {
+						if (!(HasTransparency && originalColor == transparentColor)) {
 							std::memset(dst, color, overshoot);
 						}
 						dst += overshoot;
@@ -107,33 +111,35 @@ void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsig
 					}
 					remainingLeftClip = 0;
 					break;
-				} else {
-					++src;
-					remainingLeftClip -= runLength;
 				}
+				++src;
+				remainingLeftClip -= runLength;
 			}
 		}
 
 		while (remainingWidth > 0) {
 			const uint8_t value = *src++;
 			if (value <= PcxMaxSinglePixel) {
-				*dst++ = UseColorMap ? colorMap[value] : value;
+				if (!(HasTransparency && value == transparentColor)) {
+					*dst = UseColorMap ? colorMap[value] : value;
+				}
+				++dst;
 				--remainingWidth;
 				continue;
 			}
 			const uint8_t runLength = value & PcxRunLengthMask;
-			const uint8_t color = UseColorMap ? colorMap[*src++] : *src++;
+			const uint8_t originalColor = *src++;
+			const uint8_t color = UseColorMap ? colorMap[originalColor] : originalColor;
 			if (runLength > remainingWidth) {
-				if (!(HasTransparency && color == transparentColor)) {
+				if (!(HasTransparency && originalColor == transparentColor)) {
 					std::memset(dst, color, remainingWidth);
 				}
 				dst += remainingWidth;
 				remainingWidth -= runLength;
 				break;
-			} else {
-				if (!(HasTransparency && color == transparentColor)) {
-					std::memset(dst, color, runLength);
-				}
+			}
+			if (!(HasTransparency && originalColor == transparentColor)) {
+				std::memset(dst, color, runLength);
 			}
 			dst += runLength;
 			remainingWidth -= runLength;
