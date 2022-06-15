@@ -161,14 +161,10 @@ void ApplyShadowsPatterns()
 
 void LoadQuestSetPieces()
 {
-	setloadflag = false;
 	if (Quests[Q_WARLORD].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
-		setloadflag = true;
-	}
-	if (currlevel == 15 && gbIsMultiplayer) {
+	} else if (currlevel == 15 && gbIsMultiplayer) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
-		setloadflag = true;
 	}
 }
 
@@ -318,6 +314,9 @@ void FirstRoom()
 
 void SetSetPieceRoom(Point position)
 {
+	if (pSetPiece == nullptr)
+		return;
+
 	SetPiece = { position, { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } };
 
 	PlaceDunTiles(pSetPiece.get(), position, 6);
@@ -1239,9 +1238,7 @@ void GenerateLevel(lvl_entry entry)
 		AddWall();
 		FloodTransparencyValues(6);
 		FixTransparency();
-		if (setloadflag) {
-			SetSetPieceRoom(SetPieceRoom.position);
-		}
+		SetSetPieceRoom(SetPieceRoom.position);
 		if (currlevel == 16) {
 			LoadDiabQuads(true);
 		}

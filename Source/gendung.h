@@ -133,8 +133,6 @@ extern Rectangle SetPieceRoom;
 extern Rectangle SetPiece;
 /** Contains the contents of the single player quest DUN file. */
 extern std::unique_ptr<uint16_t[]> pSetPiece;
-/** Specifies whether a single player quest DUN has been loaded. */
-extern bool setloadflag;
 extern std::optional<OwnedCelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
