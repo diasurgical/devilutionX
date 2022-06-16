@@ -327,34 +327,10 @@ enum _cmd_id : uint8_t {
 	//
 	// body (TCmd)
 	CMD_DEACTIVATEPORTAL,
-	// Delta information for dungeon level 0 through 24.
+	// Delta information for a dungeon level.
 	//
 	// body (TCmdPlrInfoHdr)
-	CMD_DLEVEL_0,
-	CMD_DLEVEL_1,
-	CMD_DLEVEL_2,
-	CMD_DLEVEL_3,
-	CMD_DLEVEL_4,
-	CMD_DLEVEL_5,
-	CMD_DLEVEL_6,
-	CMD_DLEVEL_7,
-	CMD_DLEVEL_8,
-	CMD_DLEVEL_9,
-	CMD_DLEVEL_10,
-	CMD_DLEVEL_11,
-	CMD_DLEVEL_12,
-	CMD_DLEVEL_13,
-	CMD_DLEVEL_14,
-	CMD_DLEVEL_15,
-	CMD_DLEVEL_16,
-	CMD_DLEVEL_17,
-	CMD_DLEVEL_18,
-	CMD_DLEVEL_19,
-	CMD_DLEVEL_20,
-	CMD_DLEVEL_21,
-	CMD_DLEVEL_22,
-	CMD_DLEVEL_23,
-	CMD_DLEVEL_24,
+	CMD_DLEVEL,
 	// Delta information of quest and portal states.
 	//
 	// body (TCmdPlrInfoHdr)

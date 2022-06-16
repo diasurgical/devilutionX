@@ -429,8 +429,9 @@ void DeltaImportData(_cmd_id cmd, DWORD recvOffset)
 	byte *src = &sgRecvBuf[1];
 	if (cmd == CMD_DLEVEL_JUNK) {
 		DeltaImportJunk(src);
-	} else if (cmd >= CMD_DLEVEL_0 && cmd <= CMD_DLEVEL_24) {
-		uint8_t i = cmd - CMD_DLEVEL_0;
+	} else if (cmd == CMD_DLEVEL) {
+		uint8_t i = static_cast<uint8_t>(src[0]);
+		src += sizeof(uint8_t);
 		DLevel &deltaLevel = GetDeltaLevel(i);
 		src += DeltaImportItem(src, deltaLevel.item);
 		src += DeltaImportObject(src, deltaLevel.object);
@@ -448,7 +449,7 @@ DWORD OnLevelData(int pnum, const TCmd *pCmd)
 	const auto &message = *reinterpret_cast<const TCmdPlrInfoHdr *>(pCmd);
 
 	if (gbDeltaSender != pnum) {
-		if (message.bCmd != CMD_DLEVEL_END && (message.bCmd != CMD_DLEVEL_0 || message.wOffset != 0)) {
+		if (message.bCmd != CMD_DLEVEL_END && (message.bCmd != CMD_DLEVEL || message.wOffset != 0)) {
 			return message.wBytes + sizeof(message);
 		}
 
@@ -461,13 +462,13 @@ DWORD OnLevelData(int pnum, const TCmd *pCmd)
 			sgbDeltaChunks = MAX_CHUNKS - 1;
 			return message.wBytes + sizeof(message);
 		}
-		if (message.bCmd != CMD_DLEVEL_0 || message.wOffset != 0) {
+		if (message.bCmd != CMD_DLEVEL || message.wOffset != 0) {
 			return message.wBytes + sizeof(message);
 		}
 
 		sgdwRecvOffset = 0;
 		sgbRecvCmd = message.bCmd;
-	} else if (sgbRecvCmd != message.bCmd) {
+	} else if (sgbRecvCmd != message.bCmd || message.wOffset == 0) {
 		DeltaImportData(sgbRecvCmd, sgdwRecvOffset);
 		if (message.bCmd == CMD_DLEVEL_END) {
 			sgbDeltaChunks = MAX_CHUNKS - 1;
@@ -2158,14 +2159,16 @@ void DeltaExportData(int pnum)
 {
 	if (sgbDeltaChanged) {
 		for (auto &it : DeltaLevels) {
-			std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1] };
+			std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1 + sizeof(uint8_t)] };
 			byte *dstEnd = &dst.get()[1];
 			DLevel &deltaLevel = it.second;
+			*dstEnd = static_cast<byte>(it.first);
+			dstEnd += sizeof(uint8_t);
 			dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
 			dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
 			dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
 			uint32_t size = CompressData(dst.get(), dstEnd);
-			dthread_send_delta(pnum, static_cast<_cmd_id>(it.first + CMD_DLEVEL_0), std::move(dst), size);
+			dthread_send_delta(pnum, CMD_DLEVEL, std::move(dst), size);
 		}
 
 		std::unique_ptr<byte[]> dst { new byte[sizeof(DJunk) + 1] };
@@ -3029,7 +3032,7 @@ uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 		break;
 	}
 
-	if (pCmd->bCmd < CMD_DLEVEL_0 || pCmd->bCmd > CMD_DLEVEL_END) {
+	if (pCmd->bCmd < CMD_DLEVEL || pCmd->bCmd > CMD_DLEVEL_END) {
 		SNetDropPlayer(pnum, LEAVE_DROP);
 		return 0;
 	}
