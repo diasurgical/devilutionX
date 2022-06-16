@@ -67,42 +67,41 @@ void ClearReadiedSpell(Player &player)
 void PlacePlayer(int pnum)
 {
 	Player &player = Players[pnum];
-	Point newPosition = {};
 
-	if (player.plrlevel == currlevel) {
+	if (player.plrlevel != currlevel)
+		return;
+
+	Point newPosition = [&]() {
+		Point okPosition = {};
+
 		for (int i = 0; i < 8; i++) {
-			newPosition = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
-			if (PosOkPlayer(player, newPosition)) {
-				break;
-			}
+			okPosition = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			if (PosOkPlayer(player, okPosition))
+				return okPosition;
 		}
 
-		if (!PosOkPlayer(player, newPosition)) {
-			bool done = false;
+		for (int max = 1, min = -1; min > -50; max++, min--) {
+			for (int y = min; y <= max; y++) {
+				okPosition.y = player.position.tile.y + y;
 
-			int min = -1;
-			for (int max = 1; min > -50 && !done; max++, min--) {
-				for (int y = min; y <= max && !done; y++) {
-					newPosition.y = player.position.tile.y + y;
+				for (int x = min; x <= max; x++) {
+					okPosition.x = player.position.tile.x + x;
 
-					for (int x = min; x <= max && !done; x++) {
-						newPosition.x = player.position.tile.x + x;
-
-						if (PosOkPlayer(player, newPosition)) {
-							done = true;
-						}
-					}
+					if (PosOkPlayer(player, okPosition))
+						return okPosition;
 				}
 			}
 		}
 
-		player.position.tile = newPosition;
+		return okPosition;
+	}();
 
-		dPlayer[newPosition.x][newPosition.y] = pnum + 1;
+	player.position.tile = newPosition;
 
-		if (pnum == MyPlayerId) {
-			ViewPosition = newPosition;
-		}
+	dPlayer[newPosition.x][newPosition.y] = pnum + 1;
+
+	if (pnum == MyPlayerId) {
+		ViewPosition = newPosition;
 	}
 }
 
