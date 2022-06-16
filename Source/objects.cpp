@@ -3772,30 +3772,16 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 
 int FindValidShrine()
 {
-	bool done = false;
-	int rv;
-	do {
-		rv = GenerateRnd(gbIsHellfire ? NumberOfShrineTypes : 26);
-		if (currlevel >= shrinemin[rv] && currlevel <= shrinemax[rv] && rv != ShrineThaumaturgic) {
-			done = true;
-		}
-		if (done) {
-			if (gbIsMultiplayer) {
-				if (shrineavail[rv] == ShrineTypeSingle) {
-					done = false;
-					continue;
-				}
-			}
-			if (!gbIsMultiplayer) {
-				if (shrineavail[rv] == ShrineTypeMulti) {
-					done = false;
-					continue;
-				}
-			}
-			done = true;
-		}
-	} while (!done);
-	return rv;
+	for (;;) {
+		int rv = GenerateRnd(gbIsHellfire ? NumberOfShrineTypes : 26);
+		if (currlevel < shrinemin[rv] || currlevel > shrinemax[rv] || rv == ShrineThaumaturgic)
+			continue;
+		if (gbIsMultiplayer && shrineavail[rv] == ShrineTypeSingle)
+			continue;
+		if (!gbIsMultiplayer && shrineavail[rv] == ShrineTypeMulti)
+			continue;
+		return rv;
+	}
 }
 
 void OperateGoatShrine(int pnum, int i, _sfx_id sType)
