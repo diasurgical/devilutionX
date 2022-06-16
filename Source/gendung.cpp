@@ -373,6 +373,25 @@ void FindTransparencyValues(Point floor, uint8_t floorID)
 	}
 }
 
+void InitGlobals()
+{
+	memset(dFlags, 0, sizeof(dFlags));
+	memset(dPlayer, 0, sizeof(dPlayer));
+	memset(dMonster, 0, sizeof(dMonster));
+	memset(dCorpse, 0, sizeof(dCorpse));
+	memset(dItem, 0, sizeof(dItem));
+	memset(dObject, 0, sizeof(dObject));
+	memset(dSpecial, 0, sizeof(dSpecial));
+	memset(dLight, DisableLighting ? 0 : 15, sizeof(dLight));
+
+	DRLG_InitTrans();
+
+	dminPosition = Point(0, 0).megaToWorld();
+	dmaxPosition = Point(40, 40).megaToWorld();
+	SetPieceRoom = { { -1, -1 }, { -1, -1 } };
+	SetPiece = { { 0, 0 }, { 0, 0 } };
+}
+
 } // namespace
 
 dungeon_type GetLevelType(int level)
@@ -397,7 +416,7 @@ dungeon_type GetLevelType(int level)
 
 void CreateDungeon(uint32_t rseed, lvl_entry entry)
 {
-	DRLG_Init_Globals();
+	InitGlobals();
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
@@ -509,10 +528,41 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
 
-void DRLG_InitSetPC()
+void LoadTransparency(const uint16_t *dunData)
 {
-	SetPieceRoom = { { -1, -1 }, { -1, -1 } };
-	SetPiece = { { 0, 0 }, { 0, 0 } };
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	int layer2Offset = 2 + width * height;
+
+	// The rest of the layers are at dPiece scale
+	width *= 2;
+	height *= 2;
+
+	const uint16_t *transparentLayer = &dunData[layer2Offset + width * height * 3];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparentLayer);
+			transparentLayer++;
+		}
+	}
+}
+
+void LoadDungeonBase(const char *path, Point spawn, int floorId, int dirtId)
+{
+	ViewPosition = spawn;
+
+	InitGlobals();
+
+	memset(dungeon, dirtId, sizeof(dungeon));
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+	PlaceDunTiles(dunData.get(), { 0, 0 }, floorId);
+	LoadTransparency(dunData.get());
+
+	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
+	SetMapObjects(dunData.get(), 0, 0);
 }
 
 void Make_SetPC(Rectangle area)
@@ -698,23 +748,6 @@ void DRLG_LPass3(int lv)
 		}
 		yy += 2;
 	}
-}
-
-void DRLG_Init_Globals()
-{
-	dminPosition = Point(0, 0).megaToWorld();
-	dmaxPosition = Point(40, 40).megaToWorld();
-	memset(dItem, 0, sizeof(dItem));
-	memset(dFlags, 0, sizeof(dFlags));
-	memset(dPlayer, 0, sizeof(dPlayer));
-	memset(dMonster, 0, sizeof(dMonster));
-	memset(dCorpse, 0, sizeof(dCorpse));
-	memset(dObject, 0, sizeof(dObject));
-	memset(dSpecial, 0, sizeof(dSpecial));
-	int8_t c = DisableLighting ? 0 : 15;
-	memset(dLight, c, sizeof(dLight));
-	DRLG_InitTrans();
-	DRLG_InitSetPC();
 }
 
 bool SkipThemeRoom(int x, int y)

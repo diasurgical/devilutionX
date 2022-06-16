@@ -15,8 +15,8 @@ extern bool IsUberRoomOpened;
 extern bool IsUberLeverActivated;
 extern int UberDiabloMonsterIndex;
 
-void LoadL1Dungeon(const char *path, int vx, int vy);
-void LoadPreL1Dungeon(const char *path);
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry);
+void LoadPreL1Dungeon(const char *path);
+void LoadL1Dungeon(const char *path, Point spawn);
 
 } // namespace devilution

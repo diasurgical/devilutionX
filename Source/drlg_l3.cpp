@@ -2250,22 +2250,15 @@ void LoadPreL3Dungeon(const char *path)
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 }
 
-void LoadL3Dungeon(const char *path, int vx, int vy)
+void LoadL3Dungeon(const char *path, Point spawn)
 {
-	ViewPosition = { vx, vy };
-
-	DRLG_Init_Globals();
-
-	memset(dungeon, 8, sizeof(dungeon));
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-	PlaceDunTiles(dunData.get(), { 0, 0 }, 7);
+	LoadDungeonBase(path, spawn, 7, 8);
 
 	Pass3();
 	PlaceLights();
 
-	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
-	SetMapObjects(dunData.get(), 0, 0);
+	if (leveltype == DTYPE_CAVES)
+		AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
 }
 
 } // namespace devilution

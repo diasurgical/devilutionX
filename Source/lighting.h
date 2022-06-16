@@ -47,7 +47,7 @@ extern uint8_t ActiveLights[MAXLIGHTS];
 extern int ActiveLightCount;
 constexpr char LightsMax = 15;
 extern std::array<uint8_t, LIGHTSIZE> LightTables;
-extern DVL_API_FOR_TEST bool DisableLighting;
+extern bool DisableLighting;
 extern bool UpdateLighting;
 
 void DoLighting(Point position, int nRadius, int Lnum);

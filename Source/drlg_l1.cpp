@@ -2050,24 +2050,19 @@ void LoadPreL1Dungeon(const char *path)
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 }
 
-void LoadL1Dungeon(const char *path, int vx, int vy)
+void LoadL1Dungeon(const char *path, Point spawn)
 {
-	ViewPosition = { vx, vy };
-
-	DRLG_Init_Globals();
-
-	memset(dungeon, 22, sizeof(dungeon));
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-	PlaceDunTiles(dunData.get(), { 0, 0 }, Tile::Floor);
+	LoadDungeonBase(path, spawn, Tile::Floor, 22);
 
 	if (leveltype == DTYPE_CATHEDRAL)
 		FillFloor();
 
 	Pass3();
 
-	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
-	SetMapObjects(dunData.get(), 0, 0);
+	if (leveltype == DTYPE_CRYPT)
+		AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
+	else
+		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 }
 
 } // namespace devilution
