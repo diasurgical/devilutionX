@@ -26,8 +26,8 @@ struct ROOMNODE {
 
 extern BYTE predungeon[DMAXX][DMAXY];
 
-void LoadL2Dungeon(const char *path, int vx, int vy);
-void LoadPreL2Dungeon(const char *path);
 void CreateL2Dungeon(uint32_t rseed, lvl_entry entry);
+void LoadPreL2Dungeon(const char *path);
+void LoadL2Dungeon(const char *path, Point spawn);
 
 } // namespace devilution

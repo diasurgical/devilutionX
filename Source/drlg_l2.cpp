@@ -2876,21 +2876,13 @@ void LoadPreL2Dungeon(const char *path)
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 }
 
-void LoadL2Dungeon(const char *path, int vx, int vy)
+void LoadL2Dungeon(const char *path, Point spawn)
 {
-	ViewPosition = { vx, vy };
-
-	DRLG_Init_Globals();
-
-	memset(dungeon, 12, sizeof(dungeon));
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-	PlaceDunTiles(dunData.get(), { 0, 0 }, 3);
+	LoadDungeonBase(path, spawn, 3, 12);
 
 	Pass3();
 
-	SetMapMonsters(dunData.get(), Point(0, 0).megaToWorld());
-	SetMapObjects(dunData.get(), 0, 0);
+	AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 }
 
 } // namespace devilution

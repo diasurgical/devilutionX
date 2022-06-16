@@ -185,7 +185,7 @@ extern DVL_API_FOR_TEST int dPiece[MAXDUNX][MAXDUNY];
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
 extern DVL_API_FOR_TEST int8_t dTransVal[MAXDUNX][MAXDUNY];
-extern DVL_API_FOR_TEST char dLight[MAXDUNX][MAXDUNY];
+extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
 /** Holds various information about dungeon tiles, @see DungeonFlag */
 extern DungeonFlag dFlags[MAXDUNX][MAXDUNY];
@@ -323,7 +323,8 @@ void DRLG_MRectTrans(Point origin, Point extent);
 void DRLG_MRectTrans(Rectangle area);
 void DRLG_RectTrans(Rectangle area);
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy);
-void DRLG_InitSetPC();
+void LoadTransparency(const uint16_t *dunData);
+void LoadDungeonBase(const char *path, Point spawn, int floorId, int dirtId);
 void Make_SetPC(Rectangle area);
 /**
  * @param tries Tiles to try, 1600 will scan the full map
@@ -336,7 +337,6 @@ void DRLG_HoldThemeRooms();
 void SetSetPieceRoom(Point position, int floorId);
 void FreeQuestSetPieces();
 void DRLG_LPass3(int lv);
-void DRLG_Init_Globals();
 bool SkipThemeRoom(int x, int y);
 void InitLevels();
 void FloodTransparencyValues(uint8_t floorID);

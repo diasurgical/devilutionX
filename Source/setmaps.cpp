@@ -13,6 +13,7 @@
 #include "drlg_l3.h"
 #include "drlg_l4.h"
 #include "engine/load_file.hpp"
+#include "gendung.h"
 #include "objdat.h"
 #include "objects.h"
 #include "palette.h"
@@ -65,24 +66,7 @@ void AddVileObjs()
 void SetMapTransparency(const char *path)
 {
 	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	int layer2Offset = 2 + width * height;
-
-	// The rest of the layers are at dPiece scale
-	width *= 2;
-	height *= 2;
-
-	const uint16_t *transparentLayer = &dunData[layer2Offset + width * height * 3];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparentLayer);
-			transparentLayer++;
-		}
-	}
+	LoadTransparency(dunData.get());
 }
 
 } // namespace
@@ -96,19 +80,17 @@ void LoadSetMap()
 			Quests[Q_SKELKING]._qvar1 = 1;
 		}
 		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN");
-		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", 83, 45);
-		LoadPalette("Levels\\L1Data\\L1_2.pal");
+		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", { 83, 45 });
 		SetMapTransparency("Levels\\L1Data\\SklKngT.dun");
-		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+		LoadPalette("Levels\\L1Data\\L1_2.pal");
 		AddSKingObjs();
 		InitSKingTriggers();
 		break;
 	case SL_BONECHAMB:
 		LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN");
-		LoadL2Dungeon("Levels\\L2Data\\Bonecha1.DUN", 69, 39);
-		LoadPalette("Levels\\L2Data\\L2_2.pal");
+		LoadL2Dungeon("Levels\\L2Data\\Bonecha1.DUN", { 69, 39 });
 		SetMapTransparency("Levels\\L2Data\\BonechaT.dun");
-		AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
+		LoadPalette("Levels\\L2Data\\L2_2.pal");
 		AddSChamObjs();
 		InitSChambTriggers();
 		break;
@@ -117,7 +99,7 @@ void LoadSetMap()
 	case SL_POISONWATER:
 		if (Quests[Q_PWATER]._qactive == QUEST_INIT)
 			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
-		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
+		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", { 31, 83 });
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
 		break;
@@ -128,50 +110,34 @@ void LoadSetMap()
 			Quests[Q_BETRAYER]._qvar2 = 3;
 		}
 		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN");
-		LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", 35, 36);
-		LoadPalette("Levels\\L1Data\\L1_2.pal");
-		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
-		AddVileObjs();
+		LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", { 35, 36 });
 		SetMapTransparency("Levels\\L1Data\\Vile1.DUN");
+		LoadPalette("Levels\\L1Data\\L1_2.pal");
+		AddVileObjs();
 		InitNoTriggers();
 		break;
 	case SL_NONE:
 #ifdef _DEBUG
 		switch (setlvltype) {
 		case DTYPE_CATHEDRAL:
-			LoadPreL1Dungeon(TestMapPath.c_str());
-			LoadL1Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
-			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+		case DTYPE_CRYPT:
+			LoadL1Dungeon(TestMapPath.c_str(), ViewPosition);
 			break;
 		case DTYPE_CATACOMBS:
-			LoadPreL2Dungeon(TestMapPath.c_str());
-			LoadL2Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
-			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
+			LoadL2Dungeon(TestMapPath.c_str(), ViewPosition);
 			break;
 		case DTYPE_CAVES:
-			LoadPreL3Dungeon(TestMapPath.c_str());
-			LoadL3Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
-			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
+		case DTYPE_NEST:
+			LoadL3Dungeon(TestMapPath.c_str(), ViewPosition);
 			break;
 		case DTYPE_HELL:
-			LoadPreL4Dungeon(TestMapPath.c_str());
-			LoadL4Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
-			break;
-		case DTYPE_NEST:
-			LoadPreL3Dungeon(TestMapPath.c_str());
-			LoadL3Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
-			break;
-		case DTYPE_CRYPT:
-			LoadPreL1Dungeon(TestMapPath.c_str());
-			LoadL1Dungeon(TestMapPath.c_str(), ViewPosition.x, ViewPosition.y);
-			AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
+			LoadL4Dungeon(TestMapPath.c_str(), ViewPosition);
 			break;
 		case DTYPE_TOWN:
 		case DTYPE_NONE:
 			break;
 		}
 		LoadRndLvlPal(setlvltype);
-		SetMapTransparency(TestMapPath.c_str());
 		InitNoTriggers();
 #endif
 		break;

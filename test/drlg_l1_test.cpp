@@ -1,28 +1,12 @@
 #include <gtest/gtest.h>
 
 #include "drlg_test.hpp"
-#include "gendung.h"
-#include "lighting.h"
 #include "player.h"
 #include "quests.h"
 
 using namespace devilution;
 
 namespace {
-
-TEST(Drlg_l1, DRLG_Init_Globals_noflag)
-{
-	DisableLighting = false;
-	DRLG_Init_Globals();
-	EXPECT_EQ(dLight[0][0], 15);
-}
-
-TEST(Drlg_l1, DRLG_Init_Globals)
-{
-	DisableLighting = true;
-	DRLG_Init_Globals();
-	EXPECT_EQ(dLight[0][0], 0);
-}
 
 TEST(Drlg_l1, CreateL5Dungeon_diablo_1_2588)
 {
