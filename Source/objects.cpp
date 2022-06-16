@@ -927,35 +927,36 @@ void AddNakrulGate()
 	}
 }
 
-void AddStoryBooks()
+bool CanPlaceStoryBook(Point position)
 {
-	int cnt = 0;
-	int xp;
-	int yp;
-	bool done = false;
-	while (!done) {
-		done = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
-		for (int yy = -2; yy <= 2; yy++) {
-			for (int xx = -3; xx <= 3; xx++) {
-				if (!RndLocOk(xx + xp, yy + yp))
-					done = false;
-			}
-		}
-		if (!done) {
-			cnt++;
-			if (cnt > 20000)
-				return;
+	for (int yy = -2; yy <= 2; yy++) {
+		for (int xx = -3; xx <= 3; xx++) {
+			Point tile = position + Displacement { xx, yy };
+			if (!RndLocOk(tile.x, tile.y))
+				return false;
 		}
 	}
-	AddObject(OBJ_STORYBOOK, { xp, yp });
-	AddObject(OBJ_STORYCANDLE, { xp - 2, yp + 1 });
-	AddObject(OBJ_STORYCANDLE, { xp - 2, yp });
-	AddObject(OBJ_STORYCANDLE, { xp - 1, yp - 1 });
-	AddObject(OBJ_STORYCANDLE, { xp + 1, yp - 1 });
-	AddObject(OBJ_STORYCANDLE, { xp + 2, yp });
-	AddObject(OBJ_STORYCANDLE, { xp + 2, yp + 1 });
+	return true;
+}
+
+void AddStoryBooks()
+{
+	std::optional<Point> position;
+	for (int i = 0; i <= 20000 && !position; i++) {
+		position = { GenerateRnd(80) + 16, GenerateRnd(80) + 16 };
+		if (!CanPlaceStoryBook(*position))
+			position = {};
+	}
+	if (!position)
+		return;
+
+	AddObject(OBJ_STORYBOOK, *position);
+	AddObject(OBJ_STORYCANDLE, *position + Displacement { -2, 1 });
+	AddObject(OBJ_STORYCANDLE, *position + Displacement { -2, 0 });
+	AddObject(OBJ_STORYCANDLE, *position + Displacement { -1, -1 });
+	AddObject(OBJ_STORYCANDLE, *position + Displacement { 1, -1 });
+	AddObject(OBJ_STORYCANDLE, *position + Displacement { 2, 0 });
+	AddObject(OBJ_STORYCANDLE, *position + Displacement { 2, 1 });
 }
 
 void AddHookedBodies(int freq)
