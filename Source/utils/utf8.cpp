@@ -5,6 +5,8 @@
 
 #include <hoehrmann_utf8.h>
 
+#include "utils/attributes.h"
+
 namespace devilution {
 
 namespace {
@@ -47,6 +49,32 @@ void CopyUtf8(char *dest, string_view source, std::size_t bytes)
 	source = TruncateUtf8(source, bytes - 1);
 	std::memcpy(dest, source.data(), source.size());
 	dest[source.size()] = '\0';
+}
+
+void AppendUtf8(char32_t codepoint, std::string &out)
+{
+	if (codepoint <= 0x7F) {
+		out += static_cast<char>(codepoint);
+		return;
+	}
+
+	char buf[4];
+	if (codepoint <= 0x7FF) {
+		buf[0] = static_cast<char>(0xC0 | (codepoint >> 6 & 0x3F));
+		buf[1] = static_cast<char>(0x80 | (codepoint & 0x3F));
+		out.append(buf, 2);
+	} else if (codepoint <= 0xFFFF) {
+		buf[0] = static_cast<char>(0xE0 | (codepoint >> 12 & 0x3F));
+		buf[1] = static_cast<char>(0x80 | (codepoint >> 6 & 0x3F));
+		buf[2] = static_cast<char>(0x80 | (codepoint & 0x3F));
+		out.append(buf, 3);
+	} else {
+		buf[0] = static_cast<char>(0xF0 | (codepoint >> 18 & 0x3F));
+		buf[1] = static_cast<char>(0x80 | (codepoint >> 12 & 0x3F));
+		buf[2] = static_cast<char>(0x80 | (codepoint >> 6 & 0x3F));
+		buf[3] = static_cast<char>(0x80 | (codepoint & 0x3F));
+		out.append(buf, 4);
+	}
 }
 
 } // namespace devilution

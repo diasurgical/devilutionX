@@ -2,11 +2,6 @@
 
 #include <algorithm>
 #include <string>
-#ifdef USE_SDL1
-#include <cassert>
-#include <codecvt>
-#include <locale>
-#endif
 
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
@@ -403,9 +398,8 @@ void UiFocusNavigation(SDL_Event *event)
 			}
 #ifdef USE_SDL1
 			if ((event->key.keysym.mod & KMOD_CTRL) == 0) {
-				Uint16 unicode = event->key.keysym.unicode;
-				std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
-				std::string utf8 = convert.to_bytes(unicode);
+				std::string utf8;
+				AppendUtf8(event->key.keysym.unicode, utf8);
 				SelheroCatToName(utf8.c_str(), UiTextInput, UiTextInputLen);
 			}
 #endif

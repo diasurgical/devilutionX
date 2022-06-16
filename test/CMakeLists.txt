@@ -36,6 +36,7 @@ set(tests
   random_test
   scrollrt_test
   stores_test
+  utf8_test
   writehero_test
 )
 
