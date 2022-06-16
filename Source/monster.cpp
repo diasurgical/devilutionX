@@ -568,25 +568,26 @@ void PlaceUniqueMonsters()
 	for (int u = 0; UniqueMonstersData[u].mtype != -1; u++) {
 		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
+
 		bool done = false;
 		int mt;
-		for (mt = 0; mt < LevelMonsterTypeCount; mt++) {
+		for (mt = 0; mt < LevelMonsterTypeCount && !done; mt++)
 			done = (LevelMonsterTypes[mt].mtype == UniqueMonstersData[u].mtype);
-			if (done)
-				break;
-		}
-		if (u == UMT_GARBUD && Quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
-			done = false;
-		if (u == UMT_ZHAR && Quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
-			done = false;
-		if (u == UMT_SNOTSPIL && Quests[Q_LTBANNER]._qactive == QUEST_NOTAVAIL)
-			done = false;
-		if (u == UMT_LACHDAN && Quests[Q_VEIL]._qactive == QUEST_NOTAVAIL)
-			done = false;
-		if (u == UMT_WARLORD && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
-			done = false;
 		if (done)
-			PlaceUniqueMonst(u, mt, 8);
+			continue;
+
+		if (u == UMT_GARBUD && Quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
+			continue;
+		if (u == UMT_ZHAR && Quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
+			continue;
+		if (u == UMT_SNOTSPIL && Quests[Q_LTBANNER]._qactive == QUEST_NOTAVAIL)
+			continue;
+		if (u == UMT_LACHDAN && Quests[Q_VEIL]._qactive == QUEST_NOTAVAIL)
+			continue;
+		if (u == UMT_WARLORD && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
+			continue;
+
+		PlaceUniqueMonst(u, mt, 8);
 	}
 }
 
