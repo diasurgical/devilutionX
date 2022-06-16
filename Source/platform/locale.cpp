@@ -19,8 +19,6 @@
 #include <CoreFoundation/CoreFoundation.h>
 #else
 #include <clocale>
-
-#include "utils/log.hpp"
 #endif
 
 #include "utils/stdcompat/algorithm.hpp"
@@ -176,22 +174,34 @@ std::vector<std::string> GetLocales()
 
 	CFRelease(languages);
 #else
-	const auto from = [&locales](const char *localePtr) -> bool {
-		if (localePtr == nullptr)
-			return false;
-		string_view locale = localePtr;
-		const string_view lang = locale.substr(0, locale.find_first_of(".:,"));
-		if (lang.empty())
-			return false;
-		locales.emplace_back(std::string(lang));
-		return true;
+	constexpr auto svOrEmpty = [](const char *cString) -> string_view {
+		return cString != nullptr ? cString : "";
 	};
-	if (!(from(std::getenv("LANGUAGE")) || from(std::getenv("LANG"))
+	string_view languages = svOrEmpty(std::getenv("LANGUAGE"));
+	if (languages.empty()) {
+		languages = svOrEmpty(std::getenv("LANG"));
+		if (languages.empty()) {
+			// Ideally setlocale with a POSIX defined constant should never return NULL, but...
 #ifdef LC_MESSAGES
-	        || from(setlocale(LC_MESSAGES, nullptr))
+			languages = svOrEmpty(setlocale(LC_MESSAGES, nullptr));
+#else
+			languages = svOrEmpty(setlocale(LC_CTYPE, nullptr));
 #endif
-	        || from(setlocale(LC_CTYPE, nullptr)))) {
-		LogWarn("Locale detection failed");
+		}
+		if (!languages.empty())
+			locales.emplace_back(languages.substr(0, languages.find_first_of(".")));
+	} else {
+		size_t separatorPos {};
+		do {
+			separatorPos = languages.find_first_of(":");
+			if (separatorPos != 0)
+				locales.emplace_back(std::string(languages.substr(0, separatorPos)));
+
+			if (separatorPos != languages.npos)
+				languages.remove_prefix(separatorPos + 1);
+			else
+				break;
+		} while (true);
 	}
 #endif
 	return locales;
