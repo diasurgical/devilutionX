@@ -926,17 +926,17 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 void FirstRoom()
 {
 	VerticalLayout = GenerateRnd(2) == 0;
+	HasChamber1 = (GenerateRnd(2) != 0);
+	HasChamber2 = (GenerateRnd(2) != 0);
+	HasChamber3 = (GenerateRnd(2) != 0);
+
+	if (!HasChamber1 || !HasChamber3)
+		HasChamber2 = true;
 
 	if (VerticalLayout) {
 		int ys = 1;
 		int ye = DMAXY - 1;
 
-		HasChamber1 = (GenerateRnd(2) != 0);
-		HasChamber2 = (GenerateRnd(2) != 0);
-		HasChamber3 = (GenerateRnd(2) != 0);
-
-		if (!HasChamber1 || !HasChamber3)
-			HasChamber2 = true;
 		if (HasChamber1)
 			MapRoom(15, 1, 10, 10);
 		else
@@ -968,12 +968,6 @@ void FirstRoom()
 		int xs = 1;
 		int xe = DMAXX - 1;
 
-		HasChamber1 = GenerateRnd(2) != 0;
-		HasChamber2 = GenerateRnd(2) != 0;
-		HasChamber3 = GenerateRnd(2) != 0;
-
-		if (!HasChamber1 || !HasChamber3)
-			HasChamber2 = true;
 		if (HasChamber1)
 			MapRoom(1, 15, 10, 10);
 		else
@@ -1521,16 +1515,12 @@ void FillChambers()
 		if (HasChamber1)
 			GenerateChamber(0, 14, false, false, false, true);
 
-		if (HasChamber2) {
-			if (HasChamber1 && !HasChamber3)
-				GenerateChamber(14, 14, false, false, true, false);
-			if (!HasChamber1 && HasChamber3)
-				GenerateChamber(14, 14, false, false, false, true);
-			if (HasChamber1 && HasChamber3)
-				GenerateChamber(14, 14, false, false, true, true);
-			if (!HasChamber1 && !HasChamber3)
-				GenerateChamber(14, 14, false, false, false, false);
-		}
+		if (!HasChamber3)
+			GenerateChamber(14, 14, false, false, true, false);
+		else if (!HasChamber1)
+			GenerateChamber(14, 14, false, false, false, true);
+		else if (HasChamber1 && HasChamber2 && HasChamber3)
+			GenerateChamber(14, 14, false, false, true, true);
 
 		if (HasChamber3)
 			GenerateChamber(28, 14, false, false, true, false);
@@ -1538,22 +1528,18 @@ void FillChambers()
 			GenerateHall(12, 18, 14, 18);
 		if (HasChamber2 && HasChamber3)
 			GenerateHall(26, 18, 28, 18);
-		if (HasChamber1 && !HasChamber2 && HasChamber3)
+		if (!HasChamber2)
 			GenerateHall(12, 18, 28, 18);
 	} else {
 		if (HasChamber1)
 			GenerateChamber(14, 0, false, true, false, false);
 
-		if (HasChamber2) {
-			if (HasChamber1 && !HasChamber3)
-				GenerateChamber(14, 14, true, false, false, false);
-			if (!HasChamber1 && HasChamber3)
-				GenerateChamber(14, 14, false, true, false, false);
-			if (HasChamber1 && HasChamber3)
-				GenerateChamber(14, 14, true, true, false, false);
-			if (!HasChamber1 && !HasChamber3)
-				GenerateChamber(14, 14, false, false, false, false);
-		}
+		if (!HasChamber3)
+			GenerateChamber(14, 14, true, false, false, false);
+		else if (!HasChamber1)
+			GenerateChamber(14, 14, false, true, false, false);
+		else if (HasChamber1 && HasChamber2 && HasChamber3)
+			GenerateChamber(14, 14, true, true, false, false);
 
 		if (HasChamber3)
 			GenerateChamber(14, 28, true, false, false, false);
@@ -1561,7 +1547,7 @@ void FillChambers()
 			GenerateHall(18, 12, 18, 14);
 		if (HasChamber2 && HasChamber3)
 			GenerateHall(18, 26, 18, 28);
-		if (HasChamber1 && !HasChamber2 && HasChamber3)
+		if (!HasChamber2)
 			GenerateHall(18, 12, 18, 28);
 	}
 
