@@ -1,11 +1,6 @@
 #include <cstdint>
 #include <deque>
 #include <string>
-#ifdef USE_SDL1
-#include <cassert>
-#include <codecvt>
-#include <locale>
-#endif
 
 #include <SDL.h>
 
@@ -507,8 +502,8 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		if (gbRunGame && (IsTalkActive() || dropGoldFlag)) {
 			Uint16 unicode = e.key.keysym.unicode;
 			if (unicode >= ' ') {
-				std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
-				std::string utf8 = convert.to_bytes(unicode);
+				std::string utf8;
+				AppendUtf8(unicode, utf8);
 				if (IsTalkActive())
 					control_new_text(utf8);
 				if (dropGoldFlag)

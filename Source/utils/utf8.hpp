@@ -59,4 +59,6 @@ inline std::size_t FindLastUtf8Symbols(string_view input)
  */
 void CopyUtf8(char *dest, string_view source, std::size_t bytes);
 
+void AppendUtf8(char32_t codepoint, std::string &out);
+
 } // namespace devilution
