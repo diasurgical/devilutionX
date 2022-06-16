@@ -3267,6 +3267,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 		break;
 	case WM_DIABSETLVL:
 		setlvlnum = (_setlevels)lvl;
+		player.setLevel(setlvlnum);
 		break;
 	case WM_DIABTWARPUP:
 		myPlayer.pTownWarps |= 1 << (leveltype - 2);

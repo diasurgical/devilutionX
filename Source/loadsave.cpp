@@ -544,6 +544,12 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	// Omit pointer _pDData
 	// Omit pointer _pBData
 	// Omit pointer pReserved
+
+	// Ensure plrIsOnSetLevel and plrlevel is correctly initialized, cause in vanilla sometimes plrlevel is not updated to setlvlnum
+	if (setlevel)
+		player.setLevel(setlvlnum);
+	else
+		player.setLevel(currlevel);
 }
 
 bool gbSkipSync = false;

@@ -223,6 +223,7 @@ struct Player {
 	int destParam3;
 	int destParam4;
 	uint8_t plrlevel;
+	bool plrIsOnSetLevel;
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (PlayerWeaponGraphic) and higher values define armour (starting with PlayerArmorGraphic)
@@ -710,21 +711,30 @@ struct Player {
 	/** @brief Checks if the player is on the same level as the local player (MyPlayer). */
 	bool isOnActiveLevel() const
 	{
-		return currlevel == this->plrlevel;
+		if (setlevel)
+			return isOnLevel(setlvlnum);
+		return isOnLevel(currlevel);
 	}
 
 	/** @brief Checks if the player is on the correspondig level. */
 	bool isOnLevel(uint8_t level) const
 	{
-		return this->plrlevel == level;
+		return !this->plrIsOnSetLevel && this->plrlevel == level;
+	}
+	/** @brief Checks if the player is on the correspondig level. */
+	bool isOnLevel(_setlevels level) const
+	{
+		return this->plrIsOnSetLevel && this->plrlevel == static_cast<uint8_t>(level);
 	}
 	void setLevel(uint8_t level)
 	{
 		this->plrlevel = level;
+		this->plrIsOnSetLevel = false;
 	}
 	void setLevel(_setlevels level)
 	{
 		this->plrlevel = static_cast<uint8_t>(level);
+		this->plrIsOnSetLevel = true;
 	}
 };
 
