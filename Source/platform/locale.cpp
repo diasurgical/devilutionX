@@ -18,7 +18,7 @@
 #elif defined(__APPLE__) and defined(USE_COREFOUNDATION)
 #include <CoreFoundation/CoreFoundation.h>
 #else
-#include <locale>
+#include <clocale>
 
 #include "utils/log.hpp"
 #endif
@@ -176,12 +176,22 @@ std::vector<std::string> GetLocales()
 
 	CFRelease(languages);
 #else
-	try {
-		std::string locale = std::locale("").name();
-		// strip off any encoding specifier, devX uses UTF8.
-		locales.emplace_back(locale.substr(0, locale.find('.')));
-	} catch (std::runtime_error &e) {
-		LogWarn("Locale detection failed: {}", e.what());
+	const auto from = [&locales](const char *localePtr) -> bool {
+		if (localePtr == nullptr)
+			return false;
+		string_view locale = localePtr;
+		const string_view lang = locale.substr(0, locale.find_first_of(".:,"));
+		if (lang.empty())
+			return false;
+		locales.emplace_back(std::string(lang));
+		return true;
+	};
+	if (!(from(std::getenv("LANGUAGE")) || from(std::getenv("LANG"))
+#ifdef LC_MESSAGES
+	        || from(setlocale(LC_MESSAGES, nullptr))
+#endif
+	        || from(setlocale(LC_CTYPE, nullptr)))) {
+		LogWarn("Locale detection failed");
 	}
 #endif
 	return locales;
