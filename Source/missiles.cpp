@@ -3604,12 +3604,8 @@ void MI_Infra(Missile &missile)
 
 void MI_Apoca(Missile &missile)
 {
-	int id = missile._misource;
-	bool exit = false;
-	int j;
-	int k;
-	for (j = missile.var2; j < missile.var3 && !exit; j++) {
-		for (k = missile.var4; k < missile.var5 && !exit; k++) {
+	for (int j = missile.var2; j < missile.var3; j++) {
+		for (int k = missile.var4; k < missile.var5; k++) {
 			int mid = dMonster[k][j] - 1;
 			if (mid < 0)
 				continue;
@@ -3619,20 +3615,16 @@ void MI_Apoca(Missile &missile)
 				continue;
 			if (gbIsHellfire && !LineClearMissile(missile.position.tile, { k, j }))
 				continue;
-			AddMissile({ k, j }, { k, j }, Players[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile._midam, 0);
-			exit = true;
-		}
-		if (!exit) {
-			missile.var4 = missile.var6;
-		}
-	}
 
-	if (exit) {
-		missile.var2 = j - 1;
-		missile.var4 = k;
-	} else {
-		missile._miDelFlag = true;
+			int id = missile._misource;
+			AddMissile({ k, j }, { k, j }, Players[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile._midam, 0);
+			missile.var2 = j - 1;
+			missile.var4 = k;
+			return;
+		}
+		missile.var4 = missile.var6;
 	}
+	missile._miDelFlag = true;
 }
 
 void MI_Wave(Missile &missile)
