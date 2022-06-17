@@ -4011,7 +4011,7 @@ void M_StartKill(int i, int pnum)
 		if (i != pnum) {
 			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, i);
 		} else {
-			NetSendCmdLocParam1(false, CMD_KILLGOLEM, monster.position.tile, currlevel);
+			NetSendCmdLoc(MyPlayerId, false, CMD_KILLGOLEM, monster.position.tile);
 		}
 	}
 
@@ -4900,7 +4900,7 @@ void SpawnGolem(int i, Point position, Missile &missile)
 		    golem._mdir,
 		    golem._menemy,
 		    golem._mhitpoints,
-		    currlevel);
+		    GetLevelForMultiplayer(player));
 	}
 }
 

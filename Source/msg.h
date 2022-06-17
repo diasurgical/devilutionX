@@ -724,6 +724,7 @@ void delta_init();
 void delta_kill_monster(int mi, Point position, const Player &player);
 void delta_monster_hp(int mi, int hp, const Player &player);
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
+uint8_t GetLevelForMultiplayer(const Player &player);
 void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
