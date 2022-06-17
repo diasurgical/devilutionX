@@ -26,6 +26,7 @@
 #include "stores.h"
 #include "town.h"
 #include "towners.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
@@ -1928,7 +1929,7 @@ int8_t CheckInvHLight()
 
 	if (pi->_itype == ItemType::Gold) {
 		int nGold = pi->_ivalue;
-		InfoString = fmt::format(fmt::runtime(ngettext("{:d} gold piece", "{:d} gold pieces", nGold)), nGold);
+		InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
 	} else {
 		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {

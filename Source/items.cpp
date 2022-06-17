@@ -37,6 +37,7 @@
 #include "spells.h"
 #include "stores.h"
 #include "town.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
@@ -3452,7 +3453,7 @@ void GetItemStr(Item &item)
 		InfoColor = item.getTextColor();
 	} else {
 		int nGold = item._ivalue;
-		InfoString = fmt::format(fmt::runtime(ngettext("{:d} gold piece", "{:d} gold pieces", nGold)), nGold);
+		InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
 	}
 }
 

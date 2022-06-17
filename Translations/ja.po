@@ -1041,9 +1041,9 @@ msgid_plural "{:d} Charges"
 msgstr[0] "{:d}チャージ"
 
 #: Source/control.cpp:880 Source/inv.cpp:1931 Source/items.cpp:3452
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} 金魂"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} 金魂"
 
 #: Source/control.cpp:882
 msgid "Requirements not met"
@@ -1063,9 +1063,9 @@ msgstr "レベルアップ"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1059
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "あなたは{:d}ゴールドを持っています。何枚削除しますか？"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "あなたは{:s}ゴールドを持っています。何枚削除しますか？"
 
 #: Source/controls/modifier_hints.cpp:179 Source/qol/monhealthbar.cpp:44
 #: Source/qol/xpbar.cpp:76
@@ -6883,8 +6883,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "チャット​履歴 (​メッセージ: {:d}​)"
 
 #: Source/qol/itemlabels.cpp:73
-msgid "{:d} gold"
-msgstr "{:d} ゴールド"
+msgid "{:s} gold"
+msgstr "{:s} ゴールド"
 
 #: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"

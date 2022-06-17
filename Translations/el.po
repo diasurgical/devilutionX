@@ -1071,10 +1071,10 @@ msgstr[0] "{:d} Φορτίο"
 msgstr[1] "{:d} Φορτία"
 
 #: Source/control.cpp:860 Source/inv.cpp:1991 Source/items.cpp:3471
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} χρυσό νόμισμα"
-msgstr[1] "{:d} χρυσά νομίσματα"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} χρυσό νόμισμα"
+msgstr[1] "{:s} χρυσά νομίσματα"
 
 #: Source/control.cpp:862
 msgid "Requirements not met"
@@ -1094,10 +1094,10 @@ msgstr "Νέο Επίπεδο"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1039
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Έχεις {:d} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
-msgstr[1] "Έχεις {:d} χρυσά νομίσματα. Πόσα θέλεις να αφαιρέσεις;"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Έχεις {:s} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
+msgstr[1] "Έχεις {:s} χρυσά νομίσματα. Πόσα θέλεις να αφαιρέσεις;"
 
 #: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -6946,14 +6946,14 @@ msgid "Chat History (Messages: {:d})"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} χρυσά"
+msgid "{:s} gold"
+msgstr "{:s} χρυσά"
 
 #: Source/qol/stash.cpp:619
 #, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
+#| msgid "You have {:s} gold piece. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "Έχεις {:d} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
+msgstr "Έχεις {:s} χρυσό νόμισμα. Πόσα θέλεις να αφαιρέσεις;"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61

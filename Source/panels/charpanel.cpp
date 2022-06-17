@@ -12,6 +12,7 @@
 #include "panels/ui_panels.hpp"
 #include "player.h"
 #include "utils/display.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -163,7 +164,7 @@ PanelEntry panelEntries[] = {
 
 	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98 },
 	{ "", { TopRightLabelX, 127 }, 99, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pGold) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:s}", FormatInteger(MyPlayer->_pGold)) }; } },
 
 	{ N_("Armor class"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusAC), fmt::format("{:d}", MyPlayer->GetArmor()) }; } },

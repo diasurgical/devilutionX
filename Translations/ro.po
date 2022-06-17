@@ -1068,11 +1068,11 @@ msgstr[1] "{:d} încărcături"
 msgstr[2] "{:d} de încărcături"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} galben"
-msgstr[1] "{:d} galbeni"
-msgstr[2] "{:d} de galbeni"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} galben"
+msgstr[1] "{:s} galbeni"
+msgstr[2] "{:s} de galbeni"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1092,11 +1092,11 @@ msgstr "Creștere nivel"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Aveți {:d} galben. Câți doriți sa scoateți?"
-msgstr[1] "Aveți {:d} galbeni. Cați doriți sa scoateți?"
-msgstr[2] "Aveți {:d} de galbeni. Cați doriți sa scoateți?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Aveți {:s} galben. Câți doriți sa scoateți?"
+msgstr[1] "Aveți {:s} galbeni. Cați doriți sa scoateți?"
+msgstr[2] "Aveți {:s} de galbeni. Cați doriți sa scoateți?"
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -7008,15 +7008,15 @@ msgid "Chat History (Messages: {:d})"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} galbeni"
+msgid "{:s} gold"
+msgstr "{:s} galbeni"
 
 #: Source/qol/stash.cpp:586
 #, fuzzy
-#| msgid "You have {:d} gold piece. How many do you want to remove?"
-#| msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+#| msgid "You have {:s} gold piece. How many do you want to remove?"
+#| msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "Aveți {:d} galben. Câți doriți sa scoateți?"
+msgstr "Aveți {:s} galben. Câți doriți sa scoateți?"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
