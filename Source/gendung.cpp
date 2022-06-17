@@ -382,7 +382,7 @@ void InitGlobals()
 	memset(dItem, 0, sizeof(dItem));
 	memset(dObject, 0, sizeof(dObject));
 	memset(dSpecial, 0, sizeof(dSpecial));
-	memset(dLight, DisableLighting ? 0 : 15, sizeof(dLight));
+	memset(dLight, DisableLighting || leveltype == DTYPE_TOWN ? 0 : 15, sizeof(dLight));
 
 	DRLG_InitTrans();
 
