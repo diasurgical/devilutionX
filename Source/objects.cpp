@@ -368,7 +368,7 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 
 bool CanPlaceRandomObject(Point position, Displacement standoff)
 {
-	for (int yy = -standoff.deltaY; yy <= standoff.deltaX; yy++) {
+	for (int yy = -standoff.deltaY; yy <= standoff.deltaY; yy++) {
 		for (int xx = -standoff.deltaX; xx <= standoff.deltaX; xx++) {
 			Point tile = position + Displacement { xx, yy };
 			if (!RndLocOk(tile.x, tile.y))
