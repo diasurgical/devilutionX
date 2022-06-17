@@ -260,7 +260,7 @@ uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 	dwMaxLen -= sizeof(TSyncHeader);
 
 	pHdr->bCmd = CMD_SYNCDATA;
-	pHdr->bLevel = currlevel;
+	pHdr->bLevel = GetLevelForMultiplayer(*MyPlayer);
 	pHdr->wLen = 0;
 	SyncPlrInv(pHdr);
 	assert(dwMaxLen <= 0xffff);
@@ -311,7 +311,7 @@ uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 			if (!IsTSyncMonsterValidate(monsterSyncs[i]))
 				continue;
 
-			if (currlevel == level) {
+			if (GetLevelForMultiplayer(*MyPlayer) == level) {
 				SyncMonster(pnum, monsterSyncs[i]);
 			}
 

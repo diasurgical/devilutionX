@@ -139,7 +139,8 @@ DLevel &GetDeltaLevel(uint8_t level)
 /** @brief Gets a delta level. */
 DLevel &GetDeltaLevel(const Player &player)
 {
-	return GetDeltaLevel(player.plrlevel);
+	uint8_t level = GetLevelForMultiplayer(player);
+	return GetDeltaLevel(level);
 }
 
 /**
@@ -870,9 +871,10 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 	} else if (IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (DeltaGetItem(message, message.bLevel)) {
-			if ((currlevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
+			bool isOnActiveLevel = GetLevelForMultiplayer(*MyPlayer) == message.bLevel;
+			if ((isOnActiveLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
-					if (currlevel != message.bLevel) {
+					if (!isOnActiveLevel) {
 						int ii = SyncPutItem(*MyPlayer, MyPlayer->position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
 							InvGetItem(*MyPlayer, ii);
@@ -938,9 +940,10 @@ DWORD OnAutoGetItem(const TCmd *pCmd, int pnum)
 	} else if (IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (DeltaGetItem(message, message.bLevel)) {
-			if ((currlevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
+			uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
+			if ((localLevel == message.bLevel || message.bPnum == MyPlayerId) && message.bMaster != MyPlayerId) {
 				if (message.bPnum == MyPlayerId) {
-					if (currlevel != message.bLevel) {
+					if (localLevel != message.bLevel) {
 						Player &player = *MyPlayer;
 						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
@@ -1531,12 +1534,12 @@ DWORD OnMonstDeath(const TCmd *pCmd, int pnum)
 
 DWORD OnKillGolem(const TCmd *pCmd, int pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
-	else if (pnum != MyPlayerId && InDungeonBounds(position) && message.wParam1 < NUMLEVELS) {
+	else if (pnum != MyPlayerId && InDungeonBounds(position)) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			M_SyncStartKill(pnum, position, pnum);
@@ -2275,7 +2278,8 @@ void DeltaAddItem(int ii)
 	if (!gbIsMultiplayer)
 		return;
 
-	DLevel &deltaLevel = GetDeltaLevel(currlevel);
+	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
+	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 
 	for (const TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd != CMD_INVALID
@@ -2325,7 +2329,8 @@ void DeltaSaveLevel()
 			ResetPlayerGFX(Players[i]);
 	}
 	MyPlayer->_pLvlVisited[currlevel] = true;
-	DeltaLeaveSync(currlevel);
+	uint8_t localLevel = currlevel;
+	DeltaLeaveSync(localLevel);
 }
 
 namespace {
@@ -2351,13 +2356,19 @@ Point GetItemPosition(Point position)
 
 } // namespace
 
+uint8_t GetLevelForMultiplayer(const Player &player)
+{
+	return player.plrlevel;
+}
+
 void DeltaLoadLevel()
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	deltaload = true;
-	DLevel &deltaLevel = GetDeltaLevel(currlevel);
+	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
+	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < ActiveMonsterCount; i++) {
 			if (deltaLevel.monster[i]._mx == 0xFF)
@@ -2399,7 +2410,7 @@ void DeltaLoadLevel()
 				monster._msquelch = deltaLevel.monster[i]._mactive;
 			}
 		}
-		auto localLevelIt = LocalLevels.find(currlevel);
+		auto localLevelIt = LocalLevels.find(localLevel);
 		if (localLevelIt != LocalLevels.end())
 			memcpy(AutomapView, &localLevelIt->second, sizeof(AutomapView));
 		else
@@ -2710,7 +2721,7 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint
 	cmd.bCmd = bCmd;
 	cmd.bPnum = pnum;
 	cmd.bMaster = mast;
-	cmd.bLevel = currlevel;
+	cmd.bLevel = GetLevelForMultiplayer(*MyPlayer);
 	cmd.bCursitem = ii;
 	cmd.dwTime = 0;
 	cmd.x = Items[ii].position.x;
