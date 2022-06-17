@@ -7,12 +7,11 @@
 
 #include <array>
 
-#include <fmt/format.h>
-
 #include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "engine/point.hpp"
 #include "options.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -42,27 +41,6 @@ void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &g
 	out.SetPixel({ point.x, point.y + 1 }, gradient[idx * 3 / 4]);
 	out.SetPixel({ point.x, point.y + 2 }, gradient[idx]);
 	out.SetPixel({ point.x, point.y + 3 }, gradient[idx / 2]);
-}
-
-/**
- * @brief Prints integer with thousands separator.
- */
-std::string PrintWithSeparator(int n)
-{
-	std::string number = fmt::format("{:d}", n);
-	std::string out = "";
-
-	int length = number.length();
-	int mlength = length % 3;
-	if (mlength == 0)
-		mlength = 3;
-	out.append(number.substr(0, mlength));
-	for (int i = mlength; i < length; i += 3) {
-		AppendStrView(out, _(/* TRANSLATORS: Thousands separator */ ","));
-		out.append(number.substr(i, 3));
-	}
-
-	return out;
 }
 
 } // namespace
@@ -150,7 +128,7 @@ bool CheckXPBarInfo()
 		// Show a maximum level indicator for max level players.
 		InfoColor = UiFlags::ColorWhitegold;
 
-		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), PrintWithSeparator(ExpLvlsTbl[charLevel - 1])));
+		AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(ExpLvlsTbl[charLevel - 1])));
 		AddPanelString(_("Maximum Level"));
 
 		return true;
@@ -158,9 +136,9 @@ bool CheckXPBarInfo()
 
 	InfoColor = UiFlags::ColorWhite;
 
-	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), PrintWithSeparator(player._pExperience)));
-	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), PrintWithSeparator(ExpLvlsTbl[charLevel])));
-	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), PrintWithSeparator(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
+	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
+	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(ExpLvlsTbl[charLevel])));
+	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
 
 	return true;
 }
