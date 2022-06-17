@@ -2592,8 +2592,6 @@ void CreatePlayer(int playerId, HeroClass c)
 	// Initializing the hotkey bindings to no selection
 	std::fill(player._pSplHotKey, player._pSplHotKey + NumHotkeys, SPL_INVALID);
 
-	player.deathCount = 0;
-
 	PlayerWeaponGraphic animWeaponId = PlayerWeaponGraphic::Unarmed;
 	switch (c) {
 	case HeroClass::Warrior:
@@ -2629,6 +2627,7 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	InitDungMsgs(player);
 	CreatePlrItems(playerId);
+	InitializePlayerStatistics(player);
 	SetRndSeed(0);
 }
 
@@ -3146,7 +3145,7 @@ StartPlayerKill(int pnum, int earflag)
 		}
 	}
 	SetPlayerHitPoints(player, 0);
-	player.deathCount++;
+	player.statistics->deathCount++;
 }
 
 void StripTopGold(Player &player)

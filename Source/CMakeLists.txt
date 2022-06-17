@@ -102,6 +102,7 @@ set(libdevilutionx_SRCS
   qol/chatlog.cpp
   qol/monhealthbar.cpp
   qol/stash.cpp
+  qol/statistics.cpp
   qol/xpbar.cpp
   qol/itemlabels.cpp
   utils/console.cpp

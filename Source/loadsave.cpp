@@ -30,6 +30,7 @@
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
 #include "qol/stash.h"
+#include "qol/statistics.h"
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
@@ -1928,6 +1929,7 @@ void SaveHotkeys(MpqWriter &saveWriter)
 
 void LoadStatistics()
 {
+	InitializePlayerStatistics(*MyPlayer);
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "statistics");
 	if (!file.IsValid())
 		return;
@@ -1938,9 +1940,8 @@ void LoadStatistics()
 		readString += file.NextLE<char>();
 	}
 
-	std::map<std::string, std::string> statistics;
-
 	{
+		statisticsFile.clear();
 		std::stringstream ss(readString);
 		std::string line;
 		std::string del = "=";
@@ -1950,24 +1951,19 @@ void LoadStatistics()
 				continue;
 			std::string key = line.substr(0, delPos);
 			std::string value = line.substr(delPos + del.size());
-			statistics[key] = value;
+			statisticsFile[key] = value;
 		}
 	}
 
-	if (statistics.find("myPlayer.deathCount") != statistics.end()) {
-		Player &myPlayer = *MyPlayer;
-		myPlayer.deathCount = std::stoul(statistics.at("myPlayer.deathCount"));
-	}
+	LoadStatisticsFromMap();
 }
 
 void SaveStatistics(MpqWriter &saveWriter)
 {
-	Player &myPlayer = *MyPlayer;
-	std::map<std::string, std::string> statistics;
-	statistics["myPlayer.deathCount"] = std::to_string(myPlayer.deathCount);
-
+	CalculateInGameTime();
+	SaveStatisticsToMap();
 	std::string stringToSave;
-	for (const auto &s : statistics) {
+	for (const auto &s : statisticsFile) {
 		stringToSave += s.first + "=" + s.second + "\n";
 	}
 
