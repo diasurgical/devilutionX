@@ -2236,11 +2236,8 @@ void PrintSString(const Surface &out, int margin, int line, const char *text, Ui
 
 	const Rectangle rect { { sx, sy }, { width, 0 } };
 	DrawString(out, text, rect, flags);
-	if (price > 0) {
-		char valstr[32];
-		sprintf(valstr, "%i", price);
-		DrawString(out, valstr, rect, flags | UiFlags::AlignRight);
-	}
+	if (price > 0)
+		DrawString(out, fmt::format("{:s}", FormatInteger(price)), rect, flags | UiFlags::AlignRight);
 
 	if (stextsel == line) {
 		DrawSelector(out, rect, text, flags);
