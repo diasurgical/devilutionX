@@ -30,12 +30,7 @@ std::optional<OwnedCelSprite> pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<uint16_t[]> pLevelPieces;
 std::unique_ptr<byte[]> pDungeonCels;
-std::array<uint8_t, MAXTILES + 1> block_lvid;
-std::array<bool, MAXTILES + 1> nBlockTable;
-std::array<bool, MAXTILES + 1> nSolidTable;
-std::array<bool, MAXTILES + 1> nTransTable;
-std::array<bool, MAXTILES + 1> nMissileTable;
-std::array<bool, MAXTILES + 1> nTrapTable;
+std::array<TileProperties, MAXTILES> SOLData;
 Point dminPosition;
 Point dmaxPosition;
 dungeon_type leveltype;
@@ -63,30 +58,6 @@ int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
 
 namespace {
-
-std::unique_ptr<uint8_t[]> LoadLevelSOLData(size_t &tileCount)
-{
-	switch (leveltype) {
-	case DTYPE_TOWN:
-		if (gbIsHellfire)
-			return LoadFileInMem<uint8_t>("NLevels\\TownData\\Town.SOL", &tileCount);
-		return LoadFileInMem<uint8_t>("Levels\\TownData\\Town.SOL", &tileCount);
-	case DTYPE_CATHEDRAL:
-		return LoadFileInMem<uint8_t>("Levels\\L1Data\\L1.SOL", &tileCount);
-	case DTYPE_CATACOMBS:
-		return LoadFileInMem<uint8_t>("Levels\\L2Data\\L2.SOL", &tileCount);
-	case DTYPE_CAVES:
-		return LoadFileInMem<uint8_t>("Levels\\L3Data\\L3.SOL", &tileCount);
-	case DTYPE_HELL:
-		return LoadFileInMem<uint8_t>("Levels\\L4Data\\L4.SOL", &tileCount);
-	case DTYPE_NEST:
-		return LoadFileInMem<uint8_t>("NLevels\\L6Data\\L6.SOL", &tileCount);
-	case DTYPE_CRYPT:
-		return LoadFileInMem<uint8_t>("NLevels\\L5Data\\L5.SOL", &tileCount);
-	default:
-		app_fatal("FillSolidBlockTbls");
-	}
-}
 
 bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
 {
@@ -443,19 +414,43 @@ void CreateDungeon(uint32_t rseed, lvl_entry entry)
 	Make_SetPC(SetPiece);
 }
 
-void FillSolidBlockTbls()
+bool TileHasAny(int tileId, TileProperties property)
 {
-	size_t tileCount;
-	auto pSBFile = LoadLevelSOLData(tileCount);
+	if (tileId == 0)
+		return false; // Change town to place 219 (218) instead of 0 and make dPiece zero indexed
 
-	for (unsigned i = 0; i < tileCount; i++) {
-		uint8_t bv = pSBFile[i];
-		nSolidTable[i + 1] = (bv & 0x01) != 0;
-		nBlockTable[i + 1] = (bv & 0x02) != 0;
-		nMissileTable[i + 1] = (bv & 0x04) != 0;
-		nTransTable[i + 1] = (bv & 0x08) != 0;
-		nTrapTable[i + 1] = (bv & 0x80) != 0;
-		block_lvid[i + 1] = (bv & 0x30) >> 4;
+	return HasAnyOf(SOLData[tileId - 1], property);
+}
+
+void LoadLevelSOLData()
+{
+	switch (leveltype) {
+	case DTYPE_TOWN:
+		if (gbIsHellfire)
+			LoadFileInMem("NLevels\\TownData\\Town.SOL", SOLData);
+		else
+			LoadFileInMem("Levels\\TownData\\Town.SOL", SOLData);
+		break;
+	case DTYPE_CATHEDRAL:
+		LoadFileInMem("Levels\\L1Data\\L1.SOL", SOLData);
+		break;
+	case DTYPE_CATACOMBS:
+		LoadFileInMem("Levels\\L2Data\\L2.SOL", SOLData);
+		break;
+	case DTYPE_CAVES:
+		LoadFileInMem("Levels\\L3Data\\L3.SOL", SOLData);
+		break;
+	case DTYPE_HELL:
+		LoadFileInMem("Levels\\L4Data\\L4.SOL", SOLData);
+		break;
+	case DTYPE_NEST:
+		LoadFileInMem("NLevels\\L6Data\\L6.SOL", SOLData);
+		break;
+	case DTYPE_CRYPT:
+		LoadFileInMem("NLevels\\L5Data\\L5.SOL", SOLData);
+		break;
+	default:
+		app_fatal("LoadLevelSOLData");
 	}
 }
 

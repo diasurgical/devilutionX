@@ -656,8 +656,8 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 {
 	MICROS *pMap = &dpiece_defs_map_2[tilePosition.x][tilePosition.y];
 	level_piece_id = dPiece[tilePosition.x][tilePosition.y];
-	cel_transparency_active = nTransTable[level_piece_id] && TransList[dTransVal[tilePosition.x][tilePosition.y]];
-	cel_foliage_active = !nSolidTable[level_piece_id];
+	cel_transparency_active = TileHasAny(level_piece_id, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
+	cel_foliage_active = !TileHasAny(level_piece_id, TileProperties::Solid);
 	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
@@ -930,7 +930,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 			if (InDungeonBounds(tilePosition)) {
 				level_piece_id = dPiece[tilePosition.x][tilePosition.y];
 				if (level_piece_id != 0) {
-					if (!nSolidTable[level_piece_id])
+					if (!TileHasAny(level_piece_id, TileProperties::Solid))
 						DrawFloor(out, tilePosition, targetBufferPosition);
 				} else {
 					world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
@@ -959,7 +959,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	}
 }
 
-#define IsWall(x, y) (dPiece[x][y] == 0 || nSolidTable[dPiece[x][y]] || dSpecial[x][y] != 0)
+#define IsWall(x, y) (dPiece[x][y] == 0 || TileHasAny(dPiece[x][y], TileProperties::Solid) || dSpecial[x][y] != 0)
 #define IsWalkable(x, y) (dPiece[x][y] != 0 && IsTileNotSolid({ x, y }))
 
 /**

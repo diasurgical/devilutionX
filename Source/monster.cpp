@@ -4405,7 +4405,7 @@ bool DirOK(int i, Direction mdir)
 
 bool PosOkMissile(Point position)
 {
-	return !nMissileTable[dPiece[position.x][position.y]];
+	return !TileHasAny(dPiece[position.x][position.y], TileProperties::BlockMissile);
 }
 
 bool LineClearMissile(Point startPoint, Point endPoint)

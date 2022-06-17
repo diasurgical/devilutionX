@@ -58,7 +58,7 @@ bool TFit_Shrine(int i)
 	while (found == 0) {
 		Point testPosition { xp, yp };
 		if (dTransVal[xp][yp] == themes[i].ttval) {
-			if (nTrapTable[dPiece[xp][yp - 1]]
+			if (TileHasAny(dPiece[xp][yp - 1], TileProperties::Trap)
 			    && IsTileNotSolid(testPosition + Direction::NorthWest)
 			    && IsTileNotSolid(testPosition + Direction::SouthEast)
 			    && dTransVal[xp - 1][yp] == themes[i].ttval
@@ -68,7 +68,7 @@ bool TFit_Shrine(int i)
 				found = 1;
 			}
 			if (found == 0
-			    && nTrapTable[dPiece[xp - 1][yp]]
+			    && TileHasAny(dPiece[xp - 1][yp], TileProperties::Trap)
 			    && IsTileNotSolid(testPosition + Direction::NorthEast)
 			    && IsTileNotSolid(testPosition + Direction::SouthWest)
 			    && dTransVal[xp][yp - 1] == themes[i].ttval
@@ -106,7 +106,7 @@ bool TFit_Obj5(int t)
 		if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
 			found = true;
 			for (int i = 0; found && i < 25; i++) {
-				if (nSolidTable[dPiece[xp + trm5x[i]][yp + trm5y[i]]]) {
+				if (TileHasAny(dPiece[xp + trm5x[i]][yp + trm5y[i]], TileProperties::Solid)) {
 					found = false;
 				}
 				if (dTransVal[xp + trm5x[i]][yp + trm5y[i]] != themes[t].ttval) {
@@ -368,7 +368,7 @@ bool CheckThemeRoom(int tv)
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dTransVal[i][j] != tv || nSolidTable[dPiece[i][j]])
+			if (dTransVal[i][j] != tv || TileHasAny(dPiece[i][j], TileProperties::Solid))
 				continue;
 			if (dTransVal[i - 1][j] != tv && IsTileNotSolid({ i - 1, j }))
 				return false;

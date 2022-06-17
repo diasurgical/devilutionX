@@ -2133,7 +2133,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	if (!setlevel) {
 		CreateLevel(lvldir);
 		IncProgress();
-		FillSolidBlockTbls();
+		LoadLevelSOLData();
 		SetRndSeed(glSeedTbl[currlevel]);
 
 		if (leveltype != DTYPE_TOWN) {
@@ -2254,7 +2254,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		InitCorpses();
 		IncProgress();
-		FillSolidBlockTbls();
+		LoadLevelSOLData();
 		IncProgress();
 
 		if (lvldir == ENTRY_WARPLVL)
