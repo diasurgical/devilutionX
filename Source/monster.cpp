@@ -1061,7 +1061,7 @@ void MonsterHitMonster(int mid, int i, int dam)
 	if (i >= 0 && i < MAX_PLRS)
 		monster.mWhoHit |= 1 << i;
 
-	delta_monster_hp(mid, monster._mhitpoints, currlevel);
+	delta_monster_hp(mid, monster._mhitpoints, *MyPlayer);
 	NetSendCmdMonDmg(false, mid, dam);
 	PlayEffect(monster, 1);
 
@@ -1142,7 +1142,7 @@ void StartDeathFromMonster(int i, int mid)
 	assert(mid >= 0 && mid < MAXMONSTERS);
 	Monster &monster = Monsters[mid];
 
-	delta_kill_monster(mid, monster.position.tile, currlevel);
+	delta_kill_monster(mid, monster.position.tile, *MyPlayer);
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
 
 	Direction md = GetDirection(monster.position.tile, killer.position.tile);
@@ -3976,7 +3976,7 @@ void M_StartHit(int i, int pnum, int dam)
 	if (pnum >= 0)
 		monster.mWhoHit |= 1 << pnum;
 	if (pnum == MyPlayerId) {
-		delta_monster_hp(i, monster._mhitpoints, currlevel);
+		delta_monster_hp(i, monster._mhitpoints, *MyPlayer);
 		NetSendCmdMonDmg(false, i, dam);
 	}
 	PlayEffect(monster, 1);
@@ -4007,7 +4007,7 @@ void M_StartKill(int i, int pnum)
 	auto &monster = Monsters[i];
 
 	if (MyPlayerId == pnum) {
-		delta_kill_monster(i, monster.position.tile, currlevel);
+		delta_kill_monster(i, monster.position.tile, *MyPlayer);
 		if (i != pnum) {
 			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, i);
 		} else {
