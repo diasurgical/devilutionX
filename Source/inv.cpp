@@ -292,47 +292,49 @@ bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool p
 	return true;
 }
 
+int FindSlotUnderCursor(Point cursorPosition, Size itemSize)
+{
+	int i = cursorPosition.x;
+	int j = cursorPosition.y;
+
+	if (!IsHardwareCursor()) {
+		// offset the cursor position to match the hot pixel we'd use for a hardware cursor
+		i += itemSize.width * INV_SLOT_HALF_SIZE_PX;
+		j += itemSize.height * INV_SLOT_HALF_SIZE_PX;
+	}
+
+	for (int r = 0; r < NUM_XY_SLOTS; r++) {
+		int xo = GetRightPanel().position.x;
+		int yo = GetRightPanel().position.y;
+		if (r >= SLOTXY_BELT_FIRST) {
+			xo = GetMainPanel().position.x;
+			yo = GetMainPanel().position.y;
+		}
+
+		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
+			if (j >= InvRect[r].y + yo - InventorySlotSizeInPixels.height - 1 && j < InvRect[r].y + yo) {
+				return r;
+			}
+		}
+		if (r == SLOTXY_CHEST_LAST) {
+			if (itemSize.width % 2 == 0)
+				i -= INV_SLOT_HALF_SIZE_PX;
+			if (itemSize.height % 2 == 0)
+				j -= INV_SLOT_HALF_SIZE_PX;
+		}
+		if (r == SLOTXY_INV_LAST && itemSize.height % 2 == 0)
+			j += INV_SLOT_HALF_SIZE_PX;
+	}
+	return NUM_XY_SLOTS;
+}
+
 void CheckInvPaste(Player &player, Point cursorPosition)
 {
 	Size itemSize = GetInventorySize(player.HoldItem);
 
-	auto possibleSlot = [&]() -> std::optional<int> {
-		int i = cursorPosition.x;
-		int j = cursorPosition.y;
-
-		if (!IsHardwareCursor()) {
-			// offset the cursor position to match the hot pixel we'd use for a hardware cursor
-			i += itemSize.width * INV_SLOT_HALF_SIZE_PX;
-			j += itemSize.height * INV_SLOT_HALF_SIZE_PX;
-		}
-
-		for (int r = 0; r < NUM_XY_SLOTS; r++) {
-			int xo = GetRightPanel().position.x;
-			int yo = GetRightPanel().position.y;
-			if (r >= SLOTXY_BELT_FIRST) {
-				xo = GetMainPanel().position.x;
-				yo = GetMainPanel().position.y;
-			}
-
-			if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
-				if (j >= InvRect[r].y + yo - InventorySlotSizeInPixels.height - 1 && j < InvRect[r].y + yo) {
-					return r;
-				}
-			}
-			if (r == SLOTXY_CHEST_LAST) {
-				if (itemSize.width % 2 == 0)
-					i -= INV_SLOT_HALF_SIZE_PX;
-				if (itemSize.height % 2 == 0)
-					j -= INV_SLOT_HALF_SIZE_PX;
-			}
-			if (r == SLOTXY_INV_LAST && itemSize.height % 2 == 0)
-				j += INV_SLOT_HALF_SIZE_PX;
-		}
-		return {};
-	}();
-	if (!possibleSlot)
+	int slot = FindSlotUnderCursor(cursorPosition, itemSize);
+	if (slot == NUM_XY_SLOTS)
 		return;
-	int slot = *possibleSlot;
 
 	item_equip_type il = ILOC_UNEQUIPABLE;
 	if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST)
