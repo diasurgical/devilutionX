@@ -63,11 +63,9 @@ enum class DebugGridTextItem : uint16_t {
 	objectindex,
 
 	// take dPiece as index
-	nBlockTable,
-	nSolidTable,
-	nTransTable,
-	nMissileTable,
-	nTrapTable,
+	Solid,
+	Transparent,
+	Trap,
 
 	// megatiles
 	AutomapView,
@@ -846,11 +844,9 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"coords",
 		"cursorcoords",
 		"objectindex",
-		"nBlockTable",
-		"nSolidTable",
-		"nTransTable",
-		"nMissileTable",
-		"nTrapTable",
+		"solid",
+		"transparent",
+		"trap",
 		"AutomapView",
 		"dungeon",
 		"pdungeon",
@@ -1132,20 +1128,14 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	case DebugGridTextItem::dObject:
 		info = dObject[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugGridTextItem::nBlockTable:
-		info = nBlockTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+	case DebugGridTextItem::Solid:
+		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Solid) << 0 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::BlockLight) << 1 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::BlockMissile) << 2;
 		break;
-	case DebugGridTextItem::nSolidTable:
-		info = nSolidTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+	case DebugGridTextItem::Transparent:
+		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Transparent) << 0 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::TransparentLeft) << 1 | TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::TransparentRight) << 2;
 		break;
-	case DebugGridTextItem::nTransTable:
-		info = nTransTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
-		break;
-	case DebugGridTextItem::nMissileTable:
-		info = nMissileTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
-		break;
-	case DebugGridTextItem::nTrapTable:
-		info = nTrapTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+	case DebugGridTextItem::Trap:
+		info = TileHasAny(dPiece[dungeonCoords.x][dungeonCoords.y], TileProperties::Trap);
 		break;
 	case DebugGridTextItem::AutomapView:
 		info = AutomapView[megaCoords.x][megaCoords.y];

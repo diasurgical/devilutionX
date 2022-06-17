@@ -291,7 +291,7 @@ bool IsTileNotSolid(Point position)
 		return false;
 	}
 
-	return !nSolidTable[dPiece[position.x][position.y]];
+	return !TileHasAny(dPiece[position.x][position.y], TileProperties::Solid);
 }
 
 bool IsTileSolid(Point position)
@@ -300,7 +300,7 @@ bool IsTileSolid(Point position)
 		return false;
 	}
 
-	return nSolidTable[dPiece[position.x][position.y]];
+	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid);
 }
 
 bool IsTileWalkable(Point position, bool ignoreDoors)

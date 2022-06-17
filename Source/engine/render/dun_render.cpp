@@ -1131,12 +1131,12 @@ const std::uint32_t *GetMask(TileType tile)
 			return &WallMaskFullyTrasparent[TILE_HEIGHT - 1];
 		}
 		if (arch_draw_type == 1 && tile != TileType::LeftTriangle) {
-			if ((block_lvid[level_piece_id] & 0x01) != 0) {
+			if (TileHasAny(level_piece_id, TileProperties::TransparentLeft)) {
 				return &LeftMaskTransparent[TILE_HEIGHT - 1];
 			}
 		}
 		if (arch_draw_type == 2 && tile != TileType::RightTriangle) {
-			if ((block_lvid[level_piece_id] & 0x02) != 0) {
+			if (TileHasAny(level_piece_id, TileProperties::TransparentRight)) {
 				return &RightMaskTransparent[TILE_HEIGHT - 1];
 			}
 		}
