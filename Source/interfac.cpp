@@ -413,7 +413,7 @@ void ShowProgress(interface_mode uMsg)
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == DisableInputWndProc);
 
-	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel);
+	NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.plrIsOnSetLevel ? 1 : 0);
 	plrmsg_delay(false);
 
 	if (gbSomebodyWonGameKludge && myPlayer.isOnLevel(16)) {

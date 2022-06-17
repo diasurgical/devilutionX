@@ -77,7 +77,9 @@ struct PlayerPack {
 	ItemSpecialEffectHf pDamAcFlags;
 	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
 	uint8_t friendlyMode;
-	uint8_t dwReserved[19]; // For future use
+	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
+	uint8_t isOnSetLevel;
+	uint8_t dwReserved[18]; // For future use
 };
 #pragma pack(pop)
 

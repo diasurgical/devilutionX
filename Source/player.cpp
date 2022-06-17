@@ -3324,7 +3324,10 @@ void StartWarpLvl(int pnum, int pidx)
 		if (!player.isOnLevel(0)) {
 			player.setLevel(0);
 		} else {
-			player.setLevel(Portals[pidx].level);
+			if (Portals[pidx].setlvl)
+				player.setLevel(static_cast<_setlevels>(Portals[pidx].level));
+			else
+				player.setLevel(Portals[pidx].level);
 		}
 	}
 

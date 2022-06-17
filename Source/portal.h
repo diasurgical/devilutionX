@@ -23,7 +23,7 @@ struct Portal {
 extern Portal Portals[MAXPORTAL];
 
 void InitPortals();
-void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype);
+void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, bool isSetLevel);
 void AddWarpMissile(int i, Point position);
 void SyncPortals();
 void AddInTownPortal(int i);
