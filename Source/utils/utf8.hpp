@@ -32,11 +32,17 @@ inline char32_t ConsumeFirstUtf8CodePoint(string_view *input)
 /**
  * Returns true if this is a trailing byte in a UTF-8 code point encoding.
  *
- * A trailing byte is any byte that is not the heading byte.
+ * Trailing bytes all begin with 10 as the most significant bits, meaning they generally fall in the range 0x80 to
+ * 0xBF. Please note that certain 3 and 4 byte sequences use a narrower range for the second byte, this function is
+ * not intended to guarantee the character is valid within the sequence (or that the sequence is well-formed).
  */
 inline bool IsTrailUtf8CodeUnit(char x)
 {
-	return static_cast<signed char>(x) < -0x40;
+	// The following is equivalent to a bitmask test (x & 0xC0) == 0x80
+	// On x86_64 architectures it ends up being one instruction shorter
+	// This invokes implementation defined behaviour on platforms where the underlying type of char is unsigned char
+	// until C++20 makes unsigned to signed conversion well defined
+	return static_cast<signed char>(x) < static_cast<signed char>('\xC0');
 }
 
 /**
