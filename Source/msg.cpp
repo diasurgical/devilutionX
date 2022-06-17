@@ -529,13 +529,13 @@ void DeltaLeaveSync(uint8_t bLevel)
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
 }
 
-void DeltaSyncObject(int oi, _cmd_id bCmd, uint8_t bLevel)
+void DeltaSyncObject(int oi, _cmd_id bCmd, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	GetDeltaLevel(bLevel).object[oi].bCmd = bCmd;
+	GetDeltaLevel(player).object[oi].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -597,12 +597,12 @@ bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
 	return true;
 }
 
-void DeltaPutItem(const TCmdPItem &message, Point position, uint8_t bLevel)
+void DeltaPutItem(const TCmdPItem &message, Point position, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
-	DLevel &deltaLevel = GetDeltaLevel(bLevel);
+	DLevel &deltaLevel = GetDeltaLevel(player);
 
 	for (const TCmdPItem &item : deltaLevel.item) {
 		if (item.bCmd != TCmdPItem::PickedUpItem
@@ -983,21 +983,22 @@ DWORD OnPutItem(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
 		const Point position { message.x, message.y };
-		if (Players[pnum].isOnActiveLevel()) {
+		Player &player = Players[pnum];
+		if (player.isOnActiveLevel()) {
 			int ii;
 			if (pnum == MyPlayerId)
-				ii = InvPutItem(Players[pnum], position, ItemLimbo);
+				ii = InvPutItem(player, position, ItemLimbo);
 			else
-				ii = SyncPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+				ii = SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			if (ii != -1) {
 				PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-				DeltaPutItem(message, Items[ii].position, Players[pnum].plrlevel);
+				DeltaPutItem(message, Items[ii].position, player);
 				CheckUpdatePlayer(pnum);
 			}
 			return sizeof(message);
 		} else {
 			PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-			DeltaPutItem(message, position, Players[pnum].plrlevel);
+			DeltaPutItem(message, position, player);
 			CheckUpdatePlayer(pnum);
 		}
 	}
@@ -1013,17 +1014,18 @@ DWORD OnSyncPutItem(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (IsPItemValid(message)) {
 		const Point position { message.x, message.y };
-		if (Players[pnum].isOnActiveLevel()) {
-			int ii = SyncPutItem(Players[pnum], position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
+		Player &player = Players[pnum];
+		if (player.isOnActiveLevel()) {
+			int ii = SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 			if (ii != -1) {
 				PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-				DeltaPutItem(message, Items[ii].position, Players[pnum].plrlevel);
+				DeltaPutItem(message, Items[ii].position, player);
 				CheckUpdatePlayer(pnum);
 			}
 			return sizeof(message);
 		} else {
 			PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-			DeltaPutItem(message, position, Players[pnum].plrlevel);
+			DeltaPutItem(message, position, player);
 			CheckUpdatePlayer(pnum);
 		}
 	}
@@ -1044,7 +1046,7 @@ DWORD OnRespawnItem(const TCmd *pCmd, int pnum)
 			SyncPutItem(player, position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 		}
 		PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-		DeltaPutItem(message, position, player.plrlevel);
+		DeltaPutItem(message, position, player);
 	}
 
 	return sizeof(message);
@@ -1627,7 +1629,7 @@ DWORD OnOpenDoor(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(pnum, CMD_OPENDOOR, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_OPENDOOR, player.plrlevel);
+		DeltaSyncObject(message.wParam1, CMD_OPENDOOR, player);
 	}
 
 	return sizeof(message);
@@ -1643,7 +1645,7 @@ DWORD OnCloseDoor(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(pnum, CMD_CLOSEDOOR, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_CLOSEDOOR, player.plrlevel);
+		DeltaSyncObject(message.wParam1, CMD_CLOSEDOOR, player);
 	}
 
 	return sizeof(message);
@@ -1659,7 +1661,7 @@ DWORD OnOperateObject(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(pnum, CMD_OPERATEOBJ, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_OPERATEOBJ, player.plrlevel);
+		DeltaSyncObject(message.wParam1, CMD_OPERATEOBJ, player);
 	}
 
 	return sizeof(message);
@@ -1675,7 +1677,7 @@ DWORD OnPlayerOperateObject(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(message.wParam1, CMD_PLROPOBJ, message.wParam2);
-		DeltaSyncObject(message.wParam2, CMD_PLROPOBJ, player.plrlevel);
+		DeltaSyncObject(message.wParam2, CMD_PLROPOBJ, player);
 	}
 
 	return sizeof(message);
@@ -1692,7 +1694,7 @@ DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 		if (player.isOnActiveLevel()) {
 			SyncBreakObj(message.wParam1, Objects[message.wParam2]);
 		}
-		DeltaSyncObject(message.wParam2, CMD_BREAKOBJ, player.plrlevel);
+		DeltaSyncObject(message.wParam2, CMD_BREAKOBJ, player);
 	}
 
 	return sizeof(message);
@@ -1750,7 +1752,7 @@ DWORD OnDropItem(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (IsPItemValid(message)) {
-		DeltaPutItem(message, { message.x, message.y }, Players[pnum].plrlevel);
+		DeltaPutItem(message, { message.x, message.y }, Players[pnum]);
 	}
 
 	return sizeof(message);
@@ -1769,7 +1771,7 @@ DWORD OnSpawnItem(const TCmd *pCmd, int pnum)
 			SyncDropItem(position, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 		}
 		PutItemRecord(message.dwSeed, message.wCI, message.wIndx);
-		DeltaPutItem(message, position, player.plrlevel);
+		DeltaPutItem(message, position, player);
 	}
 
 	return sizeof(message);
