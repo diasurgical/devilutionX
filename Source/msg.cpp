@@ -628,7 +628,7 @@ void DeltaPutItem(const TCmdPItem &message, Point position, const Player &player
 	}
 }
 
-bool IOwnLevel(int nReqLevel)
+bool IOwnLevel(const Player &player)
 {
 	int i;
 
@@ -637,7 +637,9 @@ bool IOwnLevel(int nReqLevel)
 			continue;
 		if (Players[i]._pLvlChanging)
 			continue;
-		if (Players[i].plrlevel != nReqLevel)
+		if (Players[i].plrlevel != player.plrlevel)
+			continue;
+		if (Players[i].plrIsOnSetLevel != player.plrIsOnSetLevel)
 			continue;
 		if (i == MyPlayerId && gbBufferMsgs != 0)
 			continue;
@@ -824,7 +826,7 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
-	if (gbBufferMsgs != 1 && IOwnLevel(player.plrlevel) && IsGItemValid(message)) {
+	if (gbBufferMsgs != 1 && IOwnLevel(player) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
 			int ii = -1;
@@ -908,7 +910,7 @@ DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
-	if (gbBufferMsgs != 1 && IOwnLevel(player.plrlevel) && IsGItemValid(message)) {
+	if (gbBufferMsgs != 1 && IOwnLevel(player) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
 			if (FindGetItem(message.dwSeed, message.wIndx, message.wCI) != -1) {
