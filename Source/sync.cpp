@@ -304,7 +304,7 @@ uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 
 	uint8_t level = header.bLevel;
 
-	if (level < NUMLEVELS) {
+	if (IsValidLevelForMultiplayer(level)) {
 		const auto *monsterSyncs = reinterpret_cast<const TSyncMonster *>(pCmd + sizeof(header));
 
 		for (int i = 0; i < monsterCount; i++) {
