@@ -339,6 +339,7 @@ void SendPlayerInfo(int pnum, _cmd_id cmd)
 	Player &myPlayer = *MyPlayer;
 	PackPlayer(pPack, myPlayer, true, true);
 	pPack->friendlyMode = myPlayer.friendlyMode ? 1 : 0;
+	pPack->isOnSetLevel = myPlayer.plrIsOnSetLevel;
 	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
 }
 
@@ -814,6 +815,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 		return;
 	}
 	player.friendlyMode = packedPlayer.friendlyMode != 0;
+	player.plrIsOnSetLevel = packedPlayer.isOnSetLevel != 0;
 
 	if (!recv) {
 		return;

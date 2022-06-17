@@ -2273,12 +2273,14 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitMultiView();
 		IncProgress();
 
-		if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pSLvlVisited[setlvlnum]) {
+		if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pSLvlVisited[setlvlnum] || gbIsMultiplayer) {
 			InitItems();
 			SavePreLighting();
 		} else {
 			LoadLevel();
 		}
+		if (gbIsMultiplayer)
+			DeltaLoadLevel();
 
 		InitMissiles();
 		IncProgress();

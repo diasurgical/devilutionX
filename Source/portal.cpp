@@ -38,13 +38,13 @@ void InitPortals()
 	}
 }
 
-void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
+void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype, bool isSetLevel)
 {
 	Portals[i].open = o;
 	Portals[i].position = { x, y };
 	Portals[i].level = lvl;
 	Portals[i].ltype = lvltype;
-	Portals[i].setlvl = false;
+	Portals[i].setlvl = isSetLevel;
 }
 
 void AddWarpMissile(int i, Point position)

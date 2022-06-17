@@ -104,7 +104,8 @@ struct DJunk {
 };
 #pragma pack(pop)
 
-#define MAX_CHUNKS (NUMLEVELS + 4)
+constexpr size_t MAX_MULTIPLAYERLEVELS = NUMLEVELS + SL_LAST;
+constexpr size_t MAX_CHUNKS = MAX_MULTIPLAYERLEVELS + 4;
 
 uint32_t sgdwOwnerWait;
 uint32_t sgdwRecvOffset;
@@ -122,6 +123,13 @@ Item ItemLimbo;
 
 /** @brief Last sent player command for the local player. */
 TCmdLocParam4 lastSentPlayerCmd;
+
+uint8_t GetLevelForMultiplayer(uint8_t level, bool isSetLevel)
+{
+	if (isSetLevel)
+		return level + NUMLEVELS;
+	return level;
+}
 
 /** @brief Gets a delta level. */
 DLevel &GetDeltaLevel(uint8_t level)
@@ -1792,7 +1800,7 @@ DWORD OnSendPlayerInfo(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const auto &message = *reinterpret_cast<const TCmdLocParam2 *>(pCmd);
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1) {
@@ -1801,7 +1809,8 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 	}
 
 	int playerLevel = message.wParam1;
-	if (!IsValidLevel(playerLevel, false) || !InDungeonBounds(position)) {
+	bool isSetLevel = message.wParam2 != 0;
+	if (!IsValidLevel(playerLevel, isSetLevel) || !InDungeonBounds(position)) {
 		return sizeof(message);
 	}
 
@@ -1817,7 +1826,10 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 
 	if (player.plractive && MyPlayerId != pnum) {
 		player.position.tile = position;
-		player.setLevel(playerLevel);
+		if (isSetLevel)
+			player.setLevel(static_cast<_setlevels>(playerLevel));
+		else
+			player.setLevel(playerLevel);
 		ResetPlayerGFX(player);
 		if (player.isOnActiveLevel()) {
 			SyncInitPlr(pnum);
@@ -2224,7 +2236,7 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	if (!gbIsMultiplayer)
 		return;
 
-	assert(level < NUMLEVELS);
+	assert(level < MAX_MULTIPLAYERLEVELS);
 	sgbDeltaChanged = true;
 
 	DMonsterStr &monster = GetDeltaLevel(level).monster[monsterSync._mndx];
@@ -2243,7 +2255,7 @@ void DeltaSyncJunk()
 {
 	for (int i = 0; i < MAXPORTAL; i++) {
 		if (sgJunk.portal[i].x == 0xFF) {
-			SetPortalStats(i, false, 0, 0, 0, DTYPE_TOWN);
+			SetPortalStats(i, false, 0, 0, 0, DTYPE_TOWN, false);
 		} else {
 			SetPortalStats(
 			    i,
@@ -2251,7 +2263,8 @@ void DeltaSyncJunk()
 			    sgJunk.portal[i].x,
 			    sgJunk.portal[i].y,
 			    sgJunk.portal[i].level,
-			    (dungeon_type)sgJunk.portal[i].ltype);
+			    (dungeon_type)sgJunk.portal[i].ltype,
+			    sgJunk.portal[i].setlvl);
 		}
 	}
 
@@ -2324,8 +2337,11 @@ void DeltaSaveLevel()
 		if (i != MyPlayerId)
 			ResetPlayerGFX(Players[i]);
 	}
-	MyPlayer->_pLvlVisited[currlevel] = true;
-	uint8_t localLevel = currlevel;
+	if (setlevel)
+		MyPlayer->_pSLvlVisited[currlevel] = true;
+	else
+		MyPlayer->_pLvlVisited[currlevel] = true;
+	uint8_t localLevel = GetLevelForMultiplayer(currlevel, setlevel);
 	DeltaLeaveSync(localLevel);
 }
 
@@ -2354,12 +2370,12 @@ Point GetItemPosition(Point position)
 
 uint8_t GetLevelForMultiplayer(const Player &player)
 {
-	return player.plrlevel;
+	return GetLevelForMultiplayer(player.plrlevel, player.plrIsOnSetLevel);
 }
 
 bool IsValidLevelForMultiplayer(uint8_t level)
 {
-	return level < NUMLEVELS;
+	return level < MAX_MULTIPLAYERLEVELS;
 }
 
 bool IsValidLevel(uint8_t level, bool isSetLevel)
