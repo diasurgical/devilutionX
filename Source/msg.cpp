@@ -804,7 +804,7 @@ bool IsGItemValid(const TCmdGItem &message)
 		return false;
 	if (message.bCursitem >= MAXITEMS + 1)
 		return false;
-	if (message.bLevel >= NUMLEVELS)
+	if (!IsValidLevelForMultiplayer(message.bLevel))
 		return false;
 
 	if (!InDungeonBounds({ message.x, message.y }))
@@ -1488,12 +1488,8 @@ DWORD OnNewLevel(const TCmd *pCmd, int pnum)
 		auto mode = static_cast<interface_mode>(message.wParam1);
 
 		int levelId = message.wParam2;
-		if (mode == WM_DIABSETLVL) {
-			if (levelId > SL_LAST)
-				return sizeof(message);
-		} else {
-			if (levelId >= NUMLEVELS)
-				return sizeof(message);
+		if (!IsValidLevel(levelId, mode == WM_DIABSETLVL)) {
+			return sizeof(message);
 		}
 
 		StartNewLvl(pnum, mode, levelId);
@@ -1805,7 +1801,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 	}
 
 	int playerLevel = message.wParam1;
-	if (playerLevel > NUMLEVELS || !InDungeonBounds(position)) {
+	if (!IsValidLevel(playerLevel, false) || !InDungeonBounds(position)) {
 		return sizeof(message);
 	}
 
@@ -1846,13 +1842,13 @@ DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
 	const Point position { message.x, message.y };
+	bool isSetLevel = message.wParam3 != 0;
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (InDungeonBounds(position) && message.wParam1 < NUMLEVELS && message.wParam2 <= DTYPE_LAST) {
+	} else if (InDungeonBounds(position) && IsValidLevel(message.wParam1, isSetLevel) && message.wParam2 <= DTYPE_LAST) {
 		int level = message.wParam1;
 		auto dungeonType = static_cast<dungeon_type>(message.wParam2);
-		bool isSetLevel = message.wParam3 != 0;
 
 		ActivatePortal(pnum, position, level, dungeonType, isSetLevel);
 		if (pnum != MyPlayerId) {
@@ -2359,6 +2355,18 @@ Point GetItemPosition(Point position)
 uint8_t GetLevelForMultiplayer(const Player &player)
 {
 	return player.plrlevel;
+}
+
+bool IsValidLevelForMultiplayer(uint8_t level)
+{
+	return level < NUMLEVELS;
+}
+
+bool IsValidLevel(uint8_t level, bool isSetLevel)
+{
+	if (isSetLevel)
+		return level <= SL_LAST;
+	return level < NUMLEVELS;
 }
 
 void DeltaLoadLevel()
