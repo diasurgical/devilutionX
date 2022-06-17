@@ -1519,7 +1519,7 @@ DWORD OnMonstDeath(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			M_SyncStartKill(message.wParam1, position, pnum);
-		delta_kill_monster(message.wParam1, position, player.plrlevel);
+		delta_kill_monster(message.wParam1, position, player);
 	}
 
 	return sizeof(message);
@@ -1533,9 +1533,10 @@ DWORD OnKillGolem(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (pnum != MyPlayerId && InDungeonBounds(position) && message.wParam1 < NUMLEVELS) {
-		if (currlevel == message.wParam1)
+		Player &player = Players[pnum];
+		if (player.isOnActiveLevel())
 			M_SyncStartKill(pnum, position, pnum);
-		delta_kill_monster(pnum, position, message.wParam1);
+		delta_kill_monster(pnum, position, player);
 	}
 
 	return sizeof(message);
@@ -1581,7 +1582,7 @@ DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 				monster._mhitpoints -= message.dwDam;
 				if ((monster._mhitpoints >> 6) < 1)
 					monster._mhitpoints = 1 << 6;
-				delta_monster_hp(message.wMon, monster._mhitpoints, player.plrlevel);
+				delta_monster_hp(message.wMon, monster._mhitpoints, player);
 			}
 		}
 	}
@@ -2191,26 +2192,26 @@ void delta_init()
 	deltaload = false;
 }
 
-void delta_kill_monster(int mi, Point position, uint8_t bLevel)
+void delta_kill_monster(int mi, Point position, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &GetDeltaLevel(bLevel).monster[mi];
+	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
 	pD->_mx = position.x;
 	pD->_my = position.y;
 	pD->_mdir = Monsters[mi]._mdir;
 	pD->_mhitpoints = 0;
 }
 
-void delta_monster_hp(int mi, int hp, uint8_t bLevel)
+void delta_monster_hp(int mi, int hp, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &GetDeltaLevel(bLevel).monster[mi];
+	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
 	if (pD->_mhitpoints > hp)
 		pD->_mhitpoints = hp;
 }
