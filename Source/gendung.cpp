@@ -442,6 +442,7 @@ void LoadLevelSOLData()
 		break;
 	case DTYPE_HELL:
 		LoadFileInMem("Levels\\L4Data\\L4.SOL", SOLData);
+		SOLData[210] = TileProperties::None; // Tile is incorrectly marked as being solid
 		break;
 	case DTYPE_NEST:
 		LoadFileInMem("NLevels\\L6Data\\L6.SOL", SOLData);
