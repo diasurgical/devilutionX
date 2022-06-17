@@ -150,7 +150,6 @@ void TownCloseGrave()
 
 void InitTownPieces()
 {
-
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNX; x++) {
 			if (dPiece[x][y] == 360) {
