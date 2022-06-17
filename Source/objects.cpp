@@ -366,31 +366,36 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 	}
 }
 
+bool CanPlaceRandomObject(Point position, Displacement standoff)
+{
+	for (int yy = -standoff.deltaY; yy <= standoff.deltaX; yy++) {
+		for (int xx = -standoff.deltaX; xx <= standoff.deltaX; xx++) {
+			Point tile = position + Displacement { xx, yy };
+			if (!RndLocOk(tile.x, tile.y))
+				return false;
+		}
+	}
+	return true;
+}
+
+std::optional<Point> GetRandomObjectPosition(Displacement standoff)
+{
+	for (int i = 0; i <= 20000; i++) {
+		Point position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		if (CanPlaceRandomObject(position, standoff))
+			return position;
+	}
+	return {};
+}
+
 void InitRndLocObj5x5(int min, int max, _object_id objtype)
 {
 	int numobjs = min + GenerateRnd(max - min);
 	for (int i = 0; i < numobjs; i++) {
-		int xp;
-		int yp;
-		int cnt = 0;
-		bool exit = false;
-		while (!exit) {
-			exit = true;
-			xp = GenerateRnd(80) + 16;
-			yp = GenerateRnd(80) + 16;
-			for (int n = -2; n <= 2; n++) {
-				for (int m = -2; m <= 2; m++) {
-					if (!RndLocOk(xp + m, yp + n))
-						exit = false;
-				}
-			}
-			if (!exit) {
-				cnt++;
-				if (cnt > 20000)
-					return;
-			}
-		}
-		AddObject(objtype, { xp, yp });
+		std::optional<Point> position = GetRandomObjectPosition({ 2, 2 });
+		if (!position)
+			return;
+		AddObject(objtype, *position);
 	}
 }
 
@@ -450,34 +455,19 @@ void AddCandles()
  */
 void AddBookLever(Rectangle affectedArea, _speech_id msg)
 {
-	int cnt = 0;
-	Point position;
-	bool exit = false;
-	while (!exit) {
-		exit = true;
-		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
-		for (int n = -2; n <= 2; n++) {
-			for (int m = -2; m <= 2; m++) {
-				if (!RndLocOk(position.x + m, position.y + n))
-					exit = false;
-			}
-		}
-		if (!exit) {
-			cnt++;
-			if (cnt > 20000)
-				return;
-		}
-	}
+	std::optional<Point> position = GetRandomObjectPosition({ 2, 2 });
+	if (!position)
+		return;
 
 	if (Quests[Q_BLIND].IsAvailable())
-		AddObject(OBJ_BLINDBOOK, position);
+		AddObject(OBJ_BLINDBOOK, *position);
 	if (Quests[Q_WARLORD].IsAvailable())
-		AddObject(OBJ_STEELTOME, position);
+		AddObject(OBJ_STEELTOME, *position);
 	if (Quests[Q_BLOOD].IsAvailable()) {
 		position = SetPiece.position.megaToWorld() + Displacement { 9, 24 };
-		AddObject(OBJ_BLOODBOOK, position);
+		AddObject(OBJ_BLOODBOOK, *position);
 	}
-	ObjectAtPosition(position)->InitializeQuestBook(affectedArea, leverid, msg);
+	ObjectAtPosition(*position)->InitializeQuestBook(affectedArea, leverid, msg);
 	leverid++;
 }
 
@@ -804,7 +794,7 @@ void SetupObject(Object &object, Point position, _object_id ot)
 	object._oDoorFlag = false;
 }
 
-void AddCryptBook(_object_id ot, int v2, int ox, int oy)
+void AddCryptBook(_object_id ot, int v2, Point position)
 {
 	if (ActiveObjectCount >= MAXOBJECTS)
 		return;
@@ -812,47 +802,30 @@ void AddCryptBook(_object_id ot, int v2, int ox, int oy)
 	int oi = AvailableObjects[0];
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
-	dObject[ox][oy] = oi + 1;
+	dObject[position.x][position.y] = oi + 1;
 	Object &object = Objects[oi];
-	SetupObject(object, { ox, oy }, ot);
+	SetupObject(object, position, ot);
 	AddCryptObject(object, v2);
 	ActiveObjectCount++;
 }
 
 void AddCryptStoryBook(int s)
 {
-	int cnt = 0;
-	int xp;
-	int yp;
-	bool exit = false;
-	while (!exit) {
-		exit = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
-		for (int n = -2; n <= 2; n++) {
-			for (int m = -3; m <= 3; m++) {
-				if (!RndLocOk(xp + m, yp + n))
-					exit = false;
-			}
-		}
-		if (!exit) {
-			cnt++;
-			if (cnt > 20000)
-				return;
-		}
-	}
-	AddCryptBook(OBJ_L5BOOKS, s, xp, yp);
-	AddObject(OBJ_L5CANDLE, { xp - 2, yp + 1 });
-	AddObject(OBJ_L5CANDLE, { xp - 2, yp });
-	AddObject(OBJ_L5CANDLE, { xp - 1, yp - 1 });
-	AddObject(OBJ_L5CANDLE, { xp + 1, yp - 1 });
-	AddObject(OBJ_L5CANDLE, { xp + 2, yp });
-	AddObject(OBJ_L5CANDLE, { xp + 2, yp + 1 });
+	std::optional<Point> position = GetRandomObjectPosition({ 3, 2 });
+	if (!position)
+		return;
+	AddCryptBook(OBJ_L5BOOKS, s, *position);
+	AddObject(OBJ_L5CANDLE, *position + Displacement { -2, 1 });
+	AddObject(OBJ_L5CANDLE, *position + Displacement { -2, 0 });
+	AddObject(OBJ_L5CANDLE, *position + Displacement { -1, -1 });
+	AddObject(OBJ_L5CANDLE, *position + Displacement { 1, -1 });
+	AddObject(OBJ_L5CANDLE, *position + Displacement { 2, 0 });
+	AddObject(OBJ_L5CANDLE, *position + Displacement { 2, 1 });
 }
 
-void AddNakrulBook(int a1, int a2, int a3)
+void AddNakrulBook(int a1, Point position)
 {
-	AddCryptBook(OBJ_L5BOOKS, a1, a2, a3);
+	AddCryptBook(OBJ_L5BOOKS, a1, position);
 }
 
 void AddNakrulGate()
@@ -860,58 +833,41 @@ void AddNakrulGate()
 	AddNakrulLeaver();
 	switch (GenerateRnd(6)) {
 	case 0:
-		AddNakrulBook(6, UberRow + 3, UberCol);
-		AddNakrulBook(7, UberRow + 2, UberCol - 3);
-		AddNakrulBook(8, UberRow + 2, UberCol + 2);
+		AddNakrulBook(6, { UberRow + 3, UberCol });
+		AddNakrulBook(7, { UberRow + 2, UberCol - 3 });
+		AddNakrulBook(8, { UberRow + 2, UberCol + 2 });
 		break;
 	case 1:
-		AddNakrulBook(6, UberRow + 3, UberCol);
-		AddNakrulBook(8, UberRow + 2, UberCol - 3);
-		AddNakrulBook(7, UberRow + 2, UberCol + 2);
+		AddNakrulBook(6, { UberRow + 3, UberCol });
+		AddNakrulBook(8, { UberRow + 2, UberCol - 3 });
+		AddNakrulBook(7, { UberRow + 2, UberCol + 2 });
 		break;
 	case 2:
-		AddNakrulBook(7, UberRow + 3, UberCol);
-		AddNakrulBook(6, UberRow + 2, UberCol - 3);
-		AddNakrulBook(8, UberRow + 2, UberCol + 2);
+		AddNakrulBook(7, { UberRow + 3, UberCol });
+		AddNakrulBook(6, { UberRow + 2, UberCol - 3 });
+		AddNakrulBook(8, { UberRow + 2, UberCol + 2 });
 		break;
 	case 3:
-		AddNakrulBook(7, UberRow + 3, UberCol);
-		AddNakrulBook(8, UberRow + 2, UberCol - 3);
-		AddNakrulBook(6, UberRow + 2, UberCol + 2);
+		AddNakrulBook(7, { UberRow + 3, UberCol });
+		AddNakrulBook(8, { UberRow + 2, UberCol - 3 });
+		AddNakrulBook(6, { UberRow + 2, UberCol + 2 });
 		break;
 	case 4:
-		AddNakrulBook(8, UberRow + 3, UberCol);
-		AddNakrulBook(7, UberRow + 2, UberCol - 3);
-		AddNakrulBook(6, UberRow + 2, UberCol + 2);
+		AddNakrulBook(8, { UberRow + 3, UberCol });
+		AddNakrulBook(7, { UberRow + 2, UberCol - 3 });
+		AddNakrulBook(6, { UberRow + 2, UberCol + 2 });
 		break;
 	case 5:
-		AddNakrulBook(8, UberRow + 3, UberCol);
-		AddNakrulBook(6, UberRow + 2, UberCol - 3);
-		AddNakrulBook(7, UberRow + 2, UberCol + 2);
+		AddNakrulBook(8, { UberRow + 3, UberCol });
+		AddNakrulBook(6, { UberRow + 2, UberCol - 3 });
+		AddNakrulBook(7, { UberRow + 2, UberCol + 2 });
 		break;
 	}
-}
-
-bool CanPlaceStoryBook(Point position)
-{
-	for (int yy = -2; yy <= 2; yy++) {
-		for (int xx = -3; xx <= 3; xx++) {
-			Point tile = position + Displacement { xx, yy };
-			if (!RndLocOk(tile.x, tile.y))
-				return false;
-		}
-	}
-	return true;
 }
 
 void AddStoryBooks()
 {
-	std::optional<Point> position;
-	for (int i = 0; i <= 20000 && !position; i++) {
-		position = { GenerateRnd(80) + 16, GenerateRnd(80) + 16 };
-		if (!CanPlaceStoryBook(*position))
-			position = {};
-	}
+	std::optional<Point> position = GetRandomObjectPosition({ 3, 2 });
 	if (!position)
 		return;
 
