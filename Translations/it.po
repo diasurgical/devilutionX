@@ -7432,8 +7432,8 @@ msgstr "Lascia bottega"
 msgid "I have these items for sale:"
 msgstr "Merce in vendita:"
 
-msgid "Your gold: {:d}"
-msgstr "Monete: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Monete: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

@@ -7462,8 +7462,8 @@ msgstr "Φύγεις από το Μαγαζί"
 msgid "I have these items for sale:"
 msgstr "Έχω τα παρακάτω για πώληση:"
 
-msgid "Your gold: {:d}"
-msgstr "Ο χρυσός σου: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ο χρυσός σου: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
@@ -7621,8 +7621,8 @@ msgstr "Δεν έχεις τίποτα για ταυτοποίηση."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Πιο αντικείμενο θέλεις να ταυτοποιήσω;   Ο χρυσός σου: {:d}"
+msgid "Identify which item?             Your gold: {:s}"
+msgstr "Πιο αντικείμενο θέλεις να ταυτοποιήσω;   Ο χρυσός σου: {:s}"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"

@@ -7541,8 +7541,8 @@ msgstr "Покинуть магазин"
 msgid "I have these items for sale:"
 msgstr "У меня есть на продажу:"
 
-msgid "Your gold: {:d}"
-msgstr "Ваше золото: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ваше золото: {:s}"
 
 # “премиальные прдеметы” не влезают в длину строки
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
@@ -7704,8 +7704,8 @@ msgstr "У вас нечего идентифицировать."
 # Нужно выровнять с остальными строками
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:d}"
-msgstr "Какой предмет идентифицировать? Ваше золото: {:d}"
+msgid "Identify which item?             Your gold: {:s}"
+msgstr "Какой предмет идентифицировать? Ваше золото: {:s}"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"

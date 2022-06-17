@@ -7397,7 +7397,7 @@ msgid "Say Goodbye"
 msgstr ""
 
 #: Source/stores.cpp:2458
-msgid "Your gold: {:d}"
+msgid "Your gold: {:s}"
 msgstr ""
 
 #. TRANSLATORS: Quest dialog spoken by Cain

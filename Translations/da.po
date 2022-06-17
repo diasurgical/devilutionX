@@ -7810,7 +7810,7 @@ msgstr "Køb varer"
 msgid "Leave the shop"
 msgstr "Forlad healers hjem"
 
-msgid "Your gold: {:d}"
+msgid "Your gold: {:s}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!

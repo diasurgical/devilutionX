@@ -7354,8 +7354,8 @@ msgstr "要​出售​哪​件​物品？"
 msgid "You have nothing to repair."
 msgstr "你​没有​需要​修理​的​物品。"
 
-msgid "Your gold: {:d}"
-msgstr "你​的​金币: {:d}"
+msgid "Your gold: {:s}"
+msgstr "你​的​金币: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637

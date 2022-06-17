@@ -7434,8 +7434,8 @@ msgstr "Напуснете ателието"
 msgid "I have these items for sale:"
 msgstr "Продавам тези предмети."
 
-msgid "Your gold: {:d}"
-msgstr "Вашето злато: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Вашето злато: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

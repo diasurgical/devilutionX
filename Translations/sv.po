@@ -7412,8 +7412,8 @@ msgstr "Lämna butiken"
 msgid "I have these items for sale:"
 msgstr "Jag har dessa föremål till salu:"
 
-msgid "Your gold: {:d}"
-msgstr "Ditt guld: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ditt guld: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

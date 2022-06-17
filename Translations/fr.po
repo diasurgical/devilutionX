@@ -1078,8 +1078,8 @@ msgstr "Niveau Supérieur"
 #: Source/control.cpp:1040
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Vous avez {:d} pièce d'or. Combien voulez-vous en supprimer ?"
-msgstr[1] "Vous avez {:d} pièces d'or. Combien voulez-vous en supprimer ?"
+msgstr[0] "Vous avez {:d} pièce d'or. Combien voulez-vous en supprimer ?"
+msgstr[1] "Vous avez {:d} pièces d'or. Combien voulez-vous en supprimer ?"
 
 #: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -5696,7 +5696,7 @@ msgstr "Quelques Immunités Magiques"
 
 #: Source/msg.cpp:537
 msgid "Trying to drop a floor item?"
-msgstr "Vous essayez de déposer un objet au sol ?"
+msgstr "Vous essayez de déposer un objet au sol ?"
 
 #: Source/msg.cpp:1039 Source/msg.cpp:1074 Source/msg.cpp:1105
 #: Source/msg.cpp:1232 Source/msg.cpp:1264 Source/msg.cpp:1296
@@ -6936,7 +6936,7 @@ msgstr "{:d} or"
 
 #: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"
-msgstr "Combien de pièces d'or voulez-vous retirer ?"
+msgstr "Combien de pièces d'or voulez-vous retirer ?"
 
 #. TRANSLATORS: Thousands separator
 #: Source/qol/xpbar.cpp:61
@@ -7658,8 +7658,8 @@ msgid "Say Goodbye"
 msgstr "Dire Au Revoir"
 
 #: Source/stores.cpp:2439
-msgid "Your gold: {:d}"
-msgstr "Votre or: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Votre or: {:s}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
@@ -8851,9 +8851,9 @@ msgstr ""
 "On dit que toute arme fabriquée sur l'enclume ardente est dotée d'un grand "
 "pouvoir. Si cette Enclume est bien l'Enclume de Fureur, je pourrais peut-"
 "être vous fabriquer une arme capable de vaincre même le plus sombre des "
-"seigneurs de l'enfer !\n"
+"seigneurs de l'enfer !\n"
 " \n"
-"Trouvez l'Enclume pour moi et je me mettrai au travail !"
+"Trouvez l'Enclume pour moi et je me mettrai au travail !"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -9335,7 +9335,7 @@ msgid ""
 msgstr ""
 "Si Adria n'en a pas, vous pouvez parier que c'est une chose rare. Je ne peux "
 "pas vous offrir plus d'aide, mais cela ressemble à... un énorme champignon "
-"gargantuesque, gonflé et gonflé ! Eh bien, bonne chasse, je suppose."
+"gargantuesque, gonflé et gonflé ! Eh bien, bonne chasse, je suppose."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
@@ -9344,7 +9344,7 @@ msgid ""
 "listen... here's the secret - moderation is the key!"
 msgstr ""
 "Ogden mélange un champignon noir, mais je tombe malade si je bois ça. "
-"Écoutez, écoutez... voici le secret - la modération est la clé !"
+"Écoutez, écoutez... voici le secret - la modération est la clé !"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -9620,7 +9620,7 @@ msgstr ""
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (Hostile)
 #: Source/textdat.cpp:307
 msgid "Arrrrgh! Your curiosity will be the death of you!!!"
-msgstr "Arrrrgh ! Votre curiosité sera votre mort !!!"
+msgstr "Arrrrgh ! Votre curiosité sera votre mort !!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain
 #: Source/textdat.cpp:308
@@ -10976,7 +10976,7 @@ msgid ""
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
-"Dieu merci, vous êtes de retour !\n"
+"Dieu merci, vous êtes de retour !\n"
 "Beaucoup de choses ont changé depuis que vous ne vivez plus ici, mon ami. "
 "Tout était paisible jusqu'à ce que les cavaliers noirs arrivent et "
 "détruisent notre village. Beaucoup ont été abattus sur place, et ceux qui "

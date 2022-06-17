@@ -8151,8 +8151,8 @@ msgstr "修理​專案"
 msgid "Leave the shop"
 msgstr "離​開​商店"
 
-msgid "Your gold: {:d}"
-msgstr "你​的​金幣: {:d}"
+msgid "Your gold: {:s}"
+msgstr "你​的​金幣: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096

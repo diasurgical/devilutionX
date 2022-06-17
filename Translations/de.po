@@ -7421,8 +7421,8 @@ msgstr "Schmiede verlassen"
 msgid "I have these items for sale:"
 msgstr "Hier meine Angebote:"
 
-msgid "Your gold: {:d}"
-msgstr "Euer Gold: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Euer Gold: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

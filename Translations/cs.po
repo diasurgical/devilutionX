@@ -7399,8 +7399,8 @@ msgstr "Odejít z obchodu"
 msgid "I have these items for sale:"
 msgstr "Mám na prodej tyto věci:"
 
-msgid "Your gold: {:d}"
-msgstr "Tvoje zlaťáky: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Tvoje zlaťáky: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

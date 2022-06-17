@@ -7635,8 +7635,8 @@ msgid "Say Goodbye"
 msgstr "Попрощатися"
 
 #: Source/stores.cpp:2440
-msgid "Your gold: {:d}"
-msgstr "Ваше золото: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ваше золото: {:s}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15

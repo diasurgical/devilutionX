@@ -7454,8 +7454,8 @@ msgstr "Salir de la tienda"
 msgid "I have these items for sale:"
 msgstr "Tengo estos artículos a la venta:"
 
-msgid "Your gold: {:d}"
-msgstr "Tu oro: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Tu oro: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

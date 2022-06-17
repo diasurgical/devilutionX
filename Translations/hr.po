@@ -7513,8 +7513,8 @@ msgstr "Napustiti kovačnicu"
 msgid "I have these items for sale:"
 msgstr "Imam ove predmete za prodaju:"
 
-msgid "Your gold: {:d}"
-msgstr "Vaše zlato: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Vaše zlato: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

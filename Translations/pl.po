@@ -7642,8 +7642,8 @@ msgid "Say Goodbye"
 msgstr "Wyjdź"
 
 #: Source/stores.cpp:2439
-msgid "Your gold: {:d}"
-msgstr "Twoje złoto: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Twoje złoto: {:s}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
@@ -11858,8 +11858,8 @@ msgstr "Staw czoła Diablo"
 msgid "Back to Level {:d}"
 msgstr "Wróć na poziom {:d}"
 
-#~ msgid "Which item is for sale?             Your gold: {:d}"
-#~ msgstr "Który przedmiot chcesz sprzedać?  Twoje złoto: {:d}"
+#~ msgid "Which item is for sale?             Your gold: {:s}"
+#~ msgstr "Który przedmiot chcesz sprzedać?  Twoje złoto: {:s}"
 
 #~ msgid "Right click to use"
 #~ msgstr "PPM by użyć"

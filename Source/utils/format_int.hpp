@@ -30,4 +30,4 @@ inline std::string FormatInteger(int n)
 	return out;
 }
 
-} //namespace devilution
+} // namespace devilution

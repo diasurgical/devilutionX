@@ -21,6 +21,7 @@
 #include "panels/info_box.hpp"
 #include "qol/stash.h"
 #include "towners.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
@@ -2437,7 +2438,7 @@ void DrawSText(const Surface &out)
 	}
 
 	if (RenderGold) {
-		PrintSString(out, 28, 1, fmt::format(fmt::runtime(_("Your gold: {:d}")), TotalPlayerGold()).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
+		PrintSString(out, 28, 1, fmt::format(fmt::runtime(_("Your gold: {:s}")), FormatInteger(TotalPlayerGold())).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
 	}
 
 	if (stextscrl)

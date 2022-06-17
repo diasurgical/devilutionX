@@ -7592,8 +7592,8 @@ msgid "Say Goodbye"
 msgstr "작별한다"
 
 #: Source/stores.cpp:2458
-msgid "Your gold: {:d}"
-msgstr "소지금: {:d}"
+msgid "Your gold: {:s}"
+msgstr "소지금: {:s}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
@@ -11305,20 +11305,20 @@ msgstr "디아블로에게 향한다"
 msgid "Back to Level {:d}"
 msgstr "지하 {:d} 층으로 돌아간다"
 
-#~ msgid "I have these items for sale:             Your gold: {:d}"
-#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:d}"
+#~ msgid "I have these items for sale:             Your gold: {:s}"
+#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:s}"
 
-#~ msgid "Repair which item?             Your gold: {:d}"
-#~ msgstr "무엇을 수리하겠습니까?             소지금: {:d}"
+#~ msgid "Repair which item?             Your gold: {:s}"
+#~ msgstr "무엇을 수리하겠습니까?             소지금: {:s}"
 
-#~ msgid "Recharge which item?             Your gold: {:d}"
-#~ msgstr "무엇을 충전하겠습니까?             소지금: {:d}"
+#~ msgid "Recharge which item?             Your gold: {:s}"
+#~ msgstr "무엇을 충전하겠습니까?             소지금: {:s}"
 
-#~ msgid "I have this item for sale:             Your gold: {:d}"
-#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:d}"
+#~ msgid "I have this item for sale:             Your gold: {:s}"
+#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:s}"
 
-#~ msgid "Identify which item?             Your gold: {:d}"
-#~ msgstr "어느 물품을 감별하겠습니까?             소지금: {:d}"
+#~ msgid "Identify which item?             Your gold: {:s}"
+#~ msgstr "어느 물품을 감별하겠습니까?             소지금: {:s}"
 
 #~ msgid "Right click to use"
 #~ msgstr "우클릭으로 사용"

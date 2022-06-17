@@ -7531,8 +7531,8 @@ msgstr "Ieșiți din magazin"
 msgid "I have these items for sale:"
 msgstr "Am aceste obiecte de vânzare:"
 
-msgid "Your gold: {:d}"
-msgstr "Galbeni: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Galbeni: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425
