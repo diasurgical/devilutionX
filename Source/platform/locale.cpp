@@ -191,9 +191,8 @@ std::vector<std::string> GetLocales()
 		if (!languages.empty())
 			locales.emplace_back(languages.substr(0, languages.find_first_of(".")));
 	} else {
-		size_t separatorPos {};
 		do {
-			separatorPos = languages.find_first_of(":");
+			size_t separatorPos = languages.find_first_of(":");
 			if (separatorPos != 0)
 				locales.emplace_back(std::string(languages.substr(0, separatorPos)));
 

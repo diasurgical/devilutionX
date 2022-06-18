@@ -621,19 +621,27 @@ void UiDestroy()
 	UnloadUiGFX();
 }
 
-bool UiValidPlayerName(const char *name)
+bool UiValidPlayerName(string_view name)
 {
-	if (strlen(name) == 0)
+	if (name.empty())
 		return false;
 
-	if (strpbrk(name, ",<>%&\\\"?*#/:") != nullptr || strpbrk(name, " ") != nullptr)
+	// Currently only allow saving PLR_NAME_LEN bytes as a player name, so if the name is too long we'd have to truncate it.
+	// That said the input buffer is only 16 bytes long...
+	if (name.size() > PLR_NAME_LEN)
 		return false;
 
-	for (BYTE *letter = (BYTE *)name; *letter != '\0'; letter++)
-		if (*letter < 0x20 || (*letter > 0x7E && *letter < 0xC0))
+	if (name.find_first_of(",<>%&\\\"?*#/: ") != name.npos)
+		return false;
+
+	constexpr auto isAsciiControlCharacter = [](char character) -> bool {
+		return (character >= 0x00 && character < 0x20) || character == 0x7F;
+	};
+	for (char letter : name)
+		if (isAsciiControlCharacter(letter) || !IsLeadUtf8CodeUnit(letter))
 			return false;
 
-	const char *const bannedNames[] = {
+	string_view bannedNames[] = {
 		"gvdl",
 		"dvou",
 		"tiju",
@@ -644,13 +652,13 @@ bool UiValidPlayerName(const char *name)
 		"benjo",
 	};
 
-	char tmpname[PLR_NAME_LEN];
-	CopyUtf8(tmpname, name, sizeof(tmpname));
-	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
-		tmpname[i]++;
+	std::string buffer { name };
+	for (char &character : buffer)
+		character++;
 
-	for (const auto *bannedName : bannedNames) {
-		if (strstr(tmpname, bannedName) != nullptr)
+	string_view tempName { buffer };
+	for (string_view bannedName : bannedNames) {
+		if (tempName.find(bannedName) != tempName.npos)
 			return false;
 	}
 
