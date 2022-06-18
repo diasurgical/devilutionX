@@ -91,7 +91,7 @@ void FocusOnCharInfo()
 	if (stat == -1)
 		return;
 
-	SetCursorPos(ChrBtnsRect[stat].Center());
+	SetCursorPos(ChrBtnsRect[stat].center());
 }
 
 int TranslateSdlKey(SDL_Keysym key)

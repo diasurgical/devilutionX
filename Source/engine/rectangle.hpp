@@ -42,7 +42,7 @@ struct Rectangle {
 	/**
 	 * @brief Computes the center of this rectangle in integer coordinates. Values are truncated towards zero.
 	 */
-	constexpr Point Center() const
+	constexpr Point center() const
 	{
 		return position + Displacement(size / 2);
 	}
