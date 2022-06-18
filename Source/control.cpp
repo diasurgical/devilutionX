@@ -1057,7 +1057,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 	const std::string description = fmt::format(
 	    fmt::runtime(ngettext(
-	        /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/
+	        /* TRANSLATORS: {:s} is a number with separators. Dialog is shown when splitting a stash of Gold.*/
 	        "You have {:s} gold piece. How many do you want to remove?",
 	        "You have {:s} gold pieces. How many do you want to remove?",
 	        initialDropGoldValue)),
