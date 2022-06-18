@@ -543,11 +543,12 @@ void PlaceUniqueMonsters()
 		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
 
-		bool done = false;
 		int mt;
-		for (mt = 0; mt < LevelMonsterTypeCount && !done; mt++)
-			done = (LevelMonsterTypes[mt].mtype == UniqueMonstersData[u].mtype);
-		if (!done)
+		for (mt = 0; mt < LevelMonsterTypeCount; mt++) {
+			if (LevelMonsterTypes[mt].mtype == UniqueMonstersData[u].mtype)
+				break;
+		}
+		if (mt >= LevelMonsterTypeCount)
 			continue;
 
 		if (u == UMT_GARBUD && Quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
