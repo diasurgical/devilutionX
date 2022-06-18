@@ -345,6 +345,7 @@ void CreateTown(lvl_entry entry)
 	}
 
 	DrlgTPass3();
+	pMegaTiles = nullptr;
 }
 
 } // namespace devilution
