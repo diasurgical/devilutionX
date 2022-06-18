@@ -127,7 +127,6 @@ void TownCloseHive()
 	dPiece[86][61] = 0x18;
 	dPiece[85][62] = 0x13;
 	dPiece[84][64] = 0x118;
-	SetDungeonMicros();
 }
 
 /**
@@ -145,7 +144,6 @@ void TownCloseGrave()
 	dPiece[37][24] = 0x532;
 	dPiece[35][21] = 0x53b;
 	dPiece[34][21] = 0x53c;
-	SetDungeonMicros();
 }
 
 void InitTownPieces()
@@ -303,7 +301,6 @@ void TownOpenHive()
 	dPiece[86][61] = 0x18;
 	dPiece[85][62] = 0x13;
 	dPiece[84][64] = 0x118;
-	SetDungeonMicros();
 }
 
 void TownOpenGrave()
@@ -318,7 +315,6 @@ void TownOpenGrave()
 	dPiece[37][24] = 0x53a;
 	dPiece[35][21] = 0x53b;
 	dPiece[34][21] = 0x53c;
-	SetDungeonMicros();
 }
 
 void CreateTown(lvl_entry entry)

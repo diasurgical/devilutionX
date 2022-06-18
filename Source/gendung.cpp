@@ -28,7 +28,6 @@ Rectangle SetPiece;
 std::unique_ptr<uint16_t[]> pSetPiece;
 std::optional<OwnedCelSprite> pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
-std::unique_ptr<uint16_t[]> pLevelPieces;
 std::unique_ptr<byte[]> pDungeonCels;
 std::array<TileProperties, MAXTILES> SOLData;
 Point dminPosition;
@@ -44,7 +43,7 @@ int MicroTileLen;
 char TransVal;
 bool TransList[256];
 int dPiece[MAXDUNX][MAXDUNY];
-MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
+MICROS DPieceMicros[MAXTILES + 1];
 int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
@@ -58,6 +57,30 @@ int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
 
 namespace {
+
+std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
+{
+	switch (leveltype) {
+	case DTYPE_TOWN:
+		if (gbIsHellfire)
+			return LoadFileInMem<uint16_t>("NLevels\\TownData\\Town.MIN", &tileCount);
+		return LoadFileInMem<uint16_t>("Levels\\TownData\\Town.MIN", &tileCount);
+	case DTYPE_CATHEDRAL:
+		return LoadFileInMem<uint16_t>("Levels\\L1Data\\L1.MIN", &tileCount);
+	case DTYPE_CATACOMBS:
+		return LoadFileInMem<uint16_t>("Levels\\L2Data\\L2.MIN", &tileCount);
+	case DTYPE_CAVES:
+		return LoadFileInMem<uint16_t>("Levels\\L3Data\\L3.MIN", &tileCount);
+	case DTYPE_HELL:
+		return LoadFileInMem<uint16_t>("Levels\\L4Data\\L4.MIN", &tileCount);
+	case DTYPE_NEST:
+		return LoadFileInMem<uint16_t>("NLevels\\L6Data\\L6.MIN", &tileCount);
+	case DTYPE_CRYPT:
+		return LoadFileInMem<uint16_t>("NLevels\\L5Data\\L5.MIN", &tileCount);
+	default:
+		app_fatal("LoadMinData");
+	}
+}
 
 bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
 {
@@ -468,19 +491,13 @@ void SetDungeonMicros()
 		blocks = 16;
 	}
 
-	for (int y = 0; y < MAXDUNY; y++) {
-		for (int x = 0; x < MAXDUNX; x++) {
-			int lv = dPiece[x][y];
-			MICROS &micros = dpiece_defs_map_2[x][y];
-			if (lv != 0) {
-				lv--;
-				uint16_t *pieces = &pLevelPieces[blocks * lv];
-				for (int i = 0; i < blocks; i++)
-					micros.mt[i] = SDL_SwapLE16(pieces[blocks - 2 + (i & 1) - (i & 0xE)]);
-			} else {
-				for (int i = 0; i < blocks; i++)
-					micros.mt[i] = 0;
-			}
+	size_t tileCount;
+	std::unique_ptr<uint16_t[]> levelPieces = LoadMinData(tileCount);
+
+	for (int i = 0; i < tileCount / blocks; i++) {
+		uint16_t *pieces = &levelPieces[blocks * i];
+		for (int block = 0; block < blocks; block++) {
+			DPieceMicros[i + 1].mt[block] = SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]);
 		}
 	}
 }

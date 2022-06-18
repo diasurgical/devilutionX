@@ -150,7 +150,6 @@ extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern std::optional<OwnedCelSprite> pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
-extern std::unique_ptr<uint16_t[]> pLevelPieces;
 extern std::unique_ptr<byte[]> pDungeonCels;
 /**
  * List tile properties
@@ -178,8 +177,8 @@ extern char TransVal;
 extern bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
 extern DVL_API_FOR_TEST int dPiece[MAXDUNX][MAXDUNY];
-/** Specifies the dungeon piece information for a given coordinate and block number. */
-extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
+/** Map of micros that comprises a full tile for any given dungeon piece. */
+extern MICROS DPieceMicros[MAXTILES + 1];
 /** Specifies the transparency at each coordinate of the map. */
 extern DVL_API_FOR_TEST int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
