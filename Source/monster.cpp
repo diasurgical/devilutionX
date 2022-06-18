@@ -442,7 +442,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			}
 		}
 	}
-	if (!gbIsMultiplayer) {
+	if (setlevel) {
 		if (uniqindex == UMT_LAZARUS) {
 			position = { 32, 46 };
 		}
