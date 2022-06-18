@@ -96,11 +96,11 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 bool IsMouseOverGameArea()
 {
-	if ((IsRightPanelOpen()) && GetRightPanel().Contains(MousePosition))
+	if ((IsRightPanelOpen()) && GetRightPanel().contains(MousePosition))
 		return false;
-	if ((IsLeftPanelOpen()) && GetLeftPanel().Contains(MousePosition))
+	if ((IsLeftPanelOpen()) && GetLeftPanel().contains(MousePosition))
 		return false;
-	if (GetMainPanel().Contains(MousePosition))
+	if (GetMainPanel().contains(MousePosition))
 		return false;
 
 	return true;

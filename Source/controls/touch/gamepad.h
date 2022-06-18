@@ -37,7 +37,7 @@ struct VirtualButton {
 	{
 	}
 
-	virtual bool Contains(Point point) = 0;
+	virtual bool contains(Point point) = 0;
 	void Deactivate();
 };
 
@@ -49,9 +49,9 @@ struct VirtualMenuButton : VirtualButton {
 	{
 	}
 
-	bool Contains(Point point) override
+	bool contains(Point point) override
 	{
-		return area.Contains(point);
+		return area.contains(point);
 	}
 };
 
@@ -63,9 +63,9 @@ struct VirtualPadButton : VirtualButton {
 	{
 	}
 
-	bool Contains(Point point) override
+	bool contains(Point point) override
 	{
-		return area.Contains(point);
+		return area.contains(point);
 	}
 };
 

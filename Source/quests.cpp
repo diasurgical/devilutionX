@@ -198,7 +198,7 @@ int QuestLogMouseToEntry()
 {
 	Rectangle innerArea = InnerPanel;
 	innerArea.position += Displacement(GetLeftPanel().position.x, GetLeftPanel().position.y);
-	if (!innerArea.Contains(MousePosition) || (EncounteredQuestCount == 0))
+	if (!innerArea.contains(MousePosition) || (EncounteredQuestCount == 0))
 		return -1;
 	int y = MousePosition.y - innerArea.position.y;
 	for (int i = 0; i < FirstFinishedQuest; i++) {

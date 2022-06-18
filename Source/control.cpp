@@ -400,7 +400,7 @@ bool IsLevelUpButtonVisible()
 	if (stextflag != STORE_NONE || IsStashOpen) {
 		return false;
 	}
-	if (QuestLogIsOpen && GetLeftPanel().Contains(GetMainPanel().position + Displacement { 0, -74 })) {
+	if (QuestLogIsOpen && GetLeftPanel().contains(GetMainPanel().position + Displacement { 0, -74 })) {
 		return false;
 	}
 
@@ -975,7 +975,7 @@ void CheckChrBtns()
 		auto buttonId = static_cast<size_t>(attribute);
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
-		if (button.Contains(MousePosition)) {
+		if (button.contains(MousePosition)) {
 			chrbtn[buttonId] = true;
 			chrbtnactive = true;
 		}
@@ -993,7 +993,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 		chrbtn[buttonId] = false;
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
-		if (button.Contains(MousePosition)) {
+		if (button.contains(MousePosition)) {
 			Player &myPlayer = *MyPlayer;
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)

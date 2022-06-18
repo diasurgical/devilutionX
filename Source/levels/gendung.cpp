@@ -613,7 +613,7 @@ std::optional<Point> PlaceMiniSet(const Miniset &miniset, int tries, bool drlg1Q
 			}
 		}
 
-		if (SetPieceRoom.Contains(position))
+		if (SetPieceRoom.contains(position))
 			continue;
 		if (!miniset.matches(position))
 			continue;
@@ -748,7 +748,7 @@ void DRLG_LPass3(int lv)
 bool IsNearThemeRoom(Point testPosition)
 {
 	for (int i = 0; i < themeCount; i++) {
-		if (Rectangle(themeLoc[i].room.position - Displacement { 2 }, themeLoc[i].room.size + 5).Contains(testPosition))
+		if (Rectangle(themeLoc[i].room.position - Displacement { 2 }, themeLoc[i].room.size + 5).contains(testPosition))
 			return true;
 	}
 

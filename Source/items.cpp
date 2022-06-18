@@ -3740,7 +3740,7 @@ bool DoOil(Player &player, int cii)
 void DrawUniqueInfo(const Surface &out)
 {
 	const Point position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
-	if (IsLeftPanelOpen() && GetLeftPanel().Contains(position)) {
+	if (IsLeftPanelOpen() && GetLeftPanel().contains(position)) {
 		return;
 	}
 

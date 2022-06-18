@@ -194,7 +194,7 @@ void CheckSBook()
 	// enough to the height of the space given to spell descriptions that we can reuse that value and subtract the
 	// padding from the end of the area.
 	Rectangle iconArea = { GetPanelPosition(UiPanels::Spell, { 11, 18 }), Size { 37, SpellBookDescription.height * 7 - 5 } };
-	if (iconArea.Contains(MousePosition)) {
+	if (iconArea.contains(MousePosition)) {
 		spell_id sn = SpellPages[sbooktab][(MousePosition.y - iconArea.position.y) / SpellBookDescription.height];
 		Player &player = *MyPlayer;
 		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
@@ -219,7 +219,7 @@ void CheckSBook()
 	const int TabWidth = gbIsHellfire ? 61 : 76;
 	// Tabs are drawn in a row near the bottom of the panel
 	Rectangle tabArea = { GetPanelPosition(UiPanels::Spell, { 7, 320 }), Size { 305, 29 } };
-	if (tabArea.Contains(MousePosition)) {
+	if (tabArea.contains(MousePosition)) {
 		int hitColumn = MousePosition.x - tabArea.position.x;
 		// Clicking on the gutter currently activates tab 3. Could make it do nothing by checking for == here and return early.
 		if (!gbIsHellfire && hitColumn > TabWidth * 2) {

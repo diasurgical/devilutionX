@@ -542,7 +542,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	for (int i = 0; i < 4; i++) {
 		button = ChrBtnsRect[i];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
-		if (button.Contains(MousePosition)) {
+		if (button.contains(MousePosition)) {
 			slot = i;
 			break;
 		}
@@ -1689,7 +1689,7 @@ void PerformPrimaryAction()
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
-		} else if (GetRightPanel().Contains(MousePosition) || GetMainPanel().Contains(MousePosition)) {
+		} else if (GetRightPanel().contains(MousePosition) || GetMainPanel().contains(MousePosition)) {
 			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
 			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);
@@ -1725,7 +1725,7 @@ void PerformPrimaryAction()
 				Slot = jumpSlot;
 				SetCursorPos(mousePos);
 			}
-		} else if (IsStashOpen && GetLeftPanel().Contains(MousePosition)) {
+		} else if (IsStashOpen && GetLeftPanel().contains(MousePosition)) {
 			Point stashSlot = (ActiveStashSlot != InvalidStashPoint) ? ActiveStashSlot : FindClosestStashSlot(MousePosition);
 
 			const Size cursorSizeInCells = MyPlayer->HoldItem.isEmpty() ? Size { 1, 1 } : GetInventorySize(MyPlayer->HoldItem);

@@ -9,7 +9,7 @@ struct Circle {
 	Point position;
 	int radius;
 
-	constexpr bool Contains(Point point) const
+	constexpr bool contains(Point point) const
 	{
 		Displacement diff = point - position;
 		int x = diff.deltaX;

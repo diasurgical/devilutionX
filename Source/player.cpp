@@ -3528,12 +3528,12 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		if (pcurs != CURSOR_HAND)
 			return;
 
-		if (GetMainPanel().Contains(MousePosition)) // inside main panel
+		if (GetMainPanel().contains(MousePosition)) // inside main panel
 			return;
 
 		if (
-		    (IsLeftPanelOpen() && GetLeftPanel().Contains(MousePosition))      // inside left panel
-		    || (IsRightPanelOpen() && GetRightPanel().Contains(MousePosition)) // inside right panel
+		    (IsLeftPanelOpen() && GetLeftPanel().contains(MousePosition))      // inside left panel
+		    || (IsRightPanelOpen() && GetRightPanel().contains(MousePosition)) // inside right panel
 		) {
 			if (spellID != SPL_HEAL
 			    && spellID != SPL_IDENTIFY

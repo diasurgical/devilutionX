@@ -169,7 +169,7 @@ bool InteractsWithCharButton(Point point)
 		auto buttonId = static_cast<size_t>(attribute);
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
-		if (button.Contains(point)) {
+		if (button.contains(point)) {
 			return true;
 		}
 	}
