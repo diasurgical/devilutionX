@@ -124,7 +124,7 @@ bool CheckXPBarInfo()
 
 	const int8_t charLevel = player._pLevel;
 
-	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}  Deaths: {:d}")), charLevel, player.statistics->deathCount));
+	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}")), charLevel));
 
 	if (charLevel == MAXCHARLEVEL) {
 		// Show a maximum level indicator for max level players.
@@ -141,6 +141,7 @@ bool CheckXPBarInfo()
 	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
 	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(ExpLvlsTbl[charLevel])));
 	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
+	AddPanelString(fmt::format(fmt::runtime(_("Deaths: {:d}")), player.statistics->deathCount));
 
 	return true;
 }
