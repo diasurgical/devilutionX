@@ -3618,8 +3618,8 @@ void MI_Apoca(Missile &missile)
 
 			int id = missile._misource;
 			AddMissile({ k, j }, { k, j }, Players[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile._midam, 0);
-			missile.var2 = j - 1;
-			missile.var4 = k;
+			missile.var2 = j;
+			missile.var4 = k + 1;
 			return;
 		}
 		missile.var4 = missile.var6;
