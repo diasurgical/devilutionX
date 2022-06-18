@@ -67,5 +67,22 @@ TEST(Utf8CodeUnits, InvalidCodePoints)
 	}
 }
 
+TEST(Utf8CodeUnits, BasicLatin)
+{
+	for (char x = '\x00'; x < '\x20'; x++) {
+		EXPECT_FALSE(IsBasicLatin(x)) << "ASCII Control characters are not Basic Latin symbols";
+	}
+
+	for (char x = '\x20'; x <= '\x7E'; x++) {
+		EXPECT_TRUE(IsBasicLatin(x)) << "Basic Latin symbols are denoted by the range 0x20 to 0x7E inclusive";
+	}
+
+	EXPECT_FALSE(IsBasicLatin('\x7F')) << "ASCII Control character DEL is not a Basic Latin symbol";
+
+	for (char x = '\x80'; x >= '\x80' && x <= '\xFF'; x++) {
+		EXPECT_FALSE(IsBasicLatin(x)) << "Multibyte Utf8 code units are not Basic Latin symbols";
+	}
+}
+
 } // namespace
 } // namespace devilution
