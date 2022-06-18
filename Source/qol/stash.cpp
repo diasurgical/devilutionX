@@ -34,16 +34,19 @@ constexpr unsigned LastStashPage = CountStashPages - 1;
 
 int InitialWithdrawGoldValue;
 
+constexpr Size ButtonSize { 27, 16 };
 /** Contains mappings for the buttons in the stash (2 navigation buttons, withdraw gold buttons, 2 navigation buttons) */
 constexpr Rectangle StashButtonRect[] = {
 	// clang-format off
-	{ {  19, 19 }, { 27, 16 } }, // 10 left
-	{ {  56, 19 }, { 27, 16 } }, // 1 left
-	{ {  93, 19 }, { 27, 16 } }, // withdraw gold
-	{ { 242, 19 }, { 27, 16 } }, // 1 right
-	{ { 279, 19 }, { 27, 16 } }  // 10 right
+	{ {  19, 19 }, ButtonSize }, // 10 left
+	{ {  56, 19 }, ButtonSize }, // 1 left
+	{ {  93, 19 }, ButtonSize }, // withdraw gold
+	{ { 242, 19 }, ButtonSize }, // 1 right
+	{ { 279, 19 }, ButtonSize }  // 10 right
 	// clang-format on
 };
+
+constexpr PointsInRectangleRange StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
 
 Art StashPanelArt;
 Art StashNavButtonArt;
@@ -61,7 +64,7 @@ void AddItemToStashGrid(unsigned page, Point position, uint16_t stashListIndex, 
 
 Point FindSlotUnderCursor(Point cursorPosition)
 {
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+	for (auto point : StashGridRange) {
 		Rectangle cell {
 			GetStashSlotCoord(point),
 			InventorySlotSizeInPixels + 1
@@ -164,10 +167,10 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 
 	Point slot = InvalidStashPoint;
 
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+	for (auto point : StashGridRange) {
 		Rectangle cell {
 			GetStashSlotCoord(point),
-			{ InventorySlotSizeInPixels.width + 1, InventorySlotSizeInPixels.height + 1 }
+			InventorySlotSizeInPixels + 1
 		};
 
 		// check which inventory rectangle the mouse is in, if any
@@ -343,13 +346,13 @@ void DrawStash(const Surface &out)
 
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
 
-	for (auto slot : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+	for (auto slot : StashGridRange) {
 		if (Stash.IsItemAtPosition(slot)) {
 			InvDrawSlotBack(out, GetStashSlotCoord(slot) + offset, InventorySlotSizeInPixels);
 		}
 	}
 
-	for (auto slot : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+	for (auto slot : StashGridRange) {
 		StashStruct::StashCell itemId = Stash.GetItemIdAtPosition(slot);
 		if (itemId == StashStruct::EmptyCell) {
 			continue; // No item in the given slot
@@ -395,10 +398,10 @@ void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)
 uint16_t CheckStashHLight(Point mousePosition)
 {
 	Point slot = InvalidStashPoint;
-	for (auto point : PointsInRectangleRange({ { 0, 0 }, { 10, 10 } })) {
+	for (auto point : StashGridRange) {
 		Rectangle cell {
 			GetStashSlotCoord(point),
-			{ InventorySlotSizeInPixels.width + 1, InventorySlotSizeInPixels.height + 1 }
+			InventorySlotSizeInPixels + 1
 		};
 
 		if (cell.Contains({ mousePosition })) {
@@ -675,7 +678,7 @@ bool AutoPlaceItemInStash(Player &player, const Item &item, bool persistItem)
 		if (pageIndex >= CountStashPages)
 			pageIndex -= CountStashPages;
 		// Search all possible position in stash grid
-		for (auto stashPosition : PointsInRectangleRange({ { 0, 0 }, { 10 - (itemSize.width - 1), 10 - (itemSize.height - 1) } })) {
+		for (auto stashPosition : PointsInRectangleRange({ { 0, 0 }, Size { 10 - (itemSize.width - 1), 10 - (itemSize.height - 1) } })) {
 			// Check that all needed slots are free
 			bool isSpaceFree = true;
 			for (auto itemPoint : PointsInRectangleRange({ stashPosition, itemSize })) {
