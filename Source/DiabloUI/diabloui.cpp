@@ -922,7 +922,8 @@ void Render(const UiEdit *uiEdit)
 {
 	DrawSelector(uiEdit->m_rect);
 
-	Rectangle rect { { uiEdit->m_rect.x + 43, uiEdit->m_rect.y + 1 }, { uiEdit->m_rect.w - 86, uiEdit->m_rect.h } };
+	// To simulate padding we inset the region used to draw text in an edit control
+	Rectangle rect = MakeRectangle(uiEdit->m_rect).inset({ 43, 1 });
 
 	const Surface &out = Surface(DiabloUiSurface());
 	DrawString(out, uiEdit->m_value, rect, uiEdit->GetFlags() | UiFlags::TextCursor);
