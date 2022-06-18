@@ -79,9 +79,9 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	if (CanPanelsCoverView()) {
 		if (IsRightPanelOpen())
-			position.x -= SPANEL_WIDTH / 2;
+			position.x -= SidePanelSize.width / 2;
 		if (IsLeftPanelOpen())
-			position.x += SPANEL_WIDTH / 2;
+			position.x += SidePanelSize.width / 2;
 	}
 
 	const int border = 3;

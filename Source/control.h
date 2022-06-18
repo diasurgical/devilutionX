@@ -24,8 +24,7 @@
 
 namespace devilution {
 
-#define SPANEL_WIDTH 320
-#define SPANEL_HEIGHT 352
+constexpr Size SidePanelSize { 320, 352 };
 
 extern bool drawhpflag;
 extern bool dropGoldFlag;
@@ -64,7 +63,7 @@ bool IsChatAvailable();
 inline bool CanPanelsCoverView()
 {
 	const Rectangle &mainPanel = GetMainPanel();
-	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SPANEL_HEIGHT + mainPanel.size.height;
+	return GetScreenWidth() <= mainPanel.size.width && GetScreenHeight() <= SidePanelSize.height + mainPanel.size.height;
 }
 void DrawSpellList(const Surface &out);
 void SetSpell();

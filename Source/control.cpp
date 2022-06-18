@@ -108,12 +108,13 @@ bool IsRightPanelOpen()
 	return invflag || sbookflag;
 }
 
+constexpr Size IncrementAttributeButtonSize { 41, 22 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
-	{ { 137, 138 }, { 41, 22 } },
-	{ { 137, 166 }, { 41, 22 } },
-	{ { 137, 195 }, { 41, 22 } },
-	{ { 137, 223 }, { 41, 22 } }
+	{ { 137, 138 }, IncrementAttributeButtonSize },
+	{ { 137, 166 }, IncrementAttributeButtonSize },
+	{ { 137, 195 }, IncrementAttributeButtonSize },
+	{ { 137, 223 }, IncrementAttributeButtonSize }
 };
 
 /** Positions of panel buttons. */
@@ -410,20 +411,19 @@ bool IsLevelUpButtonVisible()
 
 void CalculatePanelAreas()
 {
-	constexpr uint16_t PanelWidth = 640;
-	constexpr uint16_t PanelHeight = 128;
+	constexpr Size MainPanelSize { 640, 128 };
 
 	MainPanel = {
-		{ (gnScreenWidth - PanelWidth) / 2, gnScreenHeight - PanelHeight },
-		{ PanelWidth, PanelHeight }
+		{ (gnScreenWidth - MainPanelSize.width) / 2, gnScreenHeight - MainPanelSize.height },
+		MainPanelSize
 	};
 	LeftPanel = {
 		{ 0, 0 },
-		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+		SidePanelSize
 	};
 	RightPanel = {
 		{ 0, 0 },
-		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+		SidePanelSize
 	};
 
 	if (ControlMode == ControlTypes::VirtualGamepad) {
@@ -591,7 +591,7 @@ void InitControlPan()
 	sbookflag = false;
 
 	InitSpellBook();
-	pQLogCel = LoadCel("Data\\Quest.CEL", SPANEL_WIDTH);
+	pQLogCel = LoadCel("Data\\Quest.CEL", static_cast<uint16_t>(SidePanelSize.width));
 	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
 	CloseGoldDrop();
 	dropGoldValue = 0;

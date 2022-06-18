@@ -16,7 +16,7 @@ public:
 	using reference = value_type;
 
 protected:
-	PointsInRectangleIteratorBase(Point origin, int majorDimension, int majorIndex, int minorIndex)
+	constexpr PointsInRectangleIteratorBase(Point origin, int majorDimension, int majorIndex, int minorIndex)
 	    : origin(origin)
 	    , majorDimension(majorDimension)
 	    , majorIndex(majorIndex)
@@ -24,7 +24,7 @@ protected:
 	{
 	}
 
-	explicit PointsInRectangleIteratorBase(Point origin, int majorDimension, int index = 0)
+	explicit constexpr PointsInRectangleIteratorBase(Point origin, int majorDimension, int index = 0)
 	    : PointsInRectangleIteratorBase(origin, majorDimension, index / majorDimension, index % majorDimension)
 	{
 	}
@@ -71,7 +71,7 @@ public:
 	public:
 		PointsInRectangleIterator() = default;
 
-		PointsInRectangleIterator(Rectangle region, int index = 0)
+		constexpr PointsInRectangleIterator(Rectangle region, int index = 0)
 		    : PointsInRectangleIteratorBase(region.position, region.size.width, index)
 		{
 		}
@@ -182,7 +182,7 @@ public:
 		}
 	};
 
-	PointsInRectangleRange(Rectangle region)
+	constexpr PointsInRectangleRange(Rectangle region)
 	    : region(region)
 	{
 	}
@@ -239,7 +239,7 @@ public:
 	public:
 		PointsInRectangleIteratorColMajor() = default;
 
-		PointsInRectangleIteratorColMajor(Rectangle region, int index = 0)
+		constexpr PointsInRectangleIteratorColMajor(Rectangle region, int index = 0)
 		    : PointsInRectangleIteratorBase(region.position, region.size.height, index)
 		{
 		}
@@ -351,7 +351,7 @@ public:
 	};
 
 	// gcc6 needs a defined constructor?
-	PointsInRectangleRangeColMajor(Rectangle region)
+	constexpr PointsInRectangleRangeColMajor(Rectangle region)
 	    : region(region)
 	{
 	}

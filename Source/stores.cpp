@@ -2251,8 +2251,8 @@ void DrawSLine(const Surface &out, int sy)
 	int width = 587;
 
 	if (!stextsize) {
-		sx += SPANEL_WIDTH;
-		width -= SPANEL_WIDTH;
+		sx += SidePanelSize.width;
+		width -= SidePanelSize.width;
 	}
 
 	BYTE *src = out.at(uiPosition.x + sx, uiPosition.y + 25);

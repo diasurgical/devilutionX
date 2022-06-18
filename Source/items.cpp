@@ -1775,8 +1775,8 @@ void PrintItemOil(char iDidx)
 
 void DrawUniqueInfoWindow(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 0);
-	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SPANEL_WIDTH + 27, GetRightPanel().position.y + 28, 265, 297);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), *pSTextBoxCels, 0);
+	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
 void PrintItemMisc(const Item &item)
@@ -3739,7 +3739,7 @@ bool DoOil(Player &player, int cii)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	const Point position = GetRightPanel().position - Displacement { SPANEL_WIDTH, 0 };
+	const Point position = GetRightPanel().position - Displacement { SidePanelSize.width, 0 };
 	if (IsLeftPanelOpen() && GetLeftPanel().Contains(position)) {
 		return;
 	}

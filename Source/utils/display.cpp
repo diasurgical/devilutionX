@@ -140,11 +140,10 @@ void FreeRenderer()
 
 void CalculateUIRectangle()
 {
-	constexpr int UIWidth = 640;
-	constexpr int UIHeight = 480;
+	constexpr Size UISize { 640, 480 };
 	UIRectangle = {
-		{ (gnScreenWidth - UIWidth) / 2, (gnScreenHeight - UIHeight) / 2 },
-		{ UIWidth, UIHeight }
+		{ (gnScreenWidth - UISize.width) / 2, (gnScreenHeight - UISize.height) / 2 },
+		UISize
 	};
 }
 
