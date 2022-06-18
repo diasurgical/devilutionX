@@ -8,6 +8,7 @@
 #include <climits>
 #include <cstring>
 #include <numeric>
+#include <sstream>
 #include <unordered_map>
 
 #include <SDL.h>
@@ -1931,13 +1932,55 @@ void LoadStatistics()
 	if (!file.IsValid())
 		return;
 
-	MyPlayer->deathCount = file.NextLE<uint32_t>();
+	std::string readString;
+	size_t sizeFile = file.getSize();
+	for (int i = 0; i < sizeFile; i++) {
+		readString += file.NextLE<char>();
+	}
+
+	std::map<std::string, std::string> statistics;
+
+	{
+		std::stringstream ss(readString);
+		std::string line;
+		std::string del = "=";
+		while (std::getline(ss, line)) {
+			size_t delPos = line.find(del);
+			if (delPos == std::string::npos)
+				continue;
+			std::string key = line.substr(0, delPos);
+			std::string value = line.substr(delPos + del.size());
+			statistics[key] = value;
+		}
+	}
+
+	if (statistics.find("myPlayer.deathCount") != statistics.end()) {
+		Player &myPlayer = *MyPlayer;
+		myPlayer.deathCount = std::stoul(statistics.at("myPlayer.deathCount"));
+	}
 }
 
 void SaveStatistics(MpqWriter &saveWriter)
 {
-	SaveHelper file(saveWriter, "statistics", sizeof(uint32_t));
-	file.WriteLE<uint32_t>(MyPlayer->deathCount);
+	Player &myPlayer = *MyPlayer;
+	std::map<std::string, std::string> statistics;
+	statistics["myPlayer.deathCount"] = std::to_string(myPlayer.deathCount);
+
+	std::string stringToSave;
+	for (const auto &s : statistics) {
+		stringToSave += s.first + "=" + s.second + "\n";
+	}
+
+	size_t stringToSaveLength = stringToSave.length();
+	char *charArrayToSave = new char[stringToSaveLength + 1];
+	strcpy(charArrayToSave, stringToSave.c_str());
+
+	SaveHelper file(saveWriter, "statistics", stringToSaveLength);
+	for (int i = 0; i < stringToSaveLength; i++) {
+		char charToSave = *(charArrayToSave + i);
+		file.WriteLE<char>(charToSave);
+	}
+	delete[] charArrayToSave;
 }
 
 void LoadHeroItems(Player &player)
