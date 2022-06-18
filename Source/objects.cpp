@@ -1020,16 +1020,6 @@ void AddChest(int i, int t)
 void ObjSetMicro(Point position, int pn)
 {
 	dPiece[position.x][position.y] = pn;
-	pn--;
-
-	int blocks = leveltype != DTYPE_HELL ? 10 : 16;
-
-	uint16_t *piece = &pLevelPieces[blocks * pn];
-	MICROS &micros = dpiece_defs_map_2[position.x][position.y];
-
-	for (int i = 0; i < blocks; i++) {
-		micros.mt[i] = SDL_SwapLE16(piece[blocks - 2 + (i & 1) - (i & 0xE)]);
-	}
 }
 
 void InitializeL1Door(Object &door)
@@ -1614,16 +1604,6 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 	}
 }
 
-void SetDoorPiece(Point position)
-{
-	int pn = dPiece[position.x][position.y] - 1;
-
-	uint16_t *piece = &pLevelPieces[10 * pn + 8];
-
-	dpiece_defs_map_2[position.x][position.y].mt[0] = SDL_SwapLE16(piece[0]);
-	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
-}
-
 void DoorSet(Point position, bool isLeftDoor)
 {
 	int pn = dPiece[position.x][position.y];
@@ -1753,7 +1733,6 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		ObjSetMicro(door.position, 395);
 		dSpecial[door.position.x][door.position.y] = 8;
-		SetDoorPiece(door.position + Direction::NorthEast);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(door.position + Direction::NorthWest, false);
@@ -1808,7 +1787,6 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		else
 			ObjSetMicro(door.position, 393);
 		dSpecial[door.position.x][door.position.y] = 7;
-		SetDoorPiece(door.position + Direction::NorthWest);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(door.position + Direction::NorthEast, true);
@@ -2028,7 +2006,6 @@ void OperateL5RDoor(int pnum, int oi, bool sendflag)
 			PlaySfxLoc(IS_CROPEN, door.position);
 		ObjSetMicro(door.position, 209);
 		dSpecial[door.position.x][door.position.y] = 2;
-		SetDoorPiece(door.position + Direction::NorthEast);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		CryptDoorSet(door.position + Direction::NorthWest, false);
@@ -2080,7 +2057,6 @@ void OperateL5LDoor(int pnum, int oi, bool sendflag)
 			PlaySfxLoc(IS_CROPEN, door.position);
 		ObjSetMicro(door.position, 206);
 		dSpecial[door.position.x][door.position.y] = 1;
-		SetDoorPiece(door.position + Direction::NorthWest);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		CryptDoorSet(door.position + Direction::NorthEast, true);
@@ -4181,12 +4157,10 @@ void SyncL1Doors(Object &door)
 	if (isLeftDoor) {
 		ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
 		dSpecial[door.position.x][door.position.y] = 7;
-		SetDoorPiece(door.position + Direction::NorthWest);
 		DoorSet(door.position + Direction::NorthEast, isLeftDoor);
 	} else {
 		ObjSetMicro(door.position, 395);
 		dSpecial[door.position.x][door.position.y] = 8;
-		SetDoorPiece(door.position + Direction::NorthEast);
 		DoorSet(door.position + Direction::NorthWest, isLeftDoor);
 	}
 }
@@ -4244,12 +4218,10 @@ void SyncL5Doors(Object &door)
 	if (isLeftDoor) {
 		ObjSetMicro(door.position, 206);
 		dSpecial[door.position.x][door.position.y] = 1;
-		SetDoorPiece(door.position + Direction::NorthWest);
 		CryptDoorSet(door.position + Direction::NorthEast, isLeftDoor);
 	} else {
 		ObjSetMicro(door.position, 209);
 		dSpecial[door.position.x][door.position.y] = 2;
-		SetDoorPiece(door.position + Direction::NorthEast);
 		CryptDoorSet(door.position + Direction::NorthWest, isLeftDoor);
 	}
 }
@@ -5566,8 +5538,6 @@ void SyncNakrulRoom()
 	dPiece[UberRow][UberCol - 1] = 301;
 	dPiece[UberRow][UberCol - 2] = 300;
 	dPiece[UberRow][UberCol + 1] = 299;
-
-	SetDungeonMicros();
 }
 
 void AddNakrulLeaver()
