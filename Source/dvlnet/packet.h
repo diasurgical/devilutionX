@@ -10,7 +10,9 @@
 #include <sodium.h>
 #endif
 
+#include "appfat.h"
 #include "dvlnet/abstract_net.h"
+#include "utils/attributes.h"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -201,7 +203,11 @@ template <class T>
 void packet_in::process_element(T &x)
 {
 	if (decrypted_buffer.size() < sizeof(T))
+#if DVL_EXCEPTIONS
 		throw packet_exception();
+#else
+		app_fatal("invalid packet");
+#endif
 	std::memcpy(&x, decrypted_buffer.data(), sizeof(T));
 	decrypted_buffer.erase(decrypted_buffer.begin(),
 	    decrypted_buffer.begin() + sizeof(T));

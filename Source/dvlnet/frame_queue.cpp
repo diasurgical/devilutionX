@@ -2,10 +2,18 @@
 
 #include <cstring>
 
+#include "appfat.h"
 #include "dvlnet/packet.h"
+#include "utils/attributes.h"
 
 namespace devilution {
 namespace net {
+
+#if DVL_EXCEPTIONS
+#define FRAME_QUEUE_ERROR throw frame_queue_exception()
+#else
+#define FRAME_QUEUE_ERROR app_fatal("frame queue error")
+#endif
 
 framesize_t frame_queue::Size() const
 {
@@ -15,7 +23,7 @@ framesize_t frame_queue::Size() const
 buffer_t frame_queue::Read(framesize_t s)
 {
 	if (current_size < s)
-		throw frame_queue_exception();
+		FRAME_QUEUE_ERROR;
 	buffer_t ret;
 	while (s > 0 && s >= buffer_deque.front().size()) {
 		s -= buffer_deque.front().size();
@@ -50,7 +58,7 @@ bool frame_queue::PacketReady()
 		auto szbuf = Read(sizeof(framesize_t));
 		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
 		if (nextsize == 0)
-			throw frame_queue_exception();
+			FRAME_QUEUE_ERROR;
 	}
 	return Size() >= nextsize;
 }
@@ -58,7 +66,7 @@ bool frame_queue::PacketReady()
 buffer_t frame_queue::ReadPacket()
 {
 	if (nextsize == 0 || Size() < nextsize)
-		throw frame_queue_exception();
+		FRAME_QUEUE_ERROR;
 	auto ret = Read(nextsize);
 	nextsize = 0;
 	return ret;

@@ -49,9 +49,13 @@ std::string format(string_view fmt, Args &&...args)
 	}
 	FMT_CATCH(const fmt::format_error &e)
 	{
+#if FMT_EXCEPTIONS
+		// e.what() is undefined if exceptions are disabled, so we wrap the whole block
+		// with an `FMT_EXCEPTIONS` check.
 		std::string error = fmt::format("Format error, fmt: {}, error: {}", fmt, e.what());
 		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "%s", error.c_str());
 		app_fatal(error);
+#endif
 	}
 }
 
