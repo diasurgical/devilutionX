@@ -12,6 +12,7 @@
 #include "panels/ui_panels.hpp"
 #include "player.h"
 #include "utils/display.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -130,13 +131,17 @@ PanelEntry panelEntries[] = {
 	{ N_("Level"), { 57, 52 }, 57, 45,
 	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pLevel) }; } },
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
-	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pExperience) }; } },
+	    []() {
+	        int spacing = ((MyPlayer->_pExperience >= 1000000000) ? 0 : 1);
+	        return StyledText { UiFlags::ColorWhite, fmt::format("{:s}", FormatInteger(MyPlayer->_pExperience)), spacing };
+	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
 	        if (MyPlayer->_pLevel == MAXCHARLEVEL) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
-	        return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pNextExper) };
+	        int spacing = ((MyPlayer->_pNextExper >= 1000000000) ? 0 : 1);
+	        return StyledText { UiFlags::ColorWhite, fmt::format("{:s}", FormatInteger(MyPlayer->_pNextExper)), spacing };
 	    } },
 
 	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, 0, 44 },
@@ -163,7 +168,7 @@ PanelEntry panelEntries[] = {
 
 	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98 },
 	{ "", { TopRightLabelX, 127 }, 99, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pGold) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:s}", FormatInteger(MyPlayer->_pGold)) }; } },
 
 	{ N_("Armor class"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
 	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusAC), fmt::format("{:d}", MyPlayer->GetArmor()) }; } },

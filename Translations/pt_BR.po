@@ -1051,10 +1051,10 @@ msgstr[0] "{:d} carga"
 msgstr[1] "{:d} cargas"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} peça de ouro"
-msgstr[1] "{:d} peças de ouro"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} peça de ouro"
+msgstr[1] "{:s} peças de ouro"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1074,10 +1074,10 @@ msgstr "Subiu de Nível"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Você tem {:d} peça de ouro. Quanto quer remover?"
-msgstr[1] "Você tem {:d} peças de ouro. Quanto quer remover?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Você tem {:s} peça de ouro. Quanto quer remover?"
+msgstr[1] "Você tem {:s} peças de ouro. Quanto quer remover?"
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -7289,8 +7289,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "Histórico do Chat (Mensagens: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} de ouro"
+msgid "{:s} gold"
+msgstr "{:s} de ouro"
 
 #: Source/qol/stash.cpp:586
 msgid "How many gold pieces do you want to withdraw?"
@@ -7803,8 +7803,8 @@ msgstr "Sair da loja"
 msgid "I have these items for sale:"
 msgstr "Eu tenho estes itens para vender:"
 
-msgid "Your gold: {:d}"
-msgstr "Seu ouro: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Seu ouro: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:425

@@ -42,6 +42,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
@@ -878,7 +879,7 @@ void DrawInfoBox(const Surface &out)
 	} else if (!myPlayer.HoldItem.isEmpty()) {
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
-			InfoString = fmt::format(fmt::runtime(ngettext("{:d} gold piece", "{:d} gold pieces", nGold)), nGold);
+			InfoString = fmt::format(fmt::runtime(ngettext("{:s} gold piece", "{:s} gold pieces", nGold)), FormatInteger(nGold));
 		} else if (!myPlayer.CanUseItem(myPlayer.HoldItem)) {
 			InfoString = _("Requirements not met");
 		} else {
@@ -1056,11 +1057,11 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 	const std::string description = fmt::format(
 	    fmt::runtime(ngettext(
-	        /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/
-	        "You have {:d} gold piece. How many do you want to remove?",
-	        "You have {:d} gold pieces. How many do you want to remove?",
+	        /* TRANSLATORS: {:s} is a number with separators. Dialog is shown when splitting a stash of Gold.*/
+	        "You have {:s} gold piece. How many do you want to remove?",
+	        "You have {:s} gold pieces. How many do you want to remove?",
 	        initialDropGoldValue)),
-	    initialDropGoldValue);
+	    FormatInteger(initialDropGoldValue));
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(description, 200);

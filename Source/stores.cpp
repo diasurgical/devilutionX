@@ -21,6 +21,7 @@
 #include "panels/info_box.hpp"
 #include "qol/stash.h"
 #include "towners.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/utf8.hpp"
@@ -2235,11 +2236,8 @@ void PrintSString(const Surface &out, int margin, int line, const char *text, Ui
 
 	const Rectangle rect { { sx, sy }, { width, 0 } };
 	DrawString(out, text, rect, flags);
-	if (price > 0) {
-		char valstr[32];
-		sprintf(valstr, "%i", price);
-		DrawString(out, valstr, rect, flags | UiFlags::AlignRight);
-	}
+	if (price > 0)
+		DrawString(out, fmt::format("{:s}", FormatInteger(price)), rect, flags | UiFlags::AlignRight);
 
 	if (stextsel == line) {
 		DrawSelector(out, rect, text, flags);
@@ -2437,7 +2435,7 @@ void DrawSText(const Surface &out)
 	}
 
 	if (RenderGold) {
-		PrintSString(out, 28, 1, fmt::format(fmt::runtime(_("Your gold: {:d}")), TotalPlayerGold()).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
+		PrintSString(out, 28, 1, fmt::format(fmt::runtime(_("Your gold: {:s}")), FormatInteger(TotalPlayerGold())).c_str(), UiFlags::ColorWhitegold | UiFlags::AlignRight);
 	}
 
 	if (stextscrl)

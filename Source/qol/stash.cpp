@@ -16,6 +16,7 @@
 #include "hwcursor.hpp"
 #include "minitext.h"
 #include "stores.h"
+#include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 
@@ -377,7 +378,7 @@ void DrawStash(const Surface &out)
 	UiFlags style = UiFlags::VerticalCenter | UiFlags::ColorWhite;
 
 	DrawString(out, fmt::format("{:d}", Stash.GetPage() + 1), { position + Displacement { 132, 0 }, { 57, 11 } }, UiFlags::AlignCenter | style);
-	DrawString(out, fmt::format("{:d}", Stash.gold), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
+	DrawString(out, fmt::format("{:s}", FormatInteger(Stash.gold)), { position + Displacement { 122, 19 }, { 107, 13 } }, UiFlags::AlignRight | style);
 }
 
 void CheckStashItem(Point mousePosition, bool isShiftHeld, bool isCtrlHeld)

@@ -1045,11 +1045,11 @@ msgstr[1] "{:d} Заряда"
 msgstr[2] "{:d} Зарядів"
 
 #: Source/control.cpp:880 Source/inv.cpp:1931 Source/items.cpp:3453
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} золота монета"
-msgstr[1] "{:d} золоті монети"
-msgstr[2] "{:d} золотих монет"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} золота монета"
+msgstr[1] "{:s} золоті монети"
+msgstr[2] "{:s} золотих монет"
 
 #: Source/control.cpp:882
 msgid "Requirements not met"
@@ -1069,11 +1069,11 @@ msgstr "Новий Рівень"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1059
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "У тебе {:d} золота монета. Скільки ти хочеш забрати?"
-msgstr[1] "У тебе {:d} золоті монети. Скільки ти хочеш забрати?"
-msgstr[2] "У тебе {:d} золотих монет. Скільки ти хочеш забрати?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "У тебе {:s} золота монета. Скільки ти хочеш забрати?"
+msgstr[1] "У тебе {:s} золоті монети. Скільки ти хочеш забрати?"
+msgstr[2] "У тебе {:s} золотих монет. Скільки ти хочеш забрати?"
 
 #: Source/controls/modifier_hints.cpp:179 Source/qol/monhealthbar.cpp:44
 #: Source/qol/xpbar.cpp:76
@@ -6908,8 +6908,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "Історія Чату (Повідомлень: {:d})"
 
 #: Source/qol/itemlabels.cpp:73
-msgid "{:d} gold"
-msgstr "{:d} золота"
+msgid "{:s} gold"
+msgstr "{:s} золота"
 
 #: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"
@@ -7635,8 +7635,8 @@ msgid "Say Goodbye"
 msgstr "Попрощатися"
 
 #: Source/stores.cpp:2440
-msgid "Your gold: {:d}"
-msgstr "Ваше золото: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Ваше золото: {:s}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15

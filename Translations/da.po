@@ -1127,10 +1127,10 @@ msgstr[1] "Understøttede spillere: {:d}"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
 #, fuzzy
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "Understøttede spillere: {:d}"
-msgstr[1] "Understøttede spillere: {:d}"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "Understøttede spillere: {:s}"
+msgstr[1] "Understøttede spillere: {:s}"
 
 #: Source/control.cpp:863
 #, fuzzy
@@ -1156,8 +1156,8 @@ msgstr "Niveau:"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -7271,8 +7271,8 @@ msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
 #, fuzzy
-msgid "{:d} gold"
-msgstr "Understøttede spillere: {:d}"
+msgid "{:s} gold"
+msgstr "Understøttede spillere: {:s}"
 
 #: Source/qol/stash.cpp:586
 msgid "How many gold pieces do you want to withdraw?"
@@ -7810,7 +7810,7 @@ msgstr "Køb varer"
 msgid "Leave the shop"
 msgstr "Forlad healers hjem"
 
-msgid "Your gold: {:d}"
+msgid "Your gold: {:s}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!

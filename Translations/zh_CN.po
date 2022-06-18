@@ -1029,9 +1029,9 @@ msgid_plural "{:d} Charges"
 msgstr[0] "{:d}充能"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d}金币堆"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s}金币堆"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1051,9 +1051,9 @@ msgstr "升级"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "你有 {:d} 金币。你想要取出多少？"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "你有 {:s} 金币。你想要取出多少？"
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -6820,8 +6820,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "聊天​历史 (​消息: {:d}​)"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} 金币"
+msgid "{:s} gold"
+msgstr "{:s} 金币"
 
 #: Source/qol/stash.cpp:586
 msgid "How many gold pieces do you want to withdraw?"
@@ -7354,8 +7354,8 @@ msgstr "要​出售​哪​件​物品？"
 msgid "You have nothing to repair."
 msgstr "你​没有​需要​修理​的​物品。"
 
-msgid "Your gold: {:d}"
-msgstr "你​的​金币: {:d}"
+msgid "Your gold: {:s}"
+msgstr "你​的​金币: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:637

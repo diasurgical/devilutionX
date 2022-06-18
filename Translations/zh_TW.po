@@ -1078,9 +1078,9 @@ msgstr[0] "生命點{:d}的{:d}"
 
 #: Source/control.cpp:860 Source/inv.cpp:1998 Source/items.cpp:3480
 #, fuzzy
-#| msgid "{:d} gold piece"
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
+#| msgid "{:s} gold piece"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
 msgstr[0] "金幣"
 
 #: Source/control.cpp:863
@@ -1101,8 +1101,8 @@ msgstr "升級"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
 msgstr[0] ""
 
 #: Source/controls/modifier_hints.cpp:176 Source/qol/monhealthbar.cpp:36
@@ -7522,7 +7522,7 @@ msgid "Chat History (Messages: {:d})"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
+msgid "{:s} gold"
 msgstr ""
 
 #: Source/qol/stash.cpp:586
@@ -8151,8 +8151,8 @@ msgstr "修理​專案"
 msgid "Leave the shop"
 msgstr "離​開​商店"
 
-msgid "Your gold: {:d}"
-msgstr "你​的​金幣: {:d}"
+msgid "Your gold: {:s}"
+msgstr "你​的​金幣: {:s}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:360 Source/stores.cpp:725 Source/stores.cpp:1096

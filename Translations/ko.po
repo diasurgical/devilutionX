@@ -1034,9 +1034,9 @@ msgid_plural "{:d} Charges"
 msgstr[0] "{:d}회 충전"
 
 #: Source/control.cpp:860 Source/inv.cpp:2004 Source/items.cpp:3486
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "금화 {:d}개"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "금화 {:s}개"
 
 #: Source/control.cpp:862
 msgid "Requirements not met"
@@ -1056,9 +1056,9 @@ msgstr "레벨업"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1039
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "금화 {:d}개를 갖고 있습니다. 몇 개를 버리겠습니까?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "금화 {:s}개를 갖고 있습니다. 몇 개를 버리겠습니까?"
 
 #: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -6863,8 +6863,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "채팅 내역 (메시지: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} 금화"
+msgid "{:s} gold"
+msgstr "{:s} 금화"
 
 #: Source/qol/stash.cpp:619
 msgid "How many gold pieces do you want to withdraw?"
@@ -7592,8 +7592,8 @@ msgid "Say Goodbye"
 msgstr "작별한다"
 
 #: Source/stores.cpp:2458
-msgid "Your gold: {:d}"
-msgstr "소지금: {:d}"
+msgid "Your gold: {:s}"
+msgstr "소지금: {:s}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
@@ -11305,20 +11305,20 @@ msgstr "디아블로에게 향한다"
 msgid "Back to Level {:d}"
 msgstr "지하 {:d} 층으로 돌아간다"
 
-#~ msgid "I have these items for sale:             Your gold: {:d}"
-#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:d}"
+#~ msgid "I have these items for sale:             Your gold: {:s}"
+#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:s}"
 
-#~ msgid "Repair which item?             Your gold: {:d}"
-#~ msgstr "무엇을 수리하겠습니까?             소지금: {:d}"
+#~ msgid "Repair which item?             Your gold: {:s}"
+#~ msgstr "무엇을 수리하겠습니까?             소지금: {:s}"
 
-#~ msgid "Recharge which item?             Your gold: {:d}"
-#~ msgstr "무엇을 충전하겠습니까?             소지금: {:d}"
+#~ msgid "Recharge which item?             Your gold: {:s}"
+#~ msgstr "무엇을 충전하겠습니까?             소지금: {:s}"
 
-#~ msgid "I have this item for sale:             Your gold: {:d}"
-#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:d}"
+#~ msgid "I have this item for sale:             Your gold: {:s}"
+#~ msgstr "이런 물품들이 구비되어 있습니다:             소지금: {:s}"
 
-#~ msgid "Identify which item?             Your gold: {:d}"
-#~ msgstr "어느 물품을 감별하겠습니까?             소지금: {:d}"
+#~ msgid "Identify which item?             Your gold: {:s}"
+#~ msgstr "어느 물품을 감별하겠습니까?             소지금: {:s}"
 
 #~ msgid "Right click to use"
 #~ msgstr "우클릭으로 사용"

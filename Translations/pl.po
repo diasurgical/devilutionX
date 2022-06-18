@@ -1051,11 +1051,11 @@ msgstr[1] "Ładunki: {:d}"
 msgstr[2] "Ładunki: {:d}"
 
 #: Source/control.cpp:861 Source/inv.cpp:1963 Source/items.cpp:3489
-msgid "{:d} gold piece"
-msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} złota"
-msgstr[1] "{:d} złota"
-msgstr[2] "{:d} złota"
+msgid "{:s} gold piece"
+msgid_plural "{:s} gold pieces"
+msgstr[0] "{:s} złota"
+msgstr[1] "{:s} złota"
+msgstr[2] "{:s} złota"
 
 #: Source/control.cpp:863
 msgid "Requirements not met"
@@ -1075,11 +1075,11 @@ msgstr "Nowy Poziom"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1040
-msgid "You have {:d} gold piece. How many do you want to remove?"
-msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Masz {:d} złota. Ile monet chcesz oddzielić?"
-msgstr[1] "Masz {:d} złota. Ile monet chcesz oddzielić?"
-msgstr[2] "Masz {:d} złota. Ile monet chcesz oddzielić?"
+msgid "You have {:s} gold piece. How many do you want to remove?"
+msgid_plural "You have {:s} gold pieces. How many do you want to remove?"
+msgstr[0] "Masz {:s} złota. Ile monet chcesz oddzielić?"
+msgstr[1] "Masz {:s} złota. Ile monet chcesz oddzielić?"
+msgstr[2] "Masz {:s} złota. Ile monet chcesz oddzielić?"
 
 #: Source/controls/modifier_hints.cpp:177 Source/qol/monhealthbar.cpp:36
 #: Source/qol/xpbar.cpp:76
@@ -6915,8 +6915,8 @@ msgid "Chat History (Messages: {:d})"
 msgstr "Historia czatu (Wiadomości: {:d})"
 
 #: Source/qol/itemlabels.cpp:72
-msgid "{:d} gold"
-msgstr "{:d} złota"
+msgid "{:s} gold"
+msgstr "{:s} złota"
 
 #: Source/qol/stash.cpp:618
 msgid "How many gold pieces do you want to withdraw?"
@@ -7642,8 +7642,8 @@ msgid "Say Goodbye"
 msgstr "Wyjdź"
 
 #: Source/stores.cpp:2439
-msgid "Your gold: {:d}"
-msgstr "Twoje złoto: {:d}"
+msgid "Your gold: {:s}"
+msgstr "Twoje złoto: {:s}"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
@@ -11858,8 +11858,8 @@ msgstr "Staw czoła Diablo"
 msgid "Back to Level {:d}"
 msgstr "Wróć na poziom {:d}"
 
-#~ msgid "Which item is for sale?             Your gold: {:d}"
-#~ msgstr "Który przedmiot chcesz sprzedać?  Twoje złoto: {:d}"
+#~ msgid "Which item is for sale?             Your gold: {:s}"
+#~ msgstr "Który przedmiot chcesz sprzedać?  Twoje złoto: {:s}"
 
 #~ msgid "Right click to use"
 #~ msgstr "PPM by użyć"
