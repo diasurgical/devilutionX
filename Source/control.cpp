@@ -591,7 +591,7 @@ void InitControlPan()
 	sbookflag = false;
 
 	InitSpellBook();
-	pQLogCel = LoadCel("Data\\Quest.CEL", SidePanelSize.width);
+	pQLogCel = LoadCel("Data\\Quest.CEL", static_cast<uint16_t>(SidePanelSize.width));
 	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
 	CloseGoldDrop();
 	dropGoldValue = 0;
