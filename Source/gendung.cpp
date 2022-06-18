@@ -42,7 +42,7 @@ ScrollStruct ScrollInfo;
 int MicroTileLen;
 char TransVal;
 bool TransList[256];
-int dPiece[MAXDUNX][MAXDUNY];
+uint16_t dPiece[MAXDUNX][MAXDUNY];
 MICROS DPieceMicros[MAXTILES + 1];
 int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
