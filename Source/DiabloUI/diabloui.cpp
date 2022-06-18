@@ -634,12 +634,10 @@ bool UiValidPlayerName(string_view name)
 	if (name.find_first_of(",<>%&\\\"?*#/: ") != name.npos)
 		return false;
 
-	constexpr auto isAsciiControlCharacter = [](char character) -> bool {
-		return (character >= 0x00 && character < 0x20) || character == 0x7F;
-	};
-	for (char letter : name)
-		if (isAsciiControlCharacter(letter) || !IsLeadUtf8CodeUnit(letter))
-			return false;
+	// Only basic latin alphabet is supported for multiplayer characters to avoid rendering issues for players who do
+	// not have fonts.mpq installed
+	if (!std::all_of(name.begin(), name.end(), IsBasicLatin))
+		return false;
 
 	string_view bannedNames[] = {
 		"gvdl",

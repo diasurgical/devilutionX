@@ -44,6 +44,16 @@ constexpr bool IsLeadUtf8CodeUnit(char x)
 }
 
 /**
+ * Returns true if the character is part of the Basic Latin set.
+ *
+ * This includes ASCII punctuation, symbols, math operators, digits, and both uppercase/lowercase latin alphabets
+ */
+constexpr bool IsBasicLatin(char x)
+{
+	return x >= '\x20' && x <= '\x7E';
+}
+
+/**
  * Returns true if this is a trailing byte in a UTF-8 code point encoding.
  *
  * Trailing bytes all begin with 10 as the most significant bits, meaning they generally fall in the range 0x80 to
