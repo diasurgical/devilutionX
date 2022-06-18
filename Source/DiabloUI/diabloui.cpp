@@ -802,18 +802,14 @@ namespace {
 
 void Render(const UiText *uiText)
 {
-	Rectangle rect { { uiText->m_rect.x, uiText->m_rect.y }, { uiText->m_rect.w, uiText->m_rect.h } };
-
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiText->GetText(), rect, uiText->GetFlags() | UiFlags::FontSizeDialog);
+	DrawString(out, uiText->GetText(), MakeRectangle(uiText->m_rect), uiText->GetFlags() | UiFlags::FontSizeDialog);
 }
 
 void Render(const UiArtText *uiArtText)
 {
-	Rectangle rect { { uiArtText->m_rect.x, uiArtText->m_rect.y }, { uiArtText->m_rect.w, uiArtText->m_rect.h } };
-
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiArtText->GetText(), rect, uiArtText->GetFlags(), uiArtText->GetSpacing(), uiArtText->GetLineHeight());
+	DrawString(out, uiArtText->GetText(), MakeRectangle(uiArtText->m_rect), uiArtText->GetFlags(), uiArtText->GetSpacing(), uiArtText->GetLineHeight());
 }
 
 void Render(const UiImage *uiImage)
@@ -865,10 +861,8 @@ void Render(const UiImageAnimatedPcx *uiImage)
 
 void Render(const UiArtTextButton *uiButton)
 {
-	Rectangle rect { { uiButton->m_rect.x, uiButton->m_rect.y }, { uiButton->m_rect.w, uiButton->m_rect.h } };
-
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiButton->GetText(), rect, uiButton->GetFlags());
+	DrawString(out, uiButton->GetText(), MakeRectangle(uiButton->m_rect), uiButton->GetFlags());
 }
 
 void Render(const UiList *uiList)
@@ -881,7 +875,7 @@ void Render(const UiList *uiList)
 		if (i == SelectedItem)
 			DrawSelector(rect);
 
-		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
+		Rectangle rectangle = MakeRectangle(rect);
 		if (item->args.empty())
 			DrawString(out, item->m_text, rectangle, uiList->GetFlags() | item->uiFlags, uiList->GetSpacing());
 		else

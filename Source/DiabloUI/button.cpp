@@ -18,7 +18,7 @@ void RenderButton(UiButton *button)
 	const Surface &out = Surface(DiabloUiSurface());
 	RenderPcxSprite(out, ButtonSprite(button->IsPressed()), { button->m_rect.x, button->m_rect.y });
 
-	Rectangle textRect { { button->m_rect.x, button->m_rect.y }, { button->m_rect.w, button->m_rect.h } };
+	Rectangle textRect = MakeRectangle(button->m_rect);
 	if (!button->IsPressed()) {
 		--textRect.position.y;
 	}
