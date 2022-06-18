@@ -107,6 +107,7 @@ set(libdevilutionx_SRCS
   utils/console.cpp
   utils/display.cpp
   utils/file_util.cpp
+  utils/format_int.cpp
   utils/language.cpp
   utils/logged_fstream.cpp
   utils/paths.cpp

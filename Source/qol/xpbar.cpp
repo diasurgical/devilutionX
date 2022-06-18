@@ -7,6 +7,8 @@
 
 #include <array>
 
+#include <fmt/core.h>
+
 #include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "engine/point.hpp"
