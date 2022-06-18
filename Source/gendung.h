@@ -176,7 +176,7 @@ extern char TransVal;
 /** Specifies the active transparency indices. */
 extern bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
-extern DVL_API_FOR_TEST int dPiece[MAXDUNX][MAXDUNY];
+extern DVL_API_FOR_TEST uint16_t dPiece[MAXDUNX][MAXDUNY];
 /** Map of micros that comprises a full tile for any given dungeon piece. */
 extern MICROS DPieceMicros[MAXTILES + 1];
 /** Specifies the transparency at each coordinate of the map. */
