@@ -39,14 +39,17 @@ TEST(Utf8CodeUnits, ValidCodePoints)
 	// Working backwards on this loop to avoid triggering signed integer overflow on platforms where char has an
 	// underlying type of signed char
 	for (char x = '\x7F'; x >= '\x00' && x <= '\x7F'; x--) {
+		EXPECT_TRUE(IsLeadUtf8CodeUnit(x)) << "Basic Latin and ASCII Control characters are lead code units";
 		EXPECT_FALSE(IsTrailUtf8CodeUnit(x)) << "Basic Latin and ASCII Control characters are not trail code units";
 	}
 
 	for (char x = '\x80'; x >= '\x80' && x <= '\xBF'; x++) {
 		EXPECT_TRUE(IsTrailUtf8CodeUnit(x)) << "Bytes in the range 0x80 to 0xBF are potentially valid trail code units";
+		EXPECT_FALSE(IsLeadUtf8CodeUnit(x)) << "Trail code units are never valid lead code units";
 	}
 
 	for (char x = '\xC2'; x >= '\xC2' && x <= '\xF4'; x++) {
+		EXPECT_TRUE(IsLeadUtf8CodeUnit(x)) << "Bytes in the range 0xC2 to 0xF4 are lead code units";
 		EXPECT_FALSE(IsTrailUtf8CodeUnit(x)) << "Bytes in the range 0xC2 to 0xF4 are never valid trail code units";
 	}
 }
@@ -54,10 +57,12 @@ TEST(Utf8CodeUnits, ValidCodePoints)
 TEST(Utf8CodeUnits, InvalidCodePoints)
 {
 	for (char x = '\xC0'; x >= '\xC0' && x <= '\xC1'; x++) {
+		EXPECT_FALSE(IsLeadUtf8CodeUnit(x)) << "Bytes in the range 0xC0 to 0xC1 are not lead code units";
 		EXPECT_FALSE(IsTrailUtf8CodeUnit(x)) << "Bytes in the range 0xC0 to oxC1 are not trail code units";
 	}
 
 	for (char x = '\xF5'; x >= '\xF5' && x <= '\xFF'; x++) {
+		EXPECT_FALSE(IsLeadUtf8CodeUnit(x)) << "Bytes in the range 0xF5 to 0xFF are not lead code units";
 		EXPECT_FALSE(IsTrailUtf8CodeUnit(x)) << "Bytes in the range 0xF5 to 0xFF are not trail code units";
 	}
 }
