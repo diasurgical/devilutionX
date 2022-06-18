@@ -1575,7 +1575,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
-			if (SetPieceRoom.Contains({ sx, sy }))
+			if (SetPieceRoom.contains({ sx, sy }))
 				continue;
 			if (!miniset.matches({ sx, sy }))
 				continue;
@@ -2099,7 +2099,7 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if (SetPieceRoom.Contains({ x, y }))
+			if (SetPieceRoom.contains({ x, y }))
 				continue;
 			if (GenerateRnd(4) != 0)
 				continue;

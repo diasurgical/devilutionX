@@ -70,7 +70,7 @@ Point FindSlotUnderCursor(Point cursorPosition)
 			InventorySlotSizeInPixels + 1
 		};
 
-		if (cell.Contains(cursorPosition)) {
+		if (cell.contains(cursorPosition)) {
 			return point;
 		}
 	}
@@ -174,7 +174,7 @@ void CheckStashCut(Point cursorPosition, bool automaticMove)
 		};
 
 		// check which inventory rectangle the mouse is in, if any
-		if (cell.Contains(cursorPosition)) {
+		if (cell.contains(cursorPosition)) {
 			slot = point;
 			break;
 		}
@@ -296,7 +296,7 @@ void CheckStashButtonRelease(Point mousePosition)
 
 	Rectangle stashButton = StashButtonRect[StashButtonPressed];
 	stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
-	if (stashButton.Contains(mousePosition)) {
+	if (stashButton.contains(mousePosition)) {
 		switch (StashButtonPressed) {
 		case 0:
 			Stash.PreviousPage(10);
@@ -326,7 +326,7 @@ void CheckStashButtonPress(Point mousePosition)
 	for (int i = 0; i < 5; i++) {
 		stashButton = StashButtonRect[i];
 		stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
-		if (stashButton.Contains(mousePosition)) {
+		if (stashButton.contains(mousePosition)) {
 			StashButtonPressed = i;
 			return;
 		}
@@ -404,7 +404,7 @@ uint16_t CheckStashHLight(Point mousePosition)
 			InventorySlotSizeInPixels + 1
 		};
 
-		if (cell.Contains({ mousePosition })) {
+		if (cell.contains(mousePosition)) {
 			slot = point;
 			break;
 		}

@@ -31,7 +31,7 @@ struct Rectangle {
 	{
 	}
 
-	constexpr bool Contains(Point point) const
+	constexpr bool contains(Point point) const
 	{
 		return point.x >= this->position.x
 		    && point.x < (this->position.x + this->size.width)

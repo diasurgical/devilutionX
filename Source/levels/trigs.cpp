@@ -762,7 +762,7 @@ void CheckTrigForce()
 {
 	trigflag = false;
 
-	if (ControlMode == ControlTypes::KeyboardAndMouse && GetMainPanel().Contains(MousePosition)) {
+	if (ControlMode == ControlTypes::KeyboardAndMouse && GetMainPanel().contains(MousePosition)) {
 		return;
 	}
 
