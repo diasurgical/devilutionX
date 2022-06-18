@@ -1027,10 +1027,10 @@ void Zoom(const Surface &out)
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
 		if (IsLeftPanelOpen()) {
-			viewportWidth -= SPANEL_WIDTH;
-			viewportOffsetX = SPANEL_WIDTH;
+			viewportWidth -= SidePanelSize.width;
+			viewportOffsetX = SidePanelSize.width;
 		} else if (IsRightPanelOpen()) {
-			viewportWidth -= SPANEL_WIDTH;
+			viewportWidth -= SidePanelSize.width;
 		}
 	}
 
@@ -1109,7 +1109,7 @@ void DrawGame(const Surface &fullOut, Point position)
 			if (IsLeftPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
 				columns -= 4;
-				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
+				sx += SidePanelSize.width - TILE_WIDTH / 2;
 			}
 			if (IsRightPanelOpen()) {
 				position += Displacement(Direction::East) * 2;
