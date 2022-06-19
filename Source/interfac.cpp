@@ -102,7 +102,7 @@ void InitCutscene(interface_mode uMsg)
 
 	switch (PickCutscene(uMsg)) {
 	case CutStart:
-		LoadArt("Gendata\\cutstartw.pcx", &ArtCutsceneWidescreen);
+		LoadArt("gendata\\cutstartw.pcx", &ArtCutsceneWidescreen);
 		celPath = "Gendata\\Cutstart.cel";
 		palPath = "Gendata\\Cutstart.pal";
 		progress_id = 1;
@@ -143,13 +143,13 @@ void InitCutscene(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutPortal:
-		LoadArt("Gendata\\Cutportlw.pcx", &ArtCutsceneWidescreen);
+		LoadArt("gendata\\cutportlw.pcx", &ArtCutsceneWidescreen);
 		celPath = "Gendata\\Cutportl.cel";
 		palPath = "Gendata\\Cutportl.pal";
 		progress_id = 1;
 		break;
 	case CutPortalRed:
-		LoadArt("Gendata\\Cutportrw.pcx", &ArtCutsceneWidescreen);
+		LoadArt("gendata\\cutportrw.pcx", &ArtCutsceneWidescreen);
 		celPath = "Gendata\\Cutportr.cel";
 		palPath = "Gendata\\Cutportr.pal";
 		progress_id = 1;
