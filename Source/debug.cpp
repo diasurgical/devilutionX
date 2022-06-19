@@ -1147,7 +1147,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		info = pdungeon[megaCoords.x][megaCoords.y];
 		break;
 	case DebugGridTextItem::Protected:
-		info = Protected[megaCoords.x][megaCoords.y];
+		info = Protected.test(megaCoords.x, megaCoords.y);
 		break;
 	case DebugGridTextItem::None:
 		return false;

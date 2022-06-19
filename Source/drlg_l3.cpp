@@ -708,7 +708,7 @@ const Miniset HivePattern42 {
 void InitDungeonFlags()
 {
 	memset(dungeon, 0, sizeof(dungeon));
-	memset(Protected, 0, sizeof(Protected));
+	Protected.reset();
 }
 
 bool FillRoom(int x1, int y1, int x2, int y2)
@@ -1862,7 +1862,7 @@ bool PlaceAnvil()
 				if (dungeon[xx + sx][yy + sy] != 7) {
 					found = false;
 				}
-				if (Protected[xx + sx][yy + sy]) {
+				if (Protected.test(xx + sx, yy + sy)) {
 					found = false;
 				}
 			}
@@ -1876,7 +1876,7 @@ bool PlaceAnvil()
 
 	for (int yy = 0; yy < SetPiece.size.width; yy++) {
 		for (int xx = 0; xx < SetPiece.size.height; xx++) {
-			Protected[xx + sx][yy + sy] = true;
+			Protected.set(xx + sx, yy + sy);
 		}
 	}
 

@@ -11,6 +11,7 @@
 #include "gendung.h"
 #include "player.h"
 #include "quests.h"
+#include "utils/bitset2d.hpp"
 
 namespace devilution {
 
@@ -25,7 +26,7 @@ namespace {
 /** Represents a tile ID map of twice the size, repeating each tile of the original map in blocks of 4. */
 BYTE L5dungeon[80][80];
 /** Marks where walls may not be added to the level */
-bool Chamber[DMAXX][DMAXX];
+Bitset2d<DMAXX, DMAXY> Chamber;
 /** Specifies whether to generate a horizontal or vertical layout. */
 bool VerticalLayout;
 /** Specifies whether to generate a room at position 1 in the Cathedral. */
@@ -721,13 +722,13 @@ void ApplyShadowsPatterns()
 				if (shadow.s3 != 0 && shadow.s3 != sd[1][0])
 					continue;
 
-				if (shadow.nv1 != 0 && !Protected[x - 1][y - 1]) {
+				if (shadow.nv1 != 0 && !Protected.test(x - 1, y - 1)) {
 					dungeon[x - 1][y - 1] = shadow.nv1;
 				}
-				if (shadow.nv2 != 0 && !Protected[x][y - 1]) {
+				if (shadow.nv2 != 0 && !Protected.test(x, y - 1)) {
 					dungeon[x][y - 1] = shadow.nv2;
 				}
-				if (shadow.nv3 != 0 && !Protected[x - 1][y]) {
+				if (shadow.nv3 != 0 && !Protected.test(x - 1, y)) {
 					dungeon[x - 1][y] = shadow.nv3;
 				}
 			}
@@ -736,7 +737,7 @@ void ApplyShadowsPatterns()
 
 	for (int y = 1; y < DMAXY; y++) {
 		for (int x = 1; x < DMAXX; x++) {
-			if (Protected[x - 1][y])
+			if (Protected.test(x - 1, y))
 				continue;
 
 			if (dungeon[x - 1][y] == 139) {
@@ -813,7 +814,7 @@ void FillFloor()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (!Protected[i][j] && dungeon[i][j] == Tile::Floor) {
+			if (!Protected.test(i, j) && dungeon[i][j] == Tile::Floor) {
 				int rv = GenerateRnd(3);
 
 				if (rv == 1)
@@ -863,13 +864,9 @@ void InitDungeonPieces()
 
 void InitDungeonFlags()
 {
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 0;
-			Protected[i][j] = false;
-			Chamber[i][j] = false;
-		}
-	}
+	memset(dungeon, 0, sizeof(dungeon));
+	Protected.reset();
+	Chamber.reset();
 }
 
 void MapRoom(int x, int y, int width, int height)
@@ -1083,7 +1080,7 @@ int HorizontalWallOk(int i, int j)
 {
 	int x;
 	for (x = 1; dungeon[i + x][j] == 13; x++) {
-		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || Protected[i + x][j] || Chamber[i + x][j])
+		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || Protected.test(i + x, j) || Chamber.test(i + x, j))
 			break;
 	}
 
@@ -1107,7 +1104,7 @@ int VerticalWallOk(int i, int j)
 {
 	int y;
 	for (y = 1; dungeon[i][j + y] == 13; y++) {
-		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || Protected[i][j + y] || Chamber[i][j + y])
+		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || Protected.test(i, j + y) || Chamber.test(i, j + y))
 			break;
 	}
 
@@ -1165,7 +1162,7 @@ void HorizontalWall(int i, int j, Tile p, int dx)
 
 	dungeon[i + xx][j] = wt;
 	if (wt == Tile::HDoor) {
-		Protected[i + xx][j] = true;
+		Protected.set(i + xx, j);
 	}
 }
 
@@ -1207,7 +1204,7 @@ void VerticalWall(int i, int j, Tile p, int dy)
 
 	dungeon[i][j + yy] = wt;
 	if (wt == Tile::VDoor) {
-		Protected[i][j + yy] = true;
+		Protected.set(i, j + yy);
 	}
 }
 
@@ -1215,7 +1212,7 @@ void AddWall()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (!Protected[i][j] && !Chamber[i][j]) {
+			if (!Protected.test(i, j) && !Chamber.test(i, j)) {
 				if (dungeon[i][j] == Tile::Corner) {
 					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
@@ -1309,7 +1306,7 @@ void GenerateChamber(int sx, int sy, bool topflag, bool bottomflag, bool leftfla
 	for (int j = 1; j < 11; j++) {
 		for (int i = 1; i < 11; i++) {
 			dungeon[i + sx][j + sy] = Tile::Floor;
-			Chamber[i + sx][j + sy] = true;
+			Chamber.set(i + sx, j + sy);
 		}
 	}
 
@@ -1462,7 +1459,7 @@ void Substitution()
 		for (int x = 0; x < DMAXX; x++) {
 			if (GenerateRnd(4) == 0) {
 				uint8_t c = L5BTYPES[dungeon[x][y]];
-				if (c != 0 && !Protected[x][y]) {
+				if (c != 0 && !Protected.test(x, y)) {
 					int rv = GenerateRnd(16);
 					int i = -1;
 					while (rv >= 0) {
@@ -1477,14 +1474,14 @@ void Substitution()
 
 					// BUGFIX: Add `&& y > 0` to the if statement. (fixed)
 					if (i == 89 && y > 0) {
-						if (L5BTYPES[dungeon[x][y - 1]] != 79 || Protected[x][y - 1])
+						if (L5BTYPES[dungeon[x][y - 1]] != 79 || Protected.test(x, y - 1))
 							i = 79;
 						else
 							dungeon[x][y - 1] = 90;
 					}
 					// BUGFIX: Add `&& x + 1 < DMAXX` to the if statement. (fixed)
 					if (i == 91 && x + 1 < DMAXX) {
-						if (L5BTYPES[dungeon[x + 1][y]] != 80 || Protected[x + 1][y])
+						if (L5BTYPES[dungeon[x + 1][y]] != 80 || Protected.test(x + 1, y))
 							i = 80;
 						else
 							dungeon[x + 1][y] = 92;
@@ -1677,7 +1674,7 @@ void FixCornerTiles()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
-			if (!Protected[i][j] && dungeon[i][j] == 17 && dungeon[i - 1][j] == Tile::Floor && dungeon[i][j - 1] == Tile::VWall) {
+			if (!Protected.test(i, j) && dungeon[i][j] == 17 && dungeon[i - 1][j] == Tile::Floor && dungeon[i][j - 1] == Tile::VWall) {
 				dungeon[i][j] = 16;
 				// BUGFIX: Set tile as Protected
 			}

@@ -14,6 +14,7 @@
 #include "engine/rectangle.hpp"
 #include "scrollrt.h"
 #include "utils/attributes.h"
+#include "utils/bitset2d.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -141,7 +142,7 @@ extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 /** Contains a backup of the tile IDs of the map. */
 extern uint8_t pdungeon[DMAXX][DMAXY];
 /** Tile that may not be overwritten by the level generator */
-extern bool Protected[DMAXX][DMAXY];
+extern Bitset2d<DMAXX, DMAXY> Protected;
 extern Rectangle SetPieceRoom;
 /** Specifies the active set quest piece in coordinate. */
 extern Rectangle SetPiece;
@@ -291,7 +292,7 @@ struct Miniset {
 			for (int xx = 0; xx < size.width; xx++) {
 				if (search[yy][xx] != 0 && dungeon[xx + position.x][yy + position.y] != search[yy][xx])
 					return false;
-				if (respectProtected && Protected[xx + position.x][yy + position.y])
+				if (respectProtected && Protected.test(xx + position.x, yy + position.y))
 					return false;
 			}
 		}
@@ -306,7 +307,7 @@ struct Miniset {
 					continue;
 				dungeon[x + position.x][y + position.y] = replace[y][x];
 				if (protect)
-					Protected[x + position.x][y + position.y] = true;
+					Protected.set(x + position.x, y + position.y);
 			}
 		}
 	}

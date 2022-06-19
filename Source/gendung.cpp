@@ -22,7 +22,7 @@ namespace devilution {
 
 uint8_t dungeon[DMAXX][DMAXY];
 uint8_t pdungeon[DMAXX][DMAXY];
-bool Protected[DMAXX][DMAXY];
+Bitset2d<DMAXX, DMAXY> Protected;
 Rectangle SetPieceRoom;
 Rectangle SetPiece;
 std::unique_ptr<uint16_t[]> pSetPiece;
@@ -643,7 +643,7 @@ void PlaceDunTiles(const uint16_t *dunData, Point position, int floorId)
 			auto tileId = static_cast<uint8_t>(SDL_SwapLE16(tileLayer[j * width + i]));
 			if (tileId != 0) {
 				dungeon[position.x + i][position.y + j] = tileId;
-				Protected[position.x + i][position.y + j] = true;
+				Protected.set(position.x + i, position.y + j);
 			} else if (floorId != 0) {
 				dungeon[position.x + i][position.y + j] = floorId;
 			}

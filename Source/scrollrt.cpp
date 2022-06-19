@@ -36,6 +36,7 @@
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/bitset2d.hpp"
 #include "utils/display.h"
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
@@ -200,7 +201,10 @@ uint32_t sgdwCursWdt;
 BYTE sgSaveBack[8192];
 uint32_t sgdwCursHgtOld;
 
-bool dRendered[MAXDUNX][MAXDUNY];
+/**
+ * @brief Keeps track of which tiles have been rendered already.
+ */
+Bitset2d<MAXDUNX, MAXDUNY> dRendered;
 
 int frameend;
 int framerate;
@@ -830,9 +834,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 {
 	assert(InDungeonBounds(tilePosition));
 
-	if (dRendered[tilePosition.x][tilePosition.y])
+	if (dRendered.test(tilePosition.x, tilePosition.y))
 		return;
-	dRendered[tilePosition.x][tilePosition.y] = true;
+	dRendered.set(tilePosition.x, tilePosition.y);
 
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
@@ -972,7 +976,7 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 {
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
-	memset(dRendered, 0, sizeof(dRendered));
+	dRendered.reset();
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
