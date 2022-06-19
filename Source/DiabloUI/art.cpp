@@ -80,15 +80,4 @@ void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask, const st
 		SDLC_SetColorKey(art->surface.get(), mask);
 }
 
-void LoadArt(Art *art, const std::uint8_t *artData, int w, int h, int frames)
-{
-	constexpr int DefaultArtBpp = 8;
-	constexpr int DefaultArtFormat = SDL_PIXELFORMAT_INDEX8;
-	art->frames = frames;
-	art->surface = ScaleSurfaceToOutput(SDLWrap::CreateRGBSurfaceWithFormatFrom(
-	    const_cast<std::uint8_t *>(artData), w, h, DefaultArtBpp, w, DefaultArtFormat));
-	art->logical_width = w;
-	art->frame_height = h / frames;
-}
-
 } // namespace devilution
