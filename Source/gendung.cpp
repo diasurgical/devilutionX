@@ -478,7 +478,7 @@ void LoadLevelSOLData()
 void SetDungeonMicros()
 {
 	MicroTileLen = 10;
-	int blocks = 10;
+	size_t blocks = 10;
 
 	if (leveltype == DTYPE_TOWN) {
 		MicroTileLen = 16;
@@ -491,9 +491,9 @@ void SetDungeonMicros()
 	size_t tileCount;
 	std::unique_ptr<uint16_t[]> levelPieces = LoadMinData(tileCount);
 
-	for (int i = 0; i < tileCount / blocks; i++) {
+	for (size_t i = 0; i < tileCount / blocks; i++) {
 		uint16_t *pieces = &levelPieces[blocks * i];
-		for (int block = 0; block < blocks; block++) {
+		for (size_t block = 0; block < blocks; block++) {
 			DPieceMicros[i].mt[block] = SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]);
 		}
 	}
