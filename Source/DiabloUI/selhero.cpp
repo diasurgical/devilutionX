@@ -225,13 +225,29 @@ bool ShouldPrefillHeroName()
 #endif
 }
 
+void RemoveSelHeroBackground()
+{
+	vecSelHeroDialog.erase(vecSelHeroDialog.begin());
+	ArtBackground = std::nullopt;
+}
+
+void AddSelHeroBackground()
+{
+	LoadBackgroundArt("ui_art\\selhero.pcx");
+	vecSelHeroDialog.insert(vecSelHeroDialog.begin(),
+	    std::make_unique<UiImagePcx>(
+	        PcxSpriteSheet { *ArtBackground }.sprite(0),
+	        MakeSdlRect(0, GetUIRectangle().position.y, 0, 0),
+	        UiFlags::AlignCenter));
+}
+
 void SelheroClassSelectorSelect(int value)
 {
 	auto hClass = static_cast<HeroClass>(vecSelHeroDlgItems[value]->m_value);
 	if (gbIsSpawn && (hClass == HeroClass::Rogue || hClass == HeroClass::Sorcerer || (hClass == HeroClass::Bard && !hfbard_mpq))) {
-		ArtBackground = std::nullopt;
+		RemoveSelHeroBackground();
 		UiSelOkDialog(nullptr, _("The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.").data(), false);
-		LoadBackgroundArt("ui_art\\selhero.pcx");
+		AddSelHeroBackground();
 		SelheroListSelect(selhero_SaveCount);
 		return;
 	}
@@ -275,9 +291,9 @@ void SelheroNameSelect(int /*value*/)
 {
 	// only check names in multiplayer, we don't care about them in single
 	if (selhero_isMultiPlayer && !UiValidPlayerName(selhero_heroInfo.name)) {
-		ArtBackground = std::nullopt;
+		RemoveSelHeroBackground();
 		UiSelOkDialog(title, _("Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n").data(), false);
-		LoadBackgroundArt("ui_art\\selhero.pcx");
+		AddSelHeroBackground();
 	} else {
 		if (gfnHeroCreate(&selhero_heroInfo)) {
 			SelheroLoadSelect(1);
@@ -418,8 +434,7 @@ const char *SelheroGenerateName(HeroClass heroClass)
 
 void selhero_Init()
 {
-	LoadBackgroundArt("ui_art\\selhero.pcx");
-	UiAddBackground(&vecSelHeroDialog);
+	AddSelHeroBackground();
 	UiAddLogo(&vecSelHeroDialog);
 	LoadScrollBar();
 
