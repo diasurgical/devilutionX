@@ -40,7 +40,7 @@ inline char32_t ConsumeFirstUtf8CodePoint(string_view *input)
 constexpr bool IsLeadUtf8CodeUnit(char x)
 {
 	// single byte character || multibyte character leader
-	return (x >= '\x00' && x <= '\x7F') || (x >= '\xC2' && x <= '\xF4');
+	return (static_cast<signed char>(x) >= '\x00') || (x >= '\xC2' && x <= '\xF4');
 }
 
 /**
@@ -64,8 +64,6 @@ inline bool IsTrailUtf8CodeUnit(char x)
 {
 	// The following is equivalent to a bitmask test (x & 0xC0) == 0x80
 	// On x86_64 architectures it ends up being one instruction shorter
-	// This invokes implementation defined behaviour on platforms where the underlying type of char is unsigned char
-	// until C++20 makes unsigned to signed conversion well defined
 	return static_cast<signed char>(x) < static_cast<signed char>('\xC0');
 }
 

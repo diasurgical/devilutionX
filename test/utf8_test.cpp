@@ -38,7 +38,7 @@ TEST(Utf8CodeUnits, ValidCodePoints)
 {
 	// Working backwards on this loop to avoid triggering signed integer overflow on platforms where char has an
 	// underlying type of signed char
-	for (char x = '\x7F'; x >= '\x00' && x <= '\x7F'; x--) {
+	for (char x = '\x7F'; static_cast<signed char>(x) >= '\x00'; x--) {
 		EXPECT_TRUE(IsLeadUtf8CodeUnit(x)) << "Basic Latin and ASCII Control characters are lead code units";
 		EXPECT_FALSE(IsTrailUtf8CodeUnit(x)) << "Basic Latin and ASCII Control characters are not trail code units";
 	}
