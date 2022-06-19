@@ -484,26 +484,24 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 int AddMonsterType(_monster_id type, placeflag placeflag)
 {
-	bool done = false;
-	int i;
+	int typeIndex = [&]() {
+		for (int i = 0; i < LevelMonsterTypeCount; i++) {
+			if (LevelMonsterTypes[i].mtype == type)
+				return i;
+		}
+		return LevelMonsterTypeCount;
+	}();
 
-	for (i = 0; i < LevelMonsterTypeCount && !done; i++) {
-		done = LevelMonsterTypes[i].mtype == type;
-	}
-
-	i--;
-
-	if (!done) {
-		i = LevelMonsterTypeCount;
+	if (typeIndex == LevelMonsterTypeCount) {
 		LevelMonsterTypeCount++;
-		LevelMonsterTypes[i].mtype = type;
+		LevelMonsterTypes[typeIndex].mtype = type;
 		monstimgtot += MonstersData[type].mImage;
-		InitMonsterGFX(i);
-		InitMonsterSND(i);
+		InitMonsterGFX(typeIndex);
+		InitMonsterSND(typeIndex);
 	}
 
-	LevelMonsterTypes[i].mPlaceFlags |= placeflag;
-	return i;
+	LevelMonsterTypes[typeIndex].mPlaceFlags |= placeflag;
+	return typeIndex;
 }
 
 void ClearMVars(Monster &monster)
