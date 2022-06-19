@@ -46,6 +46,19 @@ struct Rectangle {
 	{
 		return position + Displacement(size / 2);
 	}
+
+	/**
+	 * @brief Returns a rectangle with all sides shrunk according to the given displacement
+	 *
+	 * Effectively moves the left/right edges in by deltaX, and the top/bottom edges in by deltaY
+	 */
+	constexpr Rectangle inset(Displacement factor) const
+	{
+		return {
+			position + factor,
+			Size { size.width - factor.deltaX * 2, size.height - factor.deltaY * 2 }
+		};
+	}
 };
 
 } // namespace devilution

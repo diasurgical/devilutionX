@@ -254,8 +254,8 @@ void UiSettingsMenu()
 
 		const Rectangle &uiRectangle = GetUIRectangle();
 
-		rectList = { { uiRectangle.position.x + 50, (uiRectangle.position.y + 204) }, { 540, 208 } };
-		rectDescription = { { uiRectangle.position.x + 24, rectList.position.y + rectList.size.height + 16 }, { 590, 35 } };
+		rectList = { uiRectangle.position + Displacement { 50, 204 }, Size { 540, 208 } };
+		rectDescription = { rectList.position + Displacement { -26, rectList.size.height + 16 }, Size { 590, 35 } };
 
 		optionDescription[0] = '\0';
 

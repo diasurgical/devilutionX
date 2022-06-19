@@ -31,4 +31,8 @@ inline SDL_Rect MakeSdlRect(Rectangle rect)
 	return MakeSdlRect(rect.position.x, rect.position.y, rect.size.width, rect.size.height);
 }
 
+constexpr Rectangle MakeRectangle(SDL_Rect sdlRect)
+{
+	return { Point { sdlRect.x, sdlRect.y }, Size { sdlRect.w, sdlRect.h } };
+}
 } // namespace devilution
