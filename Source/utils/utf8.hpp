@@ -30,20 +30,6 @@ inline char32_t ConsumeFirstUtf8CodePoint(string_view *input)
 }
 
 /**
- * Returns true if this is a byte that potentially starts a valid UTF-8 sequence.
- *
- * Well-formed UTF-8 sequences are described in table 3-7 of S3.9 of the Unicode Standard
- * see: https://www.unicode.org/versions/Unicode14.0.0/ch03.pdf#G7404
- *
- * This is not an inverse of IsTrailUtf8CodeUnit. Byte values C0-C1, F5-FF are not valid anywhere in a UTF-8 sequence.
- */
-constexpr bool IsLeadUtf8CodeUnit(char x)
-{
-	// single byte character || multibyte character leader
-	return (x >= '\x00' && x <= '\x7F') || (x >= '\xC2' && x <= '\xF4');
-}
-
-/**
  * Returns true if the character is part of the Basic Latin set.
  *
  * This includes ASCII punctuation, symbols, math operators, digits, and both uppercase/lowercase latin alphabets
@@ -64,8 +50,6 @@ inline bool IsTrailUtf8CodeUnit(char x)
 {
 	// The following is equivalent to a bitmask test (x & 0xC0) == 0x80
 	// On x86_64 architectures it ends up being one instruction shorter
-	// This invokes implementation defined behaviour on platforms where the underlying type of char is unsigned char
-	// until C++20 makes unsigned to signed conversion well defined
 	return static_cast<signed char>(x) < static_cast<signed char>('\xC0');
 }
 
