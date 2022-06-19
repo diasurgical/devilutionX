@@ -567,9 +567,9 @@ void InitCryptPieces()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 77) {
+			if (dPiece[i][j] == 76) {
 				dSpecial[i][j] = 1;
-			} else if (dPiece[i][j] == 80) {
+			} else if (dPiece[i][j] == 79) {
 				dSpecial[i][j] = 2;
 			}
 		}
@@ -841,17 +841,17 @@ void InitDungeonPieces()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			int8_t pc;
-			if (IsAnyOf(dPiece[i][j], 12, 71, 321, 211, 341, 418)) {
+			if (IsAnyOf(dPiece[i][j], 11, 70, 320, 210, 340, 417)) {
 				pc = 1;
-			} else if (IsAnyOf(dPiece[i][j], 11, 249, 325, 344, 331, 421)) {
+			} else if (IsAnyOf(dPiece[i][j], 10, 248, 324, 343, 330, 420)) {
 				pc = 2;
-			} else if (dPiece[i][j] == 253) {
+			} else if (dPiece[i][j] == 252) {
 				pc = 3;
-			} else if (dPiece[i][j] == 255) {
+			} else if (dPiece[i][j] == 254) {
 				pc = 4;
-			} else if (dPiece[i][j] == 259) {
+			} else if (dPiece[i][j] == 258) {
 				pc = 5;
-			} else if (dPiece[i][j] == 267) {
+			} else if (dPiece[i][j] == 266) {
 				pc = 6;
 			} else {
 				continue;
@@ -2043,11 +2043,11 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 	if (leveltype == DTYPE_CRYPT) {
 		for (int j = dminPosition.y; j < dmaxPosition.y; j++) {
 			for (int i = dminPosition.x; i < dmaxPosition.x; i++) {
-				if (dPiece[i][j] == 290) {
+				if (dPiece[i][j] == 289) {
 					UberRow = i;
 					UberCol = j;
 				}
-				if (dPiece[i][j] == 317) {
+				if (dPiece[i][j] == 316) {
 					CornerStone.position = { i, j };
 				}
 			}

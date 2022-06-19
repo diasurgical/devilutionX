@@ -434,7 +434,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		if (gbIsMultiplayer) {
 			for (int j = 0; j < MAXDUNY; j++) {
 				for (int i = 0; i < MAXDUNX; i++) {
-					if (dPiece[i][j] == 370) {
+					if (dPiece[i][j] == 369) {
 						trigs[numtrigs].position = { i, j };
 						trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 						numtrigs++;

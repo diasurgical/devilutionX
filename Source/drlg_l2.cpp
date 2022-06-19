@@ -1618,9 +1618,9 @@ void InitDungeonPieces()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			int8_t pc;
-			if (IsAnyOf(dPiece[i][j], 541, 178, 551)) {
+			if (IsAnyOf(dPiece[i][j], 540, 177, 550)) {
 				pc = 5;
-			} else if (IsAnyOf(dPiece[i][j], 542, 553)) {
+			} else if (IsAnyOf(dPiece[i][j], 541, 552)) {
 				pc = 6;
 			} else {
 				continue;
@@ -1630,10 +1630,10 @@ void InitDungeonPieces()
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 132) {
+			if (dPiece[i][j] == 131) {
 				dSpecial[i][j + 1] = 2;
 				dSpecial[i][j + 2] = 1;
-			} else if (dPiece[i][j] == 135 || dPiece[i][j] == 139) {
+			} else if (dPiece[i][j] == 134 || dPiece[i][j] == 138) {
 				dSpecial[i + 1][j] = 3;
 				dSpecial[i + 2][j] = 4;
 			}

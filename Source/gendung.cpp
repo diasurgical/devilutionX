@@ -43,7 +43,7 @@ int MicroTileLen;
 char TransVal;
 bool TransList[256];
 uint16_t dPiece[MAXDUNX][MAXDUNY];
-MICROS DPieceMicros[MAXTILES + 1];
+MICROS DPieceMicros[MAXTILES];
 int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
@@ -439,10 +439,7 @@ void CreateDungeon(uint32_t rseed, lvl_entry entry)
 
 bool TileHasAny(int tileId, TileProperties property)
 {
-	if (tileId == 0)
-		return false; // Change town to place 219 (218) instead of 0 and make dPiece zero indexed
-
-	return HasAnyOf(SOLData[tileId - 1], property);
+	return HasAnyOf(SOLData[tileId], property);
 }
 
 void LoadLevelSOLData()
@@ -497,7 +494,7 @@ void SetDungeonMicros()
 	for (int i = 0; i < tileCount / blocks; i++) {
 		uint16_t *pieces = &levelPieces[blocks * i];
 		for (int block = 0; block < blocks; block++) {
-			DPieceMicros[i + 1].mt[block] = SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]);
+			DPieceMicros[i].mt[block] = SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]);
 		}
 	}
 }
@@ -721,10 +718,10 @@ void DRLG_LPass3(int lv)
 {
 	{
 		MegaTile mega = pMegaTiles[lv];
-		int v1 = SDL_SwapLE16(mega.micro1) + 1;
-		int v2 = SDL_SwapLE16(mega.micro2) + 1;
-		int v3 = SDL_SwapLE16(mega.micro3) + 1;
-		int v4 = SDL_SwapLE16(mega.micro4) + 1;
+		int v1 = SDL_SwapLE16(mega.micro1);
+		int v2 = SDL_SwapLE16(mega.micro2);
+		int v3 = SDL_SwapLE16(mega.micro3);
+		int v4 = SDL_SwapLE16(mega.micro4);
 
 		for (int j = 0; j < MAXDUNY; j += 2) {
 			for (int i = 0; i < MAXDUNX; i += 2) {
@@ -740,23 +737,12 @@ void DRLG_LPass3(int lv)
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			int v1 = 0;
-			int v2 = 0;
-			int v3 = 0;
-			int v4 = 0;
-
 			int tileId = dungeon[i][j] - 1;
-			if (tileId >= 0) {
-				MegaTile mega = pMegaTiles[tileId];
-				v1 = SDL_SwapLE16(mega.micro1) + 1;
-				v2 = SDL_SwapLE16(mega.micro2) + 1;
-				v3 = SDL_SwapLE16(mega.micro3) + 1;
-				v4 = SDL_SwapLE16(mega.micro4) + 1;
-			}
-			dPiece[xx + 0][yy + 0] = v1;
-			dPiece[xx + 1][yy + 0] = v2;
-			dPiece[xx + 0][yy + 1] = v3;
-			dPiece[xx + 1][yy + 1] = v4;
+			MegaTile mega = pMegaTiles[tileId];
+			dPiece[xx + 0][yy + 0] = SDL_SwapLE16(mega.micro1);
+			dPiece[xx + 1][yy + 0] = SDL_SwapLE16(mega.micro2);
+			dPiece[xx + 0][yy + 1] = SDL_SwapLE16(mega.micro3);
+			dPiece[xx + 1][yy + 1] = SDL_SwapLE16(mega.micro4);
 			xx += 2;
 		}
 		yy += 2;
