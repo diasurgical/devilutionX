@@ -1,24 +1,44 @@
 #include "DiabloUI/button.h"
 
 #include "DiabloUI/diabloui.h"
-#include "DiabloUI/errorart.h"
+#include "engine/load_pcx.hpp"
+#include "engine/pcx_sprite.hpp"
 #include "engine/render/pcx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/display.h"
 
 namespace devilution {
 
+namespace {
+
+std::optional<OwnedPcxSpriteSheet> ButtonSprites;
+
+} // namespace
+
+void LoadDialogButtonGraphics()
+{
+	ButtonSprites = LoadPcxSpriteSheetAsset("ui_art\\dvl_but_sml.pcx", 2);
+	if (ButtonSprites == std::nullopt) {
+		ButtonSprites = LoadPcxSpriteSheetAsset("ui_art\\but_sml.pcx", 15);
+	}
+}
+
+void FreeDialogButtonGraphics()
+{
+	ButtonSprites = std::nullopt;
+}
+
 PcxSprite ButtonSprite(bool pressed)
 {
-	return PcxSprite { pressed ? ButtonPcxPressed : ButtonPcxDefault, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
+	return PcxSpriteSheet { *ButtonSprites }.sprite(pressed ? 1 : 0);
 }
 
 void RenderButton(UiButton *button)
 {
-	const Surface &out = Surface(DiabloUiSurface());
-	RenderPcxSprite(out, ButtonSprite(button->IsPressed()), { button->m_rect.x, button->m_rect.y });
+	const Surface &out = Surface(DiabloUiSurface()).subregion(button->m_rect.x, button->m_rect.y, button->m_rect.w, button->m_rect.h);
+	RenderPcxSprite(out, ButtonSprite(button->IsPressed()), { 0, 0 });
 
-	Rectangle textRect = MakeRectangle(button->m_rect);
+	Rectangle textRect { { 0, 0 }, { button->m_rect.w, button->m_rect.h } };
 	if (!button->IsPressed()) {
 		--textRect.position.y;
 	}
