@@ -180,7 +180,7 @@ void DrawCutsceneBackground()
 		const PcxSprite sprite { *ArtCutsceneWidescreen };
 		RenderPcxSprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
 	}
-	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, *sgpBackCel, 0);
+	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, CelSprite { *sgpBackCel }, 0);
 }
 
 void DrawCutsceneForeground()

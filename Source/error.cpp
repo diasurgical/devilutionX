@@ -144,21 +144,22 @@ void DrawDiabloMsg(const Surface &out)
 	auto &uiRectanglePosition = GetUIRectangle().position;
 	int dialogStartY = ((gnScreenHeight - GetMainPanel().size.height) / 2) - (ErrorWindowHeight / 2) + 9;
 
-	CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY }, *pSTextSlidCels, 0);
-	CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 1);
-	CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 2);
-	CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY }, *pSTextSlidCels, 3);
+	CelSprite sprite { *pSTextSlidCels };
+	CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY }, sprite, 0);
+	CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY + ErrorWindowHeight - 6 }, sprite, 1);
+	CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY + ErrorWindowHeight - 6 }, sprite, 2);
+	CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY }, sprite, 3);
 
 	int sx = uiRectanglePosition.x + 109;
 	for (int i = 0; i < 35; i++) {
-		CelDrawTo(out, { sx, dialogStartY }, *pSTextSlidCels, 4);
-		CelDrawTo(out, { sx, dialogStartY + ErrorWindowHeight - 6 }, *pSTextSlidCels, 6);
+		CelDrawTo(out, { sx, dialogStartY }, sprite, 4);
+		CelDrawTo(out, { sx, dialogStartY + ErrorWindowHeight - 6 }, sprite, 6);
 		sx += 12;
 	}
 	int drawnYborder = 12;
 	while ((drawnYborder + 12) < ErrorWindowHeight) {
-		CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY + drawnYborder }, *pSTextSlidCels, 5);
-		CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY + drawnYborder }, *pSTextSlidCels, 7);
+		CelDrawTo(out, { uiRectanglePosition.x + 101, dialogStartY + drawnYborder }, sprite, 5);
+		CelDrawTo(out, { uiRectanglePosition.x + 527, dialogStartY + drawnYborder }, sprite, 7);
 		drawnYborder += 12;
 	}
 

@@ -650,7 +650,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
 		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
@@ -758,7 +758,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	}
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
 		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}

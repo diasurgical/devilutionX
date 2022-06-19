@@ -37,7 +37,7 @@ void doom_draw(const Surface &out)
 		return;
 	}
 
-	CelDrawTo(out, GetUIRectangle().position + Displacement { 0, 352 }, *DoomCel, 0);
+	CelDrawTo(out, GetUIRectangle().position + Displacement { 0, 352 }, CelSprite { *DoomCel }, 0);
 }
 
 } // namespace devilution

@@ -146,7 +146,7 @@ void InitQTextMsg(_speech_id m)
 void DrawQTextBack(const Surface &out)
 {
 	const Point uiPosition = GetUIRectangle().position;
-	CelDrawTo(out, uiPosition + Displacement { 24, 327 }, *pTextBoxCels, 0);
+	CelDrawTo(out, uiPosition + Displacement { 24, 327 }, CelSprite { *pTextBoxCels }, 0);
 	DrawHalfTransparentRectTo(out, uiPosition.x + 27, uiPosition.y + 28, 585, 297);
 }
 

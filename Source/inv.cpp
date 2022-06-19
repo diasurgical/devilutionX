@@ -1130,7 +1130,7 @@ void InitInv()
 
 void DrawInv(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), *pInvCels, 0);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), CelSprite { *pInvCels }, 0);
 
 	Size slotSize[] = {
 		{ 2, 2 }, // head
@@ -1173,7 +1173,7 @@ void DrawInv(const Surface &out)
 				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			}
 
-			const auto &cel = GetInvItemSprite(cursId);
+			const CelSprite cel { GetInvItemSprite(cursId) };
 			const int celFrame = GetInvItemFrame(cursId);
 			const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
 
@@ -1213,7 +1213,7 @@ void DrawInv(const Surface &out)
 			int ii = myPlayer.InvGrid[j] - 1;
 			int cursId = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 
-			const auto &cel = GetInvItemSprite(cursId);
+			const CelSprite cel { GetInvItemSprite(cursId) };
 			const int celFrame = GetInvItemFrame(cursId);
 			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST]) + Displacement { 0, -1 };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
@@ -1254,7 +1254,7 @@ void DrawInvBelt(const Surface &out)
 		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
-		const auto &cel = GetInvItemSprite(cursId);
+		const CelSprite cel { GetInvItemSprite(cursId) };
 		const int celFrame = GetInvItemFrame(cursId);
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {

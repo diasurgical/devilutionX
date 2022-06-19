@@ -314,7 +314,7 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 	}
 	if (pItem._iDurability > 2)
 		c += 8;
-	CelDrawTo(out, { x, -17 + GetMainPanel().position.y }, *pDurIcons, c);
+	CelDrawTo(out, { x, -17 + GetMainPanel().position.y }, CelSprite { *pDurIcons }, c);
 	return x - 32 - 8;
 }
 
@@ -548,16 +548,22 @@ void InitControlPan()
 
 	LoadCharPanel();
 	LoadSpellIcons();
-	CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", GetMainPanel().size.width), 0);
+	{
+		const OwnedCelSprite sprite = LoadCel("CtrlPan\\Panel8.CEL", GetMainPanel().size.width);
+		CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, CelSprite { sprite }, 0);
+	}
 	{
 		const Point bulbsPosition { 0, 87 };
 		const OwnedCelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
-		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 0);
-		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 1);
+		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, CelSprite { statusPanel }, 0);
+		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, CelSprite { statusPanel }, 1);
 	}
 	talkflag = false;
 	if (IsChatAvailable()) {
-		CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width), 0);
+		{
+			const OwnedCelSprite sprite = LoadCel("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width);
+			CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, CelSprite { sprite }, 0);
+		}
 		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
@@ -617,16 +623,17 @@ void DrawCtrlBtns(const Surface &out)
 			DrawPanelBox(out, MakeSdlRect(PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20), mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y });
 		} else {
 			Point position = mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y + 18 };
-			CelDrawTo(out, position, *pPanelButtons, i);
+			CelDrawTo(out, position, CelSprite { *pPanelButtons }, i);
 			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
 		}
 	}
 	if (PanelButtonIndex == 8) {
-		CelDrawTo(out, mainPanelPosition + Displacement { 87, 122 }, *multiButtons, PanelButtons[6] ? 1 : 0);
+		CelSprite sprite { *multiButtons };
+		CelDrawTo(out, mainPanelPosition + Displacement { 87, 122 }, sprite, PanelButtons[6] ? 1 : 0);
 		if (MyPlayer->friendlyMode)
-			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, *multiButtons, PanelButtons[7] ? 3 : 2);
+			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, sprite, PanelButtons[7] ? 3 : 2);
 		else
-			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, *multiButtons, PanelButtons[7] ? 5 : 4);
+			CelDrawTo(out, mainPanelPosition + Displacement { 527, 122 }, sprite, PanelButtons[7] ? 5 : 4);
 	}
 }
 
@@ -951,7 +958,7 @@ void DrawLevelUpIcon(const Surface &out)
 	if (IsLevelUpButtonVisible()) {
 		int nCel = lvlbtndown ? 2 : 1;
 		DrawString(out, _("Level Up"), { GetMainPanel().position + Displacement { 0, -62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
-		CelDrawTo(out, GetMainPanel().position + Displacement { 40, -17 }, *pChrButtons, nCel);
+		CelDrawTo(out, GetMainPanel().position + Displacement { 40, -17 }, CelSprite { *pChrButtons }, nCel);
 	}
 }
 
@@ -1053,7 +1060,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 {
 	const int dialogX = 30;
 
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 0);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), CelSprite { *pGBoxBuff }, 0);
 
 	const std::string description = fmt::format(
 	    fmt::runtime(ngettext(
@@ -1142,14 +1149,14 @@ void DrawTalkPan(const Surface &out)
 		if (WhisperList[i]) {
 			if (TalkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 3 : 2;
-				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
+				CelDrawTo(out, talkPanPosition, CelSprite { *talkButtons }, nCel);
 				DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, 2);
 			}
 		} else {
 			int nCel = talkBtn != 0 ? 1 : 0;
 			if (TalkButtonsDown[talkBtn])
 				nCel += 4;
-			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
+			CelDrawTo(out, talkPanPosition, CelSprite { *talkButtons }, nCel);
 			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
 		}
 		if (player.plractive) {

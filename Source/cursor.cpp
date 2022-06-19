@@ -195,7 +195,7 @@ void NewCursor(int cursId)
 
 void CelDrawCursor(const Surface &out, Point position, int cursId)
 {
-	const auto &sprite = GetInvItemSprite(cursId);
+	const CelSprite sprite { GetInvItemSprite(cursId) };
 	const int frame = GetInvItemFrame(cursId);
 	if (!MyPlayer->HoldItem.isEmpty()) {
 		const auto &heldItem = MyPlayer->HoldItem;
