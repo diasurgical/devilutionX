@@ -370,7 +370,7 @@ void CheckPlayerNearby()
 	if (myPlayer.friendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		const Player &player = Players[i];
 		if (&player == MyPlayer)
 			continue;

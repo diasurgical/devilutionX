@@ -329,7 +329,7 @@ void ResetTalkMsg()
 
 	uint32_t pmask = 0;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if (WhisperList[i])
 			pmask |= 1 << i;
 	}
@@ -1151,7 +1151,7 @@ void DrawTalkPan(const Surface &out)
 
 	x += 46;
 	int talkBtn = 0;
-	for (int i = 0; i < 4; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		Player &player = Players[i];
 		if (&player == MyPlayer)
 			continue;
@@ -1219,13 +1219,13 @@ void control_release_talk_btn()
 
 	int off = (MousePosition.y - (69 + mainPanelPosition.y)) / 18;
 
-	int p = 0;
-	for (; p < MAX_PLRS && off != -1; p++) {
-		if (p != MyPlayerId)
+	size_t playerId = 0;
+	for (; playerId < Players.size() && off != -1; ++playerId) {
+		if (playerId != MyPlayerId)
 			off--;
 	}
-	if (p <= MAX_PLRS)
-		WhisperList[p - 1] = !WhisperList[p - 1];
+	if (playerId > 0 && playerId <= Players.size())
+		WhisperList[playerId - 1] = !WhisperList[playerId - 1];
 }
 
 void control_type_message()

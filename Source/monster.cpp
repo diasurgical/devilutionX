@@ -701,7 +701,7 @@ void UpdateEnemy(Monster &monster)
 	bool bestsameroom = false;
 	const auto &position = monster.position.tile;
 	if ((monster.flags & MFLAG_BERSERK) != 0 || (monster.flags & MFLAG_GOLEM) == 0) {
-		for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
+		for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 			Player &player = Players[pnum];
 			if (!player.plractive || !player.isOnActiveLevel() || player._pLvlChanging
 			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
@@ -712,7 +712,7 @@ void UpdateEnemy(Monster &monster)
 			    || ((sameroom || !bestsameroom) && dist < bestDist)
 			    || (menemy == -1)) {
 				monster.flags &= ~MFLAG_TARGETS_MONSTER;
-				menemy = pnum;
+				menemy = static_cast<int>(pnum);
 				target = player.position.future;
 				bestDist = dist;
 				bestsameroom = sameroom;
@@ -3682,7 +3682,7 @@ void WeakenNaKrul()
 void InitGolems()
 {
 	if (!setlevel) {
-		for (int i = 0; i < MAX_PLRS; i++)
+		for (size_t i = 0; i < MAX_PLRS; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 	}
 }
@@ -3750,7 +3750,7 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
 	if (setlevel)
-		for (int i = 0; i < MAX_PLRS; i++)
+		for (size_t i = 0; i < MAX_PLRS; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
@@ -4140,7 +4140,7 @@ void GolumAi(int monsterId)
 
 void DeleteMonsterList()
 {
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		auto &golem = Monsters[i];
 		if (!golem.isInvalid)
 			continue;

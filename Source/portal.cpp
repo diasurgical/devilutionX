@@ -152,7 +152,7 @@ void GetPortalLevel()
 		leveltype = Portals[portalindex].ltype;
 	}
 
-	if (portalindex == MyPlayerId) {
+	if (portalindex == static_cast<int>(MyPlayerId)) {
 		NetSendCmd(true, CMD_DEACTIVATEPORTAL);
 		DeactivatePortal(portalindex);
 	}
@@ -165,7 +165,7 @@ void GetPortalLvlPos()
 	} else {
 		ViewPosition = Portals[portalindex].position;
 
-		if (portalindex != MyPlayerId) {
+		if (portalindex != static_cast<int>(MyPlayerId)) {
 			ViewPosition.x++;
 			ViewPosition.y++;
 		}

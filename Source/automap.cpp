@@ -735,7 +735,7 @@ void DrawAutomap(const Surface &out)
 		screen.y += AmLine32;
 	}
 
-	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
+	for (size_t playerId = 0; playerId < Players.size(); playerId++) {
 		Player &player = Players[playerId];
 		if (player.isOnActiveLevel() && player.plractive && !player._pLvlChanging && (&player == MyPlayer || player.friendlyMode)) {
 			DrawAutomapPlr(out, myPlayerOffset, playerId);

@@ -1349,16 +1349,14 @@ void UpdateObjectLight(Object &light, int lightRadius)
 	bool turnon = false;
 	int ox = light.position.x;
 	int oy = light.position.y;
-	int tr = lightRadius + 10;
+	const int tr = lightRadius + 10;
 	if (!DisableLighting) {
-		for (int p = 0; p < MAX_PLRS && !turnon; p++) {
-			if (Players[p].plractive) {
-				if (Players[p].isOnActiveLevel()) {
-					int dx = abs(Players[p].position.tile.x - ox);
-					int dy = abs(Players[p].position.tile.y - oy);
-					if (dx < tr && dy < tr)
-						turnon = true;
-				}
+		for (const Player &player : Players) {
+			if (player.plractive && player.isOnActiveLevel()
+			    && abs(player.position.tile.x - ox) < tr
+			    && abs(player.position.tile.y - oy) < tr) {
+				turnon = true;
+				break;
 			}
 		}
 	}

@@ -150,7 +150,7 @@ bool IsNetPlayerValid(const Player &player)
 
 void CheckPlayerInfoTimeouts()
 {
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		Player &player = Players[i];
 		if (&player == MyPlayer) {
 			continue;
@@ -200,16 +200,16 @@ void MonsterSeeds()
 
 void HandleTurnUpperBit(int pnum)
 {
-	int i;
+	size_t i;
 
-	for (i = 0; i < MAX_PLRS; i++) {
-		if ((player_state[i] & PS_CONNECTED) != 0 && i != pnum)
+	for (i = 0; i < Players.size(); i++) {
+		if ((player_state[i] & PS_CONNECTED) != 0 && i != static_cast<size_t>(pnum))
 			break;
 	}
 
 	if (MyPlayerId == i) {
 		sgbSendDeltaTbl[pnum] = true;
-	} else if (pnum == MyPlayerId) {
+	} else if (pnum == static_cast<int>(MyPlayerId)) {
 		gbDeltaSender = i;
 	}
 }
@@ -262,7 +262,7 @@ void PlayerLeftMsg(int pnum, bool left)
 
 void ClearPlayerLeftState()
 {
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if (sgbPlayerLeftGameTbl[i]) {
 			if (gbBufferMsgs == 1)
 				msg_send_drop_pkt(i, sgdwPlayerLeftReasonTbl[i]);
@@ -277,7 +277,7 @@ void ClearPlayerLeftState()
 
 void CheckDropPlayer()
 {
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if ((player_state[i] & PS_ACTIVE) == 0 && (player_state[i] & PS_CONNECTED) != 0) {
 			SNetDropPlayer(i, LEAVE_DROP);
 		}
@@ -415,6 +415,8 @@ void UnregisterNetEventHandlers()
 
 bool InitSingle(GameData *gameData)
 {
+	Players.emplace_back();
+
 	if (!SNetInitializeProvider(SELCONN_LOOPBACK, gameData)) {
 		return false;
 	}
@@ -435,6 +437,8 @@ bool InitSingle(GameData *gameData)
 
 bool InitMulti(GameData *gameData)
 {
+	Players.resize(MAX_PLRS);
+
 	int playerId;
 
 	while (true) {
@@ -449,7 +453,7 @@ bool InitMulti(GameData *gameData)
 		gbSelectProvider = true;
 	}
 
-	if (playerId < 0 || playerId >= MAX_PLRS) {
+	if (static_cast<size_t>(playerId) >= Players.size()) {
 		return false;
 	}
 	MyPlayerId = playerId;
@@ -515,7 +519,7 @@ void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size)
 	pkt.hdr.wLen = static_cast<uint16_t>(len);
 	memcpy(pkt.body, data, size);
 	size_t playerID = 0;
-	for (size_t v = 1; playerID < MAX_PLRS; playerID++, v <<= 1) {
+	for (size_t v = 1; playerID < Players.size(); playerID++, v <<= 1) {
 		if ((v & pmask) != 0) {
 			if (!SNetSendMessage(playerID, &pkt.hdr, len) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
 				nthread_terminate_game("SNetSendMessage");
@@ -527,10 +531,10 @@ void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size)
 
 void multi_msg_countdown()
 {
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if ((player_state[i] & PS_TURN_ARRIVED) != 0) {
 			if (gdwMsgLenTbl[i] == sizeof(int32_t))
-				ParseTurn(i, *(int32_t *)glpMsgTbl[i]);
+				ParseTurn(static_cast<int>(i), *(int32_t *)glpMsgTbl[i]);
 		}
 	}
 }
@@ -555,7 +559,7 @@ bool multi_handle_delta()
 		return false;
 	}
 
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if (sgbSendDeltaTbl[i]) {
 			sgbSendDeltaTbl[i] = false;
 			DeltaExportData(i);
@@ -598,7 +602,7 @@ void multi_process_network_packets()
 		ClearPlayerLeftState();
 		if (dwMsgSize < sizeof(TPktHdr))
 			continue;
-		if (dwID < 0 || dwID >= MAX_PLRS)
+		if (static_cast<size_t>(dwID) >= Players.size())
 			continue;
 		if (pkt->wCheck != LoadBE32("\0\0ip"))
 			continue;
@@ -659,7 +663,7 @@ void multi_process_network_packets()
 
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
 {
-	assert(pnum != MyPlayerId);
+	assert(pnum != static_cast<int>(MyPlayerId));
 	assert(data != nullptr);
 	assert(size <= 0x0ffff);
 
@@ -705,6 +709,8 @@ void NetClose()
 	SNetLeaveGame(3);
 	if (gbIsMultiplayer)
 		SDL_Delay(2000);
+	Players.clear();
+	MyPlayer = nullptr;
 }
 
 bool NetInit(bool bSinglePlayer)
@@ -717,9 +723,8 @@ bool NetInit(bool bSinglePlayer)
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
 		memset(sgdwPlayerLeftReasonTbl, 0, sizeof(sgdwPlayerLeftReasonTbl));
 		memset(sgbSendDeltaTbl, 0, sizeof(sgbSendDeltaTbl));
-		for (Player &player : Players) {
-			player.Reset();
-		}
+		Players.clear();
+		MyPlayer = nullptr;
 		memset(sgwPackPlrOffsetTbl, 0, sizeof(sgwPackPlrOffsetTbl));
 		SNetSetBasePlayer(0);
 		if (bSinglePlayer) {

@@ -259,7 +259,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 
 void DoResurrect(int pnum, uint16_t rid)
 {
-	if ((pnum < 0 && pnum >= MAX_PLRS) || rid >= MAX_PLRS) {
+	if (static_cast<size_t>(pnum) >= Players.size() || rid >= Players.size()) {
 		return;
 	}
 

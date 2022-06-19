@@ -545,7 +545,7 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 		return;
 	}
 
-	if (pcursplr >= 0 && pcursplr < MAX_PLRS && &player == &Players[pcursplr])
+	if (pcursplr >= 0 && static_cast<size_t>(pcursplr) < Players.size() && &player == &Players[pcursplr])
 		Cl2DrawOutline(out, 165, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 
 	if (&player == MyPlayer) {
@@ -867,7 +867,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
 	int8_t playerId = dPlayer[tilePosition.x][tilePosition.y];
-	if (playerId > 0 && playerId <= MAX_PLRS) {
+	if (static_cast<size_t>(playerId - 1) <= Players.size()) {
 		DrawPlayerHelper(out, Players[playerId - 1], tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {

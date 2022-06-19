@@ -1035,7 +1035,7 @@ void InitMissiles()
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_INFRA) {
-				if (missile._misource == MyPlayerId)
+				if (missile._misource == static_cast<int>(MyPlayerId))
 					CalcPlrItemVals(myPlayer, true);
 			}
 		}
@@ -1046,7 +1046,7 @@ void InitMissiles()
 		myPlayer._pSpellFlags &= ~SpellFlag::RageCooldown;
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_BLODBOIL) {
-				if (missile._misource == MyPlayerId) {
+				if (missile._misource == static_cast<int>(MyPlayerId)) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
 					ApplyPlrDamage(myPlayer, 0, 1, missingHP + missile.var2);
@@ -1872,7 +1872,7 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 			other._mirange = 0;
 	}
 	PutMissile(missile);
-	if (missile._misource == MyPlayerId && !missile._miDelFlag && leveltype != DTYPE_TOWN) {
+	if (missile._misource == static_cast<int>(MyPlayerId) && !missile._miDelFlag && leveltype != DTYPE_TOWN) {
 		if (!setlevel) {
 			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, missile.position.tile, currlevel, leveltype, 0);
 		} else {

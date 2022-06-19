@@ -295,7 +295,7 @@ uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		return header.wLen + sizeof(header);
 	}
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		return header.wLen + sizeof(header);
 	}
 
@@ -312,7 +312,7 @@ uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 				continue;
 
 			if (GetLevelForMultiplayer(*MyPlayer) == level) {
-				SyncMonster(pnum > MyPlayerId, monsterSyncs[i]);
+				SyncMonster(pnum > static_cast<int>(MyPlayerId), monsterSyncs[i]);
 			}
 
 			delta_sync_monster(monsterSyncs[i], level);
