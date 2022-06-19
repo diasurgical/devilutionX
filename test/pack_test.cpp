@@ -332,7 +332,16 @@ const TestItemStruct DiabloItems[] = {
 	// clang-format on
 };
 
-TEST(PackTest, UnPackItem_diablo)
+class PackTest : public ::testing::Test {
+public:
+	void SetUp() override
+	{
+		Players.resize(1);
+		MyPlayer = &Players[0];
+	}
+};
+
+TEST_F(PackTest, UnPackItem_diablo)
 {
 	Item id;
 	ItemPack is;
@@ -353,7 +362,7 @@ TEST(PackTest, UnPackItem_diablo)
 	}
 }
 
-TEST(PackTest, UnPackItem_diablo_unique_bug)
+TEST_F(PackTest, UnPackItem_diablo_unique_bug)
 {
 	ItemPack pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
 	ItemPack pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
@@ -403,7 +412,7 @@ const TestItemStruct SpawnItems[] = {
 	// clang-format on
 };
 
-TEST(PackTest, UnPackItem_spawn)
+TEST_F(PackTest, UnPackItem_spawn)
 {
 	Item id;
 	ItemPack is;
@@ -447,7 +456,7 @@ const TestItemStruct DiabloMPItems[] = {
 	// clang-format on
 };
 
-TEST(PackTest, UnPackItem_diablo_multiplayer)
+TEST_F(PackTest, UnPackItem_diablo_multiplayer)
 {
 	Item id;
 	ItemPack is;
@@ -660,7 +669,7 @@ const TestItemStruct HellfireItems[] = {
 	// clang-format on
 };
 
-TEST(PackTest, UnPackItem_hellfire)
+TEST_F(PackTest, UnPackItem_hellfire)
 {
 	Item id;
 	ItemPack is;
@@ -682,7 +691,7 @@ TEST(PackTest, UnPackItem_hellfire)
 	}
 }
 
-TEST(PackTest, UnPackItem_diablo_strip_hellfire_items)
+TEST_F(PackTest, UnPackItem_diablo_strip_hellfire_items)
 {
 	ItemPack is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
 	Item id;
@@ -696,7 +705,7 @@ TEST(PackTest, UnPackItem_diablo_strip_hellfire_items)
 	ASSERT_EQ(id._itype, ItemType::None);
 }
 
-TEST(PackTest, UnPackItem_empty)
+TEST_F(PackTest, UnPackItem_empty)
 {
 	ItemPack is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	Item id;
@@ -706,7 +715,7 @@ TEST(PackTest, UnPackItem_empty)
 	ASSERT_EQ(id._itype, ItemType::None);
 }
 
-TEST(PackTest, PackItem_empty)
+TEST_F(PackTest, PackItem_empty)
 {
 	ItemPack is;
 	Item id = {};
@@ -737,25 +746,25 @@ static void compareGold(const ItemPack &is, int iCurs)
 	ComparePackedItems(is, is2);
 }
 
-TEST(PackTest, UnPackItem_gold_small)
+TEST_F(PackTest, UnPackItem_gold_small)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
 	compareGold(is, ICURS_GOLD_SMALL);
 }
 
-TEST(PackTest, UnPackItem_gold_medium)
+TEST_F(PackTest, UnPackItem_gold_medium)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
 	compareGold(is, ICURS_GOLD_MEDIUM);
 }
 
-TEST(PackTest, UnPackItem_gold_large)
+TEST_F(PackTest, UnPackItem_gold_large)
 {
 	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
 	compareGold(is, ICURS_GOLD_LARGE);
 }
 
-TEST(PackTest, UnPackItem_ear)
+TEST_F(PackTest, UnPackItem_ear)
 {
 	ItemPack is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
 	Item id;

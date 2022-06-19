@@ -7,6 +7,7 @@
 
 #include <array>
 #include <cstdint>
+#include <vector>
 
 #include "diablo.h"
 #include "engine.h"
@@ -453,11 +454,6 @@ struct Player {
 	bool IsWalking() const;
 
 	/**
-	 * @brief Resets all Data of the current Player
-	 */
-	void Reset();
-
-	/**
 	 * @brief Returns item location taking into consideration barbarian's ability to hold two-handed maces and clubs in one hand.
 	 */
 	item_equip_type GetItemLocation(const Item &item) const
@@ -738,9 +734,9 @@ struct Player {
 	}
 };
 
-extern DVL_API_FOR_TEST int MyPlayerId;
+extern DVL_API_FOR_TEST size_t MyPlayerId;
 extern DVL_API_FOR_TEST Player *MyPlayer;
-extern DVL_API_FOR_TEST Player Players[MAX_PLRS];
+extern DVL_API_FOR_TEST std::vector<Player> Players;
 extern bool MyPlayerIsDead;
 extern int BlockBonuses[enum_size<HeroClass>::value];
 

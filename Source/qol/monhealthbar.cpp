@@ -160,7 +160,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	}
 
 	int tagOffset = 5;
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if (1 << i & monster.mWhoHit) {
 			DrawArt(out, position + Displacement { tagOffset, height - 31 }, &playerExpTags, i + 1);
 		} else if (Players[i].plractive) {

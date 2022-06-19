@@ -710,7 +710,7 @@ void UpdateEnemy(Monster &monster)
 	bool bestsameroom = false;
 	const auto &position = monster.position.tile;
 	if ((monster._mFlags & MFLAG_BERSERK) != 0 || (monster._mFlags & MFLAG_GOLEM) == 0) {
-		for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
+		for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 			Player &player = Players[pnum];
 			if (!player.plractive || !player.isOnActiveLevel() || player._pLvlChanging
 			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
@@ -721,7 +721,7 @@ void UpdateEnemy(Monster &monster)
 			    || ((sameroom || !bestsameroom) && dist < bestDist)
 			    || (menemy == -1)) {
 				monster._mFlags &= ~MFLAG_TARGETS_MONSTER;
-				menemy = pnum;
+				menemy = static_cast<int>(pnum);
 				target = player.position.future;
 				bestDist = dist;
 				bestsameroom = sameroom;
@@ -1361,14 +1361,14 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	if (blkper < blk) {
 		Direction dir = GetDirection(player.position.tile, monster.position.tile);
 		StartPlrBlock(pnum, dir);
-		if (pnum == MyPlayerId && player.wReflections > 0) {
+		if (pnum == static_cast<int>(MyPlayerId) && player.wReflections > 0) {
 			int dam = GenerateRnd(((maxDam - minDam) << 6) + 1) + (minDam << 6);
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			CheckReflect(i, pnum, dam);
 		}
 		return;
 	}
-	if (monster.MType->mtype == MT_YZOMBIE && pnum == MyPlayerId) {
+	if (monster.MType->mtype == MT_YZOMBIE && pnum == static_cast<int>(MyPlayerId)) {
 		if (player._pMaxHP > 64) {
 			if (player._pMaxHPBase > 64) {
 				player._pMaxHP -= 64;
@@ -1384,7 +1384,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	}
 	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		if (player.wReflections > 0)
 			CheckReflect(i, pnum, dam);
 		ApplyPlrDamage(pnum, 0, 0, dam);
@@ -3738,7 +3738,7 @@ void monster_some_crypt()
 void InitGolems()
 {
 	if (!setlevel) {
-		for (int i = 0; i < MAX_PLRS; i++)
+		for (size_t i = 0; i < Players.size(); i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 	}
 }
@@ -3806,7 +3806,7 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
 	if (setlevel)
-		for (int i = 0; i < MAX_PLRS; i++)
+		for (size_t i = 0; i < MAX_PLRS; i++)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
@@ -3954,7 +3954,7 @@ void M_StartHit(int i, int pnum, int dam)
 	Monster &monster = Monsters[i];
 
 	monster.mWhoHit |= 1 << pnum;
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		delta_monster_hp(i, monster._mhitpoints, *MyPlayer);
 		NetSendCmdMonDmg(false, i, dam);
 	}
@@ -3982,7 +3982,7 @@ void M_StartKill(int i, int pnum)
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (MyPlayerId == pnum) {
+	if (static_cast<int>(MyPlayerId) == pnum) {
 		delta_kill_monster(i, monster.position.tile, *MyPlayer);
 		if (i != pnum) {
 			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, i);
@@ -4194,7 +4194,7 @@ void GolumAi(int i)
 
 void DeleteMonsterList()
 {
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		auto &golem = Monsters[i];
 		if (!golem._mDelFlag)
 			continue;
@@ -4831,7 +4831,7 @@ void TalktoMonster(Monster &monster)
 
 void SpawnGolem(int i, Point position, Missile &missile)
 {
-	assert(i >= 0 && i < MAX_PLRS);
+	assert(i >= 0 && static_cast<size_t>(i) < Players.size());
 	Player &player = Players[i];
 	auto &golem = Monsters[i];
 
@@ -4849,7 +4849,7 @@ void SpawnGolem(int i, Point position, Missile &missile)
 	golem._mFlags |= MFLAG_GOLEM;
 	StartSpecialStand(golem, Direction::South);
 	UpdateEnemy(golem);
-	if (i == MyPlayerId) {
+	if (i == static_cast<int>(MyPlayerId)) {
 		NetSendCmdGolem(
 		    golem.position.tile.x,
 		    golem.position.tile.y,

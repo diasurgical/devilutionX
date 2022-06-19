@@ -333,6 +333,7 @@ TEST(Writehero, pfile_write_hero)
 	leveltype = DTYPE_TOWN;
 	giNumberOfLevels = 17;
 
+	Players.resize(1);
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
 	*MyPlayer = {};

@@ -110,7 +110,7 @@ void CheckPath(Point startPosition, Point destinationPosition, std::vector<int8_
 	// Die early if the wrong path length is returned as we don't want to read oob in expectedSteps
 	ASSERT_LE(pathLength, expectedSteps.size()) << "Path is longer than expected.";
 
-	for (auto i = 0; i < pathLength; i++) {
+	for (int i = 0; i < pathLength; i++) {
 		EXPECT_EQ(pathSteps[i], expectedSteps[i]) << "Path step " << i << " differs from expectation for a path from "
 		                                          << startPosition << " to " << destinationPosition; // this shouldn't be a requirement but...
 

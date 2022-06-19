@@ -75,7 +75,7 @@ bool DoPickup(Item item)
 
 void AutoPickup(int pnum)
 {
-	if (pnum != MyPlayerId)
+	if (pnum != static_cast<int>(MyPlayerId))
 		return;
 	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoPickupInTown)
 		return;

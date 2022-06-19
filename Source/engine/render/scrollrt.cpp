@@ -548,7 +548,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	if (pnum == pcursplr)
 		Cl2DrawOutline(out, 165, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		Cl2Draw(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 		DrawPlayerIcons(out, player, targetBufferPosition, false);
 		return;
@@ -582,7 +582,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 {
 	dFlags[tilePosition.x][tilePosition.y] &= ~DungeonFlag::DeadPlayer;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		Player &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.isOnActiveLevel() && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;

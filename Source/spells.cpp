@@ -100,7 +100,7 @@ void PlacePlayer(int pnum)
 
 	dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		ViewPosition = newPosition;
 	}
 }
@@ -170,7 +170,7 @@ void UseMana(int id, spell_id sn)
 {
 	int ma; // mana cost
 
-	if (id != MyPlayerId)
+	if (id != static_cast<int>(MyPlayerId))
 		return;
 
 	Player &myPlayer = *MyPlayer;

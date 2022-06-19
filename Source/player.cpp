@@ -37,9 +37,9 @@
 
 namespace devilution {
 
-int MyPlayerId;
-Player *MyPlayer = &Players[MyPlayerId];
-Player Players[MAX_PLRS];
+size_t MyPlayerId;
+Player *MyPlayer;
+std::vector<Player> Players;
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
@@ -324,7 +324,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.tileAdd;
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		ScrollViewPort(player, dirModeParams.scrollDir);
 	}
 
@@ -355,7 +355,7 @@ void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 {
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId)) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -397,7 +397,7 @@ void StartWalkStand(int pnum)
 	player.position.future = player.position.tile;
 	player.position.offset = { 0, 0 };
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
@@ -434,7 +434,7 @@ void StartAttack(int pnum, Direction d)
 	}
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId)) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -466,7 +466,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	}
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId)) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -507,7 +507,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		app_fatal("StartSpell: illegal player %i", pnum);
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId)) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -613,19 +613,19 @@ void InitLevelChange(int pnum)
 	player.pManaShield = false;
 	player.wReflections = 0;
 	// share info about your manashield when another player joins the level
-	if (pnum != MyPlayerId && myPlayer.pManaShield)
+	if (pnum != static_cast<int>(MyPlayerId) && myPlayer.pManaShield)
 		NetSendCmd(true, CMD_SETSHIELD);
 	// share info about your reflect charges when another player joins the level
-	if (pnum != MyPlayerId)
+	if (pnum != static_cast<int>(MyPlayerId))
 		NetSendCmdParam1(true, CMD_SETREFLECT, myPlayer.wReflections);
-	if (pnum == MyPlayerId && qtextflag) {
+	if (pnum == static_cast<int>(MyPlayerId) && qtextflag) {
 		qtextflag = false;
 		stream_stop();
 	}
 
 	RemovePlrFromMap(pnum);
 	SetPlayerOld(player);
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	} else {
 		player._pLvlVisited[player.plrlevel] = true;
@@ -635,7 +635,7 @@ void InitLevelChange(int pnum)
 	player.destAction = ACTION_NONE;
 	player._pLvlChanging = true;
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		player.pLvlLoad = 10;
 	}
 }
@@ -686,7 +686,7 @@ bool DoWalk(int pnum, int variant)
 		}
 
 		// Update the "camera" tile position
-		if (pnum == MyPlayerId && ScrollInfo._sdir != ScrollDirection::None) {
+		if (pnum == static_cast<int>(MyPlayerId) && ScrollInfo._sdir != ScrollDirection::None) {
 			ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 		}
 
@@ -902,7 +902,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	if (adjacentDamage)
 		dam >>= 2;
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Peril)) {
 			dam2 += player._pIGetHit << 6;
 			if (dam2 >= 0) {
@@ -1466,7 +1466,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	Direction d;
 	if (player.walkpath[0] != WALK_NONE) {
 		if (player._pmode == PM_STAND) {
-			if (pnum == MyPlayerId) {
+			if (pnum == static_cast<int>(MyPlayerId)) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
 					if (player.destAction == ACTION_ATTACKMON) {
 						x = abs(player.position.future.x - monster->position.future.x);
@@ -1633,7 +1633,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_PICKUPITEM:
-			if (pnum == MyPlayerId) {
+			if (pnum == static_cast<int>(MyPlayerId)) {
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
@@ -1643,7 +1643,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_PICKUPAITEM:
-			if (pnum == MyPlayerId) {
+			if (pnum == static_cast<int>(MyPlayerId)) {
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
@@ -1652,7 +1652,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_TALK:
-			if (pnum == MyPlayerId) {
+			if (pnum == static_cast<int>(MyPlayerId)) {
 				TalkToTowner(player, player.destParam1);
 			}
 			break;
@@ -1750,8 +1750,8 @@ bool PlrDeathModeOK(Player &player)
 
 void ValidatePlayer()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
-		app_fatal("ValidatePlayer: illegal player %i", MyPlayerId);
+	if (MyPlayerId >= MAX_PLRS) {
+		app_fatal("Invalid player %u", static_cast<unsigned>(MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
 
@@ -1983,13 +1983,6 @@ void Player::Stop()
 bool Player::IsWalking() const
 {
 	return IsAnyOf(_pmode, PM_WALK, PM_WALK2, PM_WALK3);
-}
-
-void Player::Reset()
-{
-	// Create empty default initialized Player on heap to avoid excessive stack usage
-	auto emptyPlayer = std::make_unique<Player>();
-	*this = std::move(*emptyPlayer);
 }
 
 int Player::GetManaShieldDamageReduction()
@@ -2449,7 +2442,7 @@ void CreatePlayer(int playerId, HeroClass c)
 	}
 	Player &player = Players[playerId];
 
-	player.Reset();
+	player = {};
 	SetRndSeed(SDL_GetTicks());
 
 	player._pClass = c;
@@ -2702,7 +2695,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 void AddPlrMonstExper(int lvl, int exp, char pmask)
 {
 	int totplrs = 0;
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if (((1 << i) & pmask) != 0) {
 			totplrs++;
 		}
@@ -2717,12 +2710,10 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 
 void InitPlayer(Player &player, bool firstTime)
 {
-	Player &myPlayer = *MyPlayer;
-
 	if (firstTime) {
 		player._pRSplType = RSPLTYPE_INVALID;
 		player._pRSpell = SPL_INVALID;
-		if (&player == &myPlayer)
+		if (&player == MyPlayer)
 			LoadHotkeys();
 		player._pSBkSpell = SPL_INVALID;
 		player._pSpell = player._pRSpell;
@@ -2753,7 +2744,7 @@ void InitPlayer(Player &player, bool firstTime)
 
 		player._pdir = Direction::South;
 
-		if (&player == &myPlayer) {
+		if (&player == MyPlayer) {
 			if (!firstTime || leveltype != DTYPE_TOWN) {
 				player.position.tile = ViewPosition;
 			}
@@ -2769,13 +2760,13 @@ void InitPlayer(Player &player, bool firstTime)
 		player.walkpath[0] = WALK_NONE;
 		player.destAction = ACTION_NONE;
 
-		if (&player == &myPlayer) {
+		if (&player == MyPlayer) {
 			player._plid = AddLight(player.position.tile, player._pLightRad);
 			ChangeLightXY(player._plid, player.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player._plid = NO_LIGHT;
 		}
-		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == &myPlayer);
+		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == MyPlayer);
 	}
 
 	if (player._pClass == HeroClass::Warrior) {
@@ -2795,7 +2786,7 @@ void InitPlayer(Player &player, bool firstTime)
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
 	player._pInvincible = false;
 
-	if (&player == &myPlayer) {
+	if (&player == MyPlayer) {
 		MyPlayerIsDead = false;
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
@@ -2804,8 +2795,8 @@ void InitPlayer(Player &player, bool firstTime)
 
 void InitMultiView()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
-		app_fatal("InitPlayer: illegal player %i", MyPlayerId);
+	if (MyPlayerId >= MAX_PLRS) {
+		app_fatal("Invalid player %u", static_cast<unsigned>(MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
 
@@ -2863,7 +2854,7 @@ void StartStand(int pnum, Direction dir)
 	}
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId)) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -2883,7 +2874,7 @@ void StartPlrBlock(int pnum, Direction dir)
 	}
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId)) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -2941,7 +2932,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	}
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId) {
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId)) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -2997,7 +2988,7 @@ StartPlayerKill(int pnum, int earflag)
 		return;
 	}
 
-	if (MyPlayerId == pnum) {
+	if (static_cast<int>(MyPlayerId) == pnum) {
 		NetSendCmdParam1(true, CMD_PLRDEAD, earflag);
 	}
 
@@ -3021,7 +3012,7 @@ StartPlayerKill(int pnum, int earflag)
 	player._pInvincible = true;
 	SetPlayerHitPoints(player, 0);
 
-	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
+	if (pnum != static_cast<int>(MyPlayerId) && earflag == 0 && !diablolevel) {
 		for (auto &item : player.InvBody) {
 			item.clear();
 		}
@@ -3034,7 +3025,7 @@ StartPlayerKill(int pnum, int earflag)
 		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
 
-		if (pnum == MyPlayerId) {
+		if (pnum == static_cast<int>(MyPlayerId)) {
 			drawhpflag = true;
 
 			if (!player.HoldItem.isEmpty()) {
@@ -3116,7 +3107,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 		if (manaShieldLevel > 0) {
 			totalDamage += totalDamage / -player.GetManaShieldDamageReduction();
 		}
-		if (pnum == MyPlayerId)
+		if (pnum == static_cast<int>(MyPlayerId))
 			drawmanaflag = true;
 		if (player._pMana >= totalDamage) {
 			player._pMana -= totalDamage;
@@ -3129,7 +3120,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 			}
 			player._pMana = 0;
 			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
-			if (pnum == MyPlayerId)
+			if (pnum == static_cast<int>(MyPlayerId))
 				NetSendCmd(true, CMD_REMSHIELD);
 		}
 	}
@@ -3168,7 +3159,7 @@ void SyncPlrKill(int pnum, int earflag)
 
 void RemovePlrMissiles(int pnum)
 {
-	if (leveltype != DTYPE_TOWN && pnum == MyPlayerId) {
+	if (leveltype != DTYPE_TOWN && pnum == static_cast<int>(MyPlayerId)) {
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
@@ -3223,7 +3214,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 		app_fatal("StartNewLvl");
 	}
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
 		PostMessage(fom, 0, 0);
@@ -3251,7 +3242,7 @@ void RestartTownLvl(int pnum)
 
 	CalcPlrInv(player, false);
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
 		PostMessage(WM_DIABRETOWN, 0, 0);
@@ -3275,7 +3266,7 @@ void StartWarpLvl(int pnum, int pidx)
 		}
 	}
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		SetCurrentPortal(pidx);
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
@@ -3285,8 +3276,8 @@ void StartWarpLvl(int pnum, int pidx)
 
 void ProcessPlayers()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
-		app_fatal("ProcessPlayers: illegal player %i", MyPlayerId);
+	if (MyPlayerId >= MAX_PLRS) {
+		app_fatal("Illegal player %u", static_cast<unsigned>(MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
 
@@ -3318,7 +3309,7 @@ void ProcessPlayers()
 
 	ValidatePlayer();
 
-	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
+	for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 		Player &player = Players[pnum];
 		if (player.plractive && player.isOnActiveLevel() && (pnum == MyPlayerId || !player._pLvlChanging)) {
 			CheckCheatStats(player);
@@ -3453,8 +3444,8 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 	bool addflag = false;
 	int sl;
 
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
-		app_fatal("CheckPlrSpell: illegal player %i", MyPlayerId);
+	if (MyPlayerId >= MAX_PLRS) {
+		app_fatal("Invalid player %u", static_cast<unsigned>(MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
 
@@ -3624,7 +3615,7 @@ void SyncInitPlrPos(int pnum)
 	player.position.tile = position;
 	dPlayer[position.x][position.y] = pnum + 1;
 
-	if (pnum == MyPlayerId) {
+	if (pnum == static_cast<int>(MyPlayerId)) {
 		player.position.future = position;
 		ViewPosition = position;
 	}
@@ -3639,7 +3630,7 @@ void SyncInitPlr(int pnum)
 
 	SetPlrAnims(player);
 	SyncInitPlrPos(pnum);
-	if (pnum != MyPlayerId)
+	if (pnum != static_cast<int>(MyPlayerId))
 		player._plid = NO_LIGHT;
 }
 
@@ -3813,8 +3804,8 @@ enum {
 
 void PlayDungMsgs()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
-		app_fatal("PlayDungMsgs: illegal player %i", MyPlayerId);
+	if (MyPlayerId >= MAX_PLRS) {
+		app_fatal("Invalid player %u", static_cast<unsigned>(MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
 

@@ -83,6 +83,8 @@ BlockTestCase BlockData[] = {
 
 TEST(Player, PM_DoGotHit)
 {
+	Players.resize(1);
+	MyPlayer = &Players[0];
 	for (size_t i = 0; i < sizeof(BlockData) / sizeof(*BlockData); i++) {
 		EXPECT_EQ(BlockData[i].expectedRecoveryFrame, RunBlockTest(BlockData[i].maxRecoveryFrame, BlockData[i].itemFlags));
 	}
@@ -181,6 +183,7 @@ static void AssertPlayer(Player &player)
 
 TEST(Player, CreatePlayer)
 {
+	Players.resize(1);
 	CreatePlayer(0, HeroClass::Rogue);
 	AssertPlayer(Players[0]);
 }

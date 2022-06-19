@@ -3002,7 +3002,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 
 void SetupItem(Item &item)
 {
-	item.setNewAnimation(MyPlayer->pLvlLoad == 0);
+	item.setNewAnimation(MyPlayer != nullptr && MyPlayer->pLvlLoad == 0);
 	item._iIdentified = false;
 }
 
@@ -3910,7 +3910,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 	case IMISC_SCROLL:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (pnum == MyPlayerId)
+			if (pnum == static_cast<int>(MyPlayerId))
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -3920,14 +3920,14 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;
 			player.destParam2 = cursPosition.y;
-			if (pnum == MyPlayerId && spl == SPL_NOVA)
+			if (pnum == static_cast<int>(MyPlayerId) && spl == SPL_NOVA)
 				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
 		}
 		break;
 	case IMISC_SCROLLT:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (pnum == MyPlayerId)
+			if (pnum == static_cast<int>(MyPlayerId))
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -3973,7 +3973,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
 		player._pOilType = mid;
-		if (pnum != MyPlayerId) {
+		if (pnum != static_cast<int>(MyPlayerId)) {
 			return;
 		}
 		if (sbookflag) {
@@ -3992,27 +3992,27 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SPL_RUNEFIRE;
-		if (pnum == MyPlayerId)
+		if (pnum == static_cast<int>(MyPlayerId))
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
 		player._pTSpell = SPL_RUNELIGHT;
-		if (pnum == MyPlayerId)
+		if (pnum == static_cast<int>(MyPlayerId))
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
 		player._pTSpell = SPL_RUNENOVA;
-		if (pnum == MyPlayerId)
+		if (pnum == static_cast<int>(MyPlayerId))
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
 		player._pTSpell = SPL_RUNEIMMOLAT;
-		if (pnum == MyPlayerId)
+		if (pnum == static_cast<int>(MyPlayerId))
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
 		player._pTSpell = SPL_RUNESTONE;
-		if (pnum == MyPlayerId)
+		if (pnum == static_cast<int>(MyPlayerId))
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	default:

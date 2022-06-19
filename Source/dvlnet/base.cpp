@@ -4,6 +4,8 @@
 #include <cstring>
 #include <memory>
 
+#include "player.h"
+
 namespace devilution {
 namespace net {
 
@@ -218,7 +220,7 @@ bool base::SNetSendMessage(int playerId, void *data, unsigned int size)
 
 bool base::AllTurnsArrived()
 {
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		PlayerState &playerState = playerStateTable_[i];
 		if (!playerState.isConnected)
 			continue;
@@ -237,7 +239,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 {
 	poll();
 
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		status[i] = 0;
 
 		PlayerState &playerState = playerStateTable_[i];
@@ -257,7 +259,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 	}
 
 	if (AllTurnsArrived()) {
-		for (auto i = 0; i < MAX_PLRS; ++i) {
+		for (size_t i = 0; i < Players.size(); ++i) {
 			PlayerState &playerState = playerStateTable_[i];
 			if (!playerState.isConnected)
 				continue;
@@ -284,7 +286,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 		return true;
 	}
 
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		PlayerState &playerState = playerStateTable_[i];
 		if (!playerState.isConnected)
 			continue;
@@ -414,7 +416,7 @@ bool base::SNetDropPlayer(int playerid, uint32_t flags)
 
 plr_t base::GetOwner()
 {
-	for (auto i = 0; i < MAX_PLRS; ++i) {
+	for (size_t i = 0; i < Players.size(); ++i) {
 		if (IsConnected(i)) {
 			return i;
 		}
