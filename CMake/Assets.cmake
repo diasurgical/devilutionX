@@ -159,6 +159,7 @@ set(devilutionx_assets
   gendata/cutstartw.pcx
   Levels/L1Data/SklKngT.dun
   Levels/L2Data/BonechaT.dun
+  ui_art/black.pcx
   ui_art/creditsw.pcx
   ui_art/dvl_but_sml.pcx
   ui_art/dvl_lrpopup.pcx
