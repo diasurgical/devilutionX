@@ -35,7 +35,7 @@ void SaveStatisticsToMap()
 
 void CalculateInGameTime()
 {
-	uint64_t ticksNow = SDL_GetTicks64();
+	uint32_t ticksNow = SDL_GetTicks();
 	myPlayerStatistics.ingameTime += (ticksNow - myPlayerStatistics.ticksSubstrahend);
 	myPlayerStatistics.ticksSubstrahend = ticksNow;
 }

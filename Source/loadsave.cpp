@@ -1936,7 +1936,7 @@ void LoadStatistics()
 
 	std::string readString;
 	size_t sizeFile = file.getSize();
-	for (int i = 0; i < sizeFile; i++) {
+	for (size_t i = 0; i < sizeFile; i++) {
 		readString += file.NextLE<char>();
 	}
 
@@ -1972,7 +1972,7 @@ void SaveStatistics(MpqWriter &saveWriter)
 	strcpy(charArrayToSave, stringToSave.c_str());
 
 	SaveHelper file(saveWriter, "statistics", stringToSaveLength);
-	for (int i = 0; i < stringToSaveLength; i++) {
+	for (size_t i = 0; i < stringToSaveLength; i++) {
 		char charToSave = *(charArrayToSave + i);
 		file.WriteLE<char>(charToSave);
 	}

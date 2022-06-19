@@ -10,7 +10,7 @@ namespace devilution {
 struct Statistics {
 	uint32_t deathCount = 0;
 	uint64_t ingameTime = 0;
-	uint64_t ticksSubstrahend = SDL_GetTicks64();
+	uint32_t ticksSubstrahend = SDL_GetTicks();
 };
 
 extern std::map<std::string, std::string> statisticsFile;
