@@ -160,6 +160,8 @@ set(devilutionx_assets
   Levels/L1Data/SklKngT.dun
   Levels/L2Data/BonechaT.dun
   ui_art/creditsw.pcx
+  ui_art/dvl_but_sml.pcx
+  ui_art/dvl_lrpopup.pcx
   ui_art/hf_titlew.pcx
   ui_art/mainmenuw.pcx
   ui_art/supportw.pcx)

@@ -123,7 +123,6 @@ set(libdevilutionx_SRCS
   DiabloUI/credits_lines.cpp
   DiabloUI/diabloui.cpp
   DiabloUI/dialogs.cpp
-  DiabloUI/errorart.cpp
   DiabloUI/mainmenu.cpp
   DiabloUI/progress.cpp
   DiabloUI/scrollbar.cpp

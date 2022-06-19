@@ -5,9 +5,11 @@
 
 namespace devilution {
 
-const Uint16 SML_BUTTON_WIDTH = 110;
-const Uint16 SML_BUTTON_HEIGHT = 28;
+const Uint16 DialogButtonWidth = 110;
+const Uint16 DialogButtonHeight = 28;
 
+void LoadDialogButtonGraphics();
+void FreeDialogButtonGraphics();
 PcxSprite ButtonSprite(bool pressed);
 void RenderButton(UiButton *button);
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button);

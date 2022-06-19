@@ -4,7 +4,6 @@
 
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
-#include "DiabloUI/errorart.h"
 #include "control.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
@@ -22,10 +21,6 @@ namespace devilution {
 
 namespace {
 
-constexpr int EmbeddedErrorDialogWidth = 385;
-constexpr int EmbeddedErrorDialogHeight = 280;
-
-Art dialogArt;
 std::optional<OwnedPcxSprite> dialogPcx;
 std::string wrappedText;
 
@@ -171,19 +166,20 @@ std::optional<PcxSprite> LoadDialogSprite(bool hasCaption, bool isError)
 	constexpr uint8_t TransparentColor = 255;
 	if (!hasCaption) {
 		dialogPcx = LoadPcxAsset(isError ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", TransparentColor);
-		return PcxSprite { *dialogPcx };
+	} else if (isError) {
+		dialogPcx = LoadPcxAsset("ui_art\\dvl_lrpopup.pcx");
+		if (dialogPcx == std::nullopt) {
+			dialogPcx = LoadPcxAsset("ui_art\\lrpopup.pcx", /*transparentColor=*/255);
+		}
+	} else {
+		dialogPcx = LoadPcxAsset("ui_art\\lpopup.pcx", TransparentColor);
 	}
-	if (isError) {
-#if DEVILUTIONX_EMBEDDED_ERROR_DIALOG_BACKGROUND
-		LoadArt(&dialogArt, PopupData, EmbeddedErrorDialogWidth, EmbeddedErrorDialogHeight);
-#endif
+	if (!dialogPcx)
 		return std::nullopt;
-	}
-	dialogPcx = LoadPcxAsset("ui_art\\lpopup.pcx", TransparentColor);
 	return PcxSprite { *dialogPcx };
 }
 
-void Init(string_view caption, string_view text, bool error, bool renderBehind)
+bool Init(string_view caption, string_view text, bool error, bool renderBehind)
 {
 	if (!renderBehind) {
 		ArtBackground = std::nullopt;
@@ -194,36 +190,29 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 				Log("{}", SDL_GetError());
 		}
 	}
+	LoadDialogButtonGraphics();
 
 	std::optional<PcxSprite> dialogSprite = LoadDialogSprite(!caption.empty(), error);
-	const int dialogWidth = dialogSprite ? dialogSprite->width() : EmbeddedErrorDialogWidth;
+	if (!dialogSprite)
+		return false;
+
+	const int dialogWidth = dialogSprite->width();
 	const int textWidth = dialogWidth - 40;
 
 	wrappedText = WordWrapString(text, textWidth, FontSizeDialog);
 
 	const Point uiPosition = GetUIRectangle().position;
 	if (caption.empty()) {
-		if (dialogSprite) {
-			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogSprite->width(), dialogSprite->height());
-			vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
-		} else if (dialogArt.surface != nullptr) {
-			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, EmbeddedErrorDialogWidth, EmbeddedErrorDialogHeight);
-			vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
-		}
-
+		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogSprite->width(), dialogSprite->height());
+		vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
 		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 200, uiPosition.y + 211, textWidth, 80);
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
-		SDL_Rect rect3 = MakeSdlRect(uiPosition.x + 265, uiPosition.y + 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
+		SDL_Rect rect3 = MakeSdlRect(uiPosition.x + 265, uiPosition.y + 265, DialogButtonWidth, DialogButtonHeight);
 		vecOkDialog.push_back(std::make_unique<UiButton>(_("OK"), &DialogActionOK, rect3));
 	} else {
-		if (dialogSprite) {
-			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogSprite->width(), dialogSprite->height());
-			vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
-		} else if (dialogArt.surface != nullptr) {
-			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, EmbeddedErrorDialogWidth, EmbeddedErrorDialogHeight);
-			vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
-		}
+		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogSprite->width(), dialogSprite->height());
+		vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
 
 		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 110, textWidth, 20);
 		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogYellow));
@@ -231,17 +220,18 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 		SDL_Rect rect3 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 141, textWidth, 190);
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect3, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
-		SDL_Rect rect4 = MakeSdlRect(uiPosition.x + 264, uiPosition.y + 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT);
+		SDL_Rect rect4 = MakeSdlRect(uiPosition.x + 264, uiPosition.y + 335, DialogButtonWidth, DialogButtonHeight);
 		vecOkDialog.push_back(std::make_unique<UiButton>(_("OK"), &DialogActionOK, rect4));
 	}
+	return true;
 }
 
 void Deinit()
 {
-	dialogArt.Unload();
 	dialogPcx = std::nullopt;
 	vecOkDialog.clear();
 	ArtBackground = std::nullopt;
+	FreeDialogButtonGraphics();
 }
 
 void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
@@ -295,11 +285,11 @@ void UiOkDialog(string_view caption, string_view text, bool error, const std::ve
 	if (!gbActive || inDialog) {
 		if (!gbQuietMode) {
 			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
-				Log("{}", SDL_GetError());
+				LogError("{}", SDL_GetError());
 			std::string captionStr = std::string(caption);
 			std::string textStr = std::string(caption);
 			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, captionStr.c_str(), textStr.c_str(), nullptr) <= -1) {
-				Log("{}", SDL_GetError());
+				LogError("{}", SDL_GetError());
 			}
 		}
 		return;
@@ -307,12 +297,20 @@ void UiOkDialog(string_view caption, string_view text, bool error, const std::ve
 
 	if (IsHardwareCursor()) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1)
-			Log("{}", SDL_GetError());
+			LogError("{}", SDL_GetError());
+	}
+
+	if (!Init(caption, text, error, !renderBehind.empty())) {
+		LogError("{}\n{}", caption, text);
+		std::string captionStr = std::string(caption);
+		std::string textStr = std::string(caption);
+		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, captionStr.c_str(), textStr.c_str(), nullptr) <= -1) {
+			LogError("{}", SDL_GetError());
+		}
 	}
 
 	inDialog = true;
 	SDL_SetClipRect(DiabloUiSurface(), nullptr);
-	Init(caption, text, error, !renderBehind.empty());
 	DialogLoop(vecOkDialog, renderBehind);
 	Deinit();
 	inDialog = false;

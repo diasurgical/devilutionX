@@ -17,7 +17,6 @@
 
 namespace devilution {
 namespace {
-Art dialogArt;
 std::optional<OwnedPcxSprite> ArtPopupSm;
 std::optional<OwnedPcxSprite> ArtProgBG;
 std::optional<OwnedPcxSprite> ProgFil;
@@ -38,10 +37,11 @@ void ProgressLoadBackground()
 
 void ProgressLoadForeground()
 {
+	LoadDialogButtonGraphics();
 	ProgFil = LoadPcxAsset("ui_art\\prog_fil.pcx");
 
 	const Point uiPosition = GetUIRectangle().position;
-	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 265), (Sint16)(uiPosition.y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
+	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 265), (Sint16)(uiPosition.y + 267), DialogButtonWidth, DialogButtonHeight };
 	vecProgress.push_back(std::make_unique<UiButton>(_("Cancel"), &DialogActionCancel, rect3));
 }
 
@@ -56,6 +56,7 @@ void ProgressFreeForeground()
 {
 	vecProgress.clear();
 	ProgFil = std::nullopt;
+	FreeDialogButtonGraphics();
 }
 
 Point GetPosition()
@@ -85,7 +86,9 @@ void ProgressRenderForeground(int progress)
 		RenderPcxSprite(out.subregion(x, 0, w, out.h()), PcxSprite { *ProgFil }, { 0, position.y + 52 });
 	}
 	// Not rendering an actual button, only the top 2 rows of its graphics.
-	RenderPcxSprite(out.subregionY(position.y + 99, 2), ButtonSprite(/*pressed=*/false), { GetCenterOffset(110), 0 });
+	RenderPcxSprite(
+	    out.subregion(GetCenterOffset(110), position.y + 99, DialogButtonWidth, 2),
+	    ButtonSprite(/*pressed=*/false), { 0, 0 });
 }
 
 } // namespace
