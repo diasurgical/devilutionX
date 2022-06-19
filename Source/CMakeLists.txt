@@ -115,6 +115,7 @@ set(libdevilutionx_SRCS
   utils/pcx_to_cel.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
+  utils/surface_to_cel.cpp
   utils/utf8.cpp
   DiabloUI/art.cpp
   DiabloUI/art_draw.cpp
