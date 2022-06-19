@@ -167,7 +167,13 @@ if(WIN32 AND NOT UWP_LIB)
   add_subdirectory(3rdParty/find_steam_game)
 endif()
 
-add_subdirectory(3rdParty/simpleini)
+find_package(simpleini QUIET)
+if(simpleini_FOUND)
+  message("-- Found simpleini")
+else()
+  message("-- Suitable system simpleini package not found, will use simpleini from source")
+  add_subdirectory(3rdParty/simpleini)
+endif()
 
 add_subdirectory(3rdParty/libmpq)
 
