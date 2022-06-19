@@ -1922,7 +1922,7 @@ bool IsTileAccessible(const Monster &monster, Point position)
 
 bool AiPlanWalk(int i)
 {
-	int8_t path[MAX_PATH_LENGTH];
+	int8_t path[MaxPathLength];
 
 	/** Maps from walking path step to facing direction. */
 	const Direction plr2monst[9] = { Direction::South, Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest, Direction::North, Direction::East, Direction::South, Direction::West };

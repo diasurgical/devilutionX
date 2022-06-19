@@ -136,7 +136,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player.pDamAcFlags, ItemSpecialEffectHf::None);
 
 	ASSERT_EQ(player._pmode, 0);
-	ASSERT_EQ(Count8(player.walkpath, MAX_PATH_LENGTH), 0);
+	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 0);
 	ASSERT_EQ(player._pSpell, 0);
 	ASSERT_EQ(player._pSplType, 0);
 	ASSERT_EQ(player._pSplFrom, 0);

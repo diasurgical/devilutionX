@@ -215,7 +215,7 @@ struct Player {
 	Player &operator=(Player &&) noexcept = default;
 
 	PLR_MODE _pmode;
-	int8_t walkpath[MAX_PATH_LENGTH];
+	int8_t walkpath[MaxPathLength];
 	bool plractive;
 	action_id destAction;
 	int destParam1;
