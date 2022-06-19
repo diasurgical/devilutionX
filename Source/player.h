@@ -19,7 +19,6 @@
 #include "items.h"
 #include "multi.h"
 #include "path.h"
-#include "qol/statistics.h"
 #include "spelldat.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
@@ -351,7 +350,6 @@ struct Player {
 	ItemSpecialEffectHf pDamAcFlags;
 	/** @brief Specifies whether players are in non-PvP mode. */
 	bool friendlyMode = true;
-	struct Statistics *statistics;
 
 	void CalcScrolls();
 

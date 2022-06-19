@@ -28,6 +28,7 @@
 #include "player.h"
 #include "qol/autopickup.h"
 #include "qol/stash.h"
+#include "qol/statistics.h"
 #include "spells.h"
 #include "stores.h"
 #include "towners.h"
@@ -2627,7 +2628,7 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	InitDungMsgs(player);
 	CreatePlrItems(playerId);
-	InitializePlayerStatistics(player);
+	InitializePlayerStatistics();
 	SetRndSeed(0);
 }
 
@@ -3145,7 +3146,7 @@ StartPlayerKill(int pnum, int earflag)
 		}
 	}
 	SetPlayerHitPoints(player, 0);
-	player.statistics->deathCount++;
+	myPlayerStatistics.deathCount++;
 }
 
 void StripTopGold(Player &player)

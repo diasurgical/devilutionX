@@ -14,8 +14,9 @@ struct Statistics {
 };
 
 extern std::map<std::string, std::string> statisticsFile;
+extern Statistics myPlayerStatistics;
 
-void InitializePlayerStatistics(Player &player);
+void InitializePlayerStatistics();
 void LoadStatisticsFromMap();
 void SaveStatisticsToMap();
 void CalculateInGameTime();

@@ -10,38 +10,34 @@ void LoadMonsterKillCount();
 std::string GetMonsterName(uint16_t monsterID);
 void AddMonsterWeapon(std::string &monsterName, uint16_t monsterID);
 
-void InitializePlayerStatistics(Player &player)
+void InitializePlayerStatistics()
 {
 	myPlayerStatistics = {};
-	player.statistics = &myPlayerStatistics;
 	std::fill_n(MonsterKillCounts, MAXMONSTERS, 0);
 }
 
 void LoadStatisticsFromMap()
 {
-	Player &myPlayer = *MyPlayer;
 	if (statisticsFile.find("deathCount") != statisticsFile.end())
-		myPlayer.statistics->deathCount = std::stoul(statisticsFile.at("deathCount"));
+		myPlayerStatistics.deathCount = std::stoul(statisticsFile.at("deathCount"));
 
 	if (statisticsFile.find("ingameTime") != statisticsFile.end())
-		myPlayer.statistics->ingameTime = std::stoul(statisticsFile.at("ingameTime"));
+		myPlayerStatistics.ingameTime = std::stoul(statisticsFile.at("ingameTime"));
 	LoadMonsterKillCount();
 }
 
 void SaveStatisticsToMap()
 {
-	Player &myPlayer = *MyPlayer;
-	statisticsFile["deathCount"] = std::to_string(myPlayer.statistics->deathCount);
-	statisticsFile["ingameTime"] = std::to_string(myPlayer.statistics->ingameTime);
+	statisticsFile["deathCount"] = std::to_string(myPlayerStatistics.deathCount);
+	statisticsFile["ingameTime"] = std::to_string(myPlayerStatistics.ingameTime);
 	SaveMonsterKillCount();
 }
 
 void CalculateInGameTime()
 {
-	Statistics *stats = MyPlayer->statistics;
 	uint64_t ticksNow = SDL_GetTicks64();
-	stats->ingameTime += (ticksNow - stats->ticksSubstrahend);
-	stats->ticksSubstrahend = ticksNow;
+	myPlayerStatistics.ingameTime += (ticksNow - myPlayerStatistics.ticksSubstrahend);
+	myPlayerStatistics.ticksSubstrahend = ticksNow;
 }
 
 void LoadMonsterKillCount()

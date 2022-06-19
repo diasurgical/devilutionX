@@ -1929,7 +1929,7 @@ void SaveHotkeys(MpqWriter &saveWriter)
 
 void LoadStatistics()
 {
-	InitializePlayerStatistics(*MyPlayer);
+	InitializePlayerStatistics();
 	LoadHelper file(OpenSaveArchive(gSaveNumber), "statistics");
 	if (!file.IsValid())
 		return;

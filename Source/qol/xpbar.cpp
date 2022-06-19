@@ -13,6 +13,7 @@
 #include "control.h"
 #include "engine/point.hpp"
 #include "options.h"
+#include "qol/statistics.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 
@@ -141,7 +142,7 @@ bool CheckXPBarInfo()
 	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
 	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(ExpLvlsTbl[charLevel])));
 	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
-	AddPanelString(fmt::format(fmt::runtime(_("Deaths: {:d}")), player.statistics->deathCount));
+	AddPanelString(fmt::format(fmt::runtime(_("Deaths: {:d}")), myPlayerStatistics.deathCount));
 
 	return true;
 }
