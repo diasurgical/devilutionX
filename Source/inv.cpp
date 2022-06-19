@@ -579,8 +579,6 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		dropGoldValue = 0;
 	}
 
-	bool done = false;
-
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
 		int xo = GetRightPanel().position.x;
@@ -595,12 +593,11 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		    && cursorPosition.x < InvRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
 		    && cursorPosition.y >= InvRect[r].y + yo - (InventorySlotSizeInPixels.height + 1)
 		    && cursorPosition.y < InvRect[r].y + yo) {
-			done = true;
 			break;
 		}
 	}
 
-	if (!done) {
+	if (r == NUM_XY_SLOTS) {
 		// not on an inventory slot rectangle
 		return;
 	}
