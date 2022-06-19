@@ -23,41 +23,41 @@ TriggerStruct trigs[MAXTRIGGERS];
 int TWarpFrom;
 
 /** Specifies the dungeon piece IDs which constitute stairways leading down to the cathedral from town. */
-int TownDownList[] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
+int TownDownList[] = { 715, 714, 718, 719, 720, 722, 723, 724, 725, 726, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down to the catacombs from town. */
-int TownWarp1List[] = { 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1181, 1183, 1185, -1 };
-int TownCryptList[] = { 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, -1 };
-int TownHiveList[] = { 1307, 1308, 1309, 1310, -1 };
+int TownWarp1List[] = { 1170, 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1180, 1182, 1184, -1 };
+int TownCryptList[] = { 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337, -1 };
+int TownHiveList[] = { 1306, 1307, 1308, 1309, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the cathedral. */
-int L1UpList[] = { 127, 129, 130, 131, 132, 133, 135, 137, 138, 139, 140, -1 };
+int L1UpList[] = { 126, 128, 129, 130, 131, 132, 134, 136, 137, 138, 139, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from the cathedral. */
-int L1DownList[] = { 106, 107, 108, 109, 110, 112, 114, 115, 118, -1 };
+int L1DownList[] = { 105, 106, 107, 108, 109, 111, 113, 114, 117, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the catacombs. */
-int L2UpList[] = { 266, 267, -1 };
+int L2UpList[] = { 265, 266, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from the catacombs. */
-int L2DownList[] = { 269, 270, 271, 272, -1 };
+int L2DownList[] = { 268, 269, 270, 271, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up to town from the catacombs. */
-int L2TWarpUpList[] = { 558, 559, -1 };
+int L2TWarpUpList[] = { 557, 558, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the caves. */
-int L3UpList[] = { 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, -1 };
+int L3UpList[] = { 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from the caves. */
-int L3DownList[] = { 162, 163, 164, 165, 166, 167, 168, 169, -1 };
+int L3DownList[] = { 161, 162, 163, 164, 165, 166, 167, 168, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up to town from the caves. */
-int L3TWarpUpList[] = { 182, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, -1 };
+int L3TWarpUpList[] = { 181, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up from hell. */
-int L4UpList[] = { 82, 83, 90, -1 };
+int L4UpList[] = { 81, 82, 89, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from hell. */
-int L4DownList[] = { 120, 130, 131, 132, 133, -1 };
+int L4DownList[] = { 119, 129, 130, 131, 132, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading up to town from hell. */
-int L4TWarpUpList[] = { 421, 422, 429, -1 };
+int L4TWarpUpList[] = { 420, 421, 428, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down to Diablo from hell. */
-int L4PentaList[] = { 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, -1 };
-int L5TWarpUpList[] = { 172, 173, 174, 175, 176, 177, 178, 179, 184, -1 };
-int L5UpList[] = { 149, 150, 151, 152, 153, 154, 155, 157, 158, 159, -1 };
-int L5DownList[] = { 125, 126, 129, 131, 132, 135, 136, 140, 142, -1 };
-int L6TWarpUpList[] = { 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, -1 };
-int L6UpList[] = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, -1 };
-int L6DownList[] = { 57, 58, 59, 60, 61, 62, 63, 64, -1 };
+int L4PentaList[] = { 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, -1 };
+int L5TWarpUpList[] = { 171, 172, 173, 174, 175, 176, 177, 178, 183, -1 };
+int L5UpList[] = { 148, 149, 150, 151, 152, 153, 154, 156, 157, 158, -1 };
+int L5DownList[] = { 124, 125, 128, 130, 131, 134, 135, 139, 141, -1 };
+int L6TWarpUpList[] = { 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, -1 };
+int L6UpList[] = { 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, -1 };
+int L6DownList[] = { 56, 57, 58, 59, 60, 61, 62, 63, -1 };
 
 void InitNoTriggers()
 {
@@ -146,12 +146,12 @@ void InitL1Triggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 129) {
+			if (dPiece[i][j] == 128) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
 			}
-			if (dPiece[i][j] == 115) {
+			if (dPiece[i][j] == 114) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -166,20 +166,20 @@ void InitL2Triggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 267 && (i != Quests[Q_SCHAMB].position.x || j != Quests[Q_SCHAMB].position.y)) {
+			if (dPiece[i][j] == 266 && (i != Quests[Q_SCHAMB].position.x || j != Quests[Q_SCHAMB].position.y)) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 559) {
+			if (dPiece[i][j] == 558) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
 				trigs[numtrigs]._tlvl = 0;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 271) {
+			if (dPiece[i][j] == 270) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -194,19 +194,19 @@ void InitL3Triggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 171) {
+			if (dPiece[i][j] == 170) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 168) {
+			if (dPiece[i][j] == 167) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 549) {
+			if (dPiece[i][j] == 548) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
 				numtrigs++;
@@ -221,20 +221,20 @@ void InitL4Triggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 83) {
+			if (dPiece[i][j] == 82) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 422) {
+			if (dPiece[i][j] == 421) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
 				trigs[numtrigs]._tlvl = 0;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 120) {
+			if (dPiece[i][j] == 119) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -244,7 +244,7 @@ void InitL4Triggers()
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 370 && Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+			if (dPiece[i][j] == 369 && Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -259,19 +259,19 @@ void InitHiveTriggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 66) {
+			if (dPiece[i][j] == 65) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 63) {
+			if (dPiece[i][j] == 62) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
 			}
 
-			if (dPiece[i][j] == 80) {
+			if (dPiece[i][j] == 79) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
 				numtrigs++;
@@ -286,18 +286,18 @@ void InitCryptTriggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 184) {
+			if (dPiece[i][j] == 183) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
 				trigs[numtrigs]._tlvl = 0;
 				numtrigs++;
 			}
-			if (dPiece[i][j] == 158) {
+			if (dPiece[i][j] == 157) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
 			}
-			if (dPiece[i][j] == 126) {
+			if (dPiece[i][j] == 125) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -364,7 +364,7 @@ bool ForceTownTrig()
 	}
 
 	if (IsWarpOpen(DTYPE_CAVES)) {
-		for (int i = 1199; i <= 1220; i++) {
+		for (int i = 1198; i <= 1219; i++) {
 			if (dPiece[cursPosition.x][cursPosition.y] == i) {
 				InfoString = _("Down to caves");
 				cursPosition = { 17, 69 };
@@ -374,7 +374,7 @@ bool ForceTownTrig()
 	}
 
 	if (IsWarpOpen(DTYPE_HELL)) {
-		for (int i = 1240; i <= 1255; i++) {
+		for (int i = 1239; i <= 1254; i++) {
 			if (dPiece[cursPosition.x][cursPosition.y] == i) {
 				InfoString = _("Down to hell");
 				cursPosition = { 41, 80 };
@@ -666,7 +666,7 @@ bool ForceCryptTrig()
 			}
 		}
 	}
-	if (dPiece[cursPosition.x][cursPosition.y] == 317) {
+	if (dPiece[cursPosition.x][cursPosition.y] == 316) {
 		InfoString = _("Cornerstone of the World");
 		return true;
 	}

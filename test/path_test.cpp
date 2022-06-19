@@ -44,12 +44,12 @@ TEST(PathTest, Heuristics)
 
 TEST(PathTest, Solid)
 {
-	dPiece[5][5] = 1;
+	dPiece[5][5] = 0;
 	SOLData[0] = TileProperties::Solid;
 	EXPECT_TRUE(IsTileSolid({ 5, 5 })) << "Solid in-bounds tiles are solid";
 	EXPECT_FALSE(IsTileNotSolid({ 5, 5 })) << "IsTileNotSolid returns the inverse of IsTileSolid for in-bounds tiles";
 
-	dPiece[6][6] = 2;
+	dPiece[6][6] = 1;
 	SOLData[1] = TileProperties::None;
 	EXPECT_FALSE(IsTileSolid({ 6, 6 })) << "Non-solid in-bounds tiles are not solid";
 	EXPECT_TRUE(IsTileNotSolid({ 6, 6 })) << "IsTileNotSolid returns the inverse of IsTileSolid for in-bounds tiles";
@@ -60,10 +60,10 @@ TEST(PathTest, Solid)
 
 TEST(PathTest, SolidPieces)
 {
-	dPiece[0][0] = 1;
-	dPiece[0][1] = 1;
-	dPiece[1][0] = 1;
-	dPiece[1][1] = 1;
+	dPiece[0][0] = 0;
+	dPiece[0][1] = 0;
+	dPiece[1][0] = 0;
+	dPiece[1][1] = 0;
 	SOLData[0] = TileProperties::None;
 	EXPECT_TRUE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "A step in open space is free of solid pieces";
 	EXPECT_TRUE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "A step in open space is free of solid pieces";
@@ -71,7 +71,7 @@ TEST(PathTest, SolidPieces)
 	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "A step in open space is free of solid pieces";
 
 	SOLData[1] = TileProperties::Solid;
-	dPiece[1][0] = 2;
+	dPiece[1][0] = 1;
 	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can path to a destination which is solid";
 	EXPECT_TRUE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can path from a starting position which is solid";
 	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 1 })) << "Stepping in a cardinal direction ignores solid pieces";
@@ -81,24 +81,24 @@ TEST(PathTest, SolidPieces)
 
 	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
 	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
-	dPiece[0][1] = 2;
+	dPiece[0][1] = 1;
 	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't walk through the boundary between two corners";
 	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't walk through the boundary between two corners";
-	dPiece[1][0] = 1;
+	dPiece[1][0] = 0;
 	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
 	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
-	dPiece[0][1] = 1;
+	dPiece[0][1] = 0;
 
-	dPiece[0][0] = 2;
-	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
-	dPiece[1][1] = 2;
-	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't walk through the boundary between two corners";
-	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't walk through the boundary between two corners";
 	dPiece[0][0] = 1;
 	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
 	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
 	dPiece[1][1] = 1;
+	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't walk through the boundary between two corners";
+	dPiece[0][0] = 0;
+	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
+	dPiece[1][1] = 0;
 }
 
 void CheckPath(Point startPosition, Point destinationPosition, std::vector<int8_t> expectedSteps)
@@ -139,7 +139,7 @@ TEST(PathTest, FindPath)
 
 TEST(PathTest, Walkable)
 {
-	dPiece[5][5] = 1;
+	dPiece[5][5] = 0;
 	SOLData[0] = TileProperties::Solid; // Doing this manually to save running through the code in gendung.cpp
 	EXPECT_FALSE(IsTileWalkable({ 5, 5 })) << "Tile which is marked as solid should be considered blocked";
 	EXPECT_FALSE(IsTileWalkable({ 5, 5 }, true)) << "Solid non-door tiles remain unwalkable when ignoring doors";

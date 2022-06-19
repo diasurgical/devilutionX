@@ -929,13 +929,8 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
-				level_piece_id = dPiece[tilePosition.x][tilePosition.y];
-				if (level_piece_id != 0) {
-					if (!TileHasAny(level_piece_id, TileProperties::Solid))
-						DrawFloor(out, tilePosition, targetBufferPosition);
-				} else {
-					world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
-				}
+				if (!TileHasAny(dPiece[tilePosition.x][tilePosition.y], TileProperties::Solid))
+					DrawFloor(out, tilePosition, targetBufferPosition);
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 			}
@@ -960,8 +955,10 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	}
 }
 
-#define IsWall(x, y) (dPiece[x][y] == 0 || TileHasAny(dPiece[x][y], TileProperties::Solid) || dSpecial[x][y] != 0)
-#define IsWalkable(x, y) (dPiece[x][y] != 0 && IsTileNotSolid({ x, y }))
+bool IsWall(Point position)
+{
+	return TileHasAny(dPiece[position.x][position.y], TileProperties::Solid) || dSpecial[position.x][position.y] != 0;
+}
 
 /**
  * @brief Render a row of tile
@@ -988,15 +985,13 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 					// between tiles, from poking through the walls as they exceed the tile bounds.
 					// A proper fix for this would probably be to layout the sceen and render by
 					// sprite screen position rather than tile position.
-					if (IsWall(tilePosition.x, tilePosition.y) && (IsWall(tilePosition.x + 1, tilePosition.y) || (tilePosition.x > 0 && IsWall(tilePosition.x - 1, tilePosition.y)))) { // Part of a wall aligned on the x-axis
-						if (IsWalkable(tilePosition.x + 1, tilePosition.y - 1) && IsWalkable(tilePosition.x, tilePosition.y - 1)) {                                                     // Has walkable area behind it
+					if (IsWall(tilePosition) && (IsWall(tilePosition + Displacement { 1, 0 }) || (tilePosition.x > 0 && IsWall(tilePosition + Displacement { -1, 0 })))) { // Part of a wall aligned on the x-axis
+						if (IsTileNotSolid(tilePosition + Displacement { 1, -1 }) && IsTileNotSolid(tilePosition + Displacement { 0, -1 })) {                              // Has walkable area behind it
 							DrawDungeon(out, tilePosition + Direction::East, { targetBufferPosition.x + TILE_WIDTH, targetBufferPosition.y });
 						}
 					}
 				}
-				if (dPiece[tilePosition.x][tilePosition.y] != 0) {
-					DrawDungeon(out, tilePosition, targetBufferPosition);
-				}
+				DrawDungeon(out, tilePosition, targetBufferPosition);
 			}
 			tilePosition += Direction::East;
 			targetBufferPosition.x += TILE_WIDTH;

@@ -296,7 +296,7 @@ bool PlrDirOK(const Player &player, Direction dir)
 {
 	Point position = player.position.tile;
 	Point futurePosition = position + dir;
-	if (futurePosition.x < 0 || dPiece[futurePosition.x][futurePosition.y] == 0 || !PosOkPlayer(player, futurePosition)) {
+	if (futurePosition.x < 0 || !PosOkPlayer(player, futurePosition)) {
 		return false;
 	}
 
@@ -3451,8 +3451,6 @@ void ClrPlrPath(Player &player)
 bool PosOkPlayer(const Player &player, Point position)
 {
 	if (!InDungeonBounds(position))
-		return false;
-	if (dPiece[position.x][position.y] == 0)
 		return false;
 	if (!IsTileWalkable(position))
 		return false;

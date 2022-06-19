@@ -303,7 +303,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (TileHasAny(dPiece[xp][yp], TileProperties::Solid))
 		return false;
-	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
+	return IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CRYPT) || dPiece[xp][yp] <= 125 || dPiece[xp][yp] >= 143;
 }
 
 bool CanPlaceWallTrap(int xp, int yp)
@@ -416,7 +416,7 @@ void AddTortures()
 {
 	for (int oy = 0; oy < MAXDUNY; oy++) {
 		for (int ox = 0; ox < MAXDUNX; ox++) {
-			if (dPiece[ox][oy] == 367) {
+			if (dPiece[ox][oy] == 366) {
 				AddObject(OBJ_TORTURE1, { ox, oy + 1 });
 				AddObject(OBJ_TORTURE3, { ox + 2, oy - 1 });
 				AddObject(OBJ_TORTURE2, { ox, oy + 3 });
@@ -533,19 +533,19 @@ void AddL2Torches()
 				continue;
 
 			int pn = dPiece[i][j];
-			if (pn == 1 && GenerateRnd(3) == 0) {
+			if (pn == 0 && GenerateRnd(3) == 0) {
 				AddObject(OBJ_TORCHL2, testPosition);
 			}
 
-			if (pn == 5 && GenerateRnd(3) == 0) {
+			if (pn == 4 && GenerateRnd(3) == 0) {
 				AddObject(OBJ_TORCHR2, testPosition);
 			}
 
-			if (pn == 37 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthWest)) {
+			if (pn == 36 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthWest)) {
 				AddObject(OBJ_TORCHL, testPosition + Direction::NorthWest);
 			}
 
-			if (pn == 41 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthEast)) {
+			if (pn == 40 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthEast)) {
 				AddObject(OBJ_TORCHR, testPosition + Direction::NorthEast);
 			}
 		}
@@ -1025,22 +1025,22 @@ void ObjSetMicro(Point position, int pn)
 void InitializeL1Door(Object &door)
 {
 	door.InitializeDoor();
-	door._oVar1 = dPiece[door.position.x][door.position.y];
+	door._oVar1 = dPiece[door.position.x][door.position.y] + 1;
 	if (door._otype == _object_id::OBJ_L1LDOOR) {
-		door._oVar2 = dPiece[door.position.x][door.position.y - 1];
+		door._oVar2 = dPiece[door.position.x][door.position.y - 1] + 1;
 	} else { // _object_id::OBJ_L1RDOOR
-		door._oVar2 = dPiece[door.position.x - 1][door.position.y];
+		door._oVar2 = dPiece[door.position.x - 1][door.position.y] + 1;
 	}
 }
 
 void InitializeL5Door(Object &door)
 {
 	door.InitializeDoor();
-	door._oVar1 = dPiece[door.position.x][door.position.y];
+	door._oVar1 = dPiece[door.position.x][door.position.y] + 1;
 	if (door._otype == _object_id::OBJ_L5LDOOR) {
-		door._oVar2 = dPiece[door.position.x][door.position.y - 1];
+		door._oVar2 = dPiece[door.position.x][door.position.y - 1] + 1;
 	} else { // _object_id::OBJ_L5RDOOR
-		door._oVar2 = dPiece[door.position.x - 1][door.position.y];
+		door._oVar2 = dPiece[door.position.x - 1][door.position.y] + 1;
 	}
 }
 
@@ -1050,16 +1050,16 @@ void InitializeMicroDoor(Object &door)
 	int pieceNumber;
 	switch (door._otype) {
 	case _object_id::OBJ_L2LDOOR:
-		pieceNumber = 538;
+		pieceNumber = 537;
 		break;
 	case _object_id::OBJ_L2RDOOR:
-		pieceNumber = 540;
+		pieceNumber = 539;
 		break;
 	case _object_id::OBJ_L3LDOOR:
-		pieceNumber = 531;
+		pieceNumber = 530;
 		break;
 	case _object_id::OBJ_L3RDOOR:
-		pieceNumber = 534;
+		pieceNumber = 533;
 		break;
 	default:
 		return; // unreachable
@@ -1526,10 +1526,10 @@ void ObjSetMini(Point position, int v)
 
 	Point megaOrigin = position.megaToWorld();
 
-	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1) + 1);
-	ObjSetMicro(megaOrigin + Direction::SouthEast, SDL_SwapLE16(mega.micro2) + 1);
-	ObjSetMicro(megaOrigin + Direction::SouthWest, SDL_SwapLE16(mega.micro3) + 1);
-	ObjSetMicro(megaOrigin + Direction::South, SDL_SwapLE16(mega.micro4) + 1);
+	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1));
+	ObjSetMicro(megaOrigin + Direction::SouthEast, SDL_SwapLE16(mega.micro2));
+	ObjSetMicro(megaOrigin + Direction::SouthWest, SDL_SwapLE16(mega.micro3));
+	ObjSetMicro(megaOrigin + Direction::South, SDL_SwapLE16(mega.micro4));
 }
 
 void ObjL1Special(int x1, int y1, int x2, int y2)
@@ -1537,37 +1537,37 @@ void ObjL1Special(int x1, int y1, int x2, int y2)
 	for (int i = y1; i <= y2; ++i) {
 		for (int j = x1; j <= x2; ++j) {
 			dSpecial[j][i] = 0;
-			if (dPiece[j][i] == 12)
-				dSpecial[j][i] = 1;
 			if (dPiece[j][i] == 11)
-				dSpecial[j][i] = 2;
-			if (dPiece[j][i] == 71)
 				dSpecial[j][i] = 1;
-			if (dPiece[j][i] == 253)
+			if (dPiece[j][i] == 10)
+				dSpecial[j][i] = 2;
+			if (dPiece[j][i] == 70)
+				dSpecial[j][i] = 1;
+			if (dPiece[j][i] == 252)
 				dSpecial[j][i] = 3;
-			if (dPiece[j][i] == 267)
+			if (dPiece[j][i] == 266)
 				dSpecial[j][i] = 6;
-			if (dPiece[j][i] == 259)
+			if (dPiece[j][i] == 258)
 				dSpecial[j][i] = 5;
-			if (dPiece[j][i] == 249)
+			if (dPiece[j][i] == 248)
 				dSpecial[j][i] = 2;
-			if (dPiece[j][i] == 325)
+			if (dPiece[j][i] == 324)
 				dSpecial[j][i] = 2;
-			if (dPiece[j][i] == 321)
+			if (dPiece[j][i] == 320)
 				dSpecial[j][i] = 1;
-			if (dPiece[j][i] == 255)
+			if (dPiece[j][i] == 254)
 				dSpecial[j][i] = 4;
-			if (dPiece[j][i] == 211)
+			if (dPiece[j][i] == 210)
 				dSpecial[j][i] = 1;
-			if (dPiece[j][i] == 344)
+			if (dPiece[j][i] == 343)
 				dSpecial[j][i] = 2;
-			if (dPiece[j][i] == 341)
+			if (dPiece[j][i] == 340)
 				dSpecial[j][i] = 1;
-			if (dPiece[j][i] == 331)
+			if (dPiece[j][i] == 330)
 				dSpecial[j][i] = 2;
-			if (dPiece[j][i] == 418)
+			if (dPiece[j][i] == 417)
 				dSpecial[j][i] = 1;
-			if (dPiece[j][i] == 421)
+			if (dPiece[j][i] == 420)
 				dSpecial[j][i] = 2;
 		}
 	}
@@ -1578,25 +1578,25 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 	for (int j = y1; j <= y2; j++) {
 		for (int i = x1; i <= x2; i++) {
 			dSpecial[i][j] = 0;
+			if (dPiece[i][j] == 540)
+				dSpecial[i][j] = 5;
+			if (dPiece[i][j] == 177)
+				dSpecial[i][j] = 5;
+			if (dPiece[i][j] == 550)
+				dSpecial[i][j] = 5;
 			if (dPiece[i][j] == 541)
-				dSpecial[i][j] = 5;
-			if (dPiece[i][j] == 178)
-				dSpecial[i][j] = 5;
-			if (dPiece[i][j] == 551)
-				dSpecial[i][j] = 5;
-			if (dPiece[i][j] == 542)
 				dSpecial[i][j] = 6;
-			if (dPiece[i][j] == 553)
+			if (dPiece[i][j] == 552)
 				dSpecial[i][j] = 6;
 		}
 	}
 	for (int j = y1; j <= y2; j++) {
 		for (int i = x1; i <= x2; i++) {
-			if (dPiece[i][j] == 132) {
+			if (dPiece[i][j] == 131) {
 				dSpecial[i][j + 1] = 2;
 				dSpecial[i][j + 2] = 1;
 			}
-			if (dPiece[i][j] == 135 || dPiece[i][j] == 139) {
+			if (dPiece[i][j] == 134 || dPiece[i][j] == 138) {
 				dSpecial[i + 1][j] = 3;
 				dSpecial[i + 2][j] = 4;
 			}
@@ -1608,51 +1608,51 @@ void DoorSet(Point position, bool isLeftDoor)
 {
 	int pn = dPiece[position.x][position.y];
 	switch (pn) {
-	case 43:
-		ObjSetMicro(position, 392);
+	case 42:
+		ObjSetMicro(position, 391);
 		break;
-	case 45:
-		ObjSetMicro(position, 394);
+	case 44:
+		ObjSetMicro(position, 393);
 		break;
-	case 50:
-		ObjSetMicro(position, isLeftDoor ? 411 : 412);
+	case 49:
+		ObjSetMicro(position, isLeftDoor ? 410 : 411);
+		break;
+	case 53:
+		ObjSetMicro(position, 396);
 		break;
 	case 54:
 		ObjSetMicro(position, 397);
 		break;
-	case 55:
+	case 60:
 		ObjSetMicro(position, 398);
 		break;
-	case 61:
+	case 66:
 		ObjSetMicro(position, 399);
 		break;
 	case 67:
 		ObjSetMicro(position, 400);
 		break;
 	case 68:
-		ObjSetMicro(position, 401);
+		ObjSetMicro(position, 402);
 		break;
 	case 69:
 		ObjSetMicro(position, 403);
 		break;
-	case 70:
-		ObjSetMicro(position, 404);
+	case 71:
+		ObjSetMicro(position, 405);
 		break;
-	case 72:
+	case 211:
 		ObjSetMicro(position, 406);
 		break;
-	case 212:
-		ObjSetMicro(position, 407);
+	case 353:
+		ObjSetMicro(position, 408);
 		break;
 	case 354:
 		ObjSetMicro(position, 409);
 		break;
-	case 355:
-		ObjSetMicro(position, 410);
-		break;
+	case 410:
 	case 411:
-	case 412:
-		ObjSetMicro(position, 396);
+		ObjSetMicro(position, 395);
 		break;
 	}
 }
@@ -1661,42 +1661,42 @@ void CryptDoorSet(Point position, bool isLeftDoor)
 {
 	int pn = dPiece[position.x][position.y];
 	switch (pn) {
-	case 75:
-		ObjSetMicro(position, 204);
+	case 74:
+		ObjSetMicro(position, 203);
 		break;
-	case 79:
-		ObjSetMicro(position, 208);
+	case 78:
+		ObjSetMicro(position, 207);
 		break;
-	case 86:
-		ObjSetMicro(position, isLeftDoor ? 232 : 234);
+	case 85:
+		ObjSetMicro(position, isLeftDoor ? 231 : 233);
 		break;
-	case 91:
-		ObjSetMicro(position, 215);
+	case 90:
+		ObjSetMicro(position, 214);
 		break;
-	case 93:
-		ObjSetMicro(position, 218);
+	case 92:
+		ObjSetMicro(position, 217);
 		break;
-	case 99:
-		ObjSetMicro(position, 220);
+	case 98:
+		ObjSetMicro(position, 219);
 		break;
-	case 111:
-		ObjSetMicro(position, 222);
+	case 110:
+		ObjSetMicro(position, 221);
 		break;
-	case 113:
-		ObjSetMicro(position, 224);
+	case 112:
+		ObjSetMicro(position, 223);
 		break;
-	case 115:
-		ObjSetMicro(position, 226);
+	case 114:
+		ObjSetMicro(position, 225);
 		break;
-	case 117:
-		ObjSetMicro(position, 228);
+	case 116:
+		ObjSetMicro(position, 227);
 		break;
-	case 119:
-		ObjSetMicro(position, 230);
+	case 118:
+		ObjSetMicro(position, 229);
 		break;
-	case 232:
-	case 234:
-		ObjSetMicro(position, 212);
+	case 231:
+	case 233:
+		ObjSetMicro(position, 211);
 		break;
 	}
 }
@@ -1731,7 +1731,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 395);
+		ObjSetMicro(door.position, 394);
 		dSpecial[door.position.x][door.position.y] = 8;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -1749,14 +1749,14 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1);
+		ObjSetMicro(door.position, door._oVar1 - 1);
 
 		// Restore the normal tile where the open door used to be
 		auto openPosition = door.position + Direction::NorthWest;
-		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
-			ObjSetMicro(openPosition, 411);
+		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 395)
+			ObjSetMicro(openPosition, 410);
 		else
-			ObjSetMicro(openPosition, door._oVar2);
+			ObjSetMicro(openPosition, door._oVar2 - 1);
 
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
@@ -1783,9 +1783,9 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		if (door._oVar1 == 214)
-			ObjSetMicro(door.position, 408);
+			ObjSetMicro(door.position, 407);
 		else
-			ObjSetMicro(door.position, 393);
+			ObjSetMicro(door.position, 392);
 		dSpecial[door.position.x][door.position.y] = 7;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -1803,14 +1803,14 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1);
+		ObjSetMicro(door.position, door._oVar1 - 1);
 
 		// Restore the normal tile where the open door used to be
 		auto openPosition = door.position + Direction::NorthEast;
-		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
-			ObjSetMicro(openPosition, 412);
+		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 395)
+			ObjSetMicro(openPosition, 411);
 		else
-			ObjSetMicro(openPosition, door._oVar2);
+			ObjSetMicro(openPosition, door._oVar2 - 1);
 
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
@@ -1836,7 +1836,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 17);
+		ObjSetMicro(door.position, 16);
 		dSpecial[door.position.x][door.position.y] = 6;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -1854,7 +1854,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 540);
+		ObjSetMicro(door.position, 539);
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
@@ -1879,7 +1879,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 13);
+		ObjSetMicro(door.position, 12);
 		dSpecial[door.position.x][door.position.y] = 5;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -1897,7 +1897,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 538);
+		ObjSetMicro(door.position, 537);
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
@@ -1922,7 +1922,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 541);
+		ObjSetMicro(door.position, 540);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		door._oVar4 = 1;
@@ -1939,7 +1939,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 534);
+		ObjSetMicro(door.position, 533);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
 		RedoPlayerVision();
@@ -1963,7 +1963,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 538);
+		ObjSetMicro(door.position, 537);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		door._oVar4 = 1;
@@ -1980,7 +1980,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 531);
+		ObjSetMicro(door.position, 530);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
 		RedoPlayerVision();
@@ -2004,7 +2004,7 @@ void OperateL5RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_CROPEN, door.position);
-		ObjSetMicro(door.position, 209);
+		ObjSetMicro(door.position, 208);
 		dSpecial[door.position.x][door.position.y] = 2;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -2022,14 +2022,14 @@ void OperateL5RDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1);
+		ObjSetMicro(door.position, door._oVar1 - 1);
 
 		// Restore the normal tile where the open door used to be
 		auto openPosition = door.position + Direction::NorthWest;
-		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
-			ObjSetMicro(openPosition, 232);
+		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 209)
+			ObjSetMicro(openPosition, 231);
 		else
-			ObjSetMicro(openPosition, door._oVar2);
+			ObjSetMicro(openPosition, door._oVar2 - 1);
 
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
@@ -2055,7 +2055,7 @@ void OperateL5LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_CROPEN, door.position);
-		ObjSetMicro(door.position, 206);
+		ObjSetMicro(door.position, 205);
 		dSpecial[door.position.x][door.position.y] = 1;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
@@ -2073,14 +2073,14 @@ void OperateL5LDoor(int pnum, int oi, bool sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1);
+		ObjSetMicro(door.position, door._oVar1 - 1);
 
 		// Restore the normal tile where the open door used to be
 		auto openPosition = door.position + Direction::NorthEast;
-		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
-			ObjSetMicro(openPosition, 234);
+		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 209)
+			ObjSetMicro(openPosition, 233);
 		else
-			ObjSetMicro(openPosition, door._oVar2);
+			ObjSetMicro(openPosition, door._oVar2 - 1);
 
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
@@ -4155,11 +4155,11 @@ void SyncL1Doors(Object &door)
 	bool isLeftDoor = door._otype == _object_id::OBJ_L1LDOOR; // otherwise the door is type OBJ_L1RDOOR
 
 	if (isLeftDoor) {
-		ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
+		ObjSetMicro(door.position, door._oVar1 == 214 ? 407 : 392);
 		dSpecial[door.position.x][door.position.y] = 7;
 		DoorSet(door.position + Direction::NorthEast, isLeftDoor);
 	} else {
-		ObjSetMicro(door.position, 395);
+		ObjSetMicro(door.position, 394);
 		dSpecial[door.position.x][door.position.y] = 8;
 		DoorSet(door.position + Direction::NorthWest, isLeftDoor);
 	}
@@ -4174,12 +4174,12 @@ void SyncL2Doors(Object &door)
 
 	switch (door._oVar4) {
 	case 0:
-		ObjSetMicro(door.position, isLeftDoor ? 538 : 540);
+		ObjSetMicro(door.position, isLeftDoor ? 537 : 539);
 		dSpecial[door.position.x][door.position.y] = 0;
 		break;
 	case 1:
 	case 2:
-		ObjSetMicro(door.position, isLeftDoor ? 13 : 17);
+		ObjSetMicro(door.position, isLeftDoor ? 12 : 16);
 		dSpecial[door.position.x][door.position.y] = isLeftDoor ? 5 : 6;
 		break;
 	}
@@ -4194,11 +4194,11 @@ void SyncL3Doors(Object &door)
 
 	switch (door._oVar4) {
 	case 0:
-		ObjSetMicro(door.position, isLeftDoor ? 531 : 534);
+		ObjSetMicro(door.position, isLeftDoor ? 530 : 533);
 		break;
 	case 1:
 	case 2:
-		ObjSetMicro(door.position, isLeftDoor ? 538 : 541);
+		ObjSetMicro(door.position, isLeftDoor ? 537 : 540);
 		break;
 	}
 }
@@ -4216,11 +4216,11 @@ void SyncL5Doors(Object &door)
 	bool isLeftDoor = door._otype == _object_id::OBJ_L5LDOOR; // otherwise the door is type OBJ_L5RDOOR
 
 	if (isLeftDoor) {
-		ObjSetMicro(door.position, 206);
+		ObjSetMicro(door.position, 205);
 		dSpecial[door.position.x][door.position.y] = 1;
 		CryptDoorSet(door.position + Direction::NorthEast, isLeftDoor);
 	} else {
-		ObjSetMicro(door.position, 209);
+		ObjSetMicro(door.position, 208);
 		dSpecial[door.position.x][door.position.y] = 2;
 		CryptDoorSet(door.position + Direction::NorthWest, isLeftDoor);
 	}
@@ -4356,11 +4356,11 @@ void AddL1Objs(int x1, int y1, int x2, int y2)
 	for (int j = y1; j < y2; j++) {
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
-			if (pn == 270)
+			if (pn == 269)
 				AddObject(OBJ_L1LIGHT, { i, j });
-			if (pn == 44 || pn == 51 || pn == 214)
+			if (pn == 43 || pn == 50 || pn == 213)
 				AddObject(OBJ_L1LDOOR, { i, j });
-			if (pn == 46 || pn == 56)
+			if (pn == 45 || pn == 55)
 				AddObject(OBJ_L1RDOOR, { i, j });
 		}
 	}
@@ -4371,9 +4371,9 @@ void AddL2Objs(int x1, int y1, int x2, int y2)
 	for (int j = y1; j < y2; j++) {
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
-			if (pn == 13 || pn == 541)
+			if (pn == 12 || pn == 540)
 				AddObject(OBJ_L2LDOOR, { i, j });
-			if (pn == 17 || pn == 542)
+			if (pn == 16 || pn == 541)
 				AddObject(OBJ_L2RDOOR, { i, j });
 		}
 	}
@@ -4384,9 +4384,9 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 	for (int j = y1; j < y2; j++) {
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
-			if (pn == 531)
+			if (pn == 530)
 				AddObject(OBJ_L3LDOOR, { i, j });
-			if (pn == 534)
+			if (pn == 533)
 				AddObject(OBJ_L3RDOOR, { i, j });
 		}
 	}
@@ -4397,9 +4397,9 @@ void AddCryptObjects(int x1, int y1, int x2, int y2)
 	for (int j = y1; j < y2; j++) {
 		for (int i = x1; i < x2; i++) {
 			int pn = dPiece[i][j];
-			if (pn == 77)
+			if (pn == 76)
 				AddObject(OBJ_L5LDOOR, { i, j });
-			if (pn == 80)
+			if (pn == 79)
 				AddObject(OBJ_L5RDOOR, { i, j });
 		}
 	}
@@ -5534,10 +5534,10 @@ void OperateNakrulLever()
 
 void SyncNakrulRoom()
 {
-	dPiece[UberRow][UberCol] = 298;
-	dPiece[UberRow][UberCol - 1] = 301;
-	dPiece[UberRow][UberCol - 2] = 300;
-	dPiece[UberRow][UberCol + 1] = 299;
+	dPiece[UberRow][UberCol] = 297;
+	dPiece[UberRow][UberCol - 1] = 300;
+	dPiece[UberRow][UberCol - 2] = 299;
+	dPiece[UberRow][UberCol + 1] = 298;
 }
 
 void AddNakrulLeaver()
