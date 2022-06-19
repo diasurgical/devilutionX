@@ -215,11 +215,11 @@ void PrintQLString(const Surface &out, int x, int y, string_view str, bool marke
 	int width = GetLineWidth(str);
 	x += std::max((257 - width) / 2, 0);
 	if (marked) {
-		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { x - 20, y + 13 }), *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { x - 20, y + 13 }), CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 	}
 	DrawString(out, str, { GetPanelPosition(UiPanels::Quest, { x, y }), { 257, 0 } }, disabled ? UiFlags::ColorWhitegold : UiFlags::ColorWhite);
 	if (marked) {
-		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { x + width + 7, y + 13 }), *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { x + width + 7, y + 13 }), CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 	}
 }
 
@@ -678,7 +678,7 @@ void DrawQuestLog(const Surface &out)
 		SelectedQuest = l;
 	}
 	const auto x = InnerPanel.position.x;
-	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 0);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), CelSprite { *pQLogCel }, 0);
 	int y = InnerPanel.position.y + ListYOffset;
 	for (int i = 0; i < EncounteredQuestCount; i++) {
 		if (i == FirstFinishedQuest) {

@@ -713,7 +713,7 @@ void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, in
 {
 	SDL_Rect rect = MakeSdlRect(0, GetUIRectangle().position.y + y, 0, 0);
 	vecDialog->push_back(std::make_unique<UiImageCel>(
-	    CelSpriteWithFrameHeight { ArtLogos[size]->sprite, ArtLogos[size]->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
+	    CelSpriteWithFrameHeight { CelSprite { ArtLogos[size]->sprite }, ArtLogos[size]->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 }
 
 void UiFadeIn()
@@ -756,7 +756,7 @@ void DrawSelector(const SDL_Rect &rect)
 		size = FOCUS_BIG;
 	else if (rect.h >= 30)
 		size = FOCUS_MED;
-	CelSpriteWithFrameHeight sprite { ArtFocus[size]->sprite, ArtFocus[size]->frameHeight };
+	CelSpriteWithFrameHeight sprite { CelSprite { ArtFocus[size]->sprite }, ArtFocus[size]->frameHeight };
 
 	// TODO FOCUS_MED appares higher than the box
 	const int y = rect.y + (rect.h - static_cast<int>(sprite.frameHeight)) / 2;

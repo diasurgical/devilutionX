@@ -252,14 +252,15 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 void DrawStatButtons(const Surface &out)
 {
 	if (MyPlayer->_pStatPts > 0) {
+		CelSprite sprite { *pChrButtons };
 		if (MyPlayer->_pBaseStr < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Strength))
-			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 157 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 2 : 1);
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 157 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 2 : 1);
 		if (MyPlayer->_pBaseMag < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Magic))
-			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 185 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 4 : 3);
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 185 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 4 : 3);
 		if (MyPlayer->_pBaseDex < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Dexterity))
-			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 214 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 6 : 5);
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 214 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 6 : 5);
 		if (MyPlayer->_pBaseVit < MyPlayer->GetMaximumAttributeValue(CharacterAttribute::Vitality))
-			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 242 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 8 : 7);
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 242 }), sprite, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 8 : 7);
 	}
 }
 

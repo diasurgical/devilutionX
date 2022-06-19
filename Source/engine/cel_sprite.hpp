@@ -28,6 +28,12 @@ public:
 	{
 	}
 
+	CelSprite(const byte *data, PointerOrValue<uint16_t> widths)
+	    : data_ptr_(data)
+	    , width_(widths)
+	{
+	}
+
 	explicit CelSprite(const OwnedCelSprite &owned);
 
 	CelSprite(const CelSprite &) = default;
@@ -63,17 +69,17 @@ private:
  * Stores a CEL or CL2 sprite and its width(s).
  * Owns the data.
  */
-class OwnedCelSprite : public CelSprite {
+class OwnedCelSprite {
 public:
 	OwnedCelSprite(std::unique_ptr<byte[]> data, uint16_t width)
-	    : CelSprite(data.get(), width)
-	    , data_(std::move(data))
+	    : data_(std::move(data))
+	    , width_(width)
 	{
 	}
 
 	OwnedCelSprite(std::unique_ptr<byte[]> data, const uint16_t *widths)
-	    : CelSprite(data.get(), widths)
-	    , data_(std::move(data))
+	    : data_(std::move(data))
+	    , width_(widths)
 	{
 	}
 
@@ -87,10 +93,13 @@ public:
 
 private:
 	std::unique_ptr<byte[]> data_;
+	PointerOrValue<uint16_t> width_;
+
+	friend class CelSprite;
 };
 
 inline CelSprite::CelSprite(const OwnedCelSprite &owned)
-    : CelSprite(static_cast<const CelSprite &>(owned))
+    : CelSprite(owned.data_.get(), owned.width_)
 {
 }
 

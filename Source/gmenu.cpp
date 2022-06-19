@@ -107,20 +107,21 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		int uiPositionX = GetUIRectangle().position.x;
 		int x = 16 + w / 2;
-		CelDrawTo(out, { x + uiPositionX, y + 40 }, *optbar_cel, 0);
+		CelDrawTo(out, { x + uiPositionX, y + 40 }, CelSprite { *optbar_cel }, 0);
 		uint16_t step = pItem->dwFlags & 0xFFF;
 		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 		uint16_t pos = step * 256 / steps;
 		GmenuClearBuffer(out, x + 2 + uiPositionX, y + 38, pos + 13, 28);
-		CelDrawTo(out, { x + 2 + pos + uiPositionX, y + 38 }, *option_cel, 0);
+		CelDrawTo(out, { x + 2 + pos + uiPositionX, y + 38 }, CelSprite { *option_cel }, 0);
 	}
 
 	int x = (gnScreenWidth - w) / 2;
 	UiFlags style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UiFlags::ColorGold : UiFlags::ColorBlack;
 	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UiFlags::FontSize46, 2);
 	if (pItem == sgpCurrItem) {
-		CelDrawTo(out, { x - 54, y + 51 }, *PentSpin_cel, PentSpn2Spin());
-		CelDrawTo(out, { x + 4 + w, y + 51 }, *PentSpin_cel, PentSpn2Spin());
+		CelSprite sprite { *PentSpin_cel };
+		CelDrawTo(out, { x - 54, y + 51 }, sprite, PentSpn2Spin());
+		CelDrawTo(out, { x + 4 + w, y + 51 }, sprite, PentSpn2Spin());
 	}
 }
 
@@ -240,7 +241,8 @@ void gmenu_draw(const Surface &out)
 			}
 		}
 		int uiPositionY = GetUIRectangle().position.y;
-		CelDrawTo(out, { (gnScreenWidth - sgpLogo->Width()) / 2, 102 + uiPositionY }, *sgpLogo, LogoAnim_frame);
+		CelSprite sprite { *sgpLogo };
+		CelDrawTo(out, { (gnScreenWidth - sprite.Width()) / 2, 102 + uiPositionY }, sprite, LogoAnim_frame);
 		int y = 110 + uiPositionY;
 		TMenuItem *i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu != nullptr) {

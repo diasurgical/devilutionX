@@ -141,7 +141,7 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 	for (item_cursor_graphic graphic : potionGraphics) {
 		const int cursorID = static_cast<int>(CURSOR_FIRSTITEM) + graphic;
 		const int frame = GetInvItemFrame(cursorID);
-		const OwnedCelSprite &potionSprite = GetInvItemSprite(cursorID);
+		const CelSprite potionSprite { GetInvItemSprite(cursorID) };
 		position.y += potionSize.height;
 		CelClippedDrawTo(Surface(surface.get()), position, potionSprite, frame);
 	}

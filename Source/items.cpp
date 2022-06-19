@@ -1775,7 +1775,7 @@ void PrintItemOil(char iDidx)
 
 void DrawUniqueInfoWindow(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), *pSTextBoxCels, 0);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), CelSprite { *pSTextBoxCels }, 0);
 	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 

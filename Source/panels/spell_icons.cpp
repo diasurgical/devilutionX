@@ -89,7 +89,7 @@ void DrawSpellCel(const Surface &out, Point position, int nCel)
 
 void DrawSpellCel(const Surface &out, Point position, const OwnedCelSprite &sprite, int nCel)
 {
-	CelDrawLightTo(out, position, sprite, nCel, SplTransTbl);
+	CelDrawLightTo(out, position, CelSprite { sprite }, nCel, SplTransTbl);
 }
 
 void SetSpellTrans(spell_type t)

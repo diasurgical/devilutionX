@@ -843,7 +843,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 #ifdef _DEBUG
 	if (DebugVision && IsTileLit(tilePosition)) {
-		CelClippedDrawTo(out, targetBufferPosition, *pSquareCel, 1);
+		CelClippedDrawTo(out, targetBufferPosition, CelSprite { *pSquareCel }, 1);
 	}
 #endif
 
@@ -896,7 +896,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				cel_transparency_active = false; // Turn transparency off here for debugging
 			}
 #endif
-			CelClippedBlitLightTransTo(out, targetBufferPosition, *pSpecialCels, bArch - 1);
+			CelClippedBlitLightTransTo(out, targetBufferPosition, CelSprite { *pSpecialCels }, bArch - 1);
 #ifdef _DEBUG
 			if (GetAsyncKeyState(DVL_VK_MENU)) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
@@ -910,7 +910,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
 			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
 			if (bArch != 0) {
-				CelDrawTo(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, *pSpecialCels, bArch - 1);
+				CelDrawTo(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, CelSprite { *pSpecialCels }, bArch - 1);
 			}
 		}
 	}

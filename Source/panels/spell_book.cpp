@@ -116,16 +116,16 @@ void FreeSpellBook()
 
 void DrawSpellBook(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), *pSpellBkCel, 0);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), CelSprite { *pSpellBkCel }, 0);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), *pSBkBtnCel, sbooktab);
+		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), *pSBkBtnCel, sbooktab);
+		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
 	}
 	Player &player = *MyPlayer;
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;

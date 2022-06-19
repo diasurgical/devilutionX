@@ -164,7 +164,7 @@ void CalculateLineHeights()
 void DrawSTextBack(const Surface &out)
 {
 	const Point uiPosition = GetUIRectangle().position;
-	CelDrawTo(out, { uiPosition.x + 320 + 24, 327 + uiPosition.y }, *pSTextBoxCels, 0);
+	CelDrawTo(out, { uiPosition.x + 320 + 24, 327 + uiPosition.y }, CelSprite { *pSTextBoxCels }, 0);
 	DrawHalfTransparentRectTo(out, uiPosition.x + 347, uiPosition.y + 28, 265, 297);
 }
 
@@ -173,18 +173,19 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 	const Point uiPosition = GetUIRectangle().position;
 	int yd1 = y1 * 12 + 44 + uiPosition.y;
 	int yd2 = y2 * 12 + 44 + uiPosition.y;
+	CelSprite sprite { *pSTextSlidCels };
 	if (stextscrlubtn != -1)
-		CelDrawTo(out, { uiPosition.x + 601, yd1 }, *pSTextSlidCels, 11);
+		CelDrawTo(out, { uiPosition.x + 601, yd1 }, sprite, 11);
 	else
-		CelDrawTo(out, { uiPosition.x + 601, yd1 }, *pSTextSlidCels, 9);
+		CelDrawTo(out, { uiPosition.x + 601, yd1 }, sprite, 9);
 	if (stextscrldbtn != -1)
-		CelDrawTo(out, { uiPosition.x + 601, yd2 }, *pSTextSlidCels, 10);
+		CelDrawTo(out, { uiPosition.x + 601, yd2 }, sprite, 10);
 	else
-		CelDrawTo(out, { uiPosition.x + 601, yd2 }, *pSTextSlidCels, 8);
+		CelDrawTo(out, { uiPosition.x + 601, yd2 }, sprite, 8);
 	yd1 += 12;
 	int yd3 = yd1;
 	for (; yd3 < yd2; yd3 += 12) {
-		CelDrawTo(out, { uiPosition.x + 601, yd3 }, *pSTextSlidCels, 13);
+		CelDrawTo(out, { uiPosition.x + 601, yd3 }, sprite, 13);
 	}
 	if (stextsel == BackButtonLine())
 		yd3 = stextlhold;
@@ -194,7 +195,7 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) / 4)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDrawTo(out, { uiPosition.x + 601, (y1 + 1) * 12 + 44 + uiPosition.y + yd3 }, *pSTextSlidCels, 12);
+	CelDrawTo(out, { uiPosition.x + 601, (y1 + 1) * 12 + 44 + uiPosition.y + yd3 }, sprite, 12);
 }
 
 void AddSLine(int y)
@@ -2140,13 +2141,13 @@ void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, U
 	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x1 += (rect.size.width - lineWidth) / 2;
 
-	CelDrawTo(out, { x1, rect.position.y + 13 }, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x1, rect.position.y + 13 }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 
 	int x2 = rect.position.x + rect.size.width + 5;
 	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x2 = rect.position.x + (rect.size.width - lineWidth) / 2 + lineWidth + 5;
 
-	CelDrawTo(out, { x2, rect.position.y + 13 }, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x2, rect.position.y + 13 }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 }
 
 } // namespace
