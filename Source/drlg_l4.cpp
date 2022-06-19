@@ -176,7 +176,7 @@ void InitDungeonFlags()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 30;
-			Protected[i][j] = false;
+			Protected.reset(i, j);
 		}
 	}
 }
@@ -370,7 +370,7 @@ int HorizontalWallOk(int i, int j)
 {
 	int x;
 	for (x = 1; dungeon[i + x][j] == 6; x++) {
-		if (Protected[i + x][j]) {
+		if (Protected.test(i + x, j)) {
 			break;
 		}
 		if (dungeon[i + x][j - 1] != 6) {
@@ -391,7 +391,7 @@ int VerticalWallOk(int i, int j)
 {
 	int y;
 	for (y = 1; dungeon[i][j + y] == 6; y++) {
-		if (Protected[i][j + y]) {
+		if (Protected.test(i, j + y)) {
 			break;
 		}
 		if (dungeon[i - 1][j + y] != 6) {
@@ -499,7 +499,7 @@ void AddWall()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (Protected[i][j]) {
+			if (Protected.test(i, j)) {
 				continue;
 			}
 			for (auto d : { 10, 12, 13, 15, 16, 21, 22 }) {
@@ -879,7 +879,7 @@ void Substitution()
 		for (int x = 0; x < DMAXX; x++) {
 			if (GenerateRnd(3) == 0) {
 				uint8_t c = L4BTYPES[dungeon[x][y]];
-				if (c != 0 && !Protected[x][y]) {
+				if (c != 0 && !Protected.test(x, y)) {
 					int rv = GenerateRnd(16);
 					int i = -1;
 					while (rv >= 0) {
@@ -902,7 +902,7 @@ void Substitution()
 			int rv = GenerateRnd(10);
 			if (rv == 0) {
 				uint8_t c = dungeon[x][y];
-				if (L4BTYPES[c] == 6 && !Protected[x][y]) {
+				if (L4BTYPES[c] == 6 && !Protected.test(x, y)) {
 					dungeon[x][y] = GenerateRnd(3) + 95;
 				}
 			}
@@ -1008,10 +1008,10 @@ void ProtectQuads()
 {
 	for (int y = 0; y < 14; y++) {
 		for (int x = 0; x < 14; x++) {
-			Protected[L4Hold.x + x][L4Hold.y + y] = true;
-			Protected[DMAXX - 1 - x - L4Hold.x][L4Hold.y + y] = true;
-			Protected[L4Hold.x + x][DMAXY - 1 - y - L4Hold.y] = true;
-			Protected[DMAXX - 1 - x - L4Hold.x][DMAXY - 1 - y - L4Hold.y] = true;
+			Protected.set(L4Hold.x + x, L4Hold.y + y);
+			Protected.set(DMAXX - 1 - x - L4Hold.x, L4Hold.y + y);
+			Protected.set(L4Hold.x + x, DMAXY - 1 - y - L4Hold.y);
+			Protected.set(DMAXX - 1 - x - L4Hold.x, DMAXY - 1 - y - L4Hold.y);
 		}
 	}
 }
@@ -1218,7 +1218,7 @@ void GenerateLevel(lvl_entry entry)
 		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 			for (int spi = SetPieceRoom.position.x; spi < SetPieceRoom.position.x + SetPieceRoom.size.width - 1; spi++) {
 				for (int spj = SetPieceRoom.position.y; spj < SetPieceRoom.position.y + SetPieceRoom.size.height - 1; spj++) {
-					Protected[spi][spj] = true;
+					Protected.set(spi, spj);
 				}
 			}
 		}

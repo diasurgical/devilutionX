@@ -1646,7 +1646,7 @@ void InitDungeonFlags()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			predungeon[i][j] = 32;
-			Protected[i][j] = false;
+			Protected.reset(i, j);
 		}
 	}
 }
@@ -1685,7 +1685,7 @@ void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool forceHW)
 		for (int i = nX1; i < nX2; i++) {
 			/// BUGFIX: Should loop j between nY1 and nY2 instead of always using nY1.
 			while (i < nY2) {
-				Protected[i][nY1] = true;
+				Protected.set(i, nY1);
 				i++;
 			}
 		}
@@ -2612,7 +2612,7 @@ void FixLockout()
 	}
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
-			if (Protected[i][j]) {
+			if (Protected.test(i, j)) {
 				continue;
 			}
 			if ((dungeon[i][j] == 2 || dungeon[i][j] == 5) && dungeon[i][j - 1] == 3 && dungeon[i][j + 1] == 3) {
@@ -2629,7 +2629,7 @@ void FixLockout()
 					}
 					i++;
 				}
-				if (!doorok && !Protected[i - 1][j]) {
+				if (!doorok && !Protected.test(i - 1, j)) {
 					dungeon[i - 1][j] = 5;
 				}
 			}
@@ -2637,7 +2637,7 @@ void FixLockout()
 	}
 	for (int j = 1; j < DMAXX - 1; j++) { /* check: might be flipped */
 		for (int i = 1; i < DMAXY - 1; i++) {
-			if (Protected[j][i]) {
+			if (Protected.test(j, i)) {
 				continue;
 			}
 			if ((dungeon[j][i] == 1 || dungeon[j][i] == 4) && dungeon[j - 1][i] == 3 && dungeon[j + 1][i] == 3) {
@@ -2654,7 +2654,7 @@ void FixLockout()
 					}
 					i++;
 				}
-				if (!doorok && !Protected[j][i - 1]) {
+				if (!doorok && !Protected.test(j, i - 1)) {
 					dungeon[j][i - 1] = 4;
 				}
 			}
