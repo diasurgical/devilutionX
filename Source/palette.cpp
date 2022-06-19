@@ -19,7 +19,9 @@ SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
 Uint8 paletteTransparencyLookup[256][256];
 
+#if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 uint16_t paletteTransparencyLookupBlack16[65536];
+#endif
 
 namespace {
 
@@ -91,6 +93,7 @@ void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, in
 		}
 	}
 
+#if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 	for (unsigned i = 0; i < 256; ++i) {
 		for (unsigned j = 0; j < 256; ++j) {
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
@@ -101,6 +104,7 @@ void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, in
 			paletteTransparencyLookupBlack16[index] = paletteTransparencyLookup[0][i] | (paletteTransparencyLookup[0][j] << 8);
 		}
 	}
+#endif
 }
 
 /**

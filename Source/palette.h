@@ -37,6 +37,7 @@ extern SDL_Color orig_palette[256];
 /** Lookup table for transparency */
 extern Uint8 paletteTransparencyLookup[256][256];
 
+#if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 /**
  * A lookup table from black for a pair of colors.
  *
@@ -47,6 +48,7 @@ extern Uint8 paletteTransparencyLookup[256][256];
  * value order remains the same.
  */
 extern uint16_t paletteTransparencyLookupBlack16[65536];
+#endif
 
 void palette_update(int first = 0, int ncolor = 256);
 void palette_init();
