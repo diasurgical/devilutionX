@@ -1009,6 +1009,28 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 	}
 }
 
+std::optional<Point> GetTeleportTile(const Monster &monster)
+{
+	int mx = monster.enemyPosition.x;
+	int my = monster.enemyPosition.y;
+	int rx = 2 * GenerateRnd(2) - 1;
+	int ry = 2 * GenerateRnd(2) - 1;
+
+	for (int j = -1; j <= 1; j++) {
+		for (int k = -1; k < 1; k++) {
+			if (j == 0 && k == 0)
+				continue;
+			int x = mx + rx * j;
+			int y = my + ry * k;
+			if (!InDungeonBounds({ x, y }) || x == monster.position.tile.x || y == monster.position.tile.y)
+				continue;
+			if (IsTileAvailable(monster, { x, y }))
+				return Point { x, y };
+		}
+	}
+	return {};
+}
+
 void Teleport(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -1017,38 +1039,18 @@ void Teleport(int i)
 	if (monster._mmode == MonsterMode::Petrified)
 		return;
 
-	int mx = monster.enemyPosition.x;
-	int my = monster.enemyPosition.y;
-	int rx = 2 * GenerateRnd(2) - 1;
-	int ry = 2 * GenerateRnd(2) - 1;
+	std::optional<Point> position = GetTeleportTile(monster);
+	if (!position)
+		return;
 
-	bool done = false;
+	M_ClearSquares(i);
+	dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
+	dMonster[position->x][position->y] = i + 1;
+	monster.position.old = *position;
+	monster._mdir = GetMonsterDirection(monster);
 
-	int x;
-	int y;
-	for (int j = -1; j <= 1 && !done; j++) {
-		for (int k = -1; k < 1 && !done; k++) {
-			if (j != 0 || k != 0) {
-				x = mx + rx * j;
-				y = my + ry * k;
-				if (InDungeonBounds({ x, y }) && x != monster.position.tile.x && y != monster.position.tile.y) {
-					if (IsTileAvailable(monster, { x, y }))
-						done = true;
-				}
-			}
-		}
-	}
-
-	if (done) {
-		M_ClearSquares(i);
-		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-		dMonster[x][y] = i + 1;
-		monster.position.old = { x, y };
-		monster._mdir = GetMonsterDirection(monster);
-
-		if (monster.mlid != NO_LIGHT) {
-			ChangeLightXY(monster.mlid, { x, y });
-		}
+	if (monster.mlid != NO_LIGHT) {
+		ChangeLightXY(monster.mlid, *position);
 	}
 }
 
@@ -2303,6 +2305,29 @@ void SkeletonBowAi(int i)
 	monster.CheckStandAnimationIsLoaded(md);
 }
 
+std::optional<Point> ScavengerFindCorpse(const Monster &scavenger)
+{
+	bool lowToHigh = GenerateRnd(2) != 0;
+	int first = lowToHigh ? -4 : 4;
+	int last = lowToHigh ? 4 : -4;
+	int increment = lowToHigh ? 1 : -1;
+
+	for (int y = first; y <= last; y += increment) {
+		for (int x = first; x <= last; x += increment) {
+			Point position = scavenger.position.tile + Displacement { x, y };
+			// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
+			if (!InDungeonBounds(position))
+				continue;
+			if (dCorpse[position.x][position.y] == 0)
+				continue;
+			if (!IsLineNotSolid(scavenger.position.tile, position))
+				continue;
+			return position;
+		}
+	}
+	return {};
+}
+
 void ScavengerAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2345,41 +2370,10 @@ void ScavengerAi(int i)
 			}
 		} else {
 			if (monster._mgoalvar1 == 0) {
-				bool done = false;
-				int x;
-				int y;
-				if (GenerateRnd(2) != 0) {
-					for (y = -4; y <= 4 && !done; y++) {
-						for (x = -4; x <= 4 && !done; x++) {
-							// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
-							if (!InDungeonBounds(monster.position.tile + Displacement { x, y }))
-								continue;
-							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
-							    && IsLineNotSolid(
-							        monster.position.tile,
-							        monster.position.tile + Displacement { x, y });
-						}
-					}
-					x--;
-					y--;
-				} else {
-					for (y = 4; y >= -4 && !done; y--) {
-						for (x = 4; x >= -4 && !done; x--) {
-							// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
-							if (!InDungeonBounds(monster.position.tile + Displacement { x, y }))
-								continue;
-							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
-							    && IsLineNotSolid(
-							        monster.position.tile,
-							        monster.position.tile + Displacement { x, y });
-						}
-					}
-					x++;
-					y++;
-				}
-				if (done) {
-					monster._mgoalvar1 = x + monster.position.tile.x + 1;
-					monster._mgoalvar2 = y + monster.position.tile.y + 1;
+				std::optional<Point> position = ScavengerFindCorpse(monster);
+				if (position) {
+					monster._mgoalvar1 = position->x + 1;
+					monster._mgoalvar2 = position->y + 1;
 				}
 			}
 			if (monster._mgoalvar1 != 0) {
