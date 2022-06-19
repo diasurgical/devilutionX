@@ -62,6 +62,9 @@ mark_as_advanced(STREAM_ALL_AUDIO)
 option(DEVILUTIONX_RESAMPLER_SPEEX "Build with Speex resampler" ON)
 option(DEVILUTIONX_RESAMPLER_SDL "Build with SDL resampler" ON)
 
+option(DEVILUTIONX_EMBEDDED_ERROR_DIALOG_BACKGROUND "Whether to embed the error dialog image into the binary. The image is 100 KiB in size and is only used when the data MPQ cannot be found." ON)
+option(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT "Whether to use a lookup table for transparency blending with black. This improves performance of blending transparent black overlays, such as quest dialog background, at the cost of 128 KiB of RAM." ON)
+
 if(TSAN)
   set(ASAN OFF)
 endif()

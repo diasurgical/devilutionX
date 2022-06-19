@@ -23,6 +23,20 @@
 namespace devilution {
 namespace {
 
+void DrawHalfTransparentUnalignedBlendedRectTo(const Surface &out, unsigned sx, unsigned sy, unsigned width, unsigned height)
+{
+	uint8_t *pix = out.at(static_cast<int>(sx), static_cast<int>(sy));
+	const uint8_t *lookupTable = paletteTransparencyLookup[0];
+	const unsigned skipX = out.pitch() - width;
+	for (unsigned y = 0; y < height; ++y) {
+		for (unsigned x = 0; x < width; ++x, ++pix) {
+			*pix = lookupTable[*pix];
+		}
+		pix += skipX;
+	}
+}
+
+#if DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT
 // Expects everything to be 4-byte aligned.
 void DrawHalfTransparentAligned32BlendedRectTo(const Surface &out, unsigned sx, unsigned sy, unsigned width, unsigned height)
 {
@@ -43,19 +57,6 @@ void DrawHalfTransparentAligned32BlendedRectTo(const Surface &out, unsigned sx, 
 #else
 			*pix = lookupTable[(v >> 16) & 0xFFFF] | (lookupTable[v & 0xFFFF] << 16);
 #endif
-		}
-		pix += skipX;
-	}
-}
-
-void DrawHalfTransparentUnalignedBlendedRectTo(const Surface &out, unsigned sx, unsigned sy, unsigned width, unsigned height)
-{
-	uint8_t *pix = out.at(static_cast<int>(sx), static_cast<int>(sy));
-	const uint8_t *lookupTable = paletteTransparencyLookup[0];
-	const unsigned skipX = out.pitch() - width;
-	for (unsigned y = 0; y < height; ++y) {
-		for (unsigned x = 0; x < width; ++x, ++pix) {
-			*pix = lookupTable[*pix];
 		}
 		pix += skipX;
 	}
@@ -87,6 +88,10 @@ void DrawHalfTransparentBlendedRectTo(const Surface &out, unsigned sx, unsigned 
 	// Now everything is divisible by 4. Draw the aligned part.
 	DrawHalfTransparentAligned32BlendedRectTo(out, sx, sy, width, height);
 }
+#else
+#define DrawHalfTransparentBlendedRectTo DrawHalfTransparentUnalignedBlendedRectTo
+#endif
+
 } // namespace
 
 void DrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex)

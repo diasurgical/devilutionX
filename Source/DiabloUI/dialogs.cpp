@@ -22,6 +22,9 @@ namespace devilution {
 
 namespace {
 
+constexpr int EmbeddedErrorDialogWidth = 385;
+constexpr int EmbeddedErrorDialogHeight = 280;
+
 Art dialogArt;
 std::optional<OwnedPcxSprite> dialogPcx;
 std::string wrappedText;
@@ -171,7 +174,9 @@ std::optional<PcxSprite> LoadDialogSprite(bool hasCaption, bool isError)
 		return PcxSprite { *dialogPcx };
 	}
 	if (isError) {
-		LoadArt(&dialogArt, PopupData, 385, 280);
+#if DEVILUTIONX_EMBEDDED_ERROR_DIALOG_BACKGROUND
+		LoadArt(&dialogArt, PopupData, EmbeddedErrorDialogWidth, EmbeddedErrorDialogHeight);
+#endif
 		return std::nullopt;
 	}
 	dialogPcx = LoadPcxAsset("ui_art\\lpopup.pcx", TransparentColor);
@@ -191,7 +196,7 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 	}
 
 	std::optional<PcxSprite> dialogSprite = LoadDialogSprite(!caption.empty(), error);
-	const int dialogWidth = dialogSprite ? dialogSprite->width() : dialogArt.w();
+	const int dialogWidth = dialogSprite ? dialogSprite->width() : EmbeddedErrorDialogWidth;
 	const int textWidth = dialogWidth - 40;
 
 	wrappedText = WordWrapString(text, textWidth, FontSizeDialog);
@@ -201,8 +206,8 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 		if (dialogSprite) {
 			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogSprite->width(), dialogSprite->height());
 			vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
-		} else {
-			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogArt.w(), dialogArt.h());
+		} else if (dialogArt.surface != nullptr) {
+			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, EmbeddedErrorDialogWidth, EmbeddedErrorDialogHeight);
 			vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 		}
 
@@ -215,8 +220,8 @@ void Init(string_view caption, string_view text, bool error, bool renderBehind)
 		if (dialogSprite) {
 			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogSprite->width(), dialogSprite->height());
 			vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
-		} else {
-			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogArt.w(), dialogArt.h());
+		} else if (dialogArt.surface != nullptr) {
+			SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, EmbeddedErrorDialogWidth, EmbeddedErrorDialogHeight);
 			vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 		}
 
