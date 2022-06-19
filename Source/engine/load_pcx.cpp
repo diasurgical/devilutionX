@@ -41,8 +41,8 @@ std::unique_ptr<uint32_t[]> LoadFrameOffsets(PcxSprite sprite, uint16_t numFrame
 				++data;
 				x += runLength;
 			}
+			data += srcSkip;
 		}
-		data += srcSkip;
 		frameOffsets[frame] = static_cast<uint32_t>(data - sprite.data());
 	}
 	return frameOffsets;
