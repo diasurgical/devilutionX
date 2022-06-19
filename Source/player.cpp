@@ -1561,11 +1561,11 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				break;
 			}
 
-			for (int j = 1; j < MAX_PATH_LENGTH; j++) {
+			for (size_t j = 1; j < MaxPathLength; j++) {
 				player.walkpath[j - 1] = player.walkpath[j];
 			}
 
-			player.walkpath[MAX_PATH_LENGTH - 1] = WALK_NONE;
+			player.walkpath[MaxPathLength - 1] = WALK_NONE;
 
 			if (player._pmode == PM_STAND) {
 				StartStand(pnum, player._pdir);
@@ -2158,7 +2158,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	}
 
 	if (minimalWalkDistance >= 0 && position.future != point) {
-		int8_t testWalkPath[MAX_PATH_LENGTH];
+		int8_t testWalkPath[MaxPathLength];
 		int steps = FindPath([this](Point position) { return PosOkPlayer(*this, position); }, position.future, point, testWalkPath);
 		if (steps == 0) {
 			// Can't walk to desired location => stand still

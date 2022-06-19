@@ -5,7 +5,9 @@
  */
 #pragma once
 
+#include <cstdint>
 #include <functional>
+#include <limits>
 
 #include <SDL.h>
 
@@ -15,17 +17,7 @@
 
 namespace devilution {
 
-#define MAX_PATH_LENGTH 25
-
-struct PATHNODE {
-	uint8_t f;
-	uint8_t h;
-	uint8_t g;
-	Point position;
-	struct PATHNODE *Parent;
-	struct PATHNODE *Child[8];
-	struct PATHNODE *NextNode;
-};
+constexpr size_t MaxPathLength = 25;
 
 bool IsTileNotSolid(Point position);
 bool IsTileSolid(Point position);
@@ -44,7 +36,7 @@ bool IsTileOccupied(Point position);
  * @brief Find the shortest path from startPosition to destinationPosition, using PosOk(Point) to check that each step is a valid position.
  * Store the step directions (corresponds to an index in PathDirs) in path, which must have room for 24 steps
  */
-int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MAX_PATH_LENGTH]);
+int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MaxPathLength]);
 
 /**
  * @brief check if stepping from a given position to a neighbouring tile cuts a corner.

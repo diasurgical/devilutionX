@@ -103,7 +103,7 @@ TEST(PathTest, SolidPieces)
 
 void CheckPath(Point startPosition, Point destinationPosition, std::vector<int8_t> expectedSteps)
 {
-	static int8_t pathSteps[MAX_PATH_LENGTH];
+	static int8_t pathSteps[MaxPathLength];
 	auto pathLength = FindPath([](Point) { return true; }, startPosition, destinationPosition, pathSteps);
 
 	EXPECT_EQ(pathLength, expectedSteps.size()) << "Wrong path length for a path from " << startPosition << " to " << destinationPosition;
