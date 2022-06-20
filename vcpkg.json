@@ -3,7 +3,8 @@
     "version-string": "1.3.0",
     "dependencies": [
         "fmt",
-        "bzip2"
+        "bzip2",
+        "simpleini"
     ],
     "features": {
         "sdl1": {
