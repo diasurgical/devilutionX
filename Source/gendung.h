@@ -157,7 +157,7 @@ extern std::unique_ptr<byte[]> pDungeonCels;
  * List tile properties
  */
 extern DVL_API_FOR_TEST std::array<TileProperties, MAXTILES> SOLData;
-extern std::vector<OwnedCelSpriteWithFrameHeight> MicroTiles;
+extern StaticVector<std::unique_ptr<byte[]>, MAXTILES> MicroTiles;
 /** Specifies the minimum X,Y-coordinates of the map. */
 extern Point dminPosition;
 /** Specifies the maximum X,Y-coordinates of the map. */

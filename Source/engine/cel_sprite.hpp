@@ -85,6 +85,11 @@ public:
 		return data_.get();
 	}
 
+	[[nodiscard]] std::unique_ptr<byte[]> release() &&
+	{
+		return std::move(data_);
+	}
+
 private:
 	std::unique_ptr<byte[]> data_;
 };

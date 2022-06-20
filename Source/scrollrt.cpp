@@ -658,7 +658,7 @@ void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition
 	cel_transparency_active = TileHasAny(tileId, TileProperties::Transparent) && TransList[dTransVal[tilePosition.x][tilePosition.y]];
 	bool foliage = !TileHasAny(tileId, TileProperties::Solid);
 	// TODO apply foliage and transparancy masks
-	CelClippedBlitLightTransTo(out, targetBufferPosition, MicroTiles[tileId].sprite, 0);
+	CelDrawLightTo(out, targetBufferPosition, CelSprite { MicroTiles[tileId].get(), TILE_WIDTH }, 0, nullptr);
 }
 
 /**
@@ -672,7 +672,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 	int pn = dPiece[tilePosition.x][tilePosition.y];
 	// TODO Clip/mask to floor tile
-	CelClippedDrawLightTo(out, targetBufferPosition, MicroTiles[pn].sprite, 0);
+	CelDrawLightTo(out, targetBufferPosition, CelSprite { MicroTiles[pn].get(), TILE_WIDTH }, 0, nullptr);
 }
 
 /**

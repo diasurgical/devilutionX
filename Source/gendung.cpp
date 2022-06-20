@@ -33,7 +33,7 @@ std::optional<OwnedCelSprite> pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<byte[]> pDungeonCels;
 std::array<TileProperties, MAXTILES> SOLData;
-std::vector<OwnedCelSpriteWithFrameHeight> MicroTiles;
+StaticVector<std::unique_ptr<byte[]>, MAXTILES> MicroTiles;
 Point dminPosition;
 Point dmaxPosition;
 dungeon_type leveltype;
@@ -520,9 +520,11 @@ void SetDungeonMicros()
 			}
 			targetBufferPosition.y += TILE_HEIGHT;
 		}
-		Surface next { microTile.get() };
-
-		MicroTiles.emplace_back(SurfaceToCel(next.subregion(0, frameStartY, TILE_WIDTH, TILE_HEIGHT * blocks / 2 - frameStartY), 1, true, 225));
+		MicroTiles.emplace_back(
+		    SurfaceToCel(
+		        Surface { microTile.get() }.subregion(0, frameStartY, TILE_WIDTH, TILE_HEIGHT * blocks / 2 - frameStartY),
+		        /*numFrames=*/1, /*generateFrameHeaders=*/false, /*transparentColor=*/225)
+		        .sprite.release());
 	}
 	pDungeonCels = nullptr;
 }

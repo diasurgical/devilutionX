@@ -43,6 +43,18 @@ public:
 
 	~StaticVector()
 	{
+		destroyAll();
+	}
+
+	void clear()
+	{
+		destroyAll();
+		size_ = 0;
+	}
+
+private:
+	void destroyAll()
+	{
 		for (std::size_t pos = 0; pos < size_; ++pos) {
 #if __cplusplus >= 201703L
 			std::destroy_at(std::launder(reinterpret_cast<T *>(&data_[pos])));
@@ -52,7 +64,6 @@ public:
 		}
 	}
 
-private:
 	std::aligned_storage_t<sizeof(T), alignof(T)> data_[N];
 	std::size_t size_ = 0;
 };
