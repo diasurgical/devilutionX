@@ -8,6 +8,7 @@
 #include <fstream>
 
 #define SI_SUPPORT_IOSTREAMS
+#define SI_NO_CONVERSION
 #include <SimpleIni.h>
 
 #include "control.h"
