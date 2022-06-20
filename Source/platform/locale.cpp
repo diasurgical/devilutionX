@@ -15,9 +15,6 @@
 #define NOMINMAX 1
 #define WIN32_LEAN_AND_MEAN
 // clang-format off
-// Suppress definitions of `min` and `max` macros by <windows.h>:
-#define NOMINMAX 1
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winnls.h>
 // clang-format on
