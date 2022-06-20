@@ -478,6 +478,28 @@ void LoadLevelSOLData()
 	}
 }
 
+int GetTileCount(dungeon_type levelType)
+{
+	switch (levelType) {
+	case DTYPE_TOWN:
+		return 376;
+	case DTYPE_CATHEDRAL:
+		return 206;
+	case DTYPE_CATACOMBS:
+		return 160;
+	case DTYPE_CAVES:
+		return 206;
+	case DTYPE_HELL:
+		return 137;
+	case DTYPE_NEST:
+		return 166;
+	case DTYPE_CRYPT:
+		return 217;
+	default:
+		app_fatal("Invalid level type");
+	}
+}
+
 void SetDungeonMicros()
 {
 	MicroTileLen = 10;
@@ -493,6 +515,16 @@ void SetDungeonMicros()
 
 	size_t tileCount;
 	std::unique_ptr<uint16_t[]> levelPieces = LoadMinData(tileCount);
+	std::vector<uint16_t> usedMicros {};
+
+	int megaCount = GetTileCount(leveltype);
+	for (int i = 0; i < megaCount; i++) {
+		MegaTile mega = pMegaTiles[i];
+		usedMicros.emplace_back(SDL_SwapLE16(mega.micro1));
+		usedMicros.emplace_back(SDL_SwapLE16(mega.micro2));
+		usedMicros.emplace_back(SDL_SwapLE16(mega.micro3));
+		usedMicros.emplace_back(SDL_SwapLE16(mega.micro4));
+	}
 
 	LightTableIndex = 0;
 	arch_draw_type = 0;
@@ -500,7 +532,15 @@ void SetDungeonMicros()
 	cel_transparency_active = false;
 	MicroTiles.clear();
 	SDLSurfaceUniquePtr microTile = SDLWrap::CreateRGBSurfaceWithFormat(0, TILE_WIDTH, TILE_HEIGHT * blocks / 2, 8, SDL_PIXELFORMAT_INDEX8);
-	for (int i = 0; i < tileCount / blocks; i++) {
+	for (uint16_t i = 0; i < tileCount / blocks; i++) {
+		if (std::find(usedMicros.begin(), usedMicros.end(), i) == usedMicros.end()) {
+		MicroTiles.emplace_back(
+		    SurfaceToCel(
+		        Surface { microTile.get() }.subregion(0, 0, 0, 0),
+		        /*numFrames=*/1, /*generateFrameHeaders=*/false, /*transparentColor=*/225)
+		        .sprite.release());
+			continue;
+		}
 		int frameStartY = 0;
 		Point targetBufferPosition { 0, 0 };
 		SDL_FillRect(microTile.get(), nullptr, 225);
