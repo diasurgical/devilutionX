@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
@@ -15,6 +16,7 @@
 #include "scrollrt.h"
 #include "utils/attributes.h"
 #include "utils/enum_traits.h"
+#include "utils/static_vector.hpp"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -155,6 +157,7 @@ extern std::unique_ptr<byte[]> pDungeonCels;
  * List tile properties
  */
 extern DVL_API_FOR_TEST std::array<TileProperties, MAXTILES> SOLData;
+extern std::vector<OwnedCelSpriteWithFrameHeight> MicroTiles;
 /** Specifies the minimum X,Y-coordinates of the map. */
 extern Point dminPosition;
 /** Specifies the maximum X,Y-coordinates of the map. */
@@ -177,8 +180,6 @@ extern char TransVal;
 extern bool TransList[256];
 /** Contains the piece IDs of each tile on the map. */
 extern DVL_API_FOR_TEST uint16_t dPiece[MAXDUNX][MAXDUNY];
-/** Map of micros that comprises a full tile for any given dungeon piece. */
-extern MICROS DPieceMicros[MAXTILES];
 /** Specifies the transparency at each coordinate of the map. */
 extern DVL_API_FOR_TEST int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];

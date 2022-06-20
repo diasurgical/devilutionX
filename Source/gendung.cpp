@@ -13,10 +13,13 @@
 #include "drlg_l4.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "engine/render/dun_render.hpp"
 #include "init.h"
 #include "lighting.h"
 #include "options.h"
 #include "town.h"
+#include "utils/sdl_compat.h"
+#include "utils/surface_to_cel.hpp"
 
 namespace devilution {
 
@@ -30,6 +33,7 @@ std::optional<OwnedCelSprite> pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<byte[]> pDungeonCels;
 std::array<TileProperties, MAXTILES> SOLData;
+std::vector<OwnedCelSpriteWithFrameHeight> MicroTiles;
 Point dminPosition;
 Point dmaxPosition;
 dungeon_type leveltype;
@@ -43,7 +47,6 @@ int MicroTileLen;
 char TransVal;
 bool TransList[256];
 uint16_t dPiece[MAXDUNX][MAXDUNY];
-MICROS DPieceMicros[MAXTILES];
 int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
@@ -478,7 +481,7 @@ void LoadLevelSOLData()
 void SetDungeonMicros()
 {
 	MicroTileLen = 10;
-	size_t blocks = 10;
+	int blocks = 10;
 
 	if (leveltype == DTYPE_TOWN) {
 		MicroTileLen = 16;
@@ -491,12 +494,37 @@ void SetDungeonMicros()
 	size_t tileCount;
 	std::unique_ptr<uint16_t[]> levelPieces = LoadMinData(tileCount);
 
-	for (size_t i = 0; i < tileCount / blocks; i++) {
+	LightTableIndex = 0;
+	arch_draw_type = 0;
+	cel_foliage_active = false;
+	cel_transparency_active = false;
+	MicroTiles.clear();
+	SDLSurfaceUniquePtr microTile = SDLWrap::CreateRGBSurfaceWithFormat(0, TILE_WIDTH, TILE_HEIGHT * blocks / 2, 8, SDL_PIXELFORMAT_INDEX8);
+	for (int i = 0; i < tileCount / blocks; i++) {
+		int frameStartY = 0;
+		Point targetBufferPosition { 0, 0 };
+		SDL_FillRect(microTile.get(), nullptr, 225);
 		uint16_t *pieces = &levelPieces[blocks * i];
-		for (size_t block = 0; block < blocks; block++) {
-			DPieceMicros[i].mt[block] = SDL_SwapLE16(pieces[blocks - 2 + (block & 1) - (block & 0xE)]);
+		for (int block = 0; block < blocks; block += 2) {
+			level_cel_block = SDL_SwapLE16(pieces[block]);
+			if (level_cel_block != 0) {
+				RenderTile(Surface { microTile.get() }, targetBufferPosition + Displacement { 0, TILE_HEIGHT - 1 });
+				if (frameStartY == 0)
+					frameStartY = targetBufferPosition.y;
+			}
+			level_cel_block = SDL_SwapLE16(pieces[block + 1]);
+			if (level_cel_block != 0) {
+				RenderTile(Surface { microTile.get() }, targetBufferPosition + Displacement { TILE_WIDTH / 2, TILE_HEIGHT - 1 });
+				if (frameStartY == 0)
+					frameStartY = targetBufferPosition.y;
+			}
+			targetBufferPosition.y += TILE_HEIGHT;
 		}
+		Surface next { microTile.get() };
+
+		MicroTiles.emplace_back(SurfaceToCel(next.subregion(0, frameStartY, TILE_WIDTH, TILE_HEIGHT * blocks / 2 - frameStartY), 1, true, 225));
 	}
+	pDungeonCels = nullptr;
 }
 
 void DRLG_InitTrans()
