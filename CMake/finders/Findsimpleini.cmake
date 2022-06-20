@@ -1,12 +1,15 @@
 find_package(PkgConfig)
 pkg_check_modules(PC_simpleini QUIET simpleini)
 
-find_path(simpleini_INCLUDE_DIR SimpleIni.h)
+find_path(simpleini_INCLUDE_DIR SimpleIni.h
+          HINTS ${PC_simpleini_INCLUDEDIR} ${PC_simpleini_INCLUDE_DIRS})
 
-find_library(simpleini_LIBRARY simpleini)
+find_library(simpleini_LIBRARY simpleini
+             HINTS ${PC_simpleini_LIBDIR} ${PC_simpleini_LIBRARY_DIRS})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(simpleini DEFAULT_MSG simpleini_INCLUDE_DIR simpleini_LIBRARY)
+find_package_handle_standard_args(simpleini DEFAULT_MSG
+                                  simpleini_INCLUDE_DIR simpleini_LIBRARY)
 
 if(simpleini_FOUND)
   add_library(simpleini INTERFACE)
