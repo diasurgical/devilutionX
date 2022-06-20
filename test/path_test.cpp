@@ -137,6 +137,19 @@ TEST(PathTest, FindPath)
 	CheckPath({ 8, 8 }, { 12, 20 }, { 7, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4 });
 }
 
+TEST(PathTest, LongPaths)
+{
+	// Starting from the middle of the world and trying to path to a border exceeds the maximum path size
+	CheckPath({ 56, 56 }, { 0, 0 }, {});
+
+	// Longest possible path is currently 24 steps meaning tiles 24 units away are reachable
+	Point startingPosition { 56, 56 };
+	CheckPath(startingPosition, startingPosition + Displacement { 24, 24 }, std::vector<int8_t>(24, 7));
+
+	// But trying to navigate 25 units fails
+	CheckPath(startingPosition, startingPosition + Displacement { 25, 25 }, {});
+}
+
 TEST(PathTest, Walkable)
 {
 	dPiece[5][5] = 0;
