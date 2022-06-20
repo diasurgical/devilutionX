@@ -7,9 +7,18 @@ find_path(simpleini_INCLUDE_DIR SimpleIni.h
 find_library(simpleini_LIBRARY simpleini
              HINTS ${PC_simpleini_LIBDIR} ${PC_simpleini_LIBRARY_DIRS})
 
+
+if (NOT simpleini_INCLUDE_DIR STREQUAL "simpleini_INCLUDE_DIR-NOTFOUND")
+  file(READ "${simpleini_INCLUDE_DIR}/SimpleIni.h" _version_header_content)
+  if(_version_header_content MATCHES "<th>Version *<td>([0-9.]+)")
+    set(simpleini_VERSION "${CMAKE_MATCH_1}")
+  endif()
+endif()
+
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(simpleini DEFAULT_MSG
-                                  simpleini_INCLUDE_DIR simpleini_LIBRARY)
+find_package_handle_standard_args(simpleini
+                                  REQUIRED_VARS simpleini_INCLUDE_DIR simpleini_LIBRARY
+                                  VERSION_VAR simpleini_VERSION)
 
 if(simpleini_FOUND)
   add_library(simpleini INTERFACE)
