@@ -4,7 +4,7 @@
     "dependencies": [
         "fmt",
         "bzip2",
-		"simpleini"
+        "simpleini"
     ],
     "features": {
         "sdl1": {
