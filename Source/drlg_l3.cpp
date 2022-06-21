@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "engine/load_file.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "gendung.h"
 #include "lighting.h"
@@ -1839,32 +1840,28 @@ void LoadQuestSetPieces()
 
 bool PlaceAnvil()
 {
-	int width = SDL_SwapLE16(pSetPiece[0]);
-	int height = SDL_SwapLE16(pSetPiece[1]);
-	int sx = GenerateRnd(DMAXX - width - 2);
-	int sy = GenerateRnd(DMAXY - height - 2);
+	// growing the size by 2 to allow a 1 tile border on all sides
+	Size areaSize = Size { SDL_SwapLE16(pSetPiece[0]), SDL_SwapLE16(pSetPiece[1]) } + 2;
+	int sx = GenerateRnd(DMAXX - areaSize.width);
+	int sy = GenerateRnd(DMAXY - areaSize.height);
 
 	for (int trys = 0;; trys++, sx++) {
 		if (trys > 198)
 			return false;
 
-		if (sx == DMAXX - width - 2) {
+		if (sx == DMAXX - areaSize.width) {
 			sx = 0;
 			sy++;
-			if (sy == DMAXY - height - 2) {
+			if (sy == DMAXY - areaSize.height) {
 				sy = 0;
 			}
 		}
 
 		bool found = true;
-		for (int yy = 0; yy < height + 2 && found; yy++) {
-			for (int xx = 0; xx < width + 2 && found; xx++) {
-				if (dungeon[xx + sx][yy + sy] != 7) {
-					found = false;
-				}
-				if (Protected.test(xx + sx, yy + sy)) {
-					found = false;
-				}
+		for (Point tile : PointsInRectangleRange { { { sx, sy }, areaSize } }) {
+			if (Protected.test(tile.x, tile.y) || dungeon[tile.x][tile.y] != 7) {
+				found = false;
+				break;
 			}
 		}
 		if (found)
@@ -1872,12 +1869,10 @@ bool PlaceAnvil()
 	}
 
 	PlaceDunTiles(pSetPiece.get(), { sx + 1, sy + 1 }, 7);
-	SetPiece = { { sx, sy }, { width + 2, height + 2 } };
+	SetPiece = { { sx, sy }, areaSize };
 
-	for (int yy = 0; yy < SetPiece.size.width; yy++) {
-		for (int xx = 0; xx < SetPiece.size.height; xx++) {
-			Protected.set(xx + sx, yy + sy);
-		}
+	for (Point tile : PointsInRectangleRange { SetPiece }) {
+		Protected.set(tile.x, tile.y);
 	}
 
 	// Hack to avoid rivers entering the island, reversed later
