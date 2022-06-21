@@ -9,3 +9,4 @@ FetchContent_MakeAvailableExcludeFromAll(simpleini)
 
 add_library(simpleini INTERFACE)
 target_include_directories(simpleini INTERFACE ${simpleini_SOURCE_DIR})
+add_library(simpleini::simpleini ALIAS simpleini)
