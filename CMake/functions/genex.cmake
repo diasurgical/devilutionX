@@ -1,8 +1,25 @@
 # Generator expression helpers
 
+# If "NEW", `set(CACHE ...)` does not override non-cache variables
+if(POLICY CMP0126)
+  cmake_policy(GET CMP0126 _cache_does_not_override_normal_vars_policy)
+else()
+  set(_cache_does_not_override_normal_vars_policy "OLD")
+endif()
+
 macro(GENEX_OPTION name default description)
-  set(${name} ${default} CACHE STRING ${description})
-  set_property(CACHE ${name} PROPERTY STRINGS FOR_DEBUG FOR_RELEASE ON OFF)
+  if(_cache_does_not_override_normal_vars_policy STREQUAL "NEW")
+    set(_define_cache_var TRUE)
+  elseif(DEFINED ${name})
+    get_property(_define_cache_var CACHE ${name} PROPERTY TYPE)
+  endif()
+
+  if(_define_cache_var)
+    set(${name} ${default} CACHE STRING ${description})
+    set_property(CACHE ${name} PROPERTY STRINGS FOR_DEBUG FOR_RELEASE ON OFF)
+  else()
+    message("Skipping `set(CACHE ${name} ...)`: CMake is < 3.21 and a non-cache variable with the same name is already set (${name}=${${name}})")
+  endif()
 endmacro()
 
 # Provide an option that defaults to ON in debug builds.
