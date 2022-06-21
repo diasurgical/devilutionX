@@ -60,6 +60,37 @@ int stextsmax;
 int stextlhold;
 /** Currently selected text line from stext */
 int stextsel;
+
+struct STextStruct {
+	enum Type : uint8_t {
+		Label,
+		Divider,
+		Selectable,
+	};
+
+	std::string text;
+	int _sval;
+	int y;
+	UiFlags flags;
+	Type type;
+	uint8_t _sx;
+	uint8_t _syoff;
+
+	[[nodiscard]] bool isDivider() const
+	{
+		return type == Divider;
+	}
+	[[nodiscard]] bool isSelectable() const
+	{
+		return type == Selectable;
+	}
+
+	[[nodiscard]] bool hasText() const
+	{
+		return !text.empty();
+	}
+};
+
 /** Text lines */
 STextStruct stext[STORE_LINES];
 
@@ -148,7 +179,7 @@ void CalculateLineHeights()
 	if (IsSmallFontTall()) {
 		for (int i = 1; i < STORE_LINES; ++i) {
 			// Space out consecutive text lines, unless they are both selectable (never the case currently).
-			if (stext[i].IsText() && stext[i - 1].IsText() && !(stext[i]._ssel && stext[i - 1]._ssel)) {
+			if (stext[i].hasText() && stext[i - 1].hasText() && !(stext[i].isSelectable() && stext[i - 1].isSelectable())) {
 				stext[i].y = stext[i - 1].y + LargeTextHeight;
 			} else {
 				stext[i].y = i * LargeLineHeight;
@@ -198,27 +229,28 @@ void DrawSSlider(const Surface &out, int y1, int y2)
 	CelDrawTo(out, { uiPosition.x + 601, (y1 + 1) * 12 + 44 + uiPosition.y + yd3 }, sprite, 12);
 }
 
-void AddSLine(int y)
+void AddSLine(size_t y)
 {
 	stext[y]._sx = 0;
 	stext[y]._syoff = 0;
-	stext[y]._sstr[0] = 0;
-	stext[y]._sline = 1;
+	stext[y].text.clear();
+	stext[y].text.shrink_to_fit();
+	stext[y].type = STextStruct::Divider;
 }
 
-void AddSTextVal(int y, int val)
+void AddSTextVal(size_t y, int val)
 {
 	stext[y]._sval = val;
 }
 
-void AddSText(int x, int y, string_view text, UiFlags flags, bool sel)
+void AddSText(uint8_t x, size_t y, string_view text, UiFlags flags, bool sel)
 {
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
-	CopyUtf8(stext[y]._sstr, text, sizeof(stext[y]._sstr));
+	stext[y].text.clear();
+	AppendStrView(stext[y].text, text);
 	stext[y].flags = flags;
-	stext[y]._sline = 0;
-	stext[y]._ssel = sel;
+	stext[y].type = sel ? STextStruct::Selectable : STextStruct::Label;
 }
 
 void AddOptionsBackButton()
@@ -351,7 +383,7 @@ void ScrollSmithBuy(int idx)
 		}
 	}
 
-	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != BackButtonLine())
+	if (stextsel != -1 && !stext[stextsel].isSelectable() && stextsel != BackButtonLine())
 		stextsel = stextdown;
 }
 
@@ -413,7 +445,7 @@ void ScrollSmithPremiumBuy(int boughtitems)
 		}
 		idx++;
 	}
-	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != BackButtonLine())
+	if (stextsel != -1 && !stext[stextsel].isSelectable() && stextsel != BackButtonLine())
 		stextsel = stextdown;
 }
 
@@ -704,7 +736,7 @@ void ScrollWitchBuy(int idx)
 		}
 	}
 
-	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != BackButtonLine())
+	if (stextsel != -1 && !stext[stextsel].isSelectable() && stextsel != BackButtonLine())
 		stextsel = stextdown;
 }
 
@@ -1092,7 +1124,7 @@ void ScrollHealerBuy(int idx)
 		}
 	}
 
-	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != BackButtonLine())
+	if (stextsel != -1 && !stext[stextsel].isSelectable() && stextsel != BackButtonLine())
 		stextsel = stextdown;
 }
 
@@ -1916,7 +1948,7 @@ void ConfirmEnter(Item &item)
 	stextsel = stextlhold;
 	stextsval = std::min(stextvhold, stextsmax);
 
-	while (stextsel != -1 && !stext[stextsel]._ssel) {
+	while (stextsel != -1 && !stext[stextsel].isSelectable()) {
 		stextsel--;
 	}
 }
@@ -2133,7 +2165,7 @@ int TakeGold(Player &player, int cost, bool skipMaxPiles)
 	return cost;
 }
 
-void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, UiFlags flags)
+void DrawSelector(const Surface &out, const Rectangle &rect, string_view text, UiFlags flags)
 {
 	int lineWidth = GetLineWidth(text);
 
@@ -2217,9 +2249,13 @@ void SetupTownStores()
 void FreeStoreMem()
 {
 	stextflag = STORE_NONE;
+	for (STextStruct &entry : stext) {
+		entry.text.clear();
+		entry.text.shrink_to_fit();
+	}
 }
 
-void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price)
+void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price)
 {
 	const Point uiPosition = GetUIRectangle().position;
 	int sx = uiPosition.x + 32 + margin;
@@ -2274,10 +2310,10 @@ void ClearSText(int s, int e)
 	for (int i = s; i < e; i++) {
 		stext[i]._sx = 0;
 		stext[i]._syoff = 0;
-		stext[i]._sstr[0] = 0;
+		stext[i].text.clear();
+		stext[i].text.shrink_to_fit();
 		stext[i].flags = UiFlags::None;
-		stext[i]._sline = 0;
-		stext[i]._ssel = false;
+		stext[i].type = STextStruct::Label;
 		stext[i]._sval = 0;
 	}
 }
@@ -2384,7 +2420,7 @@ void StartStore(talk_id s)
 
 	stextsel = -1;
 	for (int i = 0; i < STORE_LINES; i++) {
-		if (stext[i]._ssel) {
+		if (stext[i].isSelectable()) {
 			stextsel = i;
 			break;
 		}
@@ -2429,10 +2465,10 @@ void DrawSText(const Surface &out)
 	CalculateLineHeights();
 	const Point uiPosition = GetUIRectangle().position;
 	for (int i = 0; i < STORE_LINES; i++) {
-		if (stext[i].IsDivider())
+		if (stext[i].isDivider())
 			DrawSLine(out, uiPosition.y + PaddingTop + stext[i].y + TextHeight() / 2);
-		if (stext[i].IsText())
-			PrintSString(out, stext[i]._sx, i, stext[i]._sstr, stext[i].flags, stext[i]._sval);
+		else if (stext[i].hasText())
+			PrintSString(out, stext[i]._sx, i, stext[i].text, stext[i].flags, stext[i]._sval);
 	}
 
 	if (RenderGold) {
@@ -2534,7 +2570,7 @@ void StoreUp()
 		}
 
 		stextsel--;
-		while (!stext[stextsel]._ssel) {
+		while (!stext[stextsel].isSelectable()) {
 			if (stextsel == 0)
 				stextsel = STORE_LINES - 1;
 			else
@@ -2548,7 +2584,7 @@ void StoreUp()
 	else
 		stextsel--;
 
-	while (!stext[stextsel]._ssel) {
+	while (!stext[stextsel].isSelectable()) {
 		if (stextsel == 0)
 			stextsel = STORE_LINES - 1;
 		else
@@ -2571,7 +2607,7 @@ void StoreDown()
 		}
 
 		stextsel++;
-		while (!stext[stextsel]._ssel) {
+		while (!stext[stextsel].isSelectable()) {
 			if (stextsel == STORE_LINES - 1)
 				stextsel = 0;
 			else
@@ -2585,7 +2621,7 @@ void StoreDown()
 	else
 		stextsel++;
 
-	while (!stext[stextsel]._ssel) {
+	while (!stext[stextsel].isSelectable()) {
 		if (stextsel == STORE_LINES - 1)
 			stextsel = 0;
 		else
@@ -2765,7 +2801,7 @@ void CheckStoreBtn()
 
 		// Large small fonts draw beyond LineHeight. Check if the click was on the overflow text.
 		if (IsSmallFontTall() && y > 0 && y < STORE_LINES
-		    && stext[y - 1].IsText() && !stext[y].IsText()
+		    && stext[y - 1].hasText() && !stext[y].hasText()
 		    && relativeY < stext[y - 1].y + LargeTextHeight) {
 			--y;
 		}
@@ -2773,14 +2809,14 @@ void CheckStoreBtn()
 		if (y >= 5) {
 			if (y >= BackButtonLine() + 1)
 				y = BackButtonLine();
-			if (stextscrl && y <= 20 && !stext[y]._ssel) {
-				if (stext[y - 2]._ssel) {
+			if (stextscrl && y <= 20 && !stext[y].isSelectable()) {
+				if (stext[y - 2].isSelectable()) {
 					y -= 2;
-				} else if (stext[y - 1]._ssel) {
+				} else if (stext[y - 1].isSelectable()) {
 					y--;
 				}
 			}
-			if (stext[y]._ssel || (stextscrl && y == BackButtonLine())) {
+			if (stext[y].isSelectable() || (stextscrl && y == BackButtonLine())) {
 				stextsel = y;
 				StoreEnter();
 			}

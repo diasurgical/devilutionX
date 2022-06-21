@@ -46,27 +46,6 @@ enum talk_id : uint8_t {
 	STORE_BARMAID,
 };
 
-struct STextStruct {
-	int _sx;
-	int _syoff;
-	char _sstr[128];
-	UiFlags flags;
-	int _sline;
-	bool _ssel;
-	int _sval;
-
-	int y;
-
-	[[nodiscard]] bool IsDivider() const
-	{
-		return _sline != 0;
-	}
-	[[nodiscard]] bool IsText() const
-	{
-		return _sstr[0] != '\0';
-	}
-};
-
 /** Currently active store */
 extern talk_id stextflag;
 
@@ -107,7 +86,7 @@ void SetupTownStores();
 
 void FreeStoreMem();
 
-void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
+void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price = 0);
 void DrawSLine(const Surface &out, int sy);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
