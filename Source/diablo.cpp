@@ -342,7 +342,7 @@ void LeftMouseDown(int wParam)
 				CheckSBook();
 			} else if (!MyPlayer->HoldItem.isEmpty()) {
 				Point currentPosition = MyPlayer->position.tile;
-				if (CanPut(currentPosition, GetDirection(currentPosition, cursPosition))) {
+				if (FindAdjacentPositionForItem(currentPosition, GetDirection(currentPosition, cursPosition))) {
 					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition, MyPlayer->HoldItem);
 					NewCursor(CURSOR_HAND);
 				}

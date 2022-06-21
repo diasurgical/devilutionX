@@ -188,6 +188,18 @@ void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
  */
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld);
 void InvGetItem(Player &player, int ii);
+
+/**
+ * @brief Returns the first free space that can take an item preferencing tiles in front of the current position
+ *
+ * The search starts with the adjacent tile in the desired direction and alternates sides until it ends up checking the
+ * opposite tile, before finally checking the origin tile
+ *
+ * @param origin center tile of the search space
+ * @param facing direction of the adjacent tile to check first
+ * @return the first valid point or an empty optional
+ */
+std::optional<Point> FindAdjacentPositionForItem(Point origin, Direction facing);
 void AutoGetItem(int pnum, Item *item, int ii);
 
 /**
@@ -207,17 +219,8 @@ void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci);
  */
 bool CanPut(Point position);
 
-/**
- * @brief Checks for free spaces in the three "adjacent" tiles in the given direction and also the given position.
- * @see CanPut
- * @param position base tile coordinates
- * @param facing direction to check, tiles "left" and "right" of this direction will also be checked.
- * @return True if any of the four tiles checked can accept an item, false if all blocked
- */
-bool CanPut(Point position, Direction facing);
-
-int InvPutItem(Player &player, Point position, Item &item);
-int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
+int InvPutItem(const Player &player, Point position, const Item &item);
+int SyncPutItem(const Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int8_t CheckInvHLight();
 bool UseScroll(spell_id spell);
