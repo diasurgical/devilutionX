@@ -5,17 +5,24 @@
 
 using namespace devilution;
 
+enum class TestDataType {
+	SetNewAnimation,
+	GameTick,
+	Rendering
+};
+
 /**
  * @brief Represents a Action in the game_logic or rendering.
  */
 struct TestData {
 	virtual ~TestData() = default;
+	virtual TestDataType type() const = 0;
 };
 
 /**
  * @brief Represents a call to SetNewAnimation
  */
-struct SetNewAnimationData : TestData {
+struct SetNewAnimationData : public TestData {
 	SetNewAnimationData(int numberOfFrames, int delayLen, AnimationDistributionFlags params = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 	{
 		_NumberOfFrames = numberOfFrames;
@@ -24,6 +31,12 @@ struct SetNewAnimationData : TestData {
 		_NumSkippedFrames = numSkippedFrames;
 		_DistributeFramesBeforeFrame = distributeFramesBeforeFrame;
 	}
+
+	TestDataType type() const override
+	{
+		return TestDataType::SetNewAnimation;
+	}
+
 	int _NumberOfFrames;
 	int _DelayLen;
 	AnimationDistributionFlags _Params;
@@ -42,6 +55,11 @@ struct GameTickData : TestData {
 		_ExpectedAnimationFrame = expectedAnimationFrame;
 		_ExpectedAnimationCnt = expectedAnimationCnt;
 	}
+
+	TestDataType type() const override
+	{
+		return TestDataType::GameTick;
+	}
 };
 
 /**
@@ -59,6 +77,11 @@ struct RenderingData : TestData {
 		this->_fProgressToNextGameTick = fProgressToNextGameTick;
 		this->_ExpectedRenderingFrame = expectedRenderingFrame;
 	}
+
+	TestDataType type() const override
+	{
+		return TestDataType::Rendering;
+	}
 };
 
 /**
@@ -73,21 +96,20 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 
 	int currentGameTick = 0;
 	for (TestData *x : vecTestData) {
-		auto setNewAnimationData = dynamic_cast<SetNewAnimationData *>(x);
-		if (setNewAnimationData != nullptr) {
+		switch (x->type()) {
+		case TestDataType::SetNewAnimation: {
+			auto setNewAnimationData = static_cast<SetNewAnimationData *>(x);
 			animInfo.SetNewAnimation(std::nullopt, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
-		}
-
-		auto gameTickData = dynamic_cast<GameTickData *>(x);
-		if (gameTickData != nullptr) {
+		} break;
+		case TestDataType::GameTick: {
+			auto gameTickData = static_cast<GameTickData *>(x);
 			currentGameTick += 1;
 			animInfo.ProcessAnimation();
 			EXPECT_EQ(animInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
 			EXPECT_EQ(animInfo.TickCounterOfCurrentFrame, gameTickData->_ExpectedAnimationCnt);
-		}
-
-		auto renderingData = dynamic_cast<RenderingData *>(x);
-		if (renderingData != nullptr) {
+		} break;
+		case TestDataType::Rendering: {
+			auto renderingData = static_cast<RenderingData *>(x);
 			gfProgressToNextGameTick = renderingData->_fProgressToNextGameTick;
 			EXPECT_EQ(animInfo.GetFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
@@ -95,6 +117,7 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 			    << " CurrentFrame: " << animInfo.CurrentFrame
 			    << " DelayCounter: " << animInfo.TickCounterOfCurrentFrame
 			    << " GameTick: " << currentGameTick;
+		} break;
 		}
 	}
 	for (TestData *x : vecTestData) {

@@ -64,6 +64,9 @@ option(DEVILUTIONX_RESAMPLER_SDL "Build with SDL resampler" ON)
 
 option(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT "Whether to use a lookup table for transparency blending with black. This improves performance of blending transparent black overlays, such as quest dialog background, at the cost of 128 KiB of RAM." ON)
 
+cmake_dependent_option(DEVILUTIONX_DISABLE_RTTI "Disable RTTI" ON "NONET" OFF)
+cmake_dependent_option(DEVILUTIONX_DISABLE_EXCEPTIONS "Disable exceptions" ON "NONET" OFF)
+
 if(TSAN)
   set(ASAN OFF)
 endif()
@@ -156,6 +159,8 @@ endif()
 if(NONET)
   set(DISABLE_TCP ON)
   set(DISABLE_ZERO_TIER ON)
+  set(DISABLE_RTTI ON)
+  set(DISABLE_EXCEPTIONS ON)
   set(PACKET_ENCRYPTION OFF)
 endif()
 
@@ -175,6 +180,34 @@ set_property(CACHE DEVILUTIONX_DEFAULT_RESAMPLER PROPERTY STRINGS ${_resamplers}
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
+if(DEVILUTIONX_DISABLE_RTTI)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
+  elseif(MSVC)
+    string(REGEX REPLACE "/GR" "/GR-" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  endif()
+endif()
+
+if(DEVILUTIONX_DISABLE_EXCEPTIONS)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
+  elseif(MSVC)
+    string(REGEX REPLACE "/EHsc" "/EHs-c-" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  endif()
+endif()
+
+# Remove unused symbols in non-debug mode.
+# This is useful even with LTO (-84 KiB with MinSizeRel).
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  # For some reason, adding to CMAKE_CXX_FLAGS results in a slightly smaller
+  # binary than using `add_compile/link_options`
+  set(_extra_flags "-ffunction-sections -fdata-sections -Wl,--gc-sections")
+
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${_extra_flags}")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${_extra_flags}")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} ${_extra_flags}")
 endif()
 
 # Not a genexp because CMake doesn't support it
