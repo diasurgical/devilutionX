@@ -1831,13 +1831,9 @@ bool TryDropItem()
 
 	Point position = myPlayer.position.future;
 	Direction direction = myPlayer._pdir;
-	if (!CanPut(position, direction)) {
-		direction = Opposite(direction);
-		// if we can't drop in front of the player, can we drop it behind?
-		if (!CanPut(position, direction)) {
-			myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
-			return false;
-		}
+	if (!FindAdjacentPositionForItem(position, direction)) {
+		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
+		return false;
 	}
 
 	NetSendCmdPItem(true, CMD_PUTITEM, position + direction, myPlayer.HoldItem);

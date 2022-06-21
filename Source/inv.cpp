@@ -972,51 +972,6 @@ void CleanupItems(int ii)
 	}
 }
 
-bool PutItem(Player &player, Point &position)
-{
-	if (ActiveItemCount >= MAXITEMS)
-		return false;
-
-	Direction d = GetDirection(player.position.tile, position);
-
-	if (position.WalkingDistance(player.position.tile) > 1) {
-		position = player.position.tile + d;
-	}
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Left(d);
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Right(d);
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Left(Left(d));
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Right(Right(d));
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Left(Left(Left(d)));
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Right(Right(Right(d)));
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + Opposite(d);
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile;
-	return CanPut(position);
-}
-
 bool CanUseStaff(Item &staff, spell_id spell)
 {
 	return !staff.isEmpty()
@@ -1610,6 +1565,41 @@ void InvGetItem(Player &player, int ii)
 	pcursitem = -1;
 }
 
+std::optional<Point> FindAdjacentPositionForItem(Point origin, Direction facing)
+{
+	if (ActiveItemCount >= MAXITEMS)
+		return {};
+
+	if (CanPut(origin + facing))
+		return origin + facing;
+
+	if (CanPut(origin + Left(facing)))
+		return origin + Left(facing);
+
+	if (CanPut(origin + Right(facing)))
+		return origin + Right(facing);
+
+	if (CanPut(origin + Left(Left(facing))))
+		return origin + Left(Left(facing));
+
+	if (CanPut(origin + Right(Right(facing))))
+		return origin + Right(Right(facing));
+
+	if (CanPut(origin + Left(Left(Left(facing)))))
+		return origin + Left(Left(Left(facing)));
+
+	if (CanPut(origin + Right(Right(Right(facing)))))
+		return origin + Right(Right(Right(facing)));
+
+	if (CanPut(origin + Opposite(facing)))
+		return origin + Opposite(facing);
+
+	if (CanPut(origin))
+		return origin;
+
+	return {};
+}
+
 void AutoGetItem(int pnum, Item *itemPointer, int ii)
 {
 	Item &item = *itemPointer;
@@ -1738,27 +1728,7 @@ bool CanPut(Point position)
 	return true;
 }
 
-bool CanPut(Point position, Direction dir)
-{
-	if (ActiveItemCount >= MAXITEMS)
-		return false;
-
-	if (CanPut(position + dir)) {
-		return true;
-	}
-
-	if (CanPut(position + Left(dir))) {
-		return true;
-	}
-
-	if (CanPut(position + Right(dir))) {
-		return true;
-	}
-
-	return CanPut(position);
-}
-
-int InvPutItem(Player &player, Point position, Item &item)
+int InvPutItem(const Player &player, Point position, const Item &item)
 {
 	if (player.isOnLevel(0)) {
 		if (item.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
@@ -1771,18 +1741,18 @@ int InvPutItem(Player &player, Point position, Item &item)
 		}
 	}
 
-	if (!PutItem(player, position))
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
+	if (!itemTile)
 		return -1;
 
-	assert(CanPut(position));
 	int ii = AllocateItem();
 
-	dItem[position.x][position.y] = ii + 1;
+	dItem[itemTile->x][itemTile->y] = ii + 1;
 	Items[ii] = item;
-	Items[ii].position = position;
+	Items[ii].position = *itemTile;
 	RespawnItem(Items[ii], true);
 
-	if (currlevel == 21 && position == CornerStone.position) {
+	if (currlevel == 21 && *itemTile == CornerStone.position) {
 		CornerStone.item = Items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		Quests[Q_CORNSTN]._qlog = false;
@@ -1792,7 +1762,7 @@ int InvPutItem(Player &player, Point position, Item &item)
 	return ii;
 }
 
-int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
+int SyncPutItem(const Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
 	if (player.isOnLevel(0)) {
 		if (idx == IDI_RUNEBOMB && OpensHive(position))
@@ -1801,12 +1771,11 @@ int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, i
 			return -1;
 	}
 
-	if (!PutItem(player, position))
+	std::optional<Point> itemTile = FindAdjacentPositionForItem(player.position.tile, GetDirection(player.position.tile, position));
+	if (!itemTile)
 		return -1;
 
-	assert(CanPut(position));
-
-	return SyncDropItem(position, idx, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff, toHit, maxDam, minStr, minMag, minDex, ac);
+	return SyncDropItem(*itemTile, idx, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff, toHit, maxDam, minStr, minMag, minDex, ac);
 }
 
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
