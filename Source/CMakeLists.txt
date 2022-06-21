@@ -229,7 +229,7 @@ target_link_libraries(libdevilutionx PUBLIC
   PKWare
   libmpq
   libsmackerdec
-  simpleini
+  simpleini::simpleini
   hoehrmann_utf8
 )
 
@@ -243,7 +243,7 @@ if(NOT NONET)
 endif()
 
 if(NOT NOSOUND)
-  target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
+  target_link_libraries(libdevilutionx PUBLIC SDL_audiolib::SDL_audiolib)
 endif()
 
 if(NOT NONET AND NOT DISABLE_ZERO_TIER)
