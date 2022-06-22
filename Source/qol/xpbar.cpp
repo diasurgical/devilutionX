@@ -142,7 +142,8 @@ bool CheckXPBarInfo()
 	AddPanelString(fmt::format(fmt::runtime(_("Experience: {:s}")), FormatInteger(player._pExperience)));
 	AddPanelString(fmt::format(fmt::runtime(_("Next Level: {:s}")), FormatInteger(ExpLvlsTbl[charLevel])));
 	AddPanelString(fmt::format(fmt::runtime(_("{:s} to Level {:d}")), FormatInteger(ExpLvlsTbl[charLevel] - player._pExperience), charLevel + 1));
-	AddPanelString(fmt::format(fmt::runtime(_("Deaths: {:d}")), myPlayerStatistics.deathCount));
+	if (gbIsMultiplayer)
+		AddPanelString(fmt::format(fmt::runtime(_("Deaths: {:d}")), MyPlayerStatistics.deathCount));
 
 	return true;
 }

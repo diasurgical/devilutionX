@@ -3146,7 +3146,7 @@ StartPlayerKill(int pnum, int earflag)
 		}
 	}
 	SetPlayerHitPoints(player, 0);
-	myPlayerStatistics.deathCount++;
+	MyPlayerStatistics.deathCount++;
 }
 
 void StripTopGold(Player &player)

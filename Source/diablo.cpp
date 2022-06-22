@@ -61,6 +61,7 @@
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/stash.h"
+#include "qol/statistics.h"
 #include "qol/xpbar.h"
 #include "restrict.h"
 #include "setmaps.h"
@@ -1913,11 +1914,13 @@ void diablo_pause_game()
 	if (!gbIsMultiplayer) {
 		if (PauseMode != 0) {
 			PauseMode = 0;
+			MyPlayerStatistics.ticksSubtrahend = SDL_GetTicks();
 		} else {
 			PauseMode = 2;
 			sound_stop();
 			qtextflag = false;
 			LastMouseButtonAction = MouseActionType::None;
+			CalculateInGameTime();
 		}
 
 		force_redraw = 255;
@@ -1949,6 +1952,7 @@ void diablo_focus_pause()
 		PauseMode = 2;
 		sound_stop();
 		LastMouseButtonAction = MouseActionType::None;
+		CalculateInGameTime();
 	}
 
 	SVidMute();
@@ -1961,6 +1965,7 @@ void diablo_focus_unpause()
 {
 	if (!GameWasAlreadyPaused) {
 		PauseMode = 0;
+		MyPlayerStatistics.ticksSubtrahend = SDL_GetTicks();
 	}
 
 	SVidUnmute();

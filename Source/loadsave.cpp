@@ -1941,7 +1941,7 @@ void LoadStatistics()
 	}
 
 	{
-		statisticsFile.clear();
+		StatisticsFile.clear();
 		std::stringstream ss(readString);
 		std::string line;
 		std::string del = "=";
@@ -1951,7 +1951,7 @@ void LoadStatistics()
 				continue;
 			std::string key = line.substr(0, delPos);
 			std::string value = line.substr(delPos + del.size());
-			statisticsFile[key] = value;
+			StatisticsFile[key] = value;
 		}
 	}
 
@@ -1963,7 +1963,7 @@ void SaveStatistics(MpqWriter &saveWriter)
 	CalculateInGameTime();
 	SaveStatisticsToMap();
 	std::string stringToSave;
-	for (const auto &s : statisticsFile) {
+	for (const auto &s : StatisticsFile) {
 		stringToSave += s.first + "=" + s.second + "\n";
 	}
 

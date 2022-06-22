@@ -2,50 +2,51 @@
 
 namespace devilution {
 
-Statistics myPlayerStatistics;
-std::map<std::string, std::string> statisticsFile;
+Statistics MyPlayerStatistics;
+std::map<std::string, std::string> StatisticsFile;
 
-void SaveMonsterKillCount();
 void LoadMonsterKillCount();
+void SaveMonsterKillCount();
 std::string GetMonsterName(uint16_t monsterID);
 void AddMonsterWeapon(std::string &monsterName, uint16_t monsterID);
 
 void InitializePlayerStatistics()
 {
-	myPlayerStatistics = {};
+	MyPlayerStatistics = {};
 	std::fill_n(MonsterKillCounts, MAXMONSTERS, 0);
+	StatisticsFile.clear();
 }
 
 void LoadStatisticsFromMap()
 {
-	if (statisticsFile.find("deathCount") != statisticsFile.end())
-		myPlayerStatistics.deathCount = std::stoul(statisticsFile.at("deathCount"));
+	if (StatisticsFile.find("deathCount") != StatisticsFile.end())
+		MyPlayerStatistics.deathCount = std::stoul(StatisticsFile.at("deathCount"));
 
-	if (statisticsFile.find("ingameTime") != statisticsFile.end())
-		myPlayerStatistics.ingameTime = std::stoul(statisticsFile.at("ingameTime"));
+	if (StatisticsFile.find("ingameTime") != StatisticsFile.end())
+		MyPlayerStatistics.ingameTime = std::stoul(StatisticsFile.at("ingameTime"));
 	LoadMonsterKillCount();
 }
 
 void SaveStatisticsToMap()
 {
-	statisticsFile["deathCount"] = std::to_string(myPlayerStatistics.deathCount);
-	statisticsFile["ingameTime"] = std::to_string(myPlayerStatistics.ingameTime);
+	StatisticsFile["deathCount"] = std::to_string(MyPlayerStatistics.deathCount);
+	StatisticsFile["ingameTime"] = std::to_string(MyPlayerStatistics.ingameTime);
 	SaveMonsterKillCount();
 }
 
 void CalculateInGameTime()
 {
 	uint32_t ticksNow = SDL_GetTicks();
-	myPlayerStatistics.ingameTime += (ticksNow - myPlayerStatistics.ticksSubstrahend);
-	myPlayerStatistics.ticksSubstrahend = ticksNow;
+	MyPlayerStatistics.ingameTime += (ticksNow - MyPlayerStatistics.ticksSubtrahend);
+	MyPlayerStatistics.ticksSubtrahend = ticksNow;
 }
 
 void LoadMonsterKillCount()
 {
 	for (uint16_t monsterID = 0; monsterID < _monster_id::NUM_MTYPES; monsterID++) {
 		std::string monsterName = GetMonsterName(monsterID);
-		if (statisticsFile.find("killed." + monsterName) != statisticsFile.end())
-			MonsterKillCounts[monsterID] = std::stoi(statisticsFile.at("killed." + monsterName));
+		if (StatisticsFile.find("killed." + monsterName) != StatisticsFile.end())
+			MonsterKillCounts[monsterID] = std::stoi(StatisticsFile.at("killed." + monsterName));
 	}
 }
 
@@ -53,14 +54,15 @@ void SaveMonsterKillCount()
 {
 	for (uint16_t monsterID = 0; monsterID < _monster_id::NUM_MTYPES; monsterID++) {
 		std::string monsterName = GetMonsterName(monsterID);
-		statisticsFile["killed." + monsterName] = std::to_string(MonsterKillCounts[monsterID]);
+		StatisticsFile["killed." + monsterName] = std::to_string(MonsterKillCounts[monsterID]);
 	}
 }
 
 std::string GetMonsterName(uint16_t monsterID)
 {
 	std::string monsterName = MonstersData[monsterID].mName;
-	monsterName.erase(std::remove_if(monsterName.begin(), monsterName.end(), [](unsigned char x) { return std::isspace(x); }), monsterName.end());
+	std::string remChars = "- ";
+	monsterName.erase(std::remove_if(monsterName.begin(), monsterName.end(), [remChars](const std::string::value_type &x) { return remChars.find(x) != std::string::npos; }), monsterName.end());
 	AddMonsterWeapon(monsterName, monsterID);
 	return monsterName;
 }
