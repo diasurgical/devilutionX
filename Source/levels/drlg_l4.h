@@ -1,11 +1,11 @@
 /**
- * @file drlg_l4.h
+ * @file levels/drlg_l4.h
  *
  * Interface of the hell level generation algorithms.
  */
 #pragma once
 
-#include "gendung.h"
+#include "levels/gendung.h"
 
 namespace devilution {
 

@@ -3,7 +3,7 @@
  *
  * Implementation of functionality for triggering events when the player enters an area.
  */
-#include "trigs.h"
+#include "levels/trigs.h"
 
 #include <fmt/format.h>
 

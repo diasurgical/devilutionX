@@ -1,11 +1,11 @@
 /**
- * @file drlg_l3.h
+ * @file levels/drlg_l3.h
  *
  * Interface of the caves level generation algorithms.
  */
 #pragma once
 
-#include "gendung.h"
+#include "levels/gendung.h"
 
 namespace devilution {
 

@@ -3,7 +3,7 @@
 #include "path.h"
 
 // The following headers are included to access globals used in functions that have not been isolated yet.
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "objects.h"
 
 namespace devilution {

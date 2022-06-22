@@ -1,24 +1,19 @@
-/**
- * @file setmaps.cpp
- *
- * Implementation of functionality the special quest dungeons.
- */
-#include "setmaps.h"
+#include "levels/setmaps.h"
 
 #ifdef _DEBUG
 #include "debug.h"
 #endif
-#include "drlg_l1.h"
-#include "drlg_l2.h"
-#include "drlg_l3.h"
-#include "drlg_l4.h"
 #include "engine/load_file.hpp"
-#include "gendung.h"
+#include "levels/drlg_l1.h"
+#include "levels/drlg_l2.h"
+#include "levels/drlg_l3.h"
+#include "levels/drlg_l4.h"
+#include "levels/gendung.h"
+#include "levels/trigs.h"
 #include "objdat.h"
 #include "objects.h"
 #include "palette.h"
 #include "quests.h"
-#include "trigs.h"
 #include "utils/language.h"
 
 namespace devilution {

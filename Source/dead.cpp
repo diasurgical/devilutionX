@@ -5,7 +5,7 @@
  */
 #include "dead.h"
 
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "lighting.h"
 #include "misdat.h"
 #include "monster.h"

@@ -1,14 +1,14 @@
 /**
- * @file drlg_l1.cpp
+ * @file levels/drlg_l1.cpp
  *
  * Implementation of the cathedral level generation algorithms.
  */
-#include "drlg_l1.h"
+#include "levels/drlg_l1.h"
 
 #include "engine/load_file.hpp"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "player.h"
 #include "quests.h"
 #include "utils/bitset2d.hpp"

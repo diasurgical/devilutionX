@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "drlg_test.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "multi.h"
 #include "quests.h"
 

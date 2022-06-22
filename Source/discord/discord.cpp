@@ -12,12 +12,12 @@
 #include <fmt/format.h>
 
 #include "config.h"
-#include "gendung.h"
 #include "init.h"
+#include "levels/gendung.h"
+#include "levels/setmaps.h"
 #include "multi.h"
 #include "panels/charpanel.hpp"
 #include "player.h"
-#include "setmaps.h"
 #include "utils/language.h"
 
 namespace devilution {

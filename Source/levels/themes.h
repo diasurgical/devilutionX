@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "objdat.h"
 
 namespace devilution {

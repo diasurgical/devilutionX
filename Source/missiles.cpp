@@ -19,10 +19,10 @@
 #include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
+#include "levels/trigs.h"
 #include "lighting.h"
 #include "monster.h"
 #include "spells.h"
-#include "trigs.h"
 
 namespace devilution {
 

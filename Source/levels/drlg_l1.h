@@ -1,11 +1,11 @@
 /**
- * @file drlg_l1.h
+ * @file levels/drlg_l1.h
  *
  * Interface of the cathedral level generation algorithms.
  */
 #pragma once
 
-#include "gendung.h"
+#include "levels/gendung.h"
 
 namespace devilution {
 
