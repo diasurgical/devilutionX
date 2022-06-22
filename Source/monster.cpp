@@ -518,7 +518,7 @@ void PlaceQuestMonsters()
 			Quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
 		}
 
-		if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+		if (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests()) {
 			AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE);
 			AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE);
 			PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
@@ -1443,7 +1443,7 @@ void MonsterTalk(Monster &monster)
 	}
 	if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood)
 		Quests[Q_WARLORD]._qvar1 = 2;
-	if (monster.uniqueType == UniqueMonsterType::Lazarus && gbIsMultiplayer) {
+	if (monster.uniqueType == UniqueMonsterType::Lazarus && UseMultiplayerQuests()) {
 		Quests[Q_BETRAYER]._qvar1 = 6;
 		monster.goal = MonsterGoal::Normal;
 		monster.activeForTicks = UINT8_MAX;
@@ -2790,12 +2790,16 @@ void LazarusAi(Monster &monster)
 
 	Direction md = GetMonsterDirection(monster);
 	if (IsTileVisible(monster.position.tile)) {
-		if (!gbIsMultiplayer) {
+		if (!UseMultiplayerQuests()) {
 			Player &myPlayer = *MyPlayer;
 			if (monster.talkMsg == TEXT_VILE13 && monster.goal == MonsterGoal::Inquiring && myPlayer.position.tile == Point { 35, 46 }) {
-				PlayInGameMovie("gendata\\fprst3.smk");
+				if (!gbIsMultiplayer) {
+					// Playing ingame movies is currently not supported in multiplayer
+					PlayInGameMovie("gendata\\fprst3.smk");
+				}
 				monster.mode = MonsterMode::Talk;
 				Quests[Q_BETRAYER]._qvar1 = 5;
+				NetSendCmdQuest(true, Quests[Q_BETRAYER]);
 			}
 
 			if (monster.talkMsg == TEXT_VILE13 && !effect_is_playing(USFX_LAZ1) && monster.goal == MonsterGoal::Talking) {
@@ -2805,16 +2809,17 @@ void LazarusAi(Monster &monster)
 				monster.goal = MonsterGoal::Normal;
 				monster.activeForTicks = UINT8_MAX;
 				monster.talkMsg = TEXT_NONE;
+				NetSendCmdQuest(true, Quests[Q_BETRAYER]);
 			}
 		}
 
-		if (gbIsMultiplayer && monster.talkMsg == TEXT_VILE13 && monster.goal == MonsterGoal::Inquiring && Quests[Q_BETRAYER]._qvar1 <= 3) {
+		if (UseMultiplayerQuests() && monster.talkMsg == TEXT_VILE13 && monster.goal == MonsterGoal::Inquiring && Quests[Q_BETRAYER]._qvar1 <= 3) {
 			monster.mode = MonsterMode::Talk;
 		}
 	}
 
 	if (IsAnyOf(monster.goal, MonsterGoal::Normal, MonsterGoal::Retreat, MonsterGoal::Move)) {
-		if (!gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 4 && monster.talkMsg == TEXT_NONE) { // Fix save games affected by teleport bug
+		if (!UseMultiplayerQuests() && Quests[Q_BETRAYER]._qvar1 == 4 && monster.talkMsg == TEXT_NONE) { // Fix save games affected by teleport bug
 			ObjChangeMapResync(1, 18, 20, 24);
 			RedoPlayerVision();
 			Quests[Q_BETRAYER]._qvar1 = 6;
@@ -2834,7 +2839,7 @@ void LazarusMinionAi(Monster &monster)
 	Direction md = GetMonsterDirection(monster);
 
 	if (IsTileVisible(monster.position.tile)) {
-		if (!gbIsMultiplayer) {
+		if (!UseMultiplayerQuests()) {
 			if (Quests[Q_BETRAYER]._qvar1 <= 5) {
 				monster.goal = MonsterGoal::Inquiring;
 			} else {
@@ -3130,7 +3135,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 	else
 		monster.lightId = AddLight(monster.position.tile, 3);
 
-	if (gbIsMultiplayer) {
+	if (UseMultiplayerQuests()) {
 		if (monster.ai == AI_LAZHELP)
 			monster.talkMsg = TEXT_NONE;
 		if (monster.ai == AI_LAZARUS && Quests[Q_BETRAYER]._qvar1 > 3) {

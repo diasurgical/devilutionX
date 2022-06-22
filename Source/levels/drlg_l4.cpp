@@ -160,7 +160,7 @@ void LoadQuestSetPieces()
 {
 	if (Quests[Q_WARLORD].IsAvailable()) {
 		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\warlord.dun");
-	} else if (currlevel == 15 && gbIsMultiplayer) {
+	} else if (currlevel == 15 && UseMultiplayerQuests()) {
 		pSetPiece = LoadFileInMem<uint16_t>("levels\\l4data\\vile1.dun");
 	}
 }
@@ -253,7 +253,7 @@ void FirstRoom()
 		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
 			assert(!gbIsMultiplayer);
 			room.size = { 11, 11 };
-		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests()) {
 			room.size = { 11, 11 };
 		} else {
 			const int32_t randomWidth = GenerateRnd(5) + 2;
@@ -273,7 +273,7 @@ void FirstRoom()
 	if (currlevel == 16) {
 		L4Hold = room.position;
 	}
-	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests())) {
 		SetPieceRoom = { room.position + WorldTileDisplacement { 1, 1 }, WorldTileSize(room.size.width + 1, room.size.height + 1) };
 	} else {
 		SetPieceRoom = {};
@@ -1112,7 +1112,7 @@ bool PlaceStairs(lvl_entry entry)
 		}
 	} else {
 		// Place hell gate
-		bool isGateOpen = gbIsMultiplayer || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
+		bool isGateOpen = UseMultiplayerQuests() || Quests[Q_DIABLO]._qactive == QUEST_ACTIVE;
 		position = PlaceMiniSet(isGateOpen ? L4PENTA2 : L4PENTA);
 		if (!position)
 			return false;
@@ -1145,7 +1145,7 @@ void GenerateLevel(lvl_entry entry)
 		if (currlevel == 16) {
 			ProtectQuads();
 		}
-		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+		if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && UseMultiplayerQuests())) {
 			for (int spi = SetPieceRoom.position.x; spi < SetPieceRoom.position.x + SetPieceRoom.size.width - 1; spi++) {
 				for (int spj = SetPieceRoom.position.y; spj < SetPieceRoom.position.y + SetPieceRoom.size.height - 1; spj++) {
 					Protected.set(spi, spj);

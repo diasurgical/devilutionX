@@ -310,13 +310,13 @@ void CheckQuests()
 		return;
 
 	auto &quest = Quests[Q_BETRAYER];
-	if (quest.IsAvailable() && gbIsMultiplayer && quest._qvar1 == 2) {
+	if (quest.IsAvailable() && UseMultiplayerQuests() && quest._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, SetPiece.position.megaToWorld() + Displacement { 4, 6 });
 		quest._qvar1 = 3;
 		NetSendCmdQuest(true, quest);
 	}
 
-	if (gbIsMultiplayer) {
+	if (UseMultiplayerQuests()) {
 		return;
 	}
 
@@ -375,7 +375,7 @@ bool ForceQuests()
 	if (gbIsSpawn)
 		return false;
 
-	if (gbIsMultiplayer) {
+	if (UseMultiplayerQuests()) {
 		return false;
 	}
 
@@ -428,7 +428,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		auto &diabloQuest = Quests[Q_DIABLO];
 		diabloQuest._qactive = QUEST_ACTIVE;
 
-		if (gbIsMultiplayer) {
+		if (UseMultiplayerQuests()) {
 			for (WorldTileCoord j = 0; j < MAXDUNY; j++) {
 				for (WorldTileCoord i = 0; i < MAXDUNX; i++) {
 					if (dPiece[i][j] == 369) {
@@ -660,8 +660,17 @@ void ResyncQuests()
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (Quests[Q_BETRAYER]._qvar1 >= 4)
 			ObjChangeMapResync(1, 11, 20, 18);
-		if (Quests[Q_BETRAYER]._qvar1 >= 6)
+		if (Quests[Q_BETRAYER]._qvar1 >= 6) {
 			ObjChangeMapResync(1, 18, 20, 24);
+			if (gbIsMultiplayer) {
+				Monster *lazarus = FindUniqueMonster(UniqueMonsterType::Lazarus);
+				if (lazarus != nullptr) {
+					// Ensure lazarus starts attacking again after returning to the level
+					lazarus->goal = MonsterGoal::Normal;
+					lazarus->talkMsg = TEXT_NONE;
+				}
+			}
+		}
 		if (Quests[Q_BETRAYER]._qvar1 >= 7)
 			InitVPTriggers();
 		for (int i = 0; i < ActiveObjectCount; i++)
@@ -672,6 +681,7 @@ void ResyncQuests()
 	    && (Quests[Q_BETRAYER]._qvar2 == 1 || Quests[Q_BETRAYER]._qvar2 >= 3)
 	    && (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE || Quests[Q_BETRAYER]._qactive == QUEST_DONE)) {
 		Quests[Q_BETRAYER]._qvar2 = 2;
+		NetSendCmdQuest(true, Quests[Q_BETRAYER]);
 	}
 }
 
