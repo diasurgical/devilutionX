@@ -7,7 +7,7 @@
 
 #include <array>
 
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "objects.h"
 
 namespace devilution {

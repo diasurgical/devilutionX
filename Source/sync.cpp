@@ -5,7 +5,7 @@
  */
 #include <climits>
 
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "monster.h"
 #include "player.h"
 

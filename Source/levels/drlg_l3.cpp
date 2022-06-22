@@ -1,21 +1,15 @@
-/**
- * @file drlg_l3.cpp
- *
- * Implementation of the caves level generation algorithms.
- */
-
 #include <algorithm>
 
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
+#include "levels/setmaps.h"
 #include "lighting.h"
 #include "monster.h"
 #include "objdat.h"
 #include "objects.h"
 #include "quests.h"
-#include "setmaps.h"
 
 namespace devilution {
 

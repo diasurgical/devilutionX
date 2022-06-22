@@ -1,13 +1,13 @@
 /**
- * @file drlg_l4.cpp
+ * @file levels/drlg_l4.cpp
  *
  * Implementation of the hell level generation algorithms.
  */
-#include "drlg_l4.h"
+#include "levels/drlg_l4.h"
 
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "monster.h"
 #include "multi.h"
 #include "objdat.h"

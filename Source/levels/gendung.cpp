@@ -1,22 +1,17 @@
-/**
- * @file gendung.cpp
- *
- * Implementation of general dungeon generation code.
- */
 #include <stack>
 
-#include "gendung.h"
+#include "levels/gendung.h"
 
-#include "drlg_l1.h"
-#include "drlg_l2.h"
-#include "drlg_l3.h"
-#include "drlg_l4.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "init.h"
+#include "levels/drlg_l1.h"
+#include "levels/drlg_l2.h"
+#include "levels/drlg_l3.h"
+#include "levels/drlg_l4.h"
+#include "levels/town.h"
 #include "lighting.h"
 #include "options.h"
-#include "town.h"
 
 namespace devilution {
 

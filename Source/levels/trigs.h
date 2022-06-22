@@ -6,8 +6,8 @@
 #pragma once
 
 #include "engine/point.hpp"
-#include "gendung.h"
 #include "interfac.h"
+#include "levels/gendung.h"
 
 namespace devilution {
 

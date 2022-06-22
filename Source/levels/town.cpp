@@ -1,17 +1,12 @@
-/**
- * @file town.h
- *
- * Implementation of functionality for rendering the town, towners and calling other render routines.
- */
-#include "town.h"
+#include "levels/town.h"
 
-#include "drlg_l1.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "init.h"
+#include "levels/drlg_l1.h"
+#include "levels/trigs.h"
 #include "player.h"
 #include "quests.h"
-#include "trigs.h"
 
 namespace devilution {
 

@@ -10,7 +10,7 @@
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "monster.h"
 #include "objdat.h"
 #include "panels/info_box.hpp"

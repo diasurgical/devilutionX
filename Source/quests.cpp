@@ -14,8 +14,9 @@
 #include "engine/random.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
-#include "gendung.h"
 #include "init.h"
+#include "levels/gendung.h"
+#include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
 #include "monster.h"
@@ -23,7 +24,6 @@
 #include "panels/ui_panels.hpp"
 #include "stores.h"
 #include "towners.h"
-#include "trigs.h"
 #include "utils/language.h"
 #include "utils/utf8.hpp"
 

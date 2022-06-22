@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "miniwin/miniwin.h"
 
 #ifndef NOSOUND

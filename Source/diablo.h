@@ -10,8 +10,8 @@
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
-#include "gendung.h"
 #include "init.h"
+#include "levels/gendung.h"
 #include "utils/attributes.h"
 #include "utils/endian.hpp"
 

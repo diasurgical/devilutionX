@@ -1,9 +1,9 @@
 /**
- * @file drlg_l2.cpp
+ * @file levels/drlg_l2.cpp
  *
  * Implementation of the catacombs level generation algorithms.
  */
-#include "drlg_l2.h"
+#include "levels/drlg_l2.h"
 
 #include <list>
 
@@ -11,10 +11,10 @@
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "engine/size.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
+#include "levels/setmaps.h"
 #include "player.h"
 #include "quests.h"
-#include "setmaps.h"
 #include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {

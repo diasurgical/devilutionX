@@ -25,6 +25,7 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "items.h"
+#include "levels/trigs.h"
 #include "minitext.h"
 #include "missiles.h"
 #include "panels/spell_list.hpp"
@@ -34,7 +35,6 @@
 #include "stores.h"
 #include "towners.h"
 #include "track.h"
-#include "trigs.h"
 #include "utils/log.hpp"
 
 #define SPLICONLENGTH 56

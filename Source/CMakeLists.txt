@@ -13,10 +13,6 @@ set(libdevilutionx_SRCS
   debug.cpp
   diablo.cpp
   doom.cpp
-  drlg_l1.cpp
-  drlg_l2.cpp
-  drlg_l3.cpp
-  drlg_l4.cpp
   dthread.cpp
   dx.cpp
   encrypt.cpp
@@ -24,7 +20,6 @@ set(libdevilutionx_SRCS
   error.cpp
   engine/assets.cpp
   gamemenu.cpp
-  gendung.cpp
   gmenu.cpp
   help.cpp
   hwcursor.cpp
@@ -58,19 +53,15 @@ set(libdevilutionx_SRCS
   quests.cpp
   restrict.cpp
   scrollrt.cpp
-  setmaps.cpp
   sha.cpp
   spelldat.cpp
   spells.cpp
   stores.cpp
   sync.cpp
   textdat.cpp
-  themes.cpp
   tmsg.cpp
-  town.cpp
   towners.cpp
   track.cpp
-  trigs.cpp
   controls/axis_direction.cpp
   controls/controller.cpp
   controls/controller_motion.cpp
@@ -95,6 +86,15 @@ set(libdevilutionx_SRCS
   engine/render/text_render.cpp
   engine/surface.cpp
   engine/trn.cpp
+  levels/drlg_l1.cpp
+  levels/drlg_l2.cpp
+  levels/drlg_l3.cpp
+  levels/drlg_l4.cpp
+  levels/gendung.cpp
+  levels/setmaps.cpp
+  levels/themes.cpp
+  levels/town.cpp
+  levels/trigs.cpp
   mpq/mpq_reader.cpp
   mpq/mpq_sdl_rwops.cpp
   mpq/mpq_writer.cpp

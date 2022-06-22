@@ -6,7 +6,7 @@
 #pragma once
 
 #include "engine/load_file.hpp"
-#include "themes.h"
+#include "levels/themes.h"
 #include "utils/paths.h"
 
 using namespace devilution;

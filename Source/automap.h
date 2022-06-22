@@ -10,7 +10,7 @@
 #include "engine.h"
 #include "engine/displacement.hpp"
 #include "engine/point.hpp"
-#include "gendung.h"
+#include "levels/gendung.h"
 #include "utils/attributes.h"
 
 namespace devilution {
