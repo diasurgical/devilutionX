@@ -17,7 +17,6 @@
 namespace devilution {
 
 #define MAX_SEND_STR_LEN 80
-#define MAXMULTIQUESTS 10
 
 enum _cmd_id : uint8_t {
 	// Player mode standing.
