@@ -104,6 +104,7 @@ void QuestlogDown();
 void QuestlogEnter();
 void QuestlogESC();
 void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2);
+bool UseMultiplayerQuests();
 
 /* rdata */
 extern QuestData QuestsData[];
