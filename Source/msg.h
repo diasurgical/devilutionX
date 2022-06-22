@@ -536,6 +536,7 @@ struct TCmdQuest {
 	quest_state qstate;
 	uint8_t qlog;
 	uint8_t qvar1;
+	uint8_t qvar2;
 };
 
 struct TItemDef {

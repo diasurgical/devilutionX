@@ -103,7 +103,7 @@ void QuestlogUp();
 void QuestlogDown();
 void QuestlogEnter();
 void QuestlogESC();
-void SetMultiQuest(int q, quest_state s, bool log, int v1);
+void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2);
 
 /* rdata */
 extern QuestData QuestsData[];
