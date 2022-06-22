@@ -335,7 +335,13 @@ void DRLG_HoldThemeRooms();
 void SetSetPieceRoom(Point position, int floorId);
 void FreeQuestSetPieces();
 void DRLG_LPass3(int lv);
-bool SkipThemeRoom(int x, int y);
+
+/**
+ * @brief Checks if a theme room is located near the target point
+ * @param position Target location in dungeon coordinates
+ * @return True if a theme room is near (within 2 tiles of) this point, false if it is free.
+ */
+bool IsNearThemeRoom(Point position);
 void InitLevels();
 void FloodTransparencyValues(uint8_t floorID);
 
