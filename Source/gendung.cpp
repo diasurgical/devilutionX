@@ -752,11 +752,8 @@ void DRLG_LPass3(int lv)
 
 bool IsNearThemeRoom(Point testPosition)
 {
-	int x = testPosition.x;
-	int y = testPosition.y;
 	for (int i = 0; i < themeCount; i++) {
-		if (x >= themeLoc[i].room.position.x - 2 && x <= themeLoc[i].room.position.x + themeLoc[i].room.size.width + 2
-		    && y >= themeLoc[i].room.position.y - 2 && y <= themeLoc[i].room.position.y + themeLoc[i].room.size.height + 2)
+		if (Rectangle(themeLoc[i].room.position - Displacement { 2 }, themeLoc[i].room.size + 5).Contains(testPosition))
 			return true;
 	}
 
