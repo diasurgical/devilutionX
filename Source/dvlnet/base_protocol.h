@@ -16,20 +16,20 @@ namespace net {
 template <class P>
 class base_protocol : public base {
 public:
-	virtual int create(std::string addrstr);
-	virtual int join(std::string addrstr);
-	virtual void poll();
-	virtual void send(packet &pkt);
-	virtual void DisconnectNet(plr_t plr);
+	int create(std::string addrstr) override;
+	int join(std::string addrstr) override;
+	void poll() override;
+	void send(packet &pkt) override;
+	void DisconnectNet(plr_t plr) override;
 
-	virtual bool SNetLeaveGame(int type);
+	bool SNetLeaveGame(int type) override;
 
-	virtual std::string make_default_gamename();
-	virtual bool send_info_request();
-	virtual void clear_gamelist();
-	virtual std::vector<GameInfo> get_gamelist();
+	std::string make_default_gamename() override;
+	bool send_info_request() override;
+	void clear_gamelist() override;
+	std::vector<GameInfo> get_gamelist() override;
 
-	virtual ~base_protocol() = default;
+	~base_protocol() override = default;
 
 protected:
 	bool IsGameHost() override;

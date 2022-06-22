@@ -18,17 +18,17 @@ namespace net {
 
 class tcp_client : public base {
 public:
-	int create(std::string addrstr);
-	int join(std::string addrstr);
+	int create(std::string addrstr) override;
+	int join(std::string addrstr) override;
 
-	virtual void poll();
-	virtual void send(packet &pkt);
+	void poll() override;
+	void send(packet &pkt) override;
 
-	virtual bool SNetLeaveGame(int type);
+	bool SNetLeaveGame(int type) override;
 
-	virtual ~tcp_client();
+	~tcp_client() override;
 
-	virtual std::string make_default_gamename();
+	std::string make_default_gamename() override;
 
 protected:
 	bool IsGameHost() override;
