@@ -41,6 +41,11 @@ struct Size {
 		return *this;
 	}
 
+	constexpr Size &operator-=(const int factor)
+	{
+		return *this += -factor;
+	}
+
 	constexpr Size &operator*=(const int factor)
 	{
 		width *= factor;
@@ -65,6 +70,12 @@ struct Size {
 	constexpr friend Size operator+(Size a, const int factor)
 	{
 		a += factor;
+		return a;
+	}
+
+	constexpr friend Size operator-(Size a, const int factor)
+	{
+		a -= factor;
 		return a;
 	}
 

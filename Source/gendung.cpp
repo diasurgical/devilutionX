@@ -670,13 +670,14 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 					if (themeH < min || themeH > max)
 						themeH = min;
 				}
-				themeLoc[themeCount].room = { { i + 1, j + 1 }, { themeW, themeH } };
+				THEME_LOC &theme = themeLoc[themeCount];
+				theme.room = { Point { i, j } + Direction::South, Size { themeW, themeH } };
 				if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
-					DRLG_RectTrans({ Point(i + 2, j + 2).megaToWorld(), { themeW * 2 - 5, themeH * 2 - 5 } });
+					DRLG_RectTrans({ (theme.room.position + Direction::South).megaToWorld(), theme.room.size * 2 - 5 });
 				} else {
-					DRLG_MRectTrans({ { i + 1, j + 1 }, { themeW - 1, themeH - 1 } });
+					DRLG_MRectTrans({ theme.room.position, theme.room.size - 1 });
 				}
-				themeLoc[themeCount].ttval = TransVal - 1;
+				theme.ttval = TransVal - 1;
 				CreateThemeRoom(themeCount);
 				themeCount++;
 			}
