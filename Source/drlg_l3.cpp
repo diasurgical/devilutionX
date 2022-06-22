@@ -1714,7 +1714,7 @@ void Fence()
 
 	for (int j = 1; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (int i = 1; i < DMAXX; i++) { // BUGFIX: Change '0' to '1' (fixed)
-			if (dungeon[i][j] == 7 && GenerateRnd(1) == 0 && SkipThemeRoom(i, j)) {
+			if (dungeon[i][j] == 7 && GenerateRnd(1) == 0 && !IsNearThemeRoom({ i, j })) {
 				int rt = GenerateRnd(2);
 				if (rt == 0) {
 					int y1 = j;

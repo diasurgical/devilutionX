@@ -95,7 +95,7 @@ bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *wi
 	if (x + minSize > DMAXX || y + minSize > DMAXY) {
 		return false; // Skip definit OOB cases
 	}
-	if (!SkipThemeRoom(x, y)) {
+	if (IsNearThemeRoom({ x, y })) {
 		return false;
 	}
 
@@ -750,15 +750,17 @@ void DRLG_LPass3(int lv)
 	}
 }
 
-bool SkipThemeRoom(int x, int y)
+bool IsNearThemeRoom(Point testPosition)
 {
+	int x = testPosition.x;
+	int y = testPosition.y;
 	for (int i = 0; i < themeCount; i++) {
 		if (x >= themeLoc[i].room.position.x - 2 && x <= themeLoc[i].room.position.x + themeLoc[i].room.size.width + 2
 		    && y >= themeLoc[i].room.position.y - 2 && y <= themeLoc[i].room.position.y + themeLoc[i].room.size.height + 2)
-			return false;
+			return true;
 	}
 
-	return true;
+	return false;
 }
 
 void InitLevels()

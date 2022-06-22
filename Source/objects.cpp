@@ -890,7 +890,7 @@ void AddHookedBodies(int freq)
 				continue;
 			if (GenerateRnd(freq) != 0)
 				continue;
-			if (!SkipThemeRoom(i, j))
+			if (IsNearThemeRoom({ i, j }))
 				continue;
 			if (dungeon[i][j] == 1 && dungeon[i + 1][j] == 6) {
 				switch (GenerateRnd(3)) {
