@@ -234,7 +234,6 @@ void InitQuests()
 	QuestLogIsOpen = false;
 	WaterDone = 0;
 
-	int initiatedQuests = 0;
 	int q = 0;
 	for (auto &quest : Quests) {
 		quest._qidx = static_cast<quest_id>(q);
@@ -256,7 +255,6 @@ void InitQuests()
 		} else if (!questData.isSinglePlayerOnly) {
 			quest._qlevel = questData._qdmultlvl;
 			quest._qactive = QUEST_INIT;
-			initiatedQuests++;
 		}
 	}
 

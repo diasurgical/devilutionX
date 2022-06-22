@@ -102,7 +102,7 @@ struct MultiQuests {
 
 struct DJunk {
 	DPortal portal[MAXPORTAL];
-	MultiQuests quests[MAXMULTIQUESTS];
+	MultiQuests quests[MAXQUESTS];
 };
 #pragma pack(pop)
 
