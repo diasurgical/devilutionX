@@ -516,12 +516,13 @@ void TalkToBoy(Player & /*player*/, Towner & /*boy*/)
 void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 {
 	auto &betrayerQuest = Quests[Q_BETRAYER];
-	if (!gbIsMultiplayer) {
+	if (!UseMultiplayerQuests()) {
 		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_LAZSTAFF)) {
 			InitQTextMsg(TEXT_VILE1);
 			betrayerQuest._qlog = true;
 			betrayerQuest._qactive = QUEST_ACTIVE;
 			betrayerQuest._qvar1 = 2;
+			NetSendCmdQuest(true, betrayerQuest);
 			return;
 		}
 	} else {

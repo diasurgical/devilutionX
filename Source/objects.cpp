@@ -1880,6 +1880,9 @@ void UpdateLeverState(Object &object)
 		return;
 	}
 
+	if (setlevel && setlvlnum == SL_VILEBETRAYER)
+		ObjectAtPosition({ 35, 36 })._oVar5++;
+
 	ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
 }
 
@@ -1939,6 +1942,8 @@ void OperateBook(Player &player, Object &book)
 
 	book._oSelFlag = 0;
 	book._oAnimFrame++;
+
+	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, book.position);
 
 	if (!setlevel) {
 		return;
@@ -3400,6 +3405,7 @@ void OperateLazStand(Object &stand)
 	stand._oSelFlag = 0;
 	Point pos = GetSuperItemLoc(stand.position);
 	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0);
+	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, stand.position);
 }
 
 /**
@@ -3891,7 +3897,7 @@ void InitObjects()
 				AddBookLever(OBJ_STEELTOME, SetPiece, spId);
 				LoadMapObjects("levels\\l4data\\warlord.dun", SetPiece.position.megaToWorld());
 			}
-			if (Quests[Q_BETRAYER].IsAvailable() && !gbIsMultiplayer)
+			if (Quests[Q_BETRAYER].IsAvailable() && !UseMultiplayerQuests())
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
@@ -4452,6 +4458,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
+	case OBJ_BOOK2L:
 		UpdateLeverState(object);
 		break;
 	case OBJ_CHEST1:
@@ -4490,6 +4497,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_WARARMOR:
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
+	case OBJ_LAZSTAND:
 		UpdateState(object, object._oAnimFrame + 1);
 		break;
 	case OBJ_CAULDRON:
