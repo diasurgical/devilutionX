@@ -249,7 +249,7 @@ void InitQuests()
 		quest._qlog = false;
 		quest._qmsg = questData._qdmsg;
 
-		if (!gbIsMultiplayer) {
+		if (!UseMultiplayerQuests()) {
 			quest._qlevel = questData._qdlvl;
 			quest._qactive = QUEST_INIT;
 		} else if (!questData.isSinglePlayerOnly) {
@@ -258,7 +258,7 @@ void InitQuests()
 		}
 	}
 
-	if (!gbIsMultiplayer && *sgOptions.Gameplay.randomizeQuests) {
+	if (!UseMultiplayerQuests() && *sgOptions.Gameplay.randomizeQuests) {
 		// Quests are set from the seed used to generate level 16.
 		InitialiseQuestPools(glSeedTbl[15], Quests);
 	}
@@ -274,7 +274,7 @@ void InitQuests()
 	if (Quests[Q_ROCK]._qactive == QUEST_NOTAVAIL)
 		Quests[Q_ROCK]._qvar2 = 2;
 	Quests[Q_LTBANNER]._qvar1 = 1;
-	if (gbIsMultiplayer)
+	if (UseMultiplayerQuests())
 		Quests[Q_BETRAYER]._qvar1 = 2;
 }
 
@@ -804,6 +804,11 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 	quest._qvar2 = v2;
 }
 
+bool UseMultiplayerQuests()
+{
+	return gbIsMultiplayer;
+}
+
 bool Quest::IsAvailable()
 {
 	if (setlevel)
@@ -812,7 +817,7 @@ bool Quest::IsAvailable()
 		return false;
 	if (_qactive == QUEST_NOTAVAIL)
 		return false;
-	if (gbIsMultiplayer && QuestsData[_qidx].isSinglePlayerOnly)
+	if (QuestsData[_qidx].isSinglePlayerOnly && UseMultiplayerQuests())
 		return false;
 
 	return true;

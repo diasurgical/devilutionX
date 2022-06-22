@@ -423,14 +423,15 @@ byte *DeltaExportJunk(byte *dst)
 
 	int q = 0;
 	for (auto &quest : Quests) {
-		if (!QuestsData[quest._qidx].isSinglePlayerOnly) {
-			sgJunk.quests[q].qlog = quest._qlog ? 1 : 0;
-			sgJunk.quests[q].qstate = quest._qactive;
-			sgJunk.quests[q].qvar1 = quest._qvar1;
-			memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
-			dst += sizeof(MultiQuests);
-			q++;
+		if (QuestsData[quest._qidx].isSinglePlayerOnly && UseMultiplayerQuests()) {
+			continue;
 		}
+		sgJunk.quests[q].qlog = quest._qlog ? 1 : 0;
+		sgJunk.quests[q].qstate = quest._qactive;
+		sgJunk.quests[q].qvar1 = quest._qvar1;
+		memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
+		dst += sizeof(MultiQuests);
+		q++;
 	}
 
 	return dst;
@@ -450,11 +451,12 @@ void DeltaImportJunk(const byte *src)
 
 	int q = 0;
 	for (int qidx = 0; qidx < MAXQUESTS; qidx++) {
-		if (!QuestsData[qidx].isSinglePlayerOnly) {
-			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
-			src += sizeof(MultiQuests);
-			q++;
+		if (QuestsData[qidx].isSinglePlayerOnly && UseMultiplayerQuests()) {
+			continue;
 		}
+		memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
+		src += sizeof(MultiQuests);
+		q++;
 	}
 }
 
@@ -2537,7 +2539,7 @@ void DeltaSyncJunk()
 
 	int q = 0;
 	for (auto &quest : Quests) {
-		if (QuestsData[quest._qidx].isSinglePlayerOnly) {
+		if (QuestsData[quest._qidx].isSinglePlayerOnly && UseMultiplayerQuests()) {
 			continue;
 		}
 		if (sgJunk.quests[q].qstate != QUEST_INVALID) {
