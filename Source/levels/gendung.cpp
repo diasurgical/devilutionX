@@ -79,11 +79,6 @@ std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
 
 bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
 {
-	bool yFlag = true;
-	bool xFlag = true;
-	int xCount = 0;
-	int yCount = 0;
-
 	if (x + maxSize > DMAXX && y + maxSize > DMAXY) {
 		return false; // Original broken bounds check, avoids lower right corner
 	}
@@ -94,67 +89,41 @@ bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *wi
 		return false;
 	}
 
-	int xArray[20] = {};
-	int yArray[20] = {};
+	int maxWidth = std::min(DMAXX - x, maxSize);
+	int maxHeight = std::min(DMAXY - y, maxSize);
 
-	for (int ii = 0; ii < maxSize; ii++) {
-		if (xFlag && y + ii < DMAXY) {
-			for (int xx = x; xx < x + maxSize && xx < DMAXX; xx++) {
-				if (dungeon[xx][y + ii] != floor) {
-					if (xx >= minSize) {
-						break;
-					}
-					xFlag = false;
-				} else {
-					xCount++;
-				}
+	// see if we can find a region at least as large as the minSize on each dimension
+	for (int yOffset = 0; yOffset < maxHeight; yOffset++) {
+		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
+			// Start out looking for the widest area at least as tall as minSize
+			if (dungeon[x + xOffset][y + yOffset] == floor)
+				continue;
+
+			// found a floor tile earlier than the previous row, so the width has shrunk somewhat
+
+			if (xOffset < minSize && yOffset < minSize) {
+				// area is too small to hold a room of the desired size
+				return false;
 			}
-			if (xFlag) {
-				xArray[ii] = xCount;
-				xCount = 0;
+
+			if (yOffset >= minSize) {
+				// area is at least as high as necessary, this row now defines our max height (also breaks out of the outer loop)
+				maxHeight = yOffset;
 			}
-		}
-		if (yFlag && x + ii < DMAXX) {
-			for (int yy = y; yy < y + maxSize && yy < DMAXY; yy++) {
-				if (dungeon[x + ii][yy] != floor) {
-					if (yy >= minSize) {
-						break;
-					}
-					yFlag = false;
-				} else {
-					yCount++;
-				}
+
+			if (xOffset < minSize) {
+				// current row is too small to meet the minimum size, so just use the last rows dimension
+				break;
 			}
-			if (yFlag) {
-				yArray[ii] = yCount;
-				yCount = 0;
-			}
+
+			// otherwise we now have a new lower bound for how wide a row can be
+			maxWidth = xOffset; // soft break
 		}
 	}
 
-	for (int ii = 0; ii < minSize; ii++) {
-		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			return false;
-		}
-	}
+	*width = maxWidth - 2;
+	*height = maxHeight - 2;
 
-	int xSmallest = xArray[0];
-	int ySmallest = yArray[0];
-
-	for (int ii = 0; ii < maxSize; ii++) {
-		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			break;
-		}
-		if (xArray[ii] < xSmallest) {
-			xSmallest = xArray[ii];
-		}
-		if (yArray[ii] < ySmallest) {
-			ySmallest = yArray[ii];
-		}
-	}
-
-	*width = xSmallest - 2;
-	*height = ySmallest - 2;
 	return true;
 }
 
