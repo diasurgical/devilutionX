@@ -787,19 +787,21 @@ void QuestlogESC()
 	}
 }
 
-void SetMultiQuest(int q, quest_state s, bool log, int v1)
+void SetMultiQuest(int q, quest_state s, bool log, int v1, int v2)
 {
 	if (gbIsSpawn)
 		return;
 
-	if (Quests[q]._qactive != QUEST_DONE) {
-		if (s > Quests[q]._qactive)
-			Quests[q]._qactive = s;
+	auto &quest = Quests[q];
+	if (quest._qactive != QUEST_DONE) {
+		if (s > quest._qactive)
+			quest._qactive = s;
 		if (log)
-			Quests[q]._qlog = true;
-		if (v1 > Quests[q]._qvar1)
-			Quests[q]._qvar1 = v1;
+			quest._qlog = true;
 	}
+	if (v1 > quest._qvar1)
+		quest._qvar1 = v1;
+	quest._qvar2 = v2;
 }
 
 bool Quest::IsAvailable()

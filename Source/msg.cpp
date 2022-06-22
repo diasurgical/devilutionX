@@ -2248,7 +2248,7 @@ size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else {
 		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
-			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1);
+			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1, message.qvar2);
 		sgbDeltaChanged = true;
 	}
 
@@ -2936,6 +2936,7 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 	cmd.qstate = quest._qactive;
 	cmd.qlog = quest._qlog ? 1 : 0;
 	cmd.qvar1 = quest._qvar1;
+	cmd.qvar2 = quest._qvar2;
 
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
