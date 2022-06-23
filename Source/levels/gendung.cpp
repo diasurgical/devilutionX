@@ -77,37 +77,52 @@ std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
 	}
 }
 
-bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
+/**
+ * @brief Starting from the origin point determine how much floor space is available with the given bounds
+ *
+ * Essentially looks for the widest/tallest rectangular area of at least the minimum size, but due to a weird/buggy
+ * bounds check can return an area smaller than the available width/height.
+ *
+ * @param floor what value defines floor tiles within a dungeon
+ * @param origin starting point for the search
+ * @param minSize minimum allowable value for both dimensions
+ * @param maxSize maximum allowable value for both dimensions
+ * @return how much width/height is available for a theme room or an empty optional if there's not enough space
+ */
+std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, int maxSize)
 {
-	if (x + maxSize > DMAXX && y + maxSize > DMAXY) {
-		return false; // Original broken bounds check, avoids lower right corner
+	if (origin.x + maxSize > DMAXX && origin.y + maxSize > DMAXY) {
+		return {}; // Original broken bounds check, avoids lower right corner
 	}
-	if (x + minSize > DMAXX || y + minSize > DMAXY) {
-		return false; // Skip definit OOB cases
+	if (origin.x + minSize > DMAXX || origin.y + minSize > DMAXY) {
+		return {}; // Skip definit OOB cases
 	}
-	if (IsNearThemeRoom({ x, y })) {
-		return false;
+	if (IsNearThemeRoom(origin)) {
+		return {};
 	}
 
-	int maxWidth = std::min(DMAXX - x, maxSize);
-	int maxHeight = std::min(DMAXY - y, maxSize);
+	int maxWidth = std::min(DMAXX - origin.x, maxSize);
+	int maxHeight = std::min(DMAXY - origin.y, maxSize);
 
 	// see if we can find a region at least as large as the minSize on each dimension
 	for (int yOffset = 0; yOffset < maxHeight; yOffset++) {
 		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
 			// Start out looking for the widest area at least as tall as minSize
-			if (dungeon[x + xOffset][y + yOffset] == floor)
+			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
 				continue;
 
 			// found a floor tile earlier than the previous row, so the width has shrunk somewhat
 
 			if (xOffset < minSize && yOffset < minSize) {
 				// area is too small to hold a room of the desired size
-				return false;
+				return {};
 			}
 
 			if (yOffset >= minSize) {
-				// area is at least as high as necessary, this row now defines our max height (also breaks out of the outer loop)
+				// area is at least as high as necessary. If we wanted to find the largest rectangular area we should
+				// keep going and start checking for the largest total area we can find (could be either the current
+				// width and height, or maybe a narrower but taller region has a larger area). Instead to match
+				// vanilla Diablo logic we trigger a break from the outer loop and fall through to the other checks
 				maxHeight = yOffset;
 			}
 
@@ -121,10 +136,7 @@ bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *wi
 		}
 	}
 
-	*width = maxWidth - 2;
-	*height = maxHeight - 2;
-
-	return true;
+	return Size { maxWidth, maxHeight } - 2;
 }
 
 void CreateThemeRoom(int themeIndex)
@@ -621,21 +633,25 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 	memset(themeLoc, 0, sizeof(*themeLoc));
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			int themeW = 0;
-			int themeH = 0;
-			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
+			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0) {
+				std::optional<Size> themeSize = GetSizeForThemeRoom(floor, { i, j }, minSize, maxSize);
+
+				if (!themeSize)
+					continue;
+
 				if (rndSize) {
 					int min = minSize - 2;
 					int max = maxSize - 2;
-					themeW = min + GenerateRnd(GenerateRnd(themeW - min + 1));
-					if (themeW < min || themeW > max)
-						themeW = min;
-					themeH = min + GenerateRnd(GenerateRnd(themeH - min + 1));
-					if (themeH < min || themeH > max)
-						themeH = min;
+					themeSize->width = min + GenerateRnd(GenerateRnd(themeSize->width - min + 1));
+					if (themeSize->width < min || themeSize->width > max)
+						themeSize->width = min;
+					themeSize->height = min + GenerateRnd(GenerateRnd(themeSize->height - min + 1));
+					if (themeSize->height < min || themeSize->height > max)
+						themeSize->height = min;
 				}
+
 				THEME_LOC &theme = themeLoc[themeCount];
-				theme.room = { Point { i, j } + Direction::South, Size { themeW, themeH } };
+				theme.room = { Point { i, j } + Direction::South, *themeSize };
 				if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
 					DRLG_RectTrans({ (theme.room.position + Direction::South).megaToWorld(), theme.room.size * 2 - 5 });
 				} else {
