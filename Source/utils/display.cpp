@@ -20,7 +20,7 @@
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
 #include "controls/touch/gamepad.h"
-#include "dx.h"
+#include "engine/dx.h"
 #include "options.h"
 #include "utils/log.hpp"
 #include "utils/sdl_geometry.h"

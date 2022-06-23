@@ -6,10 +6,10 @@
 #include "effects.h"
 
 #include "engine/random.hpp"
+#include "engine/sound.h"
+#include "engine/sound_defs.hpp"
 #include "init.h"
 #include "player.h"
-#include "sound.h"
-#include "sound_defs.hpp"
 #include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {

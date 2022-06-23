@@ -9,9 +9,9 @@
 #include <SDL.h>
 
 #include "control.h"
-#include "dx.h"
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
+#include "engine/dx.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_pcx.hpp"
 #include "engine/pcx_sprite.hpp"

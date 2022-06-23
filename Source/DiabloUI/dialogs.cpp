@@ -7,7 +7,7 @@
 #include "control.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
-#include "dx.h"
+#include "engine/dx.h"
 #include "engine/load_pcx.hpp"
 #include "engine/pcx_sprite.hpp"
 #include "hwcursor.hpp"

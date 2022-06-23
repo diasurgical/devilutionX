@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "engine.h"
-#include "sound.h"
+#include "engine/sound.h"
 
 namespace devilution {
 

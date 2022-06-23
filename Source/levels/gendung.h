@@ -12,7 +12,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
-#include "scrollrt.h"
+#include "engine/render/scrollrt.h"
 #include "utils/attributes.h"
 #include "utils/bitset2d.hpp"
 #include "utils/enum_traits.h"

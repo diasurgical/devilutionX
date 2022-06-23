@@ -3,7 +3,7 @@
  *
  * Implementation of functions setting up the audio pipeline.
  */
-#include "sound.h"
+#include "engine/sound.h"
 
 #include <cstdint>
 #include <list>

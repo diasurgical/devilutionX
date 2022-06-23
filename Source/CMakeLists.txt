@@ -14,7 +14,6 @@ set(libdevilutionx_SRCS
   diablo.cpp
   doom.cpp
   dthread.cpp
-  dx.cpp
   encrypt.cpp
   engine.cpp
   error.cpp
@@ -51,7 +50,6 @@ set(libdevilutionx_SRCS
   portal.cpp
   quests.cpp
   restrict.cpp
-  scrollrt.cpp
   sha.cpp
   spelldat.cpp
   spells.cpp
@@ -99,6 +97,7 @@ set(libdevilutionx_SRCS
   engine/assets.cpp
   engine/demomode.cpp
   engine/direction.cpp
+  engine/dx.cpp
   engine/load_cel.cpp
   engine/load_pcx.cpp
   engine/load_pcx_as_cel.cpp
@@ -110,6 +109,7 @@ set(libdevilutionx_SRCS
   engine/render/cl2_render.cpp
   engine/render/dun_render.cpp
   engine/render/pcx_render.cpp
+  engine/render/scrollrt.cpp
   engine/render/text_render.cpp
   levels/drlg_l1.cpp
   levels/drlg_l2.cpp
@@ -163,11 +163,11 @@ endif()
 if(NOSOUND)
   list(APPEND libdevilutionx_SRCS
     effects_stubs.cpp
-    sound_stubs.cpp)
+    engine/sound_stubs.cpp)
 else()
   list(APPEND libdevilutionx_SRCS
     effects.cpp
-    sound.cpp
+    engine/sound.cpp
     utils/push_aulib_decoder.cpp
     utils/soundsample.cpp)
 endif()

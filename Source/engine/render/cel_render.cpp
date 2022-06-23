@@ -10,10 +10,10 @@
 
 #include "engine/cel_header.hpp"
 #include "engine/render/common_impl.h"
+#include "engine/render/scrollrt.h"
 #include "engine/trn.hpp"
 #include "options.h"
 #include "palette.h"
-#include "scrollrt.h"
 #include "utils/attributes.h"
 
 namespace devilution {

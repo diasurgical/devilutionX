@@ -9,7 +9,7 @@
 
 #include "engine/cel_header.hpp"
 #include "engine/render/common_impl.h"
-#include "scrollrt.h"
+#include "engine/render/scrollrt.h"
 #include "utils/attributes.h"
 
 namespace devilution {

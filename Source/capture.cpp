@@ -8,7 +8,7 @@
 #include <fstream>
 
 #include "DiabloUI/diabloui.h"
-#include "dx.h"
+#include "engine/dx.h"
 #include "palette.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
