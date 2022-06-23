@@ -104,35 +104,45 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 	int maxWidth = std::min(DMAXX - origin.x, maxSize);
 	int maxHeight = std::min(DMAXY - origin.y, maxSize);
 
-	// see if we can find a region at least as large as the minSize on each dimension
-	for (int yOffset = 0; yOffset < maxHeight; yOffset++) {
+	// Start out looking for the widest area at least as tall as minSize
+	for (int yOffset = 0; yOffset < minSize; yOffset++) {
 		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
-			// Start out looking for the widest area at least as tall as minSize
 			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
 				continue;
 
-			// found a floor tile earlier than the previous row, so the width has shrunk somewhat
+			// found a non-floor tile earlier than the previous max width
 
-			if (xOffset < minSize && yOffset < minSize) {
+			if (xOffset < minSize) {
 				// area is too small to hold a room of the desired size
 				return {};
 			}
 
-			if (yOffset >= minSize) {
-				// area is at least as high as necessary. If we wanted to find the largest rectangular area we should
-				// keep going and start checking for the largest total area we can find (could be either the current
-				// width and height, or maybe a narrower but taller region has a larger area). Instead to match
-				// vanilla Diablo logic we trigger a break from the outer loop and fall through to the other checks
-				maxHeight = yOffset;
-			}
+			// update the max width since we can't make a room larger than this
+			maxWidth = xOffset;
+		}
+	}
+
+	// area is at least as high as necessary. If we wanted to find the largest rectangular area we should keep going
+	// and start checking for the largest total area we can find (could be the tallest region that maintains current
+	// width, or maybe a narrower but taller region has a larger area). Instead to match vanilla Diablo logic we
+	// trigger a break as soon as the width shrinks again.
+	for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
+		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
+			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
+				continue;
+
+			// really should continue and check if using this xOffset as width gives a larger area than our current
+			// maxWidth and yOffset.
+			maxHeight = yOffset;
 
 			if (xOffset < minSize) {
-				// current row is too small to meet the minimum size, so just use the last rows dimension
+				// current row is too small to meet the minimum size, so we've reached the end of the search
 				break;
 			}
 
-			// otherwise we now have a new lower bound for how wide a row can be
-			maxWidth = xOffset; // soft break
+			// We should be checking the maxHeight/yOffset in combination with the xOffset to see if we've got a more
+			// suitable area, but instead we just update maxWidth and let the loops fall out.
+			maxWidth = xOffset;
 		}
 	}
 
