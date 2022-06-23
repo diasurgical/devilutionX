@@ -5,11 +5,11 @@
 #include "cursor.h"
 #include "diablo.h"
 #include "engine.h"
+#include "engine/render/scrollrt.h"
 #include "gmenu.h"
 #include "inv.h"
 #include "panels/spell_book.hpp"
 #include "qol/stash.h"
-#include "scrollrt.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"
 

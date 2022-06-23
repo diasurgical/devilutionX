@@ -4,7 +4,7 @@
  * Implementation of functions for handling the engines color palette.
  */
 
-#include "dx.h"
+#include "engine/dx.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "hwcursor.hpp"

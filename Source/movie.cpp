@@ -8,8 +8,8 @@
 #include "diablo.h"
 #include "effects.h"
 #include "engine/demomode.h"
+#include "engine/sound.h"
 #include "hwcursor.hpp"
-#include "sound.h"
 #include "storm/storm_svid.h"
 #include "utils/display.h"
 

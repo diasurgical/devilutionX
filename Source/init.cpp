@@ -13,8 +13,8 @@
 #endif
 
 #include "DiabloUI/diabloui.h"
-#include "dx.h"
 #include "engine/assets.hpp"
+#include "engine/dx.h"
 #include "mpq/mpq_reader.hpp"
 #include "options.h"
 #include "pfile.h"

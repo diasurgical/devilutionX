@@ -2,7 +2,7 @@
 
 #include "control.h"
 #include "diablo.h"
-#include "scrollrt.h"
+#include "engine/render/scrollrt.h"
 #include "utils/ui_fwd.h"
 
 using namespace devilution;

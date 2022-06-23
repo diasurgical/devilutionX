@@ -6,14 +6,14 @@
 #include "gamemenu.h"
 
 #include "cursor.h"
+#include "engine/sound.h"
+#include "engine/sound_defs.hpp"
 #include "error.h"
 #include "gmenu.h"
 #include "init.h"
 #include "loadsave.h"
 #include "options.h"
 #include "pfile.h"
-#include "sound.h"
-#include "sound_defs.hpp"
 #include "utils/language.h"
 
 namespace devilution {

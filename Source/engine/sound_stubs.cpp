@@ -1,5 +1,5 @@
 // Stubbed implementations of sound functions for the NOSOUND mode.
-#include "sound.h"
+#include "engine/sound.h"
 
 namespace devilution {
 

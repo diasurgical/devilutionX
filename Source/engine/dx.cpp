@@ -3,7 +3,7 @@
  *
  * Implementation of functions setting up the graphics pipeline.
  */
-#include "dx.h"
+#include "engine/dx.h"
 
 #include <SDL.h>
 

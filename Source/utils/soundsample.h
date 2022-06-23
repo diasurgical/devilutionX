@@ -6,7 +6,7 @@
 
 #include <Aulib/Stream.h>
 
-#include "sound_defs.hpp"
+#include "engine/sound_defs.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 
 namespace devilution {
