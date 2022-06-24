@@ -2142,7 +2142,7 @@ void AiRanged(int i)
 	}
 }
 
-void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, int lessmissiles)
+void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
@@ -2151,6 +2151,7 @@ void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, 
 		return;
 	}
 
+	int lessmissiles = (monster._mAi == AI_ACID) ? 1 : 0;
 	int fx = monster.enemyPosition.x;
 	int fy = monster.enemyPosition.y;
 	int mx = monster.position.tile.x - fx;
@@ -2559,7 +2560,7 @@ void FallenAi(int i)
 
 void MagmaAi(int i)
 {
-	AiRangedAvoidance(i, MIS_MAGMABALL, true, 4, 0);
+	AiRangedAvoidance(i, MIS_MAGMABALL, true, 4);
 }
 
 void LeoricAi(int i)
@@ -2805,7 +2806,7 @@ void SneakAi(int i)
 
 void StormAi(int i)
 {
-	AiRangedAvoidance(i, MIS_LIGHTCTRL2, true, 4, 0);
+	AiRangedAvoidance(i, MIS_LIGHTCTRL2, true, 4);
 }
 
 void GharbadAi(int i)
@@ -2857,7 +2858,7 @@ void GharbadAi(int i)
 
 void AcidAvoidanceAi(int i)
 {
-	AiRangedAvoidance(i, MIS_ACID, false, 4, 1);
+	AiRangedAvoidance(i, MIS_ACID, false, 4);
 }
 
 void SnotSpilAi(int i)
@@ -3130,7 +3131,7 @@ void MegaAi(int i)
 
 void DiabloAi(int i)
 {
-	AiRangedAvoidance(i, MIS_DIABAPOCA, false, 40, 0);
+	AiRangedAvoidance(i, MIS_DIABAPOCA, false, 40);
 }
 
 void LazarusAi(int i)
@@ -3326,7 +3327,7 @@ void HorkDemonAi(int i)
 
 void BoneDemonAi(int i)
 {
-	AiRangedAvoidance(i, MIS_BONEDEMON, true, 4, 0);
+	AiRangedAvoidance(i, MIS_BONEDEMON, true, 4);
 }
 
 string_view GetMonsterTypeText(const MonsterData &monsterData)
