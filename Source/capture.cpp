@@ -9,7 +9,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "engine/dx.h"
-#include "palette.h"
+#include "engine/palette.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"

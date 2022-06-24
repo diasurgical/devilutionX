@@ -1,7 +1,7 @@
 #include "DiabloUI/art_draw.h"
 
 #include "DiabloUI/diabloui.h"
-#include "palette.h"
+#include "engine/palette.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 

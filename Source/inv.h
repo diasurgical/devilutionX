@@ -7,10 +7,10 @@
 
 #include <cstdint>
 
+#include "engine/palette.h"
 #include "engine/point.hpp"
 #include "inv_iterators.hpp"
 #include "items.h"
-#include "palette.h"
 #include "player.h"
 
 namespace devilution {

@@ -1,9 +1,9 @@
 #include "panels/spell_icons.hpp"
 
 #include "engine/load_cel.hpp"
+#include "engine/palette.h"
 #include "engine/render/cel_render.hpp"
 #include "init.h"
-#include "palette.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {

@@ -5,13 +5,13 @@
  */
 #include "levels/themes.h"
 
+#include "engine/path.h"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "items.h"
 #include "levels/trigs.h"
 #include "monster.h"
 #include "objects.h"
-#include "path.h"
 #include "quests.h"
 
 namespace devilution {
