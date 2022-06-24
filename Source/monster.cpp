@@ -2537,7 +2537,8 @@ void FallenAi(int i)
 			for (int x = -rad; x <= rad; x++) {
 				int xpos = monster.position.tile.x + x;
 				int ypos = monster.position.tile.y + y;
-				if (InDungeonBounds({ x, y })) {
+				// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
+				if (InDungeonBounds({ xpos, ypos })) {
 					int m = dMonster[xpos][ypos];
 					if (m <= 0)
 						continue;
