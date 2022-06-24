@@ -2016,7 +2016,7 @@ bool AiPlanPath(int i)
 	return false;
 }
 
-void AiAvoidance(int i, bool special)
+void AiAvoidance(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
@@ -2060,7 +2060,7 @@ void AiAvoidance(int i, bool special)
 			}
 		} else if (v < 2 * monster._mint + 23) {
 			monster._mdir = md;
-			if (special && monster._mhitpoints < (monster._mmaxhp / 2) && GenerateRnd(2) != 0)
+			if (IsAnyOf(monster._mAi, AI_GOATMC, AI_GARBUD) && monster._mhitpoints < (monster._mmaxhp / 2) && GenerateRnd(2) != 0)
 				StartSpecialAttack(monster);
 			else
 				StartAttack(monster);
@@ -2166,7 +2166,6 @@ void AiRangedAvoidance(int i)
 	int my = monster.position.tile.y - fy;
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
 	if (IsAnyOf(monster._mAi, AI_MAGMA, AI_STORM, AI_BONEDEMON) && monster._msquelch < UINT8_MAX)
-
 		MonstCheckDoors(monster);
 	int lessmissiles = (monster._mAi == AI_ACID) ? 1 : 0;
 	int dam = (monster._mAi == AI_DIABLO) ? 40 : 4;
@@ -2500,11 +2499,6 @@ void RhinoAi(int i)
 	monster.CheckStandAnimationIsLoaded(monster._mdir);
 }
 
-void GoatAi(int i)
-{
-	AiAvoidance(i, true);
-}
-
 void FallenAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2722,7 +2716,7 @@ void GargoyleAi(int i)
 			monster._mgoal = MGOAL_NORMAL;
 		}
 	}
-	AiAvoidance(i, false);
+	AiAvoidance(i);
 }
 
 void ButcherAi(int i)
@@ -2853,7 +2847,7 @@ void GharbadAi(int i)
 	}
 
 	if (monster._mgoal == MGOAL_NORMAL || monster._mgoal == MGOAL_MOVE)
-		AiAvoidance(i, true);
+		AiAvoidance(i);
 
 	monster.CheckStandAnimationIsLoaded(md);
 }
@@ -3349,7 +3343,7 @@ void (*AiProc[])(int i) = {
 	/*AI_SKELBOW  */ &SkeletonBowAi,
 	/*AI_SCAV     */ &ScavengerAi,
 	/*AI_RHINO    */ &RhinoAi,
-	/*AI_GOATMC   */ &GoatAi,
+	/*AI_GOATMC   */ &AiAvoidance,
 	/*AI_GOATBOW  */ &AiRanged,
 	/*AI_FALLEN   */ &FallenAi,
 	/*AI_MAGMA    */ &AiRangedAvoidance,
