@@ -2569,11 +2569,6 @@ void FallenAi(int i)
 		SkeletonAi(i);
 }
 
-void MagmaAi(int i)
-{
-	AiRangedAvoidance(i);
-}
-
 void LeoricAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2815,11 +2810,6 @@ void SneakAi(int i)
 	}
 }
 
-void StormAi(int i)
-{
-	AiRangedAvoidance(i);
-}
-
 void GharbadAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2865,11 +2855,6 @@ void GharbadAi(int i)
 		AiAvoidance(i, true);
 
 	monster.CheckStandAnimationIsLoaded(md);
-}
-
-void AcidAvoidanceAi(int i)
-{
-	AiRangedAvoidance(i);
 }
 
 void SnotSpilAi(int i)
@@ -3140,11 +3125,6 @@ void MegaAi(int i)
 	}
 }
 
-void DiabloAi(int i)
-{
-	AiRangedAvoidance(i);
-}
-
 void LazarusAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -3336,11 +3316,6 @@ void HorkDemonAi(int i)
 	monster.CheckStandAnimationIsLoaded(monster._mdir);
 }
 
-void BoneDemonAi(int i)
-{
-	AiRangedAvoidance(i);
-}
-
 string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.mMonstClass) {
@@ -3376,17 +3351,17 @@ void (*AiProc[])(int i) = {
 	/*AI_GOATMC   */ &GoatAi,
 	/*AI_GOATBOW  */ &AiRanged,
 	/*AI_FALLEN   */ &FallenAi,
-	/*AI_MAGMA    */ &MagmaAi,
+	/*AI_MAGMA    */ &AiRangedAvoidance,
 	/*AI_SKELKING */ &LeoricAi,
 	/*AI_BAT      */ &BatAi,
 	/*AI_GARG     */ &GargoyleAi,
 	/*AI_CLEAVER  */ &ButcherAi,
 	/*AI_SUCC     */ &AiRanged,
 	/*AI_SNEAK    */ &SneakAi,
-	/*AI_STORM    */ &StormAi,
+	/*AI_STORM    */ &AiRangedAvoidance,
 	/*AI_FIREMAN  */ nullptr,
 	/*AI_GARBUD   */ &GharbadAi,
-	/*AI_ACID     */ &AcidAvoidanceAi,
+	/*AI_ACID     */ &AiRangedAvoidance,
 	/*AI_ACIDUNIQ */ &AiRanged,
 	/*AI_GOLUM    */ &GolumAi,
 	/*AI_ZHAR     */ &ZharAi,
@@ -3394,7 +3369,7 @@ void (*AiProc[])(int i) = {
 	/*AI_SNAKE    */ &SnakeAi,
 	/*AI_COUNSLR  */ &CounselorAi,
 	/*AI_MEGA     */ &MegaAi,
-	/*AI_DIABLO   */ &DiabloAi,
+	/*AI_DIABLO   */ &AiRangedAvoidance,
 	/*AI_LAZARUS  */ &LazarusAi,
 	/*AI_LAZHELP  */ &LazarusMinionAi,
 	/*AI_LACHDAN  */ &LachdananAi,
@@ -3406,7 +3381,7 @@ void (*AiProc[])(int i) = {
 	/*AI_ARCHLICH */ &AiRanged,
 	/*AI_PSYCHORB */ &AiRanged,
 	/*AI_NECROMORB*/ &AiRanged,
-	/*AI_BONEDEMON*/ &BoneDemonAi
+	/*AI_BONEDEMON*/ &AiRangedAvoidance
 };
 
 bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
