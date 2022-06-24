@@ -2070,36 +2070,27 @@ void AiAvoidance(int i, bool special)
 	monster.CheckStandAnimationIsLoaded(md);
 }
 
- missile_id GetMissileType(_mai_id ai)
+missile_id GetMissileType(_mai_id ai)
 {
 	switch (ai) {
 	case AI_GOATMC:
 		return MIS_ARROW;
-		break;
 	case AI_SUCC:
 		return MIS_FLARE;
-		break;
 	case AI_ACIDUNIQ:
 		return MIS_ACID;
-		break;
 	case AI_FIREBAT:
 		return MIS_FIREBOLT;
-		break;
 	case AI_TORCHANT:
 		return MIS_FIREBALL;
-		break;
 	case AI_LICH:
 		return MIS_LICH;
-		break;
 	case AI_ARCHLICH:
 		return MIS_ARCHLICH;
-		break;
 	case AI_PSYCHORB:
 		return MIS_PSYCHORB;
-		break;
 	case AI_NECROMORB:
 		return MIS_NECROMORB;
-		break;
 	default:
 		return MIS_ARROW;
 	}
@@ -2501,11 +2492,6 @@ void GoatAi(int i)
 	AiAvoidance(i, true);
 }
 
-void GoatBowAi(int i)
-{
-	AiRanged(i);
-}
-
 void FallenAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2756,11 +2742,6 @@ void ButcherAi(int i)
 	monster.CheckStandAnimationIsLoaded(md);
 }
 
-void SuccubusAi(int i)
-{
-	AiRanged(i);
-}
-
 void SneakAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2877,11 +2858,6 @@ void GharbadAi(int i)
 void AcidAvoidanceAi(int i)
 {
 	AiRangedAvoidance(i, MIS_ACID, false, 4, 1);
-}
-
-void AcidAi(int i)
-{
-	AiRanged(i);
 }
 
 void SnotSpilAi(int i)
@@ -3226,7 +3202,7 @@ void LazarusMinionAi(int i)
 			monster._mgoal = MGOAL_NORMAL;
 	}
 	if (monster._mgoal == MGOAL_NORMAL)
-		SuccubusAi(i);
+		AiRanged(i);
 
 	monster.CheckStandAnimationIsLoaded(md);
 }
@@ -3284,16 +3260,6 @@ void WarlordAi(int i)
 		SkeletonAi(i);
 
 	monster.CheckStandAnimationIsLoaded(md);
-}
-
-void FirebatAi(int i)
-{
-	AiRanged(i);
-}
-
-void TorchantAi(int i)
-{
-	AiRanged(i);
 }
 
 void HorkDemonAi(int i)
@@ -3358,26 +3324,6 @@ void HorkDemonAi(int i)
 	monster.CheckStandAnimationIsLoaded(monster._mdir);
 }
 
-void LichAi(int i)
-{
-	AiRanged(i);
-}
-
-void ArchLichAi(int i)
-{
-	AiRanged(i);
-}
-
-void PsychorbAi(int i)
-{
-	AiRanged(i);
-}
-
-void NecromorbAi(int i)
-{
-	AiRanged(i);
-}
-
 void BoneDemonAi(int i)
 {
 	AiRangedAvoidance(i, MIS_BONEDEMON, true, 4, 0);
@@ -3416,20 +3362,20 @@ void (*AiProc[])(int i) = {
 	/*AI_SCAV     */ &ScavengerAi,
 	/*AI_RHINO    */ &RhinoAi,
 	/*AI_GOATMC   */ &GoatAi,
-	/*AI_GOATBOW  */ &GoatBowAi,
+	/*AI_GOATBOW  */ &AiRanged,
 	/*AI_FALLEN   */ &FallenAi,
 	/*AI_MAGMA    */ &MagmaAi,
 	/*AI_SKELKING */ &LeoricAi,
 	/*AI_BAT      */ &BatAi,
 	/*AI_GARG     */ &GargoyleAi,
 	/*AI_CLEAVER  */ &ButcherAi,
-	/*AI_SUCC     */ &SuccubusAi,
+	/*AI_SUCC     */ &AiRanged,
 	/*AI_SNEAK    */ &SneakAi,
 	/*AI_STORM    */ &StormAi,
 	/*AI_FIREMAN  */ nullptr,
 	/*AI_GARBUD   */ &GharbadAi,
 	/*AI_ACID     */ &AcidAvoidanceAi,
-	/*AI_ACIDUNIQ */ &AcidAi,
+	/*AI_ACIDUNIQ */ &AiRanged,
 	/*AI_GOLUM    */ &GolumAi,
 	/*AI_ZHAR     */ &ZharAi,
 	/*AI_SNOTSPIL */ &SnotSpilAi,
@@ -3441,13 +3387,13 @@ void (*AiProc[])(int i) = {
 	/*AI_LAZHELP  */ &LazarusMinionAi,
 	/*AI_LACHDAN  */ &LachdananAi,
 	/*AI_WARLORD  */ &WarlordAi,
-	/*AI_FIREBAT  */ &FirebatAi,
-	/*AI_TORCHANT */ &TorchantAi,
+	/*AI_FIREBAT  */ &AiRanged,
+	/*AI_TORCHANT */ &AiRanged,
 	/*AI_HORKDMN  */ &HorkDemonAi,
-	/*AI_LICH     */ &LichAi,
-	/*AI_ARCHLICH */ &ArchLichAi,
-	/*AI_PSYCHORB */ &PsychorbAi,
-	/*AI_NECROMORB*/ &NecromorbAi,
+	/*AI_LICH     */ &AiRanged,
+	/*AI_ARCHLICH */ &AiRanged,
+	/*AI_PSYCHORB */ &AiRanged,
+	/*AI_NECROMORB*/ &AiRanged,
 	/*AI_BONEDEMON*/ &BoneDemonAi
 };
 
