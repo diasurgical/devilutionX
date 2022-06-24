@@ -2077,6 +2077,7 @@ missile_id GetMissileType(_mai_id ai)
 		return MIS_ARROW;
 	case AI_SUCC:
 		return MIS_FLARE;
+	case AI_ACID:
 	case AI_ACIDUNIQ:
 		return MIS_ACID;
 	case AI_FIREBAT:
@@ -2091,6 +2092,14 @@ missile_id GetMissileType(_mai_id ai)
 		return MIS_PSYCHORB;
 	case AI_NECROMORB:
 		return MIS_NECROMORB;
+	case AI_MAGMA:
+		return MIS_MAGMABALL;
+	case AI_STORM:
+		return MIS_LIGHTCTRL2;
+	case AI_DIABLO:
+		return MIS_DIABAPOCA;
+	case AI_BONEDEMON:
+		return MIS_BONEDEMON;
 	default:
 		return MIS_ARROW;
 	}
@@ -2142,7 +2151,7 @@ void AiRanged(int i)
 	}
 }
 
-void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, int lessmissiles)
+void AiRangedAvoidance(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
@@ -2156,8 +2165,12 @@ void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, 
 	int mx = monster.position.tile.x - fx;
 	int my = monster.position.tile.y - fy;
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
-	if (checkdoors && monster._msquelch < UINT8_MAX)
+	if (IsAnyOf(monster._mAi, AI_MAGMA, AI_STORM, AI_BONEDEMON) && monster._msquelch < UINT8_MAX)
+
 		MonstCheckDoors(monster);
+	int lessmissiles = (monster._mAi == AI_ACID) ? 1 : 0;
+	int dam = (monster._mAi == AI_DIABLO) ? 40 : 4;
+	missile_id missileType = GetMissileType(monster._mAi);
 	int v = GenerateRnd(10000);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2 && monster._msquelch == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
@@ -2557,11 +2570,6 @@ void FallenAi(int i)
 		SkeletonAi(i);
 }
 
-void MagmaAi(int i)
-{
-	AiRangedAvoidance(i, MIS_MAGMABALL, true, 4, 0);
-}
-
 void LeoricAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2803,11 +2811,6 @@ void SneakAi(int i)
 	}
 }
 
-void StormAi(int i)
-{
-	AiRangedAvoidance(i, MIS_LIGHTCTRL2, true, 4, 0);
-}
-
 void GharbadAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -2853,11 +2856,6 @@ void GharbadAi(int i)
 		AiAvoidance(i, true);
 
 	monster.CheckStandAnimationIsLoaded(md);
-}
-
-void AcidAvoidanceAi(int i)
-{
-	AiRangedAvoidance(i, MIS_ACID, false, 4, 1);
 }
 
 void SnotSpilAi(int i)
@@ -3128,11 +3126,6 @@ void MegaAi(int i)
 	}
 }
 
-void DiabloAi(int i)
-{
-	AiRangedAvoidance(i, MIS_DIABAPOCA, false, 40, 0);
-}
-
 void LazarusAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -3324,11 +3317,6 @@ void HorkDemonAi(int i)
 	monster.CheckStandAnimationIsLoaded(monster._mdir);
 }
 
-void BoneDemonAi(int i)
-{
-	AiRangedAvoidance(i, MIS_BONEDEMON, true, 4, 0);
-}
-
 string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.mMonstClass) {
@@ -3364,17 +3352,17 @@ void (*AiProc[])(int i) = {
 	/*AI_GOATMC   */ &GoatAi,
 	/*AI_GOATBOW  */ &AiRanged,
 	/*AI_FALLEN   */ &FallenAi,
-	/*AI_MAGMA    */ &MagmaAi,
+	/*AI_MAGMA    */ &AiRangedAvoidance,
 	/*AI_SKELKING */ &LeoricAi,
 	/*AI_BAT      */ &BatAi,
 	/*AI_GARG     */ &GargoyleAi,
 	/*AI_CLEAVER  */ &ButcherAi,
 	/*AI_SUCC     */ &AiRanged,
 	/*AI_SNEAK    */ &SneakAi,
-	/*AI_STORM    */ &StormAi,
+	/*AI_STORM    */ &AiRangedAvoidance,
 	/*AI_FIREMAN  */ nullptr,
 	/*AI_GARBUD   */ &GharbadAi,
-	/*AI_ACID     */ &AcidAvoidanceAi,
+	/*AI_ACID     */ &AiRangedAvoidance,
 	/*AI_ACIDUNIQ */ &AiRanged,
 	/*AI_GOLUM    */ &GolumAi,
 	/*AI_ZHAR     */ &ZharAi,
@@ -3382,7 +3370,7 @@ void (*AiProc[])(int i) = {
 	/*AI_SNAKE    */ &SnakeAi,
 	/*AI_COUNSLR  */ &CounselorAi,
 	/*AI_MEGA     */ &MegaAi,
-	/*AI_DIABLO   */ &DiabloAi,
+	/*AI_DIABLO   */ &AiRangedAvoidance,
 	/*AI_LAZARUS  */ &LazarusAi,
 	/*AI_LAZHELP  */ &LazarusMinionAi,
 	/*AI_LACHDAN  */ &LachdananAi,
@@ -3394,7 +3382,7 @@ void (*AiProc[])(int i) = {
 	/*AI_ARCHLICH */ &AiRanged,
 	/*AI_PSYCHORB */ &AiRanged,
 	/*AI_NECROMORB*/ &AiRanged,
-	/*AI_BONEDEMON*/ &BoneDemonAi
+	/*AI_BONEDEMON*/ &AiRangedAvoidance
 };
 
 bool IsRelativeMoveOK(const Monster &monster, Point position, Direction mdir)
