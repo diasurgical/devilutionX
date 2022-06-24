@@ -398,6 +398,7 @@ void ShowProgress(interface_mode uMsg)
 		}
 		IncProgress();
 		FreeGameMem();
+		setlevel = false;
 		currlevel = myPlayer.plrlevel;
 		leveltype = GetLevelType(currlevel);
 		IncProgress();
