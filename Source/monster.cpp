@@ -2142,7 +2142,7 @@ void AiRanged(int i)
 	}
 }
 
-void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors)
+void AiRangedAvoidance(int i, missile_id missileType)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
@@ -2151,15 +2151,15 @@ void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors)
 		return;
 	}
 
-	int lessmissiles = (monster._mAi == AI_ACID) ? 1 : 0;
-	int dam = (monster._mAi == AI_DIABLO) ? 40 : 4;
 	int fx = monster.enemyPosition.x;
 	int fy = monster.enemyPosition.y;
 	int mx = monster.position.tile.x - fx;
 	int my = monster.position.tile.y - fy;
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
-	if (checkdoors && monster._msquelch < UINT8_MAX)
+	if ((monster._mAi == AI_MAGMA || monster._mAi == AI_STORM || monster._mAi == AI_BONEDEMON) && monster._msquelch < UINT8_MAX)
 		MonstCheckDoors(monster);
+	int lessmissiles = (monster._mAi == AI_ACID) ? 1 : 0;
+	int dam = (monster._mAi == AI_DIABLO) ? 40 : 4;
 	int v = GenerateRnd(10000);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2 && monster._msquelch == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
@@ -2561,7 +2561,7 @@ void FallenAi(int i)
 
 void MagmaAi(int i)
 {
-	AiRangedAvoidance(i, MIS_MAGMABALL, true);
+	AiRangedAvoidance(i, MIS_MAGMABALL);
 }
 
 void LeoricAi(int i)
@@ -2807,7 +2807,7 @@ void SneakAi(int i)
 
 void StormAi(int i)
 {
-	AiRangedAvoidance(i, MIS_LIGHTCTRL2, true);
+	AiRangedAvoidance(i, MIS_LIGHTCTRL2);
 }
 
 void GharbadAi(int i)
@@ -2859,7 +2859,7 @@ void GharbadAi(int i)
 
 void AcidAvoidanceAi(int i)
 {
-	AiRangedAvoidance(i, MIS_ACID, false);
+	AiRangedAvoidance(i, MIS_ACID);
 }
 
 void SnotSpilAi(int i)
@@ -3132,7 +3132,7 @@ void MegaAi(int i)
 
 void DiabloAi(int i)
 {
-	AiRangedAvoidance(i, MIS_DIABAPOCA, false);
+	AiRangedAvoidance(i, MIS_DIABAPOCA);
 }
 
 void LazarusAi(int i)
@@ -3328,7 +3328,7 @@ void HorkDemonAi(int i)
 
 void BoneDemonAi(int i)
 {
-	AiRangedAvoidance(i, MIS_BONEDEMON, true);
+	AiRangedAvoidance(i, MIS_BONEDEMON);
 }
 
 string_view GetMonsterTypeText(const MonsterData &monsterData)
