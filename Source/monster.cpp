@@ -4515,40 +4515,24 @@ void SyncMonsterAnim(Monster &monster)
 
 void M_FallenFear(Point position)
 {
-	for (int i = 0; i < ActiveMonsterCount; i++) {
-		auto &monster = Monsters[ActiveMonsters[i]];
+	const Rectangle fearArea = Rectangle { position, 4 };
+	for (const Point tile : PointsInRectangleRange { fearArea }) {
+		if (!InDungeonBounds(tile))
+			continue;
+		int m = dMonster[tile.x][tile.y];
+		if (m == 0)
+			continue;
+		Monster &monster = Monsters[m - 1];
+		if (monster._mAi != AI_FALLEN || monster._mhitpoints >> 6 <= 0)
+			continue;
 
-		if (monster._mAi != AI_FALLEN)
-			continue;
-		if (position.WalkingDistance(monster.position.tile) >= 5)
-			continue;
-		if (monster._mhitpoints >> 6 <= 0)
-			continue;
-
-		int rundist;
-		switch (monster.MType->mtype) {
-		case MT_RFALLSP:
-		case MT_RFALLSD:
-			rundist = 7;
-			break;
-		case MT_DFALLSP:
-		case MT_DFALLSD:
-			rundist = 5;
-			break;
-		case MT_YFALLSP:
-		case MT_YFALLSD:
-			rundist = 3;
-			break;
-		case MT_BFALLSP:
-		case MT_BFALLSD:
-			rundist = 2;
-			break;
-		default:
-			continue;
-		}
+		int intelligenceFactor = monster._mint;
+		if (monster.MType->mtype == MT_DFALLSP)
+			intelligenceFactor--;
+		int runDistance = std::max((7 - 2 * intelligenceFactor), 2);
 
 		monster._mgoal = MGOAL_RETREAT;
-		monster._mgoalvar1 = rundist;
+		monster._mgoalvar1 = runDistance;
 		monster._mgoalvar2 = static_cast<int>(GetDirection(position, monster.position.tile));
 	}
 }
