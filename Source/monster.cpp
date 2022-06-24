@@ -2165,7 +2165,8 @@ void AiRangedAvoidance(int i)
 	int mx = monster.position.tile.x - fx;
 	int my = monster.position.tile.y - fy;
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
-	if ((monster._mAi == AI_MAGMA || monster._mAi == AI_STORM || monster._mAi == AI_BONEDEMON) && monster._msquelch < UINT8_MAX)
+	if (IsAnyOf(monster._mAi, AI_MAGMA, AI_STORM, AI_BONEDEMON) && monster._msquelch < UINT8_MAX)
+
 		MonstCheckDoors(monster);
 	int lessmissiles = (monster._mAi == AI_ACID) ? 1 : 0;
 	int dam = (monster._mAi == AI_DIABLO) ? 40 : 4;
