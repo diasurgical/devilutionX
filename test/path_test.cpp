@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "path.h"
+#include "engine/path.h"
 
 // The following headers are included to access globals used in functions that have not been isolated yet.
 #include "levels/gendung.h"

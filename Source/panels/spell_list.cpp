@@ -4,10 +4,10 @@
 
 #include "control.h"
 #include "engine.h"
+#include "engine/palette.h"
 #include "engine/render/text_render.hpp"
 #include "inv_iterators.hpp"
 #include "options.h"
-#include "palette.h"
 #include "panels/spell_icons.hpp"
 #include "player.h"
 #include "spells.h"

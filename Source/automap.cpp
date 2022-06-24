@@ -9,10 +9,10 @@
 
 #include "control.h"
 #include "engine/load_file.hpp"
+#include "engine/palette.h"
 #include "engine/render/automap_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
-#include "palette.h"
 #include "player.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"

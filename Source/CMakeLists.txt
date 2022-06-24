@@ -42,8 +42,6 @@ set(libdevilutionx_SRCS
   objects.cpp
   options.cpp
   pack.cpp
-  palette.cpp
-  path.cpp
   pfile.cpp
   player.cpp
   plrmsg.cpp
@@ -59,6 +57,7 @@ set(libdevilutionx_SRCS
   tmsg.cpp
   towners.cpp
   track.cpp
+
   controls/axis_direction.cpp
   controls/controller.cpp
   controls/controller_motion.cpp
@@ -68,6 +67,7 @@ set(libdevilutionx_SRCS
   controls/menu_controls.cpp
   controls/modifier_hints.cpp
   controls/plrctrls.cpp
+
   DiabloUI/art.cpp
   DiabloUI/art_draw.cpp
   DiabloUI/button.cpp
@@ -87,23 +87,28 @@ set(libdevilutionx_SRCS
   DiabloUI/settingsmenu.cpp
   DiabloUI/support_lines.cpp
   DiabloUI/title.cpp
+
   dvlnet/abstract_net.cpp
   dvlnet/base.cpp
   dvlnet/cdwrap.cpp
   dvlnet/frame_queue.cpp
   dvlnet/loopback.cpp
   dvlnet/packet.cpp
+
   engine/animationinfo.cpp
   engine/assets.cpp
   engine/demomode.cpp
   engine/direction.cpp
   engine/dx.cpp
   engine/load_cel.cpp
-  engine/load_pcx.cpp
   engine/load_pcx_as_cel.cpp
+  engine/load_pcx.cpp
+  engine/palette.cpp
+  engine/path.cpp
   engine/random.cpp
   engine/surface.cpp
   engine/trn.cpp
+
   engine/render/automap_render.cpp
   engine/render/cel_render.cpp
   engine/render/cl2_render.cpp
@@ -111,6 +116,7 @@ set(libdevilutionx_SRCS
   engine/render/pcx_render.cpp
   engine/render/scrollrt.cpp
   engine/render/text_render.cpp
+
   levels/drlg_l1.cpp
   levels/drlg_l2.cpp
   levels/drlg_l3.cpp
@@ -120,25 +126,32 @@ set(libdevilutionx_SRCS
   levels/themes.cpp
   levels/town.cpp
   levels/trigs.cpp
+
   miniwin/misc_msg.cpp
+
   mpq/mpq_reader.cpp
   mpq/mpq_sdl_rwops.cpp
   mpq/mpq_writer.cpp
+
   panels/charpanel.cpp
   panels/info_box.cpp
   panels/mainpanel.cpp
   panels/spell_book.cpp
   panels/spell_icons.cpp
   panels/spell_list.cpp
+
   platform/locale.cpp
+
   qol/autopickup.cpp
   qol/chatlog.cpp
   qol/itemlabels.cpp
   qol/monhealthbar.cpp
   qol/stash.cpp
   qol/xpbar.cpp
+
   storm/storm_net.cpp
   storm/storm_svid.cpp
+
   utils/console.cpp
   utils/display.cpp
   utils/file_util.cpp

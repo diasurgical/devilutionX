@@ -4,6 +4,7 @@
 #include "debug.h"
 #endif
 #include "engine/load_file.hpp"
+#include "engine/palette.h"
 #include "levels/drlg_l1.h"
 #include "levels/drlg_l2.h"
 #include "levels/drlg_l3.h"
@@ -12,7 +13,6 @@
 #include "levels/trigs.h"
 #include "objdat.h"
 #include "objects.h"
-#include "palette.h"
 #include "quests.h"
 #include "utils/language.h"
 

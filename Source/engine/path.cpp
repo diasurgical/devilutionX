@@ -3,7 +3,7 @@
  *
  * Implementation of the path finding algorithms.
  */
-#include "path.h"
+#include "engine/path.h"
 
 #include <array>
 

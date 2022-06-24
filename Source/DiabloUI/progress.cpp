@@ -8,10 +8,10 @@
 #include "controls/menu_controls.h"
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
+#include "engine/palette.h"
 #include "engine/pcx_sprite.hpp"
 #include "engine/render/pcx_render.hpp"
 #include "hwcursor.hpp"
-#include "palette.h"
 #include "utils/display.h"
 #include "utils/language.h"
 
