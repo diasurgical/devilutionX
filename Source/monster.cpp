@@ -2560,6 +2560,7 @@ void FallenAi(int i)
 			}
 		}
 	} else if (monster._mgoal == MGOAL_RETREAT) {
+		monster._mdir = static_cast<Direction>(monster._mgoalvar2);
 		RandomWalk(i, monster._mdir);
 	} else if (monster._mgoal == MGOAL_ATTACK2) {
 		int xpos = monster.position.tile.x - monster.enemyPosition.x;
