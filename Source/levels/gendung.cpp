@@ -80,8 +80,7 @@ std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
 /**
  * @brief Starting from the origin point determine how much floor space is available with the given bounds
  *
- * Essentially looks for the widest/tallest rectangular area of at least the minimum size, but due to a weird/buggy
- * bounds check can return an area smaller than the available width/height.
+ * Essentially looks for the widest/tallest rectangular area of at least the minimum size.
  *
  * @param floor what value defines floor tiles within a dungeon
  * @param origin starting point for the search
@@ -91,62 +90,67 @@ std::unique_ptr<uint16_t[]> LoadMinData(size_t &tileCount)
  */
 std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, int maxSize)
 {
-	if (origin.x + maxSize > DMAXX && origin.y + maxSize > DMAXY) {
-		return {}; // Original broken bounds check, avoids lower right corner
-	}
 	if (origin.x + minSize > DMAXX || origin.y + minSize > DMAXY) {
-		return {}; // Skip definit OOB cases
+		return {}; // Skip definite OOB cases
 	}
 	if (IsNearThemeRoom(origin)) {
 		return {};
 	}
 
 	int maxWidth = std::min(DMAXX - origin.x, maxSize);
-	int maxHeight = std::min(DMAXY - origin.y, maxSize);
-
+	int currentHeight = 0;
 	// Start out looking for the widest area at least as tall as minSize
-	for (int yOffset = 0; yOffset < minSize; yOffset++) {
-		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
-			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
+	for (; currentHeight < minSize; currentHeight++) {
+		for (int currentWidth = 0; currentWidth < maxWidth; currentWidth++) {
+			if (dungeon[origin.x + currentWidth][origin.y + currentHeight] == floor)
 				continue;
 
 			// found a non-floor tile earlier than the previous max width
 
-			if (xOffset < minSize) {
+			if (currentWidth < minSize) {
 				// area is too small to hold a room of the desired size
 				return {};
 			}
 
 			// update the max width since we can't make a room larger than this
-			maxWidth = xOffset;
+			maxWidth = currentWidth;
 		}
 	}
 
-	// area is at least as high as necessary. If we wanted to find the largest rectangular area we should keep going
-	// and start checking for the largest total area we can find (could be the tallest region that maintains current
-	// width, or maybe a narrower but taller region has a larger area). Instead to match vanilla Diablo logic we
-	// trigger a break as soon as the width shrinks again.
-	for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
-		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
-			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
-				continue;
+	Size bestSize {};
 
-			// really should continue and check if using this xOffset as width gives a larger area than our current
-			// maxWidth and yOffset.
-			maxHeight = yOffset;
+	// area is at least as high as necessary. Now start checking if a taller but narrower area gives a larger total
+	for (;; currentHeight++) {
+		// might look a bit odd but we want to perform this check after the last loop iteration and when first entering the loop
+		if (maxWidth * currentHeight > bestSize.area()) {
+			// found a new best area
+			bestSize = { maxWidth, currentHeight };
+		}
 
-			if (xOffset < minSize) {
-				// current row is too small to meet the minimum size, so we've reached the end of the search
+		// we check the max height and break after checking if the area is the new best since the tallest possible region
+		// might be the most suitable
+		if (currentHeight >= std::min(DMAXY - origin.y, maxSize)) {
+			// reached the max height, end of the search
+			break;
+		}
+
+		// is the current row narrower than our previous max width?
+		int currentWidth = 0;
+		for (; currentWidth < maxWidth; currentWidth++) {
+			if (dungeon[origin.x + currentWidth][origin.y + currentHeight] != floor)
 				break;
-			}
-
-			// We should be checking the maxHeight/yOffset in combination with the xOffset to see if we've got a more
-			// suitable area, but instead we just update maxWidth and let the loops fall out.
-			maxWidth = xOffset;
 		}
+
+		if (currentWidth < minSize) {
+			// current row is too small to meet the minimum size, so we've reached the end of the search
+			break;
+		}
+
+		// otherwise update our search space
+		maxWidth = currentWidth;
 	}
 
-	return Size { maxWidth, maxHeight } - 2;
+	return bestSize - 2;
 }
 
 void CreateThemeRoom(int themeIndex)

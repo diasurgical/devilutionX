@@ -91,6 +91,11 @@ struct Size {
 		return a;
 	}
 
+	constexpr int area() const
+	{
+		return width * height;
+	}
+
 #ifdef BUILD_TESTING
 	/**
 	 * @brief Format sizes nicely in test failure messages
