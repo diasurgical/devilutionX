@@ -2070,7 +2070,42 @@ void AiAvoidance(int i, bool special)
 	monster.CheckStandAnimationIsLoaded(md);
 }
 
-void AiRanged(int i, missile_id missileType)
+ missile_id GetMissileType(_mai_id ai)
+{
+	switch (ai) {
+	case AI_GOATMC:
+		return MIS_ARROW;
+		break;
+	case AI_SUCC:
+		return MIS_FLARE;
+		break;
+	case AI_ACIDUNIQ:
+		return MIS_ACID;
+		break;
+	case AI_FIREBAT:
+		return MIS_FIREBOLT;
+		break;
+	case AI_TORCHANT:
+		return MIS_FIREBALL;
+		break;
+	case AI_LICH:
+		return MIS_LICH;
+		break;
+	case AI_ARCHLICH:
+		return MIS_ARCHLICH;
+		break;
+	case AI_PSYCHORB:
+		return MIS_PSYCHORB;
+		break;
+	case AI_NECROMORB:
+		return MIS_NECROMORB;
+		break;
+	default:
+		return MIS_ARROW;
+	}
+}
+
+void AiRanged(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
@@ -2096,6 +2131,7 @@ void AiRanged(int i, missile_id missileType)
 		}
 		if (monster._mmode == MonsterMode::Stand) {
 			if (LineClearMissile(monster.position.tile, { fx, fy })) {
+				missile_id missileType = GetMissileType(monster._mAi);
 				if (monster._mAi == AI_ACIDUNIQ)
 					StartRangedSpecialAttack(monster, missileType, 4);
 				else
@@ -2467,7 +2503,7 @@ void GoatAi(int i)
 
 void GoatBowAi(int i)
 {
-	AiRanged(i, MIS_ARROW);
+	AiRanged(i);
 }
 
 void FallenAi(int i)
@@ -2722,7 +2758,7 @@ void ButcherAi(int i)
 
 void SuccubusAi(int i)
 {
-	AiRanged(i, MIS_FLARE);
+	AiRanged(i);
 }
 
 void SneakAi(int i)
@@ -2845,7 +2881,7 @@ void AcidAvoidanceAi(int i)
 
 void AcidAi(int i)
 {
-	AiRanged(i, MIS_ACID);
+	AiRanged(i);
 }
 
 void SnotSpilAi(int i)
@@ -3252,12 +3288,12 @@ void WarlordAi(int i)
 
 void FirebatAi(int i)
 {
-	AiRanged(i, MIS_FIREBOLT);
+	AiRanged(i);
 }
 
 void TorchantAi(int i)
 {
-	AiRanged(i, MIS_FIREBALL);
+	AiRanged(i);
 }
 
 void HorkDemonAi(int i)
@@ -3324,22 +3360,22 @@ void HorkDemonAi(int i)
 
 void LichAi(int i)
 {
-	AiRanged(i, MIS_LICH);
+	AiRanged(i);
 }
 
 void ArchLichAi(int i)
 {
-	AiRanged(i, MIS_ARCHLICH);
+	AiRanged(i);
 }
 
 void PsychorbAi(int i)
 {
-	AiRanged(i, MIS_PSYCHORB);
+	AiRanged(i);
 }
 
 void NecromorbAi(int i)
 {
-	AiRanged(i, MIS_NECROMORB);
+	AiRanged(i);
 }
 
 void BoneDemonAi(int i)
