@@ -4515,7 +4515,7 @@ void M_FallenFear(Point position)
 		int m = dMonster[tile.x][tile.y];
 		if (m == 0)
 			continue;
-		Monster &monster = Monsters[m - 1];
+		Monster &monster = Monsters[abs(m) - 1];
 		if (monster._mAi != AI_FALLEN || monster._mhitpoints >> 6 <= 0)
 			continue;
 
