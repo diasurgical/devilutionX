@@ -27,7 +27,7 @@ for:
       - cd %APPVEYOR_BUILD_FOLDER%
 
     before_build:
-      - cmake -G "Visual Studio 15 2017" -A x64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
+      - cmake -G "Visual Studio 15 2017" -A x64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DNONET=On -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
     build:
       project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
