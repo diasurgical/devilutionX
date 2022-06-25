@@ -42,8 +42,8 @@ uint32_t DemoModeLastTick = 0;
 int LogicTick = 0;
 int StartTime = 0;
 
-int DemoGraphicsWidth = 640;
-int DemoGraphicsHeight = 480;
+uint16_t DemoGraphicsWidth = 640;
+uint16_t DemoGraphicsHeight = 480;
 
 void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, int32_t wParam, int32_t lParam, float progressToNextGameTick)
 {
@@ -57,53 +57,50 @@ void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, int32_t wParam, 
 	Demo_Message_Queue.push_back(msg);
 }
 
+template <class T>
+T ReadFromStream(std::ifstream &stream)
+{
+	T value;
+	stream.read(reinterpret_cast<char *>(&value), sizeof(value));
+	return value;
+}
+
+template <class T>
+void WriteToDemo(T value)
+{
+	DemoRecording.write(reinterpret_cast<char *>(&value), sizeof(value));
+}
+
 bool LoadDemoMessages(int i)
 {
 	std::ifstream demofile;
 	char demoFilename[16];
 	snprintf(demoFilename, 15, "demo_%d.dmo", i);
-	demofile.open(paths::PrefPath() + demoFilename);
+	demofile.open(paths::PrefPath() + demoFilename, std::fstream::binary);
 	if (!demofile.is_open()) {
 		return false;
 	}
 
-	std::string line;
-	std::getline(demofile, line);
-	std::stringstream header(line);
-
-	std::string number;
-	std::getline(header, number, ','); // Demo version
-	if (std::stoi(number) != 0) {
+	uint8_t version = ReadFromStream<uint8_t>(demofile);
+	if (version != 0) {
 		return false;
 	}
 
-	std::getline(header, number, ',');
-	gSaveNumber = std::stoi(number);
+	gSaveNumber = ReadFromStream<uint32_t>(demofile);
+	DemoGraphicsWidth = ReadFromStream<uint16_t>(demofile);
+	DemoGraphicsHeight = ReadFromStream<uint16_t>(demofile);
 
-	std::getline(header, number, ',');
-	DemoGraphicsWidth = std::stoi(number);
-
-	std::getline(header, number, ',');
-	DemoGraphicsHeight = std::stoi(number);
-
-	while (std::getline(demofile, line)) {
-		std::stringstream command(line);
-
-		std::getline(command, number, ',');
-		int typeNum = std::stoi(number);
+	while (!demofile.eof()) {
+		uint32_t typeNum = ReadFromStream<uint32_t>(demofile);
 		auto type = static_cast<DemoMsgType>(typeNum);
 
-		std::getline(command, number, ',');
-		float progressToNextGameTick = std::stof(number);
+		float progressToNextGameTick = ReadFromStream<float>(demofile);
 
 		switch (type) {
 		case DemoMsgType::Message: {
-			std::getline(command, number, ',');
-			uint32_t message = std::stoi(number);
-			std::getline(command, number, ',');
-			int32_t wParam = std::stoi(number);
-			std::getline(command, number, ',');
-			int32_t lParam = std::stoi(number);
+			uint32_t message = ReadFromStream<uint32_t>(demofile);
+			int32_t wParam = ReadFromStream<int32_t>(demofile);
+			int32_t lParam = ReadFromStream<int32_t>(demofile);
 			PumpDemoMessage(type, message, wParam, lParam, progressToNextGameTick);
 			break;
 		}
@@ -253,14 +250,19 @@ bool FetchMessage(tagMSG *lpMsg)
 
 void RecordGameLoopResult(bool runGameLoop)
 {
-	DemoRecording << static_cast<uint32_t>(runGameLoop ? DemoMsgType::GameTick : DemoMsgType::Rendering) << "," << gfProgressToNextGameTick << "\n";
+	WriteToDemo<uint32_t>(static_cast<uint32_t>(runGameLoop ? DemoMsgType::GameTick : DemoMsgType::Rendering));
+	WriteToDemo<float>(gfProgressToNextGameTick);
 }
 
 void RecordMessage(tagMSG *lpMsg)
 {
 	if (!gbRunGame || !DemoRecording.is_open())
 		return;
-	DemoRecording << static_cast<uint32_t>(DemoMsgType::Message) << "," << gfProgressToNextGameTick << "," << lpMsg->message << "," << lpMsg->wParam << "," << lpMsg->lParam << "\n";
+	WriteToDemo<uint32_t>(static_cast<uint32_t>(DemoMsgType::Message));
+	WriteToDemo<float>(gfProgressToNextGameTick);
+	WriteToDemo<uint32_t>(lpMsg->message);
+	WriteToDemo<uint32_t>(lpMsg->wParam);
+	WriteToDemo<uint32_t>(lpMsg->lParam);
 }
 
 void NotifyGameLoopStart()
@@ -268,8 +270,12 @@ void NotifyGameLoopStart()
 	if (IsRecording()) {
 		char demoFilename[16];
 		snprintf(demoFilename, 15, "demo_%d.dmo", RecordNumber);
-		DemoRecording.open(paths::PrefPath() + demoFilename, std::fstream::trunc);
-		DemoRecording << "0," << gSaveNumber << "," << gnScreenWidth << "," << gnScreenHeight << "\n";
+		DemoRecording.open(paths::PrefPath() + demoFilename, std::fstream::trunc | std::fstream::binary);
+		constexpr uint8_t version = 0;
+		WriteToDemo<uint8_t>(version);
+		WriteToDemo<uint32_t>(gSaveNumber);
+		WriteToDemo<uint16_t>(gnScreenWidth);
+		WriteToDemo<uint16_t>(gnScreenHeight);
 	}
 
 	if (IsRunning()) {
@@ -290,8 +296,8 @@ void NotifyGameLoopEnd()
 	}
 
 	if (IsRunning()) {
-		float secounds = (SDL_GetTicks() - StartTime) / 1000.0;
-		SDL_Log("%d frames, %.2f seconds: %.1f fps", LogicTick, secounds, LogicTick / secounds);
+		float seconds = (SDL_GetTicks() - StartTime) / 1000.0f;
+		SDL_Log("%d frames, %.2f seconds: %.1f fps", LogicTick, seconds, LogicTick / seconds);
 		gbRunGameResult = false;
 		gbRunGame = false;
 
