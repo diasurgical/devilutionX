@@ -2076,6 +2076,7 @@ missile_id GetMissileType(_mai_id ai)
 	case AI_GOATMC:
 		return MIS_ARROW;
 	case AI_SUCC:
+	case AI_LAZHELP:
 		return MIS_FLARE;
 	case AI_ACID:
 	case AI_ACIDUNIQ:
