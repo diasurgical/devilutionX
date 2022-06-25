@@ -240,8 +240,10 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 		if (level != quest._qslvl)
 			continue;
 
-		StartNewLvl(MyPlayerId, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
-		ProcessMessages();
+		if (!MyPlayer->isOnLevel(quest._qlevel)) {
+			StartNewLvl(MyPlayerId, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
+			ProcessMessages();
+		}
 
 		setlvltype = quest._qlvltype;
 		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
