@@ -4528,11 +4528,7 @@ void M_FallenFear(Point position)
 		if (monster._mAi != AI_FALLEN || monster._mhitpoints >> 6 <= 0)
 			continue;
 
-		int intelligenceFactor = monster._mint;
-		if (monster.MType->mtype == MT_DFALLSP)
-			intelligenceFactor--;
-		int runDistance = std::max((7 - 2 * intelligenceFactor), 2);
-
+		int runDistance = std::max((8 - monster.MData->mLevel), 2);
 		monster._mgoal = MGOAL_RETREAT;
 		monster._mgoalvar1 = runDistance;
 		monster._mgoalvar2 = static_cast<int>(GetDirection(position, monster.position.tile));
