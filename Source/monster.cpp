@@ -482,15 +482,18 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	PrepareUniqueMonst(monster, uniqindex, miniontype, bosspacksize, uniqueMonsterData);
 }
 
+int GetMonsterTypeIndex(_monster_id type)
+{
+	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+		if (LevelMonsterTypes[i].mtype == type)
+			return i;
+	}
+	return LevelMonsterTypeCount;
+}
+
 int AddMonsterType(_monster_id type, placeflag placeflag)
 {
-	int typeIndex = [&]() {
-		for (int i = 0; i < LevelMonsterTypeCount; i++) {
-			if (LevelMonsterTypes[i].mtype == type)
-				return i;
-		}
-		return LevelMonsterTypeCount;
-	}();
+	int typeIndex = GetMonsterTypeIndex(type);
 
 	if (typeIndex == LevelMonsterTypeCount) {
 		LevelMonsterTypeCount++;
@@ -541,13 +544,7 @@ void PlaceUniqueMonsters()
 		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
 
-		int mt = [&]() {
-			for (int i = 0; i < LevelMonsterTypeCount; i++) {
-				if (LevelMonsterTypes[mt].mtype == UniqueMonstersData[u].mtype)
-					return i;
-			}
-			return LevelMonsterTypeCount;
-		}();
+		int mt = GetMonsterTypeIndex(UniqueMonstersData[u].mtype);
 		if (mt == LevelMonsterTypeCount)
 			continue;
 
