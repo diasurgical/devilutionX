@@ -57,6 +57,16 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 </details>
 
+<details><summary>FreeBSD</summary>
+
+- Copy the MPQ files to the folder containing the DevilutionX application, or to the data folder `~/.local/share/diasurgical/devilution/`
+- To install the port: `cd /usr/ports/games/devilutionX/ && make install clean`
+- To add the package, run one of these commands:
+  `pkg install games/devilutionX` || `pkg install devilutionX`
+- Run `devilutionx`
+  
+</details>
+
 <details><summary>iOS & iPadOS</summary>
 
 Certain sideloading applications exist which can let you install IPA packages to your device such as AltStore (https://altstore.io/) and Sideloadly (https://sideloadly.io/). Using such a sideloading application, install the .ipa file to your iDevice.
