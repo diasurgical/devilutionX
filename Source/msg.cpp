@@ -2378,7 +2378,7 @@ uint8_t GetLevelForMultiplayer(const Player &player)
 
 bool IsValidLevelForMultiplayer(uint8_t level)
 {
-	return level < MAX_MULTIPLAYERLEVELS;
+	return level <= MAX_MULTIPLAYERLEVELS;
 }
 
 bool IsValidLevel(uint8_t level, bool isSetLevel)
