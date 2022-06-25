@@ -2337,11 +2337,14 @@ void DeltaSaveLevel()
 		if (i != MyPlayerId)
 			ResetPlayerGFX(Players[i]);
 	}
-	if (setlevel)
-		MyPlayer->_pSLvlVisited[currlevel] = true;
-	else
+	uint8_t localLevel;
+	if (setlevel) {
+		localLevel = GetLevelForMultiplayer(static_cast<uint8_t>(setlvlnum), setlevel);
+		MyPlayer->_pSLvlVisited[static_cast<uint8_t>(setlvlnum)] = true;
+	} else {
+		localLevel = GetLevelForMultiplayer(currlevel, setlevel);
 		MyPlayer->_pLvlVisited[currlevel] = true;
-	uint8_t localLevel = GetLevelForMultiplayer(currlevel, setlevel);
+	}
 	DeltaLeaveSync(localLevel);
 }
 
