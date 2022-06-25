@@ -336,8 +336,10 @@ HeroCompareResult pfile_compare_hero_demo(int demo)
 		return HeroCompareResult::ReferenceNotFound;
 
 	std::string actualSavePath = GetSavePath(gSaveNumber, fmt::format("demo_{}_actual_", demo));
-	auto saveWriter = MpqWriter(actualSavePath.c_str());
-	pfile_write_hero(saveWriter, true);
+	{
+		MpqWriter saveWriter(actualSavePath.c_str());
+		pfile_write_hero(saveWriter, true);
+	}
 
 	bool compareResult = CompareSaves(actualSavePath, referenceSavePath);
 	return compareResult ? HeroCompareResult::Same : HeroCompareResult::Difference;
