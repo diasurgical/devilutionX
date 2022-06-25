@@ -58,7 +58,7 @@ void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, int32_t wParam, 
 }
 
 template <class T>
-T ReadFromStream(std::ifstream& stream)
+T ReadFromStream(std::ifstream &stream)
 {
 	T value;
 	stream.read(reinterpret_cast<char *>(&value), sizeof(value));
@@ -296,8 +296,8 @@ void NotifyGameLoopEnd()
 	}
 
 	if (IsRunning()) {
-		float secounds = (SDL_GetTicks() - StartTime) / 1000.0f;
-		SDL_Log("%d frames, %.2f seconds: %.1f fps", LogicTick, secounds, LogicTick / secounds);
+		float seconds = (SDL_GetTicks() - StartTime) / 1000.0f;
+		SDL_Log("%d frames, %.2f seconds: %.1f fps", LogicTick, seconds, LogicTick / seconds);
 		gbRunGameResult = false;
 		gbRunGame = false;
 
