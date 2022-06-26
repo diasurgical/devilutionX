@@ -191,17 +191,13 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 	int hit = GenerateRnd(100);
 	int hper = 0;
-	if (pnum != -1) {
-		const Player &player = Players[pnum];
-		if (MissilesData[t].mType == 0) {
-			hper = player.GetRangedPiercingToHit();
-			hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
-			hper -= (dist * dist) / 2;
-		} else {
-			hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
-		}
+	const Player &player = Players[pnum];
+	if (MissilesData[t].mType == 0) {
+		hper = player.GetRangedPiercingToHit();
+		hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
+		hper -= (dist * dist) / 2;
 	} else {
-		hper = GenerateRnd(75) - monster.mLevel * 2;
+		hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
 	}
 
 	hper = clamp(hper, 5, 95);
@@ -225,8 +221,6 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 	}
-
-	const Player &player = Players[pnum];
 
 	if (MissilesData[t].mType == 0 && MissilesData[t].mResist == MISR_NONE) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
@@ -395,25 +389,13 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	int my = position.y;
 
 	bool isMonsterHit = false;
-	const int mid = dMonster[mx][my];
-	if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
-		if (missile._micaster == TARGET_MONSTERS) {
-			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
-				isMonsterHit = MonsterMHit(missile._misource, abs(mid) - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-			}
-		} else {
-			Monster &attackingMonster = Monsters[missile._misource];
-			if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
-			    && mid > 0
-			    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
-				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-		}
-	} else {
-		if (mid > 0) {
-			if (missile._micaster == TARGET_BOTH)
-				isMonsterHit = MonsterMHit(missile._misource, mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-			else
-				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+	int mid = dMonster[mx][my];
+	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
+		mid = abs(mid) - 1;
+		if (missile.IsTrap() || (missile._micaster == TARGET_PLAYERS && (Monsters[missile._misource]._mFlags & MFLAG_TARGETS_MONSTER) != 0 && Monsters[missile._misource]._menemy == mid)) {
+			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+		} else if (IsAnyOf(missile._micaster, TARGET_BOTH, TARGET_MONSTERS)) {
+			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	}
 
