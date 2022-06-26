@@ -3519,11 +3519,6 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		return;
 	}
 
-	if (leveltype == DTYPE_TOWN && !spelldata[spellID].sTownSpell) {
-		myPlayer.Say(HeroSpeech::ICantCastThatHere);
-		return;
-	}
-
 	if (ControlMode == ControlTypes::KeyboardAndMouse) {
 		if (pcurs != CURSOR_HAND)
 			return;
@@ -3543,6 +3538,12 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 				return;
 		}
 	}
+
+	if (leveltype == DTYPE_TOWN && !spelldata[spellID].sTownSpell) {
+		myPlayer.Say(HeroSpeech::ICantCastThatHere);
+		return;
+	}
+
 	SpellCheckResult spellcheck = SpellCheckResult::Success;
 	switch (spellType) {
 	case RSPLTYPE_SKILL:
