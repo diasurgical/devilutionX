@@ -1716,7 +1716,7 @@ inline bool IsDoorClear(const Point &doorPosition)
 	    && dItem[doorPosition.x][doorPosition.y] == 0;
 }
 
-void OperateL1RDoor(int pnum, int oi, bool sendflag)
+void OperateL1RDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -1727,7 +1727,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
@@ -1745,7 +1745,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 	if (!deltaload && IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -1767,7 +1767,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL1LDoor(int pnum, int oi, bool sendflag)
+void OperateL1LDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -1778,7 +1778,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
@@ -1799,7 +1799,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 	if (IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -1821,7 +1821,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL2RDoor(int pnum, int oi, bool sendflag)
+void OperateL2RDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -1832,7 +1832,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
@@ -1850,7 +1850,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 	if (IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -1864,7 +1864,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL2LDoor(int pnum, int oi, bool sendflag)
+void OperateL2LDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -1875,7 +1875,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
@@ -1893,7 +1893,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 	if (IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -1907,7 +1907,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL3RDoor(int pnum, int oi, bool sendflag)
+void OperateL3RDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -1918,7 +1918,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
@@ -1935,7 +1935,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 	if (IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -1948,7 +1948,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL3LDoor(int pnum, int oi, bool sendflag)
+void OperateL3LDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -1959,7 +1959,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
@@ -1976,7 +1976,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 	if (IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -1989,7 +1989,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL5RDoor(int pnum, int oi, bool sendflag)
+void OperateL5RDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -2000,7 +2000,7 @@ void OperateL5RDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_CROPEN, door.position);
@@ -2018,7 +2018,7 @@ void OperateL5RDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_CRCLOS, door.position);
 	if (!deltaload && IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -2040,7 +2040,7 @@ void OperateL5RDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL5LDoor(int pnum, int oi, bool sendflag)
+void OperateL5LDoor(int oi, bool sendflag)
 {
 	Object &door = Objects[oi];
 
@@ -2051,7 +2051,7 @@ void OperateL5LDoor(int pnum, int oi, bool sendflag)
 	}
 
 	if (door._oVar4 == 0) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_OPENDOOR, oi);
 		if (!deltaload)
 			PlaySfxLoc(IS_CROPEN, door.position);
@@ -2069,7 +2069,7 @@ void OperateL5LDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_CRCLOS, door.position);
 	if (IsDoorClear(door.position)) {
-		if (pnum == MyPlayerId && sendflag)
+		if (sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
@@ -2091,24 +2091,24 @@ void OperateL5LDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void OperateL1Door(int pnum, int i, bool sendflag)
+void OperateL1Door(int pnum, int i)
 {
 	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
 	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L1LDOOR)
-		OperateL1LDoor(pnum, i, sendflag);
+		OperateL1LDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L1RDOOR)
-		OperateL1RDoor(pnum, i, sendflag);
+		OperateL1RDoor(i, true);
 }
 
-void OperateL5Door(int pnum, int i, bool sendflag)
+void OperateL5Door(int pnum, int i)
 {
 	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
 	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L5LDOOR)
-		OperateL5LDoor(pnum, i, sendflag);
+		OperateL5LDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L5RDOOR)
-		OperateL5RDoor(pnum, i, sendflag);
+		OperateL5RDoor(i, true);
 }
 
 bool AreAllLeversActivated(int leverId)
@@ -2504,24 +2504,24 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateL2Door(int pnum, int i, bool sendflag)
+void OperateL2Door(int pnum, int i)
 {
 	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
 	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L2LDOOR)
-		OperateL2LDoor(pnum, i, sendflag);
+		OperateL2LDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L2RDOOR)
-		OperateL2RDoor(pnum, i, sendflag);
+		OperateL2RDoor(i, true);
 }
 
-void OperateL3Door(int pnum, int i, bool sendflag)
+void OperateL3Door(int pnum, int i)
 {
 	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
 	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L3RDOOR)
-		OperateL3RDoor(pnum, i, sendflag);
+		OperateL3RDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L3LDOOR)
-		OperateL3LDoor(pnum, i, sendflag);
+		OperateL3LDoor(i, true);
 }
 
 void OperatePedistal(int pnum, int i)
@@ -3914,9 +3914,9 @@ void SyncOpL1Door(int pnum, int cmd, int i)
 		return;
 
 	if (Objects[i]._otype == OBJ_L1LDOOR)
-		OperateL1LDoor(-1, i, false);
+		OperateL1LDoor(i, false);
 	if (Objects[i]._otype == OBJ_L1RDOOR)
-		OperateL1RDoor(-1, i, false);
+		OperateL1RDoor(i, false);
 }
 
 void SyncOpL2Door(int pnum, int cmd, int i)
@@ -3933,9 +3933,9 @@ void SyncOpL2Door(int pnum, int cmd, int i)
 		return;
 
 	if (Objects[i]._otype == OBJ_L2LDOOR)
-		OperateL2LDoor(-1, i, false);
+		OperateL2LDoor(i, false);
 	if (Objects[i]._otype == OBJ_L2RDOOR)
-		OperateL2RDoor(-1, i, false);
+		OperateL2RDoor(i, false);
 }
 
 void SyncOpL3Door(int pnum, int cmd, int i)
@@ -3952,9 +3952,9 @@ void SyncOpL3Door(int pnum, int cmd, int i)
 		return;
 
 	if (Objects[i]._otype == OBJ_L3LDOOR)
-		OperateL3LDoor(-1, i, false);
+		OperateL3LDoor(i, false);
 	if (Objects[i]._otype == OBJ_L3RDOOR)
-		OperateL3RDoor(-1, i, false);
+		OperateL3RDoor(i, false);
 }
 
 void SyncOpL5Door(int pnum, int cmd, int i)
@@ -3971,9 +3971,9 @@ void SyncOpL5Door(int pnum, int cmd, int i)
 		return;
 
 	if (Objects[i]._otype == OBJ_L5LDOOR)
-		OperateL5LDoor(-1, i, false);
+		OperateL5LDoor(i, false);
 	if (Objects[i]._otype == OBJ_L5RDOOR)
-		OperateL5RDoor(-1, i, false);
+		OperateL5RDoor(i, false);
 }
 
 /**
@@ -4943,33 +4943,33 @@ void MonstCheckDoors(Monster &monster)
 				int dpx = abs(Objects[oi].position.x - mx);
 				int dpy = abs(Objects[oi].position.y - my);
 				if (dpx == 1 && dpy <= 1 && Objects[oi]._otype == OBJ_L1LDOOR)
-					OperateL1LDoor(MyPlayerId, oi, true);
+					OperateL1LDoor(oi, true);
 				if (dpx <= 1 && dpy == 1 && Objects[oi]._otype == OBJ_L1RDOOR)
-					OperateL1RDoor(MyPlayerId, oi, true);
+					OperateL1RDoor(oi, true);
 			}
 			if ((Objects[oi]._otype == OBJ_L2LDOOR || Objects[oi]._otype == OBJ_L2RDOOR) && Objects[oi]._oVar4 == 0) {
 				int dpx = abs(Objects[oi].position.x - mx);
 				int dpy = abs(Objects[oi].position.y - my);
 				if (dpx == 1 && dpy <= 1 && Objects[oi]._otype == OBJ_L2LDOOR)
-					OperateL2LDoor(MyPlayerId, oi, true);
+					OperateL2LDoor(oi, true);
 				if (dpx <= 1 && dpy == 1 && Objects[oi]._otype == OBJ_L2RDOOR)
-					OperateL2RDoor(MyPlayerId, oi, true);
+					OperateL2RDoor(oi, true);
 			}
 			if ((Objects[oi]._otype == OBJ_L3LDOOR || Objects[oi]._otype == OBJ_L3RDOOR) && Objects[oi]._oVar4 == 0) {
 				int dpx = abs(Objects[oi].position.x - mx);
 				int dpy = abs(Objects[oi].position.y - my);
 				if (dpx == 1 && dpy <= 1 && Objects[oi]._otype == OBJ_L3RDOOR)
-					OperateL3RDoor(MyPlayerId, oi, true);
+					OperateL3RDoor(oi, true);
 				if (dpx <= 1 && dpy == 1 && Objects[oi]._otype == OBJ_L3LDOOR)
-					OperateL3LDoor(MyPlayerId, oi, true);
+					OperateL3LDoor(oi, true);
 			}
 			if ((Objects[oi]._otype == OBJ_L5LDOOR || Objects[oi]._otype == OBJ_L5RDOOR) && Objects[oi]._oVar4 == 0) {
 				int dpx = abs(Objects[oi].position.x - mx);
 				int dpy = abs(Objects[oi].position.y - my);
 				if (dpx == 1 && dpy <= 1 && Objects[oi]._otype == OBJ_L5LDOOR)
-					OperateL5LDoor(MyPlayerId, oi, true);
+					OperateL5LDoor(oi, true);
 				if (dpx <= 1 && dpy == 1 && Objects[oi]._otype == OBJ_L5RDOOR)
-					OperateL5RDoor(MyPlayerId, oi, true);
+					OperateL5RDoor(oi, true);
 			}
 		}
 	}
@@ -5056,49 +5056,49 @@ void OperateObject(int pnum, int i, bool teleFlag)
 	case OBJ_L1RDOOR:
 		if (teleFlag) {
 			if (Objects[i]._otype == OBJ_L1LDOOR)
-				OperateL1LDoor(pnum, i, true);
+				OperateL1LDoor(i, sendmsg);
 			if (Objects[i]._otype == OBJ_L1RDOOR)
-				OperateL1RDoor(pnum, i, true);
+				OperateL1RDoor(i, sendmsg);
 			break;
 		}
-		if (pnum == MyPlayerId)
-			OperateL1Door(pnum, i, true);
+		if (sendmsg)
+			OperateL1Door(pnum, i);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
 		if (teleFlag) {
 			if (Objects[i]._otype == OBJ_L2LDOOR)
-				OperateL2LDoor(pnum, i, true);
+				OperateL2LDoor(i, sendmsg);
 			if (Objects[i]._otype == OBJ_L2RDOOR)
-				OperateL2RDoor(pnum, i, true);
+				OperateL2RDoor(i, sendmsg);
 			break;
 		}
-		if (pnum == MyPlayerId)
-			OperateL2Door(pnum, i, true);
+		if (sendmsg)
+			OperateL2Door(pnum, i);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
 		if (teleFlag) {
 			if (Objects[i]._otype == OBJ_L3LDOOR)
-				OperateL3LDoor(pnum, i, true);
+				OperateL3LDoor(i, sendmsg);
 			if (Objects[i]._otype == OBJ_L3RDOOR)
-				OperateL3RDoor(pnum, i, true);
+				OperateL3RDoor(i, sendmsg);
 			break;
 		}
-		if (pnum == MyPlayerId)
-			OperateL3Door(pnum, i, true);
+		if (sendmsg)
+			OperateL3Door(pnum, i);
 		break;
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
 		if (teleFlag) {
 			if (Objects[i]._otype == OBJ_L5LDOOR)
-				OperateL5LDoor(pnum, i, true);
+				OperateL5LDoor(i, sendmsg);
 			if (Objects[i]._otype == OBJ_L5RDOOR)
-				OperateL5RDoor(pnum, i, true);
+				OperateL5RDoor(i, sendmsg);
 			break;
 		}
-		if (pnum == MyPlayerId)
-			OperateL5Door(pnum, i, true);
+		if (sendmsg)
+			OperateL5Door(pnum, i);
 		break;
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
