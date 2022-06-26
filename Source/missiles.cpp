@@ -883,7 +883,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		PlayEffect(monster, 1);
 	} else {
 		if (monster.MType->mtype != MT_GOLEM)
-			M_StartHit(m, -1, dam);
+			M_StartHit(m, dam);
 	}
 	return true;
 }

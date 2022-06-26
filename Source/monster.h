@@ -286,6 +286,7 @@ bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
 void M_ClearSquares(int i);
 void M_GetKnockback(int i);
+void M_StartHit(int i, int dam);
 void M_StartHit(int i, int pnum, int dam);
 void M_StartKill(int i, int pnum);
 void M_SyncStartKill(int i, Point position, int pnum);

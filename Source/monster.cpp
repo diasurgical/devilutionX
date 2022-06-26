@@ -1051,23 +1051,17 @@ void Teleport(int i)
 	}
 }
 
-void MonsterHitMonster(int mid, int i, int dam)
+void HitMonster(int mid, int dam)
 {
 	assert(mid >= 0 && mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
-
-	if (i >= 0 && i < MAX_PLRS)
-		monster.mWhoHit |= 1 << i;
 
 	delta_monster_hp(mid, monster._mhitpoints, *MyPlayer);
 	NetSendCmdMonDmg(false, mid, dam);
 	PlayEffect(monster, 1);
 
 	if (IsAnyOf(monster.MType->mtype, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
-		if (i >= 0)
-			monster._mdir = Opposite(Monsters[i]._mdir);
-
 		if (monster.MType->mtype == MT_BLINK) {
 			Teleport(mid);
 		} else if (IsAnyOf(monster.MType->mtype, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
@@ -1080,6 +1074,22 @@ void MonsterHitMonster(int mid, int i, int dam)
 			StartMonsterGotHit(mid);
 		}
 	}
+}
+
+void MonsterHitMonster(int mid, int i, int dam)
+{
+	assert(mid >= 0 && mid < MAXMONSTERS);
+	auto &monster = Monsters[mid];
+	assert(monster.MType != nullptr);
+
+	if (i < MAX_PLRS)
+		monster.mWhoHit |= 1 << i;
+
+	if (IsAnyOf(monster.MType->mtype, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
+		monster._mdir = Opposite(Monsters[i]._mdir);
+	}
+
+	HitMonster(mid, dam);
 }
 
 void MonsterDeath(int mid, int pnum, Direction md, bool sendmsg)
@@ -3927,24 +3937,13 @@ void M_GetKnockback(int i)
 	StartMonsterGotHit(i);
 }
 
-void M_StartHit(int i, int pnum, int dam)
+void M_StartHit(int i, int dam)
 {
-	auto &monster = Monsters[i];
+	Monster &monster = Monsters[i];
 
-	if (pnum >= 0)
-		monster.mWhoHit |= 1 << pnum;
-	if (pnum == MyPlayerId) {
-		delta_monster_hp(i, monster._mhitpoints, *MyPlayer);
-		NetSendCmdMonDmg(false, i, dam);
-	}
 	PlayEffect(monster, 1);
+
 	if (IsAnyOf(monster.MType->mtype, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
-		if (pnum >= 0) {
-			monster._menemy = pnum;
-			monster.enemyPosition = Players[pnum].position.future;
-			monster._mFlags &= ~MFLAG_TARGETS_MONSTER;
-			monster._mdir = GetMonsterDirection(monster);
-		}
 		if (monster.MType->mtype == MT_BLINK) {
 			Teleport(i);
 		} else if (IsAnyOf(monster.MType->mtype, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV)
@@ -3957,6 +3956,25 @@ void M_StartHit(int i, int pnum, int dam)
 			StartMonsterGotHit(i);
 		}
 	}
+}
+
+void M_StartHit(int i, int pnum, int dam)
+{
+	Monster &monster = Monsters[i];
+
+	monster.mWhoHit |= 1 << pnum;
+	if (pnum == MyPlayerId) {
+		delta_monster_hp(i, monster._mhitpoints, *MyPlayer);
+		NetSendCmdMonDmg(false, i, dam);
+	}
+	if (IsAnyOf(monster.MType->mtype, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
+		monster._menemy = pnum;
+		monster.enemyPosition = Players[pnum].position.future;
+		monster._mFlags &= ~MFLAG_TARGETS_MONSTER;
+		monster._mdir = GetMonsterDirection(monster);
+	}
+
+	M_StartHit(i, dam);
 }
 
 void M_StartKill(int i, int pnum)
@@ -4656,9 +4674,9 @@ void MissToMonst(Missile &missile, Point position)
 	monster.position.tile = position;
 	M_StartStand(monster, monster._mdir);
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0)
-		M_StartHit(m, -1, 0);
+		M_StartHit(m, 0);
 	else
-		MonsterHitMonster(m, -1, 0);
+		HitMonster(m, 0);
 
 	if (monster.MType->mtype == MT_GLOOM)
 		return;
