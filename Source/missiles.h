@@ -13,6 +13,7 @@
 #include "miniwin/miniwin.h"
 #include "misdat.h"
 #include "monster.h"
+#include "player.h"
 #include "spelldat.h"
 
 namespace devilution {
@@ -134,6 +135,58 @@ struct Missile {
 	}
 };
 
+class Collidable {
+public:
+	Missile *colMissile;
+	int minDamage;
+	int maxDamage;
+	bool isDamageShifted;
+};
+
+class TrapMissile : public Collidable {
+
+public:
+	TrapMissile(Missile missile, int minDamage, int maxDamage, bool isDamageShifted)
+	{
+		colMissile = &missile;
+		this->minDamage = minDamage;
+		this->maxDamage = maxDamage;
+		this->isDamageShifted = isDamageShifted;
+	}
+	TrapMissile(Missile missile, int minDamage, int maxDamage, bool isDamageShifted, int distance, int miSource, missile_id mName)
+	    : TrapMissile(missile, minDamage, maxDamage, isDamageShifted)
+	{
+		colMissile->_midist = distance;
+		colMissile->_misource = miSource;
+		colMissile->_mitype = mName;
+	}
+	int calculateCTH(Monster &monster) const;
+	int calculateDamage(Monster &monster) const;
+	void hitMonster(int mid, int dam) const;
+};
+
+class PlayerMissile : public Collidable {
+
+public:
+	PlayerMissile(Missile missile, int minDamage, int maxDamage, bool isDamageShifted)
+	{
+		colMissile = &missile;
+		this->minDamage = minDamage;
+		this->maxDamage = maxDamage;
+		this->isDamageShifted = isDamageShifted;
+		attacker_ = &Players[colMissile->_misource];
+	}
+	int calculateCTH(Monster &monster) const;
+	int calculateDamage(Monster &monster) const;
+	void hitMonster(int mid, int dam) const;
+
+private:
+	const Player *attacker_;
+};
+
+template <typename TCollidable>
+bool TryHitMonster(TCollidable const &col, int mid);
+
 extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
 
@@ -160,7 +213,6 @@ int GetSpellLevel(int playerId, spell_id sn);
  * @return the direction of the p1->p2 vector
  */
 Direction16 GetDirection16(Point p1, Point p2);
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**

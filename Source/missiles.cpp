@@ -182,92 +182,6 @@ void MoveMissilePos(Missile &missile)
 	}
 }
 
-bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
-{
-	auto &monster = Monsters[m];
-
-	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
-		return false;
-
-	int hit = GenerateRnd(100);
-	int hper = 0;
-	if (pnum != -1) {
-		const Player &player = Players[pnum];
-		if (MissilesData[t].mType == 0) {
-			hper = player.GetRangedPiercingToHit();
-			hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
-			hper -= (dist * dist) / 2;
-		} else {
-			hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
-		}
-	} else {
-		hper = GenerateRnd(75) - monster.mLevel * 2;
-	}
-
-	hper = clamp(hper, 5, 95);
-
-	if (monster._mmode == MonsterMode::Petrified)
-		hit = 0;
-
-	if (monster.TryLiftGargoyle())
-		return true;
-
-	if (hit >= hper) {
-#ifdef _DEBUG
-		if (!DebugGodMode)
-#endif
-			return false;
-	}
-
-	int dam;
-	if (t == MIS_BONESPIRIT) {
-		dam = monster._mhitpoints / 3 >> 6;
-	} else {
-		dam = mindam + GenerateRnd(maxdam - mindam + 1);
-	}
-
-	const Player &player = Players[pnum];
-
-	if (MissilesData[t].mType == 0 && MissilesData[t].mResist == MISR_NONE) {
-		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
-		if (player._pClass == HeroClass::Rogue)
-			dam += player._pDamageMod;
-		else
-			dam += player._pDamageMod / 2;
-		if (monster.MData->mMonstClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
-			dam *= 3;
-	}
-	bool resist = monster.IsResistant(t);
-	if (!shift)
-		dam <<= 6;
-	if (resist)
-		dam >>= 2;
-
-	if (pnum == MyPlayerId)
-		monster._mhitpoints -= dam;
-
-	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
-		monster._mFlags |= MFLAG_NOHEAL;
-
-	if (monster._mhitpoints >> 6 <= 0) {
-		M_StartKill(m, pnum);
-	} else if (resist) {
-		PlayEffect(monster, 1);
-	} else {
-		if (monster._mmode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
-			M_GetKnockback(m);
-		if (monster.MType->mtype != MT_GOLEM)
-			M_StartHit(m, pnum, dam);
-	}
-
-	if (monster._msquelch == 0) {
-		monster._msquelch = UINT8_MAX;
-		monster.position.last = player.position.tile;
-	}
-
-	return true;
-}
-
 bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
 	Player &player = Players[pnum];
@@ -396,25 +310,25 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 
 	bool isMonsterHit = false;
 	const int mid = dMonster[mx][my];
-	if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
-		if (missile._micaster == TARGET_MONSTERS) {
-			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
-				isMonsterHit = MonsterMHit(missile._misource, abs(mid) - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+	if (mid != 0) {
+		if (!missile.IsTrap()) {
+
+			if (missile._micaster == TARGET_MONSTERS
+			    && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified))
+				isMonsterHit = TryHitMonster(PlayerMissile(missile, minDamage, maxDamage, isDamageShifted), abs(mid) - 1);
+
+			if (missile._micaster == TARGET_PLAYERS && mid > 0) {
+				Monster &attackingMonster = Monsters[missile._misource];
+				if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
+				    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
+					isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
 			}
-		} else {
-			Monster &attackingMonster = Monsters[missile._misource];
-			if ((attackingMonster._mFlags & MFLAG_TARGETS_MONSTER) != 0
-			    && mid > 0
-			    && (Monsters[mid - 1]._mFlags & MFLAG_GOLEM) != 0)
-				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-		}
-	} else {
-		if (mid > 0) {
-			if (missile._micaster == TARGET_BOTH)
-				isMonsterHit = MonsterMHit(missile._misource, mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-			else
-				isMonsterHit = MonsterTrapHit(mid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-		}
+
+			if (missile._micaster == TARGET_BOTH && mid > 0)
+				isMonsterHit = TryHitMonster(PlayerMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
+
+		} else if (mid > 0)
+			isMonsterHit = TryHitMonster(TrapMissile(missile, minDamage, maxDamage, isDamageShifted), mid - 1);
 	}
 
 	if (isMonsterHit) {
@@ -436,7 +350,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
 			}
 		} else {
-			int earflag = (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING) ? 1 : 0;
+			int earflag = (!missile.IsTrap() && (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING)) ? 1 : 0;
 			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
 		}
 	}
@@ -864,45 +778,137 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
+void MissileHitMonsterConsequences(int mid, int pnum, int dam, missile_id mName)
 {
-	auto &monster = Monsters[m];
+	Monster &monster = Monsters[mid];
 
-	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
-		return false;
-
-	int hit = GenerateRnd(100);
-	int hper = 90 - (BYTE)monster.mArmorClass - dist;
-	hper = clamp(hper, 5, 95);
-	if (monster.TryLiftGargoyle())
-		return true;
-	if (hit >= hper && monster._mmode != MonsterMode::Petrified) {
-#ifdef _DEBUG
-		if (!DebugGodMode)
-#endif
-			return false;
+	bool hasKnockback = false;
+	if (pnum >= 0 && pnum < MAX_PLRS) {
+		const Player &player = Players[pnum];
+		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+			hasKnockback = true;
 	}
 
-	bool resist = monster.IsResistant(t);
-	int dam = mindam + GenerateRnd(maxdam - mindam + 1);
-	if (!shift)
-		dam <<= 6;
-	if (resist)
-		monster._mhitpoints -= dam / 4;
-	else
+	if (monster._mhitpoints >> 6 <= 0) {
+		M_StartKill(mid, pnum);
+	} else if (monster.IsResistant(mName)) {
+		PlayEffect(monster, 1);
+	} else {
+		if (monster._mmode != MonsterMode::Petrified
+		    && MissilesData[mName].mType == 0
+		    && hasKnockback)
+			M_GetKnockback(mid);
+		if (monster.MType->mtype != MT_GOLEM)
+			M_StartHit(mid, pnum, dam);
+	}
+}
+
+int PlayerMissile::calculateCTH(Monster &monster) const
+{
+	int hper = 0;
+	if (MissilesData[colMissile->_mitype].mType == 0) {
+		hper = attacker_->GetRangedPiercingToHit();
+		hper -= attacker_->CalculateArmorPierce(monster.mArmorClass, false);
+		hper -= (colMissile->_midist * colMissile->_midist) / 2;
+	} else {
+		hper = attacker_->GetMagicToHit() - (monster.mLevel * 2) - colMissile->_midist;
+	}
+	return hper;
+}
+
+int PlayerMissile::calculateDamage(Monster &monster) const
+{
+	if (colMissile->_mitype == MIS_BONESPIRIT)
+		return monster._mhitpoints / 3 >> 6;
+
+	int dam = minDamage + GenerateRnd(maxDamage - minDamage + 1);
+	if (MissilesData[colMissile->_mitype].mType == 0 && MissilesData[colMissile->_mitype].mResist == MISR_NONE) {
+		dam += (dam * attacker_->_pIBonusDamMod / 100) + attacker_->_pIBonusDam;
+		if (attacker_->_pClass == HeroClass::Rogue)
+			dam += attacker_->_pDamageMod;
+		else
+			dam += attacker_->_pDamageMod / 2;
+		if (monster.MData->mMonstClass == MonsterClass::Demon && HasAnyOf(attacker_->_pIFlags, ItemSpecialEffect::TripleDemonDamage))
+			dam *= 3;
+	}
+	return dam;
+}
+
+void PlayerMissile::hitMonster(int mid, int dam) const
+{
+	Monster &monster = Monsters[mid];
+	if (colMissile->_misource == MyPlayerId)
 		monster._mhitpoints -= dam;
+
+	if ((gbIsHellfire && HasAnyOf(attacker_->_pIFlags, ItemSpecialEffect::NoHealOnMonsters))
+	    || (!gbIsHellfire && HasAnyOf(attacker_->_pIFlags, ItemSpecialEffect::FireArrows)))
+		monster._mFlags |= MFLAG_NOHEAL;
+
+	MissileHitMonsterConsequences(mid, colMissile->_misource, dam, colMissile->_mitype);
+
+	if (monster._msquelch == 0) {
+		monster._msquelch = UINT8_MAX;
+		monster.position.last = attacker_->position.tile;
+	}
+}
+
+int TrapMissile::calculateCTH(Monster &monster) const
+{
+	return (colMissile->_mitype == MIS_FIREWALL
+	        ? GenerateRnd(75) - monster.mLevel * 2
+	        : 90 - monster.mArmorClass - colMissile->_midist);
+}
+
+int TrapMissile::calculateDamage(Monster &monster) const
+{
+	return (colMissile->_mitype == MIS_BONESPIRIT)
+	    ? monster._mhitpoints / 3 >> 6
+	    : minDamage + GenerateRnd(maxDamage - minDamage + 1);
+}
+
+void TrapMissile::hitMonster(int mid, int dam) const
+{
+	Monster &monster = Monsters[mid];
+	monster._mhitpoints -= dam;
 #ifdef _DEBUG
 	if (DebugGodMode)
 		monster._mhitpoints = 0;
 #endif
-	if (monster._mhitpoints >> 6 <= 0) {
-		M_StartKill(m, -1);
-	} else if (resist) {
-		PlayEffect(monster, 1);
-	} else {
-		if (monster.MType->mtype != MT_GOLEM)
-			M_StartHit(m, -1, dam);
+	MissileHitMonsterConsequences(mid, -1, dam, colMissile->_mitype);
+}
+
+template <typename TCollidable>
+bool TryHitMonster(TCollidable const &col, int mid)
+{
+	Monster &monster = Monsters[mid];
+
+	if (!monster.IsPossibleToHit() || monster.IsImmune(col.colMissile->_mitype))
+		return false;
+
+	if (monster.TryLiftGargoyle())
+		return true;
+
+	if (monster._mmode != MonsterMode::Petrified) {
+		int hit = GenerateRnd(100);
+		int hper = col.calculateCTH(monster);
+		hper = clamp(hper, 5, 95);
+
+		if (hit >= hper) {
+#ifdef _DEBUG
+			if (!DebugGodMode)
+#endif
+				return false;
+		}
 	}
+
+	int dam = col.calculateDamage(monster);
+	if (!col.isDamageShifted)
+		dam <<= 6;
+	if (monster.IsResistant(col.colMissile->_mitype))
+		dam >>= 2;
+
+	col.hitMonster(mid, dam);
+
 	return true;
 }
 
