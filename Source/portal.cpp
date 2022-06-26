@@ -103,7 +103,7 @@ void DeactivatePortal(int i)
 
 bool PortalOnLevel(int i)
 {
-	if (Portals[i].level == currlevel)
+	if (Portals[i].setlvl == setlevel && Portals[i].level == setlevel ? static_cast<int>(setlvlnum) : currlevel)
 		return true;
 
 	return leveltype == DTYPE_TOWN;
