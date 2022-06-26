@@ -463,18 +463,18 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 /**
  * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, Point position, bool lighting)
+void DrawPlayerIconHelper(const Surface &out, missile_graphic_id missileGraphicId, Point position, bool lighting, bool infraVision)
 {
 	position.x -= MissileSpriteData[missileGraphicId].animWidth2;
 
 	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
 
-	if (pnum == MyPlayerId) {
+	if (!lighting) {
 		Cl2Draw(out, position.x, position.y, cel, 0);
 		return;
 	}
 
-	if (lighting) {
+	if (infraVision) {
 		Cl2DrawTRN(out, position.x, position.y, cel, 0, GetInfravisionTRN());
 		return;
 	}
@@ -485,17 +485,15 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
 /**
  * @brief Helper for rendering player icons (Mana Shield and Reflect)
  * @param out Output buffer
- * @param pnum Player id
  * @param position Output buffer coordinates
  * @param lighting Should lighting be applied
  */
-void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting)
+void DrawPlayerIcons(const Surface &out, Player &player, Point position, bool infraVision)
 {
-	Player &player = Players[pnum];
 	if (player.pManaShield)
-		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, position, lighting);
+		DrawPlayerIconHelper(out, MFILE_MANASHLD, position, &player != MyPlayer, infraVision);
 	if (player.wReflections > 0)
-		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, position + Displacement { 0, 16 }, lighting);
+		DrawPlayerIconHelper(out, MFILE_REFLECT, position + Displacement { 0, 16 }, &player != MyPlayer, infraVision);
 }
 
 /**
@@ -552,13 +550,13 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 
 	if (pnum == MyPlayerId) {
 		Cl2Draw(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
-		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
+		DrawPlayerIcons(out, player, targetBufferPosition, false);
 		return;
 	}
 
 	if (!IsTileLit(tilePosition) || (MyPlayer->_pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawTRN(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel, GetInfravisionTRN());
-		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
+		DrawPlayerIcons(out, player, targetBufferPosition, true);
 		return;
 	}
 
@@ -569,7 +567,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		LightTableIndex -= 5;
 
 	Cl2DrawLight(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
-	DrawPlayerIcons(out, pnum, targetBufferPosition, false);
+	DrawPlayerIcons(out, player, targetBufferPosition, false);
 
 	LightTableIndex = l;
 }
@@ -804,14 +802,8 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  */
-void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
+void DrawPlayerHelper(const Surface &out, int p, Point tilePosition, Point targetBufferPosition)
 {
-	int8_t p = abs(dPlayer[tilePosition.x][tilePosition.y]) - 1;
-
-	if (p < 0 || p >= MAX_PLRS) {
-		Log("draw player: tried to draw illegal player {}", p);
-		return;
-	}
 	Player &player = Players[p];
 
 	Displacement offset = player.position.offset;
@@ -881,8 +873,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (TileContainsDeadPlayer(tilePosition)) {
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
-	if (dPlayer[tilePosition.x][tilePosition.y] > 0) {
-		DrawPlayerHelper(out, tilePosition, targetBufferPosition);
+	int8_t playerId = dPlayer[tilePosition.x][tilePosition.y];
+	if (playerId > 0 && playerId <= MAX_PLRS) {
+		DrawPlayerHelper(out, abs(playerId) - 1, tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
 		DrawMonsterHelper(out, tilePosition, targetBufferPosition);
