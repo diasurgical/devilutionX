@@ -771,7 +771,7 @@ void SetupObject(Object &object, Point position, _object_id ot)
 
 	object._oAnimData = pObjCels[j].get();
 	object._oAnimFlag = objectData.oAnimFlag;
-	if (object._oAnimFlag != 0) {
+	if (object._oAnimFlag) {
 		object._oAnimDelay = objectData.oAnimDelay;
 		object._oAnimCnt = GenerateRnd(object._oAnimDelay);
 		object._oAnimLen = objectData.oAnimLen;
@@ -1188,7 +1188,7 @@ void AddPurifyingFountain(int i)
 void AddArmorStand(int i)
 {
 	if (!armorFlag) {
-		Objects[i]._oAnimFlag = 2;
+		Objects[i]._oAnimFlag = true;
 		Objects[i]._oSelFlag = 0;
 	}
 
@@ -1275,7 +1275,7 @@ void AddStoryBook(int i)
 void AddWeaponRack(int i)
 {
 	if (!weaponFlag) {
-		Objects[i]._oAnimFlag = 2;
+		Objects[i]._oAnimFlag = true;
 		Objects[i]._oSelFlag = 0;
 	}
 	Objects[i]._oRndSeed = AdvanceRndSeed();
@@ -1428,7 +1428,7 @@ void UpdateDoor(Object &door)
 void UpdateSarcophagus(Object &sarcophagus)
 {
 	if (sarcophagus._oAnimFrame == sarcophagus._oAnimLen)
-		sarcophagus._oAnimFlag = 0;
+		sarcophagus._oAnimFlag = false;
 }
 
 void ActivateTrapLine(int ttype, int tid)
@@ -1437,7 +1437,7 @@ void ActivateTrapLine(int ttype, int tid)
 		int oi = ActiveObjects[i];
 		if (Objects[oi]._otype == ttype && Objects[oi]._oVar1 == tid) {
 			Objects[oi]._oVar4 = 1;
-			Objects[oi]._oAnimFlag = 1;
+			Objects[oi]._oAnimFlag = true;
 			Objects[oi]._oAnimDelay = 1;
 			Objects[oi]._olid = AddLight(Objects[oi].position, 1);
 		}
@@ -2463,7 +2463,7 @@ void OperateTrapLever(Object &flameLever)
 			Object &target = Objects[ActiveObjects[j]];
 			if (target._otype == flameLever._oVar2 && target._oVar1 == flameLever._oVar1) {
 				target._oVar2 = 1;
-				target._oAnimFlag = 0;
+				target._oAnimFlag = false;
 			}
 		}
 		return;
@@ -2475,7 +2475,7 @@ void OperateTrapLever(Object &flameLever)
 		if (target._otype == flameLever._oVar2 && target._oVar1 == flameLever._oVar1) {
 			target._oVar2 = 0;
 			if (target._oVar4 != 0) {
-				target._oAnimFlag = 1;
+				target._oAnimFlag = true;
 			}
 		}
 	}
@@ -2489,7 +2489,7 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 
 	PlaySfxLoc(IS_SARC, Objects[i].position);
 	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFlag = 1;
+	Objects[i]._oAnimFlag = true;
 	Objects[i]._oAnimDelay = 3;
 	SetRndSeed(Objects[i]._oRndSeed);
 	if (Objects[i]._oVar1 <= 2)
@@ -3346,7 +3346,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 	Objects[i]._oSelFlag = 0;
 
 	PlaySfxLoc(sType, Objects[i].position);
-	Objects[i]._oAnimFlag = 1;
+	Objects[i]._oAnimFlag = true;
 	Objects[i]._oAnimDelay = 1;
 
 	switch (Objects[i]._oVar1) {
@@ -3601,7 +3601,7 @@ void OperateCauldron(int pnum, int i, _sfx_id sType)
 	Objects[i]._oVar1 = FindValidShrine();
 	OperateShrine(pnum, i, sType);
 	Objects[i]._oAnimFrame = 3;
-	Objects[i]._oAnimFlag = 0;
+	Objects[i]._oAnimFlag = false;
 	force_redraw = 255;
 }
 
@@ -3884,7 +3884,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 
 void BreakCrux(Object &crux)
 {
-	crux._oAnimFlag = 1;
+	crux._oAnimFlag = true;
 	crux._oAnimFrame = 1;
 	crux._oAnimDelay = 1;
 	crux._oSolidFlag = true;
@@ -3916,7 +3916,7 @@ void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendms
 	}
 
 	barrel._oVar1 = 0;
-	barrel._oAnimFlag = 1;
+	barrel._oAnimFlag = true;
 	barrel._oAnimFrame = 1;
 	barrel._oAnimDelay = 1;
 	barrel._oSolidFlag = false;
@@ -4106,7 +4106,7 @@ void UpdateState(Object &object, int frame)
 
 	object._oSelFlag = 0;
 	object._oAnimFrame = frame;
-	object._oAnimFlag = 0;
+	object._oAnimFlag = false;
 }
 
 } // namespace
@@ -4773,7 +4773,7 @@ void ProcessObjects()
 		default:
 			break;
 		}
-		if (object._oAnimFlag == 0)
+		if (!object._oAnimFlag)
 			continue;
 
 		object._oAnimCnt++;
@@ -5274,15 +5274,13 @@ void DeltaSyncBreakObj(Object &object)
 		return;
 
 	object._oVar1 = 0;
-	object._oAnimFlag = 1;
 	object._oSolidFlag = false;
 	object._oMissFlag = true;
 	object._oBreak = -1;
 	object._oSelFlag = 0;
 	object._oPreFlag = true;
+	object._oAnimFlag = false;
 	object._oAnimFrame = object._oAnimLen;
-	object._oAnimCnt = 0;
-	object._oAnimDelay = 1000;
 }
 
 void SyncBreakObj(int pnum, Object &object)
