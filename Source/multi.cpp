@@ -206,7 +206,7 @@ void HandleTurnUpperBit(int pnum)
 
 	if (MyPlayerId == i) {
 		sgbSendDeltaTbl[pnum] = true;
-	} else if (MyPlayerId == pnum) {
+	} else if (pnum == MyPlayerId) {
 		gbDeltaSender = i;
 	}
 }
@@ -785,7 +785,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
 	static PlayerPack PackedPlayerBuffer[MAX_PLRS];
 
-	if (MyPlayerId == pnum) {
+	if (pnum == MyPlayerId) {
 		return;
 	}
 	assert(pnum >= 0 && pnum < MAX_PLRS);
