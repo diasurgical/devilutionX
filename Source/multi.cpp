@@ -197,17 +197,15 @@ void MonsterSeeds()
 
 void HandleTurnUpperBit(int pnum)
 {
-	int i;
-
-	for (i = 0; i < MAX_PLRS; i++) {
-		if ((player_state[i] & PS_CONNECTED) != 0 && i != pnum)
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if ((player_state[i] & PS_CONNECTED) != 0 && i != pnum) {
+			if (MyPlayerId == i) {
+				sgbSendDeltaTbl[pnum] = true;
+			} else if (pnum == MyPlayerId) {
+				gbDeltaSender = i;
+			}
 			break;
-	}
-
-	if (MyPlayerId == i) {
-		sgbSendDeltaTbl[pnum] = true;
-	} else if (MyPlayerId == pnum) {
-		gbDeltaSender = i;
+		}
 	}
 }
 
