@@ -2153,19 +2153,14 @@ void OperateLever(int pnum, int i)
 	}
 
 	PlaySfxLoc(IS_LEVER, object.position);
-	object._oSelFlag = 0;
-	object._oAnimFrame++;
-	bool mapflag = true;
-	if (currlevel == 16 && !AreAllLeversActivated(object._oVar8))
-		mapflag = false;
+
+	DeltaOperateLever(object);
+
 	if (currlevel == 24) {
-		OperateNakrulLever();
-		IsUberLeverActivated = true;
-		mapflag = false;
+		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
 		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
 	}
-	if (mapflag)
-		ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
+
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
@@ -5508,14 +5503,6 @@ void GetObjectStr(const Object &object)
 	if (object.IsDisabled()) {
 		InfoString = fmt::format(fmt::runtime(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled))")), InfoString);
 		InfoColor = UiFlags::ColorRed;
-	}
-}
-
-void OperateNakrulLever()
-{
-	if (currlevel == 24) {
-		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
-		SyncNakrulRoom();
 	}
 }
 
