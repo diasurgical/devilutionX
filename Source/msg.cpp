@@ -749,7 +749,7 @@ DWORD OnAddStrength(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrStr(pnum, message.wParam1);
+		ModifyPlrStr(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -761,7 +761,7 @@ DWORD OnAddMagic(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrMag(pnum, message.wParam1);
+		ModifyPlrMag(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -773,7 +773,7 @@ DWORD OnAddDexterity(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrDex(pnum, message.wParam1);
+		ModifyPlrDex(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -785,7 +785,7 @@ DWORD OnAddVitality(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
 	else if (message.wParam1 <= 256)
-		ModifyPlrVit(pnum, message.wParam1);
+		ModifyPlrVit(Players[pnum], message.wParam1);
 
 	return sizeof(message);
 }
@@ -928,7 +928,7 @@ DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 				if (message.bPnum != MyPlayerId)
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
 				else
-					AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
+					AutoGetItem(*MyPlayer, &Items[message.bCursitem], message.bCursitem);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
@@ -955,9 +955,9 @@ DWORD OnAutoGetItem(const TCmd *pCmd, int pnum)
 						Player &player = *MyPlayer;
 						int ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
-							AutoGetItem(MyPlayerId, &Items[ii], ii);
+							AutoGetItem(*MyPlayer, &Items[ii], ii);
 					} else {
-						AutoGetItem(MyPlayerId, &Items[message.bCursitem], message.bCursitem);
+						AutoGetItem(*MyPlayer, &Items[message.bCursitem], message.bCursitem);
 					}
 				} else {
 					SyncGetItem(position, message.dwSeed, message.wIndx, message.wCI);
@@ -2007,7 +2007,7 @@ DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
-		NextPlrLevel(pnum);
+		NextPlrLevel(Players[pnum]);
 	}
 #endif
 	return sizeof(*pCmd);

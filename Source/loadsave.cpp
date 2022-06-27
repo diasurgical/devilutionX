@@ -2053,7 +2053,7 @@ void LoadGame(bool firstflag)
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
 	SyncInitPlr(MyPlayerId);
-	SyncPlrAnim(MyPlayerId);
+	SyncPlrAnim(myPlayer);
 
 	ViewPosition = { viewX, viewY };
 	ActiveMonsterCount = tmpNummonsters;

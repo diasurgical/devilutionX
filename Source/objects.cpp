@@ -2556,27 +2556,29 @@ bool OperateShrineMysterious(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	ModifyPlrStr(pnum, -1);
-	ModifyPlrMag(pnum, -1);
-	ModifyPlrDex(pnum, -1);
-	ModifyPlrVit(pnum, -1);
+	Player &player = Players[pnum];
+
+	ModifyPlrStr(player, -1);
+	ModifyPlrMag(player, -1);
+	ModifyPlrDex(player, -1);
+	ModifyPlrVit(player, -1);
 
 	switch (static_cast<CharacterAttribute>(GenerateRnd(4))) {
 	case CharacterAttribute::Strength:
-		ModifyPlrStr(pnum, 6);
+		ModifyPlrStr(player, 6);
 		break;
 	case CharacterAttribute::Magic:
-		ModifyPlrMag(pnum, 6);
+		ModifyPlrMag(player, 6);
 		break;
 	case CharacterAttribute::Dexterity:
-		ModifyPlrDex(pnum, 6);
+		ModifyPlrDex(player, 6);
 		break;
 	case CharacterAttribute::Vitality:
-		ModifyPlrVit(pnum, 6);
+		ModifyPlrVit(player, 6);
 		break;
 	}
 
-	CheckStats(Players[pnum]);
+	CheckStats(player);
 
 	InitDiabloMsg(EMSG_SHRINE_MYSTERIOUS);
 
@@ -2903,8 +2905,10 @@ bool OperateShrineEerie(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	ModifyPlrMag(pnum, 2);
-	CheckStats(Players[pnum]);
+	Player &player = Players[pnum];
+
+	ModifyPlrMag(player, 2);
+	CheckStats(player);
 
 	InitDiabloMsg(EMSG_SHRINE_EERIE);
 
@@ -3003,8 +3007,10 @@ bool OperateShrineAbandoned(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	ModifyPlrDex(pnum, 2);
-	CheckStats(Players[pnum]);
+	Player &player = Players[pnum];
+
+	ModifyPlrDex(player, 2);
+	CheckStats(player);
 
 	if (pnum != MyPlayerId)
 		return true;
@@ -3019,8 +3025,10 @@ bool OperateShrineCreepy(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	ModifyPlrStr(pnum, 2);
-	CheckStats(Players[pnum]);
+	Player &player = Players[pnum];
+
+	ModifyPlrStr(player, 2);
+	CheckStats(player);
 
 	if (pnum != MyPlayerId)
 		return true;
@@ -3035,8 +3043,10 @@ bool OperateShrineQuiet(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	ModifyPlrVit(pnum, 2);
-	CheckStats(Players[pnum]);
+	Player &player = Players[pnum];
+
+	ModifyPlrVit(player, 2);
+	CheckStats(player);
 
 	if (pnum != MyPlayerId)
 		return true;
@@ -3090,12 +3100,14 @@ bool OperateShrineTainted(int pnum)
 	int v3 = r == 2 ? 1 : -1;
 	int v4 = r == 3 ? 1 : -1;
 
-	ModifyPlrStr(MyPlayerId, v1);
-	ModifyPlrMag(MyPlayerId, v2);
-	ModifyPlrDex(MyPlayerId, v3);
-	ModifyPlrVit(MyPlayerId, v4);
+	Player &player = *MyPlayer;
 
-	CheckStats(*MyPlayer);
+	ModifyPlrStr(player, v1);
+	ModifyPlrMag(player, v2);
+	ModifyPlrDex(player, v3);
+	ModifyPlrVit(player, v4);
+
+	CheckStats(player);
 
 	InitDiabloMsg(EMSG_SHRINE_TAINTED2);
 
@@ -3115,28 +3127,28 @@ bool OperateShrineOily(int pnum, Point spawnPosition)
 	if (pnum != MyPlayerId)
 		return false;
 
-	Player &myPlayer = *MyPlayer;
+	Player &player = Players[pnum];
 
-	switch (myPlayer._pClass) {
+	switch (player._pClass) {
 	case HeroClass::Warrior:
-		ModifyPlrStr(MyPlayerId, 2);
+		ModifyPlrStr(player, 2);
 		break;
 	case HeroClass::Rogue:
-		ModifyPlrDex(MyPlayerId, 2);
+		ModifyPlrDex(player, 2);
 		break;
 	case HeroClass::Sorcerer:
-		ModifyPlrMag(MyPlayerId, 2);
+		ModifyPlrMag(player, 2);
 		break;
 	case HeroClass::Barbarian:
-		ModifyPlrVit(MyPlayerId, 2);
+		ModifyPlrVit(player, 2);
 		break;
 	case HeroClass::Monk:
-		ModifyPlrStr(MyPlayerId, 1);
-		ModifyPlrDex(MyPlayerId, 1);
+		ModifyPlrStr(player, 1);
+		ModifyPlrDex(player, 1);
 		break;
 	case HeroClass::Bard:
-		ModifyPlrDex(MyPlayerId, 1);
-		ModifyPlrMag(MyPlayerId, 1);
+		ModifyPlrDex(player, 1);
+		ModifyPlrMag(player, 1);
 		break;
 	}
 
@@ -3144,8 +3156,8 @@ bool OperateShrineOily(int pnum, Point spawnPosition)
 
 	AddMissile(
 	    spawnPosition,
-	    myPlayer.position.tile,
-	    myPlayer._pdir,
+	    player.position.tile,
+	    player._pdir,
 	    MIS_FIREWALL,
 	    TARGET_PLAYERS,
 	    -1,
@@ -3162,21 +3174,21 @@ bool OperateShrineGlowing(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	Player &myPlayer = *MyPlayer;
+	Player &player = Players[pnum];
 
 	// Add 0-5 points to Magic (0.1% of the players XP)
-	ModifyPlrMag(MyPlayerId, static_cast<int>(std::min<uint32_t>(myPlayer._pExperience / 1000, 5)));
+	ModifyPlrMag(player, static_cast<int>(std::min<uint32_t>(player._pExperience / 1000, 5)));
 
 	// Take 5% of the players experience to offset the bonus, unless they're very low level in which case take all their experience.
-	if (myPlayer._pExperience > 5000)
-		myPlayer._pExperience = static_cast<uint32_t>(myPlayer._pExperience * 0.95);
+	if (player._pExperience > 5000)
+		player._pExperience = static_cast<uint32_t>(player._pExperience * 0.95);
 	else
-		myPlayer._pExperience = 0;
+		player._pExperience = 0;
 
 	if (*sgOptions.Gameplay.experienceBar)
 		force_redraw = 255;
 
-	CheckStats(Players[pnum]);
+	CheckStats(player);
 
 	InitDiabloMsg(EMSG_SHRINE_GLOWING);
 
@@ -3188,13 +3200,13 @@ bool OperateShrineMendicant(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	Player &myPlayer = *MyPlayer;
+	Player &player = Players[pnum];
 
-	int gold = myPlayer._pGold / 2;
-	AddPlrExperience(MyPlayerId, myPlayer._pLevel, gold);
+	int gold = player._pGold / 2;
+	AddPlrExperience(player, player._pLevel, gold);
 	TakePlrsMoney(gold);
 
-	CheckStats(Players[pnum]);
+	CheckStats(player);
 
 	InitDiabloMsg(EMSG_SHRINE_MENDICANT);
 
@@ -3212,21 +3224,21 @@ bool OperateShrineSparkling(int pnum, Point spawnPosition)
 	if (pnum != MyPlayerId)
 		return false;
 
-	Player &myPlayer = *MyPlayer;
+	Player &player = Players[pnum];
 
-	AddPlrExperience(MyPlayerId, myPlayer._pLevel, 1000 * currlevel);
+	AddPlrExperience(player, player._pLevel, 1000 * currlevel);
 
 	AddMissile(
 	    spawnPosition,
-	    myPlayer.position.tile,
-	    myPlayer._pdir,
+	    player.position.tile,
+	    player._pdir,
 	    MIS_FLASH,
 	    TARGET_PLAYERS,
 	    -1,
 	    3 * currlevel + 2,
 	    0);
 
-	CheckStats(Players[pnum]);
+	CheckStats(player);
 
 	InitDiabloMsg(EMSG_SHRINE_SPARKLING);
 
@@ -3281,23 +3293,25 @@ bool OperateShrineSolar(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
+	Player &player = Players[pnum];
+
 	time_t tm = time(nullptr);
 	int hour = localtime(&tm)->tm_hour;
 	if (hour >= 20 || hour < 4) {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR4);
-		ModifyPlrVit(MyPlayerId, 2);
+		ModifyPlrVit(player, 2);
 	} else if (hour >= 18) {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR3);
-		ModifyPlrMag(MyPlayerId, 2);
+		ModifyPlrMag(player, 2);
 	} else if (hour >= 12) {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR2);
-		ModifyPlrStr(MyPlayerId, 2);
+		ModifyPlrStr(player, 2);
 	} else /* 4:00 to 11:59 */ {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR1);
-		ModifyPlrDex(MyPlayerId, 2);
+		ModifyPlrDex(player, 2);
 	}
 
-	CheckStats(Players[pnum]);
+	CheckStats(player);
 
 	return true;
 }
@@ -3680,16 +3694,16 @@ bool OperateFountains(int pnum, int i)
 		for (auto alteration : alterations) {
 			switch (alteration.first) {
 			case 0:
-				ModifyPlrStr(pnum, alteration.second);
+				ModifyPlrStr(player, alteration.second);
 				break;
 			case 1:
-				ModifyPlrMag(pnum, alteration.second);
+				ModifyPlrMag(player, alteration.second);
 				break;
 			case 2:
-				ModifyPlrDex(pnum, alteration.second);
+				ModifyPlrDex(player, alteration.second);
 				break;
 			case 3:
-				ModifyPlrVit(pnum, alteration.second);
+				ModifyPlrVit(player, alteration.second);
 				break;
 			}
 		}

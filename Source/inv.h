@@ -136,7 +136,7 @@ bool AutoEquipEnabled(const Player &player, const Item &item);
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerId, const Item &item, bool persistItem = true);
+bool AutoEquip(Player &player, const Item &item, bool persistItem = true);
 
 /**
  * @brief Checks whether the given item can be placed on the specified player's inventory.
@@ -200,7 +200,7 @@ void InvGetItem(Player &player, int ii);
  * @return the first valid point or an empty optional
  */
 std::optional<Point> FindAdjacentPositionForItem(Point origin, Direction facing);
-void AutoGetItem(int pnum, Item *item, int ii);
+void AutoGetItem(Player &player, Item *itemPointer, int ii);
 
 /**
  * @brief Searches for a dropped item with the same type/createInfo/seed

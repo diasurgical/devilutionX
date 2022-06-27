@@ -3868,10 +3868,10 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_ELIXSTR:
-		ModifyPlrStr(pnum, 1);
+		ModifyPlrStr(player, 1);
 		break;
 	case IMISC_ELIXMAG:
-		ModifyPlrMag(pnum, 1);
+		ModifyPlrMag(player, 1);
 		if (gbIsHellfire) {
 			player.RestoreFullMana();
 			if (&player == MyPlayer) {
@@ -3880,10 +3880,10 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_ELIXDEX:
-		ModifyPlrDex(pnum, 1);
+		ModifyPlrDex(player, 1);
 		break;
 	case IMISC_ELIXVIT:
-		ModifyPlrVit(pnum, 1);
+		ModifyPlrVit(player, 1);
 		if (gbIsHellfire) {
 			player.RestoreFullLife();
 			if (&player == MyPlayer) {
@@ -3985,10 +3985,10 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		NewCursor(CURSOR_OIL);
 		break;
 	case IMISC_SPECELIX:
-		ModifyPlrStr(pnum, 3);
-		ModifyPlrMag(pnum, 3);
-		ModifyPlrDex(pnum, 3);
-		ModifyPlrVit(pnum, 3);
+		ModifyPlrStr(player, 3);
+		ModifyPlrMag(player, 3);
+		ModifyPlrDex(player, 3);
+		ModifyPlrVit(player, 3);
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SPL_RUNEFIRE;
