@@ -288,6 +288,7 @@ void M_ClearSquares(int i);
 void M_GetKnockback(int i);
 void M_StartHit(int i, int dam);
 void M_StartHit(int i, int pnum, int dam);
+void StartMonsterDeath(int mid, int pnum, bool sendmsg);
 void M_StartKill(int i, int pnum);
 void M_SyncStartKill(int i, Point position, int pnum);
 void M_UpdateLeader(int i);
