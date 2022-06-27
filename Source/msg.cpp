@@ -2513,10 +2513,10 @@ void DeltaLoadLevel()
 			case CMD_CLOSEDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				SyncOpObject(-1, deltaLevel.object[i].bCmd, i);
+				DeltaSyncOpObject(deltaLevel.object[i].bCmd, i);
 				break;
 			case CMD_BREAKOBJ:
-				SyncBreakObj(-1, Objects[i]);
+				DeltaSyncBreakObj(Objects[i]);
 				break;
 			default:
 				break;
