@@ -1135,15 +1135,6 @@ void MonsterDeath(int mid, int pnum, Direction md, bool sendmsg)
 		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster._mint + 1, 0);
 }
 
-void StartMonsterDeath(int mid, int pnum, bool sendmsg)
-{
-	assert(mid >= 0 && mid < MAXMONSTERS);
-	Monster &monster = Monsters[mid];
-
-	Direction md = pnum >= 0 ? GetDirection(monster.position.tile, Players[pnum].position.tile) : monster._mdir;
-	MonsterDeath(mid, pnum, md, sendmsg);
-}
-
 void StartDeathFromMonster(int i, int mid)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -3219,7 +3210,7 @@ void LachdananAi(int i)
 			if (!effect_is_playing(USFX_LACH3) && monster._mgoal == MGOAL_TALKING) {
 				monster.mtalkmsg = TEXT_NONE;
 				Quests[Q_VEIL]._qactive = QUEST_DONE;
-				M_StartKill(i, -1);
+				StartMonsterDeath(i, -1, true);
 			}
 		}
 	}
@@ -3975,6 +3966,15 @@ void M_StartHit(int i, int pnum, int dam)
 	}
 
 	M_StartHit(i, dam);
+}
+
+void StartMonsterDeath(int mid, int pnum, bool sendmsg)
+{
+	assert(mid >= 0 && mid < MAXMONSTERS);
+	Monster &monster = Monsters[mid];
+
+	Direction md = pnum >= 0 ? GetDirection(monster.position.tile, Players[pnum].position.tile) : monster._mdir;
+	MonsterDeath(mid, pnum, md, sendmsg);
 }
 
 void M_StartKill(int i, int pnum)
