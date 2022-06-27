@@ -1099,13 +1099,15 @@ void MonsterDeath(int mid, int pnum, Direction md, bool sendmsg)
 	assert(monster.MType != nullptr);
 
 	if (pnum < MAX_PLRS) {
-		if (pnum >= 0)
+		if (pnum >= 0) {
 			monster.mWhoHit |= 1 << pnum;
+			if (pnum == MyPlayerId)
+				MonsterKillCounts[monster.MType->mtype]++;
+		}
 		if (monster.MType->mtype != MT_GOLEM)
 			AddPlrMonstExper(monster.mLevel, monster.mExp, monster.mWhoHit);
 	}
 
-	MonsterKillCounts[monster.MType->mtype]++;
 	monster._mhitpoints = 0;
 	SetRndSeed(monster._mRndSeed);
 

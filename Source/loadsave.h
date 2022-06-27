@@ -34,6 +34,8 @@ void RemoveEmptyInventory(Player &player);
  */
 void LoadGame(bool firstflag);
 void SaveHotkeys(MpqWriter &saveWriter);
+void SaveStatistics(MpqWriter &saveWriter);
+void LoadStatistics();
 void SaveHeroItems(MpqWriter &saveWriter, Player &player);
 void SaveGameData(MpqWriter &saveWriter);
 void SaveGame();

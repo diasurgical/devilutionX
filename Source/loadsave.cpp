@@ -8,6 +8,7 @@
 #include <climits>
 #include <cstring>
 #include <numeric>
+#include <sstream>
 #include <unordered_map>
 
 #include <SDL.h>
@@ -29,6 +30,7 @@
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
 #include "qol/stash.h"
+#include "qol/statistics.h"
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
@@ -149,6 +151,11 @@ public:
 	bool NextBool32()
 	{
 		return Next<uint32_t>() != 0;
+	}
+
+	size_t getSize() const
+	{
+		return m_size_;
 	}
 };
 
@@ -1918,6 +1925,58 @@ void SaveHotkeys(MpqWriter &saveWriter)
 	// Write the selected spell last
 	file.WriteLE<int32_t>(myPlayer._pRSpell);
 	file.WriteLE<uint8_t>(myPlayer._pRSplType);
+}
+
+void LoadStatistics()
+{
+	InitializePlayerStatistics();
+	LoadHelper file(OpenSaveArchive(gSaveNumber), "statistics");
+	if (!file.IsValid())
+		return;
+
+	std::string readString;
+	size_t sizeFile = file.getSize();
+	for (size_t i = 0; i < sizeFile; i++) {
+		readString += file.NextLE<char>();
+	}
+
+	{
+		StatisticsFile.clear();
+		std::stringstream ss(readString);
+		std::string line;
+		std::string del = "=";
+		while (std::getline(ss, line)) {
+			size_t delPos = line.find(del);
+			if (delPos == std::string::npos)
+				continue;
+			std::string key = line.substr(0, delPos);
+			std::string value = line.substr(delPos + del.size());
+			StatisticsFile[key] = value;
+		}
+	}
+
+	LoadStatisticsFromMap();
+}
+
+void SaveStatistics(MpqWriter &saveWriter)
+{
+	CalculateInGameTime();
+	SaveStatisticsToMap();
+	std::string stringToSave;
+	for (const auto &s : StatisticsFile) {
+		stringToSave += s.first + "=" + s.second + "\n";
+	}
+
+	size_t stringToSaveLength = stringToSave.length();
+	char *charArrayToSave = new char[stringToSaveLength + 1];
+	strcpy(charArrayToSave, stringToSave.c_str());
+
+	SaveHelper file(saveWriter, "statistics", stringToSaveLength);
+	for (size_t i = 0; i < stringToSaveLength; i++) {
+		char charToSave = *(charArrayToSave + i);
+		file.WriteLE<char>(charToSave);
+	}
+	delete[] charArrayToSave;
 }
 
 void LoadHeroItems(Player &player)

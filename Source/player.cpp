@@ -28,6 +28,7 @@
 #include "player.h"
 #include "qol/autopickup.h"
 #include "qol/stash.h"
+#include "qol/statistics.h"
 #include "spells.h"
 #include "stores.h"
 #include "towners.h"
@@ -2627,6 +2628,7 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	InitDungMsgs(player);
 	CreatePlrItems(playerId);
+	InitializePlayerStatistics();
 	SetRndSeed(0);
 }
 
@@ -2773,8 +2775,10 @@ void InitPlayer(Player &player, bool firstTime)
 	if (firstTime) {
 		player._pRSplType = RSPLTYPE_INVALID;
 		player._pRSpell = SPL_INVALID;
-		if (&player == &myPlayer)
+		if (&player == &myPlayer) {
 			LoadHotkeys();
+			LoadStatistics();
+		}
 		player._pSBkSpell = SPL_INVALID;
 		player._pSpell = player._pRSpell;
 		player._pSplType = player._pRSplType;
@@ -3142,6 +3146,7 @@ StartPlayerKill(int pnum, int earflag)
 		}
 	}
 	SetPlayerHitPoints(player, 0);
+	MyPlayerStatistics.deathCount++;
 }
 
 void StripTopGold(Player &player)
