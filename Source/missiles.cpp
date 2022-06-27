@@ -2158,11 +2158,6 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 
 	int playerId = missile._misource;
 
-	for (auto &other : Missiles) {
-		if (other._mitype == MIS_GOLEM && &other != &missile && other._misource == playerId) {
-			return;
-		}
-	}
 	if (Monsters[playerId].position.tile != GolemHoldingCell && playerId == MyPlayerId)
 		M_StartKill(playerId, playerId);
 
