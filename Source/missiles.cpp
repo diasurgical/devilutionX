@@ -1040,8 +1040,7 @@ void InitMissiles()
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_INFRA) {
-				int src = missile._misource;
-				if (src == MyPlayerId)
+				if (missile._misource == MyPlayerId)
 					CalcPlrItemVals(myPlayer, true);
 			}
 		}

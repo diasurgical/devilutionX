@@ -1290,9 +1290,6 @@ bool DoBlock(int pnum)
 
 void DamageArmor(Player &player)
 {
-	int a;
-	Item *pi;
-
 	if (&player != MyPlayer) {
 		return;
 	}
@@ -1301,7 +1298,7 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	a = GenerateRnd(3);
+	int a = GenerateRnd(3);
 	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		a = 1;
 	}
@@ -1309,6 +1306,7 @@ void DamageArmor(Player &player)
 		a = 0;
 	}
 
+	Item *pi;
 	if (a != 0) {
 		pi = &player.InvBody[INVLOC_CHEST];
 	} else {
