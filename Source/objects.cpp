@@ -3899,23 +3899,14 @@ void BreakCrux(Object &crux)
 	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
-void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendmsg)
+void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
 {
 	if (barrel._oSelFlag == 0)
 		return;
-	if (forcebreak) {
-		barrel._oVar1 = 0;
-	} else {
-		barrel._oVar1 -= dam;
-		if (pnum != MyPlayerId && barrel._oVar1 <= 0)
-			barrel._oVar1 = 1;
-	}
-	if (barrel._oVar1 > 0) {
-		PlaySfxLoc(IS_IBOW, barrel.position);
+	if (!forcebreak && pnum != MyPlayerId) {
 		return;
 	}
 
-	barrel._oVar1 = 0;
 	barrel._oAnimFlag = true;
 	barrel._oAnimFrame = 1;
 	barrel._oAnimDelay = 1;
@@ -3944,7 +3935,7 @@ void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendms
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = ObjectAtPosition({ xp, yp }, false);
 				if (adjacentObject != nullptr && adjacentObject->isExplosive() && !adjacentObject->IsBroken()) {
-					BreakBarrel(pnum, *adjacentObject, dam, true, sendmsg);
+					BreakBarrel(pnum, *adjacentObject, true, sendmsg);
 				}
 			}
 		}
@@ -5252,17 +5243,8 @@ void SyncOpObject(int pnum, int cmd, int i)
 
 void BreakObject(int pnum, Object &object)
 {
-	int objdam = 10;
-	if (pnum != -1) {
-		Player &player = Players[pnum];
-		int mind = player._pIMinDam;
-		int maxd = player._pIMaxDam;
-		objdam = GenerateRnd(maxd - mind + 1) + mind;
-		objdam += player._pDamageMod + player._pIBonusDamMod + objdam * player._pIBonusDam / 100;
-	}
-
 	if (object.IsBarrel()) {
-		BreakBarrel(pnum, object, objdam, false, true);
+		BreakBarrel(pnum, object, false, true);
 	} else if (object.IsCrux()) {
 		BreakCrux(object);
 	}
@@ -5273,7 +5255,6 @@ void DeltaSyncBreakObj(Object &object)
 	if (!object.IsBarrel() || object._oSelFlag == 0)
 		return;
 
-	object._oVar1 = 0;
 	object._oSolidFlag = false;
 	object._oMissFlag = true;
 	object._oBreak = -1;
@@ -5286,7 +5267,7 @@ void DeltaSyncBreakObj(Object &object)
 void SyncBreakObj(int pnum, Object &object)
 {
 	if (object.IsBarrel()) {
-		BreakBarrel(pnum, object, 0, true, false);
+		BreakBarrel(pnum, object, true, false);
 	}
 }
 
