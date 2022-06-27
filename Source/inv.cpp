@@ -1946,9 +1946,6 @@ Item &GetInventoryItem(Player &player, int location)
 
 bool UseInvItem(int pnum, int cii)
 {
-	int c;
-	Item *item;
-
 	Player &player = Players[pnum];
 
 	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId)
@@ -1961,6 +1958,8 @@ bool UseInvItem(int pnum, int cii)
 		return false;
 
 	bool speedlist = false;
+	int c;
+	Item *item;
 	if (cii <= INVITEM_INV_LAST) {
 		c = cii - INVITEM_INV_FIRST;
 		item = &player.InvList[c];
