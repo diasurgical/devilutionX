@@ -249,7 +249,7 @@ struct ObjectData {
 	dungeon_type olvltype;
 	theme_id otheme;
 	quest_id oquest;
-	int oAnimFlag;  // TODO Create enum
+	bool oAnimFlag;
 	int oAnimDelay; // Tick length of each frame in the current animation
 	int oAnimLen;   // Number of frames in current animation
 	uint16_t oAnimWidth;
