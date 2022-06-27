@@ -2551,10 +2551,10 @@ void OperatePedistal(int pnum, int i)
 	}
 }
 
-bool OperateShrineMysterious(int pnum)
+void OperateShrineMysterious(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2579,16 +2579,16 @@ bool OperateShrineMysterious(int pnum)
 	}
 
 	CheckStats(player);
+	CalcPlrInv(player, true);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_MYSTERIOUS);
-
-	return true;
 }
 
-bool OperateShrineHidden(int pnum)
+void OperateShrineHidden(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2632,14 +2632,12 @@ bool OperateShrineHidden(int pnum)
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_HIDDEN);
-
-	return true;
 }
 
-bool OperateShrineGloomy(int pnum)
+void OperateShrineGloomy(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return true;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2667,15 +2665,15 @@ bool OperateShrineGloomy(int pnum)
 		}
 	}
 
-	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
+	CalcPlrInv(Players[pnum], true);
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
 }
 
-bool OperateShrineWeird(int pnum)
+void OperateShrineWeird(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return true;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2698,14 +2696,17 @@ bool OperateShrineWeird(int pnum)
 		}
 	}
 
-	InitDiabloMsg(EMSG_SHRINE_WEIRD);
+	CalcPlrInv(Players[pnum], true);
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_WEIRD);
 }
 
-bool OperateShrineMagical(int pnum)
+void OperateShrineMagical(int pnum)
 {
 	Player &player = Players[pnum];
+
+	if (pnum != MyPlayerId)
+		return;
 
 	AddMissile(
 	    player.position.tile,
@@ -2717,47 +2718,40 @@ bool OperateShrineMagical(int pnum)
 	    0,
 	    2 * leveltype);
 
-	if (pnum != MyPlayerId)
-		return false;
-
 	InitDiabloMsg(EMSG_SHRINE_MAGICAL);
-
-	return true;
 }
 
-bool OperateShrineStone(int pnum)
+void OperateShrineStone(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return true;
+		return;
 
 	for (Item &item : PlayerItemsRange { Players[pnum] }) {
 		if (item._itype == ItemType::Staff)
-			item._iCharges = item._iMaxCharges; // belt items don't have charges?
+			item._iCharges = item._iMaxCharges;
 	}
 
-	InitDiabloMsg(EMSG_SHRINE_STONE);
+	force_redraw = 255;
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_STONE);
 }
 
-bool OperateShrineReligious(int pnum)
+void OperateShrineReligious(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return true;
+		return;
 
 	for (Item &item : PlayerItemsRange { Players[pnum] }) {
-		item._iDurability = item._iMaxDur; // belt items don't have durability?
+		item._iDurability = item._iMaxDur;
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_RELIGIOUS);
-
-	return true;
 }
 
-bool OperateShrineEnchanted(int pnum)
+void OperateShrineEnchanted(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2790,11 +2784,9 @@ bool OperateShrineEnchanted(int pnum)
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_ENCHANTED);
-
-	return true;
 }
 
-bool OperateShrineThaumaturgic(int pnum)
+void OperateShrineThaumaturgic(int pnum)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		int v1 = ActiveObjects[j];
@@ -2807,17 +2799,15 @@ bool OperateShrineThaumaturgic(int pnum)
 	}
 
 	if (pnum != MyPlayerId)
-		return true;
+		return;
 
 	InitDiabloMsg(EMSG_SHRINE_THAUMATURGIC);
-
-	return true;
 }
 
-bool OperateShrineCostOfWisdom(int pnum, spell_id spellId, diablo_message message)
+void OperateShrineCostOfWisdom(int pnum, spell_id spellId, diablo_message message)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2844,12 +2834,12 @@ bool OperateShrineCostOfWisdom(int pnum, spell_id spellId, diablo_message messag
 		player._pMaxManaBase = 0;
 	}
 
-	InitDiabloMsg(message);
+	force_redraw = 255;
 
-	return true;
+	InitDiabloMsg(message);
 }
 
-bool OperateShrineCryptic(int pnum)
+void OperateShrineCryptic(int pnum)
 {
 	Player &player = Players[pnum];
 
@@ -2864,20 +2854,20 @@ bool OperateShrineCryptic(int pnum)
 	    2 * leveltype);
 
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
 
 	InitDiabloMsg(EMSG_SHRINE_CRYPTIC);
 
-	return true;
+	force_redraw = 255;
 }
 
-bool OperateShrineEldritch(int pnum)
+void OperateShrineEldritch(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return true;
+		return;
 
 	for (Item &item : InventoryAndBeltPlayerItemsRange { Players[pnum] }) {
 		if (item._itype != ItemType::Misc) {
@@ -2895,24 +2885,24 @@ bool OperateShrineEldritch(int pnum)
 		}
 	}
 
-	InitDiabloMsg(EMSG_SHRINE_ELDRITCH);
+	force_redraw = 255;
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_ELDRITCH);
 }
 
-bool OperateShrineEerie(int pnum)
+void OperateShrineEerie(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
 	ModifyPlrMag(player, 2);
 	CheckStats(player);
+	CalcPlrInv(player, true);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_EERIE);
-
-	return true;
 }
 
 /**
@@ -2923,10 +2913,10 @@ bool OperateShrineEerie(int pnum)
  * @return false if the shrine was activated by another player in a multiplayer game and
  *               no changes were made by this instance, true otherwise.
  */
-bool OperateShrineDivine(int pnum, Point spawnPosition)
+void OperateShrineDivine(int pnum, Point spawnPosition)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2943,27 +2933,25 @@ bool OperateShrineDivine(int pnum, Point spawnPosition)
 	player._pHitPoints = player._pMaxHP;
 	player._pHPBase = player._pMaxHPBase;
 
-	InitDiabloMsg(EMSG_SHRINE_DIVINE);
+	force_redraw = 255;
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_DIVINE);
 }
 
-bool OperateShrineHoly(int pnum)
+void OperateShrineHoly(int pnum)
 {
 	AddMissile(Players[pnum].position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
 
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	InitDiabloMsg(EMSG_SHRINE_HOLY);
-
-	return true;
 }
 
-bool OperateShrineSpiritual(int pnum)
+void OperateShrineSpiritual(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -2979,15 +2967,13 @@ bool OperateShrineSpiritual(int pnum)
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_SPIRITUAL);
-
-	return true;
 }
 
-bool OperateShrineSpooky(int pnum)
+void OperateShrineSpooky(int pnum)
 {
 	if (pnum == MyPlayerId) {
 		InitDiabloMsg(EMSG_SHRINE_SPOOKY1);
-		return true;
+		return;
 	}
 
 	Player &myPlayer = *MyPlayer;
@@ -2997,100 +2983,90 @@ bool OperateShrineSpooky(int pnum)
 	myPlayer._pMana = myPlayer._pMaxMana;
 	myPlayer._pManaBase = myPlayer._pMaxManaBase;
 
-	InitDiabloMsg(EMSG_SHRINE_SPOOKY2);
+	force_redraw = 255;
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_SPOOKY2);
 }
 
-bool OperateShrineAbandoned(int pnum)
+void OperateShrineAbandoned(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
 	ModifyPlrDex(player, 2);
 	CheckStats(player);
-
-	if (pnum != MyPlayerId)
-		return true;
+	CalcPlrInv(player, true);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_ABANDONED);
-
-	return true;
 }
 
-bool OperateShrineCreepy(int pnum)
+void OperateShrineCreepy(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
 	ModifyPlrStr(player, 2);
 	CheckStats(player);
-
-	if (pnum != MyPlayerId)
-		return true;
+	CalcPlrInv(player, true);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_CREEPY);
-
-	return true;
 }
 
-bool OperateShrineQuiet(int pnum)
+void OperateShrineQuiet(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
 	ModifyPlrVit(player, 2);
 	CheckStats(player);
-
-	if (pnum != MyPlayerId)
-		return true;
+	CalcPlrInv(player, true);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_QUIET);
-
-	return true;
 }
 
-bool OperateShrineSecluded(int pnum)
+void OperateShrineSecluded(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return true;
+		return;
 
 	for (int x = 0; x < DMAXX; x++)
 		for (int y = 0; y < DMAXY; y++)
 			UpdateAutomapExplorer({ x, y }, MAP_EXP_SHRINE);
 
 	InitDiabloMsg(EMSG_SHRINE_SECLUDED);
-
-	return true;
 }
 
-bool OperateShrineGlimmering(int pnum)
+void OperateShrineGlimmering(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	for (Item &item : PlayerItemsRange { Players[pnum] }) {
 		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified) {
-			item._iIdentified = true; // belt items can't be magical?
+			item._iIdentified = true;
 		}
 	}
 
-	InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
+	CalcPlrInv(Players[pnum], true);
+	force_redraw = 255;
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
 }
 
-bool OperateShrineTainted(int pnum)
+void OperateShrineTainted(int pnum)
 {
 	if (pnum == MyPlayerId) {
 		InitDiabloMsg(EMSG_SHRINE_TAINTED1);
-		return true;
+		return;
 	}
 
 	int r = GenerateRnd(4);
@@ -3108,10 +3084,10 @@ bool OperateShrineTainted(int pnum)
 	ModifyPlrVit(player, v4);
 
 	CheckStats(player);
+	CalcPlrInv(player, true);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_TAINTED2);
-
-	return true;
 }
 
 /**
@@ -3119,13 +3095,11 @@ bool OperateShrineTainted(int pnum)
  *        firewall near the shrine that will spread towards the player
  * @param pnum The player that activated the shrine
  * @param spawnPosition Start location for the firewall
- * @return false if the current player did not activate the shrine (i.e. it's a multiplayer
- *         game) and we bailed early to avoid doubling the effects, true otherwise.
  */
-bool OperateShrineOily(int pnum, Point spawnPosition)
+void OperateShrineOily(int pnum, Point spawnPosition)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -3153,6 +3127,8 @@ bool OperateShrineOily(int pnum, Point spawnPosition)
 	}
 
 	CheckStats(Players[pnum]);
+	CalcPlrInv(Players[pnum], true);
+	force_redraw = 255;
 
 	AddMissile(
 	    spawnPosition,
@@ -3165,14 +3141,12 @@ bool OperateShrineOily(int pnum, Point spawnPosition)
 	    0);
 
 	InitDiabloMsg(EMSG_SHRINE_OILY);
-
-	return true;
 }
 
-bool OperateShrineGlowing(int pnum)
+void OperateShrineGlowing(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -3185,20 +3159,16 @@ bool OperateShrineGlowing(int pnum)
 	else
 		player._pExperience = 0;
 
-	if (*sgOptions.Gameplay.experienceBar)
-		force_redraw = 255;
-
 	CheckStats(player);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_GLOWING);
-
-	return true;
 }
 
-bool OperateShrineMendicant(int pnum)
+void OperateShrineMendicant(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -3206,23 +3176,20 @@ bool OperateShrineMendicant(int pnum)
 	AddPlrExperience(player, player._pLevel, gold);
 	TakePlrsMoney(gold);
 
-	CheckStats(player);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_MENDICANT);
-
-	return true;
 }
 
 /**
  * @brief Grants experience to the player based on their current level while also triggering a magic trap
  * @param pnum The player that activated the shrine
  * @param spawnPosition The trap results in casting flash from this location targeting the player
- * @return false if the current player didn't activate the shrine (to avoid doubling the effect), true otherwise
  */
-bool OperateShrineSparkling(int pnum, Point spawnPosition)
+void OperateShrineSparkling(int pnum, Point spawnPosition)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -3238,23 +3205,20 @@ bool OperateShrineSparkling(int pnum, Point spawnPosition)
 	    3 * currlevel + 2,
 	    0);
 
-	CheckStats(player);
+	force_redraw = 255;
 
 	InitDiabloMsg(EMSG_SHRINE_SPARKLING);
-
-	return true;
 }
 
 /**
  * @brief Spawns a town portal near the active player
  * @param pnum The player that activated the shrine
  * @param spawnPosition The position of the shrine, the portal will be placed on the side closest to the player
- * @return false if the current player didn't activate the shrine (to avoid doubling the effect), true otherwise
  */
-bool OperateShrineTown(int pnum, Point spawnPosition)
+void OperateShrineTown(int pnum, Point spawnPosition)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &myPlayer = *MyPlayer;
 
@@ -3269,29 +3233,27 @@ bool OperateShrineTown(int pnum, Point spawnPosition)
 	    0);
 
 	InitDiabloMsg(EMSG_SHRINE_TOWN);
-
-	return true;
 }
 
-bool OperateShrineShimmering(int pnum)
+void OperateShrineShimmering(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
 
-	InitDiabloMsg(EMSG_SHRINE_SHIMMERING);
+	force_redraw = 255;
 
-	return true;
+	InitDiabloMsg(EMSG_SHRINE_SHIMMERING);
 }
 
-bool OperateShrineSolar(int pnum)
+void OperateShrineSolar(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &player = Players[pnum];
 
@@ -3312,14 +3274,14 @@ bool OperateShrineSolar(int pnum)
 	}
 
 	CheckStats(player);
-
-	return true;
+	CalcPlrInv(player, true);
+	force_redraw = 255;
 }
 
-bool OperateShrineMurphys(int pnum)
+void OperateShrineMurphys(int pnum)
 {
 	if (pnum != MyPlayerId)
-		return false;
+		return;
 
 	Player &myPlayer = *MyPlayer;
 
@@ -3340,167 +3302,130 @@ bool OperateShrineMurphys(int pnum)
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_MURPHYS);
-
-	return true;
 }
 
 void OperateShrine(int pnum, int i, _sfx_id sType)
 {
+	assert(i >= 0 && i < MAXOBJECTS);
+	Object &shrine = Objects[i];
+
+	if (shrine._oSelFlag == 0)
+		return;
+
 	if (dropGoldFlag) {
 		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
-	assert(i >= 0 && i < MAXOBJECTS);
+	SetRndSeed(shrine._oRndSeed);
+	shrine._oSelFlag = 0;
 
-	if (Objects[i]._oSelFlag == 0)
-		return;
+	PlaySfxLoc(sType, shrine.position);
+	shrine._oAnimFlag = true;
+	shrine._oAnimDelay = 1;
 
-	SetRndSeed(Objects[i]._oRndSeed);
-	Objects[i]._oSelFlag = 0;
-
-	PlaySfxLoc(sType, Objects[i].position);
-	Objects[i]._oAnimFlag = true;
-	Objects[i]._oAnimDelay = 1;
-
-	switch (Objects[i]._oVar1) {
+	switch (shrine._oVar1) {
 	case ShrineMysterious:
-		if (!OperateShrineMysterious(pnum))
-			return;
+		OperateShrineMysterious(pnum);
 		break;
 	case ShrineHidden:
-		if (!OperateShrineHidden(pnum))
-			return;
+		OperateShrineHidden(pnum);
 		break;
 	case ShrineGloomy:
-		if (!OperateShrineGloomy(pnum))
-			return;
+		OperateShrineGloomy(pnum);
 		break;
 	case ShrineWeird:
-		if (!OperateShrineWeird(pnum))
-			return;
+		OperateShrineWeird(pnum);
 		break;
 	case ShrineMagical:
 	case ShrineMagicaL2:
-		if (!OperateShrineMagical(pnum))
-			return;
+		OperateShrineMagical(pnum);
 		break;
 	case ShrineStone:
-		if (!OperateShrineStone(pnum))
-			return;
+		OperateShrineStone(pnum);
 		break;
 	case ShrineReligious:
-		if (!OperateShrineReligious(pnum))
-			return;
+		OperateShrineReligious(pnum);
 		break;
 	case ShrineEnchanted:
-		if (!OperateShrineEnchanted(pnum))
-			return;
+		OperateShrineEnchanted(pnum);
 		break;
 	case ShrineThaumaturgic:
-		if (!OperateShrineThaumaturgic(pnum))
-			return;
+		OperateShrineThaumaturgic(pnum);
 		break;
 	case ShrineFascinating:
-		if (!OperateShrineCostOfWisdom(pnum, SPL_FIREBOLT, EMSG_SHRINE_FASCINATING))
-			return;
+		OperateShrineCostOfWisdom(pnum, SPL_FIREBOLT, EMSG_SHRINE_FASCINATING);
 		break;
 	case ShrineCryptic:
-		if (!OperateShrineCryptic(pnum))
-			return;
+		OperateShrineCryptic(pnum);
 		break;
 	case ShrineEldritch:
-		if (!OperateShrineEldritch(pnum))
-			return;
+		OperateShrineEldritch(pnum);
 		break;
 	case ShrineEerie:
-		if (!OperateShrineEerie(pnum))
-			return;
+		OperateShrineEerie(pnum);
 		break;
 	case ShrineDivine:
-		if (!OperateShrineDivine(pnum, Objects[i].position))
-			return;
+		OperateShrineDivine(pnum, shrine.position);
 		break;
 	case ShrineHoly:
-		if (!OperateShrineHoly(pnum))
-			return;
+		OperateShrineHoly(pnum);
 		break;
 	case ShrineSacred:
-		if (!OperateShrineCostOfWisdom(pnum, SPL_CBOLT, EMSG_SHRINE_SACRED))
-			return;
+		OperateShrineCostOfWisdom(pnum, SPL_CBOLT, EMSG_SHRINE_SACRED);
 		break;
 	case ShrineSpiritual:
-		if (!OperateShrineSpiritual(pnum))
-			return;
+		OperateShrineSpiritual(pnum);
 		break;
 	case ShrineSpooky:
-		if (!OperateShrineSpooky(pnum))
-			return;
+		OperateShrineSpooky(pnum);
 		break;
 	case ShrineAbandoned:
-		if (!OperateShrineAbandoned(pnum))
-			return;
+		OperateShrineAbandoned(pnum);
 		break;
 	case ShrineCreepy:
-		if (!OperateShrineCreepy(pnum))
-			return;
+		OperateShrineCreepy(pnum);
 		break;
 	case ShrineQuiet:
-		if (!OperateShrineQuiet(pnum))
-			return;
+		OperateShrineQuiet(pnum);
 		break;
 	case ShrineSecluded:
-		if (!OperateShrineSecluded(pnum))
-			return;
+		OperateShrineSecluded(pnum);
 		break;
 	case ShrineOrnate:
-		if (!OperateShrineCostOfWisdom(pnum, SPL_HBOLT, EMSG_SHRINE_ORNATE))
-			return;
+		OperateShrineCostOfWisdom(pnum, SPL_HBOLT, EMSG_SHRINE_ORNATE);
 		break;
 	case ShrineGlimmering:
-		if (!OperateShrineGlimmering(pnum))
-			return;
+		OperateShrineGlimmering(pnum);
 		break;
 	case ShrineTainted:
-		if (!OperateShrineTainted(pnum))
-			return;
+		OperateShrineTainted(pnum);
 		break;
 	case ShrineOily:
-		if (!OperateShrineOily(pnum, Objects[i].position))
-			return;
+		OperateShrineOily(pnum, shrine.position);
 		break;
 	case ShrineGlowing:
-		if (!OperateShrineGlowing(pnum))
-			return;
+		OperateShrineGlowing(pnum);
 		break;
 	case ShrineMendicant:
-		if (!OperateShrineMendicant(pnum))
-			return;
+		OperateShrineMendicant(pnum);
 		break;
 	case ShrineSparkling:
-		if (!OperateShrineSparkling(pnum, Objects[i].position))
-			return;
+		OperateShrineSparkling(pnum, shrine.position);
 		break;
 	case ShrineTown:
-		if (!OperateShrineTown(pnum, Objects[i].position))
-			return;
+		OperateShrineTown(pnum, shrine.position);
 		break;
 	case ShrineShimmering:
-		if (!OperateShrineShimmering(pnum))
-			return;
+		OperateShrineShimmering(pnum);
 		break;
 	case ShrineSolar:
-		if (!OperateShrineSolar(pnum))
-			return;
+		OperateShrineSolar(pnum);
 		break;
 	case ShrineMurphys:
-		if (!OperateShrineMurphys(pnum))
-			return;
+		OperateShrineMurphys(pnum);
 		break;
 	}
-
-	CalcPlrInv(Players[pnum], true);
-	force_redraw = 255;
 
 	if (pnum == MyPlayerId)
 		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
