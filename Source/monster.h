@@ -276,7 +276,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monsterTypeIndex);
-void monster_some_crypt();
+void WeakenNaKrul();
 void InitGolems();
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);

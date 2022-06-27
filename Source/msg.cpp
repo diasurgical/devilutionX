@@ -2087,7 +2087,7 @@ DWORD OnNakrul(const TCmd *pCmd)
 		}
 		IsUberRoomOpened = true;
 		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
-		monster_some_crypt();
+		WeakenNaKrul();
 	}
 	return sizeof(*pCmd);
 }
