@@ -148,7 +148,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 	}
 }
 
-void SyncMonster(int pnum, const TSyncMonster &monsterSync)
+void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 {
 	const int monsterId = monsterSync._mndx;
 	Monster &monster = Monsters[monsterId];
@@ -165,7 +165,7 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 			delta = 255;
 		}
 
-		if (delta < monsterSync._mdelta || (delta == monsterSync._mdelta && pnum > MyPlayerId)) {
+		if (delta < monsterSync._mdelta || (delta == monsterSync._mdelta && isOwner)) {
 			return;
 		}
 		if (monster.position.future == position) {
@@ -312,7 +312,7 @@ uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 				continue;
 
 			if (GetLevelForMultiplayer(*MyPlayer) == level) {
-				SyncMonster(pnum, monsterSyncs[i]);
+				SyncMonster(pnum > MyPlayerId, monsterSyncs[i]);
 			}
 
 			delta_sync_monster(monsterSyncs[i], level);

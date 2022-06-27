@@ -2145,7 +2145,7 @@ void DeltaOperateLever(Object &object)
 	ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
 }
 
-void OperateLever(int pnum, int i)
+void OperateLever(int i, bool sendmsg)
 {
 	Object &object = Objects[i];
 	if (object._oSelFlag == 0) {
@@ -2161,7 +2161,7 @@ void OperateLever(int pnum, int i)
 		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
 	}
 
-	if (pnum == MyPlayerId)
+	if (sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
@@ -2237,7 +2237,7 @@ void OperateBook(int pnum, Object &book)
 	}
 }
 
-void OperateBookLever(int pnum, int i)
+void OperateBookLever(int i, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2272,7 +2272,7 @@ void OperateBookLever(int pnum, int i)
 		}
 		Objects[i]._oAnimFrame = Objects[i]._oVar6;
 		InitQTextMsg(Objects[i].bookMessage);
-		if (pnum == MyPlayerId)
+		if (sendmsg)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 	}
 }
@@ -4989,7 +4989,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		OperateLever(pnum, i);
+		OperateLever(i, sendmsg);
 		break;
 	case OBJ_BOOK2L:
 		OperateBook(pnum, Objects[i]);
@@ -5015,7 +5015,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(pnum, i);
+		OperateBookLever(i, sendmsg);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -5182,7 +5182,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		OperateLever(pnum, i);
+		OperateLever(i, pnum == MyPlayerId);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -5199,7 +5199,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(pnum, i);
+		OperateBookLever(i, pnum == MyPlayerId);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
