@@ -309,6 +309,8 @@ int ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, Object &object);
+void DeltaSyncOpObject(int cmd, int i);
+void DeltaSyncBreakObj(Object &object);
 void SyncBreakObj(int pnum, Object &object);
 void SyncObjectAnim(Object &object);
 /**
