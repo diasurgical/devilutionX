@@ -2081,7 +2081,10 @@ DWORD OnSetReflect(const TCmd *pCmd, Player &player)
 DWORD OnNakrul(const TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
-		OperateNakrulLever();
+		if (currlevel == 24) {
+			PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
+			SyncNakrulRoom();
+		}
 		IsUberRoomOpened = true;
 		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		monster_some_crypt();

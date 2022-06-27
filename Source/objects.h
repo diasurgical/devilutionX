@@ -318,7 +318,6 @@ void SyncObjectAnim(Object &object);
  * @param object The currently highlighted object
  */
 void GetObjectStr(const Object &object);
-void OperateNakrulLever();
 void SyncNakrulRoom();
 void AddNakrulLeaver();
 
