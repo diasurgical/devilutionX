@@ -500,7 +500,7 @@ bool DoOil(Player &player, int cii);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(const Item &item);
 void PrintItemDur(const Item &item);
-void UseItem(int p, item_misc_id Mid, spell_id spl);
+void UseItem(size_t pnum, item_misc_id Mid, spell_id spl);
 bool UseItemOpensHive(const Item &item, Point position);
 bool UseItemOpensCrypt(const Item &item, Point position);
 void SpawnSmith(int lvl);

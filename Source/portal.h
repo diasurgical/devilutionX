@@ -31,7 +31,7 @@ void ActivatePortal(int i, Point position, int lvl, dungeon_type lvltype, bool s
 void DeactivatePortal(int i);
 bool PortalOnLevel(int i);
 void RemovePortalMissile(int id);
-void SetCurrentPortal(int p);
+void SetCurrentPortal(uint16_t p);
 void GetPortalLevel();
 void GetPortalLvlPos();
 bool PosOkPortal(int lvl, int x, int y);

@@ -19,7 +19,7 @@ Portal Portals[MAXPORTAL];
 namespace {
 
 /** Current portal number (a portal array index). */
-int portalindex;
+uint16_t portalindex;
 
 /** Coordinate of each players portal in town. */
 Point WarpDrop[MAXPORTAL] = {
@@ -124,7 +124,7 @@ void RemovePortalMissile(int id)
 	});
 }
 
-void SetCurrentPortal(int p)
+void SetCurrentPortal(uint16_t p)
 {
 	portalindex = p;
 }
@@ -152,7 +152,7 @@ void GetPortalLevel()
 		leveltype = Portals[portalindex].ltype;
 	}
 
-	if (portalindex == static_cast<int>(MyPlayerId)) {
+	if (portalindex == MyPlayerId) {
 		NetSendCmd(true, CMD_DEACTIVATEPORTAL);
 		DeactivatePortal(portalindex);
 	}
@@ -165,7 +165,7 @@ void GetPortalLvlPos()
 	} else {
 		ViewPosition = Portals[portalindex].position;
 
-		if (portalindex != static_cast<int>(MyPlayerId)) {
+		if (portalindex != MyPlayerId) {
 			ViewPosition.x++;
 			ViewPosition.y++;
 		}

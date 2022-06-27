@@ -66,9 +66,9 @@ void multi_net_ping();
  */
 bool multi_handle_delta();
 void multi_process_network_packets();
-void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size);
+void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const byte *data, size_t size);
 void NetClose();
 bool NetInit(bool bSinglePlayer);
-void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv);
+void recv_plrinfo(size_t pnum, const TCmdPlrInfoHdr &header, bool recv);
 
 } // namespace devilution

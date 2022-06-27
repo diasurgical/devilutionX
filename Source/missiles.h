@@ -138,7 +138,7 @@ extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
-int GetSpellLevel(int playerId, spell_id sn);
+int GetSpellLevel(size_t playerId, spell_id sn);
 
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
@@ -161,7 +161,7 @@ int GetSpellLevel(int playerId, spell_id sn);
  */
 Direction16 GetDirection16(Point p1, Point p2);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
+bool PlayerMHit(size_t pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**
  * @brief Could the missile collide with solid objects? (like walls or closed doors)

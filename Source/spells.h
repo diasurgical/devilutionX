@@ -19,7 +19,7 @@ enum class SpellCheckResult : uint8_t {
 bool IsWallSpell(spell_id spl);
 bool TargetsMonster(spell_id id);
 int GetManaAmount(Player &player, spell_id sn);
-void UseMana(int id, spell_id sn);
+void UseMana(size_t id, spell_id sn);
 SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
 
 /**
@@ -36,7 +36,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
  * @param pnum player index
  * @param rid target player index
  */
-void DoResurrect(int pnum, uint16_t rid);
+void DoResurrect(size_t pnum, size_t rid);
 void DoHealOther(const Player &caster, Player &target);
 int GetSpellBookLevel(spell_id s);
 int GetSpellStaffLevel(spell_id s);

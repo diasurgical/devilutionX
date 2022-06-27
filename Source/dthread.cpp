@@ -14,12 +14,12 @@
 namespace devilution {
 
 struct DThreadPkt {
-	int pnum;
+	size_t pnum;
 	_cmd_id cmd;
 	std::unique_ptr<byte[]> data;
 	uint32_t len;
 
-	DThreadPkt(int pnum, _cmd_id(cmd), std::unique_ptr<byte[]> data, uint32_t len)
+	DThreadPkt(size_t pnum, _cmd_id(cmd), std::unique_ptr<byte[]> data, uint32_t len)
 	    : pnum(pnum)
 	    , cmd(cmd)
 	    , data(std::move(data))
@@ -69,7 +69,7 @@ void dthread_remove_player(uint8_t pnum)
 	});
 }
 
-void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uint32_t len)
+void dthread_send_delta(size_t pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uint32_t len)
 {
 	if (!gbIsMultiplayer || !DthreadRunning)
 		return;

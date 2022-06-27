@@ -19,7 +19,7 @@ public:
 	virtual int create(std::string addrstr) = 0;
 	virtual int join(std::string addrstr) = 0;
 
-	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size);
+	virtual bool SNetReceiveMessage(size_t *sender, void **data, uint32_t *size);
 	virtual bool SNetSendMessage(int playerId, void *data, unsigned int size);
 	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status);
 	virtual bool SNetSendTurn(char *data, unsigned int size);

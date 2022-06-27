@@ -64,7 +64,7 @@ void ClearReadiedSpell(Player &player)
 	}
 }
 
-void PlacePlayer(int pnum)
+void PlacePlayer(size_t pnum)
 {
 	Player &player = Players[pnum];
 
@@ -100,7 +100,7 @@ void PlacePlayer(int pnum)
 
 	dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 
-	if (pnum == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		ViewPosition = newPosition;
 	}
 }
@@ -166,11 +166,11 @@ int GetManaAmount(Player &player, spell_id sn)
 	return ma;
 }
 
-void UseMana(int id, spell_id sn)
+void UseMana(size_t id, spell_id sn)
 {
 	int ma; // mana cost
 
-	if (id != static_cast<int>(MyPlayerId))
+	if (id != MyPlayerId)
 		return;
 
 	Player &myPlayer = *MyPlayer;
@@ -254,9 +254,9 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 }
 
-void DoResurrect(int pnum, uint16_t rid)
+void DoResurrect(size_t pnum, size_t rid)
 {
-	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
+	if (pnum >= MAX_PLRS || rid >= MAX_PLRS) {
 		return;
 	}
 

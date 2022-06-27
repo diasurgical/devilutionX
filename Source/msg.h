@@ -718,7 +718,7 @@ extern int dwRecCount;
 void msg_send_drop_pkt(int pnum, int reason);
 bool msg_wait_resync();
 void run_delta_info();
-void DeltaExportData(int pnum);
+void DeltaExportData(size_t pnum);
 void DeltaSyncJunk();
 void delta_init();
 void delta_kill_monster(int mi, Point position, const Player &player);
@@ -734,7 +734,7 @@ void DeltaLoadLevel();
 void ClearLastSendPlayerCmd();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
 void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int hp, uint8_t cl);
-void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);
+void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
@@ -752,6 +752,6 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
-uint32_t ParseCmd(int pnum, const TCmd *pCmd);
+uint32_t ParseCmd(size_t pnum, const TCmd *pCmd);
 
 } // namespace devilution

@@ -506,7 +506,7 @@ void DrawPlayerIcons(const Surface &out, Player &player, Point position, bool in
  * @param nCel frame
  * @param nWidth width
  */
-void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
+void DrawPlayer(const Surface &out, size_t pnum, Point tilePosition, Point targetBufferPosition)
 {
 	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
@@ -545,10 +545,10 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	if (pnum == pcursplr)
+	if (pnum == static_cast<size_t>(pcursplr))
 		Cl2DrawOutline(out, 165, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 
-	if (pnum == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		Cl2Draw(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 		DrawPlayerIcons(out, player, targetBufferPosition, false);
 		return;
@@ -802,7 +802,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  */
-void DrawPlayerHelper(const Surface &out, int p, Point tilePosition, Point targetBufferPosition)
+void DrawPlayerHelper(const Surface &out, size_t p, Point tilePosition, Point targetBufferPosition)
 {
 	Player &player = Players[p];
 

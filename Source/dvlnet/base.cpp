@@ -184,7 +184,7 @@ void base::RecvLocal(packet &pkt)
 	}
 }
 
-bool base::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
+bool base::SNetReceiveMessage(size_t *sender, void **data, uint32_t *size)
 {
 	poll();
 	if (message_queue.empty())
@@ -275,9 +275,9 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 			playerState.lastTurnValue = turn.Value;
 			turnQueue.pop_front();
 
-			size[i] = sizeof(int32_t);
 			status[i] |= PS_ACTIVE;
 			status[i] |= PS_TURN_ARRIVED;
+			size[i] = sizeof(int32_t);
 			data[i] = reinterpret_cast<char *>(&playerState.lastTurnValue);
 		}
 
@@ -303,7 +303,7 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 
 bool base::SNetSendTurn(char *data, unsigned int size)
 {
-	if (size != sizeof(int32_t))
+	if (size != sizeof(uint32_t))
 		ABORT();
 
 	turn_t turn;

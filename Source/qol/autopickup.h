@@ -8,6 +8,6 @@
 
 namespace devilution {
 
-void AutoPickup(int pnum);
+void AutoPickup(size_t pnum);
 
 } // namespace devilution

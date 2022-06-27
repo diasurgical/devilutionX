@@ -1944,14 +1944,11 @@ Item &GetInventoryItem(Player &player, int location)
 	return player.SpdList[location - INVITEM_BELT_FIRST];
 }
 
-bool UseInvItem(int pnum, int cii)
+bool UseInvItem(size_t pnum, int cii)
 {
-	int c;
-	Item *item;
-
 	Player &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == static_cast<int>(MyPlayerId))
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
@@ -1961,6 +1958,8 @@ bool UseInvItem(int pnum, int cii)
 		return false;
 
 	bool speedlist = false;
+	int c;
+	Item *item;
 	if (cii <= INVITEM_INV_LAST) {
 		c = cii - INVITEM_INV_FIRST;
 		item = &player.InvList[c];
@@ -2050,7 +2049,7 @@ bool UseInvItem(int pnum, int cii)
 	int idata = ItemCAnimTbl[item->_iCurs];
 	if (item->_iMiscId == IMISC_BOOK)
 		PlaySFX(IS_RBOOK);
-	else if (pnum == static_cast<int>(MyPlayerId))
+	else if (pnum == MyPlayerId)
 		PlaySFX(ItemInvSnds[idata]);
 
 	UseItem(pnum, item->_iMiscId, item->_iSpell);

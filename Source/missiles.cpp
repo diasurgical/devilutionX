@@ -182,7 +182,7 @@ void MoveMissilePos(Missile &missile)
 	}
 }
 
-bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
+bool MonsterMHit(size_t pnum, int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
 	auto &monster = Monsters[m];
 
@@ -237,7 +237,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (resist)
 		dam >>= 2;
 
-	if (pnum == static_cast<int>(MyPlayerId))
+	if (pnum == MyPlayerId)
 		monster._mhitpoints -= dam;
 
 	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
@@ -262,7 +262,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	return true;
 }
 
-bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
+bool Plr2PlrMHit(size_t pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
 	Player &player = Players[pnum];
 	auto &target = Players[p];
@@ -342,7 +342,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		dam /= 2;
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
-		if (pnum == static_cast<int>(MyPlayerId))
+		if (pnum == MyPlayerId)
 			NetSendCmdDamage(true, p, dam);
 		target.Say(HeroSpeech::ArghClang);
 		return true;
@@ -352,7 +352,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		StartPlrBlock(p, GetDirection(target.position.tile, player.position.tile));
 		*blocked = true;
 	} else {
-		if (pnum == static_cast<int>(MyPlayerId))
+		if (pnum == MyPlayerId)
 			NetSendCmdDamage(true, p, dam);
 		StartPlrHit(p, dam, false);
 	}
@@ -800,9 +800,9 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	}
 }
 
-int GetSpellLevel(int playerId, spell_id sn)
+int GetSpellLevel(size_t playerId, spell_id sn)
 {
-	if (playerId != static_cast<int>(MyPlayerId))
+	if (playerId != MyPlayerId)
 		return 1; // BUGFIX spell level will be wrong in multiplayer
 
 	Player &player = Players[playerId];
@@ -888,7 +888,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	return true;
 }
 
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked)
+bool PlayerMHit(size_t pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked)
 {
 	*blocked = false;
 
@@ -1004,7 +1004,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 
 	if (resper > 0) {
 		dam -= dam * resper / 100;
-		if (pnum == static_cast<int>(MyPlayerId)) {
+		if (pnum == MyPlayerId) {
 			ApplyPlrDamage(pnum, 0, 0, dam, earflag);
 		}
 
@@ -1014,7 +1014,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		return true;
 	}
 
-	if (pnum == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		ApplyPlrDamage(pnum, 0, 0, dam, earflag);
 	}
 
@@ -1040,8 +1040,7 @@ void InitMissiles()
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_INFRA) {
-				int src = missile._misource;
-				if (src == static_cast<int>(MyPlayerId))
+				if (static_cast<size_t>(missile._misource) == MyPlayerId)
 					CalcPlrItemVals(myPlayer, true);
 			}
 		}
@@ -1052,7 +1051,7 @@ void InitMissiles()
 		myPlayer._pSpellFlags &= ~SpellFlag::RageCooldown;
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_BLODBOIL) {
-				if (missile._misource == static_cast<int>(MyPlayerId)) {
+				if (static_cast<size_t>(missile._misource) == MyPlayerId) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
 					ApplyPlrDamage(MyPlayerId, 0, 1, missingHP + missile.var2);
@@ -1121,7 +1120,7 @@ void AddReflection(Missile &missile, const AddMissileParameter & /*parameter*/)
 	if (player.wReflections + add >= std::numeric_limits<uint16_t>::max())
 		add = 0;
 	player.wReflections += add;
-	if (missile._misource == static_cast<int>(MyPlayerId))
+	if (static_cast<size_t>(missile._misource) == MyPlayerId)
 		NetSendCmdParam1(true, CMD_SETREFLECT, player.wReflections);
 
 	UseMana(missile._misource, SPL_REFLECT);
@@ -1487,7 +1486,7 @@ void AddRing(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddSearch(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	if (missile._misource == static_cast<int>(MyPlayerId))
+	if (static_cast<size_t>(missile._misource) == MyPlayerId)
 		AutoMapShowItems = true;
 	int lvl = 2;
 	if (missile._misource >= 0)
@@ -1876,7 +1875,7 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 			other._mirange = 0;
 	}
 	PutMissile(missile);
-	if (missile._misource == static_cast<int>(MyPlayerId) && !missile._miDelFlag && leveltype != DTYPE_TOWN) {
+	if (static_cast<size_t>(missile._misource) == MyPlayerId && !missile._miDelFlag && leveltype != DTYPE_TOWN) {
 		if (!setlevel) {
 			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, missile.position.tile, currlevel, leveltype, 0);
 		} else {
@@ -1931,7 +1930,7 @@ void AddManashield(Missile &missile, const AddMissileParameter & /*parameter*/)
 		return;
 
 	player.pManaShield = true;
-	if (missile._misource == static_cast<int>(MyPlayerId))
+	if (static_cast<size_t>(missile._misource) == MyPlayerId)
 		NetSendCmd(true, CMD_SETSHIELD);
 
 	if (missile._micaster == TARGET_MONSTERS)
@@ -2157,14 +2156,9 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile._miDelFlag = true;
 
-	int playerId = missile._misource;
+	size_t playerId = static_cast<size_t>(missile._misource);
 
-	for (auto &other : Missiles) {
-		if (other._mitype == MIS_GOLEM && &other != &missile && other._misource == playerId) {
-			return;
-		}
-	}
-	if (Monsters[playerId].position.tile != GolemHoldingCell && playerId == static_cast<int>(MyPlayerId))
+	if (Monsters[playerId].position.tile != GolemHoldingCell && playerId == MyPlayerId)
 		M_StartKill(playerId, playerId);
 
 	UseMana(playerId, SPL_GOLEM);
@@ -2216,7 +2210,7 @@ void AddHealOther(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 	UseMana(missile._misource, SPL_HEALOTHER);
-	if (missile._misource == static_cast<int>(MyPlayerId)) {
+	if (static_cast<size_t>(missile._misource) == MyPlayerId) {
 		NewCursor(CURSOR_HEALOTHER);
 		if (ControlMode != ControlTypes::KeyboardAndMouse)
 			TryIconCurs();
@@ -2250,7 +2244,7 @@ void AddIdentify(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 	UseMana(missile._misource, SPL_IDENTIFY);
-	if (missile._misource == static_cast<int>(MyPlayerId)) {
+	if (static_cast<size_t>(missile._misource) == MyPlayerId) {
 		if (sbookflag)
 			sbookflag = false;
 		if (!invflag) {
@@ -2347,7 +2341,7 @@ void AddRepair(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 	UseMana(missile._misource, SPL_REPAIR);
-	if (missile._misource == static_cast<int>(MyPlayerId)) {
+	if (static_cast<size_t>(missile._misource) == MyPlayerId) {
 		if (sbookflag)
 			sbookflag = false;
 		if (!invflag) {
@@ -2363,7 +2357,7 @@ void AddRecharge(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 	UseMana(missile._misource, SPL_RECHARGE);
-	if (missile._misource == static_cast<int>(MyPlayerId)) {
+	if (static_cast<size_t>(missile._misource) == MyPlayerId) {
 		if (sbookflag)
 			sbookflag = false;
 		if (!invflag) {
@@ -2379,7 +2373,7 @@ void AddDisarm(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 	UseMana(missile._misource, SPL_DISARM);
-	if (missile._misource == static_cast<int>(MyPlayerId)) {
+	if (static_cast<size_t>(missile._misource) == MyPlayerId) {
 		NewCursor(CURSOR_DISARM);
 		if (ControlMode != ControlTypes::KeyboardAndMouse) {
 			if (pcursobj != -1)
@@ -2477,7 +2471,7 @@ void AddHbolt(Missile &missile, const AddMissileParameter &parameter)
 void AddResurrect(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	UseMana(missile._misource, SPL_RESURRECT);
-	if (missile._misource == static_cast<int>(MyPlayerId)) {
+	if (static_cast<size_t>(missile._misource) == MyPlayerId) {
 		NewCursor(CURSOR_RESURRECT);
 		if (ControlMode != ControlTypes::KeyboardAndMouse)
 			TryIconCurs();
@@ -2496,7 +2490,7 @@ void AddTelekinesis(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 	UseMana(missile._misource, SPL_TELEKINESIS);
-	if (missile._misource == static_cast<int>(MyPlayerId))
+	if (static_cast<size_t>(missile._misource) == MyPlayerId)
 		NewCursor(CURSOR_TELEKINESIS);
 }
 
@@ -3028,7 +3022,7 @@ void MI_Search(Missile &missile)
 
 	missile._miDelFlag = true;
 	PlaySfxLoc(IS_CAST7, Players[missile._misource].position.tile);
-	if (missile._misource == static_cast<int>(MyPlayerId))
+	if (static_cast<size_t>(missile._misource) == MyPlayerId)
 		AutoMapShowItems = false;
 }
 
@@ -3440,7 +3434,7 @@ void MI_Teleport(Missile &missile)
 		return;
 	}
 
-	int id = missile._misource;
+	size_t id = static_cast<size_t>(missile._misource);
 	Player &player = Players[id];
 
 	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
@@ -3455,7 +3449,7 @@ void MI_Teleport(Missile &missile)
 		ChangeLightXY(player._plid, player.position.tile);
 		ChangeVisionXY(player._pvid, player.position.tile);
 	}
-	if (id == static_cast<int>(MyPlayerId)) {
+	if (id == MyPlayerId) {
 		ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 	}
 }

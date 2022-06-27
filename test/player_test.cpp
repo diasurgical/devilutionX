@@ -5,10 +5,10 @@
 using namespace devilution;
 
 namespace devilution {
-extern bool TestPlayerDoGotHit(int pnum);
+extern bool TestPlayerDoGotHit(size_t pnum);
 }
 
-int RunBlockTest(int frames, ItemSpecialEffect flags)
+size_t RunBlockTest(int frames, ItemSpecialEffect flags)
 {
 	int pnum = 0;
 	Player &player = Players[pnum];
@@ -17,7 +17,7 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 	player._pIFlags = flags;
 	StartPlrHit(pnum, 5, false);
 
-	int i = 1;
+	size_t i = 1;
 	for (; i < 100; i++) {
 		TestPlayerDoGotHit(pnum);
 		if (player._pmode != PM_GOTHIT)
@@ -42,7 +42,7 @@ constexpr int Rogue = 7;
 constexpr int Sorcerer = 8;
 
 struct BlockTestCase {
-	int expectedRecoveryFrame;
+	size_t expectedRecoveryFrame;
 	int maxRecoveryFrame;
 	ItemSpecialEffect itemFlags;
 };

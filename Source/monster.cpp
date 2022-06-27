@@ -1293,7 +1293,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	}
 }
 
-void CheckReflect(int mon, int pnum, int dam)
+void CheckReflect(size_t mon, size_t pnum, int dam)
 {
 	auto &monster = Monsters[mon];
 	Player &player = Players[pnum];
@@ -1311,9 +1311,9 @@ void CheckReflect(int mon, int pnum, int dam)
 		M_StartHit(mon, pnum, mdam);
 }
 
-void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
+void MonsterAttackPlayer(size_t i, size_t pnum, int hit, int minDam, int maxDam)
 {
-	assert(i >= 0 && i < MAXMONSTERS);
+	assert(i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 
@@ -1361,14 +1361,14 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	if (blkper < blk) {
 		Direction dir = GetDirection(player.position.tile, monster.position.tile);
 		StartPlrBlock(pnum, dir);
-		if (pnum == static_cast<int>(MyPlayerId) && player.wReflections > 0) {
+		if (pnum == MyPlayerId && player.wReflections > 0) {
 			int dam = GenerateRnd(((maxDam - minDam) << 6) + 1) + (minDam << 6);
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			CheckReflect(i, pnum, dam);
 		}
 		return;
 	}
-	if (monster.MType->mtype == MT_YZOMBIE && pnum == static_cast<int>(MyPlayerId)) {
+	if (monster.MType->mtype == MT_YZOMBIE && pnum == MyPlayerId) {
 		if (player._pMaxHP > 64) {
 			if (player._pMaxHPBase > 64) {
 				player._pMaxHP -= 64;
@@ -1384,7 +1384,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	}
 	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
-	if (pnum == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		if (player.wReflections > 0)
 			CheckReflect(i, pnum, dam);
 		ApplyPlrDamage(pnum, 0, 0, dam);
@@ -3720,7 +3720,7 @@ void InitMonsterGFX(int monst)
 		MissileSpriteData[MFILE_FIREPLAR].LoadGFX();
 }
 
-void monster_some_crypt()
+void WeakenNaKrul()
 {
 	if (currlevel != 24 || UberDiabloMonsterIndex < 0 || UberDiabloMonsterIndex >= ActiveMonsterCount)
 		return;
@@ -3949,12 +3949,12 @@ void M_StartHit(int i, int dam)
 	}
 }
 
-void M_StartHit(int i, int pnum, int dam)
+void M_StartHit(int i, size_t pnum, int dam)
 {
 	Monster &monster = Monsters[i];
 
 	monster.mWhoHit |= 1 << pnum;
-	if (pnum == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		delta_monster_hp(i, monster._mhitpoints, *MyPlayer);
 		NetSendCmdMonDmg(false, i, dam);
 	}
@@ -3968,21 +3968,21 @@ void M_StartHit(int i, int pnum, int dam)
 	M_StartHit(i, dam);
 }
 
-void StartMonsterDeath(int mid, int pnum, bool sendmsg)
+void StartMonsterDeath(size_t mid, int pnum, bool sendmsg)
 {
-	assert(mid >= 0 && mid < MAXMONSTERS);
+	assert(mid < MAXMONSTERS);
 	Monster &monster = Monsters[mid];
 
 	Direction md = pnum >= 0 ? GetDirection(monster.position.tile, Players[pnum].position.tile) : monster._mdir;
 	MonsterDeath(mid, pnum, md, sendmsg);
 }
 
-void M_StartKill(int i, int pnum)
+void M_StartKill(size_t i, size_t pnum)
 {
-	assert(i >= 0 && i < MAXMONSTERS);
+	assert(i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (static_cast<int>(MyPlayerId) == pnum) {
+	if (pnum == MyPlayerId) {
 		delta_kill_monster(i, monster.position.tile, *MyPlayer);
 		if (i != pnum) {
 			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, i);
@@ -4829,13 +4829,13 @@ void TalktoMonster(Monster &monster)
 	}
 }
 
-void SpawnGolem(int i, Point position, Missile &missile)
+void SpawnGolem(size_t pnum, Point position, Missile &missile)
 {
-	assert(i >= 0 && static_cast<size_t>(i) < Players.size());
-	Player &player = Players[i];
-	auto &golem = Monsters[i];
+	assert(pnum < Players.size());
+	Player &player = Players[pnum];
+	auto &golem = Monsters[pnum];
 
-	dMonster[position.x][position.y] = i + 1;
+	dMonster[position.x][position.y] = pnum + 1;
 	golem.position.tile = position;
 	golem.position.future = position;
 	golem.position.old = position;
@@ -4849,7 +4849,7 @@ void SpawnGolem(int i, Point position, Missile &missile)
 	golem._mFlags |= MFLAG_GOLEM;
 	StartSpecialStand(golem, Direction::South);
 	UpdateEnemy(golem);
-	if (i == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		NetSendCmdGolem(
 		    golem.position.tile.x,
 		    golem.position.tile.y,

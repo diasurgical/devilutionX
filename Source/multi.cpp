@@ -195,18 +195,18 @@ void MonsterSeeds()
 		Monsters[i]._mAISeed = seed + i;
 }
 
-void HandleTurnUpperBit(int pnum)
+void HandleTurnUpperBit(size_t pnum)
 {
 	size_t i;
 
 	for (i = 0; i < Players.size(); i++) {
-		if ((player_state[i] & PS_CONNECTED) != 0 && i != static_cast<size_t>(pnum))
+		if ((player_state[i] & PS_CONNECTED) != 0 && i != pnum)
 			break;
 	}
 
 	if (MyPlayerId == i) {
 		sgbSendDeltaTbl[pnum] = true;
-	} else if (static_cast<int>(MyPlayerId) == pnum) {
+	} else if (pnum == MyPlayerId) {
 		gbDeltaSender = i;
 	}
 }
@@ -224,9 +224,9 @@ void ParseTurn(int pnum, uint32_t turn)
 	}
 }
 
-void PlayerLeftMsg(int pnum, bool left)
+void PlayerLeftMsg(size_t pnum, bool left)
 {
-	if (pnum == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		return;
 	}
 
@@ -307,7 +307,7 @@ void BeginTimeout()
 	CheckDropPlayer();
 }
 
-void HandleAllPackets(int pnum, const byte *data, size_t size)
+void HandleAllPackets(size_t pnum, const byte *data, size_t size)
 {
 	for (unsigned offset = 0; offset < size;) {
 		int messageSize = ParseCmd(pnum, reinterpret_cast<const TCmd *>(&data[offset]));
@@ -535,8 +535,8 @@ void multi_msg_countdown()
 {
 	for (size_t i = 0; i < Players.size(); i++) {
 		if ((player_state[i] & PS_TURN_ARRIVED) != 0) {
-			if (gdwMsgLenTbl[i] == 4)
-				ParseTurn(static_cast<int>(i), *(DWORD *)glpMsgTbl[i]);
+			if (gdwMsgLenTbl[i] == sizeof(uint32_t))
+				ParseTurn(i, *(uint32_t *)glpMsgTbl[i]);
 		}
 	}
 }
@@ -596,7 +596,7 @@ void multi_process_network_packets()
 	ClearPlayerLeftState();
 	ProcessTmsgs();
 
-	int dwID = -1;
+	size_t dwID = std::numeric_limits<size_t>::max();
 	TPktHdr *pkt;
 	uint32_t dwMsgSize = 0;
 	while (SNetReceiveMessage(&dwID, (void **)&pkt, &dwMsgSize)) {
@@ -604,7 +604,7 @@ void multi_process_network_packets()
 		ClearPlayerLeftState();
 		if (dwMsgSize < sizeof(TPktHdr))
 			continue;
-		if (dwID < 0 || dwID >= MAX_PLRS)
+		if (dwID >= MAX_PLRS)
 			continue;
 		if (pkt->wCheck != LoadBE32("\0\0ip"))
 			continue;
@@ -621,7 +621,7 @@ void multi_process_network_packets()
 		}
 		Point syncPosition = { pkt->px, pkt->py };
 		player.position.last = syncPosition;
-		if (dwID != static_cast<int>(MyPlayerId)) {
+		if (dwID != MyPlayerId) {
 			assert(gbBufferMsgs != 2);
 			player._pHitPoints = pkt->php;
 			player._pMaxHP = pkt->pmhp;
@@ -664,9 +664,9 @@ void multi_process_network_packets()
 	CheckPlayerInfoTimeouts();
 }
 
-void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
+void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const byte *data, size_t size)
 {
-	assert(pnum != static_cast<int>(MyPlayerId));
+	assert(pnum != MyPlayerId);
 	assert(data != nullptr);
 	assert(size <= 0x0ffff);
 
@@ -786,14 +786,14 @@ bool NetInit(bool bSinglePlayer)
 	return true;
 }
 
-void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
+void recv_plrinfo(size_t pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
 	static PlayerPack PackedPlayerBuffer[MAX_PLRS];
 
-	if (static_cast<int>(MyPlayerId) == pnum) {
+	if (pnum == MyPlayerId) {
 		return;
 	}
-	assert(pnum >= 0 && pnum < MAX_PLRS);
+	assert(pnum < MAX_PLRS);
 	Player &player = Players[pnum];
 	auto &packedPlayer = PackedPlayerBuffer[pnum];
 
