@@ -272,10 +272,8 @@ void ChangeEquipment(Player &player, inv_body_loc bodyLocation, const Item &item
 	}
 }
 
-bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool persistItem)
+bool AutoEquip(Player &player, const Item &item, inv_body_loc bodyLocation, bool persistItem)
 {
-	Player &player = Players[playerId];
-
 	if (!CanEquip(player, item, bodyLocation)) {
 		return false;
 	}
@@ -283,7 +281,7 @@ bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool p
 	if (persistItem) {
 		ChangeEquipment(player, bodyLocation, item);
 
-		if (*sgOptions.Audio.autoEquipSound && playerId == MyPlayerId) {
+		if (*sgOptions.Audio.autoEquipSound && &player == MyPlayer) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
 		}
 
@@ -566,10 +564,8 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 	}
 }
 
-void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropItem)
+void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
-	Player &player = Players[pnum];
-
 	if (player._pmode > PM_WALK3) {
 		return;
 	}
@@ -778,7 +774,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 						}
 					}
 					holdItem = player.InvList[iv - 1];
-					automaticallyMoved = automaticallyEquipped = AutoEquip(pnum, holdItem);
+					automaticallyMoved = automaticallyEquipped = AutoEquip(player, holdItem);
 				}
 			}
 
@@ -811,7 +807,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		CalcPlrInv(player, true);
 		holdItem._iStatFlag = player.CanUseItem(holdItem);
 
-		if (pnum == MyPlayerId) {
+		if (&player == MyPlayer) {
 			if (automaticallyEquipped) {
 				PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
 			} else if (!automaticMove || automaticallyMoved) {
@@ -1254,14 +1250,14 @@ bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem)
 	return false;
 }
 
-bool AutoEquip(int playerId, const Item &item, bool persistItem)
+bool AutoEquip(Player &player, const Item &item, bool persistItem)
 {
 	if (!CanEquip(item)) {
 		return false;
 	}
 
 	for (int bodyLocation = INVLOC_HEAD; bodyLocation < NUM_INVLOC; bodyLocation++) {
-		if (AutoEquip(playerId, item, (inv_body_loc)bodyLocation, persistItem)) {
+		if (AutoEquip(player, item, (inv_body_loc)bodyLocation, persistItem)) {
 			return true;
 		}
 	}
@@ -1511,7 +1507,7 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 	} else if (IsStashOpen && isCtrlHeld) {
 		TransferItemToStash(*MyPlayer, pcursinvitem);
 	} else {
-		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld, isCtrlHeld);
+		CheckInvCut(*MyPlayer, MousePosition, isShiftHeld, isCtrlHeld);
 	}
 }
 
@@ -1597,10 +1593,9 @@ std::optional<Point> FindAdjacentPositionForItem(Point origin, Direction facing)
 	return {};
 }
 
-void AutoGetItem(int pnum, Item *itemPointer, int ii)
+void AutoGetItem(Player &player, Item *itemPointer, int ii)
 {
 	Item &item = *itemPointer;
-	Player &player = Players[pnum];
 
 	if (dropGoldFlag) {
 		CloseGoldDrop();
@@ -1623,7 +1618,7 @@ void AutoGetItem(int pnum, Item *itemPointer, int ii)
 			SetPlrHandGoldCurs(item);
 		}
 	} else {
-		done = AutoEquipEnabled(player, item) && AutoEquip(pnum, item);
+		done = AutoEquipEnabled(player, item) && AutoEquip(player, item);
 		if (done) {
 			autoEquipped = true;
 		}
@@ -1637,7 +1632,7 @@ void AutoGetItem(int pnum, Item *itemPointer, int ii)
 	}
 
 	if (done) {
-		if (!autoEquipped && *sgOptions.Audio.itemPickupSound && pnum == MyPlayerId) {
+		if (!autoEquipped && *sgOptions.Audio.itemPickupSound && &player == MyPlayer) {
 			PlaySFX(IS_IGRAB);
 		}
 
@@ -1645,7 +1640,7 @@ void AutoGetItem(int pnum, Item *itemPointer, int ii)
 		return;
 	}
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		player.Say(HeroSpeech::ICantCarryAnymore);
 	}
 	RespawnItem(item, true);

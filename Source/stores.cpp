@@ -333,7 +333,7 @@ bool StoreAutoPlace(Item &item, bool persistItem)
 {
 	Player &player = *MyPlayer;
 
-	if (AutoEquipEnabled(player, item) && AutoEquip(MyPlayerId, item, persistItem)) {
+	if (AutoEquipEnabled(player, item) && AutoEquip(player, item, persistItem)) {
 		return true;
 	}
 
