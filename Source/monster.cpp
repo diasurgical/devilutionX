@@ -3982,7 +3982,7 @@ void M_StartKill(int monsterId, int pnum)
 	assert(monsterId >= 0 && monsterId < MAXMONSTERS);
 	auto &monster = Monsters[monsterId];
 
-	if (MyPlayerId == pnum) {
+	if (pnum == MyPlayerId) {
 		delta_kill_monster(monsterId, monster.position.tile, *MyPlayer);
 		if (monsterId != pnum) {
 			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monsterId);
