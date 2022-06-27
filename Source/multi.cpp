@@ -531,8 +531,8 @@ void multi_msg_countdown()
 {
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if ((player_state[i] & PS_TURN_ARRIVED) != 0) {
-			if (gdwMsgLenTbl[i] == 4)
-				ParseTurn(i, *(DWORD *)glpMsgTbl[i]);
+			if (gdwMsgLenTbl[i] == sizeof(int32_t))
+				ParseTurn(i, *(int32_t *)glpMsgTbl[i]);
 		}
 	}
 }

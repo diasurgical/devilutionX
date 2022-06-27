@@ -273,9 +273,9 @@ bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 			playerState.lastTurnValue = turn.Value;
 			turnQueue.pop_front();
 
-			size[i] = sizeof(int32_t);
 			status[i] |= PS_ACTIVE;
 			status[i] |= PS_TURN_ARRIVED;
+			size[i] = sizeof(int32_t);
 			data[i] = reinterpret_cast<char *>(&playerState.lastTurnValue);
 		}
 
