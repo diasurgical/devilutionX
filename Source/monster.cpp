@@ -241,7 +241,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.maxDamage2 = monster.data().mMaxDamage2;
 	monster.armorClass = monster.data().mArmorClass;
 	monster.magicResistance = monster.data().mMagicRes;
-	monster.leader = 0;
+	monster.leader = Monster::NoLeader;
 	monster.leaderRelation = LeaderRelation::None;
 	monster.flags = monster.data().mFlags;
 	monster.talkMsg = TEXT_NONE;
@@ -1754,18 +1754,18 @@ bool IsLineNotSolid(Point startPoint, Point endPoint)
 
 void FollowTheLeader(Monster &monster)
 {
-	if (monster.leader == 0)
-		return;
-
 	if (monster.leaderRelation != LeaderRelation::Leashed)
 		return;
 
-	auto &leader = Monsters[monster.leader];
-	if (monster.activeForTicks >= leader.activeForTicks)
+	Monster *leader = monster.getLeader();
+	if (leader == nullptr)
 		return;
 
-	monster.position.last = leader.position.tile;
-	monster.activeForTicks = leader.activeForTicks - 1;
+	if (monster.activeForTicks >= leader->activeForTicks)
+		return;
+
+	monster.position.last = leader->position.tile;
+	monster.activeForTicks = leader->activeForTicks - 1;
 }
 
 void GroupUnity(Monster &monster)
@@ -1773,12 +1773,12 @@ void GroupUnity(Monster &monster)
 	if (monster.leaderRelation == LeaderRelation::None)
 		return;
 
-	// Someone with a leaderRelation should have a leader ...
-	assert(monster.leader >= 0);
-	// And no unique monster would be a minion of someone else!
+	// No unique monster would be a minion of someone else!
 	assert(monster.uniqType == 0);
 
-	auto &leader = Monsters[monster.leader];
+	// Someone with a leaderRelation should have a leader, if we end up trying to access a nullptr then the relation was already broken...
+
+	auto &leader = *monster.getLeader();
 	if (IsLineNotSolid(monster.position.tile, leader.position.future)) {
 		if (monster.leaderRelation == LeaderRelation::Separated
 		    && monster.position.tile.WalkingDistance(leader.position.future) < 4) {
@@ -2345,7 +2345,7 @@ void ScavengerAi(int monsterId)
 	if (monster.hitPoints < (monster.maxHitPoints / 2) && monster.goal != MonsterGoal::Healing) {
 		if (monster.leaderRelation != LeaderRelation::None) {
 			if (monster.leaderRelation == LeaderRelation::Leashed)
-				Monsters[monster.leader].packSize--;
+				monster.getLeader()->packSize--;
 			monster.leaderRelation = LeaderRelation::None;
 		}
 		monster.goal = MonsterGoal::Healing;
@@ -4007,12 +4007,12 @@ void M_UpdateLeader(int monsterId)
 
 	for (size_t j = 0; j < ActiveMonsterCount; j++) {
 		auto &minion = Monsters[ActiveMonsters[j]];
-		if (minion.leaderRelation == LeaderRelation::Leashed && minion.leader == monsterId)
+		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &monster)
 			minion.leaderRelation = LeaderRelation::None;
 	}
 
 	if (monster.leaderRelation == LeaderRelation::Leashed) {
-		Monsters[monster.leader].packSize--;
+		monster.getLeader()->packSize--;
 	}
 }
 
@@ -4296,7 +4296,7 @@ bool DirOK(int monsterId, Direction mdir)
 	if (!IsRelativeMoveOK(monster, position, mdir))
 		return false;
 	if (monster.leaderRelation == LeaderRelation::Leashed) {
-		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
+		return futurePosition.WalkingDistance(monster.getLeader()->position.future) < 4;
 	}
 	if (monster.uniqType == 0 || UniqueMonstersData[monster.uniqType - 1].monsterPack != UniqueMonsterPack::Leashed)
 		return true;
@@ -4310,7 +4310,7 @@ bool DirOK(int monsterId, Direction mdir)
 				continue;
 
 			auto &minion = Monsters[mi - 1];
-			if (minion.leaderRelation == LeaderRelation::Leashed && minion.leader == monsterId) {
+			if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &monster) {
 				mcount++;
 			}
 		}
@@ -4843,6 +4843,14 @@ void decode_enemy(Monster &monster, int enemyId)
 [[nodiscard]] size_t Monster::getId() const
 {
 	return std::distance<const Monster *>(&Monsters[0], this);
+}
+
+Monster *Monster::getLeader() const
+{
+	if (leader == Monster::NoLeader)
+		return nullptr;
+
+	return &Monsters[leader];
 }
 
 void Monster::checkStandAnimationIsLoaded(Direction mdir)

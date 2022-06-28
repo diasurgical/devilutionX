@@ -239,6 +239,8 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t packSize;
 	int8_t lightId;
 
+	static constexpr uint8_t NoLeader = -1;
+
 	/**
 	 * @brief Sets the current cell sprite to match the desired desiredDirection and animation sequence
 	 * @param graphic Animation sequence of interest
@@ -288,6 +290,8 @@ struct Monster { // note: missing field _mAFNum
 	 * This is currently the index into the Monsters array, but may change in the future.
 	 */
 	[[nodiscard]] size_t getId() const;
+
+	[[nodiscard]] Monster *getLeader() const;
 
 	/**
 	 * @brief Is the monster currently walking?
