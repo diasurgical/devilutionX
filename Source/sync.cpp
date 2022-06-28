@@ -180,14 +180,14 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 		if (!monster.IsWalking()) {
 			Direction md = GetDirection(monster.position.tile, position);
 			if (DirOK(monsterId, md)) {
-				M_ClearSquares(monsterId);
+				M_ClearSquares(monster);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
 				M_WalkDir(monster, md);
 				monster._msquelch = UINT8_MAX;
 			}
 		}
 	} else if (dMonster[position.x][position.y] == 0) {
-		M_ClearSquares(monsterId);
+		M_ClearSquares(monster);
 		dMonster[position.x][position.y] = monsterId + 1;
 		monster.position.tile = position;
 		decode_enemy(monster, enemyId);

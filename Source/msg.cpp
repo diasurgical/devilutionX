@@ -2401,8 +2401,9 @@ void DeltaLoadLevel()
 			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
 
-			M_ClearSquares(i);
+			// Should this be Monsters[ActiveMonsters[i]]? this loop uses ActiveMonsterCount, not MAXMONSTERS
 			auto &monster = Monsters[i];
+			M_ClearSquares(monster);
 			{
 				const WorldTilePosition position = deltaLevel.monster[i].position;
 				monster.position.tile = position;
@@ -2414,7 +2415,7 @@ void DeltaLoadLevel()
 				monster.mWhoHit = deltaLevel.monster[i].mWhoHit;
 			}
 			if (deltaLevel.monster[i]._mhitpoints == 0) {
-				M_ClearSquares(i);
+				M_ClearSquares(monster);
 				if (monster._mAi != AI_DIABLO) {
 					if (monster._uniqtype == 0) {
 						AddCorpse(monster.position.tile, monster.type().corpseId, monster._mdir);

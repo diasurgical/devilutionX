@@ -693,7 +693,7 @@ void StartMonsterGotHit(int monsterId)
 	monster.position.offset = { 0, 0 };
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
-	M_ClearSquares(monsterId);
+	M_ClearSquares(monster);
 	dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
 }
 
@@ -950,7 +950,7 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 		monster._mVar1 = 0;
 		monster.position.tile = monster.position.old;
 		monster.position.future = monster.position.tile;
-		M_ClearSquares(k);
+		M_ClearSquares(monster);
 		dMonster[monster.position.tile.x][monster.position.tile.y] = k + 1;
 	}
 	AddLight(diablo.position.tile, 8);
@@ -1034,7 +1034,7 @@ void Teleport(int monsterId)
 	if (!position)
 		return;
 
-	M_ClearSquares(monsterId);
+	M_ClearSquares(monster);
 	dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 	dMonster[position->x][position->y] = monsterId + 1;
 	monster.position.old = *position;
@@ -1118,7 +1118,7 @@ void MonsterDeath(int monsterId, int pnum, Direction md, bool sendmsg)
 	monster.position.offset = { 0, 0 };
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
-	M_ClearSquares(monsterId);
+	M_ClearSquares(monster);
 	dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
 	CheckQuestKill(monster, sendmsg);
 	M_FallenFear(monster.position.tile);
@@ -3880,20 +3880,11 @@ void M_StartStand(Monster &monster, Direction md)
 	UpdateEnemy(monster);
 }
 
-void M_ClearSquares(int monsterId)
+void M_ClearSquares(const Monster &monster)
 {
-	auto &monster = Monsters[monsterId];
-
-	int mx = monster.position.old.x;
-	int my = monster.position.old.y;
-	int m1 = -(monsterId + 1);
-	int m2 = monsterId + 1;
-
-	for (int y = my - 1; y <= my + 1; y++) {
-		for (int x = mx - 1; x <= mx + 1; x++) {
-			if (InDungeonBounds({ x, y }) && (dMonster[x][y] == m1 || dMonster[x][y] == m2))
-				dMonster[x][y] = 0;
-		}
+	for (Point searchTile : PointsInRectangleRange { Rectangle { monster.position.old, 1 } }) {
+		if (MonsterAtPosition(searchTile) == &monster)
+			dMonster[searchTile.x][searchTile.y] = 0;
 	}
 }
 
@@ -3906,7 +3897,7 @@ void M_GetKnockback(int monsterId)
 		return;
 	}
 
-	M_ClearSquares(monsterId);
+	M_ClearSquares(monster);
 	monster.position.old += dir;
 	StartMonsterGotHit(monsterId);
 }
@@ -3987,7 +3978,7 @@ void M_SyncStartKill(int monsterId, Point position, int pnum)
 	}
 
 	if (dMonster[position.x][position.y] == 0) {
-		M_ClearSquares(monsterId);
+		M_ClearSquares(monster);
 		monster.position.tile = position;
 		monster.position.old = position;
 	}
@@ -4702,6 +4693,22 @@ void MissToMonst(Missile &missile, Point position)
 		monster.position.tile = newPosition;
 		monster.position.future = newPosition;
 	}
+}
+
+Monster *MonsterAtPosition(Point position)
+{
+	if (!InDungeonBounds(position)) {
+		return nullptr;
+	}
+
+	auto monsterId = dMonster[position.x][position.y];
+
+	if (monsterId != 0) {
+		return &Monsters[abs(monsterId) - 1];
+	}
+
+	// nothing at this position, return a nullptr
+	return nullptr;
 }
 
 bool IsTileAvailable(const Monster &monster, Point position)
