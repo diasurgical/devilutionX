@@ -27,6 +27,11 @@ jobs:
       with:
         vcpkgGitCommitId: '98f8d00e89fb6a8019c2045cfa1edbe9d92d3405'
 
+    - name: Fetch test data
+      run: |
+          mkdir build-ninja-vcpkg-debug
+          Invoke-WebRequest -Uri "https://github.com/diasurgical/devilutionx-assets/releases/download/v2/spawn.mpq" -OutFile "build-ninja-vcpkg-debug/spawn.mpq" -Resume
+
     - name: Get CMakePresets.json
       run: cp Packaging/windows/CMakePresets.json .
 
