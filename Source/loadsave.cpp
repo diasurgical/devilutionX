@@ -659,6 +659,8 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	if (monster.talkMsg == TEXT_KING1) // Fix original bad mapping of NONE for monsters
 		monster.talkMsg = TEXT_NONE;
 	monster.leader = file->NextLE<uint8_t>();
+	if (monster.leader == 0)
+		monster.leader = Monster::NoLeader; // Golems shouldn't be leaders of other monsters
 	monster.leaderRelation = static_cast<LeaderRelation>(file->NextLE<uint8_t>());
 	monster.packSize = file->NextLE<uint8_t>();
 	monster.lightId = file->NextLE<int8_t>();
@@ -1400,8 +1402,8 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint16_t>(monster.magicResistance);
 	file->Skip(2); // Alignment
 
-	file->WriteLE<int32_t>(monster.talkMsg == TEXT_NONE ? 0 : monster.talkMsg); // Replicate original bad mapping of none for monsters
-	file->WriteLE<uint8_t>(monster.leader);
+	file->WriteLE<int32_t>(monster.talkMsg == TEXT_NONE ? 0 : monster.talkMsg);       // Replicate original bad mapping of none for monsters
+	file->WriteLE<uint8_t>(monster.leader == Monster::NoLeader ? 0 : monster.leader); // Vanilla uses 0 as the default leader which corresponds to player 0s golem
 	file->WriteLE<uint8_t>(static_cast<std::uint8_t>(monster.leaderRelation));
 	file->WriteLE<uint8_t>(monster.packSize);
 	// vanilla compatibility
