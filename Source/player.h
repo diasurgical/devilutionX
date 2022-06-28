@@ -760,7 +760,7 @@ void ResetPlayerGFX(Player &player);
  */
 void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 void SetPlrAnims(Player &player);
-void CreatePlayer(int playerId, HeroClass c);
+void CreatePlayer(Player &player, HeroClass c);
 int CalcStatDiff(Player &player);
 #ifdef _DEBUG
 void NextPlrLevel(Player &player);

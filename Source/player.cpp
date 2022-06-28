@@ -2442,13 +2442,8 @@ void SetPlrAnims(Player &player)
 /**
  * @param c The hero class.
  */
-void CreatePlayer(int playerId, HeroClass c)
+void CreatePlayer(Player &player, HeroClass c)
 {
-	if ((DWORD)playerId >= MAX_PLRS) {
-		app_fatal("CreatePlayer: illegal player %i", playerId);
-	}
-	Player &player = Players[playerId];
-
 	player.Reset();
 	SetRndSeed(SDL_GetTicks());
 
@@ -2585,7 +2580,7 @@ void CreatePlayer(int playerId, HeroClass c)
 	player.wReflections = 0;
 
 	InitDungMsgs(player);
-	CreatePlrItems(playerId);
+	CreatePlrItems(player);
 	SetRndSeed(0);
 }
 

@@ -2785,10 +2785,8 @@ void SetPlrHandGoldCurs(Item &gold)
 	gold._iCurs = GetGoldCursor(gold._ivalue);
 }
 
-void CreatePlrItems(int playerId)
+void CreatePlrItems(Player &player)
 {
-	Player &player = Players[playerId];
-
 	for (auto &item : player.InvBody) {
 		item.clear();
 	}
