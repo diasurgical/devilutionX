@@ -305,7 +305,7 @@ int AddMonster(Point position, Direction dir, int mtype, bool inMap);
 void AddDoppelganger(Monster &monster);
 bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
-void M_ClearSquares(int monsterId);
+void M_ClearSquares(const Monster &monster);
 void M_GetKnockback(int monsterId);
 void M_StartHit(int monsterId, int dam);
 void M_StartHit(int monsterId, int pnum, int dam);
@@ -330,6 +330,8 @@ void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void PlayEffect(Monster &monster, int mode);
 void MissToMonst(Missile &missile, Point position);
+
+Monster *MonsterAtPosition(Point position);
 
 /**
  * @brief Check that the given tile is available to the monster
