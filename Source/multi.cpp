@@ -237,7 +237,7 @@ void PlayerLeftMsg(int pnum, bool left)
 		return;
 	}
 
-	RemovePlrFromMap(pnum);
+	FixPlrWalkTags(player);
 	RemovePortalMissile(pnum);
 	DeactivatePortal(pnum);
 	delta_close_portal(pnum);
@@ -615,7 +615,7 @@ void multi_process_network_packets()
 		}
 		Point syncPosition = { pkt->px, pkt->py };
 		player.position.last = syncPosition;
-		if (dwID != MyPlayerId) {
+		if (&player != MyPlayer) {
 			assert(gbBufferMsgs != 2);
 			player._pHitPoints = pkt->php;
 			player._pMaxHP = pkt->pmhp;
@@ -627,21 +627,20 @@ void multi_process_network_packets()
 			player._pBaseDex = pkt->bdex;
 			if (!cond && player.plractive && player._pHitPoints != 0) {
 				if (player.isOnActiveLevel() && !player._pLvlChanging) {
-					int dx = abs(player.position.tile.x - pkt->px);
-					int dy = abs(player.position.tile.y - pkt->py);
-					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
-						FixPlrWalkTags(dwID);
+					if (player.position.tile.WalkingDistance(syncPosition) > 3 && dPlayer[pkt->px][pkt->py] == 0) {
+						// got out of sync, clear the tiles around where we last thought the player was located
+						FixPlrWalkTags(player);
+
 						player.position.old = player.position.tile;
-						FixPlrWalkTags(dwID);
+						// then just in case clear the tiles around the current position (probably unnecessary)
+						FixPlrWalkTags(player);
 						player.position.tile = syncPosition;
 						player.position.future = syncPosition;
 						if (player.IsWalking())
 							player.position.temp = syncPosition;
 						dPlayer[player.position.tile.x][player.position.tile.y] = dwID + 1;
 					}
-					dx = abs(player.position.future.x - player.position.tile.x);
-					dy = abs(player.position.future.y - player.position.tile.y);
-					if (dx > 1 || dy > 1) {
+					if (player.position.future.WalkingDistance(player.position.tile) > 1) {
 						player.position.future = player.position.tile;
 					}
 					MakePlrPath(player, { pkt->targx, pkt->targy }, true);

@@ -738,6 +738,8 @@ extern DVL_API_FOR_TEST Player Players[MAX_PLRS];
 extern bool MyPlayerIsDead;
 extern const int BlockBonuses[enum_size<HeroClass>::value];
 
+Player *PlayerAtPosition(Point position);
+
 void LoadPlrGFX(Player &player, player_graphic graphic);
 void InitPlayerGFX(Player &player);
 void ResetPlayerGFX(Player &player);
@@ -771,8 +773,7 @@ void SetPlayerOld(Player &player);
 void FixPlayerLocation(Player &player, Direction bDir);
 void StartStand(int pnum, Direction dir);
 void StartPlrBlock(int pnum, Direction dir);
-void FixPlrWalkTags(int pnum);
-void RemovePlrFromMap(int pnum);
+void FixPlrWalkTags(const Player &player);
 void StartPlrHit(int pnum, int dam, bool forcehit);
 void StartPlayerKill(int pnum, int earflag);
 /**
