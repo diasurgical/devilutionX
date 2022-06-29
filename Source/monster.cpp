@@ -188,8 +188,9 @@ void InitMonsterTRN(CMonster &monst)
 	}
 }
 
-void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
+void InitMonster(Monster &monster, Direction rd, int mtype, Point position, int monsterId)
 {
+	monster.monsterId = monsterId;
 	monster._mdir = rd;
 	monster.position.tile = position;
 	monster.position.future = position;
@@ -310,7 +311,7 @@ void PlaceMonster(int i, int mtype, Point position)
 	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	InitMonster(Monsters[i], rd, mtype, position);
+	InitMonster(Monsters[i], rd, mtype, position, i);
 }
 
 void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
@@ -808,14 +809,12 @@ void StartSpecialStand(Monster &monster, Direction md)
 	monster.position.old = monster.position.tile;
 }
 
-void StartWalk(int monsterId, int xvel, int yvel, int xadd, int yadd, Direction endDir)
+void StartWalk(Monster &monster, int xvel, int yvel, int xadd, int yadd, Direction endDir)
 {
-	auto &monster = Monsters[monsterId];
-
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 
-	dMonster[fx][fy] = -(monsterId + 1);
+	dMonster[fx][fy] = -(monster.monsterId + 1);
 	monster._mmode = MonsterMode::MoveNorthwards;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
@@ -827,20 +826,18 @@ void StartWalk(int monsterId, int xvel, int yvel, int xadd, int yadd, Direction 
 	monster.position.offset2 = { 0, 0 };
 }
 
-void StartWalk2(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction endDir)
+void StartWalk2(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction endDir)
 {
-	auto &monster = Monsters[monsterId];
-
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 
-	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
+	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.monsterId + 1);
 	monster._mVar1 = monster.position.tile.x;
 	monster._mVar2 = monster.position.tile.y;
 	monster.position.old = monster.position.tile;
 	monster.position.tile = { fx, fy };
 	monster.position.future = { fx, fy };
-	dMonster[fx][fy] = monsterId + 1;
+	dMonster[fx][fy] = monster.monsterId + 1;
 	if (monster.mlid != NO_LIGHT)
 		ChangeLightXY(monster.mlid, monster.position.tile);
 	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
@@ -851,10 +848,8 @@ void StartWalk2(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd,
 	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
 
-void StartWalk3(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
+void StartWalk3(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
 {
-	auto &monster = Monsters[monsterId];
-
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 	const auto x = static_cast<WorldTileCoord>(mapx + monster.position.tile.x);
@@ -863,8 +858,8 @@ void StartWalk3(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd,
 	if (monster.mlid != NO_LIGHT)
 		ChangeLightXY(monster.mlid, { x, y });
 
-	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
-	dMonster[fx][fy] = monsterId + 1;
+	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.monsterId + 1);
+	dMonster[fx][fy] = monster.monsterId + 1;
 	monster.position.temp = { x, y };
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
@@ -3831,7 +3826,7 @@ int AddMonster(Point position, Direction dir, int mtype, bool inMap)
 		int i = ActiveMonsters[ActiveMonsterCount++];
 		if (inMap)
 			dMonster[position.x][position.y] = i + 1;
-		InitMonster(Monsters[i], dir, mtype, position);
+		InitMonster(Monsters[i], dir, mtype, position, i);
 		return i;
 	}
 
@@ -4081,32 +4076,33 @@ void PrepDoEnding()
 void M_WalkDir(int monsterId, Direction md)
 {
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
+	auto &monster = Monsters[monsterId];
 
-	int mwi = Monsters[monsterId].type().getAnimData(MonsterGraphic::Walk).frames - 1;
+	int mwi = monster.type().getAnimData(MonsterGraphic::Walk).frames - 1;
 	switch (md) {
 	case Direction::North:
-		StartWalk(monsterId, 0, -MWVel[mwi][1], -1, -1, Direction::North);
+		StartWalk(monster, 0, -MWVel[mwi][1], -1, -1, Direction::North);
 		break;
 	case Direction::NorthEast:
-		StartWalk(monsterId, MWVel[mwi][1], -MWVel[mwi][0], 0, -1, Direction::NorthEast);
+		StartWalk(monster, MWVel[mwi][1], -MWVel[mwi][0], 0, -1, Direction::NorthEast);
 		break;
 	case Direction::East:
-		StartWalk3(monsterId, MWVel[mwi][2], 0, -32, -16, 1, -1, 1, 0, Direction::East);
+		StartWalk3(monster, MWVel[mwi][2], 0, -32, -16, 1, -1, 1, 0, Direction::East);
 		break;
 	case Direction::SouthEast:
-		StartWalk2(monsterId, MWVel[mwi][1], MWVel[mwi][0], -32, -16, 1, 0, Direction::SouthEast);
+		StartWalk2(monster, MWVel[mwi][1], MWVel[mwi][0], -32, -16, 1, 0, Direction::SouthEast);
 		break;
 	case Direction::South:
-		StartWalk2(monsterId, 0, MWVel[mwi][1], 0, -32, 1, 1, Direction::South);
+		StartWalk2(monster, 0, MWVel[mwi][1], 0, -32, 1, 1, Direction::South);
 		break;
 	case Direction::SouthWest:
-		StartWalk2(monsterId, -MWVel[mwi][1], MWVel[mwi][0], 32, -16, 0, 1, Direction::SouthWest);
+		StartWalk2(monster, -MWVel[mwi][1], MWVel[mwi][0], 32, -16, 0, 1, Direction::SouthWest);
 		break;
 	case Direction::West:
-		StartWalk3(monsterId, -MWVel[mwi][2], 0, 32, -16, -1, 1, 0, 1, Direction::West);
+		StartWalk3(monster, -MWVel[mwi][2], 0, 32, -16, -1, 1, 0, 1, Direction::West);
 		break;
 	case Direction::NorthWest:
-		StartWalk(monsterId, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, Direction::NorthWest);
+		StartWalk(monster, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, Direction::NorthWest);
 		break;
 	}
 }

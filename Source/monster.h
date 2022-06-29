@@ -168,6 +168,7 @@ struct CMonster {
 extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 
 struct Monster { // note: missing field _mAFNum
+	int monsterId;
 	const char *mName;
 	std::unique_ptr<uint8_t[]> uniqueTRN;
 	AnimationInfo AnimInfo;
