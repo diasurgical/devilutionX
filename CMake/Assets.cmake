@@ -41,6 +41,7 @@ if (Gettext_FOUND)
 endif()
 
 set(devilutionx_assets
+  data/bird.cl2
   data/boxleftend.pcx
   data/boxmiddle.pcx
   data/boxrightend.pcx

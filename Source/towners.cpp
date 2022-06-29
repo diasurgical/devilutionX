@@ -13,6 +13,7 @@ namespace devilution {
 namespace {
 
 std::unique_ptr<byte[]> CowCels;
+std::unique_ptr<byte[]> BirdCels;
 int CowMsg;
 int CowClicks;
 
@@ -229,6 +230,21 @@ void InitCows(Towner &towner, const TownerData &townerData)
 	dMonster[offset.x][offset.y] = -cowId;
 	offset = position + Direction::North;
 	dMonster[offset.x][offset.y] = -cowId;
+}
+
+void InitBird(Towner& towner, const TownerData& townerData)
+{
+	towner._tAnimWidth = 1;
+	static const uint8_t AnimOrder[] = {
+		// clang-format off
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+		// clang-format on
+	};
+	towner.animOrder = AnimOrder;
+	towner.animOrderSize = 10;
+	towner.data = LoadFileInMem(R"(data\bird.cl2)");
+	NewTownerAnim(towner, towner.data.get(), 10, 3);
+	towner.name = _("Bird");
 }
 
 void InitFarmer(Towner &towner, const TownerData &townerData)
@@ -758,6 +774,7 @@ const TownerData TownersData[] = {
 	// type         position    dir                   init           talk
 	{ TOWN_SMITH,   { 62, 63 }, Direction::SouthWest, InitSmith,     TalkToBlackSmith  },
 	{ TOWN_HEALER,  { 55, 79 }, Direction::SouthEast, InitHealer,    TalkToHealer      },
+	{ TOWN_COW,     { 57, 80 }, Direction::South,     InitCows,      TalkToCow         },
 	{ TOWN_DEADGUY, { 24, 32 }, Direction::North,     InitTownDead,  TalkToDeadguy     },
 	{ TOWN_TAVERN,  { 55, 62 }, Direction::SouthWest, InitBarOwner,  TalkToBarOwner    },
 	{ TOWN_STORY,   { 62, 71 }, Direction::South,     InitTeller,    TalkToStoryteller },
@@ -771,6 +788,7 @@ const TownerData TownersData[] = {
 	{ TOWN_COWFARM, { 61, 22 }, Direction::SouthWest, InitCowFarmer, TalkToCowFarmer   },
 	{ TOWN_FARMER,  { 62, 16 }, Direction::South,     InitFarmer,    TalkToFarmer      },
 	{ TOWN_GIRL,    { 77, 43 }, Direction::South,     InitGirl,      TalkToGirl        },
+	{ TOWN_BIRD,    { 57, 80 }, Direction::South,     InitBird,      TalkToCow         },
 	// clang-format on
 };
 
@@ -819,6 +837,7 @@ void InitTowners()
 	assert(CowCels == nullptr);
 
 	CowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL");
+	BirdCels = LoadFileInMem(R"(data\bird.cl2)");
 
 	int i = 0;
 	for (const auto &townerData : TownersData) {
