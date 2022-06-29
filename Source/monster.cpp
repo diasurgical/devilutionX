@@ -1401,7 +1401,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		if (PosOkPlayer(player, newPosition)) {
 			player.position.tile = newPosition;
 			FixPlayerLocation(player, player._pdir);
-			FixPlrWalkTags(pnum);
+			FixPlrWalkTags(player);
 			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 			SetPlayerOld(player);
 		}
@@ -4642,7 +4642,7 @@ void MissToMonst(Missile &missile, Point position)
 		if (PosOkPlayer(player, newPosition)) {
 			player.position.tile = newPosition;
 			FixPlayerLocation(player, player._pdir);
-			FixPlrWalkTags(pnum);
+			FixPlrWalkTags(player);
 			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 			SetPlayerOld(player);
 		}

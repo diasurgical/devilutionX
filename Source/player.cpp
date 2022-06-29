@@ -17,6 +17,7 @@
 #endif
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
 #include "gamemenu.h"
@@ -614,20 +615,20 @@ void InitLevelChange(int pnum)
 	RemovePlrMissiles(player);
 	player.pManaShield = false;
 	player.wReflections = 0;
-	// share info about your manashield when another player joins the level
-	if (pnum != MyPlayerId && myPlayer.pManaShield)
-		NetSendCmd(true, CMD_SETSHIELD);
-	// share info about your reflect charges when another player joins the level
-	if (pnum != MyPlayerId)
+	if (&player != MyPlayer) {
+		// share info about your manashield when another player joins the level
+		if (myPlayer.pManaShield)
+			NetSendCmd(true, CMD_SETSHIELD);
+		// share info about your reflect charges when another player joins the level
 		NetSendCmdParam1(true, CMD_SETREFLECT, myPlayer.wReflections);
-	if (pnum == MyPlayerId && qtextflag) {
+	} else if (qtextflag) {
 		qtextflag = false;
 		stream_stop();
 	}
 
-	RemovePlrFromMap(pnum);
+	FixPlrWalkTags(player);
 	SetPlayerOld(player);
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	} else {
 		player._pLvlVisited[player.plrlevel] = true;
@@ -637,7 +638,7 @@ void InitLevelChange(int pnum)
 	player.destAction = ACTION_NONE;
 	player._pLvlChanging = true;
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		player.pLvlLoad = 10;
 	}
 }
@@ -2200,6 +2201,18 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	}
 }
 
+Player *PlayerAtPosition(Point position)
+{
+	if (!InDungeonBounds(position))
+		return nullptr;
+
+	auto playerIndex = dPlayer[position.x][position.y];
+	if (playerIndex == 0)
+		return nullptr;
+
+	return &Players[abs(playerIndex) - 1];
+}
+
 void LoadPlrGFX(Player &player, player_graphic graphic)
 {
 	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
@@ -2898,7 +2911,7 @@ void StartStand(int pnum, Direction dir)
 	NewPlrAnim(player, player_graphic::Stand, dir, player._pNFrames, 4);
 	player._pmode = PM_STAND;
 	FixPlayerLocation(player, dir);
-	FixPlrWalkTags(pnum);
+	FixPlrWalkTags(player);
 	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	SetPlayerOld(player);
 }
@@ -2929,35 +2942,12 @@ void StartPlrBlock(int pnum, Direction dir)
 	SetPlayerOld(player);
 }
 
-void FixPlrWalkTags(int pnum)
+void FixPlrWalkTags(const Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal(fmt::format("FixPlrWalkTags: illegal player {}", pnum));
-	}
-	Player &player = Players[pnum];
-
-	int pp = pnum + 1;
-	int pn = -(pnum + 1);
-	int dx = player.position.old.x;
-	int dy = player.position.old.y;
-	for (int y = dy - 1; y <= dy + 1; y++) {
-		for (int x = dx - 1; x <= dx + 1; x++) {
-			if (InDungeonBounds({ x, y }) && (dPlayer[x][y] == pp || dPlayer[x][y] == pn)) {
-				dPlayer[x][y] = 0;
-			}
+	for (Point searchTile : PointsInRectangleRange { Rectangle { player.position.old, 1 } }) {
+		if (PlayerAtPosition(searchTile) == &player) {
+			dPlayer[searchTile.x][searchTile.y] = 0;
 		}
-	}
-}
-
-void RemovePlrFromMap(int pnum)
-{
-	int pp = pnum + 1;
-	int pn = -(pnum + 1);
-
-	for (int y = 0; y < MAXDUNY; y++) {
-		for (int x = 0; x < MAXDUNX; x++) // NOLINT(modernize-loop-convert)
-			if (dPlayer[x][y] == pp || dPlayer[x][y] == pn)
-				dPlayer[x][y] = 0;
 	}
 }
 
@@ -3004,7 +2994,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 
 	player._pmode = PM_GOTHIT;
 	FixPlayerLocation(player, pd);
-	FixPlrWalkTags(pnum);
+	FixPlrWalkTags(player);
 	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	SetPlayerOld(player);
 }
@@ -3057,7 +3047,7 @@ StartPlayerKill(int pnum, int earflag)
 
 	if (player.isOnActiveLevel()) {
 		FixPlayerLocation(player, player._pdir);
-		RemovePlrFromMap(pnum);
+		FixPlrWalkTags(player);
 		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
 
