@@ -7,7 +7,6 @@
  */
 #pragma once
 
-#include <algorithm>
 #include <cstdint>
 #include <initializer_list>
 
@@ -60,6 +59,17 @@ int32_t AdvanceRndSeed();
 int32_t GenerateRnd(int32_t v);
 
 /**
+ * @brief Generates a random integer in the range [0, v)
+ *
+ * Will not return a negative value, provided to avoid segfaults in legacy code.
+ *
+ * @see AdvanceRndSeed()
+ * @param v The upper limit for the return value
+ * @return A random number in the range [0, v)
+ */
+int32_t GenerateNonNegativeRnd(int32_t v);
+
+/**
  * @brief Picks one of the elements in the list randomly.
  *
  * @param values The values to pick from
@@ -68,7 +78,7 @@ int32_t GenerateRnd(int32_t v);
 template <typename T>
 const T PickRandomlyAmong(const std::initializer_list<T> &values)
 {
-	const auto index { std::max<int32_t>(GenerateRnd(values.size()), 0) };
+	const auto index { GenerateNonNegativeRnd(values.size()) };
 
 	return *(values.begin() + index);
 }
