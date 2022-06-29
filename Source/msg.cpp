@@ -1838,7 +1838,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 				player._pgfxnum &= ~0xF;
 				player._pmode = PM_DEATH;
 				NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
-				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
+				player.AnimInfo.setCurrentFrame(player.AnimInfo.getNumberOfFrames() - 2);
 				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
 

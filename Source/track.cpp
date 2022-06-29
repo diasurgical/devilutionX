@@ -23,7 +23,7 @@ void RepeatWalk(Player &player)
 	if (!InDungeonBounds(cursPosition))
 		return;
 
-	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
+	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.getFrameToUseForRendering() > 6))
 		return;
 
 	const Point target = player.GetTargetPosition();

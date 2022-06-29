@@ -445,7 +445,7 @@ void AddInitItems()
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+		item.AnimInfo.setCurrentFrameAsLast();
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -1647,7 +1647,7 @@ void SpawnRock()
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
-	item.AnimInfo.CurrentFrame = 10;
+	item.AnimInfo.setCurrentFrame(10);
 }
 
 void ItemDoppel()
@@ -2678,10 +2678,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player.previewCelSprite = std::nullopt;
 		if (player._pmode == PM_STAND) {
 			LoadPlrGFX(player, player_graphic::Stand);
-			player.AnimInfo.ChangeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
+			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
 		} else {
 			LoadPlrGFX(player, player_graphic::Walk);
-			player.AnimInfo.ChangeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].GetCelSpritesForDirection(player._pdir), player._pWFrames, 1);
+			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].GetCelSpritesForDirection(player._pdir), player._pWFrames, 1);
 		}
 	} else {
 		player._pgfxnum = gfxNum;
@@ -3328,7 +3328,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	item._iPostDraw = true;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+		item.AnimInfo.setCurrentFrameAsLast();
 		item._iAnimFlag = false;
 	}
 }
@@ -3410,18 +3410,18 @@ void ProcessItems()
 		auto &item = Items[ii];
 		if (!item._iAnimFlag)
 			continue;
-		item.AnimInfo.ProcessAnimation();
+		item.AnimInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.CurrentFrame == 10)
-				item.AnimInfo.CurrentFrame = 0;
-			if (item._iSelFlag == 2 && item.AnimInfo.CurrentFrame == 20)
-				item.AnimInfo.CurrentFrame = 10;
+			if (item._iSelFlag == 1 && item.AnimInfo.getCurrentFrame() == 10)
+				item.AnimInfo.setCurrentFrame(0);
+			if (item._iSelFlag == 2 && item.AnimInfo.getCurrentFrame() == 20)
+				item.AnimInfo.setCurrentFrame(10);
 		} else {
-			if (item.AnimInfo.CurrentFrame == (item.AnimInfo.NumberOfFrames - 1) / 2)
+			if (item.AnimInfo.getCurrentFrame() == (item.AnimInfo.getNumberOfFrames() - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
 
-			if (item.AnimInfo.CurrentFrame >= item.AnimInfo.NumberOfFrames - 1) {
-				item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+			if (item.AnimInfo.isOver()) {
+				item.AnimInfo.setCurrentFrameAsLast();
 				item._iAnimFlag = false;
 				item._iSelFlag = 1;
 			}
@@ -3439,7 +3439,7 @@ void FreeItemGFX()
 
 void GetItemFrm(Item &item)
 {
-	item.AnimInfo.celSprite.emplace(*itemanims[ItemCAnimTbl[item._iCurs]]);
+	item.AnimInfo.emplaceCelSprite(*itemanims[ItemCAnimTbl[item._iCurs]]);
 }
 
 void GetItemStr(Item &item)
@@ -4336,7 +4336,7 @@ void MakeGoldStack(Item &goldItem, int value)
 int ItemNoFlippy()
 {
 	int r = ActiveItems[ActiveItemCount - 1];
-	Items[r].AnimInfo.CurrentFrame = Items[r].AnimInfo.NumberOfFrames - 1;
+	Items[r].AnimInfo.setCurrentFrameAsLast();
 	Items[r]._iAnimFlag = false;
 	Items[r]._iSelFlag = 1;
 
@@ -4584,16 +4584,16 @@ void Item::setNewAnimation(bool showAnimation)
 	int numberOfFrames = ItemAnimLs[it];
 	auto celSprite = itemanims[it] ? std::optional<CelSprite> { *itemanims[it] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
-		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+		AnimInfo.setNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
-		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1);
+		AnimInfo.setNewAnimation(celSprite, numberOfFrames, 1);
 	_iPostDraw = false;
 	_iRequest = false;
 	if (showAnimation) {
 		_iAnimFlag = true;
 		_iSelFlag = 0;
 	} else {
-		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames - 1;
+		AnimInfo.setCurrentFrameAsLast();
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}

@@ -363,7 +363,7 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
-	if (!monster.AnimInfo.celSprite) {
+	if (!monster.AnimInfo.getCelSprite()) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
 		return;
 	}
@@ -429,8 +429,8 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		}
 	};
 
-	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
-	const uint32_t frames = LoadLE32(monster.AnimInfo.celSprite->Data());
+	int nCel = monster.AnimInfo.getFrameToUseForRendering();
+	const uint32_t frames = LoadLE32(monster.AnimInfo.getCelSprite()->Data());
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
@@ -442,7 +442,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		return;
 	}
 
-	const auto &cel = *monster.AnimInfo.celSprite;
+	const auto &cel = *monster.AnimInfo.getCelSprite();
 
 	if (!IsTileLit(tilePosition)) {
 		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, GetInfravisionTRN());
@@ -515,8 +515,8 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 
 	Player &player = Players[pnum];
 
-	std::optional<CelSprite> sprite = player.AnimInfo.celSprite;
-	int nCel = player.AnimInfo.GetFrameToUseForRendering();
+	std::optional<CelSprite> sprite = player.AnimInfo.getCelSprite();
+	int nCel = player.AnimInfo.getFrameToUseForRendering();
 
 	if (player.previewCelSprite) {
 		sprite = player.previewCelSprite;
@@ -719,13 +719,13 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	if (item._iPostDraw == pre)
 		return;
 
-	std::optional<CelSprite> cel = item.AnimInfo.celSprite;
+	std::optional<CelSprite> cel = item.AnimInfo.getCelSprite();
 	if (!cel) {
 		Log("Draw Item \"{}\" 1: NULL CelSprite", item._iIName);
 		return;
 	}
 
-	int nCel = item.AnimInfo.GetFrameToUseForRendering();
+	int nCel = item.AnimInfo.getFrameToUseForRendering();
 	const uint32_t frames = LoadLE32(cel->Data());
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", item._iIName, nCel, frames, ItemTypeToString(item._itype));
@@ -738,7 +738,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 		CelBlitOutlineTo(out, GetOutlineColor(item, false), position, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, position, *cel, nCel);
-	if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames - 1 || item._iCurs == ICURS_MAGIC_ROCK)
+	if (item.AnimInfo.isLastFrame() || item._iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
 }
 
@@ -783,7 +783,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	CelSprite cel = *monster.AnimInfo.celSprite;
+	CelSprite cel = *monster.AnimInfo.getCelSprite();
 
 	Displacement offset = monster.position.offset;
 	if (monster.IsWalking()) {
@@ -792,7 +792,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.AnimInfo.GetFrameToUseForRendering());
+		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.AnimInfo.getFrameToUseForRendering());
 	}
 	DrawMonster(out, tilePosition, monsterRenderPosition, monster);
 }
@@ -1425,7 +1425,7 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
 	// clang-format on
 
-	float fAnimationProgress = animationInfo.GetAnimationProgress();
+	float fAnimationProgress = animationInfo.getAnimationProgress();
 	Displacement offset = MovingOffset[static_cast<size_t>(dir)];
 	offset *= fAnimationProgress;
 
