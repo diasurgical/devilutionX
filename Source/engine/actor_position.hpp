@@ -1,25 +1,26 @@
 #pragma once
 
 #include "engine/point.hpp"
+#include "engine/world_tile.hpp"
 
 namespace devilution {
 
 struct ActorPosition {
-	Point tile;
+	WorldTilePosition tile;
 	/** Future tile position. Set at start of walking animation. */
-	Point future;
+	WorldTilePosition future;
 	/** Tile position of player. Set via network on player input. */
-	Point last;
+	WorldTilePosition last;
 	/** Most recent position in dPlayer. */
-	Point old;
-	/** Pixel offset from tile. */
-	Displacement offset;
-	/** Same as offset but contains the value in a higher range */
-	Displacement offset2;
-	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
-	Displacement velocity;
+	WorldTilePosition old;
 	/** Used for referring to position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks) */
-	Point temp;
+	WorldTilePosition temp;
+	/** Pixel offset from tile. */
+	DisplacementOf<int8_t> offset;
+	/** Same as offset but contains the value in a higher range */
+	DisplacementOf<int16_t> offset2;
+	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
+	DisplacementOf<int16_t> velocity;
 };
 
 } // namespace devilution

@@ -20,6 +20,7 @@
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "engine/render/cl2_render.hpp"
+#include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/drlg_l1.h"
 #include "levels/drlg_l4.h"
@@ -813,14 +814,14 @@ void StartWalk(int monsterId, int xvel, int yvel, int xadd, int yadd, Direction 
 {
 	auto &monster = Monsters[monsterId];
 
-	int fx = xadd + monster.position.tile.x;
-	int fy = yadd + monster.position.tile.y;
+	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
+	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 
 	dMonster[fx][fy] = -(monsterId + 1);
 	monster._mmode = MonsterMode::MoveNorthwards;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
-	monster.position.velocity = { xvel, yvel };
+	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
 	monster._mVar1 = xadd;
 	monster._mVar2 = yadd;
 	monster._mVar3 = static_cast<int>(endDir);
@@ -832,8 +833,8 @@ void StartWalk2(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd,
 {
 	auto &monster = Monsters[monsterId];
 
-	int fx = xadd + monster.position.tile.x;
-	int fy = yadd + monster.position.tile.y;
+	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
+	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 
 	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
 	monster._mVar1 = monster.position.tile.x;
@@ -844,22 +845,22 @@ void StartWalk2(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd,
 	dMonster[fx][fy] = monsterId + 1;
 	if (monster.mlid != NO_LIGHT)
 		ChangeLightXY(monster.mlid, monster.position.tile);
-	monster.position.offset = { xoff, yoff };
+	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
 	monster._mmode = MonsterMode::MoveSouthwards;
-	monster.position.velocity = { xvel, yvel };
+	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
 	monster._mVar3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-	monster.position.offset2 = { 16 * xoff, 16 * yoff };
+	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
 
 void StartWalk3(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
 {
 	auto &monster = Monsters[monsterId];
 
-	int fx = xadd + monster.position.tile.x;
-	int fy = yadd + monster.position.tile.y;
-	int x = mapx + monster.position.tile.x;
-	int y = mapy + monster.position.tile.y;
+	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
+	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
+	const auto x = static_cast<WorldTileCoord>(mapx + monster.position.tile.x);
+	const auto y = static_cast<WorldTileCoord>(mapy + monster.position.tile.y);
 
 	if (monster.mlid != NO_LIGHT)
 		ChangeLightXY(monster.mlid, { x, y });
@@ -869,14 +870,14 @@ void StartWalk3(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd,
 	monster.position.temp = { x, y };
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
-	monster.position.offset = { xoff, yoff };
+	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
 	monster._mmode = MonsterMode::MoveSideways;
-	monster.position.velocity = { xvel, yvel };
+	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
 	monster._mVar1 = fx;
 	monster._mVar2 = fy;
 	monster._mVar3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-	monster.position.offset2 = { 16 * xoff, 16 * yoff };
+	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
 
 void StartAttack(Monster &monster)
@@ -1236,7 +1237,7 @@ bool MonsterWalk(int monsterId, MonsterMode variant)
 			break;
 		case MonsterMode::MoveSideways:
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-			monster.position.tile = { monster._mVar1, monster._mVar2 };
+			monster.position.tile = WorldTilePosition { static_cast<WorldTileCoord>(monster._mVar1), static_cast<WorldTileCoord>(monster._mVar2) };
 			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
 			dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
 			break;

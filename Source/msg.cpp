@@ -2405,12 +2405,13 @@ void DeltaLoadLevel()
 				continue;
 
 			M_ClearSquares(i);
-			int x = deltaLevel.monster[i]._mx;
-			int y = deltaLevel.monster[i]._my;
 			auto &monster = Monsters[i];
-			monster.position.tile = { x, y };
-			monster.position.old = { x, y };
-			monster.position.future = { x, y };
+			{
+				const WorldTilePosition position { deltaLevel.monster[i]._mx, deltaLevel.monster[i]._my };
+				monster.position.tile = position;
+				monster.position.old = position;
+				monster.position.future = position;
+			}
 			if (deltaLevel.monster[i]._mhitpoints != -1) {
 				monster._mhitpoints = deltaLevel.monster[i]._mhitpoints;
 				monster.mWhoHit = deltaLevel.monster[i].mWhoHit;
