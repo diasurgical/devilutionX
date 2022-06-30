@@ -13,9 +13,9 @@ namespace devilution {
 
 namespace {
 
-uint16_t sgnMonsterPriority[MAXMONSTERS];
+uint16_t sgnMonsterPriority[MaxMonsters];
 int sgnMonsters;
-uint16_t sgwLRU[MAXMONSTERS];
+uint16_t sgwLRU[MaxMonsters];
 int sgnSyncItem;
 int sgnSyncPInv;
 
@@ -211,7 +211,7 @@ bool IsEnemyIdValid(const Monster &monster, int enemyId)
 	}
 
 	enemyId -= MAX_PLRS;
-	if (enemyId >= MAXMONSTERS) {
+	if (enemyId >= MaxMonsters) {
 		return false;
 	}
 
@@ -232,7 +232,7 @@ bool IsTSyncMonsterValidate(const TSyncMonster &monsterSync)
 {
 	const int monsterId = monsterSync._mndx;
 
-	if (monsterId < 0 || monsterId >= MAXMONSTERS)
+	if (monsterId < 0 || monsterId >= MaxMonsters)
 		return false;
 
 	if (!InDungeonBounds({ monsterSync._mx, monsterSync._my }))

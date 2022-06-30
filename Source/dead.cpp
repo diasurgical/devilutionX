@@ -27,7 +27,7 @@ void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 
 void InitCorpses()
 {
-	int8_t mtypes[MAXMONSTERS] = {};
+	int8_t mtypes[MaxMonsters] = {};
 
 	int8_t nd = 0;
 
