@@ -43,7 +43,7 @@
 
 namespace devilution {
 
-CMonster LevelMonsterTypes[maxLvlmtypes];
+CMonster LevelMonsterTypes[MaxLvlMTypes];
 int LevelMonsterTypeCount;
 Monster Monsters[MaxMonsters];
 int ActiveMonsters[MaxMonsters];
@@ -55,18 +55,18 @@ bool sgbSaveSoundOn;
 
 namespace {
 
-constinit const int NightmareToHitBonus = 85;
-constinit const int HellToHitBonus = 120;
+constexpr const int NightmareToHitBonus = 85;
+constexpr const int HellToHitBonus = 120;
 
-constinit const int NightmareAcBonus = 50;
-constinit const int HellAcBonus = 80;
+constexpr const int NightmareAcBonus = 50;
+constexpr const int HellAcBonus = 80;
 
 /** Tracks which missile files are already loaded */
 int totalmonsters;
 int monstimgtot;
 int uniquetrans;
 
-constinit const std::array<_monster_id, 12> SkeletonTypes {
+constexpr const std::array<_monster_id, 12> SkeletonTypes {
 	MT_WSKELAX,
 	MT_TSKELAX,
 	MT_RSKELAX,
@@ -119,7 +119,7 @@ constinit const std::array<_monster_id, 12> SkeletonTypes {
 //   };
 
 /** Maps from monster walk animation frame num to monster velocity. */
-constinit const int MWVel[24][3] = {
+constexpr const int MWVel[24][3] = {
 	{ 256, 512, 1024 },
 	{ 128, 256, 512 },
 	{ 85, 170, 341 },
@@ -146,7 +146,7 @@ constinit const int MWVel[24][3] = {
 	{ 10, 21, 42 }
 };
 /** Maps from monster action to monster animation letter. */
-constinit const char Animletter[7] = "nwahds";
+constexpr const char Animletter[7] = "nwahds";
 
 size_t GetNumAnims(const MonsterData &monsterData)
 {
@@ -3606,7 +3606,7 @@ void GetLevelMTypes()
 			typelist[nt++] = (_monster_id)i;
 		}
 
-		while (nt > 0 && LevelMonsterTypeCount < maxLvlmtypes && monstimgtot < 4000) {
+		while (nt > 0 && LevelMonsterTypeCount < MaxLvlMTypes && monstimgtot < 4000) {
 			for (int i = 0; i < nt;) {
 				if (MonstersData[typelist[i]].mImage > 4000 - monstimgtot) {
 					typelist[i] = typelist[--nt];
@@ -3867,7 +3867,7 @@ void AddDoppelganger(Monster &monster)
 		target = position;
 	}
 	if (target != Point { 0, 0 }) {
-		for (int j = 0; j < maxLvlmtypes; j++) {
+		for (int j = 0; j < MaxLvlMTypes; j++) {
 			if (LevelMonsterTypes[j].mtype == monster.MType->mtype) {
 				AddMonster(target, monster._mdir, j, true);
 				break;

@@ -699,7 +699,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = maxLvlmtypes - 1;
+	int id = MaxLvlMTypes - 1;
 	bool found = false;
 
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
@@ -785,7 +785,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = maxLvlmtypes - 1;
+	int id = MaxLvlMTypes - 1;
 	bool found = false;
 
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {

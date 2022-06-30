@@ -25,8 +25,8 @@ namespace devilution {
 
 struct Missile;
 
-constinit const int MaxMonsters = 200;
-constinit const int maxLvlmtypes = 24;
+constexpr const int MaxMonsters = 200;
+constexpr const int MaxLvlMTypes = 24;
 
 enum monster_flag : uint16_t {
 	// clang-format off
@@ -264,7 +264,7 @@ struct Monster { // note: missing field _mAFNum
 	bool TryLiftGargoyle();
 };
 
-extern CMonster LevelMonsterTypes[maxLvlmtypes];
+extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 extern int LevelMonsterTypeCount;
 extern Monster Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];

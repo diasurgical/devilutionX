@@ -1230,7 +1230,7 @@ void InitMonsterSND(int monst)
 void FreeMonsterSnd()
 {
 #ifdef _DEBUG
-	for (int i = 0; i < maxLvlmtypes; i++) {
+	for (int i = 0; i < MaxLvlMTypes; i++) {
 #else
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
 #endif
