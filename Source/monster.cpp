@@ -66,7 +66,7 @@ int totalmonsters;
 int monstimgtot;
 int uniquetrans;
 
-constexpr std::array<_monster_id, 12> SkeletonTypes {
+constexpr const std::array<_monster_id, 12> SkeletonTypes {
 	MT_WSKELAX,
 	MT_TSKELAX,
 	MT_RSKELAX,

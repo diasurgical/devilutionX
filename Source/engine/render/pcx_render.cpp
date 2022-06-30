@@ -28,17 +28,15 @@ const uint8_t *SkipRestOfPcxLine(const uint8_t *src, unsigned remainingWidth)
 template <bool UseColorMap, bool HasTransparency>
 void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, const uint8_t *colorMap, uint8_t transparentColor)
 {
-	if (position.y >= out.h())
-		return;
+	const unsigned srcSkip = srcWidth % 2;
 	while (position.y < 0 && srcHeight != 0) {
-		src = SkipRestOfPcxLine(src, srcWidth);
+		src = SkipRestOfPcxLine(src, srcWidth) + srcSkip;
 		++position.y;
 		--srcHeight;
 	}
 	srcHeight = static_cast<unsigned>(std::min<int>(out.h() - position.y, srcHeight));
 
 	const auto dstSkip = static_cast<unsigned>(out.pitch() - srcWidth);
-	const unsigned srcSkip = srcWidth % 2;
 	uint8_t *dst = &out[position];
 	for (unsigned y = 0; y < srcHeight; y++) {
 		for (unsigned x = 0; x < srcWidth;) {
@@ -67,10 +65,9 @@ void BlitPcxClipY(const Surface &out, Point position, const uint8_t *src, unsign
 template <bool UseColorMap, bool HasTransparency>
 void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsigned srcWidth, unsigned srcHeight, ClipX clipX, const uint8_t *colorMap, uint8_t transparentColor)
 {
-	if (position.y >= out.h() || position.x >= out.w())
-		return;
+	const unsigned srcSkip = srcWidth % 2;
 	while (position.y < 0 && srcHeight != 0) {
-		src = SkipRestOfPcxLine(src, srcWidth);
+		src = SkipRestOfPcxLine(src, srcWidth) + srcSkip;
 		++position.y;
 		--srcHeight;
 	}
@@ -79,7 +76,6 @@ void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsig
 	position.x += static_cast<int>(clipX.left);
 
 	const auto dstSkip = static_cast<unsigned>(out.pitch() - clipX.width);
-	const unsigned srcSkip = srcWidth % 2;
 	uint8_t *dst = &out[position];
 	for (unsigned y = 0; y < srcHeight; y++) {
 		// Skip initial src if clipping on the left.
@@ -155,6 +151,8 @@ void BlitPcxClipXY(const Surface &out, Point position, const uint8_t *src, unsig
 template <bool UseColorMap>
 void BlitPcxSprite(const Surface &out, Point position, PcxSprite sprite, const uint8_t *colorMap)
 {
+	if (position.y >= out.h() || position.y + sprite.height() <= 0)
+		return;
 	const ClipX clipX = CalculateClipX(position.x, sprite.width(), out);
 	if (clipX.width <= 0)
 		return;
