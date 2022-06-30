@@ -25,8 +25,8 @@ namespace devilution {
 
 struct Missile;
 
-constexpr const int MaxMonsters = 200;
-constexpr const int MaxLvlMTypes = 24;
+constexpr int MaxMonsters = 200;
+constexpr int MaxLvlMTypes = 24;
 
 enum monster_flag : uint16_t {
 	// clang-format off
