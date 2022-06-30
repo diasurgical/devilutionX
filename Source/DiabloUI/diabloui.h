@@ -62,8 +62,7 @@ struct _uiheroinfo {
 	bool spawned;
 };
 
-extern std::optional<OwnedPcxSpriteSheet> ArtLogoMed;
-extern std::optional<OwnedCelSpriteWithFrameHeight> ArtLogoBig;
+extern std::optional<OwnedPcxSpriteSheet> ArtLogo;
 extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 extern std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 extern std::optional<OwnedPcxSpriteSheet> ArtBackground;
@@ -101,7 +100,6 @@ void DrawMouse();
 void LoadBackgroundArt(const char *pszFile, int frames = 1);
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
-void UiAddLogoBig(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int y);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
