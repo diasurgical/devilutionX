@@ -23,12 +23,6 @@ enum _artFocus : uint8_t {
 	FOCUS_BIG,
 };
 
-enum _artLogo : uint8_t {
-	LOGO_SMALL,
-	LOGO_MED,
-	LOGO_BIG,
-};
-
 enum _mainmenu_selections : uint8_t {
 	MAINMENU_NONE,
 	MAINMENU_SINGLE_PLAYER,
@@ -68,7 +62,8 @@ struct _uiheroinfo {
 	bool spawned;
 };
 
-extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
+extern std::optional<OwnedPcxSpriteSheet> ArtLogoMed;
+extern std::optional<OwnedCelSpriteWithFrameHeight> ArtLogoBig;
 extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 extern std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 extern std::optional<OwnedPcxSpriteSheet> ArtBackground;
@@ -105,7 +100,8 @@ void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
 void LoadBackgroundArt(const char *pszFile, int frames = 1);
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
-void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size = LOGO_MED, int y = 0);
+void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
+void UiAddLogoBig(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int y);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();

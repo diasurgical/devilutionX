@@ -45,8 +45,10 @@
 
 namespace devilution {
 
+std::optional<OwnedPcxSpriteSheet> ArtLogoMed;
+
 // These are stored as PCX but we load them as CEL to reduce memory usage.
-std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtLogos;
+std::optional<OwnedCelSpriteWithFrameHeight> ArtLogoBig;
 std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 
 std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
@@ -572,9 +574,9 @@ void LoadHeros()
 void LoadUiGFX()
 {
 	if (gbIsHellfire) {
-		ArtLogos[LOGO_MED] = LoadPcxAssetAsCel("ui_art\\hf_logo2.pcx", /*numFrames=*/16);
+		ArtLogoMed = LoadPcxSpriteSheetAsset("ui_art\\hf_logo2.pcx", /*numFrames=*/16, /*transparentColor=*/1);
 	} else {
-		ArtLogos[LOGO_MED] = LoadPcxAssetAsCel("ui_art\\smlogo.pcx", /*numFrames=*/15, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+		ArtLogoMed = LoadPcxSpriteSheetAsset("ui_art\\smlogo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
 	}
 	ArtFocus[FOCUS_SMALL] = LoadPcxAssetAsCel("ui_art\\focus16.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
 	ArtFocus[FOCUS_MED] = LoadPcxAssetAsCel("ui_art\\focus.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
@@ -600,8 +602,8 @@ void UnloadUiGFX()
 	ArtCursor.Unload();
 	for (auto &art : ArtFocus)
 		art = std::nullopt;
-	for (auto &art : ArtLogos)
-		art = std::nullopt;
+	ArtLogoMed = std::nullopt;
+	ArtLogoBig = std::nullopt;
 }
 
 void UiInitialize()
@@ -709,11 +711,17 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 	vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSpriteSheet { *ArtBackground }.sprite(0), rect, UiFlags::AlignCenter));
 }
 
-void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
+void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
+{
+	vecDialog->push_back(std::make_unique<UiImageAnimatedPcx>(
+	    PcxSpriteSheet { *ArtLogoMed }, MakeSdlRect(0, GetUIRectangle().position.y, 0, 0), UiFlags::AlignCenter));
+}
+
+void UiAddLogoBig(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int y)
 {
 	SDL_Rect rect = MakeSdlRect(0, GetUIRectangle().position.y + y, 0, 0);
 	vecDialog->push_back(std::make_unique<UiImageCel>(
-	    CelSpriteWithFrameHeight { CelSprite { ArtLogos[size]->sprite }, ArtLogos[size]->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
+	    CelSpriteWithFrameHeight { CelSprite { ArtLogoBig->sprite }, ArtLogoBig->frameHeight }, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 }
 
 void UiFadeIn()
