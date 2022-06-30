@@ -2328,8 +2328,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		music_mute();
 	}
 
-	while (!IncProgress())
-		;
+	if (firstflag) {
+		while (!IncProgress())
+			;
+	}
 
 	if (!gbIsSpawn && setlevel && setlvlnum == SL_SKELKING && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
 		PlaySFX(USFX_SKING1);

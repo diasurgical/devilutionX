@@ -32,6 +32,7 @@ namespace {
 
 std::optional<OwnedCelSprite> sgpBackCel;
 
+bool IsProgress;
 uint32_t sgdwProgress;
 int progress_id;
 
@@ -217,6 +218,8 @@ void interface_msg_pump()
 bool IncProgress()
 {
 	interface_msg_pump();
+	if (!IsProgress)
+		return false;
 	sgdwProgress += 23;
 	if (sgdwProgress > 534)
 		sgdwProgress = 534;
@@ -227,6 +230,7 @@ bool IncProgress()
 void ShowProgress(interface_mode uMsg)
 {
 	WNDPROC saveProc;
+	IsProgress = true;
 
 	gbSomebodyWonGameKludge = false;
 	plrmsg_delay(true);
@@ -413,6 +417,7 @@ void ShowProgress(interface_mode uMsg)
 
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == DisableInputWndProc);
+	IsProgress = false;
 
 	NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.plrIsOnSetLevel ? 1 : 0);
 	plrmsg_delay(false);
