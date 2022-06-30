@@ -161,9 +161,9 @@ namespace {
 
 struct DirectionSettings {
 	Direction dir;
-	Displacement tileAdd;
-	Displacement offset;
-	Displacement map;
+	DisplacementOf<int8_t> tileAdd;
+	DisplacementOf<int8_t> offset;
+	DisplacementOf<int8_t> map;
 	ScrollDirection scrollDir;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(int, const DirectionSettings &);
