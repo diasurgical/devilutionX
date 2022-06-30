@@ -392,7 +392,10 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	int mid = dMonster[mx][my];
 	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
 		mid = abs(mid) - 1;
-		if (missile.IsTrap() || (missile._micaster == TARGET_PLAYERS && (Monsters[missile._misource]._mFlags & MFLAG_TARGETS_MONSTER) != 0 && Monsters[missile._misource]._menemy == mid)) {
+		if (missile.IsTrap()
+		    || (missile._micaster == TARGET_PLAYERS
+		        && (Monsters[missile._misource]._mFlags & MFLAG_TARGETS_MONSTER) != 0
+		        && ((Monsters[mid]._mFlags & MFLAG_GOLEM) != 0 || (Monsters[missile._misource]._mFlags & MFLAG_BERSERK) != 0))) {
 			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		} else if (IsAnyOf(missile._micaster, TARGET_BOTH, TARGET_MONSTERS)) {
 			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
