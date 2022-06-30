@@ -187,10 +187,10 @@ void DrlgTPass3()
 {
 	for (int yy = 0; yy < MAXDUNY; yy += 2) {
 		for (int xx = 0; xx < MAXDUNX; xx += 2) {
-			dPiece[xx][yy] = 218;
-			dPiece[xx + 1][yy] = 218;
-			dPiece[xx][yy + 1] = 218;
-			dPiece[xx + 1][yy + 1] = 218;
+			dPiece[xx][yy] = 426;
+			dPiece[xx + 1][yy] = 426;
+			dPiece[xx][yy + 1] = 426;
+			dPiece[xx + 1][yy + 1] = 426;
 		}
 	}
 
