@@ -296,7 +296,7 @@ void NotifyGameLoopEnd()
 		CreateDemoReference = false;
 	}
 
-	if (IsRunning()) {
+	if (IsRunning() && !HeadlessMode) {
 		float seconds = (SDL_GetTicks() - StartTime) / 1000.0f;
 		SDL_Log("%d frames, %.2f seconds: %.1f fps", LogicTick, seconds, LogicTick / seconds);
 		gbRunGameResult = false;

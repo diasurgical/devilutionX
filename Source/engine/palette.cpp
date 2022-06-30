@@ -176,6 +176,9 @@ void CycleColorsReverse(int from, int to)
 
 void palette_update(int first, int ncolor)
 {
+	if (HeadlessMode)
+		return;
+
 	assert(Palette);
 	if (SDLC_SetSurfaceAndPaletteColors(PalSurface, Palette.get(), system_palette, first, ncolor) < 0) {
 		ErrSdl();
@@ -205,6 +208,9 @@ void palette_init()
 void LoadPalette(const char *pszFileName, bool blend /*= true*/)
 {
 	assert(pszFileName);
+
+	if (HeadlessMode)
+		return;
 
 	struct Color {
 		uint8_t r;
@@ -238,6 +244,9 @@ void LoadPalette(const char *pszFileName, bool blend /*= true*/)
 
 void LoadRndLvlPal(dungeon_type l)
 {
+	if (HeadlessMode)
+		return;
+
 	if (l == DTYPE_TOWN) {
 		LoadPalette("Levels\\TownData\\Town.pal");
 		return;
@@ -293,6 +302,9 @@ int UpdateGamma(int gamma)
 
 void SetFadeLevel(int fadeval)
 {
+	if (HeadlessMode)
+		return;
+
 	for (int i = 0; i < 256; i++) {
 		system_palette[i].r = (fadeval * logical_palette[i].r) / 256;
 		system_palette[i].g = (fadeval * logical_palette[i].g) / 256;
@@ -311,6 +323,9 @@ void BlackPalette()
 
 void PaletteFadeIn(int fr)
 {
+	if (HeadlessMode)
+		return;
+
 	ApplyGamma(logical_palette, orig_palette, 256);
 
 	const uint32_t tc = SDL_GetTicks();
@@ -334,7 +349,7 @@ void PaletteFadeIn(int fr)
 
 void PaletteFadeOut(int fr)
 {
-	if (!sgbFadedIn)
+	if (!sgbFadedIn || HeadlessMode)
 		return;
 
 	const uint32_t tc = SDL_GetTicks();

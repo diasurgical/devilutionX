@@ -1560,6 +1560,9 @@ extern SDL_Surface *PalSurface;
 
 void ClearScreenBuffer()
 {
+	if (HeadlessMode)
+		return;
+
 	assert(PalSurface != nullptr);
 	SDL_FillRect(PalSurface, nullptr, 0);
 }
@@ -1652,6 +1655,9 @@ void EnableFrameCount()
 
 void scrollrt_draw_game_screen()
 {
+	if (HeadlessMode)
+		return;
+
 	int hgt = 0;
 
 	if (force_redraw == 255) {
@@ -1676,7 +1682,7 @@ void scrollrt_draw_game_screen()
 
 void DrawAndBlit()
 {
-	if (!gbRunGame) {
+	if (!gbRunGame || HeadlessMode) {
 		return;
 	}
 

@@ -375,7 +375,7 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 {
 	data = nullptr;
 	data = LoadFileInMem(path);
-	if (data == nullptr && HeadlessMode)
+	if (data == nullptr)
 		return;
 
 	const byte *directionFrames[8];
@@ -2182,6 +2182,9 @@ Player *PlayerAtPosition(Point position)
 
 void LoadPlrGFX(Player &player, player_graphic graphic)
 {
+	if (HeadlessMode)
+		return;
+
 	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
 	if (animationData.RawData != nullptr)
 		return;
@@ -2298,6 +2301,9 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 
 void InitPlayerGFX(Player &player)
 {
+	if (HeadlessMode)
+		return;
+
 	ResetPlayerGFX(player);
 
 	if (player._pHitPoints >> 6 == 0) {
