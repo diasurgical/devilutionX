@@ -43,7 +43,7 @@ void selok_Esc()
 void UiSelOkDialog(const char *title, const char *body, bool background)
 {
 	if (!background) {
-		LoadBackgroundArt("ui_art\\black.pcx");
+		UiLoadBlackBackground();
 	} else {
 		if (!gbIsSpawn) {
 			LoadBackgroundArt("ui_art\\mainmenu.pcx");

@@ -673,8 +673,22 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 	return (bw - w) / 2;
 }
 
+bool UiLoadBlackBackground()
+{
+	LoadBackgroundArt(gbIsHellfire ? "ui_art\\black_hellfire.pcx" : "ui_art\\black_diablo.pcx");
+
+	if (!ArtBackground)
+		return false;
+
+	// We only needed the black background for the palette, can now deallocate it.
+	ArtBackground = std::nullopt;
+
+	return true;
+}
+
 void LoadBackgroundArt(const char *pszFile, int frames)
 {
+	ArtBackground = std::nullopt;
 	SDL_Color pPal[256];
 	ArtBackground = LoadPcxSpriteSheetAsset(pszFile, static_cast<uint16_t>(frames), /*transparentColor=*/std::nullopt, pPal);
 	if (!ArtBackground)
@@ -700,14 +714,13 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
-	int uiPositionY = GetUIRectangle().position.y;
+	const SDL_Rect rect = MakeSdlRect(0, GetUIRectangle().position.y, 0, 0);
 	if (ArtBackgroundWidescreen) {
-		SDL_Rect rectw = MakeSdlRect(0, uiPositionY, 0, 0);
-		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rectw, UiFlags::AlignCenter));
+		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rect, UiFlags::AlignCenter));
 	}
-
-	SDL_Rect rect = MakeSdlRect(0, uiPositionY, 0, 0);
-	vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSpriteSheet { *ArtBackground }.sprite(0), rect, UiFlags::AlignCenter));
+	if (ArtBackground) {
+		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSpriteSheet { *ArtBackground }.sprite(0), rect, UiFlags::AlignCenter));
+	}
 }
 
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
@@ -769,7 +782,7 @@ void DrawSelector(const SDL_Rect &rect)
 
 void UiClearScreen()
 {
-	if (gnScreenWidth > 640) // Background size
+	if (!ArtBackground || gnScreenWidth > PcxSpriteSheet { *ArtBackground }.width() || gnScreenHeight > PcxSpriteSheet { *ArtBackground }.frameHeight())
 		SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 }
 

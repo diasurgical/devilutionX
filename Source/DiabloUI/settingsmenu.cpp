@@ -247,7 +247,7 @@ void UiSettingsMenu()
 	do {
 		endMenu = false;
 
-		LoadBackgroundArt("ui_art\\black.pcx");
+		UiLoadBlackBackground();
 		LoadScrollBar();
 		UiAddBackground(&vecDialog);
 		UiAddLogo(&vecDialog);
