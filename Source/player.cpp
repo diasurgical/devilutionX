@@ -798,7 +798,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 {
 	int hper = 0;
 
-	if ((DWORD)m >= MAXMONSTERS) {
+	if ((DWORD)m >= MaxMonsters) {
 		app_fatal("PlrHitMonst: illegal monster %i", m);
 	}
 	auto &monster = Monsters[m];

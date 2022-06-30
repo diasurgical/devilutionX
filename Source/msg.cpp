@@ -73,7 +73,7 @@ struct DObjectStr {
 struct DLevel {
 	TCmdPItem item[MAXITEMS];
 	DObjectStr object[MAXOBJECTS];
-	DMonsterStr monster[MAXMONSTERS];
+	DMonsterStr monster[MaxMonsters];
 };
 
 struct LocalLevel {
@@ -346,7 +346,7 @@ size_t DeltaImportObject(const byte *src, DObjectStr *dst)
 
 byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 {
-	for (int i = 0; i < MAXMONSTERS; i++, src++) {
+	for (int i = 0; i < MaxMonsters; i++, src++) {
 		if (src->_mx == 0xFF) {
 			*dst++ = byte { 0xFF };
 		} else {
@@ -361,7 +361,7 @@ byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 void DeltaImportMonster(const byte *src, DMonsterStr *dst)
 {
 	size_t size = 0;
-	for (int i = 0; i < MAXMONSTERS; i++, dst++) {
+	for (int i = 0; i < MaxMonsters; i++, dst++) {
 		if (src[size] == byte { 0xFF }) {
 			memset(dst, 0xFF, sizeof(DMonsterStr));
 			size++;
@@ -1254,7 +1254,7 @@ DWORD OnAttackMonster(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MAXMONSTERS) {
+	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MaxMonsters) {
 		Point position = Monsters[message.wParam1].position.future;
 		if (player.position.tile.WalkingDistance(position) > 1)
 			MakePlrPath(player, position, false);
@@ -1282,7 +1282,7 @@ DWORD OnRangedAttackMonster(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MAXMONSTERS) {
+	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MaxMonsters) {
 		ClrPlrPath(player);
 		player.destAction = ACTION_RATTACKMON;
 		player.destParam1 = message.wParam1;
@@ -1312,7 +1312,7 @@ DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	if (!player.isOnActiveLevel())
 		return sizeof(message);
-	if (message.wParam1 >= MAXMONSTERS)
+	if (message.wParam1 >= MaxMonsters)
 		return sizeof(message);
 	if (message.wParam2 > SPL_LAST)
 		return sizeof(message);
@@ -1376,7 +1376,7 @@ DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	if (!player.isOnActiveLevel())
 		return sizeof(message);
-	if (message.wParam1 >= MAXMONSTERS)
+	if (message.wParam1 >= MaxMonsters)
 		return sizeof(message);
 	if (message.wParam2 > SPL_LAST)
 		return sizeof(message);
@@ -1434,7 +1434,7 @@ DWORD OnKnockback(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && Players[pnum].isOnActiveLevel() && message.wParam1 < MAXMONSTERS) {
+	if (gbBufferMsgs != 1 && Players[pnum].isOnActiveLevel() && message.wParam1 < MaxMonsters) {
 		M_GetKnockback(message.wParam1);
 		M_StartHit(message.wParam1, pnum, 0);
 	}
@@ -1526,7 +1526,7 @@ DWORD OnMonstDeath(const TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
-	else if (pnum != MyPlayerId && InDungeonBounds(position) && message.wParam1 < MAXMONSTERS) {
+	else if (pnum != MyPlayerId && InDungeonBounds(position) && message.wParam1 < MaxMonsters) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			M_SyncStartKill(message.wParam1, position, pnum);
@@ -1586,7 +1586,7 @@ DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (pnum != MyPlayerId) {
 		Player &player = Players[pnum];
-		if (player.isOnActiveLevel() && message.wMon < MAXMONSTERS) {
+		if (player.isOnActiveLevel() && message.wMon < MaxMonsters) {
 			auto &monster = Monsters[message.wMon];
 			monster.mWhoHit |= 1 << pnum;
 			if (monster._mhitpoints > 0) {

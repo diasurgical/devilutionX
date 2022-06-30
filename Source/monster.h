@@ -25,8 +25,8 @@ namespace devilution {
 
 struct Missile;
 
-#define MAXMONSTERS 200
-#define MAX_LVLMTYPES 24
+constinit const int MaxMonsters = 200;
+constinit const int maxLvlmtypes = 24;
 
 enum monster_flag : uint16_t {
 	// clang-format off
@@ -46,7 +46,7 @@ enum monster_flag : uint16_t {
 	// clang-format on
 };
 
-/** this enum contains indexes from UniqueMonstersData array for special unique monsters (usually quest related) */
+/** This enum contains indexes from UniqueMonstersData array for special unique monsters (usually quest related) */
 enum : uint8_t {
 	UMT_GARBUD,
 	UMT_SKELKING,
@@ -117,16 +117,16 @@ enum placeflag : uint8_t {
 
 /**
  * @brief Defines the relation of the monster to a monster pack.
- *        If value is differnt from Individual Monster.leader must also be set
+ *        If value is different from Individual Monster, the leader must also be set
  */
 enum class LeaderRelation : uint8_t {
 	None,
 	/**
-	 * @brief Minion that sticks with the leader
+	 * @brief Minion that sticks to the leader
 	 */
 	Leashed,
 	/**
-	 * @brief Minion that was separated from leader and acts individual until it reaches the leader again
+	 * @brief Minion that was separated from the leader and acts individually until it reaches the leader again
 	 */
 	Separated,
 };
@@ -175,12 +175,12 @@ struct Monster { // note: missing field _mAFNum
 	ActorPosition position;
 	/** Direction faced by monster (direction enum) */
 	Direction _mdir;
-	/** The current target of the mosnter. An index in to either the plr or monster array based on the _meflag value. */
+	/** The current target of the monster. An index in to either the plr or monster array based on the _meflag value. */
 	int _menemy;
-	/** Usually correspond's to the enemy's future position */
+	/** Usually corresponds to the enemy's future position */
 	Point enemyPosition;
 	/**
-	 * @brief Contains Information for current Animation
+	 * @brief Contains information for current animation
 	 */
 	AnimationInfo AnimInfo;
 	bool _mDelFlag;
@@ -264,12 +264,12 @@ struct Monster { // note: missing field _mAFNum
 	bool TryLiftGargoyle();
 };
 
-extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
+extern CMonster LevelMonsterTypes[maxLvlmtypes];
 extern int LevelMonsterTypeCount;
-extern Monster Monsters[MAXMONSTERS];
-extern int ActiveMonsters[MAXMONSTERS];
+extern Monster Monsters[MaxMonsters];
+extern int ActiveMonsters[MaxMonsters];
 extern int ActiveMonsterCount;
-extern int MonsterKillCounts[MAXMONSTERS];
+extern int MonsterKillCounts[MaxMonsters];
 extern bool sgbSaveSoundOn;
 
 void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
