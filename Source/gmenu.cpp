@@ -190,6 +190,10 @@ void gmenu_init_menu()
 	gmenu_current_option = nullptr;
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = false;
+
+	if (HeadlessMode)
+		return;
+
 	if (gbIsHellfire)
 		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
 	else

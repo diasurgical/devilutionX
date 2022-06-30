@@ -766,15 +766,17 @@ void SetupObject(Object &object, Point position, _object_id ot)
 	object_graphic_id ofi = objectData.ofindex;
 	object.position = position;
 
-	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
-	if (found == std::end(ObjFileList)) {
-		LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", ofi);
-		return;
+	if (!HeadlessMode) {
+		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
+		if (found == std::end(ObjFileList)) {
+			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", ofi);
+			return;
+		}
+
+		const int j = std::distance(std::begin(ObjFileList), found);
+
+		object._oAnimData = pObjCels[j].get();
 	}
-
-	const int j = std::distance(std::begin(ObjFileList), found);
-
-	object._oAnimData = pObjCels[j].get();
 	object._oAnimFlag = objectData.oAnimFlag;
 	if (object._oAnimFlag) {
 		object._oAnimDelay = objectData.oAnimDelay;
@@ -4077,6 +4079,9 @@ bool IsItemBlockingObjectAtPosition(Point position)
 
 void LoadLevelObjects(bool filesLoaded[65])
 {
+	if (HeadlessMode)
+		return;
+
 	for (const ObjectData objectData : AllObjects) {
 		if (leveltype == objectData.olvltype) {
 			filesLoaded[objectData.ofindex] = true;
@@ -5171,15 +5176,18 @@ void SyncObjectAnim(Object &object)
 {
 	object_graphic_id index = AllObjects[object._otype].ofindex;
 
-	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
-	if (found == std::end(ObjFileList)) {
-		LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", index);
-		return;
+	if (!HeadlessMode) {
+		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
+		if (found == std::end(ObjFileList)) {
+			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", index);
+			return;
+		}
+
+		const int i = std::distance(std::begin(ObjFileList), found);
+
+		object._oAnimData = pObjCels[i].get();
 	}
 
-	const int i = std::distance(std::begin(ObjFileList), found);
-
-	object._oAnimData = pObjCels[i].get();
 	switch (object._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:

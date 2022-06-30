@@ -1077,9 +1077,6 @@ void InitInv()
 		pInvCels = LoadCel(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	}
-
-	CloseInventory();
-	drawsbarflag = false;
 }
 
 void DrawInv(const Surface &out)

@@ -157,6 +157,9 @@ void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect)
 
 void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
 {
+	if (HeadlessMode)
+		return;
+
 	SDL_Surface *dst = GetOutputSurface();
 #ifndef USE_SDL1
 	if (SDL_BlitSurface(src, srcRect, dst, dstRect) < 0)
@@ -207,6 +210,9 @@ void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
 
 void RenderPresent()
 {
+	if (HeadlessMode)
+		return;
+
 	SDL_Surface *surface = GetOutputSurface();
 
 	if (!gbActive) {

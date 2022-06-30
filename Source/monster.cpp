@@ -3612,11 +3612,13 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 	};
 
 	std::array<uint32_t, MaxAnims> animOffsets;
-	monster.animData = MultiFileLoader<MaxAnims> {}(
-	    numAnims,
-	    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.GraphicType }, ".CL2", Animletter),
-	    animOffsets.data(),
-	    hasAnim);
+	if (HeadlessMode) {
+		monster.animData = MultiFileLoader<MaxAnims> {}(
+		    numAnims,
+		    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.GraphicType }, ".CL2", Animletter),
+		    animOffsets.data(),
+		    hasAnim);
+	}
 
 	for (unsigned animIndex = 0; animIndex < numAnims; animIndex++) {
 		AnimStruct &anim = monster.anims[animIndex];
@@ -3630,6 +3632,9 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 		anim.rate = monsterData.Rate[animIndex];
 		anim.width = width;
 
+		if (HeadlessMode)
+			continue;
+
 		byte *cl2Data = &monster.animData[animOffsets[animIndex]];
 		if (IsDirectionalAnim(monster, animIndex)) {
 			CelGetDirectionFrames(cl2Data, anim.celSpritesForDirections.data());
@@ -3641,6 +3646,9 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 	}
 
 	monster.data = &monsterData;
+
+	if (HeadlessMode)
+		return;
 
 	if (monsterData.TransFile != nullptr) {
 		InitMonsterTRN(monster);

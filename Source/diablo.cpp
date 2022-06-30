@@ -693,20 +693,16 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		if (gbIsMultiplayer)
 			pfile_write_hero();
 		nthread_ignore_mutex(true);
-		if (!HeadlessMode) {
-			PaletteFadeOut(8);
-			sound_stop();
-		}
+		PaletteFadeOut(8);
+		sound_stop();
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ShowProgress((interface_mode)uMsg);
 		force_redraw = 255;
-		if (!HeadlessMode) {
-			DrawAndBlit();
-			LoadPWaterPalette();
-			if (gbRunGame)
-				PaletteFadeIn(8);
-		}
+		DrawAndBlit();
+		LoadPWaterPalette();
+		if (gbRunGame)
+			PaletteFadeIn(8);
 		nthread_ignore_mutex(false);
 		gbGameLoopStartup = true;
 		return;
@@ -729,13 +725,11 @@ void RunGameLoop(interface_mode uMsg)
 	gbRunGame = true;
 	gbProcessPlayers = true;
 	gbRunGameResult = true;
-	if (!HeadlessMode) {
-		force_redraw = 255;
-		DrawAndBlit();
-		LoadPWaterPalette();
-		PaletteFadeIn(8);
-		force_redraw = 255;
-	}
+	force_redraw = 255;
+	DrawAndBlit();
+	LoadPWaterPalette();
+	PaletteFadeIn(8);
+	force_redraw = 255;
 	gbGameLoopStartup = true;
 	nthread_ignore_mutex(false);
 
@@ -804,13 +798,11 @@ void RunGameLoop(interface_mode uMsg)
 		sfile_write_stash();
 	}
 
-	if (!HeadlessMode) {
-		PaletteFadeOut(8);
-		NewCursor(CURSOR_NONE);
-		ClearScreenBuffer();
-		force_redraw = 255;
-		scrollrt_draw_game_screen();
-	}
+	PaletteFadeOut(8);
+	NewCursor(CURSOR_NONE);
+	ClearScreenBuffer();
+	force_redraw = 255;
+	scrollrt_draw_game_screen();
 	previousHandler = SetEventHandler(previousHandler);
 	assert(HeadlessMode || previousHandler == GameEventHandler);
 	FreeGame();
@@ -2101,13 +2093,18 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 
 	if (firstflag) {
-		InitInv();
-		InitStash();
-		InitQuestText();
-		InitInfoBoxGfx();
+		CloseInventory();
+		drawsbarflag = false;
+		qtextflag = false;
+		if (!HeadlessMode) {
+			InitInv();
+			InitStash();
+			InitQuestText();
+			InitInfoBoxGfx();
+			InitHelp();
+		}
 		InitStores();
 		InitAutomapOnce();
-		InitHelp();
 	}
 	SetRndSeed(glSeedTbl[currlevel]);
 
@@ -2143,8 +2140,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (leveltype != DTYPE_TOWN) {
 			GetLevelMTypes();
 			InitThemes();
-			LoadAllGFX();
-		} else {
+			if (!HeadlessMode)
+				LoadAllGFX();
+		} else if (!HeadlessMode) {
 			IncProgress();
 #if !defined(USE_SDL1) && !defined(__vita__)
 			InitVirtualGamepadGFX(renderer);
@@ -2249,11 +2247,13 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitGolems();
 		InitMonsters();
 		IncProgress();
+		if (!HeadlessMode) {
 #if !defined(USE_SDL1) && !defined(__vita__)
-		InitVirtualGamepadGFX(renderer);
+			InitVirtualGamepadGFX(renderer);
 #endif
-		InitMissileGFX(gbIsHellfire);
-		IncProgress();
+			InitMissileGFX(gbIsHellfire);
+			IncProgress();
+		}
 		InitCorpses();
 		IncProgress();
 		LoadLevelSOLData();
