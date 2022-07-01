@@ -335,7 +335,7 @@ std::string ExportDun(const string_view parameter)
 			uint16_t monsterId = 0;
 			if (dMonster[x][y] > 0) {
 				for (int i = 0; i < 157; i++) {
-					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].MType->mtype) {
+					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].MType->type) {
 						monsterId = i + 1;
 						break;
 					}
@@ -704,7 +704,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	bool found = false;
 
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
-		if (LevelMonsterTypes[i].mtype == mtype) {
+		if (LevelMonsterTypes[i].type == mtype) {
 			id = i;
 			found = true;
 			break;
@@ -712,11 +712,11 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
+		LevelMonsterTypes[id].type = static_cast<_monster_id>(mtype);
 		InitMonsterGFX(id);
 		InitMonsterSND(id);
-		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].mdeadval = 1;
+		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
+		LevelMonsterTypes[id].corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;
@@ -789,7 +789,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	bool found = false;
 
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
-		if (LevelMonsterTypes[i].mtype == mtype) {
+		if (LevelMonsterTypes[i].type == mtype) {
 			id = i;
 			found = true;
 			break;
@@ -797,11 +797,11 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
+		LevelMonsterTypes[id].type = static_cast<_monster_id>(mtype);
 		InitMonsterGFX(id);
 		InitMonsterSND(id);
-		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].mdeadval = 1;
+		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
+		LevelMonsterTypes[id].corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;

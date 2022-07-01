@@ -132,36 +132,37 @@ enum class LeaderRelation : uint8_t {
 };
 
 struct AnimStruct {
-	[[nodiscard]] std::optional<CelSprite> GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] std::optional<CelSprite> getCelSpritesForDirection(Direction direction) const
 	{
-		const byte *spriteData = CelSpritesForDirections[static_cast<size_t>(direction)];
+		const byte *spriteData = celSpritesForDirections[static_cast<size_t>(direction)];
 		if (spriteData == nullptr)
 			return std::nullopt;
-		return CelSprite(spriteData, Width);
+		return CelSprite(spriteData, width);
 	}
 
-	std::array<byte *, 8> CelSpritesForDirections;
-	uint16_t Width;
-	int Frames;
-	int Rate;
+	std::array<byte *, 8> celSpritesForDirections;
+	uint16_t width;
+	int frames;
+	int rate;
 };
 
 struct CMonster {
-	_monster_id mtype;
+	_monster_id type;
 	/** placeflag enum as a flags*/
-	uint8_t mPlaceFlags;
+
+	uint8_t placeFlags;
 	std::unique_ptr<byte[]> animData;
-	AnimStruct Anims[6];
+	AnimStruct anims[6];
 	/**
 	 * @brief Returns AnimStruct for specified graphic
 	 */
-	const AnimStruct &GetAnimData(MonsterGraphic graphic) const
+	const AnimStruct &getAnimData(MonsterGraphic graphic) const
 	{
-		return Anims[static_cast<int>(graphic)];
+		return anims[static_cast<int>(graphic)];
 	}
-	std::unique_ptr<TSnd> Snds[4][2];
-	int8_t mdeadval;
-	const MonsterData *MData;
+	std::unique_ptr<TSnd> sounds[4][2];
+	int8_t corpseId;
+	const MonsterData *data;
 };
 
 struct Monster { // note: missing field _mAFNum
@@ -228,10 +229,10 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void ChangeAnimationData(MonsterGraphic graphic, Direction direction)
 	{
-		auto &animationData = this->MType->GetAnimData(graphic);
+		auto &animationData = this->MType->getAnimData(graphic);
 
-		// Passing the Frames and Rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->AnimInfo.ChangeAnimationData(animationData.GetCelSpritesForDirection(direction), animationData.Frames, animationData.Rate);
+		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
+		this->AnimInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(direction), animationData.frames, animationData.rate);
 	}
 
 	/**

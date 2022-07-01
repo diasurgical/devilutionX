@@ -250,7 +250,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	} else {
 		if (monster._mmode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(m);
-		if (monster.MType->mtype != MT_GOLEM)
+		if (monster.MType->type != MT_GOLEM)
 			M_StartHit(m, pnum, dam);
 	}
 
@@ -592,7 +592,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	if (mid < 0)
 		return false;
 	const Monster &monster = Monsters[mid];
-	if (monster.MType->mtype == MT_GOLEM)
+	if (monster.MType->type == MT_GOLEM)
 		return false;
 	if (monster._mhitpoints >> 6 <= 0)
 		return false;
@@ -639,7 +639,7 @@ void SpawnLightning(Missile &missile, int dam)
 		if (position != Point { missile.var1, missile.var2 } && InDungeonBounds(position)) {
 			missile_id type = MIS_LIGHTNING;
 			if (!missile.IsTrap() && missile._micaster == TARGET_PLAYERS
-			    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
+			    && IsAnyOf(Monsters[missile._misource].MType->type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
 				type = MIS_LIGHTNING2;
 			}
 			AddMissile(
@@ -882,7 +882,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
-		if (monster.MType->mtype != MT_GOLEM)
+		if (monster.MType->type != MT_GOLEM)
 			M_StartHit(m, dam);
 	}
 	return true;
@@ -1144,7 +1144,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 
 		    const Monster &monster = Monsters[monsterId];
-		    if (monster.MType->mtype == MT_GOLEM)
+		    if (monster.MType->type == MT_GOLEM)
 			    return false;
 		    if ((monster._mFlags & MFLAG_BERSERK) != 0)
 			    return false;
@@ -1778,7 +1778,7 @@ void AddLightning(Missile &missile, const AddMissileParameter &parameter)
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 
 	if (missile._micaster == TARGET_PLAYERS || missile.IsTrap()) {
-		if (missile.IsTrap() || Monsters[missile._misource].MType->mtype == MT_FAMILIAR)
+		if (missile.IsTrap() || Monsters[missile._misource].MType->type == MT_FAMILIAR)
 			missile._mirange = 8;
 		else
 			missile._mirange = 10;
@@ -1791,7 +1791,7 @@ void AddLightning(Missile &missile, const AddMissileParameter &parameter)
 void AddMisexp(Missile &missile, const AddMissileParameter &parameter)
 {
 	if (missile._micaster != TARGET_MONSTERS && missile._misource >= 0) {
-		switch (Monsters[missile._misource].MType->mtype) {
+		switch (Monsters[missile._misource].MType->type) {
 		case MT_SUCCUBUS:
 			SetMissAnim(missile, MFILE_FLAREEXP);
 			break;
@@ -2010,13 +2010,13 @@ void AddChain(Missile &missile, const AddMissileParameter &parameter)
 namespace {
 void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monster &mon, MonsterGraphic graphic)
 {
-	const AnimStruct &anim = mon.MType->GetAnimData(graphic);
+	const AnimStruct &anim = mon.MType->getAnimData(graphic);
 	mis._mimfnum = static_cast<int32_t>(midir);
 	mis._miAnimFlags = MissileDataFlags::None;
-	CelSprite celSprite = *anim.GetCelSpritesForDirection(midir);
+	CelSprite celSprite = *anim.getCelSpritesForDirection(midir);
 	mis._miAnimData = celSprite.Data();
-	mis._miAnimDelay = anim.Rate;
-	mis._miAnimLen = anim.Frames;
+	mis._miAnimDelay = anim.rate;
+	mis._miAnimLen = anim.frames;
 	mis._miAnimWidth = celSprite.Width();
 	mis._miAnimWidth2 = CalculateWidth2(celSprite.Width());
 	mis._miAnimAdd = 1;
@@ -2032,14 +2032,14 @@ void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 	Monster &monster = Monsters[missile._misource];
 
 	MonsterGraphic graphic = MonsterGraphic::Walk;
-	if (IsAnyOf(monster.MType->mtype, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
+	if (IsAnyOf(monster.MType->type, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
 		graphic = MonsterGraphic::Special;
-	} else if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
+	} else if (IsAnyOf(monster.MType->type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
 		graphic = MonsterGraphic::Attack;
 	}
 	UpdateMissileVelocity(missile, parameter.dst, 18);
 	InitMissileAnimationFromMonster(missile, parameter.midir, monster, graphic);
-	if (IsAnyOf(monster.MType->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
+	if (IsAnyOf(monster.MType->type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		missile._miAnimFrame = 7;
 	if (monster._uniqtype != 0) {
 		missile._mlid = monster.mlid;
@@ -2063,13 +2063,13 @@ void AddFlare(Missile &missile, const AddMissileParameter &parameter)
 		ApplyPlrDamage(missile._misource, 5);
 	} else if (missile._misource > 0) {
 		auto &monster = Monsters[missile._misource];
-		if (monster.MType->mtype == MT_SUCCUBUS)
+		if (monster.MType->type == MT_SUCCUBUS)
 			SetMissAnim(missile, MFILE_FLARE);
-		if (monster.MType->mtype == MT_SNOWWICH)
+		if (monster.MType->type == MT_SNOWWICH)
 			SetMissAnim(missile, MFILE_SCUBMISB);
-		if (monster.MType->mtype == MT_HLSPWN)
+		if (monster.MType->type == MT_HLSPWN)
 			SetMissAnim(missile, MFILE_SCUBMISD);
-		if (monster.MType->mtype == MT_SOLBRNR)
+		if (monster.MType->type == MT_SOLBRNR)
 			SetMissAnim(missile, MFILE_SCUBMISC);
 	}
 
@@ -2115,7 +2115,7 @@ void AddStone(Missile &missile, const AddMissileParameter &parameter)
 
 		    auto &monster = Monsters[monsterId];
 
-		    if (IsAnyOf(monster.MType->mtype, MT_GOLEM, MT_DIABLO, MT_NAKRUL)) {
+		    if (IsAnyOf(monster.MType->type, MT_GOLEM, MT_DIABLO, MT_NAKRUL)) {
 			    return false;
 		    }
 		    if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge)) {
@@ -3587,7 +3587,7 @@ void MI_Apoca(Missile &missile)
 			int mid = dMonster[k][j] - 1;
 			if (mid < 0)
 				continue;
-			if (Monsters[mid].MType->mtype == MT_GOLEM)
+			if (Monsters[mid].MType->type == MT_GOLEM)
 				continue;
 			if (TileHasAny(dPiece[k][j], TileProperties::Solid))
 				continue;
@@ -3989,14 +3989,14 @@ void missiles_process_charge()
 		CMonster *mon = Monsters[missile._misource].MType;
 
 		MonsterGraphic graphic;
-		if (IsAnyOf(mon->mtype, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
+		if (IsAnyOf(mon->type, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
 			graphic = MonsterGraphic::Special;
-		} else if (IsAnyOf(mon->mtype, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
+		} else if (IsAnyOf(mon->type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE)) {
 			graphic = MonsterGraphic::Attack;
 		} else {
 			graphic = MonsterGraphic::Walk;
 		}
-		missile._miAnimData = mon->GetAnimData(graphic).CelSpritesForDirections[missile._mimfnum];
+		missile._miAnimData = mon->getAnimData(graphic).celSpritesForDirections[missile._mimfnum];
 	}
 }
 

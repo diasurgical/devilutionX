@@ -199,7 +199,7 @@ struct PlayerAnimationData {
 	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
 	/**
 	 * @brief Raw Data (binary) of the CL2 file.
-	 *        Is referenced from CelSprite in CelSpritesForDirections
+	 *        Is referenced from CelSprite in celSpritesForDirections
 	 */
 	std::unique_ptr<byte[]> RawData;
 
