@@ -3,6 +3,9 @@
  *
  * Implementation of functionality for rendering the dungeons, monsters and calling other render routines.
  */
+#include "engine/render/scrollrt.h"
+
+#include <fmt/compile.h>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
@@ -1319,7 +1322,7 @@ void DrawView(const Surface &out, Point startPosition)
  */
 void DrawFPS(const Surface &out)
 {
-	char string[12];
+	char buf[12];
 
 	if (!frameflag || !gbActive) {
 		return;
@@ -1333,8 +1336,9 @@ void DrawFPS(const Surface &out)
 		framerate = 1000 * frameend / frames;
 		frameend = 0;
 	}
-	snprintf(string, 12, "%i FPS", framerate);
-	DrawString(out, string, Point { 8, 68 }, UiFlags::ColorRed);
+	const char *end = fmt::format_to_n(buf, sizeof(buf), FMT_COMPILE("{} FPS"), framerate).out;
+	string_view str { buf, static_cast<string_view::size_type>(end - buf) };
+	DrawString(out, str, Point { 8, 68 }, UiFlags::ColorRed);
 }
 
 /**
