@@ -131,6 +131,4 @@ auto Crawl(unsigned minRadius, unsigned maxRadius, F function) -> invoke_result_
 
 /* rdata */
 
-extern const uint8_t VisionCrawlTable[23][30];
-
 } // namespace devilution
