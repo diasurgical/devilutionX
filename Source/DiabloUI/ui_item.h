@@ -195,6 +195,11 @@ public:
 		return sprite_;
 	}
 
+	void setSprite(PcxSprite sprite)
+	{
+		sprite_ = sprite;
+	}
+
 private:
 	PcxSprite sprite_;
 };
