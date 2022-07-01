@@ -63,7 +63,7 @@ struct _uiheroinfo {
 };
 
 extern std::optional<OwnedPcxSpriteSheet> ArtLogo;
-extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
+extern std::array<std::optional<OwnedPcxSpriteSheet>, 3> ArtFocus;
 extern std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 extern std::optional<OwnedPcxSpriteSheet> ArtBackground;
 extern Art ArtCursor;
