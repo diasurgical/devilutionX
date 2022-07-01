@@ -55,11 +55,11 @@ bool sgbSaveSoundOn;
 
 namespace {
 
-constexpr const int NightmareToHitBonus = 85;
-constexpr const int HellToHitBonus = 120;
+constexpr int NightmareToHitBonus = 85;
+constexpr int HellToHitBonus = 120;
 
-constexpr const int NightmareAcBonus = 50;
-constexpr const int HellAcBonus = 80;
+constexpr int NightmareAcBonus = 50;
+constexpr int HellAcBonus = 80;
 
 /** Tracks which missile files are already loaded */
 int totalmonsters;
@@ -119,7 +119,7 @@ constexpr const std::array<_monster_id, 12> SkeletonTypes {
 //   };
 
 /** Maps from monster walk animation frame num to monster velocity. */
-constexpr const int MWVel[24][3] = {
+constexpr int MWVel[24][3] = {
 	{ 256, 512, 1024 },
 	{ 128, 256, 512 },
 	{ 85, 170, 341 },
@@ -146,7 +146,7 @@ constexpr const int MWVel[24][3] = {
 	{ 10, 21, 42 }
 };
 /** Maps from monster action to monster animation letter. */
-constexpr const char Animletter[7] = "nwahds";
+constexpr char Animletter[7] = "nwahds";
 
 size_t GetNumAnims(const MonsterData &monsterData)
 {
