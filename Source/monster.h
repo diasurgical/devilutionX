@@ -15,6 +15,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/sound.h"
+#include "engine/world_tile.hpp"
 #include "miniwin/miniwin.h"
 #include "monstdat.h"
 #include "spelldat.h"
@@ -178,7 +179,7 @@ struct Monster { // note: missing field _mAFNum
 	/** The current target of the monster. An index in to either the plr or monster array based on the _meflag value. */
 	int _menemy;
 	/** Usually corresponds to the enemy's future position */
-	Point enemyPosition;
+	WorldTilePosition enemyPosition;
 	/**
 	 * @brief Contains information for current animation
 	 */
