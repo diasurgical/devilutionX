@@ -3063,10 +3063,8 @@ void MI_LightningWallC(Missile &missile)
 	}
 }
 
-void MI_FireNova(Missile &missile)
+void MI_NovaCommon(Missile &missile, missile_id projectileType)
 {
-	int sx1 = 0;
-	int sy1 = 0;
 	int id = missile._misource;
 	int dam = missile._midam;
 	Point src = missile.position.tile;
@@ -3076,18 +3074,27 @@ void MI_FireNova(Missile &missile)
 		dir = Players[id]._pdir;
 		en = TARGET_MONSTERS;
 	}
-	for (const auto &k : VisionCrawlTable) {
-		if (sx1 != k[6] || sy1 != k[7]) {
-			Displacement offsets[] = { { k[6], k[7] }, { -k[6], -k[7] }, { -k[6], +k[7] }, { +k[6], -k[7] } };
-			for (Displacement offset : offsets)
-				AddMissile(src, src + offset, dir, MIS_FIRENOVA, en, id, dam, missile._mispllvl);
-			sx1 = k[6];
-			sy1 = k[7];
-		}
+
+	constexpr std::array<Displacement, 9> quarterRadius = { { { 4, 0 }, { 4, 1 }, { 4, 2 }, { 4, 3 }, { 4, 4 }, { 3, 4 }, { 2, 4 }, { 1, 4 }, { 0, 4 } } };
+	for (Displacement quarterOffset : quarterRadius) {
+		// This ends up with two missiles targeting offsets 4,0, 0,4, -4,0, 0,-4.
+		std::array<Displacement, 4> offsets { quarterOffset, quarterOffset.flipXY(), quarterOffset.flipX(), quarterOffset.flipY() };
+		for (Displacement offset : offsets)
+			AddMissile(src, src + offset, dir, projectileType, en, id, dam, missile._mispllvl);
 	}
 	missile._mirange--;
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;
+}
+
+void MI_FireNova(Missile &missile)
+{
+	MI_NovaCommon(missile, MIS_FIRENOVA);
+}
+
+void MI_Nova(Missile &missile)
+{
+	MI_NovaCommon(missile, MIS_LIGHTBALL);
 }
 
 void MI_SpecArrow(Missile &missile)
@@ -3636,34 +3643,6 @@ void MI_Wave(Missile &missile)
 		}
 	}
 
-	missile._mirange--;
-	if (missile._mirange == 0)
-		missile._miDelFlag = true;
-}
-
-void MI_Nova(Missile &missile)
-{
-	int sx1 = 0;
-	int sy1 = 0;
-	int id = missile._misource;
-	int dam = missile._midam;
-	Point src = missile.position.tile;
-	Direction dir = Direction::South;
-	mienemy_type en = TARGET_PLAYERS;
-	if (!missile.IsTrap()) {
-		dir = Players[id]._pdir;
-		en = TARGET_MONSTERS;
-	}
-	for (const auto &k : VisionCrawlTable) {
-		if (sx1 != k[6] || sy1 != k[7]) {
-			AddMissile(src, src + Displacement { k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			AddMissile(src, src + Displacement { -k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			AddMissile(src, src + Displacement { -k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			AddMissile(src, src + Displacement { k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			sx1 = k[6];
-			sy1 = k[7];
-		}
-	}
 	missile._mirange--;
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;
