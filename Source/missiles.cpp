@@ -2015,10 +2015,10 @@ void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monste
 	const AnimStruct &anim = mon.MType->GetAnimData(graphic);
 	mis._mimfnum = static_cast<int32_t>(midir);
 	mis._miAnimFlags = MissileDataFlags::None;
-	CelSprite celSprite = *anim.GetCelSpritesForDirection(midir);
+	CelSprite celSprite = *anim.getCelSpritesForDirection(midir);
 	mis._miAnimData = celSprite.Data();
-	mis._miAnimDelay = anim.Rate;
-	mis._miAnimLen = anim.Frames;
+	mis._miAnimDelay = anim.rate;
+	mis._miAnimLen = anim.frames;
 	mis._miAnimWidth = celSprite.Width();
 	mis._miAnimWidth2 = CalculateWidth2(celSprite.Width());
 	mis._miAnimAdd = 1;
@@ -4022,7 +4022,7 @@ void missiles_process_charge()
 		} else {
 			graphic = MonsterGraphic::Walk;
 		}
-		missile._miAnimData = mon->GetAnimData(graphic).CelSpritesForDirections[missile._mimfnum];
+		missile._miAnimData = mon->GetAnimData(graphic).celSpritesForDirections[missile._mimfnum];
 	}
 }
 

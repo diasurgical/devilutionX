@@ -132,18 +132,18 @@ enum class LeaderRelation : uint8_t {
 };
 
 struct AnimStruct {
-	[[nodiscard]] std::optional<CelSprite> GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] std::optional<CelSprite> getCelSpritesForDirection(Direction direction) const
 	{
-		const byte *spriteData = CelSpritesForDirections[static_cast<size_t>(direction)];
+		const byte *spriteData = celSpritesForDirections[static_cast<size_t>(direction)];
 		if (spriteData == nullptr)
 			return std::nullopt;
-		return CelSprite(spriteData, Width);
+		return CelSprite(spriteData, width);
 	}
 
-	std::array<byte *, 8> CelSpritesForDirections;
-	uint16_t Width;
-	int Frames;
-	int Rate;
+	std::array<byte *, 8> celSpritesForDirections;
+	uint16_t width;
+	int frames;
+	int rate;
 };
 
 struct CMonster {
@@ -230,8 +230,8 @@ struct Monster { // note: missing field _mAFNum
 	{
 		auto &animationData = this->MType->GetAnimData(graphic);
 
-		// Passing the Frames and Rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->AnimInfo.ChangeAnimationData(animationData.GetCelSpritesForDirection(direction), animationData.Frames, animationData.Rate);
+		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
+		this->AnimInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(direction), animationData.frames, animationData.rate);
 	}
 
 	/**

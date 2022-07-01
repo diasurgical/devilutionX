@@ -174,13 +174,13 @@ void InitMonsterTRN(CMonster &monst)
 		AnimStruct &anim = monst.Anims[i];
 		if (IsDirectionalAnim(monst, i)) {
 			for (size_t j = 0; j < 8; ++j) {
-				Cl2ApplyTrans(anim.CelSpritesForDirections[j], colorTranslations, anim.Frames);
+				Cl2ApplyTrans(anim.celSpritesForDirections[j], colorTranslations, anim.frames);
 			}
 		} else {
 			byte *frames[8];
-			CelGetDirectionFrames(anim.CelSpritesForDirections[0], frames);
+			CelGetDirectionFrames(anim.celSpritesForDirections[0], frames);
 			for (byte *frame : frames) {
-				Cl2ApplyTrans(frame, colorTranslations, anim.Frames);
+				Cl2ApplyTrans(frame, colorTranslations, anim.frames);
 			}
 		}
 	}
@@ -676,7 +676,7 @@ void DeleteMonster(size_t activeIndex)
 void NewMonsterAnim(Monster &monster, MonsterGraphic graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 {
 	const auto &animData = monster.MType->GetAnimData(graphic);
-	monster.AnimInfo.SetNewAnimation(animData.GetCelSpritesForDirection(md), animData.Frames, animData.Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
+	monster.AnimInfo.SetNewAnimation(animData.getCelSpritesForDirection(md), animData.frames, animData.rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
 	monster._mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
 	monster._mdir = md;
 }
@@ -1181,7 +1181,7 @@ void StartFadeout(Monster &monster, Direction md, bool backwards)
 void StartHeal(Monster &monster)
 {
 	monster.ChangeAnimationData(MonsterGraphic::Special);
-	monster.AnimInfo.CurrentFrame = monster.MType->GetAnimData(MonsterGraphic::Special).Frames - 1;
+	monster.AnimInfo.CurrentFrame = monster.MType->GetAnimData(MonsterGraphic::Special).frames - 1;
 	monster._mFlags |= MFLAG_LOCK_ANIMATION;
 	monster._mmode = MonsterMode::Heal;
 	monster._mVar1 = monster._mmaxhp / (16 * (GenerateRnd(5) + 4));
@@ -3653,20 +3653,20 @@ void InitMonsterGFX(int monsterTypeIndex)
 		AnimStruct &anim = monster.Anims[animIndex];
 
 		if (!hasAnim(animIndex)) {
-			anim.Frames = 0;
+			anim.frames = 0;
 			continue;
 		}
 
-		anim.Frames = monsterData.Frames[animIndex];
-		anim.Rate = monsterData.Rate[animIndex];
-		anim.Width = width;
+		anim.frames = monsterData.Frames[animIndex];
+		anim.rate = monsterData.Rate[animIndex];
+		anim.width = width;
 
 		byte *cl2Data = &monster.animData[animOffsets[animIndex]];
 		if (IsDirectionalAnim(monster, animIndex)) {
-			CelGetDirectionFrames(cl2Data, anim.CelSpritesForDirections.data());
+			CelGetDirectionFrames(cl2Data, anim.celSpritesForDirections.data());
 		} else {
 			for (size_t i = 0; i < 8; ++i) {
-				anim.CelSpritesForDirections[i] = cl2Data;
+				anim.celSpritesForDirections[i] = cl2Data;
 			}
 		}
 	}
@@ -4101,7 +4101,7 @@ void M_WalkDir(int monsterId, Direction md)
 {
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 
-	int mwi = Monsters[monsterId].MType->GetAnimData(MonsterGraphic::Walk).Frames - 1;
+	int mwi = Monsters[monsterId].MType->GetAnimData(MonsterGraphic::Walk).frames - 1;
 	switch (md) {
 	case Direction::North:
 		StartWalk(monsterId, 0, -MWVel[mwi][1], -1, -1, Direction::North);
