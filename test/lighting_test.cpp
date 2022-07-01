@@ -10,12 +10,12 @@ TEST(Lighting, CrawlTables)
 	bool added[40][40];
 	memset(added, 0, sizeof(added));
 
-	for (int j = 0; j < (int)CoolCrawlTable.size(); j++) {
+	for (int j = 0; j < (int)CrawlTable.size(); j++) {
 		int x = 20;
 		int y = 20;
-		for (unsigned i = 0; i < CoolCrawlTable[j].size(); i++) {
-			int dx = x + CoolCrawlTable[j][i].deltaX;
-			int dy = y + CoolCrawlTable[j][i].deltaY;
+		for (unsigned i = 0; i < CrawlTable[j].size(); i++) {
+			int dx = x + CrawlTable[j][i].deltaX;
+			int dy = y + CrawlTable[j][i].deltaY;
 			EXPECT_EQ(added[dx][dy], false) << "location " << i << ":" << j << " added twice";
 			added[dx][dy] = true;
 		}
