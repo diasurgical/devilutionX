@@ -18,8 +18,6 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
-#include "engine/load_pcx_as_cel.hpp"
-#include "engine/palette.h"
 #include "engine/pcx_sprite.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/pcx_render.hpp"
@@ -50,8 +48,7 @@ namespace devilution {
 
 std::optional<OwnedPcxSpriteSheet> ArtLogo;
 
-// These are stored as PCX but we load them as CEL to reduce memory usage.
-std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
+std::array<std::optional<OwnedPcxSpriteSheet>, 3> ArtFocus;
 
 std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 std::optional<OwnedPcxSpriteSheet> ArtBackground;
@@ -572,9 +569,9 @@ void LoadUiGFX()
 	} else {
 		ArtLogo = LoadPcxSpriteSheetAsset("ui_art\\smlogo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
 	}
-	ArtFocus[FOCUS_SMALL] = LoadPcxAssetAsCel("ui_art\\focus16.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
-	ArtFocus[FOCUS_MED] = LoadPcxAssetAsCel("ui_art\\focus.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
-	ArtFocus[FOCUS_BIG] = LoadPcxAssetAsCel("ui_art\\focus42.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+	ArtFocus[FOCUS_SMALL] = LoadPcxSpriteSheetAsset("ui_art\\focus16.pcx", /*numFrames=*/8, /*transparentColor=*/250);
+	ArtFocus[FOCUS_MED] = LoadPcxSpriteSheetAsset("ui_art\\focus.pcx", /*numFrames=*/8, /*transparentColor=*/250);
+	ArtFocus[FOCUS_BIG] = LoadPcxSpriteSheetAsset("ui_art\\focus42.pcx", /*numFrames=*/8, /*transparentColor=*/250);
 
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
 
@@ -759,13 +756,15 @@ void DrawSelector(const SDL_Rect &rect)
 		size = FOCUS_BIG;
 	else if (rect.h >= 30)
 		size = FOCUS_MED;
-	CelSpriteWithFrameHeight sprite { CelSprite { ArtFocus[size]->sprite }, ArtFocus[size]->frameHeight };
+	const PcxSpriteSheet spriteSheet { *ArtFocus[size] };
+	const PcxSprite sprite = spriteSheet.sprite(GetAnimationFrame(spriteSheet.numFrames()));
 
 	// TODO FOCUS_MED appares higher than the box
-	const int y = rect.y + (rect.h - static_cast<int>(sprite.frameHeight)) / 2;
+	const int y = rect.y + (rect.h - static_cast<int>(sprite.height())) / 2;
 
-	DrawAnimatedCel(sprite, { rect.x, y });
-	DrawAnimatedCel(sprite, { rect.x + rect.w - sprite.sprite.Width(), y });
+	const Surface &out = Surface(DiabloUiSurface());
+	RenderPcxSprite(out, sprite, { rect.x, y });
+	RenderPcxSprite(out, sprite, { rect.x + rect.w - sprite.width(), y });
 }
 
 void UiClearScreen()
