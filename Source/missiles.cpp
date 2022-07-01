@@ -1224,10 +1224,8 @@ void AddJester(Missile &missile, const AddMissileParameter &parameter)
 void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	for (int i = 0; i < 3; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = missile.position.start + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+		for (Displacement displacement : CoolCrawlTable[i]) {
+			Point target = missile.position.start + displacement;
 			if (!InDungeonBounds(target))
 				continue;
 			int8_t pnum = dPlayer[target.x][target.y];
