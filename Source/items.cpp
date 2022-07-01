@@ -13,6 +13,7 @@
 #include <climits>
 #include <cstdint>
 
+#include <fmt/compile.h>
 #include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"
@@ -2292,7 +2293,7 @@ void InitItemGFX()
 
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
-		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
+		*fmt::format_to(arglist, FMT_COMPILE(R"(Items\{}.CEL)"), ItemDropNames[i]) = '\0';
 		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));

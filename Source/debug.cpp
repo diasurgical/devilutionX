@@ -6,10 +6,11 @@
 
 #ifdef _DEBUG
 
+#include <fstream>
 #include <sstream>
 
+#include <fmt/compile.h>
 #include <fmt/format.h>
-#include <fstream>
 
 #include "debug.h"
 
@@ -1080,12 +1081,12 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	Point megaCoords = dungeonCoords.worldToMega();
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
-		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}:{}"), dungeonCoords.x, dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::cursorcoords:
 		if (dungeonCoords != cursPosition)
 			return false;
-		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}:{}"), dungeonCoords.x, dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::objectindex: {
 		info = 0;
@@ -1154,7 +1155,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	}
 	if (info == 0)
 		return false;
-	sprintf(debugGridTextBuffer, "%d", info);
+	*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}"), info) = '\0';
 	return true;
 }
 
