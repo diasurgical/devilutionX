@@ -6,6 +6,7 @@
 #pragma once
 
 #include <array>
+#include <vector>
 
 #include "automap.h"
 #include "engine.h"
@@ -75,8 +76,7 @@ void lighting_color_cycling();
 
 /* rdata */
 
-extern DVL_API_FOR_TEST const int8_t CrawlTable[2749];
-extern DVL_API_FOR_TEST const int CrawlNum[19];
+extern DVL_API_FOR_TEST const std::vector<std::vector<Displacement>> CrawlTable;
 extern const uint8_t VisionCrawlTable[23][30];
 
 } // namespace devilution

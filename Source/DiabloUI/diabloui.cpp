@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <string>
 
+#include <fmt/compile.h>
+
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
@@ -12,11 +14,10 @@
 #include "controls/menu_controls.h"
 #include "controls/plrctrls.h"
 #include "discord/discord.h"
+#include "engine/assets.hpp"
 #include "engine/cel_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
-#include "engine/load_pcx_as_cel.hpp"
-#include "engine/palette.h"
 #include "engine/pcx_sprite.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/pcx_render.hpp"
@@ -47,19 +48,21 @@ namespace devilution {
 
 std::optional<OwnedPcxSpriteSheet> ArtLogo;
 
-// These are stored as PCX but we load them as CEL to reduce memory usage.
-std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
+std::array<std::optional<OwnedPcxSpriteSheet>, 3> ArtFocus;
 
 std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 std::optional<OwnedPcxSpriteSheet> ArtBackground;
 Art ArtCursor;
-Art ArtHero;
 
 void (*gfnSoundFunction)(const char *file);
 bool textInputActive = true;
 std::size_t SelectedItem = 0;
 
 namespace {
+
+std::optional<OwnedPcxSpriteSheet> ArtHero;
+std::array<uint8_t, enum_size<HeroClass>::value + 1> ArtHeroPortraitOrder;
+std::array<std::optional<OwnedPcxSprite>, enum_size<HeroClass>::value + 1> ArtHeroOverrides;
 
 std::size_t SelectedItemMax;
 std::size_t ListViewportSize = 1;
@@ -528,46 +531,35 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 
 void LoadHeros()
 {
-	LoadArt("ui_art\\heros.pcx", &ArtHero);
+	std::optional<OwnedPcxSprite> portraits = LoadPcxAsset("ui_art\\heros.pcx");
+	if (!portraits)
+		return;
+	constexpr unsigned PortraitHeight = 76;
+	const uint16_t numPortraits = PcxSprite { *portraits }.height() / PortraitHeight;
+	ArtHero = OwnedPcxSpriteSheet { std::move(*portraits), numPortraits };
 
-	const int portraitHeight = 76;
-	int portraitOrder[enum_size<HeroClass>::value + 1] = { 0, 1, 2, 2, 1, 0, 3 };
-	if (ArtHero.h() >= portraitHeight * 6) {
-		portraitOrder[static_cast<std::size_t>(HeroClass::Monk)] = 3;
-		portraitOrder[static_cast<std::size_t>(HeroClass::Bard)] = 4;
-		portraitOrder[enum_size<HeroClass>::value] = 5;
+	ArtHeroPortraitOrder = { 0, 1, 2, 2, 1, 0, 3 };
+	if (numPortraits >= 6) {
+		ArtHeroPortraitOrder[static_cast<std::size_t>(HeroClass::Monk)] = 3;
+		ArtHeroPortraitOrder[static_cast<std::size_t>(HeroClass::Bard)] = 4;
+		ArtHeroPortraitOrder[enum_size<HeroClass>::value] = 5;
 	}
-	if (ArtHero.h() >= portraitHeight * 7) {
-		portraitOrder[static_cast<std::size_t>(HeroClass::Barbarian)] = 6;
-	}
-
-	SDLSurfaceUniquePtr heros = SDLWrap::CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (static_cast<int>(enum_size<HeroClass>::value) + 1), 8, SDL_PIXELFORMAT_INDEX8);
-
-	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
-		int offset = portraitOrder[i] * portraitHeight;
-		if (offset + portraitHeight > ArtHero.h()) {
-			offset = 0;
-		}
-		SDL_Rect srcRect = MakeSdlRect(0, offset, ArtHero.w(), portraitHeight);
-		SDL_Rect dstRect = MakeSdlRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
-		SDL_BlitSurface(ArtHero.surface.get(), &srcRect, heros.get(), &dstRect);
+	if (numPortraits >= 7) {
+		ArtHeroPortraitOrder[static_cast<std::size_t>(HeroClass::Barbarian)] = 6;
 	}
 
-	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
-		Art portrait;
+	for (size_t i = 0; i <= enum_size<HeroClass>::value; ++i) {
 		char portraitPath[18];
-		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
-		LoadArt(portraitPath, &portrait);
-		if (portrait.surface == nullptr)
+		*fmt::format_to(portraitPath, FMT_COMPILE("ui_art\\hero{}.pcx"), i) = '\0';
+
+		SDL_RWops *handle = OpenAsset(portraitPath);
+		if (handle == nullptr) {
+			// Portrait overrides are optional, ignore the error and continue.
+			SDL_ClearError();
 			continue;
-
-		SDL_Rect dstRect = MakeSdlRect(0, i * portraitHeight, portrait.w(), portraitHeight);
-		SDL_BlitSurface(portrait.surface.get(), nullptr, heros.get(), &dstRect);
+		}
+		ArtHeroOverrides[i] = LoadPcxAsset(handle);
 	}
-
-	ArtHero.surface = std::move(heros);
-	ArtHero.frame_height = portraitHeight;
-	ArtHero.frames = static_cast<int>(enum_size<HeroClass>::value);
 }
 
 void LoadUiGFX()
@@ -577,9 +569,9 @@ void LoadUiGFX()
 	} else {
 		ArtLogo = LoadPcxSpriteSheetAsset("ui_art\\smlogo.pcx", /*numFrames=*/15, /*transparentColor=*/250);
 	}
-	ArtFocus[FOCUS_SMALL] = LoadPcxAssetAsCel("ui_art\\focus16.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
-	ArtFocus[FOCUS_MED] = LoadPcxAssetAsCel("ui_art\\focus.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
-	ArtFocus[FOCUS_BIG] = LoadPcxAssetAsCel("ui_art\\focus42.pcx", /*numFrames=*/8, /*generateFrameHeaders=*/false, /*transparentColorIndex=*/250);
+	ArtFocus[FOCUS_SMALL] = LoadPcxSpriteSheetAsset("ui_art\\focus16.pcx", /*numFrames=*/8, /*transparentColor=*/250);
+	ArtFocus[FOCUS_MED] = LoadPcxSpriteSheetAsset("ui_art\\focus.pcx", /*numFrames=*/8, /*transparentColor=*/250);
+	ArtFocus[FOCUS_BIG] = LoadPcxSpriteSheetAsset("ui_art\\focus42.pcx", /*numFrames=*/8, /*transparentColor=*/250);
 
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
 
@@ -595,9 +587,18 @@ void LoadUiGFX()
 
 } // namespace
 
+PcxSprite UiGetHeroDialogSprite(size_t heroClassIndex)
+{
+	return ArtHeroOverrides[heroClassIndex]
+	    ? PcxSprite { *ArtHeroOverrides[heroClassIndex] }
+	    : PcxSpriteSheet { *ArtHero }.sprite(ArtHeroPortraitOrder[heroClassIndex]);
+}
+
 void UnloadUiGFX()
 {
-	ArtHero.Unload();
+	ArtHero = std::nullopt;
+	for (std::optional<devilution::OwnedPcxSprite> &override : ArtHeroOverrides)
+		override = std::nullopt;
 	ArtCursor.Unload();
 	for (auto &art : ArtFocus)
 		art = std::nullopt;
@@ -672,8 +673,22 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 	return (bw - w) / 2;
 }
 
+bool UiLoadBlackBackground()
+{
+	LoadBackgroundArt(gbIsHellfire ? "ui_art\\black_hellfire.pcx" : "ui_art\\black_diablo.pcx");
+
+	if (!ArtBackground)
+		return false;
+
+	// We only needed the black background for the palette, can now deallocate it.
+	ArtBackground = std::nullopt;
+
+	return true;
+}
+
 void LoadBackgroundArt(const char *pszFile, int frames)
 {
+	ArtBackground = std::nullopt;
 	SDL_Color pPal[256];
 	ArtBackground = LoadPcxSpriteSheetAsset(pszFile, static_cast<uint16_t>(frames), /*transparentColor=*/std::nullopt, pPal);
 	if (!ArtBackground)
@@ -699,14 +714,13 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
-	int uiPositionY = GetUIRectangle().position.y;
+	const SDL_Rect rect = MakeSdlRect(0, GetUIRectangle().position.y, 0, 0);
 	if (ArtBackgroundWidescreen) {
-		SDL_Rect rectw = MakeSdlRect(0, uiPositionY, 0, 0);
-		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rectw, UiFlags::AlignCenter));
+		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSprite { *ArtBackgroundWidescreen }, rect, UiFlags::AlignCenter));
 	}
-
-	SDL_Rect rect = MakeSdlRect(0, uiPositionY, 0, 0);
-	vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSpriteSheet { *ArtBackground }.sprite(0), rect, UiFlags::AlignCenter));
+	if (ArtBackground) {
+		vecDialog->push_back(std::make_unique<UiImagePcx>(PcxSpriteSheet { *ArtBackground }.sprite(0), rect, UiFlags::AlignCenter));
+	}
 }
 
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
@@ -755,18 +769,20 @@ void DrawSelector(const SDL_Rect &rect)
 		size = FOCUS_BIG;
 	else if (rect.h >= 30)
 		size = FOCUS_MED;
-	CelSpriteWithFrameHeight sprite { CelSprite { ArtFocus[size]->sprite }, ArtFocus[size]->frameHeight };
+	const PcxSpriteSheet spriteSheet { *ArtFocus[size] };
+	const PcxSprite sprite = spriteSheet.sprite(GetAnimationFrame(spriteSheet.numFrames()));
 
 	// TODO FOCUS_MED appares higher than the box
-	const int y = rect.y + (rect.h - static_cast<int>(sprite.frameHeight)) / 2;
+	const int y = rect.y + (rect.h - static_cast<int>(sprite.height())) / 2;
 
-	DrawAnimatedCel(sprite, { rect.x, y });
-	DrawAnimatedCel(sprite, { rect.x + rect.w - sprite.sprite.Width(), y });
+	const Surface &out = Surface(DiabloUiSurface());
+	RenderPcxSprite(out, sprite, { rect.x, y });
+	RenderPcxSprite(out, sprite, { rect.x + rect.w - sprite.width(), y });
 }
 
 void UiClearScreen()
 {
-	if (gnScreenWidth > 640) // Background size
+	if (!ArtBackground || gnScreenWidth > PcxSpriteSheet { *ArtBackground }.width() || gnScreenHeight > PcxSpriteSheet { *ArtBackground }.frameHeight())
 		SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 }
 

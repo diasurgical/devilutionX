@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include <fmt/compile.h>
+
 #include "codec.h"
 #include "engine.h"
 #include "init.h"
@@ -59,7 +61,7 @@ std::string GetSavePath(uint32_t saveNum, std::string savePrefix = "")
 	}
 
 	char saveNumStr[21];
-	snprintf(saveNumStr, sizeof(saveNumStr) / sizeof(char), "%i", saveNum);
+	*fmt::format_to(saveNumStr, FMT_COMPILE("{}"), saveNum) = '\0';
 	path.append(saveNumStr);
 	path.append(ext);
 	return path;
@@ -81,36 +83,30 @@ std::string GetStashSavePath()
 	return path;
 }
 
+bool GetSaveNames(uint8_t index, string_view prefix, char *out)
+{
+	char suf;
+	if (index < giNumberOfLevels)
+		suf = 'l';
+	else if (index < giNumberOfLevels * 2) {
+		index -= giNumberOfLevels;
+		suf = 's';
+	} else {
+		return false;
+	}
+
+	*fmt::format_to(out, FMT_COMPILE("{}{}{:02d}"), prefix, suf, index) = '\0';
+	return true;
+}
+
 bool GetPermSaveNames(uint8_t dwIndex, char *szPerm)
 {
-	const char *fmt;
-
-	if (dwIndex < giNumberOfLevels)
-		fmt = "perml%02d";
-	else if (dwIndex < giNumberOfLevels * 2) {
-		dwIndex -= giNumberOfLevels;
-		fmt = "perms%02d";
-	} else
-		return false;
-
-	sprintf(szPerm, fmt, dwIndex);
-	return true;
+	return GetSaveNames(dwIndex, "perm", szPerm);
 }
 
 bool GetTempSaveNames(uint8_t dwIndex, char *szTemp)
 {
-	const char *fmt;
-
-	if (dwIndex < giNumberOfLevels)
-		fmt = "templ%02d";
-	else if (dwIndex < giNumberOfLevels * 2) {
-		dwIndex -= giNumberOfLevels;
-		fmt = "temps%02d";
-	} else
-		return false;
-
-	sprintf(szTemp, fmt, dwIndex);
-	return true;
+	return GetSaveNames(dwIndex, "temp", szTemp);
 }
 
 void RenameTempToPerm(MpqWriter &saveWriter)
@@ -185,27 +181,24 @@ void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFil
 
 bool GetFileName(uint8_t lvl, char *dst)
 {
-	const char *fmt;
-
 	if (gbIsMultiplayer) {
 		if (lvl != 0)
 			return false;
-		fmt = "hero";
-	} else {
-		if (lvl < giNumberOfLevels)
-			fmt = "perml%02d";
-		else if (lvl < giNumberOfLevels * 2) {
-			lvl -= giNumberOfLevels;
-			fmt = "perms%02d";
-		} else if (lvl == giNumberOfLevels * 2)
-			fmt = "game";
-		else if (lvl == giNumberOfLevels * 2 + 1)
-			fmt = "hero";
-		else
-			return false;
+		memcpy(dst, "hero", 5);
+		return true;
 	}
-	sprintf(dst, fmt, lvl);
-	return true;
+	if (GetPermSaveNames(lvl, dst)) {
+		return true;
+	}
+	if (lvl == giNumberOfLevels * 2) {
+		memcpy(dst, "game", 5);
+		return true;
+	}
+	if (lvl == giNumberOfLevels * 2 + 1) {
+		memcpy(dst, "hero", 5);
+		return true;
+	}
+	return false;
 }
 
 bool ArchiveContainsGame(MpqArchive &hsArchive)

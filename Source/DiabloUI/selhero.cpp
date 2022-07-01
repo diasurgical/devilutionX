@@ -44,7 +44,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelHeroDialog;
 std::vector<std::unique_ptr<UiListItem>> vecSelHeroDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelDlgItems;
 
-UiImage *SELHERO_DIALOG_HERO_IMG;
+UiImagePcx *SELHERO_DIALOG_HERO_IMG;
 
 void SelheroListFocus(int value);
 void SelheroListSelect(int value);
@@ -77,7 +77,7 @@ void SelheroFree()
 
 void SelheroSetStats()
 {
-	SELHERO_DIALOG_HERO_IMG->SetFrame(static_cast<int>(selhero_heroInfo.heroclass));
+	SELHERO_DIALOG_HERO_IMG->setSprite(UiGetHeroDialogSprite(static_cast<size_t>(selhero_heroInfo.heroclass)));
 	CopyUtf8(textStats[0], fmt::format("{}", selhero_heroInfo.level), sizeof(textStats[0]));
 	CopyUtf8(textStats[1], fmt::format("{}", selhero_heroInfo.strength), sizeof(textStats[1]));
 	CopyUtf8(textStats[2], fmt::format("{}", selhero_heroInfo.magic), sizeof(textStats[2]));
@@ -109,7 +109,7 @@ void SelheroListFocus(int value)
 		return;
 	}
 
-	SELHERO_DIALOG_HERO_IMG->SetFrame(static_cast<int>(enum_size<HeroClass>::value));
+	SELHERO_DIALOG_HERO_IMG->setSprite(UiGetHeroDialogSprite(enum_size<HeroClass>::value));
 	for (char *textStat : textStats)
 		strcpy(textStat, "--");
 	SELLIST_DIALOG_DELETE_BUTTON->SetFlags(baseFlags | UiFlags::ColorUiSilver | UiFlags::ElementDisabled);
@@ -449,7 +449,7 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(&title, rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 30), (Sint16)(uiPosition.y + 211), 180, 76 };
-	auto heroImg = std::make_unique<UiImage>(&ArtHero, rect2, UiFlags::None, /*bAnimated=*/false, static_cast<int>(enum_size<HeroClass>::value));
+	auto heroImg = std::make_unique<UiImagePcx>(UiGetHeroDialogSprite(0), rect2, UiFlags::None);
 	SELHERO_DIALOG_HERO_IMG = heroImg.get();
 	vecSelHeroDialog.push_back(std::move(heroImg));
 

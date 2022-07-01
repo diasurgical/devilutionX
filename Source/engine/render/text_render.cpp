@@ -10,6 +10,8 @@
 #include <unordered_map>
 #include <utility>
 
+#include <fmt/compile.h>
+
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/ui_item.h"
@@ -137,6 +139,11 @@ bool IsSmallFontTallRow(uint16_t row)
 	return IsCJK(row) || IsHangul(row);
 }
 
+void GetFontPath(GameFontTables size, uint16_t row, string_view ext, char *out)
+{
+	*fmt::format_to(out, FMT_COMPILE(R"(fonts\{}-{:02x}.{})"), FontSizes[size], row, ext) = '\0';
+}
+
 std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 {
 	uint32_t fontId = (size << 16) | row;
@@ -147,7 +154,7 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 	}
 
 	char path[32];
-	sprintf(path, "fonts\\%i-%02x.bin", FontSizes[size], row);
+	GetFontPath(size, row, "bin", &path[0]);
 
 	auto *kerning = &FontKerns[fontId];
 
@@ -174,11 +181,6 @@ uint32_t GetFontId(GameFontTables size, uint16_t row)
 	return (size << 16) | row;
 }
 
-void GetFontPath(GameFontTables size, uint16_t row, char *out)
-{
-	sprintf(out, "fonts\\%i-%02x.pcx", FontSizes[size], row);
-}
-
 const OwnedPcxSpriteSheet *LoadFont(GameFontTables size, text_color color, uint16_t row)
 {
 	if (ColorTranslations[color] != nullptr && !ColorTranslationsData[color]) {
@@ -193,7 +195,7 @@ const OwnedPcxSpriteSheet *LoadFont(GameFontTables size, text_color color, uint1
 	}
 
 	char path[32];
-	GetFontPath(size, row, &path[0]);
+	GetFontPath(size, row, "pcx", &path[0]);
 
 	std::optional<OwnedPcxSpriteSheet> &font = Fonts[fontId];
 	constexpr unsigned NumFrames = 256;

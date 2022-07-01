@@ -9,6 +9,7 @@
 #include <array>
 #include <climits>
 
+#include <fmt/compile.h>
 #include <fmt/format.h>
 
 #include "control.h"
@@ -3410,7 +3411,7 @@ bool IsMonsterAvalible(const MonsterData &monsterData)
 void InitTRNForUniqueMonster(Monster &monster)
 {
 	char filestr[64];
-	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", UniqueMonstersData[monster._uniqtype - 1].mTrnName);
+	*fmt::format_to(filestr, FMT_COMPILE(R"(Monsters\Monsters\{}.TRN)"), UniqueMonstersData[monster._uniqtype - 1].mTrnName) = '\0';
 	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
 }
 

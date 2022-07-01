@@ -55,9 +55,7 @@ std::optional<PcxSprite> LoadDialogSprite(bool hasCaption, bool isError)
 bool Init(string_view caption, string_view text, bool error, bool renderBehind)
 {
 	if (!renderBehind) {
-		ArtBackground = std::nullopt;
-		LoadBackgroundArt("ui_art\\black.pcx");
-		if (!ArtBackground) {
+		if (!UiLoadBlackBackground()) {
 			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
 				LogError("{}", SDL_GetError());
 		}

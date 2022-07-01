@@ -63,11 +63,10 @@ struct _uiheroinfo {
 };
 
 extern std::optional<OwnedPcxSpriteSheet> ArtLogo;
-extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
+extern std::array<std::optional<OwnedPcxSpriteSheet>, 3> ArtFocus;
 extern std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 extern std::optional<OwnedPcxSpriteSheet> ArtBackground;
 extern Art ArtCursor;
-extern Art ArtHero;
 
 extern void (*gfnSoundFunction)(const char *file);
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
@@ -97,6 +96,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
+bool UiLoadBlackBackground();
 void LoadBackgroundArt(const char *pszFile, int frames = 1);
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
@@ -109,6 +109,7 @@ void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler = nullptr);
 void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items);
 void UiInitList_clear();
+PcxSprite UiGetHeroDialogSprite(size_t heroClassIndex);
 
 void mainmenu_restart_repintro();
 } // namespace devilution

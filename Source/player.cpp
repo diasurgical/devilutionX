@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include <fmt/compile.h>
+
 #include "control.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
@@ -2171,10 +2173,6 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	if (animationData.RawData != nullptr)
 		return;
 
-	char prefix[16];
-	char pszName[256];
-	const char *szCel;
-
 	HeroClass c = player._pClass;
 	if (c == HeroClass::Bard && !hfbard_mpq) {
 		c = HeroClass::Rogue;
@@ -2188,6 +2186,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
+	const char *szCel;
 	switch (graphic) {
 	case player_graphic::Stand:
 		szCel = "AS";
@@ -2278,8 +2277,9 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		}
 	}
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)]);
-	sprintf(pszName, R"(PlrGFX\%s\%s\%s%s.CL2)", cs, prefix, prefix, szCel);
+	char prefix[3] = { CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
+	char pszName[256];
+	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), cs, string_view(prefix, 3), szCel) = 0;
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 

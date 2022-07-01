@@ -3,6 +3,9 @@
  *
  * Implementation of functions for handling the engines color palette.
  */
+#include "engine/palette.h"
+
+#include <fmt/compile.h>
 
 #include "engine/dx.h"
 #include "engine/load_file.hpp"
@@ -251,9 +254,9 @@ void LoadRndLvlPal(dungeon_type l)
 		if (!*sgOptions.Graphics.alternateNestArt) {
 			rv++;
 		}
-		sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
+		*fmt::format_to(szFileName, FMT_COMPILE(R"(NLevels\L{0}Data\L{0}Base{1}.PAL)"), 6, rv) = '\0';
 	} else {
-		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
+		*fmt::format_to(szFileName, FMT_COMPILE(R"(Levels\L{0}Data\L{0}_{1}.PAL)"), l, rv) = '\0';
 	}
 	LoadPalette(szFileName);
 }

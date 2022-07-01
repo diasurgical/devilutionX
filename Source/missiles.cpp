@@ -1224,10 +1224,8 @@ void AddJester(Missile &missile, const AddMissileParameter &parameter)
 void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	for (int i = 0; i < 3; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = missile.position.start + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+		for (auto displacement : CrawlTable[i]) {
+			Point target = missile.position.start + displacement;
 			if (!InDungeonBounds(target))
 				continue;
 			int8_t pnum = dPlayer[target.x][target.y];
@@ -2993,10 +2991,11 @@ void MI_FireRing(Missile &missile)
 	uint8_t lvl = missile._micaster == TARGET_MONSTERS ? Players[src]._pLevel : currlevel;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
-	int k = CrawlNum[3];
-	int ck = k + 2;
-	for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-		Point target { missile.var1 + CrawlTable[ck - 1], missile.var2 + CrawlTable[ck] };
+	if (missile.limitReached)
+		return;
+
+	for (auto displacement : CrawlTable[3]) {
+		Point target = Point { missile.var1, missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
 			continue;
 		int dp = dPiece[target.x][target.y];
@@ -3006,9 +3005,9 @@ void MI_FireRing(Missile &missile)
 			continue;
 		if (!LineClearMissile(missile.position.tile, target))
 			continue;
-		if (TileHasAny(dp, TileProperties::BlockMissile) || missile.limitReached) {
+		if (TileHasAny(dp, TileProperties::BlockMissile)) {
 			missile.limitReached = true;
-			continue;
+			return;
 		}
 
 		AddMissile(target, target, Direction::South, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
@@ -3064,10 +3063,8 @@ void MI_LightningWallC(Missile &missile)
 	}
 }
 
-void MI_FireNova(Missile &missile)
+void MI_NovaCommon(Missile &missile, missile_id projectileType)
 {
-	int sx1 = 0;
-	int sy1 = 0;
 	int id = missile._misource;
 	int dam = missile._midam;
 	Point src = missile.position.tile;
@@ -3077,18 +3074,27 @@ void MI_FireNova(Missile &missile)
 		dir = Players[id]._pdir;
 		en = TARGET_MONSTERS;
 	}
-	for (const auto &k : VisionCrawlTable) {
-		if (sx1 != k[6] || sy1 != k[7]) {
-			Displacement offsets[] = { { k[6], k[7] }, { -k[6], -k[7] }, { -k[6], +k[7] }, { +k[6], -k[7] } };
-			for (Displacement offset : offsets)
-				AddMissile(src, src + offset, dir, MIS_FIRENOVA, en, id, dam, missile._mispllvl);
-			sx1 = k[6];
-			sy1 = k[7];
-		}
+
+	constexpr std::array<Displacement, 9> quarterRadius = { { { 4, 0 }, { 4, 1 }, { 4, 2 }, { 4, 3 }, { 4, 4 }, { 3, 4 }, { 2, 4 }, { 1, 4 }, { 0, 4 } } };
+	for (Displacement quarterOffset : quarterRadius) {
+		// This ends up with two missiles targeting offsets 4,0, 0,4, -4,0, 0,-4.
+		std::array<Displacement, 4> offsets { quarterOffset, quarterOffset.flipXY(), quarterOffset.flipX(), quarterOffset.flipY() };
+		for (Displacement offset : offsets)
+			AddMissile(src, src + offset, dir, projectileType, en, id, dam, missile._mispllvl);
 	}
 	missile._mirange--;
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;
+}
+
+void MI_FireNova(Missile &missile)
+{
+	MI_NovaCommon(missile, MIS_FIRENOVA);
+}
+
+void MI_Nova(Missile &missile)
+{
+	MI_NovaCommon(missile, MIS_LIGHTBALL);
 }
 
 void MI_SpecArrow(Missile &missile)
@@ -3340,14 +3346,10 @@ void MI_Chain(Missile &missile)
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
 	AddMissile(position, dst, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
-	int rad = missile._mispllvl + 3;
-	if (rad > 19)
-		rad = 19;
+	int rad = std::min(missile._mispllvl + 3, (int)CrawlTable.size() - 1);
 	for (int i = 1; i < rad; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = position + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+		for (auto displacement : CrawlTable[i]) {
+			Point target = position + displacement;
 			if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
 				dir = GetDirection(position, target);
 				AddMissile(position, target, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
@@ -3641,34 +3643,6 @@ void MI_Wave(Missile &missile)
 		}
 	}
 
-	missile._mirange--;
-	if (missile._mirange == 0)
-		missile._miDelFlag = true;
-}
-
-void MI_Nova(Missile &missile)
-{
-	int sx1 = 0;
-	int sy1 = 0;
-	int id = missile._misource;
-	int dam = missile._midam;
-	Point src = missile.position.tile;
-	Direction dir = Direction::South;
-	mienemy_type en = TARGET_PLAYERS;
-	if (!missile.IsTrap()) {
-		dir = Players[id]._pdir;
-		en = TARGET_MONSTERS;
-	}
-	for (const auto &k : VisionCrawlTable) {
-		if (sx1 != k[6] || sy1 != k[7]) {
-			AddMissile(src, src + Displacement { k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			AddMissile(src, src + Displacement { -k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			AddMissile(src, src + Displacement { -k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			AddMissile(src, src + Displacement { k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
-			sx1 = k[6];
-			sy1 = k[7];
-		}
-	}
 	missile._mirange--;
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;

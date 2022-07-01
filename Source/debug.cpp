@@ -6,10 +6,11 @@
 
 #ifdef _DEBUG
 
+#include <fstream>
 #include <sstream>
 
+#include <fmt/compile.h>
 #include <fmt/format.h>
-#include <fstream>
 
 #include "debug.h"
 
@@ -722,10 +723,9 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	for (int k : CrawlNum) {
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point pos = myPlayer.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+	for (const auto &table : CrawlTable) {
+		for (auto displacement : table) {
+			Point pos = myPlayer.position.tile + displacement;
 			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
 				continue;
 			if (!IsTileWalkable(pos))
@@ -808,10 +808,9 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	for (int k : CrawlNum) {
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point pos = myPlayer.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+	for (const auto &table : CrawlTable) {
+		for (auto displacement : table) {
+			Point pos = myPlayer.position.tile + displacement;
 			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
 				continue;
 			if (!IsTileWalkable(pos))
@@ -1082,12 +1081,12 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	Point megaCoords = dungeonCoords.worldToMega();
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
-		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}:{}"), dungeonCoords.x, dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::cursorcoords:
 		if (dungeonCoords != cursPosition)
 			return false;
-		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}:{}"), dungeonCoords.x, dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::objectindex: {
 		info = 0;
@@ -1156,7 +1155,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	}
 	if (info == 0)
 		return false;
-	sprintf(debugGridTextBuffer, "%d", info);
+	*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}"), info) = '\0';
 	return true;
 }
 

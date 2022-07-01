@@ -30,7 +30,7 @@ void DialogActionCancel()
 
 void ProgressLoadBackground()
 {
-	LoadBackgroundArt("ui_art\\black.pcx");
+	UiLoadBlackBackground();
 	ArtPopupSm = LoadPcxAsset("ui_art\\spopup.pcx");
 	ArtProgBG = LoadPcxAsset("ui_art\\prog_bg.pcx");
 }
