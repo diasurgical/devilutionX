@@ -3,8 +3,10 @@
  *
  * Implementation of functions for managing game ticks.
  */
-
 #include "nthread.h"
+
+#include <fmt/core.h>
+
 #include "diablo.h"
 #include "engine/demomode.h"
 #include "gmenu.h"
@@ -68,7 +70,7 @@ void nthread_terminate_game(const char *pszFcn)
 		return;
 	}
 	if (sErr != STORM_ERROR_GAME_TERMINATED && sErr != STORM_ERROR_NOT_IN_GAME) {
-		app_fatal("%s:\n%s", pszFcn, SDL_GetError());
+		app_fatal(fmt::format("{}:\n{}", pszFcn, SDL_GetError()));
 	}
 
 	gbGameDestroyed = true;

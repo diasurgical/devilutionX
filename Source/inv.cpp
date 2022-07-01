@@ -1349,7 +1349,7 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 		return false;
 	}
 
-	app_fatal("Unknown item size: %ix%i", itemSize.width, itemSize.height);
+	app_fatal(fmt::format("Unknown item size: {}x{}", itemSize.width, itemSize.height));
 }
 
 bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &item, bool persistItem)

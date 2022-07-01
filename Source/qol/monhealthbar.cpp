@@ -117,7 +117,7 @@ void DrawMonsterHealthBar(const Surface &out)
 			return 150;
 
 		default:
-			app_fatal("Invalid monster class '%i'.", static_cast<int>(monsterClass));
+			app_fatal(fmt::format("Invalid monster class: {}", static_cast<int>(monsterClass)));
 		}
 	};
 

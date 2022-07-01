@@ -1633,7 +1633,7 @@ bool MonsterTalk(Monster &monster)
 			monster._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 < 2) {
-			app_fatal("SS Talk = %i, Flags = %i", monster.mtalkmsg, monster._mFlags);
+			app_fatal(fmt::format("SS Talk = {}, Flags = {}", monster.mtalkmsg, monster._mFlags));
 		}
 	}
 	if (monster._uniqtype - 1 == UMT_LACHDAN) {
@@ -3318,7 +3318,7 @@ string_view GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal("Unknown mMonstClass %i", static_cast<int>(monsterData.mMonstClass));
+	app_fatal(fmt::format("Unknown mMonstClass {}", static_cast<int>(monsterData.mMonstClass)));
 }
 
 void ActivateSpawn(int monsterId, Point position, Direction dir)

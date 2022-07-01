@@ -4,11 +4,11 @@
  * Implementation of function for sending and reciving network messages.
  */
 #include <climits>
+#include <list>
 #include <memory>
+#include <unordered_map>
 
 #include <fmt/format.h>
-#include <list>
-#include <unordered_map>
 
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
@@ -446,7 +446,7 @@ void DeltaImportData(_cmd_id cmd, DWORD recvOffset)
 		src += DeltaImportObject(src, deltaLevel.object);
 		DeltaImportMonster(src, deltaLevel.monster);
 	} else {
-		app_fatal("Unkown network message type: %i", cmd);
+		app_fatal(fmt::format("Unkown network message type: {}", cmd));
 	}
 
 	sgbDeltaChunks++;
