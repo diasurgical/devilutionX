@@ -76,7 +76,8 @@ void lighting_color_cycling();
 
 /* rdata */
 
-extern DVL_API_FOR_TEST const std::vector<std::vector<DisplacementOf<int8_t>>> CrawlTable;
+constexpr size_t CrawlTableSize = 19;
+extern DVL_API_FOR_TEST const std::array<std::vector<DisplacementOf<int8_t>>, CrawlTableSize> CrawlTable;
 extern const uint8_t VisionCrawlTable[23][30];
 
 } // namespace devilution

@@ -26,34 +26,32 @@ bool UpdateLighting;
 
 namespace {
 
-std::vector<DisplacementOf<int8_t>> CrawlFlips(const std::vector<DisplacementOf<int8_t>> &displacements)
+std::vector<DisplacementOf<int8_t>> CrawlFlips(const DisplacementOf<int8_t> *begin, const DisplacementOf<int8_t> *end)
 {
 	std::vector<DisplacementOf<int8_t>> ret;
-	for (auto displacement : displacements) {
+	for (; begin != end; ++begin) {
+		DisplacementOf<int8_t> displacement = *begin;
 		if (displacement.deltaX != 0)
-			ret.push_back(displacement.flipX());
-		ret.push_back(displacement);
+			ret.emplace_back(displacement.flipX());
+		ret.emplace_back(displacement);
 		if (displacement.deltaX != 0 && displacement.deltaY != 0)
-			ret.push_back(displacement.flipXY());
+			ret.emplace_back(displacement.flipXY());
 		if (displacement.deltaY != 0)
-			ret.push_back(displacement.flipY());
+			ret.emplace_back(displacement.flipY());
 	}
 	return ret;
 }
 
 std::vector<DisplacementOf<int8_t>> CrawlRow(int8_t row)
 {
-	if (row == 0)
-		return { { 0, 0 } };
-
-	std::vector<DisplacementOf<int8_t>> ret;
+	StaticVector<DisplacementOf<int8_t>, (CrawlTableSize - 1) * 2 + 1> ret;
 	for (int8_t i = 0; i < row; i++)
-		ret.push_back({ i, row });
+		ret.emplace_back(i, row);
 	if (row > 1)
-		ret.push_back({ static_cast<int8_t>(row - 1), static_cast<int8_t>(row - 1) });
+		ret.emplace_back(static_cast<int8_t>(row - 1), static_cast<int8_t>(row - 1));
 	for (int8_t i = 0; i < row; i++)
-		ret.push_back({ row, i });
-	return CrawlFlips(ret);
+		ret.emplace_back(row, i);
+	return CrawlFlips(ret.begin(), ret.end());
 }
 
 } // namespace
@@ -82,10 +80,12 @@ std::vector<DisplacementOf<int8_t>> CrawlRow(int8_t row)
  *    +-------> x
  */
 
-const std::vector<std::vector<DisplacementOf<int8_t>>> CrawlTable = [] {
-	std::vector<std::vector<DisplacementOf<int8_t>>> ret;
-	for (int i = 0; i < 19; i++)
-		ret.push_back(CrawlRow(i));
+const std::array<std::vector<DisplacementOf<int8_t>>, CrawlTableSize> CrawlTable = []() {
+	std::array<std::vector<DisplacementOf<int8_t>>, CrawlTableSize> ret;
+	ret[0].emplace_back(0, 0);
+	for (size_t row = 1; row < CrawlTableSize; ++row) {
+		ret[row] = CrawlRow(static_cast<int8_t>(row));
+	}
 	return ret;
 }();
 

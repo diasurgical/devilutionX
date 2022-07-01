@@ -3346,7 +3346,7 @@ void MI_Chain(Missile &missile)
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
 	AddMissile(position, dst, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
-	int rad = std::min(missile._mispllvl + 3, (int)CrawlTable.size() - 1);
+	int rad = std::min<int>(missile._mispllvl + 3, CrawlTable.size() - 1);
 	for (int i = 1; i < rad; i++) {
 		for (auto displacement : CrawlTable[i]) {
 			Point target = position + displacement;
