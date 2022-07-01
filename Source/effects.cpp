@@ -1215,13 +1215,13 @@ void InitMonsterSND(int monst)
 		return;
 	}
 
-	const int mtype = LevelMonsterTypes[monst].mtype;
+	const int mtype = LevelMonsterTypes[monst].type;
 	for (int i = 0; i < 4; i++) {
 		if (MonstSndChar[i] != 's' || MonstersData[mtype].snd_special) {
 			for (int j = 0; j < 2; j++) {
 				char path[MAX_PATH];
 				sprintf(path, MonstersData[mtype].sndfile, MonstSndChar[i], j + 1);
-				LevelMonsterTypes[monst].Snds[i][j] = sound_file_load(path);
+				LevelMonsterTypes[monst].snds[i][j] = sound_file_load(path);
 			}
 		}
 	}
@@ -1234,7 +1234,7 @@ void FreeMonsterSnd()
 #else
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
 #endif
-		for (auto &variants : LevelMonsterTypes[i].Snds) {
+		for (auto &variants : LevelMonsterTypes[i].snds) {
 			for (auto &snd : variants) {
 				snd = nullptr;
 			}

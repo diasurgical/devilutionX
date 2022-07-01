@@ -18,7 +18,7 @@ int8_t stonendx;
 namespace {
 void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 {
-	const auto &animData = mon.GetAnimData(MonsterGraphic::Death);
+	const auto &animData = mon.getAnimData(MonsterGraphic::Death);
 	memcpy(&corpse.data[0], &animData.celSpritesForDirections[0], sizeof(animData.celSpritesForDirections[0]) * animData.celSpritesForDirections.size());
 	corpse.frame = animData.frames - 1;
 	corpse.width = animData.width;
@@ -32,15 +32,15 @@ void InitCorpses()
 	int8_t nd = 0;
 
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
-		if (mtypes[LevelMonsterTypes[i].mtype] != 0)
+		if (mtypes[LevelMonsterTypes[i].type] != 0)
 			continue;
 
 		InitDeadAnimationFromMonster(Corpses[nd], LevelMonsterTypes[i]);
 		Corpses[nd].translationPaletteIndex = 0;
 		nd++;
 
-		LevelMonsterTypes[i].mdeadval = nd;
-		mtypes[LevelMonsterTypes[i].mtype] = nd;
+		LevelMonsterTypes[i].deadval = nd;
+		mtypes[LevelMonsterTypes[i].type] = nd;
 	}
 
 	nd++; // Unused blood spatter

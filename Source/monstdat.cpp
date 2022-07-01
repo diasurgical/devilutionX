@@ -335,7 +335,7 @@ const _monster_id MonstConvTbl[] = {
 /** Contains the data related to each unique monster ID. */
 const UniqueMonsterData UniqueMonstersData[] = {
 	// clang-format off
-	// mtype,            mName,                                             mTrnName,          mlevel,    mmaxhp,    mAi,               mint,  mMinDamage,  mMaxDamage,                         mMagicRes,                               monsterPack,                      customToHit, customArmorClass, mtalkmsg
+	// type,            mName,                                             mTrnName,          mlevel,    mmaxhp,    mAi,               mint,  mMinDamage,  mMaxDamage,                         mMagicRes,                               monsterPack,                      customToHit, customArmorClass, mtalkmsg
 	// TRANSLATORS: Unique Monster Block start
 	{  MT_NGOATMC,       P_("monster", "Gharbad the Weak"),                 "BSDB",                 4,       120, AI_GARBUD,               3,           8,          16,                               IMMUNE_LIGHTNING | IMMUNE_NULL_40, UniqueMonsterPack::None,                    0,                0, TEXT_GARBUD1   },
 	{  MT_SKING,         P_("monster", "Skeleton King"),                    "GENRL",                0,       240, AI_SKELKING,             3,           6,          16,  IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40, UniqueMonsterPack::Independent,             0,                0, TEXT_NONE      },
