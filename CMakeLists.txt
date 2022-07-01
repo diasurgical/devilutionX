@@ -240,6 +240,9 @@ if(GPERF)
   endif()
 endif()
 
+# Despite setting C++ standard to 20, features from this version are not being used.
+# The oldest compiler used is GCC 6.5 - and that defines our C++ feature set (meaning most of C++17).
+# It's present only to take advantage of fmt::format build time errors.
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
