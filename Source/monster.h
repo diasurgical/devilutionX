@@ -160,8 +160,8 @@ struct CMonster {
 	{
 		return anims[static_cast<int>(graphic)];
 	}
-	std::unique_ptr<TSnd> snds[4][2];
-	int8_t deadval;
+	std::unique_ptr<TSnd> sounds[4][2];
+	int8_t corpseId;
 	const MonsterData *data;
 };
 

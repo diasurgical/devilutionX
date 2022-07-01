@@ -39,7 +39,7 @@ void InitCorpses()
 		Corpses[nd].translationPaletteIndex = 0;
 		nd++;
 
-		LevelMonsterTypes[i].deadval = nd;
+		LevelMonsterTypes[i].corpseId = nd;
 		mtypes[LevelMonsterTypes[i].type] = nd;
 	}
 

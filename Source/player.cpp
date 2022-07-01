@@ -3165,7 +3165,7 @@ void RemovePlrMissiles(int pnum)
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
-			AddCorpse(golem.position.tile, golem.MType->deadval, golem._mdir);
+			AddCorpse(golem.position.tile, golem.MType->corpseId, golem._mdir);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
 			dMonster[mx][my] = 0;

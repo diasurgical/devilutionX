@@ -1692,7 +1692,7 @@ bool MonsterDeath(int monsterId)
 			PrepDoEnding();
 	} else if (monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames - 1) {
 		if (monster._uniqtype == 0)
-			AddCorpse(monster.position.tile, monster.MType->deadval, monster._mdir);
+			AddCorpse(monster.position.tile, monster.MType->corpseId, monster._mdir);
 		else
 			AddCorpse(monster.position.tile, monster._udeadval, monster._mdir);
 
@@ -4471,7 +4471,7 @@ void SyncMonsterAnim(Monster &monster)
 	// fix for saves with debug monsters having type originally not on the level
 	if (LevelMonsterTypes[monster._mMTidx].data == nullptr) {
 		InitMonsterGFX(monster._mMTidx);
-		LevelMonsterTypes[monster._mMTidx].deadval = 1;
+		LevelMonsterTypes[monster._mMTidx].corpseId = 1;
 	}
 #endif
 	monster.MData = LevelMonsterTypes[monster._mMTidx].data;
@@ -4649,7 +4649,7 @@ void PlayEffect(Monster &monster, int mode)
 	}
 
 	int mi = monster._mMTidx;
-	TSnd *snd = LevelMonsterTypes[mi].snds[mode][sndIdx].get();
+	TSnd *snd = LevelMonsterTypes[mi].sounds[mode][sndIdx].get();
 	if (snd == nullptr || snd->isPlaying()) {
 		return;
 	}

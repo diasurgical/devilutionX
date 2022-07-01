@@ -716,7 +716,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 		InitMonsterGFX(id);
 		InitMonsterSND(id);
 		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].deadval = 1;
+		LevelMonsterTypes[id].corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;
@@ -801,7 +801,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 		InitMonsterGFX(id);
 		InitMonsterSND(id);
 		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].deadval = 1;
+		LevelMonsterTypes[id].corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;
