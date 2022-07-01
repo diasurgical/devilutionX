@@ -237,6 +237,21 @@ struct Displacement {
 		return Displacement { deltaX * cosine - deltaY * sine, deltaX * sine + deltaY * cosine };
 	}
 
+	constexpr Displacement flipX()
+	{
+		return { -deltaX, deltaY };
+	}
+
+	constexpr Displacement flipY()
+	{
+		return { deltaX, -deltaY };
+	}
+
+	constexpr Displacement flipXY()
+	{
+		return { -deltaX, -deltaY };
+	}
+
 #ifdef BUILD_TESTING
 	/**
 	 * @brief Format displacements nicely in test failure messages

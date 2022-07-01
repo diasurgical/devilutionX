@@ -1224,10 +1224,8 @@ void AddJester(Missile &missile, const AddMissileParameter &parameter)
 void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	for (int i = 0; i < 3; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = missile.position.start + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+		for (auto displacement : CrawlTable[i]) {
+			Point target = missile.position.start + displacement;
 			if (!InDungeonBounds(target))
 				continue;
 			int8_t pnum = dPlayer[target.x][target.y];
@@ -2993,10 +2991,8 @@ void MI_FireRing(Missile &missile)
 	uint8_t lvl = missile._micaster == TARGET_MONSTERS ? Players[src]._pLevel : currlevel;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
-	int k = CrawlNum[3];
-	int ck = k + 2;
-	for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-		Point target { missile.var1 + CrawlTable[ck - 1], missile.var2 + CrawlTable[ck] };
+	for (auto displacement : CrawlTable[3]) {
+		Point target = Point { missile.var1, missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
 			continue;
 		int dp = dPiece[target.x][target.y];
@@ -3340,14 +3336,10 @@ void MI_Chain(Missile &missile)
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
 	AddMissile(position, dst, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
-	int rad = missile._mispllvl + 3;
-	if (rad > 19)
-		rad = 19;
+	int rad = std::min(missile._mispllvl + 3, (int)CrawlTable.size() - 1);
 	for (int i = 1; i < rad; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = position + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+		for (auto displacement : CrawlTable[i]) {
+			Point target = position + displacement;
 			if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
 				dir = GetDirection(position, target);
 				AddMissile(position, target, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
