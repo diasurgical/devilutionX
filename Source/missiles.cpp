@@ -2991,10 +2991,8 @@ void MI_FireRing(Missile &missile)
 	uint8_t lvl = missile._micaster == TARGET_MONSTERS ? Players[src]._pLevel : currlevel;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
-	int k = CrawlNum[3];
-	int ck = k + 2;
-	for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-		Point target { missile.var1 + CrawlTable[ck - 1], missile.var2 + CrawlTable[ck] };
+	for (Displacement displacement : CoolCrawlTable[3]) {
+		Point target = Point { missile.var1 , missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
 			continue;
 		int dp = dPiece[target.x][target.y];
