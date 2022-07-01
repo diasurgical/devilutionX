@@ -10,7 +10,7 @@ TEST(Lighting, CrawlTables)
 	bool added[40][40];
 	memset(added, 0, sizeof(added));
 
-	for (int j = 0; j < (int)CrawlTable.size(); j++) {
+	for (size_t j = 0; j < CrawlTable.size(); j++) {
 		int x = 20;
 		int y = 20;
 		for (unsigned i = 0; i < CrawlTable[j].size(); i++) {
