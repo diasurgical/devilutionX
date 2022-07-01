@@ -24,6 +24,25 @@ std::array<uint8_t, LIGHTSIZE> LightTables;
 bool DisableLighting;
 bool UpdateLighting;
 
+namespace {
+
+std::vector<Displacement> CrawlTableFlips(const std::vector<Displacement> displacements)
+{
+	std::vector<Displacement> ret;
+	for (auto displacement : displacements) {
+		if (displacement.deltaX != 0)
+			ret.push_back(displacement.flipX());
+		ret.push_back(displacement);
+		if (displacement.deltaX != 0 && displacement.deltaY != 0)
+			ret.push_back(displacement.flipXY());
+		if (displacement.deltaY != 0)
+			ret.push_back(displacement.flipY());
+	}
+	return ret;
+}
+
+} // namespace
+
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
  *
