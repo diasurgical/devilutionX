@@ -1,0 +1,5 @@
+if(NOT TARGET fmt::fmt)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(fmt REQUIRED IMPORTED_TARGET fmt)
+  add_library(fmt::fmt ALIAS PkgConfig::fmt)
+endif()

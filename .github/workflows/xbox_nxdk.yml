@@ -1,0 +1,47 @@
+name: Xbox
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  xbox:
+    # `ubuntu-latest` is currently 20.04 but we require a newer clang.
+    runs-on: ubuntu-22.04
+    env:
+      NXDK_DIR: /opt/nxdk
+    steps:
+    - name: Install APT packages
+      run: sudo apt-get update && sudo apt-get install -y clang llvm lld bison flex cmake git gettext smpq
+
+    - name: Clone NXDK Repo
+      shell: bash
+      run: git clone --recursive --depth 1 --branch devilutionx https://github.com/glebm/nxdk.git "$NXDK_DIR"
+
+    - name: Build NXDK
+      shell: bash
+      run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 all cxbe extract-xiso
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Configure CMake
+      working-directory: ${{github.workspace}}
+      run: cmake -S. -Bbuild-xbox -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=/opt/nxdk/share/toolchain-nxdk.cmake
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: cmake --build build-xbox -j $(nproc) --target nxdk_xbe
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx
+        path: build-xbox/pkg/default.xbe

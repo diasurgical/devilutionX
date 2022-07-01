@@ -19,7 +19,7 @@ void ReadOnlyTest()
 	}
 
 	fclose(f);
-	RemoveFile(path);
+	RemoveFile(path.c_str());
 }
 
 } // namespace devilution

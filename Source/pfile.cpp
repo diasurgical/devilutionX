@@ -437,7 +437,7 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 	uint32_t saveNum = heroInfo->saveNumber;
 	if (saveNum < MAX_CHARACTERS) {
 		hero_names[saveNum][0] = '\0';
-		RemoveFile(GetSavePath(saveNum));
+		RemoveFile(GetSavePath(saveNum).c_str());
 	}
 	return true;
 }
