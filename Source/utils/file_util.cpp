@@ -17,20 +17,21 @@
 // Suppress definitions of `min` and `max` macros by <windows.h>:
 #define NOMINMAX 1
 #define WIN32_LEAN_AND_MEAN
-#include <shlwapi.h>
 #include <windows.h>
 
-#include "utils/log.hpp"
+#ifndef NXDK
+#include <shlwapi.h>
+#endif
 #endif
 
-#if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+#if (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(NXDK)
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
 
 namespace devilution {
 
-#if defined(_WIN64) || defined(_WIN32)
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
 std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 {
 	constexpr std::uint32_t flags = MB_ERR_INVALID_CHARS;
@@ -48,16 +49,25 @@ std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 bool FileExists(const char *path)
 {
 #if defined(_WIN64) || defined(_WIN32)
+#if defined(NXDK)
+	const bool exists = ::GetFileAttributesA(path) != INVALID_FILE_ATTRIBUTES;
+#else
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return false;
 	}
-	if (!::PathFileExistsW(&pathUtf16[0])) {
+	const bool exists = ::PathFileExistsW(&pathUtf16[0]);
+#endif
+	if (!exists) {
 		if (::GetLastError() == ERROR_FILE_NOT_FOUND || ::GetLastError() == ERROR_PATH_NOT_FOUND) {
 			::SetLastError(ERROR_SUCCESS);
 		} else {
+#if defined(NXDK)
+			LogError("GetFileAttributesA: error code {}", ::GetLastError());
+#else
 			LogError("PathFileExistsW: error code {}", ::GetLastError());
+#endif
 		}
 		return false;
 	}
@@ -76,29 +86,60 @@ bool FileExists(const char *path)
 bool FileExistsAndIsWriteable(const char *path)
 {
 #if defined(_WIN64) || defined(_WIN32)
+#if defined(NXDK)
+	const DWORD attr = ::GetFileAttributesA(path);
+#else
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return false;
 	}
-	return ::GetFileAttributesW(&pathUtf16[0]) != INVALID_FILE_ATTRIBUTES && (::GetFileAttributesW(&pathUtf16[0]) & FILE_ATTRIBUTE_READONLY) == 0;
-#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+	const DWORD attr = ::GetFileAttributesW(&pathUtf16[0]);
+#endif
+	const bool exists = attr != INVALID_FILE_ATTRIBUTES;
+	if (!exists) {
+		if (::GetLastError() == ERROR_FILE_NOT_FOUND || ::GetLastError() == ERROR_PATH_NOT_FOUND) {
+			::SetLastError(ERROR_SUCCESS);
+		} else {
+#if defined(NXDK)
+			LogError("GetFileAttributesA: error code {}", ::GetLastError());
+#else
+			LogError("GetFileAttributesW: error code {}", ::GetLastError());
+#endif
+		}
+	}
+	return exists && (attr & FILE_ATTRIBUTE_READONLY) == 0;
+#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
 	return ::access(path, W_OK) == 0;
+#else
+	if (!FileExists(path))
+		return false;
+	SDL_RWops *file = SDL_RWFromFile(path, "a+b");
+	if (file == NULL)
+		return false;
+	SDL_RWclose(file);
+	return true;
 #endif
 }
 
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
 #if defined(_WIN64) || defined(_WIN32)
+	WIN32_FILE_ATTRIBUTE_DATA attr;
+#if defined(NXDK)
+	if (!GetFileAttributesExA(path, GetFileExInfoStandard, &attr)) {
+		return false;
+	}
+#else
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return false;
 	}
-	WIN32_FILE_ATTRIBUTE_DATA attr;
 	if (!GetFileAttributesExW(&pathUtf16[0], GetFileExInfoStandard, &attr)) {
 		return false;
 	}
+#endif
 	// C4293 in msvc when shifting a 32 bit type by 32 bits.
 	*size = static_cast<std::uintmax_t>(attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
@@ -119,12 +160,16 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 	if (lisize.QuadPart < 0) {
 		return false;
 	}
+#ifdef NXDK
+	HANDLE file = ::CreateFileA(path, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+#else
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return false;
 	}
 	HANDLE file = ::CreateFileW(&pathUtf16[0], GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+#endif
 	if (file == INVALID_HANDLE_VALUE) {
 		return false;
 	} else if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0 || ::SetEndOfFile(file) == 0) {
@@ -140,17 +185,19 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 #endif
 }
 
-void RemoveFile(string_view lpFileName)
+void RemoveFile(const char *path)
 {
-#if defined(_WIN64) || defined(_WIN32)
-	const auto pathUtf16 = ToWideChar(lpFileName);
+#if defined(NXDK)
+	::DeleteFileA(path);
+#elif defined(_WIN64) || defined(_WIN32)
+	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return;
 	}
 	::DeleteFileW(&pathUtf16[0]);
 #else
-	std::string name { lpFileName };
+	std::string name { path };
 	std::replace(name.begin(), name.end(), '\\', '/');
 	FILE *f = fopen(name.c_str(), "r+");
 	if (f != nullptr) {
@@ -166,7 +213,7 @@ void RemoveFile(string_view lpFileName)
 
 std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
 {
-#if defined(_WIN64) || defined(_WIN32)
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
@@ -180,7 +227,7 @@ std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmod
 
 FILE *FOpen(const char *path, const char *mode)
 {
-#if defined(_WIN64) || defined(_WIN32)
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(NXDK)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());

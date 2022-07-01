@@ -67,3 +67,7 @@ endif()
 if(UWP_LIB)
   include(platforms/uwp_lib)
 endif()
+
+if(NXDK)
+  include(platforms/xbox_nxdk)
+endif()

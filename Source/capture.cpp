@@ -185,7 +185,7 @@ void CaptureScreen()
 
 	if (!success) {
 		Log("Failed to save screenshot at {}", fileName);
-		RemoveFile(fileName);
+		RemoveFile(fileName.c_str());
 	} else {
 		Log("Screenshot saved at {}", fileName);
 	}

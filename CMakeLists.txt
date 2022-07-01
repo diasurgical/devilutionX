@@ -467,6 +467,18 @@ if(UWP_LIB)
   target_compile_definitions(libdevilutionx PRIVATE __UWP__=1)
 endif()
 
+if(NXDK)
+  set(NXDK_PKG_DIR "${CMAKE_BINARY_DIR}/pkg")
+  set(_xbe_path "${NXDK_PKG_DIR}/default.xbe")
+  add_custom_command(
+    OUTPUT "${_xbe_path}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${NXDK_PKG_DIR}"
+    COMMAND "${NXDK_DIR}/tools/cxbe/cxbe" "-OUT:${_xbe_path}" -TITLE:DevilutionX "${CMAKE_BINARY_DIR}/${BIN_TARGET}.exe"
+    DEPENDS "${BIN_TARGET}"
+  )
+  add_custom_target(nxdk_xbe DEPENDS "${_xbe_path}")
+endif()
+
 if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")

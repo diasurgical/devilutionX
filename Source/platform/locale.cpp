@@ -10,7 +10,7 @@
 #include <psp2/system_param.h>
 #elif defined(__3DS__)
 #include "platform/ctr/locale.hpp"
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(NXDK)
 // Suppress definitions of `min` and `max` macros by <windows.h>:
 #define NOMINMAX 1
 #define WIN32_LEAN_AND_MEAN
@@ -30,7 +30,7 @@
 namespace devilution {
 namespace {
 
-#if (defined(_WIN32) && WINVER >= 0x0600) || (defined(__APPLE__) && defined(USE_COREFOUNDATION))
+#if (defined(_WIN32) && WINVER >= 0x0600 && !defined(NXDK)) || (defined(__APPLE__) && defined(USE_COREFOUNDATION))
 std::string IetfToPosix(string_view langCode)
 {
 	/*
@@ -111,7 +111,7 @@ std::vector<std::string> GetLocales()
 	// use default
 #elif defined(__3DS__)
 	locales.push_back(n3ds::GetLocale());
-#elif defined(_WIN32)
+#elif defined(_WIN32) && !defined(NXDK)
 #if WINVER >= 0x0600
 	auto wideCharToUtf8 = [](PWSTR wideString) {
 		// WideCharToMultiByte potentially leaves the buffer unterminated, default initialise here as a workaround

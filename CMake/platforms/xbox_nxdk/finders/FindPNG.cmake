@@ -1,0 +1,5 @@
+if(NOT TARGET PNG::PNG)
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(PNG REQUIRED IMPORTED_TARGET libpng)
+  add_library(PNG::PNG ALIAS PkgConfig::PNG)
+endif()

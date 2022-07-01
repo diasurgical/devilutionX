@@ -98,7 +98,7 @@ void CalculatePreferredWindowSize(int &width, int &height)
 
 void FreeRenderer()
 {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(NXDK)
 	bool wasD3D9 = false;
 	bool wasD3D11 = false;
 	if (renderer != nullptr) {
@@ -114,7 +114,7 @@ void FreeRenderer()
 		renderer = nullptr;
 	}
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(NXDK)
 	// On Windows 11 the directx9 VSYNC timer doesn't get recreated properly, see https://github.com/libsdl-org/SDL/issues/5099
 	// Furthermore, the direct3d11 driver "poisons" the window so it can't be used by another renderer
 	if ((wasD3D9 && *sgOptions.Graphics.upscale && *sgOptions.Graphics.vSync) || (wasD3D11 && !*sgOptions.Graphics.upscale)) {
