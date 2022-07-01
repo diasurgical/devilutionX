@@ -2992,7 +2992,7 @@ void MI_FireRing(Missile &missile)
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
 	for (auto displacement : CrawlTable[3]) {
-		Point target = Point { missile.var1 , missile.var2 } + displacement;
+		Point target = Point { missile.var1, missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
 			continue;
 		int dp = dPiece[target.x][target.y];
