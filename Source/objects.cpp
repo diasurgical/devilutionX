@@ -7,6 +7,8 @@
 #include <climits>
 #include <cstdint>
 
+#include <fmt/compile.h>
+
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "cursor.h"
@@ -4080,7 +4082,7 @@ void LoadLevelObjects(bool filesLoaded[65])
 
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
-		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
+		*fmt::format_to(filestr, FMT_COMPILE(R"(Objects\{}.CEL)"), ObjMasterLoadList[i]) = '\0';
 		pObjCels[numobjfiles] = LoadFileInMem(filestr);
 		numobjfiles++;
 	}

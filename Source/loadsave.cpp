@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 #include <SDL.h>
+#include <fmt/compile.h>
 
 #include "automap.h"
 #include "codec.h"
@@ -878,20 +879,28 @@ void LoadPortal(LoadHelper *file, int i)
 	pPortal->setlvl = file->NextBool32();
 }
 
+void GetLevelNames(string_view prefix, char *out)
+{
+	char suf;
+	uint8_t num;
+	if (setlevel) {
+		suf = 's';
+		num = static_cast<uint8_t>(setlvlnum);
+	} else {
+		suf = 'l';
+		num = currlevel;
+	}
+	*fmt::format_to(out, FMT_COMPILE("{}{}{:02d}"), prefix, suf, num) = '\0';
+}
+
 void GetTempLevelNames(char *szTemp)
 {
-	if (setlevel)
-		sprintf(szTemp, "temps%02d", setlvlnum);
-	else
-		sprintf(szTemp, "templ%02d", currlevel);
+	return GetLevelNames("temp", szTemp);
 }
 
 void GetPermLevelNames(char *szPerm)
 {
-	if (setlevel)
-		sprintf(szPerm, "perms%02d", setlvlnum);
-	else
-		sprintf(szPerm, "perml%02d", currlevel);
+	return GetLevelNames("perm", szPerm);
 }
 
 bool LevelFileExists(MpqWriter &archive)
