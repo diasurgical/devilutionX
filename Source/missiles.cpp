@@ -2991,6 +2991,9 @@ void MI_FireRing(Missile &missile)
 	uint8_t lvl = missile._micaster == TARGET_MONSTERS ? Players[src]._pLevel : currlevel;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
+	if (missile.limitReached)
+		return;
+
 	for (auto displacement : CrawlTable[3]) {
 		Point target = Point { missile.var1, missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
@@ -3002,9 +3005,9 @@ void MI_FireRing(Missile &missile)
 			continue;
 		if (!LineClearMissile(missile.position.tile, target))
 			continue;
-		if (TileHasAny(dp, TileProperties::BlockMissile) || missile.limitReached) {
+		if (TileHasAny(dp, TileProperties::BlockMissile)) {
 			missile.limitReached = true;
-			continue;
+			return;
 		}
 
 		AddMissile(target, target, Direction::South, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
