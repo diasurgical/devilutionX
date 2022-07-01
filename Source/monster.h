@@ -147,21 +147,22 @@ struct AnimStruct {
 };
 
 struct CMonster {
-	_monster_id mtype;
+	_monster_id type;
 	/** placeflag enum as a flags*/
-	uint8_t mPlaceFlags;
+
+	uint8_t placeFlags;
 	std::unique_ptr<byte[]> animData;
-	AnimStruct Anims[6];
+	AnimStruct anims[6];
 	/**
 	 * @brief Returns AnimStruct for specified graphic
 	 */
-	const AnimStruct &GetAnimData(MonsterGraphic graphic) const
+	const AnimStruct &getAnimData(MonsterGraphic graphic) const
 	{
-		return Anims[static_cast<int>(graphic)];
+		return anims[static_cast<int>(graphic)];
 	}
-	std::unique_ptr<TSnd> Snds[4][2];
-	int8_t mdeadval;
-	const MonsterData *MData;
+	std::unique_ptr<TSnd> snds[4][2];
+	int8_t deadval;
+	const MonsterData *data;
 };
 
 struct Monster { // note: missing field _mAFNum
@@ -228,7 +229,7 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void ChangeAnimationData(MonsterGraphic graphic, Direction direction)
 	{
-		auto &animationData = this->MType->GetAnimData(graphic);
+		auto &animationData = this->MType->getAnimData(graphic);
 
 		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
 		this->AnimInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(direction), animationData.frames, animationData.rate);

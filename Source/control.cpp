@@ -911,7 +911,7 @@ void DrawInfoBox(const Surface &out)
 					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
 				} else {
-					PrintMonstHistory(monster.MType->mtype);
+					PrintMonstHistory(monster.MType->type);
 				}
 			} else if (pcursitem == -1) {
 				InfoString = string_view(Towners[pcursmonst].name);

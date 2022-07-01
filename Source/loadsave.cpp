@@ -649,7 +649,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 
 	// Omit pointer mName;
 	// Omit pointer MType;
-	// Omit pointer MData;
+	// Omit pointer data;
 
 	if (gbSkipSync)
 		return;
@@ -1380,7 +1380,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 
 	// Omit pointer mName;
 	// Omit pointer MType;
-	// Omit pointer MData;
+	// Omit pointer data;
 }
 
 void SaveMissile(SaveHelper *file, const Missile &missile)
