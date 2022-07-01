@@ -18,6 +18,7 @@
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "engine/world_tile.hpp"
 #include "gamemenu.h"
 #include "init.h"
 #include "inv_iterators.hpp"
@@ -45,13 +46,13 @@ Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
-int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
+int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
 /** Specifies the Y-coordinate delta from the player start location in Tristram. */
-int plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
+int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
 /** Specifies the X-coordinate delta from a player, used for instance when casting resurrect. */
-int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
+int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
-int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
+int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
 /** Maps from player_class to starting stat in strength. */
 int StrengthTbl[enum_size<HeroClass>::value] = {
@@ -160,9 +161,9 @@ namespace {
 
 struct DirectionSettings {
 	Direction dir;
-	Displacement tileAdd;
-	Displacement offset;
-	Displacement map;
+	DisplacementOf<int8_t> tileAdd;
+	DisplacementOf<int8_t> offset;
+	DisplacementOf<int8_t> map;
 	ScrollDirection scrollDir;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(int, const DirectionSettings &);
@@ -221,7 +222,7 @@ void WalkUpwards(int pnum, const DirectionSettings &walkParams)
 {
 	Player &player = Players[pnum];
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
-	player.position.temp = { walkParams.tileAdd.deltaX, walkParams.tileAdd.deltaY };
+	player.position.temp = WorldTilePosition { static_cast<WorldTileCoord>(walkParams.tileAdd.deltaX), static_cast<WorldTileCoord>(walkParams.tileAdd.deltaY) };
 }
 
 void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
@@ -417,7 +418,10 @@ void ChangeOffset(Player &player)
 		player.position.offset2 += player.position.velocity;
 	}
 
-	player.position.offset = { player.position.offset2.deltaX >> 8, player.position.offset2.deltaY >> 8 };
+	player.position.offset = DisplacementOf<int8_t> {
+		static_cast<int8_t>(player.position.offset2.deltaX >> 8),
+		static_cast<int8_t>(player.position.offset2.deltaY >> 8)
+	};
 
 	px -= player.position.offset2.deltaX >> 8;
 	py -= player.position.offset2.deltaY >> 8;
@@ -461,7 +465,7 @@ void StartAttack(int pnum, Direction d)
 	SetPlayerOld(player);
 }
 
-void StartRangeAttack(int pnum, Direction d, int cx, int cy)
+void StartRangeAttack(int pnum, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartRangeAttack: illegal player %i", pnum);
@@ -488,7 +492,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	player._pmode = PM_RATTACK;
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
-	player.position.temp = { cx, cy };
+	player.position.temp = WorldTilePosition { cx, cy };
 }
 
 player_graphic GetPlayerGraphicForSpell(spell_id spellId)
@@ -503,7 +507,7 @@ player_graphic GetPlayerGraphicForSpell(spell_id spellId)
 	}
 }
 
-void StartSpell(int pnum, Direction d, int cx, int cy)
+void StartSpell(int pnum, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS)
 		app_fatal("StartSpell: illegal player %i", pnum);
@@ -526,7 +530,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 	FixPlayerLocation(player, d);
 	SetPlayerOld(player);
 
-	player.position.temp = { cx, cy };
+	player.position.temp = WorldTilePosition { cx, cy };
 	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
 }
 

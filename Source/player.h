@@ -813,10 +813,10 @@ void PlayDungMsgs();
 
 /* data */
 
-extern int plrxoff[9];
-extern int plryoff[9];
-extern int plrxoff2[9];
-extern int plryoff2[9];
+extern int8_t plrxoff[9];
+extern int8_t plryoff[9];
+extern int8_t plrxoff2[9];
+extern int8_t plryoff2[9];
 extern int StrengthTbl[enum_size<HeroClass>::value];
 extern int MagicTbl[enum_size<HeroClass>::value];
 extern int DexterityTbl[enum_size<HeroClass>::value];

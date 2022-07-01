@@ -15,6 +15,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/sound.h"
+#include "engine/world_tile.hpp"
 #include "miniwin/miniwin.h"
 #include "monstdat.h"
 #include "spelldat.h"
@@ -63,7 +64,7 @@ enum : uint8_t {
 	UMT_NAKRUL,
 };
 
-enum class MonsterMode {
+enum class MonsterMode : uint8_t {
 	Stand,
 	/** Movement towards N, NW, or NE */
 	MoveNorthwards,
@@ -87,7 +88,7 @@ enum class MonsterMode {
 	Talk,
 };
 
-enum class MonsterGraphic {
+enum class MonsterGraphic : uint8_t {
 	Stand,
 	Walk,
 	Attack,
@@ -166,61 +167,65 @@ struct CMonster {
 };
 
 struct Monster { // note: missing field _mAFNum
-	int _mMTidx;
-	MonsterMode _mmode;
-	monster_goal _mgoal;
+	const char *mName;
+	CMonster *MType;
+	const MonsterData *MData;
+	std::unique_ptr<uint8_t[]> uniqueTRN;
+	AnimationInfo AnimInfo;
 	int _mgoalvar1;
 	int _mgoalvar2;
 	int _mgoalvar3;
-	uint8_t _pathcount;
-	ActorPosition position;
-	/** Direction faced by monster (direction enum) */
-	Direction _mdir;
-	/** The current target of the monster. An index in to either the plr or monster array based on the _meflag value. */
-	int _menemy;
-	/** Usually corresponds to the enemy's future position */
-	Point enemyPosition;
-	/**
-	 * @brief Contains information for current animation
-	 */
-	AnimationInfo AnimInfo;
-	bool _mDelFlag;
 	int _mVar1;
 	int _mVar2;
 	int _mVar3;
 	int _mmaxhp;
 	int _mhitpoints;
-	_mai_id _mAi;
-	uint8_t _mint;
 	uint32_t _mFlags;
-	uint8_t _msquelch;
 	/** Seed used to determine item drops on death */
 	uint32_t _mRndSeed;
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t _mAISeed;
+
+	uint16_t mExp;
+	uint16_t mHit;
+	uint16_t mHit2;
+	uint16_t mMagicRes;
+	_speech_id mtalkmsg;
+	ActorPosition position;
+
+	/** Usually corresponds to the enemy's future position */
+	WorldTilePosition enemyPosition;
+	uint8_t _mMTidx;
+	MonsterMode _mmode;
+	monster_goal _mgoal;
+	uint8_t _pathcount;
+	/** Direction faced by monster (direction enum) */
+	Direction _mdir;
+	/** The current target of the monster. An index in to either the plr or monster array based on the _meflag value. */
+	uint8_t _menemy;
+
+	/**
+	 * @brief Contains information for current animation
+	 */
+	bool _mDelFlag;
+
+	_mai_id _mAi;
+	uint8_t _mint;
+	uint8_t _msquelch;
 	uint8_t _uniqtype;
 	uint8_t _uniqtrans;
 	int8_t _udeadval;
 	int8_t mWhoHit;
 	int8_t mLevel;
-	uint16_t mExp;
-	uint16_t mHit;
 	uint8_t mMinDamage;
 	uint8_t mMaxDamage;
-	uint16_t mHit2;
 	uint8_t mMinDamage2;
 	uint8_t mMaxDamage2;
 	uint8_t mArmorClass;
-	uint16_t mMagicRes;
-	_speech_id mtalkmsg;
 	uint8_t leader;
 	LeaderRelation leaderRelation;
 	uint8_t packsize;
 	int8_t mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
-	const char *mName;
-	CMonster *MType;
-	const MonsterData *MData;
-	std::unique_ptr<uint8_t[]> uniqueTRN;
 
 	/**
 	 * @brief Sets the current cell sprite to match the desired direction and animation sequence

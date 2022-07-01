@@ -14,6 +14,7 @@
 #include "dthread.h"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
+#include "engine/world_tile.hpp"
 #include "menu.h"
 #include "nthread.h"
 #include "options.h"
@@ -349,16 +350,13 @@ void SetupLocalPositions()
 	leveltype = DTYPE_TOWN;
 	setlevel = false;
 
-	int x = 75;
-	int y = 68;
-
-	x += plrxoff[MyPlayerId];
-	y += plryoff[MyPlayerId];
+	const auto x = static_cast<WorldTileCoord>(75 + plrxoff[MyPlayerId]);
+	const auto y = static_cast<WorldTileCoord>(68 + plryoff[MyPlayerId]);
 
 	Player &myPlayer = *MyPlayer;
 
-	myPlayer.position.tile = { x, y };
-	myPlayer.position.future = { x, y };
+	myPlayer.position.tile = WorldTilePosition { x, y };
+	myPlayer.position.future = WorldTilePosition { x, y };
 	myPlayer.setLevel(currlevel);
 	myPlayer._pLvlChanging = true;
 	myPlayer.pLvlLoad = 0;

@@ -18,6 +18,7 @@
 #include "dthread.h"
 #include "encrypt.h"
 #include "engine/random.hpp"
+#include "engine/world_tile.hpp"
 #include "gamemenu.h"
 #include "levels/drlg_l1.h"
 #include "levels/town.h"
@@ -57,8 +58,7 @@ struct TMegaPkt {
 
 #pragma pack(push, 1)
 struct DMonsterStr {
-	uint8_t _mx;
-	uint8_t _my;
+	WorldTilePosition position;
 	Direction _mdir;
 	uint8_t _menemy;
 	uint8_t _mactive;
@@ -347,7 +347,7 @@ size_t DeltaImportObject(const byte *src, DObjectStr *dst)
 byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 {
 	for (int i = 0; i < MaxMonsters; i++, src++) {
-		if (src->_mx == 0xFF) {
+		if (src->position.x == 0xFF) {
 			*dst++ = byte { 0xFF };
 		} else {
 			memcpy(dst, src, sizeof(DMonsterStr));
@@ -501,8 +501,8 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 
 	sgbDeltaChanged = true;
 	DMonsterStr &monster = GetDeltaLevel(level).monster[pnum];
-	monster._mx = message._mx;
-	monster._my = message._my;
+	monster.position.x = message._mx;
+	monster.position.y = message._my;
 	monster._mactive = UINT8_MAX;
 	monster._menemy = message._menemy;
 	monster._mdir = message._mdir;
@@ -527,8 +527,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 			continue;
 		sgbDeltaChanged = true;
 		DMonsterStr &delta = deltaLevel.monster[ma];
-		delta._mx = monster.position.tile.x;
-		delta._my = monster.position.tile.y;
+		delta.position = monster.position.tile;
 		delta._mdir = monster._mdir;
 		delta._menemy = encode_enemy(monster);
 		delta._mhitpoints = monster._mhitpoints;
@@ -2217,8 +2216,7 @@ void delta_kill_monster(int mi, Point position, const Player &player)
 
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
-	pD->_mx = position.x;
-	pD->_my = position.y;
+	pD->position = position;
 	pD->_mdir = Monsters[mi]._mdir;
 	pD->_mhitpoints = 0;
 }
@@ -2246,8 +2244,8 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	if (monster._mhitpoints == 0)
 		return;
 
-	monster._mx = monsterSync._mx;
-	monster._my = monsterSync._my;
+	monster.position.x = monsterSync._mx;
+	monster.position.y = monsterSync._my;
 	monster._mactive = UINT8_MAX;
 	monster._menemy = monsterSync._menemy;
 	monster._mhitpoints = monsterSync._mhitpoints;
@@ -2401,16 +2399,17 @@ void DeltaLoadLevel()
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
 		for (int i = 0; i < ActiveMonsterCount; i++) {
-			if (deltaLevel.monster[i]._mx == 0xFF)
+			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
 
 			M_ClearSquares(i);
-			int x = deltaLevel.monster[i]._mx;
-			int y = deltaLevel.monster[i]._my;
 			auto &monster = Monsters[i];
-			monster.position.tile = { x, y };
-			monster.position.old = { x, y };
-			monster.position.future = { x, y };
+			{
+				const WorldTilePosition position = deltaLevel.monster[i].position;
+				monster.position.tile = position;
+				monster.position.old = position;
+				monster.position.future = position;
+			}
 			if (deltaLevel.monster[i]._mhitpoints != -1) {
 				monster._mhitpoints = deltaLevel.monster[i]._mhitpoints;
 				monster.mWhoHit = deltaLevel.monster[i].mWhoHit;

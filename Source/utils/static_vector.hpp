@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <initializer_list>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -18,6 +19,31 @@ namespace devilution {
 template <class T, size_t N>
 class StaticVector {
 public:
+	StaticVector() = default;
+
+	template <typename U>
+	StaticVector(std::initializer_list<U> elements)
+	{
+		for (auto &&element : elements) {
+			emplace_back(element);
+		}
+	}
+
+	[[nodiscard]] const T *begin() const
+	{
+		return &(*this)[0];
+	}
+
+	[[nodiscard]] const T *end() const
+	{
+		return begin() + size_;
+	}
+
+	[[nodiscard]] size_t size() const
+	{
+		return size_;
+	}
+
 	template <typename... Args>
 	T &emplace_back(Args &&...args) // NOLINT(readability-identifier-naming)
 	{

@@ -1714,7 +1714,7 @@ void AddLightball(Missile &missile, const AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 	missile._mirange = 255;
-	const Point position { missile._misource < 0 ? missile.position.start : Players[missile._misource].position.tile };
+	const Point position { missile._misource < 0 ? missile.position.start : Point(Players[missile._misource].position.tile) };
 	missile.var1 = position.x;
 	missile.var2 = position.y;
 }
@@ -3346,7 +3346,7 @@ void MI_Chain(Missile &missile)
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
 	AddMissile(position, dst, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
-	int rad = std::min(missile._mispllvl + 3, (int)CrawlTable.size() - 1);
+	int rad = std::min<int>(missile._mispllvl + 3, CrawlTable.size() - 1);
 	for (int i = 1; i < rad; i++) {
 		for (auto displacement : CrawlTable[i]) {
 			Point target = position + displacement;
@@ -3809,7 +3809,7 @@ void MI_Element(Missile &missile)
 	if (missile._miAnimType == MFILE_BIGEXP) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
 
-		Point startPoint = missile.var3 == 2 ? Point { missile.var4, missile.var5 } : missile.position.start;
+		Point startPoint = missile.var3 == 2 ? Point { missile.var4, missile.var5 } : Point(missile.position.start);
 		constexpr Displacement Offsets[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
 		for (Displacement offset : Offsets) {
 			if (!CheckBlock(startPoint, missilePosition + offset))
