@@ -26,9 +26,9 @@ bool UpdateLighting;
 
 namespace {
 
-std::vector<Displacement> CrawlFlips(const std::vector<Displacement> displacements)
+std::vector<DisplacementOf<int8_t>> CrawlFlips(const std::vector<DisplacementOf<int8_t>> &displacements)
 {
-	std::vector<Displacement> ret;
+	std::vector<DisplacementOf<int8_t>> ret;
 	for (auto displacement : displacements) {
 		if (displacement.deltaX != 0)
 			ret.push_back(displacement.flipX());
@@ -41,17 +41,17 @@ std::vector<Displacement> CrawlFlips(const std::vector<Displacement> displacemen
 	return ret;
 }
 
-std::vector<Displacement> CrawlRow(int row)
+std::vector<DisplacementOf<int8_t>> CrawlRow(int8_t row)
 {
 	if (row == 0)
 		return { { 0, 0 } };
 
-	std::vector<Displacement> ret;
-	for (int i = 0; i < row; i++)
+	std::vector<DisplacementOf<int8_t>> ret;
+	for (int8_t i = 0; i < row; i++)
 		ret.push_back({ i, row });
 	if (row > 1)
-		ret.push_back({ row - 1, row - 1 });
-	for (int i = 0; i < row; i++)
+		ret.push_back({ static_cast<int8_t>(row - 1), static_cast<int8_t>(row - 1) });
+	for (int8_t i = 0; i < row; i++)
 		ret.push_back({ row, i });
 	return CrawlFlips(ret);
 }
@@ -82,8 +82,8 @@ std::vector<Displacement> CrawlRow(int row)
  *    +-------> x
  */
 
-const std::vector<std::vector<Displacement>> CrawlTable = [] {
-	std::vector<std::vector<Displacement>> ret;
+const std::vector<std::vector<DisplacementOf<int8_t>>> CrawlTable = [] {
+	std::vector<std::vector<DisplacementOf<int8_t>>> ret;
 	for (int i = 0; i < 19; i++)
 		ret.push_back(CrawlRow(i));
 	return ret;
