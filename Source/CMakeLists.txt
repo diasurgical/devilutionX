@@ -101,7 +101,6 @@ set(libdevilutionx_SRCS
   engine/direction.cpp
   engine/dx.cpp
   engine/load_cel.cpp
-  engine/load_pcx_as_cel.cpp
   engine/load_pcx.cpp
   engine/palette.cpp
   engine/path.cpp
@@ -160,7 +159,6 @@ set(libdevilutionx_SRCS
   utils/logged_fstream.cpp
   utils/paths.cpp
   utils/pcx.cpp
-  utils/pcx_to_cel.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
   utils/utf8.cpp)
