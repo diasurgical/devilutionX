@@ -139,8 +139,11 @@ public:
 	{
 	}
 
-	OwnedPcxSpriteSheet(OwnedPcxSprite &&sprite, std::unique_ptr<uint32_t[]> &&frameOffsets, uint16_t numFrames)
-	    : OwnedPcxSpriteSheet(std::move(sprite.data_), std::move(frameOffsets), numFrames, sprite.width_, sprite.height_ / numFrames, sprite.transparent_color_)
+	OwnedPcxSpriteSheet(OwnedPcxSprite &&sprite, uint16_t numFrames)
+	    : OwnedPcxSpriteSheet(
+	        std::move(sprite.data_),
+	        calculateFrameOffsets(PcxSprite { sprite.data_.get(), sprite.width_, sprite.height_ }, numFrames),
+	        numFrames, sprite.width_, sprite.height_ / numFrames, sprite.transparent_color_)
 	{
 	}
 
@@ -148,6 +151,8 @@ public:
 	OwnedPcxSpriteSheet &operator=(OwnedPcxSpriteSheet &&) noexcept = default;
 
 private:
+	static std::unique_ptr<uint32_t[]> calculateFrameOffsets(PcxSprite sprite, uint16_t numFrames);
+
 	std::unique_ptr<uint8_t[]> data_;
 	std::unique_ptr<uint32_t[]> frame_offsets_;
 	uint16_t num_frames_;

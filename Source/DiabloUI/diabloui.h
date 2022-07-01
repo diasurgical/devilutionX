@@ -67,7 +67,6 @@ extern std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 extern std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 extern std::optional<OwnedPcxSpriteSheet> ArtBackground;
 extern Art ArtCursor;
-extern Art ArtHero;
 
 extern void (*gfnSoundFunction)(const char *file);
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
@@ -109,6 +108,7 @@ void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler = nullptr);
 void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items);
 void UiInitList_clear();
+PcxSprite UiGetHeroDialogSprite(size_t heroClassIndex);
 
 void mainmenu_restart_repintro();
 } // namespace devilution

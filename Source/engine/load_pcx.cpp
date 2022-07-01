@@ -17,39 +17,6 @@
 
 namespace devilution {
 
-namespace {
-
-std::unique_ptr<uint32_t[]> LoadFrameOffsets(PcxSprite sprite, uint16_t numFrames)
-{
-	uint16_t frameHeight = sprite.height() / numFrames;
-	std::unique_ptr<uint32_t[]> frameOffsets { new uint32_t[numFrames] };
-	frameOffsets[0] = 0;
-	const unsigned width = sprite.width();
-	const unsigned srcSkip = width % 2;
-	const uint8_t *data = sprite.data();
-	for (unsigned frame = 1; frame < numFrames; ++frame) {
-		for (unsigned y = 0; y < frameHeight; ++y) {
-			for (unsigned x = 0; x < width;) {
-				constexpr uint8_t PcxMaxSinglePixel = 0xBF;
-				const uint8_t byte = *data++;
-				if (byte <= PcxMaxSinglePixel) {
-					++x;
-					continue;
-				}
-				constexpr uint8_t PcxRunLengthMask = 0x3F;
-				const uint8_t runLength = (byte & PcxRunLengthMask);
-				++data;
-				x += runLength;
-			}
-			data += srcSkip;
-		}
-		frameOffsets[frame] = static_cast<uint32_t>(data - sprite.data());
-	}
-	return frameOffsets;
-}
-
-} // namespace
-
 std::optional<OwnedPcxSprite> LoadPcxAsset(const char *path, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
 {
 	SDL_RWops *handle = OpenAsset(path);
@@ -57,7 +24,11 @@ std::optional<OwnedPcxSprite> LoadPcxAsset(const char *path, std::optional<uint8
 		LogError("Missing file: {}", path);
 		return std::nullopt;
 	}
+	return LoadPcxAsset(handle, transparentColor, outPalette);
+}
 
+std::optional<OwnedPcxSprite> LoadPcxAsset(SDL_RWops *handle, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
+{
 	int width;
 	int height;
 	uint8_t bpp;
@@ -118,8 +89,7 @@ std::optional<OwnedPcxSpriteSheet> LoadPcxSpriteSheetAsset(const char *path, uin
 	std::optional<OwnedPcxSprite> ownedSprite = LoadPcxAsset(path, transparentColor, palette);
 	if (ownedSprite == std::nullopt)
 		return std::nullopt;
-	std::unique_ptr<uint32_t[]> frameOffsets = LoadFrameOffsets(PcxSprite { *ownedSprite }, numFrames);
-	return OwnedPcxSpriteSheet { *std::move(ownedSprite), std::move(frameOffsets), numFrames };
+	return OwnedPcxSpriteSheet { *std::move(ownedSprite), numFrames };
 }
 
 } // namespace devilution

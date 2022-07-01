@@ -105,6 +105,7 @@ set(libdevilutionx_SRCS
   engine/load_pcx.cpp
   engine/palette.cpp
   engine/path.cpp
+  engine/pcx_sprite.cpp
   engine/random.cpp
   engine/surface.cpp
   engine/trn.cpp

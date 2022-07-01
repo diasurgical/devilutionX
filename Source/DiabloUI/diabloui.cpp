@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <string>
 
+#include <fmt/compile.h>
+
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
@@ -12,6 +14,7 @@
 #include "controls/menu_controls.h"
 #include "controls/plrctrls.h"
 #include "discord/discord.h"
+#include "engine/assets.hpp"
 #include "engine/cel_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
@@ -53,13 +56,16 @@ std::array<std::optional<OwnedCelSpriteWithFrameHeight>, 3> ArtFocus;
 std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 std::optional<OwnedPcxSpriteSheet> ArtBackground;
 Art ArtCursor;
-Art ArtHero;
 
 void (*gfnSoundFunction)(const char *file);
 bool textInputActive = true;
 std::size_t SelectedItem = 0;
 
 namespace {
+
+std::optional<OwnedPcxSpriteSheet> ArtHero;
+std::array<uint8_t, enum_size<HeroClass>::value + 1> ArtHeroPortraitOrder;
+std::array<std::optional<OwnedPcxSprite>, enum_size<HeroClass>::value + 1> ArtHeroOverrides;
 
 std::size_t SelectedItemMax;
 std::size_t ListViewportSize = 1;
@@ -528,46 +534,35 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 
 void LoadHeros()
 {
-	LoadArt("ui_art\\heros.pcx", &ArtHero);
+	std::optional<OwnedPcxSprite> portraits = LoadPcxAsset("ui_art\\heros.pcx");
+	if (!portraits)
+		return;
+	constexpr unsigned PortraitHeight = 76;
+	const uint16_t numPortraits = PcxSprite { *portraits }.height() / PortraitHeight;
+	ArtHero = OwnedPcxSpriteSheet { std::move(*portraits), numPortraits };
 
-	const int portraitHeight = 76;
-	int portraitOrder[enum_size<HeroClass>::value + 1] = { 0, 1, 2, 2, 1, 0, 3 };
-	if (ArtHero.h() >= portraitHeight * 6) {
-		portraitOrder[static_cast<std::size_t>(HeroClass::Monk)] = 3;
-		portraitOrder[static_cast<std::size_t>(HeroClass::Bard)] = 4;
-		portraitOrder[enum_size<HeroClass>::value] = 5;
+	ArtHeroPortraitOrder = { 0, 1, 2, 2, 1, 0, 3 };
+	if (numPortraits >= 6) {
+		ArtHeroPortraitOrder[static_cast<std::size_t>(HeroClass::Monk)] = 3;
+		ArtHeroPortraitOrder[static_cast<std::size_t>(HeroClass::Bard)] = 4;
+		ArtHeroPortraitOrder[enum_size<HeroClass>::value] = 5;
 	}
-	if (ArtHero.h() >= portraitHeight * 7) {
-		portraitOrder[static_cast<std::size_t>(HeroClass::Barbarian)] = 6;
-	}
-
-	SDLSurfaceUniquePtr heros = SDLWrap::CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (static_cast<int>(enum_size<HeroClass>::value) + 1), 8, SDL_PIXELFORMAT_INDEX8);
-
-	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
-		int offset = portraitOrder[i] * portraitHeight;
-		if (offset + portraitHeight > ArtHero.h()) {
-			offset = 0;
-		}
-		SDL_Rect srcRect = MakeSdlRect(0, offset, ArtHero.w(), portraitHeight);
-		SDL_Rect dstRect = MakeSdlRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
-		SDL_BlitSurface(ArtHero.surface.get(), &srcRect, heros.get(), &dstRect);
+	if (numPortraits >= 7) {
+		ArtHeroPortraitOrder[static_cast<std::size_t>(HeroClass::Barbarian)] = 6;
 	}
 
-	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
-		Art portrait;
+	for (size_t i = 0; i <= enum_size<HeroClass>::value; ++i) {
 		char portraitPath[18];
-		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
-		LoadArt(portraitPath, &portrait);
-		if (portrait.surface == nullptr)
+		*fmt::format_to(portraitPath, FMT_COMPILE("ui_art\\hero{}.pcx"), i) = '\0';
+
+		SDL_RWops *handle = OpenAsset(portraitPath);
+		if (handle == nullptr) {
+			// Portrait overrides are optional, ignore the error and continue.
+			SDL_ClearError();
 			continue;
-
-		SDL_Rect dstRect = MakeSdlRect(0, i * portraitHeight, portrait.w(), portraitHeight);
-		SDL_BlitSurface(portrait.surface.get(), nullptr, heros.get(), &dstRect);
+		}
+		ArtHeroOverrides[i] = LoadPcxAsset(handle);
 	}
-
-	ArtHero.surface = std::move(heros);
-	ArtHero.frame_height = portraitHeight;
-	ArtHero.frames = static_cast<int>(enum_size<HeroClass>::value);
 }
 
 void LoadUiGFX()
@@ -595,9 +590,18 @@ void LoadUiGFX()
 
 } // namespace
 
+PcxSprite UiGetHeroDialogSprite(size_t heroClassIndex)
+{
+	return ArtHeroOverrides[heroClassIndex]
+	    ? PcxSprite { *ArtHeroOverrides[heroClassIndex] }
+	    : PcxSpriteSheet { *ArtHero }.sprite(ArtHeroPortraitOrder[heroClassIndex]);
+}
+
 void UnloadUiGFX()
 {
-	ArtHero.Unload();
+	ArtHero = std::nullopt;
+	for (std::optional<devilution::OwnedPcxSprite> &override : ArtHeroOverrides)
+		override = std::nullopt;
 	ArtCursor.Unload();
 	for (auto &art : ArtFocus)
 		art = std::nullopt;
