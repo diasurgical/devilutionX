@@ -50,7 +50,7 @@ std::vector<Displacement> CrawlRow(int row)
 	for (int i = 0; i < row; i++)
 		ret.push_back({ i, row });
 	if (row > 1)
-		ret.push_back({ row - 1, row - 1});
+		ret.push_back({ row - 1, row - 1 });
 	for (int i = 0; i < row; i++)
 		ret.push_back({ row, i });
 	return CrawlFlips(ret);
