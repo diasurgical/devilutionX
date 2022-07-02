@@ -1391,7 +1391,7 @@ bool DoDeath(Player &player)
 {
 	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames - 1) {
 		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
-			player.AnimInfo.TicksPerFrame = 1000000000;
+			player.AnimInfo.TicksPerFrame = 100;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		} else if (&player == MyPlayer && player.AnimInfo.TickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
@@ -3395,7 +3395,8 @@ void ProcessPlayers()
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
-			player.AnimInfo.ProcessAnimation();
+			if (player._pmode != PM_DEATH || player.AnimInfo.TickCounterOfCurrentFrame != 40)
+				player.AnimInfo.ProcessAnimation();
 		}
 	}
 }
