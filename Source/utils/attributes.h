@@ -51,7 +51,7 @@
 #define DVL_REINITIALIZES
 #endif
 
-#if (defined(__GNUC__) && !defined(__EXCEPTIONS)) || FMT_MSC_VER && !_HAS_EXCEPTIONS
+#if ((defined(__GNUC__) || defined(__clang__)) && !defined(__EXCEPTIONS)) || defined(_MSC_VER) && !_HAS_EXCEPTIONS
 #define DVL_EXCEPTIONS 0
 #else
 #define DVL_EXCEPTIONS 1
