@@ -137,7 +137,7 @@ const Point InvRect[] = {
 
 namespace {
 
-std::optional<OwnedCelSprite> pInvCels;
+OptionalOwnedCelSprite pInvCels;
 
 /**
  * @brief Adds an item to a player's InvGrid array

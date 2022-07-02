@@ -85,7 +85,7 @@ Rectangle MainPanel;
 Rectangle LeftPanel;
 Rectangle RightPanel;
 std::optional<OwnedSurface> pBtmBuff;
-std::optional<OwnedCelSprite> pGBoxBuff;
+OptionalOwnedCelSprite pGBoxBuff;
 
 const Rectangle &GetMainPanel()
 {
@@ -135,10 +135,10 @@ namespace {
 
 std::optional<OwnedSurface> pLifeBuff;
 std::optional<OwnedSurface> pManaBuff;
-std::optional<OwnedCelSprite> talkButtons;
-std::optional<OwnedCelSprite> pDurIcons;
-std::optional<OwnedCelSprite> multiButtons;
-std::optional<OwnedCelSprite> pPanelButtons;
+OptionalOwnedCelSprite talkButtons;
+OptionalOwnedCelSprite pDurIcons;
+OptionalOwnedCelSprite multiButtons;
+OptionalOwnedCelSprite pPanelButtons;
 
 bool PanelButtons[8];
 int PanelButtonIndex;

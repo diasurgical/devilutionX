@@ -30,7 +30,7 @@
 namespace devilution {
 
 bool QuestLogIsOpen;
-std::optional<OwnedCelSprite> pQLogCel;
+OptionalOwnedCelSprite pQLogCel;
 /** Contains the quests of the current game. */
 Quest Quests[MAXQUESTS];
 Point ReturnLvlPosition;

@@ -15,7 +15,7 @@
 namespace devilution {
 
 extern std::string TestMapPath;
-extern std::optional<OwnedCelSprite> pSquareCel;
+extern OptionalOwnedCelSprite pSquareCel;
 extern bool DebugToggle;
 extern bool DebugGodMode;
 extern bool DebugVision;
