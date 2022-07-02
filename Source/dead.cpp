@@ -83,7 +83,7 @@ void SyncUniqDead()
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {
 				if ((dCorpse[dx][dy] & 0x1F) == monster.corpseId)
-					ChangeLightXY(monster.lid, { dx, dy });
+					ChangeLightXY(monster.lightId, { dx, dy });
 			}
 		}
 	}

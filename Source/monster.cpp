@@ -226,7 +226,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.delFlag = false;
 	monster.uniqType = 0;
 	monster.squelch = 0;
-	monster.lid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
+	monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	monster.rndItemSeed = AdvanceRndSeed();
 	monster.aiSeed = AdvanceRndSeed();
 	monster.whoHit = 0;
@@ -668,7 +668,7 @@ void DeleteMonster(size_t activeIndex)
 {
 	const auto &monster = Monsters[ActiveMonsters[activeIndex]];
 	if ((monster.flags & MFLAG_BERSERK) != 0) {
-		AddUnLight(monster.lid);
+		AddUnLight(monster.lightId);
 	}
 
 	ActiveMonsterCount--;
@@ -843,8 +843,8 @@ void StartWalk2(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd,
 	monster.position.tile = { fx, fy };
 	monster.position.future = { fx, fy };
 	dMonster[fx][fy] = monsterId + 1;
-	if (monster.lid != NO_LIGHT)
-		ChangeLightXY(monster.lid, monster.position.tile);
+	if (monster.lightId != NO_LIGHT)
+		ChangeLightXY(monster.lightId, monster.position.tile);
 	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
 	monster.mode = MonsterMode::MoveSouthwards;
 	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
@@ -862,8 +862,8 @@ void StartWalk3(int monsterId, int xvel, int yvel, int xoff, int yoff, int xadd,
 	const auto x = static_cast<WorldTileCoord>(mapx + monster.position.tile.x);
 	const auto y = static_cast<WorldTileCoord>(mapy + monster.position.tile.y);
 
-	if (monster.lid != NO_LIGHT)
-		ChangeLightXY(monster.lid, { x, y });
+	if (monster.lightId != NO_LIGHT)
+		ChangeLightXY(monster.lightId, { x, y });
 
 	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
 	dMonster[fx][fy] = monsterId + 1;
@@ -1048,8 +1048,8 @@ void Teleport(int monsterId)
 	monster.position.old = *position;
 	monster.dir = GetMonsterDirection(monster);
 
-	if (monster.lid != NO_LIGHT) {
-		ChangeLightXY(monster.lid, *position);
+	if (monster.lightId != NO_LIGHT) {
+		ChangeLightXY(monster.lightId, *position);
 	}
 }
 
@@ -1194,8 +1194,8 @@ void SyncLightPosition(Monster &monster)
 	int lx = (monster.position.offset.deltaX + 2 * monster.position.offset.deltaY) / 8;
 	int ly = (2 * monster.position.offset.deltaY - monster.position.offset.deltaX) / 8;
 
-	if (monster.lid != NO_LIGHT)
-		ChangeLightOffset(monster.lid, { lx, ly });
+	if (monster.lightId != NO_LIGHT)
+		ChangeLightOffset(monster.lightId, { lx, ly });
 }
 
 bool MonsterIdle(Monster &monster)
@@ -1244,8 +1244,8 @@ bool MonsterWalk(int monsterId, MonsterMode variant)
 		default:
 			break;
 		}
-		if (monster.lid != NO_LIGHT)
-			ChangeLightXY(monster.lid, monster.position.tile);
+		if (monster.lightId != NO_LIGHT)
+			ChangeLightXY(monster.lightId, monster.position.tile);
 		M_StartStand(monster, monster.dir);
 	} else { // We didn't reach new tile so update monster's "sub-tile" position
 		if (monster.animInfo.TickCounterOfCurrentFrame == 0) {
@@ -1257,7 +1257,7 @@ bool MonsterWalk(int monsterId, MonsterMode variant)
 		}
 	}
 
-	if (monster.lid != NO_LIGHT) // BUGFIX: change uniqtype check to lid check like it is in all other places (fixed)
+	if (monster.lightId != NO_LIGHT) // BUGFIX: change uniqtype check to lightId check like it is in all other places (fixed)
 		SyncLightPosition(monster);
 
 	return isAnimationEnd;
@@ -3443,9 +3443,9 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	monster.magicRes = uniqueMonsterData.mMagicRes;
 	monster.talkMsg = uniqueMonsterData.mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
-		monster.lid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
+		monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	else
-		monster.lid = AddLight(monster.position.tile, 3);
+		monster.lightId = AddLight(monster.position.tile, 3);
 
 	if (gbIsMultiplayer) {
 		if (monster.ai == AI_LAZHELP)

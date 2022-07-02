@@ -1231,18 +1231,18 @@ void UpdateMonsterLights()
 
 		if ((monster.flags & MFLAG_BERSERK) != 0) {
 			int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
-			monster.lid = AddLight(monster.position.tile, lightRadius);
+			monster.lightId = AddLight(monster.position.tile, lightRadius);
 		}
 
-		if (monster.lid != NO_LIGHT) {
-			if (monster.lid == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
-				monster.lid = NO_LIGHT;
+		if (monster.lightId != NO_LIGHT) {
+			if (monster.lightId == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
+				monster.lightId = NO_LIGHT;
 				continue;
 			}
 
-			Light &light = Lights[monster.lid];
+			Light &light = Lights[monster.lightId];
 			if (monster.position.tile != light.position.tile) {
-				ChangeLightXY(monster.lid, monster.position.tile);
+				ChangeLightXY(monster.lightId, monster.position.tile);
 			}
 		}
 	}

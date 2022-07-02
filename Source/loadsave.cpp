@@ -642,9 +642,9 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.leader = file->NextLE<uint8_t>();
 	monster.leaderRelation = static_cast<LeaderRelation>(file->NextLE<uint8_t>());
 	monster.packSize = file->NextLE<uint8_t>();
-	monster.lid = file->NextLE<int8_t>();
-	if (monster.lid == 0)
-		monster.lid = NO_LIGHT; // Correct incorect values in old saves
+	monster.lightId = file->NextLE<int8_t>();
+	if (monster.lightId == 0)
+		monster.lightId = NO_LIGHT; // Correct incorect values in old saves
 
 	// Omit pointer name;
 	// Omit pointer type;
@@ -1380,10 +1380,10 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(static_cast<std::uint8_t>(monster.leaderRelation));
 	file->WriteLE<uint8_t>(monster.packSize);
 	// vanilla compatibility
-	if (monster.lid == NO_LIGHT)
+	if (monster.lightId == NO_LIGHT)
 		file->WriteLE<int8_t>(0);
 	else
-		file->WriteLE<int8_t>(monster.lid);
+		file->WriteLE<int8_t>(monster.lightId);
 
 	// Omit pointer name;
 	// Omit pointer type;

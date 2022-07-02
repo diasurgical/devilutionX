@@ -1173,7 +1173,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 		monster.minDamage2 = (GenerateRnd(10) + 120) * monster.minDamage2 / 100 + slvl;
 		monster.maxDamage2 = (GenerateRnd(10) + 120) * monster.maxDamage2 / 100 + slvl;
 		int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
-		monster.lid = AddLight(monster.position.tile, lightRadius);
+		monster.lightId = AddLight(monster.position.tile, lightRadius);
 		UseMana(missile._misource, SPL_BERSERK);
 	}
 }
@@ -2045,7 +2045,7 @@ void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 	if (IsAnyOf(monster.type->type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		missile._miAnimFrame = 7;
 	if (monster.uniqType != 0) {
-		missile._mlid = monster.lid;
+		missile._mlid = monster.lightId;
 	}
 	PutMissile(missile);
 }
