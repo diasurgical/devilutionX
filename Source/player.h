@@ -196,14 +196,14 @@ struct PlayerAnimationData {
 	/**
 	 * @brief CelSprites for the different directions
 	 */
-	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
+	std::array<OptionalCelSprite, 8> CelSpritesForDirections;
 	/**
 	 * @brief Raw Data (binary) of the CL2 file.
 	 *        Is referenced from CelSprite in celSpritesForDirections
 	 */
 	std::unique_ptr<byte[]> RawData;
 
-	[[nodiscard]] std::optional<CelSprite> GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] OptionalCelSprite GetCelSpritesForDirection(Direction direction) const
 	{
 		return CelSpritesForDirections[static_cast<size_t>(direction)];
 	}
@@ -234,7 +234,7 @@ struct Player {
 	/**
 	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
 	 */
-	std::optional<CelSprite> previewCelSprite;
+	OptionalCelSprite previewCelSprite;
 	/**
 	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */

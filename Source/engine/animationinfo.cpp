@@ -74,7 +74,7 @@ float AnimationInfo::GetAnimationProgress() const
 	return animationFraction;
 }
 
-void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
+void AnimationInfo::SetNewAnimation(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame + 1 >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames - 1) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -167,7 +167,7 @@ void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int8_t n
 	}
 }
 
-void AnimationInfo::ChangeAnimationData(std::optional<CelSprite> celSprite, int8_t numberOfFrames, int8_t ticksPerFrame)
+void AnimationInfo::ChangeAnimationData(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame)
 {
 	if (numberOfFrames != NumberOfFrames || ticksPerFrame != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong

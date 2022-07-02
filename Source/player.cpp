@@ -368,7 +368,7 @@ void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 	StartWalkAnimation(player, dir, pmWillBeCalled);
 }
 
-void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<std::optional<CelSprite>, 8> &anim, int width)
+void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<OptionalCelSprite, 8> &anim, int width)
 {
 	data = nullptr;
 	data = LoadFileInMem(path);
@@ -2188,7 +2188,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	std::optional<CelSprite> celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
+	OptionalCelSprite celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
 	if (celSprites && previewCelSprite != celSprites) {
 		previewCelSprite = celSprites;
 		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
@@ -2343,7 +2343,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t nu
 {
 	LoadPlrGFX(player, graphic);
 
-	std::optional<CelSprite> celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
+	OptionalCelSprite celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
 
 	float previewShownGameTickFragments = 0.F;
 	if (celSprite == player.previewCelSprite && !player.IsWalking())
