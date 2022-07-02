@@ -16,7 +16,7 @@
 
 namespace devilution {
 
-extern std::optional<OwnedCelSprite> pSBkIconCels;
+extern OptionalOwnedCelSprite pSBkIconCels;
 
 namespace {
 

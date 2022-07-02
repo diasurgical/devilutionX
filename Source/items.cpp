@@ -131,7 +131,7 @@ _sfx_id ItemInvSnds[] = {
 
 namespace {
 
-std::optional<OwnedCelSprite> itemanims[ITEMTYPES];
+OptionalOwnedCelSprite itemanims[ITEMTYPES];
 
 enum class PlayerArmorGraphic : uint8_t {
 	// clang-format off

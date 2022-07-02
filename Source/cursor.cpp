@@ -31,8 +31,8 @@
 namespace devilution {
 namespace {
 /** Cursor images CEL */
-std::optional<OwnedCelSprite> pCursCels;
-std::optional<OwnedCelSprite> pCursCels2;
+OptionalOwnedCelSprite pCursCels;
+OptionalOwnedCelSprite pCursCels2;
 
 /** Maps from objcurs.cel frame number to frame width. */
 const uint16_t InvItemWidth1[] = {

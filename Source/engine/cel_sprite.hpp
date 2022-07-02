@@ -142,6 +142,8 @@ private:
 	CelSprite sprite_;
 };
 
+class OptionalOwnedCelSprite;
+
 /**
  * Stores a CEL or CL2 sprite and its width(s).
  * Owns the data.
@@ -169,10 +171,87 @@ public:
 	}
 
 private:
+	// for OptionalOwnedCelSprite.
+	OwnedCelSprite()
+	    : data_(nullptr)
+	    , width_(nullptr)
+	{
+	}
+
 	std::unique_ptr<byte[]> data_;
 	PointerOrValue<uint16_t> width_;
 
 	friend class CelSprite;
+	friend class OptionalOwnedCelSprite;
+};
+
+/**
+ * @brief Equivalent to `std::optional<OwnedCelSprite>` but smaller.
+ */
+class OptionalOwnedCelSprite {
+public:
+	OptionalOwnedCelSprite() = default;
+
+	OptionalOwnedCelSprite(OwnedCelSprite &&sprite)
+	    : sprite_(std::move(sprite))
+	{
+	}
+
+	OptionalOwnedCelSprite(std::nullopt_t)
+	    : OptionalOwnedCelSprite()
+	{
+	}
+
+	template <typename... Args>
+	OwnedCelSprite &emplace(Args &&...args)
+	{
+		sprite_ = OwnedCelSprite(std::forward<Args>(args)...);
+		return sprite_;
+	}
+
+	OptionalOwnedCelSprite &operator=(OwnedCelSprite &&sprite)
+	{
+		sprite_ = std::move(sprite);
+		return *this;
+	}
+
+	OptionalOwnedCelSprite &operator=(std::nullopt_t)
+	{
+		sprite_ = {};
+		return *this;
+	}
+
+	OwnedCelSprite &operator*()
+	{
+		assert(sprite_.data_ != nullptr);
+		return sprite_;
+	}
+
+	const OwnedCelSprite &operator*() const
+	{
+		assert(sprite_.data_ != nullptr);
+		return sprite_;
+	}
+
+	OwnedCelSprite *operator->()
+	{
+		assert(sprite_.data_ != nullptr);
+		return &sprite_;
+	}
+
+	const OwnedCelSprite *operator->() const
+	{
+		assert(sprite_.data_ != nullptr);
+		return &sprite_;
+	}
+
+	operator bool() const
+	{
+		return sprite_.data_ != nullptr;
+	}
+
+private:
+	OwnedCelSprite sprite_;
 };
 
 inline CelSprite::CelSprite(const OwnedCelSprite &owned)
