@@ -1082,7 +1082,7 @@ msgid ""
 "\n"
 "Make sure devilutionx.mpq is in the game folder and that it is up to date."
 msgstr ""
-"Не зміг завантажити ресурси UI.\n"
+"Неможливо завантажити ресурси UI.\n"
 "\n"
 "Впевніться що devilutionx.mpq в папці гри і актуальної версії."
 
@@ -1469,7 +1469,7 @@ msgstr "петльова адреса"
 
 #: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
-msgstr "Не зміг з'єднатися"
+msgstr "Неможливо з'єднатися"
 
 #: Source/dvlnet/tcp_client.cpp:91
 msgid "error: read 0 bytes from server"
@@ -2021,7 +2021,7 @@ msgstr ""
 
 #: Source/init.cpp:219
 msgid "Unable to create main window"
-msgstr "Не зміг створити головне вікно"
+msgstr "Неможливо створити головне вікно"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:235 Source/panels/charpanel.cpp:169
 msgid "Gold"
@@ -5765,10 +5765,8 @@ msgid "Some Magic Immunities"
 msgstr "Декілька Магічних Імунітетів"
 
 #: Source/mpq/mpq_writer.cpp:153
-#, fuzzy
-#| msgid "Failed to open stash archive for writing."
 msgid "Failed to open archive for writing."
-msgstr "Не зміг відкрити архів хованки для читання."
+msgstr "Неможливо відкрити архів для читання."
 
 #: Source/msg.cpp:623
 msgid "Trying to drop a floor item?"
@@ -6518,7 +6516,7 @@ msgstr "Захопити Мишу"
 
 #: Source/options.cpp:970
 msgid "When enabled mouse is locked to the game window."
-msgstr "Миша прив'язана до вікна гри коли це налаштування ввімкнено."
+msgstr "Коли це налаштування ввімкнене, курсор буде прив'язаний до вікна гри ."
 
 #: Source/options.cpp:971
 msgid "Theo Quest"
@@ -6681,14 +6679,12 @@ msgstr ""
 "Наведення курсора миші над монстром покаже його тип в Панелі Інформації."
 
 #: Source/options.cpp:989
-#, fuzzy
-#| msgid "Show mana values"
 msgid "Show Item Labels"
-msgstr "Показати значення мани"
+msgstr "Показати Назви Предметів"
 
 #: Source/options.cpp:989
 msgid "Show labels for items on the ground when enabled."
-msgstr ""
+msgstr "Показати назви предметів на землі, коли це налаштування ввімкнене."
 
 #: Source/options.cpp:990
 msgid "Auto Refill Belt"
@@ -6710,7 +6706,8 @@ msgid ""
 "and Sacred Shrines are not able to be clicked on and labeled as disabled."
 msgstr ""
 "Коли це налаштування ввімкнене, гравець не зможе клікнути на Казани, "
-"Чарівливі, Барвисті, Святі Вівтарі і Вівтарі Кози."
+"Чарівливі, Барвисті, Святі Вівтарі і Вівтарі Кози, які будуть показані як "
+"неактивні."
 
 #: Source/options.cpp:992
 msgid "Quick Cast"
@@ -11512,12 +11509,3 @@ msgstr "Вбитий Житель"
 #: Source/utils/format_int.cpp:28
 msgid ","
 msgstr ","
-
-#~ msgid "Failed to open player archive for writing."
-#~ msgstr "Не зміг відкрити архів гравця для читання."
-
-#~ msgid "Unable to read to save file archive"
-#~ msgstr "Неможливо писати в архів збереження"
-
-#~ msgid "Unable to write to save file archive"
-#~ msgstr "Неможливо прочитати архів збереження"
