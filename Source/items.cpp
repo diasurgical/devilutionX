@@ -3241,8 +3241,9 @@ void CornerstoneSave()
 		PackItem(id, CornerStone.item, (CornerStone.item.dwBuff & CF_HELLFIRE) != 0);
 		const auto *buffer = reinterpret_cast<uint8_t *>(&id);
 		for (size_t i = 0; i < sizeof(ItemPack); i++) {
-			snprintf(&sgOptions.Hellfire.szItem[i * 2], 3, "%02hhX", buffer[i]);
+			fmt::format_to(&sgOptions.Hellfire.szItem[i * 2], FMT_COMPILE("{:02X}"), buffer[i]);
 		}
+		sgOptions.Hellfire.szItem[sizeof(sgOptions.Hellfire.szItem) - 1] = '\0';
 	} else {
 		sgOptions.Hellfire.szItem[0] = '\0';
 	}

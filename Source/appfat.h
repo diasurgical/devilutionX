@@ -27,10 +27,8 @@ namespace devilution {
 
 /**
  * @brief Terminates the game and displays an error message box.
- * @param pszFmt Optional error message.
- * @param ... (see printf)
+ * @param str Error message.
  */
-[[noreturn]] void app_fatal(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
 [[noreturn]] void app_fatal(string_view str);
 
 #ifdef _DEBUG

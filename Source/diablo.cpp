@@ -991,8 +991,8 @@ void DiabloInitScreen()
 
 void SetApplicationVersions()
 {
-	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	CopyUtf8(gszVersionNumber, fmt::format(fmt::runtime(_("version {:s}")), PROJECT_VERSION), sizeof(gszVersionNumber) / sizeof(char));
+	*fmt::format_to_n(gszProductName, sizeof(gszProductName) - 1, "{} v{}", PROJECT_NAME, PROJECT_VERSION).out = '\0';
+	CopyUtf8(gszVersionNumber, fmt::format(fmt::runtime(_("version {:s}")), PROJECT_VERSION), sizeof(gszVersionNumber));
 }
 
 void DiabloInit()

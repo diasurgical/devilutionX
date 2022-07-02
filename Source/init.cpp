@@ -112,11 +112,7 @@ std::vector<std::string> GetMPQSearchPaths()
 
 		std::string message;
 		for (std::size_t i = 0; i < paths.size(); ++i) {
-			char prefix[32];
-			std::snprintf(prefix, sizeof(prefix), "\n%6u. '", static_cast<unsigned>(i + 1));
-			message.append(prefix);
-			message.append(paths[i]);
-			message += '\'';
+			message.append(fmt::format("\n{:6d}. '{}'", i + 1, paths[i]));
 		}
 		LogVerbose("MPQ search paths:{}", message);
 	}
@@ -213,7 +209,7 @@ void LoadGameArchives()
 
 	if (gbIsHellfire && (!hfmonk_mpq || !hfmusic_mpq || !hfvoice_mpq)) {
 		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
-		app_fatal(nullptr);
+		diablo_quit(1);
 	}
 }
 

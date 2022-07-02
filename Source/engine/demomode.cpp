@@ -75,7 +75,7 @@ bool LoadDemoMessages(int i)
 {
 	std::ifstream demofile;
 	char demoFilename[16];
-	snprintf(demoFilename, 15, "demo_%d.dmo", i);
+	*fmt::format_to_n(demoFilename, 15, "demo_{}.dmo", i).out = '\0';
 	demofile.open(paths::PrefPath() + demoFilename, std::fstream::binary);
 	if (!demofile.is_open()) {
 		return false;
@@ -269,7 +269,7 @@ void NotifyGameLoopStart()
 {
 	if (IsRecording()) {
 		char demoFilename[16];
-		snprintf(demoFilename, 15, "demo_%d.dmo", RecordNumber);
+		*fmt::format_to_n(demoFilename, 15, "demo_{}.dmo", RecordNumber).out = '\0';
 		DemoRecording.open(paths::PrefPath() + demoFilename, std::fstream::trunc | std::fstream::binary);
 		constexpr uint8_t version = 0;
 		WriteToDemo<uint8_t>(version);

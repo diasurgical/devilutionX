@@ -5,6 +5,8 @@
  */
 #include "levels/themes.h"
 
+#include <fmt/core.h>
+
 #include "engine/path.h"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
@@ -1024,7 +1026,7 @@ void CreateThemeRooms()
 			Theme_WeaponRack(i);
 			break;
 		case THEME_NONE:
-			app_fatal("Unknown theme type: %i", themes[i].ttype);
+			app_fatal(fmt::format("Unknown theme type: {}", static_cast<int>(themes[i].ttype)));
 		}
 	}
 	ApplyObjectLighting = false;

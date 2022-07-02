@@ -25,20 +25,6 @@ bool Terminating = false;
 SDL_threadID CleanupThreadId;
 
 /**
- * @brief Displays an error message box based on the given format string and variable argument list.
- * @param pszFmt Error message format
- * @param va Additional parameters for message format
- */
-void MsgBox(const char *pszFmt, va_list va)
-{
-	char text[256];
-
-	vsnprintf(text, sizeof(text), pszFmt, va);
-
-	UiErrorOkDialog(_("Error"), text);
-}
-
-/**
  * @brief Cleans up after a fatal application error.
  */
 void FreeDlg()
@@ -66,25 +52,10 @@ void app_fatal(string_view str)
 	diablo_quit(1);
 }
 
-void app_fatal(const char *pszFmt, ...)
-{
-	va_list va;
-
-	va_start(va, pszFmt);
-	FreeDlg();
-
-	if (pszFmt != nullptr)
-		MsgBox(pszFmt, va);
-
-	va_end(va);
-
-	diablo_quit(1);
-}
-
 #ifdef _DEBUG
 void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 {
-	app_fatal("assertion failed (%s:%i)\n%s", pszFile, nLineNo, pszFail);
+	app_fatal(fmt::format("assertion failed ({}:{})\n{}", pszFile, nLineNo, pszFail));
 }
 #endif
 
@@ -95,7 +66,7 @@ void ErrDlg(const char *title, string_view error, string_view logFilePath, int l
 	std::string text = fmt::format(fmt::runtime(_(/* TRANSLATORS: Error message that displays relevant information for bug report */ "{:s}\n\nThe error occurred at: {:s} line {:d}")), error, logFilePath, logLineNr);
 
 	UiErrorOkDialog(title, text);
-	app_fatal(nullptr);
+	diablo_quit(1);
 }
 
 void InsertCDDlg(string_view archiveName)
@@ -107,7 +78,7 @@ void InsertCDDlg(string_view archiveName)
 	    archiveName);
 
 	UiErrorOkDialog(_("Data File Error"), text);
-	app_fatal(nullptr);
+	diablo_quit(1);
 }
 
 void DirErrorDlg(string_view error)
@@ -115,7 +86,7 @@ void DirErrorDlg(string_view error)
 	std::string text = fmt::format(fmt::runtime(_(/* TRANSLATORS: Error when Program is not allowed to write data */ "Unable to write to location:\n{:s}")), error);
 
 	UiErrorOkDialog(_("Read-Only Directory Error"), text);
-	app_fatal(nullptr);
+	diablo_quit(1);
 }
 
 } // namespace devilution

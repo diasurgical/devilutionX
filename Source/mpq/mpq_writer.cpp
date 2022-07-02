@@ -6,6 +6,8 @@
 #include <memory>
 #include <type_traits>
 
+#include <fmt/core.h>
+
 #include "appfat.h"
 #include "encrypt.h"
 #include "engine.h"
@@ -325,7 +327,7 @@ MpqBlockEntry *MpqWriter::AddFile(const char *filename, MpqBlockEntry *block, ui
 	uint32_t h2 = Hash(filename, 1);
 	uint32_t h3 = Hash(filename, 2);
 	if (GetHashIndex(h1, h2, h3) != HashEntryNotFound)
-		app_fatal("Hash collision between \"%s\" and existing file\n", filename);
+		app_fatal(fmt::format("Hash collision between \"{}\" and existing file\n", filename));
 	unsigned int hIdx = h1 & 0x7FF;
 
 	bool hasSpace = false;
