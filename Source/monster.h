@@ -237,7 +237,7 @@ struct Monster { // note: missing field _mAFNum
 		auto &animationData = this->MType->getAnimData(graphic);
 
 		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->AnimInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(direction), animationData.frames, animationData.rate);
+		this->AnimInfo.changeAnimationData(animationData.getCelSpritesForDirection(direction), animationData.frames, animationData.rate);
 	}
 
 	/**
