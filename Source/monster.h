@@ -171,13 +171,17 @@ struct Monster { // note: missing field _mAFNum
 	const MonsterData *data;
 	std::unique_ptr<uint8_t[]> uniqueMonsterTRN;
 	AnimationInfo animInfo;
-	/** Specifies the current goal of the monster */
+	/** Specifies current goal of the monster */
 	monster_goal goal;
-	/** Specifies monster's behaviour regarding walking and changing goals. */
+	/** Specifies monster's behaviour regarding moving and changing goals. */
 	int goalGeneral;
-	/** Specifies turning direction for @p RoundWalk in most cases. Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi. */
+	/** @brief Specifies turning direction for @p RoundWalk in most cases.
+	 *  Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi.
+	 */
 	int goalTurning;
-	/** Controls monster's behaviour regarding special actions. Used only by @p ScavengerAi and @p MegaAi. */
+	/** @brief Controls monster's behaviour regarding special actions.
+	 *  Used only by @p ScavengerAi and @p MegaAi.
+	 */
 	int goalSpecialAction;
 	int var1;
 	int var2;
