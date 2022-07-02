@@ -18,6 +18,9 @@ struct PointOf;
 
 using Point = PointOf<int>;
 
+template <typename PointCoordT, typename OtherPointCoordT>
+constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b);
+
 template <typename CoordT>
 struct PointOf {
 	CoordT x;
@@ -99,7 +102,7 @@ struct PointOf {
 	template <typename PointCoordT>
 	constexpr int ApproxDistance(PointOf<PointCoordT> other) const
 	{
-		Displacement offset { abs(other - *this) };
+		const Displacement offset = abs(Point(*this) - Point(other));
 		auto minMax = std::minmax(offset.deltaX, offset.deltaY);
 		int min = minMax.first;
 		int max = minMax.second;
@@ -121,7 +124,7 @@ struct PointOf {
 	template <typename PointCoordT>
 	int ExactDistance(PointOf<PointCoordT> other) const
 	{
-		auto vector = *this - other; // No need to call abs() as we square the values anyway
+		const Displacement vector = Point(*this) - Point(other); // No need to call abs() as we square the values anyway
 
 		// Casting multiplication operands to a wide type to address overflow warnings
 		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.deltaX) * vector.deltaX + static_cast<int64_t>(vector.deltaY) * vector.deltaY));
@@ -130,7 +133,7 @@ struct PointOf {
 	template <typename PointCoordT>
 	constexpr int ManhattanDistance(PointOf<PointCoordT> other) const
 	{
-		Displacement offset { abs(*this - other) };
+		const Displacement offset = abs(Point(*this) - Point(other));
 
 		return offset.deltaX + offset.deltaY;
 	}
@@ -138,7 +141,7 @@ struct PointOf {
 	template <typename PointCoordT>
 	constexpr int WalkingDistance(PointOf<PointCoordT> other) const
 	{
-		Displacement offset { abs(*this - other) };
+		const Displacement offset = abs(Point(*this) - Point(other));
 
 		return std::max<int>(offset.deltaX, offset.deltaY);
 	}
@@ -189,7 +192,7 @@ constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, Direction direc
 }
 
 template <typename PointCoordT, typename OtherPointCoordT>
-constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, const PointOf<OtherPointCoordT> &b)
+constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b)
 {
 	return { static_cast<PointCoordT>(a.x - b.x), static_cast<PointCoordT>(a.y - b.y) };
 }
