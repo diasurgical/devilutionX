@@ -1,7 +1,6 @@
 #pragma once
 
 #include "engine/cel_sprite.hpp"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

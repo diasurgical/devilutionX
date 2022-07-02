@@ -16,7 +16,6 @@
 #include "panels/info_box.hpp"
 #include "textdat.h"
 #include "utils/attributes.h"
-#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

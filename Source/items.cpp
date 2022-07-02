@@ -4582,7 +4582,7 @@ void Item::setNewAnimation(bool showAnimation)
 {
 	int8_t it = ItemCAnimTbl[_iCurs];
 	int8_t numberOfFrames = ItemAnimLs[it];
-	auto celSprite = itemanims[it] ? std::optional<CelSprite> { *itemanims[it] } : std::nullopt;
+	auto celSprite = itemanims[it] ? OptionalCelSprite { *itemanims[it] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
 		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
