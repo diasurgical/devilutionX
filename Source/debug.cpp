@@ -723,8 +723,8 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	for (const auto &table : CrawlTable) {
-		for (auto displacement : table) {
+	for (size_t row = 0; row < CrawlTableRows; ++row) {
+		for (DisplacementOf<int8_t> displacement : CrawlTableRow(row)) {
 			Point pos = myPlayer.position.tile + displacement;
 			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
 				continue;
@@ -808,8 +808,8 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	for (const auto &table : CrawlTable) {
-		for (auto displacement : table) {
+	for (size_t row = 0; row < CrawlTableRows; ++row) {
+		for (DisplacementOf<int8_t> displacement : CrawlTableRow(row)) {
 			Point pos = myPlayer.position.tile + displacement;
 			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
 				continue;

@@ -5,6 +5,8 @@
 #include <ostream>
 #endif
 
+#include <fmt/core.h>
+
 #include "direction.hpp"
 #include "size.hpp"
 #include "utils/stdcompat/abs.hpp"
@@ -332,3 +334,20 @@ Displacement DisplacementOf<DeltaT>::normalized() const
 }
 
 } // namespace devilution
+
+namespace fmt {
+
+template <typename DeltaT>
+struct formatter<devilution::DisplacementOf<DeltaT>> : formatter<DeltaT> {
+	template <typename FormatContext>
+	auto format(const devilution::DisplacementOf<DeltaT> &displacement, FormatContext &ctx)
+	{
+		format_to(ctx.out(), "{{ ");
+		formatter<DeltaT>::format(displacement.deltaX, ctx);
+		format_to(ctx.out(), ", ");
+		formatter<DeltaT>::format(displacement.deltaY, ctx);
+		return format_to(ctx.out(), " }}");
+	}
+};
+
+} // namespace fmt

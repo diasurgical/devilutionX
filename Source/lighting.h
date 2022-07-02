@@ -6,13 +6,13 @@
 #pragma once
 
 #include <array>
-#include <vector>
 
 #include "automap.h"
 #include "engine.h"
 #include "engine/point.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/attributes.h"
+#include "utils/span.hpp"
 
 namespace devilution {
 
@@ -74,10 +74,10 @@ void ChangeVisionXY(int id, Point position);
 void ProcessVisionList();
 void lighting_color_cycling();
 
-/* rdata */
+constexpr size_t CrawlTableRows = 19;
 
-constexpr size_t CrawlTableSize = 19;
-extern DVL_API_FOR_TEST const std::array<std::vector<DisplacementOf<int8_t>>, CrawlTableSize> CrawlTable;
+Span<const DisplacementOf<int8_t>> CrawlTableRow(size_t row);
+
 extern const uint8_t VisionCrawlTable[23][30];
 
 } // namespace devilution

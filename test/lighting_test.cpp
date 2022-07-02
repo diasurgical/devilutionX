@@ -2,6 +2,7 @@
 
 #include "control.h"
 #include "lighting.h"
+#include "utils/span.hpp"
 
 using namespace devilution;
 
@@ -10,12 +11,13 @@ TEST(Lighting, CrawlTables)
 	bool added[40][40];
 	memset(added, 0, sizeof(added));
 
-	for (size_t j = 0; j < CrawlTable.size(); j++) {
+	for (size_t j = 0; j < CrawlTableRows; j++) {
 		int x = 20;
 		int y = 20;
-		for (unsigned i = 0; i < CrawlTable[j].size(); i++) {
-			int dx = x + CrawlTable[j][i].deltaX;
-			int dy = y + CrawlTable[j][i].deltaY;
+		const Span<const DisplacementOf<int8_t>> row = CrawlTableRow(j);
+		for (unsigned i = 0; i < row.size(); i++) {
+			int dx = x + row[i].deltaX;
+			int dy = y + row[i].deltaY;
 			EXPECT_EQ(added[dx][dy], false) << "location " << i << ":" << j << " added twice";
 			added[dx][dy] = true;
 		}

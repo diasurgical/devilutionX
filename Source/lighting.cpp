@@ -26,38 +26,63 @@ bool UpdateLighting;
 
 namespace {
 
-std::vector<DisplacementOf<int8_t>> CrawlFlips(const DisplacementOf<int8_t> *begin, const DisplacementOf<int8_t> *end)
+void FillCrawlFlips(const DisplacementOf<int8_t> *begin, const DisplacementOf<int8_t> *end, DisplacementOf<int8_t> *out)
 {
-	std::vector<DisplacementOf<int8_t>> ret;
 	for (; begin != end; ++begin) {
 		DisplacementOf<int8_t> displacement = *begin;
 		if (displacement.deltaX != 0)
-			ret.emplace_back(displacement.flipX());
-		ret.emplace_back(displacement);
+			*out++ = displacement.flipX();
+		*out++ = displacement;
 		if (displacement.deltaX != 0 && displacement.deltaY != 0)
-			ret.emplace_back(displacement.flipXY());
+			*out++ = displacement.flipXY();
 		if (displacement.deltaY != 0)
-			ret.emplace_back(displacement.flipY());
+			*out++ = displacement.flipY();
 	}
-	return ret;
 }
 
-std::vector<DisplacementOf<int8_t>> CrawlRow(int8_t row)
+void FillCrawlRow(int8_t row, DisplacementOf<int8_t> *out)
 {
-	StaticVector<DisplacementOf<int8_t>, (CrawlTableSize - 1) * 2 + 1> ret;
+	StaticVector<DisplacementOf<int8_t>, (CrawlTableRows - 1) * 2 + 1> ret;
 	for (int8_t i = 0; i < row; i++)
 		ret.emplace_back(i, row);
 	if (row > 1)
 		ret.emplace_back(static_cast<int8_t>(row - 1), static_cast<int8_t>(row - 1));
 	for (int8_t i = 0; i < row; i++)
 		ret.emplace_back(row, i);
-	return CrawlFlips(ret.begin(), ret.end());
+	FillCrawlFlips(ret.begin(), ret.end(), out);
+}
+
+/**
+ * @brief The number of crawl table elements up to and including the given `row`.
+ * Requires: row >= 1
+ */
+constexpr size_t CrawlTableCumulativeSize(size_t row)
+{
+	return 1 + 4 + 8 * (row - 1) * (row + 2) / 2;
+}
+
+constexpr size_t CrawlTableSize = CrawlTableCumulativeSize(CrawlTableRows - 1);
+
+std::pair<size_t, size_t> CrawlTableRowRange(size_t row)
+{
+	switch (row) {
+	case 0:
+		return { 0, 1 };
+	case 1:
+		return { 1, 5 };
+	default:
+		return { CrawlTableCumulativeSize(row - 1), CrawlTableCumulativeSize(row) };
+	}
 }
 
 } // namespace
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
+ *
+ * Row 0: 1 element
+ * Row 1: 4 elements
+ * Row i>1: 8 * i elements
  *
  * n=4
  *
@@ -80,14 +105,20 @@ std::vector<DisplacementOf<int8_t>> CrawlRow(int8_t row)
  *    +-------> x
  */
 
-const std::array<std::vector<DisplacementOf<int8_t>>, CrawlTableSize> CrawlTable = []() {
-	std::array<std::vector<DisplacementOf<int8_t>>, CrawlTableSize> ret;
-	ret[0].emplace_back(0, 0);
-	for (size_t row = 1; row < CrawlTableSize; ++row) {
-		ret[row] = CrawlRow(static_cast<int8_t>(row));
+const std::array<DisplacementOf<int8_t>, CrawlTableSize> CrawlTable = []() {
+	std::array<DisplacementOf<int8_t>, CrawlTableSize> ret;
+	ret[0] = { 0, 0 };
+	for (size_t row = 1; row < CrawlTableRows; ++row) {
+		FillCrawlRow(static_cast<int8_t>(row), &ret[CrawlTableRowRange(row).first]);
 	}
 	return ret;
 }();
+
+Span<const DisplacementOf<int8_t>> CrawlTableRow(size_t row)
+{
+	const std::pair<size_t, size_t> range = CrawlTableRowRange(row);
+	return { &CrawlTable[range.first], &CrawlTable[range.second] };
+}
 
 /*
  * X- Y-coordinate offsets of lighting visions.
