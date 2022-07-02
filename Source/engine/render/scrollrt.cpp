@@ -209,9 +209,7 @@ uint32_t sgdwCursHgtOld;
  */
 Bitset2d<MAXDUNX, MAXDUNY> dRendered;
 
-int frameend;
-int framerate;
-int framestart;
+int lastFpsUpdateInMs;
 
 const char *const PlayerModeNames[] = {
 	"standing",
@@ -1322,23 +1320,24 @@ void DrawView(const Surface &out, Point startPosition)
  */
 void DrawFPS(const Surface &out)
 {
-	char buf[12];
+	static int framesSinceLastUpdate = 0;
+	static fmt::memory_buffer buf {};
 
 	if (!frameflag || !gbActive) {
 		return;
 	}
 
-	frameend++;
-	uint32_t tc = SDL_GetTicks();
-	uint32_t frames = tc - framestart;
-	if (tc - framestart >= 1000) {
-		framestart = tc;
-		framerate = 1000 * frameend / frames;
-		frameend = 0;
-	}
-	const char *end = fmt::format_to_n(buf, sizeof(buf), FMT_COMPILE("{} FPS"), framerate).out;
-	string_view str { buf, static_cast<string_view::size_type>(end - buf) };
-	DrawString(out, str, Point { 8, 68 }, UiFlags::ColorRed);
+	framesSinceLastUpdate++;
+	uint32_t runtimeInMs = SDL_GetTicks();
+	uint32_t msSinceLastUpdate = runtimeInMs - lastFpsUpdateInMs;
+	if (msSinceLastUpdate >= 1000) {
+		lastFpsUpdateInMs = runtimeInMs;
+		int framerate = 1000 * framesSinceLastUpdate / msSinceLastUpdate;
+		framesSinceLastUpdate = 0;
+		buf.clear();
+		fmt::format_to(std::back_inserter(buf), FMT_COMPILE("{} FPS"), framerate);
+	};
+	DrawString(out, { buf.data(), buf.size() }, Point { 8, 68 }, UiFlags::ColorRed);
 }
 
 /**
@@ -1654,7 +1653,7 @@ void ScrollView()
 void EnableFrameCount()
 {
 	frameflag = true;
-	framestart = SDL_GetTicks();
+	lastFpsUpdateInMs = SDL_GetTicks();
 }
 
 void scrollrt_draw_game_screen()
