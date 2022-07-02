@@ -1321,7 +1321,7 @@ void DrawView(const Surface &out, Point startPosition)
 void DrawFPS(const Surface &out)
 {
 	static int framesSinceLastUpdate = 0;
-	static fmt::memory_buffer buf {};
+	static string_view formatted {};
 
 	if (!frameflag || !gbActive) {
 		return;
@@ -1334,10 +1334,12 @@ void DrawFPS(const Surface &out)
 		lastFpsUpdateInMs = runtimeInMs;
 		int framerate = 1000 * framesSinceLastUpdate / msSinceLastUpdate;
 		framesSinceLastUpdate = 0;
-		buf.clear();
-		fmt::format_to(std::back_inserter(buf), FMT_COMPILE("{} FPS"), framerate);
+
+		static char buf[12] {};
+		const char *end = fmt::format_to_n(buf, sizeof(buf), FMT_COMPILE("{} FPS"), framerate).out;
+		formatted = { buf, static_cast<string_view::size_type>(end - buf) };
 	};
-	DrawString(out, { buf.data(), buf.size() }, Point { 8, 68 }, UiFlags::ColorRed);
+	DrawString(out, formatted, Point { 8, 68 }, UiFlags::ColorRed);
 }
 
 /**
