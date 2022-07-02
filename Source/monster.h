@@ -168,7 +168,6 @@ struct CMonster {
 extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 
 struct Monster { // note: missing field _mAFNum
-	int monsterId;
 	const char *mName;
 	std::unique_ptr<uint8_t[]> uniqueTRN;
 	AnimationInfo AnimInfo;
@@ -269,6 +268,13 @@ struct Monster { // note: missing field _mAFNum
 	{
 		return *type().data;
 	}
+
+	/**
+	 * @brief Returns the network identifier for this monster
+	 *
+	 * This is currently the index into the Monsters array, but may change in the future.
+	 */
+	[[nodiscard]] size_t getId() const;
 
 	/**
 	 * @brief Is the monster currently walking?

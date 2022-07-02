@@ -188,9 +188,8 @@ void InitMonsterTRN(CMonster &monst)
 	}
 }
 
-void InitMonster(Monster &monster, Direction rd, int mtype, Point position, int monsterId)
+void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 {
-	monster.monsterId = monsterId;
 	monster._mdir = rd;
 	monster.position.tile = position;
 	monster.position.future = position;
@@ -311,7 +310,7 @@ void PlaceMonster(int i, int mtype, Point position)
 	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	InitMonster(Monsters[i], rd, mtype, position, i);
+	InitMonster(Monsters[i], rd, mtype, position);
 }
 
 void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
@@ -814,7 +813,7 @@ void StartWalk(Monster &monster, int xvel, int yvel, int xadd, int yadd, Directi
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 
-	dMonster[fx][fy] = -(monster.monsterId + 1);
+	dMonster[fx][fy] = -(monster.getId() + 1);
 	monster._mmode = MonsterMode::MoveNorthwards;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
@@ -831,13 +830,13 @@ void StartWalk2(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xa
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 
-	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.monsterId + 1);
+	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.getId() + 1);
 	monster._mVar1 = monster.position.tile.x;
 	monster._mVar2 = monster.position.tile.y;
 	monster.position.old = monster.position.tile;
 	monster.position.tile = { fx, fy };
 	monster.position.future = { fx, fy };
-	dMonster[fx][fy] = monster.monsterId + 1;
+	dMonster[fx][fy] = monster.getId() + 1;
 	if (monster.mlid != NO_LIGHT)
 		ChangeLightXY(monster.mlid, monster.position.tile);
 	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
@@ -858,8 +857,8 @@ void StartWalk3(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xa
 	if (monster.mlid != NO_LIGHT)
 		ChangeLightXY(monster.mlid, { x, y });
 
-	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.monsterId + 1);
-	dMonster[fx][fy] = monster.monsterId + 1;
+	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.getId() + 1);
+	dMonster[fx][fy] = monster.getId() + 1;
 	monster.position.temp = { x, y };
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
@@ -3826,7 +3825,7 @@ int AddMonster(Point position, Direction dir, int mtype, bool inMap)
 		int i = ActiveMonsters[ActiveMonsterCount++];
 		if (inMap)
 			dMonster[position.x][position.y] = i + 1;
-		InitMonster(Monsters[i], dir, mtype, position, i);
+		InitMonster(Monsters[i], dir, mtype, position);
 		return i;
 	}
 
@@ -4860,6 +4859,11 @@ void decode_enemy(Monster &monster, int enemyId)
 		monster._menemy = enemyId;
 		monster.enemyPosition = Monsters[enemyId].position.future;
 	}
+}
+
+[[nodiscard]] size_t Monster::getId() const
+{
+	return std::distance<const Monster *>(&Monsters[0], this);
 }
 
 void Monster::CheckStandAnimationIsLoaded(Direction mdir)
