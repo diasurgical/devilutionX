@@ -905,13 +905,13 @@ void DrawInfoBox(const Surface &out)
 			if (leveltype != DTYPE_TOWN) {
 				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
-				InfoString = string_view(monster.mName);
+				InfoString = string_view(monster.name);
 				ClearPanel();
-				if (monster._uniqtype != 0) {
+				if (monster.uniqType != 0) {
 					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
 				} else {
-					PrintMonstHistory(monster.MType->type);
+					PrintMonstHistory(monster.type->type);
 				}
 			} else if (pcursitem == -1) {
 				InfoString = string_view(Towners[pcursmonst].name);

@@ -814,7 +814,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 	Player &player = Players[pnum];
 
-	if (!monster.IsPossibleToHit())
+	if (!monster.isPossibleToHit())
 		return false;
 
 	if (adjacentDamage) {
@@ -825,14 +825,14 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 
 	int hit = GenerateRnd(100);
-	if (monster._mmode == MonsterMode::Petrified) {
+	if (monster.mode == MonsterMode::Petrified) {
 		hit = 0;
 	}
 
-	hper += player.GetMeleePiercingToHit() - player.CalculateArmorPierce(monster.mArmorClass, true);
+	hper += player.GetMeleePiercingToHit() - player.CalculateArmorPierce(monster.armorClass, true);
 	hper = clamp(hper, 5, 95);
 
-	if (monster.TryLiftGargoyle())
+	if (monster.tryLiftGargoyle())
 		return true;
 
 	if (hit >= hper) {
@@ -867,7 +867,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		phanditype = ItemType::Mace;
 	}
 
-	switch (monster.MData->mMonstClass) {
+	switch (monster.data->mMonstClass) {
 	case MonsterClass::Undead:
 		if (phanditype == ItemType::Sword) {
 			dam -= dam / 2;
@@ -893,7 +893,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.MType->type != MT_DIABLO && monster._uniqtype == 0 && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type->type != MT_DIABLO && monster.uniqType == 0 && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster);
 	}
 
@@ -916,7 +916,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 			}
 			dam *= 2;
 		}
-		monster._mhitpoints -= dam;
+		monster.hitPoints -= dam;
 	}
 
 	int skdam = 0;
@@ -967,17 +967,17 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		drawhpflag = true;
 	}
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnPlayer)) { // Why is there a different ItemSpecialEffect here? (see missile.cpp) is this a BUG?
-		monster._mFlags |= MFLAG_NOHEAL;
+		monster.flags |= MFLAG_NOHEAL;
 	}
 #ifdef _DEBUG
 	if (DebugGodMode) {
-		monster._mhitpoints = 0; /* double check */
+		monster.hitPoints = 0; /* double check */
 	}
 #endif
-	if ((monster._mhitpoints >> 6) <= 0) {
+	if ((monster.hitPoints >> 6) <= 0) {
 		M_StartKill(m, pnum);
 	} else {
-		if (monster._mmode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(m);
 		M_StartHit(m, pnum, dam);
 	}
@@ -1436,7 +1436,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	case ACTION_RATTACKMON:
 	case ACTION_SPELLMON:
 		monster = &Monsters[targetId];
-		if ((monster->_mhitpoints >> 6) <= 0) {
+		if ((monster->hitPoints >> 6) <= 0) {
 			player.Stop();
 			return;
 		}
@@ -1484,7 +1484,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 					if (x < 2 && y < 2) {
 						ClrPlrPath(player);
-						if (player.destAction == ACTION_ATTACKMON && monster->mtalkmsg != TEXT_NONE && monster->mtalkmsg != TEXT_VILE14) {
+						if (player.destAction == ACTION_ATTACKMON && monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 							TalktoMonster(*monster);
 						} else {
 							StartAttack(pnum, d);
@@ -1559,7 +1559,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			y = abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, monster->position.future);
-				if (monster->mtalkmsg != TEXT_NONE && monster->mtalkmsg != TEXT_VILE14) {
+				if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 					TalktoMonster(*monster);
 				} else {
 					StartAttack(pnum, d);
@@ -1580,7 +1580,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			break;
 		case ACTION_RATTACKMON:
 			d = GetDirection(player.position.future, monster->position.future);
-			if (monster->mtalkmsg != TEXT_NONE && monster->mtalkmsg != TEXT_VILE14) {
+			if (monster->talkMsg != TEXT_NONE && monster->talkMsg != TEXT_VILE14) {
 				TalktoMonster(*monster);
 			} else {
 				StartRangeAttack(pnum, d, monster->position.future.x, monster->position.future.y);
@@ -3169,18 +3169,18 @@ void RemovePlrMissiles(int pnum)
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
-			AddCorpse(golem.position.tile, golem.MType->corpseId, golem._mdir);
+			AddCorpse(golem.position.tile, golem.type->corpseId, golem.dir);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
 			dMonster[mx][my] = 0;
-			golem._mDelFlag = true;
+			golem.delFlag = true;
 			DeleteMonsterList();
 		}
 	}
 
 	for (auto &missile : Missiles) {
 		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
-			Monsters[missile.var2]._mmode = static_cast<MonsterMode>(missile.var1);
+			Monsters[missile.var2].mode = static_cast<MonsterMode>(missile.var1);
 		}
 	}
 }
@@ -3409,7 +3409,7 @@ bool PosOkPlayer(const Player &player, Point position)
 		if (dMonster[position.x][position.y] <= 0) {
 			return false;
 		}
-		if ((Monsters[dMonster[position.x][position.y] - 1]._mhitpoints >> 6) > 0) {
+		if ((Monsters[dMonster[position.x][position.y] - 1].hitPoints >> 6) > 0) {
 			return false;
 		}
 	}

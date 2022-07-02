@@ -100,13 +100,13 @@ void PrintDebugMonster(int m)
 	EventPlrMsg(fmt::format(
 	                "Monster {:d} = {:s}\nX = {:d}, Y = {:d}\nEnemy = {:d}, HP = {:d}\nMode = {:d}, Var1 = {:d}",
 	                m,
-	                monster.mName,
+	                monster.name,
 	                monster.position.tile.x,
 	                monster.position.tile.y,
-	                monster._menemy,
-	                monster._mhitpoints,
-	                static_cast<int>(monster._mmode),
-	                monster._mVar1),
+	                monster.enemy,
+	                monster.hitPoints,
+	                static_cast<int>(monster.mode),
+	                monster.var1),
 	    UiFlags::ColorWhite);
 
 	bool bActive = false;
@@ -116,7 +116,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
+	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster.squelch), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
@@ -335,7 +335,7 @@ std::string ExportDun(const string_view parameter)
 			uint16_t monsterId = 0;
 			if (dMonster[x][y] > 0) {
 				for (int i = 0; i < 157; i++) {
-					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].MType->type) {
+					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].type->type) {
 						monsterId = i + 1;
 						break;
 					}
@@ -737,7 +737,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 			auto &monster = Monsters[mon];
 			PrepareUniqueMonst(monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
 			ActiveMonsterCount--;
-			monster._udeadval = 1;
+			monster.corpseId = 1;
 			spawnedMonster += 1;
 
 			if (spawnedMonster >= count)

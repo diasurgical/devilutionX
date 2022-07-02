@@ -39,8 +39,8 @@ void InvalidateTargets()
 {
 	if (pcursmonst != -1) {
 		const Monster &monster = Monsters[pcursmonst];
-		if (monster._mDelFlag || monster._mhitpoints >> 6 <= 0
-		    || (monster._mFlags & MFLAG_HIDDEN) != 0
+		if (monster.delFlag || monster.hitPoints >> 6 <= 0
+		    || (monster.flags & MFLAG_HIDDEN) != 0
 		    || !IsTileLit(monster.position.tile)) {
 			pcursmonst = -1;
 		}

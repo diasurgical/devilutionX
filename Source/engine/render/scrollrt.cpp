@@ -363,8 +363,8 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
-	if (!monster.AnimInfo.celSprite) {
-		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
+	if (!monster.animInfo.celSprite) {
+		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name);
 		return;
 	}
 
@@ -429,29 +429,29 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		}
 	};
 
-	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
-	const uint32_t frames = LoadLE32(monster.AnimInfo.celSprite->Data());
+	int nCel = monster.animInfo.GetFrameToUseForRendering();
+	const uint32_t frames = LoadLE32(monster.animInfo.celSprite->Data());
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
-		    monster.mName,
-		    getMonsterModeDisplayName(monster._mmode),
-		    DirectionToString(monster._mdir),
+		    monster.name,
+		    getMonsterModeDisplayName(monster.mode),
+		    DirectionToString(monster.dir),
 		    nCel,
 		    frames);
 		return;
 	}
 
-	const auto &cel = *monster.AnimInfo.celSprite;
+	const auto &cel = *monster.animInfo.celSprite;
 
 	if (!IsTileLit(tilePosition)) {
 		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, GetInfravisionTRN());
 		return;
 	}
 	uint8_t *trn = nullptr;
-	if (monster._uniqtype != 0)
+	if (monster.uniqType != 0)
 		trn = monster.uniqueTRN.get();
-	if (monster._mmode == MonsterMode::Petrified)
+	if (monster.mode == MonsterMode::Petrified)
 		trn = GetStoneTRN();
 	if (MyPlayer->_pInfraFlag && LightTableIndex > 8)
 		trn = GetInfravisionTRN();
@@ -774,25 +774,25 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	}
 
 	const auto &monster = Monsters[mi];
-	if ((monster._mFlags & MFLAG_HIDDEN) != 0) {
+	if ((monster.flags & MFLAG_HIDDEN) != 0) {
 		return;
 	}
 
-	if (monster.MType == nullptr) {
-		Log("Draw Monster \"{}\": uninitialized monster", monster.mName);
+	if (monster.type == nullptr) {
+		Log("Draw Monster \"{}\": uninitialized monster", monster.name);
 		return;
 	}
 
-	CelSprite cel = *monster.AnimInfo.celSprite;
+	CelSprite cel = *monster.animInfo.celSprite;
 
 	Displacement offset = monster.position.offset;
-	if (monster.IsWalking()) {
-		offset = GetOffsetForWalking(monster.AnimInfo, monster._mdir);
+	if (monster.isWalking()) {
+		offset = GetOffsetForWalking(monster.animInfo, monster.dir);
 	}
 
 	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.AnimInfo.GetFrameToUseForRendering());
+		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.animInfo.GetFrameToUseForRendering());
 	}
 	DrawMonster(out, tilePosition, monsterRenderPosition, monster);
 }

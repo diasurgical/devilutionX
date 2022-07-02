@@ -1219,8 +1219,8 @@ void UnstuckChargers()
 	}
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster._mmode == MonsterMode::Charge)
-			monster._mmode = MonsterMode::Stand;
+		if (monster.mode == MonsterMode::Charge)
+			monster.mode = MonsterMode::Stand;
 	}
 }
 
@@ -1229,20 +1229,20 @@ void UpdateMonsterLights()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 
-		if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+		if ((monster.flags & MFLAG_BERSERK) != 0) {
 			int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
-			monster.mlid = AddLight(monster.position.tile, lightRadius);
+			monster.lid = AddLight(monster.position.tile, lightRadius);
 		}
 
-		if (monster.mlid != NO_LIGHT) {
-			if (monster.mlid == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
-				monster.mlid = NO_LIGHT;
+		if (monster.lid != NO_LIGHT) {
+			if (monster.lid == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
+				monster.lid = NO_LIGHT;
 				continue;
 			}
 
-			Light &light = Lights[monster.mlid];
+			Light &light = Lights[monster.lid];
 			if (monster.position.tile != light.position.tile) {
-				ChangeLightXY(monster.mlid, monster.position.tile);
+				ChangeLightXY(monster.lid, monster.position.tile);
 			}
 		}
 	}

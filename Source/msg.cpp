@@ -523,16 +523,16 @@ void DeltaLeaveSync(uint8_t bLevel)
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
 		auto &monster = Monsters[ma];
-		if (monster._mhitpoints == 0)
+		if (monster.hitPoints == 0)
 			continue;
 		sgbDeltaChanged = true;
 		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta.position = monster.position.tile;
-		delta._mdir = monster._mdir;
+		delta._mdir = monster.dir;
 		delta._menemy = encode_enemy(monster);
-		delta._mhitpoints = monster._mhitpoints;
-		delta._mactive = monster._msquelch;
-		delta.mWhoHit = monster.mWhoHit;
+		delta._mhitpoints = monster.hitPoints;
+		delta._mactive = monster.squelch;
+		delta.mWhoHit = monster.whoHit;
 	}
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
 }
@@ -1587,12 +1587,12 @@ DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel() && message.wMon < MaxMonsters) {
 			auto &monster = Monsters[message.wMon];
-			monster.mWhoHit |= 1 << pnum;
-			if (monster._mhitpoints > 0) {
-				monster._mhitpoints -= message.dwDam;
-				if ((monster._mhitpoints >> 6) < 1)
-					monster._mhitpoints = 1 << 6;
-				delta_monster_hp(message.wMon, monster._mhitpoints, player);
+			monster.whoHit |= 1 << pnum;
+			if (monster.hitPoints > 0) {
+				monster.hitPoints -= message.dwDam;
+				if ((monster.hitPoints >> 6) < 1)
+					monster.hitPoints = 1 << 6;
+				delta_monster_hp(message.wMon, monster.hitPoints, player);
 			}
 		}
 	}
@@ -2217,7 +2217,7 @@ void delta_kill_monster(int mi, Point position, const Player &player)
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
 	pD->position = position;
-	pD->_mdir = Monsters[mi]._mdir;
+	pD->_mdir = Monsters[mi].dir;
 	pD->_mhitpoints = 0;
 }
 
@@ -2411,32 +2411,32 @@ void DeltaLoadLevel()
 				monster.position.future = position;
 			}
 			if (deltaLevel.monster[i]._mhitpoints != -1) {
-				monster._mhitpoints = deltaLevel.monster[i]._mhitpoints;
-				monster.mWhoHit = deltaLevel.monster[i].mWhoHit;
+				monster.hitPoints = deltaLevel.monster[i]._mhitpoints;
+				monster.whoHit = deltaLevel.monster[i].mWhoHit;
 			}
 			if (deltaLevel.monster[i]._mhitpoints == 0) {
 				M_ClearSquares(i);
-				if (monster._mAi != AI_DIABLO) {
-					if (monster._uniqtype == 0) {
-						assert(monster.MType != nullptr);
-						AddCorpse(monster.position.tile, monster.MType->corpseId, monster._mdir);
+				if (monster.ai != AI_DIABLO) {
+					if (monster.uniqType == 0) {
+						assert(monster.type != nullptr);
+						AddCorpse(monster.position.tile, monster.type->corpseId, monster.dir);
 					} else {
-						AddCorpse(monster.position.tile, monster._udeadval, monster._mdir);
+						AddCorpse(monster.position.tile, monster.corpseId, monster.dir);
 					}
 				}
-				monster._mDelFlag = true;
+				monster.delFlag = true;
 				M_UpdateLeader(i);
 			} else {
 				decode_enemy(monster, deltaLevel.monster[i]._menemy);
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
 					dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
-				if (monster.MType->type == MT_GOLEM) {
+				if (monster.type->type == MT_GOLEM) {
 					GolumAi(i);
-					monster._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
+					monster.flags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 				} else {
-					M_StartStand(monster, monster._mdir);
+					M_StartStand(monster, monster.dir);
 				}
-				monster._msquelch = deltaLevel.monster[i]._mactive;
+				monster.squelch = deltaLevel.monster[i]._mactive;
 			}
 		}
 		auto localLevelIt = LocalLevels.find(localLevel);

@@ -25,7 +25,7 @@ void SyncOneMonster()
 		int m = ActiveMonsters[i];
 		auto &monster = Monsters[m];
 		sgnMonsterPriority[m] = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
-		if (monster._msquelch == 0) {
+		if (monster.squelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
 			sgwLRU[m]--;
@@ -41,11 +41,11 @@ void SyncMonsterPos(TSyncMonster &monsterSync, int ndx)
 	monsterSync._my = monster.position.tile.y;
 	monsterSync._menemy = encode_enemy(monster);
 	monsterSync._mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
-	monsterSync.mWhoHit = monster.mWhoHit;
-	monsterSync._mhitpoints = monster._mhitpoints;
+	monsterSync.mWhoHit = monster.whoHit;
+	monsterSync._mhitpoints = monster.hitPoints;
 
 	sgnMonsterPriority[ndx] = 0xFFFF;
-	sgwLRU[ndx] = monster._msquelch == 0 ? 0xFFFF : 0xFFFE;
+	sgwLRU[ndx] = monster.squelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
 bool SyncMonsterActive(TSyncMonster &monsterSync)
@@ -152,14 +152,14 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 {
 	const int monsterId = monsterSync._mndx;
 	Monster &monster = Monsters[monsterId];
-	if (monster._mhitpoints <= 0 || monster._mmode == MonsterMode::Death) {
+	if (monster.hitPoints <= 0 || monster.mode == MonsterMode::Death) {
 		return;
 	}
 
 	const Point position { monsterSync._mx, monsterSync._my };
 	const int enemyId = monsterSync._menemy;
 
-	if (monster._msquelch != 0) {
+	if (monster.squelch != 0) {
 		uint32_t delta = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
 		if (delta > 255) {
 			delta = 255;
@@ -172,18 +172,18 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 			return;
 		}
 	}
-	if (IsAnyOf(monster._mmode, MonsterMode::Charge, MonsterMode::Petrified)) {
+	if (IsAnyOf(monster.mode, MonsterMode::Charge, MonsterMode::Petrified)) {
 		return;
 	}
 
 	if (monster.position.tile.WalkingDistance(position) <= 2) {
-		if (!monster.IsWalking()) {
+		if (!monster.isWalking()) {
 			Direction md = GetDirection(monster.position.tile, position);
 			if (DirOK(monsterId, md)) {
 				M_ClearSquares(monsterId);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
 				M_WalkDir(monsterId, md);
-				monster._msquelch = UINT8_MAX;
+				monster.squelch = UINT8_MAX;
 			}
 		}
 	} else if (dMonster[position.x][position.y] == 0) {
@@ -193,11 +193,11 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 		decode_enemy(monster, enemyId);
 		Direction md = GetDirection(position, monster.enemyPosition);
 		M_StartStand(monster, md);
-		monster._msquelch = UINT8_MAX;
+		monster.squelch = UINT8_MAX;
 	}
 
 	decode_enemy(monster, enemyId);
-	monster.mWhoHit |= monsterSync.mWhoHit;
+	monster.whoHit |= monsterSync.mWhoHit;
 }
 
 bool IsEnemyIdValid(const Monster &monster, int enemyId)
@@ -221,7 +221,7 @@ bool IsEnemyIdValid(const Monster &monster, int enemyId)
 		return false;
 	}
 
-	if (enemy._mhitpoints <= 0) {
+	if (enemy.hitPoints <= 0) {
 		return false;
 	}
 

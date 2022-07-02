@@ -404,58 +404,58 @@ void CheckCursMove()
 		if (pcurstemp != -1) {
 			if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
 				int mi = abs(dMonster[mx + 2][my + 1]) - 1;
-				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
+				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 2, 1 };
 					pcursmonst = mi;
 				}
 			}
 			if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
 				int mi = abs(dMonster[mx + 1][my + 2]) - 1;
-				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
+				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 2 };
 					pcursmonst = mi;
 				}
 			}
 			if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
 				int mi = abs(dMonster[mx + 2][my + 2]) - 1;
-				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
+				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 2, 2 };
 					pcursmonst = mi;
 				}
 			}
 			if (mx + 1 < MAXDUNX && !flipflag && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
 				int mi = abs(dMonster[mx + 1][my]) - 1;
-				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
+				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 0 };
 					pcursmonst = mi;
 				}
 			}
 			if (my + 1 < MAXDUNY && flipflag && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
 				int mi = abs(dMonster[mx][my + 1]) - 1;
-				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
+				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 0, 1 };
 					pcursmonst = mi;
 				}
 			}
 			if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
 				int mi = abs(dMonster[mx][my]) - 1;
-				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 1) != 0) {
+				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 1) != 0) {
 					cursPosition = { mx, my };
 					pcursmonst = mi;
 				}
 			}
 			if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
 				int mi = abs(dMonster[mx + 1][my + 1]) - 1;
-				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
+				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 1 };
 					pcursmonst = mi;
 				}
 			}
-			if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_HIDDEN) != 0) {
+			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_HIDDEN) != 0) {
 				pcursmonst = -1;
 				cursPosition = { mx, my };
 			}
-			if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst]._mFlags & MFLAG_BERSERK) == 0) {
+			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
 				pcursmonst = -1;
 			}
 			if (pcursmonst != -1) {
@@ -464,58 +464,58 @@ void CheckCursMove()
 		}
 		if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
 			int mi = abs(dMonster[mx + 2][my + 1]) - 1;
-			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
+			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 1 };
 				pcursmonst = mi;
 			}
 		}
 		if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
 			int mi = abs(dMonster[mx + 1][my + 2]) - 1;
-			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
+			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 2 };
 				pcursmonst = mi;
 			}
 		}
 		if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
 			int mi = abs(dMonster[mx + 2][my + 2]) - 1;
-			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
+			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 2 };
 				pcursmonst = mi;
 			}
 		}
 		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
 			int mi = abs(dMonster[mx + 1][my]) - 1;
-			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
+			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 0 };
 				pcursmonst = mi;
 			}
 		}
 		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
 			int mi = abs(dMonster[mx][my + 1]) - 1;
-			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
+			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 0, 1 };
 				pcursmonst = mi;
 			}
 		}
 		if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
 			int mi = abs(dMonster[mx][my]) - 1;
-			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 1) != 0) {
+			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 1) != 0) {
 				cursPosition = { mx, my };
 				pcursmonst = mi;
 			}
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
 			int mi = abs(dMonster[mx + 1][my + 1]) - 1;
-			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
+			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data->mSelFlag & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 1 };
 				pcursmonst = mi;
 			}
 		}
-		if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_HIDDEN) != 0) {
+		if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_HIDDEN) != 0) {
 			pcursmonst = -1;
 			cursPosition = { mx, my };
 		}
-		if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst]._mFlags & MFLAG_BERSERK) == 0) {
+		if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
 			pcursmonst = -1;
 		}
 	} else {
@@ -661,7 +661,7 @@ void CheckCursMove()
 		pcursitem = -1;
 		cursPosition = { mx, my };
 	}
-	if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst]._mFlags & MFLAG_BERSERK) == 0) {
+	if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
 		pcursmonst = -1;
 	}
 }
