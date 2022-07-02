@@ -169,11 +169,16 @@ struct Monster { // note: missing field _mAFNum
 	const char *name;
 	CMonster *type;
 	const MonsterData *data;
-	std::unique_ptr<uint8_t[]> uniqueTRN;
+	std::unique_ptr<uint8_t[]> uniqueMonsterTRN;
 	AnimationInfo animInfo;
-	int goalVar1;
-	int goalVar2;
-	int goalVar3;
+	/** Specifies the current goal of the monster */
+	monster_goal goal;
+	/** Specifies monster's behaviour regarding walking and changing goals. */
+	int goalGeneral;
+	/** Specifies turning direction for @p RoundWalk in most cases. Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi. */
+	int goalTurning;
+	/** Controls monster's behaviour regarding special actions. Used only by @p ScavengerAi and @p MegaAi. */
+	int goalSpecialAction;
 	int var1;
 	int var2;
 	int var3;
@@ -195,7 +200,6 @@ struct Monster { // note: missing field _mAFNum
 	WorldTilePosition enemyPosition;
 	uint8_t idx;
 	MonsterMode mode;
-	monster_goal goal;
 	uint8_t pathCount;
 	/** Direction faced by monster (direction enum) */
 	Direction dir;

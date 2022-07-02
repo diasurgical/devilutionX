@@ -219,9 +219,9 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.ai = monster.data->mAi;
 	monster.mint = monster.data->mInt;
 	monster.goal = MGOAL_NORMAL;
-	monster.goalVar1 = 0;
-	monster.goalVar2 = 0;
-	monster.goalVar3 = 0;
+	monster.goalGeneral = 0;
+	monster.goalTurning = 0;
+	monster.goalSpecialAction = 0;
 	monster.pathCount = 0;
 	monster.delFlag = false;
 	monster.uniqType = 0;
@@ -1068,8 +1068,8 @@ void HitMonster(int monsterId, int dam)
 			Teleport(monsterId);
 		} else if (IsAnyOf(monster.type->type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
 			monster.goal = MGOAL_NORMAL;
-			monster.goalVar1 = 0;
-			monster.goalVar2 = 0;
+			monster.goalGeneral = 0;
+			monster.goalTurning = 0;
 		}
 
 		if (monster.mode != MonsterMode::Petrified) {
@@ -2038,14 +2038,14 @@ void AiAvoidance(int monsterId)
 	if ((abs(mx) >= 2 || abs(my) >= 2) && monster.squelch == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
 		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 4 || abs(my) >= 4) && GenerateRnd(4) == 0)) {
 			if (monster.goal != MGOAL_MOVE) {
-				monster.goalVar1 = 0;
-				monster.goalVar2 = GenerateRnd(2);
+				monster.goalGeneral = 0;
+				monster.goalTurning = GenerateRnd(2);
 			}
 			monster.goal = MGOAL_MOVE;
 			int dist = std::max(abs(mx), abs(my));
-			if ((monster.goalVar1++ >= 2 * dist && DirOK(monsterId, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
+			if ((monster.goalGeneral++ >= 2 * dist && DirOK(monsterId, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
 				monster.goal = MGOAL_NORMAL;
-			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+			} else if (!RoundWalk(monsterId, md, &monster.goalTurning)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
 			}
 		}
@@ -2178,17 +2178,17 @@ void AiRangedAvoidance(int monsterId)
 	if (dist >= 2 && monster.squelch == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
 		if (monster.goal == MGOAL_MOVE || (dist >= 3 && GenerateRnd(4 << lessmissiles) == 0)) {
 			if (monster.goal != MGOAL_MOVE) {
-				monster.goalVar1 = 0;
-				monster.goalVar2 = GenerateRnd(2);
+				monster.goalGeneral = 0;
+				monster.goalTurning = GenerateRnd(2);
 			}
 			monster.goal = MGOAL_MOVE;
-			if (monster.goalVar1++ >= 2 * dist && DirOK(monsterId, md)) {
+			if (monster.goalGeneral++ >= 2 * dist && DirOK(monsterId, md)) {
 				monster.goal = MGOAL_NORMAL;
 			} else if (v < (500 * (monster.mint + 1) >> lessmissiles)
 			    && (LineClearMissile(monster.position.tile, { fx, fy }))) {
 				StartRangedSpecialAttack(monster, missileType, dam);
 			} else {
-				RoundWalk(monsterId, md, &monster.goalVar2);
+				RoundWalk(monsterId, md, &monster.goalTurning);
 			}
 		}
 	} else {
@@ -2382,10 +2382,10 @@ void ScavengerAi(int monsterId)
 			monster.leaderRelation = LeaderRelation::None;
 		}
 		monster.goal = MGOAL_HEALING;
-		monster.goalVar3 = 10;
+		monster.goalSpecialAction = 10;
 	}
-	if (monster.goal == MGOAL_HEALING && monster.goalVar3 != 0) {
-		monster.goalVar3--;
+	if (monster.goal == MGOAL_HEALING && monster.goalSpecialAction != 0) {
+		monster.goalSpecialAction--;
 		if (dCorpse[monster.position.tile.x][monster.position.tile.y] != 0) {
 			StartEating(monster);
 			if ((monster.flags & MFLAG_NOHEAL) == 0) {
@@ -2394,7 +2394,7 @@ void ScavengerAi(int monsterId)
 					monster.hitPoints += mMaxHP / 8;
 					if (monster.hitPoints > monster.maxHp)
 						monster.hitPoints = monster.maxHp;
-					if (monster.goalVar3 <= 0 || monster.hitPoints == monster.maxHp)
+					if (monster.goalSpecialAction <= 0 || monster.hitPoints == monster.maxHp)
 						dCorpse[monster.position.tile.x][monster.position.tile.y] = 0;
 				} else {
 					monster.hitPoints += 64;
@@ -2405,20 +2405,20 @@ void ScavengerAi(int monsterId)
 				targetHealth = (monster.maxHp / 2) + (monster.maxHp / 4);
 			if (monster.hitPoints >= targetHealth) {
 				monster.goal = MGOAL_NORMAL;
-				monster.goalVar1 = 0;
-				monster.goalVar2 = 0;
+				monster.goalGeneral = 0;
+				monster.goalTurning = 0;
 			}
 		} else {
-			if (monster.goalVar1 == 0) {
+			if (monster.goalGeneral == 0) {
 				std::optional<Point> position = ScavengerFindCorpse(monster);
 				if (position) {
-					monster.goalVar1 = position->x + 1;
-					monster.goalVar2 = position->y + 1;
+					monster.goalGeneral = position->x + 1;
+					monster.goalTurning = position->y + 1;
 				}
 			}
-			if (monster.goalVar1 != 0) {
-				int x = monster.goalVar1 - 1;
-				int y = monster.goalVar2 - 1;
+			if (monster.goalGeneral != 0) {
+				int x = monster.goalGeneral - 1;
+				int y = monster.goalTurning - 1;
 				monster.dir = GetDirection(monster.position.tile, { x, y });
 				RandomWalk(monsterId, monster.dir);
 			}
@@ -2450,13 +2450,13 @@ void RhinoAi(int monsterId)
 	if (dist >= 2) {
 		if (monster.goal == MGOAL_MOVE || (dist >= 5 && GenerateRnd(4) != 0)) {
 			if (monster.goal != MGOAL_MOVE) {
-				monster.goalVar1 = 0;
-				monster.goalVar2 = GenerateRnd(2);
+				monster.goalGeneral = 0;
+				monster.goalTurning = GenerateRnd(2);
 			}
 			monster.goal = MGOAL_MOVE;
-			if (monster.goalVar1++ >= 2 * dist || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
+			if (monster.goalGeneral++ >= 2 * dist || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
 				monster.goal = MGOAL_NORMAL;
-			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+			} else if (!RoundWalk(monsterId, md, &monster.goalTurning)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
 			}
 		}
@@ -2500,8 +2500,8 @@ void FallenAi(int monsterId)
 	auto &monster = Monsters[monsterId];
 
 	if (monster.goal == MGOAL_ATTACK2) {
-		if (monster.goalVar1 != 0)
-			monster.goalVar1--;
+		if (monster.goalGeneral != 0)
+			monster.goalGeneral--;
 		else
 			monster.goal = MGOAL_NORMAL;
 	}
@@ -2510,9 +2510,9 @@ void FallenAi(int monsterId)
 	}
 
 	if (monster.goal == MGOAL_RETREAT) {
-		if (monster.goalVar1-- == 0) {
+		if (monster.goalGeneral-- == 0) {
 			monster.goal = MGOAL_NORMAL;
-			M_StartStand(monster, Opposite(static_cast<Direction>(monster.goalVar2)));
+			M_StartStand(monster, Opposite(static_cast<Direction>(monster.goalTurning)));
 		}
 	}
 
@@ -2543,12 +2543,12 @@ void FallenAi(int monsterId)
 						continue;
 
 					otherMonster.goal = MGOAL_ATTACK2;
-					otherMonster.goalVar1 = 30 * monster.mint + 105;
+					otherMonster.goalGeneral = 30 * monster.mint + 105;
 				}
 			}
 		}
 	} else if (monster.goal == MGOAL_RETREAT) {
-		monster.dir = static_cast<Direction>(monster.goalVar2);
+		monster.dir = static_cast<Direction>(monster.goalTurning);
 		RandomWalk(monsterId, monster.dir);
 	} else if (monster.goal == MGOAL_ATTACK2) {
 		int xpos = monster.position.tile.x - monster.enemyPosition.x;
@@ -2582,13 +2582,13 @@ void LeoricAi(int monsterId)
 	if (dist >= 2 && monster.squelch == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
 		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 3 || abs(my) >= 3) && GenerateRnd(4) == 0)) {
 			if (monster.goal != MGOAL_MOVE) {
-				monster.goalVar1 = 0;
-				monster.goalVar2 = GenerateRnd(2);
+				monster.goalGeneral = 0;
+				monster.goalTurning = GenerateRnd(2);
 			}
 			monster.goal = MGOAL_MOVE;
-			if ((monster.goalVar1++ >= 2 * dist && DirOK(monsterId, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
+			if ((monster.goalGeneral++ >= 2 * dist && DirOK(monsterId, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
 				monster.goal = MGOAL_NORMAL;
-			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+			} else if (!RoundWalk(monsterId, md, &monster.goalTurning)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
 			}
 		}
@@ -2638,9 +2638,9 @@ void BatAi(int monsterId)
 	monster.dir = md;
 	int v = GenerateRnd(100);
 	if (monster.goal == MGOAL_RETREAT) {
-		if (monster.goalVar1 == 0) {
+		if (monster.goalGeneral == 0) {
 			RandomWalk(monsterId, Opposite(md));
-			monster.goalVar1++;
+			monster.goalGeneral++;
 		} else {
 			if (GenerateRnd(2) != 0)
 				RandomWalk(monsterId, Left(md));
@@ -2671,7 +2671,7 @@ void BatAi(int monsterId)
 	} else if (v < 4 * monster.mint + 8) {
 		StartAttack(monster);
 		monster.goal = MGOAL_RETREAT;
-		monster.goalVar1 = 0;
+		monster.goalGeneral = 0;
 		if (monster.type->type == MT_FAMILIAR) {
 			AddMissile(monster.enemyPosition, { monster.enemyPosition.x + 1, 0 }, Direction::South, MIS_LIGHTNING, TARGET_PLAYERS, monsterId, GenerateRnd(10) + 1, 0);
 		}
@@ -2760,10 +2760,10 @@ void SneakAi(int monsterId)
 	int dist = 5 - monster.mint;
 	if (static_cast<MonsterMode>(monster.var1) == MonsterMode::HitRecovery) {
 		monster.goal = MGOAL_RETREAT;
-		monster.goalVar1 = 0;
-	} else if (abs(mx) >= dist + 3 || abs(my) >= dist + 3 || monster.goalVar1 > 8) {
+		monster.goalGeneral = 0;
+	} else if (abs(mx) >= dist + 3 || abs(my) >= dist + 3 || monster.goalGeneral > 8) {
 		monster.goal = MGOAL_NORMAL;
-		monster.goalVar1 = 0;
+		monster.goalGeneral = 0;
 	}
 	Direction md = GetMonsterDirection(monster);
 	if (monster.goal == MGOAL_RETREAT && (monster.flags & MFLAG_NO_ENEMY) == 0) {
@@ -2789,7 +2789,7 @@ void SneakAi(int monsterId)
 		} else {
 			if (monster.goal == MGOAL_RETREAT
 			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster.var2 > 20 && v < 4 * monster.mint + 14) || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 4 * monster.mint + 64)))) {
-				monster.goalVar1++;
+				monster.goalGeneral++;
 				RandomWalk(monsterId, md);
 			}
 		}
@@ -2912,18 +2912,18 @@ void SnakeAi(int monsterId)
 				monster.mode = MonsterMode::Charge;
 			}
 		} else if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay || GenerateRnd(100) >= 35 - 2 * monster.mint) {
-			if (pattern[monster.goalVar1] == -1)
+			if (pattern[monster.goalGeneral] == -1)
 				md = Left(md);
-			else if (pattern[monster.goalVar1] == 1)
+			else if (pattern[monster.goalGeneral] == 1)
 				md = Right(md);
 
-			monster.goalVar1++;
-			if (monster.goalVar1 > 5)
-				monster.goalVar1 = 0;
+			monster.goalGeneral++;
+			if (monster.goalGeneral > 5)
+				monster.goalGeneral = 0;
 
-			Direction targetDirection = static_cast<Direction>(monster.goalVar2);
+			Direction targetDirection = static_cast<Direction>(monster.goalTurning);
 			if (md != targetDirection) {
-				int drift = static_cast<int>(md) - monster.goalVar2;
+				int drift = static_cast<int>(md) - monster.goalTurning;
 				if (drift < 0)
 					drift += 8;
 
@@ -2931,7 +2931,7 @@ void SnakeAi(int monsterId)
 					md = Right(targetDirection);
 				else if (drift > 4)
 					md = Left(targetDirection);
-				monster.goalVar2 = static_cast<int>(md);
+				monster.goalTurning = static_cast<int>(md);
 			}
 
 			if (!DumbWalk(monsterId, md))
@@ -2967,7 +2967,7 @@ void CounselorAi(int monsterId)
 		MonstCheckDoors(monster);
 	int v = GenerateRnd(100);
 	if (monster.goal == MGOAL_RETREAT) {
-		if (monster.goalVar1++ <= 3)
+		if (monster.goalGeneral++ <= 3)
 			RandomWalk(monsterId, Opposite(md));
 		else {
 			monster.goal = MGOAL_NORMAL;
@@ -2976,8 +2976,8 @@ void CounselorAi(int monsterId)
 	} else if (monster.goal == MGOAL_MOVE) {
 		int dist = std::max(abs(mx), abs(my));
 		if (dist >= 2 && monster.squelch == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-			if (monster.goalVar1++ < 2 * dist || !DirOK(monsterId, md)) {
-				RoundWalk(monsterId, md, &monster.goalVar2);
+			if (monster.goalGeneral++ < 2 * dist || !DirOK(monsterId, md)) {
+				RoundWalk(monsterId, md, &monster.goalTurning);
 			} else {
 				monster.goal = MGOAL_NORMAL;
 				StartFadein(monster, md, true);
@@ -2993,7 +2993,7 @@ void CounselorAi(int monsterId)
 				StartRangedAttack(monster, MissileTypes[monster.mint], monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
 			} else if (GenerateRnd(100) < 30) {
 				monster.goal = MGOAL_MOVE;
-				monster.goalVar1 = 0;
+				monster.goalGeneral = 0;
 				StartFadeout(monster, md, false);
 			} else
 				AiDelay(monster, GenerateRnd(10) + 2 * (5 - monster.mint));
@@ -3001,7 +3001,7 @@ void CounselorAi(int monsterId)
 			monster.dir = md;
 			if (monster.hitPoints < (monster.maxHp / 2)) {
 				monster.goal = MGOAL_RETREAT;
-				monster.goalVar1 = 0;
+				monster.goalGeneral = 0;
 				StartFadeout(monster, md, false);
 			} else if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay
 			    || GenerateRnd(100) < 2 * monster.mint + 20) {
@@ -3076,14 +3076,14 @@ void MegaAi(int monsterId)
 	if (dist >= 2 && monster.squelch == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
 		if (monster.goal == MGOAL_MOVE || dist >= 3) {
 			if (monster.goal != MGOAL_MOVE) {
-				monster.goalVar1 = 0;
-				monster.goalVar2 = GenerateRnd(2);
+				monster.goalGeneral = 0;
+				monster.goalTurning = GenerateRnd(2);
 			}
 			monster.goal = MGOAL_MOVE;
-			monster.goalVar3 = 4;
-			if (monster.goalVar1++ < 2 * dist || !DirOK(monsterId, md)) {
+			monster.goalSpecialAction = 4;
+			if (monster.goalGeneral++ < 2 * dist || !DirOK(monsterId, md)) {
 				if (v < 5 * (monster.mint + 16))
-					RoundWalk(monsterId, md, &monster.goalVar2);
+					RoundWalk(monsterId, md, &monster.goalTurning);
 			} else
 				monster.goal = MGOAL_NORMAL;
 		}
@@ -3091,7 +3091,7 @@ void MegaAi(int monsterId)
 		monster.goal = MGOAL_NORMAL;
 	}
 	if (monster.goal == MGOAL_NORMAL) {
-		if (((dist >= 3 && v < 5 * (monster.mint + 2)) || v < 5 * (monster.mint + 1) || monster.goalVar3 == 4) && LineClearMissile(monster.position.tile, { fx, fy })) {
+		if (((dist >= 3 && v < 5 * (monster.mint + 2)) || v < 5 * (monster.mint + 1) || monster.goalSpecialAction == 4) && LineClearMissile(monster.position.tile, { fx, fy })) {
 			StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
@@ -3110,7 +3110,7 @@ void MegaAi(int monsterId)
 					StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
 			}
 		}
-		monster.goalVar3 = 1;
+		monster.goalSpecialAction = 1;
 	}
 	if (monster.mode == MonsterMode::Stand) {
 		AiDelay(monster, GenerateRnd(10) + 5);
@@ -3271,14 +3271,14 @@ void HorkDemonAi(int monsterId)
 		monster.goal = MGOAL_NORMAL;
 	} else if (monster.goal == 4 || ((abs(mx) >= 5 || abs(my) >= 5) && GenerateRnd(4) != 0)) {
 		if (monster.goal != 4) {
-			monster.goalVar1 = 0;
-			monster.goalVar2 = GenerateRnd(2);
+			monster.goalGeneral = 0;
+			monster.goalTurning = GenerateRnd(2);
 		}
 		monster.goal = MGOAL_MOVE;
 		int dist = std::max(abs(mx), abs(my));
-		if (monster.goalVar1++ >= 2 * dist || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
+		if (monster.goalGeneral++ >= 2 * dist || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
 			monster.goal = MGOAL_NORMAL;
-		} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+		} else if (!RoundWalk(monsterId, md, &monster.goalTurning)) {
 			AiDelay(monster, GenerateRnd(10) + 10);
 		}
 	}
@@ -3413,7 +3413,7 @@ void InitTRNForUniqueMonster(Monster &monster)
 {
 	char filestr[64];
 	*fmt::format_to(filestr, FMT_COMPILE(R"(Monsters\Monsters\{}.TRN)"), UniqueMonstersData[monster.uniqType - 1].mTrnName) = '\0';
-	monster.uniqueTRN = LoadFileInMem<uint8_t>(filestr);
+	monster.uniqueMonsterTRN = LoadFileInMem<uint8_t>(filestr);
 }
 
 void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
@@ -3942,8 +3942,8 @@ void M_StartHit(int monsterId, int dam)
 		} else if (IsAnyOf(monster.type->type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV)
 		    || monster.type->type == MT_GRAVEDIG) {
 			monster.goal = MGOAL_NORMAL;
-			monster.goalVar1 = 0;
-			monster.goalVar2 = 0;
+			monster.goalGeneral = 0;
+			monster.goalTurning = 0;
 		}
 		if (monster.mode != MonsterMode::Petrified) {
 			StartMonsterGotHit(monsterId);
@@ -4541,8 +4541,8 @@ void M_FallenFear(Point position)
 
 		int runDistance = std::max((8 - monster.data->mLevel), 2);
 		monster.goal = MGOAL_RETREAT;
-		monster.goalVar1 = runDistance;
-		monster.goalVar2 = static_cast<int>(GetDirection(position, monster.position.tile));
+		monster.goalGeneral = runDistance;
+		monster.goalTurning = static_cast<int>(GetDirection(position, monster.position.tile));
 	}
 }
 
