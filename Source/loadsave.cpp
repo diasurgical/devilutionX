@@ -328,7 +328,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.tile.y = file.NextLE<int32_t>();
 	player.position.future.x = file.NextLE<int32_t>();
 	player.position.future.y = file.NextLE<int32_t>();
-	file.Skip(8); // Skip _ptargx and _ptargy
+	file.Skip<uint32_t>(2); // Skip _ptargx and _ptargy
 	player.position.last.x = file.NextLE<int32_t>();
 	player.position.last.y = file.NextLE<int32_t>();
 	player.position.old.x = file.NextLE<int32_t>();
@@ -340,15 +340,13 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pdir = static_cast<Direction>(file.NextLE<int32_t>());
 	file.Skip(4); // Unused
 	player._pgfxnum = file.NextLE<int32_t>();
-	file.Skip(4); // Skip pointer pData
+	file.Skip<uint32_t>(); // Skip pointer pData
 	player.AnimInfo = {};
 	player.AnimInfo.TicksPerFrame = file.NextLE<int32_t>() + 1;
 	player.AnimInfo.TickCounterOfCurrentFrame = file.NextLE<int32_t>();
 	player.AnimInfo.NumberOfFrames = file.NextLE<int32_t>();
 	player.AnimInfo.CurrentFrame = file.NextLE<int32_t>() - 1;
-	file.Skip(4); // Skip _pAnimWidth
-	file.Skip(4); // Skip _pAnimWidth2
-	file.Skip(4); // Skip _peflag
+	file.Skip<uint32_t>(3); // Skip _pAnimWidth, _pAnimWidth2, _peflag
 	player._plid = file.NextLE<int32_t>();
 	player._pvid = file.NextLE<int32_t>();
 
@@ -407,12 +405,12 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pMaxHPBase = file.NextLE<int32_t>();
 	player._pHitPoints = file.NextLE<int32_t>();
 	player._pMaxHP = file.NextLE<int32_t>();
-	file.Skip(sizeof(int32_t)); // Skip _pHPPer - always derived from hp and maxHP.
+	file.Skip<int32_t>(); // Skip _pHPPer - always derived from hp and maxHP.
 	player._pManaBase = file.NextLE<int32_t>();
 	player._pMaxManaBase = file.NextLE<int32_t>();
 	player._pMana = file.NextLE<int32_t>();
 	player._pMaxMana = file.NextLE<int32_t>();
-	file.Skip(sizeof(int32_t)); // Skip _pManaPer - always derived from mana and maxMana
+	file.Skip<int32_t>(); // Skip _pManaPer - always derived from mana and maxMana
 	player._pLevel = file.NextLE<int8_t>();
 	player._pMaxLvl = file.NextLE<int8_t>();
 	file.Skip(2); // Alignment
@@ -430,10 +428,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.temp.y = file.NextLE<int32_t>();
 	player.tempDirection = static_cast<Direction>(file.NextLE<int32_t>());
 	player.spellLevel = file.NextLE<int32_t>();
-	file.Skip(4); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
+	file.Skip<uint32_t>(); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
 	player.position.offset2.deltaX = file.NextLE<int32_t>();
 	player.position.offset2.deltaY = file.NextLE<int32_t>();
-	file.Skip(4); // Skip actionFrame
+	file.Skip<uint32_t>(); // Skip actionFrame
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		player._pLvlVisited[i] = file.NextBool8();
@@ -441,33 +439,33 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		player._pSLvlVisited[i] = file.NextBool8();
 
-	file.Skip(2);     // Alignment
-	file.Skip(4);     // skip _pGFXLoad
-	file.Skip(4 * 8); // Skip pointers _pNAnim
+	file.Skip(2);           // Alignment
+	file.Skip<uint32_t>();  // skip _pGFXLoad
+	file.Skip<uint32_t>(8); // Skip pointers _pNAnim
 	player._pNFrames = file.NextLE<int32_t>();
-	file.Skip(4);     // skip _pNWidth
-	file.Skip(4 * 8); // Skip pointers _pWAnim
+	file.Skip<uint32_t>();  // skip _pNWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pWAnim
 	player._pWFrames = file.NextLE<int32_t>();
-	file.Skip(4);     // skip _pWWidth
-	file.Skip(4 * 8); // Skip pointers _pAAnim
+	file.Skip<uint32_t>();  // skip _pWWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pAAnim
 	player._pAFrames = file.NextLE<int32_t>();
-	file.Skip(4); // skip _pAWidth
+	file.Skip<uint32_t>(); // skip _pAWidth
 	player._pAFNum = file.NextLE<int32_t>();
-	file.Skip(4 * 8); // Skip pointers _pLAnim
-	file.Skip(4 * 8); // Skip pointers _pFAnim
-	file.Skip(4 * 8); // Skip pointers _pTAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pLAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pFAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pTAnim
 	player._pSFrames = file.NextLE<int32_t>();
-	file.Skip(4); // skip _pSWidth
+	file.Skip<uint32_t>(); // skip _pSWidth
 	player._pSFNum = file.NextLE<int32_t>();
-	file.Skip(4 * 8); // Skip pointers _pHAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pHAnim
 	player._pHFrames = file.NextLE<int32_t>();
-	file.Skip(4);     // skip _pHWidth
-	file.Skip(4 * 8); // Skip pointers _pDAnim
+	file.Skip<uint32_t>();  // skip _pHWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pDAnim
 	player._pDFrames = file.NextLE<int32_t>();
-	file.Skip(4);     // skip _pDWidth
-	file.Skip(4 * 8); // Skip pointers _pBAnim
+	file.Skip<uint32_t>();  // skip _pDWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pBAnim
 	player._pBFrames = file.NextLE<int32_t>();
-	file.Skip(4); // skip _pBWidth
+	file.Skip<uint32_t>(); // skip _pBWidth
 
 	for (Item &item : player.InvBody)
 		LoadItemData(file, item);
@@ -1202,32 +1200,32 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	file.Skip(2); // Alignment
 
-	file.Skip<int32_t>(); // Skip _pGFXLoad
-	file.Skip(4 * 8);     // Skip pointers _pNAnim
+	file.Skip<int32_t>();   // Skip _pGFXLoad
+	file.Skip<uint32_t>(8); // Skip pointers _pNAnim
 	file.WriteLE<int32_t>(player._pNFrames);
-	file.Skip(4);     // Skip _pNWidth
-	file.Skip(4 * 8); // Skip pointers _pWAnim
+	file.Skip<uint32_t>();  // Skip _pNWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pWAnim
 	file.WriteLE<int32_t>(player._pWFrames);
-	file.Skip(4);     // Skip _pWWidth
-	file.Skip(4 * 8); // Skip pointers _pAAnim
+	file.Skip<uint32_t>();  // Skip _pWWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pAAnim
 	file.WriteLE<int32_t>(player._pAFrames);
-	file.Skip(4); // Skip _pAWidth
+	file.Skip<uint32_t>(); // Skip _pAWidth
 	file.WriteLE<int32_t>(player._pAFNum);
-	file.Skip(4 * 8); // Skip pointers _pLAnim
-	file.Skip(4 * 8); // Skip pointers _pFAnim
-	file.Skip(4 * 8); // Skip pointers _pTAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pLAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pFAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pTAnim
 	file.WriteLE<int32_t>(player._pSFrames);
-	file.Skip(4); // Skip _pSWidth
+	file.Skip<uint32_t>(); // Skip _pSWidth
 	file.WriteLE<int32_t>(player._pSFNum);
-	file.Skip(4 * 8); // Skip pointers _pHAnim
+	file.Skip<uint32_t>(8); // Skip pointers _pHAnim
 	file.WriteLE<int32_t>(player._pHFrames);
-	file.Skip(4);     // Skip _pHWidth
-	file.Skip(4 * 8); // Skip pointers _pDAnim
+	file.Skip<uint32_t>();  // Skip _pHWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pDAnim
 	file.WriteLE<int32_t>(player._pDFrames);
-	file.Skip(4);     // Skip _pDWidth
-	file.Skip(4 * 8); // Skip pointers _pBAnim
+	file.Skip<uint32_t>();  // Skip _pDWidth
+	file.Skip<uint32_t>(8); // Skip pointers _pBAnim
 	file.WriteLE<int32_t>(player._pBFrames);
-	file.Skip(4); // Skip _pBWidth
+	file.Skip<uint32_t>(); // Skip _pBWidth
 
 	for (const Item &item : player.InvBody)
 		SaveItem(file, item);
@@ -2193,7 +2191,7 @@ void LoadGame(bool firstflag)
 
 void SaveHeroItems(MpqWriter &saveWriter, Player &player)
 {
-	size_t itemCount = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
+	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + NUM_INV_GRID_ELEM + MAXBELTITEMS;
 	SaveHelper file(saveWriter, "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
