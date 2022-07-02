@@ -601,7 +601,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.hitPoints = file->NextLE<int32_t>();
 
 	monster.ai = static_cast<_mai_id>(file->NextLE<uint8_t>());
-	monster.mint = file->NextLE<uint8_t>();
+	monster.behaviour = file->NextLE<uint8_t>();
 	file->Skip(2); // Alignment
 	monster.flags = file->NextLE<uint32_t>();
 	monster.squelch = file->NextLE<uint8_t>();
@@ -1343,7 +1343,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.hitPoints);
 
 	file->WriteLE<uint8_t>(monster.ai);
-	file->WriteLE<uint8_t>(monster.mint);
+	file->WriteLE<uint8_t>(monster.behaviour);
 	file->Skip(2); // Alignment
 	file->WriteLE<uint32_t>(monster.flags);
 	file->WriteLE<uint8_t>(monster.squelch);

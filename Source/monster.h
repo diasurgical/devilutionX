@@ -216,7 +216,7 @@ struct Monster { // note: missing field _mAFNum
 	bool delFlag;
 
 	_mai_id ai;
-	uint8_t mint;
+	uint8_t behaviour;
 	uint8_t squelch;
 	uint8_t uniqType;
 	uint8_t uniqTrans;
