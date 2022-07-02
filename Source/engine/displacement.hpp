@@ -127,6 +127,7 @@ struct DisplacementOf {
 	 */
 	constexpr DisplacementOf<DeltaT> worldToScreen() const
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		return { (deltaY - deltaX) * 32, (deltaY + deltaX) * -16 };
 	}
 
@@ -139,6 +140,7 @@ struct DisplacementOf {
 	 */
 	constexpr DisplacementOf<DeltaT> screenToWorld() const
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		return { (2 * deltaY + deltaX) / -64, (2 * deltaY - deltaX) / -64 };
 	}
 
@@ -153,6 +155,7 @@ struct DisplacementOf {
 
 	constexpr DisplacementOf<DeltaT> screenToLight() const
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		return { (2 * deltaY + deltaX) / 8, (2 * deltaY - deltaX) / 8 };
 	}
 
@@ -163,12 +166,13 @@ struct DisplacementOf {
 	 */
 	[[nodiscard]] Displacement worldToNormalScreen() const
 	{
+		static_assert(std::is_signed<DeltaT>::value, "DeltaT must be signed for transformations involving a rotation");
 		// Most transformations between world and screen space take shortcuts when scaling to simplify the math. This
 		//  routine is typically used with missiles where we want a normal vector that can be multiplied with a target
 		//  velocity (given in pixels). We could normalize the vector first but then we'd need to scale it during
 		//  rotation from world to screen space. To save performing unnecessary divisions we rotate first without
 		//  correcting the scaling. This gives a vector in elevation projection aligned with screen space.
-		Displacement rotated { static_cast<int>(deltaY) - static_cast<int>(deltaX), -(static_cast<int>(deltaY) + static_cast<int>(deltaX)) };
+		DisplacementOf<DeltaT> rotated { deltaY - deltaX, -(deltaY + deltaX) };
 		// then normalize this vector
 		Displacement rotatedAndNormalized = rotated.normalized();
 		// and finally scale the y axis to bring it to isometric projection
