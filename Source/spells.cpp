@@ -64,7 +64,7 @@ void ClearReadiedSpell(Player &player)
 	}
 }
 
-void PlacePlayer(int pnum)
+void PlacePlayer(size_t pnum)
 {
 	Player &player = Players[pnum];
 
@@ -166,7 +166,7 @@ int GetManaAmount(Player &player, spell_id sn)
 	return ma;
 }
 
-void UseMana(int id, spell_id sn)
+void UseMana(size_t id, spell_id sn)
 {
 	int ma; // mana cost
 
@@ -220,11 +220,11 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 		return SpellCheckResult::Success;
 	}
 
-	if (GetSpellLevel(id, sn) <= 0) {
+	Player &player = Players[id];
+	if (GetSpellLevel(player, sn) <= 0) {
 		return SpellCheckResult::Fail_Level0;
 	}
 
-	Player &player = Players[id];
 	if (player._pMana < GetManaAmount(player, sn)) {
 		return SpellCheckResult::Fail_NoMana;
 	}
@@ -254,7 +254,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 }
 
-void DoResurrect(int pnum, uint16_t rid)
+void DoResurrect(size_t pnum, size_t rid)
 {
 	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
 		return;
