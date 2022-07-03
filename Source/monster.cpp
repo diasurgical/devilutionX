@@ -1022,11 +1022,8 @@ std::optional<Point> GetTeleportTile(const Monster &monster)
 	return {};
 }
 
-void Teleport(int monsterId)
+void Teleport(Monster &monster)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster._mmode == MonsterMode::Petrified)
 		return;
 
@@ -1036,7 +1033,7 @@ void Teleport(int monsterId)
 
 	M_ClearSquares(monster);
 	dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-	dMonster[position->x][position->y] = monsterId + 1;
+	dMonster[position->x][position->y] = monster.getId() + 1;
 	monster.position.old = *position;
 	monster._mdir = GetMonsterDirection(monster);
 
@@ -1056,7 +1053,7 @@ void HitMonster(int monsterId, int dam)
 
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
 		if (monster.type().type == MT_BLINK) {
-			Teleport(monsterId);
+			Teleport(monster);
 		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
 			monster._mgoal = MGOAL_NORMAL;
 			monster._mgoalvar1 = 0;
@@ -3910,7 +3907,7 @@ void M_StartHit(int monsterId, int dam)
 
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
 		if (monster.type().type == MT_BLINK) {
-			Teleport(monsterId);
+			Teleport(monster);
 		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV)
 		    || monster.type().type == MT_GRAVEDIG) {
 			monster._mgoal = MGOAL_NORMAL;
