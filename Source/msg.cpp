@@ -2417,8 +2417,7 @@ void DeltaLoadLevel()
 				M_ClearSquares(i);
 				if (monster._mAi != AI_DIABLO) {
 					if (monster._uniqtype == 0) {
-						assert(monster.MType != nullptr);
-						AddCorpse(monster.position.tile, monster.MType->corpseId, monster._mdir);
+						AddCorpse(monster.position.tile, monster.type().corpseId, monster._mdir);
 					} else {
 						AddCorpse(monster.position.tile, monster._udeadval, monster._mdir);
 					}
@@ -2429,7 +2428,7 @@ void DeltaLoadLevel()
 				decode_enemy(monster, deltaLevel.monster[i]._menemy);
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
 					dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
-				if (monster.MType->type == MT_GOLEM) {
+				if (monster.type().type == MT_GOLEM) {
 					GolumAi(i);
 					monster._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 				} else {

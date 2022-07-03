@@ -166,10 +166,10 @@ struct CMonster {
 	const MonsterData *data;
 };
 
+extern CMonster LevelMonsterTypes[MaxLvlMTypes];
+
 struct Monster { // note: missing field _mAFNum
 	const char *mName;
-	CMonster *MType;
-	const MonsterData *MData;
 	std::unique_ptr<uint8_t[]> uniqueTRN;
 	AnimationInfo AnimInfo;
 	int _mgoalvar1;
@@ -234,7 +234,7 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void ChangeAnimationData(MonsterGraphic graphic, Direction direction)
 	{
-		auto &animationData = this->MType->getAnimData(graphic);
+		auto &animationData = type().getAnimData(graphic);
 
 		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
 		this->AnimInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(direction), animationData.frames, animationData.rate);
@@ -260,6 +260,16 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void Petrify();
 
+	const CMonster &type() const
+	{
+		return LevelMonsterTypes[_mMTidx];
+	}
+
+	const MonsterData &data() const
+	{
+		return *type().data;
+	}
+
 	/**
 	 * @brief Is the monster currently walking?
 	 */
@@ -270,7 +280,6 @@ struct Monster { // note: missing field _mAFNum
 	bool TryLiftGargoyle();
 };
 
-extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 extern int LevelMonsterTypeCount;
 extern Monster Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];

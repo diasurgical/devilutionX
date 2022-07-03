@@ -772,11 +772,6 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (monster.MType == nullptr) {
-		Log("Draw Monster \"{}\": uninitialized monster", monster.mName);
-		return;
-	}
-
 	CelSprite cel = *monster.AnimInfo.celSprite;
 
 	Displacement offset = monster.position.offset;
