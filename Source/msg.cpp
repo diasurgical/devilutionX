@@ -1592,7 +1592,7 @@ DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 				monster._mhitpoints -= message.dwDam;
 				if ((monster._mhitpoints >> 6) < 1)
 					monster._mhitpoints = 1 << 6;
-				delta_monster_hp(message.wMon, monster._mhitpoints, player);
+				delta_monster_hp(monster, player);
 			}
 		}
 	}
@@ -2220,15 +2220,15 @@ void delta_kill_monster(int mi, Point position, const Player &player)
 	pD->_mhitpoints = 0;
 }
 
-void delta_monster_hp(int mi, int hp, const Player &player)
+void delta_monster_hp(const Monster &monster, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
-	if (pD->_mhitpoints > hp)
-		pD->_mhitpoints = hp;
+	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
+	if (pD->_mhitpoints > monster._mhitpoints)
+		pD->_mhitpoints = monster._mhitpoints;
 }
 
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
