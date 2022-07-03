@@ -115,9 +115,9 @@ enum class PlayerWeaponGraphic : uint8_t {
 
 enum PLR_MODE : uint8_t {
 	PM_STAND,
-	PM_WALK,  // Movement towards N, NW, or NE
-	PM_WALK2, // Movement towards S, SW, or SE
-	PM_WALK3, // Movement towards W or E
+	PM_WALK_NORTHWARDS,
+	PM_WALK_SOUTHWARDS,
+	PM_WALK_SIDEWAYS,
 	PM_ATTACK,
 	PM_RATTACK,
 	PM_BLOCK,
