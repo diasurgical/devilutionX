@@ -1626,7 +1626,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				} else {
-					TryDisarm(pnum, targetId);
+					TryDisarm(player, targetId);
 					OperateObject(pnum, targetId, false);
 				}
 			}

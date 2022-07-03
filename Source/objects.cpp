@@ -2093,20 +2093,20 @@ void OperateL5LDoor(int oi, bool sendflag)
 	}
 }
 
-void OperateL1Door(int pnum, int i)
+void OperateL1Door(Player &player, int i)
 {
-	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
-	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
+	int dpx = abs(Objects[i].position.x - player.position.tile.x);
+	int dpy = abs(Objects[i].position.y - player.position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L1LDOOR)
 		OperateL1LDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L1RDOOR)
 		OperateL1RDoor(i, true);
 }
 
-void OperateL5Door(int pnum, int i)
+void OperateL5Door(Player &player, int i)
 {
-	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
-	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
+	int dpx = abs(Objects[i].position.x - player.position.tile.x);
+	int dpy = abs(Objects[i].position.y - player.position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L5LDOOR)
 		OperateL5LDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L5RDOOR)
@@ -2377,15 +2377,15 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
 }
 
-void OperateMushroomPatch(int pnum, Object &questContainer)
+void OperateMushroomPatch(Player &player, Object &questContainer)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE) {
-		if (pnum == MyPlayerId) {
-			Players[pnum].Say(HeroSpeech::ICantUseThisYet);
+		if (&player == MyPlayer) {
+			player.Say(HeroSpeech::ICantUseThisYet);
 		}
 		return;
 	}
@@ -2403,15 +2403,15 @@ void OperateMushroomPatch(int pnum, Object &questContainer)
 	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 }
 
-void OperateInnSignChest(int pnum, Object &questContainer)
+void OperateInnSignChest(Player &player, Object &questContainer)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
 	if (Quests[Q_LTBANNER]._qvar1 != 2) {
-		if (pnum == MyPlayerId) {
-			Players[pnum].Say(HeroSpeech::ICantOpenThisYet);
+		if (&player == MyPlayer) {
+			player.Say(HeroSpeech::ICantOpenThisYet);
 		}
 		return;
 	}
@@ -2428,14 +2428,12 @@ void OperateInnSignChest(int pnum, Object &questContainer)
 	SpawnQuestItem(IDI_BANNER, pos, 0, 0);
 }
 
-void OperateSlainHero(int pnum, int i)
+void OperateSlainHero(Player &player, int i)
 {
 	if (Objects[i]._oSelFlag == 0) {
 		return;
 	}
 	Objects[i]._oSelFlag = 0;
-
-	Player &player = Players[pnum];
 
 	if (player._pClass == HeroClass::Warrior) {
 		CreateMagicArmor(Objects[i].position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
@@ -2451,7 +2449,7 @@ void OperateSlainHero(int pnum, int i)
 		CreateMagicWeapon(Objects[i].position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
-	if (pnum == MyPlayerId)
+	if (&player == MyPlayer)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
@@ -2483,7 +2481,7 @@ void OperateTrapLever(Object &flameLever)
 	}
 }
 
-void OperateSarc(int pnum, int i, bool sendmsg)
+void OperateSarc(int i, bool sendMsg, bool sendLootMsg)
 {
 	if (Objects[i]._oSelFlag == 0) {
 		return;
@@ -2495,27 +2493,27 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 	Objects[i]._oAnimDelay = 3;
 	SetRndSeed(Objects[i]._oRndSeed);
 	if (Objects[i]._oVar1 <= 2)
-		CreateRndItem(Objects[i].position, false, sendmsg, false);
+		CreateRndItem(Objects[i].position, false, sendLootMsg, false);
 	if (Objects[i]._oVar1 >= 8)
 		SpawnSkeleton(Objects[i]._oVar2, Objects[i].position);
-	if (pnum == MyPlayerId)
+	if (sendMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateL2Door(int pnum, int i)
+void OperateL2Door(Player &player, int i)
 {
-	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
-	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
+	int dpx = abs(Objects[i].position.x - player.position.tile.x);
+	int dpy = abs(Objects[i].position.y - player.position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L2LDOOR)
 		OperateL2LDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L2RDOOR)
 		OperateL2RDoor(i, true);
 }
 
-void OperateL3Door(int pnum, int i)
+void OperateL3Door(Player &player, int i)
 {
-	int dpx = abs(Objects[i].position.x - Players[pnum].position.tile.x);
-	int dpy = abs(Objects[i].position.y - Players[pnum].position.tile.y);
+	int dpx = abs(Objects[i].position.x - player.position.tile.x);
+	int dpy = abs(Objects[i].position.y - player.position.tile.y);
 	if (dpx == 1 && dpy <= 1 && Objects[i]._otype == OBJ_L3RDOOR)
 		OperateL3RDoor(i, true);
 	if (dpx <= 1 && dpy == 1 && Objects[i]._otype == OBJ_L3LDOOR)
@@ -3396,7 +3394,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
 }
 
-void OperateSkelBook(int pnum, int i, bool sendmsg)
+void OperateSkelBook(int i, bool sendmsg, bool sendLootMsg)
 {
 	if (Objects[i]._oSelFlag == 0) {
 		return;
@@ -3407,14 +3405,14 @@ void OperateSkelBook(int pnum, int i, bool sendmsg)
 	Objects[i]._oAnimFrame += 2;
 	SetRndSeed(Objects[i]._oRndSeed);
 	if (GenerateRnd(5) != 0)
-		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_SCROLL, sendmsg, false);
+		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
 	else
-		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendmsg, false);
-	if (pnum == MyPlayerId)
+		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+	if (sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateBookCase(int pnum, int i, bool sendmsg)
+void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
 {
 	if (Objects[i]._oSelFlag == 0) {
 		return;
@@ -3424,7 +3422,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 	Objects[i]._oSelFlag = 0;
 	Objects[i]._oAnimFrame -= 2;
 	SetRndSeed(Objects[i]._oRndSeed);
-	CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendmsg, false);
+	CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
@@ -3438,23 +3436,23 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 			zhar._mmode = MonsterMode::Talk;
 		}
 	}
-	if (pnum == MyPlayerId)
+	if (sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateDecap(int pnum, int i, bool sendmsg)
+void OperateDecap(int i, bool sendmsg, bool sendLootMsg)
 {
 	if (Objects[i]._oSelFlag == 0) {
 		return;
 	}
 	Objects[i]._oSelFlag = 0;
 	SetRndSeed(Objects[i]._oRndSeed);
-	CreateRndItem(Objects[i].position, false, sendmsg, false);
-	if (pnum == MyPlayerId)
+	CreateRndItem(Objects[i].position, false, sendLootMsg, false);
+	if (sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateArmorStand(int pnum, int i, bool sendmsg)
+void OperateArmorStand(int i, bool sendmsg, bool sendLootMsg)
 {
 	if (Objects[i]._oSelFlag == 0) {
 		return;
@@ -3464,15 +3462,15 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 	SetRndSeed(Objects[i]._oRndSeed);
 	bool uniqueRnd = (GenerateRnd(2) != 0);
 	if (currlevel <= 5) {
-		CreateTypeItem(Objects[i].position, true, ItemType::LightArmor, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {
-		CreateTypeItem(Objects[i].position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 10 && currlevel <= 12) {
-		CreateTypeItem(Objects[i].position, false, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, false, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 13) {
-		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
 	}
-	if (pnum == MyPlayerId)
+	if (sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
@@ -3610,7 +3608,7 @@ bool OperateFountains(int pnum, int i)
 	return applied;
 }
 
-void OperateWeaponRack(int pnum, int i, bool sendmsg)
+void OperateWeaponRack(int i, bool sendmsg, bool sendLootMsg)
 {
 	if (Objects[i]._oSelFlag == 0)
 		return;
@@ -3621,9 +3619,9 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 	Objects[i]._oSelFlag = 0;
 	Objects[i]._oAnimFrame++;
 
-	CreateTypeItem(Objects[i].position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendmsg, false);
+	CreateTypeItem(Objects[i].position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendLootMsg, false);
 
-	if (pnum == MyPlayerId)
+	if (sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
@@ -3660,9 +3658,9 @@ bool OperateNakrulBook(int s)
 	return false;
 }
 
-void OperateStoryBook(int pnum, int i)
+void OperateStoryBook(int i)
 {
-	if (Objects[i]._oSelFlag == 0 || qtextflag || pnum != MyPlayerId) {
+	if (Objects[i]._oSelFlag == 0 || qtextflag) {
 		return;
 	}
 	Objects[i]._oAnimFrame = Objects[i]._oVar4;
@@ -3682,13 +3680,13 @@ void OperateStoryBook(int pnum, int i)
 	NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateLazStand(int pnum, int i)
+void OperateLazStand(int i)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
-	if (Objects[i]._oSelFlag == 0 || qtextflag || pnum != MyPlayerId) {
+	if (Objects[i]._oSelFlag == 0 || qtextflag) {
 		return;
 	}
 
@@ -4791,14 +4789,14 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	}
 }
 
-void TryDisarm(int pnum, int i)
+void TryDisarm(Player &player, int i)
 {
-	if (pnum == MyPlayerId)
+	if (&player == MyPlayer)
 		NewCursor(CURSOR_HAND);
 	if (!Objects[i]._oTrapFlag) {
 		return;
 	}
-	int trapdisper = 2 * Players[pnum]._pDexterity - 5 * currlevel;
+	int trapdisper = 2 * player._pDexterity - 5 * currlevel;
 	if (GenerateRnd(100) > trapdisper) {
 		return;
 	}
@@ -4827,6 +4825,7 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 void OperateObject(int pnum, int i, bool teleFlag)
 {
 	bool sendmsg = pnum == MyPlayerId;
+	Player &player = Players[pnum];
 	switch (Objects[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -4838,7 +4837,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 			break;
 		}
 		if (sendmsg)
-			OperateL1Door(pnum, i);
+			OperateL1Door(player, i);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
@@ -4850,7 +4849,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 			break;
 		}
 		if (sendmsg)
-			OperateL2Door(pnum, i);
+			OperateL2Door(player, i);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
@@ -4862,7 +4861,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 			break;
 		}
 		if (sendmsg)
-			OperateL3Door(pnum, i);
+			OperateL3Door(player, i);
 		break;
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
@@ -4874,7 +4873,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 			break;
 		}
 		if (sendmsg)
-			OperateL5Door(pnum, i);
+			OperateL5Door(player, i);
 		break;
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
@@ -4897,7 +4896,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
-		OperateSarc(pnum, i, sendmsg);
+		OperateSarc(i, sendmsg, sendmsg);
 		break;
 	case OBJ_FLAMELVR:
 		OperateTrapLever(Objects[i]);
@@ -4913,18 +4912,18 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		OperateSkelBook(pnum, i, sendmsg);
+		OperateSkelBook(i, sendmsg, sendmsg);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		OperateBookCase(pnum, i, sendmsg);
+		OperateBookCase(i, sendmsg, sendmsg);
 		break;
 	case OBJ_DECAP:
-		OperateDecap(pnum, i, sendmsg);
+		OperateDecap(i, sendmsg, sendmsg);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		OperateArmorStand(pnum, i, sendmsg);
+		OperateArmorStand(i, sendmsg, sendmsg);
 		break;
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(pnum, i, LS_GSHRINE);
@@ -4940,26 +4939,28 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
-		OperateStoryBook(pnum, i);
+		if (sendmsg)
+			OperateStoryBook(i);
 		break;
 	case OBJ_PEDISTAL:
 		OperatePedistal(pnum, i);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
-		OperateWeaponRack(pnum, i, sendmsg);
+		OperateWeaponRack(i, sendmsg, sendmsg);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushroomPatch(pnum, Objects[i]);
+		OperateMushroomPatch(player, Objects[i]);
 		break;
 	case OBJ_LAZSTAND:
-		OperateLazStand(pnum, i);
+		if (sendmsg)
+			OperateLazStand(i);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(pnum, i);
+		OperateSlainHero(player, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(pnum, Objects[i]);
+		OperateInnSignChest(player, Objects[i]);
 		break;
 	default:
 		break;
@@ -5048,6 +5049,7 @@ void DeltaSyncOpObject(int cmd, int i)
 
 void SyncOpObject(int pnum, int cmd, int i)
 {
+	bool sendmsg = pnum == MyPlayerId;
 	switch (Objects[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5072,7 +5074,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		OperateLever(i, pnum == MyPlayerId);
+		OperateLever(i, sendmsg);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -5084,12 +5086,12 @@ void SyncOpObject(int pnum, int cmd, int i)
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
-		OperateSarc(pnum, i, false);
+		OperateSarc(i, sendmsg, false);
 		break;
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(i, pnum == MyPlayerId);
+		OperateBookLever(i, sendmsg);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -5097,18 +5099,18 @@ void SyncOpObject(int pnum, int cmd, int i)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		OperateSkelBook(pnum, i, false);
+		OperateSkelBook(i, sendmsg, false);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		OperateBookCase(pnum, i, false);
+		OperateBookCase(i, sendmsg, false);
 		break;
 	case OBJ_DECAP:
-		OperateDecap(pnum, i, false);
+		OperateDecap(i, sendmsg, false);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		OperateArmorStand(pnum, i, false);
+		OperateArmorStand(i, sendmsg, false);
 		break;
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(pnum, i, LS_GSHRINE);
@@ -5122,23 +5124,24 @@ void SyncOpObject(int pnum, int cmd, int i)
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
-		OperateStoryBook(pnum, i);
+		if (sendmsg)
+			OperateStoryBook(i);
 		break;
 	case OBJ_PEDISTAL:
 		OperatePedistal(pnum, i);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
-		OperateWeaponRack(pnum, i, false);
+		OperateWeaponRack(i, sendmsg, false);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushroomPatch(pnum, Objects[i]);
+		OperateMushroomPatch(Players[pnum], Objects[i]);
 		break;
 	case OBJ_SLAINHERO:
 		OperateSlainHero(pnum, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(pnum, Objects[i]);
+		OperateInnSignChest(Players[pnum], Objects[i]);
 		break;
 	default:
 		break;

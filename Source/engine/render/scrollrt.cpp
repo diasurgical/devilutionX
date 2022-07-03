@@ -500,20 +500,17 @@ void DrawPlayerIcons(const Surface &out, Player &player, Point position, bool in
 /**
  * @brief Render a player sprite
  * @param out Output buffer
- * @param pnum Player id
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  * @param pCelBuff sprite buffer
  * @param nCel frame
  * @param nWidth width
  */
-void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
+void DrawPlayer(const Surface &out, Player &player, Point tilePosition, Point targetBufferPosition)
 {
 	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
-
-	Player &player = Players[pnum];
 
 	std::optional<CelSprite> sprite = player.AnimInfo.celSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
@@ -524,7 +521,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	}
 
 	if (!sprite) {
-		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, player._pName);
+		Log("Drawing player {} \"{}\": NULL CelSprite", std::distance(Players, &player), player._pName);
 		return;
 	}
 
@@ -537,7 +534,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 			szMode = PlayerModeNames[player._pmode];
 		Log(
 		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
-		    pnum,
+		    std::distance(Players, &player),
 		    player._pName,
 		    szMode,
 		    DirectionToString(player._pdir),
@@ -546,10 +543,10 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	if (pnum == pcursplr)
+	if (pcursplr >= 0 && pcursplr < MAX_PLRS && &player == &Players[pcursplr])
 		Cl2DrawOutline(out, 165, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		Cl2Draw(out, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 		DrawPlayerIcons(out, player, targetBufferPosition, false);
 		return;
@@ -588,7 +585,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 		if (player.plractive && player._pHitPoints == 0 && player.isOnActiveLevel() && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
 			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
-			DrawPlayer(out, i, tilePosition, playerRenderPosition);
+			DrawPlayer(out, player, tilePosition, playerRenderPosition);
 		}
 	}
 }
@@ -803,10 +800,8 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  */
-void DrawPlayerHelper(const Surface &out, int p, Point tilePosition, Point targetBufferPosition)
+void DrawPlayerHelper(const Surface &out, Player &player, Point tilePosition, Point targetBufferPosition)
 {
-	Player &player = Players[p];
-
 	Displacement offset = player.position.offset;
 	if (player.IsWalking()) {
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
@@ -814,7 +809,7 @@ void DrawPlayerHelper(const Surface &out, int p, Point tilePosition, Point targe
 
 	const Point playerRenderPosition { targetBufferPosition + offset };
 
-	DrawPlayer(out, p, tilePosition, playerRenderPosition);
+	DrawPlayer(out, player, tilePosition, playerRenderPosition);
 }
 
 /**
@@ -876,7 +871,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	int8_t playerId = dPlayer[tilePosition.x][tilePosition.y];
 	if (playerId > 0 && playerId <= MAX_PLRS) {
-		DrawPlayerHelper(out, abs(playerId) - 1, tilePosition, targetBufferPosition);
+		DrawPlayerHelper(out, Players[abs(playerId) - 1], tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
 		DrawMonsterHelper(out, tilePosition, targetBufferPosition);
