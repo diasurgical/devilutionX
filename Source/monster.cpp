@@ -366,9 +366,7 @@ void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, Mo
 				minion.intelligence = leader->intelligence;
 
 				if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
-					minion.setLeader(*leader);
-					minion.leaderRelation = LeaderRelation::Leashed;
-					minion.ai = leader->ai;
+					minion.setLeader(leader);
 				}
 
 				if (minion.ai != AI_GARG) {
@@ -1646,11 +1644,25 @@ bool MonsterGotHit(Monster &monster)
 	return false;
 }
 
-void MonsterDeath(int monsterId)
+void ReleaseMinions(const Monster &leader)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
+	for (int j = 0; j < ActiveMonsterCount; j++) {
+		auto &minion = Monsters[ActiveMonsters[j]];
+		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &leader) {
+			minion.setLeader(nullptr);
+		}
+	}
+}
 
+void ShrinkLeaderPacksize(const Monster &monster)
+{
+	if (monster.leaderRelation == LeaderRelation::Leashed) {
+		monster.getLeader()->packSize--;
+	}
+}
+
+void MonsterDeath(Monster &monster)
+{
 	monster.var1++;
 	if (monster.type().type == MT_DIABLO) {
 		if (monster.position.tile.x < ViewPosition.x) {
@@ -1676,7 +1688,7 @@ void MonsterDeath(int monsterId)
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 		monster.isInvalid = true;
 
-		M_UpdateLeader(monsterId);
+		M_UpdateRelations(monster);
 	}
 }
 
@@ -2344,8 +2356,7 @@ void ScavengerAi(int monsterId)
 		return;
 	if (monster.hitPoints < (monster.maxHitPoints / 2) && monster.goal != MonsterGoal::Healing) {
 		if (monster.leaderRelation != LeaderRelation::None) {
-			if (monster.leaderRelation == LeaderRelation::Leashed)
-				monster.getLeader()->packSize--;
+			ShrinkLeaderPacksize(monster);
 			monster.leaderRelation = LeaderRelation::None;
 		}
 		monster.goal = MonsterGoal::Healing;
@@ -3384,7 +3395,7 @@ bool UpdateModeStance(int monsterId)
 	case MonsterMode::HitRecovery:
 		return MonsterGotHit(monster);
 	case MonsterMode::Death:
-		MonsterDeath(monsterId);
+		MonsterDeath(monster);
 		return false;
 	case MonsterMode::SpecialMeleeAttack:
 		return MonsterSpecialAttack(monsterId);
@@ -3998,20 +4009,10 @@ void M_SyncStartKill(int monsterId, Point position, int pnum)
 	StartMonsterDeath(monster, pnum, false);
 }
 
-void M_UpdateLeader(int monsterId)
+void M_UpdateRelations(const Monster &monster)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
-	for (size_t j = 0; j < ActiveMonsterCount; j++) {
-		auto &minion = Monsters[ActiveMonsters[j]];
-		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &monster)
-			minion.leaderRelation = LeaderRelation::None;
-	}
-
-	if (monster.leaderRelation == LeaderRelation::Leashed) {
-		monster.getLeader()->packSize--;
-	}
+	ReleaseMinions(monster);
+	ShrinkLeaderPacksize(monster);
 }
 
 void DoEnding()
@@ -4851,9 +4852,19 @@ Monster *Monster::getLeader() const
 	return &Monsters[leader];
 }
 
-void Monster::setLeader(const Monster &leader)
+void Monster::setLeader(const Monster *leader)
 {
-	this->leader = leader.getId();
+	if (leader == nullptr) {
+		// really we should update this->leader to NoLeader to avoid leaving a dangling reference to a dead monster
+		// when passed nullptr. So that buffed minions are drawn with a distinct colour in monhealthbar we leave the
+		// reference and hope that no code tries to modify the leader through this instance later.
+		leaderRelation = LeaderRelation::None;
+		return;
+	}
+
+	this->leader = leader->getId();
+	leaderRelation = LeaderRelation::Leashed;
+	ai = leader->ai;
 }
 
 void Monster::checkStandAnimationIsLoaded(Direction mdir)

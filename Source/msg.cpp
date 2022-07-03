@@ -2471,7 +2471,7 @@ void DeltaLoadLevel()
 					}
 				}
 				monster.isInvalid = true;
-				M_UpdateLeader(i);
+				M_UpdateRelations(monster);
 			} else {
 				decode_enemy(monster, deltaLevel.monster[i]._menemy);
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)

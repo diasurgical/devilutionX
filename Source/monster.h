@@ -292,7 +292,7 @@ struct Monster { // note: missing field _mAFNum
 	[[nodiscard]] size_t getId() const;
 
 	[[nodiscard]] Monster *getLeader() const;
-	void setLeader(const Monster &leader);
+	void setLeader(const Monster *leader);
 
 	/**
 	 * @brief Is the monster currently walking?
@@ -330,7 +330,7 @@ void M_StartHit(Monster &monster, int pnum, int dam);
 void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg);
 void M_StartKill(int monsterId, int pnum);
 void M_SyncStartKill(int monsterId, Point position, int pnum);
-void M_UpdateLeader(int monsterId);
+void M_UpdateRelations(const Monster &monster);
 void DoEnding();
 void PrepDoEnding();
 bool Walk(Monster &monster, Direction md);
