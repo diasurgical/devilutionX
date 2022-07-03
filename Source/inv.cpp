@@ -236,7 +236,7 @@ bool CanWield(Player &player, const Item &item)
  */
 bool CanEquip(Player &player, const Item &item, inv_body_loc bodyLocation)
 {
-	if (!CanEquip(item) || player._pmode > PM_WALK3 || !player.InvBody[bodyLocation].isEmpty()) {
+	if (!CanEquip(item) || player._pmode > PM_WALK_SIDEWAYS || !player.InvBody[bodyLocation].isEmpty()) {
 		return false;
 	}
 
@@ -402,7 +402,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		return;
 	}
 
-	if (player._pmode > PM_WALK3 && IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT))
+	if (player._pmode > PM_WALK_SIDEWAYS && IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT))
 		return;
 
 	if (&player == MyPlayer)
@@ -566,7 +566,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 
 void CheckInvCut(Player &player, Point cursorPosition, bool automaticMove, bool dropItem)
 {
-	if (player._pmode > PM_WALK3) {
+	if (player._pmode > PM_WALK_SIDEWAYS) {
 		return;
 	}
 
