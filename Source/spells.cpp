@@ -122,7 +122,7 @@ bool TargetsMonster(spell_id id)
 	    || id == SPL_WAVE;
 }
 
-int GetManaAmount(Player &player, spell_id sn)
+int GetManaAmount(const Player &player, spell_id sn)
 {
 	int ma; // mana amount
 
@@ -166,33 +166,29 @@ int GetManaAmount(Player &player, spell_id sn)
 	return ma;
 }
 
-void UseMana(int id, spell_id sn)
+void UseMana(Player &player, spell_id sn)
 {
-	int ma; // mana cost
-
-	if (id != MyPlayerId)
+	if (&player != MyPlayer)
 		return;
 
-	Player &myPlayer = *MyPlayer;
-
-	switch (myPlayer._pSplType) {
+	switch (player._pSplType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_INVALID:
 		break;
 	case RSPLTYPE_SCROLL:
-		RemoveCurrentSpellScroll(myPlayer);
+		RemoveCurrentSpellScroll(player);
 		break;
 	case RSPLTYPE_CHARGES:
-		UseStaffCharge(myPlayer);
+		UseStaffCharge(player);
 		break;
 	case RSPLTYPE_SPELL:
 #ifdef _DEBUG
 		if (DebugGodMode)
 			break;
 #endif
-		ma = GetManaAmount(myPlayer, sn);
-		myPlayer._pMana -= ma;
-		myPlayer._pManaBase -= ma;
+		int ma = GetManaAmount(player, sn);
+		player._pMana -= ma;
+		player._pManaBase -= ma;
 		drawmanaflag = true;
 		break;
 	}
@@ -220,11 +216,11 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 		return SpellCheckResult::Success;
 	}
 
-	if (GetSpellLevel(id, sn) <= 0) {
+	const Player &player = Players[id];
+	if (GetSpellLevel(player, sn) <= 0) {
 		return SpellCheckResult::Fail_Level0;
 	}
 
-	Player &player = Players[id];
 	if (player._pMana < GetManaAmount(player, sn)) {
 		return SpellCheckResult::Fail_NoMana;
 	}
@@ -234,9 +230,10 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 
 void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 {
-	Direction dir = Players[id]._pdir;
+	Player &player = Players[id];
+	Direction dir = player._pdir;
 	if (IsWallSpell(spl)) {
-		dir = Players[id].tempDirection;
+		dir = player.tempDirection;
 	}
 
 	for (int i = 0; i < 3 && spelldata[spl].sMissiles[i] != MIS_NULL; i++) {
@@ -244,9 +241,9 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 
 	if (spl == SPL_TOWN) {
-		UseMana(id, SPL_TOWN);
+		UseMana(player, SPL_TOWN);
 	} else if (spl == SPL_CBOLT) {
-		UseMana(id, SPL_CBOLT);
+		UseMana(player, SPL_CBOLT);
 
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
 			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);

@@ -24,10 +24,10 @@ namespace devilution {
 
 namespace {
 
-std::optional<OwnedCelSprite> optbar_cel;
-std::optional<OwnedCelSprite> PentSpin_cel;
-std::optional<OwnedCelSprite> option_cel;
-std::optional<OwnedCelSprite> sgpLogo;
+OptionalOwnedCelSprite optbar_cel;
+OptionalOwnedCelSprite PentSpin_cel;
+OptionalOwnedCelSprite option_cel;
+OptionalOwnedCelSprite sgpLogo;
 bool mouseNavigation;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;

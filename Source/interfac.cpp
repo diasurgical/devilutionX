@@ -30,7 +30,7 @@ namespace devilution {
 
 namespace {
 
-std::optional<OwnedCelSprite> sgpBackCel;
+OptionalOwnedCelSprite sgpBackCel;
 
 bool IsProgress;
 uint32_t sgdwProgress;

@@ -27,6 +27,7 @@
 #include "minitext.h"
 #include "missiles.h"
 #include "nthread.h"
+#include "objects.h"
 #include "options.h"
 #include "player.h"
 #include "qol/autopickup.h"
@@ -170,7 +171,7 @@ struct DirectionSettings {
 };
 
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
-const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
+const int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
@@ -343,7 +344,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 
 void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 {
-	int skippedFrames = -2;
+	int8_t skippedFrames = -2;
 	if (leveltype == DTYPE_TOWN && sgGameInitInfo.bRunInTown != 0)
 		skippedFrames = 2;
 	if (pmWillBeCalled)
@@ -367,7 +368,7 @@ void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 	StartWalkAnimation(player, dir, pmWillBeCalled);
 }
 
-void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<std::optional<CelSprite>, 8> &anim, int width)
+void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<OptionalCelSprite, 8> &anim, int width)
 {
 	data = nullptr;
 	data = LoadFileInMem(path);
@@ -445,7 +446,7 @@ void StartAttack(int pnum, Direction d)
 		return;
 	}
 
-	int skippedAnimationFrames = 0;
+	int8_t skippedAnimationFrames = 0;
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FasterAttack)) {
 		// The combination of Faster and Fast Attack doesn't result in more skipped skipped frames, cause the secound frame skip of Faster Attack is not triggered.
 		skippedAnimationFrames = 2;
@@ -477,7 +478,7 @@ void StartRangeAttack(int pnum, Direction d, WorldTileCoord cx, WorldTileCoord c
 		return;
 	}
 
-	int skippedAnimationFrames = 0;
+	int8_t skippedAnimationFrames = 0;
 	if (!gbIsHellfire) {
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastAttack)) {
 			skippedAnimationFrames += 1;
@@ -531,7 +532,7 @@ void StartSpell(int pnum, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 	SetPlayerOld(player);
 
 	player.position.temp = WorldTilePosition { cx, cy };
-	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
+	player.spellLevel = GetSpellLevel(player, player._pSpell);
 }
 
 void RespawnDeadItem(Item &&itm, Point target)
@@ -1390,7 +1391,7 @@ bool DoDeath(Player &player)
 {
 	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames - 1) {
 		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
-			player.AnimInfo.TicksPerFrame = 1000000000;
+			player.AnimInfo.TicksPerFrame = 100;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		} else if (&player == MyPlayer && player.AnimInfo.TickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
@@ -1412,6 +1413,29 @@ bool IsPlayerAdjacentToObject(Player &player, Object &object)
 		y = abs(player.position.tile.y - object.position.y + 1);
 	}
 	return x <= 1 && y <= 1;
+}
+
+void TryDisarm(const Player &player, Object &object)
+{
+	if (&player == MyPlayer)
+		NewCursor(CURSOR_HAND);
+	if (!object._oTrapFlag) {
+		return;
+	}
+	int trapdisper = 2 * player._pDexterity - 5 * currlevel;
+	if (GenerateRnd(100) > trapdisper) {
+		return;
+	}
+	for (int j = 0; j < ActiveObjectCount; j++) {
+		Object &trap = Objects[ActiveObjects[j]];
+		if (trap.IsTrap() && ObjectAtPosition({ trap._oVar1, trap._oVar2 }) == &object) {
+			trap._oVar4 = 1;
+			object._oTrapFlag = false;
+		}
+	}
+	if (object.IsTrappedChest()) {
+		object._oTrapFlag = false;
+	}
 }
 
 void CheckNewPath(int pnum, bool pmWillBeCalled)
@@ -1626,7 +1650,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				} else {
-					TryDisarm(pnum, targetId);
+					TryDisarm(player, *object);
 					OperateObject(pnum, targetId, false);
 				}
 			}
@@ -2164,7 +2188,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	std::optional<CelSprite> celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
+	OptionalCelSprite celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
 	if (celSprites && previewCelSprite != celSprites) {
 		previewCelSprite = celSprites;
 		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
@@ -2315,11 +2339,11 @@ void ResetPlayerGFX(Player &player)
 	}
 }
 
-void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t numberOfFrames, int8_t delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/)
 {
 	LoadPlrGFX(player, graphic);
 
-	std::optional<CelSprite> celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
+	OptionalCelSprite celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
 
 	float previewShownGameTickFragments = 0.F;
 	if (celSprite == player.previewCelSprite && !player.IsWalking())
@@ -2887,7 +2911,7 @@ void StartPlrBlock(int pnum, Direction dir)
 
 	PlaySfxLoc(IS_ISWORD, player.position.tile);
 
-	int skippedAnimationFrames = 0;
+	int8_t skippedAnimationFrames = 0;
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FastBlock)) {
 		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
@@ -2956,7 +2980,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 
 	Direction pd = player._pdir;
 
-	int skippedAnimationFrames = 0;
+	int8_t skippedAnimationFrames = 0;
 	constexpr ItemSpecialEffect ZenFlags = ItemSpecialEffect::FastHitRecovery | ItemSpecialEffect::FasterHitRecovery | ItemSpecialEffect::FastestHitRecovery;
 	if (HasAllOf(player._pIFlags, ZenFlags)) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
 		skippedAnimationFrames = 4;
@@ -3371,7 +3395,8 @@ void ProcessPlayers()
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
-			player.AnimInfo.ProcessAnimation();
+			if (player._pmode != PM_DEATH || player.AnimInfo.TickCounterOfCurrentFrame != 40)
+				player.AnimInfo.ProcessAnimation();
 		}
 	}
 }
@@ -3448,7 +3473,6 @@ void CalcPlrStaff(Player &player)
 void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 {
 	bool addflag = false;
-	int sl;
 
 	if ((DWORD)MyPlayerId >= MAX_PLRS) {
 		app_fatal(fmt::format("CheckPlrSpell: illegal player {}", MyPlayerId));
@@ -3520,22 +3544,19 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		return;
 	}
 
+	int sl = GetSpellLevel(myPlayer, spellID);
 	if (IsWallSpell(spellID)) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdLocParam4(true, CMD_SPELLXYD, cursPosition, spellID, spellType, static_cast<uint16_t>(sd), sl);
 	} else if (pcursmonst != -1 && !isShiftHeld) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, spellID, spellType, sl);
 	} else if (pcursplr != -1 && !isShiftHeld && !myPlayer.friendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, spellID, spellType, sl);
 	} else {
 		LastMouseButtonAction = MouseActionType::Spell;
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdLocParam3(true, CMD_SPELLXY, cursPosition, spellID, spellType, sl);
 	}
 }

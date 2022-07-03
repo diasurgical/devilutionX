@@ -2030,14 +2030,13 @@ DWORD OnDebug(const TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
-DWORD OnNova(const TCmd *pCmd, int pnum)
+DWORD OnNova(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
 	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs != 1) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel() && pnum != MyPlayerId && InDungeonBounds(position)) {
+		if (player.isOnActiveLevel() && &player != MyPlayer && InDungeonBounds(position)) {
 			ClrPlrPath(player);
 			player._pSpell = SPL_NOVA;
 			player._pSplType = RSPLTYPE_INVALID;
@@ -3060,7 +3059,7 @@ uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_CHEAT_SPELL_LEVEL:
 		return OnCheatSpellLevel(pCmd, pnum);
 	case CMD_NOVA:
-		return OnNova(pCmd, pnum);
+		return OnNova(pCmd, player);
 	case CMD_SETSHIELD:
 		return OnSetShield(pCmd, player);
 	case CMD_REMSHIELD:

@@ -9,7 +9,7 @@
 namespace devilution {
 
 namespace {
-std::optional<OwnedCelSprite> pSpellCels;
+OptionalOwnedCelSprite pSpellCels;
 uint8_t SplTransTbl[256];
 } // namespace
 
