@@ -555,7 +555,7 @@ bool gbSkipSync = false;
 
 void LoadMonster(LoadHelper *file, Monster &monster)
 {
-	monster.idx = file->NextLE<int32_t>();
+	monster.levelType = file->NextLE<int32_t>();
 	monster.mode = static_cast<MonsterMode>(file->NextLE<int32_t>());
 	monster.goal = static_cast<monster_goal>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
@@ -575,7 +575,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.position.offset.deltaY = file->NextLE<int32_t>();
 	monster.position.velocity.deltaX = file->NextLE<int32_t>();
 	monster.position.velocity.deltaY = file->NextLE<int32_t>();
-	monster.dir = static_cast<Direction>(file->NextLE<int32_t>());
+	monster.direction = static_cast<Direction>(file->NextLE<int32_t>());
 	monster.enemy = file->NextLE<int32_t>();
 	monster.enemyPosition.x = file->NextLE<uint8_t>();
 	monster.enemyPosition.y = file->NextLE<uint8_t>();
@@ -588,7 +588,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.animInfo.NumberOfFrames = file->NextLE<int32_t>();
 	monster.animInfo.CurrentFrame = file->NextLE<int32_t>() - 1;
 	file->Skip(4); // Skip _meflag
-	monster.delFlag = file->NextBool32();
+	monster.invalidate = file->NextBool32();
 	monster.var1 = file->NextLE<int32_t>();
 	monster.var2 = file->NextLE<int32_t>();
 	monster.var3 = file->NextLE<int32_t>();
@@ -601,10 +601,10 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.hitPoints = file->NextLE<int32_t>();
 
 	monster.ai = static_cast<_mai_id>(file->NextLE<uint8_t>());
-	monster.behaviour = file->NextLE<uint8_t>();
+	monster.intelligence = file->NextLE<uint8_t>();
 	file->Skip(2); // Alignment
 	monster.flags = file->NextLE<uint32_t>();
-	monster.squelch = file->NextLE<uint8_t>();
+	monster.activityTicks = file->NextLE<uint8_t>();
 	file->Skip(3); // Alignment
 	file->Skip(4); // Unused
 	monster.position.last.x = file->NextLE<int32_t>();
@@ -1298,7 +1298,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 void SaveMonster(SaveHelper *file, Monster &monster)
 {
-	file->WriteLE<int32_t>(monster.idx);
+	file->WriteLE<int32_t>(monster.levelType);
 	file->WriteLE<int32_t>(static_cast<int>(monster.mode));
 	file->WriteLE<uint8_t>(monster.goal);
 	file->Skip(3); // Alignment
@@ -1318,7 +1318,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.position.offset.deltaY);
 	file->WriteLE<int32_t>(monster.position.velocity.deltaX);
 	file->WriteLE<int32_t>(monster.position.velocity.deltaY);
-	file->WriteLE<int32_t>(static_cast<int32_t>(monster.dir));
+	file->WriteLE<int32_t>(static_cast<int32_t>(monster.direction));
 	file->WriteLE<int32_t>(monster.enemy);
 	file->WriteLE<uint8_t>(monster.enemyPosition.x);
 	file->WriteLE<uint8_t>(monster.enemyPosition.y);
@@ -1330,7 +1330,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.animInfo.NumberOfFrames);
 	file->WriteLE<int32_t>(monster.animInfo.CurrentFrame + 1);
 	file->Skip<uint32_t>(); // Skip _meflag
-	file->WriteLE<uint32_t>(monster.delFlag ? 1 : 0);
+	file->WriteLE<uint32_t>(monster.invalidate ? 1 : 0);
 	file->WriteLE<int32_t>(monster.var1);
 	file->WriteLE<int32_t>(monster.var2);
 	file->WriteLE<int32_t>(monster.var3);
@@ -1343,10 +1343,10 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.hitPoints);
 
 	file->WriteLE<uint8_t>(monster.ai);
-	file->WriteLE<uint8_t>(monster.behaviour);
+	file->WriteLE<uint8_t>(monster.intelligence);
 	file->Skip(2); // Alignment
 	file->WriteLE<uint32_t>(monster.flags);
-	file->WriteLE<uint8_t>(monster.squelch);
+	file->WriteLE<uint8_t>(monster.activityTicks);
 	file->Skip(3); // Alignment
 	file->Skip(4); // Unused
 	file->WriteLE<int32_t>(monster.position.last.x);

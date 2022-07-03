@@ -436,7 +436,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster.name,
 		    getMonsterModeDisplayName(monster.mode),
-		    DirectionToString(monster.dir),
+		    DirectionToString(monster.direction),
 		    nCel,
 		    frames);
 		return;
@@ -787,7 +787,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	Displacement offset = monster.position.offset;
 	if (monster.isWalking()) {
-		offset = GetOffsetForWalking(monster.animInfo, monster.dir);
+		offset = GetOffsetForWalking(monster.animInfo, monster.direction);
 	}
 
 	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };

@@ -202,23 +202,23 @@ struct Monster { // note: missing field _mAFNum
 
 	/** Usually corresponds to the enemy's future position */
 	WorldTilePosition enemyPosition;
-	uint8_t idx;
+	uint8_t levelType;
 	MonsterMode mode;
 	uint8_t pathCount;
 	/** Direction faced by monster (direction enum) */
-	Direction dir;
+	Direction direction;
 	/** The current target of the monster. An index in to either the player or monster array based on the _meflag value. */
 	uint8_t enemy;
 
 	/**
 	 * @brief Contains information for current animation
 	 */
-	bool delFlag;
+	bool invalidate;
 
 	_mai_id ai;
 	/** Specifies monster behaviour across various actions */
-	uint8_t behaviour;
-	uint8_t squelch;
+	uint8_t intelligence;
+	uint8_t activityTicks;
 	uint8_t uniqType;
 	uint8_t uniqTrans;
 	int8_t corpseId;
@@ -235,16 +235,16 @@ struct Monster { // note: missing field _mAFNum
 	int8_t lightId;
 
 	/**
-	 * @brief Sets the current cell sprite to match the desired direction and animation sequence
+	 * @brief Sets the current cell sprite to match the desired desiredDirection and animation sequence
 	 * @param graphic Animation sequence of interest
-	 * @param direction Desired direction the monster should be visually facing
+	 * @param desiredDirection Desired desiredDirection the monster should be visually facing
 	 */
-	void changeAnimationData(MonsterGraphic graphic, Direction direction)
+	void changeAnimationData(MonsterGraphic graphic, Direction desiredDirection)
 	{
 		auto &animationData = this->type->getAnimData(graphic);
 
 		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->animInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(direction), animationData.frames, animationData.rate);
+		this->animInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(desiredDirection), animationData.frames, animationData.rate);
 	}
 
 	/**
@@ -253,7 +253,7 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void changeAnimationData(MonsterGraphic graphic)
 	{
-		this->changeAnimationData(graphic, this->dir);
+		this->changeAnimationData(graphic, this->direction);
 	}
 
 	/**

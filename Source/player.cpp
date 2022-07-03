@@ -3169,11 +3169,11 @@ void RemovePlrMissiles(int pnum)
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
-			AddCorpse(golem.position.tile, golem.type->corpseId, golem.dir);
+			AddCorpse(golem.position.tile, golem.type->corpseId, golem.direction);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
 			dMonster[mx][my] = 0;
-			golem.delFlag = true;
+			golem.invalidate = true;
 			DeleteMonsterList();
 		}
 	}

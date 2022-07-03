@@ -528,10 +528,10 @@ void DeltaLeaveSync(uint8_t bLevel)
 		sgbDeltaChanged = true;
 		DMonsterStr &delta = deltaLevel.monster[ma];
 		delta.position = monster.position.tile;
-		delta._mdir = monster.dir;
+		delta._mdir = monster.direction;
 		delta._menemy = encode_enemy(monster);
 		delta._mhitpoints = monster.hitPoints;
-		delta._mactive = monster.squelch;
+		delta._mactive = monster.activityTicks;
 		delta.mWhoHit = monster.whoHit;
 	}
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
@@ -2217,7 +2217,7 @@ void delta_kill_monster(int mi, Point position, const Player &player)
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
 	pD->position = position;
-	pD->_mdir = Monsters[mi].dir;
+	pD->_mdir = Monsters[mi].direction;
 	pD->_mhitpoints = 0;
 }
 
@@ -2419,12 +2419,12 @@ void DeltaLoadLevel()
 				if (monster.ai != AI_DIABLO) {
 					if (monster.uniqType == 0) {
 						assert(monster.type != nullptr);
-						AddCorpse(monster.position.tile, monster.type->corpseId, monster.dir);
+						AddCorpse(monster.position.tile, monster.type->corpseId, monster.direction);
 					} else {
-						AddCorpse(monster.position.tile, monster.corpseId, monster.dir);
+						AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
 					}
 				}
-				monster.delFlag = true;
+				monster.invalidate = true;
 				M_UpdateLeader(i);
 			} else {
 				decode_enemy(monster, deltaLevel.monster[i]._menemy);
@@ -2434,9 +2434,9 @@ void DeltaLoadLevel()
 					GolumAi(i);
 					monster.flags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 				} else {
-					M_StartStand(monster, monster.dir);
+					M_StartStand(monster, monster.direction);
 				}
-				monster.squelch = deltaLevel.monster[i]._mactive;
+				monster.activityTicks = deltaLevel.monster[i]._mactive;
 			}
 		}
 		auto localLevelIt = LocalLevels.find(localLevel);

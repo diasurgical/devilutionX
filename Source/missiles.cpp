@@ -254,8 +254,8 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 			M_StartHit(m, pnum, dam);
 	}
 
-	if (monster.squelch == 0) {
-		monster.squelch = UINT8_MAX;
+	if (monster.activityTicks == 0) {
+		monster.activityTicks = UINT8_MAX;
 		monster.position.last = player.position.tile;
 	}
 
@@ -2086,7 +2086,7 @@ void AddAcid(Missile &missile, const AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	SetMissDir(missile, GetDirection16(missile.position.start, parameter.dst));
 	if (!gbIsHellfire || (missile.position.velocity.deltaX & 0xFFFF0000) != 0 || (missile.position.velocity.deltaY & 0xFFFF0000) != 0)
-		missile._mirange = 5 * (Monsters[missile._misource].behaviour + 4);
+		missile._mirange = 5 * (Monsters[missile._misource].intelligence + 4);
 	else
 		missile._mirange = 1;
 	missile._mlid = NO_LIGHT;
@@ -2099,7 +2099,7 @@ void AddAcidpud(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miLightFlag = true;
 	int monst = missile._misource;
-	missile._mirange = GenerateRnd(15) + 40 * (Monsters[monst].behaviour + 1);
+	missile._mirange = GenerateRnd(15) + 40 * (Monsters[monst].intelligence + 1);
 	missile._miPreFlag = true;
 }
 
@@ -3481,7 +3481,7 @@ void MI_Stone(Missile &missile)
 			monster.mode = static_cast<MonsterMode>(missile.var1);
 			monster.animInfo.IsPetrified = false;
 		} else {
-			AddCorpse(monster.position.tile, stonendx, monster.dir);
+			AddCorpse(monster.position.tile, stonendx, monster.direction);
 		}
 	}
 	if (missile._miAnimType == MFILE_SHATTER1)
