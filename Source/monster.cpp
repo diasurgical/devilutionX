@@ -1923,7 +1923,7 @@ bool AiPlanWalk(int monsterId)
 
 bool DumbWalk(int monsterId, Direction md)
 {
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	bool ok = DirOK(monsterId, md);
 	if (ok)
@@ -1939,7 +1939,7 @@ Direction Turn(Direction direction, bool turnLeft)
 
 bool RoundWalk(int monsterId, Direction direction, int *dir)
 {
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	Direction turn45deg = Turn(direction, *dir != 0);
 	Direction turn90deg = Turn(turn45deg, *dir != 0);
