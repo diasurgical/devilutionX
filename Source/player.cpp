@@ -27,6 +27,7 @@
 #include "minitext.h"
 #include "missiles.h"
 #include "nthread.h"
+#include "objects.h"
 #include "options.h"
 #include "player.h"
 #include "qol/autopickup.h"
@@ -531,7 +532,7 @@ void StartSpell(int pnum, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 	SetPlayerOld(player);
 
 	player.position.temp = WorldTilePosition { cx, cy };
-	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
+	player.spellLevel = GetSpellLevel(player, player._pSpell);
 }
 
 void RespawnDeadItem(Item &&itm, Point target)
@@ -1414,6 +1415,29 @@ bool IsPlayerAdjacentToObject(Player &player, Object &object)
 	return x <= 1 && y <= 1;
 }
 
+void TryDisarm(const Player &player, Object &object)
+{
+	if (&player == MyPlayer)
+		NewCursor(CURSOR_HAND);
+	if (!object._oTrapFlag) {
+		return;
+	}
+	int trapdisper = 2 * player._pDexterity - 5 * currlevel;
+	if (GenerateRnd(100) > trapdisper) {
+		return;
+	}
+	for (int j = 0; j < ActiveObjectCount; j++) {
+		Object &trap = Objects[ActiveObjects[j]];
+		if (trap.IsTrap() && ObjectAtPosition({ trap._oVar1, trap._oVar2 }) == &object) {
+			trap._oVar4 = 1;
+			object._oTrapFlag = false;
+		}
+	}
+	if (object.IsTrappedChest()) {
+		object._oTrapFlag = false;
+	}
+}
+
 void CheckNewPath(int pnum, bool pmWillBeCalled)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -1626,7 +1650,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				} else {
-					TryDisarm(pnum, targetId);
+					TryDisarm(player, *object);
 					OperateObject(pnum, targetId, false);
 				}
 			}
@@ -3448,7 +3472,6 @@ void CalcPlrStaff(Player &player)
 void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 {
 	bool addflag = false;
-	int sl;
 
 	if ((DWORD)MyPlayerId >= MAX_PLRS) {
 		app_fatal(fmt::format("CheckPlrSpell: illegal player {}", MyPlayerId));
@@ -3520,22 +3543,19 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		return;
 	}
 
+	int sl = GetSpellLevel(myPlayer, spellID);
 	if (IsWallSpell(spellID)) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdLocParam4(true, CMD_SPELLXYD, cursPosition, spellID, spellType, static_cast<uint16_t>(sd), sl);
 	} else if (pcursmonst != -1 && !isShiftHeld) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, spellID, spellType, sl);
 	} else if (pcursplr != -1 && !isShiftHeld && !myPlayer.friendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, spellID, spellType, sl);
 	} else {
 		LastMouseButtonAction = MouseActionType::Spell;
-		sl = GetSpellLevel(MyPlayerId, spellID);
 		NetSendCmdLocParam3(true, CMD_SPELLXY, cursPosition, spellID, spellType, sl);
 	}
 }

@@ -220,11 +220,11 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 		return SpellCheckResult::Success;
 	}
 
-	if (GetSpellLevel(id, sn) <= 0) {
+	Player &player = Players[id];
+	if (GetSpellLevel(player, sn) <= 0) {
 		return SpellCheckResult::Fail_Level0;
 	}
 
-	Player &player = Players[id];
 	if (player._pMana < GetManaAmount(player, sn)) {
 		return SpellCheckResult::Fail_NoMana;
 	}
