@@ -633,7 +633,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.maxDamage2 = file->NextLE<uint8_t>();
 	monster.armorClass = file->NextLE<uint8_t>();
 	file->Skip(1); // Alignment
-	monster.magicRes = file->NextLE<uint16_t>();
+	monster.magicResistance = file->NextLE<uint16_t>();
 	file->Skip(2); // Alignment
 
 	monster.talkMsg = static_cast<_speech_id>(file->NextLE<int32_t>());
@@ -1372,7 +1372,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(monster.maxDamage2);
 	file->WriteLE<uint8_t>(monster.armorClass);
 	file->Skip(1); // Alignment
-	file->WriteLE<uint16_t>(monster.magicRes);
+	file->WriteLE<uint16_t>(monster.magicResistance);
 	file->Skip(2); // Alignment
 
 	file->WriteLE<int32_t>(monster.talkMsg == TEXT_NONE ? 0 : monster.talkMsg); // Replicate original bad mapping of none for monsters

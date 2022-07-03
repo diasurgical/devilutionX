@@ -238,7 +238,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.minDamage2 = monster.data->mMinDamage2;
 	monster.maxDamage2 = monster.data->mMaxDamage2;
 	monster.armorClass = monster.data->mArmorClass;
-	monster.magicRes = monster.data->mMagicRes;
+	monster.magicResistance = monster.data->mMagicRes;
 	monster.leader = 0;
 	monster.leaderRelation = LeaderRelation::None;
 	monster.flags = monster.data->mFlags;
@@ -283,7 +283,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.minDamage2 = 4 * monster.minDamage2 + 6;
 		monster.maxDamage2 = 4 * monster.maxDamage2 + 6;
 		monster.armorClass += HellAcBonus;
-		monster.magicRes = monster.data->mMagicRes2;
+		monster.magicResistance = monster.data->mMagicRes2;
 	}
 }
 
@@ -1877,8 +1877,8 @@ bool IsTileSafe(const Monster &monster, Point position)
 		return true;
 	}
 
-	bool fearsFire = (monster.magicRes & IMMUNE_FIRE) == 0 || monster.type->type == MT_DIABLO;
-	bool fearsLightning = (monster.magicRes & IMMUNE_LIGHTNING) == 0 || monster.type->type == MT_DIABLO;
+	bool fearsFire = (monster.magicResistance & IMMUNE_FIRE) == 0 || monster.type->type == MT_DIABLO;
+	bool fearsLightning = (monster.magicResistance & IMMUNE_LIGHTNING) == 0 || monster.type->type == MT_DIABLO;
 
 	for (auto &missile : Missiles) {
 		if (missile.position.tile == position) {
@@ -3440,7 +3440,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	monster.maxDamage = uniqueMonsterData.mMaxDamage;
 	monster.minDamage2 = uniqueMonsterData.mMinDamage;
 	monster.maxDamage2 = uniqueMonsterData.mMaxDamage;
-	monster.magicRes = uniqueMonsterData.mMagicRes;
+	monster.magicResistance = uniqueMonsterData.mMagicRes;
 	monster.talkMsg = uniqueMonsterData.mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
 		monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
@@ -3732,7 +3732,7 @@ void WeakenNaKrul()
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.armorClass -= 50;
 	int hp = monster.maxHp / 2;
-	monster.magicRes = 0;
+	monster.magicResistance = 0;
 	monster.hitPoints = hp;
 	monster.maxHp = hp;
 }
@@ -4621,7 +4621,7 @@ void PrintUniqueHistory()
 		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(*monster.data)));
 	}
 
-	int res = monster.magicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
+	int res = monster.magicResistance & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (res == 0) {
 		AddPanelString(_("No resistances"));
 		AddPanelString(_("No Immunities"));
@@ -4919,10 +4919,10 @@ bool Monster::isImmune(missile_id missileType) const
 {
 	missile_resistance missileElement = MissilesData[missileType].mResist;
 
-	if (((magicRes & IMMUNE_MAGIC) != 0 && missileElement == MISR_MAGIC)
-	    || ((magicRes & IMMUNE_FIRE) != 0 && missileElement == MISR_FIRE)
-	    || ((magicRes & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
-	    || ((magicRes & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
+	if (((magicResistance & IMMUNE_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((magicResistance & IMMUNE_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((magicResistance & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
+	    || ((magicResistance & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
 		return true;
 	if (missileType == MIS_HBOLT && type->type != MT_DIABLO && data->mMonstClass != MonsterClass::Undead)
 		return true;
@@ -4933,9 +4933,9 @@ bool Monster::isResistant(missile_id missileType) const
 {
 	missile_resistance missileElement = MissilesData[missileType].mResist;
 
-	if (((magicRes & RESIST_MAGIC) != 0 && missileElement == MISR_MAGIC)
-	    || ((magicRes & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
-	    || ((magicRes & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
+	if (((magicResistance & RESIST_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((magicResistance & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((magicResistance & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
 		return true;
 	if (gbIsHellfire && missileType == MIS_HBOLT && IsAnyOf(type->type, MT_DIABLO, MT_BONEDEMN))
 		return true;

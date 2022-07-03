@@ -175,12 +175,14 @@ struct Monster { // note: missing field _mAFNum
 	monster_goal goal;
 	/** Specifies monster's behaviour regarding moving and changing goals. */
 	int goalGeneral;
-	/** @brief Specifies turning direction for @p RoundWalk in most cases.
-	 *  Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi.
+	/**
+	 * @brief Specifies turning direction for @p RoundWalk in most cases.
+	 * Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi.
 	 */
 	int goalTurning;
-	/** @brief Controls monster's behaviour regarding special actions.
-	 *  Used only by @p ScavengerAi and @p MegaAi.
+	/**
+	 * @brief Controls monster's behaviour regarding special actions.
+	 * Used only by @p ScavengerAi and @p MegaAi.
 	 */
 	int goalSpecialAction;
 	int var1;
@@ -196,7 +198,7 @@ struct Monster { // note: missing field _mAFNum
 	uint16_t exp;
 	uint16_t hit;
 	uint16_t hit2;
-	uint16_t magicRes;
+	uint16_t magicResistance;
 	_speech_id talkMsg;
 	ActorPosition position;
 
@@ -216,7 +218,11 @@ struct Monster { // note: missing field _mAFNum
 	bool invalidate;
 
 	_mai_id ai;
-	/** Specifies monster behaviour across various actions */
+	/**
+	 * @brief Specifies monster's behaviour across various actions.
+	 * Generally, when monster thinks it decides what to do based on this value, among other things.
+	 * Higher values should result in more aggressive behaviour (e.g. some monsters use this to calculate the @p AiDelay).
+	 */
 	uint8_t intelligence;
 	uint8_t activityTicks;
 	uint8_t uniqType;

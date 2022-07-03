@@ -1155,9 +1155,9 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 		    if (IsAnyOf(monster.mode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 			    return false;
-		    if ((monster.magicRes & IMMUNE_MAGIC) != 0)
+		    if ((monster.magicResistance & IMMUNE_MAGIC) != 0)
 			    return false;
-		    if ((monster.magicRes & RESIST_MAGIC) != 0 && ((monster.magicRes & RESIST_MAGIC) != 1 || GenerateRnd(2) != 0))
+		    if ((monster.magicResistance & RESIST_MAGIC) != 0 && ((monster.magicResistance & RESIST_MAGIC) != 1 || GenerateRnd(2) != 0))
 			    return false;
 
 		    return true;
