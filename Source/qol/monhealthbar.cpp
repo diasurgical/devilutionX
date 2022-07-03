@@ -122,7 +122,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	};
 
 	if (*sgOptions.Gameplay.showMonsterType) {
-		Uint8 borderColor = getBorderColor(monster.MData->mMonstClass);
+		Uint8 borderColor = getBorderColor(monster.data().mMonstClass);
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + height - border - 1 }, borderWidth, borderColor);
@@ -143,7 +143,7 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	if (multiplier > 0)
 		DrawString(out, fmt::format("x{:d}", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
-	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->type] >= 15) {
+	if (monster._uniqtype != 0 || MonsterKillCounts[monster.type().type] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
 

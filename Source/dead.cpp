@@ -58,7 +58,7 @@ void InitCorpses()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 		if (monster._uniqtype != 0) {
-			InitDeadAnimationFromMonster(Corpses[nd], *monster.MType);
+			InitDeadAnimationFromMonster(Corpses[nd], monster.type());
 			Corpses[nd].translationPaletteIndex = ActiveMonsters[i] + 1;
 			nd++;
 

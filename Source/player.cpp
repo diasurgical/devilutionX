@@ -868,7 +868,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		phanditype = ItemType::Mace;
 	}
 
-	switch (monster.MData->mMonstClass) {
+	switch (monster.data().mMonstClass) {
 	case MonsterClass::Undead:
 		if (phanditype == ItemType::Sword) {
 			dam -= dam / 2;
@@ -894,7 +894,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.MType->type != MT_DIABLO && monster._uniqtype == 0 && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && monster._uniqtype == 0 && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster);
 	}
 
@@ -3193,7 +3193,7 @@ void RemovePlrMissiles(int pnum)
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
-			AddCorpse(golem.position.tile, golem.MType->corpseId, golem._mdir);
+			AddCorpse(golem.position.tile, golem.type().corpseId, golem._mdir);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
 			dMonster[mx][my] = 0;
