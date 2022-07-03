@@ -1810,7 +1810,7 @@ void GroupUnity(Monster &monster)
 bool RandomWalk(int monsterId, Direction md)
 {
 	Direction mdtemp = md;
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	bool ok = DirOK(monsterId, md);
 	if (GenerateRnd(2) != 0)
