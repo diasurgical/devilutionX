@@ -12,14 +12,14 @@
 
 namespace devilution {
 
-int AnimationInfo::GetFrameToUseForRendering() const
+int8_t AnimationInfo::GetFrameToUseForRendering() const
 {
 	// Normal logic is used,
 	// - if no frame-skipping is required and so we have exactly one Animationframe per game tick
 	// or
 	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
 	if (RelevantFramesForDistributing <= 0)
-		return std::max(0, CurrentFrame);
+		return std::max<int8_t>(0, CurrentFrame);
 
 	if (CurrentFrame >= RelevantFramesForDistributing)
 		return CurrentFrame;
@@ -33,7 +33,7 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	// we don't use the processed game ticks alone but also the fraction of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
 	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + ticksSinceSequenceStarted;
 
-	int absoluteAnimationFrame = static_cast<int>(totalTicksForCurrentAnimationSequence * TickModifier);
+	int8_t absoluteAnimationFrame = static_cast<int8_t>(totalTicksForCurrentAnimationSequence * TickModifier);
 	if (SkippedFramesFromPreviousAnimation > 0) {
 		// absoluteAnimationFrames contains also the Frames from the previous Animation, so if we want to get the current Frame we have to remove them
 		absoluteAnimationFrame -= SkippedFramesFromPreviousAnimation;
@@ -74,7 +74,7 @@ float AnimationInfo::GetAnimationProgress() const
 	return animationFraction;
 }
 
-void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
+void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int8_t numSkippedFrames /*= 0*/, int8_t distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame + 1 >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames - 1) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -101,7 +101,7 @@ void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int numb
 
 	if (numSkippedFrames != 0 || flags != AnimationDistributionFlags::None) {
 		// Animation Frames that will be adjusted for the skipped Frames/game ticks
-		int relevantAnimationFramesForDistributing = numberOfFrames;
+		int8_t relevantAnimationFramesForDistributing = numberOfFrames;
 		if (distributeFramesBeforeFrame != 0) {
 			// After an attack hits (_pAFNum or _pSFNum) it can be canceled or another attack can be queued and this means the animation is canceled.
 			// In normal attacks frame skipping always happens before the attack actual hit.
@@ -111,7 +111,7 @@ void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int numb
 		}
 
 		// Game ticks that will be adjusted for the skipped Frames/game ticks
-		int relevantAnimationTicksForDistribution = relevantAnimationFramesForDistributing * ticksPerFrame;
+		int8_t relevantAnimationTicksForDistribution = relevantAnimationFramesForDistributing * ticksPerFrame;
 
 		// How many game ticks will the Animation be really shown (skipped Frames and game ticks removed)
 		float relevantAnimationTicksWithSkipping = relevantAnimationTicksForDistribution - (numSkippedFrames * ticksPerFrame);
@@ -167,12 +167,12 @@ void AnimationInfo::SetNewAnimation(std::optional<CelSprite> celSprite, int numb
 	}
 }
 
-void AnimationInfo::ChangeAnimationData(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame)
+void AnimationInfo::ChangeAnimationData(std::optional<CelSprite> celSprite, int8_t numberOfFrames, int8_t ticksPerFrame)
 {
 	if (numberOfFrames != NumberOfFrames || ticksPerFrame != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
 		if (numberOfFrames >= 1)
-			CurrentFrame = clamp(CurrentFrame, 0, numberOfFrames - 1);
+			CurrentFrame = clamp<int8_t>(CurrentFrame, 0, numberOfFrames - 1);
 		else
 			CurrentFrame = -1;
 

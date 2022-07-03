@@ -143,8 +143,8 @@ struct AnimStruct {
 
 	std::array<byte *, 8> celSpritesForDirections;
 	uint16_t width;
-	int frames;
-	int rate;
+	int8_t frames;
+	int8_t rate;
 };
 
 struct CMonster {

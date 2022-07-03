@@ -56,7 +56,7 @@ bool UniqueItemFlags[128];
 int MaxGold = GOLD_MAX_LIMIT;
 
 /** Maps from item_cursor_graphic to in-memory item type. */
-BYTE ItemCAnimTbl[] = {
+int8_t ItemCAnimTbl[] = {
 	20, 16, 16, 16, 4, 4, 4, 12, 12, 12,
 	12, 12, 12, 12, 12, 21, 21, 25, 12, 28,
 	28, 28, 38, 38, 38, 32, 38, 38, 38, 24,
@@ -225,7 +225,7 @@ const char *const ItemDropNames[] = {
 	"mooses1",
 };
 /** Maps of item drop animation length. */
-BYTE ItemAnimLs[] = {
+int8_t ItemAnimLs[] = {
 	15,
 	13,
 	16,
@@ -4580,8 +4580,8 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 void Item::setNewAnimation(bool showAnimation)
 {
-	int it = ItemCAnimTbl[_iCurs];
-	int numberOfFrames = ItemAnimLs[it];
+	int8_t it = ItemCAnimTbl[_iCurs];
+	int8_t numberOfFrames = ItemAnimLs[it];
 	auto celSprite = itemanims[it] ? std::optional<CelSprite> { *itemanims[it] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
 		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);

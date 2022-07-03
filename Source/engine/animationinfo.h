@@ -44,19 +44,19 @@ public:
 	/**
 	 * @brief How many game ticks are needed to advance one Animation Frame
 	 */
-	int TicksPerFrame;
+	int8_t TicksPerFrame;
 	/**
 	 * @brief Increases by one each game tick, counting how close we are to TicksPerFrame
 	 */
-	int TickCounterOfCurrentFrame;
+	int8_t TickCounterOfCurrentFrame;
 	/**
 	 * @brief Number of frames in current animation
 	 */
-	int NumberOfFrames;
+	int8_t NumberOfFrames;
 	/**
 	 * @brief Current frame of animation
 	 */
-	int CurrentFrame;
+	int8_t CurrentFrame;
 	/**
 	 * @brief Is the animation currently petrified and shouldn't advance with gfProgressToNextGameTick
 	 */
@@ -66,7 +66,7 @@ public:
 	 * @brief Calculates the Frame to use for the Animation rendering
 	 * @return The Frame to use for rendering
 	 */
-	int GetFrameToUseForRendering() const;
+	int8_t GetFrameToUseForRendering() const;
 
 	/**
 	 * @brief Calculates the progress of the current animation as a fraction (0.0f to 1.0f)
@@ -83,7 +83,7 @@ public:
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 * @param previewShownGameTickFragments Defines how long (in game ticks fraction) the preview animation was shown
 	 */
-	void SetNewAnimation(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
+	void SetNewAnimation(std::optional<CelSprite> celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
@@ -91,7 +91,7 @@ public:
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 */
-	void ChangeAnimationData(std::optional<CelSprite> celSprite, int numberOfFrames, int ticksPerFrame);
+	void ChangeAnimationData(std::optional<CelSprite> celSprite, int8_t numberOfFrames, int8_t ticksPerFrame);
 
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
@@ -117,11 +117,11 @@ private:
 	/**
 	 * @brief Animation Frames that will be adjusted for the skipped Frames/game ticks
 	 */
-	int RelevantFramesForDistributing;
+	int8_t RelevantFramesForDistributing;
 	/**
 	 * @brief Animation Frames that wasn't shown from previous Animation
 	 */
-	int SkippedFramesFromPreviousAnimation;
+	int8_t SkippedFramesFromPreviousAnimation;
 };
 
 } // namespace devilution

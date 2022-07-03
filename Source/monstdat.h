@@ -99,8 +99,8 @@ struct MonsterData {
 	bool has_special;
 	bool snd_special;
 	bool has_trans;
-	uint8_t Frames[6];
-	uint8_t Rate[6];
+	int8_t Frames[6];
+	int8_t Rate[6];
 	int8_t mMinDLvl;
 	int8_t mMaxDLvl;
 	int8_t mLevel;
@@ -111,11 +111,11 @@ struct MonsterData {
 	uint16_t mFlags;
 	uint8_t mInt;
 	uint8_t mHit;
-	uint8_t mAFNum;
+	int8_t mAFNum;
 	uint8_t mMinDamage;
 	uint8_t mMaxDamage;
 	uint8_t mHit2;
-	uint8_t mAFNum2;
+	int8_t mAFNum2;
 	uint8_t mMinDamage2;
 	uint8_t mMaxDamage2;
 	uint8_t mArmorClass;
