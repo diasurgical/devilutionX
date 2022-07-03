@@ -65,12 +65,12 @@ public:
 	 * @brief Calculates the Frame to use for the Animation rendering
 	 * @return The Frame to use for rendering
 	 */
-	int8_t getFrameToUseForRendering() const;
+	[[nodiscard]] int8_t getFrameToUseForRendering() const;
 
 	/**
 	 * @brief Calculates the progress of the current animation as a fraction (0.0f to 1.0f)
 	 */
-	float getAnimationProgress() const;
+	[[nodiscard]] float getAnimationProgress() const;
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
@@ -103,7 +103,7 @@ private:
 	/**
 	 * @brief returns the progress as a fraction (0.0f to 1.0f) in time to the next game tick or 0.0f if the animation is frozen
 	 */
-	float getProgressToNextGameTick() const;
+	[[nodiscard]] float getProgressToNextGameTick() const;
 
 	/**
 	 * @brief Specifies how many animations-fractions are displayed between two game ticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
