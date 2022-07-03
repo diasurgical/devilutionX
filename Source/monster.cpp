@@ -1050,7 +1050,7 @@ void HitMonster(int monsterId, int dam)
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	delta_monster_hp(monsterId, monster._mhitpoints, *MyPlayer);
+	delta_monster_hp(monster, *MyPlayer);
 	NetSendCmdMonDmg(false, monsterId, dam);
 	PlayEffect(monster, 1);
 
@@ -3930,7 +3930,7 @@ void M_StartHit(int monsterId, int pnum, int dam)
 
 	monster.mWhoHit |= 1 << pnum;
 	if (pnum == MyPlayerId) {
-		delta_monster_hp(monsterId, monster._mhitpoints, *MyPlayer);
+		delta_monster_hp(monster, *MyPlayer);
 		NetSendCmdMonDmg(false, monsterId, dam);
 	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
