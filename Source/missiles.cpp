@@ -3503,7 +3503,7 @@ void MI_Stone(Missile &missile)
 		missile._miDelFlag = true;
 		if (monster._mhitpoints > 0) {
 			monster._mmode = static_cast<MonsterMode>(missile.var1);
-			monster.AnimInfo.IsPetrified = false;
+			monster.AnimInfo.isPetrified = false;
 		} else {
 			AddCorpse(monster.position.tile, stonendx, monster._mdir);
 		}
