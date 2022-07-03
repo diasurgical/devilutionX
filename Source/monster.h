@@ -292,6 +292,7 @@ struct Monster { // note: missing field _mAFNum
 	[[nodiscard]] size_t getId() const;
 
 	[[nodiscard]] Monster *getLeader() const;
+	void setLeader(const Monster &leader);
 
 	/**
 	 * @brief Is the monster currently walking?
