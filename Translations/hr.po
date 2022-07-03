@@ -6223,7 +6223,7 @@ msgstr "U zamci {:s}"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
 #: Source/objects.cpp:5387
-msgid "{:s} (disabled))"
+msgid "{:s} (disabled)"
 msgstr "{:s} (onemogućeno)"
 
 #: Source/options.cpp:437 Source/options.cpp:568 Source/options.cpp:574
