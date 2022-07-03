@@ -600,7 +600,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 		return false;
 
 	Direction dir = GetDirection(position, target);
-	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, GetSpellLevel(Players[missile._misource], SPL_FIREBOLT), &missile);
+	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, Players[missile._misource].GetSpellLevel(SPL_FIREBOLT), &missile);
 	SetMissDir(missile, 2);
 	missile.var2 = 3;
 
@@ -680,14 +680,14 @@ bool IsMissileBlockedByTile(Point tile)
 	return object != nullptr && !object->_oMissFlag;
 }
 
-void GetDamageAmt(int i, int *mind, int *maxd)
+void GetDamageAmt(spell_id i, int *mind, int *maxd)
 {
 	assert(MyPlayerId >= 0 && MyPlayerId < MAX_PLRS);
 	assert(i >= 0 && i < 64);
 
 	Player &myPlayer = *MyPlayer;
 
-	int sl = myPlayer._pSplLvl[i] + myPlayer._pISplLvlAdd;
+	const int sl = myPlayer.GetSpellLevel(i);
 
 	switch (i) {
 	case SPL_FIREBOLT:
@@ -799,15 +799,9 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		*mind = (myPlayer._pMagic / 2) + 3 * sl - (myPlayer._pMagic / 8);
 		*maxd = *mind;
 		break;
+	default:
+		break;
 	}
-}
-
-int GetSpellLevel(const Player &player, spell_id sn)
-{
-	if (&player != MyPlayer)
-		return 1; // BUGFIX spell level will be wrong in multiplayer
-
-	return std::max(player._pISplLvlAdd + player._pSplLvl[sn], 0);
 }
 
 Direction16 GetDirection16(Point p1, Point p2)
@@ -1164,7 +1158,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 	if (targetMonsterPosition) {
 		auto &monster = Monsters[abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
 		Player &player = Players[missile._misource];
-		int slvl = GetSpellLevel(player, SPL_BERSERK);
+		const int slvl = player.GetSpellLevel(SPL_BERSERK);
 		monster._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
 		monster.mMinDamage = (GenerateRnd(10) + 120) * monster.mMinDamage / 100 + slvl;
 		monster.mMaxDamage = (GenerateRnd(10) + 120) * monster.mMaxDamage / 100 + slvl;

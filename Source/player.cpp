@@ -532,7 +532,7 @@ void StartSpell(int pnum, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 	SetPlayerOld(player);
 
 	player.position.temp = WorldTilePosition { cx, cy };
-	player.spellLevel = GetSpellLevel(player, player._pSpell);
+	player.spellLevel = player.GetSpellLevel(player._pSpell);
 }
 
 void RespawnDeadItem(Item &&itm, Point target)
@@ -3544,7 +3544,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		return;
 	}
 
-	int sl = GetSpellLevel(myPlayer, spellID);
+	int sl = myPlayer.GetSpellLevel(spellID);
 	if (IsWallSpell(spellID)) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);

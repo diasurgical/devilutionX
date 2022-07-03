@@ -5,8 +5,10 @@
  */
 #pragma once
 
-#include <array>
 #include <cstdint>
+
+#include <algorithm>
+#include <array>
 
 #include "diablo.h"
 #include "engine.h"
