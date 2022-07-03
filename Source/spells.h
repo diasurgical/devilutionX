@@ -18,8 +18,8 @@ enum class SpellCheckResult : uint8_t {
 
 bool IsWallSpell(spell_id spl);
 bool TargetsMonster(spell_id id);
-int GetManaAmount(Player &player, spell_id sn);
-void UseMana(int id, spell_id sn);
+int GetManaAmount(const Player &player, spell_id sn);
+void UseMana(Player &player, spell_id sn);
 SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
 
 /**
