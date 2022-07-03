@@ -69,11 +69,9 @@ void ProgressRenderBackground()
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 
 	const Surface &out = Surface(DiabloUiSurface());
-	RenderPcxSprite(out, PcxSpriteSheet { *ArtBackground }.sprite(0), { 0, 0 });
-
 	const Point position = GetPosition();
-	RenderPcxSprite(out, PcxSprite { *ArtPopupSm }, position);
-	RenderPcxSprite(out, PcxSprite { *ArtProgBG }, { GetCenterOffset(227), position.y + 52 });
+	RenderPcxSprite(out.subregion(position.x, position.y, 280, 140), PcxSprite { *ArtPopupSm }, { 0, 0 });
+	RenderPcxSprite(out.subregion(GetCenterOffset(227), 0, 227, out.h()), PcxSprite { *ArtProgBG }, { 0, position.y + 52 });
 }
 
 void ProgressRenderForeground(int progress)
