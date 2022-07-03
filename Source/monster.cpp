@@ -808,7 +808,7 @@ void StartSpecialStand(Monster &monster, Direction md)
 	monster.position.old = monster.position.tile;
 }
 
-void StartWalk(Monster &monster, int xvel, int yvel, int xadd, int yadd, Direction endDir)
+void StartWalkNorthwards(Monster &monster, int xvel, int yvel, int xadd, int yadd, Direction endDir)
 {
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
@@ -825,7 +825,7 @@ void StartWalk(Monster &monster, int xvel, int yvel, int xadd, int yadd, Directi
 	monster.position.offset2 = { 0, 0 };
 }
 
-void StartWalk2(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction endDir)
+void StartWalkSouthwards(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction endDir)
 {
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
@@ -847,7 +847,7 @@ void StartWalk2(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xa
 	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
 
-void StartWalk3(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
+void StartWalkSideways(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
 {
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
@@ -4080,28 +4080,28 @@ void M_WalkDir(int monsterId, Direction md)
 	int mwi = monster.type().getAnimData(MonsterGraphic::Walk).frames - 1;
 	switch (md) {
 	case Direction::North:
-		StartWalk(monster, 0, -MWVel[mwi][1], -1, -1, Direction::North);
+		StartWalkNorthwards(monster, 0, -MWVel[mwi][1], -1, -1, Direction::North);
 		break;
 	case Direction::NorthEast:
-		StartWalk(monster, MWVel[mwi][1], -MWVel[mwi][0], 0, -1, Direction::NorthEast);
+		StartWalkNorthwards(monster, MWVel[mwi][1], -MWVel[mwi][0], 0, -1, Direction::NorthEast);
 		break;
 	case Direction::East:
-		StartWalk3(monster, MWVel[mwi][2], 0, -32, -16, 1, -1, 1, 0, Direction::East);
+		StartWalkSideways(monster, MWVel[mwi][2], 0, -32, -16, 1, -1, 1, 0, Direction::East);
 		break;
 	case Direction::SouthEast:
-		StartWalk2(monster, MWVel[mwi][1], MWVel[mwi][0], -32, -16, 1, 0, Direction::SouthEast);
+		StartWalkSouthwards(monster, MWVel[mwi][1], MWVel[mwi][0], -32, -16, 1, 0, Direction::SouthEast);
 		break;
 	case Direction::South:
-		StartWalk2(monster, 0, MWVel[mwi][1], 0, -32, 1, 1, Direction::South);
+		StartWalkSouthwards(monster, 0, MWVel[mwi][1], 0, -32, 1, 1, Direction::South);
 		break;
 	case Direction::SouthWest:
-		StartWalk2(monster, -MWVel[mwi][1], MWVel[mwi][0], 32, -16, 0, 1, Direction::SouthWest);
+		StartWalkSouthwards(monster, -MWVel[mwi][1], MWVel[mwi][0], 32, -16, 0, 1, Direction::SouthWest);
 		break;
 	case Direction::West:
-		StartWalk3(monster, -MWVel[mwi][2], 0, 32, -16, -1, 1, 0, 1, Direction::West);
+		StartWalkSideways(monster, -MWVel[mwi][2], 0, 32, -16, -1, 1, 0, 1, Direction::West);
 		break;
 	case Direction::NorthWest:
-		StartWalk(monster, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, Direction::NorthWest);
+		StartWalkNorthwards(monster, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, Direction::NorthWest);
 		break;
 	}
 }
