@@ -232,7 +232,7 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t leader;
 	LeaderRelation leaderRelation;
 	uint8_t packSize;
-	int8_t lightId; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
+	int8_t lightId;
 
 	/**
 	 * @brief Sets the current cell sprite to match the desired direction and animation sequence
