@@ -18,7 +18,7 @@ namespace devilution {
 enum AnimationDistributionFlags : uint8_t {
 	None = 0,
 	/**
-	 * @brief ProcessAnimation will be called after SetNewAnimation (in same game tick as NewPlrAnim)
+	 * @brief processAnimation will be called after setNewAnimation (in same game tick as NewPlrAnim)
 	 */
 	ProcessAnimationPending = 1 << 0,
 	/**
@@ -65,12 +65,12 @@ public:
 	 * @brief Calculates the Frame to use for the Animation rendering
 	 * @return The Frame to use for rendering
 	 */
-	int8_t GetFrameToUseForRendering() const;
+	int8_t getFrameToUseForRendering() const;
 
 	/**
 	 * @brief Calculates the progress of the current animation as a fraction (0.0f to 1.0f)
 	 */
-	float GetAnimationProgress() const;
+	float getAnimationProgress() const;
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
@@ -82,7 +82,7 @@ public:
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 * @param previewShownGameTickFragments Defines how long (in game ticks fraction) the preview animation was shown
 	 */
-	void SetNewAnimation(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
+	void setNewAnimation(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
@@ -90,20 +90,20 @@ public:
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 */
-	void ChangeAnimationData(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame);
+	void changeAnimationData(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame);
 
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
 	 * @param reverseAnimation Play the animation backwards (for example is used for "unseen" monster fading)
 	 * @param dontProgressAnimation Increase tickCounterOfCurrentFrame but don't change currentFrame
 	 */
-	void ProcessAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
+	void processAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
 
 private:
 	/**
 	 * @brief returns the progress as a fraction (0.0f to 1.0f) in time to the next game tick or 0.0f if the animation is frozen
 	 */
-	float GetProgressToNextGameTick() const;
+	float getProgressToNextGameTick() const;
 
 	/**
 	 * @brief Specifies how many animations-fractions are displayed between two game ticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).

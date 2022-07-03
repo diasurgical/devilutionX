@@ -20,7 +20,7 @@ struct TestData {
 };
 
 /**
- * @brief Represents a call to SetNewAnimation
+ * @brief Represents a call to setNewAnimation
  */
 struct SetNewAnimationData : public TestData {
 	SetNewAnimationData(int numberOfFrames, int delayLen, AnimationDistributionFlags params = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
@@ -45,7 +45,7 @@ struct SetNewAnimationData : public TestData {
 };
 
 /**
- * @brief Represents a GameTick, this includes skipping of Frames (for example because of Fastest Attack Modifier) and ProcessAnimation (which also updates Animation Frame/Count).
+ * @brief Represents a GameTick, this includes skipping of Frames (for example because of Fastest Attack Modifier) and processAnimation (which also updates Animation Frame/Count).
  */
 struct GameTickData : TestData {
 	int _ExpectedAnimationFrame;
@@ -99,19 +99,19 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 		switch (x->type()) {
 		case TestDataType::SetNewAnimation: {
 			auto setNewAnimationData = static_cast<SetNewAnimationData *>(x);
-			animInfo.SetNewAnimation(std::nullopt, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
+			animInfo.setNewAnimation(std::nullopt, setNewAnimationData->_NumberOfFrames, setNewAnimationData->_DelayLen, setNewAnimationData->_Params, setNewAnimationData->_NumSkippedFrames, setNewAnimationData->_DistributeFramesBeforeFrame);
 		} break;
 		case TestDataType::GameTick: {
 			auto gameTickData = static_cast<GameTickData *>(x);
 			currentGameTick += 1;
-			animInfo.ProcessAnimation();
+			animInfo.processAnimation();
 			EXPECT_EQ(animInfo.currentFrame, gameTickData->_ExpectedAnimationFrame);
 			EXPECT_EQ(animInfo.tickCounterOfCurrentFrame, gameTickData->_ExpectedAnimationCnt);
 		} break;
 		case TestDataType::Rendering: {
 			auto renderingData = static_cast<RenderingData *>(x);
 			gfProgressToNextGameTick = renderingData->_fProgressToNextGameTick;
-			EXPECT_EQ(animInfo.GetFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
+			EXPECT_EQ(animInfo.getFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
 			    << "ProgressToNextGameTick: " << renderingData->_fProgressToNextGameTick
 			    << " currentFrame: " << animInfo.currentFrame
@@ -130,7 +130,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	RunAnimationTest(
 	    {
 	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),
 	        new RenderingData(0.0f, 0),
 	        new RenderingData(0.3f, 0),
@@ -193,7 +193,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	RunAnimationTest(
 	    {
 	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 2, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(3, 0),
 	        new RenderingData(0.0f, 0),
 	        new RenderingData(0.3f, 0),
@@ -249,7 +249,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	RunAnimationTest(
 	    {
 	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),
 	        new RenderingData(0.0f, 0),
 	        new RenderingData(0.3f, 0),
@@ -294,7 +294,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 
 	        // Start of repeated attack, cause plr[pnum].AnimInfo.currentFrame > plr[myplr]._pAFNum
 	        new SetNewAnimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
-	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
+	        // processAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),
 	        new RenderingData(0.0f, 10),
 	        new RenderingData(0.3f, 10),
