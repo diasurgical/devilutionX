@@ -9,10 +9,10 @@ msbuild /p:PlatformToolset=v143;TargetPlatformVersion=10.0.22000.0;TargetPlatfor
 
 cmake -DUWP_LIB=1 -DUWP_SDL2_DIR="%CD%/SDL" -DCMAKE_BUILD_TYPE=x64-Release ..
 
-msbuild /p:Configuration=Release;Platform=x64 DevilutionX.sln
+msbuild /p:Configuration=Release;Platform=x64 /m DevilutionX.sln
 
 powershell "Get-Content ..\uwp-project\Package.appxmanifest.template | %% {$_ -replace '__PROJECT_VERSION__',$(& {git describe --tags --abbrev=0})} | Out-File -FilePath ..\uwp-project\Package.appxmanifest -encoding ASCII"
 
-msbuild /p:Configuration=Release;Platform=x64;AppxBundle=Always;AppxBundlePlatforms=x64 ..\uwp-project\devilutionx.sln
+msbuild /p:Configuration=Release;Platform=x64;AppxBundle=Always;AppxBundlePlatforms=x64 /m ..\uwp-project\devilutionx.sln
 
 powershell "Get-Childitem -Path uwp-project\AppxPackages, uwp-project\Release -Include Microsoft.VCLibs.x64.*.appx, devilutionX_*_x64.appx -File -Recurse | Compress-Archive -DestinationPath ..\devilutionx.zip"
