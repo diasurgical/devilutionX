@@ -2134,7 +2134,7 @@ void AddStone(Missile &missile, const AddMissileParameter &parameter)
 		return;
 	}
 
-	// petrify the targeted monster
+	// Petrify the targeted monster
 	int monsterId = abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1;
 	auto &monster = Monsters[monsterId];
 	missile.var1 = static_cast<int>(monster.mode);
