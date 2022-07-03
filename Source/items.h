@@ -535,7 +535,7 @@ std::string DebugSpawnUniqueItem(std::string itemName);
 
 extern int MaxGold;
 
-extern BYTE ItemCAnimTbl[];
+extern int8_t ItemCAnimTbl[];
 extern _sfx_id ItemInvSnds[];
 
 } // namespace devilution

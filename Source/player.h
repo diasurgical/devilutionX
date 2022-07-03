@@ -302,15 +302,15 @@ struct Player {
 	 * @brief Contains Data (Sprites) for the different Animations
 	 */
 	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
-	int _pNFrames;
-	int _pWFrames;
-	int _pAFrames;
-	int _pAFNum;
-	int _pSFrames;
-	int _pSFNum;
-	int _pHFrames;
-	int _pDFrames;
-	int _pBFrames;
+	int8_t _pNFrames;
+	int8_t _pWFrames;
+	int8_t _pAFrames;
+	int8_t _pAFNum;
+	int8_t _pSFrames;
+	int8_t _pSFNum;
+	int8_t _pHFrames;
+	int8_t _pDFrames;
+	int8_t _pBFrames;
 	Item InvBody[NUM_INVLOC];
 	Item InvList[NUM_INV_GRID_ELEM];
 	int _pNumInv;
@@ -758,7 +758,7 @@ void ResetPlayerGFX(Player &player);
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t numberOfFrames, int8_t delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0);
 void SetPlrAnims(Player &player);
 void CreatePlayer(Player &player, HeroClass c);
 int CalcStatDiff(Player &player);

@@ -675,7 +675,7 @@ void DeleteMonster(size_t activeIndex)
 	std::swap(ActiveMonsters[activeIndex], ActiveMonsters[ActiveMonsterCount]); // This ensures alive monsters are before ActiveMonsterCount in the array and any deleted monster after
 }
 
-void NewMonsterAnim(Monster &monster, MonsterGraphic graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
+void NewMonsterAnim(Monster &monster, MonsterGraphic graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0)
 {
 	const auto &animData = monster.MType->getAnimData(graphic);
 	monster.AnimInfo.SetNewAnimation(animData.getCelSpritesForDirection(md), animData.frames, animData.rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
@@ -688,7 +688,7 @@ void StartMonsterGotHit(int monsterId)
 	auto &monster = Monsters[monsterId];
 	if (monster.MType->type != MT_GOLEM) {
 		auto animationFlags = gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None;
-		int numSkippedFrames = (gbIsHellfire && monster.MType->type == MT_DIABLO) ? 4 : 0;
+		int8_t numSkippedFrames = (gbIsHellfire && monster.MType->type == MT_DIABLO) ? 4 : 0;
 		NewMonsterAnim(monster, MonsterGraphic::GotHit, monster._mdir, animationFlags, numSkippedFrames);
 		monster._mmode = MonsterMode::HitRecovery;
 	}
@@ -905,7 +905,7 @@ void StartRangedAttack(Monster &monster, missile_id missileType, int dam)
 void StartRangedSpecialAttack(Monster &monster, missile_id missileType, int dam)
 {
 	Direction md = GetMonsterDirection(monster);
-	int distributeFramesBeforeFrame = 0;
+	int8_t distributeFramesBeforeFrame = 0;
 	if (monster._mAi == AI_MEGA)
 		distributeFramesBeforeFrame = monster.MData->mAFNum2;
 	NewMonsterAnim(monster, MonsterGraphic::Special, md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
