@@ -315,7 +315,7 @@ void M_SyncStartKill(int monsterId, Point position, int pnum);
 void M_UpdateLeader(int monsterId);
 void DoEnding();
 void PrepDoEnding();
-void M_WalkDir(int monsterId, Direction md);
+void M_WalkDir(Monster &monster, Direction md);
 void GolumAi(int monsterId);
 void DeleteMonsterList();
 void ProcessMonsters();
