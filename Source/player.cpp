@@ -390,18 +390,13 @@ void ClearStateVariables(Player &player)
 	player.position.offset2 = { 0, 0 };
 }
 
-void StartWalkStand(int pnum)
+void StartWalkStand(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal(fmt::format("StartWalkStand: illegal player {}", pnum));
-	}
-	Player &player = Players[pnum];
-
 	player._pmode = PM_STAND;
 	player.position.future = player.position.tile;
 	player.position.offset = { 0, 0 };
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
@@ -616,7 +611,7 @@ void InitLevelChange(int pnum)
 	Player &player = Players[pnum];
 	Player &myPlayer = *MyPlayer;
 
-	RemovePlrMissiles(pnum);
+	RemovePlrMissiles(player);
 	player.pManaShield = false;
 	player.wReflections = 0;
 	// share info about your manashield when another player joins the level
@@ -698,7 +693,7 @@ bool DoWalk(int pnum, int variant)
 		}
 
 		if (player.walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
+			StartWalkStand(player);
 		} else {
 			StartStand(pnum, player.tempDirection);
 		}
@@ -3187,9 +3182,9 @@ void SyncPlrKill(int pnum, int earflag)
 	StartPlayerKill(pnum, earflag);
 }
 
-void RemovePlrMissiles(int pnum)
+void RemovePlrMissiles(const Player &player)
 {
-	if (leveltype != DTYPE_TOWN && pnum == MyPlayerId) {
+	if (leveltype != DTYPE_TOWN && &player == MyPlayer) {
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
@@ -3203,7 +3198,7 @@ void RemovePlrMissiles(int pnum)
 	}
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
+		if (missile._mitype == MIS_STONE && &Players[missile._misource] == &player) {
 			Monsters[missile.var2]._mmode = static_cast<MonsterMode>(missile.var1);
 		}
 	}

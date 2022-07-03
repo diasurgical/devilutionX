@@ -241,7 +241,7 @@ void PlayerLeftMsg(int pnum, bool left)
 	RemovePortalMissile(pnum);
 	DeactivatePortal(pnum);
 	delta_close_portal(pnum);
-	RemovePlrMissiles(pnum);
+	RemovePlrMissiles(player);
 	if (left) {
 		string_view pszFmt = _("Player '{:s}' just left the game");
 		switch (sgdwPlayerLeftReasonTbl[pnum]) {
