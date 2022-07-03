@@ -681,9 +681,8 @@ void NewMonsterAnim(Monster &monster, MonsterGraphic graphic, Direction md, Anim
 	monster._mdir = md;
 }
 
-void StartMonsterGotHit(int monsterId)
+void StartMonsterGotHit(Monster &monster)
 {
-	auto &monster = Monsters[monsterId];
 	if (monster.type().type != MT_GOLEM) {
 		auto animationFlags = gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None;
 		int8_t numSkippedFrames = (gbIsHellfire && monster.type().type == MT_DIABLO) ? 4 : 0;
@@ -694,7 +693,7 @@ void StartMonsterGotHit(int monsterId)
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
 	M_ClearSquares(monster);
-	dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+	dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 }
 
 bool IsRanged(Monster &monster)
@@ -1061,7 +1060,7 @@ void HitMonster(int monsterId, int dam)
 		}
 
 		if (monster._mmode != MonsterMode::Petrified) {
-			StartMonsterGotHit(monsterId);
+			StartMonsterGotHit(monster);
 		}
 	}
 }
@@ -3896,7 +3895,7 @@ void M_GetKnockback(int monsterId)
 
 	M_ClearSquares(monster);
 	monster.position.old += dir;
-	StartMonsterGotHit(monsterId);
+	StartMonsterGotHit(monster);
 }
 
 void M_StartHit(int monsterId, int dam)
@@ -3915,7 +3914,7 @@ void M_StartHit(int monsterId, int dam)
 			monster._mgoalvar2 = 0;
 		}
 		if (monster._mmode != MonsterMode::Petrified) {
-			StartMonsterGotHit(monsterId);
+			StartMonsterGotHit(monster);
 		}
 	}
 }
