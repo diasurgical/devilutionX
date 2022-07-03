@@ -142,6 +142,16 @@ public:
 		return SwapBE(Next<T>());
 	}
 
+	template <class TSource, class TDesired>
+	TDesired NextLENarrow(TSource modifier = 0)
+	{
+		static_assert(std::numeric_limits<TSource>::min() < std::numeric_limits<TDesired>::min());
+		static_assert(std::numeric_limits<TSource>::max() > std::numeric_limits<TDesired>::max());
+		TSource value = SwapLE(Next<TSource>()) + modifier;
+		assert(value >= std::numeric_limits<TDesired>::min() && value <= std::numeric_limits<TDesired>::max());
+		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
+	}
+
 	bool NextBool8()
 	{
 		return Next<uint8_t>() != 0;
@@ -230,8 +240,8 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iAnimFlag = file.NextBool32();
 	file.Skip(4); // Skip pointer _iAnimData
 	item.AnimInfo = {};
-	item.AnimInfo.NumberOfFrames = file.NextLE<int32_t>();
-	item.AnimInfo.CurrentFrame = file.NextLE<int32_t>() - 1;
+	item.AnimInfo.NumberOfFrames = file.NextLENarrow<int32_t, int8_t>();
+	item.AnimInfo.CurrentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip(8); // Skip _iAnimWidth and _iAnimWidth2
 	file.Skip(4); // Unused since 1.02
 	item._iSelFlag = file.NextLE<uint8_t>();
@@ -342,10 +352,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pgfxnum = file.NextLE<int32_t>();
 	file.Skip<uint32_t>(); // Skip pointer pData
 	player.AnimInfo = {};
-	player.AnimInfo.TicksPerFrame = file.NextLE<int32_t>() + 1;
-	player.AnimInfo.TickCounterOfCurrentFrame = file.NextLE<int32_t>();
-	player.AnimInfo.NumberOfFrames = file.NextLE<int32_t>();
-	player.AnimInfo.CurrentFrame = file.NextLE<int32_t>() - 1;
+	player.AnimInfo.TicksPerFrame = file.NextLENarrow<int32_t, int8_t>(1);
+	player.AnimInfo.TickCounterOfCurrentFrame = file.NextLENarrow<int32_t, int8_t>();
+	player.AnimInfo.NumberOfFrames = file.NextLENarrow<int32_t, int8_t>();
+	player.AnimInfo.CurrentFrame = file.NextLENarrow<int32_t, int8_t>(-1);
 	file.Skip<uint32_t>(3); // Skip _pAnimWidth, _pAnimWidth2, _peflag
 	player._plid = file.NextLE<int32_t>();
 	player._pvid = file.NextLE<int32_t>();
@@ -442,29 +452,29 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(2);           // Alignment
 	file.Skip<uint32_t>();  // skip _pGFXLoad
 	file.Skip<uint32_t>(8); // Skip pointers _pNAnim
-	player._pNFrames = file.NextLE<int32_t>();
+	player._pNFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pNWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pWAnim
-	player._pWFrames = file.NextLE<int32_t>();
+	player._pWFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pWWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pAAnim
-	player._pAFrames = file.NextLE<int32_t>();
+	player._pAFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pAWidth
-	player._pAFNum = file.NextLE<int32_t>();
+	player._pAFNum = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(8); // Skip pointers _pLAnim
 	file.Skip<uint32_t>(8); // Skip pointers _pFAnim
 	file.Skip<uint32_t>(8); // Skip pointers _pTAnim
-	player._pSFrames = file.NextLE<int32_t>();
+	player._pSFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pSWidth
-	player._pSFNum = file.NextLE<int32_t>();
+	player._pSFNum = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(8); // Skip pointers _pHAnim
-	player._pHFrames = file.NextLE<int32_t>();
+	player._pHFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pHWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pDAnim
-	player._pDFrames = file.NextLE<int32_t>();
+	player._pDFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>();  // skip _pDWidth
 	file.Skip<uint32_t>(8); // Skip pointers _pBAnim
-	player._pBFrames = file.NextLE<int32_t>();
+	player._pBFrames = file.NextLENarrow<int32_t, int8_t>();
 	file.Skip<uint32_t>(); // skip _pBWidth
 
 	for (Item &item : player.InvBody)
@@ -583,10 +593,10 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 
 	file->Skip(4); // Skip pointer _mAnimData
 	monster.AnimInfo = {};
-	monster.AnimInfo.TicksPerFrame = file->NextLE<int32_t>();
-	monster.AnimInfo.TickCounterOfCurrentFrame = file->NextLE<int32_t>();
-	monster.AnimInfo.NumberOfFrames = file->NextLE<int32_t>();
-	monster.AnimInfo.CurrentFrame = file->NextLE<int32_t>() - 1;
+	monster.AnimInfo.TicksPerFrame = file->NextLENarrow<int32_t, int8_t>();
+	monster.AnimInfo.TickCounterOfCurrentFrame = file->NextLENarrow<int32_t, int8_t>();
+	monster.AnimInfo.NumberOfFrames = file->NextLENarrow<int32_t, int8_t>();
+	monster.AnimInfo.CurrentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
 	file->Skip(4); // Skip _meflag
 	monster._mDelFlag = file->NextBool32();
 	monster._mVar1 = file->NextLE<int32_t>();
