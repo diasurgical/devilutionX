@@ -262,10 +262,9 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	return true;
 }
 
-bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
+bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
-	Player &player = Players[pnum];
-	auto &target = Players[p];
+	Player &target = Players[p];
 
 	if (sgGameInitInfo.bFriendlyFire == 0 && player.friendlyMode)
 		return false;
@@ -342,7 +341,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		dam /= 2;
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdDamage(true, p, dam);
 		target.Say(HeroSpeech::ArghClang);
 		return true;
@@ -352,7 +351,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		StartPlrBlock(p, GetDirection(target.position.tile, player.position.tile));
 		*blocked = true;
 	} else {
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdDamage(true, p, dam);
 		StartPlrHit(p, dam, false);
 	}
@@ -415,7 +414,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 		if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 			if (missile._micaster == TARGET_MONSTERS) {
 				if ((pid - 1) != missile._misource)
-					isPlayerHit = Plr2PlrMHit(missile._misource, pid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
+					isPlayerHit = Plr2PlrMHit(Players[missile._misource], pid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
 			} else {
 				Monster &monster = Monsters[missile._misource];
 				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
@@ -601,7 +600,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 		return false;
 
 	Direction dir = GetDirection(position, target);
-	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, GetSpellLevel(missile._misource, SPL_FIREBOLT), &missile);
+	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, GetSpellLevel(Players[missile._misource], SPL_FIREBOLT), &missile);
 	SetMissDir(missile, 2);
 	missile.var2 = 3;
 
@@ -803,12 +802,10 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	}
 }
 
-int GetSpellLevel(int playerId, spell_id sn)
+int GetSpellLevel(const Player &player, spell_id sn)
 {
-	if (playerId != MyPlayerId)
+	if (&player != MyPlayer)
 		return 1; // BUGFIX spell level will be wrong in multiplayer
-
-	Player &player = Players[playerId];
 
 	return std::max(player._pISplLvlAdd + player._pSplLvl[sn], 0);
 }
@@ -1166,7 +1163,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 
 	if (targetMonsterPosition) {
 		auto &monster = Monsters[abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
-		int slvl = GetSpellLevel(missile._misource, SPL_BERSERK);
+		int slvl = GetSpellLevel(Players[missile._misource], SPL_BERSERK);
 		monster._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
 		monster.mMinDamage = (GenerateRnd(10) + 120) * monster.mMinDamage / 100 + slvl;
 		monster.mMaxDamage = (GenerateRnd(10) + 120) * monster.mMaxDamage / 100 + slvl;
