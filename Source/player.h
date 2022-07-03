@@ -787,7 +787,7 @@ void StartPlayerKill(int pnum, int earflag);
  */
 void StripTopGold(Player &player);
 void SyncPlrKill(int pnum, int earflag);
-void RemovePlrMissiles(int pnum);
+void RemovePlrMissiles(const Player &player);
 void StartNewLvl(int pnum, interface_mode fom, int lvl);
 void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
