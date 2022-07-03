@@ -31,6 +31,7 @@ for:
 
     build:
       project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
+      parallel: true
       verbosity: minimal
 
     artifacts:
