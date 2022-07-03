@@ -451,11 +451,11 @@ void CheckCursMove()
 					pcursmonst = mi;
 				}
 			}
-			if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_HIDDEN) != 0) {
+			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_HIDDEN) != 0) {
 				pcursmonst = -1;
 				cursPosition = { mx, my };
 			}
-			if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst]._mFlags & MFLAG_BERSERK) == 0) {
+			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
 				pcursmonst = -1;
 			}
 			if (pcursmonst != -1) {

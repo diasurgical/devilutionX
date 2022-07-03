@@ -143,7 +143,7 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	if (multiplier > 0)
 		DrawString(out, fmt::format("x{:d}", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
-	if (monster._uniqtype != 0 || MonsterKillCounts[monster.type().type] >= 15) {
+	if (monster.uniqType != 0 || MonsterKillCounts[monster.type().type] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
 

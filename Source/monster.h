@@ -168,8 +168,6 @@ extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 
 struct Monster { // note: missing field _mAFNum
 	const char *name;
-	CMonster *type;
-	const MonsterData *data;
 	std::unique_ptr<uint8_t[]> uniqueMonsterTRN;
 	AnimationInfo animInfo;
 	/** Specifies current goal of the monster */
@@ -276,7 +274,7 @@ struct Monster { // note: missing field _mAFNum
 
 	const CMonster &type() const
 	{
-		return LevelMonsterTypes[_mMTidx];
+		return LevelMonsterTypes[levelType];
 	}
 
 	const MonsterData &data() const

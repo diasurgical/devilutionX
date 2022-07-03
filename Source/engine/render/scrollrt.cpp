@@ -772,7 +772,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	CelSprite cel = *monster.AnimInfo.celSprite;
+	CelSprite cel = *monster.animInfo.celSprite;
 
 	Displacement offset = monster.position.offset;
 	if (monster.isWalking()) {

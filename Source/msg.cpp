@@ -62,7 +62,7 @@ struct DMonsterStr {
 	Direction _mdir;
 	uint8_t _menemy;
 	uint8_t _mactive;
-	int32_t _mhitpoints;
+	int32_t hitPoints;
 	int8_t mWhoHit;
 };
 
@@ -506,7 +506,7 @@ void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 	monster._mactive = UINT8_MAX;
 	monster._menemy = message._menemy;
 	monster._mdir = message._mdir;
-	monster._mhitpoints = message._mhitpoints;
+	monster.hitPoints = message._mhitpoints;
 }
 
 void DeltaLeaveSync(uint8_t bLevel)
@@ -530,7 +530,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 		delta.position = monster.position.tile;
 		delta._mdir = monster.direction;
 		delta._menemy = encode_enemy(monster);
-		delta._mhitpoints = monster.hitPoints;
+		delta.hitPoints = monster.hitPoints;
 		delta._mactive = monster.activityTicks;
 		delta.mWhoHit = monster.whoHit;
 	}
@@ -2217,7 +2217,7 @@ void delta_kill_monster(int mi, Point position, const Player &player)
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
 	pD->position = position;
 	pD->_mdir = Monsters[mi].direction;
-	pD->_mhitpoints = 0;
+	pD->hitPoints = 0;
 }
 
 void delta_monster_hp(const Monster &monster, const Player &player)
@@ -2227,8 +2227,8 @@ void delta_monster_hp(const Monster &monster, const Player &player)
 
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
-	if (pD->_mhitpoints > monster._mhitpoints)
-		pD->_mhitpoints = monster._mhitpoints;
+	if (pD->hitPoints > monster.hitPoints)
+		pD->hitPoints = monster.hitPoints;
 }
 
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
@@ -2240,14 +2240,14 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	sgbDeltaChanged = true;
 
 	DMonsterStr &monster = GetDeltaLevel(level).monster[monsterSync._mndx];
-	if (monster._mhitpoints == 0)
+	if (monster.hitPoints == 0)
 		return;
 
 	monster.position.x = monsterSync._mx;
 	monster.position.y = monsterSync._my;
 	monster._mactive = UINT8_MAX;
 	monster._menemy = monsterSync._menemy;
-	monster._mhitpoints = monsterSync._mhitpoints;
+	monster.hitPoints = monsterSync._mhitpoints;
 	monster.mWhoHit = monsterSync.mWhoHit;
 }
 
@@ -2409,16 +2409,15 @@ void DeltaLoadLevel()
 				monster.position.old = position;
 				monster.position.future = position;
 			}
-			if (deltaLevel.monster[i]._mhitpoints != -1) {
-				monster.hitPoints = deltaLevel.monster[i]._mhitpoints;
+			if (deltaLevel.monster[i].hitPoints != -1) {
+				monster.hitPoints = deltaLevel.monster[i].hitPoints;
 				monster.whoHit = deltaLevel.monster[i].mWhoHit;
 			}
-			if (deltaLevel.monster[i]._mhitpoints == 0) {
+			if (deltaLevel.monster[i].hitPoints == 0) {
 				M_ClearSquares(monster);
 				if (monster.ai != AI_DIABLO) {
 					if (monster.uniqType == 0) {
-						assert(monster.type != nullptr);
-						AddCorpse(monster.position.tile, monster.type->corpseId, monster.direction);
+						AddCorpse(monster.position.tile, monster.type().corpseId, monster.direction);
 					} else {
 						AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
 					}
