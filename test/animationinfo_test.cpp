@@ -105,8 +105,8 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 			auto gameTickData = static_cast<GameTickData *>(x);
 			currentGameTick += 1;
 			animInfo.ProcessAnimation();
-			EXPECT_EQ(animInfo.CurrentFrame, gameTickData->_ExpectedAnimationFrame);
-			EXPECT_EQ(animInfo.TickCounterOfCurrentFrame, gameTickData->_ExpectedAnimationCnt);
+			EXPECT_EQ(animInfo.currentFrame, gameTickData->_ExpectedAnimationFrame);
+			EXPECT_EQ(animInfo.tickCounterOfCurrentFrame, gameTickData->_ExpectedAnimationCnt);
 		} break;
 		case TestDataType::Rendering: {
 			auto renderingData = static_cast<RenderingData *>(x);
@@ -114,8 +114,8 @@ void RunAnimationTest(const std::vector<TestData *> &vecTestData)
 			EXPECT_EQ(animInfo.GetFrameToUseForRendering(), renderingData->_ExpectedRenderingFrame)
 			    << std::fixed << std::setprecision(2)
 			    << "ProgressToNextGameTick: " << renderingData->_fProgressToNextGameTick
-			    << " CurrentFrame: " << animInfo.CurrentFrame
-			    << " DelayCounter: " << animInfo.TickCounterOfCurrentFrame
+			    << " currentFrame: " << animInfo.currentFrame
+			    << " DelayCounter: " << animInfo.tickCounterOfCurrentFrame
 			    << " GameTick: " << currentGameTick;
 		} break;
 		}
@@ -184,7 +184,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames - 1) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
 	    });
 }
 
@@ -237,7 +237,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames - 1) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
 	    });
 }
 
@@ -292,7 +292,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	        new GameTickData(9, 0),
 	        new RenderingData(0.3f, 9),
 
-	        // Start of repeated attack, cause plr[pnum].AnimInfo.CurrentFrame > plr[myplr]._pAFNum
+	        // Start of repeated attack, cause plr[pnum].AnimInfo.currentFrame > plr[myplr]._pAFNum
 	        new SetNewAnimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
 	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(1, 0),
@@ -348,7 +348,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	        new RenderingData(0.6f, 14),
 	        new GameTickData(15, 0),
 	        new RenderingData(0.6f, 15),
-	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame == plr[pnum]._pAFrames - 1) {"
+	        // Animation stopped cause PM_DoAttack would stop the Animation "if (plr[pnum].AnimInfo.currentFrame == plr[pnum]._pAFrames - 1) {"
 	    });
 }
 
@@ -376,7 +376,7 @@ TEST(AnimationInfo, BlockingWarriorNormal) // Ignored delay for last Frame shoul
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
 	        new RenderingData(0.8f, 1),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {"
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pBFrames) {"
 	    });
 }
 
@@ -404,7 +404,7 @@ TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored
 	        new RenderingData(0.3f, 4),
 	        new RenderingData(0.6f, 5),
 	        new RenderingData(0.8f, 5),
-	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pBFrames) {"
+	        // Animation stopped cause PM_DoBlock would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pBFrames) {"
 	    });
 }
 
@@ -432,7 +432,7 @@ TEST(AnimationInfo, HitRecoverySorcererZenMode) // Skipped frames and ignored de
 	        new RenderingData(0.3f, 6),
 	        new RenderingData(0.6f, 7),
 	        new RenderingData(0.8f, 7),
-	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.CurrentFrame >= plr[pnum]._pHFrames) {"
+	        // Animation stopped cause PM_DoGotHit would stop the Animation "if (plr[pnum].AnimInfo.currentFrame >= plr[pnum]._pHFrames) {"
 	    });
 }
 TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here

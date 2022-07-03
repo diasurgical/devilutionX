@@ -732,7 +732,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 		CelBlitOutlineTo(out, GetOutlineColor(item, false), position, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, position, *cel, nCel);
-	if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames - 1 || item._iCurs == ICURS_MAGIC_ROCK)
+	if (item.AnimInfo.currentFrame == item.AnimInfo.numberOfFrames - 1 || item._iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
 }
 

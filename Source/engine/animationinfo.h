@@ -43,23 +43,23 @@ public:
 	/**
 	 * @brief How many game ticks are needed to advance one Animation Frame
 	 */
-	int8_t TicksPerFrame;
+	int8_t ticksPerFrame;
 	/**
-	 * @brief Increases by one each game tick, counting how close we are to TicksPerFrame
+	 * @brief Increases by one each game tick, counting how close we are to ticksPerFrame
 	 */
-	int8_t TickCounterOfCurrentFrame;
+	int8_t tickCounterOfCurrentFrame;
 	/**
 	 * @brief Number of frames in current animation
 	 */
-	int8_t NumberOfFrames;
+	int8_t numberOfFrames;
 	/**
 	 * @brief Current frame of animation
 	 */
-	int8_t CurrentFrame;
+	int8_t currentFrame;
 	/**
 	 * @brief Is the animation currently petrified and shouldn't advance with gfProgressToNextGameTick
 	 */
-	bool IsPetrified;
+	bool isPetrified;
 
 	/**
 	 * @brief Calculates the Frame to use for the Animation rendering
@@ -95,7 +95,7 @@ public:
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
 	 * @param reverseAnimation Play the animation backwards (for example is used for "unseen" monster fading)
-	 * @param dontProgressAnimation Increase TickCounterOfCurrentFrame but don't change CurrentFrame
+	 * @param dontProgressAnimation Increase tickCounterOfCurrentFrame but don't change currentFrame
 	 */
 	void ProcessAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
 

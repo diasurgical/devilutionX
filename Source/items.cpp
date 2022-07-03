@@ -445,7 +445,7 @@ void AddInitItems()
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -1647,7 +1647,7 @@ void SpawnRock()
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
-	item.AnimInfo.CurrentFrame = 10;
+	item.AnimInfo.currentFrame = 10;
 }
 
 void ItemDoppel()
@@ -3328,7 +3328,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	item._iPostDraw = true;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 	}
 }
@@ -3412,16 +3412,16 @@ void ProcessItems()
 			continue;
 		item.AnimInfo.ProcessAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.CurrentFrame == 10)
-				item.AnimInfo.CurrentFrame = 0;
-			if (item._iSelFlag == 2 && item.AnimInfo.CurrentFrame == 20)
-				item.AnimInfo.CurrentFrame = 10;
+			if (item._iSelFlag == 1 && item.AnimInfo.currentFrame == 10)
+				item.AnimInfo.currentFrame = 0;
+			if (item._iSelFlag == 2 && item.AnimInfo.currentFrame == 20)
+				item.AnimInfo.currentFrame = 10;
 		} else {
-			if (item.AnimInfo.CurrentFrame == (item.AnimInfo.NumberOfFrames - 1) / 2)
+			if (item.AnimInfo.currentFrame == (item.AnimInfo.numberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
 
-			if (item.AnimInfo.CurrentFrame >= item.AnimInfo.NumberOfFrames - 1) {
-				item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+			if (item.AnimInfo.currentFrame >= item.AnimInfo.numberOfFrames - 1) {
+				item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 				item._iAnimFlag = false;
 				item._iSelFlag = 1;
 			}
@@ -4336,7 +4336,7 @@ void MakeGoldStack(Item &goldItem, int value)
 int ItemNoFlippy()
 {
 	int r = ActiveItems[ActiveItemCount - 1];
-	Items[r].AnimInfo.CurrentFrame = Items[r].AnimInfo.NumberOfFrames - 1;
+	Items[r].AnimInfo.currentFrame = Items[r].AnimInfo.numberOfFrames - 1;
 	Items[r]._iAnimFlag = false;
 	Items[r]._iSelFlag = 1;
 
@@ -4593,7 +4593,7 @@ void Item::setNewAnimation(bool showAnimation)
 		_iAnimFlag = true;
 		_iSelFlag = 0;
 	} else {
-		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames - 1;
+		AnimInfo.currentFrame = AnimInfo.numberOfFrames - 1;
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}
