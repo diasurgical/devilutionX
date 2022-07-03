@@ -306,7 +306,7 @@ void AddDoppelganger(Monster &monster);
 bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
 void M_ClearSquares(const Monster &monster);
-void M_GetKnockback(int monsterId);
+void M_GetKnockback(Monster &monster);
 void M_StartHit(int monsterId, int dam);
 void M_StartHit(int monsterId, int pnum, int dam);
 void StartMonsterDeath(int monsterId, int pnum, bool sendmsg);
