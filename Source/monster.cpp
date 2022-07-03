@@ -1810,6 +1810,8 @@ void GroupUnity(Monster &monster)
 bool RandomWalk(int monsterId, Direction md)
 {
 	Direction mdtemp = md;
+	auto &monster = Monsters[monsterId];
+
 	bool ok = DirOK(monsterId, md);
 	if (GenerateRnd(2) != 0)
 		ok = ok || (md = Left(mdtemp), DirOK(monsterId, md)) || (md = Right(mdtemp), DirOK(monsterId, md));
@@ -1825,12 +1827,14 @@ bool RandomWalk(int monsterId, Direction md)
 		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md));
 	}
 	if (ok)
-		M_WalkDir(monsterId, md);
+		M_WalkDir(monster, md);
 	return ok;
 }
 
 bool RandomWalk2(int monsterId, Direction md)
 {
+	auto &monster = Monsters[monsterId];
+
 	Direction mdtemp = md;
 	bool ok = DirOK(monsterId, md); // Can we continue in the same direction
 	if (GenerateRnd(2) != 0) {      // Randomly go left or right
@@ -1840,7 +1844,7 @@ bool RandomWalk2(int monsterId, Direction md)
 	}
 
 	if (ok)
-		M_WalkDir(monsterId, mdtemp);
+		M_WalkDir(monster, mdtemp);
 
 	return ok;
 }
@@ -1919,9 +1923,11 @@ bool AiPlanWalk(int monsterId)
 
 bool DumbWalk(int monsterId, Direction md)
 {
+	auto &monster = Monsters[monsterId];
+
 	bool ok = DirOK(monsterId, md);
 	if (ok)
-		M_WalkDir(monsterId, md);
+		M_WalkDir(monster, md);
 
 	return ok;
 }
@@ -1933,24 +1939,26 @@ Direction Turn(Direction direction, bool turnLeft)
 
 bool RoundWalk(int monsterId, Direction direction, int *dir)
 {
+	auto &monster = Monsters[monsterId];
+
 	Direction turn45deg = Turn(direction, *dir != 0);
 	Direction turn90deg = Turn(turn45deg, *dir != 0);
 
 	if (DirOK(monsterId, turn90deg)) {
 		// Turn 90 degrees
-		M_WalkDir(monsterId, turn90deg);
+		M_WalkDir(monster, turn90deg);
 		return true;
 	}
 
 	if (DirOK(monsterId, turn45deg)) {
 		// Only do a small turn
-		M_WalkDir(monsterId, turn45deg);
+		M_WalkDir(monster, turn45deg);
 		return true;
 	}
 
 	if (DirOK(monsterId, direction)) {
 		// Continue straight
-		M_WalkDir(monsterId, direction);
+		M_WalkDir(monster, direction);
 		return true;
 	}
 
@@ -4072,11 +4080,8 @@ void PrepDoEnding()
 	}
 }
 
-void M_WalkDir(int monsterId, Direction md)
+void M_WalkDir(Monster &monster, Direction md)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	int mwi = monster.type().getAnimData(MonsterGraphic::Walk).frames - 1;
 	switch (md) {
 	case Direction::North:
@@ -4165,7 +4170,7 @@ void GolumAi(int monsterId)
 		ok = DirOK(monsterId, md);
 	}
 	if (ok)
-		M_WalkDir(monsterId, md);
+		M_WalkDir(golem, md);
 }
 
 void DeleteMonsterList()

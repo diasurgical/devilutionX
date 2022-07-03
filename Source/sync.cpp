@@ -182,7 +182,7 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 			if (DirOK(monsterId, md)) {
 				M_ClearSquares(monsterId);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
-				M_WalkDir(monsterId, md);
+				M_WalkDir(monster, md);
 				monster._msquelch = UINT8_MAX;
 			}
 		}
