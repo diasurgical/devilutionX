@@ -108,19 +108,19 @@ private:
 	/**
 	 * @brief Specifies how many animations-fractions are displayed between two game ticks. this can be > 0, if animations are skipped or < 0 if the same animation is shown in multiple times (delay specified).
 	 */
-	float TickModifier;
+	float tickModifier_;
 	/**
 	 * @brief Number of game ticks after the current animation sequence started
 	 */
-	float TicksSinceSequenceStarted;
+	float ticksSinceSequenceStarted_;
 	/**
 	 * @brief Animation Frames that will be adjusted for the skipped Frames/game ticks
 	 */
-	int8_t RelevantFramesForDistributing;
+	int8_t relevantFramesForDistributing_;
 	/**
 	 * @brief Animation Frames that wasn't shown from previous Animation
 	 */
-	int8_t SkippedFramesFromPreviousAnimation;
+	int8_t skippedFramesFromPreviousAnimation_;
 };
 
 } // namespace devilution
