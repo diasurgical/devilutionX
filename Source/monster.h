@@ -270,6 +270,13 @@ struct Monster { // note: missing field _mAFNum
 	}
 
 	/**
+	 * @brief Returns the network identifier for this monster
+	 *
+	 * This is currently the index into the Monsters array, but may change in the future.
+	 */
+	[[nodiscard]] size_t getId() const;
+
+	/**
 	 * @brief Is the monster currently walking?
 	 */
 	bool IsWalking() const;
