@@ -164,6 +164,8 @@ struct CMonster {
 	const MonsterData *data;
 };
 
+extern CMonster LevelMonsterTypes[MaxLvlMTypes];
+
 struct Monster { // note: missing field _mAFNum
 	const char *name;
 	CMonster *type;
@@ -246,10 +248,10 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void changeAnimationData(MonsterGraphic graphic, Direction desiredDirection)
 	{
-		auto &animationData = this->type->getAnimData(graphic);
+		auto &animationData = type().getAnimData(graphic);
 
 		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->animInfo.ChangeAnimationData(animationData.getCelSpritesForDirection(desiredDirection), animationData.frames, animationData.rate);
+		this->animInfo.changeAnimationData(animationData.getCelSpritesForDirection(desiredDirection), animationData.frames, animationData.rate);
 	}
 
 	/**
@@ -272,6 +274,23 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void petrify();
 
+	const CMonster &type() const
+	{
+		return LevelMonsterTypes[_mMTidx];
+	}
+
+	const MonsterData &data() const
+	{
+		return *type().data;
+	}
+
+	/**
+	 * @brief Returns the network identifier for this monster
+	 *
+	 * This is currently the index into the Monsters array, but may change in the future.
+	 */
+	[[nodiscard]] size_t getId() const;
+
 	/**
 	 * @brief Is the monster currently walking?
 	 */
@@ -282,7 +301,6 @@ struct Monster { // note: missing field _mAFNum
 	bool tryLiftGargoyle();
 };
 
-extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 extern int LevelMonsterTypeCount;
 extern Monster Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];
@@ -302,7 +320,7 @@ int AddMonster(Point position, Direction dir, int mtype, bool inMap);
 void AddDoppelganger(Monster &monster);
 bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
-void M_ClearSquares(int monsterId);
+void M_ClearSquares(const Monster &monster);
 void M_GetKnockback(int monsterId);
 void M_StartHit(int monsterId, int dam);
 void M_StartHit(int monsterId, int pnum, int dam);
@@ -312,7 +330,7 @@ void M_SyncStartKill(int monsterId, Point position, int pnum);
 void M_UpdateLeader(int monsterId);
 void DoEnding();
 void PrepDoEnding();
-void M_WalkDir(int monsterId, Direction md);
+void M_WalkDir(Monster &monster, Direction md);
 void GolumAi(int monsterId);
 void DeleteMonsterList();
 void ProcessMonsters();
@@ -327,6 +345,8 @@ void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void PlayEffect(Monster &monster, int mode);
 void MissToMonst(Missile &missile, Point position);
+
+Monster *MonsterAtPosition(Point position);
 
 /**
  * @brief Check that the given tile is available to the monster

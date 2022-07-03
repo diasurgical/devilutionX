@@ -241,7 +241,7 @@ void PlayerLeftMsg(int pnum, bool left)
 	RemovePortalMissile(pnum);
 	DeactivatePortal(pnum);
 	delta_close_portal(pnum);
-	RemovePlrMissiles(pnum);
+	RemovePlrMissiles(player);
 	if (left) {
 		string_view pszFmt = _("Player '{:s}' just left the game");
 		switch (sgdwPlayerLeftReasonTbl[pnum]) {
@@ -845,7 +845,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	player._pgfxnum &= ~0xF;
 	player._pmode = PM_DEATH;
 	NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
-	player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
+	player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
 	dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 }
 

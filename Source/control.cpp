@@ -744,8 +744,8 @@ void CheckPanelInfo()
 				break;
 			case RSPLTYPE_SPELL: {
 				AddPanelString(fmt::format(fmt::runtime(_("{:s} Spell")), pgettext("spell", spelldata[spellId].sNameText)));
-				int c = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spellId], 0);
-				AddPanelString(c == 0 ? _("Spell Level 0 - Unusable") : fmt::format(fmt::runtime(_("Spell Level {:d}")), c));
+				const int spellLevel = myPlayer.GetSpellLevel(spellId);
+				AddPanelString(spellLevel == 0 ? _("Spell Level 0 - Unusable") : fmt::format(fmt::runtime(_("Spell Level {:d}")), spellLevel));
 			} break;
 			case RSPLTYPE_SCROLL: {
 				AddPanelString(fmt::format(fmt::runtime(_("Scroll of {:s}")), pgettext("spell", spelldata[spellId].sNameText)));
@@ -905,13 +905,13 @@ void DrawInfoBox(const Surface &out)
 			if (leveltype != DTYPE_TOWN) {
 				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
-				InfoString = string_view(monster.name);
+				InfoString = string_view(monster.mName);
 				ClearPanel();
-				if (monster.uniqType != 0) {
+				if (monster._uniqtype != 0) {
 					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
 				} else {
-					PrintMonstHistory(monster.type->type);
+					PrintMonstHistory(monster.type().type);
 				}
 			} else if (pcursitem == -1) {
 				InfoString = string_view(Towners[pcursmonst].name);

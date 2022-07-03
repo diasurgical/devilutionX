@@ -22,7 +22,7 @@ int RunBlockTest(int frames, ItemSpecialEffect flags)
 		TestPlayerDoGotHit(pnum);
 		if (player._pmode != PM_GOTHIT)
 			break;
-		player.AnimInfo.CurrentFrame++;
+		player.AnimInfo.currentFrame++;
 	}
 
 	return i;

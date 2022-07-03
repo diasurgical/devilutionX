@@ -1592,7 +1592,7 @@ DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 				monster.hitPoints -= message.dwDam;
 				if ((monster.hitPoints >> 6) < 1)
 					monster.hitPoints = 1 << 6;
-				delta_monster_hp(message.wMon, monster.hitPoints, player);
+				delta_monster_hp(monster, player);
 			}
 		}
 	}
@@ -1838,7 +1838,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 				player._pgfxnum &= ~0xF;
 				player._pmode = PM_DEATH;
 				NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
-				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
+				player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
 				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
 
@@ -2220,15 +2220,15 @@ void delta_kill_monster(int mi, Point position, const Player &player)
 	pD->_mhitpoints = 0;
 }
 
-void delta_monster_hp(int mi, int hp, const Player &player)
+void delta_monster_hp(const Monster &monster, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
-	if (pD->_mhitpoints > hp)
-		pD->_mhitpoints = hp;
+	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
+	if (pD->_mhitpoints > monster._mhitpoints)
+		pD->_mhitpoints = monster._mhitpoints;
 }
 
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
@@ -2397,12 +2397,12 @@ void DeltaLoadLevel()
 	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < ActiveMonsterCount; i++) {
+		for (int i = 0; i < MaxMonsters; i++) {
 			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
 
-			M_ClearSquares(i);
 			auto &monster = Monsters[i];
+			M_ClearSquares(monster);
 			{
 				const WorldTilePosition position = deltaLevel.monster[i].position;
 				monster.position.tile = position;
@@ -2414,7 +2414,7 @@ void DeltaLoadLevel()
 				monster.whoHit = deltaLevel.monster[i].mWhoHit;
 			}
 			if (deltaLevel.monster[i]._mhitpoints == 0) {
-				M_ClearSquares(i);
+				M_ClearSquares(monster);
 				if (monster.ai != AI_DIABLO) {
 					if (monster.uniqType == 0) {
 						assert(monster.type != nullptr);
@@ -2429,7 +2429,7 @@ void DeltaLoadLevel()
 				decode_enemy(monster, deltaLevel.monster[i]._menemy);
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
 					dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
-				if (monster.type->type == MT_GOLEM) {
+				if (monster.type().type == MT_GOLEM) {
 					GolumAi(i);
 					monster.flags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 				} else {

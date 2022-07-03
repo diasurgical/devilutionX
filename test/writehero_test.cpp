@@ -264,10 +264,10 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MaxPathLength), 25);
 	ASSERT_EQ(player._pgfxnum, 36);
-	ASSERT_EQ(player.AnimInfo.TicksPerFrame, 4);
-	ASSERT_EQ(player.AnimInfo.TickCounterOfCurrentFrame, 1);
-	ASSERT_EQ(player.AnimInfo.NumberOfFrames, 20);
-	ASSERT_EQ(player.AnimInfo.CurrentFrame, 0);
+	ASSERT_EQ(player.AnimInfo.ticksPerFrame, 4);
+	ASSERT_EQ(player.AnimInfo.tickCounterOfCurrentFrame, 1);
+	ASSERT_EQ(player.AnimInfo.numberOfFrames, 20);
+	ASSERT_EQ(player.AnimInfo.currentFrame, 0);
 	ASSERT_EQ(player._pSpell, -1);
 	ASSERT_EQ(player._pSplType, 4);
 	ASSERT_EQ(player._pSplFrom, 0);

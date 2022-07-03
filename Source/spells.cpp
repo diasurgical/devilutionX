@@ -130,7 +130,7 @@ int GetManaAmount(const Player &player, spell_id sn)
 	int adj = 0;
 
 	// spell level
-	int sl = std::max(player._pSplLvl[sn] + player._pISplLvlAdd - 1, 0);
+	int sl = std::max(player.GetSpellLevel(sn) - 1, 0);
 
 	if (sl > 0) {
 		adj = sl * spelldata[sn].sManaAdj;
@@ -217,7 +217,7 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 	}
 
 	const Player &player = Players[id];
-	if (GetSpellLevel(player, sn) <= 0) {
+	if (player.GetSpellLevel(sn) <= 0) {
 		return SpellCheckResult::Fail_Level0;
 	}
 

@@ -66,7 +66,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 		if (CheckSpell(MyPlayerId, ii, st, true) != SpellCheckResult::Success) {
 			st = RSPLTYPE_INVALID;
 		}
-		if ((char)(player._pSplLvl[ii] + player._pISplLvlAdd) <= 0) {
+		if (player.GetSpellLevel(ii) == 0) {
 			st = RSPLTYPE_INVALID;
 		}
 	}
@@ -159,7 +159,7 @@ void DrawSpellBook(const Surface &out)
 			} break;
 			default: {
 				int mana = GetManaAmount(player, sn) >> 6;
-				int lvl = std::max(player._pSplLvl[sn] + player._pISplLvlAdd, 0);
+				int lvl = player.GetSpellLevel(sn);
 				PrintSBookStr(out, line0, fmt::format(fmt::runtime(pgettext(/* TRANSLATORS: UI constraints, keep short please.*/ "spellbook", "Level {:d}")), lvl), UiFlags::AlignRight);
 				if (lvl == 0) {
 					PrintSBookStr(out, line1, _("Unusable"), UiFlags::AlignRight);

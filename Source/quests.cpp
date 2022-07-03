@@ -405,14 +405,14 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 
 	Player &myPlayer = *MyPlayer;
 
-	if (monster.type->type == MT_SKING) {
+	if (monster.type().type == MT_SKING) {
 		auto &quest = Quests[Q_SKELKING];
 		quest._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::RestWellLeoricIllFindYourSon, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, quest);
 
-	} else if (monster.type->type == MT_CLEAVER) {
+	} else if (monster.type().type == MT_CLEAVER) {
 		auto &quest = Quests[Q_BUTCHER];
 		quest._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::TheSpiritsOfTheDeadAreNowAvenged, 30);

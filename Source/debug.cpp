@@ -335,7 +335,7 @@ std::string ExportDun(const string_view parameter)
 			uint16_t monsterId = 0;
 			if (dMonster[x][y] > 0) {
 				for (int i = 0; i < 157; i++) {
-					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].type->type) {
+					if (MonstConvTbl[i] == Monsters[abs(dMonster[x][y]) - 1].type().type) {
 						monsterId = i + 1;
 						break;
 					}

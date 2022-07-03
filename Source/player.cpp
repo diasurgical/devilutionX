@@ -219,14 +219,14 @@ void PmChangeLightOff(Player &player)
 	ChangeLightOffset(player._plid, { x, y });
 }
 
-void WalkUpwards(int pnum, const DirectionSettings &walkParams)
+void WalkNorthwards(int pnum, const DirectionSettings &walkParams)
 {
 	Player &player = Players[pnum];
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
 	player.position.temp = WorldTilePosition { static_cast<WorldTileCoord>(walkParams.tileAdd.deltaX), static_cast<WorldTileCoord>(walkParams.tileAdd.deltaY) };
 }
 
-void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
+void WalkSouthwards(int pnum, const DirectionSettings & /*walkParams*/)
 {
 	Player &player = Players[pnum];
 	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
@@ -238,7 +238,7 @@ void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
 	PmChangeLightOff(player);
 }
 
-void WalkSides(int pnum, const DirectionSettings &walkParams)
+void WalkSideways(int pnum, const DirectionSettings &walkParams)
 {
 	Player &player = Players[pnum];
 
@@ -268,14 +268,14 @@ _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = 
 
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
-	{ Direction::South,     {  1,  1 }, {   0, -32 }, { 0, 0 }, ScrollDirection::South,     PM_WALK2, WalkDownwards },
-	{ Direction::SouthWest, {  0,  1 }, {  32, -16 }, { 0, 0 }, ScrollDirection::SouthWest, PM_WALK2, WalkDownwards },
-	{ Direction::West,      { -1,  1 }, {  32, -16 }, { 0, 1 }, ScrollDirection::West,      PM_WALK3, WalkSides     },
-	{ Direction::NorthWest, { -1,  0 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthWest, PM_WALK,  WalkUpwards   },
-	{ Direction::North,     { -1, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::North,     PM_WALK,  WalkUpwards   },
-	{ Direction::NorthEast, {  0, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthEast, PM_WALK,  WalkUpwards   },
-	{ Direction::East,      {  1, -1 }, { -32, -16 }, { 1, 0 }, ScrollDirection::East,      PM_WALK3, WalkSides     },
-	{ Direction::SouthEast, {  1,  0 }, { -32, -16 }, { 0, 0 }, ScrollDirection::SouthEast, PM_WALK2, WalkDownwards }
+	{ Direction::South,     {  1,  1 }, {   0, -32 }, { 0, 0 }, ScrollDirection::South,     PM_WALK_SOUTHWARDS, WalkSouthwards },
+	{ Direction::SouthWest, {  0,  1 }, {  32, -16 }, { 0, 0 }, ScrollDirection::SouthWest, PM_WALK_SOUTHWARDS, WalkSouthwards },
+	{ Direction::West,      { -1,  1 }, {  32, -16 }, { 0, 1 }, ScrollDirection::West,      PM_WALK_SIDEWAYS,   WalkSideways   },
+	{ Direction::NorthWest, { -1,  0 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthWest, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::North,     { -1, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::North,     PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::NorthEast, {  0, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthEast, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::East,      {  1, -1 }, { -32, -16 }, { 1, 0 }, ScrollDirection::East,      PM_WALK_SIDEWAYS,   WalkSideways   },
+	{ Direction::SouthEast, {  1,  0 }, { -32, -16 }, { 0, 0 }, ScrollDirection::SouthEast, PM_WALK_SOUTHWARDS, WalkSouthwards }
 	// clang-format on
 } };
 
@@ -390,18 +390,13 @@ void ClearStateVariables(Player &player)
 	player.position.offset2 = { 0, 0 };
 }
 
-void StartWalkStand(int pnum)
+void StartWalkStand(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal(fmt::format("StartWalkStand: illegal player {}", pnum));
-	}
-	Player &player = Players[pnum];
-
 	player._pmode = PM_STAND;
 	player.position.future = player.position.tile;
 	player.position.offset = { 0, 0 };
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
@@ -532,7 +527,7 @@ void StartSpell(int pnum, Direction d, WorldTileCoord cx, WorldTileCoord cy)
 	SetPlayerOld(player);
 
 	player.position.temp = WorldTilePosition { cx, cy };
-	player.spellLevel = GetSpellLevel(player, player._pSpell);
+	player.spellLevel = player.GetSpellLevel(player._pSpell);
 }
 
 void RespawnDeadItem(Item &&itm, Point target)
@@ -616,7 +611,7 @@ void InitLevelChange(int pnum)
 	Player &player = Players[pnum];
 	Player &myPlayer = *MyPlayer;
 
-	RemovePlrMissiles(pnum);
+	RemovePlrMissiles(player);
 	player.pManaShield = false;
 	player.wReflections = 0;
 	// share info about your manashield when another player joins the level
@@ -659,26 +654,26 @@ bool DoWalk(int pnum, int variant)
 
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
-		if (player.AnimInfo.CurrentFrame == 0
-		    || player.AnimInfo.CurrentFrame == 4) {
+		if (player.AnimInfo.currentFrame == 0
+		    || player.AnimInfo.currentFrame == 4) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
 		}
 	}
 
 	// Check if we reached new tile
-	if (player.AnimInfo.CurrentFrame >= player._pWFrames - 1) {
+	if (player.AnimInfo.currentFrame >= player._pWFrames - 1) {
 
 		// Update the player's tile position
 		switch (variant) {
-		case PM_WALK:
+		case PM_WALK_NORTHWARDS:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 			player.position.tile += { player.position.temp.x, player.position.temp.y };
 			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 			break;
-		case PM_WALK2:
+		case PM_WALK_SOUTHWARDS:
 			dPlayer[player.position.temp.x][player.position.temp.y] = 0;
 			break;
-		case PM_WALK3:
+		case PM_WALK_SIDEWAYS:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 			player.position.tile = player.position.temp;
 			// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
@@ -698,7 +693,7 @@ bool DoWalk(int pnum, int variant)
 		}
 
 		if (player.walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
+			StartWalkStand(player);
 		} else {
 			StartStand(pnum, player.tempDirection);
 		}
@@ -868,7 +863,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		phanditype = ItemType::Mace;
 	}
 
-	switch (monster.data->mMonstClass) {
+	switch (monster.data().mMonstClass) {
 	case MonsterClass::Undead:
 		if (phanditype == ItemType::Sword) {
 			dam -= dam / 2;
@@ -894,7 +889,7 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type->type != MT_DIABLO && monster.uniqType == 0 && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && monster.uniqType == 0 && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster);
 	}
 
@@ -1073,13 +1068,13 @@ bool DoAttack(int pnum)
 	}
 	Player &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame == player._pAFNum - 2) {
+	if (player.AnimInfo.currentFrame == player._pAFNum - 2) {
 		PlaySfxLoc(PS_SWING, player.position.tile);
 	}
 
 	bool didhit = false;
 
-	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
+	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
 		Point position = player.position.tile + player._pdir;
 		int dx = position.x;
 		int dy = position.y;
@@ -1166,7 +1161,7 @@ bool DoAttack(int pnum)
 		}
 	}
 
-	if (player.AnimInfo.CurrentFrame == player._pAFrames - 1) {
+	if (player.AnimInfo.currentFrame == player._pAFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1183,11 +1178,11 @@ bool DoRangeAttack(int pnum)
 	Player &player = Players[pnum];
 
 	int arrows = 0;
-	if (player.AnimInfo.CurrentFrame == player._pAFNum - 1) {
+	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
 		arrows = 1;
 	}
 
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.CurrentFrame == player._pAFNum + 1) {
+	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::MultipleArrows) && player.AnimInfo.currentFrame == player._pAFNum + 1) {
 		arrows = 2;
 	}
 
@@ -1238,7 +1233,7 @@ bool DoRangeAttack(int pnum)
 		}
 	}
 
-	if (player.AnimInfo.CurrentFrame >= player._pAFrames - 1) {
+	if (player.AnimInfo.currentFrame >= player._pAFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1282,7 +1277,7 @@ bool DoBlock(int pnum)
 	}
 	Player &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame >= player._pBFrames - 1) {
+	if (player.AnimInfo.currentFrame >= player._pBFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 
@@ -1343,7 +1338,7 @@ bool DoSpell(int pnum)
 	}
 	Player &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame == player._pSFNum) {
+	if (player.AnimInfo.currentFrame == player._pSFNum) {
 		CastSpell(
 		    pnum,
 		    player._pSpell,
@@ -1358,7 +1353,7 @@ bool DoSpell(int pnum)
 		}
 	}
 
-	if (player.AnimInfo.CurrentFrame >= player._pSFrames - 1) {
+	if (player.AnimInfo.currentFrame >= player._pSFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		return true;
@@ -1374,7 +1369,7 @@ bool DoGotHit(int pnum)
 	}
 	Player &player = Players[pnum];
 
-	if (player.AnimInfo.CurrentFrame >= player._pHFrames - 1) {
+	if (player.AnimInfo.currentFrame >= player._pHFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 		if (GenerateRnd(4) != 0) {
@@ -1389,11 +1384,11 @@ bool DoGotHit(int pnum)
 
 bool DoDeath(Player &player)
 {
-	if (player.AnimInfo.CurrentFrame == player.AnimInfo.NumberOfFrames - 1) {
-		if (player.AnimInfo.TickCounterOfCurrentFrame == 0) {
-			player.AnimInfo.TicksPerFrame = 100;
+	if (player.AnimInfo.currentFrame == player.AnimInfo.numberOfFrames - 1) {
+		if (player.AnimInfo.tickCounterOfCurrentFrame == 0) {
+			player.AnimInfo.ticksPerFrame = 100;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
-		} else if (&player == MyPlayer && player.AnimInfo.TickCounterOfCurrentFrame == 30) {
+		} else if (&player == MyPlayer && player.AnimInfo.tickCounterOfCurrentFrame == 30) {
 			MyPlayerIsDead = true;
 			if (!gbIsMultiplayer) {
 				gamemenu_on();
@@ -1694,7 +1689,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		return;
 	}
 
-	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame >= player._pAFNum) {
+	if (player._pmode == PM_ATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_ATTACK) {
 			d = GetDirection(player.position.future, { player.destParam1, player.destParam2 });
 			StartAttack(pnum, d);
@@ -1725,7 +1720,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame >= player._pAFNum) {
+	if (player._pmode == PM_RATTACK && player.AnimInfo.currentFrame >= player._pAFNum) {
 		if (player.destAction == ACTION_RATTACK) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(pnum, d, player.destParam1, player.destParam2);
@@ -1741,7 +1736,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	if (player._pmode == PM_SPELL && player.AnimInfo.CurrentFrame >= player._pSFNum) {
+	if (player._pmode == PM_SPELL && player.AnimInfo.currentFrame >= player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
@@ -2010,7 +2005,7 @@ void Player::Stop()
 
 bool Player::IsWalking() const
 {
-	return IsAnyOf(_pmode, PM_WALK, PM_WALK2, PM_WALK3);
+	return IsAnyOf(_pmode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
 }
 
 void Player::Reset()
@@ -2348,7 +2343,7 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t nu
 	float previewShownGameTickFragments = 0.F;
 	if (celSprite == player.previewCelSprite && !player.IsWalking())
 		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
-	player.AnimInfo.SetNewAnimation(celSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
+	player.AnimInfo.setNewAnimation(celSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
 
 void SetPlrAnims(Player &player)
@@ -2764,12 +2759,12 @@ void InitPlayer(Player &player, bool firstTime)
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, Direction::South, player._pNFrames, 4);
-			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1);
-			player.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(3);
+			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
+			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 2);
-			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 2;
+			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
 		}
 
 		player._pdir = Direction::South;
@@ -3187,13 +3182,13 @@ void SyncPlrKill(int pnum, int earflag)
 	StartPlayerKill(pnum, earflag);
 }
 
-void RemovePlrMissiles(int pnum)
+void RemovePlrMissiles(const Player &player)
 {
-	if (leveltype != DTYPE_TOWN && pnum == MyPlayerId) {
+	if (leveltype != DTYPE_TOWN && &player == MyPlayer) {
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
-			AddCorpse(golem.position.tile, golem.type->corpseId, golem.direction);
+			AddCorpse(golem.position.tile, golem.type().corpseId, golem._mdir);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
 			dMonster[mx][my] = 0;
@@ -3203,7 +3198,7 @@ void RemovePlrMissiles(int pnum)
 	}
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
+		if (missile._mitype == MIS_STONE && &Players[missile._misource] == &player) {
 			Monsters[missile.var2].mode = static_cast<MonsterMode>(missile.var1);
 		}
 	}
@@ -3367,9 +3362,9 @@ void ProcessPlayers()
 				case PM_QUIT:
 					tplayer = false;
 					break;
-				case PM_WALK:
-				case PM_WALK2:
-				case PM_WALK3:
+				case PM_WALK_NORTHWARDS:
+				case PM_WALK_SOUTHWARDS:
+				case PM_WALK_SIDEWAYS:
 					tplayer = DoWalk(pnum, player._pmode);
 					break;
 				case PM_ATTACK:
@@ -3395,8 +3390,8 @@ void ProcessPlayers()
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
-			if (player._pmode != PM_DEATH || player.AnimInfo.TickCounterOfCurrentFrame != 40)
-				player.AnimInfo.ProcessAnimation();
+			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
+				player.AnimInfo.processAnimation();
 		}
 	}
 }
@@ -3544,7 +3539,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		return;
 	}
 
-	int sl = GetSpellLevel(myPlayer, spellID);
+	int sl = myPlayer.GetSpellLevel(spellID);
 	if (IsWallSpell(spellID)) {
 		LastMouseButtonAction = MouseActionType::Spell;
 		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
@@ -3570,9 +3565,9 @@ void SyncPlrAnim(Player &player)
 	case PM_QUIT:
 		graphic = player_graphic::Stand;
 		break;
-	case PM_WALK:
-	case PM_WALK2:
-	case PM_WALK3:
+	case PM_WALK_NORTHWARDS:
+	case PM_WALK_SOUTHWARDS:
+	case PM_WALK_SIDEWAYS:
 		graphic = player_graphic::Walk;
 		break;
 	case PM_ATTACK:

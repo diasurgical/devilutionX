@@ -445,7 +445,7 @@ void AddInitItems()
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
 		DeltaAddItem(ii);
@@ -1334,8 +1334,8 @@ void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allows
 
 int RndUItem(Monster *monster)
 {
-	if (monster != nullptr && (monster->data->mTreasure & T_UNIQ) != 0 && !gbIsMultiplayer)
-		return -((monster->data->mTreasure & T_MASK) + 1);
+	if (monster != nullptr && (monster->data().mTreasure & T_UNIQ) != 0 && !gbIsMultiplayer)
+		return -((monster->data().mTreasure & T_MASK) + 1);
 
 	int ril[512];
 
@@ -1647,7 +1647,7 @@ void SpawnRock()
 	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
-	item.AnimInfo.CurrentFrame = 10;
+	item.AnimInfo.currentFrame = 10;
 }
 
 void ItemDoppel()
@@ -2678,10 +2678,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player.previewCelSprite = std::nullopt;
 		if (player._pmode == PM_STAND) {
 			LoadPlrGFX(player, player_graphic::Stand);
-			player.AnimInfo.ChangeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
+			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
 		} else {
 			LoadPlrGFX(player, player_graphic::Walk);
-			player.AnimInfo.ChangeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].GetCelSpritesForDirection(player._pdir), player._pWFrames, 1);
+			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].GetCelSpritesForDirection(player._pdir), player._pWFrames, 1);
 		}
 	} else {
 		player._pgfxnum = gfxNum;
@@ -3007,10 +3007,10 @@ void SetupItem(Item &item)
 
 int RndItem(const Monster &monster)
 {
-	if ((monster.data->mTreasure & T_UNIQ) != 0)
-		return -((monster.data->mTreasure & T_MASK) + 1);
+	if ((monster.data().mTreasure & T_UNIQ) != 0)
+		return -((monster.data().mTreasure & T_MASK) + 1);
 
-	if ((monster.data->mTreasure & T_NODROP) != 0)
+	if ((monster.data().mTreasure & T_NODROP) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -3070,7 +3070,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster.uniqType != 0 || ((monster.data->mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
+	if (monster.uniqType != 0 || ((monster.data().mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(&monster);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -3101,8 +3101,8 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int uper = monster.uniqType != 0 ? 15 : 1;
 
-	int8_t mLevel = monster.data->mLevel;
-	if (!gbIsHellfire && monster.type->type == MT_DIABLO)
+	int8_t mLevel = monster.data().mLevel;
+	if (!gbIsHellfire && monster.type().type == MT_DIABLO)
 		mLevel -= 15;
 
 	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
@@ -3328,7 +3328,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	item._iPostDraw = true;
 	if (selflag != 0) {
 		item._iSelFlag = selflag;
-		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+		item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 		item._iAnimFlag = false;
 	}
 }
@@ -3410,18 +3410,18 @@ void ProcessItems()
 		auto &item = Items[ii];
 		if (!item._iAnimFlag)
 			continue;
-		item.AnimInfo.ProcessAnimation();
+		item.AnimInfo.processAnimation();
 		if (item._iCurs == ICURS_MAGIC_ROCK) {
-			if (item._iSelFlag == 1 && item.AnimInfo.CurrentFrame == 10)
-				item.AnimInfo.CurrentFrame = 0;
-			if (item._iSelFlag == 2 && item.AnimInfo.CurrentFrame == 20)
-				item.AnimInfo.CurrentFrame = 10;
+			if (item._iSelFlag == 1 && item.AnimInfo.currentFrame == 10)
+				item.AnimInfo.currentFrame = 0;
+			if (item._iSelFlag == 2 && item.AnimInfo.currentFrame == 20)
+				item.AnimInfo.currentFrame = 10;
 		} else {
-			if (item.AnimInfo.CurrentFrame == (item.AnimInfo.NumberOfFrames - 1) / 2)
+			if (item.AnimInfo.currentFrame == (item.AnimInfo.numberOfFrames - 1) / 2)
 				PlaySfxLoc(ItemDropSnds[ItemCAnimTbl[item._iCurs]], item.position);
 
-			if (item.AnimInfo.CurrentFrame >= item.AnimInfo.NumberOfFrames - 1) {
-				item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames - 1;
+			if (item.AnimInfo.currentFrame >= item.AnimInfo.numberOfFrames - 1) {
+				item.AnimInfo.currentFrame = item.AnimInfo.numberOfFrames - 1;
 				item._iAnimFlag = false;
 				item._iSelFlag = 1;
 			}
@@ -4336,7 +4336,7 @@ void MakeGoldStack(Item &goldItem, int value)
 int ItemNoFlippy()
 {
 	int r = ActiveItems[ActiveItemCount - 1];
-	Items[r].AnimInfo.CurrentFrame = Items[r].AnimInfo.NumberOfFrames - 1;
+	Items[r].AnimInfo.currentFrame = Items[r].AnimInfo.numberOfFrames - 1;
 	Items[r]._iAnimFlag = false;
 	Items[r]._iSelFlag = 1;
 
@@ -4462,8 +4462,8 @@ std::string DebugSpawnItem(std::string itemName)
 
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
-	fake_m.data = &MonstersData[0];
-	fake_m.uniqType = 0;
+	fake_m.idx = 0;
+	fake_m.uniqtype = 0;
 
 	int i = 0;
 	for (;; i++) {
@@ -4584,16 +4584,16 @@ void Item::setNewAnimation(bool showAnimation)
 	int8_t numberOfFrames = ItemAnimLs[it];
 	auto celSprite = itemanims[it] ? OptionalCelSprite { *itemanims[it] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
-		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+		AnimInfo.setNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
-		AnimInfo.SetNewAnimation(celSprite, numberOfFrames, 1);
+		AnimInfo.setNewAnimation(celSprite, numberOfFrames, 1);
 	_iPostDraw = false;
 	_iRequest = false;
 	if (showAnimation) {
 		_iAnimFlag = true;
 		_iSelFlag = 0;
 	} else {
-		AnimInfo.CurrentFrame = AnimInfo.NumberOfFrames - 1;
+		AnimInfo.currentFrame = AnimInfo.numberOfFrames - 1;
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}
