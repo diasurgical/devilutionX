@@ -281,7 +281,7 @@ constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 
 void ScrollViewPort(const Player &player, ScrollDirection dir)
 {
-	ScrollInfo.tile = Point { 0, 0 } + (player.position.tile - ViewPosition);
+	ScrollInfo.tile = PointOf<int8_t> { 0, 0 } + (player.position.tile - ViewPosition);
 
 	if (zoomflag) {
 		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
@@ -545,21 +545,21 @@ void RespawnDeadItem(Item &&itm, Point target)
 	NetSendCmdPItem(false, CMD_RESPAWNITEM, target, Items[ii]);
 }
 
-void DeadItem(Player &player, Item &&itm, Displacement direction)
+void DeadItem(Player &player, Item &&itm, DisplacementOf<int8_t> direction)
 {
 	if (itm.isEmpty())
 		return;
 
 	Point target = player.position.tile + direction;
-	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
+	if (direction != DisplacementOf<int8_t> { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(std::move(itm), target);
 		return;
 	}
 
-	for (int k = 1; k < 50; k++) {
-		for (int j = -k; j <= k; j++) {
-			for (int i = -k; i <= k; i++) {
-				Point next = player.position.tile + Displacement { i, j };
+	for (int_fast8_t k = 1; k < 50; k++) {
+		for (int_fast8_t j = -k; j <= k; j++) {
+			for (int_fast8_t i = -k; i <= k; i++) {
+				Point next = player.position.tile + DisplacementOf<int8_t> { i, j };
 				if (ItemSpaceOk(next)) {
 					RespawnDeadItem(std::move(itm), next);
 					return;
@@ -689,7 +689,7 @@ bool DoWalk(int pnum, int variant)
 
 		// Update the "camera" tile position
 		if (pnum == MyPlayerId && ScrollInfo._sdir != ScrollDirection::None) {
-			ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
+			ViewPosition = PointOf<uint8_t> { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 		}
 
 		if (player.walkpath[0] != WALK_NONE) {
@@ -1187,14 +1187,14 @@ bool DoRangeAttack(int pnum)
 	}
 
 	for (int arrow = 0; arrow < arrows; arrow++) {
-		int xoff = 0;
-		int yoff = 0;
+		int8_t xoff = 0;
+		int8_t yoff = 0;
 		if (arrows != 1) {
-			int angle = arrow == 0 ? -1 : 1;
-			int x = player.position.temp.x - player.position.tile.x;
+			int8_t angle = arrow == 0 ? -1 : 1;
+			int8_t x = player.position.temp.x - player.position.tile.x;
 			if (x != 0)
 				yoff = x < 0 ? angle : -angle;
-			int y = player.position.temp.y - player.position.tile.y;
+			int8_t y = player.position.temp.y - player.position.tile.y;
 			if (y != 0)
 				xoff = y < 0 ? -angle : angle;
 		}
@@ -1214,7 +1214,7 @@ bool DoRangeAttack(int pnum)
 
 		AddMissile(
 		    player.position.tile,
-		    player.position.temp + Displacement { xoff, yoff },
+		    player.position.temp + DisplacementOf<int8_t> { xoff, yoff },
 		    player._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
@@ -2775,7 +2775,7 @@ void InitPlayer(Player &player, bool firstTime)
 			}
 		} else {
 			unsigned i;
-			for (i = 0; i < 8 && !PosOkPlayer(player, player.position.tile + Displacement { plrxoff2[i], plryoff2[i] }); i++)
+			for (i = 0; i < 8 && !PosOkPlayer(player, player.position.tile + DisplacementOf<int8_t> { plrxoff2[i], plryoff2[i] }); i++)
 				;
 			player.position.tile.x += plrxoff2[i];
 			player.position.tile.y += plryoff2[i];
@@ -3618,7 +3618,7 @@ void SyncInitPlrPos(int pnum)
 
 	Point position = [&]() {
 		for (int i = 0; i < 8; i++) {
-			Point position = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			Point position = Point(player.position.tile) + Displacement { plrxoff2[i], plryoff2[i] };
 			if (PosOkPlayer(player, position))
 				return position;
 		}

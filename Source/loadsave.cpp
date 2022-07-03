@@ -2024,8 +2024,8 @@ void LoadGame(bool firstflag)
 	leveltype = static_cast<dungeon_type>(file.NextBE<uint32_t>());
 	if (!setlevel)
 		leveltype = GetLevelType(currlevel);
-	int viewX = file.NextBE<int32_t>();
-	int viewY = file.NextBE<int32_t>();
+	const auto viewX = static_cast<WorldTileCoord>(file.NextBE<int32_t>());
+	const auto viewY = static_cast<WorldTileCoord>(file.NextBE<int32_t>());
 	invflag = file.NextBool8();
 	chrflag = file.NextBool8();
 	int tmpNummonsters = file.NextBE<int32_t>();
