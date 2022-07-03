@@ -2397,11 +2397,10 @@ void DeltaLoadLevel()
 	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < ActiveMonsterCount; i++) {
+		for (int i = 0; i < MaxMonsters; i++) {
 			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
 
-			// Should this be Monsters[ActiveMonsters[i]]? this loop uses ActiveMonsterCount, not MAXMONSTERS
 			auto &monster = Monsters[i];
 			M_ClearSquares(monster);
 			{
