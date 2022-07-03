@@ -138,8 +138,7 @@ struct Missile {
 extern std::list<Missile> Missiles;
 extern bool MissilePreFlag;
 
-void GetDamageAmt(int i, int *mind, int *maxd);
-int GetSpellLevel(const Player &player, spell_id sn);
+void GetDamageAmt(spell_id i, int *mind, int *maxd);
 
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.

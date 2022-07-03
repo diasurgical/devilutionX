@@ -104,7 +104,7 @@ void DrawSpell(const Surface &out)
 
 	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
 	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
-		int tlvl = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spl];
+		int tlvl = myPlayer.GetSpellLevel(spl);
 		if (CheckSpell(MyPlayerId, spl, st, true) != SpellCheckResult::Success)
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
@@ -138,7 +138,7 @@ void DrawSpellList(const Surface &out)
 			transType = RSPLTYPE_INVALID;
 		}
 		if (spellListItem.type == RSPLTYPE_SPELL) {
-			spellLevel = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spellListItem.id], 0);
+			spellLevel = myPlayer.GetSpellLevel(spellListItem.id);
 			if (spellLevel == 0)
 				transType = RSPLTYPE_INVALID;
 		}
