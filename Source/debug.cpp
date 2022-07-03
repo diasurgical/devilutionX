@@ -727,7 +727,6 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 		if (monster == nullptr)
 			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
-		ActiveMonsterCount--;
 		monster->corpseId = 1;
 		spawnedMonster += 1;
 

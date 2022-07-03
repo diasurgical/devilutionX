@@ -317,11 +317,9 @@ void PlaceMonster(int i, int mtype, Point position)
 	InitMonster(Monsters[i], rd, mtype, position);
 }
 
-void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
+void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, Monster *leader)
 {
 	unsigned placed = 0;
-
-	auto &leader = Monsters[leaderId];
 
 	for (int try1 = 0; try1 < 10; try1++) {
 		while (placed != 0) {
@@ -335,7 +333,7 @@ void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, in
 		int yp;
 		if (uniqueMonsterPack != UniqueMonsterPack::None) {
 			int offset = GenerateRnd(8);
-			auto position = leader.position.tile + static_cast<Direction>(offset);
+			auto position = leader->position.tile + static_cast<Direction>(offset);
 			xp = position.x;
 			yp = position.y;
 		} else {
@@ -365,12 +363,12 @@ void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, in
 				auto &minion = Monsters[ActiveMonsterCount];
 				minion.maxHitPoints *= 2;
 				minion.hitPoints = minion.maxHitPoints;
-				minion.intelligence = leader.intelligence;
+				minion.intelligence = leader->intelligence;
 
 				if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
-					minion.leader = leaderId;
+					minion.setLeader(*leader);
 					minion.leaderRelation = LeaderRelation::Leashed;
-					minion.ai = leader.ai;
+					minion.ai = leader->ai;
 				}
 
 				if (minion.ai != AI_GARG) {
@@ -391,7 +389,7 @@ void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, in
 	}
 
 	if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
-		leader.packSize = placed;
+		leader->packSize = placed;
 	}
 }
 
@@ -483,6 +481,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		UberDiabloMonsterIndex = static_cast<int>(ActiveMonsterCount);
 	}
 	PlaceMonster(ActiveMonsterCount, uniqtype, position);
+	ActiveMonsterCount++;
+
 	PrepareUniqueMonst(monster, uniqindex, miniontype, bosspacksize, uniqueMonsterData);
 }
 
@@ -3519,10 +3519,8 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 		}
 	}
 
-	ActiveMonsterCount++;
-
 	if (uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
-		PlaceGroup(miniontype, bosspacksize, uniqueMonsterData.monsterPack, ActiveMonsterCount - 1);
+		PlaceGroup(miniontype, bosspacksize, uniqueMonsterData.monsterPack, &monster);
 	}
 
 	if (monster.ai != AI_GARG) {
@@ -3800,7 +3798,7 @@ void InitMonsters()
 				na = GenerateRnd(2) + 2;
 			else
 				na = GenerateRnd(3) + 3;
-			PlaceGroup(mtype, na, UniqueMonsterPack::None, 0);
+			PlaceGroup(mtype, na, UniqueMonsterPack::None, nullptr);
 		}
 	}
 	for (int i = 0; i < nt; i++) {
@@ -4851,6 +4849,11 @@ Monster *Monster::getLeader() const
 		return nullptr;
 
 	return &Monsters[leader];
+}
+
+void Monster::setLeader(const Monster &leader)
+{
+	this->leader = leader.getId();
 }
 
 void Monster::checkStandAnimationIsLoaded(Direction mdir)
