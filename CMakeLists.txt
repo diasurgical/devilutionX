@@ -468,15 +468,22 @@ if(UWP_LIB)
 endif()
 
 if(NXDK)
-  set(NXDK_PKG_DIR "${CMAKE_BINARY_DIR}/pkg")
-  set(_xbe_path "${NXDK_PKG_DIR}/default.xbe")
+  set(_nxdk_pkg_dir "${CMAKE_BINARY_DIR}/pkg")
+  set(_xbe_path "${_nxdk_pkg_dir}/default.xbe")
+  set(_iso_path "${CMAKE_BINARY_DIR}/devilutionx.iso")
   add_custom_command(
     OUTPUT "${_xbe_path}"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${NXDK_PKG_DIR}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${_nxdk_pkg_dir}"
     COMMAND "${NXDK_DIR}/tools/cxbe/cxbe" "-OUT:${_xbe_path}" -TITLE:DevilutionX "${CMAKE_BINARY_DIR}/${BIN_TARGET}.exe"
     DEPENDS "${BIN_TARGET}"
   )
   add_custom_target(nxdk_xbe DEPENDS "${_xbe_path}")
+  add_custom_command(
+      OUTPUT "${_iso_path}"
+      COMMAND "${NXDK_DIR}/tools/extract-xiso/build/extract-xiso" -c "${_nxdk_pkg_dir}" "${_iso_path}"
+      DEPENDS nxdk_xbe devilutionx_copied_assets
+  )
+  add_custom_target(nxdk_iso DEPENDS "${_iso_path}")
 endif()
 
 if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ OR SRC_DIST))
