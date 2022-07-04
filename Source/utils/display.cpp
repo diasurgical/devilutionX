@@ -10,6 +10,10 @@
 #include "platform/ctr/display.hpp"
 #endif
 
+#ifdef NXDK
+#include <hal/video.h>
+#endif
+
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/controller.h"
@@ -234,6 +238,18 @@ bool SpawnWindow(const char *lpWindowName)
 {
 #ifdef __vita__
 	scePowerSetArmClockFrequency(444);
+#endif
+#ifdef NXDK
+	{
+		Size windowSize = *sgOptions.Graphics.resolution;
+		VIDEO_MODE xmode;
+		void *p = nullptr;
+		while (XVideoListModes(&xmode, 0, 0, &p)) {
+			if (windowSize.width >= xmode.width && windowSize.height == xmode.height)
+				break;
+		}
+		XVideoSetMode(xmode.width, xmode.height, xmode.bpp, xmode.refresh);
+	}
 #endif
 
 #if SDL_VERSION_ATLEAST(2, 0, 6) && defined(__vita__)
