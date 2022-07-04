@@ -1428,11 +1428,8 @@ bool MonsterAttack(int monsterId)
 	return false;
 }
 
-bool MonsterRangedAttack(int monsterId)
+bool MonsterRangedAttack(Monster &monster)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster.AnimInfo.currentFrame == monster.data().mAFNum - 1) {
 		const auto &missileType = static_cast<missile_id>(monster._mVar1);
 		if (missileType != MIS_NULL) {
@@ -1446,7 +1443,7 @@ bool MonsterRangedAttack(int monsterId)
 				    monster._mdir,
 				    missileType,
 				    TARGET_PLAYERS,
-				    monsterId,
+				    monster.getId(),
 				    monster._mVar2,
 				    0);
 			}
@@ -4262,7 +4259,7 @@ void ProcessMonsters()
 				raflag = MonsterFadeout(monster);
 				break;
 			case MonsterMode::RangedAttack:
-				raflag = MonsterRangedAttack(monsterId);
+				raflag = MonsterRangedAttack(monster);
 				break;
 			case MonsterMode::SpecialStand:
 				raflag = MonsterSpecialStand(monster);
