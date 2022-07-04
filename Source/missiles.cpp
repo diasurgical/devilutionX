@@ -182,9 +182,9 @@ void MoveMissilePos(Missile &missile)
 	}
 }
 
-bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
+bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
-	auto &monster = Monsters[m];
+	auto &monster = Monsters[monsterId];
 
 	if (!monster.isPossibleToHit() || monster.isImmune(t))
 		return false;
@@ -244,14 +244,14 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		monster.flags |= MFLAG_NOHEAL;
 
 	if (monster.hitPoints >> 6 <= 0) {
-		M_StartKill(m, pnum);
+		M_StartKill(monsterId, pnum);
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(m);
 		if (monster.type().type != MT_GOLEM)
-			M_StartHit(m, pnum, dam);
+			M_StartHit(monsterId, pnum, dam);
 	}
 
 	if (monster.ticksToLive == 0) {
@@ -2672,6 +2672,7 @@ void MI_LArrow(Missile &missile)
 				eRst = MISR_FIRE;
 				break;
 			default:
+				app_fatal(fmt::format("wrong missile ID {}", static_cast<int>(missile._mitype)));
 				break;
 			}
 			SetMissAnim(missile, eAnim);

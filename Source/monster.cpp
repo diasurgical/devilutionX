@@ -3884,10 +3884,8 @@ void M_ClearSquares(const Monster &monster)
 	}
 }
 
-void M_GetKnockback(int monsterId)
+void M_GetKnockback(Monster &monster)
 {
-	auto &monster = Monsters[monsterId];
-
 	Direction dir = Opposite(monster.direction);
 	if (!IsRelativeMoveOK(monster, monster.position.old, dir)) {
 		return;

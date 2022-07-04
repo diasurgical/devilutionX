@@ -163,7 +163,7 @@ namespace {
 struct DirectionSettings {
 	Direction dir;
 	DisplacementOf<int8_t> tileAdd;
-	DisplacementOf<int8_t> offset;
+	DisplacementOf<int16_t> offset;
 	DisplacementOf<int8_t> map;
 	ScrollDirection scrollDir;
 	PLR_MODE walkMode;
@@ -796,14 +796,14 @@ bool DamageWeapon(Player &player, int durrnd)
 	return false;
 }
 
-bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
+bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 {
 	int hper = 0;
 
-	if ((DWORD)m >= MaxMonsters) {
-		app_fatal(fmt::format("PlrHitMonst: illegal monster {}", m));
+	if ((DWORD)monsterId >= MaxMonsters) {
+		app_fatal(fmt::format("PlrHitMonst: illegal monster {}", monsterId));
 	}
-	auto &monster = Monsters[m];
+	auto &monster = Monsters[monsterId];
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal(fmt::format("PlrHitMonst: illegal player {}", pnum));
@@ -971,13 +971,13 @@ bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 	}
 #endif
 	if ((monster.hitPoints >> 6) <= 0) {
-		M_StartKill(m, pnum);
+		M_StartKill(monsterId, pnum);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
-			M_GetKnockback(m);
-		M_StartHit(m, pnum, dam);
-	}
+			M_GetKnockback(monster);
+		M_StartHit(monsterId, pnum, dam);
 
+	}
 	return true;
 }
 
