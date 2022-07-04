@@ -1599,7 +1599,7 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 
 void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 {
-	PlaceMiniSetRandom({ { 1, 1 }, { search }, { replace } }, rndper);
+	PlaceMiniSetRandom({ { 1, 1 }, { { search } }, { { replace } } }, rndper);
 }
 
 void LoadQuestSetPieces()
