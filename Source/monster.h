@@ -322,7 +322,7 @@ void M_ClearSquares(const Monster &monster);
 void M_GetKnockback(Monster &monster);
 void M_StartHit(int monsterId, int dam);
 void M_StartHit(int monsterId, int pnum, int dam);
-void StartMonsterDeath(int monsterId, int pnum, bool sendmsg);
+void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg);
 void M_StartKill(int monsterId, int pnum);
 void M_SyncStartKill(int monsterId, Point position, int pnum);
 void M_UpdateLeader(int monsterId);

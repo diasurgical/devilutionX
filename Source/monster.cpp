@@ -1080,11 +1080,8 @@ void MonsterHitMonster(int monsterId, int i, int dam)
 	HitMonster(monsterId, dam);
 }
 
-void MonsterDeath(int monsterId, int pnum, Direction md, bool sendmsg)
+void MonsterDeath(Monster &monster, int pnum, Direction md, bool sendmsg)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (pnum < MAX_PLRS) {
 		if (pnum >= 0)
 			monster.whoHit |= 1 << pnum;
@@ -1115,11 +1112,11 @@ void MonsterDeath(int monsterId, int pnum, Direction md, bool sendmsg)
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
 	M_ClearSquares(monster);
-	dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+	dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 	CheckQuestKill(monster, sendmsg);
 	M_FallenFear(monster.position.tile);
 	if (IsAnyOf(monster.type().type, MT_NACID, MT_RACID, MT_BACID, MT_XACID, MT_SPIDLORD))
-		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monsterId, monster.intelligence + 1, 0);
+		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monster.getId(), monster.intelligence + 1, 0);
 }
 
 void StartDeathFromMonster(int i, int mid)
@@ -1133,7 +1130,7 @@ void StartDeathFromMonster(int i, int mid)
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
 
 	Direction md = GetDirection(monster.position.tile, killer.position.tile);
-	MonsterDeath(mid, i, md, true);
+	MonsterDeath(monster, i, md, true);
 	if (gbIsHellfire)
 		M_StartStand(killer, killer.direction);
 }
@@ -1201,11 +1198,8 @@ bool MonsterIdle(Monster &monster)
 /**
  * @brief Continue movement towards new tile
  */
-bool MonsterWalk(int monsterId, MonsterMode variant)
+bool MonsterWalk(Monster &monster, MonsterMode variant)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	// Check if we reached new tile
 	const bool isAnimationEnd = monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1;
 	if (isAnimationEnd) {
@@ -1214,7 +1208,7 @@ bool MonsterWalk(int monsterId, MonsterMode variant)
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 			monster.position.tile.x += monster.var1;
 			monster.position.tile.y += monster.var2;
-			dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+			dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 			break;
 		case MonsterMode::MoveSouthwards:
 			dMonster[monster.var1][monster.var2] = 0;
@@ -1223,7 +1217,7 @@ bool MonsterWalk(int monsterId, MonsterMode variant)
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 			monster.position.tile = WorldTilePosition { static_cast<WorldTileCoord>(monster.var1), static_cast<WorldTileCoord>(monster.var2) };
 			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
-			dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+			dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 			break;
 		default:
 			break;
@@ -3193,7 +3187,7 @@ void LachdananAi(int monsterId)
 			if (!effect_is_playing(USFX_LACH3) && monster.goal == MGOAL_TALKING) {
 				monster.talkMsg = TEXT_NONE;
 				Quests[Q_VEIL]._qactive = QUEST_DONE;
-				StartMonsterDeath(monsterId, -1, true);
+				StartMonsterDeath(monster, -1, true);
 			}
 		}
 	}
@@ -3936,13 +3930,10 @@ void M_StartHit(int monsterId, int pnum, int dam)
 	M_StartHit(monsterId, dam);
 }
 
-void StartMonsterDeath(int monsterId, int pnum, bool sendmsg)
+void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	Monster &monster = Monsters[monsterId];
-
 	Direction md = pnum >= 0 ? GetDirection(monster.position.tile, Players[pnum].position.tile) : monster.direction;
-	MonsterDeath(monsterId, pnum, md, sendmsg);
+	MonsterDeath(monster, pnum, md, sendmsg);
 }
 
 void M_StartKill(int monsterId, int pnum)
@@ -3959,7 +3950,7 @@ void M_StartKill(int monsterId, int pnum)
 		}
 	}
 
-	StartMonsterDeath(monsterId, pnum, true);
+	StartMonsterDeath(monster, pnum, true);
 }
 
 void M_SyncStartKill(int monsterId, Point position, int pnum)
@@ -3977,7 +3968,7 @@ void M_SyncStartKill(int monsterId, Point position, int pnum)
 		monster.position.old = position;
 	}
 
-	StartMonsterDeath(monsterId, pnum, false);
+	StartMonsterDeath(monster, pnum, false);
 }
 
 void M_UpdateLeader(int monsterId)
@@ -4250,7 +4241,7 @@ void ProcessMonsters()
 			case MonsterMode::MoveNorthwards:
 			case MonsterMode::MoveSouthwards:
 			case MonsterMode::MoveSideways:
-				raflag = MonsterWalk(monsterId, monster.mode);
+				raflag = MonsterWalk(monster, monster.mode);
 				break;
 			case MonsterMode::MeleeAttack:
 				raflag = MonsterAttack(monsterId);
