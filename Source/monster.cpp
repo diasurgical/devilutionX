@@ -1428,11 +1428,8 @@ bool MonsterAttack(int monsterId)
 	return false;
 }
 
-bool MonsterRangedAttack(int monsterId)
+bool MonsterRangedAttack(Monster &monster)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster.animInfo.currentFrame == monster.data().mAFNum - 1) {
 		const auto &missileType = static_cast<missile_id>(monster.var1);
 		if (missileType != MIS_NULL) {
@@ -1446,7 +1443,7 @@ bool MonsterRangedAttack(int monsterId)
 				    monster.direction,
 				    missileType,
 				    TARGET_PLAYERS,
-				    monsterId,
+				    monster.getId(),
 				    monster.var2,
 				    0);
 			}
@@ -3297,10 +3294,9 @@ string_view GetMonsterTypeText(const MonsterData &monsterData)
 	app_fatal(fmt::format("Unknown mMonstClass {}", static_cast<int>(monsterData.mMonstClass)));
 }
 
-void ActivateSpawn(int monsterId, Point position, Direction dir)
+void ActivateSpawn(Monster &monster, Point position, Direction dir)
 {
-	auto &monster = Monsters[monsterId];
-	dMonster[position.x][position.y] = monsterId + 1;
+	dMonster[position.x][position.y] = monster.getId() + 1;
 	monster.position.tile = position;
 	monster.position.future = position;
 	monster.position.old = position;
@@ -4262,7 +4258,7 @@ void ProcessMonsters()
 				raflag = MonsterFadeout(monster);
 				break;
 			case MonsterMode::RangedAttack:
-				raflag = MonsterRangedAttack(monsterId);
+				raflag = MonsterRangedAttack(monster);
 				break;
 			case MonsterMode::SpecialStand:
 				raflag = MonsterSpecialStand(monster);
@@ -4721,9 +4717,11 @@ bool SpawnSkeleton(int ii, Point position)
 	if (ii == -1)
 		return false;
 
+	Monster &monster = Monsters[ii];
+
 	if (IsTileAvailable(position)) {
 		Direction dir = GetDirection(position, position); // TODO useless calculation
-		ActivateSpawn(ii, position, dir);
+		ActivateSpawn(monster, position, dir);
 		return true;
 	}
 
@@ -4763,7 +4761,7 @@ bool SpawnSkeleton(int ii, Point position)
 
 	Point spawn = position + Displacement { x2 - 1, y2 - 1 };
 	Direction dir = GetDirection(spawn, position);
-	ActivateSpawn(ii, spawn, dir);
+	ActivateSpawn(monster, spawn, dir);
 
 	return true;
 }
