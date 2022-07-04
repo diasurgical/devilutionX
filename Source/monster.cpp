@@ -4618,20 +4618,20 @@ void PlayEffect(Monster &monster, int mode)
 
 void MissToMonst(Missile &missile, Point position)
 {
-	int m = missile._misource;
+	int monsterId = missile._misource;
 
-	assert(m >= 0 && m < MaxMonsters);
-	auto &monster = Monsters[m];
+	assert(monsterId >= 0 && monsterId < MaxMonsters);
+	auto &monster = Monsters[monsterId];
 
 	Point oldPosition = missile.position.tile;
-	dMonster[position.x][position.y] = m + 1;
+	dMonster[position.x][position.y] = monsterId + 1;
 	monster._mdir = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster._mdir);
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0)
-		M_StartHit(m, 0);
+		M_StartHit(monsterId, 0);
 	else
-		HitMonster(m, 0);
+		HitMonster(monsterId, 0);
 
 	if (monster.type().type == MT_GLOOM)
 		return;
@@ -4641,7 +4641,7 @@ void MissToMonst(Missile &missile, Point position)
 			return;
 
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
-		MonsterAttackPlayer(m, pnum, 500, monster.mMinDamage2, monster.mMaxDamage2);
+		MonsterAttackPlayer(monsterId, pnum, 500, monster.mMinDamage2, monster.mMaxDamage2);
 
 		if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 			return;
@@ -4664,17 +4664,17 @@ void MissToMonst(Missile &missile, Point position)
 		return;
 
 	int mid = dMonster[oldPosition.x][oldPosition.y] - 1;
-	MonsterAttackMonster(m, mid, 500, monster.mMinDamage2, monster.mMaxDamage2);
+	MonsterAttackMonster(monsterId, mid, 500, monster.mMinDamage2, monster.mMaxDamage2);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
 
 	Point newPosition = oldPosition + monster._mdir;
 	if (IsTileAvailable(Monsters[mid], newPosition)) {
-		m = dMonster[oldPosition.x][oldPosition.y];
-		dMonster[newPosition.x][newPosition.y] = m;
+		monsterId = dMonster[oldPosition.x][oldPosition.y];
+		dMonster[newPosition.x][newPosition.y] = monsterId;
 		dMonster[oldPosition.x][oldPosition.y] = 0;
-		m--;
+		monsterId--;
 		monster.position.tile = newPosition;
 		monster.position.future = newPosition;
 	}
