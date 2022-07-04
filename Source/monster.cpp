@@ -1287,7 +1287,7 @@ void CheckReflect(int monsterId, int pnum, int dam)
 	if (monster._mhitpoints >> 6 <= 0)
 		M_StartKill(monsterId, pnum);
 	else
-		M_StartHit(monsterId, pnum, mdam);
+		M_StartHit(monster, pnum, mdam);
 }
 
 void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDam)
@@ -1375,7 +1375,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		if (monster._mhitpoints >> 6 <= 0)
 			M_StartKill(monsterId, pnum);
 		else
-			M_StartHit(monsterId, pnum, mdam);
+			M_StartHit(monster, pnum, mdam);
 	}
 	if ((monster._mFlags & MFLAG_NOLIFESTEAL) == 0 && monster.type().type == MT_SKING && gbIsMultiplayer)
 		monster._mhitpoints += dam;
@@ -3886,10 +3886,8 @@ void M_GetKnockback(Monster &monster)
 	StartMonsterGotHit(monster);
 }
 
-void M_StartHit(int monsterId, int dam)
+void M_StartHit(Monster &monster, int dam)
 {
-	Monster &monster = Monsters[monsterId];
-
 	PlayEffect(monster, 1);
 
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
@@ -3907,14 +3905,12 @@ void M_StartHit(int monsterId, int dam)
 	}
 }
 
-void M_StartHit(int monsterId, int pnum, int dam)
+void M_StartHit(Monster &monster, int pnum, int dam)
 {
-	Monster &monster = Monsters[monsterId];
-
 	monster.mWhoHit |= 1 << pnum;
 	if (pnum == MyPlayerId) {
 		delta_monster_hp(monster, *MyPlayer);
-		NetSendCmdMonDmg(false, monsterId, dam);
+		NetSendCmdMonDmg(false, monster.getId(), dam);
 	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
 		monster._menemy = pnum;
@@ -3923,7 +3919,7 @@ void M_StartHit(int monsterId, int pnum, int dam)
 		monster._mdir = GetMonsterDirection(monster);
 	}
 
-	M_StartHit(monsterId, dam);
+	M_StartHit(monster, dam);
 }
 
 void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg)
@@ -4625,7 +4621,7 @@ void MissToMonst(Missile &missile, Point position)
 	monster.position.tile = position;
 	M_StartStand(monster, monster._mdir);
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0)
-		M_StartHit(monsterId, 0);
+		M_StartHit(monster, 0);
 	else
 		HitMonster(monsterId, 0);
 

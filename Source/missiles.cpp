@@ -251,7 +251,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		if (monster._mmode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
 		if (monster.type().type != MT_GOLEM)
-			M_StartHit(monsterId, pnum, dam);
+			M_StartHit(monster, pnum, dam);
 	}
 
 	if (monster._msquelch == 0) {
@@ -877,7 +877,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 		PlayEffect(monster, 1);
 	} else {
 		if (monster.type().type != MT_GOLEM)
-			M_StartHit(monsterId, dam);
+			M_StartHit(monster, dam);
 	}
 	return true;
 }
