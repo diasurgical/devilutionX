@@ -872,7 +872,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		monster._mhitpoints = 0;
 #endif
 	if (monster._mhitpoints >> 6 <= 0) {
-		StartMonsterDeath(m, -1, true);
+		StartMonsterDeath(monster, -1, true);
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
