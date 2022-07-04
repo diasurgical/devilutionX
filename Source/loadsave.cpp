@@ -594,7 +594,8 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	file->Skip(4); // Skip pointer _mAnimData
 	monster.AnimInfo = {};
 	monster.AnimInfo.ticksPerFrame = file->NextLENarrow<int32_t, int8_t>();
-	monster.AnimInfo.tickCounterOfCurrentFrame = file->NextLENarrow<int32_t, int8_t>();
+	// Ensure that we can increase the tickCounterOfCurrentFrame at least once without overflow (needed for backwards compatibility for sitting gargoyles)
+	monster.AnimInfo.tickCounterOfCurrentFrame = file->NextLENarrow<int32_t, int8_t>(1) - 1;
 	monster.AnimInfo.numberOfFrames = file->NextLENarrow<int32_t, int8_t>();
 	monster.AnimInfo.currentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
 	file->Skip(4); // Skip _meflag
