@@ -1198,11 +1198,8 @@ bool MonsterIdle(Monster &monster)
 /**
  * @brief Continue movement towards new tile
  */
-bool MonsterWalk(int monsterId, MonsterMode variant)
+bool MonsterWalk(Monster &monster, MonsterMode variant)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	// Check if we reached new tile
 	const bool isAnimationEnd = monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1;
 	if (isAnimationEnd) {
@@ -1211,7 +1208,7 @@ bool MonsterWalk(int monsterId, MonsterMode variant)
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 			monster.position.tile.x += monster._mVar1;
 			monster.position.tile.y += monster._mVar2;
-			dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+			dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 			break;
 		case MonsterMode::MoveSouthwards:
 			dMonster[monster._mVar1][monster._mVar2] = 0;
@@ -1220,7 +1217,7 @@ bool MonsterWalk(int monsterId, MonsterMode variant)
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 			monster.position.tile = WorldTilePosition { static_cast<WorldTileCoord>(monster._mVar1), static_cast<WorldTileCoord>(monster._mVar2) };
 			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
-			dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+			dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 			break;
 		default:
 			break;
@@ -4244,7 +4241,7 @@ void ProcessMonsters()
 			case MonsterMode::MoveNorthwards:
 			case MonsterMode::MoveSouthwards:
 			case MonsterMode::MoveSideways:
-				raflag = MonsterWalk(monsterId, monster._mmode);
+				raflag = MonsterWalk(monster, monster._mmode);
 				break;
 			case MonsterMode::MeleeAttack:
 				raflag = MonsterAttack(monsterId);
