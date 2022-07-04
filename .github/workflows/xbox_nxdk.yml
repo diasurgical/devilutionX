@@ -23,7 +23,7 @@ jobs:
 
     - name: Build NXDK
       shell: bash
-      run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 all cxbe extract-xiso
+      run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 all cxbe
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -37,13 +37,11 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}
       shell: bash
-      run: cmake --build build-xbox -j $(nproc) --target nxdk_iso
+      run: cmake --build build-xbox -j $(nproc) --target nxdk_xbe
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
         name: devilutionx
-        path: |
-          build-xbox/pkg/default.xbe
-          build-xbox/devilutionx.iso
+        path: build-xbox/pkg/
