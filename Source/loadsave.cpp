@@ -148,7 +148,6 @@ public:
 		static_assert(std::numeric_limits<TSource>::min() < std::numeric_limits<TDesired>::min());
 		static_assert(std::numeric_limits<TSource>::max() > std::numeric_limits<TDesired>::max());
 		TSource value = SwapLE(Next<TSource>()) + modifier;
-		assert(value >= std::numeric_limits<TDesired>::min() && value <= std::numeric_limits<TDesired>::max());
 		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
 	}
 
