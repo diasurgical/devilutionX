@@ -69,8 +69,6 @@ class PointsInRectangleRange {
 public:
 	using const_iterator = class PointsInRectangleIterator : public PointsInRectangleIteratorBase {
 	public:
-		PointsInRectangleIterator() = default;
-
 		constexpr PointsInRectangleIterator(Rectangle region, int index = 0)
 		    : PointsInRectangleIteratorBase(region.position, region.size.width, index)
 		{
@@ -237,8 +235,6 @@ class PointsInRectangleRangeColMajor {
 public:
 	using const_iterator = class PointsInRectangleIteratorColMajor : public PointsInRectangleIteratorBase {
 	public:
-		PointsInRectangleIteratorColMajor() = default;
-
 		constexpr PointsInRectangleIteratorColMajor(Rectangle region, int index = 0)
 		    : PointsInRectangleIteratorBase(region.position, region.size.height, index)
 		{

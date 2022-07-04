@@ -12,7 +12,6 @@
 namespace devilution {
 namespace {
 constexpr unsigned NumPaletteColors = 256;
-constexpr unsigned PcxPaletteSize = 1 + NumPaletteColors * 3;
 } // namespace
 
 bool LoadPcxMeta(SDL_RWops *handle, int &width, int &height, uint8_t &bpp)
