@@ -468,6 +468,9 @@ if(UWP_LIB)
 endif()
 
 if(NXDK)
+  target_link_libraries(${BIN_TARGET} PRIVATE "${NXDK_DIR}/lib/libnxdk_automount_d.lib")
+  target_link_options(${BIN_TARGET} PRIVATE "-include:_automount_d_drive")
+
   set(_nxdk_pkg_dir "${CMAKE_BINARY_DIR}/pkg")
   set(_xbe_path "${_nxdk_pkg_dir}/default.xbe")
   add_custom_command(
