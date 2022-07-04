@@ -15,7 +15,7 @@ jobs:
       NXDK_DIR: /opt/nxdk
     steps:
     - name: Install APT packages
-      run: sudo apt-get update && sudo apt-get install -y clang llvm lld bison flex cmake git gettext smpq
+      run: sudo apt-get update && sudo apt-get install -y clang llvm lld bison flex cmake git gettext
 
     - name: Clone NXDK Repo
       shell: bash
@@ -37,11 +37,13 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}
       shell: bash
-      run: cmake --build build-xbox -j $(nproc) --target nxdk_xbe
+      run: cmake --build build-xbox -j $(nproc) --target nxdk_iso
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: devilutionx
-        path: build-xbox/pkg/default.xbe
+        path: |
+          build-xbox/pkg/default.xbe
+          build-xbox/devilutionx.iso
