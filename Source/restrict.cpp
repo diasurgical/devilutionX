@@ -13,7 +13,7 @@ namespace devilution {
 void ReadOnlyTest()
 {
 	const std::string path = paths::PrefPath() + "Diablo1ReadOnlyTest.foo";
-	FILE *f = FOpen(path.c_str(), "wt");
+	FILE *f = FOpen(path.c_str(), "w");
 	if (f == nullptr) {
 		DirErrorDlg(paths::PrefPath());
 	}
