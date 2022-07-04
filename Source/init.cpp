@@ -95,6 +95,8 @@ std::vector<std::string> GetMPQSearchPaths()
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #elif defined(__3DS__) || defined(__SWITCH__)
 	paths.emplace_back("romfs:/");
+#elif defined(NXDK)
+	paths.emplace_back("D:\\");
 #elif (defined(_WIN64) || defined(_WIN32)) && !defined(__UWP__) && !defined(NXDK)
 	char gogpath[_FSG_PATH_MAX];
 	fsg_get_gog_game_path(gogpath, "1412601690");
