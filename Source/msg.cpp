@@ -2879,12 +2879,12 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam)
+void NetSendCmdMonDmg(bool bHiPri, Monster &monster, uint32_t dwDam)
 {
 	TCmdMonDamage cmd;
 
 	cmd.bCmd = CMD_MONSTDAMAGE;
-	cmd.wMon = wMon;
+	cmd.wMon = monster.getId();
 	cmd.dwDam = dwDam;
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));

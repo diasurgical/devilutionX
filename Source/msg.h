@@ -749,7 +749,7 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
-void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
+void NetSendCmdMonDmg(bool bHiPri, Monster &monster, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
 uint32_t ParseCmd(int pnum, const TCmd *pCmd);

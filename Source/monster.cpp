@@ -1047,7 +1047,7 @@ void HitMonster(int monsterId, int dam)
 	auto &monster = Monsters[monsterId];
 
 	delta_monster_hp(monster, *MyPlayer);
-	NetSendCmdMonDmg(false, monsterId, dam);
+	NetSendCmdMonDmg(false, monster, dam);
 	PlayEffect(monster, 1);
 
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
@@ -3926,7 +3926,7 @@ void M_StartHit(int monsterId, int pnum, int dam)
 	monster.mWhoHit |= 1 << pnum;
 	if (pnum == MyPlayerId) {
 		delta_monster_hp(monster, *MyPlayer);
-		NetSendCmdMonDmg(false, monsterId, dam);
+		NetSendCmdMonDmg(false, monster, dam);
 	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.mLevel + 3) {
 		monster._menemy = pnum;
