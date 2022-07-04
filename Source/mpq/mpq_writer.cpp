@@ -91,8 +91,9 @@ MpqWriter::MpqWriter(const char *path)
 	LogVerbose("Opening {}", path);
 	std::string error;
 	bool exists = FileExists(path);
-	std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
+	std::ios::openmode mode = std::ios::out | std::ios::binary;
 	if (exists) {
+		mode |= std::ios::in;
 		if (!GetFileSize(path, &size_)) {
 			error = R"(GetFileSize failed: "{}")";
 			LogError(error, path, std::strerror(errno));
