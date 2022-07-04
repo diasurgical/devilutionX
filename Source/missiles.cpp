@@ -840,9 +840,9 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
+bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
-	auto &monster = Monsters[m];
+	auto &monster = Monsters[monsterId];
 
 	if (!monster.IsPossibleToHit() || monster.IsImmune(t))
 		return false;
@@ -877,7 +877,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		PlayEffect(monster, 1);
 	} else {
 		if (monster.type().type != MT_GOLEM)
-			M_StartHit(m, dam);
+			M_StartHit(monsterId, dam);
 	}
 	return true;
 }
