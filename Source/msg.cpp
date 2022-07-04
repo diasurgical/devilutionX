@@ -1434,8 +1434,7 @@ DWORD OnKnockback(const TCmd *pCmd, int pnum)
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs != 1 && Players[pnum].isOnActiveLevel() && message.wParam1 < MaxMonsters) {
-		Monster &monster = Monsters[message.wParam1];
-		M_GetKnockback(monster);
+		M_GetKnockback(Monsters[message.wParam1]);
 		M_StartHit(message.wParam1, pnum, 0);
 	}
 
