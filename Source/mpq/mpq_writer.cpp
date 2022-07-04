@@ -89,11 +89,13 @@ bool IsUnallocatedBlock(const MpqBlockEntry *block)
 MpqWriter::MpqWriter(const char *path)
 {
 	LogVerbose("Opening {}", path);
+	std::string error;
 	bool exists = FileExists(path);
 	std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 	if (exists) {
 		if (!GetFileSize(path, &size_)) {
-			Log(R"(GetFileSize("{}") failed with "{}")", path, std::strerror(errno));
+			error = R"(GetFileSize failed: "{}")";
+			LogError(error, path, std::strerror(errno));
 			goto on_error;
 		}
 		LogVerbose("GetFileSize(\"{}\") = {}", path, size_);
@@ -102,6 +104,7 @@ MpqWriter::MpqWriter(const char *path)
 	}
 	if (!stream_.Open(path, mode)) {
 		stream_.Close();
+		error = "Failed to open fstream";
 		goto on_error;
 	}
 
@@ -112,13 +115,16 @@ MpqWriter::MpqWriter(const char *path)
 		if (!exists) {
 			InitDefaultMpqHeader(&fhdr);
 		} else if (!ReadMPQHeader(&fhdr)) {
+			error = "Failed to read MPQ header";
 			goto on_error;
 		}
 		blockTable_ = std::make_unique<MpqBlockEntry[]>(BlockEntriesCount);
 		std::memset(blockTable_.get(), 0, BlockEntriesCount * sizeof(MpqBlockEntry));
 		if (fhdr.blockEntriesCount > 0) {
-			if (!stream_.Read(reinterpret_cast<char *>(blockTable_.get()), static_cast<std::streamsize>(fhdr.blockEntriesCount * sizeof(MpqBlockEntry))))
+			if (!stream_.Read(reinterpret_cast<char *>(blockTable_.get()), static_cast<std::streamsize>(fhdr.blockEntriesCount * sizeof(MpqBlockEntry)))) {
+				error = "Failed to read block table";
 				goto on_error;
+			}
 			uint32_t key = Hash("(block table)", 3);
 			Decrypt(reinterpret_cast<uint32_t *>(blockTable_.get()), fhdr.blockEntriesCount * sizeof(MpqBlockEntry), key);
 		}
@@ -128,8 +134,10 @@ MpqWriter::MpqWriter(const char *path)
 		std::memset(hashTable_.get(), 0xFF, HashEntriesCount * sizeof(MpqHashEntry));
 
 		if (fhdr.hashEntriesCount > 0) {
-			if (!stream_.Read(reinterpret_cast<char *>(hashTable_.get()), static_cast<std::streamsize>(fhdr.hashEntriesCount * sizeof(MpqHashEntry))))
+			if (!stream_.Read(reinterpret_cast<char *>(hashTable_.get()), static_cast<std::streamsize>(fhdr.hashEntriesCount * sizeof(MpqHashEntry)))) {
+				error = "Failed to read hash entries";
 				goto on_error;
+			}
 			uint32_t key = Hash("(hash table)", 3);
 			Decrypt(reinterpret_cast<uint32_t *>(hashTable_.get()), fhdr.hashEntriesCount * sizeof(MpqHashEntry), key);
 		}
@@ -150,7 +158,7 @@ MpqWriter::MpqWriter(const char *path)
 	}
 	return;
 on_error:
-	app_fatal(_("Failed to open archive for writing."));
+	app_fatal(fmt::format("{}\n{}\n{}", _("Failed to open archive for writing."), path, error));
 }
 
 MpqWriter::~MpqWriter()
