@@ -208,12 +208,12 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		maxhp /= 2;
 		monster.level -= 15;
 	}
-	monster.maxHp = maxhp << 6;
+	monster.maxHitPoints = maxhp << 6;
 
 	if (!gbIsMultiplayer)
-		monster.maxHp = std::max(monster.maxHp / 2, 64);
+		monster.maxHitPoints = std::max(monster.maxHitPoints / 2, 64);
 
-	monster.hitPoints = monster.maxHp;
+	monster.hitPoints = monster.maxHitPoints;
 	monster.ai = monster.data().mAi;
 	monster.intelligence = monster.data().mInt;
 	monster.goal = MGOAL_NORMAL;
@@ -250,12 +250,12 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	}
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster.maxHp = 3 * monster.maxHp;
+		monster.maxHitPoints = 3 * monster.maxHitPoints;
 		if (gbIsHellfire)
-			monster.maxHp += (gbIsMultiplayer ? 100 : 50) << 6;
+			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
-			monster.maxHp += 64;
-		monster.hitPoints = monster.maxHp;
+			monster.maxHitPoints += 64;
+		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 15;
 		monster.exp = 2 * (monster.exp + 1000);
 		monster.hit += NightmareToHitBonus;
@@ -266,12 +266,12 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.maxDamage2 = 2 * (monster.maxDamage2 + 2);
 		monster.armorClass += NightmareAcBonus;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-		monster.maxHp = 4 * monster.maxHp;
+		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
-			monster.maxHp += (gbIsMultiplayer ? 200 : 100) << 6;
+			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
-			monster.maxHp += 192;
-		monster.hitPoints = monster.maxHp;
+			monster.maxHitPoints += 192;
+		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 30;
 		monster.exp = 4 * (monster.exp + 1000);
 		monster.hit += HellToHitBonus;
@@ -359,8 +359,8 @@ void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int lea
 			PlaceMonster(ActiveMonsterCount, mtype, { xp, yp });
 			if (uniqueMonsterPack != UniqueMonsterPack::None) {
 				auto &minion = Monsters[ActiveMonsterCount];
-				minion.maxHp *= 2;
-				minion.hitPoints = minion.maxHp;
+				minion.maxHitPoints *= 2;
+				minion.hitPoints = minion.maxHitPoints;
 				minion.intelligence = leader.intelligence;
 
 				if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
@@ -1171,7 +1171,7 @@ void StartHeal(Monster &monster)
 	monster.animInfo.currentFrame = monster.type().getAnimData(MonsterGraphic::Special).frames - 1;
 	monster.flags |= MFLAG_LOCK_ANIMATION;
 	monster.mode = MonsterMode::Heal;
-	monster.var1 = monster.maxHp / (16 * (GenerateRnd(5) + 4));
+	monster.var1 = monster.maxHitPoints / (16 * (GenerateRnd(5) + 4));
 }
 
 void SyncLightPosition(Monster &monster)
@@ -1559,10 +1559,10 @@ bool MonsterHeal(Monster &monster)
 	if (monster.animInfo.currentFrame == 0) {
 		monster.flags &= ~MFLAG_LOCK_ANIMATION;
 		monster.flags |= MFLAG_ALLOW_SPECIAL;
-		if (monster.var1 + monster.hitPoints < monster.maxHp) {
+		if (monster.var1 + monster.hitPoints < monster.maxHitPoints) {
 			monster.hitPoints = monster.var1 + monster.hitPoints;
 		} else {
-			monster.hitPoints = monster.maxHp;
+			monster.hitPoints = monster.maxHitPoints;
 			monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 			monster.mode = MonsterMode::SpecialMeleeAttack;
 		}
@@ -2043,7 +2043,7 @@ void AiAvoidance(int monsterId)
 			}
 		} else if (v < 2 * monster.intelligence + 23) {
 			monster.direction = md;
-			if (IsAnyOf(monster.ai, AI_GOATMC, AI_GARBUD) && monster.hitPoints < (monster.maxHp / 2) && GenerateRnd(2) != 0)
+			if (IsAnyOf(monster.ai, AI_GOATMC, AI_GARBUD) && monster.hitPoints < (monster.maxHitPoints / 2) && GenerateRnd(2) != 0)
 				StartSpecialAttack(monster);
 			else
 				StartAttack(monster);
@@ -2356,7 +2356,7 @@ void ScavengerAi(int monsterId)
 
 	if (monster.mode != MonsterMode::Stand)
 		return;
-	if (monster.hitPoints < (monster.maxHp / 2) && monster.goal != MGOAL_HEALING) {
+	if (monster.hitPoints < (monster.maxHitPoints / 2) && monster.goal != MGOAL_HEALING) {
 		if (monster.leaderRelation != LeaderRelation::None) {
 			if (monster.leaderRelation == LeaderRelation::Leashed)
 				Monsters[monster.leader].packSize--;
@@ -2371,19 +2371,19 @@ void ScavengerAi(int monsterId)
 			StartEating(monster);
 			if ((monster.flags & MFLAG_NOHEAL) == 0) {
 				if (gbIsHellfire) {
-					int mMaxHP = monster.maxHp; // BUGFIX use maxHp or we loose health when difficulty isn't normal (fixed)
+					int mMaxHP = monster.maxHitPoints; // BUGFIX use maxHitPoints or we loose health when difficulty isn't normal (fixed)
 					monster.hitPoints += mMaxHP / 8;
-					if (monster.hitPoints > monster.maxHp)
-						monster.hitPoints = monster.maxHp;
-					if (monster.goalSpecialAction <= 0 || monster.hitPoints == monster.maxHp)
+					if (monster.hitPoints > monster.maxHitPoints)
+						monster.hitPoints = monster.maxHitPoints;
+					if (monster.goalSpecialAction <= 0 || monster.hitPoints == monster.maxHitPoints)
 						dCorpse[monster.position.tile.x][monster.position.tile.y] = 0;
 				} else {
 					monster.hitPoints += 64;
 				}
 			}
-			int targetHealth = monster.maxHp;
+			int targetHealth = monster.maxHitPoints;
 			if (!gbIsHellfire)
-				targetHealth = (monster.maxHp / 2) + (monster.maxHp / 4);
+				targetHealth = (monster.maxHitPoints / 2) + (monster.maxHitPoints / 4);
 			if (monster.hitPoints >= targetHealth) {
 				monster.goal = MGOAL_NORMAL;
 				monster.goalGeneral = 0;
@@ -2503,10 +2503,10 @@ void FallenAi(int monsterId)
 		}
 		if ((monster.flags & MFLAG_NOHEAL) == 0) {
 			StartSpecialStand(monster, monster.direction);
-			if (monster.maxHp - (2 * monster.intelligence + 2) >= monster.hitPoints)
+			if (monster.maxHitPoints - (2 * monster.intelligence + 2) >= monster.hitPoints)
 				monster.hitPoints += 2 * monster.intelligence + 2;
 			else
-				monster.hitPoints = monster.maxHp;
+				monster.hitPoints = monster.maxHitPoints;
 		}
 		int rad = 2 * monster.intelligence + 4;
 		for (int y = -rad; y <= rad; y++) {
@@ -2683,7 +2683,7 @@ void GargoyleAi(int monsterId)
 		return;
 	}
 
-	if (monster.hitPoints < (monster.maxHp / 2))
+	if (monster.hitPoints < (monster.maxHitPoints / 2))
 		if ((monster.flags & MFLAG_NOHEAL) == 0)
 			monster.goal = MGOAL_RETREAT;
 	if (monster.goal == MGOAL_RETREAT) {
@@ -2980,7 +2980,7 @@ void CounselorAi(int monsterId)
 				AiDelay(monster, GenerateRnd(10) + 2 * (5 - monster.intelligence));
 		} else {
 			monster.direction = md;
-			if (monster.hitPoints < (monster.maxHp / 2)) {
+			if (monster.hitPoints < (monster.maxHitPoints / 2)) {
 				monster.goal = MGOAL_RETREAT;
 				monster.goalGeneral = 0;
 				StartFadeout(monster, md, false);
@@ -3409,12 +3409,12 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 
 	monster.exp *= 2;
 	monster.name = pgettext("monster", uniqueMonsterData.mName).data();
-	monster.maxHp = uniqueMonsterData.mmaxhp << 6;
+	monster.maxHitPoints = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
-		monster.maxHp = std::max(monster.maxHp / 2, 64);
+		monster.maxHitPoints = std::max(monster.maxHitPoints / 2, 64);
 
-	monster.hitPoints = monster.maxHp;
+	monster.hitPoints = monster.maxHitPoints;
 	monster.ai = uniqueMonsterData.mAi;
 	monster.intelligence = uniqueMonsterData.mint;
 	monster.minDamage = uniqueMonsterData.mMinDamage;
@@ -3441,26 +3441,26 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	}
 
 	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster.maxHp = 3 * monster.maxHp;
+		monster.maxHitPoints = 3 * monster.maxHitPoints;
 		if (gbIsHellfire)
-			monster.maxHp += (gbIsMultiplayer ? 100 : 50) << 6;
+			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
-			monster.maxHp += 64;
+			monster.maxHitPoints += 64;
 		monster.level += 15;
-		monster.hitPoints = monster.maxHp;
+		monster.hitPoints = monster.maxHitPoints;
 		monster.exp = 2 * (monster.exp + 1000);
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
 		monster.minDamage2 = 2 * (monster.minDamage2 + 2);
 		monster.maxDamage2 = 2 * (monster.maxDamage2 + 2);
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-		monster.maxHp = 4 * monster.maxHp;
+		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
-			monster.maxHp += (gbIsMultiplayer ? 200 : 100) << 6;
+			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
-			monster.maxHp += 192;
+			monster.maxHitPoints += 192;
 		monster.level += 30;
-		monster.hitPoints = monster.maxHp;
+		monster.hitPoints = monster.maxHitPoints;
 		monster.exp = 4 * (monster.exp + 1000);
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
@@ -3712,10 +3712,10 @@ void WeakenNaKrul()
 	PlayEffect(monster, 2);
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.armorClass -= 50;
-	int hp = monster.maxHp / 2;
+	int hp = monster.maxHitPoints / 2;
 	monster.magicResistance = 0;
 	monster.hitPoints = hp;
-	monster.maxHp = hp;
+	monster.maxHitPoints = hp;
 }
 
 void InitGolems()
@@ -4198,13 +4198,13 @@ void ProcessMonsters()
 			SetRndSeed(monster.aiSeed);
 			monster.aiSeed = AdvanceRndSeed();
 		}
-		if ((monster.flags & MFLAG_NOHEAL) == 0 && monster.hitPoints < monster.maxHp && monster.hitPoints >> 6 > 0) {
+		if ((monster.flags & MFLAG_NOHEAL) == 0 && monster.hitPoints < monster.maxHitPoints && monster.hitPoints >> 6 > 0) {
 			if (monster.level > 1) {
 				monster.hitPoints += monster.level / 2;
 			} else {
 				monster.hitPoints += monster.level;
 			}
-			monster.hitPoints = std::min(monster.hitPoints, monster.maxHp); // prevent going over max HP with part of a single regen tick
+			monster.hitPoints = std::min(monster.hitPoints, monster.maxHitPoints); // prevent going over max HP with part of a single regen tick
 		}
 
 		if (IsTileVisible(monster.position.tile) && monster.ticksToLive == 0) {
@@ -4822,8 +4822,8 @@ void SpawnGolem(int id, Point position, Missile &missile)
 	golem.position.future = position;
 	golem.position.old = position;
 	golem.pathCount = 0;
-	golem.maxHp = 2 * (320 * missile._mispllvl + player._pMaxMana / 3);
-	golem.hitPoints = golem.maxHp;
+	golem.maxHitPoints = 2 * (320 * missile._mispllvl + player._pMaxMana / 3);
+	golem.hitPoints = golem.maxHitPoints;
 	golem.armorClass = 25;
 	golem.hit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
 	golem.minDamage = 2 * (missile._mispllvl + 4);

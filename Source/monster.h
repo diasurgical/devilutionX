@@ -187,7 +187,7 @@ struct Monster { // note: missing field _mAFNum
 	int var1;
 	int var2;
 	int var3;
-	int maxHp;
+	int maxHitPoints;
 	int hitPoints;
 	uint32_t flags;
 	/** Seed used to determine item drops on death */

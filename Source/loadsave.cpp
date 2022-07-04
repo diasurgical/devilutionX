@@ -607,7 +607,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.position.offset2.deltaX = file->NextLE<int32_t>();
 	monster.position.offset2.deltaY = file->NextLE<int32_t>();
 	file->Skip(4); // Skip actionFrame
-	monster.maxHp = file->NextLE<int32_t>();
+	monster.maxHitPoints = file->NextLE<int32_t>();
 	monster.hitPoints = file->NextLE<int32_t>();
 
 	monster.ai = static_cast<_mai_id>(file->NextLE<uint8_t>());
@@ -1347,7 +1347,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.position.offset2.deltaX);
 	file->WriteLE<int32_t>(monster.position.offset2.deltaY);
 	file->Skip<int32_t>(); // Skip _mVar8
-	file->WriteLE<int32_t>(monster.maxHp);
+	file->WriteLE<int32_t>(monster.maxHitPoints);
 	file->WriteLE<int32_t>(monster.hitPoints);
 
 	file->WriteLE<uint8_t>(monster.ai);
