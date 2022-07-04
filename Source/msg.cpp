@@ -531,7 +531,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 		delta._mdir = monster.direction;
 		delta._menemy = encode_enemy(monster);
 		delta.hitPoints = monster.hitPoints;
-		delta._mactive = monster.activityTicks;
+		delta._mactive = monster.ticksToLive;
 		delta.mWhoHit = monster.whoHit;
 	}
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
@@ -2434,7 +2434,7 @@ void DeltaLoadLevel()
 				} else {
 					M_StartStand(monster, monster.direction);
 				}
-				monster.activityTicks = deltaLevel.monster[i]._mactive;
+				monster.ticksToLive = deltaLevel.monster[i]._mactive;
 			}
 		}
 		auto localLevelIt = LocalLevels.find(localLevel);

@@ -614,7 +614,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.intelligence = file->NextLE<uint8_t>();
 	file->Skip(2); // Alignment
 	monster.flags = file->NextLE<uint32_t>();
-	monster.activityTicks = file->NextLE<uint8_t>();
+	monster.ticksToLive = file->NextLE<uint8_t>();
 	file->Skip(3); // Alignment
 	file->Skip(4); // Unused
 	monster.position.last.x = file->NextLE<int32_t>();
@@ -1354,7 +1354,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(monster.intelligence);
 	file->Skip(2); // Alignment
 	file->WriteLE<uint32_t>(monster.flags);
-	file->WriteLE<uint8_t>(monster.activityTicks);
+	file->WriteLE<uint8_t>(monster.ticksToLive);
 	file->Skip(3); // Alignment
 	file->Skip(4); // Unused
 	file->WriteLE<int32_t>(monster.position.last.x);

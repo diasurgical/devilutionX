@@ -223,7 +223,7 @@ struct Monster { // note: missing field _mAFNum
 	 * Higher values should result in more aggressive behaviour (e.g. some monsters use this to calculate the @p AiDelay).
 	 */
 	uint8_t intelligence;
-	uint8_t activityTicks;
+	uint8_t ticksToLive;
 	uint8_t uniqType;
 	uint8_t uniqTrans;
 	int8_t corpseId;

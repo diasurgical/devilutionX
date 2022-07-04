@@ -3428,7 +3428,7 @@ void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
 		auto &zhar = Monsters[MAX_PLRS];
 		if (zhar.mode == MonsterMode::Stand // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 		    && zhar.uniqType - 1 == UMT_ZHAR
-		    && zhar.activityTicks == UINT8_MAX
+		    && zhar.ticksToLive == UINT8_MAX
 		    && zhar.hitPoints > 0) {
 			zhar.talkMsg = TEXT_ZHAR2;
 			M_StartStand(zhar, zhar.direction); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
