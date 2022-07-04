@@ -2672,6 +2672,7 @@ void MI_LArrow(Missile &missile)
 				eRst = MISR_FIRE;
 				break;
 			default:
+				app_fatal(fmt::format("wrong missile ID {}", static_cast<int>(missile._mitype)));
 				break;
 			}
 			SetMissAnim(missile, eAnim);
