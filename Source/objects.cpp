@@ -1075,7 +1075,7 @@ void AddSarc(int i)
 	Objects[i]._oVar1 = GenerateRnd(10);
 	Objects[i]._oRndSeed = AdvanceRndSeed();
 	if (Objects[i]._oVar1 >= 8)
-		Objects[i]._oVar2 = PreSpawnSkeleton();
+		Objects[i]._oVar2 = PreSpawnSkeleton()->getId();
 }
 
 void AddFlameTrap(int i)
@@ -1128,7 +1128,7 @@ void AddBarrel(Object &barrel)
 	barrel._oVar3 = GenerateRnd(3);
 
 	if (barrel._oVar2 >= 8)
-		barrel._oVar4 = PreSpawnSkeleton();
+		barrel._oVar4 = PreSpawnSkeleton()->getId();
 }
 
 void AddShrine(int i)
@@ -2495,7 +2495,7 @@ void OperateSarc(int i, bool sendMsg, bool sendLootMsg)
 	if (Objects[i]._oVar1 <= 2)
 		CreateRndItem(Objects[i].position, false, sendLootMsg, false);
 	if (Objects[i]._oVar1 >= 8)
-		SpawnSkeleton(Objects[i]._oVar2, Objects[i].position);
+		SpawnSkeleton(&Monsters[Objects[i]._oVar2], Objects[i].position);
 	if (sendMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
@@ -3856,7 +3856,7 @@ void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
 				CreateRndItem(barrel.position, false, sendmsg, false);
 		}
 		if (barrel._oVar2 >= 8)
-			SpawnSkeleton(barrel._oVar4, barrel.position);
+			SpawnSkeleton(&Monsters[barrel._oVar4], barrel.position);
 	}
 	if (pnum == MyPlayerId) {
 		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, static_cast<uint16_t>(barrel.GetId()));

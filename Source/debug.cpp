@@ -731,13 +731,12 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 			if (!IsTileWalkable(pos))
 				continue;
 
-			int mon = AddMonster(pos, myPlayer._pdir, id, true);
-			if (mon < 0)
+			Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
+			if (monster == nullptr)
 				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
-			auto &monster = Monsters[mon];
-			PrepareUniqueMonst(monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
+			PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
 			ActiveMonsterCount--;
-			monster._udeadval = 1;
+			monster->_udeadval = 1;
 			spawnedMonster += 1;
 
 			if (spawnedMonster >= count)
@@ -816,7 +815,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 			if (!IsTileWalkable(pos))
 				continue;
 
-			if (AddMonster(pos, myPlayer._pdir, id, true) < 0)
+			if (AddMonster(pos, myPlayer._pdir, id, true) == nullptr)
 				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
 			spawnedMonster += 1;
 

@@ -1710,7 +1710,7 @@ bool MonsterPetrified(Monster &monster)
 	return false;
 }
 
-int AddSkeleton(Point position, Direction dir, bool inMap)
+Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 {
 	int j = 0;
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
@@ -1719,7 +1719,7 @@ int AddSkeleton(Point position, Direction dir, bool inMap)
 	}
 
 	if (j == 0) {
-		return -1;
+		return nullptr;
 	}
 
 	int skeltypes = GenerateRnd(j);
@@ -1733,9 +1733,9 @@ int AddSkeleton(Point position, Direction dir, bool inMap)
 
 void SpawnSkeleton(Point position, Direction dir)
 {
-	int skel = AddSkeleton(position, dir, true);
-	if (skel != -1)
-		StartSpecialStand(Monsters[skel], dir);
+	Monster *skeleton = AddSkeleton(position, dir, true);
+	if (skeleton != nullptr)
+		StartSpecialStand(*skeleton, dir);
 }
 
 bool IsLineNotSolid(Point startPoint, Point endPoint)
@@ -3813,17 +3813,17 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 	}
 }
 
-int AddMonster(Point position, Direction dir, int mtype, bool inMap)
+Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap)
 {
 	if (ActiveMonsterCount < MaxMonsters) {
-		int i = ActiveMonsters[ActiveMonsterCount++];
+		Monster &monster = Monsters[ActiveMonsters[ActiveMonsterCount++]];
 		if (inMap)
-			dMonster[position.x][position.y] = i + 1;
-		InitMonster(Monsters[i], dir, mtype, position);
-		return i;
+			dMonster[position.x][position.y] = monster.getId() + 1;
+		InitMonster(monster, dir, mtype, position);
+		return &monster;
 	}
 
-	return -1;
+	return nullptr;
 }
 
 void AddDoppelganger(Monster &monster)
@@ -4712,16 +4712,14 @@ bool IsGoat(_monster_id mt)
 	    MT_NGOATBW, MT_BGOATBW, MT_RGOATBW, MT_GGOATBW);
 }
 
-bool SpawnSkeleton(int ii, Point position)
+bool SpawnSkeleton(Monster *monster, Point position)
 {
-	if (ii == -1)
+	if (monster == nullptr)
 		return false;
-
-	Monster &monster = Monsters[ii];
 
 	if (IsTileAvailable(position)) {
 		Direction dir = GetDirection(position, position); // TODO useless calculation
-		ActivateSpawn(monster, position, dir);
+		ActivateSpawn(*monster, position, dir);
 		return true;
 	}
 
@@ -4761,18 +4759,18 @@ bool SpawnSkeleton(int ii, Point position)
 
 	Point spawn = position + Displacement { x2 - 1, y2 - 1 };
 	Direction dir = GetDirection(spawn, position);
-	ActivateSpawn(monster, spawn, dir);
+	ActivateSpawn(*monster, spawn, dir);
 
 	return true;
 }
 
-int PreSpawnSkeleton()
+Monster *PreSpawnSkeleton()
 {
-	int skel = AddSkeleton({ 0, 0 }, Direction::South, false);
-	if (skel != -1)
-		M_StartStand(Monsters[skel], Direction::South);
+	Monster *skeleton = AddSkeleton({ 0, 0 }, Direction::South, false);
+	if (skeleton != nullptr)
+		M_StartStand(*skeleton, Direction::South);
 
-	return skel;
+	return skeleton;
 }
 
 void TalktoMonster(Monster &monster)
