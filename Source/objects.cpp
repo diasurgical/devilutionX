@@ -1136,9 +1136,9 @@ void AddBarrel(Object &barrel)
 
 	if (barrel._oVar2 >= 8) {
 		Monster *skeleton = PreSpawnSkeleton();
-		if (skeleton != nullptr)
+		if (skeleton != nullptr) {
 			barrel._oVar4 = skeleton->getId();
-		else {
+		} else {
 			barrel._oVar2 = 0;
 		}
 	}
