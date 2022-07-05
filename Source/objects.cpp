@@ -1074,8 +1074,15 @@ void AddSarc(int i)
 	dObject[Objects[i].position.x][Objects[i].position.y - 1] = -(i + 1);
 	Objects[i]._oVar1 = GenerateRnd(10);
 	Objects[i]._oRndSeed = AdvanceRndSeed();
-	if (Objects[i]._oVar1 >= 8)
-		Objects[i]._oVar2 = PreSpawnSkeleton()->getId();
+	if (Objects[i]._oVar1 >= 8) {
+		Monster *monster = PreSpawnSkeleton();
+		if (monster != nullptr) {
+			Objects[i]._oVar2 =	monster->getId();
+		} else {
+			Objects[i]._oVar1 = 0;
+		}
+
+	}
 }
 
 void AddFlameTrap(int i)
@@ -1127,8 +1134,14 @@ void AddBarrel(Object &barrel)
 	barrel._oVar2 = barrel.isExplosive() ? 0 : GenerateRnd(10);
 	barrel._oVar3 = GenerateRnd(3);
 
-	if (barrel._oVar2 >= 8)
-		barrel._oVar4 = PreSpawnSkeleton()->getId();
+	if (barrel._oVar2 >= 8) {
+		Monster *skeleton = PreSpawnSkeleton();
+		if (skeleton != nullptr)
+			barrel._oVar4 = skeleton->getId();
+		else {
+			barrel._oVar2 = 0;
+		}
+	}
 }
 
 void AddShrine(int i)
