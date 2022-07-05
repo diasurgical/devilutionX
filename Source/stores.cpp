@@ -568,7 +568,7 @@ void StartSmithSell()
 		}
 	}
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (SmithSellOk(-(i + 1))) {
@@ -836,7 +836,7 @@ void StartWitchSell()
 		}
 	}
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		if (storenumh >= 48)
 			break;
 		if (!myPlayer.SpdList[i].isEmpty() && WitchSellOk(-(i + 1))) {

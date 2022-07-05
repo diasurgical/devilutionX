@@ -251,7 +251,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		if (monster.mode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
 		if (monster.type().type != MT_GOLEM)
-			M_StartHit(monsterId, pnum, dam);
+			M_StartHit(monster, pnum, dam);
 	}
 
 	if (monster.ticksToLive == 0) {
@@ -840,9 +840,9 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
+bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
-	auto &monster = Monsters[m];
+	auto &monster = Monsters[monsterId];
 
 	if (!monster.isPossibleToHit() || monster.isImmune(t))
 		return false;
@@ -877,7 +877,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		PlayEffect(monster, 1);
 	} else {
 		if (monster.type().type != MT_GOLEM)
-			M_StartHit(m, dam);
+			M_StartHit(monster, dam);
 	}
 	return true;
 }
@@ -1229,7 +1229,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 			Player &player = Players[abs(pnum) - 1];
 
 			bool hasPlayedSFX = false;
-			for (int si = 0; si < MAXBELTITEMS; si++) {
+			for (int si = 0; si < MaxBeltItems; si++) {
 				int ii = -1;
 				if (player.SpdList[si]._itype == ItemType::Misc) {
 					if (GenerateRnd(2) == 0)

@@ -148,7 +148,6 @@ public:
 		static_assert(std::numeric_limits<TSource>::min() < std::numeric_limits<TDesired>::min());
 		static_assert(std::numeric_limits<TSource>::max() > std::numeric_limits<TDesired>::max());
 		TSource value = SwapLE(Next<TSource>()) + modifier;
-		assert(value >= std::numeric_limits<TDesired>::min() && value <= std::numeric_limits<TDesired>::max());
 		return static_cast<TDesired>(clamp<TSource>(value, std::numeric_limits<TDesired>::min(), std::numeric_limits<TDesired>::max()));
 	}
 
@@ -395,7 +394,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pLightRad = file.NextLE<int8_t>();
 	player._pLvlChanging = file.NextBool8();
 
-	file.NextBytes(player._pName, PLR_NAME_LEN);
+	file.NextBytes(player._pName, PlayerNameLength);
 	player._pClass = static_cast<HeroClass>(file.NextLE<int8_t>());
 	file.Skip(3); // Alignment
 	player._pStrength = file.NextLE<int32_t>();
@@ -594,7 +593,8 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	file->Skip(4); // Skip pointer _mAnimData
 	monster.animInfo = {};
 	monster.animInfo.ticksPerFrame = file->NextLENarrow<int32_t, int8_t>();
-	monster.animInfo.tickCounterOfCurrentFrame = file->NextLENarrow<int32_t, int8_t>();
+  // Ensure that we can increase the tickCounterOfCurrentFrame at least once without overflow (needed for backwards compatibility for sitting gargoyles)
+	monster.animInfo.tickCounterOfCurrentFrame = file->NextLENarrow<int32_t, int8_t>(1) - 1;
 	monster.animInfo.numberOfFrames = file->NextLENarrow<int32_t, int8_t>();
 	monster.animInfo.currentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
 	file->Skip(4); // Skip _meflag
@@ -1155,7 +1155,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int8_t>(player._pLightRad);
 	file.WriteLE<uint8_t>(player._pLvlChanging ? 1 : 0);
 
-	file.WriteBytes(player._pName, PLR_NAME_LEN);
+	file.WriteBytes(player._pName, PlayerNameLength);
 	file.WriteLE<int8_t>(static_cast<int8_t>(player._pClass));
 	file.Skip(3); // Alignment
 	file.WriteLE<int32_t>(player._pStrength);
@@ -1937,8 +1937,8 @@ void LoadHeroItems(Player &player)
 	gbIsHellfireSaveGame = file.NextBool8();
 
 	LoadMatchingItems(file, NUM_INVLOC, player.InvBody);
-	LoadMatchingItems(file, NUM_INV_GRID_ELEM, player.InvList);
-	LoadMatchingItems(file, MAXBELTITEMS, player.SpdList);
+	LoadMatchingItems(file, InventoryGridCells, player.InvList);
+	LoadMatchingItems(file, MaxBeltItems, player.SpdList);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -1986,7 +1986,7 @@ void LoadStash()
 
 void RemoveEmptyInventory(Player &player)
 {
-	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
+	for (int i = InventoryGridCells; i > 0; i--) {
 		int8_t idx = player.InvGrid[i - 1];
 		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
 			player.RemoveInvItem(idx - 1);
@@ -2197,7 +2197,7 @@ void LoadGame(bool firstflag)
 
 void SaveHeroItems(MpqWriter &saveWriter, Player &player)
 {
-	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + NUM_INV_GRID_ELEM + MAXBELTITEMS;
+	size_t itemCount = static_cast<size_t>(NUM_INVLOC) + InventoryGridCells + MaxBeltItems;
 	SaveHelper file(saveWriter, "heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);

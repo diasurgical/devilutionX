@@ -139,7 +139,7 @@ void NetReceivePlayerData(TPkt *pkt)
 bool IsNetPlayerValid(const Player &player)
 {
 	return player._pLevel >= 1
-	    && player._pLevel <= MAXCHARLEVEL
+	    && player._pLevel <= MaxCharacterLevel
 	    && static_cast<uint8_t>(player._pClass) < enum_size<HeroClass>::value
 	    && player.plrlevel < NUMLEVELS
 	    && player.pDifficulty <= DIFF_LAST

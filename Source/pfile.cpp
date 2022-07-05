@@ -35,7 +35,7 @@ bool gbValidSaveFile;
 namespace {
 
 /** List of character names for the character selection screen. */
-char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
+char hero_names[MAX_CHARACTERS][PlayerNameLength];
 
 std::string GetSavePath(uint32_t saveNum, std::string savePrefix = "")
 {
@@ -420,7 +420,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 	Player &player = Players[0];
 	CreatePlayer(player, heroinfo->heroclass);
-	CopyUtf8(player._pName, heroinfo->name, PLR_NAME_LEN);
+	CopyUtf8(player._pName, heroinfo->name, PlayerNameLength);
 	PackPlayer(&pkplr, player, true, false);
 	EncodeHero(saveWriter, &pkplr);
 	Game2UiPlayer(player, heroinfo, false);

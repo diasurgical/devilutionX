@@ -185,11 +185,9 @@ void AnimationInfo::changeAnimationData(OptionalCelSprite celSprite, int8_t numb
 	this->celSprite = celSprite;
 }
 
-void AnimationInfo::processAnimation(bool reverseAnimation /*= false*/, bool dontProgressAnimation /*= false*/)
+void AnimationInfo::processAnimation(bool reverseAnimation /*= false*/)
 {
 	tickCounterOfCurrentFrame++;
-	if (dontProgressAnimation)
-		return;
 	ticksSinceSequenceStarted_++;
 	if (tickCounterOfCurrentFrame >= ticksPerFrame) {
 		tickCounterOfCurrentFrame = 0;

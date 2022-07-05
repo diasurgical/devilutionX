@@ -1434,8 +1434,9 @@ DWORD OnKnockback(const TCmd *pCmd, int pnum)
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs != 1 && Players[pnum].isOnActiveLevel() && message.wParam1 < MaxMonsters) {
-		M_GetKnockback(Monsters[message.wParam1]);
-		M_StartHit(message.wParam1, pnum, 0);
+		Monster &monster = Monsters[message.wParam1];
+		M_GetKnockback(monster);
+		M_StartHit(monster, pnum, 0);
 	}
 
 	return sizeof(message);
@@ -1747,7 +1748,7 @@ DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, &message, sizeof(message));
-	else if (message.wParam1 <= MAXCHARLEVEL && pnum != MyPlayerId)
+	else if (message.wParam1 <= MaxCharacterLevel && pnum != MyPlayerId)
 		Players[pnum]._pLevel = static_cast<int8_t>(message.wParam1);
 
 	return sizeof(message);
@@ -2001,7 +2002,7 @@ DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
-	else if (Players[pnum]._pLevel < MAXCHARLEVEL) {
+	else if (Players[pnum]._pLevel < MaxCharacterLevel) {
 		Players[pnum]._pExperience = Players[pnum]._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;

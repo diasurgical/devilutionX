@@ -1287,7 +1287,7 @@ void CheckReflect(int monsterId, int pnum, int dam)
 	if (monster.hitPoints >> 6 <= 0)
 		M_StartKill(monsterId, pnum);
 	else
-		M_StartHit(monsterId, pnum, mdam);
+		M_StartHit(monster, pnum, mdam);
 }
 
 void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDam)
@@ -1375,7 +1375,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		if (monster.hitPoints >> 6 <= 0)
 			M_StartKill(monsterId, pnum);
 		else
-			M_StartHit(monsterId, pnum, mdam);
+			M_StartHit(monster, pnum, mdam);
 	}
 	if ((monster.flags & MFLAG_NOLIFESTEAL) == 0 && monster.type().type == MT_SKING && gbIsMultiplayer)
 		monster.hitPoints += dam;
@@ -1464,7 +1464,7 @@ bool MonsterRangedSpecialAttack(int monsterId)
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	if (monster.animInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.animInfo.tickCounterOfCurrentFrame == 0) {
+	if (monster.animInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.animInfo.tickCounterOfCurrentFrame == 0 && (monster.ai != AI_MEGA || monster.var2 == 0)) {
 		if (AddMissile(
 		        monster.position.tile,
 		        monster.enemyPosition,
@@ -3886,10 +3886,8 @@ void M_GetKnockback(Monster &monster)
 	StartMonsterGotHit(monster);
 }
 
-void M_StartHit(int monsterId, int dam)
+void M_StartHit(Monster &monster, int dam)
 {
-	Monster &monster = Monsters[monsterId];
-
 	PlayEffect(monster, 1);
 
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
@@ -3907,14 +3905,12 @@ void M_StartHit(int monsterId, int dam)
 	}
 }
 
-void M_StartHit(int monsterId, int pnum, int dam)
+void M_StartHit(Monster &monster, int pnum, int dam)
 {
-	Monster &monster = Monsters[monsterId];
-
 	monster.whoHit |= 1 << pnum;
 	if (pnum == MyPlayerId) {
 		delta_monster_hp(monster, *MyPlayer);
-		NetSendCmdMonDmg(false, monsterId, dam);
+		NetSendCmdMonDmg(false, monster.getId(), dam);
 	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		monster.enemy = pnum;
@@ -3923,7 +3919,7 @@ void M_StartHit(int monsterId, int pnum, int dam)
 		monster.direction = GetMonsterDirection(monster);
 	}
 
-	M_StartHit(monsterId, dam);
+	M_StartHit(monster, dam);
 }
 
 void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg)
@@ -4286,8 +4282,8 @@ void ProcessMonsters()
 				GroupUnity(monster);
 			}
 		} while (raflag);
-		if (monster.mode != MonsterMode::Petrified) {
-			monster.animInfo.processAnimation((monster.flags & MFLAG_LOCK_ANIMATION) != 0, (monster.flags & MFLAG_ALLOW_SPECIAL) != 0);
+		if (monster.mode != MonsterMode::Petrified && (monster.flags & MFLAG_ALLOW_SPECIAL) == 0) {
+			monster.animInfo.processAnimation((monster.flags & MFLAG_LOCK_ANIMATION) != 0);
 		}
 	}
 
@@ -4614,20 +4610,20 @@ void PlayEffect(Monster &monster, int mode)
 
 void MissToMonst(Missile &missile, Point position)
 {
-	int m = missile._misource;
+	int monsterId = missile._misource;
 
-	assert(m >= 0 && m < MaxMonsters);
-	auto &monster = Monsters[m];
+	assert(monsterId >= 0 && monsterId < MaxMonsters);
+	auto &monster = Monsters[monsterId];
 
 	Point oldPosition = missile.position.tile;
-	dMonster[position.x][position.y] = m + 1;
+	dMonster[position.x][position.y] = monsterId + 1;
 	monster.direction = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster.direction);
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
-		M_StartHit(m, 0);
+		M_StartHit(monster, 0);
 	else
-		HitMonster(m, 0);
+		HitMonster(monsterId, 0);
 
 	if (monster.type().type == MT_GLOOM)
 		return;
@@ -4637,7 +4633,7 @@ void MissToMonst(Missile &missile, Point position)
 			return;
 
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
-		MonsterAttackPlayer(m, pnum, 500, monster.minDamage2, monster.maxDamage2);
+		MonsterAttackPlayer(monsterId, pnum, 500, monster.minDamage2, monster.maxDamage2);
 
 		if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 			return;
@@ -4660,17 +4656,17 @@ void MissToMonst(Missile &missile, Point position)
 		return;
 
 	int mid = dMonster[oldPosition.x][oldPosition.y] - 1;
-	MonsterAttackMonster(m, mid, 500, monster.minDamage2, monster.maxDamage2);
+	MonsterAttackMonster(monsterId, mid, 500, monster.minDamage2, monster.maxDamage2);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
 
 	Point newPosition = oldPosition + monster.direction;
 	if (IsTileAvailable(Monsters[mid], newPosition)) {
-		m = dMonster[oldPosition.x][oldPosition.y];
-		dMonster[newPosition.x][newPosition.y] = m;
+		monsterId = dMonster[oldPosition.x][oldPosition.y];
+		dMonster[newPosition.x][newPosition.y] = monsterId;
 		dMonster[oldPosition.x][oldPosition.y] = 0;
-		m--;
+		monsterId--;
 		monster.position.tile = newPosition;
 		monster.position.future = newPosition;
 	}

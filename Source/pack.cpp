@@ -121,10 +121,10 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 		PackItem(pPack->InvList[i], item, isHellfire);
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
+	for (int i = 0; i < InventoryGridCells; i++)
 		pPack->InvGrid[i] = player.InvGrid[i];
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		const Item &item = player.SpdList[i];
 		bool isHellfire = netSync ? ((item.dwBuff & CF_HELLFIRE) != 0) : gbIsHellfire;
 		PackItem(pPack->SpdList[i], item, isHellfire);
@@ -206,7 +206,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	}
 	auto heroClass = static_cast<HeroClass>(pPack->pClass);
 
-	if (pPack->pLevel > MAXCHARLEVEL || pPack->pLevel < 1) {
+	if (pPack->pLevel > MaxCharacterLevel || pPack->pLevel < 1) {
 		return false;
 	}
 	uint32_t difficulty = SDL_SwapLE32(pPack->pDifficulty);
@@ -270,12 +270,12 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 		UnPackItem(packedItem, player.InvList[i], isHellfire);
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
+	for (int i = 0; i < InventoryGridCells; i++)
 		player.InvGrid[i] = pPack->InvGrid[i];
 
 	VerifyGoldSeeds(player);
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		auto packedItem = pPack->SpdList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
 		UnPackItem(packedItem, player.SpdList[i], isHellfire);

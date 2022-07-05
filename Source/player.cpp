@@ -47,16 +47,16 @@ Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
-int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
+constexpr int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
 /** Specifies the Y-coordinate delta from the player start location in Tristram. */
-int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
+constexpr int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
 /** Specifies the X-coordinate delta from a player, used for instance when casting resurrect. */
-int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
+constexpr int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
-int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
+constexpr int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
 /** Maps from player_class to starting stat in strength. */
-int StrengthTbl[enum_size<HeroClass>::value] = {
+constexpr int StrengthTbl[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	15,
@@ -65,7 +65,7 @@ int StrengthTbl[enum_size<HeroClass>::value] = {
 	40,
 };
 /** Maps from player_class to starting stat in magic. */
-int MagicTbl[enum_size<HeroClass>::value] = {
+constexpr int MagicTbl[enum_size<HeroClass>::value] = {
 	// clang-format off
 	10,
 	15,
@@ -76,7 +76,7 @@ int MagicTbl[enum_size<HeroClass>::value] = {
 	// clang-format on
 };
 /** Maps from player_class to starting stat in dexterity. */
-int DexterityTbl[enum_size<HeroClass>::value] = {
+constexpr int DexterityTbl[enum_size<HeroClass>::value] = {
 	20,
 	30,
 	15,
@@ -85,7 +85,7 @@ int DexterityTbl[enum_size<HeroClass>::value] = {
 	20,
 };
 /** Maps from player_class to starting stat in vitality. */
-int VitalityTbl[enum_size<HeroClass>::value] = {
+constexpr int VitalityTbl[enum_size<HeroClass>::value] = {
 	25,
 	20,
 	20,
@@ -94,7 +94,7 @@ int VitalityTbl[enum_size<HeroClass>::value] = {
 	25,
 };
 /** Specifies the chance to block bonus of each player class.*/
-int BlockBonuses[enum_size<HeroClass>::value] = {
+constexpr int BlockBonuses[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	10,
@@ -104,7 +104,7 @@ int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1] = {
+constexpr uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
 	0,
 	2000,
 	4620,
@@ -171,7 +171,7 @@ struct DirectionSettings {
 };
 
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
-const int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
+constexpr int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
@@ -180,7 +180,7 @@ const int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 };
 /** Maps from player class to player velocity. */
-int PWVel[enum_size<HeroClass>::value][3] = {
+constexpr int PWVel[enum_size<HeroClass>::value][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
@@ -255,7 +255,7 @@ void WalkSideways(int pnum, const DirectionSettings &walkParams)
 	player.position.temp = player.position.future;
 }
 
-_sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
+constexpr _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = {
 	// clang-format off
 	{ PS_WARR1,  PS_WARR2,  PS_WARR3,  PS_WARR4,  PS_WARR5,  PS_WARR6,  PS_WARR7,  PS_WARR8,  PS_WARR9,  PS_WARR10,  PS_WARR11,  PS_WARR12,  PS_WARR13,  PS_WARR14,  PS_WARR15,  PS_WARR16,  PS_WARR17,  PS_WARR18,  PS_WARR19,  PS_WARR20,  PS_WARR21,  PS_WARR22,  PS_WARR23,  PS_WARR24,  PS_WARR25,  PS_WARR26,  PS_WARR27,  PS_WARR28,  PS_WARR29,  PS_WARR30,  PS_WARR31,  PS_WARR32,  PS_WARR33,  PS_WARR34,  PS_WARR35,  PS_WARR36,  PS_WARR37,  PS_WARR38,  PS_WARR39,  PS_WARR40,  PS_WARR41,  PS_WARR42,  PS_WARR43,  PS_WARR44,  PS_WARR45,  PS_WARR46,  PS_WARR47,  PS_WARR48,  PS_WARR49,  PS_WARR50,  PS_WARR51,  PS_WARR52,  PS_WARR53,  PS_WARR54,  PS_WARR55,  PS_WARR56,  PS_WARR57,  PS_WARR58,  PS_WARR59,  PS_WARR60,  PS_WARR61,  PS_WARR62,  PS_WARR63,  PS_WARR64,  PS_WARR65,  PS_WARR66,  PS_WARR67,  PS_WARR68,  PS_WARR69,  PS_WARR70,  PS_WARR71,  PS_WARR72,  PS_WARR73,  PS_WARR74,  PS_WARR75,  PS_WARR76,  PS_WARR77,  PS_WARR78,  PS_WARR79,  PS_WARR80,  PS_WARR81,  PS_WARR82,  PS_WARR83,  PS_WARR84,  PS_WARR85,  PS_WARR86,  PS_WARR87,  PS_WARR88,  PS_WARR89,  PS_WARR90,  PS_WARR91,  PS_WARR92,  PS_WARR93,  PS_WARR94,  PS_WARR95,  PS_WARR96B,  PS_WARR97,  PS_WARR98,  PS_WARR99,  PS_WARR100,  PS_WARR101,  PS_WARR102,  PS_DEAD    },
 	{ PS_ROGUE1, PS_ROGUE2, PS_ROGUE3, PS_ROGUE4, PS_ROGUE5, PS_ROGUE6, PS_ROGUE7, PS_ROGUE8, PS_ROGUE9, PS_ROGUE10, PS_ROGUE11, PS_ROGUE12, PS_ROGUE13, PS_ROGUE14, PS_ROGUE15, PS_ROGUE16, PS_ROGUE17, PS_ROGUE18, PS_ROGUE19, PS_ROGUE20, PS_ROGUE21, PS_ROGUE22, PS_ROGUE23, PS_ROGUE24, PS_ROGUE25, PS_ROGUE26, PS_ROGUE27, PS_ROGUE28, PS_ROGUE29, PS_ROGUE30, PS_ROGUE31, PS_ROGUE32, PS_ROGUE33, PS_ROGUE34, PS_ROGUE35, PS_ROGUE36, PS_ROGUE37, PS_ROGUE38, PS_ROGUE39, PS_ROGUE40, PS_ROGUE41, PS_ROGUE42, PS_ROGUE43, PS_ROGUE44, PS_ROGUE45, PS_ROGUE46, PS_ROGUE47, PS_ROGUE48, PS_ROGUE49, PS_ROGUE50, PS_ROGUE51, PS_ROGUE52, PS_ROGUE53, PS_ROGUE54, PS_ROGUE55, PS_ROGUE56, PS_ROGUE57, PS_ROGUE58, PS_ROGUE59, PS_ROGUE60, PS_ROGUE61, PS_ROGUE62, PS_ROGUE63, PS_ROGUE64, PS_ROGUE65, PS_ROGUE66, PS_ROGUE67, PS_ROGUE68, PS_ROGUE69, PS_ROGUE70, PS_ROGUE71, PS_ROGUE72, PS_ROGUE73, PS_ROGUE74, PS_ROGUE75, PS_ROGUE76, PS_ROGUE77, PS_ROGUE78, PS_ROGUE79, PS_ROGUE80, PS_ROGUE81, PS_ROGUE82, PS_ROGUE83, PS_ROGUE84, PS_ROGUE85, PS_ROGUE86, PS_ROGUE87, PS_ROGUE88, PS_ROGUE89, PS_ROGUE90, PS_ROGUE91, PS_ROGUE92, PS_ROGUE93, PS_ROGUE94, PS_ROGUE95, PS_ROGUE96,  PS_ROGUE97, PS_ROGUE98, PS_ROGUE99, PS_ROGUE100, PS_ROGUE101, PS_ROGUE102, PS_ROGUE71 },
@@ -975,7 +975,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 	} else {
 		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
-		M_StartHit(monsterId, pnum, dam);
+		M_StartHit(monster, pnum, dam);
 	}
 	return true;
 }
@@ -1777,8 +1777,8 @@ void ValidatePlayer()
 	}
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pLevel > MAXCHARLEVEL)
-		myPlayer._pLevel = MAXCHARLEVEL;
+	if (myPlayer._pLevel > MaxCharacterLevel)
+		myPlayer._pLevel = MaxCharacterLevel;
 	if (myPlayer._pExperience > myPlayer._pNextExper) {
 		myPlayer._pExperience = myPlayer._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
@@ -1819,8 +1819,8 @@ void ValidatePlayer()
 	for (int b = SPL_FIREBOLT; b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel((spell_id)b) != -1) {
 			msk |= GetSpellBitmask(b);
-			if (myPlayer._pSplLvl[b] > MAX_SPELL_LEVEL)
-				myPlayer._pSplLvl[b] = MAX_SPELL_LEVEL;
+			if (myPlayer._pSplLvl[b] > MaxSpellLevel)
+				myPlayer._pSplLvl[b] = MaxSpellLevel;
 		}
 	}
 
@@ -2679,7 +2679,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
-		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MAXCHARLEVEL);
+		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MaxCharacterLevel);
 
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.

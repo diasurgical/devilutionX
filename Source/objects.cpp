@@ -2213,7 +2213,7 @@ void OperateBook(int pnum, Object &book)
 
 	if (setlvlnum == SL_BONECHAMB) {
 		player._pMemSpells |= GetSpellBitmask(SPL_GUARDIAN);
-		if (player._pSplLvl[SPL_GUARDIAN] < MAX_SPELL_LEVEL)
+		if (player._pSplLvl[SPL_GUARDIAN] < MaxSpellLevel)
 			player._pSplLvl[SPL_GUARDIAN]++;
 		Quests[Q_SCHAMB]._qactive = QUEST_DONE;
 		PlaySfxLoc(IS_QUESTDN, book.position);
@@ -2758,7 +2758,7 @@ void OperateShrineEnchanted(Player &player)
 		spell = 1;
 		for (int j = SPL_FIREBOLT; j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
 			if ((player._pMemSpells & spell) != 0) {
-				if (player._pSplLvl[j] < MAX_SPELL_LEVEL)
+				if (player._pSplLvl[j] < MaxSpellLevel)
 					player._pSplLvl[j]++;
 			}
 			spell *= 2;
@@ -2801,9 +2801,9 @@ void OperateShrineCostOfWisdom(Player &player, spell_id spellId, diablo_message 
 
 	player._pMemSpells |= GetSpellBitmask(spellId);
 
-	if (player._pSplLvl[spellId] < MAX_SPELL_LEVEL)
+	if (player._pSplLvl[spellId] < MaxSpellLevel)
 		player._pSplLvl[spellId]++;
-	if (player._pSplLvl[spellId] < MAX_SPELL_LEVEL)
+	if (player._pSplLvl[spellId] < MaxSpellLevel)
 		player._pSplLvl[spellId]++;
 
 	uint32_t t = player._pMaxManaBase / 10;

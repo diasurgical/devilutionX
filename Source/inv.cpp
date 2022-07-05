@@ -370,7 +370,7 @@ void CheckInvPaste(Player &player, Point cursorPosition)
 		} else {
 			int yy = std::max(INV_ROW_SLOT_SIZE * ((ii / INV_ROW_SLOT_SIZE) - ((itemSize.height - 1) / 2)), 0);
 			for (int j = 0; j < itemSize.height; j++) {
-				if (yy >= NUM_INV_GRID_ELEM)
+				if (yy >= InventoryGridCells)
 					return;
 				int xx = std::max((ii % INV_ROW_SLOT_SIZE) - ((itemSize.width - 1) / 2), 0);
 				for (int i = 0; i < itemSize.width; i++) {
@@ -1147,7 +1147,7 @@ void DrawInv(const Surface &out)
 		}
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+	for (int i = 0; i < InventoryGridCells; i++) {
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
@@ -1156,7 +1156,7 @@ void DrawInv(const Surface &out)
 		}
 	}
 
-	for (int j = 0; j < NUM_INV_GRID_ELEM; j++) {
+	for (int j = 0; j < InventoryGridCells; j++) {
 		if (myPlayer.InvGrid[j] > 0) { // first slot of an item
 			int ii = myPlayer.InvGrid[j] - 1;
 			int cursId = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
@@ -1193,7 +1193,7 @@ void DrawInvBelt(const Surface &out)
 
 	Player &myPlayer = *MyPlayer;
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		if (myPlayer.SpdList[i].isEmpty()) {
 			continue;
 		}
@@ -1358,7 +1358,7 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 
 	Size itemSize = GetInventorySize(item);
 	for (int j = 0; j < itemSize.height; j++) {
-		if (yy >= NUM_INV_GRID_ELEM) {
+		if (yy >= InventoryGridCells) {
 			return false;
 		}
 		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
