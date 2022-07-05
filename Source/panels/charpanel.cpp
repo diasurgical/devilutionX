@@ -14,6 +14,7 @@
 #include "utils/display.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -108,7 +109,7 @@ StyledText GetResistInfo(int8_t resist)
 	else if (resist >= MaxResistance)
 		style = UiFlags::ColorWhitegold;
 
-	return { style, fmt::format("{:d}%", resist) };
+	return { style, StrCat(resist, "%") };
 }
 
 constexpr int LeftColumnLabelX = 88;
@@ -129,11 +130,11 @@ PanelEntry panelEntries[] = {
 	    []() { return StyledText { UiFlags::ColorWhite, std::string(_(ClassStrTbl[static_cast<std::size_t>(MyPlayer->_pClass)])) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
-	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pLevel) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, StrCat(MyPlayer->_pLevel) }; } },
 	{ N_("Experience"), { TopRightLabelX, 52 }, 99, 91,
 	    []() {
 	        int spacing = ((MyPlayer->_pExperience >= 1000000000) ? 0 : 1);
-	        return StyledText { UiFlags::ColorWhite, fmt::format("{:s}", FormatInteger(MyPlayer->_pExperience)), spacing };
+	        return StyledText { UiFlags::ColorWhite, FormatInteger(MyPlayer->_pExperience), spacing };
 	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
@@ -141,54 +142,54 @@ PanelEntry panelEntries[] = {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
 	        int spacing = ((MyPlayer->_pNextExper >= 1000000000) ? 0 : 1);
-	        return StyledText { UiFlags::ColorWhite, fmt::format("{:s}", FormatInteger(MyPlayer->_pNextExper)), spacing };
+	        return StyledText { UiFlags::ColorWhite, FormatInteger(MyPlayer->_pNextExper), spacing };
 	    } },
 
 	{ N_("Base"), { LeftColumnLabelX, /* set dynamically */ 0 }, 0, 44 },
 	{ N_("Now"), { 135, /* set dynamically */ 0 }, 0, 44 },
 	{ N_("Strength"), { LeftColumnLabelX, 135 }, 45, LeftColumnLabelWidth,
-	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Strength), fmt::format("{:d}", MyPlayer->_pBaseStr) }; } },
+	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Strength), StrCat(MyPlayer->_pBaseStr) }; } },
 	{ "", { 135, 135 }, 45, 0,
-	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Strength), fmt::format("{:d}", MyPlayer->_pStrength) }; } },
+	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Strength), StrCat(MyPlayer->_pStrength) }; } },
 	{ N_("Magic"), { LeftColumnLabelX, 163 }, 45, LeftColumnLabelWidth,
-	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Magic), fmt::format("{:d}", MyPlayer->_pBaseMag) }; } },
+	    []() { return StyledText { GetBaseStatColor(CharacterAttribute::Magic), StrCat(MyPlayer->_pBaseMag) }; } },
 	{ "", { 135, 163 }, 45, 0,
-	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Magic), fmt::format("{:d}", MyPlayer->_pMagic) }; } },
-	{ N_("Dexterity"), { LeftColumnLabelX, 191 }, 45, LeftColumnLabelWidth, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Dexterity), fmt::format("{:d}", MyPlayer->_pBaseDex) }; } },
+	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Magic), StrCat(MyPlayer->_pMagic) }; } },
+	{ N_("Dexterity"), { LeftColumnLabelX, 191 }, 45, LeftColumnLabelWidth, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Dexterity), StrCat(MyPlayer->_pBaseDex) }; } },
 	{ "", { 135, 191 }, 45, 0,
-	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Dexterity), fmt::format("{:d}", MyPlayer->_pDexterity) }; } },
-	{ N_("Vitality"), { LeftColumnLabelX, 219 }, 45, LeftColumnLabelWidth, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Vitality), fmt::format("{:d}", MyPlayer->_pBaseVit) }; } },
+	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Dexterity), StrCat(MyPlayer->_pDexterity) }; } },
+	{ N_("Vitality"), { LeftColumnLabelX, 219 }, 45, LeftColumnLabelWidth, []() { return StyledText { GetBaseStatColor(CharacterAttribute::Vitality), StrCat(MyPlayer->_pBaseVit) }; } },
 	{ "", { 135, 219 }, 45, 0,
-	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Vitality), fmt::format("{:d}", MyPlayer->_pVitality) }; } },
+	    []() { return StyledText { GetCurrentStatColor(CharacterAttribute::Vitality), StrCat(MyPlayer->_pVitality) }; } },
 	{ N_("Points to distribute"), { LeftColumnLabelX, 248 }, 45, LeftColumnLabelWidth,
 	    []() {
 	        MyPlayer->_pStatPts = std::min(CalcStatDiff(*MyPlayer), MyPlayer->_pStatPts);
-	        return StyledText { UiFlags::ColorRed, (MyPlayer->_pStatPts > 0 ? fmt::format("{:d}", MyPlayer->_pStatPts) : "") };
+	        return StyledText { UiFlags::ColorRed, (MyPlayer->_pStatPts > 0 ? StrCat(MyPlayer->_pStatPts) : "") };
 	    } },
 
 	{ N_("Gold"), { TopRightLabelX, /* set dynamically */ 0 }, 0, 98 },
 	{ "", { TopRightLabelX, 127 }, 99, 0,
-	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:s}", FormatInteger(MyPlayer->_pGold)) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, FormatInteger(MyPlayer->_pGold) }; } },
 
 	{ N_("Armor class"), { RightColumnLabelX, 163 }, 57, RightColumnLabelWidth,
-	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusAC), fmt::format("{:d}", MyPlayer->GetArmor()) }; } },
+	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusAC), StrCat(MyPlayer->GetArmor()) }; } },
 	{ N_("To hit"), { RightColumnLabelX, 191 }, 57, RightColumnLabelWidth,
-	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusToHit), fmt::format("{:d}%", (MyPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? MyPlayer->GetRangedToHit() : MyPlayer->GetMeleeToHit())) }; } },
+	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusToHit), StrCat(MyPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? MyPlayer->GetRangedToHit() : MyPlayer->GetMeleeToHit(), "%") }; } },
 	{ N_("Damage"), { RightColumnLabelX, 219 }, 57, RightColumnLabelWidth,
 	    []() {
 	        std::pair<int, int> dmg = GetDamage();
 	        int spacing = ((dmg.first >= 100) ? -1 : 1);
-	        return StyledText { GetValueColor(MyPlayer->_pIBonusDam), fmt::format("{:d}-{:d}", dmg.first, dmg.second), spacing };
+	        return StyledText { GetValueColor(MyPlayer->_pIBonusDam), StrCat(dmg.first, "-", dmg.second), spacing };
 	    } },
 
 	{ N_("Life"), { LeftColumnLabelX, 284 }, 45, LeftColumnLabelWidth,
-	    []() { return StyledText { GetMaxHealthColor(), fmt::format("{:d}", MyPlayer->_pMaxHP >> 6) }; } },
+	    []() { return StyledText { GetMaxHealthColor(), StrCat(MyPlayer->_pMaxHP >> 6) }; } },
 	{ "", { 135, 284 }, 45, 0,
-	    []() { return StyledText { (MyPlayer->_pHitPoints != MyPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), fmt::format("{:d}", MyPlayer->_pHitPoints >> 6) }; } },
+	    []() { return StyledText { (MyPlayer->_pHitPoints != MyPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), StrCat(MyPlayer->_pHitPoints >> 6) }; } },
 	{ N_("Mana"), { LeftColumnLabelX, 312 }, 45, LeftColumnLabelWidth,
-	    []() { return StyledText { GetMaxManaColor(), fmt::format("{:d}", MyPlayer->_pMaxMana >> 6) }; } },
+	    []() { return StyledText { GetMaxManaColor(), StrCat(MyPlayer->_pMaxMana >> 6) }; } },
 	{ "", { 135, 312 }, 45, 0,
-	    []() { return StyledText { (MyPlayer->_pMana != MyPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), fmt::format("{:d}", MyPlayer->_pMana >> 6) }; } },
+	    []() { return StyledText { (MyPlayer->_pMana != MyPlayer->_pMaxMana ? UiFlags::ColorRed : GetMaxManaColor()), StrCat(MyPlayer->_pMana >> 6) }; } },
 
 	{ N_("Resist magic"), { RightColumnLabelX, 256 }, 57, RightColumnLabelWidth,
 	    []() { return GetResistInfo(MyPlayer->_pMagResist); } },

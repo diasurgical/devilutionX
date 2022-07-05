@@ -42,6 +42,7 @@
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -2297,7 +2298,7 @@ void InitItemGFX()
 
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
-		*fmt::format_to(arglist, FMT_COMPILE(R"(Items\{}.CEL)"), ItemDropNames[i]) = '\0';
+		*BufCopy(arglist, "Items\\", ItemDropNames[i], ".CEL") = '\0';
 		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
@@ -4461,10 +4462,10 @@ std::string DebugSpawnItem(std::string itemName)
 		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
 		SetRndSeed(dist(BetterRng));
 		if (SDL_GetTicks() - begin > max_time)
-			return fmt::format("Item not found in {:d} seconds!", max_time / 1000);
+			return StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		if (i > max_iter)
-			return fmt::format("Item not found in {:d} tries!", max_iter);
+			return StrCat("Item not found in ", max_iter, " tries!");
 
 		fake_m.level = dist(BetterRng) % CF_LEVEL + 1;
 
@@ -4487,7 +4488,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 	item._iIdentified = true;
 	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
-	return fmt::format("Item generated successfully - iterations: {:d}", i);
+	return StrCat("Item generated successfully - iterations: ", i);
 }
 
 std::string DebugSpawnUniqueItem(std::string itemName)
@@ -4535,10 +4536,10 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	int i = 0;
 	for (uint32_t begin = SDL_GetTicks();; i++) {
 		if (SDL_GetTicks() - begin > max_time)
-			return fmt::format("Item not found in {:d} seconds!", max_time / 1000);
+			return StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		if (i > max_iter)
-			return fmt::format("Item not found in {:d} tries!", max_iter);
+			return StrCat("Item not found in ", max_iter, " tries!");
 
 		Point bkp = item.position;
 		item = {};
@@ -4564,7 +4565,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 	item._iIdentified = true;
 	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
-	return fmt::format("Item generated successfully - iterations: {:d}", i);
+	return StrCat("Item generated successfully - iterations: ", i);
 }
 #endif
 

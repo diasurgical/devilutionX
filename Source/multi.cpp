@@ -28,6 +28,7 @@
 #include "utils/language.h"
 #include "utils/stdcompat/cstddef.hpp"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -372,7 +373,7 @@ void HandleEvents(_SNETEVENT *pEvt)
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
 		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
-			app_fatal(fmt::format("Invalid size of game data: {}", gameData->size));
+			app_fatal(StrCat("Invalid size of game data: ", gameData->size));
 		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
@@ -405,7 +406,7 @@ void EventHandler(bool add)
 	for (auto eventType : EventTypes) {
 		if (add) {
 			if (!SNetRegisterEventHandler(eventType, HandleEvents)) {
-				app_fatal(fmt::format("SNetRegisterEventHandler:\n{}", SDL_GetError()));
+				app_fatal(StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
 			}
 		} else {
 			SNetUnregisterEventHandler(eventType);
@@ -421,7 +422,7 @@ bool InitSingle(GameData *gameData)
 
 	int unused = 0;
 	if (!SNetCreateGame("local", "local", (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
-		app_fatal(fmt::format("SNetCreateGame1:\n{}", SDL_GetError()));
+		app_fatal(StrCat("SNetCreateGame1:\n", SDL_GetError()));
 	}
 
 	MyPlayerId = 0;

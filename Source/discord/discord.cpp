@@ -19,6 +19,7 @@
 #include "panels/charpanel.hpp"
 #include "player.h"
 #include "utils/language.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 namespace discord_manager {
@@ -92,7 +93,7 @@ std::string GetCharacterString()
 
 std::string GetDetailString()
 {
-	return fmt::format("{} - {}", GetCharacterString(), GetLocationString());
+	return StrCat(GetCharacterString(), " - ", GetLocationString());
 }
 
 std::string GetStateString()
@@ -104,7 +105,7 @@ std::string GetStateString()
 
 std::string GetTooltipString()
 {
-	return fmt::format("{} - {}", MyPlayer->_pName, GetCharacterString());
+	return StrCat(MyPlayer->_pName, " - ", GetCharacterString());
 }
 
 std::string GetPlayerAssetString()

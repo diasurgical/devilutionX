@@ -36,6 +36,7 @@
 #include "tmsg.h"
 #include "towners.h"
 #include "utils/language.h"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -446,7 +447,7 @@ void DeltaImportData(_cmd_id cmd, DWORD recvOffset)
 		src += DeltaImportObject(src, deltaLevel.object);
 		DeltaImportMonster(src, deltaLevel.monster);
 	} else {
-		app_fatal(fmt::format("Unkown network message type: {}", cmd));
+		app_fatal(StrCat("Unkown network message type: ", cmd));
 	}
 
 	sgbDeltaChunks++;

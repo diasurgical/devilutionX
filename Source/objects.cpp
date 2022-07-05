@@ -7,7 +7,7 @@
 #include <climits>
 #include <cstdint>
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
@@ -36,6 +36,7 @@
 #include "track.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -4087,7 +4088,7 @@ void LoadLevelObjects(bool filesLoaded[65])
 
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
-		*fmt::format_to(filestr, FMT_COMPILE(R"(Objects\{}.CEL)"), ObjMasterLoadList[i]) = '\0';
+		*BufCopy(filestr, "Objects\\", ObjMasterLoadList[i], ".CEL") = '\0';
 		pObjCels[numobjfiles] = LoadFileInMem(filestr);
 		numobjfiles++;
 	}

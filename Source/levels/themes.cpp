@@ -15,6 +15,7 @@
 #include "monster.h"
 #include "objects.h"
 #include "quests.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -1008,7 +1009,7 @@ void CreateThemeRooms()
 			Theme_WeaponRack(i);
 			break;
 		case THEME_NONE:
-			app_fatal(fmt::format("Unknown theme type: {}", static_cast<int>(themes[i].ttype)));
+			app_fatal(StrCat("Unknown theme type: ", static_cast<int>(themes[i].ttype)));
 		}
 	}
 	ApplyObjectLighting = false;

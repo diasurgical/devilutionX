@@ -163,6 +163,7 @@ set(libdevilutionx_SRCS
   utils/pcx.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
+  utils/str_cat.cpp
   utils/utf8.cpp)
 
 if(IOS)

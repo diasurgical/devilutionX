@@ -28,6 +28,7 @@
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -515,7 +516,7 @@ string_view OptionEntryIntBase::GetListDescription(size_t index) const
 {
 	if (entryNames.empty()) {
 		for (auto value : entryValues) {
-			entryNames.push_back(fmt::format("{}", value));
+			entryNames.push_back(StrCat(value));
 		}
 	}
 	return entryNames[index].data();
@@ -724,7 +725,7 @@ void OptionEntryResolution::CheckResolutionsAreInitialized() const
 	sizes.erase(std::unique(sizes.begin(), sizes.end()), sizes.end());
 
 	for (auto &size : sizes) {
-		resolutions.emplace_back(size, fmt::format("{}x{}", size.width, size.height));
+		resolutions.emplace_back(size, StrCat(size.width, "x", size.height));
 	}
 }
 
@@ -1221,7 +1222,7 @@ KeymapperOptions::KeymapperOptions()
 		keyIDToKeyName.emplace(c, std::string(1, c));
 	}
 	for (int i = 0; i < 12; ++i) {
-		keyIDToKeyName.emplace(DVL_VK_F1 + i, fmt::format("F{}", i + 1));
+		keyIDToKeyName.emplace(DVL_VK_F1 + i, StrCat("F", i + 1));
 	}
 
 	keyIDToKeyName.emplace(DVL_VK_LMENU, "LALT");

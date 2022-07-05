@@ -30,6 +30,7 @@
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -1219,7 +1220,7 @@ void DrawInvBelt(const Surface &out)
 
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
-			DrawString(out, fmt::format("{:d}", i + 1), { position - Displacement { 0, 12 }, InventorySlotSizeInPixels }, UiFlags::ColorWhite | UiFlags::AlignRight);
+			DrawString(out, StrCat(i + 1), { position - Displacement { 0, 12 }, InventorySlotSizeInPixels }, UiFlags::ColorWhite | UiFlags::AlignRight);
 		}
 	}
 }
@@ -1353,7 +1354,7 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 		return false;
 	}
 
-	app_fatal(fmt::format("Unknown item size: {}x{}", itemSize.width, itemSize.height));
+	app_fatal(StrCat("Unknown item size: ", itemSize.width, "x", itemSize.height));
 }
 
 bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &item, bool persistItem)

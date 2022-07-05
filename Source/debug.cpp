@@ -9,9 +9,6 @@
 #include <fstream>
 #include <sstream>
 
-#include <fmt/compile.h>
-#include <fmt/format.h>
-
 #include "debug.h"
 
 #include "automap.h"
@@ -31,6 +28,7 @@
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -97,16 +95,11 @@ void PrintDebugMonster(int m)
 {
 	auto &monster = Monsters[m];
 
-	EventPlrMsg(fmt::format(
-	                "Monster {:d} = {:s}\nX = {:d}, Y = {:d}\nEnemy = {:d}, HP = {:d}\nMode = {:d}, Var1 = {:d}",
-	                m,
-	                monster.name,
-	                monster.position.tile.x,
-	                monster.position.tile.y,
-	                monster.enemy,
-	                monster.hitPoints,
-	                static_cast<int>(monster.mode),
-	                monster.var1),
+	EventPlrMsg(StrCat(
+	                "Monster ", m, " = ", monster.name,
+	                "\nX = ", monster.position.tile.x, ", Y = ", monster.position.tile.y,
+	                "\nEnemy = ", monster.enemy, ", HP = ", monster.hitPoints,
+	                "\nMode = ", static_cast<int>(monster.mode), ", Var1 = ", monster.var1),
 	    UiFlags::ColorWhite);
 
 	bool bActive = false;
@@ -116,7 +109,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster.activeForTicks), UiFlags::ColorWhite);
+	EventPlrMsg(StrCat("Active List = ", bActive ? 1 : 0, ", Squelch = ", monster.activeForTicks), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
@@ -155,15 +148,14 @@ std::string DebugCmdHelp(const string_view parameter)
 			ret.append(std::string(dbgCmd.text));
 		}
 		return ret;
-	} else {
-		auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return elem.text == parameter; });
-		if (debugCmdIterator == DebugCmdList.end())
-			return fmt::format("Debug command {} wasn't found", parameter);
-		auto &dbgCmdItem = *debugCmdIterator;
-		if (dbgCmdItem.requiredParameter.empty())
-			return fmt::format("Description: {}\nParameters: No additional parameter needed.", dbgCmdItem.description);
-		return fmt::format("Description: {}\nParameters: {}", dbgCmdItem.description, dbgCmdItem.requiredParameter);
 	}
+	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return elem.text == parameter; });
+	if (debugCmdIterator == DebugCmdList.end())
+		return StrCat("Debug command ", parameter, " wasn't found");
+	auto &dbgCmdItem = *debugCmdIterator;
+	if (dbgCmdItem.requiredParameter.empty())
+		return StrCat("Description: ", dbgCmdItem.description, "\nParameters: No additional parameter needed.");
+	return StrCat("Description: ", dbgCmdItem.description, "\nParameters: ", dbgCmdItem.requiredParameter);
 }
 
 std::string DebugCmdGiveGoldCheat(const string_view parameter)
@@ -211,12 +203,12 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	Player &myPlayer = *MyPlayer;
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return fmt::format("Level {} is not known. Do you want to write a mod?", level);
+		return StrCat("Level ", level, " is not known. Do you want to write a mod?");
 	if (!setlevel && myPlayer.isOnLevel(level))
-		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+		return StrCat("I did nothing but fulfilled your wish. You are already at level ", level, ".");
 
 	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
-	return fmt::format("Welcome to level {}.", level);
+	return StrCat("Welcome to level ", level, ".");
 }
 
 std::string DebugCmdLoadQuestMap(const string_view parameter)
@@ -226,16 +218,16 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (quest._qslvl <= 0)
 				continue;
-			ret.append(fmt::format(" {} ({})", quest._qslvl, QuestLevelNames[quest._qslvl]));
+			StrAppend(ret, " ", quest._qslvl, " (", QuestLevelNames[quest._qslvl], ")");
 		}
 		return ret;
 	}
 
 	auto level = atoi(parameter.data());
 	if (level < 1)
-		return fmt::format("Map id must be 1 or higher", level);
+		return "Map id must be 1 or higher";
 	if (setlevel && setlvlnum == level)
-		return fmt::format("I did nothing but fulfilled your wish. You are already at mapid {}.", level);
+		return StrCat("I did nothing but fulfilled your wish. You are already at mapid .", level);
 
 	for (auto &quest : Quests) {
 		if (level != quest._qslvl)
@@ -249,10 +241,10 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 		setlvltype = quest._qlvltype;
 		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
 
-		return fmt::format("Welcome to {}.", QuestLevelNames[level]);
+		return StrCat("Welcome to ", QuestLevelNames[level], ".");
 	}
 
-	return fmt::format("Mapid {} is not known. Do you want to write a mod?", level);
+	return StrCat("Mapid ", level, " is not known. Do you want to write a mod?");
 }
 
 std::string DebugCmdLoadMap(const string_view parameter)
@@ -266,7 +258,7 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	for (std::string tmp; std::getline(paramsStream, tmp, ' ');) {
 		switch (count) {
 		case 0:
-			TestMapPath = fmt::format("{:s}.dun", tmp);
+			TestMapPath = StrCat(tmp, ".dun");
 			break;
 		case 1:
 			mapType = atoi(tmp.c_str());
@@ -308,7 +300,7 @@ std::string ExportDun(const string_view parameter)
 {
 	std::ofstream dunFile;
 
-	std::string levelName = fmt::format("{}-{}.dun", currlevel, glSeedTbl[currlevel]);
+	std::string levelName = StrCat(currlevel, "-", glSeedTbl[currlevel], ".dun");
 
 	dunFile.open(levelName, std::ios::out | std::ios::app | std::ios::binary);
 
@@ -369,7 +361,7 @@ std::string ExportDun(const string_view parameter)
 	}
 	dunFile.close();
 
-	return fmt::format("{} saved. Happy mapping!", levelName);
+	return StrCat(levelName, " saved. Happy mapping!");
 }
 
 std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
@@ -405,7 +397,7 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 
 	auto it = TownerShortNameToTownerId.find(parameter);
 	if (it == TownerShortNameToTownerId.end())
-		return fmt::format("{} is unknown. Perhaps he is a ninja?", parameter);
+		return StrCat(parameter, " is unknown. Perhaps he is a ninja?");
 
 	for (auto &towner : Towners) {
 		if (towner._ttype != it->second)
@@ -420,10 +412,10 @@ std::string DebugCmdVisitTowner(const string_view parameter)
 		    towner.position.y,
 		    1);
 
-		return fmt::format("Say hello to {} from me.", parameter);
+		return StrCat("Say hello to ", parameter, " from me.");
 	}
 
-	return fmt::format("Couldn't find {}.", parameter);
+	return StrCat("Couldn't find ", parameter, ".");
 }
 
 std::string DebugCmdResetLevel(const string_view parameter)
@@ -436,7 +428,7 @@ std::string DebugCmdResetLevel(const string_view parameter)
 		return "What level do you want to visit?";
 	auto level = atoi(singleParameter.c_str());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
+		return StrCat("Level ", level, " is not known. Do you want to write an extension mod?");
 	myPlayer._pLvlVisited[level] = false;
 
 	if (std::getline(paramsStream, singleParameter, ' ')) {
@@ -445,8 +437,8 @@ std::string DebugCmdResetLevel(const string_view parameter)
 	}
 
 	if (myPlayer.isOnLevel(level))
-		return fmt::format("Level {} can't be cleaned, cause you still occupy it!", level);
-	return fmt::format("Level {} was restored and looks fabulous.", level);
+		return StrCat("Level ", level, " can't be cleaned, cause you still occupy it!");
+	return StrCat("Level ", level, " was restored and looks fabulous.");
 }
 
 std::string DebugCmdGodMode(const string_view parameter)
@@ -498,7 +490,7 @@ std::string DebugCmdQuest(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			ret.append(fmt::format(", {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
+			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
 		}
 		return ret;
 	}
@@ -518,16 +510,16 @@ std::string DebugCmdQuest(const string_view parameter)
 	int questId = atoi(parameter.data());
 
 	if (questId >= MAXQUESTS)
-		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
 	auto &quest = Quests[questId];
 
 	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-		return fmt::format("{} was already given.", QuestsData[questId]._qlstr);
+		return StrCat(QuestsData[questId]._qlstr, " was already given.");
 
 	quest._qactive = QUEST_ACTIVE;
 	quest._qlog = true;
 
-	return fmt::format("{} enabled.", QuestsData[questId]._qlstr);
+	return StrCat(QuestsData[questId]._qlstr, " enabled.");
 }
 
 std::string DebugCmdLevelUp(const string_view parameter)
@@ -572,14 +564,14 @@ std::string DebugCmdChangeHealth(const string_view parameter)
 		change = atoi(parameter.data());
 
 	if (change == 0)
-		return fmt::format("Health hasn't changed.");
+		return "Health hasn't changed.";
 
 	int newHealth = myPlayer._pHitPoints + (change * 64);
 	SetPlayerHitPoints(myPlayer, newHealth);
 	if (newHealth <= 0)
 		SyncPlrKill(MyPlayerId, 0);
 
-	return fmt::format("Health has changed.");
+	return "Health has changed.";
 }
 
 std::string DebugCmdChangeMana(const string_view parameter)
@@ -591,14 +583,14 @@ std::string DebugCmdChangeMana(const string_view parameter)
 		change = atoi(parameter.data());
 
 	if (change == 0)
-		return fmt::format("Mana hasn't changed.");
+		return "Mana hasn't changed.";
 
 	int newMana = myPlayer._pMana + (change * 64);
 	myPlayer._pMana = newMana;
 	myPlayer._pManaBase = myPlayer._pMana + myPlayer._pMaxManaBase - myPlayer._pMaxMana;
 	drawmanaflag = true;
 
-	return fmt::format("Mana has changed.");
+	return "Mana has changed.";
 }
 
 std::string DebugCmdGenerateUniqueItem(const string_view parameter)
@@ -659,7 +651,7 @@ std::string DebugCmdShowGrid(const string_view parameter)
 
 std::string DebugCmdLevelSeed(const string_view parameter)
 {
-	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
+	return StrCat("Seedinfo for level ", currlevel, "\nseed: ", glSeedTbl[currlevel], "\nMid1: ", glMid1Seed[currlevel], "\nMid2: ", glMid2Seed[currlevel], "\nMid3: ", glMid3Seed[currlevel], "\nEnd: ", glEndSeed[currlevel]);
 }
 
 std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
@@ -732,7 +724,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 
 		Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
 		if (monster == nullptr)
-			return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
 		ActiveMonsterCount--;
 		monster->corpseId = 1;
@@ -745,7 +737,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	});
 
 	if (!ret)
-		ret = fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+		ret = StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 	return *ret;
 }
 
@@ -817,7 +809,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 			return {};
 
 		if (AddMonster(pos, myPlayer._pdir, id, true) == nullptr)
-			return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 		spawnedMonster += 1;
 
 		if (spawnedMonster >= count)
@@ -827,7 +819,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	});
 
 	if (!ret)
-		ret = fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+		ret = StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
 	return *ret;
 }
 
@@ -913,9 +905,9 @@ std::string DebugCmdItemInfo(const string_view parameter)
 		pItem = &Items[pcursitem];
 	}
 	if (pItem != nullptr) {
-		return fmt::format("Name: {}\nIDidx: {}\nSeed: {}\nCreateInfo: {}", pItem->_iIName, pItem->IDidx, pItem->_iSeed, pItem->_iCreateInfo);
+		return StrCat("Name: ", pItem->_iIName, "\nIDidx: ", pItem->IDidx, "\nSeed: ", pItem->_iSeed, "\nCreateInfo: ", pItem->_iCreateInfo);
 	}
-	return fmt::format("Numitems: {}", ActiveItemCount);
+	return StrCat("Numitems: ", ActiveItemCount);
 }
 
 std::string DebugCmdQuestInfo(const string_view parameter)
@@ -925,7 +917,7 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			ret.append(fmt::format(" {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
+			StrAppend(ret, ", ", quest._qidx, " (", QuestsData[quest._qidx]._qlstr, ")");
 		}
 		return ret;
 	}
@@ -933,9 +925,9 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 	int questId = atoi(parameter.data());
 
 	if (questId >= MAXQUESTS)
-		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+		return StrCat("Quest ", questId, " is not known. Do you want to write a mod?");
 	auto &quest = Quests[questId];
-	return fmt::format("\nQuest: {}\nActive: {} Var1: {} Var2: {}", QuestsData[quest._qidx]._qlstr, quest._qactive, quest._qvar1, quest._qvar2);
+	return StrCat("\nQuest: ", QuestsData[quest._qidx]._qlstr, "\nActive: ", quest._qactive, " Var1: ", quest._qvar1, " Var2: ", quest._qvar2);
 }
 
 std::string DebugCmdPlayerInfo(const string_view parameter)
@@ -948,12 +940,11 @@ std::string DebugCmdPlayerInfo(const string_view parameter)
 		return "Player is not active";
 
 	const Point target = player.GetTargetPosition();
-	return fmt::format("Plr {} is {}\nLvl: {} Changing: {}\nTile.x: {} Tile.y: {} Target.x: {} Target.y: {}\nMode: {} destAction: {} walkpath[0]: {}\nInvincible:{} HitPoints:{}",
-	    playerId, player._pName,
-	    player.plrlevel, player._pLvlChanging,
-	    player.position.tile.x, player.position.tile.y, target.x, target.y,
-	    player._pmode, player.destAction, player.walkpath[0],
-	    player._pInvincible ? 1 : 0, player._pHitPoints);
+	return StrCat("Plr ", playerId, " is ", player._pName,
+	    "\nLvl: ", player.plrlevel, " Changing: ", player._pLvlChanging,
+	    "\nTile.x: ", player.position.tile.x, " Tile.y: ", player.position.tile.y, " Target.x: ", target.x, " Target.y: ", target.y,
+	    "\nMode: ", player._pmode, " destAction: ", player.destAction, " walkpath[0]: ", player.walkpath[0],
+	    "\nInvincible:", player._pInvincible ? 1 : 0, " HitPoints:", player._pHitPoints);
 }
 
 std::string DebugCmdToggleFPS(const string_view parameter)
@@ -1032,7 +1023,7 @@ void NextDebugMonster()
 	if (DebugMonsterId == MaxMonsters)
 		DebugMonsterId = 0;
 
-	EventPlrMsg(fmt::format("Current debug monster = {:d}", DebugMonsterId), UiFlags::ColorWhite);
+	EventPlrMsg(StrCat("Current debug monster = ", DebugMonsterId), UiFlags::ColorWhite);
 }
 
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)
@@ -1084,12 +1075,12 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	Point megaCoords = dungeonCoords.worldToMega();
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
-		*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}:{}"), dungeonCoords.x, dungeonCoords.y) = '\0';
+		*BufCopy(debugGridTextBuffer, dungeonCoords.x, ":", dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::cursorcoords:
 		if (dungeonCoords != cursPosition)
 			return false;
-		*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}:{}"), dungeonCoords.x, dungeonCoords.y) = '\0';
+		*BufCopy(debugGridTextBuffer, dungeonCoords.x, ":", dungeonCoords.y) = '\0';
 		return true;
 	case DebugGridTextItem::objectindex: {
 		info = 0;
@@ -1158,7 +1149,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	}
 	if (info == 0)
 		return false;
-	*fmt::format_to(debugGridTextBuffer, FMT_COMPILE("{}"), info) = '\0';
+	*BufCopy(debugGridTextBuffer, info) = '\0';
 	return true;
 }
 
