@@ -11,6 +11,7 @@
 #include "cursor.h"
 #include "options.h"
 #include "utils/language.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 namespace {
@@ -117,7 +118,7 @@ void DrawMonsterHealthBar(const Surface &out)
 			return 150;
 
 		default:
-			app_fatal(fmt::format("Invalid monster class: {}", static_cast<int>(monsterClass)));
+			app_fatal(StrCat("Invalid monster class: ", static_cast<int>(monsterClass)));
 		}
 	};
 
@@ -142,7 +143,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	DrawString(out, monster.name, { position, { width, height } }, style);
 
 	if (multiplier > 0)
-		DrawString(out, fmt::format("x{:d}", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
+		DrawString(out, StrCat("x", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
 	if (monster.uniqType != 0 || MonsterKillCounts[monster.type().type] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };

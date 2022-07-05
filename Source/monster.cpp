@@ -37,6 +37,7 @@
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef _DEBUG
@@ -1614,7 +1615,7 @@ void MonsterTalk(Monster &monster)
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 < 2) {
-			app_fatal(fmt::format("SS Talk = {}, Flags = {}", monster.talkMsg, monster.flags));
+			app_fatal(StrCat("SS Talk = ", monster.talkMsg, ", Flags = ", monster.flags));
 		}
 	}
 	if (monster.uniqType - 1 == UMT_LACHDAN) {
@@ -3282,7 +3283,7 @@ string_view GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal(fmt::format("Unknown mMonstClass {}", static_cast<int>(monsterData.mMonstClass)));
+	app_fatal(StrCat("Unknown mMonstClass ", static_cast<int>(monsterData.mMonstClass)));
 }
 
 void ActivateSpawn(Monster &monster, Point position, Direction dir)
@@ -3421,7 +3422,7 @@ bool UpdateModeStance(int monsterId)
 void InitTRNForUniqueMonster(Monster &monster)
 {
 	char filestr[64];
-	*fmt::format_to(filestr, FMT_COMPILE(R"(Monsters\Monsters\{}.TRN)"), UniqueMonstersData[monster.uniqType - 1].mTrnName) = '\0';
+	*BufCopy(filestr, R"(Monsters\Monsters\)", UniqueMonstersData[monster.uniqType - 1].mTrnName, ".TRN") = '\0';
 	monster.uniqueMonsterTRN = LoadFileInMem<uint8_t>(filestr);
 }
 

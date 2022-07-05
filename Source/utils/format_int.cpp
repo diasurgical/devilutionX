@@ -5,6 +5,7 @@
 
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -14,7 +15,7 @@ std::string FormatInteger(int n)
 
 	char buf[40];
 	char *begin = buf;
-	const char *end = fmt::format_to(buf, FMT_COMPILE("{}"), n);
+	const char *end = BufCopy(buf, n);
 	const size_t len = end - begin;
 
 	std::string out;

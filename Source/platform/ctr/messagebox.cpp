@@ -1,8 +1,8 @@
 #include <3ds.h>
 #include <SDL.h>
-#include <fmt/core.h>
 
 #include "utils/sdl2_to_1_2_backports.h"
+#include "utils/str_cat.hpp"
 
 int SDL_ShowSimpleMessageBox(Uint32 flags,
     const char *title,
@@ -13,7 +13,7 @@ int SDL_ShowSimpleMessageBox(Uint32 flags,
 		SDL_Log("%s", SDL_GetError());
 
 	bool init = !gspHasGpuRight();
-	auto text = fmt::format("{}\n\n{}", title, message);
+	auto text = devilution::StrCat(title, "\n\n", message);
 
 	if (init)
 		gfxInitDefault();

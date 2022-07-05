@@ -5,6 +5,7 @@
 #include <fmt/ranges.h>
 
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"
@@ -52,7 +53,7 @@ std::string format(string_view fmt, Args &&...args)
 #if FMT_EXCEPTIONS
 		// e.what() is undefined if exceptions are disabled, so we wrap the whole block
 		// with an `FMT_EXCEPTIONS` check.
-		std::string error = fmt::format("Format error, fmt: {}, error: {}", fmt, e.what());
+		std::string error = StrCat("Format error, fmt: ", fmt, " error: ", e.what());
 		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "%s", error.c_str());
 		app_fatal(error);
 #endif

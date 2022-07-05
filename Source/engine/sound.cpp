@@ -21,6 +21,7 @@
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -76,7 +77,7 @@ bool LoadAudioFile(const char *path, bool stream, bool errorDialog, SoundSample 
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
 		if (SDL_RWread(file, waveFile.get(), dwBytes, 1) == 0) {
 			if (errorDialog)
-				ErrDlg("Failed to read file", fmt::format("{}: {}", path, SDL_GetError()), __FILE__, __LINE__);
+				ErrDlg("Failed to read file", StrCat(path, ": ", SDL_GetError()), __FILE__, __LINE__);
 			return false;
 		}
 		int error = result.SetChunk(waveFile, dwBytes, isMp3);
