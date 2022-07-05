@@ -1464,7 +1464,7 @@ bool MonsterRangedSpecialAttack(int monsterId)
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	if (monster.AnimInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.AnimInfo.tickCounterOfCurrentFrame == 0) {
+	if (monster.AnimInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.AnimInfo.tickCounterOfCurrentFrame == 0 && (monster._mAi != AI_MEGA || monster._mVar2 == 0)) {
 		if (AddMissile(
 		        monster.position.tile,
 		        monster.enemyPosition,
@@ -4282,8 +4282,8 @@ void ProcessMonsters()
 				GroupUnity(monster);
 			}
 		} while (raflag);
-		if (monster._mmode != MonsterMode::Petrified) {
-			monster.AnimInfo.processAnimation((monster._mFlags & MFLAG_LOCK_ANIMATION) != 0, (monster._mFlags & MFLAG_ALLOW_SPECIAL) != 0);
+		if (monster._mmode != MonsterMode::Petrified && (monster._mFlags & MFLAG_ALLOW_SPECIAL) == 0) {
+			monster.AnimInfo.processAnimation((monster._mFlags & MFLAG_LOCK_ANIMATION) != 0);
 		}
 	}
 

@@ -97,7 +97,7 @@ public:
 	 * @param reverseAnimation Play the animation backwards (for example is used for "unseen" monster fading)
 	 * @param dontProgressAnimation Increase tickCounterOfCurrentFrame but don't change currentFrame
 	 */
-	void processAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
+	void processAnimation(bool reverseAnimation = false);
 
 private:
 	/**
