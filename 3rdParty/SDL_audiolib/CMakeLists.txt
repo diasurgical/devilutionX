@@ -15,6 +15,9 @@ set(USE_RESAMP_SRC OFF)
 # No need for the SOX resampler:
 set(USE_RESAMP_SOXR OFF)
 
+# Exceptions are only used for fatal errors which we can't handle anyway:
+set(DISABLE_EXCEPTIONS ON)
+
 # We do not need any of the audio formats except WAV and mp3:
 set(USE_DEC_DRWAV ON)
 set(USE_DEC_DRFLAC OFF)
@@ -35,8 +38,8 @@ set(USE_DEC_DRMP3 ON)
 
 include(FetchContent)
 FetchContent_Declare(SDL_audiolib
-  URL https://github.com/realnc/SDL_audiolib/archive/b66a66fedf8f65cacc5ce2ff8ed8d10649c6de31.tar.gz
-  URL_HASH MD5=0d8909cebd83fff19cbeceebc4b4577a)
+  URL https://github.com/realnc/SDL_audiolib/archive/2f85feb589f7b74f17a82ff18eb05b002df16cfd.tar.gz
+  URL_HASH MD5=3f9b64d6bcb8c3254e24d5c39e2147ee)
 FetchContent_MakeAvailableExcludeFromAll(SDL_audiolib)
 
 add_library(SDL_audiolib::SDL_audiolib ALIAS SDL_audiolib)
