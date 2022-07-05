@@ -743,7 +743,7 @@ extern DVL_API_FOR_TEST int MyPlayerId;
 extern DVL_API_FOR_TEST Player *MyPlayer;
 extern DVL_API_FOR_TEST Player Players[MAX_PLRS];
 extern bool MyPlayerIsDead;
-extern int BlockBonuses[enum_size<HeroClass>::value];
+extern const int BlockBonuses[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(Player &player, player_graphic graphic);
 void InitPlayerGFX(Player &player);
@@ -814,14 +814,14 @@ void PlayDungMsgs();
 
 /* data */
 
-extern int8_t plrxoff[9];
-extern int8_t plryoff[9];
-extern int8_t plrxoff2[9];
-extern int8_t plryoff2[9];
-extern int StrengthTbl[enum_size<HeroClass>::value];
-extern int MagicTbl[enum_size<HeroClass>::value];
-extern int DexterityTbl[enum_size<HeroClass>::value];
-extern int VitalityTbl[enum_size<HeroClass>::value];
-extern uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
+extern const int8_t plrxoff[9];
+extern const int8_t plryoff[9];
+extern const int8_t plrxoff2[9];
+extern const int8_t plryoff2[9];
+extern const int StrengthTbl[enum_size<HeroClass>::value];
+extern const int MagicTbl[enum_size<HeroClass>::value];
+extern const int DexterityTbl[enum_size<HeroClass>::value];
+extern const int VitalityTbl[enum_size<HeroClass>::value];
+extern const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
 
 } // namespace devilution
