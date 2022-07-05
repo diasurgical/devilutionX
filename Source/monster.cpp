@@ -1467,7 +1467,7 @@ bool MonsterRangedSpecialAttack(int monsterId)
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	if (monster.AnimInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.AnimInfo.tickCounterOfCurrentFrame == 0 && monster._mVar2 == 0) {
+	if (monster.AnimInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.AnimInfo.tickCounterOfCurrentFrame == 0 && (monster._mAi != AI_MEGA || monster._mVar2 == 0)) {
 		if (AddMissile(
 		        monster.position.tile,
 		        monster.enemyPosition,
