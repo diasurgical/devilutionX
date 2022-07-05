@@ -180,7 +180,7 @@ static void PackPlayerTest(PlayerPack *pPack)
 		pPack->InvList[i].idx = -1;
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
-	for (auto i = 0; i < MAXBELTITEMS; i++)
+	for (auto i = 0; i < MaxBeltItems; i++)
 		PackItemFullRejuv(pPack->SpdList + i, i);
 	for (auto i = 1; i < 37; i++) {
 		if (spelldat_vanilla[i] != -1) {
@@ -217,10 +217,10 @@ static void PackPlayerTest(PlayerPack *pPack)
 static void AssertPlayer(Player &player)
 {
 	ASSERT_EQ(Count8(player._pSplLvl, 64), 23);
-	ASSERT_EQ(Count8(player.InvGrid, NUM_INV_GRID_ELEM), 9);
+	ASSERT_EQ(Count8(player.InvGrid, InventoryGridCells), 9);
 	ASSERT_EQ(CountItems(player.InvBody, NUM_INVLOC), 6);
-	ASSERT_EQ(CountItems(player.InvList, NUM_INV_GRID_ELEM), 2);
-	ASSERT_EQ(CountItems(player.SpdList, MAXBELTITEMS), 8);
+	ASSERT_EQ(CountItems(player.InvList, InventoryGridCells), 2);
+	ASSERT_EQ(CountItems(player.SpdList, MaxBeltItems), 8);
 	ASSERT_EQ(CountItems(&player.HoldItem, 1), 0);
 
 	ASSERT_EQ(player.position.tile.x, 75);
