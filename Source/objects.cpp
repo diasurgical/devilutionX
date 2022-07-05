@@ -1081,7 +1081,6 @@ void AddSarc(int i)
 		} else {
 			Objects[i]._oVar1 = 0;
 		}
-
 	}
 }
 
