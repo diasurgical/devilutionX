@@ -2423,7 +2423,7 @@ void DeltaLoadLevel()
 						AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
 					}
 				}
-				monster.invalidate = true;
+				monster.isInvalid = true;
 				M_UpdateLeader(i);
 			} else {
 				decode_enemy(monster, deltaLevel.monster[i]._menemy);

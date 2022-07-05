@@ -221,7 +221,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.goalTurning = 0;
 	monster.goalSpecialAction = 0;
 	monster.pathCount = 0;
-	monster.invalidate = false;
+	monster.isInvalid = false;
 	monster.uniqType = 0;
 	monster.activeForTicks = 0;
 	monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
@@ -532,7 +532,7 @@ void ClrAllMonsters()
 		monster.position.velocity = { 0, 0 };
 		monster.animInfo = {};
 		monster.flags = 0;
-		monster.invalidate = false;
+		monster.isInvalid = false;
 		monster.enemy = GenerateRnd(gbActivePlayers);
 		monster.enemyPosition = Players[monster.enemy].position.future;
 	}
@@ -1662,7 +1662,7 @@ bool MonsterDeath(int monsterId)
 			AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
 
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-		monster.invalidate = true;
+		monster.isInvalid = true;
 
 		M_UpdateLeader(monsterId);
 	}
@@ -1704,7 +1704,7 @@ bool MonsterPetrified(Monster &monster)
 {
 	if (monster.hitPoints <= 0) {
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-		monster.invalidate = true;
+		monster.isInvalid = true;
 	}
 
 	return false;
@@ -4145,17 +4145,17 @@ void DeleteMonsterList()
 {
 	for (int i = 0; i < MAX_PLRS; i++) {
 		auto &golem = Monsters[i];
-		if (!golem.invalidate)
+		if (!golem.isInvalid)
 			continue;
 
 		golem.position.tile = GolemHoldingCell;
 		golem.position.future = { 0, 0 };
 		golem.position.old = { 0, 0 };
-		golem.invalidate = false;
+		golem.isInvalid = false;
 	}
 
 	for (int i = MAX_PLRS; i < ActiveMonsterCount;) {
-		if (Monsters[ActiveMonsters[i]].invalidate) {
+		if (Monsters[ActiveMonsters[i]].isInvalid) {
 			if (pcursmonst == ActiveMonsters[i]) // Unselect monster if player highlighted it
 				pcursmonst = -1;
 			DeleteMonster(i);

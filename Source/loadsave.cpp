@@ -598,7 +598,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.animInfo.numberOfFrames = file->NextLENarrow<int32_t, int8_t>();
 	monster.animInfo.currentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
 	file->Skip(4); // Skip _meflag
-	monster.invalidate = file->NextBool32();
+	monster.isInvalid = file->NextBool32();
 	monster.var1 = file->NextLE<int32_t>();
 	monster.var2 = file->NextLE<int32_t>();
 	monster.var3 = file->NextLE<int32_t>();
@@ -1338,7 +1338,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.animInfo.numberOfFrames);
 	file->WriteLE<int32_t>(monster.animInfo.currentFrame + 1);
 	file->Skip<uint32_t>(); // Skip _meflag
-	file->WriteLE<uint32_t>(monster.invalidate ? 1 : 0);
+	file->WriteLE<uint32_t>(monster.isInvalid ? 1 : 0);
 	file->WriteLE<int32_t>(monster.var1);
 	file->WriteLE<int32_t>(monster.var2);
 	file->WriteLE<int32_t>(monster.var3);

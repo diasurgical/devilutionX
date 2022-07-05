@@ -169,6 +169,9 @@ extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 struct Monster { // note: missing field _mAFNum
 	const char *name;
 	std::unique_ptr<uint8_t[]> uniqueMonsterTRN;
+	/**
+	 * @brief Contains information for current animation
+	 */
 	AnimationInfo animInfo;
 	/** Specifies current goal of the monster */
 	monster_goal goal;
@@ -210,12 +213,7 @@ struct Monster { // note: missing field _mAFNum
 	Direction direction;
 	/** The current target of the monster. An index in to either the player or monster array based on the _meflag value. */
 	uint8_t enemy;
-
-	/**
-	 * @brief Contains information for current animation
-	 */
-	bool invalidate;
-
+	bool isInvalid;
 	_mai_id ai;
 	/**
 	 * @brief Specifies monster's behaviour across various actions.

@@ -3191,7 +3191,7 @@ void RemovePlrMissiles(const Player &player)
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
 			dMonster[mx][my] = 0;
-			golem.invalidate = true;
+			golem.isInvalid = true;
 			DeleteMonsterList();
 		}
 	}
