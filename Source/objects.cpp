@@ -1138,7 +1138,7 @@ void AddBarrel(Object &barrel)
 		if (skeleton != nullptr) {
 			barrel._oVar4 = skeleton->getId();
 		} else {
-			barrel._oVar2 = 0;
+			barrel._oVar2 = -1;
 		}
 	}
 }
