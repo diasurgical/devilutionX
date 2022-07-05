@@ -1079,7 +1079,7 @@ void AddSarc(int i)
 		if (monster != nullptr) {
 			Objects[i]._oVar2 = monster->getId();
 		} else {
-			Objects[i]._oVar1 = -1;
+			Objects[i]._oVar2 = -1;
 		}
 	}
 }
