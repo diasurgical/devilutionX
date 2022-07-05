@@ -1077,7 +1077,7 @@ void AddSarc(int i)
 	if (Objects[i]._oVar1 >= 8) {
 		Monster *monster = PreSpawnSkeleton();
 		if (monster != nullptr) {
-			Objects[i]._oVar2 =	monster->getId();
+			Objects[i]._oVar2 = monster->getId();
 		} else {
 			Objects[i]._oVar1 = 0;
 		}
