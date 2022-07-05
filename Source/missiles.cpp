@@ -1229,7 +1229,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 			Player &player = Players[abs(pnum) - 1];
 
 			bool hasPlayedSFX = false;
-			for (int si = 0; si < MAXBELTITEMS; si++) {
+			for (int si = 0; si < MaxBeltItems; si++) {
 				int ii = -1;
 				if (player.SpdList[si]._itype == ItemType::Misc) {
 					if (GenerateRnd(2) == 0)

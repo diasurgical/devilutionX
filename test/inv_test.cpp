@@ -20,7 +20,7 @@ void set_up_scroll(Item &item, spell_id spell)
 /* Clear the inventory of MyPlayerId. */
 void clear_inventory()
 {
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+	for (int i = 0; i < InventoryGridCells; i++) {
 		MyPlayer->InvList[i] = {};
 		MyPlayer->InvGrid[i] = 0;
 	}
@@ -46,7 +46,7 @@ TEST(Inv, UseScroll_from_belt)
 TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 {
 	// Empty the belt to prevent using a scroll from the belt
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		MyPlayer->SpdList[i].clear();
 	}
 
@@ -181,7 +181,7 @@ TEST(Inv, RemoveInvItem_other_item)
 TEST(Inv, RemoveSpdBarItem)
 {
 	// Clear the belt
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		MyPlayer->SpdList[i].clear();
 	}
 	// Put an item in the belt: | x | x | item | x | x | x | x | x |
@@ -212,7 +212,7 @@ TEST(Inv, RemoveCurrentSpellScroll_inventory)
 TEST(Inv, RemoveCurrentSpellScroll_belt)
 {
 	// Clear the belt
-	for (int i = 0; i < MAXBELTITEMS; i++) {
+	for (int i = 0; i < MaxBeltItems; i++) {
 		MyPlayer->SpdList[i].clear();
 	}
 	// Put a firebolt scroll into the belt

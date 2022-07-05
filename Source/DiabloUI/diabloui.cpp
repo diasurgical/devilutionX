@@ -627,9 +627,9 @@ bool UiValidPlayerName(string_view name)
 	if (name.empty())
 		return false;
 
-	// Currently only allow saving PLR_NAME_LEN bytes as a player name, so if the name is too long we'd have to truncate it.
+	// Currently only allow saving PlayerNameLength bytes as a player name, so if the name is too long we'd have to truncate it.
 	// That said the input buffer is only 16 bytes long...
-	if (name.size() > PLR_NAME_LEN)
+	if (name.size() > PlayerNameLength)
 		return false;
 
 	if (name.find_first_of(",<>%&\\\"?*#/: ") != name.npos)
