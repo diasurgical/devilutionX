@@ -3232,8 +3232,9 @@ void OperateShrineSolar(Player &player)
 	if (&player != MyPlayer)
 		return;
 
-	time_t tm = time(nullptr);
-	int hour = localtime(&tm)->tm_hour;
+	time_t timeResult = time(nullptr);
+	const std::tm *localtimeResult = localtime(&timeResult);
+	int hour = localtimeResult != nullptr ? localtimeResult->tm_hour : 20;
 	if (hour >= 20 || hour < 4) {
 		InitDiabloMsg(EMSG_SHRINE_SOLAR4);
 		ModifyPlrVit(player, 2);

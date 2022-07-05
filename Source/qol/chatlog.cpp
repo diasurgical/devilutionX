@@ -116,8 +116,10 @@ void ToggleChatLog()
 void AddMessageToChatLog(string_view message, Player *player, UiFlags flags)
 {
 	MessageCounter++;
-	time_t tm = time(nullptr);
-	std::string timestamp = fmt::format("[#{:d}] {:02}:{:02}:{:02}", MessageCounter, localtime(&tm)->tm_hour, localtime(&tm)->tm_min, localtime(&tm)->tm_sec);
+	time_t timeResult = time(nullptr);
+	const std::tm *localtimeResult = localtime(&timeResult);
+	std::string timestamp = localtimeResult != nullptr ? fmt::format("[#{:d}] {:02}:{:02}:{:02}", MessageCounter, localtimeResult->tm_hour, localtimeResult->tm_min, localtimeResult->tm_sec)
+	                                                   : fmt::format("[#{:d}] ", MessageCounter);
 	int oldSize = ChatLogLines.size();
 	ChatLogLines.emplace_back(MultiColoredText { "", { {} } });
 	if (player == nullptr) {
@@ -156,9 +158,12 @@ void DrawChatLog(const Surface &out)
 	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },
 	    (UnreadFlag ? UiFlags::ColorRed : UiFlags::ColorWhitegold) | UiFlags::AlignCenter);
 
-	time_t tm = time(nullptr);
-	std::string timestamp = fmt::format("{:02}:{:02}:{:02}", localtime(&tm)->tm_hour, localtime(&tm)->tm_min, localtime(&tm)->tm_sec);
-	DrawString(out, timestamp, { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } }, UiFlags::ColorWhitegold);
+	time_t timeResult = time(nullptr);
+	const std::tm *localtimeResult = localtime(&timeResult);
+	if (localtimeResult != nullptr) {
+		std::string timestamp = fmt::format("{:02}:{:02}:{:02}", localtimeResult->tm_hour, localtimeResult->tm_min, localtimeResult->tm_sec);
+		DrawString(out, timestamp, { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } }, UiFlags::ColorWhitegold);
+	}
 
 	const int titleBottom = sy + HeaderHeight();
 	DrawSLine(out, titleBottom);
