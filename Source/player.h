@@ -635,7 +635,7 @@ struct Player {
 	void RestorePartialLife();
 
 	/**
-	 * @brief Resets hp to maxHitPoints
+	 * @brief Resets hp to maxHp
 	 */
 	void RestoreFullLife()
 	{
