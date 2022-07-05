@@ -1187,7 +1187,7 @@ bool MonsterIdle(Monster &monster)
 	else
 		monster.ChangeAnimationData(MonsterGraphic::Stand);
 
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1)
+	if (monster.AnimInfo.hasAnimationEnded())
 		UpdateEnemy(monster);
 
 	monster._mVar2++;
@@ -1201,7 +1201,7 @@ bool MonsterIdle(Monster &monster)
 bool MonsterWalk(Monster &monster, MonsterMode variant)
 {
 	// Check if we reached new tile
-	const bool isAnimationEnd = monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1;
+	const bool isAnimationEnd = monster.AnimInfo.hasAnimationEnded();
 	if (isAnimationEnd) {
 		switch (variant) {
 		case MonsterMode::MoveNorthwards:
@@ -1420,7 +1420,7 @@ bool MonsterAttack(int monsterId)
 	}
 	if (monster._mAi == AI_SNAKE && monster.AnimInfo.currentFrame == 0)
 		PlayEffect(monster, 0);
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	if (monster.AnimInfo.hasAnimationEnded()) {
 		M_StartStand(monster, monster._mdir);
 		return true;
 	}
@@ -1451,7 +1451,7 @@ bool MonsterRangedAttack(Monster &monster)
 		PlayEffect(monster, 0);
 	}
 
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	if (monster.AnimInfo.hasAnimationEnded()) {
 		M_StartStand(monster, monster._mdir);
 		return true;
 	}
@@ -1487,7 +1487,7 @@ bool MonsterRangedSpecialAttack(int monsterId)
 		}
 	}
 
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	if (monster.AnimInfo.hasAnimationEnded()) {
 		M_StartStand(monster, monster._mdir);
 		return true;
 	}
@@ -1503,7 +1503,7 @@ bool MonsterSpecialAttack(int monsterId)
 	if (monster.AnimInfo.currentFrame == monster.data().mAFNum2 - 1)
 		MonsterAttackPlayer(monsterId, monster._menemy, monster.mHit2, monster.mMinDamage2, monster.mMaxDamage2);
 
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	if (monster.AnimInfo.hasAnimationEnded()) {
 		M_StartStand(monster, monster._mdir);
 		return true;
 	}
@@ -1514,7 +1514,7 @@ bool MonsterSpecialAttack(int monsterId)
 bool MonsterFadein(Monster &monster)
 {
 	if (((monster._mFlags & MFLAG_LOCK_ANIMATION) == 0 || monster.AnimInfo.currentFrame != 0)
-	    && ((monster._mFlags & MFLAG_LOCK_ANIMATION) != 0 || monster.AnimInfo.currentFrame != monster.AnimInfo.numberOfFrames - 1)) {
+	    && ((monster._mFlags & MFLAG_LOCK_ANIMATION) != 0 || !monster.AnimInfo.hasAnimationEnded())) {
 		return false;
 	}
 
@@ -1527,7 +1527,7 @@ bool MonsterFadein(Monster &monster)
 bool MonsterFadeout(Monster &monster)
 {
 	if (((monster._mFlags & MFLAG_LOCK_ANIMATION) == 0 || monster.AnimInfo.currentFrame != 0)
-	    && ((monster._mFlags & MFLAG_LOCK_ANIMATION) != 0 || monster.AnimInfo.currentFrame != monster.AnimInfo.numberOfFrames - 1)) {
+	    && ((monster._mFlags & MFLAG_LOCK_ANIMATION) != 0 || !monster.AnimInfo.hasAnimationEnded())) {
 		return false;
 	}
 
@@ -1625,7 +1625,7 @@ bool MonsterTalk(Monster &monster)
 
 bool MonsterGotHit(Monster &monster)
 {
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	if (monster.AnimInfo.hasAnimationEnded()) {
 		M_StartStand(monster, monster._mdir);
 
 		return true;
@@ -1655,7 +1655,7 @@ bool MonsterDeath(int monsterId)
 
 		if (monster._mVar1 == 140)
 			PrepDoEnding();
-	} else if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	} else if (monster.AnimInfo.hasAnimationEnded()) {
 		if (monster._uniqtype == 0)
 			AddCorpse(monster.position.tile, monster.type().corpseId, monster._mdir);
 		else
@@ -1674,7 +1674,7 @@ bool MonsterSpecialStand(Monster &monster)
 	if (monster.AnimInfo.currentFrame == monster.data().mAFNum2 - 1)
 		PlayEffect(monster, 3);
 
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	if (monster.AnimInfo.hasAnimationEnded()) {
 		M_StartStand(monster, monster._mdir);
 		return true;
 	}
@@ -2488,7 +2488,7 @@ void FallenAi(int monsterId)
 		}
 	}
 
-	if (monster.AnimInfo.currentFrame == monster.AnimInfo.numberOfFrames - 1) {
+	if (monster.AnimInfo.hasAnimationEnded()) {
 		if (GenerateRnd(4) != 0) {
 			return;
 		}

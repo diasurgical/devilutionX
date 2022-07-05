@@ -99,6 +99,13 @@ public:
 	 */
 	void processAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
 
+	/**
+	 * @brief Returns if the animation is finished
+	 *
+	 * @return true if the animation is finished
+	 */
+	[[nodiscard]] bool hasAnimationEnded() const;
+
 private:
 	/**
 	 * @brief returns the progress as a fraction (0.0f to 1.0f) in time to the next game tick or 0.0f if the animation is frozen

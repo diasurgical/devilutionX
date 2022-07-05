@@ -209,6 +209,11 @@ void AnimationInfo::processAnimation(bool reverseAnimation /*= false*/, bool don
 	}
 }
 
+[[nodiscard]] bool AnimationInfo::hasAnimationEnded() const
+{
+	return currentFrame >= numberOfFrames - 1;
+}
+
 float AnimationInfo::getProgressToNextGameTick() const
 {
 	if (isPetrified)

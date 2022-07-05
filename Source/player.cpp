@@ -1384,7 +1384,7 @@ bool DoGotHit(int pnum)
 
 bool DoDeath(Player &player)
 {
-	if (player.AnimInfo.currentFrame == player.AnimInfo.numberOfFrames - 1) {
+	if (player.AnimInfo.hasAnimationEnded()) {
 		if (player.AnimInfo.tickCounterOfCurrentFrame == 0) {
 			player.AnimInfo.ticksPerFrame = 100;
 			dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
