@@ -116,7 +116,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster.ticksToLive), UiFlags::ColorWhite);
+	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster.activeForTicks), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()

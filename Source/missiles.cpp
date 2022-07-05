@@ -254,8 +254,8 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 			M_StartHit(monster, pnum, dam);
 	}
 
-	if (monster.ticksToLive == 0) {
-		monster.ticksToLive = UINT8_MAX;
+	if (monster.activeForTicks == 0) {
+		monster.activeForTicks = UINT8_MAX;
 		monster.position.last = player.position.tile;
 	}
 
