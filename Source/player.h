@@ -28,13 +28,12 @@
 
 namespace devilution {
 
-// number of inventory grid cells
-#define NUM_INV_GRID_ELEM 40
-#define MAXBELTITEMS 8
-#define MAXRESIST 75
-#define MAXCHARLEVEL 50
-#define MAX_SPELL_LEVEL 15
-#define PLR_NAME_LEN 32
+constexpr int InventoryGridCells = 40;
+constexpr int MaxBeltItems = 8;
+constexpr int MaxResistance = 75;
+constexpr int MaxCharacterLevel = 50;
+constexpr int MaxSpellLevel = 15;
+constexpr int PlayerNameLength = 32;
 
 constexpr size_t NumHotkeys = 12;
 constexpr int BaseHitChance = 50;
@@ -261,7 +260,7 @@ struct Player {
 	bool _pInvincible;
 	int8_t _pLightRad;
 	bool _pLvlChanging; // True when the player is transitioning between levels
-	char _pName[PLR_NAME_LEN];
+	char _pName[PlayerNameLength];
 	HeroClass _pClass;
 	int _pStrength;
 	int _pBaseStr;
@@ -314,10 +313,10 @@ struct Player {
 	int8_t _pDFrames;
 	int8_t _pBFrames;
 	Item InvBody[NUM_INVLOC];
-	Item InvList[NUM_INV_GRID_ELEM];
+	Item InvList[InventoryGridCells];
 	int _pNumInv;
-	int8_t InvGrid[NUM_INV_GRID_ELEM];
-	Item SpdList[MAXBELTITEMS];
+	int8_t InvGrid[InventoryGridCells];
+	Item SpdList[MaxBeltItems];
 	Item HoldItem;
 	int _pIMinDam;
 	int _pIMaxDam;
@@ -394,7 +393,7 @@ struct Player {
 			return mostValuableItem;
 		};
 
-		const Item *mostValuableItem = getMostValuableItem(SpdList, SpdList + MAXBELTITEMS);
+		const Item *mostValuableItem = getMostValuableItem(SpdList, SpdList + MaxBeltItems);
 		mostValuableItem = getMostValuableItem(InvBody, InvBody + inv_body_loc::NUM_INVLOC, mostValuableItem);
 		mostValuableItem = getMostValuableItem(InvList, InvList + _pNumInv, mostValuableItem);
 
@@ -823,6 +822,6 @@ extern int StrengthTbl[enum_size<HeroClass>::value];
 extern int MagicTbl[enum_size<HeroClass>::value];
 extern int DexterityTbl[enum_size<HeroClass>::value];
 extern int VitalityTbl[enum_size<HeroClass>::value];
-extern uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1];
+extern uint32_t ExpLvlsTbl[MaxCharacterLevel + 1];
 
 } // namespace devilution

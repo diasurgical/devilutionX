@@ -2550,9 +2550,9 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		lr = 0;
 	}
 
-	player._pMagResist = clamp(mr, 0, MAXRESIST);
-	player._pFireResist = clamp(fr, 0, MAXRESIST);
-	player._pLghtResist = clamp(lr, 0, MAXRESIST);
+	player._pMagResist = clamp(mr, 0, MaxResistance);
+	player._pFireResist = clamp(fr, 0, MaxResistance);
+	player._pLghtResist = clamp(lr, 0, MaxResistance);
 
 	if (player._pClass == HeroClass::Warrior) {
 		vadd *= 2;
@@ -3534,28 +3534,28 @@ bool DoOil(Player &player, int cii)
 		return fmt::format(fmt::runtime(_("armor class: {:d}")), item._iAC);
 	case IPL_FIRERES:
 	case IPL_FIRERES_CURSE:
-		if (item._iPLFR < MAXRESIST)
+		if (item._iPLFR < MaxResistance)
 			return fmt::format(fmt::runtime(_("Resist Fire: {:+d}%")), item._iPLFR);
 		else
-			return fmt::format(fmt::runtime(_("Resist Fire: {:+d}% MAX")), MAXRESIST);
+			return fmt::format(fmt::runtime(_("Resist Fire: {:+d}% MAX")), MaxResistance);
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
-		if (item._iPLLR < MAXRESIST)
+		if (item._iPLLR < MaxResistance)
 			return fmt::format(fmt::runtime(_("Resist Lightning: {:+d}%")), item._iPLLR);
 		else
-			return fmt::format(fmt::runtime(_("Resist Lightning: {:+d}% MAX")), MAXRESIST);
+			return fmt::format(fmt::runtime(_("Resist Lightning: {:+d}% MAX")), MaxResistance);
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
-		if (item._iPLMR < MAXRESIST)
+		if (item._iPLMR < MaxResistance)
 			return fmt::format(fmt::runtime(_("Resist Magic: {:+d}%")), item._iPLMR);
 		else
-			return fmt::format(fmt::runtime(_("Resist Magic: {:+d}% MAX")), MAXRESIST);
+			return fmt::format(fmt::runtime(_("Resist Magic: {:+d}% MAX")), MaxResistance);
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
-		if (item._iPLFR < MAXRESIST)
+		if (item._iPLFR < MaxResistance)
 			return fmt::format(fmt::runtime(_("Resist All: {:+d}%")), item._iPLFR);
 		else
-			return fmt::format(fmt::runtime(_("Resist All: {:+d}% MAX")), MAXRESIST);
+			return fmt::format(fmt::runtime(_("Resist All: {:+d}% MAX")), MaxResistance);
 	case IPL_SPLLVLADD:
 		if (item._iSplLvlAdd > 0)
 			return fmt::format(fmt::runtime(ngettext("spells are increased {:d} level", "spells are increased {:d} levels", item._iSplLvlAdd)), item._iSplLvlAdd);
@@ -3941,7 +3941,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		break;
 	case IMISC_BOOK:
 		player._pMemSpells |= GetSpellBitmask(spl);
-		if (player._pSplLvl[spl] < MAX_SPELL_LEVEL)
+		if (player._pSplLvl[spl] < MaxSpellLevel)
 			player._pSplLvl[spl]++;
 		if (HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana)) {
 			player._pMana += spelldata[spl].sManaCost << 6;

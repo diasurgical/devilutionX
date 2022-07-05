@@ -104,7 +104,7 @@ int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-uint32_t ExpLvlsTbl[MAXCHARLEVEL + 1] = {
+uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
 	0,
 	2000,
 	4620,
@@ -1778,8 +1778,8 @@ void ValidatePlayer()
 	}
 	Player &myPlayer = *MyPlayer;
 
-	if (myPlayer._pLevel > MAXCHARLEVEL)
-		myPlayer._pLevel = MAXCHARLEVEL;
+	if (myPlayer._pLevel > MaxCharacterLevel)
+		myPlayer._pLevel = MaxCharacterLevel;
 	if (myPlayer._pExperience > myPlayer._pNextExper) {
 		myPlayer._pExperience = myPlayer._pNextExper;
 		if (*sgOptions.Gameplay.experienceBar) {
@@ -1820,8 +1820,8 @@ void ValidatePlayer()
 	for (int b = SPL_FIREBOLT; b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel((spell_id)b) != -1) {
 			msk |= GetSpellBitmask(b);
-			if (myPlayer._pSplLvl[b] > MAX_SPELL_LEVEL)
-				myPlayer._pSplLvl[b] = MAX_SPELL_LEVEL;
+			if (myPlayer._pSplLvl[b] > MaxSpellLevel)
+				myPlayer._pSplLvl[b] = MaxSpellLevel;
 		}
 	}
 
@@ -2680,7 +2680,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
-		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MAXCHARLEVEL);
+		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 1, MaxCharacterLevel);
 
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.

@@ -292,7 +292,7 @@ template <class P>
 void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 {
 	if (pkt.Source() == PLR_BROADCAST && pkt.Destination() == PLR_MASTER && pkt.Type() == PT_INFO_REPLY) {
-		constexpr size_t sizePlayerName = (sizeof(char) * PLR_NAME_LEN);
+		constexpr size_t sizePlayerName = (sizeof(char) * PlayerNameLength);
 		size_t neededSize = sizeof(GameData) + (sizePlayerName * MAX_PLRS);
 		if (pkt.Info().size() < neededSize)
 			return;
@@ -301,7 +301,7 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint_t sender)
 		for (size_t i = 0; i < MAX_PLRS; i++) {
 			std::string playerName;
 			const char *playerNamePointer = (const char *)(pkt.Info().data() + sizeof(GameData) + (i * sizePlayerName));
-			playerName.append(playerNamePointer, strnlen(playerNamePointer, PLR_NAME_LEN));
+			playerName.append(playerNamePointer, strnlen(playerNamePointer, PlayerNameLength));
 			if (!playerName.empty())
 				playerNames.push_back(playerName);
 		}
@@ -324,7 +324,7 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint_t sender)
 		} else if (pkt.Type() == PT_INFO_REQUEST) {
 			if ((plr_self != PLR_BROADCAST) && (get_master() == plr_self)) {
 				buffer_t buf;
-				constexpr size_t sizePlayerName = (sizeof(char) * PLR_NAME_LEN);
+				constexpr size_t sizePlayerName = (sizeof(char) * PlayerNameLength);
 				buf.resize(game_init_info.size() + (sizePlayerName * MAX_PLRS) + gamename.size());
 				std::memcpy(buf.data(), &game_init_info[0], game_init_info.size());
 				for (size_t i = 0; i < MAX_PLRS; i++) {

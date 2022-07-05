@@ -80,7 +80,7 @@ void DrawXPBar(const Surface &out)
 
 	const int8_t charLevel = player._pLevel;
 
-	if (charLevel == MAXCHARLEVEL) {
+	if (charLevel == MaxCharacterLevel) {
 		// Draw a nice golden bar for max level characters.
 		DrawBar(out, position, BarWidth, GoldGradient);
 
@@ -126,7 +126,7 @@ bool CheckXPBarInfo()
 
 	AddPanelString(fmt::format(fmt::runtime(_("Level {:d}")), charLevel));
 
-	if (charLevel == MAXCHARLEVEL) {
+	if (charLevel == MaxCharacterLevel) {
 		// Show a maximum level indicator for max level players.
 		InfoColor = UiFlags::ColorWhitegold;
 

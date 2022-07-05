@@ -38,7 +38,7 @@ struct PlayerPack {
 	uint8_t py;
 	uint8_t targx;
 	uint8_t targy;
-	char pName[PLR_NAME_LEN];
+	char pName[PlayerNameLength];
 	uint8_t pClass;
 	uint8_t pBaseStr;
 	uint8_t pBaseMag;
@@ -55,10 +55,10 @@ struct PlayerPack {
 	int8_t pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
 	uint64_t pMemSpells;
 	ItemPack InvBody[NUM_INVLOC];
-	ItemPack InvList[NUM_INV_GRID_ELEM];
-	int8_t InvGrid[NUM_INV_GRID_ELEM];
+	ItemPack InvList[InventoryGridCells];
+	int8_t InvGrid[InventoryGridCells];
 	uint8_t _pNumInv;
-	ItemPack SpdList[MAXBELTITEMS];
+	ItemPack SpdList[MaxBeltItems];
 	int8_t pTownWarps;
 	int8_t pDungMsgs;
 	int8_t pLvlLoad;

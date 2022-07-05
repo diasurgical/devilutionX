@@ -105,7 +105,7 @@ StyledText GetResistInfo(int8_t resist)
 		style = UiFlags::ColorWhite;
 	else if (resist < 0)
 		style = UiFlags::ColorRed;
-	else if (resist >= MAXRESIST)
+	else if (resist >= MaxResistance)
 		style = UiFlags::ColorWhitegold;
 
 	return { style, fmt::format("{:d}%", resist) };
@@ -137,7 +137,7 @@ PanelEntry panelEntries[] = {
 	    } },
 	{ N_("Next level"), { TopRightLabelX, 80 }, 99, 198,
 	    []() {
-	        if (MyPlayer->_pLevel == MAXCHARLEVEL) {
+	        if (MyPlayer->_pLevel == MaxCharacterLevel) {
 		        return StyledText { UiFlags::ColorWhitegold, std::string(_("None")) };
 	        }
 	        int spacing = ((MyPlayer->_pNextExper >= 1000000000) ? 0 : 1);
