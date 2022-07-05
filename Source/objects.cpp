@@ -2506,7 +2506,7 @@ void OperateSarc(int i, bool sendMsg, bool sendLootMsg)
 	SetRndSeed(Objects[i]._oRndSeed);
 	if (Objects[i]._oVar1 <= 2)
 		CreateRndItem(Objects[i].position, false, sendLootMsg, false);
-	if (Objects[i]._oVar1 >= 8)
+	if (Objects[i]._oVar1 >= 8 && Objects[i]._oVar2 >= 0)
 		SpawnSkeleton(&Monsters[Objects[i]._oVar2], Objects[i].position);
 	if (sendMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -3867,7 +3867,7 @@ void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
 			else
 				CreateRndItem(barrel.position, false, sendmsg, false);
 		}
-		if (barrel._oVar2 >= 8)
+		if (barrel._oVar2 >= 8 && barrel._oVar4 >= 0)
 			SpawnSkeleton(&Monsters[barrel._oVar4], barrel.position);
 	}
 	if (pnum == MyPlayerId) {
