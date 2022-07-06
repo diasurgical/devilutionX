@@ -2952,9 +2952,9 @@ void MI_HorkSpawn(Missile &missile)
 
 		if (spawnPosition) {
 			auto facing = static_cast<Direction>(missile.var1);
-			int monsterId = AddMonster(*spawnPosition, facing, 1, true);
-			if (monsterId != -1) {
-				M_StartStand(Monsters[monsterId], facing);
+			Monster *monster = AddMonster(*spawnPosition, facing, 1, true);
+			if (monster != nullptr) {
+				M_StartStand(*monster, facing);
 			}
 		}
 	} else {
