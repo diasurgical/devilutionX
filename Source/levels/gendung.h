@@ -13,6 +13,7 @@
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/scrollrt.h"
+#include "engine/world_tile.hpp"
 #include "utils/attributes.h"
 #include "utils/bitset2d.hpp"
 #include "utils/enum_traits.h"
@@ -104,7 +105,7 @@ enum _difficulty : uint8_t {
 
 struct ScrollStruct {
 	/** @brief Tile offset of camera. */
-	Point tile;
+	PointOf<int8_t> tile;
 	/** @brief Pixel offset of camera. */
 	Displacement offset;
 	/** @brief Move direction of camera. */
@@ -170,7 +171,7 @@ extern _setlevels setlvlnum;
 /** Specifies the player viewpoint X-coordinate of the map. */
 extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
-extern DVL_API_FOR_TEST Point ViewPosition;
+extern DVL_API_FOR_TEST WorldTilePosition ViewPosition;
 extern ScrollStruct ScrollInfo;
 extern int MicroTileLen;
 extern char TransVal;

@@ -51,7 +51,7 @@ int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point
 bool path_solid_pieces(Point startPosition, Point destinationPosition);
 
 /** For iterating over the 8 possible movement directions */
-const Displacement PathDirs[8] = {
+const DisplacementOf<int8_t> PathDirs[8] = {
 	// clang-format off
 	{ -1, -1 }, //Direction::North
 	{ -1,  1 }, //Direction::West

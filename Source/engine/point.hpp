@@ -90,6 +90,7 @@ struct PointOf {
 
 	constexpr PointOf<CoordT> operator-() const
 	{
+		static_assert(std::is_signed<CoordT>::value, "CoordT must be signed");
 		return { -x, -y };
 	}
 
@@ -180,6 +181,8 @@ std::ostream &operator<<(std::ostream &stream, const PointOf<PointCoordT> &point
 template <typename PointCoordT, typename DisplacementDeltaT>
 constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
 {
+	static_assert(std::is_signed<PointCoordT>::value == std::is_signed<DisplacementDeltaT>::value || sizeof(PointCoordT) == sizeof(DisplacementDeltaT),
+	    "different size unsigned and signed addition is not allowed");
 	a += displacement;
 	return a;
 }
@@ -194,12 +197,16 @@ constexpr PointOf<PointCoordT> operator+(PointOf<PointCoordT> a, Direction direc
 template <typename PointCoordT, typename OtherPointCoordT>
 constexpr DisplacementOf<PointCoordT> operator-(PointOf<PointCoordT> a, PointOf<OtherPointCoordT> b)
 {
+	static_assert(std::is_signed<PointCoordT>::value == std::is_signed<OtherPointCoordT>::value || sizeof(PointCoordT) == sizeof(OtherPointCoordT),
+	    "different size unsigned and signed subtraction is not allowed");
 	return { static_cast<PointCoordT>(a.x - b.x), static_cast<PointCoordT>(a.y - b.y) };
 }
 
 template <typename PointCoordT, typename DisplacementDeltaT>
 constexpr PointOf<PointCoordT> operator-(PointOf<PointCoordT> a, DisplacementOf<DisplacementDeltaT> displacement)
 {
+	static_assert(std::is_signed<PointCoordT>::value == std::is_signed<DisplacementDeltaT>::value || sizeof(PointCoordT) == sizeof(DisplacementDeltaT),
+	    "different size unsigned and signed subtraction is not allowed");
 	a -= displacement;
 	return a;
 }

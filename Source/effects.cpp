@@ -1246,8 +1246,8 @@ void FreeMonsterSnd()
 
 bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan)
 {
-	const auto &playerPosition = MyPlayer->position.tile;
-	const auto delta = soundPosition - playerPosition;
+	const WorldTilePosition playerPosition = MyPlayer->position.tile;
+	const Displacement delta = soundPosition - Point(playerPosition);
 
 	int pan = (delta.deltaX - delta.deltaY) * 256;
 	*plPan = clamp(pan, PAN_MIN, PAN_MAX);

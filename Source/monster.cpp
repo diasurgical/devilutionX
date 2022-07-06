@@ -970,7 +970,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 	}
 
 	if (Quests[Q_GARBUD].IsAvailable() && monster._uniqtype - 1 == UMT_GARBUD) {
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(monster.position.tile + Direction::South, true, ItemType::Mace, IMISC_NONE, sendmsg, false);
 	} else if (monster._uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
@@ -1574,7 +1574,7 @@ bool MonsterTalk(Monster &monster)
 			Quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
 		}
 		if (monster.mtalkmsg == TEXT_GARBUD2 && (monster._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
-			SpawnItem(monster, monster.position.tile + Displacement { 1, 1 }, true);
+			SpawnItem(monster, monster.position.tile + Direction::South, true);
 			monster._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
@@ -1583,7 +1583,7 @@ bool MonsterTalk(Monster &monster)
 	    && (monster._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
 		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		Quests[Q_ZHAR]._qlog = true;
-		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, true, false);
+		CreateTypeItem(monster.position.tile + Direction::South, false, ItemType::Misc, IMISC_BOOK, true, false);
 		monster._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster._uniqtype - 1 == UMT_SNOTSPIL) {
@@ -2320,13 +2320,13 @@ void SkeletonBowAi(int monsterId)
 std::optional<Point> ScavengerFindCorpse(const Monster &scavenger)
 {
 	bool lowToHigh = GenerateRnd(2) != 0;
-	int first = lowToHigh ? -4 : 4;
-	int last = lowToHigh ? 4 : -4;
-	int increment = lowToHigh ? 1 : -1;
+	const int_fast8_t first = lowToHigh ? -4 : 4;
+	const int_fast8_t last = lowToHigh ? 4 : -4;
+	const int_fast8_t increment = lowToHigh ? 1 : -1;
 
-	for (int y = first; y <= last; y += increment) {
-		for (int x = first; x <= last; x += increment) {
-			Point position = scavenger.position.tile + Displacement { x, y };
+	for (int_fast8_t y = first; y <= last; y += increment) {
+		for (int_fast8_t x = first; x <= last; x += increment) {
+			Point position = scavenger.position.tile + DisplacementOf<int8_t> { x, y };
 			// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
 			if (!InDungeonBounds(position))
 				continue;

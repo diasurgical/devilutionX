@@ -4,6 +4,7 @@
 
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/drlg_l1.h"
 #include "levels/drlg_l2.h"
@@ -32,7 +33,7 @@ uint8_t currlevel;
 bool setlevel;
 _setlevels setlvlnum;
 dungeon_type setlvltype;
-Point ViewPosition;
+WorldTilePosition ViewPosition;
 ScrollStruct ScrollInfo;
 int MicroTileLen;
 char TransVal;

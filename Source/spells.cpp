@@ -75,7 +75,7 @@ void PlacePlayer(int pnum)
 		Point okPosition = {};
 
 		for (int i = 0; i < 8; i++) {
-			okPosition = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			okPosition = player.position.tile + DisplacementOf<int8_t> { plrxoff2[i], plryoff2[i] };
 			if (PosOkPlayer(player, okPosition))
 				return okPosition;
 		}

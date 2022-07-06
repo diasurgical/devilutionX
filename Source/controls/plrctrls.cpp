@@ -1800,9 +1800,9 @@ void UpdateSpellTarget(spell_id spell)
 
 	Player &myPlayer = *MyPlayer;
 
-	int range = spell == SPL_TELEPORT ? 4 : 1;
+	const int8_t range = spell == SPL_TELEPORT ? 4 : 1;
 
-	cursPosition = myPlayer.position.future + Displacement(myPlayer._pdir) * range;
+	cursPosition = myPlayer.position.future + DisplacementOf<int8_t>(myPlayer._pdir) * range;
 }
 
 /**
