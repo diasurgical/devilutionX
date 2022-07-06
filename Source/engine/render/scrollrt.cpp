@@ -332,7 +332,7 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
 	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
 	if (missile._miUniqTrans != 0)
-		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel, Monsters[missile._misource].uniqueTRN.get());
+		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel, Monsters[missile._misource].uniqueMonsterTRN.get());
 	else if (missile._miLightFlag)
 		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel);
 	else
@@ -363,8 +363,8 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
-	if (!monster.AnimInfo.celSprite) {
-		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
+	if (!monster.animInfo.celSprite) {
+		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name);
 		return;
 	}
 
@@ -429,29 +429,29 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		}
 	};
 
-	int nCel = monster.AnimInfo.getFrameToUseForRendering();
-	const uint32_t frames = LoadLE32(monster.AnimInfo.celSprite->Data());
+	int nCel = monster.animInfo.getFrameToUseForRendering();
+	const uint32_t frames = LoadLE32(monster.animInfo.celSprite->Data());
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
-		    monster.mName,
-		    getMonsterModeDisplayName(monster._mmode),
-		    DirectionToString(monster._mdir),
+		    monster.name,
+		    getMonsterModeDisplayName(monster.mode),
+		    DirectionToString(monster.direction),
 		    nCel,
 		    frames);
 		return;
 	}
 
-	const auto &cel = *monster.AnimInfo.celSprite;
+	const auto &cel = *monster.animInfo.celSprite;
 
 	if (!IsTileLit(tilePosition)) {
 		Cl2DrawTRN(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, GetInfravisionTRN());
 		return;
 	}
 	uint8_t *trn = nullptr;
-	if (monster._uniqtype != 0)
-		trn = monster.uniqueTRN.get();
-	if (monster._mmode == MonsterMode::Petrified)
+	if (monster.uniqType != 0)
+		trn = monster.uniqueMonsterTRN.get();
+	if (monster.mode == MonsterMode::Petrified)
 		trn = GetStoneTRN();
 	if (MyPlayer->_pInfraFlag && LightTableIndex > 8)
 		trn = GetInfravisionTRN();
@@ -768,20 +768,20 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	}
 
 	const auto &monster = Monsters[mi];
-	if ((monster._mFlags & MFLAG_HIDDEN) != 0) {
+	if ((monster.flags & MFLAG_HIDDEN) != 0) {
 		return;
 	}
 
-	CelSprite cel = *monster.AnimInfo.celSprite;
+	CelSprite cel = *monster.animInfo.celSprite;
 
 	Displacement offset = monster.position.offset;
-	if (monster.IsWalking()) {
-		offset = GetOffsetForWalking(monster.AnimInfo, monster._mdir);
+	if (monster.isWalking()) {
+		offset = GetOffsetForWalking(monster.animInfo, monster.direction);
 	}
 
 	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.AnimInfo.getFrameToUseForRendering());
+		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.animInfo.getFrameToUseForRendering());
 	}
 	DrawMonster(out, tilePosition, monsterRenderPosition, monster);
 }
@@ -848,7 +848,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				break;
 			}
 			if (pDeadGuy->translationPaletteIndex != 0) {
-				uint8_t *trn = Monsters[pDeadGuy->translationPaletteIndex - 1].uniqueTRN.get();
+				uint8_t *trn = Monsters[pDeadGuy->translationPaletteIndex - 1].uniqueMonsterTRN.get();
 				Cl2DrawTRN(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel, trn);
 			} else {
 				Cl2DrawLight(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel);

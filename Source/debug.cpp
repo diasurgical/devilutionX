@@ -100,13 +100,13 @@ void PrintDebugMonster(int m)
 	EventPlrMsg(fmt::format(
 	                "Monster {:d} = {:s}\nX = {:d}, Y = {:d}\nEnemy = {:d}, HP = {:d}\nMode = {:d}, Var1 = {:d}",
 	                m,
-	                monster.mName,
+	                monster.name,
 	                monster.position.tile.x,
 	                monster.position.tile.y,
-	                monster._menemy,
-	                monster._mhitpoints,
-	                static_cast<int>(monster._mmode),
-	                monster._mVar1),
+	                monster.enemy,
+	                monster.hitPoints,
+	                static_cast<int>(monster.mode),
+	                monster.var1),
 	    UiFlags::ColorWhite);
 
 	bool bActive = false;
@@ -116,7 +116,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster._msquelch), UiFlags::ColorWhite);
+	EventPlrMsg(fmt::format("Active List = {:d}, Squelch = {:d}", bActive ? 1 : 0, monster.activeForTicks), UiFlags::ColorWhite);
 }
 
 void ProcessMessages()
@@ -736,7 +736,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
 			PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
 			ActiveMonsterCount--;
-			monster->_udeadval = 1;
+			monster->corpseId = 1;
 			spawnedMonster += 1;
 
 			if (spawnedMonster >= count)

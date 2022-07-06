@@ -57,12 +57,12 @@ void InitCorpses()
 
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster._uniqtype != 0) {
+		if (monster.uniqType != 0) {
 			InitDeadAnimationFromMonster(Corpses[nd], monster.type());
 			Corpses[nd].translationPaletteIndex = ActiveMonsters[i] + 1;
 			nd++;
 
-			monster._udeadval = nd;
+			monster.corpseId = nd;
 		}
 	}
 
@@ -78,12 +78,12 @@ void SyncUniqDead()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster._uniqtype == 0)
+		if (monster.uniqType == 0)
 			continue;
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {
-				if ((dCorpse[dx][dy] & 0x1F) == monster._udeadval)
-					ChangeLightXY(monster.mlid, { dx, dy });
+				if ((dCorpse[dx][dy] & 0x1F) == monster.corpseId)
+					ChangeLightXY(monster.lightId, { dx, dy });
 			}
 		}
 	}

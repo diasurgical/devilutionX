@@ -1349,7 +1349,7 @@ int RndUItem(Monster *monster)
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
 		if (monster != nullptr) {
-			if (monster->mLevel < AllItemsList[i].iMinMLvl)
+			if (monster->level < AllItemsList[i].iMinMLvl)
 				okflag = false;
 		} else {
 			if (2 * curlv < AllItemsList[i].iMinMLvl)
@@ -3026,12 +3026,12 @@ int RndItem(const Monster &monster)
 		if (!IsItemAvailable(i))
 			continue;
 
-		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster.mLevel >= AllItemsList[i].iMinMLvl
+		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster.level >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
 		}
-		if (AllItemsList[i].iRnd != IDROP_NEVER && monster.mLevel >= AllItemsList[i].iMinMLvl
+		if (AllItemsList[i].iRnd != IDROP_NEVER && monster.level >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
@@ -3070,7 +3070,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster._uniqtype != 0 || ((monster.data().mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
+	if (monster.uniqType != 0 || ((monster.data().mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(&monster);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -3099,7 +3099,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
-	int uper = monster._uniqtype != 0 ? 15 : 1;
+	int uper = monster.uniqType != 0 ? 15 : 1;
 
 	int8_t mLevel = monster.data().mLevel;
 	if (!gbIsHellfire && monster.type().type == MT_DIABLO)
@@ -4462,8 +4462,8 @@ std::string DebugSpawnItem(std::string itemName)
 
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
-	fake_m._mMTidx = 0;
-	fake_m._uniqtype = 0;
+	fake_m.levelType = 0;
+	fake_m.uniqType = 0;
 
 	int i = 0;
 	for (;; i++) {
@@ -4476,7 +4476,7 @@ std::string DebugSpawnItem(std::string itemName)
 		if (i > max_iter)
 			return fmt::format("Item not found in {:d} tries!", max_iter);
 
-		fake_m.mLevel = dist(BetterRng) % CF_LEVEL + 1;
+		fake_m.level = dist(BetterRng) % CF_LEVEL + 1;
 
 		int idx = RndItem(fake_m);
 		if (idx > 1) {
@@ -4487,7 +4487,7 @@ std::string DebugSpawnItem(std::string itemName)
 		Point bkp = item.position;
 		item = {};
 		item.position = bkp;
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, 1, false, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.level, 1, false, false, false);
 
 		std::string tmp(item._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });

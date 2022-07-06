@@ -418,13 +418,13 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		myPlayer.Say(HeroSpeech::TheSpiritsOfTheDeadAreNowAvenged, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, quest);
-	} else if (monster._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
+	} else if (monster.uniqType - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		Quests[Q_GARBUD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::ImNotImpressed, 30);
-	} else if (monster._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
+	} else if (monster.uniqType - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		Quests[Q_ZHAR]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
-	} else if (monster._uniqtype - 1 == UMT_LAZARUS) { //"Arch-Bishop Lazarus"
+	} else if (monster.uniqType - 1 == UMT_LAZARUS) { //"Arch-Bishop Lazarus"
 		auto &betrayerQuest = Quests[Q_BETRAYER];
 		betrayerQuest._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
@@ -451,7 +451,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 			betrayerQuest._qvar2 = 4;
 			AddMissile({ 35, 32 }, { 35, 32 }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		}
-	} else if (monster._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
+	} else if (monster.uniqType - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		Quests[Q_WARLORD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::YourReignOfPainHasEnded, 30);
 	}
