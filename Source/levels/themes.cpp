@@ -594,50 +594,50 @@ void Theme_SkelRoom(int t)
 	AddObject(OBJ_SKFIRE, { xp, yp });
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp - 1, yp - 1 });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp - 1, yp - 1 });
 	} else {
 		AddObject(OBJ_BANNERL, { xp - 1, yp - 1 });
 	}
 
 	{
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp, yp - 1 });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp, yp - 1 });
 	}
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp + 1, yp - 1 });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp + 1, yp - 1 });
 	} else {
 		AddObject(OBJ_BANNERR, { xp + 1, yp - 1 });
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp - 1, yp });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp - 1, yp });
 	} else {
 		AddObject(OBJ_BANNERM, { xp - 1, yp });
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp + 1, yp });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp + 1, yp });
 	} else {
 		AddObject(OBJ_BANNERM, { xp + 1, yp });
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp - 1, yp + 1 });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp - 1, yp + 1 });
 	} else {
 		AddObject(OBJ_BANNERR, { xp - 1, yp + 1 });
 	}
 
 	{
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp, yp + 1 });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp, yp + 1 });
 	}
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		int i = PreSpawnSkeleton();
-		SpawnSkeleton(i, { xp + 1, yp + 1 });
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, { xp + 1, yp + 1 });
 	} else {
 		AddObject(OBJ_BANNERL, { xp + 1, yp + 1 });
 	}

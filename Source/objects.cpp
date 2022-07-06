@@ -1074,8 +1074,14 @@ void AddSarc(int i)
 	dObject[Objects[i].position.x][Objects[i].position.y - 1] = -(i + 1);
 	Objects[i]._oVar1 = GenerateRnd(10);
 	Objects[i]._oRndSeed = AdvanceRndSeed();
-	if (Objects[i]._oVar1 >= 8)
-		Objects[i]._oVar2 = PreSpawnSkeleton();
+	if (Objects[i]._oVar1 >= 8) {
+		Monster *monster = PreSpawnSkeleton();
+		if (monster != nullptr) {
+			Objects[i]._oVar2 = monster->getId();
+		} else {
+			Objects[i]._oVar2 = -1;
+		}
+	}
 }
 
 void AddFlameTrap(int i)
@@ -1127,8 +1133,14 @@ void AddBarrel(Object &barrel)
 	barrel._oVar2 = barrel.isExplosive() ? 0 : GenerateRnd(10);
 	barrel._oVar3 = GenerateRnd(3);
 
-	if (barrel._oVar2 >= 8)
-		barrel._oVar4 = PreSpawnSkeleton();
+	if (barrel._oVar2 >= 8) {
+		Monster *skeleton = PreSpawnSkeleton();
+		if (skeleton != nullptr) {
+			barrel._oVar4 = skeleton->getId();
+		} else {
+			barrel._oVar4 = -1;
+		}
+	}
 }
 
 void AddShrine(int i)
@@ -2494,8 +2506,8 @@ void OperateSarc(int i, bool sendMsg, bool sendLootMsg)
 	SetRndSeed(Objects[i]._oRndSeed);
 	if (Objects[i]._oVar1 <= 2)
 		CreateRndItem(Objects[i].position, false, sendLootMsg, false);
-	if (Objects[i]._oVar1 >= 8)
-		SpawnSkeleton(Objects[i]._oVar2, Objects[i].position);
+	if (Objects[i]._oVar1 >= 8 && Objects[i]._oVar2 >= 0)
+		SpawnSkeleton(&Monsters[Objects[i]._oVar2], Objects[i].position);
 	if (sendMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
@@ -3855,8 +3867,8 @@ void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
 			else
 				CreateRndItem(barrel.position, false, sendmsg, false);
 		}
-		if (barrel._oVar2 >= 8)
-			SpawnSkeleton(barrel._oVar4, barrel.position);
+		if (barrel._oVar2 >= 8 && barrel._oVar4 >= 0)
+			SpawnSkeleton(&Monsters[barrel._oVar4], barrel.position);
 	}
 	if (pnum == MyPlayerId) {
 		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, static_cast<uint16_t>(barrel.GetId()));
