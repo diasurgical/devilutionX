@@ -309,7 +309,7 @@ void DrawCursor(const Surface &out)
 /**
  * @brief Render a missile sprite
  * @param out Output buffer
- * @param m Pointer to Missile struct
+ * @param missile Pointer to Missile struct
  * @param targetBufferPosition Output buffer coordinate
  * @param pre Is the sprite in the background
  */
@@ -359,7 +359,7 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
  * @param out Output buffer
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
- * @param m Id of monster
+ * @param monster Monster reference
  */
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
@@ -486,8 +486,9 @@ void DrawPlayerIconHelper(const Surface &out, missile_graphic_id missileGraphicI
 /**
  * @brief Helper for rendering player icons (Mana Shield and Reflect)
  * @param out Output buffer
+ * @param player Player reference
  * @param position Output buffer coordinates
- * @param lighting Should lighting be applied
+ * @param infraVision Should infravision be applied
  */
 void DrawPlayerIcons(const Surface &out, const Player &player, Point position, bool infraVision)
 {
@@ -500,6 +501,7 @@ void DrawPlayerIcons(const Surface &out, const Player &player, Point position, b
 /**
  * @brief Render a player sprite
  * @param out Output buffer
+ * @param player Player reference
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  */
@@ -789,6 +791,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 /**
  * @brief Check if and how a player should be rendered
  * @param out Output buffer
+ * @param player Player reference
  * @param tilePosition dPiece coordinates
  * @param targetBufferPosition Output buffer coordinates
  */
@@ -1061,7 +1064,7 @@ int tileRows;
 
 /**
  * @brief Configure render and process screen rows
- * @param full_out Buffer to render to
+ * @param fullOut Buffer to render to
  * @param position Center of view in dPiece coordinate
  */
 void DrawGame(const Surface &fullOut, Point position)
@@ -1353,11 +1356,11 @@ void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 /**
  * @brief Check render pipeline and blit individual screen parts
  * @param dwHgt Section of screen to update from top to bottom
- * @param draw_desc Render info box
- * @param draw_hp Render health bar
- * @param draw_mana Render mana bar
- * @param draw_sbar Render belt
- * @param draw_btn Render panel buttons
+ * @param drawDesc Render info box
+ * @param drawHp Render health bar
+ * @param drawMana Render mana bar
+ * @param drawSbar Render belt
+ * @param drawBtn Render panel buttons
  */
 void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
 {

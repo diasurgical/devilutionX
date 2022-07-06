@@ -143,6 +143,7 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd);
 /**
  * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
  *
+ * @code{.unparsed}
  *      W  sW  SW   Sw  S
  *              ^
  *     nW       |       Se
@@ -152,11 +153,10 @@ void GetDamageAmt(spell_id i, int *mind, int *maxd);
  *     Nw       |       sE
  *              |
  *      N  Ne  NE   nE  E
+ * @endcode
  *
- * @param x1 the x coordinate of p1
- * @param y1 the y coordinate of p1
- * @param x2 the x coordinate of p2
- * @param y2 the y coordinate of p2
+ * @param p1 The point from which the vector starts.
+ * @param p2 The point from which the vector ends.
  * @return the direction of the p1->p2 vector
  */
 Direction16 GetDirection16(Point p1, Point p2);

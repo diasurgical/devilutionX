@@ -1607,7 +1607,7 @@ std::unordered_map<uint8_t, uint8_t> SaveDroppedItems(SaveHelper &file)
 /**
  * @brief Saves the position of dropped items (in dItem)
  * @param file interface to the save file
- * @param indexMap a map converting from runtime item indexes to the relative position in the save file
+ * @param itemIndexes a map converting from runtime item indexes to the relative position in the save file
  */
 void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t, uint8_t> &itemIndexes)
 {

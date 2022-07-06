@@ -24,7 +24,7 @@ void LoadHotkeys();
 void LoadHeroItems(Player &player);
 /**
  * @brief Remove invalid inventory items from the inventory grid
- * @param pnum The id of the player
+ * @param player The player to remove invalid items from
  */
 void RemoveEmptyInventory(Player &player);
 

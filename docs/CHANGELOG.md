@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
@@ -7,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## DevilutionX 1.3.0
 
 ### Features
+
 #### Platforms
+
 - Added support for [Android](https://play.google.com/store/apps/details?id=org.diasurgical.devilutionx) (please leave us a review 🤗)
 - Added support for the original Nintendo 3DS
 - Added support for Lepus - jz4760/RG300 with multiplayer support
@@ -16,7 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OpenDingux: Added TCP/IP multiplayer support
 - 3DS: Added TCP/IP multiplayer support
 - 3DS: Add launcher sound
+
 #### Graphics / Audio
+
 - Animations are now updated at render time for high fps visuals
 - Added support for hardware cursor (solves cursor lag)
 - Quests being ordered logically in the quest panel
@@ -31,12 +36,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved XP bar visuals
 - More widescreen loading scenes
 - Mac: Icon now follow Big Sur style guide
+
 #### Multiplayer
+
 - Added built in support for ZeroTier (no need for port forwarding, no need for an extra application)
 - Added support for unencrypted public games
 - Added auto discovery of public games over ZeroTier
 - Share map exploration (in a different color than your own exploration)
+
 #### Controls
+
 - Press alt to show items on ground with labels
 - Added option for stopping the hero with a key-press
 - Hold click to continue to attack/walk/consume
@@ -54,7 +63,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - gamepad: Inventory now takes object size into consideration
 - gamepad: Add joystick dead zone range to ini
 - touch: Add input hint to virtual keyboards
+
 #### Stability / Performance / System
+
 - Add support for translations
 - Run in self-contained (portable) mode if diablo.ini is in the same folder as DevilutionX
 - Chat now supports Unicode, including emojis
@@ -70,7 +81,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow for multiple heroes with the same name
 - Only update diablo.ini if there are changes
 - Windows: Auto detect location of MPQ files from GOG installation
+
 #### Translations
+
 - Added Brazilian Portuguese
 - Added Bulgarian
 - Added Czech
@@ -85,7 +98,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Traditional Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
 
 ### Bugfixes
+
 #### Gameplay
+
 - Fix small rooms missing from some levels
 - Golem's to-hit being incorrect after loading a save game
 - Diablo: Correct spells mana cost for the Sorcerer
@@ -93,26 +108,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Diablo: Barbarian missing his armor piercing bonus
 - Hellfire: Elemental spell was missing
 - Hellfire: Firering spell not creating the correct shape
+
 #### Platforms
+
 - Switch: No longer reacts to touch events
+
 #### Graphics / Audio
+
 - Corrected directional sounds for distant sources
 - Fix sound cut off when exiting game or starting the intro video
 - Entirely new audio mixer to solve audio issues and lower memory usage
 - Fixed rendering issues on 8bit outputs
 - Hellfire: Clearly indicate if it's in shareware mode
+
 #### Multiplayer
+
 - Reverted melee damage, when friendly fire and friendly mode is on
 - Do not show XP bar when chat is open
 - Do not show unbound status in place of game name
 - Show host version when incompatible
+
 #### Controls
+
 - Gamepad: Prevent wasting stat points on maxed out stats
 - Gamepad: Do not reset cursor position when switching between mouse and gamepad
 - Gamepad: Unable to open crypt and hive
 - Gamepad: Close cathedral map when pressing B-button
 - Touch: Open virtual keyboard when text input is needed
+
 #### Stability / Performance / System
+
 - Correctly reset game state if not saved
 - Compatibility with shareware save games
 - Correctly handle folders with non English symbols in them
@@ -129,7 +154,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Windows: Only show network errors once
 
 ### Bugfixes for original Diablo bugs
+
 #### Gameplay
+
 - Player becoming immune to stun while using manashield at low health
 - Monsters and players are no-longer immune to missiles when moving horizontally
 - Fix missiles hitting multiple times
@@ -162,7 +189,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix stairs up to level 8 sometimes taking the player to town instead
 - Fix random tiles being explored on automap
 - Fixed various typos
+
 #### Graphics / Audio
+
 - Monster light not updating when monster teleports
 - Correctly shorten item names depending on visual length
 - Missing dirt corners on map
@@ -172,7 +201,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fully close the dialog screen when pausing game
 - Changed player saying "Not enough mana" to a more fitting message when using a level 0 spell
 - Draw belt item number for unusable scrolls
+
 #### Multiplayer
+
 - Correct dsync caused by incorrect vision range for other players
 - Sync monster active state
 - Player attack speed being out of sync
@@ -181,9 +212,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Golem dsyncing if owner leaves level
 - Prevent golems from fighting each other
 - Play the correct sound when a player is hit by missiles
+
 #### Controls
+
 - Controls [ + ] stat point buttons sometimes not responding to clicks
+
 #### Stability / Performance / System
+
 - Keyboard layout is now correct when entering chat messages
 - Validate network messages to harden security
 - Fix corrupt save games for levels with large amount of entities
@@ -193,7 +228,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected multiple crashes and stability issues
 
 ### Bugfixes for original Hellfire bugs
+
 #### Gameplay
+
 - Range monsters cannot hit target at melee range
 - Monsters could not see firewalls if covered by lightning wall and vice versa
 - Armor piercing affix on ranged weapons decreasing hit chance instead of increasing it
@@ -204,7 +241,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reflect spell not working after loading a save game
 - Potion trap was not degrading rejuvenation potion into mana or life
 - Barbarian's skill not correctly updating health points
+
 #### Graphics / Audio
+
 - Fix missing player lights when loading Hive level 3
 - Apply lights to all berserked monsters after loading save game
 - Remove light when killing a berserked monster
@@ -215,7 +254,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Celia and Complete Nut graphics when completing their quests
 - Only play "Uh uh" sound the first time you pick up the cathedral map
 - Glass breaking sound sometimes not playing for the potion trap
+
 #### Multiplayer
+
 - Fix dsync in Hive
 - Open Crypt from the start
 - Restrict access to Hive and Crypt based on level
@@ -223,36 +264,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search spell affecting all players
 
 ### Known issues
+
 - Switch/3DS: Polish dub produces static sounds
 - OpenDingux: Now requires Beta
 
 ## DevilutionX 1.2.1
+
 ### Bugfixes
+
 #### Gameplay
+
 - Gharbad not having to go out of vision before progressing his quest
 - Diablo: Items with negative AC morphing in multiplayer
 - Diablo: Griswold and Wirt selling unusually expensive items
 - Diablo: Gold not going directly to inventory
 - Hellfire: Some monsters having lower than intended HP
 - Hellfire: Auric Amulet not taking effect in most scenarios
+
 #### Graphics / Audio
+
 - Windows: Glitchy audio
+
 #### Controls
+
 - Vita: Inability to edit hero name on the creation screen
+
 #### Stability / Performance / System
+
 - Quest panel crashing the game for some quests
 - Windows: Some systems getting a sensor permission error
 - Windows: Stability issues and item morphing in Hellfire
 
 ### Bugfixes for original Hellfire bugs
+
 #### Gameplay
+
 - Rage/Search/Lightningwall not factoring in the hero level for the first player
 - Sparkling Shrine dealing an incorrect amount of damage
 - Items with negative AC morphing in multiplayer
 
 ## DevilutionX 1.2.0
+
 ### Features
+
 #### Gameplay
+
 - Hellfire support
 - Shareware support
 - Fully migrate saves between Diablo and Hellfire
@@ -271,7 +327,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disable quest randomization (off by default)
 - Adria refills mana (off by default)
 - Barbarian and Bard heroes in Diablo (off by default)
+
 #### Controls
+
 - Use belt via the numpad
 - Close panels when pressing <kbd>ESC</kbd>
 - <kbd>Shift-click</kbd> to spend all stat points
@@ -284,7 +342,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Right stick mouse emulation has been improved.
 - Gamepads plugged in while the game is running can be used.
 - All connected gamepads can be used (previously, only the first one).
+
 #### Graphics / Audio
+
 - Widescreen menus
 - Scroll subtitles at the same speed as narration reader
 - Apply sound volume to videos
@@ -292,7 +352,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auto-equip sounds (off by default)
 - Show monster type (off by default)
 - Disable walking sounds (off by default)
+
 #### Stability / Performance / System
+
 - Document [ini-file options](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide)
 - Reorganize ini-file
 - Allow for up to 99 save games of each type
@@ -310,22 +372,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added AppImage for Linux
 
 ### Bugfixes
+
 #### Gameplay
+
 - Catacombs doors never having traps
+
 #### Graphics / Audio
+
 - Incorrect graphics under cave doors in multiplayer
 - Minor color issues in some videos
 - Command-line output missing on Windows
 - Correct visuals and function of the joining-game-dialog
+
 #### Controls
+
 - Mouse jumping to the top of the windows when using the menu
 - Mouse not releasing when exiting the window
 - Dragging on touch devices
+
 #### Stability / Performance / System
+
 - Multiplayer host crashing after beating the game
 
 ### Bugfixes for original Diablo bugs
+
 #### Gameplay
+
 - Base damage not being updated when leveling up
 - Player vision radius not updating properly before changing level
 - Tiles not properly being marked as out of visibility when walking
@@ -351,9 +423,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Randomly being teleported from level 15 to Lazarus' chamber
 - Several bugs in Lazarus quest when re-entering the teleport
 - Town portals appearing on two levels when cast in a quest level
+
 #### Controls
+
 - Inconsistent mouse behavior when opening/closing various panels
+
 #### Graphics / Audio
+
 - Gold icons graphics are always correct
 - Arrows graphics not aligning with the move direction
 - Wrong death sound when monster/golem kills another monster
@@ -364,15 +440,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lava pools sometimes having roof tiles in them
 - Doors sometimes missing in Halls of The Blind
 - Broken outline on some inventory items
+
 #### Stability / Performance / System
+
 - Fix more stability issues
+
 #### Bugfixes from Hellfire 1.00 - 1.01
+
 - Monster hitpoints overflowing in Nightmare/Hell difficulty
 - Gharbad the Weak not dropping his item when killed by a golem
 - Some stability issues
 
 ### Bugfixes for original Hellfire bugs
+
 #### Gameplay
+
 - Firewall damage calculation being too low
 - Firewall/Lightningwall damage being based on the dungeon level instead of spell level for the first player
 - Right-hand item's decay suffix being applied to the left-hand item in multiplayer
@@ -382,12 +464,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scavenger/Gravedigger AI being stuck for a round after eating
 - Sync available quests in multiplayer
 - Correct spell level being ignored for Search and Rage
+
 #### Graphics / Audio
+
 - Monster attack sound sometimes not playing
 - Missing sounds when bards and barbarians talk to cows
 - "0 Gold" sometimes spawning on The Cornerstone
 - Minor typography corrections
+
 #### Bugfixes from Diablo 1.03 - 1.09
+
 - The Hidden Shrine freezes when not holding an applicable item
 - Memory corruption when casting town portal
 - Crashes associated with Black Death
@@ -411,11 +497,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some stability issues
 
 ### Known issues
+
 - Save game difficulty does not carry over from 1.1.0
 - Amiga builds are currently unstable
 
 ## DevilutionX 1.1.0
+
 ### Features
+
 - Proper widescreen (and other aspects) support
 - Select difficulty in single player (remembered in the save game)
 - Adjustable game speed in-game
@@ -426,10 +515,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for joining a game via hostname instead of IP
 
 ### Bugfixes
+
 - You can now enter and exit fullscreen also when the game is paused
 - [Amiga] Fix double-clicking in menu
 
 ### Original Diablo bugs
+
 - Fix some monsters AC and to-hit values on Nightmare/Hell ending up as 0
 - Fix player base block resetting to 0 after loading a save game
 - Correctly render trees in front of the player
@@ -442,17 +533,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Correctly align the inventory slots
 
 ## DevilutionX 1.0.3
+
 ### Bugfixes
+
 - Fix keyboard input in the menu
 
 ## DevilutionX 1.0.2
+
 ### Features
+
 - Support for integer scaling
 - Controller: Map Start + L1/R1 to char/inventory
 - Added `--save-dir` to allow for specifying the save game folder
 - Correctly scale the game on systems with a non-standard DPI setting
 
 ### Bugfixes
+
 - Some cave levels were generated with an incorrect layout
 - Firebolt mana cost is now correct
 - Allow players to join Nightmare/Hell games without first creating a game
@@ -463,7 +559,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix hanging for 20 sec on the error screen
 
 ## DevilutionX 1.0.1
+
 ### Features
+
 - Toggle fullscreen at any point by hitting alt+enter (mouse grab can be disabled in diablo.ini)
 - Controller: B button closes the currently active panel.
 - Added a navigation menu for controllers
@@ -472,6 +570,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add a list of [known mods](https://github.com/diasurgical/devilutionX/blob/master/docs/mods.md)
 
 ### Platforms
+
 - Added support for 32bit PowerPc
 - Added support for Amiga
 - Added support Clockwork PI GameShell
@@ -480,6 +579,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update OpenDingux/RetroFW build root
 
 ### Bugfixes
+
 - Game crashing on systems that do not report monitor refresh rate.
 - Fixed belt not working correctly when holding shift on us keyboard layouts
 - Always keep track of the latest hero level when selecting difficulty.
@@ -491,11 +591,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a couple of typos in error messages
 
 ### Original Diablo bugs
+
 - Fix belt not working correctly when holding shift on *non-*us keyboard layouts
 - Fix one more rare crash.
 
 ## DevilutionX 1.0.0
+
 ### Features
+
 - FPS no longer capped at 20hz; smoother mouse and transitions
 - Full-featured gamepad support
 - All movies can now be skipped via ESC
@@ -509,12 +612,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Faster loading
 
 ### Platforms
+
 - Added Nintendo Switch support
 - Added Retro Gamer Handheld (OpenDingux/Retrofw) support
 - Added OpenBSD support
 - Windows version is now build as GUI an app and has an icon
 
 ### Bugfixes
+
 - Fixed random missing sounds
 - Fixed NPCs not talking about the right quest
 - Error messages implemented in GUI
@@ -525,12 +630,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed end movie not looping
 
 ### Original Diablo bugs
+
 - Fixed a large number of rare stability issues from the original game
 - Correctly take open panels into account when casting spells
 - Fix sound some times being muted after Diablo dies
 
 ## DevilutionX 0.5.0
+
 ### Features
+
 - Sound is now accurate to the original
 - All in-game issues fixed
 - Delete hero, inline dialogs and scrollbars are now implemented
@@ -544,11 +652,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - diabdat.mpq can now be loaded with read-only access
 
 ### Known issues
+
 - Error dialogs not implemented in main UI
 - The game must restart after hosting multiplayer
 
 ## [0.10.0](https://github.com/diasurgical/devilution/compare/0.9.6...0.10.0)
+
 ### June 22, 2019
+
 - [All functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 - Fix buying from Wirt
 - Replace many magic numbers with constants
@@ -556,13 +667,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add toggle fullscreen with alt+enter in debug builds
 
 ### June 21, 2019
+
 - All functions are now [binary identical](https://github.com/diasurgical/devilution/milestone/3) to Diablo 1.09b
 
 ### June 1, 2019
+
 - MVG posts [a video about the project](https://www.youtube.com/watch?v=5tADL_fmsHQ) and releases a Nintendo Switch port
 
 ## DevilutionX 0.4.0
+
 ### May 20, 2019
+
 - Fixed flickering mouse in caves
 - 32bit ARM build (Raspberry Pi)
 - 32bit FreeBSD build
@@ -575,48 +690,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Music and speech memory leaks fixed
 
 ## [0.9.6](https://github.com/diasurgical/devilution/compare/0.9.0...0.9.6)
+
 ### May 19, 2019
+
 - [96% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 - Fix several item corruption issues introduced in 0.9.0
 
 ## [0.9.0](https://github.com/diasurgical/devilution/compare/0.8.0...0.9.0)
+
 ### May 2, 2019
+
 - [90% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 - Mute buttons now work correctly
 
 ### April 15, 2019
+
 - Code is once again compiled as C++ as some parts appear to require despite the indications in Rich header
 
 ## [0.8.0](https://github.com/diasurgical/devilution/compare/0.7.0...0.8.0)
+
 ### April 12, 2019
+
 - [80% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 - Fixes a few minor issues with generated items
 
 ## [0.7.0](https://github.com/diasurgical/devilution/compare/0.6.0...0.7.0)
+
 ### April 9, 2019
+
 - [70% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 
 ### April 9, 2019
+
 - The last of the compiler flags are figured out
 
 ### March 22, 2019
+
 - Devilution appears on [Phoronix](https://www.phoronix.com/scan.php?page=news_item&px=DeviluitionX-Open-Diablo)
 
 ## DevilutionX 0.3.0
+
 ### March 20, 2019
+
 - Fix dialog volume
 - 32bit macOS build
 - Fix crash in town during multiplayer
 - Screenshot implemented
 
 ## [0.6.0](https://github.com/diasurgical/devilution/compare/v0.5.0...0.6.0)
+
 ### March 19, 2019
+
 - [60% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 - Added a guide for people wanting to join in [Cleaning the code](https://github.com/diasurgical/devilution/wiki/Cleaning-Code)
 - File size is now only 968 bytes (0.13%) larger than the original Diablo 1.09b.
 
 ## DevilutionX 0.2.0
+
 ### March 17, 2019
+
 - Fully implemented audio (all issues from 0.1.0 fixed)
 - Fully implemented multiplayer
 - Windows 32bit build
@@ -625,10 +757,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Most known crashes have been fixed
 
 ### March 7, 2019
+
 - [GOG re-release Diablo](https://www.gog.com/news/release_diablo)
 
 ## DevilutionX 0.1.0
+
 ### February 27, 2019
+
 - Linux 32bit build
 - Basic audio
 - Video playback
@@ -640,7 +775,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Encrypted network connection with password protection
 
 ## [0.5.0](https://github.com/diasurgical/devilution/compare/0.4...v0.5.0)
+
 ### January 14, 2019
+
 - [50% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 - [#456](https://github.com/diasurgical/devilution/pull/456) Assets can now be loaded directly form disk (no need for MPQ-files when modding)
 - [#528](https://github.com/diasurgical/devilution/pull/528) Code ported to C (can still be compiled as C++)
@@ -655,25 +792,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a few issues, mostly relating to multiplayer
 
 ### November 17, 2018
+
 - An older and more original PSX symbol file is discovered
 
 ### October 1, 2018
+
 - Compiler version is confirmed to be correct by discovery of the [Rich header](https://bytepointer.com/articles/the_microsoft_rich_header.htm)
 
 ### September 18, 2018
+
 - Merge nightly back in to devilution
 
 ### September 3, 2018
+
 - Travis is configured to report the overall project delta to 1.09b on every change
 
 ### September 1, 2018
+
 - Devilution-comparer is developed for comparing binary diff in compiled functions
 
 ### August 28, 2018
+
 - The correct compiler combination is found by trial and error plus a bit of luck
 
 ## [0.4.0](https://github.com/diasurgical/devilution/compare/0.3...0.4)
+
 ### September 16, 2018
+
 - Fix crash
 - Get the first functions bin exact
 - Fix render issues
@@ -686,16 +831,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Correct names based on PSX symbols and DX SDK
 
 ### August 20, 2018
+
 - Created nightly fork where code clean up can take place until major bugs are fixed in the main project
 
 ### July 6, 2018
+
 - Setup a Discord channel
 
 ### July 1, 2018
+
 - Diablo 1.09b is determined to have been compiled with the /O1 flag
 
 ## [0.3.0](https://github.com/diasurgical/devilution/compare/0.1.0...0.3)
+
 ### June 28, 2018
+
 - Windows binary can now be compiled under Linux and Mac OS X
 - Windows binary can now be compiled under VS 5.10
 - Fix multiple crashes
@@ -706,127 +856,158 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use consts for various values
 
 ### June 20, 2018
+
 - The [media](https://www.pcgamer.com/a-coder-spent-1200-hours-reverse-engineering-diablos-source-code/) catches wind and [several](https://bloody-disgusting.com/video-games/3505673/fan-completes-reverse-engineering-source-code-diablo/) [articles](https://kotaku.com/coder-spends-1-200-hours-piecing-together-diablos-sourc-1827001247) [appear](https://www.diabloii.net/blog/comments/reverse-engineered-diablo-source-code-released)
 
 ### June 18, 2018
+
 - Devilution gets posted on [Y Combinator](https://news.ycombinator.com/item?id=17338886)
 
 ## 0.1.0
+
 ### June 6, 2018
+
 - Devilution is unleashed upon the world! Version 0.1.0!
 
 ### June 3, 2018
+
 - Polishing things up for final release
 - Added a cheesy fake copyright notice to dissuade monetary gain
 - Properly integrated Storm and DiabloUI into the project
 
 ### May 28, 2018
+
 - Fixed bugs with save files
 - You can now load Devilution saves in the vanilla game
 
 ### May 25, 2018
+
 - Finally! Figured it out and now monsters spawn correctly
 - The game can be completed from start to finish with a few tricks
 
 ### May 21, 2018
+
 - Took a week break, begin working on monster code again
 - Nearly all quests work now
 - Fixed a bug with Adria
 
 ### May 8, 2018
+
 - Fix bugs with character drawing
 - Fix bugs relating to item affix generation
 - Towners no longer crash the game
 
 ### May 7, 2018
+
 - Port debugging functions from the debug release
 - Still can't figure out the zombie problem
 
 ### May 5, 2018
+
 - Begin fixing quest code and testing completion
 
 ### April 26, 2018
+
 - Zombies are spawning in all dungeon types... sigh
 
 ### April 20, 2018
+
 - Split code from IDA's C file into separate CPP files
 - All dungeon types can now be entered
 - Objects are now mostly working
 - Begin uncommenting monster code and fixing them
 
 ### April 11, 2018
+
 - Begin fixing up dungeon generation and objects
 
 ### April 4, 2018
+
 - Fixed many crashing bugs when in town and dungeon
 - Items, missiles, and spells are now drawn
 
 ### April 1, 2018
+
 - Finally fixed the render bug, everything draws correctly!
 - Character animation now draws correctly
 - The cathedral is now mostly working
 
 ### March 29, 2018
+
 - Fixed tons of bugs
 - You can now walk around in town
 - Entering the dungeon almost always crashes
 
 ### March 27, 2018
+
 - Uncommented and fixed lots of broken code
 - The game screen now appears, although very glitchy
 
 ### March 22, 2018
+
 - Control panel and inventory now work almost flawlessly
 
 ### March 21, 2018
+
 - Temporarily commented out tons of broken code
 - You can now get past the loading screen and into town
 - Music also works
 - Control panel mostly works but game screen is black
 
 ### March 18, 2018
+
 - The title screen now works
 - Freezes during the loading screen
 
 ### March 16, 2018
+
 - Fixed enough bugs that you can now launch binary
 - Crashes during title screen
 
 ### March 14, 2018
+
 - Fix remaining errors in code
 - Code now compiles and produces a non-working binary
 
 ### March 13, 2018 -- *!  SPECIAL DAY  !*
+
 - Dump the database to C code via IDA
 
 ### March 8, 2018
+
 - Correct various function signatures
 - Correct struct names and types
 - Plug in enumerates
 - Finish correcting and documenting data sections
 
 ### February 26, 2018
+
 - Finish documenting functions
 - Begin correcting names to match PSX
 
 ### February 18, 2018
+
 - Begin adding enumerates
 - Add more minor structs
 - Clean up data sections
 
 ### February 15, 2018
+
 - Almost finished adding every function
 - Begin working on major structs
 
 ### February 8, 2018
+
 - Add more functions
 - Begin adding data from Sanctuary project
 
 ### February 4, 2018
+
 - IDA disassembly begin
 - Start adding function names from [Sanctuary project](https://github.com/sanctuary/notes)
 
 ### January 15, 2018
+
 - The concept of Devilution is born
 - Research into Diablo's code and mechanics
 - Research from [Jarulf's guide](http://www.bigd-online.com/JG/JGFrame.html)

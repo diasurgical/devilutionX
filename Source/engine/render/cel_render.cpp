@@ -546,6 +546,7 @@ void RenderCelOutline(const Surface &out, Point position, const byte *src, std::
  * @param position Target buffer coordinate
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite in pixels
  */
 void CelBlitSafeTo(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
@@ -555,10 +556,11 @@ void CelBlitSafeTo(const Surface &out, Point position, const byte *pRLEBytes, in
 
 /**
  * @brief Same as CelBlitLightSafe, with blended transparency applied
- * @param out The output buffer
+ * @param out Target buffer
+ * @param position Target buffer coordinate
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
- * @param nWidth Width of sprite
+ * @param nWidth Width of sprite in pixels
  * @param tbl Palette translation table
  */
 void CelBlitLightBlendedSafeTo(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, const uint8_t *tbl)
@@ -583,6 +585,7 @@ void CelBlitLightBlendedSafeTo(const Surface &out, Point position, const byte *p
  * @param position Target buffer coordinate
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite in pixels
  * @param tbl Palette translation table
  */
 void CelBlitLightSafeTo(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)

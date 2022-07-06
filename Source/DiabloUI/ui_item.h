@@ -241,6 +241,8 @@ public:
 	 * @param text Pointer to the first character of a c-string
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
+	 * @param spacing Spacing between characters
+	 * @param lineHeight Vertical distance between text lines
 	 */
 	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)
@@ -255,6 +257,8 @@ public:
 	 * @param ptext Pointer to a c-string (pointer to a pointer to the first character)
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
+	 * @param spacing Spacing between characters
+	 * @param lineHeight Vertical distance between text lines
 	 */
 	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)

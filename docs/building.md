@@ -6,6 +6,7 @@ This is the version most appropriate for packaging DevilutionX for Linux distrib
 For other use cases, use the git repository.
 
 Note: If you do not use git or `devilutionx-src.tar.xz` to get the source you must provide the version to CMake manually:
+
 ```bash
 cmake -S. -Bbuild -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 ```
@@ -15,26 +16,36 @@ cmake -S. -Bbuild -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYP
 Note that ```pkg-config``` is an optional dependency for finding libsodium, although we have a fallback if necessary.
 
 ### Installing dependencies on Debian and Ubuntu
+
 ```
 sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev libbz2-dev libgtest-dev libgmock-dev libsdl2-image-dev libfmt-dev
 ```
+
 ### If you want to build the translations (optional)
+
 ```
 sudo apt-get install gettext poedit
 ```
+
 ### If you want to build the devilutionX.mpq File (optional)
+
 ```
 sudo apt-get install smpq
 ```
+
 ### Installing dependencies on Fedora
+
 ```
 sudo dnf install cmake gcc-c++ glibc-devel libstdc++-static SDL2-devel libsodium-devel libpng-devel bzip2-devel gmock-devel gtest-devel libasan libubsan fmt-devel
 ```
+
 ### Compiling
+
 ```bash
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
+
 </details>
 
 <details><summary>macOS</summary>
@@ -46,6 +57,7 @@ brew bundle install
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(sysctl -n hw.physicalcpu)
 ```
+
 </details>
 <details><summary>iOS</summary>
 
@@ -73,39 +85,51 @@ Then open the generated Xcode project and run things from there.
 <details><summary>FreeBSD</summary>
 
 ### Installing dependencies
+
 ```
 pkg install cmake sdl2 libsodium libpng bzip2 googletest
 ```
+
 ### Compiling
+
 ```bash
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(sysctl -n hw.ncpu)
 ```
+
 </details>
 <details><summary>NetBSD</summary>
 
 ### Installing dependencies
+
 ```
 pkgin install cmake SDL2 libsodium libpng bzip2 googletest
 ```
+
 ### Compiling
+
 ```bash
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(sysctl -n hw.ncpu)
 ```
+
 </details>
 
 <details><summary>OpenBSD</summary>
 
 ### Installing dependencies
+
 ```
 pkg_add cmake sdl2 libsodium libpng bzip2 gmake googletest
 ```
+
 ### Compiling
+
 ```bash
 cmake -S. -Bbuild -DCMAKE_MAKE_PROGRAM=gmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(sysctl -n hw.ncpuonline)
 ```
+
 </details>
 
 <details><summary>Windows via MinGW</summary>
@@ -127,6 +151,7 @@ Download the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/
 ```
 sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 libz-mingw-w64-dev
 ```
+
 ### Compiling
 
 ### 32-bit
@@ -150,6 +175,7 @@ of the `(i686|x86_64)-w64-mingw32` directory.
 <details><summary>Windows via Visual Studio</summary>
 
 ### Installing dependencies
+
 Make sure to install the workload `Desktop development with C++` and the individual components `C++ CMake tools for Windows` and `Windows SDK` for Visual Studio.
 *Note: `Windows SDK` component should match your Windows build version.*
 
@@ -164,17 +190,20 @@ vcpkg integrate install
 If you need aditional instructions for vcpkg you can find the documentation [here](https://github.com/microsoft/vcpkg#quick-start-windows).
 
 ### If you want to build the devilutionX.mpq File (optional)
+
 In order to build devilutionx.mpq, install smpq from https://launchpad.net/smpq/trunk/1.6/+download/SMPQ-1.6-x86_64.exe.
 The location of this tool will need to be [added to the system's PATH environment variable](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/).
 
 ### Compiling
 
 * **Through Open->CMake in Visual Studio**
+
 1. Go to `File -> Open -> CMake`, select `CMakeLists.txt` from the project root.
 2. Select the `x64-Release` configuration (or `x86` for 32 bit builds, `-Debug` for debug builds).
 3. Select `Build devilution.exe` from the `Build` menu.
 
 * **Through GCC/WSL in Visual Studio**
+
 1. Ensure the WSL environment has the build pre-requisites for both devilutionX (see "Installing Dependencies on Debian and Ubuntu" under the "Linux" section above) and [WSL remote development](https://docs.microsoft.com/en-us/cpp/linux/connect-to-your-remote-linux-computer?view=msvc-160#connect-to-wsl).
 2. Select the `WSL-GCC-x64-Debug` configuration.
 3. Select `Build devilution` from the `Build` menu.
@@ -188,16 +217,19 @@ The location of this tool will need to be [added to the system's PATH environmen
 5. In case you need to select any paths to dependencies manually do this right in cmake-gui window.
 6. Press `Generate` and open produced `.sln` file using Visual Studio.
 7. Use build/debug etc. commands inside Visual Studio Solution like with any normal Visual Studio project.
+
 </details>
 
 <details><summary>Android</summary>
 
 ### Installing dependencies
+
 Install [Android Studio](https://developer.android.com/studio)
 After first launch configuration, go to "Configure -> SDK Manager -> SDK Tools".
 Select "NDK (Side by side)" and "CMake" checkboxes and click "OK".
 
 ### Compiling
+
 Click "Open Existing Project" and choose "android-project" folder in DevilutionX root folder.
 Wait until Gradle sync is completed.
 In Android Studio, go to "Build -> Make Project" or use the shortcut Ctrl+F9
@@ -210,27 +242,29 @@ You can find the compiled APK in `/android-project/app/build/outputs/apk/`
 
 https://devkitpro.org/wiki/Getting_Started
 
-
 - Install (dkp-)pacman: https://devkitpro.org/wiki/devkitPro_pacman
 
 - Install required packages with (dkp-)pacman:
+
 ```
 sudo (dkp-)pacman -S --needed - < Packaging/switch/packages.txt
 ```
 
 - Install smpq (if building from git or a source archive without devilutionx.mpq)
-DevilutionX requires some core assets to render UI elements and fonts even if game data is not available. While some
-platforms can load this from the filesystem as loose files the switch build currently only supports bundling the mpq
-archive inside the nro. If you're building DevilutionX on a supported platform a prebuilt binary may be available from
-your package distribution system (e.g. `sudo apt install smpq` or `yum install smpq`), on windows you can
-[download the latest version from Launchpad.net](https://launchpad.net/smpq/+download), and unix based OSes can build
-from source using [tools/build_and_install_smpq.sh](../tools/build_and_install_smpq.sh)
+  DevilutionX requires some core assets to render UI elements and fonts even if game data is not available. While some
+  platforms can load this from the filesystem as loose files the switch build currently only supports bundling the mpq
+  archive inside the nro. If you're building DevilutionX on a supported platform a prebuilt binary may be available from
+  your package distribution system (e.g. `sudo apt install smpq` or `yum install smpq`), on windows you can
+  [download the latest version from Launchpad.net](https://launchpad.net/smpq/+download), and unix based OSes can build
+  from source using [tools/build_and_install_smpq.sh](../tools/build_and_install_smpq.sh)
 
 ### Compiling
+
 ```bash
 cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_ASSETS_MPQ=ON
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
+
 The nro-file will be generated in the build folder. Test with an emulator (RyuJinx) or real hardware.
 
 [Nintendo Switch manual](manual/platforms/switch.md)
@@ -242,20 +276,22 @@ The nro-file will be generated in the build folder. Test with an emulator (RyuJi
 
 https://devkitpro.org/wiki/Getting_Started
 
-
 - Install (dkp-)pacman: https://devkitpro.org/wiki/devkitPro_pacman
 
 - Install required packages with (dkp-)pacman:
+
 ```
 sudo (dkp-)pacman -S \
 		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
 		libctru citro3d 3ds-sdl 3ds-libpng \
 		3ds-cmake 3ds-pkg-config picasso 3dslink
 ```
+
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
-  - Copy binaries to: `/opt/devkitpro/tools/bin/`
+    - Copy binaries to: `/opt/devkitpro/tools/bin/`
 
 ### Compiling
+
 _If you are compiling using MSYS2, you will need to run `export MSYS2_ARG_CONV_EXCL=-D` before compiling.
 Otherwise, MSYS will sanitize file paths in compiler flags which will likely lead to errors in the build._
 
@@ -263,6 +299,7 @@ Otherwise, MSYS will sanitize file paths in compiler flags which will likely lea
 cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
+
 The output files will be generated in the build folder.
 
 [Nintendo 3DS manual](/docs/manual/platforms/3ds.md)
@@ -271,10 +308,12 @@ The output files will be generated in the build folder.
 <details><summary>PlayStation Vita</summary>
 
 ### Compiling
+
 ```bash
 cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
+
 [PlayStation Vita manual](/docs/manual/platforms/vita.md)
 </details>
 
@@ -282,25 +321,34 @@ cmake --build build
 <details><summary>Haiku</summary>
 
 ### Installing dependencies on 32 bit Haiku
+
 ```
 pkgman install cmake_x86 devel:libsdl2_x86 devel:libsodium_x86 devel:libpng_x86 devel:bzip2_x86
 ```
+
 ### Installing dependencies on 64 bit Haiku
+
 ```
 pkgman install cmake devel:libsdl2 devel:libsodium devel:libpng devel:bzip2
 ```
+
 ### Compiling on 32 bit Haiku
+
 ```bash
 setarch x86 # Switch to secondary compiler toolchain (GCC8+)
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
+
 ### Compiling on 64 bit Haiku
+
 No setarch required, as there is no secondary toolchain on x86_64, and the primary is GCC8+
+
 ```bash
 cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j $(getconf _NPROCESSORS_ONLN)
 ```
+
 </details>
 
 <details><summary>OpenDingux / RetroFW</summary>
@@ -338,9 +386,11 @@ End-user manuals are available here:
 <details><summary>Clockwork PI GameShell</summary>
 
 You can either call
+
 ~~~ bash
 Packaging/cpi-gamesh/build.sh
 ~~~
+
 to install dependencies and build the code.
 
 Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](Packaging/cpi-gamesh/readme.md) for more details.
@@ -391,6 +441,7 @@ To then run it:
 cd build-em
 emrun index.html
 ~~~
+
 </details>
 
 <details><summary>Xbox One/Series</summary>
@@ -411,11 +462,13 @@ _Note: Visual Studio Community Edition can be used._
 ### Building
 
 Add the following to the PATH:
+
 * CMake
 * GIT
 * VsDevCmd.bat
 
 Run:
+
 ```
 Packaging/xbox-one/build.bat
 ```
@@ -426,12 +479,14 @@ Packaging/xbox-one/build.bat
 <details><summary><b>CMake build options</b></summary>
 
 ### General
+
 - `-DCMAKE_BUILD_TYPE=Release` changed build type to release and optimize for distribution.
 - `-DNONET=ON` disable network support, this also removes the need for the ASIO and Sodium.
 - `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
 - `-DCMAKE_TOOLCHAIN_FILE=../CMake/platforms/linux_i386.toolchain..cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
 
 ### Debug builds
+
 - `-DDEBUG=OFF` disable debug mode of the Diablo engine.
 - `-DASAN=OFF` disable address sanitizer.
 - `-DUBSAN=OFF` disable undefined behavior sanitizer.

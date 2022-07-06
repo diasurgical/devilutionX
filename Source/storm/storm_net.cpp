@@ -151,6 +151,7 @@ bool SNetLeaveGame(int type)
 /**
  * @brief Called by engine for single, called by ui for multi
  * @param provider BNET, IPXN, MODM, SCBL or UDPN
+ * @param gameData The game data
  */
 bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData)
 {

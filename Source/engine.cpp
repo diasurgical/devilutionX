@@ -163,23 +163,6 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
 	DrawHalfTransparentBlendedRectTo(out, sx, sy, width, height);
 }
 
-/**
- * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
- *
- *      W    SW     S
- *            ^
- *            |
- *     NW ----+---> SE
- *            |
- *            |
- *      N    NE     E
- *
- * @param x1 the x coordinate of p1
- * @param y1 the y coordinate of p1
- * @param x2 the x coordinate of p2
- * @param y2 the y coordinate of p2
- * @return the direction of the p1->p2 vector
- */
 Direction GetDirection(Point start, Point destination)
 {
 	Direction md;

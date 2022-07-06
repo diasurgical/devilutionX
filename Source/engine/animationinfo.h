@@ -95,7 +95,6 @@ public:
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
 	 * @param reverseAnimation Play the animation backwards (for example is used for "unseen" monster fading)
-	 * @param dontProgressAnimation Increase tickCounterOfCurrentFrame but don't change currentFrame
 	 */
 	void processAnimation(bool reverseAnimation = false);
 

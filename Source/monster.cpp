@@ -774,6 +774,7 @@ void UpdateEnemy(Monster &monster)
 
 /**
  * @brief Make the AI wait a bit before thinking again
+ * @param monster The monster what will wait
  * @param len
  */
 void AiDelay(Monster &monster, int len)
@@ -1162,6 +1163,15 @@ void StartFadeout(Monster &monster, Direction md, bool backwards)
 	}
 }
 
+/**
+ * @brief Starts the monster healing procedure.
+ *
+ * The monster will be healed between 1.47% and 25% of its max HP. The healing amount is stored in _mVar1.
+ *
+ * This is only used by Gargoyles.
+ *
+ * @param monster The monster that will be healed.
+ */
 void StartHeal(Monster &monster)
 {
 	monster.changeAnimationData(MonsterGraphic::Special);
@@ -1539,6 +1549,14 @@ bool MonsterFadeout(Monster &monster)
 	return true;
 }
 
+/**
+ * @brief Applies the healing effect on the monster.
+ *
+ * This is triggered by StartHeal()
+ *
+ * @param monster The monster that will be healed.
+ * @return
+ */
 bool MonsterHeal(Monster &monster)
 {
 	if ((monster.flags & MFLAG_NOHEAL) != 0) {
