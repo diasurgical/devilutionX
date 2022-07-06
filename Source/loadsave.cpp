@@ -568,9 +568,9 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.mode = static_cast<MonsterMode>(file->NextLE<int32_t>());
 	monster.goal = static_cast<monster_goal>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
-	monster.goalVar1 = file->NextLE<int32_t>();
-	monster.goalVar2 = file->NextLE<int32_t>();
-	monster.goalVar3 = file->NextLE<int32_t>();
+	monster.goalGeneral = file->NextLE<int32_t>();
+	monster.goalTurning = file->NextLE<int32_t>();
+	monster.goalSpecialAction = file->NextLE<int32_t>();
 	file->Skip(4); // Unused
 	monster.pathCount = file->NextLE<uint8_t>();
 	file->Skip(3); // Alignment
@@ -1310,9 +1310,9 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(static_cast<int>(monster.mode));
 	file->WriteLE<uint8_t>(monster.goal);
 	file->Skip(3); // Alignment
-	file->WriteLE<int32_t>(monster.goalVar1);
-	file->WriteLE<int32_t>(monster.goalVar2);
-	file->WriteLE<int32_t>(monster.goalVar3);
+	file->WriteLE<int32_t>(monster.goalGeneral);
+	file->WriteLE<int32_t>(monster.goalTurning);
+	file->WriteLE<int32_t>(monster.goalSpecialAction);
 	file->Skip(4); // Unused
 	file->WriteLE<uint8_t>(monster.pathCount);
 	file->Skip(3); // Alignment
