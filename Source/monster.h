@@ -176,17 +176,17 @@ struct Monster { // note: missing field _mAFNum
 	/** Specifies current goal of the monster */
 	monster_goal goal;
 	/** Specifies monster's behaviour regarding moving and changing goals. */
-	int goalGeneral;
+	int goalVar1;
 	/**
 	 * @brief Specifies turning direction for @p RoundWalk in most cases.
 	 * Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi.
 	 */
-	int goalTurning;
+	int goalVar2;
 	/**
 	 * @brief Controls monster's behaviour regarding special actions.
 	 * Used only by @p ScavengerAi and @p MegaAi.
 	 */
-	int goalSpecialAction;
+	int goalVar3;
 	int var1;
 	int var2;
 	int var3;
