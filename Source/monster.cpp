@@ -1826,10 +1826,9 @@ void GroupUnity(Monster &monster)
 	}
 }
 
-bool RandomWalk(int monsterId, Direction md)
+bool RandomWalk(Monster &monster, Direction md)
 {
 	Direction mdtemp = md;
-	Monster &monster = Monsters[monsterId];
 
 	bool ok = DirOK(monster, md);
 	if (FlipCoin())
@@ -1938,7 +1937,7 @@ bool AiPlanWalk(int monsterId)
 		return false;
 	}
 
-	RandomWalk(monsterId, plr2monst[path[0]]);
+	RandomWalk(monster, plr2monst[path[0]]);
 	return true;
 }
 
@@ -1971,7 +1970,7 @@ bool RoundWalk(int monsterId, Direction direction, int *dir)
 
 	// Try 90 degrees in the opposite than desired direction
 	*dir = (*dir == 0) ? 1 : 0;
-	return RandomWalk(monsterId, Opposite(turn90deg));
+	return RandomWalk(monster, Opposite(turn90deg));
 }
 
 bool AiPlanPath(int monsterId)
@@ -2050,7 +2049,7 @@ void AiAvoidance(int monsterId)
 			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 			        && monster.var2 == 0
 			        && v < 2 * monster.intelligence + 78)) {
-				RandomWalk(monsterId, md);
+				RandomWalk(monster, md);
 			}
 		} else if (v < 2 * monster.intelligence + 23) {
 			monster.direction = md;
@@ -2122,7 +2121,7 @@ void AiRanged(int monsterId)
 			AiDelay(monster, GenerateRnd(20));
 		} else if (abs(mx) < 4 && abs(my) < 4) {
 			if (GenerateRnd(100) < 10 * (monster.intelligence + 7))
-				RandomWalk(monsterId, Opposite(md));
+				RandomWalk(monster, Opposite(md));
 		}
 		if (monster.mode == MonsterMode::Stand) {
 			if (LineClearMissile(monster.position.tile, { fx, fy })) {
@@ -2142,7 +2141,7 @@ void AiRanged(int monsterId)
 		int fx = monster.position.last.x;
 		int fy = monster.position.last.y;
 		Direction md = GetDirection(monster.position.tile, { fx, fy });
-		RandomWalk(monsterId, md);
+		RandomWalk(monster, md);
 	}
 }
 
@@ -2195,7 +2194,7 @@ void AiRangedAvoidance(int monsterId)
 			v = GenerateRnd(100);
 			if (v < 1000 * (monster.intelligence + 5)
 			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 1000 * (monster.intelligence + 8))) {
-				RandomWalk(monsterId, md);
+				RandomWalk(monster, md);
 			}
 		} else if (v < 1000 * (monster.intelligence + 6)) {
 			monster.direction = md;
@@ -2230,7 +2229,7 @@ void ZombieAi(int monsterId)
 				}
 				Walk(monster, md);
 			} else {
-				RandomWalk(monsterId, GetMonsterDirection(monster));
+				RandomWalk(monster, GetMonsterDirection(monster));
 			}
 		} else {
 			StartAttack(monster);
@@ -2259,7 +2258,7 @@ void OverlordAi(int monsterId)
 		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 		        && monster.var2 == 0
 		        && v < 4 * monster.intelligence + 70)) {
-			RandomWalk(monsterId, md);
+			RandomWalk(monster, md);
 		}
 	} else if (v < 4 * monster.intelligence + 15) {
 		StartAttack(monster);
@@ -2285,7 +2284,7 @@ void SkeletonAi(int monsterId)
 	monster.direction = md;
 	if (abs(x) >= 2 || abs(y) >= 2) {
 		if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay || (GenerateRnd(100) >= 35 - 4 * monster.intelligence)) {
-			RandomWalk(monsterId, md);
+			RandomWalk(monster, md);
 		} else {
 			AiDelay(monster, 15 - 2 * monster.intelligence + GenerateRnd(10));
 		}
@@ -2411,7 +2410,7 @@ void ScavengerAi(int monsterId)
 				int x = monster.goalVar1 - 1;
 				int y = monster.goalVar2 - 1;
 				monster.direction = GetDirection(monster.position.tile, { x, y });
-				RandomWalk(monsterId, monster.direction);
+				RandomWalk(monster, monster.direction);
 			}
 		}
 	}
@@ -2473,7 +2472,7 @@ void RhinoAi(int monsterId)
 				        || v >= 2 * monster.intelligence + 83)) {
 					AiDelay(monster, GenerateRnd(10) + 10);
 				} else {
-					RandomWalk(monsterId, md);
+					RandomWalk(monster, md);
 				}
 			} else if (v < 2 * monster.intelligence + 28) {
 				monster.direction = md;
@@ -2540,14 +2539,14 @@ void FallenAi(int monsterId)
 		}
 	} else if (monster.goal == MonsterGoal::Retreat) {
 		monster.direction = static_cast<Direction>(monster.goalVar2);
-		RandomWalk(monsterId, monster.direction);
+		RandomWalk(monster, monster.direction);
 	} else if (monster.goal == MonsterGoal::Attack) {
 		int xpos = monster.position.tile.x - monster.enemyPosition.x;
 		int ypos = monster.position.tile.y - monster.enemyPosition.y;
 		if (abs(xpos) < 2 && abs(ypos) < 2)
 			StartAttack(monster);
 		else
-			RandomWalk(monsterId, GetMonsterDirection(monster));
+			RandomWalk(monster, GetMonsterDirection(monster));
 	} else
 		SkeletonAi(monsterId);
 }
@@ -2602,7 +2601,7 @@ void LeoricAi(int monsterId)
 				    && (IsNoneOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) || monster.var2 != 0 || (v >= monster.intelligence + 75))) {
 					AiDelay(monster, GenerateRnd(10) + 10);
 				} else {
-					RandomWalk(monsterId, md);
+					RandomWalk(monster, md);
 				}
 			} else if (v < monster.intelligence + 20) {
 				monster.direction = md;
@@ -2630,10 +2629,10 @@ void BatAi(int monsterId)
 	int v = GenerateRnd(100);
 	if (monster.goal == MonsterGoal::Retreat) {
 		if (monster.goalVar1 == 0) {
-			RandomWalk(monsterId, Opposite(md));
+			RandomWalk(monster, Opposite(md));
 			monster.goalVar1++;
 		} else {
-			RandomWalk(monsterId, PickRandomlyAmong({ Right(md), Left(md) }));
+			RandomWalk(monster, PickRandomlyAmong({ Right(md), Left(md) }));
 			monster.goal = MonsterGoal::Normal;
 		}
 		return;
@@ -2654,7 +2653,7 @@ void BatAi(int monsterId)
 		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 		        && monster.var2 == 0
 		        && v < monster.intelligence + 63)) {
-			RandomWalk(monsterId, md);
+			RandomWalk(monster, md);
 		}
 	} else if (v < 4 * monster.intelligence + 8) {
 		StartAttack(monster);
@@ -2697,7 +2696,7 @@ void GargoyleAi(int monsterId)
 		if (abs(dx) >= monster.intelligence + 2 || abs(dy) >= monster.intelligence + 2) {
 			monster.goal = MonsterGoal::Normal;
 			StartHeal(monster);
-		} else if (!RandomWalk(monsterId, Opposite(md))) {
+		} else if (!RandomWalk(monster, Opposite(md))) {
 			monster.goal = MonsterGoal::Normal;
 		}
 	}
@@ -2722,7 +2721,7 @@ void ButcherAi(int monsterId)
 	monster.direction = md;
 
 	if (abs(x) >= 2 || abs(y) >= 2)
-		RandomWalk(monsterId, md);
+		RandomWalk(monster, md);
 	else
 		StartAttack(monster);
 
@@ -2775,7 +2774,7 @@ void SneakAi(int monsterId)
 			if (monster.goal == MonsterGoal::Retreat
 			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster.var2 > 20 && v < 4 * monster.intelligence + 14) || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 4 * monster.intelligence + 64)))) {
 				monster.goalVar1++;
-				RandomWalk(monsterId, md);
+				RandomWalk(monster, md);
 			}
 		}
 	}
@@ -2953,7 +2952,7 @@ void CounselorAi(int monsterId)
 	int v = GenerateRnd(100);
 	if (monster.goal == MonsterGoal::Retreat) {
 		if (monster.goalVar1++ <= 3)
-			RandomWalk(monsterId, Opposite(md));
+			RandomWalk(monster, Opposite(md));
 		else {
 			monster.goal = MonsterGoal::Normal;
 			StartFadein(monster, md, true);
@@ -3084,7 +3083,7 @@ void MegaAi(int monsterId)
 			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 			        && monster.var2 == 0
 			        && v < 2 * (5 * monster.intelligence + 40))) {
-				RandomWalk(monsterId, md);
+				RandomWalk(monster, md);
 			}
 		} else {
 			if (GenerateRnd(100) < 10 * (monster.intelligence + 4)) {
@@ -3283,7 +3282,7 @@ void HorkDemonAi(int monsterId)
 			v = GenerateRnd(100);
 			if (v < 2 * monster.intelligence + 33
 			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 2 * monster.intelligence + 83)) {
-				RandomWalk(monsterId, md);
+				RandomWalk(monster, md);
 			} else {
 				AiDelay(monster, GenerateRnd(10) + 10);
 			}
@@ -4184,7 +4183,7 @@ void GolumAi(int monsterId)
 	if (golem.pathCount > 8)
 		golem.pathCount = 5;
 
-	if (RandomWalk(monsterId, Players[monsterId]._pdir))
+	if (RandomWalk(golem, Players[monsterId]._pdir))
 		return;
 
 	Direction md = Left(golem.direction);
