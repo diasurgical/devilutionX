@@ -8,16 +8,15 @@ environment:
   - job_name: windows
     appveyor_build_worker_image: Visual Studio 2022
 
-  - job_name: uwp
-    appveyor_build_worker_image: Visual Studio 2022
-
 for:
   -
     matrix:
       only:
         - job_name: windows
 
-    cache: '%LOCALAPPDATA%\vcpkg\archives'
+    cache:
+      - '%LOCALAPPDATA%\vcpkg\archives'
+      - c:\tools\vcpkg\installed\
 
     install:
       - if not exist C:\Tools\vcpkg mkdir C:\Tools\vcpkg
@@ -27,15 +26,14 @@ for:
       - cd %APPVEYOR_BUILD_FOLDER%
 
     before_build:
-      - cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
+      - call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+      - cmake -G "Ninja" -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DDISCORD_INTEGRATION=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
-    build:
-      project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
-      parallel: true
-      verbosity: minimal
+    build_script:
+      - cmake --build build --parallel 4
 
     artifacts:
-      - path: Debug\devilutionx.exe
+      - path: build\devilutionx.exe
         name: devilutionx.exe
 
   -
