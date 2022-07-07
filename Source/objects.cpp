@@ -987,7 +987,7 @@ void DeleteObject(int oi, int i)
 
 void AddChest(int i, int t)
 {
-	if (flipCoin())
+	if (!flipCoin())
 		Objects[i]._oAnimFrame += 3;
 	Objects[i]._oRndSeed = AdvanceRndSeed();
 	switch (t) {
