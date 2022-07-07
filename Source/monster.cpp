@@ -774,7 +774,7 @@ void UpdateEnemy(Monster &monster)
 
 /**
  * @brief Make the AI wait a bit before thinking again
- * @param monster The monster what will wait
+ * @param monster The monster that will wait
  * @param len
  */
 void AiDelay(Monster &monster, int len)
