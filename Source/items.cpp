@@ -438,7 +438,7 @@ void AddInitItems()
 		item._iSeed = AdvanceRndSeed();
 		SetRndSeed(item._iSeed);
 
-		if (flipCoin())
+		if (FlipCoin())
 			GetItemAttrs(item, IDI_HEAL, curlv);
 		else
 			GetItemAttrs(item, IDI_MANA, curlv);
@@ -1156,7 +1156,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 	int pre = GenerateRnd(4);
 	int post = GenerateRnd(3);
 	if (pre != 0 && post == 0) {
-		if (flipCoin())
+		if (FlipCoin())
 			post = 1;
 		else
 			pre = 0;
@@ -1592,7 +1592,7 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 			break;
 		}
 	} else {
-		if (flipCoin())
+		if (FlipCoin())
 			idx = IDI_HEAL;
 		else
 			idx = IDI_MANA;

@@ -575,7 +575,7 @@ void AddObjTraps()
 				continue;
 
 			Object *trapObject = nullptr;
-			if (!flipCoin()) {
+			if (!FlipCoin()) {
 				int xp = i - 1;
 				while (IsTileNotSolid({ xp, j }))
 					xp--;
@@ -987,7 +987,7 @@ void DeleteObject(int oi, int i)
 
 void AddChest(int i, int t)
 {
-	if (!flipCoin())
+	if (!FlipCoin())
 		Objects[i]._oAnimFrame += 3;
 	Objects[i]._oRndSeed = AdvanceRndSeed();
 	switch (t) {
@@ -1167,7 +1167,7 @@ void AddShrine(int i)
 	} while (!slist[val]);
 
 	Objects[i]._oVar1 = val;
-	if (flipCoin()) {
+	if (FlipCoin()) {
 		Objects[i]._oAnimFrame = 12;
 		Objects[i]._oAnimLen = 22;
 	}
@@ -3474,7 +3474,7 @@ void OperateArmorStand(int i, bool sendmsg, bool sendLootMsg)
 	Objects[i]._oSelFlag = 0;
 	Objects[i]._oAnimFrame++;
 	SetRndSeed(Objects[i]._oRndSeed);
-	bool uniqueRnd = flipCoin();
+	bool uniqueRnd = FlipCoin();
 	if (currlevel <= 5) {
 		CreateTypeItem(Objects[i].position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {

@@ -66,7 +66,7 @@ int32_t GenerateRnd(int32_t v);
  *
  * @return A random boolean value
  */
-bool flipCoin();
+bool FlipCoin();
 
 /**
  * @brief Picks one of the elements in the list randomly.

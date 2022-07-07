@@ -282,7 +282,7 @@ void InitQuests()
 void InitialiseQuestPools(uint32_t seed, Quest quests[])
 {
 	SetRndSeed(seed);
-	if (flipCoin())
+	if (FlipCoin())
 		quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 	else
 		quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
