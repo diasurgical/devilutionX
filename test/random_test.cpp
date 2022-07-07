@@ -36,6 +36,14 @@ TEST(RandomTest, RandomEngineParams)
 	ASSERT_EQ(GetLCGEngineState(), expectedState) << "Wrong engine state after 10000 invocations";
 }
 
+TEST(RandomTest, Shuffle)
+{
+	SetRndSeed(0);
+	std::vector<int> aa { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	Shuffle(aa.begin(), aa.end());
+	ASSERT_EQ(aa, (std::vector<int> { 3, 7, 9, 2, 6, 8, 1, 5, 4, 0 })) << "Shuffle failed";
+}
+
 TEST(RandomTest, AbsDistribution)
 {
 	// The default distribution for RNG calls is the absolute value of the generated value interpreted as a signed int

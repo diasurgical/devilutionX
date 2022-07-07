@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <initializer_list>
+#include <iterator>
 
 namespace devilution {
 
@@ -82,6 +83,23 @@ const T PickRandomlyAmong(const std::initializer_list<T> &values)
 	const auto index { std::max<int32_t>(GenerateRnd(static_cast<int32_t>(values.size())), 0) };
 
 	return *(values.begin() + index);
+}
+
+/**
+ * @brief Shuffles the iterator using the Fisher-Yates algorithm.
+ * @tparam T The type of the iterator.
+ * @param begin Iterator to the first element in the range to shuffle.
+ * @param end Iterator to the last element in the range to shuffle.
+ */
+template <typename T>
+void Shuffle(T begin, T end)
+{
+	for (unsigned int n = end - begin - 1; n >= 1; --n) {
+		unsigned int k = GenerateRnd(n + 1);
+		if (k != n) {
+			std::iter_swap(begin + k, begin + n);
+		}
+	}
 }
 
 } // namespace devilution
