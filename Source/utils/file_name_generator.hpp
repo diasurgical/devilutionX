@@ -59,7 +59,7 @@ private:
 /**
  * @brief Generates file names from prefixes, a suffix, and an index.
  *
- * @example FileNameGenerator f({"a/", "b"}, ".txt", 1);
+ *     FileNameGenerator f({"a/", "b"}, ".txt", 1);
  *     f()  // "a/b.txt"
  *     f(0) // "a/b1.txt"
  *     f(1) // "a/b2.txt"
@@ -87,7 +87,7 @@ private:
 /**
  * @brief Generates file names from prefixes, a suffix, a char array and an index into it.
  *
- * @example FileNameWithCharAffixGenerator f({"a/", "b"}, ".txt", "ABC");
+ *     FileNameWithCharAffixGenerator f({"a/", "b"}, ".txt", "ABC");
  *     f(0) // "a/bA.txt"
  *     f(1) // "a/bB.txt"
  */

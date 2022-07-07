@@ -40,6 +40,8 @@ bool drawsbarflag;
 /**
  * Maps from inventory slot to screen position. The inventory slots are
  * arranged as follows:
+ *
+ * @code{.unparsed}
  *                          00 01
  *                          02 03   06
  *
@@ -55,6 +57,7 @@ bool drawsbarflag;
  *              55 56 57 58 59 60 61 62 63 64
  *
  * 65 66 67 68 69 70 71 72
+ * @endcode
  */
 const Point InvRect[] = {
 	// clang-format off
@@ -141,6 +144,7 @@ OptionalOwnedCelSprite pInvCels;
 
 /**
  * @brief Adds an item to a player's InvGrid array
+ * @param player The player reference
  * @param invGridIndex Item's position in InvGrid (this should be the item's topleft grid tile)
  * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
  * @param itemSize Size of item

@@ -1,5 +1,5 @@
 /**
- * @file trn.h
+ * @file trn.hpp
  *
  * Contains most of trn logic
  */

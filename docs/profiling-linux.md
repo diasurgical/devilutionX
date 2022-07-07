@@ -52,4 +52,5 @@ google-pprof --web build-gperf/devilutionx main.0001.heap
 See [gperftools heap profiling documentation] for more information.
 
 [gperftools]: https://github.com/gperftools/gperftools/wiki
+
 [gperftools heap profiling documentation]: https://gperftools.github.io/gperftools/heapprofile.html

@@ -43,6 +43,7 @@ void CheckTriggers();
 
 /**
  * @brief Check if the provided position is in the entrance boundary of the entrance.
+ * @param entrance The entrance to check.
  * @param position The position to check against the entrance boundary.
  */
 bool EntranceBoundaryContains(Point entrance, Point position);

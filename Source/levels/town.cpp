@@ -56,7 +56,6 @@ void FillSector(const char *path, int xi, int yy)
 
 /**
  * @brief Load a tile in to dPiece
- * @param megas Map from mega tiles to macro tiles
  * @param xx upper left destination
  * @param yy upper left destination
  * @param t tile id

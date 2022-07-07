@@ -462,7 +462,7 @@ int GetGoldCursor(int value);
 
 /**
  * @brief Update the gold cursor on the given gold item
- * @param h The item to update
+ * @param gold The item to update
  */
 void SetPlrHandGoldCurs(Item &gold);
 void CreatePlrItems(Player &player);

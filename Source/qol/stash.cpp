@@ -52,6 +52,8 @@ Art StashPanelArt;
 Art StashNavButtonArt;
 
 /**
+ * @param page The stash page index.
+ * @param position Position to add the item to.
  * @param stashListIndex The item's StashList index
  * @param itemSize Size of item
  */

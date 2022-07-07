@@ -101,7 +101,7 @@ int GetRotaryDistance(Point destination)
 
 /**
  * @brief Get the best case walking steps to coordinates
- * @param Position Tile coordinates
+ * @param position Tile coordinates
  */
 int GetMinDistance(Point position)
 {

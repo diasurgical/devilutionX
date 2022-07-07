@@ -27,8 +27,8 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int numFrames)
  * @param out Output buffer
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
+ * @param cel CL2 buffer
+ * @param frame CL2 frame number
  */
 void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame);
 
@@ -38,8 +38,8 @@ void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame);
  * @param out Output buffer
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
+ * @param cel CL2 buffer
+ * @param frame CL2 frame number
  */
 void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite cel, int frame);
 
@@ -48,9 +48,9 @@ void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite c
  * @param out Output buffer
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- * @param TRN to use
+ * @param cel CL2 buffer
+ * @param frame CL2 frame number
+ * @param trn TRN to use
  */
 void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, uint8_t *trn);
 
@@ -59,8 +59,8 @@ void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, ui
  * @param out Output buffer
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
+ * @param cel CL2 buffer
+ * @param frame CL2 frame number
  */
 void Cl2DrawLight(const Surface &out, int sx, int sy, CelSprite cel, int frame);
 

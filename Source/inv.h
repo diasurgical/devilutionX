@@ -38,7 +38,7 @@ enum inv_item : int8_t {
 
 /**
  * identifiers for each of the inventory squares
- * @see #InvRect
+ * @see InvRect
  */
 enum inv_xy_slot : uint8_t {
 	// clang-format off
@@ -130,7 +130,7 @@ bool AutoEquipEnabled(const Player &player, const Item &item);
 /**
  * @brief Automatically attempts to equip the specified item in the most appropriate location in the player's body.
  * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
- * @param playerId The player number whose inventory will be checked for compatibility with the item.
+ * @param player The player whose inventory will be checked for compatibility with the item.
  * @param item The item to equip.
  * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
@@ -141,6 +141,7 @@ bool AutoEquip(Player &player, const Item &item, bool persistItem = true);
 /**
  * @brief Checks whether the given item can be placed on the specified player's inventory.
  * If 'persistItem' is 'True', the item is also placed in the inventory.
+ * @param player The player whose inventory will be checked.
  * @param item The item to be checked.
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
@@ -150,6 +151,7 @@ bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem
 /**
  * @brief Checks whether the given item can be placed on the specified player's inventory slot.
  * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @param player The player whose inventory will be checked.
  * @param slotIndex The 0-based index of the slot to put the item on.
  * @param item The item to be checked.
  * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
@@ -206,7 +208,7 @@ void AutoGetItem(Player &player, Item *itemPointer, int ii);
  * @brief Searches for a dropped item with the same type/createInfo/seed
  * @param iseed The value used to initialise the RNG when generating the item
  * @param idx The overarching type of the target item
- * @param createInfo Flags used to describe the specific subtype of the target item
+ * @param ci Flags used to describe the specific subtype of the target item
  * @return An index into ActiveItems or -1 if no matching item was found
  */
 int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t ci);

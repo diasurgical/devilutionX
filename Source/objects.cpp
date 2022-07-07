@@ -1720,7 +1720,7 @@ void CryptDoorSet(Point position, bool isLeftDoor)
  *
  * In order to be able to close a door the space where the closed door would be must be free of bodies, monsters, and items
  *
- * @param doorPos Map tile where the door is in its closed position
+ * @param doorPosition Map tile where the door is in its closed position
  * @return true if the door is free to be closed, false if anything is blocking it
  */
 inline bool IsDoorClear(const Point &doorPosition)
@@ -2906,9 +2906,8 @@ void OperateShrineEerie(Player &player)
 /**
  * @brief Fully restores HP and Mana of the active player and spawns a pair of potions
  *        in response to the player activating a Divine shrine
+ * @param player The player who activated the shrine
  * @param spawnPosition The map tile where the potions will be spawned
- * @return false if the shrine was activated by another player in a multiplayer game and
- *               no changes were made by this instance, true otherwise.
  */
 void OperateShrineDivine(Player &player, Point spawnPosition)
 {
@@ -3082,6 +3081,7 @@ void OperateShrineTainted(const Player &player)
 /**
  * @brief Oily shrines increase the players primary stat(s) by a total of two, but spawn a
  *        firewall near the shrine that will spread towards the player
+ * @param player The player that will be affected by the shrine
  * @param spawnPosition Start location for the firewall
  */
 void OperateShrineOily(Player &player, Point spawnPosition)
@@ -3165,6 +3165,7 @@ void OperateShrineMendicant(Player &player)
 
 /**
  * @brief Grants experience to the player based on their current level while also triggering a magic trap
+ * @param player The player that will be affected by the shrine
  * @param spawnPosition The trap results in casting flash from this location targeting the player
  */
 void OperateShrineSparkling(Player &player, Point spawnPosition)

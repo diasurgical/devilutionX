@@ -1,4 +1,4 @@
-#Controls handling
+# Controls handling
 
 DevilutionX supports mouse & keyboard and gamepad input.
 

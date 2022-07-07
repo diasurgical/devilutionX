@@ -116,7 +116,7 @@ void UpdateMissileVelocity(Missile &missile, Point destination, int velocityInPi
 
 /**
  * @brief Add the missile to the lookup tables
- * @param i Missiles index
+ * @param missile The missile to add
  */
 void PutMissile(Missile &missile)
 {

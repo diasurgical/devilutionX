@@ -38,7 +38,7 @@ void CelApplyTrans(byte *p, const std::array<uint8_t, 256> &translation);
 void CelDrawTo(const Surface &out, Point position, CelSprite cel, int frame);
 
 /**
- * @briefBlit CEL sprite to the given buffer, does not perform bounds-checking.
+ * @brief Blit CEL sprite to the given buffer, does not perform bounds-checking.
  * @param out Target buffer
  * @param position Coordinate in the target buffer coordinate
  * @param cel CEL sprite
@@ -61,6 +61,7 @@ void CelClippedDrawTo(const Surface &out, Point position, CelSprite cel, int fra
  * @param position Target buffer coordinate
  * @param cel CEL sprite
  * @param frame CEL frame number
+ * @param tbl Palette translation table
  */
 void CelDrawLightTo(const Surface &out, Point position, CelSprite cel, int frame, uint8_t *tbl);
 
@@ -106,7 +107,7 @@ void CelDrawItem(const Item &item, const Surface &out, Point position, CelSprite
  * @param out Target buffer
  * @param col Color index from current palette
  * @param position Target buffer coordinate
- * @param pCelBuff CEL buffer
+ * @param cel CEL sprite
  * @param frame CEL frame number
  * @param skipColorIndexZero If true, color in index 0 will be treated as transparent (these are typically used for shadows in sprites)
  */

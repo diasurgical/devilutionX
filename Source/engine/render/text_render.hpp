@@ -143,6 +143,7 @@ int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing
  * @brief Calculate pixel width of first line of text, respecting kerning
  * @param fmt An fmt::format string.
  * @param args Format arguments.
+ * @param argsLen Number of format arguments.
  * @param size Font size to use
  * @param spacing Extra spacing to add per character
  * @param charactersInLine Receives characters read until newline or terminator
@@ -210,12 +211,13 @@ inline void DrawString(const Surface &out, string_view text, const Point &positi
 /**
  * @brief Draws a line of text with different colors for certain parts of the text.
  *
- * @example DrawStringWithColors(out, "Press {} to start", {{"Ⓧ", UiFlags::ColorBlue}}, UiFlags::ColorWhite)
+ *     DrawStringWithColors(out, "Press {} to start", {{"Ⓧ", UiFlags::ColorBlue}}, UiFlags::ColorWhite)
  *
  * @param out Output buffer to draw the text on.
  * @param fmt An fmt::format string.
  * @param args Format arguments.
- * @param position Location of the top left corner of the string relative to the top left corner of the output buffer.
+ * @param argsLen Number of format arguments.
+ * @param rect Clipping region relative to the output buffer describing where to draw the text and when to wrap long lines.
  * @param flags A combination of UiFlags to describe font size, color, alignment, etc. See ui_items.h for available options
  * @param spacing Additional space to add between characters.
  *                This value may be adjusted if the flag UIS_FIT_SPACING is passed in the flags parameter.

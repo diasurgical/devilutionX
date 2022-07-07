@@ -284,6 +284,7 @@ struct Miniset {
 	uint8_t replace[6][6];
 
 	/**
+	 * @param position Coordinates of the dungeon tile to check
 	 * @param respectProtected Match bug from Crypt levels
 	 */
 	bool matches(Point position, bool respectProtected = true) const
@@ -325,6 +326,7 @@ void LoadTransparency(const uint16_t *dunData);
 void LoadDungeonBase(const char *path, Point spawn, int floorId, int dirtId);
 void Make_SetPC(Rectangle area);
 /**
+ * @param miniset The miniset to place
  * @param tries Tiles to try, 1600 will scan the full map
  * @param drlg1Quirk Match buggy behaviour of Diablo's Cathedral
  */

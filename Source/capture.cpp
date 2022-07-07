@@ -111,7 +111,9 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 /**
  * @brief Write the pixel data to the PCX file
- * @param buf Buffer
+ *
+ * @param buf Pixel data
+ * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
 bool CapturePix(const Surface &buf, std::ofstream *out)
