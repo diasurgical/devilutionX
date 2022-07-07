@@ -60,6 +60,15 @@ int32_t AdvanceRndSeed();
 int32_t GenerateRnd(int32_t v);
 
 /**
+ * @brief Generates a random boolean value using the vanilla RNG
+ *
+ * This function returns true 50% of the time and false 50% of the time.
+ *
+ * @return A random boolean value
+ */
+bool flipCoin();
+
+/**
  * @brief Picks one of the elements in the list randomly.
  *
  * @param values The values to pick from

@@ -729,18 +729,18 @@ bool FillRoom(int x1, int y1, int x2, int y2)
 		}
 	}
 	for (int j = y1; j <= y2; j++) {
-		if (GenerateRnd(2) != 0) {
+		if (flipCoin()) {
 			dungeon[x1][j] = 1;
 		}
-		if (GenerateRnd(2) != 0) {
+		if (flipCoin()) {
 			dungeon[x2][j] = 1;
 		}
 	}
 	for (int i = x1; i <= x2; i++) {
-		if (GenerateRnd(2) != 0) {
+		if (flipCoin()) {
 			dungeon[i][y1] = 1;
 		}
-		if (GenerateRnd(2) != 0) {
+		if (flipCoin()) {
 			dungeon[i][y2] = 1;
 		}
 	}
@@ -847,14 +847,14 @@ void FillDiagonals()
 		for (int i = 0; i < DMAXX - 1; i++) {
 			int v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
-				if (GenerateRnd(2) == 0) {
+				if (!flipCoin()) {
 					dungeon[i][j] = 1;
 				} else {
 					dungeon[i + 1][j + 1] = 1;
 				}
 			}
 			if (v == 9) {
-				if (GenerateRnd(2) == 0) {
+				if (!flipCoin()) {
 					dungeon[i + 1][j] = 1;
 				} else {
 					dungeon[i][j + 1] = 1;
@@ -892,7 +892,7 @@ void FillStraights()
 				}
 				xs++;
 			} else {
-				if (xs > 3 && GenerateRnd(2) != 0) {
+				if (xs > 3 && flipCoin()) {
 					for (int k = xc; k < i; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[k][j] = rv;
@@ -911,7 +911,7 @@ void FillStraights()
 				}
 				xs++;
 			} else {
-				if (xs > 3 && GenerateRnd(2) != 0) {
+				if (xs > 3 && flipCoin()) {
 					for (int k = xc; k < i; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[k][j + 1] = rv;
@@ -930,7 +930,7 @@ void FillStraights()
 				}
 				ys++;
 			} else {
-				if (ys > 3 && GenerateRnd(2) != 0) {
+				if (ys > 3 && flipCoin()) {
 					for (int k = yc; k < j; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[i][k] = rv;
@@ -949,7 +949,7 @@ void FillStraights()
 				}
 				ys++;
 			} else {
-				if (ys > 3 && GenerateRnd(2) != 0) {
+				if (ys > 3 && flipCoin()) {
 					for (int k = yc; k < j; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[i + 1][k] = rv;
@@ -1638,7 +1638,7 @@ void Fence()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (int i = 1; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1' (fixed)
-			if (dungeon[i][j] == 10 && GenerateRnd(2) != 0) {
+			if (dungeon[i][j] == 10 && flipCoin()) {
 				int x = i;
 				while (dungeon[x][j] == 10) {
 					x++;
@@ -1647,7 +1647,7 @@ void Fence()
 				if (x - i > 0) {
 					dungeon[i][j] = 127;
 					for (int xx = i + 1; xx < x; xx++) {
-						if (GenerateRnd(2) != 0) {
+						if (flipCoin()) {
 							dungeon[xx][j] = 126;
 						} else {
 							dungeon[xx][j] = 129;
@@ -1656,7 +1656,7 @@ void Fence()
 					dungeon[x][j] = 128;
 				}
 			}
-			if (dungeon[i][j] == 9 && GenerateRnd(2) != 0) {
+			if (dungeon[i][j] == 9 && flipCoin()) {
 				int y = j;
 				while (dungeon[i][y] == 9) {
 					y++;
@@ -1665,7 +1665,7 @@ void Fence()
 				if (y - j > 0) {
 					dungeon[i][j] = 123;
 					for (int yy = j + 1; yy < y; yy++) {
-						if (GenerateRnd(2) != 0) {
+						if (flipCoin()) {
 							dungeon[i][yy] = 121;
 						} else {
 							dungeon[i][yy] = 124;
@@ -1674,7 +1674,7 @@ void Fence()
 					dungeon[i][y] = 122;
 				}
 			}
-			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 10 && dungeon[i][j + 1] == 9 && GenerateRnd(2) != 0) {
+			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 10 && dungeon[i][j + 1] == 9 && flipCoin()) {
 				dungeon[i][j] = 125;
 				int x = i + 1;
 				while (dungeon[x][j] == 10) {
@@ -1682,7 +1682,7 @@ void Fence()
 				}
 				x--;
 				for (int xx = i + 1; xx < x; xx++) {
-					if (GenerateRnd(2) != 0) {
+					if (flipCoin()) {
 						dungeon[xx][j] = 126;
 					} else {
 						dungeon[xx][j] = 129;
@@ -1695,7 +1695,7 @@ void Fence()
 				}
 				y--;
 				for (int yy = j + 1; yy < y; yy++) {
-					if (GenerateRnd(2) != 0) {
+					if (flipCoin()) {
 						dungeon[i][yy] = 121;
 					} else {
 						dungeon[i][yy] = 124;
@@ -1737,7 +1737,7 @@ void Fence()
 								continue;
 							}
 							if (dungeon[i][y] == 7) {
-								if (GenerateRnd(2) != 0) {
+								if (flipCoin()) {
 									dungeon[i][y] = 135;
 								} else {
 									dungeon[i][y] = 137;
@@ -1791,7 +1791,7 @@ void Fence()
 								continue;
 							}
 							if (dungeon[x][j] == 7) {
-								if (GenerateRnd(2) != 0) {
+								if (flipCoin()) {
 									dungeon[x][j] = 134;
 								} else {
 									dungeon[x][j] = 136;

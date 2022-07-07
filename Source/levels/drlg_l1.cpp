@@ -954,10 +954,10 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 
 void FirstRoom()
 {
-	VerticalLayout = GenerateRnd(2) == 0;
-	HasChamber1 = (GenerateRnd(2) != 0);
-	HasChamber2 = (GenerateRnd(2) != 0);
-	HasChamber3 = (GenerateRnd(2) != 0);
+	VerticalLayout = !flipCoin();
+	HasChamber1 = flipCoin();
+	HasChamber2 = flipCoin();
+	HasChamber3 = flipCoin();
 
 	if (!HasChamber1 || !HasChamber3)
 		HasChamber2 = true;
@@ -1497,11 +1497,11 @@ Point SelectChamber()
 {
 	int chamber;
 	if (!HasChamber1)
-		chamber = GenerateRnd(2) != 0 ? 3 : 2;
+		chamber = flipCoin() ? 3 : 2;
 	else if (!HasChamber2)
-		chamber = GenerateRnd(2) != 0 ? 1 : 3;
+		chamber = flipCoin() ? 1 : 3;
 	else if (!HasChamber3)
-		chamber = GenerateRnd(2) != 0 ? 1 : 2;
+		chamber = flipCoin() ? 1 : 2;
 	else
 		chamber = GenerateRnd(3) + 1;
 
