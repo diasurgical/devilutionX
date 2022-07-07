@@ -140,8 +140,6 @@ constexpr int MaxCrawlRadius = 18;
 template <typename F>
 auto Crawl(unsigned radius, F function) -> invoke_result_t<decltype(function), Displacement>
 {
-	assert(radius <= MaxCrawlRadius);
-
 	if (radius == 0)
 		return function(Displacement { 0, 0 });
 
