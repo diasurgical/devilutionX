@@ -723,28 +723,30 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	for (const auto &table : CrawlTable) {
-		for (auto displacement : table) {
-			Point pos = myPlayer.position.tile + displacement;
-			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
-				continue;
-			if (!IsTileWalkable(pos))
-				continue;
+	auto ret = Crawl(0, MaxCrawlRadius, [&](auto displacement) -> std::optional<std::string> {
+		Point pos = myPlayer.position.tile + displacement;
+		if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
+			return {};
+		if (!IsTileWalkable(pos))
+			return {};
 
-			Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
-			if (monster == nullptr)
-				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
-			PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
-			ActiveMonsterCount--;
-			monster->corpseId = 1;
-			spawnedMonster += 1;
+		Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
+		if (monster == nullptr)
+			return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
+		ActiveMonsterCount--;
+		monster->corpseId = 1;
+		spawnedMonster += 1;
 
-			if (spawnedMonster >= count)
-				return "Let the fighting begin!";
-		}
-	}
+		if (spawnedMonster >= count)
+			return "Let the fighting begin!";
 
-	return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+		return {};
+	});
+
+	if (!ret)
+		ret = fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+	return *ret;
 }
 
 std::string DebugCmdSpawnMonster(const string_view parameter)
@@ -807,24 +809,26 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	for (const auto &table : CrawlTable) {
-		for (auto displacement : table) {
-			Point pos = myPlayer.position.tile + displacement;
-			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
-				continue;
-			if (!IsTileWalkable(pos))
-				continue;
+	auto ret = Crawl(0, MaxCrawlRadius, [&](auto displacement) -> std::optional<std::string> {
+		Point pos = myPlayer.position.tile + displacement;
+		if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
+			return {};
+		if (!IsTileWalkable(pos))
+			return {};
 
-			if (AddMonster(pos, myPlayer._pdir, id, true) == nullptr)
-				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
-			spawnedMonster += 1;
+		if (AddMonster(pos, myPlayer._pdir, id, true) == nullptr)
+			return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+		spawnedMonster += 1;
 
-			if (spawnedMonster >= count)
-				return "Let the fighting begin!";
-		}
-	}
+		if (spawnedMonster >= count)
+			return "Let the fighting begin!";
 
-	return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+		return {};
+	});
+
+	if (!ret)
+		ret = fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+	return *ret;
 }
 
 std::string DebugCmdShowTileData(const string_view parameter)
