@@ -1218,69 +1218,69 @@ void AddJester(Missile &missile, const AddMissileParameter &parameter)
 
 void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	for (int i = 0; i < 3; i++) {
-		for (auto displacement : CrawlTable[i]) {
-			Point target = missile.position.start + displacement;
-			if (!InDungeonBounds(target))
-				continue;
-			int8_t pnum = dPlayer[target.x][target.y];
-			if (pnum == 0)
-				continue;
-			Player &player = Players[abs(pnum) - 1];
+	Crawl(0, 2, [&](auto displacement) {
+		Point target = missile.position.start + displacement;
+		if (!InDungeonBounds(target))
+			return false;
+		int8_t pnum = dPlayer[target.x][target.y];
+		if (pnum == 0)
+			return false;
+		Player &player = Players[abs(pnum) - 1];
 
-			bool hasPlayedSFX = false;
-			for (int si = 0; si < MaxBeltItems; si++) {
-				int ii = -1;
-				if (player.SpdList[si]._itype == ItemType::Misc) {
-					if (GenerateRnd(2) == 0)
-						continue;
-					switch (player.SpdList[si]._iMiscId) {
-					case IMISC_FULLHEAL:
-						ii = ItemMiscIdIdx(IMISC_HEAL);
-						break;
-					case IMISC_HEAL:
-					case IMISC_MANA:
-						player.RemoveSpdBarItem(si);
-						break;
-					case IMISC_FULLMANA:
+		bool hasPlayedSFX = false;
+		for (int si = 0; si < MaxBeltItems; si++) {
+			int ii = -1;
+			if (player.SpdList[si]._itype == ItemType::Misc) {
+				if (GenerateRnd(2) == 0)
+					continue;
+				switch (player.SpdList[si]._iMiscId) {
+				case IMISC_FULLHEAL:
+					ii = ItemMiscIdIdx(IMISC_HEAL);
+					break;
+				case IMISC_HEAL:
+				case IMISC_MANA:
+					player.RemoveSpdBarItem(si);
+					break;
+				case IMISC_FULLMANA:
+					ii = ItemMiscIdIdx(IMISC_MANA);
+					break;
+				case IMISC_REJUV:
+					if (GenerateRnd(2) != 0) {
 						ii = ItemMiscIdIdx(IMISC_MANA);
+					} else {
+						ii = ItemMiscIdIdx(IMISC_HEAL);
+					}
+					break;
+				case IMISC_FULLREJUV:
+					switch (GenerateRnd(3)) {
+					case 0:
+						ii = ItemMiscIdIdx(IMISC_FULLMANA);
 						break;
-					case IMISC_REJUV:
-						if (GenerateRnd(2) != 0) {
-							ii = ItemMiscIdIdx(IMISC_MANA);
-						} else {
-							ii = ItemMiscIdIdx(IMISC_HEAL);
-						}
-						break;
-					case IMISC_FULLREJUV:
-						switch (GenerateRnd(3)) {
-						case 0:
-							ii = ItemMiscIdIdx(IMISC_FULLMANA);
-							break;
-						case 1:
-							ii = ItemMiscIdIdx(IMISC_FULLHEAL);
-							break;
-						default:
-							ii = ItemMiscIdIdx(IMISC_REJUV);
-							break;
-						}
+					case 1:
+						ii = ItemMiscIdIdx(IMISC_FULLHEAL);
 						break;
 					default:
-						continue;
+						ii = ItemMiscIdIdx(IMISC_REJUV);
+						break;
 					}
-				}
-				if (ii != -1) {
-					InitializeItem(player.SpdList[si], ii);
-					player.SpdList[si]._iStatFlag = true;
-				}
-				if (!hasPlayedSFX) {
-					PlaySfxLoc(IS_POPPOP2, target);
-					hasPlayedSFX = true;
+					break;
+				default:
+					continue;
 				}
 			}
-			force_redraw = 255;
+			if (ii != -1) {
+				InitializeItem(player.SpdList[si], ii);
+				player.SpdList[si]._iStatFlag = true;
+			}
+			if (!hasPlayedSFX) {
+				PlaySfxLoc(IS_POPPOP2, target);
+				hasPlayedSFX = true;
+			}
 		}
-	}
+		force_redraw = 255;
+
+		return false;
+	});
 	missile._miDelFlag = true;
 }
 
@@ -3020,24 +3020,25 @@ void MI_FireRing(Missile &missile)
 	if (missile.limitReached)
 		return;
 
-	for (auto displacement : CrawlTable[3]) {
+	Crawl(3, [&](auto displacement) {
 		Point target = Point { missile.var1, missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
-			continue;
+			return false;
 		int dp = dPiece[target.x][target.y];
 		if (TileHasAny(dp, TileProperties::Solid))
-			continue;
+			return false;
 		if (IsObjectAtPosition(target))
-			continue;
+			return false;
 		if (!LineClearMissile(missile.position.tile, target))
-			continue;
+			return false;
 		if (TileHasAny(dp, TileProperties::BlockMissile)) {
 			missile.limitReached = true;
-			return;
+			return true;
 		}
 
 		AddMissile(target, target, Direction::South, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
-	}
+		return false;
+	});
 }
 
 void MI_Search(Missile &missile)
@@ -3374,16 +3375,15 @@ void MI_Chain(Missile &missile)
 	Point dst { missile.var1, missile.var2 };
 	Direction dir = GetDirection(position, dst);
 	AddMissile(position, dst, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
-	int rad = std::min<int>(missile._mispllvl + 3, CrawlTable.size() - 1);
-	for (int i = 1; i < rad; i++) {
-		for (auto displacement : CrawlTable[i]) {
-			Point target = position + displacement;
-			if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
-				dir = GetDirection(position, target);
-				AddMissile(position, target, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
-			}
+	int rad = std::min<int>(missile._mispllvl + 3, MaxCrawlRadius);
+	Crawl(1, rad, [&](auto displacement) {
+		Point target = position + displacement;
+		if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
+			dir = GetDirection(position, target);
+			AddMissile(position, target, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
 		}
-	}
+		return false;
+	});
 	missile._mirange--;
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;

@@ -13,6 +13,7 @@
 #include "engine/point.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/attributes.h"
+#include "utils/stdcompat/invoke_result_t.hpp"
 
 namespace devilution {
 
@@ -74,10 +75,113 @@ void ChangeVisionXY(int id, Point position);
 void ProcessVisionList();
 void lighting_color_cycling();
 
+template <typename F>
+auto CrawlFlipsX(Displacement mirrored, F function) -> invoke_result_t<decltype(function), Displacement>
+{
+	const Displacement Flips[] = { mirrored.flipX(), mirrored };
+	for (auto displacement : Flips) {
+		auto ret = function(displacement);
+		if (ret)
+			return ret;
+	}
+	return {};
+}
+
+template <typename F>
+auto CrawlFlipsY(Displacement mirrored, F function) -> invoke_result_t<decltype(function), Displacement>
+{
+	const Displacement Flips[] = { mirrored, mirrored.flipY() };
+	for (auto displacement : Flips) {
+		auto ret = function(displacement);
+		if (ret)
+			return ret;
+	}
+	return {};
+}
+
+template <typename F>
+auto CrawlFlipsXY(Displacement mirrored, F function) -> invoke_result_t<decltype(function), Displacement>
+{
+	const Displacement Flips[] = { mirrored.flipX(), mirrored, mirrored.flipXY(), mirrored.flipY() };
+	for (auto displacement : Flips) {
+		auto ret = function(displacement);
+		if (ret)
+			return ret;
+	}
+	return {};
+}
+
+constexpr int MaxCrawlRadius = 18;
+
+/**
+ * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
+ *
+ * n=4
+ *
+ *    y
+ *    ^
+ *    |  1
+ *    | 3#4
+ *    |  2
+ *    +-----> x
+ *
+ * n=16
+ *
+ *    y
+ *    ^
+ *    |  314
+ *    | B7 8C
+ *    | F # G
+ *    | D9 AE
+ *    |  526
+ *    +-------> x
+ */
+
+template <typename F>
+auto Crawl(unsigned radius, F function) -> invoke_result_t<decltype(function), Displacement>
+{
+	assert(radius <= MaxCrawlRadius);
+
+	if (radius == 0)
+		return function(Displacement { 0, 0 });
+
+	auto ret = CrawlFlipsY({ 0, static_cast<int>(radius) }, function);
+	if (ret)
+		return ret;
+	for (unsigned i = 1; i < radius; i++) {
+		ret = CrawlFlipsXY({ static_cast<int>(i), static_cast<int>(radius) }, function);
+		if (ret)
+			return ret;
+	}
+	if (radius > 1) {
+		ret = CrawlFlipsXY({ static_cast<int>(radius) - 1, static_cast<int>(radius) - 1 }, function);
+		if (ret)
+			return ret;
+	}
+	ret = CrawlFlipsX({ static_cast<int>(radius), 0 }, function);
+	if (ret)
+		return ret;
+	for (unsigned i = 1; i < radius; i++) {
+		ret = CrawlFlipsXY({ static_cast<int>(radius), static_cast<int>(i) }, function);
+		if (ret)
+			return ret;
+	}
+	return {};
+}
+
+template <typename F>
+auto Crawl(unsigned minRadius, unsigned maxRadius, F function) -> invoke_result_t<decltype(function), Displacement>
+{
+	for (unsigned i = minRadius; i <= maxRadius; i++) {
+		auto displacement = Crawl(i, function);
+		if (displacement)
+			return displacement;
+	}
+	return {};
+}
+
 /* rdata */
 
-constexpr size_t CrawlTableSize = 19;
-extern DVL_API_FOR_TEST const std::array<std::vector<DisplacementOf<int8_t>>, CrawlTableSize> CrawlTable;
 extern const uint8_t VisionCrawlTable[23][30];
 
 } // namespace devilution

@@ -10,22 +10,22 @@ TEST(Lighting, CrawlTables)
 	bool added[40][40];
 	memset(added, 0, sizeof(added));
 
-	for (size_t j = 0; j < CrawlTable.size(); j++) {
-		int x = 20;
-		int y = 20;
-		for (unsigned i = 0; i < CrawlTable[j].size(); i++) {
-			int dx = x + CrawlTable[j][i].deltaX;
-			int dy = y + CrawlTable[j][i].deltaY;
-			EXPECT_EQ(added[dx][dy], false) << "location " << i << ":" << j << " added twice";
-			added[dx][dy] = true;
-		}
-	}
+	int x = 20;
+	int y = 20;
 
-	for (int i = -18; i <= 18; i++) {
-		for (int j = -18; j <= 18; j++) {
+	Crawl(0, MaxCrawlRadius, [&](auto displacement) {
+		int dx = x + displacement.deltaX;
+		int dy = y + displacement.deltaY;
+		EXPECT_EQ(added[dx][dy], false) << "displacement " << displacement.deltaX << ":" << displacement.deltaY << " added twice";
+		added[dx][dy] = true;
+		return false;
+	});
+
+	for (int i = -MaxCrawlRadius; i <= MaxCrawlRadius; i++) {
+		for (int j = -MaxCrawlRadius; j <= MaxCrawlRadius; j++) {
 			if (added[i + 20][j + 20])
 				continue;
-			if ((i == -18 && j == -18) || (i == -18 && j == 18) || (i == 18 && j == -18) || (i == 18 && j == 18))
+			if (abs(i) == MaxCrawlRadius && abs(j) == MaxCrawlRadius)
 				continue; // Limit of the crawl table rage
 			EXPECT_EQ(false, true) << "while checking location " << i << ":" << j;
 		}
