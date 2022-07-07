@@ -361,7 +361,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 
 void RotateBlockedMissile(Missile &missile)
 {
-	int rotation = GenerateRnd(2) != 0 ? 1 : -1;
+	int rotation = FlipCoin() ? 1 : -1;
 
 	if (missile._miAnimType == MFILE_ARROWS) {
 		int dir = missile._miAnimFrame + rotation;
@@ -1148,7 +1148,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 		    if ((monster.magicResistance & IMMUNE_MAGIC) != 0)
 			    return false;
-		    if ((monster.magicResistance & RESIST_MAGIC) != 0 && ((monster.magicResistance & RESIST_MAGIC) != 1 || GenerateRnd(2) != 0))
+		    if ((monster.magicResistance & RESIST_MAGIC) != 0 && ((monster.magicResistance & RESIST_MAGIC) != 1 || FlipCoin()))
 			    return false;
 
 		    return true;
@@ -1231,7 +1231,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 		for (int si = 0; si < MaxBeltItems; si++) {
 			int ii = -1;
 			if (player.SpdList[si]._itype == ItemType::Misc) {
-				if (GenerateRnd(2) == 0)
+				if (!FlipCoin())
 					continue;
 				switch (player.SpdList[si]._iMiscId) {
 				case IMISC_FULLHEAL:
@@ -1245,7 +1245,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 					ii = ItemMiscIdIdx(IMISC_MANA);
 					break;
 				case IMISC_REJUV:
-					if (GenerateRnd(2) != 0) {
+					if (FlipCoin()) {
 						ii = ItemMiscIdIdx(IMISC_MANA);
 					} else {
 						ii = ItemMiscIdIdx(IMISC_HEAL);

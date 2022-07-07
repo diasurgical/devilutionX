@@ -51,4 +51,9 @@ int32_t GenerateRnd(int32_t v)
 	return AdvanceRndSeed() % v;
 }
 
+bool FlipCoin()
+{
+	return GenerateRnd(2) != 0;
+}
+
 } // namespace devilution
