@@ -163,8 +163,10 @@ bool IsDirectionalAnim(const CMonster &monster, size_t animIndex)
 
 void InitMonsterTRN(CMonster &monst)
 {
+	char path[MAX_PATH];
 	std::array<uint8_t, 256> colorTranslations;
-	LoadFileInMem(monst.data->TransFile, colorTranslations);
+	*BufCopy(path, "Monsters\\", monst.data->TransFile, ".TRN") = '\0';
+	LoadFileInMem(path, colorTranslations);
 
 	std::replace(colorTranslations.begin(), colorTranslations.end(), 255, 0);
 
