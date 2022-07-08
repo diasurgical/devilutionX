@@ -438,10 +438,7 @@ void AddInitItems()
 		item._iSeed = AdvanceRndSeed();
 		SetRndSeed(item._iSeed);
 
-		if (FlipCoin())
-			GetItemAttrs(item, IDI_MANA, curlv);
-		else
-			GetItemAttrs(item, IDI_HEAL, curlv);
+		GetItemAttrs(item, PickRandomlyAmong({ IDI_MANA, IDI_HEAL }), curlv);
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
@@ -1592,10 +1589,7 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 			break;
 		}
 	} else {
-		if (FlipCoin())
-			idx = IDI_MANA;
-		else
-			idx = IDI_HEAL;
+		idx = PickRandomlyAmong({ IDI_MANA, IDI_HEAL });
 
 		if (lvl > 1 && GenerateRnd(3) == 0)
 			idx = IDI_PORTAL;

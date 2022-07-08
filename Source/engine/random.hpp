@@ -79,7 +79,7 @@ bool FlipCoin(unsigned frequency = 2);
 template <typename T>
 const T PickRandomlyAmong(const std::initializer_list<T> &values)
 {
-	const auto index { std::max<int32_t>(GenerateRnd(values.size()), 0) };
+	const auto index { std::max<int32_t>(GenerateRnd(static_cast<int32_t>(values.size())), 0) };
 
 	return *(values.begin() + index);
 }

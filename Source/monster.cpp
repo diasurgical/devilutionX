@@ -2632,10 +2632,7 @@ void BatAi(int monsterId)
 			RandomWalk(monsterId, Opposite(md));
 			monster.goalVar1++;
 		} else {
-			if (FlipCoin())
-				RandomWalk(monsterId, Right(md));
-			else
-				RandomWalk(monsterId, Left(md));
+			RandomWalk(monsterId, PickRandomlyAmong({ Right(md), Left(md) }));
 			monster.goal = MGOAL_NORMAL;
 		}
 		return;
@@ -2763,10 +2760,7 @@ void SneakAi(int monsterId)
 			md = GetDirection(monster.position.tile, Players[monster.enemy].position.last);
 		md = Opposite(md);
 		if (monster.type().type == MT_UNSEEN) {
-			if (FlipCoin())
-				md = Right(md);
-			else
-				md = Left(md);
+			md = PickRandomlyAmong({ Right(md), Left(md) });
 		}
 	}
 	monster.direction = md;

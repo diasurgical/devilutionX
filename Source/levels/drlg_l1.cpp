@@ -1497,11 +1497,11 @@ Point SelectChamber()
 {
 	int chamber;
 	if (!HasChamber1)
-		chamber = FlipCoin() ? 2 : 3;
+		chamber = PickRandomlyAmong({ 2, 3 });
 	else if (!HasChamber2)
-		chamber = FlipCoin() ? 3 : 1;
+		chamber = PickRandomlyAmong({ 3, 1 });
 	else if (!HasChamber3)
-		chamber = FlipCoin() ? 2 : 1;
+		chamber = PickRandomlyAmong({ 2, 1 });
 	else
 		chamber = GenerateRnd(3) + 1;
 

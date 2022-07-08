@@ -361,7 +361,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 
 void RotateBlockedMissile(Missile &missile)
 {
-	int rotation = FlipCoin() ? -1 : 1;
+	int rotation = PickRandomlyAmong({ -1, 1 });
 
 	if (missile._miAnimType == MFILE_ARROWS) {
 		int dir = missile._miAnimFrame + rotation;
@@ -1245,11 +1245,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 					ii = ItemMiscIdIdx(IMISC_MANA);
 					break;
 				case IMISC_REJUV:
-					if (FlipCoin()) {
-						ii = ItemMiscIdIdx(IMISC_HEAL);
-					} else {
-						ii = ItemMiscIdIdx(IMISC_MANA);
-					}
+					ii = ItemMiscIdIdx(PickRandomlyAmong({ IMISC_HEAL, IMISC_MANA }));
 					break;
 				case IMISC_FULLREJUV:
 					switch (GenerateRnd(3)) {
