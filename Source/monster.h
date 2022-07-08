@@ -187,7 +187,7 @@ struct Monster { // note: missing field _mAFNum
 	 * Used only by @p ScavengerAi and @p MegaAi.
 	 */
 	int goalVar3;
-	int var1;
+	int var1; //used as tmp? Saves old monster goal, saves missile_id
 	int var2;
 	int var3;
 	int maxHitPoints;
