@@ -1643,12 +1643,8 @@ void InitDungeonPieces()
 
 void InitDungeonFlags()
 {
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			predungeon[i][j] = 32;
-			Protected.reset(i, j);
-		}
-	}
+	Protected.reset();
+	memset(predungeon, 32, sizeof(predungeon));
 }
 
 void MapRoom(int x1, int y1, int x2, int y2)

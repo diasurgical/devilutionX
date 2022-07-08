@@ -137,6 +137,8 @@ struct ShadowStruct {
 	uint8_t nv3;
 };
 
+/** Reprecents what tiles are being utilized in the generated map. */
+extern Bitset2d<DMAXX, DMAXY> DungeonMask;
 /** Contains the tile IDs of the map. */
 extern DVL_API_FOR_TEST uint8_t dungeon[DMAXX][DMAXY];
 /** Contains a backup of the tile IDs of the map. */

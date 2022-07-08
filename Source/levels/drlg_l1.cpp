@@ -8,6 +8,7 @@
 #include "engine/load_file.hpp"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
+#include "engine/rectangle.hpp"
 #include "levels/gendung.h"
 #include "player.h"
 #include "quests.h"
@@ -23,8 +24,6 @@ int UberDiabloMonsterIndex;
 
 namespace {
 
-/** Represents a tile ID map of twice the size, repeating each tile of the original map in blocks of 4. */
-BYTE L5dungeon[80][80];
 /** Marks where walls may not be added to the level */
 Bitset2d<DMAXX, DMAXY> Chamber;
 /** Specifies whether to generate a horizontal or vertical layout. */
@@ -864,28 +863,28 @@ void InitDungeonPieces()
 
 void InitDungeonFlags()
 {
-	memset(dungeon, 0, sizeof(dungeon));
+	memset(dungeon, 22, sizeof(dungeon));
 	Protected.reset();
 	Chamber.reset();
 }
 
-void MapRoom(int x, int y, int width, int height)
+void MapRoom(Rectangle room)
 {
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			dungeon[x + i][y + j] = Tile::VWall;
+	for (int y = 0; y < room.size.height; y++) {
+		for (int x = 0; x < room.size.width; x++) {
+			DungeonMask.set(room.position.x + x, room.position.y + y);
 		}
 	}
 }
 
-bool CheckRoom(int x, int y, int width, int height)
+bool CheckRoom(Rectangle room)
 {
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			if (i + x < 0 || i + x >= DMAXX || j + y < 0 || j + y >= DMAXY) {
+	for (int j = 0; j < room.size.height; j++) {
+		for (int i = 0; i < room.size.width; i++) {
+			if (i + room.position.x < 0 || i + room.position.x >= DMAXX || j + room.position.y < 0 || j + room.position.y >= DMAXY) {
 				return false;
 			}
-			if (dungeon[i + x][j + y] != 0) {
+			if (DungeonMask.test(i + room.position.x, j + room.position.y)) {
 				return false;
 			}
 		}
@@ -894,66 +893,56 @@ bool CheckRoom(int x, int y, int width, int height)
 	return true;
 }
 
-void GenerateRoom(int x, int y, int w, int h, int dir)
+void GenerateRoom(Rectangle area, bool verticalLayout)
 {
-	int dirProb = GenerateRnd(4);
-	int num = 0;
+	bool rotate = GenerateRnd(4) == 0;
+	verticalLayout = (!verticalLayout && rotate) || (verticalLayout && !rotate);
 
-	bool ran;
-	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
-		int cw;
-		int ch;
-		int cx1;
-		int cy1;
-		do {
-			cw = (GenerateRnd(5) + 2) & ~1;
-			ch = (GenerateRnd(5) + 2) & ~1;
-			cx1 = x - cw;
-			cy1 = h / 2 + y - ch / 2;
-			ran = CheckRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1") (workaround applied below)
-			num++;
-		} while (!ran && num < 20);
+	bool placeRoom1;
+	Rectangle room1;
 
-		if (ran)
-			MapRoom(cx1, cy1, std::min(DMAXX - cx1, cw), std::min(DMAXX - cy1, ch));
-		int cx2 = x + w;
-		bool ran2 = CheckRoom(cx2, cy1 - 1, cw + 1, ch + 2);
-		if (ran2)
-			MapRoom(cx2, cy1, cw, ch);
-		if (ran)
-			GenerateRoom(cx1, cy1, cw, ch, 1);
-		if (ran2)
-			GenerateRoom(cx2, cy1, cw, ch, 1);
-		return;
+	for (int num = 0; num < 20; num++) {
+		room1.size = { (GenerateRnd(5) + 2) & ~1, (GenerateRnd(5) + 2) & ~1 };
+		room1.position = area.position;
+		if (verticalLayout) {
+			room1.position += Displacement { -room1.size.width, area.size.height / 2 - room1.size.height / 2 };
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.height + 2, room1.size.width + 1 } }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
+		} else {
+			room1.position += Displacement { area.size.width / 2 - room1.size.width / 2, -room1.size.height };
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.width + 2, room1.size.height + 1 } });
+		}
+		if (placeRoom1)
+			break;
 	}
 
-	int width;
-	int height;
-	int rx;
-	int ry;
-	do {
-		width = (GenerateRnd(5) + 2) & ~1;
-		height = (GenerateRnd(5) + 2) & ~1;
-		rx = w / 2 + x - width / 2;
-		ry = y - height;
-		ran = CheckRoom(rx - 1, ry - 1, width + 2, height + 1);
-		num++;
-	} while (!ran && num < 20);
+	if (placeRoom1)
+		MapRoom({ room1.position, { std::min(DMAXX - room1.position.x, room1.size.width), std::min(DMAXX - room1.position.y, room1.size.height) } });
 
-	if (ran)
-		MapRoom(rx, ry, width, height);
-	int ry2 = y + h;
-	bool ran2 = CheckRoom(rx - 1, ry2, width + 2, height + 1);
-	if (ran2)
-		MapRoom(rx, ry2, width, height);
-	if (ran)
-		GenerateRoom(rx, ry, width, height, 0);
-	if (ran2)
-		GenerateRoom(rx, ry2, width, height, 0);
+	bool placeRoom2;
+	Rectangle room2 = room1;
+	if (verticalLayout) {
+		room2.position.x = area.position.x + area.size.width;
+		placeRoom2 = CheckRoom({ room2.position + Displacement { 0, -1 }, { room2.size.width + 1, room2.size.height + 2 } });
+	} else {
+		room2.position.y = area.position.y + area.size.height;
+		placeRoom2 = CheckRoom({ room2.position + Displacement { -1, 0 }, { room2.size.width + 2, room2.size.height + 1 } });
+	}
+
+	if (placeRoom2)
+		MapRoom(room2);
+	if (placeRoom1)
+		GenerateRoom(room1, !verticalLayout);
+	if (placeRoom2)
+		GenerateRoom(room2, !verticalLayout);
 }
 
+/**
+ * @brief Generate a boolean dungoen room layout
+ */
 void FirstRoom()
 {
+	DungeonMask.reset();
+
 	VerticalLayout = !FlipCoin();
 	HasChamber1 = FlipCoin();
 	HasChamber2 = FlipCoin();
@@ -962,78 +951,66 @@ void FirstRoom()
 	if (!HasChamber1 || !HasChamber3)
 		HasChamber2 = true;
 
+	Rectangle chamber1 { { 15, 15 }, { 10, 10 } };
+	Rectangle chamber2 { { 15, 15 }, { 10, 10 } };
+	Rectangle chamber3 { { 15, 15 }, { 10, 10 } };
+	Rectangle hallway { { 1, 1 }, { DMAXX - 2, DMAXY - 2 } };
+
 	if (VerticalLayout) {
-		int ys = 1;
-		int ye = DMAXY - 1;
+		chamber1.position.y = 1;
+		chamber3.position.y = 29;
+		hallway.position.x = 17;
+		hallway.size.width = 6;
 
-		if (HasChamber1)
-			MapRoom(15, 1, 10, 10);
-		else
-			ys = 18;
-
-		if (HasChamber2)
-			MapRoom(15, 15, 10, 10);
-		if (HasChamber3)
-			MapRoom(15, 29, 10, 10);
-		else
-			ye = 22;
-
-		for (int y = ys; y < ye; y++) {
-			dungeon[17][y] = Tile::VWall;
-			dungeon[18][y] = Tile::VWall;
-			dungeon[19][y] = Tile::VWall;
-			dungeon[20][y] = Tile::VWall;
-			dungeon[21][y] = Tile::VWall;
-			dungeon[22][y] = Tile::VWall;
+		if (!HasChamber1) {
+			hallway.position.y += 17;
+			hallway.size.height -= 17;
 		}
 
-		if (HasChamber1)
-			GenerateRoom(15, 1, 10, 10, 0);
-		if (HasChamber2)
-			GenerateRoom(15, 15, 10, 10, 0);
-		if (HasChamber3)
-			GenerateRoom(15, 29, 10, 10, 0);
+		if (!HasChamber3)
+			hallway.size.height -= 16;
 	} else {
-		int xs = 1;
-		int xe = DMAXX - 1;
+		chamber1.position.x = 1;
+		chamber3.position.x = 29;
+		hallway.position.y = 17;
+		hallway.size.height = 6;
 
-		if (HasChamber1)
-			MapRoom(1, 15, 10, 10);
-		else
-			xs = 18;
-
-		if (HasChamber2)
-			MapRoom(15, 15, 10, 10);
-		if (HasChamber3)
-			MapRoom(29, 15, 10, 10);
-		else
-			xe = 22;
-
-		for (int x = xs; x < xe; x++) {
-			dungeon[x][17] = Tile::VWall;
-			dungeon[x][18] = Tile::VWall;
-			dungeon[x][19] = Tile::VWall;
-			dungeon[x][20] = Tile::VWall;
-			dungeon[x][21] = Tile::VWall;
-			dungeon[x][22] = Tile::VWall;
+		if (!HasChamber1) {
+			hallway.position.x += 17;
+			hallway.size.width -= 17;
 		}
 
-		if (HasChamber1)
-			GenerateRoom(1, 15, 10, 10, 1);
-		if (HasChamber2)
-			GenerateRoom(15, 15, 10, 10, 1);
-		if (HasChamber3)
-			GenerateRoom(29, 15, 10, 10, 1);
+		if (!HasChamber3)
+			hallway.size.width -= 16;
 	}
+
+	if (HasChamber1)
+		MapRoom(chamber1);
+	if (HasChamber2)
+		MapRoom(chamber2);
+	if (HasChamber3)
+		MapRoom(chamber3);
+
+	MapRoom(hallway);
+
+	if (HasChamber1)
+		GenerateRoom(chamber1, VerticalLayout);
+	if (HasChamber2)
+		GenerateRoom(chamber2, VerticalLayout);
+	if (HasChamber3)
+		GenerateRoom(chamber3, VerticalLayout);
 }
 
+/**
+ * @brief Find the number of mega tiles used by layout
+ */
 int FindArea()
 {
 	int rv = 0;
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			if (dungeon[i][j] == Tile::VWall)
+			if (DungeonMask.test(i, j))
 				rv++;
 		}
 	}
@@ -1041,36 +1018,11 @@ int FindArea()
 	return rv;
 }
 
-void MakeDungeon()
-{
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			int i2 = i * 2;
-			int j2 = j * 2;
-			L5dungeon[i2][j2] = dungeon[i][j];
-			L5dungeon[i2][j2 + 1] = dungeon[i][j];
-			L5dungeon[i2 + 1][j2] = dungeon[i][j];
-			L5dungeon[i2 + 1][j2 + 1] = dungeon[i][j];
-		}
-	}
-}
-
 void MakeDmt()
 {
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			dungeon[i][j] = 22;
-		}
-	}
-
-	int dmty = 1;
-	for (int j = 0; dmty <= 77; j++, dmty += 2) {
-		int dmtx = 1;
-		for (int i = 0; dmtx <= 77; i++, dmtx += 2) {
-			int val = 8 * L5dungeon[dmtx + 1][dmty + 1]
-			    + 4 * L5dungeon[dmtx][dmty + 1]
-			    + 2 * L5dungeon[dmtx + 1][dmty]
-			    + L5dungeon[dmtx][dmty];
+	for (int j = 0; j < DMAXY - 1; j++) {
+		for (int i = 0; i < DMAXX - 1; i++) {
+			int val = (DungeonMask.test(i + 1, j + 1) << 3) | (DungeonMask.test(i, j + 1) << 2) | (DungeonMask.test(i + 1, j) << 1) | DungeonMask.test(i, j);
 			dungeon[i][j] = L5ConvTbl[val];
 		}
 	}
@@ -1916,11 +1868,10 @@ void GenerateLevel(lvl_entry entry)
 		DRLG_InitTrans();
 
 		do {
-			InitDungeonFlags();
 			FirstRoom();
 		} while (FindArea() < minarea);
 
-		MakeDungeon();
+		InitDungeonFlags();
 		MakeDmt();
 		FillChambers();
 		FixTilesPatterns();
