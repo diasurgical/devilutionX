@@ -51,9 +51,10 @@ int32_t GenerateRnd(int32_t v)
 	return AdvanceRndSeed() % v;
 }
 
-bool FlipCoin()
+bool FlipCoin(unsigned frequency)
 {
-	return GenerateRnd(2) != 0;
+	// Casting here because GenerateRnd takes a signed argument when it should take and yield unsigned.
+	return GenerateRnd(static_cast<int32_t>(frequency)) == 0;
 }
 
 } // namespace devilution
