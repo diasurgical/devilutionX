@@ -894,13 +894,13 @@ bool CheckRoom(int x, int y, int width, int height)
 	return true;
 }
 
-void GenerateRoom(int x, int y, int w, int h, int dir)
+void GenerateRoom(int x, int y, int w, int h, bool preferHorizontal)
 {
-	int dirProb = GenerateRnd(4);
+	bool generateVerticalRoom = FlipCoin(4);
 	int num = 0;
 
 	bool ran;
-	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
+	if ((preferHorizontal && generateVerticalRoom) || (!preferHorizontal && !generateVerticalRoom)) {
 		int cw;
 		int ch;
 		int cx1;
@@ -921,9 +921,9 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 		if (ran2)
 			MapRoom(cx2, cy1, cw, ch);
 		if (ran)
-			GenerateRoom(cx1, cy1, cw, ch, 1);
+			GenerateRoom(cx1, cy1, cw, ch, true);
 		if (ran2)
-			GenerateRoom(cx2, cy1, cw, ch, 1);
+			GenerateRoom(cx2, cy1, cw, ch, true);
 		return;
 	}
 
@@ -947,9 +947,9 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 	if (ran2)
 		MapRoom(rx, ry2, width, height);
 	if (ran)
-		GenerateRoom(rx, ry, width, height, 0);
+		GenerateRoom(rx, ry, width, height, false);
 	if (ran2)
-		GenerateRoom(rx, ry2, width, height, 0);
+		GenerateRoom(rx, ry2, width, height, false);
 }
 
 void FirstRoom()
@@ -988,11 +988,11 @@ void FirstRoom()
 		}
 
 		if (HasChamber1)
-			GenerateRoom(15, 1, 10, 10, 0);
+			GenerateRoom(15, 1, 10, 10, false);
 		if (HasChamber2)
-			GenerateRoom(15, 15, 10, 10, 0);
+			GenerateRoom(15, 15, 10, 10, false);
 		if (HasChamber3)
-			GenerateRoom(15, 29, 10, 10, 0);
+			GenerateRoom(15, 29, 10, 10, false);
 	} else {
 		int xs = 1;
 		int xe = DMAXX - 1;
@@ -1019,11 +1019,11 @@ void FirstRoom()
 		}
 
 		if (HasChamber1)
-			GenerateRoom(1, 15, 10, 10, 1);
+			GenerateRoom(1, 15, 10, 10, true);
 		if (HasChamber2)
-			GenerateRoom(15, 15, 10, 10, 1);
+			GenerateRoom(15, 15, 10, 10, true);
 		if (HasChamber3)
-			GenerateRoom(29, 15, 10, 10, 1);
+			GenerateRoom(29, 15, 10, 10, true);
 	}
 }
 
