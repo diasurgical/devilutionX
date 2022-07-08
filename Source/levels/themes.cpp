@@ -169,7 +169,7 @@ bool TFit_GoatShrine(int t)
 	return false;
 }
 
-bool CheckThemeObj3(Point origin, int8_t regionId, int frequency)
+bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency)
 {
 	const PointsInRectangleRange searchArea { Rectangle { origin, 1 } };
 	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId, frequency](Point testPosition) {
@@ -186,7 +186,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, int frequency)
 		if (IsObjectAtPosition(testPosition)) {
 			return false;
 		}
-		if (frequency != -1 && GenerateRnd(frequency) == 0) {
+		if (frequency != -1 && FlipCoin(frequency)) {
 			return false;
 		}
 		return true;
@@ -195,7 +195,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, int frequency)
 
 bool TFit_Obj3(int8_t regionId)
 {
-	int objrnd[4] = { 4, 4, 3, 5 };
+	unsigned objrnd[4] = { 4, 4, 3, 5 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -489,7 +489,7 @@ void PlaceThemeMonsts(int t, int f)
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && dItem[xp][yp] == 0 && !IsObjectAtPosition({ xp, yp })) {
-				if (GenerateRnd(f) == 0) {
+				if (FlipCoin(f)) {
 					AddMonster({ xp, yp }, static_cast<Direction>(GenerateRnd(8)), mtype, true);
 				}
 			}
@@ -510,11 +510,8 @@ void Theme_Barrel(int t)
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-				if (GenerateRnd(barrnd[leveltype - 1]) == 0) {
-					_object_id r = OBJ_BARREL;
-					if (GenerateRnd(barrnd[leveltype - 1]) != 0) {
-						r = OBJ_BARRELEX;
-					}
+				if (FlipCoin(barrnd[leveltype - 1])) {
+					_object_id r = FlipCoin(barrnd[leveltype - 1]) ? OBJ_BARREL : OBJ_BARRELEX;
 					AddObject(r, { xp, yp });
 				}
 			}
@@ -577,6 +574,18 @@ void Theme_MonstPit(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
+namespace {
+void SpawnObjectOrSkeleton(unsigned frequency, _object_id objectType, Point tile)
+{
+	if (FlipCoin(frequency)) {
+		AddObject(objectType, tile);
+	} else {
+		Monster *skeleton = PreSpawnSkeleton();
+		SpawnSkeleton(skeleton, tile);
+	}
+}
+} // namespace
+
 /**
  * Theme_SkelRoom initializes the skeleton room theme.
  *
@@ -584,7 +593,7 @@ void Theme_MonstPit(int t)
  */
 void Theme_SkelRoom(int t)
 {
-	int monstrnd[4] = { 6, 7, 3, 9 };
+	constexpr unsigned monstrnd[4] = { 6, 7, 3, 9 };
 
 	TFit_SkelRoom(t);
 
@@ -593,54 +602,27 @@ void Theme_SkelRoom(int t)
 
 	AddObject(OBJ_SKFIRE, { xp, yp });
 
-	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp - 1, yp - 1 });
-	} else {
-		AddObject(OBJ_BANNERL, { xp - 1, yp - 1 });
-	}
+	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERL, { xp - 1, yp - 1 });
 
 	{
 		Monster *skeleton = PreSpawnSkeleton();
 		SpawnSkeleton(skeleton, { xp, yp - 1 });
 	}
 
-	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp + 1, yp - 1 });
-	} else {
-		AddObject(OBJ_BANNERR, { xp + 1, yp - 1 });
-	}
-	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp - 1, yp });
-	} else {
-		AddObject(OBJ_BANNERM, { xp - 1, yp });
-	}
-	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp + 1, yp });
-	} else {
-		AddObject(OBJ_BANNERM, { xp + 1, yp });
-	}
-	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp - 1, yp + 1 });
-	} else {
-		AddObject(OBJ_BANNERR, { xp - 1, yp + 1 });
-	}
+	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERR, { xp + 1, yp - 1 });
+
+	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERM, { xp - 1, yp });
+
+	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERM, { xp + 1, yp });
+
+	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERR, { xp - 1, yp + 1 });
 
 	{
 		Monster *skeleton = PreSpawnSkeleton();
 		SpawnSkeleton(skeleton, { xp, yp + 1 });
 	}
 
-	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp + 1, yp + 1 });
-	} else {
-		AddObject(OBJ_BANNERL, { xp + 1, yp + 1 });
-	}
+	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERL, { xp + 1, yp + 1 });
 
 	if (!IsObjectAtPosition({ xp, yp - 3 })) {
 		AddObject(OBJ_SKELBOOK, { xp, yp - 2 });
@@ -694,7 +676,7 @@ void Theme_Treasure(int t)
  */
 void Theme_Library(int t)
 {
-	int librnd[4] = { 1, 2, 2, 5 };
+	constexpr unsigned librnd[4] = { 1, 2, 2, 5 };
 	int monstrnd[4] = { 5, 7, 3, 9 };
 
 	TFit_Shrine(t);
@@ -711,9 +693,9 @@ void Theme_Library(int t)
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
-			if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1) && dMonster[xp][yp] == 0 && GenerateRnd(librnd[leveltype - 1]) == 0) {
+			if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1) && dMonster[xp][yp] == 0 && FlipCoin(librnd[leveltype - 1])) {
 				AddObject(OBJ_BOOKSTAND, { xp, yp });
-				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0) {
+				if (!FlipCoin(2 * librnd[leveltype - 1])) {
 					Object *bookstand = ObjectAtPosition({ xp, yp });
 					if (bookstand != nullptr) {
 						bookstand->_oSelFlag = 0;
@@ -737,14 +719,14 @@ void Theme_Library(int t)
  */
 void Theme_Torture(int t)
 {
-	int tortrnd[4] = { 6, 8, 3, 8 };
+	constexpr unsigned tortrnd[4] = { 6, 8, 3, 8 };
 	int monstrnd[4] = { 6, 8, 3, 9 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
 				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
-					if (GenerateRnd(tortrnd[leveltype - 1]) == 0) {
+					if (FlipCoin(tortrnd[leveltype - 1])) {
 						AddObject(OBJ_TNUDEM2, { xp, yp });
 					}
 				}
@@ -774,14 +756,14 @@ void Theme_BloodFountain(int t)
  */
 void Theme_Decap(int t)
 {
-	int decaprnd[4] = { 6, 8, 3, 8 };
+	constexpr unsigned decaprnd[4] = { 6, 8, 3, 8 };
 	int monstrnd[4] = { 6, 8, 3, 9 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
 				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
-					if (GenerateRnd(decaprnd[leveltype - 1]) == 0) {
+					if (FlipCoin(decaprnd[leveltype - 1])) {
 						AddObject(OBJ_DECAP, { xp, yp });
 					}
 				}
@@ -812,7 +794,7 @@ void Theme_PurifyingFountain(int t)
  */
 void Theme_ArmorStand(int t)
 {
-	int armorrnd[4] = { 6, 8, 3, 8 };
+	constexpr unsigned armorrnd[4] = { 6, 8, 3, 8 };
 	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	if (armorFlag) {
@@ -823,7 +805,7 @@ void Theme_ArmorStand(int t)
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
 				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
-					if (GenerateRnd(armorrnd[leveltype - 1]) == 0) {
+					if (FlipCoin(armorrnd[leveltype - 1])) {
 						AddObject(OBJ_ARMORSTANDN, { xp, yp });
 					}
 				}
@@ -903,13 +885,13 @@ void Theme_BrnCross(int t)
 {
 	int8_t regionId = themes[t].ttval;
 	int monstrnd[4] = { 6, 8, 3, 9 };
-	int bcrossrnd[4] = { 5, 7, 3, 8 };
+	constexpr unsigned bcrossrnd[4] = { 5, 7, 3, 8 };
 
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == regionId && IsTileNotSolid({ xp, yp })) {
 				if (CheckThemeObj3({ xp, yp }, regionId, -1)) {
-					if (GenerateRnd(bcrossrnd[leveltype - 1]) == 0) {
+					if (FlipCoin(bcrossrnd[leveltype - 1])) {
 						AddObject(OBJ_TBCROSS, { xp, yp });
 					}
 				}
@@ -927,7 +909,7 @@ void Theme_BrnCross(int t)
 void Theme_WeaponRack(int t)
 {
 	int8_t regionId = themes[t].ttval;
-	int weaponrnd[4] = { 6, 8, 5, 8 };
+	constexpr unsigned weaponrnd[4] = { 6, 8, 5, 8 };
 	int monstrnd[4] = { 6, 7, 3, 9 };
 
 	if (weaponFlag) {
@@ -938,7 +920,7 @@ void Theme_WeaponRack(int t)
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == regionId && IsTileNotSolid({ xp, yp })) {
 				if (CheckThemeObj3({ xp, yp }, regionId, -1)) {
-					if (GenerateRnd(weaponrnd[leveltype - 1]) == 0) {
+					if (FlipCoin(weaponrnd[leveltype - 1])) {
 						AddObject(OBJ_WEAPONRACKN, { xp, yp });
 					}
 				}
