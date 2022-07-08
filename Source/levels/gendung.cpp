@@ -15,6 +15,7 @@
 
 namespace devilution {
 
+Bitset2d<DMAXX, DMAXY> DungeonMask;
 uint8_t dungeon[DMAXX][DMAXY];
 uint8_t pdungeon[DMAXX][DMAXY];
 Bitset2d<DMAXX, DMAXY> Protected;

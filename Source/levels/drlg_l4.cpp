@@ -23,9 +23,6 @@ namespace {
 
 bool hallok[20];
 Point L4Hold;
-BYTE L4dungeon[80][80];
-BYTE dung[20][20];
-// int dword_52A4DC;
 
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
@@ -170,38 +167,32 @@ void LoadQuestSetPieces()
 
 void InitDungeonFlags()
 {
-	memset(dung, 0, sizeof(dung));
-	memset(L4dungeon, 0, sizeof(L4dungeon));
+	DungeonMask.reset();
+	Protected.reset();
+	memset(dungeon, 30, sizeof(dungeon));
+}
 
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 30;
-			Protected.reset(i, j);
+void MapRoom(Rectangle room)
+{
+	for (int y = 0; y < room.size.height && y + room.position.y < 20; y++) {
+		for (int x = 0; x < room.size.width && x + room.position.x < 20; x++) {
+			DungeonMask.set(room.position.x + x, room.position.y + y);
 		}
 	}
 }
 
-void MapRoom(int x, int y, int width, int height)
+bool CheckRoom(Rectangle room)
 {
-	for (int j = 0; j < height && j + y < 20; j++) {
-		for (int i = 0; i < width && i + x < 20; i++) {
-			dung[i + x][j + y] = 1;
-		}
-	}
-}
-
-bool CheckRoom(int x, int y, int width, int height)
-{
-	if (x <= 0 || y <= 0) {
+	if (room.position.x <= 0 || room.position.y <= 0) {
 		return false;
 	}
 
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			if (i + x < 0 || i + x >= 20 || j + y < 0 || j + y >= 20) {
+	for (int y = 0; y < room.size.height; y++) {
+		for (int x = 0; x < room.size.width; x++) {
+			if (x + room.position.x < 0 || x + room.position.x >= DMAXX / 2 || y + room.position.y < 0 || y + room.position.y >= DMAXY / 2) {
 				return false;
 			}
-			if (dung[i + x][j + y] != 0) {
+			if (DungeonMask.test(room.position.x + x, room.position.y + y)) {
 				return false;
 			}
 		}
@@ -210,158 +201,101 @@ bool CheckRoom(int x, int y, int width, int height)
 	return true;
 }
 
-void GenerateRoom(int x, int y, int w, int h, int dir)
+void GenerateRoom(Rectangle area, bool verticalLayout)
 {
-	int dirProb = GenerateRnd(4);
-	int num = 0;
+	bool rotate = GenerateRnd(4) != 0;
+	verticalLayout = (!verticalLayout && rotate) || (verticalLayout && !rotate);
 
-	bool ran;
-	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
-		int cw;
-		int ch;
-		int cx1;
-		int cy1;
-		do {
-			cw = (GenerateRnd(5) + 2) & ~1;
-			ch = (GenerateRnd(5) + 2) & ~1;
-			cx1 = x - cw;
-			cy1 = h / 2 + y - ch / 2;
-			ran = CheckRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
-			num++;
-		} while (!ran && num < 20);
+	bool placeRoom1;
+	Rectangle room1;
 
-		if (ran)
-			MapRoom(cx1, cy1, cw, ch);
-		int cx2 = x + w;
-		bool ran2 = CheckRoom(cx2, cy1 - 1, cw + 1, ch + 2);
-		if (ran2)
-			MapRoom(cx2, cy1, cw, ch);
-		if (ran)
-			GenerateRoom(cx1, cy1, cw, ch, 1);
-		if (ran2)
-			GenerateRoom(cx2, cy1, cw, ch, 1);
-		return;
+	for (int num = 0; num < 20; num++) {
+		room1.size = { (GenerateRnd(5) + 2) & ~1, (GenerateRnd(5) + 2) & ~1 };
+		room1.position = area.position;
+		if (verticalLayout) {
+			room1.position += Displacement { -room1.size.width, area.size.height / 2 - room1.size.height / 2 };
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.height + 2, room1.size.width + 1 } }); /// BUGFIX: swap height and width ({ room1.size.width + 1, room1.size.height + 2 }) (workaround applied below)
+		} else {
+			room1.position += Displacement { area.size.width / 2 - room1.size.width / 2, -room1.size.height };
+			placeRoom1 = CheckRoom({ room1.position + Displacement { -1, -1 }, { room1.size.width + 2, room1.size.height + 1 } });
+		}
+		if (placeRoom1)
+			break;
 	}
 
-	int width;
-	int height;
-	int rx;
-	int ry;
-	do {
-		width = (GenerateRnd(5) + 2) & ~1;
-		height = (GenerateRnd(5) + 2) & ~1;
-		rx = w / 2 + x - width / 2;
-		ry = y - height;
-		ran = CheckRoom(rx - 1, ry - 1, width + 2, height + 1);
-		num++;
-	} while (!ran && num < 20);
+	if (placeRoom1)
+		MapRoom({ room1.position, { std::min(DMAXX - room1.position.x, room1.size.width), std::min(DMAXX - room1.position.y, room1.size.height) } });
 
-	if (ran)
-		MapRoom(rx, ry, width, height);
-	int ry2 = y + h;
-	bool ran2 = CheckRoom(rx - 1, ry2, width + 2, height + 1);
-	if (ran2)
-		MapRoom(rx, ry2, width, height);
-	if (ran)
-		GenerateRoom(rx, ry, width, height, 0);
-	if (ran2)
-		GenerateRoom(rx, ry2, width, height, 0);
+	bool placeRoom2;
+	Rectangle room2 = room1;
+	if (verticalLayout) {
+		room2.position.x = area.position.x + area.size.width;
+		placeRoom2 = CheckRoom({ room2.position + Displacement { 0, -1 }, { room2.size.width + 1, room2.size.height + 2 } });
+	} else {
+		room2.position.y = area.position.y + area.size.height;
+		placeRoom2 = CheckRoom({ room2.position + Displacement { -1, 0 }, { room2.size.width + 2, room2.size.height + 1 } });
+	}
+
+	if (placeRoom2)
+		MapRoom(room2);
+	if (placeRoom1)
+		GenerateRoom(room1, verticalLayout);
+	if (placeRoom2)
+		GenerateRoom(room2, verticalLayout);
 }
 
 void FirstRoom()
 {
-	int w = 14;
-	int h = 14;
+	Rectangle room { { 0, 0 }, { 14, 14 } };
 	if (currlevel != 16) {
 		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
 			assert(!gbIsMultiplayer);
-			w = 11;
-			h = 11;
+			room.size = { 11, 11 };
 		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
-			w = 11;
-			h = 11;
+			room.size = { 11, 11 };
 		} else {
-			w = GenerateRnd(5) + 2;
-			h = GenerateRnd(5) + 2;
+			room.size = { GenerateRnd(5) + 2, GenerateRnd(5) + 2 };
 		}
 	}
 
-	int xmin = (20 - w) / 2;
-	int xmax = 19 - w;
-	int x = GenerateRnd(xmax - xmin + 1) + xmin;
-
-	int ymin = (20 - h) / 2;
-	int ymax = 19 - h;
-	int y = GenerateRnd(ymax - ymin + 1) + ymin;
+	int xmin = (DMAXX / 2 - room.size.width) / 2;
+	int xmax = DMAXX / 2 - 1 - room.size.width;
+	int ymin = (DMAXY / 2 - room.size.height) / 2;
+	int ymax = DMAXY / 2 - 1 - room.size.height;
+	room.position = { GenerateRnd(xmax - xmin + 1) + xmin, GenerateRnd(ymax - ymin + 1) + ymin };
 
 	if (currlevel == 16) {
-		L4Hold = { x, y };
+		L4Hold = room.position;
 	}
 	if (Quests[Q_WARLORD].IsAvailable() || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-		SetPieceRoom = { { x + 1, y + 1 }, { w + 1, h + 1 } };
+		SetPieceRoom = { room.position + Displacement { 1, 1 }, { room.size.width + 1, room.size.height + 1 } };
 	} else {
 		SetPieceRoom = {};
 	}
 
-	MapRoom(x, y, w, h);
-	GenerateRoom(x, y, w, h, GenerateRnd(2));
+	MapRoom(room);
+	GenerateRoom(room, GenerateRnd(2));
 }
 
 void MakeDungeon()
 {
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k][l] = dung[i][j];
-			L4dungeon[k][l + 1] = dung[i][j];
-			L4dungeon[k + 1][l] = dung[i][j];
-			L4dungeon[k + 1][l + 1] = dung[i][j];
-		}
-	}
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k][l + 40] = dung[i][19 - j];
-			L4dungeon[k][l + 41] = dung[i][19 - j];
-			L4dungeon[k + 1][l + 40] = dung[i][19 - j];
-			L4dungeon[k + 1][l + 41] = dung[i][19 - j];
-		}
-	}
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k + 40][l] = dung[19 - i][j];
-			L4dungeon[k + 40][l + 1] = dung[19 - i][j];
-			L4dungeon[k + 41][l] = dung[19 - i][j];
-			L4dungeon[k + 41][l + 1] = dung[19 - i][j];
-		}
-	}
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k + 40][l + 40] = dung[19 - i][19 - j];
-			L4dungeon[k + 40][l + 41] = dung[19 - i][19 - j];
-			L4dungeon[k + 41][l + 40] = dung[19 - i][19 - j];
-			L4dungeon[k + 41][l + 41] = dung[19 - i][19 - j];
+	for (int y = 0; y < DMAXY / 2; y++) {
+		for (int x = 0; x < DMAXX / 2; x++) {
+			if (DungeonMask.test(x, y)) {
+				DungeonMask.set(x, DMAXY - 1 - y);
+				DungeonMask.set(DMAXX - 1 - x, y);
+				DungeonMask.set(DMAXX - 1 - x, DMAXY - 1 - y);
+			}
 		}
 	}
 }
 
 void MakeDmt()
 {
-	int dmty = 1;
-	for (int j = 0; dmty <= 77; j++, dmty += 2) {
-		int dmtx = 1;
-		for (int i = 0; dmtx <= 77; i++, dmtx += 2) {
-			int val = 8 * L4dungeon[dmtx + 1][dmty + 1]
-			    + 4 * L4dungeon[dmtx][dmty + 1]
-			    + 2 * L4dungeon[dmtx + 1][dmty]
-			    + L4dungeon[dmtx][dmty];
-			dungeon[i][j] = L4ConvTbl[val];
+	for (int y = 0; y < DMAXY - 1; y++) {
+		for (int x = 0; x < DMAXX - 1; x++) {
+			int val = (DungeonMask.test(x + 1, y + 1) << 3) | (DungeonMask.test(x, y + 1) << 2) | (DungeonMask.test(x + 1, y) << 1) | DungeonMask.test(x, y);
+			dungeon[x][y] = L4ConvTbl[val];
 		}
 	}
 }
@@ -912,96 +846,85 @@ void Substitution()
 
 void UShape()
 {
-	for (int j = 19; j >= 0; j--) {
-		for (int i = 19; i >= 0; i--) {
-			if (dung[i][j] != 1) {
-				hallok[j] = false;
-			}
-			if (dung[i][j] == 1) {
-				// BUGFIX: check that i + 1 < 20 and j + 1 < 20 (fixed)
-				if (i + 1 < 20 && j + 1 < 20
-				    && dung[i][j + 1] == 1 && dung[i + 1][j + 1] == 0) {
-					hallok[j] = true;
-				} else {
-					hallok[j] = false;
-				}
-				i = 0;
+	for (int y = DMAXY / 2 - 1; y >= 0; y--) {
+		for (int x = DMAXX / 2 - 1; x >= 0; x--) {
+			if (!DungeonMask.test(x, y)) {
+				hallok[y] = false;
+			} else {
+				hallok[y] = x + 1 < DMAXX / 2 && y + 1 < DMAXY / 2 && DungeonMask.test(x, y + 1) && !DungeonMask.test(x + 1, y + 1);
+				x = 0;
 			}
 		}
 	}
 
-	int rv = GenerateRnd(19) + 1;
+	int ry = GenerateRnd(DMAXY / 2 - 1) + 1;
 	do {
-		if (hallok[rv]) {
-			for (int i = 19; i >= 0; i--) {
-				if (dung[i][rv] == 1) {
-					i = -1;
-					rv = 0;
+		if (hallok[ry]) {
+			for (int x = DMAXX / 2 - 1; x >= 0; x--) {
+				if (DungeonMask.test(x, ry)) {
+					x = -1;
+					ry = 0;
 				} else {
-					dung[i][rv] = 1;
-					dung[i][rv + 1] = 1;
+					DungeonMask.set(x, ry);
+					DungeonMask.set(x, ry + 1);
 				}
 			}
 		} else {
-			rv++;
-			if (rv == 20) {
-				rv = 1;
+			ry++;
+			if (ry == DMAXY / 2) {
+				ry = 1;
 			}
 		}
-	} while (rv != 0);
+	} while (ry != 0);
 
-	for (int i = 19; i >= 0; i--) {
-		for (int j = 19; j >= 0; j--) {
-			if (dung[i][j] != 1) {
-				hallok[i] = false;
-			}
-			if (dung[i][j] == 1) {
-				// BUGFIX: check that i + 1 < 20 and j + 1 < 20 (fixed)
-				if (i + 1 < 20 && j + 1 < 20
-				    && dung[i + 1][j] == 1 && dung[i + 1][j + 1] == 0) {
-					hallok[i] = true;
-				} else {
-					hallok[i] = false;
-				}
-				j = 0;
+	for (int x = DMAXX / 2 - 1; x >= 0; x--) {
+		for (int y = DMAXY / 2 - 1; y >= 0; y--) {
+			if (!DungeonMask.test(x, y)) {
+				hallok[x] = false;
+			} else {
+				hallok[x] = x + 1 < DMAXX / 2 && y + 1 < DMAXY / 2 && DungeonMask.test(x + 1, y) && !DungeonMask.test(x + 1, y + 1);
+				y = 0;
 			}
 		}
 	}
 
-	rv = GenerateRnd(19) + 1;
+	int rx = GenerateRnd(DMAXX / 2 - 1) + 1;
 	do {
-		if (hallok[rv]) {
-			for (int j = 19; j >= 0; j--) {
-				if (dung[rv][j] == 1) {
-					j = -1;
-					rv = 0;
+		if (hallok[rx]) {
+			for (int y = DMAXY / 2 - 1; y >= 0; y--) {
+				if (DungeonMask.test(rx, y)) {
+					y = -1;
+					rx = 0;
 				} else {
-					dung[rv][j] = 1;
-					dung[rv + 1][j] = 1;
+					DungeonMask.set(rx, y);
+					DungeonMask.set(rx + 1, y);
 				}
 			}
 		} else {
-			rv++;
-			if (rv == 20) {
-				rv = 1;
+			rx++;
+			if (rx == DMAXX / 2) {
+				rx = 1;
 			}
 		}
-	} while (rv != 0);
+	} while (rx != 0);
 }
 
-int GetArea()
+/**
+ * @brief Find the number of mega tiles used by layout
+ */
+int FindArea()
 {
-	int rv = 0;
+	int area = 0;
 
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) { // NOLINT(modernize-loop-convert)
-			if (dung[i][j] == 1) {
-				rv++;
+	for (int y = 0; y < DMAXY / 2; y++) {
+		for (int x = 0; x < DMAXX / 2; x++) { // NOLINT(modernize-loop-convert)
+			if (DungeonMask.test(x, y)) {
+				area++;
 			}
 		}
 	}
 
-	return rv;
+	return area * 4;
 }
 
 void ProtectQuads()
@@ -1128,11 +1051,11 @@ void FixCornerTiles()
 
 void FixRim()
 {
-	for (int i = 0; i < 20; i++) { // NOLINT(modernize-loop-convert)
-		dung[i][0] = 0;
+	for (int x = 0; x < DMAXX / 2; x++) { // NOLINT(modernize-loop-convert)
+		DungeonMask.reset(x, 0);
 	}
-	for (int j = 0; j < 20; j++) {
-		dung[0][j] = 0;
+	for (int y = 0; y < DMAXY / 2; y++) {
+		DungeonMask.reset(0, y);
 	}
 }
 
@@ -1201,12 +1124,12 @@ void GenerateLevel(lvl_entry entry)
 	while (true) {
 		DRLG_InitTrans();
 
-		constexpr int Minarea = 173;
+		constexpr int Minarea = 692;
 		do {
 			InitDungeonFlags();
 			FirstRoom();
 			FixRim();
-		} while (GetArea() < Minarea);
+		} while (FindArea() < Minarea);
 		UShape();
 
 		MakeDungeon();
