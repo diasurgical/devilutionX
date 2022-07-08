@@ -19,13 +19,13 @@
 
 namespace devilution {
 
-BYTE predungeon[DMAXX][DMAXY];
-
 namespace {
 
 int nRoomCnt;
 ROOMNODE RoomList[81];
 std::list<HALLNODE> HallList;
+// An ASCII representation of the level
+char predungeon[DMAXX][DMAXY];
 
 const int DirXadd[5] = { 0, 0, 1, 0, -1 };
 const int DirYadd[5] = { 0, -1, 0, 1, 0 };
@@ -1644,32 +1644,32 @@ void InitDungeonPieces()
 void InitDungeonFlags()
 {
 	Protected.reset();
-	memset(predungeon, 32, sizeof(predungeon));
+	memset(predungeon, ' ', sizeof(predungeon));
 }
 
 void MapRoom(int x1, int y1, int x2, int y2)
 {
 	for (int jj = y1; jj <= y2; jj++) {
 		for (int ii = x1; ii <= x2; ii++) {
-			predungeon[ii][jj] = 46;
+			predungeon[ii][jj] = '.';
 		}
 	}
 	for (int jj = y1; jj <= y2; jj++) {
-		predungeon[x1][jj] = 35;
-		predungeon[x2][jj] = 35;
+		predungeon[x1][jj] = '#';
+		predungeon[x2][jj] = '#';
 	}
 	for (int ii = x1; ii <= x2; ii++) {
-		predungeon[ii][y1] = 35;
-		predungeon[ii][y2] = 35;
+		predungeon[ii][y1] = '#';
+		predungeon[ii][y2] = '#';
 	}
 }
 
 void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool forceHW)
 {
-	predungeon[nX1][nY1] = 67;
-	predungeon[nX1][nY2] = 69;
-	predungeon[nX2][nY1] = 66;
-	predungeon[nX2][nY2] = 65;
+	predungeon[nX1][nY1] = 'C';
+	predungeon[nX1][nY2] = 'E';
+	predungeon[nX2][nY1] = 'B';
+	predungeon[nX2][nY2] = 'A';
 
 	nRoomCnt++;
 	RoomList[nRoomCnt].nRoomx1 = nX1;
@@ -1687,44 +1687,44 @@ void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool forceHW)
 		}
 	}
 	for (int i = nX1 + 1; i <= nX2 - 1; i++) {
-		predungeon[i][nY1] = 35;
-		predungeon[i][nY2] = 35;
+		predungeon[i][nY1] = '#';
+		predungeon[i][nY2] = '#';
 	}
 	nY2--;
 	for (int j = nY1 + 1; j <= nY2; j++) {
-		predungeon[nX1][j] = 35;
-		predungeon[nX2][j] = 35;
+		predungeon[nX1][j] = '#';
+		predungeon[nX2][j] = '#';
 		for (int i = nX1 + 1; i < nX2; i++) {
-			predungeon[i][j] = 46;
+			predungeon[i][j] = '.';
 		}
 	}
 }
 
 void CreateDoorType(int nX, int nY)
 {
-	if (predungeon[nX - 1][nY] == 68) {
+	if (predungeon[nX - 1][nY] == 'D') {
 		return;
 	}
-	if (predungeon[nX + 1][nY] == 68) {
+	if (predungeon[nX + 1][nY] == 'D') {
 		return;
 	}
-	if (predungeon[nX][nY - 1] == 68) {
+	if (predungeon[nX][nY - 1] == 'D') {
 		return;
 	}
-	if (predungeon[nX][nY + 1] == 68) {
+	if (predungeon[nX][nY + 1] == 'D') {
 		return;
 	}
-	if (IsAnyOf(predungeon[nX][nY], 65, 66, 67, 69)) {
+	if (IsAnyOf(predungeon[nX][nY], 'A', 'B', 'C', 'E')) {
 		return;
 	}
 
-	predungeon[nX][nY] = 68;
+	predungeon[nX][nY] = 'D';
 }
 
 void PlaceHallExt(int nX, int nY)
 {
-	if (predungeon[nX][nY] == 32) {
-		predungeon[nX][nY] = 44;
+	if (predungeon[nX][nY] == ' ') {
+		predungeon[nX][nY] = ',';
 	}
 }
 
@@ -1865,7 +1865,7 @@ void ConnectHall(const HALLNODE &node)
 	int nCurrd = nHd;
 	nX2 -= DirXadd[nCurrd];
 	nY2 -= DirYadd[nCurrd];
-	predungeon[nX2][nY2] = 44;
+	predungeon[nX2][nY2] = ',';
 	bool fInroom = false;
 
 	while (!fDoneflag) {
@@ -1881,21 +1881,21 @@ void ConnectHall(const HALLNODE &node)
 		if (nY1 <= 1 && nCurrd == 1) {
 			nCurrd = 3;
 		}
-		if (predungeon[nX1][nY1] == 67 && (nCurrd == 1 || nCurrd == 4)) {
+		if (predungeon[nX1][nY1] == 'C' && (nCurrd == 1 || nCurrd == 4)) {
 			nCurrd = 2;
 		}
-		if (predungeon[nX1][nY1] == 66 && (nCurrd == 1 || nCurrd == 2)) {
+		if (predungeon[nX1][nY1] == 'B' && (nCurrd == 1 || nCurrd == 2)) {
 			nCurrd = 3;
 		}
-		if (predungeon[nX1][nY1] == 69 && (nCurrd == 4 || nCurrd == 3)) {
+		if (predungeon[nX1][nY1] == 'E' && (nCurrd == 4 || nCurrd == 3)) {
 			nCurrd = 1;
 		}
-		if (predungeon[nX1][nY1] == 65 && (nCurrd == 2 || nCurrd == 3)) {
+		if (predungeon[nX1][nY1] == 'A' && (nCurrd == 2 || nCurrd == 3)) {
 			nCurrd = 4;
 		}
 		nX1 += DirXadd[nCurrd];
 		nY1 += DirYadd[nCurrd];
-		if (predungeon[nX1][nY1] == 32) {
+		if (predungeon[nX1][nY1] == ' ') {
 			if (fInroom) {
 				CreateDoorType(nX1 - DirXadd[nCurrd], nY1 - DirYadd[nCurrd]);
 			} else {
@@ -1914,13 +1914,13 @@ void ConnectHall(const HALLNODE &node)
 					}
 				}
 			}
-			predungeon[nX1][nY1] = 44;
+			predungeon[nX1][nY1] = ',';
 			fInroom = false;
 		} else {
-			if (!fInroom && predungeon[nX1][nY1] == 35) {
+			if (!fInroom && predungeon[nX1][nY1] == '#') {
 				CreateDoorType(nX1, nY1);
 			}
-			if (predungeon[nX1][nY1] != 44) {
+			if (predungeon[nX1][nY1] != ',') {
 				fInroom = true;
 			}
 		}
@@ -1979,14 +1979,14 @@ void ConnectHall(const HALLNODE &node)
 				nCurrd = 3;
 			}
 		}
-		if (nDx == 0 && predungeon[nX1][nY1] != 32 && (nCurrd == 2 || nCurrd == 4)) {
+		if (nDx == 0 && predungeon[nX1][nY1] != ' ' && (nCurrd == 2 || nCurrd == 4)) {
 			if (nX2 <= nOrigX1 || nX1 >= DMAXX) {
 				nCurrd = 1;
 			} else {
 				nCurrd = 3;
 			}
 		}
-		if (nDy == 0 && predungeon[nX1][nY1] != 32 && (nCurrd == 1 || nCurrd == 3)) {
+		if (nDy == 0 && predungeon[nX1][nY1] != ' ' && (nCurrd == 1 || nCurrd == 3)) {
 			if (nY2 <= nOrigY1 || nY1 >= DMAXY) {
 				nCurrd = 4;
 			} else {
@@ -2017,42 +2017,42 @@ void DoPatternCheck(int i, int j)
 					nOk = 254;
 					break;
 				case 1:
-					if (predungeon[x][y] == 35) {
+					if (predungeon[x][y] == '#') {
 						nOk = 254;
 					}
 					break;
 				case 2:
-					if (predungeon[x][y] == 46) {
+					if (predungeon[x][y] == '.') {
 						nOk = 254;
 					}
 					break;
 				case 4:
-					if (predungeon[x][y] == 32) {
+					if (predungeon[x][y] == ' ') {
 						nOk = 254;
 					}
 					break;
 				case 3:
-					if (predungeon[x][y] == 68) {
+					if (predungeon[x][y] == 'D') {
 						nOk = 254;
 					}
 					break;
 				case 5:
-					if (predungeon[x][y] == 68 || predungeon[x][y] == 46) {
+					if (predungeon[x][y] == 'D' || predungeon[x][y] == '.') {
 						nOk = 254;
 					}
 					break;
 				case 6:
-					if (predungeon[x][y] == 68 || predungeon[x][y] == 35) {
+					if (predungeon[x][y] == 'D' || predungeon[x][y] == '#') {
 						nOk = 254;
 					}
 					break;
 				case 7:
-					if (predungeon[x][y] == 32 || predungeon[x][y] == 46) {
+					if (predungeon[x][y] == ' ' || predungeon[x][y] == '.') {
 						nOk = 254;
 					}
 					break;
 				case 8:
-					if (predungeon[x][y] == 68 || predungeon[x][y] == 35 || predungeon[x][y] == 46) {
+					if (predungeon[x][y] == 'D' || predungeon[x][y] == '#' || predungeon[x][y] == '.') {
 						nOk = 254;
 					}
 					break;
@@ -2136,7 +2136,7 @@ int CountEmptyTiles()
 	int t = 0;
 	for (int jj = 0; jj < DMAXY; jj++) {
 		for (int ii = 0; ii < DMAXX; ii++) { // NOLINT(modernize-loop-convert)
-			if (predungeon[ii][jj] == 32) {
+			if (predungeon[ii][jj] == ' ') {
 				t++;
 			}
 		}
@@ -2148,31 +2148,31 @@ int CountEmptyTiles()
 void KnockWalls(int x1, int y1, int x2, int y2)
 {
 	for (int ii = x1 + 1; ii < x2; ii++) {
-		if (predungeon[ii][y1 - 1] == 46 && predungeon[ii][y1 + 1] == 46) {
-			predungeon[ii][y1] = 46;
+		if (predungeon[ii][y1 - 1] == '.' && predungeon[ii][y1 + 1] == '.') {
+			predungeon[ii][y1] = '.';
 		}
-		if (predungeon[ii][y2 - 1] == 46 && predungeon[ii][y2 + 1] == 46) {
-			predungeon[ii][y2] = 46;
+		if (predungeon[ii][y2 - 1] == '.' && predungeon[ii][y2 + 1] == '.') {
+			predungeon[ii][y2] = '.';
 		}
-		if (predungeon[ii][y1 - 1] == 68) {
-			predungeon[ii][y1 - 1] = 46;
+		if (predungeon[ii][y1 - 1] == 'D') {
+			predungeon[ii][y1 - 1] = '.';
 		}
-		if (predungeon[ii][y2 + 1] == 68) {
-			predungeon[ii][y2 + 1] = 46;
+		if (predungeon[ii][y2 + 1] == 'D') {
+			predungeon[ii][y2 + 1] = '.';
 		}
 	}
 	for (int jj = y1 + 1; jj < y2; jj++) {
-		if (predungeon[x1 - 1][jj] == 46 && predungeon[x1 + 1][jj] == 46) {
-			predungeon[x1][jj] = 46;
+		if (predungeon[x1 - 1][jj] == '.' && predungeon[x1 + 1][jj] == '.') {
+			predungeon[x1][jj] = '.';
 		}
-		if (predungeon[x2 - 1][jj] == 46 && predungeon[x2 + 1][jj] == 46) {
-			predungeon[x2][jj] = 46;
+		if (predungeon[x2 - 1][jj] == '.' && predungeon[x2 + 1][jj] == '.') {
+			predungeon[x2][jj] = '.';
 		}
-		if (predungeon[x1 - 1][jj] == 68) {
-			predungeon[x1 - 1][jj] = 46;
+		if (predungeon[x1 - 1][jj] == 'D') {
+			predungeon[x1 - 1][jj] = '.';
 		}
-		if (predungeon[x2 + 1][jj] == 68) {
-			predungeon[x2 + 1][jj] = 46;
+		if (predungeon[x2 + 1][jj] == 'D') {
+			predungeon[x2 + 1][jj] = '.';
 		}
 	}
 }
@@ -2213,10 +2213,10 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 			if (yf2) {
 				y2++;
 			}
-			if (predungeon[x2][y1] != 32) {
+			if (predungeon[x2][y1] != ' ') {
 				yf1 = false;
 			}
-			if (predungeon[x2][y2] != 32) {
+			if (predungeon[x2][y2] != ' ') {
 				yf2 = false;
 			}
 		}
@@ -2231,7 +2231,7 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 					xf2 = false;
 				}
 				for (int jj = y1; jj <= y2; jj++) {
-					if (predungeon[x2][jj] != 32) {
+					if (predungeon[x2][jj] != ' ') {
 						xf2 = false;
 					}
 				}
@@ -2263,10 +2263,10 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 			if (yf2) {
 				y2++;
 			}
-			if (predungeon[x1][y1] != 32) {
+			if (predungeon[x1][y1] != ' ') {
 				yf1 = false;
 			}
-			if (predungeon[x1][y2] != 32) {
+			if (predungeon[x1][y2] != ' ') {
 				yf2 = false;
 			}
 		}
@@ -2281,7 +2281,7 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 					xf1 = false;
 				}
 				for (int jj = y1; jj <= y2; jj++) {
-					if (predungeon[x1][jj] != 32) {
+					if (predungeon[x1][jj] != ' ') {
 						xf1 = false;
 					}
 				}
@@ -2313,10 +2313,10 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 			if (xf2) {
 				x2++;
 			}
-			if (predungeon[x1][y2] != 32) {
+			if (predungeon[x1][y2] != ' ') {
 				xf1 = false;
 			}
-			if (predungeon[x2][y2] != 32) {
+			if (predungeon[x2][y2] != ' ') {
 				xf2 = false;
 			}
 		}
@@ -2331,7 +2331,7 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 					yf2 = false;
 				}
 				for (int ii = x1; ii <= x2; ii++) {
-					if (predungeon[ii][y2] != 32) {
+					if (predungeon[ii][y2] != ' ') {
 						yf2 = false;
 					}
 				}
@@ -2363,10 +2363,10 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 			if (xf2) {
 				x2++;
 			}
-			if (predungeon[x1][y1] != 32) {
+			if (predungeon[x1][y1] != ' ') {
 				xf1 = false;
 			}
-			if (predungeon[x2][y1] != 32) {
+			if (predungeon[x2][y1] != ' ') {
 				xf2 = false;
 			}
 		}
@@ -2381,7 +2381,7 @@ void FillVoid(bool xf1, bool yf1, bool xf2, bool yf2, int xx, int yy)
 					yf1 = false;
 				}
 				for (int ii = x1; ii <= x2; ii++) {
-					if (predungeon[ii][y1] != 32) {
+					if (predungeon[ii][y1] != ' ') {
 						yf1 = false;
 					}
 				}
@@ -2404,45 +2404,45 @@ bool FillVoids()
 	while (CountEmptyTiles() > 700 && to < 100) {
 		int xx = GenerateRnd(38) + 1;
 		int yy = GenerateRnd(38) + 1;
-		if (predungeon[xx][yy] != 35) {
+		if (predungeon[xx][yy] != '#') {
 			continue;
 		}
 		bool xf1 = false;
 		bool xf2 = false;
 		bool yf1 = false;
 		bool yf2 = false;
-		if (predungeon[xx - 1][yy] == 32 && predungeon[xx + 1][yy] == 46) {
-			if (predungeon[xx + 1][yy - 1] == 46
-			    && predungeon[xx + 1][yy + 1] == 46
-			    && predungeon[xx - 1][yy - 1] == 32
-			    && predungeon[xx - 1][yy + 1] == 32) {
+		if (predungeon[xx - 1][yy] == ' ' && predungeon[xx + 1][yy] == '.') {
+			if (predungeon[xx + 1][yy - 1] == '.'
+			    && predungeon[xx + 1][yy + 1] == '.'
+			    && predungeon[xx - 1][yy - 1] == ' '
+			    && predungeon[xx - 1][yy + 1] == ' ') {
 				xf1 = true;
 				yf1 = true;
 				yf2 = true;
 			}
-		} else if (predungeon[xx + 1][yy] == 32 && predungeon[xx - 1][yy] == 46) {
-			if (predungeon[xx - 1][yy - 1] == 46
-			    && predungeon[xx - 1][yy + 1] == 46
-			    && predungeon[xx + 1][yy - 1] == 32
-			    && predungeon[xx + 1][yy + 1] == 32) {
+		} else if (predungeon[xx + 1][yy] == ' ' && predungeon[xx - 1][yy] == '.') {
+			if (predungeon[xx - 1][yy - 1] == '.'
+			    && predungeon[xx - 1][yy + 1] == '.'
+			    && predungeon[xx + 1][yy - 1] == ' '
+			    && predungeon[xx + 1][yy + 1] == ' ') {
 				xf2 = true;
 				yf1 = true;
 				yf2 = true;
 			}
-		} else if (predungeon[xx][yy - 1] == 32 && predungeon[xx][yy + 1] == 46) {
-			if (predungeon[xx - 1][yy + 1] == 46
-			    && predungeon[xx + 1][yy + 1] == 46
-			    && predungeon[xx - 1][yy - 1] == 32
-			    && predungeon[xx + 1][yy - 1] == 32) {
+		} else if (predungeon[xx][yy - 1] == ' ' && predungeon[xx][yy + 1] == '.') {
+			if (predungeon[xx - 1][yy + 1] == '.'
+			    && predungeon[xx + 1][yy + 1] == '.'
+			    && predungeon[xx - 1][yy - 1] == ' '
+			    && predungeon[xx + 1][yy - 1] == ' ') {
 				yf1 = true;
 				xf1 = true;
 				xf2 = true;
 			}
-		} else if (predungeon[xx][yy + 1] == 32 && predungeon[xx][yy - 1] == 46) {
-			if (predungeon[xx - 1][yy - 1] == 46
-			    && predungeon[xx + 1][yy - 1] == 46
-			    && predungeon[xx - 1][yy + 1] == 32
-			    && predungeon[xx + 1][yy + 1] == 32) {
+		} else if (predungeon[xx][yy + 1] == ' ' && predungeon[xx][yy - 1] == '.') {
+			if (predungeon[xx - 1][yy - 1] == '.'
+			    && predungeon[xx + 1][yy - 1] == '.'
+			    && predungeon[xx - 1][yy + 1] == ' '
+			    && predungeon[xx + 1][yy + 1] == ' ') {
 				yf2 = true;
 				xf1 = true;
 				xf2 = true;
@@ -2498,11 +2498,11 @@ bool CreateDungeon()
 
 	for (int j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
 		for (int i = 0; i < DMAXX; i++) { /// BUGFIX: change '<=' to '<' (fixed)
-			if (IsAnyOf(predungeon[i][j], 65, 66, 67, 69)) {
-				predungeon[i][j] = 35;
+			if (IsAnyOf(predungeon[i][j], 'A', 'B', 'C', 'E')) {
+				predungeon[i][j] = '#';
 			}
-			if (predungeon[i][j] == 44) {
-				predungeon[i][j] = 46;
+			if (predungeon[i][j] == ',') {
+				predungeon[i][j] = '.';
 				for (int a = -1; a <= 1; a++) {
 					for (int b = -1; b <= 1; b++) {
 						if (a == 0 && b == 0)
@@ -2511,8 +2511,8 @@ bool CreateDungeon()
 							continue;
 						if (i + a >= DMAXX || j + b >= DMAXY)
 							continue;
-						if (predungeon[i + a][j + b] == 32) {
-							predungeon[i + a][j + b] = 35;
+						if (predungeon[i + a][j + b] == ' ') {
+							predungeon[i + a][j + b] = '#';
 						}
 					}
 				}
