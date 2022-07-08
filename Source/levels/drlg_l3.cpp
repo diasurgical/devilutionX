@@ -16,7 +16,6 @@ namespace devilution {
 namespace {
 
 int lockoutcnt;
-bool lockout[DMAXX][DMAXY];
 
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
@@ -1922,11 +1921,11 @@ void HallOfHeroes()
 
 void LockRectangle(int x, int y)
 {
-	if (!lockout[x][y]) {
+	if (!DungeonMask.test(x, y)) {
 		return;
 	}
 
-	lockout[x][y] = false;
+	DungeonMask.reset(x, y);
 	lockoutcnt++;
 	LockRectangle(x, y - 1);
 	LockRectangle(x, y + 1);
@@ -1936,6 +1935,8 @@ void LockRectangle(int x, int y)
 
 bool Lockout()
 {
+	DungeonMask.reset();
+
 	int fx;
 	int fy;
 
@@ -1943,12 +1944,10 @@ bool Lockout()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] != 0) {
-				lockout[i][j] = true;
+				DungeonMask.set(i, j);
 				fx = i;
 				fy = j;
 				t++;
-			} else {
-				lockout[i][j] = false;
 			}
 		}
 	}
