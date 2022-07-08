@@ -85,7 +85,7 @@ use_enum_as_flags(OptionEntryFlags);
 
 class OptionEntryBase {
 public:
-	OptionEntryBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
+	OptionEntryBase(string_view key, OptionEntryFlags flags, const char *name, const char *description)
 	    : flags(flags)
 	    , key(key)
 	    , name(name)
@@ -107,8 +107,8 @@ public:
 
 protected:
 	string_view key;
-	string_view name;
-	string_view description;
+	const char *name;
+	const char *description;
 	void NotifyValueChanged();
 
 private:
@@ -117,7 +117,7 @@ private:
 
 class OptionEntryBoolean : public OptionEntryBase {
 public:
-	OptionEntryBoolean(string_view key, OptionEntryFlags flags, string_view name, string_view description, bool defaultValue)
+	OptionEntryBoolean(string_view key, OptionEntryFlags flags, const char *name, const char *description, bool defaultValue)
 	    : OptionEntryBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -150,7 +150,7 @@ public:
 	[[nodiscard]] string_view GetValueDescription() const override;
 
 protected:
-	OptionEntryListBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
+	OptionEntryListBase(string_view key, OptionEntryFlags flags, const char *name, const char *description)
 	    : OptionEntryBase(key, flags, name, description)
 	{
 	}
@@ -167,7 +167,7 @@ public:
 	void SetActiveListIndex(size_t index) override;
 
 protected:
-	OptionEntryEnumBase(string_view key, OptionEntryFlags flags, string_view name, string_view description, int defaultValue)
+	OptionEntryEnumBase(string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
 	    : OptionEntryListBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -192,7 +192,7 @@ private:
 template <typename T>
 class OptionEntryEnum : public OptionEntryEnumBase {
 public:
-	OptionEntryEnum(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<std::pair<T, string_view>> entries)
+	OptionEntryEnum(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<std::pair<T, string_view>> entries)
 	    : OptionEntryEnumBase(key, flags, name, description, static_cast<int>(defaultValue))
 	{
 		for (auto entry : entries) {
@@ -220,7 +220,7 @@ public:
 	void SetActiveListIndex(size_t index) override;
 
 protected:
-	OptionEntryIntBase(string_view key, OptionEntryFlags flags, string_view name, string_view description, int defaultValue)
+	OptionEntryIntBase(string_view key, OptionEntryFlags flags, const char *name, const char *description, int defaultValue)
 	    : OptionEntryListBase(key, flags, name, description)
 	    , defaultValue(defaultValue)
 	    , value(defaultValue)
@@ -245,14 +245,14 @@ private:
 template <typename T>
 class OptionEntryInt : public OptionEntryIntBase {
 public:
-	OptionEntryInt(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<T> entries)
+	OptionEntryInt(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue, std::initializer_list<T> entries)
 	    : OptionEntryIntBase(key, flags, name, description, static_cast<int>(defaultValue))
 	{
 		for (auto entry : entries) {
 			AddEntry(static_cast<int>(entry));
 		}
 	}
-	OptionEntryInt(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue)
+	OptionEntryInt(string_view key, OptionEntryFlags flags, const char *name, const char *description, T defaultValue)
 	    : OptionEntryInt(key, flags, name, description, defaultValue, { defaultValue })
 	{
 	}
@@ -368,7 +368,12 @@ private:
 };
 
 struct OptionCategoryBase {
-	OptionCategoryBase(string_view key, string_view name, string_view description);
+	OptionCategoryBase(string_view key, const char *name, const char *description)
+	    : key(key)
+	    , name(name)
+	    , description(description)
+	{
+	}
 
 	[[nodiscard]] string_view GetKey() const;
 	[[nodiscard]] string_view GetName() const;
@@ -378,8 +383,8 @@ struct OptionCategoryBase {
 
 protected:
 	string_view key;
-	string_view name;
-	string_view description;
+	const char *name;
+	const char *description;
 };
 
 struct StartUpOptions : OptionCategoryBase {
@@ -628,7 +633,7 @@ struct KeymapperOptions : OptionCategoryBase {
 		bool SetValue(int value);
 
 	private:
-		Action(string_view key, string_view name, string_view description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+		Action(string_view key, const char *name, const char *description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
 		int defaultKey;
 		std::function<void()> actionPressed;
 		std::function<void()> actionReleased;
@@ -645,7 +650,7 @@ struct KeymapperOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	void AddAction(
-	    string_view key, string_view name, string_view description, int defaultKey,
+	    string_view key, const char *name, const char *description, int defaultKey,
 	    std::function<void()> actionPressed,
 	    std::function<void()> actionReleased = nullptr,
 	    std::function<bool()> enable = nullptr,
