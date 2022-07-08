@@ -1646,11 +1646,7 @@ void Fence()
 				if (x - i > 0) {
 					dungeon[i][j] = 127;
 					for (int xx = i + 1; xx < x; xx++) {
-						if (FlipCoin()) {
-							dungeon[xx][j] = 129;
-						} else {
-							dungeon[xx][j] = 126;
-						}
+						dungeon[xx][j] = PickRandomlyAmong({ 129, 126 });
 					}
 					dungeon[x][j] = 128;
 				}
@@ -1664,11 +1660,7 @@ void Fence()
 				if (y - j > 0) {
 					dungeon[i][j] = 123;
 					for (int yy = j + 1; yy < y; yy++) {
-						if (FlipCoin()) {
-							dungeon[i][yy] = 124;
-						} else {
-							dungeon[i][yy] = 121;
-						}
+						dungeon[i][yy] = PickRandomlyAmong({ 124, 121 });
 					}
 					dungeon[i][y] = 122;
 				}
@@ -1681,11 +1673,7 @@ void Fence()
 				}
 				x--;
 				for (int xx = i + 1; xx < x; xx++) {
-					if (FlipCoin()) {
-						dungeon[xx][j] = 129;
-					} else {
-						dungeon[xx][j] = 126;
-					}
+					dungeon[xx][j] = PickRandomlyAmong({ 129, 126 });
 				}
 				dungeon[x][j] = 128;
 				int y = j + 1;
@@ -1694,11 +1682,7 @@ void Fence()
 				}
 				y--;
 				for (int yy = j + 1; yy < y; yy++) {
-					if (FlipCoin()) {
-						dungeon[i][yy] = 124;
-					} else {
-						dungeon[i][yy] = 121;
-					}
+					dungeon[i][yy] = PickRandomlyAmong({ 124, 121 });
 				}
 				dungeon[i][y] = 122;
 			}
@@ -1736,11 +1720,7 @@ void Fence()
 								continue;
 							}
 							if (dungeon[i][y] == 7) {
-								if (FlipCoin()) {
-									dungeon[i][y] = 137;
-								} else {
-									dungeon[i][y] = 135;
-								}
+								dungeon[i][y] = PickRandomlyAmong({ 137, 135 });
 							}
 							if (dungeon[i][y] == 10) {
 								dungeon[i][y] = 131;
@@ -1790,11 +1770,7 @@ void Fence()
 								continue;
 							}
 							if (dungeon[x][j] == 7) {
-								if (FlipCoin()) {
-									dungeon[x][j] = 136;
-								} else {
-									dungeon[x][j] = 134;
-								}
+								dungeon[x][j] = PickRandomlyAmong({ 136, 134 });
 							}
 							if (dungeon[x][j] == 9) {
 								dungeon[x][j] = 130;
