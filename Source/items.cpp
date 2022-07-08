@@ -1078,7 +1078,7 @@ void SaveItemAffix(Item &item, const PLStruct &affix)
 void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 {
 	int preidx = -1;
-	if (GenerateRnd(10) == 0 || onlygood) {
+	if (FlipCoin(10) || onlygood) {
 		int nl = 0;
 		int l[256];
 		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
@@ -1150,20 +1150,21 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 	int l[256];
 	goodorevil goe;
 
-	int pre = GenerateRnd(4);
-	int post = GenerateRnd(3);
-	if (pre != 0 && post == 0) {
+	bool allocatePrefix = FlipCoin(4);
+	bool allocateSuffix = !FlipCoin(3);
+	if (!allocatePrefix && !allocateSuffix) {
+		// At least try and give each item a prefix or suffix
 		if (FlipCoin())
-			pre = 0;
+			allocatePrefix = true;
 		else
-			post = 1;
+			allocateSuffix = true;
 	}
 	int preidx = -1;
 	int sufidx = -1;
 	goe = GOE_ANY;
-	if (!onlygood && GenerateRnd(3) != 0)
+	if (!onlygood && !FlipCoin(3))
 		onlygood = true;
-	if (pre == 0) {
+	if (allocatePrefix) {
 		int nt = 0;
 		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
 			if (!IsPrefixValidForItemType(j, flgs))
@@ -1189,7 +1190,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 			goe = ItemPrefixes[preidx].PLGOE;
 		}
 	}
-	if (post != 0) {
+	if (allocateSuffix) {
 		int nl = 0;
 		for (int j = 0; ItemSuffixes[j].power.type != IPL_INVALID; j++) {
 			if (IsSuffixValidForItemType(j, flgs)
@@ -1218,7 +1219,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 
 void GetStaffSpell(Item &item, int lvl, bool onlygood)
 {
-	if (!gbIsHellfire && GenerateRnd(4) == 0) {
+	if (!gbIsHellfire && FlipCoin(4)) {
 		GetItemPower(item, lvl / 2, lvl, AffixItemType::Staff, onlygood);
 		return;
 	}
@@ -1591,7 +1592,7 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 	} else {
 		idx = PickRandomlyAmong({ IDI_MANA, IDI_HEAL });
 
-		if (lvl > 1 && GenerateRnd(3) == 0)
+		if (lvl > 1 && FlipCoin(3))
 			idx = IDI_PORTAL;
 	}
 

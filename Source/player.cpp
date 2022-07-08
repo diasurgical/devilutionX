@@ -726,7 +726,7 @@ bool WeaponDecay(Player &player, int ii)
 	return false;
 }
 
-bool DamageWeapon(Player &player, int durrnd)
+bool DamageWeapon(Player &player, unsigned damageFrequency)
 {
 	if (&player != MyPlayer) {
 		return false;
@@ -737,7 +737,7 @@ bool DamageWeapon(Player &player, int durrnd)
 	if (WeaponDecay(player, INVLOC_HAND_RIGHT))
 		return true;
 
-	if (GenerateRnd(durrnd) != 0) {
+	if (!FlipCoin(damageFrequency)) {
 		return false;
 	}
 
@@ -1281,7 +1281,7 @@ bool DoBlock(int pnum)
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
 
-		if (GenerateRnd(10) == 0) {
+		if (FlipCoin(10)) {
 			DamageParryItem(player);
 		}
 		return true;
@@ -1300,19 +1300,19 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	int a = GenerateRnd(3);
+	bool targetHead = GenerateRnd(3);
 	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
-		a = 1;
+		targetHead = false;
 	}
 	if (player.InvBody[INVLOC_CHEST].isEmpty() && !player.InvBody[INVLOC_HEAD].isEmpty()) {
-		a = 0;
+		targetHead = true;
 	}
 
 	Item *pi;
-	if (a != 0) {
-		pi = &player.InvBody[INVLOC_CHEST];
-	} else {
+	if (targetHead) {
 		pi = &player.InvBody[INVLOC_HEAD];
+	} else {
+		pi = &player.InvBody[INVLOC_CHEST];
 	}
 	if (pi->_iDurability == DUR_INDESTRUCTIBLE) {
 		return;
@@ -1323,10 +1323,10 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	if (a != 0) {
-		RemoveEquipment(player, INVLOC_CHEST, true);
-	} else {
+	if (targetHead) {
 		RemoveEquipment(player, INVLOC_HEAD, true);
+	} else {
+		RemoveEquipment(player, INVLOC_CHEST, true);
 	}
 	CalcPlrInv(player, true);
 }
@@ -1372,7 +1372,7 @@ bool DoGotHit(int pnum)
 	if (player.AnimInfo.currentFrame >= player._pHFrames - 1) {
 		StartStand(pnum, player._pdir);
 		ClearStateVariables(player);
-		if (GenerateRnd(4) != 0) {
+		if (!FlipCoin(4)) {
 			DamageArmor(player);
 		}
 

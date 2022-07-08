@@ -965,7 +965,7 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if (GenerateRnd(4) == 0) {
+			if (FlipCoin(4)) {
 				uint8_t c = TileDecorations[dungeon[x][y]];
 				if (c != 0 && !Protected.test(x, y)) {
 					int rv = GenerateRnd(16);
