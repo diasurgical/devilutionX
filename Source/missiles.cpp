@@ -1218,7 +1218,7 @@ void AddJester(Missile &missile, const AddMissileParameter &parameter)
 
 void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Crawl(0, 2, [&](auto displacement) {
+	Crawl(0, 2, [&](Displacement displacement) {
 		Point target = missile.position.start + displacement;
 		if (!InDungeonBounds(target))
 			return false;
@@ -3020,7 +3020,7 @@ void MI_FireRing(Missile &missile)
 	if (missile.limitReached)
 		return;
 
-	Crawl(3, [&](auto displacement) {
+	Crawl(3, [&](Displacement displacement) {
 		Point target = Point { missile.var1, missile.var2 } + displacement;
 		if (!InDungeonBounds(target))
 			return false;
@@ -3376,7 +3376,7 @@ void MI_Chain(Missile &missile)
 	Direction dir = GetDirection(position, dst);
 	AddMissile(position, dst, dir, MIS_LIGHTCTRL, TARGET_MONSTERS, id, 1, missile._mispllvl);
 	int rad = std::min<int>(missile._mispllvl + 3, MaxCrawlRadius);
-	Crawl(1, rad, [&](auto displacement) {
+	Crawl(1, rad, [&](Displacement displacement) {
 		Point target = position + displacement;
 		if (InDungeonBounds(target) && dMonster[target.x][target.y] > 0) {
 			dir = GetDirection(position, target);

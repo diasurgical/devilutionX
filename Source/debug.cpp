@@ -723,7 +723,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	auto ret = Crawl(0, MaxCrawlRadius, [&](auto displacement) -> std::optional<std::string> {
+	auto ret = Crawl(0, MaxCrawlRadius, [&](Displacement displacement) -> std::optional<std::string> {
 		Point pos = myPlayer.position.tile + displacement;
 		if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
 			return {};
@@ -809,7 +809,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 
 	int spawnedMonster = 0;
 
-	auto ret = Crawl(0, MaxCrawlRadius, [&](auto displacement) -> std::optional<std::string> {
+	auto ret = Crawl(0, MaxCrawlRadius, [&](Displacement displacement) -> std::optional<std::string> {
 		Point pos = myPlayer.position.tile + displacement;
 		if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
 			return {};

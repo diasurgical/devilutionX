@@ -185,6 +185,8 @@ endif()
 
 add_subdirectory(3rdParty/libmpq)
 
+add_subdirectory(3rdParty/tl)
+
 add_subdirectory(3rdParty/hoehrmann_utf8)
 
 add_subdirectory(3rdParty/PKWare)

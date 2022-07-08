@@ -8,12 +8,15 @@
 #include <array>
 #include <vector>
 
+#include <function_ref.hpp>
+
 #include "automap.h"
 #include "engine.h"
 #include "engine/point.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/attributes.h"
 #include "utils/stdcompat/invoke_result_t.hpp"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -75,42 +78,6 @@ void ChangeVisionXY(int id, Point position);
 void ProcessVisionList();
 void lighting_color_cycling();
 
-template <typename F>
-auto CrawlFlipsX(Displacement mirrored, F function) -> invoke_result_t<decltype(function), Displacement>
-{
-	const Displacement Flips[] = { mirrored.flipX(), mirrored };
-	for (auto displacement : Flips) {
-		auto ret = function(displacement);
-		if (ret)
-			return ret;
-	}
-	return {};
-}
-
-template <typename F>
-auto CrawlFlipsY(Displacement mirrored, F function) -> invoke_result_t<decltype(function), Displacement>
-{
-	const Displacement Flips[] = { mirrored, mirrored.flipY() };
-	for (auto displacement : Flips) {
-		auto ret = function(displacement);
-		if (ret)
-			return ret;
-	}
-	return {};
-}
-
-template <typename F>
-auto CrawlFlipsXY(Displacement mirrored, F function) -> invoke_result_t<decltype(function), Displacement>
-{
-	const Displacement Flips[] = { mirrored.flipX(), mirrored, mirrored.flipXY(), mirrored.flipY() };
-	for (auto displacement : Flips) {
-		auto ret = function(displacement);
-		if (ret)
-			return ret;
-	}
-	return {};
-}
-
 constexpr int MaxCrawlRadius = 18;
 
 /**
@@ -137,45 +104,29 @@ constexpr int MaxCrawlRadius = 18;
  *    +-------> x
  */
 
+bool DoCrawl(unsigned radius, tl::function_ref<bool(Displacement)> function);
+bool DoCrawl(unsigned minRadius, unsigned maxRadius, tl::function_ref<bool(Displacement)> function);
+
 template <typename F>
 auto Crawl(unsigned radius, F function) -> invoke_result_t<decltype(function), Displacement>
 {
-	if (radius == 0)
-		return function(Displacement { 0, 0 });
-
-	auto ret = CrawlFlipsY({ 0, static_cast<int>(radius) }, function);
-	if (ret)
-		return ret;
-	for (unsigned i = 1; i < radius; i++) {
-		ret = CrawlFlipsXY({ static_cast<int>(i), static_cast<int>(radius) }, function);
-		if (ret)
-			return ret;
-	}
-	if (radius > 1) {
-		ret = CrawlFlipsXY({ static_cast<int>(radius) - 1, static_cast<int>(radius) - 1 }, function);
-		if (ret)
-			return ret;
-	}
-	ret = CrawlFlipsX({ static_cast<int>(radius), 0 }, function);
-	if (ret)
-		return ret;
-	for (unsigned i = 1; i < radius; i++) {
-		ret = CrawlFlipsXY({ static_cast<int>(radius), static_cast<int>(i) }, function);
-		if (ret)
-			return ret;
-	}
-	return {};
+	invoke_result_t<decltype(function), Displacement> result;
+	DoCrawl(radius, [&result, &function](Displacement displacement) -> bool {
+		result = function(displacement);
+		return !result;
+	});
+	return result;
 }
 
 template <typename F>
 auto Crawl(unsigned minRadius, unsigned maxRadius, F function) -> invoke_result_t<decltype(function), Displacement>
 {
-	for (unsigned i = minRadius; i <= maxRadius; i++) {
-		auto displacement = Crawl(i, function);
-		if (displacement)
-			return displacement;
-	}
-	return {};
+	invoke_result_t<decltype(function), Displacement> result;
+	DoCrawl(minRadius, maxRadius, [&result, &function](Displacement displacement) -> bool {
+		result = function(displacement);
+		return !result;
+	});
+	return result;
 }
 
 /* rdata */
