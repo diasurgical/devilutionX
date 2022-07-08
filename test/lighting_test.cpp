@@ -13,7 +13,7 @@ TEST(Lighting, CrawlTables)
 	int x = 20;
 	int y = 20;
 
-	Crawl(0, MaxCrawlRadius, [&](auto displacement) {
+	Crawl(0, MaxCrawlRadius, [&](Displacement displacement) {
 		int dx = x + displacement.deltaX;
 		int dy = y + displacement.deltaY;
 		EXPECT_EQ(added[dx][dy], false) << "displacement " << displacement.deltaX << ":" << displacement.deltaY << " added twice";

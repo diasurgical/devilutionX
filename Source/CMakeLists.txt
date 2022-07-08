@@ -248,6 +248,7 @@ target_link_libraries(libdevilutionx PUBLIC
   libmpq
   libsmackerdec
   simpleini::simpleini
+  tl
   hoehrmann_utf8
 )
 

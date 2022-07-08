@@ -436,7 +436,7 @@ bool path_solid_pieces(Point startPosition, Point destinationPosition)
 
 std::optional<Point> FindClosestValidPosition(const std::function<bool(Point)> &posOk, Point startingPosition, unsigned int minimumRadius, unsigned int maximumRadius)
 {
-	return Crawl(minimumRadius, maximumRadius, [&](auto displacement) -> std::optional<Point> {
+	return Crawl(minimumRadius, maximumRadius, [&](Displacement displacement) -> std::optional<Point> {
 		Point candidatePosition = startingPosition + displacement;
 		if (posOk(candidatePosition))
 			return candidatePosition;
