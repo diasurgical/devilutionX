@@ -1004,8 +1004,8 @@ std::optional<Point> GetTeleportTile(const Monster &monster)
 {
 	int mx = monster.enemyPosition.x;
 	int my = monster.enemyPosition.y;
-	int rx = 2 * GenerateRnd(2) - 1;
-	int ry = 2 * GenerateRnd(2) - 1;
+	int rx = PickRandomlyAmong({ -1, 1 });
+	int ry = PickRandomlyAmong({ -1, 1 });
 
 	for (int j = -1; j <= 1; j++) {
 		for (int k = -1; k < 1; k++) {
@@ -2026,7 +2026,7 @@ void AiAvoidance(int monsterId)
 		MonstCheckDoors(monster);
 	int v = GenerateRnd(100);
 	if ((abs(mx) >= 2 || abs(my) >= 2) && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 4 || abs(my) >= 4) && GenerateRnd(4) == 0)) {
+		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 4 || abs(my) >= 4) && FlipCoin(4))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -2166,7 +2166,7 @@ void AiRangedAvoidance(int monsterId)
 	int v = GenerateRnd(10000);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2 && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-		if (monster.goal == MGOAL_MOVE || (dist >= 3 && GenerateRnd(4 << lessmissiles) == 0)) {
+		if (monster.goal == MGOAL_MOVE || (dist >= 3 && FlipCoin(4 << lessmissiles))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -2438,7 +2438,7 @@ void RhinoAi(int monsterId)
 	int v = GenerateRnd(100);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2) {
-		if (monster.goal == MGOAL_MOVE || (dist >= 5 && GenerateRnd(4) != 0)) {
+		if (monster.goal == MGOAL_MOVE || (dist >= 5 && !FlipCoin(4))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -2507,7 +2507,7 @@ void FallenAi(int monsterId)
 	}
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
-		if (GenerateRnd(4) != 0) {
+		if (!FlipCoin(4)) {
 			return;
 		}
 		if ((monster.flags & MFLAG_NOHEAL) == 0) {
@@ -2570,7 +2570,7 @@ void LeoricAi(int monsterId)
 	int v = GenerateRnd(100);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2 && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 3 || abs(my) >= 3) && GenerateRnd(4) == 0)) {
+		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 3 || abs(my) >= 3) && FlipCoin(4))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -3253,7 +3253,7 @@ void HorkDemonAi(int monsterId)
 
 	if (abs(mx) < 2 && abs(my) < 2) {
 		monster.goal = MGOAL_NORMAL;
-	} else if (monster.goal == 4 || ((abs(mx) >= 5 || abs(my) >= 5) && GenerateRnd(4) != 0)) {
+	} else if (monster.goal == 4 || ((abs(mx) >= 5 || abs(my) >= 5) && !FlipCoin(4))) {
 		if (monster.goal != 4) {
 			monster.goalVar1 = 0;
 			monster.goalVar2 = GenerateRnd(2);

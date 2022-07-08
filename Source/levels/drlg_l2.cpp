@@ -2101,7 +2101,7 @@ void Substitution()
 		for (int x = 0; x < DMAXX; x++) {
 			if (SetPieceRoom.contains({ x, y }))
 				continue;
-			if (GenerateRnd(4) != 0)
+			if (!FlipCoin(4))
 				continue;
 
 			uint8_t c = BTYPESL2[dungeon[x][y]];

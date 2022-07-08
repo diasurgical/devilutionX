@@ -877,7 +877,7 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if (GenerateRnd(3) == 0) {
+			if (FlipCoin(3)) {
 				uint8_t c = L4BTYPES[dungeon[x][y]];
 				if (c != 0 && !Protected.test(x, y)) {
 					int rv = GenerateRnd(16);
@@ -899,8 +899,7 @@ void Substitution()
 	}
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			int rv = GenerateRnd(10);
-			if (rv == 0) {
+			if (FlipCoin(10)) {
 				uint8_t c = dungeon[x][y];
 				if (L4BTYPES[c] == 6 && !Protected.test(x, y)) {
 					dungeon[x][y] = GenerateRnd(3) + 95;

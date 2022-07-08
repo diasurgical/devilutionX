@@ -217,42 +217,31 @@ void CreateThemeRoom(int themeIndex)
 	}
 
 	if (leveltype == DTYPE_CATACOMBS) {
-		switch (GenerateRnd(2)) {
-		case 0:
+		if (FlipCoin())
 			dungeon[hx - 1][(ly + hy) / 2] = 4;
-			break;
-		case 1:
+		else
 			dungeon[(lx + hx) / 2][hy - 1] = 5;
-			break;
-		}
 	}
 	if (IsAnyOf(leveltype, DTYPE_CAVES, DTYPE_NEST)) {
-		switch (GenerateRnd(2)) {
-		case 0:
+		if (FlipCoin())
 			dungeon[hx - 1][(ly + hy) / 2] = 147;
-			break;
-		case 1:
+		else
 			dungeon[(lx + hx) / 2][hy - 1] = 146;
-			break;
-		}
 	}
 	if (leveltype == DTYPE_HELL) {
-		switch (GenerateRnd(2)) {
-		case 0: {
+		if (FlipCoin()) {
 			int yy = (ly + hy) / 2;
 			dungeon[hx - 1][yy - 1] = 53;
 			dungeon[hx - 1][yy] = 6;
 			dungeon[hx - 1][yy + 1] = 52;
 			dungeon[hx - 2][yy - 1] = 54;
-		} break;
-		case 1: {
+		} else {
 			int xx = (lx + hx) / 2;
 			dungeon[xx - 1][hy - 1] = 57;
 			dungeon[xx][hy - 1] = 6;
 			dungeon[xx + 1][hy - 1] = 56;
 			dungeon[xx][hy - 2] = 59;
 			dungeon[xx - 1][hy - 2] = 58;
-		} break;
 		}
 	}
 }
@@ -654,7 +643,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 		for (int i = 0; i < DMAXX; i++) {
 			int themeW = 0;
 			int themeH = 0;
-			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
+			if (dungeon[i][j] == floor && FlipCoin(freq) && WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
 				if (rndSize) {
 					int min = minSize - 2;
 					int max = maxSize - 2;
