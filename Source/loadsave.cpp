@@ -599,9 +599,9 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.animInfo.currentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
 	file->Skip(4); // Skip _meflag
 	monster.isInvalid = file->NextBool32();
-	monster.var1 = file->NextLE<int32_t>();
-	monster.var2 = file->NextLE<int32_t>();
-	monster.var3 = file->NextLE<int32_t>();
+	monster.temporary1 = file->NextLE<int32_t>();
+	monster.temporary2 = file->NextLE<int32_t>();
+	monster.temporary3 = file->NextLE<int32_t>();
 	monster.position.temp.x = file->NextLE<int32_t>();
 	monster.position.temp.y = file->NextLE<int32_t>();
 	monster.position.offset2.deltaX = file->NextLE<int32_t>();
@@ -1339,9 +1339,9 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.animInfo.currentFrame + 1);
 	file->Skip<uint32_t>(); // Skip _meflag
 	file->WriteLE<uint32_t>(monster.isInvalid ? 1 : 0);
-	file->WriteLE<int32_t>(monster.var1);
-	file->WriteLE<int32_t>(monster.var2);
-	file->WriteLE<int32_t>(monster.var3);
+	file->WriteLE<int32_t>(monster.temporary1);
+	file->WriteLE<int32_t>(monster.temporary2);
+	file->WriteLE<int32_t>(monster.temporary3);
 	file->WriteLE<int32_t>(monster.position.temp.x);
 	file->WriteLE<int32_t>(monster.position.temp.y);
 	file->WriteLE<int32_t>(monster.position.offset2.deltaX);

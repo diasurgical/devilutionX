@@ -213,7 +213,7 @@ void AddReflection(Missile &missile, const AddMissileParameter &parameter);
 void AddBerserk(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: Direction to place the spawn
+ * temporary1: Direction to place the spawn
  */
 void AddHorkSpawn(Missile &missile, const AddMissileParameter &parameter);
 void AddJester(Missile &missile, const AddMissileParameter &parameter);
@@ -240,16 +240,16 @@ void AddLightball(Missile &missile, const AddMissileParameter &parameter);
 void AddFirewall(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
+ * temporary1: X coordinate of the missile-light
+ * temporary2: Y coordinate of the missile-light
  * var4: X coordinate of the missile-light
  * var5: Y coordinate of the missile-light
  */
 void AddFireball(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the missile
- * var2: Y coordinate of the missile
+ * temporary1: X coordinate of the missile
+ * temporary2: Y coordinate of the missile
  */
 void AddLightctrl(Missile &missile, const AddMissileParameter &parameter);
 void AddLightning(Missile &missile, const AddMissileParameter &parameter);
@@ -257,7 +257,7 @@ void AddMisexp(Missile &missile, const AddMissileParameter &parameter);
 void AddWeapexp(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: Animation
+ * temporary1: Animation
  */
 void AddTown(Missile &missile, const AddMissileParameter &parameter);
 void AddFlash(Missile &missile, const AddMissileParameter &parameter);
@@ -266,34 +266,34 @@ void AddManashield(Missile &missile, const AddMissileParameter &parameter);
 void AddFiremove(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: Animation
- * var3: Light strength
+ * temporary1: Animation
+ * temporary3: Light strength
  */
 void AddGuardian(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the destination
- * var2: Y coordinate of the destination
+ * temporary1: X coordinate of the destination
+ * temporary2: Y coordinate of the destination
  */
 void AddChain(Missile &missile, const AddMissileParameter &parameter);
 void AddRhino(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
+ * temporary1: X coordinate of the missile-light
+ * temporary2: Y coordinate of the missile-light
  */
 void AddFlare(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
+ * temporary1: X coordinate of the missile-light
+ * temporary2: Y coordinate of the missile-light
  */
 void AddAcid(Missile &missile, const AddMissileParameter &parameter);
 void AddAcidpud(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: mmode of the monster
- * var2: mnum of the monster
+ * temporary1: mmode of the monster
+ * temporary2: mnum of the monster
  */
 void AddStone(Missile &missile, const AddMissileParameter &parameter);
 void AddGolem(Missile &missile, const AddMissileParameter &parameter);
@@ -302,8 +302,8 @@ void AddHeal(Missile &missile, const AddMissileParameter &parameter);
 void AddHealOther(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
+ * temporary1: X coordinate of the missile-light
+ * temporary2: Y coordinate of the missile-light
  * var4: X coordinate of the destination
  * var5: Y coordinate of the destination
  */
@@ -311,9 +311,9 @@ void AddElement(Missile &missile, const AddMissileParameter &parameter);
 void AddIdentify(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the first wave
- * var2: Y coordinate of the first wave
- * var3: Direction of the first wave
+ * temporary1: X coordinate of the first wave
+ * temporary2: Y coordinate of the first wave
+ * temporary3: Direction of the first wave
  * var4: Direction of the second wave
  * var5: X coordinate of the second wave
  * var6: Y coordinate of the second wave
@@ -322,8 +322,8 @@ void AddFirewallC(Missile &missile, const AddMissileParameter &parameter);
 void AddInfra(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: X coordinate of the destination
- * var2: Y coordinate of the destination
+ * temporary1: X coordinate of the destination
+ * temporary2: Y coordinate of the destination
  */
 void AddWave(Missile &missile, const AddMissileParameter &parameter);
 void AddNova(Missile &missile, const AddMissileParameter &parameter);
@@ -336,8 +336,8 @@ void AddFlame(Missile &missile, const AddMissileParameter &parameter);
 void AddFlamec(Missile &missile, const AddMissileParameter &parameter);
 
 /**
- * var1: Light strength
- * var2: Base direction
+ * temporary1: Light strength
+ * temporary2: Base direction
  */
 void AddCbolt(Missile &missile, const AddMissileParameter &parameter);
 void AddHbolt(Missile &missile, const AddMissileParameter &parameter);

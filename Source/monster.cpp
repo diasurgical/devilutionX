@@ -509,9 +509,9 @@ int AddMonsterType(_monster_id type, placeflag placeflag)
 
 void ClearMVars(Monster &monster)
 {
-	monster.var1 = 0;
-	monster.var2 = 0;
-	monster.var3 = 0;
+	monster.temporary1 = 0;
+	monster.temporary2 = 0;
+	monster.temporary3 = 0;
 	monster.position.temp = { 0, 0 };
 	monster.position.offset2 = { 0, 0 };
 }
@@ -523,8 +523,8 @@ void ClrAllMonsters()
 		monster.name = "Invalid Monster";
 		monster.goal = MGOAL_NONE;
 		monster.mode = MonsterMode::Stand;
-		monster.var1 = 0;
-		monster.var2 = 0;
+		monster.temporary1 = 0;
+		monster.temporary2 = 0;
 		monster.position.tile = { 0, 0 };
 		monster.position.future = { 0, 0 };
 		monster.position.old = { 0, 0 };
@@ -787,7 +787,7 @@ void AiDelay(Monster &monster, int len)
 		return;
 	}
 
-	monster.var2 = len;
+	monster.temporary2 = len;
 	monster.mode = MonsterMode::Delay;
 }
 
@@ -818,9 +818,9 @@ void WalkNorthwards(Monster &monster, int xvel, int yvel, int xadd, int yadd, Di
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
 	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
-	monster.var1 = xadd;
-	monster.var2 = yadd;
-	monster.var3 = static_cast<int>(endDir);
+	monster.temporary1 = xadd;
+	monster.temporary2 = yadd;
+	monster.temporary3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster.position.offset2 = { 0, 0 };
 }
@@ -831,8 +831,8 @@ void WalkSouthwards(Monster &monster, int xvel, int yvel, int xoff, int yoff, in
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
 
 	dMonster[monster.position.tile.x][monster.position.tile.y] = -(monster.getId() + 1);
-	monster.var1 = monster.position.tile.x;
-	monster.var2 = monster.position.tile.y;
+	monster.temporary1 = monster.position.tile.x;
+	monster.temporary2 = monster.position.tile.y;
 	monster.position.old = monster.position.tile;
 	monster.position.tile = { fx, fy };
 	monster.position.future = { fx, fy };
@@ -842,7 +842,7 @@ void WalkSouthwards(Monster &monster, int xvel, int yvel, int xoff, int yoff, in
 	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
 	monster.mode = MonsterMode::MoveSouthwards;
 	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
-	monster.var3 = static_cast<int>(endDir);
+	monster.temporary3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
@@ -865,9 +865,9 @@ void WalkSideways(Monster &monster, int xvel, int yvel, int xoff, int yoff, int 
 	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
 	monster.mode = MonsterMode::MoveSideways;
 	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
-	monster.var1 = fx;
-	monster.var2 = fy;
-	monster.var3 = static_cast<int>(endDir);
+	monster.temporary1 = fx;
+	monster.temporary2 = fy;
+	monster.temporary3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
@@ -887,8 +887,8 @@ void StartRangedAttack(Monster &monster, missile_id missileType, int dam)
 	Direction md = GetMonsterDirection(monster);
 	NewMonsterAnim(monster, MonsterGraphic::Attack, md, AnimationDistributionFlags::ProcessAnimationPending);
 	monster.mode = MonsterMode::RangedAttack;
-	monster.var1 = missileType;
-	monster.var2 = dam;
+	monster.temporary1 = missileType;
+	monster.temporary2 = dam;
 	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
@@ -902,9 +902,9 @@ void StartRangedSpecialAttack(Monster &monster, missile_id missileType, int dam)
 		distributeFramesBeforeFrame = monster.data().mAFNum2;
 	NewMonsterAnim(monster, MonsterGraphic::Special, md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
 	monster.mode = MonsterMode::SpecialRangedAttack;
-	monster.var1 = missileType;
-	monster.var2 = 0;
-	monster.var3 = dam;
+	monster.temporary1 = missileType;
+	monster.temporary2 = 0;
+	monster.temporary3 = dam;
 	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
@@ -947,7 +947,7 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 		NewMonsterAnim(monster, MonsterGraphic::Death, monster.direction);
 		monster.mode = MonsterMode::Death;
 		monster.position.offset = { 0, 0 };
-		monster.var1 = 0;
+		monster.temporary1 = 0;
 		monster.position.tile = monster.position.old;
 		monster.position.future = monster.position.tile;
 		M_ClearSquares(monster);
@@ -958,9 +958,9 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 	int dist = diablo.position.tile.WalkingDistance(ViewPosition);
 	if (dist > 20)
 		dist = 20;
-	diablo.var3 = ViewPosition.x << 16;
+	diablo.temporary3 = ViewPosition.x << 16;
 	diablo.position.temp.x = ViewPosition.y << 16;
-	diablo.position.temp.y = (int)((diablo.var3 - (diablo.position.tile.x << 16)) / (double)dist);
+	diablo.position.temp.y = (int)((diablo.temporary3 - (diablo.position.tile.x << 16)) / (double)dist);
 	diablo.position.offset2.deltaX = (int)((diablo.position.temp.x - (diablo.position.tile.y << 16)) / (double)dist);
 }
 
@@ -1108,7 +1108,7 @@ void MonsterDeath(Monster &monster, int pnum, Direction md, bool sendmsg)
 		monster.mode = MonsterMode::Death;
 	}
 	monster.goal = MGOAL_NONE;
-	monster.var1 = 0;
+	monster.temporary1 = 0;
 	monster.position.offset = { 0, 0 };
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
@@ -1178,7 +1178,7 @@ void StartHeal(Monster &monster)
 	monster.animInfo.currentFrame = monster.type().getAnimData(MonsterGraphic::Special).frames - 1;
 	monster.flags |= MFLAG_LOCK_ANIMATION;
 	monster.mode = MonsterMode::Heal;
-	monster.var1 = monster.maxHitPoints / (16 * (GenerateRnd(5) + 4));
+	monster.temporary1 = monster.maxHitPoints / (16 * (GenerateRnd(5) + 4));
 }
 
 void SyncLightPosition(Monster &monster)
@@ -1200,7 +1200,7 @@ bool MonsterIdle(Monster &monster)
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1)
 		UpdateEnemy(monster);
 
-	monster.var2++;
+	monster.temporary2++;
 
 	return false;
 }
@@ -1216,16 +1216,16 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 		switch (variant) {
 		case MonsterMode::MoveNorthwards:
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-			monster.position.tile.x += monster.var1;
-			monster.position.tile.y += monster.var2;
+			monster.position.tile.x += monster.temporary1;
+			monster.position.tile.y += monster.temporary2;
 			dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 			break;
 		case MonsterMode::MoveSouthwards:
-			dMonster[monster.var1][monster.var2] = 0;
+			dMonster[monster.temporary1][monster.temporary2] = 0;
 			break;
 		case MonsterMode::MoveSideways:
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
-			monster.position.tile = WorldTilePosition { static_cast<WorldTileCoord>(monster.var1), static_cast<WorldTileCoord>(monster.var2) };
+			monster.position.tile = WorldTilePosition { static_cast<WorldTileCoord>(monster.temporary1), static_cast<WorldTileCoord>(monster.temporary2) };
 			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
 			dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
 			break;
@@ -1441,7 +1441,7 @@ bool MonsterAttack(int monsterId)
 bool MonsterRangedAttack(Monster &monster)
 {
 	if (monster.animInfo.currentFrame == monster.data().mAFNum - 1) {
-		const auto &missileType = static_cast<missile_id>(monster.var1);
+		const auto &missileType = static_cast<missile_id>(monster.temporary1);
 		if (missileType != MIS_NULL) {
 			int multimissiles = 1;
 			if (missileType == MIS_CBOLT)
@@ -1454,7 +1454,7 @@ bool MonsterRangedAttack(Monster &monster)
 				    missileType,
 				    TARGET_PLAYERS,
 				    monster.getId(),
-				    monster.var2,
+				    monster.temporary2,
 				    0);
 			}
 		}
@@ -1474,15 +1474,15 @@ bool MonsterRangedSpecialAttack(int monsterId)
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	if (monster.animInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.animInfo.tickCounterOfCurrentFrame == 0 && (monster.ai != AI_MEGA || monster.var2 == 0)) {
+	if (monster.animInfo.currentFrame == monster.data().mAFNum2 - 1 && monster.animInfo.tickCounterOfCurrentFrame == 0 && (monster.ai != AI_MEGA || monster.temporary2 == 0)) {
 		if (AddMissile(
 		        monster.position.tile,
 		        monster.enemyPosition,
 		        monster.direction,
-		        static_cast<missile_id>(monster.var1),
+		        static_cast<missile_id>(monster.temporary1),
 		        TARGET_PLAYERS,
 		        monsterId,
-		        monster.var3,
+		        monster.temporary3,
 		        0)
 		    != nullptr) {
 			PlayEffect(monster, 3);
@@ -1490,9 +1490,9 @@ bool MonsterRangedSpecialAttack(int monsterId)
 	}
 
 	if (monster.ai == AI_MEGA && monster.animInfo.currentFrame == monster.data().mAFNum2 - 1) {
-		if (monster.var2++ == 0) {
+		if (monster.temporary2++ == 0) {
 			monster.flags |= MFLAG_ALLOW_SPECIAL;
-		} else if (monster.var2 == 15) {
+		} else if (monster.temporary2 == 15) {
 			monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 		}
 	}
@@ -1568,8 +1568,8 @@ bool MonsterHeal(Monster &monster)
 	if (monster.animInfo.currentFrame == 0) {
 		monster.flags &= ~MFLAG_LOCK_ANIMATION;
 		monster.flags |= MFLAG_ALLOW_SPECIAL;
-		if (monster.var1 + monster.hitPoints < monster.maxHitPoints) {
-			monster.hitPoints = monster.var1 + monster.hitPoints;
+		if (monster.temporary1 + monster.hitPoints < monster.maxHitPoints) {
+			monster.hitPoints = monster.temporary1 + monster.hitPoints;
 		} else {
 			monster.hitPoints = monster.maxHitPoints;
 			monster.flags &= ~MFLAG_ALLOW_SPECIAL;
@@ -1657,7 +1657,7 @@ bool MonsterDeath(int monsterId)
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	monster.var1++;
+	monster.temporary1++;
 	if (monster.type().type == MT_DIABLO) {
 		if (monster.position.tile.x < ViewPosition.x) {
 			ViewPosition.x--;
@@ -1671,7 +1671,7 @@ bool MonsterDeath(int monsterId)
 			ViewPosition.y++;
 		}
 
-		if (monster.var1 == 140)
+		if (monster.temporary1 == 140)
 			PrepDoEnding();
 	} else if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
 		if (monster.uniqType == 0)
@@ -1704,11 +1704,11 @@ bool MonsterDelay(Monster &monster)
 {
 	monster.changeAnimationData(MonsterGraphic::Stand, GetMonsterDirection(monster));
 	if (monster.ai == AI_LAZARUS) {
-		if (monster.var2 > 8 || monster.var2 < 0)
-			monster.var2 = 8;
+		if (monster.temporary2 > 8 || monster.temporary2 < 0)
+			monster.temporary2 = 8;
 	}
 
-	if (monster.var2-- == 0) {
+	if (monster.temporary2-- == 0) {
 		int oFrame = monster.animInfo.currentFrame;
 		M_StartStand(monster, monster.direction);
 		monster.animInfo.currentFrame = oFrame;
@@ -2044,9 +2044,9 @@ void AiAvoidance(int monsterId)
 	}
 	if (monster.goal == MGOAL_NORMAL) {
 		if (abs(mx) >= 2 || abs(my) >= 2) {
-			if ((monster.var2 > 20 && v < 2 * monster.intelligence + 28)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
-			        && monster.var2 == 0
+			if ((monster.temporary2 > 20 && v < 2 * monster.intelligence + 28)
+			    || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+			        && monster.temporary2 == 0
 			        && v < 2 * monster.intelligence + 78)) {
 				RandomWalk(monsterId, md);
 			}
@@ -2116,7 +2116,7 @@ void AiRanged(int monsterId)
 		if (monster.activeForTicks < UINT8_MAX)
 			MonstCheckDoors(monster);
 		monster.direction = md;
-		if (static_cast<MonsterMode>(monster.var1) == MonsterMode::RangedAttack) {
+		if (static_cast<MonsterMode>(monster.temporary1) == MonsterMode::RangedAttack) {
 			AiDelay(monster, GenerateRnd(20));
 		} else if (abs(mx) < 4 && abs(my) < 4) {
 			if (GenerateRnd(100) < 10 * (monster.intelligence + 7))
@@ -2192,7 +2192,7 @@ void AiRangedAvoidance(int monsterId)
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 1000 * (monster.intelligence + 5)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 1000 * (monster.intelligence + 8))) {
+			    || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.temporary2 == 0 && v < 1000 * (monster.intelligence + 8))) {
 				RandomWalk(monsterId, md);
 			}
 		} else if (v < 1000 * (monster.intelligence + 6)) {
@@ -2253,9 +2253,9 @@ void OverlordAi(int monsterId)
 	monster.direction = md;
 	int v = GenerateRnd(100);
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if ((monster.var2 > 20 && v < 4 * monster.intelligence + 20)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
-		        && monster.var2 == 0
+		if ((monster.temporary2 > 20 && v < 4 * monster.intelligence + 20)
+		    || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		        && monster.temporary2 == 0
 		        && v < 4 * monster.intelligence + 70)) {
 			RandomWalk(monsterId, md);
 		}
@@ -2282,13 +2282,13 @@ void SkeletonAi(int monsterId)
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
 	monster.direction = md;
 	if (abs(x) >= 2 || abs(y) >= 2) {
-		if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay || (GenerateRnd(100) >= 35 - 4 * monster.intelligence)) {
+		if (static_cast<MonsterMode>(monster.temporary1) == MonsterMode::Delay || (GenerateRnd(100) >= 35 - 4 * monster.intelligence)) {
 			RandomWalk(monsterId, md);
 		} else {
 			AiDelay(monster, 15 - 2 * monster.intelligence + GenerateRnd(10));
 		}
 	} else {
-		if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay || (GenerateRnd(100) < 2 * monster.intelligence + 20)) {
+		if (static_cast<MonsterMode>(monster.temporary1) == MonsterMode::Delay || (GenerateRnd(100) < 2 * monster.intelligence + 20)) {
 			StartAttack(monster);
 		} else {
 			AiDelay(monster, 2 * (5 - monster.intelligence) + GenerateRnd(10));
@@ -2317,9 +2317,9 @@ void SkeletonBowAi(int monsterId)
 	bool walking = false;
 
 	if (abs(mx) < 4 && abs(my) < 4) {
-		if ((monster.var2 > 20 && v < 2 * monster.intelligence + 13)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
-		        && monster.var2 == 0
+		if ((monster.temporary2 > 20 && v < 2 * monster.intelligence + 13)
+		    || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		        && monster.temporary2 == 0
 		        && v < 2 * monster.intelligence + 63)) {
 			walking = DumbWalk(monsterId, Opposite(md));
 		}
@@ -2467,8 +2467,8 @@ void RhinoAi(int monsterId)
 			if (dist >= 2) {
 				v = GenerateRnd(100);
 				if (v >= 2 * monster.intelligence + 33
-				    && (IsNoneOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
-				        || monster.var2 != 0
+				    && (IsNoneOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+				        || monster.temporary2 != 0
 				        || v >= 2 * monster.intelligence + 83)) {
 					AiDelay(monster, GenerateRnd(10) + 10);
 				} else {
@@ -2598,7 +2598,7 @@ void LeoricAi(int monsterId)
 			if (dist >= 2) {
 				v = GenerateRnd(100);
 				if (v >= monster.intelligence + 25
-				    && (IsNoneOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) || monster.var2 != 0 || (v >= monster.intelligence + 75))) {
+				    && (IsNoneOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) || monster.temporary2 != 0 || (v >= monster.intelligence + 75))) {
 					AiDelay(monster, GenerateRnd(10) + 10);
 				} else {
 					RandomWalk(monsterId, md);
@@ -2652,9 +2652,9 @@ void BatAi(int monsterId)
 			monster.mode = MonsterMode::Charge;
 		}
 	} else if (abs(xd) >= 2 || abs(yd) >= 2) {
-		if ((monster.var2 > 20 && v < monster.intelligence + 13)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
-		        && monster.var2 == 0
+		if ((monster.temporary2 > 20 && v < monster.intelligence + 13)
+		    || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		        && monster.temporary2 == 0
 		        && v < monster.intelligence + 63)) {
 			RandomWalk(monsterId, md);
 		}
@@ -2748,7 +2748,7 @@ void SneakAi(int monsterId)
 	my -= monster.enemyPosition.y;
 
 	int dist = 5 - monster.intelligence;
-	if (static_cast<MonsterMode>(monster.var1) == MonsterMode::HitRecovery) {
+	if (static_cast<MonsterMode>(monster.temporary1) == MonsterMode::HitRecovery) {
 		monster.goal = MGOAL_RETREAT;
 		monster.goalVar1 = 0;
 	} else if (abs(mx) >= dist + 3 || abs(my) >= dist + 3 || monster.goalVar1 > 8) {
@@ -2778,7 +2778,7 @@ void SneakAi(int monsterId)
 			StartFadeout(monster, md, true);
 		} else {
 			if (monster.goal == MGOAL_RETREAT
-			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster.var2 > 20 && v < 4 * monster.intelligence + 14) || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 4 * monster.intelligence + 64)))) {
+			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster.temporary2 > 20 && v < 4 * monster.intelligence + 14) || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.temporary2 == 0 && v < 4 * monster.intelligence + 64)))) {
 				monster.goalVar1++;
 				RandomWalk(monsterId, md);
 			}
@@ -2895,13 +2895,13 @@ void SnakeAi(int monsterId)
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
 	monster.direction = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy }) && static_cast<MonsterMode>(monster.var1) != MonsterMode::Charge) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy }) && static_cast<MonsterMode>(monster.temporary1) != MonsterMode::Charge) {
 			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, TARGET_PLAYERS, monsterId, 0, 0) != nullptr) {
 				PlayEffect(monster, 0);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
 				monster.mode = MonsterMode::Charge;
 			}
-		} else if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay || GenerateRnd(100) >= 35 - 2 * monster.intelligence) {
+		} else if (static_cast<MonsterMode>(monster.temporary1) == MonsterMode::Delay || GenerateRnd(100) >= 35 - 2 * monster.intelligence) {
 			if (pattern[monster.goalVar1] == -1)
 				md = Left(md);
 			else if (pattern[monster.goalVar1] == 1)
@@ -2930,7 +2930,7 @@ void SnakeAi(int monsterId)
 			AiDelay(monster, 15 - monster.intelligence + GenerateRnd(10));
 		}
 	} else {
-		if (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::Delay, MonsterMode::Charge)
+		if (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::Delay, MonsterMode::Charge)
 		    || (GenerateRnd(100) < monster.intelligence + 20)) {
 			StartAttack(monster);
 		} else
@@ -2993,7 +2993,7 @@ void CounselorAi(int monsterId)
 				monster.goal = MGOAL_RETREAT;
 				monster.goalVar1 = 0;
 				StartFadeout(monster, md, false);
-			} else if (static_cast<MonsterMode>(monster.var1) == MonsterMode::Delay
+			} else if (static_cast<MonsterMode>(monster.temporary1) == MonsterMode::Delay
 			    || GenerateRnd(100) < 2 * monster.intelligence + 20) {
 				StartRangedAttack(monster, MIS_NULL, 0);
 				AddMissile(monster.position.tile, { 0, 0 }, monster.direction, MIS_FLASH, TARGET_PLAYERS, monsterId, 4, 0);
@@ -3086,8 +3086,8 @@ void MegaAi(int monsterId)
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 2 * (5 * monster.intelligence + 25)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
-			        && monster.var2 == 0
+			    || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+			        && monster.temporary2 == 0
 			        && v < 2 * (5 * monster.intelligence + 40))) {
 				RandomWalk(monsterId, md);
 			}
@@ -3287,7 +3287,7 @@ void HorkDemonAi(int monsterId)
 		} else {
 			v = GenerateRnd(100);
 			if (v < 2 * monster.intelligence + 33
-			    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.var2 == 0 && v < 2 * monster.intelligence + 83)) {
+			    || (IsAnyOf(static_cast<MonsterMode>(monster.temporary1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster.temporary2 == 0 && v < 2 * monster.intelligence + 83)) {
 				RandomWalk(monsterId, md);
 			} else {
 				AiDelay(monster, GenerateRnd(10) + 10);
@@ -3875,8 +3875,8 @@ void M_StartStand(Monster &monster, Direction md)
 		NewMonsterAnim(monster, MonsterGraphic::Walk, md);
 	else
 		NewMonsterAnim(monster, MonsterGraphic::Stand, md);
-	monster.var1 = static_cast<int>(monster.mode);
-	monster.var2 = 0;
+	monster.temporary1 = static_cast<int>(monster.mode);
+	monster.temporary2 = 0;
 	monster.mode = MonsterMode::Stand;
 	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;

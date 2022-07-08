@@ -106,7 +106,7 @@ void PrintDebugMonster(int m)
 	                monster.enemy,
 	                monster.hitPoints,
 	                static_cast<int>(monster.mode),
-	                monster.var1),
+	                monster.temporary1),
 	    UiFlags::ColorWhite);
 
 	bool bActive = false;
