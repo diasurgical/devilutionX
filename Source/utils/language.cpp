@@ -2,11 +2,8 @@
 
 #include <functional>
 #include <memory>
+#include <unordered_map>
 #include <vector>
-
-#if __cplusplus >= 202002L
-#include <version>
-#endif
 
 #include "engine/assets.hpp"
 #include "options.h"
@@ -17,42 +14,46 @@
 
 #define MO_MAGIC 0x950412de
 
-#if defined(__cpp_lib_generic_unordered_lookup)
-#include <unordered_map>
-
 namespace {
 
 using namespace devilution;
 
+std::unique_ptr<char[]> translationKeys;
+std::unique_ptr<char[]> translationValues;
+
+using TranslationRef = uint32_t;
+
 struct StringHash {
-	using is_transparent = void;
-
-	auto operator()(const char *str) const noexcept
-	{
-		return std::hash<string_view> {}(str);
-	}
-
-	auto operator()(string_view str) const noexcept
-	{
-		return std::hash<string_view> {}(str);
-	}
-
-	auto operator()(const std::string &str) const noexcept
+	size_t operator()(const char *str) const noexcept
 	{
 		return std::hash<string_view> {}(str);
 	}
 };
 
-std::vector<std::unordered_map<std::string, std::string, StringHash, std::equal_to<>>> translation = { {}, {} };
-} // namespace
-#else
-#include <map>
-namespace {
-using namespace devilution;
+struct StringEq {
+	bool operator()(const char *lhs, const char *rhs) const noexcept
+	{
+		return string_view(lhs) == string_view(rhs);
+	}
+};
 
-std::vector<std::map<std::string, std::string, std::less<>>> translation = { {}, {} };
+std::vector<std::unordered_map<const char *, TranslationRef, StringHash, StringEq>> translation = { {}, {} };
+
+constexpr uint32_t TranslationRefOffsetBits = 19;
+constexpr uint32_t TranslationRefSizeBits = 32 - TranslationRefOffsetBits; // 13
+constexpr uint32_t TranslationRefSizeMask = (1 << TranslationRefSizeBits) - 1;
+
+TranslationRef EncodeTranslationRef(uint32_t offset, uint32_t size)
+{
+	return (offset << TranslationRefSizeBits) | size;
+}
+
+string_view GetTranslation(TranslationRef ref)
+{
+	return { &translationValues[ref >> TranslationRefSizeBits], ref & TranslationRefSizeMask };
+}
+
 } // namespace
-#endif
 
 namespace {
 
@@ -125,7 +126,7 @@ string_view TrimRight(string_view str)
 }
 
 // English, Danish, Spanish, Italian, Swedish
-int PluralForms = 2;
+unsigned PluralForms = 2;
 std::function<int(int n)> GetLocalPluralId = [](int n) -> int { return n != 1 ? 1 : 0; };
 
 /**
@@ -230,7 +231,7 @@ void ParsePluralForms(const char *string)
 
 	value += 1;
 
-	int nplurals = SDL_atoi(value);
+	const unsigned nplurals = SDL_atoi(value);
 	if (nplurals == 0)
 		return;
 
@@ -273,13 +274,12 @@ void ParseMetadata(char *ptr)
 	}
 }
 
-bool ReadEntry(SDL_RWops *rw, MoEntry *e, std::vector<char> &result)
+bool ReadEntry(SDL_RWops *rw, const MoEntry &e, char *result)
 {
-	if (SDL_RWseek(rw, e->offset, RW_SEEK_SET) == -1)
+	if (SDL_RWseek(rw, e.offset, RW_SEEK_SET) == -1)
 		return false;
-	result.resize(e->length + 1);
-	result.back() = '\0';
-	return static_cast<uint32_t>(SDL_RWread(rw, result.data(), sizeof(char), e->length)) == e->length;
+	result[e.length] = '\0';
+	return static_cast<uint32_t>(SDL_RWread(rw, result, sizeof(char), e.length)) == e.length;
 }
 
 } // namespace
@@ -293,15 +293,15 @@ string_view LanguageParticularTranslate(string_view context, string_view message
 	key += Glue;
 	AppendStrView(key, message);
 
-	auto it = translation[0].find(key);
+	auto it = translation[0].find(key.c_str());
 	if (it == translation[0].end()) {
 		return message;
 	}
 
-	return it->second;
+	return GetTranslation(it->second);
 }
 
-string_view LanguagePluralTranslate(string_view singular, string_view plural, int count)
+string_view LanguagePluralTranslate(const char *singular, string_view plural, int count)
 {
 	int n = GetLocalPluralId(count);
 
@@ -312,17 +312,17 @@ string_view LanguagePluralTranslate(string_view singular, string_view plural, in
 		return singular;
 	}
 
-	return it->second;
+	return GetTranslation(it->second);
 }
 
-string_view LanguageTranslate(string_view key)
+string_view LanguageTranslate(const char *key)
 {
 	auto it = translation[0].find(key);
 	if (it == translation[0].end()) {
 		return key;
 	}
 
-	return it->second;
+	return GetTranslation(it->second);
 }
 
 bool HasTranslation(const std::string &locale)
@@ -353,6 +353,8 @@ bool IsSmallFontTall()
 void LanguageInitialize()
 {
 	translation = { {}, {} };
+	translationKeys = nullptr;
+	translationValues = nullptr;
 
 	const std::string lang(*sgOptions.Language.code);
 	SDL_RWops *rw;
@@ -361,8 +363,9 @@ void LanguageInitialize()
 	// We also support ".mo" because that is what poedit generates
 	// and what translators use to test their work.
 	for (const char *ext : { ".mo", ".gmo" }) {
-		if ((rw = OpenAsset((lang + ext).c_str())) != nullptr)
+		if ((rw = OpenAsset((lang + ext).c_str())) != nullptr) {
 			break;
+		}
 	}
 	if (rw == nullptr) {
 		SetPluralForm("plural=(n != 1);"); // Reset to English plural form
@@ -415,39 +418,49 @@ void LanguageInitialize()
 		SwapLE(dst[i]);
 	}
 
-	std::vector<char> key;
-	std::vector<char> value;
-
 	// MO header
-	if (!ReadEntry(rw, &src[0], key) || !ReadEntry(rw, &dst[0], value)) {
+	if (src[0].length != 0) {
 		SDL_RWclose(rw);
 		return;
 	}
-
-	if (key[0] != '\0') {
-		SDL_RWclose(rw);
-		return;
+	{
+		auto headerValue = std::unique_ptr<char[]> { new char[dst[0].length + 1] };
+		if (!ReadEntry(rw, dst[0], &headerValue[0])) {
+			SDL_RWclose(rw);
+			return;
+		}
+		ParseMetadata(&headerValue[0]);
 	}
-
-	ParseMetadata(value.data());
 
 	translation.resize(PluralForms);
-	for (int i = 0; i < PluralForms; i++)
+	for (unsigned i = 0; i < PluralForms; i++)
 		translation[i] = {};
 
 	// Read strings described by entries
+	size_t keysSize = 0;
+	size_t valuesSize = 0;
 	for (uint32_t i = 1; i < head.nbMappings; i++) {
-		if (ReadEntry(rw, &src[i], key) && ReadEntry(rw, &dst[i], value)) {
-			size_t offset = 0;
-			for (int j = 0; j < PluralForms; j++) {
-				const char *text = value.data() + offset;
-				translation[j].emplace(key.data(), text);
+		keysSize += src[i].length + 1;
+		valuesSize += dst[i].length + 1;
+	}
+	translationKeys = std::unique_ptr<char[]> { new char[keysSize] };
+	translationValues = std::unique_ptr<char[]> { new char[valuesSize] };
 
-				if (dst[i].length <= offset + strlen(value.data()))
-					break;
-
-				offset += strlen(text) + 1;
+	char *keyPtr = &translationKeys[0];
+	char *valuePtr = &translationValues[0];
+	for (uint32_t i = 1; i < head.nbMappings; i++) {
+		if (ReadEntry(rw, src[i], keyPtr) && ReadEntry(rw, dst[i], valuePtr)) {
+			// Plural keys also have a plural form but it does not participate in lookup.
+			// Plural values are \0-terminated.
+			string_view value { valuePtr, dst[i].length + 1 };
+			for (size_t j = 0; j < PluralForms && !value.empty(); j++) {
+				const size_t formValueEnd = value.find('\0');
+				translation[j].emplace(keyPtr, EncodeTranslationRef(value.data() - &translationValues[0], formValueEnd));
+				value.remove_prefix(formValueEnd + 1);
 			}
+
+			keyPtr += src[i].length + 1;
+			valuePtr += dst[i].length + 1;
 		}
 	}
 
