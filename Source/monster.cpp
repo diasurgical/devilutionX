@@ -1812,17 +1812,17 @@ bool RandomWalk(int monsterId, Direction md)
 
 	bool ok = DirOK(monsterId, md);
 	if (FlipCoin())
-		ok = ok || (md = Left(mdtemp), DirOK(monsterId, md)) || (md = Right(mdtemp), DirOK(monsterId, md));
-	else
 		ok = ok || (md = Right(mdtemp), DirOK(monsterId, md)) || (md = Left(mdtemp), DirOK(monsterId, md));
+	else
+		ok = ok || (md = Left(mdtemp), DirOK(monsterId, md)) || (md = Right(mdtemp), DirOK(monsterId, md));
 	if (FlipCoin()) {
-		ok = ok
-		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md))
-		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md));
-	} else {
 		ok = ok
 		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md))
 		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md));
+	} else {
+		ok = ok
+		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md))
+		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md));
 	}
 	if (ok)
 		Walk(monster, md);
@@ -1836,9 +1836,9 @@ bool RandomWalk2(int monsterId, Direction md)
 	Direction mdtemp = md;
 	bool ok = DirOK(monsterId, md); // Can we continue in the same direction
 	if (FlipCoin()) {               // Randomly go left or right
-		ok = ok || (mdtemp = Left(md), DirOK(monsterId, Left(md))) || (mdtemp = Right(md), DirOK(monsterId, Right(md)));
-	} else {
 		ok = ok || (mdtemp = Right(md), DirOK(monsterId, Right(md))) || (mdtemp = Left(md), DirOK(monsterId, Left(md)));
+	} else {
+		ok = ok || (mdtemp = Left(md), DirOK(monsterId, Left(md))) || (mdtemp = Right(md), DirOK(monsterId, Right(md)));
 	}
 
 	if (ok)
@@ -2031,7 +2031,7 @@ void AiAvoidance(int monsterId)
 			}
 		} else if (v < 2 * monster.intelligence + 23) {
 			monster.direction = md;
-			if (IsAnyOf(monster.ai, AI_GOATMC, AI_GARBUD) && monster.hitPoints < (monster.maxHitPoints / 2) && FlipCoin())
+			if (IsAnyOf(monster.ai, AI_GOATMC, AI_GARBUD) && monster.hitPoints < (monster.maxHitPoints / 2) && !FlipCoin())
 				StartSpecialAttack(monster);
 			else
 				StartAttack(monster);
@@ -2316,10 +2316,10 @@ void SkeletonBowAi(int monsterId)
 
 std::optional<Point> ScavengerFindCorpse(const Monster &scavenger)
 {
-	bool lowToHigh = FlipCoin();
-	int first = lowToHigh ? -4 : 4;
-	int last = lowToHigh ? 4 : -4;
-	int increment = lowToHigh ? 1 : -1;
+	bool reverseSearch = FlipCoin();
+	int first = reverseSearch ? 4 : -4;
+	int last = reverseSearch ? -4 : 4;
+	int increment = reverseSearch ? -1 : 1;
 
 	for (int y = first; y <= last; y += increment) {
 		for (int x = first; x <= last; x += increment) {
@@ -2612,9 +2612,9 @@ void BatAi(int monsterId)
 			monster.goalVar1++;
 		} else {
 			if (FlipCoin())
-				RandomWalk(monsterId, Left(md));
-			else
 				RandomWalk(monsterId, Right(md));
+			else
+				RandomWalk(monsterId, Left(md));
 			monster.goal = MGOAL_NORMAL;
 		}
 		return;
@@ -2743,9 +2743,9 @@ void SneakAi(int monsterId)
 		md = Opposite(md);
 		if (monster.type().type == MT_UNSEEN) {
 			if (FlipCoin())
-				md = Left(md);
-			else
 				md = Right(md);
+			else
+				md = Left(md);
 		}
 	}
 	monster.direction = md;
@@ -3074,9 +3074,9 @@ void MegaAi(int monsterId)
 			if (GenerateRnd(100) < 10 * (monster.intelligence + 4)) {
 				monster.direction = md;
 				if (FlipCoin())
-					StartAttack(monster);
-				else
 					StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
+				else
+					StartAttack(monster);
 			}
 		}
 		monster.goalVar3 = 1;
@@ -3802,7 +3802,7 @@ void InitMonsters()
 		}
 		while (ActiveMonsterCount < totalmonsters) {
 			int mtype = scattertypes[GenerateRnd(numscattypes)];
-			if (currlevel == 1 || !FlipCoin())
+			if (currlevel == 1 || FlipCoin())
 				na = 1;
 			else if (currlevel == 2 || leveltype == DTYPE_CRYPT)
 				na = GenerateRnd(2) + 2;
