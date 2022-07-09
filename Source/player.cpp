@@ -2033,6 +2033,18 @@ void Player::RestorePartialLife()
 	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
 }
 
+void Player::RegenerateLife()
+{
+	int wholeHitpoints = _pMaxHP >> 6;
+	int l = (wholeHitpoints / 100) << 6;
+	if (IsAnyOf(_pClass, HeroClass::Warrior, HeroClass::Barbarian))
+		l *= 2;
+	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		l += l / 2;
+	_pHitPoints = std::min(_pHitPoints + l, _pMaxHP);
+	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
+}
+
 void Player::RestorePartialMana()
 {
 	int wholeManaPoints = _pMaxMana >> 6;
@@ -2041,6 +2053,20 @@ void Player::RestorePartialMana()
 		l *= 2;
 	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		l += l / 2;
+	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
+		_pMana = std::min(_pMana + l, _pMaxMana);
+		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
+	}
+}
+
+void Player::RegenerateMana()
+{
+	int wholeManaPoints = _pMaxMana >> 6;
+	int l = (wholeManaPoints / 100) << 6; // 175 is fast but good if there are no potions at all
+	if (IsAnyOf(_pClass, HeroClass::Warrior, HeroClass::Barbarian))
+		l *= 2;
+	if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		l = l / 2;
 	if (HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana)) {
 		_pMana = std::min(_pMana + l, _pMaxMana);
 		_pManaBase = std::min(_pManaBase + l, _pMaxManaBase);
@@ -3403,6 +3429,20 @@ void ProcessPlayers()
 			player.previewCelSprite = std::nullopt;
 			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
 				player.AnimInfo.processAnimation();
+
+			Uint32 time = SDL_GetTicks();
+
+			if (player._pmode != PM_DEATH && player._pmode != PM_SPELL) {
+				if (time % 3 == 0) {
+					player.RegenerateMana();
+				}
+			}
+
+			if (player._pmode != PM_DEATH && player._pmode != PM_GOTHIT) {
+				if (time % 3 == 0) {
+					player.RegenerateLife();
+				}
+			}
 		}
 	}
 }
