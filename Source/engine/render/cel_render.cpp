@@ -45,12 +45,10 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const byte *SkipRestOfCelLine(const byte *sr
 	return src;
 }
 
-constexpr auto NullLineEndFn = []() {};
-
 /** Renders a CEL with only vertical clipping to the output buffer. */
-template <typename RenderLine, typename LineEndFn>
+template <typename RenderLine>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipY(const Surface &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
-    const RenderLine &renderLine, const LineEndFn &lineEndFn)
+    const RenderLine &renderLine)
 {
 	const auto *srcEnd = src + srcSize;
 
@@ -59,7 +57,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipY(const Surface &out, Poin
 	while (position.y >= dstHeight && src != srcEnd) {
 		src = SkipRestOfCelLine(src, static_cast<std::int_fast16_t>(srcWidth));
 		--position.y;
-		lineEndFn();
 	}
 
 	auto *dst = &out[position];
@@ -78,15 +75,14 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipY(const Surface &out, Poin
 			remainingWidth -= v;
 		}
 		dst -= dstPitch + srcWidth;
-		lineEndFn();
 	}
 }
 
 /** Renders a CEL with both horizontal and vertical clipping to the output buffer. */
-template <typename RenderLine, typename LineEndFn>
+template <typename RenderLine>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipXY( // NOLINT(readability-function-cognitive-complexity)
     const Surface &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
-    const RenderLine &renderLine, const LineEndFn &lineEndFn)
+    const RenderLine &renderLine)
 {
 	const auto *srcEnd = src + srcSize;
 
@@ -95,7 +91,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipXY( // NOLINT(readability-
 	while (position.y >= dstHeight && src != srcEnd) {
 		src = SkipRestOfCelLine(src, static_cast<std::int_fast16_t>(srcWidth));
 		--position.y;
-		lineEndFn();
 	}
 
 	position.x += static_cast<int>(clipX.left);
@@ -159,22 +154,21 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCelClipXY( // NOLINT(readability-
 		src = SkipRestOfCelLine(src, clipX.right + remainingWidth);
 
 		dst -= dstPitch + clipX.width;
-		lineEndFn();
 	}
 }
 
-template <typename RenderLine, typename LineEndFn>
+template <typename RenderLine>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCel(
     const Surface &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
-    const RenderLine &renderLine, const LineEndFn &lineEndFn)
+    const RenderLine &renderLine)
 {
 	const ClipX clipX = CalculateClipX(position.x, srcWidth, out);
 	if (clipX.width <= 0)
 		return;
 	if (static_cast<std::size_t>(clipX.width) == srcWidth) {
-		RenderCelClipY(out, position, src, srcSize, srcWidth, renderLine, lineEndFn);
+		RenderCelClipY(out, position, src, srcSize, srcWidth, renderLine);
 	} else {
-		RenderCelClipXY(out, position, src, srcSize, srcWidth, clipX, renderLine, lineEndFn);
+		RenderCelClipXY(out, position, src, srcSize, srcWidth, clipX, renderLine);
 	}
 }
 
@@ -186,8 +180,7 @@ void RenderCelWithLightTable(const Surface &out, Point position, const byte *src
 			    *dst++ = tbl[static_cast<std::uint8_t>(*src)];
 			    ++src;
 		    }
-	    },
-	    NullLineEndFn);
+	    });
 }
 
 constexpr auto RenderLineMemcpy = [](std::uint8_t *dst, const std::uint8_t *src, std::size_t w) {
@@ -551,7 +544,7 @@ void RenderCelOutline(const Surface &out, Point position, const byte *src, std::
 void CelBlitSafeTo(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
-	RenderCel(out, position, pRLEBytes, nDataSize, nWidth, RenderLineMemcpy, NullLineEndFn);
+	RenderCel(out, position, pRLEBytes, nDataSize, nWidth, RenderLineMemcpy);
 }
 
 /**
@@ -575,8 +568,7 @@ void CelBlitLightBlendedSafeTo(const Surface &out, Point position, const byte *p
 			    *dst = paletteTransparencyLookup[*dst][tbl[*src++]];
 			    ++dst;
 		    }
-	    },
-	    NullLineEndFn);
+	    });
 }
 
 /**
@@ -669,7 +661,7 @@ void CelDrawUnsafeTo(const Surface &out, Point position, CelSprite cel, int fram
 {
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
-	RenderCelClipY(out, position, pRLEBytes, nDataSize, cel.Width(frame), RenderLineMemcpy, NullLineEndFn);
+	RenderCelClipY(out, position, pRLEBytes, nDataSize, cel.Width(frame), RenderLineMemcpy);
 }
 
 void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame, bool skipColorIndexZero)
