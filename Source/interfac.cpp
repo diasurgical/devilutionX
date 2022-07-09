@@ -21,6 +21,7 @@
 #include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"
+#include "miniwin/miniwin.h"
 #include "pfile.h"
 #include "plrmsg.h"
 #include "utils/sdl_geometry.h"
@@ -37,7 +38,7 @@ uint32_t sgdwProgress;
 int progress_id;
 
 /** The color used for the progress bar as an index into the palette. */
-const BYTE BarColor[3] = { 138, 43, 254 };
+const uint8_t BarColor[3] = { 138, 43, 254 };
 /** The screen position of the top left corner of the progress bar. */
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 

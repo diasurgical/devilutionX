@@ -20,6 +20,7 @@
 #include "inv.h"
 #include "levels/setmaps.h"
 #include "lighting.h"
+#include "miniwin/miniwin.h"
 #include "monstdat.h"
 #include "monster.h"
 #include "plrmsg.h"

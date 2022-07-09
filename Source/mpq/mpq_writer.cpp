@@ -11,6 +11,7 @@
 #include "appfat.h"
 #include "encrypt.h"
 #include "engine.h"
+#include "miniwin/miniwin.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"

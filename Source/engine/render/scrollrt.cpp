@@ -26,6 +26,7 @@
 #include "inv.h"
 #include "lighting.h"
 #include "minitext.h"
+#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "nthread.h"
 #include "options.h"
@@ -201,7 +202,7 @@ int sgdwCursXOld;
 int sgdwCursYOld;
 
 uint32_t sgdwCursWdt;
-BYTE sgSaveBack[8192];
+uint8_t sgSaveBack[8192];
 uint32_t sgdwCursHgtOld;
 
 /**
@@ -226,7 +227,7 @@ const char *const PlayerModeNames[] = {
 	"quitting"
 };
 
-void BlitCursor(BYTE *dst, std::uint32_t dstPitch, BYTE *src, std::uint32_t srcPitch)
+void BlitCursor(uint8_t *dst, std::uint32_t dstPitch, uint8_t *src, std::uint32_t srcPitch)
 {
 	for (std::uint32_t i = 0; i < sgdwCursHgt; ++i, src += srcPitch, dst += dstPitch) {
 		memcpy(dst, src, sgdwCursWdt);
@@ -1024,8 +1025,8 @@ void Zoom(const Surface &out)
 	const int srcHeight = (out.h() + 1) / 2;
 	const int doubleableHeight = out.h() / 2;
 
-	BYTE *src = out.at(srcWidth - 1, srcHeight - 1);
-	BYTE *dst = out.at(viewportOffsetX + viewportWidth - 1, out.h() - 1);
+	uint8_t *src = out.at(srcWidth - 1, srcHeight - 1);
+	uint8_t *dst = out.at(viewportOffsetX + viewportWidth - 1, out.h() - 1);
 	const bool oddViewportWidth = (viewportWidth % 2) == 1;
 
 	for (int hgt = 0; hgt < doubleableHeight; hgt++) {

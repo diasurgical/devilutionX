@@ -10,7 +10,6 @@
 
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
-#include "miniwin/miniwin.h"
 #include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 

@@ -14,6 +14,7 @@
 #include "init.h"
 #include "loadsave.h"
 #include "menu.h"
+#include "miniwin/miniwin.h"
 #include "mpq/mpq_reader.hpp"
 #include "pack.h"
 #include "qol/stash.h"

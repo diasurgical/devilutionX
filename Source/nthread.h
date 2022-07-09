@@ -10,7 +10,7 @@
 
 namespace devilution {
 
-extern BYTE sgbNetUpdateRate;
+extern uint8_t sgbNetUpdateRate;
 extern size_t gdwMsgLenTbl[MAX_PLRS];
 extern uint32_t gdwTurnsInTransit;
 extern uintptr_t glpMsgTbl[MAX_PLRS];

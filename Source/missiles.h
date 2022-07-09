@@ -10,7 +10,6 @@
 
 #include "engine.h"
 #include "engine/point.hpp"
-#include "miniwin/miniwin.h"
 #include "misdat.h"
 #include "monster.h"
 #include "player.h"

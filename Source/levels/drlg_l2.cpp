@@ -13,6 +13,7 @@
 #include "engine/size.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
+#include "miniwin/miniwin.h"
 #include "player.h"
 #include "quests.h"
 #include "utils/stdcompat/algorithm.hpp"

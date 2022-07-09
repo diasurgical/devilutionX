@@ -26,6 +26,7 @@
 #include "inv.h"
 #include "lighting.h"
 #include "menu.h"
+#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"

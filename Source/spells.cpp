@@ -7,6 +7,7 @@
 
 #include "control.h"
 #include "cursor.h"
+#include "miniwin/miniwin.h"
 #ifdef _DEBUG
 #include "debug.h"
 #endif

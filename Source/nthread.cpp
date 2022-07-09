@@ -17,7 +17,7 @@
 
 namespace devilution {
 
-BYTE sgbNetUpdateRate;
+uint8_t sgbNetUpdateRate;
 size_t gdwMsgLenTbl[MAX_PLRS];
 uint32_t gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];

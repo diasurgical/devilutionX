@@ -14,6 +14,7 @@
 #include <array>
 #include <cassert>
 #include <cstdint>
+#include <cstring>
 
 #include "engine/render/common_impl.h"
 #include "lighting.h"

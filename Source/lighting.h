@@ -13,7 +13,6 @@
 #include "automap.h"
 #include "engine.h"
 #include "engine/point.hpp"
-#include "miniwin/miniwin.h"
 #include "utils/attributes.h"
 #include "utils/stdcompat/invoke_result_t.hpp"
 #include "utils/stdcompat/optional.hpp"

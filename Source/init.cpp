@@ -15,6 +15,7 @@
 #include "DiabloUI/diabloui.h"
 #include "engine/assets.hpp"
 #include "engine/dx.h"
+#include "miniwin/miniwin.h"
 #include "mpq/mpq_reader.hpp"
 #include "options.h"
 #include "pfile.h"

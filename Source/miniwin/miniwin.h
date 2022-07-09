@@ -24,8 +24,6 @@ namespace devilution {
 typedef uint32_t DWORD;
 typedef unsigned char BYTE;
 
-typedef void (*WNDPROC)(uint32_t, int32_t, int32_t);
-
 struct tagMSG {
 	uint32_t message;
 	int32_t wParam;
