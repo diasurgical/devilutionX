@@ -21,7 +21,7 @@
 #include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"
-#include "miniwin/miniwin.h"
+#include "miniwin/misc_msg.h"
 #include "pfile.h"
 #include "plrmsg.h"
 #include "utils/sdl_geometry.h"

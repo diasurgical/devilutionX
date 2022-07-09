@@ -14,7 +14,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
-#include "miniwin/miniwin.h"
+#include "miniwin/misc_msg.h"
 #include "options.h"
 #include "stores.h"
 #include "utils/language.h"
@@ -87,7 +87,7 @@ void GmenuLeftRight(bool isRight)
 
 void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
 {
-	BYTE *i = out.at(x, y);
+	uint8_t *i = out.at(x, y);
 	while ((height--) != 0) {
 		memset(i, 205, width);
 		i -= out.pitch();

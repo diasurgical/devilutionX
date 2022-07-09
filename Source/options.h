@@ -7,7 +7,7 @@
 #include <SDL_version.h>
 
 #include "engine/sound_defs.hpp"
-#include "miniwin/miniwin.h"
+#include "miniwin/misc_msg.h"
 #include "pack.h"
 #include "utils/enum_traits.h"
 #include "utils/stdcompat/optional.hpp"

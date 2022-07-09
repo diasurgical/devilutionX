@@ -1,3 +1,5 @@
+#include "miniwin/misc_msg.h"
+
 #include <cstdint>
 #include <deque>
 #include <string>
@@ -20,7 +22,6 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "menu.h"
-#include "miniwin/miniwin.h"
 #include "movie.h"
 #include "panels/spell_list.hpp"
 #include "qol/stash.h"

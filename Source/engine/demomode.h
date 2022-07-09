@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include "miniwin/miniwin.h"
+#include "miniwin/misc_msg.h"
 
 namespace devilution {
 
