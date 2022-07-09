@@ -1028,135 +1028,125 @@ void MakeDmt()
 	}
 }
 
-int HorizontalWallOk(int i, int j)
+int HorizontalWallOk(Point position)
 {
-	int x;
-	for (x = 1; dungeon[i + x][j] == 13; x++) {
-		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || Protected.test(i + x, j) || Chamber.test(i + x, j))
+	int length;
+	for (length = 1; dungeon[position.x + length][position.y] == 13; length++) {
+		if (dungeon[position.x + length][position.y - 1] != 13 || dungeon[position.x + length][position.y + 1] != 13 || Protected.test(position.x + length, position.y) || Chamber.test(position.x + length, position.y))
 			break;
 	}
 
-	bool wallok = false;
-	if (dungeon[i + x][j] >= 3 && dungeon[i + x][j] <= 7)
-		wallok = true;
-	if (dungeon[i + x][j] >= 16 && dungeon[i + x][j] <= 24)
-		wallok = true;
-	if (dungeon[i + x][j] == 22)
-		wallok = false;
-	if (x == 1)
-		wallok = false;
+	if (length == 1)
+		return -1;
 
-	if (wallok)
-		return x;
+	auto tileId = static_cast<Tile>(dungeon[position.x + length][position.y]);
 
-	return -1;
+	if (!IsAnyOf(tileId, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 23, 24))
+		return -1;
+
+	return length;
 }
 
-int VerticalWallOk(int i, int j)
+int VerticalWallOk(Point position)
 {
-	int y;
-	for (y = 1; dungeon[i][j + y] == 13; y++) {
-		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || Protected.test(i, j + y) || Chamber.test(i, j + y))
+	int length;
+	for (length = 1; dungeon[position.x][position.y + length] == 13; length++) {
+		if (dungeon[position.x - 1][position.y + length] != 13 || dungeon[position.x + 1][position.y + length] != 13 || Protected.test(position.x, position.y + length) || Chamber.test(position.x, position.y + length))
 			break;
 	}
 
-	bool wallok = false;
-	if (dungeon[i][j + y] >= 3 && dungeon[i][j + y] <= 7)
-		wallok = true;
-	if (dungeon[i][j + y] >= 16 && dungeon[i][j + y] <= 24)
-		wallok = true;
-	if (dungeon[i][j + y] == 22)
-		wallok = false;
-	if (y == 1)
-		wallok = false;
+	if (length == 1)
+		return -1;
 
-	if (wallok)
-		return y;
+	auto tileId = static_cast<Tile>(dungeon[position.x][position.y + length]);
 
-	return -1;
+	if (!IsAnyOf(tileId, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 23, 24))
+		return -1;
+
+	return length;
 }
 
-void HorizontalWall(int i, int j, Tile p, int dx)
+void HorizontalWall(Point position, Tile start, int maxX)
 {
-	Tile dt = Tile::HWall;
-	Tile wt = Tile::HDoor;
+	Tile wallTile = Tile::HWall;
+	Tile doorTile = Tile::HDoor;
 
 	switch (GenerateRnd(4)) {
 	case 2: // Add arch
-		dt = Tile::HArch;
-		wt = Tile::HArch;
-		if (p == Tile::HWall)
-			p = Tile::HArch;
-		else if (p == Tile::DWall)
-			p = Tile::HArchVWall;
+		wallTile = Tile::HArch;
+		doorTile = Tile::HArch;
+		if (start == Tile::HWall)
+			start = Tile::HArch;
+		else if (start == Tile::DWall)
+			start = Tile::HArchVWall;
 		break;
 	case 3: // Add Fence
-		dt = Tile::HFence;
-		if (p == Tile::HWall)
-			p = Tile::HFence;
-		else if (p == Tile::DWall)
-			p = Tile::HFenceVWall;
+		wallTile = Tile::HFence;
+		if (start == Tile::HWall)
+			start = Tile::HFence;
+		else if (start == Tile::DWall)
+			start = Tile::HFenceVWall;
 		break;
 	default:
 		break;
 	}
 
 	if (GenerateRnd(6) == 5)
-		wt = Tile::HArch;
+		doorTile = Tile::HArch;
 
-	dungeon[i][j] = p;
+	dungeon[position.x][position.y] = start;
 
-	for (int xx = 1; xx < dx; xx++) {
-		dungeon[i + xx][j] = dt;
+	for (int x = 1; x < maxX; x++) {
+		dungeon[position.x + x][position.y] = wallTile;
 	}
 
-	int xx = GenerateRnd(dx - 1) + 1;
+	int x = GenerateRnd(maxX - 1) + 1;
 
-	dungeon[i + xx][j] = wt;
-	if (wt == Tile::HDoor) {
-		Protected.set(i + xx, j);
+	dungeon[position.x + x][position.y] = doorTile;
+	if (doorTile == Tile::HDoor) {
+		Protected.set(position.x + x, position.y);
 	}
 }
 
-void VerticalWall(int i, int j, Tile p, int dy)
+void VerticalWall(Point position, Tile start, int maxY)
 {
-	Tile dt = Tile::VWall;
-	Tile wt = Tile::VDoor;
+	Tile wallTile = Tile::VWall;
+	Tile doorTile = Tile::VDoor;
 
 	switch (GenerateRnd(4)) {
 	case 2: // Add arch
-		dt = Tile::VArch;
-		wt = Tile::VArch;
-		if (p == Tile::VWall)
-			p = Tile::VArch;
-		else if (p == Tile::DWall)
-			p = Tile::HWallVArch;
+		wallTile = Tile::VArch;
+		doorTile = Tile::VArch;
+		if (start == Tile::VWall)
+			start = Tile::VArch;
+		else if (start == Tile::DWall)
+			start = Tile::HWallVArch;
 		break;
 	case 3: // Add Fence
-		dt = Tile::VFence;
-		if (p == Tile::VWall)
-			p = Tile::VFence;
-		else if (p == Tile::DWall)
-			p = Tile::HWallVFence;
+		wallTile = Tile::VFence;
+		if (start == Tile::VWall)
+			start = Tile::VFence;
+		else if (start == Tile::DWall)
+			start = Tile::HWallVFence;
 		break;
 	default:
 		break;
 	}
 
 	if (GenerateRnd(6) == 5)
-		wt = Tile::VArch;
+		doorTile = Tile::VArch;
 
-	dungeon[i][j] = p;
+	dungeon[position.x][position.y] = start;
 
-	for (int yy = 1; yy < dy; yy++) {
-		dungeon[i][j + yy] = dt;
+	for (int y = 1; y < maxY; y++) {
+		dungeon[position.x][position.y + y] = wallTile;
 	}
 
-	int yy = GenerateRnd(dy - 1) + 1;
+	int y = GenerateRnd(maxY - 1) + 1;
 
-	dungeon[i][j + yy] = wt;
-	if (wt == Tile::VDoor) {
-		Protected.set(i, j + yy);
+	dungeon[position.x][position.y + y] = doorTile;
+	if (doorTile == Tile::VDoor) {
+		Protected.set(position.x, position.y + y);
 	}
 }
 
@@ -1167,44 +1157,44 @@ void AddWall()
 			if (!Protected.test(i, j) && !Chamber.test(i, j)) {
 				if (dungeon[i][j] == Tile::Corner) {
 					AdvanceRndSeed();
-					int x = HorizontalWallOk(i, j);
-					if (x != -1) {
-						HorizontalWall(i, j, Tile::HWall, x);
+					int maxX = HorizontalWallOk({ i, j });
+					if (maxX != -1) {
+						HorizontalWall({ i, j }, Tile::HWall, maxX);
 					}
 				}
 				if (dungeon[i][j] == Tile::Corner) {
 					AdvanceRndSeed();
-					int y = VerticalWallOk(i, j);
-					if (y != -1) {
-						VerticalWall(i, j, Tile::VWall, y);
+					int maxY = VerticalWallOk({ i, j });
+					if (maxY != -1) {
+						VerticalWall({ i, j }, Tile::VWall, maxY);
 					}
 				}
 				if (dungeon[i][j] == Tile::VWallEnd) {
 					AdvanceRndSeed();
-					int x = HorizontalWallOk(i, j);
-					if (x != -1) {
-						HorizontalWall(i, j, Tile::DWall, x);
+					int maxX = HorizontalWallOk({ i, j });
+					if (maxX != -1) {
+						HorizontalWall({ i, j }, Tile::DWall, maxX);
 					}
 				}
 				if (dungeon[i][j] == Tile::HWallEnd) {
 					AdvanceRndSeed();
-					int y = VerticalWallOk(i, j);
-					if (y != -1) {
-						VerticalWall(i, j, Tile::DWall, y);
+					int maxY = VerticalWallOk({ i, j });
+					if (maxY != -1) {
+						VerticalWall({ i, j }, Tile::DWall, maxY);
 					}
 				}
 				if (dungeon[i][j] == Tile::HWall) {
 					AdvanceRndSeed();
-					int x = HorizontalWallOk(i, j);
-					if (x != -1) {
-						HorizontalWall(i, j, Tile::HWall, x);
+					int maxX = HorizontalWallOk({ i, j });
+					if (maxX != -1) {
+						HorizontalWall({ i, j }, Tile::HWall, maxX);
 					}
 				}
 				if (dungeon[i][j] == Tile::VWall) {
 					AdvanceRndSeed();
-					int y = VerticalWallOk(i, j);
-					if (y != -1) {
-						VerticalWall(i, j, Tile::VWall, y);
+					int maxY = VerticalWallOk({ i, j });
+					if (maxY != -1) {
+						VerticalWall({ i, j }, Tile::VWall, maxY);
 					}
 				}
 			}
@@ -1212,60 +1202,60 @@ void AddWall()
 	}
 }
 
-void GenerateChamber(int sx, int sy, bool topflag, bool bottomflag, bool leftflag, bool rightflag)
+void GenerateChamber(Point position, bool topflag, bool bottomflag, bool leftflag, bool rightflag)
 {
 	if (topflag) {
-		dungeon[sx + 2][sy] = Tile::HArch;
-		dungeon[sx + 3][sy] = Tile::HArch;
-		dungeon[sx + 4][sy] = Tile::Corner;
-		dungeon[sx + 7][sy] = Tile::VArchEnd;
-		dungeon[sx + 8][sy] = Tile::HArch;
-		dungeon[sx + 9][sy] = Tile::HWall;
+		dungeon[position.x + 2][position.y] = Tile::HArch;
+		dungeon[position.x + 3][position.y] = Tile::HArch;
+		dungeon[position.x + 4][position.y] = Tile::Corner;
+		dungeon[position.x + 7][position.y] = Tile::VArchEnd;
+		dungeon[position.x + 8][position.y] = Tile::HArch;
+		dungeon[position.x + 9][position.y] = Tile::HWall;
 	}
 	if (bottomflag) {
-		sy += 11;
-		dungeon[sx + 2][sy] = Tile::HArchVWall;
-		dungeon[sx + 3][sy] = Tile::HArch;
-		dungeon[sx + 4][sy] = Tile::HArchEnd;
-		dungeon[sx + 7][sy] = Tile::DArch;
-		dungeon[sx + 8][sy] = Tile::HArch;
-		if (dungeon[sx + 9][sy] != Tile::DWall) {
-			dungeon[sx + 9][sy] = Tile::DirtCorner;
+		position.y += 11;
+		dungeon[position.x + 2][position.y] = Tile::HArchVWall;
+		dungeon[position.x + 3][position.y] = Tile::HArch;
+		dungeon[position.x + 4][position.y] = Tile::HArchEnd;
+		dungeon[position.x + 7][position.y] = Tile::DArch;
+		dungeon[position.x + 8][position.y] = Tile::HArch;
+		if (dungeon[position.x + 9][position.y] != Tile::DWall) {
+			dungeon[position.x + 9][position.y] = Tile::DirtCorner;
 		}
-		sy -= 11;
+		position.y -= 11;
 	}
 	if (leftflag) {
-		dungeon[sx][sy + 2] = Tile::VArch;
-		dungeon[sx][sy + 3] = Tile::VArch;
-		dungeon[sx][sy + 4] = Tile::Corner;
-		dungeon[sx][sy + 7] = Tile::HArchEnd;
-		dungeon[sx][sy + 8] = Tile::VArch;
-		dungeon[sx][sy + 9] = Tile::VWall;
+		dungeon[position.x][position.y + 2] = Tile::VArch;
+		dungeon[position.x][position.y + 3] = Tile::VArch;
+		dungeon[position.x][position.y + 4] = Tile::Corner;
+		dungeon[position.x][position.y + 7] = Tile::HArchEnd;
+		dungeon[position.x][position.y + 8] = Tile::VArch;
+		dungeon[position.x][position.y + 9] = Tile::VWall;
 	}
 	if (rightflag) {
-		sx += 11;
-		dungeon[sx][sy + 2] = Tile::HWallVArch;
-		dungeon[sx][sy + 3] = Tile::VArch;
-		dungeon[sx][sy + 4] = Tile::VArchEnd;
-		dungeon[sx][sy + 7] = Tile::DArch;
-		dungeon[sx][sy + 8] = Tile::VArch;
-		if (dungeon[sx][sy + 9] != Tile::DWall) {
-			dungeon[sx][sy + 9] = Tile::DirtCorner;
+		position.x += 11;
+		dungeon[position.x][position.y + 2] = Tile::HWallVArch;
+		dungeon[position.x][position.y + 3] = Tile::VArch;
+		dungeon[position.x][position.y + 4] = Tile::VArchEnd;
+		dungeon[position.x][position.y + 7] = Tile::DArch;
+		dungeon[position.x][position.y + 8] = Tile::VArch;
+		if (dungeon[position.x][position.y + 9] != Tile::DWall) {
+			dungeon[position.x][position.y + 9] = Tile::DirtCorner;
 		}
-		sx -= 11;
+		position.x -= 11;
 	}
 
-	for (int j = 1; j < 11; j++) {
-		for (int i = 1; i < 11; i++) {
-			dungeon[i + sx][j + sy] = Tile::Floor;
-			Chamber.set(i + sx, j + sy);
+	for (int y = 1; y < 11; y++) {
+		for (int x = 1; x < 11; x++) {
+			dungeon[position.x + x][position.y + y] = Tile::Floor;
+			Chamber.set(position.x + x, position.y + y);
 		}
 	}
 
-	dungeon[sx + 4][sy + 4] = Tile::Pillar;
-	dungeon[sx + 7][sy + 4] = Tile::Pillar;
-	dungeon[sx + 4][sy + 7] = Tile::Pillar;
-	dungeon[sx + 7][sy + 7] = Tile::Pillar;
+	dungeon[position.x + 4][position.y + 4] = Tile::Pillar;
+	dungeon[position.x + 7][position.y + 4] = Tile::Pillar;
+	dungeon[position.x + 4][position.y + 7] = Tile::Pillar;
+	dungeon[position.x + 7][position.y + 7] = Tile::Pillar;
 }
 
 void GenerateHall(int x1, int y1, int x2, int y2)
@@ -1494,17 +1484,17 @@ void FillChambers()
 {
 	if (!VerticalLayout) {
 		if (HasChamber1)
-			GenerateChamber(0, 14, false, false, false, true);
+			GenerateChamber({ 0, 14 }, false, false, false, true);
 
 		if (!HasChamber3)
-			GenerateChamber(14, 14, false, false, true, false);
+			GenerateChamber({ 14, 14 }, false, false, true, false);
 		else if (!HasChamber1)
-			GenerateChamber(14, 14, false, false, false, true);
+			GenerateChamber({ 14, 14 }, false, false, false, true);
 		else if (HasChamber1 && HasChamber2 && HasChamber3)
-			GenerateChamber(14, 14, false, false, true, true);
+			GenerateChamber({ 14, 14 }, false, false, true, true);
 
 		if (HasChamber3)
-			GenerateChamber(28, 14, false, false, true, false);
+			GenerateChamber({ 28, 14 }, false, false, true, false);
 		if (HasChamber1 && HasChamber2)
 			GenerateHall(12, 18, 14, 18);
 		if (HasChamber2 && HasChamber3)
@@ -1513,17 +1503,17 @@ void FillChambers()
 			GenerateHall(12, 18, 28, 18);
 	} else {
 		if (HasChamber1)
-			GenerateChamber(14, 0, false, true, false, false);
+			GenerateChamber({ 14, 0 }, false, true, false, false);
 
 		if (!HasChamber3)
-			GenerateChamber(14, 14, true, false, false, false);
+			GenerateChamber({ 14, 14 }, true, false, false, false);
 		else if (!HasChamber1)
-			GenerateChamber(14, 14, false, true, false, false);
+			GenerateChamber({ 14, 14 }, false, true, false, false);
 		else if (HasChamber1 && HasChamber2 && HasChamber3)
-			GenerateChamber(14, 14, true, true, false, false);
+			GenerateChamber({ 14, 14 }, true, true, false, false);
 
 		if (HasChamber3)
-			GenerateChamber(14, 28, true, false, false, false);
+			GenerateChamber({ 14, 28 }, true, false, false, false);
 		if (HasChamber1 && HasChamber2)
 			GenerateHall(18, 12, 18, 14);
 		if (HasChamber2 && HasChamber3)
