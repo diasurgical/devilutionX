@@ -247,7 +247,7 @@ void VirtualDirectionPadRenderer::LoadArt(SDL_Renderer *renderer)
 
 void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 {
-	if (CurrentProc == DisableInputWndProc)
+	if (CurrentEventHandler == DisableInputEventHandler)
 		return;
 
 	primaryActionButtonRenderer.Render(renderFunction, buttonArt);

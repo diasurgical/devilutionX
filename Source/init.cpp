@@ -37,7 +37,7 @@ bool gbActive;
 /** A handle to an hellfire.mpq archive. */
 std::optional<MpqArchive> hellfire_mpq;
 /** The current input handler function */
-WNDPROC CurrentProc;
+EventHandler CurrentEventHandler;
 /** A handle to the spawn.mpq archive. */
 std::optional<MpqArchive> spawn_mpq;
 /** A handle to the diabdat.mpq archive. */
@@ -238,13 +238,11 @@ void MainWndProc(uint32_t msg)
 	}
 }
 
-WNDPROC SetWindowProc(WNDPROC newProc)
+EventHandler SetEventHandler(EventHandler eventHandler)
 {
-	WNDPROC oldProc;
-
-	oldProc = CurrentProc;
-	CurrentProc = newProc;
-	return oldProc;
+	EventHandler previousHandler = CurrentEventHandler;
+	CurrentEventHandler = eventHandler;
+	return previousHandler;
 }
 
 } // namespace devilution
