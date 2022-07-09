@@ -182,7 +182,7 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 			if (DirOK(monsterId, md)) {
 				M_ClearSquares(monster);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
-				M_WalkDir(monster, md);
+				Walk(monster, md);
 				monster.activeForTicks = UINT8_MAX;
 			}
 		}

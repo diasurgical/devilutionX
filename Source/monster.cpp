@@ -1832,7 +1832,7 @@ bool RandomWalk(int monsterId, Direction md)
 		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md));
 	}
 	if (ok)
-		M_WalkDir(monster, md);
+		Walk(monster, md);
 	return ok;
 }
 
@@ -1849,7 +1849,7 @@ bool RandomWalk2(int monsterId, Direction md)
 	}
 
 	if (ok)
-		M_WalkDir(monster, mdtemp);
+		Walk(monster, mdtemp);
 
 	return ok;
 }
@@ -1926,17 +1926,6 @@ bool AiPlanWalk(int monsterId)
 	return true;
 }
 
-bool DumbWalk(int monsterId, Direction md)
-{
-	Monster &monster = Monsters[monsterId];
-
-	bool ok = DirOK(monsterId, md);
-	if (ok)
-		M_WalkDir(monster, md);
-
-	return ok;
-}
-
 Direction Turn(Direction direction, bool turnLeft)
 {
 	return turnLeft ? Left(direction) : Right(direction);
@@ -1949,21 +1938,18 @@ bool RoundWalk(int monsterId, Direction direction, int *dir)
 	Direction turn45deg = Turn(direction, *dir != 0);
 	Direction turn90deg = Turn(turn45deg, *dir != 0);
 
-	if (DirOK(monsterId, turn90deg)) {
-		// Turn 90 degrees
-		M_WalkDir(monster, turn90deg);
+	// Turn 90 degrees
+	if (Walk(monster, turn90deg)) {
 		return true;
 	}
 
-	if (DirOK(monsterId, turn45deg)) {
-		// Only do a small turn
-		M_WalkDir(monster, turn45deg);
+	// Only do a small turn
+	if (Walk(monster, turn45deg)) {
 		return true;
 	}
 
-	if (DirOK(monsterId, direction)) {
-		// Continue straight
-		M_WalkDir(monster, direction);
+	// Continue straight
+	if (Walk(monster, direction)) {
 		return true;
 	}
 
@@ -2226,7 +2212,7 @@ void ZombieAi(int monsterId)
 				if (GenerateRnd(100) < 2 * monster.intelligence + 20) {
 					md = static_cast<Direction>(GenerateRnd(8));
 				}
-				DumbWalk(monsterId, md);
+				Walk(monster, md);
 			} else {
 				RandomWalk(monsterId, GetMonsterDirection(monster));
 			}
@@ -2321,7 +2307,7 @@ void SkeletonBowAi(int monsterId)
 		    || (IsAnyOf(static_cast<MonsterMode>(monster.var1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 		        && monster.var2 == 0
 		        && v < 2 * monster.intelligence + 63)) {
-			walking = DumbWalk(monsterId, Opposite(md));
+			walking = Walk(monster, Opposite(md));
 		}
 	}
 
@@ -2924,7 +2910,7 @@ void SnakeAi(int monsterId)
 				monster.goalVar2 = static_cast<int>(md);
 			}
 
-			if (!DumbWalk(monsterId, md))
+			if (!Walk(monster, md))
 				RandomWalk2(monsterId, monster.direction);
 		} else {
 			AiDelay(monster, 15 - monster.intelligence + GenerateRnd(10));
@@ -4066,8 +4052,12 @@ void PrepDoEnding()
 	}
 }
 
-void M_WalkDir(Monster &monster, Direction md)
+bool Walk(Monster &monster, Direction md)
 {
+	if (!DirOK(monster.getId(), md)) {
+		return false;
+	}
+
 	int mwi = monster.type().getAnimData(MonsterGraphic::Walk).frames - 1;
 	switch (md) {
 	case Direction::North:
@@ -4095,6 +4085,7 @@ void M_WalkDir(Monster &monster, Direction md)
 		WalkNorthwards(monster, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, Direction::NorthWest);
 		break;
 	}
+	return true;
 }
 
 void GolumAi(int monsterId)
@@ -4150,13 +4141,12 @@ void GolumAi(int monsterId)
 		return;
 
 	Direction md = Left(golem.direction);
-	bool ok = false;
-	for (int j = 0; j < 8 && !ok; j++) {
+	for (int j = 0; j < 8; j++) {
 		md = Right(md);
-		ok = DirOK(monsterId, md);
+		if (Walk(golem, md)) {
+			break;
+		}
 	}
-	if (ok)
-		M_WalkDir(golem, md);
 }
 
 void DeleteMonsterList()
