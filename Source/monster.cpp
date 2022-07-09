@@ -1190,7 +1190,7 @@ void SyncLightPosition(Monster &monster)
 		ChangeLightOffset(monster.lightId, { lx, ly });
 }
 
-bool MonsterIdle(Monster &monster)
+void MonsterIdle(Monster &monster)
 {
 	if (monster.type().type == MT_GOLEM)
 		monster.changeAnimationData(MonsterGraphic::Walk);
@@ -1201,8 +1201,6 @@ bool MonsterIdle(Monster &monster)
 		UpdateEnemy(monster);
 
 	monster.var2++;
-
-	return false;
 }
 
 /**
@@ -1557,12 +1555,12 @@ bool MonsterFadeout(Monster &monster)
  * @param monster The monster that will be healed.
  * @return
  */
-bool MonsterHeal(Monster &monster)
+void MonsterHeal(Monster &monster)
 {
 	if ((monster.flags & MFLAG_NOHEAL) != 0) {
 		monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 		monster.mode = MonsterMode::SpecialMeleeAttack;
-		return false;
+		return;
 	}
 
 	if (monster.animInfo.currentFrame == 0) {
@@ -1576,15 +1574,14 @@ bool MonsterHeal(Monster &monster)
 			monster.mode = MonsterMode::SpecialMeleeAttack;
 		}
 	}
-	return false;
 }
 
-bool MonsterTalk(Monster &monster)
+void MonsterTalk(Monster &monster)
 {
 	M_StartStand(monster, monster.direction);
 	monster.goal = MGOAL_TALKING;
 	if (effect_is_playing(Speeches[monster.talkMsg].sfxnr))
-		return false;
+		return;
 	InitQTextMsg(monster.talkMsg);
 	if (monster.uniqType - 1 == UMT_GARBUD) {
 		if (monster.talkMsg == TEXT_GARBUD1) {
@@ -1638,7 +1635,6 @@ bool MonsterTalk(Monster &monster)
 		monster.activeForTicks = UINT8_MAX;
 		monster.talkMsg = TEXT_NONE;
 	}
-	return false;
 }
 
 bool MonsterGotHit(Monster &monster)
@@ -1652,7 +1648,7 @@ bool MonsterGotHit(Monster &monster)
 	return false;
 }
 
-bool MonsterDeath(int monsterId)
+void MonsterDeath(int monsterId)
 {
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
@@ -1684,7 +1680,6 @@ bool MonsterDeath(int monsterId)
 
 		M_UpdateLeader(monsterId);
 	}
-	return false;
 }
 
 bool MonsterSpecialStand(Monster &monster)
@@ -1718,14 +1713,12 @@ bool MonsterDelay(Monster &monster)
 	return false;
 }
 
-bool MonsterPetrified(Monster &monster)
+void MonsterPetrified(Monster &monster)
 {
 	if (monster.hitPoints <= 0) {
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 		monster.isInvalid = true;
 	}
-
-	return false;
 }
 
 Monster *AddSkeleton(Point position, Direction dir, bool inMap)
@@ -3382,6 +3375,53 @@ bool IsMonsterAvalible(const MonsterData &monsterData)
 	return currlevel >= monsterData.mMinDLvl && currlevel <= monsterData.mMaxDLvl;
 }
 
+bool UpdateModeStance(int monsterId)
+{
+	Monster &monster = Monsters[monsterId];
+
+	switch (monster.mode) {
+	case MonsterMode::Stand:
+		MonsterIdle(monster);
+		return false;
+	case MonsterMode::MoveNorthwards:
+	case MonsterMode::MoveSouthwards:
+	case MonsterMode::MoveSideways:
+		return MonsterWalk(monster, monster.mode);
+	case MonsterMode::MeleeAttack:
+		return MonsterAttack(monsterId);
+	case MonsterMode::HitRecovery:
+		return MonsterGotHit(monster);
+	case MonsterMode::Death:
+		MonsterDeath(monsterId);
+		return false;
+	case MonsterMode::SpecialMeleeAttack:
+		return MonsterSpecialAttack(monsterId);
+	case MonsterMode::FadeIn:
+		return MonsterFadein(monster);
+	case MonsterMode::FadeOut:
+		return MonsterFadeout(monster);
+	case MonsterMode::RangedAttack:
+		return MonsterRangedAttack(monster);
+	case MonsterMode::SpecialStand:
+		return MonsterSpecialStand(monster);
+	case MonsterMode::SpecialRangedAttack:
+		return MonsterRangedSpecialAttack(monsterId);
+	case MonsterMode::Delay:
+		return MonsterDelay(monster);
+	case MonsterMode::Petrified:
+		MonsterPetrified(monster);
+		return false;
+	case MonsterMode::Heal:
+		MonsterHeal(monster);
+		return false;
+	case MonsterMode::Talk:
+		MonsterTalk(monster);
+		return false;
+	default:
+		return false;
+	}
+}
+
 } // namespace
 
 void InitTRNForUniqueMonster(Monster &monster)
@@ -4182,7 +4222,6 @@ void ProcessMonsters()
 		int monsterId = ActiveMonsters[i];
 		auto &monster = Monsters[monsterId];
 		FollowTheLeader(monster);
-		bool raflag = false;
 		if (gbIsMultiplayer) {
 			SetRndSeed(monster.aiSeed);
 			monster.aiSeed = AdvanceRndSeed();
@@ -4230,66 +4269,16 @@ void ProcessMonsters()
 				monster.activeForTicks--;
 			}
 		}
-		do {
+		while (true) {
 			if ((monster.flags & MFLAG_SEARCH) == 0 || !AiPlanPath(monsterId)) {
 				AiProc[monster.ai](monsterId);
 			}
-			switch (monster.mode) {
-			case MonsterMode::Stand:
-				raflag = MonsterIdle(monster);
+
+			if (!UpdateModeStance(monsterId))
 				break;
-			case MonsterMode::MoveNorthwards:
-			case MonsterMode::MoveSouthwards:
-			case MonsterMode::MoveSideways:
-				raflag = MonsterWalk(monster, monster.mode);
-				break;
-			case MonsterMode::MeleeAttack:
-				raflag = MonsterAttack(monsterId);
-				break;
-			case MonsterMode::HitRecovery:
-				raflag = MonsterGotHit(monster);
-				break;
-			case MonsterMode::Death:
-				raflag = MonsterDeath(monsterId);
-				break;
-			case MonsterMode::SpecialMeleeAttack:
-				raflag = MonsterSpecialAttack(monsterId);
-				break;
-			case MonsterMode::FadeIn:
-				raflag = MonsterFadein(monster);
-				break;
-			case MonsterMode::FadeOut:
-				raflag = MonsterFadeout(monster);
-				break;
-			case MonsterMode::RangedAttack:
-				raflag = MonsterRangedAttack(monster);
-				break;
-			case MonsterMode::SpecialStand:
-				raflag = MonsterSpecialStand(monster);
-				break;
-			case MonsterMode::SpecialRangedAttack:
-				raflag = MonsterRangedSpecialAttack(monsterId);
-				break;
-			case MonsterMode::Delay:
-				raflag = MonsterDelay(monster);
-				break;
-			case MonsterMode::Charge:
-				raflag = false;
-				break;
-			case MonsterMode::Petrified:
-				raflag = MonsterPetrified(monster);
-				break;
-			case MonsterMode::Heal:
-				raflag = MonsterHeal(monster);
-				break;
-			case MonsterMode::Talk:
-				raflag = MonsterTalk(monster);
-				break;
-			}
-			if (raflag) {
-				GroupUnity(monster);
-			}
-		} while (raflag);
+
+			GroupUnity(monster);
+		}
 		if (monster.mode != MonsterMode::Petrified && (monster.flags & MFLAG_ALLOW_SPECIAL) == 0) {
 			monster.animInfo.processAnimation((monster.flags & MFLAG_LOCK_ANIMATION) != 0);
 		}
