@@ -1324,17 +1324,7 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 	Pass3();
 
 	if (leveltype == DTYPE_CRYPT) {
-		for (int j = dminPosition.y; j < dmaxPosition.y; j++) {
-			for (int i = dminPosition.x; i < dmaxPosition.x; i++) {
-				if (dPiece[i][j] == 289) {
-					UberRow = i;
-					UberCol = j;
-				}
-				if (dPiece[i][j] == 316) {
-					CornerStone.position = { i, j };
-				}
-			}
-		}
+		SetCryptSetPieceRoom();
 	}
 }
 
