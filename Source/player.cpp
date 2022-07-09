@@ -38,7 +38,7 @@
 namespace devilution {
 
 int MyPlayerId;
-Player *MyPlayer;
+Player *MyPlayer = &Players[MyPlayerId];
 Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 
