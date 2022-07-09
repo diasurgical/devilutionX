@@ -671,15 +671,7 @@ struct Player {
 	 * @brief Sets the readied spell to the spell in the specified equipment slot. Does nothing if the item does not have a valid spell.
 	 * @param bodyLocation - the body location whose item will be checked for the spell.
 	 */
-	void ReadySpellFromEquipment(inv_body_loc bodyLocation)
-	{
-		auto &item = InvBody[bodyLocation];
-		if (item._itype == ItemType::Staff && item._iSpell != SPL_NULL && item._iCharges > 0) {
-			_pRSpell = item._iSpell;
-			_pRSplType = RSPLTYPE_CHARGES;
-			force_redraw = 255;
-		}
-	}
+	void ReadySpellFromEquipment(inv_body_loc bodyLocation);
 
 	/**
 	 * @brief Does the player currently have a ranged weapon equipped?

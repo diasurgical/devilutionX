@@ -102,18 +102,24 @@ void DrawSpell(const Surface &out)
 	spell_id spl = myPlayer._pRSpell;
 	spell_type st = myPlayer._pRSplType;
 
-	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
-	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
+	if (!IsValidSpell(spl)) {
+		st = RSPLTYPE_INVALID;
+		spl = SPL_NULL;
+	}
+
+	if (st == RSPLTYPE_SPELL) {
 		int tlvl = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spl];
 		if (CheckSpell(MyPlayerId, spl, st, true) != SpellCheckResult::Success)
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
 			st = RSPLTYPE_INVALID;
 	}
+
 	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
 		st = RSPLTYPE_INVALID;
+
 	SetSpellTrans(st);
-	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 27;
+	const int nCel = SpellITbl[spl];
 	const Point position { PANEL_X + 565, PANEL_Y + 119 };
 	DrawSpellCel(out, position, nCel);
 
@@ -300,7 +306,8 @@ void ToggleSpell(int slot)
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pSplHotKey[slot] == SPL_INVALID) {
+	const spell_id spellId = myPlayer._pSplHotKey[slot];
+	if (!IsValidSpell(spellId)) {
 		return;
 	}
 
@@ -321,8 +328,7 @@ void ToggleSpell(int slot)
 		return;
 	}
 
-	const spell_id spellId = myPlayer._pSplHotKey[slot];
-	if (spellId != SPL_INVALID && spellId != SPL_NULL && (spells & GetSpellBitmask(spellId)) != 0) {
+	if ((spells & GetSpellBitmask(spellId)) != 0) {
 		myPlayer._pRSpell = spellId;
 		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
 		force_redraw = 255;
@@ -339,7 +345,7 @@ void DoSpeedBook()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pRSpell != SPL_INVALID) {
+	if (IsValidSpell(myPlayer._pRSpell)) {
 		for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
 			uint64_t spells;
 			switch (i) {

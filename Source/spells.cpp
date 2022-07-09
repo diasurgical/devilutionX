@@ -108,6 +108,13 @@ void PlacePlayer(int pnum)
 
 } // namespace
 
+bool IsValidSpell(spell_id spl)
+{
+	return spl > SPL_NULL
+	    && spl <= SPL_LAST
+	    && (spl <= SPL_LASTDIABLO || gbIsHellfire);
+}
+
 bool IsWallSpell(spell_id spl)
 {
 	return spl == SPL_FIREWALL || spl == SPL_LIGHTWALL;

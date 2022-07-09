@@ -717,7 +717,7 @@ void CheckPanelInfo()
 		AddPanelString(_("Hotkey: 's'"));
 		auto &myPlayer = Players[MyPlayerId];
 		const spell_id spellId = myPlayer._pRSpell;
-		if (spellId != SPL_INVALID && spellId != SPL_NULL) {
+		if (IsValidSpell(spellId)) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
 				AddPanelString(fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[spellId].sSkillText)));
