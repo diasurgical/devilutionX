@@ -22,7 +22,7 @@
 #include "engine/render/cl2_render.hpp"
 #include "engine/world_tile.hpp"
 #include "init.h"
-#include "levels/drlg_l1.h"
+#include "levels/crypt.h"
 #include "levels/drlg_l4.h"
 #include "levels/themes.h"
 #include "levels/trigs.h"
