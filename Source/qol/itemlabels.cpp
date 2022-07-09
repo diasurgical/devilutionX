@@ -86,7 +86,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 	x += *labelCenterOffsets[index];
 	y -= TILE_HEIGHT;
-	if (!zoomflag) {
+	if (*sgOptions.Graphics.zoom) {
 		x *= 2;
 		y *= 2;
 	}

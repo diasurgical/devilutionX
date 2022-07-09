@@ -283,7 +283,7 @@ void ScrollViewPort(const Player &player, ScrollDirection dir)
 {
 	ScrollInfo.tile = Point { 0, 0 } + (player.position.tile - ViewPosition);
 
-	if (zoomflag) {
+	if (!*sgOptions.Graphics.zoom) {
 		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
 			ScrollInfo._sdir = ScrollDirection::None;
 		} else {

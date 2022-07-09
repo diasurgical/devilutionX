@@ -20,6 +20,7 @@
 #include "inv.h"
 #include "levels/trigs.h"
 #include "missiles.h"
+#include "options.h"
 #include "qol/itemlabels.h"
 #include "qol/stash.h"
 #include "towners.h"
@@ -269,7 +270,7 @@ void CheckCursMove()
 		sy = mainPanel.position.y - 1;
 	}
 
-	if (!zoomflag) {
+	if (*sgOptions.Graphics.zoom) {
 		sx /= 2;
 		sy /= 2;
 	}
@@ -316,7 +317,7 @@ void CheckCursMove()
 		my++;
 	}
 
-	if (!zoomflag) {
+	if (*sgOptions.Graphics.zoom) {
 		sy -= TILE_HEIGHT / 4;
 	}
 
