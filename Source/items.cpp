@@ -1784,7 +1784,13 @@ void PrintItemMisc(const Item &item)
 {
 	if (item._iMiscId == IMISC_SCROLL) {
 		if (ControlMode == ControlTypes::KeyboardAndMouse) {
-			AddPanelString(_("Right-click to read"));
+                        if (item._iSpell == SPL_TOWN || item._iSpell == SPL_IDENTIFY) {
+                          AddPanelString(_("Right-click to read, then"));
+                          AddPanelString(_("left-click to target"));
+                        }
+                        else {
+                          AddPanelString(_("Right-click to read"));
+                        }
 		} else {
 			if (!invflag) {
 				AddPanelString(_("Open inventory to use"));
@@ -1795,9 +1801,13 @@ void PrintItemMisc(const Item &item)
 	}
 	if (item._iMiscId == IMISC_SCROLLT) {
 		if (ControlMode == ControlTypes::KeyboardAndMouse) {
+                    if (item._iSpell == SPL_FLASH) {
+                        AddPanelString(_("Right-click to read"));
+                    } else {
 			AddPanelString(_("Right-click to read, then"));
 			AddPanelString(_("left-click to target"));
-		} else {
+		    }
+                } else {
 			if (TargetsMonster(item._iSpell)) {
 				AddPanelString(_("Select from spell book, then"));
 				AddPanelString(_("cast spell to read"));
