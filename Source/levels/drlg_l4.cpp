@@ -8,7 +8,6 @@
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "levels/gendung.h"
-#include "miniwin/miniwin.h"
 #include "monster.h"
 #include "multi.h"
 #include "objdat.h"
@@ -29,7 +28,7 @@ Point L4Hold;
  * A lookup table for the 16 possible patterns of a 2x2 area,
  * where each cell either contains a SW wall or it doesn't.
  */
-const BYTE L4ConvTbl[16] = { 30, 6, 1, 6, 2, 6, 6, 6, 9, 6, 1, 6, 2, 6, 3, 6 };
+const uint8_t L4ConvTbl[16] = { 30, 6, 1, 6, 2, 6, 6, 6, 9, 6, 1, 6, 2, 6, 3, 6 };
 
 /** Miniset: Stairs up. */
 const Miniset L4USTAIRS {
@@ -123,7 +122,7 @@ const Miniset L4PENTA2 {
 };
 
 /** Maps tile IDs to their corresponding undecorated tile ID. */
-const BYTE L4BTYPES[140] = {
+const uint8_t L4BTYPES[140] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

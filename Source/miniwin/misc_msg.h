@@ -38,14 +38,6 @@ void PushMessage(const tagMSG *lpMsg);
 bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam);
 void ClearMessageQueue();
 
-//
-// MSCVRT emulation
-//
-
-#define DVL_FILE_BEGIN 0
-#define DVL_FILE_CURRENT 1
-#define DVL_FILE_END 2
-
 #define DVL_WM_QUIT 0x0012
 
 //

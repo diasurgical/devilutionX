@@ -6,7 +6,6 @@
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
 #include "lighting.h"
-#include "miniwin/miniwin.h"
 #include "monster.h"
 #include "objdat.h"
 #include "objects.h"
@@ -22,7 +21,7 @@ int lockoutcnt;
  * A lookup table for the 16 possible patterns of a 2x2 area,
  * where each cell either contains a SW wall or it doesn't.
  */
-const BYTE L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
+const uint8_t L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
 /** Miniset: Stairs up. */
 const Miniset L3UP {
 	{ 3, 3 },
@@ -1100,10 +1099,10 @@ void River()
 				if (dungeon[rx][ry] == 7) {
 					dircheck = 0;
 					if (dir < 2) {
-						river[2][riveramt] = (BYTE)GenerateRnd(2) + 17;
+						river[2][riveramt] = GenerateRnd(2) + 17;
 					}
 					if (dir > 1) {
-						river[2][riveramt] = (BYTE)GenerateRnd(2) + 15;
+						river[2][riveramt] = GenerateRnd(2) + 15;
 					}
 					river[0][riveramt] = rx;
 					river[1][riveramt] = ry;
@@ -1261,8 +1260,7 @@ bool Spawn(int x, int y, int *totarea);
 
 bool SpawnEdge(int x, int y, int *totarea)
 {
-	BYTE i;
-	static BYTE spawntable[15] = { 0x00, 0x0A, 0x43, 0x05, 0x2c, 0x06, 0x09, 0x00, 0x00, 0x1c, 0x83, 0x06, 0x09, 0x0A, 0x05 };
+	constexpr uint8_t spawntable[15] = { 0x00, 0x0A, 0x43, 0x05, 0x2c, 0x06, 0x09, 0x00, 0x00, 0x1c, 0x83, 0x06, 0x09, 0x0A, 0x05 };
 
 	if (*totarea > 40) {
 		return true;
@@ -1277,7 +1275,7 @@ bool SpawnEdge(int x, int y, int *totarea)
 		return true;
 	}
 
-	i = dungeon[x][y];
+	uint8_t i = dungeon[x][y];
 	dungeon[x][y] |= 0x80;
 	*totarea += 1;
 
@@ -1311,8 +1309,7 @@ bool SpawnEdge(int x, int y, int *totarea)
 
 bool Spawn(int x, int y, int *totarea)
 {
-	BYTE i;
-	static BYTE spawntable[15] = { 0x00, 0x0A, 0x03, 0x05, 0x0C, 0x06, 0x09, 0x00, 0x00, 0x0C, 0x03, 0x06, 0x09, 0x0A, 0x05 };
+	constexpr uint8_t spawntable[15] = { 0x00, 0x0A, 0x03, 0x05, 0x0C, 0x06, 0x09, 0x00, 0x00, 0x0C, 0x03, 0x06, 0x09, 0x0A, 0x05 };
 
 	if (*totarea > 40) {
 		return true;
@@ -1327,7 +1324,7 @@ bool Spawn(int x, int y, int *totarea)
 		return true;
 	}
 
-	i = dungeon[x][y];
+	uint8_t i = dungeon[x][y];
 	dungeon[x][y] |= 0x80;
 	*totarea += 1;
 
