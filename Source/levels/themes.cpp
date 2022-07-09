@@ -648,8 +648,8 @@ void Theme_Treasure(int t)
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
 				int8_t treasureType = treasrnd[leveltype - 1];
 				int rv = GenerateRnd(treasureType);
-				// BUGFIX: the `2*` in `2*GenerateRnd(treasrnd...) == 0` has no effect, should probably be `GenerateRnd(2*treasrnd...) == 0`
-				if ((2 * GenerateRnd(treasureType)) == 0) {
+				// BUGFIX: this used to be `2*GenerateRnd(treasureType) == 0` however 2*0 has no effect, should probably be `FlipCoin(2*treasureType)`
+				if (FlipCoin(treasureType)) {
 					CreateTypeItem({ xp, yp }, false, ItemType::Gold, IMISC_NONE, false, true);
 					ItemNoFlippy();
 				}
