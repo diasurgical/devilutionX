@@ -22,7 +22,7 @@
 #include "init.h"
 #include "inv.h"
 #include "inv_iterators.hpp"
-#include "levels/drlg_l1.h"
+#include "levels/crypt.h"
 #include "levels/drlg_l4.h"
 #include "levels/setmaps.h"
 #include "levels/themes.h"

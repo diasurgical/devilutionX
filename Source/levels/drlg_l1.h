@@ -9,12 +9,8 @@
 
 namespace devilution {
 
-extern int UberRow;
-extern int UberCol;
-extern bool IsUberRoomOpened;
-extern bool IsUberLeverActivated;
-extern int UberDiabloMonsterIndex;
-
+void PlaceMiniSetRandom(const Miniset &miniset, int rndper);
+Point SelectChamber();
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry);
 void LoadPreL1Dungeon(const char *path);
 void LoadL1Dungeon(const char *path, Point spawn);

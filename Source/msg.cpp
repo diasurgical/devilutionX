@@ -20,7 +20,7 @@
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
 #include "gamemenu.h"
-#include "levels/drlg_l1.h"
+#include "levels/crypt.h"
 #include "levels/town.h"
 #include "levels/trigs.h"
 #include "lighting.h"
