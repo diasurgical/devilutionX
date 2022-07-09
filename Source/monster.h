@@ -16,7 +16,6 @@
 #include "engine/point.hpp"
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
-#include "miniwin/miniwin.h"
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
