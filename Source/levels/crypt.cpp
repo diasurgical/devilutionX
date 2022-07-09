@@ -1,6 +1,7 @@
 #include "levels/crypt.h"
 
 #include "engine/point.hpp"
+#include "items.h"
 #include "levels/drlg_l1.h"
 
 namespace devilution {
@@ -760,6 +761,21 @@ void CryptSubstitution()
 		CryptLeaking(20);
 		ApplyCryptShadowsPatterns();
 		break;
+	}
+}
+
+void SetCryptSetPieceRoom()
+{
+	for (int j = dminPosition.y; j < dmaxPosition.y; j++) {
+		for (int i = dminPosition.x; i < dmaxPosition.x; i++) {
+			if (dPiece[i][j] == 289) {
+				UberRow = i;
+				UberCol = j;
+			}
+			if (dPiece[i][j] == 316) {
+				CornerStone.position = { i, j };
+			}
+		}
 	}
 }
 

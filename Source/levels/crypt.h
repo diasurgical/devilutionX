@@ -23,5 +23,6 @@ void SetCornerRoom();
 void FixCryptDirtTiles();
 bool PlaceCryptStairs(lvl_entry entry);
 void CryptSubstitution();
+void SetCryptSetPieceRoom();
 
 } // namespace devilution
