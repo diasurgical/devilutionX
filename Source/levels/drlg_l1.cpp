@@ -449,7 +449,7 @@ bool CheckRoom(Rectangle room)
 
 void GenerateRoom(Rectangle area, bool verticalLayout)
 {
-	bool rotate = GenerateRnd(4) == 0;
+	bool rotate = FlipCoin(4);
 	verticalLayout = (!verticalLayout && rotate) || (verticalLayout && !rotate);
 
 	bool placeRoom1;
