@@ -24,6 +24,7 @@
 #include "levels/town.h"
 #include "levels/trigs.h"
 #include "lighting.h"
+#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "nthread.h"
 #include "objects.h"

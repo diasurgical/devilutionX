@@ -10,7 +10,6 @@
 #include <string>
 
 #include "levels/gendung.h"
-#include "miniwin/miniwin.h"
 
 #ifndef NOSOUND
 #include "utils/soundsample.h"

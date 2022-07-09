@@ -20,6 +20,7 @@
 #include "inv_iterators.hpp"
 #include "levels/town.h"
 #include "minitext.h"
+#include "miniwin/miniwin.h"
 #include "options.h"
 #include "panels/ui_panels.hpp"
 #include "plrmsg.h"

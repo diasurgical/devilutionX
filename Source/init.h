@@ -5,11 +5,12 @@
  */
 #pragma once
 
-#include "miniwin/miniwin.h"
 #include "mpq/mpq_reader.hpp"
 #include "utils/attributes.h"
 
 namespace devilution {
+
+typedef void (*WNDPROC)(uint32_t, int32_t, int32_t);
 
 extern bool gbActive;
 extern std::optional<MpqArchive> hellfire_mpq;

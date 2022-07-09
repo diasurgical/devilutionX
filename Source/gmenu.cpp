@@ -14,6 +14,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "miniwin/miniwin.h"
 #include "options.h"
 #include "stores.h"
 #include "utils/language.h"
@@ -31,7 +32,7 @@ OptionalOwnedCelSprite sgpLogo;
 bool mouseNavigation;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;
-BYTE LogoAnim_frame;
+uint8_t LogoAnim_frame;
 void (*gmenu_current_option)();
 int sgCurrentMenuIdx;
 

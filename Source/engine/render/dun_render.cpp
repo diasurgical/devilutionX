@@ -10,6 +10,7 @@
 #include <cstdint>
 
 #include "lighting.h"
+#include "miniwin/miniwin.h"
 #include "options.h"
 #include "utils/attributes.h"
 

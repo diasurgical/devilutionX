@@ -11,6 +11,7 @@
 #include "automap.h"
 #include "control.h"
 #include "controls/controller_motion.h"
+#include "miniwin/miniwin.h"
 #ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
 #endif

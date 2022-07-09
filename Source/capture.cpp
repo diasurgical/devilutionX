@@ -54,7 +54,7 @@ bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
  */
 bool CapturePal(SDL_Color *palette, std::ofstream *out)
 {
-	BYTE pcxPalette[1 + 256 * 3];
+	uint8_t pcxPalette[1 + 256 * 3];
 
 	pcxPalette[0] = 12;
 	for (int i = 0; i < 256; i++) {
@@ -75,12 +75,12 @@ bool CapturePal(SDL_Color *palette, std::ofstream *out)
 
  * @return Output buffer
  */
-BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
+uint8_t *CaptureEnc(uint8_t *src, uint8_t *dst, int width)
 {
 	int rleLength;
 
 	do {
-		BYTE rlePixel = *src;
+		uint8_t rlePixel = *src;
 		src++;
 		rleLength = 1;
 
@@ -119,10 +119,10 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 bool CapturePix(const Surface &buf, std::ofstream *out)
 {
 	int width = buf.w();
-	std::unique_ptr<BYTE[]> pBuffer { new BYTE[2 * width] };
-	BYTE *pixels = buf.begin();
+	std::unique_ptr<uint8_t[]> pBuffer { new uint8_t[2 * width] };
+	uint8_t *pixels = buf.begin();
 	for (int height = buf.h(); height > 0; height--) {
-		const BYTE *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
+		const uint8_t *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
 		pixels += buf.pitch();
 		out->write(reinterpret_cast<const char *>(pBuffer.get()), pBufferEnd - pBuffer.get());
 		if (out->fail())

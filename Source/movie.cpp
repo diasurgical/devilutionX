@@ -10,6 +10,7 @@
 #include "engine/demomode.h"
 #include "engine/sound.h"
 #include "hwcursor.hpp"
+#include "miniwin/miniwin.h"
 #include "storm/storm_svid.h"
 #include "utils/display.h"
 

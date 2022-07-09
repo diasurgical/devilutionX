@@ -6,6 +6,7 @@
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
 #include "lighting.h"
+#include "miniwin/miniwin.h"
 #include "monster.h"
 #include "objdat.h"
 #include "objects.h"

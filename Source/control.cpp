@@ -31,6 +31,7 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "minitext.h"
+#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "options.h"
 #include "panels/charpanel.hpp"

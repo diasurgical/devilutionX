@@ -2293,8 +2293,8 @@ void DrawSLine(const Surface &out, int sy)
 		width -= SidePanelSize.width;
 	}
 
-	BYTE *src = out.at(uiPosition.x + sx, uiPosition.y + 25);
-	BYTE *dst = out.at(uiPosition.x + sx, sy);
+	uint8_t *src = out.at(uiPosition.x + sx, uiPosition.y + 25);
+	uint8_t *dst = out.at(uiPosition.x + sx, sy);
 
 	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, width);
