@@ -838,7 +838,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 			return false;
 	}
 
-	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage) && HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
+	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
 		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 	}
@@ -1091,10 +1091,11 @@ bool DoAttack(int pnum)
 			}
 		}
 
-		if (!HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+		if (!gbIsHellfire || !HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
 				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-			} else if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
+			}
+			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
 				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
 		}
