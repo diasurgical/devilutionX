@@ -234,7 +234,11 @@ enum Tile : uint8_t {
 	Pillar         =  15,
 	Pillar1        =  16,
 	Pillar2        =  17,
+	DirtHwall      =  18,
+	DirtVwall      =  19,
 	DirtCorner     =  21,
+	DirtHWallEnd   =  23,
+	DirtVWallEnd   =  24,
 	VDoor          =  25,
 	HDoor          =  26,
 	HFenceVWall    =  27,
@@ -249,6 +253,11 @@ enum Tile : uint8_t {
 	HArchVFence    =  38,
 	HArchVDoor     =  39,
 	EntranceStairs =  64,
+	DirtHWall2     =  82,
+	DirtVWall2     =  83,
+	DirtCorner2    =  85,
+	DirtHWallEnd2  =  87,
+	DirtVWallEnd2  =  88,
 	VWall5         =  89,
 	VWall6         =  90,
 	VWall7         =  91,
@@ -445,9 +454,9 @@ void ApplyCryptShadowsPatterns()
 				break;
 			case VArchEnd3:
 				if (dungeon[i - 1][j] == Floor)
-					dungeon[i - 1][j] = Tile::Shadow11;
+					dungeon[i - 1][j] = Shadow11;
 				if (dungeon[i - 1][j - 1] == Floor)
-					dungeon[i - 1][j - 1] = Tile::Shadow12;
+					dungeon[i - 1][j - 1] = Shadow12;
 				if (dungeon[i][j - 1] == Floor)
 					dungeon[i][j - 1] = Shadow3;
 				break;
@@ -465,9 +474,9 @@ void ApplyCryptShadowsPatterns()
 			case Pillar6:
 			case Pillar8:
 				if (dungeon[i - 1][j] == Floor)
-					dungeon[i - 1][j] = Tile::Shadow11;
+					dungeon[i - 1][j] = Shadow11;
 				if (dungeon[i - 1][j - 1] == Floor)
-					dungeon[i - 1][j - 1] = Tile::Shadow12;
+					dungeon[i - 1][j - 1] = Shadow12;
 				break;
 			case DArch4:
 				if (dungeon[i - 1][j] == Floor)
@@ -497,109 +506,109 @@ void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 
 void CryptStatues(int rndper)
 {
-	PlaceMiniSetRandom1x1(Tile::VWall, Tile::VDemon, rndper);
-	PlaceMiniSetRandom1x1(Tile::VWall, Tile::VSuccubus, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall, Tile::HDemon, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall, Tile::HSuccubus, rndper);
+	PlaceMiniSetRandom1x1(VWall, VDemon, rndper);
+	PlaceMiniSetRandom1x1(VWall, VSuccubus, rndper);
+	PlaceMiniSetRandom1x1(HWall, HDemon, rndper);
+	PlaceMiniSetRandom1x1(HWall, HSuccubus, rndper);
 }
 
 void CryptCracked(int rndper)
 {
 	// clang-format off
-	PlaceMiniSetRandom1x1(Tile::VWall,      Tile::VWall2,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall,      Tile::HWall2,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Corner,     Tile::Corner2,     rndper);
-	PlaceMiniSetRandom1x1(Tile::DWall,      Tile::DWall2,      rndper);
-	PlaceMiniSetRandom1x1(Tile::DArch,      Tile::DArch2,      rndper);
-	PlaceMiniSetRandom1x1(Tile::VWallEnd,   Tile::VWallEnd2,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HWallEnd,   Tile::HWallEnd2,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HArchEnd,   Tile::HArchEnd2,   rndper);
-	PlaceMiniSetRandom1x1(Tile::VArchEnd,   Tile::VArchEnd2,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HArchVWall, Tile::HArchVWall2, rndper);
-	PlaceMiniSetRandom1x1(Tile::VArch,      Tile::VArch2,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HArch,      Tile::HArch2,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor,      Tile::Floor2,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HWallVArch, Tile::HWallVArch2, rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar,     Tile::Pillar3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar1,    Tile::Pillar4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar2,    Tile::Pillar5,      rndper);
+	PlaceMiniSetRandom1x1(VWall,      VWall2,      rndper);
+	PlaceMiniSetRandom1x1(HWall,      HWall2,      rndper);
+	PlaceMiniSetRandom1x1(Corner,     Corner2,     rndper);
+	PlaceMiniSetRandom1x1(DWall,      DWall2,      rndper);
+	PlaceMiniSetRandom1x1(DArch,      DArch2,      rndper);
+	PlaceMiniSetRandom1x1(VWallEnd,   VWallEnd2,   rndper);
+	PlaceMiniSetRandom1x1(HWallEnd,   HWallEnd2,   rndper);
+	PlaceMiniSetRandom1x1(HArchEnd,   HArchEnd2,   rndper);
+	PlaceMiniSetRandom1x1(VArchEnd,   VArchEnd2,   rndper);
+	PlaceMiniSetRandom1x1(HArchVWall, HArchVWall2, rndper);
+	PlaceMiniSetRandom1x1(VArch,      VArch2,      rndper);
+	PlaceMiniSetRandom1x1(HArch,      HArch2,      rndper);
+	PlaceMiniSetRandom1x1(Floor,      Floor2,      rndper);
+	PlaceMiniSetRandom1x1(HWallVArch, HWallVArch2, rndper);
+	PlaceMiniSetRandom1x1(Pillar,     Pillar3,     rndper);
+	PlaceMiniSetRandom1x1(Pillar1,    Pillar4,     rndper);
+	PlaceMiniSetRandom1x1(Pillar2,    Pillar5,     rndper);
 	// clang-format on
 }
 
 void CryptBroken(int rndper)
 {
 	// clang-format off
-	PlaceMiniSetRandom1x1(Tile::VWall,      Tile::VWall3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall,      Tile::HWall3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Corner,     Tile::Corner3,     rndper);
-	PlaceMiniSetRandom1x1(Tile::DWall,      Tile::DWall3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::DArch,      Tile::DArch3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::VWallEnd,   Tile::VWallEnd3,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HWallEnd,   Tile::HWallEnd3,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HArchEnd,   Tile::HArchEnd3,   rndper);
-	PlaceMiniSetRandom1x1(Tile::VArchEnd,   Tile::VArchEnd3,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HArchVWall, Tile::HArchVWall3, rndper);
-	PlaceMiniSetRandom1x1(Tile::VArch,      Tile::VArch3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HArch,      Tile::HArch3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor,      Tile::Floor3,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HWallVArch, Tile::HWallVArch3, rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar,      Tile::Pillar6,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar1,     Tile::Pillar7,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar2,     Tile::Pillar8,      rndper);
+	PlaceMiniSetRandom1x1(VWall,      VWall3,      rndper);
+	PlaceMiniSetRandom1x1(HWall,      HWall3,      rndper);
+	PlaceMiniSetRandom1x1(Corner,     Corner3,     rndper);
+	PlaceMiniSetRandom1x1(DWall,      DWall3,      rndper);
+	PlaceMiniSetRandom1x1(DArch,      DArch3,      rndper);
+	PlaceMiniSetRandom1x1(VWallEnd,   VWallEnd3,   rndper);
+	PlaceMiniSetRandom1x1(HWallEnd,   HWallEnd3,   rndper);
+	PlaceMiniSetRandom1x1(HArchEnd,   HArchEnd3,   rndper);
+	PlaceMiniSetRandom1x1(VArchEnd,   VArchEnd3,   rndper);
+	PlaceMiniSetRandom1x1(HArchVWall, HArchVWall3, rndper);
+	PlaceMiniSetRandom1x1(VArch,      VArch3,      rndper);
+	PlaceMiniSetRandom1x1(HArch,      HArch3,      rndper);
+	PlaceMiniSetRandom1x1(Floor,      Floor3,      rndper);
+	PlaceMiniSetRandom1x1(HWallVArch, HWallVArch3, rndper);
+	PlaceMiniSetRandom1x1(Pillar,     Pillar6,     rndper);
+	PlaceMiniSetRandom1x1(Pillar1,    Pillar7,     rndper);
+	PlaceMiniSetRandom1x1(Pillar2,    Pillar8,     rndper);
 	// clang-format on
 }
 
 void CryptLeaking(int rndper)
 {
 	// clang-format off
-	PlaceMiniSetRandom1x1(Tile::VWall,      Tile::VWall4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall,      Tile::HWall4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Corner,     Tile::Corner4,     rndper);
-	PlaceMiniSetRandom1x1(Tile::DWall,      Tile::DWall4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::DArch,      Tile::DArch4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::VWallEnd,   Tile::VWallEnd4,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HWallEnd,   Tile::HWallEnd4,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HArchEnd,   Tile::HArchEnd4,   rndper);
-	PlaceMiniSetRandom1x1(Tile::VArchEnd,   Tile::VArchEnd4,   rndper);
-	PlaceMiniSetRandom1x1(Tile::HArchVWall, Tile::HArchVWall4, rndper);
-	PlaceMiniSetRandom1x1(Tile::VArch,      Tile::VArch4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HArch,      Tile::HArch4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor,      Tile::Floor4,      rndper);
-	PlaceMiniSetRandom1x1(Tile::HWallVArch, Tile::HWallVArch4, rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar,      Tile::Pillar9,      rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar1,     Tile::Pillar10,     rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar2,     Tile::Pillar11,     rndper);
+	PlaceMiniSetRandom1x1(VWall,      VWall4,      rndper);
+	PlaceMiniSetRandom1x1(HWall,      HWall4,      rndper);
+	PlaceMiniSetRandom1x1(Corner,     Corner4,     rndper);
+	PlaceMiniSetRandom1x1(DWall,      DWall4,      rndper);
+	PlaceMiniSetRandom1x1(DArch,      DArch4,      rndper);
+	PlaceMiniSetRandom1x1(VWallEnd,   VWallEnd4,   rndper);
+	PlaceMiniSetRandom1x1(HWallEnd,   HWallEnd4,   rndper);
+	PlaceMiniSetRandom1x1(HArchEnd,   HArchEnd4,   rndper);
+	PlaceMiniSetRandom1x1(VArchEnd,   VArchEnd4,   rndper);
+	PlaceMiniSetRandom1x1(HArchVWall, HArchVWall4, rndper);
+	PlaceMiniSetRandom1x1(VArch,      VArch4,      rndper);
+	PlaceMiniSetRandom1x1(HArch,      HArch4,      rndper);
+	PlaceMiniSetRandom1x1(Floor,      Floor4,      rndper);
+	PlaceMiniSetRandom1x1(HWallVArch, HWallVArch4, rndper);
+	PlaceMiniSetRandom1x1(Pillar,     Pillar9,     rndper);
+	PlaceMiniSetRandom1x1(Pillar1,    Pillar10,    rndper);
+	PlaceMiniSetRandom1x1(Pillar2,    Pillar11,    rndper);
 	// clang-format on
 }
 
 void CryptSubstitions1(int rndper)
 {
-	PlaceMiniSetRandom1x1(Tile::VArch, Tile::VArch6, rndper);
-	PlaceMiniSetRandom1x1(Tile::HArch, Tile::HArch6, rndper);
-	PlaceMiniSetRandom1x1(Tile::VArch, Tile::VArch7, rndper);
-	PlaceMiniSetRandom1x1(Tile::HArch, Tile::HArch7, rndper);
-	PlaceMiniSetRandom1x1(Tile::VWall5, Tile::VWall8, rndper);
-	PlaceMiniSetRandom1x1(Tile::VWall5, Tile::VWall9, rndper);
-	PlaceMiniSetRandom1x1(Tile::VWall6, Tile::VWall10, rndper);
-	PlaceMiniSetRandom1x1(Tile::VWall6, Tile::VWall11, rndper);
-	PlaceMiniSetRandom1x1(Tile::VWall7, Tile::VWall12, rndper);
-	PlaceMiniSetRandom1x1(Tile::VWall7, Tile::VWall13, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall5, Tile::HWall8, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall5, Tile::HWall9, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall5, Tile::HWall10, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall5, Tile::HWall11, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall5, Tile::HWall12, rndper);
-	PlaceMiniSetRandom1x1(Tile::HWall5, Tile::HWall13, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor7, Tile::Floor15, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor7, Tile::Floor16, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor6, Tile::Floor17, rndper);
-	PlaceMiniSetRandom1x1(Tile::Pillar, Tile::Pillar12, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor8, Tile::Floor18, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor8, Tile::Floor19, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor9, Tile::Floor20, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor10, Tile::Floor21, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor10, Tile::Floor22, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor10, Tile::Floor23, rndper);
+	PlaceMiniSetRandom1x1(VArch, VArch6, rndper);
+	PlaceMiniSetRandom1x1(HArch, HArch6, rndper);
+	PlaceMiniSetRandom1x1(VArch, VArch7, rndper);
+	PlaceMiniSetRandom1x1(HArch, HArch7, rndper);
+	PlaceMiniSetRandom1x1(VWall5, VWall8, rndper);
+	PlaceMiniSetRandom1x1(VWall5, VWall9, rndper);
+	PlaceMiniSetRandom1x1(VWall6, VWall10, rndper);
+	PlaceMiniSetRandom1x1(VWall6, VWall11, rndper);
+	PlaceMiniSetRandom1x1(VWall7, VWall12, rndper);
+	PlaceMiniSetRandom1x1(VWall7, VWall13, rndper);
+	PlaceMiniSetRandom1x1(HWall5, HWall8, rndper);
+	PlaceMiniSetRandom1x1(HWall5, HWall9, rndper);
+	PlaceMiniSetRandom1x1(HWall5, HWall10, rndper);
+	PlaceMiniSetRandom1x1(HWall5, HWall11, rndper);
+	PlaceMiniSetRandom1x1(HWall5, HWall12, rndper);
+	PlaceMiniSetRandom1x1(HWall5, HWall13, rndper);
+	PlaceMiniSetRandom1x1(Floor7, Floor15, rndper);
+	PlaceMiniSetRandom1x1(Floor7, Floor16, rndper);
+	PlaceMiniSetRandom1x1(Floor6, Floor17, rndper);
+	PlaceMiniSetRandom1x1(Pillar, Pillar12, rndper);
+	PlaceMiniSetRandom1x1(Floor8, Floor18, rndper);
+	PlaceMiniSetRandom1x1(Floor8, Floor19, rndper);
+	PlaceMiniSetRandom1x1(Floor9, Floor20, rndper);
+	PlaceMiniSetRandom1x1(Floor10, Floor21, rndper);
+	PlaceMiniSetRandom1x1(Floor10, Floor22, rndper);
+	PlaceMiniSetRandom1x1(Floor10, Floor23, rndper);
 }
 
 void CryptSubstitions2(int rndper)
@@ -610,18 +619,18 @@ void CryptSubstitions2(int rndper)
 	PlaceMiniSetRandom(CryptPillar4, rndper);
 	PlaceMiniSetRandom(CryptPillar5, rndper);
 	PlaceMiniSetRandom(CryptStar, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor11, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor12, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor13, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor14, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor11, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor12, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor13, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor14, rndper);
 }
 
 void CryptFloor(int rndper)
 {
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor6, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor7, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor8, rndper);
-	PlaceMiniSetRandom1x1(Tile::Floor, Tile::Floor9, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor6, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor7, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor8, rndper);
+	PlaceMiniSetRandom1x1(Floor, Floor9, rndper);
 }
 
 } // namespace
@@ -666,16 +675,16 @@ void FixCryptDirtTiles()
 {
 	for (int j = 0; j < DMAXY - 1; j++) {
 		for (int i = 0; i < DMAXX - 1; i++) {
-			if (dungeon[i][j] == 19)
-				dungeon[i][j] = 83;
-			if (dungeon[i][j] == 21)
-				dungeon[i][j] = 85;
-			if (dungeon[i][j] == 23)
-				dungeon[i][j] = 87;
-			if (dungeon[i][j] == 24)
-				dungeon[i][j] = 88;
-			if (dungeon[i][j] == 18)
-				dungeon[i][j] = 82;
+			if (dungeon[i][j] == DirtVwall)
+				dungeon[i][j] = DirtVWall2;
+			if (dungeon[i][j] == DirtCorner)
+				dungeon[i][j] = DirtCorner2;
+			if (dungeon[i][j] == DirtHWallEnd)
+				dungeon[i][j] = DirtHWallEnd2;
+			if (dungeon[i][j] == DirtVWallEnd)
+				dungeon[i][j] = DirtVWallEnd2;
+			if (dungeon[i][j] == DirtHwall)
+				dungeon[i][j] = DirtHWall2;
 		}
 	}
 }
@@ -708,8 +717,8 @@ bool PlaceCryptStairs(lvl_entry entry)
 void CryptSubstitution()
 {
 	CryptStatues(10);
-	PlaceMiniSetRandom1x1(Tile::VArch, Tile::VArch5, 95);
-	PlaceMiniSetRandom1x1(Tile::HArch, Tile::HArch5, 95);
+	PlaceMiniSetRandom1x1(VArch, VArch5, 95);
+	PlaceMiniSetRandom1x1(HArch, HArch5, 95);
 	PlaceMiniSetRandom(VWallSection, 100);
 	PlaceMiniSetRandom(HWallSection, 100);
 	PlaceMiniSetRandom(CryptFloorLave, 60);
