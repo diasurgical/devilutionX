@@ -2046,6 +2046,16 @@ void Player::RestorePartialMana()
 	}
 }
 
+void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation)
+{
+	auto &item = InvBody[bodyLocation];
+	if (item._itype == ItemType::Staff && IsValidSpell(item._iSpell) && item._iCharges > 0) {
+		_pRSpell = item._iSpell;
+		_pRSplType = RSPLTYPE_CHARGES;
+		force_redraw = 255;
+	}
+}
+
 void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2)
 {
 	// if game is not running don't show a preview
@@ -3475,7 +3485,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 	}
 	Player &myPlayer = *MyPlayer;
 
-	if (spellID == SPL_INVALID) {
+	if (!IsValidSpell(spellID)) {
 		myPlayer.Say(HeroSpeech::IDontHaveASpellReady);
 		return;
 	}
