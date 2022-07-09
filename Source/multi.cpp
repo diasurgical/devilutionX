@@ -400,16 +400,19 @@ void HandleEvents(_SNETEVENT *pEvt)
 	}
 }
 
-void EventHandler(bool add)
+void RegisterNetEventHandlers()
 {
 	for (auto eventType : EventTypes) {
-		if (add) {
-			if (!SNetRegisterEventHandler(eventType, HandleEvents)) {
-				app_fatal(StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
-			}
-		} else {
-			SNetUnregisterEventHandler(eventType);
+		if (!SNetRegisterEventHandler(eventType, HandleEvents)) {
+			app_fatal(StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
 		}
+	}
+}
+
+void UnregisterNetEventHandlers()
+{
+	for (auto eventType : EventTypes) {
+		SNetUnregisterEventHandler(eventType);
 	}
 }
 
@@ -442,7 +445,7 @@ bool InitMulti(GameData *gameData)
 			return false;
 		}
 
-		EventHandler(true);
+		RegisterNetEventHandlers();
 		if (UiSelectGame(gameData, &playerId))
 			break;
 
@@ -701,7 +704,7 @@ void NetClose()
 	nthread_cleanup();
 	DThreadCleanup();
 	tmsg_cleanup();
-	EventHandler(false);
+	UnregisterNetEventHandlers();
 	SNetLeaveGame(3);
 	if (gbIsMultiplayer)
 		SDL_Delay(2000);

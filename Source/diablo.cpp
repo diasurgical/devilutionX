@@ -715,13 +715,12 @@ void RunGameLoop(interface_mode uMsg)
 {
 	demo::NotifyGameLoopStart();
 
-	WNDPROC saveProc;
 	tagMSG msg;
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
 	assert(ghMainWnd);
-	saveProc = SetWindowProc(GameEventHandler);
+	EventHandler previousHandler = SetEventHandler(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
 	gbProcessPlayers = true;
@@ -804,8 +803,8 @@ void RunGameLoop(interface_mode uMsg)
 	ClearScreenBuffer();
 	force_redraw = 255;
 	scrollrt_draw_game_screen();
-	saveProc = SetWindowProc(saveProc);
-	assert(saveProc == GameEventHandler);
+	previousHandler = SetEventHandler(previousHandler);
+	assert(previousHandler == GameEventHandler);
 	FreeGame();
 
 	if (cineflag) {
@@ -2037,7 +2036,7 @@ bool PressEscKey()
 	return rv;
 }
 
-void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
+void DisableInputEventHandler(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:

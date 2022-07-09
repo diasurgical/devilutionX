@@ -230,14 +230,13 @@ bool IncProgress()
 
 void ShowProgress(interface_mode uMsg)
 {
-	WNDPROC saveProc;
 	IsProgress = true;
 
 	gbSomebodyWonGameKludge = false;
 	plrmsg_delay(true);
 
 	assert(ghMainWnd);
-	saveProc = SetWindowProc(DisableInputWndProc);
+	EventHandler previousHandler = SetEventHandler(DisableInputEventHandler);
 
 	interface_msg_pump();
 	ClearScreenBuffer();
@@ -416,8 +415,8 @@ void ShowProgress(interface_mode uMsg)
 
 	PaletteFadeOut(8);
 
-	saveProc = SetWindowProc(saveProc);
-	assert(saveProc == DisableInputWndProc);
+	previousHandler = SetEventHandler(previousHandler);
+	assert(previousHandler == DisableInputEventHandler);
 	IsProgress = false;
 
 	NetSendCmdLocParam2(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel, myPlayer.plrIsOnSetLevel ? 1 : 0);

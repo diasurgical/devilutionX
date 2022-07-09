@@ -829,9 +829,9 @@ bool GetAsyncKeyState(int vKey)
 
 void PushMessage(const tagMSG *lpMsg)
 {
-	assert(CurrentProc);
+	assert(CurrentEventHandler != nullptr);
 
-	CurrentProc(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+	CurrentEventHandler(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
 bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
