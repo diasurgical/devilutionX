@@ -26,7 +26,9 @@
 #include "inv.h"
 #include "lighting.h"
 #include "minitext.h"
-#include "miniwin/miniwin.h"
+#ifdef _DEBUG
+#include "miniwin/misc_msg.h"
+#endif
 #include "missiles.h"
 #include "nthread.h"
 #include "options.h"

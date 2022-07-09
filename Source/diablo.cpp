@@ -14,9 +14,9 @@
 #include "capture.h"
 #include "cursor.h"
 #include "dead.h"
-#include "miniwin/miniwin.h"
 #ifdef _DEBUG
 #include "debug.h"
+#include "miniwin/misc_msg.h"
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/plrctrls.h"
@@ -926,7 +926,7 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(0);
 			}
 			recordNumber = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("--create-reference", argv[i]) == 0) {
+		} else if (arg == "--create-reference") {
 			createDemoReference = true;
 		} else if (arg == "-n") {
 			gbShowIntro = false;

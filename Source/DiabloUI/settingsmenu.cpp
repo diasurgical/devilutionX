@@ -5,7 +5,7 @@
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
-#include "miniwin/miniwin.h"
+#include "miniwin/misc_msg.h"
 #include "options.h"
 #include "utils/language.h"
 #include "utils/utf8.hpp"

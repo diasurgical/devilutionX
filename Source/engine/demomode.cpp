@@ -1,10 +1,11 @@
+#include "engine/demomode.h"
+
 #include <deque>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
 #include "controls/plrctrls.h"
-#include "demomode.h"
 #include "menu.h"
 #include "nthread.h"
 #include "options.h"
