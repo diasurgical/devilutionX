@@ -1868,7 +1868,7 @@ bool SmithItemOk(int i)
 		return false;
 	if (AllItemsList[i].itype == ItemType::Gold)
 		return false;
-	if (AllItemsList[i].itype == ItemType::Staff && (!gbIsHellfire || AllItemsList[i].iSpell != SPL_NULL))
+	if (AllItemsList[i].itype == ItemType::Staff && (!gbIsHellfire || IsValidSpell(AllItemsList[i].iSpell)))
 		return false;
 	if (AllItemsList[i].itype == ItemType::Ring)
 		return false;
@@ -2387,7 +2387,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			maxd += item._iMaxDam;
 			tac += item._iAC;
 
-			if (item._iSpell != SPL_NULL) {
+			if (IsValidSpell(item._iSpell)) {
 				spl |= GetSpellBitmask(item._iSpell);
 			}
 
@@ -4648,7 +4648,7 @@ void RepairItem(Item &item, int lvl)
 
 void RechargeItem(Item &item, Player &player)
 {
-	if (item._itype != ItemType::Staff || item._iSpell == SPL_NULL)
+	if (item._itype != ItemType::Staff || !IsValidSpell(item._iSpell))
 		return;
 
 	if (item._iCharges == item._iMaxCharges)

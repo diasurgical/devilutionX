@@ -136,7 +136,7 @@ void DrawSpellBook(const Surface &out)
 	const int textPaddingTop = 7;
 	for (int i = 1; i < 8; i++) {
 		spell_id sn = SpellPages[sbooktab][i - 1];
-		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
+		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + SpellBookDescription.height });
@@ -198,7 +198,7 @@ void CheckSBook()
 		spell_id sn = SpellPages[sbooktab][(MousePosition.y - iconArea.position.y) / SpellBookDescription.height];
 		Player &player = *MyPlayer;
 		uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
-		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
+		if (IsValidSpell(sn) && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = RSPLTYPE_SPELL;
 			if ((player._pISpells & GetSpellBitmask(sn)) != 0) {
 				st = RSPLTYPE_CHARGES;
