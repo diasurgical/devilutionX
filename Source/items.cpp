@@ -3908,6 +3908,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_SCROLL:
+	case IMISC_SCROLLT:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
 			if (pnum == MyPlayerId)
@@ -3922,21 +3923,6 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 			player.destParam2 = cursPosition.y;
 			if (pnum == MyPlayerId && spl == SPL_NOVA)
 				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
-		}
-		break;
-	case IMISC_SCROLLT:
-		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
-			player._pTSpell = spl;
-			if (pnum == MyPlayerId)
-				NewCursor(CURSOR_TELEPORT);
-		} else {
-			ClrPlrPath(player);
-			player._pSpell = spl;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 3;
-			player.destAction = ACTION_SPELL;
-			player.destParam1 = cursPosition.x;
-			player.destParam2 = cursPosition.y;
 		}
 		break;
 	case IMISC_BOOK:
