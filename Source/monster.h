@@ -187,9 +187,21 @@ struct Monster { // note: missing field _mAFNum
 	 * Used only by @p ScavengerAi and @p MegaAi.
 	 */
 	int goalVar3;
-	int var1;
-	int var2;
-	int var3;
+	/**
+	 * @brief Used as a temporary storage for various use cases.
+	 * Often used as a storage for mode the monster was in before changing it to @p MonsterMode::Stand
+	 */
+	int temporary1;
+	/**
+	 * @brief Used as a temporary storage for various use cases.
+	 * Often used for storing movement parameters, among others. //todo this needs further explanation.
+	 */
+	int temporary2;
+	/**
+	 * @brief Used as a temporary storage for various use cases.
+	 * Often used for storing damage of ranged special attack and movement parameters, among others.
+	 */
+	int temporary3;
 	int maxHitPoints;
 	int hitPoints;
 	uint32_t flags;
