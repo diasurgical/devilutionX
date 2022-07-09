@@ -24,11 +24,6 @@ namespace devilution {
 typedef uint32_t DWORD;
 typedef unsigned char BYTE;
 
-//
-// Handles
-//
-typedef void *HANDLE;
-
 typedef void (*WNDPROC)(uint32_t, int32_t, int32_t);
 
 struct tagMSG {

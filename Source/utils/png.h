@@ -3,7 +3,6 @@
 #include <SDL.h>
 
 #include "engine/assets.hpp"
-#include "miniwin/miniwin.h"
 
 #ifdef __cplusplus
 extern "C" {
