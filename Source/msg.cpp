@@ -1126,6 +1126,10 @@ DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
+	if (!IsValidSpell(spell)) {
+		LogError(_("{:s} has cast an invalid spell."), player._pName);
+		return sizeof(message);
+	}
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
@@ -1161,6 +1165,10 @@ DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
+	if (!IsValidSpell(spell)) {
+		LogError(_("{:s} has cast an invalid spell."), player._pName);
+		return sizeof(message);
+	}
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
@@ -1319,6 +1327,10 @@ DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
+	if (!IsValidSpell(spell)) {
+		LogError(_("{:s} has cast an invalid spell."), player._pName);
+		return sizeof(message);
+	}
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
@@ -1351,6 +1363,10 @@ DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
+	if (!IsValidSpell(spell)) {
+		LogError(_("{:s} has cast an invalid spell."), player._pName);
+		return sizeof(message);
+	}
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
