@@ -28,6 +28,7 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "minitext.h"
+#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "movie.h"
 #include "options.h"

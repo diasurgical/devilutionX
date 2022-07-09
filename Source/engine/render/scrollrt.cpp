@@ -868,7 +868,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	int8_t playerId = dPlayer[tilePosition.x][tilePosition.y];
 	if (playerId > 0 && playerId <= MAX_PLRS) {
-		DrawPlayerHelper(out, Players[abs(playerId) - 1], tilePosition, targetBufferPosition);
+		DrawPlayerHelper(out, Players[playerId - 1], tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
 		DrawMonsterHelper(out, tilePosition, targetBufferPosition);

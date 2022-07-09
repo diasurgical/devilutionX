@@ -7,11 +7,6 @@ namespace devilution {
 #endif
 
 typedef uint32_t DWORD;
-typedef unsigned char BYTE;
-
-//
-// Everything else
-//
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
