@@ -1349,15 +1349,15 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		return;
 	if (blkper < blk) {
 		Direction dir = GetDirection(player.position.tile, monster.position.tile);
-		StartPlrBlock(pnum, dir);
-		if (pnum == MyPlayerId && player.wReflections > 0) {
+		StartPlrBlock(player, dir);
+		if (&player == MyPlayer && player.wReflections > 0) {
 			int dam = GenerateRnd(((maxDam - minDam) << 6) + 1) + (minDam << 6);
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			CheckReflect(monsterId, pnum, dam);
 		}
 		return;
 	}
-	if (monster.type().type == MT_YZOMBIE && pnum == MyPlayerId) {
+	if (monster.type().type == MT_YZOMBIE && &player == MyPlayer) {
 		if (player._pMaxHP > 64) {
 			if (player._pMaxHPBase > 64) {
 				player._pMaxHP -= 64;
@@ -1373,10 +1373,10 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 	}
 	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		if (player.wReflections > 0)
 			CheckReflect(monsterId, pnum, dam);
-		ApplyPlrDamage(pnum, 0, 0, dam);
+		ApplyPlrDamage(player, 0, 0, dam);
 	}
 
 	// Reflect can also kill a monster, so make sure the monster is still alive
@@ -3949,13 +3949,14 @@ void M_StartHit(Monster &monster, int dam)
 void M_StartHit(Monster &monster, int pnum, int dam)
 {
 	monster.whoHit |= 1 << pnum;
-	if (pnum == MyPlayerId) {
+	Player &player = Players[pnum];
+	if (&player == MyPlayer) {
 		delta_monster_hp(monster, *MyPlayer);
 		NetSendCmdMonDmg(false, monster.getId(), dam);
 	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		monster.enemy = pnum;
-		monster.enemyPosition = Players[pnum].position.future;
+		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
 		monster.direction = GetMonsterDirection(monster);
 	}
@@ -3972,7 +3973,7 @@ void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg)
 void M_StartKill(int monsterId, int pnum)
 {
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	if (pnum == MyPlayerId) {
 		delta_kill_monster(monsterId, monster.position.tile, *MyPlayer);
@@ -4806,7 +4807,7 @@ void SpawnGolem(int id, Point position, Missile &missile)
 	golem.flags |= MFLAG_GOLEM;
 	StartSpecialStand(golem, Direction::South);
 	UpdateEnemy(golem);
-	if (id == MyPlayerId) {
+	if (&player == MyPlayer) {
 		NetSendCmdGolem(
 		    golem.position.tile.x,
 		    golem.position.tile.y,

@@ -238,7 +238,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 	if (resist)
 		dam >>= 2;
 
-	if (pnum == MyPlayerId)
+	if (&player == MyPlayer)
 		monster.hitPoints -= dam;
 
 	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
@@ -349,7 +349,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 	}
 
 	if (blkper < blk) {
-		StartPlrBlock(p, GetDirection(target.position.tile, player.position.tile));
+		StartPlrBlock(target, GetDirection(target.position.tile, player.position.tile));
 		*blocked = true;
 	} else {
 		if (&player == MyPlayer)
@@ -887,7 +887,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 {
 	*blocked = false;
 
-	const Player &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (player._pHitPoints >> 6 <= 0) {
 		return false;
@@ -993,14 +993,14 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 			dir = GetDirection(player.position.tile, monster->position.tile);
 		}
 		*blocked = true;
-		StartPlrBlock(pnum, dir);
+		StartPlrBlock(player, dir);
 		return true;
 	}
 
 	if (resper > 0) {
 		dam -= dam * resper / 100;
-		if (pnum == MyPlayerId) {
-			ApplyPlrDamage(pnum, 0, 0, dam, earflag);
+		if (&player == MyPlayer) {
+			ApplyPlrDamage(player, 0, 0, dam, earflag);
 		}
 
 		if (player._pHitPoints >> 6 > 0) {
@@ -1009,8 +1009,8 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		return true;
 	}
 
-	if (pnum == MyPlayerId) {
-		ApplyPlrDamage(pnum, 0, 0, dam, earflag);
+	if (&player == MyPlayer) {
+		ApplyPlrDamage(player, 0, 0, dam, earflag);
 	}
 
 	if (player._pHitPoints >> 6 > 0) {
@@ -1049,7 +1049,7 @@ void InitMissiles()
 				if (missile._misource == MyPlayerId) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
-					ApplyPlrDamage(MyPlayerId, 0, 1, missingHP + missile.var2);
+					ApplyPlrDamage(myPlayer, 0, 1, missingHP + missile.var2);
 				}
 			}
 		}
@@ -2056,8 +2056,9 @@ void AddFlare(Missile &missile, const AddMissileParameter &parameter)
 	missile.var2 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 8);
 	if (missile._micaster == TARGET_MONSTERS) {
-		UseMana(Players[missile._misource], SPL_FLARE);
-		ApplyPlrDamage(missile._misource, 5);
+		Player &player = Players[missile._misource];
+		UseMana(player, SPL_FLARE);
+		ApplyPlrDamage(player, 5);
 	} else if (missile._misource > 0) {
 		auto &monster = Monsters[missile._misource];
 		if (monster.type().type == MT_SUCCUBUS)
@@ -2531,8 +2532,9 @@ void AddBoneSpirit(Missile &missile, const AddMissileParameter &parameter)
 	missile.var5 = dst.y;
 	missile._mlid = AddLight(missile.position.start, 8);
 	if (missile._micaster == TARGET_MONSTERS) {
-		UseMana(Players[missile._misource], SPL_BONESPIRIT);
-		ApplyPlrDamage(missile._misource, 6);
+		Player &player = Players[missile._misource];
+		UseMana(player, SPL_BONESPIRIT);
+		ApplyPlrDamage(player, 6);
 	}
 }
 
@@ -2545,9 +2547,7 @@ void AddRportal(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddDiabApoca(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	int players = gbIsMultiplayer ? MAX_PLRS : 1;
-	for (int pnum = 0; pnum < players; pnum++) {
-		const Player &player = Players[pnum];
+	for (const Player &player : Players) {
 		if (!player.plractive)
 			continue;
 		if (!LineClearMissile(missile.position.start, player.position.future))
@@ -3210,11 +3210,10 @@ void MI_Town(Missile &missile)
 		missile.var2++;
 	}
 
-	for (int p = 0; p < MAX_PLRS; p++) {
-		Player &player = Players[p];
+	for (Player &player : Players) {
 		if (player.plractive && player.isOnActiveLevel() && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
 			ClrPlrPath(player);
-			if (p == MyPlayerId) {
+			if (&player == MyPlayer) {
 				NetSendCmdParam1(true, CMD_WARP, missile._misource);
 				player._pmode = PM_NEWLVL;
 			}
@@ -3693,8 +3692,7 @@ void MI_Blodboil(Missile &missile)
 		return;
 	}
 
-	int id = missile._misource;
-	Player &player = Players[id];
+	Player &player = Players[missile._misource];
 
 	int hpdif = player._pMaxHP - player._pHitPoints;
 
@@ -3710,7 +3708,7 @@ void MI_Blodboil(Missile &missile)
 	}
 
 	CalcPlrItemVals(player, true);
-	ApplyPlrDamage(id, 0, 1, hpdif);
+	ApplyPlrDamage(player, 0, 1, hpdif);
 	force_redraw = 255;
 	player.Say(HeroSpeech::HeavyBreathing);
 }

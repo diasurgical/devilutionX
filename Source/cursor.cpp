@@ -540,14 +540,16 @@ void CheckCursMove()
 	if (pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
 			int8_t bv = abs(dPlayer[mx + 1][my]) - 1;
-			if (bv != MyPlayerId && Players[bv]._pHitPoints != 0) {
+			Player &player = Players[bv];
+			if (&player != MyPlayer && player._pHitPoints != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 0 };
 				pcursplr = bv;
 			}
 		}
 		if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
 			int8_t bv = abs(dPlayer[mx][my + 1]) - 1;
-			if (bv != MyPlayerId && Players[bv]._pHitPoints != 0) {
+			Player &player = Players[bv];
+			if (&player != MyPlayer && player._pHitPoints != 0) {
 				cursPosition = Point { mx, my } + Displacement { 0, 1 };
 				pcursplr = bv;
 			}
@@ -561,7 +563,8 @@ void CheckCursMove()
 		}
 		if (TileContainsDeadPlayer({ mx, my })) {
 			for (int i = 0; i < MAX_PLRS; i++) {
-				if (Players[i].position.tile == Point { mx, my } && i != MyPlayerId) {
+				const Player &player = Players[i];
+				if (player.position.tile == Point { mx, my } && &player != MyPlayer) {
 					cursPosition = { mx, my };
 					pcursplr = i;
 				}
@@ -572,7 +575,8 @@ void CheckCursMove()
 				for (int yy = -1; yy < 2; yy++) {
 					if (TileContainsDeadPlayer({ mx + xx, my + yy })) {
 						for (int i = 0; i < MAX_PLRS; i++) {
-							if (Players[i].position.tile.x == mx + xx && Players[i].position.tile.y == my + yy && i != MyPlayerId) {
+							const Player &player = Players[i];
+							if (player.position.tile.x == mx + xx && player.position.tile.y == my + yy && &player != MyPlayer) {
 								cursPosition = Point { mx, my } + Displacement { xx, yy };
 								pcursplr = i;
 							}
@@ -583,7 +587,8 @@ void CheckCursMove()
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
 			int8_t bv = abs(dPlayer[mx + 1][my + 1]) - 1;
-			if (bv != MyPlayerId && Players[bv]._pHitPoints != 0) {
+			const Player &player = Players[bv];
+			if (&player != MyPlayer && player._pHitPoints != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 1 };
 				pcursplr = bv;
 			}

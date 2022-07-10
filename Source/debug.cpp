@@ -569,7 +569,7 @@ std::string DebugCmdChangeHealth(const string_view parameter)
 	int newHealth = myPlayer._pHitPoints + (change * 64);
 	SetPlayerHitPoints(myPlayer, newHealth);
 	if (newHealth <= 0)
-		SyncPlrKill(MyPlayerId, 0);
+		SyncPlrKill(myPlayer, 0);
 
 	return "Health has changed.";
 }

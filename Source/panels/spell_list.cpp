@@ -110,7 +110,7 @@ void DrawSpell(const Surface &out)
 
 	if (st == RSPLTYPE_SPELL) {
 		int tlvl = myPlayer.GetSpellLevel(spl);
-		if (CheckSpell(MyPlayerId, spl, st, true) != SpellCheckResult::Success)
+		if (CheckSpell(*MyPlayer, spl, st, true) != SpellCheckResult::Success)
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
 			st = RSPLTYPE_INVALID;

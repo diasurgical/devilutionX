@@ -1522,7 +1522,7 @@ void UpdateBurningCrossDamage(Object &cross)
 	if (myPlayer.position.tile != cross.position + Displacement { 0, -1 })
 		return;
 
-	ApplyPlrDamage(MyPlayerId, 0, 0, damage[leveltype - 1]);
+	ApplyPlrDamage(myPlayer, 0, 0, damage[leveltype - 1]);
 	if (myPlayer._pHitPoints >> 6 > 0) {
 		myPlayer.Say(HeroSpeech::Argh);
 	}
@@ -2350,8 +2350,8 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				CreateRndUseful(Objects[i].position, sendmsg);
 		}
 	}
+	const Player &player = Players[pnum];
 	if (Objects[i].IsTrappedChest()) {
-		const Player &player = Players[pnum];
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
 		missile_id mtype;
 		switch (Objects[i]._oVar4) {
@@ -2379,7 +2379,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		AddMissile(Objects[i].position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 		Objects[i]._oTrapFlag = false;
 	}
-	if (pnum == MyPlayerId)
+	if (&player == MyPlayer)
 		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
 }
 
@@ -3521,7 +3521,7 @@ bool OperateFountains(int pnum, int i)
 	bool applied = false;
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
-		if (pnum != MyPlayerId)
+		if (&player != MyPlayer)
 			return false;
 
 		if (player._pHitPoints < player._pMaxHP) {
@@ -3537,7 +3537,7 @@ bool OperateFountains(int pnum, int i)
 			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
 		break;
 	case OBJ_PURIFYINGFTN:
-		if (pnum != MyPlayerId)
+		if (&player != MyPlayer)
 			return false;
 
 		if (player._pMana < player._pMaxMana) {
@@ -3569,7 +3569,7 @@ bool OperateFountains(int pnum, int i)
 		    0,
 		    2 * leveltype);
 		applied = true;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		break;
 	case OBJ_TEARFTN: {
@@ -3577,7 +3577,7 @@ bool OperateFountains(int pnum, int i)
 			break;
 		PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
 		Objects[i]._oSelFlag = 0;
-		if (pnum != MyPlayerId)
+		if (&player != MyPlayer)
 			return false;
 
 		unsigned randomValue = (Objects[i]._oRndSeed >> 16) % 12;
@@ -3606,7 +3606,7 @@ bool OperateFountains(int pnum, int i)
 
 		CheckStats(player);
 		applied = true;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 	} break;
 	default:
@@ -4809,8 +4809,8 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 
 void OperateObject(int pnum, int i, bool teleFlag)
 {
-	bool sendmsg = pnum == MyPlayerId;
 	const Player &player = Players[pnum];
+	bool sendmsg = &player == MyPlayer;
 	switch (Objects[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5034,28 +5034,28 @@ void DeltaSyncOpObject(int cmd, int i)
 
 void SyncOpObject(int pnum, int cmd, int i)
 {
-	bool sendmsg = pnum == MyPlayerId;
 	const Player &player = Players[pnum];
+	bool sendmsg = &player == MyPlayer;
 
 	switch (Objects[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL1Door(cmd, i);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL2Door(cmd, i);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL3Door(cmd, i);
 		break;
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL5Door(cmd, i);
 		break;
 	case OBJ_LEVER:
