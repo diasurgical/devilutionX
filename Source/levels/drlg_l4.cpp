@@ -274,7 +274,7 @@ void FirstRoom()
 	}
 
 	MapRoom(room);
-	GenerateRoom(room, GenerateRnd(2));
+	GenerateRoom(room, !FlipCoin());
 }
 
 void MakeDungeon()
