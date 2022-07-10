@@ -1045,13 +1045,10 @@ void Teleport(Monster &monster)
 	}
 }
 
-void HitMonster(int monsterId, int dam)
+void HitMonster(Monster &monster, int dam)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	delta_monster_hp(monster, *MyPlayer);
-	NetSendCmdMonDmg(false, monsterId, dam);
+	NetSendCmdMonDmg(false, monster.getId(), dam);
 	PlayEffect(monster, 1);
 
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
@@ -1069,11 +1066,8 @@ void HitMonster(int monsterId, int dam)
 	}
 }
 
-void MonsterHitMonster(int monsterId, int i, int dam)
+void MonsterHitMonster(Monster &monster, int i, int dam)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (i < MAX_PLRS)
 		monster.whoHit |= 1 << i;
 
@@ -1081,7 +1075,7 @@ void MonsterHitMonster(int monsterId, int i, int dam)
 		monster.direction = Opposite(Monsters[i].direction);
 	}
 
-	HitMonster(monsterId, dam);
+	HitMonster(monster, dam);
 }
 
 void MonsterDeath(Monster &monster, int pnum, Direction md, bool sendmsg)
@@ -1273,7 +1267,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	if (monster.hitPoints >> 6 <= 0) {
 		StartDeathFromMonster(i, mid);
 	} else {
-		MonsterHitMonster(mid, i, dam);
+		MonsterHitMonster(monster, i, dam);
 	}
 
 	Monster &attackingMonster = Monsters[i];
@@ -4618,7 +4612,7 @@ void MissToMonst(Missile &missile, Point position)
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
 		M_StartHit(monster, 0);
 	else
-		HitMonster(monsterId, 0);
+		HitMonster(monster, 0);
 
 	if (monster.type().type == MT_GLOOM)
 		return;
