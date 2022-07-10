@@ -18,6 +18,8 @@ jobs:
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        variant: sccache
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
@@ -30,12 +32,18 @@ jobs:
         cd ${{ github.workspace }}\Packaging\xbox-one
         build.bat
 
+    - name:
+      run: >
+        New-Item -Path build-uwp-project -Name pkg -ItemType Directory -Force &&
+        Copy-Item -Recurse
+          -Path uwp-project\AppxPackages, uwp-project\Release
+          -Include Microsoft.VCLibs.x64.*.appx, devilutionX_*_x64.appx
+          -Destination build-uwp-project\pkg\
+
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
         name: devilutionx-xbox-one.zip
         if-no-files-found: error
-        path: |
-          build/uwp-project/AppxPackages/**/Microsoft.VCLibs.x64.*.appx
-          build/uwp-project/Release/**/devilutionX_*_x64.appx
+        path: build/uwp-project/pkg/
