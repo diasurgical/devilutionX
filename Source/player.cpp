@@ -49,16 +49,16 @@ Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
-constexpr int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
+const int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
 /** Specifies the Y-coordinate delta from the player start location in Tristram. */
-constexpr int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
+const int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
 /** Specifies the X-coordinate delta from a player, used for instance when casting resurrect. */
-constexpr int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
+const int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
-constexpr int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
+const int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
 /** Maps from player_class to starting stat in strength. */
-constexpr int StrengthTbl[enum_size<HeroClass>::value] = {
+const int StrengthTbl[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	15,
@@ -67,7 +67,7 @@ constexpr int StrengthTbl[enum_size<HeroClass>::value] = {
 	40,
 };
 /** Maps from player_class to starting stat in magic. */
-constexpr int MagicTbl[enum_size<HeroClass>::value] = {
+const int MagicTbl[enum_size<HeroClass>::value] = {
 	// clang-format off
 	10,
 	15,
@@ -78,7 +78,7 @@ constexpr int MagicTbl[enum_size<HeroClass>::value] = {
 	// clang-format on
 };
 /** Maps from player_class to starting stat in dexterity. */
-constexpr int DexterityTbl[enum_size<HeroClass>::value] = {
+const int DexterityTbl[enum_size<HeroClass>::value] = {
 	20,
 	30,
 	15,
@@ -87,7 +87,7 @@ constexpr int DexterityTbl[enum_size<HeroClass>::value] = {
 	20,
 };
 /** Maps from player_class to starting stat in vitality. */
-constexpr int VitalityTbl[enum_size<HeroClass>::value] = {
+const int VitalityTbl[enum_size<HeroClass>::value] = {
 	25,
 	20,
 	20,
@@ -96,7 +96,7 @@ constexpr int VitalityTbl[enum_size<HeroClass>::value] = {
 	25,
 };
 /** Specifies the chance to block bonus of each player class.*/
-constexpr int BlockBonuses[enum_size<HeroClass>::value] = {
+const int BlockBonuses[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	10,
@@ -106,7 +106,7 @@ constexpr int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-constexpr uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
+const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
 	0,
 	2000,
 	4620,
