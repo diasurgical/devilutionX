@@ -1300,7 +1300,7 @@ void DamageArmor(Player &player)
 		return;
 	}
 
-	bool targetHead = GenerateRnd(3);
+	bool targetHead = FlipCoin(3);
 	if (!player.InvBody[INVLOC_CHEST].isEmpty() && player.InvBody[INVLOC_HEAD].isEmpty()) {
 		targetHead = false;
 	}
