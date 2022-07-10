@@ -350,7 +350,7 @@ void M_GetKnockback(Monster &monster);
 void M_StartHit(Monster &monster, int dam);
 void M_StartHit(Monster &monster, int pnum, int dam);
 void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg);
-void M_StartKill(int monsterId, int pnum);
+void M_StartKill(Monster &monster, int pnum);
 void M_SyncStartKill(int monsterId, Point position, int pnum);
 void M_UpdateRelations(const Monster &monster);
 void DoEnding();
