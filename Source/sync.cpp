@@ -24,8 +24,8 @@ void SyncOneMonster()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int m = ActiveMonsters[i];
 		auto &monster = Monsters[m];
-		sgnMonsterPriority[m] = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
-		if (monster.activeForTicks == 0) {
+		sgnMonsterPriority[m] = MyPlayer->position.tile.ManhattanDistance(monster->position.tile);
+		if (monster->activeForTicks == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
 			sgwLRU[m]--;
@@ -35,17 +35,17 @@ void SyncOneMonster()
 
 void SyncMonsterPos(TSyncMonster &monsterSync, int ndx)
 {
-	auto &monster = Monsters[ndx];
+	auto monster = Monsters[ndx];
 	monsterSync._mndx = ndx;
-	monsterSync._mx = monster.position.tile.x;
-	monsterSync._my = monster.position.tile.y;
-	monsterSync._menemy = encode_enemy(monster);
+	monsterSync._mx = monster->position.tile.x;
+	monsterSync._my = monster->position.tile.y;
+	monsterSync._menemy = encode_enemy(*monster);
 	monsterSync._mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
-	monsterSync.mWhoHit = monster.whoHit;
-	monsterSync._mhitpoints = monster.hitPoints;
+	monsterSync.mWhoHit = monster->whoHit;
+	monsterSync._mhitpoints = monster->hitPoints;
 
 	sgnMonsterPriority[ndx] = 0xFFFF;
-	sgwLRU[ndx] = monster.activeForTicks == 0 ? 0xFFFF : 0xFFFE;
+	sgwLRU[ndx] = monster->activeForTicks == 0 ? 0xFFFF : 0xFFFE;
 }
 
 bool SyncMonsterActive(TSyncMonster &monsterSync)
@@ -151,16 +151,16 @@ void SyncPlrInv(TSyncHeader *pHdr)
 void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 {
 	const int monsterId = monsterSync._mndx;
-	Monster &monster = Monsters[monsterId];
-	if (monster.hitPoints <= 0 || monster.mode == MonsterMode::Death) {
+	Monster *monster = Monsters[monsterId];
+	if (monster->hitPoints <= 0 || monster->mode == MonsterMode::Death) {
 		return;
 	}
 
 	const Point position { monsterSync._mx, monsterSync._my };
 	const int enemyId = monsterSync._menemy;
 
-	if (monster.activeForTicks != 0) {
-		uint32_t delta = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
+	if (monster->activeForTicks != 0) {
+		uint32_t delta = MyPlayer->position.tile.ManhattanDistance(monster->position.tile);
 		if (delta > 255) {
 			delta = 255;
 		}
@@ -168,36 +168,36 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 		if (delta < monsterSync._mdelta || (delta == monsterSync._mdelta && isOwner)) {
 			return;
 		}
-		if (monster.position.future == position) {
+		if (monster->position.future == position) {
 			return;
 		}
 	}
-	if (IsAnyOf(monster.mode, MonsterMode::Charge, MonsterMode::Petrified)) {
+	if (IsAnyOf(monster->mode, MonsterMode::Charge, MonsterMode::Petrified)) {
 		return;
 	}
 
-	if (monster.position.tile.WalkingDistance(position) <= 2) {
-		if (!monster.isWalking()) {
-			Direction md = GetDirection(monster.position.tile, position);
+	if (monster->position.tile.WalkingDistance(position) <= 2) {
+		if (!monster->isWalking()) {
+			Direction md = GetDirection(monster->position.tile, position);
 			if (DirOK(monsterId, md)) {
-				M_ClearSquares(monster);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
-				Walk(monster, md);
-				monster.activeForTicks = UINT8_MAX;
+				M_ClearSquares(*monster);
+				dMonster[monster->position.tile.x][monster->position.tile.y] = monsterId + 1;
+				Walk(*monster, md);
+				monster->activeForTicks = UINT8_MAX;
 			}
 		}
 	} else if (dMonster[position.x][position.y] == 0) {
-		M_ClearSquares(monster);
+		M_ClearSquares(*monster);
 		dMonster[position.x][position.y] = monsterId + 1;
-		monster.position.tile = position;
-		decode_enemy(monster, enemyId);
-		Direction md = GetDirection(position, monster.enemyPosition);
-		M_StartStand(monster, md);
-		monster.activeForTicks = UINT8_MAX;
+		monster->position.tile = position;
+		decode_enemy(*monster, enemyId);
+		Direction md = GetDirection(position, monster->enemyPosition);
+		M_StartStand(*monster, md);
+		monster->activeForTicks = UINT8_MAX;
 	}
 
-	decode_enemy(monster, enemyId);
-	monster.whoHit |= monsterSync.mWhoHit;
+	decode_enemy(*monster, enemyId);
+	monster->whoHit |= monsterSync.mWhoHit;
 }
 
 bool IsEnemyIdValid(const Monster &monster, int enemyId)
@@ -215,13 +215,13 @@ bool IsEnemyIdValid(const Monster &monster, int enemyId)
 		return false;
 	}
 
-	const Monster &enemy = Monsters[enemyId];
+	const auto enemy = Monsters[enemyId];
 
-	if (&enemy == &monster) {
+	if (enemy == &monster) {
 		return false;
 	}
 
-	if (enemy.hitPoints <= 0) {
+	if (enemy->hitPoints <= 0) {
 		return false;
 	}
 
@@ -238,7 +238,7 @@ bool IsTSyncMonsterValidate(const TSyncMonster &monsterSync)
 	if (!InDungeonBounds({ monsterSync._mx, monsterSync._my }))
 		return false;
 
-	if (!IsEnemyIdValid(Monsters[monsterId], monsterSync._menemy))
+	if (!IsEnemyIdValid(*Monsters[monsterId], monsterSync._menemy))
 		return false;
 
 	return true;

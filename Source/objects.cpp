@@ -2501,7 +2501,7 @@ void OperateSarc(int i, bool sendMsg, bool sendLootMsg)
 	if (Objects[i]._oVar1 <= 2)
 		CreateRndItem(Objects[i].position, false, sendLootMsg, false);
 	if (Objects[i]._oVar1 >= 8 && Objects[i]._oVar2 >= 0)
-		SpawnSkeleton(&Monsters[Objects[i]._oVar2], Objects[i].position);
+		SpawnSkeleton(Monsters[Objects[i]._oVar2], Objects[i].position);
 	if (sendMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
@@ -3434,14 +3434,14 @@ void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
-		if (zhar.mode == MonsterMode::Stand // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
-		    && zhar.uniqType - 1 == UMT_ZHAR
-		    && zhar.activeForTicks == UINT8_MAX
-		    && zhar.hitPoints > 0) {
-			zhar.talkMsg = TEXT_ZHAR2;
-			M_StartStand(zhar, zhar.direction); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
-			zhar.goal = MGOAL_ATTACK2;
-			zhar.mode = MonsterMode::Talk;
+		if (zhar->mode == MonsterMode::Stand // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
+		    && zhar->uniqType - 1 == UMT_ZHAR
+		    && zhar->activeForTicks == UINT8_MAX
+		    && zhar->hitPoints > 0) {
+			zhar->talkMsg = TEXT_ZHAR2;
+			M_StartStand(*zhar, zhar->direction); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
+			zhar->goal = MGOAL_ATTACK2;
+			zhar->mode = MonsterMode::Talk;
 		}
 	}
 	if (sendmsg)
@@ -3864,7 +3864,7 @@ void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
 				CreateRndItem(barrel.position, false, sendmsg, false);
 		}
 		if (barrel._oVar2 >= 8 && barrel._oVar4 >= 0)
-			SpawnSkeleton(&Monsters[barrel._oVar4], barrel.position);
+			SpawnSkeleton(Monsters[barrel._oVar4], barrel.position);
 	}
 	if (pnum == MyPlayerId) {
 		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, static_cast<uint16_t>(barrel.GetId()));

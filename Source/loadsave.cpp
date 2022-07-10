@@ -686,7 +686,7 @@ void SyncPackSize(Monster &leader)
 
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &minion = Monsters[ActiveMonsters[i]];
-		if (minion.leaderRelation == LeaderRelation::Leashed && &Monsters[minion.leader] == &leader)
+		if (minion->leaderRelation == LeaderRelation::Leashed && Monsters[minion->leader] == &leader)
 			leader.packSize++;
 	}
 }
@@ -2090,9 +2090,9 @@ void LoadGame(bool firstflag)
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+			LoadMonster(&file, *Monsters[ActiveMonsters[i]]);
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			SyncPackSize(Monsters[ActiveMonsters[i]]);
+			SyncPackSize(*Monsters[ActiveMonsters[i]]);
 		// Skip ActiveMissiles
 		file.Skip<int8_t>(MaxMissilesForSaveGame);
 		// Skip AvailableMissiles
@@ -2346,7 +2346,7 @@ void SaveGameData(MpqWriter &saveWriter)
 		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
+			SaveMonster(&file, *Monsters[ActiveMonsters[i]]);
 		// Write ActiveMissiles
 		for (uint8_t activeMissile = 0; activeMissile < MaxMissilesForSaveGame; activeMissile++)
 			file.WriteLE<uint8_t>(activeMissile);
@@ -2482,7 +2482,7 @@ void SaveLevel(MpqWriter &saveWriter)
 		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
+			SaveMonster(&file, *Monsters[ActiveMonsters[i]]);
 		for (int objectId : ActiveObjects)
 			file.WriteLE<int8_t>(objectId);
 		for (int objectId : AvailableObjects)
@@ -2555,7 +2555,7 @@ void LoadLevel()
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+			LoadMonster(&file, *Monsters[ActiveMonsters[i]]);
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : AvailableObjects)

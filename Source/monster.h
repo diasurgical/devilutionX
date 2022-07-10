@@ -296,10 +296,12 @@ struct Monster { // note: missing field _mAFNum
 	bool isResistant(missile_id mitype) const;
 	bool isPossibleToHit() const;
 	bool tryLiftGargoyle();
+
+	virtual void Ai() = 0;
 };
 
 extern int LevelMonsterTypeCount;
-extern Monster Monsters[MaxMonsters];
+extern Monster* Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];
 extern int ActiveMonsterCount;
 extern int MonsterKillCounts[MaxMonsters];

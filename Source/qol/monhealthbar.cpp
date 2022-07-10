@@ -71,7 +71,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	if (pcursmonst == -1)
 		return;
 
-	const Monster &monster = Monsters[pcursmonst];
+	const auto monster = Monsters[pcursmonst];
 
 	const int width = healthBox.w();
 	const int barWidth = health.w();
@@ -88,20 +88,20 @@ void DrawMonsterHealthBar(const Surface &out)
 	const int border = 3;
 
 	int multiplier = 0;
-	int currLife = monster.hitPoints;
+	int currLife = monster->hitPoints;
 	// lifestealing monsters can reach HP exceeding their max
-	if (monster.hitPoints > monster.maxHitPoints) {
-		multiplier = monster.hitPoints / monster.maxHitPoints;
-		currLife = monster.hitPoints - monster.maxHitPoints * multiplier;
+	if (monster->hitPoints > monster->maxHitPoints) {
+		multiplier = monster->hitPoints / monster->maxHitPoints;
+		currLife = monster->hitPoints - monster->maxHitPoints * multiplier;
 		if (currLife == 0 && multiplier > 0) {
 			multiplier--;
-			currLife = monster.maxHitPoints;
+			currLife = monster->maxHitPoints;
 		}
 	}
 
 	DrawArt(out, position, &healthBox);
 	DrawHalfTransparentRectTo(out, position.x + border, position.y + border, width - (border * 2), height - (border * 2));
-	int barProgress = (barWidth * currLife) / monster.maxHitPoints;
+	int barProgress = (barWidth * currLife) / monster->maxHitPoints;
 	if (barProgress != 0) {
 		DrawArt(out, position + Displacement { border + 1, border + 1 }, multiplier > 0 ? &healthBlue : &health, 0, barProgress, height - (border * 2) - 2);
 	}
@@ -123,7 +123,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	};
 
 	if (*sgOptions.Gameplay.showMonsterType) {
-		Uint8 borderColor = getBorderColor(monster.data().mMonstClass);
+		Uint8 borderColor = getBorderColor(monster->data().mMonstClass);
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + height - border - 1 }, borderWidth, borderColor);
@@ -133,27 +133,27 @@ void DrawMonsterHealthBar(const Surface &out)
 	}
 
 	UiFlags style = UiFlags::AlignCenter | UiFlags::VerticalCenter;
-	DrawString(out, monster.name, { position + Displacement { -1, 1 }, { width, height } }, style | UiFlags::ColorBlack);
-	if (monster.uniqType != 0)
+	DrawString(out, monster->name, { position + Displacement { -1, 1 }, { width, height } }, style | UiFlags::ColorBlack);
+	if (monster->uniqType != 0)
 		style |= UiFlags::ColorWhitegold;
-	else if (monster.leader != 0)
+	else if (monster->leader != 0)
 		style |= UiFlags::ColorBlue;
 	else
 		style |= UiFlags::ColorWhite;
-	DrawString(out, monster.name, { position, { width, height } }, style);
+	DrawString(out, monster->name, { position, { width, height } }, style);
 
 	if (multiplier > 0)
 		DrawString(out, StrCat("x", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
-	if (monster.uniqType != 0 || MonsterKillCounts[monster.type().type] >= 15) {
+	if (monster->uniqType != 0 || MonsterKillCounts[monster->type().type] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
 
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
-			if ((monster.magicResistance & immunes[i]) != 0) {
+			if ((monster->magicResistance & immunes[i]) != 0) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
-			} else if ((monster.magicResistance & resists[i]) != 0) {
+			} else if ((monster->magicResistance & resists[i]) != 0) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}
@@ -162,7 +162,7 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	int tagOffset = 5;
 	for (int i = 0; i < MAX_PLRS; i++) {
-		if (1 << i & monster.whoHit) {
+		if (1 << i & monster->whoHit) {
 			DrawArt(out, position + Displacement { tagOffset, height - 31 }, &playerExpTags, i + 1);
 		} else if (Players[i].plractive) {
 			DrawArt(out, position + Displacement { tagOffset, height - 31 }, &playerExpTags, 0);

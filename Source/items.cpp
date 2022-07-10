@@ -4452,9 +4452,9 @@ std::string DebugSpawnItem(std::string itemName)
 	GetSuperItemSpace(pos, ii);
 
 	uint32_t begin = SDL_GetTicks();
-	Monster fake_m;
-	fake_m.levelType = 0;
-	fake_m.uniqType = 0;
+	Monster *fake_m;
+	fake_m->levelType = 0;
+	fake_m->uniqType = 0;
 
 	int i = 0;
 	for (;; i++) {
@@ -4467,9 +4467,9 @@ std::string DebugSpawnItem(std::string itemName)
 		if (i > max_iter)
 			return StrCat("Item not found in ", max_iter, " tries!");
 
-		fake_m.level = dist(BetterRng) % CF_LEVEL + 1;
+		fake_m->level = dist(BetterRng) % CF_LEVEL + 1;
 
-		int idx = RndItem(fake_m);
+		int idx = RndItem(*fake_m);
 		if (idx > 1) {
 			idx--;
 		} else
@@ -4478,7 +4478,7 @@ std::string DebugSpawnItem(std::string itemName)
 		Point bkp = item.position;
 		item = {};
 		item.position = bkp;
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.level, 1, false, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m->level, 1, false, false, false);
 
 		std::string tmp(item._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });

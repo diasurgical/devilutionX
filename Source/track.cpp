@@ -38,10 +38,10 @@ void RepeatWalk(Player &player)
 void InvalidateTargets()
 {
 	if (pcursmonst != -1) {
-		const Monster &monster = Monsters[pcursmonst];
-		if (monster.isInvalid || monster.hitPoints >> 6 <= 0
-		    || (monster.flags & MFLAG_HIDDEN) != 0
-		    || !IsTileLit(monster.position.tile)) {
+		const Monster *monster = Monsters[pcursmonst];
+		if (monster->isInvalid || monster->hitPoints >> 6 <= 0
+		    || (monster->flags & MFLAG_HIDDEN) != 0
+		    || !IsTileLit(monster->position.tile)) {
 			pcursmonst = -1;
 		}
 	}

@@ -812,7 +812,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 	}
 	Player &player = Players[pnum];
 
-	if (!monster.isPossibleToHit())
+	if (!monster->isPossibleToHit())
 		return false;
 
 	if (adjacentDamage) {
@@ -823,14 +823,14 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 	}
 
 	int hit = GenerateRnd(100);
-	if (monster.mode == MonsterMode::Petrified) {
+	if (monster->mode == MonsterMode::Petrified) {
 		hit = 0;
 	}
 
-	hper += player.GetMeleePiercingToHit() - player.CalculateArmorPierce(monster.armorClass, true);
+	hper += player.GetMeleePiercingToHit() - player.CalculateArmorPierce(monster->armorClass, true);
 	hper = clamp(hper, 5, 95);
 
-	if (monster.tryLiftGargoyle())
+	if (monster->tryLiftGargoyle())
 		return true;
 
 	if (hit >= hper) {
@@ -865,7 +865,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 		phanditype = ItemType::Mace;
 	}
 
-	switch (monster.data().mMonstClass) {
+	switch (monster->data().mMonstClass) {
 	case MonsterClass::Undead:
 		if (phanditype == ItemType::Sword) {
 			dam -= dam / 2;
@@ -891,8 +891,8 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && monster.uniqType == 0 && GenerateRnd(100) < 10) {
-		AddDoppelganger(monster);
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster->type().type != MT_DIABLO && monster->uniqType == 0 && GenerateRnd(100) < 10) {
+		AddDoppelganger(*monster);
 	}
 
 	dam <<= 6;
@@ -914,7 +914,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 			}
 			dam *= 2;
 		}
-		monster.hitPoints -= dam;
+		monster->hitPoints -= dam;
 	}
 
 	int skdam = 0;
@@ -965,19 +965,19 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 		drawhpflag = true;
 	}
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnPlayer)) { // Why is there a different ItemSpecialEffect here? (see missile.cpp) is this a BUG?
-		monster.flags |= MFLAG_NOHEAL;
+		monster->flags |= MFLAG_NOHEAL;
 	}
 #ifdef _DEBUG
 	if (DebugGodMode) {
-		monster.hitPoints = 0; /* double check */
+		monster->hitPoints = 0; /* double check */
 	}
 #endif
-	if ((monster.hitPoints >> 6) <= 0) {
+	if ((monster->hitPoints >> 6) <= 0) {
 		M_StartKill(monsterId, pnum);
 	} else {
-		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
-			M_GetKnockback(monster);
-		M_StartHit(monster, pnum, dam);
+		if (monster->mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
+			M_GetKnockback(*monster);
+		M_StartHit(*monster, pnum, dam);
 	}
 	return true;
 }
@@ -1087,7 +1087,7 @@ bool DoAttack(int pnum)
 			} else {
 				m = -(dMonster[dx][dy] + 1);
 			}
-			if (CanTalkToMonst(Monsters[m])) {
+			if (CanTalkToMonst(*Monsters[m])) {
 				player.position.temp.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
 				return false;
 			}
@@ -1140,7 +1140,7 @@ bool DoAttack(int pnum)
 			if (dMonster[position.x][position.y] != 0) {
 				int m = abs(dMonster[position.x][position.y]) - 1;
 				auto &monster = Monsters[m];
-				if (!CanTalkToMonst(monster) && monster.position.old == position) {
+				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
 					if (PlrHitMonst(pnum, m, true))
 						didhit = true;
 				}
@@ -1149,7 +1149,7 @@ bool DoAttack(int pnum)
 			if (dMonster[position.x][position.y] != 0) {
 				int m = abs(dMonster[position.x][position.y]) - 1;
 				auto &monster = Monsters[m];
-				if (!CanTalkToMonst(monster) && monster.position.old == position) {
+				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
 					if (PlrHitMonst(pnum, m, true))
 						didhit = true;
 				}
@@ -1456,7 +1456,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	case ACTION_ATTACKMON:
 	case ACTION_RATTACKMON:
 	case ACTION_SPELLMON:
-		monster = &Monsters[targetId];
+		monster = Monsters[targetId];
 		if ((monster->hitPoints >> 6) <= 0) {
 			player.Stop();
 			return;
@@ -2076,23 +2076,23 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	switch (cmdId) {
 	case _cmd_id::CMD_RATTACKID: {
 		auto &monster = Monsters[wParam1];
-		dir = GetDirection(position.future, monster.position.future);
+		dir = GetDirection(position.future, monster->position.future);
 		graphic = player_graphic::Attack;
 		break;
 	}
 	case _cmd_id::CMD_SPELLID:
 	case _cmd_id::CMD_TSPELLID: {
 		auto &monster = Monsters[wParam1];
-		dir = GetDirection(position.future, monster.position.future);
+		dir = GetDirection(position.future, monster->position.future);
 		graphic = GetPlayerGraphicForSpell(static_cast<spell_id>(wParam2));
 		break;
 	}
 	case _cmd_id::CMD_ATTACKID: {
 		auto &monster = Monsters[wParam1];
-		point = monster.position.future;
+		point = monster->position.future;
 		minimalWalkDistance = 2;
-		if (!CanTalkToMonst(monster)) {
-			dir = GetDirection(position.future, monster.position.future);
+		if (!CanTalkToMonst(*monster)) {
+			dir = GetDirection(position.future, monster->position.future);
 			graphic = player_graphic::Attack;
 		}
 		break;
@@ -3188,20 +3188,20 @@ void RemovePlrMissiles(const Player &player)
 {
 	if (leveltype != DTYPE_TOWN && &player == MyPlayer) {
 		auto &golem = Monsters[MyPlayerId];
-		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
+		if (golem->position.tile.x != 1 || golem->position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
-			AddCorpse(golem.position.tile, golem.type().corpseId, golem.direction);
-			int mx = golem.position.tile.x;
-			int my = golem.position.tile.y;
+			AddCorpse(golem->position.tile, golem->type().corpseId, golem->direction);
+			int mx = golem->position.tile.x;
+			int my = golem->position.tile.y;
 			dMonster[mx][my] = 0;
-			golem.isInvalid = true;
+			golem->isInvalid = true;
 			DeleteMonsterList();
 		}
 	}
 
 	for (auto &missile : Missiles) {
 		if (missile._mitype == MIS_STONE && &Players[missile._misource] == &player) {
-			Monsters[missile.var2].mode = static_cast<MonsterMode>(missile.var1);
+			Monsters[missile.var2]->mode = static_cast<MonsterMode>(missile.var1);
 		}
 	}
 }
@@ -3432,7 +3432,7 @@ bool PosOkPlayer(const Player &player, Point position)
 		if (dMonster[position.x][position.y] <= 0) {
 			return false;
 		}
-		if ((Monsters[dMonster[position.x][position.y] - 1].hitPoints >> 6) > 0) {
+		if ((Monsters[dMonster[position.x][position.y] - 1]->hitPoints >> 6) > 0) {
 			return false;
 		}
 	}

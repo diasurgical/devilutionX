@@ -253,14 +253,14 @@ void FindRangedTarget()
 		int mi = ActiveMonsters[i];
 		const auto &monster = Monsters[mi];
 
-		if (!CanTargetMonster(monster))
+		if (!CanTargetMonster(*monster))
 			continue;
 
-		const bool newCanTalk = CanTalkToMonst(monster);
+		const bool newCanTalk = CanTalkToMonst(*monster);
 		if (pcursmonst != -1 && !canTalk && newCanTalk)
 			continue;
-		const int newDdistance = GetDistanceRanged(monster.position.future);
-		const int newRotations = GetRotaryDistance(monster.position.future);
+		const int newDdistance = GetDistanceRanged(monster->position.future);
+		const int newRotations = GetRotaryDistance(monster->position.future);
 		if (pcursmonst != -1 && canTalk == newCanTalk) {
 			if (distance < newDdistance)
 				continue;
@@ -318,8 +318,8 @@ void FindMeleeTarget()
 				if (dMonster[dx][dy] != 0) {
 					const int mi = abs(dMonster[dx][dy]) - 1;
 					const auto &monster = Monsters[mi];
-					if (CanTargetMonster(monster)) {
-						const bool newCanTalk = CanTalkToMonst(monster);
+					if (CanTargetMonster(*monster)) {
+						const bool newCanTalk = CanTalkToMonst(*monster);
 						if (pcursmonst != -1 && !canTalk && newCanTalk)
 							continue;
 						const int newRotations = GetRotaryDistance({ dx, dy });
@@ -496,7 +496,7 @@ void Interact()
 
 		Point position = myPlayer.position.tile + pdir;
 		if (pcursmonst != -1 && !motion) {
-			position = Monsters[pcursmonst].position.tile;
+			position = Monsters[pcursmonst]->position.tile;
 		}
 
 		NetSendCmdLoc(MyPlayerId, true, myPlayer.UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
@@ -505,7 +505,7 @@ void Interact()
 	}
 
 	if (pcursmonst != -1) {
-		if (!myPlayer.UsesRangedWeapon() || CanTalkToMonst(Monsters[pcursmonst])) {
+		if (!myPlayer.UsesRangedWeapon() || CanTalkToMonst(*Monsters[pcursmonst])) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
@@ -1785,7 +1785,7 @@ bool SpellHasActorTarget()
 		return false;
 
 	if (IsWallSpell(spl) && pcursmonst != -1) {
-		cursPosition = Monsters[pcursmonst].position.tile;
+		cursPosition = Monsters[pcursmonst]->position.tile;
 	}
 
 	return pcursplr != -1 || pcursmonst != -1;

@@ -331,7 +331,7 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
 	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
 	if (missile._miUniqTrans != 0)
-		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel, Monsters[missile._misource].uniqueMonsterTRN.get());
+		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel, Monsters[missile._misource]->uniqueMonsterTRN.get());
 	else if (missile._miLightFlag)
 		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel);
 	else
@@ -769,22 +769,22 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	}
 
 	const auto &monster = Monsters[mi];
-	if ((monster.flags & MFLAG_HIDDEN) != 0) {
+	if ((monster->flags & MFLAG_HIDDEN) != 0) {
 		return;
 	}
 
-	CelSprite cel = *monster.animInfo.celSprite;
+	CelSprite cel = *monster->animInfo.celSprite;
 
-	Displacement offset = monster.position.offset;
-	if (monster.isWalking()) {
-		offset = GetOffsetForWalking(monster.animInfo, monster.direction);
+	Displacement offset = monster->position.offset;
+	if (monster->isWalking()) {
+		offset = GetOffsetForWalking(monster->animInfo, monster->direction);
 	}
 
 	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.animInfo.getFrameToUseForRendering());
+		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster->animInfo.getFrameToUseForRendering());
 	}
-	DrawMonster(out, tilePosition, monsterRenderPosition, monster);
+	DrawMonster(out, tilePosition, monsterRenderPosition, *monster);
 }
 
 /**
@@ -850,7 +850,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				break;
 			}
 			if (pDeadGuy->translationPaletteIndex != 0) {
-				uint8_t *trn = Monsters[pDeadGuy->translationPaletteIndex - 1].uniqueMonsterTRN.get();
+				uint8_t *trn = Monsters[pDeadGuy->translationPaletteIndex - 1]->uniqueMonsterTRN.get();
 				Cl2DrawTRN(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel, trn);
 			} else {
 				Cl2DrawLight(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel);

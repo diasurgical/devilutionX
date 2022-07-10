@@ -246,7 +246,7 @@ void LeftMouseCmd(bool bShift)
 			LastMouseButtonAction = MouseActionType::Attack;
 			NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, cursPosition);
 		} else if (pcursmonst != -1) {
-			if (CanTalkToMonst(Monsters[pcursmonst])) {
+			if (CanTalkToMonst(*Monsters[pcursmonst])) {
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 			} else {
 				LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
@@ -259,7 +259,7 @@ void LeftMouseCmd(bool bShift)
 	} else {
 		if (bShift) {
 			if (pcursmonst != -1) {
-				if (CanTalkToMonst(Monsters[pcursmonst])) {
+				if (CanTalkToMonst(*Monsters[pcursmonst])) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 				} else {
 					LastMouseButtonAction = MouseActionType::Attack;
@@ -1219,30 +1219,30 @@ void UnstuckChargers()
 	}
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster.mode == MonsterMode::Charge)
-			monster.mode = MonsterMode::Stand;
+		if (monster->mode == MonsterMode::Charge)
+			monster->mode = MonsterMode::Stand;
 	}
 }
 
 void UpdateMonsterLights()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
-		auto &monster = Monsters[ActiveMonsters[i]];
+		auto monster = Monsters[ActiveMonsters[i]];
 
-		if ((monster.flags & MFLAG_BERSERK) != 0) {
+		if ((monster->flags & MFLAG_BERSERK) != 0) {
 			int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
-			monster.lightId = AddLight(monster.position.tile, lightRadius);
+			monster->lightId = AddLight(monster->position.tile, lightRadius);
 		}
 
-		if (monster.lightId != NO_LIGHT) {
-			if (monster.lightId == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
-				monster.lightId = NO_LIGHT;
+		if (monster->lightId != NO_LIGHT) {
+			if (monster->lightId == MyPlayer->_plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
+				monster->lightId = NO_LIGHT;
 				continue;
 			}
 
-			Light &light = Lights[monster.lightId];
-			if (monster.position.tile != light.position.tile) {
-				ChangeLightXY(monster.lightId, monster.position.tile);
+			Light &light = Lights[monster->lightId];
+			if (monster->position.tile != light.position.tile) {
+				ChangeLightXY(monster->lightId, monster->position.tile);
 			}
 		}
 	}
