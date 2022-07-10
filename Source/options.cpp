@@ -1054,8 +1054,8 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&numFullManaPotionPickup,
 		&numRejuPotionPickup,
 		&numFullRejuPotionPickup,
-                &hpRegen,
-                &manaRegen
+		&hpRegen,
+		&manaRegen
 	};
 }
 
