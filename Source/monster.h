@@ -95,15 +95,15 @@ enum class MonsterGraphic : uint8_t {
 	Special,
 };
 
-enum monster_goal : uint8_t {
-	MGOAL_NONE,
-	MGOAL_NORMAL,
-	MGOAL_RETREAT,
-	MGOAL_HEALING,
-	MGOAL_MOVE,
-	MGOAL_ATTACK2,
-	MGOAL_INQUIRING,
-	MGOAL_TALKING,
+enum class MonsterGoal : uint8_t {
+	None,
+	Normal,
+	Retreat,
+	Healing,
+	Move,
+	Attack,
+	Inquiring,
+	Talking,
 };
 
 enum placeflag : uint8_t {
@@ -173,7 +173,7 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	AnimationInfo animInfo;
 	/** Specifies current goal of the monster */
-	monster_goal goal;
+	MonsterGoal goal;
 	/** Specifies monster's behaviour regarding moving and changing goals. */
 	int goalVar1;
 	/**

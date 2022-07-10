@@ -3440,7 +3440,7 @@ void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
 		    && zhar.hitPoints > 0) {
 			zhar.talkMsg = TEXT_ZHAR2;
 			M_StartStand(zhar, zhar.direction); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
-			zhar.goal = MGOAL_ATTACK2;
+			zhar.goal = MonsterGoal::Attack;
 			zhar.mode = MonsterMode::Talk;
 		}
 	}
