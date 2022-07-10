@@ -95,7 +95,6 @@ Point MousePosition;
 bool gbRunGame;
 bool gbRunGameResult;
 bool ReturnToMainMenu;
-bool zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
 bool gbProcessPlayers;
 bool gbLoadGame;
@@ -147,7 +146,6 @@ bool was_ui_init = false;
 
 void StartGame(interface_mode uMsg)
 {
-	zoomflag = true;
 	CalcViewportGeometry();
 	cineflag = false;
 	InitCursor();
@@ -1628,7 +1626,7 @@ void InitKeymapActions()
 	    N_("Zoom Game Screen."),
 	    'Z',
 	    [] {
-		    zoomflag = !zoomflag;
+		    sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
 		    CalcViewportGeometry();
 	    },
 	    nullptr,
