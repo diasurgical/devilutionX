@@ -398,6 +398,8 @@ struct GraphicsOptions : OptionCategoryBase {
 #endif
 	/** @brief Gamma correction level. */
 	OptionEntryInt<int> gammaCorrection;
+	/** @brief Zoom on start. */
+	OptionEntryBoolean zoom;
 	/** @brief Enable color cycling animations. */
 	OptionEntryBoolean colorCycling;
 	/** @brief Use alternate nest palette. */
