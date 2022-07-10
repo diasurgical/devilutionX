@@ -297,7 +297,9 @@ struct Monster { // note: missing field _mAFNum
 	bool isPossibleToHit() const;
 	bool tryLiftGargoyle();
 
-	virtual void Ai() = 0;
+	//virtual void Ai() = 0;
+
+	Monster(Direction rd, int mtype, Point position, const MonsterData &data);
 };
 
 extern int LevelMonsterTypeCount;
