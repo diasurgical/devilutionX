@@ -2271,7 +2271,7 @@ bool IsItemAvailable(int i)
 	        *sgOptions.Gameplay.testBard && IsAnyOf(i, IDI_BARDSWORD, IDI_BARDDAGGER));
 }
 
-BYTE GetOutlineColor(const Item &item, bool checkReq)
+uint8_t GetOutlineColor(const Item &item, bool checkReq)
 {
 	if (checkReq && !item._iStatFlag)
 		return ICOL_RED;

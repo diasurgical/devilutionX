@@ -849,7 +849,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 		return false;
 
 	int hit = GenerateRnd(100);
-	int hper = 90 - (BYTE)monster.armorClass - dist;
+	int hper = 90 - monster.armorClass - dist;
 	hper = clamp(hper, 5, 95);
 	if (monster.tryLiftGargoyle())
 		return true;

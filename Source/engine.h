@@ -36,7 +36,6 @@
 #include "engine/point.hpp"
 #include "engine/size.hpp"
 #include "engine/surface.hpp"
-#include "miniwin/miniwin.h"
 #include "utils/stdcompat/cstddef.hpp"
 
 #define TILE_WIDTH 64

@@ -12,6 +12,7 @@
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "dead.h"
+#include "miniwin/misc_msg.h"
 #ifdef _DEBUG
 #include "debug.h"
 #endif
@@ -49,16 +50,16 @@ Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
-constexpr int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
+const int8_t plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
 /** Specifies the Y-coordinate delta from the player start location in Tristram. */
-constexpr int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
+const int8_t plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
 /** Specifies the X-coordinate delta from a player, used for instance when casting resurrect. */
-constexpr int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
+const int8_t plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
-constexpr int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
+const int8_t plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
 /** Maps from player_class to starting stat in strength. */
-constexpr int StrengthTbl[enum_size<HeroClass>::value] = {
+const int StrengthTbl[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	15,
@@ -67,7 +68,7 @@ constexpr int StrengthTbl[enum_size<HeroClass>::value] = {
 	40,
 };
 /** Maps from player_class to starting stat in magic. */
-constexpr int MagicTbl[enum_size<HeroClass>::value] = {
+const int MagicTbl[enum_size<HeroClass>::value] = {
 	// clang-format off
 	10,
 	15,
@@ -78,7 +79,7 @@ constexpr int MagicTbl[enum_size<HeroClass>::value] = {
 	// clang-format on
 };
 /** Maps from player_class to starting stat in dexterity. */
-constexpr int DexterityTbl[enum_size<HeroClass>::value] = {
+const int DexterityTbl[enum_size<HeroClass>::value] = {
 	20,
 	30,
 	15,
@@ -87,7 +88,7 @@ constexpr int DexterityTbl[enum_size<HeroClass>::value] = {
 	20,
 };
 /** Maps from player_class to starting stat in vitality. */
-constexpr int VitalityTbl[enum_size<HeroClass>::value] = {
+const int VitalityTbl[enum_size<HeroClass>::value] = {
 	25,
 	20,
 	20,
@@ -96,7 +97,7 @@ constexpr int VitalityTbl[enum_size<HeroClass>::value] = {
 	25,
 };
 /** Specifies the chance to block bonus of each player class.*/
-constexpr int BlockBonuses[enum_size<HeroClass>::value] = {
+const int BlockBonuses[enum_size<HeroClass>::value] = {
 	30,
 	20,
 	10,
@@ -106,7 +107,7 @@ constexpr int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-constexpr uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
+const uint32_t ExpLvlsTbl[MaxCharacterLevel + 1] = {
 	0,
 	2000,
 	4620,
@@ -285,7 +286,7 @@ void ScrollViewPort(const Player &player, ScrollDirection dir)
 {
 	ScrollInfo.tile = Point { 0, 0 } + (player.position.tile - ViewPosition);
 
-	if (zoomflag) {
+	if (!*sgOptions.Graphics.zoom) {
 		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
 			ScrollInfo._sdir = ScrollDirection::None;
 		} else {
@@ -635,7 +636,7 @@ void InitLevelChange(int pnum)
  */
 bool DoWalk(int pnum, int variant)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PM_DoWalk: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -788,12 +789,12 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 {
 	int hper = 0;
 
-	if ((DWORD)monsterId >= MaxMonsters) {
+	if (monsterId < 0 || monsterId >= MaxMonsters) {
 		app_fatal(StrCat("PlrHitMonst: illegal monster ", monsterId));
 	}
 	auto &monster = Monsters[monsterId];
 
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PlrHitMonst: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -970,7 +971,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 
 bool PlrHitPlr(Player &attacker, int8_t p)
 {
-	if ((DWORD)p >= MAX_PLRS) {
+	if (p < 0 || p >= MAX_PLRS) {
 		app_fatal(StrCat("PlrHitPlr: illegal target player ", p));
 	}
 	Player &target = Players[p];
@@ -1050,7 +1051,7 @@ bool PlrHitObj(int pnum, Object &targetObject)
 
 bool DoAttack(int pnum)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PM_DoAttack: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -1067,13 +1068,7 @@ bool DoAttack(int pnum)
 		int dy = position.y;
 
 		if (dMonster[dx][dy] != 0) {
-			int m = -1;
-			if (dMonster[dx][dy] > 0) {
-				m = dMonster[dx][dy] - 1;
-			} else {
-				m = -(dMonster[dx][dy] + 1);
-			}
-			if (CanTalkToMonst(Monsters[m])) {
+			if (CanTalkToMonst(Monsters[abs(dMonster[dx][dy]) - 1])) {
 				player.position.temp.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
 				return false;
 			}
@@ -1089,21 +1084,9 @@ bool DoAttack(int pnum)
 		}
 
 		if (dMonster[dx][dy] != 0) {
-			int m = dMonster[dx][dy];
-			if (dMonster[dx][dy] > 0) {
-				m = dMonster[dx][dy] - 1;
-			} else {
-				m = -(dMonster[dx][dy] + 1);
-			}
-			didhit = PlrHitMonst(pnum, m);
+			didhit = PlrHitMonst(pnum, abs(dMonster[dx][dy]) - 1);
 		} else if (dPlayer[dx][dy] != 0 && !player.friendlyMode) {
-			BYTE p = dPlayer[dx][dy];
-			if (dPlayer[dx][dy] > 0) {
-				p = dPlayer[dx][dy] - 1;
-			} else {
-				p = -(dPlayer[dx][dy] + 1);
-			}
-			didhit = PlrHitPlr(player, p);
+			didhit = PlrHitPlr(player, abs(dPlayer[dx][dy]) - 1);
 		} else {
 			Object *object = ObjectAtPosition(position, false);
 			if (object != nullptr) {
@@ -1160,7 +1143,7 @@ bool DoAttack(int pnum)
 
 bool DoRangeAttack(int pnum)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PM_DoRangeAttack: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -1260,7 +1243,7 @@ void DamageParryItem(Player &player)
 
 bool DoBlock(int pnum)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PM_DoBlock: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -1321,7 +1304,7 @@ void DamageArmor(Player &player)
 
 bool DoSpell(int pnum)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PM_DoSpell: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -1352,7 +1335,7 @@ bool DoSpell(int pnum)
 
 bool DoGotHit(int pnum)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PM_DoGotHit: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -1423,7 +1406,7 @@ void TryDisarm(const Player &player, Object &object)
 
 void CheckNewPath(int pnum, bool pmWillBeCalled)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("CheckNewPath: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -1761,7 +1744,7 @@ bool PlrDeathModeOK(Player &player)
 
 void ValidatePlayer()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
+	if (MyPlayerId < 0 || MyPlayerId >= MAX_PLRS) {
 		app_fatal(StrCat("ValidatePlayer: illegal player ", MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
@@ -2861,7 +2844,7 @@ void InitPlayer(Player &player, bool firstTime)
 
 void InitMultiView()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
+	if (MyPlayerId < 0 || MyPlayerId >= MAX_PLRS) {
 		app_fatal(StrCat("InitPlayer: illegal player ", MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
@@ -2915,7 +2898,7 @@ void FixPlayerLocation(Player &player, Direction bDir)
 
 void StartStand(int pnum, Direction dir)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("StartStand: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -2965,7 +2948,7 @@ void FixPlrWalkTags(const Player &player)
 
 void StartPlrHit(int pnum, int dam, bool forcehit)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("StartPlrHit: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -3216,7 +3199,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 {
 	InitLevelChange(pnum);
 
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("StartNewLvl: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -3256,7 +3239,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 void RestartTownLvl(int pnum)
 {
 	InitLevelChange(pnum);
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("RestartTownLvl: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -3305,7 +3288,7 @@ void StartWarpLvl(int pnum, int pidx)
 
 void ProcessPlayers()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
+	if (MyPlayerId < 0 || MyPlayerId >= MAX_PLRS) {
 		app_fatal(StrCat("ProcessPlayers: illegal player ", MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
@@ -3480,7 +3463,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 {
 	bool addflag = false;
 
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
+	if (MyPlayerId < 0 || MyPlayerId >= MAX_PLRS) {
 		app_fatal(StrCat("CheckPlrSpell: illegal player ", MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;
@@ -3656,7 +3639,7 @@ void SyncInitPlrPos(int pnum)
 
 void SyncInitPlr(int pnum)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("SyncInitPlr: illegal player ", pnum));
 	}
 	Player &player = Players[pnum];
@@ -3837,7 +3820,7 @@ enum {
 
 void PlayDungMsgs()
 {
-	if ((DWORD)MyPlayerId >= MAX_PLRS) {
+	if (MyPlayerId < 0 || MyPlayerId >= MAX_PLRS) {
 		app_fatal(StrCat("PlayDungMsgs: illegal player ", MyPlayerId));
 	}
 	Player &myPlayer = *MyPlayer;

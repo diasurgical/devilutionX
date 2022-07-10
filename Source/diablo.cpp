@@ -16,6 +16,7 @@
 #include "dead.h"
 #ifdef _DEBUG
 #include "debug.h"
+#include "miniwin/misc_msg.h"
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/plrctrls.h"
@@ -95,7 +96,6 @@ Point MousePosition;
 bool gbRunGame;
 bool gbRunGameResult;
 bool ReturnToMainMenu;
-bool zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
 bool gbProcessPlayers;
 bool gbLoadGame;
@@ -147,7 +147,6 @@ bool was_ui_init = false;
 
 void StartGame(interface_mode uMsg)
 {
-	zoomflag = true;
 	CalcViewportGeometry();
 	cineflag = false;
 	InitCursor();
@@ -716,13 +715,12 @@ void RunGameLoop(interface_mode uMsg)
 {
 	demo::NotifyGameLoopStart();
 
-	WNDPROC saveProc;
 	tagMSG msg;
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
 	assert(ghMainWnd);
-	saveProc = SetWindowProc(GameEventHandler);
+	EventHandler previousHandler = SetEventHandler(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
 	gbProcessPlayers = true;
@@ -805,8 +803,8 @@ void RunGameLoop(interface_mode uMsg)
 	ClearScreenBuffer();
 	force_redraw = 255;
 	scrollrt_draw_game_screen();
-	saveProc = SetWindowProc(saveProc);
-	assert(saveProc == GameEventHandler);
+	previousHandler = SetEventHandler(previousHandler);
+	assert(previousHandler == GameEventHandler);
 	FreeGame();
 
 	if (cineflag) {
@@ -928,7 +926,7 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(0);
 			}
 			recordNumber = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("--create-reference", argv[i]) == 0) {
+		} else if (arg == "--create-reference") {
 			createDemoReference = true;
 		} else if (arg == "-n") {
 			gbShowIntro = false;
@@ -1628,7 +1626,7 @@ void InitKeymapActions()
 	    N_("Zoom Game Screen."),
 	    'Z',
 	    [] {
-		    zoomflag = !zoomflag;
+		    sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
 		    CalcViewportGeometry();
 	    },
 	    nullptr,
@@ -2038,7 +2036,7 @@ bool PressEscKey()
 	return rv;
 }
 
-void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
+void DisableInputEventHandler(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:

@@ -4,6 +4,7 @@
 
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
+#include "miniwin/misc_msg.h"
 #ifndef USE_SDL1
 #include "controls/devices/game_controller.h"
 #endif
@@ -302,7 +303,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			case ControllerButton_BUTTON_Y: // Top button
 #ifdef __3DS__
 				if (!ctrlEvent.up) {
-					zoomflag = !zoomflag;
+					sgOptions.Graphics.zoom.SetValue(!*sgOptions.Graphics.zoom);
 					CalcViewportGeometry();
 				}
 #else

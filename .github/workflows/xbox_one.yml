@@ -1,0 +1,41 @@
+name: Xbox One / Series
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        msbuild-architecture: x64
+
+    - name: Build
+      shell: cmd
+      run: |
+        cd ${{ github.workspace }}\Packaging\xbox-one
+        build.bat
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: devilutionx-xbox-one.zip
+        if-no-files-found: error
+        path: |
+          build/uwp-project/AppxPackages/**/Microsoft.VCLibs.x64.*.appx
+          build/uwp-project/Release/**/devilutionX_*_x64.appx

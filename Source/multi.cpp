@@ -16,6 +16,7 @@
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
 #include "menu.h"
+#include "miniwin/miniwin.h"
 #include "nthread.h"
 #include "options.h"
 #include "pfile.h"
@@ -39,7 +40,7 @@ uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
 bool gbShouldValidatePackage;
-BYTE gbActivePlayers;
+uint8_t gbActivePlayers;
 bool gbGameDestroyed;
 bool sgbSendDeltaTbl[MAX_PLRS];
 GameData sgGameInitInfo;
@@ -56,7 +57,7 @@ bool gbIsMultiplayer;
 bool sgbTimeout;
 char szPlayerName[128];
 bool PublicGame;
-BYTE gbDeltaSender;
+uint8_t gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
 Uint32 playerInfoTimers[MAX_PLRS];
@@ -399,16 +400,19 @@ void HandleEvents(_SNETEVENT *pEvt)
 	}
 }
 
-void EventHandler(bool add)
+void RegisterNetEventHandlers()
 {
 	for (auto eventType : EventTypes) {
-		if (add) {
-			if (!SNetRegisterEventHandler(eventType, HandleEvents)) {
-				app_fatal(StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
-			}
-		} else {
-			SNetUnregisterEventHandler(eventType);
+		if (!SNetRegisterEventHandler(eventType, HandleEvents)) {
+			app_fatal(StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
 		}
+	}
+}
+
+void UnregisterNetEventHandlers()
+{
+	for (auto eventType : EventTypes) {
+		SNetUnregisterEventHandler(eventType);
 	}
 }
 
@@ -441,7 +445,7 @@ bool InitMulti(GameData *gameData)
 			return false;
 		}
 
-		EventHandler(true);
+		RegisterNetEventHandlers();
 		if (UiSelectGame(gameData, &playerId))
 			break;
 
@@ -700,7 +704,7 @@ void NetClose()
 	nthread_cleanup();
 	DThreadCleanup();
 	tmsg_cleanup();
-	EventHandler(false);
+	UnregisterNetEventHandlers();
 	SNetLeaveGame(3);
 	if (gbIsMultiplayer)
 		SDL_Delay(2000);

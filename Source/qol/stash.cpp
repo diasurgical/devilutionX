@@ -15,6 +15,7 @@
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
 #include "minitext.h"
+#include "miniwin/misc_msg.h"
 #include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"

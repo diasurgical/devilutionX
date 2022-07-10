@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-#include "miniwin/miniwin.h"
 #include "options.h"
 #include "utils/display.h"
 #include "utils/ui_fwd.h"

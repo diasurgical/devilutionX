@@ -17,7 +17,7 @@
 
 namespace devilution {
 
-BYTE sgbNetUpdateRate;
+uint8_t sgbNetUpdateRate;
 size_t gdwMsgLenTbl[MAX_PLRS];
 uint32_t gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
@@ -29,7 +29,6 @@ float gfProgressToNextGameTick = 0.0;
 namespace {
 
 SdlMutex MemCrit;
-DWORD gdwDeltaBytesSec;
 bool nthread_should_run;
 char sgbSyncCountdown;
 uint32_t turn_upper_bit;
@@ -167,7 +166,6 @@ void nthread_start(bool setTurnUpperBit)
 	uint32_t largestMsgSize = 512;
 	if (caps.maxmessagesize < 0x200)
 		largestMsgSize = caps.maxmessagesize;
-	gdwDeltaBytesSec = caps.bytessec / 4;
 	gdwLargestMsgSize = largestMsgSize;
 	gdwNormalMsgSize = caps.bytessec * sgbNetUpdateRate / 20;
 	gdwNormalMsgSize *= 3;

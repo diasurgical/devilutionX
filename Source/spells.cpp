@@ -259,7 +259,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 
 void DoResurrect(int pnum, uint16_t rid)
 {
-	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
+	if ((pnum < 0 && pnum >= MAX_PLRS) || rid >= MAX_PLRS) {
 		return;
 	}
 

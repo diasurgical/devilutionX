@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include "miniwin/miniwin.h"
+#include "miniwin/misc_msg.h"
 #include "mpq/mpq_reader.hpp"
 #include "utils/attributes.h"
 
@@ -13,7 +13,7 @@ namespace devilution {
 
 extern bool gbActive;
 extern std::optional<MpqArchive> hellfire_mpq;
-extern WNDPROC CurrentProc;
+extern EventHandler CurrentEventHandler;
 extern std::optional<MpqArchive> spawn_mpq;
 extern std::optional<MpqArchive> diabdat_mpq;
 extern DVL_API_FOR_TEST bool gbIsSpawn;
@@ -35,6 +35,6 @@ void LoadLanguageArchive();
 void LoadGameArchives();
 void init_create_window();
 void MainWndProc(uint32_t Msg);
-WNDPROC SetWindowProc(WNDPROC NewProc);
+EventHandler SetEventHandler(EventHandler NewProc);
 
 } // namespace devilution

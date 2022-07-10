@@ -9,6 +9,7 @@
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "init.h"
+#include "miniwin/miniwin.h"
 #include "player.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
@@ -1161,7 +1162,7 @@ _sfx_id RndSFX(_sfx_id psfx)
 	return static_cast<_sfx_id>(psfx + GenerateRnd(nRand));
 }
 
-void PrivSoundInit(BYTE bLoadMask)
+void PrivSoundInit(uint8_t bLoadMask)
 {
 	if (!gbSndInited) {
 		return;

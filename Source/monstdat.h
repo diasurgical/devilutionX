@@ -98,7 +98,6 @@ struct MonsterData {
 	uint16_t mImage;
 	bool has_special;
 	bool snd_special;
-	bool has_trans;
 	int8_t Frames[6];
 	int8_t Rate[6];
 	int8_t mMinDLvl;

@@ -28,6 +28,7 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "minitext.h"
+#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "movie.h"
 #include "options.h"
@@ -1045,22 +1046,19 @@ void Teleport(Monster &monster)
 	}
 }
 
-void HitMonster(int monsterId, int dam)
+void HitMonster(Monster &monster, int dam)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	delta_monster_hp(monster, *MyPlayer);
-	NetSendCmdMonDmg(false, monsterId, dam);
+	NetSendCmdMonDmg(false, monster.getId(), dam);
 	PlayEffect(monster, 1);
 
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		if (monster.type().type == MT_BLINK) {
 			Teleport(monster);
 		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
-			monster.goalVar1 = MGOAL_NORMAL;
+			monster.goal = MGOAL_NORMAL;
+			monster.goalVar1 = 0;
 			monster.goalVar2 = 0;
-			monster.goalVar3 = 0;
 		}
 
 		if (monster.mode != MonsterMode::Petrified) {
@@ -1069,11 +1067,8 @@ void HitMonster(int monsterId, int dam)
 	}
 }
 
-void MonsterHitMonster(int monsterId, int i, int dam)
+void MonsterHitMonster(Monster &monster, int i, int dam)
 {
-	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (i < MAX_PLRS)
 		monster.whoHit |= 1 << i;
 
@@ -1081,7 +1076,7 @@ void MonsterHitMonster(int monsterId, int i, int dam)
 		monster.direction = Opposite(Monsters[i].direction);
 	}
 
-	HitMonster(monsterId, dam);
+	HitMonster(monster, dam);
 }
 
 void MonsterDeath(Monster &monster, int pnum, Direction md, bool sendmsg)
@@ -1273,7 +1268,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	if (monster.hitPoints >> 6 <= 0) {
 		StartDeathFromMonster(i, mid);
 	} else {
-		MonsterHitMonster(mid, i, dam);
+		MonsterHitMonster(monster, i, dam);
 	}
 
 	Monster &attackingMonster = Monsters[i];
@@ -2639,8 +2634,8 @@ void BatAi(int monsterId)
 		}
 	} else if (v < 4 * monster.intelligence + 8) {
 		StartAttack(monster);
-		monster.goalVar1 = MGOAL_RETREAT;
-		monster.goalVar2 = 0;
+		monster.goal = MGOAL_RETREAT;
+		monster.goalVar1 = 0;
 		if (monster.type().type == MT_FAMILIAR) {
 			AddMissile(monster.enemyPosition, { monster.enemyPosition.x + 1, 0 }, Direction::South, MIS_LIGHTNING, TARGET_PLAYERS, monsterId, GenerateRnd(10) + 1, 0);
 		}
@@ -3687,7 +3682,7 @@ void InitMonsterGFX(int monsterTypeIndex)
 
 	monster.data = &monsterData;
 
-	if (monsterData.has_trans) {
+	if (monsterData.TransFile != nullptr) {
 		InitMonsterTRN(monster);
 	}
 
@@ -3936,9 +3931,9 @@ void M_StartHit(Monster &monster, int dam)
 			Teleport(monster);
 		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV)
 		    || monster.type().type == MT_GRAVEDIG) {
-			monster.goalVar1 = MGOAL_NORMAL;
+			monster.goal = MGOAL_NORMAL;
+			monster.goalVar1 = 0;
 			monster.goalVar2 = 0;
-			monster.goalVar3 = 0;
 		}
 		if (monster.mode != MonsterMode::Petrified) {
 			StartMonsterGotHit(monster);
@@ -4480,9 +4475,9 @@ void M_FallenFear(Point position)
 			continue;
 
 		int runDistance = std::max((8 - monster.data().mLevel), 2);
-		monster.goalVar1 = MGOAL_RETREAT;
-		monster.goalVar2 = runDistance;
-		monster.goalVar3 = static_cast<int>(GetDirection(position, monster.position.tile));
+		monster.goal = MGOAL_RETREAT;
+		monster.goalVar1 = runDistance;
+		monster.goalVar2 = static_cast<int>(GetDirection(position, monster.position.tile));
 	}
 }
 
@@ -4618,7 +4613,7 @@ void MissToMonst(Missile &missile, Point position)
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
 		M_StartHit(monster, 0);
 	else
-		HitMonster(monsterId, 0);
+		HitMonster(monster, 0);
 
 	if (monster.type().type == MT_GLOOM)
 		return;
@@ -4907,9 +4902,9 @@ bool Monster::isPossibleToHit() const
 {
 	return !(hitPoints >> 6 <= 0
 	    || talkMsg != TEXT_NONE
-	    || (type().type == MT_ILLWEAV && goalVar1 == MGOAL_RETREAT)
+	    || (type().type == MT_ILLWEAV && goal == MGOAL_RETREAT)
 	    || mode == MonsterMode::Charge
-	    || (IsAnyOf(type().type, MT_COUNSLR, MT_MAGISTR, MT_CABALIST, MT_ADVOCATE) && goalVar1 != MGOAL_NORMAL));
+	    || (IsAnyOf(type().type, MT_COUNSLR, MT_MAGISTR, MT_CABALIST, MT_ADVOCATE) && goal != MGOAL_NORMAL));
 }
 
 bool Monster::tryLiftGargoyle()

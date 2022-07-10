@@ -9,7 +9,6 @@
 
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
-#include "miniwin/miniwin.h"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {

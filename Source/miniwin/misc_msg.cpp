@@ -1,3 +1,5 @@
+#include "miniwin/misc_msg.h"
+
 #include <cstdint>
 #include <deque>
 #include <string>
@@ -20,7 +22,6 @@
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "menu.h"
-#include "miniwin/miniwin.h"
 #include "movie.h"
 #include "panels/spell_list.hpp"
 #include "qol/stash.h"
@@ -829,9 +830,9 @@ bool GetAsyncKeyState(int vKey)
 
 void PushMessage(const tagMSG *lpMsg)
 {
-	assert(CurrentProc);
+	assert(CurrentEventHandler != nullptr);
 
-	CurrentProc(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+	CurrentEventHandler(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
 bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
