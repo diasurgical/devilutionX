@@ -317,38 +317,6 @@ _sfx_id ItemDropSnds[] = {
 	IS_FLARM,
 	IS_FLARM,
 };
-/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
-int premiumlvladd[] = {
-	// clang-format off
-	-1,
-	-1,
-	 0,
-	 0,
-	 1,
-	 2,
-	// clang-format on
-};
-/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
-int premiumLvlAddHellfire[] = {
-	// clang-format off
-	-1,
-	-1,
-	-1,
-	 0,
-	 0,
-	 0,
-	 0,
-	 1,
-	 1,
-	 1,
-	 1,
-	 2,
-	 2,
-	 3,
-	 3,
-	// clang-format on
-};
-
 bool IsPrefixValidForItemType(int i, AffixItemType flgs)
 {
 	AffixItemType itemTypes = ItemPrefixes[i].PLIType;
@@ -4069,6 +4037,35 @@ void SpawnSmith(int lvl)
 
 void SpawnPremium(int pnum)
 {
+	/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
+	constexpr int premiumlvladd[] = {
+		-1,
+		-1,
+		0,
+		0,
+		1,
+		2,
+	};
+
+	/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
+	constexpr int premiumLvlAddHellfire[] = {
+		-1,
+		-1,
+		-1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		1,
+		1,
+		1,
+		2,
+		2,
+		3,
+		3,
+	};
+
 	int8_t lvl = Players[pnum]._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
@@ -4083,18 +4080,24 @@ void SpawnPremium(int pnum)
 	while (premiumlevel < lvl) {
 		premiumlevel++;
 		if (gbIsHellfire) {
-			// Discard first 3 items and shift next 10
-			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
+			// Discard the first four items, this allows us to reuse the last three +0 level items, all four +1 level items and the two +2 level items as the new -1, +0, +1 set
+			std::move(premiumitems.begin() + 4, premiumitems.begin() + 13, premiumitems.begin());
+			// Roll two new +1 items
+			SpawnOnePremium(premiumitems[9], premiumlevel + premiumLvlAddHellfire[9], pnum);
 			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], pnum);
-			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], pnum);
-			premiumitems[13] = premiumitems[14];
+			// Reuse the existing +3 items as the +2 set relative to the current player level
+			std::move(premiumitems.begin() + 13, premiumitems.end(), premiumitems.begin() + 11);
+			// Roll two new +3 items
+			SpawnOnePremium(premiumitems[13], premiumlevel + premiumLvlAddHellfire[13], pnum);
 			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], pnum);
 		} else {
-			// Discard first 2 items and shift next 3
-			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
+			// Discard first 2 items, reuse the +0, +1 items as the new -1, +0 set
+			std::move(premiumitems.begin() + 2, premiumitems.begin() + 5, premiumitems.begin());
+			// Roll a new +0 item to finish that set
 			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], pnum);
-			premiumitems[4] = premiumitems[5];
+			// Move the +2 item to the +1 position
+			premiumitems[4] = std::move(premiumitems[5]);
+			// Roll a new +2 item
 			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], pnum);
 		}
 	}

@@ -63,7 +63,7 @@ extern int numpremium;
 /** Base level of current premium items sold by Griswold */
 extern int premiumlevel;
 /** Premium items sold by Griswold */
-extern Item premiumitems[SMITH_PREMIUM_ITEMS];
+extern std::array<Item, SMITH_PREMIUM_ITEMS> premiumitems;
 
 /** Items sold by Pepin */
 extern Item healitem[20];
