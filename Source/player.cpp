@@ -219,7 +219,7 @@ void WalkUpwards(int pnum, const DirectionSettings &walkParams)
 {
 	auto &player = Players[pnum];
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
-	player.position.temp = { walkParams.tileAdd.deltaX, walkParams.tileAdd.deltaY };
+	player.position.temp = player.position.tile + walkParams.tileAdd;
 }
 
 void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
@@ -680,7 +680,7 @@ bool DoWalk(int pnum, int variant)
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile += { player.position.temp.x, player.position.temp.y };
+			player.position.tile = player.position.temp;
 			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 			break;
 		case PM_WALK2:
