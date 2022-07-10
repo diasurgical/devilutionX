@@ -423,10 +423,18 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pFireResist = file.NextLE<int8_t>();
 	player._pLghtResist = file.NextLE<int8_t>();
 	player._pGold = file.NextLE<int32_t>();
-
 	player._pInfraFlag = file.NextBool32();
-	player.position.temp.x = file.NextLE<int32_t>();
-	player.position.temp.y = file.NextLE<int32_t>();
+
+	int32_t tempPositionX = file.NextLE<int32_t>();
+	int32_t tempPositionY = file.NextLE<int32_t>();
+	if (player._pmode == PM_WALK) {
+		// These values are saved as offsets to remain consistent with old savefiles
+		tempPositionX += player.position.tile.x;
+		tempPositionY += player.position.tile.y;
+	}
+	player.position.temp.x = tempPositionX;
+	player.position.temp.y = tempPositionY;
+
 	player.tempDirection = static_cast<Direction>(file.NextLE<int32_t>());
 	player.spellLevel = file.NextLE<int32_t>();
 	file.Skip(4); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
@@ -1147,10 +1155,18 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int8_t>(player._pFireResist);
 	file.WriteLE<int8_t>(player._pLghtResist);
 	file.WriteLE<int32_t>(player._pGold);
-
 	file.WriteLE<uint32_t>(player._pInfraFlag ? 1 : 0);
-	file.WriteLE<int32_t>(player.position.temp.x);
-	file.WriteLE<int32_t>(player.position.temp.y);
+
+	int32_t tempPositionX = player.position.temp.x;
+	int32_t tempPositionY = player.position.temp.y;
+	if (player._pmode == PM_WALK) {
+		// For backwards compatibility, save this as an offset
+		tempPositionX -= player.position.tile.x;
+		tempPositionY -= player.position.tile.y;
+	}
+	file.WriteLE<int32_t>(tempPositionX);
+	file.WriteLE<int32_t>(tempPositionY);
+
 	file.WriteLE<int32_t>(static_cast<int32_t>(player.tempDirection));
 	file.WriteLE<int32_t>(player.spellLevel);
 	file.Skip<int32_t>(); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
