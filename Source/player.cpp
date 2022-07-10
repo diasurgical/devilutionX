@@ -3404,22 +3404,16 @@ void ProcessPlayers()
 			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
 				player.AnimInfo.processAnimation();
 
+                        int mod = player._pLevel > 1 ? 2 : 1;
 			if (player._pmode != PM_DEATH && player._pHitPoints < player._pMaxHP) {
-				if (player._pLevel > 1)
-					player._pHitPoints += player._pLevel / 2;
-				else
-					player._pHitPoints += player._pLevel;
-
-				player._pHitPoints = std::min(player._pHitPoints, player._pMaxHP);
+                          player._pHitPoints = std::min(player._pHitPoints + player._pLevel / mod, player._pMaxHP);
+                          player._pHPBase = std::min(player._pHPBase + player._pLevel / mod, player._pMaxHPBase);
 			}
 
-			if (player._pmode != PM_DEATH && player._pMana < player._pMaxMana) {
-				if (player._pLevel > 1)
-					player._pMana += player._pLevel / 2;
-				else
-					player._pMana += player._pLevel;
-
-				player._pHitPoints = std::min(player._pHitPoints, player._pMaxHP);
+                        bool canRegenMana = HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana); 
+			if (canRegenMana && player._pmode != PM_DEATH && player._pMana < player._pMaxMana) {
+                          player._pMana = std::min(player._pMana + player._pLevel / mod, player._pMaxMana);
+                          player._pManaBase = std::min(player._pManaBase + player._pLevel / mod, player._pMaxManaBase);
 			}
 		}
 	}
