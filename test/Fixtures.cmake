@@ -28,6 +28,7 @@ set(devilutionx_fixtures
   diablo/15-1583642716-changed.dun
   diablo/16-741281013.dun
   hellfire/1-401921334.dun
+  hellfire/1-536340718.dun
   hellfire/2-128964898.dun
   hellfire/2-1180526547.dun
   hellfire/3-1512491184.dun
