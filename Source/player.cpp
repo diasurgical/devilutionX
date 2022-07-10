@@ -225,7 +225,7 @@ void WalkNorthwards(int pnum, const DirectionSettings &walkParams)
 {
 	Player &player = Players[pnum];
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
-	player.position.temp = WorldTilePosition { static_cast<WorldTileCoord>(walkParams.tileAdd.deltaX), static_cast<WorldTileCoord>(walkParams.tileAdd.deltaY) };
+	player.position.temp = player.position.tile + walkParams.tileAdd;
 }
 
 void WalkSouthwards(int pnum, const DirectionSettings & /*walkParams*/)
@@ -669,7 +669,7 @@ bool DoWalk(int pnum, int variant)
 		switch (variant) {
 		case PM_WALK_NORTHWARDS:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile += { player.position.temp.x, player.position.temp.y };
+			player.position.tile = player.position.temp;
 			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 			break;
 		case PM_WALK_SOUTHWARDS:
