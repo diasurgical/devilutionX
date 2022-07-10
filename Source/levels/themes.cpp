@@ -170,7 +170,7 @@ bool TFit_GoatShrine(int t)
 	return false;
 }
 
-bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency)
+bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = std::numeric_limits<unsigned>::max())
 {
 	const PointsInRectangleRange searchArea { Rectangle { origin, 1 } };
 	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId, frequency](Point testPosition) {
@@ -187,7 +187,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency)
 		if (IsObjectAtPosition(testPosition)) {
 			return false;
 		}
-		if (frequency != -1 && FlipCoin(frequency)) {
+		if (frequency != std::numeric_limits<unsigned>::max() && FlipCoin(frequency)) {
 			return false;
 		}
 		return true;
@@ -196,7 +196,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency)
 
 bool TFit_Obj3(int8_t regionId)
 {
-	unsigned objrnd[4] = { 4, 4, 3, 5 };
+	constexpr unsigned objrnd[4] = { 4, 4, 3, 5 };
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
@@ -694,7 +694,7 @@ void Theme_Library(int t)
 
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
-			if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1) && dMonster[xp][yp] == 0 && FlipCoin(librnd[leveltype - 1])) {
+			if (CheckThemeObj3({ xp, yp }, themes[t].ttval) && dMonster[xp][yp] == 0 && FlipCoin(librnd[leveltype - 1])) {
 				AddObject(OBJ_BOOKSTAND, { xp, yp });
 				if (!FlipCoin(2 * librnd[leveltype - 1])) {
 					Object *bookstand = ObjectAtPosition({ xp, yp });
@@ -726,7 +726,7 @@ void Theme_Torture(int t)
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
+				if (CheckThemeObj3({ xp, yp }, themes[t].ttval)) {
 					if (FlipCoin(tortrnd[leveltype - 1])) {
 						AddObject(OBJ_TNUDEM2, { xp, yp });
 					}
@@ -763,7 +763,7 @@ void Theme_Decap(int t)
 	for (int yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
+				if (CheckThemeObj3({ xp, yp }, themes[t].ttval)) {
 					if (FlipCoin(decaprnd[leveltype - 1])) {
 						AddObject(OBJ_DECAP, { xp, yp });
 					}
@@ -805,7 +805,7 @@ void Theme_ArmorStand(int t)
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-				if (CheckThemeObj3({ xp, yp }, themes[t].ttval, -1)) {
+				if (CheckThemeObj3({ xp, yp }, themes[t].ttval)) {
 					if (FlipCoin(armorrnd[leveltype - 1])) {
 						AddObject(OBJ_ARMORSTANDN, { xp, yp });
 					}
@@ -891,7 +891,7 @@ void Theme_BrnCross(int t)
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == regionId && IsTileNotSolid({ xp, yp })) {
-				if (CheckThemeObj3({ xp, yp }, regionId, -1)) {
+				if (CheckThemeObj3({ xp, yp }, regionId)) {
 					if (FlipCoin(bcrossrnd[leveltype - 1])) {
 						AddObject(OBJ_TBCROSS, { xp, yp });
 					}
@@ -920,7 +920,7 @@ void Theme_WeaponRack(int t)
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == regionId && IsTileNotSolid({ xp, yp })) {
-				if (CheckThemeObj3({ xp, yp }, regionId, -1)) {
+				if (CheckThemeObj3({ xp, yp }, regionId)) {
 					if (FlipCoin(weaponrnd[leveltype - 1])) {
 						AddObject(OBJ_WEAPONRACKN, { xp, yp });
 					}
