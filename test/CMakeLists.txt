@@ -8,6 +8,8 @@ set_target_properties(libdevilutionx_so PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON
 
 add_library(test_main STATIC main.cpp)
 target_link_libraries(test_main PUBLIC libdevilutionx_so GTest::gtest)
+target_compile_definitions(test_main PUBLIC ${DEVILUTIONX_PLATFORM_COMPILE_DEFINITIONS})
+target_compile_options(test_main PUBLIC ${DEVILUTIONX_PLATFORM_COMPILE_OPTIONS})
 
 set(tests
   animationinfo_test
@@ -47,6 +49,8 @@ foreach(test_target ${tests})
   add_executable(${test_target} "${test_target}.cpp")
   gtest_discover_tests(${test_target})
   target_link_libraries(${test_target} PRIVATE test_main)
+  target_compile_definitions(${test_target} PUBLIC ${DEVILUTIONX_PLATFORM_COMPILE_DEFINITIONS})
+  target_compile_options(${test_target} PUBLIC ${DEVILUTIONX_PLATFORM_COMPILE_OPTIONS})
   set_target_properties(${test_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${DevilutionX_BINARY_DIR})
   if(GPERF)
     target_link_libraries(${test_target} PUBLIC ${GPERFTOOLS_LIBRARIES})
