@@ -2021,6 +2021,36 @@ void Player::RestorePartialLife()
 	_pHPBase = std::min(_pHPBase + l, _pMaxHPBase);
 }
 
+void Player::RegenLife()
+{
+	int lvlMod = _pLevel > 1 ? 2 : 1;
+	int hpMod = 1;
+	if (IsAnyOf(_pClass, HeroClass::Barbarian, HeroClass::Warrior))
+		hpMod = _pLevel * 2;
+	else if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		hpMod = _pLevel + _pLevel / 2;
+	if (_pmode != PM_DEATH && _pHitPoints < _pMaxHP) {
+		_pHitPoints = std::min(_pHitPoints + hpMod / lvlMod, _pMaxHP);
+		_pHPBase = std::min(_pHPBase + hpMod / lvlMod, _pMaxHPBase);
+	}
+}
+
+void Player::RegenMana()
+{
+	int lvlMod = _pLevel > 1 ? 2 : 1;
+	int manaMod = 1;
+	if (_pClass == HeroClass::Sorcerer)
+		manaMod = _pLevel * 2;
+	else if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		manaMod = _pLevel + _pLevel / 2;
+
+	bool canRegenMana = HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana);
+	if (canRegenMana && _pmode != PM_DEATH && _pMana < _pMaxMana) {
+		_pMana = std::min(_pMana + manaMod / lvlMod, _pMaxMana);
+		_pManaBase = std::min(_pManaBase + manaMod / lvlMod, _pMaxManaBase);
+	}
+}
+
 void Player::RestorePartialMana()
 {
 	int wholeManaPoints = _pMaxMana >> 6;
@@ -3367,28 +3397,11 @@ void ProcessPlayers()
 			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
 				player.AnimInfo.processAnimation();
 
-			int lvlMod = player._pLevel > 1 ? 2 : 1;
-			int hpMod = 1;
-			int manaMod = 1;
-			if (IsAnyOf(player._pClass, HeroClass::Barbarian, HeroClass::Warrior))
-				hpMod = player._pLevel * 2;
-			else if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
-				hpMod = player._pLevel + player._pLevel / 2;
-			if (player._pClass == HeroClass::Sorcerer)
-				manaMod = player._pLevel * 2;
-			else if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
-				manaMod = player._pLevel + player._pLevel / 2;
+			if (*sgOptions.Gameplay.hpRegen)
+				player.RegenLife();
 
-			if (*sgOptions.Gameplay.hpRegen && player._pmode != PM_DEATH && player._pHitPoints < player._pMaxHP) {
-				player._pHitPoints = std::min(player._pHitPoints + hpMod / lvlMod, player._pMaxHP);
-				player._pHPBase = std::min(player._pHPBase + hpMod / lvlMod, player._pMaxHPBase);
-			}
-
-			bool canRegenMana = HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana) && *sgOptions.Gameplay.manaRegen;
-			if (canRegenMana && player._pmode != PM_DEATH && player._pMana < player._pMaxMana) {
-				player._pMana = std::min(player._pMana + manaMod / lvlMod, player._pMaxMana);
-				player._pManaBase = std::min(player._pManaBase + manaMod / lvlMod, player._pMaxManaBase);
-			}
+			if (*sgOptions.Gameplay.manaRegen)
+				player.RegenMana();
 		}
 	}
 }
