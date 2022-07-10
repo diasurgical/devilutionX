@@ -3379,12 +3379,12 @@ void ProcessPlayers()
 			else if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 				manaMod = player._pLevel + player._pLevel / 2;
 
-			if (player._pmode != PM_DEATH && player._pHitPoints < player._pMaxHP) {
+			if (*sgOptions.Gameplay.hpRegen && player._pmode != PM_DEATH && player._pHitPoints < player._pMaxHP) {
 				player._pHitPoints = std::min(player._pHitPoints + hpMod / lvlMod, player._pMaxHP);
 				player._pHPBase = std::min(player._pHPBase + hpMod / lvlMod, player._pMaxHPBase);
 			}
 
-			bool canRegenMana = HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana);
+			bool canRegenMana = HasNoneOf(player._pIFlags, ItemSpecialEffect::NoMana) && *sgOptions.Gameplay.manaRegen;
 			if (canRegenMana && player._pmode != PM_DEATH && player._pMana < player._pMaxMana) {
 				player._pMana = std::min(player._pMana + manaMod / lvlMod, player._pMaxMana);
 				player._pManaBase = std::min(player._pManaBase + manaMod / lvlMod, player._pMaxManaBase);
