@@ -370,9 +370,9 @@ void CheckPlayerNearby()
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		if (i == MyPlayerId)
-			continue;
 		const Player &player = Players[i];
+		if (&player == MyPlayer)
+			continue;
 		const int mx = player.position.future.x;
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0

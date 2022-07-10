@@ -2179,7 +2179,7 @@ void LoadGame(bool firstflag)
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
 		LoadPremium(file, i);
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
-		SpawnPremium(MyPlayerId);
+		SpawnPremium(myPlayer);
 
 	AutomapActive = file.NextBool8();
 	AutoMapScale = file.NextBE<int32_t>();

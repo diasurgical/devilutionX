@@ -1141,10 +1141,10 @@ void DrawTalkPan(const Surface &out)
 	x += 46;
 	int talkBtn = 0;
 	for (int i = 0; i < 4; i++) {
-		if (i == MyPlayerId)
+		Player &player = Players[i];
+		if (&player == MyPlayer)
 			continue;
 
-		Player &player = Players[i];
 		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {

@@ -151,13 +151,14 @@ bool IsNetPlayerValid(const Player &player)
 void CheckPlayerInfoTimeouts()
 {
 	for (int i = 0; i < MAX_PLRS; i++) {
-		if (i == MyPlayerId) {
+		Player &player = Players[i];
+		if (&player == MyPlayer) {
 			continue;
 		}
 
 		Uint32 &timerStart = playerInfoTimers[i];
 		bool isPlayerConnected = (player_state[i] & PS_CONNECTED) != 0;
-		bool isPlayerValid = isPlayerConnected && IsNetPlayerValid(Players[i]);
+		bool isPlayerValid = isPlayerConnected && IsNetPlayerValid(player);
 		if (isPlayerConnected && !isPlayerValid && timerStart == 0) {
 			timerStart = SDL_GetTicks();
 		}
@@ -228,15 +229,12 @@ void ParseTurn(int pnum, uint32_t turn)
 
 void PlayerLeftMsg(int pnum, bool left)
 {
-	if (pnum == MyPlayerId) {
-		return;
-	}
-
 	Player &player = Players[pnum];
 
-	if (!player.plractive) {
+	if (&player == MyPlayer)
 		return;
-	}
+	if (!player.plractive)
+		return;
 
 	FixPlrWalkTags(player);
 	RemovePortalMissile(pnum);
@@ -783,11 +781,11 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
 	static PlayerPack PackedPlayerBuffer[MAX_PLRS];
 
-	if (pnum == MyPlayerId) {
-		return;
-	}
 	assert(pnum >= 0 && pnum < MAX_PLRS);
 	Player &player = Players[pnum];
+	if (&player == MyPlayer) {
+		return;
+	}
 	auto &packedPlayer = PackedPlayerBuffer[pnum];
 
 	if (sgwPackPlrOffsetTbl[pnum] != header.wOffset) {

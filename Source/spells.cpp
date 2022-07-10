@@ -100,7 +100,7 @@ void PlacePlayer(int pnum)
 
 	dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		ViewPosition = newPosition;
 	}
 }
@@ -208,7 +208,7 @@ void EnsureValidReadiedSpell(Player &player)
 	}
 }
 
-SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
+SpellCheckResult CheckSpell(const Player &player, spell_id sn, spell_type st, bool manaonly)
 {
 #ifdef _DEBUG
 	if (DebugGodMode)
@@ -223,7 +223,6 @@ SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 		return SpellCheckResult::Success;
 	}
 
-	const Player &player = Players[id];
 	if (player.GetSpellLevel(sn) <= 0) {
 		return SpellCheckResult::Fail_Level0;
 	}
@@ -271,7 +270,7 @@ void DoResurrect(int pnum, uint16_t rid)
 	if (target._pHitPoints != 0)
 		return;
 
-	if (rid == MyPlayerId) {
+	if (&target == MyPlayer) {
 		MyPlayerIsDead = false;
 		gamemenu_off();
 		drawhpflag = true;
