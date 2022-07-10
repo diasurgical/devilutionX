@@ -3101,11 +3101,11 @@ void MI_NovaCommon(Missile &missile, missile_id projectileType)
 		en = TARGET_MONSTERS;
 	}
 
-	constexpr std::array<Displacement, 9> quarterRadius = { { { 4, 0 }, { 4, 1 }, { 4, 2 }, { 4, 3 }, { 4, 4 }, { 3, 4 }, { 2, 4 }, { 1, 4 }, { 0, 4 } } };
-	for (Displacement quarterOffset : quarterRadius) {
+	constexpr std::array<WorldTileDisplacement, 9> quarterRadius = { { { 4, 0 }, { 4, 1 }, { 4, 2 }, { 4, 3 }, { 4, 4 }, { 3, 4 }, { 2, 4 }, { 1, 4 }, { 0, 4 } } };
+	for (WorldTileDisplacement quarterOffset : quarterRadius) {
 		// This ends up with two missiles targeting offsets 4,0, 0,4, -4,0, 0,-4.
-		std::array<Displacement, 4> offsets { quarterOffset, quarterOffset.flipXY(), quarterOffset.flipX(), quarterOffset.flipY() };
-		for (Displacement offset : offsets)
+		std::array<WorldTileDisplacement, 4> offsets { quarterOffset, quarterOffset.flipXY(), quarterOffset.flipX(), quarterOffset.flipY() };
+		for (WorldTileDisplacement offset : offsets)
 			AddMissile(src, src + offset, dir, projectileType, en, id, dam, missile._mispllvl);
 	}
 	missile._mirange--;
@@ -3320,26 +3320,38 @@ void MI_Guardian(Missile &missile)
 	Point position = missile.position.tile;
 
 	if ((missile._mirange % 16) == 0) {
-		Displacement previous = { 0, 0 };
-
-		bool found = false;
-		for (int j = 0; j < 23 && !found; j++) {
-			for (int k = 10; k >= 0 && !found; k -= 2) {
-				const Displacement offset { VisionCrawlTable[j][k], VisionCrawlTable[j][k + 1] };
-				if (offset == Displacement { 0, 0 }) {
-					break;
-				}
-				if (previous == offset) {
-					continue;
-				}
-				found = GuardianTryFireAt(missile, { position.x + offset.deltaX, position.y + offset.deltaY })
-				    || GuardianTryFireAt(missile, { position.x - offset.deltaX, position.y - offset.deltaY })
-				    || GuardianTryFireAt(missile, { position.x + offset.deltaX, position.y - offset.deltaY })
-				    || GuardianTryFireAt(missile, { position.x - offset.deltaX, position.y + offset.deltaY });
-				if (!found) {
-					previous = offset;
-				}
+		// Guardians pick a target by working backwards along lines originally based on VisionCrawlTable.
+		// Because of their rather unique behaviour the points checked have been unrolled here
+		constexpr std::array<WorldTileDisplacement, 48> guardianArc {
+			{
+			    // clang-format off
+			    { 6, 0 }, { 5, 0 }, { 4, 0 }, { 3, 0 }, { 2, 0 }, { 1, 0 },
+			    { 6, 1 }, { 5, 1 }, { 4, 1 }, { 3, 1 },
+			    { 6, 2 }, { 2, 1 },
+			    { 5, 2 },
+			    { 6, 3 }, { 4, 2 },
+			    { 5, 3 }, { 3, 2 }, { 1, 1 },
+			    { 6, 4 },
+			    { 6, 5 }, { 5, 4 }, { 4, 3 }, { 2, 2 },
+			    { 5, 5 }, { 4, 4 }, { 3, 3 },
+			    { 6, 6 }, { 5, 6 }, { 4, 5 }, { 3, 4 }, { 2, 3 },
+			    { 4, 6 }, { 3, 5 }, { 2, 4 }, { 1, 2 },
+			    { 3, 6 }, { 2, 5 }, { 1, 3 }, { 0, 1 },
+			    { 2, 6 }, { 1, 4 },
+			    { 1, 5 },
+			    { 1, 6 },
+			    { 0, 2 },
+			    { 0, 3 },
+			    { 0, 6 }, { 0, 5 }, { 0, 4 },
+			    // clang-format on
 			}
+		};
+		for (WorldTileDisplacement offset : guardianArc) {
+			if (GuardianTryFireAt(missile, position + offset)
+			    || GuardianTryFireAt(missile, position + offset.flipXY())
+			    || GuardianTryFireAt(missile, position + offset.flipY())
+			    || GuardianTryFireAt(missile, position + offset.flipX()))
+				break;
 		}
 	}
 
