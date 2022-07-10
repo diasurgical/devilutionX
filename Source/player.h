@@ -626,15 +626,6 @@ struct Player {
 		return _pManaPer;
 	}
 
-        /**
-         * @brief Restores between 1/32 (inclusive) and 1/16 (exlusive) of the player's max HP (further adjusted by class). 
-         *
-         * This determines a random amount of non-fractional life points to restore, then scales the value based on the
-         * player class. Warriors/barbarians get between 1/16 and 1/8 life restored per time interval, rogue/monk/bard
-         * get  between 3/64 and 3/32, and sorcerers get the base amount.
-         */
-        void RegenerateLife();
-
 	/**
 	 * @brief Restores between 1/8 (inclusive) and 1/4 (exclusive) of the players max HP (further adjusted by class).
 	 *
@@ -652,16 +643,6 @@ struct Player {
 		_pHitPoints = _pMaxHP;
 		_pHPBase = _pMaxHPBase;
 	}
-
-        /**
-         * @brief Restores between 1/32 (inclusive) and 1/16 (exlusive) of the player's max HP (further adjusted by class). 
-         *
-         * This determines a random amount of non-fractional life points to restore, then scales the value based on the
-         * player class. Warriors/barbarians get between 1/16 and 1/8 life restored per time interval, rogue/monk/bard
-         * get  between 3/64 and 3/32, and sorcerers get the base amount.
-         */
-        void RegenerateMana();
-
 
 	/**
 	 * @brief Restores between 1/8 (inclusive) and 1/4 (exclusive) of the players max Mana (further adjusted by class).
