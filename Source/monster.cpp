@@ -3687,7 +3687,7 @@ void InitMonsterGFX(int monsterTypeIndex)
 
 	monster.data = &monsterData;
 
-	if (monsterData.has_trans) {
+	if (monsterData.TransFile != nullptr) {
 		InitMonsterTRN(monster);
 	}
 
