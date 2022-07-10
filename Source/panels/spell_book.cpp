@@ -63,7 +63,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 		st = RSPLTYPE_SKILL;
 	}
 	if (st == RSPLTYPE_SPELL) {
-		if (CheckSpell(MyPlayerId, ii, st, true) != SpellCheckResult::Success) {
+		if (CheckSpell(*MyPlayer, ii, st, true) != SpellCheckResult::Success) {
 			st = RSPLTYPE_INVALID;
 		}
 		if (player.GetSpellLevel(ii) == 0) {

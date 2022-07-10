@@ -5,8 +5,6 @@
  */
 #include "engine/render/scrollrt.h"
 
-#include <fmt/compile.h>
-
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
 #include "controls/plrctrls.h"
@@ -43,6 +41,7 @@
 #include "utils/display.h"
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
+#include "utils/str_cat.hpp"
 
 #ifdef _DEBUG
 #include "debug.h"
@@ -579,8 +578,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 {
 	dFlags[tilePosition.x][tilePosition.y] &= ~DungeonFlag::DeadPlayer;
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		Player &player = Players[i];
+	for (Player &player : Players) {
 		if (player.plractive && player._pHitPoints == 0 && player.isOnActiveLevel() && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
 			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
@@ -1326,7 +1324,7 @@ void DrawFPS(const Surface &out)
 		framesSinceLastUpdate = 0;
 
 		static char buf[12] {};
-		const char *end = fmt::format_to_n(buf, sizeof(buf), FMT_COMPILE("{} FPS"), framerate).out;
+		const char *end = BufCopy(buf, framerate, " FPS");
 		formatted = { buf, static_cast<string_view::size_type>(end - buf) };
 	};
 	DrawString(out, formatted, Point { 8, 68 }, UiFlags::ColorRed);

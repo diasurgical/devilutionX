@@ -376,6 +376,135 @@ enum Tile : uint8_t {
 	// clang-format on
 };
 
+struct ReplaceTile {
+	Tile search;
+	Tile replace;
+};
+
+const ReplaceTile Statues[] {
+	// clang-format off
+	{ VWall, VDemon    },
+	{ VWall, VSuccubus },
+	{ HWall, HDemon    },
+	{ HWall, HSuccubus },
+	// clang-format on
+};
+
+const ReplaceTile CrackedTiles[] {
+	// clang-format off
+	{ VWall,      VWall2      },
+	{ HWall,      HWall2      },
+	{ Corner,     Corner2     },
+	{ DWall,      DWall2      },
+	{ DArch,      DArch2      },
+	{ VWallEnd,   VWallEnd2   },
+	{ HWallEnd,   HWallEnd2   },
+	{ HArchEnd,   HArchEnd2   },
+	{ VArchEnd,   VArchEnd2   },
+	{ HArchVWall, HArchVWall2 },
+	{ VArch,      VArch2      },
+	{ HArch,      HArch2      },
+	{ Floor,      Floor2      },
+	{ HWallVArch, HWallVArch2 },
+	{ Pillar,     Pillar3     },
+	{ Pillar1,    Pillar4     },
+	{ Pillar2,    Pillar5     },
+	// clang-format on
+};
+
+const ReplaceTile BrokenTiles[] {
+	// clang-format off
+	{ VWall,      VWall3      },
+	{ HWall,      HWall3      },
+	{ Corner,     Corner3     },
+	{ DWall,      DWall3      },
+	{ DArch,      DArch3      },
+	{ VWallEnd,   VWallEnd3   },
+	{ HWallEnd,   HWallEnd3   },
+	{ HArchEnd,   HArchEnd3   },
+	{ VArchEnd,   VArchEnd3   },
+	{ HArchVWall, HArchVWall3 },
+	{ VArch,      VArch3      },
+	{ HArch,      HArch3      },
+	{ Floor,      Floor3      },
+	{ HWallVArch, HWallVArch3 },
+	{ Pillar,     Pillar6     },
+	{ Pillar1,    Pillar7     },
+	{ Pillar2,    Pillar8     },
+	// clang-format on
+};
+
+const ReplaceTile LeakingTiles[] {
+	// clang-format off
+	{ VWall,      VWall4      },
+	{ HWall,      HWall4      },
+	{ Corner,     Corner4     },
+	{ DWall,      DWall4      },
+	{ DArch,      DArch4      },
+	{ VWallEnd,   VWallEnd4   },
+	{ HWallEnd,   HWallEnd4   },
+	{ HArchEnd,   HArchEnd4   },
+	{ VArchEnd,   VArchEnd4   },
+	{ HArchVWall, HArchVWall4 },
+	{ VArch,      VArch4      },
+	{ HArch,      HArch4      },
+	{ Floor,      Floor4      },
+	{ HWallVArch, HWallVArch4 },
+	{ Pillar,     Pillar9     },
+	{ Pillar1,    Pillar10    },
+	{ Pillar2,    Pillar11    },
+	// clang-format on
+};
+
+const ReplaceTile Substitions1Tiles[] {
+	// clang-format off
+	{ VArch,   VArch6   },
+	{ HArch,   HArch6   },
+	{ VArch,   VArch7   },
+	{ HArch,   HArch7   },
+	{ VWall5,  VWall8   },
+	{ VWall5,  VWall9   },
+	{ VWall6,  VWall10  },
+	{ VWall6,  VWall11  },
+	{ VWall7,  VWall12  },
+	{ VWall7,  VWall13  },
+	{ HWall5,  HWall8   },
+	{ HWall5,  HWall9   },
+	{ HWall5,  HWall10  },
+	{ HWall5,  HWall11  },
+	{ HWall5,  HWall12  },
+	{ HWall5,  HWall13  },
+	{ Floor7,  Floor15  },
+	{ Floor7,  Floor16  },
+	{ Floor6,  Floor17  },
+	{ Pillar,  Pillar12 },
+	{ Floor8,  Floor18  },
+	{ Floor8,  Floor19  },
+	{ Floor9,  Floor20  },
+	{ Floor10, Floor21  },
+	{ Floor10, Floor22  },
+	{ Floor10, Floor23  },
+	// clang-format on
+};
+
+const ReplaceTile Substition1Floor[] {
+	// clang-format off
+	{ Floor, Floor11 },
+	{ Floor, Floor12 },
+	{ Floor, Floor13 },
+	{ Floor, Floor14 },
+	// clang-format on
+};
+
+const ReplaceTile Substition2Floor[] {
+	// clang-format off
+	{ Floor, Floor6 },
+	{ Floor, Floor7 },
+	{ Floor, Floor8 },
+	{ Floor, Floor9 },
+	// clang-format on
+};
+
 void ApplyCryptShadowsPatterns()
 {
 	for (int j = 1; j < DMAXY; j++) {
@@ -505,111 +634,32 @@ void PlaceMiniSetRandom1x1(uint8_t search, uint8_t replace, int rndper)
 	PlaceMiniSetRandom({ { 1, 1 }, { { search } }, { { replace } } }, rndper);
 }
 
-void CryptStatues(int rndper)
-{
-	PlaceMiniSetRandom1x1(VWall, VDemon, rndper);
-	PlaceMiniSetRandom1x1(VWall, VSuccubus, rndper);
-	PlaceMiniSetRandom1x1(HWall, HDemon, rndper);
-	PlaceMiniSetRandom1x1(HWall, HSuccubus, rndper);
-}
-
 void CryptCracked(int rndper)
 {
-	// clang-format off
-	PlaceMiniSetRandom1x1(VWall,      VWall2,      rndper);
-	PlaceMiniSetRandom1x1(HWall,      HWall2,      rndper);
-	PlaceMiniSetRandom1x1(Corner,     Corner2,     rndper);
-	PlaceMiniSetRandom1x1(DWall,      DWall2,      rndper);
-	PlaceMiniSetRandom1x1(DArch,      DArch2,      rndper);
-	PlaceMiniSetRandom1x1(VWallEnd,   VWallEnd2,   rndper);
-	PlaceMiniSetRandom1x1(HWallEnd,   HWallEnd2,   rndper);
-	PlaceMiniSetRandom1x1(HArchEnd,   HArchEnd2,   rndper);
-	PlaceMiniSetRandom1x1(VArchEnd,   VArchEnd2,   rndper);
-	PlaceMiniSetRandom1x1(HArchVWall, HArchVWall2, rndper);
-	PlaceMiniSetRandom1x1(VArch,      VArch2,      rndper);
-	PlaceMiniSetRandom1x1(HArch,      HArch2,      rndper);
-	PlaceMiniSetRandom1x1(Floor,      Floor2,      rndper);
-	PlaceMiniSetRandom1x1(HWallVArch, HWallVArch2, rndper);
-	PlaceMiniSetRandom1x1(Pillar,     Pillar3,     rndper);
-	PlaceMiniSetRandom1x1(Pillar1,    Pillar4,     rndper);
-	PlaceMiniSetRandom1x1(Pillar2,    Pillar5,     rndper);
-	// clang-format on
+	for (ReplaceTile pair : CrackedTiles) {
+		PlaceMiniSetRandom1x1(pair.search, pair.replace, rndper);
+	}
 }
 
 void CryptBroken(int rndper)
 {
-	// clang-format off
-	PlaceMiniSetRandom1x1(VWall,      VWall3,      rndper);
-	PlaceMiniSetRandom1x1(HWall,      HWall3,      rndper);
-	PlaceMiniSetRandom1x1(Corner,     Corner3,     rndper);
-	PlaceMiniSetRandom1x1(DWall,      DWall3,      rndper);
-	PlaceMiniSetRandom1x1(DArch,      DArch3,      rndper);
-	PlaceMiniSetRandom1x1(VWallEnd,   VWallEnd3,   rndper);
-	PlaceMiniSetRandom1x1(HWallEnd,   HWallEnd3,   rndper);
-	PlaceMiniSetRandom1x1(HArchEnd,   HArchEnd3,   rndper);
-	PlaceMiniSetRandom1x1(VArchEnd,   VArchEnd3,   rndper);
-	PlaceMiniSetRandom1x1(HArchVWall, HArchVWall3, rndper);
-	PlaceMiniSetRandom1x1(VArch,      VArch3,      rndper);
-	PlaceMiniSetRandom1x1(HArch,      HArch3,      rndper);
-	PlaceMiniSetRandom1x1(Floor,      Floor3,      rndper);
-	PlaceMiniSetRandom1x1(HWallVArch, HWallVArch3, rndper);
-	PlaceMiniSetRandom1x1(Pillar,     Pillar6,     rndper);
-	PlaceMiniSetRandom1x1(Pillar1,    Pillar7,     rndper);
-	PlaceMiniSetRandom1x1(Pillar2,    Pillar8,     rndper);
-	// clang-format on
+	for (ReplaceTile pair : BrokenTiles) {
+		PlaceMiniSetRandom1x1(pair.search, pair.replace, rndper);
+	}
 }
 
 void CryptLeaking(int rndper)
 {
-	// clang-format off
-	PlaceMiniSetRandom1x1(VWall,      VWall4,      rndper);
-	PlaceMiniSetRandom1x1(HWall,      HWall4,      rndper);
-	PlaceMiniSetRandom1x1(Corner,     Corner4,     rndper);
-	PlaceMiniSetRandom1x1(DWall,      DWall4,      rndper);
-	PlaceMiniSetRandom1x1(DArch,      DArch4,      rndper);
-	PlaceMiniSetRandom1x1(VWallEnd,   VWallEnd4,   rndper);
-	PlaceMiniSetRandom1x1(HWallEnd,   HWallEnd4,   rndper);
-	PlaceMiniSetRandom1x1(HArchEnd,   HArchEnd4,   rndper);
-	PlaceMiniSetRandom1x1(VArchEnd,   VArchEnd4,   rndper);
-	PlaceMiniSetRandom1x1(HArchVWall, HArchVWall4, rndper);
-	PlaceMiniSetRandom1x1(VArch,      VArch4,      rndper);
-	PlaceMiniSetRandom1x1(HArch,      HArch4,      rndper);
-	PlaceMiniSetRandom1x1(Floor,      Floor4,      rndper);
-	PlaceMiniSetRandom1x1(HWallVArch, HWallVArch4, rndper);
-	PlaceMiniSetRandom1x1(Pillar,     Pillar9,     rndper);
-	PlaceMiniSetRandom1x1(Pillar1,    Pillar10,    rndper);
-	PlaceMiniSetRandom1x1(Pillar2,    Pillar11,    rndper);
-	// clang-format on
+	for (ReplaceTile pair : LeakingTiles) {
+		PlaceMiniSetRandom1x1(pair.search, pair.replace, rndper);
+	}
 }
 
 void CryptSubstitions1(int rndper)
 {
-	PlaceMiniSetRandom1x1(VArch, VArch6, rndper);
-	PlaceMiniSetRandom1x1(HArch, HArch6, rndper);
-	PlaceMiniSetRandom1x1(VArch, VArch7, rndper);
-	PlaceMiniSetRandom1x1(HArch, HArch7, rndper);
-	PlaceMiniSetRandom1x1(VWall5, VWall8, rndper);
-	PlaceMiniSetRandom1x1(VWall5, VWall9, rndper);
-	PlaceMiniSetRandom1x1(VWall6, VWall10, rndper);
-	PlaceMiniSetRandom1x1(VWall6, VWall11, rndper);
-	PlaceMiniSetRandom1x1(VWall7, VWall12, rndper);
-	PlaceMiniSetRandom1x1(VWall7, VWall13, rndper);
-	PlaceMiniSetRandom1x1(HWall5, HWall8, rndper);
-	PlaceMiniSetRandom1x1(HWall5, HWall9, rndper);
-	PlaceMiniSetRandom1x1(HWall5, HWall10, rndper);
-	PlaceMiniSetRandom1x1(HWall5, HWall11, rndper);
-	PlaceMiniSetRandom1x1(HWall5, HWall12, rndper);
-	PlaceMiniSetRandom1x1(HWall5, HWall13, rndper);
-	PlaceMiniSetRandom1x1(Floor7, Floor15, rndper);
-	PlaceMiniSetRandom1x1(Floor7, Floor16, rndper);
-	PlaceMiniSetRandom1x1(Floor6, Floor17, rndper);
-	PlaceMiniSetRandom1x1(Pillar, Pillar12, rndper);
-	PlaceMiniSetRandom1x1(Floor8, Floor18, rndper);
-	PlaceMiniSetRandom1x1(Floor8, Floor19, rndper);
-	PlaceMiniSetRandom1x1(Floor9, Floor20, rndper);
-	PlaceMiniSetRandom1x1(Floor10, Floor21, rndper);
-	PlaceMiniSetRandom1x1(Floor10, Floor22, rndper);
-	PlaceMiniSetRandom1x1(Floor10, Floor23, rndper);
+	for (ReplaceTile pair : Substitions1Tiles) {
+		PlaceMiniSetRandom1x1(pair.search, pair.replace, rndper);
+	}
 }
 
 void CryptSubstitions2(int rndper)
@@ -620,18 +670,17 @@ void CryptSubstitions2(int rndper)
 	PlaceMiniSetRandom(CryptPillar4, rndper);
 	PlaceMiniSetRandom(CryptPillar5, rndper);
 	PlaceMiniSetRandom(CryptStar, rndper);
-	PlaceMiniSetRandom1x1(Floor, Floor11, rndper);
-	PlaceMiniSetRandom1x1(Floor, Floor12, rndper);
-	PlaceMiniSetRandom1x1(Floor, Floor13, rndper);
-	PlaceMiniSetRandom1x1(Floor, Floor14, rndper);
+
+	for (ReplaceTile pair : Substition1Floor) {
+		PlaceMiniSetRandom1x1(pair.search, pair.replace, rndper);
+	}
 }
 
 void CryptFloor(int rndper)
 {
-	PlaceMiniSetRandom1x1(Floor, Floor6, rndper);
-	PlaceMiniSetRandom1x1(Floor, Floor7, rndper);
-	PlaceMiniSetRandom1x1(Floor, Floor8, rndper);
-	PlaceMiniSetRandom1x1(Floor, Floor9, rndper);
+	for (ReplaceTile pair : Substition2Floor) {
+		PlaceMiniSetRandom1x1(pair.search, pair.replace, rndper);
+	}
 }
 
 } // namespace
@@ -717,7 +766,9 @@ bool PlaceCryptStairs(lvl_entry entry)
 
 void CryptSubstitution()
 {
-	CryptStatues(10);
+	for (ReplaceTile pair : Statues) {
+		PlaceMiniSetRandom1x1(pair.search, pair.replace, 10);
+	}
 	PlaceMiniSetRandom1x1(VArch, VArch5, 95);
 	PlaceMiniSetRandom1x1(HArch, HArch5, 95);
 	PlaceMiniSetRandom(VWallSection, 100);

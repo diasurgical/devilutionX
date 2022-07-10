@@ -88,6 +88,18 @@ TEST(Drlg_l1, CreateL5Dungeon_hellfire_1_401921334)
 	EXPECT_EQ(ViewPosition, Point(49, 63));
 }
 
+TEST(Drlg_l1, CreateL5Dungeon_hellfire_1_536340718)
+{
+	LoadExpectedLevelData("hellfire/1-536340718.dun");
+
+	MyPlayer->pOriginalCathedral = false;
+
+	TestCreateDungeon(1, 536340718, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(55, 72));
+	TestCreateDungeon(1, 536340718, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(49, 63));
+}
+
 TEST(Drlg_l1, CreateL5Dungeon_hellfire_2_128964898)
 {
 	LoadExpectedLevelData("hellfire/2-128964898.dun");

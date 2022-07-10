@@ -12,6 +12,7 @@
 #include "player.h"
 #include "spells.h"
 #include "utils/language.h"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 #define SPLROWICONLS 10
@@ -88,7 +89,7 @@ std::optional<string_view> GetHotkeyName(spell_id spellId, spell_type spellType)
 	for (size_t t = 0; t < NumHotkeys; t++) {
 		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
 			continue;
-		auto quickSpellActionKey = fmt::format("QuickSpell{}", t + 1);
+		auto quickSpellActionKey = StrCat("QuickSpell", t + 1);
 		return sgOptions.Keymapper.KeyNameForAction(quickSpellActionKey);
 	}
 	return {};
@@ -109,7 +110,7 @@ void DrawSpell(const Surface &out)
 
 	if (st == RSPLTYPE_SPELL) {
 		int tlvl = myPlayer.GetSpellLevel(spl);
-		if (CheckSpell(MyPlayerId, spl, st, true) != SpellCheckResult::Success)
+		if (CheckSpell(*MyPlayer, spl, st, true) != SpellCheckResult::Success)
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
 			st = RSPLTYPE_INVALID;

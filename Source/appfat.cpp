@@ -13,6 +13,7 @@
 #include "storm/storm_net.hpp"
 #include "utils/language.h"
 #include "utils/sdl_thread.h"
+#include "utils/str_cat.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -55,7 +56,7 @@ void app_fatal(string_view str)
 #ifdef _DEBUG
 void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 {
-	app_fatal(fmt::format("assertion failed ({}:{})\n{}", pszFile, nLineNo, pszFail));
+	app_fatal(StrCat("assertion failed (", pszFile, ":", nLineNo, ")\n", pszFail));
 }
 #endif
 

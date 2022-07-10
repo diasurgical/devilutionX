@@ -28,6 +28,7 @@
 #include "utils/language.h"
 #include "utils/stdcompat/cstddef.hpp"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -150,13 +151,14 @@ bool IsNetPlayerValid(const Player &player)
 void CheckPlayerInfoTimeouts()
 {
 	for (int i = 0; i < MAX_PLRS; i++) {
-		if (i == MyPlayerId) {
+		Player &player = Players[i];
+		if (&player == MyPlayer) {
 			continue;
 		}
 
 		Uint32 &timerStart = playerInfoTimers[i];
 		bool isPlayerConnected = (player_state[i] & PS_CONNECTED) != 0;
-		bool isPlayerValid = isPlayerConnected && IsNetPlayerValid(Players[i]);
+		bool isPlayerValid = isPlayerConnected && IsNetPlayerValid(player);
 		if (isPlayerConnected && !isPlayerValid && timerStart == 0) {
 			timerStart = SDL_GetTicks();
 		}
@@ -227,17 +229,14 @@ void ParseTurn(int pnum, uint32_t turn)
 
 void PlayerLeftMsg(int pnum, bool left)
 {
-	if (pnum == MyPlayerId) {
-		return;
-	}
-
 	Player &player = Players[pnum];
 
-	if (!player.plractive) {
+	if (&player == MyPlayer)
 		return;
-	}
+	if (!player.plractive)
+		return;
 
-	RemovePlrFromMap(pnum);
+	FixPlrWalkTags(player);
 	RemovePortalMissile(pnum);
 	DeactivatePortal(pnum);
 	delta_close_portal(pnum);
@@ -372,7 +371,7 @@ void HandleEvents(_SNETEVENT *pEvt)
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
 		auto *gameData = (GameData *)pEvt->data;
 		if (gameData->size != sizeof(GameData))
-			app_fatal(fmt::format("Invalid size of game data: {}", gameData->size));
+			app_fatal(StrCat("Invalid size of game data: ", gameData->size));
 		sgGameInitInfo = *gameData;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
@@ -405,7 +404,7 @@ void EventHandler(bool add)
 	for (auto eventType : EventTypes) {
 		if (add) {
 			if (!SNetRegisterEventHandler(eventType, HandleEvents)) {
-				app_fatal(fmt::format("SNetRegisterEventHandler:\n{}", SDL_GetError()));
+				app_fatal(StrCat("SNetRegisterEventHandler:\n", SDL_GetError()));
 			}
 		} else {
 			SNetUnregisterEventHandler(eventType);
@@ -421,7 +420,7 @@ bool InitSingle(GameData *gameData)
 
 	int unused = 0;
 	if (!SNetCreateGame("local", "local", (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), &unused)) {
-		app_fatal(fmt::format("SNetCreateGame1:\n{}", SDL_GetError()));
+		app_fatal(StrCat("SNetCreateGame1:\n", SDL_GetError()));
 	}
 
 	MyPlayerId = 0;
@@ -615,7 +614,7 @@ void multi_process_network_packets()
 		}
 		Point syncPosition = { pkt->px, pkt->py };
 		player.position.last = syncPosition;
-		if (dwID != MyPlayerId) {
+		if (&player != MyPlayer) {
 			assert(gbBufferMsgs != 2);
 			player._pHitPoints = pkt->php;
 			player._pMaxHP = pkt->pmhp;
@@ -627,21 +626,20 @@ void multi_process_network_packets()
 			player._pBaseDex = pkt->bdex;
 			if (!cond && player.plractive && player._pHitPoints != 0) {
 				if (player.isOnActiveLevel() && !player._pLvlChanging) {
-					int dx = abs(player.position.tile.x - pkt->px);
-					int dy = abs(player.position.tile.y - pkt->py);
-					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
-						FixPlrWalkTags(dwID);
+					if (player.position.tile.WalkingDistance(syncPosition) > 3 && dPlayer[pkt->px][pkt->py] == 0) {
+						// got out of sync, clear the tiles around where we last thought the player was located
+						FixPlrWalkTags(player);
+
 						player.position.old = player.position.tile;
-						FixPlrWalkTags(dwID);
+						// then just in case clear the tiles around the current position (probably unnecessary)
+						FixPlrWalkTags(player);
 						player.position.tile = syncPosition;
 						player.position.future = syncPosition;
 						if (player.IsWalking())
 							player.position.temp = syncPosition;
 						dPlayer[player.position.tile.x][player.position.tile.y] = dwID + 1;
 					}
-					dx = abs(player.position.future.x - player.position.tile.x);
-					dy = abs(player.position.future.y - player.position.tile.y);
-					if (dx > 1 || dy > 1) {
+					if (player.position.future.WalkingDistance(player.position.tile) > 1) {
 						player.position.future = player.position.tile;
 					}
 					MakePlrPath(player, { pkt->targx, pkt->targy }, true);
@@ -783,11 +781,11 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
 	static PlayerPack PackedPlayerBuffer[MAX_PLRS];
 
-	if (pnum == MyPlayerId) {
-		return;
-	}
 	assert(pnum >= 0 && pnum < MAX_PLRS);
 	Player &player = Players[pnum];
+	if (&player == MyPlayer) {
+		return;
+	}
 	auto &packedPlayer = PackedPlayerBuffer[pnum];
 
 	if (sgwPackPlrOffsetTbl[pnum] != header.wOffset) {

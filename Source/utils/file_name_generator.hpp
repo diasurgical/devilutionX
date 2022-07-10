@@ -3,9 +3,8 @@
 #include <cstring>
 #include <initializer_list>
 
-#include <fmt/format.h>
-
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -19,7 +18,7 @@ public:
 
 	const char *operator()() const
 	{
-		*Append(prefixEnd_, suffix_) = '\0';
+		*BufCopy(prefixEnd_, suffix_) = '\0';
 		return buf_;
 	}
 
@@ -27,14 +26,8 @@ protected:
 	static char *Append(char *buf, std::initializer_list<string_view> strings)
 	{
 		for (string_view str : strings)
-			buf = Append(buf, str);
+			buf = BufCopy(buf, str);
 		return buf;
-	}
-
-	static char *Append(char *buf, string_view str)
-	{
-		memcpy(buf, str.data(), str.size());
-		return buf + str.size();
 	}
 
 	[[nodiscard]] string_view Suffix() const
@@ -76,7 +69,7 @@ public:
 
 	const char *operator()(size_t i) const
 	{
-		*Append(fmt::format_to(PrefixEnd(), "{}", static_cast<unsigned>(min_ + i)), Suffix()) = '\0';
+		*BufCopy(PrefixEnd(), static_cast<unsigned>(min_ + i), Suffix()) = '\0';
 		return Buffer();
 	}
 
@@ -97,7 +90,7 @@ public:
 	    : BaseFileNameGenerator(prefixes, suffix)
 	    , chars_(chars)
 	{
-		*Append(PrefixEnd() + 1, Suffix()) = '\0';
+		*BufCopy(PrefixEnd() + 1, Suffix()) = '\0';
 	}
 
 	const char *operator()(size_t i) const

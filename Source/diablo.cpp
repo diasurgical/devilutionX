@@ -2171,9 +2171,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		bool visited = false;
-		int players = gbIsMultiplayer ? MAX_PLRS : 1;
-		for (int i = 0; i < players; i++) {
-			Player &player = Players[i];
+		for (const Player &player : Players) {
 			if (player.plractive)
 				visited = visited || player._pLvlVisited[currlevel];
 		}
@@ -2288,7 +2286,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		Player &player = Players[i];
-		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || i == MyPlayerId)) {
+		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || &player == MyPlayer)) {
 			if (player._pHitPoints > 0) {
 				if (!gbIsMultiplayer)
 					dPlayer[player.position.tile.x][player.position.tile.y] = i + 1;

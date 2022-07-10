@@ -282,10 +282,7 @@ void InitQuests()
 void InitialiseQuestPools(uint32_t seed, Quest quests[])
 {
 	SetRndSeed(seed);
-	if (FlipCoin())
-		quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
-	else
-		quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
+	quests[PickRandomlyAmong({ Q_SKELKING, Q_PWATER })]._qactive = QUEST_NOTAVAIL;
 
 	// using int and not size_t here to detect negative values from GenerateRnd
 	int randomIndex = GenerateRnd(sizeof(QuestGroup1) / sizeof(*QuestGroup1));

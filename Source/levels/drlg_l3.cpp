@@ -728,18 +728,18 @@ bool FillRoom(int x1, int y1, int x2, int y2)
 		}
 	}
 	for (int j = y1; j <= y2; j++) {
-		if (FlipCoin()) {
+		if (!FlipCoin()) {
 			dungeon[x1][j] = 1;
 		}
-		if (FlipCoin()) {
+		if (!FlipCoin()) {
 			dungeon[x2][j] = 1;
 		}
 	}
 	for (int i = x1; i <= x2; i++) {
-		if (FlipCoin()) {
+		if (!FlipCoin()) {
 			dungeon[i][y1] = 1;
 		}
-		if (FlipCoin()) {
+		if (!FlipCoin()) {
 			dungeon[i][y2] = 1;
 		}
 	}
@@ -815,17 +815,19 @@ void CreateBlock(int x, int y, int obs, int dir)
 	}
 
 	if (FillRoom(x1, y1, x2, y2)) {
-		int contflag = GenerateRnd(4);
-		if (contflag != 0 && dir != 2) {
+		if (FlipCoin(4))
+			return;
+
+		if (dir != 2) {
 			CreateBlock(x1, y1, blksizey, 0);
 		}
-		if (contflag != 0 && dir != 3) {
+		if (dir != 3) {
 			CreateBlock(x2, y1, blksizex, 1);
 		}
-		if (contflag != 0 && dir != 0) {
+		if (dir != 0) {
 			CreateBlock(x1, y2, blksizey, 2);
 		}
-		if (contflag != 0 && dir != 1) {
+		if (dir != 1) {
 			CreateBlock(x1, y1, blksizex, 3);
 		}
 	}
@@ -846,14 +848,14 @@ void FillDiagonals()
 		for (int i = 0; i < DMAXX - 1; i++) {
 			int v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
-				if (!FlipCoin()) {
+				if (FlipCoin()) {
 					dungeon[i][j] = 1;
 				} else {
 					dungeon[i + 1][j + 1] = 1;
 				}
 			}
 			if (v == 9) {
-				if (!FlipCoin()) {
+				if (FlipCoin()) {
 					dungeon[i + 1][j] = 1;
 				} else {
 					dungeon[i][j + 1] = 1;
@@ -891,7 +893,7 @@ void FillStraights()
 				}
 				xs++;
 			} else {
-				if (xs > 3 && FlipCoin()) {
+				if (xs > 3 && !FlipCoin()) {
 					for (int k = xc; k < i; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[k][j] = rv;
@@ -910,7 +912,7 @@ void FillStraights()
 				}
 				xs++;
 			} else {
-				if (xs > 3 && FlipCoin()) {
+				if (xs > 3 && !FlipCoin()) {
 					for (int k = xc; k < i; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[k][j + 1] = rv;
@@ -929,7 +931,7 @@ void FillStraights()
 				}
 				ys++;
 			} else {
-				if (ys > 3 && FlipCoin()) {
+				if (ys > 3 && !FlipCoin()) {
 					for (int k = yc; k < j; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[i][k] = rv;
@@ -948,7 +950,7 @@ void FillStraights()
 				}
 				ys++;
 			} else {
-				if (ys > 3 && FlipCoin()) {
+				if (ys > 3 && !FlipCoin()) {
 					for (int k = yc; k < j; k++) {
 						int rv = GenerateRnd(2);
 						dungeon[i + 1][k] = rv;
@@ -989,20 +991,10 @@ void MakeMegas()
 		for (int i = 0; i < DMAXX - 1; i++) {
 			int v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
-				int rv = GenerateRnd(2);
-				if (rv == 0) {
-					v = 12;
-				} else {
-					v = 5;
-				}
+				v = PickRandomlyAmong({ 12, 5 });
 			}
 			if (v == 9) {
-				int rv = GenerateRnd(2);
-				if (rv == 0) {
-					v = 13;
-				} else {
-					v = 14;
-				}
+				v = PickRandomlyAmong({ 13, 14 });
 			}
 			dungeon[i][j] = L3ConvTbl[v];
 		}
@@ -1475,14 +1467,14 @@ bool PlaceLavaPool()
 			} else {
 				found = true;
 			}
-			int poolchance = GenerateRnd(100);
+			bool placePool = GenerateRnd(100) < 25;
 			for (int j = std::max(duny - totarea, 0); j < std::min(duny + totarea, DMAXY); j++) {
 				for (int i = std::max(dunx - totarea, 0); i < std::min(dunx + totarea, DMAXX); i++) {
 					// BUGFIX: In the following swap the order to first do the
 					// index checks and only then access dungeon[i][j] (fixed)
 					if ((dungeon[i][j] & 0x80) != 0) {
 						dungeon[i][j] &= ~0x80;
-						if (totarea > 4 && poolchance < 25 && !found) {
+						if (totarea > 4 && placePool && !found) {
 							uint8_t k = Poolsub[dungeon[i][j]];
 							if (k != 0 && k <= 37) {
 								dungeon[i][j] = k;
@@ -1637,7 +1629,7 @@ void Fence()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (int i = 1; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1' (fixed)
-			if (dungeon[i][j] == 10 && FlipCoin()) {
+			if (dungeon[i][j] == 10 && !FlipCoin()) {
 				int x = i;
 				while (dungeon[x][j] == 10) {
 					x++;
@@ -1646,16 +1638,12 @@ void Fence()
 				if (x - i > 0) {
 					dungeon[i][j] = 127;
 					for (int xx = i + 1; xx < x; xx++) {
-						if (FlipCoin()) {
-							dungeon[xx][j] = 126;
-						} else {
-							dungeon[xx][j] = 129;
-						}
+						dungeon[xx][j] = PickRandomlyAmong({ 129, 126 });
 					}
 					dungeon[x][j] = 128;
 				}
 			}
-			if (dungeon[i][j] == 9 && FlipCoin()) {
+			if (dungeon[i][j] == 9 && !FlipCoin()) {
 				int y = j;
 				while (dungeon[i][y] == 9) {
 					y++;
@@ -1664,16 +1652,12 @@ void Fence()
 				if (y - j > 0) {
 					dungeon[i][j] = 123;
 					for (int yy = j + 1; yy < y; yy++) {
-						if (FlipCoin()) {
-							dungeon[i][yy] = 121;
-						} else {
-							dungeon[i][yy] = 124;
-						}
+						dungeon[i][yy] = PickRandomlyAmong({ 124, 121 });
 					}
 					dungeon[i][y] = 122;
 				}
 			}
-			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 10 && dungeon[i][j + 1] == 9 && FlipCoin()) {
+			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 10 && dungeon[i][j + 1] == 9 && !FlipCoin()) {
 				dungeon[i][j] = 125;
 				int x = i + 1;
 				while (dungeon[x][j] == 10) {
@@ -1681,11 +1665,7 @@ void Fence()
 				}
 				x--;
 				for (int xx = i + 1; xx < x; xx++) {
-					if (FlipCoin()) {
-						dungeon[xx][j] = 126;
-					} else {
-						dungeon[xx][j] = 129;
-					}
+					dungeon[xx][j] = PickRandomlyAmong({ 129, 126 });
 				}
 				dungeon[x][j] = 128;
 				int y = j + 1;
@@ -1694,11 +1674,7 @@ void Fence()
 				}
 				y--;
 				for (int yy = j + 1; yy < y; yy++) {
-					if (FlipCoin()) {
-						dungeon[i][yy] = 121;
-					} else {
-						dungeon[i][yy] = 124;
-					}
+					dungeon[i][yy] = PickRandomlyAmong({ 124, 121 });
 				}
 				dungeon[i][y] = 122;
 			}
@@ -1707,9 +1683,9 @@ void Fence()
 
 	for (int j = 1; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (int i = 1; i < DMAXX; i++) { // BUGFIX: Change '0' to '1' (fixed)
-			if (dungeon[i][j] == 7 && GenerateRnd(1) == 0 && !IsNearThemeRoom({ i, j })) {
-				int rt = GenerateRnd(2);
-				if (rt == 0) {
+			// note the comma operator is used here to advance the RNG state
+			if (dungeon[i][j] == 7 && (AdvanceRndSeed(), !IsNearThemeRoom({ i, j }))) {
+				if (FlipCoin()) {
 					int y1 = j;
 					// BUGFIX: Check `y1 >= 0` first (fixed)
 					while (y1 >= 0 && FenceVerticalUp(i, y1)) {
@@ -1736,11 +1712,7 @@ void Fence()
 								continue;
 							}
 							if (dungeon[i][y] == 7) {
-								if (FlipCoin()) {
-									dungeon[i][y] = 135;
-								} else {
-									dungeon[i][y] = 137;
-								}
+								dungeon[i][y] = PickRandomlyAmong({ 137, 135 });
 							}
 							if (dungeon[i][y] == 10) {
 								dungeon[i][y] = 131;
@@ -1762,8 +1734,7 @@ void Fence()
 							}
 						}
 					}
-				}
-				if (rt == 1) {
+				} else {
 					int x1 = i;
 					// BUGFIX: Check `x1 >= 0` first (fixed)
 					while (x1 >= 0 && FenceHorizontalLeft(x1, j)) {
@@ -1790,11 +1761,7 @@ void Fence()
 								continue;
 							}
 							if (dungeon[x][j] == 7) {
-								if (FlipCoin()) {
-									dungeon[x][j] = 134;
-								} else {
-									dungeon[x][j] = 136;
-								}
+								dungeon[x][j] = PickRandomlyAmong({ 136, 134 });
 							}
 							if (dungeon[x][j] == 9) {
 								dungeon[x][j] = 130;

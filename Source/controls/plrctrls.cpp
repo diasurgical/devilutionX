@@ -36,6 +36,7 @@
 #include "towners.h"
 #include "track.h"
 #include "utils/log.hpp"
+#include "utils/str_cat.hpp"
 
 #define SPLICONLENGTH 56
 
@@ -369,9 +370,9 @@ void CheckPlayerNearby()
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		if (i == MyPlayerId)
-			continue;
 		const Player &player = Players[i];
+		if (&player == MyPlayer)
+			continue;
 		const int mx = player.position.future.x;
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
@@ -1469,7 +1470,7 @@ void LogControlDeviceAndModeChange(ControlTypes newControlDevice, ControlTypes n
 	constexpr auto DebugChange = [](ControlTypes before, ControlTypes after) -> std::string {
 		if (before == after)
 			return std::string { ControlTypeToString(before) };
-		return fmt::format("{} -> {}", ControlTypeToString(before), ControlTypeToString(after));
+		return StrCat(ControlTypeToString(before), " -> ", ControlTypeToString(after));
 	};
 	LogVerbose("Control: device {}, mode {}", DebugChange(ControlDevice, newControlDevice), DebugChange(ControlMode, newControlMode));
 }

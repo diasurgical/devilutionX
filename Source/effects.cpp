@@ -5,14 +5,13 @@
  */
 #include "effects.h"
 
-#include <fmt/compile.h>
-
 #include "engine/random.hpp"
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "init.h"
 #include "player.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -1218,11 +1217,13 @@ void InitMonsterSND(int monst)
 	}
 
 	const int mtype = LevelMonsterTypes[monst].type;
+	const MonsterData &data = MonstersData[mtype];
 	for (int i = 0; i < 4; i++) {
-		if (MonstSndChar[i] != 's' || MonstersData[mtype].snd_special) {
+		if (MonstSndChar[i] != 's' || data.snd_special) {
 			for (int j = 0; j < 2; j++) {
 				char path[MAX_PATH];
-				*fmt::format_to(path, FMT_COMPILE("{}{}{}.WAV"), MonstersData[mtype].sndfile, MonstSndChar[i], j + 1) = '\0';
+				const char *sndfile = data.sndfile != nullptr ? data.sndfile : data.GraphicType;
+				*BufCopy(path, "Monsters\\", sndfile, string_view(&MonstSndChar[i], 1), j + 1, ".WAV") = '\0';
 				LevelMonsterTypes[monst].sounds[i][j] = sound_file_load(path);
 			}
 		}

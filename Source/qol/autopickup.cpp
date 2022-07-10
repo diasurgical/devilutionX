@@ -75,13 +75,14 @@ bool DoPickup(Item item)
 
 void AutoPickup(int pnum)
 {
-	if (pnum != MyPlayerId)
+	const Player &player = Players[pnum];
+	if (&player != MyPlayer)
 		return;
 	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoPickupInTown)
 		return;
 
 	for (auto pathDir : PathDirs) {
-		Point tile = Players[pnum].position.tile + pathDir;
+		Point tile = player.position.tile + pathDir;
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];

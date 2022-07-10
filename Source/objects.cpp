@@ -7,7 +7,7 @@
 #include <climits>
 #include <cstdint>
 
-#include <fmt/compile.h>
+#include <fmt/core.h>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
@@ -36,6 +36,7 @@
 #include "track.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -494,14 +495,14 @@ void InitRndBarrels()
 			xp = GenerateRnd(80) + 16;
 			yp = GenerateRnd(80) + 16;
 		} while (!RndLocOk(xp, yp));
-		_object_id o = (GenerateRnd(4) != 0) ? barrelId : explosiveBarrelId;
+		_object_id o = FlipCoin(4) ? explosiveBarrelId : barrelId;
 		AddObject(o, { xp, yp });
 		bool found = true;
 		/** regulates chance to stop placing barrels in current group */
 		int p = 0;
 		/** number of barrels in current group */
 		int c = 1;
-		while (GenerateRnd(p) == 0 && found) {
+		while (FlipCoin(p) && found) {
 			/** number of tries of placing next barrel in current group */
 			int t = 0;
 			found = false;
@@ -517,7 +518,7 @@ void InitRndBarrels()
 					break;
 			}
 			if (found) {
-				o = (GenerateRnd(5) != 0) ? barrelId : explosiveBarrelId;
+				o = FlipCoin(5) ? explosiveBarrelId : barrelId;
 				AddObject(o, { xp, yp });
 				c++;
 			}
@@ -535,19 +536,19 @@ void AddL2Torches()
 				continue;
 
 			int pn = dPiece[i][j];
-			if (pn == 0 && GenerateRnd(3) == 0) {
+			if (pn == 0 && FlipCoin(3)) {
 				AddObject(OBJ_TORCHL2, testPosition);
 			}
 
-			if (pn == 4 && GenerateRnd(3) == 0) {
+			if (pn == 4 && FlipCoin(3)) {
 				AddObject(OBJ_TORCHR2, testPosition);
 			}
 
-			if (pn == 36 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthWest)) {
+			if (pn == 36 && FlipCoin(10) && !IsObjectAtPosition(testPosition + Direction::NorthWest)) {
 				AddObject(OBJ_TORCHL, testPosition + Direction::NorthWest);
 			}
 
-			if (pn == 40 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthEast)) {
+			if (pn == 40 && FlipCoin(10) && !IsObjectAtPosition(testPosition + Direction::NorthEast)) {
 				AddObject(OBJ_TORCHR, testPosition + Direction::NorthEast);
 			}
 		}
@@ -575,7 +576,7 @@ void AddObjTraps()
 				continue;
 
 			Object *trapObject = nullptr;
-			if (!FlipCoin()) {
+			if (FlipCoin()) {
 				int xp = i - 1;
 				while (IsTileNotSolid({ xp, j }))
 					xp--;
@@ -890,7 +891,7 @@ void AddHookedBodies(int freq)
 			int ii = 16 + i * 2;
 			if (dungeon[i][j] != 1 && dungeon[i][j] != 2)
 				continue;
-			if (GenerateRnd(freq) != 0)
+			if (!FlipCoin(freq))
 				continue;
 			if (IsNearThemeRoom({ i, j }))
 				continue;
@@ -909,14 +910,7 @@ void AddHookedBodies(int freq)
 				continue;
 			}
 			if (dungeon[i][j] == 2 && dungeon[i][j + 1] == 6) {
-				switch (GenerateRnd(2)) {
-				case 0:
-					AddObject(OBJ_TORTURE3, { ii, jj });
-					break;
-				case 1:
-					AddObject(OBJ_TORTURE4, { ii, jj });
-					break;
-				}
+				AddObject(PickRandomlyAmong({ OBJ_TORTURE3, OBJ_TORTURE4 }), { ii, jj });
 			}
 		}
 	}
@@ -987,7 +981,7 @@ void DeleteObject(int oi, int i)
 
 void AddChest(int i, int t)
 {
-	if (!FlipCoin())
+	if (FlipCoin())
 		Objects[i]._oAnimFrame += 3;
 	Objects[i]._oRndSeed = AdvanceRndSeed();
 	switch (t) {
@@ -1167,7 +1161,7 @@ void AddShrine(int i)
 	} while (!slist[val]);
 
 	Objects[i]._oVar1 = val;
-	if (FlipCoin()) {
+	if (!FlipCoin()) {
 		Objects[i]._oAnimFrame = 12;
 		Objects[i]._oAnimLen = 22;
 	}
@@ -1528,7 +1522,7 @@ void UpdateBurningCrossDamage(Object &cross)
 	if (myPlayer.position.tile != cross.position + Displacement { 0, -1 })
 		return;
 
-	ApplyPlrDamage(MyPlayerId, 0, 0, damage[leveltype - 1]);
+	ApplyPlrDamage(myPlayer, 0, 0, damage[leveltype - 1]);
 	if (myPlayer._pHitPoints >> 6 > 0) {
 		myPlayer.Say(HeroSpeech::Argh);
 	}
@@ -2356,8 +2350,8 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				CreateRndUseful(Objects[i].position, sendmsg);
 		}
 	}
+	const Player &player = Players[pnum];
 	if (Objects[i].IsTrappedChest()) {
-		const Player &player = Players[pnum];
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
 		missile_id mtype;
 		switch (Objects[i]._oVar4) {
@@ -2385,7 +2379,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		AddMissile(Objects[i].position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 		Objects[i]._oTrapFlag = false;
 	}
-	if (pnum == MyPlayerId)
+	if (&player == MyPlayer)
 		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
 }
 
@@ -3262,7 +3256,7 @@ void OperateShrineMurphys(Player &player)
 
 	bool broke = false;
 	for (auto &item : player.InvBody) {
-		if (!item.isEmpty() && GenerateRnd(3) == 0) {
+		if (!item.isEmpty() && FlipCoin(3)) {
 			if (item._iDurability != DUR_INDESTRUCTIBLE) {
 				if (item._iDurability > 0) {
 					item._iDurability /= 2;
@@ -3418,10 +3412,10 @@ void OperateSkelBook(int i, bool sendmsg, bool sendLootMsg)
 	Objects[i]._oSelFlag = 0;
 	Objects[i]._oAnimFrame += 2;
 	SetRndSeed(Objects[i]._oRndSeed);
-	if (GenerateRnd(5) != 0)
-		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
-	else
+	if (FlipCoin(5))
 		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+	else
+		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
 	if (sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
@@ -3474,7 +3468,7 @@ void OperateArmorStand(int i, bool sendmsg, bool sendLootMsg)
 	Objects[i]._oSelFlag = 0;
 	Objects[i]._oAnimFrame++;
 	SetRndSeed(Objects[i]._oRndSeed);
-	bool uniqueRnd = FlipCoin();
+	bool uniqueRnd = !FlipCoin();
 	if (currlevel <= 5) {
 		CreateTypeItem(Objects[i].position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {
@@ -3527,7 +3521,7 @@ bool OperateFountains(int pnum, int i)
 	bool applied = false;
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
-		if (pnum != MyPlayerId)
+		if (&player != MyPlayer)
 			return false;
 
 		if (player._pHitPoints < player._pMaxHP) {
@@ -3543,7 +3537,7 @@ bool OperateFountains(int pnum, int i)
 			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
 		break;
 	case OBJ_PURIFYINGFTN:
-		if (pnum != MyPlayerId)
+		if (&player != MyPlayer)
 			return false;
 
 		if (player._pMana < player._pMaxMana) {
@@ -3575,7 +3569,7 @@ bool OperateFountains(int pnum, int i)
 		    0,
 		    2 * leveltype);
 		applied = true;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 		break;
 	case OBJ_TEARFTN: {
@@ -3583,7 +3577,7 @@ bool OperateFountains(int pnum, int i)
 			break;
 		PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
 		Objects[i]._oSelFlag = 0;
-		if (pnum != MyPlayerId)
+		if (&player != MyPlayer)
 			return false;
 
 		unsigned randomValue = (Objects[i]._oRndSeed >> 16) % 12;
@@ -3612,7 +3606,7 @@ bool OperateFountains(int pnum, int i)
 
 		CheckStats(player);
 		applied = true;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 	} break;
 	default:
@@ -4094,7 +4088,7 @@ void LoadLevelObjects(bool filesLoaded[65])
 
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
-		*fmt::format_to(filestr, FMT_COMPILE(R"(Objects\{}.CEL)"), ObjMasterLoadList[i]) = '\0';
+		*BufCopy(filestr, "Objects\\", ObjMasterLoadList[i], ".CEL") = '\0';
 		pObjCels[numobjfiles] = LoadFileInMem(filestr);
 		numobjfiles++;
 	}
@@ -4815,8 +4809,8 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 
 void OperateObject(int pnum, int i, bool teleFlag)
 {
-	bool sendmsg = pnum == MyPlayerId;
 	const Player &player = Players[pnum];
+	bool sendmsg = &player == MyPlayer;
 	switch (Objects[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5040,28 +5034,28 @@ void DeltaSyncOpObject(int cmd, int i)
 
 void SyncOpObject(int pnum, int cmd, int i)
 {
-	bool sendmsg = pnum == MyPlayerId;
 	const Player &player = Players[pnum];
+	bool sendmsg = &player == MyPlayer;
 
 	switch (Objects[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL1Door(cmd, i);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL2Door(cmd, i);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL3Door(cmd, i);
 		break;
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (pnum != MyPlayerId)
+		if (!sendmsg)
 			SyncOpL5Door(cmd, i);
 		break;
 	case OBJ_LEVER:

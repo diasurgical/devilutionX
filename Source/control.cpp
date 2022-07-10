@@ -46,6 +46,7 @@
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/string_or_view.hpp"
 #include "utils/utf8.hpp"
 
@@ -528,10 +529,10 @@ void DrawFlaskValues(const Surface &out, Point pos, int currValue, int maxValue)
 		DrawString(out, text, pos, color | UiFlags::KerningFitSpacing, 0);
 	};
 
-	std::string currText = fmt::format("{:d}", currValue);
+	std::string currText = StrCat(currValue);
 	drawStringWithShadow(currText, pos - Displacement { GetLineWidth(currText, GameFont12) + 1, 0 });
 	drawStringWithShadow("/", pos);
-	drawStringWithShadow(fmt::format("{:d}", maxValue), pos + Displacement { GetLineWidth("/", GameFont12) + 1, 0 });
+	drawStringWithShadow(StrCat(maxValue), pos + Displacement { GetLineWidth("/", GameFont12) + 1, 0 });
 }
 
 void control_update_life_mana()
@@ -1078,9 +1079,9 @@ void DrawGoldSplit(const Surface &out, int amount)
 	//  for the text entered by the player.
 	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
-	std::string value = "";
+	std::string value;
 	if (amount > 0) {
-		value = fmt::format("{:d}", amount);
+		value = StrCat(amount);
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
@@ -1140,10 +1141,10 @@ void DrawTalkPan(const Surface &out)
 	x += 46;
 	int talkBtn = 0;
 	for (int i = 0; i < 4; i++) {
-		if (i == MyPlayerId)
+		Player &player = Players[i];
+		if (&player == MyPlayer)
 			continue;
 
-		Player &player = Players[i];
 		UiFlags color = player.friendlyMode ? UiFlags::ColorWhitegold : UiFlags::ColorRed;
 		const Point talkPanPosition = mainPanelPosition + Displacement { 172, 84 + 18 * talkBtn };
 		if (WhisperList[i]) {

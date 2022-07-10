@@ -42,6 +42,7 @@
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 namespace devilution {
@@ -438,10 +439,7 @@ void AddInitItems()
 		item._iSeed = AdvanceRndSeed();
 		SetRndSeed(item._iSeed);
 
-		if (FlipCoin())
-			GetItemAttrs(item, IDI_HEAL, curlv);
-		else
-			GetItemAttrs(item, IDI_MANA, curlv);
+		GetItemAttrs(item, PickRandomlyAmong({ IDI_MANA, IDI_HEAL }), curlv);
 
 		item._iCreateInfo = curlv | CF_PREGEN;
 		SetupItem(item);
@@ -1081,7 +1079,7 @@ void SaveItemAffix(Item &item, const PLStruct &affix)
 void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 {
 	int preidx = -1;
-	if (GenerateRnd(10) == 0 || onlygood) {
+	if (FlipCoin(10) || onlygood) {
 		int nl = 0;
 		int l[256];
 		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
@@ -1153,20 +1151,21 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 	int l[256];
 	goodorevil goe;
 
-	int pre = GenerateRnd(4);
-	int post = GenerateRnd(3);
-	if (pre != 0 && post == 0) {
+	bool allocatePrefix = FlipCoin(4);
+	bool allocateSuffix = !FlipCoin(3);
+	if (!allocatePrefix && !allocateSuffix) {
+		// At least try and give each item a prefix or suffix
 		if (FlipCoin())
-			post = 1;
+			allocatePrefix = true;
 		else
-			pre = 0;
+			allocateSuffix = true;
 	}
 	int preidx = -1;
 	int sufidx = -1;
 	goe = GOE_ANY;
-	if (!onlygood && GenerateRnd(3) != 0)
+	if (!onlygood && !FlipCoin(3))
 		onlygood = true;
-	if (pre == 0) {
+	if (allocatePrefix) {
 		int nt = 0;
 		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
 			if (!IsPrefixValidForItemType(j, flgs))
@@ -1192,7 +1191,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 			goe = ItemPrefixes[preidx].PLGOE;
 		}
 	}
-	if (post != 0) {
+	if (allocateSuffix) {
 		int nl = 0;
 		for (int j = 0; ItemSuffixes[j].power.type != IPL_INVALID; j++) {
 			if (IsSuffixValidForItemType(j, flgs)
@@ -1221,7 +1220,7 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 
 void GetStaffSpell(Item &item, int lvl, bool onlygood)
 {
-	if (!gbIsHellfire && GenerateRnd(4) == 0) {
+	if (!gbIsHellfire && FlipCoin(4)) {
 		GetItemPower(item, lvl / 2, lvl, AffixItemType::Staff, onlygood);
 		return;
 	}
@@ -1592,12 +1591,9 @@ void SetupAllUseful(Item &item, int iseed, int lvl)
 			break;
 		}
 	} else {
-		if (FlipCoin())
-			idx = IDI_HEAL;
-		else
-			idx = IDI_MANA;
+		idx = PickRandomlyAmong({ IDI_MANA, IDI_HEAL });
 
-		if (lvl > 1 && GenerateRnd(3) == 0)
+		if (lvl > 1 && FlipCoin(3))
 			idx = IDI_PORTAL;
 	}
 
@@ -1964,12 +1960,10 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
+void SpawnOnePremium(Item &premiumItem, int plvl, Player &player)
 {
 	int itemValue = 0;
 	bool keepGoing = false;
-
-	Player &player = Players[playerId];
 
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
@@ -2302,7 +2296,7 @@ void InitItemGFX()
 
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
-		*fmt::format_to(arglist, FMT_COMPILE(R"(Items\{}.CEL)"), ItemDropNames[i]) = '\0';
+		*BufCopy(arglist, "Items\\", ItemDropNames[i], ".CEL") = '\0';
 		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
@@ -3920,7 +3914,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 	case IMISC_SCROLLT:
 		if (ControlMode == ControlTypes::KeyboardAndMouse && spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (pnum == MyPlayerId)
+			if (&player == MyPlayer)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -3930,7 +3924,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;
 			player.destParam2 = cursPosition.y;
-			if (pnum == MyPlayerId && spl == SPL_NOVA)
+			if (&player == MyPlayer && spl == SPL_NOVA)
 				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
 		}
 		break;
@@ -3968,7 +3962,7 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
 		player._pOilType = mid;
-		if (pnum != MyPlayerId) {
+		if (&player != MyPlayer) {
 			return;
 		}
 		if (sbookflag) {
@@ -3987,27 +3981,27 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SPL_RUNEFIRE;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
 		player._pTSpell = SPL_RUNELIGHT;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
 		player._pTSpell = SPL_RUNENOVA;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
 		player._pTSpell = SPL_RUNEIMMOLAT;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
 		player._pTSpell = SPL_RUNESTONE;
-		if (pnum == MyPlayerId)
+		if (&player == MyPlayer)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	default:
@@ -4071,15 +4065,15 @@ void SpawnSmith(int lvl)
 	SortVendor(smithitem + PinnedItemCount);
 }
 
-void SpawnPremium(int pnum)
+void SpawnPremium(Player &player)
 {
-	int8_t lvl = Players[pnum]._pLevel;
+	int8_t lvl = player._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
 			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(premiumitems[i], plvl, pnum);
+				SpawnOnePremium(premiumitems[i], plvl, player);
 			}
 		}
 		numpremium = maxItems;
@@ -4089,17 +4083,17 @@ void SpawnPremium(int pnum)
 		if (gbIsHellfire) {
 			// Discard first 3 items and shift next 10
 			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], pnum);
+			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], player);
 			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], pnum);
+			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], player);
 			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], pnum);
+			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], player);
 		} else {
 			// Discard first 2 items and shift next 3
 			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], pnum);
+			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], player);
 			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], pnum);
+			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], player);
 		}
 	}
 }
@@ -4466,10 +4460,10 @@ std::string DebugSpawnItem(std::string itemName)
 		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
 		SetRndSeed(dist(BetterRng));
 		if (SDL_GetTicks() - begin > max_time)
-			return fmt::format("Item not found in {:d} seconds!", max_time / 1000);
+			return StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		if (i > max_iter)
-			return fmt::format("Item not found in {:d} tries!", max_iter);
+			return StrCat("Item not found in ", max_iter, " tries!");
 
 		fake_m.level = dist(BetterRng) % CF_LEVEL + 1;
 
@@ -4492,7 +4486,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 	item._iIdentified = true;
 	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
-	return fmt::format("Item generated successfully - iterations: {:d}", i);
+	return StrCat("Item generated successfully - iterations: ", i);
 }
 
 std::string DebugSpawnUniqueItem(std::string itemName)
@@ -4540,10 +4534,10 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 	int i = 0;
 	for (uint32_t begin = SDL_GetTicks();; i++) {
 		if (SDL_GetTicks() - begin > max_time)
-			return fmt::format("Item not found in {:d} seconds!", max_time / 1000);
+			return StrCat("Item not found in ", max_time / 1000, " seconds!");
 
 		if (i > max_iter)
-			return fmt::format("Item not found in {:d} tries!", max_iter);
+			return StrCat("Item not found in ", max_iter, " tries!");
 
 		Point bkp = item.position;
 		item = {};
@@ -4569,7 +4563,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 
 	item._iIdentified = true;
 	NetSendCmdPItem(false, CMD_DROPITEM, item.position, item);
-	return fmt::format("Item generated successfully - iterations: {:d}", i);
+	return StrCat("Item generated successfully - iterations: ", i);
 }
 #endif
 

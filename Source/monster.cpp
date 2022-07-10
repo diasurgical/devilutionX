@@ -37,6 +37,7 @@
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef _DEBUG
@@ -162,8 +163,10 @@ bool IsDirectionalAnim(const CMonster &monster, size_t animIndex)
 
 void InitMonsterTRN(CMonster &monst)
 {
+	char path[MAX_PATH];
 	std::array<uint8_t, 256> colorTranslations;
-	LoadFileInMem(monst.data->TransFile, colorTranslations);
+	*BufCopy(path, "Monsters\\", monst.data->TransFile, ".TRN") = '\0';
+	LoadFileInMem(path, colorTranslations);
 
 	std::replace(colorTranslations.begin(), colorTranslations.end(), 255, 0);
 
@@ -1004,8 +1007,8 @@ std::optional<Point> GetTeleportTile(const Monster &monster)
 {
 	int mx = monster.enemyPosition.x;
 	int my = monster.enemyPosition.y;
-	int rx = 2 * GenerateRnd(2) - 1;
-	int ry = 2 * GenerateRnd(2) - 1;
+	int rx = PickRandomlyAmong({ -1, 1 });
+	int ry = PickRandomlyAmong({ -1, 1 });
 
 	for (int j = -1; j <= 1; j++) {
 		for (int k = -1; k < 1; k++) {
@@ -1190,7 +1193,7 @@ void SyncLightPosition(Monster &monster)
 		ChangeLightOffset(monster.lightId, { lx, ly });
 }
 
-bool MonsterIdle(Monster &monster)
+void MonsterIdle(Monster &monster)
 {
 	if (monster.type().type == MT_GOLEM)
 		monster.changeAnimationData(MonsterGraphic::Walk);
@@ -1201,8 +1204,6 @@ bool MonsterIdle(Monster &monster)
 		UpdateEnemy(monster);
 
 	monster.var2++;
-
-	return false;
 }
 
 /**
@@ -1348,15 +1349,15 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		return;
 	if (blkper < blk) {
 		Direction dir = GetDirection(player.position.tile, monster.position.tile);
-		StartPlrBlock(pnum, dir);
-		if (pnum == MyPlayerId && player.wReflections > 0) {
+		StartPlrBlock(player, dir);
+		if (&player == MyPlayer && player.wReflections > 0) {
 			int dam = GenerateRnd(((maxDam - minDam) << 6) + 1) + (minDam << 6);
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			CheckReflect(monsterId, pnum, dam);
 		}
 		return;
 	}
-	if (monster.type().type == MT_YZOMBIE && pnum == MyPlayerId) {
+	if (monster.type().type == MT_YZOMBIE && &player == MyPlayer) {
 		if (player._pMaxHP > 64) {
 			if (player._pMaxHPBase > 64) {
 				player._pMaxHP -= 64;
@@ -1372,10 +1373,10 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 	}
 	int dam = (minDam << 6) + GenerateRnd(((maxDam - minDam) << 6) + 1);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
-	if (pnum == MyPlayerId) {
+	if (&player == MyPlayer) {
 		if (player.wReflections > 0)
 			CheckReflect(monsterId, pnum, dam);
-		ApplyPlrDamage(pnum, 0, 0, dam);
+		ApplyPlrDamage(player, 0, 0, dam);
 	}
 
 	// Reflect can also kill a monster, so make sure the monster is still alive
@@ -1403,7 +1404,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		if (PosOkPlayer(player, newPosition)) {
 			player.position.tile = newPosition;
 			FixPlayerLocation(player, player._pdir);
-			FixPlrWalkTags(pnum);
+			FixPlrWalkTags(player);
 			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 			SetPlayerOld(player);
 		}
@@ -1557,12 +1558,12 @@ bool MonsterFadeout(Monster &monster)
  * @param monster The monster that will be healed.
  * @return
  */
-bool MonsterHeal(Monster &monster)
+void MonsterHeal(Monster &monster)
 {
 	if ((monster.flags & MFLAG_NOHEAL) != 0) {
 		monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 		monster.mode = MonsterMode::SpecialMeleeAttack;
-		return false;
+		return;
 	}
 
 	if (monster.animInfo.currentFrame == 0) {
@@ -1576,15 +1577,14 @@ bool MonsterHeal(Monster &monster)
 			monster.mode = MonsterMode::SpecialMeleeAttack;
 		}
 	}
-	return false;
 }
 
-bool MonsterTalk(Monster &monster)
+void MonsterTalk(Monster &monster)
 {
 	M_StartStand(monster, monster.direction);
 	monster.goal = MGOAL_TALKING;
 	if (effect_is_playing(Speeches[monster.talkMsg].sfxnr))
-		return false;
+		return;
 	InitQTextMsg(monster.talkMsg);
 	if (monster.uniqType - 1 == UMT_GARBUD) {
 		if (monster.talkMsg == TEXT_GARBUD1) {
@@ -1617,7 +1617,7 @@ bool MonsterTalk(Monster &monster)
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 		}
 		if (Quests[Q_LTBANNER]._qvar1 < 2) {
-			app_fatal(fmt::format("SS Talk = {}, Flags = {}", monster.talkMsg, monster.flags));
+			app_fatal(StrCat("SS Talk = ", monster.talkMsg, ", Flags = ", monster.flags));
 		}
 	}
 	if (monster.uniqType - 1 == UMT_LACHDAN) {
@@ -1638,7 +1638,6 @@ bool MonsterTalk(Monster &monster)
 		monster.activeForTicks = UINT8_MAX;
 		monster.talkMsg = TEXT_NONE;
 	}
-	return false;
 }
 
 bool MonsterGotHit(Monster &monster)
@@ -1652,7 +1651,7 @@ bool MonsterGotHit(Monster &monster)
 	return false;
 }
 
-bool MonsterDeath(int monsterId)
+void MonsterDeath(int monsterId)
 {
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
 	auto &monster = Monsters[monsterId];
@@ -1684,7 +1683,6 @@ bool MonsterDeath(int monsterId)
 
 		M_UpdateLeader(monsterId);
 	}
-	return false;
 }
 
 bool MonsterSpecialStand(Monster &monster)
@@ -1718,14 +1716,12 @@ bool MonsterDelay(Monster &monster)
 	return false;
 }
 
-bool MonsterPetrified(Monster &monster)
+void MonsterPetrified(Monster &monster)
 {
 	if (monster.hitPoints <= 0) {
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 		monster.isInvalid = true;
 	}
-
-	return false;
 }
 
 Monster *AddSkeleton(Point position, Direction dir, bool inMap)
@@ -1819,17 +1815,17 @@ bool RandomWalk(int monsterId, Direction md)
 
 	bool ok = DirOK(monsterId, md);
 	if (FlipCoin())
-		ok = ok || (md = Left(mdtemp), DirOK(monsterId, md)) || (md = Right(mdtemp), DirOK(monsterId, md));
-	else
 		ok = ok || (md = Right(mdtemp), DirOK(monsterId, md)) || (md = Left(mdtemp), DirOK(monsterId, md));
+	else
+		ok = ok || (md = Left(mdtemp), DirOK(monsterId, md)) || (md = Right(mdtemp), DirOK(monsterId, md));
 	if (FlipCoin()) {
-		ok = ok
-		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md))
-		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md));
-	} else {
 		ok = ok
 		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md))
 		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md));
+	} else {
+		ok = ok
+		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md))
+		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md));
 	}
 	if (ok)
 		Walk(monster, md);
@@ -1843,9 +1839,9 @@ bool RandomWalk2(int monsterId, Direction md)
 	Direction mdtemp = md;
 	bool ok = DirOK(monsterId, md); // Can we continue in the same direction
 	if (FlipCoin()) {               // Randomly go left or right
-		ok = ok || (mdtemp = Left(md), DirOK(monsterId, Left(md))) || (mdtemp = Right(md), DirOK(monsterId, Right(md)));
-	} else {
 		ok = ok || (mdtemp = Right(md), DirOK(monsterId, Right(md))) || (mdtemp = Left(md), DirOK(monsterId, Left(md)));
+	} else {
+		ok = ok || (mdtemp = Left(md), DirOK(monsterId, Left(md))) || (mdtemp = Right(md), DirOK(monsterId, Right(md)));
 	}
 
 	if (ok)
@@ -2012,7 +2008,7 @@ void AiAvoidance(int monsterId)
 		MonstCheckDoors(monster);
 	int v = GenerateRnd(100);
 	if ((abs(mx) >= 2 || abs(my) >= 2) && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 4 || abs(my) >= 4) && GenerateRnd(4) == 0)) {
+		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 4 || abs(my) >= 4) && FlipCoin(4))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -2038,7 +2034,7 @@ void AiAvoidance(int monsterId)
 			}
 		} else if (v < 2 * monster.intelligence + 23) {
 			monster.direction = md;
-			if (IsAnyOf(monster.ai, AI_GOATMC, AI_GARBUD) && monster.hitPoints < (monster.maxHitPoints / 2) && FlipCoin())
+			if (IsAnyOf(monster.ai, AI_GOATMC, AI_GARBUD) && monster.hitPoints < (monster.maxHitPoints / 2) && !FlipCoin())
 				StartSpecialAttack(monster);
 			else
 				StartAttack(monster);
@@ -2152,7 +2148,7 @@ void AiRangedAvoidance(int monsterId)
 	int v = GenerateRnd(10000);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2 && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-		if (monster.goal == MGOAL_MOVE || (dist >= 3 && GenerateRnd(4 << lessmissiles) == 0)) {
+		if (monster.goal == MGOAL_MOVE || (dist >= 3 && FlipCoin(4 << lessmissiles))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -2323,10 +2319,10 @@ void SkeletonBowAi(int monsterId)
 
 std::optional<Point> ScavengerFindCorpse(const Monster &scavenger)
 {
-	bool lowToHigh = FlipCoin();
-	int first = lowToHigh ? -4 : 4;
-	int last = lowToHigh ? 4 : -4;
-	int increment = lowToHigh ? 1 : -1;
+	bool reverseSearch = FlipCoin();
+	int first = reverseSearch ? 4 : -4;
+	int last = reverseSearch ? -4 : 4;
+	int increment = reverseSearch ? -1 : 1;
 
 	for (int y = first; y <= last; y += increment) {
 		for (int x = first; x <= last; x += increment) {
@@ -2424,7 +2420,7 @@ void RhinoAi(int monsterId)
 	int v = GenerateRnd(100);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2) {
-		if (monster.goal == MGOAL_MOVE || (dist >= 5 && GenerateRnd(4) != 0)) {
+		if (monster.goal == MGOAL_MOVE || (dist >= 5 && !FlipCoin(4))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -2493,7 +2489,7 @@ void FallenAi(int monsterId)
 	}
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
-		if (GenerateRnd(4) != 0) {
+		if (!FlipCoin(4)) {
 			return;
 		}
 		if ((monster.flags & MFLAG_NOHEAL) == 0) {
@@ -2556,7 +2552,7 @@ void LeoricAi(int monsterId)
 	int v = GenerateRnd(100);
 	int dist = std::max(abs(mx), abs(my));
 	if (dist >= 2 && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 3 || abs(my) >= 3) && GenerateRnd(4) == 0)) {
+		if (monster.goal == MGOAL_MOVE || ((abs(mx) >= 3 || abs(my) >= 3) && FlipCoin(4))) {
 			if (monster.goal != MGOAL_MOVE) {
 				monster.goalVar1 = 0;
 				monster.goalVar2 = GenerateRnd(2);
@@ -2618,10 +2614,7 @@ void BatAi(int monsterId)
 			RandomWalk(monsterId, Opposite(md));
 			monster.goalVar1++;
 		} else {
-			if (FlipCoin())
-				RandomWalk(monsterId, Left(md));
-			else
-				RandomWalk(monsterId, Right(md));
+			RandomWalk(monsterId, PickRandomlyAmong({ Right(md), Left(md) }));
 			monster.goal = MGOAL_NORMAL;
 		}
 		return;
@@ -2749,10 +2742,7 @@ void SneakAi(int monsterId)
 			md = GetDirection(monster.position.tile, Players[monster.enemy].position.last);
 		md = Opposite(md);
 		if (monster.type().type == MT_UNSEEN) {
-			if (FlipCoin())
-				md = Left(md);
-			else
-				md = Right(md);
+			md = PickRandomlyAmong({ Right(md), Left(md) });
 		}
 	}
 	monster.direction = md;
@@ -3081,9 +3071,9 @@ void MegaAi(int monsterId)
 			if (GenerateRnd(100) < 10 * (monster.intelligence + 4)) {
 				monster.direction = md;
 				if (FlipCoin())
-					StartAttack(monster);
-				else
 					StartRangedSpecialAttack(monster, MIS_FLAMEC, 0);
+				else
+					StartAttack(monster);
 			}
 		}
 		monster.goalVar3 = 1;
@@ -3245,7 +3235,7 @@ void HorkDemonAi(int monsterId)
 
 	if (abs(mx) < 2 && abs(my) < 2) {
 		monster.goal = MGOAL_NORMAL;
-	} else if (monster.goal == 4 || ((abs(mx) >= 5 || abs(my) >= 5) && GenerateRnd(4) != 0)) {
+	} else if (monster.goal == 4 || ((abs(mx) >= 5 || abs(my) >= 5) && !FlipCoin(4))) {
 		if (monster.goal != 4) {
 			monster.goalVar1 = 0;
 			monster.goalVar2 = GenerateRnd(2);
@@ -3295,7 +3285,7 @@ string_view GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal(fmt::format("Unknown mMonstClass {}", static_cast<int>(monsterData.mMonstClass)));
+	app_fatal(StrCat("Unknown mMonstClass ", static_cast<int>(monsterData.mMonstClass)));
 }
 
 void ActivateSpawn(Monster &monster, Point position, Direction dir)
@@ -3382,12 +3372,59 @@ bool IsMonsterAvalible(const MonsterData &monsterData)
 	return currlevel >= monsterData.mMinDLvl && currlevel <= monsterData.mMaxDLvl;
 }
 
+bool UpdateModeStance(int monsterId)
+{
+	Monster &monster = Monsters[monsterId];
+
+	switch (monster.mode) {
+	case MonsterMode::Stand:
+		MonsterIdle(monster);
+		return false;
+	case MonsterMode::MoveNorthwards:
+	case MonsterMode::MoveSouthwards:
+	case MonsterMode::MoveSideways:
+		return MonsterWalk(monster, monster.mode);
+	case MonsterMode::MeleeAttack:
+		return MonsterAttack(monsterId);
+	case MonsterMode::HitRecovery:
+		return MonsterGotHit(monster);
+	case MonsterMode::Death:
+		MonsterDeath(monsterId);
+		return false;
+	case MonsterMode::SpecialMeleeAttack:
+		return MonsterSpecialAttack(monsterId);
+	case MonsterMode::FadeIn:
+		return MonsterFadein(monster);
+	case MonsterMode::FadeOut:
+		return MonsterFadeout(monster);
+	case MonsterMode::RangedAttack:
+		return MonsterRangedAttack(monster);
+	case MonsterMode::SpecialStand:
+		return MonsterSpecialStand(monster);
+	case MonsterMode::SpecialRangedAttack:
+		return MonsterRangedSpecialAttack(monsterId);
+	case MonsterMode::Delay:
+		return MonsterDelay(monster);
+	case MonsterMode::Petrified:
+		MonsterPetrified(monster);
+		return false;
+	case MonsterMode::Heal:
+		MonsterHeal(monster);
+		return false;
+	case MonsterMode::Talk:
+		MonsterTalk(monster);
+		return false;
+	default:
+		return false;
+	}
+}
+
 } // namespace
 
 void InitTRNForUniqueMonster(Monster &monster)
 {
 	char filestr[64];
-	*fmt::format_to(filestr, FMT_COMPILE(R"(Monsters\Monsters\{}.TRN)"), UniqueMonstersData[monster.uniqType - 1].mTrnName) = '\0';
+	*BufCopy(filestr, R"(Monsters\Monsters\)", UniqueMonstersData[monster.uniqType - 1].mTrnName, ".TRN") = '\0';
 	monster.uniqueMonsterTRN = LoadFileInMem<uint8_t>(filestr);
 }
 
@@ -3762,7 +3799,7 @@ void InitMonsters()
 		}
 		while (ActiveMonsterCount < totalmonsters) {
 			int mtype = scattertypes[GenerateRnd(numscattypes)];
-			if (currlevel == 1 || !FlipCoin())
+			if (currlevel == 1 || FlipCoin())
 				na = 1;
 			else if (currlevel == 2 || leveltype == DTYPE_CRYPT)
 				na = GenerateRnd(2) + 2;
@@ -3912,13 +3949,14 @@ void M_StartHit(Monster &monster, int dam)
 void M_StartHit(Monster &monster, int pnum, int dam)
 {
 	monster.whoHit |= 1 << pnum;
-	if (pnum == MyPlayerId) {
+	Player &player = Players[pnum];
+	if (&player == MyPlayer) {
 		delta_monster_hp(monster, *MyPlayer);
 		NetSendCmdMonDmg(false, monster.getId(), dam);
 	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		monster.enemy = pnum;
-		monster.enemyPosition = Players[pnum].position.future;
+		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
 		monster.direction = GetMonsterDirection(monster);
 	}
@@ -3935,7 +3973,7 @@ void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg)
 void M_StartKill(int monsterId, int pnum)
 {
 	assert(monsterId >= 0 && monsterId < MaxMonsters);
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	if (pnum == MyPlayerId) {
 		delta_kill_monster(monsterId, monster.position.tile, *MyPlayer);
@@ -4182,7 +4220,6 @@ void ProcessMonsters()
 		int monsterId = ActiveMonsters[i];
 		auto &monster = Monsters[monsterId];
 		FollowTheLeader(monster);
-		bool raflag = false;
 		if (gbIsMultiplayer) {
 			SetRndSeed(monster.aiSeed);
 			monster.aiSeed = AdvanceRndSeed();
@@ -4230,66 +4267,16 @@ void ProcessMonsters()
 				monster.activeForTicks--;
 			}
 		}
-		do {
+		while (true) {
 			if ((monster.flags & MFLAG_SEARCH) == 0 || !AiPlanPath(monsterId)) {
 				AiProc[monster.ai](monsterId);
 			}
-			switch (monster.mode) {
-			case MonsterMode::Stand:
-				raflag = MonsterIdle(monster);
+
+			if (!UpdateModeStance(monsterId))
 				break;
-			case MonsterMode::MoveNorthwards:
-			case MonsterMode::MoveSouthwards:
-			case MonsterMode::MoveSideways:
-				raflag = MonsterWalk(monster, monster.mode);
-				break;
-			case MonsterMode::MeleeAttack:
-				raflag = MonsterAttack(monsterId);
-				break;
-			case MonsterMode::HitRecovery:
-				raflag = MonsterGotHit(monster);
-				break;
-			case MonsterMode::Death:
-				raflag = MonsterDeath(monsterId);
-				break;
-			case MonsterMode::SpecialMeleeAttack:
-				raflag = MonsterSpecialAttack(monsterId);
-				break;
-			case MonsterMode::FadeIn:
-				raflag = MonsterFadein(monster);
-				break;
-			case MonsterMode::FadeOut:
-				raflag = MonsterFadeout(monster);
-				break;
-			case MonsterMode::RangedAttack:
-				raflag = MonsterRangedAttack(monster);
-				break;
-			case MonsterMode::SpecialStand:
-				raflag = MonsterSpecialStand(monster);
-				break;
-			case MonsterMode::SpecialRangedAttack:
-				raflag = MonsterRangedSpecialAttack(monsterId);
-				break;
-			case MonsterMode::Delay:
-				raflag = MonsterDelay(monster);
-				break;
-			case MonsterMode::Charge:
-				raflag = false;
-				break;
-			case MonsterMode::Petrified:
-				raflag = MonsterPetrified(monster);
-				break;
-			case MonsterMode::Heal:
-				raflag = MonsterHeal(monster);
-				break;
-			case MonsterMode::Talk:
-				raflag = MonsterTalk(monster);
-				break;
-			}
-			if (raflag) {
-				GroupUnity(monster);
-			}
-		} while (raflag);
+
+			GroupUnity(monster);
+		}
 		if (monster.mode != MonsterMode::Petrified && (monster.flags & MFLAG_ALLOW_SPECIAL) == 0) {
 			monster.animInfo.processAnimation((monster.flags & MFLAG_LOCK_ANIMATION) != 0);
 		}
@@ -4653,7 +4640,7 @@ void MissToMonst(Missile &missile, Point position)
 		if (PosOkPlayer(player, newPosition)) {
 			player.position.tile = newPosition;
 			FixPlayerLocation(player, player._pdir);
-			FixPlrWalkTags(pnum);
+			FixPlrWalkTags(player);
 			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 			SetPlayerOld(player);
 		}
@@ -4820,7 +4807,7 @@ void SpawnGolem(int id, Point position, Missile &missile)
 	golem.flags |= MFLAG_GOLEM;
 	StartSpecialStand(golem, Direction::South);
 	UpdateEnemy(golem);
-	if (id == MyPlayerId) {
+	if (&player == MyPlayer) {
 		NetSendCmdGolem(
 		    golem.position.tile.x,
 		    golem.position.tile.y,

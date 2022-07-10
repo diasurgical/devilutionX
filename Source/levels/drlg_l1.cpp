@@ -367,14 +367,14 @@ void FillFloor()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (!Protected.test(i, j) && dungeon[i][j] == Floor) {
-				int rv = GenerateRnd(3);
+			if (dungeon[i][j] != Floor || Protected.test(i, j))
+				continue;
 
-				if (rv == 1)
-					dungeon[i][j] = Floor22;
-				if (rv == 2)
-					dungeon[i][j] = Floor23;
-			}
+			int rv = GenerateRnd(3);
+			if (rv == 1)
+				dungeon[i][j] = Floor22;
+			else if (rv == 2)
+				dungeon[i][j] = Floor23;
 		}
 	}
 }
@@ -449,7 +449,7 @@ bool CheckRoom(Rectangle room)
 
 void GenerateRoom(Rectangle area, bool verticalLayout)
 {
-	bool rotate = GenerateRnd(4) == 0;
+	bool rotate = FlipCoin(4);
 	verticalLayout = (!verticalLayout && rotate) || (verticalLayout && !rotate);
 
 	bool placeRoom1;
@@ -497,45 +497,29 @@ void FirstRoom()
 {
 	DungeonMask.reset();
 
-	VerticalLayout = !FlipCoin();
-	HasChamber1 = FlipCoin();
-	HasChamber2 = FlipCoin();
-	HasChamber3 = FlipCoin();
+	VerticalLayout = FlipCoin();
+	HasChamber1 = !FlipCoin();
+	HasChamber2 = !FlipCoin();
+	HasChamber3 = !FlipCoin();
 
 	if (!HasChamber1 || !HasChamber3)
 		HasChamber2 = true;
 
-	Rectangle chamber1 { { 15, 15 }, { 10, 10 } };
+	Rectangle chamber1 { { 1, 15 }, { 10, 10 } };
 	Rectangle chamber2 { { 15, 15 }, { 10, 10 } };
-	Rectangle chamber3 { { 15, 15 }, { 10, 10 } };
-	Rectangle hallway { { 1, 1 }, { DMAXX - 2, DMAXY - 2 } };
-
+	Rectangle chamber3 { { 29, 15 }, { 10, 10 } };
+	Rectangle hallway { { 1, 17 }, { 38, 6 } };
+	if (!HasChamber1) {
+		hallway.position.x += 17;
+		hallway.size.width -= 17;
+	}
+	if (!HasChamber3)
+		hallway.size.width -= 16;
 	if (VerticalLayout) {
-		chamber1.position.y = 1;
-		chamber3.position.y = 29;
-		hallway.position.x = 17;
-		hallway.size.width = 6;
-
-		if (!HasChamber1) {
-			hallway.position.y += 17;
-			hallway.size.height -= 17;
-		}
-
-		if (!HasChamber3)
-			hallway.size.height -= 16;
-	} else {
-		chamber1.position.x = 1;
-		chamber3.position.x = 29;
-		hallway.position.y = 17;
-		hallway.size.height = 6;
-
-		if (!HasChamber1) {
-			hallway.position.x += 17;
-			hallway.size.width -= 17;
-		}
-
-		if (!HasChamber3)
-			hallway.size.width -= 16;
+		std::swap(chamber1.position.x, chamber1.position.y);
+		std::swap(chamber3.position.x, chamber3.position.y);
+		std::swap(hallway.position.x, hallway.position.y);
+		std::swap(hallway.size.width, hallway.size.height);
 	}
 
 	if (HasChamber1)
@@ -720,95 +704,96 @@ void AddWall()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			if (!Protected.test(i, j) && !Chamber.test(i, j)) {
-				if (dungeon[i][j] == Corner) {
-					AdvanceRndSeed();
-					int maxX = HorizontalWallOk({ i, j });
-					if (maxX != -1) {
-						HorizontalWall({ i, j }, HWall, maxX);
-					}
+			if (Protected.test(i, j) || Chamber.test(i, j))
+				continue;
+
+			if (dungeon[i][j] == Corner) {
+				AdvanceRndSeed();
+				int maxX = HorizontalWallOk({ i, j });
+				if (maxX != -1) {
+					HorizontalWall({ i, j }, HWall, maxX);
 				}
-				if (dungeon[i][j] == Corner) {
-					AdvanceRndSeed();
-					int maxY = VerticalWallOk({ i, j });
-					if (maxY != -1) {
-						VerticalWall({ i, j }, VWall, maxY);
-					}
+			}
+			if (dungeon[i][j] == Corner) {
+				AdvanceRndSeed();
+				int maxY = VerticalWallOk({ i, j });
+				if (maxY != -1) {
+					VerticalWall({ i, j }, VWall, maxY);
 				}
-				if (dungeon[i][j] == VWallEnd) {
-					AdvanceRndSeed();
-					int maxX = HorizontalWallOk({ i, j });
-					if (maxX != -1) {
-						HorizontalWall({ i, j }, DWall, maxX);
-					}
+			}
+			if (dungeon[i][j] == VWallEnd) {
+				AdvanceRndSeed();
+				int maxX = HorizontalWallOk({ i, j });
+				if (maxX != -1) {
+					HorizontalWall({ i, j }, DWall, maxX);
 				}
-				if (dungeon[i][j] == HWallEnd) {
-					AdvanceRndSeed();
-					int maxY = VerticalWallOk({ i, j });
-					if (maxY != -1) {
-						VerticalWall({ i, j }, DWall, maxY);
-					}
+			}
+			if (dungeon[i][j] == HWallEnd) {
+				AdvanceRndSeed();
+				int maxY = VerticalWallOk({ i, j });
+				if (maxY != -1) {
+					VerticalWall({ i, j }, DWall, maxY);
 				}
-				if (dungeon[i][j] == HWall) {
-					AdvanceRndSeed();
-					int maxX = HorizontalWallOk({ i, j });
-					if (maxX != -1) {
-						HorizontalWall({ i, j }, HWall, maxX);
-					}
+			}
+			if (dungeon[i][j] == HWall) {
+				AdvanceRndSeed();
+				int maxX = HorizontalWallOk({ i, j });
+				if (maxX != -1) {
+					HorizontalWall({ i, j }, HWall, maxX);
 				}
-				if (dungeon[i][j] == VWall) {
-					AdvanceRndSeed();
-					int maxY = VerticalWallOk({ i, j });
-					if (maxY != -1) {
-						VerticalWall({ i, j }, VWall, maxY);
-					}
+			}
+			if (dungeon[i][j] == VWall) {
+				AdvanceRndSeed();
+				int maxY = VerticalWallOk({ i, j });
+				if (maxY != -1) {
+					VerticalWall({ i, j }, VWall, maxY);
 				}
 			}
 		}
 	}
 }
 
-void GenerateChamber(Point position, bool topflag, bool bottomflag, bool leftflag, bool rightflag)
+void GenerateChamber(Point position, bool connectPrevious, bool connectNext, bool verticalLayout)
 {
-	if (topflag) {
-		dungeon[position.x + 2][position.y] = HArch;
-		dungeon[position.x + 3][position.y] = HArch;
-		dungeon[position.x + 4][position.y] = Corner;
-		dungeon[position.x + 7][position.y] = VArchEnd;
-		dungeon[position.x + 8][position.y] = HArch;
-		dungeon[position.x + 9][position.y] = HWall;
-	}
-	if (bottomflag) {
-		position.y += 11;
-		dungeon[position.x + 2][position.y] = HArchVWall;
-		dungeon[position.x + 3][position.y] = HArch;
-		dungeon[position.x + 4][position.y] = HArchEnd;
-		dungeon[position.x + 7][position.y] = DArch;
-		dungeon[position.x + 8][position.y] = HArch;
-		if (dungeon[position.x + 9][position.y] != DWall) {
-			dungeon[position.x + 9][position.y] = HDirtCorner;
+	if (connectPrevious) {
+		if (verticalLayout) {
+			dungeon[position.x + 2][position.y] = HArch;
+			dungeon[position.x + 3][position.y] = HArch;
+			dungeon[position.x + 4][position.y] = Corner;
+			dungeon[position.x + 7][position.y] = VArchEnd;
+			dungeon[position.x + 8][position.y] = HArch;
+			dungeon[position.x + 9][position.y] = HWall;
+		} else {
+			dungeon[position.x][position.y + 2] = VArch;
+			dungeon[position.x][position.y + 3] = VArch;
+			dungeon[position.x][position.y + 4] = Corner;
+			dungeon[position.x][position.y + 7] = HArchEnd;
+			dungeon[position.x][position.y + 8] = VArch;
+			dungeon[position.x][position.y + 9] = VWall;
 		}
-		position.y -= 11;
 	}
-	if (leftflag) {
-		dungeon[position.x][position.y + 2] = VArch;
-		dungeon[position.x][position.y + 3] = VArch;
-		dungeon[position.x][position.y + 4] = Corner;
-		dungeon[position.x][position.y + 7] = HArchEnd;
-		dungeon[position.x][position.y + 8] = VArch;
-		dungeon[position.x][position.y + 9] = VWall;
-	}
-	if (rightflag) {
-		position.x += 11;
-		dungeon[position.x][position.y + 2] = HWallVArch;
-		dungeon[position.x][position.y + 3] = VArch;
-		dungeon[position.x][position.y + 4] = VArchEnd;
-		dungeon[position.x][position.y + 7] = DArch;
-		dungeon[position.x][position.y + 8] = VArch;
-		if (dungeon[position.x][position.y + 9] != DWall) {
-			dungeon[position.x][position.y + 9] = HDirtCorner;
+	if (connectNext) {
+		if (verticalLayout) {
+			position.y += 11;
+			dungeon[position.x + 2][position.y] = HArchVWall;
+			dungeon[position.x + 3][position.y] = HArch;
+			dungeon[position.x + 4][position.y] = HArchEnd;
+			dungeon[position.x + 7][position.y] = DArch;
+			dungeon[position.x + 8][position.y] = HArch;
+			if (dungeon[position.x + 9][position.y] != DWall)
+				dungeon[position.x + 9][position.y] = HDirtCorner;
+			position.y -= 11;
+		} else {
+			position.x += 11;
+			dungeon[position.x][position.y + 2] = HWallVArch;
+			dungeon[position.x][position.y + 3] = VArch;
+			dungeon[position.x][position.y + 4] = VArchEnd;
+			dungeon[position.x][position.y + 7] = DArch;
+			dungeon[position.x][position.y + 8] = VArch;
+			if (dungeon[position.x][position.y + 9] != DWall)
+				dungeon[position.x][position.y + 9] = HDirtCorner;
+			position.x -= 11;
 		}
-		position.x -= 11;
 	}
 
 	for (int y = 1; y < 11; y++) {
@@ -824,19 +809,18 @@ void GenerateChamber(Point position, bool topflag, bool bottomflag, bool leftfla
 	dungeon[position.x + 7][position.y + 7] = Pillar;
 }
 
-void GenerateHall(int x1, int y1, int x2, int y2)
+void GenerateHall(Point start, int length, bool verticalLayout)
 {
-	if (y1 == y2) {
-		for (int i = x1; i < x2; i++) {
-			dungeon[i][y1] = HArch;
-			dungeon[i][y1 + 3] = HArch;
+	if (verticalLayout) {
+		for (int i = start.y; i < start.y + length; i++) {
+			dungeon[start.x][i] = VArch;
+			dungeon[start.x + 3][i] = VArch;
 		}
-		return;
-	}
-
-	for (int i = y1; i < y2; i++) {
-		dungeon[x1][i] = VArch;
-		dungeon[x1 + 3][i] = VArch;
+	} else {
+		for (int i = start.x; i < start.x + length; i++) {
+			dungeon[i][start.y] = HArch;
+			dungeon[i][start.y + 3] = HArch;
+		}
 	}
 }
 
@@ -965,7 +949,7 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if (GenerateRnd(4) == 0) {
+			if (FlipCoin(4)) {
 				uint8_t c = TileDecorations[dungeon[x][y]];
 				if (c != 0 && !Protected.test(x, y)) {
 					int rv = GenerateRnd(16);
@@ -1003,44 +987,31 @@ void Substitution()
 
 void FillChambers()
 {
-	if (!VerticalLayout) {
+	Point chamber1 { 0, 14 };
+	Point chamber3 { 28, 14 };
+	Point hall1 { 12, 18 };
+	Point hall2 { 26, 18 };
+	if (VerticalLayout) {
+		std::swap(chamber1.x, chamber1.y);
+		std::swap(chamber3.x, chamber3.y);
+		std::swap(hall1.x, hall1.y);
+		std::swap(hall2.x, hall2.y);
+	}
+
+	if (HasChamber1)
+		GenerateChamber(chamber1, false, true, VerticalLayout);
+	if (HasChamber2)
+		GenerateChamber({ 14, 14 }, HasChamber1, HasChamber3, VerticalLayout);
+	if (HasChamber3)
+		GenerateChamber(chamber3, true, false, VerticalLayout);
+
+	if (HasChamber2) {
 		if (HasChamber1)
-			GenerateChamber({ 0, 14 }, false, false, false, true);
-
-		if (!HasChamber3)
-			GenerateChamber({ 14, 14 }, false, false, true, false);
-		else if (!HasChamber1)
-			GenerateChamber({ 14, 14 }, false, false, false, true);
-		else if (HasChamber1 && HasChamber2 && HasChamber3)
-			GenerateChamber({ 14, 14 }, false, false, true, true);
-
+			GenerateHall(hall1, 2, VerticalLayout);
 		if (HasChamber3)
-			GenerateChamber({ 28, 14 }, false, false, true, false);
-		if (HasChamber1 && HasChamber2)
-			GenerateHall(12, 18, 14, 18);
-		if (HasChamber2 && HasChamber3)
-			GenerateHall(26, 18, 28, 18);
-		if (!HasChamber2)
-			GenerateHall(12, 18, 28, 18);
+			GenerateHall(hall2, 2, VerticalLayout);
 	} else {
-		if (HasChamber1)
-			GenerateChamber({ 14, 0 }, false, true, false, false);
-
-		if (!HasChamber3)
-			GenerateChamber({ 14, 14 }, true, false, false, false);
-		else if (!HasChamber1)
-			GenerateChamber({ 14, 14 }, false, true, false, false);
-		else if (HasChamber1 && HasChamber2 && HasChamber3)
-			GenerateChamber({ 14, 14 }, true, true, false, false);
-
-		if (HasChamber3)
-			GenerateChamber({ 14, 28 }, true, false, false, false);
-		if (HasChamber1 && HasChamber2)
-			GenerateHall(18, 12, 18, 14);
-		if (HasChamber2 && HasChamber3)
-			GenerateHall(18, 26, 18, 28);
-		if (!HasChamber2)
-			GenerateHall(18, 12, 18, 28);
+		GenerateHall(hall1, 16, VerticalLayout);
 	}
 
 	if (leveltype == DTYPE_CRYPT) {
@@ -1294,11 +1265,11 @@ Point SelectChamber()
 {
 	int chamber;
 	if (!HasChamber1)
-		chamber = FlipCoin() ? 3 : 2;
+		chamber = PickRandomlyAmong({ 2, 3 });
 	else if (!HasChamber2)
-		chamber = FlipCoin() ? 1 : 3;
+		chamber = PickRandomlyAmong({ 3, 1 });
 	else if (!HasChamber3)
-		chamber = FlipCoin() ? 1 : 2;
+		chamber = PickRandomlyAmong({ 2, 1 });
 	else
 		chamber = GenerateRnd(3) + 1;
 
