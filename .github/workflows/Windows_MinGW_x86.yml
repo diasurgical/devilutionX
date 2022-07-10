@@ -1,4 +1,4 @@
-name: Windows_x86
+name: Windows MinGW x86
 
 on:
   push:

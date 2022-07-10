@@ -1,0 +1,42 @@
+name: Windows MSVC x64
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+
+    - name: Install latest CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Restore or setup vcpkg
+      uses: lukka/run-vcpkg@v10
+      with:
+        vcpkgGitCommitId: '98f8d00e89fb6a8019c2045cfa1edbe9d92d3405'
+
+    - name: Run CMake consuming CMakePresets.json and vcpkg.json by mean of vcpkg.
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: 'ninja-vcpkg-debug'
+        buildPreset: 'ninja-vcpkg-debug'
+        testPreset: 'ninja-vcpkg-debug'
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx.exe
+        path: build-ninja-vcpkg-debug/devilutionx.exe
