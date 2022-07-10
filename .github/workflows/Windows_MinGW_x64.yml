@@ -1,4 +1,4 @@
-name: Windows_x64
+name: Windows MinGW x64
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
       with:
         name: devilutionx_x64.zip
         path: build/devilutionx.zip
-        
+
     - name: Upload artifacts as release in storage repo
       if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' }}
       uses: svenstaro/upload-release-action@v2

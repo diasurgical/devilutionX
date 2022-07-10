@@ -1,4 +1,4 @@
-name: Linux_x86_64_SDL1
+name: Linux x64 SDL1
 
 on:
   push:

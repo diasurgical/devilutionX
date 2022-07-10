@@ -1,4 +1,4 @@
-name: Linux_x86_64_test
+name: Linux x64 Tests
 
 on:
   push:
