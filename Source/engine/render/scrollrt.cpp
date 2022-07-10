@@ -1011,7 +1011,7 @@ void DrawGame(const Surface &fullOut, Point position)
 
 	// Adjust by player offset and tile grid alignment
 	Player &myPlayer = *MyPlayer;
-	Displacement offset = ScrollInfo.offset;
+	Displacement offset = {};
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 	int sx = offset.deltaX + tileOffset.deltaX;
@@ -1052,48 +1052,48 @@ void DrawGame(const Surface &fullOut, Point position)
 	UpdateMissilesRendererData();
 
 	// Draw areas moving in and out of the screen
-	switch (ScrollInfo._sdir) {
-	case ScrollDirection::North:
-		sy -= TILE_HEIGHT;
-		position += Direction::North;
-		rows += 2;
-		break;
-	case ScrollDirection::NorthEast:
-		sy -= TILE_HEIGHT;
-		position += Direction::North;
-		columns++;
-		rows += 2;
-		break;
-	case ScrollDirection::East:
-		columns++;
-		break;
-	case ScrollDirection::SouthEast:
-		columns++;
-		rows++;
-		break;
-	case ScrollDirection::South:
-		rows += 2;
-		break;
-	case ScrollDirection::SouthWest:
-		sx -= TILE_WIDTH;
-		position += Direction::West;
-		columns++;
-		rows++;
-		break;
-	case ScrollDirection::West:
-		sx -= TILE_WIDTH;
-		position += Direction::West;
-		columns++;
-		break;
-	case ScrollDirection::NorthWest:
-		sx -= TILE_WIDTH / 2;
-		sy -= TILE_HEIGHT / 2;
-		position += Direction::NorthWest;
-		columns++;
-		rows++;
-		break;
-	case ScrollDirection::None:
-		break;
+	if (myPlayer.IsWalking()) {
+		switch (myPlayer._pdir) {
+		case Direction::North:
+			sy -= TILE_HEIGHT;
+			position += Direction::North;
+			rows += 2;
+			break;
+		case Direction::NorthEast:
+			sy -= TILE_HEIGHT;
+			position += Direction::North;
+			columns++;
+			rows += 2;
+			break;
+		case Direction::East:
+			columns++;
+			break;
+		case Direction::SouthEast:
+			columns++;
+			rows++;
+			break;
+		case Direction::South:
+			rows += 2;
+			break;
+		case Direction::SouthWest:
+			sx -= TILE_WIDTH;
+			position += Direction::West;
+			columns++;
+			rows++;
+			break;
+		case Direction::West:
+			sx -= TILE_WIDTH;
+			position += Direction::West;
+			columns++;
+			break;
+		case Direction::NorthWest:
+			sx -= TILE_WIDTH / 2;
+			sy -= TILE_HEIGHT / 2;
+			position += Direction::NorthWest;
+			columns++;
+			rows++;
+			break;
+		}
 	}
 
 	DrawFloor(out, position, { sx, sy }, rows, columns);
@@ -1503,80 +1503,61 @@ void ClearScreenBuffer()
 #ifdef _DEBUG
 void ScrollView()
 {
-	bool scroll;
-
 	if (!MyPlayer->HoldItem.isEmpty())
 		return;
-
-	scroll = false;
 
 	if (MousePosition.x < 20) {
 		if (dmaxPosition.y - 1 <= ViewPosition.y || dminPosition.x >= ViewPosition.x) {
 			if (dmaxPosition.y - 1 > ViewPosition.y) {
 				ViewPosition.y++;
-				scroll = true;
 			}
 			if (dminPosition.x < ViewPosition.x) {
 				ViewPosition.x--;
-				scroll = true;
 			}
 		} else {
 			ViewPosition.y++;
 			ViewPosition.x--;
-			scroll = true;
 		}
 	}
 	if (MousePosition.x > gnScreenWidth - 20) {
 		if (dmaxPosition.x - 1 <= ViewPosition.x || dminPosition.y >= ViewPosition.y) {
 			if (dmaxPosition.x - 1 > ViewPosition.x) {
 				ViewPosition.x++;
-				scroll = true;
 			}
 			if (dminPosition.y < ViewPosition.y) {
 				ViewPosition.y--;
-				scroll = true;
 			}
 		} else {
 			ViewPosition.y--;
 			ViewPosition.x++;
-			scroll = true;
 		}
 	}
 	if (MousePosition.y < 20) {
 		if (dminPosition.y >= ViewPosition.y || dminPosition.x >= ViewPosition.x) {
 			if (dminPosition.y < ViewPosition.y) {
 				ViewPosition.y--;
-				scroll = true;
 			}
 			if (dminPosition.x < ViewPosition.x) {
 				ViewPosition.x--;
-				scroll = true;
 			}
 		} else {
 			ViewPosition.x--;
 			ViewPosition.y--;
-			scroll = true;
 		}
 	}
 	if (MousePosition.y > gnScreenHeight - 20) {
 		if (dmaxPosition.y - 1 <= ViewPosition.y || dmaxPosition.x - 1 <= ViewPosition.x) {
 			if (dmaxPosition.y - 1 > ViewPosition.y) {
 				ViewPosition.y++;
-				scroll = true;
 			}
 			if (dmaxPosition.x - 1 > ViewPosition.x) {
 				ViewPosition.x++;
-				scroll = true;
 			}
 		} else {
 			ViewPosition.x++;
 			ViewPosition.y++;
-			scroll = true;
 		}
 	}
-
-	if (scroll)
-		ScrollInfo._sdir = ScrollDirection::None;
 }
 #endif
 

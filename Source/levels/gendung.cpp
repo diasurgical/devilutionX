@@ -34,7 +34,6 @@ bool setlevel;
 _setlevels setlvlnum;
 dungeon_type setlvltype;
 Point ViewPosition;
-ScrollStruct ScrollInfo;
 int MicroTileLen;
 char TransVal;
 bool TransList[256];

@@ -289,7 +289,7 @@ void CheckCursMove()
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
 	const Player &myPlayer = *MyPlayer;
-	Displacement offset = ScrollInfo.offset;
+	Displacement offset = {};
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 	sx -= offset.deltaX - xo;
@@ -300,7 +300,7 @@ void CheckCursMove()
 	int fy = myPlayer.position.offset2.deltaY / 256;
 	fx -= (myPlayer.position.offset2.deltaX + myPlayer.position.velocity.deltaX) / 256;
 	fy -= (myPlayer.position.offset2.deltaY + myPlayer.position.velocity.deltaY) / 256;
-	if (ScrollInfo._sdir != ScrollDirection::None) {
+	if (myPlayer.IsWalking()) {
 		sx -= fx;
 		sy -= fy;
 	}

@@ -168,7 +168,6 @@ struct DirectionSettings {
 	DisplacementOf<int8_t> tileAdd;
 	DisplacementOf<int16_t> offset;
 	DisplacementOf<int8_t> map;
-	ScrollDirection scrollDir;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(Player &, const DirectionSettings &);
 };
@@ -269,33 +268,16 @@ constexpr _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>:
 
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
-	{ Direction::South,     {  1,  1 }, {   0, -32 }, { 0, 0 }, ScrollDirection::South,     PM_WALK_SOUTHWARDS, WalkSouthwards },
-	{ Direction::SouthWest, {  0,  1 }, {  32, -16 }, { 0, 0 }, ScrollDirection::SouthWest, PM_WALK_SOUTHWARDS, WalkSouthwards },
-	{ Direction::West,      { -1,  1 }, {  32, -16 }, { 0, 1 }, ScrollDirection::West,      PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::NorthWest, { -1,  0 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthWest, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::North,     { -1, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::North,     PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::NorthEast, {  0, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthEast, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::East,      {  1, -1 }, { -32, -16 }, { 1, 0 }, ScrollDirection::East,      PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::SouthEast, {  1,  0 }, { -32, -16 }, { 0, 0 }, ScrollDirection::SouthEast, PM_WALK_SOUTHWARDS, WalkSouthwards }
+	{ Direction::South,     {  1,  1 }, {   0, -32 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
+	{ Direction::SouthWest, {  0,  1 }, {  32, -16 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
+	{ Direction::West,      { -1,  1 }, {  32, -16 }, { 0, 1 }, PM_WALK_SIDEWAYS,   WalkSideways   },
+	{ Direction::NorthWest, { -1,  0 }, {   0,   0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::North,     { -1, -1 }, {   0,   0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::NorthEast, {  0, -1 }, {   0,   0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::East,      {  1, -1 }, { -32, -16 }, { 1, 0 }, PM_WALK_SIDEWAYS,   WalkSideways   },
+	{ Direction::SouthEast, {  1,  0 }, { -32, -16 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards }
 	// clang-format on
 } };
-
-void ScrollViewPort(const Player &player, ScrollDirection dir)
-{
-	ScrollInfo.tile = Point { 0, 0 } + (player.position.tile - ViewPosition);
-
-	if (!*sgOptions.Graphics.zoom) {
-		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
-			ScrollInfo._sdir = ScrollDirection::None;
-		} else {
-			ScrollInfo._sdir = dir;
-		}
-	} else if (abs(ScrollInfo.tile.x) >= 2 || abs(ScrollInfo.tile.y) >= 2) {
-		ScrollInfo._sdir = ScrollDirection::None;
-	} else {
-		ScrollInfo._sdir = dir;
-	}
-}
 
 bool PlrDirOK(const Player &player, Direction dir)
 {
@@ -327,10 +309,6 @@ void HandleWalkMode(Player &player, Displacement vel, Direction dir)
 	player.position.offset = dirModeParams.offset; // Offset player sprite to align with their previous tile position
 	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.tileAdd;
-
-	if (&player == MyPlayer) {
-		ScrollViewPort(player, dirModeParams.scrollDir);
-	}
 
 	dirModeParams.walkModeHandler(player, dirModeParams);
 
@@ -381,8 +359,6 @@ void StartWalkStand(Player &player)
 	player.position.offset = { 0, 0 };
 
 	if (&player == MyPlayer) {
-		ScrollInfo.offset = { 0, 0 };
-		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
 	}
 }
@@ -405,10 +381,6 @@ void ChangeOffset(Player &player)
 
 	px -= player.position.offset2.deltaX >> 8;
 	py -= player.position.offset2.deltaY >> 8;
-
-	if (&player == MyPlayer && ScrollInfo._sdir != ScrollDirection::None) {
-		ScrollInfo.offset += { px, py };
-	}
 
 	PmChangeLightOff(player);
 }
@@ -667,11 +639,6 @@ bool DoWalk(Player &player, int variant)
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(player._plid, player.position.tile);
 			ChangeVisionXY(player._pvid, player.position.tile);
-		}
-
-		// Update the "camera" tile position
-		if (&player == MyPlayer && ScrollInfo._sdir != ScrollDirection::None) {
-			ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 		}
 
 		if (player.walkpath[0] != WALK_NONE) {
@@ -2819,8 +2786,6 @@ void InitPlayer(Player &player, bool firstTime)
 
 	if (&player == MyPlayer) {
 		MyPlayerIsDead = false;
-		ScrollInfo.offset = { 0, 0 };
-		ScrollInfo._sdir = ScrollDirection::None;
 	}
 }
 
@@ -2866,8 +2831,6 @@ void FixPlayerLocation(Player &player, Direction bDir)
 	player.position.offset = { 0, 0 };
 	player._pdir = bDir;
 	if (&player == MyPlayer) {
-		ScrollInfo.offset = { 0, 0 };
-		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
 	}
 	ChangeLightXY(player._plid, player.position.tile);
@@ -3507,8 +3470,6 @@ void SyncPlrAnim(Player &player)
 	const player_graphic graphic = player.getGraphic();
 	if (!HeadlessMode)
 		player.AnimInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
-	// Ensure ScrollInfo is initialized correctly
-	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);
 }
 
 void SyncInitPlrPos(Player &player)

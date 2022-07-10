@@ -931,9 +931,6 @@ void DiabloInitScreen()
 	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
 	if (ControlMode == ControlTypes::KeyboardAndMouse)
 		SetCursorPos(MousePosition);
-	ScrollInfo.tile = { 0, 0 };
-	ScrollInfo.offset = { 0, 0 };
-	ScrollInfo._sdir = ScrollDirection::None;
 
 	ClrDiabloMsg();
 }

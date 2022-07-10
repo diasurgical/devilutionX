@@ -3520,7 +3520,7 @@ void MI_Teleport(Missile &missile)
 		ChangeVisionXY(player._pvid, player.position.tile);
 	}
 	if (&player == MyPlayer) {
-		ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
+		ViewPosition = player.position.tile;
 	}
 }
 
