@@ -13,18 +13,6 @@
 
 namespace devilution {
 
-enum class ScrollDirection : uint8_t {
-	None,
-	North,
-	NorthEast,
-	East,
-	SouthEast,
-	South,
-	SouthWest,
-	West,
-	NorthWest,
-};
-
 extern int LightTableIndex;
 extern uint32_t level_cel_block;
 extern char arch_draw_type;

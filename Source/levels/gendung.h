@@ -102,15 +102,6 @@ enum _difficulty : uint8_t {
 	DIFF_LAST = DIFF_HELL,
 };
 
-struct ScrollStruct {
-	/** @brief Tile offset of camera. */
-	Point tile;
-	/** @brief Pixel offset of camera. */
-	Displacement offset;
-	/** @brief Move direction of camera. */
-	ScrollDirection _sdir;
-};
-
 struct THEME_LOC {
 	Rectangle room;
 	int16_t ttval;
@@ -173,7 +164,6 @@ extern _setlevels setlvlnum;
 extern dungeon_type setlvltype;
 /** Specifies the player viewpoint X,Y-coordinates of the map. */
 extern DVL_API_FOR_TEST Point ViewPosition;
-extern ScrollStruct ScrollInfo;
 extern int MicroTileLen;
 extern char TransVal;
 /** Specifies the active transparency indices. */

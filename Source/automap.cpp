@@ -651,7 +651,7 @@ void DrawAutomap(const Surface &out)
 	Automap += AutomapOffset;
 
 	const Player &myPlayer = *MyPlayer;
-	Displacement myPlayerOffset = ScrollInfo.offset;
+	Displacement myPlayerOffset = {};
 	if (myPlayer.IsWalking())
 		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
 
