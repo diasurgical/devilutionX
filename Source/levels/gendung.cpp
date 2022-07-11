@@ -123,7 +123,7 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 		}
 	}
 
-	// Worth out the tallest area we could potentially fill
+	// Work out the tallest area we could potentially fill
 	for (int xOffset = 0; xOffset < minSize; xOffset++) {
 		for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
 			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
