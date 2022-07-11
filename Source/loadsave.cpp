@@ -572,7 +572,7 @@ bool gbSkipSync = false;
 
 void LoadMonster(LoadHelper *file, Monster &monster)
 {
-	monster.levelType = file->NextLE<int32_t>();
+	monster.monsterType = file->NextLE<int32_t>();
 	monster.mode = static_cast<MonsterMode>(file->NextLE<int32_t>());
 	monster.goal = static_cast<monster_goal>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
@@ -1322,7 +1322,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 void SaveMonster(SaveHelper *file, Monster &monster)
 {
-	file->WriteLE<int32_t>(monster.levelType);
+	file->WriteLE<int32_t>(monster.monsterType);
 	file->WriteLE<int32_t>(static_cast<int>(monster.mode));
 	file->WriteLE<uint8_t>(monster.goal);
 	file->Skip(3); // Alignment

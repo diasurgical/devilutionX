@@ -4453,7 +4453,7 @@ std::string DebugSpawnItem(std::string itemName)
 
 	uint32_t begin = SDL_GetTicks();
 	Monster *fake_m;
-	fake_m->levelType = 0;
+	fake_m->monsterType = 0;
 	fake_m->uniqType = 0;
 
 	int i = 0;

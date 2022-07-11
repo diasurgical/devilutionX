@@ -191,104 +191,6 @@ void InitMonsterTRN(CMonster &monst)
 	}
 }
 
-/* This cannot be easily changed into ctor, because it does not initialize monsters, it updates its data. */
-void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
-{
-	monster.direction = rd;
-	monster.position.tile = position;
-	monster.position.future = position;
-	monster.position.old = position;
-	monster.levelType = mtype;
-	monster.mode = MonsterMode::Stand;
-	monster.name = pgettext("monster", monster.data().mName).data();
-	monster.animInfo = {};
-	monster.changeAnimationData(MonsterGraphic::Stand);
-	monster.animInfo.tickCounterOfCurrentFrame = GenerateRnd(monster.animInfo.ticksPerFrame - 1);
-	monster.animInfo.currentFrame = GenerateRnd(monster.animInfo.numberOfFrames - 1);
-
-	monster.level = monster.data().mLevel;
-	int maxhp = monster.data().mMinHP + GenerateRnd(monster.data().mMaxHP - monster.data().mMinHP + 1);
-	if (monster.type().type == MT_DIABLO && !gbIsHellfire) {
-		maxhp /= 2;
-		monster.level -= 15;
-	}
-	monster.maxHitPoints = maxhp << 6;
-
-	if (!gbIsMultiplayer)
-		monster.maxHitPoints = std::max(monster.maxHitPoints / 2, 64);
-
-	monster.hitPoints = monster.maxHitPoints;
-	monster.ai = monster.data().mAi;
-	monster.intelligence = monster.data().mInt;
-	monster.goal = MGOAL_NORMAL;
-	monster.goalVar1 = 0;
-	monster.goalVar2 = 0;
-	monster.goalVar3 = 0;
-	monster.pathCount = 0;
-	monster.isInvalid = false;
-	monster.uniqType = 0;
-	monster.activeForTicks = 0;
-	monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
-	monster.rndItemSeed = AdvanceRndSeed();
-	monster.aiSeed = AdvanceRndSeed();
-	monster.whoHit = 0;
-	monster.exp = monster.data().mExp;
-	monster.hit = monster.data().mHit;
-	monster.minDamage = monster.data().mMinDamage;
-	monster.maxDamage = monster.data().mMaxDamage;
-	monster.hit2 = monster.data().mHit2;
-	monster.minDamage2 = monster.data().mMinDamage2;
-	monster.maxDamage2 = monster.data().mMaxDamage2;
-	monster.armorClass = monster.data().mArmorClass;
-	monster.magicResistance = monster.data().mMagicRes;
-	monster.leader = 0;
-	monster.leaderRelation = LeaderRelation::None;
-	monster.flags = monster.data().mFlags;
-	monster.talkMsg = TEXT_NONE;
-
-	if (monster.ai == AI_GARG) {
-		monster.changeAnimationData(MonsterGraphic::Special);
-		monster.animInfo.currentFrame = 0;
-		monster.flags |= MFLAG_ALLOW_SPECIAL;
-		monster.mode = MonsterMode::SpecialMeleeAttack;
-	}
-
-	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-		monster.maxHitPoints = 3 * monster.maxHitPoints;
-		if (gbIsHellfire)
-			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
-		else
-			monster.maxHitPoints += 64;
-		monster.hitPoints = monster.maxHitPoints;
-		monster.level += 15;
-		monster.exp = 2 * (monster.exp + 1000);
-		monster.hit += NightmareToHitBonus;
-		monster.minDamage = 2 * (monster.minDamage + 2);
-		monster.maxDamage = 2 * (monster.maxDamage + 2);
-		monster.hit2 += NightmareToHitBonus;
-		monster.minDamage2 = 2 * (monster.minDamage2 + 2);
-		monster.maxDamage2 = 2 * (monster.maxDamage2 + 2);
-		monster.armorClass += NightmareAcBonus;
-	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-		monster.maxHitPoints = 4 * monster.maxHitPoints;
-		if (gbIsHellfire)
-			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
-		else
-			monster.maxHitPoints += 192;
-		monster.hitPoints = monster.maxHitPoints;
-		monster.level += 30;
-		monster.exp = 4 * (monster.exp + 1000);
-		monster.hit += HellToHitBonus;
-		monster.minDamage = 4 * monster.minDamage + 6;
-		monster.maxDamage = 4 * monster.maxDamage + 6;
-		monster.hit2 += HellToHitBonus;
-		monster.minDamage2 = 4 * monster.minDamage2 + 6;
-		monster.maxDamage2 = 4 * monster.maxDamage2 + 6;
-		monster.armorClass += HellAcBonus;
-		monster.magicResistance = monster.data().mMagicRes2;
-	}
-}
-
 bool CanPlaceMonster(Point position)
 {
 	return InDungeonBounds(position)
@@ -303,7 +205,7 @@ void PlaceMonster(int i, int mtype, Point position)
 {
 	if (LevelMonsterTypes[mtype].type == MT_NAKRUL) {
 		for (int j = 0; j < ActiveMonsterCount; j++) {
-			if (Monsters[j]->levelType == mtype) {
+			if (Monsters[j]->monsterType == mtype) {
 				return;
 			}
 			if (Monsters[j]->type().type == MT_NAKRUL) {
@@ -314,7 +216,7 @@ void PlaceMonster(int i, int mtype, Point position)
 	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	InitMonster(*Monsters[i], rd, mtype, position);
+	Monsters[i] = new Monster(rd, mtype, position, *LevelMonsterTypes[mtype].data);
 }
 
 void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
@@ -632,7 +534,7 @@ void PlaceQuestMonsters()
 			if (i1 < LevelMonsterTypeCount) {
 				for (int i2 = 0; i2 < ActiveMonsterCount; i2++) {
 					auto &monster = Monsters[i2];
-					if (monster->uniqType != 0 || monster->levelType == i1) {
+					if (monster->uniqType != 0 || monster->monsterType == i1) {
 						UberDiabloMonsterIndex = i2;
 						break;
 					}
@@ -3759,7 +3661,7 @@ void InitGolems()
 {
 	if (!setlevel) {
 		for (int i = 0; i < MAX_PLRS; i++)
-			AddMonster(GolemHoldingCell, Direction::South, 0, false);
+			Monsters[i] = AddMonster(GolemHoldingCell, Direction::South, 0, false);
 	}
 }
 
@@ -3863,10 +3765,12 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap)
 {
 	if (ActiveMonsterCount < MaxMonsters) {
-		Monster *monster = Monsters[ActiveMonsters[ActiveMonsterCount++]];
+		auto *monster = new Monster(dir, mtype, position, *LevelMonsterTypes[mtype].data);
+		Monsters[ActiveMonsters[ActiveMonsterCount++]] = monster;
+
 		if (inMap)
 			dMonster[position.x][position.y] = monster->getId() + 1;
-		InitMonster(*monster, dir, mtype, position);
+
 		return monster;
 	}
 
@@ -4421,9 +4325,9 @@ void SyncMonsterAnim(Monster &monster)
 {
 #ifdef _DEBUG
 	// fix for saves with debug monsters having type originally not on the level
-	if (LevelMonsterTypes[monster.levelType].data == nullptr) {
-		InitMonsterGFX(monster.levelType);
-		LevelMonsterTypes[monster.levelType].corpseId = 1;
+	if (LevelMonsterTypes[monster.monsterType].data == nullptr) {
+		InitMonsterGFX(monster.monsterType);
+		LevelMonsterTypes[monster.monsterType].corpseId = 1;
 	}
 #endif
 	if (monster.uniqType != 0)
@@ -4599,7 +4503,7 @@ void PlayEffect(Monster &monster, int mode)
 		return;
 	}
 
-	int mi = monster.levelType;
+	int mi = monster.monsterType;
 	TSnd *snd = LevelMonsterTypes[mi].sounds[mode][sndIdx].get();
 	if (snd == nullptr || snd->isPlaying()) {
 		return;
@@ -4938,4 +4842,112 @@ bool Monster::tryLiftGargoyle()
 	return false;
 }
 
+Monster::Monster(Direction rd, int mtype, Point position, const MonsterData &data)
+{
+
+	direction = rd;
+	this->position.tile = position;
+	this->position.future = position;
+	this->position.old = position;
+	monsterType = mtype;
+	mode = MonsterMode::Stand;
+	name = pgettext("monster", data.mName).data();
+	animInfo = {};
+	changeAnimationData(MonsterGraphic::Stand);
+	animInfo.tickCounterOfCurrentFrame = GenerateRnd(animInfo.ticksPerFrame - 1);
+	animInfo.currentFrame = GenerateRnd(animInfo.numberOfFrames - 1);
+
+	level = data.mLevel;
+	int maxhp = data.mMinHP + GenerateRnd(data.mMaxHP - data.mMinHP + 1);
+	if (type().type == MT_DIABLO && !gbIsHellfire) {
+		maxhp /= 2;
+		level -= 15;
+	}
+	maxHitPoints = maxhp << 6;
+
+	if (!gbIsMultiplayer)
+		maxHitPoints = std::max(maxHitPoints / 2, 64);
+
+	hitPoints = maxHitPoints;
+	ai = data.mAi;
+	intelligence = data.mInt;
+	goal = MGOAL_NORMAL;
+	goalVar1 = 0;
+	goalVar2 = 0;
+	goalVar3 = 0;
+	pathCount = 0;
+	isInvalid = false;
+	uniqType = 0;
+	activeForTicks = 0;
+	lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
+	rndItemSeed = AdvanceRndSeed();
+	aiSeed = AdvanceRndSeed();
+	whoHit = 0;
+	exp = data.mExp;
+	hit = data.mHit;
+	minDamage = data.mMinDamage;
+	maxDamage = data.mMaxDamage;
+	hit2 = data.mHit2;
+	minDamage2 = data.mMinDamage2;
+	maxDamage2 = data.mMaxDamage2;
+	armorClass = data.mArmorClass;
+	magicResistance = data.mMagicRes;
+	leader = 0;
+	leaderRelation = LeaderRelation::None;
+	flags = data.mFlags;
+	talkMsg = TEXT_NONE;
+
+	if (ai == AI_GARG) {
+		changeAnimationData(MonsterGraphic::Special);
+		animInfo.currentFrame = 0;
+		flags |= MFLAG_ALLOW_SPECIAL;
+		mode = MonsterMode::SpecialMeleeAttack;
+	}
+
+	if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
+		maxHitPoints = 3 * maxHitPoints;
+		if (gbIsHellfire)
+			maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
+		else
+			maxHitPoints += 64;
+		hitPoints = maxHitPoints;
+		level += 15;
+		exp = 2 * (exp + 1000);
+		hit += NightmareToHitBonus;
+		minDamage = 2 * (minDamage + 2);
+		maxDamage = 2 * (maxDamage + 2);
+		hit2 += NightmareToHitBonus;
+		minDamage2 = 2 * (minDamage2 + 2);
+		maxDamage2 = 2 * (maxDamage2 + 2);
+		armorClass += NightmareAcBonus;
+	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
+		maxHitPoints = 4 * maxHitPoints;
+		if (gbIsHellfire)
+			maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
+		else
+			maxHitPoints += 192;
+		hitPoints = maxHitPoints;
+		level += 30;
+		exp = 4 * (exp + 1000);
+		hit += HellToHitBonus;
+		minDamage = 4 * minDamage + 6;
+		maxDamage = 4 * maxDamage + 6;
+		hit2 += HellToHitBonus;
+		minDamage2 = 4 * minDamage2 + 6;
+		maxDamage2 = 4 * maxDamage2 + 6;
+		armorClass += HellAcBonus;
+		magicResistance = data.mMagicRes2;
+	}
+
+	uniqueMonsterTRN = {};
+	var1 = 0;
+	var2 = 0;
+	var3 = 0;
+	enemyPosition = {};
+	enemy = 0;
+	uniqTrans = 0;
+	corpseId = 0;
+	whoHit = 0;
+	packSize = 0;
+}
 } // namespace devilution

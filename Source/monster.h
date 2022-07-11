@@ -206,7 +206,7 @@ struct Monster { // note: missing field _mAFNum
 
 	/** Usually corresponds to the enemy's future position */
 	WorldTilePosition enemyPosition;
-	uint8_t levelType;
+	uint8_t monsterType; //this was levelType for unknow reasons
 	MonsterMode mode;
 	uint8_t pathCount;
 	/** Direction faced by monster (direction enum) */
@@ -273,7 +273,7 @@ struct Monster { // note: missing field _mAFNum
 
 	const CMonster &type() const
 	{
-		return LevelMonsterTypes[levelType];
+		return LevelMonsterTypes[monsterType];
 	}
 
 	const MonsterData &data() const
