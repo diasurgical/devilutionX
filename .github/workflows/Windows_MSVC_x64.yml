@@ -27,6 +27,9 @@ jobs:
       with:
         vcpkgGitCommitId: '98f8d00e89fb6a8019c2045cfa1edbe9d92d3405'
 
+    - name: Get CMakePresets.json
+      run: cp Packaging/windows/CMakePresets.json .
+
     - name: Run CMake consuming CMakePresets.json and vcpkg.json by mean of vcpkg.
       uses: lukka/run-cmake@v10
       with:
