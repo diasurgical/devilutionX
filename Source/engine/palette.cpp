@@ -366,9 +366,9 @@ void palette_update_caves()
  */
 void palette_update_crypt()
 {
-	static bool delayLava = true;
+	static bool delayLava = false;
 
-	if (delayLava) {
+	if (!delayLava) {
 		CycleColorsReverse(1, 15);
 		delayLava = 0;
 	}
