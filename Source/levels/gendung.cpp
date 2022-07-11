@@ -123,27 +123,26 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 		}
 	}
 
-	// area is at least as high as necessary. If we wanted to find the largest rectangular area we should keep going
-	// and start checking for the largest total area we can find (could be the tallest region that maintains current
-	// width, or maybe a narrower but taller region has a larger area). Instead to match vanilla Diablo logic we
-	// trigger a break as soon as the width shrinks again.
-	for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
-		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
+	// Work out the tallest area we could potentially fill
+	for (int xOffset = 0; xOffset < minSize; xOffset++) {
+		for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
 			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
 				continue;
 
-			// really should continue and check if using this xOffset as width gives a larger area than our current
-			// maxWidth and yOffset.
 			maxHeight = yOffset;
+		}
+	}
 
-			if (xOffset < minSize) {
-				// current row is too small to meet the minimum size, so we've reached the end of the search
-				break;
-			}
+	// Then replicate the original dungeon generation constraints and find the "squarest" region
+	for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
+		for (int xOffset = minSize; xOffset < maxWidth; xOffset++) {
+			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
+				continue;
 
-			// We should be checking the maxHeight/yOffset in combination with the xOffset to see if we've got a more
-			// suitable area, but instead we just update maxWidth and let the loops fall out.
-			maxWidth = xOffset;
+			if (xOffset > yOffset)
+				maxWidth = xOffset;
+			if (yOffset > xOffset)
+				maxHeight = yOffset;
 		}
 	}
 
