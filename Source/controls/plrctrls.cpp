@@ -1991,6 +1991,7 @@ void PerformSecondaryAction()
 
 void QuickCast(size_t slot)
 {
+	MouseActionType prevMouseButtonAction = LastMouseButtonAction;
 	Player &myPlayer = *MyPlayer;
 	spell_id spell = myPlayer._pSplHotKey[slot];
 	spell_type spellType = myPlayer._pSplTHotKey[slot];
@@ -2000,12 +2001,7 @@ void QuickCast(size_t slot)
 	}
 
 	CheckPlrSpell(false, spell, spellType);
-	if (pcursplr != -1)
-		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
-	else if (pcursmonst != -1)
-		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
-	else
-		LastMouseButtonAction = MouseActionType::Spell;
+	LastMouseButtonAction = prevMouseButtonAction;
 }
 
 } // namespace devilution
