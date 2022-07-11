@@ -1991,7 +1991,7 @@ void PerformSecondaryAction()
 
 void QuickCast(size_t slot)
 {
-	MouseActionType PrevMouseButtonAction = LastMouseButtonAction;
+	mouseActionType PrevMouseButtonAction = LastMouseButtonAction;
 	Player &myPlayer = *MyPlayer;
 	spell_id spell = myPlayer._pSplHotKey[slot];
 	spell_type spellType = myPlayer._pSplTHotKey[slot];
