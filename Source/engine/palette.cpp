@@ -380,7 +380,7 @@ void palette_update_crypt()
 
 /**
  * @brief Cycle the pond waves and bubles colors every 3rd frame
- * Bubles have 8 colors and waves 7, so the full animation has 56th frames before it loops
+ * Bubles have 8 colors and waves 7, so the full animation has 56 frames before it loops
  */
 void palette_update_hive()
 {
