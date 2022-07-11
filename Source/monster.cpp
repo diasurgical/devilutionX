@@ -3446,6 +3446,11 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 
 void InitLevelMonsters()
 {
+	// todo fix it to be nonquick
+	for (auto &monster : Monsters) {
+		monster = new Monster(Direction::South,0, Point(0,0), MonstersData[0]);
+	}
+
 	LevelMonsterTypeCount = 0;
 	monstimgtot = 0;
 
@@ -4161,7 +4166,8 @@ void ProcessMonsters()
 			monster->position.last = Monsters[monster->enemy]->position.future;
 			monster->enemyPosition = monster->position.last;
 		} else {
-			assert(monster->enemy >= 0 && monster->enemy < MAX_PLRS);
+			bool ass = monster->enemy >= 0 && monster->enemy < MAX_PLRS;
+			assert(ass);
 			Player &player = Players[monster->enemy];
 			monster->enemyPosition = player.position.future;
 			if (IsTileVisible(monster->position.tile)) {
@@ -4751,6 +4757,12 @@ void decode_enemy(Monster &monster, int enemyId)
 
 [[nodiscard]] size_t Monster::getId() const
 {
+	int i = 0;
+	for (auto &monster : Monsters) {
+		if (monster == this)
+			return i++;
+		i++;
+	}
 	return std::distance<const Monster *>(Monsters[0], this);
 }
 
@@ -4840,7 +4852,7 @@ Monster::Monster(Direction rd, int mtype, Point position, const MonsterData &dat
 	changeAnimationData(MonsterGraphic::Stand);
 	animInfo.tickCounterOfCurrentFrame = GenerateRnd(animInfo.ticksPerFrame - 1);
 	animInfo.currentFrame = GenerateRnd(animInfo.numberOfFrames - 1);
-	
+
 	level = data.mLevel;
 	int maxhp = data.mMinHP + GenerateRnd(data.mMaxHP - data.mMinHP + 1);
 	if (type().type == MT_DIABLO && !gbIsHellfire) {
@@ -4923,5 +4935,6 @@ Monster::Monster(Direction rd, int mtype, Point position, const MonsterData &dat
 		magicResistance = data.mMagicRes2;
 	}
 }
+
 
 } // namespace devilution
