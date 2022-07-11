@@ -41,7 +41,7 @@ jobs:
         path: build/devilutionx.zip
 
     - name: Upload artifacts as release in storage repo
-      if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' }}
+      if: ${{ !env.ACT && github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && github.repository == 'diasurgical/devilutionX' }}
       uses: svenstaro/upload-release-action@v2
       with:
         repo_name: artifacts-storage/devilutionx-artifacts
