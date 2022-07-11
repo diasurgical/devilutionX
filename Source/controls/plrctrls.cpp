@@ -2000,6 +2000,7 @@ void QuickCast(size_t slot)
 	}
 
 	CheckPlrSpell(false, spell, spellType);
+        // Set to attack values to allow auto attack to continue
 	if (pcursplr != -1)
 		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 	else if (pcursmonst != -1)
