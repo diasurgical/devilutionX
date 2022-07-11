@@ -31,6 +31,8 @@ namespace devilution {
 
 namespace {
 
+constexpr uint32_t MaxProgress = 534;
+
 OptionalOwnedCelSprite sgpBackCel;
 
 bool IsProgress;
@@ -216,16 +218,23 @@ void interface_msg_pump()
 	}
 }
 
-bool IncProgress()
+void IncProgress()
 {
 	interface_msg_pump();
 	if (!IsProgress)
-		return false;
+		return;
 	sgdwProgress += 23;
-	if (sgdwProgress > 534)
-		sgdwProgress = 534;
+	if (sgdwProgress > MaxProgress)
+		sgdwProgress = MaxProgress;
 	DrawCutsceneForeground();
-	return sgdwProgress >= 534;
+}
+
+void CompleteProgress()
+{
+	if (!IsProgress)
+		return;
+	while (sgdwProgress < MaxProgress)
+		IncProgress();
 }
 
 void ShowProgress(interface_mode uMsg)
