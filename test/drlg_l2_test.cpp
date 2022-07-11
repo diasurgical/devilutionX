@@ -65,6 +65,19 @@ TEST(Drlg_l2, CreateL2Dungeon_diablo_6_1824554527)
 	EXPECT_EQ(ViewPosition, Point(28, 76));
 }
 
+TEST(Drlg_l2, CreateL2Dungeon_diablo_6_2033265779)
+{
+	LoadExpectedLevelData("diablo/6-2033265779.dun");
+
+	InitQuests();
+	Quests[Q_SCHAMB]._qactive = QUEST_INIT;
+
+	TestCreateDungeon(6, 2033265779, ENTRY_MAIN);
+	EXPECT_EQ(ViewPosition, Point(27, 28));
+	TestCreateDungeon(6, 2033265779, ENTRY_PREV);
+	EXPECT_EQ(ViewPosition, Point(64, 64));
+}
+
 TEST(Drlg_l2, CreateL2Dungeon_diablo_7_680552750)
 {
 	LoadExpectedLevelData("diablo/7-680552750.dun");
