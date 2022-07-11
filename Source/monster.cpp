@@ -4295,6 +4295,11 @@ void FreeMonsters()
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
 		LevelMonsterTypes[i].animData = nullptr;
 	}
+
+	//todo should this be split?
+	for (auto monster : Monsters) {
+		delete monster;
+	}
 }
 
 bool DirOK(int monsterId, Direction mdir)
