@@ -2001,11 +2001,11 @@ void QuickCast(size_t slot)
 
 	CheckPlrSpell(false, spell, spellType);
 	if (pcursplr != -1)
-		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
+		LastMouseButtonAction = MouseActionType::AttackPlayerTarget;
 	else if (pcursmonst != -1)
-		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
+		LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
 	else
-		LastMouseButtonAction = MouseActionType::Spell;
+		LastMouseButtonAction = MouseActionType::Attack;
 }
 
 } // namespace devilution
