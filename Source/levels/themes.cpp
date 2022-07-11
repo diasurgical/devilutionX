@@ -581,8 +581,7 @@ void SpawnObjectOrSkeleton(unsigned frequency, _object_id objectType, Point tile
 	if (FlipCoin(frequency)) {
 		AddObject(objectType, tile);
 	} else {
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, tile);
+		SpawnSkeleton(PreSpawnSkeleton(), tile);
 	}
 }
 } // namespace
@@ -605,10 +604,7 @@ void Theme_SkelRoom(int t)
 
 	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERL, { xp - 1, yp - 1 });
 
-	{
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp, yp - 1 });
-	}
+	SpawnSkeleton(PreSpawnSkeleton(), { xp, yp - 1 });
 
 	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERR, { xp + 1, yp - 1 });
 
@@ -618,10 +614,7 @@ void Theme_SkelRoom(int t)
 
 	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERR, { xp - 1, yp + 1 });
 
-	{
-		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp, yp + 1 });
-	}
+	SpawnSkeleton(PreSpawnSkeleton(), { xp, yp + 1 });
 
 	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERL, { xp + 1, yp + 1 });
 

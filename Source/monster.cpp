@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <array>
 #include <climits>
+#include <optional>
 
 #include <fmt/compile.h>
 #include <fmt/format.h>
@@ -1719,7 +1720,7 @@ void MonsterPetrified(Monster &monster)
 	}
 }
 
-Monster *AddSkeleton(Point position, Direction dir, bool inMap)
+std::optional<Monster *> AddSkeleton(Point position, Direction dir, bool inMap)
 {
 	int j = 0;
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
@@ -1742,9 +1743,9 @@ Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 
 void SpawnSkeleton(Point position, Direction dir)
 {
-	Monster *skeleton = AddSkeleton(position, dir, true);
-	if (skeleton != nullptr)
-		StartSpecialStand(*skeleton, dir);
+	auto skeleton = AddSkeleton(position, dir, true);
+	if (skeleton)
+		StartSpecialStand(*skeleton.value(), dir);
 }
 
 bool IsLineNotSolid(Point startPoint, Point endPoint)
@@ -3849,7 +3850,7 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 	}
 }
 
-Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap)
+std::optional<Monster *> AddMonster(Point position, Direction dir, int mtype, bool inMap)
 {
 	if (ActiveMonsterCount < MaxMonsters) {
 		Monster &monster = Monsters[ActiveMonsters[ActiveMonsterCount++]];
@@ -3859,7 +3860,7 @@ Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap)
 		return &monster;
 	}
 
-	return nullptr;
+	return {};
 }
 
 void AddDoppelganger(Monster &monster)
@@ -4698,10 +4699,12 @@ bool IsGoat(_monster_id mt)
 	    MT_NGOATBW, MT_BGOATBW, MT_RGOATBW, MT_GGOATBW);
 }
 
-bool SpawnSkeleton(Monster *monster, Point position)
+bool SpawnSkeleton(std::optional<Monster *> maybeMonster, Point position)
 {
-	if (monster == nullptr)
+	if (!maybeMonster)
 		return false;
+
+	auto monster = maybeMonster.value();
 
 	if (IsTileAvailable(position)) {
 		Direction dir = GetDirection(position, position); // TODO useless calculation
@@ -4750,13 +4753,13 @@ bool SpawnSkeleton(Monster *monster, Point position)
 	return true;
 }
 
-Monster *PreSpawnSkeleton()
+std::optional<Monster *> PreSpawnSkeleton()
 {
-	Monster *skeleton = AddSkeleton({ 0, 0 }, Direction::South, false);
-	if (skeleton != nullptr)
-		M_StartStand(*skeleton, Direction::South);
+	auto maybeSkeleton = AddSkeleton({ 0, 0 }, Direction::South, false);
+	if (maybeSkeleton)
+		M_StartStand(*maybeSkeleton.value(), Direction::South);
 
-	return skeleton;
+	return maybeSkeleton;
 }
 
 void TalktoMonster(Monster &monster)

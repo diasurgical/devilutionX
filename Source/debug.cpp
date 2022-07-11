@@ -723,9 +723,10 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 		if (!IsTileWalkable(pos))
 			return {};
 
-		Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
-		if (monster == nullptr)
+		auto maybeMonster = AddMonster(pos, myPlayer._pdir, id, true);
+		if (!maybeMonster)
 			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
+		Monster *monster = maybeMonster.value();
 		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
 		ActiveMonsterCount--;
 		monster->corpseId = 1;

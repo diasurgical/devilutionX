@@ -1069,9 +1069,9 @@ void AddSarc(int i)
 	Objects[i]._oVar1 = GenerateRnd(10);
 	Objects[i]._oRndSeed = AdvanceRndSeed();
 	if (Objects[i]._oVar1 >= 8) {
-		Monster *monster = PreSpawnSkeleton();
-		if (monster != nullptr) {
-			Objects[i]._oVar2 = monster->getId();
+		auto maybeMonster = PreSpawnSkeleton();
+		if (maybeMonster) {
+			Objects[i]._oVar2 = maybeMonster.value()->getId();
 		} else {
 			Objects[i]._oVar2 = -1;
 		}
@@ -1128,9 +1128,9 @@ void AddBarrel(Object &barrel)
 	barrel._oVar3 = GenerateRnd(3);
 
 	if (barrel._oVar2 >= 8) {
-		Monster *skeleton = PreSpawnSkeleton();
-		if (skeleton != nullptr) {
-			barrel._oVar4 = skeleton->getId();
+		auto maybeSkeleton = PreSpawnSkeleton();
+		if (maybeSkeleton) {
+			barrel._oVar4 = maybeSkeleton.value()->getId();
 		} else {
 			barrel._oVar4 = -1;
 		}
