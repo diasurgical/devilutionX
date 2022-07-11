@@ -11858,9 +11858,6 @@ msgstr "Staw czoła Diablo"
 msgid "Back to Level {:d}"
 msgstr "Wróć na poziom {:d}"
 
-#~ msgid "Which item is for sale?             Your gold: {:s}"
-#~ msgstr "Który przedmiot chcesz sprzedać?  Twoje złoto: {:s}"
-
 #~ msgid "Right click to use"
 #~ msgstr "PPM by użyć"
 

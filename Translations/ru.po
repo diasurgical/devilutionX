@@ -7696,16 +7696,13 @@ msgstr "Поговорить с Каином"
 msgid "Identify an item"
 msgstr "Идентифицировать предмет"
 
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1214
 msgid "You have nothing to identify."
 msgstr "У вас нечего идентифицировать."
 
-# Нужно выровнять с остальными строками
-#. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:s}"
-msgstr "Какой предмет идентифицировать? Ваше золото: {:s}"
+msgid "Identify which item?"
+msgstr "Какой предмет идентифицировать?"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"
