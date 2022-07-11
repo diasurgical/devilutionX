@@ -14,14 +14,14 @@ namespace devilution {
 namespace {
 
 uint16_t sgnMonsterPriority[MaxMonsters];
-int sgnMonsters;
+size_t sgnMonsters;
 uint16_t sgwLRU[MaxMonsters];
 int sgnSyncItem;
 int sgnSyncPInv;
 
 void SyncOneMonster()
 {
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int m = ActiveMonsters[i];
 		auto &monster = Monsters[m];
 		sgnMonsterPriority[m] = MyPlayer->position.tile.ManhattanDistance(monster.position.tile);
@@ -53,7 +53,7 @@ bool SyncMonsterActive(TSyncMonster &monsterSync)
 	int ndx = -1;
 	uint32_t lru = 0xFFFFFFFF;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int m = ActiveMonsters[i];
 		if (sgnMonsterPriority[m] < lru && sgwLRU[m] < 0xFFFE) {
 			lru = sgnMonsterPriority[m];
@@ -74,7 +74,7 @@ bool SyncMonsterActive2(TSyncMonster &monsterSync)
 	int ndx = -1;
 	uint32_t lru = 0xFFFE;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		if (sgnMonsters >= ActiveMonsterCount) {
 			sgnMonsters = 0;
 		}
@@ -211,7 +211,7 @@ bool IsEnemyIdValid(const Monster &monster, int enemyId)
 	}
 
 	enemyId -= MAX_PLRS;
-	if (enemyId >= MaxMonsters) {
+	if (static_cast<size_t>(enemyId) >= MaxMonsters) {
 		return false;
 	}
 
@@ -230,9 +230,9 @@ bool IsEnemyIdValid(const Monster &monster, int enemyId)
 
 bool IsTSyncMonsterValidate(const TSyncMonster &monsterSync)
 {
-	const int monsterId = monsterSync._mndx;
+	const size_t monsterId = monsterSync._mndx;
 
-	if (monsterId < 0 || monsterId >= MaxMonsters)
+	if (monsterId >= MaxMonsters)
 		return false;
 
 	if (!InDungeonBounds({ monsterSync._mx, monsterSync._my }))
@@ -266,7 +266,7 @@ uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 	assert(dwMaxLen <= 0xffff);
 	SyncOneMonster();
 
-	for (int i = 0; i < ActiveMonsterCount && dwMaxLen >= sizeof(TSyncMonster); i++) {
+	for (size_t i = 0; i < ActiveMonsterCount && dwMaxLen >= sizeof(TSyncMonster); i++) {
 		auto &monsterSync = *reinterpret_cast<TSyncMonster *>(pbBuf);
 		bool sync = false;
 		if (i < 2) {

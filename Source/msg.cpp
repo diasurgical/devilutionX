@@ -348,7 +348,7 @@ size_t DeltaImportObject(const byte *src, DObjectStr *dst)
 
 byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 {
-	for (int i = 0; i < MaxMonsters; i++, src++) {
+	for (size_t i = 0; i < MaxMonsters; i++, src++) {
 		if (src->position.x == 0xFF) {
 			*dst++ = byte { 0xFF };
 		} else {
@@ -363,7 +363,7 @@ byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 void DeltaImportMonster(const byte *src, DMonsterStr *dst)
 {
 	size_t size = 0;
-	for (int i = 0; i < MaxMonsters; i++, dst++) {
+	for (size_t i = 0; i < MaxMonsters; i++, dst++) {
 		if (src[size] == byte { 0xFF }) {
 			memset(dst, 0xFF, sizeof(DMonsterStr));
 			size++;
@@ -522,7 +522,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 
 	DLevel &deltaLevel = GetDeltaLevel(bLevel);
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
 		auto &monster = Monsters[ma];
 		if (monster.hitPoints == 0)
@@ -2445,7 +2445,7 @@ void DeltaLoadLevel()
 	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MaxMonsters; i++) {
+		for (size_t i = 0; i < MaxMonsters; i++) {
 			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
 

@@ -785,14 +785,11 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	return false;
 }
 
-bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
+bool PlrHitMonst(int pnum, size_t monsterId, bool adjacentDamage = false)
 {
 	int hper = 0;
 
-	if (monsterId < 0 || monsterId >= MaxMonsters) {
-		app_fatal(StrCat("PlrHitMonst: illegal monster ", monsterId));
-	}
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PlrHitMonst: illegal player ", pnum));
