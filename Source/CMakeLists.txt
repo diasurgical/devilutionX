@@ -166,6 +166,14 @@ set(libdevilutionx_SRCS
   utils/str_cat.cpp
   utils/utf8.cpp)
 
+# Optimize dungeon rendering to significantly improve Debug build performance.
+set(_files_to_optimize_in_debug engine/render/dun_render.cpp)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  set_source_files_properties(${_files_to_optimize_in_debug} PROPERTIES COMPILE_FLAGS $<$<CONFIG:Debug>:-O3>)
+elseif(MSVC)
+  set_source_files_properties(${_files_to_optimize_in_debug} PROPERTIES COMPILE_FLAGS $<$<CONFIG:Debug>:/O2>)
+endif()
+
 if(IOS)
   list(APPEND libdevilutionx_SRCS platform/ios/ios_paths.m)
 endif()
