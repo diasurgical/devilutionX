@@ -3,9 +3,11 @@
  *
  * Implementation of object functionality, interaction, spawning, loading, etc.
  */
-#include <algorithm>
 #include <climits>
 #include <cstdint>
+#include <ctime>
+
+#include <algorithm>
 
 #include <fmt/core.h>
 

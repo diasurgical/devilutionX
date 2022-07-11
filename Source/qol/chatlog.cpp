@@ -3,9 +3,12 @@
  *
  * Implementation of the in-game chat log.
  */
-#include <fmt/format.h>
+#include <ctime>
+
 #include <string>
 #include <vector>
+
+#include <fmt/format.h>
 
 #include "DiabloUI/ui_flags.hpp"
 #include "automap.h"
