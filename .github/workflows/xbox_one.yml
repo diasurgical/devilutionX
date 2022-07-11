@@ -30,6 +30,14 @@ jobs:
         cd ${{ github.workspace }}\Packaging\xbox-one
         build.bat
 
+    - name: Copy artifacts to package directory
+      run: >
+        New-Item -Path build\uwp-project -Name pkg -ItemType Directory -Force &&
+        Copy-Item -Recurse -Container:$false -Path build\uwp-project\AppxPackages
+        -Filter Microsoft.VCLibs.x64.*.appx -Destination build\uwp-project\pkg\ &&
+        Copy-Item -Recurse -Container:$false -Path build\uwp-project\Release
+        -Filter devilutionX_*_x64.appx -Destination build\uwp-project\pkg\
+
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
@@ -37,5 +45,4 @@ jobs:
         name: devilutionx-xbox-one.zip
         if-no-files-found: error
         path: |
-          build/uwp-project/AppxPackages/**/Microsoft.VCLibs.x64.*.appx
-          build/uwp-project/Release/**/devilutionX_*_x64.appx
+          build/uwp-project/pkg/
