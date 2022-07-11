@@ -216,6 +216,7 @@ void PlaceMonster(int i, int mtype, Point position)
 	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
+	delete Monsters[i];
 	Monsters[i] = new Monster(rd, mtype, position, *LevelMonsterTypes[mtype].data);
 }
 
@@ -3766,6 +3767,7 @@ Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap)
 {
 	if (ActiveMonsterCount < MaxMonsters) {
 		auto *monster = new Monster(dir, mtype, position, *LevelMonsterTypes[mtype].data);
+		delete Monsters[ActiveMonsters[ActiveMonsterCount]];
 		Monsters[ActiveMonsters[ActiveMonsterCount++]] = monster;
 
 		if (inMap)
@@ -4201,7 +4203,7 @@ void FreeMonsters()
 	}
 
 	// todo should this be split?
-	for (auto monster : Monsters) {
+	for (auto *monster : Monsters) {
 		delete monster;
 	}
 }
