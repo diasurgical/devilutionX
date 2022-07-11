@@ -1,6 +1,0 @@
-#pragma once
-#define PROJECT_NAME "DevilutionX"
-#define PROJECT_VERSION "1.4.0-1a491c8fe"
-#define PROJECT_VERSION_MAJOR 1
-#define PROJECT_VERSION_MINOR 4
-#define PROJECT_VERSION_PATCH 0
