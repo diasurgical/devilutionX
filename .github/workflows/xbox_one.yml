@@ -33,16 +33,15 @@ jobs:
     - name: Copy artifacts to package directory
       run: >
         New-Item -Path build\uwp-project -Name pkg -ItemType Directory -Force &&
-        Copy-Item -Recurse -Container:$false -Path build\uwp-project\AppxPackages
-        -Filter Microsoft.VCLibs.x64.*.appx -Destination build\uwp-project\pkg\ &&
-        Copy-Item -Recurse -Container:$false -Path build\uwp-project\Release
-        -Filter devilutionX_*_x64.appx -Destination build\uwp-project\pkg\
+        Get-Childitem -Path build\uwp-project\AppxPackages, build\uwp-project\Release
+        -Include Microsoft.VCLibs.x64.*.appx, devilutionX_*_x64.appx -File -Recurse |
+        Copy-Item -Destination build\uwp-project\pkg\
 
     - name: Upload-Package
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
-        name: devilutionx-xbox-one.zip
+        name: devilutionx-xbox-one
         if-no-files-found: error
         path: |
           build/uwp-project/pkg/
