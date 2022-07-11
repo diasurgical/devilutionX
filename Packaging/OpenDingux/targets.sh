@@ -1,6 +1,7 @@
 declare -ra VALID_TARGETS=(
   lepus
   retrofw
+  rg99
   rg350
   gkd350h
 )

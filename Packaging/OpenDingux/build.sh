@@ -22,12 +22,14 @@ declare -r BUILD_DIR="build-${TARGET}"
 declare -rA BUILDROOT_REPOS=(
 	[lepus]=https://github.com/OpenDingux/buildroot.git
 	[retrofw]=https://github.com/retrofw/buildroot.git
+	[rg99]=https://github.com/OpenDingux/buildroot.git
 	[rg350]=https://github.com/OpenDingux/buildroot.git
 	[gkd350h]=https://github.com/tonyjih/RG350_buildroot.git
 )
 declare -rA BUILDROOT_DEFCONFIGS=(
 	[lepus]='od_lepus_defconfig BR2_EXTERNAL=board/opendingux'
 	[retrofw]='RetroFW_defconfig BR2_EXTERNAL=retrofw'
+	[rg99]='od_rs90_defconfig BR2_EXTERNAL=board/opendingux'
 	[rg350]='od_gcw0_defconfig BR2_EXTERNAL=board/opendingux'
 	[gkd350h]='rg350_defconfig BR2_EXTERNAL=board/opendingux'
 )
@@ -55,14 +57,19 @@ prepare_buildroot() {
 	if [[ -d $BUILDROOT ]]; then
 		return
 	fi
-	git clone --depth=1 "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" "$BUILDROOT"
+	if [[ "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" == *.tar.gz ]]; then
+		mkdir -p "$BUILDROOT"
+		curl -L --fail "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" | \
+			tar -xz --strip-components 1 -C "$BUILDROOT"
+	else
+		git clone --depth=1 "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" "$BUILDROOT"
+	fi
 	cd "$BUILDROOT"
 	ln -s ../shared-dl dl
 
 	# Work around a BR2_EXTERNAL initialization bug in older buildroots.
 	mkdir -p output
 	touch output/.br-external.mk
-
 	make ${BUILDROOT_DEFCONFIGS[$BUILDROOT_TARGET]}
 	cd -
 }
@@ -104,6 +111,12 @@ build_relwithdebinfo() {
 	cmake_build
 }
 
+build_minsizerel() {
+	cmake_configure -DCMAKE_BUILD_TYPE=MinSizeRel
+	cmake_build
+	strip_bin
+}
+
 build_release() {
 	cmake_configure -DCMAKE_BUILD_TYPE=Release
 	cmake_build
@@ -112,7 +125,11 @@ build_release() {
 
 build() {
 	rm -f "${BUILD_DIR}/CMakeCache.txt"
-	build_release
+	if [[ $TARGET == rg99 ]]; then
+		build_minsizerel
+	else
+		build_release
+	fi
 }
 
 main
