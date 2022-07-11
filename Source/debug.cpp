@@ -105,7 +105,7 @@ void PrintDebugMonster(int m)
 
 	bool bActive = false;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		if (ActiveMonsters[i] == m)
 			bActive = true;
 	}
@@ -693,10 +693,10 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = MaxLvlMTypes - 1;
+	size_t id = MaxLvlMTypes - 1;
 	bool found = false;
 
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (LevelMonsterTypes[i].type == mtype) {
 			id = i;
 			found = true;
@@ -779,10 +779,10 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = MaxLvlMTypes - 1;
+	size_t id = MaxLvlMTypes - 1;
 	bool found = false;
 
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (LevelMonsterTypes[i].type == mtype) {
 			id = i;
 			found = true;

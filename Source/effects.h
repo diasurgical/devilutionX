@@ -1177,7 +1177,7 @@ extern _sfx_id sfxdnum;
 
 bool effect_is_playing(int nSFX);
 void stream_stop();
-void InitMonsterSND(int monst);
+void InitMonsterSND(size_t monst);
 void FreeMonsterSnd();
 bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan);
 void PlaySFX(_sfx_id psfx);

@@ -766,7 +766,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag)
 		return;
 
-	if (mi < 0 || mi >= MaxMonsters) {
+	if (static_cast<size_t>(mi) >= MaxMonsters) {
 		Log("Draw Monster: tried to draw illegal monster {}", mi);
 		return;
 	}

@@ -5,8 +5,10 @@
  */
 #pragma once
 
-#include <array>
+#include <cstddef>
 #include <cstdint>
+
+#include <array>
 #include <functional>
 
 #include "engine.h"
@@ -24,8 +26,8 @@ namespace devilution {
 
 struct Missile;
 
-constexpr int MaxMonsters = 200;
-constexpr int MaxLvlMTypes = 24;
+constexpr size_t MaxMonsters = 200;
+constexpr size_t MaxLvlMTypes = 24;
 
 enum monster_flag : uint16_t {
 	// clang-format off
@@ -297,22 +299,22 @@ struct Monster { // note: missing field _mAFNum
 	bool tryLiftGargoyle();
 };
 
-extern int LevelMonsterTypeCount;
+extern size_t LevelMonsterTypeCount;
 extern Monster Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];
-extern int ActiveMonsterCount;
+extern size_t ActiveMonsterCount;
 extern int MonsterKillCounts[MaxMonsters];
 extern bool sgbSaveSoundOn;
 
 void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
-void InitMonsterGFX(int monsterTypeIndex);
+void InitMonsterGFX(size_t monsterTypeIndex);
 void WeakenNaKrul();
 void InitGolems();
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
-Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap);
+Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap);
 void AddDoppelganger(Monster &monster);
 bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
