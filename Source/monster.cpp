@@ -4296,7 +4296,7 @@ void FreeMonsters()
 		LevelMonsterTypes[i].animData = nullptr;
 	}
 
-	//todo should this be split?
+	// todo should this be split?
 	for (auto monster : Monsters) {
 		delete monster;
 	}
