@@ -362,7 +362,7 @@ void palette_update_caves()
 
 /**
  * @brief Cycle the lava every other frame, and glow every frame
- * Lava has 15 colors and the glow 16, so the full animation has 240th frames before it loops
+ * Lava has 15 colors and the glow 16, so the full animation has 240 frames before it loops
  */
 void palette_update_crypt()
 {
