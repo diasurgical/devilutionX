@@ -300,6 +300,7 @@ struct Monster { // note: missing field _mAFNum
 	//virtual void Ai() = 0;
 
 	Monster(Direction rd, int mtype, Point position, const MonsterData &data);
+	Monster() = default;
 };
 
 extern int LevelMonsterTypeCount;
