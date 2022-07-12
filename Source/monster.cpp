@@ -216,8 +216,8 @@ void PlaceMonster(int i, int mtype, Point position)
 	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	delete Monsters[i];
-	Monsters[i] = new Monster(rd, mtype, position, *LevelMonsterTypes[mtype].data);
+	// delete Monsters[i];
+	Monsters[i] = new (Monsters[i]) Monster(rd, mtype, position, *LevelMonsterTypes[mtype].data);
 }
 
 void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
@@ -3444,7 +3444,13 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 
 void InitLevelMonsters()
 {
-	// todo fix it to be nonquick
+	// todo move this to do this once at the start of the game, and use placement new here instead.
+	// This uses placement new. The idea is to initialize memory for every monster once, and then only construct new monsters in the place of an old one.
+	// This comes at a cost of trickier maintenance: if a concrete monster is being replaced it's dtor must be called manually.
+	// Also, the memory for an object must be properly aligned - meaning that if we achieve full OO monsters,
+	// this should allocate the memory for the biggest one of them all.
+
+	// Disclaimer: I do not claim that I got this 100% right.
 	for (auto &monster : Monsters) {
 		monster = new Monster();
 	}
@@ -3456,7 +3462,8 @@ void InitLevelMonsters()
 		levelMonsterType.placeFlags = 0;
 	}
 
-	ClrAllMonsters();
+	// This is not needed, since the first loop in this fun basically does it. (except for not setting name to "invalid monster" - this is todo)
+	// ClrAllMonsters();
 	ActiveMonsterCount = 0;
 	totalmonsters = MaxMonsters;
 
@@ -3766,14 +3773,14 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap)
 {
 	if (ActiveMonsterCount < MaxMonsters) {
-		auto *monster = new Monster(dir, mtype, position, *LevelMonsterTypes[mtype].data);
-		delete Monsters[ActiveMonsters[ActiveMonsterCount]];
-		Monsters[ActiveMonsters[ActiveMonsterCount++]] = monster;
+		// auto *monster = new Monster(dir, mtype, position, *LevelMonsterTypes[mtype].data);
+		// delete Monsters[ActiveMonsters[ActiveMonsterCount]];
+		Monsters[ActiveMonsters[ActiveMonsterCount]] = new (Monsters[ActiveMonsters[ActiveMonsterCount]]) Monster(dir, mtype, position, *LevelMonsterTypes[mtype].data);
 
 		if (inMap)
-			dMonster[position.x][position.y] = monster->getId() + 1;
+			dMonster[position.x][position.y] = Monsters[ActiveMonsters[ActiveMonsterCount]]->getId() + 1;
 
-		return monster;
+		return Monsters[ActiveMonsters[ActiveMonsterCount++]];
 	}
 
 	return nullptr;
@@ -4203,7 +4210,7 @@ void FreeMonsters()
 	}
 
 	// todo should this be split?
-	for (auto *monster : Monsters) {
+	for (auto &monster : Monsters) {
 		delete monster;
 	}
 }
