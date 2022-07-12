@@ -205,8 +205,9 @@ void PmChangeLightOff(Player &player)
 		return;
 
 	const Light *l = &Lights[player._plid];
-	int x = 2 * player.position.offset.deltaY + player.position.offset.deltaX;
-	int y = 2 * player.position.offset.deltaY - player.position.offset.deltaX;
+	WorldTileDisplacement offset = player.position.offset;
+	int x = 2 * offset.deltaY + offset.deltaX;
+	int y = 2 * offset.deltaY - offset.deltaX;
 
 	x = (x / 8) * (x < 0 ? 1 : -1);
 	y = (y / 8) * (y < 0 ? 1 : -1);
