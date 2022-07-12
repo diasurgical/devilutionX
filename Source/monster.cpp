@@ -1088,11 +1088,7 @@ void StartHeal(Monster &monster)
 
 void SyncLightPosition(Monster &monster)
 {
-	int lx = (monster.position.offset.deltaX + 2 * monster.position.offset.deltaY) / 8;
-	int ly = (2 * monster.position.offset.deltaY - monster.position.offset.deltaX) / 8;
-
-	if (monster.lightId != NO_LIGHT)
-		ChangeLightOffset(monster.lightId, { lx, ly });
+	ChangeLightOffset(monster.lightId, monster.position.offset.screenToLight());
 }
 
 void MonsterIdle(Monster &monster)
