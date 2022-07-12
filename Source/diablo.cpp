@@ -169,6 +169,7 @@ void StartGame(interface_mode uMsg)
 void FreeGame()
 {
 	FreeMonsterHealthBar();
+	FreeMonstersMemory();
 	FreeXPBar();
 	FreeControlPan();
 	FreeInvGFX();
@@ -720,6 +721,8 @@ void RunGameLoop(interface_mode uMsg)
 	tagMSG msg;
 
 	nthread_ignore_mutex(true);
+	// Is this the right place to call this?
+	AllocateMemoryForMonsters();
 	StartGame(uMsg);
 	assert(ghMainWnd);
 	saveProc = SetWindowProc(GameEventHandler);

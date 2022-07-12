@@ -3444,15 +3444,9 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 
 void InitLevelMonsters()
 {
-	// todo move this to do this once at the start of the game, and use placement new here instead.
-	// This uses placement new. The idea is to initialize memory for every monster once, and then only construct new monsters in the place of an old one.
-	// This comes at a cost of trickier maintenance: if a concrete monster is being replaced it's dtor must be called manually.
-	// Also, the memory for an object must be properly aligned - meaning that if we achieve full OO monsters,
-	// this should allocate the memory for the biggest one of them all.
 
-	// Disclaimer: I do not claim that I got this 100% right.
 	for (auto &monster : Monsters) {
-		monster = new Monster();
+		monster = new(monster) Monster();
 	}
 
 	LevelMonsterTypeCount = 0;
@@ -4208,8 +4202,9 @@ void FreeMonsters()
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
 		LevelMonsterTypes[i].animData = nullptr;
 	}
+}
 
-	// todo should this be split?
+void FreeMonstersMemory() {
 	for (auto &monster : Monsters) {
 		delete monster;
 	}
@@ -4958,5 +4953,16 @@ Monster::Monster(Direction rd, int mtype, Point position, const MonsterData &dat
 	corpseId = 0;
 	whoHit = 0;
 	packSize = 0;
+}
+
+// This uses placement new. The idea is to initialize memory for every monster once, and then only construct new monsters in the place of an old one.
+// This comes at a cost of trickier maintenance: if a concrete monster is being replaced it's dtor must be called manually.
+// Also, the memory for an object must be properly aligned - meaning that if we achieve full OO monsters,
+// this should allocate the memory for the biggest one of them all.
+// Disclaimer: I do not claim that I got this 100% right.
+void AllocateMemoryForMonsters() {
+	for(int i = 0; i < MaxMonsters; i++) {
+		Monsters[i] = new Monster();
+	}
 }
 } // namespace devilution

@@ -364,5 +364,7 @@ void SpawnGolem(int id, Point position, Missile &missile);
 bool CanTalkToMonst(const Monster &monster);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemyId);
+void AllocateMemoryForMonsters();
+void FreeMonstersMemory();
 
 } // namespace devilution
