@@ -301,6 +301,16 @@ struct Monster { // note: missing field _mAFNum
 	}
 
 	/**
+	 * @brief Calculates the distance in tiles between this monster and its current target
+	 *
+	 * The distance is not calculated as the euclidean distance, but rather as
+	 * the longest number of tiles in the coordinate system.
+	 *
+	 * @return The distance in tiles
+	 */
+	[[nodiscard]] unsigned distanceToEnemy() const;
+
+	/**
 	 * @brief Is the monster currently walking?
 	 */
 	bool isWalking() const;
