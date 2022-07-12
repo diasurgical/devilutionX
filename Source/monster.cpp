@@ -317,7 +317,7 @@ void PlaceMonster(int i, int mtype, Point position)
 	InitMonster(Monsters[i], rd, mtype, position);
 }
 
-void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, Monster *leader)
+void PlaceGroup(int mtype, unsigned num, Monster *leader = nullptr, bool leashed = false)
 {
 	unsigned placed = 0;
 
@@ -331,7 +331,7 @@ void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, Mo
 
 		int xp;
 		int yp;
-		if (uniqueMonsterPack != UniqueMonsterPack::None) {
+		if (leader != nullptr) {
 			int offset = GenerateRnd(8);
 			auto position = leader->position.tile + static_cast<Direction>(offset);
 			xp = position.x;
@@ -353,19 +353,19 @@ void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, Mo
 		for (int try2 = 0; j < num && try2 < 100; xp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
 			if (!CanPlaceMonster({ xp, yp })
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
-			    || (uniqueMonsterPack == UniqueMonsterPack::Leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
+			    || (leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
 				try2++;
 				continue;
 			}
 
 			PlaceMonster(ActiveMonsterCount, mtype, { xp, yp });
-			if (uniqueMonsterPack != UniqueMonsterPack::None) {
+			if (leader != nullptr) {
 				auto &minion = Monsters[ActiveMonsterCount];
 				minion.maxHitPoints *= 2;
 				minion.hitPoints = minion.maxHitPoints;
 				minion.intelligence = leader->intelligence;
 
-				if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
+				if (leashed) {
 					minion.setLeader(leader);
 				}
 
@@ -386,7 +386,7 @@ void PlaceGroup(int mtype, unsigned num, UniqueMonsterPack uniqueMonsterPack, Mo
 		}
 	}
 
-	if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
+	if (leashed) {
 		leader->packSize = placed;
 	}
 }
@@ -3531,7 +3531,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	}
 
 	if (uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
-		PlaceGroup(miniontype, bosspacksize, uniqueMonsterData.monsterPack, &monster);
+		PlaceGroup(miniontype, bosspacksize, &monster, uniqueMonsterData.monsterPack == UniqueMonsterPack::Leashed);
 	}
 
 	if (monster.ai != AI_GARG) {
@@ -3809,7 +3809,7 @@ void InitMonsters()
 				na = GenerateRnd(2) + 2;
 			else
 				na = GenerateRnd(3) + 3;
-			PlaceGroup(mtype, na, UniqueMonsterPack::None, nullptr);
+			PlaceGroup(mtype, na);
 		}
 	}
 	for (int i = 0; i < nt; i++) {
