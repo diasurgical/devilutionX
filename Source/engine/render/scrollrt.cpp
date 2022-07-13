@@ -367,7 +367,7 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
 	if (!monster.animInfo.celSprite) {
-		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name);
+		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name());
 		return;
 	}
 
@@ -437,7 +437,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
-		    monster.name,
+		    monster.name(),
 		    getMonsterModeDisplayName(monster.mode),
 		    DirectionToString(monster.direction),
 		    nCel,

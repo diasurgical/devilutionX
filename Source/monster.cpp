@@ -200,7 +200,6 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.position.old = position;
 	monster.levelType = mtype;
 	monster.mode = MonsterMode::Stand;
-	monster.name = pgettext("monster", monster.data().mName).data();
 	monster.animInfo = {};
 	monster.changeAnimationData(MonsterGraphic::Stand);
 	monster.animInfo.tickCounterOfCurrentFrame = GenerateRnd(monster.animInfo.ticksPerFrame - 1);
@@ -524,7 +523,6 @@ void ClrAllMonsters()
 {
 	for (auto &monster : Monsters) {
 		ClearMVars(monster);
-		monster.name = "Invalid Monster";
 		monster.goal = MonsterGoal::None;
 		monster.mode = MonsterMode::Stand;
 		monster.var1 = 0;
@@ -3434,7 +3432,6 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	}
 
 	monster.exp *= 2;
-	monster.name = pgettext("monster", uniqueMonsterData.mName).data();
 	monster.maxHitPoints = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
@@ -4411,10 +4408,6 @@ void SyncMonsterAnim(Monster &monster)
 		LevelMonsterTypes[monster.levelType].corpseId = 1;
 	}
 #endif
-	if (monster.uniqType != 0)
-		monster.name = pgettext("monster", UniqueMonstersData[monster.uniqType - 1].mName).data();
-	else
-		monster.name = pgettext("monster", monster.data().mName).data();
 
 	if (monster.uniqType != 0)
 		InitTRNForUniqueMonster(monster);

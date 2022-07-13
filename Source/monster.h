@@ -166,7 +166,6 @@ struct CMonster {
 extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 
 struct Monster { // note: missing field _mAFNum
-	const char *name;
 	std::unique_ptr<uint8_t[]> uniqueMonsterTRN;
 	/**
 	 * @brief Contains information for current animation
@@ -278,6 +277,18 @@ struct Monster { // note: missing field _mAFNum
 	const MonsterData &data() const
 	{
 		return *type().data;
+	}
+
+	/**
+	 * @brief Returns monster's name
+	 * @return Monster's name
+	 */
+	const char *name() const
+	{
+		if (uniqType != 0)
+			return UniqueMonstersData[uniqType - 1].mName;
+
+		return data().mName;
 	}
 
 	/**
