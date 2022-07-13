@@ -2084,7 +2084,7 @@ void CloseInventory()
 void DoTelekinesis()
 {
 	if (pcursobj != -1)
-		NetSendCmdParam1(true, CMD_OPOBJT, pcursobj);
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJT, cursPosition);
 	if (pcursitem != -1)
 		NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, pcursitem);
 	if (pcursmonst != -1) {

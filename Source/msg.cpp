@@ -1215,29 +1215,18 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnObjectTileAction(const TCmd &cmd, Player &player, action_id action)
+size_t OnObjectTileAction(const TCmd &cmd, Player &player, action_id action, bool pathToObject = true)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(cmd);
 	const Point position { message.x, message.y };
 	const Object *object = ObjectAtPosition(position);
 
 	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && object != nullptr) {
-		MakePlrPath(player, position, !object->_oSolidFlag && !object->_oDoorFlag);
+		if (pathToObject)
+			MakePlrPath(player, position, !object->_oSolidFlag && !object->_oDoorFlag);
 
 		player.destAction = action;
 		player.destParam1 = object->GetId();
-	}
-
-	return sizeof(message);
-}
-
-size_t OnOperateObjectTelekinesis(const TCmd *pCmd, Player &player)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MAXOBJECTS) {
-		player.destAction = ACTION_OPERATETK;
-		player.destParam1 = message.wParam1;
 	}
 
 	return sizeof(message);
@@ -3005,7 +2994,7 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_DISARMXY:
 		return OnObjectTileAction(*pCmd, player, ACTION_DISARM);
 	case CMD_OPOBJT:
-		return OnOperateObjectTelekinesis(pCmd, player);
+		return OnObjectTileAction(*pCmd, player, ACTION_OPERATETK, false);
 	case CMD_ATTACKID:
 		return OnAttackMonster(pCmd, player);
 	case CMD_ATTACKPID:
