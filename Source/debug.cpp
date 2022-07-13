@@ -342,9 +342,10 @@ std::string ExportDun(const string_view parameter)
 	for (int y = 16; y < MAXDUNY - 16; y++) {
 		for (int x = 16; x < MAXDUNX - 16; x++) {
 			uint16_t objectId = 0;
-			if (dObject[x][y] > 0) {
+			Object *object = ObjectAtPosition({ x, y }, false);
+			if (object != nullptr) {
 				for (int i = 0; i < 147; i++) {
-					if (ObjTypeConv[i] == Objects[abs(dObject[x][y]) - 1]._otype) {
+					if (ObjTypeConv[i] == object->_otype) {
 						objectId = i;
 						break;
 					}
