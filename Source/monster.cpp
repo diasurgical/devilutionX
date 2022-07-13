@@ -509,6 +509,16 @@ size_t AddMonsterType(_monster_id type, placeflag placeflag)
 	return typeIndex;
 }
 
+inline _monster_id GetMonsterTypeFrom(UniqueMonsterType uniqueType)
+{
+	return UniqueMonstersData[static_cast<size_t>(uniqueType)].mtype;
+}
+
+inline size_t AddMonsterType(UniqueMonsterType uniqueType, placeflag placeflag)
+{
+	return AddMonsterType(GetMonsterTypeFrom(uniqueType), placeflag);
+}
+
 void ClearMVars(Monster &monster)
 {
 	monster.var1 = 0;
@@ -601,18 +611,18 @@ void PlaceQuestMonsters()
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::WarlordOfBlood)].mtype, PLACE_SCATTER);
+			AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_SCATTER);
 		}
 		if (Quests[Q_VEIL].IsAvailable()) {
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lachdan)].mtype, PLACE_SCATTER);
+			AddMonsterType(UniqueMonsterType::Lachdan, PLACE_SCATTER);
 		}
 		if (Quests[Q_ZHAR].IsAvailable() && zharlib == -1) {
 			Quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
 		}
 
 		if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lazarus)].mtype, PLACE_UNIQUE);
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::RedVex)].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE);
 			PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
 			PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
 			PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
@@ -624,7 +634,7 @@ void PlaceQuestMonsters()
 			UberDiabloMonsterIndex = -1;
 			size_t i1;
 			for (i1 = 0; i1 < LevelMonsterTypeCount; i1++) {
-				if (LevelMonsterTypes[i1].type == UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::NaKrul)].mtype)
+				if (LevelMonsterTypes[i1].type == GetMonsterTypeFrom(UniqueMonsterType::NaKrul))
 					break;
 			}
 
@@ -3590,15 +3600,15 @@ void GetLevelMTypes()
 		if (Quests[Q_BUTCHER].IsAvailable())
 			AddMonsterType(MT_CLEAVER, PLACE_SPECIAL);
 		if (Quests[Q_GARBUD].IsAvailable())
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Garbud)].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonsterType::Garbud, PLACE_UNIQUE);
 		if (Quests[Q_ZHAR].IsAvailable())
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Zhar)].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonsterType::Zhar, PLACE_UNIQUE);
 		if (Quests[Q_LTBANNER].IsAvailable())
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::SnotSpill)].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonsterType::SnotSpill, PLACE_UNIQUE);
 		if (Quests[Q_VEIL].IsAvailable())
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lachdan)].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonsterType::Lachdan, PLACE_UNIQUE);
 		if (Quests[Q_WARLORD].IsAvailable())
-			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::WarlordOfBlood)].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonsterType::WarlordOfBlood, PLACE_UNIQUE);
 
 		if (gbIsMultiplayer && currlevel == Quests[Q_SKELKING]._qlevel) {
 
@@ -3829,9 +3839,9 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lazarus)].mtype, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::RedVex)].mtype, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::BlackJade)].mtype, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonsterType::Lazarus, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonsterType::RedVex, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonsterType::BlackJade, PLACE_UNIQUE);
 		PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
 		PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
 		PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
