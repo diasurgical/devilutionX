@@ -533,7 +533,7 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
 	for (Player &player : Players) {
 		if (player.plractive && player._pHitPoints == 0 && player.isOnActiveLevel() && player.position.tile == tilePosition) {
 			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
-			const Point playerRenderPosition { targetBufferPosition + player.position.offset };
+			const Point playerRenderPosition { targetBufferPosition };
 			DrawPlayer(out, player, tilePosition, playerRenderPosition);
 		}
 	}
@@ -705,7 +705,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	const ClxSprite sprite = monster.animInfo.currentSprite();
 
-	Displacement offset = monster.position.offset;
+	Displacement offset = {};
 	if (monster.isWalking()) {
 		bool isSideWalkingToLeft = monster.mode == MonsterMode::MoveSideways && monster.direction == Direction::West;
 		if (isNegativeMonster && !isSideWalkingToLeft)
@@ -735,7 +735,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
  */
 void DrawPlayerHelper(const Surface &out, const Player &player, Point tilePosition, Point targetBufferPosition)
 {
-	Displacement offset = player.position.offset;
+	Displacement offset = {};
 	if (player.IsWalking()) {
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}

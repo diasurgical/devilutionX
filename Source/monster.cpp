@@ -86,70 +86,6 @@ constexpr const std::array<_monster_id, 12> SkeletonTypes {
 	MT_XSKELSD,
 };
 
-// BUGFIX: MWVel velocity values are not rounded consistently. The correct
-// formula for monster walk velocity is calculated as follows (for 16, 32 and 64
-// pixel distances, respectively):
-//
-//    vel16 = (16 << monsterWalkShift) / nframes
-//    vel32 = (32 << monsterWalkShift) / nframes
-//    vel64 = (64 << monsterWalkShift) / nframes
-//
-// The correct monster walk velocity table is as follows:
-//
-//   int MWVel[24][3] = {
-//      { 256, 512, 1024 },
-//      { 128, 256, 512 },
-//      { 85, 171, 341 },
-//      { 64, 128, 256 },
-//      { 51, 102, 205 },
-//      { 43, 85, 171 },
-//      { 37, 73, 146 },
-//      { 32, 64, 128 },
-//      { 28, 57, 114 },
-//      { 26, 51, 102 },
-//      { 23, 47, 93 },
-//      { 21, 43, 85 },
-//      { 20, 39, 79 },
-//      { 18, 37, 73 },
-//      { 17, 34, 68 },
-//      { 16, 32, 64 },
-//      { 15, 30, 60 },
-//      { 14, 28, 57 },
-//      { 13, 27, 54 },
-//      { 13, 26, 51 },
-//      { 12, 24, 49 },
-//      { 12, 23, 47 },
-//      { 11, 22, 45 },
-//      { 11, 21, 43 }
-//   };
-
-/** Maps from monster walk animation frame num to monster velocity. */
-constexpr int MWVel[24][3] = {
-	{ 256, 512, 1024 },
-	{ 128, 256, 512 },
-	{ 85, 170, 341 },
-	{ 64, 128, 256 },
-	{ 51, 102, 204 },
-	{ 42, 85, 170 },
-	{ 36, 73, 146 },
-	{ 32, 64, 128 },
-	{ 28, 56, 113 },
-	{ 26, 51, 102 },
-	{ 23, 46, 93 },
-	{ 21, 42, 85 },
-	{ 19, 39, 78 },
-	{ 18, 36, 73 },
-	{ 17, 34, 68 },
-	{ 16, 32, 64 },
-	{ 15, 30, 60 },
-	{ 14, 28, 57 },
-	{ 13, 26, 54 },
-	{ 12, 25, 51 },
-	{ 12, 24, 48 },
-	{ 11, 23, 46 },
-	{ 11, 22, 44 },
-	{ 10, 21, 42 }
-};
 /** Maps from monster action to monster animation letter. */
 constexpr char Animletter[7] = "nwahds";
 
@@ -500,7 +436,6 @@ void ClearMVars(Monster &monster)
 	monster.var2 = 0;
 	monster.var3 = 0;
 	monster.position.temp = { 0, 0 };
-	monster.position.offset2 = { 0, 0 };
 }
 
 void ClrAllMonsters()
@@ -515,7 +450,6 @@ void ClrAllMonsters()
 		monster.position.future = { 0, 0 };
 		monster.position.old = { 0, 0 };
 		monster.direction = static_cast<Direction>(GenerateRnd(8));
-		monster.position.velocity = { 0, 0 };
 		monster.animInfo = {};
 		monster.flags = 0;
 		monster.isInvalid = false;
@@ -671,7 +605,6 @@ void StartMonsterGotHit(Monster &monster)
 		NewMonsterAnim(monster, MonsterGraphic::GotHit, monster.direction, animationFlags, numSkippedFrames);
 		monster.mode = MonsterMode::HitRecovery;
 	}
-	monster.position.offset = { 0, 0 };
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
 	M_ClearSquares(monster);
@@ -784,12 +717,11 @@ void StartSpecialStand(Monster &monster, Direction md)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
 	monster.mode = MonsterMode::SpecialStand;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 }
 
-void WalkNorthwards(Monster &monster, int xvel, int yvel, int xadd, int yadd, Direction endDir)
+void WalkNorthwards(Monster &monster, int xadd, int yadd, Direction endDir)
 {
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
@@ -798,15 +730,13 @@ void WalkNorthwards(Monster &monster, int xvel, int yvel, int xadd, int yadd, Di
 	monster.mode = MonsterMode::MoveNorthwards;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
-	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
 	monster.var1 = xadd;
 	monster.var2 = yadd;
 	monster.var3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-	monster.position.offset2 = { 0, 0 };
 }
 
-void WalkSouthwards(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction endDir)
+void WalkSouthwards(Monster &monster, int xoff, int yoff, int xadd, int yadd, Direction endDir)
 {
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
@@ -820,15 +750,12 @@ void WalkSouthwards(Monster &monster, int xvel, int yvel, int xoff, int yoff, in
 	dMonster[fx][fy] = monster.getId() + 1;
 	if (monster.lightId != NO_LIGHT)
 		ChangeLightXY(monster.lightId, monster.position.tile);
-	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
 	monster.mode = MonsterMode::MoveSouthwards;
-	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
 	monster.var3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
 
-void WalkSideways(Monster &monster, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
+void WalkSideways(Monster &monster, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
 {
 	const auto fx = static_cast<WorldTileCoord>(xadd + monster.position.tile.x);
 	const auto fy = static_cast<WorldTileCoord>(yadd + monster.position.tile.y);
@@ -843,14 +770,11 @@ void WalkSideways(Monster &monster, int xvel, int yvel, int xoff, int yoff, int 
 	monster.position.temp = { x, y };
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
-	monster.position.offset = DisplacementOf<int16_t> { static_cast<int16_t>(xoff), static_cast<int16_t>(yoff) };
 	monster.mode = MonsterMode::MoveSideways;
-	monster.position.velocity = DisplacementOf<int16_t> { static_cast<int16_t>(xvel), static_cast<int16_t>(yvel) };
 	monster.var1 = fx;
 	monster.var2 = fy;
 	monster.var3 = static_cast<int>(endDir);
 	NewMonsterAnim(monster, MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
-	monster.position.offset2 = DisplacementOf<int16_t> { static_cast<int16_t>(16 * xoff), static_cast<int16_t>(16 * yoff) };
 }
 
 void StartAttack(Monster &monster)
@@ -858,7 +782,6 @@ void StartAttack(Monster &monster)
 	Direction md = GetMonsterDirection(monster);
 	NewMonsterAnim(monster, MonsterGraphic::Attack, md, AnimationDistributionFlags::ProcessAnimationPending);
 	monster.mode = MonsterMode::MeleeAttack;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 }
@@ -870,7 +793,6 @@ void StartRangedAttack(Monster &monster, missile_id missileType, int dam)
 	monster.mode = MonsterMode::RangedAttack;
 	monster.var1 = missileType;
 	monster.var2 = dam;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 }
@@ -886,7 +808,6 @@ void StartRangedSpecialAttack(Monster &monster, missile_id missileType, int dam)
 	monster.var1 = missileType;
 	monster.var2 = 0;
 	monster.var3 = dam;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 }
@@ -896,7 +817,6 @@ void StartSpecialAttack(Monster &monster)
 	Direction md = GetMonsterDirection(monster);
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
 	monster.mode = MonsterMode::SpecialMeleeAttack;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 }
@@ -905,7 +825,6 @@ void StartEating(Monster &monster)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, monster.direction);
 	monster.mode = MonsterMode::SpecialMeleeAttack;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 }
@@ -927,7 +846,6 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 
 		NewMonsterAnim(monster, MonsterGraphic::Death, monster.direction);
 		monster.mode = MonsterMode::Death;
-		monster.position.offset = { 0, 0 };
 		monster.var1 = 0;
 		monster.position.tile = monster.position.old;
 		monster.position.future = monster.position.tile;
@@ -942,7 +860,6 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 	diablo.var3 = ViewPosition.x << 16;
 	diablo.position.temp.x = ViewPosition.y << 16;
 	diablo.position.temp.y = (int)((diablo.var3 - (diablo.position.tile.x << 16)) / (double)dist);
-	diablo.position.offset2.deltaX = (int)((diablo.position.temp.x - (diablo.position.tile.y << 16)) / (double)dist);
 }
 
 void SpawnLoot(Monster &monster, bool sendmsg)
@@ -1045,7 +962,6 @@ void StartFadein(Monster &monster, Direction md, bool backwards)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
 	monster.mode = MonsterMode::FadeIn;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 	monster.flags &= ~MFLAG_HIDDEN;
@@ -1059,7 +975,6 @@ void StartFadeout(Monster &monster, Direction md, bool backwards)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
 	monster.mode = MonsterMode::FadeOut;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 	if (backwards) {
@@ -1088,7 +1003,8 @@ void StartHeal(Monster &monster)
 
 void SyncLightPosition(Monster &monster)
 {
-	ChangeLightOffset(monster.lightId, monster.position.offset.screenToLight());
+	Displacement offset = monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo);
+	ChangeLightOffset(monster.lightId, offset.screenToLight());
 }
 
 void MonsterIdle(Monster &monster)
@@ -1138,15 +1054,8 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 		if (monster.animInfo.tickCounterOfCurrentFrame == 0) {
 			if (monster.animInfo.currentFrame == 0 && monster.type().type == MT_FLESTHNG)
 				PlayEffect(monster, MonsterSound::Special);
-			monster.position.offset2 += monster.position.velocity;
-			monster.position.offset.deltaX = monster.position.offset2.deltaX >> 4;
-			monster.position.offset.deltaY = monster.position.offset2.deltaY >> 4;
 		}
 	}
-
-	assert(!monster.isWalking() || monster.position.velocity == monster.position.GetWalkingVelocityShifted4(monster.direction, monster.animInfo));
-	assert(!monster.isWalking() || monster.position.offset == monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo, true));
-	assert(!monster.isWalking() || monster.position.offset2 == monster.position.CalculateWalkingOffsetShifted4(monster.direction, monster.animInfo, true));
 
 	if (monster.lightId != NO_LIGHT) // BUGFIX: change uniqtype check to lightId check like it is in all other places (fixed)
 		SyncLightPosition(monster);
@@ -3693,7 +3602,6 @@ void M_StartStand(Monster &monster, Direction md)
 	monster.var1 = static_cast<int>(monster.mode);
 	monster.var2 = 0;
 	monster.mode = MonsterMode::Stand;
-	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
 	UpdateEnemy(monster);
@@ -3777,7 +3685,6 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 	}
 	monster.goal = MonsterGoal::None;
 	monster.var1 = 0;
-	monster.position.offset = { 0, 0 };
 	monster.position.tile = monster.position.old;
 	monster.position.future = monster.position.old;
 	M_ClearSquares(monster);
@@ -3911,28 +3818,28 @@ bool Walk(Monster &monster, Direction md)
 	int mwi = monster.type().getAnimData(MonsterGraphic::Walk).frames - 1;
 	switch (md) {
 	case Direction::North:
-		WalkNorthwards(monster, 0, -MWVel[mwi][1], -1, -1, Direction::North);
+		WalkNorthwards(monster, -1, -1, Direction::North);
 		break;
 	case Direction::NorthEast:
-		WalkNorthwards(monster, MWVel[mwi][1], -MWVel[mwi][0], 0, -1, Direction::NorthEast);
+		WalkNorthwards(monster, 0, -1, Direction::NorthEast);
 		break;
 	case Direction::East:
-		WalkSideways(monster, MWVel[mwi][2], 0, -32, -16, 1, -1, 1, 0, Direction::East);
+		WalkSideways(monster, -32, -16, 1, -1, 1, 0, Direction::East);
 		break;
 	case Direction::SouthEast:
-		WalkSouthwards(monster, MWVel[mwi][1], MWVel[mwi][0], -32, -16, 1, 0, Direction::SouthEast);
+		WalkSouthwards(monster, -32, -16, 1, 0, Direction::SouthEast);
 		break;
 	case Direction::South:
-		WalkSouthwards(monster, 0, MWVel[mwi][1], 0, -32, 1, 1, Direction::South);
+		WalkSouthwards(monster, 0, -32, 1, 1, Direction::South);
 		break;
 	case Direction::SouthWest:
-		WalkSouthwards(monster, -MWVel[mwi][1], MWVel[mwi][0], 32, -16, 0, 1, Direction::SouthWest);
+		WalkSouthwards(monster, 32, -16, 0, 1, Direction::SouthWest);
 		break;
 	case Direction::West:
-		WalkSideways(monster, -MWVel[mwi][2], 0, 32, -16, -1, 1, 0, 1, Direction::West);
+		WalkSideways(monster, 32, -16, -1, 1, 0, 1, Direction::West);
 		break;
 	case Direction::NorthWest:
-		WalkNorthwards(monster, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, Direction::NorthWest);
+		WalkNorthwards(monster, -1, 0, Direction::NorthWest);
 		break;
 	}
 	return true;
@@ -4088,9 +3995,6 @@ void ProcessMonsters()
 		if (monster.mode != MonsterMode::Petrified && (monster.flags & MFLAG_ALLOW_SPECIAL) == 0) {
 			monster.animInfo.processAnimation((monster.flags & MFLAG_LOCK_ANIMATION) != 0);
 		}
-		assert(!monster.isWalking() || monster.position.velocity == monster.position.GetWalkingVelocityShifted4(monster.direction, monster.animInfo));
-		assert(!monster.isWalking() || monster.position.offset == monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo));
-		assert(!monster.isWalking() || monster.position.offset2 == monster.position.CalculateWalkingOffsetShifted4(monster.direction, monster.animInfo));
 	}
 
 	DeleteMonsterList();

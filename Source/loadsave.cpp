@@ -342,10 +342,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.last.y = file.NextLE<int32_t>();
 	player.position.old.x = file.NextLE<int32_t>();
 	player.position.old.y = file.NextLE<int32_t>();
-	player.position.offset.deltaX = file.NextLE<int32_t>();
-	player.position.offset.deltaY = file.NextLE<int32_t>();
-	player.position.velocity.deltaX = file.NextLE<int32_t>();
-	player.position.velocity.deltaY = file.NextLE<int32_t>();
+	file.Skip<int32_t>(4); // Skip offset and velocity
 	player._pdir = static_cast<Direction>(file.NextLE<int32_t>());
 	file.Skip(4); // Unused
 	player._pgfxnum = file.NextLE<int32_t>();
@@ -446,8 +443,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.tempDirection = static_cast<Direction>(file.NextLE<int32_t>());
 	player.queuedSpell.spellLevel = file.NextLE<int32_t>();
 	file.Skip<uint32_t>(); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
-	player.position.offset2.deltaX = file.NextLE<int32_t>();
-	player.position.offset2.deltaY = file.NextLE<int32_t>();
+	file.Skip<int32_t>(2); // skip offset2;
 	file.Skip<uint32_t>(); // Skip actionFrame
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
@@ -590,10 +586,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.position.future.y = file->NextLE<int32_t>();
 	monster.position.old.x = file->NextLE<int32_t>();
 	monster.position.old.y = file->NextLE<int32_t>();
-	monster.position.offset.deltaX = file->NextLE<int32_t>();
-	monster.position.offset.deltaY = file->NextLE<int32_t>();
-	monster.position.velocity.deltaX = file->NextLE<int32_t>();
-	monster.position.velocity.deltaY = file->NextLE<int32_t>();
+	file->Skip<int32_t>(4); // Skip offset and velocity
 	monster.direction = static_cast<Direction>(file->NextLE<int32_t>());
 	monster.enemy = file->NextLE<int32_t>();
 	monster.enemyPosition.x = file->NextLE<uint8_t>();
@@ -614,9 +607,8 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.var3 = file->NextLENarrow<int32_t, int8_t>();
 	monster.position.temp.x = file->NextLENarrow<int32_t, WorldTileCoord>();
 	monster.position.temp.y = file->NextLENarrow<int32_t, WorldTileCoord>();
-	monster.position.offset2.deltaX = file->NextLE<int32_t>();
-	monster.position.offset2.deltaY = file->NextLE<int32_t>();
-	file->Skip(4); // Skip actionFrame
+	file->Skip<int32_t>(2); // skip offset2;
+	file->Skip(4);          // Skip actionFrame
 	monster.maxHitPoints = file->NextLE<int32_t>();
 	monster.hitPoints = file->NextLE<int32_t>();
 
@@ -1109,10 +1101,18 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.position.last.y);
 	file.WriteLE<int32_t>(player.position.old.x);
 	file.WriteLE<int32_t>(player.position.old.y);
-	file.WriteLE<int32_t>(player.position.offset.deltaX);
-	file.WriteLE<int32_t>(player.position.offset.deltaY);
-	file.WriteLE<int32_t>(player.position.velocity.deltaX);
-	file.WriteLE<int32_t>(player.position.velocity.deltaY);
+	DisplacementOf<int16_t> offset = {};
+	DisplacementOf<int16_t> offset2 = {};
+	DisplacementOf<int16_t> velocity = {};
+	if (player.IsWalking()) {
+		offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
+		offset2 = player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo);
+		velocity = player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo);
+	}
+	file.WriteLE<int32_t>(offset.deltaX);
+	file.WriteLE<int32_t>(offset.deltaY);
+	file.WriteLE<int32_t>(velocity.deltaX);
+	file.WriteLE<int32_t>(velocity.deltaY);
 	file.WriteLE<int32_t>(static_cast<int32_t>(player._pdir));
 	file.Skip(4); // Unused
 	file.WriteLE<int32_t>(player._pgfxnum);
@@ -1218,8 +1218,8 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(static_cast<int32_t>(player.tempDirection));
 	file.WriteLE<int32_t>(player.queuedSpell.spellLevel);
 	file.Skip<int32_t>(); // skip _pVar5, was used for storing position of a tile which should have its HorizontalMovingPlayer flag removed after walking
-	file.WriteLE<int32_t>(player.position.offset2.deltaX);
-	file.WriteLE<int32_t>(player.position.offset2.deltaY);
+	file.WriteLE<int32_t>(offset2.deltaX);
+	file.WriteLE<int32_t>(offset2.deltaY);
 	file.Skip<int32_t>(); // Skip _pVar8
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file.WriteLE<uint8_t>(player._pLvlVisited[i] ? 1 : 0);
@@ -1342,10 +1342,18 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.position.future.y);
 	file->WriteLE<int32_t>(monster.position.old.x);
 	file->WriteLE<int32_t>(monster.position.old.y);
-	file->WriteLE<int32_t>(monster.position.offset.deltaX);
-	file->WriteLE<int32_t>(monster.position.offset.deltaY);
-	file->WriteLE<int32_t>(monster.position.velocity.deltaX);
-	file->WriteLE<int32_t>(monster.position.velocity.deltaY);
+	DisplacementOf<int16_t> offset = {};
+	DisplacementOf<int16_t> offset2 = {};
+	DisplacementOf<int16_t> velocity = {};
+	if (monster.isWalking()) {
+		offset = monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo);
+		offset2 = monster.position.CalculateWalkingOffsetShifted4(monster.direction, monster.animInfo);
+		velocity = monster.position.GetWalkingVelocityShifted4(monster.direction, monster.animInfo);
+	}
+	file->WriteLE<int32_t>(offset.deltaX);
+	file->WriteLE<int32_t>(offset.deltaY);
+	file->WriteLE<int32_t>(velocity.deltaX);
+	file->WriteLE<int32_t>(velocity.deltaY);
 	file->WriteLE<int32_t>(static_cast<int32_t>(monster.direction));
 	file->WriteLE<int32_t>(monster.enemy);
 	file->WriteLE<uint8_t>(monster.enemyPosition.x);
@@ -1364,8 +1372,8 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.var3);
 	file->WriteLE<int32_t>(monster.position.temp.x);
 	file->WriteLE<int32_t>(monster.position.temp.y);
-	file->WriteLE<int32_t>(monster.position.offset2.deltaX);
-	file->WriteLE<int32_t>(monster.position.offset2.deltaY);
+	file->WriteLE<int32_t>(offset2.deltaX);
+	file->WriteLE<int32_t>(offset2.deltaY);
 	file->Skip<int32_t>(); // Skip _mVar8
 	file->WriteLE<int32_t>(monster.maxHitPoints);
 	file->WriteLE<int32_t>(monster.hitPoints);
