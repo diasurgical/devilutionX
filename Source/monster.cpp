@@ -1853,21 +1853,24 @@ bool RandomWalk(Monster &monster, Direction md, bool narrow = false)
 	if (Walk(monster, md))
 		return true;
 
+	bool ok = false;
 	// Tries the next adjacent directions.
-	std::vector<Direction> leftOrRight = { Left(md), Right(md) };
-	Shuffle(leftOrRight.begin(), leftOrRight.end());
-	if (WalkAny(monster, leftOrRight))
-		return true;
-
-	// Tries the next adjacent directions.
-	if (!narrow) {
-		leftOrRight = { Left(Left(md)), Right(Right(md)) };
-		Shuffle(leftOrRight.begin(), leftOrRight.end());
-
-		if (WalkAny(monster, leftOrRight))
-			return true;
+	if (FlipCoin()) {
+		ok = WalkAny(monster, { Left(md), Right(md) });
+	} else {
+		ok = WalkAny(monster, { Right(md), Left(md) });
 	}
-	return false;
+
+	// Tries the next adjacent directions.
+	if (!ok && !narrow) {
+		if (FlipCoin()) {
+			ok = WalkAny(monster, { Left(Left(md)), Right(Right(md)) });
+		} else {
+			ok = WalkAny(monster, { Right(Right(md)), Left(Left(md)) });
+		}
+	}
+
+	return ok;
 }
 
 /**
