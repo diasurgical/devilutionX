@@ -46,10 +46,8 @@ void InvalidateTargets()
 		}
 	}
 
-	if (pcursobj != -1) {
-		if (Objects[pcursobj]._oSelFlag < 1)
-			pcursobj = -1;
-	}
+	if (ObjectUnderCursor != nullptr && ObjectUnderCursor->_oSelFlag < 1)
+		ObjectUnderCursor = nullptr;
 
 	if (pcursplr != -1) {
 		Player &targetPlayer = Players[pcursplr];
@@ -111,12 +109,9 @@ void RepeatMouseAction()
 			CheckPlrSpell(false);
 		break;
 	case MouseActionType::OperateObject:
-		if (pcursobj != -1) {
-			auto &object = Objects[pcursobj];
-			if (object.IsDoor())
-				break;
+		if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDoor()) {
 			// This should probably be cursPosition so paths to large objects are consistent
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, object.position);
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, ObjectUnderCursor->position);
 		}
 		break;
 	case MouseActionType::Walk:

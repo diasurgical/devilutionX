@@ -913,8 +913,8 @@ void DrawInfoBox(const Surface &out)
 	} else {
 		if (pcursitem != -1)
 			GetItemStr(Items[pcursitem]);
-		else if (pcursobj != -1)
-			GetObjectStr(Objects[pcursobj]);
+		else if (ObjectUnderCursor != nullptr)
+			GetObjectStr(*ObjectUnderCursor);
 		if (pcursmonst != -1) {
 			if (leveltype != DTYPE_TOWN) {
 				const auto &monster = Monsters[pcursmonst];

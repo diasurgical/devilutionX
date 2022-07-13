@@ -120,7 +120,7 @@ uint16_t pcursstashitem;
 /** Current highlighted item */
 int8_t pcursitem;
 /** Current highlighted object */
-int8_t pcursobj;
+Object *ObjectUnderCursor;
 /** Current highlighted player */
 int8_t pcursplr;
 /** Current highlighted tile position */
@@ -226,7 +226,7 @@ void InitLevelCursor()
 	cursPosition = ViewPosition;
 	pcurstemp = -1;
 	pcursmonst = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
@@ -361,7 +361,7 @@ void CheckCursMove()
 	if ((sgbMouseDown != CLICK_NONE || ControllerButtonHeld != ControllerButton_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
 			cursPosition = { mx, my };
 			CheckTrigForce();
 			CheckTown();
@@ -374,7 +374,7 @@ void CheckCursMove()
 
 	pcurstemp = pcursmonst;
 	pcursmonst = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	if (pcursinvitem != -1) {
 		drawsbarflag = true;
@@ -634,10 +634,10 @@ void CheckCursMove()
 		if (object != nullptr) {
 			// found object that can be activated with the given cursor position
 			cursPosition = testPosition;
-			pcursobj = object->GetId();
+			ObjectUnderCursor = object;
 		}
 	}
-	if (pcursplr == -1 && pcursobj == -1 && pcursmonst == -1) {
+	if (pcursplr == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
 			int8_t bv = dItem[mx + 1][my] - 1;
 			if (Items[bv]._iSelFlag >= 2) {
@@ -675,7 +675,7 @@ void CheckCursMove()
 	}
 
 	if (pcurs == CURSOR_IDENTIFY) {
-		pcursobj = -1;
+		ObjectUnderCursor = nullptr;
 		pcursmonst = -1;
 		pcursitem = -1;
 		cursPosition = { mx, my };
