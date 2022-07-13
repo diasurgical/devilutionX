@@ -1134,7 +1134,7 @@ void StartDeathFromMonster(int i, int mid)
 	assert(static_cast<size_t>(mid) < MaxMonsters);
 	Monster &monster = Monsters[mid];
 
-	delta_kill_monster(mid, monster.position.tile, *MyPlayer);
+	delta_kill_monster(monster, monster.position.tile, *MyPlayer);
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
 
 	Direction md = GetDirection(monster.position.tile, killer.position.tile);
@@ -3930,7 +3930,7 @@ void M_StartKill(int monsterId, int pnum)
 	Monster &monster = Monsters[monsterId];
 
 	if (pnum == MyPlayerId) {
-		delta_kill_monster(monsterId, monster.position.tile, *MyPlayer);
+		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
 		if (monsterId != pnum) {
 			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monsterId);
 		} else {
