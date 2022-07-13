@@ -1112,13 +1112,13 @@ void AddTrap(int i)
 	Objects[i]._oVar4 = 0;
 }
 
-void AddObjectLight(int i, int r)
+void AddObjectLight(Object &object, int r)
 {
 	if (ApplyObjectLighting) {
-		DoLighting(Objects[i].position, r, -1);
-		Objects[i]._oVar1 = -1;
+		DoLighting(object.position, r, -1);
+		object._oVar1 = -1;
 	} else {
-		Objects[i]._oVar1 = 0;
+		object._oVar1 = 0;
 	}
 }
 
@@ -4413,17 +4413,17 @@ void AddObject(_object_id objType, Point objPos)
 	case OBJ_CANDLE1:
 	case OBJ_CANDLE2:
 	case OBJ_BOOKCANDLE:
-		AddObjectLight(oi, 5);
+		AddObjectLight(object, 5);
 		break;
 	case OBJ_STORYCANDLE:
 	case OBJ_L5CANDLE:
-		AddObjectLight(oi, 3);
+		AddObjectLight(object, 3);
 		break;
 	case OBJ_TORCHL:
 	case OBJ_TORCHR:
 	case OBJ_TORCHL2:
 	case OBJ_TORCHR2:
-		AddObjectLight(oi, 8);
+		AddObjectLight(object, 8);
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -4537,7 +4537,7 @@ void AddObject(_object_id objType, Point objPos)
 	case OBJ_BCROSS:
 	case OBJ_TBCROSS:
 		AddBrnCross(oi);
-		AddObjectLight(oi, 5);
+		AddObjectLight(object, 5);
 		break;
 	case OBJ_PEDISTAL:
 		AddPedistal(oi);
