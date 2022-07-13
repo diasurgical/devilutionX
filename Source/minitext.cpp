@@ -127,7 +127,6 @@ void FreeQuestText()
 void InitQuestText()
 {
 	pTextBoxCels = LoadCel("Data\\TextBox.CEL", 591);
-	qtextflag = false;
 }
 
 void InitQTextMsg(_speech_id m)

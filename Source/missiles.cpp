@@ -245,7 +245,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		monster.flags |= MFLAG_NOHEAL;
 
 	if (monster.hitPoints >> 6 <= 0) {
-		M_StartKill(monsterId, pnum);
+		M_StartKill(monster, pnum);
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
@@ -1143,7 +1143,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 		    if ((monster.flags & MFLAG_BERSERK) != 0)
 			    return false;
-		    if (monster.uniqType != 0 || monster.ai == AI_DIABLO)
+		    if (monster.isUnique() || monster.ai == AI_DIABLO)
 			    return false;
 		    if (IsAnyOf(monster.mode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 			    return false;
@@ -2038,7 +2038,7 @@ void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 	InitMissileAnimationFromMonster(missile, parameter.midir, monster, graphic);
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		missile._miAnimFrame = 7;
-	if (monster.uniqType != 0) {
+	if (monster.isUnique()) {
 		missile._mlid = monster.lightId;
 	}
 	PutMissile(missile);
@@ -2156,13 +2156,14 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 
 	int playerId = missile._misource;
 	Player &player = Players[playerId];
+	Monster &golem = Monsters[playerId];
 
-	if (Monsters[playerId].position.tile != GolemHoldingCell && &player == MyPlayer)
-		M_StartKill(playerId, playerId);
+	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
+		M_StartKill(golem, playerId);
 
 	UseMana(player, SPL_GOLEM);
 
-	if (Monsters[playerId].position.tile == GolemHoldingCell) {
+	if (golem.position.tile == GolemHoldingCell) {
 		std::optional<Point> spawnPosition = FindClosestValidPosition(
 		    [start = missile.position.start](Point target) {
 			    return !IsTileOccupied(target) && LineClearMissile(start, target);
@@ -2584,7 +2585,7 @@ Missile *AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mi
 
 	if (!missile.IsTrap() && micaster == TARGET_PLAYERS) {
 		Monster &monster = Monsters[id];
-		if (monster.uniqType != 0) {
+		if (monster.isUnique()) {
 			missile._miUniqTrans = monster.uniqTrans + 1;
 		}
 	}
@@ -3564,7 +3565,7 @@ void MI_Rhino(Missile &missile)
 	monster.position.old = newPos;
 	monster.position.tile = newPos;
 	dMonster[newPos.x][newPos.y] = -(monst + 1);
-	if (monster.uniqType != 0)
+	if (monster.isUnique())
 		ChangeLightXY(missile._mlid, newPos);
 	MoveMissilePos(missile);
 	PutMissile(missile);

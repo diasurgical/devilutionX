@@ -104,7 +104,7 @@ int force_redraw;
 int PauseMode;
 bool gbBard;
 bool gbBarbarian;
-bool gbQuietMode = false;
+bool HeadlessMode = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";
@@ -153,7 +153,7 @@ void StartGame(interface_mode uMsg)
 #ifdef _DEBUG
 	LoadDebugGFX();
 #endif
-	assert(ghMainWnd);
+	assert(HeadlessMode || ghMainWnd);
 	music_stop();
 	InitMonsterHealthBar();
 	InitXPBar();
@@ -719,7 +719,7 @@ void RunGameLoop(interface_mode uMsg)
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
-	assert(ghMainWnd);
+	assert(HeadlessMode || ghMainWnd);
 	EventHandler previousHandler = SetEventHandler(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
@@ -804,7 +804,7 @@ void RunGameLoop(interface_mode uMsg)
 	force_redraw = 255;
 	scrollrt_draw_game_screen();
 	previousHandler = SetEventHandler(previousHandler);
-	assert(previousHandler == GameEventHandler);
+	assert(HeadlessMode || previousHandler == GameEventHandler);
 	FreeGame();
 
 	if (cineflag) {
@@ -1215,7 +1215,7 @@ void UnstuckChargers()
 			return;
 		}
 	}
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 		if (monster.mode == MonsterMode::Charge)
 			monster.mode = MonsterMode::Stand;
@@ -1224,7 +1224,7 @@ void UnstuckChargers()
 
 void UpdateMonsterLights()
 {
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 
 		if ((monster.flags & MFLAG_BERSERK) != 0) {
@@ -1454,6 +1454,7 @@ bool CanPlayerTakeAction()
 {
 	return !IsPlayerDead() && IsGameRunning();
 }
+} // namespace
 
 void InitKeymapActions()
 {
@@ -1701,7 +1702,6 @@ void InitKeymapActions()
 	    });
 #endif
 }
-} // namespace
 
 void FreeGameMem()
 {
@@ -2093,13 +2093,18 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 
 	if (firstflag) {
-		InitInv();
-		InitStash();
-		InitQuestText();
-		InitInfoBoxGfx();
+		CloseInventory();
+		drawsbarflag = false;
+		qtextflag = false;
+		if (!HeadlessMode) {
+			InitInv();
+			InitStash();
+			InitQuestText();
+			InitInfoBoxGfx();
+			InitHelp();
+		}
 		InitStores();
 		InitAutomapOnce();
-		InitHelp();
 	}
 	SetRndSeed(glSeedTbl[currlevel]);
 
@@ -2135,8 +2140,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (leveltype != DTYPE_TOWN) {
 			GetLevelMTypes();
 			InitThemes();
-			LoadAllGFX();
-		} else {
+			if (!HeadlessMode)
+				LoadAllGFX();
+		} else if (!HeadlessMode) {
 			IncProgress();
 #if !defined(USE_SDL1) && !defined(__vita__)
 			InitVirtualGamepadGFX(renderer);
@@ -2241,11 +2247,13 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitGolems();
 		InitMonsters();
 		IncProgress();
+		if (!HeadlessMode) {
 #if !defined(USE_SDL1) && !defined(__vita__)
-		InitVirtualGamepadGFX(renderer);
+			InitVirtualGamepadGFX(renderer);
 #endif
-		InitMissileGFX(gbIsHellfire);
-		IncProgress();
+			InitMissileGFX(gbIsHellfire);
+			IncProgress();
+		}
 		InitCorpses();
 		IncProgress();
 		LoadLevelSOLData();
@@ -2299,7 +2307,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 	IncProgress();
 
-	if (firstflag) {
+	if (firstflag && !HeadlessMode) {
 		InitControlPan();
 	}
 	IncProgress();

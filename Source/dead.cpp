@@ -31,7 +31,7 @@ void InitCorpses()
 
 	int8_t nd = 0;
 
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (mtypes[LevelMonsterTypes[i].type] != 0)
 			continue;
 
@@ -55,9 +55,9 @@ void InitCorpses()
 
 	stonendx = nd;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster.uniqType != 0) {
+		if (monster.isUnique()) {
 			InitDeadAnimationFromMonster(Corpses[nd], monster.type());
 			Corpses[nd].translationPaletteIndex = ActiveMonsters[i] + 1;
 			nd++;
@@ -76,9 +76,9 @@ void AddCorpse(Point tilePosition, int8_t dv, Direction ddir)
 
 void SyncUniqDead()
 {
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster.uniqType == 0)
+		if (!monster.isUnique())
 			continue;
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {

@@ -1211,7 +1211,7 @@ void stream_stop()
 	}
 }
 
-void InitMonsterSND(int monst)
+void InitMonsterSND(size_t monst)
 {
 	if (!gbSndInited) {
 		return;
@@ -1234,9 +1234,9 @@ void InitMonsterSND(int monst)
 void FreeMonsterSnd()
 {
 #ifdef _DEBUG
-	for (int i = 0; i < MaxLvlMTypes; i++) {
+	for (size_t i = 0; i < MaxLvlMTypes; i++) {
 #else
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 #endif
 		for (auto &variants : LevelMonsterTypes[i].sounds) {
 			for (auto &snd : variants) {

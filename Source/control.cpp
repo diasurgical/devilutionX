@@ -544,30 +544,34 @@ void control_update_life_mana()
 
 void InitControlPan()
 {
-	pBtmBuff.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + 16) * (IsChatAvailable() ? 2 : 1));
-	pManaBuff.emplace(88, 88);
-	pLifeBuff.emplace(88, 88);
+	if (!HeadlessMode) {
+		pBtmBuff.emplace(GetMainPanel().size.width, (GetMainPanel().size.height + 16) * (IsChatAvailable() ? 2 : 1));
+		pManaBuff.emplace(88, 88);
+		pLifeBuff.emplace(88, 88);
 
-	LoadCharPanel();
-	LoadSpellIcons();
-	{
-		const OwnedCelSprite sprite = LoadCel("CtrlPan\\Panel8.CEL", GetMainPanel().size.width);
-		CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, CelSprite { sprite }, 0);
-	}
-	{
-		const Point bulbsPosition { 0, 87 };
-		const OwnedCelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
-		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, CelSprite { statusPanel }, 0);
-		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, CelSprite { statusPanel }, 1);
+		LoadCharPanel();
+		LoadSpellIcons();
+		{
+			const OwnedCelSprite sprite = LoadCel("CtrlPan\\Panel8.CEL", GetMainPanel().size.width);
+			CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) - 1 }, CelSprite { sprite }, 0);
+		}
+		{
+			const Point bulbsPosition { 0, 87 };
+			const OwnedCelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
+			CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, CelSprite { statusPanel }, 0);
+			CelDrawUnsafeTo(*pManaBuff, bulbsPosition, CelSprite { statusPanel }, 1);
+		}
 	}
 	talkflag = false;
 	if (IsChatAvailable()) {
-		{
-			const OwnedCelSprite sprite = LoadCel("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width);
-			CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, CelSprite { sprite }, 0);
+		if (!HeadlessMode) {
+			{
+				const OwnedCelSprite sprite = LoadCel("CtrlPan\\TalkPanl.CEL", GetMainPanel().size.width);
+				CelDrawUnsafeTo(*pBtmBuff, { 0, (GetMainPanel().size.height + 16) * 2 - 1 }, CelSprite { sprite }, 0);
+			}
+			multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
+			talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		}
-		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
-		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
 		TalkMessage[0] = '\0';
 		for (bool &whisper : WhisperList)
@@ -575,20 +579,23 @@ void InitControlPan()
 		for (bool &talkButtonDown : TalkButtonsDown)
 			talkButtonDown = false;
 	}
-	LoadMainPanel();
 	panelflag = false;
 	lvlbtndown = false;
-	pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
+	if (!HeadlessMode) {
+		LoadMainPanel();
+		pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
+		pChrButtons = LoadCel("Data\\CharBut.CEL", 41);
+	}
 	ClearPanBtn();
 	if (!IsChatAvailable())
 		PanelButtonIndex = 6;
 	else
 		PanelButtonIndex = 8;
-	pChrButtons = LoadCel("Data\\CharBut.CEL", 41);
+	if (!HeadlessMode)
+		pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
 	chrbtnactive = false;
-	pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
 	InfoString = {};
 	ClearPanel();
 	drawhpflag = true;
@@ -598,9 +605,11 @@ void InitControlPan()
 	sbooktab = 0;
 	sbookflag = false;
 
-	InitSpellBook();
-	pQLogCel = LoadCel("Data\\Quest.CEL", static_cast<uint16_t>(SidePanelSize.width));
-	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
+	if (!HeadlessMode) {
+		InitSpellBook();
+		pQLogCel = LoadCel("Data\\Quest.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
+	}
 	CloseGoldDrop();
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
@@ -608,7 +617,8 @@ void InitControlPan()
 
 	CalculatePanelAreas();
 
-	InitModifierHints();
+	if (!HeadlessMode)
+		InitModifierHints();
 }
 
 void DrawCtrlPan(const Surface &out)
@@ -909,7 +919,7 @@ void DrawInfoBox(const Surface &out)
 				InfoColor = UiFlags::ColorWhite;
 				InfoString = string_view(monster.name());
 				ClearPanel();
-				if (monster.uniqType != 0) {
+				if (monster.isUnique()) {
 					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
 				} else {

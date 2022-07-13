@@ -35,6 +35,7 @@ set(tests
   player_test
   quests_test
   random_test
+  timedemo_test
   scrollrt_test
   stores_test
   utf8_test

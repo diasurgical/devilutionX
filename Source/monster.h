@@ -5,8 +5,10 @@
  */
 #pragma once
 
-#include <array>
+#include <cstddef>
 #include <cstdint>
+
+#include <array>
 #include <functional>
 
 #include "engine.h"
@@ -25,8 +27,8 @@ namespace devilution {
 
 struct Missile;
 
-constexpr int MaxMonsters = 200;
-constexpr int MaxLvlMTypes = 24;
+constexpr size_t MaxMonsters = 200;
+constexpr size_t MaxLvlMTypes = 24;
 
 enum monster_flag : uint16_t {
 	// clang-format off
@@ -47,20 +49,21 @@ enum monster_flag : uint16_t {
 };
 
 /** Indexes from UniqueMonstersData array for special unique monsters (usually quest related) */
-enum : uint8_t {
-	UMT_GARBUD,
-	UMT_SKELKING,
-	UMT_ZHAR,
-	UMT_SNOTSPIL,
-	UMT_LAZARUS,
-	UMT_RED_VEX,
-	UMT_BLACKJADE,
-	UMT_LACHDAN,
-	UMT_WARLORD,
-	UMT_BUTCHER,
-	UMT_HORKDMN,
-	UMT_DEFILER,
-	UMT_NAKRUL,
+enum class UniqueMonsterType : uint8_t {
+	Garbud,
+	SkeletonKing,
+	Zhar,
+	SnotSpill,
+	Lazarus,
+	RedVex,
+	BlackJade,
+	Lachdan,
+	WarlordOfBlood,
+	Butcher,
+	HorkDemon,
+	Defiler,
+	NaKrul,
+	None = static_cast<uint8_t>(-1),
 };
 
 enum class MonsterMode : uint8_t {
@@ -222,7 +225,7 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t intelligence;
 	/** Stores information for how many ticks the monster will remain active */
 	uint8_t activeForTicks;
-	uint8_t uniqType;
+	UniqueMonsterType uniqueType;
 	uint8_t uniqTrans;
 	int8_t corpseId;
 	int8_t whoHit;
@@ -236,6 +239,8 @@ struct Monster { // note: missing field _mAFNum
 	LeaderRelation leaderRelation;
 	uint8_t packSize;
 	int8_t lightId;
+
+	static constexpr uint8_t NoLeader = -1;
 
 	/**
 	 * @brief Sets the current cell sprite to match the desired desiredDirection and animation sequence
@@ -300,6 +305,24 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	[[nodiscard]] size_t getId() const;
 
+	[[nodiscard]] Monster *getLeader() const;
+	void setLeader(const Monster *leader);
+
+	[[nodiscard]] bool hasLeashedMinions() const
+	{
+		return isUnique() && UniqueMonstersData[static_cast<size_t>(uniqueType)].monsterPack == UniqueMonsterPack::Leashed;
+	}
+
+	/**
+	 * @brief Calculates the distance in tiles between this monster and its current target
+	 *
+	 * The distance is not calculated as the euclidean distance, but rather as
+	 * the longest number of tiles in the coordinate system.
+	 *
+	 * @return The distance in tiles
+	 */
+	[[nodiscard]] unsigned distanceToEnemy() const;
+
 	/**
 	 * @brief Is the monster currently walking?
 	 */
@@ -307,25 +330,31 @@ struct Monster { // note: missing field _mAFNum
 	bool isImmune(missile_id mitype) const;
 	bool isResistant(missile_id mitype) const;
 	bool isPossibleToHit() const;
+
+	[[nodiscard]] bool isUnique() const
+	{
+		return uniqueType != UniqueMonsterType::None;
+	}
+
 	bool tryLiftGargoyle();
 };
 
-extern int LevelMonsterTypeCount;
+extern size_t LevelMonsterTypeCount;
 extern Monster Monsters[MaxMonsters];
 extern int ActiveMonsters[MaxMonsters];
-extern int ActiveMonsterCount;
+extern size_t ActiveMonsterCount;
 extern int MonsterKillCounts[MaxMonsters];
 extern bool sgbSaveSoundOn;
 
-void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
+void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
-void InitMonsterGFX(int monsterTypeIndex);
+void InitMonsterGFX(size_t monsterTypeIndex);
 void WeakenNaKrul();
 void InitGolems();
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
-Monster *AddMonster(Point position, Direction dir, int mtype, bool inMap);
+Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap);
 void AddDoppelganger(Monster &monster);
 bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
@@ -334,9 +363,9 @@ void M_GetKnockback(Monster &monster);
 void M_StartHit(Monster &monster, int dam);
 void M_StartHit(Monster &monster, int pnum, int dam);
 void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg);
-void M_StartKill(int monsterId, int pnum);
+void M_StartKill(Monster &monster, int pnum);
 void M_SyncStartKill(int monsterId, Point position, int pnum);
-void M_UpdateLeader(int monsterId);
+void M_UpdateRelations(const Monster &monster);
 void DoEnding();
 void PrepDoEnding();
 bool Walk(Monster &monster, Direction md);
@@ -344,7 +373,7 @@ void GolumAi(int monsterId);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();
-bool DirOK(int monsterId, Direction mdir);
+bool DirOK(const Monster &monster, Direction mdir);
 bool PosOkMissile(Point position);
 bool LineClearMissile(Point startPoint, Point endPoint);
 bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point endPoint);

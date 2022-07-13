@@ -348,7 +348,7 @@ size_t DeltaImportObject(const byte *src, DObjectStr *dst)
 
 byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 {
-	for (int i = 0; i < MaxMonsters; i++, src++) {
+	for (size_t i = 0; i < MaxMonsters; i++, src++) {
 		if (src->position.x == 0xFF) {
 			*dst++ = byte { 0xFF };
 		} else {
@@ -363,7 +363,7 @@ byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 void DeltaImportMonster(const byte *src, DMonsterStr *dst)
 {
 	size_t size = 0;
-	for (int i = 0; i < MaxMonsters; i++, dst++) {
+	for (size_t i = 0; i < MaxMonsters; i++, dst++) {
 		if (src[size] == byte { 0xFF }) {
 			memset(dst, 0xFF, sizeof(DMonsterStr));
 			size++;
@@ -522,7 +522,7 @@ void DeltaLeaveSync(uint8_t bLevel)
 
 	DLevel &deltaLevel = GetDeltaLevel(bLevel);
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
 		auto &monster = Monsters[ma];
 		if (monster.hitPoints == 0)
@@ -1544,9 +1544,10 @@ DWORD OnMonstDeath(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (&player != MyPlayer && InDungeonBounds(position) && message.wParam1 < MaxMonsters) {
+			Monster &monster = Monsters[message.wParam1];
 			if (player.isOnActiveLevel())
 				M_SyncStartKill(message.wParam1, position, pnum);
-			delta_kill_monster(message.wParam1, position, player);
+			delta_kill_monster(monster, position, player);
 		}
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
@@ -1563,9 +1564,10 @@ DWORD OnKillGolem(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (&player != MyPlayer && InDungeonBounds(position)) {
+			Monster &monster = Monsters[pnum];
 			if (player.isOnActiveLevel())
 				M_SyncStartKill(pnum, position, pnum);
-			delta_kill_monster(pnum, position, player);
+			delta_kill_monster(monster, position, player);
 		}
 	} else {
 		SendPacket(pnum, &message, sizeof(message));
@@ -2256,15 +2258,15 @@ void delta_init()
 	deltaload = false;
 }
 
-void delta_kill_monster(int mi, Point position, const Player &player)
+void delta_kill_monster(const Monster &monster, Point position, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &GetDeltaLevel(player).monster[mi];
+	DMonsterStr *pD = &GetDeltaLevel(player).monster[monster.getId()];
 	pD->position = position;
-	pD->_mdir = Monsters[mi].direction;
+	pD->_mdir = monster.direction;
 	pD->hitPoints = 0;
 }
 
@@ -2445,7 +2447,7 @@ void DeltaLoadLevel()
 	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MaxMonsters; i++) {
+		for (size_t i = 0; i < MaxMonsters; i++) {
 			if (deltaLevel.monster[i].position.x == 0xFF)
 				continue;
 
@@ -2464,14 +2466,14 @@ void DeltaLoadLevel()
 			if (deltaLevel.monster[i].hitPoints == 0) {
 				M_ClearSquares(monster);
 				if (monster.ai != AI_DIABLO) {
-					if (monster.uniqType == 0) {
-						AddCorpse(monster.position.tile, monster.type().corpseId, monster.direction);
-					} else {
+					if (monster.isUnique()) {
 						AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
+					} else {
+						AddCorpse(monster.position.tile, monster.type().corpseId, monster.direction);
 					}
 				}
 				monster.isInvalid = true;
-				M_UpdateLeader(i);
+				M_UpdateRelations(monster);
 			} else {
 				decode_enemy(monster, deltaLevel.monster[i]._menemy);
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)

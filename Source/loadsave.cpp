@@ -632,7 +632,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.aiSeed = file->NextLE<uint32_t>();
 	file->Skip(4); // Unused
 
-	monster.uniqType = file->NextLE<uint8_t>();
+	monster.uniqueType = static_cast<UniqueMonsterType>(file->NextLE<uint8_t>() - 1);
 	monster.uniqTrans = file->NextLE<uint8_t>();
 	monster.corpseId = file->NextLE<int8_t>();
 
@@ -659,6 +659,8 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	if (monster.talkMsg == TEXT_KING1) // Fix original bad mapping of NONE for monsters
 		monster.talkMsg = TEXT_NONE;
 	monster.leader = file->NextLE<uint8_t>();
+	if (monster.leader == 0)
+		monster.leader = Monster::NoLeader; // Golems shouldn't be leaders of other monsters
 	monster.leaderRelation = static_cast<LeaderRelation>(file->NextLE<uint8_t>());
 	monster.packSize = file->NextLE<uint8_t>();
 	monster.lightId = file->NextLE<int8_t>();
@@ -678,16 +680,16 @@ void LoadMonster(LoadHelper *file, Monster &monster)
  */
 void SyncPackSize(Monster &leader)
 {
-	if (leader.uniqType == 0)
+	if (!leader.isUnique())
 		return;
 	if (leader.ai != AI_SCAV)
 		return;
 
 	leader.packSize = 0;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &minion = Monsters[ActiveMonsters[i]];
-		if (minion.leaderRelation == LeaderRelation::Leashed && &Monsters[minion.leader] == &leader)
+		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &leader)
 			leader.packSize++;
 	}
 }
@@ -1380,7 +1382,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint32_t>(monster.aiSeed);
 	file->Skip(4); // Unused
 
-	file->WriteLE<uint8_t>(monster.uniqType);
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(monster.uniqueType) + 1);
 	file->WriteLE<uint8_t>(monster.uniqTrans);
 	file->WriteLE<int8_t>(monster.corpseId);
 
@@ -1400,8 +1402,8 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint16_t>(monster.magicResistance);
 	file->Skip(2); // Alignment
 
-	file->WriteLE<int32_t>(monster.talkMsg == TEXT_NONE ? 0 : monster.talkMsg); // Replicate original bad mapping of none for monsters
-	file->WriteLE<uint8_t>(monster.leader);
+	file->WriteLE<int32_t>(monster.talkMsg == TEXT_NONE ? 0 : monster.talkMsg);       // Replicate original bad mapping of none for monsters
+	file->WriteLE<uint8_t>(monster.leader == Monster::NoLeader ? 0 : monster.leader); // Vanilla uses 0 as the default leader which corresponds to player 0s golem
 	file->WriteLE<uint8_t>(static_cast<std::uint8_t>(monster.leaderRelation));
 	file->WriteLE<uint8_t>(monster.packSize);
 	// vanilla compatibility
@@ -2090,9 +2092,9 @@ void LoadGame(bool firstflag)
 	if (leveltype != DTYPE_TOWN) {
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
-		for (int i = 0; i < ActiveMonsterCount; i++)
+		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
-		for (int i = 0; i < ActiveMonsterCount; i++)
+		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			SyncPackSize(Monsters[ActiveMonsters[i]]);
 		// Skip ActiveMissiles
 		file.Skip<int8_t>(MaxMissilesForSaveGame);
@@ -2346,7 +2348,7 @@ void SaveGameData(MpqWriter &saveWriter)
 	if (leveltype != DTYPE_TOWN) {
 		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
-		for (int i = 0; i < ActiveMonsterCount; i++)
+		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		// Write ActiveMissiles
 		for (uint8_t activeMissile = 0; activeMissile < MaxMissilesForSaveGame; activeMissile++)
@@ -2482,7 +2484,7 @@ void SaveLevel(MpqWriter &saveWriter)
 	if (leveltype != DTYPE_TOWN) {
 		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
-		for (int i = 0; i < ActiveMonsterCount; i++)
+		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int objectId : ActiveObjects)
 			file.WriteLE<int8_t>(objectId);
@@ -2555,7 +2557,7 @@ void LoadLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
-		for (int i = 0; i < ActiveMonsterCount; i++)
+		for (size_t i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();

@@ -375,7 +375,7 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 {
 	data = nullptr;
 	data = LoadFileInMem(path);
-	if (data == nullptr && gbQuietMode)
+	if (data == nullptr)
 		return;
 
 	const byte *directionFrames[8];
@@ -785,14 +785,11 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	return false;
 }
 
-bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
+bool PlrHitMonst(int pnum, size_t monsterId, bool adjacentDamage = false)
 {
 	int hper = 0;
 
-	if (monsterId < 0 || monsterId >= MaxMonsters) {
-		app_fatal(StrCat("PlrHitMonst: illegal monster ", monsterId));
-	}
-	auto &monster = Monsters[monsterId];
+	Monster &monster = Monsters[monsterId];
 
 	if (pnum < 0 || pnum >= MAX_PLRS) {
 		app_fatal(StrCat("PlrHitMonst: illegal player ", pnum));
@@ -878,7 +875,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && monster.uniqType == 0 && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && !monster.isUnique() && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster);
 	}
 
@@ -960,7 +957,7 @@ bool PlrHitMonst(int pnum, int monsterId, bool adjacentDamage = false)
 	}
 #endif
 	if ((monster.hitPoints >> 6) <= 0) {
-		M_StartKill(monsterId, pnum);
+		M_StartKill(monster, pnum);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
@@ -2185,6 +2182,9 @@ Player *PlayerAtPosition(Point position)
 
 void LoadPlrGFX(Player &player, player_graphic graphic)
 {
+	if (HeadlessMode)
+		return;
+
 	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
 	if (animationData.RawData != nullptr)
 		return;
@@ -2301,6 +2301,9 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 
 void InitPlayerGFX(Player &player)
 {
+	if (HeadlessMode)
+		return;
+
 	ResetPlayerGFX(player);
 
 	if (player._pHitPoints >> 6 == 0) {
@@ -3142,9 +3145,9 @@ void SyncPlrKill(Player &player, int earflag)
 void RemovePlrMissiles(const Player &player)
 {
 	if (leveltype != DTYPE_TOWN && &player == MyPlayer) {
-		auto &golem = Monsters[MyPlayerId];
+		Monster &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
-			M_StartKill(MyPlayerId, MyPlayerId);
+			M_StartKill(golem, MyPlayerId);
 			AddCorpse(golem.position.tile, golem.type().corpseId, golem.direction);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
