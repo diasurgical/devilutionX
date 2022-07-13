@@ -282,6 +282,7 @@ struct Monster { // note: missing field _mAFNum
 
 	/**
 	 * @brief Returns monster's name
+	 * Internally it returns a name stored in global array of monsters' data.
 	 * @return Monster's name
 	 */
 	const char *name() const
