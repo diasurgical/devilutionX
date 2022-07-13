@@ -1144,6 +1144,10 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 		}
 	}
 
+	assert(!monster.isWalking() || monster.position.velocity == monster.position.GetWalkingVelocityShifted4(monster.direction, monster.animInfo));
+	assert(!monster.isWalking() || monster.position.offset == monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo, true));
+	assert(!monster.isWalking() || monster.position.offset2 == monster.position.CalculateWalkingOffsetShifted4(monster.direction, monster.animInfo, true));
+
 	if (monster.lightId != NO_LIGHT) // BUGFIX: change uniqtype check to lightId check like it is in all other places (fixed)
 		SyncLightPosition(monster);
 
@@ -4084,6 +4088,9 @@ void ProcessMonsters()
 		if (monster.mode != MonsterMode::Petrified && (monster.flags & MFLAG_ALLOW_SPECIAL) == 0) {
 			monster.animInfo.processAnimation((monster.flags & MFLAG_LOCK_ANIMATION) != 0);
 		}
+		assert(!monster.isWalking() || monster.position.velocity == monster.position.GetWalkingVelocityShifted4(monster.direction, monster.animInfo));
+		assert(!monster.isWalking() || monster.position.offset == monster.position.CalculateWalkingOffset(monster.direction, monster.animInfo));
+		assert(!monster.isWalking() || monster.position.offset2 == monster.position.CalculateWalkingOffsetShifted4(monster.direction, monster.animInfo));
 	}
 
 	DeleteMonsterList();

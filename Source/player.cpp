@@ -201,6 +201,10 @@ const char *const ClassPathTbl[] = {
 
 void PmChangeLightOff(Player &player)
 {
+	assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.velocity == player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo));
+	assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset == player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo, true));
+	assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset2 == player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo, true));
+
 	if (player._plid == NO_LIGHT)
 		return;
 
@@ -3303,6 +3307,10 @@ void ProcessPlayers()
 			player.previewCelSprite = std::nullopt;
 			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
 				player.AnimInfo.processAnimation();
+
+			assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.velocity == player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo));
+			assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset == player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo));
+			assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset2 == player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo));
 		}
 	}
 }

@@ -94,6 +94,7 @@ set(libdevilutionx_SRCS
   dvlnet/loopback.cpp
   dvlnet/packet.cpp
 
+  engine/actor_position.cpp
   engine/animationinfo.cpp
   engine/assets.cpp
   engine/demomode.cpp
