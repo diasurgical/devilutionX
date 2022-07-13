@@ -445,7 +445,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 	}
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return GetBlankButtonType(virtualPadButton->isHeld);
-	if (pcursobj != -1)
+	if (ObjectUnderCursor != nullptr)
 		return GetObjectButtonType(virtualPadButton->isHeld);
 	if (pcursitem != -1)
 		return GetItemButtonType(virtualPadButton->isHeld);
