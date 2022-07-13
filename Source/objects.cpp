@@ -1094,22 +1094,22 @@ void AddFlameLvr(int i)
 	Objects[i]._oVar2 = MIS_FLAMEC;
 }
 
-void AddTrap(int i)
+void AddTrap(Object &trap)
 {
-	int mt = currlevel / 3 + 1;
-	if (leveltype == DTYPE_NEST) {
-		mt = (currlevel - 4) / 3 + 1;
-	} else if (leveltype == DTYPE_CRYPT) {
-		mt = (currlevel - 8) / 3 + 1;
-	}
-	mt = GenerateRnd(mt);
-	if (mt == 0)
-		Objects[i]._oVar3 = MIS_ARROW;
-	if (mt == 1)
-		Objects[i]._oVar3 = MIS_FIREBOLT;
-	if (mt == 2)
-		Objects[i]._oVar3 = MIS_LIGHTCTRL;
-	Objects[i]._oVar4 = 0;
+	int effectiveLevel = currlevel;
+	if (leveltype == DTYPE_NEST)
+		effectiveLevel -= 4;
+	else if (leveltype == DTYPE_CRYPT)
+		effectiveLevel -= 8;
+
+	int missileType = GenerateRnd(effectiveLevel / 3 + 1);
+	if (missileType == 0)
+		trap._oVar3 = MIS_ARROW;
+	if (missileType == 1)
+		trap._oVar3 = MIS_FIREBOLT;
+	if (missileType == 2)
+		trap._oVar3 = MIS_LIGHTCTRL;
+	trap._oVar4 = 0;
 }
 
 void AddObjectLight(Object &object, int r)
@@ -4476,7 +4476,7 @@ void AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_TRAPL:
 	case OBJ_TRAPR:
-		AddTrap(oi);
+		AddTrap(object);
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
