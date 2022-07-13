@@ -292,8 +292,8 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	const char *name() const
 	{
-		if (uniqType != 0)
-			return pgettext("monster", UniqueMonstersData[uniqType - 1].mName).data();
+		if (uniqueType != UniqueMonsterType::None)
+			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName).data();
 
 		return pgettext("monster", data().mName).data();
 	}

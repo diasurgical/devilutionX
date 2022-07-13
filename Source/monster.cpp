@@ -4365,10 +4365,7 @@ void SyncMonsterAnim(Monster &monster)
 #endif
 	if (monster.isUnique()) {
 		InitTRNForUniqueMonster(monster);
-	} else {
-		monster.name = pgettext("monster", monster.data().mName).data();
 	}
-
 	MonsterGraphic graphic = MonsterGraphic::Stand;
 
 	switch (monster.mode) {
