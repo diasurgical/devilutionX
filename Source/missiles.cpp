@@ -2156,14 +2156,14 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 
 	int playerId = missile._misource;
 	Player &player = Players[playerId];
-	Monster &monster = Monsters[playerId];
+	Monster &golem = Monsters[playerId];
 
-	if (monster.position.tile != GolemHoldingCell && &player == MyPlayer)
-		M_StartKill(monster, playerId);
+	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
+		M_StartKill(golem, playerId);
 
 	UseMana(player, SPL_GOLEM);
 
-	if (monster.position.tile == GolemHoldingCell) {
+	if (golem.position.tile == GolemHoldingCell) {
 		std::optional<Point> spawnPosition = FindClosestValidPosition(
 		    [start = missile.position.start](Point target) {
 			    return !IsTileOccupied(target) && LineClearMissile(start, target);
