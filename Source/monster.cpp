@@ -1300,7 +1300,7 @@ void CheckReflect(int monsterId, int pnum, int dam)
 	monster.hitPoints -= mdam;
 	dam = std::max(dam - mdam, 0);
 	if (monster.hitPoints >> 6 <= 0)
-		M_StartKill(monsterId, pnum);
+		M_StartKill(monster, pnum);
 	else
 		M_StartHit(monster, pnum, mdam);
 }
@@ -1388,10 +1388,11 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		int mdam = (GenerateRnd(3) + 1) << 6;
 		monster.hitPoints -= mdam;
 		if (monster.hitPoints >> 6 <= 0)
-			M_StartKill(monsterId, pnum);
+			M_StartKill(monster, pnum);
 		else
 			M_StartHit(monster, pnum, mdam);
 	}
+
 	if ((monster.flags & MFLAG_NOLIFESTEAL) == 0 && monster.type().type == MT_SKING && gbIsMultiplayer)
 		monster.hitPoints += dam;
 	if (player._pHitPoints >> 6 <= 0) {
@@ -3924,15 +3925,12 @@ void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg)
 	MonsterDeath(monster, pnum, md, sendmsg);
 }
 
-void M_StartKill(int monsterId, int pnum)
+void M_StartKill(Monster &monster, int pnum)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	Monster &monster = Monsters[monsterId];
-
 	if (pnum == MyPlayerId) {
 		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
-		if (monsterId != pnum) {
-			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monsterId);
+		if (&monster != &Monsters[pnum]) {
+			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
 		} else {
 			NetSendCmdLoc(MyPlayerId, false, CMD_KILLGOLEM, monster.position.tile);
 		}

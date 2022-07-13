@@ -245,7 +245,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		monster.flags |= MFLAG_NOHEAL;
 
 	if (monster.hitPoints >> 6 <= 0) {
-		M_StartKill(monsterId, pnum);
+		M_StartKill(monster, pnum);
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
@@ -2156,13 +2156,14 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 
 	int playerId = missile._misource;
 	Player &player = Players[playerId];
+	Monster &golem = Monsters[playerId];
 
-	if (Monsters[playerId].position.tile != GolemHoldingCell && &player == MyPlayer)
-		M_StartKill(playerId, playerId);
+	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
+		M_StartKill(golem, playerId);
 
 	UseMana(player, SPL_GOLEM);
 
-	if (Monsters[playerId].position.tile == GolemHoldingCell) {
+	if (golem.position.tile == GolemHoldingCell) {
 		std::optional<Point> spawnPosition = FindClosestValidPosition(
 		    [start = missile.position.start](Point target) {
 			    return !IsTileOccupied(target) && LineClearMissile(start, target);
