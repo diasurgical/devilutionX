@@ -166,7 +166,6 @@ namespace {
 struct DirectionSettings {
 	Direction dir;
 	DisplacementOf<int8_t> tileAdd;
-	DisplacementOf<int16_t> offset;
 	DisplacementOf<int8_t> map;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(Player &, const DirectionSettings &);
@@ -181,15 +180,7 @@ constexpr int8_t PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 };
-/** Maps from player class to player velocity. */
-constexpr int PWVel[enum_size<HeroClass>::value][3] = {
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-};
+
 const char *const ClassPathTbl[] = {
 	"Warrior",
 	"Rogue",
@@ -201,15 +192,11 @@ const char *const ClassPathTbl[] = {
 
 void PmChangeLightOff(Player &player)
 {
-	assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.velocity == player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo));
-	assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset == player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo, true));
-	assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset2 == player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo, true));
-
 	if (player._plid == NO_LIGHT)
 		return;
 
 	const Light *l = &Lights[player._plid];
-	WorldTileDisplacement offset = player.position.offset;
+	WorldTileDisplacement offset = player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo);
 	int x = 2 * offset.deltaY + offset.deltaX;
 	int y = 2 * offset.deltaY - offset.deltaX;
 
@@ -273,14 +260,14 @@ constexpr _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>:
 
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
-	{ Direction::South,     {  1,  1 }, {   0, -32 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
-	{ Direction::SouthWest, {  0,  1 }, {  32, -16 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
-	{ Direction::West,      { -1,  1 }, {  32, -16 }, { 0, 1 }, PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::NorthWest, { -1,  0 }, {   0,   0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::North,     { -1, -1 }, {   0,   0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::NorthEast, {  0, -1 }, {   0,   0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
-	{ Direction::East,      {  1, -1 }, { -32, -16 }, { 1, 0 }, PM_WALK_SIDEWAYS,   WalkSideways   },
-	{ Direction::SouthEast, {  1,  0 }, { -32, -16 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards }
+	{ Direction::South,     {  1,  1 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
+	{ Direction::SouthWest, {  0,  1 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards },
+	{ Direction::West,      { -1,  1 }, { 0, 1 }, PM_WALK_SIDEWAYS,   WalkSideways   },
+	{ Direction::NorthWest, { -1,  0 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::North,     { -1, -1 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::NorthEast, {  0, -1 }, { 0, 0 }, PM_WALK_NORTHWARDS, WalkNorthwards },
+	{ Direction::East,      {  1, -1 }, { 1, 0 }, PM_WALK_SIDEWAYS,   WalkSideways   },
+	{ Direction::SouthEast, {  1,  0 }, { 0, 0 }, PM_WALK_SOUTHWARDS, WalkSouthwards }
 	// clang-format on
 } };
 
@@ -303,7 +290,7 @@ bool PlrDirOK(const Player &player, Direction dir)
 	return true;
 }
 
-void HandleWalkMode(Player &player, Displacement vel, Direction dir)
+void HandleWalkMode(Player &player, Direction dir)
 {
 	const auto &dirModeParams = WalkSettings[static_cast<size_t>(dir)];
 	SetPlayerOld(player);
@@ -311,16 +298,13 @@ void HandleWalkMode(Player &player, Displacement vel, Direction dir)
 		return;
 	}
 
-	player.position.offset = dirModeParams.offset; // Offset player sprite to align with their previous tile position
 	// The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.tileAdd;
 
 	dirModeParams.walkModeHandler(player, dirModeParams);
 
-	player.position.velocity = vel;
 	player.tempDirection = dirModeParams.dir;
 	player._pmode = dirModeParams.walkMode;
-	player.position.offset2 = dirModeParams.offset * 256;
 
 	player._pdir = dir;
 }
@@ -338,14 +322,14 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(Player &player, Displacement vel, Direction dir, bool pmWillBeCalled)
+void StartWalk(Player &player, Direction dir, bool pmWillBeCalled)
 {
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, -1);
 		return;
 	}
 
-	HandleWalkMode(player, vel, dir);
+	HandleWalkMode(player, dir);
 	StartWalkAnimation(player, dir, pmWillBeCalled);
 }
 
@@ -354,14 +338,12 @@ void ClearStateVariables(Player &player)
 	player.position.temp = { 0, 0 };
 	player.tempDirection = Direction::South;
 	player.queuedSpell.spellLevel = 0;
-	player.position.offset2 = { 0, 0 };
 }
 
 void StartWalkStand(Player &player)
 {
 	player._pmode = PM_STAND;
 	player.position.future = player.position.tile;
-	player.position.offset = { 0, 0 };
 
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;
@@ -370,23 +352,6 @@ void StartWalkStand(Player &player)
 
 void ChangeOffset(Player &player)
 {
-	int px = player.position.offset2.deltaX / 256;
-	int py = player.position.offset2.deltaY / 256;
-
-	player.position.offset2 += player.position.velocity;
-
-	if (leveltype == DTYPE_TOWN && sgGameInitInfo.bRunInTown != 0) {
-		player.position.offset2 += player.position.velocity;
-	}
-
-	player.position.offset = DisplacementOf<int8_t> {
-		static_cast<int8_t>(player.position.offset2.deltaX >> 8),
-		static_cast<int8_t>(player.position.offset2.deltaY >> 8)
-	};
-
-	px -= player.position.offset2.deltaX >> 8;
-	py -= player.position.offset2.deltaY >> 8;
-
 	PmChangeLightOff(player);
 }
 
@@ -1402,39 +1367,30 @@ void CheckNewPath(Player &player, bool pmWillBeCalled)
 				}
 			}
 
-			int xvel3 = 2048;
-			int xvel = 1024;
-			int yvel = 512;
-			if (leveltype != DTYPE_TOWN) {
-				xvel3 = PWVel[static_cast<std::size_t>(player._pClass)][0];
-				xvel = PWVel[static_cast<std::size_t>(player._pClass)][1];
-				yvel = PWVel[static_cast<std::size_t>(player._pClass)][2];
-			}
-
 			switch (player.walkpath[0]) {
 			case WALK_N:
-				StartWalk(player, { 0, -xvel }, Direction::North, pmWillBeCalled);
+				StartWalk(player, Direction::North, pmWillBeCalled);
 				break;
 			case WALK_NE:
-				StartWalk(player, { xvel, -yvel }, Direction::NorthEast, pmWillBeCalled);
+				StartWalk(player, Direction::NorthEast, pmWillBeCalled);
 				break;
 			case WALK_E:
-				StartWalk(player, { xvel3, 0 }, Direction::East, pmWillBeCalled);
+				StartWalk(player, Direction::East, pmWillBeCalled);
 				break;
 			case WALK_SE:
-				StartWalk(player, { xvel, yvel }, Direction::SouthEast, pmWillBeCalled);
+				StartWalk(player, Direction::SouthEast, pmWillBeCalled);
 				break;
 			case WALK_S:
-				StartWalk(player, { 0, xvel }, Direction::South, pmWillBeCalled);
+				StartWalk(player, Direction::South, pmWillBeCalled);
 				break;
 			case WALK_SW:
-				StartWalk(player, { -xvel, yvel }, Direction::SouthWest, pmWillBeCalled);
+				StartWalk(player, Direction::SouthWest, pmWillBeCalled);
 				break;
 			case WALK_W:
-				StartWalk(player, { -xvel3, 0 }, Direction::West, pmWillBeCalled);
+				StartWalk(player, Direction::West, pmWillBeCalled);
 				break;
 			case WALK_NW:
-				StartWalk(player, { -xvel, -yvel }, Direction::NorthWest, pmWillBeCalled);
+				StartWalk(player, Direction::NorthWest, pmWillBeCalled);
 				break;
 			}
 
@@ -2729,9 +2685,6 @@ void InitPlayer(Player &player, bool firstTime)
 
 		SetPlrAnims(player);
 
-		player.position.offset = { 0, 0 };
-		player.position.velocity = { 0, 0 };
-
 		ClearStateVariables(player);
 
 		if (player._pHitPoints >> 6 > 0) {
@@ -2833,7 +2786,6 @@ void SetPlayerOld(Player &player)
 void FixPlayerLocation(Player &player, Direction bDir)
 {
 	player.position.future = player.position.tile;
-	player.position.offset = { 0, 0 };
 	player._pdir = bDir;
 	if (&player == MyPlayer) {
 		ViewPosition = player.position.tile;
@@ -3307,10 +3259,6 @@ void ProcessPlayers()
 			player.previewCelSprite = std::nullopt;
 			if (player._pmode != PM_DEATH || player.AnimInfo.tickCounterOfCurrentFrame != 40)
 				player.AnimInfo.processAnimation();
-
-			assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.velocity == player.position.GetWalkingVelocityShifted8(player._pdir, player.AnimInfo));
-			assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset == player.position.CalculateWalkingOffset(player._pdir, player.AnimInfo));
-			assert(!player.IsWalking() || leveltype == DTYPE_TOWN || player.position.offset2 == player.position.CalculateWalkingOffsetShifted8(player._pdir, player.AnimInfo));
 		}
 	}
 }

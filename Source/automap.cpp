@@ -402,7 +402,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	int px = tile.x - 2 * AutomapOffset.deltaX - ViewPosition.x;
 	int py = tile.y - 2 * AutomapOffset.deltaY - ViewPosition.y;
 
-	Displacement playerOffset = player.position.offset;
+	Displacement playerOffset = {};
 	if (player.IsWalking())
 		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 
