@@ -727,7 +727,8 @@ void LoadMissile(LoadHelper *file)
 	missile._miPreFlag = file->NextBool32();
 	missile._miUniqTrans = file->NextLE<uint32_t>();
 	missile._mirange = file->NextLE<int32_t>();
-	missile._misource = file->NextLE<int32_t>();
+	// TODO: How to handle this?
+	//	missile._misource = file->NextLE<int32_t>();
 	missile._micaster = static_cast<mienemy_type>(file->NextLE<int32_t>());
 	missile._midam = file->NextLE<int32_t>();
 	missile._miHitFlag = file->NextBool32();
@@ -1447,7 +1448,8 @@ void SaveMissile(SaveHelper *file, const Missile &missile)
 	file->WriteLE<uint32_t>(missile._miPreFlag ? 1 : 0);
 	file->WriteLE<uint32_t>(missile._miUniqTrans);
 	file->WriteLE<int32_t>(missile._mirange);
-	file->WriteLE<int32_t>(missile._misource);
+	// TODO: How to handle this?
+	//	file->WriteLE<int32_t>(missile._misource);
 	file->WriteLE<int32_t>(missile._micaster);
 	file->WriteLE<int32_t>(missile._midam);
 	file->WriteLE<uint32_t>(missile._miHitFlag ? 1 : 0);
@@ -2197,7 +2199,7 @@ void LoadGame(bool firstflag)
 	// convert stray manashield missiles into pManaShield flag
 	for (auto &missile : Missiles) {
 		if (missile._mitype == MIS_MANASHIELD && !missile._miDelFlag) {
-			Players[missile._misource].pManaShield = true;
+			missile.sourcePlayer->pManaShield = true;
 			missile._miDelFlag = true;
 		}
 	}

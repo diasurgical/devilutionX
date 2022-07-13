@@ -826,7 +826,7 @@ bool PlrHitMonst(int pnum, size_t monsterId, bool adjacentDamage = false)
 
 	if (gbIsHellfire && HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
 		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
-		AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+		AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, nullptr, &player, midam, 0);
 	}
 	int mind = player._pIMinDam;
 	int maxd = player._pIMaxDam;
@@ -1073,10 +1073,10 @@ bool DoAttack(int pnum)
 
 		if (!gbIsHellfire || !HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
-				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, nullptr, &player, 0, 0);
 			}
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
-				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, nullptr, &player, 0, 0);
 			}
 		}
 
@@ -1186,7 +1186,8 @@ bool DoRangeAttack(int pnum)
 		    player._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
-		    pnum,
+		    nullptr,
+		    &player,
 		    dmg,
 		    0);
 
@@ -1824,6 +1825,11 @@ void CheckCheatStats(Player &player)
 }
 
 } // namespace
+
+[[nodiscard]] size_t Player::getId() const
+{
+	return std::distance<const Player *>(&Players[0], this);
+}
 
 void Player::CalcScrolls()
 {
@@ -3158,7 +3164,7 @@ void RemovePlrMissiles(const Player &player)
 	}
 
 	for (auto &missile : Missiles) {
-		if (missile._mitype == MIS_STONE && &Players[missile._misource] == &player) {
+		if (missile._mitype == MIS_STONE && missile.sourcePlayer == &player) {
 			Monsters[missile.var2].mode = static_cast<MonsterMode>(missile.var1);
 		}
 	}

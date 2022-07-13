@@ -328,7 +328,7 @@ void CheckQuests()
 	    && (quest._qvar2 == 0 || quest._qvar2 == 2)) {
 		// Move the quest trigger into world space, then spawn a portal at the same location
 		quest.position = quest.position.megaToWorld();
-		AddMissile(quest.position, quest.position, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		AddMissile(quest.position, quest.position, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, nullptr, MyPlayer, 0, 0);
 		quest._qvar2 = 1;
 		if (quest._qactive == QUEST_ACTIVE && quest._qvar1 == 2) {
 			quest._qvar1 = 3;
@@ -340,7 +340,7 @@ void CheckQuests()
 	    && setlvlnum == SL_VILEBETRAYER
 	    && quest._qvar2 == 4) {
 		Point portalLocation { 35, 32 };
-		AddMissile(portalLocation, portalLocation, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		AddMissile(portalLocation, portalLocation, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, nullptr, MyPlayer, 0, 0);
 		quest._qvar2 = 3;
 	}
 
@@ -446,7 +446,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		} else {
 			InitVPTriggers();
 			betrayerQuest._qvar2 = 4;
-			AddMissile({ 35, 32 }, { 35, 32 }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+			AddMissile({ 35, 32 }, { 35, 32 }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, nullptr, MyPlayer, 0, 0);
 		}
 	} else if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood) {
 		Quests[Q_WARLORD]._qactive = QUEST_DONE;

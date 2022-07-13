@@ -243,7 +243,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 
 	for (int i = 0; i < 3 && spelldata[spl].sMissiles[i] != MIS_NULL; i++) {
-		AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
+		AddMissile({ sx, sy }, { dx, dy }, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, nullptr, &player, 0, spllvl);
 	}
 
 	if (spl == SPL_TOWN) {
@@ -252,7 +252,7 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 		UseMana(player, SPL_CBOLT);
 
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
-			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
+			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, nullptr, &player, 0, spllvl);
 		}
 	}
 }
@@ -264,8 +264,9 @@ void DoResurrect(int pnum, uint16_t rid)
 	}
 
 	auto &target = Players[rid];
+	Player &player = Players[pnum];
 
-	AddMissile(target.position.tile, target.position.tile, Direction::South, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
+	AddMissile(target.position.tile, target.position.tile, Direction::South, MIS_RESURRECTBEAM, TARGET_MONSTERS, nullptr, &player, 0, 0);
 
 	if (target._pHitPoints != 0)
 		return;

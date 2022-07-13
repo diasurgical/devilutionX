@@ -51,7 +51,7 @@ void AddWarpMissile(int i, Point position)
 {
 	MissilesData[MIS_TOWN].mlSFX = SFX_NONE;
 
-	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	auto *missile = AddMissile({ 0, 0 }, position, Direction::South, MIS_TOWN, TARGET_MONSTERS, nullptr, &Players[i], 0, 0);
 	if (missile != nullptr) {
 		SetMissDir(*missile, 1);
 
@@ -112,7 +112,8 @@ bool PortalOnLevel(int i)
 void RemovePortalMissile(int id)
 {
 	Missiles.remove_if([id](Missile &missile) {
-		if (missile._mitype == MIS_TOWN && missile._misource == id) {
+		Player &player = Players[id];
+		if (missile._mitype == MIS_TOWN && missile.sourcePlayer == &player) {
 			dFlags[missile.position.tile.x][missile.position.tile.y] &= ~DungeonFlag::Missile;
 
 			if (Portals[id].level != 0)

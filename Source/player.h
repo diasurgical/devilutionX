@@ -352,6 +352,8 @@ struct Player {
 	/** @brief Specifies whether players are in non-PvP mode. */
 	bool friendlyMode = true;
 
+	[[nodiscard]] size_t getId() const;
+
 	void CalcScrolls();
 
 	bool CanUseItem(const Item &item) const

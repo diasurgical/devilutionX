@@ -335,7 +335,7 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
 	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
 	if (missile._miUniqTrans != 0)
-		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel, Monsters[missile._misource].uniqueMonsterTRN.get());
+		Cl2DrawTRN(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel, missile.sourceMonster->uniqueMonsterTRN.get());
 	else if (missile._miLightFlag)
 		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, nCel);
 	else
@@ -545,7 +545,7 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 		return;
 	}
 
-	if (pcursplr >= 0 && pcursplr < MAX_PLRS && &player == &Players[pcursplr])
+	if (pcursplr >= 0 && pcursplr < MAX_PLRS && & player == &Players[pcursplr])
 		Cl2DrawOutline(out, 165, spriteBufferPosition.x, spriteBufferPosition.y, *sprite, nCel);
 
 	if (&player == MyPlayer) {
