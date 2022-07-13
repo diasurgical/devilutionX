@@ -1013,6 +1013,8 @@ void AddChest(Object &chest, _object_id type)
 		}
 		chest._oVar1 = GenerateRnd(4);
 		break;
+	default:
+		break;
 	}
 	chest._oVar2 = GenerateRnd(8);
 }
