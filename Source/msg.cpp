@@ -1215,29 +1215,17 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnOperateObjectTile(const TCmd *pCmd, Player &player)
+size_t OnObjectTileAction(const TCmd &cmd, Player &player, action_id action)
 {
-	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const auto &message = reinterpret_cast<const TCmdLoc &>(cmd);
 	const Point position { message.x, message.y };
+	const Object *object = ObjectAtPosition(position);
 
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
-		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
-		player.destAction = ACTION_OPERATE;
-		player.destParam1 = message.wParam1;
-	}
+	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && object != nullptr) {
+		MakePlrPath(player, position, !object->_oSolidFlag && !object->_oDoorFlag);
 
-	return sizeof(message);
-}
-
-size_t OnDisarm(const TCmd *pCmd, Player &player)
-{
-	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
-	const Point position { message.x, message.y };
-
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
-		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
-		player.destAction = ACTION_DISARM;
-		player.destParam1 = message.wParam1;
+		player.destAction = action;
+		player.destParam1 = object->GetId();
 	}
 
 	return sizeof(message);
@@ -3013,9 +3001,9 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_TSPELLXY:
 		return OnTargetSpellTile(pCmd, player);
 	case CMD_OPOBJXY:
-		return OnOperateObjectTile(pCmd, player);
+		return OnObjectTileAction(*pCmd, player, ACTION_OPERATE);
 	case CMD_DISARMXY:
-		return OnDisarm(pCmd, player);
+		return OnObjectTileAction(*pCmd, player, ACTION_DISARM);
 	case CMD_OPOBJT:
 		return OnOperateObjectTelekinesis(pCmd, player);
 	case CMD_ATTACKID:

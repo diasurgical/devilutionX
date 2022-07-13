@@ -522,7 +522,7 @@ void Interact()
 	}
 
 	if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		LastMouseButtonAction = MouseActionType::OperateObject;
 		return;
 	}
@@ -1973,7 +1973,7 @@ void PerformSecondaryAction()
 	if (pcursitem != -1) {
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursPosition, pcursitem);
 	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		LastMouseButtonAction = MouseActionType::OperateObject;
 	} else {
 		if (pcursmissile != nullptr) {
