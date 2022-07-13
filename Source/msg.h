@@ -164,8 +164,9 @@ enum _cmd_id : uint8_t {
 	CMD_RESURRECT,
 	// Operate object using telekinesis.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_OPOBJT,
 	// Knockback target monster using telekinesis.
 	//
