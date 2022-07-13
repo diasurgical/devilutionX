@@ -3609,7 +3609,7 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 	};
 
 	std::array<uint32_t, MaxAnims> animOffsets;
-	if (HeadlessMode) {
+	if (!HeadlessMode) {
 		monster.animData = MultiFileLoader<MaxAnims> {}(
 		    numAnims,
 		    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.GraphicType }, ".CL2", Animletter),
