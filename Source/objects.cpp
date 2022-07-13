@@ -1402,7 +1402,7 @@ void UpdateCircle(Object &circle)
 			if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
 				Quests[Q_BETRAYER]._qvar1 = 4;
 		}
-		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, nullptr, MyPlayer, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
@@ -2205,7 +2205,7 @@ void OperateBook(int pnum, Object &book)
 			if (doAddMissile) {
 				questObject._oVar6 = 4;
 				ObjectAtPosition({ 35, 36 })->_oVar5++;
-				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
+				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, nullptr, &player, 0, 0);
 				missileAdded = true;
 			}
 		}
@@ -2234,7 +2234,8 @@ void OperateBook(int pnum, Object &book)
 		    player._pdir,
 		    MIS_GUARDIAN,
 		    TARGET_MONSTERS,
-		    pnum,
+		    nullptr,
+		    &player,
 		    0,
 		    0);
 	}
@@ -2380,7 +2381,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		default:
 			mtype = MIS_ARROW;
 		}
-		AddMissile(Objects[i].position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+		AddMissile(Objects[i].position, player.position.tile, mdir, mtype, TARGET_PLAYERS, nullptr, nullptr, 0, 0);
 		Objects[i]._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
@@ -2705,7 +2706,7 @@ void OperateShrineWeird(Player &player)
 
 void OperateShrineMagical(int pnum)
 {
-	const Player &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	AddMissile(
 	    player.position.tile,
@@ -2713,7 +2714,8 @@ void OperateShrineMagical(int pnum)
 	    player._pdir,
 	    MIS_MANASHIELD,
 	    TARGET_PLAYERS,
-	    pnum,
+	    nullptr,
+	    &player,
 	    0,
 	    2 * leveltype);
 
@@ -2847,7 +2849,8 @@ void OperateShrineCryptic(int pnum)
 	    player._pdir,
 	    MIS_NOVA,
 	    TARGET_PLAYERS,
-	    pnum,
+	    nullptr,
+	    &player,
 	    0,
 	    2 * leveltype);
 
@@ -2932,9 +2935,9 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 
 void OperateShrineHoly(int pnum)
 {
-	const Player &player = Players[pnum];
+	Player &player = Players[pnum];
 
-	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
+	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_PLAYERS, nullptr, &player, 0, 2 * leveltype);
 
 	if (&player != MyPlayer)
 		return;
@@ -3120,7 +3123,8 @@ void OperateShrineOily(Player &player, Point spawnPosition)
 	    player._pdir,
 	    MIS_FIREWALL,
 	    TARGET_PLAYERS,
-	    -1,
+	    nullptr,
+	    nullptr,
 	    2 * currlevel + 2,
 	    0);
 
@@ -3179,7 +3183,8 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
 	    player._pdir,
 	    MIS_FLASH,
 	    TARGET_PLAYERS,
-	    -1,
+	    nullptr,
+	    nullptr,
 	    3 * currlevel + 2,
 	    0);
 
@@ -3195,7 +3200,7 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
  */
 void OperateShrineTown(int pnum, Point spawnPosition)
 {
-	const Player &player = Players[pnum];
+	Player &player = Players[pnum];
 
 	if (&player != MyPlayer)
 		return;
@@ -3206,7 +3211,8 @@ void OperateShrineTown(int pnum, Point spawnPosition)
 	    player._pdir,
 	    MIS_TOWN,
 	    TARGET_PLAYERS,
-	    pnum,
+	    nullptr,
+	    &player,
 	    0,
 	    0);
 
@@ -3569,7 +3575,8 @@ bool OperateFountains(int pnum, int i)
 		    player._pdir,
 		    MIS_INFRA,
 		    TARGET_PLAYERS,
-		    pnum,
+		    nullptr,
+		    &player,
 		    0,
 		    2 * leveltype);
 		applied = true;
@@ -4607,7 +4614,7 @@ void OperateTrap(Object &trap)
 	}
 
 	Direction dir = GetDirection(trap.position, target);
-	AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
+	AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, nullptr, nullptr, 0, 0);
 	PlaySfxLoc(IS_TRAP, trigger.position);
 	trigger._oTrapFlag = false;
 }

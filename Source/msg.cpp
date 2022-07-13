@@ -1590,12 +1590,12 @@ DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
 		} else if (&player != MyPlayer) {
 			// Check if this player already has an active golem
 			for (auto &missile : Missiles) {
-				if (missile._mitype == MIS_GOLEM && &Players[missile._misource] == &player) {
+				if (missile._mitype == MIS_GOLEM && missile.sourcePlayer == &player) {
 					return sizeof(message);
 				}
 			}
 
-			AddMissile(player.position.tile, position, message._mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
+			AddMissile(player.position.tile, position, message._mdir, MIS_GOLEM, TARGET_MONSTERS, nullptr, &player, 0, 1);
 		}
 	}
 
@@ -1906,7 +1906,7 @@ DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 			} else if (player.isOnActiveLevel()) {
 				bool addPortal = true;
 				for (auto &missile : Missiles) {
-					if (missile._mitype == MIS_TOWN && &Players[missile._misource] == &player) {
+					if (missile._mitype == MIS_TOWN && missile.sourcePlayer == &player) {
 						addPortal = false;
 						break;
 					}
@@ -2143,7 +2143,7 @@ DWORD OnNakrul(const TCmd *pCmd)
 DWORD OnOpenHive(const TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs != 1) {
-		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, nullptr, &Players[pnum], 0, 0);
 		TownOpenHive();
 		InitTownTriggers();
 	}
