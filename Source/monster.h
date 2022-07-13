@@ -19,6 +19,7 @@
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -286,9 +287,9 @@ struct Monster { // note: missing field _mAFNum
 	const char *name() const
 	{
 		if (uniqType != 0)
-			return UniqueMonstersData[uniqType - 1].mName;
+			return pgettext("monster", UniqueMonstersData[uniqType - 1].mName).data();
 
-		return data().mName;
+		return pgettext("monster", data().mName).data();
 	}
 
 	/**
