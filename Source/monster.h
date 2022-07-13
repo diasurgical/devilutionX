@@ -350,7 +350,7 @@ void GolumAi(int monsterId);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();
-bool DirOK(int monsterId, Direction mdir);
+bool DirOK(const Monster &monster, Direction mdir);
 bool PosOkMissile(Point position);
 bool LineClearMissile(Point startPoint, Point endPoint);
 bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point endPoint);

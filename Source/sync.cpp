@@ -179,7 +179,7 @@ void SyncMonster(bool isOwner, const TSyncMonster &monsterSync)
 	if (monster.position.tile.WalkingDistance(position) <= 2) {
 		if (!monster.isWalking()) {
 			Direction md = GetDirection(monster.position.tile, position);
-			if (DirOK(monsterId, md)) {
+			if (DirOK(monster, md)) {
 				M_ClearSquares(monster);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
 				Walk(monster, md);

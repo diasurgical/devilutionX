@@ -1831,19 +1831,19 @@ bool RandomWalk(int monsterId, Direction md)
 	Direction mdtemp = md;
 	Monster &monster = Monsters[monsterId];
 
-	bool ok = DirOK(monsterId, md);
+	bool ok = DirOK(monster, md);
 	if (FlipCoin())
-		ok = ok || (md = Right(mdtemp), DirOK(monsterId, md)) || (md = Left(mdtemp), DirOK(monsterId, md));
+		ok = ok || (md = Right(mdtemp), DirOK(monster, md)) || (md = Left(mdtemp), DirOK(monster, md));
 	else
-		ok = ok || (md = Left(mdtemp), DirOK(monsterId, md)) || (md = Right(mdtemp), DirOK(monsterId, md));
+		ok = ok || (md = Left(mdtemp), DirOK(monster, md)) || (md = Right(mdtemp), DirOK(monster, md));
 	if (FlipCoin()) {
 		ok = ok
-		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md))
-		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md));
+		    || (md = Left(Left(mdtemp)), DirOK(monster, md))
+		    || (md = Right(Right(mdtemp)), DirOK(monster, md));
 	} else {
 		ok = ok
-		    || (md = Right(Right(mdtemp)), DirOK(monsterId, md))
-		    || (md = Left(Left(mdtemp)), DirOK(monsterId, md));
+		    || (md = Right(Right(mdtemp)), DirOK(monster, md))
+		    || (md = Left(Left(mdtemp)), DirOK(monster, md));
 	}
 	if (ok)
 		Walk(monster, md);
@@ -1855,11 +1855,13 @@ bool RandomWalk2(int monsterId, Direction md)
 	auto &monster = Monsters[monsterId];
 
 	Direction mdtemp = md;
-	bool ok = DirOK(monsterId, md); // Can we continue in the same direction
-	if (FlipCoin()) {               // Randomly go left or right
-		ok = ok || (mdtemp = Right(md), DirOK(monsterId, Right(md))) || (mdtemp = Left(md), DirOK(monsterId, Left(md)));
+	bool ok = DirOK(monster, md); // Can we continue in the same direction
+
+	// Randomly go left or right
+	if (FlipCoin()) {
+		ok = ok || (mdtemp = Right(md), DirOK(monster, Right(md))) || (mdtemp = Left(md), DirOK(monster, Left(md)));
 	} else {
-		ok = ok || (mdtemp = Left(md), DirOK(monsterId, Left(md))) || (mdtemp = Right(md), DirOK(monsterId, Right(md)));
+		ok = ok || (mdtemp = Left(md), DirOK(monster, Left(md))) || (mdtemp = Right(md), DirOK(monster, Right(md)));
 	}
 
 	if (ok)
@@ -2033,7 +2035,7 @@ void AiAvoidance(int monsterId)
 			}
 			monster.goal = MonsterGoal::Move;
 			int dist = std::max(abs(mx), abs(my));
-			if ((monster.goalVar1++ >= 2 * dist && DirOK(monsterId, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
+			if ((monster.goalVar1++ >= 2 * dist && DirOK(monster, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
 				monster.goal = MonsterGoal::Normal;
 			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
@@ -2172,7 +2174,7 @@ void AiRangedAvoidance(int monsterId)
 				monster.goalVar2 = GenerateRnd(2);
 			}
 			monster.goal = MonsterGoal::Move;
-			if (monster.goalVar1++ >= 2 * dist && DirOK(monsterId, md)) {
+			if (monster.goalVar1++ >= 2 * dist && DirOK(monster, md)) {
 				monster.goal = MonsterGoal::Normal;
 			} else if (v < (500 * (monster.intelligence + 1) >> lessmissiles)
 			    && (LineClearMissile(monster.position.tile, { fx, fy }))) {
@@ -2575,7 +2577,7 @@ void LeoricAi(int monsterId)
 				monster.goalVar2 = GenerateRnd(2);
 			}
 			monster.goal = MonsterGoal::Move;
-			if ((monster.goalVar1++ >= 2 * dist && DirOK(monsterId, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
+			if ((monster.goalVar1++ >= 2 * dist && DirOK(monster, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[fx][fy]) {
 				monster.goal = MonsterGoal::Normal;
 			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
@@ -2959,7 +2961,7 @@ void CounselorAi(int monsterId)
 	} else if (monster.goal == MonsterGoal::Move) {
 		int dist = std::max(abs(mx), abs(my));
 		if (dist >= 2 && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[fx][fy]) {
-			if (monster.goalVar1++ < 2 * dist || !DirOK(monsterId, md)) {
+			if (monster.goalVar1++ < 2 * dist || !DirOK(monster, md)) {
 				RoundWalk(monsterId, md, &monster.goalVar2);
 			} else {
 				monster.goal = MonsterGoal::Normal;
@@ -3064,7 +3066,7 @@ void MegaAi(int monsterId)
 			}
 			monster.goal = MonsterGoal::Move;
 			monster.goalVar3 = 4;
-			if (monster.goalVar1++ < 2 * dist || !DirOK(monsterId, md)) {
+			if (monster.goalVar1++ < 2 * dist || !DirOK(monster, md)) {
 				if (v < 5 * (monster.intelligence + 16))
 					RoundWalk(monsterId, md, &monster.goalVar2);
 			} else
@@ -4099,7 +4101,7 @@ void PrepDoEnding()
 
 bool Walk(Monster &monster, Direction md)
 {
-	if (!DirOK(monster.getId(), md)) {
+	if (!DirOK(monster, md)) {
 		return false;
 	}
 
@@ -4299,10 +4301,8 @@ void FreeMonsters()
 	}
 }
 
-bool DirOK(int monsterId, Direction mdir)
+bool DirOK(const Monster &monster, Direction mdir)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
 	Point position = monster.position.tile;
 	Point futurePosition = position + mdir;
 	if (!IsRelativeMoveOK(monster, position, mdir))
