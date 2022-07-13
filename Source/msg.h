@@ -99,17 +99,15 @@ enum _cmd_id : uint8_t {
 	CMD_TSPELLXY,
 	// Operate object at location.
 	//
-	// body (TCmdLocParam1):
+	// body (TCmdLoc):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t object_num
 	CMD_OPOBJXY,
 	// Disarm trap at location.
 	//
-	// body (TCmdLocParam1):
+	// body (TCmdLoc):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t object_num
 	CMD_DISARMXY,
 	// Attack target monster.
 	//
