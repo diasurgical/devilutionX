@@ -909,7 +909,7 @@ void DrawInfoBox(const Surface &out)
 				InfoColor = UiFlags::ColorWhite;
 				InfoString = string_view(monster.name);
 				ClearPanel();
-				if (monster.uniqType != 0) {
+				if (monster.isUnique()) {
 					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
 				} else {

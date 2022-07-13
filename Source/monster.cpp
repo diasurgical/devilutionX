@@ -226,7 +226,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.goalVar3 = 0;
 	monster.pathCount = 0;
 	monster.isInvalid = false;
-	monster.uniqType = 0;
+	monster.uniqueType = UniqueMonsterType::None;
 	monster.activeForTicks = 0;
 	monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	monster.rndItemSeed = AdvanceRndSeed();
@@ -391,10 +391,10 @@ void PlaceGroup(int mtype, unsigned num, Monster *leader = nullptr, bool leashed
 	}
 }
 
-void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
+void PlaceUniqueMonst(UniqueMonsterType uniqindex, int miniontype, int bosspacksize)
 {
 	auto &monster = Monsters[ActiveMonsterCount];
-	const auto &uniqueMonsterData = UniqueMonstersData[uniqindex];
+	const auto &uniqueMonsterData = UniqueMonstersData[static_cast<size_t>(uniqindex)];
 
 	size_t uniqtype;
 	for (uniqtype = 0; uniqtype < LevelMonsterTypeCount; uniqtype++) {
@@ -428,13 +428,13 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		}
 	}
 
-	if (uniqindex == UMT_SNOTSPIL) {
+	if (uniqindex == UniqueMonsterType::SnotSpill) {
 		position = SetPiece.position.megaToWorld() + Displacement { 8, 12 };
 	}
-	if (uniqindex == UMT_WARLORD) {
+	if (uniqindex == UniqueMonsterType::WarlordOfBlood) {
 		position = SetPiece.position.megaToWorld() + Displacement { 6, 7 };
 	}
-	if (uniqindex == UMT_ZHAR) {
+	if (uniqindex == UniqueMonsterType::Zhar) {
 		for (int i = 0; i < themeCount; i++) {
 			if (i == zharlib) {
 				position = themeLoc[i].room.position.megaToWorld() + Displacement { 4, 4 };
@@ -443,34 +443,34 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		}
 	}
 	if (setlevel) {
-		if (uniqindex == UMT_LAZARUS) {
+		if (uniqindex == UniqueMonsterType::Lazarus) {
 			position = { 32, 46 };
 		}
-		if (uniqindex == UMT_RED_VEX) {
+		if (uniqindex == UniqueMonsterType::RedVex) {
 			position = { 40, 45 };
 		}
-		if (uniqindex == UMT_BLACKJADE) {
+		if (uniqindex == UniqueMonsterType::BlackJade) {
 			position = { 38, 49 };
 		}
-		if (uniqindex == UMT_SKELKING) {
+		if (uniqindex == UniqueMonsterType::SkeletonKing) {
 			position = { 35, 47 };
 		}
 	} else {
-		if (uniqindex == UMT_LAZARUS) {
+		if (uniqindex == UniqueMonsterType::Lazarus) {
 			position = SetPiece.position.megaToWorld() + Displacement { 3, 6 };
 		}
-		if (uniqindex == UMT_RED_VEX) {
+		if (uniqindex == UniqueMonsterType::RedVex) {
 			position = SetPiece.position.megaToWorld() + Displacement { 5, 3 };
 		}
-		if (uniqindex == UMT_BLACKJADE) {
+		if (uniqindex == UniqueMonsterType::BlackJade) {
 			position = SetPiece.position.megaToWorld() + Displacement { 5, 9 };
 		}
 	}
-	if (uniqindex == UMT_BUTCHER) {
+	if (uniqindex == UniqueMonsterType::Butcher) {
 		position = SetPiece.position.megaToWorld() + Displacement { 4, 4 };
 	}
 
-	if (uniqindex == UMT_NAKRUL) {
+	if (uniqindex == UniqueMonsterType::NaKrul) {
 		if (UberRow == 0 || UberCol == 0) {
 			UberDiabloMonsterIndex = -1;
 			return;
@@ -542,7 +542,7 @@ void ClrAllMonsters()
 
 void PlaceUniqueMonsters()
 {
-	for (int u = 0; UniqueMonstersData[u].mtype != -1; u++) {
+	for (size_t u = 0; UniqueMonstersData[u].mtype != -1; u++) {
 		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
 
@@ -550,18 +550,19 @@ void PlaceUniqueMonsters()
 		if (mt == LevelMonsterTypeCount)
 			continue;
 
-		if (u == UMT_GARBUD && Quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
+		UniqueMonsterType uniqueType = static_cast<UniqueMonsterType>(u);
+		if (uniqueType == UniqueMonsterType::Garbud && Quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
 			continue;
-		if (u == UMT_ZHAR && Quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
+		if (uniqueType == UniqueMonsterType::Zhar && Quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
 			continue;
-		if (u == UMT_SNOTSPIL && Quests[Q_LTBANNER]._qactive == QUEST_NOTAVAIL)
+		if (uniqueType == UniqueMonsterType::SnotSpill && Quests[Q_LTBANNER]._qactive == QUEST_NOTAVAIL)
 			continue;
-		if (u == UMT_LACHDAN && Quests[Q_VEIL]._qactive == QUEST_NOTAVAIL)
+		if (uniqueType == UniqueMonsterType::Lachdan && Quests[Q_VEIL]._qactive == QUEST_NOTAVAIL)
 			continue;
-		if (u == UMT_WARLORD && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
+		if (uniqueType == UniqueMonsterType::WarlordOfBlood && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
 			continue;
 
-		PlaceUniqueMonst(u, mt, 8);
+		PlaceUniqueMonst(uniqueType, mt, 8);
 	}
 }
 
@@ -569,13 +570,13 @@ void PlaceQuestMonsters()
 {
 	if (!setlevel) {
 		if (Quests[Q_BUTCHER].IsAvailable()) {
-			PlaceUniqueMonst(UMT_BUTCHER, 0, 0);
+			PlaceUniqueMonst(UniqueMonsterType::Butcher, 0, 0);
 		}
 
 		if (currlevel == Quests[Q_SKELKING]._qlevel && gbIsMultiplayer) {
 			for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 				if (IsSkel(LevelMonsterTypes[i].type)) {
-					PlaceUniqueMonst(UMT_SKELKING, i, 30);
+					PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, i, 30);
 					break;
 				}
 			}
@@ -600,21 +601,21 @@ void PlaceQuestMonsters()
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
-			AddMonsterType(UniqueMonstersData[UMT_WARLORD].mtype, PLACE_SCATTER);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::WarlordOfBlood)].mtype, PLACE_SCATTER);
 		}
 		if (Quests[Q_VEIL].IsAvailable()) {
-			AddMonsterType(UniqueMonstersData[UMT_LACHDAN].mtype, PLACE_SCATTER);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lachdan)].mtype, PLACE_SCATTER);
 		}
 		if (Quests[Q_ZHAR].IsAvailable() && zharlib == -1) {
 			Quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
 		}
 
 		if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
-			AddMonsterType(UniqueMonstersData[UMT_LAZARUS].mtype, PLACE_UNIQUE);
-			AddMonsterType(UniqueMonstersData[UMT_RED_VEX].mtype, PLACE_UNIQUE);
-			PlaceUniqueMonst(UMT_LAZARUS, 0, 0);
-			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
-			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lazarus)].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::RedVex)].mtype, PLACE_UNIQUE);
+			PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
+			PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
+			PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
 			SetMapMonsters(dunData.get(), SetPiece.position.megaToWorld());
 		}
@@ -623,24 +624,24 @@ void PlaceQuestMonsters()
 			UberDiabloMonsterIndex = -1;
 			size_t i1;
 			for (i1 = 0; i1 < LevelMonsterTypeCount; i1++) {
-				if (LevelMonsterTypes[i1].type == UniqueMonstersData[UMT_NAKRUL].mtype)
+				if (LevelMonsterTypes[i1].type == UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::NaKrul)].mtype)
 					break;
 			}
 
 			if (i1 < LevelMonsterTypeCount) {
 				for (size_t i2 = 0; i2 < ActiveMonsterCount; i2++) {
 					auto &monster = Monsters[i2];
-					if (monster.uniqType != 0 || monster.levelType == i1) {
+					if (monster.isUnique() || monster.levelType == i1) {
 						UberDiabloMonsterIndex = static_cast<int>(i2);
 						break;
 					}
 				}
 			}
 			if (UberDiabloMonsterIndex == -1)
-				PlaceUniqueMonst(UMT_NAKRUL, 0, 0);
+				PlaceUniqueMonst(UniqueMonsterType::NaKrul, 0, 0);
 		}
 	} else if (setlvlnum == SL_SKELKING) {
-		PlaceUniqueMonst(UMT_SKELKING, 0, 0);
+		PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, 0, 0);
 	}
 }
 
@@ -972,14 +973,14 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 		return;
 	}
 
-	if (Quests[Q_GARBUD].IsAvailable() && monster.uniqType - 1 == UMT_GARBUD) {
+	if (Quests[Q_GARBUD].IsAvailable() && monster.uniqueType == UniqueMonsterType::Garbud) {
 		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ItemType::Mace, IMISC_NONE, sendmsg, false);
-	} else if (monster.uniqType - 1 == UMT_DEFILER) {
+	} else if (monster.uniqueType == UniqueMonsterType::Defiler) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
 		Quests[Q_DEFILER]._qlog = false;
 		SpawnMapOfDoom(monster.position.tile, sendmsg);
-	} else if (monster.uniqType - 1 == UMT_HORKDMN) {
+	} else if (monster.uniqueType == UniqueMonsterType::HorkDemon) {
 		if (sgGameInitInfo.bTheoQuest != 0) {
 			SpawnTheodore(monster.position.tile, sendmsg);
 		} else {
@@ -1579,7 +1580,7 @@ void MonsterTalk(Monster &monster)
 	if (effect_is_playing(Speeches[monster.talkMsg].sfxnr))
 		return;
 	InitQTextMsg(monster.talkMsg);
-	if (monster.uniqType - 1 == UMT_GARBUD) {
+	if (monster.uniqueType == UniqueMonsterType::Garbud) {
 		if (monster.talkMsg == TEXT_GARBUD1) {
 			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
 			Quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
@@ -1589,7 +1590,7 @@ void MonsterTalk(Monster &monster)
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
-	if (monster.uniqType - 1 == UMT_ZHAR
+	if (monster.uniqueType == UniqueMonsterType::Zhar
 	    && monster.talkMsg == TEXT_ZHAR1
 	    && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
@@ -1597,7 +1598,7 @@ void MonsterTalk(Monster &monster)
 		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, false, ItemType::Misc, IMISC_BOOK, true, false);
 		monster.flags |= MFLAG_QUEST_COMPLETE;
 	}
-	if (monster.uniqType - 1 == UMT_SNOTSPIL) {
+	if (monster.uniqueType == UniqueMonsterType::SnotSpill) {
 		if (monster.talkMsg == TEXT_BANNER10 && (monster.flags & MFLAG_QUEST_COMPLETE) == 0) {
 			ObjChangeMap(SetPiece.position.x, SetPiece.position.y, SetPiece.position.x + (SetPiece.size.width / 2) + 2, SetPiece.position.y + (SetPiece.size.height / 2) - 2);
 			auto tren = TransVal;
@@ -1613,7 +1614,7 @@ void MonsterTalk(Monster &monster)
 			app_fatal(StrCat("SS Talk = ", monster.talkMsg, ", Flags = ", monster.flags));
 		}
 	}
-	if (monster.uniqType - 1 == UMT_LACHDAN) {
+	if (monster.uniqueType == UniqueMonsterType::Lachdan) {
 		if (monster.talkMsg == TEXT_VEIL9) {
 			Quests[Q_VEIL]._qactive = QUEST_ACTIVE;
 			Quests[Q_VEIL]._qlog = true;
@@ -1623,9 +1624,9 @@ void MonsterTalk(Monster &monster)
 			monster.flags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
-	if (monster.uniqType - 1 == UMT_WARLORD)
+	if (monster.uniqueType == UniqueMonsterType::WarlordOfBlood)
 		Quests[Q_WARLORD]._qvar1 = 2;
-	if (monster.uniqType - 1 == UMT_LAZARUS && gbIsMultiplayer) {
+	if (monster.uniqueType == UniqueMonsterType::Lazarus && gbIsMultiplayer) {
 		Quests[Q_BETRAYER]._qvar1 = 6;
 		monster.goal = MonsterGoal::Normal;
 		monster.activeForTicks = UINT8_MAX;
@@ -1680,10 +1681,10 @@ void MonsterDeath(Monster &monster)
 		if (monster.var1 == 140)
 			PrepDoEnding();
 	} else if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
-		if (monster.uniqType == 0)
-			AddCorpse(monster.position.tile, monster.type().corpseId, monster.direction);
-		else
+		if (monster.isUnique())
 			AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
+		else
+			AddCorpse(monster.position.tile, monster.type().corpseId, monster.direction);
 
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 		monster.isInvalid = true;
@@ -1786,7 +1787,7 @@ void GroupUnity(Monster &monster)
 		return;
 
 	// No unique monster would be a minion of someone else!
-	assert(monster.uniqType == 0);
+	assert(!monster.isUnique());
 
 	// Someone with a leaderRelation should have a leader, if we end up trying to access a nullptr then the relation was already broken...
 
@@ -3430,13 +3431,13 @@ bool UpdateModeStance(int monsterId)
 void InitTRNForUniqueMonster(Monster &monster)
 {
 	char filestr[64];
-	*BufCopy(filestr, R"(Monsters\Monsters\)", UniqueMonstersData[monster.uniqType - 1].mTrnName, ".TRN") = '\0';
+	*BufCopy(filestr, R"(Monsters\Monsters\)", UniqueMonstersData[static_cast<size_t>(monster.uniqueType)].mTrnName, ".TRN") = '\0';
 	monster.uniqueMonsterTRN = LoadFileInMem<uint8_t>(filestr);
 }
 
-void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
+void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
 {
-	monster.uniqType = uniqindex + 1;
+	monster.uniqueType = monsterType;
 
 	if (uniqueMonsterData.mlevel != 0) {
 		monster.level = 2 * uniqueMonsterData.mlevel;
@@ -3460,7 +3461,7 @@ void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bos
 	monster.maxDamage2 = uniqueMonsterData.mMaxDamage;
 	monster.magicResistance = uniqueMonsterData.mMagicRes;
 	monster.talkMsg = uniqueMonsterData.mtalkmsg;
-	if (uniqindex == UMT_HORKDMN)
+	if (monsterType == UniqueMonsterType::HorkDemon)
 		monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	else
 		monster.lightId = AddLight(monster.position.tile, 3);
@@ -3589,15 +3590,15 @@ void GetLevelMTypes()
 		if (Quests[Q_BUTCHER].IsAvailable())
 			AddMonsterType(MT_CLEAVER, PLACE_SPECIAL);
 		if (Quests[Q_GARBUD].IsAvailable())
-			AddMonsterType(UniqueMonstersData[UMT_GARBUD].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Garbud)].mtype, PLACE_UNIQUE);
 		if (Quests[Q_ZHAR].IsAvailable())
-			AddMonsterType(UniqueMonstersData[UMT_ZHAR].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Zhar)].mtype, PLACE_UNIQUE);
 		if (Quests[Q_LTBANNER].IsAvailable())
-			AddMonsterType(UniqueMonstersData[UMT_SNOTSPIL].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::SnotSpill)].mtype, PLACE_UNIQUE);
 		if (Quests[Q_VEIL].IsAvailable())
-			AddMonsterType(UniqueMonstersData[UMT_LACHDAN].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lachdan)].mtype, PLACE_UNIQUE);
 		if (Quests[Q_WARLORD].IsAvailable())
-			AddMonsterType(UniqueMonstersData[UMT_WARLORD].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::WarlordOfBlood)].mtype, PLACE_UNIQUE);
 
 		if (gbIsMultiplayer && currlevel == Quests[Q_SKELKING]._qlevel) {
 
@@ -3828,12 +3829,12 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 			AddMonster(GolemHoldingCell, Direction::South, 0, false);
 
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		AddMonsterType(UniqueMonstersData[UMT_LAZARUS].mtype, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonstersData[UMT_RED_VEX].mtype, PLACE_UNIQUE);
-		AddMonsterType(UniqueMonstersData[UMT_BLACKJADE].mtype, PLACE_UNIQUE);
-		PlaceUniqueMonst(UMT_LAZARUS, 0, 0);
-		PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
-		PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
+		AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::Lazarus)].mtype, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::RedVex)].mtype, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonstersData[static_cast<size_t>(UniqueMonsterType::BlackJade)].mtype, PLACE_UNIQUE);
+		PlaceUniqueMonst(UniqueMonsterType::Lazarus, 0, 0);
+		PlaceUniqueMonst(UniqueMonsterType::RedVex, 0, 0);
+		PlaceUniqueMonst(UniqueMonsterType::BlackJade, 0, 0);
 	}
 
 	int width = SDL_SwapLE16(dunData[0]);
@@ -4011,7 +4012,9 @@ void M_SyncStartKill(int monsterId, Point position, int pnum)
 
 void M_UpdateRelations(const Monster &monster)
 {
-	ReleaseMinions(monster);
+	if (monster.hasLeashedMinions())
+		ReleaseMinions(monster);
+
 	ShrinkLeaderPacksize(monster);
 }
 
@@ -4297,7 +4300,7 @@ bool DirOK(int monsterId, Direction mdir)
 	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		return futurePosition.WalkingDistance(monster.getLeader()->position.future) < 4;
 	}
-	if (monster.uniqType == 0 || UniqueMonstersData[monster.uniqType - 1].monsterPack != UniqueMonsterPack::Leashed)
+	if (!monster.hasLeashedMinions())
 		return true;
 	int mcount = 0;
 	for (int x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {
@@ -4410,13 +4413,12 @@ void SyncMonsterAnim(Monster &monster)
 		LevelMonsterTypes[monster.levelType].corpseId = 1;
 	}
 #endif
-	if (monster.uniqType != 0)
-		monster.name = pgettext("monster", UniqueMonstersData[monster.uniqType - 1].mName).data();
-	else
-		monster.name = pgettext("monster", monster.data().mName).data();
-
-	if (monster.uniqType != 0)
+	if (monster.isUnique()) {
+		monster.name = pgettext("monster", UniqueMonstersData[static_cast<size_t>(monster.uniqueType)].mName).data();
 		InitTRNForUniqueMonster(monster);
+	} else {
+		monster.name = pgettext("monster", monster.data().mName).data();
+	}
 
 	MonsterGraphic graphic = MonsterGraphic::Stand;
 

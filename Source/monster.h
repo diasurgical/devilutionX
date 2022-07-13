@@ -48,20 +48,21 @@ enum monster_flag : uint16_t {
 };
 
 /** Indexes from UniqueMonstersData array for special unique monsters (usually quest related) */
-enum : uint8_t {
-	UMT_GARBUD,
-	UMT_SKELKING,
-	UMT_ZHAR,
-	UMT_SNOTSPIL,
-	UMT_LAZARUS,
-	UMT_RED_VEX,
-	UMT_BLACKJADE,
-	UMT_LACHDAN,
-	UMT_WARLORD,
-	UMT_BUTCHER,
-	UMT_HORKDMN,
-	UMT_DEFILER,
-	UMT_NAKRUL,
+enum class UniqueMonsterType : uint8_t {
+	Garbud,
+	SkeletonKing,
+	Zhar,
+	SnotSpill,
+	Lazarus,
+	RedVex,
+	BlackJade,
+	Lachdan,
+	WarlordOfBlood,
+	Butcher,
+	HorkDemon,
+	Defiler,
+	NaKrul,
+	None = static_cast<uint8_t>(-1),
 };
 
 enum class MonsterMode : uint8_t {
@@ -224,7 +225,7 @@ struct Monster { // note: missing field _mAFNum
 	uint8_t intelligence;
 	/** Stores information for how many ticks the monster will remain active */
 	uint8_t activeForTicks;
-	uint8_t uniqType;
+	UniqueMonsterType uniqueType;
 	uint8_t uniqTrans;
 	int8_t corpseId;
 	int8_t whoHit;
@@ -294,6 +295,11 @@ struct Monster { // note: missing field _mAFNum
 	[[nodiscard]] Monster *getLeader() const;
 	void setLeader(const Monster *leader);
 
+	[[nodiscard]] bool hasLeashedMinions() const
+	{
+		return isUnique() && UniqueMonstersData[static_cast<size_t>(uniqueType)].monsterPack == UniqueMonsterPack::Leashed;
+	}
+
 	/**
 	 * @brief Is the monster currently walking?
 	 */
@@ -301,6 +307,12 @@ struct Monster { // note: missing field _mAFNum
 	bool isImmune(missile_id mitype) const;
 	bool isResistant(missile_id mitype) const;
 	bool isPossibleToHit() const;
+
+	[[nodiscard]] bool isUnique() const
+	{
+		return uniqueType != UniqueMonsterType::None;
+	}
+
 	bool tryLiftGargoyle();
 };
 
@@ -311,7 +323,7 @@ extern size_t ActiveMonsterCount;
 extern int MonsterKillCounts[MaxMonsters];
 extern bool sgbSaveSoundOn;
 
-void PrepareUniqueMonst(Monster &monster, int uniqindex, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
+void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(size_t monsterTypeIndex);
