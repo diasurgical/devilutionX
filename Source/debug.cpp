@@ -677,15 +677,15 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
 
 	int mtype = -1;
-	int uniqueIndex = -1;
-	for (int i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
+	UniqueMonsterType uniqueIndex = UniqueMonsterType::None;
+	for (size_t i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
 		auto mondata = UniqueMonstersData[i];
 		std::string monsterName(mondata.mName);
 		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (monsterName.find(name) == std::string::npos)
 			continue;
 		mtype = mondata.mtype;
-		uniqueIndex = i;
+		uniqueIndex = static_cast<UniqueMonsterType>(i);
 		if (monsterName == name) // to support partial name matching but always choose the correct monster if full name is given
 			break;
 	}
@@ -726,7 +726,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 		Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
 		if (monster == nullptr)
 			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
-		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
+		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[static_cast<size_t>(uniqueIndex)]);
 		monster->corpseId = 1;
 		spawnedMonster += 1;
 

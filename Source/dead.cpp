@@ -57,7 +57,7 @@ void InitCorpses()
 
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster.uniqType != 0) {
+		if (monster.isUnique()) {
 			InitDeadAnimationFromMonster(Corpses[nd], monster.type());
 			Corpses[nd].translationPaletteIndex = ActiveMonsters[i] + 1;
 			nd++;
@@ -78,7 +78,7 @@ void SyncUniqDead()
 {
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
-		if (monster.uniqType == 0)
+		if (!monster.isUnique())
 			continue;
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {

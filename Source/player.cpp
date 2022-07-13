@@ -875,7 +875,7 @@ bool PlrHitMonst(int pnum, size_t monsterId, bool adjacentDamage = false)
 		dam *= 3;
 	}
 
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && monster.uniqType == 0 && GenerateRnd(100) < 10) {
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::Doppelganger) && monster.type().type != MT_DIABLO && !monster.isUnique() && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster);
 	}
 

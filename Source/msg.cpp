@@ -2464,10 +2464,10 @@ void DeltaLoadLevel()
 			if (deltaLevel.monster[i].hitPoints == 0) {
 				M_ClearSquares(monster);
 				if (monster.ai != AI_DIABLO) {
-					if (monster.uniqType == 0) {
-						AddCorpse(monster.position.tile, monster.type().corpseId, monster.direction);
-					} else {
+					if (monster.isUnique()) {
 						AddCorpse(monster.position.tile, monster.corpseId, monster.direction);
+					} else {
+						AddCorpse(monster.position.tile, monster.type().corpseId, monster.direction);
 					}
 				}
 				monster.isInvalid = true;

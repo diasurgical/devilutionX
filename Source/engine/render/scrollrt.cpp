@@ -452,7 +452,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		return;
 	}
 	uint8_t *trn = nullptr;
-	if (monster.uniqType != 0)
+	if (monster.isUnique())
 		trn = monster.uniqueMonsterTRN.get();
 	if (monster.mode == MonsterMode::Petrified)
 		trn = GetStoneTRN();

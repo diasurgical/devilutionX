@@ -632,7 +632,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.aiSeed = file->NextLE<uint32_t>();
 	file->Skip(4); // Unused
 
-	monster.uniqType = file->NextLE<uint8_t>();
+	monster.uniqueType = static_cast<UniqueMonsterType>(file->NextLE<uint8_t>() - 1);
 	monster.uniqTrans = file->NextLE<uint8_t>();
 	monster.corpseId = file->NextLE<int8_t>();
 
@@ -680,7 +680,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
  */
 void SyncPackSize(Monster &leader)
 {
-	if (leader.uniqType == 0)
+	if (!leader.isUnique())
 		return;
 	if (leader.ai != AI_SCAV)
 		return;
@@ -1382,7 +1382,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint32_t>(monster.aiSeed);
 	file->Skip(4); // Unused
 
-	file->WriteLE<uint8_t>(monster.uniqType);
+	file->WriteLE<uint8_t>(static_cast<uint8_t>(monster.uniqueType) + 1);
 	file->WriteLE<uint8_t>(monster.uniqTrans);
 	file->WriteLE<int8_t>(monster.corpseId);
 

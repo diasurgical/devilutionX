@@ -3073,7 +3073,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster.uniqType != 0 || ((monster.data().mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
+	if (monster.isUnique() || ((monster.data().mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(&monster);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -3102,7 +3102,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
-	int uper = monster.uniqType != 0 ? 15 : 1;
+	int uper = monster.isUnique() ? 15 : 1;
 
 	int8_t mLevel = monster.data().mLevel;
 	if (!gbIsHellfire && monster.type().type == MT_DIABLO)
@@ -4452,7 +4452,7 @@ std::string DebugSpawnItem(std::string itemName)
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
 	fake_m.levelType = 0;
-	fake_m.uniqType = 0;
+	fake_m.uniqueType = UniqueMonsterType::None;
 
 	int i = 0;
 	for (;; i++) {
