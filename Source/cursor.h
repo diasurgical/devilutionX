@@ -35,7 +35,10 @@ extern int pcursmonst;
 extern int8_t pcursinvitem;
 extern uint16_t pcursstashitem;
 extern int8_t pcursitem;
-extern int8_t pcursobj;
+
+struct Object; // Defined in objects.h
+extern Object *ObjectUnderCursor;
+
 extern int8_t pcursplr;
 extern Point cursPosition;
 extern DVL_API_FOR_TEST int pcurs;

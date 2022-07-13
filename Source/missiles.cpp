@@ -2394,7 +2394,7 @@ void AddDisarm(Missile &missile, const AddMissileParameter & /*parameter*/)
 	if (&player == MyPlayer) {
 		NewCursor(CURSOR_DISARM);
 		if (ControlMode != ControlTypes::KeyboardAndMouse) {
-			if (pcursobj != -1)
+			if (ObjectUnderCursor != nullptr)
 				NetSendCmdLoc(MyPlayerId, true, CMD_DISARMXY, cursPosition);
 			else
 				NewCursor(CURSOR_HAND);

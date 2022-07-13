@@ -238,7 +238,7 @@ void LeftMouseCmd(bool bShift)
 	bNear = myPlayer.position.tile.WalkingDistance(cursPosition) < 2;
 	if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 		NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
-	} else if (pcursobj != -1 && !Objects[pcursobj].IsDisabled() && (!bShift || (bNear && Objects[pcursobj]._oBreak == 1))) {
+	} else if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled() && (!bShift || (bNear && ObjectUnderCursor->_oBreak == 1))) {
 		LastMouseButtonAction = MouseActionType::OperateObject;
 		NetSendCmdLoc(MyPlayerId, true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursPosition);
 	} else if (myPlayer.UsesRangedWeapon()) {
@@ -277,7 +277,7 @@ void LeftMouseCmd(bool bShift)
 			NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 		}
 	}
-	if (!bShift && pcursitem == -1 && pcursobj == -1 && pcursmonst == -1 && pcursplr == -1) {
+	if (!bShift && pcursitem == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1 && pcursplr == -1) {
 		LastMouseButtonAction = MouseActionType::Walk;
 		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 	}
@@ -1882,7 +1882,7 @@ bool TryIconCurs()
 		return true;
 	}
 
-	if (pcurs == CURSOR_DISARM && pcursobj == -1) {
+	if (pcurs == CURSOR_DISARM && ObjectUnderCursor == nullptr) {
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
@@ -2319,7 +2319,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	// Reset mouse selection of entities
 	pcursmonst = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	pcursinvitem = -1;
 	pcursplr = -1;

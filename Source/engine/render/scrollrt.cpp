@@ -634,7 +634,7 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 	}
 
 	CelSprite cel { objectToDraw._oAnimData, objectToDraw._oAnimWidth };
-	if (pcursobj != -1 && &objectToDraw == &Objects[pcursobj]) {
+	if (&objectToDraw == ObjectUnderCursor) {
 		Cl2DrawOutlineSkipColorZero(out, 194, screenPosition, cel, nCel);
 	}
 	if (objectToDraw._oLight) {

@@ -973,13 +973,14 @@ void AddLazStand()
 
 void DeleteObject(int oi, int i)
 {
-	int ox = Objects[oi].position.x;
-	int oy = Objects[oi].position.y;
+	const Object &object = Objects[oi];
+	int ox = object.position.x;
+	int oy = object.position.y;
 	dObject[ox][oy] = 0;
 	AvailableObjects[-ActiveObjectCount + MAXOBJECTS] = oi;
 	ActiveObjectCount--;
-	if (pcursobj == oi) // Unselect object if this was highlighted by player
-		pcursobj = -1;
+	if (ObjectUnderCursor == &object) // Unselect object if this was highlighted by player
+		ObjectUnderCursor = nullptr;
 	if (ActiveObjectCount > 0 && i != ActiveObjectCount)
 		ActiveObjects[i] = ActiveObjects[ActiveObjectCount];
 }
