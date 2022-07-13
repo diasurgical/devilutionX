@@ -74,7 +74,7 @@ TEST(Utf8CodeUnits, BasicLatin)
 
 	EXPECT_FALSE(IsBasicLatin('\x7F')) << "ASCII Control character DEL is not a Basic Latin symbol";
 
-	for (char x = '\x80'; x >= '\x80' && x <= '\xFF'; x++) {
+	for (char x = '\x80'; x <= '\xFF'; x++) {
 		EXPECT_FALSE(IsBasicLatin(x)) << "Multibyte Utf8 code units are not Basic Latin symbols";
 	}
 }

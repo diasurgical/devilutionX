@@ -349,8 +349,8 @@ void PlaceGroup(int mtype, unsigned num, Monster *leader = nullptr, bool leashed
 			num = totalmonsters - ActiveMonsterCount;
 		}
 
-		int j = 0;
-		for (int try2 = 0; j < num && try2 < 100; xp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
+		unsigned j = 0;
+		for (unsigned try2 = 0; j < num && try2 < 100; xp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
 			if (!CanPlaceMonster({ xp, yp })
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
 			    || (leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
@@ -1658,7 +1658,7 @@ bool MonsterGotHit(Monster &monster)
 
 void ReleaseMinions(const Monster &leader)
 {
-	for (int j = 0; j < ActiveMonsterCount; j++) {
+	for (size_t j = 0; j < ActiveMonsterCount; j++) {
 		auto &minion = Monsters[ActiveMonsters[j]];
 		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &leader) {
 			minion.setLeader(nullptr);
@@ -2643,7 +2643,7 @@ void GargoyleAi(int monsterId)
 	unsigned distanceToEnemy = monster.distanceToEnemy();
 	if (monster.activeForTicks != 0 && (monster.flags & MFLAG_ALLOW_SPECIAL) != 0) {
 		UpdateEnemy(monster);
-		if (distanceToEnemy < monster.intelligence + 2) {
+		if (distanceToEnemy < monster.intelligence + 2u) {
 			monster.flags &= ~MFLAG_ALLOW_SPECIAL;
 		}
 		return;
@@ -2657,7 +2657,7 @@ void GargoyleAi(int monsterId)
 		if ((monster.flags & MFLAG_NOHEAL) == 0)
 			monster.goal = MonsterGoal::Retreat;
 	if (monster.goal == MonsterGoal::Retreat) {
-		if (distanceToEnemy >= monster.intelligence + 2) {
+		if (distanceToEnemy >= monster.intelligence + 2u) {
 			monster.goal = MonsterGoal::Normal;
 			StartHeal(monster);
 		} else if (!RandomWalk(monster, Opposite(md))) {
