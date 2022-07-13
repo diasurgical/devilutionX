@@ -115,7 +115,8 @@ void RepeatMouseAction()
 			auto &object = Objects[pcursobj];
 			if (object.IsDoor())
 				break;
-			NetSendCmdLocParam1(true, CMD_OPOBJXY, object.position, pcursobj);
+			// This should probably be cursPosition so paths to large objects are consistent
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, object.position);
 		}
 		break;
 	case MouseActionType::Walk:
