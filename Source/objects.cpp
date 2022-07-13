@@ -981,38 +981,38 @@ void DeleteObject(int oi, int i)
 		ActiveObjects[i] = ActiveObjects[ActiveObjectCount];
 }
 
-void AddChest(int i, int t)
+void AddChest(Object &chest, _object_id type)
 {
 	if (FlipCoin())
-		Objects[i]._oAnimFrame += 3;
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	switch (t) {
+		chest._oAnimFrame += 3;
+	chest._oRndSeed = AdvanceRndSeed();
+	switch (type) {
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
 		if (setlevel) {
-			Objects[i]._oVar1 = 1;
+			chest._oVar1 = 1;
 			break;
 		}
-		Objects[i]._oVar1 = GenerateRnd(2);
+		chest._oVar1 = GenerateRnd(2);
 		break;
 	case OBJ_TCHEST2:
 	case OBJ_CHEST2:
 		if (setlevel) {
-			Objects[i]._oVar1 = 2;
+			chest._oVar1 = 2;
 			break;
 		}
-		Objects[i]._oVar1 = GenerateRnd(3);
+		chest._oVar1 = GenerateRnd(3);
 		break;
 	case OBJ_TCHEST3:
 	case OBJ_CHEST3:
 		if (setlevel) {
-			Objects[i]._oVar1 = 3;
+			chest._oVar1 = 3;
 			break;
 		}
-		Objects[i]._oVar1 = GenerateRnd(4);
+		chest._oVar1 = GenerateRnd(4);
 		break;
 	}
-	Objects[i]._oVar2 = GenerateRnd(8);
+	chest._oVar2 = GenerateRnd(8);
 }
 
 void ObjSetMicro(Point position, int pn)
@@ -4448,12 +4448,12 @@ void AddObject(_object_id objType, Point objPos)
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
 	case OBJ_CHEST3:
-		AddChest(oi, objType);
+		AddChest(object, objType);
 		break;
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		AddChest(oi, objType);
+		AddChest(object, objType);
 		object._oTrapFlag = true;
 		if (leveltype == DTYPE_CATACOMBS) {
 			object._oVar4 = GenerateRnd(2);
