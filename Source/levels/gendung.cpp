@@ -351,6 +351,13 @@ void InitGlobals()
 
 } // namespace
 
+#ifdef BUILD_TESTING
+std::optional<Size> GetSizeForThemeRoom()
+{
+	return GetSizeForThemeRoom(0, { 0, 0 }, 5, 10);
+}
+#endif
+
 dungeon_type GetLevelType(int level)
 {
 	if (level == 0)
