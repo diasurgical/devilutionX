@@ -133,14 +133,14 @@ void DrawMonsterHealthBar(const Surface &out)
 	}
 
 	UiFlags style = UiFlags::AlignCenter | UiFlags::VerticalCenter;
-	DrawString(out, monster.name, { position + Displacement { -1, 1 }, { width, height } }, style | UiFlags::ColorBlack);
+	DrawString(out, monster.name(), { position + Displacement { -1, 1 }, { width, height } }, style | UiFlags::ColorBlack);
 	if (monster.isUnique())
 		style |= UiFlags::ColorWhitegold;
 	else if (monster.leader != Monster::NoLeader)
 		style |= UiFlags::ColorBlue;
 	else
 		style |= UiFlags::ColorWhite;
-	DrawString(out, monster.name, { position, { width, height } }, style);
+	DrawString(out, monster.name(), { position, { width, height } }, style);
 
 	if (multiplier > 0)
 		DrawString(out, StrCat("x", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);

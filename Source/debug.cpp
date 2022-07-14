@@ -97,7 +97,7 @@ void PrintDebugMonster(int m)
 	auto &monster = Monsters[m];
 
 	EventPlrMsg(StrCat(
-	                "Monster ", m, " = ", monster.name,
+	                "Monster ", m, " = ", monster.name(),
 	                "\nX = ", monster.position.tile.x, ", Y = ", monster.position.tile.y,
 	                "\nEnemy = ", monster.enemy, ", HP = ", monster.hitPoints,
 	                "\nMode = ", static_cast<int>(monster.mode), ", Var1 = ", monster.var1),

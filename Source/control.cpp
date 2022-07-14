@@ -917,7 +917,7 @@ void DrawInfoBox(const Surface &out)
 			if (leveltype != DTYPE_TOWN) {
 				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
-				InfoString = string_view(monster.name);
+				InfoString = monster.name();
 				ClearPanel();
 				if (monster.isUnique()) {
 					InfoColor = UiFlags::ColorWhitegold;

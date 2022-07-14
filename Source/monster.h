@@ -21,6 +21,7 @@
 #include "monstdat.h"
 #include "spelldat.h"
 #include "textdat.h"
+#include "utils/language.h"
 
 namespace devilution {
 
@@ -169,7 +170,6 @@ struct CMonster {
 extern CMonster LevelMonsterTypes[MaxLvlMTypes];
 
 struct Monster { // note: missing field _mAFNum
-	const char *name;
 	std::unique_ptr<uint8_t[]> uniqueMonsterTRN;
 	/**
 	 * @brief Contains information for current animation
@@ -283,6 +283,19 @@ struct Monster { // note: missing field _mAFNum
 	const MonsterData &data() const
 	{
 		return *type().data;
+	}
+
+	/**
+	 * @brief Returns monster's name
+	 * Internally it returns a name stored in global array of monsters' data.
+	 * @return Monster's name
+	 */
+	string_view name() const
+	{
+		if (uniqueType != UniqueMonsterType::None)
+			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
+
+		return pgettext("monster", data().mName);
 	}
 
 	/**
