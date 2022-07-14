@@ -9,11 +9,6 @@
 
 namespace devilution {
 
-enum game_info : uint8_t {
-	GAMEINFO_NAME,
-	GAMEINFO_PASSWORD,
-};
-
 enum conn_type : uint8_t {
 	SELCONN_ZT,
 	SELCONN_TCP,
@@ -67,19 +62,6 @@ bool SNetDestroy();
  *  Returns true if the function was called successfully and false otherwise.
  */
 bool SNetDropPlayer(int playerid, uint32_t flags);
-
-/*  SNetGetGameInfo @ 107
- *
- *  Retrieves specific game information from Storm, such as name, password,
- *  stats, mode, game template, and players.
- *
- *  type:         The type of data to retrieve. See GAMEINFO_ flags.
- *  dst:          The destination buffer for the data.
- *  length:       The maximum size of the destination buffer.
- *
- *  Returns true if the function was called successfully and false otherwise.
- */
-bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
 
 /*  SNetGetTurnsInTransit @ 115
  *
