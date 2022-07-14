@@ -41,14 +41,14 @@ struct GameInfo {
 };
 
 extern bool gbSomebodyWonGameKludge;
-extern char szPlayerDescript[128];
 extern uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 extern uint8_t gbActivePlayers;
 extern bool gbGameDestroyed;
 extern GameData sgGameInitInfo;
 extern bool gbSelectProvider;
 extern DVL_API_FOR_TEST bool gbIsMultiplayer;
-extern char szPlayerName[128];
+extern std::string GameName;
+extern std::string GamePassword;
 extern bool PublicGame;
 extern uint8_t gbDeltaSender;
 extern uint32_t player_state[MAX_PLRS];
