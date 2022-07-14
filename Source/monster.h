@@ -290,12 +290,12 @@ struct Monster { // note: missing field _mAFNum
 	 * Internally it returns a name stored in global array of monsters' data.
 	 * @return Monster's name
 	 */
-	const char *name() const
+	string_view name() const
 	{
 		if (uniqueType != UniqueMonsterType::None)
-			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName).data();
+			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
 
-		return pgettext("monster", data().mName).data();
+		return pgettext("monster", data().mName);
 	}
 
 	/**
