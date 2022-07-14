@@ -215,6 +215,10 @@ extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
+#ifdef BUILD_TESTING
+std::optional<Size> GetSizeForThemeRoom();
+#endif
+
 dungeon_type GetLevelType(int level);
 void CreateDungeon(uint32_t rseed, lvl_entry entry);
 
