@@ -85,6 +85,12 @@ enum class Direction16 {
 	South_SouthEast,
 };
 
+enum class MissileSourceType {
+	Player,
+	Monster,
+	Trap,
+};
+
 struct Missile {
 	/** Type of projectile */
 	missile_id _mitype;
@@ -145,6 +151,15 @@ struct Missile {
 		if (_micaster != TARGET_PLAYERS || _misource == -1)
 			return nullptr;
 		return &Monsters[_misource];
+	}
+
+	MissileSourceType SourceType()
+	{
+		if (_misource == -1)
+			return MissileSourceType::Trap;
+		if (_micaster == TARGET_PLAYERS)
+			return MissileSourceType::Monster;
+		return MissileSourceType::Player;
 	}
 };
 
