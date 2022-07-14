@@ -132,6 +132,20 @@ struct Missile {
 	{
 		return _misource == -1;
 	}
+
+	[[nodiscard]] Player *SourcePlayer()
+	{
+		if (IsNoneOf(_micaster, TARGET_BOTH, TARGET_MONSTERS) || _misource == -1)
+			return nullptr;
+		return &Players[_misource];
+	}
+
+	[[nodiscard]] Monster *SourceMonster()
+	{
+		if (_micaster != TARGET_PLAYERS || _misource == -1)
+			return nullptr;
+		return &Monsters[_misource];
+	}
 };
 
 extern std::list<Missile> Missiles;
