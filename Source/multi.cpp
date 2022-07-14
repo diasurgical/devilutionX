@@ -311,7 +311,7 @@ void BeginTimeout()
 void HandleAllPackets(int pnum, const byte *data, size_t size)
 {
 	for (unsigned offset = 0; offset < size;) {
-		int messageSize = ParseCmd(pnum, reinterpret_cast<const TCmd *>(&data[offset]));
+		size_t messageSize = ParseCmd(pnum, reinterpret_cast<const TCmd *>(&data[offset]));
 		if (messageSize == 0) {
 			break;
 		}

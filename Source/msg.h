@@ -752,6 +752,6 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
-uint32_t ParseCmd(int pnum, const TCmd *pCmd);
+size_t ParseCmd(int pnum, const TCmd *pCmd);
 
 } // namespace devilution
