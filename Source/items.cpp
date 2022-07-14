@@ -1333,8 +1333,8 @@ void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allows
 
 int RndUItem(Monster *monster)
 {
-	if (monster != nullptr && (monster->data().mTreasure & T_UNIQ) != 0 && !gbIsMultiplayer)
-		return -((monster->data().mTreasure & T_MASK) + 1);
+	if (monster != nullptr && (monster->data().treasure & T_UNIQ) != 0 && !gbIsMultiplayer)
+		return -((monster->data().treasure & T_MASK) + 1);
 
 	int ril[512];
 
@@ -3011,10 +3011,10 @@ void SetupItem(Item &item)
 
 int RndItem(const Monster &monster)
 {
-	if ((monster.data().mTreasure & T_UNIQ) != 0)
-		return -((monster.data().mTreasure & T_MASK) + 1);
+	if ((monster.data().treasure & T_UNIQ) != 0)
+		return -((monster.data().treasure & T_MASK) + 1);
 
-	if ((monster.data().mTreasure & T_NODROP) != 0)
+	if ((monster.data().treasure & T_NODROP) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -3074,7 +3074,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster.isUnique() || ((monster.data().mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
+	if (monster.isUnique() || ((monster.data().treasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(&monster);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -3105,7 +3105,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int uper = monster.isUnique() ? 15 : 1;
 
-	int8_t mLevel = monster.data().mLevel;
+	int8_t mLevel = monster.data().level;
 	if (!gbIsHellfire && monster.type().type == MT_DIABLO)
 		mLevel -= 15;
 

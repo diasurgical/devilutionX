@@ -667,7 +667,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	if (monster.lightId == 0)
 		monster.lightId = NO_LIGHT; // Correct incorect values in old saves
 
-	// Omit pointer mName;
+	// Omit pointer name;
 
 	if (gbSkipSync)
 		return;
@@ -1412,7 +1412,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	else
 		file->WriteLE<int8_t>(monster.lightId);
 
-	// Omit pointer mName;
+	// Omit pointer name;
 }
 
 void SaveMissile(SaveHelper *file, const Missile &missile)

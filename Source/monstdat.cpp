@@ -14,7 +14,7 @@ namespace devilution {
 
 namespace {
 
-// Returns an `mTreasure` value for the given item.
+// Returns an `treasure` value for the given item.
 constexpr uint16_t Uniq(_unique_items item)
 {
 	return static_cast<uint16_t>(T_UNIQ) + item;
@@ -25,7 +25,7 @@ constexpr uint16_t Uniq(_unique_items item)
 /** Contains the data related to each monster ID. */
 const MonsterData MonstersData[] = {
 	// clang-format off
-// _monster_id     name,                                     GraphicType,        sndfile,          TransFile,           availability,                width, mImage, has_special, snd_special, Frames[6],                  rate[6],               mMinDLvl, mMaxDLvl, level, mMinHP, mMaxHP, mAi,           mFlags                                                             , mInt, hit, mAFNum, minDamage, maxDamage, hit2, mAFNum2, minDamage2, maxDamage2, armorClass, mMonstClass         ,   magicResistance                                                       , mMagicRes2                                                        , mSelFlag,     mTreasure,           exp
+// _monster_id     name,                                     graphicType,        sndFile,          transFile,           availability,                width, image, hasSpecial, sndSpecial, frames[6],                  rate[6],               minDunLvl, maxDunLvl, level, maxHitPointsMinimum, maxHitPointsMaximum, ai,           flags                                                             , intelligence, hit, animFrameNum, minDamage, maxDamage, hit2, animFrameNum2, minDamage2, maxDamage2, armorClass, monsterClass         ,   magicResistance                                                       , magicResistanceHellDiff                                                        , sellFlag,     treasure,           exp
 
 // TRANSLATORS: Monster Block start
 /* MT_NZOMBIE */ { P_("monster", "Zombie"),                  "Zombie\\Zombie",   nullptr,          nullptr,             MonsterAvailability::Always,   128,    799, false,       false,       { 11, 24, 12,  6, 16,  0 }, { 4, 1, 1, 1, 1, 1 },         1,        2,      1,      4,      7, AI_ZOMBIE,    0                                                                  ,    0,   10,      8,          2,          5,     0,       0,           0,           0,           5, MonsterClass::Undead,   IMMUNE_MAGIC |                                  IMMUNE_NULL_40  , IMMUNE_MAGIC |                                  IMMUNE_NULL_40    ,  3,                   0,           54 },
@@ -336,7 +336,7 @@ const _monster_id MonstConvTbl[] = {
 /** Contains the data related to each unique monster ID. */
 const UniqueMonsterData UniqueMonstersData[] = {
 	// clang-format off
-	// type,            name,                                             mTrnName,          mlevel,    mmaxhp,    mAi,               mint,  minDamage,  maxDamage,                         magicResistance,                               monsterPack,                      customToHit, customArmorClass, talkMsg
+	// type,            name,                                             mTrnName,          mlevel,    mmaxhp,    ai,               mint,  minDamage,  maxDamage,                         magicResistance,                               monsterPack,                      customToHit, customArmorClass, talkMsg
 	// TRANSLATORS: Unique Monster Block start
 	{  MT_NGOATMC,       P_("monster", "Gharbad the Weak"),                 "BSDB",                 4,       120, AI_GARBUD,               3,           8,          16,                               IMMUNE_LIGHTNING | IMMUNE_NULL_40, UniqueMonsterPack::None,                    0,                0, TEXT_GARBUD1   },
 	{  MT_SKING,         P_("monster", "Skeleton King"),                    "GENRL",                0,       240, AI_SKELKING,             3,           6,          16,  IMMUNE_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_NULL_40, UniqueMonsterPack::Independent,             0,                0, TEXT_NONE      },

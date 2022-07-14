@@ -251,7 +251,7 @@ struct Monster { // note: missing field _mAFNum
 	{
 		auto &animationData = type().getAnimData(graphic);
 
-		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
+		// Passing the frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
 		this->animInfo.changeAnimationData(animationData.getCelSpritesForDirection(desiredDirection), animationData.frames, animationData.rate);
 	}
 
@@ -295,7 +295,7 @@ struct Monster { // note: missing field _mAFNum
 		if (uniqueType != UniqueMonsterType::None)
 			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
 
-		return pgettext("monster", data().mName);
+		return pgettext("monster", data().name);
 	}
 
 	/**

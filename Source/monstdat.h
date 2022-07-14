@@ -89,44 +89,44 @@ enum class MonsterAvailability : uint8_t {
 };
 
 struct MonsterData {
-	const char *mName;
-	const char *GraphicType;
-	const char *sndfile;
-	const char *TransFile;
+	const char *name;
+	const char *graphicType;
+	const char *sndFile;
+	const char *transFile;
 	MonsterAvailability availability;
 	uint16_t width;
-	uint16_t mImage;
-	bool has_special;
-	bool snd_special;
-	int8_t Frames[6];
-	int8_t Rate[6];
-	int8_t mMinDLvl;
-	int8_t mMaxDLvl;
-	int8_t mLevel;
-	uint16_t mMinHP;
-	uint16_t mMaxHP;
-	_mai_id mAi;
+	uint16_t image;
+	bool hasSpecial;
+	bool sndSpecial;
+	int8_t frames[6];
+	int8_t rate[6];
+	int8_t minDunLvl;
+	int8_t maxDunLvl;
+	int8_t level;
+	uint16_t maxHitPointsMinimum;
+	uint16_t maxHitPointsMaximum;
+	_mai_id ai;
 	/** Usign monster_flag as bitflags */
-	uint16_t mFlags;
-	uint8_t mInt;
-	uint8_t mHit;
-	int8_t mAFNum;
-	uint8_t mMinDamage;
-	uint8_t mMaxDamage;
-	uint8_t mHit2;
-	int8_t mAFNum2;
-	uint8_t mMinDamage2;
-	uint8_t mMaxDamage2;
-	uint8_t mArmorClass;
-	MonsterClass mMonstClass;
+	uint16_t flags;
+	uint8_t intelligence;
+	uint8_t hit;
+	int8_t animFrameNum;
+	uint8_t minDamage;
+	uint8_t maxDamage;
+	uint8_t hit2;
+	int8_t animFrameNum2;
+	uint8_t minDamage2;
+	uint8_t maxDamage2;
+	uint8_t armorClass;
+	MonsterClass monsterClass;
 	/** Using monster_resistance as bitflags */
-	uint8_t mMagicRes;
+	uint8_t magicResistance;
 	/** Using monster_resistance as bitflags */
-	uint8_t mMagicRes2;
-	int8_t mSelFlag; // TODO Create enum
+	uint8_t magicResistanceHellDiff;
+	int8_t sellFlag; // TODO Create enum
 	/** Using monster_treasure */
-	uint16_t mTreasure;
-	uint16_t mExp;
+	uint16_t treasure;
+	uint16_t exp;
 };
 
 enum _monster_id : int16_t {
