@@ -139,7 +139,7 @@ struct Missile {
 		return _misource == -1;
 	}
 
-	[[nodiscard]] Player *SourcePlayer()
+	[[nodiscard]] Player *sourcePlayer()
 	{
 		if (IsNoneOf(_micaster, TARGET_BOTH, TARGET_MONSTERS) || _misource == -1)
 			return nullptr;
