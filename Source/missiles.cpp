@@ -1891,10 +1891,9 @@ void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 		missile._midam += missile._midam / 2;
 		UseMana(*player, SPL_FLASH);
 	} break;
-	case MissileSourceType::Monster: {
-		Monster *monster = missile.SourceMonster();
-		missile._midam = monster->level * 2;
-	} break;
+	case MissileSource::Monster: {
+		missile._midam = missile.sourceMonster()->level * 2;
+		break;
 	case MissileSourceType::Trap:
 		missile._midam = currlevel / 2;
 		break;
