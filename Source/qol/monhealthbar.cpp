@@ -106,24 +106,24 @@ void DrawMonsterHealthBar(const Surface &out)
 		DrawArt(out, position + Displacement { border + 1, border + 1 }, multiplier > 0 ? &healthBlue : &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
-	constexpr auto getBorderColor = [](MonsterClass monsterClass) {
-		switch (monsterClass) {
-		case MonsterClass::Undead:
+	constexpr auto getBorderColor = [](MonsterBaseClass monsterBaseClass) {
+		switch (monsterBaseClass) {
+		case MonsterBaseClass::Undead:
 			return 248;
 
-		case MonsterClass::Demon:
+		case MonsterBaseClass::Demon:
 			return 232;
 
-		case MonsterClass::Animal:
+		case MonsterBaseClass::Animal:
 			return 150;
 
 		default:
-			app_fatal(StrCat("Invalid monster class: ", static_cast<int>(monsterClass)));
+			app_fatal(StrCat("Invalid monster class: ", static_cast<int>(monsterBaseClass)));
 		}
 	};
 
 	if (*sgOptions.Gameplay.showMonsterType) {
-		Uint8 borderColor = getBorderColor(monster.data().monsterClass);
+		Uint8 borderColor = getBorderColor(monster.data().monsterClass.GetBaseClass());
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + height - border - 1 }, borderWidth, borderColor);

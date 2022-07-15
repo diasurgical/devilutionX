@@ -398,8 +398,6 @@ Monster *MonsterAtPosition(Point position);
  * @brief Check that the given tile is available to the monster
  */
 bool IsTileAvailable(const Monster &monster, Point position);
-bool IsSkel(_monster_id mt);
-bool IsGoat(_monster_id mt);
 bool SpawnSkeleton(Monster *monster, Point position);
 Monster *PreSpawnSkeleton();
 void TalktoMonster(Monster &monster);

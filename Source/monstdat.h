@@ -55,10 +55,64 @@ enum _mai_id : int8_t {
 	AI_INVALID = -1,
 };
 
-enum class MonsterClass : uint8_t {
+enum class MonsterBaseClass : uint8_t {
 	Undead,
 	Demon,
 	Animal,
+};
+
+enum class MonsterSuperClass : uint8_t {
+	None,
+	Skeleton,
+	Goat,
+	Fallen,
+	Zombie,
+	Mage,
+	StormLord,
+	Balrog,
+	Spider,
+	Succubus,
+	Scavenger,
+};
+
+class MonsterClass {
+
+	uint8_t combinedMonsterClass;
+public:
+	MonsterClass(MonsterBaseClass monsterBaseClass, MonsterSuperClass monsterSuperClass = MonsterSuperClass::None)
+	{
+		combinedMonsterClass = static_cast<uint8_t>(monsterBaseClass) + (static_cast<uint8_t>(monsterSuperClass)) << 2;
+	}
+
+	MonsterBaseClass GetBaseClass() const
+	{
+		return static_cast<MonsterBaseClass>(combinedMonsterClass & 0b00000011);
+	}
+
+	const MonsterSuperClass GetSuperClass() const
+	{
+		return static_cast<MonsterSuperClass>(combinedMonsterClass >> 2);
+	}
+
+	bool IsType(MonsterSuperClass monsterSuperClass) const
+	{
+		return GetSuperClass() == monsterSuperClass;
+	}
+
+	bool IsType(MonsterBaseClass monsterBaseClass) const
+	{
+		return GetBaseClass() == monsterBaseClass;
+	}
+
+	bool IsSkeleton() const
+	{
+		return GetSuperClass() == MonsterSuperClass::Skeleton;
+	}
+
+	bool IsGoat() const
+	{
+		return GetSuperClass() == MonsterSuperClass::Goat;
+	}
 };
 
 enum monster_resistance : uint8_t {
