@@ -9,6 +9,11 @@ set(USE_SDL1 ON)
 # the system `libstdc++` resides on disk.
 set(DEVILUTIONX_STATIC_CXX_STDLIB OFF)
 
+# -fmerge-all-constants saves ~4 KiB
+set(_extra_flags "-fmerge-all-constants")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_extra_flags}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_extra_flags}")
+
 # 128 KiB
 set(DEVILUTIONX_PALETTE_TRANSPARENCY_BLACK_16_LUT OFF)
 
