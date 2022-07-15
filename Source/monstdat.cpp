@@ -14,7 +14,7 @@ namespace devilution {
 
 namespace {
 
-// Returns an `treasure` value for the given item.
+// Returns a `treasure` value for the given item.
 constexpr uint16_t Uniq(_unique_items item)
 {
 	return static_cast<uint16_t>(T_UNIQ) + item;
