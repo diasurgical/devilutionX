@@ -123,7 +123,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	};
 
 	if (*sgOptions.Gameplay.showMonsterType) {
-		Uint8 borderColor = getBorderColor(monster.data().mMonstClass);
+		Uint8 borderColor = getBorderColor(monster.data().monsterClass);
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + height - border - 1 }, borderWidth, borderColor);
@@ -150,10 +150,10 @@ void DrawMonsterHealthBar(const Surface &out)
 
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
-			if ((monster.magicResistance & immunes[i]) != 0) {
+			if ((monster.resistance & immunes[i]) != 0) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
-			} else if ((monster.magicResistance & resists[i]) != 0) {
+			} else if ((monster.resistance & resists[i]) != 0) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}

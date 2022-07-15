@@ -849,7 +849,7 @@ bool PlrHitMonst(int pnum, size_t monsterId, bool adjacentDamage = false)
 		phanditype = ItemType::Mace;
 	}
 
-	switch (monster.data().mMonstClass) {
+	switch (monster.data().monsterClass) {
 	case MonsterClass::Undead:
 		if (phanditype == ItemType::Sword) {
 			dam -= dam / 2;

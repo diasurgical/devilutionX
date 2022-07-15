@@ -200,9 +200,9 @@ struct Monster { // note: missing field _mAFNum
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t aiSeed;
 	uint16_t exp;
-	uint16_t hit;
-	uint16_t hit2;
-	uint16_t magicResistance;
+	uint16_t toHit;
+	uint16_t toHitSpecial;
+	uint16_t resistance;
 	_speech_id talkMsg;
 	ActorPosition position;
 
@@ -232,8 +232,8 @@ struct Monster { // note: missing field _mAFNum
 	int8_t level;
 	uint8_t minDamage;
 	uint8_t maxDamage;
-	uint8_t minDamage2;
-	uint8_t maxDamage2;
+	uint8_t minDamageSpecial;
+	uint8_t maxDamageSpecial;
 	uint8_t armorClass;
 	uint8_t leader;
 	LeaderRelation leaderRelation;
@@ -251,7 +251,7 @@ struct Monster { // note: missing field _mAFNum
 	{
 		auto &animationData = type().getAnimData(graphic);
 
-		// Passing the Frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
+		// Passing the frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
 		this->animInfo.changeAnimationData(animationData.getCelSpritesForDirection(desiredDirection), animationData.frames, animationData.rate);
 	}
 
@@ -295,7 +295,7 @@ struct Monster { // note: missing field _mAFNum
 		if (uniqueType != UniqueMonsterType::None)
 			return pgettext("monster", UniqueMonstersData[static_cast<int8_t>(uniqueType)].mName);
 
-		return pgettext("monster", data().mName);
+		return pgettext("monster", data().name);
 	}
 
 	/**
