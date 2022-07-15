@@ -78,6 +78,7 @@ enum class MonsterSuperClass : uint8_t {
 class MonsterClass {
 
 	uint8_t combinedMonsterClass;
+
 public:
 	MonsterClass(MonsterBaseClass monsterBaseClass, MonsterSuperClass monsterSuperClass = MonsterSuperClass::None)
 	{
