@@ -1729,20 +1729,15 @@ Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 	size_t skeletonIndexes[sizeof(SkeletonTypes) / sizeof(SkeletonTypes[0])];
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (LevelMonsterTypes[i].data->monsterClass.IsSkeleton())
-			j++;
+			skeletonIndexes[typeCount++] = i;
 	}
 
 	if (typeCount == 0) {
 		return nullptr;
 	}
 
-	int skeltypes = GenerateRnd(j);
-	size_t m = 0;
-	for (int i = 0; m < LevelMonsterTypeCount && i <= skeltypes; m++) {
-		if (LevelMonsterTypes[m].data->monsterClass.IsSkeleton())
-			i++;
-	}
-	return AddMonster(position, dir, m - 1, inMap);
+	const size_t typeIndex = skeletonIndexes[GenerateRnd(typeCount)];
+	return AddMonster(position, dir, typeIndex, inMap);
 }
 
 void SpawnSkeleton(Point position, Direction dir)
