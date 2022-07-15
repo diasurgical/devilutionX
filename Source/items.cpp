@@ -1731,12 +1731,6 @@ void PrintItemOil(char iDidx)
 	case IMISC_HEAL:
 		AddPanelString(_("restore some life"));
 		break;
-	case IMISC_OLDHEAL:
-		AddPanelString(_("recover life"));
-		break;
-	case IMISC_DEADHEAL:
-		AddPanelString(_("deadly heal"));
-		break;
 	case IMISC_MANA:
 		AddPanelString(_("restore some mana"));
 		break;
@@ -1754,16 +1748,6 @@ void PrintItemOil(char iDidx)
 		break;
 	case IMISC_ELIXVIT:
 		AddPanelString(_("increase vitality"));
-		break;
-	case IMISC_ELIXWEAK:
-	case IMISC_ELIXDIS:
-		AddPanelString(_("decrease strength"));
-		break;
-	case IMISC_ELIXCLUM:
-		AddPanelString(_("decrease dexterity"));
-		break;
-	case IMISC_ELIXSICK:
-		AddPanelString(_("decrease vitality"));
 		break;
 	case IMISC_REJUV:
 		AddPanelString(_("restore some life and mana"));
@@ -3843,7 +3827,6 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 
 	switch (mid) {
 	case IMISC_HEAL:
-	case IMISC_FOOD:
 		player.RestorePartialLife();
 		if (&player == MyPlayer) {
 			drawhpflag = true;

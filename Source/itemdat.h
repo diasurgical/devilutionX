@@ -380,20 +380,20 @@ enum item_misc_id : int8_t {
 	IMISC_USEFIRST,
 	IMISC_FULLHEAL,
 	IMISC_HEAL,
-	IMISC_OLDHEAL,
-	IMISC_DEADHEAL,
+	IMISC_0x4, // Unused
+	IMISC_0x5, // Unused
 	IMISC_MANA,
 	IMISC_FULLMANA,
-	IMISC_POTEXP,  /* add experience */
-	IMISC_POTFORG, /* remove experience */
+	IMISC_0x8, // Unused
+	IMISC_0x9, // Unused
 	IMISC_ELIXSTR,
 	IMISC_ELIXMAG,
 	IMISC_ELIXDEX,
 	IMISC_ELIXVIT,
-	IMISC_ELIXWEAK, /* double check with alpha */
-	IMISC_ELIXDIS,
-	IMISC_ELIXCLUM,
-	IMISC_ELIXSICK,
+	IMISC_0xE,  // Unused
+	IMISC_0xF,  // Unused
+	IMISC_0x10, // Unused
+	IMISC_0x11, // Unused
 	IMISC_REJUV,
 	IMISC_FULLREJUV,
 	IMISC_USELAST,
@@ -404,7 +404,7 @@ enum item_misc_id : int8_t {
 	IMISC_RING,
 	IMISC_AMULET,
 	IMISC_UNIQUE,
-	IMISC_FOOD, /* from demo/PSX */
+	IMISC_0x1C, // Unused
 	IMISC_OILFIRST,
 	IMISC_OILOF, /* oils are beta or hellfire only */
 	IMISC_OILACC,
@@ -421,7 +421,7 @@ enum item_misc_id : int8_t {
 	IMISC_MAPOFDOOM,
 	IMISC_EAR,
 	IMISC_SPECELIX,
-	IMISC_0x2D, // Unknown
+	IMISC_0x2D, // Unused
 	IMISC_RUNEFIRST,
 	IMISC_RUNEF,
 	IMISC_RUNEL,
