@@ -1712,7 +1712,6 @@ void FreeGameMem()
 	FreeMonsters();
 	FreeMissileGFX();
 	FreeObjectGFX();
-	FreeMonsterSnd();
 	FreeTownerGFX();
 #ifndef USE_SDL1
 	DeactivateVirtualGamepad();

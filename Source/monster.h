@@ -354,10 +354,11 @@ extern size_t ActiveMonsterCount;
 extern int MonsterKillCounts[MaxMonsters];
 extern bool sgbSaveSoundOn;
 
-void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
+void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData);
 void InitLevelMonsters();
 void GetLevelMTypes();
-void InitMonsterGFX(size_t monsterTypeIndex);
+void InitMonsterSND(CMonster &monsterType);
+void InitMonsterGFX(CMonster &monsterType);
 void WeakenNaKrul();
 void InitGolems();
 void InitMonsters();
