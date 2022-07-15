@@ -1220,10 +1220,10 @@ void InitMonsterSND(size_t monst)
 	const int mtype = LevelMonsterTypes[monst].type;
 	const MonsterData &data = MonstersData[mtype];
 	for (int i = 0; i < 4; i++) {
-		if (MonstSndChar[i] != 's' || data.sndSpecial) {
+		if (MonstSndChar[i] != 's' || data.hasSpecialSound) {
 			for (int j = 0; j < 2; j++) {
 				char path[MAX_PATH];
-				const char *sndfile = data.sndFile != nullptr ? data.sndFile : data.graphicType;
+				const char *sndfile = data.soundSuffix != nullptr ? data.soundSuffix : data.assetsSuffix;
 				*BufCopy(path, "Monsters\\", sndfile, string_view(&MonstSndChar[i], 1), j + 1, ".WAV") = '\0';
 				LevelMonsterTypes[monst].sounds[i][j] = sound_file_load(path);
 			}

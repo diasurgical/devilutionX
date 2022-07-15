@@ -648,8 +648,8 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.minDamage = file->NextLE<uint8_t>();
 	monster.maxDamage = file->NextLE<uint8_t>();
 	file->Skip(1); // Skip toHitSpecial as it's already initialized
-	monster.minDamage2 = file->NextLE<uint8_t>();
-	monster.maxDamage2 = file->NextLE<uint8_t>();
+	monster.minDamageSpecial = file->NextLE<uint8_t>();
+	monster.maxDamageSpecial = file->NextLE<uint8_t>();
 	monster.armorClass = file->NextLE<uint8_t>();
 	file->Skip(1); // Alignment
 	monster.resistance = file->NextLE<uint16_t>();
@@ -1395,8 +1395,8 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(monster.minDamage);
 	file->WriteLE<uint8_t>(monster.maxDamage);
 	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHitSpecial, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
-	file->WriteLE<uint8_t>(monster.minDamage2);
-	file->WriteLE<uint8_t>(monster.maxDamage2);
+	file->WriteLE<uint8_t>(monster.minDamageSpecial);
+	file->WriteLE<uint8_t>(monster.maxDamageSpecial);
 	file->WriteLE<uint8_t>(monster.armorClass);
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(monster.resistance);

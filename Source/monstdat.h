@@ -90,14 +90,14 @@ enum class MonsterAvailability : uint8_t {
 
 struct MonsterData {
 	const char *name;
-	const char *graphicType;
-	const char *sndFile;
-	const char *transFile;
+	const char *assetsSuffix;
+	const char *soundSuffix;
+	const char *trnFile;
 	MonsterAvailability availability;
 	uint16_t width;
 	uint16_t image;
 	bool hasSpecial;
-	bool sndSpecial;
+	bool hasSpecialSound;
 	int8_t frames[6];
 	int8_t rate[6];
 	int8_t minDunLvl;
@@ -106,7 +106,10 @@ struct MonsterData {
 	uint16_t hitPointsMinimum;
 	uint16_t hitPointsMaximum;
 	_mai_id ai;
-	/** Using @p monster_flag as bitflags */
+	/**
+	 * @brief Denotes monster's abilities defined in @p monster_flag as bitflags
+	 * For usage, see @p MonstersData in monstdat.cpp
+	 */
 	uint16_t abilityFlags;
 	uint8_t intelligence;
 	uint8_t toHit;
@@ -114,16 +117,16 @@ struct MonsterData {
 	uint8_t minDamage;
 	uint8_t maxDamage;
 	uint8_t toHitSpecial;
-	int8_t animFrameNum2;
-	uint8_t minDamage2;
-	uint8_t maxDamage2;
+	int8_t animFrameNumSpecial;
+	uint8_t minDamageSpecial;
+	uint8_t maxDamageSpecial;
 	uint8_t armorClass;
 	MonsterClass monsterClass;
 	/** Using monster_resistance as bitflags */
 	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
-	uint8_t resistanceHellDiff;
-	int8_t selectionFlag; // TODO Create enum
+	uint8_t resistanceHell;
+	int8_t selectionType; // TODO Create enum
 	/** Using monster_treasure */
 	uint16_t treasure;
 	uint16_t exp;

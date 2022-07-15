@@ -166,7 +166,7 @@ void InitMonsterTRN(CMonster &monst)
 {
 	char path[MAX_PATH];
 	std::array<uint8_t, 256> colorTranslations;
-	*BufCopy(path, "Monsters\\", monst.data->transFile, ".TRN") = '\0';
+	*BufCopy(path, "Monsters\\", monst.data->trnFile, ".TRN") = '\0';
 	LoadFileInMem(path, colorTranslations);
 
 	std::replace(colorTranslations.begin(), colorTranslations.end(), 255, 0);
@@ -236,8 +236,8 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.minDamage = monster.data().minDamage;
 	monster.maxDamage = monster.data().maxDamage;
 	monster.toHitSpecial = monster.data().toHitSpecial;
-	monster.minDamage2 = monster.data().minDamage2;
-	monster.maxDamage2 = monster.data().maxDamage2;
+	monster.minDamageSpecial = monster.data().minDamageSpecial;
+	monster.maxDamageSpecial = monster.data().maxDamageSpecial;
 	monster.armorClass = monster.data().armorClass;
 	monster.resistance = monster.data().resistance;
 	monster.leader = Monster::NoLeader;
@@ -265,8 +265,8 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
 		monster.toHitSpecial += NightmareToHitBonus;
-		monster.minDamage2 = 2 * (monster.minDamage2 + 2);
-		monster.maxDamage2 = 2 * (monster.maxDamage2 + 2);
+		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
+		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
 		monster.armorClass += NightmareAcBonus;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
@@ -281,10 +281,10 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
 		monster.toHitSpecial += HellToHitBonus;
-		monster.minDamage2 = 4 * monster.minDamage2 + 6;
-		monster.maxDamage2 = 4 * monster.maxDamage2 + 6;
+		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
+		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 		monster.armorClass += HellAcBonus;
-		monster.resistance = monster.data().resistanceHellDiff;
+		monster.resistance = monster.data().resistanceHell;
 	}
 }
 
@@ -910,7 +910,7 @@ void StartRangedSpecialAttack(Monster &monster, missile_id missileType, int dam)
 	Direction md = GetMonsterDirection(monster);
 	int8_t distributeFramesBeforeFrame = 0;
 	if (monster.ai == AI_MEGA)
-		distributeFramesBeforeFrame = monster.data().animFrameNum2;
+		distributeFramesBeforeFrame = monster.data().animFrameNumSpecial;
 	NewMonsterAnim(monster, MonsterGraphic::Special, md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
 	monster.mode = MonsterMode::SpecialRangedAttack;
 	monster.var1 = missileType;
@@ -1478,7 +1478,7 @@ bool MonsterRangedSpecialAttack(int monsterId)
 	assert(static_cast<size_t>(monsterId) < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	if (monster.animInfo.currentFrame == monster.data().animFrameNum2 - 1 && monster.animInfo.tickCounterOfCurrentFrame == 0 && (monster.ai != AI_MEGA || monster.var2 == 0)) {
+	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1 && monster.animInfo.tickCounterOfCurrentFrame == 0 && (monster.ai != AI_MEGA || monster.var2 == 0)) {
 		if (AddMissile(
 		        monster.position.tile,
 		        monster.enemyPosition,
@@ -1493,7 +1493,7 @@ bool MonsterRangedSpecialAttack(int monsterId)
 		}
 	}
 
-	if (monster.ai == AI_MEGA && monster.animInfo.currentFrame == monster.data().animFrameNum2 - 1) {
+	if (monster.ai == AI_MEGA && monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1) {
 		if (monster.var2++ == 0) {
 			monster.flags |= MFLAG_ALLOW_SPECIAL;
 		} else if (monster.var2 == 15) {
@@ -1514,8 +1514,8 @@ bool MonsterSpecialAttack(int monsterId)
 	assert(static_cast<size_t>(monsterId) < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
-	if (monster.animInfo.currentFrame == monster.data().animFrameNum2 - 1)
-		MonsterAttackPlayer(monsterId, monster.enemy, monster.toHitSpecial, monster.minDamage2, monster.maxDamage2);
+	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1)
+		MonsterAttackPlayer(monsterId, monster.enemy, monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
 		M_StartStand(monster, monster.direction);
@@ -1704,7 +1704,7 @@ void MonsterDeath(Monster &monster)
 
 bool MonsterSpecialStand(Monster &monster)
 {
-	if (monster.animInfo.currentFrame == monster.data().animFrameNum2 - 1)
+	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1)
 		PlayEffect(monster, 3);
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
@@ -2432,7 +2432,7 @@ void RhinoAi(int monsterId)
 		    && v < 2 * monster.intelligence + 43
 		    && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, monster.enemyPosition)) {
 			if (AddMissile(monster.position.tile, monster.enemyPosition, md, MIS_RHINO, TARGET_PLAYERS, monsterId, 0, 0) != nullptr) {
-				if (monster.data().sndSpecial)
+				if (monster.data().hasSpecialSound)
 					PlayEffect(monster, 3);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
 				monster.mode = MonsterMode::Charge;
@@ -3404,8 +3404,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int min
 	monster.intelligence = uniqueMonsterData.mint;
 	monster.minDamage = uniqueMonsterData.mMinDamage;
 	monster.maxDamage = uniqueMonsterData.mMaxDamage;
-	monster.minDamage2 = uniqueMonsterData.mMinDamage;
-	monster.maxDamage2 = uniqueMonsterData.mMaxDamage;
+	monster.minDamageSpecial = uniqueMonsterData.mMinDamage;
+	monster.maxDamageSpecial = uniqueMonsterData.mMaxDamage;
 	monster.resistance = uniqueMonsterData.mMagicRes;
 	monster.talkMsg = uniqueMonsterData.mtalkmsg;
 	if (monsterType == UniqueMonsterType::HorkDemon)
@@ -3436,8 +3436,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int min
 		monster.exp = 2 * (monster.exp + 1000);
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
-		monster.minDamage2 = 2 * (monster.minDamage2 + 2);
-		monster.maxDamage2 = 2 * (monster.maxDamage2 + 2);
+		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
+		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
@@ -3449,8 +3449,8 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int min
 		monster.exp = 4 * (monster.exp + 1000);
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
-		monster.minDamage2 = 4 * monster.minDamage2 + 6;
-		monster.maxDamage2 = 4 * monster.maxDamage2 + 6;
+		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
+		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
 	}
 
 	InitTRNForUniqueMonster(monster);
@@ -3612,7 +3612,7 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 	if (!HeadlessMode) {
 		monster.animData = MultiFileLoader<MaxAnims> {}(
 		    numAnims,
-		    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.graphicType }, ".CL2", Animletter),
+		    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.assetsSuffix }, ".CL2", Animletter),
 		    animOffsets.data(),
 		    hasAnim);
 	}
@@ -3647,7 +3647,7 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 	if (HeadlessMode)
 		return;
 
-	if (monsterData.transFile != nullptr) {
+	if (monsterData.trnFile != nullptr) {
 		InitMonsterTRN(monster);
 	}
 
@@ -4468,7 +4468,7 @@ void PrintMonstHistory(int mt)
 		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].resistance : MonstersData[mt].resistanceHellDiff;
+		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].resistance : MonstersData[mt].resistanceHell;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
 			AddPanelString(_("No magic resistance"));
 		} else {
@@ -4570,7 +4570,7 @@ void MissToMonst(Missile &missile, Point position)
 			return;
 
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
-		MonsterAttackPlayer(monsterId, pnum, 500, monster.minDamage2, monster.maxDamage2);
+		MonsterAttackPlayer(monsterId, pnum, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 		if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 			return;
@@ -4593,7 +4593,7 @@ void MissToMonst(Missile &missile, Point position)
 		return;
 
 	int mid = dMonster[oldPosition.x][oldPosition.y] - 1;
-	MonsterAttackMonster(monsterId, mid, 500, monster.minDamage2, monster.maxDamage2);
+	MonsterAttackMonster(monsterId, mid, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
