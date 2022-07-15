@@ -2714,7 +2714,7 @@ void OperateShrineMagical(int pnum)
 	    player.position.tile,
 	    player._pdir,
 	    MIS_MANASHIELD,
-	    TARGET_PLAYERS,
+	    TARGET_MONSTERS,
 	    pnum,
 	    0,
 	    2 * leveltype);
@@ -2848,7 +2848,7 @@ void OperateShrineCryptic(int pnum)
 	    player.position.tile,
 	    player._pdir,
 	    MIS_NOVA,
-	    TARGET_PLAYERS,
+	    TARGET_MONSTERS,
 	    pnum,
 	    0,
 	    2 * leveltype);
@@ -2936,7 +2936,7 @@ void OperateShrineHoly(int pnum)
 {
 	const Player &player = Players[pnum];
 
-	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
+	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 2 * leveltype);
 
 	if (&player != MyPlayer)
 		return;
@@ -3207,7 +3207,7 @@ void OperateShrineTown(int pnum, Point spawnPosition)
 	    player.position.tile,
 	    player._pdir,
 	    MIS_TOWN,
-	    TARGET_PLAYERS,
+	    TARGET_MONSTERS,
 	    pnum,
 	    0,
 	    0);
@@ -3570,7 +3570,7 @@ bool OperateFountains(int pnum, int i)
 		    player.position.tile,
 		    player._pdir,
 		    MIS_INFRA,
-		    TARGET_PLAYERS,
+		    TARGET_MONSTERS,
 		    pnum,
 		    0,
 		    2 * leveltype);
