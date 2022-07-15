@@ -85,7 +85,7 @@ enum class Direction16 {
 	South_SouthEast,
 };
 
-enum class MissileSourceType {
+enum class MissileSource {
 	Player,
 	Monster,
 	Trap,
