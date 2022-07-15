@@ -910,7 +910,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	if (MissilesData[mtype].mType == 0) {
 		int tac = player.GetArmor();
 		if (monster != nullptr) {
-			hper = monster->hit
+			hper = monster->toHit
 			    + ((monster->level - player._pLevel) * 2)
 			    + 30
 			    - (dist * 2) - tac;
@@ -1147,9 +1147,9 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 		    if (IsAnyOf(monster.mode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 			    return false;
-		    if ((monster.magicResistance & IMMUNE_MAGIC) != 0)
+		    if ((monster.resistance & IMMUNE_MAGIC) != 0)
 			    return false;
-		    if ((monster.magicResistance & RESIST_MAGIC) != 0 && ((monster.magicResistance & RESIST_MAGIC) != 1 || !FlipCoin()))
+		    if ((monster.resistance & RESIST_MAGIC) != 0 && ((monster.resistance & RESIST_MAGIC) != 1 || !FlipCoin()))
 			    return false;
 
 		    return true;

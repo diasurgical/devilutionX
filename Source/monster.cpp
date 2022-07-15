@@ -206,7 +206,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.animInfo.currentFrame = GenerateRnd(monster.animInfo.numberOfFrames - 1);
 
 	monster.level = monster.data().level;
-	int maxhp = monster.data().maxHitPointsMinimum + GenerateRnd(monster.data().maxHitPointsMaximum - monster.data().maxHitPointsMinimum + 1);
+	int maxhp = monster.data().hitPointsMinimum + GenerateRnd(monster.data().hitPointsMaximum - monster.data().hitPointsMinimum + 1);
 	if (monster.type().type == MT_DIABLO && !gbIsHellfire) {
 		maxhp /= 2;
 		monster.level -= 15;
@@ -232,17 +232,17 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.aiSeed = AdvanceRndSeed();
 	monster.whoHit = 0;
 	monster.exp = monster.data().exp;
-	monster.hit = monster.data().hit;
+	monster.toHit = monster.data().toHit;
 	monster.minDamage = monster.data().minDamage;
 	monster.maxDamage = monster.data().maxDamage;
-	monster.hit2 = monster.data().hit2;
+	monster.toHitSpecial = monster.data().toHitSpecial;
 	monster.minDamage2 = monster.data().minDamage2;
 	monster.maxDamage2 = monster.data().maxDamage2;
 	monster.armorClass = monster.data().armorClass;
-	monster.magicResistance = monster.data().magicResistance;
+	monster.resistance = monster.data().resistance;
 	monster.leader = Monster::NoLeader;
 	monster.leaderRelation = LeaderRelation::None;
-	monster.flags = monster.data().flags;
+	monster.flags = monster.data().abilityFlags;
 	monster.talkMsg = TEXT_NONE;
 
 	if (monster.ai == AI_GARG) {
@@ -261,10 +261,10 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 15;
 		monster.exp = 2 * (monster.exp + 1000);
-		monster.hit += NightmareToHitBonus;
+		monster.toHit += NightmareToHitBonus;
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
-		monster.hit2 += NightmareToHitBonus;
+		monster.toHitSpecial += NightmareToHitBonus;
 		monster.minDamage2 = 2 * (monster.minDamage2 + 2);
 		monster.maxDamage2 = 2 * (monster.maxDamage2 + 2);
 		monster.armorClass += NightmareAcBonus;
@@ -277,14 +277,14 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 30;
 		monster.exp = 4 * (monster.exp + 1000);
-		monster.hit += HellToHitBonus;
+		monster.toHit += HellToHitBonus;
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
-		monster.hit2 += HellToHitBonus;
+		monster.toHitSpecial += HellToHitBonus;
 		monster.minDamage2 = 4 * monster.minDamage2 + 6;
 		monster.maxDamage2 = 4 * monster.maxDamage2 + 6;
 		monster.armorClass += HellAcBonus;
-		monster.magicResistance = monster.data().magicResistanceHellDiff;
+		monster.resistance = monster.data().resistanceHellDiff;
 	}
 }
 
@@ -1420,16 +1420,16 @@ bool MonsterAttack(int monsterId)
 	auto &monster = Monsters[monsterId];
 
 	if (monster.animInfo.currentFrame == monster.data().animFrameNum - 1) {
-		MonsterAttackPlayer(monsterId, monster.enemy, monster.hit, monster.minDamage, monster.maxDamage);
+		MonsterAttackPlayer(monsterId, monster.enemy, monster.toHit, monster.minDamage, monster.maxDamage);
 		if (monster.ai != AI_SNAKE)
 			PlayEffect(monster, 0);
 	}
 	if (IsAnyOf(monster.type().type, MT_NMAGMA, MT_YMAGMA, MT_BMAGMA, MT_WMAGMA) && monster.animInfo.currentFrame == 8) {
-		MonsterAttackPlayer(monsterId, monster.enemy, monster.hit + 10, monster.minDamage - 2, monster.maxDamage - 2);
+		MonsterAttackPlayer(monsterId, monster.enemy, monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
 		PlayEffect(monster, 0);
 	}
 	if (IsAnyOf(monster.type().type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL) && monster.animInfo.currentFrame == 12) {
-		MonsterAttackPlayer(monsterId, monster.enemy, monster.hit - 20, monster.minDamage + 4, monster.maxDamage + 4);
+		MonsterAttackPlayer(monsterId, monster.enemy, monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
 		PlayEffect(monster, 0);
 	}
 	if (monster.ai == AI_SNAKE && monster.animInfo.currentFrame == 0)
@@ -1515,7 +1515,7 @@ bool MonsterSpecialAttack(int monsterId)
 	auto &monster = Monsters[monsterId];
 
 	if (monster.animInfo.currentFrame == monster.data().animFrameNum2 - 1)
-		MonsterAttackPlayer(monsterId, monster.enemy, monster.hit2, monster.minDamage2, monster.maxDamage2);
+		MonsterAttackPlayer(monsterId, monster.enemy, monster.toHitSpecial, monster.minDamage2, monster.maxDamage2);
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
 		M_StartStand(monster, monster.direction);
@@ -1877,8 +1877,8 @@ bool IsTileSafe(const Monster &monster, Point position)
 		return true;
 	}
 
-	bool fearsFire = (monster.magicResistance & IMMUNE_FIRE) == 0 || monster.type().type == MT_DIABLO;
-	bool fearsLightning = (monster.magicResistance & IMMUNE_LIGHTNING) == 0 || monster.type().type == MT_DIABLO;
+	bool fearsFire = (monster.resistance & IMMUNE_FIRE) == 0 || monster.type().type == MT_DIABLO;
+	bool fearsLightning = (monster.resistance & IMMUNE_LIGHTNING) == 0 || monster.type().type == MT_DIABLO;
 
 	for (auto &missile : Missiles) {
 		if (missile.position.tile == position) {
@@ -2358,7 +2358,7 @@ void ScavengerAi(int monsterId)
 			StartEating(monster);
 			if ((monster.flags & MFLAG_NOHEAL) == 0) {
 				if (gbIsHellfire) {
-					int mMaxHP = monster.maxHitPoints; // BUGFIX use maxHitPointsMaximum or we loose health when difficulty isn't normal (fixed)
+					int mMaxHP = monster.maxHitPoints; // BUGFIX use hitPointsMaximum or we loose health when difficulty isn't normal (fixed)
 					monster.hitPoints += mMaxHP / 8;
 					if (monster.hitPoints > monster.maxHitPoints)
 						monster.hitPoints = monster.maxHitPoints;
@@ -3406,7 +3406,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int min
 	monster.maxDamage = uniqueMonsterData.mMaxDamage;
 	monster.minDamage2 = uniqueMonsterData.mMinDamage;
 	monster.maxDamage2 = uniqueMonsterData.mMaxDamage;
-	monster.magicResistance = uniqueMonsterData.mMagicRes;
+	monster.resistance = uniqueMonsterData.mMagicRes;
 	monster.talkMsg = uniqueMonsterData.mtalkmsg;
 	if (monsterType == UniqueMonsterType::HorkDemon)
 		monster.lightId = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
@@ -3457,15 +3457,15 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int min
 	monster.uniqTrans = uniquetrans++;
 
 	if (uniqueMonsterData.customToHit != 0) {
-		monster.hit = uniqueMonsterData.customToHit;
-		monster.hit2 = uniqueMonsterData.customToHit;
+		monster.toHit = uniqueMonsterData.customToHit;
+		monster.toHitSpecial = uniqueMonsterData.customToHit;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
-			monster.hit += NightmareToHitBonus;
-			monster.hit2 += NightmareToHitBonus;
+			monster.toHit += NightmareToHitBonus;
+			monster.toHitSpecial += NightmareToHitBonus;
 		} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
-			monster.hit += HellToHitBonus;
-			monster.hit2 += HellToHitBonus;
+			monster.toHit += HellToHitBonus;
+			monster.toHitSpecial += HellToHitBonus;
 		}
 	}
 	if (uniqueMonsterData.customArmorClass != 0) {
@@ -3704,7 +3704,7 @@ void WeakenNaKrul()
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.armorClass -= 50;
 	int hp = monster.maxHitPoints / 2;
-	monster.magicResistance = 0;
+	monster.resistance = 0;
 	monster.hitPoints = hp;
 	monster.maxHitPoints = hp;
 }
@@ -4437,8 +4437,8 @@ void PrintMonstHistory(int mt)
 	}
 
 	if (MonsterKillCounts[mt] >= 30) {
-		int minHP = MonstersData[mt].maxHitPointsMinimum;
-		int maxHP = MonstersData[mt].maxHitPointsMaximum;
+		int minHP = MonstersData[mt].hitPointsMinimum;
+		int maxHP = MonstersData[mt].hitPointsMaximum;
 		if (!gbIsHellfire && mt == MT_DIABLO) {
 			minHP /= 2;
 			maxHP /= 2;
@@ -4468,7 +4468,7 @@ void PrintMonstHistory(int mt)
 		AddPanelString(fmt::format(fmt::runtime(_("Hit Points: {:d}-{:d}")), minHP, maxHP));
 	}
 	if (MonsterKillCounts[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].magicResistance : MonstersData[mt].magicResistanceHellDiff;
+		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].resistance : MonstersData[mt].resistanceHellDiff;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
 			AddPanelString(_("No magic resistance"));
 		} else {
@@ -4503,7 +4503,7 @@ void PrintUniqueHistory()
 		AddPanelString(fmt::format(fmt::runtime(_("Type: {:s}")), GetMonsterTypeText(monster.data())));
 	}
 
-	int res = monster.magicResistance & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
+	int res = monster.resistance & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (res == 0) {
 		AddPanelString(_("No resistances"));
 		AddPanelString(_("No Immunities"));
@@ -4743,7 +4743,7 @@ void SpawnGolem(int id, Point position, Missile &missile)
 	golem.maxHitPoints = 2 * (320 * missile._mispllvl + player._pMaxMana / 3);
 	golem.hitPoints = golem.maxHitPoints;
 	golem.armorClass = 25;
-	golem.hit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
+	golem.toHit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
 	golem.minDamage = 2 * (missile._mispllvl + 4);
 	golem.maxDamage = 2 * (missile._mispllvl + 8);
 	golem.flags |= MFLAG_GOLEM;
@@ -4852,10 +4852,10 @@ bool Monster::isImmune(missile_id missileType) const
 {
 	missile_resistance missileElement = MissilesData[missileType].mResist;
 
-	if (((magicResistance & IMMUNE_MAGIC) != 0 && missileElement == MISR_MAGIC)
-	    || ((magicResistance & IMMUNE_FIRE) != 0 && missileElement == MISR_FIRE)
-	    || ((magicResistance & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
-	    || ((magicResistance & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
+	if (((resistance & IMMUNE_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((resistance & IMMUNE_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((resistance & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
+	    || ((resistance & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
 		return true;
 	if (missileType == MIS_HBOLT && type().type != MT_DIABLO && data().monsterClass != MonsterClass::Undead)
 		return true;
@@ -4866,9 +4866,9 @@ bool Monster::isResistant(missile_id missileType) const
 {
 	missile_resistance missileElement = MissilesData[missileType].mResist;
 
-	if (((magicResistance & RESIST_MAGIC) != 0 && missileElement == MISR_MAGIC)
-	    || ((magicResistance & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
-	    || ((magicResistance & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
+	if (((resistance & RESIST_MAGIC) != 0 && missileElement == MISR_MAGIC)
+	    || ((resistance & RESIST_FIRE) != 0 && missileElement == MISR_FIRE)
+	    || ((resistance & RESIST_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING))
 		return true;
 	if (gbIsHellfire && missileType == MIS_HBOLT && IsAnyOf(type().type, MT_DIABLO, MT_BONEDEMN))
 		return true;

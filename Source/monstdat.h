@@ -103,27 +103,27 @@ struct MonsterData {
 	int8_t minDunLvl;
 	int8_t maxDunLvl;
 	int8_t level;
-	uint16_t maxHitPointsMinimum;
-	uint16_t maxHitPointsMaximum;
+	uint16_t hitPointsMinimum;
+	uint16_t hitPointsMaximum;
 	_mai_id ai;
-	/** Usign monster_flag as bitflags */
-	uint16_t flags;
+	/** Using @p monster_flag as bitflags */
+	uint16_t abilityFlags;
 	uint8_t intelligence;
-	uint8_t hit;
+	uint8_t toHit;
 	int8_t animFrameNum;
 	uint8_t minDamage;
 	uint8_t maxDamage;
-	uint8_t hit2;
+	uint8_t toHitSpecial;
 	int8_t animFrameNum2;
 	uint8_t minDamage2;
 	uint8_t maxDamage2;
 	uint8_t armorClass;
 	MonsterClass monsterClass;
 	/** Using monster_resistance as bitflags */
-	uint8_t magicResistance;
+	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
-	uint8_t magicResistanceHellDiff;
-	int8_t sellFlag; // TODO Create enum
+	uint8_t resistanceHellDiff;
+	int8_t selectionFlag; // TODO Create enum
 	/** Using monster_treasure */
 	uint16_t treasure;
 	uint16_t exp;

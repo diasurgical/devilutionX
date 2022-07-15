@@ -200,9 +200,9 @@ struct Monster { // note: missing field _mAFNum
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t aiSeed;
 	uint16_t exp;
-	uint16_t hit;
-	uint16_t hit2;
-	uint16_t magicResistance;
+	uint16_t toHit;
+	uint16_t toHitSpecial;
+	uint16_t resistance;
 	_speech_id talkMsg;
 	ActorPosition position;
 
