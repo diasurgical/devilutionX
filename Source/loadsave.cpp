@@ -577,9 +577,9 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.mode = static_cast<MonsterMode>(file->NextLE<int32_t>());
 	monster.goal = static_cast<MonsterGoal>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
-	monster.goalVar1 = file->NextLE<int32_t>();
-	monster.goalVar2 = file->NextLE<int32_t>();
-	monster.goalVar3 = file->NextLE<int32_t>();
+	monster.goalVar1 = file->NextLENarrow<int32_t, int16_t>();
+	monster.goalVar2 = file->NextLENarrow<int32_t, int8_t>();
+	monster.goalVar3 = file->NextLENarrow<int32_t, int8_t>();
 	file->Skip(4); // Unused
 	monster.pathCount = file->NextLE<uint8_t>();
 	file->Skip(3); // Alignment
@@ -608,11 +608,11 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.animInfo.currentFrame = file->NextLENarrow<int32_t, int8_t>(-1);
 	file->Skip(4); // Skip _meflag
 	monster.isInvalid = file->NextBool32();
-	monster.var1 = file->NextLE<int32_t>();
-	monster.var2 = file->NextLE<int32_t>();
-	monster.var3 = file->NextLE<int32_t>();
-	monster.position.temp.x = file->NextLE<int32_t>();
-	monster.position.temp.y = file->NextLE<int32_t>();
+	monster.var1 = file->NextLENarrow<int32_t, int16_t>();
+	monster.var2 = file->NextLENarrow<int32_t, int16_t>();
+	monster.var3 = file->NextLENarrow<int32_t, int8_t>();
+	monster.position.temp.x = file->NextLENarrow<int32_t, WorldTileCoord>();
+	monster.position.temp.y = file->NextLENarrow<int32_t, WorldTileCoord>();
 	monster.position.offset2.deltaX = file->NextLE<int32_t>();
 	monster.position.offset2.deltaY = file->NextLE<int32_t>();
 	file->Skip(4); // Skip actionFrame

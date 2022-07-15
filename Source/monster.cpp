@@ -1945,7 +1945,7 @@ Direction Turn(Direction direction, bool turnLeft)
 	return turnLeft ? Left(direction) : Right(direction);
 }
 
-bool RoundWalk(int monsterId, Direction direction, int *dir)
+bool RoundWalk(int monsterId, Direction direction, int8_t *dir)
 {
 	Monster &monster = Monsters[monsterId];
 

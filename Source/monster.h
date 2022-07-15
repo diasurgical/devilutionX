@@ -150,11 +150,16 @@ struct AnimStruct {
 };
 
 struct CMonster {
+	std::unique_ptr<byte[]> animData;
+	AnimStruct anims[6];
+	std::unique_ptr<TSnd> sounds[4][2];
+	const MonsterData *data;
+
 	_monster_id type;
 	/** placeflag enum as a flags*/
 	uint8_t placeFlags;
-	std::unique_ptr<byte[]> animData;
-	AnimStruct anims[6];
+	int8_t corpseId;
+
 	/**
 	 * @brief Returns AnimStruct for specified graphic
 	 */
@@ -162,9 +167,6 @@ struct CMonster {
 	{
 		return anims[static_cast<int>(graphic)];
 	}
-	std::unique_ptr<TSnd> sounds[4][2];
-	int8_t corpseId;
-	const MonsterData *data;
 };
 
 extern CMonster LevelMonsterTypes[MaxLvlMTypes];
@@ -175,23 +177,6 @@ struct Monster { // note: missing field _mAFNum
 	 * @brief Contains information for current animation
 	 */
 	AnimationInfo animInfo;
-	/** Specifies current goal of the monster */
-	MonsterGoal goal;
-	/** Specifies monster's behaviour regarding moving and changing goals. */
-	int goalVar1;
-	/**
-	 * @brief Specifies turning direction for @p RoundWalk in most cases.
-	 * Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi.
-	 */
-	int goalVar2;
-	/**
-	 * @brief Controls monster's behaviour regarding special actions.
-	 * Used only by @p ScavengerAi and @p MegaAi.
-	 */
-	int goalVar3;
-	int var1;
-	int var2;
-	int var3;
 	int maxHitPoints;
 	int hitPoints;
 	uint32_t flags;
@@ -204,7 +189,30 @@ struct Monster { // note: missing field _mAFNum
 	uint16_t toHitSpecial;
 	uint16_t resistance;
 	_speech_id talkMsg;
+
+	/** @brief Specifies monster's behaviour regarding moving and changing goals. */
+	int16_t goalVar1;
+
+	/**
+	 * @brief Specifies turning direction for @p RoundWalk in most cases.
+	 * Used in custom way by @p FallenAi, @p SnakeAi, @p M_FallenFear and @p FallenAi.
+	 */
+	int8_t goalVar2;
+
+	/**
+	 * @brief Controls monster's behaviour regarding special actions.
+	 * Used only by @p ScavengerAi and @p MegaAi.
+	 */
+	int8_t goalVar3;
+
+	int16_t var1;
+	int16_t var2;
+	int8_t var3;
+
 	ActorPosition position;
+
+	/** Specifies current goal of the monster */
+	MonsterGoal goal;
 
 	/** Usually corresponds to the enemy's future position */
 	WorldTilePosition enemyPosition;
