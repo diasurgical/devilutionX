@@ -1884,17 +1884,17 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	switch (missile.SourceType()) {
-	case MissileSourceType::Player: {
-		Player *player = missile.SourcePlayer();
+	case MissileSource::Player: {
+		Player *player = missile.sourcePlayer();
 		int dmg = GenerateRndSum(20, player->_pLevel + 1) + player->_pLevel + 1;
 		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
 		missile._midam += missile._midam / 2;
 		UseMana(*player, SPL_FLASH);
 	} break;
-	case MissileSource::Monster: {
+	case MissileSource::Monster:
 		missile._midam = missile.sourceMonster()->level * 2;
 		break;
-	case MissileSourceType::Trap:
+	case MissileSource::Trap:
 		missile._midam = currlevel / 2;
 		break;
 	}

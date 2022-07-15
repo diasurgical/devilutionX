@@ -146,20 +146,20 @@ struct Missile {
 		return &Players[_misource];
 	}
 
-	[[nodiscard]] Monster *SourceMonster()
+	[[nodiscard]] Monster *sourceMonster()
 	{
 		if (_micaster != TARGET_PLAYERS || _misource == -1)
 			return nullptr;
 		return &Monsters[_misource];
 	}
 
-	MissileSourceType SourceType()
+	MissileSource SourceType()
 	{
 		if (_misource == -1)
-			return MissileSourceType::Trap;
+			return MissileSource::Trap;
 		if (_micaster == TARGET_PLAYERS)
-			return MissileSourceType::Monster;
-		return MissileSourceType::Player;
+			return MissileSource::Monster;
+		return MissileSource::Player;
 	}
 };
 
