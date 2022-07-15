@@ -179,8 +179,8 @@ void InitMonsterTRN(CMonster &monst)
 
 		AnimStruct &anim = monst.anims[i];
 		if (IsDirectionalAnim(monst, i)) {
-			for (size_t j = 0; j < 8; ++j) {
-				Cl2ApplyTrans(anim.celSpritesForDirections[j], colorTranslations, anim.frames);
+			for (size_t i = 0; i < 8; i++) {
+				Cl2ApplyTrans(anim.celSpritesForDirections[i], colorTranslations, anim.frames);
 			}
 		} else {
 			byte *frames[8];
@@ -192,13 +192,13 @@ void InitMonsterTRN(CMonster &monst)
 	}
 }
 
-void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
+void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point position)
 {
 	monster.direction = rd;
 	monster.position.tile = position;
 	monster.position.future = position;
 	monster.position.old = position;
-	monster.levelType = mtype;
+	monster.levelType = typeIndex;
 	monster.mode = MonsterMode::Stand;
 	monster.animInfo = {};
 	monster.changeAnimationData(MonsterGraphic::Stand);
@@ -298,14 +298,11 @@ bool CanPlaceMonster(Point position)
 	    && !IsTileOccupied(position);
 }
 
-void PlaceMonster(int i, int mtype, Point position)
+void PlaceMonster(int i, size_t typeIndex, Point position)
 {
-	if (LevelMonsterTypes[mtype].type == MT_NAKRUL) {
+	if (LevelMonsterTypes[typeIndex].type == MT_NAKRUL) {
 		for (size_t j = 0; j < ActiveMonsterCount; j++) {
-			if (Monsters[j].levelType == mtype) {
-				return;
-			}
-			if (Monsters[j].type().type == MT_NAKRUL) {
+			if (Monsters[j].levelType == typeIndex) {
 				return;
 			}
 		}
@@ -313,10 +310,10 @@ void PlaceMonster(int i, int mtype, Point position)
 	dMonster[position.x][position.y] = i + 1;
 
 	auto rd = static_cast<Direction>(GenerateRnd(8));
-	InitMonster(Monsters[i], rd, mtype, position);
+	InitMonster(Monsters[i], rd, typeIndex, position);
 }
 
-void PlaceGroup(int mtype, unsigned num, Monster *leader = nullptr, bool leashed = false)
+void PlaceGroup(size_t typeIndex, unsigned num, Monster *leader = nullptr, bool leashed = false)
 {
 	unsigned placed = 0;
 
@@ -357,7 +354,7 @@ void PlaceGroup(int mtype, unsigned num, Monster *leader = nullptr, bool leashed
 				continue;
 			}
 
-			PlaceMonster(ActiveMonsterCount, mtype, { xp, yp });
+			PlaceMonster(ActiveMonsterCount, typeIndex, { xp, yp });
 			if (leader != nullptr) {
 				auto &minion = Monsters[ActiveMonsterCount];
 				minion.maxHitPoints *= 2;
@@ -390,17 +387,19 @@ void PlaceGroup(int mtype, unsigned num, Monster *leader = nullptr, bool leashed
 	}
 }
 
-void PlaceUniqueMonst(UniqueMonsterType uniqindex, int miniontype, int bosspacksize)
+size_t GetMonsterTypeIndex(_monster_id type)
+{
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
+		if (LevelMonsterTypes[i].type == type)
+			return i;
+	}
+	return LevelMonsterTypeCount;
+}
+
+void PlaceUniqueMonst(UniqueMonsterType uniqindex, size_t minionType, int bosspacksize)
 {
 	auto &monster = Monsters[ActiveMonsterCount];
 	const auto &uniqueMonsterData = UniqueMonstersData[static_cast<size_t>(uniqindex)];
-
-	size_t uniqtype;
-	for (uniqtype = 0; uniqtype < LevelMonsterTypeCount; uniqtype++) {
-		if (LevelMonsterTypes[uniqtype].type == uniqueMonsterData.mtype) {
-			break;
-		}
-	}
 
 	int count = 0;
 	Point position;
@@ -477,45 +476,33 @@ void PlaceUniqueMonst(UniqueMonsterType uniqindex, int miniontype, int bosspacks
 		position = { UberRow - 2, UberCol };
 		UberDiabloMonsterIndex = static_cast<int>(ActiveMonsterCount);
 	}
-	PlaceMonster(ActiveMonsterCount, uniqtype, position);
+	const size_t typeIndex = GetMonsterTypeIndex(uniqueMonsterData.mtype);
+	PlaceMonster(ActiveMonsterCount, typeIndex, position);
 	ActiveMonsterCount++;
 
-	PrepareUniqueMonst(monster, uniqindex, miniontype, bosspacksize, uniqueMonsterData);
-}
-
-size_t GetMonsterTypeIndex(_monster_id type)
-{
-	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-		if (LevelMonsterTypes[i].type == type)
-			return i;
-	}
-	return LevelMonsterTypeCount;
+	PrepareUniqueMonst(monster, uniqindex, minionType, bosspacksize, uniqueMonsterData);
 }
 
 size_t AddMonsterType(_monster_id type, placeflag placeflag)
 {
 	const size_t typeIndex = GetMonsterTypeIndex(type);
+	CMonster &monsterType = LevelMonsterTypes[typeIndex];
 
 	if (typeIndex == LevelMonsterTypeCount) {
 		LevelMonsterTypeCount++;
-		LevelMonsterTypes[typeIndex].type = type;
+		monsterType.type = type;
 		monstimgtot += MonstersData[type].image;
-		InitMonsterGFX(typeIndex);
-		InitMonsterSND(typeIndex);
+		InitMonsterGFX(monsterType);
+		InitMonsterSND(monsterType);
 	}
 
-	LevelMonsterTypes[typeIndex].placeFlags |= placeflag;
+	monsterType.placeFlags |= placeflag;
 	return typeIndex;
-}
-
-inline _monster_id GetMonsterTypeFrom(UniqueMonsterType uniqueType)
-{
-	return UniqueMonstersData[static_cast<size_t>(uniqueType)].mtype;
 }
 
 inline size_t AddMonsterType(UniqueMonsterType uniqueType, placeflag placeflag)
 {
-	return AddMonsterType(GetMonsterTypeFrom(uniqueType), placeflag);
+	return AddMonsterType(UniqueMonstersData[static_cast<size_t>(uniqueType)].mtype, placeflag);
 }
 
 void ClearMVars(Monster &monster)
@@ -554,8 +541,8 @@ void PlaceUniqueMonsters()
 		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
 
-		const size_t mt = GetMonsterTypeIndex(UniqueMonstersData[u].mtype);
-		if (mt == LevelMonsterTypeCount)
+		const size_t minionType = GetMonsterTypeIndex(UniqueMonstersData[u].mtype);
+		if (minionType == LevelMonsterTypeCount)
 			continue;
 
 		UniqueMonsterType uniqueType = static_cast<UniqueMonsterType>(u);
@@ -570,7 +557,7 @@ void PlaceUniqueMonsters()
 		if (uniqueType == UniqueMonsterType::WarlordOfBlood && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
 			continue;
 
-		PlaceUniqueMonst(uniqueType, mt, 8);
+		PlaceUniqueMonst(uniqueType, minionType, 8);
 	}
 }
 
@@ -630,17 +617,12 @@ void PlaceQuestMonsters()
 
 		if (currlevel == 24) {
 			UberDiabloMonsterIndex = -1;
-			size_t i1;
-			for (i1 = 0; i1 < LevelMonsterTypeCount; i1++) {
-				if (LevelMonsterTypes[i1].type == GetMonsterTypeFrom(UniqueMonsterType::NaKrul))
-					break;
-			}
-
-			if (i1 < LevelMonsterTypeCount) {
-				for (size_t i2 = 0; i2 < ActiveMonsterCount; i2++) {
-					auto &monster = Monsters[i2];
-					if (monster.isUnique() || monster.levelType == i1) {
-						UberDiabloMonsterIndex = static_cast<int>(i2);
+			const size_t typeIndex = GetMonsterTypeIndex(MT_NAKRUL);
+			if (typeIndex < LevelMonsterTypeCount) {
+				for (size_t i = 0; i < ActiveMonsterCount; i++) {
+					Monster &monster = Monsters[i];
+					if (monster.isUnique() || monster.levelType == typeIndex) {
+						UberDiabloMonsterIndex = static_cast<int>(i);
 						break;
 					}
 				}
@@ -738,9 +720,9 @@ void UpdateEnemy(Monster &monster)
 			}
 		}
 	}
-	for (size_t j = 0; j < ActiveMonsterCount; j++) {
-		int mi = ActiveMonsters[j];
-		auto &otherMonster = Monsters[mi];
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
+		int monsterId = ActiveMonsters[i];
+		auto &otherMonster = Monsters[monsterId];
 		if (&otherMonster == &monster)
 			continue;
 		if ((otherMonster.hitPoints >> 6) <= 0)
@@ -768,7 +750,7 @@ void UpdateEnemy(Monster &monster)
 		    || ((sameroom || !bestsameroom) && dist < bestDist)
 		    || (menemy == -1)) {
 			monster.flags |= MFLAG_TARGETS_MONSTER;
-			menemy = mi;
+			menemy = monsterId;
 			target = otherMonster.position.future;
 			bestDist = dist;
 			bestsameroom = sameroom;
@@ -949,9 +931,9 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 		NetSendCmdQuest(true, quest);
 	sgbSaveSoundOn = gbSoundOn;
 	gbProcessPlayers = false;
-	for (size_t j = 0; j < ActiveMonsterCount; j++) {
-		int k = ActiveMonsters[j];
-		auto &monster = Monsters[k];
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
+		int monsterId = ActiveMonsters[i];
+		Monster &monster = Monsters[monsterId];
 		if (monster.type().type == MT_DIABLO || diablo.activeForTicks == 0)
 			continue;
 
@@ -962,7 +944,7 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 		monster.position.tile = monster.position.old;
 		monster.position.future = monster.position.tile;
 		M_ClearSquares(monster);
-		dMonster[monster.position.tile.x][monster.position.tile.y] = k + 1;
+		dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
 	}
 	AddLight(diablo.position.tile, 8);
 	DoVision(diablo.position.tile, 8, MAP_EXP_NONE, true);
@@ -1656,8 +1638,8 @@ bool MonsterGotHit(Monster &monster)
 
 void ReleaseMinions(const Monster &leader)
 {
-	for (size_t j = 0; j < ActiveMonsterCount; j++) {
-		auto &minion = Monsters[ActiveMonsters[j]];
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
+		auto &minion = Monsters[ActiveMonsters[i]];
 		if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &leader) {
 			minion.setLeader(nullptr);
 		}
@@ -1743,23 +1725,20 @@ void MonsterPetrified(Monster &monster)
 
 Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 {
-	int j = 0;
+	size_t typeCount = 0;
+	size_t skeletonIndexes[sizeof(SkeletonTypes) / sizeof(SkeletonTypes[0])];
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-		if (IsSkel(LevelMonsterTypes[i].type))
-			j++;
+		if (IsSkel(LevelMonsterTypes[i].type)) {
+			skeletonIndexes[typeCount++] = i;
+		}
 	}
 
-	if (j == 0) {
+	if (typeCount == 0) {
 		return nullptr;
 	}
 
-	int skeltypes = GenerateRnd(j);
-	size_t m = 0;
-	for (int i = 0; m < LevelMonsterTypeCount && i <= skeltypes; m++) {
-		if (IsSkel(LevelMonsterTypes[m].type))
-			i++;
-	}
-	return AddMonster(position, dir, m - 1, inMap);
+	const size_t typeIndex = skeletonIndexes[GenerateRnd(typeCount)];
+	return AddMonster(position, dir, typeIndex, inMap);
 }
 
 void SpawnSkeleton(Point position, Direction dir)
@@ -3383,7 +3362,7 @@ void InitTRNForUniqueMonster(Monster &monster)
 	monster.uniqueMonsterTRN = LoadFileInMem<uint8_t>(filestr);
 }
 
-void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int miniontype, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
+void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t minionType, int bosspacksize, const UniqueMonsterData &uniqueMonsterData)
 {
 	monster.uniqueType = monsterType;
 
@@ -3479,7 +3458,7 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, int min
 	}
 
 	if (uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
-		PlaceGroup(miniontype, bosspacksize, &monster, uniqueMonsterData.monsterPack == UniqueMonsterPack::Leashed);
+		PlaceGroup(minionType, bosspacksize, &monster, uniqueMonsterData.monsterPack == UniqueMonsterPack::Leashed);
 	}
 
 	if (monster.ai != AI_GARG) {
@@ -3495,7 +3474,7 @@ void InitLevelMonsters()
 	LevelMonsterTypeCount = 0;
 	monstimgtot = 0;
 
-	for (auto &levelMonsterType : LevelMonsterTypes) {
+	for (CMonster &levelMonsterType : LevelMonsterTypes) {
 		levelMonsterType.placeFlags = 0;
 	}
 
@@ -3595,10 +3574,37 @@ void GetLevelMTypes()
 	}
 }
 
-void InitMonsterGFX(size_t monsterTypeIndex)
+void InitMonsterSND(CMonster &monsterType)
 {
-	CMonster &monster = LevelMonsterTypes[monsterTypeIndex];
-	const _monster_id mtype = monster.type;
+	if (!gbSndInited)
+		return;
+
+	const char *prefixes[] {
+		"a", // Attack
+		"h", // Hit
+		"d", // Death
+		"s", // Special
+	};
+
+	const MonsterData &data = MonstersData[monsterType.type];
+	string_view soundSuffix = data.soundSuffix != nullptr ? data.soundSuffix : data.assetsSuffix;
+
+	for (int i = 0; i < 4; i++) {
+		string_view prefix = prefixes[i];
+		if (prefix == "s" && !data.hasSpecialSound)
+			continue;
+
+		for (int j = 0; j < 2; j++) {
+			char path[MAX_PATH];
+			*BufCopy(path, "Monsters\\", soundSuffix, prefix, j + 1, ".WAV") = '\0';
+			monsterType.sounds[i][j] = sound_file_load(path);
+		}
+	}
+}
+
+void InitMonsterGFX(CMonster &monsterType)
+{
+	const _monster_id mtype = monsterType.type;
 	const MonsterData &monsterData = MonstersData[mtype];
 	const int width = monsterData.width;
 	constexpr size_t MaxAnims = sizeof(Animletter) / sizeof(Animletter[0]) - 1;
@@ -3610,7 +3616,7 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 
 	std::array<uint32_t, MaxAnims> animOffsets;
 	if (!HeadlessMode) {
-		monster.animData = MultiFileLoader<MaxAnims> {}(
+		monsterType.animData = MultiFileLoader<MaxAnims> {}(
 		    numAnims,
 		    FileNameWithCharAffixGenerator({ "Monsters\\", monsterData.assetsSuffix }, ".CL2", Animletter),
 		    animOffsets.data(),
@@ -3618,7 +3624,7 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 	}
 
 	for (unsigned animIndex = 0; animIndex < numAnims; animIndex++) {
-		AnimStruct &anim = monster.anims[animIndex];
+		AnimStruct &anim = monsterType.anims[animIndex];
 
 		if (!hasAnim(animIndex)) {
 			anim.frames = 0;
@@ -3632,8 +3638,8 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 		if (HeadlessMode)
 			continue;
 
-		byte *cl2Data = &monster.animData[animOffsets[animIndex]];
-		if (IsDirectionalAnim(monster, animIndex)) {
+		byte *cl2Data = &monsterType.animData[animOffsets[animIndex]];
+		if (IsDirectionalAnim(monsterType, animIndex)) {
 			CelGetDirectionFrames(cl2Data, anim.celSpritesForDirections.data());
 		} else {
 			for (size_t i = 0; i < 8; ++i) {
@@ -3642,13 +3648,13 @@ void InitMonsterGFX(size_t monsterTypeIndex)
 		}
 	}
 
-	monster.data = &monsterData;
+	monsterType.data = &monsterData;
 
 	if (HeadlessMode)
 		return;
 
 	if (monsterData.trnFile != nullptr) {
-		InitMonsterTRN(monster);
+		InitMonsterTRN(monsterType);
 	}
 
 	if (IsAnyOf(mtype, MT_NMAGMA, MT_YMAGMA, MT_BMAGMA, MT_WMAGMA))
@@ -3750,7 +3756,7 @@ void InitMonsters()
 			numplacemonsters = MaxMonsters - 10 - ActiveMonsterCount;
 		totalmonsters = ActiveMonsterCount + numplacemonsters;
 		int numscattypes = 0;
-		int scattertypes[NUM_MTYPES];
+		size_t scattertypes[NUM_MTYPES];
 		for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 			if ((LevelMonsterTypes[i].placeFlags & PLACE_SCATTER) != 0) {
 				scattertypes[numscattypes] = i;
@@ -3758,14 +3764,14 @@ void InitMonsters()
 			}
 		}
 		while (ActiveMonsterCount < totalmonsters) {
-			int mtype = scattertypes[GenerateRnd(numscattypes)];
+			const size_t typeIndex = scattertypes[GenerateRnd(numscattypes)];
 			if (currlevel == 1 || FlipCoin())
 				na = 1;
 			else if (currlevel == 2 || leveltype == DTYPE_CRYPT)
 				na = GenerateRnd(2) + 2;
 			else
 				na = GenerateRnd(3) + 3;
-			PlaceGroup(mtype, na);
+			PlaceGroup(typeIndex, na);
 		}
 	}
 	for (int i = 0; i < nt; i++) {
@@ -3807,20 +3813,20 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 		for (int i = 0; i < width; i++) {
 			auto monsterId = static_cast<uint8_t>(SDL_SwapLE16(monsterLayer[j * width + i]));
 			if (monsterId != 0) {
-				const size_t mtype = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
-				PlaceMonster(ActiveMonsterCount++, mtype, startPosition + Displacement { i, j });
+				const size_t typeIndex = AddMonsterType(MonstConvTbl[monsterId - 1], PLACE_SPECIAL);
+				PlaceMonster(ActiveMonsterCount++, typeIndex, startPosition + Displacement { i, j });
 			}
 		}
 	}
 }
 
-Monster *AddMonster(Point position, Direction dir, size_t mtype, bool inMap)
+Monster *AddMonster(Point position, Direction dir, size_t typeIndex, bool inMap)
 {
 	if (ActiveMonsterCount < MaxMonsters) {
 		Monster &monster = Monsters[ActiveMonsters[ActiveMonsterCount++]];
 		if (inMap)
 			dMonster[position.x][position.y] = monster.getId() + 1;
-		InitMonster(monster, dir, mtype, position);
+		InitMonster(monster, dir, typeIndex, position);
 		return &monster;
 	}
 
@@ -3837,12 +3843,8 @@ void AddDoppelganger(Monster &monster)
 		target = position;
 	}
 	if (target != Point { 0, 0 }) {
-		for (size_t j = 0; j < MaxLvlMTypes; j++) {
-			if (LevelMonsterTypes[j].type == monster.type().type) {
-				AddMonster(target, monster.direction, j, true);
-				break;
-			}
-		}
+		const size_t typeIndex = GetMonsterTypeIndex(monster.type().type);
+		AddMonster(target, monster.direction, typeIndex, true);
 	}
 }
 
@@ -4236,8 +4238,14 @@ void ProcessMonsters()
 
 void FreeMonsters()
 {
-	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-		LevelMonsterTypes[i].animData = nullptr;
+	for (CMonster &monsterType : LevelMonsterTypes) {
+		monsterType.animData = nullptr;
+
+		for (auto &variants : monsterType.sounds) {
+			for (auto &sound : variants) {
+				sound = nullptr;
+			}
+		}
 	}
 }
 
@@ -4358,9 +4366,10 @@ void SyncMonsterAnim(Monster &monster)
 {
 #ifdef _DEBUG
 	// fix for saves with debug monsters having type originally not on the level
-	if (LevelMonsterTypes[monster.levelType].data == nullptr) {
-		InitMonsterGFX(monster.levelType);
-		LevelMonsterTypes[monster.levelType].corpseId = 1;
+	CMonster &monsterType = LevelMonsterTypes[monster.levelType];
+	if (monsterType.data == nullptr) {
+		InitMonsterGFX(monsterType);
+		monsterType.corpseId = 1;
 	}
 #endif
 	if (monster.isUnique()) {
@@ -4531,8 +4540,7 @@ void PlayEffect(Monster &monster, int mode)
 		return;
 	}
 
-	int mi = monster.levelType;
-	TSnd *snd = LevelMonsterTypes[mi].sounds[mode][sndIdx].get();
+	TSnd *snd = monster.type().sounds[mode][sndIdx].get();
 	if (snd == nullptr || snd->isPlaying()) {
 		return;
 	}

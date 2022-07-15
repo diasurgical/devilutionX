@@ -12,8 +12,6 @@ _sfx_id sfxdnum;
 // clang-format off
 bool effect_is_playing(int nSFX) { return false; }
 void stream_stop() { }
-void InitMonsterSND(size_t monst) { }
-void FreeMonsterSnd() { }
 bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan) { return false; }
 void PlaySFX(_sfx_id psfx)
 {

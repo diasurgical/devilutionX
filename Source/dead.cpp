@@ -32,15 +32,16 @@ void InitCorpses()
 	int8_t nd = 0;
 
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-		if (mtypes[LevelMonsterTypes[i].type] != 0)
+		CMonster &monsterType = LevelMonsterTypes[i];
+		if (mtypes[monsterType.type] != 0)
 			continue;
 
-		InitDeadAnimationFromMonster(Corpses[nd], LevelMonsterTypes[i]);
+		InitDeadAnimationFromMonster(Corpses[nd], monsterType);
 		Corpses[nd].translationPaletteIndex = 0;
 		nd++;
 
-		LevelMonsterTypes[i].corpseId = nd;
-		mtypes[LevelMonsterTypes[i].type] = nd;
+		monsterType.corpseId = nd;
+		mtypes[monsterType.type] = nd;
 	}
 
 	nd++; // Unused blood spatter

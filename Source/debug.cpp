@@ -706,11 +706,12 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].type = static_cast<_monster_id>(mtype);
-		InitMonsterGFX(id);
-		InitMonsterSND(id);
-		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].corpseId = 1;
+		CMonster &monsterType = LevelMonsterTypes[id];
+		monsterType.type = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(monsterType);
+		InitMonsterSND(monsterType);
+		monsterType.placeFlags |= PLACE_SCATTER;
+		monsterType.corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;
@@ -791,11 +792,12 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].type = static_cast<_monster_id>(mtype);
-		InitMonsterGFX(id);
-		InitMonsterSND(id);
-		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].corpseId = 1;
+		CMonster &monsterType = LevelMonsterTypes[id];
+		monsterType.type = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(monsterType);
+		InitMonsterSND(monsterType);
+		monsterType.placeFlags |= PLACE_SCATTER;
+		monsterType.corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;
