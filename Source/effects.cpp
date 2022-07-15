@@ -30,15 +30,6 @@ constexpr bool AllowStreaming = false;
 /** Specifies the sound file and the playback state of the current sound effect. */
 TSFX *sgpStreamSFX = nullptr;
 
-/**
- * Monster sound type prefix
- * a: Attack
- * h: Hit
- * d: Death
- * s: Special
- */
-const char MonstSndChar[] = { 'a', 'h', 'd', 's' };
-
 /* data */
 /** List of all sounds, except monsters and music */
 TSFX sgSFX[] = {
@@ -1208,41 +1199,6 @@ void stream_stop()
 	if (sgpStreamSFX != nullptr) {
 		sgpStreamSFX->pSnd = nullptr;
 		sgpStreamSFX = nullptr;
-	}
-}
-
-void InitMonsterSND(size_t monst)
-{
-	if (!gbSndInited) {
-		return;
-	}
-
-	const int mtype = LevelMonsterTypes[monst].type;
-	const MonsterData &data = MonstersData[mtype];
-	for (int i = 0; i < 4; i++) {
-		if (MonstSndChar[i] != 's' || data.hasSpecialSound) {
-			for (int j = 0; j < 2; j++) {
-				char path[MAX_PATH];
-				const char *sndfile = data.soundSuffix != nullptr ? data.soundSuffix : data.assetsSuffix;
-				*BufCopy(path, "Monsters\\", sndfile, string_view(&MonstSndChar[i], 1), j + 1, ".WAV") = '\0';
-				LevelMonsterTypes[monst].sounds[i][j] = sound_file_load(path);
-			}
-		}
-	}
-}
-
-void FreeMonsterSnd()
-{
-#ifdef _DEBUG
-	for (size_t i = 0; i < MaxLvlMTypes; i++) {
-#else
-	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-#endif
-		for (auto &variants : LevelMonsterTypes[i].sounds) {
-			for (auto &snd : variants) {
-				snd = nullptr;
-			}
-		}
 	}
 }
 
