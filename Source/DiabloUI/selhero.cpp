@@ -167,6 +167,10 @@ void SelheroListSelect(int value)
 		return;
 	}
 
+	if (static_cast<std::size_t>(value) == selhero_SaveCount + 1) {
+		return;
+	}
+
 	if (selhero_heroInfo.hassaved) {
 		vecSelDlgItems.clear();
 
@@ -507,6 +511,8 @@ void selhero_List_Init()
 			selectedItem = i;
 	}
 	vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("New Hero").data(), static_cast<int>(selhero_SaveCount)));
+
+	vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Import Hero").data(), static_cast<int>(selhero_SaveCount + 1)));
 
 	vecSelDlgItems.push_back(std::make_unique<UiList>(vecSelHeroDlgItems, 6, uiPosition.x + 265, (uiPosition.y + 256), 320, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
