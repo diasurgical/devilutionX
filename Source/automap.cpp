@@ -13,7 +13,6 @@
 #include "engine/render/automap_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
-#include "miniwin/miniwin.h"
 #include "player.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"

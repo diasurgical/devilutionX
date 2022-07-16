@@ -26,7 +26,6 @@
 #include "inv.h"
 #include "lighting.h"
 #include "menu.h"
-#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
@@ -922,7 +921,7 @@ void GetPermLevelNames(char *szPerm)
 
 bool LevelFileExists(MpqWriter &archive)
 {
-	char szName[MAX_PATH];
+	char szName[MaxMpqPathSize];
 
 	GetTempLevelNames(szName);
 	if (archive.HasFile(szName))
@@ -2466,7 +2465,7 @@ void SaveLevel(MpqWriter &saveWriter)
 	if (leveltype == DTYPE_TOWN)
 		glSeedTbl[0] = AdvanceRndSeed();
 
-	char szName[MAX_PATH];
+	char szName[MaxMpqPathSize];
 	GetTempLevelNames(szName);
 	SaveHelper file(saveWriter, szName, 256 * 1024);
 
@@ -2533,7 +2532,7 @@ void SaveLevel(MpqWriter &saveWriter)
 
 void LoadLevel()
 {
-	char szName[MAX_PATH];
+	char szName[MaxMpqPathSize];
 	std::optional<MpqArchive> archive = OpenSaveArchive(gSaveNumber);
 	GetTempLevelNames(szName);
 	if (!archive || !archive->HasFile(szName))
