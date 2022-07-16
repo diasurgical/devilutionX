@@ -16,7 +16,6 @@
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
 #include "menu.h"
-#include "miniwin/miniwin.h"
 #include "nthread.h"
 #include "options.h"
 #include "pfile.h"
@@ -48,7 +47,7 @@ bool gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
-DWORD sgdwGameLoops;
+uint32_t sgdwGameLoops;
 /**
  * Specifies the maximum number of players in a game, where 1
  * represents a single player game and 4 represents a multi player game.
@@ -194,7 +193,7 @@ void SendPacket(int playerId, const byte *packet, size_t size)
 void MonsterSeeds()
 {
 	sgdwGameLoops++;
-	const uint32_t seed = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
+	const uint32_t seed = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24);
 	for (size_t i = 0; i < MaxMonsters; i++)
 		Monsters[i].aiSeed = seed + i;
 }
@@ -366,8 +365,6 @@ void SetupLocalPositions()
 
 void HandleEvents(_SNETEVENT *pEvt)
 {
-	DWORD leftReason;
-
 	switch (pEvt->eventid) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
 		auto *gameData = (GameData *)pEvt->data;
@@ -377,13 +374,13 @@ void HandleEvents(_SNETEVENT *pEvt)
 		sgbPlayerTurnBitTbl[pEvt->playerid] = true;
 		break;
 	}
-	case EVENT_TYPE_PLAYER_LEAVE_GAME:
+	case EVENT_TYPE_PLAYER_LEAVE_GAME: {
 		sgbPlayerLeftGameTbl[pEvt->playerid] = true;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = false;
 
-		leftReason = 0;
-		if (pEvt->data != nullptr && pEvt->databytes >= sizeof(DWORD))
-			leftReason = *(DWORD *)pEvt->data;
+		int leftReason = 0;
+		if (pEvt->data != nullptr && pEvt->databytes >= sizeof(leftReason))
+			leftReason = *(int *)pEvt->data;
 		sgdwPlayerLeftReasonTbl[pEvt->playerid] = leftReason;
 		if (leftReason == LEAVE_ENDING)
 			gbSomebodyWonGameKludge = true;
@@ -393,7 +390,7 @@ void HandleEvents(_SNETEVENT *pEvt)
 
 		if (gbDeltaSender == pEvt->playerid)
 			gbDeltaSender = MAX_PLRS;
-		break;
+	} break;
 	case EVENT_TYPE_PLAYER_MESSAGE:
 		EventPlrMsg((char *)pEvt->data);
 		break;
@@ -452,7 +449,7 @@ bool InitMulti(GameData *gameData)
 		gbSelectProvider = true;
 	}
 
-	if ((DWORD)playerId >= MAX_PLRS) {
+	if (playerId < 0 || playerId >= MAX_PLRS) {
 		return false;
 	}
 	MyPlayerId = playerId;
