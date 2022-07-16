@@ -849,22 +849,22 @@ bool PlrHitMonst(int pnum, size_t monsterId, bool adjacentDamage = false)
 		phanditype = ItemType::Mace;
 	}
 
-	switch (monster.data().monsterClass.GetBaseClass()) {
-	case MonsterBaseClass::Undead:
+	switch (monster.data().monsterClass.GetClass()) {
+	case MonsterClass::Undead:
 		if (phanditype == ItemType::Sword) {
 			dam -= dam / 2;
 		} else if (phanditype == ItemType::Mace) {
 			dam += dam / 2;
 		}
 		break;
-	case MonsterBaseClass::Animal:
+	case MonsterClass::Animal:
 		if (phanditype == ItemType::Mace) {
 			dam -= dam / 2;
 		} else if (phanditype == ItemType::Sword) {
 			dam += dam / 2;
 		}
 		break;
-	case MonsterBaseClass::Demon:
+	case MonsterClass::Demon:
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage)) {
 			dam *= 3;
 		}

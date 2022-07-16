@@ -1308,9 +1308,9 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		hper = 1000;
 #endif
 	int ac = player.GetArmor();
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstDemons) && monster.data().monsterClass.IsType(MonsterBaseClass::Demon))
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstDemons) && monster.data().monsterClass.IsType(MonsterClass::Demon))
 		ac += 40;
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterClass.IsType(MonsterBaseClass::Undead))
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterClass.IsType(MonsterClass::Undead))
 		ac += 20;
 	hit += 2 * (monster.level - player._pLevel)
 	    + 30
@@ -3209,16 +3209,16 @@ void HorkDemonAi(int monsterId)
 
 string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
-	switch (monsterData.monsterClass.GetBaseClass()) {
-	case MonsterBaseClass::Animal:
+	switch (monsterData.monsterClass.GetClass()) {
+	case MonsterClass::Animal:
 		return _("Animal");
-	case MonsterBaseClass::Demon:
+	case MonsterClass::Demon:
 		return _("Demon");
-	case MonsterBaseClass::Undead:
+	case MonsterClass::Undead:
 		return _("Undead");
 	}
 
-	app_fatal(StrCat("Unknown monsterClass ", static_cast<int>(monsterData.monsterClass.GetBaseClass())));
+	app_fatal(StrCat("Unknown monsterClass ", static_cast<int>(monsterData.monsterClass.GetClass())));
 }
 
 void ActivateSpawn(Monster &monster, Point position, Direction dir)
@@ -4852,7 +4852,7 @@ bool Monster::isImmune(missile_id missileType) const
 	    || ((resistance & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
 	    || ((resistance & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
 		return true;
-	if (missileType == MIS_HBOLT && type().type != MT_DIABLO && !data().monsterClass.IsType(MonsterBaseClass::Undead))
+	if (missileType == MIS_HBOLT && type().type != MT_DIABLO && !data().monsterClass.IsType(MonsterClass::Undead))
 		return true;
 	return false;
 }

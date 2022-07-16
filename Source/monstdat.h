@@ -55,13 +55,13 @@ enum _mai_id : int8_t {
 	AI_INVALID = -1,
 };
 
-enum class MonsterBaseClass : uint8_t {
+enum class MonsterClass : uint8_t {
 	Undead,
 	Demon,
 	Animal,
 };
 
-enum class MonsterSuperClass : uint8_t {
+enum class MonsterFamily : uint8_t {
 	None,
 	Skeleton,
 	Goat,
@@ -75,44 +75,44 @@ enum class MonsterSuperClass : uint8_t {
 	Scavenger,
 };
 
-class MonsterClass {
+class MonsterType {
 
-	uint8_t combinedMonsterClass;
+	uint8_t monsterType;
 
 public:
-	MonsterClass(MonsterBaseClass monsterBaseClass, MonsterSuperClass monsterSuperClass = MonsterSuperClass::None)
+	MonsterType(MonsterClass monsterClass, MonsterFamily monsterFamily = MonsterFamily::None)
 	{
-		combinedMonsterClass = static_cast<uint8_t>(monsterBaseClass) + (static_cast<uint8_t>(monsterSuperClass)) << 2;
+		monsterType = static_cast<uint8_t>(monsterClass) + ((static_cast<uint8_t>(monsterFamily)) << 2);
 	}
 
-	MonsterBaseClass GetBaseClass() const
+	MonsterClass GetClass() const
 	{
-		return static_cast<MonsterBaseClass>(combinedMonsterClass & 0b00000011);
+		return static_cast<MonsterClass>(monsterType & 0b00000011);
 	}
 
-	const MonsterSuperClass GetSuperClass() const
+	const MonsterFamily GetFamily() const
 	{
-		return static_cast<MonsterSuperClass>(combinedMonsterClass >> 2);
+		return static_cast<MonsterFamily>(monsterType >> 2);
 	}
 
-	bool IsType(MonsterSuperClass monsterSuperClass) const
+	bool IsType(MonsterFamily monsterFamily) const
 	{
-		return GetSuperClass() == monsterSuperClass;
+		return GetFamily() == monsterFamily;
 	}
 
-	bool IsType(MonsterBaseClass monsterBaseClass) const
+	bool IsType(MonsterClass monsterClass) const
 	{
-		return GetBaseClass() == monsterBaseClass;
+		return GetClass() == monsterClass;
 	}
 
 	bool IsSkeleton() const
 	{
-		return GetSuperClass() == MonsterSuperClass::Skeleton;
+		return GetFamily() == MonsterFamily::Skeleton;
 	}
 
 	bool IsGoat() const
 	{
-		return GetSuperClass() == MonsterSuperClass::Goat;
+		return GetFamily() == MonsterFamily::Goat;
 	}
 };
 
@@ -176,7 +176,7 @@ struct MonsterData {
 	uint8_t minDamageSpecial;
 	uint8_t maxDamageSpecial;
 	uint8_t armorClass;
-	MonsterClass monsterClass;
+	MonsterType monsterClass;
 	/** Using monster_resistance as bitflags */
 	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
