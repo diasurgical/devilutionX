@@ -102,58 +102,32 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 		return {};
 	}
 
-	bool yFlag = true;
-	bool xFlag = true;
-	int xCount = 0;
-	int yCount = 0;
+	int maxWidth = std::min(maxSize, DMAXX - origin.x);
+	int maxHeight = std::min(maxSize, DMAXY - origin.y);
+
+	int yArray[20] = {};
+	for (int x = 0; x < maxWidth; x++) {
+		for (int y = origin.y; y < origin.y + maxHeight; y++) {
+			if (dungeon[origin.x + x][y] != floor) {
+				if (yArray[x] < minSize && x < minSize)
+					return {};
+				break;
+			}
+
+			yArray[x]++;
+		}
+	}
 
 	int xArray[20] = {};
-	int yArray[20] = {};
+	for (int y = 0; y < maxHeight; y++) {
+		for (int x = origin.x; x < origin.x + maxWidth; x++) {
+			if (dungeon[x][origin.y + y] != floor) {
+				if (xArray[y] < minSize && y < minSize)
+					return {};
+				break;
+			}
 
-	for (int ii = 0; ii < maxSize; ii++) {
-		if (xFlag && origin.y + ii < DMAXY) {
-			for (int xx = origin.x; xx < origin.x + maxSize && xx < DMAXX; xx++) {
-				if (dungeon[xx][origin.y + ii] != floor) {
-					if (xx >= /* origin.x + */ minSize) {
-						break;
-					}
-					xFlag = false;
-				} else {
-					xCount++;
-				}
-			}
-			if (xFlag) {
-				xArray[ii] = xCount;
-				xCount = 0;
-			}
-		}
-		if (yFlag && origin.x + ii < DMAXX) {
-			for (int yy = origin.y; yy < origin.y + maxSize && yy < DMAXY; yy++) {
-				if (dungeon[origin.x + ii][yy] != floor) {
-					if (yy >= /* origin.y + */ minSize) {
-						break;
-					}
-					yFlag = false;
-				} else {
-					yCount++;
-				}
-			}
-			if (yFlag) {
-				yArray[ii] = yCount;
-				yCount = 0;
-			}
-		}
-	}
-
-	for (int ii = 0; ii < minSize; ii++) {
-		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			return {};
-		}
-	}
-
-	for (int ii = 0; ii < minSize; ii++) {
-		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			return {};
+			xArray[y]++;
 		}
 	}
 
