@@ -44,7 +44,8 @@ enum Cutscenes : uint8_t {
 };
 
 void interface_msg_pump();
-bool IncProgress();
+void IncProgress();
+void CompleteProgress();
 void ShowProgress(interface_mode uMsg);
 
 } // namespace devilution

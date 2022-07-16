@@ -721,7 +721,7 @@ void run_delta_info();
 void DeltaExportData(int pnum);
 void DeltaSyncJunk();
 void delta_init();
-void delta_kill_monster(int mi, Point position, const Player &player);
+void delta_kill_monster(const Monster &monster, Point position, const Player &player);
 void delta_monster_hp(const Monster &monster, const Player &player);
 void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
 uint8_t GetLevelForMultiplayer(const Player &player);
@@ -752,6 +752,6 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
-uint32_t ParseCmd(int pnum, const TCmd *pCmd);
+size_t ParseCmd(int pnum, const TCmd *pCmd);
 
 } // namespace devilution

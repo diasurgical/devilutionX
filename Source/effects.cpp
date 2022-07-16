@@ -9,7 +9,6 @@
 #include "engine/sound.h"
 #include "engine/sound_defs.hpp"
 #include "init.h"
-#include "miniwin/miniwin.h"
 #include "player.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
@@ -29,15 +28,6 @@ constexpr bool AllowStreaming = false;
 
 /** Specifies the sound file and the playback state of the current sound effect. */
 TSFX *sgpStreamSFX = nullptr;
-
-/**
- * Monster sound type prefix
- * a: Attack
- * h: Hit
- * d: Death
- * s: Special
- */
-const char MonstSndChar[] = { 'a', 'h', 'd', 's' };
 
 /* data */
 /** List of all sounds, except monsters and music */
@@ -1211,41 +1201,6 @@ void stream_stop()
 	}
 }
 
-void InitMonsterSND(int monst)
-{
-	if (!gbSndInited) {
-		return;
-	}
-
-	const int mtype = LevelMonsterTypes[monst].type;
-	const MonsterData &data = MonstersData[mtype];
-	for (int i = 0; i < 4; i++) {
-		if (MonstSndChar[i] != 's' || data.snd_special) {
-			for (int j = 0; j < 2; j++) {
-				char path[MAX_PATH];
-				const char *sndfile = data.sndfile != nullptr ? data.sndfile : data.GraphicType;
-				*BufCopy(path, "Monsters\\", sndfile, string_view(&MonstSndChar[i], 1), j + 1, ".WAV") = '\0';
-				LevelMonsterTypes[monst].sounds[i][j] = sound_file_load(path);
-			}
-		}
-	}
-}
-
-void FreeMonsterSnd()
-{
-#ifdef _DEBUG
-	for (int i = 0; i < MaxLvlMTypes; i++) {
-#else
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
-#endif
-		for (auto &variants : LevelMonsterTypes[i].sounds) {
-			for (auto &snd : variants) {
-				snd = nullptr;
-			}
-		}
-	}
-}
-
 bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan)
 {
 	const auto &playerPosition = MyPlayer->position.tile;
@@ -1354,19 +1309,15 @@ void ui_sound_init()
 	PrivSoundInit(sfx_UI);
 }
 
-void effects_play_sound(const char *sndFile)
+void effects_play_sound(_sfx_id id)
 {
 	if (!gbSndInited || !gbSoundOn) {
 		return;
 	}
 
-	for (auto &sfx : sgSFX) {
-		if (strcasecmp(sfx.pszName, sndFile) == 0 && sfx.pSnd != nullptr) {
-			if (!sfx.pSnd->isPlaying())
-				snd_play_snd(sfx.pSnd.get(), 0, 0);
-
-			return;
-		}
+	TSFX &sfx = sgSFX[id];
+	if (sfx.pSnd != nullptr && !sfx.pSnd->isPlaying()) {
+		snd_play_snd(sfx.pSnd.get(), 0, 0);
 	}
 }
 

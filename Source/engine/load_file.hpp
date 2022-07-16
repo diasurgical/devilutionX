@@ -22,7 +22,7 @@ public:
 	{
 		handle_ = OpenAsset(path);
 		if (handle_ == nullptr) {
-			if (!gbQuietMode) {
+			if (!HeadlessMode) {
 				app_fatal(StrCat("Failed to open file:\n", path, "\n\n", SDL_GetError()));
 			}
 		}

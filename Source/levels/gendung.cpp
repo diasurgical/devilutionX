@@ -95,58 +95,46 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 	if (origin.x + maxSize > DMAXX && origin.y + maxSize > DMAXY) {
 		return {}; // Original broken bounds check, avoids lower right corner
 	}
-	if (origin.x + minSize > DMAXX || origin.y + minSize > DMAXY) {
-		return {}; // Skip definit OOB cases
-	}
 	if (IsNearThemeRoom(origin)) {
 		return {};
 	}
 
-	int maxWidth = std::min(DMAXX - origin.x, maxSize);
-	int maxHeight = std::min(DMAXY - origin.y, maxSize);
+	const int maxWidth = std::min(maxSize, DMAXX - origin.x);
+	const int maxHeight = std::min(maxSize, DMAXY - origin.y);
 
-	// Start out looking for the widest area at least as tall as minSize
-	for (int yOffset = 0; yOffset < minSize; yOffset++) {
-		for (int xOffset = 0; xOffset < maxWidth; xOffset++) {
-			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
-				continue;
+	Size room { maxWidth, maxHeight };
 
-			// found a non-floor tile earlier than the previous max width
+	for (int i = 0; i < maxSize; i++) {
+		int width = 0;
+		if (i < maxHeight) {
+			while (width < room.width) {
+				if (dungeon[origin.x + width][origin.y + i] != floor)
+					break;
 
-			if (xOffset < minSize) {
-				// area is too small to hold a room of the desired size
-				return {};
+				width++;
 			}
-
-			// update the max width since we can't make a room larger than this
-			maxWidth = xOffset;
 		}
+
+		int height = 0;
+		if (i < maxWidth) {
+			while (height < room.height) {
+				if (dungeon[origin.x + i][origin.y + height] != floor)
+					break;
+
+				height++;
+			}
+		}
+
+		if (width < minSize || height < minSize) {
+			if (i < minSize)
+				return {};
+			break;
+		}
+
+		room = { std::min(room.width, width), std::min(room.height, height) };
 	}
 
-	// Work out the tallest area we could potentially fill
-	for (int xOffset = 0; xOffset < minSize; xOffset++) {
-		for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
-			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
-				continue;
-
-			maxHeight = yOffset;
-		}
-	}
-
-	// Then replicate the original dungeon generation constraints and find the "squarest" region
-	for (int yOffset = minSize; yOffset < maxHeight; yOffset++) {
-		for (int xOffset = minSize; xOffset < maxWidth; xOffset++) {
-			if (dungeon[origin.x + xOffset][origin.y + yOffset] == floor)
-				continue;
-
-			if (xOffset > yOffset)
-				maxWidth = xOffset;
-			if (yOffset > xOffset)
-				maxHeight = yOffset;
-		}
-	}
-
-	return Size { maxWidth, maxHeight } - 2;
+	return room - 2;
 }
 
 void CreateThemeRoom(int themeIndex)

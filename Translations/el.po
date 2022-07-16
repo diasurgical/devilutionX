@@ -7621,8 +7621,8 @@ msgstr "Δεν έχεις τίποτα για ταυτοποίηση."
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1225
-msgid "Identify which item?             Your gold: {:s}"
-msgstr "Πιο αντικείμενο θέλεις να ταυτοποιήσω;   Ο χρυσός σου: {:s}"
+msgid "Identify which item?"
+msgstr "Πιο αντικείμενο θέλεις να ταυτοποιήσω;"
 
 #: Source/stores.cpp:1242
 msgid "This item is:"

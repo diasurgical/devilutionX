@@ -322,13 +322,13 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 		return;
 
 	if (missile._miAnimData == nullptr) {
-		Log("Draw Missile 2 type {}: NULL Cel Buffer", missile._mitype);
+		Log("Draw Missile 2 type {}: NULL Cel Buffer", static_cast<int>(missile._mitype));
 		return;
 	}
 	int nCel = missile._miAnimFrame - 1;
 	const uint32_t frames = LoadLE32(missile._miAnimData);
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
-		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
+		Log("Draw Missile 2: frame {} of {}, missile type {}", nCel, frames, static_cast<int>(missile._mitype));
 		return;
 	}
 
@@ -367,7 +367,7 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
 	if (!monster.animInfo.celSprite) {
-		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name);
+		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name());
 		return;
 	}
 
@@ -437,7 +437,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
-		    monster.name,
+		    monster.name(),
 		    getMonsterModeDisplayName(monster.mode),
 		    DirectionToString(monster.direction),
 		    nCel,
@@ -452,7 +452,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		return;
 	}
 	uint8_t *trn = nullptr;
-	if (monster.uniqType != 0)
+	if (monster.isUnique())
 		trn = monster.uniqueMonsterTRN.get();
 	if (monster.mode == MonsterMode::Petrified)
 		trn = GetStoneTRN();
@@ -623,14 +623,14 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 
 	byte *pCelBuff = objectToDraw._oAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Object type {}: NULL Cel Buffer", objectToDraw._otype);
+		Log("Draw Object type {}: NULL Cel Buffer", static_cast<int>(objectToDraw._otype));
 		return;
 	}
 
 	const uint32_t nCel = objectToDraw._oAnimFrame - 1;
 	const uint32_t frames = LoadLE32(pCelBuff);
 	if (nCel == static_cast<uint32_t>(-1) || frames > 50 || nCel >= frames) {
-		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, objectToDraw._otype);
+		Log("Draw Object: frame {} of {}, object type {}", nCel, frames, static_cast<int>(objectToDraw._otype));
 		return;
 	}
 
@@ -766,7 +766,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	if (!IsTileLit(tilePosition) && !MyPlayer->_pInfraFlag)
 		return;
 
-	if (mi < 0 || mi >= MaxMonsters) {
+	if (static_cast<size_t>(mi) >= MaxMonsters) {
 		Log("Draw Monster: tried to draw illegal monster {}", mi);
 		return;
 	}
@@ -1560,6 +1560,9 @@ extern SDL_Surface *PalSurface;
 
 void ClearScreenBuffer()
 {
+	if (HeadlessMode)
+		return;
+
 	assert(PalSurface != nullptr);
 	SDL_FillRect(PalSurface, nullptr, 0);
 }
@@ -1652,6 +1655,9 @@ void EnableFrameCount()
 
 void scrollrt_draw_game_screen()
 {
+	if (HeadlessMode)
+		return;
+
 	int hgt = 0;
 
 	if (force_redraw == 255) {
@@ -1676,7 +1682,7 @@ void scrollrt_draw_game_screen()
 
 void DrawAndBlit()
 {
-	if (!gbRunGame) {
+	if (!gbRunGame || HeadlessMode) {
 		return;
 	}
 

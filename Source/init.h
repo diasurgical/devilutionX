@@ -14,8 +14,8 @@ namespace devilution {
 extern bool gbActive;
 extern std::optional<MpqArchive> hellfire_mpq;
 extern EventHandler CurrentEventHandler;
-extern std::optional<MpqArchive> spawn_mpq;
-extern std::optional<MpqArchive> diabdat_mpq;
+extern DVL_API_FOR_TEST std::optional<MpqArchive> spawn_mpq;
+extern DVL_API_FOR_TEST std::optional<MpqArchive> diabdat_mpq;
 extern DVL_API_FOR_TEST bool gbIsSpawn;
 extern DVL_API_FOR_TEST bool gbIsHellfire;
 extern DVL_API_FOR_TEST bool gbVanilla;

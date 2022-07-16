@@ -97,7 +97,7 @@ void PrintDebugMonster(int m)
 	auto &monster = Monsters[m];
 
 	EventPlrMsg(StrCat(
-	                "Monster ", m, " = ", monster.name,
+	                "Monster ", m, " = ", monster.name(),
 	                "\nX = ", monster.position.tile.x, ", Y = ", monster.position.tile.y,
 	                "\nEnemy = ", monster.enemy, ", HP = ", monster.hitPoints,
 	                "\nMode = ", static_cast<int>(monster.mode), ", Var1 = ", monster.var1),
@@ -105,7 +105,7 @@ void PrintDebugMonster(int m)
 
 	bool bActive = false;
 
-	for (int i = 0; i < ActiveMonsterCount; i++) {
+	for (size_t i = 0; i < ActiveMonsterCount; i++) {
 		if (ActiveMonsters[i] == m)
 			bActive = true;
 	}
@@ -342,9 +342,10 @@ std::string ExportDun(const string_view parameter)
 	for (int y = 16; y < MAXDUNY - 16; y++) {
 		for (int x = 16; x < MAXDUNX - 16; x++) {
 			uint16_t objectId = 0;
-			if (dObject[x][y] > 0) {
+			Object *object = ObjectAtPosition({ x, y }, false);
+			if (object != nullptr) {
 				for (int i = 0; i < 147; i++) {
-					if (ObjTypeConv[i] == Objects[abs(dObject[x][y]) - 1]._otype) {
+					if (ObjTypeConv[i] == object->_otype) {
 						objectId = i;
 						break;
 					}
@@ -677,15 +678,15 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
 
 	int mtype = -1;
-	int uniqueIndex = -1;
-	for (int i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
+	UniqueMonsterType uniqueIndex = UniqueMonsterType::None;
+	for (size_t i = 0; UniqueMonstersData[i].mtype != MT_INVALID; i++) {
 		auto mondata = UniqueMonstersData[i];
 		std::string monsterName(mondata.mName);
 		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (monsterName.find(name) == std::string::npos)
 			continue;
 		mtype = mondata.mtype;
-		uniqueIndex = i;
+		uniqueIndex = static_cast<UniqueMonsterType>(i);
 		if (monsterName == name) // to support partial name matching but always choose the correct monster if full name is given
 			break;
 	}
@@ -693,10 +694,10 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = MaxLvlMTypes - 1;
+	size_t id = MaxLvlMTypes - 1;
 	bool found = false;
 
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (LevelMonsterTypes[i].type == mtype) {
 			id = i;
 			found = true;
@@ -705,11 +706,12 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].type = static_cast<_monster_id>(mtype);
-		InitMonsterGFX(id);
-		InitMonsterSND(id);
-		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].corpseId = 1;
+		CMonster &monsterType = LevelMonsterTypes[id];
+		monsterType.type = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(monsterType);
+		InitMonsterSND(monsterType);
+		monsterType.placeFlags |= PLACE_SCATTER;
+		monsterType.corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;
@@ -726,8 +728,7 @@ std::string DebugCmdSpawnUniqueMonster(const string_view parameter)
 		Monster *monster = AddMonster(pos, myPlayer._pdir, id, true);
 		if (monster == nullptr)
 			return StrCat("I could only summon ", spawnedMonster, " Monsters. The rest strike for shorter working hours.");
-		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[uniqueIndex]);
-		ActiveMonsterCount--;
+		PrepareUniqueMonst(*monster, uniqueIndex, 0, 0, UniqueMonstersData[static_cast<size_t>(uniqueIndex)]);
 		monster->corpseId = 1;
 		spawnedMonster += 1;
 
@@ -767,7 +768,7 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 
 	for (int i = 0; i < NUM_MTYPES; i++) {
 		auto mondata = MonstersData[i];
-		std::string monsterName(mondata.mName);
+		std::string monsterName(mondata.name);
 		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (monsterName.find(name) == std::string::npos)
 			continue;
@@ -779,10 +780,10 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	if (mtype == -1)
 		return "Monster not found!";
 
-	int id = MaxLvlMTypes - 1;
+	size_t id = MaxLvlMTypes - 1;
 	bool found = false;
 
-	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
 		if (LevelMonsterTypes[i].type == mtype) {
 			id = i;
 			found = true;
@@ -791,11 +792,12 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	}
 
 	if (!found) {
-		LevelMonsterTypes[id].type = static_cast<_monster_id>(mtype);
-		InitMonsterGFX(id);
-		InitMonsterSND(id);
-		LevelMonsterTypes[id].placeFlags |= PLACE_SCATTER;
-		LevelMonsterTypes[id].corpseId = 1;
+		CMonster &monsterType = LevelMonsterTypes[id];
+		monsterType.type = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(monsterType);
+		InitMonsterSND(monsterType);
+		monsterType.placeFlags |= PLACE_SCATTER;
+		monsterType.corpseId = 1;
 	}
 
 	Player &myPlayer = *MyPlayer;

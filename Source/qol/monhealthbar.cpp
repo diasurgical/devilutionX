@@ -123,7 +123,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	};
 
 	if (*sgOptions.Gameplay.showMonsterType) {
-		Uint8 borderColor = getBorderColor(monster.data().mMonstClass);
+		Uint8 borderColor = getBorderColor(monster.data().monsterClass);
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);
 		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + height - border - 1 }, borderWidth, borderColor);
@@ -133,27 +133,27 @@ void DrawMonsterHealthBar(const Surface &out)
 	}
 
 	UiFlags style = UiFlags::AlignCenter | UiFlags::VerticalCenter;
-	DrawString(out, monster.name, { position + Displacement { -1, 1 }, { width, height } }, style | UiFlags::ColorBlack);
-	if (monster.uniqType != 0)
+	DrawString(out, monster.name(), { position + Displacement { -1, 1 }, { width, height } }, style | UiFlags::ColorBlack);
+	if (monster.isUnique())
 		style |= UiFlags::ColorWhitegold;
-	else if (monster.leader != 0)
+	else if (monster.leader != Monster::NoLeader)
 		style |= UiFlags::ColorBlue;
 	else
 		style |= UiFlags::ColorWhite;
-	DrawString(out, monster.name, { position, { width, height } }, style);
+	DrawString(out, monster.name(), { position, { width, height } }, style);
 
 	if (multiplier > 0)
 		DrawString(out, StrCat("x", multiplier), { position, { width - 2, height } }, UiFlags::ColorWhite | UiFlags::AlignRight | UiFlags::VerticalCenter);
-	if (monster.uniqType != 0 || MonsterKillCounts[monster.type().type] >= 15) {
+	if (monster.isUnique() || MonsterKillCounts[monster.type().type] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
 
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
-			if ((monster.magicResistance & immunes[i]) != 0) {
+			if ((monster.resistance & immunes[i]) != 0) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
-			} else if ((monster.magicResistance & resists[i]) != 0) {
+			} else if ((monster.resistance & resists[i]) != 0) {
 				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}

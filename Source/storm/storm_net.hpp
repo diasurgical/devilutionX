@@ -47,13 +47,6 @@ struct _SNETEVENT {
 	uint32_t databytes;
 };
 
-// Game states
-#define GAMESTATE_PRIVATE 0x01
-#define GAMESTATE_FULL 0x02
-#define GAMESTATE_ACTIVE 0x04
-#define GAMESTATE_STARTED 0x08
-#define GAMESTATE_REPLAY 0x80
-
 #define PS_CONNECTED 0x10000
 #define PS_TURN_ARRIVED 0x20000
 #define PS_ACTIVE 0x40000

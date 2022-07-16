@@ -4240,7 +4240,7 @@ msgstr "шкода кулі вогню: {:d}-{:d}"
 
 #: Source/items.cpp:3632
 msgid "attacker takes 1-3 damage"
-msgstr "володар отримує 1-3 шкоди"
+msgstr "нападник отримує 1-3 шкоди"
 
 #: Source/items.cpp:3634
 msgid "user loses all mana"

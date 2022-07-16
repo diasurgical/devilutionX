@@ -130,7 +130,7 @@ uint32_t PkwareCompress(byte *srcData, uint32_t size)
 	return size;
 }
 
-void PkwareDecompress(byte *inBuff, int recvSize, int maxBytes)
+void PkwareDecompress(byte *inBuff, uint32_t recvSize, int maxBytes)
 {
 	std::unique_ptr<char[]> ptr = std::make_unique<char[]>(CMP_BUFFER_SIZE);
 	std::unique_ptr<byte[]> outBuff { new byte[maxBytes] };

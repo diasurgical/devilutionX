@@ -94,7 +94,7 @@ cmake_configure() {
 }
 
 cmake_build() {
-	cmake --build "$BUILD_DIR" -j "$(getconf _NPROCESSORS_ONLN)"
+	BR_CACHE_DIR="${HOME}/.buildroot-ccache" cmake --build "$BUILD_DIR" -j "$(getconf _NPROCESSORS_ONLN)"
 }
 
 strip_bin() {

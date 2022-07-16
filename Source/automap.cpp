@@ -13,7 +13,6 @@
 #include "engine/render/automap_render.hpp"
 #include "levels/gendung.h"
 #include "levels/setmaps.h"
-#include "miniwin/miniwin.h"
 #include "player.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
@@ -480,7 +479,7 @@ void DrawAutomapText(const Surface &out)
 	Point linePosition { 8, 8 };
 
 	if (gbIsMultiplayer) {
-		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
+		if (string_view("0.0.0.0") != szPlayerName) {
 			std::string description = std::string(_("Game: "));
 			description.append(szPlayerName);
 			DrawString(out, description, linePosition);

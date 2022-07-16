@@ -18,6 +18,7 @@ Uint16 GetViewportHeight();
 /** @brief Returns the UI (Menus, Messages, Help) can use. Currently this is 640x480 like vanilla. */
 const Rectangle &GetUIRectangle();
 
+void AdjustToScreenGeometry(Size windowSize);
 float GetDpiScalingFactor();
 /**
  * @brief Set the screen to fullscreen or windowe if fullsc

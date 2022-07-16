@@ -1333,8 +1333,8 @@ void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allows
 
 int RndUItem(Monster *monster)
 {
-	if (monster != nullptr && (monster->data().mTreasure & T_UNIQ) != 0 && !gbIsMultiplayer)
-		return -((monster->data().mTreasure & T_MASK) + 1);
+	if (monster != nullptr && (monster->data().treasure & T_UNIQ) != 0 && !gbIsMultiplayer)
+		return -((monster->data().treasure & T_MASK) + 1);
 
 	int ril[512];
 
@@ -1623,21 +1623,22 @@ void SpawnRock()
 	if (ActiveItemCount >= MAXITEMS)
 		return;
 
-	int oi;
-	bool ostand = false;
-	for (int i = 0; i < ActiveObjectCount && !ostand; i++) {
-		oi = ActiveObjects[i];
-		ostand = Objects[oi]._otype == OBJ_STAND;
+	Object *stand = nullptr;
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		if (Objects[ActiveObjects[i]]._otype == OBJ_STAND) {
+			stand = &Objects[ActiveObjects[i]];
+			break;
+		}
 	}
 
-	if (!ostand)
+	if (stand == nullptr)
 		return;
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 
-	item.position = Objects[oi].position;
-	dItem[Objects[oi].position.x][Objects[oi].position.y] = ii + 1;
+	item.position = stand->position;
+	dItem[item.position.x][item.position.y] = ii + 1;
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(item, IDI_ROCK, curlv);
 	SetupItem(item);
@@ -1727,12 +1728,6 @@ void PrintItemOil(char iDidx)
 	case IMISC_HEAL:
 		AddPanelString(_("restore some life"));
 		break;
-	case IMISC_OLDHEAL:
-		AddPanelString(_("recover life"));
-		break;
-	case IMISC_DEADHEAL:
-		AddPanelString(_("deadly heal"));
-		break;
 	case IMISC_MANA:
 		AddPanelString(_("restore some mana"));
 		break;
@@ -1750,16 +1745,6 @@ void PrintItemOil(char iDidx)
 		break;
 	case IMISC_ELIXVIT:
 		AddPanelString(_("increase vitality"));
-		break;
-	case IMISC_ELIXWEAK:
-	case IMISC_ELIXDIS:
-		AddPanelString(_("decrease strength"));
-		break;
-	case IMISC_ELIXCLUM:
-		AddPanelString(_("decrease dexterity"));
-		break;
-	case IMISC_ELIXSICK:
-		AddPanelString(_("decrease vitality"));
 		break;
 	case IMISC_REJUV:
 		AddPanelString(_("restore some life and mana"));
@@ -3010,10 +2995,10 @@ void SetupItem(Item &item)
 
 int RndItem(const Monster &monster)
 {
-	if ((monster.data().mTreasure & T_UNIQ) != 0)
-		return -((monster.data().mTreasure & T_MASK) + 1);
+	if ((monster.data().treasure & T_UNIQ) != 0)
+		return -((monster.data().treasure & T_MASK) + 1);
 
-	if ((monster.data().mTreasure & T_NODROP) != 0)
+	if ((monster.data().treasure & T_NODROP) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -3073,7 +3058,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster.uniqType != 0 || ((monster.data().mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
+	if (monster.isUnique() || ((monster.data().treasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(&monster);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -3102,9 +3087,9 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
-	int uper = monster.uniqType != 0 ? 15 : 1;
+	int uper = monster.isUnique() ? 15 : 1;
 
-	int8_t mLevel = monster.data().mLevel;
+	int8_t mLevel = monster.data().level;
 	if (!gbIsHellfire && monster.type().type == MT_DIABLO)
 		mLevel -= 15;
 
@@ -3442,7 +3427,9 @@ void FreeItemGFX()
 
 void GetItemFrm(Item &item)
 {
-	item.AnimInfo.celSprite.emplace(*itemanims[ItemCAnimTbl[item._iCurs]]);
+	int it = ItemCAnimTbl[item._iCurs];
+	if (itemanims[it])
+		item.AnimInfo.celSprite.emplace(*itemanims[it]);
 }
 
 void GetItemStr(Item &item)
@@ -3768,6 +3755,9 @@ void DrawUniqueInfo(const Surface &out)
 
 void PrintItemDetails(const Item &item)
 {
+	if (HeadlessMode)
+		return;
+
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
@@ -3806,6 +3796,9 @@ void PrintItemDetails(const Item &item)
 
 void PrintItemDur(const Item &item)
 {
+	if (HeadlessMode)
+		return;
+
 	if (item._iClass == ICLASS_WEAPON) {
 		if (item._iMinDam == item._iMaxDam) {
 			if (item._iMaxDur == DUR_INDESTRUCTIBLE)
@@ -3846,7 +3839,6 @@ void UseItem(int pnum, item_misc_id mid, spell_id spl)
 
 	switch (mid) {
 	case IMISC_HEAL:
-	case IMISC_FOOD:
 		player.RestorePartialLife();
 		if (&player == MyPlayer) {
 			drawhpflag = true;
@@ -4452,7 +4444,7 @@ std::string DebugSpawnItem(std::string itemName)
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
 	fake_m.levelType = 0;
-	fake_m.uniqType = 0;
+	fake_m.uniqueType = UniqueMonsterType::None;
 
 	int i = 0;
 	for (;; i++) {

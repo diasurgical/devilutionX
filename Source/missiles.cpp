@@ -229,7 +229,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 			dam += player._pDamageMod;
 		else
 			dam += player._pDamageMod / 2;
-		if (monster.data().mMonstClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
+		if (monster.data().monsterClass == MonsterClass::Demon && HasAnyOf(player._pIFlags, ItemSpecialEffect::TripleDemonDamage))
 			dam *= 3;
 	}
 	bool resist = monster.isResistant(t);
@@ -245,7 +245,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		monster.flags |= MFLAG_NOHEAL;
 
 	if (monster.hitPoints >> 6 <= 0) {
-		M_StartKill(monsterId, pnum);
+		M_StartKill(monster, pnum);
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
@@ -910,7 +910,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	if (MissilesData[mtype].mType == 0) {
 		int tac = player.GetArmor();
 		if (monster != nullptr) {
-			hper = monster->hit
+			hper = monster->toHit
 			    + ((monster->level - player._pLevel) * 2)
 			    + 30
 			    - (dist * 2) - tac;
@@ -1143,13 +1143,13 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 		    if ((monster.flags & MFLAG_BERSERK) != 0)
 			    return false;
-		    if (monster.uniqType != 0 || monster.ai == AI_DIABLO)
+		    if (monster.isUnique() || monster.ai == AI_DIABLO)
 			    return false;
 		    if (IsAnyOf(monster.mode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 			    return false;
-		    if ((monster.magicResistance & IMMUNE_MAGIC) != 0)
+		    if ((monster.resistance & IMMUNE_MAGIC) != 0)
 			    return false;
-		    if ((monster.magicResistance & RESIST_MAGIC) != 0 && ((monster.magicResistance & RESIST_MAGIC) != 1 || !FlipCoin()))
+		    if ((monster.resistance & RESIST_MAGIC) != 0 && ((monster.resistance & RESIST_MAGIC) != 1 || !FlipCoin()))
 			    return false;
 
 		    return true;
@@ -1163,8 +1163,8 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 		monster.flags |= MFLAG_BERSERK | MFLAG_GOLEM;
 		monster.minDamage = (GenerateRnd(10) + 120) * monster.minDamage / 100 + slvl;
 		monster.maxDamage = (GenerateRnd(10) + 120) * monster.maxDamage / 100 + slvl;
-		monster.minDamage2 = (GenerateRnd(10) + 120) * monster.minDamage2 / 100 + slvl;
-		monster.maxDamage2 = (GenerateRnd(10) + 120) * monster.maxDamage2 / 100 + slvl;
+		monster.minDamageSpecial = (GenerateRnd(10) + 120) * monster.minDamageSpecial / 100 + slvl;
+		monster.maxDamageSpecial = (GenerateRnd(10) + 120) * monster.maxDamageSpecial / 100 + slvl;
 		int lightRadius = leveltype == DTYPE_NEST ? 9 : 3;
 		monster.lightId = AddLight(monster.position.tile, lightRadius);
 		UseMana(player, SPL_BERSERK);
@@ -2038,7 +2038,7 @@ void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 	InitMissileAnimationFromMonster(missile, parameter.midir, monster, graphic);
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		missile._miAnimFrame = 7;
-	if (monster.uniqType != 0) {
+	if (monster.isUnique()) {
 		missile._mlid = monster.lightId;
 	}
 	PutMissile(missile);
@@ -2156,13 +2156,14 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 
 	int playerId = missile._misource;
 	Player &player = Players[playerId];
+	Monster &golem = Monsters[playerId];
 
-	if (Monsters[playerId].position.tile != GolemHoldingCell && &player == MyPlayer)
-		M_StartKill(playerId, playerId);
+	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
+		M_StartKill(golem, playerId);
 
 	UseMana(player, SPL_GOLEM);
 
-	if (Monsters[playerId].position.tile == GolemHoldingCell) {
+	if (golem.position.tile == GolemHoldingCell) {
 		std::optional<Point> spawnPosition = FindClosestValidPosition(
 		    [start = missile.position.start](Point target) {
 			    return !IsTileOccupied(target) && LineClearMissile(start, target);
@@ -2584,7 +2585,7 @@ Missile *AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mi
 
 	if (!missile.IsTrap() && micaster == TARGET_PLAYERS) {
 		Monster &monster = Monsters[id];
-		if (monster.uniqType != 0) {
+		if (monster.isUnique()) {
 			missile._miUniqTrans = monster.uniqTrans + 1;
 		}
 	}
@@ -3458,7 +3459,7 @@ void MI_Acidsplat(Missile &missile)
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
 		int monst = missile._misource;
-		int dam = (Monsters[monst].data().mLevel >= 2 ? 2 : 1);
+		int dam = (Monsters[monst].data().level >= 2 ? 2 : 1);
 		AddMissile(missile.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monst, dam, missile._mispllvl);
 	} else {
 		PutMissile(missile);
@@ -3564,7 +3565,7 @@ void MI_Rhino(Missile &missile)
 	monster.position.old = newPos;
 	monster.position.tile = newPos;
 	dMonster[newPos.x][newPos.y] = -(monst + 1);
-	if (monster.uniqType != 0)
+	if (monster.isUnique())
 		ChangeLightXY(missile._mlid, newPos);
 	MoveMissilePos(missile);
 	PutMissile(missile);

@@ -31,6 +31,8 @@ namespace devilution {
 
 namespace {
 
+constexpr uint32_t MaxProgress = 534;
+
 OptionalOwnedCelSprite sgpBackCel;
 
 bool IsProgress;
@@ -216,16 +218,27 @@ void interface_msg_pump()
 	}
 }
 
-bool IncProgress()
+void IncProgress()
 {
+	if (HeadlessMode)
+		return;
 	interface_msg_pump();
 	if (!IsProgress)
-		return false;
+		return;
 	sgdwProgress += 23;
-	if (sgdwProgress > 534)
-		sgdwProgress = 534;
+	if (sgdwProgress > MaxProgress)
+		sgdwProgress = MaxProgress;
 	DrawCutsceneForeground();
-	return sgdwProgress >= 534;
+}
+
+void CompleteProgress()
+{
+	if (HeadlessMode)
+		return;
+	if (!IsProgress)
+		return;
+	while (sgdwProgress < MaxProgress)
+		IncProgress();
 }
 
 void ShowProgress(interface_mode uMsg)
@@ -235,35 +248,38 @@ void ShowProgress(interface_mode uMsg)
 	gbSomebodyWonGameKludge = false;
 	plrmsg_delay(true);
 
-	assert(ghMainWnd);
 	EventHandler previousHandler = SetEventHandler(DisableInputEventHandler);
 
-	interface_msg_pump();
-	ClearScreenBuffer();
-	scrollrt_draw_game_screen();
-	BlackPalette();
+	if (!HeadlessMode) {
+		assert(ghMainWnd);
 
-	// Blit the background once and then free it.
-	LoadCutsceneBackground(uMsg);
-	DrawCutsceneBackground();
-	if (RenderDirectlyToOutputSurface && IsDoubleBuffered()) {
-		// Blit twice for triple buffering.
-		for (unsigned i = 0; i < 2; ++i) {
-			if (DiabloUiSurface() == PalSurface)
-				BltFast(nullptr, nullptr);
-			RenderPresent();
-			DrawCutsceneBackground();
+		interface_msg_pump();
+		ClearScreenBuffer();
+		scrollrt_draw_game_screen();
+		BlackPalette();
+
+		// Blit the background once and then free it.
+		LoadCutsceneBackground(uMsg);
+		DrawCutsceneBackground();
+		if (RenderDirectlyToOutputSurface && IsDoubleBuffered()) {
+			// Blit twice for triple buffering.
+			for (unsigned i = 0; i < 2; ++i) {
+				if (DiabloUiSurface() == PalSurface)
+					BltFast(nullptr, nullptr);
+				RenderPresent();
+				DrawCutsceneBackground();
+			}
 		}
+		FreeCutsceneBackground();
+
+		if (IsHardwareCursor())
+			SetHardwareCursorVisible(false);
+
+		PaletteFadeIn(8);
+		IncProgress();
+		sound_init();
+		IncProgress();
 	}
-	FreeCutsceneBackground();
-
-	if (IsHardwareCursor())
-		SetHardwareCursorVisible(false);
-
-	PaletteFadeIn(8);
-	IncProgress();
-	sound_init();
-	IncProgress();
 
 	Player &myPlayer = *MyPlayer;
 
@@ -411,9 +427,11 @@ void ShowProgress(interface_mode uMsg)
 		break;
 	}
 
-	assert(ghMainWnd);
+	if (!HeadlessMode) {
+		assert(ghMainWnd);
 
-	PaletteFadeOut(8);
+		PaletteFadeOut(8);
+	}
 
 	previousHandler = SetEventHandler(previousHandler);
 	assert(previousHandler == DisableInputEventHandler);

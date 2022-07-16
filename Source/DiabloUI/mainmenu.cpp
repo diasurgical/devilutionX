@@ -32,10 +32,8 @@ void MainmenuEsc()
 }
 #endif
 
-void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
+void MainmenuLoad(const char *name)
 {
-	gfnSoundFunction = fnSound;
-
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Single Player"), MAINMENU_SINGLE_PLAYER));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Multi Player"), MAINMENU_MULTIPLAYER));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Settings"), MAINMENU_SETTINGS));
@@ -92,12 +90,12 @@ void mainmenu_restart_repintro()
 	dwAttractTicks = SDL_GetTicks() + mainmenu_attract_time_out * 1000;
 }
 
-bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
+bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, int attractTimeOut)
 {
 	MainMenuResult = MAINMENU_NONE;
 	while (MainMenuResult == MAINMENU_NONE) {
 		mainmenu_attract_time_out = attractTimeOut;
-		MainmenuLoad(name, fnSound);
+		MainmenuLoad(name);
 
 		mainmenu_restart_repintro(); // for automatic starts
 

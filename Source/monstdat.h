@@ -89,44 +89,47 @@ enum class MonsterAvailability : uint8_t {
 };
 
 struct MonsterData {
-	const char *mName;
-	const char *GraphicType;
-	const char *sndfile;
-	const char *TransFile;
+	const char *name;
+	const char *assetsSuffix;
+	const char *soundSuffix;
+	const char *trnFile;
 	MonsterAvailability availability;
 	uint16_t width;
-	uint16_t mImage;
-	bool has_special;
-	bool snd_special;
-	int8_t Frames[6];
-	int8_t Rate[6];
-	int8_t mMinDLvl;
-	int8_t mMaxDLvl;
-	int8_t mLevel;
-	uint16_t mMinHP;
-	uint16_t mMaxHP;
-	_mai_id mAi;
-	/** Usign monster_flag as bitflags */
-	uint16_t mFlags;
-	uint8_t mInt;
-	uint8_t mHit;
-	int8_t mAFNum;
-	uint8_t mMinDamage;
-	uint8_t mMaxDamage;
-	uint8_t mHit2;
-	int8_t mAFNum2;
-	uint8_t mMinDamage2;
-	uint8_t mMaxDamage2;
-	uint8_t mArmorClass;
-	MonsterClass mMonstClass;
+	uint16_t image;
+	bool hasSpecial;
+	bool hasSpecialSound;
+	int8_t frames[6];
+	int8_t rate[6];
+	int8_t minDunLvl;
+	int8_t maxDunLvl;
+	int8_t level;
+	uint16_t hitPointsMinimum;
+	uint16_t hitPointsMaximum;
+	_mai_id ai;
+	/**
+	 * @brief Denotes monster's abilities defined in @p monster_flag as bitflags
+	 * For usage, see @p MonstersData in monstdat.cpp
+	 */
+	uint16_t abilityFlags;
+	uint8_t intelligence;
+	uint8_t toHit;
+	int8_t animFrameNum;
+	uint8_t minDamage;
+	uint8_t maxDamage;
+	uint8_t toHitSpecial;
+	int8_t animFrameNumSpecial;
+	uint8_t minDamageSpecial;
+	uint8_t maxDamageSpecial;
+	uint8_t armorClass;
+	MonsterClass monsterClass;
 	/** Using monster_resistance as bitflags */
-	uint8_t mMagicRes;
+	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
-	uint8_t mMagicRes2;
-	int8_t mSelFlag; // TODO Create enum
+	uint8_t resistanceHell;
+	int8_t selectionType; // TODO Create enum
 	/** Using monster_treasure */
-	uint16_t mTreasure;
-	uint16_t mExp;
+	uint16_t treasure;
+	uint16_t exp;
 };
 
 enum _monster_id : int16_t {

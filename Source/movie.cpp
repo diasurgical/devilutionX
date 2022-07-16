@@ -30,7 +30,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	sound_disable_music(true);
 	stream_stop();
-	effects_play_sound("Sfx\\Misc\\blank.wav");
+	effects_play_sound(SFX_SILENCE);
 
 	if (IsHardwareCursorEnabled() && ControlDevice == ControlTypes::KeyboardAndMouse) {
 		SetHardwareCursorVisible(false);
