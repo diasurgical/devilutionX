@@ -22,5 +22,8 @@ set(DEVILUTIONX_STATIC_LIBFMT ON)
 set(DEVILUTIONX_STATIC_BZIP2 ON)
 set(DEVILUTIONX_STATIC_ZLIB ON)
 
+set(BUILD_ASSETS_MPQ OFF)
+set(DEVILUTIONX_ASSETS_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/uwp-project/pkg/assets")
+
 # not really necessary but a good measure for SDL related stuff
 set(WINDOWS_STORE ON)

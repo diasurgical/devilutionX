@@ -8,7 +8,7 @@
 3. In the first popup - called `Deploy or Install Application` choose `devilutionX..appx` and then click `Next`
 4. In the second popup - called `Choose any necessary dependencies` choose `Microsoft.VCLibs..appx` and then click `Start`
 5. In your PC go to the shared folder `WindowsApps` and find the devilutionX folder which should be something like `<random string>\_<version>\_random string<>`
-6. Copy `diabdat.mpq` from your CD (or GoG install folder) to it.
+6. Copy the `assets` directory from the archive and `diabdat.mpq` from your CD (or GoG install folder) to it.
 7. In the Xbox press `View` on DevilutionX and select `Details` and there change the type from `App` to `Game`.
 
 ## Usage
