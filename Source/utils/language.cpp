@@ -91,29 +91,6 @@ void SwapLE(MoEntry &entry)
 	entry.offset = SDL_SwapLE32(entry.offset);
 }
 
-char *StrTrimLeft(char *s)
-{
-	while (*s != '\0' && isblank(*s) != 0) {
-		s++;
-	}
-	return s;
-}
-
-char *StrTrimRight(char *s)
-{
-	size_t length = strlen(s);
-
-	while (length != 0) {
-		length--;
-		if (isblank(s[length]) != 0) {
-			s[length] = '\0';
-		} else {
-			break;
-		}
-	}
-	return s;
-}
-
 string_view TrimLeft(string_view str)
 {
 	str.remove_prefix(std::min(str.find_first_not_of(" \t"), str.size()));
@@ -220,19 +197,23 @@ void SetPluralForm(string_view expression)
 /**
  * Parse "nplurals=2;"
  */
-void ParsePluralForms(const char *string)
+void ParsePluralForms(string_view string)
 {
-	const char *value = strstr(string, "nplurals");
-	if (value == nullptr)
+	const string_view pluralsKey = "nplurals";
+	const string_view::size_type pluralsPos = string.find(pluralsKey);
+	if (pluralsPos == string_view::npos)
+		return;
+	string.remove_prefix(pluralsPos + pluralsKey.size());
+
+	const string_view::size_type eqPos = string.find('=');
+	if (eqPos == string_view::npos)
 		return;
 
-	value = strstr(value, "=");
-	if (value == nullptr)
+	string_view value = string.substr(eqPos + 1);
+	if (value.empty() || value[0] < '0')
 		return;
 
-	value += 1;
-
-	const unsigned nplurals = SDL_atoi(value);
+	const unsigned nplurals = value[0] - '0';
 	if (nplurals == 0)
 		return;
 
@@ -241,36 +222,25 @@ void ParsePluralForms(const char *string)
 	SetPluralForm(value);
 }
 
-void ParseMetadata(char *ptr)
+void ParseMetadata(string_view metadata)
 {
-	char *delim;
+	string_view::size_type delim;
 
-	while ((ptr != nullptr) && ((delim = strstr(ptr, ":")) != nullptr)) {
-		char *key = StrTrimLeft(ptr);
-		char *val = StrTrimLeft(delim + 1);
+	while (!metadata.empty() && ((delim = metadata.find(':')) != string_view::npos)) {
+		const string_view key = TrimLeft(string_view(metadata.data(), delim));
+		string_view val = TrimLeft(string_view(metadata.data() + delim + 1, metadata.size() - delim - 1));
 
-		// null-terminate key
-		*delim = '\0';
-
-		// progress to next line (if any)
-		if ((ptr = strstr(val, "\n")) != nullptr) {
-			*ptr = '\0';
-			ptr++;
-		}
-
-		val = StrTrimRight(val);
-
-		if ((strcmp("Content-Type", key) == 0) && ((delim = strstr(val, "=")) != nullptr)) {
-			if (strcasecmp(delim + 1, "utf-8") != 0) {
-				Log("Translation is now UTF-8 encoded!");
-			}
-			continue;
+		if ((delim = val.find('\n')) != string_view::npos) {
+			val = string_view(val.data(), delim);
+			metadata.remove_prefix(val.data() - metadata.data() + val.size() + 1);
+		} else {
+			metadata.remove_prefix(metadata.size());
 		}
 
 		// Match "Plural-Forms: nplurals=2; plural=(n != 1);"
-		if (strcmp("Plural-Forms", key) == 0) {
+		if (key == "Plural-Forms") {
 			ParsePluralForms(val);
-			continue;
+			break;
 		}
 	}
 }
