@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "engine/assets.hpp"
-#include "miniwin/miniwin.h"
 #include "options.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"

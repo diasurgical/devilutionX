@@ -11,7 +11,6 @@
 #include "appfat.h"
 #include "encrypt.h"
 #include "engine.h"
-#include "miniwin/miniwin.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
@@ -500,7 +499,7 @@ void MpqWriter::RemoveHashEntry(const char *filename)
 
 void MpqWriter::RemoveHashEntries(bool (*fnGetName)(uint8_t, char *))
 {
-	char pszFileName[MAX_PATH];
+	char pszFileName[MaxMpqPathSize];
 
 	for (uint8_t i = 0; fnGetName(i, pszFileName); i++) {
 		RemoveHashEntry(pszFileName);

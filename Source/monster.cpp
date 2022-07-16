@@ -28,7 +28,6 @@
 #include "levels/trigs.h"
 #include "lighting.h"
 #include "minitext.h"
-#include "miniwin/miniwin.h"
 #include "missiles.h"
 #include "movie.h"
 #include "options.h"
@@ -164,7 +163,7 @@ bool IsDirectionalAnim(const CMonster &monster, size_t animIndex)
 
 void InitMonsterTRN(CMonster &monst)
 {
-	char path[MAX_PATH];
+	char path[64];
 	std::array<uint8_t, 256> colorTranslations;
 	*BufCopy(path, "Monsters\\", monst.data->trnFile, ".TRN") = '\0';
 	LoadFileInMem(path, colorTranslations);
@@ -3595,7 +3594,7 @@ void InitMonsterSND(CMonster &monsterType)
 			continue;
 
 		for (int j = 0; j < 2; j++) {
-			char path[MAX_PATH];
+			char path[64];
 			*BufCopy(path, "Monsters\\", soundSuffix, prefix, j + 1, ".WAV") = '\0';
 			monsterType.sounds[i][j] = sound_file_load(path);
 		}

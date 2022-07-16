@@ -14,7 +14,6 @@
 #include "init.h"
 #include "loadsave.h"
 #include "menu.h"
-#include "miniwin/miniwin.h"
 #include "mpq/mpq_reader.hpp"
 #include "pack.h"
 #include "qol/stash.h"
@@ -84,8 +83,8 @@ bool GetTempSaveNames(uint8_t dwIndex, char *szTemp)
 
 void RenameTempToPerm(MpqWriter &saveWriter)
 {
-	char szTemp[MAX_PATH];
-	char szPerm[MAX_PATH];
+	char szTemp[MaxMpqPathSize];
+	char szPerm[MaxMpqPathSize];
 
 	uint32_t dwIndex = 0;
 	while (GetTempSaveNames(dwIndex, szTemp)) {
@@ -194,7 +193,7 @@ bool CompareSaves(const std::string &actualSavePath, const std::string &referenc
 	possibleFileNamesToCheck.emplace_back("hero");
 	possibleFileNamesToCheck.emplace_back("game");
 	possibleFileNamesToCheck.emplace_back("additionalMissiles");
-	char szPerm[MAX_PATH];
+	char szPerm[MaxMpqPathSize];
 	for (int i = 0; GetPermSaveNames(i, szPerm); i++) {
 		possibleFileNamesToCheck.emplace_back(szPerm);
 	}
