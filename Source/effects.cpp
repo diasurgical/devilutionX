@@ -1316,8 +1316,8 @@ void effects_play_sound(const char *sndFile)
 		return;
 	}
 
-	for (auto &sfx : sgSFX) {
-		if (strcasecmp(sfx.pszName, sndFile) == 0 && sfx.pSnd != nullptr) {
+	for (TSFX &sfx : sgSFX) {
+		if (sfx.pSnd != nullptr && string_view(sfx.pszName) == sndFile) {
 			if (!sfx.pSnd->isPlaying())
 				snd_play_snd(sfx.pSnd.get(), 0, 0);
 

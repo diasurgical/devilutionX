@@ -185,13 +185,13 @@ void UiInitList_clear()
 void UiPlayMoveSound()
 {
 	if (gfnSoundFunction != nullptr)
-		gfnSoundFunction("sfx\\items\\titlemov.wav");
+		gfnSoundFunction("Sfx\\Items\\Titlemov.wav");
 }
 
 void UiPlaySelectSound()
 {
 	if (gfnSoundFunction != nullptr)
-		gfnSoundFunction("sfx\\items\\titlslct.wav");
+		gfnSoundFunction("Sfx\\Items\\Titlslct.wav");
 }
 
 namespace {

@@ -480,7 +480,7 @@ void DrawAutomapText(const Surface &out)
 	Point linePosition { 8, 8 };
 
 	if (gbIsMultiplayer) {
-		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
+		if (string_view("0.0.0.0") != szPlayerName) {
 			std::string description = std::string(_("Game: "));
 			description.append(szPlayerName);
 			DrawString(out, description, linePosition);

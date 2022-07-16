@@ -6,8 +6,4 @@ namespace devilution {
 #define MAX_PATH 260
 #endif
 
-#ifdef _MSC_VER
-#define strcasecmp _stricmp
-#endif
-
 } // namespace devilution
