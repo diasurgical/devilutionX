@@ -54,7 +54,6 @@ std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 std::optional<OwnedPcxSpriteSheet> ArtBackground;
 Art ArtCursor;
 
-void (*gfnSoundFunction)(const char *file);
 bool textInputActive = true;
 std::size_t SelectedItem = 0;
 
@@ -184,14 +183,12 @@ void UiInitList_clear()
 
 void UiPlayMoveSound()
 {
-	if (gfnSoundFunction != nullptr)
-		gfnSoundFunction("Sfx\\Items\\Titlemov.wav");
+	effects_play_sound(IS_TITLEMOV);
 }
 
 void UiPlaySelectSound()
 {
-	if (gfnSoundFunction != nullptr)
-		gfnSoundFunction("Sfx\\Items\\Titlslct.wav");
+	effects_play_sound(IS_TITLSLCT);
 }
 
 namespace {

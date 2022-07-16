@@ -68,7 +68,6 @@ extern std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
 extern std::optional<OwnedPcxSpriteSheet> ArtBackground;
 extern Art ArtCursor;
 
-extern void (*gfnSoundFunction)(const char *file);
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 
 inline SDL_Surface *DiabloUiSurface()
@@ -85,7 +84,7 @@ void UiSelHeroMultDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool
 void UiSelHeroSingDialog(bool (*fninfo)(bool (*fninfofunc)(_uiheroinfo *)), bool (*fncreate)(_uiheroinfo *), bool (*fnremove)(_uiheroinfo *), void (*fnstats)(unsigned int, _uidefaultstats *), _selhero_selections *dlgresult, uint32_t *saveNumber, _difficulty *difficulty);
 bool UiCreditsDialog();
 bool UiSupportDialog();
-bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*fnSound)(const char *file), int attractTimeOut);
+bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, int attractTimeOut);
 bool UiProgressDialog(int (*fnfunc)());
 bool UiSelectGame(GameData *gameData, int *playerId);
 bool UiSelectProvider(GameData *gameData);

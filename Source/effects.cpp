@@ -1310,19 +1310,15 @@ void ui_sound_init()
 	PrivSoundInit(sfx_UI);
 }
 
-void effects_play_sound(const char *sndFile)
+void effects_play_sound(_sfx_id id)
 {
 	if (!gbSndInited || !gbSoundOn) {
 		return;
 	}
 
-	for (TSFX &sfx : sgSFX) {
-		if (sfx.pSnd != nullptr && string_view(sfx.pszName) == sndFile) {
-			if (!sfx.pSnd->isPlaying())
-				snd_play_snd(sfx.pSnd.get(), 0, 0);
-
-			return;
-		}
+	TSFX &sfx = sgSFX[id];
+	if (sfx.pSnd != nullptr && !sfx.pSnd->isPlaying()) {
+		snd_play_snd(sfx.pSnd.get(), 0, 0);
 	}
 }
 

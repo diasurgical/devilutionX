@@ -1185,7 +1185,7 @@ void sound_update();
 void effects_cleanup_sfx();
 void sound_init();
 void ui_sound_init();
-void effects_play_sound(const char *sndFile);
+void effects_play_sound(_sfx_id);
 int GetSFXLength(int nSFX);
 
 } // namespace devilution
