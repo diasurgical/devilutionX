@@ -19,8 +19,8 @@ if(NXDK)
   )
 else()
   FetchContent_Declare(libfmt
-    URL https://github.com/fmtlib/fmt/archive/22d31b31f0e9b4e4654ba67ee881f3564c2cc297.tar.gz
-    URL_HASH MD5=d4e8744846cb9e94a80aca932ed2d5c0
+    URL https://github.com/fmtlib/fmt/archive/688a627d6c4d1fb6dfe070397b7cd4bf55a0024e.tar.gz
+    URL_HASH MD5=55a7ac3c12ee83cc86b76275fd1e5f6b
   )
 endif()
 FetchContent_MakeAvailableExcludeFromAll(libfmt)
