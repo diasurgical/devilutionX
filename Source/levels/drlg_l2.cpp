@@ -16,19 +16,30 @@
 #include "player.h"
 #include "quests.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
 namespace {
 
+struct HallNode {
+	Point beginning;
+	Point end;
+	int nHalldir;
+};
+
+struct RoomNode {
+	Point topLeft;
+	Point bottomRight;
+};
+
 int nRoomCnt;
-ROOMNODE RoomList[81];
-std::list<HALLNODE> HallList;
+RoomNode RoomList[81];
+std::list<HallNode> HallList;
 // An ASCII representation of the level
 char predungeon[DMAXX][DMAXY];
 
-const int DirXadd[5] = { 0, 0, 1, 0, -1 };
-const int DirYadd[5] = { 0, -1, 0, 1, 0 };
+const Displacement DirAdd[5] = { { 0, 0 }, { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
 const ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
 // short word_48489A = 0;
 
@@ -1664,135 +1675,113 @@ void MapRoom(int x1, int y1, int x2, int y2)
 	}
 }
 
-void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool forceHW)
+void DefineRoom(Point topLeft, Point bottomRight, bool forceHW)
 {
-	predungeon[nX1][nY1] = 'C';
-	predungeon[nX1][nY2] = 'E';
-	predungeon[nX2][nY1] = 'B';
-	predungeon[nX2][nY2] = 'A';
+	predungeon[topLeft.x][topLeft.y] = 'C';
+	predungeon[topLeft.x][bottomRight.y] = 'E';
+	predungeon[bottomRight.x][topLeft.y] = 'B';
+	predungeon[bottomRight.x][bottomRight.y] = 'A';
 
 	nRoomCnt++;
-	RoomList[nRoomCnt].nRoomx1 = nX1;
-	RoomList[nRoomCnt].nRoomx2 = nX2;
-	RoomList[nRoomCnt].nRoomy1 = nY1;
-	RoomList[nRoomCnt].nRoomy2 = nY2;
+	RoomList[nRoomCnt] = { topLeft, bottomRight };
 
 	if (forceHW) {
-		for (int i = nX1; i < nX2; i++) {
+		for (int i = topLeft.x; i < bottomRight.x; i++) {
 			/// BUGFIX: Should loop j between nY1 and nY2 instead of always using nY1.
-			while (i < nY2) {
-				Protected.set(i, nY1);
+			while (i < bottomRight.y) {
+				Protected.set(i, topLeft.y);
 				i++;
 			}
 		}
 	}
-	for (int i = nX1 + 1; i <= nX2 - 1; i++) {
-		predungeon[i][nY1] = '#';
-		predungeon[i][nY2] = '#';
+	for (int i = topLeft.x + 1; i <= bottomRight.x - 1; i++) {
+		predungeon[i][topLeft.y] = '#';
+		predungeon[i][bottomRight.y] = '#';
 	}
-	nY2--;
-	for (int j = nY1 + 1; j <= nY2; j++) {
-		predungeon[nX1][j] = '#';
-		predungeon[nX2][j] = '#';
-		for (int i = nX1 + 1; i < nX2; i++) {
+	bottomRight.y--;
+	for (int j = topLeft.y + 1; j <= bottomRight.y; j++) {
+		predungeon[topLeft.x][j] = '#';
+		predungeon[bottomRight.x][j] = '#';
+		for (int i = topLeft.x + 1; i < bottomRight.x; i++) {
 			predungeon[i][j] = '.';
 		}
 	}
 }
 
-void CreateDoorType(int nX, int nY)
+void CreateDoorType(Point position)
 {
-	if (predungeon[nX - 1][nY] == 'D') {
+	if (predungeon[position.x - 1][position.y] == 'D')
 		return;
-	}
-	if (predungeon[nX + 1][nY] == 'D') {
+	if (predungeon[position.x + 1][position.y] == 'D')
 		return;
-	}
-	if (predungeon[nX][nY - 1] == 'D') {
+	if (predungeon[position.x][position.y - 1] == 'D')
 		return;
-	}
-	if (predungeon[nX][nY + 1] == 'D') {
+	if (predungeon[position.x][position.y + 1] == 'D')
 		return;
-	}
-	if (IsAnyOf(predungeon[nX][nY], 'A', 'B', 'C', 'E')) {
+	if (IsAnyOf(predungeon[position.x][position.y], 'A', 'B', 'C', 'E'))
 		return;
-	}
 
-	predungeon[nX][nY] = 'D';
+	predungeon[position.x][position.y] = 'D';
 }
 
-void PlaceHallExt(int nX, int nY)
+void PlaceHallExt(Point position)
 {
-	if (predungeon[nX][nY] == ' ') {
-		predungeon[nX][nY] = ',';
-	}
+	if (predungeon[position.x][position.y] == ' ')
+		predungeon[position.x][position.y] = ',';
 }
 
 /**
  * Draws a random room rectangle, and then subdivides the rest of the passed in rectangle into 4 and recurses.
- * @param nX1 Lower X boundary of the area to draw into.
- * @param nY1 Lower Y boundary of the area to draw into.
- * @param nX2 Upper X boundary of the area to draw into.
- * @param nY2 Upper Y boundary of the area to draw into.
+ * @param topLeft Lower X and Y boundaries of the area to draw into.
+ * @param bottomRight Upper X and Y boundaries of the area to draw into.
  * @param nRDest The room number of the parent room this call was invoked for. Zero for empty
  * @param nHDir The direction of the hall from nRDest to this room.
- * @param forceHW If set, nH and nW are used for room size instead of random values.
- * @param nH Height of the room, if forceHW is set.
- * @param nW Width of the room, if forceHW is set.
+ * @param size If set, is is used used for room size instead of random values.
  */
-void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool forceHW, int nH, int nW)
+void CreateRoom(Point topLeft, Point bottomRight, int nRDest, int nHDir, std::optional<Size> size)
 {
-	if (nRoomCnt >= 80) {
+	if (nRoomCnt >= 80)
 		return;
-	}
 
-	int nAw = nX2 - nX1;
-	int nAh = nY2 - nY1;
+	Displacement areaDisplacement = bottomRight - topLeft;
+	Size area { areaDisplacement.deltaX, areaDisplacement.deltaY };
 
 	constexpr int AreaMin = 2;
-	if (nAw < AreaMin || nAh < AreaMin) {
+	if (area.width < AreaMin || area.height < AreaMin)
 		return;
-	}
 
 	constexpr int RoomMax = 10;
 	constexpr int RoomMin = 4;
-	int nRw = nAw;
-	if (nAw > RoomMin) {
-		nRw = GenerateRnd(std::min(nAw, RoomMax) - RoomMin) + RoomMin;
+	Size roomSize = area;
+	if (area.width > RoomMin)
+		roomSize.width = GenerateRnd(std::min(area.width, RoomMax) - RoomMin) + RoomMin;
+	if (area.height > RoomMin)
+		roomSize.height = GenerateRnd(std::min(area.height, RoomMax) - RoomMin) + RoomMin;
+
+	if (size)
+		roomSize = *size;
+
+	Point roomTopLeft = topLeft + Displacement { GenerateRnd(area.width), GenerateRnd(area.height) };
+	Point roomBottomRight = roomTopLeft + Displacement { roomSize };
+	if (roomBottomRight.x > bottomRight.x) {
+		roomBottomRight.x = bottomRight.x;
+		roomTopLeft.x = bottomRight.x - roomSize.width;
 	}
-	int nRh = nAh;
-	if (nAh > RoomMin) {
-		nRh = GenerateRnd(std::min(nAh, RoomMax) - RoomMin) + RoomMin;
+	if (roomBottomRight.y > bottomRight.y) {
+		roomBottomRight.y = bottomRight.y;
+		roomTopLeft.y = bottomRight.y - roomSize.height;
 	}
 
-	if (forceHW) {
-		nRw = nW;
-		nRh = nH;
-	}
+	roomTopLeft.x = clamp(roomTopLeft.x, 1, 38);
+	roomTopLeft.y = clamp(roomTopLeft.y, 1, 38);
+	roomBottomRight.x = clamp(roomBottomRight.x, 1, 38);
+	roomBottomRight.y = clamp(roomBottomRight.y, 1, 38);
 
-	int nRx1 = GenerateRnd(nX2 - nX1) + nX1;
-	int nRy1 = GenerateRnd(nY2 - nY1) + nY1;
-	int nRx2 = nRw + nRx1;
-	int nRy2 = nRh + nRy1;
-	if (nRx2 > nX2) {
-		nRx2 = nX2;
-		nRx1 = nX2 - nRw;
-	}
-	if (nRy2 > nY2) {
-		nRy2 = nY2;
-		nRy1 = nY2 - nRh;
-	}
+	DefineRoom(roomTopLeft, roomBottomRight, static_cast<bool>(size));
 
-	nRx1 = clamp(nRx1, 1, 38);
-	nRy1 = clamp(nRy1, 1, 38);
-	nRx2 = clamp(nRx2, 1, 38);
-	nRy2 = clamp(nRy2, 1, 38);
-
-	DefineRoom(nRx1, nRy1, nRx2, nRy2, forceHW);
-
-	if (forceHW) {
-		SetPieceRoom = { { nRx1 + 2, nRy1 + 2 }, { nRx2 - nRx1 - 1, nRy2 - nRy1 - 1 } };
-	}
+	constexpr Displacement standoff { 2, 2 };
+	if (size)
+		SetPieceRoom = { roomTopLeft + standoff, roomSize - 1 };
 
 	int nRid = nRoomCnt;
 
@@ -1802,201 +1791,164 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 		int nHx2 = 0;
 		int nHy2 = 0;
 		if (nHDir == 1) {
-			nHx1 = GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
-			nHy1 = nRy1;
-			int nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
-			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
-			nHy2 = RoomList[nRDest].nRoomy2;
+			nHx1 = GenerateRnd(roomSize.width - 2) + roomTopLeft.x + 1;
+			nHy1 = roomTopLeft.y;
+			int nHw = RoomList[nRDest].bottomRight.x - RoomList[nRDest].topLeft.x - 2;
+			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].topLeft.x + 1;
+			nHy2 = RoomList[nRDest].bottomRight.y;
 		}
 		if (nHDir == 3) {
-			nHx1 = GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
-			nHy1 = nRy2;
-			int nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
-			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
-			nHy2 = RoomList[nRDest].nRoomy1;
+			nHx1 = GenerateRnd(roomSize.width - 2) + roomTopLeft.x + 1;
+			nHy1 = roomBottomRight.y;
+			int nHw = RoomList[nRDest].bottomRight.x - RoomList[nRDest].topLeft.x - 2;
+			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].topLeft.x + 1;
+			nHy2 = RoomList[nRDest].topLeft.y;
 		}
 		if (nHDir == 2) {
-			nHx1 = nRx2;
-			nHy1 = GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
-			nHx2 = RoomList[nRDest].nRoomx1;
-			int nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
-			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
+			nHx1 = roomBottomRight.x;
+			nHy1 = GenerateRnd(roomSize.height - 2) + roomTopLeft.y + 1;
+			nHx2 = RoomList[nRDest].topLeft.x;
+			int nHh = RoomList[nRDest].bottomRight.y - RoomList[nRDest].topLeft.y - 2;
+			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].topLeft.y + 1;
 		}
 		if (nHDir == 4) {
-			nHx1 = nRx1;
-			nHy1 = GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
-			nHx2 = RoomList[nRDest].nRoomx2;
-			int nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
-			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
+			nHx1 = roomTopLeft.x;
+			nHy1 = GenerateRnd(roomSize.height - 2) + roomTopLeft.y + 1;
+			nHx2 = RoomList[nRDest].bottomRight.x;
+			int nHh = RoomList[nRDest].bottomRight.y - RoomList[nRDest].topLeft.y - 2;
+			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].topLeft.y + 1;
 		}
-		HallList.push_back({ nHx1, nHy1, nHx2, nHy2, nHDir });
+		HallList.push_back({ { nHx1, nHy1 }, { nHx2, nHy2 }, nHDir });
 	}
 
-	if (nRh > nRw) {
-		CreateRoom(nX1 + 2, nY1 + 2, nRx1 - 2, nRy2 - 2, nRid, 2, false, 0, 0);
-		CreateRoom(nRx2 + 2, nRy1 + 2, nX2 - 2, nY2 - 2, nRid, 4, false, 0, 0);
-		CreateRoom(nX1 + 2, nRy2 + 2, nRx2 - 2, nY2 - 2, nRid, 1, false, 0, 0);
-		CreateRoom(nRx1 + 2, nY1 + 2, nX2 - 2, nRy1 - 2, nRid, 3, false, 0, 0);
+	Point roomBottomLeft { roomTopLeft.x, roomBottomRight.y };
+	Point roomTopRight { roomBottomRight.x, roomTopLeft.y };
+	if (roomSize.height > roomSize.width) {
+		CreateRoom(topLeft + standoff, roomBottomLeft - standoff, nRid, 2, {});
+		CreateRoom(roomTopRight + standoff, bottomRight - standoff, nRid, 4, {});
+		CreateRoom(Point { topLeft.x, roomBottomRight.y } + standoff, Point { roomBottomRight.x, bottomRight.y } - standoff, nRid, 1, {});
+		CreateRoom(Point { roomTopLeft.x, topLeft.y } + standoff, Point { bottomRight.x, roomTopLeft.y } - standoff, nRid, 3, {});
 	} else {
-		CreateRoom(nX1 + 2, nY1 + 2, nRx2 - 2, nRy1 - 2, nRid, 3, false, 0, 0);
-		CreateRoom(nRx1 + 2, nRy2 + 2, nX2 - 2, nY2 - 2, nRid, 1, false, 0, 0);
-		CreateRoom(nX1 + 2, nRy1 + 2, nRx1 - 2, nY2 - 2, nRid, 2, false, 0, 0);
-		CreateRoom(nRx2 + 2, nY1 + 2, nX2 - 2, nRy2 - 2, nRid, 4, false, 0, 0);
+		CreateRoom(topLeft + standoff, roomTopRight - standoff, nRid, 3, {});
+		CreateRoom(roomBottomLeft + standoff, bottomRight - standoff, nRid, 1, {});
+		CreateRoom(Point { topLeft.x, roomTopLeft.y } + standoff, Point { roomTopLeft.x, bottomRight.y } - standoff, nRid, 2, {});
+		CreateRoom(Point { roomBottomRight.x, topLeft.y } + standoff, Point { bottomRight.x, roomBottomRight.y } - standoff, nRid, 4, {});
 	}
 }
 
-void ConnectHall(const HALLNODE &node)
+void ConnectHall(const HallNode &node)
 {
-	int nRp;
+	Point beginning = node.beginning;
+	Point end = node.end;
 
-	int nX1 = node.nHallx1;
-	int nY1 = node.nHally1;
-	int nX2 = node.nHallx2;
-	int nY2 = node.nHally2;
-	int nHd = node.nHalldir;
-
-	bool fDoneflag = false;
 	int fMinusFlag = GenerateRnd(100);
 	int fPlusFlag = GenerateRnd(100);
-	int nOrigX1 = nX1;
-	int nOrigY1 = nY1;
-	CreateDoorType(nX1, nY1);
-	CreateDoorType(nX2, nY2);
-	int nCurrd = nHd;
-	nX2 -= DirXadd[nCurrd];
-	nY2 -= DirYadd[nCurrd];
-	predungeon[nX2][nY2] = ',';
+	CreateDoorType(beginning);
+	CreateDoorType(end);
+	int nCurrd = node.nHalldir;
+	end -= DirAdd[nCurrd];
+	predungeon[end.x][end.y] = ',';
 	bool fInroom = false;
 
-	while (!fDoneflag) {
-		if (nX1 >= 38 && nCurrd == 2) {
+	do {
+		if (beginning.x >= 38 && nCurrd == 2)
 			nCurrd = 4;
-		}
-		if (nY1 >= 38 && nCurrd == 3) {
+		if (beginning.y >= 38 && nCurrd == 3)
 			nCurrd = 1;
-		}
-		if (nX1 <= 1 && nCurrd == 4) {
+		if (beginning.x <= 1 && nCurrd == 4)
 			nCurrd = 2;
-		}
-		if (nY1 <= 1 && nCurrd == 1) {
+		if (beginning.y <= 1 && nCurrd == 1)
 			nCurrd = 3;
-		}
-		if (predungeon[nX1][nY1] == 'C' && (nCurrd == 1 || nCurrd == 4)) {
+		if (predungeon[beginning.x][beginning.y] == 'C' && (nCurrd == 1 || nCurrd == 4))
 			nCurrd = 2;
-		}
-		if (predungeon[nX1][nY1] == 'B' && (nCurrd == 1 || nCurrd == 2)) {
+		if (predungeon[beginning.x][beginning.y] == 'B' && (nCurrd == 1 || nCurrd == 2))
 			nCurrd = 3;
-		}
-		if (predungeon[nX1][nY1] == 'E' && (nCurrd == 4 || nCurrd == 3)) {
+		if (predungeon[beginning.x][beginning.y] == 'E' && (nCurrd == 4 || nCurrd == 3))
 			nCurrd = 1;
-		}
-		if (predungeon[nX1][nY1] == 'A' && (nCurrd == 2 || nCurrd == 3)) {
+		if (predungeon[beginning.x][beginning.y] == 'A' && (nCurrd == 2 || nCurrd == 3))
 			nCurrd = 4;
-		}
-		nX1 += DirXadd[nCurrd];
-		nY1 += DirYadd[nCurrd];
-		if (predungeon[nX1][nY1] == ' ') {
+		beginning += DirAdd[nCurrd];
+		if (predungeon[beginning.x][beginning.y] == ' ') {
 			if (fInroom) {
-				CreateDoorType(nX1 - DirXadd[nCurrd], nY1 - DirYadd[nCurrd]);
+				CreateDoorType(beginning - DirAdd[nCurrd]);
+				fInroom = false;
 			} else {
 				if (fMinusFlag < 50) {
-					if (nCurrd != 1 && nCurrd != 3) {
-						PlaceHallExt(nX1, nY1 - 1);
-					} else {
-						PlaceHallExt(nX1 - 1, nY1);
-					}
+					if (nCurrd != 1 && nCurrd != 3)
+						PlaceHallExt(beginning + Displacement { 0, -1 });
+					else
+						PlaceHallExt(beginning + Displacement { -1, 0 });
 				}
 				if (fPlusFlag < 50) {
-					if (nCurrd != 1 && nCurrd != 3) {
-						PlaceHallExt(nX1, nY1 + 1);
-					} else {
-						PlaceHallExt(nX1 + 1, nY1);
-					}
+					if (nCurrd != 1 && nCurrd != 3)
+						PlaceHallExt(beginning + Displacement { 0, 1 });
+					else
+						PlaceHallExt(beginning + Displacement { 1, 0 });
 				}
 			}
-			predungeon[nX1][nY1] = ',';
-			fInroom = false;
+			predungeon[beginning.x][beginning.y] = ',';
 		} else {
-			if (!fInroom && predungeon[nX1][nY1] == '#') {
-				CreateDoorType(nX1, nY1);
-			}
-			if (predungeon[nX1][nY1] != ',') {
+			if (!fInroom && predungeon[beginning.x][beginning.y] == '#')
+				CreateDoorType(beginning);
+			if (predungeon[beginning.x][beginning.y] != ',')
 				fInroom = true;
-			}
 		}
-		int nDx = abs(nX2 - nX1);
-		int nDy = abs(nY2 - nY1);
+		int nDx = abs(end.x - beginning.x);
+		int nDy = abs(end.y - beginning.y);
 		if (nDx > nDy) {
-			nRp = 2 * nDx;
-			if (nRp > 30) {
-				nRp = 30;
-			}
+			int nRp = std::min(2 * nDx, 30);
 			if (GenerateRnd(100) < nRp) {
-				if (nX2 <= nX1 || nX1 >= DMAXX) {
+				if (end.x <= beginning.x || beginning.x >= DMAXX)
 					nCurrd = 4;
-				} else {
+				else
 					nCurrd = 2;
-				}
 			}
 		} else {
-			nRp = 5 * nDy;
-			if (nRp > 80) {
-				nRp = 80;
-			}
+			int nRp = std::min(5 * nDy, 80);
 			if (GenerateRnd(100) < nRp) {
-				if (nY2 <= nY1 || nY1 >= DMAXY) {
+				if (end.y <= beginning.y || beginning.y >= DMAXY)
 					nCurrd = 1;
-				} else {
+				else
 					nCurrd = 3;
-				}
 			}
 		}
-		if (nDy < 10 && nX1 == nX2 && (nCurrd == 2 || nCurrd == 4)) {
-			if (nY2 <= nY1 || nY1 >= DMAXY) {
+		if (nDy < 10 && beginning.x == end.x && (nCurrd == 2 || nCurrd == 4)) {
+			if (end.y <= beginning.y || beginning.y >= DMAXY)
 				nCurrd = 1;
-			} else {
+			else
 				nCurrd = 3;
-			}
 		}
-		if (nDx < 10 && nY1 == nY2 && (nCurrd == 1 || nCurrd == 3)) {
-			if (nX2 <= nX1 || nX1 >= DMAXX) {
+		if (nDx < 10 && beginning.y == end.y && (nCurrd == 1 || nCurrd == 3)) {
+			if (end.x <= beginning.x || beginning.x >= DMAXX)
 				nCurrd = 4;
-			} else {
+			else
 				nCurrd = 2;
-			}
 		}
 		if (nDy == 1 && nDx > 1 && (nCurrd == 1 || nCurrd == 3)) {
-			if (nX2 <= nX1 || nX1 >= DMAXX) {
+			if (end.x <= beginning.x || beginning.x >= DMAXX)
 				nCurrd = 4;
-			} else {
+			else
 				nCurrd = 2;
-			}
 		}
 		if (nDx == 1 && nDy > 1 && (nCurrd == 2 || nCurrd == 4)) {
-			if (nY2 <= nY1 || nX1 >= DMAXX) {
+			if (end.y <= beginning.y || beginning.x >= DMAXX)
 				nCurrd = 1;
-			} else {
+			else
 				nCurrd = 3;
-			}
 		}
-		if (nDx == 0 && predungeon[nX1][nY1] != ' ' && (nCurrd == 2 || nCurrd == 4)) {
-			if (nX2 <= nOrigX1 || nX1 >= DMAXX) {
+		if (nDx == 0 && predungeon[beginning.x][beginning.y] != ' ' && (nCurrd == 2 || nCurrd == 4)) {
+			if (end.x <= node.beginning.x || beginning.x >= DMAXX)
 				nCurrd = 1;
-			} else {
+			else
 				nCurrd = 3;
-			}
 		}
-		if (nDy == 0 && predungeon[nX1][nY1] != ' ' && (nCurrd == 1 || nCurrd == 3)) {
-			if (nY2 <= nOrigY1 || nY1 >= DMAXY) {
+		if (nDy == 0 && predungeon[beginning.x][beginning.y] != ' ' && (nCurrd == 1 || nCurrd == 3)) {
+			if (end.y <= node.beginning.y || beginning.y >= DMAXY)
 				nCurrd = 4;
-			} else {
+			else
 				nCurrd = 2;
-			}
 		}
-		if (nX1 == nX2 && nY1 == nY2) {
-			fDoneflag = true;
-		}
-	}
+	} while (beginning != end);
 }
 
 void DoPatternCheck(int i, int j)
@@ -2459,37 +2411,26 @@ bool FillVoids()
 
 bool CreateDungeon()
 {
-	int forceW = 0;
-	int forceH = 0;
-	bool forceHW = false;
+	std::optional<Size> size;
 
 	switch (currlevel) {
 	case 5:
-		if (Quests[Q_BLOOD]._qactive != QUEST_NOTAVAIL) {
-			forceHW = true;
-			forceH = 20;
-			forceW = 14;
-		}
+		if (Quests[Q_BLOOD]._qactive != QUEST_NOTAVAIL)
+			size = { 14, 20 };
 		break;
 	case 6:
-		if (Quests[Q_SCHAMB]._qactive != QUEST_NOTAVAIL) {
-			forceHW = true;
-			forceW = 10;
-			forceH = 10;
-		}
+		if (Quests[Q_SCHAMB]._qactive != QUEST_NOTAVAIL)
+			size = { 10, 10 };
 		break;
 	case 7:
-		if (Quests[Q_BLIND]._qactive != QUEST_NOTAVAIL) {
-			forceHW = true;
-			forceW = 15;
-			forceH = 15;
-		}
+		if (Quests[Q_BLIND]._qactive != QUEST_NOTAVAIL)
+			size = { 15, 15 };
 		break;
 	case 8:
 		break;
 	}
 
-	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, forceHW, forceH, forceW);
+	CreateRoom({ 2, 2 }, { DMAXX - 1, DMAXY - 1 }, 0, 0, size);
 
 	while (!HallList.empty()) {
 		ConnectHall(HallList.front());
