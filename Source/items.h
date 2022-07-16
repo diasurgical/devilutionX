@@ -245,6 +245,7 @@ struct Item {
 	_item_indexes IDidx = IDI_NONE;
 	uint32_t dwBuff = 0;
 	ItemSpecialEffectHf _iDamAcFlags = ItemSpecialEffectHf::None;
+	bool isForeign = false;
 
 	/**
 	 * @brief Clears this item and returns the old value

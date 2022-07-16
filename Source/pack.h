@@ -79,7 +79,12 @@ struct PlayerPack {
 	uint8_t friendlyMode;
 	/**@brief Only used in multiplayer sync (SendPlayerInfo/recv_plrinfo). Never used in save games (single- or multiplayer). */
 	uint8_t isOnSetLevel;
-	uint8_t dwReserved[18]; // For future use
+
+	uint64_t foreignInvFlags;
+	uint8_t foreignBodyFlags;
+	uint8_t foreignBeltFlags;
+
+	uint8_t dwReserved[8]; // For future use
 };
 #pragma pack(pop)
 
