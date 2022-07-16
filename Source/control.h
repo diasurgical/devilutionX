@@ -8,6 +8,12 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #include "DiabloUI/ui_flags.hpp"
 #include "engine.h"
 #include "engine/point.hpp"
@@ -169,7 +175,7 @@ void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
 void DrawGoldSplit(const Surface &out, int amount);
-void control_drop_gold(char vkey);
+void control_drop_gold(SDL_Keycode vkey);
 void DrawTalkPan(const Surface &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();
@@ -177,7 +183,7 @@ void control_type_message();
 void control_reset_talk();
 bool IsTalkActive();
 void control_new_text(string_view text);
-bool control_presskeys(int vkey);
+bool control_presskeys(SDL_Keycode vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
 void CloseGoldDrop();
 void GoldDropNewText(string_view text);
