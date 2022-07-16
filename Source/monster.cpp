@@ -570,7 +570,7 @@ void PlaceQuestMonsters()
 
 		if (currlevel == Quests[Q_SKELKING]._qlevel && gbIsMultiplayer) {
 			for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-				if (LevelMonsterTypes[i].data->monsterClass.IsSkeleton()) {
+				if (LevelMonsterTypes[i].data->monsterType.IsSkeleton()) {
 					PlaceUniqueMonst(UniqueMonsterType::SkeletonKing, i, 30);
 					break;
 				}
@@ -1308,9 +1308,9 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		hper = 1000;
 #endif
 	int ac = player.GetArmor();
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstDemons) && monster.data().monsterClass.IsType(MonsterClass::Demon))
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstDemons) && monster.data().monsterType.IsType(MonsterClass::Demon))
 		ac += 40;
-	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterClass.IsType(MonsterClass::Undead))
+	if (HasAnyOf(player.pDamAcFlags, ItemSpecialEffectHf::ACAgainstUndead) && monster.data().monsterType.IsType(MonsterClass::Undead))
 		ac += 20;
 	hit += 2 * (monster.level - player._pLevel)
 	    + 30
@@ -1728,7 +1728,7 @@ Monster *AddSkeleton(Point position, Direction dir, bool inMap)
 	size_t typeCount = 0;
 	size_t skeletonIndexes[sizeof(SkeletonTypes) / sizeof(SkeletonTypes[0])];
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-		if (LevelMonsterTypes[i].data->monsterClass.IsSkeleton())
+		if (LevelMonsterTypes[i].data->monsterType.IsSkeleton())
 			skeletonIndexes[typeCount++] = i;
 	}
 
@@ -3209,7 +3209,7 @@ void HorkDemonAi(int monsterId)
 
 string_view GetMonsterTypeText(const MonsterData &monsterData)
 {
-	switch (monsterData.monsterClass.GetClass()) {
+	switch (monsterData.monsterType.GetClass()) {
 	case MonsterClass::Animal:
 		return _("Animal");
 	case MonsterClass::Demon:
@@ -3218,7 +3218,7 @@ string_view GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal(StrCat("Unknown monsterClass ", static_cast<int>(monsterData.monsterClass.GetClass())));
+	app_fatal(StrCat("Unknown monsterClass ", static_cast<int>(monsterData.monsterType.GetClass())));
 }
 
 void ActivateSpawn(Monster &monster, Point position, Direction dir)
@@ -4852,7 +4852,7 @@ bool Monster::isImmune(missile_id missileType) const
 	    || ((resistance & IMMUNE_LIGHTNING) != 0 && missileElement == MISR_LIGHTNING)
 	    || ((resistance & IMMUNE_ACID) != 0 && missileElement == MISR_ACID))
 		return true;
-	if (missileType == MIS_HBOLT && type().type != MT_DIABLO && !data().monsterClass.IsType(MonsterClass::Undead))
+	if (missileType == MIS_HBOLT && type().type != MT_DIABLO && !data().monsterType.IsType(MonsterClass::Undead))
 		return true;
 	return false;
 }

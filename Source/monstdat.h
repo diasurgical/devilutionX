@@ -176,7 +176,7 @@ struct MonsterData {
 	uint8_t minDamageSpecial;
 	uint8_t maxDamageSpecial;
 	uint8_t armorClass;
-	MonsterType monsterClass;
+	MonsterType monsterType;
 	/** Using monster_resistance as bitflags */
 	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
