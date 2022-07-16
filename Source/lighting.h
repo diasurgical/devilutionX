@@ -56,7 +56,7 @@ extern bool UpdateLighting;
 
 void DoLighting(Point position, int nRadius, int Lnum);
 void DoUnVision(Point position, int nRadius);
-void DoVision(Point position, int nRadius, MapExplorationType doautomap, bool visible);
+void DoVision(Point position, int radius, MapExplorationType doAutomap, bool visible);
 void MakeLightTable();
 #ifdef _DEBUG
 void ToggleLighting();
@@ -127,7 +127,5 @@ auto Crawl(unsigned minRadius, unsigned maxRadius, F function) -> invoke_result_
 	});
 	return result;
 }
-
-/* rdata */
 
 } // namespace devilution
