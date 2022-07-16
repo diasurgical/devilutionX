@@ -116,6 +116,8 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 
 			yArray[x]++;
 		}
+		if (yArray[x] < minSize)
+			break;
 	}
 
 	int xArray[20] = {};
@@ -129,6 +131,8 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 
 			xArray[y]++;
 		}
+		if (xArray[y] < minSize)
+			break;
 	}
 
 	int xSmallest = xArray[0];
