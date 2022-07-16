@@ -591,7 +591,7 @@ void StartGoldWithdraw()
 	SDL_StartTextInput();
 }
 
-void WithdrawGoldKeyPress(char vkey)
+void WithdrawGoldKeyPress(SDL_Keycode vkey)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -600,15 +600,15 @@ void WithdrawGoldKeyPress(char vkey)
 		return;
 	}
 
-	if (vkey == DVL_VK_RETURN) {
+	if ((vkey == SDLK_RETURN) || (vkey == SDLK_KP_ENTER)) {
 		if (WithdrawGoldValue > 0) {
 			WithdrawGold(myPlayer, WithdrawGoldValue);
 			PlaySFX(IS_GOLD);
 		}
 		CloseGoldWithdraw();
-	} else if (vkey == DVL_VK_ESCAPE) {
+	} else if (vkey == SDLK_ESCAPE) {
 		CloseGoldWithdraw();
-	} else if (vkey == DVL_VK_BACK) {
+	} else if (vkey == SDLK_BACKSPACE) {
 		WithdrawGoldValue /= 10;
 	}
 }

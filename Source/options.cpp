@@ -1224,20 +1224,20 @@ KeymapperOptions::KeymapperOptions()
 		keyIDToKeyName.emplace(c, std::string(1, c));
 	}
 	for (int i = 0; i < 12; ++i) {
-		keyIDToKeyName.emplace(DVL_VK_F1 + i, StrCat("F", i + 1));
+		keyIDToKeyName.emplace(SDLK_F1 + i, StrCat("F", i + 1));
 	}
 
-	keyIDToKeyName.emplace(DVL_VK_LMENU, "LALT");
-	keyIDToKeyName.emplace(DVL_VK_RMENU, "RALT");
-	keyIDToKeyName.emplace(DVL_VK_SPACE, "SPACE");
-	keyIDToKeyName.emplace(DVL_VK_RCONTROL, "RCONTROL");
-	keyIDToKeyName.emplace(DVL_VK_LCONTROL, "LCONTROL");
-	keyIDToKeyName.emplace(DVL_VK_SNAPSHOT, "PRINT");
-	keyIDToKeyName.emplace(DVL_VK_PAUSE, "PAUSE");
-	keyIDToKeyName.emplace(DVL_VK_TAB, "TAB");
-	keyIDToKeyName.emplace(DVL_VK_MBUTTON, "MMOUSE");
-	keyIDToKeyName.emplace(DVL_VK_X1BUTTON, "X1MOUSE");
-	keyIDToKeyName.emplace(DVL_VK_X2BUTTON, "X2MOUSE");
+	keyIDToKeyName.emplace(SDLK_LALT, "LALT");
+	keyIDToKeyName.emplace(SDLK_RALT, "RALT");
+	keyIDToKeyName.emplace(SDLK_SPACE, "SPACE");
+	keyIDToKeyName.emplace(SDLK_RCTRL, "RCONTROL");
+	keyIDToKeyName.emplace(SDLK_LCTRL, "LCONTROL");
+	keyIDToKeyName.emplace(SDLK_PRINTSCREEN, "PRINT");
+	keyIDToKeyName.emplace(SDLK_PAUSE, "PAUSE");
+	keyIDToKeyName.emplace(SDLK_TAB, "TAB");
+	keyIDToKeyName.emplace(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask, "MMOUSE");
+	keyIDToKeyName.emplace(SDL_BUTTON_X1 | KeymapperMouseButtonMask, "X1MOUSE");
+	keyIDToKeyName.emplace(SDL_BUTTON_X2 | KeymapperMouseButtonMask, "X2MOUSE");
 
 	keyNameToKeyID.reserve(keyIDToKeyName.size());
 	for (const auto &kv : keyIDToKeyName) {
@@ -1254,7 +1254,7 @@ std::vector<OptionEntryBase *> KeymapperOptions::GetEntries()
 	return entries;
 }
 
-KeymapperOptions::Action::Action(string_view key, const char *name, const char *description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
+KeymapperOptions::Action::Action(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
     : OptionEntryBase(key, OptionEntryFlags::None, name, description)
     , defaultKey(defaultKey)
     , actionPressed(std::move(actionPressed))
@@ -1286,7 +1286,7 @@ void KeymapperOptions::Action::LoadFromIni(string_view category)
 
 	std::string readKey = result.data();
 	if (readKey.empty()) {
-		SetValue(DVL_VK_INVALID);
+		SetValue(SDLK_UNKNOWN);
 		return;
 	}
 
@@ -1304,7 +1304,7 @@ void KeymapperOptions::Action::LoadFromIni(string_view category)
 }
 void KeymapperOptions::Action::SaveToIni(string_view category) const
 {
-	if (boundKey == DVL_VK_INVALID) {
+	if (boundKey == SDLK_UNKNOWN) {
 		// Just add an empty config entry if the action is unbound.
 		SetIniValue(category.data(), key.data(), "");
 	}
@@ -1318,7 +1318,7 @@ void KeymapperOptions::Action::SaveToIni(string_view category) const
 
 string_view KeymapperOptions::Action::GetValueDescription() const
 {
-	if (boundKey == DVL_VK_INVALID)
+	if (boundKey == SDLK_UNKNOWN)
 		return "";
 	auto keyNameIt = sgOptions.Keymapper.keyIDToKeyName.find(boundKey);
 	if (keyNameIt == sgOptions.Keymapper.keyIDToKeyName.end()) {
@@ -1329,24 +1329,24 @@ string_view KeymapperOptions::Action::GetValueDescription() const
 
 bool KeymapperOptions::Action::SetValue(int value)
 {
-	if (value != DVL_VK_INVALID && sgOptions.Keymapper.keyIDToKeyName.find(value) == sgOptions.Keymapper.keyIDToKeyName.end()) {
+	if (value != SDLK_UNKNOWN && sgOptions.Keymapper.keyIDToKeyName.find(value) == sgOptions.Keymapper.keyIDToKeyName.end()) {
 		// Ignore invalid key values
 		return false;
 	}
 
 	// Remove old key
-	if (boundKey != DVL_VK_INVALID) {
+	if (boundKey != SDLK_UNKNOWN) {
 		sgOptions.Keymapper.keyIDToAction.erase(boundKey);
-		boundKey = DVL_VK_INVALID;
+		boundKey = SDLK_UNKNOWN;
 	}
 
 	// Add new key
-	if (value != DVL_VK_INVALID) {
+	if (value != SDLK_UNKNOWN) {
 		auto it = sgOptions.Keymapper.keyIDToAction.find(value);
 		if (it != sgOptions.Keymapper.keyIDToAction.end()) {
 			// Warn about overwriting keys.
 			Log("Keymapper: key '{}' is already bound to action '{}', overwriting", value, it->second.get().name);
-			it->second.get().boundKey = DVL_VK_INVALID;
+			it->second.get().boundKey = SDLK_UNKNOWN;
 		}
 
 		sgOptions.Keymapper.keyIDToAction.insert_or_assign(value, *this);
@@ -1356,13 +1356,17 @@ bool KeymapperOptions::Action::SetValue(int value)
 	return true;
 }
 
-void KeymapperOptions::AddAction(string_view key, const char *name, const char *description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
+void KeymapperOptions::AddAction(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index)
 {
 	actions.push_back(std::unique_ptr<Action>(new Action(key, name, description, defaultKey, std::move(actionPressed), std::move(actionReleased), std::move(enable), index)));
 }
 
-void KeymapperOptions::KeyPressed(int key) const
+void KeymapperOptions::KeyPressed(uint32_t key) const
 {
+	if (key >= SDLK_a && key <= SDLK_z) {
+		key -= 'a' - 'A';
+	}
+
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
 		return; // Ignore unmapped keys.
@@ -1377,7 +1381,7 @@ void KeymapperOptions::KeyPressed(int key) const
 	action.actionPressed();
 }
 
-void KeymapperOptions::KeyReleased(int key) const
+void KeymapperOptions::KeyReleased(uint32_t key) const
 {
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
@@ -1396,7 +1400,7 @@ void KeymapperOptions::KeyReleased(int key) const
 string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 {
 	for (const auto &action : actions) {
-		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
+		if (action->key == actionName && action->boundKey != SDLK_UNKNOWN) {
 			return action->GetValueDescription();
 		}
 	}
@@ -1406,11 +1410,11 @@ string_view KeymapperOptions::KeyNameForAction(string_view actionName) const
 uint32_t KeymapperOptions::KeyForAction(string_view actionName) const
 {
 	for (const auto &action : actions) {
-		if (action->key == actionName && action->boundKey != DVL_VK_INVALID) {
+		if (action->key == actionName && action->boundKey != SDLK_UNKNOWN) {
 			return action->boundKey;
 		}
 	}
-	return DVL_VK_INVALID;
+	return SDLK_UNKNOWN;
 }
 
 namespace {

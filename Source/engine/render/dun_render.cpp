@@ -1086,7 +1086,7 @@ DVL_ATTRIBUTE_HOT void RenderTileType(TileType tile, std::uint8_t *dst, int dstP
 const std::uint32_t *GetMask(TileType tile)
 {
 #ifdef _DEBUG
-	if (GetAsyncKeyState(DVL_VK_MENU)) {
+	if ((SDL_GetModState() & KMOD_ALT) != 0) {
 		return &SolidMask[TILE_HEIGHT - 1];
 	}
 #endif

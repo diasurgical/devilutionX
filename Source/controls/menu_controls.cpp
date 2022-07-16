@@ -74,7 +74,7 @@ MenuAction GetMenuAction(const SDL_Event &event)
 
 #if HAS_KBCTRL == 0
 	if (event.type == SDL_KEYDOWN) {
-		auto sym = event.key.keysym.sym;
+		SDL_Keycode sym = event.key.keysym.sym;
 		remap_keyboard_key(&sym);
 		switch (sym) {
 		case SDLK_UP:
@@ -90,13 +90,11 @@ MenuAction GetMenuAction(const SDL_Event &event)
 			return MenuAction_PAGE_UP;
 		case SDLK_PAGEDOWN:
 			return MenuAction_PAGE_DOWN;
-		case SDLK_RETURN: {
-			const Uint8 *state = SDLC_GetKeyState();
-			if (state[SDLC_KEYSTATE_LALT] == 0 && state[SDLC_KEYSTATE_RALT] == 0) {
+		case SDLK_RETURN:
+			if ((SDL_GetModState() & KMOD_ALT) == 0) {
 				return MenuAction_SELECT;
 			}
 			break;
-		}
 		case SDLK_KP_ENTER:
 			return MenuAction_SELECT;
 		case SDLK_SPACE:

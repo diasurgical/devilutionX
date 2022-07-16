@@ -260,34 +260,37 @@ void gmenu_draw(const Surface &out)
 	}
 }
 
-bool gmenu_presskeys(int vkey)
+bool gmenu_presskeys(SDL_Keycode vkey)
 {
 	if (sgpCurrentMenu == nullptr)
 		return false;
 	switch (vkey) {
-	case DVL_VK_RETURN:
+	case SDLK_KP_ENTER:
+	case SDLK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
 			PlaySFX(IS_TITLEMOV);
 			sgpCurrItem->fnMenu(true);
 		}
 		break;
-	case DVL_VK_ESCAPE:
+	case SDLK_ESCAPE:
 		PlaySFX(IS_TITLEMOV);
 		gmenu_set_items(nullptr, nullptr);
 		break;
-	case DVL_VK_SPACE:
+	case SDLK_SPACE:
 		return false;
-	case DVL_VK_LEFT:
+	case SDLK_LEFT:
 		GmenuLeftRight(false);
 		break;
-	case DVL_VK_RIGHT:
+	case SDLK_RIGHT:
 		GmenuLeftRight(true);
 		break;
-	case DVL_VK_UP:
+	case SDLK_UP:
 		GmenuUpDown(false);
 		break;
-	case DVL_VK_DOWN:
+	case SDLK_DOWN:
 		GmenuUpDown(true);
+		break;
+	default:
 		break;
 	}
 	return true;
