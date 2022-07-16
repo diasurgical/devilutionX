@@ -95,61 +95,46 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 	if (origin.x + maxSize > DMAXX && origin.y + maxSize > DMAXY) {
 		return {}; // Original broken bounds check, avoids lower right corner
 	}
-	if (origin.x + minSize > DMAXX || origin.y + minSize > DMAXY) {
-		return {}; // Skip definit OOB cases
-	}
 	if (IsNearThemeRoom(origin)) {
 		return {};
 	}
 
-	int maxWidth = std::min(maxSize, DMAXX - origin.x);
-	int maxHeight = std::min(maxSize, DMAXY - origin.y);
+	const int maxWidth = std::min(maxSize, DMAXX - origin.x);
+	const int maxHeight = std::min(maxSize, DMAXY - origin.y);
 
-	int yArray[20] = {};
-	for (int x = 0; x < maxWidth; x++) {
-		for (int y = origin.y; y < origin.y + maxHeight; y++) {
-			if (dungeon[origin.x + x][y] != floor) {
-				if (yArray[x] < minSize && x < minSize)
-					return {};
-				break;
+	Size room { maxWidth, maxHeight };
+
+	for (int i = 0; i < maxSize; i++) {
+		int width = 0;
+		if (i < maxHeight) {
+			while (width < room.width) {
+				if (dungeon[origin.x + width][origin.y + i] != floor)
+					break;
+
+				width++;
 			}
-
-			yArray[x]++;
 		}
-		if (yArray[x] < minSize)
-			break;
-	}
 
-	int xArray[20] = {};
-	for (int y = 0; y < maxHeight; y++) {
-		for (int x = origin.x; x < origin.x + maxWidth; x++) {
-			if (dungeon[x][origin.y + y] != floor) {
-				if (xArray[y] < minSize && y < minSize)
-					return {};
-				break;
+		int height = 0;
+		if (i < maxWidth) {
+			while (height < room.height) {
+				if (dungeon[origin.x + i][origin.y + height] != floor)
+					break;
+
+				height++;
 			}
-
-			xArray[y]++;
 		}
-		if (xArray[y] < minSize)
-			break;
-	}
 
-	int xSmallest = xArray[0];
-	int ySmallest = yArray[0];
-
-	for (int ii = 0; ii < maxSize; ii++) {
-		if (xArray[ii] < minSize || yArray[ii] < minSize) {
+		if (width < minSize || height < minSize) {
+			if (i < minSize)
+				return {};
 			break;
 		}
-		if (xArray[ii] < xSmallest) {
-			xSmallest = xArray[ii];
-		}
-		if (yArray[ii] < ySmallest) {
-			ySmallest = yArray[ii];
-		}
+
+		room = { std::min(room.width, width), std::min(room.height, height) };
 	}
-	return Size { xSmallest, ySmallest } - 2;
+
+	return room - 2;
 }
 
 void CreateThemeRoom(int themeIndex)
