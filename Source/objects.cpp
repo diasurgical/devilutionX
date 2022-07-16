@@ -769,7 +769,7 @@ void SetupObject(Object &object, Point position, _object_id ot)
 	if (!HeadlessMode) {
 		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), ofi);
 		if (found == std::end(ObjFileList)) {
-			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", ofi);
+			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", static_cast<int>(ofi));
 			return;
 		}
 
@@ -5181,7 +5181,7 @@ void SyncObjectAnim(Object &object)
 	if (!HeadlessMode) {
 		const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
 		if (found == std::end(ObjFileList)) {
-			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", index);
+			LogCritical("Unable to find object_graphic_id {} in list of objects to load, level generation error.", static_cast<int>(index));
 			return;
 		}
 

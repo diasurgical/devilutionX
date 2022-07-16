@@ -322,13 +322,13 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 		return;
 
 	if (missile._miAnimData == nullptr) {
-		Log("Draw Missile 2 type {}: NULL Cel Buffer", missile._mitype);
+		Log("Draw Missile 2 type {}: NULL Cel Buffer", static_cast<int>(missile._mitype));
 		return;
 	}
 	int nCel = missile._miAnimFrame - 1;
 	const uint32_t frames = LoadLE32(missile._miAnimData);
 	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
-		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
+		Log("Draw Missile 2: frame {} of {}, missile type {}", nCel, frames, static_cast<int>(missile._mitype));
 		return;
 	}
 
@@ -623,14 +623,14 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 
 	byte *pCelBuff = objectToDraw._oAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Object type {}: NULL Cel Buffer", objectToDraw._otype);
+		Log("Draw Object type {}: NULL Cel Buffer", static_cast<int>(objectToDraw._otype));
 		return;
 	}
 
 	const uint32_t nCel = objectToDraw._oAnimFrame - 1;
 	const uint32_t frames = LoadLE32(pCelBuff);
 	if (nCel == static_cast<uint32_t>(-1) || frames > 50 || nCel >= frames) {
-		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, objectToDraw._otype);
+		Log("Draw Object: frame {} of {}, object type {}", nCel, frames, static_cast<int>(objectToDraw._otype));
 		return;
 	}
 

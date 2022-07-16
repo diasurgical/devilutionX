@@ -260,7 +260,7 @@ int TranslateSdlKey(SDL_Keysym key)
 		} else if (sym >= SDLK_F1 && sym <= SDLK_F12) {
 			return DVL_VK_F1 + (sym - SDLK_F1);
 		}
-		Log("unknown key: name={} sym=0x{:X} scan={} mod=0x{:X}", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
+		Log("unknown key: name={} sym=0x{:X} scan={} mod=0x{:X}", SDL_GetKeyName(sym), static_cast<int>(sym), static_cast<int>(key.scancode), static_cast<unsigned>(key.mod));
 		return -1;
 	}
 }
