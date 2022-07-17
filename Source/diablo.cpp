@@ -79,6 +79,7 @@
 #include "utils/language.h"
 #include "utils/paths.h"
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
 #ifdef __vita__
@@ -967,8 +968,8 @@ void DiabloInitScreen()
 
 void SetApplicationVersions()
 {
-	*fmt::format_to_n(gszProductName, sizeof(gszProductName) - 1, "{} v{}", PROJECT_NAME, PROJECT_VERSION).out = '\0';
-	CopyUtf8(gszVersionNumber, fmt::format(fmt::runtime(_("version {:s}")), PROJECT_VERSION), sizeof(gszVersionNumber));
+	*BufCopy(gszProductName, PROJECT_NAME, " v", PROJECT_VERSION) = '\0';
+	*BufCopy(gszVersionNumber, "version ", PROJECT_VERSION) = '\0';
 }
 
 void DiabloInit()

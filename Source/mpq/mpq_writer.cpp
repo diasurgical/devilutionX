@@ -6,8 +6,6 @@
 #include <memory>
 #include <type_traits>
 
-#include <fmt/core.h>
-
 #include "appfat.h"
 #include "encrypt.h"
 #include "engine.h"
@@ -160,7 +158,7 @@ MpqWriter::MpqWriter(const char *path)
 	}
 	return;
 on_error:
-	app_fatal(fmt::format("{}\n{}\n{}", _("Failed to open archive for writing."), path, error));
+	app_fatal(StrCat(_("Failed to open archive for writing."), "\n", path, "\n", error));
 }
 
 MpqWriter::~MpqWriter()

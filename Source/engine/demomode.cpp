@@ -12,6 +12,7 @@
 #include "pfile.h"
 #include "utils/display.h"
 #include "utils/paths.h"
+#include "utils/str_cat.hpp"
 
 namespace devilution {
 
@@ -75,9 +76,7 @@ void WriteToDemo(T value)
 bool LoadDemoMessages(int i)
 {
 	std::ifstream demofile;
-	char demoFilename[16];
-	*fmt::format_to_n(demoFilename, 15, "demo_{}.dmo", i).out = '\0';
-	demofile.open(paths::PrefPath() + demoFilename, std::fstream::binary);
+	demofile.open(StrCat(paths::PrefPath(), "demo_", i, ".dmo"), std::fstream::binary);
 	if (!demofile.is_open()) {
 		return false;
 	}
@@ -269,9 +268,7 @@ void RecordMessage(tagMSG *lpMsg)
 void NotifyGameLoopStart()
 {
 	if (IsRecording()) {
-		char demoFilename[16];
-		*fmt::format_to_n(demoFilename, 15, "demo_{}.dmo", RecordNumber).out = '\0';
-		DemoRecording.open(paths::PrefPath() + demoFilename, std::fstream::trunc | std::fstream::binary);
+		DemoRecording.open(StrCat(paths::PrefPath(), "demo_", RecordNumber, ".dmo"), std::fstream::trunc | std::fstream::binary);
 		constexpr uint8_t version = 0;
 		WriteToDemo<uint8_t>(version);
 		WriteToDemo<uint32_t>(gSaveNumber);
