@@ -1883,19 +1883,22 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 
 void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	if (!missile.IsTrap()) {
-		if (missile._micaster == TARGET_MONSTERS) {
-			Player &player = Players[missile._misource];
-			int dmg = GenerateRndSum(20, player._pLevel + 1) + player._pLevel + 1;
-			missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
-			missile._midam += missile._midam / 2;
-			UseMana(player, SPL_FLASH);
-		} else {
-			missile._midam = Monsters[missile._misource].level * 2;
-		}
-	} else {
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		Player *player = missile.sourcePlayer();
+		int dmg = GenerateRndSum(20, player->_pLevel + 1) + player->_pLevel + 1;
+		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
+		missile._midam += missile._midam / 2;
+		UseMana(*player, SPL_FLASH);
+	} break;
+	case MissileSource::Monster:
+		missile._midam = missile.sourceMonster()->level * 2;
+		break;
+	case MissileSource::Trap:
 		missile._midam = currlevel / 2;
+		break;
 	}
+
 	missile._mirange = 19;
 }
 
