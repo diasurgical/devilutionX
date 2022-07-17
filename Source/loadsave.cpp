@@ -2078,7 +2078,7 @@ void LoadGame(bool firstflag)
 	}
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
-	SyncInitPlr(MyPlayerId);
+	SyncInitPlr(myPlayer);
 	SyncPlrAnim(myPlayer);
 
 	ViewPosition = { viewX, viewY };

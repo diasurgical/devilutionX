@@ -295,7 +295,7 @@ void DoResurrect(int pnum, uint16_t rid)
 	CalcPlrInv(target, true);
 
 	if (target.isOnActiveLevel()) {
-		StartStand(rid, target._pdir);
+		StartStand(target, target._pdir);
 	} else {
 		target._pmode = PM_STAND;
 	}

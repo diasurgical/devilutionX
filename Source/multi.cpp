@@ -830,14 +830,14 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	}
 	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player._pLevel));
 
-	SyncInitPlr(pnum);
+	SyncInitPlr(player);
 
 	if (!player.isOnActiveLevel()) {
 		return;
 	}
 
 	if (player._pHitPoints >> 6 > 0) {
-		StartStand(pnum, Direction::South);
+		StartStand(player, Direction::South);
 		return;
 	}
 

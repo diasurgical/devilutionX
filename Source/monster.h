@@ -26,6 +26,7 @@
 namespace devilution {
 
 struct Missile;
+struct Player;
 
 constexpr size_t MaxMonsters = 200;
 constexpr size_t MaxLvlMTypes = 24;
@@ -370,10 +371,11 @@ void M_StartStand(Monster &monster, Direction md);
 void M_ClearSquares(const Monster &monster);
 void M_GetKnockback(Monster &monster);
 void M_StartHit(Monster &monster, int dam);
-void M_StartHit(Monster &monster, int pnum, int dam);
-void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg);
-void M_StartKill(Monster &monster, int pnum);
-void M_SyncStartKill(int monsterId, Point position, int pnum);
+void M_StartHit(Monster &monster, const Player &player, int dam);
+void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg);
+void MonsterDeath(Monster &monster, Direction md, bool sendmsg);
+void M_StartKill(Monster &monster, const Player &player);
+void M_SyncStartKill(int monsterId, Point position, const Player &player);
 void M_UpdateRelations(const Monster &monster);
 void DoEnding();
 void PrepDoEnding();
@@ -404,7 +406,7 @@ bool IsGoat(_monster_id mt);
 bool SpawnSkeleton(Monster *monster, Point position);
 Monster *PreSpawnSkeleton();
 void TalktoMonster(Monster &monster);
-void SpawnGolem(int id, Point position, Missile &missile);
+void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile);
 bool CanTalkToMonst(const Monster &monster);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemyId);

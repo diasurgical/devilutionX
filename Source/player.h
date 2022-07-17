@@ -368,6 +368,11 @@ struct Player {
 	 */
 	void RemoveInvItem(int iv, bool calcScrolls = true);
 
+	/**
+	 * @brief Returns the network identifier for this player
+	 */
+	[[nodiscard]] size_t getId() const;
+
 	void RemoveSpdBarItem(int iv);
 
 	/**
@@ -771,10 +776,10 @@ void PlrClrTrans(Point position);
 void PlrDoTrans(Point position);
 void SetPlayerOld(Player &player);
 void FixPlayerLocation(Player &player, Direction bDir);
-void StartStand(int pnum, Direction dir);
+void StartStand(Player &player, Direction dir);
 void StartPlrBlock(Player &player, Direction dir);
 void FixPlrWalkTags(const Player &player);
-void StartPlrHit(int pnum, int dam, bool forcehit);
+void StartPlrHit(Player &player, int dam, bool forcehit);
 void StartPlayerKill(Player &player, int earflag);
 /**
  * @brief Strip the top off gold piles that are larger than MaxGold
@@ -782,9 +787,9 @@ void StartPlayerKill(Player &player, int earflag);
 void StripTopGold(Player &player);
 void SyncPlrKill(Player &player, int earflag);
 void RemovePlrMissiles(const Player &player);
-void StartNewLvl(int pnum, interface_mode fom, int lvl);
-void RestartTownLvl(int pnum);
-void StartWarpLvl(int pnum, int pidx);
+void StartNewLvl(Player &player, interface_mode fom, int lvl);
+void RestartTownLvl(Player &player);
+void StartWarpLvl(Player &player, int pidx);
 void ProcessPlayers();
 void ClrPlrPath(Player &player);
 bool PosOkPlayer(const Player &player, Point position);
@@ -792,8 +797,8 @@ void MakePlrPath(Player &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(Player &player);
 void CheckPlrSpell(bool isShiftHeld, spell_id spellID = MyPlayer->_pRSpell, spell_type spellType = MyPlayer->_pRSplType);
 void SyncPlrAnim(Player &player);
-void SyncInitPlrPos(int pnum);
-void SyncInitPlr(int pnum);
+void SyncInitPlrPos(Player &player);
+void SyncInitPlr(Player &player);
 void CheckStats(Player &player);
 void ModifyPlrStr(Player &player, int l);
 void ModifyPlrMag(Player &player, int l);

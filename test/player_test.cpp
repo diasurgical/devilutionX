@@ -5,21 +5,20 @@
 using namespace devilution;
 
 namespace devilution {
-extern bool TestPlayerDoGotHit(int pnum);
+extern bool TestPlayerDoGotHit(Player &player);
 }
 
 int RunBlockTest(int frames, ItemSpecialEffect flags)
 {
-	int pnum = 0;
-	Player &player = Players[pnum];
+	Player &player = Players[0];
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;
-	StartPlrHit(pnum, 5, false);
+	StartPlrHit(player, 5, false);
 
 	int i = 1;
 	for (; i < 100; i++) {
-		TestPlayerDoGotHit(pnum);
+		TestPlayerDoGotHit(player);
 		if (player._pmode != PM_GOTHIT)
 			break;
 		player.AnimInfo.currentFrame++;
