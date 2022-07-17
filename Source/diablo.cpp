@@ -411,14 +411,6 @@ void RightMouseDown(bool isShiftHeld)
 	}
 }
 
-bool PressSysKey(SDL_Keycode wParam)
-{
-	if (gmenu_is_active() || wParam != SDLK_F10)
-		return false;
-	DiabloHotkeyMsg(1);
-	return true;
-}
-
 void ReleaseKey(int vkey)
 {
 	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag)
@@ -612,17 +604,6 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
 	case DVL_WM_KEYUP:
 		ReleaseKey(static_cast<SDL_Keycode>(wParam));
 		return;
-	case DVL_WM_SYSKEYDOWN:
-		if (PressSysKey(static_cast<SDL_Keycode>(wParam)))
-			return;
-		break;
-	case DVL_WM_SYSCOMMAND:
-		if (wParam == DVL_SC_CLOSE) {
-			gbRunGame = false;
-			gbRunGameResult = false;
-			return;
-		}
-		break;
 	case DVL_WM_MOUSEMOVE:
 		GetMousePos(lParam);
 		gmenu_on_mouse_move();
@@ -2035,8 +2016,6 @@ void DisableInputEventHandler(uint32_t uMsg, uint32_t /*wParam*/, uint32_t lPara
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
 	case DVL_WM_KEYUP:
-	case DVL_WM_SYSKEYDOWN:
-	case DVL_WM_SYSCOMMAND:
 		return;
 	case DVL_WM_MOUSEMOVE:
 		GetMousePos(lParam);

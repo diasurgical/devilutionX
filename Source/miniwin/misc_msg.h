@@ -68,11 +68,11 @@ inline uint16_t DecodeMouseModState(uint32_t wParam)
 	return modState;
 }
 
-#define DVL_WM_QUIT 0x0012
-
 //
 // Events
 //
+#define DVL_WM_QUIT 0x0012
+
 #define DVL_WM_MOUSEMOVE 0x0200
 #define DVL_WM_LBUTTONDOWN 0x0201
 #define DVL_WM_LBUTTONUP 0x0202
@@ -87,15 +87,10 @@ inline uint16_t DecodeMouseModState(uint32_t wParam)
 
 #define DVL_WM_KEYDOWN 0x0100
 #define DVL_WM_KEYUP 0x0101
-#define DVL_WM_SYSKEYDOWN 0x0104
-
-#define DVL_WM_SYSCOMMAND 0x0112
 
 #define DVL_WM_CAPTURECHANGED 0x0215
 
 #define DVL_WM_PAINT 0x000F
 #define DVL_WM_QUERYENDSESSION 0x0011
-
-#define DVL_SC_CLOSE 0xF060
 
 } // namespace devilution
