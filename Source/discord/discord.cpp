@@ -110,10 +110,11 @@ std::string GetTooltipString()
 
 std::string GetPlayerAssetString()
 {
+	constexpr char CaseDistance = 'a' - 'A';
 	char chars[5] {
-		CharChar[static_cast<int>(MyPlayer->_pClass)] - ('a' - 'A'),
-		ArmourChar[tracked_data.playerGfx >> 4] - ('a' - 'A'),
-		WepChar[tracked_data.playerGfx & 0xF] - ('a' - 'A'),
+		static_cast<char>(CharChar[static_cast<int>(MyPlayer->_pClass)] - CaseDistance),
+		static_cast<char>(ArmourChar[tracked_data.playerGfx >> 4] - CaseDistance),
+		static_cast<char>(WepChar[tracked_data.playerGfx & 0xF] - CaseDistance),
 		'a',
 		's'
 	};
