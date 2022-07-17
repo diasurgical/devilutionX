@@ -370,7 +370,7 @@ void palette_update_crypt()
 
 	if (!delayLava) {
 		CycleColorsReverse(1, 15);
-		delayLava = 0;
+		delayLava = false;
 	}
 
 	CycleColorsReverse(16, 31);
