@@ -34,40 +34,6 @@ void PushMessage(const tagMSG *lpMsg);
 void PostMessage(uint32_t type, uint32_t wParam, uint32_t lParam);
 void ClearMessageQueue();
 
-// Encoding / decoding keyboard modifier state from wParam.
-// This is only to be compatible with the old timedemo files.
-// TODO: These should be removed next time we change the timedemo format.
-
-inline uint32_t EncodeKeyboardModState(uint16_t modState)
-{
-	return modState << 16;
-}
-
-inline uint16_t DecodeKeyboardModState(uint32_t wParam)
-{
-	return wParam >> 16;
-}
-
-inline uint32_t EncodeMouseModState(uint16_t modState)
-{
-	uint32_t result = 0;
-	if ((modState & KMOD_SHIFT) != 0)
-		result |= 0x0004;
-	if ((modState & KMOD_CTRL) != 0)
-		result |= 0x0008;
-	return result;
-}
-
-inline uint16_t DecodeMouseModState(uint32_t wParam)
-{
-	uint16_t modState = 0;
-	if ((wParam & 0x0004) != 0)
-		modState |= KMOD_LSHIFT;
-	if ((wParam & 0x0008) != 0)
-		modState |= KMOD_LCTRL;
-	return modState;
-}
-
 //
 // Events
 //

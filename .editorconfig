@@ -20,6 +20,9 @@ end_of_line = lf
 [*.py]
 end_of_line = lf
 
+[*.rb]
+end_of_line = lf
+
 [*.yml]
 indent_style = space
 end_of_line = lf
