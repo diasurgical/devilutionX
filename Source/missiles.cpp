@@ -2729,30 +2729,32 @@ void MI_Firebolt(Missile &missile)
 
 	missile._mirange--;
 	if (missile._mitype != MIS_BONESPIRIT || missile._mimfnum != 8) {
-		int p = missile._misource;
-		if (!missile.IsTrap()) {
-			if (missile._micaster == TARGET_MONSTERS) {
-				const Player &player = Players[p];
-				switch (missile._mitype) {
-				case MIS_FIREBOLT:
-					d = GenerateRnd(10) + (player._pMagic / 8) + missile._mispllvl + 1;
-					break;
-				case MIS_FLARE:
-					d = 3 * missile._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
-					break;
-				case MIS_BONESPIRIT:
-					d = 0;
-					break;
-				default:
-					break;
-				}
-			} else {
-				auto &monster = Monsters[p];
-				d = monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
+		switch (missile.sourceType()) {
+		case MissileSource::Player: {
+			const Player *player = missile.sourcePlayer();
+			switch (missile._mitype) {
+			case MIS_FIREBOLT:
+				d = GenerateRnd(10) + (player->_pMagic / 8) + missile._mispllvl + 1;
+				break;
+			case MIS_FLARE:
+				d = 3 * missile._mispllvl - (player->_pMagic / 8) + (player->_pMagic / 2);
+				break;
+			case MIS_BONESPIRIT:
+				d = 0;
+				break;
+			default:
+				break;
 			}
-		} else {
+		} break;
+		case MissileSource::Monster: {
+			const Monster *monster = missile.sourceMonster();
+			d = monster->minDamage + GenerateRnd(monster->maxDamage - monster->minDamage + 1);
+		} break;
+		case MissileSource::Trap:
 			d = currlevel + GenerateRnd(2 * currlevel);
+			break;
 		}
+
 		MoveMissileAndCheckMissileCol(missile, d, d, true, true);
 		if (missile._mirange == 0) {
 			missile._miDelFlag = true;
