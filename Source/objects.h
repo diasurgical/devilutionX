@@ -307,10 +307,11 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 int ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
-void BreakObject(int pnum, Object &object);
+void BreakObjectMissile(Object &object);
+void BreakObject(const Player &player, Object &object);
 void DeltaSyncOpObject(int cmd, int i);
 void DeltaSyncBreakObj(Object &object);
-void SyncBreakObj(int pnum, Object &object);
+void SyncBreakObj(const Player &player, Object &object);
 void SyncObjectAnim(Object &object);
 /**
  * @brief Updates the text drawn in the info box to describe the given object

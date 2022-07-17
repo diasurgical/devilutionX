@@ -1408,7 +1408,7 @@ void UpdateCircle(Object &circle)
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
-		StartStand(MyPlayerId, Direction::South);
+		StartStand(myPlayer, Direction::South);
 	}
 }
 
@@ -3815,11 +3815,11 @@ void BreakCrux(Object &crux)
 	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
-void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
+void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sendmsg)
 {
 	if (barrel._oSelFlag == 0)
 		return;
-	if (!forcebreak && pnum != MyPlayerId) {
+	if (!forcebreak && &player != MyPlayer) {
 		return;
 	}
 
@@ -3851,7 +3851,7 @@ void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
 				Object *adjacentObject = ObjectAtPosition({ xp, yp }, false);
 				if (adjacentObject != nullptr && adjacentObject->isExplosive() && !adjacentObject->IsBroken()) {
-					BreakBarrel(pnum, *adjacentObject, true, sendmsg);
+					BreakBarrel(player, *adjacentObject, true, sendmsg);
 				}
 			}
 		}
@@ -3872,8 +3872,8 @@ void BreakBarrel(int pnum, Object &barrel, bool forcebreak, bool sendmsg)
 		if (barrel._oVar2 >= 8 && barrel._oVar4 >= 0)
 			SpawnSkeleton(&Monsters[barrel._oVar4], barrel.position);
 	}
-	if (pnum == MyPlayerId) {
-		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, static_cast<uint16_t>(barrel.GetId()));
+	if (&player == MyPlayer) {
+		NetSendCmdParam1(false, CMD_BREAKOBJ, static_cast<uint16_t>(barrel.GetId()));
 	}
 }
 
@@ -5144,10 +5144,15 @@ void SyncOpObject(int pnum, int cmd, int i)
 	}
 }
 
-void BreakObject(int pnum, Object &object)
+void BreakObjectMissile(Object &object)
+{
+	if (object.IsCrux())
+		BreakCrux(object);
+}
+void BreakObject(const Player &player, Object &object)
 {
 	if (object.IsBarrel()) {
-		BreakBarrel(pnum, object, false, true);
+		BreakBarrel(player, object, false, true);
 	} else if (object.IsCrux()) {
 		BreakCrux(object);
 	}
@@ -5167,10 +5172,10 @@ void DeltaSyncBreakObj(Object &object)
 	object._oAnimFrame = object._oAnimLen;
 }
 
-void SyncBreakObj(int pnum, Object &object)
+void SyncBreakObj(const Player &player, Object &object)
 {
 	if (object.IsBarrel()) {
-		BreakBarrel(pnum, object, true, false);
+		BreakBarrel(player, object, true, false);
 	}
 }
 

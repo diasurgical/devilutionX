@@ -835,14 +835,14 @@ void CheckTriggers()
 				myPlayer.Say(HeroSpeech::NotAChance);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
-				StartNewLvl(MyPlayerId, trigs[i]._tmsg, currlevel + 1);
+				StartNewLvl(myPlayer, trigs[i]._tmsg, currlevel + 1);
 			}
 			break;
 		case WM_DIABPREVLVL:
-			StartNewLvl(MyPlayerId, trigs[i]._tmsg, currlevel - 1);
+			StartNewLvl(myPlayer, trigs[i]._tmsg, currlevel - 1);
 			break;
 		case WM_DIABRTNLVL:
-			StartNewLvl(MyPlayerId, trigs[i]._tmsg, ReturnLevel);
+			StartNewLvl(myPlayer, trigs[i]._tmsg, ReturnLevel);
 			break;
 		case WM_DIABTOWNWARP:
 			if (gbIsMultiplayer) {
@@ -877,11 +877,11 @@ void CheckTriggers()
 				}
 			}
 
-			StartNewLvl(MyPlayerId, trigs[i]._tmsg, trigs[i]._tlvl);
+			StartNewLvl(myPlayer, trigs[i]._tmsg, trigs[i]._tlvl);
 			break;
 		case WM_DIABTWARPUP:
 			TWarpFrom = currlevel;
-			StartNewLvl(MyPlayerId, trigs[i]._tmsg, 0);
+			StartNewLvl(myPlayer, trigs[i]._tmsg, 0);
 			break;
 		default:
 			app_fatal("Unknown trigger msg");

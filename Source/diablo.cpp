@@ -2264,14 +2264,13 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	SyncPortals();
 
-	for (int i = 0; i < MAX_PLRS; i++) {
-		Player &player = Players[i];
+	for (Player &player : Players) {
 		if (player.plractive && player.isOnActiveLevel() && (!player._pLvlChanging || &player == MyPlayer)) {
 			if (player._pHitPoints > 0) {
 				if (!gbIsMultiplayer)
-					dPlayer[player.position.tile.x][player.position.tile.y] = i + 1;
+					dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
 				else
-					SyncInitPlrPos(i);
+					SyncInitPlrPos(player);
 			} else {
 				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}

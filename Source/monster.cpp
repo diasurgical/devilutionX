@@ -1067,45 +1067,6 @@ void MonsterHitMonster(Monster &monster, int i, int dam)
 	HitMonster(monster, dam);
 }
 
-void MonsterDeath(Monster &monster, int pnum, Direction md, bool sendmsg)
-{
-	if (pnum < MAX_PLRS) {
-		if (pnum >= 0)
-			monster.whoHit |= 1 << pnum;
-		if (monster.type().type != MT_GOLEM)
-			AddPlrMonstExper(monster.level, monster.exp, monster.whoHit);
-	}
-
-	MonsterKillCounts[monster.type().type]++;
-	monster.hitPoints = 0;
-	SetRndSeed(monster.rndItemSeed);
-
-	SpawnLoot(monster, sendmsg);
-
-	if (monster.type().type == MT_DIABLO)
-		DiabloDeath(monster, true);
-	else
-		PlayEffect(monster, 2);
-
-	if (monster.mode != MonsterMode::Petrified) {
-		if (monster.type().type == MT_GOLEM)
-			md = Direction::South;
-		NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
-		monster.mode = MonsterMode::Death;
-	}
-	monster.goal = MonsterGoal::None;
-	monster.var1 = 0;
-	monster.position.offset = { 0, 0 };
-	monster.position.tile = monster.position.old;
-	monster.position.future = monster.position.old;
-	M_ClearSquares(monster);
-	dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
-	CheckQuestKill(monster, sendmsg);
-	M_FallenFear(monster.position.tile);
-	if (IsAnyOf(monster.type().type, MT_NACID, MT_RACID, MT_BACID, MT_XACID, MT_SPIDLORD))
-		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monster.getId(), monster.intelligence + 1, 0);
-}
-
 void StartDeathFromMonster(int i, int mid)
 {
 	assert(static_cast<size_t>(i) < MaxMonsters);
@@ -1116,8 +1077,12 @@ void StartDeathFromMonster(int i, int mid)
 	delta_kill_monster(monster, monster.position.tile, *MyPlayer);
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
 
+	if (killer.type().type == MT_GOLEM)
+		monster.whoHit |= 1 << i;
+
 	Direction md = GetDirection(monster.position.tile, killer.position.tile);
-	MonsterDeath(monster, i, md, true);
+	MonsterDeath(monster, md, true);
+
 	if (gbIsHellfire)
 		M_StartStand(killer, killer.direction);
 }
@@ -1279,9 +1244,9 @@ void CheckReflect(int monsterId, int pnum, int dam)
 	monster.hitPoints -= mdam;
 	dam = std::max(dam - mdam, 0);
 	if (monster.hitPoints >> 6 <= 0)
-		M_StartKill(monster, pnum);
+		M_StartKill(monster, player);
 	else
-		M_StartHit(monster, pnum, mdam);
+		M_StartHit(monster, player, mdam);
 }
 
 void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDam)
@@ -1367,9 +1332,9 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		int mdam = (GenerateRnd(3) + 1) << 6;
 		monster.hitPoints -= mdam;
 		if (monster.hitPoints >> 6 <= 0)
-			M_StartKill(monster, pnum);
+			M_StartKill(monster, player);
 		else
-			M_StartHit(monster, pnum, mdam);
+			M_StartHit(monster, player, mdam);
 	}
 
 	if ((monster.flags & MFLAG_NOLIFESTEAL) == 0 && monster.type().type == MT_SKING && gbIsMultiplayer)
@@ -1379,10 +1344,10 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 			M_StartStand(monster, monster.direction);
 		return;
 	}
-	StartPlrHit(pnum, dam, false);
+	StartPlrHit(player, dam, false);
 	if ((monster.flags & MFLAG_KNOCKBACK) != 0) {
 		if (player._pmode != PM_GOTHIT)
-			StartPlrHit(pnum, 0, true);
+			StartPlrHit(player, 0, true);
 
 		Point newPosition = player.position.tile + monster.direction;
 		if (PosOkPlayer(player, newPosition)) {
@@ -3115,7 +3080,7 @@ void LachdananAi(int monsterId)
 			if (!effect_is_playing(USFX_LACH3) && monster.goal == MonsterGoal::Talking) {
 				monster.talkMsg = TEXT_NONE;
 				Quests[Q_VEIL]._qactive = QUEST_DONE;
-				StartMonsterDeath(monster, -1, true);
+				MonsterDeath(monster, monster.direction, true);
 			}
 		}
 	}
@@ -3907,16 +3872,15 @@ void M_StartHit(Monster &monster, int dam)
 	}
 }
 
-void M_StartHit(Monster &monster, int pnum, int dam)
+void M_StartHit(Monster &monster, const Player &player, int dam)
 {
-	monster.whoHit |= 1 << pnum;
-	Player &player = Players[pnum];
+	monster.whoHit |= 1 << player.getId();
 	if (&player == MyPlayer) {
 		delta_monster_hp(monster, *MyPlayer);
 		NetSendCmdMonDmg(false, monster.getId(), dam);
 	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
-		monster.enemy = pnum;
+		monster.enemy = player.getId();
 		monster.enemyPosition = player.position.future;
 		monster.flags &= ~MFLAG_TARGETS_MONSTER;
 		monster.direction = GetMonsterDirection(monster);
@@ -3925,27 +3889,64 @@ void M_StartHit(Monster &monster, int pnum, int dam)
 	M_StartHit(monster, dam);
 }
 
-void StartMonsterDeath(Monster &monster, int pnum, bool sendmsg)
+void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
-	Direction md = pnum >= 0 ? GetDirection(monster.position.tile, Players[pnum].position.tile) : monster.direction;
-	MonsterDeath(monster, pnum, md, sendmsg);
+	if (monster.type().type != MT_GOLEM)
+		AddPlrMonstExper(monster.level, monster.exp, monster.whoHit);
+
+	MonsterKillCounts[monster.type().type]++;
+	monster.hitPoints = 0;
+	SetRndSeed(monster.rndItemSeed);
+
+	SpawnLoot(monster, sendmsg);
+
+	if (monster.type().type == MT_DIABLO)
+		DiabloDeath(monster, true);
+	else
+		PlayEffect(monster, 2);
+
+	if (monster.mode != MonsterMode::Petrified) {
+		if (monster.type().type == MT_GOLEM)
+			md = Direction::South;
+		NewMonsterAnim(monster, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+		monster.mode = MonsterMode::Death;
+	}
+	monster.goal = MonsterGoal::None;
+	monster.var1 = 0;
+	monster.position.offset = { 0, 0 };
+	monster.position.tile = monster.position.old;
+	monster.position.future = monster.position.old;
+	M_ClearSquares(monster);
+	dMonster[monster.position.tile.x][monster.position.tile.y] = monster.getId() + 1;
+	CheckQuestKill(monster, sendmsg);
+	M_FallenFear(monster.position.tile);
+	if (IsAnyOf(monster.type().type, MT_NACID, MT_RACID, MT_BACID, MT_XACID, MT_SPIDLORD))
+		AddMissile(monster.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monster.getId(), monster.intelligence + 1, 0);
 }
 
-void M_StartKill(Monster &monster, int pnum)
+void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg)
 {
-	if (pnum == MyPlayerId) {
+	monster.whoHit |= 1 << player.getId();
+	Direction md = GetDirection(monster.position.tile, player.position.tile);
+	MonsterDeath(monster, md, sendmsg);
+}
+
+void M_StartKill(Monster &monster, const Player &player)
+{
+	if (&player == MyPlayer) {
 		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
-		if (&monster != &Monsters[pnum]) {
-			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
+		size_t monsterId = monster.getId();
+		if (monsterId != player.getId()) {
+			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monsterId);
 		} else {
 			NetSendCmdLoc(MyPlayerId, false, CMD_KILLGOLEM, monster.position.tile);
 		}
 	}
 
-	StartMonsterDeath(monster, pnum, true);
+	StartMonsterDeath(monster, player, true);
 }
 
-void M_SyncStartKill(int monsterId, Point position, int pnum)
+void M_SyncStartKill(int monsterId, Point position, const Player &player)
 {
 	assert(static_cast<size_t>(monsterId) < MaxMonsters);
 	auto &monster = Monsters[monsterId];
@@ -3960,7 +3961,7 @@ void M_SyncStartKill(int monsterId, Point position, int pnum)
 		monster.position.old = position;
 	}
 
-	StartMonsterDeath(monster, pnum, false);
+	StartMonsterDeath(monster, player, false);
 }
 
 void M_UpdateRelations(const Monster &monster)
@@ -4584,7 +4585,7 @@ void MissToMonst(Missile &missile, Point position)
 
 		Player &player = Players[pnum];
 		if (player._pmode != PM_GOTHIT && player._pmode != PM_DEATH)
-			StartPlrHit(pnum, 0, true);
+			StartPlrHit(player, 0, true);
 		Point newPosition = oldPosition + monster.direction;
 		if (PosOkPlayer(player, newPosition)) {
 			player.position.tile = newPosition;
@@ -4736,13 +4737,9 @@ void TalktoMonster(Monster &monster)
 	}
 }
 
-void SpawnGolem(int id, Point position, Missile &missile)
+void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile)
 {
-	assert(id >= 0 && id < MAX_PLRS);
-	Player &player = Players[id];
-	auto &golem = Monsters[id];
-
-	dMonster[position.x][position.y] = id + 1;
+	dMonster[position.x][position.y] = golem.getId() + 1;
 	golem.position.tile = position;
 	golem.position.future = position;
 	golem.position.old = position;
