@@ -28,7 +28,7 @@ void gmenu_init_menu();
 bool gmenu_is_active();
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)());
 void gmenu_draw(const Surface &out);
-bool gmenu_presskeys(int vkey);
+bool gmenu_presskeys(SDL_Keycode vkey);
 bool gmenu_on_mouse_move();
 bool gmenu_left_mouse(bool isDown);
 void gmenu_enable(TMenuItem *pMenuItem, bool enable);

@@ -32,6 +32,7 @@
 
 #define SDL_Keysym SDL_keysym
 #define SDL_Keycode SDLKey
+#define SDL_Keymod SDLMod
 
 #define SDLK_PRINTSCREEN SDLK_PRINT
 #define SDLK_SCROLLLOCK SDLK_SCROLLOCK
@@ -46,6 +47,7 @@
 #define SDLK_KP_8 SDLK_KP8
 #define SDLK_KP_9 SDLK_KP9
 #define SDLK_KP_0 SDLK_KP0
+#define SDLK_KP_COMMA SDLK_COMMA
 #define SDLK_LGUI SDLK_LSUPER
 #define SDLK_RGUI SDLK_RSUPER
 

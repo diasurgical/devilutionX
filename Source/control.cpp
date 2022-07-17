@@ -1099,7 +1099,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 	DrawString(out, value, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
 }
 
-void control_drop_gold(char vkey)
+void control_drop_gold(SDL_Keycode vkey)
 {
 	Player &myPlayer = *MyPlayer;
 
@@ -1109,14 +1109,14 @@ void control_drop_gold(char vkey)
 		return;
 	}
 
-	if (vkey == DVL_VK_RETURN) {
+	if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
 		if (dropGoldValue > 0)
 			RemoveGold(myPlayer, initialDropGoldIndex);
 		CloseGoldDrop();
-	} else if (vkey == DVL_VK_ESCAPE) {
+	} else if (vkey == SDLK_ESCAPE) {
 		CloseGoldDrop();
 		dropGoldValue = 0;
-	} else if (vkey == DVL_VK_BACK) {
+	} else if (vkey == SDLK_BACKSPACE) {
 		dropGoldValue = dropGoldValue / 10;
 	}
 }
@@ -1270,24 +1270,24 @@ void control_new_text(string_view text)
 	strncat(TalkMessage, text.data(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
 }
 
-bool control_presskeys(int vkey)
+bool control_presskeys(SDL_Keycode vkey)
 {
 	if (!IsChatAvailable())
 		return false;
 	if (!talkflag)
 		return false;
 
-	if (vkey == DVL_VK_ESCAPE) {
+	if (vkey == SDLK_ESCAPE) {
 		control_reset_talk();
-	} else if (vkey == DVL_VK_RETURN) {
+	} else if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
 		ControlPressEnter();
-	} else if (vkey == DVL_VK_BACK) {
+	} else if (vkey == SDLK_BACKSPACE) {
 		TalkMessage[FindLastUtf8Symbols(TalkMessage)] = '\0';
-	} else if (vkey == DVL_VK_DOWN) {
+	} else if (vkey == SDLK_DOWN) {
 		ControlUpDown(1);
-	} else if (vkey == DVL_VK_UP) {
+	} else if (vkey == SDLK_UP) {
 		ControlUpDown(-1);
-	} else if (vkey != DVL_VK_SPACE) {
+	} else if (vkey != SDLK_SPACE) {
 		return false;
 	}
 

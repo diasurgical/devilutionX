@@ -87,7 +87,7 @@ void CheckStashButtonRelease(Point mousePosition);
 void CheckStashButtonPress(Point mousePosition);
 
 void StartGoldWithdraw();
-void WithdrawGoldKeyPress(char vkey);
+void WithdrawGoldKeyPress(SDL_Keycode vkey);
 void DrawGoldWithdraw(const Surface &out, int amount);
 void CloseGoldWithdraw();
 void GoldWithdrawNewText(string_view text);

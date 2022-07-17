@@ -212,7 +212,6 @@ void interface_msg_pump()
 
 	while (FetchMessage(&msg)) {
 		if (msg.message != DVL_WM_QUIT) {
-			TranslateMessage(&msg);
 			PushMessage(&msg);
 		}
 	}

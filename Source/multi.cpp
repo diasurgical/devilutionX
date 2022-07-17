@@ -34,7 +34,6 @@ namespace devilution {
 
 bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
-char szPlayerDescript[128];
 uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
@@ -54,7 +53,8 @@ uint32_t sgdwGameLoops;
  */
 bool gbIsMultiplayer;
 bool sgbTimeout;
-char szPlayerName[128];
+std::string GameName;
+std::string GamePassword;
 bool PublicGame;
 uint8_t gbDeltaSender;
 bool sgbNetInited;
@@ -764,10 +764,6 @@ bool NetInit(bool bSinglePlayer)
 	for (int i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = AdvanceRndSeed();
 	}
-	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128))
-		nthread_terminate_game("SNetGetGameInfo1");
-	if (!SNetGetGameInfo(GAMEINFO_PASSWORD, szPlayerDescript, 128))
-		nthread_terminate_game("SNetGetGameInfo2");
 	PublicGame = DvlNet_IsPublicGame();
 
 	Player &myPlayer = *MyPlayer;
@@ -830,14 +826,14 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	}
 	EventPlrMsg(fmt::format(fmt::runtime(szEvent), player._pName, player._pLevel));
 
-	SyncInitPlr(pnum);
+	SyncInitPlr(player);
 
 	if (!player.isOnActiveLevel()) {
 		return;
 	}
 
 	if (player._pHitPoints >> 6 > 0) {
-		StartStand(pnum, Direction::South);
+		StartStand(player, Direction::South);
 		return;
 	}
 

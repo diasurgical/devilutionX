@@ -618,6 +618,8 @@ struct LanguageOptions : OptionCategoryBase {
 	OptionEntryLanguageCode code;
 };
 
+constexpr uint32_t KeymapperMouseButtonMask = 1 << 31;
+
 /** The Keymapper maps keys to actions. */
 struct KeymapperOptions : OptionCategoryBase {
 	/**
@@ -640,12 +642,12 @@ struct KeymapperOptions : OptionCategoryBase {
 		bool SetValue(int value);
 
 	private:
-		Action(string_view key, const char *name, const char *description, int defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
-		int defaultKey;
+		Action(string_view key, const char *name, const char *description, uint32_t defaultKey, std::function<void()> actionPressed, std::function<void()> actionReleased, std::function<bool()> enable, unsigned index);
+		uint32_t defaultKey;
 		std::function<void()> actionPressed;
 		std::function<void()> actionReleased;
 		std::function<bool()> enable;
-		int boundKey = DVL_VK_INVALID;
+		uint32_t boundKey = SDLK_UNKNOWN;
 		unsigned dynamicIndex;
 		std::string dynamicKey;
 		mutable std::string dynamicName;
@@ -657,21 +659,21 @@ struct KeymapperOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	void AddAction(
-	    string_view key, const char *name, const char *description, int defaultKey,
+	    string_view key, const char *name, const char *description, uint32_t defaultKey,
 	    std::function<void()> actionPressed,
 	    std::function<void()> actionReleased = nullptr,
 	    std::function<bool()> enable = nullptr,
 	    unsigned index = 0);
-	void KeyPressed(int key) const;
-	void KeyReleased(int key) const;
+	void KeyPressed(uint32_t key) const;
+	void KeyReleased(uint32_t key) const;
 	string_view KeyNameForAction(string_view actionName) const;
 	uint32_t KeyForAction(string_view actionName) const;
 
 private:
 	std::vector<std::unique_ptr<Action>> actions;
-	std::unordered_map<int, std::reference_wrapper<Action>> keyIDToAction;
-	std::unordered_map<int, std::string> keyIDToKeyName;
-	std::unordered_map<std::string, int> keyNameToKeyID;
+	std::unordered_map<uint32_t, std::reference_wrapper<Action>> keyIDToAction;
+	std::unordered_map<uint32_t, std::string> keyIDToKeyName;
+	std::unordered_map<std::string, uint32_t> keyNameToKeyID;
 };
 
 struct Options {

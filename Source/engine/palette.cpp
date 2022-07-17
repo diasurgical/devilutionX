@@ -144,7 +144,7 @@ void CycleColors(int from, int to)
 /**
  * @brief Cycle the given range of colors in the palette in reverse direction
  * @param from First color index of the range
- * @param to First color index of the range
+ * @param to Last color index of the range
  */
 void CycleColorsReverse(int from, int to)
 {
@@ -375,44 +375,41 @@ void palette_update_caves()
 	palette_update(0, 31);
 }
 
+/**
+ * @brief Cycle the lava every other frame, and glow every frame
+ * Lava has 15 colors and the glow 16, so the full animation has 240 frames before it loops
+ */
 void palette_update_crypt()
 {
-	static int laveDelay = 0;
-	static int glowDelay = 0;
+	static bool delayLava = false;
 
-	if (laveDelay > 1) {
+	if (!delayLava) {
 		CycleColorsReverse(1, 15);
-		laveDelay = 0;
-	} else {
-		laveDelay++;
+		delayLava = false;
 	}
-	if (glowDelay > 0) {
-		CycleColorsReverse(16, 31);
-		palette_update(0, 31);
-		glowDelay++;
-	} else {
-		glowDelay = 1;
-	}
+
+	CycleColorsReverse(16, 31);
+	palette_update(0, 31);
+	delayLava = !delayLava;
 }
 
+/**
+ * @brief Cycle the pond waves and bubles colors every 3rd frame
+ * Bubles have 8 colors and waves 7, so the full animation has 56 frames before it loops
+ */
 void palette_update_hive()
 {
-	static int waveDelay = 0;
-	static int bubbleDelay = 0;
+	static uint8_t delay = 0;
 
-	if (waveDelay == 2) {
-		CycleColorsReverse(1, 8);
-		waveDelay = 0;
-	} else {
-		waveDelay++;
+	if (delay != 2) {
+		delay++;
+		return;
 	}
-	if (bubbleDelay == 2) {
-		CycleColorsReverse(9, 15);
-		palette_update(0, 15);
-		bubbleDelay = 0;
-	} else {
-		bubbleDelay++;
-	}
+
+	CycleColorsReverse(1, 8);
+	CycleColorsReverse(9, 15);
+	palette_update(0, 15);
+	delay = 0;
 }
 
 void palette_update_quest_palette(int n)

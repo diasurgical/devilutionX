@@ -1283,7 +1283,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	if (ControlMode == ControlTypes::VirtualGamepad) {
 		if (VirtualGamepadState.standButton.isHeld) {
 			if (player._pmode == PM_STAND)
-				StartStand(playerId, pdir);
+				StartStand(player, pdir);
 			return;
 		}
 	}
@@ -1291,7 +1291,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir)) {
 		if (player._pmode == PM_STAND)
-			StartStand(playerId, pdir);
+			StartStand(player, pdir);
 		return; // Don't start backtrack around obstacles
 	}
 

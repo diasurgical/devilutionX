@@ -93,7 +93,7 @@ bool diablo_is_focused();
 void diablo_focus_pause();
 void diablo_focus_unpause();
 bool PressEscKey();
-void DisableInputEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam);
+void DisableInputEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 
 /**

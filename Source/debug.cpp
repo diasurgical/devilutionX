@@ -122,7 +122,6 @@ void ProcessMessages()
 			gbRunGame = false;
 			break;
 		}
-		TranslateMessage(&msg);
 		PushMessage(&msg);
 	}
 }
@@ -208,7 +207,7 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	if (!setlevel && myPlayer.isOnLevel(level))
 		return StrCat("I did nothing but fulfilled your wish. You are already at level ", level, ".");
 
-	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
+	StartNewLvl(myPlayer, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
 	return StrCat("Welcome to level ", level, ".");
 }
 
@@ -235,12 +234,12 @@ std::string DebugCmdLoadQuestMap(const string_view parameter)
 			continue;
 
 		if (!MyPlayer->isOnLevel(quest._qlevel)) {
-			StartNewLvl(MyPlayerId, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
+			StartNewLvl(*MyPlayer, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
 			ProcessMessages();
 		}
 
 		setlvltype = quest._qlvltype;
-		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
+		StartNewLvl(*MyPlayer, WM_DIABSETLVL, level);
 
 		return StrCat("Welcome to ", QuestLevelNames[level], ".");
 	}
@@ -284,7 +283,7 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	setlvltype = static_cast<dungeon_type>(mapType);
 	ViewPosition = spawn;
 
-	StartNewLvl(MyPlayerId, WM_DIABSETLVL, SL_NONE);
+	StartNewLvl(*MyPlayer, WM_DIABSETLVL, SL_NONE);
 
 	return "Welcome to this unique place.";
 }

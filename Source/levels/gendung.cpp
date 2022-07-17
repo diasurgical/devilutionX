@@ -105,7 +105,7 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 	Size room { maxWidth, maxHeight };
 
 	for (int i = 0; i < maxSize; i++) {
-		int width = 0;
+		int width = i < room.height ? i : 0;
 		if (i < maxHeight) {
 			while (width < room.width) {
 				if (dungeon[origin.x + width][origin.y + i] != floor)
@@ -115,7 +115,7 @@ std::optional<Size> GetSizeForThemeRoom(int floor, Point origin, int minSize, in
 			}
 		}
 
-		int height = 0;
+		int height = i < room.width ? i : 0;
 		if (i < maxWidth) {
 			while (height < room.height) {
 				if (dungeon[origin.x + i][origin.y + height] != floor)
@@ -350,6 +350,13 @@ void InitGlobals()
 }
 
 } // namespace
+
+#ifdef BUILD_TESTING
+std::optional<Size> GetSizeForThemeRoom()
+{
+	return GetSizeForThemeRoom(0, { 0, 0 }, 5, 10);
+}
+#endif
 
 dungeon_type GetLevelType(int level)
 {

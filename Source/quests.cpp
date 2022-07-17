@@ -365,7 +365,7 @@ void CheckQuests()
 				if (quest._qlvltype != DTYPE_NONE) {
 					setlvltype = quest._qlvltype;
 				}
-				StartNewLvl(MyPlayerId, WM_DIABSETLVL, quest._qslvl);
+				StartNewLvl(*MyPlayer, WM_DIABSETLVL, quest._qslvl);
 			}
 		}
 	}

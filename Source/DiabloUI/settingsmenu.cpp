@@ -3,6 +3,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/scrollbar.h"
 #include "control.h"
+#include "controls/remap_keyboard.h"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "miniwin/misc_msg.h"
@@ -156,7 +157,7 @@ void ItemSelected(int value)
 			break;
 		case SpecialMenuEntry::UnbindKey:
 			auto *pOptionKey = static_cast<KeymapperOptions::Action *>(selectedOption);
-			pOptionKey->SetValue(DVL_VK_INVALID);
+			pOptionKey->SetValue(SDLK_UNKNOWN);
 			vecDialogItems[IndexKeyInput]->m_text = selectedOption->GetValueDescription().data();
 			break;
 		}
@@ -312,27 +313,28 @@ void UiSettingsMenu()
 			eventHandler = [](SDL_Event &event) {
 				if (SelectedItem != IndexKeyInput)
 					return false;
-				int key = DVL_VK_INVALID;
+				uint32_t key = SDLK_UNKNOWN;
 				switch (event.type) {
-				case SDL_KEYDOWN:
-					key = TranslateSdlKey(event.key.keysym);
-					break;
+				case SDL_KEYDOWN: {
+					SDL_Keycode keycode = event.key.keysym.sym;
+					remap_keyboard_key(&keycode);
+					if (key >= SDLK_a && key <= SDLK_z) {
+						key -= 'a' - 'A';
+					}
+					key = static_cast<uint32_t>(keycode);
+				} break;
 				case SDL_MOUSEBUTTONDOWN:
 					switch (event.button.button) {
 					case SDL_BUTTON_MIDDLE:
-						key = DVL_VK_MBUTTON;
-						break;
 					case SDL_BUTTON_X1:
-						key = DVL_VK_X1BUTTON;
-						break;
 					case SDL_BUTTON_X2:
-						key = DVL_VK_X2BUTTON;
+						key = event.button.button | KeymapperMouseButtonMask;
 						break;
 					}
 					break;
 				}
 				// Ignore unknown keys
-				if (key == DVL_VK_INVALID || key == -1)
+				if (key == SDLK_UNKNOWN)
 					return false;
 				auto *pOptionKey = static_cast<KeymapperOptions::Action *>(selectedOption);
 				if (!pOptionKey->SetValue(key))

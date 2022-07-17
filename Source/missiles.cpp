@@ -245,14 +245,14 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		monster.flags |= MFLAG_NOHEAL;
 
 	if (monster.hitPoints >> 6 <= 0) {
-		M_StartKill(monster, pnum);
+		M_StartKill(monster, player);
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
 		if (monster.type().type != MT_GOLEM)
-			M_StartHit(monster, pnum, dam);
+			M_StartHit(monster, player, dam);
 	}
 
 	if (monster.activeForTicks == 0) {
@@ -354,7 +354,7 @@ bool Plr2PlrMHit(const Player &player, int p, int mindam, int maxdam, int dist, 
 	} else {
 		if (&player == MyPlayer)
 			NetSendCmdDamage(true, p, dam);
-		StartPlrHit(p, dam, false);
+		StartPlrHit(target, dam, false);
 	}
 
 	return true;
@@ -438,7 +438,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	if (IsMissileBlockedByTile({ mx, my })) {
 		Object *object = ObjectAtPosition({ mx, my });
 		if (object != nullptr && object->IsBreakable()) {
-			BreakObject(-1, *object);
+			BreakObjectMissile(*object);
 		}
 
 		if (!dontDeleteOnCollision)
@@ -683,7 +683,7 @@ bool IsMissileBlockedByTile(Point tile)
 
 void GetDamageAmt(spell_id i, int *mind, int *maxd)
 {
-	assert(MyPlayerId >= 0 && MyPlayerId < MAX_PLRS);
+	assert(MyPlayer != nullptr);
 	assert(i >= 0 && i < 64);
 
 	Player &myPlayer = *MyPlayer;
@@ -873,7 +873,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 		monster.hitPoints = 0;
 #endif
 	if (monster.hitPoints >> 6 <= 0) {
-		StartMonsterDeath(monster, -1, true);
+		MonsterDeath(monster, monster.direction, true);
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else {
@@ -1014,7 +1014,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	}
 
 	if (player._pHitPoints >> 6 > 0) {
-		StartPlrHit(pnum, dam, false);
+		StartPlrHit(player, dam, false);
 	}
 
 	return true;
@@ -1883,19 +1883,22 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 
 void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	if (!missile.IsTrap()) {
-		if (missile._micaster == TARGET_MONSTERS) {
-			Player &player = Players[missile._misource];
-			int dmg = GenerateRndSum(20, player._pLevel + 1) + player._pLevel + 1;
-			missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
-			missile._midam += missile._midam / 2;
-			UseMana(player, SPL_FLASH);
-		} else {
-			missile._midam = Monsters[missile._misource].level * 2;
-		}
-	} else {
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		Player *player = missile.sourcePlayer();
+		int dmg = GenerateRndSum(20, player->_pLevel + 1) + player->_pLevel + 1;
+		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
+		missile._midam += missile._midam / 2;
+		UseMana(*player, SPL_FLASH);
+	} break;
+	case MissileSource::Monster:
+		missile._midam = missile.sourceMonster()->level * 2;
+		break;
+	case MissileSource::Trap:
 		missile._midam = currlevel / 2;
+		break;
 	}
+
 	missile._mirange = 19;
 }
 
@@ -2159,7 +2162,7 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 	Monster &golem = Monsters[playerId];
 
 	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
-		M_StartKill(golem, playerId);
+		M_StartKill(golem, player);
 
 	UseMana(player, SPL_GOLEM);
 
@@ -2171,7 +2174,7 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 		    parameter.dst, 0, 5);
 
 		if (spawnPosition) {
-			SpawnGolem(playerId, *spawnPosition, missile);
+			SpawnGolem(player, golem, *spawnPosition, missile);
 		}
 	}
 }
