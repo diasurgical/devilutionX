@@ -30,7 +30,6 @@ void FocusOnCharInfo();
 void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point position);
 bool FetchMessage(tagMSG *lpMsg);
 
-void TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
 void PostMessage(uint32_t type, uint32_t wParam, uint32_t lParam);
 void ClearMessageQueue();
@@ -92,7 +91,6 @@ inline uint16_t DecodeMouseModState(uint32_t wParam)
 
 #define DVL_WM_SYSCOMMAND 0x0112
 
-#define DVL_WM_CHAR 0x0102
 #define DVL_WM_CAPTURECHANGED 0x0215
 
 #define DVL_WM_PAINT 0x000F
