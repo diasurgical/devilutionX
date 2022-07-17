@@ -2699,23 +2699,24 @@ void MI_Arrow(Missile &missile)
 {
 	missile._mirange--;
 	missile._midist++;
-	int p = missile._misource;
 
 	int mind;
 	int maxd;
-	if (!missile.IsTrap()) {
-		if (missile._micaster == TARGET_MONSTERS) {
-			const Player &player = Players[p];
-			mind = player._pIMinDam;
-			maxd = player._pIMaxDam;
-		} else {
-			auto &monster = Monsters[p];
-			mind = monster.minDamage;
-			maxd = monster.maxDamage;
-		}
-	} else {
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		const Player *player = missile.sourcePlayer();
+		mind = player->_pIMinDam;
+		maxd = player->_pIMaxDam;
+	} break;
+	case MissileSource::Monster: {
+		const Monster *monster = missile.sourceMonster();
+		mind = monster->minDamage;
+		maxd = monster->maxDamage;
+	} break;
+	case MissileSource::Trap:
 		mind = currlevel;
 		maxd = 2 * currlevel;
+		break;
 	}
 	MoveMissileAndCheckMissileCol(missile, mind, maxd, true, false);
 	if (missile._mirange == 0)
