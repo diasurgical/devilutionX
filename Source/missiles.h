@@ -153,7 +153,7 @@ struct Missile {
 		return &Monsters[_misource];
 	}
 
-	MissileSource SourceType()
+	MissileSource sourceType()
 	{
 		if (_misource == -1)
 			return MissileSource::Trap;

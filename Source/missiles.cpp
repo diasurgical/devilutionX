@@ -1883,7 +1883,7 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 
 void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	switch (missile.SourceType()) {
+	switch (missile.sourceType()) {
 	case MissileSource::Player: {
 		Player *player = missile.sourcePlayer();
 		int dmg = GenerateRndSum(20, player->_pLevel + 1) + player->_pLevel + 1;
