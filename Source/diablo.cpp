@@ -601,7 +601,7 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
-		PressKey(static_cast<SDL_Keycode>(wParam), DecodeKeyboardModState(lParam));
+		PressKey(static_cast<SDL_Keycode>(wParam), lParam);
 		return;
 	case DVL_WM_KEYUP:
 		ReleaseKey(static_cast<SDL_Keycode>(wParam));
@@ -614,7 +614,7 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_LEFT;
-			LeftMouseDown(DecodeMouseModState(wParam));
+			LeftMouseDown(wParam);
 		}
 		return;
 	case DVL_WM_LBUTTONUP:
@@ -622,14 +622,14 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
 		if (sgbMouseDown == CLICK_LEFT) {
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp(DecodeMouseModState(wParam));
+			LeftMouseUp(wParam);
 		}
 		return;
 	case DVL_WM_RBUTTONDOWN:
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_RIGHT;
-			RightMouseDown((DecodeMouseModState(wParam) & KMOD_SHIFT) != 0);
+			RightMouseDown((wParam & KMOD_SHIFT) != 0);
 		}
 		return;
 	case DVL_WM_RBUTTONUP:

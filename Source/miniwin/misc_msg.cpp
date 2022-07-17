@@ -342,18 +342,18 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
 		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
 		lpMsg->wParam = static_cast<uint32_t>(key);
-		lpMsg->lParam = EncodeKeyboardModState(e.key.keysym.mod);
+		lpMsg->lParam = e.key.keysym.mod;
 	} break;
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = PositionForMouse(e.motion.x, e.motion.y);
-		lpMsg->wParam = EncodeMouseModState(SDL_GetModState());
+		lpMsg->wParam = SDL_GetModState();
 		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
 			InvalidateInventorySlot();
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
-		lpMsg->wParam = EncodeMouseModState(SDL_GetModState());
+		lpMsg->wParam = SDL_GetModState();
 		const int button = e.button.button;
 		switch (button) {
 		case SDL_BUTTON_LEFT:
@@ -375,7 +375,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	} break;
 	case SDL_MOUSEBUTTONUP: {
 		lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
-		lpMsg->wParam = EncodeMouseModState(SDL_GetModState());
+		lpMsg->wParam = SDL_GetModState();
 		const int button = e.button.button;
 		switch (button) {
 		case SDL_BUTTON_LEFT:
