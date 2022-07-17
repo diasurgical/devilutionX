@@ -122,7 +122,6 @@ void ProcessMessages()
 			gbRunGame = false;
 			break;
 		}
-		TranslateMessage(&msg);
 		PushMessage(&msg);
 	}
 }

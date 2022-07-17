@@ -441,8 +441,11 @@ void ClosePanels()
 	QuestLogIsOpen = false;
 }
 
-void PressKey(SDL_Keycode vkey)
+void PressKey(SDL_Keycode vkey, uint16_t modState)
 {
+	if (vkey == SDLK_UNKNOWN)
+		return;
+
 	if (vkey == SDLK_PAUSE) {
 		diablo_pause_game();
 		return;
@@ -457,7 +460,7 @@ void PressKey(SDL_Keycode vkey)
 		}
 		sgOptions.Keymapper.KeyPressed(vkey);
 		if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
-			if ((SDL_GetModState() & KMOD_ALT) != 0) {
+			if ((modState & KMOD_ALT) != 0) {
 				sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 				SaveOptions();
 			} else {
@@ -483,15 +486,53 @@ void PressKey(SDL_Keycode vkey)
 	sgOptions.Keymapper.KeyPressed(vkey);
 
 	if (PauseMode == 2) {
-		if ((vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) && (SDL_GetModState() & KMOD_ALT) != 0) {
+		if ((vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) && (modState & KMOD_ALT) != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
 		}
 		return;
 	}
 
-	if (vkey == SDLK_RETURN || vkey == SDLK_KP_ENTER) {
-		if ((SDL_GetModState() & KMOD_ALT) != 0) {
+	if (DoomFlag) {
+		doom_close();
+		return;
+	}
+	if (dropGoldFlag) {
+		control_drop_gold(vkey);
+		return;
+	}
+	if (IsWithdrawGoldOpen) {
+		WithdrawGoldKeyPress(vkey);
+		return;
+	}
+
+	switch (vkey) {
+	case SDLK_PLUS:
+	case SDLK_KP_PLUS:
+	case SDLK_EQUALS:
+	case SDLK_KP_EQUALS:
+		if (AutomapActive) {
+			AutomapZoomIn();
+		}
+		return;
+	case SDLK_MINUS:
+	case SDLK_KP_MINUS:
+	case SDLK_UNDERSCORE:
+		if (AutomapActive) {
+			AutomapZoomOut();
+		}
+		return;
+#ifdef _DEBUG
+	case SDLK_m:
+		if ((modState & KMOD_ALT) != 0)
+			NextDebugMonster();
+		else
+			GetDebugMonster();
+		return;
+#endif
+	case SDLK_RETURN:
+	case SDLK_KP_ENTER:
+		if ((modState & KMOD_ALT) != 0) {
 			sgOptions.Graphics.fullscreen.SetValue(!IsFullScreen());
 			SaveOptions();
 		} else if (stextflag != STORE_NONE) {
@@ -501,7 +542,8 @@ void PressKey(SDL_Keycode vkey)
 		} else {
 			control_type_message();
 		}
-	} else if (vkey == SDLK_UP) {
+		return;
+	case SDLK_UP:
 		if (stextflag != STORE_NONE) {
 			StoreUp();
 		} else if (QuestLogIsOpen) {
@@ -515,7 +557,8 @@ void PressKey(SDL_Keycode vkey)
 		} else if (IsStashOpen) {
 			Stash.PreviousPage();
 		}
-	} else if (vkey == SDLK_DOWN) {
+		return;
+	case SDLK_DOWN:
 		if (stextflag != STORE_NONE) {
 			StoreDown();
 		} else if (QuestLogIsOpen) {
@@ -529,74 +572,29 @@ void PressKey(SDL_Keycode vkey)
 		} else if (IsStashOpen) {
 			Stash.NextPage();
 		}
-	} else if (vkey == SDLK_PAGEUP) {
+		return;
+	case SDLK_PAGEUP:
 		if (stextflag != STORE_NONE) {
 			StorePrior();
 		} else if (ChatLogFlag) {
 			ChatLogScrollTop();
 		}
-	} else if (vkey == SDLK_PAGEDOWN) {
+		return;
+	case SDLK_PAGEDOWN:
 		if (stextflag != STORE_NONE) {
 			StoreNext();
 		} else if (ChatLogFlag) {
 			ChatLogScrollBottom();
 		}
-	} else if (vkey == SDLK_LEFT) {
-		if (AutomapActive && !talkflag) {
+		return;
+	case SDLK_LEFT:
+		if (AutomapActive && !talkflag)
 			AutomapLeft();
-		}
-	} else if (vkey == SDLK_RIGHT) {
-		if (AutomapActive && !talkflag) {
+		return;
+	case SDLK_RIGHT:
+		if (AutomapActive && !talkflag)
 			AutomapRight();
-		}
-	}
-}
-
-/**
- * @internal `return` must be used instead of `break` to be bin exact as C++
- */
-void PressChar(char vkey)
-{
-	if (gmenu_is_active() || IsTalkActive() || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
 		return;
-	}
-	if (PauseMode == 2) {
-		return;
-	}
-	if (DoomFlag) {
-		doom_close();
-		return;
-	}
-	if (dropGoldFlag) {
-		control_drop_gold(static_cast<SDL_Keycode>(vkey));
-		return;
-	}
-	if (IsWithdrawGoldOpen) {
-		WithdrawGoldKeyPress(static_cast<SDL_Keycode>(vkey));
-		return;
-	}
-
-	switch (vkey) {
-	case '+':
-	case '=':
-		if (AutomapActive) {
-			AutomapZoomIn();
-		}
-		return;
-	case '-':
-	case '_':
-		if (AutomapActive) {
-			AutomapZoomOut();
-		}
-		return;
-#ifdef _DEBUG
-	case 'M':
-		NextDebugMonster();
-		return;
-	case 'm':
-		GetDebugMonster();
-		return;
-#endif
 	}
 }
 
@@ -609,13 +607,10 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
-		PressKey(static_cast<SDL_Keycode>(wParam));
+		PressKey(static_cast<SDL_Keycode>(wParam), DecodeKeyboardModState(lParam));
 		return;
 	case DVL_WM_KEYUP:
 		ReleaseKey(static_cast<SDL_Keycode>(wParam));
-		return;
-	case DVL_WM_CHAR:
-		PressChar(static_cast<char>(wParam));
 		return;
 	case DVL_WM_SYSKEYDOWN:
 		if (PressSysKey(static_cast<SDL_Keycode>(wParam)))
@@ -756,7 +751,6 @@ void RunGameLoop(interface_mode uMsg)
 				gbRunGame = false;
 				break;
 			}
-			TranslateMessage(&msg);
 			PushMessage(&msg);
 		}
 		if (!gbRunGame)
@@ -2041,7 +2035,6 @@ void DisableInputEventHandler(uint32_t uMsg, uint32_t /*wParam*/, uint32_t lPara
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
 	case DVL_WM_KEYUP:
-	case DVL_WM_CHAR:
 	case DVL_WM_SYSKEYDOWN:
 	case DVL_WM_SYSCOMMAND:
 		return;
