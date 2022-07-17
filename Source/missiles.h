@@ -155,7 +155,7 @@ struct Missile {
 
 	[[nodiscard]] bool isSameSource(Missile &missile)
 	{
-		return _misource == missile._misource;
+		return sourceType() == missile.sourceType() && _misource == missile._misource;
 	}
 
 	MissileSource sourceType()
