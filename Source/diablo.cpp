@@ -516,7 +516,7 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		return;
 #ifdef _DEBUG
 	case SDLK_m:
-		if ((modState & KMOD_ALT) != 0)
+		if ((modState & KMOD_SHIFT) != 0)
 			NextDebugMonster();
 		else
 			GetDebugMonster();
@@ -587,6 +587,8 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		if (AutomapActive && !talkflag)
 			AutomapRight();
 		return;
+	default:
+		break;
 	}
 }
 
