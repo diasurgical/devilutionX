@@ -1490,7 +1490,7 @@ void AddSearch(Missile &missile, const AddMissileParameter & /*parameter*/)
 		UseMana(player, SPL_SEARCH);
 
 	for (auto &other : Missiles) {
-		if (&other != &missile && other._misource == missile._misource && other._mitype == MIS_SEARCH) {
+		if (&other != &missile && missile.isSameSource(other) && other._mitype == MIS_SEARCH) {
 			int r1 = missile._mirange;
 			int r2 = other._mirange;
 			if (r2 < INT_MAX - r1)
@@ -1868,7 +1868,7 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 	missile._mirange = 100;
 	missile.var1 = missile._mirange - missile._miAnimLen;
 	for (auto &other : Missiles) {
-		if (other._mitype == MIS_TOWN && &other != &missile && other._misource == missile._misource)
+		if (other._mitype == MIS_TOWN && &other != &missile && missile.isSameSource(other))
 			other._mirange = 0;
 	}
 	PutMissile(missile);

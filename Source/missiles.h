@@ -153,6 +153,11 @@ struct Missile {
 		return &Monsters[_misource];
 	}
 
+	[[nodiscard]] bool isSameSource(Missile &missile)
+	{
+		return _misource == missile._misource;
+	}
+
 	MissileSource sourceType()
 	{
 		if (_misource == -1)
