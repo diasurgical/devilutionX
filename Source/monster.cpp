@@ -257,32 +257,16 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 			monster.maxHitPoints += (gbIsMultiplayer ? 100 : 50) << 6;
 		else
 			monster.maxHitPoints += 64;
+
 		monster.hitPoints = monster.maxHitPoints;
-		monster.level += 15;
-		monster.exp = 2 * (monster.exp + 1000);
-		monster.toHit += NightmareToHitBonus;
-		monster.minDamage = 2 * (monster.minDamage + 2);
-		monster.maxDamage = 2 * (monster.maxDamage + 2);
-		monster.toHitSpecial += NightmareToHitBonus;
-		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
-		monster.maxDamageSpecial = 2 * (monster.maxDamageSpecial + 2);
-		monster.armorClass += NightmareAcBonus;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
 			monster.maxHitPoints += (gbIsMultiplayer ? 200 : 100) << 6;
 		else
 			monster.maxHitPoints += 192;
+
 		monster.hitPoints = monster.maxHitPoints;
-		monster.level += 30;
-		monster.exp = 4 * (monster.exp + 1000);
-		monster.toHit += HellToHitBonus;
-		monster.minDamage = 4 * monster.minDamage + 6;
-		monster.maxDamage = 4 * monster.maxDamage + 6;
-		monster.toHitSpecial += HellToHitBonus;
-		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
-		monster.maxDamageSpecial = 4 * monster.maxDamageSpecial + 6;
-		monster.armorClass += HellAcBonus;
 		monster.resistance = monster.data().resistanceHell;
 	}
 }

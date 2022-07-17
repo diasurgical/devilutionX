@@ -315,8 +315,10 @@ struct UniqueMonsterData {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterData MonstersData[];
+extern MonsterData MonstersData[];
 extern const _monster_id MonstConvTbl[];
 extern const UniqueMonsterData UniqueMonstersData[];
+
+void InitMonstersData(_difficulty difficulty, _difficulty lastDifficulty);
 
 } // namespace devilution

@@ -33,6 +33,7 @@
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
+#include "monstdat.h"
 
 namespace devilution {
 
@@ -2063,6 +2064,7 @@ void LoadGame(bool firstflag)
 
 	LoadPlayer(file, myPlayer);
 
+	InitMonstersData(myPlayer.pDifficulty, sgGameInitInfo.nDifficulty);
 	sgGameInitInfo.nDifficulty = myPlayer.pDifficulty;
 	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
 		sgGameInitInfo.nDifficulty = DIFF_NORMAL;

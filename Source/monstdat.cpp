@@ -7,6 +7,7 @@
 #include "items.h"
 
 #include "monster.h"
+#include "multi.h"
 #include "textdat.h"
 #include "utils/language.h"
 
@@ -14,16 +15,24 @@ namespace devilution {
 
 namespace {
 
+constexpr int NightmareToHitBonus = 85;
+constexpr int HellToHitBonus = 120;
+
+constexpr int NightmareAcBonus = 50;
+constexpr int HellAcBonus = 80;
+
 // Returns a `treasure` value for the given item.
 constexpr uint16_t Uniq(_unique_items item)
 {
 	return static_cast<uint16_t>(T_UNIQ) + item;
 }
 
+constexpr uint8_t MonstersDataSize = 138;
+
 } // namespace
 
 /** Contains the data related to each monster ID. */
-const MonsterData MonstersData[] = {
+MonsterData MonstersData[] = {
 	// clang-format off
 // _monster_id   name,                                       assetsSuffix,        soundSuffix,          trnFile,           availability,                 width, image, hasSpecial, hasSpecialSound,   frames[6],                  rate[6],                  minDunLvl, maxDunLvl, level, hitPointsMinimum, hitPointsMaximum, ai,           abilityFlags,                          intelligence, toHit, animFrameNum, minDamage, maxDamage, toHitSpecial, animFrameNumSpecial, minDamageSpecial, maxDamageSpecial, armorClass, monsterClass, resistance,                                                resistanceHell,                                                  selectionType,     treasure,      exp
 
@@ -442,5 +451,90 @@ const UniqueMonsterData UniqueMonstersData[] = {
 	{  MT_INVALID,       nullptr,                                           nullptr,                0,         0, AI_INVALID,              0,           0,           0,  0                                                             , UniqueMonsterPack::None,                    0,                0, TEXT_NONE      },
 	// clang-format on
 };
+
+void InitMonsterDataNightmare()
+{
+	for (auto &monsterData : MonstersData) {
+		monsterData.level += 15;
+		monsterData.exp = 2 * (monsterData.exp + 1000);
+		monsterData.toHit += NightmareToHitBonus;
+		monsterData.minDamage = 2 * (monsterData.minDamage + 2);
+		monsterData.maxDamage = 2 * (monsterData.maxDamage + 2);
+		monsterData.toHitSpecial += NightmareToHitBonus;
+		monsterData.minDamageSpecial = 2 * (monsterData.minDamageSpecial + 2);
+		monsterData.maxDamageSpecial = 2 * (monsterData.maxDamageSpecial + 2);
+		monsterData.armorClass += NightmareAcBonus;
+	}
+}
+
+void ClearMonstersDataToNormalFromNighmarte()
+{
+	for (auto &monsterData : MonstersData) {
+		monsterData.level -= 15;
+		monsterData.exp = monsterData.exp / 2 - 1000;
+		monsterData.toHit -= NightmareToHitBonus;
+		monsterData.minDamage = monsterData.minDamage / 2 - 2;
+		monsterData.maxDamage = monsterData.maxDamage / 2 - 2;
+		monsterData.toHitSpecial -= NightmareToHitBonus;
+		monsterData.minDamageSpecial = monsterData.minDamageSpecial / 2 - 2;
+		monsterData.maxDamageSpecial = monsterData.maxDamageSpecial / 2 - 2;
+		monsterData.armorClass -= NightmareAcBonus;
+	}
+}
+
+void InitMonsterDataHell()
+{
+	for (auto &monsterData : MonstersData) {
+		monsterData.level += 30;
+		monsterData.exp = 4 * (monsterData.exp + 1000);
+		monsterData.toHit += HellToHitBonus;
+		monsterData.minDamage = 4 * (monsterData.minDamage + 6);
+		monsterData.maxDamage = 4 * (monsterData.maxDamage + 6);
+		monsterData.toHitSpecial += HellToHitBonus;
+		monsterData.minDamageSpecial = 4 * (monsterData.minDamageSpecial + 6);
+		monsterData.maxDamageSpecial = 4 * (monsterData.maxDamageSpecial + 6);
+		monsterData.armorClass += HellAcBonus;
+	}
+}
+
+void ClearMonstersDataToNormalFromHell()
+{
+	for (auto &monsterData : MonstersData) {
+		monsterData.level -= 30;
+		monsterData.exp = monsterData.exp / 4 - 1000;
+		monsterData.toHit -= HellToHitBonus;
+		monsterData.minDamage = monsterData.minDamage / 4 - 6;
+		monsterData.maxDamage = monsterData.maxDamage / 4 - 6;
+		monsterData.toHitSpecial -= HellToHitBonus;
+		monsterData.minDamageSpecial = monsterData.minDamageSpecial / 4 - 6;
+		monsterData.maxDamageSpecial = monsterData.maxDamageSpecial / 4 - 6;
+		monsterData.armorClass -= HellToHitBonus;
+	}
+}
+
+void InitMonstersData(_difficulty difficulty, _difficulty lastDifficulty)
+{
+	switch (lastDifficulty) {
+	case _difficulty::DIFF_NORMAL:
+		break;
+	case _difficulty::DIFF_HELL:
+		ClearMonstersDataToNormalFromHell();
+		break;
+	case _difficulty::DIFF_NIGHTMARE:
+		ClearMonstersDataToNormalFromNighmarte();
+		break;
+	}
+
+	switch (difficulty) {
+	case _difficulty::DIFF_NORMAL:
+		break;
+	case _difficulty::DIFF_HELL:
+		InitMonsterDataHell();
+		break;
+	case _difficulty::DIFF_NIGHTMARE:
+		InitMonsterDataNightmare();
+		break;
+	}
+}
 
 } // namespace devilution
