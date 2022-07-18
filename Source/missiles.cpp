@@ -601,7 +601,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 		return false;
 
 	Direction dir = GetDirection(position, target);
-	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, Players[missile._misource].GetSpellLevel(SPL_FIREBOLT), &missile);
+	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, missile.sourcePlayer()->GetSpellLevel(SPL_FIREBOLT), &missile);
 	SetMissDir(missile, 2);
 	missile.var2 = 3;
 
