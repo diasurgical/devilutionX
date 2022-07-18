@@ -418,18 +418,18 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	bool blocked = false;
 	const int8_t pid = dPlayer[mx][my];
 	if (pid > 0) {
-		Player &hitPlayer = Players[pid - 1];
+		Player &target = Players[pid - 1];
 		if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
 			if (missileSource == MissileSource::Player) {
 				Player *sourcePlayer = missile.sourcePlayer();
-				if (&hitPlayer != sourcePlayer)
-					isPlayerHit = Plr2PlrMHit(*sourcePlayer, hitPlayer.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
+				if (&target != sourcePlayer)
+					isPlayerHit = Plr2PlrMHit(*sourcePlayer, target.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
 			} else {
-				isPlayerHit = PlayerMHit(hitPlayer.getId(), missile.sourceMonster(), missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
+				isPlayerHit = PlayerMHit(target.getId(), missile.sourceMonster(), missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
 			}
 		} else {
 			int earflag = (!missile.IsTrap() && (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING)) ? 1 : 0;
-			isPlayerHit = PlayerMHit(hitPlayer.getId(), nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
+			isPlayerHit = PlayerMHit(target.getId(), nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
 		}
 	}
 
