@@ -1106,19 +1106,19 @@ void AddReflection(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 
-	if (missile._misource < 0)
+	if (missile.sourceType() != MissileSource::Player)
 		return;
 
-	Player &player = Players[missile._misource];
+	Player *player = missile.sourcePlayer();
 
-	int add = (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
-	if (player.wReflections + add >= std::numeric_limits<uint16_t>::max())
+	int add = (missile._mispllvl != 0 ? missile._mispllvl : 2) * player->_pLevel;
+	if (player->wReflections + add >= std::numeric_limits<uint16_t>::max())
 		add = 0;
-	player.wReflections += add;
-	if (&player == MyPlayer)
-		NetSendCmdParam1(true, CMD_SETREFLECT, player.wReflections);
+	player->wReflections += add;
+	if (player == MyPlayer)
+		NetSendCmdParam1(true, CMD_SETREFLECT, player->wReflections);
 
-	UseMana(player, SPL_REFLECT);
+	UseMana(*player, SPL_REFLECT);
 }
 
 void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
