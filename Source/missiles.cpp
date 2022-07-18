@@ -393,20 +393,18 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	bool isMonsterHit = false;
 	int mid = dMonster[mx][my];
 	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1].mode == MonsterMode::Petrified)) {
-		Monster &hitMonster = Monsters[abs(mid) - 1];
+		mid = abs(mid) - 1;
 		switch (missileSource) {
-		case MissileSource::Trap:
-			isMonsterHit = MonsterTrapHit(hitMonster.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-			break;
-		case MissileSource::Monster: {
-			Monster *sourceMonster = missile.sourceMonster();
-			if ((sourceMonster->flags & MFLAG_TARGETS_MONSTER) != 0
-			    && ((sourceMonster->flags & MFLAG_GOLEM) != 0 || (sourceMonster->flags & MFLAG_BERSERK) != 0)) {
-				isMonsterHit = MonsterTrapHit(hitMonster.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-			}
-		} break;
 		case MissileSource::Player:
-			isMonsterHit = MonsterMHit(missile._misource, hitMonster.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			break;
+		case MissileSource::Monster:
+			if ((missile.sourceMonster()->flags & MFLAG_TARGETS_MONSTER) == 0 || (Monsters[mid].flags & (MFLAG_GOLEM | MFLAG_BERSERK)) == 0) {
+				break;
+			// No Break
+		case MissileSource::Trap:
+			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			break;
 		}
 	}
 
