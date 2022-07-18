@@ -27,6 +27,7 @@
 #include "quests.h"
 #include "spells.h"
 #include "towners.h"
+#include "utils/endian_stream.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/str_cat.hpp"
@@ -286,14 +287,6 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	StartNewLvl(*MyPlayer, WM_DIABSETLVL, SL_NONE);
 
 	return "Welcome to this unique place.";
-}
-
-void WriteLE16(std::ofstream &out, uint16_t val)
-{
-	const uint16_t littleEndian = SDL_SwapLE16(val);
-	char data[2];
-	memcpy(data, &littleEndian, 2);
-	out.write(data, 2);
 }
 
 std::string ExportDun(const string_view parameter)

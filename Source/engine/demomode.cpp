@@ -11,6 +11,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "utils/display.h"
+#include "utils/endian_stream.hpp"
 #include "utils/paths.h"
 #include "utils/str_cat.hpp"
 
@@ -24,11 +25,11 @@ enum class DemoMsgType {
 	Message = 2,
 };
 
-struct demoMsg {
+struct DemoMsg {
 	DemoMsgType type;
 	uint32_t message;
-	int32_t wParam;
-	int32_t lParam;
+	uint32_t wParam;
+	uint32_t lParam;
 	float progressToNextGameTick;
 };
 
@@ -38,7 +39,7 @@ int RecordNumber = -1;
 bool CreateDemoReference = false;
 
 std::ofstream DemoRecording;
-std::deque<demoMsg> Demo_Message_Queue;
+std::deque<DemoMsg> Demo_Message_Queue;
 uint32_t DemoModeLastTick = 0;
 
 int LogicTick = 0;
@@ -47,30 +48,9 @@ int StartTime = 0;
 uint16_t DemoGraphicsWidth = 640;
 uint16_t DemoGraphicsHeight = 480;
 
-void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, int32_t wParam, int32_t lParam, float progressToNextGameTick)
+void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, uint32_t wParam, uint32_t lParam, float progressToNextGameTick)
 {
-	demoMsg msg;
-	msg.type = demoMsgType;
-	msg.message = message;
-	msg.wParam = wParam;
-	msg.lParam = lParam;
-	msg.progressToNextGameTick = progressToNextGameTick;
-
-	Demo_Message_Queue.push_back(msg);
-}
-
-template <class T>
-T ReadFromStream(std::ifstream &stream)
-{
-	T value;
-	stream.read(reinterpret_cast<char *>(&value), sizeof(value));
-	return value;
-}
-
-template <class T>
-void WriteToDemo(T value)
-{
-	DemoRecording.write(reinterpret_cast<char *>(&value), sizeof(value));
+	Demo_Message_Queue.push_back(DemoMsg { demoMsgType, message, wParam, lParam, progressToNextGameTick });
 }
 
 bool LoadDemoMessages(int i)
@@ -81,26 +61,26 @@ bool LoadDemoMessages(int i)
 		return false;
 	}
 
-	uint8_t version = ReadFromStream<uint8_t>(demofile);
+	const uint8_t version = ReadByte(demofile);
 	if (version != 0) {
 		return false;
 	}
 
-	gSaveNumber = ReadFromStream<uint32_t>(demofile);
-	DemoGraphicsWidth = ReadFromStream<uint16_t>(demofile);
-	DemoGraphicsHeight = ReadFromStream<uint16_t>(demofile);
+	gSaveNumber = ReadLE32(demofile);
+	DemoGraphicsWidth = ReadLE16(demofile);
+	DemoGraphicsHeight = ReadLE16(demofile);
 
 	while (!demofile.eof()) {
-		uint32_t typeNum = ReadFromStream<uint32_t>(demofile);
-		auto type = static_cast<DemoMsgType>(typeNum);
+		const uint32_t typeNum = ReadLE32(demofile);
+		const auto type = static_cast<DemoMsgType>(typeNum);
 
-		float progressToNextGameTick = ReadFromStream<float>(demofile);
+		const float progressToNextGameTick = ReadLEFloat(demofile);
 
 		switch (type) {
 		case DemoMsgType::Message: {
-			uint32_t message = ReadFromStream<uint32_t>(demofile);
-			int32_t wParam = ReadFromStream<int32_t>(demofile);
-			int32_t lParam = ReadFromStream<int32_t>(demofile);
+			const uint32_t message = ReadLE32(demofile);
+			const uint32_t wParam = ReadLE32(demofile);
+			const uint32_t lParam = ReadLE32(demofile);
 			PumpDemoMessage(type, message, wParam, lParam, progressToNextGameTick);
 			break;
 		}
@@ -167,7 +147,7 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 {
 	if (Demo_Message_Queue.empty())
 		app_fatal("Demo queue empty");
-	demoMsg dmsg = Demo_Message_Queue.front();
+	const DemoMsg dmsg = Demo_Message_Queue.front();
 	if (dmsg.type == DemoMsgType::Message)
 		app_fatal("Unexpected Message");
 	if (Timedemo) {
@@ -230,7 +210,7 @@ bool FetchMessage(tagMSG *lpMsg)
 	}
 
 	if (!Demo_Message_Queue.empty()) {
-		demoMsg dmsg = Demo_Message_Queue.front();
+		const DemoMsg dmsg = Demo_Message_Queue.front();
 		if (dmsg.type == DemoMsgType::Message) {
 			lpMsg->message = dmsg.message;
 			lpMsg->lParam = dmsg.lParam;
@@ -250,30 +230,30 @@ bool FetchMessage(tagMSG *lpMsg)
 
 void RecordGameLoopResult(bool runGameLoop)
 {
-	WriteToDemo<uint32_t>(static_cast<uint32_t>(runGameLoop ? DemoMsgType::GameTick : DemoMsgType::Rendering));
-	WriteToDemo<float>(gfProgressToNextGameTick);
+	WriteLE32(DemoRecording, static_cast<uint32_t>(runGameLoop ? DemoMsgType::GameTick : DemoMsgType::Rendering));
+	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
 }
 
 void RecordMessage(tagMSG *lpMsg)
 {
 	if (!gbRunGame || !DemoRecording.is_open())
 		return;
-	WriteToDemo<uint32_t>(static_cast<uint32_t>(DemoMsgType::Message));
-	WriteToDemo<float>(gfProgressToNextGameTick);
-	WriteToDemo<uint32_t>(lpMsg->message);
-	WriteToDemo<uint32_t>(lpMsg->wParam);
-	WriteToDemo<uint32_t>(lpMsg->lParam);
+	WriteLE32(DemoRecording, static_cast<uint32_t>(DemoMsgType::Message));
+	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
+	WriteLE32(DemoRecording, lpMsg->message);
+	WriteLE32(DemoRecording, lpMsg->wParam);
+	WriteLE32(DemoRecording, lpMsg->lParam);
 }
 
 void NotifyGameLoopStart()
 {
 	if (IsRecording()) {
 		DemoRecording.open(StrCat(paths::PrefPath(), "demo_", RecordNumber, ".dmo"), std::fstream::trunc | std::fstream::binary);
-		constexpr uint8_t version = 0;
-		WriteToDemo<uint8_t>(version);
-		WriteToDemo<uint32_t>(gSaveNumber);
-		WriteToDemo<uint16_t>(gnScreenWidth);
-		WriteToDemo<uint16_t>(gnScreenHeight);
+		constexpr uint8_t Version = 0;
+		WriteByte(DemoRecording, Version);
+		WriteLE32(DemoRecording, gSaveNumber);
+		WriteLE16(DemoRecording, gnScreenWidth);
+		WriteLE16(DemoRecording, gnScreenHeight);
 	}
 
 	if (IsRunning()) {
