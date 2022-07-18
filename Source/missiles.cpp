@@ -388,17 +388,25 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	int mx = position.x;
 	int my = position.y;
 
+	MissileSource missileSource = missile.sourceType();
+
 	bool isMonsterHit = false;
 	int mid = dMonster[mx][my];
 	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1].mode == MonsterMode::Petrified)) {
-		mid = abs(mid) - 1;
-		if (missile.IsTrap()
-		    || (missile._micaster == TARGET_PLAYERS
-		        && (Monsters[missile._misource].flags & MFLAG_TARGETS_MONSTER) != 0
-		        && ((Monsters[mid].flags & MFLAG_GOLEM) != 0 || (Monsters[missile._misource].flags & MFLAG_BERSERK) != 0))) {
-			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
-		} else if (IsAnyOf(missile._micaster, TARGET_BOTH, TARGET_MONSTERS)) {
-			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+		Monster &hitMonster = Monsters[abs(mid) - 1];
+		switch (missileSource) {
+		case MissileSource::Trap:
+			isMonsterHit = MonsterTrapHit(hitMonster.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			break;
+		case MissileSource::Monster: {
+			Monster *sourceMonster = missile.sourceMonster();
+			if ((sourceMonster->flags & MFLAG_TARGETS_MONSTER) != 0
+			    && ((sourceMonster->flags & MFLAG_GOLEM) != 0 || (sourceMonster->flags & MFLAG_BERSERK) != 0)) {
+				isMonsterHit = MonsterTrapHit(hitMonster.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
+			}
+		} break;
+		case MissileSource::Player:
+			isMonsterHit = MonsterMHit(missile._misource, hitMonster.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		}
 	}
 
@@ -412,17 +420,18 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	bool blocked = false;
 	const int8_t pid = dPlayer[mx][my];
 	if (pid > 0) {
+		Player &hitPlayer = Players[pid - 1];
 		if (missile._micaster != TARGET_BOTH && !missile.IsTrap()) {
-			if (missile._micaster == TARGET_MONSTERS) {
-				if ((pid - 1) != missile._misource)
-					isPlayerHit = Plr2PlrMHit(Players[missile._misource], pid - 1, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
+			if (missileSource == MissileSource::Player) {
+				Player *sourcePlayer = missile.sourcePlayer();
+				if (&hitPlayer != sourcePlayer)
+					isPlayerHit = Plr2PlrMHit(*sourcePlayer, hitPlayer.getId(), minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
 			} else {
-				Monster &monster = Monsters[missile._misource];
-				isPlayerHit = PlayerMHit(pid - 1, &monster, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
+				isPlayerHit = PlayerMHit(hitPlayer.getId(), missile.sourceMonster(), missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, 0, &blocked);
 			}
 		} else {
 			int earflag = (!missile.IsTrap() && (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING)) ? 1 : 0;
-			isPlayerHit = PlayerMHit(pid - 1, nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
+			isPlayerHit = PlayerMHit(hitPlayer.getId(), nullptr, missile._midist, minDamage, maxDamage, missile._mitype, isDamageShifted, earflag, &blocked);
 		}
 	}
 
