@@ -103,6 +103,10 @@ bool HandleStartAndSelect(const ControllerButtonEvent &ctrlEvent, GameAction *ac
 
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action)
 {
+	if (MyPlayer == nullptr) {
+		return false;
+	}
+
 	const bool inGameMenu = InGameMenu();
 
 #ifndef USE_SDL1

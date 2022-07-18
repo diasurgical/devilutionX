@@ -624,7 +624,7 @@ void UpdateEnemy(Monster &monster)
 	bool bestsameroom = false;
 	const auto &position = monster.position.tile;
 	if ((monster.flags & MFLAG_BERSERK) != 0 || (monster.flags & MFLAG_GOLEM) == 0) {
-		for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
+		for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 			Player &player = Players[pnum];
 			if (!player.plractive || !player.isOnActiveLevel() || player._pLvlChanging
 			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
@@ -635,7 +635,7 @@ void UpdateEnemy(Monster &monster)
 			    || ((sameroom || !bestsameroom) && dist < bestDist)
 			    || (menemy == -1)) {
 				monster.flags &= ~MFLAG_TARGETS_MONSTER;
-				menemy = pnum;
+				menemy = static_cast<int>(pnum);
 				target = player.position.future;
 				bestDist = dist;
 				bestsameroom = sameroom;

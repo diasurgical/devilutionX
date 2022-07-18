@@ -423,52 +423,52 @@ void CheckCursMove()
 	if (leveltype != DTYPE_TOWN) {
 		if (pcurstemp != -1) {
 			if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
-				int mi = abs(dMonster[mx + 2][my + 1]) - 1;
-				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 4) != 0) {
+				const uint16_t monsterId = abs(dMonster[mx + 2][my + 1]) - 1;
+				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 2, 1 };
-					pcursmonst = mi;
+					pcursmonst = monsterId;
 				}
 			}
 			if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
-				int mi = abs(dMonster[mx + 1][my + 2]) - 1;
-				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 4) != 0) {
+				const uint16_t monsterId = abs(dMonster[mx + 1][my + 2]) - 1;
+				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 2 };
-					pcursmonst = mi;
+					pcursmonst = monsterId;
 				}
 			}
 			if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
-				int mi = abs(dMonster[mx + 2][my + 2]) - 1;
-				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 4) != 0) {
+				const uint16_t monsterId = abs(dMonster[mx + 2][my + 2]) - 1;
+				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 2, 2 };
-					pcursmonst = mi;
+					pcursmonst = monsterId;
 				}
 			}
 			if (mx + 1 < MAXDUNX && !flipflag && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
-				int mi = abs(dMonster[mx + 1][my]) - 1;
-				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 2) != 0) {
+				const uint16_t monsterId = abs(dMonster[mx + 1][my]) - 1;
+				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 0 };
-					pcursmonst = mi;
+					pcursmonst = monsterId;
 				}
 			}
 			if (my + 1 < MAXDUNY && flipflag && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
-				int mi = abs(dMonster[mx][my + 1]) - 1;
-				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 2) != 0) {
+				const uint16_t monsterId = abs(dMonster[mx][my + 1]) - 1;
+				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 0, 1 };
-					pcursmonst = mi;
+					pcursmonst = monsterId;
 				}
 			}
 			if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
-				int mi = abs(dMonster[mx][my]) - 1;
-				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 1) != 0) {
+				const uint16_t monsterId = abs(dMonster[mx][my]) - 1;
+				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 1) != 0) {
 					cursPosition = { mx, my };
-					pcursmonst = mi;
+					pcursmonst = monsterId;
 				}
 			}
 			if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
-				int mi = abs(dMonster[mx + 1][my + 1]) - 1;
-				if (mi == pcurstemp && Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 2) != 0) {
+				const uint16_t monsterId = abs(dMonster[mx + 1][my + 1]) - 1;
+				if (monsterId == pcurstemp && Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 1 };
-					pcursmonst = mi;
+					pcursmonst = monsterId;
 				}
 			}
 			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_HIDDEN) != 0) {
@@ -483,52 +483,52 @@ void CheckCursMove()
 			}
 		}
 		if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
-			int mi = abs(dMonster[mx + 2][my + 1]) - 1;
-			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 4) != 0) {
+			int monsterId = abs(dMonster[mx + 2][my + 1]) - 1;
+			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 1 };
-				pcursmonst = mi;
+				pcursmonst = monsterId;
 			}
 		}
 		if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
-			int mi = abs(dMonster[mx + 1][my + 2]) - 1;
-			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 4) != 0) {
+			const uint16_t monsterId = abs(dMonster[mx + 1][my + 2]) - 1;
+			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 2 };
-				pcursmonst = mi;
+				pcursmonst = monsterId;
 			}
 		}
 		if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
-			int mi = abs(dMonster[mx + 2][my + 2]) - 1;
-			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 4) != 0) {
+			const uint16_t monsterId = abs(dMonster[mx + 2][my + 2]) - 1;
+			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 2 };
-				pcursmonst = mi;
+				pcursmonst = monsterId;
 			}
 		}
 		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
-			int mi = abs(dMonster[mx + 1][my]) - 1;
-			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 2) != 0) {
+			const uint16_t monsterId = abs(dMonster[mx + 1][my]) - 1;
+			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 0 };
-				pcursmonst = mi;
+				pcursmonst = monsterId;
 			}
 		}
 		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
-			int mi = abs(dMonster[mx][my + 1]) - 1;
-			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 2) != 0) {
+			const uint16_t monsterId = abs(dMonster[mx][my + 1]) - 1;
+			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 0, 1 };
-				pcursmonst = mi;
+				pcursmonst = monsterId;
 			}
 		}
 		if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
-			int mi = abs(dMonster[mx][my]) - 1;
-			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 1) != 0) {
+			const uint16_t monsterId = abs(dMonster[mx][my]) - 1;
+			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 1) != 0) {
 				cursPosition = { mx, my };
-				pcursmonst = mi;
+				pcursmonst = monsterId;
 			}
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
-			int mi = abs(dMonster[mx + 1][my + 1]) - 1;
-			if (Monsters[mi].hitPoints >> 6 > 0 && (Monsters[mi].data().selectionType & 2) != 0) {
+			const uint16_t monsterId = abs(dMonster[mx + 1][my + 1]) - 1;
+			if (Monsters[monsterId].hitPoints >> 6 > 0 && (Monsters[monsterId].data().selectionType & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 1 };
-				pcursmonst = mi;
+				pcursmonst = monsterId;
 			}
 		}
 		if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_HIDDEN) != 0) {
@@ -559,34 +559,33 @@ void CheckCursMove()
 
 	if (pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
-			int8_t bv = abs(dPlayer[mx + 1][my]) - 1;
-			Player &player = Players[bv];
+			const uint8_t playerId = abs(dPlayer[mx + 1][my]) - 1;
+			Player &player = Players[playerId];
 			if (&player != MyPlayer && player._pHitPoints != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 0 };
-				pcursplr = bv;
+				pcursplr = static_cast<int8_t>(playerId);
 			}
 		}
 		if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
-			int8_t bv = abs(dPlayer[mx][my + 1]) - 1;
-			Player &player = Players[bv];
+			const uint8_t playerId = abs(dPlayer[mx][my + 1]) - 1;
+			Player &player = Players[playerId];
 			if (&player != MyPlayer && player._pHitPoints != 0) {
 				cursPosition = Point { mx, my } + Displacement { 0, 1 };
-				pcursplr = bv;
+				pcursplr = static_cast<int8_t>(playerId);
 			}
 		}
 		if (dPlayer[mx][my] != 0) {
-			int8_t bv = abs(dPlayer[mx][my]) - 1;
-			if (bv != MyPlayerId) {
+			const uint8_t playerId = abs(dPlayer[mx][my]) - 1;
+			if (playerId != MyPlayerId) {
 				cursPosition = { mx, my };
-				pcursplr = bv;
+				pcursplr = static_cast<int8_t>(playerId);
 			}
 		}
 		if (TileContainsDeadPlayer({ mx, my })) {
-			for (int i = 0; i < MAX_PLRS; i++) {
-				const Player &player = Players[i];
+			for (const Player &player : Players) {
 				if (player.position.tile == Point { mx, my } && &player != MyPlayer) {
 					cursPosition = { mx, my };
-					pcursplr = i;
+					pcursplr = static_cast<int8_t>(player.getId());
 				}
 			}
 		}
@@ -594,11 +593,10 @@ void CheckCursMove()
 			for (int xx = -1; xx < 2; xx++) {
 				for (int yy = -1; yy < 2; yy++) {
 					if (TileContainsDeadPlayer({ mx + xx, my + yy })) {
-						for (int i = 0; i < MAX_PLRS; i++) {
-							const Player &player = Players[i];
+						for (const Player &player : Players) {
 							if (player.position.tile.x == mx + xx && player.position.tile.y == my + yy && &player != MyPlayer) {
 								cursPosition = Point { mx, my } + Displacement { xx, yy };
-								pcursplr = i;
+								pcursplr = static_cast<int8_t>(player.getId());
 							}
 						}
 					}
@@ -606,11 +604,11 @@ void CheckCursMove()
 			}
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
-			int8_t bv = abs(dPlayer[mx + 1][my + 1]) - 1;
-			const Player &player = Players[bv];
+			const uint8_t playerId = abs(dPlayer[mx + 1][my + 1]) - 1;
+			const Player &player = Players[playerId];
 			if (&player != MyPlayer && player._pHitPoints != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 1 };
-				pcursplr = bv;
+				pcursplr = static_cast<int8_t>(playerId);
 			}
 		}
 	}
@@ -645,31 +643,31 @@ void CheckCursMove()
 	}
 	if (pcursplr == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
-			int8_t bv = dItem[mx + 1][my] - 1;
-			if (Items[bv]._iSelFlag >= 2) {
+			const uint8_t itemId = dItem[mx + 1][my] - 1;
+			if (Items[itemId]._iSelFlag >= 2) {
 				cursPosition = Point { mx, my } + Displacement { 1, 0 };
-				pcursitem = bv;
+				pcursitem = static_cast<int8_t>(itemId);
 			}
 		}
 		if (flipflag && my + 1 < MAXDUNY && dItem[mx][my + 1] > 0) {
-			int8_t bv = dItem[mx][my + 1] - 1;
-			if (Items[bv]._iSelFlag >= 2) {
+			const uint8_t itemId = dItem[mx][my + 1] - 1;
+			if (Items[itemId]._iSelFlag >= 2) {
 				cursPosition = Point { mx, my } + Displacement { 0, 1 };
-				pcursitem = bv;
+				pcursitem = static_cast<int8_t>(itemId);
 			}
 		}
 		if (dItem[mx][my] > 0) {
-			int8_t bv = dItem[mx][my] - 1;
-			if (Items[bv]._iSelFlag == 1 || Items[bv]._iSelFlag == 3) {
+			const uint8_t itemId = dItem[mx][my] - 1;
+			if (Items[itemId]._iSelFlag == 1 || Items[itemId]._iSelFlag == 3) {
 				cursPosition = { mx, my };
-				pcursitem = bv;
+				pcursitem = static_cast<int8_t>(itemId);
 			}
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dItem[mx + 1][my + 1] > 0) {
-			int8_t bv = dItem[mx + 1][my + 1] - 1;
-			if (Items[bv]._iSelFlag >= 2) {
+			const uint8_t itemId = dItem[mx + 1][my + 1] - 1;
+			if (Items[itemId]._iSelFlag >= 2) {
 				cursPosition = Point { mx, my } + Displacement { 1, 1 };
-				pcursitem = bv;
+				pcursitem = static_cast<int8_t>(itemId);
 			}
 		}
 		if (pcursitem == -1) {

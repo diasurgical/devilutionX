@@ -47,9 +47,9 @@
 
 namespace devilution {
 
-int MyPlayerId;
-Player *MyPlayer = &Players[MyPlayerId];
-Player Players[MAX_PLRS];
+size_t MyPlayerId;
+Player *MyPlayer;
+std::vector<Player> Players;
 bool MyPlayerIsDead;
 
 /** Specifies the X-coordinate delta from the player start location in Tristram. */
@@ -1933,13 +1933,6 @@ bool Player::IsWalking() const
 	return IsAnyOf(_pmode, PM_WALK_NORTHWARDS, PM_WALK_SOUTHWARDS, PM_WALK_SIDEWAYS);
 }
 
-void Player::Reset()
-{
-	// Create empty default initialized Player on heap to avoid excessive stack usage
-	auto emptyPlayer = std::make_unique<Player>();
-	*this = std::move(*emptyPlayer);
-}
-
 int Player::GetManaShieldDamageReduction()
 {
 	constexpr int8_t Max = 7;
@@ -2421,7 +2414,7 @@ void SetPlrAnims(Player &player)
  */
 void CreatePlayer(Player &player, HeroClass c)
 {
-	player.Reset();
+	player = {};
 	SetRndSeed(SDL_GetTicks());
 
 	player._pClass = c;
@@ -2674,7 +2667,7 @@ void AddPlrExperience(Player &player, int lvl, int exp)
 void AddPlrMonstExper(int lvl, int exp, char pmask)
 {
 	int totplrs = 0;
-	for (int i = 0; i < MAX_PLRS; i++) {
+	for (size_t i = 0; i < Players.size(); i++) {
 		if (((1 << i) & pmask) != 0) {
 			totplrs++;
 		}
@@ -3165,7 +3158,7 @@ void RestartTownLvl(Player &player)
 	}
 }
 
-void StartWarpLvl(Player &player, int pidx)
+void StartWarpLvl(Player &player, size_t pidx)
 {
 	InitLevelChange(player);
 
@@ -3223,7 +3216,7 @@ void ProcessPlayers()
 
 	ValidatePlayer();
 
-	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
+	for (size_t pnum = 0; pnum < Players.size(); pnum++) {
 		Player &player = Players[pnum];
 		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
 			CheckCheatStats(player);
