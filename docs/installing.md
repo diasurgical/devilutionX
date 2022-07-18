@@ -202,3 +202,11 @@ If you'd like to use this option, scan the QR code below.
  ~~~
 
 </details>
+
+
+<details><summary>Miyoo Mini</summary>
+**Requires OnionOS to be installed**
+
+- Copy the contents of the relese .zip file onto the root of your SD card
+- Copy the MPQ files to `/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/`
+</details>
