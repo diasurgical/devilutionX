@@ -423,7 +423,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 		switch (missileSource) {
 		case MissileSource::Player: {
 			Player *player = missile.sourcePlayer();
-			if (&Players[pid] != player) {
+			if (&Players[pid] != player && missile._micaster != TARGET_BOTH) {
 				isPlayerHit = Plr2PlrMHit(*player, pid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted, &blocked);
 				break;
 			}
