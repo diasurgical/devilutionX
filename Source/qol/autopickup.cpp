@@ -73,9 +73,8 @@ bool DoPickup(Item item)
 
 } // namespace
 
-void AutoPickup(int pnum)
+void AutoPickup(const Player &player)
 {
-	const Player &player = Players[pnum];
 	if (&player != MyPlayer)
 		return;
 	if (leveltype == DTYPE_TOWN && !*sgOptions.Gameplay.autoPickupInTown)
@@ -87,7 +86,7 @@ void AutoPickup(int pnum)
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
 			if (DoPickup(item)) {
-				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+				NetSendCmdGItem(true, CMD_REQUESTAGITEM, player.getId(), itemIndex);
 				item._iRequest = true;
 			}
 		}
