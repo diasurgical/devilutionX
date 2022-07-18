@@ -1,7 +1,7 @@
 #include "panels/mainpanel.hpp"
 
 #include "control.h"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/display.h"
 #include "utils/language.h"

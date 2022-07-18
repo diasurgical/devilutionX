@@ -12,7 +12,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "textdat.h"
 #include "utils/language.h"
@@ -126,7 +126,7 @@ void FreeQuestText()
 
 void InitQuestText()
 {
-	pTextBoxCels = LoadCel("Data\\TextBox.CEL", 591);
+	pTextBoxCels = LoadCelAsCl2("Data\\TextBox.CEL", 591);
 }
 
 void InitQTextMsg(_speech_id m)
@@ -144,7 +144,7 @@ void InitQTextMsg(_speech_id m)
 void DrawQTextBack(const Surface &out)
 {
 	const Point uiPosition = GetUIRectangle().position;
-	CelDrawTo(out, uiPosition + Displacement { 24, 327 }, CelSprite { *pTextBoxCels }, 0);
+	Cl2Draw(out, uiPosition + Displacement { 24, 327 }, CelSprite { *pTextBoxCels }, 0);
 	DrawHalfTransparentRectTo(out, uiPosition.x + 27, uiPosition.y + 28, 585, 297);
 }
 

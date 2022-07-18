@@ -13,7 +13,6 @@
 #include "dead.h"
 #include "doom.h"
 #include "engine/dx.h"
-#include "engine/render/cel_render.hpp"
 #include "engine/render/cl2_render.hpp"
 #include "engine/render/dun_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -306,7 +305,7 @@ void DrawCursor(const Surface &out)
 	Clip(sgdwCursY, sgdwCursHgt, out.h());
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
-	CelDrawCursor(out, MousePosition + Displacement { 0, cursSize.height - 1 }, pcurs);
+	DrawSoftwareCursor(out, MousePosition + Displacement { 0, cursSize.height - 1 }, pcurs);
 }
 
 /**
@@ -546,7 +545,7 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 	}
 
 	if (pcursplr >= 0 && pcursplr < MAX_PLRS && &player == &Players[pcursplr])
-		Cl2DrawOutline(out, 165, spriteBufferPosition, *sprite, nCel);
+		Cl2DrawOutlineSkipColorZero(out, 165, spriteBufferPosition, *sprite, nCel);
 
 	if (&player == MyPlayer) {
 		Cl2Draw(out, spriteBufferPosition, *sprite, nCel);
@@ -636,12 +635,12 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 
 	CelSprite cel { objectToDraw._oAnimData, objectToDraw._oAnimWidth };
 	if (pcursobj != -1 && &objectToDraw == &Objects[pcursobj]) {
-		CelBlitOutlineTo(out, 194, screenPosition, cel, nCel);
+		Cl2DrawOutlineSkipColorZero(out, 194, screenPosition, cel, nCel);
 	}
 	if (objectToDraw._oLight) {
-		CelClippedDrawLightTo(out, screenPosition, cel, nCel);
+		Cl2DrawLight(out, screenPosition, cel, nCel);
 	} else {
-		CelClippedDrawTo(out, screenPosition, cel, nCel);
+		Cl2Draw(out, screenPosition, cel, nCel);
 	}
 }
 
@@ -733,9 +732,9 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	int px = targetBufferPosition.x - CalculateWidth2(cel->Width());
 	const Point position { px, targetBufferPosition.y };
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
-		CelBlitOutlineTo(out, GetOutlineColor(item, false), position, *cel, nCel);
+		Cl2DrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, *cel, nCel);
 	}
-	CelClippedDrawLightTo(out, position, *cel, nCel);
+	Cl2DrawLight(out, position, *cel, nCel);
 	if (item.AnimInfo.currentFrame == item.AnimInfo.numberOfFrames - 1 || item._iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
 }
@@ -756,10 +755,10 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		const Point position { px, targetBufferPosition.y };
 		const CelSprite sprite = towner.Sprite();
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, position, sprite, towner._tAnimFrame);
+			Cl2DrawOutlineSkipColorZero(out, 166, position, sprite, towner._tAnimFrame);
 		}
 		assert(towner._tAnimData);
-		CelClippedDrawTo(out, position, sprite, towner._tAnimFrame);
+		Cl2Draw(out, position, sprite, towner._tAnimFrame);
 		return;
 	}
 
@@ -785,7 +784,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, monsterRenderPosition, cel, monster.animInfo.getFrameToUseForRendering());
+		Cl2DrawOutlineSkipColorZero(out, 233, monsterRenderPosition, cel, monster.animInfo.getFrameToUseForRendering());
 	}
 	DrawMonster(out, tilePosition, monsterRenderPosition, monster);
 }
@@ -832,7 +831,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 #ifdef _DEBUG
 	if (DebugVision && IsTileLit(tilePosition)) {
-		CelClippedDrawTo(out, targetBufferPosition, CelSprite { *pSquareCel }, 1);
+		Cl2Draw(out, targetBufferPosition, CelSprite { *pSquareCel }, 1);
 	}
 #endif
 
@@ -886,7 +885,11 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 				cel_transparency_active = false; // Turn transparency off here for debugging
 			}
 #endif
-			CelClippedBlitLightTransTo(out, targetBufferPosition, CelSprite { *pSpecialCels }, bArch - 1);
+			if (cel_transparency_active) {
+				Cl2DrawLightBlended(out, targetBufferPosition, CelSprite { *pSpecialCels }, bArch - 1);
+			} else {
+				Cl2DrawLight(out, targetBufferPosition, CelSprite { *pSpecialCels }, bArch - 1);
+			}
 #ifdef _DEBUG
 			if ((SDL_GetModState() & KMOD_ALT) != 0) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
@@ -900,7 +903,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
 			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
 			if (bArch != 0) {
-				CelDrawTo(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, CelSprite { *pSpecialCels }, bArch - 1);
+				Cl2Draw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, CelSprite { *pSpecialCels }, bArch - 1);
 			}
 		}
 	}

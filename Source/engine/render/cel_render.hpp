@@ -111,6 +111,6 @@ void CelDrawItem(const Item &item, const Surface &out, Point position, CelSprite
  * @param frame CEL frame number
  * @param skipColorIndexZero If true, color in index 0 will be treated as transparent (these are typically used for shadows in sprites)
  */
-void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame, bool skipColorIndexZero = true);
+void Cl2DrawOutline(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame, bool skipColorIndexZero = true);
 
 } // namespace devilution
