@@ -598,7 +598,7 @@ void GetMousePos(uint32_t lParam)
 	MousePosition = { (std::int16_t)(lParam & 0xffff), (std::int16_t)((lParam >> 16) & 0xffff) };
 }
 
-void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
+void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
@@ -608,29 +608,29 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
 		ReleaseKey(static_cast<SDL_Keycode>(wParam));
 		return;
 	case DVL_WM_MOUSEMOVE:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		gmenu_on_mouse_move();
 		return;
 	case DVL_WM_LBUTTONDOWN:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_LEFT;
-			LeftMouseDown(wParam);
+			LeftMouseDown(lParam);
 		}
 		return;
 	case DVL_WM_LBUTTONUP:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_LEFT) {
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp(wParam);
+			LeftMouseUp(lParam);
 		}
 		return;
 	case DVL_WM_RBUTTONDOWN:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_RIGHT;
-			RightMouseDown((wParam & KMOD_SHIFT) != 0);
+			RightMouseDown((lParam & KMOD_SHIFT) != 0);
 		}
 		return;
 	case DVL_WM_RBUTTONUP:
@@ -2014,14 +2014,14 @@ bool PressEscKey()
 	return rv;
 }
 
-void DisableInputEventHandler(uint32_t uMsg, uint32_t /*wParam*/, uint32_t lParam)
+void DisableInputEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t /*lParam*/)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
 	case DVL_WM_KEYUP:
 		return;
 	case DVL_WM_MOUSEMOVE:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		return;
 	case DVL_WM_LBUTTONDOWN:
 		if (sgbMouseDown != CLICK_NONE)
