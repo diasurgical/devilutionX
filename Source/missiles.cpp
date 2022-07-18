@@ -1080,8 +1080,7 @@ void AddFireRune(Missile &missile, const AddMissileParameter &parameter)
 
 void AddLightningRune(Missile &missile, const AddMissileParameter &parameter)
 {
-	Player *sourcePlayer = missile.sourcePlayer();
-	int lvl = (sourcePlayer != nullptr) ? sourcePlayer->_pLevel : 0;
+	int lvl = (missile.sourceType() == MissileSource::Player) ? missile.sourcePlayer()->_pLevel : 0;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 	missile._midam = dmg;
 	AddRune(missile, parameter.dst, MIS_LIGHTWALL);
