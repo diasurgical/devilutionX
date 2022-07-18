@@ -29,7 +29,7 @@ struct DemoMsg {
 	DemoMsgType type;
 	uint32_t message;
 	uint32_t wParam;
-	uint32_t lParam;
+	uint16_t lParam;
 	float progressToNextGameTick;
 };
 
@@ -48,7 +48,7 @@ int StartTime = 0;
 uint16_t DemoGraphicsWidth = 640;
 uint16_t DemoGraphicsHeight = 480;
 
-void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, uint32_t wParam, uint32_t lParam, float progressToNextGameTick)
+void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, uint32_t wParam, uint16_t lParam, float progressToNextGameTick)
 {
 	Demo_Message_Queue.push_back(DemoMsg { demoMsgType, message, wParam, lParam, progressToNextGameTick });
 }
@@ -80,7 +80,7 @@ bool LoadDemoMessages(int i)
 		case DemoMsgType::Message: {
 			const uint32_t message = ReadLE32(demofile);
 			const uint32_t wParam = ReadLE32(demofile);
-			const uint32_t lParam = ReadLE32(demofile);
+			const uint16_t lParam = ReadLE16(demofile);
 			PumpDemoMessage(type, message, wParam, lParam, progressToNextGameTick);
 			break;
 		}
@@ -186,8 +186,8 @@ bool FetchMessage(tagMSG *lpMsg)
 	if (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
 			lpMsg->message = DVL_WM_QUIT;
-			lpMsg->lParam = 0;
 			lpMsg->wParam = 0;
+			lpMsg->lParam = 0;
 			return true;
 		}
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
@@ -213,8 +213,8 @@ bool FetchMessage(tagMSG *lpMsg)
 		const DemoMsg dmsg = Demo_Message_Queue.front();
 		if (dmsg.type == DemoMsgType::Message) {
 			lpMsg->message = dmsg.message;
-			lpMsg->lParam = dmsg.lParam;
 			lpMsg->wParam = dmsg.wParam;
+			lpMsg->lParam = dmsg.lParam;
 			gfProgressToNextGameTick = dmsg.progressToNextGameTick;
 			Demo_Message_Queue.pop_front();
 			return true;
@@ -222,8 +222,8 @@ bool FetchMessage(tagMSG *lpMsg)
 	}
 
 	lpMsg->message = 0;
-	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
+	lpMsg->lParam = 0;
 
 	return false;
 }
@@ -242,7 +242,7 @@ void RecordMessage(tagMSG *lpMsg)
 	WriteLEFloat(DemoRecording, gfProgressToNextGameTick);
 	WriteLE32(DemoRecording, lpMsg->message);
 	WriteLE32(DemoRecording, lpMsg->wParam);
-	WriteLE32(DemoRecording, lpMsg->lParam);
+	WriteLE16(DemoRecording, lpMsg->lParam);
 }
 
 void NotifyGameLoopStart()
