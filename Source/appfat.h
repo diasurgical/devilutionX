@@ -18,9 +18,6 @@ namespace devilution {
 
 #ifndef _DEBUG
 #define assert(exp)
-#define assurance(exp, value) \
-	if (!(exp))               \
-	return
 #else
 #define assert(exp) (void)((exp) || (assert_fail(__LINE__, __FILE__, #exp), 0))
 #endif
