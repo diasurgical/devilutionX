@@ -634,7 +634,7 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t lParam)
 		}
 		return;
 	case DVL_WM_RBUTTONUP:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_RIGHT) {
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
