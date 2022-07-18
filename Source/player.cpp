@@ -170,7 +170,7 @@ struct DirectionSettings {
 	DisplacementOf<int8_t> map;
 	ScrollDirection scrollDir;
 	PLR_MODE walkMode;
-	void (*walkModeHandler)(int, const DirectionSettings &);
+	void (*walkModeHandler)(Player &, const DirectionSettings &);
 };
 
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
@@ -222,33 +222,31 @@ void PmChangeLightOff(Player &player)
 	ChangeLightOffset(player._plid, { x, y });
 }
 
-void WalkNorthwards(int pnum, const DirectionSettings &walkParams)
+void WalkNorthwards(Player &player, const DirectionSettings &walkParams)
 {
-	Player &player = Players[pnum];
-	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
+	dPlayer[player.position.future.x][player.position.future.y] = -(player.getId() + 1);
 	player.position.temp = player.position.tile + walkParams.tileAdd;
 }
 
-void WalkSouthwards(int pnum, const DirectionSettings & /*walkParams*/)
+void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
 {
-	Player &player = Players[pnum];
-	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
+	const size_t playerId = player.getId();
+	dPlayer[player.position.tile.x][player.position.tile.y] = -(playerId + 1);
 	player.position.temp = player.position.tile;
 	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
-	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+	dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
 	ChangeLightXY(player._plid, player.position.tile);
 	PmChangeLightOff(player);
 }
 
-void WalkSideways(int pnum, const DirectionSettings &walkParams)
+void WalkSideways(Player &player, const DirectionSettings &walkParams)
 {
-	Player &player = Players[pnum];
-
 	Point const nextPosition = player.position.tile + walkParams.map;
 
-	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
-	dPlayer[player.position.future.x][player.position.future.y] = pnum + 1;
+	const size_t playerId = player.getId();
+	dPlayer[player.position.tile.x][player.position.tile.y] = -(playerId + 1);
+	dPlayer[player.position.future.x][player.position.future.y] = playerId + 1;
 
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player._plid, nextPosition);
@@ -318,9 +316,8 @@ bool PlrDirOK(const Player &player, Direction dir)
 	return true;
 }
 
-void HandleWalkMode(int pnum, Displacement vel, Direction dir)
+void HandleWalkMode(Player &player, Displacement vel, Direction dir)
 {
-	Player &player = Players[pnum];
 	const auto &dirModeParams = WalkSettings[static_cast<size_t>(dir)];
 	SetPlayerOld(player);
 	if (!PlrDirOK(player, dir)) {
@@ -335,7 +332,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 		ScrollViewPort(player, dirModeParams.scrollDir);
 	}
 
-	dirModeParams.walkModeHandler(pnum, dirModeParams);
+	dirModeParams.walkModeHandler(player, dirModeParams);
 
 	player.position.velocity = vel;
 	player.tempDirection = dirModeParams.dir;
@@ -358,16 +355,14 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
+void StartWalk(Player &player, Displacement vel, Direction dir, bool pmWillBeCalled)
 {
-	Player &player = Players[pnum];
-
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, -1);
 		return;
 	}
 
-	HandleWalkMode(pnum, vel, dir);
+	HandleWalkMode(player, vel, dir);
 	StartWalkAnimation(player, dir, pmWillBeCalled);
 }
 
@@ -633,13 +628,8 @@ void InitLevelChange(Player &player)
 /**
  * @brief Continue movement towards new tile
  */
-bool DoWalk(int pnum, int variant)
+bool DoWalk(Player &player, int variant)
 {
-	if (pnum < 0 || pnum >= MAX_PLRS) {
-		app_fatal(StrCat("PM_DoWalk: illegal player ", pnum));
-	}
-	Player &player = Players[pnum];
-
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.currentFrame == 0
@@ -656,7 +646,7 @@ bool DoWalk(int pnum, int variant)
 		case PM_WALK_NORTHWARDS:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 			player.position.tile = player.position.temp;
-			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
 			break;
 		case PM_WALK_SOUTHWARDS:
 			dPlayer[player.position.temp.x][player.position.temp.y] = 0;
@@ -665,7 +655,7 @@ bool DoWalk(int pnum, int variant)
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 			player.position.tile = player.position.temp;
 			// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
-			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
 			break;
 		}
 
@@ -693,7 +683,7 @@ bool DoWalk(int pnum, int variant)
 			ChangeLightOffset(player._plid, { 0, 0 });
 		}
 
-		AutoPickup(pnum);
+		AutoPickup(player);
 		return true;
 	} // We didn't reach new tile so update player's "sub-tile" position
 	ChangeOffset(player);
@@ -1035,13 +1025,8 @@ bool PlrHitObj(const Player &player, Object &targetObject)
 	return false;
 }
 
-bool DoAttack(int pnum)
+bool DoAttack(Player &player)
 {
-	if (pnum < 0 || pnum >= MAX_PLRS) {
-		app_fatal(StrCat("PM_DoAttack: illegal player ", pnum));
-	}
-	Player &player = Players[pnum];
-
 	if (player.AnimInfo.currentFrame == player._pAFNum - 2) {
 		PlaySfxLoc(PS_SWING, player.position.tile);
 	}
@@ -1061,11 +1046,12 @@ bool DoAttack(int pnum)
 		}
 
 		if (!gbIsHellfire || !HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+			const size_t playerId = player.getId();
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
-				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, playerId, 0, 0);
 			}
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
-				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, playerId, 0, 0);
 			}
 		}
 
@@ -1370,13 +1356,8 @@ void TryDisarm(const Player &player, Object &object)
 	}
 }
 
-void CheckNewPath(int pnum, bool pmWillBeCalled)
+void CheckNewPath(Player &player, bool pmWillBeCalled)
 {
-	if (pnum < 0 || pnum >= MAX_PLRS) {
-		app_fatal(StrCat("CheckNewPath: illegal player ", pnum));
-	}
-	Player &player = Players[pnum];
-
 	int x = 0;
 	int y = 0;
 
@@ -1461,28 +1442,28 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 			switch (player.walkpath[0]) {
 			case WALK_N:
-				StartWalk(pnum, { 0, -xvel }, Direction::North, pmWillBeCalled);
+				StartWalk(player, { 0, -xvel }, Direction::North, pmWillBeCalled);
 				break;
 			case WALK_NE:
-				StartWalk(pnum, { xvel, -yvel }, Direction::NorthEast, pmWillBeCalled);
+				StartWalk(player, { xvel, -yvel }, Direction::NorthEast, pmWillBeCalled);
 				break;
 			case WALK_E:
-				StartWalk(pnum, { xvel3, 0 }, Direction::East, pmWillBeCalled);
+				StartWalk(player, { xvel3, 0 }, Direction::East, pmWillBeCalled);
 				break;
 			case WALK_SE:
-				StartWalk(pnum, { xvel, yvel }, Direction::SouthEast, pmWillBeCalled);
+				StartWalk(player, { xvel, yvel }, Direction::SouthEast, pmWillBeCalled);
 				break;
 			case WALK_S:
-				StartWalk(pnum, { 0, xvel }, Direction::South, pmWillBeCalled);
+				StartWalk(player, { 0, xvel }, Direction::South, pmWillBeCalled);
 				break;
 			case WALK_SW:
-				StartWalk(pnum, { -xvel, yvel }, Direction::SouthWest, pmWillBeCalled);
+				StartWalk(player, { -xvel, yvel }, Direction::SouthWest, pmWillBeCalled);
 				break;
 			case WALK_W:
-				StartWalk(pnum, { -xvel3, 0 }, Direction::West, pmWillBeCalled);
+				StartWalk(player, { -xvel3, 0 }, Direction::West, pmWillBeCalled);
 				break;
 			case WALK_NW:
-				StartWalk(pnum, { -xvel, -yvel }, Direction::NorthWest, pmWillBeCalled);
+				StartWalk(player, { -xvel, -yvel }, Direction::NorthWest, pmWillBeCalled);
 				break;
 			}
 
@@ -1572,7 +1553,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(player, d);
 				} else {
-					OperateObject(pnum, targetId, false);
+					OperateObject(player, targetId, false);
 				}
 			}
 			break;
@@ -1583,13 +1564,13 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					StartAttack(player, d);
 				} else {
 					TryDisarm(player, *object);
-					OperateObject(pnum, targetId, false);
+					OperateObject(player, targetId, false);
 				}
 			}
 			break;
 		case ACTION_OPERATETK:
 			if (object->_oBreak != 1) {
-				OperateObject(pnum, targetId, true);
+				OperateObject(player, targetId, true);
 			}
 			break;
 		case ACTION_PICKUPITEM:
@@ -1597,7 +1578,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
-					NetSendCmdGItem(true, CMD_REQUESTGITEM, pnum, pnum, targetId);
+					NetSendCmdGItem(true, CMD_REQUESTGITEM, player.getId(), targetId);
 					item->_iRequest = true;
 				}
 			}
@@ -1607,7 +1588,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
-					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, targetId);
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, player.getId(), targetId);
 				}
 			}
 			break;
@@ -3267,10 +3248,10 @@ void ProcessPlayers()
 				case PM_WALK_NORTHWARDS:
 				case PM_WALK_SOUTHWARDS:
 				case PM_WALK_SIDEWAYS:
-					tplayer = DoWalk(pnum, player._pmode);
+					tplayer = DoWalk(player, player._pmode);
 					break;
 				case PM_ATTACK:
-					tplayer = DoAttack(pnum);
+					tplayer = DoAttack(player);
 					break;
 				case PM_RATTACK:
 					tplayer = DoRangeAttack(player);
@@ -3288,7 +3269,7 @@ void ProcessPlayers()
 					tplayer = DoDeath(player);
 					break;
 				}
-				CheckNewPath(pnum, tplayer);
+				CheckNewPath(player, tplayer);
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
