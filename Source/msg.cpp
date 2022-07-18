@@ -237,7 +237,7 @@ void PrePacket()
 				continue;
 			}
 
-			if (playerId >= MAX_PLRS) {
+			if (playerId >= Players.size()) {
 				Log("Missing source of network message");
 				return;
 			}
@@ -291,7 +291,7 @@ int WaitForTurns()
 
 	if (gbGameDestroyed)
 		return 100;
-	if (gbDeltaSender >= MAX_PLRS) {
+	if (gbDeltaSender >= Players.size()) {
 		sgbDeltaChunks = 0;
 		sgbRecvCmd = CMD_DLEVEL_END;
 		gbDeltaSender = MyPlayerId;
@@ -820,9 +820,9 @@ size_t OnGotoGetItem(const TCmd *pCmd, Player &player)
 
 bool IsGItemValid(const TCmdGItem &message)
 {
-	if (message.bMaster >= MAX_PLRS)
+	if (message.bMaster >= Players.size())
 		return false;
-	if (message.bPnum >= MAX_PLRS)
+	if (message.bPnum >= Players.size())
 		return false;
 	if (message.bCursitem >= MAXITEMS + 1)
 		return false;
@@ -1275,7 +1275,7 @@ size_t OnAttackPlayer(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MAX_PLRS) {
+	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < Players.size()) {
 		MakePlrPath(player, Players[message.wParam1].position.future, false);
 		player.destAction = ACTION_ATTACKPLR;
 		player.destParam1 = message.wParam1;
@@ -1301,7 +1301,7 @@ size_t OnRangedAttackPlayer(const TCmd *pCmd, Player &player)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MAX_PLRS) {
+	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < Players.size()) {
 		ClrPlrPath(player);
 		player.destAction = ACTION_RATTACKPLR;
 		player.destParam1 = message.wParam1;
@@ -1354,7 +1354,7 @@ size_t OnSpellPlayer(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	if (!player.isOnActiveLevel())
 		return sizeof(message);
-	if (message.wParam1 >= MAX_PLRS)
+	if (message.wParam1 >= Players.size())
 		return sizeof(message);
 	if (message.wParam2 > SPL_LAST)
 		return sizeof(message);
@@ -1422,7 +1422,7 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	if (!player.isOnActiveLevel())
 		return sizeof(message);
-	if (message.wParam1 >= MAX_PLRS)
+	if (message.wParam1 >= Players.size())
 		return sizeof(message);
 	if (message.wParam2 > SPL_LAST)
 		return sizeof(message);
@@ -1467,9 +1467,9 @@ size_t OnResurrect(const TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAX_PLRS) {
+	} else if (message.wParam1 < Players.size()) {
 		DoResurrect(pnum, Players[message.wParam1]);
-		if (pnum == MyPlayerId)
+		if (static_cast<size_t>(pnum) == MyPlayerId)
 			pfile_update(true);
 	}
 
@@ -1481,7 +1481,7 @@ size_t OnHealOther(const TCmd *pCmd, const Player &caster)
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs != 1) {
-		if (caster.isOnActiveLevel() && message.wParam1 < MAX_PLRS) {
+		if (caster.isOnActiveLevel() && message.wParam1 < Players.size()) {
 			DoHealOther(caster, Players[message.wParam1]);
 		}
 	}
@@ -1509,7 +1509,7 @@ size_t OnNewLevel(const TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (pnum != MyPlayerId) {
+	} else if (pnum != static_cast<int>(MyPlayerId)) {
 		if (message.wParam1 < WM_FIRST || message.wParam1 > WM_LAST)
 			return sizeof(message);
 
@@ -1963,7 +1963,7 @@ size_t OnRestartTown(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	} else {
-		if (pnum == MyPlayerId) {
+		if (pnum == static_cast<int>(MyPlayerId)) {
 			MyPlayerIsDead = false;
 			gamemenu_off();
 		}
@@ -2058,7 +2058,7 @@ size_t OnSyncQuest(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else {
-		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
+		if (pnum != static_cast<int>(MyPlayerId) && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
 			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1);
 		sgbDeltaChanged = true;
 	}
@@ -2642,7 +2642,7 @@ void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int 
 
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 {
-	if (playerId == MyPlayerId && WasPlayerCmdAlreadyRequested(bCmd, position))
+	if (playerId == static_cast<int>(MyPlayerId) && WasPlayerCmdAlreadyRequested(bCmd, position))
 		return;
 
 	TCmdLoc cmd;

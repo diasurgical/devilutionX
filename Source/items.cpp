@@ -3020,7 +3020,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 
 void SetupItem(Item &item)
 {
-	item.setNewAnimation(MyPlayer->pLvlLoad == 0);
+	item.setNewAnimation(MyPlayer != nullptr && MyPlayer->pLvlLoad == 0);
 	item._iIdentified = false;
 }
 

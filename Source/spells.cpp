@@ -252,8 +252,12 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 }
 
-void DoResurrect(int pnum, Player &target)
+void DoResurrect(size_t pnum, Player &target)
 {
+	if (pnum >= Players.size()) {
+		return;
+	}
+
 	AddMissile(target.position.tile, target.position.tile, Direction::South, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
 
 	if (target._pHitPoints != 0)

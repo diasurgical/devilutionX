@@ -19,7 +19,7 @@ Portal Portals[MAXPORTAL];
 namespace {
 
 /** Current portal number (a portal array index). */
-int portalindex;
+size_t portalindex;
 
 /** Coordinate of each players portal in town. */
 Point WarpDrop[MAXPORTAL] = {
@@ -124,7 +124,7 @@ void RemovePortalMissile(int id)
 	});
 }
 
-void SetCurrentPortal(int p)
+void SetCurrentPortal(size_t p)
 {
 	portalindex = p;
 }
