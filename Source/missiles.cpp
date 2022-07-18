@@ -399,7 +399,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 			break;
 		case MissileSource::Monster:
-			if ((missile.sourceMonster()->flags & MFLAG_TARGETS_MONSTER) == 0 || (Monsters[mid].flags & (MFLAG_GOLEM | MFLAG_BERSERK)) == 0) {
+			if ((missile.sourceMonster()->flags & MFLAG_TARGETS_MONSTER) == 0 || (Monsters[mid].flags & (MFLAG_GOLEM | MFLAG_BERSERK)) == 0)
 				break;
 			// No Break
 		case MissileSource::Trap:
