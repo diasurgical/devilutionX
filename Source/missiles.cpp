@@ -1105,10 +1105,10 @@ void AddReflection(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 
-	if (missile._misource < 0)
+	if (missile.sourceType() != MissileSource::Player)
 		return;
 
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	int add = (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
 	if (player.wReflections + add >= std::numeric_limits<uint16_t>::max())
