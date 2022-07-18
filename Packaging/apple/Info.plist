@@ -34,7 +34,7 @@
 	<true/>
 	<key>CSResourcesFileMapped</key>
 	<true/>
-	<key>LSRequiresCarbon</key>
+	<key>LSRequires${MACOSX_BUNDLE_REQUIRED_PLATFORM}</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
