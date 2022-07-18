@@ -17,8 +17,6 @@ main(){
 }
 
 cmake_configure() {
-	# libzt uses `-fstack-protector` GCC flag by default.
-	# We disable `-fstack-protector` because it isn't supported by target libc.
 	cmake -S. -B"$BUILD_DIR" \
 		"-DTARGET_PLATFORM=miyoo_mini" \
 		-DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc \
