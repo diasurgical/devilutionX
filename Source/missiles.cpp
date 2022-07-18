@@ -1035,7 +1035,7 @@ void InitMissiles()
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_INFRA) {
-				if (missile._misource == MyPlayerId)
+				if (missile.sourcePlayer() == MyPlayer)
 					CalcPlrItemVals(myPlayer, true);
 			}
 		}
@@ -1046,7 +1046,7 @@ void InitMissiles()
 		myPlayer._pSpellFlags &= ~SpellFlag::RageCooldown;
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_BLODBOIL) {
-				if (missile._misource == MyPlayerId) {
+				if (missile.sourcePlayer() == MyPlayer) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
 					ApplyPlrDamage(myPlayer, 0, 1, missingHP + missile.var2);
