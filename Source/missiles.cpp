@@ -177,7 +177,7 @@ void MoveMissilePos(Missile &missile)
 	}
 
 	auto target = missile.position.tile + moveDirection;
-	if (IsTileAvailable(*missile.sourceMonster(), target)) {
+	if (IsTileAvailable(missile.sourceMonster(), target)) {
 		missile.position.tile = target;
 		missile.position.offset += Displacement(moveDirection).worldToScreen();
 	}
@@ -601,7 +601,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 		return false;
 
 	Direction dir = GetDirection(position, target);
-	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, missile.sourcePlayer()->GetSpellLevel(SPL_FIREBOLT), &missile);
+	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, missile.sourcePlayer().GetSpellLevel(SPL_FIREBOLT), &missile);
 	SetMissDir(missile, 2);
 	missile.var2 = 3;
 
@@ -642,7 +642,7 @@ void SpawnLightning(Missile &missile, int dam)
 		if (position != Point { missile.var1, missile.var2 } && InDungeonBounds(position)) {
 			missile_id type = MIS_LIGHTNING;
 			if (missile.sourceType() == MissileSource::Monster
-			    && IsAnyOf(missile.sourceMonster()->type().type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
+			    && IsAnyOf(missile.sourceMonster().type().type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
 				type = MIS_LIGHTNING2;
 			}
 			AddMissile(
@@ -1035,7 +1035,7 @@ void InitMissiles()
 	if (myPlayer._pInfraFlag) {
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_INFRA) {
-				if (missile.sourcePlayer() == MyPlayer)
+				if (missile.sourceType() == MissileSource::Player && &missile.sourcePlayer() == MyPlayer)
 					CalcPlrItemVals(myPlayer, true);
 			}
 		}
@@ -1046,7 +1046,7 @@ void InitMissiles()
 		myPlayer._pSpellFlags &= ~SpellFlag::RageCooldown;
 		for (auto &missile : Missiles) {
 			if (missile._mitype == MIS_BLODBOIL) {
-				if (missile.sourcePlayer() == MyPlayer) {
+				if (missile.sourceType() == MissileSource::Player && &missile.sourcePlayer() == MyPlayer) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
 					CalcPlrItemVals(myPlayer, true);
 					ApplyPlrDamage(myPlayer, 0, 1, missingHP + missile.var2);
@@ -1080,7 +1080,7 @@ void AddFireRune(Missile &missile, const AddMissileParameter &parameter)
 
 void AddLightningRune(Missile &missile, const AddMissileParameter &parameter)
 {
-	int lvl = (missile.sourceType() == MissileSource::Player) ? missile.sourcePlayer()->_pLevel : 0;
+	int lvl = (missile.sourceType() == MissileSource::Player) ? missile.sourcePlayer()._pLevel : 0;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 	missile._midam = dmg;
 	AddRune(missile, parameter.dst, MIS_LIGHTWALL);
@@ -1108,7 +1108,7 @@ void AddReflection(Missile &missile, const AddMissileParameter & /*parameter*/)
 	if (missile.sourceType() != MissileSource::Player)
 		return;
 
-	Player &player = *missile.sourcePlayer();
+	Player &player = missile.sourcePlayer();
 
 	int add = (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
 	if (player.wReflections + add >= std::numeric_limits<uint16_t>::max())
@@ -1871,7 +1871,7 @@ void AddTown(Missile &missile, const AddMissileParameter &parameter)
 			other._mirange = 0;
 	}
 	PutMissile(missile);
-	if (missile.sourcePlayer() == MyPlayer && !missile._miDelFlag && leveltype != DTYPE_TOWN) {
+	if (missile.sourceType() == MissileSource::Player && &missile.sourcePlayer() == MyPlayer && !missile._miDelFlag && leveltype != DTYPE_TOWN) {
 		if (!setlevel) {
 			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, missile.position.tile, currlevel, leveltype, 0);
 		} else {
@@ -1884,14 +1884,14 @@ void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	switch (missile.sourceType()) {
 	case MissileSource::Player: {
-		Player *player = missile.sourcePlayer();
-		int dmg = GenerateRndSum(20, player->_pLevel + 1) + player->_pLevel + 1;
+		Player &player = missile.sourcePlayer();
+		int dmg = GenerateRndSum(20, player._pLevel + 1) + player._pLevel + 1;
 		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
 		missile._midam += missile._midam / 2;
-		UseMana(*player, SPL_FLASH);
+		UseMana(player, SPL_FLASH);
 	} break;
 	case MissileSource::Monster:
-		missile._midam = missile.sourceMonster()->level * 2;
+		missile._midam = missile.sourceMonster().level * 2;
 		break;
 	case MissileSource::Trap:
 		missile._midam = currlevel / 2;
@@ -2703,14 +2703,14 @@ void MI_Arrow(Missile &missile)
 	int maxd;
 	switch (missile.sourceType()) {
 	case MissileSource::Player: {
-		const Player *player = missile.sourcePlayer();
-		mind = player->_pIMinDam;
-		maxd = player->_pIMaxDam;
+		const Player &player = missile.sourcePlayer();
+		mind = player._pIMinDam;
+		maxd = player._pIMaxDam;
 	} break;
 	case MissileSource::Monster: {
-		const Monster *monster = missile.sourceMonster();
-		mind = monster->minDamage;
-		maxd = monster->maxDamage;
+		const Monster &monster = missile.sourceMonster();
+		mind = monster.minDamage;
+		maxd = monster.maxDamage;
 	} break;
 	case MissileSource::Trap:
 		mind = currlevel;
@@ -2731,13 +2731,13 @@ void MI_Firebolt(Missile &missile)
 	if (missile._mitype != MIS_BONESPIRIT || missile._mimfnum != 8) {
 		switch (missile.sourceType()) {
 		case MissileSource::Player: {
-			const Player *player = missile.sourcePlayer();
+			const Player &player = missile.sourcePlayer();
 			switch (missile._mitype) {
 			case MIS_FIREBOLT:
-				d = GenerateRnd(10) + (player->_pMagic / 8) + missile._mispllvl + 1;
+				d = GenerateRnd(10) + (player._pMagic / 8) + missile._mispllvl + 1;
 				break;
 			case MIS_FLARE:
-				d = 3 * missile._mispllvl - (player->_pMagic / 8) + (player->_pMagic / 2);
+				d = 3 * missile._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
 				break;
 			case MIS_BONESPIRIT:
 				d = 0;
@@ -2747,8 +2747,8 @@ void MI_Firebolt(Missile &missile)
 			}
 		} break;
 		case MissileSource::Monster: {
-			const Monster *monster = missile.sourceMonster();
-			d = monster->minDamage + GenerateRnd(monster->maxDamage - monster->minDamage + 1);
+			const Monster &monster = missile.sourceMonster();
+			d = monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
 		} break;
 		case MissileSource::Trap:
 			d = currlevel + GenerateRnd(2 * currlevel);

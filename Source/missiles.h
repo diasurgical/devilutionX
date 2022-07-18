@@ -139,18 +139,14 @@ struct Missile {
 		return _misource == -1;
 	}
 
-	[[nodiscard]] Player *sourcePlayer()
+	[[nodiscard]] Player &sourcePlayer()
 	{
-		if (IsNoneOf(_micaster, TARGET_BOTH, TARGET_MONSTERS) || _misource == -1)
-			return nullptr;
-		return &Players[_misource];
+		return Players[_misource];
 	}
 
-	[[nodiscard]] Monster *sourceMonster()
+	[[nodiscard]] Monster &sourceMonster()
 	{
-		if (_micaster != TARGET_PLAYERS || _misource == -1)
-			return nullptr;
-		return &Monsters[_misource];
+		return Monsters[_misource];
 	}
 
 	[[nodiscard]] bool isSameSource(Missile &missile)
