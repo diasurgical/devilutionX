@@ -82,13 +82,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 void InitSpellBook()
 {
 	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", static_cast<uint16_t>(SidePanelSize.width));
-
-	if (gbIsHellfire) {
-		static const uint16_t SBkBtnHellfireWidths[] = { 61, 61, 61, 61, 61, 76 };
-		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", SBkBtnHellfireWidths);
-	} else {
-		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", 76);
-	}
+	pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", gbIsHellfire ? 61 : 76);
 	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
 
 	Player &player = *MyPlayer;
