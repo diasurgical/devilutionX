@@ -2,11 +2,13 @@
 
 #include "cursor.h"
 #include "engine/cel_header.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"
+#include "utils/cel_to_cl2.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -52,7 +54,7 @@ void InitTownerInfo(int i, const TownerData &townerData)
 
 void LoadTownerAnimations(Towner &towner, const char *path, int frames, int delay)
 {
-	towner.data = LoadFileInMem(path);
+	towner.data = LoadCelAsCl2(path, towner._tAnimWidth).data();
 	NewTownerAnim(towner, towner.data.get(), frames, delay);
 }
 
@@ -818,7 +820,7 @@ void InitTowners()
 {
 	assert(CowCels == nullptr);
 
-	CowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL");
+	CowCels = LoadCelAsCl2("Towners\\Animals\\Cow.CEL", 128).data();
 
 	int i = 0;
 	for (const auto &townerData : TownersData) {

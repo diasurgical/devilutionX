@@ -16,7 +16,7 @@
 #include "engine/load_pcx.hpp"
 #include "engine/palette.h"
 #include "engine/pcx_sprite.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "engine/render/pcx_render.hpp"
 #include "hwcursor.hpp"
 #include "init.h"
@@ -164,7 +164,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 	}
 
 	assert(!sgpBackCel);
-	sgpBackCel = LoadCel(celPath, 640);
+	sgpBackCel = LoadCelAsCl2(celPath, 640);
 	LoadPalette(palPath);
 
 	sgdwProgress = 0;
@@ -184,7 +184,7 @@ void DrawCutsceneBackground()
 		const PcxSprite sprite { *ArtCutsceneWidescreen };
 		RenderPcxSprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
 	}
-	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, CelSprite { *sgpBackCel }, 0);
+	Cl2Draw(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, CelSprite { *sgpBackCel }, 0);
 }
 
 void DrawCutsceneForeground()

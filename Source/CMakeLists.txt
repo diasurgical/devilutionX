@@ -153,6 +153,7 @@ set(libdevilutionx_SRCS
   storm/storm_net.cpp
   storm/storm_svid.cpp
 
+  utils/cel_to_cl2.cpp
   utils/console.cpp
   utils/display.cpp
   utils/file_util.cpp
