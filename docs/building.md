@@ -477,6 +477,7 @@ Packaging/xbox-one/build.bat
 </details>
 
 <details><summary>Miyoo Mini</summary>
+
 Building for Miyoo Mini must be run from inside the [Toolchain Docker image](https://github.com/MiyooMini/union-toolchain).
 Executing `Packaging/miyoo_mini/build.sh` will create the folder `build-miyoo-mini/SDROOT` which has the correct structure to be used with 
 OnionOS Port Collection.
