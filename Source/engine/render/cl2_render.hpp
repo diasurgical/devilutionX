@@ -25,43 +25,39 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int numFrames)
 /**
  * @brief Blit CL2 sprite, to the back buffer at the given coordianates
  * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param position Target buffer coordinate
  * @param cel CL2 buffer
  * @param frame CL2 frame number
  */
-void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame);
+void Cl2Draw(const Surface &out, Point position, CelSprite cel, int frame);
 
 /**
  * @brief Blit a solid colder shape one pixel larger than the given sprite shape, to the given buffer at the given coordianates
  * @param col Color index from current palette
  * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param position Target buffer coordinate
  * @param cel CL2 buffer
  * @param frame CL2 frame number
  */
-void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite cel, int frame);
+void Cl2DrawOutline(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame);
 
 /**
  * @brief Blit CL2 sprite, and apply given TRN to the given buffer at the given coordinates
  * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param position Target buffer coordinate
  * @param cel CL2 buffer
  * @param frame CL2 frame number
  * @param trn TRN to use
  */
-void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, uint8_t *trn);
+void Cl2DrawTRN(const Surface &out, Point position, CelSprite cel, int frame, uint8_t *trn);
 
 /**
  * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates
  * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param position Target buffer coordinate
  * @param cel CL2 buffer
  * @param frame CL2 frame number
  */
-void Cl2DrawLight(const Surface &out, int sx, int sy, CelSprite cel, int frame);
+void Cl2DrawLight(const Surface &out, Point position, CelSprite cel, int frame);
 
 } // namespace devilution

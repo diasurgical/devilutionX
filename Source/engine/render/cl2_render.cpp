@@ -69,10 +69,10 @@ BlitCommand Cl2GetBlitCommand(const uint8_t *src)
  * @param nDataSize Size of CL2 in bytes
  * @param nWidth Width of sprite
  */
-void Cl2BlitSafe(const Surface &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
+void Cl2BlitSafe(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
 	DoRenderBackwards</*TransparentCommandCanCrossLines=*/true, Cl2GetBlitCommand>(
-	    out, { sx, sy }, reinterpret_cast<const uint8_t *>(pRLEBytes), nDataSize, nWidth, BlitDirect {});
+	    out, position, reinterpret_cast<const uint8_t *>(pRLEBytes), nDataSize, nWidth, BlitDirect {});
 }
 
 /**
@@ -85,10 +85,10 @@ void Cl2BlitSafe(const Surface &out, int sx, int sy, const byte *pRLEBytes, int 
  * @param nWidth With of CL2 sprite
  * @param pTable Light color table
  */
-void Cl2BlitLightSafe(const Surface &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *pTable)
+void Cl2BlitLightSafe(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *pTable)
 {
 	DoRenderBackwards</*TransparentCommandCanCrossLines=*/true, Cl2GetBlitCommand>(
-	    out, { sx, sy }, reinterpret_cast<const uint8_t *>(pRLEBytes), nDataSize, nWidth, BlitWithMap { pTable });
+	    out, position, reinterpret_cast<const uint8_t *>(pRLEBytes), nDataSize, nWidth, BlitWithMap { pTable });
 }
 
 template <bool Fill, bool North, bool West, bool South, bool East>
@@ -485,36 +485,36 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int numFrames)
 	}
 }
 
-void Cl2Draw(const Surface &out, int sx, int sy, CelSprite cel, int frame)
+void Cl2Draw(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
-	Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+	Cl2BlitSafe(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, CelSprite cel, int frame)
+void Cl2DrawOutline(const Surface &out, uint8_t col, Point position, CelSprite cel, int frame)
 {
 	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
-	RenderCl2Outline(out, { sx, sy }, reinterpret_cast<const uint8_t *>(src), nDataSize, cel.Width(frame), col);
+	RenderCl2Outline(out, position, reinterpret_cast<const uint8_t *>(src), nDataSize, cel.Width(frame), col);
 }
 
-void Cl2DrawTRN(const Surface &out, int sx, int sy, CelSprite cel, int frame, uint8_t *trn)
+void Cl2DrawTRN(const Surface &out, Point position, CelSprite cel, int frame, uint8_t *trn)
 {
 	assert(frame >= 0);
 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), trn);
+	Cl2BlitLightSafe(out, position, pRLEBytes, nDataSize, cel.Width(frame), trn);
 }
 
-void Cl2DrawLight(const Surface &out, int sx, int sy, CelSprite cel, int frame)
+void Cl2DrawLight(const Surface &out, Point position, CelSprite cel, int frame)
 {
 	assert(frame >= 0);
 
@@ -522,9 +522,9 @@ void Cl2DrawLight(const Surface &out, int sx, int sy, CelSprite cel, int frame)
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
 	if (LightTableIndex != 0)
-		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), &LightTables[LightTableIndex * 256]);
+		Cl2BlitLightSafe(out, position, pRLEBytes, nDataSize, cel.Width(frame), &LightTables[LightTableIndex * 256]);
 	else
-		Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
+		Cl2BlitSafe(out, position, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
 } // namespace devilution
