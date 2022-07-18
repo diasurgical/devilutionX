@@ -177,7 +177,7 @@ void MoveMissilePos(Missile &missile)
 	}
 
 	auto target = missile.position.tile + moveDirection;
-	if (IsTileAvailable(Monsters[missile._misource], target)) {
+	if (IsTileAvailable(*missile.sourceMonster(), target)) {
 		missile.position.tile = target;
 		missile.position.offset += Displacement(moveDirection).worldToScreen();
 	}
