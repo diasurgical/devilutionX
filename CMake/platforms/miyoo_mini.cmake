@@ -9,11 +9,9 @@ set(SDL1_VIDEO_MODE_FLAGS SDL_HWSURFACE)
 set(SDL1_FORCE_SVID_VIDEO_MODE ON)
 
 set(PREFILL_PLAYER_NAME ON)
+set(DEFAULT_AUDIO_SAMPLE_RATE 44100)
 
-
-# OpenDingux Beta does not currently support X-OD-NeedsJoystick,
-# so we use KBCTRL instead. Unfortunately, this partially breaks
-# external mouse and keyboard support.
+# The mini's buttons are connected via GPIO and are mapped to keyboard inputs
 set(HAS_KBCTRL 1)
 set(KBCTRL_BUTTON_DPAD_LEFT SDLK_LEFT)
 set(KBCTRL_BUTTON_DPAD_RIGHT SDLK_RIGHT)
