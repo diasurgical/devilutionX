@@ -54,6 +54,11 @@ public:
 		return width_.HoldsPointer() ? width_.AsPointer()[frame] : width_.AsValue();
 	}
 
+	[[nodiscard]] PointerOrValue<uint16_t> widthOrWidths() const
+	{
+		return width_;
+	}
+
 	[[nodiscard]] bool operator==(CelSprite other) const
 	{
 		return data_ptr_ == other.data_ptr_;
@@ -162,12 +167,23 @@ public:
 	{
 	}
 
+	OwnedCelSprite(std::unique_ptr<byte[]> data, PointerOrValue<uint16_t> widths)
+	    : data_(std::move(data))
+	    , width_(widths)
+	{
+	}
+
 	OwnedCelSprite(OwnedCelSprite &&) noexcept = default;
 	OwnedCelSprite &operator=(OwnedCelSprite &&) noexcept = default;
 
 	[[nodiscard]] byte *MutableData()
 	{
 		return data_.get();
+	}
+
+	std::unique_ptr<byte[]> data() &&
+	{
+		return std::move(data_);
 	}
 
 private:

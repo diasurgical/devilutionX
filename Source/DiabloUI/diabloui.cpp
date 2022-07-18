@@ -17,7 +17,7 @@
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
 #include "engine/pcx_sprite.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "engine/render/pcx_render.hpp"
 #include "hwcursor.hpp"
 #include "utils/display.h"
@@ -748,14 +748,14 @@ void UiFadeIn()
 void DrawCel(CelSpriteWithFrameHeight sprite, Point p)
 {
 	const Surface &out = Surface(DiabloUiSurface());
-	CelDrawTo(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, 0);
+	Cl2Draw(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, 0);
 }
 
 void DrawAnimatedCel(CelSpriteWithFrameHeight sprite, Point p)
 {
 	const Surface &out = Surface(DiabloUiSurface());
 	const int frame = GetAnimationFrame(LoadLE32(sprite.sprite.Data()));
-	CelDrawTo(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, frame);
+	Cl2Draw(out, { p.x, static_cast<int>(p.y + sprite.frameHeight) }, sprite.sprite, frame);
 }
 
 void DrawSelector(const SDL_Rect &rect)

@@ -15,13 +15,13 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/ui_item.h"
-#include "cel_render.hpp"
 #include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/load_pcx.hpp"
 #include "engine/palette.h"
 #include "engine/point.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "pcx_render.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
@@ -405,7 +405,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 
 void LoadSmallSelectionSpinner()
 {
-	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
+	pSPentSpn2Cels = LoadCelAsCl2("Data\\PentSpn2.CEL", 12);
 }
 
 void UnloadFonts(GameFontTables size, text_color color)
@@ -652,7 +652,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
+		Cl2Draw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
 		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
@@ -760,7 +760,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	}
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
+		Cl2Draw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
 		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}

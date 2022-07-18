@@ -57,7 +57,9 @@ void CheckRportal();
 void CheckTown();
 void CheckCursMove();
 
-void CelDrawCursor(const Surface &out, Point position, int cursId);
+void DrawSoftwareCursor(const Surface &out, Point position, int cursId);
+
+void DrawItem(const Item &item, const Surface &out, Point position, CelSprite cel, int frame);
 
 /** Returns the sprite for the given inventory index. */
 const OwnedCelSprite &GetInvItemSprite(int i);

@@ -17,6 +17,7 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
+#include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
@@ -4062,37 +4063,37 @@ bool IsItemBlockingObjectAtPosition(Point position)
 	return false;
 }
 
-void LoadLevelObjects(bool filesLoaded[65])
+void LoadLevelObjects(uint16_t filesWidths[65])
 {
 	if (HeadlessMode)
 		return;
 
 	for (const ObjectData objectData : AllObjects) {
 		if (leveltype == objectData.olvltype) {
-			filesLoaded[objectData.ofindex] = true;
+			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
 		}
 	}
 
 	for (int i = OFILE_L1BRAZ; i <= OFILE_L5BOOKS; i++) {
-		if (!filesLoaded[i]) {
+		if (filesWidths[i] == 0) {
 			continue;
 		}
 
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
 		*BufCopy(filestr, "Objects\\", ObjMasterLoadList[i], ".CEL") = '\0';
-		pObjCels[numobjfiles] = LoadFileInMem(filestr);
+		pObjCels[numobjfiles] = LoadCelAsCl2(filestr, filesWidths[i]).data();
 		numobjfiles++;
 	}
 }
 
 void InitObjectGFX()
 {
-	bool filesLoaded[65] = {};
+	uint16_t filesWidths[65] = {};
 
 	if (IsAnyOf(currlevel, 4, 8, 12)) {
-		filesLoaded[OFILE_BKSLBRNT] = true;
-		filesLoaded[OFILE_CANDLE2] = true;
+		filesWidths[OFILE_BKSLBRNT] = AllObjects[OBJ_STORYBOOK].oAnimWidth;
+		filesWidths[OFILE_CANDLE2] = AllObjects[OBJ_STORYCANDLE].oAnimWidth;
 	}
 
 	for (const ObjectData objectData : AllObjects) {
@@ -4101,22 +4102,22 @@ void InitObjectGFX()
 				continue;
 			}
 
-			filesLoaded[objectData.ofindex] = true;
+			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
 		}
 		if (objectData.otheme != THEME_NONE) {
 			for (int j = 0; j < numthemes; j++) {
 				if (themes[j].ttype == objectData.otheme) {
-					filesLoaded[objectData.ofindex] = true;
+					filesWidths[objectData.ofindex] = objectData.oAnimWidth;
 				}
 			}
 		}
 
 		if (objectData.oquest != Q_INVALID && Quests[objectData.oquest].IsAvailable()) {
-			filesLoaded[objectData.ofindex] = true;
+			filesWidths[objectData.ofindex] = objectData.oAnimWidth;
 		}
 	}
 
-	LoadLevelObjects(filesLoaded);
+	LoadLevelObjects(filesWidths);
 }
 
 void FreeObjectGFX()
@@ -4347,7 +4348,7 @@ void InitObjects()
 
 void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 {
-	bool filesLoaded[65] = {};
+	uint16_t filesWidths[65] = {};
 
 	ClrAllObjects();
 	ApplyObjectLighting = true;
@@ -4367,12 +4368,13 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 		for (int i = 0; i < width; i++) {
 			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
-				filesLoaded[AllObjects[ObjTypeConv[objectId]].ofindex] = true;
+				const ObjectData &objectData = AllObjects[ObjTypeConv[objectId]];
+				filesWidths[objectData.ofindex] = objectData.oAnimWidth;
 			}
 		}
 	}
 
-	LoadLevelObjects(filesLoaded);
+	LoadLevelObjects(filesWidths);
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
