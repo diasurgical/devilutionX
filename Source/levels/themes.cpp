@@ -149,7 +149,7 @@ bool TFit_SkelRoom(int t)
 	}
 
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-		if (IsSkel(LevelMonsterTypes[i].type)) {
+		if (LevelMonsterTypes[i].data->monsterType.IsSkeleton()) {
 			themeVar1 = i;
 			return TFit_Obj5(t);
 		}
@@ -161,7 +161,7 @@ bool TFit_SkelRoom(int t)
 bool TFit_GoatShrine(int t)
 {
 	for (size_t i = 0; i < LevelMonsterTypeCount; i++) {
-		if (IsGoat(LevelMonsterTypes[i].type)) {
+		if (LevelMonsterTypes[i].data->monsterType.IsGoat()) {
 			themeVar1 = i;
 			return TFit_Obj5(t);
 		}

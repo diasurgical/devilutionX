@@ -843,7 +843,7 @@ bool PlrHitMonst(Player &player, size_t monsterId, bool adjacentDamage = false)
 		phanditype = ItemType::Mace;
 	}
 
-	switch (monster.data().monsterClass) {
+	switch (monster.data().monsterType.GetClass()) {
 	case MonsterClass::Undead:
 		if (phanditype == ItemType::Sword) {
 			dam -= dam / 2;

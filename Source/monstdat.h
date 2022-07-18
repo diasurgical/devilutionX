@@ -61,6 +61,61 @@ enum class MonsterClass : uint8_t {
 	Animal,
 };
 
+enum class MonsterFamily : uint8_t {
+	None,
+	Skeleton,
+	Goat,
+	Fallen,
+	Zombie,
+	Mage,
+	StormLord,
+	Balrog,
+	Spider,
+	Succubus,
+	Scavenger,
+};
+
+class MonsterType {
+
+	uint8_t monsterType;
+
+public:
+	MonsterType(MonsterClass monsterClass, MonsterFamily monsterFamily = MonsterFamily::None)
+	{
+		monsterType = static_cast<uint8_t>(monsterClass) + ((static_cast<uint8_t>(monsterFamily)) << 2);
+	}
+
+	MonsterClass GetClass() const
+	{
+		return static_cast<MonsterClass>(monsterType & 0b00000011);
+	}
+
+	const MonsterFamily GetFamily() const
+	{
+		return static_cast<MonsterFamily>(monsterType >> 2);
+	}
+
+	bool IsType(MonsterFamily monsterFamily) const
+	{
+		return GetFamily() == monsterFamily;
+	}
+
+	bool IsType(MonsterClass monsterClass) const
+	{
+		return GetClass() == monsterClass;
+	}
+
+	bool IsSkeleton() const
+	{
+		return GetFamily() == MonsterFamily::Skeleton;
+	}
+
+	bool IsGoat() const
+	{
+		return GetFamily() == MonsterFamily::Goat;
+	}
+};
+
 enum monster_resistance : uint8_t {
 	// clang-format off
 	RESIST_MAGIC     = 1 << 0,
@@ -121,7 +176,7 @@ struct MonsterData {
 	uint8_t minDamageSpecial;
 	uint8_t maxDamageSpecial;
 	uint8_t armorClass;
-	MonsterClass monsterClass;
+	MonsterType monsterType;
 	/** Using monster_resistance as bitflags */
 	uint8_t resistance;
 	/** Using monster_resistance as bitflags */
