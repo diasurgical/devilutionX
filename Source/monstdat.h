@@ -11,6 +11,14 @@
 
 namespace devilution {
 
+constexpr int NightmareToHitBonus = 85;
+constexpr int HellToHitBonus = 120;
+
+constexpr int NightmareAcBonus = 50;
+constexpr int HellAcBonus = 80;
+
+constexpr uint8_t MonstersDataSize = 138;
+
 enum _mai_id : int8_t {
 	AI_ZOMBIE,
 	AI_FAT,

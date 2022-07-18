@@ -6,7 +6,7 @@ target_link_libraries(libdevilutionx_so PUBLIC libdevilutionx)
 target_include_directories(libdevilutionx_so INTERFACE "${DevilutionX_SOURCE_DIR}/Source")
 set_target_properties(libdevilutionx_so PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-add_library(test_main STATIC main.cpp)
+add_library(test_main STATIC main.cpp monster_init_test.cpp)
 target_link_libraries(test_main PUBLIC libdevilutionx_so GTest::gtest)
 
 set(tests
@@ -30,6 +30,7 @@ set(tests
   lighting_test
   math_test
   missiles_test
+  monster_init_test
   pack_test
   path_test
   player_test

@@ -15,11 +15,6 @@ namespace devilution {
 
 namespace {
 
-constexpr int NightmareToHitBonus = 85;
-constexpr int HellToHitBonus = 120;
-
-constexpr int NightmareAcBonus = 50;
-constexpr int HellAcBonus = 80;
 
 // Returns a `treasure` value for the given item.
 constexpr uint16_t Uniq(_unique_items item)
@@ -27,7 +22,6 @@ constexpr uint16_t Uniq(_unique_items item)
 	return static_cast<uint16_t>(T_UNIQ) + item;
 }
 
-constexpr uint8_t MonstersDataSize = 138;
 
 } // namespace
 
