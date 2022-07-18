@@ -1465,7 +1465,7 @@ size_t OnResurrect(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (message.wParam1 < MAX_PLRS) {
-		DoResurrect(pnum, message.wParam1);
+		DoResurrect(pnum, Players[message.wParam1]);
 		if (pnum == MyPlayerId)
 			pfile_update(true);
 	}
@@ -1667,7 +1667,7 @@ size_t OnOpenDoor(const TCmd *pCmd, int pnum)
 	} else if (message.wParam1 < MAXOBJECTS) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(pnum, CMD_OPENDOOR, message.wParam1);
+			SyncOpObject(player, CMD_OPENDOOR, message.wParam1);
 		DeltaSyncObject(message.wParam1, CMD_OPENDOOR, player);
 	}
 
@@ -1683,7 +1683,7 @@ size_t OnCloseDoor(const TCmd *pCmd, int pnum)
 	} else if (message.wParam1 < MAXOBJECTS) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(pnum, CMD_CLOSEDOOR, message.wParam1);
+			SyncOpObject(player, CMD_CLOSEDOOR, message.wParam1);
 		DeltaSyncObject(message.wParam1, CMD_CLOSEDOOR, player);
 	}
 
@@ -1699,7 +1699,7 @@ size_t OnOperateObject(const TCmd *pCmd, int pnum)
 	} else if (message.wParam1 < MAXOBJECTS) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(pnum, CMD_OPERATEOBJ, message.wParam1);
+			SyncOpObject(player, CMD_OPERATEOBJ, message.wParam1);
 		DeltaSyncObject(message.wParam1, CMD_OPERATEOBJ, player);
 	}
 
@@ -1708,15 +1708,15 @@ size_t OnOperateObject(const TCmd *pCmd, int pnum)
 
 size_t OnPlayerOperateObject(const TCmd *pCmd, int pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
+	} else if (message.wParam1 < MAXOBJECTS) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(message.wParam1, CMD_PLROPOBJ, message.wParam2);
-		DeltaSyncObject(message.wParam2, CMD_PLROPOBJ, player);
+			SyncOpObject(player, CMD_PLROPOBJ, message.wParam1);
+		DeltaSyncObject(message.wParam1, CMD_PLROPOBJ, player);
 	}
 
 	return sizeof(message);
@@ -2791,13 +2791,13 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint8_t ii)
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii)
 {
 	TCmdGItem cmd;
 
 	cmd.bCmd = bCmd;
 	cmd.bPnum = pnum;
-	cmd.bMaster = mast;
+	cmd.bMaster = pnum;
 	cmd.bLevel = GetLevelForMultiplayer(*MyPlayer);
 	cmd.bCursitem = ii;
 	cmd.dwTime = 0;

@@ -2179,15 +2179,20 @@ void OperateLever(int i, bool sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateBook(int pnum, Object &book)
+void OperateBook(Player &player, Object &book)
 {
 	if (book._oSelFlag == 0) {
 		return;
 	}
 
-	Player &player = Players[pnum];
+	book._oSelFlag = 0;
+	book._oAnimFrame++;
 
-	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
+	if (!setlevel) {
+		return;
+	}
+
+	if (setlvlnum == SL_VILEBETRAYER) {
 		bool missileAdded = false;
 		for (int j = 0; j < ActiveObjectCount; j++) {
 			Object &questObject = Objects[ActiveObjects[j]];
@@ -2207,20 +2212,13 @@ void OperateBook(int pnum, Object &book)
 			if (doAddMissile) {
 				questObject._oVar6 = 4;
 				ObjectAtPosition({ 35, 36 })->_oVar5++;
-				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
+				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, player.getId(), 0, 0);
 				missileAdded = true;
 			}
 		}
 		if (!missileAdded) {
 			return;
 		}
-	}
-
-	book._oSelFlag = 0;
-	book._oAnimFrame++;
-
-	if (!setlevel) {
-		return;
 	}
 
 	if (setlvlnum == SL_BONECHAMB) {
@@ -2236,7 +2234,7 @@ void OperateBook(int pnum, Object &book)
 		    player._pdir,
 		    MIS_GUARDIAN,
 		    TARGET_MONSTERS,
-		    pnum,
+		    player.getId(),
 		    0,
 		    0);
 	}
@@ -2334,7 +2332,7 @@ void OperateChamberOfBoneBook(Object &questBook)
 	InitQTextMsg(textdef);
 }
 
-void OperateChest(int pnum, int i, bool sendmsg)
+void OperateChest(const Player &player, int i, bool sendmsg)
 {
 	if (Objects[i]._oSelFlag == 0) {
 		return;
@@ -2356,7 +2354,6 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				CreateRndUseful(Objects[i].position, sendmsg);
 		}
 	}
-	const Player &player = Players[pnum];
 	if (Objects[i].IsTrappedChest()) {
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
 		missile_id mtype;
@@ -2386,10 +2383,10 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		Objects[i]._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
-		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
+		NetSendCmdParam1(false, CMD_PLROPOBJ, i);
 }
 
-void OperateMushroomPatch(const Player &player, Object &questContainer)
+void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2402,15 +2399,15 @@ void OperateMushroomPatch(const Player &player, Object &questContainer)
 		return;
 	}
 
-	if (questContainer._oSelFlag == 0) {
+	if (mushroomPatch._oSelFlag == 0) {
 		return;
 	}
 
-	questContainer._oSelFlag = 0;
-	questContainer._oAnimFrame++;
+	mushroomPatch._oSelFlag = 0;
+	mushroomPatch._oAnimFrame++;
 
-	PlaySfxLoc(IS_CHEST, questContainer.position);
-	Point pos = GetSuperItemLoc(questContainer.position);
+	PlaySfxLoc(IS_CHEST, mushroomPatch.position);
+	Point pos = GetSuperItemLoc(mushroomPatch.position);
 	SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
 	Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 }
@@ -2532,13 +2529,13 @@ void OperateL3Door(const Player &player, int i)
 		OperateL3LDoor(i, true);
 }
 
-void OperatePedistal(int pnum, int i)
+void OperatePedistal(Player &player, int i)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
-	if (Objects[i]._oVar6 == 3 || !RemoveInventoryItemById(Players[pnum], IDI_BLDSTONE)) {
+	if (Objects[i]._oVar6 == 3 || !RemoveInventoryItemById(player, IDI_BLDSTONE)) {
 		return;
 	}
 
@@ -2705,17 +2702,15 @@ void OperateShrineWeird(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_WEIRD);
 }
 
-void OperateShrineMagical(int pnum)
+void OperateShrineMagical(const Player &player)
 {
-	const Player &player = Players[pnum];
-
 	AddMissile(
 	    player.position.tile,
 	    player.position.tile,
 	    player._pdir,
 	    MIS_MANASHIELD,
 	    TARGET_MONSTERS,
-	    pnum,
+	    player.getId(),
 	    0,
 	    2 * leveltype);
 
@@ -2839,17 +2834,15 @@ void OperateShrineCostOfWisdom(Player &player, spell_id spellId, diablo_message 
 	InitDiabloMsg(message);
 }
 
-void OperateShrineCryptic(int pnum)
+void OperateShrineCryptic(Player &player)
 {
-	Player &player = Players[pnum];
-
 	AddMissile(
 	    player.position.tile,
 	    player.position.tile,
 	    player._pdir,
 	    MIS_NOVA,
 	    TARGET_MONSTERS,
-	    pnum,
+	    player.getId(),
 	    0,
 	    2 * leveltype);
 
@@ -2932,11 +2925,9 @@ void OperateShrineDivine(Player &player, Point spawnPosition)
 	InitDiabloMsg(EMSG_SHRINE_DIVINE);
 }
 
-void OperateShrineHoly(int pnum)
+void OperateShrineHoly(const Player &player)
 {
-	const Player &player = Players[pnum];
-
-	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 2 * leveltype);
+	AddMissile(player.position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_MONSTERS, player.getId(), 0, 2 * leveltype);
 
 	if (&player != MyPlayer)
 		return;
@@ -3195,10 +3186,8 @@ void OperateShrineSparkling(Player &player, Point spawnPosition)
  * @param pnum The player that activated the shrine
  * @param spawnPosition The position of the shrine, the portal will be placed on the side closest to the player
  */
-void OperateShrineTown(int pnum, Point spawnPosition)
+void OperateShrineTown(const Player &player, Point spawnPosition)
 {
-	const Player &player = Players[pnum];
-
 	if (&player != MyPlayer)
 		return;
 
@@ -3208,7 +3197,7 @@ void OperateShrineTown(int pnum, Point spawnPosition)
 	    player._pdir,
 	    MIS_TOWN,
 	    TARGET_MONSTERS,
-	    pnum,
+	    player.getId(),
 	    0,
 	    0);
 
@@ -3279,11 +3268,8 @@ void OperateShrineMurphys(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_MURPHYS);
 }
 
-void OperateShrine(int pnum, int i, _sfx_id sType)
+void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 {
-	assert(i >= 0 && i < MAXOBJECTS);
-	Object &shrine = Objects[i];
-
 	if (shrine._oSelFlag == 0)
 		return;
 
@@ -3298,8 +3284,6 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 	PlaySfxLoc(sType, shrine.position);
 	shrine._oAnimFlag = true;
 	shrine._oAnimDelay = 1;
-
-	Player &player = Players[pnum];
 
 	switch (shrine._oVar1) {
 	case ShrineMysterious:
@@ -3316,7 +3300,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		break;
 	case ShrineMagical:
 	case ShrineMagicaL2:
-		OperateShrineMagical(pnum);
+		OperateShrineMagical(player);
 		break;
 	case ShrineStone:
 		OperateShrineStone(player);
@@ -3334,7 +3318,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		OperateShrineCostOfWisdom(player, SPL_FIREBOLT, EMSG_SHRINE_FASCINATING);
 		break;
 	case ShrineCryptic:
-		OperateShrineCryptic(pnum);
+		OperateShrineCryptic(player);
 		break;
 	case ShrineEldritch:
 		OperateShrineEldritch(player);
@@ -3346,7 +3330,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		OperateShrineDivine(player, shrine.position);
 		break;
 	case ShrineHoly:
-		OperateShrineHoly(pnum);
+		OperateShrineHoly(player);
 		break;
 	case ShrineSacred:
 		OperateShrineCostOfWisdom(player, SPL_CBOLT, EMSG_SHRINE_SACRED);
@@ -3391,7 +3375,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		OperateShrineSparkling(player, shrine.position);
 		break;
 	case ShrineTown:
-		OperateShrineTown(pnum, shrine.position);
+		OperateShrineTown(player, shrine.position);
 		break;
 	case ShrineShimmering:
 		OperateShrineShimmering(player);
@@ -3405,7 +3389,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 	}
 
 	if (&player == MyPlayer)
-		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
+		NetSendCmdParam1(false, CMD_PLROPOBJ, shrine.GetId());
 }
 
 void OperateSkelBook(int i, bool sendmsg, bool sendLootMsg)
@@ -3502,28 +3486,27 @@ int FindValidShrine()
 	}
 }
 
-void OperateGoatShrine(int pnum, int i, _sfx_id sType)
+void OperateGoatShrine(Player &player, Object &object, _sfx_id sType)
 {
-	SetRndSeed(Objects[i]._oRndSeed);
-	Objects[i]._oVar1 = FindValidShrine();
-	OperateShrine(pnum, i, sType);
-	Objects[i]._oAnimDelay = 2;
+	SetRndSeed(object._oRndSeed);
+	object._oVar1 = FindValidShrine();
+	OperateShrine(player, object, sType);
+	object._oAnimDelay = 2;
 	force_redraw = 255;
 }
 
-void OperateCauldron(int pnum, int i, _sfx_id sType)
+void OperateCauldron(Player &player, Object &object, _sfx_id sType)
 {
-	SetRndSeed(Objects[i]._oRndSeed);
-	Objects[i]._oVar1 = FindValidShrine();
-	OperateShrine(pnum, i, sType);
-	Objects[i]._oAnimFrame = 3;
-	Objects[i]._oAnimFlag = false;
+	SetRndSeed(object._oRndSeed);
+	object._oVar1 = FindValidShrine();
+	OperateShrine(player, object, sType);
+	object._oAnimFrame = 3;
+	object._oAnimFlag = false;
 	force_redraw = 255;
 }
 
-bool OperateFountains(int pnum, int i)
+bool OperateFountains(Player &player, int i)
 {
-	Player &player = Players[pnum];
 	bool applied = false;
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
@@ -3571,7 +3554,7 @@ bool OperateFountains(int pnum, int i)
 		    player._pdir,
 		    MIS_INFRA,
 		    TARGET_MONSTERS,
-		    pnum,
+		    player.getId(),
 		    0,
 		    2 * leveltype);
 		applied = true;
@@ -4816,17 +4799,18 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 	return i;
 }
 
-void OperateObject(int pnum, int i, bool teleFlag)
+void OperateObject(Player &player, int i, bool teleFlag)
 {
-	const Player &player = Players[pnum];
+	Object &object = Objects[i];
 	bool sendmsg = &player == MyPlayer;
-	switch (Objects[i]._otype) {
+
+	switch (object._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
 		if (teleFlag) {
-			if (Objects[i]._otype == OBJ_L1LDOOR)
+			if (object._otype == OBJ_L1LDOOR)
 				OperateL1LDoor(i, sendmsg);
-			if (Objects[i]._otype == OBJ_L1RDOOR)
+			if (object._otype == OBJ_L1RDOOR)
 				OperateL1RDoor(i, sendmsg);
 			break;
 		}
@@ -4836,9 +4820,9 @@ void OperateObject(int pnum, int i, bool teleFlag)
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
 		if (teleFlag) {
-			if (Objects[i]._otype == OBJ_L2LDOOR)
+			if (object._otype == OBJ_L2LDOOR)
 				OperateL2LDoor(i, sendmsg);
-			if (Objects[i]._otype == OBJ_L2RDOOR)
+			if (object._otype == OBJ_L2RDOOR)
 				OperateL2RDoor(i, sendmsg);
 			break;
 		}
@@ -4848,9 +4832,9 @@ void OperateObject(int pnum, int i, bool teleFlag)
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
 		if (teleFlag) {
-			if (Objects[i]._otype == OBJ_L3LDOOR)
+			if (object._otype == OBJ_L3LDOOR)
 				OperateL3LDoor(i, sendmsg);
-			if (Objects[i]._otype == OBJ_L3RDOOR)
+			if (object._otype == OBJ_L3RDOOR)
 				OperateL3RDoor(i, sendmsg);
 			break;
 		}
@@ -4860,9 +4844,9 @@ void OperateObject(int pnum, int i, bool teleFlag)
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
 		if (teleFlag) {
-			if (Objects[i]._otype == OBJ_L5LDOOR)
+			if (object._otype == OBJ_L5LDOOR)
 				OperateL5LDoor(i, sendmsg);
-			if (Objects[i]._otype == OBJ_L5RDOOR)
+			if (object._otype == OBJ_L5RDOOR)
 				OperateL5RDoor(i, sendmsg);
 			break;
 		}
@@ -4875,10 +4859,10 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateLever(i, sendmsg);
 		break;
 	case OBJ_BOOK2L:
-		OperateBook(pnum, Objects[i]);
+		OperateBook(player, object);
 		break;
 	case OBJ_BOOK2R:
-		OperateChamberOfBoneBook(Objects[i]);
+		OperateChamberOfBoneBook(object);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -4886,14 +4870,14 @@ void OperateObject(int pnum, int i, bool teleFlag)
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		OperateChest(pnum, i, sendmsg);
+		OperateChest(player, i, sendmsg);
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
 		OperateSarc(i, sendmsg, sendmsg);
 		break;
 	case OBJ_FLAMELVR:
-		OperateTrapLever(Objects[i]);
+		OperateTrapLever(object);
 		break;
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
@@ -4902,7 +4886,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		OperateShrine(pnum, i, IS_MAGIC);
+		OperateShrine(player, object, IS_MAGIC);
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
@@ -4920,16 +4904,16 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateArmorStand(i, sendmsg, sendmsg);
 		break;
 	case OBJ_GOATSHRINE:
-		OperateGoatShrine(pnum, i, LS_GSHRINE);
+		OperateGoatShrine(player, object, LS_GSHRINE);
 		break;
 	case OBJ_CAULDRON:
-		OperateCauldron(pnum, i, LS_CALDRON);
+		OperateCauldron(player, object, LS_CALDRON);
 		break;
 	case OBJ_BLOODFTN:
 	case OBJ_PURIFYINGFTN:
 	case OBJ_MURKYFTN:
 	case OBJ_TEARFTN:
-		OperateFountains(pnum, i);
+		OperateFountains(player, i);
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
@@ -4937,14 +4921,14 @@ void OperateObject(int pnum, int i, bool teleFlag)
 			OperateStoryBook(i);
 		break;
 	case OBJ_PEDISTAL:
-		OperatePedistal(pnum, i);
+		OperatePedistal(player, i);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
 		OperateWeaponRack(i, sendmsg, sendmsg);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushroomPatch(player, Objects[i]);
+		OperateMushroomPatch(player, object);
 		break;
 	case OBJ_LAZSTAND:
 		if (sendmsg)
@@ -4954,7 +4938,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateSlainHero(player, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(player, Objects[i]);
+		OperateInnSignChest(player, object);
 		break;
 	default:
 		break;
@@ -5041,12 +5025,12 @@ void DeltaSyncOpObject(int cmd, int i)
 	}
 }
 
-void SyncOpObject(int pnum, int cmd, int i)
+void SyncOpObject(Player &player, int cmd, int i)
 {
-	const Player &player = Players[pnum];
+	Object &object = Objects[i];
 	bool sendmsg = &player == MyPlayer;
 
-	switch (Objects[i]._otype) {
+	switch (object._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
 		if (!sendmsg)
@@ -5078,7 +5062,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		OperateChest(pnum, i, false);
+		OperateChest(player, i, false);
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
@@ -5091,7 +5075,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		OperateShrine(pnum, i, IS_MAGIC);
+		OperateShrine(player, object, IS_MAGIC);
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
@@ -5109,14 +5093,14 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateArmorStand(i, sendmsg, false);
 		break;
 	case OBJ_GOATSHRINE:
-		OperateGoatShrine(pnum, i, LS_GSHRINE);
+		OperateGoatShrine(player, object, LS_GSHRINE);
 		break;
 	case OBJ_CAULDRON:
-		OperateCauldron(pnum, i, LS_CALDRON);
+		OperateCauldron(player, object, LS_CALDRON);
 		break;
 	case OBJ_MURKYFTN:
 	case OBJ_TEARFTN:
-		OperateFountains(pnum, i);
+		OperateFountains(player, i);
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
@@ -5124,20 +5108,20 @@ void SyncOpObject(int pnum, int cmd, int i)
 			OperateStoryBook(i);
 		break;
 	case OBJ_PEDISTAL:
-		OperatePedistal(pnum, i);
+		OperatePedistal(player, i);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
 		OperateWeaponRack(i, sendmsg, false);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushroomPatch(player, Objects[i]);
+		OperateMushroomPatch(player, object);
 		break;
 	case OBJ_SLAINHERO:
 		OperateSlainHero(player, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(player, Objects[i]);
+		OperateInnSignChest(player, object);
 		break;
 	default:
 		break;
