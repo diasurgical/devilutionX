@@ -537,13 +537,16 @@ void DeltaLeaveSync(uint8_t bLevel)
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
 }
 
-void DeltaSyncObject(int oi, _cmd_id bCmd, const Player &player)
+void DeltaSyncObject(const Object &liveObject, _cmd_id bCmd, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	GetDeltaLevel(player).object[oi].bCmd = bCmd;
+
+	// object deltas are laid out in memory using the same relative offsets as the Objects array.
+	size_t deltaIndex = std::distance<const Object *>(&Objects[0], &liveObject);
+	GetDeltaLevel(player).object[deltaIndex].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -1645,7 +1648,7 @@ size_t OnOpenDoor(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(player, CMD_OPENDOOR, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_OPENDOOR, player);
+		DeltaSyncObject(Objects[message.wParam1], CMD_OPENDOOR, player);
 	}
 
 	return sizeof(message);
@@ -1661,7 +1664,7 @@ size_t OnCloseDoor(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(player, CMD_CLOSEDOOR, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_CLOSEDOOR, player);
+		DeltaSyncObject(Objects[message.wParam1], CMD_CLOSEDOOR, player);
 	}
 
 	return sizeof(message);
@@ -1677,7 +1680,7 @@ size_t OnOperateObject(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(player, CMD_OPERATEOBJ, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_OPERATEOBJ, player);
+		DeltaSyncObject(Objects[message.wParam1], CMD_OPERATEOBJ, player);
 	}
 
 	return sizeof(message);
@@ -1693,7 +1696,7 @@ size_t OnPlayerOperateObject(const TCmd *pCmd, int pnum)
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
 			SyncOpObject(player, CMD_PLROPOBJ, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_PLROPOBJ, player);
+		DeltaSyncObject(Objects[message.wParam1], CMD_PLROPOBJ, player);
 	}
 
 	return sizeof(message);
@@ -1710,7 +1713,7 @@ size_t OnBreakObject(const TCmd *pCmd, int pnum)
 		if (player.isOnActiveLevel()) {
 			SyncBreakObj(player, Objects[message.wParam1]);
 		}
-		DeltaSyncObject(message.wParam1, CMD_BREAKOBJ, player);
+		DeltaSyncObject(Objects[message.wParam1], CMD_BREAKOBJ, player);
 	}
 
 	return sizeof(message);
@@ -3046,7 +3049,7 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_PLROPOBJ:
 		return OnPlayerOperateObject(pCmd, pnum);
 	case CMD_BREAKOBJ:
-		return OnBreakObject(pCmd, pnum);
+		return OnBreakObject(*pCmd, pnum);
 	case CMD_CHANGEPLRITEMS:
 		return OnChangePlayerItems(pCmd, pnum);
 	case CMD_DELPLRITEMS:
