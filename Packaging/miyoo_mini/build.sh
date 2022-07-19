@@ -63,13 +63,24 @@ prepare_onion_skeleton(){
 	# ensure divlutionx asset dir
 	if [[ ! -d "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets" ]];
 	then
-		mkdir $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
+		mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
 	fi
 	
 	# ensure lib dir for custom SDL
 	if [[ ! -d "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib" ]];
 	then
 		mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib
+	fi
+	
+	# ensure config dir
+	if [[ ! -d "$BUILD_DIR/OnionOS/Saves/CurrentProfile/config/DevilutionX" ]];
+	then
+		mkdir -p $BUILD_DIR/OnionOS/Saves/CurrentProfile/config/DevilutionX
+	fi
+	# ensure save dir
+	if [[ ! -d "$BUILD_DIR/OnionOS/Saves/CurrentProfile/saves/DevilutionX" ]];
+	then
+		mkdir -p $BUILD_DIR/OnionOS/Saves/CurrentProfile/saves/DevilutionX
 	fi
 }
 
