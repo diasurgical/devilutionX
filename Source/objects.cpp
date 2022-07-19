@@ -2531,34 +2531,34 @@ void OperateL3Door(const Player &player, int i)
 		OperateL3LDoor(i, true);
 }
 
-void OperatePedistal(Player &player, int i)
+void OperatePedestal(Player &player, Object &pedestal)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
-	if (Objects[i]._oVar6 == 3 || !RemoveInventoryItemById(player, IDI_BLDSTONE)) {
+	if (pedestal._oVar6 == 3 || !RemoveInventoryItemById(player, IDI_BLDSTONE)) {
 		return;
 	}
 
-	Objects[i]._oAnimFrame++;
-	Objects[i]._oVar6++;
-	if (Objects[i]._oVar6 == 1) {
-		PlaySfxLoc(LS_PUDDLE, Objects[i].position);
+	pedestal._oAnimFrame++;
+	pedestal._oVar6++;
+	if (pedestal._oVar6 == 1) {
+		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
 		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1);
 	}
-	if (Objects[i]._oVar6 == 2) {
-		PlaySfxLoc(LS_PUDDLE, Objects[i].position);
+	if (pedestal._oVar6 == 2) {
+		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
 		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1);
 	}
-	if (Objects[i]._oVar6 == 3) {
-		PlaySfxLoc(LS_BLODSTAR, Objects[i].position);
-		ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+	if (pedestal._oVar6 == 3) {
+		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
+		ObjChangeMap(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
 		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", SetPiece.position.megaToWorld());
 		SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
-		Objects[i]._oSelFlag = 0;
+		pedestal._oSelFlag = 0;
 	}
 }
 
@@ -3657,16 +3657,16 @@ bool OperateNakrulBook(int s)
 	return false;
 }
 
-void OperateStoryBook(int i)
+void OperateStoryBook(Object &storyBook)
 {
-	if (Objects[i]._oSelFlag == 0 || qtextflag) {
+	if (storyBook._oSelFlag == 0 || qtextflag) {
 		return;
 	}
-	Objects[i]._oAnimFrame = Objects[i]._oVar4;
-	PlaySfxLoc(IS_ISCROL, Objects[i].position);
-	auto msg = static_cast<_speech_id>(Objects[i]._oVar2);
-	if (Objects[i]._oVar8 != 0 && currlevel == 24) {
-		if (!IsUberLeverActivated && Quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(Objects[i]._oVar8)) {
+	storyBook._oAnimFrame = storyBook._oVar4;
+	PlaySfxLoc(IS_ISCROL, storyBook.position);
+	auto msg = static_cast<_speech_id>(storyBook._oVar2);
+	if (storyBook._oVar8 != 0 && currlevel == 24) {
+		if (!IsUberLeverActivated && Quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(storyBook._oVar8)) {
 			NetSendCmd(false, CMD_NAKRUL);
 			return;
 		}
@@ -3676,22 +3676,22 @@ void OperateStoryBook(int i)
 		Quests[Q_NAKRUL]._qmsg = msg;
 	}
 	InitQTextMsg(msg);
-	NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+	NetSendCmdParam1(false, CMD_OPERATEOBJ, storyBook.GetId());
 }
 
-void OperateLazStand(int i)
+void OperateLazStand(Object &stand)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
-	if (Objects[i]._oSelFlag == 0 || qtextflag) {
+	if (stand._oSelFlag == 0 || qtextflag) {
 		return;
 	}
 
-	Objects[i]._oAnimFrame++;
-	Objects[i]._oSelFlag = 0;
-	Point pos = GetSuperItemLoc(Objects[i].position);
+	stand._oAnimFrame++;
+	stand._oSelFlag = 0;
+	Point pos = GetSuperItemLoc(stand.position);
 	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0);
 }
 
@@ -4921,10 +4921,10 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
 		if (sendmsg)
-			OperateStoryBook(i);
+			OperateStoryBook(object);
 		break;
 	case OBJ_PEDISTAL:
-		OperatePedistal(player, i);
+		OperatePedestal(player, object);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
@@ -4935,7 +4935,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_LAZSTAND:
 		if (sendmsg)
-			OperateLazStand(i);
+			OperateLazStand(object);
 		break;
 	case OBJ_SLAINHERO:
 		OperateSlainHero(player, i);
@@ -5108,10 +5108,10 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
 		if (sendmsg)
-			OperateStoryBook(i);
+			OperateStoryBook(object);
 		break;
 	case OBJ_PEDISTAL:
-		OperatePedistal(player, i);
+		OperatePedestal(player, object);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
