@@ -60,7 +60,7 @@ prepare_onion_skeleton(){
 	# Copy basic skeleton
 	yes | cp -rf  Packaging/miyoo_mini/skeleton_OnionOS/* $BUILD_DIR/OnionOS
 	
-	# ensure divlutionx asset dir
+	# ensure devilutionx asset dir
 	if [[ ! -d "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets" ]];
 	then
 		mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
