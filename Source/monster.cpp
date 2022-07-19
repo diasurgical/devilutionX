@@ -1884,10 +1884,8 @@ Direction Turn(Direction direction, bool turnLeft)
 	return turnLeft ? Left(direction) : Right(direction);
 }
 
-bool RoundWalk(int monsterId, Direction direction, int8_t *dir)
+bool RoundWalk(Monster &monster, Direction direction, int8_t *dir)
 {
-	Monster &monster = Monsters[monsterId];
-
 	Direction turn45deg = Turn(direction, *dir != 0);
 	Direction turn90deg = Turn(turn45deg, *dir != 0);
 
@@ -1970,7 +1968,7 @@ void AiAvoidance(int monsterId)
 			monster.goal = MonsterGoal::Move;
 			if ((monster.goalVar1++ >= static_cast<int>(2 * distanceToEnemy) && DirOK(monster, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[monster.enemyPosition.x][monster.enemyPosition.y]) {
 				monster.goal = MonsterGoal::Normal;
-			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+			} else if (!RoundWalk(monster, md, &monster.goalVar2)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
 			}
 		}
@@ -2103,7 +2101,7 @@ void AiRangedAvoidance(int monsterId)
 			    && (LineClearMissile(monster.position.tile, monster.enemyPosition))) {
 				StartRangedSpecialAttack(monster, missileType, dam);
 			} else {
-				RoundWalk(monsterId, md, &monster.goalVar2);
+				RoundWalk(monster, md, &monster.goalVar2);
 			}
 		}
 	} else {
@@ -2359,7 +2357,7 @@ void RhinoAi(int monsterId)
 			monster.goal = MonsterGoal::Move;
 			if (monster.goalVar1++ >= static_cast<int>(2 * distanceToEnemy) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[monster.enemyPosition.x][monster.enemyPosition.y]) {
 				monster.goal = MonsterGoal::Normal;
-			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+			} else if (!RoundWalk(monster, md, &monster.goalVar2)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
 			}
 		}
@@ -2485,7 +2483,7 @@ void LeoricAi(int monsterId)
 			monster.goal = MonsterGoal::Move;
 			if ((monster.goalVar1++ >= static_cast<int>(2 * distanceToEnemy) && DirOK(monster, md)) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[monster.enemyPosition.x][monster.enemyPosition.y]) {
 				monster.goal = MonsterGoal::Normal;
-			} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+			} else if (!RoundWalk(monster, md, &monster.goalVar2)) {
 				AiDelay(monster, GenerateRnd(10) + 10);
 			}
 		}
@@ -2847,7 +2845,7 @@ void CounselorAi(int monsterId)
 	} else if (monster.goal == MonsterGoal::Move) {
 		if (distanceToEnemy >= 2 && monster.activeForTicks == UINT8_MAX && dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[monster.enemyPosition.x][monster.enemyPosition.y]) {
 			if (monster.goalVar1++ < static_cast<int>(2 * distanceToEnemy) || !DirOK(monster, md)) {
-				RoundWalk(monsterId, md, &monster.goalVar2);
+				RoundWalk(monster, md, &monster.goalVar2);
 			} else {
 				monster.goal = MonsterGoal::Normal;
 				StartFadein(monster, md, true);
@@ -2947,7 +2945,7 @@ void MegaAi(int monsterId)
 			monster.goalVar3 = 4;
 			if (monster.goalVar1++ < static_cast<int>(2 * distanceToEnemy) || !DirOK(monster, md)) {
 				if (v < 5 * (monster.intelligence + 16))
-					RoundWalk(monsterId, md, &monster.goalVar2);
+					RoundWalk(monster, md, &monster.goalVar2);
 			} else
 				monster.goal = MonsterGoal::Normal;
 		}
@@ -3138,7 +3136,7 @@ void HorkDemonAi(int monsterId)
 		monster.goal = MonsterGoal::Move;
 		if (monster.goalVar1++ >= static_cast<int>(2 * distanceToEnemy) || dTransVal[monster.position.tile.x][monster.position.tile.y] != dTransVal[monster.enemyPosition.x][monster.enemyPosition.y]) {
 			monster.goal = MonsterGoal::Normal;
-		} else if (!RoundWalk(monsterId, md, &monster.goalVar2)) {
+		} else if (!RoundWalk(monster, md, &monster.goalVar2)) {
 			AiDelay(monster, GenerateRnd(10) + 10);
 		}
 	}
