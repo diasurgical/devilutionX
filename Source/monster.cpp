@@ -3891,6 +3891,11 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
 	int monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monster.exp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monster.exp + 1000)
 	                                                                                                                                   : monster.exp;
+	if (monster.isUnique()) {
+		monsterExp *= 2;
+		monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monsterExp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monsterExp + 1000) : monsterExp;
+	}
+
 	if (monster.type().type != MT_GOLEM)
 		AddPlrMonstExper(monster.level, monsterExp, monster.whoHit);
 
