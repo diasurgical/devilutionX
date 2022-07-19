@@ -3679,19 +3679,19 @@ void OperateStoryBook(Object &storyBook)
 	NetSendCmdParam1(false, CMD_OPERATEOBJ, storyBook.GetId());
 }
 
-void OperateLazStand(int i)
+void OperateLazStand(Object &stand)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
-	if (Objects[i]._oSelFlag == 0 || qtextflag) {
+	if (stand._oSelFlag == 0 || qtextflag) {
 		return;
 	}
 
-	Objects[i]._oAnimFrame++;
-	Objects[i]._oSelFlag = 0;
-	Point pos = GetSuperItemLoc(Objects[i].position);
+	stand._oAnimFrame++;
+	stand._oSelFlag = 0;
+	Point pos = GetSuperItemLoc(stand.position);
 	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0);
 }
 
@@ -4935,7 +4935,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_LAZSTAND:
 		if (sendmsg)
-			OperateLazStand(i);
+			OperateLazStand(object);
 		break;
 	case OBJ_SLAINHERO:
 		OperateSlainHero(player, i);
