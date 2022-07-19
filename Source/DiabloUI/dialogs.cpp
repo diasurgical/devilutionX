@@ -7,10 +7,10 @@
 #include "control.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
+#include "engine/cel_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_pcx.hpp"
 #include "engine/palette.h"
-#include "engine/pcx_sprite.hpp"
 #include "hwcursor.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
@@ -21,7 +21,7 @@ namespace devilution {
 
 namespace {
 
-std::optional<OwnedPcxSprite> dialogPcx;
+std::optional<OwnedCelSpriteWithFrameHeight> dialogPcx;
 std::string wrappedText;
 
 bool dialogEnd;
@@ -34,22 +34,22 @@ void DialogActionOK()
 std::vector<std::unique_ptr<UiItemBase>> vecNULL;
 std::vector<std::unique_ptr<UiItemBase>> vecOkDialog;
 
-std::optional<PcxSprite> LoadDialogSprite(bool hasCaption, bool isError)
+std::optional<CelFrameWithHeight> LoadDialogSprite(bool hasCaption, bool isError)
 {
 	constexpr uint8_t TransparentColor = 255;
 	if (!hasCaption) {
-		dialogPcx = LoadPcxAsset(isError ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", TransparentColor);
+		dialogPcx = LoadPcxAsCl2(isError ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", TransparentColor);
 	} else if (isError) {
-		dialogPcx = LoadPcxAsset("ui_art\\dvl_lrpopup.pcx");
+		dialogPcx = LoadPcxAsCl2("ui_art\\dvl_lrpopup.pcx");
 		if (dialogPcx == std::nullopt) {
-			dialogPcx = LoadPcxAsset("ui_art\\lrpopup.pcx", /*transparentColor=*/255);
+			dialogPcx = LoadPcxAsCl2("ui_art\\lrpopup.pcx", /*transparentColor=*/255);
 		}
 	} else {
-		dialogPcx = LoadPcxAsset("ui_art\\lpopup.pcx", TransparentColor);
+		dialogPcx = LoadPcxAsCl2("ui_art\\lpopup.pcx", TransparentColor);
 	}
 	if (!dialogPcx)
 		return std::nullopt;
-	return PcxSprite { *dialogPcx };
+	return dialogPcx->sprite();
 }
 
 bool Init(string_view caption, string_view text, bool error, bool renderBehind)
@@ -62,7 +62,7 @@ bool Init(string_view caption, string_view text, bool error, bool renderBehind)
 	}
 	LoadDialogButtonGraphics();
 
-	std::optional<PcxSprite> dialogSprite = LoadDialogSprite(!caption.empty(), error);
+	std::optional<CelFrameWithHeight> dialogSprite = LoadDialogSprite(!caption.empty(), error);
 	if (!dialogSprite)
 		return false;
 
@@ -74,7 +74,7 @@ bool Init(string_view caption, string_view text, bool error, bool renderBehind)
 	const Point uiPosition = GetUIRectangle().position;
 	if (caption.empty()) {
 		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 180, uiPosition.y + 168, dialogSprite->width(), dialogSprite->height());
-		vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
+		vecOkDialog.push_back(std::make_unique<UiImageCl2>(*dialogSprite, rect1));
 		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 200, uiPosition.y + 211, textWidth, 80);
 		vecOkDialog.push_back(std::make_unique<UiText>(wrappedText, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
@@ -82,7 +82,7 @@ bool Init(string_view caption, string_view text, bool error, bool renderBehind)
 		vecOkDialog.push_back(std::make_unique<UiButton>(_("OK"), &DialogActionOK, rect3));
 	} else {
 		SDL_Rect rect1 = MakeSdlRect(uiPosition.x + 127, uiPosition.y + 100, dialogSprite->width(), dialogSprite->height());
-		vecOkDialog.push_back(std::make_unique<UiImagePcx>(*dialogSprite, rect1));
+		vecOkDialog.push_back(std::make_unique<UiImageCl2>(*dialogSprite, rect1));
 
 		SDL_Rect rect2 = MakeSdlRect(uiPosition.x + 147, uiPosition.y + 110, textWidth, 20);
 		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogYellow));
