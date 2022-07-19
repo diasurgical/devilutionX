@@ -1067,19 +1067,19 @@ void MonsterHitMonster(Monster &monster, int i, int dam)
 	HitMonster(monster, dam);
 }
 
-void StartDeathFromMonster(Monster &killerMonster, Monster &killedMonster)
+void StartDeathFromMonster(Monster &attacker, Monster &target)
 {
-	delta_kill_monster(killedMonster, killedMonster.position.tile, *MyPlayer);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, killedMonster.position.tile, killedMonster.getId());
+	delta_kill_monster(target, target.position.tile, *MyPlayer);
+	NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
 
-	if (killerMonster.type().type == MT_GOLEM)
-		killedMonster.whoHit |= 1 << killerMonster.getId();
+	if (attacker.type().type == MT_GOLEM)
+		target.whoHit |= 1 << attacker.getId();
 
-	Direction md = GetDirection(killedMonster.position.tile, killerMonster.position.tile);
-	MonsterDeath(killedMonster, md, true);
+	Direction md = GetDirection(target.position.tile, attacker.position.tile);
+	MonsterDeath(target, md, true);
 
 	if (gbIsHellfire)
-		M_StartStand(killerMonster, killerMonster.direction);
+		M_StartStand(attacker, attacker.direction);
 }
 
 void StartFadein(Monster &monster, Direction md, bool backwards)
