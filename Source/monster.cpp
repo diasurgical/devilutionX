@@ -1231,9 +1231,8 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	}
 }
 
-void CheckReflect(int monsterId, int pnum, int dam)
+void CheckReflect(Monster &monster, int pnum, int dam)
 {
-	auto &monster = Monsters[monsterId];
 	Player &player = Players[pnum];
 
 	player.wReflections--;
@@ -1301,7 +1300,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 		if (&player == MyPlayer && player.wReflections > 0) {
 			int dam = GenerateRnd(((maxDam - minDam) << 6) + 1) + (minDam << 6);
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
-			CheckReflect(monsterId, pnum, dam);
+			CheckReflect(monster, pnum, dam);
 		}
 		return;
 	}
@@ -1323,7 +1322,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (&player == MyPlayer) {
 		if (player.wReflections > 0)
-			CheckReflect(monsterId, pnum, dam);
+			CheckReflect(monster, pnum, dam);
 		ApplyPlrDamage(player, 0, 0, dam);
 	}
 
