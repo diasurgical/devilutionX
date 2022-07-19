@@ -3890,7 +3890,8 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 	                                                                                                                                   : monster.exp;
 	if (monster.isUnique()) {
 		monsterExp *= 2;
-		monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monsterExp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monsterExp + 1000) : monsterExp;
+		monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monsterExp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monsterExp + 1000)
+		                                                                                                                              : monsterExp;
 	}
 
 	if (monster.type().type != MT_GOLEM)
