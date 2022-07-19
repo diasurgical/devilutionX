@@ -185,7 +185,7 @@ struct Monster { // note: missing field _mAFNum
 	uint32_t rndItemSeed;
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t aiSeed;
-	uint16_t exp;
+	uint32_t exp;
 	uint16_t toHit;
 	uint16_t toHitSpecial;
 	uint16_t resistance;

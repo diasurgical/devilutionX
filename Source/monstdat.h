@@ -129,7 +129,7 @@ struct MonsterData {
 	int8_t selectionType; // TODO Create enum
 	/** Using monster_treasure */
 	uint16_t treasure;
-	uint16_t exp;
+	uint32_t exp;
 };
 
 enum _monster_id : int16_t {
