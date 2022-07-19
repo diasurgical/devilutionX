@@ -2,7 +2,7 @@
 
 progdir=`cd -- "$(dirname "$0")" >/dev/null 2>&1; pwd -P`
 
-# ensure we are in deliutionx root
+# ensure we are in devilutionx root
 cd "$progdir/../.."
 
 declare -r CFLAGS="-O3 -marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7ve -Wall"
