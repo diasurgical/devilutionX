@@ -3889,7 +3889,6 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 
 void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
-	monster.exp = 4 * (monster.exp + 1000);
 	int monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monster.exp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monster.exp + 1000)
 	                                                                                                                                   : monster.exp;
 	if (monster.type().type != MT_GOLEM)
