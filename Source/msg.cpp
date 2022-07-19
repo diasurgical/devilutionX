@@ -1526,7 +1526,7 @@ size_t OnMonstDeath(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer && InDungeonBounds(position) && message.wParam1 < MaxMonsters) {
 			Monster &monster = Monsters[message.wParam1];
 			if (player.isOnActiveLevel())
-				M_SyncStartKill(message.wParam1, position, player);
+				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
@@ -1546,7 +1546,7 @@ size_t OnKillGolem(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer && InDungeonBounds(position)) {
 			Monster &monster = Monsters[pnum];
 			if (player.isOnActiveLevel())
-				M_SyncStartKill(pnum, position, player);
+				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
