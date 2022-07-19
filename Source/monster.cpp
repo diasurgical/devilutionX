@@ -3334,7 +3334,6 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 		monster.level = monster.data().level + 5;
 	}
 
-	monster.exp *= 2;
 	monster.maxHitPoints = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
@@ -3374,7 +3373,6 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 			monster.maxHitPoints += 64;
 		monster.level += 15;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.exp = 2 * (monster.exp + 1000);
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
 		monster.minDamageSpecial = 2 * (monster.minDamageSpecial + 2);
@@ -3387,7 +3385,6 @@ void PrepareUniqueMonst(Monster &monster, UniqueMonsterType monsterType, size_t 
 			monster.maxHitPoints += 192;
 		monster.level += 30;
 		monster.hitPoints = monster.maxHitPoints;
-		monster.exp = 4 * (monster.exp + 1000);
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
 		monster.minDamageSpecial = 4 * monster.minDamageSpecial + 6;
