@@ -1,11 +1,13 @@
 #include <gtest/gtest.h>
 
+#include "engine/random.hpp"
 #include "missiles.h"
 
 using namespace devilution;
 
 TEST(Missiles, RotateBlockedMissileArrow)
 {
+	SetRndSeed(0);
 	Player &player = Players[0];
 	auto *missile = AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_ARROW, TARGET_MONSTERS, player.getId(), 0, 0);
 	EXPECT_EQ(missile->_miAnimFrame, 1);
