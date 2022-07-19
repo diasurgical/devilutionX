@@ -1638,38 +1638,6 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnOpenDoor(const TCmd *pCmd, int pnum)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-
-	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncOpObject(player, CMD_OPENDOOR, message.wParam1);
-		DeltaSyncObject(Objects[message.wParam1], CMD_OPENDOOR, player);
-	}
-
-	return sizeof(message);
-}
-
-size_t OnCloseDoor(const TCmd *pCmd, int pnum)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-
-	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncOpObject(player, CMD_CLOSEDOOR, message.wParam1);
-		DeltaSyncObject(Objects[message.wParam1], CMD_CLOSEDOOR, player);
-	}
-
-	return sizeof(message);
-}
-
 size_t OnOperateObject(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
@@ -1679,24 +1647,8 @@ size_t OnOperateObject(const TCmd *pCmd, int pnum)
 	} else if (message.wParam1 < MAXOBJECTS) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(player, CMD_OPERATEOBJ, message.wParam1);
-		DeltaSyncObject(Objects[message.wParam1], CMD_OPERATEOBJ, player);
-	}
-
-	return sizeof(message);
-}
-
-size_t OnPlayerOperateObject(const TCmd *pCmd, int pnum)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-
-	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncOpObject(player, CMD_PLROPOBJ, message.wParam1);
-		DeltaSyncObject(Objects[message.wParam1], CMD_PLROPOBJ, player);
+			SyncOpObject(player, message.bCmd, message.wParam1);
+		DeltaSyncObject(Objects[message.wParam1], message.bCmd, player);
 	}
 
 	return sizeof(message);
@@ -3042,13 +2994,10 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_PLRDAMAGE:
 		return OnPlayerDamage(pCmd, player);
 	case CMD_OPENDOOR:
-		return OnOpenDoor(pCmd, pnum);
 	case CMD_CLOSEDOOR:
-		return OnCloseDoor(pCmd, pnum);
 	case CMD_OPERATEOBJ:
-		return OnOperateObject(pCmd, pnum);
 	case CMD_PLROPOBJ:
-		return OnPlayerOperateObject(pCmd, pnum);
+		return OnOperateObject(pCmd, pnum);
 	case CMD_BREAKOBJ:
 		return OnBreakObject(*pCmd, pnum);
 	case CMD_CHANGEPLRITEMS:
