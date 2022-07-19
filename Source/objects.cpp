@@ -3657,16 +3657,16 @@ bool OperateNakrulBook(int s)
 	return false;
 }
 
-void OperateStoryBook(int i)
+void OperateStoryBook(Object &storyBook)
 {
-	if (Objects[i]._oSelFlag == 0 || qtextflag) {
+	if (storyBook._oSelFlag == 0 || qtextflag) {
 		return;
 	}
-	Objects[i]._oAnimFrame = Objects[i]._oVar4;
-	PlaySfxLoc(IS_ISCROL, Objects[i].position);
-	auto msg = static_cast<_speech_id>(Objects[i]._oVar2);
-	if (Objects[i]._oVar8 != 0 && currlevel == 24) {
-		if (!IsUberLeverActivated && Quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(Objects[i]._oVar8)) {
+	storyBook._oAnimFrame = storyBook._oVar4;
+	PlaySfxLoc(IS_ISCROL, storyBook.position);
+	auto msg = static_cast<_speech_id>(storyBook._oVar2);
+	if (storyBook._oVar8 != 0 && currlevel == 24) {
+		if (!IsUberLeverActivated && Quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(storyBook._oVar8)) {
 			NetSendCmd(false, CMD_NAKRUL);
 			return;
 		}
@@ -3676,7 +3676,7 @@ void OperateStoryBook(int i)
 		Quests[Q_NAKRUL]._qmsg = msg;
 	}
 	InitQTextMsg(msg);
-	NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+	NetSendCmdParam1(false, CMD_OPERATEOBJ, storyBook.GetId());
 }
 
 void OperateLazStand(int i)
@@ -4921,7 +4921,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
 		if (sendmsg)
-			OperateStoryBook(i);
+			OperateStoryBook(object);
 		break;
 	case OBJ_PEDISTAL:
 		OperatePedistal(player, i);
@@ -5108,7 +5108,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
 		if (sendmsg)
-			OperateStoryBook(i);
+			OperateStoryBook(object);
 		break;
 	case OBJ_PEDISTAL:
 		OperatePedistal(player, i);
