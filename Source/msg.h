@@ -271,9 +271,9 @@ enum _cmd_id : uint8_t {
 	CMD_PLROPOBJ,
 	// Break object.
 	//
-	// body (TCmdParam2):
-	//    int16_t player_num
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_BREAKOBJ,
 	// Equip item for player.
 	//

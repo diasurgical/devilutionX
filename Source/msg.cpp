@@ -1702,18 +1702,19 @@ size_t OnPlayerOperateObject(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnBreakObject(const TCmd *pCmd, int pnum)
+size_t OnBreakObject(const TCmd &pCmd, int pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
+	Object *breakable = ObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
+	} else if (breakable != nullptr) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel()) {
-			SyncBreakObj(player, Objects[message.wParam1]);
+			SyncBreakObj(player, *breakable);
 		}
-		DeltaSyncObject(Objects[message.wParam1], CMD_BREAKOBJ, player);
+		DeltaSyncObject(*breakable, CMD_BREAKOBJ, player);
 	}
 
 	return sizeof(message);
