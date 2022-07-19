@@ -73,11 +73,6 @@ void DrawArt(const Surface &out, Point position, Art *art, int nFrame, Uint16 sr
 		ErrSdl();
 }
 
-void DrawAnimatedArt(Art *art, Point screenPosition)
-{
-	DrawArt(screenPosition, art, GetAnimationFrame(art->frames));
-}
-
 int GetAnimationFrame(int frames, int fps)
 {
 	int frame = (SDL_GetTicks() / fps) % frames;
