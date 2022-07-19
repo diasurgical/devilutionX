@@ -416,9 +416,8 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 
 	bool isPlayerHit = false;
 	bool blocked = false;
-	int8_t pid = dPlayer[mx][my];
-	if (pid > 0) {
-		pid -= 1;
+	int8_t pid = dPlayer[mx][my] - 1;
+	if (pid >= 0) {
 		int earflag = 0;
 		switch (missileSource) {
 		case MissileSource::Player: {
