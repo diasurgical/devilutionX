@@ -36,37 +36,40 @@ cmake_build(){
 }
 
 build_custom_sdl(){
-	if [[ ! -d "$BUILD_DIR/CustomSDL" ]];
+	# make clean folder for custom SDL build
+	if [[ -d "$BUILD_DIR/CustomSDL" ]];
 	then
-		mkdir $BUILD_DIR/CustomSDL
+		rm -rf $BUILD_DIR/CustomSDL
 	fi
+	mkdir $BUILD_DIR/CustomSDL
+	# clone the repo and build the lib
 	cd $BUILD_DIR/CustomSDL
 	git clone $MIYOO_CUSTOM_SDL_REPO --branch $MIYOO_CUSTOM_SDL_BRANCH --single-branch .
 	./make.sh
 	# change back to devilutionx root
 	cd "$progdir/../.."
-	yes | cp -rfL "$BUILD_DIR/CustomSDL/build/.libs/libSDL-1.2.so.0" "$BUILD_DIR/SDROOT/Emu/PORTS/Binaries/Diablo.port/lib/libSDL-1.2.so.0"
+	yes | cp -rfL "$BUILD_DIR/CustomSDL/build/.libs/libSDL-1.2.so.0" "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib/libSDL-1.2.so.0"
 }
 
 prepare_onion_skeleton(){
-	if [[ ! -d "$BUILD_DIR/SDROOT" ]];
+	if [[ ! -d "$BUILD_DIR/OnionOS" ]];
 	then
-		mkdir $BUILD_DIR/SDROOT
+		mkdir $BUILD_DIR/OnionOS
 	fi
 	
 	# Copy basic skeleton
-	yes | cp -rf  Packaging/miyoo_mini/skeleton/* $BUILD_DIR/SDROOT
+	yes | cp -rf  Packaging/miyoo_mini/skeleton_OnionOS/* $BUILD_DIR/OnionOS
 	
 	# ensure divlutionx asset dir
-	if [[ ! -d "$BUILD_DIR/SDROOT/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets" ]];
+	if [[ ! -d "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets" ]];
 	then
-		mkdir $BUILD_DIR/SDROOT/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
+		mkdir $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
 	fi
 	
 	# ensure lib dir for custom SDL
-	if [[ ! -d "$BUILD_DIR/SDROOT/Emu/PORTS/Binaries/Diablo.port/lib" ]];
+	if [[ ! -d "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib" ]];
 	then
-		mkdir -p $BUILD_DIR/SDROOT/Emu/PORTS/Binaries/Diablo.port/lib
+		mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/lib
 	fi
 }
 
@@ -74,9 +77,17 @@ package_onion(){
 	prepare_onion_skeleton
 	build_custom_sdl
 	# copy assets
-	yes | cp -rf $BUILD_DIR/assets/* $BUILD_DIR/SDROOT/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
+	yes | cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
 	# copy executable
-	yes | cp -rf $BUILD_DIR/devilutionx $BUILD_DIR/SDROOT/Emu/PORTS/Binaries/Diablo.port/devilutionx
+	yes | cp -rf $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/devilutionx
+	
+	if [[ -f "$BUILD_DIR/onion.zip" ]];
+	then
+		rm -rf $BUILD_DIR/onion.zip
+	fi
+	cd $BUILD_DIR/OnionOS
+	zip -r ../onion.zip .
+	cd "$progdir/../.."
 }
 
 main
