@@ -1067,24 +1067,19 @@ void MonsterHitMonster(Monster &monster, int i, int dam)
 	HitMonster(monster, dam);
 }
 
-void StartDeathFromMonster(int i, int mid)
+void StartDeathFromMonster(Monster &killerMonster, Monster &killedMonster)
 {
-	assert(static_cast<size_t>(i) < MaxMonsters);
-	Monster &killer = Monsters[i];
-	assert(static_cast<size_t>(mid) < MaxMonsters);
-	Monster &monster = Monsters[mid];
+	delta_kill_monster(killedMonster, killedMonster.position.tile, *MyPlayer);
+	NetSendCmdLocParam1(false, CMD_MONSTDEATH, killedMonster.position.tile, killedMonster.getId());
 
-	delta_kill_monster(monster, monster.position.tile, *MyPlayer);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
+	if (killerMonster.type().type == MT_GOLEM)
+		killedMonster.whoHit |= 1 << killerMonster.getId();
 
-	if (killer.type().type == MT_GOLEM)
-		monster.whoHit |= 1 << i;
-
-	Direction md = GetDirection(monster.position.tile, killer.position.tile);
-	MonsterDeath(monster, md, true);
+	Direction md = GetDirection(killedMonster.position.tile, killerMonster.position.tile);
+	MonsterDeath(killedMonster, md, true);
 
 	if (gbIsHellfire)
-		M_StartStand(killer, killer.direction);
+		M_StartStand(killerMonster, killerMonster.direction);
 }
 
 void StartFadein(Monster &monster, Direction md, bool backwards)
@@ -1204,6 +1199,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 {
 	assert(static_cast<size_t>(mid) < MaxMonsters);
 	auto &monster = Monsters[mid];
+	Monster &attackingMonster = Monsters[i];
 
 	if (!monster.isPossibleToHit())
 		return;
@@ -1219,12 +1215,11 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 	monster.hitPoints -= dam;
 	if (monster.hitPoints >> 6 <= 0) {
-		StartDeathFromMonster(i, mid);
+		StartDeathFromMonster(attackingMonster, monster);
 	} else {
 		MonsterHitMonster(monster, i, dam);
 	}
 
-	Monster &attackingMonster = Monsters[i];
 	if (monster.activeForTicks == 0) {
 		monster.activeForTicks = UINT8_MAX;
 		monster.position.last = attackingMonster.position.tile;
