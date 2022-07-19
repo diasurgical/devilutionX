@@ -6,4 +6,4 @@ configdir="/mnt/SDCARD/Saves/CurrentProfile/config/DevilutionX"
 
 cd $progdir
 export LD_LIBRARY_PATH="$progdir/lib:$LD_LIBRARY_PATH"
-./devilutionx --data-dir $progdir/FILES_HERE --save-dir $savedir --config-dir $configdir
+SDL_HIDE_BATTERY=1 ./devilutionx --data-dir $progdir/FILES_HERE --save-dir $savedir --config-dir $configdir
