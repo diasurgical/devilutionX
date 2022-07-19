@@ -9,8 +9,8 @@
 
 namespace devilution {
 
-/** @brief Loads a PCX file as a CL2 sprite.
- *
+/**
+ * @brief Loads a PCX file as a CL2 sprite.
  *
  * @param handle A non-null SDL_RWops handle. Closed by this function.
  * @param numFramesOrFrameHeight Pass a positive value with the number of frames, or the frame height as a negative value.
