@@ -259,7 +259,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 			monster.maxHitPoints += 64;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 15;
-		monster.exp = 2 * (monster.exp + 1000);
 		monster.toHit += NightmareToHitBonus;
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
@@ -275,7 +274,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 			monster.maxHitPoints += 192;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 30;
-		monster.exp = 4 * (monster.exp + 1000);
 		monster.toHit += HellToHitBonus;
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
@@ -3891,8 +3889,11 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 
 void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
+	monster.exp = 4 * (monster.exp + 1000);
+	int monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monster.exp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monster.exp + 1000)
+	                                                                                                                                   : monster.exp;
 	if (monster.type().type != MT_GOLEM)
-		AddPlrMonstExper(monster.level, monster.exp, monster.whoHit);
+		AddPlrMonstExper(monster.level, monsterExp, monster.whoHit);
 
 	MonsterKillCounts[monster.type().type]++;
 	monster.hitPoints = 0;
