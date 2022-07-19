@@ -3858,7 +3858,7 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 			SpawnSkeleton(&Monsters[barrel._oVar4], barrel.position);
 	}
 	if (&player == MyPlayer) {
-		NetSendCmdParam1(false, CMD_BREAKOBJ, static_cast<uint16_t>(barrel.GetId()));
+		NetSendCmdLoc(MyPlayerId, false, CMD_BREAKOBJ, barrel.position);
 	}
 }
 
