@@ -4,6 +4,15 @@
 
 using namespace devilution;
 
+TEST(Missiles, RotateBlockedMissileArrow)
+{
+	Player &player = Players[0];
+	auto *missile = AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_ARROW, TARGET_MONSTERS, player.getId(), 0, 0);
+	EXPECT_EQ(missile->_miAnimFrame, 1);
+	TestRotateBlockedMissile(*missile);
+	EXPECT_EQ(missile->_miAnimFrame, 16);
+}
+
 TEST(Missiles, GetDirection8)
 {
 	EXPECT_EQ(Direction::South, GetDirection({ 0, 0 }, { 15, 15 }));

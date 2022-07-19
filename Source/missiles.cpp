@@ -666,6 +666,13 @@ void SpawnLightning(Missile &missile, int dam)
 
 } // namespace
 
+#ifdef BUILD_TESTING
+void TestRotateBlockedMissile(Missile &missile)
+{
+	RotateBlockedMissile(missile);
+}
+#endif
+
 bool IsMissileBlockedByTile(Point tile)
 {
 	if (!InDungeonBounds(tile)) {
