@@ -71,7 +71,7 @@ BlitCommand Cl2GetBlitCommand(const uint8_t *src)
  */
 void Cl2Blit(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
-	DoRenderBackwards</*TransparentCommandCanCrossLines=*/true, Cl2GetBlitCommand>(
+	DoRenderBackwards<Cl2GetBlitCommand>(
 	    out, position, reinterpret_cast<const uint8_t *>(pRLEBytes), nDataSize, nWidth, BlitDirect {});
 }
 
@@ -87,13 +87,13 @@ void Cl2Blit(const Surface &out, Point position, const byte *pRLEBytes, int nDat
  */
 void Cl2BlitTRN(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *pTable)
 {
-	DoRenderBackwards</*TransparentCommandCanCrossLines=*/true, Cl2GetBlitCommand>(
+	DoRenderBackwards<Cl2GetBlitCommand>(
 	    out, position, reinterpret_cast<const uint8_t *>(pRLEBytes), nDataSize, nWidth, BlitWithMap { pTable });
 }
 
 void Cl2BlitBlendedTRN(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *pTable)
 {
-	DoRenderBackwards</*TransparentCommandCanCrossLines=*/true, Cl2GetBlitCommand>(
+	DoRenderBackwards<Cl2GetBlitCommand>(
 	    out, position, reinterpret_cast<const uint8_t *>(pRLEBytes), nDataSize, nWidth, BlitBlendedWithMap { pTable });
 }
 

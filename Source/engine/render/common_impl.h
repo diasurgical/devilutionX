@@ -90,16 +90,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const uint8_t *SkipRestOfLineWithOverrun(
 	return src;
 }
 
-template <GetBlitCommandFn GetBlitCommand>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void SkipLinesForRenderBackwards(
-    Point &position, RenderSrcBackwards &src, int_fast16_t dstHeight)
-{
-	while (position.y >= dstHeight && src.begin != src.end) {
-		src.begin = SkipRestOfLine<GetBlitCommand>(src.begin, src.width);
-		--position.y;
-	}
-}
-
 // Returns the horizontal overrun.
 template <GetBlitCommandFn GetBlitCommand>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT int_fast16_t SkipLinesForRenderBackwardsWithOverrun(
@@ -124,20 +114,12 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void SkipLinesForRenderForwards(Point &posit
 	}
 }
 
-template <
-    bool TransparentCommandCanCrossLines,
-    GetBlitCommandFn GetBlitCommand,
-    typename BlitFn>
+template <GetBlitCommandFn GetBlitCommand, typename BlitFn>
 void DoRenderBackwardsClipY(
     const Surface &out, Point position, RenderSrcBackwards src, BlitFn &&blitFn)
 {
 	// Skip the bottom clipped lines.
-	int_fast16_t xOffset;
-	if (TransparentCommandCanCrossLines) {
-		xOffset = SkipLinesForRenderBackwardsWithOverrun<GetBlitCommand>(position, src, out.h());
-	} else {
-		SkipLinesForRenderBackwards<GetBlitCommand>(position, src, out.h());
-	}
+	int_fast16_t xOffset = SkipLinesForRenderBackwardsWithOverrun<GetBlitCommand>(position, src, out.h());
 	if (src.begin >= src.end)
 		return;
 
@@ -145,11 +127,8 @@ void DoRenderBackwardsClipY(
 	const auto *dstBegin = out.begin();
 	const int dstPitch = out.pitch();
 	while (src.begin != src.end && dst >= dstBegin) {
-		auto remainingWidth = static_cast<int_fast16_t>(src.width);
-		if (TransparentCommandCanCrossLines) {
-			remainingWidth -= xOffset;
-			dst += xOffset;
-		}
+		auto remainingWidth = static_cast<int_fast16_t>(src.width) - xOffset;
+		dst += xOffset;
 		while (remainingWidth > 0) {
 			BlitCommand cmd = GetBlitCommand(src.begin);
 			blitFn(cmd, dst, src.begin + 1);
@@ -159,32 +138,22 @@ void DoRenderBackwardsClipY(
 		}
 		dst -= dstPitch + src.width - remainingWidth;
 
-		if (TransparentCommandCanCrossLines) {
-			if (remainingWidth < 0) {
-				const auto skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(src.width));
-				xOffset = skipSize.xOffset;
-				dst -= skipSize.wholeLines * dstPitch;
-			} else {
-				xOffset = 0;
-			}
+		if (remainingWidth < 0) {
+			const auto skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(src.width));
+			xOffset = skipSize.xOffset;
+			dst -= skipSize.wholeLines * dstPitch;
+		} else {
+			xOffset = 0;
 		}
 	}
 }
 
-template <
-    bool TransparentCommandCanCrossLines,
-    GetBlitCommandFn GetBlitCommand,
-    typename BlitFn>
+template <GetBlitCommandFn GetBlitCommand, typename BlitFn>
 void DoRenderBackwardsClipXY(
     const Surface &out, Point position, RenderSrcBackwards src, ClipX clipX, BlitFn &&blitFn)
 {
 	// Skip the bottom clipped lines.
-	int_fast16_t xOffset;
-	if (TransparentCommandCanCrossLines) {
-		xOffset = SkipLinesForRenderBackwardsWithOverrun<GetBlitCommand>(position, src, out.h());
-	} else {
-		SkipLinesForRenderBackwards<GetBlitCommand>(position, src, out.h());
-	}
+	int_fast16_t xOffset = SkipLinesForRenderBackwardsWithOverrun<GetBlitCommand>(position, src, out.h());
 	if (src.begin >= src.end)
 		return;
 
@@ -197,13 +166,10 @@ void DoRenderBackwardsClipXY(
 		// Skip initial src if clipping on the left.
 		// Handles overshoot, i.e. when the RLE segment goes into the unclipped area.
 		int_fast16_t remainingWidth = clipX.width;
-		int_fast16_t remainingLeftClip = clipX.left;
-		if (TransparentCommandCanCrossLines) {
-			remainingLeftClip -= xOffset;
-			if (remainingLeftClip < 0) {
-				dst += std::min<unsigned>(remainingWidth, -remainingLeftClip);
-				remainingWidth += remainingLeftClip;
-			}
+		int_fast16_t remainingLeftClip = clipX.left - xOffset;
+		if (remainingLeftClip < 0) {
+			dst += std::min<unsigned>(remainingWidth, -remainingLeftClip);
+			remainingWidth += remainingLeftClip;
 		}
 		while (remainingLeftClip > 0) {
 			BlitCommand cmd = GetBlitCommand(src.begin);
@@ -234,31 +200,24 @@ void DoRenderBackwardsClipXY(
 		// Set dst to (position.y - 1, position.x)
 		dst -= dstPitch + clipX.width;
 
-		if (TransparentCommandCanCrossLines) {
-			// `remainingWidth` can be negative, in which case it is the amount of pixels
-			// that the source has overran the line.
-			remainingWidth += clipX.right;
-			SkipSize skipSize { 0, 0 };
-			if (remainingWidth > 0) {
-				skipSize.xOffset = static_cast<int_fast16_t>(src.width) - remainingWidth;
-				src.begin = SkipRestOfLineWithOverrun<GetBlitCommand>(
-				    src.begin, static_cast<int_fast16_t>(src.width), skipSize);
-				--skipSize.wholeLines;
-			} else if (remainingWidth < 0) {
-				skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(src.width));
-			}
-			xOffset = skipSize.xOffset;
-			dst -= dstPitch * skipSize.wholeLines;
-		} else {
-			src.begin = SkipRestOfLine<GetBlitCommand>(src.begin, clipX.right + remainingWidth);
+		// `remainingWidth` can be negative, in which case it is the amount of pixels
+		// that the source has overran the line.
+		remainingWidth += clipX.right;
+		SkipSize skipSize { 0, 0 };
+		if (remainingWidth > 0) {
+			skipSize.xOffset = static_cast<int_fast16_t>(src.width) - remainingWidth;
+			src.begin = SkipRestOfLineWithOverrun<GetBlitCommand>(
+			    src.begin, static_cast<int_fast16_t>(src.width), skipSize);
+			--skipSize.wholeLines;
+		} else if (remainingWidth < 0) {
+			skipSize = GetSkipSize(-remainingWidth, static_cast<int_fast16_t>(src.width));
 		}
+		xOffset = skipSize.xOffset;
+		dst -= dstPitch * skipSize.wholeLines;
 	}
 }
 
-template <
-    bool TransparentCommandCanCrossLines,
-    GetBlitCommandFn GetBlitCommand,
-    typename BlitFn>
+template <GetBlitCommandFn GetBlitCommand, typename BlitFn>
 void DoRenderBackwards(
     const Surface &out, Point position, const uint8_t *src, size_t srcSize, unsigned srcWidth,
     BlitFn &&blitFn)
@@ -268,10 +227,10 @@ void DoRenderBackwards(
 		return;
 	RenderSrcBackwards srcForBackwards { src, src + srcSize, static_cast<uint_fast16_t>(srcWidth) };
 	if (static_cast<std::size_t>(clipX.width) == srcWidth) {
-		DoRenderBackwardsClipY<TransparentCommandCanCrossLines, GetBlitCommand>(
+		DoRenderBackwardsClipY<GetBlitCommand>(
 		    out, position, srcForBackwards, std::forward<BlitFn>(blitFn));
 	} else {
-		DoRenderBackwardsClipXY<TransparentCommandCanCrossLines, GetBlitCommand>(
+		DoRenderBackwardsClipXY<GetBlitCommand>(
 		    out, position, srcForBackwards, clipX, std::forward<BlitFn>(blitFn));
 	}
 }
