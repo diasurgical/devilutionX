@@ -9,6 +9,8 @@
 
 using namespace devilution;
 
+MonsterData MonsterDataCopy[MonstersDataSize];
+
 void InitMonsterOld(Monster &monster, Direction rd, size_t typeIndex, Point position)
 {
 	monster.direction = rd;
@@ -116,16 +118,35 @@ bool CompareMonsters(Monster &m1, Monster &m2) {
 	&& m1.leader == m2.leader && m1.leaderRelation == m2.leaderRelation && m1.lightId == m2.lightId;
 }
 
+void CopyMonsterData(MonsterData destination[], MonsterData source[]) {
+	for (size_t i = 0; i < MonstersDataSize; i++) {
+		destination[i] = source[i];
+	}
+}
+
 bool test_general(_difficulty testDifficulty) {
-	Monster *monsters_new_init[MonstersDataSize];
+	_difficulty lastDifficulty = sgGameInitInfo.nDifficulty;
+	sgGameInitInfo.nDifficulty = testDifficulty;
+
 	Monster monsters_old_init[MonstersDataSize];
+	MonsterData currentMonstersData[MonstersDataSize];
+	CopyMonsterData(currentMonstersData, MonstersData);
+	CopyMonsterData(MonstersData, MonsterDataCopy);
+
+	for (size_t i = 0; i < MonstersDataSize; i++) {
+		LevelMonsterTypes[i % 24].data = &MonstersData[i];
+		InitMonsterOld(monsters_old_init[i], Direction::South, i % 24, Point(0, 0));
+	}
+
+	CopyMonsterData(MonstersData, currentMonstersData);
+
 	InitLevelMonsters();
-	InitMonstersData(testDifficulty, sgGameInitInfo.nDifficulty);
+	Monster *monsters_new_init[MonstersDataSize];
+	InitMonstersData(testDifficulty, lastDifficulty);
 
 	for (size_t i = 0; i < MonstersDataSize; i++) {
 		LevelMonsterTypes[i % 24].data = &MonstersData[i];
 		monsters_new_init[i] = AddMonster(Point(0, 0), Direction::South, i % 24, false);
-		InitMonsterOld(monsters_old_init[i], Direction::South, i % 24, Point(0, 0));
 		if (!CompareMonsters(*monsters_new_init[i], monsters_old_init[i]))
 			return false;
 	}
@@ -135,21 +156,22 @@ bool test_general(_difficulty testDifficulty) {
 
 TEST(MonsterInit, normal_difficulty)
 {
-	test_general(devilution::DIFF_NORMAL);
+	CopyMonsterData(MonsterDataCopy, MonstersData);
+	EXPECT_TRUE(test_general(devilution::DIFF_NORMAL));
 }
 
 TEST(MonsterInit, nightmare_difficulty)
 {
-	test_general(devilution::DIFF_NIGHTMARE);
+	EXPECT_TRUE(test_general(devilution::DIFF_NIGHTMARE));
 }
 
 TEST(MonsterInit, hell_difficulty)
 {
-	test_general(devilution::DIFF_HELL);
+	EXPECT_TRUE(test_general(devilution::DIFF_HELL));
 }
 
 // This simulates loading the game from hell difficulty to normal one. This is non-trivial and can be done wrong, hence this test.
 TEST(MonsterInit, normal_difficulty_once_again)
 {
-	test_general(devilution::DIFF_NORMAL);
+	EXPECT_TRUE(test_general(devilution::DIFF_NORMAL));
 }

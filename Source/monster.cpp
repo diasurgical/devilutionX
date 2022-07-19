@@ -252,7 +252,6 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		else
 			monster.maxHitPoints += 64;
 
-		monster.hitPoints = monster.maxHitPoints;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster.maxHitPoints = 4 * monster.maxHitPoints;
 		if (gbIsHellfire)
@@ -260,9 +259,10 @@ void InitMonster(Monster &monster, Direction rd, size_t typeIndex, Point positio
 		else
 			monster.maxHitPoints += 192;
 
-		monster.hitPoints = monster.maxHitPoints;
 		monster.resistance = monster.data().resistanceHell;
 	}
+
+	monster.hitPoints = monster.maxHitPoints;
 }
 
 bool CanPlaceMonster(Point position)

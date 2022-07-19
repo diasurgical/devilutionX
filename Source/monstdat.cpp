@@ -15,13 +15,11 @@ namespace devilution {
 
 namespace {
 
-
 // Returns a `treasure` value for the given item.
 constexpr uint16_t Uniq(_unique_items item)
 {
 	return static_cast<uint16_t>(T_UNIQ) + item;
 }
-
 
 } // namespace
 
@@ -482,11 +480,11 @@ void InitMonsterDataHell()
 		monsterData.level += 30;
 		monsterData.exp = 4 * (monsterData.exp + 1000);
 		monsterData.toHit += HellToHitBonus;
-		monsterData.minDamage = 4 * (monsterData.minDamage + 6);
-		monsterData.maxDamage = 4 * (monsterData.maxDamage + 6);
+		monsterData.minDamage = 4 * monsterData.minDamage + 6;
+		monsterData.maxDamage = 4 * monsterData.maxDamage + 6;
 		monsterData.toHitSpecial += HellToHitBonus;
-		monsterData.minDamageSpecial = 4 * (monsterData.minDamageSpecial + 6);
-		monsterData.maxDamageSpecial = 4 * (monsterData.maxDamageSpecial + 6);
+		monsterData.minDamageSpecial = 4 * monsterData.minDamageSpecial + 6;
+		monsterData.maxDamageSpecial = 4 * monsterData.maxDamageSpecial + 6;
 		monsterData.armorClass += HellAcBonus;
 	}
 }
@@ -495,14 +493,18 @@ void ClearMonstersDataToNormalFromHell()
 {
 	for (auto &monsterData : MonstersData) {
 		monsterData.level -= 30;
-		monsterData.exp = monsterData.exp / 4 - 1000;
+		/** This is needed because diablo exp goes overbounds, and it has to be set manually. */
+		if (monsterData.ai == MT_DIABLO)
+			monsterData.exp = 31666;
+		else
+			monsterData.exp = monsterData.exp / 4 - 1000;
 		monsterData.toHit -= HellToHitBonus;
-		monsterData.minDamage = monsterData.minDamage / 4 - 6;
-		monsterData.maxDamage = monsterData.maxDamage / 4 - 6;
+		monsterData.minDamage = (monsterData.minDamage - 6) / 4;
+		monsterData.maxDamage = (monsterData.maxDamage - 6) / 4;
 		monsterData.toHitSpecial -= HellToHitBonus;
-		monsterData.minDamageSpecial = monsterData.minDamageSpecial / 4 - 6;
-		monsterData.maxDamageSpecial = monsterData.maxDamageSpecial / 4 - 6;
-		monsterData.armorClass -= HellToHitBonus;
+		monsterData.minDamageSpecial = (monsterData.minDamageSpecial - 6) / 4;
+		monsterData.maxDamageSpecial = (monsterData.maxDamageSpecial - 6) / 4;
+		monsterData.armorClass -= HellAcBonus;
 	}
 }
 

@@ -120,7 +120,7 @@ struct MonsterData {
 	 */
 	uint16_t abilityFlags;
 	uint8_t intelligence;
-	uint8_t toHit;
+	uint16_t toHit;
 	int8_t animFrameNum;
 	uint8_t minDamage;
 	uint8_t maxDamage;
