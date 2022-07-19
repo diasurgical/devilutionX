@@ -110,7 +110,6 @@ set(libdevilutionx_SRCS
   engine/trn.cpp
 
   engine/render/automap_render.cpp
-  engine/render/cel_render.cpp
   engine/render/cl2_render.cpp
   engine/render/dun_render.cpp
   engine/render/pcx_render.cpp
