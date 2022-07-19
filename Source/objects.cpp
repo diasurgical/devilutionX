@@ -2531,34 +2531,34 @@ void OperateL3Door(const Player &player, int i)
 		OperateL3LDoor(i, true);
 }
 
-void OperatePedistal(Player &player, int i)
+void OperatePedestal(Player &player, Object &pedestal)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
-	if (Objects[i]._oVar6 == 3 || !RemoveInventoryItemById(player, IDI_BLDSTONE)) {
+	if (pedestal._oVar6 == 3 || !RemoveInventoryItemById(player, IDI_BLDSTONE)) {
 		return;
 	}
 
-	Objects[i]._oAnimFrame++;
-	Objects[i]._oVar6++;
-	if (Objects[i]._oVar6 == 1) {
-		PlaySfxLoc(LS_PUDDLE, Objects[i].position);
+	pedestal._oAnimFrame++;
+	pedestal._oVar6++;
+	if (pedestal._oVar6 == 1) {
+		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x, SetPiece.position.y + 3, SetPiece.position.x + 2, SetPiece.position.y + 7);
 		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 3, 10 }, 0, 1);
 	}
-	if (Objects[i]._oVar6 == 2) {
-		PlaySfxLoc(LS_PUDDLE, Objects[i].position);
+	if (pedestal._oVar6 == 2) {
+		PlaySfxLoc(LS_PUDDLE, pedestal.position);
 		ObjChangeMap(SetPiece.position.x + 6, SetPiece.position.y + 3, SetPiece.position.x + SetPiece.size.width, SetPiece.position.y + 7);
 		SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 15, 10 }, 0, 1);
 	}
-	if (Objects[i]._oVar6 == 3) {
-		PlaySfxLoc(LS_BLODSTAR, Objects[i].position);
-		ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+	if (pedestal._oVar6 == 3) {
+		PlaySfxLoc(LS_BLODSTAR, pedestal.position);
+		ObjChangeMap(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
 		LoadMapObjects("Levels\\L2Data\\Blood2.DUN", SetPiece.position.megaToWorld());
 		SpawnUnique(UITEM_ARMOFVAL, SetPiece.position.megaToWorld() + Displacement { 9, 3 });
-		Objects[i]._oSelFlag = 0;
+		pedestal._oSelFlag = 0;
 	}
 }
 
@@ -4924,7 +4924,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 			OperateStoryBook(object);
 		break;
 	case OBJ_PEDISTAL:
-		OperatePedistal(player, i);
+		OperatePedestal(player, object);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
@@ -5111,7 +5111,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 			OperateStoryBook(object);
 		break;
 	case OBJ_PEDISTAL:
-		OperatePedistal(player, i);
+		OperatePedestal(player, object);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
