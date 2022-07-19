@@ -19,7 +19,7 @@ jobs:
 
     - name: Clone NXDK Repo
       shell: bash
-      run: git clone --recursive --depth 1 --branch devilutionx https://github.com/glebm/nxdk.git "$NXDK_DIR"
+      run: git clone --recursive --depth 1 https://github.com/XboxDev/nxdk.git "$NXDK_DIR"
 
     - name: Build NXDK
       shell: bash
