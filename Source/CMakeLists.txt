@@ -104,7 +104,6 @@ set(libdevilutionx_SRCS
   engine/load_pcx.cpp
   engine/palette.cpp
   engine/path.cpp
-  engine/pcx_sprite.cpp
   engine/random.cpp
   engine/surface.cpp
   engine/trn.cpp
@@ -112,7 +111,6 @@ set(libdevilutionx_SRCS
   engine/render/automap_render.cpp
   engine/render/cl2_render.cpp
   engine/render/dun_render.cpp
-  engine/render/pcx_render.cpp
   engine/render/scrollrt.cpp
   engine/render/text_render.cpp
 
