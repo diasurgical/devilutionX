@@ -3946,11 +3946,8 @@ void M_StartKill(Monster &monster, const Player &player)
 	StartMonsterDeath(monster, player, true);
 }
 
-void M_SyncStartKill(int monsterId, Point position, const Player &player)
+void M_SyncStartKill(Monster &monster, Point position, const Player &player)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster.hitPoints == 0 || monster.mode == MonsterMode::Death) {
 		return;
 	}
