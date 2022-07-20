@@ -2439,29 +2439,29 @@ void OperateInnSignChest(const Player &player, Object &questContainer)
 	SpawnQuestItem(IDI_BANNER, pos, 0, 0);
 }
 
-void OperateSlainHero(const Player &player, int i)
+void OperateSlainHero(const Player &player, Object &corpse)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (corpse._oSelFlag == 0) {
 		return;
 	}
-	Objects[i]._oSelFlag = 0;
+	corpse._oSelFlag = 0;
 
 	if (player._pClass == HeroClass::Warrior) {
-		CreateMagicArmor(Objects[i].position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
+		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
 	} else if (player._pClass == HeroClass::Rogue) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		CreateSpellBook(Objects[i].position, SPL_LIGHTNING, true, false);
+		CreateSpellBook(corpse.position, SPL_LIGHTNING, true, false);
 	} else if (player._pClass == HeroClass::Monk) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
 	} else if (player._pClass == HeroClass::Bard) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Sword, ICURS_BASTARD_SWORD, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Sword, ICURS_BASTARD_SWORD, true, false);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
 	if (&player == MyPlayer)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, corpse.GetId());
 }
 
 void OperateTrapLever(Object &flameLever)
@@ -4938,7 +4938,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 			OperateLazStand(object);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(player, i);
+		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(player, object);
@@ -5121,7 +5121,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		OperateMushroomPatch(player, object);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(player, i);
+		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(player, object);
