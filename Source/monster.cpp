@@ -3883,9 +3883,10 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 	M_StartHit(monster, dam);
 }
 
-int CalculateMonsterExp(uint16_t baseExp, bool isUnique) {
+int CalculateMonsterExp(uint16_t baseExp, bool isUnique)
+{
 	int monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (baseExp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (baseExp + 1000)
-	                                                                                                                                       : baseExp;
+	                                                                                                                               : baseExp;
 	if (isUnique) {
 		monsterExp *= 2;
 		monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monsterExp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monsterExp + 1000)
