@@ -3440,16 +3440,16 @@ void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookcase.GetId());
 }
 
-void OperateDecap(int i, bool sendmsg, bool sendLootMsg)
+void OperateDecapitatedBody(Object &corpse, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (corpse._oSelFlag == 0) {
 		return;
 	}
-	Objects[i]._oSelFlag = 0;
-	SetRndSeed(Objects[i]._oRndSeed);
-	CreateRndItem(Objects[i].position, false, sendLootMsg, false);
+	corpse._oSelFlag = 0;
+	SetRndSeed(corpse._oRndSeed);
+	CreateRndItem(corpse.position, false, sendLootMsg, false);
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, corpse.GetId());
 }
 
 void OperateArmorStand(Object &armorStand, bool sendmsg, bool sendLootMsg)
@@ -4900,7 +4900,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		OperateBookcase(object, sendmsg, sendmsg);
 		break;
 	case OBJ_DECAP:
-		OperateDecap(i, sendmsg, sendmsg);
+		OperateDecapitatedBody(object, sendmsg, sendmsg);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
@@ -5089,7 +5089,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		OperateBookcase(object, sendmsg, false);
 		break;
 	case OBJ_DECAP:
-		OperateDecap(i, sendmsg, false);
+		OperateDecapitatedBody(object, sendmsg, false);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
