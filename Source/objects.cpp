@@ -3412,17 +3412,17 @@ void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookStand.GetId());
 }
 
-void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
+void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (bookcase._oSelFlag == 0) {
 		return;
 	}
 
-	PlaySfxLoc(IS_ISCROL, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame -= 2;
-	SetRndSeed(Objects[i]._oRndSeed);
-	CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+	PlaySfxLoc(IS_ISCROL, bookcase.position);
+	bookcase._oSelFlag = 0;
+	bookcase._oAnimFrame -= 2;
+	SetRndSeed(bookcase._oRndSeed);
+	CreateTypeItem(bookcase.position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
@@ -3437,7 +3437,7 @@ void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
 		}
 	}
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookcase.GetId());
 }
 
 void OperateDecap(int i, bool sendmsg, bool sendLootMsg)
@@ -4897,7 +4897,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		OperateBookCase(i, sendmsg, sendmsg);
+		OperateBookcase(object, sendmsg, sendmsg);
 		break;
 	case OBJ_DECAP:
 		OperateDecap(i, sendmsg, sendmsg);
@@ -5086,7 +5086,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		OperateBookCase(i, sendmsg, false);
+		OperateBookcase(object, sendmsg, false);
 		break;
 	case OBJ_DECAP:
 		OperateDecap(i, sendmsg, false);
