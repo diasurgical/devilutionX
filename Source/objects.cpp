@@ -2334,32 +2334,32 @@ void OperateChamberOfBoneBook(Object &questBook)
 	InitQTextMsg(textdef);
 }
 
-void OperateChest(const Player &player, int i, bool sendmsg)
+void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (chest._oSelFlag == 0) {
 		return;
 	}
 
-	PlaySfxLoc(IS_CHEST, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame += 2;
-	SetRndSeed(Objects[i]._oRndSeed);
+	PlaySfxLoc(IS_CHEST, chest.position);
+	chest._oSelFlag = 0;
+	chest._oAnimFrame += 2;
+	SetRndSeed(chest._oRndSeed);
 	if (setlevel) {
-		for (int j = 0; j < Objects[i]._oVar1; j++) {
-			CreateRndItem(Objects[i].position, true, sendmsg, false);
+		for (int j = 0; j < chest._oVar1; j++) {
+			CreateRndItem(chest.position, true, sendLootMsg, false);
 		}
 	} else {
-		for (int j = 0; j < Objects[i]._oVar1; j++) {
-			if (Objects[i]._oVar2 != 0)
-				CreateRndItem(Objects[i].position, false, sendmsg, false);
+		for (int j = 0; j < chest._oVar1; j++) {
+			if (chest._oVar2 != 0)
+				CreateRndItem(chest.position, false, sendLootMsg, false);
 			else
-				CreateRndUseful(Objects[i].position, sendmsg);
+				CreateRndUseful(chest.position, sendLootMsg);
 		}
 	}
-	if (Objects[i].IsTrappedChest()) {
-		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
+	if (chest.IsTrappedChest()) {
+		Direction mdir = GetDirection(chest.position, player.position.tile);
 		missile_id mtype;
-		switch (Objects[i]._oVar4) {
+		switch (chest._oVar4) {
 		case 0:
 			mtype = MIS_ARROW;
 			break;
@@ -2381,11 +2381,11 @@ void OperateChest(const Player &player, int i, bool sendmsg)
 		default:
 			mtype = MIS_ARROW;
 		}
-		AddMissile(Objects[i].position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
-		Objects[i]._oTrapFlag = false;
+		AddMissile(chest.position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+		chest._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
-		NetSendCmdParam1(false, CMD_PLROPOBJ, i);
+		NetSendCmdParam1(false, CMD_PLROPOBJ, chest.GetId());
 }
 
 void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
@@ -4873,7 +4873,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		OperateChest(player, i, sendmsg);
+		OperateChest(player, object, sendmsg);
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
@@ -5065,7 +5065,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		OperateChest(player, i, false);
+		OperateChest(player, object, false);
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
