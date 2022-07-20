@@ -16,7 +16,7 @@ TEST(Missiles, RotateBlockedMissileArrow)
 	TestRotateBlockedMissile(missile);
 	EXPECT_EQ(missile._miAnimFrame, 16);
 	
-	SetRndSeed(/*find a seed which rotates the other direction*/);
+	SetRndSeed(3210);
 	TestRotateBlockedMissile(missile);
 	EXPECT_EQ(missile._miAnimFrame, 1);
 	
