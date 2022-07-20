@@ -4656,48 +4656,37 @@ bool IsGoat(_monster_id mt)
 void ActivateSkeleton(Monster &monster, Point position)
 {
 	if (IsTileAvailable(position)) {
-		Direction dir = GetDirection(position, position); // TODO useless calculation
-		ActivateSpawn(monster, position, dir);
+		ActivateSpawn(monster, position, Direction::SouthWest);
 		return;
 	}
 
-	bool monstok[3][3];
+	constexpr std::array<Direction, 8> spawnDirections {
+		Direction::North, Direction::NorthEast, Direction::East, Direction::NorthWest, Direction::SouthEast, Direction::West, Direction::SouthWest, Direction::South
+	};
+	std::bitset<8> spawnOk;
 
-	bool savail = false;
-	int yy = 0;
-	for (int j = position.y - 1; j <= position.y + 1; j++) {
-		int xx = 0;
-		for (int k = position.x - 1; k <= position.x + 1; k++) {
-			monstok[xx][yy] = IsTileAvailable({ k, j });
-			savail = savail || monstok[xx][yy];
-			xx++;
-		}
-		yy++;
+	for (size_t i = 0; i < spawnDirections.size(); i++) {
+		if (IsTileAvailable(position + spawnDirections[i]))
+			spawnOk.set(i);
 	}
-	if (!savail) {
+	if (spawnOk.none())
+		return;
+
+	// this is used in the following loop to find the nth set bit.
+	int spawnChoice = GenerateRnd(15) % spawnOk.count();
+
+	for (size_t i = 0; i < spawnOk.size(); i++) {
+		if (!spawnOk.test(i))
+			continue;
+
+		if (spawnChoice > 0) {
+			spawnChoice--;
+			continue;
+		}
+
+		ActivateSpawn(monster, position + spawnDirections[i], Opposite(spawnDirections[i]));
 		return;
 	}
-
-	int rs = GenerateRnd(15) + 1;
-	int x2 = 0;
-	int y2 = 0;
-	while (rs > 0) {
-		if (monstok[x2][y2])
-			rs--;
-		if (rs > 0) {
-			x2++;
-			if (x2 == 3) {
-				x2 = 0;
-				y2++;
-				if (y2 == 3)
-					y2 = 0;
-			}
-		}
-	}
-
-	Point spawn = position + Displacement { x2 - 1, y2 - 1 };
-	Direction dir = GetDirection(spawn, position);
-	ActivateSpawn(monster, spawn, dir);
 }
 
 Monster *PreSpawnSkeleton()
