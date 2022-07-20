@@ -62,9 +62,9 @@ prepare_onion_skeleton(){
 	yes | cp -rf  Packaging/miyoo_mini/skeleton_OnionOS/* $BUILD_DIR/OnionOS
 	
 	# ensure devilutionx asset dir
-	if [[ ! -d "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets" ]];
+	if [[ ! -d "$BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/assets" ]];
 	then
-		mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
+		mkdir -p $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/assets
 	fi
 	
 	# ensure lib dir for custom SDL
@@ -89,7 +89,7 @@ package_onion(){
 	prepare_onion_skeleton
 	build_custom_sdl
 	# copy assets
-	yes | cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/FILES_HERE/assets
+	yes | cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/assets
 	# copy executable
 	yes | cp -rf $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/Emu/PORTS/Binaries/Diablo.port/devilutionx
 	
