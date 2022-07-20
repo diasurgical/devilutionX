@@ -18,6 +18,7 @@ main(){
 	if [ $? -eq 0 ];
 	then
 		package_onion
+		package_miniui
 	fi
 }
 
@@ -98,6 +99,38 @@ package_onion(){
 	fi
 	cd $BUILD_DIR/OnionOS
 	zip -r ../onion.zip .
+	cd "$progdir/../.."
+}
+
+prepare_miniui_skeleton(){
+	if [[ ! -d "$BUILD_DIR/MiniUI" ]];
+	then
+		mkdir $BUILD_DIR/MiniUI
+	fi
+	
+	# Copy basic skeleton
+	yes | cp -rf  Packaging/miyoo_mini/skeleton_MiniUI/* $BUILD_DIR/MiniUI
+	
+	# ensure devilutionx asset dir
+	if [[ ! -d "$BUILD_DIR/OnionOS/MiniUI/Diablo/assets" ]];
+	then
+		mkdir -p $BUILD_DIR/OnionOS/MiniUI/Diablo/assets
+	fi
+}
+
+package_miniui(){
+	prepare_miniui_skeleton
+	# copy assets
+	yes | cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/MiniUI/Diablo/assets
+	# copy executable
+	yes | cp -rf $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/MiniUI/Diablo/devilutionx
+	
+	if [[ -f "$BUILD_DIR/miniui.zip" ]];
+	then
+		rm -rf $BUILD_DIR/miniui.zip
+	fi
+	cd $BUILD_DIR/MiniUI
+	zip -r ../miniui.zip .
 	cd "$progdir/../.."
 }
 
