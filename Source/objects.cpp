@@ -2506,7 +2506,7 @@ void OperateSarcophagus(Object &sarcophagus, bool sendMsg, bool sendLootMsg)
 	if (sarcophagus._oVar1 <= 2)
 		CreateRndItem(sarcophagus.position, false, sendLootMsg, false);
 	if (sarcophagus._oVar1 >= 8 && sarcophagus._oVar2 >= 0)
-		SpawnSkeleton(&Monsters[sarcophagus._oVar2], sarcophagus.position);
+		ActivateSkeleton(Monsters[sarcophagus._oVar2], sarcophagus.position);
 	if (sendMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, sarcophagus.GetId());
 }
@@ -3855,7 +3855,7 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 				CreateRndItem(barrel.position, false, sendmsg, false);
 		}
 		if (barrel._oVar2 >= 8 && barrel._oVar4 >= 0)
-			SpawnSkeleton(&Monsters[barrel._oVar4], barrel.position);
+			ActivateSkeleton(Monsters[barrel._oVar4], barrel.position);
 	}
 	if (&player == MyPlayer) {
 		NetSendCmdLoc(MyPlayerId, false, CMD_BREAKOBJ, barrel.position);

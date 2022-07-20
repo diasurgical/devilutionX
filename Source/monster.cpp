@@ -4653,15 +4653,12 @@ bool IsGoat(_monster_id mt)
 	    MT_NGOATBW, MT_BGOATBW, MT_RGOATBW, MT_GGOATBW);
 }
 
-bool SpawnSkeleton(Monster *monster, Point position)
+void ActivateSkeleton(Monster &monster, Point position)
 {
-	if (monster == nullptr)
-		return false;
-
 	if (IsTileAvailable(position)) {
 		Direction dir = GetDirection(position, position); // TODO useless calculation
-		ActivateSpawn(*monster, position, dir);
-		return true;
+		ActivateSpawn(monster, position, dir);
+		return;
 	}
 
 	bool monstok[3][3];
@@ -4678,7 +4675,7 @@ bool SpawnSkeleton(Monster *monster, Point position)
 		yy++;
 	}
 	if (!savail) {
-		return false;
+		return;
 	}
 
 	int rs = GenerateRnd(15) + 1;
@@ -4700,9 +4697,7 @@ bool SpawnSkeleton(Monster *monster, Point position)
 
 	Point spawn = position + Displacement { x2 - 1, y2 - 1 };
 	Direction dir = GetDirection(spawn, position);
-	ActivateSpawn(*monster, spawn, dir);
-
-	return true;
+	ActivateSpawn(monster, spawn, dir);
 }
 
 Monster *PreSpawnSkeleton()
