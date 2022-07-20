@@ -114,16 +114,16 @@ prepare_miniui_skeleton(){
 	# ensure devilutionx asset dir
 	if [[ ! -d "$BUILD_DIR/OnionOS/MiniUI/Diablo/assets" ]];
 	then
-		mkdir -p $BUILD_DIR/OnionOS/MiniUI/Diablo/assets
+		mkdir -p $BUILD_DIR/MiniUI/Diablo/assets
 	fi
 }
 
 package_miniui(){
 	prepare_miniui_skeleton
 	# copy assets
-	yes | cp -rf $BUILD_DIR/assets/* $BUILD_DIR/OnionOS/MiniUI/Diablo/assets
+	yes | cp -rf $BUILD_DIR/assets/* $BUILD_DIR/MiniUI/Diablo/assets
 	# copy executable
-	yes | cp -rf $BUILD_DIR/devilutionx $BUILD_DIR/OnionOS/MiniUI/Diablo/devilutionx
+	yes | cp -rf $BUILD_DIR/devilutionx $BUILD_DIR/MiniUI/Diablo/devilutionx
 	
 	if [[ -f "$BUILD_DIR/miniui.zip" ]];
 	then
