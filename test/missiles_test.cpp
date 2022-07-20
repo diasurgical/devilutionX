@@ -7,12 +7,23 @@ using namespace devilution;
 
 TEST(Missiles, RotateBlockedMissileArrow)
 {
-	SetRndSeed(0);
 	Player &player = Players[0];
-	auto *missile = AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_ARROW, TARGET_MONSTERS, player.getId(), 0, 0);
-	EXPECT_EQ(missile->_miAnimFrame, 1);
-	TestRotateBlockedMissile(*missile);
-	EXPECT_EQ(missile->_miAnimFrame, 16);
+	// missile can be a copy or a reference, there's no nullptr check and the functions that use it don't expect the instance to be part of a global structure so it doesn't really matter for this use.
+	Missile missile = *AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_ARROW, TARGET_MONSTERS, player.getId(), 0, 0);
+	EXPECT_EQ(missile._miAnimFrame, 1);
+	
+	SetRndSeed(0);
+	TestRotateBlockedMissile(missile);
+	EXPECT_EQ(missile._miAnimFrame, 16);
+	
+	SetRndSeed(/*find a seed which rotates the other direction*/);
+	TestRotateBlockedMissile(missile);
+	EXPECT_EQ(missile._miAnimFrame, 1);
+	
+	missile._miAnimFrame = 5;
+	SetRndSeed(1234); // no idea what rotation this actually performs, might need to change the expectation to 4 instead of 6
+	TestRotateBlockedMissile(missile);
+	EXPECT_EQ(missile._miAnimFrame, 6);
 }
 
 TEST(Missiles, GetDirection8)
