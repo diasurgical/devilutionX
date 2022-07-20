@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 HOME="$USERDATA_PATH"
 
-if [ -f DIABDAT.MPQ ]; then
+if [ -f "DIABDAT.MPQ" ] || [ -f "spawn.mpq" ]; then
 	./devilutionx
 else
 	show "okay.png"
