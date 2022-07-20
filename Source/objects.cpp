@@ -3452,26 +3452,26 @@ void OperateDecap(int i, bool sendmsg, bool sendLootMsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateArmorStand(int i, bool sendmsg, bool sendLootMsg)
+void OperateArmorStand(Object &armorStand, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (armorStand._oSelFlag == 0) {
 		return;
 	}
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame++;
-	SetRndSeed(Objects[i]._oRndSeed);
+	armorStand._oSelFlag = 0;
+	armorStand._oAnimFrame++;
+	SetRndSeed(armorStand._oRndSeed);
 	bool uniqueRnd = !FlipCoin();
 	if (currlevel <= 5) {
-		CreateTypeItem(Objects[i].position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {
-		CreateTypeItem(Objects[i].position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 10 && currlevel <= 12) {
-		CreateTypeItem(Objects[i].position, false, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, false, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 13) {
-		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, true, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
 	}
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, armorStand.GetId());
 }
 
 int FindValidShrine()
@@ -4904,7 +4904,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		OperateArmorStand(i, sendmsg, sendmsg);
+		OperateArmorStand(object, sendmsg, sendmsg);
 		break;
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(player, object, LS_GSHRINE);
@@ -5093,7 +5093,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		OperateArmorStand(i, sendmsg, false);
+		OperateArmorStand(object, sendmsg, false);
 		break;
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(player, object, LS_GSHRINE);
