@@ -3507,16 +3507,16 @@ void OperateCauldron(Player &player, Object &object, _sfx_id sType)
 	force_redraw = 255;
 }
 
-bool OperateFountains(Player &player, int i)
+bool OperateFountains(Player &player, Object &fountain)
 {
 	bool applied = false;
-	switch (Objects[i]._otype) {
+	switch (fountain._otype) {
 	case OBJ_BLOODFTN:
 		if (&player != MyPlayer)
 			return false;
 
 		if (player._pHitPoints < player._pMaxHP) {
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 			player._pHitPoints += 64;
 			player._pHPBase += 64;
 			if (player._pHitPoints > player._pMaxHP) {
@@ -3525,14 +3525,14 @@ bool OperateFountains(Player &player, int i)
 			}
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 		break;
 	case OBJ_PURIFYINGFTN:
 		if (&player != MyPlayer)
 			return false;
 
 		if (player._pMana < player._pMaxMana) {
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 
 			player._pMana += 64;
 			player._pManaBase += 64;
@@ -3543,13 +3543,13 @@ bool OperateFountains(Player &player, int i)
 
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 		break;
 	case OBJ_MURKYFTN:
-		if (Objects[i]._oSelFlag == 0)
+		if (fountain._oSelFlag == 0)
 			break;
-		PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
-		Objects[i]._oSelFlag = 0;
+		PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+		fountain._oSelFlag = 0;
 		AddMissile(
 		    player.position.tile,
 		    player.position.tile,
@@ -3561,17 +3561,17 @@ bool OperateFountains(Player &player, int i)
 		    2 * leveltype);
 		applied = true;
 		if (&player == MyPlayer)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+			NetSendCmdParam1(false, CMD_OPERATEOBJ, fountain.GetId());
 		break;
 	case OBJ_TEARFTN: {
-		if (Objects[i]._oSelFlag == 0)
+		if (fountain._oSelFlag == 0)
 			break;
-		PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
-		Objects[i]._oSelFlag = 0;
+		PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+		fountain._oSelFlag = 0;
 		if (&player != MyPlayer)
 			return false;
 
-		unsigned randomValue = (Objects[i]._oRndSeed >> 16) % 12;
+		unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
 		unsigned fromStat = randomValue / 3;
 		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)
@@ -3598,7 +3598,7 @@ bool OperateFountains(Player &player, int i)
 		CheckStats(player);
 		applied = true;
 		if (&player == MyPlayer)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+			NetSendCmdParam1(false, CMD_OPERATEOBJ, fountain.GetId());
 	} break;
 	default:
 		break;
@@ -4916,7 +4916,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_PURIFYINGFTN:
 	case OBJ_MURKYFTN:
 	case OBJ_TEARFTN:
-		OperateFountains(player, i);
+		OperateFountains(player, object);
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
@@ -5103,7 +5103,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_MURKYFTN:
 	case OBJ_TEARFTN:
-		OperateFountains(player, i);
+		OperateFountains(player, object);
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
