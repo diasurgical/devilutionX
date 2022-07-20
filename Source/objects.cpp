@@ -2257,20 +2257,14 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 	}
 	if (questBook._oSelFlag != 0 && !qtextflag) {
 		if (questBook._otype == OBJ_BLINDBOOK && Quests[Q_BLIND]._qvar1 == 0) {
-			Quests[Q_BLIND]._qactive = QUEST_ACTIVE;
-			Quests[Q_BLIND]._qlog = true;
-			Quests[Q_BLIND]._qvar1 = 1;
+			Quests[Q_BLIND].activateMultiStageQuest();
 		}
 		if (questBook._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
-			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
-			Quests[Q_BLOOD]._qlog = true;
-			Quests[Q_BLOOD]._qvar1 = 1;
+			Quests[Q_BLOOD].activateMultiStageQuest();
 			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1);
 		}
 		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
-			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
-			Quests[Q_WARLORD]._qlog = true;
-			Quests[Q_WARLORD]._qvar1 = 1;
+			Quests[Q_WARLORD].activateMultiStageQuest();
 		}
 		if (questBook._oAnimFrame != questBook._oVar6) {
 			if (questBook._otype != OBJ_BLOODBOOK)
