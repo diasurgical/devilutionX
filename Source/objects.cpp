@@ -2251,43 +2251,43 @@ void OperateBook(Player &player, Object &book)
 	}
 }
 
-void OperateBookLever(int i, bool sendmsg)
+void OperateBookLever(Object &questBook, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
-	if (Objects[i]._oSelFlag != 0 && !qtextflag) {
-		if (Objects[i]._otype == OBJ_BLINDBOOK && Quests[Q_BLIND]._qvar1 == 0) {
+	if (questBook._oSelFlag != 0 && !qtextflag) {
+		if (questBook._otype == OBJ_BLINDBOOK && Quests[Q_BLIND]._qvar1 == 0) {
 			Quests[Q_BLIND]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLIND]._qlog = true;
 			Quests[Q_BLIND]._qvar1 = 1;
 		}
-		if (Objects[i]._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
+		if (questBook._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
 			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLOOD]._qlog = true;
 			Quests[Q_BLOOD]._qvar1 = 1;
 			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1);
 		}
-		if (Objects[i]._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
+		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
 			Quests[Q_WARLORD]._qlog = true;
 			Quests[Q_WARLORD]._qvar1 = 1;
 		}
-		if (Objects[i]._oAnimFrame != Objects[i]._oVar6) {
-			if (Objects[i]._otype != OBJ_BLOODBOOK)
-				ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-			if (Objects[i]._otype == OBJ_BLINDBOOK) {
+		if (questBook._oAnimFrame != questBook._oVar6) {
+			if (questBook._otype != OBJ_BLOODBOOK)
+				ObjChangeMap(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4);
+			if (questBook._otype == OBJ_BLINDBOOK) {
 				SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
 				auto tren = TransVal;
 				TransVal = 9;
-				DRLG_MRectTrans({ Objects[i]._oVar1, Objects[i]._oVar2 }, { Objects[i]._oVar3, Objects[i]._oVar4 });
+				DRLG_MRectTrans({ questBook._oVar1, questBook._oVar2 }, { questBook._oVar3, questBook._oVar4 });
 				TransVal = tren;
 			}
 		}
-		Objects[i]._oAnimFrame = Objects[i]._oVar6;
-		InitQTextMsg(Objects[i].bookMessage);
+		questBook._oAnimFrame = questBook._oVar6;
+		InitQTextMsg(questBook.bookMessage);
 		if (sendmsg)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+			NetSendCmdParam1(false, CMD_OPERATEOBJ, questBook.GetId());
 	}
 }
 
@@ -4885,7 +4885,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(i, sendmsg);
+		OperateBookLever(object, sendmsg);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -5074,7 +5074,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(i, sendmsg);
+		OperateBookLever(object, sendmsg);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
