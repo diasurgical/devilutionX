@@ -2439,29 +2439,29 @@ void OperateInnSignChest(const Player &player, Object &questContainer)
 	SpawnQuestItem(IDI_BANNER, pos, 0, 0);
 }
 
-void OperateSlainHero(const Player &player, int i)
+void OperateSlainHero(const Player &player, Object &corpse)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (corpse._oSelFlag == 0) {
 		return;
 	}
-	Objects[i]._oSelFlag = 0;
+	corpse._oSelFlag = 0;
 
 	if (player._pClass == HeroClass::Warrior) {
-		CreateMagicArmor(Objects[i].position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
+		CreateMagicArmor(corpse.position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, true, false);
 	} else if (player._pClass == HeroClass::Rogue) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Bow, ICURS_LONG_BATTLE_BOW, true, false);
 	} else if (player._pClass == HeroClass::Sorcerer) {
-		CreateSpellBook(Objects[i].position, SPL_LIGHTNING, true, false);
+		CreateSpellBook(corpse.position, SPL_LIGHTNING, true, false);
 	} else if (player._pClass == HeroClass::Monk) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Staff, ICURS_WAR_STAFF, true, false);
 	} else if (player._pClass == HeroClass::Bard) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Sword, ICURS_BASTARD_SWORD, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Sword, ICURS_BASTARD_SWORD, true, false);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		CreateMagicWeapon(Objects[i].position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
+		CreateMagicWeapon(corpse.position, ItemType::Axe, ICURS_BATTLE_AXE, true, false);
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
 	if (&player == MyPlayer)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, corpse.GetId());
 }
 
 void OperateTrapLever(Object &flameLever)
@@ -3394,35 +3394,35 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		NetSendCmdParam1(false, CMD_PLROPOBJ, shrine.GetId());
 }
 
-void OperateSkelBook(int i, bool sendmsg, bool sendLootMsg)
+void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (bookStand._oSelFlag == 0) {
 		return;
 	}
 
-	PlaySfxLoc(IS_ISCROL, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame += 2;
-	SetRndSeed(Objects[i]._oRndSeed);
+	PlaySfxLoc(IS_ISCROL, bookStand.position);
+	bookStand._oSelFlag = 0;
+	bookStand._oAnimFrame += 2;
+	SetRndSeed(bookStand._oRndSeed);
 	if (FlipCoin(5))
-		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+		CreateTypeItem(bookStand.position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
 	else
-		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
+		CreateTypeItem(bookStand.position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookStand.GetId());
 }
 
-void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
+void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (bookcase._oSelFlag == 0) {
 		return;
 	}
 
-	PlaySfxLoc(IS_ISCROL, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame -= 2;
-	SetRndSeed(Objects[i]._oRndSeed);
-	CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+	PlaySfxLoc(IS_ISCROL, bookcase.position);
+	bookcase._oSelFlag = 0;
+	bookcase._oAnimFrame -= 2;
+	SetRndSeed(bookcase._oRndSeed);
+	CreateTypeItem(bookcase.position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
@@ -3437,41 +3437,41 @@ void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
 		}
 	}
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookcase.GetId());
 }
 
-void OperateDecap(int i, bool sendmsg, bool sendLootMsg)
+void OperateDecapitatedBody(Object &corpse, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (corpse._oSelFlag == 0) {
 		return;
 	}
-	Objects[i]._oSelFlag = 0;
-	SetRndSeed(Objects[i]._oRndSeed);
-	CreateRndItem(Objects[i].position, false, sendLootMsg, false);
+	corpse._oSelFlag = 0;
+	SetRndSeed(corpse._oRndSeed);
+	CreateRndItem(corpse.position, false, sendLootMsg, false);
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, corpse.GetId());
 }
 
-void OperateArmorStand(int i, bool sendmsg, bool sendLootMsg)
+void OperateArmorStand(Object &armorStand, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (armorStand._oSelFlag == 0) {
 		return;
 	}
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame++;
-	SetRndSeed(Objects[i]._oRndSeed);
+	armorStand._oSelFlag = 0;
+	armorStand._oAnimFrame++;
+	SetRndSeed(armorStand._oRndSeed);
 	bool uniqueRnd = !FlipCoin();
 	if (currlevel <= 5) {
-		CreateTypeItem(Objects[i].position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, true, ItemType::LightArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {
-		CreateTypeItem(Objects[i].position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 10 && currlevel <= 12) {
-		CreateTypeItem(Objects[i].position, false, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, false, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
 	} else if (currlevel >= 13) {
-		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
+		CreateTypeItem(armorStand.position, true, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
 	}
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, armorStand.GetId());
 }
 
 int FindValidShrine()
@@ -3507,16 +3507,16 @@ void OperateCauldron(Player &player, Object &object, _sfx_id sType)
 	force_redraw = 255;
 }
 
-bool OperateFountains(Player &player, int i)
+bool OperateFountains(Player &player, Object &fountain)
 {
 	bool applied = false;
-	switch (Objects[i]._otype) {
+	switch (fountain._otype) {
 	case OBJ_BLOODFTN:
 		if (&player != MyPlayer)
 			return false;
 
 		if (player._pHitPoints < player._pMaxHP) {
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 			player._pHitPoints += 64;
 			player._pHPBase += 64;
 			if (player._pHitPoints > player._pMaxHP) {
@@ -3525,14 +3525,14 @@ bool OperateFountains(Player &player, int i)
 			}
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 		break;
 	case OBJ_PURIFYINGFTN:
 		if (&player != MyPlayer)
 			return false;
 
 		if (player._pMana < player._pMaxMana) {
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 
 			player._pMana += 64;
 			player._pManaBase += 64;
@@ -3543,13 +3543,13 @@ bool OperateFountains(Player &player, int i)
 
 			applied = true;
 		} else
-			PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
+			PlaySfxLoc(LS_FOUNTAIN, fountain.position);
 		break;
 	case OBJ_MURKYFTN:
-		if (Objects[i]._oSelFlag == 0)
+		if (fountain._oSelFlag == 0)
 			break;
-		PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
-		Objects[i]._oSelFlag = 0;
+		PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+		fountain._oSelFlag = 0;
 		AddMissile(
 		    player.position.tile,
 		    player.position.tile,
@@ -3561,17 +3561,17 @@ bool OperateFountains(Player &player, int i)
 		    2 * leveltype);
 		applied = true;
 		if (&player == MyPlayer)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+			NetSendCmdParam1(false, CMD_OPERATEOBJ, fountain.GetId());
 		break;
 	case OBJ_TEARFTN: {
-		if (Objects[i]._oSelFlag == 0)
+		if (fountain._oSelFlag == 0)
 			break;
-		PlaySfxLoc(LS_FOUNTAIN, Objects[i].position);
-		Objects[i]._oSelFlag = 0;
+		PlaySfxLoc(LS_FOUNTAIN, fountain.position);
+		fountain._oSelFlag = 0;
 		if (&player != MyPlayer)
 			return false;
 
-		unsigned randomValue = (Objects[i]._oRndSeed >> 16) % 12;
+		unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
 		unsigned fromStat = randomValue / 3;
 		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)
@@ -3598,7 +3598,7 @@ bool OperateFountains(Player &player, int i)
 		CheckStats(player);
 		applied = true;
 		if (&player == MyPlayer)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+			NetSendCmdParam1(false, CMD_OPERATEOBJ, fountain.GetId());
 	} break;
 	default:
 		break;
@@ -3607,21 +3607,21 @@ bool OperateFountains(Player &player, int i)
 	return applied;
 }
 
-void OperateWeaponRack(int i, bool sendmsg, bool sendLootMsg)
+void OperateWeaponRack(Object &weaponRack, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0)
+	if (weaponRack._oSelFlag == 0)
 		return;
-	SetRndSeed(Objects[i]._oRndSeed);
+	SetRndSeed(weaponRack._oRndSeed);
 
 	ItemType weaponType { PickRandomlyAmong({ ItemType::Sword, ItemType::Axe, ItemType::Bow, ItemType::Mace }) };
 
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame++;
+	weaponRack._oSelFlag = 0;
+	weaponRack._oAnimFrame++;
 
-	CreateTypeItem(Objects[i].position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendLootMsg, false);
+	CreateTypeItem(weaponRack.position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendLootMsg, false);
 
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, weaponRack.GetId());
 }
 
 /**
@@ -4893,18 +4893,18 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		OperateSkelBook(i, sendmsg, sendmsg);
+		OperateBookStand(object, sendmsg, sendmsg);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		OperateBookCase(i, sendmsg, sendmsg);
+		OperateBookcase(object, sendmsg, sendmsg);
 		break;
 	case OBJ_DECAP:
-		OperateDecap(i, sendmsg, sendmsg);
+		OperateDecapitatedBody(object, sendmsg, sendmsg);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		OperateArmorStand(i, sendmsg, sendmsg);
+		OperateArmorStand(object, sendmsg, sendmsg);
 		break;
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(player, object, LS_GSHRINE);
@@ -4916,7 +4916,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_PURIFYINGFTN:
 	case OBJ_MURKYFTN:
 	case OBJ_TEARFTN:
-		OperateFountains(player, i);
+		OperateFountains(player, object);
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
@@ -4928,7 +4928,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
-		OperateWeaponRack(i, sendmsg, sendmsg);
+		OperateWeaponRack(object, sendmsg, sendmsg);
 		break;
 	case OBJ_MUSHPATCH:
 		OperateMushroomPatch(player, object);
@@ -4938,7 +4938,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 			OperateLazStand(object);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(player, i);
+		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(player, object);
@@ -5082,18 +5082,18 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		OperateSkelBook(i, sendmsg, false);
+		OperateBookStand(object, sendmsg, false);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		OperateBookCase(i, sendmsg, false);
+		OperateBookcase(object, sendmsg, false);
 		break;
 	case OBJ_DECAP:
-		OperateDecap(i, sendmsg, false);
+		OperateDecapitatedBody(object, sendmsg, false);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		OperateArmorStand(i, sendmsg, false);
+		OperateArmorStand(object, sendmsg, false);
 		break;
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(player, object, LS_GSHRINE);
@@ -5103,7 +5103,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_MURKYFTN:
 	case OBJ_TEARFTN:
-		OperateFountains(player, i);
+		OperateFountains(player, object);
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
@@ -5115,13 +5115,13 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
-		OperateWeaponRack(i, sendmsg, false);
+		OperateWeaponRack(object, sendmsg, false);
 		break;
 	case OBJ_MUSHPATCH:
 		OperateMushroomPatch(player, object);
 		break;
 	case OBJ_SLAINHERO:
-		OperateSlainHero(player, i);
+		OperateSlainHero(player, object);
 		break;
 	case OBJ_SIGNCHEST:
 		OperateInnSignChest(player, object);
