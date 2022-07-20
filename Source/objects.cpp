@@ -3607,21 +3607,21 @@ bool OperateFountains(Player &player, int i)
 	return applied;
 }
 
-void OperateWeaponRack(int i, bool sendmsg, bool sendLootMsg)
+void OperateWeaponRack(Object &weaponRack, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0)
+	if (weaponRack._oSelFlag == 0)
 		return;
-	SetRndSeed(Objects[i]._oRndSeed);
+	SetRndSeed(weaponRack._oRndSeed);
 
 	ItemType weaponType { PickRandomlyAmong({ ItemType::Sword, ItemType::Axe, ItemType::Bow, ItemType::Mace }) };
 
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame++;
+	weaponRack._oSelFlag = 0;
+	weaponRack._oAnimFrame++;
 
-	CreateTypeItem(Objects[i].position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendLootMsg, false);
+	CreateTypeItem(weaponRack.position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendLootMsg, false);
 
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, weaponRack.GetId());
 }
 
 /**
@@ -4928,7 +4928,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
-		OperateWeaponRack(i, sendmsg, sendmsg);
+		OperateWeaponRack(object, sendmsg, sendmsg);
 		break;
 	case OBJ_MUSHPATCH:
 		OperateMushroomPatch(player, object);
@@ -5115,7 +5115,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
-		OperateWeaponRack(i, sendmsg, false);
+		OperateWeaponRack(object, sendmsg, false);
 		break;
 	case OBJ_MUSHPATCH:
 		OperateMushroomPatch(player, object);
