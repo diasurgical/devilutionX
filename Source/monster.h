@@ -307,7 +307,8 @@ struct Monster { // note: missing field _mAFNum
 		return pgettext("monster", data().name);
 	}
 
-	uint16_t expBase() const {
+	uint16_t expBase() const
+	{
 		return data().exp;
 	}
 
