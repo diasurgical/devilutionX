@@ -27,13 +27,13 @@
 #include "lighting.h"
 #include "menu.h"
 #include "missiles.h"
+#include "monster.h"
 #include "mpq/mpq_writer.hpp"
 #include "pfile.h"
 #include "qol/stash.h"
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
-#include "monster.h"
 
 namespace devilution {
 
