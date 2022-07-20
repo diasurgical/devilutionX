@@ -3394,22 +3394,22 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		NetSendCmdParam1(false, CMD_PLROPOBJ, shrine.GetId());
 }
 
-void OperateSkelBook(int i, bool sendmsg, bool sendLootMsg)
+void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (bookStand._oSelFlag == 0) {
 		return;
 	}
 
-	PlaySfxLoc(IS_ISCROL, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame += 2;
-	SetRndSeed(Objects[i]._oRndSeed);
+	PlaySfxLoc(IS_ISCROL, bookStand.position);
+	bookStand._oSelFlag = 0;
+	bookStand._oAnimFrame += 2;
+	SetRndSeed(bookStand._oRndSeed);
 	if (FlipCoin(5))
-		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
+		CreateTypeItem(bookStand.position, false, ItemType::Misc, IMISC_BOOK, sendLootMsg, false);
 	else
-		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
+		CreateTypeItem(bookStand.position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookStand.GetId());
 }
 
 void OperateBookCase(int i, bool sendmsg, bool sendLootMsg)
@@ -4893,7 +4893,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		OperateSkelBook(i, sendmsg, sendmsg);
+		OperateBookStand(object, sendmsg, sendmsg);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
@@ -5082,7 +5082,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		OperateSkelBook(i, sendmsg, false);
+		OperateBookStand(object, sendmsg, false);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
