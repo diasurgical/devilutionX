@@ -2492,23 +2492,23 @@ void OperateTrapLever(Object &flameLever)
 	}
 }
 
-void OperateSarc(int i, bool sendMsg, bool sendLootMsg)
+void OperateSarcophagus(Object &sarcophagus, bool sendMsg, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (sarcophagus._oSelFlag == 0) {
 		return;
 	}
 
-	PlaySfxLoc(IS_SARC, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFlag = true;
-	Objects[i]._oAnimDelay = 3;
-	SetRndSeed(Objects[i]._oRndSeed);
-	if (Objects[i]._oVar1 <= 2)
-		CreateRndItem(Objects[i].position, false, sendLootMsg, false);
-	if (Objects[i]._oVar1 >= 8 && Objects[i]._oVar2 >= 0)
-		SpawnSkeleton(&Monsters[Objects[i]._oVar2], Objects[i].position);
+	PlaySfxLoc(IS_SARC, sarcophagus.position);
+	sarcophagus._oSelFlag = 0;
+	sarcophagus._oAnimFlag = true;
+	sarcophagus._oAnimDelay = 3;
+	SetRndSeed(sarcophagus._oRndSeed);
+	if (sarcophagus._oVar1 <= 2)
+		CreateRndItem(sarcophagus.position, false, sendLootMsg, false);
+	if (sarcophagus._oVar1 >= 8 && sarcophagus._oVar2 >= 0)
+		SpawnSkeleton(&Monsters[sarcophagus._oVar2], sarcophagus.position);
 	if (sendMsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, sarcophagus.GetId());
 }
 
 void OperateL2Door(const Player &player, int i)
@@ -4877,7 +4877,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
-		OperateSarc(i, sendmsg, sendmsg);
+		OperateSarcophagus(object, sendmsg, sendmsg);
 		break;
 	case OBJ_FLAMELVR:
 		OperateTrapLever(object);
@@ -5069,7 +5069,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
-		OperateSarc(i, sendmsg, false);
+		OperateSarcophagus(object, sendmsg, false);
 		break;
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
