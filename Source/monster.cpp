@@ -1073,7 +1073,7 @@ void StartDeathFromMonster(Monster &attacker, Monster &target)
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
 
 	if (attacker.type().type == MT_GOLEM)
-		target.whoHit |= 1 << attacker.getId();
+		target.whoHit |= 1 << attacker.getNetworkId();
 
 	Direction md = GetDirection(target.position.tile, attacker.position.tile);
 	MonsterDeath(target, md, true);
@@ -4764,6 +4764,11 @@ void decode_enemy(Monster &monster, int enemyId)
 [[nodiscard]] size_t Monster::getId() const
 {
 	return std::distance<const Monster *>(&Monsters[0], this);
+}
+
+[[nodiscard]] size_t Monster::getNetworkId() const
+{
+	return getId();
 }
 
 Monster *Monster::getLeader() const

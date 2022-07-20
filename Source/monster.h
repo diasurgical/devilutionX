@@ -308,11 +308,18 @@ struct Monster { // note: missing field _mAFNum
 	}
 
 	/**
-	 * @brief Returns the network identifier for this monster
+	 * @brief Returns the internal identifier for this monster
 	 *
 	 * This is currently the index into the Monsters array, but may change in the future.
 	 */
 	[[nodiscard]] size_t getId() const;
+
+	/**
+	 * @brief Returns the network identifier for this monster
+	 *
+	 * This is currently the index into the Monsters array, but may change in the future.
+	 */
+	[[nodiscard]] size_t getNetworkId() const;
 
 	[[nodiscard]] Monster *getLeader() const;
 	void setLeader(const Monster *leader);
