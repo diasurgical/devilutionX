@@ -33,6 +33,7 @@
 #include "stores.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
+#include "monster.h"
 
 namespace devilution {
 
@@ -638,7 +639,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.whoHit = file->NextLE<int8_t>();
 	monster.level = file->NextLE<int8_t>();
 	file->Skip(1); // Alignment
-	monster.exp = file->NextLE<uint16_t>();
+	file->Skip(2); // Skip exp - the monster used to have this field
 
 	if ((monster.flags & MFLAG_GOLEM) != 0) // Don't skip for golems
 		monster.toHit = file->NextLE<uint8_t>();
@@ -1388,7 +1389,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int8_t>(monster.whoHit);
 	file->WriteLE<int8_t>(monster.level);
 	file->Skip(1); // Alignment
-	file->WriteLE<uint16_t>(monster.exp);
+	file->WriteLE<uint16_t>(CalculateMonsterExp(monster.expBase(), monster.isUnique()));
 
 	file->WriteLE<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(monster.toHit, std::numeric_limits<uint8_t>::max()))); // For backwards compatibility
 	file->WriteLE<uint8_t>(monster.minDamage);

@@ -185,7 +185,7 @@ struct Monster { // note: missing field _mAFNum
 	uint32_t rndItemSeed;
 	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
 	uint32_t aiSeed;
-	uint16_t exp;
+
 	uint16_t toHit;
 	uint16_t toHitSpecial;
 	uint16_t resistance;
@@ -307,6 +307,10 @@ struct Monster { // note: missing field _mAFNum
 		return pgettext("monster", data().name);
 	}
 
+	uint16_t expBase() const {
+		return data().exp;
+	}
+
 	/**
 	 * @brief Returns the network identifier for this monster
 	 *
@@ -410,5 +414,6 @@ void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile
 bool CanTalkToMonst(const Monster &monster);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemyId);
+int CalculateMonsterExp(uint16_t baseExp, bool isUnique);
 
 } // namespace devilution
