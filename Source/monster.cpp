@@ -1865,15 +1865,12 @@ bool IsTileAccessible(const Monster &monster, Point position)
 	return IsTileSafe(monster, position);
 }
 
-bool AiPlanWalk(int monsterId)
+bool AiPlanWalk(Monster &monster)
 {
 	int8_t path[MaxPathLength];
 
 	/** Maps from walking path step to facing direction. */
 	const Direction plr2monst[9] = { Direction::South, Direction::NorthEast, Direction::NorthWest, Direction::SouthEast, Direction::SouthWest, Direction::North, Direction::East, Direction::South, Direction::West };
-
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
 
 	if (FindPath([&monster](Point position) { return IsTileAccessible(monster, position); }, monster.position.tile, monster.enemyPosition, path) == 0) {
 		return false;
@@ -1941,7 +1938,7 @@ bool AiPlanPath(int monsterId)
 		monster.pathCount++;
 		if (monster.pathCount < 5)
 			return false;
-		if (AiPlanWalk(monsterId))
+		if (AiPlanWalk(monster))
 			return true;
 	}
 
