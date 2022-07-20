@@ -3883,23 +3883,10 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 	M_StartHit(monster, dam);
 }
 
-int CalculateMonsterExp(uint16_t baseExp, bool isUnique)
-{
-	int monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (baseExp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (baseExp + 1000)
-	                                                                                                                               : baseExp;
-	if (isUnique) {
-		monsterExp *= 2;
-		monsterExp = sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE ? 2 * (monsterExp + 1000) : sgGameInitInfo.nDifficulty == DIFF_HELL ? 4 * (monsterExp + 1000)
-		                                                                                                                              : monsterExp;
-	}
-
-	return monsterExp;
-}
-
 void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
 	if (monster.type().type != MT_GOLEM)
-		AddPlrMonstExper(monster.level, CalculateMonsterExp(monster.expBase(), monster.isUnique()), monster.whoHit);
+		AddPlrMonstExper(monster.level, monster.exp(sgGameInitInfo.nDifficulty), monster.whoHit);
 
 	MonsterKillCounts[monster.type().type]++;
 	monster.hitPoints = 0;

@@ -307,9 +307,27 @@ struct Monster { // note: missing field _mAFNum
 		return pgettext("monster", data().name);
 	}
 
-	uint16_t expBase() const
+	int exp(_difficulty difficulty) const
 	{
-		return data().exp;
+		int monsterExp = data().exp;
+
+		if (difficulty == DIFF_NIGHTMARE) {
+			monsterExp = 2 * (monsterExp + 1000);
+		} else if (difficulty == DIFF_HELL) {
+			monsterExp = 4 * (monsterExp + 1000);
+		}
+
+		if (isUnique()) {
+			monsterExp *= 2;
+
+			if (difficulty == DIFF_NIGHTMARE) {
+				monsterExp = 2 * (monsterExp + 1000);
+			} else if (difficulty == DIFF_HELL) {
+				monsterExp = 4 * (monsterExp + 1000);
+			}
+		}
+
+		return monsterExp;
 	}
 
 	/**
@@ -415,6 +433,5 @@ void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile
 bool CanTalkToMonst(const Monster &monster);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemyId);
-int CalculateMonsterExp(uint16_t baseExp, bool isUnique);
 
 } // namespace devilution
