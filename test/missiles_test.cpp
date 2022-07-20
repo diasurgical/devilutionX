@@ -21,7 +21,7 @@ TEST(Missiles, RotateBlockedMissileArrow)
 	EXPECT_EQ(missile._miAnimFrame, 1);
 	
 	missile._miAnimFrame = 5;
-	SetRndSeed(1234); // no idea what rotation this actually performs, might need to change the expectation to 4 instead of 6
+	SetRndSeed(1234);
 	TestRotateBlockedMissile(missile);
 	EXPECT_EQ(missile._miAnimFrame, 6);
 }
