@@ -431,4 +431,8 @@ void ProcessMissiles();
 void missiles_process_charge();
 void RedoMissileFlags();
 
+#ifdef BUILD_TESTING
+void TestRotateBlockedMissile(Missile &missile);
+#endif
+
 } // namespace devilution
