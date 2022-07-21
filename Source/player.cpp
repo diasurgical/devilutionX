@@ -1977,8 +1977,9 @@ void Player::RegenMana()
 	else if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		manaMod = _pLevel + _pLevel / 2;
 
-	bool canRegenMana = HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana);
-	if (canRegenMana && _pmode != PM_DEATH && _pMana < _pMaxMana) {
+	bool hasMana = HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana);
+	bool canRegenMana = _pmode != PM_DEATH && _pmode != PM_SPELL && _pMana < _pMaxMana;
+	if (hasMana && canRegenMana) {
 		_pMana = std::min(_pMana + manaMod / lvlMod, _pMaxMana);
 		_pManaBase = std::min(_pManaBase + manaMod / lvlMod, _pMaxManaBase);
 	}
