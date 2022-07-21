@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "itemdat.h"
@@ -20,44 +21,49 @@ namespace devilution {
 #define MAXOBJECTS 127
 
 struct Object {
-	_object_id _otype;
+	_object_id _otype = OBJ_NULL;
 	Point position;
-	bool _oLight;
-	uint32_t _oAnimFlag;
-	byte *_oAnimData;
-	int _oAnimDelay;      // Tick length of each frame in the current animation
-	int _oAnimCnt;        // Increases by one each game tick, counting how close we are to _pAnimDelay
-	uint32_t _oAnimLen;   // Number of frames in current animation
-	uint32_t _oAnimFrame; // Current frame of animation.
-	uint16_t _oAnimWidth;
-	bool _oDelFlag;
-	int8_t _oBreak;
-	bool _oSolidFlag;
+	bool _oLight = false;
+	uint32_t _oAnimFlag = 0;
+	OptionalClxSpriteList _oAnimData;
+	int _oAnimDelay = 0;      // Tick length of each frame in the current animation
+	int _oAnimCnt = 0;        // Increases by one each game tick, counting how close we are to _pAnimDelay
+	uint32_t _oAnimLen = 0;   // Number of frames in current animation
+	uint32_t _oAnimFrame = 0; // Current frame of animation.
+
+	// TODO: Remove this field, it is unused and always equal to:
+	// (*_oAnimData)[0].width()
+	uint16_t _oAnimWidth = 0;
+
+	bool _oDelFlag = false;
+	int8_t _oBreak = 0;
+	bool _oSolidFlag = false;
 	/** True if the object allows missiles to pass through, false if it collides with missiles */
-	bool _oMissFlag;
-	uint8_t _oSelFlag;
-	bool _oPreFlag;
-	bool _oTrapFlag;
-	bool _oDoorFlag;
-	int _olid;
+	bool _oMissFlag = false;
+	uint8_t _oSelFlag = 0;
+	bool _oPreFlag = false;
+	bool _oTrapFlag = false;
+	bool _oDoorFlag = false;
+	int _olid = 0;
 	/**
 	 * Saves the absolute value of the engine state (typically from a call to AdvanceRndSeed()) to later use when spawning items from a container object
 	 * This is an unsigned value to avoid implementation defined behaviour when reading from this variable.
 	 */
-	uint32_t _oRndSeed;
-	int _oVar1;
-	int _oVar2;
-	int _oVar3;
-	int _oVar4;
-	int _oVar5;
-	uint32_t _oVar6;
+	uint32_t _oRndSeed = 0;
+	int _oVar1 = 0;
+	int _oVar2 = 0;
+	int _oVar3 = 0;
+	int _oVar4 = 0;
+	int _oVar5 = 0;
+	uint32_t _oVar6 = 0;
 	/**
 	 * @brief ID of a quest message to play when this object is activated.
 	 *
 	 * Used by spell book objects which trigger quest progress for Halls of the Blind, Valor, or Warlord of Blood
 	 */
-	_speech_id bookMessage;
-	int _oVar8;
+	// TODO: Should be TEXT_NONE (timedemo save will need to be updated).
+	_speech_id bookMessage = TEXT_KING1;
+	int _oVar8 = 0;
 
 	/**
 	 * @brief Returns the network identifier for this object

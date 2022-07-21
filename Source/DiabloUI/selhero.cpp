@@ -45,7 +45,7 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelHeroDialog;
 std::vector<std::unique_ptr<UiListItem>> vecSelHeroDlgItems;
 std::vector<std::unique_ptr<UiItemBase>> vecSelDlgItems;
 
-UiImageCl2 *SELHERO_DIALOG_HERO_IMG;
+UiImageClx *SELHERO_DIALOG_HERO_IMG;
 
 void SelheroListFocus(int value);
 void SelheroListSelect(int value);
@@ -236,10 +236,7 @@ void AddSelHeroBackground()
 {
 	LoadBackgroundArt("ui_art\\selhero.pcx");
 	vecSelHeroDialog.insert(vecSelHeroDialog.begin(),
-	    std::make_unique<UiImageCl2>(
-	        ArtBackground->sprite(0),
-	        MakeSdlRect(0, GetUIRectangle().position.y, 0, 0),
-	        UiFlags::AlignCenter));
+	    std::make_unique<UiImageClx>((*ArtBackground)[0], MakeSdlRect(0, GetUIRectangle().position.y, 0, 0), UiFlags::AlignCenter));
 }
 
 void SelheroClassSelectorSelect(int value)
@@ -450,7 +447,7 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(&title, rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 30), (Sint16)(uiPosition.y + 211), 180, 76 };
-	auto heroImg = std::make_unique<UiImageCl2>(UiGetHeroDialogSprite(0), rect2, UiFlags::None);
+	auto heroImg = std::make_unique<UiImageClx>(UiGetHeroDialogSprite(0), rect2, UiFlags::None);
 	SELHERO_DIALOG_HERO_IMG = heroImg.get();
 	vecSelHeroDialog.push_back(std::move(heroImg));
 
@@ -511,7 +508,7 @@ void selhero_List_Init()
 	vecSelDlgItems.push_back(std::make_unique<UiList>(vecSelHeroDlgItems, 6, uiPosition.x + 265, (uiPosition.y + 256), 320, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 	SDL_Rect rect2 = { (Sint16)(uiPosition.x + 585), (Sint16)(uiPosition.y + 244), 25, 178 };
-	vecSelDlgItems.push_back(std::make_unique<UiScrollbar>(ArtScrollBarBackground->sprite(), ArtScrollBarThumb->sprite(), ArtScrollBarArrow->sheet(), rect2));
+	vecSelDlgItems.push_back(std::make_unique<UiScrollbar>((*ArtScrollBarBackground)[0], (*ArtScrollBarThumb)[0], *ArtScrollBarArrow, rect2));
 
 	SDL_Rect rect3 = { (Sint16)(uiPosition.x + 239), (Sint16)(uiPosition.y + 429), 120, 35 };
 	vecSelDlgItems.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect3, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));

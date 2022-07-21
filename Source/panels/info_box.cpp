@@ -4,13 +4,13 @@
 
 namespace devilution {
 
-OptionalOwnedCelSprite pSTextBoxCels;
-OptionalOwnedCelSprite pSTextSlidCels;
+OptionalOwnedClxSpriteList pSTextBoxCels;
+OptionalOwnedClxSpriteList pSTextSlidCels;
 
 void InitInfoBoxGfx()
 {
-	pSTextSlidCels = LoadCelAsCl2("Data\\TextSlid.CEL", 12);
-	pSTextBoxCels = LoadCelAsCl2("Data\\TextBox2.CEL", 271);
+	pSTextSlidCels = LoadCel("Data\\TextSlid.CEL", 12);
+	pSTextBoxCels = LoadCel("Data\\TextBox2.CEL", 271);
 }
 
 void FreeInfoBoxGfx()

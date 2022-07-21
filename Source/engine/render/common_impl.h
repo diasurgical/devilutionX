@@ -38,13 +38,6 @@ struct RenderSrcBackwards {
 	uint_fast16_t width;
 };
 
-// Source data for rendering forwards: first line of input -> first line of output.
-struct RenderSrcForwards {
-	const uint8_t *begin;
-	uint_fast16_t width;
-	uint_fast16_t height;
-};
-
 struct SkipSize {
 	int_fast16_t wholeLines;
 	int_fast16_t xOffset;
@@ -198,9 +191,11 @@ void DoRenderBackwardsClipXY(
 
 template <GetBlitCommandFn GetBlitCommand, typename BlitFn>
 void DoRenderBackwards(
-    const Surface &out, Point position, const uint8_t *src, size_t srcSize, unsigned srcWidth,
-    BlitFn &&blitFn)
+    const Surface &out, Point position, const uint8_t *src, size_t srcSize,
+    unsigned srcWidth, unsigned srcHeight, BlitFn &&blitFn)
 {
+	if (position.y < 0 || position.y + 1 >= static_cast<int>(out.h() + srcHeight))
+		return;
 	const ClipX clipX = CalculateClipX(position.x, srcWidth, out);
 	if (clipX.width <= 0)
 		return;

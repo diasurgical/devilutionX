@@ -15,7 +15,7 @@
 #include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/trn.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
@@ -33,8 +33,8 @@
 namespace devilution {
 namespace {
 /** Cursor images CEL */
-OptionalOwnedCelSprite pCursCels;
-OptionalOwnedCelSprite pCursCels2;
+OptionalOwnedClxSpriteList pCursCels;
+OptionalOwnedClxSpriteList pCursCels2;
 
 /** Maps from objcurs.cel frame number to frame width. */
 const uint16_t InvItemWidth1[] = {
@@ -133,9 +133,9 @@ int pcurs;
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadCelAsCl2("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
+	pCursCels = LoadCel("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
 	if (gbIsHellfire)
-		pCursCels2 = LoadCelAsCl2("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
+		pCursCels2 = LoadCel("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
 	ClearCursor();
 }
 
@@ -146,14 +146,11 @@ void FreeCursor()
 	ClearCursor();
 }
 
-const OwnedCelSprite &GetInvItemSprite(int cursId)
+ClxSprite GetInvItemSprite(int cursId)
 {
-	return cursId <= InvItems1Size ? *pCursCels : *pCursCels2;
-}
-
-int GetInvItemFrame(int cursId)
-{
-	return cursId <= InvItems1Size ? cursId - 1 : cursId - InvItems1Size - 1;
+	if (cursId <= InvItems1Size)
+		return (*pCursCels)[cursId - 1];
+	return (*pCursCels2)[cursId - InvItems1Size - 1];
 }
 
 Size GetInvItemSize(int cursId)
@@ -164,13 +161,13 @@ Size GetInvItemSize(int cursId)
 	return { InvItemWidth1[i], InvItemHeight1[i] };
 }
 
-void DrawItem(const Item &item, const Surface &out, Point position, CelSprite cel, int frame)
+void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite clx)
 {
 	const bool usable = item._iStatFlag;
 	if (usable) {
-		Cl2Draw(out, position, cel, frame);
+		ClxDraw(out, position, clx);
 	} else {
-		Cl2DrawTRN(out, position, cel, frame, GetInfravisionTRN());
+		ClxDrawTRN(out, position, clx, GetInfravisionTRN());
 	}
 }
 
@@ -209,14 +206,13 @@ void NewCursor(int cursId)
 
 void DrawSoftwareCursor(const Surface &out, Point position, int cursId)
 {
-	const CelSprite sprite { GetInvItemSprite(cursId) };
-	const int frame = GetInvItemFrame(cursId);
+	const ClxSprite sprite = GetInvItemSprite(cursId);
 	if (!MyPlayer->HoldItem.isEmpty()) {
 		const auto &heldItem = MyPlayer->HoldItem;
-		Cl2DrawOutline(out, GetOutlineColor(heldItem, true), position, sprite, frame);
-		DrawItem(heldItem, out, position, sprite, frame);
+		ClxDrawOutline(out, GetOutlineColor(heldItem, true), position, sprite);
+		DrawItem(heldItem, out, position, sprite);
 	} else {
-		Cl2Draw(out, position, sprite, frame);
+		ClxDraw(out, position, sprite);
 	}
 }
 

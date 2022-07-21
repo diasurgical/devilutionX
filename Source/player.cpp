@@ -16,7 +16,7 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
-#include "engine/cel_header.hpp"
+#include "engine/load_cl2.hpp"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
@@ -364,20 +364,6 @@ void StartWalk(Player &player, Displacement vel, Direction dir, bool pmWillBeCal
 
 	HandleWalkMode(player, vel, dir);
 	StartWalkAnimation(player, dir, pmWillBeCalled);
-}
-
-void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<OptionalCelSprite, 8> &anim, int width)
-{
-	data = nullptr;
-	data = LoadFileInMem(path);
-	if (data == nullptr)
-		return;
-
-	const byte *directionFrames[8];
-	CelGetDirectionFrames(data.get(), directionFrames);
-	for (size_t i = 0; i < 8; i++) {
-		anim[i].emplace(directionFrames[i], width);
-	}
 }
 
 void ClearStateVariables(Player &player)
@@ -2090,7 +2076,7 @@ player_graphic Player::getGraphic() const
 uint16_t Player::getSpriteWidth() const
 {
 	if (!HeadlessMode)
-		return AnimInfo.celSprite->Width();
+		return (*AnimInfo.sprites)[0].width();
 	const player_graphic graphic = getGraphic();
 	const HeroClass cls = GetPlayerSpriteClass(_pClass);
 	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
@@ -2229,13 +2215,13 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 		}
 	}
 
-	if (!graphic)
+	if (!graphic || HeadlessMode)
 		return;
 
 	LoadPlrGFX(*this, *graphic);
-	OptionalCelSprite celSprites = AnimationData[static_cast<size_t>(*graphic)].GetCelSpritesForDirection(dir);
-	if (celSprites && previewCelSprite != celSprites) {
-		previewCelSprite = celSprites;
+	ClxSpriteList sprites = AnimationData[static_cast<size_t>(*graphic)].spritesForDirection(dir);
+	if (!previewCelSprite || *previewCelSprite != sprites[0]) {
+		previewCelSprite = sprites[0];
 		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
 	}
 }
@@ -2258,7 +2244,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		return;
 
 	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
-	if (animationData.RawData != nullptr)
+	if (animationData.sprites)
 		return;
 
 	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
@@ -2320,7 +2306,7 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	char pszName[256];
 	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), path, string_view(prefix, 3), szCel) = 0;
 	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
-	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
+	animationData.sprites = LoadCl2Sheet(pszName, animationWidth);
 }
 
 void InitPlayerGFX(Player &player)
@@ -2346,11 +2332,9 @@ void InitPlayerGFX(Player &player)
 
 void ResetPlayerGFX(Player &player)
 {
-	player.AnimInfo.celSprite = std::nullopt;
-	for (auto &animData : player.AnimationData) {
-		for (auto &celSprite : animData.CelSpritesForDirections)
-			celSprite = std::nullopt;
-		animData.RawData = nullptr;
+	player.AnimInfo.sprites = std::nullopt;
+	for (PlayerAnimationData &animData : player.AnimationData) {
+		animData.sprites = std::nullopt;
 	}
 }
 
@@ -2358,12 +2342,15 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int8_t nu
 {
 	LoadPlrGFX(player, graphic);
 
-	OptionalCelSprite celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(dir);
-
+	OptionalClxSpriteList sprites;
 	float previewShownGameTickFragments = 0.F;
-	if (celSprite == player.previewCelSprite && !player.IsWalking())
-		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
-	player.AnimInfo.setNewAnimation(celSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
+	if (!HeadlessMode) {
+		sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(dir);
+		if (player.previewCelSprite && (*sprites)[0] == *player.previewCelSprite && !player.IsWalking()) {
+			previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
+		}
+	}
+	player.AnimInfo.setNewAnimation(sprites, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
 
 void SetPlrAnims(Player &player)
@@ -3512,7 +3499,8 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 void SyncPlrAnim(Player &player)
 {
 	const player_graphic graphic = player.getGraphic();
-	player.AnimInfo.celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(player._pdir);
+	if (!HeadlessMode)
+		player.AnimInfo.sprites = player.AnimationData[static_cast<size_t>(graphic)].spritesForDirection(player._pdir);
 	// Ensure ScrollInfo is initialized correctly
 	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);
 }

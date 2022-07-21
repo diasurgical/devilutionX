@@ -14,7 +14,7 @@
 #include "engine.h"
 #include "engine/actor_position.hpp"
 #include "engine/animationinfo.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/sound.h"
 #include "engine/world_tile.hpp"
@@ -136,15 +136,18 @@ enum class LeaderRelation : uint8_t {
 };
 
 struct AnimStruct {
-	[[nodiscard]] OptionalCelSprite getCelSpritesForDirection(Direction direction) const
+	/**
+	 * @brief Sprite lists for each of the 8 directions.
+	 */
+	OptionalClxSpriteListOrSheet sprites;
+
+	[[nodiscard]] OptionalClxSpriteList spritesForDirection(Direction direction) const
 	{
-		const byte *spriteData = celSpritesForDirections[static_cast<size_t>(direction)];
-		if (spriteData == nullptr)
+		if (!sprites)
 			return std::nullopt;
-		return CelSprite(spriteData, width);
+		return sprites->isSheet() ? (*sprites).sheet()[static_cast<size_t>(direction)] : (*sprites).list();
 	}
 
-	std::array<byte *, 8> celSpritesForDirections;
 	uint16_t width;
 	int8_t frames;
 	int8_t rate;
@@ -171,7 +174,7 @@ struct CMonster {
 	/**
 	 * @brief Returns AnimStruct for specified graphic
 	 */
-	const AnimStruct &getAnimData(MonsterGraphic graphic) const
+	[[nodiscard]] const AnimStruct &getAnimData(MonsterGraphic graphic) const
 	{
 		return anims[static_cast<int>(graphic)];
 	}
@@ -265,10 +268,10 @@ struct Monster { // note: missing field _mAFNum
 	 */
 	void changeAnimationData(MonsterGraphic graphic, Direction desiredDirection)
 	{
-		auto &animationData = type().getAnimData(graphic);
+		const AnimStruct &animationData = type().getAnimData(graphic);
 
 		// Passing the frames and rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
-		this->animInfo.changeAnimationData(animationData.getCelSpritesForDirection(desiredDirection), animationData.frames, animationData.rate);
+		this->animInfo.changeAnimationData(animationData.spritesForDirection(desiredDirection), animationData.frames, animationData.rate);
 	}
 
 	/**

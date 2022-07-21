@@ -14,7 +14,7 @@
 #include "engine.h"
 #include "engine/actor_position.hpp"
 #include "engine/animationinfo.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/path.h"
 #include "engine/point.hpp"
 #include "interfac.h"
@@ -195,18 +195,13 @@ constexpr std::array<char, 6> CharChar = {
  */
 struct PlayerAnimationData {
 	/**
-	 * @brief CelSprites for the different directions
+	 * @brief Sprite lists for each of the 8 directions.
 	 */
-	std::array<OptionalCelSprite, 8> CelSpritesForDirections;
-	/**
-	 * @brief Raw Data (binary) of the CL2 file.
-	 *        Is referenced from CelSprite in celSpritesForDirections
-	 */
-	std::unique_ptr<byte[]> RawData;
+	OptionalOwnedClxSpriteSheet sprites;
 
-	[[nodiscard]] OptionalCelSprite GetCelSpritesForDirection(Direction direction) const
+	[[nodiscard]] ClxSpriteList spritesForDirection(Direction direction) const
 	{
-		return CelSpritesForDirections[static_cast<size_t>(direction)];
+		return (*sprites)[static_cast<size_t>(direction)];
 	}
 };
 
@@ -242,9 +237,9 @@ struct Player {
 	 */
 	AnimationInfo AnimInfo;
 	/**
-	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
+	 * @brief Contains a optional preview ClxSprite that is displayed until the current command is handled by the game logic
 	 */
-	OptionalCelSprite previewCelSprite;
+	OptionalClxSprite previewCelSprite;
 	/**
 	 * @brief Contains the progress to next game tick when previewCelSprite was set
 	 */

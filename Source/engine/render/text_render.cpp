@@ -21,7 +21,7 @@
 #include "engine/load_pcx.hpp"
 #include "engine/palette.h"
 #include "engine/point.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
@@ -30,14 +30,14 @@
 
 namespace devilution {
 
-OptionalOwnedCelSprite pSPentSpn2Cels;
+OptionalOwnedClxSpriteList pSPentSpn2Cels;
 
 namespace {
 
 constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 
-using Font = const OwnedCelSpriteSheetWithFrameHeight;
-std::unordered_map<uint32_t, std::optional<OwnedCelSpriteSheetWithFrameHeight>> Fonts;
+using Font = const OwnedClxSpriteList;
+std::unordered_map<uint32_t, OptionalOwnedClxSpriteList> Fonts;
 
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
@@ -180,7 +180,7 @@ uint32_t GetFontId(GameFontTables size, uint16_t row)
 	return (size << 16) | row;
 }
 
-const OwnedCelSpriteSheetWithFrameHeight *LoadFont(GameFontTables size, text_color color, uint16_t row)
+const OwnedClxSpriteList *LoadFont(GameFontTables size, text_color color, uint16_t row)
 {
 	if (ColorTranslations[color] != nullptr && !ColorTranslationsData[color]) {
 		ColorTranslationsData[color].emplace();
@@ -196,9 +196,9 @@ const OwnedCelSpriteSheetWithFrameHeight *LoadFont(GameFontTables size, text_col
 	char path[32];
 	GetFontPath(size, row, "pcx", &path[0]);
 
-	std::optional<OwnedCelSpriteSheetWithFrameHeight> &font = Fonts[fontId];
+	OptionalOwnedClxSpriteList &font = Fonts[fontId];
 	constexpr unsigned NumFrames = 256;
-	font = LoadPcxSpriteSheetAsCl2(path, NumFrames, /*transparentColor=*/1);
+	font = LoadPcxSpriteList(path, NumFrames, /*transparentColor=*/1);
 	if (!font) {
 		LogError("Error loading font: {}", path);
 		return nullptr;
@@ -207,13 +207,13 @@ const OwnedCelSpriteSheetWithFrameHeight *LoadFont(GameFontTables size, text_col
 	return &(*font);
 }
 
-void DrawFont(const Surface &out, Point position, const OwnedCelSpriteSheetWithFrameHeight *font, text_color color, int frame)
+void DrawFont(const Surface &out, Point position, const OwnedClxSpriteList *font, text_color color, int frame)
 {
-	CelFrameWithHeight glyph = font->sprite(frame);
+	ClxSprite glyph = (*font)[frame];
 	if (ColorTranslationsData[color]) {
-		RenderCl2SpriteWithTRN(out, glyph, position, ColorTranslationsData[color]->data());
+		RenderClxSpriteWithTRN(out, glyph, position, ColorTranslationsData[color]->data());
 	} else {
-		RenderCl2Sprite(out, glyph, position);
+		RenderClxSprite(out, glyph, position);
 	}
 }
 
@@ -404,7 +404,7 @@ int DoDrawString(const Surface &out, string_view text, Rectangle rect, Point &ch
 
 void LoadSmallSelectionSpinner()
 {
-	pSPentSpn2Cels = LoadCelAsCl2("Data\\PentSpn2.CEL", 12);
+	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
 }
 
 void UnloadFonts(GameFontTables size, text_color color)
@@ -651,7 +651,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	const int bytesDrawn = DoDrawString(out, text, rect, characterPosition, spacing, lineHeight, lineWidth, rightMargin, bottomMargin, flags, size, color);
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		Cl2Draw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
+		ClxDraw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
 		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}
@@ -759,7 +759,7 @@ void DrawStringWithColors(const Surface &out, string_view fmt, DrawStringFormatA
 	}
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
-		Cl2Draw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, CelSprite { *pSPentSpn2Cels }, PentSpn2Spin());
+		ClxDraw(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, (*pSPentSpn2Cels)[PentSpn2Spin()]);
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
 		DrawFont(out, characterPosition, LoadFont(size, color, 0), color, '|');
 	}

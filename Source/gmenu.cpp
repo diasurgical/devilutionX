@@ -10,9 +10,9 @@
 #include "controls/axis_direction.h"
 #include "controls/controller_motion.h"
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "miniwin/misc_msg.h"
 #include "options.h"
@@ -25,10 +25,10 @@ namespace devilution {
 
 namespace {
 
-OptionalOwnedCelSprite optbar_cel;
-OptionalOwnedCelSprite PentSpin_cel;
-OptionalOwnedCelSprite option_cel;
-OptionalOwnedCelSprite sgpLogo;
+OptionalOwnedClxSpriteList optbar_cel;
+OptionalOwnedClxSpriteList PentSpin_cel;
+OptionalOwnedClxSpriteList option_cel;
+OptionalOwnedClxSpriteList sgpLogo;
 bool mouseNavigation;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;
@@ -108,21 +108,21 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		int uiPositionX = GetUIRectangle().position.x;
 		int x = 16 + w / 2;
-		Cl2Draw(out, { x + uiPositionX, y + 40 }, CelSprite { *optbar_cel }, 0);
+		ClxDraw(out, { x + uiPositionX, y + 40 }, (*optbar_cel)[0]);
 		uint16_t step = pItem->dwFlags & 0xFFF;
 		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 		uint16_t pos = step * 256 / steps;
 		GmenuClearBuffer(out, x + 2 + uiPositionX, y + 38, pos + 13, 28);
-		Cl2Draw(out, { x + 2 + pos + uiPositionX, y + 38 }, CelSprite { *option_cel }, 0);
+		ClxDraw(out, { x + 2 + pos + uiPositionX, y + 38 }, (*option_cel)[0]);
 	}
 
 	int x = (gnScreenWidth - w) / 2;
 	UiFlags style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UiFlags::ColorGold : UiFlags::ColorBlack;
 	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UiFlags::FontSize46, 2);
 	if (pItem == sgpCurrItem) {
-		CelSprite sprite { *PentSpin_cel };
-		Cl2Draw(out, { x - 54, y + 51 }, sprite, PentSpn2Spin());
-		Cl2Draw(out, { x + 4 + w, y + 51 }, sprite, PentSpn2Spin());
+		const ClxSprite sprite = (*PentSpin_cel)[PentSpn2Spin()];
+		ClxDraw(out, { x - 54, y + 51 }, sprite);
+		ClxDraw(out, { x + 4 + w, y + 51 }, sprite);
 	}
 }
 
@@ -195,12 +195,12 @@ void gmenu_init_menu()
 		return;
 
 	if (gbIsHellfire)
-		sgpLogo = LoadCelAsCl2("Data\\hf_logo3.CEL", 430);
+		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
 	else
-		sgpLogo = LoadCelAsCl2("Data\\Diabsmal.CEL", 296);
-	PentSpin_cel = LoadCelAsCl2("Data\\PentSpin.CEL", 48);
-	option_cel = LoadCelAsCl2("Data\\option.CEL", 27);
-	optbar_cel = LoadCelAsCl2("Data\\optbar.CEL", 287);
+		sgpLogo = LoadCel("Data\\Diabsmal.CEL", 296);
+	PentSpin_cel = LoadCel("Data\\PentSpin.CEL", 48);
+	option_cel = LoadCel("Data\\option.CEL", 27);
+	optbar_cel = LoadCel("Data\\optbar.CEL", 287);
 }
 
 bool gmenu_is_active()
@@ -246,8 +246,8 @@ void gmenu_draw(const Surface &out)
 			}
 		}
 		int uiPositionY = GetUIRectangle().position.y;
-		CelSprite sprite { *sgpLogo };
-		Cl2Draw(out, { (gnScreenWidth - sprite.Width()) / 2, 102 + uiPositionY }, sprite, LogoAnim_frame);
+		const ClxSprite sprite = (*sgpLogo)[LogoAnim_frame];
+		ClxDraw(out, { (gnScreenWidth - sprite.width()) / 2, 102 + uiPositionY }, sprite);
 		int y = 110 + uiPositionY;
 		TMenuItem *i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu != nullptr) {

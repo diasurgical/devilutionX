@@ -35,7 +35,7 @@
 namespace devilution {
 
 std::string TestMapPath;
-OptionalOwnedCelSprite pSquareCel;
+OptionalOwnedClxSpriteList pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
 bool DebugVision = false;
@@ -990,7 +990,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 
 void LoadDebugGFX()
 {
-	pSquareCel = LoadCelAsCl2("Data\\Square.CEL", 64);
+	pSquareCel = LoadCel("Data\\Square.CEL", 64);
 }
 
 void FreeDebugGFX()

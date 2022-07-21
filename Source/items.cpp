@@ -20,11 +20,11 @@
 #include "controls/plrctrls.h"
 #include "cursor.h"
 #include "doom.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
 #include "engine/random.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"
 #include "inv_iterators.hpp"
@@ -132,7 +132,7 @@ _sfx_id ItemInvSnds[] = {
 
 namespace {
 
-OptionalOwnedCelSprite itemanims[ITEMTYPES];
+OptionalOwnedClxSpriteList itemanims[ITEMTYPES];
 
 enum class PlayerArmorGraphic : uint8_t {
 	// clang-format off
@@ -1758,7 +1758,7 @@ void PrintItemOil(char iDidx)
 
 void DrawUniqueInfoWindow(const Surface &out)
 {
-	Cl2Draw(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), CelSprite { *pSTextBoxCels }, 0);
+	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 24 - SidePanelSize.width, 327 }), (*pSTextBoxCels)[0]);
 	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SidePanelSize.width + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
@@ -2283,7 +2283,7 @@ void InitItemGFX()
 	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
 	for (int i = 0; i < itemTypes; i++) {
 		*BufCopy(arglist, "Items\\", ItemDropNames[i], ".CEL") = '\0';
-		itemanims[i] = LoadCelAsCl2(arglist, ItemAnimWidth);
+		itemanims[i] = LoadCel(arglist, ItemAnimWidth);
 	}
 	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 }
@@ -2667,10 +2667,10 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		player.previewCelSprite = std::nullopt;
 		if (player._pmode == PM_STAND) {
 			LoadPlrGFX(player, player_graphic::Stand);
-			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].GetCelSpritesForDirection(player._pdir), player._pNFrames, 4);
+			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Stand)].spritesForDirection(player._pdir), player._pNFrames, 4);
 		} else {
 			LoadPlrGFX(player, player_graphic::Walk);
-			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].GetCelSpritesForDirection(player._pdir), player._pWFrames, 1);
+			player.AnimInfo.changeAnimationData(player.AnimationData[static_cast<size_t>(player_graphic::Walk)].spritesForDirection(player._pdir), player._pWFrames, 1);
 		}
 	} else {
 		player._pgfxnum = gfxNum;
@@ -3430,7 +3430,7 @@ void GetItemFrm(Item &item)
 {
 	int it = ItemCAnimTbl[item._iCurs];
 	if (itemanims[it])
-		item.AnimInfo.celSprite.emplace(*itemanims[it]);
+		item.AnimInfo.sprites.emplace(*itemanims[it]);
 }
 
 void GetItemStr(Item &item)
@@ -4564,11 +4564,11 @@ void Item::setNewAnimation(bool showAnimation)
 {
 	int8_t it = ItemCAnimTbl[_iCurs];
 	int8_t numberOfFrames = ItemAnimLs[it];
-	auto celSprite = itemanims[it] ? OptionalCelSprite { *itemanims[it] } : std::nullopt;
+	OptionalClxSpriteList sprite = itemanims[it] ? OptionalClxSpriteList { *itemanims[static_cast<size_t>(it)] } : std::nullopt;
 	if (_iCurs != ICURS_MAGIC_ROCK)
-		AnimInfo.setNewAnimation(celSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+		AnimInfo.setNewAnimation(sprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
-		AnimInfo.setNewAnimation(celSprite, numberOfFrames, 1);
+		AnimInfo.setNewAnimation(sprite, numberOfFrames, 1);
 	_iPostDraw = false;
 	_iRequest = false;
 	if (showAnimation) {

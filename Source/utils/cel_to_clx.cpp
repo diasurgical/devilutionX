@@ -1,4 +1,4 @@
-#include "utils/cel_to_cl2.hpp"
+#include "utils/cel_to_clx.hpp"
 
 #include <cstring>
 
@@ -98,7 +98,7 @@ void AppendCl2PixelsOrFillRun(const uint8_t *src, unsigned length, std::vector<u
 
 } // namespace
 
-OwnedCelSprite CelToCl2(const uint8_t *data, size_t size, PointerOrValue<uint16_t> widthOrWidths)
+OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrValue<uint16_t> widthOrWidths)
 {
 	// A CEL file either begins with:
 	// 1. A CEL header.
@@ -151,16 +151,15 @@ OwnedCelSprite CelToCl2(const uint8_t *data, size_t size, PointerOrValue<uint16_
 
 			const unsigned frameWidth = widthOrWidths.HoldsPointer() ? widthOrWidths.AsPointer()[frame - 1] : widthOrWidths.AsValue();
 
-			// Frame header: 5 16-bit offsets to 32-pixel height blocks.
+			// CLX frame header.
 			const size_t frameHeaderPos = cl2Data.size();
 			constexpr size_t FrameHeaderSize = 10;
 			cl2Data.resize(cl2Data.size() + FrameHeaderSize);
-
-			// Frame header offset (first of five):
 			WriteLE16(&cl2Data[frameHeaderPos], FrameHeaderSize);
+			WriteLE16(&cl2Data[frameHeaderPos + 2], frameWidth);
 
 			unsigned transparentRunWidth = 0;
-			size_t line = 0;
+			size_t frameHeight = 0;
 			while (src != srcEnd) {
 				// Process line:
 				for (unsigned remainingCelWidth = frameWidth; remainingCelWidth != 0;) {
@@ -176,20 +175,10 @@ OwnedCelSprite CelToCl2(const uint8_t *data, size_t size, PointerOrValue<uint16_
 					}
 					remainingCelWidth -= val;
 				}
-
-				// Frame header offset:
-				switch (++line) {
-				case 32:
-				case 64:
-				case 96:
-				case 128:
-					// Finish any active transparent run to not allow it to go over an offset line boundary.
-					AppendCl2TransparentRun(transparentRunWidth, cl2Data);
-					transparentRunWidth = 0;
-					WriteLE16(&cl2Data[frameHeaderPos + line / 16], static_cast<uint16_t>(cl2Data.size() - frameHeaderPos));
-					break;
-				}
+				++frameHeight;
 			}
+			WriteLE16(&cl2Data[frameHeaderPos + 4], frameHeight);
+			memset(&cl2Data[frameHeaderPos + 6], 0, 4);
 			AppendCl2TransparentRun(transparentRunWidth, cl2Data);
 		}
 
@@ -197,12 +186,12 @@ OwnedCelSprite CelToCl2(const uint8_t *data, size_t size, PointerOrValue<uint16_
 		data = srcEnd;
 	}
 
-	auto out = std::unique_ptr<byte[]>(new byte[cl2Data.size()]);
+	auto out = std::unique_ptr<uint8_t[]>(new uint8_t[cl2Data.size()]);
 	memcpy(&out[0], cl2Data.data(), cl2Data.size());
 #ifdef DEBUG_CEL_TO_CL2_SIZE
 	std::cout << "\t" << size << "\t" << cl2Data.size() << "\t" << std::setprecision(1) << std::fixed << (static_cast<int>(cl2Data.size()) - static_cast<int>(size)) / ((float)size) * 100 << "%" << std::endl;
 #endif
-	return OwnedCelSprite { std::move(out), widthOrWidths };
+	return OwnedClxSpriteListOrSheet { std::move(out), static_cast<uint16_t>(numGroups == 1 ? 0 : numGroups) };
 }
 
 } // namespace devilution

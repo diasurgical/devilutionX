@@ -9,7 +9,7 @@
 #include <utility>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "utils/attributes.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -62,13 +62,10 @@ void CheckCursMove();
 
 void DrawSoftwareCursor(const Surface &out, Point position, int cursId);
 
-void DrawItem(const Item &item, const Surface &out, Point position, CelSprite cel, int frame);
+void DrawItem(const Item &item, const Surface &out, Point position, ClxSprite clx);
 
 /** Returns the sprite for the given inventory index. */
-const OwnedCelSprite &GetInvItemSprite(int i);
-
-/** Returns the CEL frame index for the given inventory index. */
-int GetInvItemFrame(int cursId);
+ClxSprite GetInvItemSprite(int cursId);
 
 /** Returns the width and height for an inventory index. */
 Size GetInvItemSize(int cursId);
