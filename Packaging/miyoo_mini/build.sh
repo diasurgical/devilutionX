@@ -78,7 +78,7 @@ package_onion() {
 	rm -f $BUILD_DIR/onion.zip
 	
 	cd $BUILD_DIR/OnionOS
-	zip -r ../onion.zip .
+	zip -r ../devilutionx-onion-os.zip .
 	cd "$PACKAGING_DIR/../.."
 }
 
@@ -102,7 +102,7 @@ package_miniui() {
 	rm -f $BUILD_DIR/miniui.zip
 
 	cd $BUILD_DIR/MiniUI
-	zip -r ../miniui.zip .
+	zip -r ../devilutionx-miniui.zip .
 	cd "$PACKAGING_DIR/../.."
 }
 
