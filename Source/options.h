@@ -565,6 +565,10 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	OptionEntryInt<int> numFullRejuPotionPickup;
+	/** @brief Regenerate HP over time */
+	OptionEntryBoolean hpRegen;
+	/** @brief Regenerate Mana over time */
+	OptionEntryBoolean manaRegen;
 };
 
 struct ControllerOptions : OptionCategoryBase {
