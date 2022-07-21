@@ -403,7 +403,12 @@ Monster *MonsterAtPosition(Point position);
 bool IsTileAvailable(const Monster &monster, Point position);
 bool IsSkel(_monster_id mt);
 bool IsGoat(_monster_id mt);
-bool SpawnSkeleton(Monster *monster, Point position);
+/**
+ * @brief Reveals a monster that was hiding in a container
+ * @param monster instance returned from a previous call to PreSpawnSkeleton
+ * @param position tile to try spawn the monster at, neighboring tiles will be used as a fallback
+ */
+void ActivateSkeleton(Monster &monster, Point position);
 Monster *PreSpawnSkeleton();
 void TalktoMonster(Monster &monster);
 void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile);
