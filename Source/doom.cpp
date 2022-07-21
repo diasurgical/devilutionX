@@ -7,28 +7,28 @@
 
 #include "control.h"
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 namespace {
-OptionalOwnedCelSprite DoomCel;
+OptionalOwnedClxSpriteList DoomSprite;
 } // namespace
 
 bool DoomFlag;
 
 void doom_init()
 {
-	DoomCel = LoadCelAsCl2("Items\\Map\\MapZtown.CEL", 640);
+	DoomSprite = LoadCel("Items\\Map\\MapZtown.CEL", 640);
 	DoomFlag = true;
 }
 
 void doom_close()
 {
 	DoomFlag = false;
-	DoomCel = std::nullopt;
+	DoomSprite = std::nullopt;
 }
 
 void doom_draw(const Surface &out)
@@ -37,7 +37,7 @@ void doom_draw(const Surface &out)
 		return;
 	}
 
-	Cl2Draw(out, GetUIRectangle().position + Displacement { 0, 352 }, CelSprite { *DoomCel }, 0);
+	ClxDraw(out, GetUIRectangle().position + Displacement { 0, 352 }, (*DoomSprite)[0]);
 }
 
 } // namespace devilution

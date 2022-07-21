@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/scrollrt.h"
@@ -150,7 +150,7 @@ extern Rectangle SetPieceRoom;
 extern Rectangle SetPiece;
 /** Contains the contents of the single player quest DUN file. */
 extern std::unique_ptr<uint16_t[]> pSetPiece;
-extern OptionalOwnedCelSprite pSpecialCels;
+extern OptionalOwnedClxSpriteList pSpecialCels;
 /** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 extern DVL_API_FOR_TEST std::unique_ptr<MegaTile[]> pMegaTiles;
 extern std::unique_ptr<byte[]> pDungeonCels;

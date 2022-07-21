@@ -32,7 +32,7 @@ void EscPressed()
 
 void UiSelStartUpGameOption()
 {
-	ArtBackgroundWidescreen = LoadPcxAsCl2("ui_art\\mainmenuw.pcx");
+	ArtBackgroundWidescreen = LoadPcx("ui_art\\mainmenuw.pcx");
 	LoadBackgroundArt("ui_art\\mainmenu.pcx");
 	UiAddBackground(&vecDialog);
 	UiAddLogo(&vecDialog);

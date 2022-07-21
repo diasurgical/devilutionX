@@ -1,20 +1,19 @@
 #include "towners.h"
 
 #include "cursor.h"
-#include "engine/cel_header.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"
-#include "utils/cel_to_cl2.hpp"
 #include "utils/language.h"
 
 namespace devilution {
 namespace {
 
-std::unique_ptr<byte[]> CowCels;
+OptionalOwnedClxSpriteSheet CowSprites;
 int CowMsg;
 int CowClicks;
 
@@ -29,9 +28,9 @@ struct TownerData {
 	void (*talk)(Player &player, Towner &towner);
 };
 
-void NewTownerAnim(Towner &towner, byte *pAnim, uint8_t numFrames, int delay)
+void NewTownerAnim(Towner &towner, ClxSpriteList sprites, uint8_t numFrames, int delay)
 {
-	towner._tAnimData = pAnim;
+	towner.anim.emplace(sprites);
 	towner._tAnimLen = numFrames;
 	towner._tAnimFrame = 0;
 	towner._tAnimCnt = 0;
@@ -54,8 +53,9 @@ void InitTownerInfo(int i, const TownerData &townerData)
 
 void LoadTownerAnimations(Towner &towner, const char *path, int frames, int delay)
 {
-	towner.data = LoadCelAsCl2(path, towner._tAnimWidth).data();
-	NewTownerAnim(towner, towner.data.get(), frames, delay);
+	towner.ownedAnim = std::nullopt;
+	towner.ownedAnim = LoadCel(path, towner._tAnimWidth);
+	NewTownerAnim(towner, *towner.ownedAnim, frames, delay);
 }
 
 /**
@@ -212,8 +212,8 @@ void InitCows(Towner &towner, const TownerData &townerData)
 	towner._tAnimWidth = 128;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	CelGetDirectionFrames(CowCels.get(), towner._tNAnim);
-	NewTownerAnim(towner, towner._tNAnim[static_cast<size_t>(townerData.dir)], 12, 3);
+
+	NewTownerAnim(towner, (*CowSprites)[static_cast<size_t>(townerData.dir)], 12, 3);
 	towner._tAnimFrame = GenerateRnd(11);
 	towner.name = _("Cow");
 
@@ -818,9 +818,9 @@ bool IsTownerPresent(_talker_id npc)
 
 void InitTowners()
 {
-	assert(CowCels == nullptr);
+	assert(!CowSprites);
 
-	CowCels = LoadCelAsCl2("Towners\\Animals\\Cow.CEL", 128).data();
+	CowSprites.emplace(LoadCelSheet("Towners\\Animals\\Cow.CEL", 128));
 
 	int i = 0;
 	for (const auto &townerData : TownersData) {
@@ -834,11 +834,10 @@ void InitTowners()
 
 void FreeTownerGFX()
 {
-	for (auto &towner : Towners) {
-		towner.data = nullptr;
+	for (Towner &towner : Towners) {
+		towner.ownedAnim = std::nullopt;
 	}
-
-	CowCels = nullptr;
+	CowSprites = std::nullopt;
 }
 
 void ProcessTowners()

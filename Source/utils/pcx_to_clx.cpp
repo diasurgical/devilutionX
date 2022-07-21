@@ -1,8 +1,9 @@
-#include "utils/pcx_to_cl2.hpp"
+#include "utils/pcx_to_clx.hpp"
 
-#include <array>
 #include <cstdint>
 #include <cstring>
+
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -110,7 +111,7 @@ size_t GetReservationSize(size_t pcxSize)
 
 } // namespace
 
-std::optional<OwnedCelSpriteWithFrameHeight> PcxToCl2(SDL_RWops *handle, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
+OptionalOwnedClxSpriteList PcxToClx(SDL_RWops *handle, int numFramesOrFrameHeight, std::optional<uint8_t> transparentColor, SDL_Color *outPalette)
 {
 	int width;
 	int height;
@@ -145,7 +146,7 @@ std::optional<OwnedCelSpriteWithFrameHeight> PcxToCl2(SDL_RWops *handle, int num
 		return std::nullopt;
 	}
 
-	// CEL header: frame count, frame offset for each frame, file size
+	// CLX header: frame count, frame offset for each frame, file size
 	std::vector<uint8_t> cl2Data;
 	cl2Data.reserve(GetReservationSize(pixelDataSize));
 	cl2Data.resize(4 * (2 + static_cast<size_t>(numFrames)));
@@ -159,13 +160,20 @@ std::optional<OwnedCelSpriteWithFrameHeight> PcxToCl2(SDL_RWops *handle, int num
 	for (unsigned frame = 1; frame <= numFrames; ++frame) {
 		WriteLE32(&cl2Data[4 * static_cast<size_t>(frame)], static_cast<uint32_t>(cl2Data.size()));
 
-		// Frame header: 5 16-bit offsets to 32-pixel height blocks.
+		// Frame header: 5 16-bit values:
+		// 1. Offset to start of the pixel data.
+		// 2. Width
+		// 3. Height
+		// 4..5. Unused (0)
 		const size_t frameHeaderPos = cl2Data.size();
 		constexpr size_t FrameHeaderSize = 10;
 		cl2Data.resize(cl2Data.size() + FrameHeaderSize);
 
-		// Frame header offset (first of five):
+		// Frame header:
 		WriteLE16(&cl2Data[frameHeaderPos], FrameHeaderSize);
+		WriteLE16(&cl2Data[frameHeaderPos + 2], static_cast<uint16_t>(width));
+		WriteLE16(&cl2Data[frameHeaderPos + 4], static_cast<uint16_t>(frameHeight));
+		memset(&cl2Data[frameHeaderPos + 6], 0, 4);
 
 		for (unsigned j = 0; j < frameHeight; ++j) {
 			uint8_t *buffer = &frameBuffer[static_cast<size_t>(j) * width];
@@ -212,19 +220,7 @@ std::optional<OwnedCelSpriteWithFrameHeight> PcxToCl2(SDL_RWops *handle, int num
 			} else {
 				AppendCl2PixelsOrFillRun(src, width, cl2Data);
 			}
-
-			// Frame header offset:
-			switch (++line) {
-			case 32:
-			case 64:
-			case 96:
-			case 128:
-				// Finish any active transparent run to not allow it to go over an offset line boundary.
-				AppendCl2TransparentRun(transparentRunWidth, cl2Data);
-				transparentRunWidth = 0;
-				WriteLE16(&cl2Data[frameHeaderPos + line / 16], static_cast<uint16_t>(cl2Data.size() - frameHeaderPos));
-				break;
-			}
+			++line;
 		}
 		AppendCl2TransparentRun(transparentRunWidth, cl2Data);
 	}
@@ -252,15 +248,12 @@ std::optional<OwnedCelSpriteWithFrameHeight> PcxToCl2(SDL_RWops *handle, int num
 	frameBuffer = nullptr;
 	fileBuffer = nullptr;
 
-	auto out = std::unique_ptr<byte[]>(new byte[cl2Data.size()]);
+	auto out = std::unique_ptr<uint8_t[]>(new uint8_t[cl2Data.size()]);
 	memcpy(&out[0], cl2Data.data(), cl2Data.size());
 #ifdef DEBUG_PCX_TO_CL2_SIZE
 	std::cout << "\t" << pixelDataSize << "\t" << cl2Data.size() << "\t" << std::setprecision(1) << std::fixed << (static_cast<int>(cl2Data.size()) - static_cast<int>(pixelDataSize)) / ((float)pixelDataSize) * 100 << "%" << std::endl;
 #endif
-	return OwnedCelSpriteWithFrameHeight {
-		OwnedCelSprite { std::move(out), static_cast<uint16_t>(width) },
-		static_cast<uint16_t>(frameHeight)
-	};
+	return OwnedClxSpriteList { std::move(out) };
 }
 
 } // namespace devilution

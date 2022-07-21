@@ -16,7 +16,7 @@
 
 namespace devilution {
 
-extern OptionalOwnedCelSprite pSBkIconCels;
+extern OptionalOwnedClxSpriteList pSBkIconCels;
 
 namespace {
 

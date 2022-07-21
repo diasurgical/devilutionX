@@ -45,7 +45,7 @@ void MainmenuLoad(const char *name)
 
 	if (!gbIsSpawn || gbIsHellfire) {
 		if (gbIsHellfire)
-			ArtBackgroundWidescreen = LoadPcxAsCl2("ui_art\\mainmenuw.pcx");
+			ArtBackgroundWidescreen = LoadPcx("ui_art\\mainmenuw.pcx");
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");
 	} else {
 		LoadBackgroundArt("ui_art\\swmmenu.pcx");

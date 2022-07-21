@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <type_traits>
 
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 
 namespace devilution {
 
@@ -39,7 +39,7 @@ public:
 	/**
 	 * @brief Animation sprite
 	 */
-	OptionalCelSprite celSprite;
+	OptionalClxSpriteList sprites;
 	/**
 	 * @brief How many game ticks are needed to advance one Animation Frame
 	 */
@@ -61,6 +61,11 @@ public:
 	 */
 	bool isPetrified;
 
+	[[nodiscard]] ClxSprite currentSprite() const
+	{
+		return (*sprites)[getFrameToUseForRendering()];
+	}
+
 	/**
 	 * @brief Calculates the Frame to use for the Animation rendering
 	 * @return The Frame to use for rendering
@@ -74,7 +79,7 @@ public:
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
-	 * @param celSprite Pointer to Animation Sprite
+	 * @param sprites Animation sprites
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 * @param flags Specifies what special logics are applied to this Animation
@@ -82,15 +87,15 @@ public:
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 * @param previewShownGameTickFragments Defines how long (in game ticks fraction) the preview animation was shown
 	 */
-	void setNewAnimation(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
+	void setNewAnimation(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
-	 * @param celSprite Pointer to Animation Sprite
+	 * @param sprites Animation sprites
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 */
-	void changeAnimationData(OptionalCelSprite celSprite, int8_t numberOfFrames, int8_t ticksPerFrame);
+	void changeAnimationData(OptionalClxSpriteList sprites, int8_t numberOfFrames, int8_t ticksPerFrame);
 
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)

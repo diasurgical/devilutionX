@@ -100,6 +100,7 @@ set(libdevilutionx_SRCS
   engine/direction.cpp
   engine/dx.cpp
   engine/load_cel.cpp
+  engine/load_cl2.cpp
   engine/load_pcx.cpp
   engine/palette.cpp
   engine/path.cpp
@@ -108,7 +109,7 @@ set(libdevilutionx_SRCS
   engine/trn.cpp
 
   engine/render/automap_render.cpp
-  engine/render/cl2_render.cpp
+  engine/render/clx_render.cpp
   engine/render/dun_render.cpp
   engine/render/scrollrt.cpp
   engine/render/text_render.cpp
@@ -149,7 +150,8 @@ set(libdevilutionx_SRCS
   storm/storm_net.cpp
   storm/storm_svid.cpp
 
-  utils/cel_to_cl2.cpp
+  utils/cel_to_clx.cpp
+  utils/cl2_to_clx.cpp
   utils/console.cpp
   utils/display.cpp
   utils/file_util.cpp
@@ -158,7 +160,7 @@ set(libdevilutionx_SRCS
   utils/logged_fstream.cpp
   utils/paths.cpp
   utils/pcx.cpp
-  utils/pcx_to_cl2.cpp
+  utils/pcx_to_clx.cpp
   utils/sdl_bilinear_scale.cpp
   utils/sdl_thread.cpp
   utils/str_cat.cpp

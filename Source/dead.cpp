@@ -5,6 +5,7 @@
  */
 #include "dead.h"
 
+#include "diablo.h"
 #include "levels/gendung.h"
 #include "lighting.h"
 #include "misdat.h"
@@ -18,8 +19,12 @@ int8_t stonendx;
 namespace {
 void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 {
-	const auto &animData = mon.getAnimData(MonsterGraphic::Death);
-	memcpy(&corpse.data[0], &animData.celSpritesForDirections[0], sizeof(animData.celSpritesForDirections[0]) * animData.celSpritesForDirections.size());
+	const AnimStruct &animData = mon.getAnimData(MonsterGraphic::Death);
+	if (animData.sprites) {
+		corpse.sprites.emplace(*animData.sprites);
+	} else {
+		corpse.sprites = std::nullopt;
+	}
 	corpse.frame = animData.frames - 1;
 	corpse.width = animData.width;
 }
@@ -46,9 +51,8 @@ void InitCorpses()
 
 	nd++; // Unused blood spatter
 
-	for (auto &corpse : Corpses[nd].data)
-		corpse = MissileSpriteData[MFILE_SHATTER1].GetFirstFrame();
-
+	if (!HeadlessMode)
+		Corpses[nd].sprites.emplace(*MissileSpriteData[MFILE_SHATTER1].sprites);
 	Corpses[nd].frame = 11;
 	Corpses[nd].width = 128;
 	Corpses[nd].translationPaletteIndex = 0;

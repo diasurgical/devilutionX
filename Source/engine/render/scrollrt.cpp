@@ -13,7 +13,7 @@
 #include "dead.h"
 #include "doom.h"
 #include "engine/dx.h"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/dun_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/trn.hpp"
@@ -320,25 +320,14 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, Point target
 	if (missile._miPreFlag != pre || !missile._miDrawFlag)
 		return;
 
-	if (missile._miAnimData == nullptr) {
-		Log("Draw Missile 2 type {}: NULL Cel Buffer", static_cast<int>(missile._mitype));
-		return;
-	}
-	int nCel = missile._miAnimFrame - 1;
-	const uint32_t frames = LoadLE32(missile._miAnimData);
-	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
-		Log("Draw Missile 2: frame {} of {}, missile type {}", nCel, frames, static_cast<int>(missile._mitype));
-		return;
-	}
-
 	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
-	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
+	const ClxSprite sprite = (*missile._miAnimData)[missile._miAnimFrame - 1];
 	if (missile._miUniqTrans != 0)
-		Cl2DrawTRN(out, missileRenderPosition, cel, nCel, Monsters[missile._misource].uniqueMonsterTRN.get());
+		ClxDrawTRN(out, missileRenderPosition, sprite, Monsters[missile._misource].uniqueMonsterTRN.get());
 	else if (missile._miLightFlag)
-		Cl2DrawLight(out, missileRenderPosition, cel, nCel);
+		ClxDrawLight(out, missileRenderPosition, sprite);
 	else
-		Cl2Draw(out, missileRenderPosition, cel, nCel);
+		ClxDraw(out, missileRenderPosition, sprite);
 }
 
 /**
@@ -365,7 +354,7 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
  */
 void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
-	if (!monster.animInfo.celSprite) {
+	if (!monster.animInfo.sprites) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.name());
 		return;
 	}
@@ -431,23 +420,10 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 		}
 	};
 
-	int nCel = monster.animInfo.getFrameToUseForRendering();
-	const uint32_t frames = LoadLE32(monster.animInfo.celSprite->Data());
-	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
-		Log(
-		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
-		    monster.name(),
-		    getMonsterModeDisplayName(monster.mode),
-		    DirectionToString(monster.direction),
-		    nCel,
-		    frames);
-		return;
-	}
-
-	const auto &cel = *monster.animInfo.celSprite;
+	const ClxSprite sprite = monster.animInfo.currentSprite();
 
 	if (!IsTileLit(tilePosition)) {
-		Cl2DrawTRN(out, targetBufferPosition, cel, nCel, GetInfravisionTRN());
+		ClxDrawTRN(out, targetBufferPosition, sprite, GetInfravisionTRN());
 		return;
 	}
 	uint8_t *trn = nullptr;
@@ -458,9 +434,9 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (MyPlayer->_pInfraFlag && LightTableIndex > 8)
 		trn = GetInfravisionTRN();
 	if (trn != nullptr)
-		Cl2DrawTRN(out, targetBufferPosition, cel, nCel, trn);
+		ClxDrawTRN(out, targetBufferPosition, sprite, trn);
 	else
-		Cl2DrawLight(out, targetBufferPosition, cel, nCel);
+		ClxDrawLight(out, targetBufferPosition, sprite);
 }
 
 /**
@@ -470,19 +446,19 @@ void DrawPlayerIconHelper(const Surface &out, missile_graphic_id missileGraphicI
 {
 	position.x -= MissileSpriteData[missileGraphicId].animWidth2;
 
-	const CelSprite cel = MissileSpriteData[missileGraphicId].Sprite();
+	const ClxSprite sprite = (*MissileSpriteData[missileGraphicId].sprites).list()[0];
 
 	if (!lighting) {
-		Cl2Draw(out, position, cel, 0);
+		ClxDraw(out, position, sprite);
 		return;
 	}
 
 	if (infraVision) {
-		Cl2DrawTRN(out, position, cel, 0, GetInfravisionTRN());
+		ClxDrawTRN(out, position, sprite, GetInfravisionTRN());
 		return;
 	}
 
-	Cl2DrawLight(out, position, cel, 0);
+	ClxDrawLight(out, position, sprite);
 }
 
 /**
@@ -513,48 +489,21 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 		return;
 	}
 
-	OptionalCelSprite sprite = player.AnimInfo.celSprite;
-	int nCel = player.AnimInfo.getFrameToUseForRendering();
+	const ClxSprite sprite = player.previewCelSprite ? *player.previewCelSprite : player.AnimInfo.currentSprite();
 
-	if (player.previewCelSprite) {
-		sprite = player.previewCelSprite;
-		nCel = 0;
-	}
-
-	if (!sprite) {
-		Log("Drawing player {} \"{}\": NULL CelSprite", std::distance(const_cast<const Player *>(&Players[0]), &player), player._pName);
-		return;
-	}
-
-	Point spriteBufferPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite ? sprite->Width() : 96), 0 };
-
-	const uint32_t frames = LoadLE32(sprite->Data());
-	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
-		const char *szMode = "unknown action";
-		if (player._pmode <= PM_QUIT)
-			szMode = PlayerModeNames[player._pmode];
-		Log(
-		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
-		    std::distance(const_cast<const Player *>(&Players[0]), &player),
-		    player._pName,
-		    szMode,
-		    DirectionToString(player._pdir),
-		    nCel,
-		    frames);
-		return;
-	}
+	Point spriteBufferPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite.width()), 0 };
 
 	if (pcursplr >= 0 && pcursplr < MAX_PLRS && &player == &Players[pcursplr])
-		Cl2DrawOutlineSkipColorZero(out, 165, spriteBufferPosition, *sprite, nCel);
+		ClxDrawOutlineSkipColorZero(out, 165, spriteBufferPosition, sprite);
 
 	if (&player == MyPlayer) {
-		Cl2Draw(out, spriteBufferPosition, *sprite, nCel);
+		ClxDraw(out, spriteBufferPosition, sprite);
 		DrawPlayerIcons(out, player, targetBufferPosition, false);
 		return;
 	}
 
 	if (!IsTileLit(tilePosition) || (MyPlayer->_pInfraFlag && LightTableIndex > 8)) {
-		Cl2DrawTRN(out, spriteBufferPosition, *sprite, nCel, GetInfravisionTRN());
+		ClxDrawTRN(out, spriteBufferPosition, sprite, GetInfravisionTRN());
 		DrawPlayerIcons(out, player, targetBufferPosition, true);
 		return;
 	}
@@ -565,7 +514,7 @@ void DrawPlayer(const Surface &out, const Player &player, Point tilePosition, Po
 	else
 		LightTableIndex -= 5;
 
-	Cl2DrawLight(out, spriteBufferPosition, *sprite, nCel);
+	ClxDrawLight(out, spriteBufferPosition, sprite);
 	DrawPlayerIcons(out, player, targetBufferPosition, false);
 
 	LightTableIndex = l;
@@ -613,34 +562,22 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 		return;
 	}
 
-	Point screenPosition = targetBufferPosition - Displacement { CalculateWidth2(objectToDraw._oAnimWidth), 0 };
+	const ClxSprite sprite = (*objectToDraw._oAnimData)[objectToDraw._oAnimFrame - 1];
+
+	Point screenPosition = targetBufferPosition - Displacement { CalculateWidth2(sprite.width()), 0 };
 	if (objectToDraw.position != tilePosition) {
 		// drawing a large or offset object, calculate the correct position for the center of the sprite
 		Displacement worldOffset = objectToDraw.position - tilePosition;
 		screenPosition -= worldOffset.worldToScreen();
 	}
 
-	byte *pCelBuff = objectToDraw._oAnimData;
-	if (pCelBuff == nullptr) {
-		Log("Draw Object type {}: NULL Cel Buffer", static_cast<int>(objectToDraw._otype));
-		return;
-	}
-
-	const uint32_t nCel = objectToDraw._oAnimFrame - 1;
-	const uint32_t frames = LoadLE32(pCelBuff);
-	if (nCel == static_cast<uint32_t>(-1) || frames > 50 || nCel >= frames) {
-		Log("Draw Object: frame {} of {}, object type {}", nCel, frames, static_cast<int>(objectToDraw._otype));
-		return;
-	}
-
-	CelSprite cel { objectToDraw._oAnimData, objectToDraw._oAnimWidth };
 	if (&objectToDraw == ObjectUnderCursor) {
-		Cl2DrawOutlineSkipColorZero(out, 194, screenPosition, cel, nCel);
+		ClxDrawOutlineSkipColorZero(out, 194, screenPosition, sprite);
 	}
 	if (objectToDraw._oLight) {
-		Cl2DrawLight(out, screenPosition, cel, nCel);
+		ClxDrawLight(out, screenPosition, sprite);
 	} else {
-		Cl2Draw(out, screenPosition, cel, nCel);
+		ClxDraw(out, screenPosition, sprite);
 	}
 }
 
@@ -716,25 +653,13 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 	if (item._iPostDraw == pre)
 		return;
 
-	OptionalCelSprite cel = item.AnimInfo.celSprite;
-	if (!cel) {
-		Log("Draw Item \"{}\" 1: NULL CelSprite", item._iIName);
-		return;
-	}
-
-	int nCel = item.AnimInfo.getFrameToUseForRendering();
-	const uint32_t frames = LoadLE32(cel->Data());
-	if (nCel < 0 || frames > 50 || nCel >= static_cast<int>(frames)) {
-		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", item._iIName, nCel, frames, ItemTypeToString(item._itype));
-		return;
-	}
-
-	int px = targetBufferPosition.x - CalculateWidth2(cel->Width());
+	const ClxSprite sprite = item.AnimInfo.currentSprite();
+	int px = targetBufferPosition.x - CalculateWidth2(sprite.width());
 	const Point position { px, targetBufferPosition.y };
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
-		Cl2DrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, *cel, nCel);
+		ClxDrawOutlineSkipColorZero(out, GetOutlineColor(item, false), position, sprite);
 	}
-	Cl2DrawLight(out, position, *cel, nCel);
+	ClxDrawLight(out, position, sprite);
 	if (item.AnimInfo.currentFrame == item.AnimInfo.numberOfFrames - 1 || item._iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
 }
@@ -757,12 +682,11 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		auto &towner = Towners[mi];
 		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
 		const Point position { px, targetBufferPosition.y };
-		const CelSprite sprite = towner.Sprite();
+		const ClxSprite sprite = towner.currentSprite();
 		if (mi == pcursmonst) {
-			Cl2DrawOutlineSkipColorZero(out, 166, position, sprite, towner._tAnimFrame);
+			ClxDrawOutlineSkipColorZero(out, 166, position, sprite);
 		}
-		assert(towner._tAnimData);
-		Cl2Draw(out, position, sprite, towner._tAnimFrame);
+		ClxDraw(out, position, sprite);
 		return;
 	}
 
@@ -779,7 +703,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	CelSprite cel = *monster.animInfo.celSprite;
+	const ClxSprite sprite = monster.animInfo.currentSprite();
 
 	Displacement offset = monster.position.offset;
 	if (monster.isWalking()) {
@@ -795,9 +719,9 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
+	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(sprite.width()), 0 } };
 	if (mi == pcursmonst) {
-		Cl2DrawOutlineSkipColorZero(out, 233, monsterRenderPosition, cel, monster.animInfo.getFrameToUseForRendering());
+		ClxDrawOutlineSkipColorZero(out, 233, monsterRenderPosition, sprite);
 	}
 	DrawMonster(out, tilePosition, monsterRenderPosition, monster);
 }
@@ -844,7 +768,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 #ifdef _DEBUG
 	if (DebugVision && IsTileLit(tilePosition)) {
-		Cl2Draw(out, targetBufferPosition, CelSprite { *pSquareCel }, 1);
+		ClxDraw(out, targetBufferPosition, (*pSquareCel)[0]);
 	}
 #endif
 
@@ -854,21 +778,14 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	if (LightTableIndex < LightsMax && bDead != 0) {
 		do {
-			Corpse *pDeadGuy = &Corpses[(bDead & 0x1F) - 1];
-			const Point position { targetBufferPosition.x - CalculateWidth2(pDeadGuy->width), targetBufferPosition.y };
-			const byte *pCelBuff = pDeadGuy->data[(bDead >> 5) & 7];
-			assert(pCelBuff != nullptr);
-			const uint32_t frames = LoadLE32(pCelBuff);
-			const int nCel = pDeadGuy->frame;
-			if (nCel < 0 || frames >= 50 || nCel > static_cast<int>(frames)) {
-				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
-				break;
-			}
-			if (pDeadGuy->translationPaletteIndex != 0) {
-				uint8_t *trn = Monsters[pDeadGuy->translationPaletteIndex - 1].uniqueMonsterTRN.get();
-				Cl2DrawTRN(out, position, CelSprite(pCelBuff, pDeadGuy->width), nCel, trn);
+			Corpse &corpse = Corpses[(bDead & 0x1F) - 1];
+			const Point position { targetBufferPosition.x - CalculateWidth2(corpse.width), targetBufferPosition.y };
+			const ClxSprite sprite = corpse.spritesForDirection(static_cast<Direction>((bDead >> 5) & 7))[corpse.frame];
+			if (corpse.translationPaletteIndex != 0) {
+				const uint8_t *trn = Monsters[corpse.translationPaletteIndex - 1].uniqueMonsterTRN.get();
+				ClxDrawTRN(out, position, sprite, trn);
 			} else {
-				Cl2DrawLight(out, position, CelSprite(pCelBuff, pDeadGuy->width), nCel);
+				ClxDrawLight(out, position, sprite);
 			}
 		} while (false);
 	}
@@ -899,9 +816,9 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 			}
 #endif
 			if (cel_transparency_active) {
-				Cl2DrawLightBlended(out, targetBufferPosition, CelSprite { *pSpecialCels }, bArch - 1);
+				ClxDrawLightBlended(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
 			} else {
-				Cl2DrawLight(out, targetBufferPosition, CelSprite { *pSpecialCels }, bArch - 1);
+				ClxDrawLight(out, targetBufferPosition, (*pSpecialCels)[bArch - 1]);
 			}
 #ifdef _DEBUG
 			if ((SDL_GetModState() & KMOD_ALT) != 0) {
@@ -916,7 +833,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
 			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
 			if (bArch != 0) {
-				Cl2Draw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, CelSprite { *pSpecialCels }, bArch - 1);
+				ClxDraw(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, (*pSpecialCels)[bArch - 1]);
 			}
 		}
 	}

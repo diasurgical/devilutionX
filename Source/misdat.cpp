@@ -5,8 +5,7 @@
  */
 #include "misdat.h"
 
-#include "engine/cel_header.hpp"
-#include "engine/load_file.hpp"
+#include "engine/load_cl2.hpp"
 #include "missiles.h"
 #include "utils/file_name_generator.hpp"
 
@@ -231,7 +230,7 @@ MissileFileData::MissileFileData(string_view name, uint8_t animName, uint8_t ani
 
 void MissileFileData::LoadGFX()
 {
-	if (animData != nullptr)
+	if (sprites)
 		return;
 
 	if (name.empty())
@@ -239,10 +238,9 @@ void MissileFileData::LoadGFX()
 
 	FileNameGenerator pathGenerator({ "Missiles\\", name }, ".CL2");
 	if (animFAmt == 1) {
-		animData = LoadFileInMem(pathGenerator());
-		frameOffsets[0] = 0;
+		sprites.emplace(OwnedClxSpriteListOrSheet { LoadCl2(pathGenerator(), animWidth) });
 	} else {
-		animData = MultiFileLoader<16> {}(animFAmt, pathGenerator, &frameOffsets[0]);
+		sprites.emplace(OwnedClxSpriteListOrSheet { LoadMultipleCl2Sheet<16>(pathGenerator, animFAmt, animWidth) });
 	}
 }
 

@@ -5,9 +5,10 @@
  */
 #include "monster.h"
 
+#include <climits>
+
 #include <algorithm>
 #include <array>
-#include <climits>
 
 #include <fmt/compile.h>
 #include <fmt/format.h>
@@ -15,11 +16,11 @@
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
-#include "engine/cel_header.hpp"
+#include "engine/load_cl2.hpp"
 #include "engine/load_file.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/world_tile.hpp"
 #include "init.h"
 #include "levels/crypt.h"
@@ -34,6 +35,7 @@
 #include "spelldat.h"
 #include "storm/storm_net.hpp"
 #include "towners.h"
+#include "utils/cl2_to_clx.hpp"
 #include "utils/file_name_generator.hpp"
 #include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
@@ -156,18 +158,12 @@ size_t GetNumAnims(const MonsterData &monsterData)
 	return monsterData.hasSpecial ? 6 : 5;
 }
 
-bool IsDirectionalAnim(const CMonster &monster, size_t animIndex)
-{
-	return monster.type != MT_GOLEM || animIndex < 4;
-}
-
 void InitMonsterTRN(CMonster &monst)
 {
 	char path[64];
-	std::array<uint8_t, 256> colorTranslations;
 	*BufCopy(path, "Monsters\\", monst.data->trnFile, ".TRN") = '\0';
+	std::array<uint8_t, 256> colorTranslations;
 	LoadFileInMem(path, colorTranslations);
-
 	std::replace(colorTranslations.begin(), colorTranslations.end(), 255, 0);
 
 	const size_t numAnims = GetNumAnims(*monst.data);
@@ -177,16 +173,10 @@ void InitMonsterTRN(CMonster &monst)
 		}
 
 		AnimStruct &anim = monst.anims[i];
-		if (IsDirectionalAnim(monst, i)) {
-			for (size_t i = 0; i < 8; i++) {
-				Cl2ApplyTrans(anim.celSpritesForDirections[i], colorTranslations, anim.frames);
-			}
+		if (anim.sprites->isSheet()) {
+			ClxApplyTrans(ClxSpriteSheet { anim.sprites->sheet() }, colorTranslations.data());
 		} else {
-			byte *frames[8];
-			CelGetDirectionFrames(anim.celSpritesForDirections[0], frames);
-			for (byte *frame : frames) {
-				Cl2ApplyTrans(frame, colorTranslations, anim.frames);
-			}
+			ClxApplyTrans(ClxSpriteList { anim.sprites->list() }, colorTranslations.data());
 		}
 	}
 }
@@ -668,7 +658,7 @@ void DeleteMonster(size_t activeIndex)
 void NewMonsterAnim(Monster &monster, MonsterGraphic graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int8_t numSkippedFrames = 0, int8_t distributeFramesBeforeFrame = 0)
 {
 	const auto &animData = monster.type().getAnimData(graphic);
-	monster.animInfo.setNewAnimation(animData.getCelSpritesForDirection(md), animData.frames, animData.rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
+	monster.animInfo.setNewAnimation(animData.spritesForDirection(md), animData.frames, animData.rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
 	monster.flags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
 	monster.direction = md;
 }
@@ -3455,15 +3445,12 @@ void InitMonsterGFX(CMonster &monsterType)
 {
 	const _monster_id mtype = monsterType.type;
 	const MonsterData &monsterData = MonstersData[mtype];
-	const int width = monsterData.width;
-	constexpr size_t MaxAnims = sizeof(Animletter) / sizeof(Animletter[0]) - 1;
 	const size_t numAnims = GetNumAnims(monsterData);
-
-	const auto hasAnim = [&monsterData](size_t i) {
-		return monsterData.frames[i] != 0;
+	const auto hasAnim = [&monsterData](size_t index) {
+		return monsterData.frames[index] != 0;
 	};
-
-	std::array<uint32_t, MaxAnims> animOffsets;
+	constexpr size_t MaxAnims = 6;
+	std::array<uint32_t, MaxAnims + 1> animOffsets;
 	if (!HeadlessMode) {
 		monsterType.animData = MultiFileLoader<MaxAnims> {}(
 		    numAnims,
@@ -3472,29 +3459,23 @@ void InitMonsterGFX(CMonster &monsterType)
 		    hasAnim);
 	}
 
-	for (unsigned animIndex = 0; animIndex < numAnims; animIndex++) {
-		AnimStruct &anim = monsterType.anims[animIndex];
-
-		if (!hasAnim(animIndex)) {
+	for (size_t i = 0, j = 0; i < numAnims; ++i) {
+		AnimStruct &anim = monsterType.anims[i];
+		if (!hasAnim(i)) {
 			anim.frames = 0;
 			continue;
 		}
-
-		anim.frames = monsterData.frames[animIndex];
-		anim.rate = monsterData.rate[animIndex];
-		anim.width = width;
-
-		if (HeadlessMode)
-			continue;
-
-		byte *cl2Data = &monsterType.animData[animOffsets[animIndex]];
-		if (IsDirectionalAnim(monsterType, animIndex)) {
-			CelGetDirectionFrames(cl2Data, anim.celSpritesForDirections.data());
-		} else {
-			for (size_t i = 0; i < 8; ++i) {
-				anim.celSpritesForDirections[i] = cl2Data;
-			}
+		anim.frames = monsterData.frames[i];
+		anim.rate = monsterData.rate[i];
+		anim.width = monsterData.width;
+		if (!HeadlessMode) {
+			const uint32_t begin = animOffsets[j];
+			const uint32_t end = animOffsets[j + 1];
+			auto spritesData = reinterpret_cast<uint8_t *>(&monsterType.animData[begin]);
+			const uint16_t numLists = Cl2ToClx(spritesData, end - begin, PointerOrValue<uint16_t> { monsterData.width });
+			anim.sprites = ClxSpriteListOrSheet { spritesData, numLists };
 		}
+		++j;
 	}
 
 	monsterType.data = &monsterData;
@@ -4116,6 +4097,9 @@ void FreeMonsters()
 {
 	for (CMonster &monsterType : LevelMonsterTypes) {
 		monsterType.animData = nullptr;
+		for (AnimStruct &animData : monsterType.anims) {
+			animData.sprites = std::nullopt;
+		}
 
 		for (auto &variants : monsterType.sounds) {
 			for (auto &sound : variants) {

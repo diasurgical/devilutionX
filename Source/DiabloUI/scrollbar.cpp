@@ -4,15 +4,15 @@
 
 namespace devilution {
 
-std::optional<OwnedCelSpriteWithFrameHeight> ArtScrollBarBackground;
-std::optional<OwnedCelSpriteWithFrameHeight> ArtScrollBarThumb;
-std::optional<OwnedCelSpriteSheetWithFrameHeight> ArtScrollBarArrow;
+OptionalOwnedClxSpriteList ArtScrollBarBackground;
+OptionalOwnedClxSpriteList ArtScrollBarThumb;
+OptionalOwnedClxSpriteList ArtScrollBarArrow;
 
 void LoadScrollBar()
 {
-	ArtScrollBarBackground = LoadPcxAsCl2("ui_art\\sb_bg.pcx");
-	ArtScrollBarThumb = LoadPcxAsCl2("ui_art\\sb_thumb.pcx");
-	ArtScrollBarArrow = LoadPcxSpriteSheetAsCl2("ui_art\\sb_arrow.pcx", 4);
+	ArtScrollBarBackground = LoadPcx("ui_art\\sb_bg.pcx");
+	ArtScrollBarThumb = LoadPcx("ui_art\\sb_thumb.pcx");
+	ArtScrollBarArrow = LoadPcxSpriteList("ui_art\\sb_arrow.pcx", 4);
 }
 
 void UnloadScrollBar()

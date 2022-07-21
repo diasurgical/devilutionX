@@ -22,7 +22,7 @@ Bitset2d<DMAXX, DMAXY> Protected;
 Rectangle SetPieceRoom;
 Rectangle SetPiece;
 std::unique_ptr<uint16_t[]> pSetPiece;
-OptionalOwnedCelSprite pSpecialCels;
+OptionalOwnedClxSpriteList pSpecialCels;
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<byte[]> pDungeonCels;
 std::array<TileProperties, MAXTILES> SOLData;

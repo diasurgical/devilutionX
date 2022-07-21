@@ -11,9 +11,9 @@
 #include "DiabloUI/ui_flags.hpp"
 #include "controls/plrctrls.h"
 #include "cursor.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/load_cel.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
@@ -142,7 +142,7 @@ const Point InvRect[] = {
 
 namespace {
 
-OptionalOwnedCelSprite pInvCels;
+OptionalOwnedClxSpriteList pInvCels;
 
 /**
  * @brief Adds an item to a player's InvGrid array
@@ -1064,24 +1064,24 @@ void InitInv()
 	switch (MyPlayer->_pClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
-		pInvCels = LoadCelAsCl2("Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Rogue:
 	case HeroClass::Bard:
-		pInvCels = LoadCelAsCl2("Data\\Inv\\Inv_rog.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Sorcerer:
-		pInvCels = LoadCelAsCl2("Data\\Inv\\Inv_Sor.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	case HeroClass::Monk:
-		pInvCels = LoadCelAsCl2(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
+		pInvCels = LoadCel(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", static_cast<uint16_t>(SidePanelSize.width));
 		break;
 	}
 }
 
 void DrawInv(const Surface &out)
 {
-	Cl2Draw(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), CelSprite { *pInvCels }, 0);
+	ClxDraw(out, GetPanelPosition(UiPanels::Inventory, { 0, 351 }), (*pInvCels)[0]);
 
 	Size slotSize[] = {
 		{ 2, 2 }, // head
@@ -1124,15 +1124,14 @@ void DrawInv(const Surface &out)
 				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
 			}
 
-			const CelSprite cel { GetInvItemSprite(cursId) };
-			const int celFrame = GetInvItemFrame(cursId);
+			const ClxSprite sprite = GetInvItemSprite(cursId);
 			const Point position = GetPanelPosition(UiPanels::Inventory, { screenX, screenY });
 
 			if (pcursinvitem == slot) {
-				Cl2DrawOutline(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, cel, celFrame);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, sprite);
 			}
 
-			DrawItem(myPlayer.InvBody[slot], out, position, cel, celFrame);
+			DrawItem(myPlayer.InvBody[slot], out, position, sprite);
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.GetItemLocation(myPlayer.InvBody[slot]) == ILOC_TWOHAND) {
@@ -1142,7 +1141,7 @@ void DrawInv(const Surface &out)
 
 					const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
 					const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
-					Cl2DrawLightBlended(out, { dstX, dstY }, cel, celFrame);
+					ClxDrawLightBlended(out, { dstX, dstY }, sprite);
 
 					cel_transparency_active = false;
 				}
@@ -1164,18 +1163,13 @@ void DrawInv(const Surface &out)
 			int ii = myPlayer.InvGrid[j] - 1;
 			int cursId = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
 
-			const CelSprite cel { GetInvItemSprite(cursId) };
-			const int celFrame = GetInvItemFrame(cursId);
+			const ClxSprite sprite = GetInvItemSprite(cursId);
 			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST]) + Displacement { 0, -1 };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-				Cl2DrawOutline(out, GetOutlineColor(myPlayer.InvList[ii], true), position, cel, celFrame);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.InvList[ii], true), position, sprite);
 			}
 
-			DrawItem(
-			    myPlayer.InvList[ii],
-			    out,
-			    position,
-			    cel, celFrame);
+			DrawItem(myPlayer.InvList[ii], out, position, sprite);
 		}
 	}
 }
@@ -1201,16 +1195,15 @@ void DrawInvBelt(const Surface &out)
 		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
-		const CelSprite cel { GetInvItemSprite(cursId) };
-		const int celFrame = GetInvItemFrame(cursId);
+		const ClxSprite sprite = GetInvItemSprite(cursId);
 
 		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
 			if (ControlMode == ControlTypes::KeyboardAndMouse || invflag) {
-				Cl2DrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position, cel, celFrame);
+				ClxDrawOutline(out, GetOutlineColor(myPlayer.SpdList[i], true), position, sprite);
 			}
 		}
 
-		DrawItem(myPlayer.SpdList[i], out, position, cel, celFrame);
+		DrawItem(myPlayer.SpdList[i], out, position, sprite);
 
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {

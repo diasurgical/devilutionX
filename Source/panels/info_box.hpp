@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 
 namespace devilution {
 
@@ -9,14 +9,14 @@ namespace devilution {
  *
  * Used in stores, the quest log, the help window, and the unique item info window.
  */
-extern OptionalOwnedCelSprite pSTextBoxCels;
+extern OptionalOwnedClxSpriteList pSTextBoxCels;
 
 /**
  * @brief Info box scrollbar graphics.
  *
  * Used in stores and `DrawDiabloMsg`.
  */
-extern OptionalOwnedCelSprite pSTextSlidCels;
+extern OptionalOwnedClxSpriteList pSTextSlidCels;
 
 void InitInfoBoxGfx();
 void FreeInfoBoxGfx();

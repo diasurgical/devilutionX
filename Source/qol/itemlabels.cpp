@@ -9,7 +9,7 @@
 #include "control.h"
 #include "cursor.h"
 #include "engine/point.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "gmenu.h"
 #include "inv.h"
 #include "itemlabels.h"
@@ -80,7 +80,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 	nameWidth += MarginX * 2;
 	int index = ItemCAnimTbl[item._iCurs];
 	if (!labelCenterOffsets[index]) {
-		std::pair<int, int> itemBounds = Cl2MeasureSolidHorizontalBounds(*item.AnimInfo.celSprite, item.AnimInfo.currentFrame);
+		std::pair<int, int> itemBounds = ClxMeasureSolidHorizontalBounds((*item.AnimInfo.sprites)[item.AnimInfo.currentFrame]);
 		labelCenterOffsets[index].emplace((itemBounds.first + itemBounds.second) / 2);
 	}
 

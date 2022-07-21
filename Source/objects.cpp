@@ -101,7 +101,7 @@ enum {
 
 int trapid;
 int trapdir;
-std::unique_ptr<byte[]> pObjCels[40];
+OptionalOwnedClxSpriteList pObjCels[40];
 object_graphic_id ObjFileList[40];
 /** Specifies the number of active objects. */
 int leverid;
@@ -415,7 +415,9 @@ void InitRndLocObj5x5(int min, int max, _object_id objtype)
 
 void ClrAllObjects()
 {
-	memset(Objects, 0, sizeof(Objects));
+	for (Object &object : Objects) {
+		object = {};
+	}
 	ActiveObjectCount = 0;
 	for (int i = 0; i < MAXOBJECTS; i++) {
 		AvailableObjects[i] = i;
@@ -780,7 +782,11 @@ void SetupObject(Object &object, Point position, _object_id ot)
 
 		const int j = std::distance(std::begin(ObjFileList), found);
 
-		object._oAnimData = pObjCels[j].get();
+		if (pObjCels[j]) {
+			object._oAnimData.emplace(*pObjCels[j]);
+		} else {
+			object._oAnimData = std::nullopt;
+		}
 	}
 	object._oAnimFlag = objectData.oAnimFlag;
 	if (object._oAnimFlag) {
@@ -3978,7 +3984,7 @@ void LoadLevelObjects(uint16_t filesWidths[65])
 		ObjFileList[numobjfiles] = static_cast<object_graphic_id>(i);
 		char filestr[32];
 		*BufCopy(filestr, "Objects\\", ObjMasterLoadList[i], ".CEL") = '\0';
-		pObjCels[numobjfiles] = LoadCelAsCl2(filestr, filesWidths[i]).data();
+		pObjCels[numobjfiles] = LoadCel(filestr, filesWidths[i]);
 		numobjfiles++;
 	}
 }
@@ -4019,7 +4025,7 @@ void InitObjectGFX()
 void FreeObjectGFX()
 {
 	for (int i = 0; i < numobjfiles; i++) {
-		pObjCels[i] = nullptr;
+		pObjCels[i] = std::nullopt;
 	}
 	numobjfiles = 0;
 }
@@ -5015,7 +5021,11 @@ void SyncObjectAnim(Object &object)
 
 		const int i = std::distance(std::begin(ObjFileList), found);
 
-		object._oAnimData = pObjCels[i].get();
+		if (pObjCels[i]) {
+			object._oAnimData.emplace(*pObjCels[i]);
+		} else {
+			object._oAnimData = std::nullopt;
+		}
 	}
 
 	switch (object._otype) {

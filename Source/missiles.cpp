@@ -14,7 +14,6 @@
 #ifdef _DEBUG
 #include "debug.h"
 #endif
-#include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "init.h"
@@ -538,7 +537,9 @@ void SetMissAnim(Missile &missile, int animtype)
 
 	missile._miAnimType = animtype;
 	missile._miAnimFlags = MissileSpriteData[animtype].flags;
-	missile._miAnimData = MissileSpriteData[animtype].GetFrame(static_cast<size_t>(dir));
+	if (!HeadlessMode) {
+		missile._miAnimData = MissileSpriteData[animtype].spritesForDirection(static_cast<size_t>(dir));
+	}
 	missile._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
 	missile._miAnimLen = MissileSpriteData[animtype].animLen[dir];
 	missile._miAnimWidth = MissileSpriteData[animtype].animWidth;
@@ -2035,12 +2036,13 @@ void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monste
 	const AnimStruct &anim = mon.type().getAnimData(graphic);
 	mis._mimfnum = static_cast<int32_t>(midir);
 	mis._miAnimFlags = MissileDataFlags::None;
-	CelSprite celSprite = *anim.getCelSpritesForDirection(midir);
-	mis._miAnimData = celSprite.Data();
+	ClxSpriteList sprites = *anim.spritesForDirection(midir);
+	const uint16_t width = sprites[0].width();
+	mis._miAnimData.emplace(sprites);
 	mis._miAnimDelay = anim.rate;
 	mis._miAnimLen = anim.frames;
-	mis._miAnimWidth = celSprite.Width();
-	mis._miAnimWidth2 = CalculateWidth2(celSprite.Width());
+	mis._miAnimWidth = width;
+	mis._miAnimWidth2 = CalculateWidth2(width);
 	mis._miAnimAdd = 1;
 	mis.var1 = 0;
 	mis.var2 = 0;
@@ -4043,7 +4045,7 @@ void ProcessMissiles()
 void missiles_process_charge()
 {
 	for (auto &missile : Missiles) {
-		missile._miAnimData = MissileSpriteData[missile._miAnimType].GetFrame(missile._mimfnum);
+		missile._miAnimData = MissileSpriteData[missile._miAnimType].spritesForDirection(missile._mimfnum);
 		if (missile._mitype != MIS_RHINO)
 			continue;
 
@@ -4057,7 +4059,7 @@ void missiles_process_charge()
 		} else {
 			graphic = MonsterGraphic::Walk;
 		}
-		missile._miAnimData = mon.getAnimData(graphic).celSpritesForDirections[missile._mimfnum];
+		missile._miAnimData = mon.getAnimData(graphic).spritesForDirection(static_cast<Direction>(missile._mimfnum));
 	}
 }
 

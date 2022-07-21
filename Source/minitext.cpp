@@ -9,10 +9,10 @@
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "engine.h"
-#include "engine/cel_sprite.hpp"
+#include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
-#include "engine/render/cl2_render.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "textdat.h"
 #include "utils/language.h"
@@ -30,7 +30,7 @@ int qtextSpd;
 /** Start time of scrolling */
 Uint32 ScrollStart;
 /** Graphics for the window border */
-OptionalOwnedCelSprite pTextBoxCels;
+OptionalOwnedClxSpriteList pTextBoxCels;
 
 /** Pixels for a line of text and the empty space under it. */
 const int LineHeight = 38;
@@ -126,7 +126,7 @@ void FreeQuestText()
 
 void InitQuestText()
 {
-	pTextBoxCels = LoadCelAsCl2("Data\\TextBox.CEL", 591);
+	pTextBoxCels = LoadCel("Data\\TextBox.CEL", 591);
 }
 
 void InitQTextMsg(_speech_id m)
@@ -144,7 +144,7 @@ void InitQTextMsg(_speech_id m)
 void DrawQTextBack(const Surface &out)
 {
 	const Point uiPosition = GetUIRectangle().position;
-	Cl2Draw(out, uiPosition + Displacement { 24, 327 }, CelSprite { *pTextBoxCels }, 0);
+	ClxDraw(out, uiPosition + Displacement { 24, 327 }, (*pTextBoxCels)[0]);
 	DrawHalfTransparentRectTo(out, uiPosition.x + 27, uiPosition.y + 28, 585, 297);
 }
 

@@ -11,7 +11,6 @@ namespace devilution {
 enum class BlitType : uint8_t {
 	Transparent,
 	Pixels,
-	Pixel,
 	Fill
 };
 
@@ -20,22 +19,6 @@ struct BlitCommand {
 	const uint8_t *srcEnd; // Pointer past the end of the command.
 	unsigned length;       // Number of pixels this command will write.
 	uint8_t color;         // For `BlitType::Pixel` and `BlitType::Fill` only.
-};
-
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT BlitCommand TransformBlitCommandNoop(BlitCommand cmd)
-{
-	return cmd;
-}
-
-struct TransformBlitCommandTransparentColor {
-	uint8_t transparentColor;
-
-	BlitCommand operator()(BlitCommand cmd) const
-	{
-		if (cmd.color == transparentColor)
-			cmd.type = BlitType::Transparent;
-		return cmd;
-	}
 };
 
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitFillDirect(uint8_t *dst, unsigned length, uint8_t color)
@@ -48,11 +31,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsDirect(uint8_t *dst, const ui
 	std::memcpy(dst, src, length);
 }
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelDirect(uint8_t *dst, uint8_t color)
-{
-	*dst = color;
-}
-
 struct BlitDirect {
 	DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void operator()(BlitCommand cmd, uint8_t *dst, const uint8_t *src)
 	{
@@ -62,9 +40,6 @@ struct BlitDirect {
 			return;
 		case BlitType::Pixels:
 			BlitPixelsDirect(dst, src, cmd.length);
-			return;
-		case BlitType::Pixel:
-			BlitPixelDirect(dst, cmd.color);
 			return;
 		case BlitType::Transparent:
 			return;
@@ -83,11 +58,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsWithMap(uint8_t *dst, const u
 		*dst++ = colorMap[*src++];
 }
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelWithMap(uint8_t *dst, uint8_t color, const uint8_t *colorMap)
-{
-	*dst = colorMap[color];
-}
-
 struct BlitWithMap {
 	const uint8_t *colorMap;
 
@@ -99,9 +69,6 @@ struct BlitWithMap {
 			return;
 		case BlitType::Pixels:
 			BlitPixelsWithMap(dst, src, cmd.length, colorMap);
-			return;
-		case BlitType::Pixel:
-			BlitPixelWithMap(dst, cmd.color, colorMap);
 			return;
 		case BlitType::Transparent:
 			return;
@@ -126,11 +93,6 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelsBlendedWithMap(uint8_t *dst, 
 	}
 }
 
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void BlitPixelBlendedWithMap(uint8_t *dst, uint8_t color, const uint8_t *colorMap)
-{
-	*dst = paletteTransparencyLookup[*dst][colorMap[color]];
-}
-
 struct BlitBlendedWithMap {
 	const uint8_t *colorMap;
 
@@ -142,9 +104,6 @@ struct BlitBlendedWithMap {
 			return;
 		case BlitType::Pixels:
 			BlitPixelsBlendedWithMap(dst, src, cmd.length, colorMap);
-			return;
-		case BlitType::Pixel:
-			BlitPixelBlendedWithMap(dst, cmd.color, colorMap);
 			return;
 		case BlitType::Transparent:
 			return;

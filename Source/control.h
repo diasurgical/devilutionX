@@ -58,7 +58,7 @@ const Rectangle &GetRightPanel();
 bool IsLeftPanelOpen();
 bool IsRightPanelOpen();
 extern std::optional<OwnedSurface> pBtmBuff;
-extern OptionalOwnedCelSprite pGBoxBuff;
+extern OptionalOwnedClxSpriteList pGBoxBuff;
 extern SDL_Rect PanBtnPos[8];
 
 void CalculatePanelAreas();
