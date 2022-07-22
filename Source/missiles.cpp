@@ -1312,8 +1312,8 @@ void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter)
 {
 	int av = 0;
 
-	if (missile._micaster == TARGET_MONSTERS) {
-		const Player &player = Players[missile._misource];
+	if (missile.sourceType() == MissileSource::Player) {
+		const Player &player = *missile.sourcePlayer();
 
 		if (player._pClass == HeroClass::Rogue)
 			av += (player._pLevel - 1) / 4;
