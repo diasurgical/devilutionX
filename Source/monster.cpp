@@ -1909,11 +1909,8 @@ bool RoundWalk(Monster &monster, Direction direction, int8_t *dir)
 	return RandomWalk(monster, Opposite(turn90deg));
 }
 
-bool AiPlanPath(int monsterId)
+bool AiPlanPath(Monster &monster)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster.type().type != MT_GOLEM) {
 		if (monster.activeForTicks == 0)
 			return false;
@@ -4109,7 +4106,7 @@ void GolumAi(int monsterId)
 			StartAttack(golem);
 			return;
 		}
-		if (AiPlanPath(monsterId))
+		if (AiPlanPath(golem))
 			return;
 	}
 
@@ -4210,7 +4207,7 @@ void ProcessMonsters()
 			}
 		}
 		while (true) {
-			if ((monster.flags & MFLAG_SEARCH) == 0 || !AiPlanPath(monsterId)) {
+			if ((monster.flags & MFLAG_SEARCH) == 0 || !AiPlanPath(monster)) {
 				AiProc[monster.ai](monsterId);
 			}
 
