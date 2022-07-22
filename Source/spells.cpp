@@ -15,6 +15,7 @@
 #include "gamemenu.h"
 #include "inv.h"
 #include "missiles.h"
+#include "options.h"
 
 namespace devilution {
 
@@ -167,6 +168,10 @@ int GetManaAmount(const Player &player, spell_id sn)
 	if (spelldata[sn].sMinMana > ma >> 6) {
 		ma = spelldata[sn].sMinMana << 6;
 	}
+
+        if (*sgOptions.Gameplay.manaRegen) {
+                ma *= 2;
+        }
 
 	return ma;
 }
