@@ -101,7 +101,7 @@ void DrawPlrMsg(const Surface &out)
 		return;
 
 	int x = 10;
-	int y = PANEL_TOP - 13;
+	int y = GetMainPanel().position.y - 13;
 	int width = gnScreenWidth - 20;
 
 	if (!talkflag && IsLeftPanelOpen()) {

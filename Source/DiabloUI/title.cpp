@@ -38,15 +38,16 @@ void TitleFree()
 void UiTitleDialog()
 {
 	TitleLoad();
+	const Point uiPosition = GetUIRectangle().position;
 	if (gbIsHellfire) {
-		SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
+		SDL_Rect rect = { 0, uiPosition.y, 0, 0 };
 		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackground, rect, UiFlags::AlignCenter, /*bAnimated=*/true));
 	} else {
 		UiAddBackground(&vecTitleScreen);
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
-		SDL_Rect rect = { (Sint16)(PANEL_LEFT), (Sint16)(UI_OFFSET_Y + 410), 640, 26 };
+		SDL_Rect rect = { (Sint16)(uiPosition.x), (Sint16)(uiPosition.y + 410), 640, 26 };
 		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment").c_str(), rect, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiSilver));
 	}
 

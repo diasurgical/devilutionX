@@ -370,7 +370,7 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 
 			Point screen = {
 				(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-				(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+				(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - GetMainPanel().size.height) / 2
 			};
 
 			if (CanPanelsCoverView()) {
@@ -407,7 +407,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 
 	Point base = {
 		((playerOffset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - GetMainPanel().size.height) / 2
 	};
 
 	if (CanPanelsCoverView()) {
@@ -681,7 +681,7 @@ void DrawAutomap(const Surface &out)
 
 	Point screen {
 		gnScreenWidth / 2,
-		(gnScreenHeight - PANEL_HEIGHT) / 2
+		(gnScreenHeight - GetMainPanel().size.height) / 2
 	};
 	if ((cells & 1) != 0) {
 		screen.x -= AmLine64 * ((cells - 1) / 2);

@@ -1245,7 +1245,9 @@ void DrawInvBelt(const Surface &out)
 		return;
 	}
 
-	DrawPanelBox(out, { 205, 21, 232, 28 }, { PANEL_X + 205, PANEL_Y + 5 });
+	const Point mainPanelPosition = GetMainPanel().position;
+
+	DrawPanelBox(out, { 205, 21, 232, 28 }, mainPanelPosition + Displacement { 205, 5 });
 
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -1254,7 +1256,7 @@ void DrawInvBelt(const Surface &out)
 			continue;
 		}
 
-		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1 };
+		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + mainPanelPosition.x, InvRect[i + SLOTXY_BELT_FIRST].y + mainPanelPosition.y - 1 };
 		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
 		const int cursId = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 
@@ -1569,7 +1571,7 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 {
-	auto &mainPanelPosition = GetMainPanel().position;
+	const Point mainPanelPosition = GetMainPanel().position;
 	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x
 	    && MousePosition.y > mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y) {
 		CheckInvItem(isShiftHeld, isCtrlHeld);
