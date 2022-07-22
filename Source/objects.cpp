@@ -2161,9 +2161,8 @@ void DeltaOperateLever(Object &object)
 	ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
 }
 
-void OperateLever(int i, bool sendmsg)
+void OperateLever(Object &object, bool sendmsg)
 {
-	Object &object = Objects[i];
 	if (object._oSelFlag == 0) {
 		return;
 	}
@@ -2178,7 +2177,7 @@ void OperateLever(int i, bool sendmsg)
 	}
 
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, object.GetId());
 }
 
 void OperateBook(Player &player, Object &book)
@@ -4859,7 +4858,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		OperateLever(i, sendmsg);
+		OperateLever(object, sendmsg);
 		break;
 	case OBJ_BOOK2L:
 		OperateBook(player, object);
@@ -5057,7 +5056,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		OperateLever(i, sendmsg);
+		OperateLever(object, sendmsg);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
