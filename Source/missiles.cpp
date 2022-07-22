@@ -1891,11 +1891,11 @@ void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	switch (missile.sourceType()) {
 	case MissileSource::Player: {
-		Player *player = missile.sourcePlayer();
-		int dmg = GenerateRndSum(20, player->_pLevel + 1) + player->_pLevel + 1;
+		Player &player = *missile.sourcePlayer();
+		int dmg = GenerateRndSum(20, player._pLevel + 1) + player._pLevel + 1;
 		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
 		missile._midam += missile._midam / 2;
-		UseMana(*player, SPL_FLASH);
+		UseMana(player, SPL_FLASH);
 	} break;
 	case MissileSource::Monster:
 		missile._midam = missile.sourceMonster()->level * 2;
