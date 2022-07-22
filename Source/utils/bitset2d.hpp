@@ -36,7 +36,7 @@ public:
 		data_.reset();
 	}
 
-	[[noexcept]] size_t count() const
+	[[nodiscard]] size_t count() const
 	{
 		return data_.count();
 	}
