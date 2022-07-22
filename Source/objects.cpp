@@ -1742,7 +1742,7 @@ void OperateL1RDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		ObjSetMicro(door.position, 394);
@@ -1760,7 +1760,7 @@ void OperateL1RDoor(Object &door, bool sendflag)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 	if (!deltaload && IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
@@ -1791,7 +1791,7 @@ void OperateL1LDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		if (door._oVar1 == 214)
@@ -1812,7 +1812,7 @@ void OperateL1LDoor(Object &door, bool sendflag)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
@@ -1843,7 +1843,7 @@ void OperateL2RDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		ObjSetMicro(door.position, 16);
@@ -1861,7 +1861,7 @@ void OperateL2RDoor(Object &door, bool sendflag)
 
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 539);
@@ -1884,7 +1884,7 @@ void OperateL2LDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		ObjSetMicro(door.position, 12);
@@ -1902,7 +1902,7 @@ void OperateL2LDoor(Object &door, bool sendflag)
 
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 537);
@@ -1925,7 +1925,7 @@ void OperateL3RDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		ObjSetMicro(door.position, 540);
@@ -1942,7 +1942,7 @@ void OperateL3RDoor(Object &door, bool sendflag)
 
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 533);
@@ -1964,7 +1964,7 @@ void OperateL3LDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, door.position);
 		ObjSetMicro(door.position, 537);
@@ -1981,7 +1981,7 @@ void OperateL3LDoor(Object &door, bool sendflag)
 
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 530);
@@ -2003,7 +2003,7 @@ void OperateL5RDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_CROPEN, door.position);
 		ObjSetMicro(door.position, 208);
@@ -2021,7 +2021,7 @@ void OperateL5RDoor(Object &door, bool sendflag)
 		PlaySfxLoc(IS_CRCLOS, door.position);
 	if (!deltaload && IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
@@ -2052,7 +2052,7 @@ void OperateL5LDoor(Object &door, bool sendflag)
 
 	if (door._oVar4 == 0) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_OPENDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
 			PlaySfxLoc(IS_CROPEN, door.position);
 		ObjSetMicro(door.position, 205);
@@ -2070,7 +2070,7 @@ void OperateL5LDoor(Object &door, bool sendflag)
 		PlaySfxLoc(IS_CRCLOS, door.position);
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
-			NetSendCmdParam1(true, CMD_CLOSEDOOR, door.GetId());
+			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
@@ -2161,7 +2161,7 @@ void OperateLever(Object &object, bool sendmsg)
 	}
 
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, object.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, object.position);
 }
 
 void OperateBook(Player &player, Object &book)
@@ -2270,7 +2270,7 @@ void OperateBookLever(Object &questBook, bool sendmsg)
 		questBook._oAnimFrame = questBook._oVar6;
 		InitQTextMsg(questBook.bookMessage);
 		if (sendmsg)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, questBook.GetId());
+			NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, questBook.position);
 	}
 }
 
@@ -2368,7 +2368,7 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 		chest._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
-		NetSendCmdParam1(false, CMD_PLROPOBJ, chest.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_PLROPOBJ, chest.position);
 }
 
 void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
@@ -2444,7 +2444,7 @@ void OperateSlainHero(const Player &player, Object &corpse)
 	}
 	MyPlayer->Say(HeroSpeech::RestInPeaceMyFriend);
 	if (&player == MyPlayer)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, corpse.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, corpse.position);
 }
 
 void OperateTrapLever(Object &flameLever)
@@ -2491,7 +2491,7 @@ void OperateSarcophagus(Object &sarcophagus, bool sendMsg, bool sendLootMsg)
 	if (sarcophagus._oVar1 >= 8 && sarcophagus._oVar2 >= 0)
 		ActivateSkeleton(Monsters[sarcophagus._oVar2], sarcophagus.position);
 	if (sendMsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, sarcophagus.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, sarcophagus.position);
 }
 
 void OperateL2Door(const Player &player, Object &door)
@@ -3374,7 +3374,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 	}
 
 	if (&player == MyPlayer)
-		NetSendCmdParam1(false, CMD_PLROPOBJ, shrine.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_PLROPOBJ, shrine.position);
 }
 
 void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)
@@ -3392,7 +3392,7 @@ void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)
 	else
 		CreateTypeItem(bookStand.position, false, ItemType::Misc, IMISC_SCROLL, sendLootMsg, false);
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookStand.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, bookStand.position);
 }
 
 void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
@@ -3420,7 +3420,7 @@ void OperateBookcase(Object &bookcase, bool sendmsg, bool sendLootMsg)
 		}
 	}
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, bookcase.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, bookcase.position);
 }
 
 void OperateDecapitatedBody(Object &corpse, bool sendmsg, bool sendLootMsg)
@@ -3432,7 +3432,7 @@ void OperateDecapitatedBody(Object &corpse, bool sendmsg, bool sendLootMsg)
 	SetRndSeed(corpse._oRndSeed);
 	CreateRndItem(corpse.position, false, sendLootMsg, false);
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, corpse.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, corpse.position);
 }
 
 void OperateArmorStand(Object &armorStand, bool sendmsg, bool sendLootMsg)
@@ -3454,7 +3454,7 @@ void OperateArmorStand(Object &armorStand, bool sendmsg, bool sendLootMsg)
 		CreateTypeItem(armorStand.position, true, ItemType::HeavyArmor, IMISC_NONE, sendLootMsg, false);
 	}
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, armorStand.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, armorStand.position);
 }
 
 int FindValidShrine()
@@ -3544,7 +3544,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		    2 * leveltype);
 		applied = true;
 		if (&player == MyPlayer)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, fountain.GetId());
+			NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, fountain.position);
 		break;
 	case OBJ_TEARFTN: {
 		if (fountain._oSelFlag == 0)
@@ -3581,7 +3581,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		CheckStats(player);
 		applied = true;
 		if (&player == MyPlayer)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, fountain.GetId());
+			NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, fountain.position);
 	} break;
 	default:
 		break;
@@ -3604,7 +3604,7 @@ void OperateWeaponRack(Object &weaponRack, bool sendmsg, bool sendLootMsg)
 	CreateTypeItem(weaponRack.position, leveltype != DTYPE_CATHEDRAL, weaponType, IMISC_NONE, sendLootMsg, false);
 
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, weaponRack.GetId());
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, weaponRack.position);
 }
 
 /**
@@ -3659,7 +3659,7 @@ void OperateStoryBook(Object &storyBook)
 		Quests[Q_NAKRUL]._qmsg = msg;
 	}
 	InitQTextMsg(msg);
-	NetSendCmdParam1(false, CMD_OPERATEOBJ, storyBook.GetId());
+	NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, storyBook.position);
 }
 
 void OperateLazStand(Object &stand)
@@ -4931,10 +4931,8 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	}
 }
 
-void DeltaSyncOpObject(int cmd, int i)
+void DeltaSyncOpObject(int cmd, Object &object)
 {
-	Object &object = Objects[i];
-
 	switch (object._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5011,9 +5009,8 @@ void DeltaSyncOpObject(int cmd, int i)
 	}
 }
 
-void SyncOpObject(Player &player, int cmd, int i)
+void SyncOpObject(Player &player, int cmd, Object &object)
 {
-	Object &object = Objects[i];
 	bool sendmsg = &player == MyPlayer;
 
 	switch (object._otype) {
