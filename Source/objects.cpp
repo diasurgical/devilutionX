@@ -2161,9 +2161,8 @@ void DeltaOperateLever(Object &object)
 	ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
 }
 
-void OperateLever(int i, bool sendmsg)
+void OperateLever(Object &object, bool sendmsg)
 {
-	Object &object = Objects[i];
 	if (object._oSelFlag == 0) {
 		return;
 	}
@@ -2178,7 +2177,7 @@ void OperateLever(int i, bool sendmsg)
 	}
 
 	if (sendmsg)
-		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+		NetSendCmdParam1(false, CMD_OPERATEOBJ, object.GetId());
 }
 
 void OperateBook(Player &player, Object &book)
@@ -2251,43 +2250,43 @@ void OperateBook(Player &player, Object &book)
 	}
 }
 
-void OperateBookLever(int i, bool sendmsg)
+void OperateBookLever(Object &questBook, bool sendmsg)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
-	if (Objects[i]._oSelFlag != 0 && !qtextflag) {
-		if (Objects[i]._otype == OBJ_BLINDBOOK && Quests[Q_BLIND]._qvar1 == 0) {
+	if (questBook._oSelFlag != 0 && !qtextflag) {
+		if (questBook._otype == OBJ_BLINDBOOK && Quests[Q_BLIND]._qvar1 == 0) {
 			Quests[Q_BLIND]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLIND]._qlog = true;
 			Quests[Q_BLIND]._qvar1 = 1;
 		}
-		if (Objects[i]._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
+		if (questBook._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
 			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			Quests[Q_BLOOD]._qlog = true;
 			Quests[Q_BLOOD]._qvar1 = 1;
 			SpawnQuestItem(IDI_BLDSTONE, SetPiece.position.megaToWorld() + Displacement { 9, 17 }, 0, 1);
 		}
-		if (Objects[i]._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
+		if (questBook._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
 			Quests[Q_WARLORD]._qlog = true;
 			Quests[Q_WARLORD]._qvar1 = 1;
 		}
-		if (Objects[i]._oAnimFrame != Objects[i]._oVar6) {
-			if (Objects[i]._otype != OBJ_BLOODBOOK)
-				ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-			if (Objects[i]._otype == OBJ_BLINDBOOK) {
+		if (questBook._oAnimFrame != questBook._oVar6) {
+			if (questBook._otype != OBJ_BLOODBOOK)
+				ObjChangeMap(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4);
+			if (questBook._otype == OBJ_BLINDBOOK) {
 				SpawnUnique(UITEM_OPTAMULET, SetPiece.position.megaToWorld() + Displacement { 5, 5 });
 				auto tren = TransVal;
 				TransVal = 9;
-				DRLG_MRectTrans({ Objects[i]._oVar1, Objects[i]._oVar2 }, { Objects[i]._oVar3, Objects[i]._oVar4 });
+				DRLG_MRectTrans({ questBook._oVar1, questBook._oVar2 }, { questBook._oVar3, questBook._oVar4 });
 				TransVal = tren;
 			}
 		}
-		Objects[i]._oAnimFrame = Objects[i]._oVar6;
-		InitQTextMsg(Objects[i].bookMessage);
+		questBook._oAnimFrame = questBook._oVar6;
+		InitQTextMsg(questBook.bookMessage);
 		if (sendmsg)
-			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
+			NetSendCmdParam1(false, CMD_OPERATEOBJ, questBook.GetId());
 	}
 }
 
@@ -2334,32 +2333,32 @@ void OperateChamberOfBoneBook(Object &questBook)
 	InitQTextMsg(textdef);
 }
 
-void OperateChest(const Player &player, int i, bool sendmsg)
+void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	if (chest._oSelFlag == 0) {
 		return;
 	}
 
-	PlaySfxLoc(IS_CHEST, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame += 2;
-	SetRndSeed(Objects[i]._oRndSeed);
+	PlaySfxLoc(IS_CHEST, chest.position);
+	chest._oSelFlag = 0;
+	chest._oAnimFrame += 2;
+	SetRndSeed(chest._oRndSeed);
 	if (setlevel) {
-		for (int j = 0; j < Objects[i]._oVar1; j++) {
-			CreateRndItem(Objects[i].position, true, sendmsg, false);
+		for (int j = 0; j < chest._oVar1; j++) {
+			CreateRndItem(chest.position, true, sendLootMsg, false);
 		}
 	} else {
-		for (int j = 0; j < Objects[i]._oVar1; j++) {
-			if (Objects[i]._oVar2 != 0)
-				CreateRndItem(Objects[i].position, false, sendmsg, false);
+		for (int j = 0; j < chest._oVar1; j++) {
+			if (chest._oVar2 != 0)
+				CreateRndItem(chest.position, false, sendLootMsg, false);
 			else
-				CreateRndUseful(Objects[i].position, sendmsg);
+				CreateRndUseful(chest.position, sendLootMsg);
 		}
 	}
-	if (Objects[i].IsTrappedChest()) {
-		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
+	if (chest.IsTrappedChest()) {
+		Direction mdir = GetDirection(chest.position, player.position.tile);
 		missile_id mtype;
-		switch (Objects[i]._oVar4) {
+		switch (chest._oVar4) {
 		case 0:
 			mtype = MIS_ARROW;
 			break;
@@ -2381,11 +2380,11 @@ void OperateChest(const Player &player, int i, bool sendmsg)
 		default:
 			mtype = MIS_ARROW;
 		}
-		AddMissile(Objects[i].position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
-		Objects[i]._oTrapFlag = false;
+		AddMissile(chest.position, player.position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+		chest._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
-		NetSendCmdParam1(false, CMD_PLROPOBJ, i);
+		NetSendCmdParam1(false, CMD_PLROPOBJ, chest.GetId());
 }
 
 void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
@@ -4859,7 +4858,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		OperateLever(i, sendmsg);
+		OperateLever(object, sendmsg);
 		break;
 	case OBJ_BOOK2L:
 		OperateBook(player, object);
@@ -4873,7 +4872,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		OperateChest(player, i, sendmsg);
+		OperateChest(player, object, sendmsg);
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
@@ -4885,7 +4884,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(i, sendmsg);
+		OperateBookLever(object, sendmsg);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -5057,7 +5056,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		OperateLever(i, sendmsg);
+		OperateLever(object, sendmsg);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -5065,7 +5064,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		OperateChest(player, i, false);
+		OperateChest(player, object, false);
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
@@ -5074,7 +5073,7 @@ void SyncOpObject(Player &player, int cmd, int i)
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
 	case OBJ_STEELTOME:
-		OperateBookLever(i, sendmsg);
+		OperateBookLever(object, sendmsg);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
