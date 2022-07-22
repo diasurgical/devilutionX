@@ -1,3 +1,5 @@
+#!/bin/sh
+
 main() {
 	install_dependencies
 	install_toolchain
