@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
 "|| n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -384,7 +384,7 @@ msgstr "Wymagania:"
 
 #: Source/DiabloUI/selconn.cpp:66
 msgid "no gateway needed"
-msgstr "bramka nie jest wymagana"
+msgstr "Bez bramki"
 
 #: Source/DiabloUI/selconn.cpp:72
 msgid "Select Connection"
@@ -551,7 +551,7 @@ msgstr "Gracze: "
 
 #: Source/DiabloUI/selgame.cpp:297
 msgid "Select Difficulty"
-msgstr "Wybierz Poziom Trudności"
+msgstr "Poziom Trudności"
 
 #: Source/DiabloUI/selgame.cpp:315
 msgid "Join {:s} Games"
@@ -848,7 +848,7 @@ msgid ""
 msgstr ""
 "DevilutionX jest zarządzane przez Diasurgical, wszelkie problemy należy "
 "przesyłać na adres https://github.com/diasurgical/devilutionX Abyśmy mogli "
-"ci lepiej pomóc, pamiętaj o podaniu numeru wersji, systemu operacyjnego i "
+"Ci lepiej pomóc, pamiętaj o podaniu numeru wersji, systemu operacyjnego i "
 "typu problemu."
 
 #: Source/DiabloUI/support_lines.cpp:13
@@ -982,7 +982,7 @@ msgstr "Menu Główne"
 
 #: Source/control.cpp:162 Source/diablo.cpp:1535
 msgid "Inventory"
-msgstr "Inwentarz"
+msgstr "Ekwipunek"
 
 #: Source/control.cpp:163
 msgid "Spell book"
@@ -1320,7 +1320,7 @@ msgstr "Przełącza, czy wyświetlana jest automapa."
 
 #: Source/diablo.cpp:1536
 msgid "Open Inventory screen."
-msgstr "Wyświetla ekran Inwentarza."
+msgstr "Wyświetla ekran Ekwipunku."
 
 #: Source/diablo.cpp:1543
 msgid "Character"
@@ -1809,7 +1809,7 @@ msgstr "B: Wyświetla księgę zaklęć"
 
 #: Source/help.cpp:34
 msgid "I: Open Inventory screen"
-msgstr "I: Wyświetla inwentarz"
+msgstr "I: Wyświetla ekwipunek"
 
 #: Source/help.cpp:35
 msgid "C: Open Character screen"
@@ -1860,7 +1860,7 @@ msgstr ""
 
 #: Source/help.cpp:46
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
-msgstr "Shift + LPM (na pasie): Przenieś przedmiot do inwentarza"
+msgstr "Shift + LPM (na pasie): Przenieś przedmiot do ekwipunku"
 
 #: Source/help.cpp:48
 msgid "$Movement:"
@@ -2032,7 +2032,7 @@ msgstr "Nie udało się utworzyć głównego okna"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:235 Source/panels/charpanel.cpp:164
 msgid "Gold"
-msgstr "Złota"
+msgstr "Złoto"
 
 #: Source/itemdat.cpp:54 Source/itemdat.cpp:172
 msgid "Short Sword"
@@ -3233,7 +3233,7 @@ msgstr "kruchości"
 
 #: Source/itemdat.cpp:385
 msgid "sturdiness"
-msgstr "agresji"
+msgstr "krzepy"
 
 #: Source/itemdat.cpp:386
 msgid "craftsmanship"
@@ -3996,7 +3996,7 @@ msgstr "PPM by odczytać"
 
 #: Source/items.cpp:1829 Source/items.cpp:1844 Source/items.cpp:1858
 msgid "Open inventory to use"
-msgstr "Wyświetla inwentarz do użycia"
+msgstr "Otwórz ekwipunek, aby użyć"
 
 #: Source/items.cpp:1831 Source/items.cpp:1846 Source/items.cpp:1868
 msgid "Activate to read"
@@ -5643,7 +5643,7 @@ msgstr "Brak odporności na magię"
 
 #: Source/monster.cpp:4685
 msgid "Resists:"
-msgstr "Odporność na:"
+msgstr "Odporności:"
 
 #: Source/monster.cpp:4687 Source/monster.cpp:4697
 msgid " Magic"
@@ -6335,7 +6335,7 @@ msgstr "Użyj kursora sprzętowego"
 
 #: Source/options.cpp:771
 msgid "Hardware Cursor For Items"
-msgstr "Kursor sprzętowy dla przedmiotów"
+msgstr "Kursor sprzęt. dla przedmiotów"
 
 #: Source/options.cpp:771
 msgid "Use a hardware cursor for items."
@@ -6343,7 +6343,7 @@ msgstr "Użyj kursora sprzętowego dla przedmiotów."
 
 #: Source/options.cpp:772
 msgid "Hardware Cursor Maximum Size"
-msgstr "Maksymalny rozmiar kursora sprzętowego"
+msgstr "Maks. rozmiar kursora sprzętowego"
 
 #: Source/options.cpp:772
 msgid ""
@@ -6373,7 +6373,7 @@ msgstr "Wyświetlanie liczby FPS w lewym górnym rogu ekranu."
 
 #: Source/options.cpp:776
 msgid "Show health values"
-msgstr "Pokaż ilość życia"
+msgstr "Pokaż punkty życia"
 
 #: Source/options.cpp:776
 msgid "Displays current / max health value on health globe."
@@ -6381,7 +6381,7 @@ msgstr "Wyświetla aktualną / maksymalną wartość stanu zdrowia na kuli zdrow
 
 #: Source/options.cpp:777
 msgid "Show mana values"
-msgstr "Pokaż ilość many"
+msgstr "Pokaż punkty many"
 
 #: Source/options.cpp:777
 msgid "Displays current / max mana value on mana globe."
@@ -6484,7 +6484,7 @@ msgstr "Pasek zdrowia wroga zostanie wyświetlony w górnej części ekranu."
 
 #: Source/options.cpp:837
 msgid "Auto Gold Pickup"
-msgstr "Automatyczne podnoszenie złota"
+msgstr "Auto podnoszenie złota"
 
 #: Source/options.cpp:837
 msgid "Gold is automatically collected when in close proximity to the player."
@@ -6492,7 +6492,7 @@ msgstr "Złoto jest automatycznie zbierane, gdy znajduje się w pobliżu gracza.
 
 #: Source/options.cpp:838
 msgid "Auto Elixir Pickup"
-msgstr "Automatyczne podnoszenie eliksirów"
+msgstr "Auto podnoszenie eliksirów"
 
 #: Source/options.cpp:838
 msgid ""
@@ -6631,7 +6631,7 @@ msgstr "Liczba mikstur Leczenia, które są podnoszone automatycznie."
 
 #: Source/options.cpp:852
 msgid "Full Heal Potion Pickup"
-msgstr "Podnoszenie mikstur Pełnego Leczenia"
+msgstr "Podnoszenie mikstur Pełn. Leczenia"
 
 #: Source/options.cpp:852
 msgid "Number of Full Healing potions to pick up automatically."
@@ -6663,7 +6663,7 @@ msgstr "Liczba mikstur Wzmocnienia, które będą podnoszone automatycznie."
 
 #: Source/options.cpp:856
 msgid "Full Rejuvenation Potion Pickup"
-msgstr "Podnoszenie mikstur Pełnego Wzmocnienia"
+msgstr "Podnoszenie mikstur Pełn. Wzmocnienia"
 
 #: Source/options.cpp:856
 msgid "Number of Full Rejuvenation potions to pick up automatically."
@@ -6779,8 +6779,9 @@ msgstr "Mana"
 #: Source/panels/charpanel.cpp:188
 msgid "Resist magic"
 msgstr ""
-"Odporność na:\n"
-"Magię"
+"Odporności:\n"
+"Magia\n"
+" "
 
 #: Source/panels/charpanel.cpp:190
 msgid "Resist fire"
@@ -6797,7 +6798,7 @@ msgstr "czat"
 
 #: Source/panels/mainpanel.cpp:84
 msgid "char"
-msgstr "pos."
+msgstr "postać"
 
 #: Source/panels/mainpanel.cpp:85
 msgid "quests"
@@ -6813,7 +6814,7 @@ msgstr "menu"
 
 #: Source/panels/mainpanel.cpp:88
 msgid "inv"
-msgstr "inw"
+msgstr "ekwipunek"
 
 #: Source/panels/mainpanel.cpp:89
 msgid "spells"
