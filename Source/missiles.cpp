@@ -2710,14 +2710,14 @@ void MI_Arrow(Missile &missile)
 	int maxd;
 	switch (missile.sourceType()) {
 	case MissileSource::Player: {
-		const Player *player = missile.sourcePlayer();
-		mind = player->_pIMinDam;
-		maxd = player->_pIMaxDam;
+		const Player &player = *missile.sourcePlayer();
+		mind = player._pIMinDam;
+		maxd = player._pIMaxDam;
 	} break;
 	case MissileSource::Monster: {
-		const Monster *monster = missile.sourceMonster();
-		mind = monster->minDamage;
-		maxd = monster->maxDamage;
+		const Monster &monster = *missile.sourceMonster();
+		mind = monster.minDamage;
+		maxd = monster.maxDamage;
 	} break;
 	case MissileSource::Trap:
 		mind = currlevel;
