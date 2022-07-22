@@ -17,7 +17,7 @@ jobs:
 
     - name:  Install toolchain
       working-directory: ${{github.workspace}}
-      run: sudo Packaging/miyoo_mini/setup_toolchain.sh
+      run: Packaging/miyoo_mini/setup_toolchain.sh
 
     - name:  Build
       working-directory: ${{github.workspace}}
