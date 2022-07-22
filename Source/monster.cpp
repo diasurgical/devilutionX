@@ -1790,10 +1790,8 @@ bool RandomWalk(Monster &monster, Direction md)
 	return ok;
 }
 
-bool RandomWalk2(int monsterId, Direction md)
+bool RandomWalk2(Monster &monster, Direction md)
 {
-	auto &monster = Monsters[monsterId];
-
 	Direction mdtemp = md;
 	bool ok = DirOK(monster, md); // Can we continue in the same direction
 
@@ -2807,7 +2805,7 @@ void SnakeAi(int monsterId)
 			}
 
 			if (!Walk(monster, md))
-				RandomWalk2(monsterId, monster.direction);
+				RandomWalk2(monster, monster.direction);
 		} else {
 			AiDelay(monster, 15 - monster.intelligence + GenerateRnd(10));
 		}
