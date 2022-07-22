@@ -59,11 +59,11 @@ struct Quest {
 
 	bool IsAvailable();
 
-	void activateMultiStageQuest(uint8_t quest_stage = 1)
+	void activateMultiStageQuest()
 	{
 		_qactive = QUEST_ACTIVE;
 		_qlog = true;
-		_qvar1 = quest_stage;
+		_qvar1 = 1;
 	}
 };
 

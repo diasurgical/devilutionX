@@ -412,7 +412,8 @@ void TalkToWitch(Player &player, Towner & /*witch*/)
 {
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_FUNGALTM)) {
-			Quests[Q_MUSHROOM].activateMultiStageQuest(static_cast<uint8_t>(QS_TOMEGIVEN));
+			Quests[Q_MUSHROOM].activateMultiStageQuest();
+			Quests[Q_MUSHROOM]._qvar1 = static_cast<uint8_t>(QS_TOMEGIVEN);
 			InitQTextMsg(TEXT_MUSH8);
 			return;
 		}
@@ -514,7 +515,8 @@ void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 	auto &betrayerQuest = Quests[Q_BETRAYER];
 	if (!gbIsMultiplayer) {
 		if (betrayerQuest._qactive == QUEST_INIT && RemoveInventoryItemById(player, IDI_LAZSTAFF)) {
-			betrayerQuest.activateMultiStageQuest(2);
+			betrayerQuest.activateMultiStageQuest();
+			betrayerQuest._qvar1 = 2;
 			InitQTextMsg(TEXT_VILE1);
 			return;
 		}
