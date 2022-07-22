@@ -3233,7 +3233,7 @@ msgstr "kruchości"
 
 #: Source/itemdat.cpp:385
 msgid "sturdiness"
-msgstr "agresji"
+msgstr "krzepy"
 
 #: Source/itemdat.cpp:386
 msgid "craftsmanship"
@@ -3996,7 +3996,7 @@ msgstr "PPM by odczytać"
 
 #: Source/items.cpp:1829 Source/items.cpp:1844 Source/items.cpp:1858
 msgid "Open inventory to use"
-msgstr "Wyświetla ekwipunek do użycia"
+msgstr "Otwórz ekwipunek, aby użyć"
 
 #: Source/items.cpp:1831 Source/items.cpp:1846 Source/items.cpp:1868
 msgid "Activate to read"
