@@ -1117,7 +1117,7 @@ void StartFadeout(Monster &monster, Direction md, bool backwards)
 /**
  * @brief Starts the monster healing procedure.
  *
- * The monster will be healed between 1.47% and 25% of its max HP. The healing amount is stored in _mVar1.
+ * The monster will be healed between 1.47% and 25% of its max HP. The healing amount is stored in var1.
  *
  * This is only used by Gargoyles.
  *
@@ -1504,7 +1504,6 @@ bool MonsterFadeout(Monster &monster)
  * This is triggered by StartHeal()
  *
  * @param monster The monster that will be healed.
- * @return
  */
 void MonsterHeal(Monster &monster)
 {
@@ -1767,51 +1766,56 @@ void GroupUnity(Monster &monster)
 	}
 }
 
-bool RandomWalk(Monster &monster, Direction md)
+/**
+ * @brief Walks the monster in the direction md.
+ *
+ * Take the following monster for example:
+ *
+ * @code{.unparsed}
+ * ↖️ ⬆️ ↗️
+ * ⬅️ 😈 ➡️
+ * ↙️ ⬇️ ↘️
+ * @endcode
+ *
+ * If RandomWalk is called with ➡️ the monster will try to walk into that
+ * direction, but if it is blocked, it will try the next adjacent directions: ↗️ and ↘️.
+ *
+ * If those directions are blocked, the monster will try the next adjacent
+ * directions: ⬆️ and ⬇️. But only if narrow is false.
+ *
+ * @param monster The monster to move.
+ * @param md The direction to move the monster.
+ * @param narrow If true, the monster will only try the adjacent direction of md (Used by Snakes only).
+ * @return true If the monster was able to walk anywhere.
+ */
+bool RandomWalk(Monster &monster, Direction md, bool narrow = false)
 {
-	Direction mdtemp = md;
+	// Tries to walk in the direction md.
+	if (Walk(monster, md))
+		return true;
 
-	bool ok = DirOK(monster, md);
-	if (FlipCoin())
-		ok = ok || (md = Right(mdtemp), DirOK(monster, md)) || (md = Left(mdtemp), DirOK(monster, md));
-	else
-		ok = ok || (md = Left(mdtemp), DirOK(monster, md)) || (md = Right(mdtemp), DirOK(monster, md));
+	bool ok = false;
+	// Tries the next adjacent directions.
 	if (FlipCoin()) {
-		ok = ok
-		    || (md = Left(Left(mdtemp)), DirOK(monster, md))
-		    || (md = Right(Right(mdtemp)), DirOK(monster, md));
+		ok = WalkAny(monster, { Left(md), Right(md) });
 	} else {
-		ok = ok
-		    || (md = Right(Right(mdtemp)), DirOK(monster, md))
-		    || (md = Left(Left(mdtemp)), DirOK(monster, md));
-	}
-	if (ok)
-		Walk(monster, md);
-	return ok;
-}
-
-bool RandomWalk2(int monsterId, Direction md)
-{
-	auto &monster = Monsters[monsterId];
-
-	Direction mdtemp = md;
-	bool ok = DirOK(monster, md); // Can we continue in the same direction
-
-	// Randomly go left or right
-	if (FlipCoin()) {
-		ok = ok || (mdtemp = Right(md), DirOK(monster, Right(md))) || (mdtemp = Left(md), DirOK(monster, Left(md)));
-	} else {
-		ok = ok || (mdtemp = Left(md), DirOK(monster, Left(md))) || (mdtemp = Right(md), DirOK(monster, Right(md)));
+		ok = WalkAny(monster, { Right(md), Left(md) });
 	}
 
-	if (ok)
-		Walk(monster, mdtemp);
+	// Tries the next adjacent directions.
+	if (!ok && !narrow) {
+		if (FlipCoin()) {
+			ok = WalkAny(monster, { Left(Left(md)), Right(Right(md)) });
+		} else {
+			ok = WalkAny(monster, { Right(Right(md)), Left(Left(md)) });
+		}
+	}
 
 	return ok;
 }
 
 /**
- * @brief Check if a tile is affected by a spell we are vunerable to
+ * @brief Check if a tile is affected by a spell we are vulnerable to
  */
 bool IsTileSafe(const Monster &monster, Point position)
 {
@@ -1889,18 +1893,8 @@ bool RoundWalk(Monster &monster, Direction direction, int8_t *dir)
 	Direction turn45deg = Turn(direction, *dir != 0);
 	Direction turn90deg = Turn(turn45deg, *dir != 0);
 
-	// Turn 90 degrees
-	if (Walk(monster, turn90deg)) {
-		return true;
-	}
-
-	// Only do a small turn
-	if (Walk(monster, turn45deg)) {
-		return true;
-	}
-
-	// Continue straight
-	if (Walk(monster, direction)) {
+	// Tries walking 90 degrees, 45 degrees and then straight.
+	if (WalkAny(monster, { turn90deg, turn45deg, direction })) {
 		return true;
 	}
 
@@ -2807,7 +2801,7 @@ void SnakeAi(int monsterId)
 			}
 
 			if (!Walk(monster, md))
-				RandomWalk2(monsterId, monster.direction);
+				RandomWalk(monster, monster.direction, true);
 		} else {
 			AiDelay(monster, 15 - monster.intelligence + GenerateRnd(10));
 		}
@@ -4066,6 +4060,24 @@ bool Walk(Monster &monster, Direction md)
 		break;
 	}
 	return true;
+}
+
+bool WalkAny(Monster &monster, std::initializer_list<Direction> directions)
+{
+	for (auto direction : directions) {
+		if (Walk(monster, direction))
+			return true;
+	}
+	return false;
+}
+
+bool WalkAny(Monster &monster, std::vector<Direction> directions)
+{
+	for (auto direction : directions) {
+		if (Walk(monster, direction))
+			return true;
+	}
+	return false;
 }
 
 void GolumAi(int monsterId)

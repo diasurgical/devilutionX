@@ -10,6 +10,7 @@
 
 #include <array>
 #include <functional>
+#include <vector>
 
 #include "engine.h"
 #include "engine/actor_position.hpp"
@@ -380,6 +381,8 @@ void M_UpdateRelations(const Monster &monster);
 void DoEnding();
 void PrepDoEnding();
 bool Walk(Monster &monster, Direction md);
+bool WalkAny(Monster &monster, std::initializer_list<Direction> directions);
+bool WalkAny(Monster &monster, std::vector<Direction> directions);
 void GolumAi(int monsterId);
 void DeleteMonsterList();
 void ProcessMonsters();
