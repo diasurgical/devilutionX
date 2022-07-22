@@ -36,6 +36,11 @@ public:
 		data_.reset();
 	}
 
+	[[noexcept]] size_t count() const
+	{
+		return data_.count();
+	}
+
 private:
 	static size_t index(size_t x, size_t y)
 	{
