@@ -1,6 +1,10 @@
 set(BUILD_ASSETS_MPQ OFF)
 set(USE_SDL1 ON)
 
+# LTO temporarily disabled to work around a compiler bug.
+# https://github.com/diasurgical/devilutionX/issues/4953
+set(DISABLE_LTO OFF)
+
 set(SDL1_VIDEO_MODE_BPP 8)
 set(SDL1_VIDEO_MODE_FLAGS SDL_HWSURFACE|SDL_TRIPLEBUF)
 set(SDL1_FORCE_SVID_VIDEO_MODE ON)
