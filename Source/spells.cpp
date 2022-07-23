@@ -169,13 +169,6 @@ int GetManaAmount(const Player &player, spell_id sn)
 		ma = spelldata[sn].sMinMana << 6;
 	}
 
-	if (*sgOptions.Gameplay.manaRegen) {
-		const int min = 15;
-		ma *= 2;
-		if (ma < min)
-			ma += min;
-	}
-
 	return ma;
 }
 
@@ -200,6 +193,9 @@ void UseMana(Player &player, spell_id sn)
 			break;
 #endif
 		int ma = GetManaAmount(player, sn);
+		if (*sgOptions.Gameplay.manaRegen) {
+			ma *= 3;
+		}
 		player._pMana -= ma;
 		player._pManaBase -= ma;
 		drawmanaflag = true;
