@@ -4685,51 +4685,43 @@ void RedoPlayerVision()
 	}
 }
 
-void MonstCheckDoors(Monster &monster)
+void MonstCheckDoors(const Monster &monster)
 {
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
-	if (dObject[mx - 1][my - 1] != 0
-	    || dObject[mx][my - 1] != 0
-	    || dObject[mx + 1][my - 1] != 0
-	    || dObject[mx - 1][my] != 0
-	    || dObject[mx + 1][my] != 0
-	    || dObject[mx - 1][my + 1] != 0
-	    || dObject[mx][my + 1] != 0
-	    || dObject[mx + 1][my + 1] != 0) {
-		for (int i = 0; i < ActiveObjectCount; i++) {
-			// Assuming the object is a door, if it isn't none of the OperateDoor functions will actually be called and we just go to the next object.
-			Object &door = Objects[ActiveObjects[i]];
+	for (Direction dir : { Direction::NorthEast, Direction::SouthWest, Direction::North, Direction::East, Direction::South, Direction::West, Direction::NorthWest, Direction::SouthEast }) {
+		Object *object = ObjectAtPosition(monster.position.tile + dir);
+		if (object == nullptr)
+			continue;
 
-			if (door._oVar4 != 0) {
-				// Door is not closed, don't need to try open it
-				continue;
-			}
+		Object &door = *object;
+		// Doors use _oVar4 to track open/closed state, non-zero values indicate an open door
+		// we don't use Object::isDoor since the later conditions will check the object is actually a door anyway.
+		if (door._oVar4 != 0)
+			continue;
 
-			// L3 doors are backwards, see OperateL3Door
-			int dpx = abs(door.position.x - mx);
-			int dpy = abs(door.position.y - my);
-			if (dpx == 1 && dpy <= 1) {
-				if (door._otype == OBJ_L1LDOOR) {
-					OperateL1LDoor(door, true);
-				} else if (door._otype == OBJ_L2LDOOR) {
-					OperateL2LDoor(door, true);
-				} else if (door._otype == OBJ_L3RDOOR) {
-					OperateL3RDoor(door, true);
-				} else if (door._otype == OBJ_L5LDOOR) {
-					OperateL5LDoor(door, true);
-				}
+		// Strictly speaking these checks shouldn't be required, they're guarding against monsters
+		// standing in a wall opening an adjacent door. Shouldn't be possible?
+		if (IsNoneOf(dir, Direction::NorthEast, Direction::SouthWest)) {
+			if (door._otype == OBJ_L1LDOOR) {
+				OperateL1LDoor(door, true);
+			} else if (door._otype == OBJ_L2LDOOR) {
+				OperateL2LDoor(door, true);
+			} else if (door._otype == OBJ_L3RDOOR) {
+				// L3 doors are backwards, see OperateL3Door
+				OperateL3RDoor(door, true);
+			} else if (door._otype == OBJ_L5LDOOR) {
+				OperateL5LDoor(door, true);
 			}
-			if (dpx <= 1 && dpy == 1) {
-				if (door._otype == OBJ_L1RDOOR) {
-					OperateL1RDoor(door, true);
-				} else if (door._otype == OBJ_L2RDOOR) {
-					OperateL2RDoor(door, true);
-				} else if (door._otype == OBJ_L3LDOOR) {
-					OperateL3LDoor(door, true);
-				} else if (door._otype == OBJ_L5RDOOR) {
-					OperateL5RDoor(door, true);
-				}
+		}
+		if (IsNoneOf(dir, Direction::NorthWest, Direction::SouthEast)) {
+			if (door._otype == OBJ_L1RDOOR) {
+				OperateL1RDoor(door, true);
+			} else if (door._otype == OBJ_L2RDOOR) {
+				OperateL2RDoor(door, true);
+			} else if (door._otype == OBJ_L3LDOOR) {
+				// L3 doors are backwards, see OperateL3Door
+				OperateL3LDoor(door, true);
+			} else if (door._otype == OBJ_L5RDOOR) {
+				OperateL5RDoor(door, true);
 			}
 		}
 	}
