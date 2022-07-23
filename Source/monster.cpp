@@ -1055,16 +1055,16 @@ void HitMonster(Monster &monster, int dam)
 	}
 }
 
-void MonsterHitMonster(Monster &monster, int i, int dam)
+void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
 {
-	if (i < MAX_PLRS)
-		monster.whoHit |= 1 << i;
+	if (attacker.type().type == MT_GOLEM)
+		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
 
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
-		monster.direction = Opposite(Monsters[i].direction);
+	if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
+		target.direction = Opposite(attacker.direction);
 	}
 
-	HitMonster(monster, dam);
+	HitMonster(target, dam);
 }
 
 void StartDeathFromMonster(Monster &attacker, Monster &target)
@@ -1217,7 +1217,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	if (monster.hitPoints >> 6 <= 0) {
 		StartDeathFromMonster(attackingMonster, monster);
 	} else {
-		MonsterHitMonster(monster, i, dam);
+		MonsterHitMonster(attackingMonster, monster, dam);
 	}
 
 	if (monster.activeForTicks == 0) {
