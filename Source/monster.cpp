@@ -1067,24 +1067,19 @@ void MonsterHitMonster(Monster &monster, int i, int dam)
 	HitMonster(monster, dam);
 }
 
-void StartDeathFromMonster(int i, int mid)
+void StartDeathFromMonster(Monster &attacker, Monster &target)
 {
-	assert(static_cast<size_t>(i) < MaxMonsters);
-	Monster &killer = Monsters[i];
-	assert(static_cast<size_t>(mid) < MaxMonsters);
-	Monster &monster = Monsters[mid];
+	delta_kill_monster(target, target.position.tile, *MyPlayer);
+	NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
 
-	delta_kill_monster(monster, monster.position.tile, *MyPlayer);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
+	if (attacker.type().type == MT_GOLEM)
+		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
 
-	if (killer.type().type == MT_GOLEM)
-		monster.whoHit |= 1 << i;
-
-	Direction md = GetDirection(monster.position.tile, killer.position.tile);
-	MonsterDeath(monster, md, true);
+	Direction md = GetDirection(target.position.tile, attacker.position.tile);
+	MonsterDeath(target, md, true);
 
 	if (gbIsHellfire)
-		M_StartStand(killer, killer.direction);
+		M_StartStand(attacker, attacker.direction);
 }
 
 void StartFadein(Monster &monster, Direction md, bool backwards)
@@ -1204,6 +1199,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 {
 	assert(static_cast<size_t>(mid) < MaxMonsters);
 	auto &monster = Monsters[mid];
+	Monster &attackingMonster = Monsters[i];
 
 	if (!monster.isPossibleToHit())
 		return;
@@ -1219,12 +1215,11 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 	monster.hitPoints -= dam;
 	if (monster.hitPoints >> 6 <= 0) {
-		StartDeathFromMonster(i, mid);
+		StartDeathFromMonster(attackingMonster, monster);
 	} else {
 		MonsterHitMonster(monster, i, dam);
 	}
 
-	Monster &attackingMonster = Monsters[i];
 	if (monster.activeForTicks == 0) {
 		monster.activeForTicks = UINT8_MAX;
 		monster.position.last = attackingMonster.position.tile;
