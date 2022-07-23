@@ -565,9 +565,9 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryInt<int> numRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	OptionEntryInt<int> numFullRejuPotionPickup;
-	/** @brief Regenerate HP over time */
+	/** @brief Regenerate HP over time, and make healing potions more expensive */
 	OptionEntryBoolean hpRegen;
-	/** @brief Regenerate Mana over time */
+	/** @brief Regenerate Mana over time, and make spells and mana restoring potions more expensive */
 	OptionEntryBoolean manaRegen;
 };
 
