@@ -1386,6 +1386,7 @@ void AddLightningWall(Missile &missile, const AddMissileParameter &parameter)
 		missile.var2 = player.position.tile.y;
 	} break;
 	case MissileSource::Monster:
+		assert(false); // Monsters aren't expected to cast lightning wall
 		break;
 	}
 }
