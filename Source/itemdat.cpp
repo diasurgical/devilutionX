@@ -48,8 +48,8 @@ string_view ItemTypeToString(ItemType itemType)
 	return "";
 }
 
-const float HpMod = *sgOptions.Gameplay.hpRegen ? 1.5 : 1;
-const float ManaMod = *sgOptions.Gameplay.manaRegen ? 1.5 : 1;
+const float HpMod = *sgOptions.Gameplay.hpRegen ? 2 : 1;
+const float ManaMod = *sgOptions.Gameplay.manaRegen ? 2 : 1;
 
 /** Contains the data related to each item ID. */
 ItemData AllItemsList[] = {
