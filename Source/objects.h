@@ -301,7 +301,7 @@ void AddObject(_object_id objType, Point objPos);
 void OperateTrap(Object &trap);
 void ProcessObjects();
 void RedoPlayerVision();
-void MonstCheckDoors(Monster &monster);
+void MonstCheckDoors(const Monster &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 int ItemMiscIdIdx(item_misc_id imiscid);

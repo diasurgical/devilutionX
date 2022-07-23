@@ -4685,51 +4685,43 @@ void RedoPlayerVision()
 	}
 }
 
-void MonstCheckDoors(Monster &monster)
+void MonstCheckDoors(const Monster &monster)
 {
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
-	if (dObject[mx - 1][my - 1] != 0
-	    || dObject[mx][my - 1] != 0
-	    || dObject[mx + 1][my - 1] != 0
-	    || dObject[mx - 1][my] != 0
-	    || dObject[mx + 1][my] != 0
-	    || dObject[mx - 1][my + 1] != 0
-	    || dObject[mx][my + 1] != 0
-	    || dObject[mx + 1][my + 1] != 0) {
-		for (int i = 0; i < ActiveObjectCount; i++) {
-			Object &object = Objects[ActiveObjects[i]];
-			if ((object._otype == OBJ_L1LDOOR || object._otype == OBJ_L1RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L1LDOOR)
-					OperateL1LDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L1RDOOR)
-					OperateL1RDoor(object, true);
+	for (Direction dir : { Direction::NorthEast, Direction::SouthWest, Direction::North, Direction::East, Direction::South, Direction::West, Direction::NorthWest, Direction::SouthEast }) {
+		Object *object = ObjectAtPosition(monster.position.tile + dir);
+		if (object == nullptr)
+			continue;
+
+		Object &door = *object;
+		// Doors use _oVar4 to track open/closed state, non-zero values indicate an open door
+		// we don't use Object::isDoor since the later conditions will check the object is actually a door anyway.
+		if (door._oVar4 != 0)
+			continue;
+
+		// Strictly speaking these checks shouldn't be required, they're guarding against monsters
+		// standing in a wall opening an adjacent door. Shouldn't be possible?
+		if (IsNoneOf(dir, Direction::NorthEast, Direction::SouthWest)) {
+			if (door._otype == OBJ_L1LDOOR) {
+				OperateL1LDoor(door, true);
+			} else if (door._otype == OBJ_L2LDOOR) {
+				OperateL2LDoor(door, true);
+			} else if (door._otype == OBJ_L3RDOOR) {
+				// L3 doors are backwards, see OperateL3Door
+				OperateL3RDoor(door, true);
+			} else if (door._otype == OBJ_L5LDOOR) {
+				OperateL5LDoor(door, true);
 			}
-			if ((object._otype == OBJ_L2LDOOR || object._otype == OBJ_L2RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L2LDOOR)
-					OperateL2LDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L2RDOOR)
-					OperateL2RDoor(object, true);
-			}
-			if ((object._otype == OBJ_L3LDOOR || object._otype == OBJ_L3RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L3RDOOR)
-					OperateL3RDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L3LDOOR)
-					OperateL3LDoor(object, true);
-			}
-			if ((object._otype == OBJ_L5LDOOR || object._otype == OBJ_L5RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L5LDOOR)
-					OperateL5LDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L5RDOOR)
-					OperateL5RDoor(object, true);
+		}
+		if (IsNoneOf(dir, Direction::NorthWest, Direction::SouthEast)) {
+			if (door._otype == OBJ_L1RDOOR) {
+				OperateL1RDoor(door, true);
+			} else if (door._otype == OBJ_L2RDOOR) {
+				OperateL2RDoor(door, true);
+			} else if (door._otype == OBJ_L3LDOOR) {
+				// L3 doors are backwards, see OperateL3Door
+				OperateL3LDoor(door, true);
+			} else if (door._otype == OBJ_L5RDOOR) {
+				OperateL5RDoor(door, true);
 			}
 		}
 	}
