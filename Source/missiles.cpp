@@ -1387,8 +1387,8 @@ void AddLightningWall(Missile &missile, const AddMissileParameter &parameter)
 
 void AddRuneExplosion(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	if (IsAnyOf(missile._micaster, TARGET_MONSTERS, TARGET_BOTH)) {
-		int dmg = 2 * (Players[missile._misource]._pLevel + GenerateRndSum(10, 2)) + 4;
+	if (missile.sourceType() == MissileSource::Player) {
+		int dmg = 2 * (missile.sourcePlayer()->_pLevel + GenerateRndSum(10, 2)) + 4;
 		dmg = ScaleSpellEffect(dmg, missile._mispllvl);
 
 		missile._midam = dmg;
