@@ -1338,13 +1338,13 @@ void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter)
 
 void AddWarp(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
-
 	int minDistanceSq = std::numeric_limits<int>::max();
 	Point src = missile.position.start;
 	Point tile = src;
-	if (missile._misource >= 0) {
-		tile = player.position.tile;
+
+	MissileSource missileSource = missile.sourceType();
+	if (missileSource == MissileSource::Player) {
+		tile = missile.sourcePlayer()->position.tile;
 	}
 
 	for (int i = 0; i < numtrigs && i < MAXTRIGGERS; i++) {
@@ -1366,8 +1366,9 @@ void AddWarp(Missile &missile, const AddMissileParameter & /*parameter*/)
 	}
 	missile._mirange = 2;
 	missile.position.tile = tile;
-	if (missile._micaster == TARGET_MONSTERS)
-		UseMana(player, SPL_WARP);
+	if (missileSource == MissileSource::Player) {
+		UseMana(*missile.sourcePlayer(), SPL_WARP);
+	}
 }
 
 void AddLightningWall(Missile &missile, const AddMissileParameter &parameter)
