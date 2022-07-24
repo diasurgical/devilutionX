@@ -1962,6 +1962,8 @@ void Player::RegenLife()
 		hpMod = _pLevel * 2;
 	else if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		hpMod = _pLevel + _pLevel / 2;
+	else
+		hpMod = _pLevel;
 	if (_pmode != PM_DEATH && _pHitPoints < _pMaxHP) {
 		_pHitPoints = std::min(_pHitPoints + hpMod / lvlMod, _pMaxHP);
 		_pHPBase = std::min(_pHPBase + hpMod / lvlMod, _pMaxHPBase);
