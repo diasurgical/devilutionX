@@ -338,6 +338,12 @@ struct Monster { // note: missing field _mAFNum
 	bool isWalking() const;
 	bool isImmune(missile_id mitype) const;
 	bool isResistant(missile_id mitype) const;
+
+	/**
+	 * Is this a player's golem?
+	 */
+	[[nodiscard]] bool isPlayerMinion() const;
+
 	bool isPossibleToHit() const;
 
 	[[nodiscard]] bool isUnique() const

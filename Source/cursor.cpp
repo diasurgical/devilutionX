@@ -469,7 +469,7 @@ void CheckCursMove()
 				pcursmonst = -1;
 				cursPosition = { mx, my };
 			}
-			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
+			if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
 				pcursmonst = -1;
 			}
 			if (pcursmonst != -1) {
@@ -529,7 +529,7 @@ void CheckCursMove()
 			pcursmonst = -1;
 			cursPosition = { mx, my };
 		}
-		if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
+		if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
 			pcursmonst = -1;
 		}
 	} else {
@@ -680,7 +680,7 @@ void CheckCursMove()
 		pcursitem = -1;
 		cursPosition = { mx, my };
 	}
-	if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
+	if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
 		pcursmonst = -1;
 	}
 }
