@@ -2490,8 +2490,8 @@ void AddFlamec(Missile &missile, const AddMissileParameter &parameter)
 		dst += parameter.midir;
 	}
 	UpdateMissileVelocity(missile, dst, 32);
-	if (missile._micaster == TARGET_MONSTERS) {
-		ConsumeSpell(Players[missile._misource], SPL_FLAME);
+	if (missile.sourceType() == MissileSource::Player) {
+		ConsumeSpell(*missile.sourcePlayer(), SPL_FLAME);
 	}
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
