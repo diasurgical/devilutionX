@@ -3748,7 +3748,7 @@ void MI_Blodboil(Missile &missile)
 		return;
 	}
 
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	int hpdif = player._pMaxHP - player._pHitPoints;
 
