@@ -3593,8 +3593,7 @@ void MI_Boom(Missile &missile)
 
 void MI_Rhino(Missile &missile)
 {
-	int monst = missile._misource;
-	auto &monster = Monsters[monst];
+	Monster &monster = *missile.sourceMonster();
 	if (monster.mode != MonsterMode::Charge) {
 		missile._miDelFlag = true;
 		return;
@@ -3621,7 +3620,7 @@ void MI_Rhino(Missile &missile)
 	monster.position.future = newPos;
 	monster.position.old = newPos;
 	monster.position.tile = newPos;
-	dMonster[newPos.x][newPos.y] = -(monst + 1);
+	dMonster[newPos.x][newPos.y] = -(monster.getId() + 1);
 	if (monster.isUnique())
 		ChangeLightXY(missile._mlid, newPos);
 	MoveMissilePos(missile);
