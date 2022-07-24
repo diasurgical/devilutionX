@@ -1935,15 +1935,19 @@ void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddFlash2(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	if (missile._micaster == TARGET_MONSTERS) {
-		if (!missile.IsTrap()) {
-			int dmg = Players[missile._misource]._pLevel + 1;
-			dmg += GenerateRndSum(20, dmg);
-			missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
-			missile._midam += missile._midam / 2;
-		} else {
-			missile._midam = currlevel / 2;
-		}
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		int dmg = missile.sourcePlayer()->_pLevel + 1;
+		dmg += GenerateRndSum(20, dmg);
+		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
+		missile._midam += missile._midam / 2;
+	} break;
+	case MissileSource::Trap:
+		missile._midam = currlevel / 2;
+		break;
+	case MissileSource::Monster:
+		assert(missile.sourceType() == MissileSource::Monster);
+		break;
 	}
 	missile._miPreFlag = true;
 	missile._mirange = 19;
