@@ -285,6 +285,12 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		}
 	} else {
 		if (resist) {
+			if (pnum >= 0)
+				monster.mWhoHit |= 1 << pnum;
+			if (pnum == MyPlayerId) {
+				delta_monster_hp(m, monster._mhitpoints, currlevel);
+				NetSendCmdMonDmg(false, m, dam);
+			}
 			PlayEffect(monster, 1);
 		} else if (monster._mmode == MonsterMode::Petrified) {
 			if (m > MAX_PLRS - 1)
