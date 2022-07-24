@@ -2412,7 +2412,7 @@ void DeltaLoadLevel()
 				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
 					dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 				if (monster.type().type == MT_GOLEM) {
-					GolumAi(i);
+					GolumAi(monster);
 					monster.flags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 				} else {
 					M_StartStand(monster, monster.direction);
