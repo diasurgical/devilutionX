@@ -1197,31 +1197,31 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 {
 	assert(static_cast<size_t>(mid) < MaxMonsters);
-	auto &monster = Monsters[mid];
+	auto &target = Monsters[mid];
 	Monster &attacker = Monsters[i];
 
-	if (!monster.isPossibleToHit())
+	if (!target.isPossibleToHit())
 		return;
 
 	int hit = GenerateRnd(100);
-	if (monster.mode == MonsterMode::Petrified)
+	if (target.mode == MonsterMode::Petrified)
 		hit = 0;
-	if (monster.tryLiftGargoyle())
+	if (target.tryLiftGargoyle())
 		return;
 	if (hit >= hper)
 		return;
 
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
-	monster.hitPoints -= dam;
-	if (monster.hitPoints >> 6 <= 0) {
-		StartDeathFromMonster(attacker, monster);
+	target.hitPoints -= dam;
+	if (target.hitPoints >> 6 <= 0) {
+		StartDeathFromMonster(attacker, target);
 	} else {
-		MonsterHitMonster(attacker, monster, dam);
+		MonsterHitMonster(attacker, target, dam);
 	}
 
-	if (monster.activeForTicks == 0) {
-		monster.activeForTicks = UINT8_MAX;
-		monster.position.last = attacker.position.tile;
+	if (target.activeForTicks == 0) {
+		target.activeForTicks = UINT8_MAX;
+		target.position.last = attacker.position.tile;
 	}
 }
 
