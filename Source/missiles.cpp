@@ -2347,7 +2347,7 @@ void AddWave(Missile &missile, const AddMissileParameter &parameter)
 	missile.var2 = parameter.dst.y;
 	missile._mirange = 1;
 	missile._miAnimFrame = 4;
-	ConsumeSpell(Players[missile._misource], SPL_WAVE);
+	ConsumeSpell(*missile.sourcePlayer(), SPL_WAVE);
 }
 
 void AddNova(Missile &missile, const AddMissileParameter &parameter)
