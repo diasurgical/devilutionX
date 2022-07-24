@@ -1686,14 +1686,14 @@ void AddFirebolt(Missile &missile, const AddMissileParameter &parameter)
 		dst += parameter.midir;
 	}
 	int sp = 26;
-	if (missile._micaster == TARGET_MONSTERS) {
+	if (missile.sourceType() == MissileSource::Player) {
 		sp = 16;
 		if (!missile.IsTrap()) {
 			sp += std::min(missile._mispllvl * 2, 47);
 		}
 
 		if (parameter.pParent == nullptr || parameter.pParent->_mitype != MIS_GUARDIAN)
-			ConsumeSpell(Players[missile._misource], SPL_FIREBOLT);
+			ConsumeSpell(*missile.sourcePlayer(), SPL_FIREBOLT);
 	}
 	UpdateMissileVelocity(missile, dst, sp);
 	SetMissDir(missile, GetDirection16(missile.position.start, dst));
