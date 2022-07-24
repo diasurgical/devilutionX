@@ -582,7 +582,8 @@ void SpawnObjectOrSkeleton(unsigned frequency, _object_id objectType, Point tile
 		AddObject(objectType, tile);
 	} else {
 		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, tile);
+		if (skeleton != nullptr)
+			ActivateSkeleton(*skeleton, tile);
 	}
 }
 } // namespace
@@ -607,7 +608,8 @@ void Theme_SkelRoom(int t)
 
 	{
 		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp, yp - 1 });
+		if (skeleton != nullptr)
+			ActivateSkeleton(*skeleton, { xp, yp - 1 });
 	}
 
 	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERR, { xp + 1, yp - 1 });
@@ -620,7 +622,8 @@ void Theme_SkelRoom(int t)
 
 	{
 		Monster *skeleton = PreSpawnSkeleton();
-		SpawnSkeleton(skeleton, { xp, yp + 1 });
+		if (skeleton != nullptr)
+			ActivateSkeleton(*skeleton, { xp, yp + 1 });
 	}
 
 	SpawnObjectOrSkeleton(monstrnd[leveltype - 1], OBJ_BANNERL, { xp + 1, yp + 1 });

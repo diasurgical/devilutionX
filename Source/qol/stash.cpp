@@ -10,7 +10,7 @@
 #include "cursor.h"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/rectangle.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
@@ -375,10 +375,10 @@ void DrawStash(const Surface &out)
 
 		if (pcursstashitem == itemId) {
 			uint8_t color = GetOutlineColor(item, true);
-			CelBlitOutlineTo(out, color, position, cel, celFrame, false);
+			Cl2DrawOutline(out, color, position, cel, celFrame);
 		}
 
-		CelDrawItem(item, out, position, cel, celFrame);
+		DrawItem(item, out, position, cel, celFrame);
 	}
 
 	Point position = GetPanelPosition(UiPanels::Stash);
@@ -621,7 +621,7 @@ void DrawGoldWithdraw(const Surface &out, int amount)
 
 	const int dialogX = 30;
 
-	CelDrawTo(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), CelSprite { *pGBoxBuff }, 0);
+	Cl2Draw(out, GetPanelPosition(UiPanels::Stash, { dialogX, 178 }), CelSprite { *pGBoxBuff }, 0);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(_("How many gold pieces do you want to withdraw?"), 200);

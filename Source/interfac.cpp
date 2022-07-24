@@ -15,9 +15,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/load_pcx.hpp"
 #include "engine/palette.h"
-#include "engine/pcx_sprite.hpp"
-#include "engine/render/cel_render.hpp"
-#include "engine/render/pcx_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "hwcursor.hpp"
 #include "init.h"
 #include "loadsave.h"
@@ -44,7 +42,7 @@ const uint8_t BarColor[3] = { 138, 43, 254 };
 /** The screen position of the top left corner of the progress bar. */
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
-std::optional<OwnedPcxSprite> ArtCutsceneWidescreen;
+std::optional<OwnedCelSpriteWithFrameHeight> ArtCutsceneWidescreen;
 
 Cutscenes PickCutscene(interface_mode uMsg)
 {
@@ -104,7 +102,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 
 	switch (PickCutscene(uMsg)) {
 	case CutStart:
-		ArtCutsceneWidescreen = LoadPcxAsset("gendata\\cutstartw.pcx");
+		ArtCutsceneWidescreen = LoadPcxAsCl2("gendata\\cutstartw.pcx");
 		celPath = "Gendata\\Cutstart.cel";
 		palPath = "Gendata\\Cutstart.pal";
 		progress_id = 1;
@@ -145,13 +143,13 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutPortal:
-		ArtCutsceneWidescreen = LoadPcxAsset("gendata\\cutportlw.pcx");
+		ArtCutsceneWidescreen = LoadPcxAsCl2("gendata\\cutportlw.pcx");
 		celPath = "Gendata\\Cutportl.cel";
 		palPath = "Gendata\\Cutportl.pal";
 		progress_id = 1;
 		break;
 	case CutPortalRed:
-		ArtCutsceneWidescreen = LoadPcxAsset("gendata\\cutportrw.pcx");
+		ArtCutsceneWidescreen = LoadPcxAsCl2("gendata\\cutportrw.pcx");
 		celPath = "Gendata\\Cutportr.cel";
 		palPath = "Gendata\\Cutportr.pal";
 		progress_id = 1;
@@ -164,7 +162,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 	}
 
 	assert(!sgpBackCel);
-	sgpBackCel = LoadCel(celPath, 640);
+	sgpBackCel = LoadCelAsCl2(celPath, 640);
 	LoadPalette(palPath);
 
 	sgdwProgress = 0;
@@ -181,10 +179,10 @@ void DrawCutsceneBackground()
 	const Rectangle &uiRectangle = GetUIRectangle();
 	const Surface &out = GlobalBackBuffer();
 	if (ArtCutsceneWidescreen) {
-		const PcxSprite sprite { *ArtCutsceneWidescreen };
-		RenderPcxSprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
+		const CelFrameWithHeight sprite = ArtCutsceneWidescreen->sprite();
+		RenderCl2Sprite(out, sprite, { uiRectangle.position.x - (sprite.width() - uiRectangle.size.width) / 2, uiRectangle.position.y });
 	}
-	CelDrawTo(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, CelSprite { *sgpBackCel }, 0);
+	Cl2Draw(out, { uiRectangle.position.x, 480 - 1 + uiRectangle.position.y }, CelSprite { *sgpBackCel }, 0);
 }
 
 void DrawCutsceneForeground()

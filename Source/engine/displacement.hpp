@@ -95,6 +95,14 @@ struct DisplacementOf {
 		return *this;
 	}
 
+	template <typename DeltaU>
+	constexpr DisplacementOf<DeltaT> &operator*=(const DisplacementOf<DeltaU> factor)
+	{
+		deltaX = static_cast<DeltaT>(deltaX * factor.deltaX);
+		deltaY = static_cast<DeltaT>(deltaY * factor.deltaY);
+		return *this;
+	}
+
 	constexpr DisplacementOf<DeltaT> &operator/=(const int factor)
 	{
 		deltaX /= factor;
@@ -279,6 +287,13 @@ constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<Displaceme
 
 template <typename DisplacementDeltaT>
 constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const float factor)
+{
+	a *= factor;
+	return a;
+}
+
+template <typename DisplacementDeltaT, typename DisplacementDeltaU>
+constexpr DisplacementOf<DisplacementDeltaT> operator*(DisplacementOf<DisplacementDeltaT> a, const DisplacementOf<DisplacementDeltaU> factor)
 {
 	a *= factor;
 	return a;

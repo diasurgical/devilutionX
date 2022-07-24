@@ -64,10 +64,8 @@ void ClearReadiedSpell(Player &player)
 	}
 }
 
-void PlacePlayer(int pnum)
+void PlacePlayer(Player &player)
 {
-	Player &player = Players[pnum];
-
 	if (!player.isOnActiveLevel())
 		return;
 
@@ -98,7 +96,7 @@ void PlacePlayer(int pnum)
 
 	player.position.tile = newPosition;
 
-	dPlayer[newPosition.x][newPosition.y] = pnum + 1;
+	dPlayer[newPosition.x][newPosition.y] = player.getId() + 1;
 
 	if (&player == MyPlayer) {
 		ViewPosition = newPosition;
@@ -257,14 +255,8 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 }
 
-void DoResurrect(int pnum, uint16_t rid)
+void DoResurrect(int pnum, Player &target)
 {
-	if ((pnum < 0 && pnum >= MAX_PLRS) || rid >= MAX_PLRS) {
-		return;
-	}
-
-	auto &target = Players[rid];
-
 	AddMissile(target.position.tile, target.position.tile, Direction::South, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
 
 	if (target._pHitPoints != 0)
@@ -280,7 +272,7 @@ void DoResurrect(int pnum, uint16_t rid)
 	ClrPlrPath(target);
 	target.destAction = ACTION_NONE;
 	target._pInvincible = false;
-	PlacePlayer(rid);
+	PlacePlayer(target);
 
 	int hp = 10 << 6;
 	if (target._pMaxHPBase < (10 << 6)) {

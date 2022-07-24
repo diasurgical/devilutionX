@@ -17,11 +17,11 @@ jobs:
     - name: Install APT packages
       run: sudo apt-get update && sudo apt-get install -y clang llvm lld bison flex cmake git gettext
 
-    - name: Clone NXDK Repo
+    - name: Clone nxdk Repo
       shell: bash
-      run: git clone --recursive --depth 1 --branch devilutionx https://github.com/glebm/nxdk.git "$NXDK_DIR"
+      run: git clone --recursive --depth 1 https://github.com/XboxDev/nxdk.git "$NXDK_DIR"
 
-    - name: Build NXDK
+    - name: Build nxdk
       shell: bash
       run: PATH="${NXDK_DIR}/bin:$PATH" make -j $(nproc) -C "$NXDK_DIR" NXDK_ONLY=1 all cxbe
 
@@ -43,5 +43,5 @@ jobs:
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
-        name: devilutionx
+        name: devilutionx-xbox
         path: build-xbox/pkg/

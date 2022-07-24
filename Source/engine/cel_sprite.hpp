@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "appfat.h"
+#include "engine/cel_header.hpp"
 #include "utils/pointer_value_union.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 #include "utils/stdcompat/optional.hpp"
@@ -52,6 +53,11 @@ public:
 	[[nodiscard]] uint16_t Width(std::size_t frame = 0) const
 	{
 		return width_.HoldsPointer() ? width_.AsPointer()[frame] : width_.AsValue();
+	}
+
+	[[nodiscard]] PointerOrValue<uint16_t> widthOrWidths() const
+	{
+		return width_;
 	}
 
 	[[nodiscard]] bool operator==(CelSprite other) const
@@ -162,12 +168,23 @@ public:
 	{
 	}
 
+	OwnedCelSprite(std::unique_ptr<byte[]> data, PointerOrValue<uint16_t> widths)
+	    : data_(std::move(data))
+	    , width_(widths)
+	{
+	}
+
 	OwnedCelSprite(OwnedCelSprite &&) noexcept = default;
 	OwnedCelSprite &operator=(OwnedCelSprite &&) noexcept = default;
 
 	[[nodiscard]] byte *MutableData()
 	{
 		return data_.get();
+	}
+
+	std::unique_ptr<byte[]> data() &&
+	{
+		return std::move(data_);
 	}
 
 private:
@@ -269,9 +286,59 @@ struct CelSpriteWithFrameHeight {
 	unsigned frameHeight;
 };
 
+struct CelFrameWithHeight {
+	CelSprite sprite;
+	uint16_t frameHeight;
+	uint16_t frame;
+
+	[[nodiscard]] uint16_t width() const
+	{
+		return sprite.Width(frame);
+	}
+	[[nodiscard]] uint16_t height() const
+	{
+		return frameHeight;
+	}
+};
+
 struct OwnedCelSpriteWithFrameHeight {
-	OwnedCelSprite sprite;
-	unsigned frameHeight;
+	OwnedCelSprite ownedSprite;
+	uint16_t frameHeight;
+
+	[[nodiscard]] CelFrameWithHeight sprite() const
+	{
+		return { CelSprite { ownedSprite }, frameHeight, 0 };
+	}
+};
+
+struct CelSpriteSheetWithFrameHeight {
+	CelSprite sheet;
+	uint16_t frameHeight;
+
+	[[nodiscard]] unsigned numFrames() const
+	{
+		return LoadLE32(sheet.Data());
+	}
+
+	[[nodiscard]] CelFrameWithHeight sprite(uint16_t frame) const
+	{
+		return { CelSprite { sheet }, frameHeight, frame };
+	}
+};
+
+struct OwnedCelSpriteSheetWithFrameHeight {
+	OwnedCelSprite ownedSprite;
+	uint16_t frameHeight;
+
+	[[nodiscard]] CelSpriteSheetWithFrameHeight sheet() const
+	{
+		return CelSpriteSheetWithFrameHeight { CelSprite { ownedSprite }, frameHeight };
+	}
+
+	[[nodiscard]] CelFrameWithHeight sprite(uint16_t frame) const
+	{
+		return CelFrameWithHeight { CelSprite { ownedSprite }, frameHeight, frame };
+	}
 };
 
 } // namespace devilution

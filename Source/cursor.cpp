@@ -15,7 +15,8 @@
 #include "engine.h"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
+#include "engine/trn.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "levels/trigs.h"
@@ -65,7 +66,8 @@ const uint16_t InvItemWidth2[] = {
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	2 * 28, 2 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28
 	// clang-format on
 };
 constexpr uint16_t InvItems1Size = sizeof(InvItemWidth1) / sizeof(InvItemWidth1[0]);
@@ -101,7 +103,8 @@ const uint16_t InvItemHeight2[InvItems2Size] = {
 	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
 	2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28
 	// clang-format on
 };
 
@@ -117,7 +120,7 @@ uint16_t pcursstashitem;
 /** Current highlighted item */
 int8_t pcursitem;
 /** Current highlighted object */
-int8_t pcursobj;
+Object *ObjectUnderCursor;
 /** Current highlighted player */
 int8_t pcursplr;
 /** Current highlighted tile position */
@@ -130,9 +133,9 @@ int pcurs;
 void InitCursor()
 {
 	assert(!pCursCels);
-	pCursCels = LoadCel("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
+	pCursCels = LoadCelAsCl2("Data\\Inv\\Objcurs.CEL", InvItemWidth1);
 	if (gbIsHellfire)
-		pCursCels2 = LoadCel("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
+		pCursCels2 = LoadCelAsCl2("Data\\Inv\\Objcurs2.CEL", InvItemWidth2);
 	ClearCursor();
 }
 
@@ -159,6 +162,16 @@ Size GetInvItemSize(int cursId)
 	if (i >= InvItems1Size)
 		return { InvItemWidth2[i - InvItems1Size], InvItemHeight2[i - InvItems1Size] };
 	return { InvItemWidth1[i], InvItemHeight1[i] };
+}
+
+void DrawItem(const Item &item, const Surface &out, Point position, CelSprite cel, int frame)
+{
+	const bool usable = item._iStatFlag;
+	if (usable) {
+		Cl2Draw(out, position, cel, frame);
+	} else {
+		Cl2DrawTRN(out, position, cel, frame, GetInfravisionTRN());
+	}
 }
 
 void ResetCursor()
@@ -194,16 +207,16 @@ void NewCursor(int cursId)
 	}
 }
 
-void CelDrawCursor(const Surface &out, Point position, int cursId)
+void DrawSoftwareCursor(const Surface &out, Point position, int cursId)
 {
 	const CelSprite sprite { GetInvItemSprite(cursId) };
 	const int frame = GetInvItemFrame(cursId);
 	if (!MyPlayer->HoldItem.isEmpty()) {
 		const auto &heldItem = MyPlayer->HoldItem;
-		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
-		CelDrawItem(heldItem, out, position, sprite, frame);
+		Cl2DrawOutline(out, GetOutlineColor(heldItem, true), position, sprite, frame);
+		DrawItem(heldItem, out, position, sprite, frame);
 	} else {
-		CelClippedDrawTo(out, position, sprite, frame);
+		Cl2Draw(out, position, sprite, frame);
 	}
 }
 
@@ -213,7 +226,7 @@ void InitLevelCursor()
 	cursPosition = ViewPosition;
 	pcurstemp = -1;
 	pcursmonst = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	pcursstashitem = uint16_t(-1);
 	pcursplr = -1;
@@ -348,7 +361,7 @@ void CheckCursMove()
 	if ((sgbMouseDown != CLICK_NONE || ControllerButtonHeld != ControllerButton_NONE) && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
 			cursPosition = { mx, my };
 			CheckTrigForce();
 			CheckTown();
@@ -361,7 +374,7 @@ void CheckCursMove()
 
 	pcurstemp = pcursmonst;
 	pcursmonst = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	if (pcursinvitem != -1) {
 		drawsbarflag = true;
@@ -456,7 +469,7 @@ void CheckCursMove()
 				pcursmonst = -1;
 				cursPosition = { mx, my };
 			}
-			if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
+			if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
 				pcursmonst = -1;
 			}
 			if (pcursmonst != -1) {
@@ -516,7 +529,7 @@ void CheckCursMove()
 			pcursmonst = -1;
 			cursPosition = { mx, my };
 		}
-		if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
+		if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
 			pcursmonst = -1;
 		}
 	} else {
@@ -621,10 +634,10 @@ void CheckCursMove()
 		if (object != nullptr) {
 			// found object that can be activated with the given cursor position
 			cursPosition = testPosition;
-			pcursobj = object->GetId();
+			ObjectUnderCursor = object;
 		}
 	}
-	if (pcursplr == -1 && pcursobj == -1 && pcursmonst == -1) {
+	if (pcursplr == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
 			int8_t bv = dItem[mx + 1][my] - 1;
 			if (Items[bv]._iSelFlag >= 2) {
@@ -662,12 +675,12 @@ void CheckCursMove()
 	}
 
 	if (pcurs == CURSOR_IDENTIFY) {
-		pcursobj = -1;
+		ObjectUnderCursor = nullptr;
 		pcursmonst = -1;
 		pcursitem = -1;
 		cursPosition = { mx, my };
 	}
-	if (pcursmonst != -1 && (Monsters[pcursmonst].flags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst].flags & MFLAG_BERSERK) == 0) {
+	if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
 		pcursmonst = -1;
 	}
 }

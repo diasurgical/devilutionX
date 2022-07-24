@@ -153,6 +153,11 @@ struct Missile {
 		return &Monsters[_misource];
 	}
 
+	[[nodiscard]] bool isSameSource(Missile &missile)
+	{
+		return sourceType() == missile.sourceType() && _misource == missile._misource;
+	}
+
 	MissileSource sourceType()
 	{
 		if (_misource == -1)
@@ -425,5 +430,9 @@ void MI_Rportal(Missile &missile);
 void ProcessMissiles();
 void missiles_process_charge();
 void RedoMissileFlags();
+
+#ifdef BUILD_TESTING
+void TestRotateBlockedMissile(Missile &missile);
+#endif
 
 } // namespace devilution

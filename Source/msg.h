@@ -99,17 +99,15 @@ enum _cmd_id : uint8_t {
 	CMD_TSPELLXY,
 	// Operate object at location.
 	//
-	// body (TCmdLocParam1):
+	// body (TCmdLoc):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t object_num
 	CMD_OPOBJXY,
 	// Disarm trap at location.
 	//
-	// body (TCmdLocParam1):
+	// body (TCmdLoc):
 	//    int8_t x
 	//    int8_t y
-	//    int16_t object_num
 	CMD_DISARMXY,
 	// Attack target monster.
 	//
@@ -166,8 +164,9 @@ enum _cmd_id : uint8_t {
 	CMD_RESURRECT,
 	// Operate object using telekinesis.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_OPOBJT,
 	// Knockback target monster using telekinesis.
 	//
@@ -251,30 +250,33 @@ enum _cmd_id : uint8_t {
 	CMD_GOTOAGETITEM,
 	// Open target door.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_OPENDOOR,
 	// Close target door.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_CLOSEDOOR,
 	// Operate object.
 	//
-	// body (TCmdParam1):
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_OPERATEOBJ,
 	// Player operate object.
 	//
-	// body (TCmdParam2):
-	//    int16_t player_num
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_PLROPOBJ,
 	// Break object.
 	//
-	// body (TCmdParam2):
-	//    int16_t player_num
-	//    int16_t object_num
+	// body (TCmdLoc):
+	//    int8_t x
+	//    int8_t y
 	CMD_BREAKOBJ,
 	// Equip item for player.
 	//
@@ -744,7 +746,7 @@ void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
 void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint8_t ii);
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position, const Item &item);
 void NetSendCmdChItem(bool bHiPri, uint8_t bLoc);
 void NetSendCmdDelItem(bool bHiPri, uint8_t bLoc);

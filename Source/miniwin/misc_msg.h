@@ -19,10 +19,10 @@ namespace devilution {
 struct tagMSG {
 	uint32_t message;
 	uint32_t wParam;
-	uint32_t lParam;
+	uint16_t lParam;
 };
 
-typedef void (*EventHandler)(uint32_t, uint32_t, uint32_t);
+typedef void (*EventHandler)(uint32_t, uint32_t, uint16_t);
 
 void SetCursorPos(Point position);
 void FocusOnCharInfo();
@@ -31,7 +31,7 @@ void SetMouseButtonEvent(SDL_Event &event, uint32_t type, uint8_t button, Point 
 bool FetchMessage(tagMSG *lpMsg);
 
 void PushMessage(const tagMSG *lpMsg);
-void PostMessage(uint32_t type, uint32_t wParam, uint32_t lParam);
+void PostMessage(uint32_t type, uint32_t wParam, uint16_t lParam);
 void ClearMessageQueue();
 
 //

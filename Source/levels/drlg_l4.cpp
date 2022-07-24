@@ -174,8 +174,8 @@ void InitDungeonFlags()
 
 void MapRoom(Rectangle room)
 {
-	for (int y = 0; y < room.size.height && y + room.position.y < 20; y++) {
-		for (int x = 0; x < room.size.width && x + room.position.x < 20; x++) {
+	for (int y = 0; y < room.size.height && y + room.position.y < DMAXY / 2; y++) {
+		for (int x = 0; x < room.size.width && x + room.position.x < DMAXX / 2; x++) {
 			DungeonMask.set(room.position.x + x, room.position.y + y);
 		}
 	}
@@ -277,7 +277,10 @@ void FirstRoom()
 	GenerateRoom(room, !FlipCoin());
 }
 
-void MakeDungeon()
+/**
+ * @brief Mirrors the first quadrant to the rest of the map
+ */
+void MirrorDungeonLayout()
 {
 	for (int y = 0; y < DMAXY / 2; y++) {
 		for (int x = 0; x < DMAXX / 2; x++) {
@@ -843,7 +846,10 @@ void Substitution()
 	}
 }
 
-void UShape()
+/**
+ * @brief Sets up the inside borders of the first quadrant so there are valid paths after mirroring the layout
+ */
+void PrepareInnerBorders()
 {
 	for (int y = DMAXY / 2 - 1; y >= 0; y--) {
 		for (int x = DMAXX / 2 - 1; x >= 0; x--) {
@@ -911,19 +917,11 @@ void UShape()
 /**
  * @brief Find the number of mega tiles used by layout
  */
-int FindArea()
+inline size_t FindArea()
 {
-	int area = 0;
-
-	for (int y = 0; y < DMAXY / 2; y++) {
-		for (int x = 0; x < DMAXX / 2; x++) { // NOLINT(modernize-loop-convert)
-			if (DungeonMask.test(x, y)) {
-				area++;
-			}
-		}
-	}
-
-	return area * 4;
+	// Hell layouts are mirrored based on a single quadrant, this function is called after the quadrant has been
+	// generated but before mirroring the layout. We need to multiply by 4 to get the expected number of tiles
+	return DungeonMask.count() * 4;
 }
 
 void ProtectQuads()
@@ -1048,7 +1046,10 @@ void FixCornerTiles()
 	}
 }
 
-void FixRim()
+/**
+ * @brief Marks the edge of the map as solid/not part of the dungeon layout
+ */
+void CloseOuterBorders()
 {
 	for (int x = 0; x < DMAXX / 2; x++) { // NOLINT(modernize-loop-convert)
 		DungeonMask.reset(x, 0);
@@ -1123,15 +1124,16 @@ void GenerateLevel(lvl_entry entry)
 	while (true) {
 		DRLG_InitTrans();
 
-		constexpr int Minarea = 692;
+		constexpr size_t Minarea = 692;
 		do {
 			InitDungeonFlags();
 			FirstRoom();
-			FixRim();
+			CloseOuterBorders();
 		} while (FindArea() < Minarea);
-		UShape();
 
-		MakeDungeon();
+		PrepareInnerBorders();
+		MirrorDungeonLayout();
+
 		MakeDmt();
 		FixTilesPatterns();
 		if (currlevel == 16) {

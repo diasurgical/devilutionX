@@ -537,13 +537,16 @@ void DeltaLeaveSync(uint8_t bLevel)
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
 }
 
-void DeltaSyncObject(int oi, _cmd_id bCmd, const Player &player)
+void DeltaSyncObject(const Object &liveObject, _cmd_id bCmd, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	GetDeltaLevel(player).object[oi].bCmd = bCmd;
+
+	// object deltas are laid out in memory using the same relative offsets as the Objects array.
+	size_t deltaIndex = std::distance<const Object *>(&Objects[0], &liveObject);
+	GetDeltaLevel(player).object[deltaIndex].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -1215,41 +1218,18 @@ size_t OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnOperateObjectTile(const TCmd *pCmd, Player &player)
+size_t OnObjectTileAction(const TCmd &cmd, Player &player, action_id action, bool pathToObject = true)
 {
-	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const auto &message = reinterpret_cast<const TCmdLoc &>(cmd);
 	const Point position { message.x, message.y };
+	const Object *object = ObjectAtPosition(position);
 
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
-		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
-		player.destAction = ACTION_OPERATE;
-		player.destParam1 = message.wParam1;
-	}
+	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && object != nullptr) {
+		if (pathToObject)
+			MakePlrPath(player, position, !object->_oSolidFlag && !object->_oDoorFlag);
 
-	return sizeof(message);
-}
-
-size_t OnDisarm(const TCmd *pCmd, Player &player)
-{
-	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
-	const Point position { message.x, message.y };
-
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
-		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
-		player.destAction = ACTION_DISARM;
-		player.destParam1 = message.wParam1;
-	}
-
-	return sizeof(message);
-}
-
-size_t OnOperateObjectTelekinesis(const TCmd *pCmd, Player &player)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-
-	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && message.wParam1 < MAXOBJECTS) {
-		player.destAction = ACTION_OPERATETK;
-		player.destParam1 = message.wParam1;
+		player.destAction = action;
+		player.destParam1 = object->GetId();
 	}
 
 	return sizeof(message);
@@ -1465,7 +1445,7 @@ size_t OnResurrect(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (message.wParam1 < MAX_PLRS) {
-		DoResurrect(pnum, message.wParam1);
+		DoResurrect(pnum, Players[message.wParam1]);
 		if (pnum == MyPlayerId)
 			pfile_update(true);
 	}
@@ -1546,7 +1526,7 @@ size_t OnMonstDeath(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer && InDungeonBounds(position) && message.wParam1 < MaxMonsters) {
 			Monster &monster = Monsters[message.wParam1];
 			if (player.isOnActiveLevel())
-				M_SyncStartKill(message.wParam1, position, player);
+				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
@@ -1566,7 +1546,7 @@ size_t OnKillGolem(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer && InDungeonBounds(position)) {
 			Monster &monster = Monsters[pnum];
 			if (player.isOnActiveLevel())
-				M_SyncStartKill(pnum, position, player);
+				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
@@ -1658,82 +1638,35 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnOpenDoor(const TCmd *pCmd, int pnum)
+size_t OnOperateObject(const TCmd &pCmd, int pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
+	Object *object = ObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
+	} else if (object != nullptr) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(pnum, CMD_OPENDOOR, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_OPENDOOR, player);
+			SyncOpObject(player, message.bCmd, *object);
+		DeltaSyncObject(*object, message.bCmd, player);
 	}
 
 	return sizeof(message);
 }
 
-size_t OnCloseDoor(const TCmd *pCmd, int pnum)
+size_t OnBreakObject(const TCmd &pCmd, int pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
+	Object *breakable = ObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
+	} else if (breakable != nullptr) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(pnum, CMD_CLOSEDOOR, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_CLOSEDOOR, player);
-	}
-
-	return sizeof(message);
-}
-
-size_t OnOperateObject(const TCmd *pCmd, int pnum)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-
-	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncOpObject(pnum, CMD_OPERATEOBJ, message.wParam1);
-		DeltaSyncObject(message.wParam1, CMD_OPERATEOBJ, player);
-	}
-
-	return sizeof(message);
-}
-
-size_t OnPlayerOperateObject(const TCmd *pCmd, int pnum)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
-
-	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncOpObject(message.wParam1, CMD_PLROPOBJ, message.wParam2);
-		DeltaSyncObject(message.wParam2, CMD_PLROPOBJ, player);
-	}
-
-	return sizeof(message);
-}
-
-size_t OnBreakObject(const TCmd *pCmd, int pnum)
-{
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
-
-	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
-		Player &player = Players[pnum];
-		if (player.isOnActiveLevel()) {
-			SyncBreakObj(player, Objects[message.wParam1]);
-		}
-		DeltaSyncObject(message.wParam1, CMD_BREAKOBJ, player);
+			SyncBreakObj(player, *breakable);
+		DeltaSyncObject(*breakable, CMD_BREAKOBJ, player);
 	}
 
 	return sizeof(message);
@@ -1957,7 +1890,7 @@ size_t OnSetStrength(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs == 1) {
+	if (gbBufferMsgs != 1) {
 		Player &player = Players[pnum];
 		if (message.wParam1 <= 750 && &player != MyPlayer)
 			SetPlrStr(player, message.wParam1);
@@ -2563,7 +2496,7 @@ void DeltaLoadLevel()
 			case CMD_CLOSEDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				DeltaSyncOpObject(deltaLevel.object[i].bCmd, i);
+				DeltaSyncOpObject(deltaLevel.object[i].bCmd, Objects[i]);
 				break;
 			case CMD_BREAKOBJ:
 				DeltaSyncBreakObj(Objects[i]);
@@ -2791,13 +2724,13 @@ void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t mast, uint8_t pnum, uint8_t ii)
+void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, uint8_t pnum, uint8_t ii)
 {
 	TCmdGItem cmd;
 
 	cmd.bCmd = bCmd;
 	cmd.bPnum = pnum;
-	cmd.bMaster = mast;
+	cmd.bMaster = pnum;
 	cmd.bLevel = GetLevelForMultiplayer(*MyPlayer);
 	cmd.bCursitem = ii;
 	cmd.dwTime = 0;
@@ -3013,11 +2946,11 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_TSPELLXY:
 		return OnTargetSpellTile(pCmd, player);
 	case CMD_OPOBJXY:
-		return OnOperateObjectTile(pCmd, player);
+		return OnObjectTileAction(*pCmd, player, ACTION_OPERATE);
 	case CMD_DISARMXY:
-		return OnDisarm(pCmd, player);
+		return OnObjectTileAction(*pCmd, player, ACTION_DISARM);
 	case CMD_OPOBJT:
-		return OnOperateObjectTelekinesis(pCmd, player);
+		return OnObjectTileAction(*pCmd, player, ACTION_OPERATETK, false);
 	case CMD_ATTACKID:
 		return OnAttackMonster(pCmd, player);
 	case CMD_ATTACKPID:
@@ -3061,15 +2994,12 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_PLRDAMAGE:
 		return OnPlayerDamage(pCmd, player);
 	case CMD_OPENDOOR:
-		return OnOpenDoor(pCmd, pnum);
 	case CMD_CLOSEDOOR:
-		return OnCloseDoor(pCmd, pnum);
 	case CMD_OPERATEOBJ:
-		return OnOperateObject(pCmd, pnum);
 	case CMD_PLROPOBJ:
-		return OnPlayerOperateObject(pCmd, pnum);
+		return OnOperateObject(*pCmd, pnum);
 	case CMD_BREAKOBJ:
-		return OnBreakObject(pCmd, pnum);
+		return OnBreakObject(*pCmd, pnum);
 	case CMD_CHANGEPLRITEMS:
 		return OnChangePlayerItems(pCmd, pnum);
 	case CMD_DELPLRITEMS:

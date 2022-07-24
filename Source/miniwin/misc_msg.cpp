@@ -97,9 +97,9 @@ void FocusOnCharInfo()
 
 namespace {
 
-int32_t PositionForMouse(int16_t x, int16_t y)
+uint32_t PositionForMouse(int16_t x, int16_t y)
 {
-	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
+	return (static_cast<uint16_t>(y) << 16) | static_cast<uint16_t>(x);
 }
 
 bool FalseAvail(const char *name, int value)
@@ -235,8 +235,8 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	}
 
 	lpMsg->message = 0;
-	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
+	lpMsg->lParam = 0;
 
 #ifdef __vita__
 	HandleTouchEvent(&e, MousePosition);
@@ -302,8 +302,8 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 				lpMsg->message = action.send_key.up
 				    ? (button == SDL_BUTTON_LEFT ? DVL_WM_LBUTTONUP : DVL_WM_RBUTTONUP)
 				    : (button == SDL_BUTTON_RIGHT ? DVL_WM_LBUTTONDOWN : DVL_WM_RBUTTONDOWN);
-				lpMsg->wParam = 0;
-				lpMsg->lParam = (static_cast<int16_t>(MousePosition.y) << 16) | static_cast<int16_t>(MousePosition.x);
+				lpMsg->wParam = (static_cast<int16_t>(MousePosition.y) << 16) | static_cast<int16_t>(MousePosition.x);
+				lpMsg->lParam = 0;
 			} else {
 				lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 				lpMsg->wParam = action.send_key.vk_code;
@@ -346,14 +346,14 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	} break;
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = PositionForMouse(e.motion.x, e.motion.y);
-		lpMsg->wParam = SDL_GetModState();
+		lpMsg->wParam = PositionForMouse(e.motion.x, e.motion.y);
+		lpMsg->lParam = SDL_GetModState();
 		if (ControlMode == ControlTypes::KeyboardAndMouse && invflag)
 			InvalidateInventorySlot();
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
-		lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
-		lpMsg->wParam = SDL_GetModState();
+		lpMsg->wParam = PositionForMouse(e.button.x, e.button.y);
+		lpMsg->lParam = SDL_GetModState();
 		const int button = e.button.button;
 		switch (button) {
 		case SDL_BUTTON_LEFT:
@@ -374,8 +374,8 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 	} break;
 	case SDL_MOUSEBUTTONUP: {
-		lpMsg->lParam = PositionForMouse(e.button.x, e.button.y);
-		lpMsg->wParam = SDL_GetModState();
+		lpMsg->wParam = PositionForMouse(e.button.x, e.button.y);
+		lpMsg->lParam = SDL_GetModState();
 		const int button = e.button.button;
 		switch (button) {
 		case SDL_BUTTON_LEFT:
@@ -510,7 +510,7 @@ void PushMessage(const tagMSG *lpMsg)
 	CurrentEventHandler(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-void PostMessage(uint32_t type, uint32_t wParam, uint32_t lParam)
+void PostMessage(uint32_t type, uint32_t wParam, uint16_t lParam)
 {
 	message_queue.push_back({ type, wParam, lParam });
 }

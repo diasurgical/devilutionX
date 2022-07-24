@@ -170,7 +170,7 @@ struct DirectionSettings {
 	DisplacementOf<int8_t> map;
 	ScrollDirection scrollDir;
 	PLR_MODE walkMode;
-	void (*walkModeHandler)(int, const DirectionSettings &);
+	void (*walkModeHandler)(Player &, const DirectionSettings &);
 };
 
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
@@ -222,33 +222,31 @@ void PmChangeLightOff(Player &player)
 	ChangeLightOffset(player._plid, { x, y });
 }
 
-void WalkNorthwards(int pnum, const DirectionSettings &walkParams)
+void WalkNorthwards(Player &player, const DirectionSettings &walkParams)
 {
-	Player &player = Players[pnum];
-	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
+	dPlayer[player.position.future.x][player.position.future.y] = -(player.getId() + 1);
 	player.position.temp = player.position.tile + walkParams.tileAdd;
 }
 
-void WalkSouthwards(int pnum, const DirectionSettings & /*walkParams*/)
+void WalkSouthwards(Player &player, const DirectionSettings & /*walkParams*/)
 {
-	Player &player = Players[pnum];
-	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
+	const size_t playerId = player.getId();
+	dPlayer[player.position.tile.x][player.position.tile.y] = -(playerId + 1);
 	player.position.temp = player.position.tile;
 	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
-	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+	dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
 	ChangeLightXY(player._plid, player.position.tile);
 	PmChangeLightOff(player);
 }
 
-void WalkSideways(int pnum, const DirectionSettings &walkParams)
+void WalkSideways(Player &player, const DirectionSettings &walkParams)
 {
-	Player &player = Players[pnum];
-
 	Point const nextPosition = player.position.tile + walkParams.map;
 
-	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
-	dPlayer[player.position.future.x][player.position.future.y] = pnum + 1;
+	const size_t playerId = player.getId();
+	dPlayer[player.position.tile.x][player.position.tile.y] = -(playerId + 1);
+	dPlayer[player.position.future.x][player.position.future.y] = playerId + 1;
 
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player._plid, nextPosition);
@@ -318,9 +316,8 @@ bool PlrDirOK(const Player &player, Direction dir)
 	return true;
 }
 
-void HandleWalkMode(int pnum, Displacement vel, Direction dir)
+void HandleWalkMode(Player &player, Displacement vel, Direction dir)
 {
-	Player &player = Players[pnum];
 	const auto &dirModeParams = WalkSettings[static_cast<size_t>(dir)];
 	SetPlayerOld(player);
 	if (!PlrDirOK(player, dir)) {
@@ -335,7 +332,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 		ScrollViewPort(player, dirModeParams.scrollDir);
 	}
 
-	dirModeParams.walkModeHandler(pnum, dirModeParams);
+	dirModeParams.walkModeHandler(player, dirModeParams);
 
 	player.position.velocity = vel;
 	player.tempDirection = dirModeParams.dir;
@@ -358,16 +355,14 @@ void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
+void StartWalk(Player &player, Displacement vel, Direction dir, bool pmWillBeCalled)
 {
-	Player &player = Players[pnum];
-
 	if (player._pInvincible && player._pHitPoints == 0 && &player == MyPlayer) {
 		SyncPlrKill(player, -1);
 		return;
 	}
 
-	HandleWalkMode(pnum, vel, dir);
+	HandleWalkMode(player, vel, dir);
 	StartWalkAnimation(player, dir, pmWillBeCalled);
 }
 
@@ -633,13 +628,8 @@ void InitLevelChange(Player &player)
 /**
  * @brief Continue movement towards new tile
  */
-bool DoWalk(int pnum, int variant)
+bool DoWalk(Player &player, int variant)
 {
-	if (pnum < 0 || pnum >= MAX_PLRS) {
-		app_fatal(StrCat("PM_DoWalk: illegal player ", pnum));
-	}
-	Player &player = Players[pnum];
-
 	// Play walking sound effect on certain animation frames
 	if (*sgOptions.Audio.walkingSound && (leveltype != DTYPE_TOWN || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.currentFrame == 0
@@ -656,7 +646,7 @@ bool DoWalk(int pnum, int variant)
 		case PM_WALK_NORTHWARDS:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 			player.position.tile = player.position.temp;
-			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
 			break;
 		case PM_WALK_SOUTHWARDS:
 			dPlayer[player.position.temp.x][player.position.temp.y] = 0;
@@ -665,7 +655,7 @@ bool DoWalk(int pnum, int variant)
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 			player.position.tile = player.position.temp;
 			// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
-			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+			dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
 			break;
 		}
 
@@ -693,7 +683,7 @@ bool DoWalk(int pnum, int variant)
 			ChangeLightOffset(player._plid, { 0, 0 });
 		}
 
-		AutoPickup(pnum);
+		AutoPickup(player);
 		return true;
 	} // We didn't reach new tile so update player's "sub-tile" position
 	ChangeOffset(player);
@@ -1035,13 +1025,8 @@ bool PlrHitObj(const Player &player, Object &targetObject)
 	return false;
 }
 
-bool DoAttack(int pnum)
+bool DoAttack(Player &player)
 {
-	if (pnum < 0 || pnum >= MAX_PLRS) {
-		app_fatal(StrCat("PM_DoAttack: illegal player ", pnum));
-	}
-	Player &player = Players[pnum];
-
 	if (player.AnimInfo.currentFrame == player._pAFNum - 2) {
 		PlaySfxLoc(PS_SWING, player.position.tile);
 	}
@@ -1061,11 +1046,12 @@ bool DoAttack(int pnum)
 		}
 
 		if (!gbIsHellfire || !HasAllOf(player._pIFlags, ItemSpecialEffect::FireDamage | ItemSpecialEffect::LightningDamage)) {
+			const size_t playerId = player.getId();
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::FireDamage)) {
-				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 1, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, playerId, 0, 0);
 			}
 			if (HasAnyOf(player._pIFlags, ItemSpecialEffect::LightningDamage)) {
-				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(position, { 2, 0 }, Direction::South, MIS_WEAPEXP, TARGET_MONSTERS, playerId, 0, 0);
 			}
 		}
 
@@ -1370,13 +1356,8 @@ void TryDisarm(const Player &player, Object &object)
 	}
 }
 
-void CheckNewPath(int pnum, bool pmWillBeCalled)
+void CheckNewPath(Player &player, bool pmWillBeCalled)
 {
-	if (pnum < 0 || pnum >= MAX_PLRS) {
-		app_fatal(StrCat("CheckNewPath: illegal player ", pnum));
-	}
-	Player &player = Players[pnum];
-
 	int x = 0;
 	int y = 0;
 
@@ -1461,28 +1442,28 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 			switch (player.walkpath[0]) {
 			case WALK_N:
-				StartWalk(pnum, { 0, -xvel }, Direction::North, pmWillBeCalled);
+				StartWalk(player, { 0, -xvel }, Direction::North, pmWillBeCalled);
 				break;
 			case WALK_NE:
-				StartWalk(pnum, { xvel, -yvel }, Direction::NorthEast, pmWillBeCalled);
+				StartWalk(player, { xvel, -yvel }, Direction::NorthEast, pmWillBeCalled);
 				break;
 			case WALK_E:
-				StartWalk(pnum, { xvel3, 0 }, Direction::East, pmWillBeCalled);
+				StartWalk(player, { xvel3, 0 }, Direction::East, pmWillBeCalled);
 				break;
 			case WALK_SE:
-				StartWalk(pnum, { xvel, yvel }, Direction::SouthEast, pmWillBeCalled);
+				StartWalk(player, { xvel, yvel }, Direction::SouthEast, pmWillBeCalled);
 				break;
 			case WALK_S:
-				StartWalk(pnum, { 0, xvel }, Direction::South, pmWillBeCalled);
+				StartWalk(player, { 0, xvel }, Direction::South, pmWillBeCalled);
 				break;
 			case WALK_SW:
-				StartWalk(pnum, { -xvel, yvel }, Direction::SouthWest, pmWillBeCalled);
+				StartWalk(player, { -xvel, yvel }, Direction::SouthWest, pmWillBeCalled);
 				break;
 			case WALK_W:
-				StartWalk(pnum, { -xvel3, 0 }, Direction::West, pmWillBeCalled);
+				StartWalk(player, { -xvel3, 0 }, Direction::West, pmWillBeCalled);
 				break;
 			case WALK_NW:
-				StartWalk(pnum, { -xvel, -yvel }, Direction::NorthWest, pmWillBeCalled);
+				StartWalk(player, { -xvel, -yvel }, Direction::NorthWest, pmWillBeCalled);
 				break;
 			}
 
@@ -1572,7 +1553,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					d = GetDirection(player.position.tile, object->position);
 					StartAttack(player, d);
 				} else {
-					OperateObject(pnum, targetId, false);
+					OperateObject(player, targetId, false);
 				}
 			}
 			break;
@@ -1583,13 +1564,13 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					StartAttack(player, d);
 				} else {
 					TryDisarm(player, *object);
-					OperateObject(pnum, targetId, false);
+					OperateObject(player, targetId, false);
 				}
 			}
 			break;
 		case ACTION_OPERATETK:
 			if (object->_oBreak != 1) {
-				OperateObject(pnum, targetId, true);
+				OperateObject(player, targetId, true);
 			}
 			break;
 		case ACTION_PICKUPITEM:
@@ -1597,7 +1578,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
-					NetSendCmdGItem(true, CMD_REQUESTGITEM, pnum, pnum, targetId);
+					NetSendCmdGItem(true, CMD_REQUESTGITEM, player.getId(), targetId);
 					item->_iRequest = true;
 				}
 			}
@@ -1607,7 +1588,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
-					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, targetId);
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, player.getId(), targetId);
 				}
 			}
 			break;
@@ -1788,6 +1769,67 @@ void CheckCheatStats(Player &player)
 	if (player._pMana > 128000) {
 		player._pMana = 128000;
 	}
+}
+
+HeroClass GetPlayerSpriteClass(HeroClass cls)
+{
+	if (cls == HeroClass::Bard && !hfbard_mpq)
+		return HeroClass::Rogue;
+	if (cls == HeroClass::Barbarian && !hfbarb_mpq)
+		return HeroClass::Warrior;
+	return cls;
+}
+
+PlayerWeaponGraphic GetPlayerWeaponGraphic(player_graphic graphic, PlayerWeaponGraphic weaponGraphic)
+{
+	if (leveltype == DTYPE_TOWN && IsAnyOf(graphic, player_graphic::Lightning, player_graphic::Fire, player_graphic::Magic)) {
+		// If the hero doesn't hold the weapon in town then we should use the unarmed animation for casting
+		switch (weaponGraphic) {
+		case PlayerWeaponGraphic::Mace:
+		case PlayerWeaponGraphic::Sword:
+			return PlayerWeaponGraphic::Unarmed;
+		case PlayerWeaponGraphic::SwordShield:
+		case PlayerWeaponGraphic::MaceShield:
+			return PlayerWeaponGraphic::UnarmedShield;
+		default:
+			break;
+		}
+	}
+	return weaponGraphic;
+}
+
+uint16_t GetPlayerSpriteWidth(HeroClass cls, player_graphic graphic, PlayerWeaponGraphic weaponGraphic)
+{
+	switch (graphic) {
+	case player_graphic::Stand:
+	case player_graphic::Walk:
+		if (cls == HeroClass::Monk)
+			return 112;
+		break;
+	case player_graphic::Attack:
+		if (cls == HeroClass::Monk)
+			return 130;
+		else if (weaponGraphic != PlayerWeaponGraphic::Bow || !(cls == HeroClass::Warrior || cls == HeroClass::Barbarian))
+			return 128;
+		break;
+	case player_graphic::Hit:
+	case player_graphic::Block:
+		if (cls == HeroClass::Monk)
+			return 98;
+		break;
+	case player_graphic::Lightning:
+	case player_graphic::Fire:
+	case player_graphic::Magic:
+		if (cls == HeroClass::Monk)
+			return 114;
+		else if (cls == HeroClass::Sorcerer)
+			return 128;
+		break;
+	case player_graphic::Death:
+		return (cls == HeroClass::Monk) ? 160 : 128;
+		break;
+	}
+	return 96;
 }
 
 } // namespace
@@ -1997,6 +2039,54 @@ void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation)
 	}
 }
 
+player_graphic Player::getGraphic() const
+{
+	switch (_pmode) {
+	case PM_STAND:
+	case PM_NEWLVL:
+	case PM_QUIT:
+		return player_graphic::Stand;
+	case PM_WALK_NORTHWARDS:
+	case PM_WALK_SOUTHWARDS:
+	case PM_WALK_SIDEWAYS:
+		return player_graphic::Walk;
+	case PM_ATTACK:
+	case PM_RATTACK:
+		return player_graphic::Attack;
+	case PM_BLOCK:
+		return player_graphic::Block;
+	case PM_SPELL:
+		// We don't have the spell data for other players.
+		if (this == MyPlayer) {
+			switch (spelldata[_pSpell].sType) {
+			case STYPE_FIRE:
+				return player_graphic::Fire;
+			case STYPE_LIGHTNING:
+				return player_graphic::Lightning;
+			case STYPE_MAGIC:
+				return player_graphic::Magic;
+			}
+		}
+		return player_graphic::Fire;
+	case PM_GOTHIT:
+		return player_graphic::Hit;
+	case PM_DEATH:
+		return player_graphic::Death;
+	default:
+		app_fatal("SyncPlrAnim");
+	}
+}
+
+uint16_t Player::getSpriteWidth() const
+{
+	if (!HeadlessMode)
+		return AnimInfo.celSprite->Width();
+	const player_graphic graphic = getGraphic();
+	const HeroClass cls = GetPlayerSpriteClass(_pClass);
+	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
+	return GetPlayerSpriteWidth(cls, graphic, weaponGraphic);
+}
+
 void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2)
 {
 	// if game is not running don't show a preview
@@ -2161,18 +2251,10 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	if (animationData.RawData != nullptr)
 		return;
 
-	HeroClass c = player._pClass;
-	if (c == HeroClass::Bard && !hfbard_mpq) {
-		c = HeroClass::Rogue;
-	} else if (c == HeroClass::Barbarian && !hfbarb_mpq) {
-		c = HeroClass::Warrior;
-	}
+	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
+	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
 
-	auto animWeaponId = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
-	int animationWidth = 96;
-	bool useUnarmedAnimationInTown = false;
-
-	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
+	const char *path = ClassPathTbl[static_cast<std::size_t>(cls)];
 
 	const char *szCel;
 	switch (graphic) {
@@ -2180,61 +2262,35 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		szCel = "AS";
 		if (leveltype == DTYPE_TOWN)
 			szCel = "ST";
-		if (c == HeroClass::Monk)
-			animationWidth = 112;
 		break;
 	case player_graphic::Walk:
 		szCel = "AW";
 		if (leveltype == DTYPE_TOWN)
 			szCel = "WL";
-		if (c == HeroClass::Monk)
-			animationWidth = 112;
 		break;
 	case player_graphic::Attack:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "AT";
-		if (c == HeroClass::Monk)
-			animationWidth = 130;
-		else if (animWeaponId != PlayerWeaponGraphic::Bow || !(c == HeroClass::Warrior || c == HeroClass::Barbarian))
-			animationWidth = 128;
 		break;
 	case player_graphic::Hit:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "HT";
-		if (c == HeroClass::Monk)
-			animationWidth = 98;
 		break;
 	case player_graphic::Lightning:
 		szCel = "LM";
-		useUnarmedAnimationInTown = true;
-		if (c == HeroClass::Monk)
-			animationWidth = 114;
-		else if (c == HeroClass::Sorcerer)
-			animationWidth = 128;
 		break;
 	case player_graphic::Fire:
 		szCel = "FM";
-		useUnarmedAnimationInTown = true;
-		if (c == HeroClass::Monk)
-			animationWidth = 114;
-		else if (c == HeroClass::Sorcerer)
-			animationWidth = 128;
 		break;
 	case player_graphic::Magic:
 		szCel = "QM";
-		useUnarmedAnimationInTown = true;
-		if (c == HeroClass::Monk)
-			animationWidth = 114;
-		else if (c == HeroClass::Sorcerer)
-			animationWidth = 128;
 		break;
 	case player_graphic::Death:
 		if (animWeaponId != PlayerWeaponGraphic::Unarmed)
 			return;
 		szCel = "DT";
-		animationWidth = (c == HeroClass::Monk) ? 160 : 128;
 		break;
 	case player_graphic::Block:
 		if (leveltype == DTYPE_TOWN)
@@ -2242,32 +2298,18 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		if (!player._pBlockFlag)
 			return;
 		szCel = "BL";
-		if (c == HeroClass::Monk)
-			animationWidth = 98;
 		break;
 	default:
 		app_fatal("PLR:2");
 	}
 
-	if (leveltype == DTYPE_TOWN && useUnarmedAnimationInTown) {
-		// If the hero doesn't hold the weapon in town then we should use the unarmed animation for casting
-		switch (animWeaponId) {
-		case PlayerWeaponGraphic::Mace:
-		case PlayerWeaponGraphic::Sword:
-			animWeaponId = PlayerWeaponGraphic::Unarmed;
-			break;
-		case PlayerWeaponGraphic::SwordShield:
-		case PlayerWeaponGraphic::MaceShield:
-			animWeaponId = PlayerWeaponGraphic::UnarmedShield;
-			break;
-		default:
-			break;
-		}
-	}
+	if (HeadlessMode)
+		return;
 
-	char prefix[3] = { CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
+	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
-	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), cs, string_view(prefix, 3), szCel) = 0;
+	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), path, string_view(prefix, 3), szCel) = 0;
+	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 
@@ -3267,10 +3309,10 @@ void ProcessPlayers()
 				case PM_WALK_NORTHWARDS:
 				case PM_WALK_SOUTHWARDS:
 				case PM_WALK_SIDEWAYS:
-					tplayer = DoWalk(pnum, player._pmode);
+					tplayer = DoWalk(player, player._pmode);
 					break;
 				case PM_ATTACK:
-					tplayer = DoAttack(pnum);
+					tplayer = DoAttack(player);
 					break;
 				case PM_RATTACK:
 					tplayer = DoRangeAttack(player);
@@ -3288,7 +3330,7 @@ void ProcessPlayers()
 					tplayer = DoDeath(player);
 					break;
 				}
-				CheckNewPath(pnum, tplayer);
+				CheckNewPath(player, tplayer);
 			} while (tplayer);
 
 			player.previewCelSprite = std::nullopt;
@@ -3459,51 +3501,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 
 void SyncPlrAnim(Player &player)
 {
-	player_graphic graphic;
-	switch (player._pmode) {
-	case PM_STAND:
-	case PM_NEWLVL:
-	case PM_QUIT:
-		graphic = player_graphic::Stand;
-		break;
-	case PM_WALK_NORTHWARDS:
-	case PM_WALK_SOUTHWARDS:
-	case PM_WALK_SIDEWAYS:
-		graphic = player_graphic::Walk;
-		break;
-	case PM_ATTACK:
-	case PM_RATTACK:
-		graphic = player_graphic::Attack;
-		break;
-	case PM_BLOCK:
-		graphic = player_graphic::Block;
-		break;
-	case PM_SPELL:
-		graphic = player_graphic::Fire;
-		if (&player == MyPlayer) {
-			switch (spelldata[player._pSpell].sType) {
-			case STYPE_FIRE:
-				graphic = player_graphic::Fire;
-				break;
-			case STYPE_LIGHTNING:
-				graphic = player_graphic::Lightning;
-				break;
-			case STYPE_MAGIC:
-				graphic = player_graphic::Magic;
-				break;
-			}
-		}
-		break;
-	case PM_GOTHIT:
-		graphic = player_graphic::Hit;
-		break;
-	case PM_DEATH:
-		graphic = player_graphic::Death;
-		break;
-	default:
-		app_fatal("SyncPlrAnim");
-	}
-
+	const player_graphic graphic = player.getGraphic();
 	player.AnimInfo.celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(player._pdir);
 	// Ensure ScrollInfo is initialized correctly
 	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);

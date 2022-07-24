@@ -5,7 +5,7 @@
 #include "diablo.h"
 #include "doom.h"
 #include "engine.h"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "init.h"
 #include "inv.h"
 #include "levels/gendung.h"
@@ -143,7 +143,7 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 		const int frame = GetInvItemFrame(cursorID);
 		const CelSprite potionSprite { GetInvItemSprite(cursorID) };
 		position.y += potionSize.height;
-		CelClippedDrawTo(Surface(surface.get()), position, potionSprite, frame);
+		Cl2Draw(Surface(surface.get()), position, potionSprite, frame);
 	}
 
 	potionArt->logical_width = potionSize.width;
@@ -445,7 +445,7 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 	}
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return GetBlankButtonType(virtualPadButton->isHeld);
-	if (pcursobj != -1)
+	if (ObjectUnderCursor != nullptr)
 		return GetObjectButtonType(virtualPadButton->isHeld);
 	if (pcursitem != -1)
 		return GetItemButtonType(virtualPadButton->isHeld);

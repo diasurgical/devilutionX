@@ -200,7 +200,7 @@ void FindItemOrObject()
 		}
 
 		rotations = newRotations;
-		pcursobj = object->GetId();
+		ObjectUnderCursor = object;
 		cursPosition = targetPosition;
 	}
 }
@@ -228,7 +228,9 @@ bool HasRangedSpell()
 
 bool CanTargetMonster(const Monster &monster)
 {
-	if ((monster.flags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
+	if ((monster.flags & MFLAG_HIDDEN) != 0)
+		return false;
+	if (monster.isPlayerMinion())
 		return false;
 	if (monster.hitPoints >> 6 <= 0) // dead
 		return false;
@@ -417,7 +419,7 @@ void FindTrigger()
 	int rotations = 0;
 	int distance = 0;
 
-	if (pcursitem != -1 || pcursobj != -1)
+	if (pcursitem != -1 || ObjectUnderCursor != nullptr)
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
 
 	for (auto &missile : Missiles) {
@@ -521,8 +523,8 @@ void Interact()
 		return;
 	}
 
-	if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+	if (ObjectUnderCursor != nullptr) {
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		LastMouseButtonAction = MouseActionType::OperateObject;
 		return;
 	}
@@ -1624,7 +1626,7 @@ void plrctrls_after_check_curs_move()
 	if (ControllerButtonHeld != ControllerButton_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		InvalidateTargets();
 
-		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
+		if (pcursmonst == -1 && ObjectUnderCursor == nullptr && pcursitem == -1 && pcursinvitem == -1 && pcursstashitem == uint16_t(-1) && pcursplr == -1) {
 			FindTrigger();
 		}
 		return;
@@ -1634,7 +1636,7 @@ void plrctrls_after_check_curs_move()
 	pcursplr = -1;
 	pcursmonst = -1;
 	pcursitem = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 
 	pcursmissile = nullptr;
 	pcurstrig = -1;
@@ -1879,7 +1881,7 @@ void PerformSpellAction()
 	const Player &myPlayer = *MyPlayer;
 	int spl = myPlayer._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
-	    || (pcursobj == -1 && spl == SPL_DISARM)) {
+	    || (ObjectUnderCursor == nullptr && spl == SPL_DISARM)) {
 		myPlayer.Say(HeroSpeech::ICantCastThatHere);
 		return;
 	}
@@ -1972,8 +1974,8 @@ void PerformSecondaryAction()
 
 	if (pcursitem != -1) {
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursPosition, pcursitem);
-	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+	} else if (ObjectUnderCursor != nullptr) {
+		NetSendCmdLoc(MyPlayerId, true, CMD_OPOBJXY, cursPosition);
 		LastMouseButtonAction = MouseActionType::OperateObject;
 	} else {
 		if (pcursmissile != nullptr) {

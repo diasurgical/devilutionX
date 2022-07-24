@@ -641,7 +641,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	file->Skip(1); // Alignment
 	monster.exp = file->NextLE<uint16_t>();
 
-	if ((monster.flags & MFLAG_GOLEM) != 0) // Don't skip for golems
+	if (monster.isPlayerMinion()) // Don't skip for golems
 		monster.toHit = file->NextLE<uint8_t>();
 	else
 		file->Skip(1); // Skip hit as it's already initialized
@@ -1121,7 +1121,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.AnimInfo.numberOfFrames);
 	file.WriteLE<int32_t>(player.AnimInfo.currentFrame + 1);
 	// write _pAnimWidth for vanilla compatibility
-	int animWidth = player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96;
+	const int animWidth = player.getSpriteWidth();
 	file.WriteLE<int32_t>(animWidth);
 	// write _pAnimWidth2 for vanilla compatibility
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));

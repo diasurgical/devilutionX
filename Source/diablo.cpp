@@ -238,9 +238,9 @@ void LeftMouseCmd(bool bShift)
 	bNear = myPlayer.position.tile.WalkingDistance(cursPosition) < 2;
 	if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 		NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
-	} else if (pcursobj != -1 && !Objects[pcursobj].IsDisabled() && (!bShift || (bNear && Objects[pcursobj]._oBreak == 1))) {
+	} else if (ObjectUnderCursor != nullptr && !ObjectUnderCursor->IsDisabled() && (!bShift || (bNear && ObjectUnderCursor->_oBreak == 1))) {
 		LastMouseButtonAction = MouseActionType::OperateObject;
-		NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursPosition, pcursobj);
+		NetSendCmdLoc(MyPlayerId, true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursPosition);
 	} else if (myPlayer.UsesRangedWeapon()) {
 		if (bShift) {
 			LastMouseButtonAction = MouseActionType::Attack;
@@ -277,7 +277,7 @@ void LeftMouseCmd(bool bShift)
 			NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 		}
 	}
-	if (!bShift && pcursitem == -1 && pcursobj == -1 && pcursmonst == -1 && pcursplr == -1) {
+	if (!bShift && pcursitem == -1 && ObjectUnderCursor == nullptr && pcursmonst == -1 && pcursplr == -1) {
 		LastMouseButtonAction = MouseActionType::Walk;
 		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 	}
@@ -598,7 +598,7 @@ void GetMousePos(uint32_t lParam)
 	MousePosition = { (std::int16_t)(lParam & 0xffff), (std::int16_t)((lParam >> 16) & 0xffff) };
 }
 
-void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
+void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
@@ -608,33 +608,33 @@ void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint32_t lParam)
 		ReleaseKey(static_cast<SDL_Keycode>(wParam));
 		return;
 	case DVL_WM_MOUSEMOVE:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		gmenu_on_mouse_move();
 		return;
 	case DVL_WM_LBUTTONDOWN:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_LEFT;
-			LeftMouseDown(wParam);
+			LeftMouseDown(lParam);
 		}
 		return;
 	case DVL_WM_LBUTTONUP:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_LEFT) {
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp(wParam);
+			LeftMouseUp(lParam);
 		}
 		return;
 	case DVL_WM_RBUTTONDOWN:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_RIGHT;
-			RightMouseDown((wParam & KMOD_SHIFT) != 0);
+			RightMouseDown((lParam & KMOD_SHIFT) != 0);
 		}
 		return;
 	case DVL_WM_RBUTTONUP:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		if (sgbMouseDown == CLICK_RIGHT) {
 			LastMouseButtonAction = MouseActionType::None;
 			sgbMouseDown = CLICK_NONE;
@@ -1090,37 +1090,37 @@ void LoadLvlGFX()
 			pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL");
 			pMegaTiles = LoadFileInMem<MegaTile>("Levels\\TownData\\Town.TIL");
 		}
-		pSpecialCels = LoadCel("Levels\\TownData\\TownS.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCelAsCl2("Levels\\TownData\\TownS.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CATHEDRAL:
 		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L1Data\\L1.TIL");
-		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCelAsCl2("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CATACOMBS:
 		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L2Data\\L2.TIL");
-		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCelAsCl2("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CAVES:
 		pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L3Data\\L3.TIL");
-		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCelAsCl2("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_HELL:
 		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("Levels\\L4Data\\L4.TIL");
-		pSpecialCels = LoadCel("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCelAsCl2("Levels\\L2Data\\L2S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_NEST:
 		pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("NLevels\\L6Data\\L6.TIL");
-		pSpecialCels = LoadCel("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCelAsCl2("Levels\\L1Data\\L1S.CEL", SpecialCelWidth);
 		break;
 	case DTYPE_CRYPT:
 		pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL");
 		pMegaTiles = LoadFileInMem<MegaTile>("NLevels\\L5Data\\L5.TIL");
-		pSpecialCels = LoadCel("NLevels\\L5Data\\L5S.CEL", SpecialCelWidth);
+		pSpecialCels = LoadCelAsCl2("NLevels\\L5Data\\L5S.CEL", SpecialCelWidth);
 		break;
 	default:
 		app_fatal("LoadLvlGFX");
@@ -1882,7 +1882,7 @@ bool TryIconCurs()
 		return true;
 	}
 
-	if (pcurs == CURSOR_DISARM && pcursobj == -1) {
+	if (pcurs == CURSOR_DISARM && ObjectUnderCursor == nullptr) {
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
@@ -2014,14 +2014,14 @@ bool PressEscKey()
 	return rv;
 }
 
-void DisableInputEventHandler(uint32_t uMsg, uint32_t /*wParam*/, uint32_t lParam)
+void DisableInputEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t /*lParam*/)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
 	case DVL_WM_KEYUP:
 		return;
 	case DVL_WM_MOUSEMOVE:
-		GetMousePos(lParam);
+		GetMousePos(wParam);
 		return;
 	case DVL_WM_LBUTTONDOWN:
 		if (sgbMouseDown != CLICK_NONE)
@@ -2319,7 +2319,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	// Reset mouse selection of entities
 	pcursmonst = -1;
-	pcursobj = -1;
+	ObjectUnderCursor = nullptr;
 	pcursitem = -1;
 	pcursinvitem = -1;
 	pcursplr = -1;

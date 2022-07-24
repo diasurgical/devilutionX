@@ -6,7 +6,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/rectangle.hpp"
-#include "engine/render/cel_render.hpp"
+#include "engine/render/cl2_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"
 #include "missiles.h"
@@ -81,15 +81,9 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 
 void InitSpellBook()
 {
-	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", static_cast<uint16_t>(SidePanelSize.width));
-
-	if (gbIsHellfire) {
-		static const uint16_t SBkBtnHellfireWidths[] = { 61, 61, 61, 61, 61, 76 };
-		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", SBkBtnHellfireWidths);
-	} else {
-		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", 76);
-	}
-	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
+	pSpellBkCel = LoadCelAsCl2("Data\\SpellBk.CEL", static_cast<uint16_t>(SidePanelSize.width));
+	pSBkBtnCel = LoadCelAsCl2("Data\\SpellBkB.CEL", gbIsHellfire ? 61 : 76);
+	pSBkIconCels = LoadCelAsCl2("Data\\SpellI2.CEL", 37);
 
 	Player &player = *MyPlayer;
 	if (player._pClass == HeroClass::Warrior) {
@@ -116,16 +110,16 @@ void FreeSpellBook()
 
 void DrawSpellBook(const Surface &out)
 {
-	CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), CelSprite { *pSpellBkCel }, 0);
+	Cl2Draw(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), CelSprite { *pSpellBkCel }, 0);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
+		Cl2Draw(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
+		Cl2Draw(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), CelSprite { *pSBkBtnCel }, sbooktab);
 	}
 	Player &player = *MyPlayer;
 	uint64_t spl = player._pMemSpells | player._pISpells | player._pAblSpells;
