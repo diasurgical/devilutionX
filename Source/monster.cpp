@@ -1194,12 +1194,8 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 	return isAnimationEnd;
 }
 
-void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
+void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind, int maxd)
 {
-	assert(static_cast<size_t>(mid) < MaxMonsters);
-	auto &target = Monsters[mid];
-	Monster &attacker = Monsters[i];
-
 	if (!target.isPossibleToHit())
 		return;
 
@@ -1246,7 +1242,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 	auto &monster = Monsters[monsterId];
 
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0) {
-		MonsterAttackMonster(monsterId, pnum, hit, minDam, maxDam);
+		MonsterAttackMonster(monster, Monsters[pnum], hit, minDam, maxDam);
 		return;
 	}
 
@@ -4578,14 +4574,14 @@ void MissToMonst(Missile &missile, Point position)
 	if (dMonster[oldPosition.x][oldPosition.y] <= 0)
 		return;
 
-	int mid = dMonster[oldPosition.x][oldPosition.y] - 1;
-	MonsterAttackMonster(monsterId, mid, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
+	Monster &target = *MonsterAtPosition(oldPosition);
+	MonsterAttackMonster(monster, target, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
 
 	Point newPosition = oldPosition + monster.direction;
-	if (IsTileAvailable(Monsters[mid], newPosition)) {
+	if (IsTileAvailable(target, newPosition)) {
 		monsterId = dMonster[oldPosition.x][oldPosition.y];
 		dMonster[newPosition.x][newPosition.y] = monsterId;
 		dMonster[oldPosition.x][oldPosition.y] = 0;
