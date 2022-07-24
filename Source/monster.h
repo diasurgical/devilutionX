@@ -307,9 +307,9 @@ struct Monster { // note: missing field _mAFNum
 		return pgettext("monster", data().name);
 	}
 
-	uint32_t exp(_difficulty difficulty) const
+	unsigned int exp(_difficulty difficulty) const
 	{
-		uint32_t monsterExp = data().exp;
+		unsigned int monsterExp = data().exp;
 
 		if (difficulty == DIFF_NIGHTMARE) {
 			monsterExp = 2 * (monsterExp + 1000);
