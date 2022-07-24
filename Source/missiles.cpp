@@ -4074,7 +4074,7 @@ void missiles_process_charge()
 		if (missile._mitype != MIS_RHINO)
 			continue;
 
-		const CMonster &mon = Monsters[missile._misource].type();
+		const CMonster &mon = missile.sourceMonster()->type();
 
 		MonsterGraphic graphic;
 		if (IsAnyOf(mon.type, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
