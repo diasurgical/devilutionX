@@ -1771,6 +1771,67 @@ void CheckCheatStats(Player &player)
 	}
 }
 
+HeroClass GetPlayerSpriteClass(HeroClass cls)
+{
+	if (cls == HeroClass::Bard && !hfbard_mpq)
+		return HeroClass::Rogue;
+	if (cls == HeroClass::Barbarian && !hfbarb_mpq)
+		return HeroClass::Warrior;
+	return cls;
+}
+
+PlayerWeaponGraphic GetPlayerWeaponGraphic(player_graphic graphic, PlayerWeaponGraphic weaponGraphic)
+{
+	if (leveltype == DTYPE_TOWN && IsAnyOf(graphic, player_graphic::Lightning, player_graphic::Fire, player_graphic::Magic)) {
+		// If the hero doesn't hold the weapon in town then we should use the unarmed animation for casting
+		switch (weaponGraphic) {
+		case PlayerWeaponGraphic::Mace:
+		case PlayerWeaponGraphic::Sword:
+			return PlayerWeaponGraphic::Unarmed;
+		case PlayerWeaponGraphic::SwordShield:
+		case PlayerWeaponGraphic::MaceShield:
+			return PlayerWeaponGraphic::UnarmedShield;
+		default:
+			break;
+		}
+	}
+	return weaponGraphic;
+}
+
+uint16_t GetPlayerSpriteWidth(HeroClass cls, player_graphic graphic, PlayerWeaponGraphic weaponGraphic)
+{
+	switch (graphic) {
+	case player_graphic::Stand:
+	case player_graphic::Walk:
+		if (cls == HeroClass::Monk)
+			return 112;
+		break;
+	case player_graphic::Attack:
+		if (cls == HeroClass::Monk)
+			return 130;
+		else if (weaponGraphic != PlayerWeaponGraphic::Bow || !(cls == HeroClass::Warrior || cls == HeroClass::Barbarian))
+			return 128;
+		break;
+	case player_graphic::Hit:
+	case player_graphic::Block:
+		if (cls == HeroClass::Monk)
+			return 98;
+		break;
+	case player_graphic::Lightning:
+	case player_graphic::Fire:
+	case player_graphic::Magic:
+		if (cls == HeroClass::Monk)
+			return 114;
+		else if (cls == HeroClass::Sorcerer)
+			return 128;
+		break;
+	case player_graphic::Death:
+		return (cls == HeroClass::Monk) ? 160 : 128;
+		break;
+	}
+	return 96;
+}
+
 } // namespace
 
 void Player::CalcScrolls()
@@ -1978,6 +2039,54 @@ void Player::ReadySpellFromEquipment(inv_body_loc bodyLocation)
 	}
 }
 
+player_graphic Player::getGraphic() const
+{
+	switch (_pmode) {
+	case PM_STAND:
+	case PM_NEWLVL:
+	case PM_QUIT:
+		return player_graphic::Stand;
+	case PM_WALK_NORTHWARDS:
+	case PM_WALK_SOUTHWARDS:
+	case PM_WALK_SIDEWAYS:
+		return player_graphic::Walk;
+	case PM_ATTACK:
+	case PM_RATTACK:
+		return player_graphic::Attack;
+	case PM_BLOCK:
+		return player_graphic::Block;
+	case PM_SPELL:
+		// We don't have the spell data for other players.
+		if (this == MyPlayer) {
+			switch (spelldata[_pSpell].sType) {
+			case STYPE_FIRE:
+				return player_graphic::Fire;
+			case STYPE_LIGHTNING:
+				return player_graphic::Lightning;
+			case STYPE_MAGIC:
+				return player_graphic::Magic;
+			}
+		}
+		return player_graphic::Fire;
+	case PM_GOTHIT:
+		return player_graphic::Hit;
+	case PM_DEATH:
+		return player_graphic::Death;
+	default:
+		app_fatal("SyncPlrAnim");
+	}
+}
+
+uint16_t Player::getSpriteWidth() const
+{
+	if (!HeadlessMode)
+		return AnimInfo.celSprite->Width();
+	const player_graphic graphic = getGraphic();
+	const HeroClass cls = GetPlayerSpriteClass(_pClass);
+	const PlayerWeaponGraphic weaponGraphic = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF));
+	return GetPlayerSpriteWidth(cls, graphic, weaponGraphic);
+}
+
 void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2)
 {
 	// if game is not running don't show a preview
@@ -2142,18 +2251,10 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	if (animationData.RawData != nullptr)
 		return;
 
-	HeroClass c = player._pClass;
-	if (c == HeroClass::Bard && !hfbard_mpq) {
-		c = HeroClass::Rogue;
-	} else if (c == HeroClass::Barbarian && !hfbarb_mpq) {
-		c = HeroClass::Warrior;
-	}
+	const HeroClass cls = GetPlayerSpriteClass(player._pClass);
+	const PlayerWeaponGraphic animWeaponId = GetPlayerWeaponGraphic(graphic, static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF));
 
-	auto animWeaponId = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
-	int animationWidth = 96;
-	bool useUnarmedAnimationInTown = false;
-
-	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
+	const char *path = ClassPathTbl[static_cast<std::size_t>(cls)];
 
 	const char *szCel;
 	switch (graphic) {
@@ -2161,61 +2262,35 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		szCel = "AS";
 		if (leveltype == DTYPE_TOWN)
 			szCel = "ST";
-		if (c == HeroClass::Monk)
-			animationWidth = 112;
 		break;
 	case player_graphic::Walk:
 		szCel = "AW";
 		if (leveltype == DTYPE_TOWN)
 			szCel = "WL";
-		if (c == HeroClass::Monk)
-			animationWidth = 112;
 		break;
 	case player_graphic::Attack:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "AT";
-		if (c == HeroClass::Monk)
-			animationWidth = 130;
-		else if (animWeaponId != PlayerWeaponGraphic::Bow || !(c == HeroClass::Warrior || c == HeroClass::Barbarian))
-			animationWidth = 128;
 		break;
 	case player_graphic::Hit:
 		if (leveltype == DTYPE_TOWN)
 			return;
 		szCel = "HT";
-		if (c == HeroClass::Monk)
-			animationWidth = 98;
 		break;
 	case player_graphic::Lightning:
 		szCel = "LM";
-		useUnarmedAnimationInTown = true;
-		if (c == HeroClass::Monk)
-			animationWidth = 114;
-		else if (c == HeroClass::Sorcerer)
-			animationWidth = 128;
 		break;
 	case player_graphic::Fire:
 		szCel = "FM";
-		useUnarmedAnimationInTown = true;
-		if (c == HeroClass::Monk)
-			animationWidth = 114;
-		else if (c == HeroClass::Sorcerer)
-			animationWidth = 128;
 		break;
 	case player_graphic::Magic:
 		szCel = "QM";
-		useUnarmedAnimationInTown = true;
-		if (c == HeroClass::Monk)
-			animationWidth = 114;
-		else if (c == HeroClass::Sorcerer)
-			animationWidth = 128;
 		break;
 	case player_graphic::Death:
 		if (animWeaponId != PlayerWeaponGraphic::Unarmed)
 			return;
 		szCel = "DT";
-		animationWidth = (c == HeroClass::Monk) ? 160 : 128;
 		break;
 	case player_graphic::Block:
 		if (leveltype == DTYPE_TOWN)
@@ -2223,32 +2298,18 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 		if (!player._pBlockFlag)
 			return;
 		szCel = "BL";
-		if (c == HeroClass::Monk)
-			animationWidth = 98;
 		break;
 	default:
 		app_fatal("PLR:2");
 	}
 
-	if (leveltype == DTYPE_TOWN && useUnarmedAnimationInTown) {
-		// If the hero doesn't hold the weapon in town then we should use the unarmed animation for casting
-		switch (animWeaponId) {
-		case PlayerWeaponGraphic::Mace:
-		case PlayerWeaponGraphic::Sword:
-			animWeaponId = PlayerWeaponGraphic::Unarmed;
-			break;
-		case PlayerWeaponGraphic::SwordShield:
-		case PlayerWeaponGraphic::MaceShield:
-			animWeaponId = PlayerWeaponGraphic::UnarmedShield;
-			break;
-		default:
-			break;
-		}
-	}
+	if (HeadlessMode)
+		return;
 
-	char prefix[3] = { CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
+	char prefix[3] = { CharChar[static_cast<std::size_t>(cls)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)] };
 	char pszName[256];
-	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), cs, string_view(prefix, 3), szCel) = 0;
+	*fmt::format_to(pszName, FMT_COMPILE(R"(PlrGFX\{0}\{1}\{1}{2}.CL2)"), path, string_view(prefix, 3), szCel) = 0;
+	const uint16_t animationWidth = GetPlayerSpriteWidth(cls, graphic, animWeaponId);
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 
@@ -3440,51 +3501,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 
 void SyncPlrAnim(Player &player)
 {
-	player_graphic graphic;
-	switch (player._pmode) {
-	case PM_STAND:
-	case PM_NEWLVL:
-	case PM_QUIT:
-		graphic = player_graphic::Stand;
-		break;
-	case PM_WALK_NORTHWARDS:
-	case PM_WALK_SOUTHWARDS:
-	case PM_WALK_SIDEWAYS:
-		graphic = player_graphic::Walk;
-		break;
-	case PM_ATTACK:
-	case PM_RATTACK:
-		graphic = player_graphic::Attack;
-		break;
-	case PM_BLOCK:
-		graphic = player_graphic::Block;
-		break;
-	case PM_SPELL:
-		graphic = player_graphic::Fire;
-		if (&player == MyPlayer) {
-			switch (spelldata[player._pSpell].sType) {
-			case STYPE_FIRE:
-				graphic = player_graphic::Fire;
-				break;
-			case STYPE_LIGHTNING:
-				graphic = player_graphic::Lightning;
-				break;
-			case STYPE_MAGIC:
-				graphic = player_graphic::Magic;
-				break;
-			}
-		}
-		break;
-	case PM_GOTHIT:
-		graphic = player_graphic::Hit;
-		break;
-	case PM_DEATH:
-		graphic = player_graphic::Death;
-		break;
-	default:
-		app_fatal("SyncPlrAnim");
-	}
-
+	const player_graphic graphic = player.getGraphic();
 	player.AnimInfo.celSprite = player.AnimationData[static_cast<size_t>(graphic)].GetCelSpritesForDirection(player._pdir);
 	// Ensure ScrollInfo is initialized correctly
 	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);
