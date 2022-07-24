@@ -226,7 +226,9 @@ bool HasRangedSpell()
 
 bool CanTargetMonster(const Monster &monster)
 {
-	if ((monster._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
+	if ((monster._mFlags & MFLAG_HIDDEN) != 0)
+		return false;
+	if (monster._mAi == AI_GOLUM)
 		return false;
 	if (monster._mhitpoints >> 6 <= 0) // dead
 		return false;
