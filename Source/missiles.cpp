@@ -2065,7 +2065,7 @@ void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monste
 
 void AddRhino(Missile &missile, const AddMissileParameter &parameter)
 {
-	Monster &monster = Monsters[missile._misource];
+	Monster &monster = *missile.sourceMonster();
 
 	MonsterGraphic graphic = MonsterGraphic::Walk;
 	if (IsAnyOf(monster.type().type, MT_HORNED, MT_MUDRUN, MT_FROSTC, MT_OBLORD)) {
