@@ -2039,7 +2039,7 @@ void AddChain(Missile &missile, const AddMissileParameter &parameter)
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
 	missile._mirange = 1;
-	ConsumeSpell(Players[missile._misource], SPL_CHAIN);
+	ConsumeSpell(*missile.sourcePlayer(), SPL_CHAIN);
 }
 
 namespace {
