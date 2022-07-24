@@ -1720,7 +1720,7 @@ void AddMagmaball(Missile &missile, const AddMissileParameter &parameter)
 
 void AddTeleport(Missile &missile, const AddMissileParameter &parameter)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	std::optional<Point> teleportDestination = FindClosestValidPosition(
 	    [&player](Point target) {
