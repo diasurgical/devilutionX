@@ -3223,13 +3223,17 @@ void MI_Lightctrl(Missile &missile)
 	missile._mirange--;
 
 	int dam;
-	if (missile.IsTrap()) {
+	switch (missile.sourceType()) {
+	case MissileSource::Trap:
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
-	} else if (missile._micaster == TARGET_MONSTERS) {
-		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource]._pLevel) + 2) << 6;
-	} else {
-		auto &monster = Monsters[missile._misource];
+		break;
+	case MissileSource::Player:
+		dam = (GenerateRnd(2) + GenerateRnd(missile.sourcePlayer()->_pLevel) + 2) << 6;
+		break;
+	case MissileSource::Monster: {
+		Monster &monster = *missile.sourceMonster();
 		dam = 2 * (monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1));
+	} break;
 	}
 
 	SpawnLightning(missile, dam);
