@@ -2411,7 +2411,7 @@ void AddRepair(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddRecharge(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile._miDelFlag = true;
 	ConsumeSpell(player, SPL_RECHARGE);
@@ -2429,7 +2429,7 @@ void AddRecharge(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddDisarm(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile._miDelFlag = true;
 	ConsumeSpell(player, SPL_DISARM);
@@ -2446,7 +2446,7 @@ void AddDisarm(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddApoca(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile.var1 = 8;
 	missile.var2 = std::max(missile.position.start.y - 8, 1);
