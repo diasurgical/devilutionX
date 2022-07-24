@@ -2327,7 +2327,7 @@ void AddFirewallC(Missile &missile, const AddMissileParameter &parameter)
 	missile.var3 = static_cast<int>(Left(Left(parameter.midir)));
 	missile.var4 = static_cast<int>(Right(Right(parameter.midir)));
 	missile._mirange = 7;
-	ConsumeSpell(Players[missile._misource], SPL_FIREWALL);
+	ConsumeSpell(*missile.sourcePlayer(), SPL_FIREWALL);
 }
 
 void AddInfra(Missile &missile, const AddMissileParameter & /*parameter*/)
