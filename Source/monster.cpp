@@ -1198,7 +1198,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 {
 	assert(static_cast<size_t>(mid) < MaxMonsters);
 	auto &monster = Monsters[mid];
-	Monster &attackingMonster = Monsters[i];
+	Monster &attacker = Monsters[i];
 
 	if (!monster.isPossibleToHit())
 		return;
@@ -1214,14 +1214,14 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 	monster.hitPoints -= dam;
 	if (monster.hitPoints >> 6 <= 0) {
-		StartDeathFromMonster(attackingMonster, monster);
+		StartDeathFromMonster(attacker, monster);
 	} else {
-		MonsterHitMonster(attackingMonster, monster, dam);
+		MonsterHitMonster(attacker, monster, dam);
 	}
 
 	if (monster.activeForTicks == 0) {
 		monster.activeForTicks = UINT8_MAX;
-		monster.position.last = attackingMonster.position.tile;
+		monster.position.last = attacker.position.tile;
 	}
 }
 
