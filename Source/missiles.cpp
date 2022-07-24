@@ -2180,7 +2180,7 @@ void AddStone(Missile &missile, const AddMissileParameter &parameter)
 	missile.var2 = monsterId;
 	monster.petrify();
 
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	// And set up the missile to unpetrify it in the future
 	missile.position.tile = *targetMonsterPosition;
