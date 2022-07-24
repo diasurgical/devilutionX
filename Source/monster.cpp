@@ -3239,10 +3239,8 @@ bool IsMonsterAvalible(const MonsterData &monsterData)
 	return currlevel >= monsterData.minDunLvl && currlevel <= monsterData.maxDunLvl;
 }
 
-bool UpdateModeStance(int monsterId)
+bool UpdateModeStance(Monster &monster)
 {
-	Monster &monster = Monsters[monsterId];
-
 	switch (monster.mode) {
 	case MonsterMode::Stand:
 		MonsterIdle(monster);
@@ -4189,7 +4187,7 @@ void ProcessMonsters()
 				AiProc[monster.ai](monsterId);
 			}
 
-			if (!UpdateModeStance(monsterId))
+			if (!UpdateModeStance(monster))
 				break;
 
 			GroupUnity(monster);
