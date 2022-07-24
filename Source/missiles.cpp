@@ -2094,12 +2094,14 @@ void AddFlare(Missile &missile, const AddMissileParameter &parameter)
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 8);
-	if (missile._micaster == TARGET_MONSTERS) {
-		Player &player = Players[missile._misource];
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		Player &player = *missile.sourcePlayer();
 		ConsumeSpell(player, SPL_FLARE);
 		ApplyPlrDamage(player, 5);
-	} else if (missile._misource > 0) {
-		auto &monster = Monsters[missile._misource];
+	} break;
+	case MissileSource::Monster: {
+		Monster &monster = *missile.sourceMonster();
 		if (monster.type().type == MT_SUCCUBUS)
 			SetMissAnim(missile, MFILE_FLARE);
 		if (monster.type().type == MT_SNOWWICH)
@@ -2108,6 +2110,10 @@ void AddFlare(Missile &missile, const AddMissileParameter &parameter)
 			SetMissAnim(missile, MFILE_SCUBMISD);
 		if (monster.type().type == MT_SOLBRNR)
 			SetMissAnim(missile, MFILE_SCUBMISC);
+	} break;
+	case MissileSource::Trap:
+		assert(missile.sourceType() != MissileSource::Trap);
+		break;
 	}
 
 	if (MissileSpriteData[missile._miAnimType].animFAmt == 16) {
