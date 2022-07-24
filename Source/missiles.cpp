@@ -3967,7 +3967,7 @@ void MI_Bonespirit(Missile &missile)
 				SetMissDir(missile, GetDirection(c, monster->position.tile));
 				UpdateMissileVelocity(missile, monster->position.tile, 16);
 			} else {
-				Direction sd = Players[missile._misource]._pdir;
+				Direction sd = missile.sourcePlayer()->_pdir;
 				SetMissDir(missile, sd);
 				UpdateMissileVelocity(missile, c + sd, 16);
 			}
