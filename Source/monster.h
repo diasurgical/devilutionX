@@ -309,7 +309,7 @@ struct Monster { // note: missing field _mAFNum
 
 	uint32_t exp(_difficulty difficulty) const
 	{
-		unit32_t monsterExp = data().exp;
+		uint32_t monsterExp = data().exp;
 
 		if (difficulty == DIFF_NIGHTMARE) {
 			monsterExp = 2 * (monsterExp + 1000);
