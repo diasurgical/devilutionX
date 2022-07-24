@@ -1463,7 +1463,7 @@ void AddLightningArrow(Missile &missile, const AddMissileParameter &parameter)
 
 void AddMana(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	int manaAmount = (GenerateRnd(10) + 1) << 6;
 	for (int i = 0; i < player._pLevel; i++) {
