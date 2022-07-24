@@ -639,7 +639,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.whoHit = file->NextLE<int8_t>();
 	monster.level = file->NextLE<int8_t>();
 	file->Skip(1); // Alignment
-	file->Skip(2); // Skip exp - the monster used to have this field
+	file->Skip(2); // Skip exp - now calculated from monstdat when the monster dies
 
 	if ((monster.flags & MFLAG_GOLEM) != 0) // Don't skip for golems
 		monster.toHit = file->NextLE<uint8_t>();
