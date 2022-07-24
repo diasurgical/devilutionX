@@ -1439,11 +1439,8 @@ bool MonsterRangedSpecialAttack(int monsterId)
 	return false;
 }
 
-bool MonsterSpecialAttack(int monsterId)
+bool MonsterSpecialAttack(Monster &monster)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1) {
 		MonsterAttackEnemy(monster, monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
 	}
@@ -3265,7 +3262,7 @@ bool UpdateModeStance(int monsterId)
 		MonsterDeath(monster);
 		return false;
 	case MonsterMode::SpecialMeleeAttack:
-		return MonsterSpecialAttack(monsterId);
+		return MonsterSpecialAttack(monster);
 	case MonsterMode::FadeIn:
 		return MonsterFadein(monster);
 	case MonsterMode::FadeOut:
