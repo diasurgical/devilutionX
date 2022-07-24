@@ -1489,7 +1489,7 @@ void AddMana(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddMagi(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	player._pMana = player._pMaxMana;
 	player._pManaBase = player._pMaxManaBase;
