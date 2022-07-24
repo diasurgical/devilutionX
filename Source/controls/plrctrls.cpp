@@ -230,7 +230,7 @@ bool CanTargetMonster(const Monster &monster)
 {
 	if ((monster.flags & MFLAG_HIDDEN) != 0)
 		return false;
-	if (monster.ai == AI_GOLUM)
+	if (monster.isPlayerMinion())
 		return false;
 	if (monster.hitPoints >> 6 <= 0) // dead
 		return false;

@@ -393,9 +393,12 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1].mode == MonsterMode::Petrified)) {
 		mid = abs(mid) - 1;
 		if (missile.IsTrap()
-		    || (missile._micaster == TARGET_PLAYERS
-		        && (Monsters[missile._misource].flags & MFLAG_TARGETS_MONSTER) != 0
-		        && ((Monsters[mid].flags & MFLAG_GOLEM) != 0 || (Monsters[missile._misource].flags & MFLAG_BERSERK) != 0))) {
+		    || (missile._micaster == TARGET_PLAYERS && (                                           // or was fired by a monster and
+		            Monsters[mid].isPlayerMinion() != Monsters[missile._misource].isPlayerMinion() //  the monsters are on opposing factions
+		            || (Monsters[missile._misource].flags & MFLAG_BERSERK) != 0                    //  or the attacker is berserked
+		            || (Monsters[mid].flags & MFLAG_BERSERK) != 0                                  //  or the target is berserked
+		            ))) {
+			// then the missile can potentially hit this target
 			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		} else if (IsAnyOf(missile._micaster, TARGET_BOTH, TARGET_MONSTERS)) {
 			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
@@ -595,7 +598,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	if (mid < 0)
 		return false;
 	const Monster &monster = Monsters[mid];
-	if (monster.type().type == MT_GOLEM)
+	if (monster.isPlayerMinion())
 		return false;
 	if (monster.hitPoints >> 6 <= 0)
 		return false;
@@ -883,9 +886,8 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 		MonsterDeath(monster, monster.direction, true);
 	} else if (resist) {
 		PlayEffect(monster, 1);
-	} else {
-		if (monster.type().type != MT_GOLEM)
-			M_StartHit(monster, dam);
+	} else if (monster.type().type != MT_GOLEM) {
+		M_StartHit(monster, dam);
 	}
 	return true;
 }
@@ -1145,7 +1147,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 
 		    const Monster &monster = Monsters[monsterId];
-		    if (monster.type().type == MT_GOLEM)
+		    if (monster.isPlayerMinion())
 			    return false;
 		    if ((monster.flags & MFLAG_BERSERK) != 0)
 			    return false;
@@ -3637,7 +3639,7 @@ void MI_Apoca(Missile &missile)
 			int mid = dMonster[k][j] - 1;
 			if (mid < 0)
 				continue;
-			if (Monsters[mid].type().type == MT_GOLEM)
+			if (Monsters[mid].isPlayerMinion())
 				continue;
 			if (TileHasAny(dPiece[k][j], TileProperties::Solid))
 				continue;

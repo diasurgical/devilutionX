@@ -730,8 +730,7 @@ void UpdateEnemy(Monster &monster)
 			continue;
 		if (M_Talker(otherMonster) && otherMonster.talkMsg != TEXT_NONE)
 			continue;
-		bool isBerserked = (monster.flags & MFLAG_BERSERK) != 0 || (otherMonster.flags & MFLAG_BERSERK) != 0;
-		if ((monster.flags & MFLAG_GOLEM) != 0 && (otherMonster.flags & MFLAG_GOLEM) != 0 && !isBerserked) // prevent golems from fighting each other
+		if (monster.isPlayerMinion() && otherMonster.isPlayerMinion()) // prevent golems from fighting each other
 			continue;
 
 		int dist = otherMonster.position.tile.WalkingDistance(position);
@@ -987,7 +986,7 @@ void SpawnLoot(Monster &monster, bool sendmsg)
 		CreateMagicWeapon(monster.position.tile, ItemType::Staff, ICURS_WAR_STAFF, sendmsg, false);
 		CreateMagicWeapon(monster.position.tile, ItemType::Bow, ICURS_LONG_WAR_BOW, sendmsg, false);
 		CreateSpellBook(monster.position.tile, SPL_APOCA, sendmsg, false);
-	} else if (monster.type().type != MT_GOLEM) {
+	} else if (!monster.isPlayerMinion()) {
 		SpawnItem(monster, monster.position.tile, sendmsg);
 	}
 }
@@ -1057,7 +1056,7 @@ void HitMonster(Monster &monster, int dam)
 
 void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
 {
-	if (attacker.type().type == MT_GOLEM)
+	if (attacker.isPlayerMinion())
 		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
 
 	if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
@@ -1072,7 +1071,7 @@ void StartDeathFromMonster(Monster &attacker, Monster &target)
 	delta_kill_monster(target, target.position.tile, *MyPlayer);
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
 
-	if (attacker.type().type == MT_GOLEM)
+	if (attacker.isPlayerMinion())
 		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
 
 	Direction md = GetDirection(target.position.tile, attacker.position.tile);
@@ -1911,7 +1910,7 @@ bool AiPlanPath(Monster &monster)
 			return false;
 		if (IsNoneOf(monster.goal, MonsterGoal::Normal, MonsterGoal::Move, MonsterGoal::Attack))
 			return false;
-		if (monster.position.tile.x == 1 && monster.position.tile.y == 0)
+		if (monster.position.tile == GolemHoldingCell)
 			return false;
 	}
 
@@ -3875,7 +3874,7 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 
 void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 {
-	if (monster.type().type != MT_GOLEM)
+	if (!monster.isPlayerMinion())
 		AddPlrMonstExper(monster.level, monster.exp, monster.whoHit);
 
 	MonsterKillCounts[monster.type().type]++;
@@ -4842,6 +4841,12 @@ bool Monster::isResistant(missile_id missileType) const
 	if (gbIsHellfire && missileType == MIS_HBOLT && IsAnyOf(type().type, MT_DIABLO, MT_BONEDEMN))
 		return true;
 	return false;
+}
+
+bool Monster::isPlayerMinion() const
+{
+	// This could be HasAnyOf(GOLEM) && HasNoneOf(BERSERK), I think referencing the type and player index is more robust though
+	return type().type == MT_GOLEM && getId() < sizeof(Players) / sizeof(Players[0]);
 }
 
 bool Monster::isPossibleToHit() const
