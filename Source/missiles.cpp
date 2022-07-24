@@ -2138,8 +2138,7 @@ void AddAcid(Missile &missile, const AddMissileParameter &parameter)
 void AddAcidpud(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miLightFlag = true;
-	int monst = missile._misource;
-	missile._mirange = GenerateRnd(15) + 40 * (Monsters[monst].intelligence + 1);
+	missile._mirange = GenerateRnd(15) + 40 * (missile.sourceMonster()->intelligence + 1);
 	missile._miPreFlag = true;
 }
 
