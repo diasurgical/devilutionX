@@ -1957,7 +1957,7 @@ void AddManashield(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	missile._miDelFlag = true;
 
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	if (player.pManaShield)
 		return;
