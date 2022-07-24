@@ -1972,7 +1972,7 @@ void AddManashield(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddFiremove(Missile &missile, const AddMissileParameter &parameter)
 {
-	missile._midam = GenerateRnd(10) + Players[missile._misource]._pLevel + 1;
+	missile._midam = GenerateRnd(10) + missile.sourcePlayer()->_pLevel + 1;
 	UpdateMissileVelocity(missile, parameter.dst, 16);
 	missile._mirange = 255;
 	missile.position.tile += Displacement { 1, 1 };
