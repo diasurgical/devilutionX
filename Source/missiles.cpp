@@ -2393,7 +2393,7 @@ void AddBlodboil(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddRepair(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile._miDelFlag = true;
 	ConsumeSpell(player, SPL_REPAIR);
