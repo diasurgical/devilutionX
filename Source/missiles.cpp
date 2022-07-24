@@ -1595,8 +1595,8 @@ void AddArrow(Missile &missile, const AddMissileParameter &parameter)
 		dst += parameter.midir;
 	}
 	int av = 32;
-	if (missile._micaster == TARGET_MONSTERS) {
-		const Player &player = Players[missile._misource];
+	if (missile.sourceType() == MissileSource::Player) {
+		const Player &player = *missile.sourcePlayer();
 
 		if (HasAnyOf(player._pIFlags, ItemSpecialEffect::RandomArrowVelocity)) {
 			av = GenerateRnd(32) + 16;
