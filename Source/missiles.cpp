@@ -2252,7 +2252,7 @@ void AddHeal(Missile &missile, const AddMissileParameter & /*parameter*/)
 
 void AddHealOther(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile._miDelFlag = true;
 	ConsumeSpell(player, SPL_HEALOTHER);
