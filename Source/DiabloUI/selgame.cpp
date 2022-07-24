@@ -614,7 +614,7 @@ void selgame_Password_Select(int /*value*/)
 	if (selgame_selectedGame > 1) {
 		if (provider == SELCONN_ZT) {
 			for (unsigned int i = 0; i < (sizeof(selgame_Ip) / sizeof(selgame_Ip[0])); i++) {
-				selgame_Ip[i] = std::tolower(selgame_Ip[i]);
+				selgame_Ip[i] = (selgame_Ip[i] >= 'A' && selgame_Ip[i] <= 'Z') ? selgame_Ip[i] + 'a' - 'A' : selgame_Ip[i];
 			}
 			strcpy(sgOptions.Network.szPreviousZTGame, selgame_Ip);
 		} else {
