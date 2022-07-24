@@ -2372,7 +2372,7 @@ void AddNova(Missile &missile, const AddMissileParameter &parameter)
 
 void AddBlodboil(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	if (HasAnyOf(player._pSpellFlags, SpellFlag::RageActive | SpellFlag::RageCooldown) || player._pHitPoints <= player._pLevel << 6) {
 		missile._miDelFlag = true;
