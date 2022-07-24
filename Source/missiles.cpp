@@ -3532,8 +3532,7 @@ void MI_Teleport(Missile &missile)
 		return;
 	}
 
-	int id = missile._misource;
-	Player &player = Players[id];
+	Player &player = *missile.sourcePlayer();
 
 	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 	PlrClrTrans(player.position.tile);
@@ -3542,7 +3541,7 @@ void MI_Teleport(Missile &missile)
 	player.position.old = player.position.tile;
 	PlrDoTrans(player.position.tile);
 	missile.var1 = 1;
-	dPlayer[player.position.tile.x][player.position.tile.y] = id + 1;
+	dPlayer[player.position.tile.x][player.position.tile.y] = player.getId() + 1;
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player._plid, player.position.tile);
 		ChangeVisionXY(player._pvid, player.position.tile);
