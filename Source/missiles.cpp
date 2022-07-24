@@ -1820,8 +1820,8 @@ void AddLightning(Missile &missile, const AddMissileParameter &parameter)
 
 void AddMisexp(Missile &missile, const AddMissileParameter &parameter)
 {
-	if (missile._micaster != TARGET_MONSTERS && missile._misource >= 0) {
-		switch (Monsters[missile._misource].type().type) {
+	if (missile.sourceType() == MissileSource::Monster) {
+		switch (missile.sourceMonster()->type().type) {
 		case MT_SUCCUBUS:
 			SetMissAnim(missile, MFILE_FLAREEXP);
 			break;
