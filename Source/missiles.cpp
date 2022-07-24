@@ -2541,7 +2541,7 @@ void AddHbolt(Missile &missile, const AddMissileParameter &parameter)
 
 void AddResurrect(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	ConsumeSpell(player, SPL_RESURRECT);
 	if (&player == MyPlayer) {
