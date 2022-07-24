@@ -280,7 +280,7 @@ void NotifyGameLoopEnd()
 		gbRunGame = false;
 
 		HeroCompareResult compareResult = pfile_compare_hero_demo(DemoNumber);
-		switch (compareResult) {
+		switch (compareResult.status) {
 		case HeroCompareResult::ReferenceNotFound:
 			SDL_Log("Timedemo: No final comparision cause reference is not present.");
 			break;
@@ -288,7 +288,7 @@ void NotifyGameLoopEnd()
 			SDL_Log("Timedemo: Same outcome as inital run. :)");
 			break;
 		case HeroCompareResult::Difference:
-			SDL_Log("Timedemo: Different outcome then inital run. ;(");
+			Log("Timedemo: Different outcome then inital run. ;(\n{}", compareResult.message);
 			break;
 		}
 	}
