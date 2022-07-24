@@ -17,10 +17,14 @@ extern bool gbValidSaveFile;
 /**
  * @brief Comparsion result of pfile_compare_hero_demo
  */
-enum class HeroCompareResult {
-	ReferenceNotFound,
-	Same,
-	Difference,
+struct HeroCompareResult {
+	enum Status {
+		ReferenceNotFound,
+		Same,
+		Difference,
+	};
+	Status status;
+	std::string message;
 };
 
 std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum);

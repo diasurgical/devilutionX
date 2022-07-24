@@ -21,6 +21,7 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/string_view.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
@@ -187,7 +188,7 @@ bool ArchiveContainsGame(MpqArchive &hsArchive)
 	return IsHeaderValid(hdr);
 }
 
-bool CompareSaves(const std::string &actualSavePath, const std::string &referenceSavePath)
+HeroCompareResult CompareSaves(const std::string &actualSavePath, const std::string &referenceSavePath)
 {
 	std::vector<std::string> possibleFileNamesToCheck;
 	possibleFileNamesToCheck.emplace_back("hero");
@@ -202,7 +203,6 @@ bool CompareSaves(const std::string &actualSavePath, const std::string &referenc
 	auto actualArchive = *MpqArchive::Open(actualSavePath.c_str(), error);
 	auto referenceArchive = *MpqArchive::Open(referenceSavePath.c_str(), error);
 
-	bool compareResult = true;
 	for (const auto &fileName : possibleFileNamesToCheck) {
 		size_t fileSizeActual;
 		auto fileDataActual = ReadArchive(actualArchive, fileName.c_str(), &fileSizeActual);
@@ -212,15 +212,31 @@ bool CompareSaves(const std::string &actualSavePath, const std::string &referenc
 			continue;
 		}
 		if (fileSizeActual != fileSizeReference) {
-			compareResult = false;
-			break;
+			return { HeroCompareResult::Difference, StrCat("file \"", fileName, "\" is different size. Expected: ", fileSizeReference, "Actual: ", fileSizeActual) };
 		}
-		if (memcmp(fileDataReference.get(), fileDataActual.get(), fileSizeActual) != 0) {
-			compareResult = false;
-			break;
+
+		const byte *reference = fileDataReference.get();
+		const byte *referenceEnd = reference + fileSizeActual;
+		const byte *actual = fileDataActual.get();
+		while (reference != referenceEnd) {
+			if (*reference != *actual) {
+				const size_t diffSize = std::min<size_t>(16, referenceEnd - reference);
+				return {
+					HeroCompareResult::Difference,
+					fmt::format(
+					    "file \"{}\" is different at byte {}:\n"
+					    "Expected: ... {:02X} ...\n"
+					    "  Actual: ... {:02X} ...",
+					    fileName, reference - fileDataReference.get(),
+					    fmt::join(reference, reference + diffSize, " "),
+					    fmt::join(actual, actual + diffSize, " "))
+				};
+			}
+			++reference;
+			++actual;
 		}
 	}
-	return compareResult;
+	return { HeroCompareResult::Same, {} };
 }
 
 void pfile_write_hero(MpqWriter &saveWriter, bool writeGameData)
@@ -298,7 +314,7 @@ HeroCompareResult pfile_compare_hero_demo(int demo)
 	std::string referenceSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
 
 	if (!FileExists(referenceSavePath.c_str()))
-		return HeroCompareResult::ReferenceNotFound;
+		return { HeroCompareResult::ReferenceNotFound, {} };
 
 	std::string actualSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_actual_"));
 	{
@@ -306,8 +322,7 @@ HeroCompareResult pfile_compare_hero_demo(int demo)
 		pfile_write_hero(saveWriter, true);
 	}
 
-	bool compareResult = CompareSaves(actualSavePath, referenceSavePath);
-	return compareResult ? HeroCompareResult::Same : HeroCompareResult::Difference;
+	return CompareSaves(actualSavePath, referenceSavePath);
 }
 
 void sfile_write_stash()
