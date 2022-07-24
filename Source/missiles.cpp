@@ -2332,7 +2332,7 @@ void AddFirewallC(Missile &missile, const AddMissileParameter &parameter)
 
 void AddInfra(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile._mirange = ScaleSpellEffect(1584, missile._mispllvl);
 	missile._mirange += missile._mirange * player._pISplDur / 128;
