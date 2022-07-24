@@ -698,6 +698,10 @@ struct Player {
 		return false;
 	}
 
+	[[nodiscard]] player_graphic getGraphic() const;
+
+	[[nodiscard]] uint16_t getSpriteWidth() const;
+
 	/**
 	 * @brief Updates previewCelSprite according to new requested command
 	 * @param cmdId What command is requested

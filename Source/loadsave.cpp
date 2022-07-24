@@ -1120,7 +1120,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.AnimInfo.numberOfFrames);
 	file.WriteLE<int32_t>(player.AnimInfo.currentFrame + 1);
 	// write _pAnimWidth for vanilla compatibility
-	int animWidth = player.AnimInfo.celSprite ? player.AnimInfo.celSprite->Width() : 96;
+	const int animWidth = player.getSpriteWidth();
 	file.WriteLE<int32_t>(animWidth);
 	// write _pAnimWidth2 for vanilla compatibility
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
