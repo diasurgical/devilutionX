@@ -2583,8 +2583,8 @@ void AddBoneSpirit(Missile &missile, const AddMissileParameter &parameter)
 	missile.var4 = dst.x;
 	missile.var5 = dst.y;
 	missile._mlid = AddLight(missile.position.start, 8);
-	if (missile._micaster == TARGET_MONSTERS) {
-		Player &player = Players[missile._misource];
+	if (missile.sourceType() == MissileSource::Player) {
+		Player &player = *missile.sourcePlayer();
 		ConsumeSpell(player, SPL_BONESPIRIT);
 		ApplyPlrDamage(player, 6);
 	}
