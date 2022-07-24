@@ -1773,9 +1773,9 @@ void AddFireball(Missile &missile, const AddMissileParameter &parameter)
 		dst += parameter.midir;
 	}
 	int sp = 16;
-	if (missile._micaster == TARGET_MONSTERS) {
+	if (missile.sourceType() == MissileSource::Player) {
 		sp += std::min(missile._mispllvl * 2, 34);
-		Player &player = Players[missile._misource];
+		Player &player = *missile.sourcePlayer();
 
 		int dmg = 2 * (player._pLevel + GenerateRndSum(10, 2)) + 4;
 		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
