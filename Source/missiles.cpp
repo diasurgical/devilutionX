@@ -3664,7 +3664,7 @@ void MI_FirewallC(Missile &missile)
 
 void MI_Infra(Missile &missile)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 	missile._mirange--;
 	player._pInfraFlag = true;
 	if (missile._mirange == 0) {
