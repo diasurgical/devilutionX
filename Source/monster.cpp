@@ -1345,11 +1345,8 @@ void MonsterAttackEnemy(Monster &monster, int hit, int minDam, int maxDam)
 		MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
 }
 
-bool MonsterAttack(int monsterId)
+bool MonsterAttack(Monster &monster)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster.animInfo.currentFrame == monster.data().animFrameNum - 1) {
 		MonsterAttackEnemy(monster, monster.toHit, monster.minDamage, monster.maxDamage);
 		if (monster.ai != AI_SNAKE)
@@ -3261,7 +3258,7 @@ bool UpdateModeStance(int monsterId)
 	case MonsterMode::MoveSideways:
 		return MonsterWalk(monster, monster.mode);
 	case MonsterMode::MeleeAttack:
-		return MonsterAttack(monsterId);
+		return MonsterAttack(monster);
 	case MonsterMode::HitRecovery:
 		return MonsterGotHit(monster);
 	case MonsterMode::Death:
