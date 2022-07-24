@@ -3099,7 +3099,7 @@ void MI_Search(Missile &missile)
 	if (missile._mirange != 0)
 		return;
 
-	const Player &player = Players[missile._misource];
+	const Player &player = *missile.sourcePlayer();
 
 	missile._miDelFlag = true;
 	PlaySfxLoc(IS_CAST7, player.position.tile);
