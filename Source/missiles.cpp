@@ -2352,7 +2352,7 @@ void AddWave(Missile &missile, const AddMissileParameter &parameter)
 
 void AddNova(Missile &missile, const AddMissileParameter &parameter)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile.var1 = parameter.dst.x;
 	missile.var2 = parameter.dst.y;
