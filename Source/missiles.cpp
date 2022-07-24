@@ -3687,8 +3687,8 @@ void MI_Apoca(Missile &missile)
 			if (gbIsHellfire && !LineClearMissile(missile.position.tile, { k, j }))
 				continue;
 
-			int id = missile._misource;
-			AddMissile({ k, j }, { k, j }, Players[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile._midam, 0);
+			Player &player = *missile.sourcePlayer();
+			AddMissile({ k, j }, { k, j }, player._pdir, MIS_BOOM, TARGET_MONSTERS, player.getId(), missile._midam, 0);
 			missile.var2 = j;
 			missile.var4 = k + 1;
 			return;
@@ -3703,7 +3703,6 @@ void MI_Wave(Missile &missile)
 	bool f1 = false;
 	bool f2 = false;
 
-	int id = missile._misource;
 	Point src = missile.position.tile;
 	Direction sd = GetDirection(src, { missile.var1, missile.var2 });
 	Direction dira = Left(Left(sd));
@@ -3712,8 +3711,8 @@ void MI_Wave(Missile &missile)
 	int pn = dPiece[na.x][na.y];
 	assert(pn >= 0 && pn <= MAXTILES);
 	if (!TileHasAny(pn, TileProperties::BlockMissile)) {
-		Direction pdir = Players[id]._pdir;
-		AddMissile(na, na + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, missile._mispllvl);
+		Player &player = *missile.sourcePlayer();
+		AddMissile(na, na + sd, player._pdir, MIS_FIREMOVE, TARGET_MONSTERS, player.getId(), 0, missile._mispllvl);
 		na += dira;
 		Point nb = src + sd + dirb;
 		for (int j = 0; j < (missile._mispllvl / 2) + 2; j++) {
@@ -3722,7 +3721,7 @@ void MI_Wave(Missile &missile)
 			if (TileHasAny(pn, TileProperties::BlockMissile) || f1 || !InDungeonBounds(na)) {
 				f1 = true;
 			} else {
-				AddMissile(na, na + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, missile._mispllvl);
+				AddMissile(na, na + sd, player._pdir, MIS_FIREMOVE, TARGET_MONSTERS, player.getId(), 0, missile._mispllvl);
 				na += dira;
 			}
 			pn = dPiece[nb.x][nb.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
@@ -3730,7 +3729,7 @@ void MI_Wave(Missile &missile)
 			if (TileHasAny(pn, TileProperties::BlockMissile) || f2 || !InDungeonBounds(nb)) {
 				f2 = true;
 			} else {
-				AddMissile(nb, nb + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, missile._mispllvl);
+				AddMissile(nb, nb + sd, player._pdir, MIS_FIREMOVE, TARGET_MONSTERS, player.getId(), 0, missile._mispllvl);
 				nb += dirb;
 			}
 		}
