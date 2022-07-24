@@ -3461,7 +3461,7 @@ void MI_Weapexp(Missile &missile)
 	constexpr int ExpLight[10] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2 };
 
 	missile._mirange--;
-	const Player &player = Players[missile._misource];
+	const Player &player = *missile.sourcePlayer();
 	int mind;
 	int maxd;
 	if (missile.var2 == 1) {
@@ -3516,9 +3516,9 @@ void MI_Acidsplat(Missile &missile)
 	missile._mirange--;
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
-		int monst = missile._misource;
-		int dam = (Monsters[monst].data().level >= 2 ? 2 : 1);
-		AddMissile(missile.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monst, dam, missile._mispllvl);
+		Monster &monster = *missile.sourceMonster();
+		int dam = (monster.data().level >= 2 ? 2 : 1);
+		AddMissile(missile.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monster.getId(), dam, missile._mispllvl);
 	} else {
 		PutMissile(missile);
 	}
