@@ -2467,12 +2467,19 @@ void AddFlame(Missile &missile, const AddMissileParameter &parameter)
 
 	missile._mirange = missile.var2 + 20;
 	missile._mlid = AddLight(missile.position.start, 1);
-	if (missile._micaster == TARGET_MONSTERS) {
-		int i = GenerateRnd(Players[missile._misource]._pLevel) + GenerateRnd(2);
+
+	switch (missile.sourceType()) {
+	case MissileSource::Player: {
+		int i = GenerateRnd(missile.sourcePlayer()->_pLevel) + GenerateRnd(2);
 		missile._midam = 8 * i + 16 + ((8 * i + 16) / 2);
-	} else {
-		auto &monster = Monsters[missile._misource];
+	} break;
+	case MissileSource::Monster: {
+		Monster &monster = *missile.sourceMonster();
 		missile._midam = monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
+	} break;
+	case MissileSource::Trap:
+		assert(missile.sourceType() != MissileSource::Trap);
+		break;
 	}
 }
 
