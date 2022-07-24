@@ -1443,12 +1443,20 @@ void AddLightningArrow(Missile &missile, const AddMissileParameter &parameter)
 	UpdateMissileVelocity(missile, dst, 32);
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 	missile._mirange = 255;
-	if (missile._misource < 0) {
+	switch (missile.sourceType()) {
+	case MissileSource::Trap:
 		missile.var1 = missile.position.start.x;
 		missile.var2 = missile.position.start.y;
-	} else {
-		missile.var1 = Players[missile._misource].position.tile.x;
-		missile.var2 = Players[missile._misource].position.tile.y;
+		break;
+	case MissileSource::Player: {
+		Player &player = *missile.sourcePlayer();
+		missile.var1 = player.position.tile.x;
+		missile.var2 = player.position.tile.y;
+	} break;
+	case MissileSource::Monster: {
+		assert(missile.sourceType() != MissileSource::Monster);
+		break;
+	}
 	}
 	missile._midam <<= 6;
 }
