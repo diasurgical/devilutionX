@@ -1642,7 +1642,7 @@ void AddRndTeleport(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile._mirange = 2;
 
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	if (missile._micaster == TARGET_BOTH) {
 		missile.position.tile = parameter.dst;
