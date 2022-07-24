@@ -393,9 +393,12 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	if (mid > 0 || (mid != 0 && Monsters[abs(mid) - 1].mode == MonsterMode::Petrified)) {
 		mid = abs(mid) - 1;
 		if (missile.IsTrap()
-		    || (missile._micaster == TARGET_PLAYERS
-		        && (Monsters[missile._misource].flags & MFLAG_TARGETS_MONSTER) != 0
-		        && ((Monsters[mid].flags & MFLAG_GOLEM) != 0 || (Monsters[missile._misource].flags & MFLAG_BERSERK) != 0))) {
+		    || (missile._micaster == TARGET_PLAYERS && (                                           // or was fired by a monster and
+		            Monsters[mid].isPlayerMinion() != Monsters[missile._misource].isPlayerMinion() //  the monsters are on opposing factions
+		            || (Monsters[missile._misource].flags & MFLAG_BERSERK) != 0                    //  or the attacker is berserked
+		            || (Monsters[mid].flags & MFLAG_BERSERK) != 0                                  //  or the target is berserked
+		            ))) {
+			// then the missile can potentially hit this target
 			isMonsterHit = MonsterTrapHit(mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
 		} else if (IsAnyOf(missile._micaster, TARGET_BOTH, TARGET_MONSTERS)) {
 			isMonsterHit = MonsterMHit(missile._misource, mid, minDamage, maxDamage, missile._midist, missile._mitype, isDamageShifted);
@@ -595,7 +598,7 @@ bool GuardianTryFireAt(Missile &missile, Point target)
 	if (mid < 0)
 		return false;
 	const Monster &monster = Monsters[mid];
-	if (monster.type().type == MT_GOLEM)
+	if (monster.isPlayerMinion())
 		return false;
 	if (monster.hitPoints >> 6 <= 0)
 		return false;
@@ -665,6 +668,13 @@ void SpawnLightning(Missile &missile, int dam)
 }
 
 } // namespace
+
+#ifdef BUILD_TESTING
+void TestRotateBlockedMissile(Missile &missile)
+{
+	RotateBlockedMissile(missile);
+}
+#endif
 
 bool IsMissileBlockedByTile(Point tile)
 {
@@ -876,9 +886,8 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 		MonsterDeath(monster, monster.direction, true);
 	} else if (resist) {
 		PlayEffect(monster, 1);
-	} else {
-		if (monster.type().type != MT_GOLEM)
-			M_StartHit(monster, dam);
+	} else if (monster.type().type != MT_GOLEM) {
+		M_StartHit(monster, dam);
 	}
 	return true;
 }
@@ -1124,7 +1133,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 {
 	missile._miDelFlag = true;
 
-	if (missile._misource < 0)
+	if (missile.sourceType() == MissileSource::Trap)
 		return;
 
 	std::optional<Point> targetMonsterPosition = FindClosestValidPosition(
@@ -1138,7 +1147,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 			    return false;
 
 		    const Monster &monster = Monsters[monsterId];
-		    if (monster.type().type == MT_GOLEM)
+		    if (monster.isPlayerMinion())
 			    return false;
 		    if ((monster.flags & MFLAG_BERSERK) != 0)
 			    return false;
@@ -1157,7 +1166,7 @@ void AddBerserk(Missile &missile, const AddMissileParameter &parameter)
 
 	if (targetMonsterPosition) {
 		auto &monster = Monsters[abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
-		Player &player = Players[missile._misource];
+		Player &player = *missile.sourcePlayer();
 		const int slvl = player.GetSpellLevel(SPL_BERSERK);
 		monster.flags |= MFLAG_BERSERK | MFLAG_GOLEM;
 		monster.minDamage = (GenerateRnd(10) + 120) * monster.minDamage / 100 + slvl;
@@ -1305,8 +1314,8 @@ void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter)
 {
 	int av = 0;
 
-	if (missile._micaster == TARGET_MONSTERS) {
-		const Player &player = Players[missile._misource];
+	if (missile.sourceType() == MissileSource::Player) {
+		const Player &player = *missile.sourcePlayer();
 
 		if (player._pClass == HeroClass::Rogue)
 			av += (player._pLevel - 1) / 4;
@@ -1331,13 +1340,13 @@ void AddSpecArrow(Missile &missile, const AddMissileParameter &parameter)
 
 void AddWarp(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
-
 	int minDistanceSq = std::numeric_limits<int>::max();
 	Point src = missile.position.start;
 	Point tile = src;
-	if (missile._misource >= 0) {
-		tile = player.position.tile;
+
+	MissileSource missileSource = missile.sourceType();
+	if (missileSource == MissileSource::Player) {
+		tile = missile.sourcePlayer()->position.tile;
 	}
 
 	for (int i = 0; i < numtrigs && i < MAXTRIGGERS; i++) {
@@ -1359,8 +1368,9 @@ void AddWarp(Missile &missile, const AddMissileParameter & /*parameter*/)
 	}
 	missile._mirange = 2;
 	missile.position.tile = tile;
-	if (missile._micaster == TARGET_MONSTERS)
-		UseMana(player, SPL_WARP);
+	if (missileSource == MissileSource::Player) {
+		UseMana(*missile.sourcePlayer(), SPL_WARP);
+	}
 }
 
 void AddLightningWall(Missile &missile, const AddMissileParameter &parameter)
@@ -1379,8 +1389,8 @@ void AddLightningWall(Missile &missile, const AddMissileParameter &parameter)
 
 void AddRuneExplosion(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	if (IsAnyOf(missile._micaster, TARGET_MONSTERS, TARGET_BOTH)) {
-		int dmg = 2 * (Players[missile._misource]._pLevel + GenerateRndSum(10, 2)) + 4;
+	if (missile.sourceType() == MissileSource::Player) {
+		int dmg = 2 * (missile.sourcePlayer()->_pLevel + GenerateRndSum(10, 2)) + 4;
 		dmg = ScaleSpellEffect(dmg, missile._mispllvl);
 
 		missile._midam = dmg;
@@ -1884,11 +1894,11 @@ void AddFlash(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
 	switch (missile.sourceType()) {
 	case MissileSource::Player: {
-		Player *player = missile.sourcePlayer();
-		int dmg = GenerateRndSum(20, player->_pLevel + 1) + player->_pLevel + 1;
+		Player &player = *missile.sourcePlayer();
+		int dmg = GenerateRndSum(20, player._pLevel + 1) + player._pLevel + 1;
 		missile._midam = ScaleSpellEffect(dmg, missile._mispllvl);
 		missile._midam += missile._midam / 2;
-		UseMana(*player, SPL_FLASH);
+		UseMana(player, SPL_FLASH);
 	} break;
 	case MissileSource::Monster:
 		missile._midam = missile.sourceMonster()->level * 2;
@@ -2703,14 +2713,14 @@ void MI_Arrow(Missile &missile)
 	int maxd;
 	switch (missile.sourceType()) {
 	case MissileSource::Player: {
-		const Player *player = missile.sourcePlayer();
-		mind = player->_pIMinDam;
-		maxd = player->_pIMaxDam;
+		const Player &player = *missile.sourcePlayer();
+		mind = player._pIMinDam;
+		maxd = player._pIMaxDam;
 	} break;
 	case MissileSource::Monster: {
-		const Monster *monster = missile.sourceMonster();
-		mind = monster->minDamage;
-		maxd = monster->maxDamage;
+		const Monster &monster = *missile.sourceMonster();
+		mind = monster.minDamage;
+		maxd = monster.maxDamage;
 	} break;
 	case MissileSource::Trap:
 		mind = currlevel;
@@ -2731,13 +2741,13 @@ void MI_Firebolt(Missile &missile)
 	if (missile._mitype != MIS_BONESPIRIT || missile._mimfnum != 8) {
 		switch (missile.sourceType()) {
 		case MissileSource::Player: {
-			const Player *player = missile.sourcePlayer();
+			const Player &player = *missile.sourcePlayer();
 			switch (missile._mitype) {
 			case MIS_FIREBOLT:
-				d = GenerateRnd(10) + (player->_pMagic / 8) + missile._mispllvl + 1;
+				d = GenerateRnd(10) + (player._pMagic / 8) + missile._mispllvl + 1;
 				break;
 			case MIS_FLARE:
-				d = 3 * missile._mispllvl - (player->_pMagic / 8) + (player->_pMagic / 2);
+				d = 3 * missile._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
 				break;
 			case MIS_BONESPIRIT:
 				d = 0;
@@ -2747,8 +2757,8 @@ void MI_Firebolt(Missile &missile)
 			}
 		} break;
 		case MissileSource::Monster: {
-			const Monster *monster = missile.sourceMonster();
-			d = monster->minDamage + GenerateRnd(monster->maxDamage - monster->minDamage + 1);
+			const Monster &monster = *missile.sourceMonster();
+			d = monster.minDamage + GenerateRnd(monster.maxDamage - monster.minDamage + 1);
 		} break;
 		case MissileSource::Trap:
 			d = currlevel + GenerateRnd(2 * currlevel);
@@ -3629,7 +3639,7 @@ void MI_Apoca(Missile &missile)
 			int mid = dMonster[k][j] - 1;
 			if (mid < 0)
 				continue;
-			if (Monsters[mid].type().type == MT_GOLEM)
+			if (Monsters[mid].isPlayerMinion())
 				continue;
 			if (TileHasAny(dPiece[k][j], TileProperties::Solid))
 				continue;

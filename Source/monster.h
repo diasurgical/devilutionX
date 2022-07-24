@@ -361,6 +361,12 @@ struct Monster { // note: missing field _mAFNum
 	bool isWalking() const;
 	bool isImmune(missile_id mitype) const;
 	bool isResistant(missile_id mitype) const;
+
+	/**
+	 * Is this a player's golem?
+	 */
+	[[nodiscard]] bool isPlayerMinion() const;
+
 	bool isPossibleToHit() const;
 
 	[[nodiscard]] bool isUnique() const
@@ -398,7 +404,7 @@ void M_StartHit(Monster &monster, const Player &player, int dam);
 void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg);
 void MonsterDeath(Monster &monster, Direction md, bool sendmsg);
 void M_StartKill(Monster &monster, const Player &player);
-void M_SyncStartKill(int monsterId, Point position, const Player &player);
+void M_SyncStartKill(Monster &monster, Point position, const Player &player);
 void M_UpdateRelations(const Monster &monster);
 void DoEnding();
 void PrepDoEnding();
@@ -426,7 +432,12 @@ Monster *MonsterAtPosition(Point position);
 bool IsTileAvailable(const Monster &monster, Point position);
 bool IsSkel(_monster_id mt);
 bool IsGoat(_monster_id mt);
-bool SpawnSkeleton(Monster *monster, Point position);
+/**
+ * @brief Reveals a monster that was hiding in a container
+ * @param monster instance returned from a previous call to PreSpawnSkeleton
+ * @param position tile to try spawn the monster at, neighboring tiles will be used as a fallback
+ */
+void ActivateSkeleton(Monster &monster, Point position);
 Monster *PreSpawnSkeleton();
 void TalktoMonster(Monster &monster);
 void SpawnGolem(Player &player, Monster &golem, Point position, Missile &missile);

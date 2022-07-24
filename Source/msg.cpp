@@ -1526,7 +1526,7 @@ size_t OnMonstDeath(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer && InDungeonBounds(position) && message.wParam1 < MaxMonsters) {
 			Monster &monster = Monsters[message.wParam1];
 			if (player.isOnActiveLevel())
-				M_SyncStartKill(message.wParam1, position, player);
+				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
@@ -1546,7 +1546,7 @@ size_t OnKillGolem(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer && InDungeonBounds(position)) {
 			Monster &monster = Monsters[pnum];
 			if (player.isOnActiveLevel())
-				M_SyncStartKill(pnum, position, player);
+				M_SyncStartKill(monster, position, player);
 			delta_kill_monster(monster, position, player);
 		}
 	} else {
@@ -1638,17 +1638,18 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnOperateObject(const TCmd *pCmd, int pnum)
+size_t OnOperateObject(const TCmd &pCmd, int pnum)
 {
-	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
+	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
+	Object *object = ObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (message.wParam1 < MAXOBJECTS) {
+	} else if (object != nullptr) {
 		Player &player = Players[pnum];
 		if (player.isOnActiveLevel())
-			SyncOpObject(player, message.bCmd, message.wParam1);
-		DeltaSyncObject(Objects[message.wParam1], message.bCmd, player);
+			SyncOpObject(player, message.bCmd, *object);
+		DeltaSyncObject(*object, message.bCmd, player);
 	}
 
 	return sizeof(message);
@@ -1663,9 +1664,8 @@ size_t OnBreakObject(const TCmd &pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (breakable != nullptr) {
 		Player &player = Players[pnum];
-		if (player.isOnActiveLevel()) {
+		if (player.isOnActiveLevel())
 			SyncBreakObj(player, *breakable);
-		}
 		DeltaSyncObject(*breakable, CMD_BREAKOBJ, player);
 	}
 
@@ -2496,7 +2496,7 @@ void DeltaLoadLevel()
 			case CMD_CLOSEDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				DeltaSyncOpObject(deltaLevel.object[i].bCmd, i);
+				DeltaSyncOpObject(deltaLevel.object[i].bCmd, Objects[i]);
 				break;
 			case CMD_BREAKOBJ:
 				DeltaSyncBreakObj(Objects[i]);
@@ -2997,7 +2997,7 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_CLOSEDOOR:
 	case CMD_OPERATEOBJ:
 	case CMD_PLROPOBJ:
-		return OnOperateObject(pCmd, pnum);
+		return OnOperateObject(*pCmd, pnum);
 	case CMD_BREAKOBJ:
 		return OnBreakObject(*pCmd, pnum);
 	case CMD_CHANGEPLRITEMS:

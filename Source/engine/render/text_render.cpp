@@ -22,7 +22,6 @@
 #include "engine/palette.h"
 #include "engine/point.hpp"
 #include "engine/render/cl2_render.hpp"
-#include "pcx_render.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
@@ -37,8 +36,8 @@ namespace {
 
 constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 
-using Font = const OwnedPcxSpriteSheet;
-std::unordered_map<uint32_t, std::optional<OwnedPcxSpriteSheet>> Fonts;
+using Font = const OwnedCelSpriteSheetWithFrameHeight;
+std::unordered_map<uint32_t, std::optional<OwnedCelSpriteSheetWithFrameHeight>> Fonts;
 
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
@@ -181,7 +180,7 @@ uint32_t GetFontId(GameFontTables size, uint16_t row)
 	return (size << 16) | row;
 }
 
-const OwnedPcxSpriteSheet *LoadFont(GameFontTables size, text_color color, uint16_t row)
+const OwnedCelSpriteSheetWithFrameHeight *LoadFont(GameFontTables size, text_color color, uint16_t row)
 {
 	if (ColorTranslations[color] != nullptr && !ColorTranslationsData[color]) {
 		ColorTranslationsData[color].emplace();
@@ -197,9 +196,9 @@ const OwnedPcxSpriteSheet *LoadFont(GameFontTables size, text_color color, uint1
 	char path[32];
 	GetFontPath(size, row, "pcx", &path[0]);
 
-	std::optional<OwnedPcxSpriteSheet> &font = Fonts[fontId];
+	std::optional<OwnedCelSpriteSheetWithFrameHeight> &font = Fonts[fontId];
 	constexpr unsigned NumFrames = 256;
-	font = LoadPcxSpriteSheetAsset(path, NumFrames, /*transparentColor=*/1);
+	font = LoadPcxSpriteSheetAsCl2(path, NumFrames, /*transparentColor=*/1);
 	if (!font) {
 		LogError("Error loading font: {}", path);
 		return nullptr;
@@ -208,13 +207,13 @@ const OwnedPcxSpriteSheet *LoadFont(GameFontTables size, text_color color, uint1
 	return &(*font);
 }
 
-void DrawFont(const Surface &out, Point position, const OwnedPcxSpriteSheet *font, text_color color, int frame)
+void DrawFont(const Surface &out, Point position, const OwnedCelSpriteSheetWithFrameHeight *font, text_color color, int frame)
 {
-	PcxSprite glyph = PcxSpriteSheet { *font }.sprite(frame);
+	CelFrameWithHeight glyph = font->sprite(frame);
 	if (ColorTranslationsData[color]) {
-		RenderPcxSpriteWithColorMap(out, glyph, position, *ColorTranslationsData[color]);
+		RenderCl2SpriteWithTRN(out, glyph, position, ColorTranslationsData[color]->data());
 	} else {
-		RenderPcxSprite(out, glyph, position);
+		RenderCl2Sprite(out, glyph, position);
 	}
 }
 

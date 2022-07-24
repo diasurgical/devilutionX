@@ -8,7 +8,6 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
 #include "engine/cel_sprite.hpp"
-#include "engine/pcx_sprite.hpp"
 #include "player.h"
 #include "utils/display.h"
 
@@ -62,10 +61,10 @@ struct _uiheroinfo {
 	bool spawned;
 };
 
-extern std::optional<OwnedPcxSpriteSheet> ArtLogo;
-extern std::array<std::optional<OwnedPcxSpriteSheet>, 3> ArtFocus;
-extern std::optional<OwnedPcxSprite> ArtBackgroundWidescreen;
-extern std::optional<OwnedPcxSpriteSheet> ArtBackground;
+extern std::optional<OwnedCelSpriteSheetWithFrameHeight> ArtLogo;
+extern std::array<std::optional<OwnedCelSpriteSheetWithFrameHeight>, 3> ArtFocus;
+extern std::optional<OwnedCelSpriteWithFrameHeight> ArtBackgroundWidescreen;
+extern std::optional<OwnedCelSpriteSheetWithFrameHeight> ArtBackground;
 extern Art ArtCursor;
 
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
@@ -108,7 +107,7 @@ void UiPollAndRender(std::function<bool(SDL_Event &)> eventHandler = nullptr);
 void UiRenderItems(const std::vector<UiItemBase *> &items);
 void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items);
 void UiInitList_clear();
-PcxSprite UiGetHeroDialogSprite(size_t heroClassIndex);
+CelFrameWithHeight UiGetHeroDialogSprite(size_t heroClassIndex);
 
 void mainmenu_restart_repintro();
 } // namespace devilution

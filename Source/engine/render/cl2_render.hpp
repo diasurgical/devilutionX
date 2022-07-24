@@ -35,6 +35,14 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int numFrames)
 void Cl2Draw(const Surface &out, Point position, CelSprite cel, int frame);
 
 /**
+ * @brief Same as Cl2Draw but position.y is the top of the sprite instead of the bottom.
+ */
+inline void RenderCl2Sprite(const Surface &out, CelFrameWithHeight cel, Point position)
+{
+	Cl2Draw(out, { position.x, position.y + static_cast<int>(cel.frameHeight) - 1 }, cel.sprite, cel.frame);
+}
+
+/**
  * @brief Blit a solid colder shape one pixel larger than the given sprite shape, to the given buffer at the given coordinates
  * @param col Color index from current palette
  * @param out Output buffer
@@ -64,6 +72,14 @@ void Cl2DrawOutlineSkipColorZero(const Surface &out, uint8_t col, Point position
  * @param trn TRN to use
  */
 void Cl2DrawTRN(const Surface &out, Point position, CelSprite cel, int frame, uint8_t *trn);
+
+/**
+ * @brief Same as Cl2DrawTRN but position.y is the top of the sprite instead of the bottom.
+ */
+inline void RenderCl2SpriteWithTRN(const Surface &out, CelFrameWithHeight cel, Point position, uint8_t *trn)
+{
+	Cl2DrawTRN(out, { position.x, position.y + static_cast<int>(cel.frameHeight) - 1 }, cel.sprite, cel.frame, trn);
+}
 
 void Cl2DrawBlendedTRN(const Surface &out, Point position, CelSprite cel, int frame, uint8_t *trn);
 

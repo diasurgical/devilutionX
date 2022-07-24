@@ -542,18 +542,9 @@ void FirstRoom()
 /**
  * @brief Find the number of mega tiles used by layout
  */
-int FindArea()
+inline size_t FindArea()
 {
-	int rv = 0;
-
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			if (DungeonMask.test(i, j))
-				rv++;
-		}
-	}
-
-	return rv;
+	return DungeonMask.count();
 }
 
 void MakeDmt()
@@ -1160,7 +1151,7 @@ bool PlaceStairs(lvl_entry entry)
 
 void GenerateLevel(lvl_entry entry)
 {
-	int minarea = 761;
+	size_t minarea = 761;
 	switch (currlevel) {
 	case 1:
 		minarea = 533;

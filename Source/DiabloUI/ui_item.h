@@ -8,7 +8,6 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "engine/cel_sprite.hpp"
-#include "engine/pcx_sprite.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/enum_traits.h"
 #include "utils/stubs.h"
@@ -19,10 +18,8 @@ enum class UiType {
 	Text,
 	ArtText,
 	ArtTextButton,
-	Image,
-	ImageCel,
-	ImagePcx,
-	ImageAnimatedPcx,
+	ImageCl2,
+	ImageAnimatedCl2,
 	Button,
 	List,
 	Scrollbar,
@@ -92,144 +89,59 @@ private:
 };
 
 //=============================================================================
-
-class UiImage : public UiItemBase {
+class UiImageCl2 : public UiItemBase {
 public:
-	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
-	    : UiItemBase(UiType::Image, rect, flags)
-	    , art_(art)
-	    , animated_(animated)
-	    , frame_(frame)
-	{
-	}
-
-	[[nodiscard]] bool IsCentered() const
-	{
-		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
-	}
-
-	[[nodiscard]] Art *GetArt() const
-	{
-		return art_;
-	}
-
-	[[nodiscard]] bool IsAnimated() const
-	{
-		return animated_;
-	}
-
-	[[nodiscard]] int GetFrame() const
-	{
-		return frame_;
-	}
-
-	void SetFrame(int frame)
-	{
-		frame_ = frame;
-	}
-
-private:
-	Art *art_;
-	bool animated_;
-	int frame_;
-};
-
-//=============================================================================
-class UiImageCel : public UiItemBase {
-public:
-	UiImageCel(CelSpriteWithFrameHeight sprite, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
-	    : UiItemBase(UiType::ImageCel, rect, flags)
-	    , sprite_(sprite)
-	    , animated_(animated)
-	    , frame_(frame)
-	{
-	}
-
-	[[nodiscard]] bool IsCentered() const
-	{
-		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
-	}
-
-	[[nodiscard]] CelSpriteWithFrameHeight GetSprite() const
-	{
-		return sprite_;
-	}
-
-	[[nodiscard]] bool IsAnimated() const
-	{
-		return animated_;
-	}
-
-	[[nodiscard]] int GetFrame() const
-	{
-		return frame_;
-	}
-
-	void SetFrame(int frame)
-	{
-		frame_ = frame;
-	}
-
-private:
-	CelSpriteWithFrameHeight sprite_;
-	bool animated_;
-	int frame_;
-};
-
-//=============================================================================
-class UiImagePcx : public UiItemBase {
-public:
-	UiImagePcx(PcxSprite sprite, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::ImagePcx, rect, flags)
+	UiImageCl2(CelFrameWithHeight sprite, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImageCl2, rect, flags)
 	    , sprite_(sprite)
 	{
 	}
 
-	[[nodiscard]] bool IsCentered() const
+	[[nodiscard]] bool isCentered() const
 	{
 		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
 	}
 
-	[[nodiscard]] PcxSprite GetSprite() const
+	[[nodiscard]] CelFrameWithHeight sprite() const
 	{
 		return sprite_;
 	}
 
-	void setSprite(PcxSprite sprite)
+	void setSprite(CelFrameWithHeight sprite)
 	{
 		sprite_ = sprite;
 	}
 
 private:
-	PcxSprite sprite_;
+	CelFrameWithHeight sprite_;
 };
 
 //=============================================================================
-class UiImageAnimatedPcx : public UiItemBase {
+class UiImageAnimatedCl2 : public UiItemBase {
 public:
-	UiImageAnimatedPcx(PcxSpriteSheet sheet, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::ImageAnimatedPcx, rect, flags)
+	UiImageAnimatedCl2(CelSpriteSheetWithFrameHeight sheet, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::ImageAnimatedCl2, rect, flags)
 	    , sheet_(sheet)
 	{
 	}
 
-	[[nodiscard]] bool IsCentered() const
+	[[nodiscard]] bool isCentered() const
 	{
 		return HasAnyOf(GetFlags(), UiFlags::AlignCenter);
 	}
 
-	[[nodiscard]] PcxSprite GetSprite(uint16_t frame) const
+	[[nodiscard]] CelFrameWithHeight sprite(uint16_t frame) const
 	{
 		return sheet_.sprite(frame);
 	}
 
-	[[nodiscard]] uint16_t NumFrames() const
+	[[nodiscard]] uint16_t numFrames() const
 	{
 		return sheet_.numFrames();
 	}
 
 private:
-	PcxSpriteSheet sheet_;
+	CelSpriteSheetWithFrameHeight sheet_;
 };
 
 //=============================================================================
@@ -296,7 +208,7 @@ private:
 
 class UiScrollbar : public UiItemBase {
 public:
-	UiScrollbar(PcxSprite bg, PcxSprite thumb, PcxSpriteSheet arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiScrollbar(CelFrameWithHeight bg, CelFrameWithHeight thumb, CelSpriteSheetWithFrameHeight arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::Scrollbar, rect, flags)
 	    , m_bg(bg)
 	    , m_thumb(thumb)
@@ -305,9 +217,9 @@ public:
 	}
 
 	// private:
-	PcxSprite m_bg;
-	PcxSprite m_thumb;
-	PcxSpriteSheet m_arrow;
+	CelFrameWithHeight m_bg;
+	CelFrameWithHeight m_thumb;
+	CelSpriteSheetWithFrameHeight m_arrow;
 };
 
 //=============================================================================

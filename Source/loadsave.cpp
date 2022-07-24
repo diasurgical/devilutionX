@@ -641,7 +641,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	file->Skip(1); // Alignment
 	file->Skip(2); // Skip exp - now calculated from monstdat when the monster dies
 
-	if ((monster.flags & MFLAG_GOLEM) != 0) // Don't skip for golems
+	if (monster.isPlayerMinion()) // Don't skip for golems
 		monster.toHit = file->NextLE<uint8_t>();
 	else
 		file->Skip(1); // Skip hit as it's already initialized
