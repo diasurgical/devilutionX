@@ -1403,11 +1403,8 @@ bool MonsterRangedAttack(Monster &monster)
 	return false;
 }
 
-bool MonsterRangedSpecialAttack(int monsterId)
+bool MonsterRangedSpecialAttack(Monster &monster)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
 	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1 && monster.animInfo.tickCounterOfCurrentFrame == 0 && (monster.ai != AI_MEGA || monster.var2 == 0)) {
 		if (AddMissile(
 		        monster.position.tile,
@@ -1415,7 +1412,7 @@ bool MonsterRangedSpecialAttack(int monsterId)
 		        monster.direction,
 		        static_cast<missile_id>(monster.var1),
 		        TARGET_PLAYERS,
-		        monsterId,
+		        monster.getId(),
 		        monster.var3,
 		        0)
 		    != nullptr) {
@@ -3272,7 +3269,7 @@ bool UpdateModeStance(int monsterId)
 	case MonsterMode::SpecialStand:
 		return MonsterSpecialStand(monster);
 	case MonsterMode::SpecialRangedAttack:
-		return MonsterRangedSpecialAttack(monsterId);
+		return MonsterRangedSpecialAttack(monster);
 	case MonsterMode::Delay:
 		return MonsterDelay(monster);
 	case MonsterMode::Petrified:
