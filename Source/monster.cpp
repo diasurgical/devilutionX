@@ -1337,32 +1337,31 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	}
 }
 
+void MonsterAttackEnemy(Monster &monster, int hit, int minDam, int maxDam)
+{
+	if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
+		MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
+	else
+		MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
+}
+
 bool MonsterAttack(int monsterId)
 {
 	assert(static_cast<size_t>(monsterId) < MaxMonsters);
 	auto &monster = Monsters[monsterId];
 
 	if (monster.animInfo.currentFrame == monster.data().animFrameNum - 1) {
-		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
-			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
-		else
-			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
+		MonsterAttackEnemy(monster, monster.toHit, monster.minDamage, monster.maxDamage);
 		if (monster.ai != AI_SNAKE)
 			PlayEffect(monster, 0);
 	}
 	if (IsAnyOf(monster.type().type, MT_NMAGMA, MT_YMAGMA, MT_BMAGMA, MT_WMAGMA) && monster.animInfo.currentFrame == 8) {
-		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
-			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
-		else
-			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
+		MonsterAttackEnemy(monster, monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
 
 		PlayEffect(monster, 0);
 	}
 	if (IsAnyOf(monster.type().type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL) && monster.animInfo.currentFrame == 12) {
-		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
-			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
-		else
-			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
+		MonsterAttackEnemy(monster, monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
 
 		PlayEffect(monster, 0);
 	}
@@ -1449,10 +1448,7 @@ bool MonsterSpecialAttack(int monsterId)
 	auto &monster = Monsters[monsterId];
 
 	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1) {
-		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
-			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
-		else
-			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
+		MonsterAttackEnemy(monster, monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
 	}
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
