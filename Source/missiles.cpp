@@ -2270,7 +2270,7 @@ void AddElement(Missile &missile, const AddMissileParameter &parameter)
 		dst += parameter.midir;
 	}
 
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	int dmg = 2 * (player._pLevel + GenerateRndSum(10, 2)) + 4;
 	missile._midam = ScaleSpellEffect(dmg, missile._mispllvl) / 2;
