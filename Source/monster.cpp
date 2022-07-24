@@ -1236,13 +1236,8 @@ void CheckReflect(Monster &monster, Player &player, int dam)
 		M_StartHit(monster, player, mdam);
 }
 
-void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDam)
+void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, int maxDam)
 {
-	assert(static_cast<size_t>(monsterId) < MaxMonsters);
-	auto &monster = Monsters[monsterId];
-
-	Player &player = Players[pnum];
-
 	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || HasAnyOf(player._pSpellFlags, SpellFlag::Etherealize))
 		return;
 	if (monster.position.tile.WalkingDistance(player.position.tile) >= 2)
@@ -1336,7 +1331,7 @@ void MonsterAttackPlayer(int monsterId, int pnum, int hit, int minDam, int maxDa
 			player.position.tile = newPosition;
 			FixPlayerLocation(player, player._pdir);
 			FixPlrWalkTags(player);
-			dPlayer[newPosition.x][newPosition.y] = pnum + 1;
+			dPlayer[newPosition.x][newPosition.y] = player.getId() + 1;
 			SetPlayerOld(player);
 		}
 	}
@@ -1351,7 +1346,7 @@ bool MonsterAttack(int monsterId)
 		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
 			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
 		else
-			MonsterAttackPlayer(monsterId, monster.enemy, monster.toHit, monster.minDamage, monster.maxDamage);
+			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit, monster.minDamage, monster.maxDamage);
 		if (monster.ai != AI_SNAKE)
 			PlayEffect(monster, 0);
 	}
@@ -1359,7 +1354,7 @@ bool MonsterAttack(int monsterId)
 		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
 			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
 		else
-			MonsterAttackPlayer(monsterId, monster.enemy, monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
+			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
 
 		PlayEffect(monster, 0);
 	}
@@ -1367,7 +1362,7 @@ bool MonsterAttack(int monsterId)
 		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
 			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
 		else
-			MonsterAttackPlayer(monsterId, monster.enemy, monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
+			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
 
 		PlayEffect(monster, 0);
 	}
@@ -1457,7 +1452,7 @@ bool MonsterSpecialAttack(int monsterId)
 		if ((monster.flags & MFLAG_TARGETS_MONSTER) != 0)
 			MonsterAttackMonster(monster, Monsters[monster.enemy], monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
 		else
-			MonsterAttackPlayer(monsterId, monster.enemy, monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
+			MonsterAttackPlayer(monster, Players[monster.enemy], monster.toHitSpecial, monster.minDamageSpecial, monster.maxDamageSpecial);
 	}
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
@@ -4562,12 +4557,12 @@ void MissToMonst(Missile &missile, Point position)
 			return;
 
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
-		MonsterAttackPlayer(monsterId, pnum, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
+		Player &player = Players[pnum];
+		MonsterAttackPlayer(monster, player, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 		if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 			return;
 
-		Player &player = Players[pnum];
 		if (player._pmode != PM_GOTHIT && player._pmode != PM_DEATH)
 			StartPlrHit(player, 0, true);
 		Point newPosition = oldPosition + monster.direction;
