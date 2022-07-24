@@ -2965,45 +2965,44 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 	if (gbIsHellfire && item._iMiscId == IMISC_OILOF)
 		GetOilType(item, lvl);
 
-        if (*sgOptions.Gameplay.hpRegen || *sgOptions.Gameplay.manaRegen) {
-          const int initVal = item._ivalue;
+	if (*sgOptions.Gameplay.hpRegen || *sgOptions.Gameplay.manaRegen) {
+		const int initVal = item._ivalue;
 
-	if (*sgOptions.Gameplay.hpRegen) {
-		const uint8_t healingPotions[] = {
-			ICURS_POTION_OF_HEALING,
-			ICURS_POTION_OF_FULL_HEALING,
-			ICURS_POTION_OF_REJUVENATION,
-			ICURS_POTION_OF_FULL_REJUVENATION
-		};
+		if (*sgOptions.Gameplay.hpRegen) {
+			const uint8_t healingPotions[] = {
+				ICURS_POTION_OF_HEALING,
+				ICURS_POTION_OF_FULL_HEALING,
+				ICURS_POTION_OF_REJUVENATION,
+				ICURS_POTION_OF_FULL_REJUVENATION
+			};
 
-		for (uint8_t healingPotion : healingPotions)
-		{
-			if (healingPotion == item._iCurs) {
-				item._ivalue *= 2;
-				item._iIvalue *= 2;
-				break;
+			for (uint8_t healingPotion : healingPotions) {
+				if (healingPotion == item._iCurs) {
+					item._ivalue *= 2;
+					item._iIvalue *= 2;
+					break;
+				}
+			}
+		}
+
+		if (*sgOptions.Gameplay.manaRegen) {
+			const uint8_t manaPotions[] = {
+				ICURS_POTION_OF_MANA,
+				ICURS_POTION_OF_FULL_MANA,
+				ICURS_POTION_OF_REJUVENATION,
+				ICURS_POTION_OF_FULL_REJUVENATION
+			};
+
+			for (uint8_t manaPotion : manaPotions) {
+				if (manaPotion == item._iCurs) {
+					const int xed = (int)round(item._ivalue * 2 > initVal * 2.5 ? initVal * 2.5 - 50 : item._ivalue * 2);
+					item._ivalue = xed;
+					item._iIvalue = xed;
+					break;
+				}
 			}
 		}
 	}
-
-	if (*sgOptions.Gameplay.manaRegen) {
-		const uint8_t manaPotions[] = {
-			ICURS_POTION_OF_MANA,
-			ICURS_POTION_OF_FULL_MANA,
-			ICURS_POTION_OF_REJUVENATION,
-			ICURS_POTION_OF_FULL_REJUVENATION
-		};
-
-		for (uint8_t manaPotion : manaPotions) {
-			if (manaPotion == item._iCurs) {
-                                const int xed = (int)round(item._ivalue * 2 > initVal * 2.5 ? initVal * 2.5 - 50 : item._ivalue * 2);
-				item._ivalue = xed;
-				item._iIvalue = xed;
-				break;
-			}
-		}
-	}
-        }
 
 	if (item._itype != ItemType::Gold)
 		return;
