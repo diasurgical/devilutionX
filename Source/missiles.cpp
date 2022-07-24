@@ -1793,7 +1793,7 @@ void AddFireball(Missile &missile, const AddMissileParameter &parameter)
 void AddLightctrl(Missile &missile, const AddMissileParameter &parameter)
 {
 	if (missile._midam == 0 && missile._micaster == TARGET_MONSTERS)
-		ConsumeSpell(Players[missile._misource], SPL_LIGHTNING);
+		ConsumeSpell(*missile.sourcePlayer(), SPL_LIGHTNING);
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
 	UpdateMissileVelocity(missile, parameter.dst, 32);
