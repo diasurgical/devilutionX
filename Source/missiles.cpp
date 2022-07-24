@@ -1216,7 +1216,7 @@ void AddJester(Missile &missile, const AddMissileParameter &parameter)
 		break;
 	case 6:
 		spell = MIS_TOWN;
-		ConsumeSpell(Players[missile._misource], SPL_TOWN);
+		ConsumeSpell(*missile.sourcePlayer(), SPL_TOWN);
 		break;
 	case 7:
 		spell = MIS_TELEPORT;
