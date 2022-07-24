@@ -2290,7 +2290,7 @@ extern void FocusOnInventory();
 
 void AddIdentify(Missile &missile, const AddMissileParameter & /*parameter*/)
 {
-	Player &player = Players[missile._misource];
+	Player &player = *missile.sourcePlayer();
 
 	missile._miDelFlag = true;
 	ConsumeSpell(player, SPL_IDENTIFY);
