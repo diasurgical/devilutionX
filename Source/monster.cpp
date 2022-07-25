@@ -4151,12 +4151,11 @@ bool DirOK(const Monster &monster, Direction mdir)
 		for (int y = futurePosition.y - 3; y <= futurePosition.y + 3; y++) {
 			if (!InDungeonBounds({ x, y }))
 				continue;
-			int mi = dMonster[x][y];
-			if (mi <= 0)
+			Monster *minion = MonsterAtPosition({ x, y }, true);
+			if (minion == nullptr)
 				continue;
 
-			auto &minion = Monsters[mi - 1];
-			if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &monster) {
+			if (minion->leaderRelation == LeaderRelation::Leashed && minion->getLeader() == &monster) {
 				mcount++;
 			}
 		}
@@ -4503,7 +4502,7 @@ void MissToMonst(Missile &missile, Point position)
 	}
 }
 
-Monster *MonsterAtPosition(Point position)
+Monster *MonsterAtPosition(Point position, bool ignoreMovingMonsters)
 {
 	if (!InDungeonBounds(position)) {
 		return nullptr;
@@ -4511,12 +4510,12 @@ Monster *MonsterAtPosition(Point position)
 
 	auto monsterId = dMonster[position.x][position.y];
 
-	if (monsterId != 0) {
-		return &Monsters[abs(monsterId) - 1];
+	if (monsterId == 0 || (ignoreMovingMonsters && monsterId < 0)) {
+		// nothing at this position, return a nullptr
+		return nullptr;
 	}
 
-	// nothing at this position, return a nullptr
-	return nullptr;
+	return &Monsters[abs(monsterId) - 1];
 }
 
 bool IsTileAvailable(const Monster &monster, Point position)
