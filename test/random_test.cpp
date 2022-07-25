@@ -237,4 +237,54 @@ TEST(RandomTest, ModDistributionSignPreserving)
 	    << "Distribution must map negative numbers using sign preserving modulo";
 }
 
+TEST(RandomTest, NegativeReturnValues)
+{
+	// The bug in vanilla RNG stemming from mod instead of bitmasking means that negative values are possible for
+	// non-power of 2 arguments to GenerateRnd
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(3), -2) << "Unexpected return value for a limit of 3";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(5), -3) << "Unexpected return value for a limit of 5";
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(6), -2) << "Unexpected return value for a limit of 6";
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(7), -1) << "Unexpected return value for a limit of 7";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(11), -10) << "Unexpected return value for a limit of 11";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(17), -9) << "Unexpected return value for a limit of 17";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(19), -12) << "Unexpected return value for a limit of 19";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(22), -10) << "Unexpected return value for a limit of 22";
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(23), -16) << "Unexpected return value for a limit of 23";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(25), -18) << "Unexpected return value for a limit of 25";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(27), -17) << "Unexpected return value for a limit of 27";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(29), -27) << "Unexpected return value for a limit of 29";
+
+	SetRndSeed(1457187811);
+	EXPECT_EQ(GenerateRnd(31), -1) << "Unexpected return value for a limit of 31";
+
+	for (int i : { 9, 10, 12, 13, 14, 15, 18, 20, 21, 24, 26, 28, 30 }) {
+		SetRndSeed(1457187811);
+		EXPECT_EQ(GenerateRnd(i), -8) << "Unexpected return value for a limit of " << i;
+	}
+
+	for (int i = 1; i < 32768; i *= 2) {
+		SetRndSeed(1457187811);
+		EXPECT_EQ(GenerateRnd(i), 0) << "Expect powers of 2 such as " << i << " to cleanly divide the int_min RNG value ";
+	}
+}
 } // namespace devilution
