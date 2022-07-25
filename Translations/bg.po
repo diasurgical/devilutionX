@@ -4413,8 +4413,8 @@ msgstr "2x щети за чуд., 1x за играч"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Произволни 0 - 500% щети"
+msgid "Random 0 - 600% damage"
+msgstr "Произволни 0 - 600% щети"
 
 #: Source/items.cpp:3748
 #, no-c-format

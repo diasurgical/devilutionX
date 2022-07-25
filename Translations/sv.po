@@ -4406,8 +4406,8 @@ msgstr "dubbel monsterskada, enkel till dig"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Slumpvis 0 - 500% skada"
+msgid "Random 0 - 600% damage"
+msgstr "Slumpvis 0 - 600% skada"
 
 #: Source/items.cpp:3748
 #, no-c-format

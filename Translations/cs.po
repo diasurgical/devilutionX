@@ -4409,8 +4409,8 @@ msgstr "2x poškození do nepřítele, 1x do tebe"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Náhodné 0 - 500% poškození"
+msgid "Random 0 - 600% damage"
+msgstr "Náhodné 0 - 600% poškození"
 
 #: Source/items.cpp:3748
 #, no-c-format

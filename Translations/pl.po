@@ -4408,8 +4408,8 @@ msgstr "2x obr. dla potw, 1x dla cb"
 
 #: Source/items.cpp:3755
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Losowo 0 - 500% obrażeń"
+msgid "Random 0 - 600% damage"
+msgstr "Losowo 0 - 600% obrażeń"
 
 #: Source/items.cpp:3757
 #, no-c-format

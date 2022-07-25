@@ -4507,8 +4507,8 @@ msgstr "2x 對​怪物​傷害，1x 反噬​自身"
 
 #: Source/items.cpp:3746
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "隨​機​0-500​%​傷害"
+msgid "Random 0 - 600% damage"
+msgstr "隨​機​0-600​%​傷害"
 
 #: Source/items.cpp:3748
 #, fuzzy, no-c-format
