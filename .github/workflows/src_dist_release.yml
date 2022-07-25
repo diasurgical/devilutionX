@@ -2,7 +2,7 @@ name: Build source tarball
 
 on:
   release:
-    types: [created]
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -31,15 +31,12 @@ jobs:
         path: devilutionx-src.tar.xz
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "devilutionx-src.tar.xz"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "devilutionx-src.tar.xz"
+        overwrite: true
+
   make_src_dist_fully_vendored:
     runs-on: ubuntu-latest
     steps:
@@ -65,12 +62,8 @@ jobs:
         path: devilutionx-src-fully-vendored.tar.xz
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "devilutionx-src-fully-vendored.tar.xz"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "devilutionx-src-fully-vendored.tar.xz"
+        overwrite: true

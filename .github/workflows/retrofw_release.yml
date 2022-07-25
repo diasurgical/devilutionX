@@ -2,7 +2,7 @@ name: RetroFW Release Build
 
 on:
   release:
-    types: [created]
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -38,12 +38,8 @@ jobs:
         path: build-retrofw/devilutionx-retrofw.opk
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "build-retrofw/devilutionx-retrofw.opk"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "build-retrofw/devilutionx-retrofw.opk"
+        overwrite: true
