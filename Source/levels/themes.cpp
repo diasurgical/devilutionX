@@ -170,7 +170,7 @@ bool TFit_GoatShrine(int t)
 	return false;
 }
 
-bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = std::numeric_limits<unsigned>::max())
+bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = 0)
 {
 	const PointsInRectangleRange searchArea { Rectangle { origin, 1 } };
 	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId, frequency](Point testPosition) {
@@ -187,7 +187,7 @@ bool CheckThemeObj3(Point origin, int8_t regionId, unsigned frequency = std::num
 		if (IsObjectAtPosition(testPosition)) {
 			return false;
 		}
-		if (frequency != std::numeric_limits<unsigned>::max() && FlipCoin(frequency)) {
+		if (frequency > 0 && FlipCoin(frequency)) {
 			return false;
 		}
 		return true;
