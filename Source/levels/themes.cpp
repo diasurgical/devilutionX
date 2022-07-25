@@ -22,20 +22,22 @@ namespace devilution {
 int numthemes;
 bool armorFlag;
 bool weaponFlag;
-bool treasureFlag;
-bool mFountainFlag;
-bool cauldronFlag;
-bool tFountainFlag;
 int zharlib;
+ThemeStruct themes[MAXTHEMES];
+
+namespace {
+
+bool cauldronFlag;
+bool bFountainFlag;
+bool mFountainFlag;
+bool pFountainFlag;
+bool tFountainFlag;
+bool treasureFlag;
+
 int themex;
 int themey;
 int themeVar1;
-ThemeStruct themes[MAXTHEMES];
-bool pFountainFlag;
-bool bFountainFlag;
 
-/** Specifies the set of special theme IDs from which one will be selected at random. */
-theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 bool TFit_Shrine(int i)
 {
 	int xp = 0;
@@ -122,7 +124,6 @@ bool TFit_Obj5(int t)
 	}
 	return false;
 }
-
 bool TFit_SkelRoom(int t)
 {
 	if (IsNoneOf(leveltype, DTYPE_CATHEDRAL, DTYPE_CATACOMBS)) {
@@ -244,7 +245,7 @@ bool CheckThemeReqs(theme_id t)
 	return true;
 }
 
-static bool SpecialThemeFit(int i, theme_id t)
+bool SpecialThemeFit(int i, theme_id t)
 {
 	bool rv;
 
@@ -368,88 +369,6 @@ bool CheckThemeRoom(int tv)
 	return true;
 }
 
-void InitThemes()
-{
-	zharlib = -1;
-	numthemes = 0;
-	armorFlag = true;
-	bFountainFlag = true;
-	cauldronFlag = true;
-	mFountainFlag = true;
-	pFountainFlag = true;
-	tFountainFlag = true;
-	treasureFlag = true;
-	weaponFlag = true;
-
-	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		return;
-	}
-
-	if (leveltype == DTYPE_CATHEDRAL) {
-		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
-			if (CheckThemeRoom(i)) {
-				themes[numthemes].ttval = i;
-				theme_id j = ThemeGood[GenerateRnd(4)];
-				while (!SpecialThemeFit(numthemes, j)) {
-					j = (theme_id)GenerateRnd(17);
-				}
-				themes[numthemes].ttype = j;
-				numthemes++;
-			}
-		}
-		return;
-	}
-
-	for (int i = 0; i < themeCount; i++) {
-		themes[i].ttype = THEME_NONE;
-	}
-
-	if (Quests[Q_ZHAR].IsAvailable()) {
-		for (int j = 0; j < themeCount; j++) {
-			themes[j].ttval = themeLoc[j].ttval;
-			if (SpecialThemeFit(j, THEME_LIBRARY)) {
-				themes[j].ttype = THEME_LIBRARY;
-				zharlib = j;
-				break;
-			}
-		}
-	}
-	for (int i = 0; i < themeCount; i++) {
-		if (themes[i].ttype == THEME_NONE) {
-			themes[i].ttval = themeLoc[i].ttval;
-			theme_id j = ThemeGood[GenerateRnd(4)];
-			while (!SpecialThemeFit(i, j)) {
-				j = (theme_id)GenerateRnd(17);
-			}
-			themes[i].ttype = j;
-		}
-	}
-	numthemes += themeCount;
-}
-
-void HoldThemeRooms()
-{
-	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
-		return;
-	}
-
-	if (leveltype != DTYPE_CATHEDRAL) {
-		DRLG_HoldThemeRooms();
-		return;
-	}
-
-	for (int i = 0; i < numthemes; i++) {
-		int8_t v = themes[i].ttval;
-		for (int y = 0; y < MAXDUNY; y++) {
-			for (int x = 0; x < MAXDUNX; x++) {
-				if (dTransVal[x][y] == v) {
-					dFlags[x][y] |= DungeonFlag::Populated;
-				}
-			}
-		}
-	}
-}
-
 /**
  * PlaceThemeMonsts places theme monsters with the specified frequency.
  *
@@ -556,7 +475,6 @@ void Theme_MonstPit(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-namespace {
 void SpawnObjectOrSkeleton(unsigned frequency, _object_id objectType, Point tile)
 {
 	if (FlipCoin(frequency)) {
@@ -567,7 +485,6 @@ void SpawnObjectOrSkeleton(unsigned frequency, _object_id objectType, Point tile
 			ActivateSkeleton(*skeleton, tile);
 	}
 }
-} // namespace
 
 /**
  * Theme_SkelRoom initializes the skeleton room theme.
@@ -928,6 +845,93 @@ void UpdateL4Trans()
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 			if (dTransVal[i][j] != 0) {
 				dTransVal[i][j] = 1;
+			}
+		}
+	}
+}
+
+} // namespace
+
+void InitThemes()
+{
+	zharlib = -1;
+	numthemes = 0;
+	armorFlag = true;
+	bFountainFlag = true;
+	cauldronFlag = true;
+	mFountainFlag = true;
+	pFountainFlag = true;
+	tFountainFlag = true;
+	treasureFlag = true;
+	weaponFlag = true;
+
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
+		return;
+	}
+
+	/** Specifies the set of special theme IDs from which one will be selected at random. */
+	constexpr theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
+
+	if (leveltype == DTYPE_CATHEDRAL) {
+		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
+			if (CheckThemeRoom(i)) {
+				themes[numthemes].ttval = i;
+				theme_id j = ThemeGood[GenerateRnd(4)];
+				while (!SpecialThemeFit(numthemes, j)) {
+					j = (theme_id)GenerateRnd(17);
+				}
+				themes[numthemes].ttype = j;
+				numthemes++;
+			}
+		}
+		return;
+	}
+
+	for (int i = 0; i < themeCount; i++) {
+		themes[i].ttype = THEME_NONE;
+	}
+
+	if (Quests[Q_ZHAR].IsAvailable()) {
+		for (int j = 0; j < themeCount; j++) {
+			themes[j].ttval = themeLoc[j].ttval;
+			if (SpecialThemeFit(j, THEME_LIBRARY)) {
+				themes[j].ttype = THEME_LIBRARY;
+				zharlib = j;
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < themeCount; i++) {
+		if (themes[i].ttype == THEME_NONE) {
+			themes[i].ttval = themeLoc[i].ttval;
+			theme_id j = ThemeGood[GenerateRnd(4)];
+			while (!SpecialThemeFit(i, j)) {
+				j = (theme_id)GenerateRnd(17);
+			}
+			themes[i].ttype = j;
+		}
+	}
+	numthemes += themeCount;
+}
+
+void HoldThemeRooms()
+{
+	if (currlevel == 16 || IsAnyOf(leveltype, DTYPE_NEST, DTYPE_CRYPT)) {
+		return;
+	}
+
+	if (leveltype != DTYPE_CATHEDRAL) {
+		DRLG_HoldThemeRooms();
+		return;
+	}
+
+	for (int i = 0; i < numthemes; i++) {
+		int8_t v = themes[i].ttval;
+		for (int y = 0; y < MAXDUNY; y++) {
+			for (int x = 0; x < MAXDUNX; x++) {
+				if (dTransVal[x][y] == v) {
+					dFlags[x][y] |= DungeonFlag::Populated;
+				}
 			}
 		}
 	}
