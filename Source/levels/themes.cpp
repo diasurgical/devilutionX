@@ -199,57 +199,30 @@ bool CheckThemeReqs(theme_id t)
 	case THEME_SHRINE:
 	case THEME_SKELROOM:
 	case THEME_LIBRARY:
-		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
-			return false;
-		}
-		break;
-	case THEME_BLOODFOUNTAIN:
-		if (!bFountainFlag) {
-			return false;
-		}
-		break;
-	case THEME_PURIFYINGFOUNTAIN:
-		if (!pFountainFlag) {
-			return false;
-		}
-		break;
+		return IsNoneOf(leveltype, DTYPE_CAVES, DTYPE_HELL);
 	case THEME_ARMORSTAND:
-		if (leveltype == DTYPE_CATHEDRAL) {
-			return false;
-		}
-		break;
-	case THEME_CAULDRON:
-		if (leveltype != DTYPE_HELL || !cauldronFlag) {
-			return false;
-		}
-		break;
-	case THEME_MURKYFOUNTAIN:
-		if (!mFountainFlag) {
-			return false;
-		}
-		break;
-	case THEME_TEARFOUNTAIN:
-		if (!tFountainFlag) {
-			return false;
-		}
-		break;
 	case THEME_WEAPONRACK:
-		if (leveltype == DTYPE_CATHEDRAL) {
-			return false;
-		}
-		break;
+		return IsNoneOf(leveltype, DTYPE_CATHEDRAL);
+	case THEME_CAULDRON:
+		return leveltype == DTYPE_HELL && cauldronFlag;
+	case THEME_BLOODFOUNTAIN:
+		return bFountainFlag;
+	case THEME_PURIFYINGFOUNTAIN:
+		return pFountainFlag;
+	case THEME_MURKYFOUNTAIN:
+		return mFountainFlag;
+	case THEME_TEARFOUNTAIN:
+		return tFountainFlag;
+	case THEME_TREASURE:
+		return treasureFlag;
 	default:
-		break;
+		return true;
 	}
-
-	return true;
 }
 
 bool SpecialThemeFit(int i, theme_id t)
 {
-	bool rv;
-
-	rv = CheckThemeReqs(t);
+	bool rv = CheckThemeReqs(t);
 	switch (t) {
 	case THEME_SHRINE:
 	case THEME_LIBRARY:
@@ -317,7 +290,6 @@ bool SpecialThemeFit(int i, theme_id t)
 		}
 		break;
 	case THEME_TREASURE:
-		rv = treasureFlag;
 		if (rv) {
 			treasureFlag = false;
 		}
