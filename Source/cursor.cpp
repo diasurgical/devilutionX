@@ -680,7 +680,7 @@ void CheckCursMove()
 		pcursitem = -1;
 		cursPosition = { mx, my };
 	}
-	if (pcursmonst != -1 && Monsters[pcursmonst].isPlayerMinion()) {
+	if (pcursmonst != -1 && leveltype != DTYPE_TOWN && Monsters[pcursmonst].isPlayerMinion()) {
 		pcursmonst = -1;
 	}
 }
