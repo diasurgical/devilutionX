@@ -93,12 +93,10 @@ void SetSpellLevelCheat(spell_id spl, int spllvl)
 	myPlayer._pSplLvl[spl] = spllvl;
 }
 
-void PrintDebugMonster(int m)
+void PrintDebugMonster(const Monster &monster)
 {
-	auto &monster = Monsters[m];
-
 	EventPlrMsg(StrCat(
-	                "Monster ", m, " = ", monster.name(),
+	                "Monster ", static_cast<int>(monster.getId()), " = ", monster.name(),
 	                "\nX = ", monster.position.tile.x, ", Y = ", monster.position.tile.y,
 	                "\nEnemy = ", monster.enemy, ", HP = ", monster.hitPoints,
 	                "\nMode = ", static_cast<int>(monster.mode), ", Var1 = ", monster.var1),
@@ -107,8 +105,10 @@ void PrintDebugMonster(int m)
 	bool bActive = false;
 
 	for (size_t i = 0; i < ActiveMonsterCount; i++) {
-		if (ActiveMonsters[i] == m)
+		if (&Monsters[ActiveMonsters[i]] == &monster) {
 			bActive = true;
+			break;
+		}
 	}
 
 	EventPlrMsg(StrCat("Active List = ", bActive ? 1 : 0, ", Squelch = ", monster.activeForTicks), UiFlags::ColorWhite);
@@ -1000,16 +1000,14 @@ void FreeDebugGFX()
 
 void GetDebugMonster()
 {
-	int mi1 = pcursmonst;
-	if (mi1 == -1) {
-		int mi2 = dMonster[cursPosition.x][cursPosition.y];
-		if (mi2 != 0) {
-			mi1 = abs(mi2) - 1;
-		} else {
-			mi1 = DebugMonsterId;
-		}
-	}
-	PrintDebugMonster(mi1);
+	int monsterIndex = pcursmonst;
+	if (monsterIndex == -1)
+		monsterIndex = abs(dMonster[cursPosition.x][cursPosition.y]) - 1;
+
+	if (monsterIndex == -1)
+		monsterIndex = DebugMonsterId;
+
+	PrintDebugMonster(Monsters[monsterIndex]);
 }
 
 void NextDebugMonster()
