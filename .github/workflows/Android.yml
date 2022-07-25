@@ -26,11 +26,6 @@ jobs:
         distribution: 'adopt'
         cache: gradle
 
-    # CMake version 3.21.3 causes gradle to throw a NullPointerException during the build
-    # Removing it will cause gradle to fall back on 3.18.1 installed by the Android SDK
-    - name: Create Build Environment
-      run: rm /usr/local/bin/cmake
-
     - name: Cache CMake build folder
       uses: actions/cache@v2
       with:
