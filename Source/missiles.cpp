@@ -1946,7 +1946,7 @@ void AddFlash2(Missile &missile, const AddMissileParameter & /*parameter*/)
 		missile._midam = currlevel / 2;
 		break;
 	case MissileSource::Monster:
-		assert(missile.sourceType() == MissileSource::Monster);
+		assert(missile.sourceType() != MissileSource::Monster);
 		break;
 	}
 	missile._miPreFlag = true;
