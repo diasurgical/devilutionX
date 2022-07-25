@@ -386,7 +386,7 @@ void M_UpdateRelations(const Monster &monster);
 void DoEnding();
 void PrepDoEnding();
 bool Walk(Monster &monster, Direction md);
-void GolumAi(int monsterId);
+void GolumAi(Monster &monster);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();
