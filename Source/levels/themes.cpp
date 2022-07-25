@@ -36,22 +36,6 @@ bool bFountainFlag;
 
 /** Specifies the set of special theme IDs from which one will be selected at random. */
 theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
-/** Specifies a 5x5 area to fit theme objects. */
-int trm5x[] = {
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2,
-	-2, -1, 0, 1, 2
-};
-/** Specifies a 5x5 area to fit theme objects. */
-int trm5y[] = {
-	-2, -2, -2, -2, -2,
-	-1, -1, -1, -1, -1,
-	0, 0, 0, 0, 0,
-	1, 1, 1, 1, 1,
-	2, 2, 2, 2, 2
-};
 bool TFit_Shrine(int i)
 {
 	int xp = 0;
@@ -97,49 +81,46 @@ bool TFit_Shrine(int i)
 	return true;
 }
 
+bool CheckThemeObj5(Point origin, int8_t regionId)
+{
+	const PointsInRectangleRange searchArea { Rectangle { origin, 2 } };
+	return std::all_of(searchArea.cbegin(), searchArea.cend(), [regionId](Point testPosition) {
+		// note out-of-bounds tiles are not solid, this function relies on the guard in TFit_Obj5 and dungeon border
+		if (IsTileSolid(testPosition)) {
+			return false;
+		}
+		// If the theme object would extend into a different region then it doesn't fit.
+		if (dTransVal[testPosition.x][testPosition.y] != regionId) {
+			return false;
+		}
+		return true;
+	});
+}
+
 bool TFit_Obj5(int t)
 {
-	int xp = 0;
-	int yp = 0;
-	int r = GenerateRnd(5) + 1;
-	int rs = r;
-
-	while (r > 0) {
-		bool found = false;
-		if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-			found = true;
-			for (int i = 0; found && i < 25; i++) {
-				if (TileHasAny(dPiece[xp + trm5x[i]][yp + trm5y[i]], TileProperties::Solid)) {
-					found = false;
-				}
-				if (dTransVal[xp + trm5x[i]][yp + trm5y[i]] != themes[t].ttval) {
-					found = false;
-				}
-			}
-		}
-
-		if (!found) {
-			xp++;
-			if (xp == MAXDUNX) {
-				xp = 0;
-				yp++;
-				if (yp == MAXDUNY) {
-					if (r == rs) {
-						return false;
-					}
-					yp = 0;
-				}
-			}
-			continue;
-		}
-
-		r--;
+	int skipCandidates = GenerateRnd(5);
+	if (skipCandidates < 0) {
+		// vanilla rng can return -3 for GenerateRnd(5), default behaviour is to set the output to 0,0 and return true in this case...
+		themex = 0;
+		themey = 0;
+		return true;
 	}
 
-	themex = xp;
-	themey = yp;
-
-	return true;
+	for (int yp = 0; yp < MAXDUNY; yp++) {
+		for (int xp = 0; xp < MAXDUNX; xp++) {
+			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && CheckThemeObj5({ xp, yp }, themes[t].ttval)) {
+				if (skipCandidates > 0) {
+					skipCandidates--;
+					continue;
+				}
+				themex = xp;
+				themey = yp;
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool TFit_SkelRoom(int t)
