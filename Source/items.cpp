@@ -3709,7 +3709,7 @@ bool DoOil(Player &player, int cii)
 	case IPL_PERIL:
 		return _("2x dmg to monst, 1x to you");
 	case IPL_JESTERS:
-		return std::string(_(/*xgettext:no-c-format*/ "Random 0 - 500% damage"));
+		return std::string(_(/*xgettext:no-c-format*/ "Random 0 - 600% damage"));
 	case IPL_CRYSTALLINE:
 		return fmt::format(fmt::runtime(_(/*xgettext:no-c-format*/ "low dur, {:+d}% damage")), item._iPLDam);
 	case IPL_DOPPELGANGER:
