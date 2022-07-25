@@ -7,6 +7,9 @@ if (buildAsApplication) {
 }
 
 android {
+	//ndkVersion '25.0.8775105'
+	//ndkVersion '24.0.8215888'
+	ndkVersion '23.2.8568313'
 	compileSdkVersion 32
 	defaultConfig {
 		if (buildAsApplication) {
@@ -40,7 +43,7 @@ android {
 		externalNativeBuild {
 			cmake {
 				path '../../CMakeLists.txt'
-				version "3.13.0+"
+				version "3.22.1+"
 			}
 		}
 
