@@ -2,7 +2,7 @@ name: OpenDingux Release Build
 
 on:
   release:
-    types: [created]
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -37,15 +37,11 @@ jobs:
         path: build-rg350/devilutionx-rg350.opk
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "build-rg350/devilutionx-rg350.opk"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "build-rg350/devilutionx-rg350.opk"
+        overwrite: true
 
   lepus:
     runs-on: ubuntu-22.04
@@ -78,12 +74,8 @@ jobs:
         path: build-lepus/devilutionx-lepus.opk
 
     - name: Update Release
-      if: ${{ github.event_name == 'release' && github.event.action == 'created' && !env.ACT }}
-      uses: ncipollo/release-action@v1
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
       with:
-        artifacts: "build-lepus/devilutionx-lepus.opk"
-        allowUpdates: true
-        omitBody: true
-        omitName: true
-        omitPrereleaseDuringUpdate: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        file: "build-lepus/devilutionx-lepus.opk"
+        overwrite: true
