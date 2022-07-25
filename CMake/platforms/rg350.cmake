@@ -3,7 +3,7 @@ set(USE_SDL1 ON)
 
 # LTO temporarily disabled to work around a compiler bug.
 # https://github.com/diasurgical/devilutionX/issues/4953
-set(DISABLE_LTO OFF)
+set(DISABLE_LTO ON)
 
 set(SDL1_VIDEO_MODE_BPP 8)
 set(SDL1_VIDEO_MODE_FLAGS SDL_YUV444|SDL_HWSURFACE|SDL_TRIPLEBUF)
