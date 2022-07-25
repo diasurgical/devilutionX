@@ -3116,7 +3116,7 @@ int RndItem(const Monster &monster)
 				if (pi > 2)
 					pi = 0;
 
-				if (pi == 0)
+				if (pi != 2)
 					ri--;
 			}
 		}
