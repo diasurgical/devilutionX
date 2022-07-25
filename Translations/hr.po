@@ -4429,8 +4429,8 @@ msgstr "2x ošteć. na čudovište, 1x na vas"
 
 #: Source/items.cpp:3721
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Naizmjenično 0 - 500% oštećenje"
+msgid "Random 0 - 600% damage"
+msgstr "Naizmjenično 0 - 600% oštećenje"
 
 #: Source/items.cpp:3723
 #, no-c-format

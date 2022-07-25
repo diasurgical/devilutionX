@@ -4421,8 +4421,8 @@ msgstr "2x dgt au monstre, 1x à vous"
 
 #: Source/items.cpp:3718
 #, no-c-format
-msgid "Random 0 - 500% damage"
-msgstr "Dégâts aléatoire entre 0-500%"
+msgid "Random 0 - 600% damage"
+msgstr "Dégâts aléatoire entre 0-600%"
 
 #: Source/items.cpp:3720
 #, no-c-format
