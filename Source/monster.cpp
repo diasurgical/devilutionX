@@ -1033,27 +1033,6 @@ void Teleport(Monster &monster)
 	}
 }
 
-void HitMonster(Monster &monster, int dam)
-{
-	delta_monster_hp(monster, *MyPlayer);
-	NetSendCmdMonDmg(false, monster.getId(), dam);
-	PlayEffect(monster, 1);
-
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
-		if (monster.type().type == MT_BLINK) {
-			Teleport(monster);
-		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
-			monster.goal = MonsterGoal::Normal;
-			monster.goalVar1 = 0;
-			monster.goalVar2 = 0;
-		}
-
-		if (monster.mode != MonsterMode::Petrified) {
-			StartMonsterGotHit(monster);
-		}
-	}
-}
-
 void StartFadein(Monster &monster, Direction md, bool backwards)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
@@ -1202,7 +1181,23 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 			target.direction = Opposite(attacker.direction);
 		}
 
-		HitMonster(target, dam);
+		delta_monster_hp(target, *MyPlayer);
+		NetSendCmdMonDmg(false, target.getId(), dam);
+		PlayEffect(target, 1);
+
+		if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
+			if (target.type().type == MT_BLINK) {
+				Teleport(target);
+			} else if (IsAnyOf(target.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
+				target.goal = MonsterGoal::Normal;
+				target.goalVar1 = 0;
+				target.goalVar2 = 0;
+			}
+
+			if (target.mode != MonsterMode::Petrified) {
+				StartMonsterGotHit(target);
+			}
+		}
 	}
 
 	if (target.activeForTicks == 0) {
@@ -4441,10 +4436,26 @@ void MissToMonst(Missile &missile, Point position)
 	monster.direction = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster.direction);
-	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
+	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0) {
 		M_StartHit(monster, 0);
-	else
-		HitMonster(monster, 0);
+	} else {
+		delta_monster_hp(monster, *MyPlayer);
+		NetSendCmdMonDmg(false, monster.getId(), 0);
+		PlayEffect(monster, 1);
+
+		if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || 0 >= monster.level + 3) {
+			if (monster.type().type == MT_BLINK) {
+				Teleport(monster);
+			} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
+				monster.goal = MonsterGoal::Normal;
+				monster.goalVar1 = 0;
+				monster.goalVar2 = 0;
+			}
+			if (monster.mode != MonsterMode::Petrified) {
+				StartMonsterGotHit(monster);
+			}
+		}
+	}
 
 	if (monster.type().type == MT_GLOOM)
 		return;
