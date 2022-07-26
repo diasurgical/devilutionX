@@ -1054,7 +1054,7 @@ bool DoAttack(Player &player)
 
 		if (monster != nullptr) {
 			didhit = PlrHitMonst(player, *monster);
-		} else if (monster != nullptr && !player.friendlyMode) {
+		} else if (IsPlayerAtPosition(position) && !player.friendlyMode) {
 			didhit = PlrHitPlr(player, *PlayerAtPosition(position));
 		} else {
 			Object *object = ObjectAtPosition(position, false);
