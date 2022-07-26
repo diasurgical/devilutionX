@@ -36,9 +36,28 @@
 			}
 		},
 		{
+			"name": "ninja-vcpkg-release",
+			"displayName": "Ninja with VcPkg Configure Settings with CMAKE_BUILD_TYPE=Release",
+			"inherits": "ninja-vcpkg",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
+		},
+		{
 			"name": "ninja-vcpkg-discord-relwithdebinfo",
 			"displayName": "Ninja with VcPkg Configure Settings with DISCORD_INTEGRATION=ON CMAKE_BUILD_TYPE=RelWithDebInfo",
 			"inherits": "ninja-vcpkg-relwithdebinfo",
+			"cacheVariables": {
+				"DISCORD_INTEGRATION": {
+					"type": "BOOL",
+					"value": "ON"
+				}
+			}
+		},
+		{
+			"name": "ninja-vcpkg-discord-release",
+			"displayName": "Ninja with VcPkg Configure Settings with DISCORD_INTEGRATION=ON CMAKE_BUILD_TYPE=Release",
+			"inherits": "ninja-vcpkg-release",
 			"cacheVariables": {
 				"DISCORD_INTEGRATION": {
 					"type": "BOOL",
@@ -65,6 +84,12 @@
 			"configurePreset": "ninja-vcpkg-discord-relwithdebinfo",
 			"displayName": "Build ninja-vcpkg-discord-relwithdebinfo",
 			"description": "Build ninja-vcpkg-discord-relwithdebinfo Configuration"
+		},
+		{
+			"name": "ninja-vcpkg-discord-release",
+			"configurePreset": "ninja-vcpkg-discord-release",
+			"displayName": "Build ninja-vcpkg-discord-release",
+			"description": "Build ninja-vcpkg-discord-release Configuration"
 		}
 	],
 	"testPresets": [

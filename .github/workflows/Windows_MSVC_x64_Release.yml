@@ -1,0 +1,60 @@
+name: Windows MSVC x64 Release Build
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+
+    - name: Install SMPQ
+      run: |
+        mkdir smpq-bin
+        Invoke-WebRequest -Uri "https://launchpad.net/smpq/trunk/1.6/+download/SMPQ-1.6-x86_64.exe" -OutFile "smpq-bin/smpq.exe" -Resume
+        Add-Content $env:GITHUB_PATH "$((Get-Item .).FullName)/smpq-bin"
+
+    - name: Install latest CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Restore or setup vcpkg
+      uses: lukka/run-vcpkg@v10
+      with:
+        vcpkgGitCommitId: '98f8d00e89fb6a8019c2045cfa1edbe9d92d3405'
+
+    - name: Get CMakePresets.json
+      run: cp Packaging/windows/CMakePresets.json .
+
+    - name: Run CMake consuming CMakePresets.json and vcpkg.json by mean of vcpkg.
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: 'ninja-vcpkg-discord-release'
+        buildPreset: 'ninja-vcpkg-discord-release'
+
+    - name: Build package
+      run: cmake --build build-ninja-vcpkg-discord-release --target package
+
+    - name: Upload-Package
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-windows-x86_64.zip
+        path: build-ninja-vcpkg-discord-release/*.zip
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        asset_name: devilutionx-windows-x86_64.zip
+        file: "build-ninja-vcpkg-discord-release/*.zip"
+        file_glob: true
+        overwrite: true
