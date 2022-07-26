@@ -1161,29 +1161,29 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 	target.hitPoints -= dam;
+
 	if (target.hitPoints >> 6 <= 0) {
 		delta_kill_monster(target, target.position.tile, *MyPlayer);
 		NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
+	} else {
+		delta_monster_hp(target, *MyPlayer);
+		NetSendCmdMonDmg(false, target.getId(), dam);
+		PlayEffect(target, 1);
+	}
 
-		if (attacker.isPlayerMinion())
-			target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
+	if (attacker.isPlayerMinion())
+		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
 
+	if (target.hitPoints >> 6 <= 0) {
 		Direction md = GetDirection(target.position.tile, attacker.position.tile);
 		MonsterDeath(target, md, true);
 
 		if (gbIsHellfire)
 			M_StartStand(attacker, attacker.direction);
 	} else {
-		if (attacker.isPlayerMinion())
-			target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
-
 		if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
 			target.direction = Opposite(attacker.direction);
 		}
-
-		delta_monster_hp(target, *MyPlayer);
-		NetSendCmdMonDmg(false, target.getId(), dam);
-		PlayEffect(target, 1);
 
 		if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
 			if (target.type().type == MT_BLINK) {
