@@ -3071,14 +3071,14 @@ int RndItem(const Monster &monster)
 		bool isHealingPotion = false;
 		bool isManaPotion = false;
 
-		for (ulong j = 0; j < sizeof(healingPotions) / sizeof(healingPotions[0]); j++) {
+		for (uint64_t j = 0; j < sizeof(healingPotions) / sizeof(healingPotions[0]); j++) {
 			if (AllItemsList[i].iCurs == healingPotions[i]) {
 				isHealingPotion = true;
 				break;
 			}
 		}
 
-		for (ulong j = 0; j < sizeof(manaPotions) / sizeof(manaPotions[0]); j++) {
+		for (uint64_t j = 0; j < sizeof(manaPotions) / sizeof(manaPotions[0]); j++) {
 			if (AllItemsList[i].iCurs == manaPotions[i]) {
 				isManaPotion = true;
 				break;
