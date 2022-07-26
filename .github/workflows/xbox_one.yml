@@ -5,7 +5,9 @@ on:
     branches:
       - master
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -41,7 +43,19 @@ jobs:
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
-        name: devilutionx-xbox-one
+        name: devilutionx-xbox-one-series
         if-no-files-found: error
         path: |
           build/uwp-project/pkg/
+
+    - name: Package Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      working-directory: ${{github.workspace}}/build/uwp-project/pkg/
+      run: 7z a -r ../../../devilutionx-xbox-one-series.zip .
+
+    - name: Update Release
+      if: ${{ github.event_name == 'release' && !env.ACT }}
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: devilutionx-xbox-one-series.zip
+        overwrite: true
