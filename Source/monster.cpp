@@ -1066,21 +1066,6 @@ void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
 	HitMonster(target, dam);
 }
 
-void StartDeathFromMonster(Monster &attacker, Monster &target)
-{
-	delta_kill_monster(target, target.position.tile, *MyPlayer);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
-
-	if (attacker.isPlayerMinion())
-		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
-
-	Direction md = GetDirection(target.position.tile, attacker.position.tile);
-	MonsterDeath(target, md, true);
-
-	if (gbIsHellfire)
-		M_StartStand(attacker, attacker.direction);
-}
-
 void StartFadein(Monster &monster, Direction md, bool backwards)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
@@ -1210,7 +1195,17 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 	target.hitPoints -= dam;
 	if (target.hitPoints >> 6 <= 0) {
-		StartDeathFromMonster(attacker, target);
+		delta_kill_monster(target, target.position.tile, *MyPlayer);
+		NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
+
+		if (attacker.isPlayerMinion())
+			target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
+
+		Direction md = GetDirection(target.position.tile, attacker.position.tile);
+		MonsterDeath(target, md, true);
+
+		if (gbIsHellfire)
+			M_StartStand(attacker, attacker.direction);
 	} else {
 		MonsterHitMonster(attacker, target, dam);
 	}
