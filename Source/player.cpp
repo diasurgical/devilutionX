@@ -774,11 +774,9 @@ bool DamageWeapon(Player &player, unsigned damageFrequency)
 	return false;
 }
 
-bool PlrHitMonst(Player &player, size_t monsterId, bool adjacentDamage = false)
+bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 {
 	int hper = 0;
-
-	Monster &monster = Monsters[monsterId];
 
 	if (!monster.isPossibleToHit())
 		return false;
@@ -1035,11 +1033,10 @@ bool DoAttack(Player &player)
 
 	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
 		Point position = player.position.tile + player._pdir;
-		int dx = position.x;
-		int dy = position.y;
+		Monster *monster = MonsterAtPosition(position);
 
-		if (dMonster[dx][dy] != 0) {
-			if (CanTalkToMonst(Monsters[abs(dMonster[dx][dy]) - 1])) {
+		if (monster != nullptr) {
+			if (CanTalkToMonst(*monster)) {
 				player.position.temp.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
 				return false;
 			}
@@ -1055,10 +1052,10 @@ bool DoAttack(Player &player)
 			}
 		}
 
-		if (dMonster[dx][dy] != 0) {
-			didhit = PlrHitMonst(player, abs(dMonster[dx][dy]) - 1);
-		} else if (dPlayer[dx][dy] != 0 && !player.friendlyMode) {
-			didhit = PlrHitPlr(player, Players[abs(dPlayer[dx][dy]) - 1]);
+		if (monster != nullptr) {
+			didhit = PlrHitMonst(player, *monster);
+		} else if (monster != nullptr && !player.friendlyMode) {
+			didhit = PlrHitPlr(player, *PlayerAtPosition(position));
 		} else {
 			Object *object = ObjectAtPosition(position, false);
 			if (object != nullptr) {
@@ -1078,20 +1075,18 @@ bool DoAttack(Player &player)
 		                && !(player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield))))) {
 			// playing as a class/weapon with cleave
 			position = player.position.tile + Right(player._pdir);
-			if (dMonster[position.x][position.y] != 0) {
-				int m = abs(dMonster[position.x][position.y]) - 1;
-				auto &monster = Monsters[m];
-				if (!CanTalkToMonst(monster) && monster.position.old == position) {
-					if (PlrHitMonst(player, m, true))
+			monster = MonsterAtPosition(position);
+			if (monster != nullptr) {
+				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
+					if (PlrHitMonst(player, *monster, true))
 						didhit = true;
 				}
 			}
 			position = player.position.tile + Left(player._pdir);
-			if (dMonster[position.x][position.y] != 0) {
-				int m = abs(dMonster[position.x][position.y]) - 1;
-				auto &monster = Monsters[m];
-				if (!CanTalkToMonst(monster) && monster.position.old == position) {
-					if (PlrHitMonst(player, m, true))
+			monster = MonsterAtPosition(position);
+			if (monster != nullptr) {
+				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
+					if (PlrHitMonst(player, *monster, true))
 						didhit = true;
 				}
 			}
