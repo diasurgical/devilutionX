@@ -2056,16 +2056,13 @@ player_graphic Player::getGraphic() const
 	case PM_BLOCK:
 		return player_graphic::Block;
 	case PM_SPELL:
-		// We don't have the spell data for other players.
-		if (this == MyPlayer) {
-			switch (spelldata[_pSpell].sType) {
-			case STYPE_FIRE:
-				return player_graphic::Fire;
-			case STYPE_LIGHTNING:
-				return player_graphic::Lightning;
-			case STYPE_MAGIC:
-				return player_graphic::Magic;
-			}
+		switch (spelldata[_pSpell].sType) {
+		case STYPE_FIRE:
+			return player_graphic::Fire;
+		case STYPE_LIGHTNING:
+			return player_graphic::Lightning;
+		case STYPE_MAGIC:
+			return player_graphic::Magic;
 		}
 		return player_graphic::Fire;
 	case PM_GOTHIT:
