@@ -1146,6 +1146,21 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 	return isAnimationEnd;
 }
 
+void ApplyMonsterDamage(Monster &monster, int damage)
+{
+	monster.hitPoints -= damage;
+
+	if (monster.hitPoints >> 6 <= 0) {
+		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
+		NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
+		return;
+	}
+
+	delta_monster_hp(monster, *MyPlayer);
+	NetSendCmdMonDmg(false, monster.getId(), damage);
+	PlayEffect(monster, 1);
+}
+
 void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind, int maxd)
 {
 	if (!target.isPossibleToHit())
@@ -1160,16 +1175,7 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 		return;
 
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
-	target.hitPoints -= dam;
-
-	if (target.hitPoints >> 6 <= 0) {
-		delta_kill_monster(target, target.position.tile, *MyPlayer);
-		NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
-	} else {
-		delta_monster_hp(target, *MyPlayer);
-		NetSendCmdMonDmg(false, target.getId(), dam);
-		PlayEffect(target, 1);
-	}
+	ApplyMonsterDamage(target, dam);
 
 	if (attacker.isPlayerMinion())
 		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
@@ -4439,9 +4445,7 @@ void MissToMonst(Missile &missile, Point position)
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0) {
 		M_StartHit(monster, 0);
 	} else {
-		delta_monster_hp(monster, *MyPlayer);
-		NetSendCmdMonDmg(false, monster.getId(), 0);
-		PlayEffect(monster, 1);
+		ApplyMonsterDamage(monster, 0);
 
 		if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || 0 >= monster.level + 3) {
 			if (monster.type().type == MT_BLINK) {
