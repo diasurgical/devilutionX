@@ -1191,19 +1191,7 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 			target.direction = Opposite(attacker.direction);
 		}
 
-		if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
-			if (target.type().type == MT_BLINK) {
-				Teleport(target);
-			} else if (IsAnyOf(target.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
-				target.goal = MonsterGoal::Normal;
-				target.goalVar1 = 0;
-				target.goalVar2 = 0;
-			}
-
-			if (target.mode != MonsterMode::Petrified) {
-				StartMonsterGotHit(target);
-			}
-		}
+		M_StartHit(target, dam);
 	}
 
 	if (target.activeForTicks == 0) {
@@ -3739,13 +3727,10 @@ void M_GetKnockback(Monster &monster)
 
 void M_StartHit(Monster &monster, int dam)
 {
-	PlayEffect(monster, 1);
-
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		if (monster.type().type == MT_BLINK) {
 			Teleport(monster);
-		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV)
-		    || monster.type().type == MT_GRAVEDIG) {
+		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
 			monster.goal = MonsterGoal::Normal;
 			monster.goalVar1 = 0;
 			monster.goalVar2 = 0;
@@ -3770,6 +3755,7 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 		monster.direction = GetMonsterDirection(monster);
 	}
 
+	PlayEffect(monster, 1);
 	M_StartHit(monster, dam);
 }
 
@@ -4442,24 +4428,11 @@ void MissToMonst(Missile &missile, Point position)
 	monster.direction = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster.direction);
-	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0) {
-		M_StartHit(monster, 0);
-	} else {
+	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
+		PlayEffect(monster, 1);
+	else
 		ApplyMonsterDamage(monster, 0);
-
-		if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || 0 >= monster.level + 3) {
-			if (monster.type().type == MT_BLINK) {
-				Teleport(monster);
-			} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
-				monster.goal = MonsterGoal::Normal;
-				monster.goalVar1 = 0;
-				monster.goalVar2 = 0;
-			}
-			if (monster.mode != MonsterMode::Petrified) {
-				StartMonsterGotHit(monster);
-			}
-		}
-	}
+	M_StartHit(monster, 0);
 
 	if (monster.type().type == MT_GLOOM)
 		return;
