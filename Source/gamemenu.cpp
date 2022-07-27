@@ -76,16 +76,16 @@ const char *const SoundToggleNames[] = {
 
 void GamemenuUpdateSingle()
 {
-	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
+	sgSingleMenu[3].setEnabled(gbValidSaveFile);
 
 	bool enable = MyPlayer->_pmode != PM_DEATH && !MyPlayerIsDead;
 
-	gmenu_enable(&sgSingleMenu[0], enable);
+	sgSingleMenu[0].setEnabled(enable);
 }
 
 void GamemenuUpdateMulti()
 {
-	gmenu_enable(&sgMultiMenu[2], MyPlayerIsDead);
+	sgMultiMenu[2].setEnabled(MyPlayerIsDead);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
@@ -118,14 +118,14 @@ void GamemenuRestartTown(bool /*bActivate*/)
 void GamemenuSoundMusicToggle(const char *const *names, TMenuItem *menuItem, int volume)
 {
 	if (gbSndInited) {
-		menuItem->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
+		menuItem->addFlags(GMENU_ENABLED | GMENU_SLIDER);
 		menuItem->pszStr = names[0];
 		gmenu_slider_steps(menuItem, VOLUME_STEPS);
 		gmenu_slider_set(menuItem, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
 
-	menuItem->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
+	menuItem->removeFlags(GMENU_ENABLED | GMENU_SLIDER);
 	menuItem->pszStr = names[1];
 }
 
@@ -153,7 +153,7 @@ void GamemenuGetGamma()
 void GamemenuGetSpeed()
 {
 	if (gbIsMultiplayer) {
-		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
+		sgOptionsMenu[3].removeFlags(GMENU_ENABLED | GMENU_SLIDER);
 		if (sgGameInitInfo.nTickRate >= 50)
 			sgOptionsMenu[3].pszStr = _("Speed: Fastest").data();
 		else if (sgGameInitInfo.nTickRate >= 40)
@@ -165,7 +165,7 @@ void GamemenuGetSpeed()
 		return;
 	}
 
-	sgOptionsMenu[3].dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
+	sgOptionsMenu[3].addFlags(GMENU_ENABLED | GMENU_SLIDER);
 
 	sgOptionsMenu[3].pszStr = _("Speed").data();
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
