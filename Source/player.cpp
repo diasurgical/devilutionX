@@ -3582,7 +3582,7 @@ void ModifyPlrStr(Player &player, int l)
 
 void ModifyPlrMag(Player &player, int l)
 {
-	l = clamp(l, 0 - player._pBaseStr, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
+	l = clamp(l, 0 - player._pBaseMag, player.GetMaximumAttributeValue(CharacterAttribute::Magic) - player._pBaseMag);
 
 	player._pMagic += l;
 	player._pBaseMag += l;
