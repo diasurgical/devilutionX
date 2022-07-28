@@ -2326,8 +2326,6 @@ void SaveGameData(MpqWriter &saveWriter)
 	file.WriteBE<uint32_t>(static_cast<uint32_t>(std::min(Missiles.size(), MaxMissilesForSaveGame)));
 	file.WriteBE<int32_t>(ActiveObjectCount);
 
-	leveltype = GetLevelType(currlevel);
-
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		file.WriteBE<uint32_t>(glSeedTbl[i]);
 		file.WriteBE<int32_t>(getHellfireLevelType(GetLevelType(i)));
