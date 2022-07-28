@@ -1057,7 +1057,7 @@ bool DoAttack(Player &player)
 		} else if (PlayerAtPosition(position) != nullptr && !player.friendlyMode) {
 			didhit = PlrHitPlr(player, *PlayerAtPosition(position));
 		} else {
-			Object *object = ObjectAtPosition(position, false);
+			Object *object = FindObjectAtPosition(position, false);
 			if (object != nullptr) {
 				didhit = PlrHitObj(player, *object);
 			}
@@ -1321,7 +1321,7 @@ bool IsPlayerAdjacentToObject(Player &player, Object &object)
 {
 	int x = abs(player.position.tile.x - object.position.x);
 	int y = abs(player.position.tile.y - object.position.y);
-	if (y > 1 && object.position.y >= 1 && ObjectAtPosition(object.position + Direction::NorthEast) == &object) {
+	if (y > 1 && object.position.y >= 1 && FindObjectAtPosition(object.position + Direction::NorthEast) == &object) {
 		// special case for activating a large object from the north-east side
 		y = abs(player.position.tile.y - object.position.y + 1);
 	}
@@ -1341,7 +1341,7 @@ void TryDisarm(const Player &player, Object &object)
 	}
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		Object &trap = Objects[ActiveObjects[j]];
-		if (trap.IsTrap() && ObjectAtPosition({ trap._oVar1, trap._oVar2 }) == &object) {
+		if (trap.IsTrap() && FindObjectAtPosition({ trap._oVar1, trap._oVar2 }) == &object) {
 			trap._oVar4 = 1;
 			object._oTrapFlag = false;
 		}

@@ -603,7 +603,7 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 		return;
 	}
 
-	Object *object = ObjectAtPosition(tilePosition);
+	Object *object = FindObjectAtPosition(tilePosition);
 	if (object == nullptr) {
 		return;
 	}

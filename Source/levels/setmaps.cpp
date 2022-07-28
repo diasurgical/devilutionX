@@ -33,29 +33,29 @@ namespace {
 void AddSKingObjs()
 {
 	constexpr Rectangle SmallSecretRoom { { 20, 7 }, { 3, 3 } };
-	ObjectAtPosition({ 64, 34 })->InitializeLoadedObject(SmallSecretRoom, 1);
+	ObjectAtPosition({ 64, 34 }).InitializeLoadedObject(SmallSecretRoom, 1);
 
 	constexpr Rectangle Gate { { 20, 14 }, { 1, 2 } };
-	ObjectAtPosition({ 64, 59 })->InitializeLoadedObject(Gate, 2);
+	ObjectAtPosition({ 64, 59 }).InitializeLoadedObject(Gate, 2);
 
 	constexpr Rectangle LargeSecretRoom { { 8, 1 }, { 7, 10 } };
-	ObjectAtPosition({ 27, 37 })->InitializeLoadedObject(LargeSecretRoom, 3);
-	ObjectAtPosition({ 46, 35 })->InitializeLoadedObject(LargeSecretRoom, 3);
-	ObjectAtPosition({ 49, 53 })->InitializeLoadedObject(LargeSecretRoom, 3);
-	ObjectAtPosition({ 27, 53 })->InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 27, 37 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 46, 35 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 49, 53 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 27, 53 }).InitializeLoadedObject(LargeSecretRoom, 3);
 }
 
 void AddSChamObjs()
 {
-	ObjectAtPosition({ 37, 30 })->InitializeLoadedObject({ { 17, 0 }, { 4, 5 } }, 1);
-	ObjectAtPosition({ 37, 46 })->InitializeLoadedObject({ { 13, 0 }, { 3, 5 } }, 2);
+	ObjectAtPosition({ 37, 30 }).InitializeLoadedObject({ { 17, 0 }, { 4, 5 } }, 1);
+	ObjectAtPosition({ 37, 46 }).InitializeLoadedObject({ { 13, 0 }, { 3, 5 } }, 2);
 }
 
 void AddVileObjs()
 {
-	ObjectAtPosition({ 26, 45 })->InitializeLoadedObject({ { 1, 1 }, { 8, 9 } }, 1);
-	ObjectAtPosition({ 45, 46 })->InitializeLoadedObject({ { 11, 1 }, { 9, 9 } }, 2);
-	ObjectAtPosition({ 35, 36 })->InitializeLoadedObject({ { 7, 11 }, { 6, 7 } }, 3);
+	ObjectAtPosition({ 26, 45 }).InitializeLoadedObject({ { 1, 1 }, { 8, 9 } }, 1);
+	ObjectAtPosition({ 45, 46 }).InitializeLoadedObject({ { 11, 1 }, { 9, 9 } }, 2);
+	ObjectAtPosition({ 35, 36 }).InitializeLoadedObject({ { 7, 11 }, { 6, 7 } }, 3);
 }
 
 void SetMapTransparency(const char *path)

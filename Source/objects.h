@@ -265,7 +265,7 @@ extern bool LoadingMapObjects;
  *                             this param to false if you only want the object whose base position matches this tile
  * @return A pointer to the object or nullptr if no object exists at this location
  */
-Object *ObjectAtPosition(Point position, bool considerLargeObjects = true);
+Object *FindObjectAtPosition(Point position, bool considerLargeObjects = true);
 
 /**
  * @brief Check whether an item occupies this tile position
@@ -274,7 +274,19 @@ Object *ObjectAtPosition(Point position, bool considerLargeObjects = true);
  */
 inline bool IsObjectAtPosition(Point position)
 {
-	return ObjectAtPosition(position) != nullptr;
+	return FindObjectAtPosition(position) != nullptr;
+}
+
+/**
+ * @brief Get a reference to the object located at this tile
+ *
+ * This function is unchecked. Trying to access an invalid position will result in out of bounds memory access
+ * @param position The map coordinate of the object
+ * @return a reference to the object
+ */
+inline Object &ObjectAtPosition(Point position)
+{
+	return Objects[abs(dObject[position.x][position.y]) - 1];
 }
 
 /**

@@ -439,7 +439,7 @@ void CheckMissileCol(Missile &missile, int minDamage, int maxDamage, bool isDama
 	}
 
 	if (IsMissileBlockedByTile({ mx, my })) {
-		Object *object = ObjectAtPosition({ mx, my });
+		Object *object = FindObjectAtPosition({ mx, my });
 		if (object != nullptr && object->IsBreakable()) {
 			BreakObjectMissile(*object);
 		}
@@ -686,7 +686,7 @@ bool IsMissileBlockedByTile(Point tile)
 		return true;
 	}
 
-	Object *object = ObjectAtPosition(tile);
+	Object *object = FindObjectAtPosition(tile);
 	// _oMissFlag is true if the object allows missiles to pass through so we need to invert the check here...
 	return object != nullptr && !object->_oMissFlag;
 }
@@ -2844,7 +2844,7 @@ void MI_Lightball(Missile &missile)
 		missile._mirange = j;
 
 	if (missile.position.tile == targetPosition) {
-		Object *object = ObjectAtPosition(targetPosition);
+		Object *object = FindObjectAtPosition(targetPosition);
 		if (object != nullptr && object->IsShrine()) {
 			missile._mirange = j;
 		}
