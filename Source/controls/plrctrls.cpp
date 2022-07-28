@@ -178,7 +178,7 @@ void FindItemOrObject()
 	}
 
 	for (Point targetPosition : searchArea) {
-		Object *object = ObjectAtPosition(targetPosition);
+		Object *object = FindObjectAtPosition(targetPosition);
 		if (object == nullptr || object->_oSelFlag == 0) {
 			// No object or non-interactive object
 			continue;

@@ -612,18 +612,18 @@ void CheckCursMove()
 		// No monsters or players under the cursor, try find an object starting with the tile below the current tile (tall
 		//  objects like doors)
 		Point testPosition = currentTile + Direction::South;
-		Object *object = ObjectAtPosition(testPosition);
+		Object *object = FindObjectAtPosition(testPosition);
 
 		if (object == nullptr || object->_oSelFlag < 2) {
 			// Either no object or can't interact from the test position, try the current tile
 			testPosition = currentTile;
-			object = ObjectAtPosition(testPosition);
+			object = FindObjectAtPosition(testPosition);
 
 			if (object == nullptr || IsNoneOf(object->_oSelFlag, 1, 3)) {
 				// Still no object (that could be activated from this position), try the tile to the bottom left or right
 				//  (whichever is closest to the cursor as determined when we set flipflag earlier)
 				testPosition = currentTile + (flipflag ? Direction::SouthWest : Direction::SouthEast);
-				object = ObjectAtPosition(testPosition);
+				object = FindObjectAtPosition(testPosition);
 
 				if (object != nullptr && object->_oSelFlag < 2) {
 					// Found an object but it's not in range, clear the pointer

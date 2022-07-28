@@ -569,7 +569,7 @@ void AddObjTraps()
 		rndv = 25;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			Object *triggerObject = ObjectAtPosition({ i, j }, false);
+			Object *triggerObject = FindObjectAtPosition({ i, j }, false);
 			if (triggerObject == nullptr || GenerateRnd(100) >= rndv)
 				continue;
 
@@ -611,7 +611,7 @@ void AddChestTraps()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
-			Object *chestObject = ObjectAtPosition({ i, j }, false);
+			Object *chestObject = FindObjectAtPosition({ i, j }, false);
 			if (chestObject != nullptr && chestObject->IsUntrappedChest() && GenerateRnd(100) < 10) {
 				switch (chestObject->_otype) {
 				case OBJ_CHEST1:
@@ -2192,7 +2192,7 @@ void OperateBook(Player &player, Object &book)
 
 			if (doAddMissile) {
 				questObject._oVar6 = 4;
-				ObjectAtPosition({ 35, 36 })->_oVar5++;
+				ObjectAtPosition({ 35, 36 })._oVar5++;
 				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, player.getId(), 0, 0);
 				missileAdded = true;
 			}
@@ -3813,7 +3813,7 @@ void BreakBarrel(const Player &player, Object &barrel, bool forcebreak, bool sen
 					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
 				}
 				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
-				Object *adjacentObject = ObjectAtPosition({ xp, yp }, false);
+				Object *adjacentObject = FindObjectAtPosition({ xp, yp }, false);
 				if (adjacentObject != nullptr && adjacentObject->isExplosive() && !adjacentObject->IsBroken()) {
 					BreakBarrel(player, *adjacentObject, true, sendmsg);
 				}
@@ -4001,7 +4001,7 @@ bool Object::IsDisabled() const
 	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
 }
 
-Object *ObjectAtPosition(Point position, bool considerLargeObjects)
+Object *FindObjectAtPosition(Point position, bool considerLargeObjects)
 {
 	if (!InDungeonBounds(position)) {
 		return nullptr;
@@ -4019,21 +4019,21 @@ Object *ObjectAtPosition(Point position, bool considerLargeObjects)
 
 bool IsItemBlockingObjectAtPosition(Point position)
 {
-	Object *object = ObjectAtPosition(position);
+	Object *object = FindObjectAtPosition(position);
 	if (object != nullptr && object->_oSolidFlag) {
 		// solid object
 		return true;
 	}
 
-	object = ObjectAtPosition(position + Direction::South);
+	object = FindObjectAtPosition(position + Direction::South);
 	if (object != nullptr && object->_oSelFlag != 0) {
 		// An unopened container or breakable object exists which potentially overlaps this tile, the player might not be able to pick up an item dropped here.
 		return true;
 	}
 
-	object = ObjectAtPosition(position + Direction::SouthEast, false);
+	object = FindObjectAtPosition(position + Direction::SouthEast, false);
 	if (object != nullptr) {
-		Object *otherDoor = ObjectAtPosition(position + Direction::SouthWest, false);
+		Object *otherDoor = FindObjectAtPosition(position + Direction::SouthWest, false);
 		if (otherDoor != nullptr && object->_oSelFlag != 0 && otherDoor->_oSelFlag != 0) {
 			// Two interactive objects potentially overlap both sides of this tile, as above the player might not be able to pick up an item which is dropped here.
 			return true;
@@ -4533,7 +4533,7 @@ void OperateTrap(Object &trap)
 	if (trap._oVar4 != 0)
 		return;
 
-	Object &trigger = *ObjectAtPosition({ trap._oVar1, trap._oVar2 });
+	Object &trigger = ObjectAtPosition({ trap._oVar1, trap._oVar2 });
 	switch (trigger._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -4685,7 +4685,7 @@ void RedoPlayerVision()
 void MonstCheckDoors(const Monster &monster)
 {
 	for (Direction dir : { Direction::NorthEast, Direction::SouthWest, Direction::North, Direction::East, Direction::South, Direction::West, Direction::NorthWest, Direction::SouthEast }) {
-		Object *object = ObjectAtPosition(monster.position.tile + dir);
+		Object *object = FindObjectAtPosition(monster.position.tile + dir);
 		if (object == nullptr)
 			continue;
 

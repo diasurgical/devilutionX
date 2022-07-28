@@ -334,7 +334,7 @@ std::string ExportDun(const string_view parameter)
 	for (int y = 16; y < MAXDUNY - 16; y++) {
 		for (int x = 16; x < MAXDUNX - 16; x++) {
 			uint16_t objectId = 0;
-			Object *object = ObjectAtPosition({ x, y }, false);
+			Object *object = FindObjectAtPosition({ x, y }, false);
 			if (object != nullptr) {
 				for (int i = 0; i < 147; i++) {
 					if (ObjTypeConv[i] == object->_otype) {
@@ -1077,7 +1077,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		return true;
 	case DebugGridTextItem::objectindex: {
 		info = 0;
-		Object *object = ObjectAtPosition(dungeonCoords);
+		Object *object = FindObjectAtPosition(dungeonCoords);
 		if (object != nullptr) {
 			info = static_cast<int>(object->_otype);
 		}

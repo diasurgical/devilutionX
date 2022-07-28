@@ -1222,7 +1222,7 @@ size_t OnObjectTileAction(const TCmd &cmd, Player &player, action_id action, boo
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(cmd);
 	const Point position { message.x, message.y };
-	const Object *object = ObjectAtPosition(position);
+	const Object *object = FindObjectAtPosition(position);
 
 	if (gbBufferMsgs != 1 && player.isOnActiveLevel() && object != nullptr) {
 		if (pathToObject)
@@ -1641,7 +1641,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 size_t OnOperateObject(const TCmd &pCmd, int pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
-	Object *object = ObjectAtPosition({ message.x, message.y });
+	Object *object = FindObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
@@ -1658,7 +1658,7 @@ size_t OnOperateObject(const TCmd &pCmd, int pnum)
 size_t OnBreakObject(const TCmd &pCmd, int pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
-	Object *breakable = ObjectAtPosition({ message.x, message.y });
+	Object *breakable = FindObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
