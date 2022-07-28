@@ -1,0 +1,2 @@
+R 32 glSeedTbl
+R 32 gnLevelTypeTbl

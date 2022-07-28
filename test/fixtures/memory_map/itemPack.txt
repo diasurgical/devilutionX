@@ -1,0 +1,10 @@
+R 32 iSeed
+R 16 iCreateInfo
+R 16 idx
+R 8 bId
+R 8 bDur
+R 8 bMDur
+R 8 bCh
+R 8 bMCh
+R 16 wValue
+R 32 dwBuff

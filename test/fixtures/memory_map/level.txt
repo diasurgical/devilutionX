@@ -1,0 +1,19 @@
+M_DL 12544 8 dCorpse
+LC 32 NumMonsters
+LC 32 ItemCount
+LC 32 NumObjects
+M_DL 200 32 ActiveMonsters
+C_DL NumMonsters monster monsters
+M_DL 127 8 ActiveObjects
+M_DL 127 8 AvailableObjects
+C_DL NumObjects object objects
+M 127 8 ActiveItems
+M 127 8 AvailableItems
+C ItemCount item items
+M 12544 8 dFlags
+M 12544 8 dItem
+M_DL 12544 32 dMonster
+M_DL 12544 8 dObject
+M_DL 12544 8 dLight
+M_DL 12544 8 dPreLight
+M_DL 1600 8 AutomapView
