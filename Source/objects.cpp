@@ -465,15 +465,17 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 	if (!position)
 		return;
 
+	Object *lever = nullptr;
 	if (Quests[Q_BLIND].IsAvailable())
-		AddObject(OBJ_BLINDBOOK, *position);
+		lever = AddObject(OBJ_BLINDBOOK, *position);
 	if (Quests[Q_WARLORD].IsAvailable())
-		AddObject(OBJ_STEELTOME, *position);
+		lever = AddObject(OBJ_STEELTOME, *position);
 	if (Quests[Q_BLOOD].IsAvailable()) {
 		position = SetPiece.position.megaToWorld() + Displacement { 9, 24 };
-		AddObject(OBJ_BLOODBOOK, *position);
+		lever = AddObject(OBJ_BLOODBOOK, *position);
 	}
-	ObjectAtPosition(*position)->InitializeQuestBook(affectedArea, leverid, msg);
+	assert(lever != nullptr);
+	lever->InitializeQuestBook(affectedArea, leverid, msg);
 	leverid++;
 }
 
@@ -587,8 +589,7 @@ void AddObjTraps()
 				if (!CanPlaceWallTrap(xp, j) || i - xp <= 1)
 					continue;
 
-				AddObject(OBJ_TRAPL, { xp, j });
-				trapObject = ObjectAtPosition({ xp, j });
+				trapObject = AddObject(OBJ_TRAPL, { xp, j });
 			} else {
 				int yp = j - 1;
 				while (IsTileNotSolid({ i, yp }))
@@ -597,8 +598,7 @@ void AddObjTraps()
 				if (!CanPlaceWallTrap(i, yp) || j - yp <= 1)
 					continue;
 
-				AddObject(OBJ_TRAPR, { i, yp });
-				trapObject = ObjectAtPosition({ i, yp });
+				trapObject = AddObject(OBJ_TRAPR, { i, yp });
 			}
 
 			if (trapObject != nullptr) {
@@ -664,9 +664,9 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange = {}, int 
 			auto objectId = static_cast<uint8_t>(SDL_SwapLE16(objectLayer[j * width + i]));
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
-				AddObject(ObjTypeConv[objectId], mapPos);
-				if (leveridx > 0)
-					ObjectAtPosition(mapPos)->InitializeLoadedObject(mapRange, leveridx);
+				Object *mapObject = AddObject(ObjTypeConv[objectId], mapPos);
+				if (leveridx > 0 && mapObject != nullptr)
+					mapObject->InitializeLoadedObject(mapRange, leveridx);
 			}
 		}
 	}
@@ -4372,10 +4372,10 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 	ApplyObjectLighting = false;
 }
 
-void AddObject(_object_id objType, Point objPos)
+Object *AddObject(_object_id objType, Point objPos)
 {
 	if (ActiveObjectCount >= MAXOBJECTS)
-		return;
+		return nullptr;
 
 	int oi = AvailableObjects[0];
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
@@ -4529,6 +4529,7 @@ void AddObject(_object_id objType, Point objPos)
 		break;
 	}
 	ActiveObjectCount++;
+	return &object;
 }
 
 void OperateTrap(Object &trap)
