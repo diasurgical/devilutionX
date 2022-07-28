@@ -64,6 +64,20 @@ set(devilutionx_fixtures
   Levels/L4Data/Vile1.DUN
   Levels/L4Data/Warlord.DUN
   Levels/L4Data/Warlord2.DUN
+  memory_map/additionalMissiles.txt
+  memory_map/game.txt
+  memory_map/hero.txt
+  memory_map/item.txt
+  memory_map/itemPack.txt
+  memory_map/level.txt
+  memory_map/levelSeed.txt
+  memory_map/lightning.txt
+  memory_map/missile.txt
+  memory_map/monster.txt
+  memory_map/object.txt
+  memory_map/player.txt
+  memory_map/portal.txt
+  memory_map/quest.txt
   timedemo/WarriorLevel1to2/demo_0.dmo
   timedemo/WarriorLevel1to2/demo_0_reference_spawn_0.sv
   timedemo/WarriorLevel1to2/spawn_0.sv

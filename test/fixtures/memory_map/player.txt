@@ -1,0 +1,178 @@
+R 32 _pmode
+M 25 8 walkpath
+R 8 plractive
+R 16 alignment
+R 32 destAction
+R 32 destParam1
+R 32 destParam2
+R 32 destParam3
+R 32 destParam4
+R 32 level
+R 32 tileX
+R 32 tileY
+R 32 futureX
+R 32 futureY
+R 32 _ptargx
+R 32 _ptargy
+R 32 lastX
+R 32 lastY
+R 32 oldX
+R 32 oldY
+R 32 offsetX
+R 32 offsetY
+R 32 velocityX
+R 32 velocityY
+R 32 pdir
+R 32 unused
+R 32 pfxnum
+R 32 pData
+R 32 ticksPerFrame
+R 32 tickCounterOfCurrentFrame
+R 32 numberOfFrames
+R 32 currentFrame
+R 32 _pAnimWidth
+R 32 _pAnimWidth2
+R 32 _peflag
+R 32 _plid
+R 32 _pvid
+R 32 _pSpell
+R 8 _pSplType
+R 8 _pSplFrom
+R 16 alignment
+R 32 _pTSpell
+R 8 _pTSplType
+R 24 alignment
+R 32 _pRSpell
+R 8 _pRSplType
+R 24 alignment
+R 32 _pSBkSpell
+R 8 _pSBkSplType
+M 64 8 spellLevel
+R 56 alignment
+R 64 _pMemSpells
+R 64 _pAblSpells
+R 64 _pScrlSpells
+R 8 _pSpellFlags
+R 24 alignment
+M 4 32 _pSplHotKey
+M 4 8 _pSplTHotKey
+R 32 _pwtype
+R 8 _pBlockFlag
+R 8 _pInvincible
+R 8 _pLightRad
+R 8 _pLvlChanging
+R 256 _pName
+R 8 _pClass
+R 24 alignment
+R 32 _pStrength
+R 32 _pBaseStr
+R 32 _pMagic
+R 32 _pBaseMag
+R 32 _pDexterity
+R 32 _pBaseDex
+R 32 _pVitality
+R 32 _pBaseVit
+R 32 _pStatPts
+R 32 _pDamageMod
+R 32 _pBaseToBlk
+R 32 _pHPBase
+R 32 _pMaxHPBase
+R 32 _pHitPoints
+R 32 _pMaxHP
+R 32 _pHPPer
+R 32 _pManaBase
+R 32 _pMaxManaBase
+R 32 _pMana
+R 32 _pMaxMana
+R 32 _pManaPer
+R 8 _pLevel
+R 8 _pMaxLvl
+R 16 alignment
+R 32 _pExperience
+R 32 _pMaxExp
+R 32 _pNextExper
+R 8 _pArmorClass
+R 8 _pMagResist
+R 8 _pFireResist
+R 8 _pLghtResist
+R 32 _pGold
+R 32 _pInfraFlag
+R 32 tempPositionX
+R 32 tempPositionY
+R 32 tempDirection
+R 32 spellLevel
+R 32 _pVar5
+R 32 offset2.x
+R 32 offset2.y
+R 32 actionFrame
+M_DA 17 8 _pLvlVisited
+M_HF 25 8 _pLvlVisited
+M_DA 17 8 _pSLvlVisited
+M_HF 25 8 _pSLvlVisited
+R 16 alignment
+R 32 _pGFXLoad
+M 8 32 _pNAnim
+R 32 _pNFrames
+R 32 _pNWidth
+M 8 32 _pWAnim
+R 32 _pWWidth
+M 8 32 _pAAnim
+R 32 _pAFrames
+R 32 _pAWidth
+R 32 _pAFNum
+M 8 32 _pLAnim
+M 8 32 _pFAnim
+M 8 32 _pTAnim
+R 32 _pSFrames
+R 32 _pSWidth
+R 32 _pSFNum
+R 32 _pHFrames
+M 8 32 _pHAnim
+R 32 _pHFrames
+R 32 _pHWidth
+M 8 32 _pDAnim
+R 32 _pDFrames
+R 32 _pDWidth
+M 8 32 _pBAnim
+R 32 _pBFrames
+R 32 _pBWidth
+C 7 item
+C 40 item
+R 32 _pNumInv
+M 40 8 InvGrid
+C 8 item
+C 1 item
+R 32 _pIMinDam
+R 32 _pIMaxDam
+R 32 _pIAC
+R 32 _pIBonusDam
+R 32 _pIBonusToHit
+R 32 _pIBonusAC
+R 32 _pIBonusDamMod
+R 32 alignment
+R 64 _pISpells
+R 32 _pIFlags
+R 32 _pIGetHit
+R 8 _pISplLvlAdd
+R 8 unused
+R 16 alignment
+R 32 _pISplDur
+R 32 _pIEnAc
+R 32 _pIFMinDam
+R 32 _pIFMaxDam
+R 32 _pILMinDam
+R 32 _pILMaxDam
+R 32 _pOilType
+R 8 pTownWarps
+R 8 pDungMsgs
+R 8 pLvlLoad
+R 8 pDungMsgs2
+R 8 pManaShield
+R 8 pOriginalCathedral
+R 16 unused
+R 16 wReflections
+R 112 unused
+R 32 pDiabloKillLevel
+R 32 pDifficulty
+R 32 pDamAcFlags
+R 160 unused
