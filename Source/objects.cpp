@@ -459,22 +459,18 @@ void AddCandles()
  * @param affectedArea The map region to be updated when this object is activated by the player.
  * @param msg The quest text to play when the player activates the book.
  */
-void AddBookLever(Rectangle affectedArea, _speech_id msg)
+void AddBookLever(_object_id type, Rectangle affectedArea, _speech_id msg)
 {
 	std::optional<Point> position = GetRandomObjectPosition({ 2, 2 });
 	if (!position)
 		return;
 
-	Object *lever = nullptr;
-	if (Quests[Q_BLIND].IsAvailable())
-		lever = AddObject(OBJ_BLINDBOOK, *position);
-	if (Quests[Q_WARLORD].IsAvailable())
-		lever = AddObject(OBJ_STEELTOME, *position);
-	if (Quests[Q_BLOOD].IsAvailable()) {
+	if (type == OBJ_BLOODBOOK)
 		position = SetPiece.position.megaToWorld() + Displacement { 9, 24 };
-		lever = AddObject(OBJ_BLOODBOOK, *position);
-	}
+
+	Object *lever = AddObject(type, *position);
 	assert(lever != nullptr);
+
 	lever->InitializeQuestBook(affectedArea, leverid, msg);
 	leverid++;
 }
@@ -4244,7 +4240,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLIND]._qmsg = spId;
-				AddBookLever({ SetPiece.position, { SetPiece.size.width + 1, SetPiece.size.height + 1 } }, spId);
+				AddBookLever(OBJ_BLINDBOOK, { SetPiece.position, SetPiece.size + 1 }, spId);
 				LoadMapObjects("Levels\\L2Data\\Blind2.DUN", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BLOOD].IsAvailable()) {
@@ -4270,7 +4266,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLOOD]._qmsg = spId;
-				AddBookLever({ { SetPiece.position + Displacement { 0, 3 } }, { 2, 4 } }, spId);
+				AddBookLever(OBJ_BLOODBOOK, { SetPiece.position + Displacement { 0, 3 }, { 2, 4 } }, spId);
 				AddObject(OBJ_PEDISTAL, SetPiece.position.megaToWorld() + Displacement { 9, 16 });
 			}
 			InitRndBarrels();
@@ -4303,7 +4299,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_WARLORD]._qmsg = spId;
-				AddBookLever(SetPiece, spId);
+				AddBookLever(OBJ_STEELTOME, SetPiece, spId);
 				LoadMapObjects("Levels\\L4Data\\Warlord.DUN", SetPiece.position.megaToWorld());
 			}
 			if (Quests[Q_BETRAYER].IsAvailable() && !gbIsMultiplayer)
