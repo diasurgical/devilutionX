@@ -2728,37 +2728,40 @@ void OperateShrineReligious(Player &player)
 	InitDiabloMsg(EMSG_SHRINE_RELIGIOUS);
 }
 
-void OperateShrineEnchanted(Player &player)
+void OperateShrineEnchanted(Player &player, uint32_t seed)
 {
 	if (&player != MyPlayer)
 		return;
 
-	int cnt = 0;
-	uint64_t spell = 1;
-	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-	uint64_t spells = player._pMemSpells;
-	for (int j = 0; j < maxSpells; j++) {
-		if ((spell & spells) != 0)
-			cnt++;
-		spell *= 2;
-	}
-	if (cnt > 1) {
-		spell = 1;
-		for (int j = SPL_FIREBOLT; j < maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index (fixed)
-			if ((player._pMemSpells & spell) != 0) {
-				if (player._pSplLvl[j] < MaxSpellLevel)
-					player._pSplLvl[j]++;
-			}
-			spell *= 2;
+	const size_t lastSpellIndex = static_cast<size_t>(gbIsHellfire ? spell_id::SPL_LAST : spell_id::SPL_LASTDIABLO);
+
+	std::bitset<MAX_SPELLS> knownSpells { player._pMemSpells & (~0ULL >> (64 - lastSpellIndex)) };
+	// If the player knows any spells
+	if (knownSpells.any()) {
+		// choose a spell at random to decrement (+1 as spells are 1-indexed in Player::_pSplLvl)
+		unsigned r = ShiftModDistribution(seed, knownSpells.count()) + 1;
+
+		// r currently represents the nth set bit, translate this to the actual bit position
+		for (size_t i = 0; i < r; i++) {
+			if (!knownSpells.test(i))
+				r++;
 		}
-		int r;
-		do {
-			r = GenerateRnd(maxSpells);
-		} while ((player._pMemSpells & GetSpellBitmask(r + 1)) == 0);
-		if (player._pSplLvl[r + 1] >= 2)
-			player._pSplLvl[r + 1] -= 2;
-		else
-			player._pSplLvl[r + 1] = 0;
+
+		for (size_t j = static_cast<size_t>(SPL_FIREBOLT); j <= lastSpellIndex; j++) {
+			if ((player._pMemSpells & GetSpellBitmask(static_cast<spell_id>(j))) != 0) {
+				if (j == r) {
+					// decrement the randomly chosen spell if it's above level 0
+					if (player._pSplLvl[r] >= MaxSpellLevel)
+						player._pSplLvl[r] -= 2; // by 2 levels if it was maxed
+					else if (player._pSplLvl[r] > 0)
+						player._pSplLvl[r]--; // or by one level otherwise
+				} else {
+					// add a level to every other known spell unless they're already at the max
+					if (player._pSplLvl[j] < MaxSpellLevel)
+						player._pSplLvl[j]++;
+				}
+			}
+		}
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_ENCHANTED);
@@ -3290,7 +3293,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 		OperateShrineReligious(player);
 		break;
 	case ShrineEnchanted:
-		OperateShrineEnchanted(player);
+		OperateShrineEnchanted(player, shrine._oRndSeed);
 		break;
 	case ShrineThaumaturgic:
 		OperateShrineThaumaturgic(player);
@@ -3550,7 +3553,7 @@ bool OperateFountains(Player &player, Object &fountain)
 		if (&player != MyPlayer)
 			return false;
 
-		unsigned randomValue = (fountain._oRndSeed >> 16) % 12;
+		unsigned randomValue = ShiftModDistribution(fountain._oRndSeed, 12);
 		unsigned fromStat = randomValue / 3;
 		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)

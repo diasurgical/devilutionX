@@ -103,10 +103,12 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield, bool n
 	pPack->pMaxManaBase = SDL_SwapLE32(player._pMaxManaBase);
 	pPack->pMemSpells = SDL_SwapLE64(player._pMemSpells);
 
-	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
+	// For save game compatibility only save diablo spells in PlayerPack::pSplLvl
+	for (size_t i = static_cast<size_t>(spell_id::SPL_NULL); i <= static_cast<size_t>(spell_id::SPL_LASTDIABLO); i++)
 		pPack->pSplLvl[i] = player._pSplLvl[i];
-	for (int i = 37; i < 47; i++)
-		pPack->pSplLvl2[i - 37] = player._pSplLvl[i];
+	// and hellfire spells go into PlayerPack::pSplLvl2, runes are not learnable so get ignored here
+	for (size_t i = static_cast<size_t>(spell_id::SPL_MANA); i <= static_cast<size_t>(spell_id::SPL_SEARCH); i++)
+		pPack->pSplLvl2[i - static_cast<size_t>(spell_id::SPL_MANA)] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		const Item &item = player.InvBody[i];
@@ -252,10 +254,12 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 	player._pManaBase = SDL_SwapLE32(pPack->pManaBase);
 	player._pMemSpells = SDL_SwapLE64(pPack->pMemSpells);
 
-	for (int i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 36 to make save games compatible
+	// For save game compatibility only load diablo spells from PlayerPack::pSplLvl
+	for (size_t i = static_cast<size_t>(spell_id::SPL_NULL); i <= static_cast<size_t>(spell_id::SPL_LASTDIABLO); i++)
 		player._pSplLvl[i] = pPack->pSplLvl[i];
-	for (int i = 37; i < 47; i++)
-		player._pSplLvl[i] = pPack->pSplLvl2[i - 37];
+	// hellfire spells are loaded from PlayerPack::pSplLvl2, runes are not learnable so get ignored here
+	for (size_t i = static_cast<size_t>(spell_id::SPL_MANA); i <= static_cast<size_t>(spell_id::SPL_SEARCH); i++)
+		player._pSplLvl[i] = pPack->pSplLvl2[i - static_cast<size_t>(spell_id::SPL_MANA)];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		auto packedItem = pPack->InvBody[i];

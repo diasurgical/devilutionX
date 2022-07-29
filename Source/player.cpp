@@ -1728,9 +1728,9 @@ void ValidatePlayer()
 	}
 
 	uint64_t msk = 0;
-	for (int b = SPL_FIREBOLT; b < MAX_SPELLS; b++) {
-		if (GetSpellBookLevel((spell_id)b) != -1) {
-			msk |= GetSpellBitmask(b);
+	for (size_t b = static_cast<size_t>(spell_id::SPL_FIREBOLT); b <= static_cast<size_t>(spell_id::SPL_LAST); b++) {
+		if (GetSpellBookLevel(static_cast<spell_id>(b)) != -1) {
+			msk |= GetSpellBitmask(static_cast<spell_id>(b));
 			if (myPlayer._pSplLvl[b] > MaxSpellLevel)
 				myPlayer._pSplLvl[b] = MaxSpellLevel;
 		}
@@ -2557,9 +2557,7 @@ void CreatePlayer(Player &player, HeroClass c)
 		player._pMemSpells = 0;
 	}
 
-	for (int8_t &spellLevel : player._pSplLvl) {
-		spellLevel = 0;
-	}
+	std::fill(player._pSplLvl, player._pSplLvl + sizeof(player._pSplLvl) / sizeof(player._pSplLvl[0]), 0);
 
 	player._pSpellFlags = SpellFlag::None;
 
