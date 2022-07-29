@@ -1033,7 +1033,7 @@ bool DoAttack(Player &player)
 
 	if (player.AnimInfo.currentFrame == player._pAFNum - 1) {
 		Point position = player.position.tile + player._pdir;
-		Monster *monster = MonsterAtPosition(position);
+		Monster *monster = FindMonsterAtPosition(position);
 
 		if (monster != nullptr) {
 			if (CanTalkToMonst(*monster)) {
@@ -1075,7 +1075,7 @@ bool DoAttack(Player &player)
 		                && !(player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield))))) {
 			// playing as a class/weapon with cleave
 			position = player.position.tile + Right(player._pdir);
-			monster = MonsterAtPosition(position);
+			monster = FindMonsterAtPosition(position);
 			if (monster != nullptr) {
 				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
 					if (PlrHitMonst(player, *monster, true))
@@ -1083,7 +1083,7 @@ bool DoAttack(Player &player)
 				}
 			}
 			position = player.position.tile + Left(player._pdir);
-			monster = MonsterAtPosition(position);
+			monster = FindMonsterAtPosition(position);
 			if (monster != nullptr) {
 				if (!CanTalkToMonst(*monster) && monster->position.old == position) {
 					if (PlrHitMonst(player, *monster, true))

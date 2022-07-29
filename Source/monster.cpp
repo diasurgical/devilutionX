@@ -3729,7 +3729,7 @@ void M_StartStand(Monster &monster, Direction md)
 void M_ClearSquares(const Monster &monster)
 {
 	for (Point searchTile : PointsInRectangleRange { Rectangle { monster.position.old, 1 } }) {
-		if (MonsterAtPosition(searchTile) == &monster)
+		if (FindMonsterAtPosition(searchTile) == &monster)
 			dMonster[searchTile.x][searchTile.y] = 0;
 	}
 }
@@ -4151,7 +4151,7 @@ bool DirOK(const Monster &monster, Direction mdir)
 		for (int y = futurePosition.y - 3; y <= futurePosition.y + 3; y++) {
 			if (!InDungeonBounds({ x, y }))
 				continue;
-			Monster *minion = MonsterAtPosition({ x, y }, true);
+			Monster *minion = FindMonsterAtPosition({ x, y }, true);
 			if (minion == nullptr)
 				continue;
 
@@ -4485,7 +4485,7 @@ void MissToMonst(Missile &missile, Point position)
 	if (dMonster[oldPosition.x][oldPosition.y] <= 0)
 		return;
 
-	Monster &target = *MonsterAtPosition(oldPosition);
+	Monster &target = *FindMonsterAtPosition(oldPosition);
 	MonsterAttackMonster(monster, target, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
@@ -4502,7 +4502,7 @@ void MissToMonst(Missile &missile, Point position)
 	}
 }
 
-Monster *MonsterAtPosition(Point position, bool ignoreMovingMonsters)
+Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters)
 {
 	if (!InDungeonBounds(position)) {
 		return nullptr;
