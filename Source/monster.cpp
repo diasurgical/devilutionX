@@ -4482,17 +4482,18 @@ void MissToMonst(Missile &missile, Point position)
 		return;
 	}
 
-	if (dMonster[oldPosition.x][oldPosition.y] <= 0)
+	Monster *target = FindMonsterAtPosition(oldPosition, true);
+
+	if (target == nullptr)
 		return;
 
-	Monster &target = *FindMonsterAtPosition(oldPosition);
-	MonsterAttackMonster(monster, target, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
+	MonsterAttackMonster(monster, *target, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
 
 	Point newPosition = oldPosition + monster.direction;
-	if (IsTileAvailable(target, newPosition)) {
+	if (IsTileAvailable(*target, newPosition)) {
 		monsterId = dMonster[oldPosition.x][oldPosition.y];
 		dMonster[newPosition.x][newPosition.y] = monsterId;
 		dMonster[oldPosition.x][oldPosition.y] = 0;
