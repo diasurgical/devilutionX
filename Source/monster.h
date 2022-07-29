@@ -307,6 +307,12 @@ struct Monster { // note: missing field _mAFNum
 		return pgettext("monster", data().name);
 	}
 
+	/**
+	 * @brief Calculates monster's experience points.
+	 * Fetches base exp value from @p MonstersData array.
+	 * @param difficulty - difficulty on which calculation is performed
+	 * @return Monster's experience points, including bonuses from difficulty and monster being unique
+	 */
 	unsigned int exp(_difficulty difficulty) const
 	{
 		unsigned int monsterExp = data().exp;
@@ -319,12 +325,6 @@ struct Monster { // note: missing field _mAFNum
 
 		if (isUnique()) {
 			monsterExp *= 2;
-
-			if (difficulty == DIFF_NIGHTMARE) {
-				monsterExp = 2 * (monsterExp + 1000);
-			} else if (difficulty == DIFF_HELL) {
-				monsterExp = 4 * (monsterExp + 1000);
-			}
 		}
 
 		return monsterExp;
