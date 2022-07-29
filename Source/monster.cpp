@@ -1177,8 +1177,11 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
 	ApplyMonsterDamage(target, dam);
 
-	if (attacker.isPlayerMinion())
-		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
+	if (attacker.isPlayerMinion()) {
+		int playerId = attacker.getId();
+		const Player &player = Players[playerId];
+		target.tag(player);
+	}
 
 	if (target.hitPoints >> 6 <= 0) {
 		Direction md = GetDirection(target.position.tile, attacker.position.tile);
@@ -3743,7 +3746,7 @@ void M_StartHit(Monster &monster, int dam)
 
 void M_StartHit(Monster &monster, const Player &player, int dam)
 {
-	monster.whoHit |= 1 << player.getId();
+	monster.tag(player);
 	if (&player == MyPlayer) {
 		delta_monster_hp(monster, *MyPlayer);
 		NetSendCmdMonDmg(false, monster.getId(), dam);
@@ -3796,7 +3799,7 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 
 void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg)
 {
-	monster.whoHit |= 1 << player.getId();
+	monster.tag(player);
 	Direction md = GetDirection(monster.position.tile, player.position.tile);
 	MonsterDeath(monster, md, sendmsg);
 }
@@ -4740,6 +4743,11 @@ bool Monster::isPossibleToHit() const
 	    || (type().type == MT_ILLWEAV && goal == MonsterGoal::Retreat)
 	    || mode == MonsterMode::Charge
 	    || (IsAnyOf(type().type, MT_COUNSLR, MT_MAGISTR, MT_CABALIST, MT_ADVOCATE) && goal != MonsterGoal::Normal));
+}
+
+void Monster::tag(const Player &tagger)
+{
+	whoHit |= 1 << tagger.getId();
 }
 
 bool Monster::tryLiftGargoyle()

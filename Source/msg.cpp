@@ -1591,7 +1591,7 @@ size_t OnMonstDamage(const TCmd *pCmd, int pnum)
 		if (&player != MyPlayer) {
 			if (player.isOnActiveLevel() && message.wMon < MaxMonsters) {
 				auto &monster = Monsters[message.wMon];
-				monster.whoHit |= 1 << pnum;
+				monster.tag(player);
 				if (monster.hitPoints > 0) {
 					monster.hitPoints -= message.dwDam;
 					if ((monster.hitPoints >> 6) < 1)

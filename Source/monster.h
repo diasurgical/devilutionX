@@ -345,6 +345,7 @@ struct Monster { // note: missing field _mAFNum
 	[[nodiscard]] bool isPlayerMinion() const;
 
 	bool isPossibleToHit() const;
+	void tag(const Player &tagger);
 
 	[[nodiscard]] bool isUnique() const
 	{
