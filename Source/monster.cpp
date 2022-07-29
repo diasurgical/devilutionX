@@ -1033,6 +1033,15 @@ void Teleport(Monster &monster)
 	}
 }
 
+void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
+{
+	if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
+		target.direction = Opposite(attacker.direction);
+	}
+
+	M_StartHit(target, dam);
+}
+
 void StartFadein(Monster &monster, Direction md, bool backwards)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
@@ -1190,11 +1199,7 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 		if (gbIsHellfire)
 			M_StartStand(attacker, attacker.direction);
 	} else {
-		if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
-			target.direction = Opposite(attacker.direction);
-		}
-
-		M_StartHit(target, dam);
+		MonsterHitMonster(attacker, target, dam);
 	}
 
 	if (target.activeForTicks == 0) {
