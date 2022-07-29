@@ -1042,6 +1042,15 @@ void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
 	M_StartHit(target, dam);
 }
 
+void StartDeathFromMonster(Monster &attacker, Monster &target)
+{
+	Direction md = GetDirection(target.position.tile, attacker.position.tile);
+	MonsterDeath(target, md, true);
+
+	if (gbIsHellfire)
+		M_StartStand(attacker, attacker.direction);
+}
+
 void StartFadein(Monster &monster, Direction md, bool backwards)
 {
 	NewMonsterAnim(monster, MonsterGraphic::Special, md);
@@ -1193,11 +1202,7 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 	}
 
 	if (target.hitPoints >> 6 <= 0) {
-		Direction md = GetDirection(target.position.tile, attacker.position.tile);
-		MonsterDeath(target, md, true);
-
-		if (gbIsHellfire)
-			M_StartStand(attacker, attacker.direction);
+		StartDeathFromMonster(attacker, target);
 	} else {
 		MonsterHitMonster(attacker, target, dam);
 	}
