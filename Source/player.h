@@ -659,10 +659,6 @@ struct Player {
 	 */
 	void RegenLife();
 
-        uint32_t LastGotHitTick;
-
-        uint32_t LastTick;
-
 	/**
 	 * @brief Restores between 1/8 (inclusive) and 1/4 (exclusive) of the players max Mana (further adjusted by class).
 	 *
@@ -694,8 +690,6 @@ struct Player {
 	 * to an equipped item then they get nothing.
 	 */
 	void RegenMana();
-
-        uint32_t LastSpellTick;
 
 	/**
 	 * @brief Sets the readied spell to the spell in the specified equipment slot. Does nothing if the item does not have a valid spell.

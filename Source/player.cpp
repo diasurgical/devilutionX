@@ -1964,7 +1964,7 @@ void Player::RegenLife()
 		hpMod = _pLevel + _pLevel / 2;
 	else
 		hpMod = (u_char)_pLevel;
-	if (_pmode != PM_DEATH && _pHitPoints < _pMaxHP && Player::LastTick - 1500 > Player::LastGotHitTick) {
+	if (_pmode != PM_DEATH && _pHitPoints < _pMaxHP) {
 		_pHitPoints = std::min(_pHitPoints + hpMod / lvlMod, _pMaxHP);
 		_pHPBase = std::min(_pHPBase + hpMod / lvlMod, _pMaxHPBase);
 	}
@@ -1983,7 +1983,7 @@ void Player::RegenMana()
 
 	bool hasMana = HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana);
 	bool canRegenMana = _pmode != PM_DEATH && _pmode != PM_SPELL && _pMana < _pMaxMana;
-	if (hasMana && canRegenMana && Player::LastTick - 1500 > Player::LastSpellTick) {
+	if (hasMana && canRegenMana) {
 		_pMana = std::min(_pMana + manaMod / lvlMod, _pMaxMana);
 		_pManaBase = std::min(_pManaBase + manaMod / lvlMod, _pMaxManaBase);
 	}
@@ -3254,7 +3254,6 @@ void ProcessPlayers()
 
 	for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
 		Player &player = Players[pnum];
-                player.LastTick = SDL_GetTicks();
 		if (player.plractive && player.isOnActiveLevel() && (&player == MyPlayer || !player._pLvlChanging)) {
 			CheckCheatStats(player);
 
@@ -3297,11 +3296,9 @@ void ProcessPlayers()
 					break;
 				case PM_SPELL:
 					tplayer = DoSpell(player);
-                                        player.LastSpellTick = SDL_GetTicks();
 					break;
 				case PM_GOTHIT:
 					tplayer = DoGotHit(player);
-                                        player.LastGotHitTick = SDL_GetTicks();
 					break;
 				case PM_DEATH:
 					tplayer = DoDeath(player);
@@ -3315,11 +3312,11 @@ void ProcessPlayers()
 				player.AnimInfo.processAnimation();
 
 			if (*sgOptions.Gameplay.hpRegen) {
-					player.RegenLife();
+				player.RegenLife();
 			}
 
 			if (*sgOptions.Gameplay.manaRegen) {
-                          player.RegenMana();
+				player.RegenMana();
 			}
 		}
 	}
