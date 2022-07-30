@@ -1067,33 +1067,32 @@ void InitializeMicroDoor(Object &door)
 	ObjSetMicro(door.position, pieceNumber);
 }
 
-void AddSarc(int i)
+void AddSarcophagus(Object &sarcophagus)
 {
-	dObject[Objects[i].position.x][Objects[i].position.y - 1] = -(i + 1);
-	Objects[i]._oVar1 = GenerateRnd(10);
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	if (Objects[i]._oVar1 >= 8) {
+	sarcophagus._oVar1 = GenerateRnd(10);
+	sarcophagus._oRndSeed = AdvanceRndSeed();
+	if (sarcophagus._oVar1 >= 8) {
 		Monster *monster = PreSpawnSkeleton();
 		if (monster != nullptr) {
-			Objects[i]._oVar2 = monster->getId();
+			sarcophagus._oVar2 = monster->getId();
 		} else {
-			Objects[i]._oVar2 = -1;
+			sarcophagus._oVar2 = -1;
 		}
 	}
 }
 
-void AddFlameTrap(int i)
+void AddFlameTrap(Object &flameTrap)
 {
-	Objects[i]._oVar1 = trapid;
-	Objects[i]._oVar2 = 0;
-	Objects[i]._oVar3 = trapdir;
-	Objects[i]._oVar4 = 0;
+	flameTrap._oVar1 = trapid;
+	flameTrap._oVar2 = 0;
+	flameTrap._oVar3 = trapdir;
+	flameTrap._oVar4 = 0;
 }
 
-void AddFlameLvr(int i)
+void AddFlameLever(Object &flameLever)
 {
-	Objects[i]._oVar1 = trapid;
-	Objects[i]._oVar2 = MIS_FLAMEC;
+	flameLever._oVar1 = trapid;
+	flameLever._oVar2 = MIS_FLAMEC;
 }
 
 void AddTrap(Object &trap)
@@ -1141,12 +1140,12 @@ void AddBarrel(Object &barrel)
 	}
 }
 
-void AddShrine(int i)
+void AddShrine(Object &shrine)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	shrine._oRndSeed = AdvanceRndSeed();
 	bool slist[NumberOfShrineTypes];
 
-	Objects[i]._oPreFlag = true;
+	shrine._oPreFlag = true;
 
 	int shrines = gbIsHellfire ? NumberOfShrineTypes : 26;
 
@@ -1164,140 +1163,140 @@ void AddShrine(int i)
 		val = GenerateRnd(shrines);
 	} while (!slist[val]);
 
-	Objects[i]._oVar1 = val;
+	shrine._oVar1 = val;
 	if (!FlipCoin()) {
-		Objects[i]._oAnimFrame = 12;
-		Objects[i]._oAnimLen = 22;
+		shrine._oAnimFrame = 12;
+		shrine._oAnimLen = 22;
 	}
 }
 
-void AddBookcase(int i)
+void AddBookcase(Object &bookcase)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oPreFlag = true;
+	bookcase._oRndSeed = AdvanceRndSeed();
+	bookcase._oPreFlag = true;
 }
 
-void AddBookstand(int i)
+void AddBookstand(Object &bookstand)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	bookstand._oRndSeed = AdvanceRndSeed();
 }
 
-void AddBloodFtn(int i)
+void AddBloodFountain(Object &bloodFountain)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	bloodFountain._oRndSeed = AdvanceRndSeed();
 }
 
-void AddPurifyingFountain(int i)
+void AddPurifyingFountain(Object &purifyingFountain)
 {
-	int ox = Objects[i].position.x;
-	int oy = Objects[i].position.y;
-	dObject[ox][oy - 1] = -(i + 1);
-	dObject[ox - 1][oy] = -(i + 1);
-	dObject[ox - 1][oy - 1] = -(i + 1);
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	int ox = purifyingFountain.position.x;
+	int oy = purifyingFountain.position.y;
+	dObject[ox][oy - 1] = -(purifyingFountain.GetId() + 1);
+	dObject[ox - 1][oy] = -(purifyingFountain.GetId() + 1);
+	dObject[ox - 1][oy - 1] = -(purifyingFountain.GetId() + 1);
+	purifyingFountain._oRndSeed = AdvanceRndSeed();
 }
 
-void AddArmorStand(int i)
+void AddArmorStand(Object &armorStand)
 {
 	if (!armorFlag) {
-		Objects[i]._oAnimFlag = true;
-		Objects[i]._oSelFlag = 0;
+		armorStand._oAnimFlag = true;
+		armorStand._oSelFlag = 0;
 	}
 
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	armorStand._oRndSeed = AdvanceRndSeed();
 }
 
-void AddGoatShrine(int i)
+void AddGoatShrine(Object &goatShrine)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	goatShrine._oRndSeed = AdvanceRndSeed();
 }
 
-void AddCauldron(int i)
+void AddCauldron(Object &cauldron)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	cauldron._oRndSeed = AdvanceRndSeed();
 }
 
-void AddMurkyFountain(int i)
+void AddMurkyFountain(Object &murkyFountain)
 {
-	int ox = Objects[i].position.x;
-	int oy = Objects[i].position.y;
-	dObject[ox][oy - 1] = -(i + 1);
-	dObject[ox - 1][oy] = -(i + 1);
-	dObject[ox - 1][oy - 1] = -(i + 1);
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	int ox = murkyFountain.position.x;
+	int oy = murkyFountain.position.y;
+	dObject[ox][oy - 1] = -(murkyFountain.GetId() + 1);
+	dObject[ox - 1][oy] = -(murkyFountain.GetId() + 1);
+	dObject[ox - 1][oy - 1] = -(murkyFountain.GetId() + 1);
+	murkyFountain._oRndSeed = AdvanceRndSeed();
 }
 
-void AddTearFountain(int i)
+void AddTearFountain(Object &tearFountain)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	tearFountain._oRndSeed = AdvanceRndSeed();
 }
 
-void AddDecap(int i)
+void AddDecapitatedBody(Object &decapitatedBody)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oAnimFrame = GenerateRnd(8) + 1;
-	Objects[i]._oPreFlag = true;
+	decapitatedBody._oRndSeed = AdvanceRndSeed();
+	decapitatedBody._oAnimFrame = GenerateRnd(8) + 1;
+	decapitatedBody._oPreFlag = true;
 }
 
-void AddVilebook(int i)
+void AddBookOfVileness(Object &bookOfVileness)
 {
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		Objects[i]._oAnimFrame = 4;
+		bookOfVileness._oAnimFrame = 4;
 	}
 }
 
-void AddMagicCircle(int i)
+void AddMagicCircle(Object &magicCircle)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oPreFlag = true;
-	Objects[i]._oVar6 = 0;
-	Objects[i]._oVar5 = 1;
+	magicCircle._oRndSeed = AdvanceRndSeed();
+	magicCircle._oPreFlag = true;
+	magicCircle._oVar6 = 0;
+	magicCircle._oVar5 = 1;
 }
 
-void AddBrnCross(int i)
+void AddBurningCross(Object &burningCross)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	burningCross._oRndSeed = AdvanceRndSeed();
 }
 
-void AddPedistal(int i)
+void AddPedestalOfBlood(Object &pedestalOfBlood)
 {
-	Objects[i]._oVar1 = SetPiece.position.x;
-	Objects[i]._oVar2 = SetPiece.position.y;
-	Objects[i]._oVar3 = SetPiece.position.x + SetPiece.size.width;
-	Objects[i]._oVar4 = SetPiece.position.y + SetPiece.size.height;
-	Objects[i]._oVar6 = 0;
+	pedestalOfBlood._oVar1 = SetPiece.position.x;
+	pedestalOfBlood._oVar2 = SetPiece.position.y;
+	pedestalOfBlood._oVar3 = SetPiece.position.x + SetPiece.size.width;
+	pedestalOfBlood._oVar4 = SetPiece.position.y + SetPiece.size.height;
+	pedestalOfBlood._oVar6 = 0;
 }
 
-void AddStoryBook(int i)
+void AddStoryBook(Object &storyBook)
 {
 	SetRndSeed(glSeedTbl[16]);
 
-	Objects[i]._oVar1 = GenerateRnd(3);
+	storyBook._oVar1 = GenerateRnd(3);
 	if (currlevel == 4)
-		Objects[i]._oVar2 = StoryText[Objects[i]._oVar1][0];
+		storyBook._oVar2 = StoryText[storyBook._oVar1][0];
 	else if (currlevel == 8)
-		Objects[i]._oVar2 = StoryText[Objects[i]._oVar1][1];
+		storyBook._oVar2 = StoryText[storyBook._oVar1][1];
 	else if (currlevel == 12)
-		Objects[i]._oVar2 = StoryText[Objects[i]._oVar1][2];
-	Objects[i]._oVar3 = (currlevel / 4) + 3 * Objects[i]._oVar1 - 1;
-	Objects[i]._oAnimFrame = 5 - 2 * Objects[i]._oVar1;
-	Objects[i]._oVar4 = Objects[i]._oAnimFrame + 1;
+		storyBook._oVar2 = StoryText[storyBook._oVar1][2];
+	storyBook._oVar3 = (currlevel / 4) + 3 * storyBook._oVar1 - 1;
+	storyBook._oAnimFrame = 5 - 2 * storyBook._oVar1;
+	storyBook._oVar4 = storyBook._oAnimFrame + 1;
 }
 
-void AddWeaponRack(int i)
+void AddWeaponRack(Object &weaponRack)
 {
 	if (!weaponFlag) {
-		Objects[i]._oAnimFlag = true;
-		Objects[i]._oSelFlag = 0;
+		weaponRack._oAnimFlag = true;
+		weaponRack._oSelFlag = 0;
 	}
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	weaponRack._oRndSeed = AdvanceRndSeed();
 }
 
-void AddTorturedBody(int i)
+void AddTorturedBody(Object &torturedBody)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oAnimFrame = GenerateRnd(4) + 1;
-	Objects[i]._oPreFlag = true;
+	torturedBody._oRndSeed = AdvanceRndSeed();
+	torturedBody._oAnimFrame = GenerateRnd(4) + 1;
+	torturedBody._oPreFlag = true;
 }
 
 void GetRndObjLoc(int randarea, int *xx, int *yy)
@@ -4435,13 +4434,13 @@ Object *AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_SARC:
 	case OBJ_L5SARC:
-		AddSarc(oi);
+		AddSarcophagus(object);
 		break;
 	case OBJ_FLAMEHOLE:
-		AddFlameTrap(oi);
+		AddFlameTrap(object);
 		break;
 	case OBJ_FLAMELVR:
-		AddFlameLvr(oi);
+		AddFlameLever(object);
 		break;
 	case OBJ_WATER:
 		object._oAnimFrame = 1;
@@ -4460,66 +4459,66 @@ Object *AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		AddShrine(oi);
+		AddShrine(object);
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		AddBookcase(oi);
+		AddBookcase(object);
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		AddBookstand(oi);
+		AddBookstand(object);
 		break;
 	case OBJ_BLOODFTN:
-		AddBloodFtn(oi);
+		AddBloodFountain(object);
 		break;
 	case OBJ_DECAP:
-		AddDecap(oi);
+		AddDecapitatedBody(object);
 		break;
 	case OBJ_PURIFYINGFTN:
-		AddPurifyingFountain(oi);
+		AddPurifyingFountain(object);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		AddArmorStand(oi);
+		AddArmorStand(object);
 		break;
 	case OBJ_GOATSHRINE:
-		AddGoatShrine(oi);
+		AddGoatShrine(object);
 		break;
 	case OBJ_CAULDRON:
-		AddCauldron(oi);
+		AddCauldron(object);
 		break;
 	case OBJ_MURKYFTN:
-		AddMurkyFountain(oi);
+		AddMurkyFountain(object);
 		break;
 	case OBJ_TEARFTN:
-		AddTearFountain(oi);
+		AddTearFountain(object);
 		break;
 	case OBJ_BOOK2L:
-		AddVilebook(oi);
+		AddBookOfVileness(object);
 		break;
 	case OBJ_MCIRCLE1:
 	case OBJ_MCIRCLE2:
-		AddMagicCircle(oi);
+		AddMagicCircle(object);
 		break;
 	case OBJ_STORYBOOK:
 	case OBJ_L5BOOKS:
-		AddStoryBook(oi);
+		AddStoryBook(object);
 		break;
 	case OBJ_BCROSS:
 	case OBJ_TBCROSS:
-		AddBrnCross(oi);
+		AddBurningCross(object);
 		AddObjectLight(object, 5);
 		break;
 	case OBJ_PEDISTAL:
-		AddPedistal(oi);
+		AddPedestalOfBlood(object);
 		break;
 	case OBJ_WARWEAP:
 	case OBJ_WEAPONRACK:
-		AddWeaponRack(oi);
+		AddWeaponRack(object);
 		break;
 	case OBJ_TNUDEM2:
-		AddTorturedBody(oi);
+		AddTorturedBody(object);
 		break;
 	default:
 		break;
