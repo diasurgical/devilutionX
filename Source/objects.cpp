@@ -1177,16 +1177,6 @@ void AddBookcase(Object &bookcase)
 	bookcase._oPreFlag = true;
 }
 
-void AddBookstand(Object &bookstand)
-{
-	bookstand._oRndSeed = AdvanceRndSeed();
-}
-
-void AddBloodFountain(Object &bloodFountain)
-{
-	bloodFountain._oRndSeed = AdvanceRndSeed();
-}
-
 void AddLargeFountain(Object &fountain)
 {
 	int ox = fountain.position.x;
@@ -1205,21 +1195,6 @@ void AddArmorStand(Object &armorStand)
 	}
 
 	armorStand._oRndSeed = AdvanceRndSeed();
-}
-
-void AddGoatShrine(Object &goatShrine)
-{
-	goatShrine._oRndSeed = AdvanceRndSeed();
-}
-
-void AddCauldron(Object &cauldron)
-{
-	cauldron._oRndSeed = AdvanceRndSeed();
-}
-
-void AddTearFountain(Object &tearFountain)
-{
-	tearFountain._oRndSeed = AdvanceRndSeed();
 }
 
 void AddDecapitatedBody(Object &decapitatedBody)
@@ -1242,11 +1217,6 @@ void AddMagicCircle(Object &magicCircle)
 	magicCircle._oPreFlag = true;
 	magicCircle._oVar6 = 0;
 	magicCircle._oVar5 = 1;
-}
-
-void AddBurningCross(Object &burningCross)
-{
-	burningCross._oRndSeed = AdvanceRndSeed();
 }
 
 void AddPedestalOfBlood(Object &pedestalOfBlood)
@@ -4458,10 +4428,11 @@ Object *AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_SKELBOOK:
 	case OBJ_BOOKSTAND:
-		AddBookstand(object);
-		break;
 	case OBJ_BLOODFTN:
-		AddBloodFountain(object);
+	case OBJ_GOATSHRINE:
+	case OBJ_CAULDRON:
+	case OBJ_TEARFTN:
+		object._oRndSeed = AdvanceRndSeed();
 		break;
 	case OBJ_DECAP:
 		AddDecapitatedBody(object);
@@ -4473,15 +4444,6 @@ Object *AddObject(_object_id objType, Point objPos)
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
 		AddArmorStand(object);
-		break;
-	case OBJ_GOATSHRINE:
-		AddGoatShrine(object);
-		break;
-	case OBJ_CAULDRON:
-		AddCauldron(object);
-		break;
-	case OBJ_TEARFTN:
-		AddTearFountain(object);
 		break;
 	case OBJ_BOOK2L:
 		AddBookOfVileness(object);
@@ -4496,7 +4458,7 @@ Object *AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_BCROSS:
 	case OBJ_TBCROSS:
-		AddBurningCross(object);
+		object._oRndSeed = AdvanceRndSeed();
 		AddObjectLight(object, 5);
 		break;
 	case OBJ_PEDISTAL:
