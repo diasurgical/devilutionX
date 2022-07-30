@@ -887,6 +887,7 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 	} else if (resist) {
 		PlayEffect(monster, 1);
 	} else if (monster.type().type != MT_GOLEM) {
+		PlayEffect(monster, 1);
 		M_StartHit(monster, dam);
 	}
 	return true;

@@ -1033,47 +1033,17 @@ void Teleport(Monster &monster)
 	}
 }
 
-void HitMonster(Monster &monster, int dam)
-{
-	delta_monster_hp(monster, *MyPlayer);
-	NetSendCmdMonDmg(false, monster.getId(), dam);
-	PlayEffect(monster, 1);
-
-	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
-		if (monster.type().type == MT_BLINK) {
-			Teleport(monster);
-		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
-			monster.goal = MonsterGoal::Normal;
-			monster.goalVar1 = 0;
-			monster.goalVar2 = 0;
-		}
-
-		if (monster.mode != MonsterMode::Petrified) {
-			StartMonsterGotHit(monster);
-		}
-	}
-}
-
 void MonsterHitMonster(Monster &attacker, Monster &target, int dam)
 {
-	if (attacker.isPlayerMinion())
-		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
-
 	if (IsAnyOf(target.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= target.level + 3) {
 		target.direction = Opposite(attacker.direction);
 	}
 
-	HitMonster(target, dam);
+	M_StartHit(target, dam);
 }
 
 void StartDeathFromMonster(Monster &attacker, Monster &target)
 {
-	delta_kill_monster(target, target.position.tile, *MyPlayer);
-	NetSendCmdLocParam1(false, CMD_MONSTDEATH, target.position.tile, target.getId());
-
-	if (attacker.isPlayerMinion())
-		target.whoHit |= 1 << attacker.getId(); // really the id the player who controls this golem
-
 	Direction md = GetDirection(target.position.tile, attacker.position.tile);
 	MonsterDeath(target, md, true);
 
@@ -1194,6 +1164,21 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 	return isAnimationEnd;
 }
 
+void ApplyMonsterDamage(Monster &monster, int damage)
+{
+	monster.hitPoints -= damage;
+
+	if (monster.hitPoints >> 6 <= 0) {
+		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
+		NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
+		return;
+	}
+
+	delta_monster_hp(monster, *MyPlayer);
+	NetSendCmdMonDmg(false, monster.getId(), damage);
+	PlayEffect(monster, 1);
+}
+
 void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind, int maxd)
 {
 	if (!target.isPossibleToHit())
@@ -1208,7 +1193,14 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 		return;
 
 	int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
-	target.hitPoints -= dam;
+	ApplyMonsterDamage(target, dam);
+
+	if (attacker.isPlayerMinion()) {
+		int playerId = attacker.getId();
+		const Player &player = Players[playerId];
+		target.tag(player);
+	}
+
 	if (target.hitPoints >> 6 <= 0) {
 		StartDeathFromMonster(attacker, target);
 	} else {
@@ -3748,13 +3740,10 @@ void M_GetKnockback(Monster &monster)
 
 void M_StartHit(Monster &monster, int dam)
 {
-	PlayEffect(monster, 1);
-
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		if (monster.type().type == MT_BLINK) {
 			Teleport(monster);
-		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV)
-		    || monster.type().type == MT_GRAVEDIG) {
+		} else if (IsAnyOf(monster.type().type, MT_NSCAV, MT_BSCAV, MT_WSCAV, MT_YSCAV, MT_GRAVEDIG)) {
 			monster.goal = MonsterGoal::Normal;
 			monster.goalVar1 = 0;
 			monster.goalVar2 = 0;
@@ -3767,7 +3756,7 @@ void M_StartHit(Monster &monster, int dam)
 
 void M_StartHit(Monster &monster, const Player &player, int dam)
 {
-	monster.whoHit |= 1 << player.getId();
+	monster.tag(player);
 	if (&player == MyPlayer) {
 		delta_monster_hp(monster, *MyPlayer);
 		NetSendCmdMonDmg(false, monster.getId(), dam);
@@ -3779,6 +3768,7 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 		monster.direction = GetMonsterDirection(monster);
 	}
 
+	PlayEffect(monster, 1);
 	M_StartHit(monster, dam);
 }
 
@@ -3819,7 +3809,7 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 
 void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg)
 {
-	monster.whoHit |= 1 << player.getId();
+	monster.tag(player);
 	Direction md = GetDirection(monster.position.tile, player.position.tile);
 	MonsterDeath(monster, md, sendmsg);
 }
@@ -4452,9 +4442,10 @@ void MissToMonst(Missile &missile, Point position)
 	monster.position.tile = position;
 	M_StartStand(monster, monster.direction);
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
-		M_StartHit(monster, 0);
+		PlayEffect(monster, 1);
 	else
-		HitMonster(monster, 0);
+		ApplyMonsterDamage(monster, 0);
+	M_StartHit(monster, 0);
 
 	if (monster.type().type == MT_GLOOM)
 		return;
@@ -4762,6 +4753,11 @@ bool Monster::isPossibleToHit() const
 	    || (type().type == MT_ILLWEAV && goal == MonsterGoal::Retreat)
 	    || mode == MonsterMode::Charge
 	    || (IsAnyOf(type().type, MT_COUNSLR, MT_MAGISTR, MT_CABALIST, MT_ADVOCATE) && goal != MonsterGoal::Normal));
+}
+
+void Monster::tag(const Player &tagger)
+{
+	whoHit |= 1 << tagger.getId();
 }
 
 bool Monster::tryLiftGargoyle()
