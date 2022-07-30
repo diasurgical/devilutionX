@@ -1963,7 +1963,7 @@ void Player::RegenLife()
 	else if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		hpMod = _pLevel + _pLevel / 2;
 	else
-		hpMod = _pLevel;
+		hpMod = (u_char)_pLevel;
 	if (_pmode != PM_DEATH && _pHitPoints < _pMaxHP) {
 		_pHitPoints = std::min(_pHitPoints + hpMod / lvlMod, _pMaxHP);
 		_pHPBase = std::min(_pHPBase + hpMod / lvlMod, _pMaxHPBase);
@@ -1978,6 +1978,8 @@ void Player::RegenMana()
 		manaMod = _pLevel * 2;
 	else if (IsAnyOf(_pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 		manaMod = _pLevel + _pLevel / 2;
+	else
+		manaMod = (u_char)_pLevel;
 
 	bool hasMana = HasNoneOf(_pIFlags, ItemSpecialEffect::NoMana);
 	bool canRegenMana = _pmode != PM_DEATH && _pmode != PM_SPELL && _pMana < _pMaxMana;
