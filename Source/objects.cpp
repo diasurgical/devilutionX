@@ -1069,6 +1069,7 @@ void InitializeMicroDoor(Object &door)
 
 void AddSarcophagus(Object &sarcophagus)
 {
+	dObject[sarcophagus.position.x][sarcophagus.position.y - 1] = -(sarcophagus.GetId() + 1);
 	sarcophagus._oVar1 = GenerateRnd(10);
 	sarcophagus._oRndSeed = AdvanceRndSeed();
 	if (sarcophagus._oVar1 >= 8) {
