@@ -747,7 +747,9 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
  */
 void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	int mi = abs(dMonster[tilePosition.x][tilePosition.y]) - 1;
+	int mi = dMonster[tilePosition.x][tilePosition.y];
+	bool isNegativeMonster = mi < 0;
+	mi = abs(mi) - 1;
 
 	if (leveltype == DTYPE_TOWN) {
 		auto &towner = Towners[mi];
@@ -779,7 +781,16 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	Displacement offset = monster.position.offset;
 	if (monster.isWalking()) {
+		bool isSideWalkingToLeft = monster.mode == MonsterMode::MoveSideways && monster.direction == Direction::West;
+		if (isNegativeMonster && !isSideWalkingToLeft)
+			return;
+		if (!isNegativeMonster && isSideWalkingToLeft)
+			return;
 		offset = GetOffsetForWalking(monster.animInfo, monster.direction);
+		if (isSideWalkingToLeft)
+			offset -= Displacement { 64, 0 };
+	} else if (isNegativeMonster) {
+		return;
 	}
 
 	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
@@ -869,7 +880,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (playerId > 0 && playerId <= MAX_PLRS) {
 		DrawPlayerHelper(out, Players[playerId - 1], tilePosition, targetBufferPosition);
 	}
-	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
+	if (dMonster[tilePosition.x][tilePosition.y] != 0) {
 		DrawMonsterHelper(out, tilePosition, targetBufferPosition);
 	}
 	DrawMissile(out, tilePosition, targetBufferPosition, false);
