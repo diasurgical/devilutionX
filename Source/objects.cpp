@@ -1187,14 +1187,14 @@ void AddBloodFountain(Object &bloodFountain)
 	bloodFountain._oRndSeed = AdvanceRndSeed();
 }
 
-void AddPurifyingFountain(Object &purifyingFountain)
+void AddLargeFountain(Object &fountain)
 {
-	int ox = purifyingFountain.position.x;
-	int oy = purifyingFountain.position.y;
-	dObject[ox][oy - 1] = -(purifyingFountain.GetId() + 1);
-	dObject[ox - 1][oy] = -(purifyingFountain.GetId() + 1);
-	dObject[ox - 1][oy - 1] = -(purifyingFountain.GetId() + 1);
-	purifyingFountain._oRndSeed = AdvanceRndSeed();
+	int ox = fountain.position.x;
+	int oy = fountain.position.y;
+	dObject[ox][oy - 1] = -(fountain.GetId() + 1);
+	dObject[ox - 1][oy] = -(fountain.GetId() + 1);
+	dObject[ox - 1][oy - 1] = -(fountain.GetId() + 1);
+	fountain._oRndSeed = AdvanceRndSeed();
 }
 
 void AddArmorStand(Object &armorStand)
@@ -1215,16 +1215,6 @@ void AddGoatShrine(Object &goatShrine)
 void AddCauldron(Object &cauldron)
 {
 	cauldron._oRndSeed = AdvanceRndSeed();
-}
-
-void AddMurkyFountain(Object &murkyFountain)
-{
-	int ox = murkyFountain.position.x;
-	int oy = murkyFountain.position.y;
-	dObject[ox][oy - 1] = -(murkyFountain.GetId() + 1);
-	dObject[ox - 1][oy] = -(murkyFountain.GetId() + 1);
-	dObject[ox - 1][oy - 1] = -(murkyFountain.GetId() + 1);
-	murkyFountain._oRndSeed = AdvanceRndSeed();
 }
 
 void AddTearFountain(Object &tearFountain)
@@ -4477,7 +4467,8 @@ Object *AddObject(_object_id objType, Point objPos)
 		AddDecapitatedBody(object);
 		break;
 	case OBJ_PURIFYINGFTN:
-		AddPurifyingFountain(object);
+	case OBJ_MURKYFTN:
+		AddLargeFountain(object);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
@@ -4488,9 +4479,6 @@ Object *AddObject(_object_id objType, Point objPos)
 		break;
 	case OBJ_CAULDRON:
 		AddCauldron(object);
-		break;
-	case OBJ_MURKYFTN:
-		AddMurkyFountain(object);
 		break;
 	case OBJ_TEARFTN:
 		AddTearFountain(object);
