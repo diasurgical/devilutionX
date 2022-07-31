@@ -159,6 +159,8 @@ set(devilutionx_assets
   gendata/cutstartw.pcx
   Levels/L1Data/SklKngT.dun
   Levels/L2Data/BonechaT.dun
+  NLevels/L5Data/cornerstone.dun
+  NLevels/L5Data/uberroom.dun
   ui_art/black_diablo.pcx
   ui_art/black_hellfire.pcx
   ui_art/creditsw.pcx

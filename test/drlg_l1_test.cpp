@@ -190,6 +190,8 @@ TEST(Drlg_l1, CreateL5Dungeon_crypt_1_2122696790)
 {
 	LoadExpectedLevelData("hellfire/21-2122696790.dun");
 
+	paths::SetAssetsPath(paths::BasePath() + "/assets");
+
 	TestCreateDungeon(21, 2122696790, ENTRY_TWARPDN);
 	EXPECT_EQ(ViewPosition, Point(61, 81));
 	TestCreateDungeon(21, 2122696790, ENTRY_PREV);
@@ -223,6 +225,8 @@ TEST(Drlg_l1, CreateL5Dungeon_crypt_3_97055268)
 TEST(Drlg_l1, CreateL5Dungeon_crypt_4_1324803725)
 {
 	LoadExpectedLevelData("hellfire/24-1324803725.dun");
+
+	paths::SetAssetsPath(paths::BasePath() + "/assets");
 
 	TestCreateDungeon(24, 1324803725, ENTRY_MAIN);
 	EXPECT_EQ(ViewPosition, Point(79, 47));
