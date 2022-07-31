@@ -955,20 +955,6 @@ void Substitution()
 						}
 					}
 
-					// BUGFIX: Add `&& y > 0` to the if statement. (fixed)
-					if (i == VWall4 && y > 0) {
-						if (TileDecorations[dungeon[x][y - 1]] != VWall2 || Protected.test(x, y - 1))
-							i = VWall2;
-						else
-							dungeon[x][y - 1] = VWall5;
-					}
-					// BUGFIX: Add `&& x + 1 < DMAXX` to the if statement. (fixed)
-					if (i == HWall4 && x + 1 < DMAXX) {
-						if (TileDecorations[dungeon[x + 1][y]] != HWall2 || Protected.test(x + 1, y))
-							i = HWall2;
-						else
-							dungeon[x + 1][y] = HWall5;
-					}
 					dungeon[x][y] = i;
 				}
 			}
