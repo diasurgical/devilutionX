@@ -472,7 +472,16 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		return;
 	}
 
-	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag || IsWithdrawGoldOpen) {
+	if (dropGoldFlag) {
+		control_drop_gold(vkey);
+		return;
+	}
+	if (IsWithdrawGoldOpen) {
+		WithdrawGoldKeyPress(vkey);
+		return;
+	}
+
+	if (sgnTimeoutCurs != CURSOR_NONE) {
 		return;
 	}
 
@@ -488,14 +497,6 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 
 	if (DoomFlag) {
 		doom_close();
-		return;
-	}
-	if (dropGoldFlag) {
-		control_drop_gold(vkey);
-		return;
-	}
-	if (IsWithdrawGoldOpen) {
-		WithdrawGoldKeyPress(vkey);
 		return;
 	}
 
