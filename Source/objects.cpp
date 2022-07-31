@@ -91,6 +91,14 @@ enum shrine_type : uint8_t {
 	NumberOfShrineTypes
 };
 
+enum {
+	// clang-format off
+	DOOR_CLOSED  =  0,
+	DOOR_OPEN    =  1,
+	DOOR_BLOCKED =  2,
+	// clang-format on
+};
+
 int trapid;
 int trapdir;
 std::unique_ptr<byte[]> pObjCels[40];
@@ -1398,7 +1406,7 @@ void ObjectStopAnim(Object &object)
 
 void UpdateDoor(Object &door)
 {
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		door._oSelFlag = 3;
 		door._oMissFlag = false;
 		return;
@@ -1411,7 +1419,7 @@ void UpdateDoor(Object &door)
 	dok = dok && dCorpse[dx][dy] == 0;
 	dok = dok && dPlayer[dx][dy] == 0;
 	door._oSelFlag = 2;
-	door._oVar4 = dok ? 1 : 2;
+	door._oVar4 = dok ? DOOR_OPEN : DOOR_BLOCKED;
 	door._oMissFlag = true;
 }
 
@@ -1708,13 +1716,13 @@ inline bool IsDoorClear(const Point &doorPosition)
 
 void OperateL1RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -1724,7 +1732,7 @@ void OperateL1RDoor(Object &door, bool sendflag)
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(door.position + Direction::NorthWest, false);
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -1735,7 +1743,7 @@ void OperateL1RDoor(Object &door, bool sendflag)
 	if (!deltaload && IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
 
@@ -1751,19 +1759,19 @@ void OperateL1RDoor(Object &door, bool sendflag)
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
 void OperateL1LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -1776,7 +1784,7 @@ void OperateL1LDoor(Object &door, bool sendflag)
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(door.position + Direction::NorthEast, true);
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -1787,7 +1795,7 @@ void OperateL1LDoor(Object &door, bool sendflag)
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
 
@@ -1803,19 +1811,19 @@ void OperateL1LDoor(Object &door, bool sendflag)
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
 void OperateL2RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -1824,7 +1832,7 @@ void OperateL2RDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 6;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -1836,7 +1844,7 @@ void OperateL2RDoor(Object &door, bool sendflag)
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 539);
 		dSpecial[door.position.x][door.position.y] = 0;
@@ -1844,19 +1852,19 @@ void OperateL2RDoor(Object &door, bool sendflag)
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
 void OperateL2LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -1865,7 +1873,7 @@ void OperateL2LDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 5;
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -1877,7 +1885,7 @@ void OperateL2LDoor(Object &door, bool sendflag)
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 537);
 		dSpecial[door.position.x][door.position.y] = 0;
@@ -1885,19 +1893,19 @@ void OperateL2LDoor(Object &door, bool sendflag)
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
 void OperateL3RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -1905,7 +1913,7 @@ void OperateL3RDoor(Object &door, bool sendflag)
 		ObjSetMicro(door.position, 540);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -1917,26 +1925,26 @@ void OperateL3RDoor(Object &door, bool sendflag)
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 533);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
 void OperateL3LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -1944,7 +1952,7 @@ void OperateL3LDoor(Object &door, bool sendflag)
 		ObjSetMicro(door.position, 537);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -1956,26 +1964,26 @@ void OperateL3LDoor(Object &door, bool sendflag)
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, 530);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
 void OperateL5RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -1985,7 +1993,7 @@ void OperateL5RDoor(Object &door, bool sendflag)
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		CryptDoorSet(door.position + Direction::NorthWest, false);
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -1996,7 +2004,7 @@ void OperateL5RDoor(Object &door, bool sendflag)
 	if (!deltaload && IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
 
@@ -2012,19 +2020,19 @@ void OperateL5RDoor(Object &door, bool sendflag)
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
 void OperateL5LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == 2) {
+	if (door._oVar4 == DOOR_BLOCKED) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, door.position);
 		return;
 	}
 
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		if (!deltaload)
@@ -2034,7 +2042,7 @@ void OperateL5LDoor(Object &door, bool sendflag)
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		CryptDoorSet(door.position + Direction::NorthEast, true);
-		door._oVar4 = 1;
+		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
 		return;
@@ -2045,7 +2053,7 @@ void OperateL5LDoor(Object &door, bool sendflag)
 	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = 0;
+		door._oVar4 = DOOR_CLOSED;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1 - 1);
 
@@ -2061,7 +2069,7 @@ void OperateL5LDoor(Object &door, bool sendflag)
 		door._oPreFlag = false;
 		RedoPlayerVision();
 	} else {
-		door._oVar4 = 2;
+		door._oVar4 = DOOR_BLOCKED;
 	}
 }
 
@@ -3654,9 +3662,9 @@ void OperateLazStand(Object &stand)
 void SyncOpL1Door(int cmd, Object &door)
 {
 	bool doSync = false;
-	if (cmd == CMD_OPENDOOR && door._oVar4 == 0)
+	if (cmd == CMD_OPENDOOR && door._oVar4 == DOOR_CLOSED)
 		doSync = true;
-	if (cmd == CMD_CLOSEDOOR && door._oVar4 == 1)
+	if (cmd == CMD_CLOSEDOOR && door._oVar4 == DOOR_OPEN)
 		doSync = true;
 	if (!doSync)
 		return;
@@ -3670,9 +3678,9 @@ void SyncOpL1Door(int cmd, Object &door)
 void SyncOpL2Door(int cmd, Object &door)
 {
 	bool doSync = false;
-	if (cmd == CMD_OPENDOOR && door._oVar4 == 0)
+	if (cmd == CMD_OPENDOOR && door._oVar4 == DOOR_CLOSED)
 		doSync = true;
-	if (cmd == CMD_CLOSEDOOR && door._oVar4 == 1)
+	if (cmd == CMD_CLOSEDOOR && door._oVar4 == DOOR_OPEN)
 		doSync = true;
 	if (!doSync)
 		return;
@@ -3686,9 +3694,9 @@ void SyncOpL2Door(int cmd, Object &door)
 void SyncOpL3Door(int cmd, Object &door)
 {
 	bool doSync = false;
-	if (cmd == CMD_OPENDOOR && door._oVar4 == 0)
+	if (cmd == CMD_OPENDOOR && door._oVar4 == DOOR_CLOSED)
 		doSync = true;
-	if (cmd == CMD_CLOSEDOOR && door._oVar4 == 1)
+	if (cmd == CMD_CLOSEDOOR && door._oVar4 == DOOR_OPEN)
 		doSync = true;
 	if (!doSync)
 		return;
@@ -3702,9 +3710,9 @@ void SyncOpL3Door(int cmd, Object &door)
 void SyncOpL5Door(int cmd, Object &door)
 {
 	bool doSync = false;
-	if (cmd == CMD_OPENDOOR && door._oVar4 == 0)
+	if (cmd == CMD_OPENDOOR && door._oVar4 == DOOR_CLOSED)
 		doSync = true;
-	if (cmd == CMD_CLOSEDOOR && door._oVar4 == 1)
+	if (cmd == CMD_CLOSEDOOR && door._oVar4 == DOOR_OPEN)
 		doSync = true;
 	if (!doSync)
 		return;
@@ -3864,7 +3872,7 @@ void SyncPedestal(const Object &pedestal, Point origin, int width)
 
 void SyncL1Doors(Object &door)
 {
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		door._oMissFlag = false;
 		return;
 	}
@@ -3887,18 +3895,18 @@ void SyncL1Doors(Object &door)
 
 void SyncL2Doors(Object &door)
 {
-	door._oMissFlag = door._oVar4 != 0;
+	door._oMissFlag = door._oVar4 != DOOR_CLOSED;
 	door._oSelFlag = 2;
 
 	bool isLeftDoor = door._otype == _object_id::OBJ_L2LDOOR; // otherwise the door is type OBJ_L2RDOOR
 
 	switch (door._oVar4) {
-	case 0:
+	case DOOR_CLOSED:
 		ObjSetMicro(door.position, isLeftDoor ? 537 : 539);
 		dSpecial[door.position.x][door.position.y] = 0;
 		break;
-	case 1:
-	case 2:
+	case DOOR_OPEN:
+	case DOOR_BLOCKED:
 		ObjSetMicro(door.position, isLeftDoor ? 12 : 16);
 		dSpecial[door.position.x][door.position.y] = isLeftDoor ? 5 : 6;
 		break;
@@ -3913,11 +3921,11 @@ void SyncL3Doors(Object &door)
 	bool isLeftDoor = door._otype == _object_id::OBJ_L3LDOOR; // otherwise the door is type OBJ_L3RDOOR
 
 	switch (door._oVar4) {
-	case 0:
+	case DOOR_CLOSED:
 		ObjSetMicro(door.position, isLeftDoor ? 530 : 533);
 		break;
-	case 1:
-	case 2:
+	case DOOR_OPEN:
+	case DOOR_BLOCKED:
 		ObjSetMicro(door.position, isLeftDoor ? 537 : 540);
 		break;
 	}
@@ -3925,7 +3933,7 @@ void SyncL3Doors(Object &door)
 
 void SyncL5Doors(Object &door)
 {
-	if (door._oVar4 == 0) {
+	if (door._oVar4 == DOOR_CLOSED) {
 		door._oMissFlag = false;
 		return;
 	}
@@ -4659,7 +4667,7 @@ void MonstCheckDoors(const Monster &monster)
 		Object &door = *object;
 		// Doors use _oVar4 to track open/closed state, non-zero values indicate an open door
 		// we don't use Object::isDoor since the later conditions will check the object is actually a door anyway.
-		if (door._oVar4 != 0)
+		if (door._oVar4 != DOOR_CLOSED)
 			continue;
 
 		// Strictly speaking these checks shouldn't be required, they're guarding against monsters
@@ -5180,11 +5188,11 @@ void GetObjectStr(const Object &object)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (object._oVar4 == 1)
+		if (object._oVar4 == DOOR_OPEN)
 			InfoString = _("Open Door");
-		if (object._oVar4 == 0)
+		if (object._oVar4 == DOOR_CLOSED)
 			InfoString = _("Closed Door");
-		if (object._oVar4 == 2)
+		if (object._oVar4 == DOOR_BLOCKED)
 			InfoString = _("Blocked Door");
 		break;
 	case OBJ_BOOK2L:
