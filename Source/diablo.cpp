@@ -472,9 +472,9 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 		return;
 	}
 
-	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag || IsWithdrawGoldOpen) {
+	/*if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag || IsWithdrawGoldOpen) {
 		return;
-	}
+	}*/
 
 	sgOptions.Keymapper.KeyPressed(vkey);
 
