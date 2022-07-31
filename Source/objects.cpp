@@ -3870,87 +3870,83 @@ void SyncPedestal(const Object &pedestal, Point origin, int width)
 	}
 }
 
-void SyncL1Doors(Object &door)
+void OpenDoor(Object &door)
 {
-	if (door._oVar4 == DOOR_CLOSED) {
-		door._oMissFlag = false;
-		return;
-	}
-
 	door._oMissFlag = true;
 	door._oSelFlag = 2;
 
-	bool isLeftDoor = door._otype == _object_id::OBJ_L1LDOOR; // otherwise the door is type OBJ_L1RDOOR
-
-	if (isLeftDoor) {
+	switch (door._otype) {
+	case OBJ_L1LDOOR:
 		ObjSetMicro(door.position, door._oVar1 == 214 ? 407 : 392);
 		dSpecial[door.position.x][door.position.y] = 7;
-		DoorSet(door.position + Direction::NorthEast, isLeftDoor);
-	} else {
+		DoorSet(door.position + Direction::NorthEast, true);
+		break;
+	case OBJ_L1RDOOR:
 		ObjSetMicro(door.position, 394);
 		dSpecial[door.position.x][door.position.y] = 8;
-		DoorSet(door.position + Direction::NorthWest, isLeftDoor);
-	}
-}
-
-void SyncL2Doors(Object &door)
-{
-	door._oMissFlag = door._oVar4 != DOOR_CLOSED;
-	door._oSelFlag = 2;
-
-	bool isLeftDoor = door._otype == _object_id::OBJ_L2LDOOR; // otherwise the door is type OBJ_L2RDOOR
-
-	switch (door._oVar4) {
-	case DOOR_CLOSED:
-		ObjSetMicro(door.position, isLeftDoor ? 537 : 539);
-		dSpecial[door.position.x][door.position.y] = 0;
+		DoorSet(door.position + Direction::NorthWest, false);
 		break;
-	case DOOR_OPEN:
-	case DOOR_BLOCKED:
-		ObjSetMicro(door.position, isLeftDoor ? 12 : 16);
-		dSpecial[door.position.x][door.position.y] = isLeftDoor ? 5 : 6;
+	case OBJ_L2LDOOR:
+		ObjSetMicro(door.position, 12);
+		dSpecial[door.position.x][door.position.y] = 5;
 		break;
-	}
-}
-
-void SyncL3Doors(Object &door)
-{
-	door._oMissFlag = true;
-	door._oSelFlag = 2;
-
-	bool isLeftDoor = door._otype == _object_id::OBJ_L3LDOOR; // otherwise the door is type OBJ_L3RDOOR
-
-	switch (door._oVar4) {
-	case DOOR_CLOSED:
-		ObjSetMicro(door.position, isLeftDoor ? 530 : 533);
+	case OBJ_L2RDOOR:
+		ObjSetMicro(door.position, 16);
+		dSpecial[door.position.x][door.position.y] = 6;
 		break;
-	case DOOR_OPEN:
-	case DOOR_BLOCKED:
-		ObjSetMicro(door.position, isLeftDoor ? 537 : 540);
+	case OBJ_L3LDOOR:
+		ObjSetMicro(door.position, 537);
 		break;
-	}
-}
-
-void SyncL5Doors(Object &door)
-{
-	if (door._oVar4 == DOOR_CLOSED) {
-		door._oMissFlag = false;
-		return;
-	}
-
-	door._oMissFlag = true;
-	door._oSelFlag = 2;
-
-	bool isLeftDoor = door._otype == _object_id::OBJ_L5LDOOR; // otherwise the door is type OBJ_L5RDOOR
-
-	if (isLeftDoor) {
+	case OBJ_L3RDOOR:
+		ObjSetMicro(door.position, 540);
+		break;
+	case OBJ_L5LDOOR:
 		ObjSetMicro(door.position, 205);
 		dSpecial[door.position.x][door.position.y] = 1;
-		CryptDoorSet(door.position + Direction::NorthEast, isLeftDoor);
-	} else {
+		CryptDoorSet(door.position + Direction::NorthEast, true);
+		break;
+	case OBJ_L5RDOOR:
 		ObjSetMicro(door.position, 208);
 		dSpecial[door.position.x][door.position.y] = 2;
-		CryptDoorSet(door.position + Direction::NorthWest, isLeftDoor);
+		CryptDoorSet(door.position + Direction::NorthWest, false);
+		break;
+	}
+}
+
+void CloseDoor(Object &door)
+{
+	door._oMissFlag = false;
+
+	switch (door._otype) {
+	case OBJ_L2LDOOR:
+		door._oSelFlag = 2;
+		ObjSetMicro(door.position, 537);
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	case OBJ_L2RDOOR:
+		door._oSelFlag = 2;
+		ObjSetMicro(door.position, 539);
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	case OBJ_L3LDOOR:
+		door._oMissFlag = true;
+		door._oSelFlag = 2;
+		ObjSetMicro(door.position, 530);
+		break;
+	case OBJ_L3RDOOR:
+		door._oMissFlag = true;
+		door._oSelFlag = 2;
+		ObjSetMicro(door.position, 533);
+		break;
+	}
+}
+
+void SyncDoor(Object &door)
+{
+	if (door._oVar4 == DOOR_CLOSED) {
+		CloseDoor(door);
+	} else {
+		OpenDoor(door);
 	}
 }
 
@@ -5129,19 +5125,13 @@ void SyncObjectAnim(Object &object)
 	switch (object._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		SyncL1Doors(object);
-		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		SyncL2Doors(object);
-		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		SyncL3Doors(object);
-		break;
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		SyncL5Doors(object);
+		SyncDoor(object);
 		break;
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
