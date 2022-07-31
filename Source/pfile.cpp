@@ -141,6 +141,18 @@ MpqWriter GetStashWriter()
 	return MpqWriter(GetStashSavePath().c_str());
 }
 
+void CopySaveFile(uint32_t saveNum, std::string targetPath)
+{
+	std::string savePath = GetSavePath(saveNum);
+	auto saveStream = CreateFileStream(savePath.c_str(), std::fstream::in | std::fstream::binary);
+	if (!saveStream)
+		return;
+	auto targetStream = CreateFileStream(targetPath.c_str(), std::fstream::out | std::fstream::binary | std::fstream::trunc);
+	if (!targetStream)
+		return;
+	*targetStream << saveStream->rdbuf();
+}
+
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
 	CopyUtf8(heroinfo->name, player._pName, sizeof(heroinfo->name));
@@ -516,6 +528,7 @@ void pfile_write_hero(bool writeGameData)
 void pfile_write_hero_demo(int demo)
 {
 	std::string savePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_reference_"));
+	CopySaveFile(gSaveNumber, savePath);
 	auto saveWriter = MpqWriter(savePath.c_str());
 	pfile_write_hero(saveWriter, true);
 }
@@ -529,6 +542,7 @@ HeroCompareResult pfile_compare_hero_demo(int demo, bool logDetails)
 
 	std::string actualSavePath = GetSavePath(gSaveNumber, StrCat("demo_", demo, "_actual_"));
 	{
+		CopySaveFile(gSaveNumber, actualSavePath);
 		MpqWriter saveWriter(actualSavePath.c_str());
 		pfile_write_hero(saveWriter, true);
 	}
