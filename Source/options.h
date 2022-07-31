@@ -527,6 +527,8 @@ struct GameplayOptions : OptionCategoryBase {
 	OptionEntryBoolean autoGoldPickup;
 	/** @brief Auto-pickup elixirs */
 	OptionEntryBoolean autoElixirPickup;
+	/** @brief Auto-pickup oils */
+	OptionEntryBoolean autoOilPickup;
 	/** @brief Enable or Disable auto-pickup in town */
 	OptionEntryBoolean autoPickupInTown;
 	/** @brief Recover mana when talking to Adria. */
