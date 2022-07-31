@@ -1151,7 +1151,7 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 	} else { // We didn't reach new tile so update monster's "sub-tile" position
 		if (monster.animInfo.tickCounterOfCurrentFrame == 0) {
 			if (monster.animInfo.currentFrame == 0 && monster.type().type == MT_FLESTHNG)
-				PlayEffect(monster, 3);
+				PlayEffect(monster, MonsterSound::Special);
 			monster.position.offset2 += monster.position.velocity;
 			monster.position.offset.deltaX = monster.position.offset2.deltaX >> 4;
 			monster.position.offset.deltaY = monster.position.offset2.deltaY >> 4;
@@ -1176,7 +1176,7 @@ void ApplyMonsterDamage(Monster &monster, int damage)
 
 	delta_monster_hp(monster, *MyPlayer);
 	NetSendCmdMonDmg(false, monster.getId(), damage);
-	PlayEffect(monster, 1);
+	PlayEffect(monster, MonsterSound::Hit);
 }
 
 void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind, int maxd)
@@ -1342,20 +1342,20 @@ bool MonsterAttack(Monster &monster)
 	if (monster.animInfo.currentFrame == monster.data().animFrameNum - 1) {
 		MonsterAttackEnemy(monster, monster.toHit, monster.minDamage, monster.maxDamage);
 		if (monster.ai != AI_SNAKE)
-			PlayEffect(monster, 0);
+			PlayEffect(monster, MonsterSound::Attack);
 	}
 	if (IsAnyOf(monster.type().type, MT_NMAGMA, MT_YMAGMA, MT_BMAGMA, MT_WMAGMA) && monster.animInfo.currentFrame == 8) {
 		MonsterAttackEnemy(monster, monster.toHit + 10, monster.minDamage - 2, monster.maxDamage - 2);
 
-		PlayEffect(monster, 0);
+		PlayEffect(monster, MonsterSound::Attack);
 	}
 	if (IsAnyOf(monster.type().type, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL) && monster.animInfo.currentFrame == 12) {
 		MonsterAttackEnemy(monster, monster.toHit - 20, monster.minDamage + 4, monster.maxDamage + 4);
 
-		PlayEffect(monster, 0);
+		PlayEffect(monster, MonsterSound::Attack);
 	}
 	if (monster.ai == AI_SNAKE && monster.animInfo.currentFrame == 0)
-		PlayEffect(monster, 0);
+		PlayEffect(monster, MonsterSound::Attack);
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
 		M_StartStand(monster, monster.direction);
 		return true;
@@ -1384,7 +1384,7 @@ bool MonsterRangedAttack(Monster &monster)
 				    0);
 			}
 		}
-		PlayEffect(monster, 0);
+		PlayEffect(monster, MonsterSound::Attack);
 	}
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
@@ -1408,7 +1408,7 @@ bool MonsterRangedSpecialAttack(Monster &monster)
 		        monster.var3,
 		        0)
 		    != nullptr) {
-			PlayEffect(monster, 3);
+			PlayEffect(monster, MonsterSound::Special);
 		}
 	}
 
@@ -1622,7 +1622,7 @@ void MonsterDeath(Monster &monster)
 bool MonsterSpecialStand(Monster &monster)
 {
 	if (monster.animInfo.currentFrame == monster.data().animFrameNumSpecial - 1)
-		PlayEffect(monster, 3);
+		PlayEffect(monster, MonsterSound::Special);
 
 	if (monster.animInfo.currentFrame == monster.animInfo.numberOfFrames - 1) {
 		M_StartStand(monster, monster.direction);
@@ -2311,7 +2311,7 @@ void RhinoAi(Monster &monster)
 			size_t monsterId = monster.getId();
 			if (AddMissile(monster.position.tile, monster.enemyPosition, md, MIS_RHINO, TARGET_PLAYERS, monsterId, 0, 0) != nullptr) {
 				if (monster.data().hasSpecialSound)
-					PlayEffect(monster, 3);
+					PlayEffect(monster, MonsterSound::Special);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
 				monster.mode = MonsterMode::Charge;
 			}
@@ -2695,7 +2695,7 @@ void SnakeAi(Monster &monster)
 		if (distanceToEnemy < 3 && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, monster.enemyPosition) && static_cast<MonsterMode>(monster.var1) != MonsterMode::Charge) {
 			size_t monsterId = monster.getId();
 			if (AddMissile(monster.position.tile, monster.enemyPosition, md, MIS_RHINO, TARGET_PLAYERS, monsterId, 0, 0) != nullptr) {
-				PlayEffect(monster, 0);
+				PlayEffect(monster, MonsterSound::Attack);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = -(monsterId + 1);
 				monster.mode = MonsterMode::Charge;
 			}
@@ -3555,7 +3555,7 @@ void WeakenNaKrul()
 		return;
 
 	auto &monster = Monsters[UberDiabloMonsterIndex];
-	PlayEffect(monster, 2);
+	PlayEffect(monster, MonsterSound::Death);
 	Quests[Q_NAKRUL]._qlog = false;
 	monster.armorClass -= 50;
 	int hp = monster.maxHitPoints / 2;
@@ -3768,7 +3768,7 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 		monster.direction = GetMonsterDirection(monster);
 	}
 
-	PlayEffect(monster, 1);
+	PlayEffect(monster, MonsterSound::Hit);
 	M_StartHit(monster, dam);
 }
 
@@ -3786,7 +3786,7 @@ void MonsterDeath(Monster &monster, Direction md, bool sendmsg)
 	if (monster.type().type == MT_DIABLO)
 		DiabloDeath(monster, true);
 	else
-		PlayEffect(monster, 2);
+		PlayEffect(monster, MonsterSound::Death);
 
 	if (monster.mode != MonsterMode::Petrified) {
 		if (monster.type().type == MT_GOLEM)
@@ -4405,7 +4405,7 @@ void PrintUniqueHistory()
 	}
 }
 
-void PlayEffect(Monster &monster, int mode)
+void PlayEffect(Monster &monster, MonsterSound mode)
 {
 	if (MyPlayer->pLvlLoad != 0) {
 		return;
@@ -4416,7 +4416,7 @@ void PlayEffect(Monster &monster, int mode)
 		return;
 	}
 
-	TSnd *snd = monster.type().sounds[mode][sndIdx].get();
+	TSnd *snd = monster.type().sounds[static_cast<size_t>(mode)][sndIdx].get();
 	if (snd == nullptr || snd->isPlaying()) {
 		return;
 	}
@@ -4442,7 +4442,7 @@ void MissToMonst(Missile &missile, Point position)
 	monster.position.tile = position;
 	M_StartStand(monster, monster.direction);
 	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
-		PlayEffect(monster, 1);
+		PlayEffect(monster, MonsterSound::Hit);
 	else
 		ApplyMonsterDamage(monster, 0);
 	M_StartHit(monster, 0);

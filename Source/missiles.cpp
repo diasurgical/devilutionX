@@ -247,7 +247,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 	if (monster.hitPoints >> 6 <= 0) {
 		M_StartKill(monster, player);
 	} else if (resist) {
-		PlayEffect(monster, 1);
+		PlayEffect(monster, MonsterSound::Hit);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
 			M_GetKnockback(monster);
@@ -885,9 +885,9 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 	if (monster.hitPoints >> 6 <= 0) {
 		MonsterDeath(monster, monster.direction, true);
 	} else if (resist) {
-		PlayEffect(monster, 1);
+		PlayEffect(monster, MonsterSound::Hit);
 	} else if (monster.type().type != MT_GOLEM) {
-		PlayEffect(monster, 1);
+		PlayEffect(monster, MonsterSound::Hit);
 		M_StartHit(monster, dam);
 	}
 	return true;

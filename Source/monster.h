@@ -150,6 +150,13 @@ struct AnimStruct {
 	int8_t rate;
 };
 
+enum class MonsterSound {
+	Attack,
+	Hit,
+	Death,
+	Special
+};
+
 struct CMonster {
 	std::unique_ptr<byte[]> animData;
 	AnimStruct anims[6];
@@ -399,7 +406,7 @@ void SyncMonsterAnim(Monster &monster);
 void M_FallenFear(Point position);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
-void PlayEffect(Monster &monster, int mode);
+void PlayEffect(Monster &monster, MonsterSound mode);
 void MissToMonst(Missile &missile, Point position);
 
 Monster *MonsterAtPosition(Point position);
