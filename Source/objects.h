@@ -121,16 +121,6 @@ struct Object {
 	}
 
 	/**
-	 * @brief Initializes this object as some form of door. Futher initialization of other game structures needs to be
-	 * performed separately, refer to the code in objects.cpp.
-	 */
-	constexpr void InitializeDoor()
-	{
-		_oDoorFlag = true;
-		_oVar4 = 0;
-	}
-
-	/**
 	 * @brief Marks an object which was spawned from a sublevel in response to a lever activation.
 	 * @param mapRange The region which was updated to spawn this object.
 	 * @param leverID The id (*not* an object ID/index) of the lever responsible for the map change.
