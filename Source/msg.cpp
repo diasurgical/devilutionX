@@ -41,7 +41,6 @@
 
 namespace devilution {
 
-bool deltaload;
 uint8_t gbBufferMsgs;
 int dwRecCount;
 
@@ -2188,7 +2187,6 @@ void delta_init()
 	memset(&sgJunk, 0xFF, sizeof(sgJunk));
 	DeltaLevels.clear();
 	LocalLevels.clear();
-	deltaload = false;
 }
 
 void delta_kill_monster(const Monster &monster, Point position, const Player &player)
@@ -2376,7 +2374,6 @@ void DeltaLoadLevel()
 	if (!gbIsMultiplayer)
 		return;
 
-	deltaload = true;
 	uint8_t localLevel = GetLevelForMultiplayer(*MyPlayer);
 	DLevel &deltaLevel = GetDeltaLevel(localLevel);
 	if (leveltype != DTYPE_TOWN) {
@@ -2493,10 +2490,9 @@ void DeltaLoadLevel()
 		for (int i = 0; i < MAXOBJECTS; i++) {
 			switch (deltaLevel.object[i].bCmd) {
 			case CMD_OPENDOOR:
-			case CMD_CLOSEDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				DeltaSyncOpObject(deltaLevel.object[i].bCmd, Objects[i]);
+				DeltaSyncOpObject(Objects[i]);
 				break;
 			case CMD_BREAKOBJ:
 				DeltaSyncBreakObj(Objects[i]);
@@ -2513,7 +2509,6 @@ void DeltaLoadLevel()
 			}
 		}
 	}
-	deltaload = false;
 }
 
 void NetSendCmd(bool bHiPri, _cmd_id bCmd)

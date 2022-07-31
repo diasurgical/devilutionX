@@ -311,7 +311,7 @@ void OperateObject(Player &player, int i, bool TeleFlag);
 void SyncOpObject(Player &player, int cmd, Object &object);
 void BreakObjectMissile(Object &object);
 void BreakObject(const Player &player, Object &object);
-void DeltaSyncOpObject(int cmd, Object &object);
+void DeltaSyncOpObject(Object &object);
 void DeltaSyncBreakObj(Object &object);
 void SyncBreakObj(const Player &player, Object &object);
 void SyncObjectAnim(Object &object);
