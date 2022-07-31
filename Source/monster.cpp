@@ -3721,7 +3721,7 @@ void M_StartStand(Monster &monster, Direction md)
 void M_ClearSquares(const Monster &monster)
 {
 	for (Point searchTile : PointsInRectangleRange { Rectangle { monster.position.old, 1 } }) {
-		if (MonsterAtPosition(searchTile) == &monster)
+		if (FindMonsterAtPosition(searchTile) == &monster)
 			dMonster[searchTile.x][searchTile.y] = 0;
 	}
 }
@@ -4141,12 +4141,11 @@ bool DirOK(const Monster &monster, Direction mdir)
 		for (int y = futurePosition.y - 3; y <= futurePosition.y + 3; y++) {
 			if (!InDungeonBounds({ x, y }))
 				continue;
-			int mi = dMonster[x][y];
-			if (mi <= 0)
+			Monster *minion = FindMonsterAtPosition({ x, y }, true);
+			if (minion == nullptr)
 				continue;
 
-			auto &minion = Monsters[mi - 1];
-			if (minion.leaderRelation == LeaderRelation::Leashed && minion.getLeader() == &monster) {
+			if (minion->leaderRelation == LeaderRelation::Leashed && minion->getLeader() == &monster) {
 				mcount++;
 			}
 		}
@@ -4474,17 +4473,18 @@ void MissToMonst(Missile &missile, Point position)
 		return;
 	}
 
-	if (dMonster[oldPosition.x][oldPosition.y] <= 0)
+	Monster *target = FindMonsterAtPosition(oldPosition, true);
+
+	if (target == nullptr)
 		return;
 
-	Monster &target = *MonsterAtPosition(oldPosition);
-	MonsterAttackMonster(monster, target, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
+	MonsterAttackMonster(monster, *target, 500, monster.minDamageSpecial, monster.maxDamageSpecial);
 
 	if (IsAnyOf(monster.type().type, MT_NSNAKE, MT_RSNAKE, MT_BSNAKE, MT_GSNAKE))
 		return;
 
 	Point newPosition = oldPosition + monster.direction;
-	if (IsTileAvailable(target, newPosition)) {
+	if (IsTileAvailable(*target, newPosition)) {
 		monsterId = dMonster[oldPosition.x][oldPosition.y];
 		dMonster[newPosition.x][newPosition.y] = monsterId;
 		dMonster[oldPosition.x][oldPosition.y] = 0;
@@ -4494,7 +4494,7 @@ void MissToMonst(Missile &missile, Point position)
 	}
 }
 
-Monster *MonsterAtPosition(Point position)
+Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters)
 {
 	if (!InDungeonBounds(position)) {
 		return nullptr;
@@ -4502,12 +4502,12 @@ Monster *MonsterAtPosition(Point position)
 
 	auto monsterId = dMonster[position.x][position.y];
 
-	if (monsterId != 0) {
-		return &Monsters[abs(monsterId) - 1];
+	if (monsterId == 0 || (ignoreMovingMonsters && monsterId < 0)) {
+		// nothing at this position, return a nullptr
+		return nullptr;
 	}
 
-	// nothing at this position, return a nullptr
-	return nullptr;
+	return &Monsters[abs(monsterId) - 1];
 }
 
 bool IsTileAvailable(const Monster &monster, Point position)

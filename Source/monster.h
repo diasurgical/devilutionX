@@ -409,7 +409,7 @@ void PrintUniqueHistory();
 void PlayEffect(Monster &monster, MonsterSound mode);
 void MissToMonst(Missile &missile, Point position);
 
-Monster *MonsterAtPosition(Point position);
+Monster *FindMonsterAtPosition(Point position, bool ignoreMovingMonsters = false);
 
 /**
  * @brief Check that the given tile is available to the monster
