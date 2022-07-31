@@ -326,6 +326,17 @@ void LanguageInitialize()
 	translationKeys = nullptr;
 	translationValues = nullptr;
 
+	if (IsSmallFontTall() && !font_mpq) {
+		UiErrorOkDialog(
+		    "Missing fonts.mpq",
+		    StrCat("fonts.mpq is required for locale \"",
+		        *sgOptions.Language.code,
+		        "\"\n\n"
+		        "Please download fonts.mpq from:\n"
+		        "github.com/diasurgical/\ndevilutionx-assets/releases"));
+		sgOptions.Language.code = "en";
+	}
+
 	const std::string lang(*sgOptions.Language.code);
 	SDL_RWops *rw;
 

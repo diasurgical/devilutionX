@@ -284,6 +284,14 @@ public:
 		return szCode;
 	}
 
+	OptionEntryLanguageCode &operator=(string_view code)
+	{
+		assert(code.size() < 6);
+		memcpy(szCode, code.data(), code.size());
+		szCode[code.size()] = '\0';
+		return *this;
+	}
+
 private:
 	/** @brief Language code (ISO-15897) for text. */
 	char szCode[6];
