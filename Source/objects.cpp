@@ -1080,6 +1080,8 @@ void AddDoor(Object &door)
 	case OBJ_L3RDOOR:
 		ObjSetMicro(door.position, 533);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -2048,6 +2050,8 @@ void OperateDoor(const Player &player, Object &door)
 		case OBJ_L5LDOOR:
 			OperateL5LDoor(door, true);
 			break;
+		default:
+			break;
 		}
 	}
 	if (dpx <= 1 && dpy == 1) {
@@ -2063,6 +2067,8 @@ void OperateDoor(const Player &player, Object &door)
 			break;
 		case OBJ_L5RDOOR:
 			OperateL5RDoor(door, true);
+			break;
+		default:
 			break;
 		}
 	}
@@ -2081,7 +2087,7 @@ bool AreAllLeversActivated(int leverId)
 	return true;
 }
 
-void DeltaOperateLever(Object &object)
+void UpdateLeverState(Object &object)
 {
 	if (object._oSelFlag == 0) {
 		return;
@@ -2110,7 +2116,7 @@ void OperateLever(Object &object, bool sendmsg)
 
 	PlaySfxLoc(IS_LEVER, object.position);
 
-	DeltaOperateLever(object);
+	UpdateLeverState(object);
 
 	if (currlevel == 24) {
 		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
@@ -3646,50 +3652,7 @@ void SyncOperateDoor(int cmd, Object &door)
 	case OBJ_L5RDOOR:
 		OperateL5RDoor(door, false);
 		break;
-	}
-}
-
-void DeltaSyncDoor(Object &door)
-{
-	door._oAnimFrame += 2;
-	door._oPreFlag = true;
-	door._oVar4 = DOOR_OPEN;
-	door._oSelFlag = 2;
-
-	switch (door._otype) {
-	case OBJ_L1LDOOR:
-		ObjSetMicro(door.position, door._oVar1 == 214 ? 407 : 392);
-		dSpecial[door.position.x][door.position.y] = 7;
-		DoorSet(door.position + Direction::NorthEast, true);
-		break;
-	case OBJ_L1RDOOR:
-		ObjSetMicro(door.position, 394);
-		dSpecial[door.position.x][door.position.y] = 8;
-		DoorSet(door.position + Direction::NorthWest, false);
-		break;
-	case OBJ_L2LDOOR:
-		ObjSetMicro(door.position, 12);
-		dSpecial[door.position.x][door.position.y] = 5;
-		break;
-	case OBJ_L2RDOOR:
-		ObjSetMicro(door.position, 16);
-		dSpecial[door.position.x][door.position.y] = 6;
-		break;
-	case OBJ_L3LDOOR:
-		ObjSetMicro(door.position, 537);
-		break;
-	case OBJ_L3RDOOR:
-		ObjSetMicro(door.position, 540);
-		break;
-	case OBJ_L5LDOOR:
-		ObjSetMicro(door.position, 205);
-		dSpecial[door.position.x][door.position.y] = 1;
-		CryptDoorSet(door.position + Direction::NorthEast, true);
-		break;
-	case OBJ_L5RDOOR:
-		ObjSetMicro(door.position, 208);
-		dSpecial[door.position.x][door.position.y] = 2;
-		CryptDoorSet(door.position + Direction::NorthWest, false);
+	default:
 		break;
 	}
 }
@@ -3843,6 +3806,8 @@ void SyncPedestal(const Object &pedestal, Point origin, int width)
 
 void OpenDoor(Object &door)
 {
+	door._oPreFlag = true;
+	door._oVar4 = DOOR_OPEN;
 	door._oMissFlag = true;
 	door._oSelFlag = 2;
 
@@ -3881,6 +3846,8 @@ void OpenDoor(Object &door)
 		dSpecial[door.position.x][door.position.y] = 2;
 		CryptDoorSet(door.position + Direction::NorthWest, false);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -3903,6 +3870,8 @@ void CloseDoor(Object &door)
 		break;
 	case OBJ_L3RDOOR:
 		ObjSetMicro(door.position, 533);
+		break;
+	default:
 		break;
 	}
 }
@@ -4843,12 +4812,13 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		DeltaSyncDoor(object);
+		object._oAnimFrame += 2;
+		OpenDoor(object);
 		break;
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
 	case OBJ_SWITCHSKL:
-		DeltaOperateLever(object);
+		UpdateLeverState(object);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
