@@ -1767,8 +1767,9 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 
 void OperateL1RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
+	if (!IsDoorClear(door.position)) {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -1783,12 +1784,9 @@ void OperateL1RDoor(Object &door, bool sendflag)
 		DoorSet(door.position + Direction::NorthWest, false);
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	PlaySfxLoc(IS_DOORCLOS, door.position);
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -1805,16 +1803,16 @@ void OperateL1RDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateL1LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
+	if (!IsDoorClear(door.position)) {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -1829,12 +1827,9 @@ void OperateL1LDoor(Object &door, bool sendflag)
 		DoorSet(door.position + Direction::NorthEast, true);
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	PlaySfxLoc(IS_DOORCLOS, door.position);
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -1851,16 +1846,16 @@ void OperateL1LDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateL2RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
+	if (!IsDoorClear(door.position)) {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -1874,13 +1869,9 @@ void OperateL2RDoor(Object &door, bool sendflag)
 		door._oPreFlag = true;
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	PlaySfxLoc(IS_DOORCLOS, door.position);
-
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -1889,16 +1880,16 @@ void OperateL2RDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateL2LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
+	if (!IsDoorClear(door.position)) {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -1912,13 +1903,9 @@ void OperateL2LDoor(Object &door, bool sendflag)
 		door._oPreFlag = true;
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	PlaySfxLoc(IS_DOORCLOS, door.position);
-
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -1927,16 +1914,16 @@ void OperateL2LDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateL3RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
+	if (!IsDoorClear(door.position)) {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -1949,13 +1936,9 @@ void OperateL3RDoor(Object &door, bool sendflag)
 		door._oPreFlag = true;
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	PlaySfxLoc(IS_DOORCLOS, door.position);
-
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -1963,16 +1946,16 @@ void OperateL3RDoor(Object &door, bool sendflag)
 		ObjSetMicro(door.position, 533);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateL3LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
+	if (!IsDoorClear(door.position)) {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -1985,13 +1968,9 @@ void OperateL3LDoor(Object &door, bool sendflag)
 		door._oPreFlag = true;
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	PlaySfxLoc(IS_DOORCLOS, door.position);
-
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -1999,16 +1978,16 @@ void OperateL3LDoor(Object &door, bool sendflag)
 		ObjSetMicro(door.position, 530);
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateL5RDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
+	if (!IsDoorClear(door.position)) {
+		PlaySfxLoc(IS_CRCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -2023,12 +2002,9 @@ void OperateL5RDoor(Object &door, bool sendflag)
 		CryptDoorSet(door.position + Direction::NorthWest, false);
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_CRCLOS, door.position);
 
-	PlaySfxLoc(IS_CRCLOS, door.position);
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -2045,16 +2021,16 @@ void OperateL5RDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateL5LDoor(Object &door, bool sendflag)
 {
-	if (door._oVar4 == DOOR_BLOCKED) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
+	if (!IsDoorClear(door.position)) {
+		PlaySfxLoc(IS_CRCLOS, door.position);
+		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
@@ -2069,12 +2045,9 @@ void OperateL5LDoor(Object &door, bool sendflag)
 		CryptDoorSet(door.position + Direction::NorthEast, true);
 		door._oVar4 = DOOR_OPEN;
 		door._oSelFlag = 2;
-		RedoPlayerVision();
-		return;
-	}
+	} else {
+		PlaySfxLoc(IS_CRCLOS, door.position);
 
-	PlaySfxLoc(IS_CRCLOS, door.position);
-	if (IsDoorClear(door.position)) {
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
 		door._oVar4 = DOOR_CLOSED;
@@ -2091,10 +2064,9 @@ void OperateL5LDoor(Object &door, bool sendflag)
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
-		RedoPlayerVision();
-	} else {
-		door._oVar4 = DOOR_BLOCKED;
 	}
+
+	RedoPlayerVision();
 }
 
 void OperateDoor(const Player &player, Object &door)
