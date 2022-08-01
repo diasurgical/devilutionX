@@ -1154,8 +1154,8 @@ void CryptDoorSet(Point position, bool isLeftDoor)
 
 void SetDoorStateOpen(Object &door)
 {
-	door._oPreFlag = true;
 	door._oVar4 = DOOR_OPEN;
+	door._oPreFlag = true;
 	door._oMissFlag = true;
 	door._oSelFlag = 2;
 
@@ -1202,10 +1202,37 @@ void SetDoorStateOpen(Object &door)
 void SetDoorStateClosed(Object &door)
 {
 	door._oVar4 = DOOR_CLOSED;
+	door._oPreFlag = false;
 	door._oMissFlag = false;
 	door._oSelFlag = 3;
 
 	switch (door._otype) {
+	case OBJ_L1LDOOR: {
+		ObjSetMicro(door.position, door._oVar1 - 1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthEast;
+		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 395)
+			ObjSetMicro(openPosition, 411);
+		else
+			ObjSetMicro(openPosition, door._oVar2 - 1);
+
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	} break;
+	case OBJ_L1RDOOR: {
+		ObjSetMicro(door.position, door._oVar1 - 1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthWest;
+		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 395)
+			ObjSetMicro(openPosition, 410);
+		else
+			ObjSetMicro(openPosition, door._oVar2 - 1);
+
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	} break;
 	case OBJ_L2LDOOR:
 		ObjSetMicro(door.position, 537);
 		dSpecial[door.position.x][door.position.y] = 0;
@@ -1220,6 +1247,30 @@ void SetDoorStateClosed(Object &door)
 	case OBJ_L3RDOOR:
 		ObjSetMicro(door.position, 533);
 		break;
+	case OBJ_L5LDOOR: {
+		ObjSetMicro(door.position, door._oVar1 - 1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthEast;
+		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 209)
+			ObjSetMicro(openPosition, 233);
+		else
+			ObjSetMicro(openPosition, door._oVar2 - 1);
+
+		dSpecial[door.position.x][door.position.y] = 0;
+	} break;
+	case OBJ_L5RDOOR: {
+		ObjSetMicro(door.position, door._oVar1 - 1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthWest;
+		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 209)
+			ObjSetMicro(openPosition, 231);
+		else
+			ObjSetMicro(openPosition, door._oVar2 - 1);
+
+		dSpecial[door.position.x][door.position.y] = 0;
+	} break;
 	default:
 		break;
 	}
@@ -1765,6 +1816,18 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 	}
 }
 
+void OpenDoor(Object &door)
+{
+	door._oAnimFrame += 2;
+	SetDoorStateOpen(door);
+}
+
+void CloseDoor(Object &door)
+{
+	door._oAnimFrame -= 2;
+	SetDoorStateClosed(door);
+}
+
 void OperateL1RDoor(Object &door, bool sendflag)
 {
 	if (!IsDoorClear(door.position)) {
@@ -1777,32 +1840,13 @@ void OperateL1RDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 394);
-		dSpecial[door.position.x][door.position.y] = 8;
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		DoorSet(door.position + Direction::NorthWest, false);
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1 - 1);
-
-		// Restore the normal tile where the open door used to be
-		auto openPosition = door.position + Direction::NorthWest;
-		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 395)
-			ObjSetMicro(openPosition, 410);
-		else
-			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -1820,32 +1864,13 @@ void OperateL1LDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, door._oVar1 == 214 ? 407 : 392);
-		dSpecial[door.position.x][door.position.y] = 7;
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		DoorSet(door.position + Direction::NorthEast, true);
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1 - 1);
-
-		// Restore the normal tile where the open door used to be
-		auto openPosition = door.position + Direction::NorthEast;
-		if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 395)
-			ObjSetMicro(openPosition, 411);
-		else
-			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -1863,23 +1888,13 @@ void OperateL2RDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 16);
-		dSpecial[door.position.x][door.position.y] = 6;
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 539);
-		dSpecial[door.position.x][door.position.y] = 0;
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -1897,23 +1912,13 @@ void OperateL2LDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 12);
-		dSpecial[door.position.x][door.position.y] = 5;
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 537);
-		dSpecial[door.position.x][door.position.y] = 0;
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -1931,21 +1936,13 @@ void OperateL3RDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 540);
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 533);
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -1963,21 +1960,13 @@ void OperateL3LDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_DOOROPEN, door.position);
-		ObjSetMicro(door.position, 537);
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, 530);
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -1995,32 +1984,13 @@ void OperateL5RDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_CROPEN, door.position);
-		ObjSetMicro(door.position, 208);
-		dSpecial[door.position.x][door.position.y] = 2;
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		CryptDoorSet(door.position + Direction::NorthWest, false);
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_CRCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1 - 1);
-
-		// Restore the normal tile where the open door used to be
-		auto openPosition = door.position + Direction::NorthWest;
-		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 209)
-			ObjSetMicro(openPosition, 231);
-		else
-			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -2038,32 +2008,13 @@ void OperateL5LDoor(Object &door, bool sendflag)
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
 		PlaySfxLoc(IS_CROPEN, door.position);
-		ObjSetMicro(door.position, 205);
-		dSpecial[door.position.x][door.position.y] = 1;
-		door._oAnimFrame += 2;
-		door._oPreFlag = true;
-		CryptDoorSet(door.position + Direction::NorthEast, true);
-		door._oVar4 = DOOR_OPEN;
-		door._oSelFlag = 2;
+		OpenDoor(door);
 	} else {
 		PlaySfxLoc(IS_CRCLOS, door.position);
 
 		if (sendflag)
 			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		door._oVar4 = DOOR_CLOSED;
-		door._oSelFlag = 3;
-		ObjSetMicro(door.position, door._oVar1 - 1);
-
-		// Restore the normal tile where the open door used to be
-		auto openPosition = door.position + Direction::NorthEast;
-		if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 209)
-			ObjSetMicro(openPosition, 233);
-		else
-			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
-		door._oAnimFrame -= 2;
-		door._oPreFlag = false;
+		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
@@ -4785,8 +4736,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		object._oAnimFrame += 2;
-		SetDoorStateOpen(object);
+		OpenDoor(object);
 		break;
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
