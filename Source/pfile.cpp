@@ -475,6 +475,9 @@ void pfile_write_hero(MpqWriter &saveWriter, bool writeGameData)
 	EncodeHero(saveWriter, &pkplr);
 	if (!gbVanilla) {
 		SaveHotkeys(saveWriter);
+		std::fstream myfile(myPlayer._pName, std::ios_base::out);
+		myfile << deathCounter;
+		myfile.close();
 		SaveHeroItems(saveWriter, myPlayer);
 	}
 }
@@ -638,6 +641,9 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	Game2UiPlayer(player, heroinfo, false);
 	if (!gbVanilla) {
 		SaveHotkeys(saveWriter);
+		std::fstream myfile(player._pName, std::ios_base::out);
+		myfile << deathCounter;
+		myfile.close();
 		SaveHeroItems(saveWriter, player);
 	}
 
