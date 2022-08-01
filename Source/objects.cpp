@@ -4321,7 +4321,7 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 	return i;
 }
 
-void OperateObject(Player &player, int i, bool teleFlag)
+void OperateObject(Player &player, int i)
 {
 	Object &object = Objects[i];
 	bool sendmsg = &player == MyPlayer;
@@ -4335,7 +4335,7 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (teleFlag || (sendmsg && abs(object.position.x - player.position.tile.x) <= 1 && abs(object.position.y - player.position.tile.y) <= 1))
+		if (sendmsg)
 			OperateDoor(object, sendmsg);
 		break;
 	case OBJ_LEVER:
