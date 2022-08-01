@@ -594,109 +594,78 @@ void PressKey(SDL_Keycode vkey, uint16_t modState)
 	}
 }
 
-void GetMousePos(uint32_t lParam)
+void GameEventHandler(const SDL_Event &event, uint16_t modState)
 {
-	MousePosition = { (std::int16_t)(lParam & 0xffff), (std::int16_t)((lParam >> 16) & 0xffff) };
-}
-
-void GameEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t lParam)
-{
-	switch (uMsg) {
-	case DVL_WM_KEYDOWN:
-		PressKey(static_cast<SDL_Keycode>(wParam), lParam);
+	switch (event.type) {
+	case SDL_KEYDOWN:
+		PressKey(event.key.keysym.sym, modState);
 		return;
-	case DVL_WM_KEYUP:
-		ReleaseKey(static_cast<SDL_Keycode>(wParam));
+	case SDL_KEYUP:
+		ReleaseKey(event.key.keysym.sym);
 		return;
-	case DVL_WM_MOUSEMOVE:
-		GetMousePos(wParam);
+	case SDL_MOUSEMOTION:
+		MousePosition = { event.motion.x, event.motion.y };
 		gmenu_on_mouse_move();
 		return;
-	case DVL_WM_LBUTTONDOWN:
-		GetMousePos(wParam);
+	case SDL_MOUSEBUTTONDOWN:
+		MousePosition = { event.button.x, event.button.y };
 		if (sgbMouseDown == CLICK_NONE) {
-			sgbMouseDown = CLICK_LEFT;
-			LeftMouseDown(lParam);
+			switch (event.button.button) {
+			case SDL_BUTTON_LEFT:
+				sgbMouseDown = CLICK_LEFT;
+				LeftMouseDown(modState);
+				break;
+			case SDL_BUTTON_RIGHT:
+				sgbMouseDown = CLICK_RIGHT;
+				RightMouseDown((modState & KMOD_SHIFT) != 0);
+				break;
+			default:
+				sgOptions.Keymapper.KeyPressed(event.button.button | KeymapperMouseButtonMask);
+				break;
+			}
 		}
 		return;
-	case DVL_WM_LBUTTONUP:
-		GetMousePos(wParam);
-		if (sgbMouseDown == CLICK_LEFT) {
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp(lParam);
-		}
-		return;
-	case DVL_WM_RBUTTONDOWN:
-		GetMousePos(wParam);
-		if (sgbMouseDown == CLICK_NONE) {
-			sgbMouseDown = CLICK_RIGHT;
-			RightMouseDown((lParam & KMOD_SHIFT) != 0);
-		}
-		return;
-	case DVL_WM_RBUTTONUP:
-		GetMousePos(wParam);
-		if (sgbMouseDown == CLICK_RIGHT) {
-			LastMouseButtonAction = MouseActionType::None;
-			sgbMouseDown = CLICK_NONE;
-		}
-		return;
-	case DVL_WM_MBUTTONDOWN:
-		sgOptions.Keymapper.KeyPressed(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_MBUTTONUP:
-		sgOptions.Keymapper.KeyReleased(SDL_BUTTON_MIDDLE | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X1BUTTONDOWN:
-		sgOptions.Keymapper.KeyPressed(SDL_BUTTON_X1 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X1BUTTONUP:
-		sgOptions.Keymapper.KeyReleased(SDL_BUTTON_X1 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X2BUTTONDOWN:
-		sgOptions.Keymapper.KeyPressed(SDL_BUTTON_X2 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_X2BUTTONUP:
-		sgOptions.Keymapper.KeyReleased(SDL_BUTTON_X2 | KeymapperMouseButtonMask);
-		return;
-	case DVL_WM_CAPTURECHANGED:
-		sgbMouseDown = CLICK_NONE;
-		LastMouseButtonAction = MouseActionType::None;
-		break;
-	case WM_DIABNEXTLVL:
-	case WM_DIABPREVLVL:
-	case WM_DIABRTNLVL:
-	case WM_DIABSETLVL:
-	case WM_DIABWARPLVL:
-	case WM_DIABTOWNWARP:
-	case WM_DIABTWARPUP:
-	case WM_DIABRETOWN:
-		if (gbIsMultiplayer)
-			pfile_write_hero();
-		nthread_ignore_mutex(true);
-		PaletteFadeOut(8);
-		sound_stop();
-		LastMouseButtonAction = MouseActionType::None;
-		sgbMouseDown = CLICK_NONE;
-		ShowProgress((interface_mode)uMsg);
-		force_redraw = 255;
-		DrawAndBlit();
-		LoadPWaterPalette();
-		if (gbRunGame)
-			PaletteFadeIn(8);
-		nthread_ignore_mutex(false);
-		gbGameLoopStartup = true;
-		return;
-	}
+	case SDL_MOUSEBUTTONUP:
+		MousePosition = { event.button.x, event.button.y };
 
-	MainWndProc(uMsg);
+		if (sgbMouseDown == CLICK_LEFT && event.button.button == SDL_BUTTON_LEFT) {
+			LastMouseButtonAction = MouseActionType::None;
+			sgbMouseDown = CLICK_NONE;
+			LeftMouseUp(modState);
+		} else if (sgbMouseDown == CLICK_RIGHT && event.button.button == SDL_BUTTON_RIGHT) {
+			LastMouseButtonAction = MouseActionType::None;
+			sgbMouseDown = CLICK_NONE;
+		} else {
+			sgOptions.Keymapper.KeyReleased(event.button.button | KeymapperMouseButtonMask);
+		}
+		return;
+	default:
+		if (IsCustomEvent(event.type)) {
+			if (gbIsMultiplayer)
+				pfile_write_hero();
+			nthread_ignore_mutex(true);
+			PaletteFadeOut(8);
+			sound_stop();
+			LastMouseButtonAction = MouseActionType::None;
+			sgbMouseDown = CLICK_NONE;
+			ShowProgress(GetCustomEvent(event.type));
+			force_redraw = 255;
+			DrawAndBlit();
+			LoadPWaterPalette();
+			if (gbRunGame)
+				PaletteFadeIn(8);
+			nthread_ignore_mutex(false);
+			gbGameLoopStartup = true;
+			return;
+		}
+		MainWndProc(event);
+		break;
+	}
 }
 
 void RunGameLoop(interface_mode uMsg)
 {
 	demo::NotifyGameLoopStart();
-
-	tagMSG msg;
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
@@ -730,13 +699,15 @@ void RunGameLoop(interface_mode uMsg)
 		}
 #endif
 
-		while (FetchMessage(&msg)) {
-			if (msg.message == DVL_WM_QUIT) {
+		SDL_Event event;
+		uint16_t modState;
+		while (FetchMessage(&event, &modState)) {
+			if (event.type == SDL_QUIT) {
 				gbRunGameResult = false;
 				gbRunGame = false;
 				break;
 			}
-			PushMessage(&msg);
+			HandleMessage(event, modState);
 		}
 		if (!gbRunGame)
 			break;
@@ -2015,41 +1986,31 @@ bool PressEscKey()
 	return rv;
 }
 
-void DisableInputEventHandler(uint32_t uMsg, uint32_t wParam, uint16_t /*lParam*/)
+void DisableInputEventHandler(const SDL_Event &event, uint16_t modState)
 {
-	switch (uMsg) {
-	case DVL_WM_KEYDOWN:
-	case DVL_WM_KEYUP:
+	switch (event.type) {
+	case SDL_MOUSEMOTION:
+		MousePosition = { event.motion.x, event.motion.y };
 		return;
-	case DVL_WM_MOUSEMOVE:
-		GetMousePos(wParam);
-		return;
-	case DVL_WM_LBUTTONDOWN:
+	case SDL_MOUSEBUTTONDOWN:
 		if (sgbMouseDown != CLICK_NONE)
 			return;
-		sgbMouseDown = CLICK_LEFT;
-		return;
-	case DVL_WM_LBUTTONUP:
-		if (sgbMouseDown != CLICK_LEFT)
+		switch (event.button.button) {
+		case SDL_BUTTON_LEFT:
+			sgbMouseDown = CLICK_LEFT;
 			return;
-		sgbMouseDown = CLICK_NONE;
-		return;
-	case DVL_WM_RBUTTONDOWN:
-		if (sgbMouseDown != CLICK_NONE)
+		case SDL_BUTTON_RIGHT:
+			sgbMouseDown = CLICK_RIGHT;
 			return;
-		sgbMouseDown = CLICK_RIGHT;
-		return;
-	case DVL_WM_RBUTTONUP:
-		if (sgbMouseDown != CLICK_RIGHT)
+		default:
 			return;
-		sgbMouseDown = CLICK_NONE;
-		return;
-	case DVL_WM_CAPTURECHANGED:
+		}
+	case SDL_MOUSEBUTTONUP:
 		sgbMouseDown = CLICK_NONE;
 		return;
 	}
 
-	MainWndProc(uMsg);
+	MainWndProc(event);
 }
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)

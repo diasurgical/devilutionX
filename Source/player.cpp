@@ -3186,7 +3186,9 @@ StartNewLvl(Player &player, interface_mode fom, int lvl)
 	if (&player == MyPlayer) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
-		PostMessage(fom, 0, 0);
+		SDL_Event event;
+		event.type = CustomEventToSdlEvent(fom);
+		SDL_PushEvent(&event);
 		if (gbIsMultiplayer) {
 			NetSendCmdParam2(true, CMD_NEWLVL, fom, lvl);
 		}
@@ -3210,7 +3212,9 @@ void RestartTownLvl(Player &player)
 	if (&player == MyPlayer) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
-		PostMessage(WM_DIABRETOWN, 0, 0);
+		SDL_Event event;
+		event.type = CustomEventToSdlEvent(WM_DIABRETOWN);
+		SDL_PushEvent(&event);
 	}
 }
 
@@ -3233,7 +3237,9 @@ void StartWarpLvl(Player &player, int pidx)
 		SetCurrentPortal(pidx);
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
-		PostMessage(WM_DIABWARPLVL, 0, 0);
+		SDL_Event event;
+		event.type = CustomEventToSdlEvent(WM_DIABWARPLVL);
+		SDL_PushEvent(&event);
 	}
 }
 
