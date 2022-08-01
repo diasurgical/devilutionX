@@ -1161,6 +1161,9 @@ void SetDoorStateOpen(Object &door)
 
 	switch (door._otype) {
 	case OBJ_L1LDOOR:
+		// 214: blood splater
+		// 407: blood pool
+		// 392: open door (no frame)
 		ObjSetMicro(door.position, door._oVar1 == 214 ? 407 : 392);
 		dSpecial[door.position.x][door.position.y] = 7;
 		DoorSet(door.position + Direction::NorthEast, true);
@@ -1208,6 +1211,8 @@ void SetDoorStateClosed(Object &door)
 
 	switch (door._otype) {
 	case OBJ_L1LDOOR: {
+		// Clear overlapping arches
+		dSpecial[door.position.x][door.position.y] = 0;
 		ObjSetMicro(door.position, door._oVar1 - 1);
 
 		// Restore the normal tile where the open door used to be
@@ -1216,11 +1221,11 @@ void SetDoorStateClosed(Object &door)
 			ObjSetMicro(openPosition, 411);
 		else
 			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
 		break;
 	} break;
 	case OBJ_L1RDOOR: {
+		// Clear overlapping arches
+		dSpecial[door.position.x][door.position.y] = 0;
 		ObjSetMicro(door.position, door._oVar1 - 1);
 
 		// Restore the normal tile where the open door used to be
@@ -1229,17 +1234,17 @@ void SetDoorStateClosed(Object &door)
 			ObjSetMicro(openPosition, 410);
 		else
 			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
 		break;
 	} break;
 	case OBJ_L2LDOOR:
-		ObjSetMicro(door.position, 537);
+		// Clear overlapping arches
 		dSpecial[door.position.x][door.position.y] = 0;
+		ObjSetMicro(door.position, 537);
 		break;
 	case OBJ_L2RDOOR:
-		ObjSetMicro(door.position, 539);
+		// Clear overlapping arches
 		dSpecial[door.position.x][door.position.y] = 0;
+		ObjSetMicro(door.position, 539);
 		break;
 	case OBJ_L3LDOOR:
 		ObjSetMicro(door.position, 530);
@@ -1627,13 +1632,9 @@ inline bool IsDoorClear(const Object &door)
 void UpdateDoor(Object &door)
 {
 	if (door._oVar4 == DOOR_CLOSED) {
-		door._oMissFlag = false;
-		door._oSelFlag = 3;
 		return;
 	}
 
-	door._oMissFlag = true;
-	door._oSelFlag = 2;
 	door._oVar4 = IsDoorClear(door) ? DOOR_OPEN : DOOR_BLOCKED;
 }
 
@@ -4358,7 +4359,7 @@ bool UpdateTrapState(Object &trap)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (trigger._oVar4 == 0)
+		if (trigger._oVar4 == DOOR_CLOSED)
 			return false;
 		break;
 	case OBJ_LEVER:
