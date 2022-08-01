@@ -752,6 +752,8 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 	mi = abs(mi) - 1;
 
 	if (leveltype == DTYPE_TOWN) {
+		if (isNegativeMonster)
+			return;
 		auto &towner = Towners[mi];
 		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
 		const Point position { px, targetBufferPosition.y };
