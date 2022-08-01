@@ -1055,6 +1055,175 @@ void ObjSetMicro(Point position, int pn)
 	dPiece[position.x][position.y] = pn;
 }
 
+void DoorSet(Point position, bool isLeftDoor)
+{
+	int pn = dPiece[position.x][position.y];
+	switch (pn) {
+	case 42:
+		ObjSetMicro(position, 391);
+		break;
+	case 44:
+		ObjSetMicro(position, 393);
+		break;
+	case 49:
+		ObjSetMicro(position, isLeftDoor ? 410 : 411);
+		break;
+	case 53:
+		ObjSetMicro(position, 396);
+		break;
+	case 54:
+		ObjSetMicro(position, 397);
+		break;
+	case 60:
+		ObjSetMicro(position, 398);
+		break;
+	case 66:
+		ObjSetMicro(position, 399);
+		break;
+	case 67:
+		ObjSetMicro(position, 400);
+		break;
+	case 68:
+		ObjSetMicro(position, 402);
+		break;
+	case 69:
+		ObjSetMicro(position, 403);
+		break;
+	case 71:
+		ObjSetMicro(position, 405);
+		break;
+	case 211:
+		ObjSetMicro(position, 406);
+		break;
+	case 353:
+		ObjSetMicro(position, 408);
+		break;
+	case 354:
+		ObjSetMicro(position, 409);
+		break;
+	case 410:
+	case 411:
+		ObjSetMicro(position, 395);
+		break;
+	}
+}
+
+void CryptDoorSet(Point position, bool isLeftDoor)
+{
+	int pn = dPiece[position.x][position.y];
+	switch (pn) {
+	case 74:
+		ObjSetMicro(position, 203);
+		break;
+	case 78:
+		ObjSetMicro(position, 207);
+		break;
+	case 85:
+		ObjSetMicro(position, isLeftDoor ? 231 : 233);
+		break;
+	case 90:
+		ObjSetMicro(position, 214);
+		break;
+	case 92:
+		ObjSetMicro(position, 217);
+		break;
+	case 98:
+		ObjSetMicro(position, 219);
+		break;
+	case 110:
+		ObjSetMicro(position, 221);
+		break;
+	case 112:
+		ObjSetMicro(position, 223);
+		break;
+	case 114:
+		ObjSetMicro(position, 225);
+		break;
+	case 116:
+		ObjSetMicro(position, 227);
+		break;
+	case 118:
+		ObjSetMicro(position, 229);
+		break;
+	case 231:
+	case 233:
+		ObjSetMicro(position, 211);
+		break;
+	}
+}
+
+void SetDoorStateOpen(Object &door)
+{
+	door._oPreFlag = true;
+	door._oVar4 = DOOR_OPEN;
+	door._oMissFlag = true;
+	door._oSelFlag = 2;
+
+	switch (door._otype) {
+	case OBJ_L1LDOOR:
+		ObjSetMicro(door.position, door._oVar1 == 214 ? 407 : 392);
+		dSpecial[door.position.x][door.position.y] = 7;
+		DoorSet(door.position + Direction::NorthEast, true);
+		break;
+	case OBJ_L1RDOOR:
+		ObjSetMicro(door.position, 394);
+		dSpecial[door.position.x][door.position.y] = 8;
+		DoorSet(door.position + Direction::NorthWest, false);
+		break;
+	case OBJ_L2LDOOR:
+		ObjSetMicro(door.position, 12);
+		dSpecial[door.position.x][door.position.y] = 5;
+		break;
+	case OBJ_L2RDOOR:
+		ObjSetMicro(door.position, 16);
+		dSpecial[door.position.x][door.position.y] = 6;
+		break;
+	case OBJ_L3LDOOR:
+		ObjSetMicro(door.position, 537);
+		break;
+	case OBJ_L3RDOOR:
+		ObjSetMicro(door.position, 540);
+		break;
+	case OBJ_L5LDOOR:
+		ObjSetMicro(door.position, 205);
+		dSpecial[door.position.x][door.position.y] = 1;
+		CryptDoorSet(door.position + Direction::NorthEast, true);
+		break;
+	case OBJ_L5RDOOR:
+		ObjSetMicro(door.position, 208);
+		dSpecial[door.position.x][door.position.y] = 2;
+		CryptDoorSet(door.position + Direction::NorthWest, false);
+		break;
+	default:
+		break;
+	}
+}
+
+void SetDoorStateClosed(Object &door)
+{
+	door._oMissFlag = false;
+	door._oSelFlag = 3;
+
+	switch (door._otype) {
+	case OBJ_L2LDOOR:
+		ObjSetMicro(door.position, 537);
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	case OBJ_L2RDOOR:
+		ObjSetMicro(door.position, 539);
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	case OBJ_L3LDOOR:
+		ObjSetMicro(door.position, 530);
+		break;
+	case OBJ_L3RDOOR:
+		ObjSetMicro(door.position, 533);
+		break;
+	default:
+		break;
+	}
+}
+
 void AddDoor(Object &door)
 {
 	door._oDoorFlag = true;
@@ -1606,103 +1775,6 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 				dSpecial[i + 2][j] = 4;
 			}
 		}
-	}
-}
-
-void DoorSet(Point position, bool isLeftDoor)
-{
-	int pn = dPiece[position.x][position.y];
-	switch (pn) {
-	case 42:
-		ObjSetMicro(position, 391);
-		break;
-	case 44:
-		ObjSetMicro(position, 393);
-		break;
-	case 49:
-		ObjSetMicro(position, isLeftDoor ? 410 : 411);
-		break;
-	case 53:
-		ObjSetMicro(position, 396);
-		break;
-	case 54:
-		ObjSetMicro(position, 397);
-		break;
-	case 60:
-		ObjSetMicro(position, 398);
-		break;
-	case 66:
-		ObjSetMicro(position, 399);
-		break;
-	case 67:
-		ObjSetMicro(position, 400);
-		break;
-	case 68:
-		ObjSetMicro(position, 402);
-		break;
-	case 69:
-		ObjSetMicro(position, 403);
-		break;
-	case 71:
-		ObjSetMicro(position, 405);
-		break;
-	case 211:
-		ObjSetMicro(position, 406);
-		break;
-	case 353:
-		ObjSetMicro(position, 408);
-		break;
-	case 354:
-		ObjSetMicro(position, 409);
-		break;
-	case 410:
-	case 411:
-		ObjSetMicro(position, 395);
-		break;
-	}
-}
-
-void CryptDoorSet(Point position, bool isLeftDoor)
-{
-	int pn = dPiece[position.x][position.y];
-	switch (pn) {
-	case 74:
-		ObjSetMicro(position, 203);
-		break;
-	case 78:
-		ObjSetMicro(position, 207);
-		break;
-	case 85:
-		ObjSetMicro(position, isLeftDoor ? 231 : 233);
-		break;
-	case 90:
-		ObjSetMicro(position, 214);
-		break;
-	case 92:
-		ObjSetMicro(position, 217);
-		break;
-	case 98:
-		ObjSetMicro(position, 219);
-		break;
-	case 110:
-		ObjSetMicro(position, 221);
-		break;
-	case 112:
-		ObjSetMicro(position, 223);
-		break;
-	case 114:
-		ObjSetMicro(position, 225);
-		break;
-	case 116:
-		ObjSetMicro(position, 227);
-		break;
-	case 118:
-		ObjSetMicro(position, 229);
-		break;
-	case 231:
-	case 233:
-		ObjSetMicro(position, 211);
-		break;
 	}
 }
 
@@ -3810,84 +3882,12 @@ void SyncPedestal(const Object &pedestal, Point origin, int width)
 	}
 }
 
-void OpenDoor(Object &door)
-{
-	door._oPreFlag = true;
-	door._oVar4 = DOOR_OPEN;
-	door._oMissFlag = true;
-	door._oSelFlag = 2;
-
-	switch (door._otype) {
-	case OBJ_L1LDOOR:
-		ObjSetMicro(door.position, door._oVar1 == 214 ? 407 : 392);
-		dSpecial[door.position.x][door.position.y] = 7;
-		DoorSet(door.position + Direction::NorthEast, true);
-		break;
-	case OBJ_L1RDOOR:
-		ObjSetMicro(door.position, 394);
-		dSpecial[door.position.x][door.position.y] = 8;
-		DoorSet(door.position + Direction::NorthWest, false);
-		break;
-	case OBJ_L2LDOOR:
-		ObjSetMicro(door.position, 12);
-		dSpecial[door.position.x][door.position.y] = 5;
-		break;
-	case OBJ_L2RDOOR:
-		ObjSetMicro(door.position, 16);
-		dSpecial[door.position.x][door.position.y] = 6;
-		break;
-	case OBJ_L3LDOOR:
-		ObjSetMicro(door.position, 537);
-		break;
-	case OBJ_L3RDOOR:
-		ObjSetMicro(door.position, 540);
-		break;
-	case OBJ_L5LDOOR:
-		ObjSetMicro(door.position, 205);
-		dSpecial[door.position.x][door.position.y] = 1;
-		CryptDoorSet(door.position + Direction::NorthEast, true);
-		break;
-	case OBJ_L5RDOOR:
-		ObjSetMicro(door.position, 208);
-		dSpecial[door.position.x][door.position.y] = 2;
-		CryptDoorSet(door.position + Direction::NorthWest, false);
-		break;
-	default:
-		break;
-	}
-}
-
-void CloseDoor(Object &door)
-{
-	door._oMissFlag = false;
-	door._oSelFlag = 3;
-
-	switch (door._otype) {
-	case OBJ_L2LDOOR:
-		ObjSetMicro(door.position, 537);
-		dSpecial[door.position.x][door.position.y] = 0;
-		break;
-	case OBJ_L2RDOOR:
-		ObjSetMicro(door.position, 539);
-		dSpecial[door.position.x][door.position.y] = 0;
-		break;
-	case OBJ_L3LDOOR:
-		ObjSetMicro(door.position, 530);
-		break;
-	case OBJ_L3RDOOR:
-		ObjSetMicro(door.position, 533);
-		break;
-	default:
-		break;
-	}
-}
-
 void SyncDoor(Object &door)
 {
 	if (door._oVar4 == DOOR_CLOSED) {
-		CloseDoor(door);
+		SetDoorStateClosed(door);
 	} else {
-		OpenDoor(door);
+		SetDoorStateOpen(door);
 	}
 }
 
@@ -4827,7 +4827,7 @@ void DeltaSyncOpObject(Object &object)
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
 		object._oAnimFrame += 2;
-		OpenDoor(object);
+		SetDoorStateOpen(object);
 		break;
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
