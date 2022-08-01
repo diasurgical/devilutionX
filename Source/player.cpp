@@ -506,7 +506,7 @@ void StartSpell(Player &player, Direction d, WorldTileCoord cx, WorldTileCoord c
 		isValid = CheckSpell(player, player.queuedSpell.spellId, player.queuedSpell.spellType, true) == SpellCheckResult::Success;
 		break;
 	case RSPLTYPE_SCROLL:
-		isValid = UseScroll(player, player.queuedSpell.spellId);
+		isValid = CanUseScroll(player, player.queuedSpell.spellId);
 		break;
 	case RSPLTYPE_CHARGES:
 		isValid = CanUseStaff(player, player.queuedSpell.spellId);
@@ -3465,7 +3465,7 @@ void CheckPlrSpell(bool isShiftHeld, spell_id spellID, spell_type spellType)
 		addflag = spellcheck == SpellCheckResult::Success;
 		break;
 	case RSPLTYPE_SCROLL:
-		addflag = pcurs == CURSOR_HAND && UseScroll(myPlayer, spellID);
+		addflag = pcurs == CURSOR_HAND && CanUseScroll(myPlayer, spellID);
 		break;
 	case RSPLTYPE_CHARGES:
 		addflag = pcurs == CURSOR_HAND && CanUseStaff(myPlayer, spellID);

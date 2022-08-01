@@ -1897,7 +1897,7 @@ int8_t CheckInvHLight()
 	return rv;
 }
 
-bool RemoveCurrentSpellScroll(Player &player)
+void ConsumeScroll(Player &player)
 {
 	const spell_id spellId = player.executedSpell.spellId;
 
@@ -1922,15 +1922,15 @@ bool RemoveCurrentSpellScroll(Player &player)
 			player.RemoveInvItem(static_cast<int>(itemIndex));
 		else
 			player.RemoveSpdBarItem(itemIndex);
-		return true;
+		return;
 	}
 
 	// Didn't find it at the selected slot, take the first one we find
 	// This path is always used when the scroll is consumed via spell selection
-	return RemoveInventoryOrBeltItem(player, isCurrentSpell);
+	RemoveInventoryOrBeltItem(player, isCurrentSpell);
 }
 
-bool UseScroll(Player &player, spell_id spell)
+bool CanUseScroll(Player &player, spell_id spell)
 {
 	if (leveltype == DTYPE_TOWN && !spelldata[spell].sTownSpell)
 		return false;
@@ -1940,7 +1940,7 @@ bool UseScroll(Player &player, spell_id spell)
 	});
 }
 
-void UseStaffCharge(Player &player)
+void ConsumeStaffCharge(Player &player)
 {
 	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
 

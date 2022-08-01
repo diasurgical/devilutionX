@@ -171,17 +171,17 @@ int GetManaAmount(const Player &player, spell_id sn)
 	return ma;
 }
 
-void UseMana(Player &player, spell_id sn)
+void ConsumeSpell(Player &player, spell_id sn)
 {
 	switch (player.executedSpell.spellType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_INVALID:
 		break;
 	case RSPLTYPE_SCROLL:
-		RemoveCurrentSpellScroll(player);
+		ConsumeScroll(player);
 		break;
 	case RSPLTYPE_CHARGES:
-		UseStaffCharge(player);
+		ConsumeStaffCharge(player);
 		break;
 	case RSPLTYPE_SPELL:
 #ifdef _DEBUG
@@ -242,9 +242,9 @@ void CastSpell(int id, spell_id spl, int sx, int sy, int dx, int dy, int spllvl)
 	}
 
 	if (spl == SPL_TOWN) {
-		UseMana(player, SPL_TOWN);
+		ConsumeSpell(player, SPL_TOWN);
 	} else if (spl == SPL_CBOLT) {
-		UseMana(player, SPL_CBOLT);
+		ConsumeSpell(player, SPL_CBOLT);
 
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
 			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
