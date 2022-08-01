@@ -1201,6 +1201,7 @@ void SetDoorStateOpen(Object &door)
 
 void SetDoorStateClosed(Object &door)
 {
+	door._oVar4 = DOOR_CLOSED;
 	door._oMissFlag = false;
 	door._oSelFlag = 3;
 
@@ -1227,7 +1228,6 @@ void SetDoorStateClosed(Object &door)
 void AddDoor(Object &door)
 {
 	door._oDoorFlag = true;
-	door._oVar4 = DOOR_CLOSED;
 
 	switch (door._otype) {
 	case OBJ_L1LDOOR:
@@ -1240,24 +1240,11 @@ void AddDoor(Object &door)
 		door._oVar1 = dPiece[door.position.x][door.position.y] + 1;
 		door._oVar2 = dPiece[door.position.x - 1][door.position.y] + 1;
 		break;
-	case OBJ_L2LDOOR:
-		// If a catacombs door happens to overlap an arch then clear the arch tile to prevent weird rendering
-		dSpecial[door.position.x][door.position.y] = 0;
-		ObjSetMicro(door.position, 537);
-		break;
-	case OBJ_L2RDOOR:
-		dSpecial[door.position.x][door.position.y] = 0;
-		ObjSetMicro(door.position, 539);
-		break;
-	case OBJ_L3LDOOR:
-		ObjSetMicro(door.position, 530);
-		break;
-	case OBJ_L3RDOOR:
-		ObjSetMicro(door.position, 533);
-		break;
 	default:
 		break;
 	}
+
+	SetDoorStateClosed(door);
 }
 
 void AddSarcophagus(Object &sarcophagus)
