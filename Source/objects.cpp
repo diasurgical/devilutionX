@@ -1189,12 +1189,10 @@ void SetDoorStateOpen(Object &door)
 		break;
 	case OBJ_L5LDOOR:
 		ObjSetMicro(door.position, 205);
-		dSpecial[door.position.x][door.position.y] = 1;
 		CryptDoorSet(door.position + Direction::NorthEast, true);
 		break;
 	case OBJ_L5RDOOR:
 		ObjSetMicro(door.position, 208);
-		dSpecial[door.position.x][door.position.y] = 2;
 		CryptDoorSet(door.position + Direction::NorthWest, false);
 		break;
 	default:
@@ -1261,8 +1259,6 @@ void SetDoorStateClosed(Object &door)
 			ObjSetMicro(openPosition, 233);
 		else
 			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
 	} break;
 	case OBJ_L5RDOOR: {
 		ObjSetMicro(door.position, door._oVar1 - 1);
@@ -1273,8 +1269,6 @@ void SetDoorStateClosed(Object &door)
 			ObjSetMicro(openPosition, 231);
 		else
 			ObjSetMicro(openPosition, door._oVar2 - 1);
-
-		dSpecial[door.position.x][door.position.y] = 0;
 	} break;
 	default:
 		break;
