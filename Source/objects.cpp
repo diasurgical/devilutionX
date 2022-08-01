@@ -1823,238 +1823,30 @@ void CloseDoor(Object &door)
 	SetDoorStateClosed(door);
 }
 
-void OperateL1RDoor(Object &door, bool sendflag)
+void OperateDoor(Object &door, bool sendflag)
 {
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
+	bool isCrypt = IsAnyOf(door._otype, OBJ_L5LDOOR, OBJ_L5RDOOR);
+
+	if (!IsDoorClear(door)) {
+		PlaySfxLoc(isCrypt ? IS_CRCLOS : IS_DOORCLOS, door.position);
 		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
 
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_DOOROPEN, door.position);
+	bool openDoor = door._oVar4 == DOOR_CLOSED;
+
+	if (openDoor) {
+		PlaySfxLoc(isCrypt ? IS_CROPEN : IS_DOOROPEN, door.position);
 		OpenDoor(door);
 	} else {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
+		PlaySfxLoc(isCrypt ? IS_CRCLOS : IS_DOORCLOS, door.position);
 		CloseDoor(door);
 	}
 
 	RedoPlayerVision();
-}
 
-void OperateL1LDoor(Object &door, bool sendflag)
-{
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-		door._oVar4 = DOOR_BLOCKED;
-		return;
-	}
-
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_DOOROPEN, door.position);
-		OpenDoor(door);
-	} else {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		CloseDoor(door);
-	}
-
-	RedoPlayerVision();
-}
-
-void OperateL2RDoor(Object &door, bool sendflag)
-{
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-		door._oVar4 = DOOR_BLOCKED;
-		return;
-	}
-
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_DOOROPEN, door.position);
-		OpenDoor(door);
-	} else {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		CloseDoor(door);
-	}
-
-	RedoPlayerVision();
-}
-
-void OperateL2LDoor(Object &door, bool sendflag)
-{
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-		door._oVar4 = DOOR_BLOCKED;
-		return;
-	}
-
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_DOOROPEN, door.position);
-		OpenDoor(door);
-	} else {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		CloseDoor(door);
-	}
-
-	RedoPlayerVision();
-}
-
-void OperateL3RDoor(Object &door, bool sendflag)
-{
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-		door._oVar4 = DOOR_BLOCKED;
-		return;
-	}
-
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_DOOROPEN, door.position);
-		OpenDoor(door);
-	} else {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		CloseDoor(door);
-	}
-
-	RedoPlayerVision();
-}
-
-void OperateL3LDoor(Object &door, bool sendflag)
-{
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-		door._oVar4 = DOOR_BLOCKED;
-		return;
-	}
-
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_DOOROPEN, door.position);
-		OpenDoor(door);
-	} else {
-		PlaySfxLoc(IS_DOORCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		CloseDoor(door);
-	}
-
-	RedoPlayerVision();
-}
-
-void OperateL5RDoor(Object &door, bool sendflag)
-{
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_CRCLOS, door.position);
-		door._oVar4 = DOOR_BLOCKED;
-		return;
-	}
-
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_CROPEN, door.position);
-		OpenDoor(door);
-	} else {
-		PlaySfxLoc(IS_CRCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		CloseDoor(door);
-	}
-
-	RedoPlayerVision();
-}
-
-void OperateL5LDoor(Object &door, bool sendflag)
-{
-	if (!IsDoorClear(door.position)) {
-		PlaySfxLoc(IS_CRCLOS, door.position);
-		door._oVar4 = DOOR_BLOCKED;
-		return;
-	}
-
-	if (door._oVar4 == DOOR_CLOSED) {
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_OPENDOOR, door.position);
-		PlaySfxLoc(IS_CROPEN, door.position);
-		OpenDoor(door);
-	} else {
-		PlaySfxLoc(IS_CRCLOS, door.position);
-
-		if (sendflag)
-			NetSendCmdLoc(MyPlayerId, true, CMD_CLOSEDOOR, door.position);
-		CloseDoor(door);
-	}
-
-	RedoPlayerVision();
-}
-
-void OperateDoor(const Player &player, Object &door)
-{
-	int dpx = abs(door.position.x - player.position.tile.x);
-	int dpy = abs(door.position.y - player.position.tile.y);
-	if (dpx == 1 && dpy <= 1) {
-		switch (door._otype) {
-		case OBJ_L1LDOOR:
-			OperateL1LDoor(door, true);
-			break;
-		case OBJ_L2LDOOR:
-			OperateL2LDoor(door, true);
-			break;
-		case OBJ_L3RDOOR:
-			OperateL3RDoor(door, true);
-			break;
-		case OBJ_L5LDOOR:
-			OperateL5LDoor(door, true);
-			break;
-		default:
-			break;
-		}
-	}
-	if (dpx <= 1 && dpy == 1) {
-		switch (door._otype) {
-		case OBJ_L1RDOOR:
-			OperateL1RDoor(door, true);
-			break;
-		case OBJ_L2RDOOR:
-			OperateL2RDoor(door, true);
-			break;
-		case OBJ_L3LDOOR:
-			OperateL3LDoor(door, true);
-			break;
-		case OBJ_L5RDOOR:
-			OperateL5RDoor(door, true);
-			break;
-		default:
-			break;
-		}
-	}
+	if (sendflag)
+		NetSendCmdLoc(MyPlayerId, true, openDoor ? CMD_OPENDOOR : CMD_CLOSEDOOR, door.position);
 }
 
 bool AreAllLeversActivated(int leverId)
@@ -3603,43 +3395,6 @@ void OperateLazStand(Object &stand)
 	SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0);
 }
 
-void SyncOperateDoor(int cmd, Object &door)
-{
-	if (cmd == CMD_CLOSEDOOR && door._oVar4 == DOOR_CLOSED)
-		return;
-	if (cmd == CMD_OPENDOOR && door._oVar4 == DOOR_OPEN)
-		return;
-
-	switch (door._otype) {
-	case OBJ_L1LDOOR:
-		OperateL1LDoor(door, false);
-		break;
-	case OBJ_L1RDOOR:
-		OperateL1RDoor(door, false);
-		break;
-	case OBJ_L2LDOOR:
-		OperateL2LDoor(door, false);
-		break;
-	case OBJ_L2RDOOR:
-		OperateL2RDoor(door, false);
-		break;
-	case OBJ_L3LDOOR:
-		OperateL3LDoor(door, false);
-		break;
-	case OBJ_L3RDOOR:
-		OperateL3RDoor(door, false);
-		break;
-	case OBJ_L5LDOOR:
-		OperateL5LDoor(door, false);
-		break;
-	case OBJ_L5RDOOR:
-		OperateL5RDoor(door, false);
-		break;
-	default:
-		break;
-	}
-}
-
 /**
  * @brief Checks if all active crux objects of the given type have been broken.
  *
@@ -4509,36 +4264,10 @@ void MonstCheckDoors(const Monster &monster)
 
 		Object &door = *object;
 		// Doors use _oVar4 to track open/closed state, non-zero values indicate an open door
-		// we don't use Object::isDoor since the later conditions will check the object is actually a door anyway.
-		if (door._oVar4 != DOOR_CLOSED)
+		if (!door.isDoor() || door._oVar4 != DOOR_CLOSED)
 			continue;
 
-		// Strictly speaking these checks shouldn't be required, they're guarding against monsters
-		// standing in a wall opening an adjacent door. Shouldn't be possible?
-		if (IsNoneOf(dir, Direction::NorthEast, Direction::SouthWest)) {
-			if (door._otype == OBJ_L1LDOOR) {
-				OperateL1LDoor(door, true);
-			} else if (door._otype == OBJ_L2LDOOR) {
-				OperateL2LDoor(door, true);
-			} else if (door._otype == OBJ_L3RDOOR) {
-				// L3 doors are backwards, see OperateDoor
-				OperateL3RDoor(door, true);
-			} else if (door._otype == OBJ_L5LDOOR) {
-				OperateL5LDoor(door, true);
-			}
-		}
-		if (IsNoneOf(dir, Direction::NorthWest, Direction::SouthEast)) {
-			if (door._otype == OBJ_L1RDOOR) {
-				OperateL1RDoor(door, true);
-			} else if (door._otype == OBJ_L2RDOOR) {
-				OperateL2RDoor(door, true);
-			} else if (door._otype == OBJ_L3LDOOR) {
-				// L3 doors are backwards, see OperateDoor
-				OperateL3LDoor(door, true);
-			} else if (door._otype == OBJ_L5RDOOR) {
-				OperateL5RDoor(door, true);
-			}
-		}
+		OperateDoor(door, true);
 	}
 }
 
@@ -4606,27 +4335,8 @@ void OperateObject(Player &player, int i, bool teleFlag)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (teleFlag) {
-			if (object._otype == OBJ_L1LDOOR)
-				OperateL1LDoor(object, sendmsg);
-			if (object._otype == OBJ_L1RDOOR)
-				OperateL1RDoor(object, sendmsg);
-			if (object._otype == OBJ_L2LDOOR)
-				OperateL2LDoor(object, sendmsg);
-			if (object._otype == OBJ_L2RDOOR)
-				OperateL2RDoor(object, sendmsg);
-			if (object._otype == OBJ_L3LDOOR)
-				OperateL3LDoor(object, sendmsg);
-			if (object._otype == OBJ_L3RDOOR)
-				OperateL3RDoor(object, sendmsg);
-			if (object._otype == OBJ_L5LDOOR)
-				OperateL5LDoor(object, sendmsg);
-			if (object._otype == OBJ_L5RDOOR)
-				OperateL5RDoor(object, sendmsg);
-			break;
-		}
-		if (sendmsg)
-			OperateDoor(player, object);
+		if (teleFlag || (sendmsg && abs(object.position.x - player.position.tile.x) <= 1 && abs(object.position.y - player.position.tile.y) <= 1))
+			OperateDoor(object, sendmsg);
 		break;
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
@@ -4805,8 +4515,13 @@ void SyncOpObject(Player &player, int cmd, Object &object)
 	case OBJ_L3RDOOR:
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
-		if (!sendmsg)
-			SyncOperateDoor(cmd, object);
+		if (sendmsg)
+			break;
+		if (cmd == CMD_CLOSEDOOR && object._oVar4 == DOOR_CLOSED)
+			break;
+		if (cmd == CMD_OPENDOOR && object._oVar4 == DOOR_OPEN)
+			break;
+		OperateDoor(object, false);
 		break;
 	case OBJ_LEVER:
 	case OBJ_L5LEVER:
