@@ -1611,16 +1611,17 @@ void ObjectStopAnim(Object &object)
 /**
  * @brief Checks if an open door can be closed
  *
- * In order to be able to close a door the space where the closed door would be must be free of bodies, monsters, and items
+ * In order to be able to close a door the space where the closed door would be must be free of bodies, monsters, players, and items
  *
  * @param doorPosition Map tile where the door is in its closed position
  * @return true if the door is free to be closed, false if anything is blocking it
  */
-inline bool IsDoorClear(const Point &doorPosition)
+inline bool IsDoorClear(const Object &door)
 {
-	return dCorpse[doorPosition.x][doorPosition.y] == 0
-	    && dMonster[doorPosition.x][doorPosition.y] == 0
-	    && dItem[doorPosition.x][doorPosition.y] == 0;
+	return dCorpse[door.position.x][door.position.y] == 0
+	    && dMonster[door.position.x][door.position.y] == 0
+	    && dItem[door.position.x][door.position.y] == 0
+	    && dPlayer[door.position.x][door.position.y] == 0;
 }
 
 void UpdateDoor(Object &door)
@@ -1633,8 +1634,7 @@ void UpdateDoor(Object &door)
 
 	door._oMissFlag = true;
 	door._oSelFlag = 2;
-	bool dok = IsDoorClear(door.position) && dPlayer[door.position.x][door.position.y] == 0;
-	door._oVar4 = dok ? DOOR_OPEN : DOOR_BLOCKED;
+	door._oVar4 = IsDoorClear(door) ? DOOR_OPEN : DOOR_BLOCKED;
 }
 
 void UpdateSarcophagus(Object &sarcophagus)
