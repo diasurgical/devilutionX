@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <SDL.h>
+
 #include "miniwin/misc_msg.h"
 
 namespace devilution {
@@ -19,9 +21,9 @@ bool IsRunning();
 bool IsRecording();
 
 bool GetRunGameLoop(bool &drawGame, bool &processInput);
-bool FetchMessage(tagMSG *lpMsg);
+bool FetchMessage(SDL_Event *event, uint16_t *modState);
 void RecordGameLoopResult(bool runGameLoop);
-void RecordMessage(tagMSG *lpMsg);
+void RecordMessage(const SDL_Event &event, uint16_t modState);
 
 void NotifyGameLoopStart();
 void NotifyGameLoopEnd();

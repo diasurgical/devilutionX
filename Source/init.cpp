@@ -229,15 +229,50 @@ void init_create_window()
 #endif
 }
 
-void MainWndProc(uint32_t msg)
+void MainWndProc(const SDL_Event &event)
 {
-	switch (msg) {
-	case DVL_WM_PAINT:
+#ifndef USE_SDL1
+	if (event.type != SDL_WINDOWEVENT)
+		return;
+	switch (event.window.event) {
+	case SDL_WINDOWEVENT_HIDDEN:
+		gbActive = false;
+		break;
+	case SDL_WINDOWEVENT_SHOWN:
+		gbActive = false;
 		force_redraw = 255;
 		break;
-	case DVL_WM_QUERYENDSESSION:
+	case SDL_WINDOWEVENT_EXPOSED:
+		force_redraw = 255;
+		break;
+	case SDL_WINDOWEVENT_LEAVE:
+		sgbMouseDown = CLICK_NONE;
+		LastMouseButtonAction = MouseActionType::None;
+		force_redraw = 255;
+		break;
+	case SDL_WINDOWEVENT_CLOSE:
 		diablo_quit(0);
+		break;
+	case SDL_WINDOWEVENT_FOCUS_LOST:
+		diablo_focus_pause();
+		break;
+	case SDL_WINDOWEVENT_FOCUS_GAINED:
+		diablo_focus_unpause();
+		break;
+	default:
+		LogVerbose("Unhandled SDL_WINDOWEVENT event: ", event.window.event);
+		break;
 	}
+#else
+	if (event.type != SDL_ACTIVEEVENT)
+		return;
+	if ((event.active.state & SDL_APPINPUTFOCUS) != 0) {
+		if (event.active.gain == 0)
+			diablo_focus_pause();
+		else
+			diablo_focus_unpause();
+	}
+#endif
 }
 
 EventHandler SetEventHandler(EventHandler eventHandler)

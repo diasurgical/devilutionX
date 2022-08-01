@@ -116,14 +116,15 @@ void PrintDebugMonster(const Monster &monster)
 
 void ProcessMessages()
 {
-	tagMSG msg;
-	while (FetchMessage(&msg)) {
-		if (msg.message == DVL_WM_QUIT) {
+	SDL_Event event;
+	uint16_t modState;
+	while (FetchMessage(&event, &modState)) {
+		if (event.type == SDL_QUIT) {
 			gbRunGameResult = false;
 			gbRunGame = false;
 			break;
 		}
-		PushMessage(&msg);
+		HandleMessage(event, modState);
 	}
 }
 

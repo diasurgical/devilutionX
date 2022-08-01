@@ -44,6 +44,9 @@ const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 OptionalOwnedClxSpriteList ArtCutsceneWidescreen;
 
+uint32_t CustomEventsBegin = SDL_USEREVENT;
+constexpr uint32_t NumCustomEvents = WM_LAST - WM_FIRST + 1;
+
 Cutscenes PickCutscene(interface_mode uMsg)
 {
 	switch (uMsg) {
@@ -204,13 +207,35 @@ void DrawCutsceneForeground()
 
 } // namespace
 
+void RegisterCustomEvents()
+{
+#ifndef USE_SDL1
+	CustomEventsBegin = SDL_RegisterEvents(NumCustomEvents);
+#endif
+}
+
+bool IsCustomEvent(uint32_t eventType)
+{
+	return eventType >= CustomEventsBegin && eventType < CustomEventsBegin + NumCustomEvents;
+}
+
+interface_mode GetCustomEvent(uint32_t eventType)
+{
+	return static_cast<interface_mode>(eventType - CustomEventsBegin);
+}
+
+uint32_t CustomEventToSdlEvent(interface_mode eventType)
+{
+	return CustomEventsBegin + eventType;
+}
+
 void interface_msg_pump()
 {
-	tagMSG msg;
-
-	while (FetchMessage(&msg)) {
-		if (msg.message != DVL_WM_QUIT) {
-			PushMessage(&msg);
+	SDL_Event event;
+	uint16_t modState;
+	while (FetchMessage(&event, &modState)) {
+		if (event.type != SDL_QUIT) {
+			HandleMessage(event, modState);
 		}
 	}
 }
