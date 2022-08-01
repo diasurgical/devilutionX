@@ -225,8 +225,8 @@ int InvPutItem(const Player &player, Point position, const Item &item);
 int SyncPutItem(const Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 int8_t CheckInvHLight();
-bool UseScroll(Player &player, spell_id spell);
-void UseStaffCharge(Player &player);
+bool CanUseScroll(Player &player, spell_id spell);
+void ConsumeStaffCharge(Player &player);
 bool CanUseStaff(Player &player, spell_id spellId);
 Item &GetInventoryItem(Player &player, int location);
 bool UseInvItem(int pnum, int cii);
@@ -376,10 +376,8 @@ inline bool RemoveInventoryOrBeltItemById(Player &player, _item_indexes id)
 
 /**
  * @brief Removes the first inventory or belt scroll with the player's current spell.
- *
- * @return Whether a scroll was found and removed.
  */
-bool RemoveCurrentSpellScroll(Player &player);
+void ConsumeScroll(Player &player);
 
 /* data */
 
