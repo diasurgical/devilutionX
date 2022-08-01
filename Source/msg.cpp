@@ -72,7 +72,7 @@ struct DObjectStr {
 
 struct DLevel {
 	TCmdPItem item[MAXITEMS];
-	DObjectStr object[MAXOBJECTS];
+	std::unordered_map<WorldTilePosition, DObjectStr> object;
 	DMonsterStr monster[MaxMonsters];
 };
 
@@ -112,7 +112,10 @@ uint32_t sgdwRecvOffset;
 int sgnCurrMegaPlayer;
 std::unordered_map<uint8_t, DLevel> DeltaLevels;
 uint8_t sbLastCmd;
-byte sgRecvBuf[sizeof(DLevel) + 1];
+/**
+ * @brief buffer used to receive level deltas, size is the worst expected case assuming every object on a level was touched
+ */
+byte sgRecvBuf[1U + sizeof(DLevel::item) + sizeof(uint8_t) + (sizeof(WorldTilePosition) + sizeof(_cmd_id)) * MAXOBJECTS + sizeof(DLevel::monster)];
 _cmd_id sgbRecvCmd;
 std::unordered_map<uint8_t, LocalLevel> LocalLevels;
 DJunk sgJunk;
@@ -140,7 +143,8 @@ DLevel &GetDeltaLevel(uint8_t level)
 	auto emplaceRet = DeltaLevels.emplace(level, DLevel {});
 	assert(emplaceRet.second);
 	DLevel &deltaLevel = emplaceRet.first->second;
-	memset(&deltaLevel, 0xFF, sizeof(DLevel));
+	memset(&deltaLevel.item, 0xFF, sizeof(deltaLevel.item));
+	memset(&deltaLevel.monster, 0xFF, sizeof(deltaLevel.monster));
 	return deltaLevel;
 }
 
@@ -331,16 +335,31 @@ size_t DeltaImportItem(const byte *src, TCmdPItem *dst)
 	return size;
 }
 
-byte *DeltaExportObject(byte *dst, const DObjectStr *src)
+byte *DeltaExportObject(byte *dst, const std::unordered_map<WorldTilePosition, DObjectStr> &src)
 {
-	memcpy(dst, src, sizeof(DObjectStr) * MAXOBJECTS);
-	return dst + sizeof(DObjectStr) * MAXOBJECTS;
+	*dst++ = static_cast<byte>(src.size());
+	for (auto &pair : src) {
+		*dst++ = static_cast<byte>(pair.first.x);
+		*dst++ = static_cast<byte>(pair.first.y);
+		*dst++ = static_cast<byte>(pair.second.bCmd);
+	}
+
+	return dst;
 }
 
-size_t DeltaImportObject(const byte *src, DObjectStr *dst)
+const byte *DeltaImportObjects(const byte *src, std::unordered_map<WorldTilePosition, DObjectStr> &dst)
 {
-	memcpy(dst, src, sizeof(DObjectStr) * MAXOBJECTS);
-	return sizeof(DObjectStr) * MAXOBJECTS;
+	dst.clear();
+
+	uint8_t numDeltas = static_cast<uint8_t>(*src++);
+	dst.reserve(numDeltas);
+
+	for (unsigned i = 0; i < numDeltas; i++) {
+		WorldTilePosition objectPosition { static_cast<WorldTileCoord>(*src++), static_cast<WorldTileCoord>(*src++) };
+		dst[objectPosition] = DObjectStr { static_cast<_cmd_id>(*src++) };
+	}
+
+	return src;
 }
 
 byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
@@ -434,7 +453,7 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 	if (sgRecvBuf[0] != byte { 0 })
 		PkwareDecompress(&sgRecvBuf[1], recvOffset, sizeof(sgRecvBuf) - 1);
 
-	byte *src = &sgRecvBuf[1];
+	const byte *src = &sgRecvBuf[1];
 	if (cmd == CMD_DLEVEL_JUNK) {
 		DeltaImportJunk(src);
 	} else if (cmd == CMD_DLEVEL) {
@@ -442,7 +461,7 @@ void DeltaImportData(_cmd_id cmd, uint32_t recvOffset)
 		src += sizeof(uint8_t);
 		DLevel &deltaLevel = GetDeltaLevel(i);
 		src += DeltaImportItem(src, deltaLevel.item);
-		src += DeltaImportObject(src, deltaLevel.object);
+		src = DeltaImportObjects(src, deltaLevel.object);
 		DeltaImportMonster(src, deltaLevel.monster);
 	} else {
 		app_fatal(StrCat("Unkown network message type: ", cmd));
@@ -536,16 +555,14 @@ void DeltaLeaveSync(uint8_t bLevel)
 	LocalLevels.insert_or_assign(bLevel, AutomapView);
 }
 
-void DeltaSyncObject(const Object &liveObject, _cmd_id bCmd, const Player &player)
+void DeltaSyncObject(WorldTilePosition position, _cmd_id bCmd, const Player &player)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
 
-	// object deltas are laid out in memory using the same relative offsets as the Objects array.
-	size_t deltaIndex = std::distance<const Object *>(&Objects[0], &liveObject);
-	GetDeltaLevel(player).object[deltaIndex].bCmd = bCmd;
+	GetDeltaLevel(player).object[position].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
@@ -1640,15 +1657,19 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 size_t OnOperateObject(const TCmd &pCmd, int pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
-	Object *object = FindObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (object != nullptr) {
+	} else {
 		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncOpObject(player, message.bCmd, *object);
-		DeltaSyncObject(*object, message.bCmd, player);
+		WorldTilePosition position { message.x, message.y };
+		assert(InDungeonBounds(position));
+		if (player.isOnActiveLevel()) {
+			Object *object = FindObjectAtPosition(position);
+			if (object != nullptr)
+				SyncOpObject(player, message.bCmd, *object);
+		}
+		DeltaSyncObject(position, message.bCmd, player);
 	}
 
 	return sizeof(message);
@@ -1657,15 +1678,19 @@ size_t OnOperateObject(const TCmd &pCmd, int pnum)
 size_t OnBreakObject(const TCmd &pCmd, int pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
-	Object *breakable = FindObjectAtPosition({ message.x, message.y });
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (breakable != nullptr) {
+	} else {
 		Player &player = Players[pnum];
-		if (player.isOnActiveLevel())
-			SyncBreakObj(player, *breakable);
-		DeltaSyncObject(*breakable, CMD_BREAKOBJ, player);
+		WorldTilePosition position { message.x, message.y };
+		assert(InDungeonBounds(position));
+		if (player.isOnActiveLevel()) {
+			Object *object = FindObjectAtPosition(position);
+			if (object != nullptr)
+				SyncBreakObj(player, *object);
+		}
+		DeltaSyncObject(position, CMD_BREAKOBJ, player);
 	}
 
 	return sizeof(message);
@@ -2158,9 +2183,17 @@ void DeltaExportData(int pnum)
 {
 	if (sgbDeltaChanged) {
 		for (auto &it : DeltaLevels) {
-			std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1 + sizeof(uint8_t)] };
-			byte *dstEnd = &dst.get()[1];
 			DLevel &deltaLevel = it.second;
+
+			const size_t bufferSize = 1U                                                      /* marker byte, always 0 */
+			    + sizeof(uint8_t)                                                             /* level id */
+			    + sizeof(deltaLevel.item)                                                     /* items spawned during dungeon generation which have been picked up, and items dropped by a player during a game */
+			    + sizeof(uint8_t)                                                             /* count of object interactions which caused a state change since dungeon generation */
+			    + (sizeof(WorldTilePosition) + sizeof(DObjectStr)) * deltaLevel.object.size() /* location/action pairs for the object interactions */
+			    + sizeof(deltaLevel.monster);                                                 /* latest monster state */
+			std::unique_ptr<byte[]> dst { new byte[bufferSize] };
+
+			byte *dstEnd = &dst.get()[1];
 			*dstEnd = static_cast<byte>(it.first);
 			dstEnd += sizeof(uint8_t);
 			dstEnd = DeltaExportItem(dstEnd, deltaLevel.item);
@@ -2487,17 +2520,26 @@ void DeltaLoadLevel()
 	}
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int i = 0; i < MAXOBJECTS; i++) {
-			switch (deltaLevel.object[i].bCmd) {
+		for (auto it = deltaLevel.object.begin(); it != deltaLevel.object.end();) {
+			Object *object = FindObjectAtPosition(it->first);
+			if (object == nullptr) {
+				it = deltaLevel.object.erase(it);
+				continue;
+			}
+
+			switch (it->second.bCmd) {
 			case CMD_OPENDOOR:
 			case CMD_OPERATEOBJ:
 			case CMD_PLROPOBJ:
-				DeltaSyncOpObject(Objects[i]);
+				DeltaSyncOpObject(*object);
+				it++;
 				break;
 			case CMD_BREAKOBJ:
-				DeltaSyncBreakObj(Objects[i]);
+				DeltaSyncBreakObj(*object);
+				it++;
 				break;
 			default:
+				it = deltaLevel.object.erase(it); // discard invalid commands
 				break;
 			}
 		}
