@@ -222,7 +222,7 @@ struct Object {
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */
-	[[nodiscard]] constexpr bool IsDoor() const
+	[[nodiscard]] constexpr bool isDoor() const
 	{
 		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR, _object_id::OBJ_L5LDOOR, _object_id::OBJ_L5RDOOR);
 	}

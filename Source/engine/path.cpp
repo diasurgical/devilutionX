@@ -329,7 +329,7 @@ bool IsTileWalkable(Point position, bool ignoreDoors)
 {
 	Object *object = FindObjectAtPosition(position);
 	if (object != nullptr) {
-		if (ignoreDoors && object->IsDoor()) {
+		if (ignoreDoors && object->isDoor()) {
 			return true;
 		}
 		if (object->_oSolidFlag) {
