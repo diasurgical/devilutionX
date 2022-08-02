@@ -13,7 +13,6 @@ set(libdevilutionx_SRCS
   debug.cpp
   diablo.cpp
   doom.cpp
-  dthread.cpp
   encrypt.cpp
   engine.cpp
   error.cpp
