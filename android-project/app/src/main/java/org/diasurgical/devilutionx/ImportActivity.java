@@ -90,7 +90,12 @@ public class ImportActivity extends Activity {
 					outputStream.close();
 			}
 		} catch (IOException exception) {
-			Log.e("importFile", Objects.requireNonNull(exception.getMessage()));
+			String message = exception.getMessage();
+			if (message == null) {
+				Log.e("importFile", "IOException", exception);
+			} else {
+				Log.e("importFile", message);
+			}
 		}
 	}
 }
