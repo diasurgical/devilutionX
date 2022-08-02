@@ -15,7 +15,6 @@
 #include "config.h"
 #include "control.h"
 #include "dead.h"
-#include "dthread.h"
 #include "encrypt.h"
 #include "engine/random.hpp"
 #include "engine/world_tile.hpp"
@@ -2204,18 +2203,18 @@ void DeltaExportData(int pnum)
 			dstEnd = DeltaExportObject(dstEnd, deltaLevel.object);
 			dstEnd = DeltaExportMonster(dstEnd, deltaLevel.monster);
 			uint32_t size = CompressData(dst.get(), dstEnd);
-			dthread_send_delta(pnum, CMD_DLEVEL, std::move(dst), size);
+			multi_send_zero_packet(pnum, CMD_DLEVEL, dst.get(), size);
 		}
 
-		std::unique_ptr<byte[]> dst { new byte[sizeof(DJunk) + 1] };
-		byte *dstEnd = &dst.get()[1];
+		byte dst[sizeof(DJunk) + 1];
+		byte *dstEnd = &dst[1];
 		dstEnd = DeltaExportJunk(dstEnd);
-		uint32_t size = CompressData(dst.get(), dstEnd);
-		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, std::move(dst), size);
+		uint32_t size = CompressData(dst, dstEnd);
+		multi_send_zero_packet(pnum, CMD_DLEVEL_JUNK, dst, size);
 	}
 
-	std::unique_ptr<byte[]> src { new byte[1] { static_cast<byte>(0) } };
-	dthread_send_delta(pnum, CMD_DLEVEL_END, std::move(src), 1);
+	byte src[1] = { static_cast<byte>(0) };
+	multi_send_zero_packet(pnum, CMD_DLEVEL_END, src, 1);
 }
 
 void delta_init()
