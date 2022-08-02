@@ -308,7 +308,7 @@ void BeginTimeout()
 	CheckDropPlayer();
 }
 
-void HandleAllPackets(int pnum, const byte *data, size_t size)
+void HandleAllPackets(size_t pnum, const byte *data, size_t size)
 {
 	for (unsigned offset = 0; offset < size;) {
 		size_t messageSize = ParseCmd(pnum, reinterpret_cast<const TCmd *>(&data[offset]));
@@ -591,21 +591,21 @@ void multi_process_network_packets()
 	ClearPlayerLeftState();
 	ProcessTmsgs();
 
-	int dwID = -1;
+	uint8_t playerId = std::numeric_limits<uint8_t>::max();
 	TPktHdr *pkt;
 	uint32_t dwMsgSize = 0;
-	while (SNetReceiveMessage(&dwID, (void **)&pkt, &dwMsgSize)) {
+	while (SNetReceiveMessage(&playerId, (void **)&pkt, &dwMsgSize)) {
 		dwRecCount++;
 		ClearPlayerLeftState();
 		if (dwMsgSize < sizeof(TPktHdr))
 			continue;
-		if (static_cast<size_t>(dwID) >= Players.size())
+		if (playerId >= Players.size())
 			continue;
 		if (pkt->wCheck != LoadBE32("\0\0ip"))
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
-		Player &player = Players[dwID];
+		Player &player = Players[playerId];
 		if (!IsNetPlayerValid(player)) {
 			_cmd_id cmd = *(const _cmd_id *)(pkt + 1);
 			if (gbBufferMsgs == 0 && IsNoneOf(cmd, CMD_SEND_PLRINFO, CMD_ACK_PLRINFO)) {
@@ -639,7 +639,7 @@ void multi_process_network_packets()
 						player.position.future = syncPosition;
 						if (player.IsWalking())
 							player.position.temp = syncPosition;
-						dPlayer[player.position.tile.x][player.position.tile.y] = dwID + 1;
+						dPlayer[player.position.tile.x][player.position.tile.y] = playerId + 1;
 					}
 					if (player.position.future.WalkingDistance(player.position.tile) > 1) {
 						player.position.future = player.position.tile;
@@ -651,16 +651,16 @@ void multi_process_network_packets()
 				}
 			}
 		}
-		HandleAllPackets(dwID, (const byte *)(pkt + 1), dwMsgSize - sizeof(TPktHdr));
+		HandleAllPackets(playerId, (const byte *)(pkt + 1), dwMsgSize - sizeof(TPktHdr));
 	}
 	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 		nthread_terminate_game("SNetReceiveMsg");
 	CheckPlayerInfoTimeouts();
 }
 
-void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
+void multi_send_zero_packet(size_t pnum, _cmd_id bCmd, const byte *data, size_t size)
 {
-	assert(pnum != static_cast<int>(MyPlayerId));
+	assert(pnum != MyPlayerId);
 	assert(data != nullptr);
 	assert(size <= 0x0ffff);
 

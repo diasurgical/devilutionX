@@ -756,7 +756,7 @@ size_t OnWalk(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnAddStrength(const TCmd *pCmd, int pnum)
+size_t OnAddStrength(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -768,7 +768,7 @@ size_t OnAddStrength(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnAddMagic(const TCmd *pCmd, int pnum)
+size_t OnAddMagic(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -792,7 +792,7 @@ size_t OnAddDexterity(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnAddVitality(const TCmd *pCmd, int pnum)
+size_t OnAddVitality(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -884,7 +884,7 @@ size_t OnRequestGetItem(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnGetItem(const TCmd *pCmd, int pnum)
+size_t OnGetItem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
@@ -953,7 +953,7 @@ size_t OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnAutoGetItem(const TCmd *pCmd, int pnum)
+size_t OnAutoGetItem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
@@ -985,7 +985,7 @@ size_t OnAutoGetItem(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnItemExtra(const TCmd *pCmd, int pnum)
+size_t OnItemExtra(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdGItem *>(pCmd);
 
@@ -1002,7 +1002,7 @@ size_t OnItemExtra(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnPutItem(const TCmd *pCmd, int pnum)
+size_t OnPutItem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
@@ -1036,7 +1036,7 @@ size_t OnPutItem(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnSyncPutItem(const TCmd *pCmd, int pnum)
+size_t OnSyncPutItem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
@@ -1065,7 +1065,7 @@ size_t OnSyncPutItem(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnRespawnItem(const TCmd *pCmd, int pnum)
+size_t OnRespawnItem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
@@ -1446,7 +1446,7 @@ size_t OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnKnockback(const TCmd *pCmd, int pnum)
+size_t OnKnockback(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -1461,7 +1461,7 @@ size_t OnKnockback(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnResurrect(const TCmd *pCmd, int pnum)
+size_t OnResurrect(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -1469,7 +1469,7 @@ size_t OnResurrect(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (message.wParam1 < Players.size()) {
 		DoResurrect(pnum, Players[message.wParam1]);
-		if (static_cast<size_t>(pnum) == MyPlayerId)
+		if (pnum == MyPlayerId)
 			pfile_update(true);
 	}
 
@@ -1503,13 +1503,13 @@ size_t OnTalkXY(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnNewLevel(const TCmd *pCmd, int pnum)
+size_t OnNewLevel(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (pnum != static_cast<int>(MyPlayerId)) {
+	} else if (pnum != MyPlayerId) {
 		if (message.wParam1 < WM_FIRST || message.wParam1 > WM_LAST)
 			return sizeof(message);
 
@@ -1526,7 +1526,7 @@ size_t OnNewLevel(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnWarp(const TCmd *pCmd, int pnum)
+size_t OnWarp(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -1539,7 +1539,7 @@ size_t OnWarp(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnMonstDeath(const TCmd *pCmd, int pnum)
+size_t OnMonstDeath(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
 	const Point position { message.x, message.y };
@@ -1559,7 +1559,7 @@ size_t OnMonstDeath(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnKillGolem(const TCmd *pCmd, int pnum)
+size_t OnKillGolem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
 	const Point position { message.x, message.y };
@@ -1579,7 +1579,7 @@ size_t OnKillGolem(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnAwakeGolem(const TCmd *pCmd, int pnum)
+size_t OnAwakeGolem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdGolem *>(pCmd);
 	const Point position { message._mx, message._my };
@@ -1605,7 +1605,7 @@ size_t OnAwakeGolem(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnMonstDamage(const TCmd *pCmd, int pnum)
+size_t OnMonstDamage(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdMonDamage *>(pCmd);
 
@@ -1630,7 +1630,7 @@ size_t OnMonstDamage(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnPlayerDeath(const TCmd *pCmd, int pnum)
+size_t OnPlayerDeath(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -1661,7 +1661,7 @@ size_t OnPlayerDamage(const TCmd *pCmd, Player &player)
 	return sizeof(message);
 }
 
-size_t OnOperateObject(const TCmd &pCmd, int pnum)
+size_t OnOperateObject(const TCmd &pCmd, size_t pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
 
@@ -1682,7 +1682,7 @@ size_t OnOperateObject(const TCmd &pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnBreakObject(const TCmd &pCmd, int pnum)
+size_t OnBreakObject(const TCmd &pCmd, size_t pnum)
 {
 	const auto &message = reinterpret_cast<const TCmdLoc &>(pCmd);
 
@@ -1703,7 +1703,7 @@ size_t OnBreakObject(const TCmd &pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnChangePlayerItems(const TCmd *pCmd, int pnum)
+size_t OnChangePlayerItems(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
 	Player &player = Players[pnum];
@@ -1724,7 +1724,7 @@ size_t OnChangePlayerItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnDeletePlayerItems(const TCmd *pCmd, int pnum)
+size_t OnDeletePlayerItems(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdDelItem *>(pCmd);
 
@@ -1795,7 +1795,7 @@ size_t OnDeleteBeltItems(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnPlayerLevel(const TCmd *pCmd, int pnum)
+size_t OnPlayerLevel(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -1810,7 +1810,7 @@ size_t OnPlayerLevel(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnDropItem(const TCmd *pCmd, int pnum)
+size_t OnDropItem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
@@ -1823,7 +1823,7 @@ size_t OnDropItem(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnSpawnItem(const TCmd *pCmd, int pnum)
+size_t OnSpawnItem(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPItem *>(pCmd);
 
@@ -1842,7 +1842,7 @@ size_t OnSpawnItem(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnSendPlayerInfo(const TCmd *pCmd, int pnum)
+size_t OnSendPlayerInfo(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdPlrInfoHdr *>(pCmd);
 
@@ -1854,7 +1854,7 @@ size_t OnSendPlayerInfo(const TCmd *pCmd, int pnum)
 	return message.wBytes + sizeof(message);
 }
 
-size_t OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
+size_t OnPlayerJoinLevel(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam2 *>(pCmd);
 	const Point position { message.x, message.y };
@@ -1906,7 +1906,7 @@ size_t OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnActivatePortal(const TCmd *pCmd, int pnum)
+size_t OnActivatePortal(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
 	const Point position { message.x, message.y };
@@ -1944,7 +1944,7 @@ size_t OnActivatePortal(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnDeactivatePortal(const TCmd *pCmd, int pnum)
+size_t OnDeactivatePortal(const TCmd *pCmd, size_t pnum)
 {
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
@@ -1958,12 +1958,12 @@ size_t OnDeactivatePortal(const TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-size_t OnRestartTown(const TCmd *pCmd, int pnum)
+size_t OnRestartTown(const TCmd *pCmd, size_t pnum)
 {
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	} else {
-		if (pnum == static_cast<int>(MyPlayerId)) {
+		if (pnum == MyPlayerId) {
 			MyPlayerIsDead = false;
 			gamemenu_off();
 		}
@@ -1973,7 +1973,7 @@ size_t OnRestartTown(const TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-size_t OnSetStrength(const TCmd *pCmd, int pnum)
+size_t OnSetStrength(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -1988,7 +1988,7 @@ size_t OnSetStrength(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnSetDexterity(const TCmd *pCmd, int pnum)
+size_t OnSetDexterity(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -2003,7 +2003,7 @@ size_t OnSetDexterity(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnSetMagic(const TCmd *pCmd, int pnum)
+size_t OnSetMagic(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -2018,7 +2018,7 @@ size_t OnSetMagic(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnSetVitality(const TCmd *pCmd, int pnum)
+size_t OnSetVitality(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
@@ -2051,14 +2051,14 @@ size_t OnFriendlyMode(const TCmd *pCmd, Player &player) // NOLINT(misc-unused-pa
 	return sizeof(*pCmd);
 }
 
-size_t OnSyncQuest(const TCmd *pCmd, int pnum)
+size_t OnSyncQuest(const TCmd *pCmd, size_t pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdQuest *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else {
-		if (pnum != static_cast<int>(MyPlayerId) && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
+		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
 			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1);
 		sgbDeltaChanged = true;
 	}
@@ -2066,7 +2066,7 @@ size_t OnSyncQuest(const TCmd *pCmd, int pnum)
 	return sizeof(message);
 }
 
-size_t OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
+size_t OnCheatExperience(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
@@ -2082,7 +2082,7 @@ size_t OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-param
 	return sizeof(*pCmd);
 }
 
-size_t OnCheatSpellLevel(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
+size_t OnCheatSpellLevel(const TCmd *pCmd, size_t pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1) {
@@ -2160,7 +2160,7 @@ size_t OnNakrul(const TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
-size_t OnOpenHive(const TCmd *pCmd, int pnum)
+size_t OnOpenHive(const TCmd *pCmd, size_t pnum)
 {
 	if (gbBufferMsgs != 1) {
 		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
@@ -2640,9 +2640,9 @@ void NetSendCmdGolem(uint8_t mx, uint8_t my, Direction dir, uint8_t menemy, int 
 	NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
+void NetSendCmdLoc(size_t playerId, bool bHiPri, _cmd_id bCmd, Point position)
 {
-	if (playerId == static_cast<int>(MyPlayerId) && WasPlayerCmdAlreadyRequested(bCmd, position))
+	if (playerId == MyPlayerId && WasPlayerCmdAlreadyRequested(bCmd, position))
 		return;
 
 	TCmdLoc cmd;
@@ -3031,7 +3031,7 @@ void delta_close_portal(int pnum)
 	sgbDeltaChanged = true;
 }
 
-size_t ParseCmd(int pnum, const TCmd *pCmd)
+size_t ParseCmd(size_t pnum, const TCmd *pCmd)
 {
 	sbLastCmd = pCmd->bCmd;
 	if (sgwPackPlrOffsetTbl[pnum] != 0 && sbLastCmd != CMD_ACK_PLRINFO && sbLastCmd != CMD_SEND_PLRINFO)

@@ -29,7 +29,7 @@ void SyncPortals();
 void AddInTownPortal(int i);
 void ActivatePortal(int i, Point position, int lvl, dungeon_type lvltype, bool sp);
 void DeactivatePortal(int i);
-bool PortalOnLevel(int i);
+bool PortalOnLevel(size_t i);
 void RemovePortalMissile(int id);
 void SetCurrentPortal(size_t p);
 void GetPortalLevel();
