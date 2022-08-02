@@ -3822,7 +3822,7 @@ void PrintItemDur(const Item &item)
 	PrintItemInfo(item);
 }
 
-void UseItem(int pnum, item_misc_id mid, spell_id spl)
+void UseItem(size_t pnum, item_misc_id mid, spell_id spl)
 {
 	Player &player = Players[pnum];
 

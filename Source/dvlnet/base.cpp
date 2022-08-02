@@ -184,7 +184,7 @@ void base::RecvLocal(packet &pkt)
 	}
 }
 
-bool base::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
+bool base::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
 {
 	poll();
 	if (message_queue.empty())

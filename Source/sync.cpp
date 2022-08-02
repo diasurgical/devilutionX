@@ -286,7 +286,7 @@ uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 	return dwMaxLen;
 }
 
-uint32_t OnSyncData(const TCmd *pCmd, int pnum)
+uint32_t OnSyncData(const TCmd *pCmd, size_t pnum)
 {
 	const auto &header = *reinterpret_cast<const TSyncHeader *>(pCmd);
 
@@ -295,7 +295,7 @@ uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		return header.wLen + sizeof(header);
 	}
-	if (pnum == static_cast<int>(MyPlayerId)) {
+	if (pnum == MyPlayerId) {
 		return header.wLen + sizeof(header);
 	}
 
@@ -312,7 +312,7 @@ uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 				continue;
 
 			if (GetLevelForMultiplayer(*MyPlayer) == level) {
-				SyncMonster(pnum > static_cast<int>(MyPlayerId), monsterSyncs[i]);
+				SyncMonster(pnum > MyPlayerId, monsterSyncs[i]);
 			}
 
 			delta_sync_monster(monsterSyncs[i], level);

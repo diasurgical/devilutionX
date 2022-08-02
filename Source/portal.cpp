@@ -101,7 +101,7 @@ void DeactivatePortal(int i)
 	Portals[i].open = false;
 }
 
-bool PortalOnLevel(int i)
+bool PortalOnLevel(size_t i)
 {
 	if (Portals[i].setlvl == setlevel && Portals[i].level == setlevel ? static_cast<int>(setlvlnum) : currlevel)
 		return true;

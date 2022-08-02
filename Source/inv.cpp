@@ -2039,7 +2039,7 @@ Item &GetInventoryItem(Player &player, int location)
 	return player.SpdList[location - INVITEM_BELT_FIRST];
 }
 
-bool UseInvItem(int pnum, int cii)
+bool UseInvItem(size_t pnum, int cii)
 {
 	Player &player = Players[pnum];
 

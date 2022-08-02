@@ -18,7 +18,7 @@ int loopback::join(std::string /*addrstr*/)
 	ABORT();
 }
 
-bool loopback::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
+bool loopback::SNetReceiveMessage(uint8_t *sender, void **data, uint32_t *size)
 {
 	if (message_queue.empty())
 		return false;
