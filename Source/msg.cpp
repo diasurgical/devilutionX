@@ -354,7 +354,8 @@ const byte *DeltaImportObjects(const byte *src, std::unordered_map<WorldTilePosi
 	dst.reserve(numDeltas);
 
 	for (unsigned i = 0; i < numDeltas; i++) {
-		WorldTilePosition objectPosition { static_cast<WorldTileCoord>(*src++), static_cast<WorldTileCoord>(*src++) };
+		WorldTilePosition objectPosition { static_cast<WorldTileCoord>(src[0]), static_cast<WorldTileCoord>(src[1]) };
+		src += 2;
 		dst[objectPosition] = DObjectStr { static_cast<_cmd_id>(*src++) };
 	}
 
