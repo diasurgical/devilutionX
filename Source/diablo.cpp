@@ -944,6 +944,20 @@ void SetApplicationVersions()
 	*BufCopy(gszVersionNumber, "version ", PROJECT_VERSION) = '\0';
 }
 
+void CheckArchivesUpToDate()
+{
+	const bool devilutionxMpqOutOfDate = devilutionx_mpq && devilutionx_mpq->HasFile("fonts\\12-00.pcx");
+	const bool fontsMpqOutOfDate = font_mpq && font_mpq->HasFile("fonts\\12-4e.pcx");
+
+	if (devilutionxMpqOutOfDate && fontsMpqOutOfDate) {
+		app_fatal(_("Please update devilutionx.mpq and fonts.mpq to the latest version"));
+	} else if (devilutionxMpqOutOfDate) {
+		app_fatal(_("Please update devilutionx.mpq to the latest version"));
+	} else if (fontsMpqOutOfDate) {
+		app_fatal(_("Please update fonts.mpq to the latest version"));
+	}
+}
+
 void DiabloInit()
 {
 	if (*sgOptions.Graphics.showFPS)
@@ -1003,6 +1017,8 @@ void DiabloInit()
 
 	// Always available.
 	LoadSmallSelectionSpinner();
+
+	CheckArchivesUpToDate();
 }
 
 void DiabloSplash()
