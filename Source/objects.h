@@ -306,6 +306,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty);
  * @param objPos tile coordinates
  */
 Object *AddObject(_object_id objType, Point objPos);
+bool UpdateTrapState(Object &trap);
 void OperateTrap(Object &trap);
 void ProcessObjects();
 void RedoPlayerVision();

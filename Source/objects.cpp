@@ -4433,10 +4433,10 @@ Object *AddObject(_object_id objType, Point objPos)
 	return &object;
 }
 
-void OperateTrap(Object &trap)
+bool UpdateTrapState(Object &trap)
 {
 	if (trap._oVar4 != 0)
-		return;
+		return false;
 
 	Object &trigger = ObjectAtPosition({ trap._oVar1, trap._oVar2 });
 	switch (trigger._otype) {
@@ -4449,7 +4449,7 @@ void OperateTrap(Object &trap)
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
 		if (trigger._oVar4 == 0)
-			return;
+			return false;
 		break;
 	case OBJ_LEVER:
 	case OBJ_CHEST1:
@@ -4460,16 +4460,25 @@ void OperateTrap(Object &trap)
 	case OBJ_L5LEVER:
 	case OBJ_L5SARC:
 		if (trigger._oSelFlag != 0)
-			return;
+			return false;
 		break;
 	default:
-		return;
+		return false;
 	}
 
 	trap._oVar4 = 1;
+	trigger._oTrapFlag = false;
+	return true;
+}
+
+void OperateTrap(Object &trap)
+{
+	if (!UpdateTrapState(trap))
+		return;
 
 	// default to firing at the trigger object
-	Point target = trigger.position;
+	Point triggerPosition = { trap._oVar1, trap._oVar2 };
+	Point target = triggerPosition;
 
 	PointsInRectangleRange searchArea { Rectangle { target, 1 } };
 	// look for a player near the trigger (using a reverse search to match vanilla behaviour)
@@ -4481,8 +4490,7 @@ void OperateTrap(Object &trap)
 
 	Direction dir = GetDirection(trap.position, target);
 	AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
-	PlaySfxLoc(IS_TRAP, trigger.position);
-	trigger._oTrapFlag = false;
+	PlaySfxLoc(IS_TRAP, triggerPosition);
 }
 
 void ProcessObjects()
