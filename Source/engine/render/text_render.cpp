@@ -17,8 +17,8 @@
 #include "DiabloUI/ui_item.h"
 #include "engine.h"
 #include "engine/load_cel.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/load_file.hpp"
-#include "engine/load_pcx.hpp"
 #include "engine/palette.h"
 #include "engine/point.hpp"
 #include "engine/render/clx_render.hpp"
@@ -194,11 +194,10 @@ const OwnedClxSpriteList *LoadFont(GameFontTables size, text_color color, uint16
 	}
 
 	char path[32];
-	GetFontPath(size, row, "pcx", &path[0]);
+	GetFontPath(size, row, "clx", &path[0]);
 
 	OptionalOwnedClxSpriteList &font = Fonts[fontId];
-	constexpr unsigned NumFrames = 256;
-	font = LoadPcxSpriteList(path, NumFrames, /*transparentColor=*/1);
+	font = LoadOptionalClx(path);
 	if (!font) {
 		LogError("Error loading font: {}", path);
 		return nullptr;

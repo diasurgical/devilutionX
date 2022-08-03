@@ -10,7 +10,7 @@
 #include "control.h"
 #include "controls/input.h"
 #include "controls/menu_controls.h"
-#include "engine/load_pcx.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
@@ -170,7 +170,7 @@ bool TextDialog(char const *const *text, std::size_t textLines)
 
 bool UiCreditsDialog()
 {
-	ArtBackgroundWidescreen = LoadPcx("ui_art\\creditsw.pcx");
+	ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\creditsw.clx");
 	LoadBackgroundArt("ui_art\\credits.pcx");
 
 	return TextDialog(CreditLines, CreditLinesSize);
@@ -179,10 +179,10 @@ bool UiCreditsDialog()
 bool UiSupportDialog()
 {
 	if (gbIsHellfire) {
-		ArtBackgroundWidescreen = LoadPcx("ui_art\\supportw.pcx");
+		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\supportw.clx");
 		LoadBackgroundArt("ui_art\\support.pcx");
 	} else {
-		ArtBackgroundWidescreen = LoadPcx("ui_art\\creditsw.pcx");
+		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\creditsw.clx");
 		LoadBackgroundArt("ui_art\\credits.pcx");
 	}
 

@@ -101,6 +101,7 @@ set(libdevilutionx_SRCS
   engine/dx.cpp
   engine/load_cel.cpp
   engine/load_cl2.cpp
+  engine/load_clx.cpp
   engine/load_pcx.cpp
   engine/palette.cpp
   engine/path.cpp

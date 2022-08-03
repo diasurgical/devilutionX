@@ -1,13 +1,14 @@
 #include "qol/stash.h"
 
-#include "utils/stdcompat/algorithm.hpp"
-#include <fmt/format.h>
 #include <utility>
 
-#include "DiabloUI/art_draw.h"
+#include <fmt/format.h>
+
 #include "control.h"
 #include "controls/plrctrls.h"
 #include "cursor.h"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/points_in_rectangle_range.hpp"
 #include "engine/rectangle.hpp"
 #include "engine/render/clx_render.hpp"
@@ -19,6 +20,7 @@
 #include "stores.h"
 #include "utils/format_int.hpp"
 #include "utils/language.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/str_cat.hpp"
 #include "utils/utf8.hpp"
 
@@ -50,8 +52,8 @@ constexpr Rectangle StashButtonRect[] = {
 
 constexpr PointsInRectangleRange StashGridRange { { { 0, 0 }, Size { 10, 10 } } };
 
-Art StashPanelArt;
-Art StashNavButtonArt;
+OptionalOwnedClxSpriteList StashPanelArt;
+OptionalOwnedClxSpriteList StashNavButtonArt;
 
 /**
  * @param page The stash page index.
@@ -258,16 +260,22 @@ Point GetStashSlotCoord(Point slot)
 
 void FreeStashGFX()
 {
-	StashPanelArt.Unload();
-	StashNavButtonArt.Unload();
+	StashNavButtonArt = std::nullopt;
+	StashPanelArt = std::nullopt;
 }
 
 void InitStash()
 {
 	InitialWithdrawGoldValue = 0;
 
-	LoadArt("data\\stash.pcx", &StashPanelArt, 1);
-	LoadArt("data\\stashnavbtns.pcx", &StashNavButtonArt, 5);
+	StashPanelArt = LoadOptionalClx("data\\stash.clx");
+	StashNavButtonArt = LoadOptionalClx("data\\stashnavbtns.clx");
+
+	if (!StashPanelArt || !StashNavButtonArt) {
+		app_fatal(_("Failed to load UI resources.\n"
+		            "\n"
+		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
+	}
 }
 
 void TransferItemToInventory(Player &player, uint16_t itemId)
@@ -341,11 +349,11 @@ void CheckStashButtonPress(Point mousePosition)
 
 void DrawStash(const Surface &out)
 {
-	DrawArt(out, GetPanelPosition(UiPanels::Stash), &StashPanelArt);
+	RenderClxSprite(out, (*StashPanelArt)[0], GetPanelPosition(UiPanels::Stash));
 
 	if (StashButtonPressed != -1) {
 		Point stashButton = GetPanelPosition(UiPanels::Stash, StashButtonRect[StashButtonPressed].position);
-		DrawArt(out, stashButton, &StashNavButtonArt, StashButtonPressed);
+		RenderClxSprite(out, (*StashNavButtonArt)[StashButtonPressed], stashButton);
 	}
 
 	constexpr Displacement offset { 0, INV_SLOT_SIZE_PX - 1 };
