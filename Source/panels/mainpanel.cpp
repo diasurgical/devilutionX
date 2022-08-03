@@ -1,6 +1,8 @@
 #include "panels/mainpanel.hpp"
 
 #include "control.h"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/display.h"
@@ -15,9 +17,9 @@ Art TalkButton;
 
 namespace {
 
-Art PanelButton;
-Art PanelButtonGrime;
-Art PanelButtonDownGrime;
+OptionalOwnedClxSpriteList PanelButton;
+OptionalOwnedClxSpriteList PanelButtonGrime;
+OptionalOwnedClxSpriteList PanelButtonDownGrime;
 
 void DrawButtonText(const Surface &out, string_view text, Rectangle placement, UiFlags style, int spacing = 1)
 {
@@ -27,15 +29,15 @@ void DrawButtonText(const Surface &out, string_view text, Rectangle placement, U
 
 void DrawButtonOnPanel(Point position, string_view text, int frame)
 {
-	DrawArt(*pBtmBuff, position, &PanelButton, frame);
+	RenderClxSprite(*pBtmBuff, (*PanelButton)[frame], position);
 	int spacing = 2;
-	int width = std::min(GetLineWidth(text, GameFont12, spacing), PanelButton.w());
+	int width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	if (width > 38) {
 		spacing = 1;
-		width = std::min(GetLineWidth(text, GameFont12, spacing), PanelButton.w());
+		width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	}
-	DrawArt(*pBtmBuff, position + Displacement { (PanelButton.w() - width) / 2, 7 }, &PanelButtonGrime, frame, width);
-	DrawButtonText(*pBtmBuff, text, { position, { PanelButton.w(), 0 } }, UiFlags::ColorButtonface, spacing);
+	RenderClxSprite(pBtmBuff->subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 7, width, pBtmBuff->h() - 7), (*PanelButtonGrime)[frame], { 0, 0 });
+	DrawButtonText(*pBtmBuff, text, { position, { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
 }
 
 void RenderMainButton(int buttonId, string_view text, int frame)
@@ -48,12 +50,12 @@ void RenderMainButton(int buttonId, string_view text, int frame)
 	const Surface out(PanelButtonDown.surface.get());
 	Point position { 0, 19 * buttonId };
 	int spacing = 2;
-	int width = std::min(GetLineWidth(text, GameFont12, spacing), PanelButton.w());
+	int width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	if (width > 38) {
 		spacing = 1;
-		width = std::min(GetLineWidth(text, GameFont12, spacing), PanelButton.w());
+		width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	}
-	DrawArt(out, position + Displacement { (PanelButton.w() - width) / 2, 9 }, &PanelButtonDownGrime, frame, width);
+	RenderClxSprite(out.subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 9, width, out.h() - position.y - 9), (*PanelButtonDownGrime)[frame], { 0, 0 });
 	DrawButtonText(out, text, { position + Displacement { 0, 2 }, { PanelButtonDown.w(), 0 } }, UiFlags::ColorButtonpushed, spacing);
 }
 
@@ -62,8 +64,8 @@ void DrawTalkButton(int buttonId)
 	string_view text = _("voice");
 	Point position { 176, GetMainPanel().size.height + 101 + 18 * buttonId };
 	DrawArt(*pBtmBuff, position, &TalkButton);
-	int width = std::min(GetLineWidth(text, GameFont12, 1), PanelButton.w());
-	DrawArt(*pBtmBuff, position + Displacement { (TalkButton.w() - width) / 2, 6 }, &PanelButtonGrime, 1, width, 9);
+	int width = std::min<int>(GetLineWidth(text, GameFont12, 1), (*PanelButton)[0].width());
+	RenderClxSprite(pBtmBuff->subregion(position.x + (TalkButton.w() - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
 	DrawButtonText(*pBtmBuff, text, { position, { TalkButton.w(), 0 } }, UiFlags::ColorButtonface);
 }
 
@@ -71,10 +73,10 @@ void DrawTalkButton(int buttonId)
 
 void LoadMainPanel()
 {
-	LoadArt("data\\panel8buc.pcx", &PanelButton, 2);
-	LoadArt("data\\dirtybuc.pcx", &PanelButtonGrime, 2);
 	LoadArt("data\\panel8bucp.pcx", &PanelButtonDown, 6);
-	LoadArt("data\\dirtybucp.pcx", &PanelButtonDownGrime, 2);
+	PanelButton = LoadClx("data\\panel8buc.clx");
+	PanelButtonGrime = LoadClx("data\\dirtybuc.clx");
+	PanelButtonDownGrime = LoadClx("data\\dirtybucp.clx");
 
 	// Load palette to render targets
 	UpdatePalette(&PanelButtonDown);
@@ -99,21 +101,21 @@ void LoadMainPanel()
 
 		const Surface talkSurface(TalkButton.surface.get());
 		int muteWidth = GetLineWidth(_("mute"), GameFont12, 2);
-		DrawArt(talkSurface, { (TalkButton.w() - muteWidth) / 2, 6 }, &PanelButtonGrime, 1, muteWidth, 9);
+		RenderClxSprite(talkSurface.subregion((TalkButton.w() - muteWidth) / 2, 6, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
 		DrawButtonText(talkSurface, _("mute"), { { 0, 0 }, { TalkButton.w(), 0 } }, UiFlags::ColorButtonface);
-		DrawArt(talkSurface, { (TalkButton.w() - muteWidth) / 2, 23 }, &PanelButtonGrime, 1, muteWidth, 9);
+		RenderClxSprite(talkSurface.subregion((TalkButton.w() - muteWidth) / 2, 23, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
 		DrawButtonText(talkSurface, _("mute"), { { 0, 17 }, { TalkButton.w(), 0 } }, UiFlags::ColorButtonpushed);
 		int voiceWidth = GetLineWidth(_("voice"), GameFont12, 2);
-		DrawArt(talkSurface, { (TalkButton.w() - voiceWidth) / 2, 39 }, &PanelButtonGrime, 1, voiceWidth, 9);
+		RenderClxSprite(talkSurface.subregion((TalkButton.w() - voiceWidth) / 2, 39, voiceWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
 		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, { TalkButton.w(), 0 } }, UiFlags::ColorButtonpushed);
 	}
 
 	UnloadFonts(GameFont12, ColorButtonface);
 	UnloadFonts(GameFont12, ColorButtonpushed);
 
-	PanelButton.Unload();
-	PanelButtonGrime.Unload();
-	PanelButtonDownGrime.Unload();
+	PanelButtonDownGrime = std::nullopt;
+	PanelButtonGrime = std::nullopt;
+	PanelButton = std::nullopt;
 }
 
 void FreeMainPanel()

@@ -2,13 +2,14 @@
 
 #include <cstddef>
 
-#include "DiabloUI/art_draw.h"
 #include "DiabloUI/ui_flags.hpp"
 #include "control.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
-#include "engine/load_cel.hpp"
+#include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
+#include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "options.h"
 #include "panels/spell_icons.hpp"
@@ -41,9 +42,9 @@ constexpr int IconSizeTextMarginTop = 2;
 constexpr int HintBoxSize = 39;
 constexpr int HintBoxMargin = 5;
 
-Art hintBox;
-Art hintBoxBackground;
-Art hintIcons;
+OptionalOwnedClxSpriteList hintBox;
+OptionalOwnedClxSpriteList hintBoxBackground;
+OptionalOwnedClxSpriteList hintIcons;
 
 enum HintIcon : uint8_t {
 	IconChar,
@@ -97,9 +98,9 @@ void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Po
 		if (iconIndices[slot] == HintIcon::IconNull)
 			continue;
 
-		DrawArt(out, iconPositions[slot], &hintBoxBackground);
-		DrawArt(out, iconPositions[slot], &hintIcons, iconIndices[slot], 37, 38);
-		DrawArt(out, hintBoxPositions[slot], &hintBox);
+		RenderClxSprite(out, (*hintBoxBackground)[0], iconPositions[slot]);
+		RenderClxSprite(out.subregion(iconPositions[slot].x, iconPositions[slot].y, 37, 38), (*hintIcons)[iconIndices[slot]], { 0, 0 });
+		RenderClxSprite(out, (*hintBox)[0], hintBoxPositions[slot]);
 	}
 }
 
@@ -140,7 +141,7 @@ void DrawSpellsCircleMenuHint(const Surface &out, const Point &origin)
 
 		SetSpellTrans(splType);
 		DrawSpellCel(out, spellIconPositions[slot], *pSBkIconCels, SpellITbl[splId]);
-		DrawArt(out, hintBoxPositions[slot], &hintBox);
+		RenderClxSprite(out, (*hintBox)[0], hintBoxPositions[slot]);
 	}
 }
 
@@ -171,11 +172,11 @@ void DrawSelectModifierMenu(const Surface &out)
 
 void InitModifierHints()
 {
-	LoadMaskedArt("data\\hintbox.pcx", &hintBox, 1, 1);
-	LoadMaskedArt("data\\hintboxbackground.pcx", &hintBoxBackground, 1, 1);
-	LoadMaskedArt("data\\hinticons.pcx", &hintIcons, 6, 1);
+	hintBox = LoadOptionalClx("data\\hintbox.clx");
+	hintBoxBackground = LoadOptionalClx("data\\hintboxbackground.clx");
+	hintIcons = LoadOptionalClx("data\\hinticons.clx");
 
-	if (hintBox.surface == nullptr || hintBoxBackground.surface == nullptr) {
+	if (!hintBox || !hintBoxBackground || !hintIcons) {
 		app_fatal(_("Failed to load UI resources.\n"
 		            "\n"
 		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
@@ -184,9 +185,9 @@ void InitModifierHints()
 
 void FreeModifierHints()
 {
-	hintBox.Unload();
-	hintBoxBackground.Unload();
-	hintIcons.Unload();
+	hintIcons = std::nullopt;
+	hintBoxBackground = std::nullopt;
+	hintBox = std::nullopt;
 }
 
 void DrawControllerModifierHints(const Surface &out)

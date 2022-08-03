@@ -7,6 +7,7 @@
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
 #include "control.h"
+#include "engine/load_clx.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "panels/ui_panels.hpp"
@@ -199,9 +200,9 @@ PanelEntry panelEntries[] = {
 	    []() { return GetResistInfo(MyPlayer->_pLghtResist); } },
 };
 
-Art PanelBoxLeft;
-Art PanelBoxMiddle;
-Art PanelBoxRight;
+OptionalOwnedClxSpriteList PanelBoxLeft;
+OptionalOwnedClxSpriteList PanelBoxMiddle;
+OptionalOwnedClxSpriteList PanelBoxRight;
 Art PanelFull;
 
 constexpr int PanelFieldHeight = 24;
@@ -211,12 +212,12 @@ constexpr int PanelFieldInnerHeight = PanelFieldHeight - PanelFieldPaddingTop - 
 
 void DrawPanelField(const Surface &out, Point pos, int len)
 {
-	DrawArt(out, pos, &PanelBoxLeft);
-	pos.x += PanelBoxLeft.w();
-	len -= PanelBoxLeft.w() + PanelBoxRight.w();
-	DrawArt(out, pos, &PanelBoxMiddle, 0, len);
+	RenderClxSprite(out, (*PanelBoxLeft)[0], pos);
+	pos.x += (*PanelBoxLeft)[0].width();
+	len -= (*PanelBoxLeft)[0].width() + (*PanelBoxRight)[0].width();
+	RenderClxSprite(out.subregion(pos.x, pos.y, len, (*PanelBoxMiddle)[0].height()), (*PanelBoxMiddle)[0], Point { 0, 0 });
 	pos.x += len;
-	DrawArt(out, pos, &PanelBoxRight);
+	RenderClxSprite(out, (*PanelBoxRight)[0], pos);
 }
 
 void DrawShadowString(const Surface &out, const PanelEntry &entry)
@@ -270,9 +271,9 @@ void LoadCharPanel()
 {
 	LoadArt("data\\charbg.pcx", &PanelFull);
 	UpdatePalette(&PanelFull); // PanelFull is being used as a render target
-	LoadArt("data\\boxleftend.pcx", &PanelBoxLeft);
-	LoadArt("data\\boxmiddle.pcx", &PanelBoxMiddle);
-	LoadArt("data\\boxrightend.pcx", &PanelBoxRight);
+	PanelBoxLeft = LoadClx("data\\boxleftend.clx");
+	PanelBoxMiddle = LoadClx("data\\boxmiddle.clx");
+	PanelBoxRight = LoadClx("data\\boxrightend.clx");
 
 	const Surface out(PanelFull.surface.get());
 
@@ -290,9 +291,9 @@ void LoadCharPanel()
 		DrawShadowString(out, entry);
 	}
 
-	PanelBoxLeft.Unload();
-	PanelBoxMiddle.Unload();
-	PanelBoxRight.Unload();
+	PanelBoxRight = std::nullopt;
+	PanelBoxMiddle = std::nullopt;
+	PanelBoxLeft = std::nullopt;
 }
 
 void FreeCharPanel()

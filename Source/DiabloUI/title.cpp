@@ -3,6 +3,7 @@
 #include "controls/input.h"
 #include "controls/menu_controls.h"
 #include "discord/discord.h"
+#include "engine/load_clx.hpp"
 #include "engine/load_pcx.hpp"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
@@ -19,7 +20,7 @@ void TitleLoad()
 {
 	if (gbIsHellfire) {
 		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
-		ArtBackgroundWidescreen = LoadPcx("ui_art\\hf_titlew.pcx");
+		ArtBackgroundWidescreen = LoadOptionalClx("ui_art\\hf_titlew.clx");
 	} else {
 		LoadBackgroundArt("ui_art\\title.pcx");
 		DiabloTitleLogo = LoadPcxSpriteList("ui_art\\logo.pcx", /*numFrames=*/15, /*transparentColor=*/250);

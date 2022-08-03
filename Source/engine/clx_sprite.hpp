@@ -118,6 +118,8 @@ public:
 
 	ClxSpriteList(const OwnedClxSpriteList &owned);
 
+	[[nodiscard]] OwnedClxSpriteList clone() const;
+
 	[[nodiscard]] constexpr uint32_t numSprites() const
 	{
 		return LoadLE32(data_);
@@ -139,7 +141,7 @@ public:
 	/** @brief The offset to the next sprite sheet, or file size if this is the last sprite sheet. */
 	[[nodiscard]] constexpr uint32_t nextSpriteSheetOffsetOrFileSize() const
 	{
-		return LoadLE32(&data_[4 + numSprites()]);
+		return LoadLE32(&data_[4 + numSprites() * 4]);
 	}
 
 	[[nodiscard]] constexpr const uint8_t *data() const
@@ -350,6 +352,11 @@ public:
 	OwnedClxSpriteList(OwnedClxSpriteList &&) noexcept = default;
 	OwnedClxSpriteList &operator=(OwnedClxSpriteList &&) noexcept = default;
 
+	[[nodiscard]] OwnedClxSpriteList clone() const
+	{
+		return ClxSpriteList { *this }.clone();
+	}
+
 	[[nodiscard]] ClxSprite operator[](size_t spriteIndex) const
 	{
 		return ClxSpriteList { *this }[spriteIndex];
@@ -369,6 +376,14 @@ private:
 inline ClxSpriteList::ClxSpriteList(const OwnedClxSpriteList &owned)
     : data_(owned.data_.get())
 {
+}
+
+inline OwnedClxSpriteList ClxSpriteList::clone() const
+{
+	const size_t dataSize = nextSpriteSheetOffsetOrFileSize();
+	std::unique_ptr<uint8_t[]> data { new uint8_t[dataSize] };
+	memcpy(data.get(), data_, dataSize);
+	return OwnedClxSpriteList { std::move(data) };
 }
 
 /**

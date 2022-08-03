@@ -2,6 +2,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "engine/clx_sprite.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/load_pcx.hpp"
 #include "engine/render/clx_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -17,7 +18,7 @@ OptionalOwnedClxSpriteList ButtonSprites;
 
 void LoadDialogButtonGraphics()
 {
-	ButtonSprites = LoadPcxSpriteList("ui_art\\dvl_but_sml.pcx", 2);
+	ButtonSprites = LoadOptionalClx("ui_art\\dvl_but_sml.clx");
 	if (!ButtonSprites) {
 		ButtonSprites = LoadPcxSpriteList("ui_art\\but_sml.pcx", 15);
 	}

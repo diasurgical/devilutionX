@@ -9,6 +9,7 @@
 #include "controls/menu_controls.h"
 #include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
+#include "engine/load_clx.hpp"
 #include "engine/load_pcx.hpp"
 #include "engine/palette.h"
 #include "hwcursor.hpp"
@@ -40,7 +41,7 @@ OptionalClxSprite LoadDialogSprite(bool hasCaption, bool isError)
 	if (!hasCaption) {
 		ownedDialogSprite = LoadPcx(isError ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", TransparentColor);
 	} else if (isError) {
-		ownedDialogSprite = LoadPcx("ui_art\\dvl_lrpopup.pcx", /*transparentColor=*/std::nullopt);
+		ownedDialogSprite = LoadOptionalClx("ui_art\\dvl_lrpopup.clx");
 		if (!ownedDialogSprite) {
 			ownedDialogSprite = LoadPcx("ui_art\\lrpopup.pcx", TransparentColor);
 		}

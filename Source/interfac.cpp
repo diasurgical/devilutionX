@@ -13,7 +13,7 @@
 #include "engine/clx_sprite.hpp"
 #include "engine/dx.h"
 #include "engine/load_cel.hpp"
-#include "engine/load_pcx.hpp"
+#include "engine/load_clx.hpp"
 #include "engine/palette.h"
 #include "engine/render/clx_render.hpp"
 #include "hwcursor.hpp"
@@ -105,7 +105,7 @@ void LoadCutsceneBackground(interface_mode uMsg)
 
 	switch (PickCutscene(uMsg)) {
 	case CutStart:
-		ArtCutsceneWidescreen = LoadPcx("gendata\\cutstartw.pcx");
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutstartw.pcx");
 		celPath = "Gendata\\Cutstart.cel";
 		palPath = "Gendata\\Cutstart.pal";
 		progress_id = 1;
@@ -146,13 +146,13 @@ void LoadCutsceneBackground(interface_mode uMsg)
 		progress_id = 1;
 		break;
 	case CutPortal:
-		ArtCutsceneWidescreen = LoadPcx("gendata\\cutportlw.pcx");
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutportlw.pcx");
 		celPath = "Gendata\\Cutportl.cel";
 		palPath = "Gendata\\Cutportl.pal";
 		progress_id = 1;
 		break;
 	case CutPortalRed:
-		ArtCutsceneWidescreen = LoadPcx("gendata\\cutportrw.pcx");
+		ArtCutsceneWidescreen = LoadOptionalClx("gendata\\cutportrw.pcx");
 		celPath = "Gendata\\Cutportr.cel";
 		palPath = "Gendata\\Cutportr.pal";
 		progress_id = 1;
