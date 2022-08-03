@@ -19,6 +19,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/load_clx.hpp"
 #include "engine/load_file.hpp"
+#include "engine/load_pcx.hpp"
 #include "engine/palette.h"
 #include "engine/point.hpp"
 #include "engine/render/clx_render.hpp"
@@ -198,6 +199,16 @@ const OwnedClxSpriteList *LoadFont(GameFontTables size, text_color color, uint16
 
 	OptionalOwnedClxSpriteList &font = Fonts[fontId];
 	font = LoadOptionalClx(path);
+	if (!font) {
+		// Could be an old devilutionx.mpq or fonts.mpq with PCX instead of CLX.
+		//
+		// We'll show an error elsewhere (in `CheckArchivesUpToDate`) and we need to load
+		// the font files to display it.
+		char pcxPath[32];
+		GetFontPath(size, row, "pcx", &pcxPath[0]);
+		font = LoadPcxSpriteList(pcxPath, /*numFramesOrFrameHeight=*/256, /*transparentColor=*/1);
+	}
+
 	if (!font) {
 		LogError("Error loading font: {}", path);
 		return nullptr;
