@@ -158,7 +158,7 @@ void UiOkDialog(string_view caption, string_view text, bool error, const std::ve
 			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
 				LogError("{}", SDL_GetError());
 			std::string captionStr = std::string(caption);
-			std::string textStr = std::string(caption);
+			std::string textStr = std::string(text);
 			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, captionStr.c_str(), textStr.c_str(), nullptr) <= -1) {
 				LogError("{}", SDL_GetError());
 			}
@@ -174,7 +174,7 @@ void UiOkDialog(string_view caption, string_view text, bool error, const std::ve
 	if (!Init(caption, text, error, !renderBehind.empty())) {
 		LogError("{}\n{}", caption, text);
 		std::string captionStr = std::string(caption);
-		std::string textStr = std::string(caption);
+		std::string textStr = std::string(text);
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, captionStr.c_str(), textStr.c_str(), nullptr) <= -1) {
 			LogError("{}", SDL_GetError());
 		}
