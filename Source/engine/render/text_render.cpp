@@ -417,19 +417,6 @@ void LoadSmallSelectionSpinner()
 	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
 }
 
-void UnloadFonts(GameFontTables size, text_color color)
-{
-	uint32_t fontStyle = (color << 24) | (size << 16);
-
-	for (auto font = Fonts.begin(); font != Fonts.end();) {
-		if ((font->first & 0xFFFF0000) == fontStyle) {
-			font = Fonts.erase(font);
-		} else {
-			font++;
-		}
-	}
-}
-
 void UnloadFonts()
 {
 	Fonts.clear();
