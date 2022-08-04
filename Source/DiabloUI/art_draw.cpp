@@ -50,29 +50,6 @@ void DrawArt(Point screenPosition, Art *art, int nFrame, Uint16 srcW, Uint16 src
 		ErrSdl();
 }
 
-void DrawArt(const Surface &out, Point position, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
-{
-	if (art->surface == nullptr || position.y >= out.h() || position.x >= out.w())
-		return;
-
-	SDL_Rect srcRect = MakeSdlRect(0, nFrame * art->h(), art->w(), art->h());
-	if (srcW != 0 && srcW < srcRect.w)
-		srcRect.w = srcW;
-	if (srcH != 0 && srcH < srcRect.h)
-		srcRect.h = srcH;
-
-	if (position.x + srcRect.w <= 0 || position.y + srcRect.h <= 0)
-		return;
-
-	out.Clip(&srcRect, &position);
-	SDL_Rect dstRect = MakeSdlRect(position.x + out.region.x, position.y + out.region.y, 0, 0);
-
-	UpdatePalette(art, out.surface);
-
-	if (SDL_BlitSurface(art->surface.get(), &srcRect, out.surface, &dstRect) < 0)
-		ErrSdl();
-}
-
 int GetAnimationFrame(int frames, int fps)
 {
 	int frame = (SDL_GetTicks() / fps) % frames;
