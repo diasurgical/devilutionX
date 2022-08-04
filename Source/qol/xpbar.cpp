@@ -52,13 +52,7 @@ void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &g
 void InitXPBar()
 {
 	if (*sgOptions.Gameplay.experienceBar) {
-		xpbarArt = LoadOptionalClx("data\\xpbar.clx");
-
-		if (!xpbarArt) {
-			app_fatal(_("Failed to load UI resources.\n"
-			            "\n"
-			            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
-		}
+		xpbarArt = LoadClx("data\\xpbar.clx");
 	}
 }
 

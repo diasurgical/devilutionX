@@ -265,9 +265,7 @@ void DrawStatButtons(const Surface &out)
 
 void LoadCharPanel()
 {
-	OptionalOwnedClxSpriteList background = LoadOptionalClx("data\\charbg.clx");
-	if (!background)
-		app_fatal(_("Please update devilutionx.mpq to the latest version"));
+	OptionalOwnedClxSpriteList background = LoadClx("data\\charbg.clx");
 	OwnedSurface out((*background)[0].width(), (*background)[0].height());
 	RenderClxSprite(out, (*background)[0], { 0, 0 });
 	background = std::nullopt;

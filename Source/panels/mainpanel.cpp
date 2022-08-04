@@ -67,9 +67,7 @@ void LoadMainPanel()
 	std::optional<OwnedSurface> out;
 	constexpr uint16_t NumButtonSprites = 6;
 	{
-		OptionalOwnedClxSpriteList background = LoadOptionalClx("data\\panel8bucp.clx");
-		if (!background)
-			app_fatal(_("Please update devilutionx.mpq to the latest version"));
+		OptionalOwnedClxSpriteList background = LoadClx("data\\panel8bucp.clx");
 		out.emplace((*background)[0].width(), (*background)[0].height() * NumButtonSprites);
 		int y = 0;
 		for (ClxSprite sprite : ClxSpriteList(*background)) {
