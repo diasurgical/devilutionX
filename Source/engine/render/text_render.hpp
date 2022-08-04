@@ -127,8 +127,6 @@ extern OptionalOwnedClxSpriteList pSPentSpn2Cels;
 
 void LoadSmallSelectionSpinner();
 
-void UnloadFonts(GameFontTables size, text_color color);
-
 /**
  * @brief Calculate pixel width of first line of text, respecting kerning
  * @param text Text to check, will read until first eol or terminator

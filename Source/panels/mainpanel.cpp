@@ -71,7 +71,11 @@ void LoadMainPanel()
 		if (!background)
 			app_fatal(_("Please update devilutionx.mpq to the latest version"));
 		out.emplace((*background)[0].width(), (*background)[0].height() * NumButtonSprites);
-		RenderClxSprite(*out, (*background)[0], { 0, 0 });
+		int y = 0;
+		for (ClxSprite sprite : ClxSpriteList(*background)) {
+			RenderClxSprite(*out, sprite, { 0, y });
+			y += sprite.height();
+		}
 	}
 
 	PanelButton = LoadOptionalClx("data\\panel8buc.clx");
@@ -105,7 +109,11 @@ void LoadMainPanel()
 		}
 
 		OwnedSurface talkSurface(talkButtonWidth, talkButtonHeight * NumTalkButtonSprites);
-		RenderClxSprite(talkSurface, (*talkButton)[0], { 0, 0 });
+		int y = 0;
+		for (ClxSprite sprite : ClxSpriteList(*talkButton)) {
+			RenderClxSprite(talkSurface, sprite, { 0, y });
+			y += sprite.height();
+		}
 		talkButton = std::nullopt;
 
 		int muteWidth = GetLineWidth(_("mute"), GameFont12, 2);
@@ -118,9 +126,6 @@ void LoadMainPanel()
 		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
 		TalkButton = SurfaceToClx(talkSurface, NumTalkButtonSprites);
 	}
-
-	UnloadFonts(GameFont12, ColorButtonface);
-	UnloadFonts(GameFont12, ColorButtonpushed);
 
 	PanelButtonDownGrime = std::nullopt;
 	PanelButtonGrime = std::nullopt;
