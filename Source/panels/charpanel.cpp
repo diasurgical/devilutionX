@@ -4,8 +4,6 @@
 
 #include <fmt/format.h>
 
-#include "DiabloUI/art.h"
-#include "DiabloUI/art_draw.h"
 #include "control.h"
 #include "engine/load_clx.hpp"
 #include "engine/render/clx_render.hpp"
@@ -16,6 +14,7 @@
 #include "utils/format_int.hpp"
 #include "utils/language.h"
 #include "utils/str_cat.hpp"
+#include "utils/surface_to_clx.hpp"
 
 namespace devilution {
 
@@ -200,24 +199,21 @@ PanelEntry panelEntries[] = {
 	    []() { return GetResistInfo(MyPlayer->_pLghtResist); } },
 };
 
-OptionalOwnedClxSpriteList PanelBoxLeft;
-OptionalOwnedClxSpriteList PanelBoxMiddle;
-OptionalOwnedClxSpriteList PanelBoxRight;
-Art PanelFull;
+OptionalOwnedClxSpriteList Panel;
 
 constexpr int PanelFieldHeight = 24;
 constexpr int PanelFieldPaddingTop = 3;
 constexpr int PanelFieldPaddingBottom = 3;
 constexpr int PanelFieldInnerHeight = PanelFieldHeight - PanelFieldPaddingTop - PanelFieldPaddingBottom;
 
-void DrawPanelField(const Surface &out, Point pos, int len)
+void DrawPanelField(const Surface &out, Point pos, int len, ClxSprite left, ClxSprite middle, ClxSprite right)
 {
-	RenderClxSprite(out, (*PanelBoxLeft)[0], pos);
-	pos.x += (*PanelBoxLeft)[0].width();
-	len -= (*PanelBoxLeft)[0].width() + (*PanelBoxRight)[0].width();
-	RenderClxSprite(out.subregion(pos.x, pos.y, len, (*PanelBoxMiddle)[0].height()), (*PanelBoxMiddle)[0], Point { 0, 0 });
+	RenderClxSprite(out, left, pos);
+	pos.x += left.width();
+	len -= left.width() + right.width();
+	RenderClxSprite(out.subregion(pos.x, pos.y, len, middle.height()), middle, Point { 0, 0 });
 	pos.x += len;
-	RenderClxSprite(out, (*PanelBoxRight)[0], pos);
+	RenderClxSprite(out, right, pos);
 }
 
 void DrawShadowString(const Surface &out, const PanelEntry &entry)
@@ -269,42 +265,45 @@ void DrawStatButtons(const Surface &out)
 
 void LoadCharPanel()
 {
-	LoadArt("data\\charbg.pcx", &PanelFull);
-	UpdatePalette(&PanelFull); // PanelFull is being used as a render target
-	PanelBoxLeft = LoadClx("data\\boxleftend.clx");
-	PanelBoxMiddle = LoadClx("data\\boxmiddle.clx");
-	PanelBoxRight = LoadClx("data\\boxrightend.clx");
+	OptionalOwnedClxSpriteList background = LoadOptionalClx("data\\charbg.clx");
+	if (!background)
+		app_fatal(_("Please update devilutionx.mpq to the latest version"));
+	OwnedSurface out((*background)[0].width(), (*background)[0].height());
+	RenderClxSprite(out, (*background)[0], { 0, 0 });
+	background = std::nullopt;
 
-	const Surface out(PanelFull.surface.get());
+	{
+		OwnedClxSpriteList boxLeft = LoadClx("data\\boxleftend.clx");
+		OwnedClxSpriteList boxMiddle = LoadClx("data\\boxmiddle.clx");
+		OwnedClxSpriteList boxRight = LoadClx("data\\boxrightend.clx");
 
-	const bool isSmallFontTall = IsSmallFontTall();
-	const int attributeHeadersY = isSmallFontTall ? 112 : 114;
-	for (unsigned i : AttributeHeaderEntryIndices) {
-		panelEntries[i].position.y = attributeHeadersY;
-	}
-	panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 105 : 106;
-
-	for (auto &entry : panelEntries) {
-		if (entry.statDisplayFunc != nullptr) {
-			DrawPanelField(out, entry.position, entry.length);
+		const bool isSmallFontTall = IsSmallFontTall();
+		const int attributeHeadersY = isSmallFontTall ? 112 : 114;
+		for (unsigned i : AttributeHeaderEntryIndices) {
+			panelEntries[i].position.y = attributeHeadersY;
 		}
-		DrawShadowString(out, entry);
+		panelEntries[GoldHeaderEntryIndex].position.y = isSmallFontTall ? 105 : 106;
+
+		for (auto &entry : panelEntries) {
+			if (entry.statDisplayFunc != nullptr) {
+				DrawPanelField(out, entry.position, entry.length, boxLeft[0], boxMiddle[0], boxRight[0]);
+			}
+			DrawShadowString(out, entry);
+		}
 	}
 
-	PanelBoxRight = std::nullopt;
-	PanelBoxMiddle = std::nullopt;
-	PanelBoxLeft = std::nullopt;
+	Panel = SurfaceToClx(out);
 }
 
 void FreeCharPanel()
 {
-	PanelFull.Unload();
+	Panel = std::nullopt;
 }
 
 void DrawChr(const Surface &out)
 {
 	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
-	DrawArt(out, pos, &PanelFull);
+	RenderClxSprite(out, (*Panel)[0], pos);
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {
 			StyledText tmp = entry.statDisplayFunc();

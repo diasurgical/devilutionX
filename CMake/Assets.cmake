@@ -44,7 +44,7 @@ set(devilutionx_assets
   data/boxleftend.clx
   data/boxmiddle.clx
   data/boxrightend.clx
-  data/charbg.pcx
+  data/charbg.clx
   data/dirtybuc.clx
   data/dirtybucp.clx
   data/healthbox.clx
@@ -54,11 +54,11 @@ set(devilutionx_assets
   data/hinticons.clx
   data/monstertags.clx
   data/panel8buc.clx
-  data/panel8bucp.pcx
+  data/panel8bucp.clx
   data/resistance.clx
   data/stash.clx
   data/stashnavbtns.clx
-  data/talkbutton.pcx
+  data/talkbutton.clx
   data/xpbar.clx
   fonts/12-00.bin
   fonts/12-00.clx
