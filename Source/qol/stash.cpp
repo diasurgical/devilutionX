@@ -268,14 +268,8 @@ void InitStash()
 {
 	InitialWithdrawGoldValue = 0;
 
-	StashPanelArt = LoadOptionalClx("data\\stash.clx");
-	StashNavButtonArt = LoadOptionalClx("data\\stashnavbtns.clx");
-
-	if (!StashPanelArt || !StashNavButtonArt) {
-		app_fatal(_("Failed to load UI resources.\n"
-		            "\n"
-		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
-	}
+	StashPanelArt = LoadClx("data\\stash.clx");
+	StashNavButtonArt = LoadClx("data\\stashnavbtns.clx");
 }
 
 void TransferItemToInventory(Player &player, uint16_t itemId)

@@ -943,13 +943,15 @@ void SetApplicationVersions()
 
 void CheckArchivesUpToDate()
 {
-	const bool devilutionxMpqOutOfDate = devilutionx_mpq && devilutionx_mpq->HasFile("fonts\\12-00.pcx");
-	const bool fontsMpqOutOfDate = font_mpq && font_mpq->HasFile("fonts\\12-4e.pcx");
+	const bool devilutionxMpqOutOfDate = devilutionx_mpq && !devilutionx_mpq->HasFile("data\\charbg.clx");
+	const bool fontsMpqOutOfDate = font_mpq && !font_mpq->HasFile("fonts\\12-4e.clx");
 
 	if (devilutionxMpqOutOfDate && fontsMpqOutOfDate) {
 		app_fatal(_("Please update devilutionx.mpq and fonts.mpq to the latest version"));
 	} else if (devilutionxMpqOutOfDate) {
-		app_fatal(_("Please update devilutionx.mpq to the latest version"));
+		app_fatal(_("Failed to load UI resources.\n"
+		            "\n"
+		            "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 	} else if (fontsMpqOutOfDate) {
 		app_fatal(_("Please update fonts.mpq to the latest version"));
 	}
