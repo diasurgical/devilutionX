@@ -931,7 +931,7 @@ void StartWitchRecharge()
 		stextscrl = false;
 
 		RenderGold = true;
-		AddSText(20, 1, _("You have nothing to recharge."), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+		AddSText(20, 1, _("You have nothing to recharge."), UiFlags::ColorWhitegold, false);
 		AddSLine(3);
 		AddItemListBackButton(/*selectable=*/true);
 		return;
