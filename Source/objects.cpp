@@ -1908,14 +1908,7 @@ void OperateBook(Player &player, Object &book)
 		return;
 	}
 
-	book._oSelFlag = 0;
-	book._oAnimFrame++;
-
-	if (!setlevel) {
-		return;
-	}
-
-	if (setlvlnum == SL_VILEBETRAYER) {
+	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		bool missileAdded = false;
 		for (int j = 0; j < ActiveObjectCount; j++) {
 			Object &questObject = Objects[ActiveObjects[j]];
@@ -1942,6 +1935,13 @@ void OperateBook(Player &player, Object &book)
 		if (!missileAdded) {
 			return;
 		}
+	}
+
+	book._oSelFlag = 0;
+	book._oAnimFrame++;
+
+	if (!setlevel) {
+		return;
 	}
 
 	if (setlvlnum == SL_BONECHAMB) {
