@@ -12,8 +12,6 @@
 
 #include <fmt/format.h>
 
-#include "DiabloUI/art.h"
-#include "DiabloUI/art_draw.h"
 #include "automap.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
@@ -638,7 +636,7 @@ void DrawCtrlBtns(const Surface &out)
 		} else {
 			Point position = mainPanelPosition + Displacement { PanBtnPos[i].x, PanBtnPos[i].y + 18 };
 			ClxDraw(out, position, (*pPanelButtons)[i]);
-			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
+			RenderClxSprite(out, (*PanelButtonDown)[i], position + Displacement { 4, -18 });
 		}
 	}
 
@@ -1163,14 +1161,14 @@ void DrawTalkPan(const Surface &out)
 		if (WhisperList[i]) {
 			if (TalkButtonsDown[talkBtn]) {
 				ClxDraw(out, talkPanPosition, (*talkButtons)[talkBtn != 0 ? 3 : 2]);
-				DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, 2);
+				RenderClxSprite(out, (*TalkButton)[2], talkPanPosition + Displacement { 4, -15 });
 			}
 		} else {
 			int nCel = talkBtn != 0 ? 1 : 0;
 			if (TalkButtonsDown[talkBtn])
 				nCel += 4;
 			ClxDraw(out, talkPanPosition, (*talkButtons)[nCel]);
-			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
+			RenderClxSprite(out, (*TalkButton)[TalkButtonsDown[talkBtn] ? 1 : 0], talkPanPosition + Displacement { 4, -15 });
 		}
 		if (player.plractive) {
 			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);

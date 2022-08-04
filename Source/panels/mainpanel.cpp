@@ -9,11 +9,13 @@
 #include "utils/language.h"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_geometry.h"
+#include "utils/stdcompat/optional.hpp"
+#include "utils/surface_to_clx.hpp"
 
 namespace devilution {
 
-Art PanelButtonDown;
-Art TalkButton;
+OptionalOwnedClxSpriteList PanelButtonDown;
+OptionalOwnedClxSpriteList TalkButton;
 
 namespace {
 
@@ -40,14 +42,13 @@ void DrawButtonOnPanel(Point position, string_view text, int frame)
 	DrawButtonText(*pBtmBuff, text, { position, { (*PanelButton)[0].width(), 0 } }, UiFlags::ColorButtonface, spacing);
 }
 
-void RenderMainButton(int buttonId, string_view text, int frame)
+void RenderMainButton(const Surface &out, int buttonId, string_view text, int frame)
 {
 	Point panelPosition { PanBtnPos[buttonId].x + 4, PanBtnPos[buttonId].y + 17 };
 	DrawButtonOnPanel(panelPosition, text, frame);
 	if (IsChatAvailable())
 		DrawButtonOnPanel(panelPosition + Displacement { 0, GetMainPanel().size.height + 16 }, text, frame);
 
-	const Surface out(PanelButtonDown.surface.get());
 	Point position { 0, 19 * buttonId };
 	int spacing = 2;
 	int width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
@@ -56,58 +57,66 @@ void RenderMainButton(int buttonId, string_view text, int frame)
 		width = std::min<int>(GetLineWidth(text, GameFont12, spacing), (*PanelButton)[0].width());
 	}
 	RenderClxSprite(out.subregion(position.x + ((*PanelButton)[0].width() - width) / 2, position.y + 9, width, out.h() - position.y - 9), (*PanelButtonDownGrime)[frame], { 0, 0 });
-	DrawButtonText(out, text, { position + Displacement { 0, 2 }, { PanelButtonDown.w(), 0 } }, UiFlags::ColorButtonpushed, spacing);
-}
-
-void DrawTalkButton(int buttonId)
-{
-	string_view text = _("voice");
-	Point position { 176, GetMainPanel().size.height + 101 + 18 * buttonId };
-	DrawArt(*pBtmBuff, position, &TalkButton);
-	int width = std::min<int>(GetLineWidth(text, GameFont12, 1), (*PanelButton)[0].width());
-	RenderClxSprite(pBtmBuff->subregion(position.x + (TalkButton.w() - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
-	DrawButtonText(*pBtmBuff, text, { position, { TalkButton.w(), 0 } }, UiFlags::ColorButtonface);
+	DrawButtonText(out, text, { position + Displacement { 0, 2 }, { out.w(), 0 } }, UiFlags::ColorButtonpushed, spacing);
 }
 
 } // namespace
 
 void LoadMainPanel()
 {
-	LoadArt("data\\panel8bucp.pcx", &PanelButtonDown, 6);
-	PanelButton = LoadClx("data\\panel8buc.clx");
-	PanelButtonGrime = LoadClx("data\\dirtybuc.clx");
-	PanelButtonDownGrime = LoadClx("data\\dirtybucp.clx");
+	std::optional<OwnedSurface> out;
+	constexpr uint16_t NumButtonSprites = 6;
+	{
+		OptionalOwnedClxSpriteList background = LoadOptionalClx("data\\panel8bucp.clx");
+		if (!background)
+			app_fatal(_("Please update devilutionx.mpq to the latest version"));
+		out.emplace((*background)[0].width(), (*background)[0].height() * NumButtonSprites);
+		RenderClxSprite(*out, (*background)[0], { 0, 0 });
+	}
 
-	// Load palette to render targets
-	UpdatePalette(&PanelButtonDown);
-	if (SDLC_SetSurfaceColors(pBtmBuff->surface, PalSurface->format->palette) <= -1)
-		ErrSdl();
+	PanelButton = LoadOptionalClx("data\\panel8buc.clx");
+	PanelButtonGrime = LoadOptionalClx("data\\dirtybuc.clx");
+	PanelButtonDownGrime = LoadOptionalClx("data\\dirtybucp.clx");
 
-	RenderMainButton(0, _("char"), 0);
-	RenderMainButton(1, _("quests"), 1);
-	RenderMainButton(2, _("map"), 1);
-	RenderMainButton(3, _("menu"), 0);
-	RenderMainButton(4, _("inv"), 1);
-	RenderMainButton(5, _("spells"), 0);
+	RenderMainButton(*out, 0, _("char"), 0);
+	RenderMainButton(*out, 1, _("quests"), 1);
+	RenderMainButton(*out, 2, _("map"), 1);
+	RenderMainButton(*out, 3, _("menu"), 0);
+	RenderMainButton(*out, 4, _("inv"), 1);
+	RenderMainButton(*out, 5, _("spells"), 0);
+	PanelButtonDown = SurfaceToClx(*out, NumButtonSprites);
+	out = std::nullopt;
 
 	if (IsChatAvailable()) {
-		LoadArt("data\\talkbutton.pcx", &TalkButton, 3);
-		UpdatePalette(&TalkButton);
+		OptionalOwnedClxSpriteList talkButton = LoadClx("data\\talkbutton.clx");
+		const int talkButtonWidth = (*talkButton)[0].width();
+		const int talkButtonHeight = (*talkButton)[0].height();
+		constexpr uint16_t NumTalkButtonSprites = 3;
 
-		// Must be done before adding the text to TalkButton
-		DrawTalkButton(0);
-		DrawTalkButton(1);
-		DrawTalkButton(2);
+		// Render the empty button to pBtmBuff.
+		string_view text = _("voice");
+		const int textWidth = GetLineWidth(text, GameFont12, 1);
+		for (size_t i = 0; i < 3; ++i) {
+			Point position { 176, static_cast<int>(GetMainPanel().size.height + 101 + 18 * i) };
+			RenderClxSprite(*pBtmBuff, (*talkButton)[0], position);
+			int width = std::min<int>(textWidth, (*PanelButton)[0].width());
+			RenderClxSprite(pBtmBuff->subregion(position.x + (talkButtonWidth - width) / 2, position.y + 6, width, 9), (*PanelButtonGrime)[1], { 0, 0 });
+			DrawButtonText(*pBtmBuff, text, { position, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
+		}
 
-		const Surface talkSurface(TalkButton.surface.get());
+		OwnedSurface talkSurface(talkButtonWidth, talkButtonHeight * NumTalkButtonSprites);
+		RenderClxSprite(talkSurface, (*talkButton)[0], { 0, 0 });
+		talkButton = std::nullopt;
+
 		int muteWidth = GetLineWidth(_("mute"), GameFont12, 2);
-		RenderClxSprite(talkSurface.subregion((TalkButton.w() - muteWidth) / 2, 6, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
-		DrawButtonText(talkSurface, _("mute"), { { 0, 0 }, { TalkButton.w(), 0 } }, UiFlags::ColorButtonface);
-		RenderClxSprite(talkSurface.subregion((TalkButton.w() - muteWidth) / 2, 23, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
-		DrawButtonText(talkSurface, _("mute"), { { 0, 17 }, { TalkButton.w(), 0 } }, UiFlags::ColorButtonpushed);
+		RenderClxSprite(talkSurface.subregion((talkButtonWidth - muteWidth) / 2, 6, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
+		DrawButtonText(talkSurface, _("mute"), { { 0, 0 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonface);
+		RenderClxSprite(talkSurface.subregion((talkButtonWidth - muteWidth) / 2, 23, muteWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
+		DrawButtonText(talkSurface, _("mute"), { { 0, 17 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
 		int voiceWidth = GetLineWidth(_("voice"), GameFont12, 2);
-		RenderClxSprite(talkSurface.subregion((TalkButton.w() - voiceWidth) / 2, 39, voiceWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
-		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, { TalkButton.w(), 0 } }, UiFlags::ColorButtonpushed);
+		RenderClxSprite(talkSurface.subregion((talkButtonWidth - voiceWidth) / 2, 39, voiceWidth, 9), (*PanelButtonGrime)[1], { 0, 0 });
+		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, { talkButtonWidth, 0 } }, UiFlags::ColorButtonpushed);
+		TalkButton = SurfaceToClx(talkSurface, NumTalkButtonSprites);
 	}
 
 	UnloadFonts(GameFont12, ColorButtonface);
@@ -120,8 +129,8 @@ void LoadMainPanel()
 
 void FreeMainPanel()
 {
-	PanelButtonDown.Unload();
-	TalkButton.Unload();
+	TalkButton = std::nullopt;
+	PanelButtonDown = std::nullopt;
 }
 
 } // namespace devilution
