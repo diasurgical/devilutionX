@@ -821,7 +821,7 @@ bool PlrHitMonst(Player &player, Monster &monster, bool adjacentDamage = false)
 			}
 			dam *= 2;
 		}
-		monster.hitPoints -= dam;
+		ApplyMonsterDamage(monster, dam);
 	}
 
 	int skdam = 0;
@@ -3063,7 +3063,7 @@ void RemovePlrMissiles(const Player &player)
 	if (leveltype != DTYPE_TOWN && &player == MyPlayer) {
 		Monster &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
-			M_StartKill(golem, player);
+			KillMyGolem();
 			AddCorpse(golem.position.tile, golem.type().corpseId, golem.direction);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;

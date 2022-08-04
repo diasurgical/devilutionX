@@ -238,7 +238,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 		dam >>= 2;
 
 	if (&player == MyPlayer)
-		monster.hitPoints -= dam;
+		ApplyMonsterDamage(monster, dam);
 
 	if ((gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::NoHealOnMonsters)) || (!gbIsHellfire && HasAnyOf(player._pIFlags, ItemSpecialEffect::FireArrows)))
 		monster.flags |= MFLAG_NOHEAL;
@@ -246,6 +246,7 @@ bool MonsterMHit(int pnum, int monsterId, int mindam, int maxdam, int dist, miss
 	if (monster.hitPoints >> 6 <= 0) {
 		M_StartKill(monster, player);
 	} else if (resist) {
+		monster.tag(player);
 		PlayEffect(monster, MonsterSound::Hit);
 	} else {
 		if (monster.mode != MonsterMode::Petrified && MissilesData[t].mType == 0 && HasAnyOf(player._pIFlags, ItemSpecialEffect::Knockback))
@@ -876,9 +877,8 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 	if (!shift)
 		dam <<= 6;
 	if (resist)
-		monster.hitPoints -= dam / 4;
-	else
-		monster.hitPoints -= dam;
+		dam /= 4;
+	ApplyMonsterDamage(monster, dam);
 #ifdef _DEBUG
 	if (DebugGodMode)
 		monster.hitPoints = 0;
@@ -888,7 +888,6 @@ bool MonsterTrapHit(int monsterId, int mindam, int maxdam, int dist, missile_id 
 	} else if (resist) {
 		PlayEffect(monster, MonsterSound::Hit);
 	} else if (monster.type().type != MT_GOLEM) {
-		PlayEffect(monster, MonsterSound::Hit);
 		M_StartHit(monster, dam);
 	}
 	return true;
@@ -2186,7 +2185,7 @@ void AddGolem(Missile &missile, const AddMissileParameter &parameter)
 	Monster &golem = Monsters[playerId];
 
 	if (golem.position.tile != GolemHoldingCell && &player == MyPlayer)
-		M_StartKill(golem, player);
+		KillMyGolem();
 
 	ConsumeSpell(player, SPL_GOLEM);
 

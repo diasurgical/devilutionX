@@ -1063,21 +1063,6 @@ bool MonsterWalk(Monster &monster, MonsterMode variant)
 	return isAnimationEnd;
 }
 
-void ApplyMonsterDamage(Monster &monster, int damage)
-{
-	monster.hitPoints -= damage;
-
-	if (monster.hitPoints >> 6 <= 0) {
-		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
-		NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
-		return;
-	}
-
-	delta_monster_hp(monster, *MyPlayer);
-	NetSendCmdMonDmg(false, monster.getId(), damage);
-	PlayEffect(monster, MonsterSound::Hit);
-}
-
 void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind, int maxd)
 {
 	if (!target.isPossibleToHit())
@@ -1112,14 +1097,14 @@ void MonsterAttackMonster(Monster &attacker, Monster &target, int hper, int mind
 	}
 }
 
-void CheckReflect(Monster &monster, Player &player, int dam)
+void CheckReflect(Monster &monster, Player &player, int &dam)
 {
 	player.wReflections--;
 	if (player.wReflections <= 0)
 		NetSendCmdParam1(true, CMD_SETREFLECT, 0);
 	// reflects 20-30% damage
 	int mdam = dam * (GenerateRnd(10) + 20L) / 100;
-	monster.hitPoints -= mdam;
+	ApplyMonsterDamage(monster, mdam);
 	dam = std::max(dam - mdam, 0);
 	if (monster.hitPoints >> 6 <= 0)
 		M_StartKill(monster, player);
@@ -1198,7 +1183,7 @@ void MonsterAttackPlayer(Monster &monster, Player &player, int hit, int minDam, 
 	// Reflect can also kill a monster, so make sure the monster is still alive
 	if (HasAnyOf(player._pIFlags, ItemSpecialEffect::Thorns) && monster.mode != MonsterMode::Death) {
 		int mdam = (GenerateRnd(3) + 1) << 6;
-		monster.hitPoints -= mdam;
+		ApplyMonsterDamage(monster, mdam);
 		if (monster.hitPoints >> 6 <= 0)
 			M_StartKill(monster, player);
 		else
@@ -3587,6 +3572,20 @@ void AddDoppelganger(Monster &monster)
 	}
 }
 
+void ApplyMonsterDamage(Monster &monster, int damage)
+{
+	monster.hitPoints -= damage;
+
+	if (monster.hitPoints >> 6 <= 0) {
+		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
+		NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monster.getId());
+		return;
+	}
+
+	delta_monster_hp(monster, *MyPlayer);
+	NetSendCmdMonDmg(false, monster.getId(), damage);
+}
+
 bool M_Talker(const Monster &monster)
 {
 	return IsAnyOf(monster.ai, AI_LAZARUS, AI_WARLORD, AI_GARBUD, AI_ZHAR, AI_SNOTSPIL, AI_LACHDAN, AI_LAZHELP);
@@ -3629,6 +3628,8 @@ void M_GetKnockback(Monster &monster)
 
 void M_StartHit(Monster &monster, int dam)
 {
+	PlayEffect(monster, MonsterSound::Hit);
+
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		if (monster.type().type == MT_BLINK) {
 			Teleport(monster);
@@ -3646,10 +3647,6 @@ void M_StartHit(Monster &monster, int dam)
 void M_StartHit(Monster &monster, const Player &player, int dam)
 {
 	monster.tag(player);
-	if (&player == MyPlayer) {
-		delta_monster_hp(monster, *MyPlayer);
-		NetSendCmdMonDmg(false, monster.getId(), dam);
-	}
 	if (IsAnyOf(monster.type().type, MT_SNEAK, MT_STALKER, MT_UNSEEN, MT_ILLWEAV) || dam >> 6 >= monster.level + 3) {
 		monster.enemy = player.getId();
 		monster.enemyPosition = player.position.future;
@@ -3657,7 +3654,6 @@ void M_StartHit(Monster &monster, const Player &player, int dam)
 		monster.direction = GetMonsterDirection(monster);
 	}
 
-	PlayEffect(monster, MonsterSound::Hit);
 	M_StartHit(monster, dam);
 }
 
@@ -3702,18 +3698,16 @@ void StartMonsterDeath(Monster &monster, const Player &player, bool sendmsg)
 	MonsterDeath(monster, md, sendmsg);
 }
 
+void KillMyGolem()
+{
+	Monster &golem = Monsters[MyPlayerId];
+	delta_kill_monster(golem, golem.position.tile, *MyPlayer);
+	NetSendCmdLoc(MyPlayerId, false, CMD_KILLGOLEM, golem.position.tile);
+	M_StartKill(golem, *MyPlayer);
+}
+
 void M_StartKill(Monster &monster, const Player &player)
 {
-	if (&player == MyPlayer) {
-		delta_kill_monster(monster, monster.position.tile, *MyPlayer);
-		size_t monsterId = monster.getId();
-		if (monsterId != player.getId()) {
-			NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, monsterId);
-		} else {
-			NetSendCmdLoc(MyPlayerId, false, CMD_KILLGOLEM, monster.position.tile);
-		}
-	}
-
 	StartMonsterDeath(monster, player, true);
 }
 
@@ -4331,10 +4325,6 @@ void MissToMonst(Missile &missile, Point position)
 	monster.direction = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster.direction);
-	if ((monster.flags & MFLAG_TARGETS_MONSTER) == 0)
-		PlayEffect(monster, MonsterSound::Hit);
-	else
-		ApplyMonsterDamage(monster, 0);
 	M_StartHit(monster, 0);
 
 	if (monster.type().type == MT_GLOOM)
