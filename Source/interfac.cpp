@@ -366,6 +366,7 @@ void ShowProgress(interface_mode uMsg)
 		IncProgress();
 		setlevel = true;
 		leveltype = setlvltype;
+		currlevel = static_cast<uint8_t>(setlvlnum);
 		FreeGameMem();
 		IncProgress();
 		LoadGameLevel(false, ENTRY_SETLVL);
