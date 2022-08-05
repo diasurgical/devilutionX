@@ -1826,14 +1826,13 @@ void CloseDoor(Object &door)
 void OperateDoor(Object &door, bool sendflag)
 {
 	bool isCrypt = IsAnyOf(door._otype, OBJ_L5LDOOR, OBJ_L5RDOOR);
+	bool openDoor = door._oVar4 == DOOR_CLOSED;
 
-	if (!IsDoorClear(door)) {
+	if (!openDoor && !IsDoorClear(door)) {
 		PlaySfxLoc(isCrypt ? IS_CRCLOS : IS_DOORCLOS, door.position);
 		door._oVar4 = DOOR_BLOCKED;
 		return;
 	}
-
-	bool openDoor = door._oVar4 == DOOR_CLOSED;
 
 	if (openDoor) {
 		PlaySfxLoc(isCrypt ? IS_CROPEN : IS_DOOROPEN, door.position);
