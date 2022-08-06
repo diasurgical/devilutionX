@@ -2105,7 +2105,7 @@ void OperateChest(const Player &player, Object &chest, bool sendLootMsg)
 		chest._oTrapFlag = false;
 	}
 	if (&player == MyPlayer)
-		NetSendCmdLoc(MyPlayerId, false, CMD_PLROPOBJ, chest.position);
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, chest.position);
 }
 
 void OperateMushroomPatch(const Player &player, Object &mushroomPatch)
@@ -3090,7 +3090,7 @@ void OperateShrine(Player &player, Object &shrine, _sfx_id sType)
 	}
 
 	if (&player == MyPlayer)
-		NetSendCmdLoc(MyPlayerId, false, CMD_PLROPOBJ, shrine.position);
+		NetSendCmdLoc(MyPlayerId, false, CMD_OPERATEOBJ, shrine.position);
 }
 
 void OperateBookStand(Object &bookStand, bool sendmsg, bool sendLootMsg)

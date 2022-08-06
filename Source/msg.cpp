@@ -2534,7 +2534,6 @@ void DeltaLoadLevel()
 			switch (it->second.bCmd) {
 			case CMD_OPENDOOR:
 			case CMD_OPERATEOBJ:
-			case CMD_PLROPOBJ:
 				DeltaSyncOpObject(*object);
 				it++;
 				break;
@@ -3038,7 +3037,6 @@ size_t ParseCmd(int pnum, const TCmd *pCmd)
 	case CMD_OPENDOOR:
 	case CMD_CLOSEDOOR:
 	case CMD_OPERATEOBJ:
-	case CMD_PLROPOBJ:
 		return OnOperateObject(*pCmd, pnum);
 	case CMD_BREAKOBJ:
 		return OnBreakObject(*pCmd, pnum);
