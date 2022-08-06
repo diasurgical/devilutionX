@@ -561,8 +561,11 @@ void DeltaSyncObject(WorldTilePosition position, _cmd_id bCmd, const Player &pla
 		return;
 
 	sgbDeltaChanged = true;
-
-	GetDeltaLevel(player).object[position].bCmd = bCmd;
+	auto &objectDeltas = GetDeltaLevel(player).object;
+	if (bCmd == _cmd_id::CMD_CLOSEDOOR)
+		objectDeltas.erase(position);
+	else
+		objectDeltas[position].bCmd = bCmd;
 }
 
 bool DeltaGetItem(const TCmdGItem &message, uint8_t bLevel)
