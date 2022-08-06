@@ -4320,9 +4320,8 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 	return i;
 }
 
-void OperateObject(Player &player, int i)
+void OperateObject(Player &player, Object &object)
 {
-	Object &object = Objects[i];
 	bool sendmsg = &player == MyPlayer;
 
 	switch (object._otype) {
