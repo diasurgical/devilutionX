@@ -67,7 +67,7 @@ OwnedClxSpriteListOrSheet CelToClx(const uint8_t *data, size_t size, PointerOrVa
 		// CL2 header: frame count, frame offset for each frame, file size
 		const size_t cl2DataOffset = cl2Data.size();
 		cl2Data.resize(cl2Data.size() + 4 * (2 + static_cast<size_t>(numFrames)));
-		WriteLE32(cl2Data.data(), numFrames);
+		WriteLE32(&cl2Data[cl2DataOffset], numFrames);
 
 		const uint8_t *srcEnd = &data[LoadLE32(&data[4])];
 		for (size_t frame = 1; frame <= numFrames; ++frame) {
