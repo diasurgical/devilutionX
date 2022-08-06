@@ -2693,6 +2693,7 @@ void InitPlayer(Player &player, bool firstTime)
 			player.AnimInfo.currentFrame = GenerateRnd(player._pNFrames - 1);
 			player.AnimInfo.tickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
+			player._pgfxnum &= ~0xF;
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 2);
 			player.AnimInfo.currentFrame = player.AnimInfo.numberOfFrames - 2;
