@@ -314,7 +314,7 @@ void MonstCheckDoors(const Monster &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 int ItemMiscIdIdx(item_misc_id imiscid);
-void OperateObject(Player &player, int i);
+void OperateObject(Player &player, Object &object);
 void SyncOpObject(Player &player, int cmd, Object &object);
 void BreakObjectMissile(Object &object);
 void BreakObject(const Player &player, Object &object);
