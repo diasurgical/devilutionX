@@ -110,7 +110,7 @@ MissileData MissilesData[] = {
 	{  &AddImmolationRune,         &MI_Rune,           MIS_RUNEIMMOLAT,   true,      1, MISR_NONE,      MFILE_RUNE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddStoneRune,              &MI_Rune,           MIS_RUNESTONE,     true,      1, MISR_NONE,      MFILE_RUNE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddRuneExplosion,          &MI_HiveExplode,    MIS_HIVEEXP,       true,      1, MISR_FIRE,      MFILE_BIGEXP,    LS_NESTXPLD, LS_NESTXPLD, MissileMovementDistrubution::Disabled    },
-	{  &AddHorkSpawn,              &MI_HorkSpawn,      MIS_HORKDMN,       true,      2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
+	{  &AddHorkSpawn,              &MI_HorkSpawn,      MIS_HORKDMN,       false,     2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddJester,                 nullptr,            MIS_JESTER,        false,     2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddHiveExplosion,          nullptr,            MIS_HIVEEXP2,      false,     2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddFlare,                  &MI_Firebolt,       MIS_LICH,          true,      1, MISR_MAGIC,     MFILE_LICH,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Blockable   },
