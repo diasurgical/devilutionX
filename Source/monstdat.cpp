@@ -493,11 +493,6 @@ void ClearMonstersDataToNormalFromHell()
 {
 	for (auto &monsterData : MonstersData) {
 		monsterData.level -= 30;
-		/** This is needed because diablo exp goes overbounds, and it has to be set manually. */
-		if (monsterData.ai == MT_DIABLO)
-			monsterData.exp = 31666;
-		else
-			monsterData.exp = monsterData.exp / 4 - 1000;
 		monsterData.toHit -= HellToHitBonus;
 		monsterData.minDamage = (monsterData.minDamage - 6) / 4;
 		monsterData.maxDamage = (monsterData.maxDamage - 6) / 4;

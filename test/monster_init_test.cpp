@@ -50,7 +50,6 @@ void InitMonsterOld(Monster &monster, Direction rd, size_t typeIndex, Point posi
 	monster.rndItemSeed = AdvanceRndSeed();
 	monster.aiSeed = AdvanceRndSeed();
 	monster.whoHit = 0;
-	monster.exp = monster.data().exp;
 	monster.toHit = monster.data().toHit;
 	monster.minDamage = monster.data().minDamage;
 	monster.maxDamage = monster.data().maxDamage;
@@ -79,7 +78,6 @@ void InitMonsterOld(Monster &monster, Direction rd, size_t typeIndex, Point posi
 			monster.maxHitPoints += 64;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 15;
-		monster.exp = 2 * (monster.exp + 1000);
 		monster.toHit += NightmareToHitBonus;
 		monster.minDamage = 2 * (monster.minDamage + 2);
 		monster.maxDamage = 2 * (monster.maxDamage + 2);
@@ -95,7 +93,6 @@ void InitMonsterOld(Monster &monster, Direction rd, size_t typeIndex, Point posi
 			monster.maxHitPoints += 192;
 		monster.hitPoints = monster.maxHitPoints;
 		monster.level += 30;
-		monster.exp = 4 * (monster.exp + 1000);
 		monster.toHit += HellToHitBonus;
 		monster.minDamage = 4 * monster.minDamage + 6;
 		monster.maxDamage = 4 * monster.maxDamage + 6;
@@ -107,24 +104,27 @@ void InitMonsterOld(Monster &monster, Direction rd, size_t typeIndex, Point posi
 	}
 }
 
-bool CompareMonsters(Monster &m1, Monster &m2) {
-	return m1.flags == m2.flags && m1.exp == m2.exp && m1.toHit == m2.toHit && m1.resistance == m2.resistance
-	&& m1.talkMsg == m2.talkMsg && m1.goalVar1 == m2.goalVar1 && m1.goalVar2 == m2.goalVar2 && m1.goalVar3 == m2.goalVar3
-	&& m1.goal == m2.goal && m1.levelType == m2.levelType && m1.mode == m2.mode && m1.pathCount == m2.pathCount
-	&& m1.direction == m2.direction && m1.isInvalid == m2.isInvalid && m1.ai == m2.ai
-	&& m1.intelligence == m2.intelligence && m1.activeForTicks == m2.activeForTicks
-	&& m1.whoHit == m2.whoHit && m1.level == m2.level && m1.minDamage == m2.minDamage && m1.maxDamage == m2.maxDamage
-	&& m1.minDamageSpecial == m2.minDamageSpecial && m1.maxDamageSpecial == m2.maxDamageSpecial && m1.armorClass == m2.armorClass
-	&& m1.leader == m2.leader && m1.leaderRelation == m2.leaderRelation && m1.lightId == m2.lightId;
+bool CompareMonsters(Monster &m1, Monster &m2)
+{
+	return m1.flags == m2.flags && m1.toHit == m2.toHit && m1.resistance == m2.resistance
+	    && m1.talkMsg == m2.talkMsg && m1.goalVar1 == m2.goalVar1 && m1.goalVar2 == m2.goalVar2 && m1.goalVar3 == m2.goalVar3
+	    && m1.goal == m2.goal && m1.levelType == m2.levelType && m1.mode == m2.mode && m1.pathCount == m2.pathCount
+	    && m1.direction == m2.direction && m1.isInvalid == m2.isInvalid && m1.ai == m2.ai
+	    && m1.intelligence == m2.intelligence && m1.activeForTicks == m2.activeForTicks
+	    && m1.whoHit == m2.whoHit && m1.level == m2.level && m1.minDamage == m2.minDamage && m1.maxDamage == m2.maxDamage
+	    && m1.minDamageSpecial == m2.minDamageSpecial && m1.maxDamageSpecial == m2.maxDamageSpecial && m1.armorClass == m2.armorClass
+	    && m1.leader == m2.leader && m1.leaderRelation == m2.leaderRelation && m1.lightId == m2.lightId;
 }
 
-void CopyMonsterData(MonsterData destination[], MonsterData source[]) {
+void CopyMonsterData(MonsterData destination[], MonsterData source[])
+{
 	for (size_t i = 0; i < MonstersDataSize; i++) {
 		destination[i] = source[i];
 	}
 }
 
-bool test_general(_difficulty testDifficulty) {
+bool test_general(_difficulty testDifficulty)
+{
 	_difficulty lastDifficulty = sgGameInitInfo.nDifficulty;
 	sgGameInitInfo.nDifficulty = testDifficulty;
 
