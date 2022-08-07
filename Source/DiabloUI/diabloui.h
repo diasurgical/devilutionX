@@ -65,7 +65,7 @@ extern OptionalOwnedClxSpriteList ArtLogo;
 extern std::array<OptionalOwnedClxSpriteList, 3> ArtFocus;
 extern OptionalOwnedClxSpriteList ArtBackgroundWidescreen;
 extern OptionalOwnedClxSpriteList ArtBackground;
-extern Art ArtCursor;
+extern OptionalOwnedClxSpriteList ArtCursor;
 
 extern bool (*gfnHeroInfo)(bool (*fninfofunc)(_uiheroinfo *));
 
